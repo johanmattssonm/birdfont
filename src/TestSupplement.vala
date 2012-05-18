@@ -48,18 +48,6 @@ class TestCases {
 		//add (test_tool_box, "Select all tools in Toolbox");
 	}
 
-	public static void test_tool_box () {
-		foreach (var exp in MainWindow.get_toolbox ().expanders) {
-			foreach (Tool t in exp.tool) {
-				MainWindow.get_toolbox ().select_tool (t);
-			}
-		}
-		
-		foreach (Tool t in MainWindow.get_content_display ().tools) {	
-			t.select_action (t);
-		}
-	}
-
 	public static void test_active_edit_point () {
 		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
 		tool.test_active_edit_point ();
