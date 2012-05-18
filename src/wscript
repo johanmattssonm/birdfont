@@ -56,7 +56,7 @@ TEST = [
 def build (bld):	
 	bld.program (
 		target        = 'supplement',
-		param         = '--enable-experimental --enable-experimental-non-null --vapidir=../ ',
+		param         = '--enable-experimental --enable-experimental-non-null --vapidir=../../',
 		packages      = 'gtk+-2.0 libxml-2.0',
 		uselib        = 'GTK GLIB GIO XML',
 		source        = SUPPLEMENT_MAIN

@@ -16,7 +16,7 @@ def configure(conf):
 	conf.check_cfg(package='gtk+-2.0', uselib_store='GTK', atleast_version='2.16.0', mandatory=1, args='--cflags --libs')
 	conf.check_cfg(package='libxml-2.0', uselib_store='XML', mandatory=1, args='--cflags --libs')
 	
-	conf.env.append_unique('VALAFLAGS', ['--enable-experimental', '--enable-experimental-non-null', '--vapidir=../'])
+	conf.env.append_unique('VALAFLAGS', ['--enable-experimental', '--enable-experimental-non-null', '--vapidir=../../'])
 	
 def build(bld):
 	bld.recurse('src')
