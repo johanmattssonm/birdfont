@@ -138,7 +138,12 @@ class SaveDialog : FontDisplay {
 		string? fn;
 		Font font = Supplement.get_current_font ();
 		FileChooserDialog file_chooser = new FileChooserDialog ("Save", MainWindow.get_current_window (), FileChooserAction.SAVE, Stock.CANCEL, ResponseType.CANCEL, Stock.SAVE, ResponseType.ACCEPT);
-		file_chooser.set_current_folder_file (font.get_folder ());
+		
+		try {
+			file_chooser.set_current_folder_file (font.get_folder ());
+		} catch (GLib.Error e) {
+			stderr.printf (e.message);
+		}
 		
 		if (file_chooser.run () == ResponseType.ACCEPT) {	
 			MainWindow.get_glyph_canvas ().redraw ();
