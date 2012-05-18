@@ -1,0 +1,64 @@
+SUPPLEMENT_MAIN = [
+	'Font.vala',
+	'BackgroundTool.vala',
+	'BackgroundSelection.vala',
+	'ExportTool.vala',
+	'FontDisplay.vala',
+	'CharDatabase.vala',
+	'Context.vala',
+	'ContentDisplay.vala',
+	'CutBackgroundTool.vala',
+	'CutTool.vala',
+	'ClipTool.vala',
+	'DropMenu.vala',
+	'EditPoint.vala',
+	'EditPointHandle.vala',
+	'FileSelection.vala',
+	'Glyph.vala',
+	'GlyphBackgroundImage.vala',
+	'GlyphCanvas.vala',
+	'GlyphCollection.vala',
+	'GlyphRange.vala',
+	'GridTool.vala',
+	'Icons.vala',
+	'Kerning.vala', 
+	'KeyBindings.vala', 
+	'Line.vala',
+	'MainWindow.vala',
+	'MergeTool.vala',
+	'MoveTool.vala',
+	'IOThread.vala',
+	'OpenFontFormatWriter.vala',
+	'OverView.vala',
+	'Path.vala',
+	'PenTool.vala',
+	'ResizeTool.vala',
+	'Supplement.vala',
+	'SaveDialog.vala',
+	'ShrinkTool.vala',
+	'SpinButton.vala',
+	'Svg.vala',
+	'SvgFontFormatWriter.vala',
+	'Preferences.vala',
+	'TabBar.vala',
+	'TestSupplement.vala', 
+	'Tool.vala',
+	'Toolbox.vala',
+	'TooltipArea.vala',
+	'VersionList.vala',
+	'ZoomTool.vala'
+]
+
+TEST = [
+	'TestSupplement.vala'
+]
+
+def build (bld):	
+	bld.program (
+		target        = 'supplement',
+		param         = '--enable-experimental --enable-experimental-non-null --vapidir=../ ',
+		packages      = 'gtk+-2.0 libxml-2.0',
+		uselib        = 'GTK GLIB GIO XML',
+		source        = SUPPLEMENT_MAIN
+	)
+

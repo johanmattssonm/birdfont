@@ -1,0 +1,25 @@
+----------------------------
+Supplement – svg font editor
+----------------------------
+
+Author: Johan Mattsson
+License: GNU GPL v3
+
+-------------------------------
+Building Supplement from source
+-------------------------------
+
+Install vala and all required libraries, they are most likely in packages with a 
+-dev or -devel affix. You can run this as root if you are using Debian:
+
+apt-get install valac libglib-2.0-dev libgtk+2.0-dev libxml2-dev
+
+Configure, build and install with waf:
+./waf configure
+./waf build
+su
+./waf install
+
+You need to install a sensible browser with support for svg-fonts like 
+chromium or epiphany if you want to view your font.
+

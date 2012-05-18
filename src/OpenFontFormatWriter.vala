@@ -1,0 +1,1098 @@
+/*
+    Copyright (C) 2012 Johan Mattsson
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+namespace Supplement {
+
+class OpenFontFormatWriter : Object  {
+
+	DataOutputStream os;
+	DirectoryTable directory_table;
+	
+	public OpenFontFormatWriter () {
+		directory_table = new DirectoryTable ();
+	}
+	
+	public void open (File file) throws Error {
+		if (file.query_exists ()) {
+			throw new FileError.EXIST("OpenFontFormatWriter: file exists.");
+		}
+		
+		os = new DataOutputStream(file.create(FileCreateFlags.REPLACE_DESTINATION));
+	}
+	
+	public void add_glyf (Glyf glyf) {
+		directory_table.get_glyf_table ().add (glyf);
+	}
+	
+	private void add_glyph (Glyph glyph) {
+		unichar char_code = glyph.get_unichar ();
+		Glyf g = new Glyf (char_code);
+		Contour contour;
+		
+		foreach (Path p in glyph.path_list) {
+			contour = new Contour (p);
+			g.add_contour (contour);
+		}
+		
+		add_glyf (g);
+	}
+	
+	public void write_font_file (Font font) throws Error {
+		long dl = directory_table.get_font_file_size ();
+		uint8[] data = new uint8[dl];
+		uint i = -1;
+		long written = 0;
+		Glyph? g;
+		unowned List<Table> tables;
+		unichar indice = 0;
+		
+		while (true) {
+			g = font.get_glyph_indice (indice++);
+			
+			if (g == null) {
+				break;
+			}
+
+			add_glyph ((!) g);
+		}
+		
+		tables = directory_table.get_tables ();
+		
+		foreach (Table t in tables) {
+			foreach (uint8 d in t.get_font_data ().data) {
+				data[++i] = d;
+			}
+		}
+		
+		while (written < data.length) { 
+			written += os.write (data[written:data.length]);
+		}
+	}
+	
+	public void close () throws Error {
+		os.close ();
+	}
+}
+
+class Contour : Object {
+	
+	public List<Coordinate> coordinates;
+	
+	public Contour (Path path) {
+		coordinates = new List<Coordinate> ();
+		set_path (path);
+	}
+		
+	void set_path (Path path) {
+		Coordinate c;
+		
+		if (path.points.length () == 0) {
+			return;
+		}
+		
+		c = new Coordinate ();
+		foreach (EditPoint e in path.points) {
+			c.x = (int16) e.x * 1000; // Fixa: do mapping to em-width and int16.MAX, and use em as 1:1 in canvas 
+			c.y = (int16) e.y * 1000;
+			c.flag = Coordinate.ON_PATH;
+			
+			coordinates.append (c);
+		}
+	}
+	
+	// TODO:
+	//void add_phantoms () 
+	
+	bool is_clockwise (Path path) {
+		uint len = path.points.length ();
+		return_val_if_fail (len > 0, false);
+		
+		uint i = 0;
+		unowned List<EditPoint> iter = path.points.first ();
+		
+		double xmax = iter.data.x;
+		double ymax = iter.data.y;
+		double xmin = iter.data.x;
+		double ymin = iter.data.y;
+		
+		uint i_xmax = i;
+		uint i_ymax = i;
+		uint i_xmin = i;
+		uint i_ymin = i;
+
+		foreach (EditPoint ee in path.points) {
+
+			if (xmax < ee.x) {
+				xmax = iter.data.x;
+				i_xmax = i;
+			}
+			
+			if (ymax < ee.y) {
+				ymax = iter.data.y;
+				i_ymax = i;
+			}
+			
+			if (xmin > ee.x) {
+				xmin = iter.data.x;
+				i_xmin = i;
+			}
+			
+			if (ymin > ee.y) {
+				ymin = iter.data.y;
+				i_ymin = i;
+			}
+
+			i++;
+		}
+	
+		return is_clockwise_extrema (i_xmax, i_ymax, i_xmin, i_ymin);
+	}
+	
+	bool is_clockwise_extrema (uint i_xmax, uint i_ymax, uint i_xmin, uint i_ymin) {
+		uint t, i;
+		
+		for (i = 0; i < 4; i++) {
+					
+			if (i_ymin <= i_xmin <= i_ymax <= i_xmax) {
+				return true;
+			}
+			
+			if (i_ymin <= i_xmax <= i_ymax <= i_xmin) {
+				return false;
+			}
+			
+			// shift it 
+			t = i_xmin;
+			i_xmin = i_ymin;
+			i_ymin = i_xmax;
+			i_xmax = i_ymax;
+			i_ymax = t;
+		}
+
+		warn_if_reached ();
+		
+		return true;
+	}
+
+	public uint16 get_end_point () {
+		return_val_if_fail (coordinates.length () != 0, 0);
+		return coordinates.first ().data.y;
+	}
+}
+
+class Glyf : Object {
+
+	public List<Contour> contours;
+	
+	public uint32 char_code;
+	
+	public Glyf (unichar character_code) {
+		char_code = (uint32) character_code;
+	}
+	
+	public uint32 get_char_code () {
+		return char_code;
+	}
+	
+	public void add_contour (Contour c) {
+		contours.append (c);
+	}
+	
+	/** Get advance with from lsb to begining of next glyph. */
+	public uint16 get_width() {
+		return 1000; // fixme
+	}
+	
+	/** Get left side bearing, (lsb) */
+	public int16 get_left() {
+			return -1 * (get_width() / 2); 
+	}
+	
+	public void get_boundries (out int16 xmin, out int16 ymin, out int16 xmax, out int16 ymax) {
+		xmin = int16.MAX;
+		ymin = int16.MAX;
+		xmax = int16.MIN;
+		ymax = int16.MIN;
+		
+		// Fixme we do need to add phantom points
+		foreach (var contour in contours) {
+			foreach (var v in contour.coordinates) {
+				if (v.x < xmin) xmin = v.x;
+				if (v.x > xmax) xmax = v.x;
+				if (v.y < ymin) ymin = v.y;
+				if (v.y > ymax) ymax = v.y;
+			}
+		}
+		
+		return;
+	}
+	
+}
+
+class FontData : Object {
+
+	public List<uint8> data;
+	
+	public FontData () {
+	}
+	
+	public uint length () {
+		return data.length ();
+	}
+	
+	/** Add additional checksum data to this checksum. */
+	public void continous_check_sum (out uint32 current_check_sum) {
+		uint32 val = 0;
+		uint8 b = 3;
+		
+		current_check_sum = 0;
+		
+		if (data.length () % 4 > 0) {
+			stderr.printf("Warning table data is not padded to correct size.\n");
+		}
+		
+		foreach (uint8 v in data) {
+			val += v << b*8;
+			
+			if (b == 0) {
+				current_check_sum += val;
+				val = 0;
+				b = 3;
+			}
+			
+			b--;
+		}
+	}
+	
+	public uint32 check_sum () {
+		uint32 sum = 0;
+		continous_check_sum (out sum);
+		return sum;
+	}
+	
+	public void add (uint8 d) {
+		data.append (d);
+	}
+	
+	public void add_u16 (uint16 d) {
+		uint16 n = d >> 8;
+		add ((uint8)n);
+		n <<= 8;
+		add ((uint8)(d - n));
+	}
+
+	public void add_16 (int16 i) {
+		add_u16 (i + (uint16.MAX/2));
+	}
+	
+	public void add_u32 (uint32 i) {
+		uint32 s = (uint16) (i >> 16);
+		
+		add_u16 ((uint16) s);
+		add_u16 ((uint16) (i - (s << 16)));
+	}
+
+	public void add_u64(uint64 i) {
+		uint64 s = (uint32) (i >> 32);
+		
+		add_u32 ((uint32) s);
+		add_u32 ((uint32)(i - (s << 32)));		
+	}
+
+	public void add_tag (string s) 
+		requires (s.length == 4 && s.data.length == 4) {
+		
+		uint8[] data = s.data;
+		for (int n = 0; n < data.length; n++) { 
+			add (data[n]);
+		}		
+	}
+}
+
+class Coordinate {
+	/** TTF coordinate flags. */
+	
+	public static const uint8 ON_PATH        = 1 << 0;
+	public static const uint8 X_SHORT_VECTOR = 1 << 1;
+	public static const uint8 Y_SHORT_VECTOR = 1 << 2;
+	public static const uint8 REPEAT         = 1 << 3;
+	
+	// same flag or short vector sign flag
+	public static const uint8 X_IS_SAME               = 1 << 4; 
+	public static const uint8 Y_IS_SAME               = 1 << 5;
+	public static const uint8 X_SHORT_VECTOR_POSITIVE = 1 << 4;
+	public static const uint8 Y_SHORT_VECTOR_POSITIVE = 1 << 5;
+	
+	public uint8 flag = 0;
+	public int16 x = 0;
+	public int16 y = 0;
+}
+
+interface Table : Object {
+	public abstract string get_id ();
+	public abstract FontData get_font_data ();
+}
+
+class GlyfTable : Table, Object {
+	
+	public List<Glyf> glyfs = new List<Glyf> ();
+	
+	FontData? font_data = null;
+	
+	int16 xmin = int16.MAX;
+	int16 ymin = int16.MAX;
+	int16 xmax = int16.MIN;
+	int16 ymax = int16.MIN;
+	
+	public GlyfTable () {
+	}	
+	
+	public void add (Glyf glyf) {
+		glyfs.insert_sorted_with_data (glyf, (a, b) => {
+				if (a.char_code < b.char_code) return -1;
+				if (a.char_code > b.char_code) return 1;
+				return 0;				
+			});
+	}
+	
+	public string get_id () {
+		return "glyf";
+	}
+	
+	public FontData get_font_data () {
+		if (font_data != null) return (!) font_data;
+		
+		FontData fd = new FontData ();
+		font_data = fd;
+		
+		foreach (var g in glyfs) {
+			add_glyf_data (g, fd);
+		}
+		
+		// padding
+		while (fd.length () % 4 != 0) {
+			fd.add(0);
+		}
+
+		return fd;
+	}
+
+	public void get_boundries (out int16 xmin, out int16 ymin, out int16 xmax, out int16 ymax) {
+		get_font_data();
+		
+		xmin = this.xmin;
+		ymin = this.ymin;
+		xmax = this.xmax;
+		ymax = this.ymax;
+	}
+	
+	private void add_glyf_data (Glyf glyf, FontData fd) {
+		uint16 n_instructions = 0;
+		int16 n_contours = (int16) glyf.contours.length();
+		
+		fd.add_16 (n_contours);
+		
+		add_boundries (glyf, fd);
+		
+		foreach (var contour in glyf.contours) {
+			fd.add_u16 (contour.get_end_point ()); // endPtsOfContour
+		}
+		
+		fd.add_u16 (n_instructions); // TrueType Instruction reference
+		
+		for (uint16 i = 0; i < n_instructions; i++) {
+			fd.add (0); // instruction
+		}
+		
+		foreach (var contour in glyf.contours) {
+			add_flags (contour.coordinates, fd); // flags for outline coordinate (flags[n])
+		}
+		
+		foreach (var contour in glyf.contours) {
+			add_x_coordinates (contour.coordinates, fd); // X-coordinates 
+		}
+		
+		foreach (var contour in glyf.contours) {
+			add_y_coordinates (contour.coordinates, fd); // Y-coordinates
+		}
+		
+	}
+	
+	private void add_boundries (Glyf glyf, FontData fd) {
+		int16 xmin, ymin, xmax, ymax;
+		
+		glyf.get_boundries (out xmin, out ymin, out xmax, out ymax);
+		
+		fd.add_16 (xmin);
+		fd.add_16 (ymin); 
+		fd.add_16 (xmax);
+		fd.add_16 (xmax);
+
+		if (this.xmin > xmin) this.xmin = xmin;
+		if (this.ymin > ymin) this.ymin = ymin;
+		if (this.xmax < xmax) this.xmax = xmax;
+		if (this.ymax < ymax) this.ymax = ymax;
+
+	}
+
+	private void add_flags (List<Coordinate> coordinates, FontData fd) {
+			foreach (var v in coordinates) {
+				fd.add (v.flag);
+			}
+	}
+
+	private static bool in_flag (uint8 val, uint8 flag) {
+		return (val & flag) == val;
+	}
+	
+	private void add_x_coordinates (List<Coordinate> coordinates, FontData fd) {
+		int16 last = 0;
+		foreach (var v in coordinates) {
+			if (in_flag (Coordinate.X_SHORT_VECTOR, v.flag)) {
+				fd.add ((uint8) (v.x - last));
+			} else {
+				fd.add_16 (v.x - last);
+			}
+			last = v.x;
+		}
+	}
+
+	private void add_y_coordinates (List<Coordinate> coordinates, FontData fd) {
+		int16 last = 0;
+		foreach (var v in coordinates) {
+			if (in_flag (Coordinate.Y_SHORT_VECTOR, v.flag)) {
+				fd.add ((uint8)(v.y - last));
+			} else {
+				fd.add_16 (v.y - last);
+			}
+			last = v.y;
+		}
+	}
+		
+}
+
+class CmapSubtable {
+	public static const uint16 FORMAT_TRIMMED_ARRAY = 10;
+
+	public uint32 start_char_code = 0;
+	public uint32 num_chars = 0;
+}
+
+class CmapTable : Table, Object { 
+	
+	GlyfTable glyf_table;
+	FontData? table_data;
+	
+	public CmapTable(GlyfTable gt) {
+		glyf_table = gt;
+		table_data = null;
+	}
+	
+	public string get_id () {
+		return "cmap";
+	}
+	
+	/** Character to glyph mapping */
+	public FontData get_font_data () {
+		if (table_data != null) return (!) table_data;
+		
+		FontData fd = new FontData ();
+		table_data = fd;
+		
+		List<CmapSubtable> subtables = cmap_sub_tables ();
+		uint16 n_encoding_tables = (uint16) subtables.length ();
+		uint32 offset;
+
+		uint16 glyph_indice = 0;
+			
+		fd.add_u16 (0); // table version
+		fd.add_u16 (n_encoding_tables);
+		
+		fd.add_u16 (3); // platform
+		fd.add_u16 (10); // Format Unicode UCS-4
+		
+		offset = fd.data.length () + 4;
+		
+		fd.add_u32 (offset);
+
+		foreach (CmapSubtable cmap in subtables) {
+			uint32 num_chars = cmap.num_chars;
+			uint32 table_length = 20 + 2 * num_chars; // of subtable
+			uint32 language = 0;
+			uint32 start_char_code = cmap.start_char_code;
+			
+			// Subtable
+			fd.add_u16 (cmap.FORMAT_TRIMMED_ARRAY); // Format for this subtable
+			fd.add_u16 (0);  // Reserved
+
+			fd.add_u32 (table_length);
+			fd.add_u32 (language);
+			fd.add_u32 (start_char_code);
+			fd.add_u32 (num_chars);
+			
+			for (int i = 0; i < num_chars; i++) {
+				fd.add_u16 (glyph_indice++);
+			}
+		}
+		
+		// padding
+		while (fd.length () % 4 != 0) {
+			fd.add(0);
+		}
+
+
+		return fd;
+	}
+
+	List<CmapSubtable> cmap_sub_tables () {
+		List<CmapSubtable> maps = new List<CmapSubtable> ();
+		
+		CmapSubtable cmap = new CmapSubtable ();
+		
+		uint32 charcode = 0;
+		uint32 last = 0;
+		foreach (Glyf g in glyf_table.glyfs) {
+				charcode = g.get_char_code ();
+				
+				if (charcode != last + 1 || last == 0) {	
+					cmap = new CmapSubtable ();
+					cmap.start_char_code = charcode;
+					
+					maps.append(cmap);
+				}
+				
+				last = charcode;
+				cmap.num_chars++;
+				
+				assert(maps.length () > 0);
+		}
+		
+		return maps;
+	}
+
+}
+
+class HeadTable : Table, Object {
+	
+	uint32 check_sum_adjustment = 0;
+	
+	GlyfTable glyf_table;
+	
+	public HeadTable (GlyfTable gt) {
+		glyf_table = gt;
+	}
+	
+	public string get_id () {
+			return "head";
+	}
+	
+	public void set_check_sum_adjustment (uint32 csa) {
+		check_sum_adjustment = csa;
+	}
+	
+	public FontData get_font_data () {
+		
+		int16 xmin, ymin, xmax, ymax;
+		
+		FontData font_data = new FontData ();
+		
+		font_data.add_u16 (1); // table version
+		font_data.add_u16 (0);
+		
+		// font revision
+		font_data.add_u16 (0);
+		font_data.add_u16 (0);
+		
+		// Zero on the first run and updated by directory tables checksum calculation
+		// for the entire font.
+		font_data.add_u32 (check_sum_adjustment); // TODO
+		
+		font_data.add_u32 (0x5F0F3CF5); // magic number
+		
+		font_data.add_u16 (0); // clear flags
+		
+		font_data.add_u16 (2048); // units per em (in power of two for ttf)
+		
+		font_data.add_u64 (0); //creation time since 1904-01-01
+		font_data.add_u64 (0); //modified time since 1904-01-01
+		
+		glyf_table.get_boundries(out xmin, out ymin, out xmax, out ymax);
+		
+		font_data.add_16 (xmin);
+		font_data.add_16 (ymin);
+		font_data.add_16 (xmax);
+		font_data.add_16 (ymax);
+		
+		font_data.add_u16 (0); // mac style
+		font_data.add_u16 (0); // smallest recommended size in pixels
+		font_data.add_u16 (2); // Deprecated direction hint
+		font_data.add_16 (1);  // Long offset
+		font_data.add_16 (0);  // Use current glyph data format
+
+		// padding
+		while (font_data.length () % 4 != 0) {
+			font_data.add(0);
+		}
+		
+		return font_data;
+	}
+}
+
+class HheaTable : Table, Object {
+	
+	GlyfTable glyf_table;
+	
+	public HheaTable (GlyfTable g) {
+		glyf_table = g;
+	}
+	
+	public string get_id () {
+			return "head";
+	}
+	
+	public FontData get_font_data () {
+		FontData font_data = new FontData ();
+
+		font_data.add_u16 (1); // table version
+		font_data.add_u16 (0);
+		
+		font_data.add_16 (0); // Ascender Typographic ascent.
+		font_data.add_16 (0); // Descender
+		font_data.add_16 (0); // LineGap
+		
+		font_data.add_u16 (0); // advanceWidthMax Maximum advance width value in 'hmtx' table.
+		
+		font_data.add_16 (0); // minLeftSideBearing
+		font_data.add_16 (0); // minRightSideBearing
+		font_data.add_16 (0); // xMaxExtent Max(lsb + (xMax - xMin))
+		
+		font_data.add_16 (0); // caretSlopeRise
+		font_data.add_16 (0); // caretSlopeRun
+		font_data.add_16 (0); // caretOffset
+		
+		// reserved
+		font_data.add_16 (0);
+		font_data.add_16 (0);
+		font_data.add_16 (0);
+		font_data.add_16 (0);
+		
+		font_data.add_16 (0); // metricDataFormat 0 for current format.
+		
+		font_data.add_u16 ((uint16)glyf_table.glyfs.length()); // numberOfHMetrics Number of hMetric entries in 'hmtx' table
+
+		// hmtx - Horizontal metrix (Own table?)
+		foreach (var g in glyf_table.glyfs) {
+			font_data.add_u16 (g.get_width());
+			font_data.add_16 (g.get_left());
+		}
+		
+		// hmtx for monospaced glyphs
+		// ... none right now
+
+		// padding
+		while (font_data.length () % 4 != 0) {
+			font_data.add(0);
+		}
+		
+		return font_data;
+	}
+}
+
+class MaxpTable : Table, Object {
+	
+	GlyfTable glyf_table;
+	
+	public MaxpTable (GlyfTable g) {
+		glyf_table = g;
+	}
+	
+	public string get_id () {
+			return "maxp";
+	}
+	
+	public FontData get_font_data () {
+		FontData font_data = new FontData();
+		
+		// Version 0.5 for fonts with cff data and 1.0 for ttf
+		font_data.add_u16 (1);
+		font_data.add_u16 (0);
+		
+		uint16 max_points, max_contours;
+		
+		get_max (out max_points, out max_contours);
+		
+		font_data.add_u16 ((uint16)glyf_table.glyfs.length ()); // numGlyphs in the font
+		font_data.add_u16 (max_points);
+		font_data.add_u16 (max_contours); // maxContours Maximum contours in a non-composite glyph.
+		font_data.add_u16 (0); // maxCompositePoints Maximum points in a composite glyph.
+		font_data.add_u16 (0); // maxCompositeContours Maximum contours in a composite glyph.
+		font_data.add_u16 (2); // maxZones 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
+		font_data.add_u16 (0); // maxTwilightPoints Maximum points used in Z0.
+		font_data.add_u16 (0); // maxStorage Number of Storage Area locations.
+		font_data.add_u16 (0); // maxFunctionDefs Number of FDEFs.
+		font_data.add_u16 (0); // maxInstructionDefs Number of IDEFs.
+		font_data.add_u16 (0); // maxStackElements Maximum stack depth2.
+		font_data.add_u16 (0); // maxSizeOfInstructions Maximum byte count for glyph instructions.
+		font_data.add_u16 (0); // maxComponentElements Maximum number of components referenced at "top level" for any
+		font_data.add_u16 (0); // maxComponentDepth Maximum levels of recursion; 1 for simple components.		
+
+		// padding
+		while (font_data.length () % 4 != 0) {
+			font_data.add(0);
+		}
+	
+		return font_data;
+	}
+
+	private void get_max (out uint16 max_points, out uint16 max_contours) {
+		max_points = 0;
+		max_contours = 0;
+		
+		foreach (var g in glyf_table.glyfs) {
+			uint16 p = 0;
+			
+			if (g.contours.length() > max_contours) {
+				max_contours = (uint16) g.contours.length();
+			}
+			
+			foreach (var c in g.contours) {
+				p += (uint16) c.coordinates.length();
+			}
+			
+			if (p > max_points) max_points = p;
+		}
+		
+	}
+
+}
+
+class OffsetTable : Table, Object {
+	uint16 num_tables;
+
+	public OffsetTable () {
+		num_tables = 0;
+	}
+	
+	public void set_num_tables (uint n) {
+		num_tables = (uint16) n;
+	}
+	
+	public string get_id () {
+			// warn_if_reached ();
+			return "Offset table";
+	}
+	
+	public FontData get_font_data () {
+		FontData fd = new FontData ();
+
+		uint16 search_range = 0;
+		uint16 entry_selector = 0;
+		uint16 range_shift = 0;
+		
+		// version 1.0 for TTF CFF else use OTTO
+		fd.add_u16 (1);
+		fd.add_u16 (0);
+
+		fd.add_u16 (num_tables);
+		fd.add_u16 (search_range);
+		fd.add_u16 (entry_selector);		
+		fd.add_u16 (range_shift);		
+
+		// padding
+		while (fd.length () % 4 != 0) {
+			fd.add(0);
+		}
+		
+		return fd;
+	}
+}
+
+class NameTable : Table, Object {
+	
+	public NameTable () {	
+	}
+	
+	public string get_id () {
+		return "name";
+	}
+	
+	public FontData get_font_data () {
+		// TODO: Apple table versioning of font data
+		
+		FontData font_data = new FontData ();
+		
+		font_data.add_u16 (0); // Format selector
+		font_data.add_u16 (0); // Number of name records.
+		font_data.add_u16 (6); // Offset to start of string storage (from start of table).
+		
+		// ...
+
+		// padding
+		while (font_data.length () % 4 != 0) {
+			font_data.add(0);
+		}
+		
+		return font_data;
+	}
+
+}
+
+class Os2Table : Table, Object {
+	
+	public Os2Table () {	
+	}
+	
+	public string get_id () {
+		return "OS/2";
+	}
+	
+	public FontData get_font_data () {
+		FontData font_data = new FontData ();
+		
+		font_data.add_u16 (4); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
+
+		font_data.add_16 (0); // SHORT xAvgCharWidth
+
+		font_data.add_u16 (0); // USHORT usWeightClass
+		font_data.add_u16 (0); // USHORT usWidthClass
+		font_data.add_u16 (0); // USHORT fsType
+
+		font_data.add_16 (0); // SHORT ySubscriptXSize
+		font_data.add_16 (0); // SHORT ySubscriptYSize
+		font_data.add_16 (0); // SHORT ySubscriptXOffset
+		font_data.add_16 (0); // SHORT ySubscriptYOffset
+		font_data.add_16 (0); // SHORT ySuperscriptXSize
+		font_data.add_16 (0); // SHORT ySuperscriptYSize
+		font_data.add_16 (0); // SHORT ySuperscriptXOffset
+		font_data.add_16 (0); // SHORT ySuperscriptYOffset
+		font_data.add_16 (0); // SHORT yStrikeoutSize
+		font_data.add_16 (0); // SHORT yStrikeoutPosition
+		font_data.add_16 (0); // SHORT sFamilyClass
+
+		// PANOSE
+		font_data.add (0); 
+		font_data.add (0); 
+		font_data.add (0); 
+		font_data.add (0); 
+		font_data.add (0); 
+		font_data.add (0); 
+		font_data.add (0); 
+		font_data.add (0); 
+		font_data.add (0); 
+		font_data.add (0); 
+
+		font_data.add_u32 (0); // ulUnicodeRange1 Bits 0-31
+		font_data.add_u32 (0); // ULONG ulUnicodeRange2 Bits 32-63
+		font_data.add_u32 (0); // ULONG ulUnicodeRange3 Bits 64-95
+		font_data.add_u32 (0); // ULONG ulUnicodeRange4 Bits 96-127
+
+		font_data.add_tag ("----"); // VendID
+
+		font_data.add_u16 (0); // USHORT fsSelection
+		font_data.add_u16 (0); // USHORT usFirstCharIndex
+		font_data.add_u16 (0); // USHORT usLastCharIndex
+
+		font_data.add_16 (0); // SHORT sTypoAscender
+		font_data.add_16 (0); // SHORT sTypoDescender
+		font_data.add_16 (0); // SHORT sTypoLineGap
+
+		font_data.add_u16 (0); // USHORT usWinAscent
+		font_data.add_u16 (0); // USHORT usWinDescent
+
+		font_data.add_u32 (0); // ULONG ulCodePageRange1 Bits 0-31
+		font_data.add_u32 (0); // ULONG ulCodePageRange2 Bits 32-63
+
+		font_data.add_16 (0); // SHORT sxHeight version 0x0002 and later
+		font_data.add_16 (0); // SHORT sCapHeight version 0x0002 and later
+
+		font_data.add_16 (0); // USHORT usDefaultChar version 0x0002 and later
+		font_data.add_16 (0); // USHORT usBreakChar version 0x0002 and later
+		font_data.add_16 (0); // USHORT usMaxContext version 0x0002 and later
+
+		// padding
+		while (font_data.length () % 4 != 0) {
+			font_data.add(0);
+		}
+	
+		return font_data;
+	}
+
+}
+
+class PostTable : Table, Object {
+	
+	public PostTable () {	
+	}
+	
+	public string get_id () {
+		return "post";
+	}
+	
+	public FontData get_font_data () {
+		FontData font_data = new FontData ();
+		
+		// Version
+		font_data.add_u16 (3);
+		font_data.add_u16 (0);
+
+		// italicAngle
+		font_data.add_u16 (0); 
+		font_data.add_u16 (0);
+		
+		font_data.add_16 (-2); // underlinePosition
+		font_data.add_16 (1); // underlineThickness
+
+		font_data.add_u32 (0); // non zero for monospaced font
+		
+		// mem boundries may be omitted
+		font_data.add_u32 (0); // min mem
+		font_data.add_u32 (0); // max mem
+		
+		font_data.add_u32 (0); // min mem for Type1
+		font_data.add_u32 (0); // max mem for Type1
+
+		// padding
+		while (font_data.length () % 4 != 0) {
+			font_data.add(0);
+		}
+		
+		return font_data;
+	}
+
+}
+
+/** Table with list of tables sorted by table tag. */
+class DirectoryTable : Table, Object {
+	
+	CmapTable cmap_table;
+	GlyfTable glyf_table;
+	HeadTable head_table;
+	HheaTable hhea_table;
+	MaxpTable maxp_table;
+	NameTable name_table;
+	Os2Table  os_2_table;
+	PostTable post_table;
+	
+	OffsetTable offset_table;
+	
+	List<Table> tables;
+				
+	public DirectoryTable () {
+
+		offset_table = new OffsetTable ();
+		
+		glyf_table = new GlyfTable ();
+		cmap_table = new CmapTable (glyf_table);
+		head_table = new HeadTable (glyf_table);
+		hhea_table = new HheaTable (glyf_table);
+		maxp_table = new MaxpTable (glyf_table);
+		name_table = new NameTable ();
+		os_2_table = new Os2Table (); 
+		post_table = new PostTable ();
+		
+		tables = new List<Table> ();
+
+		tables.append (offset_table); // The the directory index tables
+		tables.append (this);
+		
+		tables.append (cmap_table);  // The other required tables
+		tables.append (glyf_table);
+		tables.append (head_table);
+		tables.append (hhea_table);
+		tables.append (maxp_table);
+		tables.append (name_table);
+		tables.append (os_2_table);
+		tables.append (post_table);
+
+		offset_table.set_num_tables (tables.length () - 2); // number of tables, skip DirectoryTable and OffsetTable
+	}
+	
+	public string get_id () {
+		return "Directory table"; // Table id should be ignored for directory table, none the less it has one declared here.
+	}
+	
+	public unowned List<Table> get_tables () {
+		return tables;
+	}
+	
+	public GlyfTable get_glyf_table () {
+		return glyf_table;
+	}
+	
+	public long get_font_file_size () {
+		long length = offset_table.get_font_data ().length ();
+		
+		foreach (Table t in tables) {
+			length += t.get_font_data ().length ();
+		}
+		
+		return length;
+	}
+	
+	public FontData get_font_data () {
+		FontData fd = new FontData ();
+		
+		uint32 table_offset = 0;
+		uint32 table_length = 0;
+		
+		uint32 check_sum = 0;
+		
+		table_offset += offset_table.get_font_data ().length ();
+		
+		head_table.set_check_sum_adjustment (0);
+						
+		foreach (Table t in tables) {
+			
+			if (t is DirectoryTable || t is OffsetTable) {
+				continue;
+			}
+			
+			table_length = t.get_font_data ().length ();
+			
+			fd.add_tag (t.get_id ()); // name of table
+			fd.add_u32 (t.get_font_data ().check_sum ());
+			fd.add_u32 (table_offset);
+			fd.add_u32 (table_length);
+			
+			table_offset += table_length;
+		}
+
+		// padding
+		while (fd.length () % 4 != 0) {
+			fd.add(0);
+		}
+		
+		// Check sum adjustment for the entire font		
+		foreach (Table t in tables) {
+			
+			if (t is DirectoryTable) {
+				fd.continous_check_sum (out check_sum);
+				continue;
+			}
+			
+			t.get_font_data ().continous_check_sum (out check_sum);
+		}
+	
+		head_table.set_check_sum_adjustment ((uint32)(0xB1B0AFBA - check_sum));
+		
+		return fd;
+	}
+		
+}
+
+
+}
