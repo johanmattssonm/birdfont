@@ -523,7 +523,11 @@ class ContentDisplay : FontDisplay {
 		FileChooserDialog file_chooser = new FileChooserDialog ("Open font file", MainWindow.get_current_window (), FileChooserAction.OPEN, Stock.CANCEL, ResponseType.CANCEL, Stock.OPEN, ResponseType.ACCEPT);
 		Font f = Supplement.get_current_font ();
 		
-		file_chooser.set_current_folder_file (f.get_folder ());
+		try {
+			file_chooser.set_current_folder_file (f.get_folder ());
+		} catch (GLib.Error e) {
+			stderr.printf (e.message);
+		}
 		
 		if (file_chooser.run () == ResponseType.ACCEPT) {	
 			MainWindow.get_glyph_canvas ().redraw ();
