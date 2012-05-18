@@ -1,0 +1,120 @@
+/*
+    Copyright (C) 2012 Johan Mattsson
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+using Cairo;
+using Gdk;
+using Gtk;
+
+namespace Supplement {
+
+class TooltipArea : DrawingArea {
+
+	string tool_tip;
+
+	public TooltipArea () {
+		set_text_from_tool ();
+		
+		expose_event.connect ((t, e)=> {
+				Allocation alloc;
+				Context cr = cairo_create (get_window ());
+				
+				get_allocation (out alloc);
+				allocation = alloc;
+				
+				draw (cr, alloc);
+				return true;
+		});
+		
+		set_size_request (10, 20);
+	}
+
+	public void update_text () {
+		set_text_from_current_tool ();
+		queue_draw_area (0, 0, allocation.width, allocation.height);
+	}
+	
+	public void show_text (string text) {
+		tool_tip = text;
+		queue_draw_area (0, 0, allocation.width, allocation.height);
+	}
+	
+	public void set_text_from_tool () {
+		set_text_from_current_tool ();
+		queue_draw_area (0, 0, allocation.width, allocation.height);
+	}
+	
+	private void set_text_from_current_tool () {
+		Toolbox? tb = MainWindow.get_toolbox ();
+		Tool? t;
+		Tool tool;
+		StringBuilder sb;
+		
+		if (tb == null) {
+			return;
+		}
+		
+		t = ((!)tb).get_active_tool ();
+		
+		if (t == null) {
+			return;
+		}
+		
+		tool = (!) t;
+		
+		if (tool.key != '\0') {
+			sb = new StringBuilder ();
+
+			sb.append ("(");
+			
+			if (tool.modifier_flag == CTRL) {
+				sb.append ("Ctrl+");
+			} else if (tool.modifier_flag == SHIFT) {
+				sb.append ("Shift+");
+			} 
+
+			sb.append_unichar (tool.key);
+			sb.append (") ");
+			sb.append (tool.get_tip ());
+			
+			show_text (sb.str);
+		} else {
+			show_text (tool.get_tip ());
+		}
+		
+	}
+	
+	public void draw (Context cr, Allocation alloc) {
+		cr.save ();
+		cr.rectangle (0, 0, alloc.width, alloc.height);
+		cr.set_line_width (0);
+		cr.set_source_rgba (183/255.0, 200/255.0, 223/255.0, 1);
+		cr.fill_preserve ();
+		cr.stroke ();
+		cr.restore ();
+
+		cr.save ();
+		cr.set_font_size (14);
+		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.BOLD);
+				
+		cr.move_to (25, 15);
+		cr.show_text (tool_tip);
+		cr.restore ();
+
+	}
+}
+
+}
