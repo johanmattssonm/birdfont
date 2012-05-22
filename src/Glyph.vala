@@ -754,14 +754,8 @@ class Glyph : FontDisplay {
 
 		double xta = -view_offset_x - xmin;
 		double xtb = -view_offset_x - xmax;
-	
-		// Fixa: det vore ju bra om det fanns en funktion för att rita om den
-		// gamla figuren när den uppdateras.
-		
-		// queue_draw_area ((int)xtb - 10, (int)yta - 10, (int)(xtb - xta) + 10, (int) (yta - ytb) + 10);
-		
-		// Fixa x är inte rätt ovan
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+
+		queue_draw_area ((int)xtb - 10, (int)yta - 10, (int)(xtb - xta) + 10, (int) (yta - ytb) + 10);
 	}
 
 	public Path get_closeset_path (double x, double y) {
