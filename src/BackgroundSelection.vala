@@ -107,7 +107,6 @@ class BackgroundSelection : FontDisplay {
 		ImageSurface img;
 		GlyphBackgroundImage bg = new GlyphBackgroundImage (file);
 		File thumbnail = bg.get_thumbnail_file ();
-		File full = File.new_for_path (file);
 
 		img = new ImageSurface.from_png ((!) thumbnail.get_path ());
 		
