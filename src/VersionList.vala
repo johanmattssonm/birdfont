@@ -23,8 +23,8 @@ using Math;
 namespace Supplement {
 
 class VersionList : DropMenu {
-	public int versions = 1;
-	public int current_version = 0;
+	int versions = 1;
+	int current_version = 0;
 	public List<Glyph> glyphs = new List<Glyph> ();
 
 	public VersionList (Glyph? g = null) {
@@ -38,8 +38,8 @@ class VersionList : DropMenu {
 			
 			Supplement.get_current_font ().touch ();
 			
-			current_version = (int) glyphs.length () - 1;
 			add_new_version ();
+			current_version = (int) glyphs.length () - 1;
 		};
 		
 		if (g != null) {
