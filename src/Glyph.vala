@@ -1064,7 +1064,6 @@ class Glyph : FontDisplay {
 
 	/** lsb */
 	public double get_left_marker () {
-
 		foreach (var line in vertical_help_lines) {
 			if (line.get_label () == "left") {
 				return line.get_coordinate ();
@@ -1078,7 +1077,6 @@ class Glyph : FontDisplay {
 
 	/** rsb */
 	public double get_right_marker () {
-		// TODO: store this info in some smarter way.
 		foreach (var line in vertical_help_lines) {
 			if (line.get_label () == "right") {
 				return line.get_coordinate ();
@@ -1160,6 +1158,7 @@ class Glyph : FontDisplay {
 		//pen_tool.test_click_action (1, iax, iby);
 		
 		show_zoom_area (iax - 5, iay - 5, ibx + 5, iby + 5); // set this later on button release
+		set_zoom_from_area ();
 		set_zoom_from_area ();
 		
 		queue_draw_area (0, 0, allocation.width, allocation.height);
