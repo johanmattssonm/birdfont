@@ -74,8 +74,7 @@ class ShrinkTool : Tool {
 		EditPoint ep;
 
 		p.create_list ();
-		p.set_directions ();
-		
+
 		foreach (EditPoint pep in p.points) {
 			unowned List<EditPoint>? lep = pep.get_next ();
 			

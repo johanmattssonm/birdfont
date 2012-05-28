@@ -31,14 +31,6 @@ enum PointType {
 	FLOATING
 }
 
-enum PointDirection {
-	NONE,
-	UP_RIGHT,
-	DOWN_RIGHT,
-	UP_LEFT,
-	DOWN_LEFT
-}
-
 class EditPoint {
 	public double x;
 	public double y;
@@ -52,8 +44,6 @@ class EditPoint {
 	public unowned List<EditPoint>? prev = null;
 	public unowned List<EditPoint>? next = null;
 
-	public PointDirection direction = PointDirection.NONE;
-	
 	public bool active = false;
 	bool active_handle = false;
 	
@@ -95,8 +85,6 @@ class EditPoint {
 		new_point.y = y;
 		
 		new_point.type = type;
-		new_point.direction = direction;
-		
 		new_point.set_color (r, g, b, a);
 		
 		new_point.tie_handles = tie_handles;
@@ -229,34 +217,6 @@ class EditPoint {
 		}
 		
 		return update;
-	}
-	
-	// Fixa: ta bort färgmarkeringarna
-	public void set_direction () {
-		EditPoint pep = this.get_next ().data;
-		EditPoint ep = this;
-
-		if (pep.x < ep.x) {
-			
-			if (pep.y < ep.y) {	
-				ep.direction = PointDirection.DOWN_LEFT;
-				ep.set_color (1,1,0,1); // gul 
-			} else {
-				ep.direction = PointDirection.UP_LEFT;
-				ep.set_color (1,0,0,1); // röd
-			}
-			
-		} else {
-
-			if (pep.y < ep.y) {
-				ep.direction = PointDirection.DOWN_RIGHT;
-				ep.set_color (0,1,0,1); // grön
-			} else {
-				ep.direction = PointDirection.UP_RIGHT;
-				ep.set_color (0,1,1,1); // ljusblå
-			}
-			
-		}	
 	}
 	
 	public int get_index () {

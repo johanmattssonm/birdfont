@@ -817,135 +817,32 @@ class IntersectionList : GLib.Object {
 			stdout.printf (@"Point $i at ($(p.x), $(p.y)) $t \n");
 		}
 	}
-
-	// Fixa
-	private int next_point_is_clockwise (EditPoint p) {
-			if (p.direction == PointDirection.DOWN_RIGHT) {
-				if (p.get_next ().data.direction ==  PointDirection.DOWN_LEFT)
-					return -1;
-				else
-					return +1;
+	
+	private bool is_clockwise_top () {
+		EditPoint top_point = new EditPoint (1000, 1000);
+		
+		return_if_fail (points.length () >= 3);
+		
+		create_list ();
+		
+		foreach (EditPoint ep in points) {
+			if (ep.y < top_point.y) {
+				top_point = ep;
 			}
-			
-			if (p.direction == PointDirection.UP_RIGHT) {
-				if (p.get_next ().data.direction ==  PointDirection.DOWN_RIGHT)
-					return -2;
-				else
-					return +2;
-			}
-			
-			if (p.direction == PointDirection.UP_LEFT) {
-				if (p.get_next ().data.direction ==  PointDirection.UP_RIGHT)
-					return -3;
-				else
-					return +3;
-			}
-					
-			if (p.direction == PointDirection.DOWN_LEFT) {
-				if (p.get_next ().data.direction ==  PointDirection.UP_LEFT)
-					return -4;
-				else
-					return +4;
-			}
-
-			warn_if_reached ();
-			return 0;
+		}
+		
+		return (top_point.get_prev ().data.x < top_point.get_next ().data.x);
 	}
 	
 	public bool is_clockwise () {
-		int i, r;
-		
 		if (unlikely (points.length () <= 2)) {
 			no_derived_direction = true;
 			return clockwise_direction;
 		}
-
-		reverse_points ();
-		create_list ();
-		set_directions ();		
-		r = points_direction ();
-
-		reverse_points ();
-		create_list ();
-		set_directions ();
-		i = points_direction ();
-	
-		/*
-		if (i < r) print (@"Ja den är medsols \n");
-		else print (@"Nä den är inte medsols\n");
-		print (@" i > r;    $i > $r \n\n");
-		*/
-	
-		if (unlikely (i == r)) {
-			warning (@"Can not determine directions since i == r ($i == $r)\n");
-		}
 		
-		return i < r;
+		return is_clockwise_top ();
 	}
 	
-	private int points_direction () {
-		int dir = 0;
-		foreach (var p in points) {
-			dir += next_point_is_clockwise (p);
-		}
-		return dir;	
-	}
-		
-	public static bool next_triangle_is_clockwise (EditPoint a) {
-		unowned List<EditPoint>? p = a.get_next ();
-		unowned List<EditPoint>? q = ((!)p).next;
-		
-		return_if_fail (p != null);
-		
-		if (q == null) q = ((!)p).first ();
-		
-		return_if_fail (q != null);
-		
-		return triangle_is_clockwise (a, ((!)p).data, ((!)q).data);
-	}
-	
-	public static bool triangle_is_clockwise (EditPoint a, EditPoint b, EditPoint c) {
-		
-		if (a.x <= b.x <= c.x) return (a.y < c.y);
-		if (a.x < b.x <= c.x)	return (a.y < c.y);
-		if (a.x >= b.x && c.x >= b.x) return (a.y > c.y);
-		if (a.x < b.x && c.x < b.x) return (a.y > c.y); 
-		if (a.x >= b.x && c.x <= b.x) return (c.y > a.y);
-		if (a.x <= b.x && c.x <= b.x) return (c.y < a.y);
-		if (a.x <= b.x && c.x >= b.x) return (c.y > a.y);
-		
-		warning ("Reached.");
-		return false;
-	}
-
-	private bool is_clockwise_extrema (int ul, int ur, int lr, int ll) {
-		int  t;
-		int i;
-
-		for (i = 0; i < 4; i++) {
-
-			if (ul <= ur <= lr <= ll) {
-				return false;
-			}
-			
-			if (ul >= ur >= lr <= ll) {
-				return true;
-			}
-			
-			// shift
-			t = lr;
-			lr = ll;
-			ll = ul;
-			ul = ur;
-			ur = t;
-		}
-
-		warning (@"($ul <= $ur <= $lr <= $ll) \n");
-		warn_if_reached ();
-		
-		return false;
-	}
-
 	private static uint num_positions (uint i_xmax, uint i_ymax, uint i_xmin, uint i_ymin) {
 		List<uint> i = new List<uint> ();
 		
@@ -1616,16 +1513,6 @@ class IntersectionList : GLib.Object {
 		
 		ep.data.next = ep.first ();
 		ep.data.prev = ep.prev;
-	}
-	
-	public void set_directions () {
-		create_list ();
-		
-		if (points.length () <= 1) return;
-		
-		foreach (var ep in points) {
-			ep.set_direction ();
-		}
 	}
 	
 	public void set_new_start (EditPoint ep) {
