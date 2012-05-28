@@ -35,17 +35,12 @@ class TestCases {
 	public TestCases () {
 		add (test_active_edit_point, "Active edit point");
 		add (test_hex, "Unicode hex values");
-		add (test_coordinates, "Coordinates");
-		// add (test_merge_tool, "Merge paths");
 		add (test_reverse_path, "Reverse path");
 		add (test_reverse_random_paths, "Reverse random paths");
+		add (test_coordinates, "Coordinates");
 		add (test_drawing, "Pen tool");
-		add (test_resize, "Resize tool");
-		//add (test_export_tool, "Export tool");
 		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
-		
-		//add (test_tool_box, "Select all tools in Toolbox");
 	}
 
 	public static void test_active_edit_point () {
@@ -82,16 +77,6 @@ class TestCases {
 		ExportTool tool = (ExportTool) MainWindow.get_toolbox ().get_tool ("export");
 		tool.test_view_result ();
 	}
-	
-	public static void test_export_tool () {
-		Tool tool = MainWindow.get_toolbox ().get_tool ("export");
-		tool.test ();
-	}
-	
-	public static void test_merge_tool () {
-		Tool tool = MainWindow.get_toolbox ().get_tool ("union_paths");
-		tool.test ();
-	}
 
 	public static void test_reverse_random_paths () {
 		MergeTool tool = (MergeTool) MainWindow.get_toolbox ().get_tool ("union_paths");
@@ -105,11 +90,6 @@ class TestCases {
 
 	public static void test_drawing () {
 		Tool tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test ();
-	}
-
-	public static void test_resize () {
-		Tool tool = MainWindow.get_toolbox ().get_tool ("resize");
 		tool.test ();
 	}
 		

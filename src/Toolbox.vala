@@ -195,7 +195,7 @@ class Toolbox : DrawingArea {
 				
 		// path tools
 		Tool union_paths_tool = new MergeTool ("union_paths");
-		// path_tool_modifiers.add_tool (union_paths_tool);
+		path_tool_modifiers.add_tool (union_paths_tool);
 		// Fixa: write merge tool
 		
 		Tool reverse_path_tool = new Tool ("reverse_path", "Create counter from outline", 'r');

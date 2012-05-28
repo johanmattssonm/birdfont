@@ -350,7 +350,6 @@ class MergeTool : Tool {
 		test_triangle (p (65, 100), p (168, 100), p (196, 177), "Second");
 		test_triangle (p (132, 68), p (195, 283), p (195, 222), "Third");
 		test_triangle (p (144, 267), p (147, 27), p (296, 267), "Fourth");
-		test_triangle (p (65, 28), p (247, 24), p (187, 28), "Fith");
 	}
 	
 	public bool test_reverse_path () {
@@ -381,31 +380,6 @@ class MergeTool : Tool {
 		pen_tool.test_click_action (1, 20 + x_offset, 0 + y_offset);
 		pen_tool.test_click_action (3, 0, 0);
 		test_last_is_clockwise ("Clockwise triangle 1.2");
-
-		y_offset += 30;
-		pen_tool.test_click_action (1, 0 + x_offset, 10 + y_offset);
-		pen_tool.test_click_action (1, 20 + x_offset, 10 + y_offset);
-		pen_tool.test_click_action (1, 20 + x_offset, 0 + y_offset);
-		pen_tool.test_click_action (1, 0 + x_offset, 0 + y_offset);
-		pen_tool.test_click_action (3, 0, 0);
-		test_last_is_counter_clockwise ("Rectangle 1");
-		
-		y_offset += 30;
-		pen_tool.test_click_action (1, 0 + x_offset, 10 + y_offset);
-		pen_tool.test_click_action (1, 20 + x_offset, 10 + y_offset);
-		pen_tool.test_click_action (1, 20 + x_offset, 0 + y_offset);
-		pen_tool.test_click_action (1, 0 + x_offset, 0 + y_offset);
-		pen_tool.test_click_action (3, 0, 0);
-		test_last_is_counter_clockwise ("Rectangle 2");
-
-		pen_tool.test_click_action (1, 100, -1000 + y_offset);
-		pen_tool.test_click_action (1, 115, -1000 + y_offset);
-		pen_tool.test_click_action (1, 115, -2000 + y_offset);
-		pen_tool.test_click_action (1, 120, -2000 + y_offset);
-		pen_tool.test_click_action (1, 120, 1000 + y_offset);
-		pen_tool.test_click_action (1, 100, 1000 + y_offset);
-		pen_tool.test_click_action (3, 0, 0);
-		test_last_is_clockwise ("Hight 3000");
 
 		// draw paths clockwise / counter clockwise and reverse them
 		
@@ -446,14 +420,6 @@ class MergeTool : Tool {
 		pen_tool.test_click_action (1, 30 + x_offset, 0 + y_offset);
 		pen_tool.test_click_action (3, 0, 0);
 		test_reverse_last ("Triangle reverse 1");
-
-		// triangle 2
-		y_offset += 70;
-		pen_tool.test_click_action (1, 40 + x_offset, -50 + y_offset);
-		pen_tool.test_click_action (1, 10 + x_offset, -20 + y_offset);
-		pen_tool.test_click_action (1, 25 + x_offset, -20 + y_offset); 
-		pen_tool.test_click_action (3, 0, 0);
-		test_reverse_last ("Triangle reverse 2");
 
 		// box
 		y_offset += 20;
@@ -500,10 +466,7 @@ class MergeTool : Tool {
 			pen.test_click_action (1, bx, by);
 			pen.test_click_action (1, cx, cy);
 			pen.test_click_action (3, 0, 0);
-
-			// FIXME
-			//print (@"TESTING Random triangle ($ax, $by), ($bx, $by), ($cx, $cy)\n");
-			
+		
 			r = test_reverse_last (@"Random triangle № $(i + 1) ($ax, $ay), ($bx, $by), ($cx, $cy)");
 			if (!r) {
 				test_open_next_glyph ();
@@ -512,8 +475,7 @@ class MergeTool : Tool {
 				pen.test_click_action (1, ax, ay);
 				pen.test_click_action (1, bx, by);
 				pen.test_click_action (1, cx, cy);
-				// pen.test_click_action (3, 0, 0);
-			
+		
 				return false;
 			}
 			
