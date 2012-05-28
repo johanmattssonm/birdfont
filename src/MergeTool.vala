@@ -23,14 +23,8 @@ class MergeTool : Tool {
 		base (n, "merge paths");
 	
 		select_action.connect((self) => {
-			print ("merge_all");
-			merge_all ();
+			warning ("merge is not implemented yet");
 		});
-	}
-
-	private void merge_all () {
-		Glyph g = MainWindow.get_current_glyph ();
-		g.merge ();
 	}
 
 	public override bool test () {

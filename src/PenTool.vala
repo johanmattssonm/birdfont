@@ -31,8 +31,7 @@ class PenTool : Tool {
 	public static EditPointHandle selected_handle = new EditPointHandle.empty ();
 	
 	public static EditPoint? active_edit_point = new EditPoint ();
-	public static EditPoint selected_edit_point = new EditPoint ();
-	
+
 	/** Move handle vertical or horizontal. */
 	public static bool tie_x_or_y_coordinates = false;
 

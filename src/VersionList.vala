@@ -47,19 +47,6 @@ class VersionList : DropMenu {
 		}
 	}
 	
-	public void set_current (Glyph g) {
-		int i = 0;
-		foreach (Glyph gl in glyphs) {
-			if (likely (gl == g)) {
-				current_version = i;
-				return;
-			}
-			i++;
-		}
-		
-		warning ("Glyph not found in list.");
-	}
-	
 	public Glyph get_current () {
 		if (unlikely (current_version >= glyphs.length ())) {
 			warning (@"current_version >= glyphs.length ($current_version)");

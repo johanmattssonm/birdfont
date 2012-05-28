@@ -214,7 +214,6 @@ class Toolbox : DrawingArea {
 		Tool move_layer = new Tool ("move_layer", "Move to path to bottom layer", 'd');
 		move_layer.select_action.connect((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
-			unowned List <Path> pl; 
 			Path p;
 			
 			if (g.active_path != null) {

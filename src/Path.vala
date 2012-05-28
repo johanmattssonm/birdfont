@@ -243,23 +243,9 @@ class Path {
 		xb = xc + e.x;
 		yb = yc - e.y;
 	}
-
-	public static void get_abs_line_points (EditPoint e, EditPoint en, out double xa, out double ya, out double xb, out double yb) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		xa = en.x;
-		ya = en.y;
-		
-		xb = e.x;
-		yb = e.y;
-	}
 		
 	public void draw_line (EditPoint e, EditPoint en, Context cr, double alpha = 1) { 
 		Glyph g = MainWindow.get_current_glyph ();
-		
-		double xc = g.allocation.width / 2.0;
-		double yc = g.allocation.height / 2.0;
-		
 		double ax, ay, bx, by;
 
 		get_line_points (e, en, out ax, out ay, out bx, out by);
@@ -299,10 +285,6 @@ class Path {
 		double xc = g.allocation.width / 2.0;
 		double yc = g.allocation.height / 2.0;
 
-		double p = e.x;
-			
-		double h = g.allocation.height * ivz + g.view_offset_y;
-		
 		double x = xc + e.x;
 		double y = yc - e.y + 0.5;
 
@@ -326,69 +308,6 @@ class Path {
 		//cr.fill_preserve ();
 		cr.stroke ();
 
-	}
-	
-	public bool merge (Path? u) {
-		bool err;
-		int intersections; 
-
-		Path union;
-		Path merged;
-		
-		if (u == null) return false;
-		
-		union = (!) u;
-		
-		// skip empty path and objects that does't overlap
-		if (!is_valid_union (union)) {
-			return false;
-		}
-
-		// add intersecting points
-		intersections = prepare_merge (union);
-				
-		if (intersections == 0) {
-			return false;
-		}
-
-		// all outline paths are drawn clockwise
-		err = force_union_directions (union);
-		
-		if (err) {
-			return false;
-		}
-				
-		// FIXME DELETE
-		//print (@"DIR $(union.is_clockwise ())\n");
-		//union.force_direction (Direction.COUNTER_CLOCKWISE);
-		//print (@"DIR2  $(union.is_clockwise ())\n");
-		
-		// create new paths
-		merged = create_merged_path (this, union);
-
-		// path is crossing it self or a new inside appeared
-		/*
-		if (merged.is_crossing_own_path ()) {
-			if (this.is_crossing_own_path ()) {
-				warning ("this.is_crossing_own_path ()");
-				// TODO: split it and find some good way to deal with it
-			} else {
-				warning ("merged.is_crossing_own_path ()");
-				return false;
-			}
-		}
-		*/
-
-		// add merged points to this path
-		this.remove_all_edit_points ();
-		union.remove_all_edit_points ();
-		replace_path (merged);
-		
-		this.set_editable (true);
-		union.set_editable (true);
-		merged.set_editable (true);
-		
-		return true;
 	}
 	
 	/** Returns true if there is an edit point at (p.x, p.y). */
@@ -591,63 +510,6 @@ class Path {
 		
 		return false;
 	}
- 	
-	/** Add start and stop points to union from intersecting lines. 
-	 * @return number of new intersecting points
-	 */
-	private int prepare_merge (Path union) 
-		requires (union.points.length () >= 2)
-	{				
-		unowned List<EditPoint> lep = union.points.first ();
-		unowned List<EditPoint> lprev = union.points.last ();
-
-		List<IntersectionList> inter = new List<IntersectionList> ();
-		int count = 0;
-		
-		while (true) {
-			IntersectionList il = get_all_crossing_paths (lprev.data, lep.data);
-			inter.append (il);
-
-			if (lep == union.points.last ()) break;
-			
-			lprev = lep;
-			lep = lep.next;
-		}
-
-		foreach (var ins in inter) {
-			foreach (var ip in ins.points) {
-				add_point_on_path (ip.x, ip.y);
-				union.add_point_on_path (ip.x, ip.y);
-				count++;
-			}
-		}
-		
-		return count;
-	}
-
-	/** Returns true if this path crosses it self some where. */
-	public bool is_crossing_own_path () {
-		unowned List<EditPoint> lep;
-		unowned List<EditPoint> lprev;
-				
-		if (points.length () <= 2) return false;
-		
-		lep = points.first ();
-		lprev = points.last ();
-
-		while (true) {
-			if (get_all_crossing_paths (lprev.data, lep.data).points.length () > 0) {
-				return true;
-			}
-
-			if (lep == points.last ()) break;
-			
-			lprev = lep;
-			lep = lep.next;
-		}
-
-		return false;
-	}
 
 	public void delete_edit_point (EditPoint e) {
 		foreach (var p in points) {
@@ -657,111 +519,6 @@ class Path {
 		}
 		
 		warning ("Edit point does not exist.");
-	}
-	
-// TODO: Move classes
-class Intersection : GLib.Object {
-	public double x;
-	public double y;
-	
-	public Intersection (double x, double y) {
-		this.x = x;
-		this.y = y;
-	}
-	
-}
-
-class IntersectionList : GLib.Object {
-	public List<Intersection> points = new List<Intersection> ();
-	
-	public IntersectionList () {	
-	}
-	
-	public void add (double x, double y) {
-		if (points.length () > 0 && points.last().data.x == x && points.last().data.y == y) {
-			return;
-		}
-		
-		points.append (new Intersection (x, y));
-	}
-		
-	public void delete_control_point_at (double x, double y) {
-		foreach (var p in points) {
-			if (p.x == x && p.y == y) {
-				points.remove (p);
-			}
-		}
-	}	
-}
-
-	private static bool line_is_duplicate (EditPoint a_start, EditPoint a_stop, EditPoint b_start, EditPoint b_stop) {
-		return line_is_duplicate_comparaton (a_start, a_stop, b_start, b_stop)
-			  || line_is_duplicate_comparaton (a_stop, a_start, b_start, b_stop); // swap and compare
-	}
-
-	private static bool line_is_duplicate_comparaton (EditPoint a_start, EditPoint a_stop, EditPoint b_start, EditPoint b_stop) {
-		return (a_start.x == b_start.x && a_start.y == b_start.y && a_stop.x == b_stop.x && a_stop.y == b_stop.y);
-	}
-	
-	/** Returns a list of all points where curves in this path crosses 
-	 * line from @param start to @param stop
-	 */
-	private IntersectionList get_all_crossing_paths (EditPoint start, EditPoint stop) {
-		IntersectionList il = new IntersectionList ();
-		
-		unowned List<EditPoint> prev = points.last ();
-		unowned List<EditPoint> ep = points.first ();
-				
-		double new_x;
-		double new_y;
-
-		return_val_if_fail (points.length () >= 2, new IntersectionList ());
-
-		while (true) {
-
-			bool r = false; // fixme: optimize (don't iterate + stop iteration)
-			double min = double.MAX;
-			
-			new_x = double.MAX;
-			new_y = double.MAX;
-						
-			all_of (prev.data, ep.data, (tx, ty) => {
-				all_of (start, stop, (cx, cy) => {
-						double n = pow (tx - cx, 2) + pow (ty - cy, 2);
-						
-						if (n < min && n < 1) { // TODO: add variable tolerance
-							r = true;
-							min = n;
-
-							// this point is a better coordinate, replace the last one
-							il.delete_control_point_at (new_x, new_y);
-			
-							new_x = cx;
-							new_y = cy;
-
-							//il.add_unique (new_x, new_y); // add a new point
-							il.add (new_x, new_y); // add a new point
-						}
-						
-						// Look for the next one a long this path
-						if (n > 1) {
-							min = double.MAX;
-						}
-						
-						return true;
-					}, 5);
-					
-					return true;
-				}, 5);
-			
-			
-			if (ep == points.last ()) break;
-			
-			prev = ep;
-			ep = ep.next;
-		}
-
-		return il;
 	}
 
 	/** Switch direction from clockwise path to counter clockwise path or vise versa. */
@@ -793,20 +550,6 @@ class IntersectionList : GLib.Object {
 		}
 		
 		create_list ();
-	}
-
-	private int index (EditPoint ep) {
-		int i = 0;
-		
-		foreach (var p in points) {
-			if (ep.x == p.x && ep.y == p.y) {
-				return i;
-			}
-			
-			i++;
-		}
-		
-		return -1;
 	}
 
 	public void print_all_points () {
@@ -841,17 +584,6 @@ class IntersectionList : GLib.Object {
 		}
 		
 		return is_clockwise_top ();
-	}
-	
-	private static uint num_positions (uint i_xmax, uint i_ymax, uint i_xmin, uint i_ymin) {
-		List<uint> i = new List<uint> ();
-		
-		if (i.index (i_xmax) == -1) i.append (i_xmax);
-		if (i.index (i_ymax) == -1) i.append (i_ymax);
-		if (i.index (i_xmin) == -1) i.append (i_xmin);
-		if (i.index (i_ymin) == -1) i.append (i_ymin);
-
-		return i.length ();
 	}
 	
 	public bool is_editable () {
@@ -1012,17 +744,6 @@ class IntersectionList : GLib.Object {
 		return true;
 	}
 
-	bool in_line_region (EditPoint ep, EditPoint e, double x, double y) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		x = x * Glyph.ivz () + g.view_offset_x - Glyph.xc ();
-		y = y * Glyph.ivz () + g.view_offset_y - Glyph.yc ();
-
-		y *= -1;
-		
-		return ((ep.x <= x <= e.x || e.x <= x <= ep.x) && (ep.y <= y <= e.y || e.y <= y <= ep.y));
-	}
-
 	public bool is_over_boundry (double x, double y) {
 		Glyph g = MainWindow.get_current_glyph ();
 		
@@ -1056,7 +777,6 @@ class IntersectionList : GLib.Object {
 	
 	public unowned List<EditPoint> add_point_after (EditPoint p, List<EditPoint>? previous_point) {
 		unowned List<EditPoint> np;
-		unowned List<EditPoint>? op;
 		int prev_index;
 
 		if (points.length () > 0 && previous_point != null && ((!)previous_point).data.type == PointType.END) {
@@ -1113,13 +833,7 @@ class IntersectionList : GLib.Object {
 		return second_last_point;
 	}
 	
-	/** Move edit point. */	
-	public void move_last_point (double x, double y) {
-		return_if_fail (last_point != null);
-		((!) last_point).set_position (x, y);
-		update_region_boundries ();
-	}
-	
+
 	/** Move path. */
 	public void move (double delta_x, double delta_y) {
 		foreach (var ep in points) {
@@ -1129,47 +843,81 @@ class IntersectionList : GLib.Object {
 		
 		update_region_boundries ();
 	}
-	
-	/** Remove intersection. */
-	public void cut_path (Path exclution) {
-		if (!has_intersection (exclution)) {
-			stderr.printf ("No intersec in cut path.\n");
-			return;
+
+	public void update_region_boundries () {
+		unowned List<EditPoint> i = points.first ();
+		unowned List<EditPoint> prev = points.last ();
+
+		if (points.length () == 0) {
+			xmax = 0;
+			xmin = 0;
+			ymax = 0;
+			ymin = 0;			
 		}
+
+		xmax = -10000;
+		xmin = 10000;
+		ymax = -10000;
+		ymin = 10000;
+
+		double txmax = -10000;
+		double txmin = 10000;
+		double tymax = -10000;
+		double tymin = 10000;
+
+		bool new_val = false;
 		
-		if (points.length () < 1 || exclution.points.length () < 1) {
-			stderr.printf ("No intersection in cut path: %u %u\n", points.length (), exclution.points.length ());
-		}
-		
-		EditPoint prev_tp = points.last  ().data;
-		EditPoint prev_ep = exclution.points.last  ().data;
-		foreach (EditPoint ep in exclution.points) {
-				
-			int insert_index = 0;
-			foreach (EditPoint tp in points) {
-				
-				if (point_in_range ((!) prev_tp, ep, tp)) {
-					EditPoint? ip = get_intersect_point (prev_tp, tp, prev_ep, ep);
-					if (ip == null) {
-						stderr.printf ("No intersecting point to cut from.\n");
-						continue;
+		while (i != points.last ()) {
+						
+			all_of (prev.data, i.data, (cx, cy) => {
+					
+					if (!new_val) {
+						txmax = cx;
+						txmin = cx;
+						tymax = cy;
+						tymin = cy;
+						new_val = true;
 					}
 					
-					EditPoint inter_start = (!) ip;
-					
-					points.insert (inter_start, insert_index);
-				} else {
-					stderr.printf ("No point in range\n");
-				}
-				
-				insert_index++;
-				prev_tp = tp;
-			}
-			
-			prev_ep = ep;
-		} 
-	}
+					if (cx < txmin) {
+						txmin = cx;
+					}
 
+					if (cx > txmax) {
+						txmax = cx;
+					}
+					
+					if (cy < tymin) {
+						tymin = cy;
+					}
+
+					if (cy > tymax) {
+						tymax = cy;
+					}
+
+					return true;
+				});
+
+			prev = i;
+			i = i.next;
+		}
+
+		xmax = txmax;
+		xmin = txmin;
+		ymax = tymax;
+		ymin = tymin;
+
+		// Fixa:
+		// print (@"updated \n");
+
+		if (unlikely (!new_val)) {
+			// only one point, what should we do? probably skip it.
+		} else if (unlikely (!got_region_boundries ())) {
+			warning (@"No new region boundries.\nPoints.length: $(points.length ())");
+			print_boundries ();
+		}
+	}
+		
 	/** Test if @param path is a valid outline for this object. */	
 	public bool test_is_outline (Path path) {
 		return this.test_is_outline_of_path (path) && path.test_is_outline_of_path (this);
@@ -1289,23 +1037,7 @@ class IntersectionList : GLib.Object {
 
 	// TODO: Find a clever mathematical solutions instead
 	private void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = 400) {
-		int n = steps;
-		
-		double px;
-		double py;
-
-		double rx, qx;
-		double ry, qy;
-
-		double sx = (stop.x - start.x) / n;
-		double sy = (stop.y - start.y) / n;
-
-		if (false && start.type == PointType.LINE && stop.type == PointType.LINE) {
-			all_of_line (start.x, start.y, stop.x, stop.y, iter, steps);
-		} else {
-			all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), start.get_left_handle ().x (), start.get_left_handle ().y (), stop.x, stop.y, iter, steps);
-		}
-
+		all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), start.get_left_handle ().x (), start.get_left_handle ().y (), stop.x, stop.y, iter, steps);
 	}
 
 	private void all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, int steps = 400) {
@@ -1333,149 +1065,6 @@ class IntersectionList : GLib.Object {
 			}
 			
 		}	
-	}
-
-	private void all_of_line (double x1, double y1, double x2, double y2, RasterIterator iter, int steps = 400) {
-		int n = steps;
-		
-		double px = x1;
-		double py = y1;
-
-		double sx = (x2 - x1) / n;
-		double sy = (y2 - y1) / n;
-
-		for (int i = 0; i < n; i++) {
-			
-			if (!iter (px, py)) {
-				return;
-			}
-			
-			px += sx;
-			py += sy;
-		}
-
-	}
-	
-	private EditPoint? get_intersect_point (EditPoint a_start, EditPoint a_stop, EditPoint b_start, EditPoint b_stop) {
-		double ax = a_start.x;
-		double ny = a_start.y;
-		
-		double bx = b_start.x;
-		
-		int n = 100;
-		
-		double a_step_x = (a_stop.x - a_start.x) / n;
-		double b_step_x = (b_stop.x - b_start.x) / n;
-
-		bool d = !(ax > bx);
-
-		for (int i = 0; i < n; i++) {
-			
-			// if (nx > x.x) { // Nästan grekiskt, kolla parabol	
-			// eller bx > ax åt andra hållet
-			if (d && ax > bx) { // överklart klart, asymptotiskt 
-				return new EditPoint (ax, a_start.y * n/100.0);  // fixme do y to
-			}
-
-			if (!d && ax < bx) {
-				return new EditPoint (ax, a_start.y * n/100.0);
-			}
-			
-			ax += a_step_x;
-			bx += b_step_x;
-		}
-
-		return null;
-	}
-	
-	private bool point_in_range (EditPoint x, EditPoint a, EditPoint b) {
-		return in_range (x.x, a.x, b.x) && in_range (x.y, a.y, b.y);
-	}
-	
-	private bool in_range (double x, double ma, double mb) {
-		return (ma < x < mb) || (ma > x > mb);
-	}
-	
-	private bool has_intersection (Path p) {
-		return p.has_intersecting_point (this) || this.has_intersecting_point (p);
-	}
-
-	private bool has_intersecting_point (Path p) {
-		return (is_over (p.xmin, p.ymin) || is_over (p.xmax, p.ymax));
-	}
-	
-	public void update_region_boundries () {
-		unowned List<EditPoint> i = points.first ();
-		unowned List<EditPoint> prev = points.last ();
-
-		if (points.length () == 0) {
-			xmax = 0;
-			xmin = 0;
-			ymax = 0;
-			ymin = 0;			
-		}
-
-		xmax = -10000;
-		xmin = 10000;
-		ymax = -10000;
-		ymin = 10000;
-
-		double txmax = -10000;
-		double txmin = 10000;
-		double tymax = -10000;
-		double tymin = 10000;
-
-		bool new_val = false;
-		
-		while (i != points.last ()) {
-						
-			all_of (prev.data, i.data, (cx, cy) => {
-					
-					if (!new_val) {
-						txmax = cx;
-						txmin = cx;
-						tymax = cy;
-						tymin = cy;
-						new_val = true;
-					}
-					
-					if (cx < txmin) {
-						txmin = cx;
-					}
-
-					if (cx > txmax) {
-						txmax = cx;
-					}
-					
-					if (cy < tymin) {
-						tymin = cy;
-					}
-
-					if (cy > tymax) {
-						tymax = cy;
-					}
-
-					return true;
-				});
-
-			prev = i;
-			i = i.next;
-		}
-
-		xmax = txmax;
-		xmin = txmin;
-		ymax = tymax;
-		ymin = tymin;
-
-		// Fixa:
-		// print (@"updated \n");
-
-		if (unlikely (!new_val)) {
-			// only one point, what should we do? probably skip it.
-		} else if (unlikely (!got_region_boundries ())) {
-			warning (@"No new region boundries.\nPoints.length: $(points.length ())");
-			print_boundries ();
-		}
 	}
 	
 	public void print_boundries () {

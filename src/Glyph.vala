@@ -349,23 +349,6 @@ class Glyph : FontDisplay {
 		}
 	}
 	
-	/** Merge all paths. */
-	public void merge () {
-		bool r = false;
-		
-		remove_empty_paths ();
-		
-		foreach (var p in path_list) {
-			foreach (var u in path_list) {
-				return_if_fail (p.points.length () != 0 && u.points.length () != 0);
-				
-				if (u != p) r = p.merge (u);
-				if (r) path_list.remove_all (u);
-				
-			}
-		}
-	}
-
 	public string get_svg_data () {
 		return Svg.to_svg_glyph (this, 1 / SCALE);
 	}
@@ -747,8 +730,7 @@ class Glyph : FontDisplay {
 	
 	private void redraw_path (double xmin, double ymin, double xmax, double ymax) {
 		int yc = (int)(allocation.height / 2.0);
-		int xc = (int)(allocation.width / 2.0);
-		
+
 		double yta = yc - ymin - view_offset_y;
 		double ytb = yc - ymax - view_offset_y;
 
@@ -800,29 +782,6 @@ class Glyph : FontDisplay {
 	
 	public Path? get_active_path () {
 		return active_path;
-	}
-	
-	public Path? get_path_at (int x, int y) {
-		double xt, yt;
-		unowned List<Path> paths;
-		
-		if (unlikely (active_path != null)) {
-			stderr.printf ("Active path already selected.\n");
-			return null;
-		}
-		
-		paths = path_list;
-		
-		xt = path_coordinate_x (x);
-		yt = path_coordinate_y (y);
-				
-		foreach (Path p in paths) {
-			if (p.is_over (xt, yt)) {
-				return p;
-			}
-		}
-		
-		return null;
 	}
 	
 	private void insert_edit_point (double x, double y) {
@@ -955,8 +914,7 @@ class Glyph : FontDisplay {
 		int th;
 
 		double xc = (allocation.width / 2.0);
-		double yc = (allocation.height / 2.0);
-		
+
 		if (active_path == null) {
 			return;
 		}
@@ -1341,33 +1299,6 @@ class Glyph : FontDisplay {
 		cr.restore ();
 	}
 	
-	public void draw_full_glyph (Allocation alloc, Context cr, double zoom) {
-		double vx = view_offset_x;
-		double vy = view_offset_y;
-		double z = view_zoom;
-		double lsb, rsb;
-		
-		this.allocation = alloc;
-		view_zoom = zoom;
-
-		view_offset_x = -((this.allocation.width / view_zoom) / 2.0) + (alloc.width / 2.0);
-		view_offset_y = -((this.allocation.height / view_zoom) / 2.0) + (alloc.height / 2.0);	
-		
-		// center
-		lsb = get_left_marker ();
-		rsb = get_right_marker ();
-
-		view_offset_x += lsb;
-
-		cr.save ();
-		draw (alloc, cr);
-		cr.restore ();
-		
-		view_offset_x = vx;
-		view_offset_y = vy;
-		view_zoom = z;
-	}
-		
 	private void draw_help_lines (Context cr) {
 		
 		// lines 
