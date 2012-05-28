@@ -75,14 +75,7 @@ class Line : GLib.Object {
 		visible = v;
 	}
 	
-	public bool get_visible (bool v) {
-		return visible;
-	}
-	
-	public void set_pos (double p) {
-		pos = p;
-	}
-	
+
 	public void set_moveable (bool m) {
 		moveable = m;
 	}
