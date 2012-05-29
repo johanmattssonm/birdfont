@@ -237,7 +237,7 @@ class ContextDisplay : FontDisplay {
 				y = ((Math.fabs (e.y - begin_handle_y) / 100) + 1);
 			}
 			
-			k = (e.x - begin_handle_x) / y; // y-axis is variable presition // Fixa: spell
+			k = (e.x - begin_handle_x) / y; // y-axis is variable precision
 			set_kerning (selected_handle, k);
 			MainWindow.get_glyph_canvas ().redraw ();
 		}
