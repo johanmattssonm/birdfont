@@ -79,12 +79,12 @@ class TestCases {
 	}
 
 	public static void test_reverse_random_paths () {
-		MergeTool tool = (MergeTool) MainWindow.get_toolbox ().get_tool ("union_paths");
+		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
 		tool.test_reverse_random_triangles ();		
 	}
 
 	public static void test_reverse_path () {
-		MergeTool tool = (MergeTool) MainWindow.get_toolbox ().get_tool ("union_paths");
+		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
 		tool.test_reverse_path ();
 	}
 
