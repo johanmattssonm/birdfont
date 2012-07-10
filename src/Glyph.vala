@@ -1257,9 +1257,17 @@ class Glyph : FontDisplay {
 		return background_image_visible;
 	}
 	
+	private void plot_outline (Context cr) {
+		foreach (unowned Path p in path_list) {
+			p.plot (cr, allocation, view_zoom);
+		}		
+	}
+	
 	private void draw_path (Context cr) {
 		double left, baseline;
 		
+		// plot_outline (cr);
+			
 		cr.save ();
 		
 		baseline = get_line ("baseline").pos;

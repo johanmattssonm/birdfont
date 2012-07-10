@@ -1037,7 +1037,7 @@ class Path {
 
 	// TODO: Find a clever mathematical solutions instead
 	private void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = 400) {
-		all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), start.get_left_handle ().x (), start.get_left_handle ().y (), stop.x, stop.y, iter, steps);
+		all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.get_left_handle ().x (), stop.get_left_handle ().y (), stop.x, stop.y, iter, steps);
 	}
 
 	private void all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, int steps = 400) {
@@ -1050,21 +1050,71 @@ class Path {
 		for (int i = 0; i < steps; i++) {
 			t = i / s;
 			
-			px = pow (1 - t, 3) * x0;
-			px += 3 * pow (1 - t, 2) * t * x1;
-			px += 3 * pow (1 - t, 2) * pow (t, 2) * x2;
-			px += pow (t, 3) * x3;
-
-			py = pow (1 - t, 3) * y0;
-			py += 3 * pow (1 - t, 2) * t * y1;
-			py += 3 * pow (1 - t, 2) * pow (t, 2) * y2;
-			py += pow (t, 3) * y3;
+			px = bezier_path (t, x0, x1, x2, x3);
+			py = bezier_path (t, y0, y1, y2, y3);
 			
 			if (!iter (px, py)) {
 				return;
 			}
 			
 		}	
+	}
+
+	public static double bezier_path (double step, double p0, double p1, double p2, double p3) {
+		double q0, q1, q2;
+		double r0, r1;
+
+		q0 = step * (p1 - p0) + p0;
+		q1 = step * (p2 - p1) + p1;
+		q2 = step * (p3 - p2) + p2;
+
+		r0 = step * (q1 - q0) + q0;
+		r1 = step * (q2 - q1) + q1;
+
+		return step * (r1 - r0) + r0;
+	}
+
+	private void all_of_path (RasterIterator iter) {
+		unowned List<EditPoint> i, next;
+		
+		if (points.length () < 2) {
+			return;
+		}
+
+		i = points.first ();
+		next = i.next;
+
+		while (i != points.last ()) {
+			all_of (i.data, next.data, iter);
+			i = i.next;
+			next = i.next;
+		}
+		
+		if (!is_open ()) {
+			all_of (points.last ().data, points.first ().data, iter);
+		}
+	}
+	
+	public void plot (Context cr, Allocation allocation, double view_zoom) {
+			double px = 0, py = 0;
+			double xc = allocation.width / 2.0;
+			double yc = allocation.height / 2.0;
+
+			cr.save ();
+			
+			all_of_path ((x, y) => {
+				cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+				cr.move_to (px + xc, -py + yc);
+				cr.line_to (x + xc, -y + yc);
+				
+				px = x;
+				py = y;
+				
+				return true;
+			});
+
+			cr.stroke ();
+			cr.restore ();
 	}
 	
 	public void print_boundries () {
