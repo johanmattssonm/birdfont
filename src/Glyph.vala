@@ -1117,8 +1117,9 @@ class Glyph : FontDisplay {
 		reverse (ax, ay, out iax, out iay);
 		reverse (bx, by, out ibx, out iby);
 	
-		show_zoom_area (iax - 5, iay - 5, ibx + 5, iby + 5); // set this later on button release
+		show_zoom_area (iax, iay, ibx, iby); // set this later on button release
 		set_zoom_from_area ();
+		zoom_out (); // add some margin
 		
 		queue_draw_area (0, 0, allocation.width, allocation.height);
 		
