@@ -49,6 +49,7 @@ class Glyph : FontDisplay {
 	public EditPoint? active_point = null;
 	public EditPoint? selected_point = null;
 	public EditPoint? new_point_on_path = null;
+	public EditPoint? flipping_point_on_path = null;
 	public EditPoint? last_added_edit_point = null;
 		
 	// The point where edit event begun 
@@ -812,10 +813,12 @@ class Glyph : FontDisplay {
 			return_if_fail (e.prev != null);
 			
 			union_path = p;
-			p.add (e.x, e.y);
+			p.add_point (e);
+			e.type = PointType.CURVE;
 			
 			paths.append (p);
 			active_path = p;
+			flipping_point_on_path = new_point_on_path;
 			new_point_on_path = null;
 			added = true;
 			return;
@@ -877,10 +880,9 @@ class Glyph : FontDisplay {
 	}
 	
 	public void move_selected_edit_point (double x, double y) {		
-		double xc;
-		double yc;
-		
+		double xc, yc, xt, yt;
 		double ivz = 1 / view_zoom;
+		EditPoint p;
 		
 		Supplement.get_current_font ().touch ();
 
@@ -890,8 +892,8 @@ class Glyph : FontDisplay {
 		x *= ivz;
 		y *= ivz;
 	
-		double xt = x - xc + view_offset_x;
-		double yt = yc - y - view_offset_y;
+		xt = x - xc + view_offset_x;
+		yt = yc - y - view_offset_y;
 		
 		// redraw control point
 		queue_draw_area ((int)(x - 4*view_zoom), (int)(y - 4*view_zoom), (int)(x + 3*view_zoom), (int)(y + 3*view_zoom));
@@ -903,6 +905,12 @@ class Glyph : FontDisplay {
 			queue_draw_area (0, 0, allocation.width, allocation.height);
 		} else {
 			redraw_last_stroke (x, y);
+		}
+		
+		if (flipping_point_on_path != null) {
+			p = (!) flipping_point_on_path;
+			p.recalculate_handles (x, y);
+			queue_draw_area (0, 0, allocation.width, allocation.height);
 		}		
 	}
 	
@@ -972,6 +980,7 @@ class Glyph : FontDisplay {
 		active_path = null;
 		union_path = null; 
 		new_point_on_path = null;
+		flipping_point_on_path = null;
 		selected_point = null;
 		
 		delete_invisible_paths ();

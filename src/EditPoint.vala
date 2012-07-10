@@ -74,6 +74,35 @@ class EditPoint {
 		left_handle = new EditPointHandle (this, PI, 7);
 	}
 
+	/** Flip handles if next point on path is in the other direction. 
+	 *  Used to recalculate handles after new point is inserted on a path.
+	 */
+	public void recalculate_handles (double px, double py) {
+		double dr, dl;
+		EditPointHandle t;
+		
+		if (next == null || ((!)next).length () < 2) {
+				return;
+		}
+		
+		px = get_next ().nth (1).data.x;
+		py = get_next ().nth (1).data.y;
+		
+		dr = Math.sqrt (Math.pow (px - right_handle.x (), 2) + Math.pow (py - right_handle.y (), 2));
+		dl = Math.sqrt (Math.pow (px - left_handle.x (), 2) + Math.pow (py - left_handle.y (), 2));
+
+		// flip handles
+		if (dl < dr) {
+			t = right_handle;
+			right_handle = left_handle;
+			left_handle = t;
+		}		
+	}
+	
+	public void set_tie_handle (bool t) {
+		tie_handles = t;
+	}
+
 	public void set_point_type (PointType point_type) {
 		type = point_type;
 	}

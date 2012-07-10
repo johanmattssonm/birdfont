@@ -46,7 +46,7 @@ class Path {
 	bool no_derived_direction = false;
 	bool clockwise_direction = true;
 
-	delegate bool RasterIterator (double x, double y); // iterate over each pixel at a given zoom level
+	delegate bool RasterIterator (double x, double y, double step); // iterate over each pixel at a given zoom level
 
 	public double r = 0;
 	public double g = 0;
@@ -809,12 +809,14 @@ class Path {
 		
 	}
 	
+	/*// FIXA: DELETE
 	public void add_point_on_path (double x, double y) {
 		EditPoint e = new EditPoint (0, 0);
 		get_closest_point_on_path (e, x, y);
 		add_after (x, y, e.prev);
 	}
-	
+	*/
+
 	public void close () {
 		open = false;
 		edit = false;
@@ -981,6 +983,9 @@ class Path {
 		double ox = 0;
 		double oy = 0;
 		
+		double handle_x0, handle_x1;
+		double handle_y0, handle_y1;
+		
 		unowned List<EditPoint> i = points.first ();
 		unowned List<EditPoint> prev = i.next;
 
@@ -989,6 +994,10 @@ class Path {
 		
 		unowned List<EditPoint>? previous_point = null;
 		unowned List<EditPoint>? next_point = null;
+
+		EditPoint previous;
+		EditPoint next;
+		double step = 0;
 		
 		while (!exit) {
 			
@@ -1007,7 +1016,7 @@ class Path {
 				break;
 			}
 			
-			all_of (prev.data, i.data, (cx, cy) => {
+			all_of (prev.data, i.data, (cx, cy, t) => {
 					n = pow (x - cx, 2) + pow (y - cy, 2);
 					
 					if (n < min) {
@@ -1018,7 +1027,9 @@ class Path {
 					
 						previous_point = prev;
 						next_point = i;
-							
+						
+						step = t;
+						
 						g = true;
 					}
 					
@@ -1026,9 +1037,24 @@ class Path {
 				});
 		}
 
+		return_if_fail (previous_point != null);
+		return_if_fail (next_point != null);
+
+		previous = ((!) previous_point).data;
+		next = ((!) next_point).data;
+
+		bezier_vector (step, previous.x, previous.get_right_handle ().x (), next.get_left_handle ().x (), next.x, out handle_x0, out handle_x1);
+		bezier_vector (step, previous.y, previous.get_right_handle ().y (), next.get_left_handle ().y (), next.y, out handle_y0, out handle_y1);
+
+		// position 
 		edit_point.set_position (ox, oy);
 		edit_point.prev = previous_point;
 		edit_point.next = next_point;
+
+		// curve (angle)
+		edit_point.get_right_handle ().move_to_coordinate (handle_x0, handle_y0);
+		edit_point.get_left_handle ().move_to_coordinate (handle_x1, handle_y1);
+		// FIXA: maybe just edit_point.set_tie_handle (true);
 
 		if (unlikely (!g)) {
 			warning (@"Error: Got no coordinates for point on path. Num points $(points.length ())\n");
@@ -1053,7 +1079,7 @@ class Path {
 			px = bezier_path (t, x0, x1, x2, x3);
 			py = bezier_path (t, y0, y1, y2, y3);
 			
-			if (!iter (px, py)) {
+			if (!iter (px, py, t)) {
 				return;
 			}
 			
@@ -1074,7 +1100,20 @@ class Path {
 		return step * (r1 - r0) + r0;
 	}
 
-	private void all_of_path (RasterIterator iter) {
+	public static void bezier_vector (double step, double p0, double p1, double p2, double p3, out double a0, out double a1) {
+		double q0, q1, q2;
+		double r0, r1;
+
+		q0 = step * (p1 - p0) + p0;
+		q1 = step * (p2 - p1) + p1;
+		q2 = step * (p3 - p2) + p2;
+
+		a0 = step * (q1 - q0) + q0;
+		a1 = step * (q2 - q1) + q1;
+	}
+
+
+	private void all_of_path (RasterIterator iter, int steps = 400) {
 		unowned List<EditPoint> i, next;
 		
 		if (points.length () < 2) {
