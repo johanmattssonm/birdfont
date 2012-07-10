@@ -1117,15 +1117,7 @@ class Glyph : FontDisplay {
 		reverse (ax, ay, out iax, out iay);
 		reverse (bx, by, out ibx, out iby);
 	
-		//PenTool pen_tool = (PenTool)MainWindow.get_toolbox ().get_tool ("pen_tool");
-		//pen_tool.test_click_action (1, iax, iay);
-		//pen_tool.test_click_action (1, ibx, iby);
-
-		//pen_tool.test_click_action (1, ibx, iay);
-		//pen_tool.test_click_action (1, iax, iby);
-		
 		show_zoom_area (iax - 5, iay - 5, ibx + 5, iby + 5); // set this later on button release
-		set_zoom_from_area ();
 		set_zoom_from_area ();
 		
 		queue_draw_area (0, 0, allocation.width, allocation.height);

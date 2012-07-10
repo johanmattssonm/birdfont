@@ -847,9 +847,6 @@ class Path {
 	}
 
 	public void update_region_boundries () {
-		unowned List<EditPoint> i = points.first ();
-		unowned List<EditPoint> prev = points.last ();
-
 		if (points.length () == 0) {
 			xmax = 0;
 			xmin = 0;
@@ -868,42 +865,35 @@ class Path {
 		double tymin = 10000;
 
 		bool new_val = false;
-		
-		while (i != points.last ()) {
-						
-			all_of (prev.data, i.data, (cx, cy) => {
-					
-					if (!new_val) {
-						txmax = cx;
-						txmin = cx;
-						tymax = cy;
-						tymin = cy;
-						new_val = true;
-					}
-					
-					if (cx < txmin) {
-						txmin = cx;
-					}
+			
+		all_of_path ((cx, cy) => {	
+			if (!new_val) {
+				txmax = cx;
+				txmin = cx;
+				tymax = cy;
+				tymin = cy;
+				new_val = true;
+			}
+			
+			if (cx < txmin) {
+				txmin = cx;
+			}
 
-					if (cx > txmax) {
-						txmax = cx;
-					}
-					
-					if (cy < tymin) {
-						tymin = cy;
-					}
+			if (cx > txmax) {
+				txmax = cx;
+			}
+			
+			if (cy < tymin) {
+				tymin = cy;
+			}
 
-					if (cy > tymax) {
-						tymax = cy;
-					}
+			if (cy > tymax) {
+				tymax = cy;
+			}
 
-					return true;
-				});
-
-			prev = i;
-			i = i.next;
-		}
-
+			return true;
+		});
+				
 		xmax = txmax;
 		xmin = txmin;
 		ymax = tymax;
@@ -1086,6 +1076,27 @@ class Path {
 		}	
 	}
 
+	private void all_of_path (RasterIterator iter, int steps = 400) {
+		unowned List<EditPoint> i, next;
+		
+		if (points.length () < 2) {
+			return;
+		}
+
+		i = points.first ();
+		next = i.next;
+
+		while (i != points.last ()) {
+			all_of (i.data, next.data, iter);
+			i = i.next;
+			next = i.next;
+		}
+		
+		if (!is_open ()) {
+			all_of (points.last ().data, points.first ().data, iter);
+		}
+	}
+
 	public static double bezier_path (double step, double p0, double p1, double p2, double p3) {
 		double q0, q1, q2;
 		double r0, r1;
@@ -1110,28 +1121,6 @@ class Path {
 
 		a0 = step * (q1 - q0) + q0;
 		a1 = step * (q2 - q1) + q1;
-	}
-
-
-	private void all_of_path (RasterIterator iter, int steps = 400) {
-		unowned List<EditPoint> i, next;
-		
-		if (points.length () < 2) {
-			return;
-		}
-
-		i = points.first ();
-		next = i.next;
-
-		while (i != points.last ()) {
-			all_of (i.data, next.data, iter);
-			i = i.next;
-			next = i.next;
-		}
-		
-		if (!is_open ()) {
-			all_of (points.last ().data, points.first ().data, iter);
-		}
 	}
 	
 	public void plot (Context cr, Allocation allocation, double view_zoom) {
