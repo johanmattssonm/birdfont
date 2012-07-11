@@ -1113,10 +1113,11 @@ class Glyph : FontDisplay {
 	
 		if (ax == 1000) return; // empty page
 		
-		// Fixa: Skrota eller ordna upp reverse och path_coordinate
-		reverse (ax, ay, out iax, out iay);
-		reverse (bx, by, out ibx, out iby);
-	
+		iax = (int) ((ax + view_offset_x + allocation.width / 2.0) * view_zoom);
+		iay = (int) ((-ay + view_offset_y + allocation.height / 2.0) * view_zoom);
+		ibx = (int) ((bx + view_offset_x + allocation.width / 2.0) * view_zoom);
+		iby = (int) ((-by + view_offset_y + allocation.height / 2.0) * view_zoom);
+
 		show_zoom_area (iax, iay, ibx, iby); // set this later on button release
 		set_zoom_from_area ();
 		zoom_out (); // add some margin
