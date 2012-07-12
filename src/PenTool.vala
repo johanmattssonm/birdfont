@@ -84,7 +84,36 @@ class PenTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
 		control_point_event (x, y);
+
+		// show new point on path
+		move_current_point_on_path (x, y);
 		
+		// show curve handles
+		active_corner.set_active_handle (false);
+		selected_corner.set_active_handle (true);
+		if (active_edit_point != null) {
+			active_corner = (!) active_edit_point;
+			active_corner.set_active_handle (true);
+		}
+
+		// move curve handles
+		if (move_selected_handle) {
+			if (GridTool.is_visible ()) {
+				GridTool.tie (ref x, ref y);
+			}
+			
+			selected_handle.parent.set_point_type (PointType.CURVE);
+			selected_handle.move_to (x, y);
+			
+			selected_handle.parent.get_prev ().data.set_point_type (PointType.CURVE);
+			
+			// Fixa: redraw line only
+			glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
+			
+			return;
+		}
+		
+		// move edit point
 		if (move_selected) {
 			glyph.move_selected_edit_point (x, y);
 			
@@ -95,39 +124,100 @@ class PenTool : Tool {
 				GridTool.tie_to_prev (ep, x, y);
 			}
 			
-		}
-		
-		if (begin_new_point_on_path) {
-			move_current_point_on_path (x, y);
-		}
-		
-		if (is_corner_selected ()) {
 			if (active_corner != selected_corner) {
 				active_corner.set_active_handle (false);
 			}
 			
-			if (!move_selected_handle && !is_over_handle (x, y) && active_edit_point != null) { 
+			if (!is_over_handle (x, y) && active_edit_point != null) { 
 				active_corner = (!) active_edit_point;
 				active_corner.set_active_handle (true);
 			}
+		}
+	}
+	
+	public void press (int button, int x, int y) {
+		Glyph? g = MainWindow.get_current_glyph ();
+		Glyph glyph = (!) g;
 			
-			if (move_selected_handle) {
-				if (GridTool.is_visible ()) {
-					GridTool.tie (ref x, ref y);
-				}
+		return_if_fail (g != null);
+
+		// select or deselect a path
+		if (button == 3) {
+			if (glyph.has_active_path ()) {
+				CutTool.force_direction ();
+				glyph.close_path ();
+			} else {
+				glyph.open_path ();
+				open_closest_path (x, y);
+			}
+			
+			return;
+		}
+
+		// make path transparent and show edit points
+		if (!glyph.is_editable ()) {
+			glyph.open_path ();
+			return;
+		}
+
+		if (is_new_point_on_path_selected ()) {
+			new_point_on_path_at (x, y);
+			return;	
+		}
+
+		// add new point on path 
+		if (is_new_point_on_path_selected ()) {
+			move_selected = true;
+			move_point_on_path = true;
+			glyph.selected_point = active_edit_point;
+			return;
+		}
+		
+		// add new point
+		if (active_edit_point == null && !is_over_handle (x, y)) {
+			new_point_action (x, y);
+			glyph.store_undo_state ();
+			return;
+		}
 				
-				selected_handle.parent.set_point_type (PointType.CURVE);
-				selected_handle.move_to (x, y);
-				
-				selected_handle.parent.get_prev ().data.set_point_type (PointType.CURVE);
-				
-				// Fixa: redraw line only
-				glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);				
+		control_point_event (x, y);
+		select_active_point (x, y);
+		curve_corner_event (x, y);
+		glyph.store_undo_state ();
+		
+		if (is_erase_selected () && active_edit_point != null) {
+			glyph.delete_edit_point ((!) active_edit_point);
+		}
+	}
+	
+	public void select_active_point (double x, double y) {
+		Path cp;
+		Glyph? g = MainWindow.get_current_glyph ();
+		Glyph glyph = (!) g;
+		
+		if (glyph.has_active_path ()) {
+			cp = (!) glyph.active_path;
+			foreach (var e in cp.points) {
+				e.set_active (false);
 			}
 		}
 		
-	}
+		move_selected = true;
+		move_point_on_path = true;
+		
+		glyph.selected_point = active_edit_point;
 
+		if (!is_over_handle (x, y)) {
+			selected_corner.set_active_handle (false);
+			edit_active_corner = true;
+			set_default_handle_positions ();
+			
+			if (active_edit_point != null) {
+				selected_corner = (!) active_edit_point;
+			}
+		}		
+	}
+	
 	public void move_current_point_on_path (double x, double y) {
 			Glyph g = MainWindow.get_current_glyph ();
 
@@ -254,79 +344,6 @@ class PenTool : Tool {
 		glyph.open_path ();
 		glyph.add_new_edit_point (x, y);
 		move_selected = true;
-	}
-
-	public void press (int button, int x, int y) {
-		Path cp;
-		Glyph? g = MainWindow.get_current_glyph ();
-		Glyph glyph = (!) g;
-			
-		return_if_fail (g != null);
-		
-		glyph.open_path ();
-		
-		control_point_event (x, y);
-		
-		// select or deselect a path
-		if (button == 3) {
-			if (glyph.has_active_path ()) {
-				CutTool.force_direction ();
-				glyph.close_path ();
-			} else {
-				glyph.open_path ();
-				open_closest_path (x, y);
-			}
-		}
-	
-		if (!new_point_on_path_at (x, y)) {
-			return;
-		}
-		
-		if (!is_move_point_selected ()) {		
-			move_selected = false;
-			move_point_on_path = false;
-		}
-			
-		if (is_move_point_selected () && active_edit_point != null) {
-			glyph.store_undo_state ();
-			
-			if (glyph.has_active_path ()) {
-				cp = (!) glyph.active_path;
-				foreach (var e in cp.points) {
-					e.set_active (false);
-				}
-			}
-			
-			move_selected = true;
-			move_point_on_path = true;
-			
-			glyph.selected_point = active_edit_point;
-		} 
-		
-		if (is_new_point () && button == 1) {
-			glyph.store_undo_state ();
-			new_point_action (x, y);
-		}
-		
-		if (is_corner_selected ()) {
-			if (!is_over_handle (x, y)) {
-				selected_corner.set_active_handle (false);
-				edit_active_corner = true;
-				set_default_handle_positions ();
-				
-				if (active_edit_point != null) {
-					selected_corner = (!) active_edit_point;
-				}
-			}
-			
-			curve_corner_event (x, y);
-		}
-		
-		if (is_erase_selected () && active_edit_point != null) {
-			glyph.store_undo_state ();
-			glyph.delete_edit_point ((!) active_edit_point);
-		}
-		
 	}
 
 	void set_default_handle_positions () {

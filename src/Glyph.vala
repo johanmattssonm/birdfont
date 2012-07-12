@@ -961,6 +961,10 @@ class Glyph : FontDisplay {
 		return (active_path != null);
 	}
 	
+	public bool is_editable () {
+			return editable;
+	}
+	
 	/** Close all editable paths and return false if no path have boon closed. 
 	 * Paths without area (points and lines) will be deleted.
 	 */
