@@ -821,6 +821,10 @@ class Path {
 	public void close () {
 		open = false;
 		edit = false;
+		
+		foreach (EditPoint ep in points) {
+			ep.set_active_handle (false);
+		}
 	}
 	
 	public void reopen () {
