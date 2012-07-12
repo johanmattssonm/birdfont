@@ -288,12 +288,14 @@ class Path {
 		double x = xc + e.x;
 		double y = yc - e.y + 0.5;
 
+		double thickness = (e.active) ? 5 * ivz : 4 * ivz;
+
 		if (e.active) 
 			cr.set_source_rgba (1, 0, 0, 1);
 		else
 			cr.set_source_rgba (e.r, e.g, e.b, e.a);
 
-		cr.set_line_width (3 * ivz);	
+		cr.set_line_width (thickness);
 		
 		cr.new_path ();
 		
@@ -305,7 +307,6 @@ class Path {
 		
 		cr.close_path ();
 
-		//cr.fill_preserve ();
 		cr.stroke ();
 
 	}
