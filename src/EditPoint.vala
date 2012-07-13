@@ -99,6 +99,37 @@ class EditPoint {
 		}		
 	}
 	
+	/** Set bezier points for linear paths. */
+	public void recalculate_linear_handles () {
+		EditPointHandle h;
+		unowned EditPoint n;
+		double nx, ny;
+		
+		return_if_fail (type == PointType.LINE);
+
+		// left handle
+		if (prev != null) {
+			n = get_prev ().data;
+			h = get_left_handle ();
+			
+			nx = x + ((n.x - x) / 3);
+			ny = y + ((n.y - y) / 3);
+			
+			h.move_to_coordinate (nx, ny);	
+		}
+		
+		// right handle
+		if (next != null) {
+			n = get_next ().data;
+			h = get_right_handle ();
+			
+			nx = x + ((n.x - x) / 3);
+			ny = y + ((n.y - y) / 3);
+			
+			h.move_to_coordinate (nx, ny);
+		}
+	}
+	
 	public void set_tie_handle (bool t) {
 		tie_handles = t;
 	}

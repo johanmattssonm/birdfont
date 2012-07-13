@@ -859,7 +859,7 @@ class Path {
 			ymin = 0;			
 		}
 
-		// inside and outside in vala lambda functions is not intuitive
+		// inside and outside in vala lambda functions is a tricky matter
 		// (look at c code). that's the reason for the !new_val expression
 
 		xmax = -10000;

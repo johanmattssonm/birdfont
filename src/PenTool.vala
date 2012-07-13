@@ -82,6 +82,7 @@ class PenTool : Tool {
 		
 	public void move (double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
+		EditPoint ep;
 		
 		control_point_event (x, y);
 
@@ -116,11 +117,10 @@ class PenTool : Tool {
 		// move edit point
 		if (move_selected) {
 			glyph.move_selected_edit_point (x, y);
+			ep = (!) glyph.selected_point;
 			
 			if (tie_x_or_y_coordinates) {
 				return_if_fail (glyph.selected_point != null);
-				
-				EditPoint ep = (!) glyph.selected_point;
 				GridTool.tie_to_prev (ep, x, y);
 			}
 			
@@ -131,6 +131,10 @@ class PenTool : Tool {
 			if (!is_over_handle (x, y) && active_edit_point != null) { 
 				active_corner = (!) active_edit_point;
 				active_corner.set_active_handle (true);
+			}
+			
+			if (ep.type == PointType.LINE) {
+				ep.recalculate_linear_handles ();
 			}
 		}
 	}
@@ -366,25 +370,7 @@ class PenTool : Tool {
 		
 		foreach (EditPoint e in path.points) {
 			if (e.type == PointType.LINE) {
-				n = e.get_next ().data;
-				h = e.get_right_handle ();
-				
-				nx = e.x + ((n.x - e.x) / 3);
-				ny = e.y + ((n.y - e.y) / 3);
-				
-				h.move_to_coordinate (nx, ny);
-			}
-		}
-		
-		foreach (EditPoint e in path.points) {
-			if (e.type == PointType.LINE) {
-				n = e.get_prev ().data;
-				h = e.get_left_handle ();
-				
-				nx = e.x + ((n.x - e.x) / 3);
-				ny = e.y + ((n.y - e.y) / 3);
-				
-				h.move_to_coordinate (nx, ny);
+				e.recalculate_linear_handles ();
 			}
 		}
 	}
