@@ -825,6 +825,13 @@ class Path {
 		foreach (EditPoint ep in points) {
 			ep.set_active_handle (false);
 		}
+		
+		create_list ();
+		
+		if (points.length () > 2) {
+			points.first ().data.recalculate_linear_handles ();
+			points.last ().data.recalculate_linear_handles ();
+		}
 	}
 	
 	public void reopen () {
