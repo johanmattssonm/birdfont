@@ -83,18 +83,10 @@ class Svg {
 	}
 
 	private static void add_abs_next (EditPoint m, EditPoint e, StringBuilder svg, Glyph g, bool do_glyph, double scale = 1) {
-		switch (m.type) {
-			case PointType.LINE:				
-				add_abs_line_to (e, m, svg, g, do_glyph, scale);
-				break;
-				
-			case PointType.CURVE:
-				add_abs_path (e, m, svg, g, do_glyph, scale);
-				break;
-				
-			default:
-				warning (@"PointType is $(e.type)");
-				break;
+		if (e.right_handle.type == PointType.LINE && m.left_handle.type == PointType.LINE) {
+			add_abs_line_to (e, m, svg, g, do_glyph, scale);
+		} else {
+			add_abs_path (e, m, svg, g, do_glyph, scale);
 		}
 	}
 

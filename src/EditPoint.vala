@@ -102,20 +102,29 @@ class EditPoint {
 	/** Set bezier points for linear paths. */
 	public void recalculate_linear_handles () {
 		EditPointHandle h;
-		unowned EditPoint n;
+		EditPoint n;
 		double nx, ny;
 		
-		return_if_fail (type == PointType.LINE);
-
 		// left handle
 		if (prev != null) {
 			n = get_prev ().data;
 			h = get_left_handle ();
 			
-			nx = x + ((n.x - x) / 3);
-			ny = y + ((n.y - y) / 3);
+			if (h.type == PointType.LINE) {
+				nx = x + ((n.x - x) / 3);
+				ny = y + ((n.y - y) / 3);
 			
-			h.move_to_coordinate (nx, ny);	
+				h.move_to_coordinate (nx, ny);
+			}
+			
+			h = n.get_right_handle ();
+			
+			if (h.type == PointType.LINE) {		
+				nx = n.x + ((x - n.x) / 3);
+				ny = n.y + ((y - n.y) / 3);
+				
+				h.move_to_coordinate (nx, ny);		
+			}
 		}
 		
 		// right handle
@@ -123,10 +132,21 @@ class EditPoint {
 			n = get_next ().data;
 			h = get_right_handle ();
 			
-			nx = x + ((n.x - x) / 3);
-			ny = y + ((n.y - y) / 3);
+			if (h.type == PointType.LINE) {
+				nx = x + ((n.x - x) / 3);
+				ny = y + ((n.y - y) / 3);
+				
+				h.move_to_coordinate (nx, ny);
+			}
 			
-			h.move_to_coordinate (nx, ny);
+			h = n.get_left_handle ();
+			
+			if (h.type == PointType.LINE) {
+				nx = n.x + ((x - n.x) / 3);
+				ny = n.y + ((y - n.y) / 3);
+				
+				h.move_to_coordinate (nx, ny);		
+			}
 		}
 	}
 	
@@ -151,9 +171,11 @@ class EditPoint {
 		
 		new_point.right_handle.angle = right_handle.angle;
 		new_point.right_handle.length = right_handle.length;
+		new_point.right_handle.type = right_handle.type;
 
 		new_point.left_handle.angle = left_handle.angle;
 		new_point.left_handle.length = left_handle.length;		
+		new_point.left_handle.type = left_handle.type;
 
 		return new_point;
 	}
@@ -194,11 +216,11 @@ class EditPoint {
 		return double.MAX;
 	}
 
-	public EditPointHandle get_left_handle () {
+	public unowned EditPointHandle get_left_handle () {
 		return left_handle;
 	}
 	
-	public EditPointHandle get_right_handle () {
+	public unowned EditPointHandle get_right_handle () {
 		return right_handle;
 	}
 	

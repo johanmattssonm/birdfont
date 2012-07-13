@@ -816,6 +816,9 @@ class Glyph : FontDisplay {
 			p.add_point (e);
 			e.type = PointType.CURVE;
 			
+			e.right_handle.type = PointType.CURVE;
+			e.left_handle.type = PointType.CURVE;
+			
 			paths.append (p);
 			active_path = p;
 			flipping_point_on_path = new_point_on_path;

@@ -103,10 +103,13 @@ class PenTool : Tool {
 				GridTool.tie (ref x, ref y);
 			}
 			
-			selected_handle.parent.set_point_type (PointType.CURVE);
+			selected_handle.parent.set_point_type (PointType.CURVE); // FIXA: find a way to remove
+			selected_handle.set_point_type (PointType.CURVE);
 			selected_handle.move_to (x, y);
 			
-			selected_handle.parent.get_prev ().data.set_point_type (PointType.CURVE);
+			selected_handle.parent.recalculate_linear_handles ();
+			
+			selected_handle.parent.get_prev ().data.set_point_type (PointType.CURVE); // FIXA: find a way to remove
 			
 			// Fixa: redraw line only
 			glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
@@ -133,9 +136,7 @@ class PenTool : Tool {
 				active_corner.set_active_handle (true);
 			}
 			
-			if (ep.type == PointType.LINE) {
-				ep.recalculate_linear_handles ();
-			}
+			ep.recalculate_linear_handles ();
 		}
 	}
 	
@@ -347,6 +348,9 @@ class PenTool : Tool {
 		glyph = MainWindow.get_current_glyph ();
 		glyph.open_path ();
 		glyph.add_new_edit_point (x, y);
+		
+		((!)glyph.active_path).points.last ().data.right_handle.parent.recalculate_linear_handles ();
+		
 		move_selected = true;
 	}
 
@@ -369,9 +373,7 @@ class PenTool : Tool {
 		// as default handle position for LINE points.
 		
 		foreach (EditPoint e in path.points) {
-			if (e.type == PointType.LINE) {
-				e.recalculate_linear_handles ();
-			}
+			e.recalculate_linear_handles ();
 		}
 	}
 

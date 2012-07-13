@@ -18,6 +18,7 @@
 using Gtk;
 using Gdk;
 using Cairo;
+using Math;
 
 namespace Supplement {
 
@@ -152,23 +153,46 @@ class Toolbox : DrawingArea {
 		tie_editpoint_tool.select_action.connect((self) => {
 				EditPoint ep;
 				EditPointHandle eh;
-			
+				EditPointHandle el;
+				double a, b, c, length, angle, al, ar;
+				bool tie;
+				
 				select_draw_tool ();
 				
 				ep = pen_tool.selected_corner;
+				tie = !ep.tie_handles;
+
+				eh = ep.right_handle;
 				
-				ep.tie_handles = !ep.tie_handles;
-				
-				eh = (ep.left_handle.length > ep.right_handle.length) ? ep.left_handle : ep.right_handle;
-				
-				if (ep.next != null) {
-					eh.move_to_coordinate (eh.x (), eh.y ());
-					ep.type = PointType.CURVE;
+				if (tie) {
+					a = ep.left_handle.x () - ep.right_handle.x ();
+					b = ep.left_handle.y () - ep.right_handle.y ();
+					c = a * a + b * b;
 					
-					ep.get_next ().data.set_point_type (PointType.CURVE); // Fixa: add curve left, right and both
-					ep.get_next ().data.set_point_type (PointType.CURVE);
+					if (c == 0) {
+						return;
+					}
+					
+					length = sqrt (fabs (c));
+					
+					if (ep.right_handle.y () < ep.left_handle.y ()) {
+						angle = acos (a / length) + PI;
+					} else {
+						angle = -acos (a / length) + PI;
+					}
+					
+					ep.left_handle.type = PointType.CURVE;
+					ep.right_handle.type = PointType.CURVE;
+					
+					ep.right_handle.angle = angle;
+					ep.left_handle.angle = angle;
+
+					ep.set_tie_handle (true);
+					eh.move_to_coordinate (ep.right_handle.x (), ep.right_handle.y ());
 				}
-									
+				
+				ep.set_tie_handle (tie);
+								
 				TimeoutSource anim = new TimeoutSource (300);
 				anim.set_callback(() => {
 					select_tool (corner_tool);

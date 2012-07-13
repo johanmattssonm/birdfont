@@ -27,7 +27,9 @@ class EditPointHandle  {
 	public double angle;
 	public double length;
 	
-	public unowned EditPoint parent;
+	public PointType type;
+	
+	public EditPoint parent;
 	
 	EditPoint? visual_handle = null;
 
@@ -37,12 +39,18 @@ class EditPointHandle  {
 		this.parent = none;
 		this.angle = 0;
 		this.length = 10;
+		this.type = PointType.LINE;
 	}
 	
 	public EditPointHandle (EditPoint parent, double angle, double length) {
 		this.parent = parent;
 		this.angle = angle;
 		this.length = length;
+		this.type = PointType.LINE;
+	}
+
+	public void set_point_type (PointType point_type) {
+		type = point_type;
 	}
 
 	public double x () {

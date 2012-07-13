@@ -479,11 +479,17 @@ class Font : GLib.Object {
 			foreach (var ep in p.points) {
 				os.put_string (@"<point x=\"$(ep.x)\" y=\"$(ep.y)\" ");
 				
-				if (ep.type == PointType.CURVE) {
+				if (ep.right_handle.type == PointType.CURVE) {
 					os.put_string (@"right_angle=\"$(ep.right_handle.angle)\" ");
 					os.put_string (@"right_length=\"$(ep.right_handle.length)\" ");
+				}
+				
+				if (ep.left_handle.type == PointType.CURVE) {
 					os.put_string (@"left_angle=\"$(ep.left_handle.angle)\" ");
 					os.put_string (@"left_length=\"$(ep.left_handle.length)\" ");						
+				}
+				
+				if (ep.right_handle.type == PointType.CURVE || ep.left_handle.type == PointType.CURVE) {
 					os.put_string (@"tie_handles=\"$(ep.tie_handles)\" ");
 				}
 				
@@ -832,6 +838,9 @@ class Font : GLib.Object {
 		double length_right = 0;
 		double length_left = 0;
 		
+		PointType type_right = PointType.LINE;
+		PointType type_left = PointType.LINE;
+		
 		bool tie_handles = false;
 		
 		EditPoint ep;
@@ -844,9 +853,17 @@ class Font : GLib.Object {
 			if (attr_name == "y") y = double.parse (attr_content);
 			
 			if (attr_name == "right_angle") {
-				type = PointType.CURVE;
+				type = PointType.CURVE; // FIXA: delete, maybe
 			}	
 			
+			if (attr_name == "right_angle") {
+				type_right = PointType.CURVE;
+			}	
+
+			if (attr_name == "left_angle") {
+				type_left = PointType.CURVE;
+			}
+						
 			if (attr_name == "right_angle") angle_right = double.parse (attr_content);
 			if (attr_name == "right_length") length_right = double.parse (attr_content);
 			if (attr_name == "left_angle") angle_left = double.parse (attr_content);
@@ -861,9 +878,11 @@ class Font : GLib.Object {
 		
 		ep.right_handle.angle = angle_right;
 		ep.right_handle.length = length_right;
+		ep.right_handle.type = type_right;
 		
 		ep.left_handle.angle = angle_left;
 		ep.left_handle.length = length_left;
+		ep.left_handle.type = type_left;
 		
 		ep.tie_handles = tie_handles;
 		

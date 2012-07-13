@@ -128,29 +128,26 @@ class Path {
 
 		cr.stroke ();
 		
-		// control points for curvature
-		foreach (EditPoint e in ep) {
-			if (e.get_active_handle () || e.selected_handle > 0)
-				draw_edit_point_handles (e, cr);
+		if (is_editable ()) {
+			// control points for curvature
+			foreach (EditPoint e in ep) {
+				if (e.get_active_handle () || e.selected_handle > 0)
+					draw_edit_point_handles (e, cr);
+			}
+						
+			// control points
+			foreach (EditPoint e in ep) {
+				draw_edit_point (e, cr);
+			}
 		}
-					
-		// control points
-		foreach (EditPoint e in ep) {
-			draw_edit_point (e, cr);
-		}
-		
 	}
 	
 	private void draw_next (EditPoint e, EditPoint en, Context cr) {
-
-		if (en.type == PointType.CURVE || e.type == PointType.CURVE) {
-			draw_curve (e, en, cr);
-		}	else if (en.type == PointType.LINE && e.type == PointType.LINE) {
+		if (en.right_handle.type == PointType.LINE && e.right_handle.type == PointType.LINE) {
 			draw_line (e, en, cr);
-		} else if (unlikely (en.type != PointType.CURVE)) {
-			warning (@"PointType is $(en.type)");
+		} else {
+			draw_curve (e, en, cr);
 		}
-		
 	}
 	
 	private static void draw_curve (EditPoint e, EditPoint en, Context cr, double alpha = 1) {
@@ -859,7 +856,7 @@ class Path {
 			ymin = 0;			
 		}
 
-		// inside and outside in vala lambda functions is a tricky matter
+		// inside and outside in vala lambda functions reveals a tricky problem
 		// (look at c code). that's the reason for the !new_val expression
 
 		xmax = -10000;
