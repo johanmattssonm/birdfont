@@ -98,13 +98,13 @@ class EditPoint {
 			left_handle = t;
 		}		
 	}
-	
+		
 	/** Set bezier points for linear paths. */
 	public void recalculate_linear_handles () {
-		EditPointHandle h;
-		EditPoint n;
+		unowned EditPointHandle h;
+		unowned EditPoint n;
 		double nx, ny;
-		
+
 		// left handle
 		if (prev != null) {
 			n = get_prev ().data;
@@ -116,7 +116,7 @@ class EditPoint {
 			
 				h.move_to_coordinate (nx, ny);
 			}
-			
+
 			h = n.get_right_handle ();
 			
 			if (h.type == PointType.LINE) {		
@@ -126,7 +126,7 @@ class EditPoint {
 				h.move_to_coordinate (nx, ny);		
 			}
 		}
-		
+
 		// right handle
 		if (next != null) {
 			n = get_next ().data;

@@ -444,25 +444,8 @@ class Glyph : FontDisplay {
 	
 	/** Delete edit point from path. */
 	public void delete_edit_point (EditPoint ep) {
-		
 		foreach (Path p in path_list) {
-			foreach (EditPoint e in p.points) {
-				if (likely (e == ep)) {
-										
-					p.set_new_start (e);
-
-					if (p.is_open ()) {
-						p.close ();
-						p.points.remove (e);
-						p.reopen ();
-					} else {
-						p.reopen ();
-					}
-					
-					redraw_area (0, 0, allocation.width, allocation.height);
-					return;
-				}
-			}
+			p.delete_edit_point (ep);	
 		}
 		
 		warning ("This point does not exist.");

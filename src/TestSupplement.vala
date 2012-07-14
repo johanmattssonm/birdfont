@@ -39,8 +39,14 @@ class TestCases {
 		add (test_reverse_random_paths, "Reverse random paths");
 		add (test_coordinates, "Coordinates");
 		add (test_drawing, "Pen tool");
+		add (test_delete_points, "Delete edit points");
 		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
+	}
+
+	public static void test_delete_points () {
+		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
+		tool.test_delete_points ();
 	}
 
 	public static void test_active_edit_point () {

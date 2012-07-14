@@ -103,13 +103,10 @@ class PenTool : Tool {
 				GridTool.tie (ref x, ref y);
 			}
 			
-			selected_handle.parent.set_point_type (PointType.CURVE); // FIXA: find a way to remove
 			selected_handle.set_point_type (PointType.CURVE);
 			selected_handle.move_to (x, y);
 			
 			selected_handle.parent.recalculate_linear_handles ();
-			
-			selected_handle.parent.get_prev ().data.set_point_type (PointType.CURVE); // FIXA: find a way to remove
 			
 			// Fixa: redraw line only
 			glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
@@ -780,6 +777,30 @@ class PenTool : Tool {
 		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
 		pen_tool.test_select_action ();
 		return pen_tool;
+	}
+	
+	public bool test_delete_points () {
+		PenTool pen;
+		Tool delete_tool = MainWindow.get_toolbox ().get_tool ("erase_tool");
+		
+		test_open_next_glyph ();
+		
+		// draw a line with ten points
+		pen = (PenTool) select_pen ();
+		for (int i = 1; i <= 10; i++) {
+			pen.test_click_action (1, 20*i, 20);
+		}	
+	
+		// TODO: it would be nice to test if points were created here
+		
+		// delete points
+		delete_tool.test_select_action ();
+		for (int i = 1; i <= 10; i++) {
+			pen.move (20*i, 20);
+			pen.test_click_action (1, 20*i, 20);
+		}
+		
+		return true;
 	}
 	
 	public bool test_reverse_random_triangles () {

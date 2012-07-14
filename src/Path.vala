@@ -509,16 +509,6 @@ class Path {
 		return false;
 	}
 
-	public void delete_edit_point (EditPoint e) {
-		foreach (var p in points) {
-			if (likely (p == e)) {
-				points.remove (p);
-			}
-		}
-		
-		warning ("Edit point does not exist.");
-	}
-
 	/** Switch direction from clockwise path to counter clockwise path or vise versa. */
 	public void reverse () {
 		bool direction = is_clockwise ();
@@ -1032,8 +1022,15 @@ class Path {
 				});
 		}
 
-		return_if_fail (previous_point != null);
-		return_if_fail (next_point != null);
+		if (previous_point == null) {
+			warning ("previous_point == null");
+			return;
+		}
+		
+		if (next_point == null) {
+			warning ("next_point != null");
+			return;
+		}
 
 		previous = ((!) previous_point).data;
 		next = ((!) next_point).data;
@@ -1186,7 +1183,31 @@ class Path {
 		ep.data.next = ep.first ();
 		ep.data.prev = ep.prev;
 	}
-	
+
+	public void delete_edit_point (EditPoint ep) 
+		requires (points.length () > 0)
+	{
+			unowned List<EditPoint>? pl = null;
+			EditPoint p = points.first ().data;
+			
+			for (uint i = 0; i < points.length (); i++) {
+				p = points.nth (i).data;
+				
+				if (p == ep) {
+					p.prev = null;
+					p.next = null;
+					
+					pl = points.nth (i);
+				}
+			}
+			
+			return_if_fail (pl != null);
+			
+			points.delete_link ((!) pl);
+			
+			create_list ();
+	}
+		
 	public void set_new_start (EditPoint ep) {
 		List<EditPoint> list = new List<EditPoint> ();
 		uint len = points.length ();
