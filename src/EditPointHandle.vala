@@ -27,9 +27,9 @@ class EditPointHandle  {
 	public double angle;
 	public double length;
 	
-	public PointType type;
-	
 	public EditPoint parent;
+	
+	public PointType type;
 	
 	EditPoint? visual_handle = null;
 

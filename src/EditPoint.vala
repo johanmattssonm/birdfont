@@ -105,6 +105,10 @@ class EditPoint {
 		unowned EditPoint n;
 		double nx, ny;
 
+		if (prev == null && next != null) {
+			prev = get_next ().last ();
+		}
+
 		// left handle
 		if (prev != null) {
 			n = get_prev ().data;
@@ -119,11 +123,14 @@ class EditPoint {
 
 			h = n.get_right_handle ();
 			
-			if (h.type == PointType.LINE) {		
+			// on the other side
+			h = n.get_right_handle ();
+			
+			if (h.type == PointType.LINE) {
 				nx = n.x + ((x - n.x) / 3);
 				ny = n.y + ((y - n.y) / 3);
-				
-				h.move_to_coordinate (nx, ny);		
+			
+				h.move_to_coordinate (nx, ny);
 			}
 		}
 
@@ -138,14 +145,14 @@ class EditPoint {
 				
 				h.move_to_coordinate (nx, ny);
 			}
-			
+
 			h = n.get_left_handle ();
 			
 			if (h.type == PointType.LINE) {
 				nx = n.x + ((x - n.x) / 3);
 				ny = n.y + ((y - n.y) / 3);
-				
-				h.move_to_coordinate (nx, ny);		
+
+				h.move_to_coordinate (nx, ny);
 			}
 		}
 	}
