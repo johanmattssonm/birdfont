@@ -1513,6 +1513,8 @@ class Glyph : FontDisplay {
 		active_path = g.active_path;
 		
 		undo_list.remove_link (undo_list.last ());
+		
+		add_help_lines ();
 	}
 	
 }
