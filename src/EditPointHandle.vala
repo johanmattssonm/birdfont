@@ -35,11 +35,14 @@ class EditPointHandle  {
 
 	static EditPoint none = new EditPoint ();
 
+	public bool active;
+
 	public EditPointHandle.empty() {
 		this.parent = none;
 		this.angle = 0;
 		this.length = 10;
 		this.type = PointType.LINE;
+		this.active = false;
 	}
 	
 	public EditPointHandle (EditPoint parent, double angle, double length) {
@@ -47,6 +50,7 @@ class EditPointHandle  {
 		this.angle = angle;
 		this.length = length;
 		this.type = PointType.LINE;
+		this.active = false;
 	}
 
 	public void set_point_type (PointType point_type) {

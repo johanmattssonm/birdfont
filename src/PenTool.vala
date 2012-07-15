@@ -85,6 +85,7 @@ class PenTool : Tool {
 		EditPoint ep;
 		
 		control_point_event (x, y);
+		curve_active_corner_event (x, y);
 
 		// show new point on path
 		move_current_point_on_path (x, y);
@@ -450,6 +451,24 @@ class PenTool : Tool {
 	private bool is_over_handle (double x, double y) {
 		return selected_corner.get_left_handle ().get_point ().is_close (x, y) 
 		|| selected_corner.get_right_handle ().get_point ().is_close (x, y);
+	}
+
+	private void curve_active_corner_event (double x, double y) {
+		EditPointHandle eh;
+		
+		active_handle.active = false;
+		
+		eh = selected_corner.get_left_handle ();
+		if (eh.get_point ().is_close (x, y)) {
+			eh.active = true;
+			active_handle = eh;
+		}
+		
+		eh = selected_corner.get_right_handle ();
+		if (eh.get_point ().is_close (x, y)) {
+			eh.active = true;
+			active_handle = eh;	
+		}
 	}
 
 	private void curve_corner_event (double x, double y) {

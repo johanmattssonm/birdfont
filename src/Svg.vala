@@ -82,17 +82,22 @@ class Svg {
 		close_path (svg);
 	}
 
-	private static void add_abs_next (EditPoint m, EditPoint e, StringBuilder svg, Glyph g, bool do_glyph, double scale = 1) {
-		if (e.right_handle.type == PointType.LINE && m.left_handle.type == PointType.LINE) {
-			add_abs_line_to (e, m, svg, g, do_glyph, scale);
+	private static void add_abs_next (EditPoint start, EditPoint end, StringBuilder svg, Glyph g, bool do_glyph, double scale = 1) {
+		if (start.right_handle.type == PointType.LINE && end.left_handle.type == PointType.LINE) {
+			add_abs_line_to (end, start, svg, g, do_glyph, scale);
 		} else {
-			add_abs_path (e, m, svg, g, do_glyph, scale);
+			add_abs_path (end, start, svg, g, do_glyph, scale);
 		}
 	}
 
 	private static void add_abs_start (EditPoint ep, StringBuilder svg, Glyph g, bool do_glyph, double scale = 1) {		
-		svg.append ("M");
-		svg.append_printf ("0 0 ");
+		double left = g.left_limit;
+		double baseline = Supplement.get_current_font ().base_line;
+		
+		svg.append_printf ("M");
+
+		svg.append_printf ("%s ",  round ((ep.x - left) * scale));
+		svg.append_printf ("%s ",  round ((ep.y + baseline) * scale));
 	}
 		
 	private static void close_path (StringBuilder svg) {
@@ -113,7 +118,6 @@ class Svg {
 		double center_y = Glyph.yc ();
 	
 		if (!to_glyph) {
-			print ("!to_glyph\n");
 			svg.append ("L");
 						
 			svg.append_printf ("%s ", round ((xa - center_x - left) * scale));
@@ -152,11 +156,6 @@ class Svg {
 		double center_y = Glyph.yc ();
 		
 		if (!to_glyph) {
-			svg.append_printf ("L");
-			
-			svg.append_printf ("%s ",  round ((xa - center_x - left) * scale));
-			svg.append_printf ("%s ",  round ((ya - center_y - baseline + height) * scale));
-			
 			svg.append_printf ("C");
 
 			svg.append_printf ("%s ", round ((xb - center_x - left) * scale));
@@ -168,12 +167,7 @@ class Svg {
 			svg.append_printf ("%s ", round ((xd - center_x - left) * scale));
 			svg.append_printf ("%s ", round ((yd - center_y - baseline + height) * scale));	
 
-		} else {
-			svg.append_printf ("L");
-			
-			svg.append_printf ("%s ",  round ((xa - center_x - left) * scale));
-			svg.append_printf ("%s ",  round ((-ya + center_y + baseline) * scale));	
-			
+		} else {		
 			svg.append_printf ("C");
 
 			svg.append_printf ("%s ", round ((xb - center_x - left) * scale));

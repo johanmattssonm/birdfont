@@ -57,7 +57,18 @@ class Path {
 	
 	bool selected = false;
 	
+	private static ImageSurface? edit_point_image = null;
+	private static ImageSurface? active_edit_point_image = null;
+	private static ImageSurface? edit_point_handle_image = null;
+	private static ImageSurface? active_edit_point_handle_image = null;
+	
 	public Path () {
+		if (edit_point_image == null) {
+			edit_point_image = Icons.get_icon ("edit_point.png");
+			active_edit_point_image = Icons.get_icon ("active_edit_point.png");
+			edit_point_handle_image = Icons.get_icon ("edit_point_handle.png");
+			active_edit_point_handle_image = Icons.get_icon ("active_edit_point_handle.png");
+		}
 	}
 
 	public void set_color (double r, double g, double b, double a) {
@@ -119,8 +130,8 @@ class Path {
 			draw_next (em, en, cr);
 		}
 
-		if (is_selected ()) {
-			// fill path
+		// fill path
+		if (is_selected ()) {	
 			cr.close_path ();
 			cr.set_source_rgba (r, g, b, a);
 			cr.fill ();
@@ -143,7 +154,7 @@ class Path {
 	}
 	
 	private void draw_next (EditPoint e, EditPoint en, Context cr) {
-		if (en.right_handle.type == PointType.LINE && e.right_handle.type == PointType.LINE) {
+		if (en.right_handle.type == PointType.LINE && e.left_handle.type == PointType.LINE) {
 			draw_line (e, en, cr);
 		} else {
 			draw_curve (e, en, cr);
@@ -260,7 +271,11 @@ class Path {
 		draw_edit_point_center (e, cr);
 	}
 	
-	public void draw_edit_point_handles (EditPoint e, Context cr) {
+	public void draw_edit_point_handles (EditPoint e, Context cr)
+		requires (active_edit_point_handle_image != null && edit_point_handle_image != null)
+	{
+		ImageSurface img_right, img_left;
+
 		EditPoint handle_right = e.get_right_handle ().get_point ();
 		EditPoint handle_left = e.get_left_handle ().get_point ();
 			
@@ -269,12 +284,42 @@ class Path {
 		
 		cr.stroke ();
 		
-		draw_edit_point_center (handle_right, cr);
-		draw_edit_point_center (handle_left, cr);
+		img_right = (e.get_right_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
+		img_left = (e.get_left_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
+		
+		draw_img_center (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
+		draw_img_center (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
+	}
+
+	public static void draw_edit_point_center (EditPoint e, Context cr) 
+		requires (active_edit_point_image != null && edit_point_image != null)
+	{	
+		ImageSurface img = (e.active) ? (!) active_edit_point_image : (!) edit_point_image;
+		draw_img_center (cr, img, e.x, e.y);
 	}
 	
+	public static void draw_img_center (Context cr, ImageSurface img, double x, double y) {
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		double ivz = 1 / g.view_zoom;
+
+		double xc = g.allocation.width / 2.0;
+		double yc = g.allocation.height / 2.0;
+
+		cr.save ();
+
+		cr.scale (ivz, ivz);
+		
+		x = xc + x - (img.get_width () / 2.0) * ivz; 
+		y = yc - y - (img.get_height () / 2.0) * ivz;
+		
+		cr.set_source_surface (img, x * g.view_zoom, y * g.view_zoom);
+		cr.paint ();
+		
+		cr.restore ();		
+	}
 	
-	public static void draw_edit_point_center (EditPoint e, Context cr) {
+	public static void draw_edit_point_center_testing (EditPoint e, Context cr) {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		double ivz = 1 / g.view_zoom;
@@ -283,7 +328,7 @@ class Path {
 		double yc = g.allocation.height / 2.0;
 
 		double x = xc + e.x;
-		double y = yc - e.y + 0.5;
+		double y = yc - e.y;
 
 		double thickness = (e.active) ? 5 * ivz : 4 * ivz;
 
@@ -293,19 +338,20 @@ class Path {
 			cr.set_source_rgba (e.r, e.g, e.b, e.a);
 
 		cr.set_line_width (thickness);
-		
+
 		cr.new_path ();
 		
-		cr.move_to (x - 0.7 * ivz, y - 0.7 * ivz - 0.5);
-		cr.line_to (x + 0.7 * ivz, y + 0.7 * ivz - 0.5);
+		cr.move_to (x - 0.7 * ivz, y - 0.7 * ivz);
+		cr.line_to (x + 0.7 * ivz, y + 0.7 * ivz);
 		
-		cr.move_to (x + 0.7 * ivz, y - 0.7 * ivz - 0.5);
-		cr.line_to (x - 0.7 * ivz, y + 0.7 * ivz - 0.5);
+		cr.move_to (x + 0.7 * ivz, y - 0.7 * ivz);
+		cr.line_to (x - 0.7 * ivz, y + 0.7 * ivz);
 		
 		cr.close_path ();
 
 		cr.stroke ();
 
+		cr.save ();	
 	}
 	
 	/** Returns true if there is an edit point at (p.x, p.y). */
