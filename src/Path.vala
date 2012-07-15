@@ -278,17 +278,21 @@ class Path {
 
 		EditPoint handle_right = e.get_right_handle ().get_point ();
 		EditPoint handle_left = e.get_left_handle ().get_point ();
-			
-		draw_line (handle_right, e, cr, 0.15);
-		draw_line (handle_left, e, cr, 0.15);
-		
+
 		cr.stroke ();
 		
 		img_right = (e.get_right_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
 		img_left = (e.get_left_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
 		
-		draw_img_center (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
-		draw_img_center (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
+		if (e.next != null) {
+			draw_img_center (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
+			draw_line (handle_right, e, cr, 0.15);
+		}
+		
+		if (e.prev != null) {
+			draw_img_center (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
+			draw_line (handle_left, e, cr, 0.15);
+		}
 	}
 
 	public static void draw_edit_point_center (EditPoint e, Context cr) 
@@ -1212,8 +1216,8 @@ class Path {
 		}
 		
 		if (points.length () == 1) {
-			ep.data.next = points.first ();
-			ep.data.prev = points.last ();
+			ep.data.next = null;
+			ep.data.prev = null;
 			return;
 		}
 		
@@ -1226,7 +1230,12 @@ class Path {
 			ep = ep.next;
 		}
 		
-		ep.data.next = ep.first ();
+		if (is_open ()) {
+			ep.data.next = null;
+		} else {
+			ep.data.next = ep.first ();
+		}
+		
 		ep.data.prev = ep.prev;
 	}
 

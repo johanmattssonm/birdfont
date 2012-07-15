@@ -86,7 +86,8 @@ class PenTool : Tool {
 		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
-
+		set_default_handle_positions ();
+		
 		// show new point on path
 		move_current_point_on_path (x, y);
 		
