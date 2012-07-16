@@ -279,7 +279,7 @@ class Svg {
 }
 
 public static string round (double p) {
-	int t = (int) p;
+/*	int t = (int) p;
 	int u = (int) ((p - t) * 10);
 	int v = (int) ((p - t - u / 10.0) * 100);
 	int w = (int) ((p - t - u - v / 100.0) * 1000);
@@ -292,6 +292,9 @@ public static string round (double p) {
 	sb.append_printf ("%d.%d%d%d", t, u, v, w);
 	
 	return sb.str;
+*/
+
+	return @"$p";
 }
 	
 }
