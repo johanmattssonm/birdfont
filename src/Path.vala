@@ -1280,6 +1280,7 @@ class Path {
 			if (pl != null) {
 				points.delete_link ((!) pl);
 				reopen ();
+				MainWindow.get_current_glyph ().active_path = this;
 				create_list ();
 			}
 	}
