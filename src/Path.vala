@@ -612,6 +612,8 @@ class Path {
 			}
 		}
 		
+		return_if_fail (top_point.next != null && top_point.prev != null);
+		
 		return (top_point.get_prev ().data.x < top_point.get_next ().data.x);
 	}
 	
@@ -1041,6 +1043,11 @@ class Path {
 		EditPoint next;
 		double step = 0;
 		
+		if (points.length () != 1) {
+			edit_point.x = i.data.x;
+			edit_point.y = i.data.y;
+		}
+		
 		while (!exit) {
 			
 			if (i == points.last ()) {
@@ -1250,7 +1257,13 @@ class Path {
 		requires (points.length () > 0)
 	{
 			unowned List<EditPoint>? pl = null;
-			EditPoint p = points.first ().data;
+			EditPoint p;
+			
+			if (ep.prev != null) {
+				set_new_start (ep);
+			}
+			
+			p = points.first ().data;
 			
 			for (uint i = 0; i < points.length (); i++) {
 				p = points.nth (i).data;
@@ -1260,28 +1273,37 @@ class Path {
 					p.next = null;
 					
 					pl = points.nth (i);
+					break;
 				}
 			}
-			
-			return_if_fail (pl != null);
-			
-			points.delete_link ((!) pl);
-			
-			create_list ();
+
+			if (pl != null) {
+				points.delete_link ((!) pl);
+				reopen ();
+				create_list ();
+			}
 	}
 		
 	public void set_new_start (EditPoint ep) {
 		List<EditPoint> list = new List<EditPoint> ();
 		uint len = points.length ();
 		unowned List<EditPoint> iter = points.first ();
+		unowned List<EditPoint>? ni = null;
 		
-		foreach (var it in points) {
+		foreach (EditPoint it in points) {
 			if (it == ep) {
 				break;
 			}
 			
 			iter = iter.next;
+			ni = (!) iter;
 		}
+		
+		if (ni == null) {
+			return;			
+		}
+		
+		iter = (!) ni;
 		
 		for (uint i = 0; i < len; i++) {
 			list.append (iter.data);

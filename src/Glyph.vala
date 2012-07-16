@@ -345,9 +345,13 @@ class Glyph : FontDisplay {
 	public void remove_empty_paths () {
 		foreach (var p in path_list) {
 			if (p.points.length () == 0) {
-				path_list.remove_all (p);
+				delete_path (p);
 			}
 		}
+	}
+	
+	public void delete_path (Path p) {
+		path_list.remove_all (p);
 	}
 	
 	public string get_svg_data () {
@@ -445,10 +449,12 @@ class Glyph : FontDisplay {
 	/** Delete edit point from path. */
 	public void delete_edit_point (EditPoint ep) {
 		foreach (Path p in path_list) {
-			p.delete_edit_point (ep);	
+			if (p.points.length () > 0) {
+				p.delete_edit_point (ep);
+			} else {
+				delete_path (p);
+			}
 		}
-		
-		warning ("This point does not exist.");
 	}
 	
 	public override void motion_notify (EventMotion e) {
