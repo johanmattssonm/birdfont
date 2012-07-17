@@ -541,6 +541,7 @@ class ContentDisplay : FontDisplay {
 				MainWindow.close_all_tabs ();
 				f.load ((!)fn);
 				
+				MainWindow.get_singleton ().set_title (f.get_name ());
 				select_overview ();		
 				Preferences.add_recent_files ((!) fn);
 			}
@@ -582,10 +583,12 @@ class ContentDisplay : FontDisplay {
 			
 			if (!unlikely (loaded)) {
 				warning (@"Failed to load fond $fn");
-			} else {
-				Preferences.add_recent_files (fn);			
-				select_overview ();
+				return;
 			}
+			
+			MainWindow.get_singleton ().set_title (f.get_name ());
+			Preferences.add_recent_files (fn);			
+			select_overview ();
 		}
 	}
 

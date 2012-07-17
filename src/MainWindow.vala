@@ -37,7 +37,7 @@ public class MainWindow : Gtk.Window {
 	static DrawingArea margin_bottom;
 	static DrawingArea margin_right;
 	
-	public MainWindow(string title) {
+	public MainWindow (string title) {
 		singleton = this;
 		
 		key_bindings = new KeyBindings ();
