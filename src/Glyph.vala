@@ -819,9 +819,9 @@ class Glyph : FontDisplay {
 		if (!added && union_path != null) {
 			Path p = (!) union_path;
 			if (p.is_open ()) {
-					p.add (xt, yt);
-					active_path = p;
-					added = true;
+				p.add (xt, yt);
+				active_path = p;
+				added = true;
 			}
 		}
 		
@@ -1490,7 +1490,7 @@ class Glyph : FontDisplay {
 		}
 		
 		g.active_path = active_path;
-				
+		
 		return g;
 	}
 
@@ -1515,12 +1515,12 @@ class Glyph : FontDisplay {
 		foreach (Line line in g.get_all_help_lines ()) {
 			add_line (line.copy ());
 		}
+
+		add_help_lines ();
 				
 		active_path = g.active_path;
 		
 		undo_list.remove_link (undo_list.last ());
-		
-		add_help_lines ();
 	}
 	
 }

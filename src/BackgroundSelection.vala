@@ -104,13 +104,13 @@ class BackgroundSelection : FontDisplay {
 	}
 		
 	private bool draw_thumbnail (string file, double x, double y, Context cr, int box_index) {
-		ImageSurface img;
 		GlyphBackgroundImage bg = new GlyphBackgroundImage (file);
 		File thumbnail = bg.get_thumbnail_file ();
-
-		img = new ImageSurface.from_png ((!) thumbnail.get_path ());
+		Pixbuf pixbuf = new Pixbuf.from_file (file);
+		ImageSurface img = new ImageSurface.for_data (pixbuf.get_pixels (), Format.ARGB32, pixbuf.get_width (), pixbuf.get_height (), pixbuf.get_rowstride ());
 		
 		if (img.status () != Cairo.Status.SUCCESS) {
+			warning (@"Failed to load $file (height: $(pixbuf.get_height ()), width: $(pixbuf.get_width ()), stride: $(pixbuf.get_rowstride ()))");
 			return false;
 		}
 
@@ -152,6 +152,7 @@ class BackgroundSelection : FontDisplay {
 		FileChooserDialog file_chooser;
 		string file;
 		ImageSurface image;
+		Pixbuf pixbuf;
 		
 		try {
 			file_chooser = new FileChooserDialog ("Add background image", MainWindow.get_current_window (), FileChooserAction.OPEN, Stock.CANCEL, ResponseType.CANCEL, Stock.OPEN, ResponseType.ACCEPT);
@@ -160,12 +161,14 @@ class BackgroundSelection : FontDisplay {
 			if (file_chooser.run () == ResponseType.ACCEPT) {
 				// Fixa: Set file name relative to font folder
 				file = file_chooser.get_filename ();
-
-				image = new ImageSurface.from_png (file);
+				pixbuf = new Pixbuf.from_file (file);
+				image = new ImageSurface.for_data (pixbuf.get_pixels (), Format.ARGB32, pixbuf.get_height (), pixbuf.get_width (), pixbuf.get_rowstride ());
 				
 				if (image.status () == Cairo.Status.SUCCESS) {
 					Supplement.get_current_font ().add_background_image (file);
 					MainWindow.get_glyph_canvas ().redraw ();				
+				} else {
+					warning (@"Failed to load $file (height: $(pixbuf.get_height ()), width: $(pixbuf.get_width ()), stride: $(pixbuf.get_rowstride ()))");
 				}
 			}
 

@@ -348,9 +348,15 @@ class PenTool : Tool {
 		glyph.open_path ();
 		glyph.add_new_edit_point (x, y);
 		
-		((!)glyph.active_path).points.last ().data.right_handle.parent.recalculate_linear_handles ();
+		set_linear_handles_for_last_point ();
 		
 		move_selected = true;
+	}
+
+	void set_linear_handles_for_last_point () {
+		Glyph glyph;
+		glyph = MainWindow.get_current_glyph ();
+		((!)glyph.active_path).points.last ().data.right_handle.parent.recalculate_linear_handles ();
 	}
 
 	void set_default_handle_positions () {
