@@ -498,6 +498,10 @@ class ContentDisplay : FontDisplay {
 		}
 
 		if (0 <= recent_active <= columns) {
+			
+			return_if_fail (cf.font_file != null);
+			return_if_fail (recent_fonts.nth (recent_active).data.font_file != null);
+			
 			f = (!) cf.font_file;
 			f2 = (!) recent_fonts.nth (recent_active).data.font_file;			
 

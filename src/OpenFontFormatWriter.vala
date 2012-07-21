@@ -88,6 +88,53 @@ class OpenFontFormatWriter : Object  {
 	}
 }
 
+class OtfInputStream : Object  {
+	
+	public FileInputStream fin;
+	public DataInputStream din;
+	
+	public OtfInputStream (FileInputStream i) throws Error  {
+		din = new DataInputStream (i);
+		fin = i;
+	}
+	
+	public void seek (int64 pos) 
+		requires (fin.can_seek ()) {
+		int64 p = fin.tell ();		
+		fin.seek (pos - p, SeekType.CUR);
+	}
+	
+	public Fixed read_fixed () throws Error {
+		Fixed f = din.read_uint32 ();
+		return f;
+	}
+
+	public F2Dot14 read_f2dot14 () throws Error {
+		F2Dot14 f = din.read_int16 ();
+		return f;
+	}
+
+	public uint64 read_udate () throws Error {
+		return din.read_int64 ();
+	}
+	
+	public int16 read_short () throws Error {
+		return din.read_int16 ();
+	}
+	
+	public uint16 read_ushort () throws Error {
+		return din.read_uint16 ();
+	}
+	
+	public uint32 read_ulong () throws Error {
+		return din.read_uint32 ();
+	}
+
+	public uint8 read_byte () throws Error {
+		return din.read_byte ();
+	}
+}
+
 class Contour : Object {
 	
 	public List<Coordinate> coordinates;
@@ -325,38 +372,230 @@ class FontData : Object {
 
 class Coordinate {
 	/** TTF coordinate flags. */
-	
+
 	public static const uint8 ON_PATH        = 1 << 0;
 	public static const uint8 X_SHORT_VECTOR = 1 << 1;
 	public static const uint8 Y_SHORT_VECTOR = 1 << 2;
 	public static const uint8 REPEAT         = 1 << 3;
-	
+
 	// same flag or short vector sign flag
 	public static const uint8 X_IS_SAME               = 1 << 4; 
 	public static const uint8 Y_IS_SAME               = 1 << 5;
 	public static const uint8 X_SHORT_VECTOR_POSITIVE = 1 << 4;
 	public static const uint8 Y_SHORT_VECTOR_POSITIVE = 1 << 5;
-	
+
 	public uint8 flag = 0;
 	public int16 x = 0;
 	public int16 y = 0;
 }
 
-interface Table : Object {
-	public abstract string get_id ();
-	public abstract FontData get_font_data ();
+class Table : Object {
+
+	public string id = "NO_ID";
+
+	public uint32 checksum = 0;
+	public uint32 offset = 0;
+	public uint32 length = 0;
+
+	public virtual string get_id () {
+		return id;
+	}
+	
+	public virtual FontData get_font_data () {
+		warning ("No font data for table.");
+		return new FontData ();
+	}
+
+	public virtual void parse (OtfInputStream dis) {
+		warning (@"Parse is not implemented for $(id).");
+	}
+
+	/** Validate table checksum. */
+	public bool validate (OtfInputStream dis) {
+		bool valid;
+		
+		if (length == 0) {
+			stderr.printf (@"Table $id is of zero length.\n");			
+			valid = false;
+		} else {
+			valid = Table.validate_table (dis, checksum, offset, length, id);
+		}
+		
+		if (!valid) {
+			stderr.printf (@"Table $id is invalid.\n");
+		}
+		
+		return valid;
+	}
+
+	public static bool validate_table (OtfInputStream dis, uint32 checksum, uint32 offset, uint32 length, string name) {
+		uint32 ch = calculate_ckecksum (dis, offset, length, name);
+		bool c;
+		
+		c = (ch != checksum);
+		
+		if (!c) {
+			stderr.printf(@"Checksum does not match data for $(name).\n");
+			stderr.printf(@"name: $name, checksum: $checksum, offset: $offset, length: $length\n");
+		}
+		
+		return c;	
+	}
+
+	public static uint32 calculate_ckecksum (OtfInputStream dis, uint32 offset, uint32 length, string name) {
+		uint32 checksum = 0;
+		uint32 val = 0;
+		uint8 v;
+		uint8 b = 3;
+		
+		print (@"Seek $offset\n");
+		dis.seek (offset);
+
+		if (length % 4 > 0) {
+			stderr.printf(@"Warning table data is not padded to correct size in $(name).\n");
+		}
+
+		for (uint32 i = 0; i < length; i++) {
+			v = dis.read_byte ();
+			val += v << b*8;
+			
+			if (b == 0) {
+				checksum += val;
+				val = 0;
+				b = 3;
+			}
+			
+			b--;
+		}
+		
+		return checksum;
+	}
 }
 
-class GlyfTable : Table, Object {
+class LocaTable : Table {
 	
-	public List<Glyf> glyfs = new List<Glyf> ();
+	uint32* glyph_offsets = null;
+	public uint32 size = 0;
+	
+	public LocaTable () {
+	}	
+	
+	~LocaTable () {
+		if (glyph_offsets != null) delete glyph_offsets;
+	}
+	
+	public uint32 get_last_glyph_length () {
+		return_if_fail (glyph_offsets != null);
+		
+		if (size == 0) {
+			warning ("No glyphs in loca table");
+		}
+		
+		return glyph_offsets[size + 1];
+	}
+	
+	public uint32 get_offset (uint32 i) {
+		return_if_fail (glyph_offsets != null);
+		
+		if (size == 0) {
+			warning ("No glyphs in loca table");
+		}
+		
+		if (!(0 <= i < size + 1)) {
+			warning (@"No offset for glyph $i. Requires (0 <= $i < $(size + 1)");
+		}
+		
+		return 2 * glyph_offsets [i];
+	}
+	
+	/** Returns true if glyph at index i is empty and have no body to parse. */
+	public bool is_empty (uint32 i) {
+		return_if_fail (glyph_offsets != null);
+
+		if (size == 0) {
+			warning ("No glyphs in loca table");
+		}
+				
+		if (!(0 <= i < size + 1)) {
+			warning (@"No offset for glyph $i. Requires (0 <= $i < $(size + 1)");
+		}
+		
+		if (i == size -1) {
+			return get_last_glyph_length () == 0;
+		}
+		
+		return glyph_offsets[i] == glyph_offsets[i + 1];
+	}
+	
+	public void parse (OtfInputStream dis, HeadTable head_table, MaxpTable maxp_table) {
+		size = maxp_table.num_glyphs;
+		glyph_offsets = new uint32[size + 1];
+		
+		dis.seek (offset);
+		
+		print (@"size: $size\n");
+		print (@"length: $length\n");
+		print (@"length/4-1: $(length / 4 - 1)\n");
+		print (@"length/2-1: $(length / 2 - 1)\n");
+		print (@"head_table.loca_offset_size: $(head_table.loca_offset_size)\n");
+		
+		switch (head_table.loca_offset_size) {
+			case 0:
+				for (long i = 0; i < size + 1; i++) {
+					glyph_offsets[i] = dis.read_ushort ();	
+					
+					if (i > 0 && glyph_offsets[i - 1] > glyph_offsets[i]) {
+						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
+					}
+				} 
+				break;
+				
+			case 1:
+				for (long i = 0; i < size + 1; i++) {
+					glyph_offsets[i] = 	dis.read_ulong ();
+					
+					if (i > 0 && glyph_offsets[i - 1] > glyph_offsets[i]) {
+						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
+					}				
+				}
+				break;
+			
+			default:
+				warning ("unknown size for offset in loca table");
+				break;
+		}
+	}
+
+	public void print_offsets () {
+		for (int i = 0; i < size; i++) {
+			print (@"get_offset ($i): $(get_offset (i))\n");
+		}
+		
+		print (@"get_last_glyph_length (): $(get_last_glyph_length ())\n");
+	}
+}
+
+class GlyfTable : Table {
+	
+	public List<Glyf> glyfs = new List<Glyf> (); // FIXA: remove this
+	
+	public List<Glyph> glyphs = new List<Glyph> ();
 	
 	FontData? font_data = null;
 	
-	int16 xmin = int16.MAX;
+	int16 xmin = int16.MAX; // FIXA: remove these
 	int16 ymin = int16.MAX;
 	int16 xmax = int16.MIN;
 	int16 ymax = int16.MIN;
+	
+	// Flags for composite glyph
+	static const uint16 BOTH_ARE_WORDS = 1 << 0;
+	static const uint16 SCALE = 1 << 3;
+	static const uint16 RESERVED = 1 << 4;
+	static const uint16 MORE_COMPONENTS = 1 << 5;
+	static const uint16 SCALE_X_Y = 1 << 6;
+	static const uint16 SCALE_WITH_ROTATTION = 1 << 7;
+	static const uint16 INSTRUCTIONS = 1 << 8;
 	
 	public GlyfTable () {
 	}	
@@ -369,6 +608,356 @@ class GlyfTable : Table, Object {
 			});
 	}
 	
+	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca) {
+		print (@"Parsing $(cmap.get_length ()) glyfs\n");
+		print (@"Parsing loca size: $(loca.size)\n");
+
+/*
+		unichar c = 'g';
+		uint32 glyph_offset;
+		uint32 gbe = 0;
+		bool err = false;
+		for (uint32 i = 1; i < loca.size; i++) {
+			try {
+				err = false;
+				if (!loca.is_empty (i)) {
+					glyph_offset = loca.get_offset(i);
+					parse_next_glyf (dis, c + i, glyph_offset + gbe);
+				} else {
+					// add empty glyph
+					continue;
+				}
+			} catch (Error e) {
+				stderr.printf (@"Falied to parse glyf:\n$(e.message)\n");
+				i--;
+				gbe++;
+				err = true;
+				if (c > 'g' + 30) break;
+			}
+			
+			if (!err) break;
+		}
+*/
+		unichar c = 'g';
+		uint32 glyph_offset;
+		for (uint32 i = 0; i < loca.size; i++) {
+			try {
+				if (!loca.is_empty (i)) {
+					glyph_offset = loca.get_offset(i);
+					parse_next_glyf (dis, c + i, glyph_offset);
+				} else {
+					// add empty glyph
+				}
+			} catch (Error e) {
+				stderr.printf (@"Falied to parse glyf:\n$(e.message)\n");
+				// loca.print_offsets ();
+				break;
+			}
+		}
+	}
+	
+	void parse_next_composite_glyf (OtfInputStream dis, unichar character) throws Error {
+		uint16 component_flags = 0;
+		uint16 glyph_index;
+		int16 arg1;
+		int16 arg2;
+		uint16 arg1and2;
+		F2Dot14 scale;
+		
+		F2Dot14 scalex;
+		F2Dot14 scaley;
+		
+		F2Dot14 scale01;
+		F2Dot14 scale10;
+		
+		uint16 num_instructions;
+		
+		do {
+			component_flags = dis.read_ushort ();
+			glyph_index = dis.read_ushort ();
+			
+			print (@"glyph_index: $glyph_index\n");
+			
+			if ((component_flags & BOTH_ARE_WORDS) > 0) {
+				arg1 = dis.read_short ();
+				arg1 = dis.read_short ();			
+			} else {
+				arg1and2 = dis.read_ushort ();
+			}
+			
+			if ((component_flags & RESERVED) > 0) {
+				warning ("bad composite glyf");
+				throw new BadFormat.PARSE ("Reserved flag is set in compisite glyph.");
+			}
+			
+			if ((component_flags & SCALE) > 0) {
+				scale = dis.read_f2dot14 ();
+			}
+
+			if ((component_flags & SCALE_X_Y) > 0) {
+				scalex = dis.read_f2dot14 ();
+				scaley = dis.read_f2dot14 ();
+			}
+
+			if ((component_flags & SCALE_WITH_ROTATTION) > 0) {
+				scalex = dis.read_f2dot14 ();
+				scale01 = dis.read_f2dot14 ();
+				scale10 = dis.read_f2dot14 ();
+				scaley = dis.read_f2dot14 ();
+			}
+			
+		} while ((component_flags & MORE_COMPONENTS) > 0);
+		
+		if ((component_flags & INSTRUCTIONS) > 0) {
+			num_instructions = dis.read_ushort ();
+			
+			print (@"num_instructions: $num_instructions\n");
+			
+			for (int i = 0; i < num_instructions; i++) {
+				dis.read_byte ();
+			}
+		}
+	}
+	
+	void parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset) throws Error {
+		uint16* end_points = null;
+		uint8* instructions = null;
+		uint8* flags = null;
+		int16* xcoordinates = null;
+		int16* ycoordinates = null;
+		
+		int npoints = 0;
+		
+		int16 ncontours;
+		int16 xmin;
+		int16 ymin;
+		int16 xmax;
+		int16 ymax;
+		uint16 ninstructions;
+		
+		int nflags;
+		
+		Error? error = null;
+		
+		print (@"\nnew glyph\n");
+		print (@"glyph_offset: $glyph_offset\n");
+		
+		dis.seek (offset + glyph_offset);
+		
+		ncontours = dis.read_short ();
+		
+		print (@"$ncontours contours in glyf table.\n");
+		
+		if (ncontours == 0) {
+			warning ("Got zero contours.");
+
+			// should skip body
+		}
+				
+		if (ncontours == -1) {
+			print ("Skipping composite glyph.\n");
+			// parse_next_composite_glyf (dis, character);
+			return;
+		}
+				
+		if (ncontours < -1) {
+			warning (@"Got $ncontours contours in glyf table.");
+			error = new BadFormat.PARSE ("Invalid glyf");
+			throw error;
+		}
+		
+		xmin = dis.read_short ();
+		ymin = dis.read_short ();
+		xmax = dis.read_short ();
+		ymax = dis.read_short ();
+		
+		print (@"($xmin,$ymin) to ($xmax, $ymax)\n");
+		
+		print ("Simple\n");
+	
+		end_points = new uint16[ncontours + 1];
+		for (int i = 0; i < ncontours; i++) {
+			end_points[i] = dis.read_ushort (); // FIXA: mind shot vector is negative
+			
+			if (i > 0 && end_points[i] < end_points[i -1]) {
+				warning (@"Bad endpoint ($(end_points[i]) < $(end_points[i -1]))");
+				error = new BadFormat.PARSE ("Invalid glyf");
+				throw error;
+			}
+		}
+		
+		if (ncontours > 0) {
+			npoints = end_points[ncontours - 1] + 1;
+		} else {
+			npoints = 0;
+		}
+
+		ninstructions = dis.read_ushort ();
+		print (@"$ninstructions instructions in glyf table.\n");
+		
+		instructions = new uint8[ninstructions + 1];
+		uint8 repeat;
+		for (int i = 0; i < ninstructions; i++) {
+			instructions[i] = dis.read_byte ();
+		}
+		
+		nflags = 0;
+		flags = new uint8[npoints + 1];
+		for (int i = 0; i < npoints; i++) {
+			flags[i] = dis.read_byte ();
+			
+			if ((flags[i] & Coordinate.REPEAT) > 0) {
+				repeat = dis.read_byte ();
+				
+				// Fixa: delete print (@"Repeat flag $repeat\n");
+				
+				if (i + repeat >= npoints) {
+					error = new BadFormat.PARSE ("Too many flags in glyf (i >= ninstructions).");
+					break;
+				}
+				
+				for (int j = 0; j < repeat; j++) {
+					flags[j + i + 1] = flags[i];
+				}
+				
+				nflags += repeat;
+				i += repeat;
+			}
+			
+			nflags++;
+		}
+		
+		if (nflags < npoints) {
+			warning (@"(nflags != npoints) ($nflags != $npoints)");
+			error = new BadFormat.PARSE (@"Wrong number of flags. (nflags != npoints) ($nflags != $npoints)");
+		}
+		
+		int16 last = 0;
+		xcoordinates = new int16[npoints + 1];
+		for (int i = 0; i < npoints; i++) {
+			if ((flags[i] & Coordinate.X_SHORT_VECTOR) > 0) {	
+				if ((flags[i] & Coordinate.X_SHORT_VECTOR_POSITIVE) > 0) {
+					xcoordinates[i] = last + dis.read_byte ();
+				} else {
+					xcoordinates[i] = last - dis.read_byte ();
+				}
+			} else {
+				if ((flags[i] & Coordinate.X_IS_SAME) > 0) {
+					xcoordinates[i] = last;
+				} else {
+					xcoordinates[i] = last + dis.read_short ();
+				}
+			}
+			
+			last = xcoordinates[i];
+			
+			if (!(xmin <= last <= xmax))	{
+				error = new BadFormat.PARSE ("x is out of bounds");
+				break;
+			}
+		}
+		
+		last = 0;
+		ycoordinates = new int16[npoints + 1];
+		for (int i = 0; i < npoints; i++) {
+			if ((flags[i] & Coordinate.Y_SHORT_VECTOR) > 0) {	
+				if ((flags[i] & Coordinate.Y_SHORT_VECTOR_POSITIVE) > 0) {
+					ycoordinates[i] = last + dis.read_byte ();
+				} else {
+					ycoordinates[i] = last - dis.read_byte ();
+				}
+			} else {
+				if ((flags[i] & Coordinate.Y_IS_SAME) > 0) {
+					ycoordinates[i] = last;
+				} else {
+					ycoordinates[i] = last + dis.read_short ();
+				}
+			}
+			
+			last = ycoordinates[i];
+			
+			//print (@"$(ycoordinates[i])\n");			
+			//print (@"($ymin <= $last <= $ymax)\n");
+			
+			if (!(ymin <= last <= ymax))	{
+				error = new BadFormat.PARSE (@"y is out of bounds ($ymin <= $last <= $ymax)");
+				break;
+				// Fixa: del warning (@"y is out of bounds ($ymin <= $last <= $ymax)");
+			}
+		}
+		
+		int j = 0;
+		StringBuilder name = new StringBuilder ();
+		Glyph glyph;
+		double startx, starty;
+		double x, y, rx, ry, lx, ly, nx, ny;
+		
+		name.append_unichar (character);
+		glyph = new Glyph (name.str, character);
+		
+		for (int i = 0; i < ncontours; i++) {
+			
+			x = 0;
+			y = 0;
+			
+			print ("Next path\n");
+			
+			Path path = new Path ();
+			EditPoint edit_point = new EditPoint ();
+			
+			for (; j <= end_points[i]; j++) {
+
+				if (j >= npoints) {
+					warning (@"j >= npoints (j: $j, end_points[i]: $(end_points[i]))");
+					break;
+				}
+
+				x = xcoordinates[j] * 1000.0 / 0xFFFF; // in proportion to em width
+				y = ycoordinates[j] * 1000.0 / 0xFFFF;
+				
+				if ((flags[j] & Coordinate.ON_PATH) > 0) {
+					print ("POINT\n");
+					edit_point = new EditPoint ();
+					edit_point.set_position (x, y);
+					path.add_point (edit_point);
+					//path.add (x, y); 
+				} else {
+					print ("CURVE\n");
+					
+					path.add (x, y);
+					/*	
+					if ((flags[j - 1] & Coordinate.ON_PATH) == 0) {
+						edit_point.type = PointType.CURVE;
+						edit_point.get_left_handle ().set_point_type (PointType.CURVE);
+						edit_point.get_left_handle ().move_to_coordinate (x, y);
+					} else {
+						edit_point.type = PointType.CURVE;
+						edit_point.get_right_handle ().set_point_type (PointType.CURVE);
+						edit_point.get_right_handle ().move_to_coordinate (x, y);
+					}*/
+				} 
+				
+				//print (@"path.add ($(x * 1000.0 / 0xFFFF), $(y * 1000.0 / 0xFFFF));\n");
+				
+				//print (@"x: $(x) == $(end_points[i])\n");
+				//print (@"y: $(y) == $(end_points[i])\n");
+			}
+			
+			path.close ();
+			glyph.add_path (path);
+		}
+		
+		glyphs.append (glyph);
+		
+		if (end_points != null) delete end_points;
+		if (instructions != null) delete instructions;
+		if (flags != null) delete flags;
+		if (xcoordinates != null) delete xcoordinates;
+		if (ycoordinates != null) delete ycoordinates;
+		
+		if (error != null) throw (!) error;
+	}
+		
 	public string get_id () {
 		return "glyf";
 	}
@@ -485,29 +1074,192 @@ class GlyfTable : Table, Object {
 		
 }
 
-class CmapSubtable {
+/** Format 4 cmap subtable */
+class CmapSubtable : Table {
 	public static const uint16 FORMAT_TRIMMED_ARRAY = 10;
 
 	public uint32 start_char_code = 0;
 	public uint32 num_chars = 0;
 }
 
-class CmapTable : Table, Object { 
+class CmapSubtableWindowsUnicode : CmapSubtable {
+	uint16 format = 0;
+
+	uint16 lang;
+	uint16 seg_count_x2;
+	uint16 search_range;
+	uint16 entry_selector;
+	uint16 range_shift;
+
+	uint16 seg_count;
+	uint16* end_char = null;
+	uint16* start_char = null;
+	uint16* id_delta = null;
+	uint16* id_range_offset = null;
+	uint16* glyph_id_array = null;
+	
+	~CmapSubtableWindowsUnicode () {
+		if (end_char != null) delete end_char;
+		if (start_char != null) delete start_char;
+		if (id_delta != null) delete id_delta;
+		if (id_range_offset != null) delete id_range_offset;
+		if (glyph_id_array != null) delete glyph_id_array;
+	}
+	
+	public override void parse (OtfInputStream dis) {
+		dis.seek (offset);
+		
+		format = dis.read_ushort ();
+		
+		switch (format) {
+			case 4:
+				parse_format4 (dis);
+				break;
+			
+			default:
+				stderr.printf (@"CmapSubtable is in format $format, it is not supportet (yet).\n");
+				break;
+		}
+	}
+	
+	public unichar get_char (int indice) 
+		requires (0 <= indice < seg_count) {
+		
+		if (id_range_offset[indice] == 0) {
+			return indice + id_delta[indice];
+		}
+		
+		// FIXA: just implement it.
+		stderr.printf ("no get_char for id_range_offset > 0 is not implemented yet\n");
+				
+		return 0;
+	}
+	
+	public void parse_format4 (OtfInputStream dis) {
+		length = dis.read_ushort ();
+		lang = dis.read_ushort ();
+		seg_count_x2 = dis.read_ushort ();
+		search_range = dis.read_ushort ();
+		entry_selector = dis.read_ushort ();
+		range_shift = dis.read_ushort ();
+		
+		return_if_fail (seg_count_x2 % 2 == 0);
+		
+		num_chars = seg_count_x2 / 2;
+		
+		end_char = new uint16[num_chars];
+		for (int i = 0; i < num_chars; i++) {
+			end_char[i] = dis.read_ushort ();
+		}
+		
+		if (end_char[num_chars - 1] != 0xFFFF) {
+			warning ("end_char is $(end_char[seg_count - 1]), expecting 0xFFFF.");
+		}
+		
+		dis.read_ushort (); // Reserved
+		
+		start_char = new uint16[num_chars];
+		for (int i = 0; i < num_chars; i++) {
+			start_char[i] = dis.read_ushort ();
+		}
+		
+		id_delta = new uint16[num_chars];
+		for (int i = 0; i < num_chars; i++) {
+			id_delta[i] = dis.read_ushort ();
+		}
+		
+		id_range_offset = new uint16[num_chars];
+		for (int i = 0; i < num_chars; i++) {
+			id_range_offset[i] = dis.read_ushort ();
+		}
+		
+		glyph_id_array = new uint16[num_chars];
+		for (int i = 0; i < num_chars; i++) {
+			glyph_id_array[i] = dis.read_ushort ();
+		}
+	}
+}
+
+class CmapTable : Table { 
 	
 	GlyfTable glyf_table;
 	FontData? table_data;
 	
+	List<CmapSubtable> subtables;
+
 	public CmapTable(GlyfTable gt) {
 		glyf_table = gt;
 		table_data = null;
+		subtables = new List<CmapSubtable> ();
 	}
 	
-	public string get_id () {
+	public uint32 get_length () {
+		return get_prefered_table ().num_chars;
+	}
+	
+	CmapSubtable get_prefered_table () {
+		if (subtables.length () == 0) {
+			warning ("No cmap table has been parsed.");
+			return new CmapSubtable ();
+		}
+		
+		return subtables.first ().data;
+	}
+	
+	public override string get_id () {
 		return "cmap";
 	}
 	
+	public override void parse (OtfInputStream dis) 
+		requires (offset > 0 && length > 0) {
+			
+		uint16 version;
+		uint16 nsubtables;
+		
+		uint16 platform;
+		uint16 encoding;
+		uint32 sub_offset;
+		
+		CmapSubtable subtable;
+		
+		dis.seek (offset);
+		
+		version = dis.read_ushort ();
+		nsubtables = dis.read_ushort ();
+		
+		if (version != 0) {
+			warning (@"Bad version for cmap table: $version. Number of subtables: $nsubtables");
+			return;
+		}
+		
+		print (@"cmap version: $version\n");
+		print (@"cmap subtables: $nsubtables\n");
+		
+		for (uint i = 0; i < nsubtables; i++) {
+			platform = dis.read_ushort ();
+			encoding = dis.read_ushort ();
+			sub_offset = dis.read_ulong ();	
+			
+			if (platform == 3 && encoding == 1) {
+				print (@"Parsing Unicode BMP (UCS-2) Platform: $platform Encoding: $encoding\n");
+				subtable = new CmapSubtableWindowsUnicode ();
+				subtable.offset = offset + sub_offset;
+				subtables.append (subtable);
+			} else {
+				stderr.printf (@"Unknown encoding. Platform: $platform Encoding: $encoding.\n");
+			}	
+		}
+		
+		foreach (CmapSubtable t in subtables) {
+			t.parse (dis);
+		}
+	}
+	
 	/** Character to glyph mapping */
-	public FontData get_font_data () {
+	public override FontData get_font_data () {
+
+		// FIXA: need complete rewrite
+
 		if (table_data != null) return (!) table_data;
 		
 		FontData fd = new FontData ();
@@ -558,6 +1310,7 @@ class CmapTable : Table, Object {
 		return fd;
 	}
 
+ // FIXME:
 	List<CmapSubtable> cmap_sub_tables () {
 		List<CmapSubtable> maps = new List<CmapSubtable> ();
 		
@@ -584,17 +1337,108 @@ class CmapTable : Table, Object {
 		return maps;
 	}
 
+	CmapSubtable load_cmap_sub_table (OtfInputStream dis, uint32 offset) {
+		CmapSubtable cmap = new CmapSubtable ();
+		
+		uint32 charcode = 0;
+		uint32 last = 0;
+		uint32 format;
+		
+		format = dis.read_ushort ();
+		
+		print ("Cmap subtable format $format.\n");
+		
+		return cmap;
+	}
 }
 
-class HeadTable : Table, Object {
+class HeadTable : Table {
+	
+	int16 xmin = 0;
+	int16 ymin = 0;
+	int16 xmax = 0;
+	int16 ymax = 0;
 	
 	uint32 check_sum_adjustment = 0;
+
+	uint16 mac_style;
+	uint16 lowest_PPEM;
+	int16 font_direction_hint;
+		
+	public int16 loca_offset_size;
+	int16 glyph_data_format;
 	
 	GlyfTable glyf_table;
 	
 	public HeadTable (GlyfTable gt) {
 		glyf_table = gt;
 	}
+	
+	public override void parse (OtfInputStream dis) 
+		requires (offset > 0 && length > 0) {
+			
+		Fixed version;
+		Fixed font_revision;
+		
+		uint32 checksum_adjustment;
+		uint32 magic_number;
+		
+		uint16 flags;
+		uint16 units_per_em;
+		
+		uint64 created;
+		uint64 modified;
+		
+		List<CmapSubtable> maps = new List<CmapSubtable> ();
+		
+		print (@"Seek $offset\n");
+		dis.seek (offset);
+	
+		version = dis.read_fixed ();
+		print (@"Version: $(version.get_string ())\n");
+		
+		if (!version.equals (1, 0)) {
+			warning ("Expecting head version 1.0");
+			return;
+		}
+		
+		font_revision = dis.read_fixed ();
+		
+		checksum_adjustment = dis.read_ulong ();
+		magic_number = dis.read_ulong ();
+		
+		if (magic_number != 0x5F0F3CF5) {
+			warning (@"Magic number is invalid. Got $(magic_number).");
+			return;
+		}
+		
+		flags = dis.read_ushort ();
+		units_per_em = dis.read_ushort ();
+		
+		created = dis.read_udate ();
+		modified = dis.read_udate ();
+		
+		xmin = dis.read_short ();
+		ymin = dis.read_short ();
+		
+		xmax = dis.read_short ();
+		ymax = dis.read_short ();
+		
+		mac_style = dis.read_ushort ();
+		lowest_PPEM = dis.read_ushort ();
+		font_direction_hint = dis.read_short ();
+		
+		loca_offset_size = dis.read_short ();
+		glyph_data_format = dis.read_short ();
+		
+		if (glyph_data_format != 0) {
+			warning ("Unknown glyph data format.");
+		}
+		
+		print (@"Units per em: $units_per_em\n");
+
+		// Some deprecated values follow here ...
+	}	
 	
 	public string get_id () {
 			return "head";
@@ -605,8 +1449,6 @@ class HeadTable : Table, Object {
 	}
 	
 	public FontData get_font_data () {
-		
-		int16 xmin, ymin, xmax, ymax;
 		
 		FontData font_data = new FontData ();
 		
@@ -652,7 +1494,7 @@ class HeadTable : Table, Object {
 	}
 }
 
-class HheaTable : Table, Object {
+class HheaTable : Table {
 	
 	GlyfTable glyf_table;
 	
@@ -712,9 +1554,11 @@ class HheaTable : Table, Object {
 	}
 }
 
-class MaxpTable : Table, Object {
+class MaxpTable : Table {
 	
 	GlyfTable glyf_table;
+	
+	public uint16 num_glyphs = 0;
 	
 	public MaxpTable (GlyfTable g) {
 		glyf_table = g;
@@ -722,6 +1566,24 @@ class MaxpTable : Table, Object {
 	
 	public string get_id () {
 			return "maxp";
+	}
+	
+	public override void parse (OtfInputStream dis) 
+		requires (offset > 0 && length > 0) {
+		Fixed format;
+		
+		dis.seek (offset);
+		
+		format = dis.read_fixed ();
+		print (@"Maxp version: $(format.get_string ())\n");
+		
+		num_glyphs = dis.read_ushort ();
+		
+		if (format.equals (0, 5)) {
+			return;
+		}
+		
+		// Format 1.0 continues here
 	}
 	
 	public FontData get_font_data () {
@@ -780,11 +1642,13 @@ class MaxpTable : Table, Object {
 
 }
 
-class OffsetTable : Table, Object {
-	uint16 num_tables;
-
+class OffsetTable : Table {
+	public uint16 num_tables = 0;
+	uint16 search_range = 0;
+	uint16 entry_selector = 0;
+	uint16 range_shift = 0;
+		
 	public OffsetTable () {
-		num_tables = 0;
 	}
 	
 	public void set_num_tables (uint n) {
@@ -796,13 +1660,22 @@ class OffsetTable : Table, Object {
 			return "Offset table";
 	}
 	
+	public void parse (OtfInputStream dis) {
+		Fixed version;
+		
+		version = dis.read_ulong ();
+		num_tables = dis.read_ushort ();
+		search_range = dis.read_ushort ();
+		entry_selector = dis.read_ushort ();
+		range_shift = dis.read_ushort ();
+		
+		print (@"Version $(version.get_string ())\n");
+		print (@"Number of tables $num_tables\n");		
+	}
+	
 	public FontData get_font_data () {
 		FontData fd = new FontData ();
 
-		uint16 search_range = 0;
-		uint16 entry_selector = 0;
-		uint16 range_shift = 0;
-		
 		// version 1.0 for TTF CFF else use OTTO
 		fd.add_u16 (1);
 		fd.add_u16 (0);
@@ -821,7 +1694,7 @@ class OffsetTable : Table, Object {
 	}
 }
 
-class NameTable : Table, Object {
+class NameTable : Table {
 	
 	public NameTable () {	
 	}
@@ -851,7 +1724,7 @@ class NameTable : Table, Object {
 
 }
 
-class Os2Table : Table, Object {
+class Os2Table : Table {
 	
 	public Os2Table () {	
 	}
@@ -933,7 +1806,7 @@ class Os2Table : Table, Object {
 
 }
 
-class PostTable : Table, Object {
+class PostTable : Table {
 	
 	public PostTable () {	
 	}
@@ -976,20 +1849,21 @@ class PostTable : Table, Object {
 }
 
 /** Table with list of tables sorted by table tag. */
-class DirectoryTable : Table, Object {
+class DirectoryTable : Table {
 	
-	CmapTable cmap_table;
-	GlyfTable glyf_table;
-	HeadTable head_table;
-	HheaTable hhea_table;
-	MaxpTable maxp_table;
-	NameTable name_table;
-	Os2Table  os_2_table;
-	PostTable post_table;
+	public CmapTable cmap_table;
+	public GlyfTable glyf_table;
+	public HeadTable head_table;
+	public HheaTable hhea_table;
+	public MaxpTable maxp_table;
+	public NameTable name_table;
+	public Os2Table  os_2_table;
+	public PostTable post_table;
+	public LocaTable loca_table;
 	
 	OffsetTable offset_table;
 	
-	List<Table> tables;
+	List<Table> tables; // Fixa: remove this
 				
 	public DirectoryTable () {
 
@@ -1003,25 +1877,86 @@ class DirectoryTable : Table, Object {
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (); 
 		post_table = new PostTable ();
+		loca_table = new LocaTable ();
 		
 		tables = new List<Table> ();
+	}
 
-		tables.append (offset_table); // The the directory index tables
-		tables.append (this);
+	public void set_offset_table (OffsetTable ot) {
+		offset_table = ot;
+	}
+	
+	public void parse (OtfInputStream dis) {
+		StringBuilder tag = new StringBuilder ();
+		uint32 checksum;
+		uint32 offset;
+		uint32 length;
 		
-		tables.append (cmap_table);  // The other required tables
-		tables.append (glyf_table);
-		tables.append (head_table);
-		tables.append (hhea_table);
-		tables.append (maxp_table);
-		tables.append (name_table);
-		tables.append (os_2_table);
-		tables.append (post_table);
-
-		offset_table.set_num_tables (tables.length () - 2); // number of tables, skip DirectoryTable and OffsetTable
+		return_if_fail (offset_table.num_tables > 0);
+		
+		for (unowned List<Table> t = tables.first (); t != t.last (); t = t.next) {
+			tables.remove_link (t);
+		}
+		
+		for (uint i = 0; i < offset_table.num_tables; i++) {
+			tag.erase ();
+			
+			tag.append_unichar ((unichar) dis.read_byte ());
+			tag.append_unichar ((unichar) dis.read_byte ());
+			tag.append_unichar ((unichar) dis.read_byte ());
+			tag.append_unichar ((unichar) dis.read_byte ());
+			
+			checksum = dis.read_ulong ();
+			offset = dis.read_ulong ();
+			length = dis.read_ulong ();
+			
+			print (@"$(tag.str) \toffset: $offset \tlength: $length \tchecksum: $checksum.\n");
+			
+			if (tag.str == "loca") {
+				loca_table.id = tag.str;
+				loca_table.checksum = checksum;
+				loca_table.offset = offset;
+				loca_table.length = length;	
+			} else if (tag.str == "cmap") {
+				cmap_table.id = tag.str;
+				cmap_table.checksum = checksum;
+				cmap_table.offset = offset;
+				cmap_table.length = length;
+			} else if (tag.str == "maxp") {
+				maxp_table.id = tag.str;
+				maxp_table.checksum = checksum;
+				maxp_table.offset = offset;
+				maxp_table.length = length;
+			} else if (tag.str == "glyf") {
+				glyf_table.id = tag.str;
+				glyf_table.checksum = checksum;
+				glyf_table.offset = offset;
+				glyf_table.length = length;
+			} else if (tag.str == "head") {
+				head_table.id = tag.str;
+				head_table.checksum = checksum;
+				head_table.offset = offset;
+				head_table.length = length;
+			}
+		}
+		
+		if (!head_table.validate (dis) || !maxp_table.validate (dis) 
+			|| !loca_table.validate (dis) || !cmap_table.validate (dis) 
+			|| !glyf_table.validate (dis)) 
+		{
+			warning ("Missing required table");
+			return;
+		}
+		
+		head_table.parse (dis);
+		maxp_table.parse (dis);
+		loca_table.parse (dis, head_table, maxp_table);
+		cmap_table.parse (dis);
+		glyf_table.parse (dis, cmap_table, loca_table);		
 	}
 	
 	public string get_id () {
+		warning ("Don't write id for table directory.");		
 		return "Directory table"; // Table id should be ignored for directory table, none the less it has one declared here.
 	}
 	
@@ -1050,6 +1985,24 @@ class DirectoryTable : Table, Object {
 		uint32 table_length = 0;
 		
 		uint32 check_sum = 0;
+
+		// FIXA: clear tables here 
+
+		tables.append (offset_table); // The the directory index tables
+		tables.append (this);
+		
+		tables.append (cmap_table);  // The other required tables
+		tables.append (glyf_table);
+		tables.append (head_table);
+		tables.append (hhea_table);
+		tables.append (maxp_table);
+		tables.append (name_table);
+		tables.append (os_2_table);
+		tables.append (post_table);
+
+		offset_table.set_num_tables (tables.length () - 2); // number of tables, skip DirectoryTable and OffsetTable
+		
+		return_val_if_fail (offset_table.num_tables > 0, fd);
 		
 		table_offset += offset_table.get_font_data ().length ();
 		

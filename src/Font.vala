@@ -273,7 +273,7 @@ class Font : GLib.Object {
 		glyph_cache.remove (glyph);
 	}
 	
-	/** Obtain all version and alterntes for this glyph. */
+	/** Obtain all versions and alterntes for this glyph. */
 	public GlyphCollection? get_glyph_collection (string glyph) {
 		return glyph_cache.lookup (glyph);
 	}
@@ -531,10 +531,41 @@ class Font : GLib.Object {
 	}
 
 	public bool load (string path) {
+		bool loaded = false;
 		set_font_file (path);
-		return parse_file (path);
+		
+		if (path.index_of (".ffi") != -1) {
+			loaded = parse_file (path);
+		}
+		
+		if (path.index_of (".ttf") != -1) {
+			loaded = parse_otf_file (path);
+		}
+		
+		return loaded;
 	}
 
+	public bool parse_otf_file (string path) {
+		OpenFontFormatReader otf = new OpenFontFormatReader (path);
+		GlyphCollection? gc;
+		
+		glyph_cache.remove_all ();
+		
+		foreach (Glyph g in otf.get_glyphs ()) {
+			print (@"Add glyph with $(g.path_list.length ()) paths.\n");
+			gc = get_glyph_collection (g.get_name ());
+		
+			if (gc == null) {
+				gc = new GlyphCollection ();
+				glyph_cache.insert (g.get_name (), (!) gc);
+			}
+			
+			((!)gc).insert_glyph (g, true);
+		}
+					
+		return true; // Fixa
+	}
+	
 	public bool parse_file (string path) {
 		Parser.init ();
 		
@@ -542,8 +573,8 @@ class Font : GLib.Object {
 		Xml.Node* root = doc->get_root_element ();
 
 		if (root == null) {
-				delete doc;
-				return false;
+			delete doc;
+			return false;
 		}
 
 		// set this path as file for this font
@@ -589,9 +620,9 @@ class Font : GLib.Object {
 		}
     
 		delete doc;
-    Parser.cleanup ();
+		Parser.cleanup ();
 
-    return true;
+		return true;
 	}
 	
 	private void parse_kerning (Xml.Node* node) {
@@ -746,7 +777,7 @@ class Font : GLib.Object {
 
 		parse_content (g, node);
 		
-		// use disk thread and idle add this:
+		// todo: use disk thread and idle add this:
 		
 		gc = get_glyph_collection (g.get_name ());
 		

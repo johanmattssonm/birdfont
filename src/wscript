@@ -29,6 +29,7 @@ SUPPLEMENT_MAIN = [
 	'MoveTool.vala',
 	'IOThread.vala',
 	'OpenFontFormatWriter.vala',
+	'OpenFontFormatReader.vala',
 	'OverView.vala',
 	'Path.vala',
 	'PenTool.vala',

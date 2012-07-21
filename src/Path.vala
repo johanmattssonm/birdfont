@@ -71,6 +71,11 @@ class Path {
 		}
 	}
 
+	public EditPoint get_end_point () 
+		requires (points.length () > 0) {
+		return points.last ().data;
+	}
+
 	public void set_color (double r, double g, double b, double a) {
 		this.r = r;
 		this.g = g;
