@@ -278,6 +278,12 @@ class Font : GLib.Object {
 		return glyph_cache.lookup (glyph);
 	}
 	
+	public Glyph? get_glyph_from_unichar (unichar glyph) {
+		StringBuilder name = new StringBuilder ();
+		name.append_unichar (glyph);
+		return get_glyph (name.str);
+	}
+	
 	public Glyph? get_glyph (string glyph) {
 		unowned GlyphCollection? gc = glyph_cache.lookup (glyph);
 		
@@ -552,7 +558,6 @@ class Font : GLib.Object {
 		glyph_cache.remove_all ();
 		
 		foreach (Glyph g in otf.get_glyphs ()) {
-			print (@"Add glyph with $(g.path_list.length ()) paths.\n");
 			gc = get_glyph_collection (g.get_name ());
 		
 			if (gc == null) {
@@ -562,8 +567,43 @@ class Font : GLib.Object {
 			
 			((!)gc).insert_glyph (g, true);
 		}
-					
+		
+		base_line = 0;
+		top_position = -otf.get_ascender ();
+		top_limit = top_position - 5;
+		bottom_position = -otf.get_descender ();
+		bottom_limit = bottom_position + 5;
+
+		// take xheight from appropriate lower case letter
+		xheight_position = estimate_xheight ();
+		
 		return true; // Fixa
+	}
+	
+	/** Measure height of x or other lower case letter. */
+	private double estimate_xheight () {
+		Glyph? g;
+		double ym = 0;
+		for (unichar c = 'x'; c >= 'a' ; c--) {
+			g = get_glyph_from_unichar (c);
+			
+			// we want x-height skip letters with ascender
+			if (c == 'l' || c == 'k' || c == 'i' 
+				|| c == 'j' || c == 'h' || c == 'd') {
+				continue;
+			}
+			
+			if (g != null) {
+				foreach (Path path in ((!) g).path_list) {
+					path.update_region_boundries ();
+					if (path.ymax > ym) {
+						ym = path.ymax;
+					}
+				}
+			} 
+		}
+		
+		return -ym;
 	}
 	
 	public bool parse_file (string path) {

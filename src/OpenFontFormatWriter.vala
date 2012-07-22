@@ -1130,6 +1130,10 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 	public override unichar get_char (uint32 indice) {
 		int64? c = table.lookup (indice);
 		
+		if (c == 0 && indice == 0) {
+			return 0;
+		}
+		
 		if (c == 0) {
 			// FIXA: yes there is for null character
 			warning (@"There is no char for glyph number $indice in cmap table. table.size: $(table.size ()))");
@@ -1203,10 +1207,10 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		// map all values in a hashtable
 		int indice = 0;
 		unichar character = 0;
-		for (uint16 i = 0; i < seg_count; i++) {
+		for (uint16 i = 0; i < seg_count && start_char[i] != 0xFFFF; i++) {
 			
 			print (@"Insert range $((int)start_char[i]) to $((int)end_char[i]). id_delta[i] $(id_delta[i])  id_range_offset[i] $(id_range_offset[i])\n");
-			
+
 			if (id_range_offset[i] == 0) {
 				uint16 j = 0;
 				do {
@@ -1581,12 +1585,20 @@ class HheaTable : Table {
 			return "head";
 	}
 	
+	public double get_ascender () {
+		return ascender * 1000 / 0xFFFF;
+	}
+
+	public double get_descender () {
+		return descender * 1000 / 0xFFFF;
+	}
+	
 	public void parse (OtfInputStream dis) throws Error {
 		dis.seek (offset);
 		
 		version = dis.read_fixed ();
 		
-		return_if_fail (version.equals (1, 0));
+		warn_if_fail (version.equals (1, 0));
 		
 		ascender = dis.read_short ();
 		descender = dis.read_short ();
@@ -1674,8 +1686,10 @@ class HmtxTable : Table {
 		if (left_side_bearing != null) delete left_side_bearing; 
 	}
 
-	public uint16 get_advance (uint32 i) 
-		requires (i < nmetrics && advance_width != null) {
+	public uint16 get_advance (uint32 i) {
+		return_if_fail (i < nmetrics);
+		return_if_fail (advance_width != null);
+		
 		return advance_width[i] * 1000 / 0xFFFF;
 	}
 		
