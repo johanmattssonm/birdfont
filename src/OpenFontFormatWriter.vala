@@ -608,7 +608,7 @@ class GlyfTable : Table {
 			});
 	}
 	
-	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table) {
+	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table) {
 		print (@"Parsing $(cmap.get_length ()) glyfs\n");
 		print (@"Parsing loca size: $(loca.size)\n");
 
@@ -622,13 +622,22 @@ class GlyfTable : Table {
 				StringBuilder name = new StringBuilder ();
 				name.append_unichar (character);
 				
+				print (@"\nnew glyph: gid $i. name: $(name.str)\n");
+				
 				if (!loca.is_empty (i)) {	
 					glyph_offset = loca.get_offset(i);
 					
-					glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax);
+					glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax, head_table.get_units_per_em ());
 					
 					glyph.left_limit = xmin - hmtx_table.get_lsb (i);
 					glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (i);
+					
+					if (xmin > glyph.right_limit || xmax < glyph.left_limit) {
+						warning (@"Glyph $(name.str) is outside of it's box.");
+						glyph.left_limit = xmin;
+						glyph.right_limit = xmax;
+					}
+					
 				} else {
 					// add empty glyph
 					glyph = new Glyph (name.str, character);
@@ -639,7 +648,6 @@ class GlyfTable : Table {
 				glyphs.append (glyph);
 			} catch (Error e) {
 				stderr.printf (@"Falied to parse glyf:\n$(e.message)\n");
-				// loca.print_offsets ();
 				break;
 			}
 		}
@@ -661,6 +669,8 @@ class GlyfTable : Table {
 		
 		uint16 num_instructions;
 		
+		print ("Parsing composite glyph\n");
+		
 		do {
 			component_flags = dis.read_ushort ();
 			glyph_index = dis.read_ushort ();
@@ -674,9 +684,7 @@ class GlyfTable : Table {
 				arg1and2 = dis.read_ushort ();
 			}
 			
-			if ((component_flags & RESERVED) > 0) {
-				warning ("bad composite glyf, reserved bit is set.");
-			}
+			// if ((component_flags & RESERVED) > 0)
 			
 			if ((component_flags & SCALE) > 0) {
 				scale = dis.read_f2dot14 ();
@@ -710,7 +718,7 @@ class GlyfTable : Table {
 	}
 	
 	Glyph parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset,
-		out double xmin, out double xmax) throws Error {
+		out double xmin, out double xmax, double units_per_em) throws Error {
 		
 		uint16* end_points = null;
 		uint8* instructions = null;
@@ -733,8 +741,6 @@ class GlyfTable : Table {
 		
 		StringBuilder name = new StringBuilder ();
 		name.append_unichar (character);
-		
-		print (@"\nnew glyph\n");
 		print (@"glyph_offset: $glyph_offset\n");
 		
 		dis.seek (offset + glyph_offset);
@@ -765,7 +771,7 @@ class GlyfTable : Table {
 		ixmax = dis.read_short ();
 		iymax = dis.read_short ();
 		
-		print (@"($xmin,$ymin) to ($xmax, $ymax)\n");
+		print (@"($ixmin,$iymin) to ($ixmax, $iymax)\n");
 		
 		print ("Simple\n");
 	
@@ -826,6 +832,8 @@ class GlyfTable : Table {
 			error = new BadFormat.PARSE (@"Wrong number of flags in glyph $(name.str). (nflags != npoints) ($nflags != $npoints)");
 		}
 		
+		print (@"npoints: $npoints\n");
+		
 		int16 last = 0;
 		xcoordinates = new int16[npoints + 1];
 		for (int i = 0; i < npoints; i++) {
@@ -881,8 +889,8 @@ class GlyfTable : Table {
 
 		glyph = new Glyph (name.str, character);
 		
-		xmin = ixmin * 1000.0 / 0xFFFF;
-		xmax = ixmax * 1000.0 / 0xFFFF;
+		xmin = ixmin * 1000.0 / units_per_em;
+		xmax = ixmax * 1000.0 / units_per_em;
 		
 		for (int i = 0; i < ncontours; i++) {
 			
@@ -891,10 +899,10 @@ class GlyfTable : Table {
 			
 			print ("Next path\n");
 			
-			Path extra = new Path ();
 			Path path = new Path ();
 			EditPoint edit_point = new EditPoint ();
 			bool prev_is_curve = false;
+			
 			for (; j <= end_points[i]; j++) {
 
 				if (j >= npoints) {
@@ -902,8 +910,8 @@ class GlyfTable : Table {
 					break;
 				}
 
-				x = xcoordinates[j] * 1000.0 / 0xFFFF; // in proportion to em width
-				y = ycoordinates[j] * 1000.0 / 0xFFFF;
+				x = xcoordinates[j] * 1000.0 / units_per_em; // in proportion to em width
+				y = ycoordinates[j] * 1000.0 / units_per_em;
 				
 				if ((flags[j] & Coordinate.ON_PATH) > 0) {
 					// Point
@@ -920,7 +928,7 @@ class GlyfTable : Table {
 									
 					prev_is_curve = false;
 				} else {
-				
+									
 					if (prev_is_curve) {
 						x = x - (x - edit_point.right_handle.x ()) / 2;
 						y = y - (y - edit_point.right_handle.y ()) / 2;
@@ -930,8 +938,8 @@ class GlyfTable : Table {
 						path.add_point (edit_point);
 					}
 
-					x = xcoordinates[j] * 1000.0 / 0xFFFF; // in proportion to em width
-					y = ycoordinates[j] * 1000.0 / 0xFFFF;
+					x = xcoordinates[j] * 1000.0 / units_per_em; // in proportion to em width
+					y = ycoordinates[j] * 1000.0 / units_per_em;
 
 					edit_point.get_left_handle ().set_point_type (PointType.CURVE);
 					edit_point.get_left_handle ().length = 0;
@@ -952,16 +960,47 @@ class GlyfTable : Table {
 			}
 			
 			glyph.add_path (path);
-			glyph.add_path (extra);
 		}
 		
+		print (@" ($ixmax == $ixmin)\n");
+		
+		// glyphs with no bounding boxes
+		if (ixmax <= ixmin) {
+			warning (@"Bounding box is bad. (xmax == xmin) ($xmax == $xmin)");
+			
+			if (glyph.path_list.length () > 0) {
+				
+				Path ps = ((!) glyph.path_list.first ()).data;
+				
+				ps.update_region_boundries ();
+				xmin = ps.xmin;
+				xmax = ps.xmax;
+
+				foreach (Path p in glyph.path_list) {
+					p.update_region_boundries ();
+					
+					if (p.xmin < xmin) {
+						xmin = p.xmin;
+					}
+					
+					if (p.xmax > xmax) {
+						xmax = p.xmax;
+					}
+				}
+				
+			}
+		}
+						
 		if (end_points != null) delete end_points;
 		if (instructions != null) delete instructions;
 		if (flags != null) delete flags;
 		if (xcoordinates != null) delete xcoordinates;
 		if (ycoordinates != null) delete ycoordinates;
 		
-		if (error != null) throw (!) error;
+		if (error != null) {
+			warning ("failed to parse glyph");
+			throw (!) error;
+		}
 		
 		return glyph;
 	}
@@ -1432,10 +1471,16 @@ class HeadTable : Table {
 	public int16 loca_offset_size;
 	int16 glyph_data_format;
 	
+	uint16 units_per_em = 0;
+	
 	GlyfTable glyf_table;
 	
 	public HeadTable (GlyfTable gt) {
 		glyf_table = gt;
+	}
+	
+	public double get_units_per_em () {
+		return units_per_em * 10; // Fixa: we can refactor this number
 	}
 	
 	public override void parse (OtfInputStream dis) 
@@ -1448,7 +1493,6 @@ class HeadTable : Table {
 		uint32 magic_number;
 		
 		uint16 flags;
-		uint16 units_per_em;
 		
 		uint64 created;
 		uint64 modified;
@@ -1576,9 +1620,11 @@ class HheaTable : Table {
 	public int16 num_horizontal_metrics;
 		
 	GlyfTable glyf_table;
+	HeadTable head_table;
 	
-	public HheaTable (GlyfTable g) {
+	public HheaTable (GlyfTable g, HeadTable h) {
 		glyf_table = g;
+		head_table = h;
 	}
 	
 	public string get_id () {
@@ -1586,11 +1632,11 @@ class HheaTable : Table {
 	}
 	
 	public double get_ascender () {
-		return ascender * 1000 / 0xFFFF;
+		return ascender * 1000 / head_table.get_units_per_em ();
 	}
 
 	public double get_descender () {
-		return descender * 1000 / 0xFFFF;
+		return descender * 1000 / head_table.get_units_per_em ();
 	}
 	
 	public void parse (OtfInputStream dis) throws Error {
@@ -1678,7 +1724,10 @@ class HmtxTable : Table {
 	uint16* left_side_bearing = null;
 	uint16* left_side_bearing_monospaced = null;
 		
-	public HmtxTable () {
+	HeadTable head_table;
+	
+	public HmtxTable (HeadTable h) {
+		head_table = h;
 	}
 	
 	~HmtxTable () {
@@ -1686,25 +1735,25 @@ class HmtxTable : Table {
 		if (left_side_bearing != null) delete left_side_bearing; 
 	}
 
-	public uint16 get_advance (uint32 i) {
+	public double get_advance (uint32 i) {
 		return_if_fail (i < nmetrics);
 		return_if_fail (advance_width != null);
 		
-		return advance_width[i] * 1000 / 0xFFFF;
+		return advance_width[i] * 1000 / head_table.get_units_per_em ();
 	}
 		
 	/** Get left side bearing relative to xmin. */
-	public uint16 get_lsb (uint32 i) {
+	public double get_lsb (uint32 i) {
 		return_if_fail (i < nmetrics);
 		return_if_fail (left_side_bearing != null);
 		
-		return left_side_bearing[i] * 1000 / 0xFFFF;
+		return left_side_bearing[i] * 1000 / head_table.get_units_per_em ();
 	}
 
 	/** Get left side bearing relative to xmin for monospaces fonts. */
-	public uint16 get_lsb_mono (uint32 i) 
+	public double get_lsb_mono (uint32 i) 
 		requires (i < nmonospaced && left_side_bearing_monospaced != null) {
-		return left_side_bearing_monospaced[i] * 1000 / 0xFFFF;
+		return left_side_bearing_monospaced[i] * 1000 / head_table.get_units_per_em ();
 	}
 		
 	public void parse (OtfInputStream dis, HheaTable hhea_table, LocaTable loca_table) {
@@ -2063,8 +2112,8 @@ class DirectoryTable : Table {
 		glyf_table = new GlyfTable ();
 		cmap_table = new CmapTable (glyf_table);
 		head_table = new HeadTable (glyf_table);
-		hhea_table = new HheaTable (glyf_table);
-		hmtx_table = new HmtxTable ();
+		hhea_table = new HheaTable (glyf_table, head_table);
+		hmtx_table = new HmtxTable (head_table);
 		maxp_table = new MaxpTable (glyf_table);
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (); 
@@ -2157,7 +2206,7 @@ class DirectoryTable : Table {
 		loca_table.parse (dis, head_table, maxp_table);
 		hmtx_table.parse (dis, hhea_table, loca_table);
 		cmap_table.parse (dis);
-		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table);		
+		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table);		
 	}
 	
 	public string get_id () {

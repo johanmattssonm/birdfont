@@ -563,6 +563,8 @@ class Font : GLib.Object {
 			if (gc == null) {
 				gc = new GlyphCollection ();
 				glyph_cache.insert (g.get_name (), (!) gc);
+			} else {
+				stderr.printf (@"Glyph collection does already exit for $(g.get_name ()).\n");
 			}
 			
 			((!)gc).insert_glyph (g, true);
