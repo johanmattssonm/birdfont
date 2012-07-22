@@ -614,15 +614,18 @@ class GlyfTable : Table {
 
 		unichar character = 'g';
 		uint32 glyph_offset;
+		Glyph glyph = new Glyph ("");
 		for (uint32 i = 0; i < loca.size; i++) {
 			try {
 				if (!loca.is_empty (i)) {
 					character = cmap.get_char (i);
 					glyph_offset = loca.get_offset(i);
-					parse_next_glyf (dis, character, glyph_offset);
+					glyph = parse_next_glyf (dis, character, glyph_offset);
 				} else {
 					// add empty glyph
 				}
+				
+				glyphs.append (glyph);
 			} catch (Error e) {
 				stderr.printf (@"Falied to parse glyf:\n$(e.message)\n");
 				// loca.print_offsets ();
@@ -631,7 +634,7 @@ class GlyfTable : Table {
 		}
 	}
 	
-	void parse_next_composite_glyf (OtfInputStream dis, unichar character) throws Error {
+	Glyph parse_next_composite_glyf (OtfInputStream dis, unichar character) throws Error {
 		uint16 component_flags = 0;
 		uint16 glyph_index;
 		int16 arg1;
@@ -661,8 +664,7 @@ class GlyfTable : Table {
 			}
 			
 			if ((component_flags & RESERVED) > 0) {
-				warning ("bad composite glyf");
-				throw new BadFormat.PARSE ("Reserved flag is set in compisite glyph.");
+				warning ("bad composite glyf, reserved bit is set.");
 			}
 			
 			if ((component_flags & SCALE) > 0) {
@@ -692,9 +694,11 @@ class GlyfTable : Table {
 				dis.read_byte ();
 			}
 		}
+		
+		return new Glyph ("");
 	}
 	
-	void parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset) throws Error {
+	Glyph parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset) throws Error {
 		uint16* end_points = null;
 		uint8* instructions = null;
 		uint8* flags = null;
@@ -714,6 +718,10 @@ class GlyfTable : Table {
 		
 		Error? error = null;
 		
+		StringBuilder name = new StringBuilder ();
+		name.append_unichar (character);
+
+		
 		print (@"\nnew glyph\n");
 		print (@"glyph_offset: $glyph_offset\n");
 		
@@ -724,15 +732,14 @@ class GlyfTable : Table {
 		print (@"$ncontours contours in glyf table.\n");
 		
 		if (ncontours == 0) {
-			warning ("Got zero contours.");
+			warning (@"Got zero contours in glyph $(name.str).");
 
 			// should skip body
 		}
 				
 		if (ncontours == -1) {
 			print ("Skipping composite glyph.\n");
-			// parse_next_composite_glyf (dis, character);
-			return;
+			return parse_next_composite_glyf (dis, character);
 		}
 				
 		if (ncontours < -1) {
@@ -755,7 +762,7 @@ class GlyfTable : Table {
 			end_points[i] = dis.read_ushort (); // FIXA: mind shot vector is negative
 			
 			if (i > 0 && end_points[i] < end_points[i -1]) {
-				warning (@"Bad endpoint ($(end_points[i]) < $(end_points[i -1]))");
+				warning (@"Bad endpoint ($(end_points[i]) < $(end_points[i -1])) in glyph $(name.str).");
 				error = new BadFormat.PARSE ("Invalid glyf");
 				throw error;
 			}
@@ -787,7 +794,7 @@ class GlyfTable : Table {
 				// Fixa: delete print (@"Repeat flag $repeat\n");
 				
 				if (i + repeat >= npoints) {
-					error = new BadFormat.PARSE ("Too many flags in glyf (i >= ninstructions).");
+					error = new BadFormat.PARSE ("Too many flags in glyf in glyph $(name.str). (i >= ninstructions).");
 					break;
 				}
 				
@@ -804,7 +811,7 @@ class GlyfTable : Table {
 		
 		if (nflags < npoints) {
 			warning (@"(nflags != npoints) ($nflags != $npoints)");
-			error = new BadFormat.PARSE (@"Wrong number of flags. (nflags != npoints) ($nflags != $npoints)");
+			error = new BadFormat.PARSE (@"Wrong number of flags in glyph $(name.str). (nflags != npoints) ($nflags != $npoints)");
 		}
 		
 		int16 last = 0;
@@ -827,8 +834,7 @@ class GlyfTable : Table {
 			last = xcoordinates[i];
 			
 			if (!(xmin <= last <= xmax))	{
-				error = new BadFormat.PARSE ("x is out of bounds");
-				break;
+				stderr.printf (@"x is out of bounds in glyph $(name.str). ($xmin <= $last <= $xmax)\n");
 			}
 		}
 		
@@ -851,23 +857,16 @@ class GlyfTable : Table {
 			
 			last = ycoordinates[i];
 			
-			//print (@"$(ycoordinates[i])\n");			
-			//print (@"($ymin <= $last <= $ymax)\n");
-			
 			if (!(ymin <= last <= ymax))	{
-				error = new BadFormat.PARSE (@"y is out of bounds ($ymin <= $last <= $ymax)");
-				break;
-				// Fixa: del warning (@"y is out of bounds ($ymin <= $last <= $ymax)");
+				stderr.printf (@"y is out of bounds in glyph $(name.str). ($ymin <= $last <= $ymax)\n");
 			}
 		}
 		
 		int j = 0;
-		StringBuilder name = new StringBuilder ();
 		Glyph glyph;
 		double startx, starty;
 		double x, y, rx, ry, lx, ly, nx, ny;
-		
-		name.append_unichar (character);
+
 		glyph = new Glyph (name.str, character);
 		
 		for (int i = 0; i < ncontours; i++) {
@@ -877,13 +876,14 @@ class GlyfTable : Table {
 			
 			print ("Next path\n");
 			
+			Path extra = new Path ();
 			Path path = new Path ();
 			EditPoint edit_point = new EditPoint ();
-			
+			bool prev_is_curve = false;
 			for (; j <= end_points[i]; j++) {
 
 				if (j >= npoints) {
-					warning (@"j >= npoints (j: $j, end_points[i]: $(end_points[i]))");
+					warning (@"j >= npoints in glyph $(name.str). (j: $j, end_points[i]: $(end_points[i]))");
 					break;
 				}
 
@@ -891,35 +891,54 @@ class GlyfTable : Table {
 				y = ycoordinates[j] * 1000.0 / 0xFFFF;
 				
 				if ((flags[j] & Coordinate.ON_PATH) > 0) {
+					// Point
 					edit_point = new EditPoint ();
 					edit_point.set_position (x, y);
 					path.add_point (edit_point);
-					//path.add (x, y); 
-				} else {
-					path.add (x, y);
-					/*	
-					if ((flags[j - 1] & Coordinate.ON_PATH) == 0) {
-						edit_point.type = PointType.CURVE;
+					
+					if (prev_is_curve) {
 						edit_point.get_left_handle ().set_point_type (PointType.CURVE);
-						edit_point.get_left_handle ().move_to_coordinate (x, y);
+						edit_point.get_left_handle ().length = 0;						
 					} else {
-						edit_point.type = PointType.CURVE;
-						edit_point.get_right_handle ().set_point_type (PointType.CURVE);
-						edit_point.get_right_handle ().move_to_coordinate (x, y);
-					}*/
+						edit_point.recalculate_linear_handles ();
+					}
+									
+					prev_is_curve = false;
+				} else {
+				
+					if (prev_is_curve) {
+						x = x - (x - edit_point.right_handle.x ()) / 2;
+						y = y - (y - edit_point.right_handle.y ()) / 2;
+
+						edit_point = new EditPoint ();
+						edit_point.set_position (x, y);
+						path.add_point (edit_point);
+					}
+
+					x = xcoordinates[j] * 1000.0 / 0xFFFF; // in proportion to em width
+					y = ycoordinates[j] * 1000.0 / 0xFFFF;
+
+					edit_point.get_left_handle ().set_point_type (PointType.CURVE);
+					edit_point.get_left_handle ().length = 0;
+						
+					edit_point.type = PointType.CURVE;
+					edit_point.get_right_handle ().set_point_type (PointType.CURVE);
+					edit_point.get_right_handle ().move_to_coordinate (x, y);
+										
+					prev_is_curve = true;
 				} 
-				
-				//print (@"path.add ($(x * 1000.0 / 0xFFFF), $(y * 1000.0 / 0xFFFF));\n");
-				
-				//print (@"x: $(x) == $(end_points[i])\n");
-				//print (@"y: $(y) == $(end_points[i])\n");
 			}
 			
 			path.close ();
+			
+			if (path.points.length () > 0 && path.points.last ().data.type == PointType.CURVE) {
+				path.points.first ().data.get_left_handle ().set_point_type (PointType.CURVE);
+				path.points.first ().data.get_left_handle ().length = 0;
+			}
+			
 			glyph.add_path (path);
+			glyph.add_path (extra);
 		}
-		
-		glyphs.append (glyph);
 		
 		if (end_points != null) delete end_points;
 		if (instructions != null) delete instructions;
@@ -928,6 +947,8 @@ class GlyfTable : Table {
 		if (ycoordinates != null) delete ycoordinates;
 		
 		if (error != null) throw (!) error;
+		
+		return glyph;
 	}
 		
 	public string get_id () {
@@ -2068,8 +2089,7 @@ class DirectoryTable : Table {
 		
 		return fd;
 	}
-		
+	
 }
-
 
 }
