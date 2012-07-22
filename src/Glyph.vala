@@ -1025,6 +1025,28 @@ class Glyph : FontDisplay {
 		}
 	}
 
+	public Line get_left_line () {
+		foreach (var line in horizontal_help_lines) {
+			if (line.get_label () == "left") {
+				return line;
+			}
+		}
+		
+		warn_if_reached ();
+		return new Line ();
+	}	
+
+	public Line get_right_line () {
+		foreach (var line in horizontal_help_lines) {
+			if (line.get_label () == "right") {
+				return line;
+			}
+		}
+		
+		warn_if_reached ();
+		return new Line ();
+	}	
+
 	/** lsb */
 	public double get_left_marker () {
 		foreach (var line in vertical_help_lines) {
@@ -1034,7 +1056,6 @@ class Glyph : FontDisplay {
 		}
 		
 		warn_if_reached ();
-		
 		return 0;
 	}	
 
@@ -1047,7 +1068,6 @@ class Glyph : FontDisplay {
 		}
 		
 		warn_if_reached ();
-		
 		return 0;
 	}
 

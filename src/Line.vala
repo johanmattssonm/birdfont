@@ -47,7 +47,7 @@ class Line : GLib.Object {
 	bool visible = true;
 	bool moveable = true;
 	
-	public Line (string label, double position = 10, bool vertical = false) {
+	public Line (string label = "No label set", double position = 10, bool vertical = false) {
 		this.label = label;
 		this.vertical = vertical;
 		this.pos = position;

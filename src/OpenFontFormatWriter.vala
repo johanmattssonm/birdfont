@@ -608,21 +608,32 @@ class GlyfTable : Table {
 			});
 	}
 	
-	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca) {
+	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table) {
 		print (@"Parsing $(cmap.get_length ()) glyfs\n");
 		print (@"Parsing loca size: $(loca.size)\n");
 
-		unichar character = 'g';
 		uint32 glyph_offset;
 		Glyph glyph = new Glyph ("");
+		double xmin, xmax;
+		
 		for (uint32 i = 0; i < loca.size; i++) {
 			try {
-				if (!loca.is_empty (i)) {
-					character = cmap.get_char (i);
+				unichar character = cmap.get_char (i);
+				StringBuilder name = new StringBuilder ();
+				name.append_unichar (character);
+				
+				if (!loca.is_empty (i)) {	
 					glyph_offset = loca.get_offset(i);
-					glyph = parse_next_glyf (dis, character, glyph_offset);
+					
+					glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax);
+					
+					glyph.left_limit = xmin - hmtx_table.get_lsb (i);
+					glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (i);
 				} else {
 					// add empty glyph
+					glyph = new Glyph (name.str, character);
+					glyph.left_limit = -hmtx_table.get_lsb (i);
+					glyph.right_limit = hmtx_table.get_advance (i) - hmtx_table.get_lsb (i);;
 				}
 				
 				glyphs.append (glyph);
@@ -698,7 +709,9 @@ class GlyfTable : Table {
 		return new Glyph ("");
 	}
 	
-	Glyph parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset) throws Error {
+	Glyph parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset,
+		out double xmin, out double xmax) throws Error {
+		
 		uint16* end_points = null;
 		uint8* instructions = null;
 		uint8* flags = null;
@@ -708,10 +721,10 @@ class GlyfTable : Table {
 		int npoints = 0;
 		
 		int16 ncontours;
-		int16 xmin;
-		int16 ymin;
-		int16 xmax;
-		int16 ymax;
+		int16 ixmin;
+		int16 iymin;
+		int16 ixmax;
+		int16 iymax;
 		uint16 ninstructions;
 		
 		int nflags;
@@ -720,7 +733,6 @@ class GlyfTable : Table {
 		
 		StringBuilder name = new StringBuilder ();
 		name.append_unichar (character);
-
 		
 		print (@"\nnew glyph\n");
 		print (@"glyph_offset: $glyph_offset\n");
@@ -748,10 +760,10 @@ class GlyfTable : Table {
 			throw error;
 		}
 		
-		xmin = dis.read_short ();
-		ymin = dis.read_short ();
-		xmax = dis.read_short ();
-		ymax = dis.read_short ();
+		ixmin = dis.read_short ();
+		iymin = dis.read_short ();
+		ixmax = dis.read_short ();
+		iymax = dis.read_short ();
 		
 		print (@"($xmin,$ymin) to ($xmax, $ymax)\n");
 		
@@ -833,8 +845,8 @@ class GlyfTable : Table {
 			
 			last = xcoordinates[i];
 			
-			if (!(xmin <= last <= xmax))	{
-				stderr.printf (@"x is out of bounds in glyph $(name.str). ($xmin <= $last <= $xmax)\n");
+			if (!(ixmin <= last <= ixmax))	{
+				stderr.printf (@"x is out of bounds in glyph $(name.str). ($ixmin <= $last <= $ixmax)\n");
 			}
 		}
 		
@@ -857,8 +869,8 @@ class GlyfTable : Table {
 			
 			last = ycoordinates[i];
 			
-			if (!(ymin <= last <= ymax))	{
-				stderr.printf (@"y is out of bounds in glyph $(name.str). ($ymin <= $last <= $ymax)\n");
+			if (!(iymin <= last <= iymax))	{
+				stderr.printf (@"y is out of bounds in glyph $(name.str). ($iymin <= $last <= $iymax)\n");
 			}
 		}
 		
@@ -868,6 +880,9 @@ class GlyfTable : Table {
 		double x, y, rx, ry, lx, ly, nx, ny;
 
 		glyph = new Glyph (name.str, character);
+		
+		xmin = ixmin * 1000.0 / 0xFFFF;
+		xmax = ixmax * 1000.0 / 0xFFFF;
 		
 		for (int i = 0; i < ncontours; i++) {
 			
@@ -1540,7 +1555,22 @@ class HeadTable : Table {
 }
 
 class HheaTable : Table {
+
+	Fixed version;
+	int16 ascender;
+	int16 descender;
+	int16 linegap;
+	uint16 max_advance;
+	int16 min_lsb;
+	int16 min_rsb;
+	int16 xmax_extent;
+	int16 carret_slope;
+	int16 carret_slope_run;
+	int16 carret_offset;
 	
+	int16 metric_format;
+	public int16 num_horizontal_metrics;
+		
 	GlyfTable glyf_table;
 	
 	public HheaTable (GlyfTable g) {
@@ -1549,6 +1579,34 @@ class HheaTable : Table {
 	
 	public string get_id () {
 			return "head";
+	}
+	
+	public void parse (OtfInputStream dis) throws Error {
+		dis.seek (offset);
+		
+		version = dis.read_fixed ();
+		
+		return_if_fail (version.equals (1, 0));
+		
+		ascender = dis.read_short ();
+		descender = dis.read_short ();
+		linegap = dis.read_short ();
+		max_advance = dis.read_ushort ();
+		min_lsb = dis.read_short ();
+		min_rsb = dis.read_short ();
+		xmax_extent = dis.read_short ();
+		carret_slope = dis.read_short ();
+		carret_slope_run = dis.read_short ();
+		carret_offset = dis.read_short ();
+		
+		// reserved x 4
+		dis.read_short ();
+		dis.read_short ();
+		dis.read_short ();
+		dis.read_short ();
+		
+		metric_format = dis.read_short ();
+		num_horizontal_metrics = dis.read_short ();
 	}
 	
 	public FontData get_font_data () {
@@ -1598,6 +1656,79 @@ class HheaTable : Table {
 		return font_data;
 	}
 }
+
+class HmtxTable : Table {
+	
+	uint32 nmetrics;
+	uint32 nmonospaced;
+		
+	uint16* advance_width = null;
+	uint16* left_side_bearing = null;
+	uint16* left_side_bearing_monospaced = null;
+		
+	public HmtxTable () {
+	}
+	
+	~HmtxTable () {
+		if (advance_width != null) delete advance_width;
+		if (left_side_bearing != null) delete left_side_bearing; 
+	}
+
+	public uint16 get_advance (uint32 i) 
+		requires (i < nmetrics && advance_width != null) {
+		return advance_width[i] * 1000 / 0xFFFF;
+	}
+		
+	/** Get left side bearing relative to xmin. */
+	public uint16 get_lsb (uint32 i) {
+		return_if_fail (i < nmetrics);
+		return_if_fail (left_side_bearing != null);
+		
+		return left_side_bearing[i] * 1000 / 0xFFFF;
+	}
+
+	/** Get left side bearing relative to xmin for monospaces fonts. */
+	public uint16 get_lsb_mono (uint32 i) 
+		requires (i < nmonospaced && left_side_bearing_monospaced != null) {
+		return left_side_bearing_monospaced[i] * 1000 / 0xFFFF;
+	}
+		
+	public void parse (OtfInputStream dis, HheaTable hhea_table, LocaTable loca_table) {
+		nmetrics = hhea_table.num_horizontal_metrics;
+		nmonospaced = loca_table.size - nmetrics;
+		
+		dis.seek (offset);
+		
+		if (nmetrics > loca_table.size) {
+			warning (@"(nmetrics > loca_table.size) ($nmetrics > $(loca_table.size))");
+		}
+		
+		print (@"$(loca_table.size) - $nmetrics\n");
+		print (@"nmetrics: $nmetrics, nmonospaced: $nmonospaced\n");
+		
+		advance_width = new uint16[nmetrics];
+		left_side_bearing = new uint16[nmetrics];
+		left_side_bearing_monospaced = new uint16[nmonospaced];
+		
+		for (int i = 0; i < nmetrics; i++) {
+			advance_width[i] = dis.read_ushort ();
+			left_side_bearing[i] = dis.read_short ();
+		}
+		
+		for (int i = 0; i < nmonospaced; i++) {
+			left_side_bearing_monospaced[i] = dis.read_short ();
+		}
+	}
+	
+	public FontData get_font_data () {
+		FontData font_data = new FontData ();
+		
+		// FIXA:
+		
+		return font_data;
+	}
+}
+
 
 class MaxpTable : Table {
 	
@@ -1900,6 +2031,7 @@ class DirectoryTable : Table {
 	public GlyfTable glyf_table;
 	public HeadTable head_table;
 	public HheaTable hhea_table;
+	public HmtxTable hmtx_table;
 	public MaxpTable maxp_table;
 	public NameTable name_table;
 	public Os2Table  os_2_table;
@@ -1918,6 +2050,7 @@ class DirectoryTable : Table {
 		cmap_table = new CmapTable (glyf_table);
 		head_table = new HeadTable (glyf_table);
 		hhea_table = new HheaTable (glyf_table);
+		hmtx_table = new HmtxTable ();
 		maxp_table = new MaxpTable (glyf_table);
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (); 
@@ -1957,7 +2090,17 @@ class DirectoryTable : Table {
 			
 			print (@"$(tag.str) \toffset: $offset \tlength: $length \tchecksum: $checksum.\n");
 			
-			if (tag.str == "loca") {
+			if (tag.str == "hmtx") {
+				hmtx_table.id = tag.str;
+				hmtx_table.checksum = checksum;
+				hmtx_table.offset = offset;
+				hmtx_table.length = length;
+			} else if (tag.str == "hhea") {
+				hhea_table.id = tag.str;
+				hhea_table.checksum = checksum;
+				hhea_table.offset = offset;
+				hhea_table.length = length;	
+			} else if (tag.str == "loca") {
 				loca_table.id = tag.str;
 				loca_table.checksum = checksum;
 				loca_table.offset = offset;
@@ -1987,17 +2130,20 @@ class DirectoryTable : Table {
 		
 		if (!head_table.validate (dis) || !maxp_table.validate (dis) 
 			|| !loca_table.validate (dis) || !cmap_table.validate (dis) 
-			|| !glyf_table.validate (dis)) 
+			|| !glyf_table.validate (dis) || !hhea_table.validate (dis)
+			|| !hmtx_table.validate (dis))
 		{
 			warning ("Missing required table");
 			return;
 		}
 		
 		head_table.parse (dis);
+		hhea_table.parse (dis);
 		maxp_table.parse (dis);
 		loca_table.parse (dis, head_table, maxp_table);
+		hmtx_table.parse (dis, hhea_table, loca_table);
 		cmap_table.parse (dis);
-		glyf_table.parse (dis, cmap_table, loca_table);		
+		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table);		
 	}
 	
 	public string get_id () {
