@@ -93,12 +93,12 @@ class OtfInputStream : Object  {
 	public FileInputStream fin;
 	public DataInputStream din;
 	
-	public OtfInputStream (FileInputStream i) throws Error  {
+	public OtfInputStream (FileInputStream i) throws Error {
 		din = new DataInputStream (i);
 		fin = i;
 	}
 	
-	public void seek (int64 pos) 
+	public void seek (int64 pos) throws Error
 		requires (fin.can_seek ()) {
 		int64 p = fin.tell ();		
 		fin.seek (pos - p, SeekType.CUR);
@@ -612,39 +612,14 @@ class GlyfTable : Table {
 		print (@"Parsing $(cmap.get_length ()) glyfs\n");
 		print (@"Parsing loca size: $(loca.size)\n");
 
-/*
-		unichar c = 'g';
-		uint32 glyph_offset;
-		uint32 gbe = 0;
-		bool err = false;
-		for (uint32 i = 1; i < loca.size; i++) {
-			try {
-				err = false;
-				if (!loca.is_empty (i)) {
-					glyph_offset = loca.get_offset(i);
-					parse_next_glyf (dis, c + i, glyph_offset + gbe);
-				} else {
-					// add empty glyph
-					continue;
-				}
-			} catch (Error e) {
-				stderr.printf (@"Falied to parse glyf:\n$(e.message)\n");
-				i--;
-				gbe++;
-				err = true;
-				if (c > 'g' + 30) break;
-			}
-			
-			if (!err) break;
-		}
-*/
-		unichar c = 'g';
+		unichar character = 'g';
 		uint32 glyph_offset;
 		for (uint32 i = 0; i < loca.size; i++) {
 			try {
 				if (!loca.is_empty (i)) {
+					character = cmap.get_char (i);
 					glyph_offset = loca.get_offset(i);
-					parse_next_glyf (dis, c + i, glyph_offset);
+					parse_next_glyf (dis, character, glyph_offset);
 				} else {
 					// add empty glyph
 				}
@@ -916,14 +891,11 @@ class GlyfTable : Table {
 				y = ycoordinates[j] * 1000.0 / 0xFFFF;
 				
 				if ((flags[j] & Coordinate.ON_PATH) > 0) {
-					print ("POINT\n");
 					edit_point = new EditPoint ();
 					edit_point.set_position (x, y);
 					path.add_point (edit_point);
 					//path.add (x, y); 
 				} else {
-					print ("CURVE\n");
-					
 					path.add (x, y);
 					/*	
 					if ((flags[j - 1] & Coordinate.ON_PATH) == 0) {
@@ -1076,34 +1048,27 @@ class GlyfTable : Table {
 
 /** Format 4 cmap subtable */
 class CmapSubtable : Table {
-	public static const uint16 FORMAT_TRIMMED_ARRAY = 10;
 
-	public uint32 start_char_code = 0;
-	public uint32 num_chars = 0;
+	public virtual uint get_length () {
+		warning ("Invalid CmapSubtable");
+		return 0;
+	}
+	
+	public virtual unichar get_char (uint32 i) {
+		warning ("Invalid CmapSubtable");
+		return 0;
+	}
 }
 
 class CmapSubtableWindowsUnicode : CmapSubtable {
 	uint16 format = 0;
-
-	uint16 lang;
-	uint16 seg_count_x2;
-	uint16 search_range;
-	uint16 entry_selector;
-	uint16 range_shift;
-
-	uint16 seg_count;
-	uint16* end_char = null;
-	uint16* start_char = null;
-	uint16* id_delta = null;
-	uint16* id_range_offset = null;
-	uint16* glyph_id_array = null;
+	HashTable <uint64?, unichar> table = new HashTable <uint64?, unichar> (int64_hash, int_equal);
+	
+	public CmapSubtableWindowsUnicode () {
+	}
 	
 	~CmapSubtableWindowsUnicode () {
-		if (end_char != null) delete end_char;
-		if (start_char != null) delete start_char;
-		if (id_delta != null) delete id_delta;
-		if (id_range_offset != null) delete id_range_offset;
-		if (glyph_id_array != null) delete glyph_id_array;
+
 	}
 	
 	public override void parse (OtfInputStream dis) {
@@ -1122,20 +1087,36 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		}
 	}
 	
-	public unichar get_char (int indice) 
-		requires (0 <= indice < seg_count) {
+	public override uint get_length () {
+		return table.size ();
+	}
+	
+	public override unichar get_char (uint32 indice) {
+		int64? c = table.lookup (indice);
 		
-		if (id_range_offset[indice] == 0) {
-			return indice + id_delta[indice];
+		if (c == 0) {
+			// FIXA: yes there is for null character
+			warning (@"There is no char for glyph number $indice in cmap table. table.size: $(table.size ()))");
+			return 0;
 		}
 		
-		// FIXA: just implement it.
-		stderr.printf ("no get_char for id_range_offset > 0 is not implemented yet\n");
-				
-		return 0;
+		return (unichar) c;
 	}
 	
 	public void parse_format4 (OtfInputStream dis) {
+		uint16 lang;
+		uint16 seg_count_x2;
+		uint16 seg_count;
+		uint16 search_range;
+		uint16 entry_selector;
+		uint16 range_shift;
+
+		uint16* end_char = null;
+		uint16* start_char = null;
+		int16* id_delta = null;
+		uint16* id_range_offset = null;
+		uint16* glyph_id_array = null;
+		
 		length = dis.read_ushort ();
 		lang = dis.read_ushort ();
 		seg_count_x2 = dis.read_ushort ();
@@ -1144,39 +1125,74 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		range_shift = dis.read_ushort ();
 		
 		return_if_fail (seg_count_x2 % 2 == 0);
+
+		seg_count = seg_count_x2 / 2;		
+
+		print (@"seg_count_x2: $seg_count_x2 \n");
+		print (@"seg_count: $seg_count \n");
+		print (@"lang: $lang \n");
+		print (@"seg_count: $seg_count \n");
 		
-		num_chars = seg_count_x2 / 2;
-		
-		end_char = new uint16[num_chars];
-		for (int i = 0; i < num_chars; i++) {
+		end_char = new uint16[seg_count];
+		for (int i = 0; i < seg_count; i++) {
 			end_char[i] = dis.read_ushort ();
 		}
 		
-		if (end_char[num_chars - 1] != 0xFFFF) {
+		if (end_char[seg_count - 1] != 0xFFFF) {
 			warning ("end_char is $(end_char[seg_count - 1]), expecting 0xFFFF.");
 		}
 		
 		dis.read_ushort (); // Reserved
 		
-		start_char = new uint16[num_chars];
-		for (int i = 0; i < num_chars; i++) {
+		start_char = new uint16[seg_count];
+		for (int i = 0; i < seg_count; i++) {
 			start_char[i] = dis.read_ushort ();
 		}
-		
-		id_delta = new uint16[num_chars];
-		for (int i = 0; i < num_chars; i++) {
-			id_delta[i] = dis.read_ushort ();
+
+		id_delta = new int16[seg_count];
+		for (int i = 0; i < seg_count; i++) {
+			id_delta[i] = dis.read_short ();
 		}
-		
-		id_range_offset = new uint16[num_chars];
-		for (int i = 0; i < num_chars; i++) {
+
+		id_range_offset = new uint16[seg_count];
+		for (int i = 0; i < seg_count; i++) {
 			id_range_offset[i] = dis.read_ushort ();
 		}
-		
-		glyph_id_array = new uint16[num_chars];
-		for (int i = 0; i < num_chars; i++) {
+
+		glyph_id_array = new uint16[seg_count];
+		for (int i = 0; i < seg_count; i++) {
 			glyph_id_array[i] = dis.read_ushort ();
 		}
+		
+		// map all values in a hashtable
+		int indice = 0;
+		unichar character = 0;
+		for (uint16 i = 0; i < seg_count; i++) {
+			
+			print (@"Insert range $((int)start_char[i]) to $((int)end_char[i]). id_delta[i] $(id_delta[i])  id_range_offset[i] $(id_range_offset[i])\n");
+			
+			if (id_range_offset[i] == 0) {
+				uint16 j = 0;
+				do {
+					character = start_char[i] + j;
+					indice = start_char[i] + id_delta[i] + j;
+					
+					table.insert (indice, character);
+					
+					indice++;
+					j++;
+				} while (character != end_char[i]);
+			} else {
+				warning ("Glyph indice with id_range_offset > 0 is not implemented yet.");
+			}		
+	
+		}
+		
+		if (end_char != null) delete end_char;
+		if (start_char != null) delete start_char;
+		if (id_delta != null) delete id_delta;
+		if (id_range_offset != null) delete id_range_offset;
+		if (glyph_id_array != null) delete glyph_id_array;
 	}
 }
 
@@ -1194,7 +1210,11 @@ class CmapTable : Table {
 	}
 	
 	public uint32 get_length () {
-		return get_prefered_table ().num_chars;
+		return get_prefered_table ().get_length ();
+	}
+	
+	public unichar get_char (uint32 i) {
+		return get_prefered_table ().get_char (i) ;
 	}
 	
 	CmapSubtable get_prefered_table () {
@@ -1250,6 +1270,10 @@ class CmapTable : Table {
 			}	
 		}
 		
+		if (subtables.length () == 0) {
+			warning ("No suitable cmap subtable found.");
+		}
+		
 		foreach (CmapSubtable t in subtables) {
 			t.parse (dis);
 		}
@@ -1280,7 +1304,7 @@ class CmapTable : Table {
 		offset = fd.data.length () + 4;
 		
 		fd.add_u32 (offset);
-
+/*
 		foreach (CmapSubtable cmap in subtables) {
 			uint32 num_chars = cmap.num_chars;
 			uint32 table_length = 20 + 2 * num_chars; // of subtable
@@ -1300,7 +1324,7 @@ class CmapTable : Table {
 				fd.add_u16 (glyph_indice++);
 			}
 		}
-		
+	*/	
 		// padding
 		while (fd.length () % 4 != 0) {
 			fd.add(0);
@@ -1315,7 +1339,7 @@ class CmapTable : Table {
 		List<CmapSubtable> maps = new List<CmapSubtable> ();
 		
 		CmapSubtable cmap = new CmapSubtable ();
-		
+/*		
 		uint32 charcode = 0;
 		uint32 last = 0;
 		foreach (Glyf g in glyf_table.glyfs) {
@@ -1333,7 +1357,7 @@ class CmapTable : Table {
 				
 				assert(maps.length () > 0);
 		}
-		
+*/		
 		return maps;
 	}
 
@@ -1660,7 +1684,7 @@ class OffsetTable : Table {
 			return "Offset table";
 	}
 	
-	public void parse (OtfInputStream dis) {
+	public void parse (OtfInputStream dis) throws Error {
 		Fixed version;
 		
 		version = dis.read_ulong ();
@@ -1886,7 +1910,7 @@ class DirectoryTable : Table {
 		offset_table = ot;
 	}
 	
-	public void parse (OtfInputStream dis) {
+	public void parse (OtfInputStream dis) throws Error {
 		StringBuilder tag = new StringBuilder ();
 		uint32 checksum;
 		uint32 offset;
