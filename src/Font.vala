@@ -554,8 +554,11 @@ class Font : GLib.Object {
 	public bool parse_otf_file (string path) {
 		OpenFontFormatReader otf = new OpenFontFormatReader (path);
 		GlyphCollection? gc;
+		int unindexed = 0;
 		
 		glyph_cache.remove_all ();
+		
+		print (@"Adding $(otf.get_glyphs ().length ()) to font.");
 		
 		foreach (Glyph g in otf.get_glyphs ()) {
 			gc = get_glyph_collection (g.get_name ());
@@ -564,7 +567,9 @@ class Font : GLib.Object {
 				gc = new GlyphCollection ();
 				glyph_cache.insert (g.get_name (), (!) gc);
 			} else {
-				stderr.printf (@"Glyph collection does already exit for $(g.get_name ()).\n");
+				stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
+				gc = new GlyphCollection ();
+				glyph_cache.insert (@"$(++unindexed) $(g.get_name ())", (!) gc);
 			}
 			
 			((!)gc).insert_glyph (g, true);

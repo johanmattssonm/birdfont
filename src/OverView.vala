@@ -663,7 +663,6 @@ class OverView : FontDisplay {
 		set_glyph_range (full);
 		selected = c + 1;
 		set_glyph_range (gr);
-		
 	}
 		
 	public override void motion_notify (EventMotion e) {

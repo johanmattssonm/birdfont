@@ -448,7 +448,6 @@ class Table : Object {
 		uint8 v;
 		uint8 b = 3;
 		
-		print (@"Seek $offset\n");
 		dis.seek (offset);
 
 		if (length % 4 > 0) {
@@ -609,20 +608,18 @@ class GlyfTable : Table {
 	}
 	
 	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table) {
-		print (@"Parsing $(cmap.get_length ()) glyfs\n");
-		print (@"Parsing loca size: $(loca.size)\n");
-
 		uint32 glyph_offset;
 		Glyph glyph = new Glyph ("");
 		double xmin, xmax;
 		
 		for (uint32 i = 0; i < loca.size; i++) {
-			try {
-				unichar character = cmap.get_char (i);
-				StringBuilder name = new StringBuilder ();
-				name.append_unichar (character);
+			unichar character = 0;
+			StringBuilder name = new StringBuilder ();
 				
-				print (@"\nnew glyph: gid $i. name: $(name.str)\n");
+			try {
+				character = cmap.get_char (i);
+				name = new StringBuilder ();
+				name.append_unichar (character);
 				
 				if (!loca.is_empty (i)) {	
 					glyph_offset = loca.get_offset(i);
@@ -642,12 +639,20 @@ class GlyfTable : Table {
 					// add empty glyph
 					glyph = new Glyph (name.str, character);
 					glyph.left_limit = -hmtx_table.get_lsb (i);
-					glyph.right_limit = hmtx_table.get_advance (i) - hmtx_table.get_lsb (i);;
+					glyph.right_limit = hmtx_table.get_advance (i) - hmtx_table.get_lsb (i);				
 				}
 				
 				glyphs.append (glyph);
+				
 			} catch (Error e) {
-				stderr.printf (@"Falied to parse glyf:\n$(e.message)\n");
+				stderr.printf (@"Cmap length $(cmap.get_length ()) glyfs\n");
+				stderr.printf (@"Loca size: $(loca.size)\n");
+				stderr.printf (@"Loca offset at $i: $glyph_offset\n");
+				stderr.printf (@"Glyph name: $(name.str)\n");
+				stderr.printf (@"Unicode character: $((uint64)character)\n");
+				stderr.printf (@"\n");
+				stderr.printf (@"Falied to parse glyf: $(e.message)\n");
+				
 				break;
 			}
 		}
@@ -669,14 +674,14 @@ class GlyfTable : Table {
 		
 		uint16 num_instructions;
 		
-		print ("Parsing composite glyph\n");
-		
+		Glyph glyph;
+		StringBuilder name = new StringBuilder ();
+		name.append_unichar (character);
+
 		do {
 			component_flags = dis.read_ushort ();
 			glyph_index = dis.read_ushort ();
-			
-			print (@"glyph_index: $glyph_index\n");
-			
+
 			if ((component_flags & BOTH_ARE_WORDS) > 0) {
 				arg1 = dis.read_short ();
 				arg1 = dis.read_short ();			
@@ -707,14 +712,14 @@ class GlyfTable : Table {
 		if ((component_flags & INSTRUCTIONS) > 0) {
 			num_instructions = dis.read_ushort ();
 			
-			print (@"num_instructions: $num_instructions\n");
-			
 			for (int i = 0; i < num_instructions; i++) {
 				dis.read_byte ();
 			}
 		}
+
+		glyph = new Glyph (name.str, character);
 		
-		return new Glyph ("");
+		return glyph;
 	}
 	
 	Glyph parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset,
@@ -741,13 +746,10 @@ class GlyfTable : Table {
 		
 		StringBuilder name = new StringBuilder ();
 		name.append_unichar (character);
-		print (@"glyph_offset: $glyph_offset\n");
-		
+
 		dis.seek (offset + glyph_offset);
 		
 		ncontours = dis.read_short ();
-		
-		print (@"$ncontours contours in glyf table.\n");
 		
 		if (ncontours == 0) {
 			warning (@"Got zero contours in glyph $(name.str).");
@@ -756,7 +758,6 @@ class GlyfTable : Table {
 		}
 				
 		if (ncontours == -1) {
-			print ("Skipping composite glyph.\n");
 			return parse_next_composite_glyf (dis, character);
 		}
 				
@@ -770,11 +771,7 @@ class GlyfTable : Table {
 		iymin = dis.read_short ();
 		ixmax = dis.read_short ();
 		iymax = dis.read_short ();
-		
-		print (@"($ixmin,$iymin) to ($ixmax, $iymax)\n");
-		
-		print ("Simple\n");
-	
+
 		end_points = new uint16[ncontours + 1];
 		for (int i = 0; i < ncontours; i++) {
 			end_points[i] = dis.read_ushort (); // FIXA: mind shot vector is negative
@@ -792,9 +789,8 @@ class GlyfTable : Table {
 			npoints = 0;
 		}
 
-		ninstructions = dis.read_ushort ();
-		print (@"$ninstructions instructions in glyf table.\n");
-		
+		// FIXA: Implement this
+		ninstructions = dis.read_ushort ();		
 		instructions = new uint8[ninstructions + 1];
 		uint8 repeat;
 		for (int i = 0; i < ninstructions; i++) {
@@ -831,8 +827,6 @@ class GlyfTable : Table {
 			warning (@"(nflags != npoints) ($nflags != $npoints)");
 			error = new BadFormat.PARSE (@"Wrong number of flags in glyph $(name.str). (nflags != npoints) ($nflags != $npoints)");
 		}
-		
-		print (@"npoints: $npoints\n");
 		
 		int16 last = 0;
 		xcoordinates = new int16[npoints + 1];
@@ -893,11 +887,8 @@ class GlyfTable : Table {
 		xmax = ixmax * 1000.0 / units_per_em;
 		
 		for (int i = 0; i < ncontours; i++) {
-			
 			x = 0;
 			y = 0;
-			
-			print ("Next path\n");
 			
 			Path path = new Path ();
 			EditPoint edit_point = new EditPoint ();
@@ -961,8 +952,6 @@ class GlyfTable : Table {
 			
 			glyph.add_path (path);
 		}
-		
-		print (@" ($ixmax == $ixmin)\n");
 		
 		// glyphs with no bounding boxes
 		if (ixmax <= ixmin) {
@@ -1174,6 +1163,12 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		}
 		
 		if (c == 0) {
+			while (table.lookup (--indice) == 0) {
+				if (indice == 0) {
+					return 0;
+				}
+			} 
+			
 			// FIXA: yes there is for null character
 			warning (@"There is no char for glyph number $indice in cmap table. table.size: $(table.size ()))");
 			return 0;
@@ -1195,6 +1190,8 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		int16* id_delta = null;
 		uint16* id_range_offset = null;
 		uint16* glyph_id_array = null;
+	
+		uint32 gid_len;
 		
 		length = dis.read_ushort ();
 		lang = dis.read_ushort ();
@@ -1238,32 +1235,49 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			id_range_offset[i] = dis.read_ushort ();
 		}
 
-		glyph_id_array = new uint16[seg_count];
-		for (int i = 0; i < seg_count; i++) {
+		gid_len = (length - 16 - 8 * seg_count) / 2;
+		glyph_id_array = new uint16[gid_len];
+		for (int i = 0; i < gid_len; i++) {
 			glyph_id_array[i] = dis.read_ushort ();
 		}
 		
 		// map all values in a hashtable
 		int indice = 0;
 		unichar character = 0;
+		uint32 id;
 		for (uint16 i = 0; i < seg_count && start_char[i] != 0xFFFF; i++) {
 			
 			print (@"Insert range $((int)start_char[i]) to $((int)end_char[i]). id_delta[i] $(id_delta[i])  id_range_offset[i] $(id_range_offset[i])\n");
-
-			if (id_range_offset[i] == 0) {
-				uint16 j = 0;
-				do {
-					character = start_char[i] + j;
-					indice = start_char[i] + id_delta[i] + j;
+			
+			uint16 j = 0;
+			do {
+				character = start_char[i] + j;
+				indice = start_char[i] + id_delta[i] + j;
+				
+				if (id_range_offset[i] == 0) {
+					table.insert (indice, character);
+				} else {
+					// the awkward indexing trick:
+					id = id_range_offset[i] / 2 + j + i - seg_count;
+					
+					if (!(0 <= id < gid_len)) {
+						warning (@"(0 <= id < gid_len) (0 <= $id < $gid_len)");
+						break;
+					}
+					
+					indice = glyph_id_array [id] + id_delta[i];
+										
+					StringBuilder s = new StringBuilder ();
+					s.append_unichar (character);					
+					
+					print (@"$(s.str) -> $indice      j $j  id_delta[i] $(id_delta[i])  id $id gidi  $(glyph_id_array [id])   char: $((uint32)character)\n");
 					
 					table.insert (indice, character);
-					
-					indice++;
-					j++;
-				} while (character != end_char[i]);
-			} else {
-				warning ("Glyph indice with id_range_offset > 0 is not implemented yet.");
-			}		
+				}
+				
+				indice++;
+				j++;
+			} while (character != end_char[i]);
 	
 		}
 		
@@ -1272,6 +1286,42 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		if (id_delta != null) delete id_delta;
 		if (id_range_offset != null) delete id_range_offset;
 		if (glyph_id_array != null) delete glyph_id_array;
+		
+		// it is has a character for every glyph indice
+		// assert (validate_subtable ());
+	}
+	
+	public bool validate_subtable () {
+		uint32 length = get_length ();
+		unichar c;
+		unichar prev;
+		uint32 i = 0;
+		uint32 err = 0;
+		StringBuilder s;
+		
+		c = get_char (i);
+		i++;
+		
+		while (i < length) {
+			if (c == 0) {
+				s = new StringBuilder ();
+				s.append_unichar (c);
+				warning (@"No characte in cmap for index $i. Last avalable char is $(s.str) Got $(s.str), ($((uint32)c))");
+				err++;
+				return false;
+			} else {
+				prev = c;
+			}
+			
+			c = get_char (i);
+			i++;
+		}
+		
+		if (err > 0) {
+			stderr.printf (@"$err glyphs without mapping to a charactercode were found in this font.\n");
+		}
+		
+		return true;
 	}
 }
 
@@ -1498,8 +1548,7 @@ class HeadTable : Table {
 		uint64 modified;
 		
 		List<CmapSubtable> maps = new List<CmapSubtable> ();
-		
-		print (@"Seek $offset\n");
+
 		dis.seek (offset);
 	
 		version = dis.read_fixed ();

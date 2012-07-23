@@ -1260,6 +1260,7 @@ class Glyph : FontDisplay {
 	public bool is_empty () {
 		bool p = path_list.length () == 0 || path_list.first ().data.points.length () == 0;
 		return p && background_image == null;
+		return false;
 	}
 	
 	private void set_zoom (double z)
