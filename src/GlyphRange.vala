@@ -20,8 +20,9 @@ namespace Supplement {
 class GlyphRange {
 	
 	List<UniRange> ranges;
-	
 	List<unichar> index_start;
+
+	public List<unowned string> unassigned;
 	
 	unichar len = 0;
 	
@@ -91,7 +92,7 @@ class GlyphRange {
 	}
 	
 	public unichar get_length () {
-		return len;
+		return len + unassigned.length ();
 	}
 	
 	public void add_range (unichar start, unichar stop) {
@@ -116,19 +117,15 @@ class GlyphRange {
 		}
 		
 	}
-	
-	public unichar get_unichar (unichar index) {
-		return get_char (index).get_char (0);
-	}
-	
+
 	public string get_char (unichar index) {
 		int i = 0;
 		unichar next = 0;
+		
 		foreach (unichar s in index_start) {
 			StringBuilder sbt = new StringBuilder ();
 			
 			if (!s.validate () && s >= index) {
-				
 				sbt.append_unichar (s);
 				break;
 			} else if (s >= index) {
@@ -140,12 +137,16 @@ class GlyphRange {
 			i++;
 		}
 
-		if (unlikely(index == 0)) {
-			return "\0".dup();
-		}
-
-		if (!unlikely(0 <= i < ranges.length ())) {
-			return "\0".dup();
+		if (index == 0 || !(0 <= i < ranges.length ())) {
+			if (index > ranges.length ()) {
+				i = (int) (index - ranges.length ());
+				
+				if (i >= unassigned.length ()) {
+					return "\0".dup();
+				}
+				
+				return unassigned.nth (i).data.dup();
+			}
 		}
 
 		UniRange u = ranges.nth_data (i);

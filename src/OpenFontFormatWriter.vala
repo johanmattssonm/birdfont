@@ -642,6 +642,10 @@ class GlyfTable : Table {
 					glyph.right_limit = hmtx_table.get_advance (i) - hmtx_table.get_lsb (i);				
 				}
 				
+				if (character == 0 && i != 0) {
+					glyph.set_unassigned (true);
+				}
+				
 				glyphs.append (glyph);
 				
 			} catch (Error e) {
@@ -1275,7 +1279,6 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 					table.insert (indice, character);
 				}
 				
-				indice++;
 				j++;
 			} while (character != end_char[i]);
 	
@@ -1306,7 +1309,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			if (c == 0) {
 				s = new StringBuilder ();
 				s.append_unichar (c);
-				warning (@"No characte in cmap for index $i. Last avalable char is $(s.str) Got $(s.str), ($((uint32)c))");
+				warning (@"No entry in cmap for index $i. Last avalable char is $(s.str) Got $(s.str), ($((uint32)c))");
 				err++;
 				return false;
 			} else {

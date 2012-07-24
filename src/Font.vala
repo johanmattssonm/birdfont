@@ -23,6 +23,10 @@ namespace Supplement {
 class Font : GLib.Object {
 	
 	HashTable <string, GlyphCollection> glyph_cache = new HashTable <string, GlyphCollection> (str_hash, str_equal);
+	
+	/** Glyphs that not are tied to a unichar value. */
+	HashTable <string, GlyphCollection> unassigned_glyphs = new HashTable <string, GlyphCollection> (str_hash, str_equal);
+	
 	public HashTable <string, Kerning> kerning = new HashTable <string, Kerning> (str_hash, str_equal);
 	
 	public List <string> background_images = new List <string> ();
@@ -73,6 +77,10 @@ class Font : GLib.Object {
 		string fn = @"$(get_name ()) backgrounds";
 		File f = Supplement.get_settings_directory ().get_child (fn);
 		return f;
+	}
+
+	public uint get_length () {
+		return glyph_cache.get_keys ().length ();
 	}
 
 	/** Retuns true if the current font has be modified */
@@ -248,6 +256,8 @@ class Font : GLib.Object {
 		
 		gr.sort ();
 		
+		gr.unassigned = unassigned_glyphs.get_keys ();
+		
 		return gr;
 	}
 	
@@ -275,7 +285,17 @@ class Font : GLib.Object {
 	
 	/** Obtain all versions and alterntes for this glyph. */
 	public GlyphCollection? get_glyph_collection (string glyph) {
-		return glyph_cache.lookup (glyph);
+		GlyphCollection? gc = glyph_cache.lookup (glyph);
+		
+		if (gc == null) {
+			gc = unassigned_glyphs.lookup (glyph);
+			
+			if (gc == null) {			
+				return null;
+			}
+		}
+		
+		return gc;
 	}
 	
 	public Glyph? get_glyph_from_unichar (unichar glyph) {
@@ -285,7 +305,7 @@ class Font : GLib.Object {
 	}
 	
 	public Glyph? get_glyph (string glyph) {
-		unowned GlyphCollection? gc = glyph_cache.lookup (glyph);
+		GlyphCollection? gc = get_glyph_collection (glyph);
 		
 		if (gc == null) {
 			return null;
@@ -296,14 +316,25 @@ class Font : GLib.Object {
 	
 	public Glyph? get_glyph_indice (unichar glyph_indice) {
 		List<unowned GlyphCollection> gl;
+		unowned GlyphCollection gc;
 		
-		if (glyph_indice >= glyph_cache.size ()) {
+		if (glyph_indice >= glyph_cache.size () + unassigned_glyphs.size ()) {			
 			return null;
 		}
 		
-		gl = glyph_cache.get_values ();
-		
-		return gl.nth (glyph_indice).data.get_current ();
+		if (glyph_indice >= glyph_cache.size ()) {
+			gl = unassigned_glyphs.get_values ();
+			glyph_indice -= glyph_cache.size ();
+			
+			return null;
+		} else {
+			gl = glyph_cache.get_values ();
+		}
+			
+		gc = gl.nth (glyph_indice).data;
+		return ((!) gc).get_current ();
+
+		return null;
 	}
 	
 	public void add_background_image (string file) {
@@ -558,18 +589,21 @@ class Font : GLib.Object {
 		
 		glyph_cache.remove_all ();
 		
-		print (@"Adding $(otf.get_glyphs ().length ()) to font.");
+		print (@"Adding $(otf.get_glyphs ().length ()) glyphs to font.\n");
 		
 		foreach (Glyph g in otf.get_glyphs ()) {
 			gc = get_glyph_collection (g.get_name ());
-		
-			if (gc == null) {
+			
+			if (g.is_unassigned ()) {
+				gc = new GlyphCollection ();
+				unassigned_glyphs.insert (@"($(++unindexed)) $(g.get_name ())", (!) gc);				
+			} else if (gc == null) {
 				gc = new GlyphCollection ();
 				glyph_cache.insert (g.get_name (), (!) gc);
 			} else {
 				stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
 				gc = new GlyphCollection ();
-				glyph_cache.insert (@"$(++unindexed) $(g.get_name ())", (!) gc);
+				unassigned_glyphs.insert (@"($(++unindexed))", (!) gc);
 			}
 			
 			((!)gc).insert_glyph (g, true);
@@ -583,6 +617,8 @@ class Font : GLib.Object {
 
 		// take xheight from appropriate lower case letter
 		xheight_position = estimate_xheight ();
+		
+		print (@"Num chars $(get_length ()).\n");
 		
 		return true; // Fixa
 	}

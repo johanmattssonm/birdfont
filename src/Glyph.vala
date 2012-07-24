@@ -84,6 +84,7 @@ class Glyph : FontDisplay {
 	bool xheight_lines_visible = false;   		 	// blue lines
 	bool margin_boundries_visible = false; 			// red lines
 	
+	bool unassigned = false;
 	public unichar unichar_code = 0;
 	
 	bool editable = true;
@@ -112,6 +113,14 @@ class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 
 		path_list.append (new Path ());
+	}
+	
+	public void set_unassigned (bool u) {
+		unassigned = u;
+	}
+	
+	public bool is_unassigned () {
+		return unassigned;
 	}
 
 	public void boundries (out double x1, out double y1, out double x2, out double y2) {

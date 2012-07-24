@@ -64,11 +64,13 @@ class OverView : FontDisplay {
 			Toolbox tools = MainWindow.get_toolbox ();
 			bool selected = tabs.select_char (s);
 			unichar new_char = s.get_char (0);
+			Font f = Supplement.get_current_font ();
 			
 			stdout.printf ("Open '%s' character: %u (%s)\n", s, new_char, Font.to_hex (new_char));
-						
+			
+			if (f.get_glyph_collection (s) == null) print ("NO GLYPH \n");
+					
 			if (!selected) {
-				Font f = Supplement.get_current_font ();
 				GlyphCollection? fg = f.get_glyph_collection (s);
 				Glyph g = (fg == null) ? new Glyph (s, new_char) : ((!) fg).get_current ();
 				ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");
@@ -734,6 +736,7 @@ class OverView : FontDisplay {
 			selected++;
 			x += nail_width;
 		}
+		
 		selected--;
 		
 		if (current == selected && !menu_action) {
@@ -756,11 +759,14 @@ class OverView : FontDisplay {
 	}
 
 	public void set_glyph_range (GlyphRange range) {
-		string c = glyph_range.get_char (selected);		
+		string c = glyph_range.get_char (selected);
 		bool done = false;
 		unichar i;
 		unichar len;
+		
 		glyph_range = range;
+		
+		// Todo: optimized search when full range is selected.
 		
 		// scroll to the selected character
 		if (c == "") {
@@ -774,6 +780,11 @@ class OverView : FontDisplay {
 		
 		scroll_top ();
 
+		// Skip scroll if this is a unassigned character
+		if (c.char_count () > 1) {
+			return;
+		}
+
 		while (true) {
 			for (i = first_visible; i < first_visible + items_per_row * (rows + 1); i++) {
 				if (range.get_char (i) == c) {
@@ -785,7 +796,7 @@ class OverView : FontDisplay {
 			
 			if (done) break;
 			if (at_bottom ()) break;
-			
+
 			scroll_rows (rows);
 		}
 
