@@ -27,6 +27,9 @@ class Font : GLib.Object {
 	/** Glyphs that not are tied to a unichar value. */
 	HashTable <string, GlyphCollection> unassigned_glyphs = new HashTable <string, GlyphCollection> (str_hash, str_equal);
 	
+	/** Last unassigned index */
+	int next_unindexed = 0;
+		
 	public HashTable <string, Kerning> kerning = new HashTable <string, Kerning> (str_hash, str_equal);
 	
 	public List <string> background_images = new List <string> ();
@@ -581,46 +584,61 @@ class Font : GLib.Object {
 		
 		return loaded;
 	}
+	
+	/** Callbackt function for finishing parsing of font file. */ 
+	public void loading_finished_callback () {
+		print ("Done Loading.");
+	}
 
-	public bool parse_otf_file (string path) {
-		OpenFontFormatReader otf = new OpenFontFormatReader (path);
-		GlyphCollection? gc;
-		int unindexed = 0;
+	/** Callback function for loading glyph in a separate thread. */
+	public void add_glyph_callback (Glyph g) {
+		GlyphCollection? gc;	
+				
+		gc = get_glyph_collection (g.get_name ());
 		
-		glyph_cache.remove_all ();
-		
-		print (@"Adding $(otf.get_glyphs ().length ()) glyphs to font.\n");
-		
-		foreach (Glyph g in otf.get_glyphs ()) {
-			gc = get_glyph_collection (g.get_name ());
-			
-			if (g.is_unassigned ()) {
-				gc = new GlyphCollection ();
-				unassigned_glyphs.insert (@"($(++unindexed)) $(g.get_name ())", (!) gc);				
-			} else if (gc == null) {
-				gc = new GlyphCollection ();
-				glyph_cache.insert (g.get_name (), (!) gc);
-			} else {
-				stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
-				gc = new GlyphCollection ();
-				unassigned_glyphs.insert (@"($(++unindexed))", (!) gc);
-			}
-			
+		if (g.is_unassigned ()) {
+			gc = new GlyphCollection ();
+			unassigned_glyphs.insert (@"($(++next_unindexed))", (!) gc);
 			((!)gc).insert_glyph (g, true);
+		} else if (gc == null) {
+			gc = new GlyphCollection ();
+			glyph_cache.insert (g.get_name (), (!) gc);
+			((!)gc).insert_glyph (g, true);	
+		} else {
+			stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
+			gc = new GlyphCollection ();
+			unassigned_glyphs.insert (@"($(++next_unindexed))", (!) gc);
+			((!)gc).insert_glyph (g, true);	
 		}
 		
-		base_line = 0;
-		top_position = -otf.get_ascender ();
-		top_limit = top_position - 5;
-		bottom_position = -otf.get_descender ();
-		bottom_limit = bottom_position + 5;
-
 		// take xheight from appropriate lower case letter
-		xheight_position = estimate_xheight ();
+		// xheight_position = estimate_xheight ();
+	}
+
+	public bool parse_otf_file (string path) {
+		glyph_cache.remove_all ();
+		unassigned_glyphs.remove_all ();
 		
-		print (@"Num chars $(get_length ()).\n");
+		font_file = path;
 		
-		return true; // Fixa
+		ThreadFunc<void*> run = () => {
+			string file = (!) font_file;
+			parse_otf_file_async (file);
+			return null;
+		};
+		
+		try {
+			Thread.create<void*> (run, false);
+			yield;
+		} catch (ThreadError e) {
+			stderr.printf ("Thread error: %s\n", e.message);
+		}
+		
+		return true;
+	}
+		
+	public static void parse_otf_file_async (string path) {
+		OpenFontFormatReader otf = new OpenFontFormatReader (path);
 	}
 	
 	/** Measure height of x or other lower case letter. */

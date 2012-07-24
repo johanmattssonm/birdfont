@@ -121,7 +121,7 @@ class GlyphRange {
 	public string get_char (unichar index) {
 		int i = 0;
 		unichar next = 0;
-		
+
 		foreach (unichar s in index_start) {
 			StringBuilder sbt = new StringBuilder ();
 			

@@ -67,9 +67,7 @@ class OverView : FontDisplay {
 			Font f = Supplement.get_current_font ();
 			
 			stdout.printf ("Open '%s' character: %u (%s)\n", s, new_char, Font.to_hex (new_char));
-			
-			if (f.get_glyph_collection (s) == null) print ("NO GLYPH \n");
-					
+								
 			if (!selected) {
 				GlyphCollection? fg = f.get_glyph_collection (s);
 				Glyph g = (fg == null) ? new Glyph (s, new_char) : ((!) fg).get_current ();
@@ -453,8 +451,16 @@ class OverView : FontDisplay {
 	}
 	
 	private int selected_offset_y (unichar item) {
+		int64 di;
+		int64 a, b;
 		if (unlikely (items_per_row == 0)) return 0;
-		return (int) (view_offset_y + (((item - first_visible) / items_per_row) * nail_height));
+		
+		a = (int64) item;
+		b = (int64) first_visible;
+		di = (a - b);
+		
+		print (@"DI $di  =  $((int)item)  - $((int)first_visible)\n");
+		return (int) (view_offset_y + ((di / items_per_row) * nail_height));
 	}
 
 	/** Make selected item fully visible if it partly off screen. */
@@ -501,7 +507,6 @@ class OverView : FontDisplay {
 	}
 
 	private void key_up () {
-		
 		if (glyph_range.length () == 0) return;
 				
 		if (selected < first_character + items_per_row) {

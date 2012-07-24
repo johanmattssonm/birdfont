@@ -19,7 +19,7 @@ namespace Supplement {
 
 class OpenFontFormatWriter : Object  {
 
-	DataOutputStream os;
+	OtfOutputStream os;
 	DirectoryTable directory_table;
 	
 	public OpenFontFormatWriter () {
@@ -27,15 +27,14 @@ class OpenFontFormatWriter : Object  {
 	}
 	
 	public void open (File file) throws Error {
+		DataOutputStream dos;
+		
 		if (file.query_exists ()) {
 			throw new FileError.EXIST("OpenFontFormatWriter: file exists.");
 		}
 		
-		os = new DataOutputStream(file.create(FileCreateFlags.REPLACE_DESTINATION));
-	}
-	
-	public void add_glyf (Glyf glyf) {
-		directory_table.get_glyf_table ().add (glyf);
+		dos = new DataOutputStream(file.create(FileCreateFlags.REPLACE_DESTINATION));
+		os = new OtfOutputStream (dos);
 	}
 	
 	private void add_glyph (Glyph glyph) {
@@ -51,7 +50,7 @@ class OpenFontFormatWriter : Object  {
 		add_glyf (g);
 	}
 	
-	public void write_font_file (Font font) throws Error {
+	public void write_ttf_font (Font font) throws Error {
 		long dl = directory_table.get_font_file_size ();
 		uint8[] data = new uint8[dl];
 		uint i = -1;
@@ -60,16 +59,7 @@ class OpenFontFormatWriter : Object  {
 		unowned List<Table> tables;
 		unichar indice = 0;
 		
-		while (true) {
-			g = font.get_glyph_indice (indice++);
-			
-			if (g == null) {
-				break;
-			}
-
-			add_glyph ((!) g);
-		}
-		
+		directory_table.process (font);
 		tables = directory_table.get_tables ();
 		
 		foreach (Table t in tables) {
@@ -88,6 +78,7 @@ class OpenFontFormatWriter : Object  {
 	}
 }
 
+/** Reader for otf data types. */
 class OtfInputStream : Object  {
 	
 	public FileInputStream fin;
@@ -134,6 +125,52 @@ class OtfInputStream : Object  {
 		return din.read_byte ();
 	}
 }
+
+class OtfOutputStream : Object  {
+	
+	public FileOutputStream f;
+	public DataOutputStream d;
+	
+	public OtfOutputStream (FileOutputStream i) throws Error {
+		din = new DataOutputStream (i);
+		fin = i;
+	}
+	
+	public void seek (int64 pos) throws Error
+		requires (fin.can_seek ()) {
+		int64 p = fin.tell ();		
+		fin.seek (pos - p, SeekType.CUR);
+	}
+	
+	public void write_fixed (Fixed f) throws Error {
+		f.put_int32 (f);
+	}
+
+	public void write_f2dot14 (F2Dot14 f) throws Error {
+		f.put_int16 (f);
+	}
+
+	public void write_udate (int64 d) throws Error {
+		f.put_int64 (d);
+	}
+	
+	public void write_short (int16 d) throws Error {
+		f.put_int16 (d);
+	}
+	
+	public void write_ushort (uint16 d) throws Error {
+		d.put_uint16 (d);
+	}
+	
+	public void write_ulong (uint32 d) throws Error {
+		d.put_uint32 (d);
+	}
+
+	public void write_byte (uint8 b) throws Error {
+		d.put_uint8 (b);
+	}
+}
+
 
 class Contour : Object {
 	
@@ -576,10 +613,6 @@ class LocaTable : Table {
 
 class GlyfTable : Table {
 	
-	public List<Glyf> glyfs = new List<Glyf> (); // FIXA: remove this
-	
-	public List<Glyph> glyphs = new List<Glyph> ();
-	
 	FontData? font_data = null;
 	
 	int16 xmin = int16.MAX; // FIXA: remove these
@@ -600,13 +633,27 @@ class GlyfTable : Table {
 	}	
 	
 	public void add (Glyf glyf) {
-		glyfs.insert_sorted_with_data (glyf, (a, b) => {
+/*		glyfs.insert_sorted_with_data (glyf, (a, b) => {
 				if (a.char_code < b.char_code) return -1;
 				if (a.char_code > b.char_code) return 1;
 				return 0;				
 			});
+*/
 	}
 	
+	/** Add this glyph from thread safe callback to the running gui. */
+	void add_glyph (Glyph g) {
+		IdleSource idle = new IdleSource ();
+
+		idle.set_callback (() => {
+			Font font = Supplement.get_current_font ();
+			font.add_glyph_callback (g);
+			return false;
+		});
+
+		idle.attach (null);
+	}
+	 
 	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table) {
 		uint32 glyph_offset;
 		Glyph glyph = new Glyph ("");
@@ -646,7 +693,7 @@ class GlyfTable : Table {
 					glyph.set_unassigned (true);
 				}
 				
-				glyphs.append (glyph);
+				add_glyph (glyph);
 				
 			} catch (Error e) {
 				stderr.printf (@"Cmap length $(cmap.get_length ()) glyfs\n");
@@ -1007,7 +1054,7 @@ class GlyfTable : Table {
 		
 		FontData fd = new FontData ();
 		font_data = fd;
-		
+/*		
 		foreach (var g in glyfs) {
 			add_glyf_data (g, fd);
 		}
@@ -1016,7 +1063,7 @@ class GlyfTable : Table {
 		while (fd.length () % 4 != 0) {
 			fd.add(0);
 		}
-
+*/
 		return fd;
 	}
 
@@ -1721,7 +1768,7 @@ class HheaTable : Table {
 	
 	public FontData get_font_data () {
 		FontData font_data = new FontData ();
-
+/*
 		font_data.add_u16 (1); // table version
 		font_data.add_u16 (0);
 		
@@ -1762,7 +1809,7 @@ class HheaTable : Table {
 		while (font_data.length () % 4 != 0) {
 			font_data.add(0);
 		}
-		
+		*/
 		return font_data;
 	}
 }
@@ -1879,7 +1926,7 @@ class MaxpTable : Table {
 	
 	public FontData get_font_data () {
 		FontData font_data = new FontData();
-		
+/*		
 		// Version 0.5 for fonts with cff data and 1.0 for ttf
 		font_data.add_u16 (1);
 		font_data.add_u16 (0);
@@ -1907,12 +1954,12 @@ class MaxpTable : Table {
 		while (font_data.length () % 4 != 0) {
 			font_data.add(0);
 		}
-	
+	*/
 		return font_data;
 	}
 
 	private void get_max (out uint16 max_points, out uint16 max_contours) {
-		max_points = 0;
+/*		max_points = 0;
 		max_contours = 0;
 		
 		foreach (var g in glyf_table.glyfs) {
@@ -1928,7 +1975,7 @@ class MaxpTable : Table {
 			
 			if (p > max_points) max_points = p;
 		}
-		
+	*/	
 	}
 
 }
@@ -2155,10 +2202,7 @@ class DirectoryTable : Table {
 	
 	OffsetTable offset_table;
 	
-	List<Table> tables; // Fixa: remove this
-				
 	public DirectoryTable () {
-
 		offset_table = new OffsetTable ();
 		
 		glyf_table = new GlyfTable ();
@@ -2171,12 +2215,15 @@ class DirectoryTable : Table {
 		os_2_table = new Os2Table (); 
 		post_table = new PostTable ();
 		loca_table = new LocaTable ();
-		
-		tables = new List<Table> ();
 	}
 
 	public void set_offset_table (OffsetTable ot) {
 		offset_table = ot;
+	}
+	
+	/** Create a new ttf file from font. */
+	public void write (OtfOutputStream out, Font font) {
+		
 	}
 	
 	public void parse (OtfInputStream dis) throws Error {
@@ -2186,10 +2233,6 @@ class DirectoryTable : Table {
 		uint32 length;
 		
 		return_if_fail (offset_table.num_tables > 0);
-		
-		for (unowned List<Table> t = tables.first (); t != t.last (); t = t.next) {
-			tables.remove_link (t);
-		}
 		
 		for (uint i = 0; i < offset_table.num_tables; i++) {
 			tag.erase ();
@@ -2264,10 +2307,6 @@ class DirectoryTable : Table {
 	public string get_id () {
 		warning ("Don't write id for table directory.");		
 		return "Directory table"; // Table id should be ignored for directory table, none the less it has one declared here.
-	}
-	
-	public unowned List<Table> get_tables () {
-		return tables;
 	}
 	
 	public GlyfTable get_glyf_table () {

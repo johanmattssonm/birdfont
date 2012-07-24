@@ -26,7 +26,7 @@ class ExportTool : Tool {
 	
 		select_action.connect((self) => {
 			export_svg_font ();
-			// export_otf_font ();
+			export_otf_font ();
 			// Fixa: add export_glyph_to_svg (); as tool in toolbox
 		});
 		
@@ -286,6 +286,30 @@ class ExportTool : Tool {
 </html>
 """);
 
+	}
+
+	public bool export_ttf_font () {
+		try {
+			Font font = Supplement.get_current_font ();
+			File file = font.get_folder ();
+			file = file.get_child (font.get_name () + ".ttf");
+			OpenFontFormatWriter fo;
+			
+			if (file.query_exists ()) {
+				file.delete ();
+			}
+			
+			fo = new OpenFontFormatWriter ();
+			fo.open (file);
+			fo.write_ttf_font (font);
+			fo.close ();
+			
+		} catch (Error e) {
+			critical (@"$(e.message)");
+			return false;
+		}
+		
+		return true;		
 	}
 
 	public bool export_otf_font () {
