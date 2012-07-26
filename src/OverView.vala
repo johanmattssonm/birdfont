@@ -459,7 +459,6 @@ class OverView : FontDisplay {
 		b = (int64) first_visible;
 		di = (a - b);
 		
-		print (@"DI $di  =  $((int)item)  - $((int)first_visible)\n");
 		return (int) (view_offset_y + ((di / items_per_row) * nail_height));
 	}
 

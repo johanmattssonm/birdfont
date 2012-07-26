@@ -78,7 +78,7 @@ class SvgFontFormatWriter : Object  {
 			b.append_unichar (glyph.get_unichar ());
 
 			if (glyph.get_unichar () >= ' ' && b.str.validate ()) {
-				if (b.str == "\"" || b.str == "&") {
+				if (b.str == "\"" || b.str == "&" || b.str == "<") {
 					uni = Font.to_hex_code (glyph.get_unichar ());
 					put (@"<glyph unicode=\"&#x$(uni);\" horiz-adv-x=\"$(glyph.get_width ())\" d=\"$(glyph.get_svg_data ())\" />");			
 				} else {

@@ -22,6 +22,7 @@ namespace Supplement {
 
 class Font : GLib.Object {
 	
+	// TODO implemet sorted table:
 	HashTable <string, GlyphCollection> glyph_cache = new HashTable <string, GlyphCollection> (str_hash, str_equal);
 	
 	/** Glyphs that not are tied to a unichar value. */
@@ -328,7 +329,6 @@ class Font : GLib.Object {
 		if (glyph_indice >= glyph_cache.size ()) {
 			gl = unassigned_glyphs.get_values ();
 			glyph_indice -= glyph_cache.size ();
-			
 			return null;
 		} else {
 			gl = glyph_cache.get_values ();
@@ -565,6 +565,10 @@ class Font : GLib.Object {
 		modified = false;
 	}
 
+	public uint length () {
+		return glyph_cache.get_keys ().length () + unassigned_glyphs.get_keys ().length ();
+	}
+
 	public bool is_empty () {
 		uint len = glyph_cache.get_keys ().length ();
 		return (len == 0);
@@ -683,6 +687,8 @@ class Font : GLib.Object {
 		
 		// empty cache and fill it with new glyphs from disk
 		glyph_cache.remove_all ();
+		unassigned_glyphs.remove_all ();
+		
 		MainWindow.get_toolbox ().remove_all_grid_buttons ();
 		while (background_images.length () > 0) {
 			background_images.remove_link (background_images.first ());

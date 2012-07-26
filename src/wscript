@@ -46,6 +46,7 @@ SUPPLEMENT_MAIN = [
 	'Tool.vala',
 	'Toolbox.vala',
 	'TooltipArea.vala',
+	'UniRange.vala',
 	'VersionList.vala',
 	'ZoomTool.vala'
 ]
@@ -57,7 +58,7 @@ TEST = [
 def build (bld):	
 	bld.program (
 		target        = 'supplement',
-		param         = '--enable-experimental --enable-experimental-non-null --vapidir=../../',
+		param         = '--disable-warnings --enable-experimental --enable-experimental-non-null --vapidir=../../',
 		packages      = 'gtk+-2.0 libxml-2.0',
 		uselib        = 'GTK GLIB GIO XML',
 		source        = SUPPLEMENT_MAIN

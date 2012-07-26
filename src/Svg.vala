@@ -279,7 +279,13 @@ class Svg {
 }
 
 public static string round (double p) {
-	return @"$p";
+	string v = @"$p";
+	
+	if (v.index_of ("e") != -1) {
+		return "0.0";
+	}
+	
+	return v;
 }
 	
 }

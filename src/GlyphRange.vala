@@ -31,6 +31,10 @@ class GlyphRange {
 	public GlyphRange () {
 	}
 	
+	public unowned List<UniRange> get_ranges () {
+		return ranges;
+	}
+	
 	public void use_default_range () {
 		add_range ('a', 'z');
 
@@ -191,35 +195,6 @@ class GlyphRange {
 		ranges.append (ur);
 	}
 
-class UniRange : GLib.Object {
-	
-	public unichar start;
-	public unichar stop;
-	
-	public UniRange (unichar start, unichar stop) {
-		this.start = start;
-		this.stop = stop;
-	}
-	
-	public unichar length () {
-		return stop - start + 1;
-	}
-
-	public unichar get_char (unichar index) {
-		unichar result = start + index;
-		
-		if (unlikely (index < 0)) {
-			warning ("Index is negative in UniRange.");
-		}
-		
-		if (unlikely (!(start <= result <= stop))) {
-			warning ("Index out of range in UniRange (%u <= %u <= %u) (index: %u)\n", start, result, stop, index);
-		}
-		
-		return result;
-	}
-}
-	
 }
 
 }

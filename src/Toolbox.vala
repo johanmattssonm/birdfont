@@ -153,8 +153,7 @@ class Toolbox : DrawingArea {
 		tie_editpoint_tool.select_action.connect((self) => {
 				EditPoint ep;
 				EditPointHandle eh;
-				EditPointHandle el;
-				double a, b, c, length, angle, al, ar;
+				double a, b, c, length, angle;
 				bool tie;
 				
 				select_draw_tool ();

@@ -15,11 +15,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Math;
+
 namespace Supplement {
 
 class OpenFontFormatWriter : Object  {
 
-	OtfOutputStream os;
+	DataOutputStream os;
 	DirectoryTable directory_table;
 	
 	public OpenFontFormatWriter () {
@@ -27,50 +29,47 @@ class OpenFontFormatWriter : Object  {
 	}
 	
 	public void open (File file) throws Error {
-		DataOutputStream dos;
-		
 		if (file.query_exists ()) {
 			throw new FileError.EXIST("OpenFontFormatWriter: file exists.");
 		}
 		
-		dos = new DataOutputStream(file.create(FileCreateFlags.REPLACE_DESTINATION));
-		os = new OtfOutputStream (dos);
-	}
-	
-	private void add_glyph (Glyph glyph) {
-		unichar char_code = glyph.get_unichar ();
-		Glyf g = new Glyf (char_code);
-		Contour contour;
-		
-		foreach (Path p in glyph.path_list) {
-			contour = new Contour (p);
-			g.add_contour (contour);
-		}
-		
-		add_glyf (g);
+		os = new DataOutputStream(file.create(FileCreateFlags.REPLACE_DESTINATION));
 	}
 	
 	public void write_ttf_font (Font font) throws Error {
-		long dl = directory_table.get_font_file_size ();
-		uint8[] data = new uint8[dl];
-		uint i = -1;
+		print (@"Calculate size\n");
+		long dl;
+		uint8[] data;
+		uint i = 0;
 		long written = 0;
 		Glyph? g;
 		unowned List<Table> tables;
 		unichar indice = 0;
 		
-		directory_table.process (font);
+		directory_table.process ();	
 		tables = directory_table.get_tables ();
+
+		dl = directory_table.get_font_file_size ();
 		
+		if (dl == 0) {
+			warning ("font is of zero size.");
+			return;
+		}
+		
+		data = new uint8[dl];
+
 		foreach (Table t in tables) {
 			foreach (uint8 d in t.get_font_data ().data) {
-				data[++i] = d;
-			}
+				data[i] = d;
+				i++;
+			}	
 		}
 		
-		while (written < data.length) { 
+		while (written < data.length) {
 			written += os.write (data[written:data.length]);
 		}
+		
+		directory_table.cmap_table.get_font_data ().print ();
 	}
 	
 	public void close () throws Error {
@@ -126,261 +125,151 @@ class OtfInputStream : Object  {
 	}
 }
 
-class OtfOutputStream : Object  {
-	
-	public FileOutputStream f;
-	public DataOutputStream d;
-	
-	public OtfOutputStream (FileOutputStream i) throws Error {
-		din = new DataOutputStream (i);
-		fin = i;
-	}
-	
-	public void seek (int64 pos) throws Error
-		requires (fin.can_seek ()) {
-		int64 p = fin.tell ();		
-		fin.seek (pos - p, SeekType.CUR);
-	}
-	
-	public void write_fixed (Fixed f) throws Error {
-		f.put_int32 (f);
-	}
-
-	public void write_f2dot14 (F2Dot14 f) throws Error {
-		f.put_int16 (f);
-	}
-
-	public void write_udate (int64 d) throws Error {
-		f.put_int64 (d);
-	}
-	
-	public void write_short (int16 d) throws Error {
-		f.put_int16 (d);
-	}
-	
-	public void write_ushort (uint16 d) throws Error {
-		d.put_uint16 (d);
-	}
-	
-	public void write_ulong (uint32 d) throws Error {
-		d.put_uint32 (d);
-	}
-
-	public void write_byte (uint8 b) throws Error {
-		d.put_uint8 (b);
-	}
-}
-
-
-class Contour : Object {
-	
-	public List<Coordinate> coordinates;
-	
-	public Contour (Path path) {
-		coordinates = new List<Coordinate> ();
-		set_path (path);
-	}
-		
-	void set_path (Path path) {
-		Coordinate c;
-		
-		if (path.points.length () == 0) {
-			return;
-		}
-		
-		c = new Coordinate ();
-		foreach (EditPoint e in path.points) {
-			c.x = (int16) e.x * 1000; // Fixa: do mapping to em-width and int16.MAX, and use em as 1:1 in canvas 
-			c.y = (int16) e.y * 1000;
-			c.flag = Coordinate.ON_PATH;
-			
-			coordinates.append (c);
-		}
-	}
-	
-	// TODO:
-	//void add_phantoms () 
-	
-	bool is_clockwise (Path path) {
-		uint len = path.points.length ();
-		return_val_if_fail (len > 0, false);
-		
-		uint i = 0;
-		unowned List<EditPoint> iter = path.points.first ();
-		
-		double xmax = iter.data.x;
-		double ymax = iter.data.y;
-		double xmin = iter.data.x;
-		double ymin = iter.data.y;
-		
-		uint i_xmax = i;
-		uint i_ymax = i;
-		uint i_xmin = i;
-		uint i_ymin = i;
-
-		foreach (EditPoint ee in path.points) {
-
-			if (xmax < ee.x) {
-				xmax = iter.data.x;
-				i_xmax = i;
-			}
-			
-			if (ymax < ee.y) {
-				ymax = iter.data.y;
-				i_ymax = i;
-			}
-			
-			if (xmin > ee.x) {
-				xmin = iter.data.x;
-				i_xmin = i;
-			}
-			
-			if (ymin > ee.y) {
-				ymin = iter.data.y;
-				i_ymin = i;
-			}
-
-			i++;
-		}
-	
-		return is_clockwise_extrema (i_xmax, i_ymax, i_xmin, i_ymin);
-	}
-	
-	bool is_clockwise_extrema (uint i_xmax, uint i_ymax, uint i_xmin, uint i_ymin) {
-		uint t, i;
-		
-		for (i = 0; i < 4; i++) {
-					
-			if (i_ymin <= i_xmin <= i_ymax <= i_xmax) {
-				return true;
-			}
-			
-			if (i_ymin <= i_xmax <= i_ymax <= i_xmin) {
-				return false;
-			}
-			
-			// shift it 
-			t = i_xmin;
-			i_xmin = i_ymin;
-			i_ymin = i_xmax;
-			i_xmax = i_ymax;
-			i_ymax = t;
-		}
-
-		warn_if_reached ();
-		
-		return true;
-	}
-
-	public uint16 get_end_point () {
-		return_val_if_fail (coordinates.length () != 0, 0);
-		return coordinates.first ().data.y;
-	}
-}
-
-class Glyf : Object {
-
-	public List<Contour> contours;
-	
-	public uint32 char_code;
-	
-	public Glyf (unichar character_code) {
-		char_code = (uint32) character_code;
-	}
-	
-	public uint32 get_char_code () {
-		return char_code;
-	}
-	
-	public void add_contour (Contour c) {
-		contours.append (c);
-	}
-	
-	/** Get advance with from lsb to begining of next glyph. */
-	public uint16 get_width() {
-		return 1000; // fixme
-	}
-	
-	/** Get left side bearing, (lsb) */
-	public int16 get_left() {
-			return -1 * (get_width() / 2); 
-	}
-	
-	public void get_boundries (out int16 xmin, out int16 ymin, out int16 xmax, out int16 ymax) {
-		xmin = int16.MAX;
-		ymin = int16.MAX;
-		xmax = int16.MIN;
-		ymax = int16.MIN;
-		
-		// Fixme we do need to add phantom points
-		foreach (var contour in contours) {
-			foreach (var v in contour.coordinates) {
-				if (v.x < xmin) xmin = v.x;
-				if (v.x > xmax) xmax = v.x;
-				if (v.y < ymin) ymin = v.y;
-				if (v.y > ymax) ymax = v.y;
-			}
-		}
-		
-		return;
-	}
-	
-}
-
 class FontData : Object {
 
-	public List<uint8> data;
+	// Read pointer
+	int rp = 0;
 	
+	// length without pad
+	uint32 len = 0;
+		
+	public List<uint8> data = new List<uint8> ();
+
 	public FontData () {
 	}
 	
-	public uint length () {
+	public void write_table (OtfInputStream dis, uint32 offset, uint32 len) {
+		uint32 l = len + len % 4;  // padding after end of table
+		
+		dis.seek (offset);
+	
+		for (uint32 i = 0; i < l; i++) {
+			add (dis.read_byte ());
+		}	
+	}
+	
+	public void print () {
+		unowned List<unowned uint8>? u = data;
+		
+		stdout.printf (@"Table data:\n");
+		
+		if (u == null) {
+			stdout.printf (@"null\n");
+			return;
+		}
+		
+		foreach (uint8 d in data) {
+			stdout.printf (@"$(d) ");
+		}
+		
+		stdout.printf ("\n");
+	}
+	
+	public uint length_with_padding () {
 		return data.length ();
+	}	
+	
+	public uint length () {
+		return len;
+	}
+	
+	public void pad () {
+		while (data.length () % 4 != 0) {
+			data.append (0);
+		}	
 	}
 	
 	/** Add additional checksum data to this checksum. */
-	public void continous_check_sum (out uint32 current_check_sum) {
-		uint32 val = 0;
-		uint8 b = 3;
+	public void continous_check_sum (ref uint32 current_check_sum) {
+		int trp = rp;
+		uint l;
 		
-		current_check_sum = 0;
-		
-		if (data.length () % 4 > 0) {
-			stderr.printf("Warning table data is not padded to correct size.\n");
+		if (length_with_padding () % 4 != 0) {
+			warning ("Table is not padded to correct size.");
+		}
+				
+		seek (0);
+
+		l = (length () % 4 > 0) ? length () / 4 + 1 : length () / 4; 
+
+		for (uint32 i = 0; i < l; i++) {
+			current_check_sum += read_uint32 ();
 		}
 		
-		foreach (uint8 v in data) {
-			val += v << b*8;
-			
-			if (b == 0) {
-				current_check_sum += val;
-				val = 0;
-				b = 3;
-			}
-			
-			b--;
-		}
+		rp = trp;
 	}
-	
+
 	public uint32 check_sum () {
 		uint32 sum = 0;
-		continous_check_sum (out sum);
+		continous_check_sum (ref sum);
 		return sum;
+	}
+	
+	public void seek (int i) {
+		rp = i;
+	}
+	
+	public uint8 read () {
+		return data.nth (rp++).data;
+	}
+	
+	public Fixed read_fixed () {
+		return read_uint32 ();
+	}
+
+	public uint32 read_uint32 () {
+		uint32 f;
+		f = read () << 32 - 8 * 1;
+		f += read () << 32 - 8 * 2;
+		f += read () << 32 - 8 * 3;
+		f += read () << 32 - 8 * 4;
+		return f;
+	}
+	
+	public void add_udate (int64 d) throws Error {
+		add_64 (d);
+	}
+	
+	public void add_fixed (Fixed f) throws Error {
+		add_u32 (f);
+	}
+
+	public void add_f2dot14 (F2Dot14 f) throws Error {
+		add_u32 (f);
+	}
+
+	public void add_short (int16 d) throws Error {
+		add_16 (d);
+	}
+	
+	public void add_ushort (uint16 d) throws Error {
+		add_u16 (d);
+	}
+	
+	public void add_ulong (uint32 d) throws Error {
+		add_u32 (d);
+	}
+
+	public void add_byte (uint8 b) throws Error {
+		add (b);
 	}
 	
 	public void add (uint8 d) {
 		data.append (d);
+		len++;
 	}
 	
 	public void add_u16 (uint16 d) {
 		uint16 n = d >> 8;
 		add ((uint8)n);
-		n <<= 8;
-		add ((uint8)(d - n));
+		add ((uint8)(d - (n << 8)));
 	}
 
 	public void add_16 (int16 i) {
-		add_u16 (i + (uint16.MAX/2));
+		uint8 s = (uint8) (i >> 8);
+		
+		add ((uint8) s);
+		add ((uint8) (i - (s << 8)));
 	}
 	
 	public void add_u32 (uint32 i) {
@@ -390,6 +279,13 @@ class FontData : Object {
 		add_u16 ((uint16) (i - (s << 16)));
 	}
 
+	public void add_32 (int32 i) {
+		int32 s = (int16) (i >> 16);
+		
+		add_16 ((int16) s);
+		add_16 ((int16) (i - (s << 16)));
+	}
+	
 	public void add_u64(uint64 i) {
 		uint64 s = (uint32) (i >> 32);
 		
@@ -397,6 +293,13 @@ class FontData : Object {
 		add_u32 ((uint32)(i - (s << 32)));		
 	}
 
+	public void add_64(int64 i) {
+		int64 s = (int32) (i >> 32);
+		
+		add_u32 ((int32) s);
+		add_u32 ((int32)(i - (s << 32)));		
+	}
+	
 	public void add_tag (string s) 
 		requires (s.length == 4 && s.data.length == 4) {
 		
@@ -421,9 +324,6 @@ class Coordinate {
 	public static const uint8 X_SHORT_VECTOR_POSITIVE = 1 << 4;
 	public static const uint8 Y_SHORT_VECTOR_POSITIVE = 1 << 5;
 
-	public uint8 flag = 0;
-	public int16 x = 0;
-	public int16 y = 0;
 }
 
 class Table : Object {
@@ -434,13 +334,19 @@ class Table : Object {
 	public uint32 offset = 0;
 	public uint32 length = 0;
 
+	protected FontData? font_data = null;
+
 	public virtual string get_id () {
 		return id;
 	}
 	
-	public virtual FontData get_font_data () {
-		warning ("No font data for table.");
-		return new FontData ();
+	public FontData get_font_data () {
+		if (font_data == null) {
+			warning (@"No font data for $(id).");
+			font_data = new FontData ();
+		}
+		
+		return (!) font_data;
 	}
 
 	public virtual void parse (OtfInputStream dis) {
@@ -466,45 +372,48 @@ class Table : Object {
 	}
 
 	public static bool validate_table (OtfInputStream dis, uint32 checksum, uint32 offset, uint32 length, string name) {
-		uint32 ch = calculate_ckecksum (dis, offset, length, name);
+		uint32 ch = calculate_checksum (dis, offset, length, name);
 		bool c;
 		
-		c = (ch != checksum);
-		
+		c = (ch == checksum);
+	
 		if (!c) {
 			stderr.printf(@"Checksum does not match data for $(name).\n");
 			stderr.printf(@"name: $name, checksum: $checksum, offset: $offset, length: $length\n");
+			stderr.printf(@"calculated checksum $(ch)\n");
 		}
 		
 		return c;	
 	}
-
-	public static uint32 calculate_ckecksum (OtfInputStream dis, uint32 offset, uint32 length, string name) {
+	
+	public static uint32 calculate_checksum (OtfInputStream dis, uint32 offset, uint32 length, string name) {
 		uint32 checksum = 0;
-		uint32 val = 0;
-		uint8 v;
-		uint8 b = 3;
-		
+		uint32 l;
+			 
 		dis.seek (offset);
 
-		if (length % 4 > 0) {
-			stderr.printf(@"Warning table data is not padded to correct size in $(name).\n");
-		}
+		l = (length % 4 > 0) ? length / 4 + 1 : length / 4; 
 
-		for (uint32 i = 0; i < length; i++) {
-			v = dis.read_byte ();
-			val += v << b*8;
-			
-			if (b == 0) {
-				checksum += val;
-				val = 0;
-				b = 3;
-			}
-			
-			b--;
+		for (uint32 i = 0; i < l; i++) {
+			checksum += dis.read_ulong ();
 		}
 		
 		return checksum;
+	}
+	
+	public static uint16 max_pow_2_less_than_i (uint16 ind) {
+		uint16 last = 0;
+		uint16 i = 1;
+		
+		while ((i <<= 1) < ind) {
+			last = i;
+		}
+		
+		return last;
+	}
+
+	public static uint16 max_log_2_less_than_i (uint16 ind) {
+		return (uint16) (Math.log (ind) / Math.log (2));
 	}
 }
 
@@ -514,6 +423,7 @@ class LocaTable : Table {
 	public uint32 size = 0;
 	
 	public LocaTable () {
+		id = "loca";
 	}	
 	
 	~LocaTable () {
@@ -580,8 +490,9 @@ class LocaTable : Table {
 				for (long i = 0; i < size + 1; i++) {
 					glyph_offsets[i] = dis.read_ushort ();	
 					
-					if (i > 0 && glyph_offsets[i - 1] > glyph_offsets[i]) {
+					if (0 < i < size && glyph_offsets[i - 1] > glyph_offsets[i]) {
 						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
+						print_offsets ();
 					}
 				} 
 				break;
@@ -590,8 +501,11 @@ class LocaTable : Table {
 				for (long i = 0; i < size + 1; i++) {
 					glyph_offsets[i] = 	dis.read_ulong ();
 					
-					if (i > 0 && glyph_offsets[i - 1] > glyph_offsets[i]) {
+					print (@"glyph_offsets[i]: $(glyph_offsets[i])\n");
+					
+					if (0 < i < size && glyph_offsets[i - 1] > glyph_offsets[i]) {
 						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
+						print_offsets ();
 					}				
 				}
 				break;
@@ -609,16 +523,60 @@ class LocaTable : Table {
 		
 		print (@"get_last_glyph_length (): $(get_last_glyph_length ())\n");
 	}
+	
+	public void process (GlyfTable glyf_table, HeadTable head_table) {
+		FontData fd = new FontData ();
+		Font font = Supplement.get_current_font ();
+		uint32 last = 0;
+		
+		warn_if_fail (glyf_table.size_of_last_glyf > 0);
+		
+		foreach (uint32 o in glyf_table.location_offsets) {
+			warn_if_fail (o % 2 == 0);
+		}
+	
+		if (head_table.loca_offset_size == 0) {
+			foreach (uint32 o in glyf_table.location_offsets) {
+				fd.add_u16 ((uint16) (o / 2));
+				
+				print (@"o0: $(o)\n");
+				
+				if (o < last) {
+					warning (@"Loca table must be sorted. ($o < $last)");
+				}
+				
+				last = o;
+			}
+			
+			// last index in locatable stores lengtjh of last glyf
+			fd.add_u16 ((uint16) glyf_table.size_of_last_glyf);
+		} else if (head_table.loca_offset_size == 1) {
+			foreach (uint32 o in glyf_table.location_offsets) {
+				fd.add_u32 (o / 2);
+				
+				print (@"o1: $(o)\n");
+				
+				if (o < last) {
+					warning (@"Loca table must be sorted. ($o < $last)");
+				}
+				
+				last = o;
+			}
+			
+			fd.add_u32 (glyf_table.size_of_last_glyf);
+		} else {
+			warn_if_reached ();
+		}
+		
+		if (!(glyf_table.location_offsets.length () == font.length ())) {
+			warning (@"(glyf_table.location_offsets.length () == font.length ()) ($(glyf_table.location_offsets.length ()) == $(font.length ()))");
+		}
+		
+		font_data = fd;		
+	}
 }
 
 class GlyfTable : Table {
-	
-	FontData? font_data = null;
-	
-	int16 xmin = int16.MAX; // FIXA: remove these
-	int16 ymin = int16.MAX;
-	int16 xmax = int16.MIN;
-	int16 ymax = int16.MIN;
 	
 	// Flags for composite glyph
 	static const uint16 BOTH_ARE_WORDS = 1 << 0;
@@ -628,18 +586,22 @@ class GlyfTable : Table {
 	static const uint16 SCALE_X_Y = 1 << 6;
 	static const uint16 SCALE_WITH_ROTATTION = 1 << 7;
 	static const uint16 INSTRUCTIONS = 1 << 8;
+
+	public int16 xmin = 0;
+	public int16 ymin = 0;
+	public int16 xmax = 0;
+	public int16 ymax = 0;
 	
-	public GlyfTable () {
+	public LocaTable loca_table;
+	public List<uint32> location_offsets;
+	
+	public uint32 size_of_last_glyf = 0;
+	
+	public GlyfTable (LocaTable l) {
+		id = "glyf";
+		loca_table = l;
+		location_offsets = new List<uint32> ();
 	}	
-	
-	public void add (Glyf glyf) {
-/*		glyfs.insert_sorted_with_data (glyf, (a, b) => {
-				if (a.char_code < b.char_code) return -1;
-				if (a.char_code > b.char_code) return 1;
-				return 0;				
-			});
-*/
-	}
 	
 	/** Add this glyph from thread safe callback to the running gui. */
 	void add_glyph (Glyph g) {
@@ -653,12 +615,14 @@ class GlyfTable : Table {
 
 		idle.attach (null);
 	}
-	 
+	
 	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table) {
 		uint32 glyph_offset;
 		Glyph glyph = new Glyph ("");
 		double xmin, xmax;
 		
+		print (@"loca.size: $(loca.size)\n");
+			
 		for (uint32 i = 0; i < loca.size; i++) {
 			unichar character = 0;
 			StringBuilder name = new StringBuilder ();
@@ -667,6 +631,8 @@ class GlyfTable : Table {
 				character = cmap.get_char (i);
 				name = new StringBuilder ();
 				name.append_unichar (character);
+				
+				print (@"name: $(name.str)\n");
 				
 				if (!loca.is_empty (i)) {	
 					glyph_offset = loca.get_offset(i);
@@ -776,6 +742,8 @@ class GlyfTable : Table {
 	Glyph parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset,
 		out double xmin, out double xmax, double units_per_em) throws Error {
 		
+		print (@"PARSE NEXT GLYF .................................... \n");
+		
 		uint16* end_points = null;
 		uint8* instructions = null;
 		uint8* flags = null;
@@ -826,12 +794,6 @@ class GlyfTable : Table {
 		end_points = new uint16[ncontours + 1];
 		for (int i = 0; i < ncontours; i++) {
 			end_points[i] = dis.read_ushort (); // FIXA: mind shot vector is negative
-			
-			if (i > 0 && end_points[i] < end_points[i -1]) {
-				warning (@"Bad endpoint ($(end_points[i]) < $(end_points[i -1])) in glyph $(name.str).");
-				error = new BadFormat.PARSE ("Invalid glyf");
-				throw error;
-			}
 		}
 		
 		if (ncontours > 0) {
@@ -839,15 +801,15 @@ class GlyfTable : Table {
 		} else {
 			npoints = 0;
 		}
-
-		// FIXA: Implement this
+		
+		// FIXA: implement instructions (maybe)
 		ninstructions = dis.read_ushort ();		
 		instructions = new uint8[ninstructions + 1];
 		uint8 repeat;
 		for (int i = 0; i < ninstructions; i++) {
 			instructions[i] = dis.read_byte ();
 		}
-		
+
 		nflags = 0;
 		flags = new uint8[npoints + 1];
 		for (int i = 0; i < npoints; i++) {
@@ -855,8 +817,6 @@ class GlyfTable : Table {
 			
 			if ((flags[i] & Coordinate.REPEAT) > 0) {
 				repeat = dis.read_byte ();
-				
-				// Fixa: delete print (@"Repeat flag $repeat\n");
 				
 				if (i + repeat >= npoints) {
 					error = new BadFormat.PARSE ("Too many flags in glyf in glyph $(name.str). (i >= ninstructions).");
@@ -874,11 +834,17 @@ class GlyfTable : Table {
 			nflags++;
 		}
 		
-		if (nflags < npoints) {
-			warning (@"(nflags != npoints) ($nflags != $npoints)");
+		if (nflags != npoints) {
+			warning (@"(nflags != npoints) ($nflags != $npoints) in $(name.str)");
 			error = new BadFormat.PARSE (@"Wrong number of flags in glyph $(name.str). (nflags != npoints) ($nflags != $npoints)");
 		}
-		
+		// assert (nflags == npoints);
+
+		print (@"npoints: $npoints\n");
+		print (@"ncontours: $ncontours\n");
+		print (@"ninstructions: $ninstructions\n");
+		print (@"nflags: $nflags\n");
+				
 		int16 last = 0;
 		xcoordinates = new int16[npoints + 1];
 		for (int i = 0; i < npoints; i++) {
@@ -948,10 +914,10 @@ class GlyfTable : Table {
 			for (; j <= end_points[i]; j++) {
 
 				if (j >= npoints) {
-					warning (@"j >= npoints in glyph $(name.str). (j: $j, end_points[i]: $(end_points[i]))");
+					warning (@"j >= npoints in glyph $(name.str). (j: $j, end_points[i]: $(end_points[i]), npoints: $npoints)");
 					break;
 				}
-
+				
 				x = xcoordinates[j] * 1000.0 / units_per_em; // in proportion to em width
 				y = ycoordinates[j] * 1000.0 / units_per_em;
 				
@@ -1044,137 +1010,157 @@ class GlyfTable : Table {
 		
 		return glyph;
 	}
-		
-	public string get_id () {
-		return "glyf";
-	}
-	
-	public FontData get_font_data () {
-		if (font_data != null) return (!) font_data;
-		
-		FontData fd = new FontData ();
-		font_data = fd;
-/*		
-		foreach (var g in glyfs) {
-			add_glyf_data (g, fd);
-		}
-		
-		// padding
-		while (fd.length () % 4 != 0) {
-			fd.add(0);
-		}
-*/
-		return fd;
-	}
 
-	public void get_boundries (out int16 xmin, out int16 ymin, out int16 xmax, out int16 ymax) {
-		get_font_data();
+	public void process_glyph (Glyph g, FontData fd) {
+		int16 xmin;
+		int16 ymin;
+		int16 xmax;
+		int16 ymax;
+
+		double gxmin, gymin, gxmax, gymax;
+
+		int16 end_point = 0;
+		int16 npoints;
+		int16 ncontours;
+		int16 nflags;
 		
-		xmin = this.xmin;
-		ymin = this.ymin;
-		xmax = this.xmax;
-		ymax = this.ymax;
-	}
-	
-	private void add_glyf_data (Glyf glyf, FontData fd) {
-		uint16 n_instructions = 0;
-		int16 n_contours = (int16) glyf.contours.length();
+		int16 x, y;
+
+		Font font = Supplement.get_current_font ();
 		
-		fd.add_16 (n_contours);
-		
-		add_boundries (glyf, fd);
-		
-		foreach (var contour in glyf.contours) {
-			fd.add_u16 (contour.get_end_point ()); // endPtsOfContour
+		// glyph need padding too, but to two byte boundries 
+		if (fd.length () % 2 != 0) {
+			fd.add (0);
 		}
 		
-		fd.add_u16 (n_instructions); // TrueType Instruction reference
+		// set values for loca table
+		location_offsets.append (fd.length ());
 		
-		for (uint16 i = 0; i < n_instructions; i++) {
-			fd.add (0); // instruction
-		}
+		g.remove_empty_paths ();
 		
-		foreach (var contour in glyf.contours) {
-			add_flags (contour.coordinates, fd); // flags for outline coordinate (flags[n])
-		}
+		ncontours = (int16) g.path_list.length ();
+		fd.add_short (ncontours);
 		
-		foreach (var contour in glyf.contours) {
-			add_x_coordinates (contour.coordinates, fd); // X-coordinates 
-		}
+		g.boundries (out gxmin, out gymin, out gxmax, out gymax);
 		
-		foreach (var contour in glyf.contours) {
-			add_y_coordinates (contour.coordinates, fd); // Y-coordinates
-		}
-		
-	}
-	
-	private void add_boundries (Glyf glyf, FontData fd) {
-		int16 xmin, ymin, xmax, ymax;
-		
-		glyf.get_boundries (out xmin, out ymin, out xmax, out ymax);
+		xmin = (int16) gxmin;
+		ymin = (int16) gymin;
+		xmax = (int16) gxmax;
+		ymax = (int16) gymax;
 		
 		fd.add_16 (xmin);
-		fd.add_16 (ymin); 
+		fd.add_16 (ymin);
 		fd.add_16 (xmax);
-		fd.add_16 (xmax);
-
+		fd.add_16 (ymax);
+		
+		// save this for head table
 		if (this.xmin > xmin) this.xmin = xmin;
 		if (this.ymin > ymin) this.ymin = ymin;
-		if (this.xmax < xmax) this.xmax = xmax;
-		if (this.ymax < ymax) this.ymax = ymax;
-
-	}
-
-	private void add_flags (List<Coordinate> coordinates, FontData fd) {
-			foreach (var v in coordinates) {
-				fd.add (v.flag);
-			}
-	}
-
-	private static bool in_flag (uint8 val, uint8 flag) {
-		return (val & flag) == val;
-	}
-	
-	private void add_x_coordinates (List<Coordinate> coordinates, FontData fd) {
-		int16 last = 0;
-		foreach (var v in coordinates) {
-			if (in_flag (Coordinate.X_SHORT_VECTOR, v.flag)) {
-				fd.add ((uint8) (v.x - last));
-			} else {
-				fd.add_16 (v.x - last);
-			}
-			last = v.x;
-		}
-	}
-
-	private void add_y_coordinates (List<Coordinate> coordinates, FontData fd) {
-		int16 last = 0;
-		foreach (var v in coordinates) {
-			if (in_flag (Coordinate.Y_SHORT_VECTOR, v.flag)) {
-				fd.add ((uint8)(v.y - last));
-			} else {
-				fd.add_16 (v.y - last);
-			}
-			last = v.y;
-		}
-	}
+		if (this.xmax > xmax) this.xmax = xmax;
+		if (this.ymax > ymax) this.ymax = ymax;
 		
+		end_point = 0;
+		foreach (Path p in g.path_list) {
+			foreach (EditPoint e in p.points) {
+				end_point++;
+			}
+			fd.add_u16 (end_point - 1);
+		}
+		
+		fd.add_u16 (0); // instruction length 
+		
+		// instructions should go here 
+		
+		npoints = (ncontours > 0) ? end_point : 0; // +1?
+		
+		// flags
+		nflags = 0;
+		foreach (Path p in g.path_list) {
+			foreach (EditPoint e in p.points) {
+				fd.add_byte (Coordinate.ON_PATH);
+				nflags++;
+			}
+		}
+		
+		if (nflags != npoints) {
+			warning (@"(nflags != npoints)  ($nflags != $npoints) in glyph $(g.name). ncontours: $ncontours");
+		}
+		assert (nflags == npoints);
+		
+		// x coordinates
+		double prev = 0;
+		foreach (Path p in g.path_list) {
+			foreach (EditPoint e in p.points) {
+				x = (int16) (e.x - prev);
+				fd.add_16 (x);
+				prev = e.x;
+			}
+		}
+
+		// x coordinates
+		prev = 0;
+		foreach (Path p in g.path_list) {
+			foreach (EditPoint e in p.points) {
+				y = (int16) (e.y - prev + font.base_line);
+				fd.add_16 (y);
+				prev = e.y + font.base_line;
+			}
+		}
+	}
+
+	public void process () {
+		FontData fd = new FontData ();
+		unichar indice;
+		Glyph? gl;
+		Font font = Supplement.get_current_font ();
+		
+		// process_glyph (new Glyph (""), fd); // notdef. character
+		
+		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
+			process_glyph ((!) gl, fd);
+		}
+
+		if (location_offsets.length () > 0) {
+			this.size_of_last_glyf = fd.length () - ((!) location_offsets.last ()).data;
+		} else {
+			warning ("location_offsets.length () == 0");
+		}
+
+		fd.pad ();
+						
+		font_data = fd;	
+	}
 }
 
-/** Format 4 cmap subtable */
 class CmapSubtable : Table {
 
+	// Override these methods in subtables for each format.
+	
+	/** Obtain length of subtable in bytes. */
 	public virtual uint get_length () {
 		warning ("Invalid CmapSubtable");
 		return 0;
 	}
 	
+	/** Get char code for a glyph id. */
 	public virtual unichar get_char (uint32 i) {
 		warning ("Invalid CmapSubtable");
 		return 0;
 	}
+	
+	public void print_cmap () {
+		StringBuilder s;
+		unichar c;
+		for (uint32 i = 0; i < get_length (); i++) {
+			s = new StringBuilder ();
+			c = get_char (i);
+			s.append_unichar (c);
+			print (@"Char: $(s.str)  val ($((uint32)c))\tindice: $(i)\n");
+		}
+	}
 }
 
+/** Format 4 cmap subtable */
 class CmapSubtableWindowsUnicode : CmapSubtable {
 	uint16 format = 0;
 	HashTable <uint64?, unichar> table = new HashTable <uint64?, unichar> (int64_hash, int_equal);
@@ -1185,23 +1171,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 	~CmapSubtableWindowsUnicode () {
 
 	}
-	
-	public override void parse (OtfInputStream dis) {
-		dis.seek (offset);
-		
-		format = dis.read_ushort ();
-		
-		switch (format) {
-			case 4:
-				parse_format4 (dis);
-				break;
-			
-			default:
-				stderr.printf (@"CmapSubtable is in format $format, it is not supportet (yet).\n");
-				break;
-		}
-	}
-	
+
 	public override uint get_length () {
 		return table.size ();
 	}
@@ -1220,7 +1190,6 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 				}
 			} 
 			
-			// FIXA: yes there is for null character
 			warning (@"There is no char for glyph number $indice in cmap table. table.size: $(table.size ()))");
 			return 0;
 		}
@@ -1228,6 +1197,22 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		return (unichar) c;
 	}
 	
+	public override void parse (OtfInputStream dis) {
+		dis.seek (offset);
+		
+		format = dis.read_ushort ();
+		
+		switch (format) {
+			case 4:
+				parse_format4 (dis);
+				break;
+			
+			default:
+				stderr.printf (@"CmapSubtable is in format $format, it is not supportet (yet).\n");
+				break;
+		}
+	}
+		
 	public void parse_format4 (OtfInputStream dis) {
 		uint16 lang;
 		uint16 seg_count_x2;
@@ -1253,12 +1238,9 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		
 		return_if_fail (seg_count_x2 % 2 == 0);
 
-		seg_count = seg_count_x2 / 2;		
-
-		print (@"seg_count_x2: $seg_count_x2 \n");
-		print (@"seg_count: $seg_count \n");
-		print (@"lang: $lang \n");
-		print (@"seg_count: $seg_count \n");
+		seg_count = seg_count_x2 / 2;
+		
+		print (@"seg_count: $seg_count\n");
 		
 		end_char = new uint16[seg_count];
 		for (int i = 0; i < seg_count; i++) {
@@ -1286,7 +1268,14 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			id_range_offset[i] = dis.read_ushort ();
 		}
 
+		if (length == 0) {
+			warning ("cmap subtable version 4 has length 0.");
+			return;
+		}
+
 		gid_len = (length - 16 - 8 * seg_count) / 2;
+		print (@"length: $length\n");
+		print (@"gid_len: $gid_len\n");
 		glyph_id_array = new uint16[gid_len];
 		for (int i = 0; i < gid_len; i++) {
 			glyph_id_array[i] = dis.read_ushort ();
@@ -1298,7 +1287,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		uint32 id;
 		for (uint16 i = 0; i < seg_count && start_char[i] != 0xFFFF; i++) {
 			
-			print (@"Insert range $((int)start_char[i]) to $((int)end_char[i]). id_delta[i] $(id_delta[i])  id_range_offset[i] $(id_range_offset[i])\n");
+			print_range (start_char[i], end_char[i], id_delta[i], id_range_offset[i]);
 			
 			uint16 j = 0;
 			do {
@@ -1306,6 +1295,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 				indice = start_char[i] + id_delta[i] + j;
 				
 				if (id_range_offset[i] == 0) {
+					print (@"table.insert ($indice, $((uint32) character));\n");
 					table.insert (indice, character);
 				} else {
 					// the awkward indexing trick:
@@ -1319,10 +1309,8 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 					indice = glyph_id_array [id] + id_delta[i];
 										
 					StringBuilder s = new StringBuilder ();
-					s.append_unichar (character);					
-					
-					print (@"$(s.str) -> $indice      j $j  id_delta[i] $(id_delta[i])  id $id gidi  $(glyph_id_array [id])   char: $((uint32)character)\n");
-					
+					s.append_unichar (character);
+										
 					table.insert (indice, character);
 				}
 				
@@ -1337,8 +1325,114 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		if (id_range_offset != null) delete id_range_offset;
 		if (glyph_id_array != null) delete glyph_id_array;
 		
-		// it is has a character for every glyph indice
+		// it has a character for every glyph indice
 		// assert (validate_subtable ());
+	}
+	
+	void print_range (unichar start_char, unichar end_char, uint16 delta_offset, uint16 range_offset) {
+		StringBuilder s = new StringBuilder ();
+		StringBuilder e = new StringBuilder ();
+		
+		s.append_unichar (start_char);
+		e.append_unichar (end_char);
+		
+		print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
+	}
+	
+	public void process (FontData fd) {
+		GlyphRange glyph_range = new GlyphRange ();
+		Font font = Supplement.get_current_font ();
+		unowned List<UniRange> ranges;
+			
+		unichar i = 0;
+		Glyph? gl;
+		Glyph g;
+		
+		uint16 seg_count_2;
+		uint16 seg_count;
+		uint16 search_range;
+		uint16 entry_selector;
+		uint16 range_shift;				
+		
+		uint16 gid_length = 0;
+		
+		uint32 indice;
+		
+		for (i = 0; (gl = font.get_glyph_indice (i)) != null; i++) {
+			g = (!) gl;
+			glyph_range.add_single (g.unichar_code);
+		}
+		
+		ranges = glyph_range.get_ranges ();
+		seg_count = (uint16) ranges.length () + 1;
+		seg_count_2 =  seg_count * 2;
+		search_range = 2 * (2 << (uint16) (Math.log (seg_count) / Math.log (2)));
+		entry_selector = (uint16) (Math.log (search_range / 2) / Math.log (2));
+		range_shift = seg_count_2 - search_range;
+		
+		// format
+		fd.add_ushort (4);
+		
+		// length of subtable
+		fd.add_ushort (16 + 8 * seg_count + gid_length);
+		
+		// language
+		fd.add_ushort (0);
+		
+		fd.add_ushort (seg_count_2);
+		fd.add_ushort (search_range);
+		fd.add_ushort (entry_selector);
+		fd.add_ushort (range_shift);
+		
+		// end codes
+		indice = 0;
+		foreach (UniRange u in ranges) {
+			if (u.stop >= 0xFFFF) {
+				warning ("Not implemented yet.");
+			}
+			
+			fd.add_ushort ((uint16) u.stop);
+			indice += u.length ();
+		}
+		fd.add_ushort (0xFFFF); // Last segment
+		
+		fd.add_ushort (0); // Reserved
+		
+		// start codes
+		indice = 0;
+		foreach (UniRange u in ranges) {
+			if (u.start >= 0xFFFF) {
+				warning ("Not implemented yet.");
+			}
+			
+			fd.add_ushort ((uint16) u.start);
+			indice += u.length ();
+		}
+		fd.add_ushort (0xFFFF); // Last segment
+
+		// delta
+		indice = 0;
+		foreach (UniRange u in ranges) {
+			
+			if ((u.start - indice) > 0xFFFF) {
+				warning ("Need range offset.");
+			}
+			
+			fd.add_ushort ((uint16) (indice - u.start));
+			indice += u.length ();
+		}
+		fd.add_ushort (0); // Last segment
+		
+		// range offset
+		foreach (UniRange u in ranges) {
+			if (u.stop <= 0xFFFF) {
+				fd.add_ushort (0);
+			} else {
+				warning ("Not implemented yet.");
+			}
+		}
+		
+		// Fixa: implement rest of type 4 (mind gid_length in length field)
 	}
 	
 	public bool validate_subtable () {
@@ -1377,15 +1471,13 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 
 class CmapTable : Table { 
 	
-	GlyfTable glyf_table;
-	FontData? table_data;
-	
+	GlyfTable glyf_table;	
 	List<CmapSubtable> subtables;
 
 	public CmapTable(GlyfTable gt) {
 		glyf_table = gt;
-		table_data = null;
 		subtables = new List<CmapSubtable> ();
+		id = "cmap";
 	}
 	
 	public uint32 get_length () {
@@ -1425,14 +1517,14 @@ class CmapTable : Table {
 		
 		version = dis.read_ushort ();
 		nsubtables = dis.read_ushort ();
-		
-		if (version != 0) {
-			warning (@"Bad version for cmap table: $version. Number of subtables: $nsubtables");
-			return;
-		}
-		
+
 		print (@"cmap version: $version\n");
 		print (@"cmap subtables: $nsubtables\n");
+				
+		if (version != 0) {
+			warning (@"Bad version for cmap table: $version expecting 0. Number of subtables: $nsubtables");
+			return;
+		}
 		
 		for (uint i = 0; i < nsubtables; i++) {
 			platform = dis.read_ushort ();
@@ -1455,108 +1547,43 @@ class CmapTable : Table {
 		
 		foreach (CmapSubtable t in subtables) {
 			t.parse (dis);
+			t.print_cmap ();
 		}
+
 	}
 	
 	/** Character to glyph mapping */
-	public override FontData get_font_data () {
-
-		// FIXA: need complete rewrite
-
-		if (table_data != null) return (!) table_data;
-		
+	public void process (GlyfTable glyf_table) {
 		FontData fd = new FontData ();
-		table_data = fd;
-		
-		List<CmapSubtable> subtables = cmap_sub_tables ();
-		uint16 n_encoding_tables = (uint16) subtables.length ();
-		uint32 offset;
+		CmapSubtableWindowsUnicode cmap = new CmapSubtableWindowsUnicode ();
+		uint16 n_encoding_tables;
+		uint32 subtable_offset = 0;
 
 		uint16 glyph_indice = 0;
 			
+		n_encoding_tables = 1;
+		
 		fd.add_u16 (0); // table version
 		fd.add_u16 (n_encoding_tables);
 		
-		fd.add_u16 (3); // platform
-		fd.add_u16 (10); // Format Unicode UCS-4
-		
-		offset = fd.data.length () + 4;
-		
-		fd.add_u32 (offset);
-/*
-		foreach (CmapSubtable cmap in subtables) {
-			uint32 num_chars = cmap.num_chars;
-			uint32 table_length = 20 + 2 * num_chars; // of subtable
-			uint32 language = 0;
-			uint32 start_char_code = cmap.start_char_code;
-			
-			// Subtable
-			fd.add_u16 (cmap.FORMAT_TRIMMED_ARRAY); // Format for this subtable
-			fd.add_u16 (0);  // Reserved
+		fd.add_u16 (3); // platform 
+		fd.add_u16 (1); // encoding (Format Unicode UCS-4)
 
-			fd.add_u32 (table_length);
-			fd.add_u32 (language);
-			fd.add_u32 (start_char_code);
-			fd.add_u32 (num_chars);
-			
-			for (int i = 0; i < num_chars; i++) {
-				fd.add_u16 (glyph_indice++);
-			}
-		}
-	*/	
+		subtable_offset = fd.length () + 4;
+		print (@"subtable_offset: $(subtable_offset)\n");
+		
+		fd.add_ulong (subtable_offset);
+		cmap.process (fd);
+
 		// padding
-		while (fd.length () % 4 != 0) {
-			fd.add(0);
-		}
+		fd.pad ();
 
-
-		return fd;
-	}
-
- // FIXME:
-	List<CmapSubtable> cmap_sub_tables () {
-		List<CmapSubtable> maps = new List<CmapSubtable> ();
-		
-		CmapSubtable cmap = new CmapSubtable ();
-/*		
-		uint32 charcode = 0;
-		uint32 last = 0;
-		foreach (Glyf g in glyf_table.glyfs) {
-				charcode = g.get_char_code ();
-				
-				if (charcode != last + 1 || last == 0) {	
-					cmap = new CmapSubtable ();
-					cmap.start_char_code = charcode;
-					
-					maps.append(cmap);
-				}
-				
-				last = charcode;
-				cmap.num_chars++;
-				
-				assert(maps.length () > 0);
-		}
-*/		
-		return maps;
-	}
-
-	CmapSubtable load_cmap_sub_table (OtfInputStream dis, uint32 offset) {
-		CmapSubtable cmap = new CmapSubtable ();
-		
-		uint32 charcode = 0;
-		uint32 last = 0;
-		uint32 format;
-		
-		format = dis.read_ushort ();
-		
-		print ("Cmap subtable format $format.\n");
-		
-		return cmap;
+		this.font_data = fd;
 	}
 }
 
 class HeadTable : Table {
-	
+
 	int16 xmin = 0;
 	int16 ymin = 0;
 	int16 xmax = 0;
@@ -1568,15 +1595,27 @@ class HeadTable : Table {
 	uint16 lowest_PPEM;
 	int16 font_direction_hint;
 		
-	public int16 loca_offset_size;
+	public int16 loca_offset_size = 1;
 	int16 glyph_data_format;
+
+	Fixed version;
+	Fixed font_revision;
 	
-	uint16 units_per_em = 0;
+	uint32 checksum_adjustment;
+	uint32 magic_number;
+	
+	uint16 flags;
+	
+	uint64 created;
+	uint64 modified;
+		
+	uint16 units_per_em = 100;
 	
 	GlyfTable glyf_table;
 	
 	public HeadTable (GlyfTable gt) {
 		glyf_table = gt;
+		id = "head";
 	}
 	
 	public double get_units_per_em () {
@@ -1585,28 +1624,13 @@ class HeadTable : Table {
 	
 	public override void parse (OtfInputStream dis) 
 		requires (offset > 0 && length > 0) {
-			
-		Fixed version;
-		Fixed font_revision;
-		
-		uint32 checksum_adjustment;
-		uint32 magic_number;
-		
-		uint16 flags;
-		
-		uint64 created;
-		uint64 modified;
-		
-		List<CmapSubtable> maps = new List<CmapSubtable> ();
 
 		dis.seek (offset);
 	
 		version = dis.read_fixed ();
-		print (@"Version: $(version.get_string ())\n");
-		
+
 		if (!version.equals (1, 0)) {
-			warning ("Expecting head version 1.0");
-			return;
+			warning (@"Expecting head version 1.0 got $(version.get_string ())\n");
 		}
 		
 		font_revision = dis.read_fixed ();
@@ -1639,32 +1663,37 @@ class HeadTable : Table {
 		glyph_data_format = dis.read_short ();
 		
 		if (glyph_data_format != 0) {
-			warning ("Unknown glyph data format.");
+			warning (@"Unknown glyph data format. Expecting 0 got $glyph_data_format.");
 		}
 		
-		print (@"Units per em: $units_per_em\n");
-
+		// print_values ();
 		// Some deprecated values follow here ...
-	}	
+	}
 	
-	public string get_id () {
-			return "head";
+	void print_values () {
+		print (@"Version: $(version.get_string ())\n");
+		print (@"flags: $flags\n");
+		print (@"font_revision: $(font_revision.get_string ())\n");
+		print (@"flags: $flags\n");
+		print (@"Units per em: $units_per_em\n");
+		print (@"lowest_PPEM: $lowest_PPEM\n");
+		print (@"font_direction_hint: $font_direction_hint\n");
+		print (@"loca_offset_size: $loca_offset_size\n");
+		print (@"glyph_data_format: $glyph_data_format\n");
 	}
 	
 	public void set_check_sum_adjustment (uint32 csa) {
 		check_sum_adjustment = csa;
 	}
 	
-	public FontData get_font_data () {
-		
+	public void process () {
 		FontData font_data = new FontData ();
-		
-		font_data.add_u16 (1); // table version
-		font_data.add_u16 (0);
-		
-		// font revision
-		font_data.add_u16 (0);
-		font_data.add_u16 (0);
+		Fixed version = 1 << 16;
+
+		Fixed font_revision = 0;
+
+		font_data.add_fixed (version);
+		font_data.add_fixed (font_revision);
 		
 		// Zero on the first run and updated by directory tables checksum calculation
 		// for the entire font.
@@ -1672,14 +1701,19 @@ class HeadTable : Table {
 		
 		font_data.add_u32 (0x5F0F3CF5); // magic number
 		
-		font_data.add_u16 (0); // clear flags
+		font_data.add_u16 (0); // flags
 		
-		font_data.add_u16 (2048); // units per em (in power of two for ttf)
+		font_data.add_u16 (100); // units per em (should be a power of two for ttf fonts)
 		
-		font_data.add_u64 (0); //creation time since 1904-01-01
-		font_data.add_u64 (0); //modified time since 1904-01-01
+		font_data.add_64 (0); // creation time since 1904-01-01
+		font_data.add_64 (0); // modified time since 1904-01-01
 		
-		glyf_table.get_boundries(out xmin, out ymin, out xmax, out ymax);
+		// glyf_table.get_boundries(out xmin, out ymin, out xmax, out ymax);
+		
+		xmin = glyf_table.xmin;
+		ymin = glyf_table.ymin;
+		xmax = glyf_table.xmax;
+		ymax = glyf_table.ymax;
 		
 		font_data.add_16 (xmin);
 		font_data.add_16 (ymin);
@@ -1688,16 +1722,15 @@ class HeadTable : Table {
 		
 		font_data.add_u16 (0); // mac style
 		font_data.add_u16 (0); // smallest recommended size in pixels
-		font_data.add_u16 (2); // Deprecated direction hint
-		font_data.add_16 (1);  // Long offset
+		font_data.add_16 (2); // deprecated direction hint
+		font_data.add_16 (loca_offset_size);  // long offset
 		font_data.add_16 (0);  // Use current glyph data format
-
-		// padding
-		while (font_data.length () % 4 != 0) {
-			font_data.add(0);
-		}
 		
-		return font_data;
+		font_data.pad ();
+		
+		this.font_data = font_data;
+		
+		print (@"loca_offset_size: $loca_offset_size\n");
 	}
 }
 
@@ -1724,10 +1757,7 @@ class HheaTable : Table {
 	public HheaTable (GlyfTable g, HeadTable h) {
 		glyf_table = g;
 		head_table = h;
-	}
-	
-	public string get_id () {
-			return "head";
+		id = "hhea";
 	}
 	
 	public double get_ascender () {
@@ -1743,7 +1773,9 @@ class HheaTable : Table {
 		
 		version = dis.read_fixed ();
 		
-		warn_if_fail (version.equals (1, 0));
+		if (!version.equals (1, 0)) {
+			warning (@"wrong version in hhea table $(version.get_string ())");
+		}
 		
 		ascender = dis.read_short ();
 		descender = dis.read_short ();
@@ -1766,51 +1798,41 @@ class HheaTable : Table {
 		num_horizontal_metrics = dis.read_short ();
 	}
 	
-	public FontData get_font_data () {
-		FontData font_data = new FontData ();
-/*
-		font_data.add_u16 (1); // table version
-		font_data.add_u16 (0);
+	public void process () {
+		Font font = Supplement.get_current_font ();
+		FontData fd = new FontData ();
+		Fixed version = 1 << 16;
 		
-		font_data.add_16 (0); // Ascender Typographic ascent.
-		font_data.add_16 (0); // Descender
-		font_data.add_16 (0); // LineGap
+		fd.add_fixed (version); // table version
+				
+		// TODO: units per em
+		fd.add_16 ((int16) (-1 * (font.top_position - font.base_line))); // Ascender
+		fd.add_16 ((int16) (-1 * font.bottom_position)); // Descender
+		fd.add_16 (0); // LineGap
 		
-		font_data.add_u16 (0); // advanceWidthMax Maximum advance width value in 'hmtx' table.
+		fd.add_u16 (0); // advanceWidthMax Maximum advance width value in 'hmtx' table.
 		
-		font_data.add_16 (0); // minLeftSideBearing
-		font_data.add_16 (0); // minRightSideBearing
-		font_data.add_16 (0); // xMaxExtent Max(lsb + (xMax - xMin))
+		fd.add_16 (0); // minLeftSideBearing
+		fd.add_16 (0); // minRightSideBearing
+		fd.add_16 (0); // xMaxExtent Max(lsb + (xMax - xMin))
 		
-		font_data.add_16 (0); // caretSlopeRise
-		font_data.add_16 (0); // caretSlopeRun
-		font_data.add_16 (0); // caretOffset
+		fd.add_16 (0); // caretSlopeRise
+		fd.add_16 (0); // caretSlopeRun
+		fd.add_16 (0); // caretOffset
 		
 		// reserved
-		font_data.add_16 (0);
-		font_data.add_16 (0);
-		font_data.add_16 (0);
-		font_data.add_16 (0);
+		fd.add_16 (0);
+		fd.add_16 (0);
+		fd.add_16 (0);
+		fd.add_16 (0);
 		
-		font_data.add_16 (0); // metricDataFormat 0 for current format.
+		fd.add_16 (0); // metricDataFormat 0 for current format.
 		
-		font_data.add_u16 ((uint16)glyf_table.glyfs.length()); // numberOfHMetrics Number of hMetric entries in 'hmtx' table
-
-		// hmtx - Horizontal metrix (Own table?)
-		foreach (var g in glyf_table.glyfs) {
-			font_data.add_u16 (g.get_width());
-			font_data.add_16 (g.get_left());
-		}
-		
-		// hmtx for monospaced glyphs
-		// ... none right now
+		fd.add_u16 ((uint16) font.length()); // numberOfHMetrics Number of hMetric entries in 'hmtx' table
 
 		// padding
-		while (font_data.length () % 4 != 0) {
-			font_data.add(0);
-		}
-		*/
-		return font_data;
+		fd.pad ();
+		this.font_data = fd;
 	}
 }
 
@@ -1827,6 +1849,7 @@ class HmtxTable : Table {
 	
 	public HmtxTable (HeadTable h) {
 		head_table = h;
+		id = "hmtx";
 	}
 	
 	~HmtxTable () {
@@ -1863,10 +1886,8 @@ class HmtxTable : Table {
 		
 		if (nmetrics > loca_table.size) {
 			warning (@"(nmetrics > loca_table.size) ($nmetrics > $(loca_table.size))");
+			return;
 		}
-		
-		print (@"$(loca_table.size) - $nmetrics\n");
-		print (@"nmetrics: $nmetrics, nmonospaced: $nmonospaced\n");
 		
 		advance_width = new uint16[nmetrics];
 		left_side_bearing = new uint16[nmetrics];
@@ -1882,12 +1903,21 @@ class HmtxTable : Table {
 		}
 	}
 	
-	public FontData get_font_data () {
-		FontData font_data = new FontData ();
+	public void process () {
+		FontData fd = new FontData ();
+		Font font = Supplement.get_current_font ();
+		Glyph g;
 		
-		// FIXA:
+		// advance and lsb
+		for (uint i = 0; i < font.length (); i++) {
+			g = (!) font.get_glyph_indice (i);
+			fd.add_u16 ((uint16) (g.get_right_marker () - g.get_left_marker ()));
+			fd.add_16 ((int16) g.get_left_marker ());
+		}
 		
-		return font_data;
+		// monospaced lsb ...
+		
+		font_data = fd;
 	}
 }
 
@@ -1900,10 +1930,7 @@ class MaxpTable : Table {
 	
 	public MaxpTable (GlyfTable g) {
 		glyf_table = g;
-	}
-	
-	public string get_id () {
-			return "maxp";
+		id = "maxp";
 	}
 	
 	public override void parse (OtfInputStream dis) 
@@ -1924,80 +1951,40 @@ class MaxpTable : Table {
 		// Format 1.0 continues here
 	}
 	
-	public FontData get_font_data () {
-		FontData font_data = new FontData();
-/*		
-		// Version 0.5 for fonts with cff data and 1.0 for ttf
-		font_data.add_u16 (1);
-		font_data.add_u16 (0);
-		
+	public void process () {
+		FontData fd = new FontData();
+		Font font = Supplement.get_current_font ();
 		uint16 max_points, max_contours;
+				
+		// Version 0.5 for fonts with cff data and 1.0 for ttf
+		fd.add_u16 (0);
+		fd.add_u16 (5);
 		
-		get_max (out max_points, out max_contours);
-		
-		font_data.add_u16 ((uint16)glyf_table.glyfs.length ()); // numGlyphs in the font
-		font_data.add_u16 (max_points);
-		font_data.add_u16 (max_contours); // maxContours Maximum contours in a non-composite glyph.
-		font_data.add_u16 (0); // maxCompositePoints Maximum points in a composite glyph.
-		font_data.add_u16 (0); // maxCompositeContours Maximum contours in a composite glyph.
-		font_data.add_u16 (2); // maxZones 1 if instructions do not use the twilight zone (Z0), or 2 if instructions do use Z0; should be set to 2 in most cases.
-		font_data.add_u16 (0); // maxTwilightPoints Maximum points used in Z0.
-		font_data.add_u16 (0); // maxStorage Number of Storage Area locations.
-		font_data.add_u16 (0); // maxFunctionDefs Number of FDEFs.
-		font_data.add_u16 (0); // maxInstructionDefs Number of IDEFs.
-		font_data.add_u16 (0); // maxStackElements Maximum stack depth2.
-		font_data.add_u16 (0); // maxSizeOfInstructions Maximum byte count for glyph instructions.
-		font_data.add_u16 (0); // maxComponentElements Maximum number of components referenced at "top level" for any
-		font_data.add_u16 (0); // maxComponentDepth Maximum levels of recursion; 1 for simple components.		
-
-		// padding
-		while (font_data.length () % 4 != 0) {
-			font_data.add(0);
+		if (font.length () == 0) {
+			warning ("Zero glyphs in maxp table.");
 		}
-	*/
-		return font_data;
-	}
-
-	private void get_max (out uint16 max_points, out uint16 max_contours) {
-/*		max_points = 0;
-		max_contours = 0;
 		
-		foreach (var g in glyf_table.glyfs) {
-			uint16 p = 0;
-			
-			if (g.contours.length() > max_contours) {
-				max_contours = (uint16) g.contours.length();
-			}
-			
-			foreach (var c in g.contours) {
-				p += (uint16) c.coordinates.length();
-			}
-			
-			if (p > max_points) max_points = p;
-		}
-	*/	
-	}
+		fd.add_u16 ((uint16) font.length ()); // numGlyphs in the font
 
+		fd.pad ();
+		
+		this.font_data = fd;
+	}
 }
 
 class OffsetTable : Table {
+	DirectoryTable directory_table;
+		
 	public uint16 num_tables = 0;
 	uint16 search_range = 0;
 	uint16 entry_selector = 0;
 	uint16 range_shift = 0;
+	
+	public OffsetTable (DirectoryTable t) {
+		id = "Offset table";
+		directory_table = t;
+	}
 		
-	public OffsetTable () {
-	}
-	
-	public void set_num_tables (uint n) {
-		num_tables = (uint16) n;
-	}
-	
-	public string get_id () {
-			// warn_if_reached ();
-			return "Offset table";
-	}
-	
 	public void parse (OtfInputStream dis) throws Error {
 		Fixed version;
 		
@@ -2007,153 +1994,136 @@ class OffsetTable : Table {
 		entry_selector = dis.read_ushort ();
 		range_shift = dis.read_ushort ();
 		
-		print (@"Version $(version.get_string ())\n");
+		print (@"Font file version $(version.get_string ())\n");
 		print (@"Number of tables $num_tables\n");		
 	}
 	
-	public FontData get_font_data () {
+	public void process () {
 		FontData fd = new FontData ();
-
+		Fixed version = 1 << 16;
+	
 		// version 1.0 for TTF CFF else use OTTO
-		fd.add_u16 (1);
-		fd.add_u16 (0);
+		assert (version.equals (1, 0));
+		
+		num_tables = (uint16) directory_table.get_tables ().length () - 2; // number of tables, skip DirectoryTable and OffsetTable
+		
+		search_range = max_pow_2_less_than_i (num_tables) * 16;
+		entry_selector = max_log_2_less_than_i (num_tables);
+		range_shift = 16 * num_tables - search_range;
 
+		fd.add_fixed (version);
 		fd.add_u16 (num_tables);
 		fd.add_u16 (search_range);
-		fd.add_u16 (entry_selector);		
-		fd.add_u16 (range_shift);		
-
-		// padding
-		while (fd.length () % 4 != 0) {
-			fd.add(0);
-		}
+		fd.add_u16 (entry_selector);
+		fd.add_u16 (range_shift);
 		
-		return fd;
+		// skip padding for offset table 
+		
+		this.font_data = fd;
 	}
 }
 
 class NameTable : Table {
 	
-	public NameTable () {	
+	public NameTable () {
+		id = "name";
 	}
 	
 	public string get_id () {
 		return "name";
 	}
-	
-	public FontData get_font_data () {
-		// TODO: Apple table versioning of font data
-		
-		FontData font_data = new FontData ();
-		
-		font_data.add_u16 (0); // Format selector
-		font_data.add_u16 (0); // Number of name records.
-		font_data.add_u16 (6); // Offset to start of string storage (from start of table).
-		
-		// ...
 
-		// padding
-		while (font_data.length () % 4 != 0) {
-			font_data.add(0);
-		}
+	public void process () {	
+		FontData fd = new FontData ();
 		
-		return font_data;
+		this.font_data = fd;
 	}
-
 }
 
 class Os2Table : Table {
 	
-	public Os2Table () {	
+	public Os2Table () {
+		id = "OS/2";
 	}
 	
-	public string get_id () {
-		return "OS/2";
-	}
-	
-	public FontData get_font_data () {
-		FontData font_data = new FontData ();
+	public void process () {
+		FontData fd = new FontData ();
 		
-		font_data.add_u16 (4); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
+		fd.add_u16 (4); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
 
-		font_data.add_16 (0); // SHORT xAvgCharWidth
+		fd.add_16 (0); // SHORT xAvgCharWidth
 
-		font_data.add_u16 (0); // USHORT usWeightClass
-		font_data.add_u16 (0); // USHORT usWidthClass
-		font_data.add_u16 (0); // USHORT fsType
+		fd.add_u16 (0); // USHORT usWeightClass
+		fd.add_u16 (0); // USHORT usWidthClass
+		fd.add_u16 (0); // USHORT fsType
 
-		font_data.add_16 (0); // SHORT ySubscriptXSize
-		font_data.add_16 (0); // SHORT ySubscriptYSize
-		font_data.add_16 (0); // SHORT ySubscriptXOffset
-		font_data.add_16 (0); // SHORT ySubscriptYOffset
-		font_data.add_16 (0); // SHORT ySuperscriptXSize
-		font_data.add_16 (0); // SHORT ySuperscriptYSize
-		font_data.add_16 (0); // SHORT ySuperscriptXOffset
-		font_data.add_16 (0); // SHORT ySuperscriptYOffset
-		font_data.add_16 (0); // SHORT yStrikeoutSize
-		font_data.add_16 (0); // SHORT yStrikeoutPosition
-		font_data.add_16 (0); // SHORT sFamilyClass
+		fd.add_16 (0); // SHORT ySubscriptXSize
+		fd.add_16 (0); // SHORT ySubscriptYSize
+		fd.add_16 (0); // SHORT ySubscriptXOffset
+		fd.add_16 (0); // SHORT ySubscriptYOffset
+		fd.add_16 (0); // SHORT ySuperscriptXSize
+		fd.add_16 (0); // SHORT ySuperscriptYSize
+		fd.add_16 (0); // SHORT ySuperscriptXOffset
+		fd.add_16 (0); // SHORT ySuperscriptYOffset
+		fd.add_16 (0); // SHORT yStrikeoutSize
+		fd.add_16 (0); // SHORT yStrikeoutPosition
+		fd.add_16 (0); // SHORT sFamilyClass
 
 		// PANOSE
-		font_data.add (0); 
-		font_data.add (0); 
-		font_data.add (0); 
-		font_data.add (0); 
-		font_data.add (0); 
-		font_data.add (0); 
-		font_data.add (0); 
-		font_data.add (0); 
-		font_data.add (0); 
-		font_data.add (0); 
+		fd.add (0); 
+		fd.add (0); 
+		fd.add (0); 
+		fd.add (0); 
+		fd.add (0); 
+		fd.add (0); 
+		fd.add (0); 
+		fd.add (0); 
+		fd.add (0); 
+		fd.add (0); 
 
-		font_data.add_u32 (0); // ulUnicodeRange1 Bits 0-31
-		font_data.add_u32 (0); // ULONG ulUnicodeRange2 Bits 32-63
-		font_data.add_u32 (0); // ULONG ulUnicodeRange3 Bits 64-95
-		font_data.add_u32 (0); // ULONG ulUnicodeRange4 Bits 96-127
+		fd.add_u32 (0); // ulUnicodeRange1 Bits 0-31
+		fd.add_u32 (0); // ULONG ulUnicodeRange2 Bits 32-63
+		fd.add_u32 (0); // ULONG ulUnicodeRange3 Bits 64-95
+		fd.add_u32 (0); // ULONG ulUnicodeRange4 Bits 96-127
 
-		font_data.add_tag ("----"); // VendID
+		fd.add_tag ("----"); // VendID
 
-		font_data.add_u16 (0); // USHORT fsSelection
-		font_data.add_u16 (0); // USHORT usFirstCharIndex
-		font_data.add_u16 (0); // USHORT usLastCharIndex
+		fd.add_u16 (0); // USHORT fsSelection
+		fd.add_u16 (0); // USHORT usFirstCharIndex
+		fd.add_u16 (0); // USHORT usLastCharIndex
 
-		font_data.add_16 (0); // SHORT sTypoAscender
-		font_data.add_16 (0); // SHORT sTypoDescender
-		font_data.add_16 (0); // SHORT sTypoLineGap
+		fd.add_16 (0); // SHORT sTypoAscender
+		fd.add_16 (0); // SHORT sTypoDescender
+		fd.add_16 (0); // SHORT sTypoLineGap
 
-		font_data.add_u16 (0); // USHORT usWinAscent
-		font_data.add_u16 (0); // USHORT usWinDescent
+		fd.add_u16 (0); // USHORT usWinAscent
+		fd.add_u16 (0); // USHORT usWinDescent
 
-		font_data.add_u32 (0); // ULONG ulCodePageRange1 Bits 0-31
-		font_data.add_u32 (0); // ULONG ulCodePageRange2 Bits 32-63
+		fd.add_u32 (0); // ULONG ulCodePageRange1 Bits 0-31
+		fd.add_u32 (0); // ULONG ulCodePageRange2 Bits 32-63
 
-		font_data.add_16 (0); // SHORT sxHeight version 0x0002 and later
-		font_data.add_16 (0); // SHORT sCapHeight version 0x0002 and later
+		fd.add_16 (0); // SHORT sxHeight version 0x0002 and later
+		fd.add_16 (0); // SHORT sCapHeight version 0x0002 and later
 
-		font_data.add_16 (0); // USHORT usDefaultChar version 0x0002 and later
-		font_data.add_16 (0); // USHORT usBreakChar version 0x0002 and later
-		font_data.add_16 (0); // USHORT usMaxContext version 0x0002 and later
+		fd.add_16 (0); // USHORT usDefaultChar version 0x0002 and later
+		fd.add_16 (0); // USHORT usBreakChar version 0x0002 and later
+		fd.add_16 (0); // USHORT usMaxContext version 0x0002 and later
 
 		// padding
-		while (font_data.length () % 4 != 0) {
-			font_data.add(0);
-		}
+		fd.pad ();
 	
-		return font_data;
+		this.font_data = fd;
 	}
 
 }
 
 class PostTable : Table {
 	
-	public PostTable () {	
+	public PostTable () {
+		id = "post";	
 	}
 	
-	public string get_id () {
-		return "post";
-	}
-	
-	public FontData get_font_data () {
+	public void process () {
 		FontData font_data = new FontData ();
 		
 		// Version
@@ -2181,7 +2151,7 @@ class PostTable : Table {
 			font_data.add(0);
 		}
 		
-		return font_data;
+		this.font_data = font_data;
 	}
 
 }
@@ -2200,12 +2170,15 @@ class DirectoryTable : Table {
 	public PostTable post_table;
 	public LocaTable loca_table;
 	
-	OffsetTable offset_table;
+	public OffsetTable offset_table;
+	
+	List<Table> tables;
 	
 	public DirectoryTable () {
-		offset_table = new OffsetTable ();
+		offset_table = new OffsetTable (this);
 		
-		glyf_table = new GlyfTable ();
+		loca_table = new LocaTable ();
+		glyf_table = new GlyfTable (loca_table);
 		cmap_table = new CmapTable (glyf_table);
 		head_table = new HeadTable (glyf_table);
 		hhea_table = new HheaTable (glyf_table, head_table);
@@ -2214,16 +2187,49 @@ class DirectoryTable : Table {
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (); 
 		post_table = new PostTable ();
-		loca_table = new LocaTable ();
+		
+		id = "Directory table";
+	}
+
+	public void process () {
+		// generate font data
+		head_table.process ();
+		glyf_table.process ();
+		cmap_table.process (glyf_table);
+		hhea_table.process ();
+		hmtx_table.process ();
+		maxp_table.process ();
+		name_table.process ();
+		os_2_table.process ();
+		loca_table.process (glyf_table, head_table);
+		post_table.process ();
+		
+		offset_table.process ();
+		process_directory (); // this table
+	}
+
+	public unowned List<Table> get_tables () {
+		if (tables.length () == 0) {
+			tables.append (offset_table);
+			tables.append (this);
+
+			tables.append (head_table);
+			tables.append (glyf_table);
+			tables.append (loca_table);
+			tables.append (cmap_table);  // The other required tables
+			tables.append (hhea_table);
+			tables.append (hmtx_table);
+			tables.append (maxp_table);
+			tables.append (os_2_table);
+			tables.append (name_table);
+			tables.append (post_table);
+		}
+
+		return tables;
 	}
 
 	public void set_offset_table (OffsetTable ot) {
 		offset_table = ot;
-	}
-	
-	/** Create a new ttf file from font. */
-	public void write (OtfOutputStream out, Font font) {
-		
 	}
 	
 	public void parse (OtfInputStream dis) throws Error {
@@ -2286,13 +2292,15 @@ class DirectoryTable : Table {
 			}
 		}
 		
-		if (!head_table.validate (dis) || !maxp_table.validate (dis) 
-			|| !loca_table.validate (dis) || !cmap_table.validate (dis) 
-			|| !glyf_table.validate (dis) || !hhea_table.validate (dis)
-			|| !hmtx_table.validate (dis))
-		{
-			warning ("Missing required table");
-			return;
+		// FIXA: delete
+		FontData fd = new FontData ();
+		fd.write_table (dis, cmap_table.offset, cmap_table.length);
+		fd.print ();
+		
+		if (!validate_tables (dis)) {
+			warning ("Missing required table or bad checksum.");
+			// Fixa: stop processing here, if we want to avoid loading bad fonts
+			// return;
 		}
 		
 		head_table.parse (dis);
@@ -2302,6 +2310,51 @@ class DirectoryTable : Table {
 		hmtx_table.parse (dis, hhea_table, loca_table);
 		cmap_table.parse (dis);
 		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table);		
+	}
+	
+	public bool validate_tables (OtfInputStream dis) {
+		bool valid = true;
+
+		if (!glyf_table.validate (dis)) {
+			warning ("glyf_table has invalid checksum");
+			valid = false;
+		}
+		
+		// head checksum is calculated without checksum adjustment for entire file 
+		// skip validation for now.
+		/*
+		if (!head_table.validate (dis)) {
+			warning ("head_table has is invalid checksum");
+			valid = false;
+		}
+		*/
+		
+		if (!maxp_table.validate (dis)) {
+			warning ("maxp_table has is invalid checksum");
+			valid = false;
+		}
+		
+		if (!loca_table.validate (dis)) {
+			warning ("loca_table has invalid checksum");
+			valid = false;
+		}
+		
+		if (!cmap_table.validate (dis)) {
+			warning ("cmap_table has invalid checksum");
+			valid = false;
+		}
+		
+		if (!hhea_table.validate (dis)) {
+			warning ("hhea_table has invalid checksum");
+			valid = false;
+		}
+		
+		if (!hmtx_table.validate (dis)) {
+			warning ("hmtx_table has invalid checksum");
+			valid = false;
+		}
+	
+		return valid;
 	}
 	
 	public string get_id () {
@@ -2314,80 +2367,74 @@ class DirectoryTable : Table {
 	}
 	
 	public long get_font_file_size () {
-		long length = offset_table.get_font_data ().length ();
+		long length = 0;
 		
 		foreach (Table t in tables) {
-			length += t.get_font_data ().length ();
+			length += t.get_font_data ().length_with_padding ();
 		}
 		
 		return length;
 	}
 	
-	public FontData get_font_data () {
-		FontData fd = new FontData ();
-		
-		uint32 table_offset = 0;
+	public void process_directory () {
+		create_directory (); // create directory without offsets to calculate length of offset table and checksum for entre file
+		create_directory (); // generate a valid directory
+	}
+
+	public void create_directory () {
+		FontData fd;
+	
+		uint32 table_offset;
 		uint32 table_length = 0;
 		
 		uint32 check_sum = 0;
-
-		// FIXA: clear tables here 
-
-		tables.append (offset_table); // The the directory index tables
-		tables.append (this);
 		
-		tables.append (cmap_table);  // The other required tables
-		tables.append (glyf_table);
-		tables.append (head_table);
-		tables.append (hhea_table);
-		tables.append (maxp_table);
-		tables.append (name_table);
-		tables.append (os_2_table);
-		tables.append (post_table);
+		fd = new FontData ();
 
-		offset_table.set_num_tables (tables.length () - 2); // number of tables, skip DirectoryTable and OffsetTable
-		
 		return_val_if_fail (offset_table.num_tables > 0, fd);
 		
-		table_offset += offset_table.get_font_data ().length ();
+		table_offset = 0;
 		
-		head_table.set_check_sum_adjustment (0);
-						
+		table_offset += offset_table.get_font_data ().length_with_padding ();
+		table_offset += this.get_font_data ().length_with_padding ();
+
+		head_table.set_check_sum_adjustment (0); // Set this to zero, calculate the sum and update the value
+
 		foreach (Table t in tables) {
+			
+			print (@"c $(t.id)  offset: $(table_offset)  len with pad  $( t.get_font_data ().length_with_padding ())\n");
 			
 			if (t is DirectoryTable || t is OffsetTable) {
 				continue;
 			}
 			
-			table_length = t.get_font_data ().length ();
+			table_length = t.get_font_data ().length (); // without padding
 			
 			fd.add_tag (t.get_id ()); // name of table
 			fd.add_u32 (t.get_font_data ().check_sum ());
 			fd.add_u32 (table_offset);
 			fd.add_u32 (table_length);
 			
-			table_offset += table_length;
+			table_offset += t.get_font_data ().length_with_padding ();
 		}
 
 		// padding
-		while (fd.length () % 4 != 0) {
-			fd.add(0);
-		}
+		fd.pad ();
 		
 		// Check sum adjustment for the entire font		
 		foreach (Table t in tables) {
-			
 			if (t is DirectoryTable) {
-				fd.continous_check_sum (out check_sum);
+				fd.continous_check_sum (ref check_sum);
 				continue;
 			}
 			
-			t.get_font_data ().continous_check_sum (out check_sum);
+			t.get_font_data ().continous_check_sum (ref check_sum);
 		}
 	
 		head_table.set_check_sum_adjustment ((uint32)(0xB1B0AFBA - check_sum));
-		
-		return fd;
+		head_table.process (); // update the value
+						
+		this.font_data = fd;
 	}
 	
 }

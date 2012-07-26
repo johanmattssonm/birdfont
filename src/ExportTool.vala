@@ -25,8 +25,8 @@ class ExportTool : Tool {
 		base (n, "Export glyph to svg file", 'e', CTRL);
 	
 		select_action.connect((self) => {
+			print ("export_ttf_font:\n");
 			export_svg_font ();
-			export_otf_font ();
 			// Fixa: add export_glyph_to_svg (); as tool in toolbox
 		});
 		
@@ -120,7 +120,12 @@ class ExportTool : Tool {
 		string browser = "";		
 		
 		if (!export_svg_font ()) {
-			warning ("Failed to export font.");
+			warning ("Failed to export svg font.");
+			return;
+		}
+		
+		if (!export_ttf_font ()) {
+			warning ("Failed to export ttf font.");
 			return;
 		}
 		
@@ -310,30 +315,6 @@ class ExportTool : Tool {
 		}
 		
 		return true;		
-	}
-
-	public bool export_otf_font () {
-		try {
-			Font font = Supplement.get_current_font ();
-			File file = font.get_folder ();
-			file = file.get_child (font.get_name () + ".otf");
-			OpenFontFormatWriter fo;
-			
-			if (file.query_exists ()) {
-				file.delete ();
-			}
-			
-			fo = new OpenFontFormatWriter ();
-			fo.open (file);
-			fo.write_font_file (font);
-			fo.close ();
-			
-		} catch (Error e) {
-			critical (@"$(e.message)");
-			return false;
-		}
-		
-		return true;
 	}
 		
 	public bool export_svg_font () {
