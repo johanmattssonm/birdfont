@@ -639,7 +639,8 @@ class GlyfTable : Table {
 					
 					glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax, head_table.get_units_per_em ());
 					
-					glyph.left_limit = xmin - hmtx_table.get_lsb (i);
+					//glyph.left_limit = xmin - hmtx_table.get_lsb (i);
+					glyph.left_limit = 0;
 					glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (i);
 					
 					if (xmin > glyph.right_limit || xmax < glyph.left_limit) {
@@ -742,7 +743,7 @@ class GlyfTable : Table {
 	Glyph parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset,
 		out double xmin, out double xmax, double units_per_em) throws Error {
 		
-		print (@"PARSE NEXT GLYF .................................... \n");
+		print (@"PARSE NEXT GLYF\n");
 		
 		uint16* end_points = null;
 		uint8* instructions = null;
@@ -794,6 +795,10 @@ class GlyfTable : Table {
 		end_points = new uint16[ncontours + 1];
 		for (int i = 0; i < ncontours; i++) {
 			end_points[i] = dis.read_ushort (); // FIXA: mind shot vector is negative
+			
+			if (i > 0 && end_points[i] > end_points[i -1]) {
+				warning (@"Next endpoint has bad value. (end_points[i] > end_points[i -1])  ($(end_points[i]) > $(end_points[i -1]))");
+			}
 		}
 		
 		if (ncontours > 0) {
@@ -1019,7 +1024,8 @@ class GlyfTable : Table {
 
 		double gxmin, gymin, gxmax, gymax;
 
-		int16 end_point = 0;
+		int16 end_point;
+		int16 last_end_point;
 		int16 npoints;
 		int16 ncontours;
 		int16 nflags;
@@ -1059,12 +1065,20 @@ class GlyfTable : Table {
 		if (this.xmax > xmax) this.xmax = xmax;
 		if (this.ymax > ymax) this.ymax = ymax;
 		
+		// end points
 		end_point = 0;
+		last_end_point = 0;
 		foreach (Path p in g.path_list) {
 			foreach (EditPoint e in p.points) {
 				end_point++;
 			}
 			fd.add_u16 (end_point - 1);
+			
+			if (end_point - 1 < last_end_point) {
+				warning (@"Next endpoint has bad value. (end_point - 1 < last_end_point)  ($(end_point - 1) < $last_end_point");
+			}
+			
+			last_end_point = end_point - 1;
 		}
 		
 		fd.add_u16 (0); // instruction length 
@@ -1091,9 +1105,9 @@ class GlyfTable : Table {
 		double prev = 0;
 		foreach (Path p in g.path_list) {
 			foreach (EditPoint e in p.points) {
-				x = (int16) (e.x - prev);
+				x = (int16) (e.x - prev - g.left_limit);
 				fd.add_16 (x);
-				prev = e.x;
+				prev = e.x - g.left_limit;
 			}
 		}
 
@@ -1611,6 +1625,9 @@ class HeadTable : Table {
 		
 	uint16 units_per_em = 100;
 	
+	const uint8 BASELINE_AT_ZERO = 1 << 0;
+	const uint8 LSB_AT_ZERO = 1 << 1;
+	
 	GlyfTable glyf_table;
 	
 	public HeadTable (GlyfTable gt) {
@@ -1644,6 +1661,15 @@ class HeadTable : Table {
 		}
 		
 		flags = dis.read_ushort ();
+		
+		if ((flags & BASELINE_AT_ZERO) > 0) {
+			warning ("Expected flag BASELINE_AT_ZERO  has not been set.");
+		}
+
+		if ((flags & LSB_AT_ZERO) > 0) {
+			warning ("Flags LSB_AT_ZERO has been set.");
+		}
+		
 		units_per_em = dis.read_ushort ();
 		
 		created = dis.read_udate ();
@@ -1701,7 +1727,7 @@ class HeadTable : Table {
 		
 		font_data.add_u32 (0x5F0F3CF5); // magic number
 		
-		font_data.add_u16 (0); // flags
+		font_data.add_u16 (BASELINE_AT_ZERO | LSB_AT_ZERO); // flags
 		
 		font_data.add_u16 (100); // units per em (should be a power of two for ttf fonts)
 		
@@ -1911,8 +1937,8 @@ class HmtxTable : Table {
 		// advance and lsb
 		for (uint i = 0; i < font.length (); i++) {
 			g = (!) font.get_glyph_indice (i);
-			fd.add_u16 ((uint16) (g.get_right_marker () - g.get_left_marker ()));
-			fd.add_16 ((int16) g.get_left_marker ());
+			fd.add_u16 ((uint16) (g.right_limit - g.left_limit));
+			fd.add_16 (0);
 		}
 		
 		// monospaced lsb ...
@@ -2146,10 +2172,7 @@ class PostTable : Table {
 		font_data.add_u32 (0); // min mem for Type1
 		font_data.add_u32 (0); // max mem for Type1
 
-		// padding
-		while (font_data.length () % 4 != 0) {
-			font_data.add(0);
-		}
+		font_data.pad ();
 		
 		this.font_data = font_data;
 	}
