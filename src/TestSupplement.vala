@@ -33,6 +33,7 @@ class TestCases {
 	public List<Test> test_cases;
 
 	public TestCases () {
+		add (test_glyph_ranges, "Glyph ranges");
 		add (test_glyph_table, "Glyph table");
 		add (test_active_edit_point, "Active edit point");
 		add (test_hex, "Unicode hex values");
@@ -43,6 +44,23 @@ class TestCases {
 		add (test_delete_points, "Delete edit points");
 		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
+	}
+
+	public static void test_glyph_ranges () {
+		GlyphRange gr = new GlyphRange ();
+		
+		gr.add_range ('b', 'c');
+		gr.add_single ('d');
+		gr.add_range ('e', 'h');
+		gr.add_range ('k', 'm');
+		gr.add_range ('o', 'u');
+		gr.add_range ('a', 'd');
+		gr.add_range ('f', 'z');
+		gr.add_range ('b', 'd');
+			
+		return_if_fail (gr.length () == 'z' - 'a' + 1);
+		return_if_fail (gr.get_ranges ().length () == 1);
+		return_if_fail (gr.get_ranges ().first ().data.length () == 'z' - 'a' + 1);
 	}
 
 	public static void test_glyph_table () {

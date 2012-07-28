@@ -26,8 +26,6 @@ class GlyphRange {
 	
 	unichar len = 0;
 	
-	public bool is_fill_unicode = false;
-	
 	public GlyphRange () {
 	}
 	
@@ -80,7 +78,6 @@ class GlyphRange {
 	}
 	
 	public void use_full_unicode_range () {
-		is_fill_unicode = true;
 		add_range ('\0', (unichar) 0xA868FE00);
 	}
 	
@@ -110,26 +107,74 @@ class GlyphRange {
 	}
 	
 	public void add_range (unichar start, unichar stop) {
+		unichar b, s;
 		if (unique (start, stop)) {
-			insert_range(start, stop);
+			append_range (start, stop);
 		} else {
 			
-			unichar b = start;
-			unichar s = b;
-			while (b < stop) {
-				if (unique (b, b)) {
-					b++;
-				} else {
-					if (s != b) {
-						insert_range(s, b - 1);
+			// make sure this range does not overlap existing ranges
+			b = start;
+			s = b;
+			if (!unique (b, b)) {			
+				while (b < stop) {
+					if (!unique (b, b)) {
+						b++;
+					} else {
+						if (s != b) {
+							add_range (b, stop);
+						}
+						
+						b++;
+						s = b;
 					}
-					
-					b++;
-					s = b;
 				}
+			} else {
+				while (b < stop) {
+					if (unique (b, b)) {
+						b++;
+					} else {
+						if (s != b) {
+							add_range (start, b - 1);
+						}
+						
+						b++;
+						s = b;
+					}
+				}				
 			}
 		}
+	}
+	
+	private void append_range (unichar start, unichar stop) {
+		UniRange r;
 		
+		StringBuilder s = new StringBuilder ();
+		StringBuilder e = new StringBuilder ();
+		s.append_unichar (start);
+		e.append_unichar (stop);
+		
+		r = insert_range (start, stop); // insert a unique range
+		merge_range (r); // join connecting ranges
+	}
+	
+	private void merge_range (UniRange r) {
+		foreach (UniRange u in ranges) {
+			if (u == r) {
+				continue;
+			}			
+			
+			if (u.start == r.stop + 1) {
+				u.start = r.start;
+				ranges.remove_all (r);
+				merge_range (u);
+			}
+			
+			if (u.stop == r.start - 1) {
+				u.stop = r.stop;
+				ranges.remove_all (r);
+				merge_range (u);
+			}
+		}
 	}
 
 	public string get_char (unichar index) {
@@ -183,7 +228,7 @@ class GlyphRange {
 			if (inside (stop, u.start, u.stop)) return false;
 			if (inside (u.start, start, stop)) return false;
 			if (inside (u.stop, start, stop)) return false;
-
+			
 		}
 
 		return true;
@@ -193,18 +238,33 @@ class GlyphRange {
 		return (u_start <= start <= u_stop);
 	}
 	
-	private void insert_range (unichar start, unichar stop) {
+	private UniRange insert_range (unichar start, unichar stop) {
 		if (unlikely (start > stop)) {
 			warning ("start > stop");
-			return;
+			stop = start;
 		}
 		
 		UniRange ur = new UniRange (start, stop);
 		len += ur.length ();
 		index_start.append (len);
 		ranges.append (ur);
+		
+		return ur;
 	}
 
+	public void print_all () {
+		StringBuilder s;
+		
+		stdout.printf ("Ranges:\n");
+		foreach (UniRange u in ranges) {
+			s = new StringBuilder ();
+			s.append_unichar (u.start);
+			s.append (" - ");
+			s.append_unichar (u.stop);
+			s.append ("\n");
+			stdout.printf (s.str);
+		}
+	}
 }
 
 }

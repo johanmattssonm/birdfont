@@ -1403,6 +1403,8 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			}
 		}
 		
+		glyph_range.print_all ();
+		
 		ranges = glyph_range.get_ranges ();
 		seg_count = (uint16) ranges.length () + 1;
 		seg_count_2 =  seg_count * 2;
