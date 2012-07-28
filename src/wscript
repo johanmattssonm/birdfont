@@ -19,6 +19,7 @@ SUPPLEMENT_MAIN = [
 	'GlyphCanvas.vala',
 	'GlyphCollection.vala',
 	'GlyphRange.vala',
+	'GlyphTable.vala',
 	'GridTool.vala',
 	'Icons.vala',
 	'Kerning.vala', 

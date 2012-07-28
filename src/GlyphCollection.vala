@@ -39,6 +39,13 @@ class GlyphCollection : GLib.Object {
 	
 	public void insert_glyph (Glyph g, bool selected) {
 		versions.add_glyph (g, selected);
+		
+		print (@"insert $(g.get_name ()) at $(versions.glyphs.length ())\n");
+		assert (versions.glyphs.length () > 0);
+	}
+	
+	public uint length () {
+		return versions.glyphs.length ();
 	}
 	
 	public string get_name () {

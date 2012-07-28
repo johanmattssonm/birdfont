@@ -33,7 +33,8 @@ class TestCases {
 	public List<Test> test_cases;
 
 	public TestCases () {
-		add (test_active_edit_point, "Active edit point");
+		add (test_glyph_table, "Glyph table");
+/*		add (test_active_edit_point, "Active edit point");
 		add (test_hex, "Unicode hex values");
 		add (test_reverse_path, "Reverse path");
 		add (test_reverse_random_paths, "Reverse random paths");
@@ -42,6 +43,69 @@ class TestCases {
 		add (test_delete_points, "Delete edit points");
 		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
+*/	}
+
+	public static void test_glyph_table () {
+		GlyphTable table = new GlyphTable ();
+		List<GlyphCollection> gc = new List<GlyphCollection> ();
+		List<unowned GlyphCollection> gc_copy;
+		GlyphCollection g;
+		
+		return_if_fail (table.length () == 0);
+		return_if_fail (table.get ("Some glyph") == null);
+		
+		// generate test data
+		for (uint i = 0; i < 1000; i++) {
+			gc.append (new GlyphCollection (new Glyph (@"TEST $i", i + 'a')));
+		}
+
+		// insert in random order
+		gc_copy = gc.copy ();
+		for (uint i = 0; gc_copy.length () > 0; i++) {
+			int t = (int) ((gc_copy.length () - 1) * Random.next_double ());
+			g = gc_copy.nth (t).data;
+			
+			if (!table.insert (g)) {
+				warning (@"Failed to insert $(g.get_name ())");
+				return;
+			}
+			
+			gc_copy.remove_all (g);
+			
+			if (!table.validate_index ()) {
+				table.print_all ();
+				warning ("index is invalid");
+				return;
+			}
+		}
+		
+		return_if_fail (table.length () == gc.length ());
+		
+		// validate table
+		for (uint i = 0; i > 1000; i++) {
+			g = (!) table.get (gc.nth (i).data.get_name ());
+			return_if_fail (gc.nth (i).data == g);
+		}
+		
+		// search 
+		for (int i = 0; i < 2000; i++) {
+			int t = (int) (999 * Random.next_double ());
+			if (table.get (@"TEST $t") == null) {
+				table.print_all ();
+				warning (@"Did't find TEST $t in glyph table.");
+				return;
+			}
+		}
+
+		// remove
+		table.remove ("TEST 0");
+		table.remove ("TEST 53");
+		return_if_fail (table.get ("TEST 0") == null);
+		return_if_fail (table.get ("TEST 53") == null);
+		
+		// search 
+		return_if_fail (table.get ("TEST 52") != null);
+		return_if_fail (table.get ("TEST 54") != null);
 	}
 
 	public static void test_delete_points () {

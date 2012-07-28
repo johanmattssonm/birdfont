@@ -22,13 +22,17 @@ class GlyphRange {
 	List<UniRange> ranges;
 	List<unichar> index_start;
 
-	public List<unowned string> unassigned;
+	GlyphTable? unassigned = null;
 	
 	unichar len = 0;
 	
 	public bool is_fill_unicode = false;
 	
 	public GlyphRange () {
+	}
+	
+	public void set_unassigned (GlyphTable? unassigned) {
+		this.unassigned = unassigned;
 	}
 	
 	public unowned List<UniRange> get_ranges () {
@@ -96,7 +100,13 @@ class GlyphRange {
 	}
 	
 	public unichar get_length () {
-		return len + unassigned.length ();
+		unichar l = len;
+		
+		if (unassigned != null) {
+			l += ((!) unassigned).length ();
+		}
+		
+		return l;
 	}
 	
 	public void add_range (unichar start, unichar stop) {
@@ -145,11 +155,11 @@ class GlyphRange {
 			if (index > ranges.length ()) {
 				i = (int) (index - ranges.length ());
 				
-				if (i >= unassigned.length ()) {
+				if (unassigned == null || i >= ((!) unassigned).length ()) {
 					return "\0".dup();
 				}
 				
-				return unassigned.nth (i).data.dup();
+				return ((!) ((!) unassigned).nth (i)).get_name ();
 			}
 		}
 

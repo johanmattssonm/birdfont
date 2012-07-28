@@ -22,11 +22,10 @@ namespace Supplement {
 
 class Font : GLib.Object {
 	
-	// TODO implemet sorted table:
-	HashTable <string, GlyphCollection> glyph_cache = new HashTable <string, GlyphCollection> (str_hash, str_equal);
+	GlyphTable glyph_cache = new GlyphTable ();
 	
 	/** Glyphs that not are tied to a unichar value. */
-	HashTable <string, GlyphCollection> unassigned_glyphs = new HashTable <string, GlyphCollection> (str_hash, str_equal);
+	GlyphTable unassigned_glyphs = new GlyphTable ();
 	
 	/** Last unassigned index */
 	int next_unindexed = 0;
@@ -84,7 +83,7 @@ class Font : GLib.Object {
 	}
 
 	public uint get_length () {
-		return glyph_cache.get_keys ().length ();
+		return glyph_cache.length () + unassigned_glyphs.length ();
 	}
 
 	/** Retuns true if the current font has be modified */
@@ -260,27 +259,31 @@ class Font : GLib.Object {
 		
 		gr.sort ();
 		
-		gr.unassigned = unassigned_glyphs.get_keys ();
+		gr.set_unassigned (unassigned_glyphs);
 		
 		return gr;
 	}
 	
-	public void add_glyph (Glyph glyph) {
-		unowned GlyphCollection? gc = glyph_cache.lookup (glyph.get_name ());
+	public void add_glyph (Glyph glyph) 
+		requires (glyph.get_name () != "")
+	{
+		GlyphCollection? gc = glyph_cache.get (glyph.get_name ());
 
 		if (gc == null) {
-			glyph_cache.insert (glyph.get_name (), new GlyphCollection (glyph));
+			glyph_cache.insert (new GlyphCollection (glyph));
 		}
 	}
 
-	public void add_glyph_collection (GlyphCollection glyph_collection) {
-		unowned GlyphCollection? gc = glyph_cache.lookup (glyph_collection.get_name ());
-
-		if (unlikely (gc != null)) {
-			warning ("Glyph collection exists.");
+	public void add_glyph_collection (GlyphCollection glyph_collection) 
+		requires (glyph_collection.get_name () != "")
+	{
+		GlyphCollection? gc = get_glyph_collection (glyph_collection.get_name ());
+		
+		if (gc != null) {
+			warning ("glyph has been inserted");
 		}
 		
-		glyph_cache.insert (glyph_collection.get_name (), glyph_collection);
+		glyph_cache.insert (glyph_collection);
 	}
 		
 	public void delete_glyph (string glyph) {
@@ -289,10 +292,10 @@ class Font : GLib.Object {
 	
 	/** Obtain all versions and alterntes for this glyph. */
 	public GlyphCollection? get_glyph_collection (string glyph) {
-		GlyphCollection? gc = glyph_cache.lookup (glyph);
+		GlyphCollection? gc = glyph_cache.get (glyph);
 		
 		if (gc == null) {
-			gc = unassigned_glyphs.lookup (glyph);
+			gc = unassigned_glyphs.get (glyph);
 			
 			if (gc == null) {			
 				return null;
@@ -319,25 +322,20 @@ class Font : GLib.Object {
 	}
 	
 	public Glyph? get_glyph_indice (unichar glyph_indice) {
-		List<unowned GlyphCollection> gl;
-		unowned GlyphCollection gc;
+		GlyphCollection gc;
 		
-		if (glyph_indice >= glyph_cache.size () + unassigned_glyphs.size ()) {			
+		if (glyph_indice >= length ()) {
 			return null;
-		}
+		} 
 		
-		if (glyph_indice >= glyph_cache.size ()) {
-			gl = unassigned_glyphs.get_values ();
-			glyph_indice -= glyph_cache.size ();
-			return null;
+		if (glyph_indice >= glyph_cache.length ()) {
+			glyph_indice -= glyph_cache.length ();
+			gc = (!) unassigned_glyphs.nth (glyph_indice);
 		} else {
-			gl = glyph_cache.get_values ();
+			gc = (!) glyph_cache.nth (glyph_indice);
 		}
-			
-		gc = gl.nth (glyph_indice).data;
-		return ((!) gc).get_current ();
-
-		return null;
+				
+		return gc.get_current ();
 	}
 	
 	public void add_background_image (string file) {
@@ -469,7 +467,7 @@ class Font : GLib.Object {
 				os.put_string ("\n");
 			}
 			
-			glyph_cache.for_each ((k, gc) => {
+			glyph_cache.for_each ((gc) => {
 				try {
 					bool selected;
 					foreach (Glyph g in gc.get_version_list ().glyphs) {
@@ -566,12 +564,11 @@ class Font : GLib.Object {
 	}
 
 	public uint length () {
-		return glyph_cache.get_keys ().length () + unassigned_glyphs.get_keys ().length ();
+		return glyph_cache.length () + unassigned_glyphs.length ();
 	}
 
 	public bool is_empty () {
-		uint len = glyph_cache.get_keys ().length ();
-		return (len == 0);
+		return (glyph_cache.length () == 0 && unassigned_glyphs.length () == 0);
 	}
 
 	public bool load (string path) {
@@ -596,23 +593,33 @@ class Font : GLib.Object {
 
 	/** Callback function for loading glyph in a separate thread. */
 	public void add_glyph_callback (Glyph g) {
-		GlyphCollection? gc;	
-				
-		gc = get_glyph_collection (g.get_name ());
+		GlyphCollection? gcl;
+		GlyphCollection gc;
+		
+		gcl = get_glyph_collection (g.get_name ());
+		
+		if (gcl != null) {
+			warning ("glyph does already exist");
+		}
 		
 		if (g.is_unassigned ()) {
-			gc = new GlyphCollection ();
-			unassigned_glyphs.insert (@"($(++next_unindexed))", (!) gc);
-			((!)gc).insert_glyph (g, true);
-		} else if (gc == null) {
-			gc = new GlyphCollection ();
-			glyph_cache.insert (g.get_name (), (!) gc);
-			((!)gc).insert_glyph (g, true);	
+			gc = new GlyphCollection (g);
+			g.name = @"($(++next_unindexed))";
+			unassigned_glyphs.insert ((!) gc);
+		} else if (gcl == null) {
+			
+			print (@"g.name $(g.name)\n");
+			
+			gc = new GlyphCollection (g);
+			
+			print (@"gc.get_name () $(((!)gc).get_name ())\n");
+			
+			glyph_cache.insert ((!) gc);
 		} else {
 			stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
-			gc = new GlyphCollection ();
-			unassigned_glyphs.insert (@"($(++next_unindexed))", (!) gc);
-			((!)gc).insert_glyph (g, true);	
+			gc = new GlyphCollection (g);
+			g.name = @"($(++next_unindexed))";
+			unassigned_glyphs.insert ((!) gc);
 		}
 		
 		// take xheight from appropriate lower case letter
@@ -888,12 +895,17 @@ class Font : GLib.Object {
 		
 		gc = get_glyph_collection (g.get_name ());
 		
+		if (g.get_name () == "") {
+			warning ("No name set for glyph.");
+		}
+				
 		if (gc == null) {
-			gc = new GlyphCollection ();
-			glyph_cache.insert (g.get_name (), (!) gc);
+			gc = new GlyphCollection (g);
+			glyph_cache.insert ((!) gc);
+		} else {
+			((!)gc).insert_glyph (g, selected);
 		}
 		
-		((!)gc).insert_glyph (g, selected);
 	}
 	
 	/** Parse visual objects and paths */

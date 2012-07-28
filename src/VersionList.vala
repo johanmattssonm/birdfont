@@ -49,7 +49,7 @@ class VersionList : DropMenu {
 	
 	public Glyph get_current () {
 		if (unlikely (current_version >= glyphs.length ())) {
-			warning (@"current_version >= glyphs.length ($current_version)");
+			warning (@"current_version >= glyphs.length ($current_version >= $(glyphs.length ()))");
 			return new Glyph ("");
 		}
 		
