@@ -46,6 +46,12 @@ class OpenFontFormatWriter : Object  {
 		unowned List<Table> tables;
 		unichar indice = 0;
 		
+		if (!font.has_glyph ("notdef.")) {
+			font.create_not_def ();
+		}
+		
+		assert (font.has_glyph ("notdef."));
+		
 		directory_table.process ();	
 		tables = directory_table.get_tables ();
 
@@ -451,7 +457,7 @@ class LocaTable : Table {
 			warning (@"No offset for glyph $i. Requires (0 <= $i < $(size + 1)");
 		}
 		
-		return 2 * glyph_offsets [i];
+		return glyph_offsets [i];
 	}
 	
 	/** Returns true if glyph at index i is empty and have no body to parse. */
@@ -488,7 +494,7 @@ class LocaTable : Table {
 		switch (head_table.loca_offset_size) {
 			case 0:
 				for (long i = 0; i < size + 1; i++) {
-					glyph_offsets[i] = dis.read_ushort ();	
+					glyph_offsets[i] = 2 * dis.read_ushort ();	
 					
 					if (0 < i < size && glyph_offsets[i - 1] > glyph_offsets[i]) {
 						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
@@ -529,8 +535,6 @@ class LocaTable : Table {
 		Font font = Supplement.get_current_font ();
 		uint32 last = 0;
 		
-		warn_if_fail (glyf_table.size_of_last_glyf > 0);
-		
 		foreach (uint32 o in glyf_table.location_offsets) {
 			warn_if_fail (o % 2 == 0);
 		}
@@ -548,11 +552,9 @@ class LocaTable : Table {
 				last = o;
 			}
 			
-			// last index in locatable stores lengtjh of last glyf
-			fd.add_u16 ((uint16) glyf_table.size_of_last_glyf);
 		} else if (head_table.loca_offset_size == 1) {
 			foreach (uint32 o in glyf_table.location_offsets) {
-				fd.add_u32 (o / 2);
+				fd.add_u32 (o);
 				
 				print (@"o1: $(o)\n");
 				
@@ -563,7 +565,6 @@ class LocaTable : Table {
 				last = o;
 			}
 			
-			fd.add_u32 (glyf_table.size_of_last_glyf);
 		} else {
 			warn_if_reached ();
 		}
@@ -595,8 +596,6 @@ class GlyfTable : Table {
 	public LocaTable loca_table;
 	public List<uint32> location_offsets;
 	
-	public uint32 size_of_last_glyf = 0;
-	
 	public GlyfTable (LocaTable l) {
 		id = "glyf";
 		loca_table = l;
@@ -616,17 +615,31 @@ class GlyfTable : Table {
 		idle.attach (null);
 	}
 	
-	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table) {
+	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table) throws GLib.Error {
 		uint32 glyph_offset;
 		Glyph glyph = new Glyph ("");
 		double xmin, xmax;
-		
+		double units_per_em = head_table.get_units_per_em ();
+		unichar character = 0;
+		StringBuilder name = new StringBuilder ();		
+
 		print (@"loca.size: $(loca.size)\n");
-			
-		for (uint32 i = 0; i < loca.size; i++) {
-			unichar character = 0;
-			StringBuilder name = new StringBuilder ();
-				
+		
+		// notdef. character:
+		character = cmap.get_char (0);
+
+		if (character != 0) {
+			warning ("notdef. has a another value in cmap table");
+		}
+		
+		glyph = parse_next_glyf (dis, 0, 0, out xmin, out xmax, units_per_em);
+		glyph.left_limit = 0;
+		glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (0);
+		glyph.name = "notdef.";
+		glyph.set_unassigned (true);		
+		add_glyph (glyph);				
+		
+		for (uint32 i = 1; i < loca.size; i++) {
 			try {
 				character = cmap.get_char (i);
 				name = new StringBuilder ();
@@ -637,7 +650,7 @@ class GlyfTable : Table {
 				if (!loca.is_empty (i)) {	
 					glyph_offset = loca.get_offset(i);
 					
-					glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax, head_table.get_units_per_em ());
+					glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax, units_per_em);
 					
 					//glyph.left_limit = xmin - hmtx_table.get_lsb (i);
 					glyph.left_limit = 0;
@@ -1124,22 +1137,32 @@ class GlyfTable : Table {
 
 	public void process () {
 		FontData fd = new FontData ();
-		unichar indice;
+		uint32 indice;
 		Glyph? gl;
+		Glyph g;
 		Font font = Supplement.get_current_font ();
 		
-		// process_glyph (new Glyph (""), fd); // notdef. character
+		assert (font.has_glyph ("notdef."));
 		
+		// add notdef. character at index zero
+		gl = font.get_glyph ("notdef.");
+		process_glyph ((!)gl, fd);
+	
+		
+		// add glyphs
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
-			process_glyph ((!) gl, fd);
+			g = (!) gl;
+			
+			if (g.name == "notdef.") {
+				continue;
+			}
+			
+			process_glyph (g, fd);
 		}
 
-		if (location_offsets.length () > 0) {
-			this.size_of_last_glyf = fd.length () - ((!) location_offsets.last ()).data;
-		} else {
-			warning ("location_offsets.length () == 0");
-		}
-
+		// last entry in loca table
+		location_offsets.append (fd.length ());
+		
 		fd.pad ();
 						
 		font_data = fd;	
@@ -1374,7 +1397,10 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		
 		for (i = 0; (gl = font.get_glyph_indice (i)) != null; i++) {
 			g = (!) gl;
-			glyph_range.add_single (g.unichar_code);
+			
+			if (!g.is_unassigned ()) {
+				glyph_range.add_single (g.unichar_code);
+			}
 		}
 		
 		ranges = glyph_range.get_ranges ();
@@ -1413,7 +1439,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		fd.add_ushort (0); // Reserved
 		
 		// start codes
-		indice = 0;
+		indice = 1; // one since first glyph is notdef.
 		foreach (UniRange u in ranges) {
 			if (u.start >= 0xFFFF) {
 				warning ("Not implemented yet.");
@@ -1425,10 +1451,10 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		fd.add_ushort (0xFFFF); // Last segment
 
 		// delta
-		indice = 0;
+		indice = 1;
 		foreach (UniRange u in ranges) {
 			
-			if ((u.start - indice) > 0xFFFF) {
+			if ((u.start - indice) > 0xFFFF && u.start > indice) {
 				warning ("Need range offset.");
 			}
 			
@@ -1458,6 +1484,12 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		StringBuilder s;
 		
 		c = get_char (i);
+		if (c != 0) {
+			s = new StringBuilder ();
+			s.append_unichar (c);
+			warning ("nodef. is mapped to $(s.str)");
+		}
+		
 		i++;
 		
 		while (i < length) {

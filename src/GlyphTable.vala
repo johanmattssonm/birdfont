@@ -91,7 +91,6 @@ class GlyphTable : GLib.Object {
 		
 		if (g.get_name () == "") {
 			warning (@"No proper name for glyph collection. g.get_name (): \"$(g.get_name ())\"");
-			return false;
 		}
 
 		if (find (g.get_name ()) != null) {

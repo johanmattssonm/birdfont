@@ -26,7 +26,7 @@ class Font : GLib.Object {
 	
 	/** Glyphs that not are tied to a unichar value. */
 	GlyphTable unassigned_glyphs = new GlyphTable ();
-	
+
 	/** Last unassigned index */
 	int next_unindexed = 0;
 		
@@ -263,27 +263,81 @@ class Font : GLib.Object {
 		
 		return gr;
 	}
-	
-	public void add_glyph (Glyph glyph) 
-		requires (glyph.get_name () != "")
-	{
-		GlyphCollection? gc = glyph_cache.get (glyph.get_name ());
+
+	public void print_all () {
+		stdout.printf ("Assigned:\n");		
+		glyph_cache.for_each((g) => {
+			stdout.printf (@"$(g.get_name ())\n");
+		});
+
+		stdout.printf ("\n");
+		stdout.printf ("Unssigned:\n");		
+		unassigned_glyphs.for_each ((g) => {
+			stdout.printf (@"$(g.get_name ())\n");
+		});
+
+	}
+
+	public bool has_glyph (string n) {
+		return get_glyph (n) != null;
+	}
+
+	public void create_not_def () {
+		Glyph g;
+		Path p;
+		Path i;
+		
+		return_if_fail (!has_glyph ("notdef."));
+		
+		g = new Glyph ("notdef.", 0);
+		p = new Path ();
+		i = new Path ();
+		
+		g.set_unassigned (true);
+		g.left_limit = -120;
+		g.right_limit = 120;
+		
+		p.add (-100, 100);
+		p.add (100, 100);
+		p.add (100, -100);
+		p.add (-100, -100);
+		p.close ();
+		
+		i.add (-80, 80);
+		i.add (80, 80);
+		i.add (80, -80);
+		i.add (-80, -80);
+		i.reverse ();
+		i.close ();
+
+		g.add_path (i);
+		g.add_path (p);
+		
+		add_glyph (g);
+		
+		assert (has_glyph ("notdef."));
+	}
+		
+	public void add_glyph (Glyph glyph) {
+		GlyphCollection? gc = get_glyph_collection (glyph.get_name ());
 
 		if (gc == null) {
-			glyph_cache.insert (new GlyphCollection (glyph));
+			add_glyph_collection (new GlyphCollection (glyph));
 		}
 	}
 
-	public void add_glyph_collection (GlyphCollection glyph_collection) 
-		requires (glyph_collection.get_name () != "")
-	{
+	public void add_glyph_collection (GlyphCollection glyph_collection) {
 		GlyphCollection? gc = get_glyph_collection (glyph_collection.get_name ());
 		
 		if (gc != null) {
 			warning ("glyph has been inserted");
 		}
 		
-		glyph_cache.insert (glyph_collection);
+		if (glyph_collection.get_current ().is_unassigned ()) {
+			unassigned_glyphs.insert (glyph_collection);
+		} else {
+			glyph_cache.insert (glyph_collection);
+		}
 	}
 		
 	public void delete_glyph (string glyph) {
@@ -604,7 +658,9 @@ class Font : GLib.Object {
 		
 		if (g.is_unassigned ()) {
 			gc = new GlyphCollection (g);
-			g.name = @"($(++next_unindexed))";
+			if (g.name == "") {
+				g.name = @"($(++next_unindexed))";
+			}
 			unassigned_glyphs.insert ((!) gc);
 		} else if (gcl == null) {
 			

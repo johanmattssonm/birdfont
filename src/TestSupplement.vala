@@ -34,7 +34,7 @@ class TestCases {
 
 	public TestCases () {
 		add (test_glyph_table, "Glyph table");
-/*		add (test_active_edit_point, "Active edit point");
+		add (test_active_edit_point, "Active edit point");
 		add (test_hex, "Unicode hex values");
 		add (test_reverse_path, "Reverse path");
 		add (test_reverse_random_paths, "Reverse random paths");
@@ -43,7 +43,7 @@ class TestCases {
 		add (test_delete_points, "Delete edit points");
 		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
-*/	}
+	}
 
 	public static void test_glyph_table () {
 		GlyphTable table = new GlyphTable ();
