@@ -1145,22 +1145,22 @@ class Font : GLib.Object {
 		StringBuilder s = new StringBuilder ();
 		
 		uint8 a = (uint8)(ch & 0x00000F);
-		uint8 b = (uint8)(ch & 0x0000F0) >> 4 * 1;
-		uint8 c = (uint8)(ch & 0x000F00) >> 4 * 2;
-		uint8 d = (uint8)(ch & 0x00F000) >> 4 * 3;
-		uint8 e = (uint8)(ch & 0x0F0000) >> 4 * 4;
-		uint8 f = (uint8)(ch & 0xF00000) >> 4 * 5;
+		uint8 b = (uint8)((ch & 0x0000F0) >> 4 * 1);
+		uint8 c = (uint8)((ch & 0x000F00) >> 4 * 2);
+		uint8 d = (uint8)((ch & 0x00F000) >> 4 * 3);
+		uint8 e = (uint8)((ch & 0x0F0000) >> 4 * 4);
+		uint8 f = (uint8)((ch & 0xF00000) >> 4 * 5);
 		
-		if (e != 0) {
+		if (e != 0 || f != 0) {
 			s.append (oct_to_hex (f));
 			s.append (oct_to_hex (e));
 		}
 		
-		if (c != 0) {
+		if (c != 0 || d != 0) {
 			s.append (oct_to_hex (d));
 			s.append (oct_to_hex (c));
 		}
-		
+				
 		s.append (oct_to_hex (b));
 		s.append (oct_to_hex (a));
 		
@@ -1197,11 +1197,16 @@ class Font : GLib.Object {
 			case 14: return "e";
 			case 15: return "f";
 		}
+
+		return_val_if_fail (0 <= o <= 9, "-".dup ());
 		
 		return o.to_string ();
 	}
 
 	private static uint8 hex_to_oct (unichar o) {
+		StringBuilder s = new StringBuilder ();
+		s.append_unichar (o);
+	
 		switch (o) {
 			case 'a': return 10;
 			case 'b': return 11;

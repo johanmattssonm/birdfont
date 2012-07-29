@@ -146,6 +146,7 @@ class TestCases {
 		test_hex_conv ('H', "U+48", 72);
 		test_hex_conv ('1', "U+31", 49);
 		test_hex_conv ('å', "U+e5", 229);
+		test_hex_conv ('◊', "U+25ca", 9674);
 	}
 
 	private static void test_hex_conv (unichar h, string sr, int r) {
