@@ -20,16 +20,15 @@ namespace Supplement {
 class GlyphRange {
 	
 	List<UniRange> ranges;
-	List<unichar> index_start;
 
-	GlyphTable? unassigned = null;
+	GlyphTable unassigned = new GlyphTable ();
 	
-	unichar len = 0;
+	uint32 len = 0;
 	
 	public GlyphRange () {
 	}
 	
-	public void set_unassigned (GlyphTable? unassigned) {
+	public void set_unassigned (GlyphTable unassigned) {
 		this.unassigned = unassigned;
 	}
 	
@@ -98,11 +97,7 @@ class GlyphRange {
 	
 	public unichar get_length () {
 		unichar l = len;
-		
-		if (unassigned != null) {
-			l += ((!) unassigned).length ();
-		}
-		
+		l += unassigned.length ();
 		return l;
 	}
 	
@@ -177,41 +172,44 @@ class GlyphRange {
 		}
 	}
 
-	public string get_char (unichar index) {
-		int i = 0;
-		unichar next = 0;
-
-		foreach (unichar s in index_start) {
-			StringBuilder sbt = new StringBuilder ();
-			
-			if (!s.validate () && s >= index) {
-				sbt.append_unichar (s);
-				break;
-			} else if (s >= index) {
-				sbt.append_unichar (s);
-				break;
-			}
-			
-			next = s;
-			i++;
-		}
-
-		if (index == 0 || !(0 <= i < ranges.length ())) {
-			if (index > ranges.length ()) {
-				i = (int) (index - ranges.length ());
-				
-				if (unassigned == null || i >= ((!) unassigned).length ()) {
-					return "\0".dup();
-				}
-				
-				return ((!) ((!) unassigned).nth (i)).get_name ();
-			}
-		}
-
-		UniRange u = ranges.nth_data (i);
-		StringBuilder sb = new StringBuilder ();
-		unichar c = u.get_char (index - next - 1);
+	public string get_char (uint32 index) {
+		uint i = 0;
+		uint next = 0;
+		int64 ti;
+		string chr;
+		UniRange r;
+		StringBuilder sb;
+		unichar c;
 		
+		if (index > len + unassigned.length ()) { 
+			return "\0".dup();
+		}
+		
+		if (index >= len) {
+			
+			if (index - len >= unassigned.length ()) {
+				return "\0".dup();
+			} 
+			
+			chr = ((!) unassigned.nth (index - len)).get_name ();
+			return chr;
+		}
+
+		r = ranges.first ().data;
+
+		ti = (index < r.length ()) ? index - 1: index;
+
+		foreach (UniRange u in ranges) {
+			ti -= u.length ();
+			
+			if (ti < 0) {
+				r = u;
+				break;
+			}
+		}
+				
+		sb = new StringBuilder ();
+		c = r.get_char ((unichar) (ti + r.length ()));
 		sb.append_unichar (c);
 
 		return sb.str;
@@ -246,7 +244,6 @@ class GlyphRange {
 		
 		UniRange ur = new UniRange (start, stop);
 		len += ur.length ();
-		index_start.append (len);
 		ranges.append (ur);
 		
 		return ur;

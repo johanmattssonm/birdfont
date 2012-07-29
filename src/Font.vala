@@ -257,8 +257,6 @@ class Font : GLib.Object {
 			gr.add_single (((!) g).get_unichar ());
 		}
 		
-		gr.sort ();
-		
 		gr.set_unassigned (unassigned_glyphs);
 		
 		return gr;
@@ -653,23 +651,19 @@ class Font : GLib.Object {
 		gcl = get_glyph_collection (g.get_name ());
 		
 		if (gcl != null) {
-			warning ("glyph does already exist");
+			warning (@"glyph \"$(g.get_name ())\"does already exist");
 		}
 		
 		if (g.is_unassigned ()) {
 			gc = new GlyphCollection (g);
+			
 			if (g.name == "") {
 				g.name = @"($(++next_unindexed))";
 			}
+			
 			unassigned_glyphs.insert ((!) gc);
 		} else if (gcl == null) {
-			
-			print (@"g.name $(g.name)\n");
-			
 			gc = new GlyphCollection (g);
-			
-			print (@"gc.get_name () $(((!)gc).get_name ())\n");
-			
 			glyph_cache.insert ((!) gc);
 		} else {
 			stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");

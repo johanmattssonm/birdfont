@@ -38,7 +38,7 @@ class Glyph : FontDisplay {
 	int zoom_list_index = 0;
 	
 	// Paths
-	public List<Path> path_list;	// outline // FIXME: make private
+	public List<Path> path_list;	// outline // FIXME: private
 	public Path? active_path = null;
 	Path? union_path = null; 		// add this to active path
 	bool move_edit_point = false;

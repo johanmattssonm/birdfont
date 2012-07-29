@@ -643,7 +643,12 @@ class GlyfTable : Table {
 			try {
 				character = cmap.get_char (i);
 				name = new StringBuilder ();
-				name.append_unichar (character);
+				
+				if (character == '\0') {
+					name.append ("null");
+				} else {
+					name.append_unichar (character);
+				}
 				
 				print (@"name: $(name.str)\n");
 				
@@ -809,8 +814,8 @@ class GlyfTable : Table {
 		for (int i = 0; i < ncontours; i++) {
 			end_points[i] = dis.read_ushort (); // FIXA: mind shot vector is negative
 			
-			if (i > 0 && end_points[i] > end_points[i -1]) {
-				warning (@"Next endpoint has bad value. (end_points[i] > end_points[i -1])  ($(end_points[i]) > $(end_points[i -1]))");
+			if (i > 0 && end_points[i] < end_points[i -1]) {
+				warning (@"Next endpoint has bad value in $(name.str). (end_points[i] > end_points[i -1])  ($(end_points[i]) > $(end_points[i -1])) i: $i ncontours: $ncontours");
 			}
 		}
 		
@@ -912,6 +917,8 @@ class GlyfTable : Table {
 		}
 		
 		int j = 0;
+		int first_point;
+		int last_point = 0;
 		Glyph glyph;
 		double startx, starty;
 		double x, y, rx, ry, lx, ly, nx, ny;
@@ -929,13 +936,15 @@ class GlyfTable : Table {
 			EditPoint edit_point = new EditPoint ();
 			bool prev_is_curve = false;
 			
+			first_point = j;
+			last_point = end_points[i];
 			for (; j <= end_points[i]; j++) {
 
 				if (j >= npoints) {
 					warning (@"j >= npoints in glyph $(name.str). (j: $j, end_points[i]: $(end_points[i]), npoints: $npoints)");
 					break;
 				}
-				
+								
 				x = xcoordinates[j] * 1000.0 / units_per_em; // in proportion to em width
 				y = ycoordinates[j] * 1000.0 / units_per_em;
 				
@@ -973,17 +982,42 @@ class GlyfTable : Table {
 					edit_point.type = PointType.CURVE;
 					edit_point.get_right_handle ().set_point_type (PointType.CURVE);
 					edit_point.get_right_handle ().move_to_coordinate (x, y);
-										
+					
 					prev_is_curve = true;
 				} 
 			}
 			
-			path.close ();
-			
-			if (path.points.length () > 0 && path.points.last ().data.type == PointType.CURVE) {
-				path.points.first ().data.get_left_handle ().set_point_type (PointType.CURVE);
-				path.points.first ().data.get_left_handle ().length = 0;
+			// last to first point
+			if (prev_is_curve) {
+				x = xcoordinates[first_point] * 1000.0 / units_per_em; // in proportion to em width
+				y = ycoordinates[first_point] * 1000.0 / units_per_em;
+				
+				x = x - (x - edit_point.right_handle.x ()) / 2;
+				y = y - (y - edit_point.right_handle.y ()) / 2;
+				
+				edit_point = new EditPoint ();
+				edit_point.set_position (x, y);
+				path.add_point (edit_point);
+				
+				x = xcoordinates[first_point] * 1000.0 / units_per_em; // in proportion to em width
+				y = ycoordinates[first_point] * 1000.0 / units_per_em;
+
+				edit_point.get_left_handle ().set_point_type (PointType.CURVE);
+				edit_point.get_left_handle ().length = 0;
+					
+				edit_point.type = PointType.CURVE;
+				edit_point.get_right_handle ().set_point_type (PointType.CURVE);
+				edit_point.get_right_handle ().move_to_coordinate (x, y);
 			}
+			
+			// curve last to first
+			x = xcoordinates[first_point] * 1000.0 / units_per_em; // in proportion to em width
+			y = ycoordinates[first_point] * 1000.0 / units_per_em;
+			edit_point.type = PointType.CURVE;
+			edit_point.get_right_handle ().set_point_type (PointType.CURVE);
+			edit_point.get_right_handle ().move_to_coordinate (x, y);
+			
+			path.close ();
 			
 			glyph.add_path (path);
 		}
@@ -1062,10 +1096,10 @@ class GlyfTable : Table {
 		
 		g.boundries (out gxmin, out gymin, out gxmax, out gymax);
 		
-		xmin = (int16) gxmin;
-		ymin = (int16) gymin;
-		xmax = (int16) gxmax;
-		ymax = (int16) gymax;
+		xmin = (int16) (gxmin - g.left_limit);
+		ymin = (int16) (gymin + font.base_line);
+		xmax = (int16) (gxmax - g.left_limit);
+		ymax = (int16) (gymax + font.base_line);
 		
 		fd.add_16 (xmin);
 		fd.add_16 (ymin);
@@ -1324,7 +1358,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		uint32 id;
 		for (uint16 i = 0; i < seg_count && start_char[i] != 0xFFFF; i++) {
 			
-			print_range (start_char[i], end_char[i], id_delta[i], id_range_offset[i]);
+			// print_range (start_char[i], end_char[i], id_delta[i], id_range_offset[i]);
 			
 			uint16 j = 0;
 			do {
@@ -1332,7 +1366,6 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 				indice = start_char[i] + id_delta[i] + j;
 				
 				if (id_range_offset[i] == 0) {
-					print (@"table.insert ($indice, $((uint32) character));\n");
 					table.insert (indice, character);
 				} else {
 					// the awkward indexing trick:
@@ -1373,7 +1406,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		s.append_unichar (start_char);
 		e.append_unichar (end_char);
 		
-		print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
+		// print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
 	}
 	
 	public void process (FontData fd) {
@@ -1595,7 +1628,7 @@ class CmapTable : Table {
 		
 		foreach (CmapSubtable t in subtables) {
 			t.parse (dis);
-			t.print_cmap ();
+			// t.print_cmap ();
 		}
 
 	}
@@ -2277,9 +2310,9 @@ class DirectoryTable : Table {
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
 			tables.append (maxp_table);
-			tables.append (os_2_table);
-			tables.append (name_table);
-			tables.append (post_table);
+			//tables.append (os_2_table);
+			//tables.append (name_table);
+			//tables.append (post_table);
 		}
 
 		return tables;
