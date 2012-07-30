@@ -1448,7 +1448,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		ranges = glyph_range.get_ranges ();
 		seg_count = (uint16) ranges.length () + 1;
 		seg_count_2 =  seg_count * 2;
-		search_range = 2 * (2 << (uint16) (Math.log (seg_count) / Math.log (2)));
+		search_range = 2 * ((uint16) Math.pow (2, (Math.log (seg_count) / Math.log (2))));
 		entry_selector = (uint16) (Math.log (search_range / 2) / Math.log (2));
 		range_shift = seg_count_2 - search_range;
 		
@@ -1476,7 +1476,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			fd.add_ushort ((uint16) u.stop);
 			indice += u.length ();
 		}
-		fd.add_ushort (0xFFFF); // Last segment
+		fd.add_ushort (0xFFFF);
 		
 		fd.add_ushort (0); // Reserved
 		
@@ -1490,7 +1490,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			fd.add_ushort ((uint16) u.start);
 			indice += u.length ();
 		}
-		fd.add_ushort (0xFFFF); // Last segment
+		fd.add_ushort (0xFFFF);
 
 		// delta
 		indice = first_assigned;
@@ -1503,7 +1503,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			fd.add_ushort ((uint16) (indice - u.start));
 			indice += u.length ();
 		}
-		fd.add_ushort (0); // Last segment
+		fd.add_ushort (0);
 		
 		// range offset
 		foreach (UniRange u in ranges) {
@@ -2032,8 +2032,8 @@ class HmtxTable : Table {
 		foreach (Glyph g in glyf_table.glyphs) {
 			g.boundries (out xmin, out ymin, out xmax, out ymax);
 
-			lsb = (int16) (xmin - g.left_limit);
-			advance = (int16) (g.right_limit - g.left_limit);
+			lsb = (int16) (xmin - g.left_limit + 0.5);
+			advance = (int16) (g.right_limit - g.left_limit + 0.5);
 			extent = (int16) (lsb + (xmax - xmin));
 			rsb = (int16) (advance - extent);
 
@@ -2090,7 +2090,7 @@ class MaxpTable : Table {
 		
 		num_glyphs = dis.read_ushort ();
 		
-		if (format.equals (0, 5)) {
+		if (format == 0x00005000) {
 			return;
 		}
 		
@@ -2102,8 +2102,7 @@ class MaxpTable : Table {
 		uint16 max_points, max_contours;
 				
 		// Version 0.5 for fonts with cff data and 1.0 for ttf
-		fd.add_u16 (0);
-		fd.add_u16 (5);
+		fd.add_u32 (0x00005000);
 		
 		if (glyf_table.glyphs.length () == 0) {
 			warning ("Zero glyphs in maxp table.");
@@ -2359,8 +2358,8 @@ class DirectoryTable : Table {
 			tables.append (glyf_table);
 			tables.append (loca_table);
 			tables.append (cmap_table);  // The other required tables
-			tables.append (hmtx_table);
 			tables.append (hhea_table);
+			tables.append (hmtx_table);
 			tables.append (maxp_table);
 			//tables.append (os_2_table);
 			//tables.append (name_table);
@@ -2541,9 +2540,9 @@ class DirectoryTable : Table {
 		
 		if (this.font_data != null) {
 			table_offset += this.get_font_data ().length_with_padding ();
+		} else {
+			head_table.set_check_sum_adjustment (0); // Set this to zero, calculate the sum and update the value
 		}
-
-		head_table.set_check_sum_adjustment (0); // Set this to zero, calculate the sum and update the value
 
 		foreach (Table t in tables) {
 						
