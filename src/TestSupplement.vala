@@ -27,170 +27,6 @@ class Test : Object {
 	}
 }
 
-/** All the things we might want to test is here. */
-class TestCases {
-	
-	public List<Test> test_cases;
-
-	public TestCases () {
-		add (test_glyph_ranges, "Glyph ranges");
-		add (test_glyph_table, "Glyph table");
-		add (test_active_edit_point, "Active edit point");
-		add (test_hex, "Unicode hex values");
-		add (test_reverse_path, "Reverse path");
-		add (test_reverse_random_paths, "Reverse random paths");
-		add (test_coordinates, "Coordinates");
-		add (test_drawing, "Pen tool");
-		add (test_delete_points, "Delete edit points");
-		add (test_view_result, "View result in web browser");
-		add (test_save_backup, "Save backup");
-	}
-
-	public static void test_glyph_ranges () {
-		GlyphRange gr = new GlyphRange ();
-		
-		gr.add_range ('b', 'c');
-		gr.add_single ('d');
-		gr.add_range ('e', 'h');
-		gr.add_range ('k', 'm');
-		gr.add_range ('o', 'u');
-		gr.add_range ('a', 'd');
-		gr.add_range ('f', 'z');
-		gr.add_range ('b', 'd');
-			
-		return_if_fail (gr.length () == 'z' - 'a' + 1);
-		return_if_fail (gr.get_ranges ().length () == 1);
-		return_if_fail (gr.get_ranges ().first ().data.length () == 'z' - 'a' + 1);
-	}
-
-	public static void test_glyph_table () {
-		GlyphTable table = new GlyphTable ();
-		List<GlyphCollection> gc = new List<GlyphCollection> ();
-		List<unowned GlyphCollection> gc_copy;
-		GlyphCollection g;
-		
-		return_if_fail (table.length () == 0);
-		return_if_fail (table.get ("Some glyph") == null);
-		
-		// generate test data
-		for (uint i = 0; i < 1000; i++) {
-			gc.append (new GlyphCollection (new Glyph (@"TEST $i", i + 'a')));
-		}
-
-		// insert in random order
-		gc_copy = gc.copy ();
-		for (uint i = 0; gc_copy.length () > 0; i++) {
-			int t = (int) ((gc_copy.length () - 1) * Random.next_double ());
-			g = gc_copy.nth (t).data;
-			
-			if (!table.insert (g)) {
-				warning (@"Failed to insert $(g.get_name ())");
-				return;
-			}
-			
-			gc_copy.remove_all (g);
-			
-			if (!table.validate_index ()) {
-				table.print_all ();
-				warning ("index is invalid");
-				return;
-			}
-		}
-		
-		return_if_fail (table.length () == gc.length ());
-		
-		// validate table
-		for (uint i = 0; i > 1000; i++) {
-			g = (!) table.get (gc.nth (i).data.get_name ());
-			return_if_fail (gc.nth (i).data == g);
-		}
-		
-		// search 
-		for (int i = 0; i < 2000; i++) {
-			int t = (int) (999 * Random.next_double ());
-			if (table.get (@"TEST $t") == null) {
-				table.print_all ();
-				warning (@"Did't find TEST $t in glyph table.");
-				return;
-			}
-		}
-
-		// remove
-		table.remove ("TEST 0");
-		table.remove ("TEST 53");
-		return_if_fail (table.get ("TEST 0") == null);
-		return_if_fail (table.get ("TEST 53") == null);
-		
-		// search 
-		return_if_fail (table.get ("TEST 52") != null);
-		return_if_fail (table.get ("TEST 54") != null);
-	}
-
-	public static void test_delete_points () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_delete_points ();
-	}
-
-	public static void test_active_edit_point () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_active_edit_point ();
-	}
-	
-	public static void test_save_backup () {
-		// TODO draw various things and assert that they are restored correctly
-		Supplement.get_current_font ().save_backup ();
-		Supplement.get_current_font ().restore_backup ();
-	}
-
-	public static void test_hex () {
-		test_hex_conv ('H', "U+48", 72);
-		test_hex_conv ('1', "U+31", 49);
-		test_hex_conv ('å', "U+e5", 229);
-		test_hex_conv ('◊', "U+25ca", 9674);
-	}
-
-	private static void test_hex_conv (unichar h, string sr, int r) {
-		string s = Font.to_hex (h);
-		unichar t = Font.to_unichar (sr);
-		
-		if (s != sr) warning (@"($s != \"$sr\")");
-		if ((int)t != r || t != h) warning (@"$((int)t) != $r || $t != '$h'");
-	}
-
-	public static void test_coordinates () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_coordinates ();		
-	}
-
-	public static void test_view_result () {
-		ExportTool tool = (ExportTool) MainWindow.get_toolbox ().get_tool ("export");
-		tool.test_view_result ();
-	}
-
-	public static void test_reverse_random_paths () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_reverse_random_triangles ();		
-	}
-
-	public static void test_reverse_path () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_reverse_path ();
-	}
-
-	public static void test_drawing () {
-		Tool tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test ();
-	}
-		
-	private void add (Callback callback, string name) {
-		test_cases.append (new Test (callback, name));
-	}
-	
-	public unowned List<Test> get_test_functions () {
-		return test_cases;
-	}
-}
-
 /** Class for executing tests cases. */
 class TestSupplement : GLib.Object {
 
@@ -208,18 +44,23 @@ class TestSupplement : GLib.Object {
 
 	unowned List<Test> passed;
 	unowned List<Test> failed;
+	unowned List<Test> skipped;
 
 	static TestSupplement? singleton = null;
 
 	bool has_failed = false;
-	
+	bool has_skipped = false;
+		
 	static bool slow_test = false;
+	
+	string test_cases_to_run; // name of specific test case or all to run all test cases
 	
 	public TestSupplement () {
 		assert (singleton == null);
 		tests = new TestCases ();
 		test_cases = tests.get_test_functions ();
 		current_case = test_cases.first ();
+		test_cases_to_run = "All";
 		
 		from_command_line ();
 	}
@@ -245,7 +86,7 @@ class TestSupplement : GLib.Object {
 			if (t.name == s) return true;
 		}	
 		
-		if (s == "") {
+		if (s == "" || s == "All") {
 			print ("No speceific tescase given run all test cases.\n");
 			return true;
 		}
@@ -258,17 +99,18 @@ class TestSupplement : GLib.Object {
 		string? stn = Supplement.get_argument ("--test");
 	
 		if (stn != null) {
-			string st = (!)stn;
+			string st = (!) stn;
 			
 			if (!has_test_case (st)) {
-				stderr.printf (@"Test case $st does not exist.\n");
-				stderr.printf ("\nAvaliable cases:\n");
+				stderr.printf (@"Test case \"$st\" does not exist.\n");
+				stderr.printf ("\nAvaliable test cases:\n");
+				
 				foreach (var t in test_cases) {
 					stderr.printf (t.name);
 					stderr.printf ("\n");
 				}
 				
-				assert (false);
+				Process.exit(1);
 			}
 
 			if (st == "All" || st == "") {
@@ -277,6 +119,7 @@ class TestSupplement : GLib.Object {
 				stderr.printf  (@"Run only test case \"$st\" \n");
 			}
 			
+			test_cases_to_run = st;
 		}
 	}
 
@@ -326,6 +169,16 @@ class TestSupplement : GLib.Object {
 		stdout.printf ("\n");
 		stdout.printf ("Testcase results:\n");
 
+		foreach (var t in skipped) {
+			stdout.printf ("%s", t.name);
+			pad (40 - t.name.char_count());
+			stdout.printf ("Skipped\n");
+		}
+		
+		if (skipped.length () > 0) {
+			stdout.printf ("\n");
+		}
+		
 		foreach (var t in passed) {
 			stdout.printf ("%s", t.name);
 			pad (40 - t.name.char_count());
@@ -355,31 +208,42 @@ class TestSupplement : GLib.Object {
 			}
 
 			Test test = (!)((!) current_case).data;
-
+					
 			has_failed = false;
-			
-			test.callback ();
+			has_skipped = false;
 
+			if (test_cases_to_run != "All" && test_cases_to_run != test.name) {
+				has_skipped = true;
+			} else {
+				test.callback ();
+			}
+			
 			if (has_failed) {
-				failed.append ((!)test);
+				failed.append ((!) test);
 				
 				if (Supplement.has_argument ("--exit")) {
 					print_result ();
-					
-					bool test_case_will_not_fail = false;
-					assert (test_case_will_not_fail);
+					Process.exit (1);
 				}
 	
+			} else if (has_skipped) {
+				skipped.append ((!) test);
 			} else {
-				passed.append ((!)test);
+				passed.append ((!) test);
 			}
 
 			if (unlikely (current_case == test_cases.last ())) {
-				stderr.printf ("Finished running test suite.\n");			
+				stdout.printf ("Finished running test suite.\n");			
+				
 				AtomicInt.set (ref state, DONE);
 				Log.set_handler (null, LogLevelFlags.LEVEL_MASK, Log.default_handler);
 
 				print_result ();
+				
+				if (Supplement.has_argument ("--exit")) {
+					print_result ();
+					Process.exit ((failed.length () == 0) ? 0 : 1);
+				}
 				return false;
 			}
 			

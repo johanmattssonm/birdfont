@@ -95,7 +95,7 @@ class GlyphRange {
 		add_range (c, c);
 	}
 	
-	public unichar get_length () {
+	public uint32 get_length () {
 		unichar l = len;
 		l += unassigned.length ();
 		return l;
@@ -196,8 +196,7 @@ class GlyphRange {
 		}
 
 		r = ranges.first ().data;
-
-		ti = (index < r.length ()) ? index - 1: index;
+		ti = index;
 
 		foreach (UniRange u in ranges) {
 			ti -= u.length ();
@@ -215,7 +214,7 @@ class GlyphRange {
 		return sb.str;
 	}
 	
-	public unichar length () {
+	public uint32 length () {
 		return len;
 	}
 

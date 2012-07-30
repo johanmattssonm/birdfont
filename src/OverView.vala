@@ -27,9 +27,9 @@ class OverView : FontDisplay {
 	
 	int rows = 0;
 	int items_per_row = 0;
-	unichar first_character = 1;
-	unichar first_visible = 1;
-	unichar selected = 1;
+	unichar first_character = 0;
+	unichar first_visible = 0;
+	unichar selected = 0;
 	
 	double view_offset_y = 0;
 	double view_offset_x = 0;
@@ -226,10 +226,10 @@ class OverView : FontDisplay {
 		return visible_characters;
 	}
 	
-	public void draw_caption (int row, double width, Context cr, double y, unichar index_begin) {
+	public void draw_caption (int row, double width, Context cr, double y, uint64 index_begin) {
 		string character_string;
 		double left_margin, x, caption_y; // for glyph caption
-		unichar index = index_begin;
+		uint64 index = index_begin;
 		int i = row * items_per_row;
 		cr.save ();
 		cr.set_line_width (1);
@@ -252,11 +252,16 @@ class OverView : FontDisplay {
 			warning ("Max zoom level reached");
 					
 		while (x < width) {
-			if (index > glyph_range.get_length ()) {
+			if (! (0 <= index < glyph_range.get_length ())) {
 				break;
 			}
 			
-			character_string = glyph_range.get_char (index);
+			character_string = glyph_range.get_char ((uint32) index);
+			
+			if (character_string == "") {
+				warning ("Got null character as name for glyph.");
+				break;
+			}
 			
 			cr.save ();
 			draw_thumbnail (cr, character_string, x, y);
@@ -353,7 +358,7 @@ class OverView : FontDisplay {
 	public override void draw (Allocation allocation, Context cr) {
 		double width;
 		double y;
-		unichar t;
+		uint64 t;
 		int i;
 
 		while (visible_characters.length () > 9) {

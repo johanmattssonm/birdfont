@@ -280,40 +280,71 @@ class Font : GLib.Object {
 		return get_glyph (n) != null;
 	}
 
-	public void create_not_def () {
+	public Glyph get_nonmarking_return () {
+		Glyph ret;
+		
+		if (has_glyph ("nonmarkingreturn")) {
+			return (!) get_glyph ("nonmarkingreturn");
+		}
+				
+		ret = new Glyph ("nonmarkingreturn");
+		ret.set_unassigned (true);
+		ret.left_limit = 0;
+		ret.right_limit = 0;
+		
+		return ret;
+	}
+		
+	public Glyph get_null_character () {
+		Glyph n;
+		
+		if (has_glyph ("null")) {
+			return (!) get_glyph ("null");
+		}
+		
+		n = new Glyph ("null");
+		n.set_unassigned (true);
+		n.left_limit = 0;
+		n.right_limit = 0;
+		
+		return n;
+	}
+	
+	public Glyph get_not_def_character () {
 		Glyph g;
+
 		Path p;
 		Path i;
 		
-		return_if_fail (!has_glyph ("notdef."));
+		if (has_glyph ("notdef")) {
+			return (!) get_glyph ("notdef");
+		}
 		
-		g = new Glyph ("notdef.", 0);
+		g = new Glyph ("notdef", 0);
 		p = new Path ();
 		i = new Path ();
 		
 		g.set_unassigned (true);
-		g.left_limit = -120;
-		g.right_limit = 120;
+		g.left_limit = -33;
+		g.right_limit = 33;
 		
-		p.add (-100, 100);
-		p.add (100, 100);
-		p.add (100, -100);
-		p.add (-100, -100);
+		p.add (-30, 30);
+		p.add (30, 30);
+		p.add (30, -30);
+		p.add (-30, -30);
 		p.close ();
 		
-		i.add (-80, 80);
-		i.add (80, 80);
-		i.add (80, -80);
-		i.add (-80, -80);
+		i.add (-25, 25);
+		i.add (25, 25);
+		i.add (25, -25);
+		i.add (-25, -25);
 		i.reverse ();
 		i.close ();
 
 		g.add_path (i);
 		g.add_path (p);
-		
-		add_glyph (g);
-		
-		assert (has_glyph ("notdef."));
+
+		return g;
 	}
 		
 	public void add_glyph (Glyph glyph) {
@@ -326,6 +357,11 @@ class Font : GLib.Object {
 
 	public void add_glyph_collection (GlyphCollection glyph_collection) {
 		GlyphCollection? gc = get_glyph_collection (glyph_collection.get_name ());
+		
+		if (glyph_collection.get_name () == "") {
+			warning ("Refusing to insert glyph with name \"\", null character should be named null.");
+			return;
+		}
 		
 		if (gc != null) {
 			warning ("glyph has been inserted");
@@ -651,7 +687,7 @@ class Font : GLib.Object {
 		gcl = get_glyph_collection (g.get_name ());
 		
 		if (gcl != null) {
-			warning (@"glyph \"$(g.get_name ())\"does already exist");
+			warning (@"glyph \"$(g.get_name ())\" does already exist");
 		}
 		
 		if (g.is_unassigned ()) {
@@ -661,15 +697,15 @@ class Font : GLib.Object {
 				g.name = @"($(++next_unindexed))";
 			}
 			
-			unassigned_glyphs.insert ((!) gc);
+			add_glyph_collection ((!) gc);
 		} else if (gcl == null) {
 			gc = new GlyphCollection (g);
-			glyph_cache.insert ((!) gc);
+			add_glyph_collection ((!) gc);
 		} else {
 			stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
 			gc = new GlyphCollection (g);
 			g.name = @"($(++next_unindexed))";
-			unassigned_glyphs.insert ((!) gc);
+			add_glyph_collection ((!) gc);
 		}
 		
 		// take xheight from appropriate lower case letter
@@ -951,7 +987,7 @@ class Font : GLib.Object {
 				
 		if (gc == null) {
 			gc = new GlyphCollection (g);
-			glyph_cache.insert ((!) gc);
+			add_glyph_collection ((!) gc);
 		} else {
 			((!)gc).insert_glyph (g, selected);
 		}

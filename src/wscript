@@ -1,4 +1,5 @@
 SUPPLEMENT_MAIN = [
+	'Argument.vala',
 	'Font.vala',
 	'BackgroundTool.vala',
 	'BackgroundSelection.vala',
@@ -43,6 +44,7 @@ SUPPLEMENT_MAIN = [
 	'SvgFontFormatWriter.vala',
 	'Preferences.vala',
 	'TabBar.vala',
+	'TestCases.vala', 
 	'TestSupplement.vala', 
 	'Tool.vala',
 	'Toolbox.vala',

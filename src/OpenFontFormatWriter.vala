@@ -45,13 +45,7 @@ class OpenFontFormatWriter : Object  {
 		Glyph? g;
 		unowned List<Table> tables;
 		unichar indice = 0;
-		
-		if (!font.has_glyph ("notdef.")) {
-			font.create_not_def ();
-		}
-		
-		assert (font.has_glyph ("notdef."));
-		
+
 		directory_table.process ();	
 		tables = directory_table.get_tables ();
 
@@ -436,16 +430,6 @@ class LocaTable : Table {
 		if (glyph_offsets != null) delete glyph_offsets;
 	}
 	
-	public uint32 get_last_glyph_length () {
-		return_if_fail (glyph_offsets != null);
-		
-		if (size == 0) {
-			warning ("No glyphs in loca table");
-		}
-		
-		return glyph_offsets[size + 1];
-	}
-	
 	public uint32 get_offset (uint32 i) {
 		return_if_fail (glyph_offsets != null);
 		
@@ -470,10 +454,6 @@ class LocaTable : Table {
 				
 		if (!(0 <= i < size + 1)) {
 			warning (@"No offset for glyph $i. Requires (0 <= $i < $(size + 1)");
-		}
-		
-		if (i == size -1) {
-			return get_last_glyph_length () == 0;
 		}
 		
 		return glyph_offsets[i] == glyph_offsets[i + 1];
@@ -526,8 +506,6 @@ class LocaTable : Table {
 		for (int i = 0; i < size; i++) {
 			print (@"get_offset ($i): $(get_offset (i))\n");
 		}
-		
-		print (@"get_last_glyph_length (): $(get_last_glyph_length ())\n");
 	}
 	
 	public void process (GlyfTable glyf_table, HeadTable head_table) {
@@ -569,8 +547,9 @@ class LocaTable : Table {
 			warn_if_reached ();
 		}
 		
-		if (!(glyf_table.location_offsets.length () == font.length ())) {
-			warning (@"(glyf_table.location_offsets.length () == font.length ()) ($(glyf_table.location_offsets.length ()) == $(font.length ()))");
+		// err maybe not +1
+		if (!(glyf_table.location_offsets.length () == glyf_table.glyphs.length () + 1)) {
+			warning (@"(glyf_table.location_offsets.length () == glyf_table.glyphs.length () + 1) ($(glyf_table.location_offsets.length ()) == $(glyf_table.glyphs.length () + 1))");
 		}
 		
 		font_data = fd;		
@@ -594,12 +573,18 @@ class GlyfTable : Table {
 	public int16 ymax = 0;
 	
 	public LocaTable loca_table;
-	public List<uint32> location_offsets;
+	
+	public List<uint32> location_offsets; 
+
+	// list of glyphs sorted in the order we expect to find them in a
+	// ttf font. notdef is the firs glyph followed by null and nonmarkingreturn.	
+	public List<Glyph> glyphs;
 	
 	public GlyfTable (LocaTable l) {
 		id = "glyf";
 		loca_table = l;
 		location_offsets = new List<uint32> ();
+		glyphs = new List<Glyph> ();
 	}	
 	
 	/** Add this glyph from thread safe callback to the running gui. */
@@ -625,17 +610,17 @@ class GlyfTable : Table {
 
 		print (@"loca.size: $(loca.size)\n");
 		
-		// notdef. character:
+		// notdef character:
 		character = cmap.get_char (0);
 
 		if (character != 0) {
-			warning ("notdef. has a another value in cmap table");
+			warning ("notdef has a another value in cmap table");
 		}
 		
 		glyph = parse_next_glyf (dis, 0, 0, out xmin, out xmax, units_per_em);
 		glyph.left_limit = 0;
 		glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (0);
-		glyph.name = "notdef.";
+		glyph.name = "notdef";
 		glyph.set_unassigned (true);		
 		add_glyph (glyph);				
 		
@@ -657,9 +642,11 @@ class GlyfTable : Table {
 					
 					glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax, units_per_em);
 					
-					//glyph.left_limit = xmin - hmtx_table.get_lsb (i);
+					glyph.left_limit = xmin - hmtx_table.get_lsb (i);
 					glyph.left_limit = 0;
 					glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (i);
+					
+					print (@"$(glyph.right_limit) = $(glyph.left_limit) + $(hmtx_table.get_advance (i))\n");
 					
 					if (xmin > glyph.right_limit || xmax < glyph.left_limit) {
 						warning (@"Glyph $(name.str) is outside of it's box.");
@@ -1081,13 +1068,11 @@ class GlyfTable : Table {
 
 		Font font = Supplement.get_current_font ();
 		
-		// glyph need padding too, but to two byte boundries 
-		if (fd.length () % 2 != 0) {
-			fd.add (0);
+		g.remove_empty_paths ();
+		if (g.path_list.length () == 0) {
+			// ensure that location_offsets == location_offset + 1
+			return;
 		}
-		
-		// set values for loca table
-		location_offsets.append (fd.length ());
 		
 		g.remove_empty_paths ();
 		
@@ -1167,35 +1152,51 @@ class GlyfTable : Table {
 				prev = e.y + font.base_line;
 			}
 		}
+		
+		// glyph need padding too, but to two byte boundries 
+		if (fd.length () % 2 != 0) {
+			fd.add (0);
+		}
+	}
+
+	// necessary in order to have glyphs sorted according to ttf specification
+	public void create_glyph_table () {
+		Glyph? gl;
+		Glyph g;
+		Font font = Supplement.get_current_font ();
+		uint32 indice;
+
+		// add notdef. character at index zero + other special chars first
+		glyphs.append (font.get_not_def_character ());
+		// glyphs.append (font.get_null_character ());
+		// glyphs.append (font.get_nonmarking_return ());
+			
+		// add glyphs, first all assigned then the unassigned ones
+		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
+			g = (!) gl;
+			
+			if (g.name == "notdef" || g.name == "null"  || g.name == "nonmarkingreturn") {
+				continue;
+			}
+			
+			glyphs.append (g);
+		}	
+		
 	}
 
 	public void process () {
 		FontData fd = new FontData ();
-		uint32 indice;
-		Glyph? gl;
-		Glyph g;
-		Font font = Supplement.get_current_font ();
 		
-		assert (font.has_glyph ("notdef."));
+		create_glyph_table ();
 		
-		// add notdef. character at index zero
-		gl = font.get_glyph ("notdef.");
-		process_glyph ((!)gl, fd);
-	
-		
-		// add glyphs
-		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
-			g = (!) gl;
-			
-			if (g.name == "notdef.") {
-				continue;
-			}
+		foreach (Glyph g in glyphs) {
+			// set values for loca table
+			location_offsets.append (fd.length ());
 			
 			process_glyph (g, fd);
 		}
 
-		// last entry in loca table
-		location_offsets.append (fd.length ());
+		location_offsets.append (fd.length ()); // last entry in loca table is special
 		
 		fd.pad ();
 						
@@ -1409,14 +1410,12 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		// print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
 	}
 	
-	public void process (FontData fd) {
+	public void process (FontData fd, GlyfTable glyf_table) {
 		GlyphRange glyph_range = new GlyphRange ();
-		Font font = Supplement.get_current_font ();
 		unowned List<UniRange> ranges;
 			
 		unichar i = 0;
 		Glyph? gl;
-		Glyph g;
 		
 		uint16 seg_count_2;
 		uint16 seg_count;
@@ -1427,10 +1426,18 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		uint16 gid_length = 0;
 		
 		uint32 indice;
-		
-		for (i = 0; (gl = font.get_glyph_indice (i)) != null; i++) {
-			g = (!) gl;
-			
+		uint32 first_assigned = 0;
+
+		foreach (Glyph g in glyf_table.glyphs) {
+			if (!g.is_unassigned ()) {
+				first_assigned++;
+			} else {
+				break;
+			}
+		}
+		print (@"first_assigned $first_assigned\n");
+		first_assigned = 1;
+		foreach (Glyph g in glyf_table.glyphs) {
 			if (!g.is_unassigned ()) {
 				glyph_range.add_single (g.unichar_code);
 			}
@@ -1460,7 +1467,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		fd.add_ushort (range_shift);
 		
 		// end codes
-		indice = 0;
+		indice = first_assigned;
 		foreach (UniRange u in ranges) {
 			if (u.stop >= 0xFFFF) {
 				warning ("Not implemented yet.");
@@ -1474,7 +1481,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		fd.add_ushort (0); // Reserved
 		
 		// start codes
-		indice = 1; // one since first glyph is notdef.
+		indice = first_assigned; // since first glyph are notdef, null and nonmarkingreturn
 		foreach (UniRange u in ranges) {
 			if (u.start >= 0xFFFF) {
 				warning ("Not implemented yet.");
@@ -1486,7 +1493,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		fd.add_ushort (0xFFFF); // Last segment
 
 		// delta
-		indice = 1;
+		indice = first_assigned;
 		foreach (UniRange u in ranges) {
 			
 			if ((u.start - indice) > 0xFFFF && u.start > indice) {
@@ -1654,7 +1661,7 @@ class CmapTable : Table {
 		print (@"subtable_offset: $(subtable_offset)\n");
 		
 		fd.add_ulong (subtable_offset);
-		cmap.process (fd);
+		cmap.process (fd, glyf_table);
 
 		// padding
 		fd.pad ();
@@ -1846,10 +1853,12 @@ class HheaTable : Table {
 		
 	GlyfTable glyf_table;
 	HeadTable head_table;
+	HmtxTable hmtx_table;
 	
-	public HheaTable (GlyfTable g, HeadTable h) {
+	public HheaTable (GlyfTable g, HeadTable h, HmtxTable hm) {
 		glyf_table = g;
 		head_table = h;
+		hmtx_table = hm;
 		id = "hhea";
 	}
 	
@@ -1902,14 +1911,14 @@ class HheaTable : Table {
 		fd.add_16 ((int16) (-1 * (font.top_position - font.base_line))); // Ascender
 		fd.add_16 ((int16) (-1 * font.bottom_position)); // Descender
 		fd.add_16 (0); // LineGap
+				
+		fd.add_u16 (hmtx_table.max_advance); // maximum advance width value in 'hmtx' table.
 		
-		fd.add_u16 (0); // advanceWidthMax Maximum advance width value in 'hmtx' table.
+		fd.add_16 (hmtx_table.min_lsb); // min left side bearing
+		fd.add_16 (hmtx_table.min_rsb); // min right side bearing
+		fd.add_16 (hmtx_table.max_extent); // x max extent Max(lsb + (xMax - xMin))
 		
-		fd.add_16 (0); // minLeftSideBearing
-		fd.add_16 (0); // minRightSideBearing
-		fd.add_16 (0); // xMaxExtent Max(lsb + (xMax - xMin))
-		
-		fd.add_16 (0); // caretSlopeRise
+		fd.add_16 (1); // caretSlopeRise
 		fd.add_16 (0); // caretSlopeRun
 		fd.add_16 (0); // caretOffset
 		
@@ -1937,11 +1946,18 @@ class HmtxTable : Table {
 	uint16* advance_width = null;
 	uint16* left_side_bearing = null;
 	uint16* left_side_bearing_monospaced = null;
-		
-	HeadTable head_table;
 	
-	public HmtxTable (HeadTable h) {
+	public int16 max_advance = 0;
+	public int16 max_extent = 0;
+	public int16 min_lsb = 0; 
+	public int16 min_rsb = 0;
+			
+	HeadTable head_table;
+	GlyfTable glyf_table;
+	
+	public HmtxTable (HeadTable h, GlyfTable gt) {
 		head_table = h;
+		glyf_table = gt;
 		id = "hmtx";
 	}
 	
@@ -1951,16 +1967,16 @@ class HmtxTable : Table {
 	}
 
 	public double get_advance (uint32 i) {
-		return_if_fail (i < nmetrics);
-		return_if_fail (advance_width != null);
+		return_val_if_fail (i < nmetrics, 0.0);
+		return_val_if_fail (advance_width != null, 0.0);
 		
 		return advance_width[i] * 1000 / head_table.get_units_per_em ();
 	}
 		
 	/** Get left side bearing relative to xmin. */
 	public double get_lsb (uint32 i) {
-		return_if_fail (i < nmetrics);
-		return_if_fail (left_side_bearing != null);
+		return_val_if_fail (i < nmetrics, 0.0);
+		return_val_if_fail (left_side_bearing != null, 0.0);
 		
 		return left_side_bearing[i] * 1000 / head_table.get_units_per_em ();
 	}
@@ -1989,6 +2005,8 @@ class HmtxTable : Table {
 		for (int i = 0; i < nmetrics; i++) {
 			advance_width[i] = dis.read_ushort ();
 			left_side_bearing[i] = dis.read_short ();
+			
+			print (@"advance_width[i] $(advance_width[i])    $(left_side_bearing[i]) \n");
 		}
 		
 		for (int i = 0; i < nmonospaced; i++) {
@@ -1999,18 +2017,53 @@ class HmtxTable : Table {
 	public void process () {
 		FontData fd = new FontData ();
 		Font font = Supplement.get_current_font ();
-		Glyph g;
+
+		int16 advance;
+		int16 extent;
+		int16 rsb;
+		int16 lsb;
+		
+		double xmin;
+		double ymin;
+		double xmax;
+		double ymax;
 		
 		// advance and lsb
-		for (uint i = 0; i < font.length (); i++) {
-			g = (!) font.get_glyph_indice (i);
-			fd.add_u16 ((uint16) (g.right_limit - g.left_limit));
-			fd.add_16 (0);
+		foreach (Glyph g in glyf_table.glyphs) {
+			g.boundries (out xmin, out ymin, out xmax, out ymax);
+
+			lsb = (int16) (xmin - g.left_limit);
+			advance = (int16) (g.right_limit - g.left_limit);
+			extent = (int16) (lsb + (xmax - xmin));
+			rsb = (int16) (advance - extent);
+
+			print (@"$(g.name) advance: $advance  = $((int16) (g.right_limit))  -  $((int16) (g.left_limit))\n");
+						
+			fd.add_u16 (advance);
+			fd.add_16 (lsb);
+	
+			if (advance > max_advance) {
+				max_advance = advance;
+			}
+			
+			if (extent > max_extent) {
+				max_extent = extent;
+			}
+			
+			if (rsb < min_rsb) {
+				min_rsb = rsb;
+			}
+
+			if (lsb < min_lsb) {
+				min_lsb = lsb;
+			}
 		}
 		
 		// monospaced lsb ...
 		
 		font_data = fd;
+		
+		warn_if_fail (max_advance != 0);
 	}
 }
 
@@ -2046,18 +2099,17 @@ class MaxpTable : Table {
 	
 	public void process () {
 		FontData fd = new FontData();
-		Font font = Supplement.get_current_font ();
 		uint16 max_points, max_contours;
 				
 		// Version 0.5 for fonts with cff data and 1.0 for ttf
 		fd.add_u16 (0);
 		fd.add_u16 (5);
 		
-		if (font.length () == 0) {
+		if (glyf_table.glyphs.length () == 0) {
 			warning ("Zero glyphs in maxp table.");
 		}
 		
-		fd.add_u16 ((uint16) font.length ()); // numGlyphs in the font
+		fd.add_u16 ((uint16) glyf_table.glyphs.length ()); // numGlyphs in the font
 
 		fd.pad ();
 		
@@ -2271,8 +2323,8 @@ class DirectoryTable : Table {
 		glyf_table = new GlyfTable (loca_table);
 		cmap_table = new CmapTable (glyf_table);
 		head_table = new HeadTable (glyf_table);
-		hhea_table = new HheaTable (glyf_table, head_table);
-		hmtx_table = new HmtxTable (head_table);
+		hmtx_table = new HmtxTable (head_table, glyf_table);
+		hhea_table = new HheaTable (glyf_table, head_table, hmtx_table);
 		maxp_table = new MaxpTable (glyf_table);
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (); 
@@ -2283,11 +2335,11 @@ class DirectoryTable : Table {
 
 	public void process () {
 		// generate font data
-		head_table.process ();
 		glyf_table.process ();
+		head_table.process ();
 		cmap_table.process (glyf_table);
-		hhea_table.process ();
 		hmtx_table.process ();
+		hhea_table.process ();
 		maxp_table.process ();
 		name_table.process ();
 		os_2_table.process ();
@@ -2307,8 +2359,8 @@ class DirectoryTable : Table {
 			tables.append (glyf_table);
 			tables.append (loca_table);
 			tables.append (cmap_table);  // The other required tables
-			tables.append (hhea_table);
 			tables.append (hmtx_table);
+			tables.append (hhea_table);
 			tables.append (maxp_table);
 			//tables.append (os_2_table);
 			//tables.append (name_table);
@@ -2486,18 +2538,21 @@ class DirectoryTable : Table {
 		table_offset = 0;
 		
 		table_offset += offset_table.get_font_data ().length_with_padding ();
-		table_offset += this.get_font_data ().length_with_padding ();
+		
+		if (this.font_data != null) {
+			table_offset += this.get_font_data ().length_with_padding ();
+		}
 
 		head_table.set_check_sum_adjustment (0); // Set this to zero, calculate the sum and update the value
 
 		foreach (Table t in tables) {
-			
-			print (@"c $(t.id)  offset: $(table_offset)  len with pad  $( t.get_font_data ().length_with_padding ())\n");
-			
+						
 			if (t is DirectoryTable || t is OffsetTable) {
 				continue;
 			}
 			
+			print (@"c $(t.id)  offset: $(table_offset)  len with pad  $(t.get_font_data ().length_with_padding ())\n");
+
 			table_length = t.get_font_data ().length (); // without padding
 			
 			fd.add_tag (t.get_id ()); // name of table

@@ -23,7 +23,7 @@ class Supplement {
 
 	static Font current_font;
 
-	static string[]? args = null;
+	public static Argument args;
 	
 	public static Font get_current_font () {
 		return current_font;
@@ -54,142 +54,30 @@ class Supplement {
 			
 		return backup;
 	}
-	
+
 	public static bool has_argument (string param) {
-		return (get_argument (param) != null);
+		return args.has_argument (param);
 	}
 	
-	/** Get commandline argument. */
-	public static string? get_argument (string param) 
-		requires (args != null)
-	{
-		var a = (!) args;
-		int i = 0;
-		string? n;
-				
-		foreach (string s in a) {
-			string p;
-
-			if (s.substring (0, 1) != "-") continue;
-
-			if (s.substring (0, 2) != "--") {
-				p = expand_param (s);
-			} else {				
-				p = s;
-			}
+	public static string? get_argument (string param) {
+		return args.get_argument (param);
+	}
 			
-			if (param == p) {
-				if (i + 2 >= a.length) {
-					return "";
-				}
-				
-				n = a[i + 2];
-				if (n == null || ((!)n).length == 0) {
-					return "";
-				}
-				
-				if (a[i + 2].substring (0, 1) == "-") {
-					return "";
-				}
-				
-				return a[i + 2];
-			}
-			
-			i++;
+	public static void main(string[] arg) {
+		int err_arg;
+		
+		args = new Argument.command_line (arg);
+		
+		if (args.has_argument ("--help")) {
+			args.print_help ();
+			Process.exit (0);
 		}
-		
-		return null;
-	}
 
-	private static void print_padded (string cmd, string desc) {
-		int l = 25 - cmd.char_count ();
-
-		stdout.printf (cmd);
-		
-		for (int i = 0; i < l; i++) {
-				stdout.printf (" ");
-		}
-		
-		stdout.printf (desc);
-		stdout.printf ("\n");
-	}
-
-	/** Return full command line parameter for an abbrevation.
-	 * -t becomes --test.
-	 */
-	private static string expand_param (string? param) {
-		if (param == null) return "";
-		var p = (!) param;
-		
-		if (p.length == 0) return "";
-		if (p.get_char (0) != '-') return "";
-		if (p.char_count () != 2) return "";
-		
-		switch (p.get_char (1)) {
-			case 'a': 
-				return "--autosave";
-			case 'e': 
-				return "--exit";
-			case 's': 
-				return "--slow";
-			case 'h': 
-				return "--help";
-			case 't': 
-				return "--test";
-		}
-		
-		return "";
-	}
-
-	// FIXME: It seems broken:
-	public static string[] split_compound_parameters (string[] a) {
-		int ti = 0;
-		string[] na = new string [a.length];
-		
-		foreach (string s in a) {
-			if (s.substring (0, 2) != "--" && s.length > 2) {
-				unichar c;
-				int t = 1;
-				
-				while (s.get_next_char (ref t, out c)) {
-					if (c != ' ' && c != '-') {
-						StringBuilder b = new StringBuilder ();
-						b.append_unichar (c);
-						na += @"-$(b.str)";
-					}
-				}
-			}
-			
-			na[ti] = a[ti];
-			ti++;
-		}
-		
-		return na;
-	}
-
-	public static void print_help (string[] args) 
-		requires (args.length > 0)
-	{
-		
-		stdout.printf ("Usage: ");
-		stdout.printf (args[0]);
-		stdout.printf (" [OPTION ...]\n");
-
-		print_padded ("-e, --exit", "exit if a testcase failes");
-		print_padded ("-h, --help", "show this message");
-		print_padded ("-s, --slow", "sleep between each command in test suite");
-		print_padded ("-t, --test[=TEST]", "run test case");
-		
-		stdout.printf ("\n");
-	}
-
-	public static void main(string[] args) {		
-		Supplement.args = split_compound_parameters (args);
-		Supplement.args = args;
-		
-		if (has_argument ("--help")) {
-			print_help (args);
-			Process.exit(0);
+		err_arg = args.validate ();
+		if (err_arg != 0) {
+			stdout.printf (@"Unknown parameter $(arg [err_arg])\n\n");
+			args.print_help ();
+			Process.exit (0);
 		}
 
 		Preferences preferences = new Preferences ();
@@ -197,7 +85,7 @@ class Supplement {
        
 		current_font = new Font ();
 		
-		Gtk.init (ref args);
+		Gtk.init (ref arg);
 		var window = new MainWindow ("Supplement");
 		window.show_all ();
 
@@ -205,7 +93,7 @@ class Supplement {
 		idle.set_callback(() => {
 			preferences.load ();
 			return false;
-    });
+		});
 		
 		idle.attach (null);
 		
