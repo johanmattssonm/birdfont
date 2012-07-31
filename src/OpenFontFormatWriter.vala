@@ -95,12 +95,12 @@ class OtfInputStream : Object  {
 	}
 	
 	public Fixed read_fixed () throws Error {
-		Fixed f = din.read_uint32 ();
+		Fixed f = (Fixed) din.read_uint32 ();
 		return f;
 	}
 
 	public F2Dot14 read_f2dot14 () throws Error {
-		F2Dot14 f = din.read_int16 ();
+		F2Dot14 f = (F2Dot14) din.read_int16 ();
 		return f;
 	}
 
@@ -214,7 +214,7 @@ class FontData : Object {
 	}
 	
 	public Fixed read_fixed () {
-		return read_uint32 ();
+		return (Fixed) read_uint32 ();
 	}
 
 	public uint32 read_uint32 () {
@@ -2132,7 +2132,7 @@ class OffsetTable : Table {
 	public void parse (OtfInputStream dis) throws Error {
 		Fixed version;
 		
-		version = dis.read_ulong ();
+		version = dis.read_fixed ();
 		num_tables = dis.read_ushort ();
 		search_range = dis.read_ushort ();
 		entry_selector = dis.read_ushort ();
