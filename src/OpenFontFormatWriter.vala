@@ -747,9 +747,7 @@ class GlyfTable : Table {
 	
 	Glyph parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset,
 		out double xmin, out double xmax, double units_per_em) throws Error {
-		
-		print (@"PARSE NEXT GLYF\n");
-		
+
 		uint16* end_points = null;
 		uint8* instructions = null;
 		uint8* flags = null;
@@ -1051,11 +1049,6 @@ class GlyfTable : Table {
 	}
 
 	public void process_glyph (Glyph g, FontData fd) {
-		int16 xmin;
-		int16 ymin;
-		int16 xmax;
-		int16 ymax;
-
 		double gxmin, gymin, gxmax, gymax;
 
 		int16 end_point;
@@ -1081,6 +1074,7 @@ class GlyfTable : Table {
 		
 		g.boundries (out gxmin, out gymin, out gxmax, out gymax);
 		
+		// remove:
 		xmin = (int16) (gxmin - g.left_limit);
 		ymin = (int16) (gymin + font.base_line);
 		xmax = (int16) (gxmax - g.left_limit);
@@ -1153,8 +1147,8 @@ class GlyfTable : Table {
 			}
 		}
 		
-		// glyph need padding too, but to two byte boundries 
-		if (fd.length () % 2 != 0) {
+		// glyph need padding too for loca table to be correct
+		if (fd.length () % 4 != 0) {
 			fd.add (0);
 		}
 	}
@@ -1503,7 +1497,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			fd.add_ushort ((uint16) (indice - u.start));
 			indice += u.length ();
 		}
-		fd.add_ushort (0);
+		fd.add_ushort (0xFFFF);
 		
 		// range offset
 		foreach (UniRange u in ranges) {
@@ -1513,6 +1507,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 				warning ("Not implemented yet.");
 			}
 		}
+		fd.add_ushort (0);
 		
 		// Fixa: implement rest of type 4 (mind gid_length in length field)
 	}
@@ -1930,7 +1925,7 @@ class HheaTable : Table {
 		
 		fd.add_16 (0); // metricDataFormat 0 for current format.
 		
-		fd.add_u16 ((uint16) font.length()); // numberOfHMetrics Number of hMetric entries in 'hmtx' table
+		fd.add_u16 ((uint16) glyf_table.glyphs.length()); // numberOfHMetrics Number of hMetric entries in 'hmtx' table
 
 		// padding
 		fd.pad ();
@@ -2034,7 +2029,7 @@ class HmtxTable : Table {
 
 			lsb = (int16) (xmin - g.left_limit + 0.5);
 			advance = (int16) (g.right_limit - g.left_limit + 0.5);
-			extent = (int16) (lsb + (xmax - xmin));
+			extent = (int16) (lsb + (xmax - xmin) + 0.5);
 			rsb = (int16) (advance - extent);
 
 			print (@"$(g.name) advance: $advance  = $((int16) (g.right_limit))  -  $((int16) (g.left_limit))\n");
@@ -2355,11 +2350,11 @@ class DirectoryTable : Table {
 			tables.append (this);
 
 			tables.append (head_table);
-			tables.append (glyf_table);
-			tables.append (loca_table);
 			tables.append (cmap_table);  // The other required tables
+			tables.append (glyf_table);
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
+			tables.append (loca_table);
 			tables.append (maxp_table);
 			//tables.append (os_2_table);
 			//tables.append (name_table);
@@ -2540,10 +2535,22 @@ class DirectoryTable : Table {
 		
 		if (this.font_data != null) {
 			table_offset += this.get_font_data ().length_with_padding ();
-		} else {
-			head_table.set_check_sum_adjustment (0); // Set this to zero, calculate the sum and update the value
 		}
+	
+		// Check sum adjustment for the entire font
+		foreach (Table t in tables) {
+			if (t is DirectoryTable) {
+				fd.continous_check_sum (ref check_sum);
+				continue;
+			}
+			
+			t.get_font_data ().continous_check_sum (ref check_sum);
+		}
+	
+		head_table.set_check_sum_adjustment ((uint32)(0xB1B0AFBA - check_sum));
+		head_table.process (); // update the value		head_table.set_check_sum_adjustment (0); // Set this to zero, calculate the sum and update the value
 
+		// write the directory 
 		foreach (Table t in tables) {
 						
 			if (t is DirectoryTable || t is OffsetTable) {
@@ -2564,19 +2571,6 @@ class DirectoryTable : Table {
 
 		// padding
 		fd.pad ();
-		
-		// Check sum adjustment for the entire font		
-		foreach (Table t in tables) {
-			if (t is DirectoryTable) {
-				fd.continous_check_sum (ref check_sum);
-				continue;
-			}
-			
-			t.get_font_data ().continous_check_sum (ref check_sum);
-		}
-	
-		head_table.set_check_sum_adjustment ((uint32)(0xB1B0AFBA - check_sum));
-		head_table.process (); // update the value
 						
 		this.font_data = fd;
 	}
