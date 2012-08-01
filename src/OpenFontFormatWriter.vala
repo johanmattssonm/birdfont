@@ -39,13 +39,15 @@ class OpenFontFormatWriter : Object  {
 	public void write_ttf_font (Font font) throws Error {
 		print (@"Calculate size\n");
 		long dl;
-		uint8[] data;
+		uint8* data;
 		uint i = 0;
 		long written = 0;
 		Glyph? g;
 		unowned List<Table> tables;
 		unichar indice = 0;
-
+		FontData fd;
+		uint l;
+			
 		directory_table.process ();	
 		tables = directory_table.get_tables ();
 
@@ -56,6 +58,17 @@ class OpenFontFormatWriter : Object  {
 			return;
 		}
 		
+		foreach (Table t in tables) {
+			fd = t.get_font_data ();
+			data = fd.table_data;
+			l = fd.length_with_padding ();
+			
+			for (int j = 0; j < l; j++) {
+				os.put_byte (data[j]);
+			}
+		}
+		
+		/*
 		data = new uint8[dl];
 
 		foreach (Table t in tables) {
@@ -68,8 +81,8 @@ class OpenFontFormatWriter : Object  {
 		while (written < data.length) {
 			written += os.write (data[written:data.length]);
 		}
-		
-		directory_table.cmap_table.get_font_data ().print ();
+		*/
+		// directory_table.cmap_table.get_font_data ().print ();
 	}
 	
 	public void close () throws Error {
@@ -123,60 +136,89 @@ class OtfInputStream : Object  {
 	public uint8 read_byte () throws Error {
 		return din.read_byte ();
 	}
+
+	public char read_char () throws Error {
+		return (char) din.read_byte ();
+	}
 }
 
 class FontData : Object {
 
 	// Read pointer
 	int rp = 0;
+
+	// Write pointer
+	int wp = 0;
 	
 	// length without pad
 	uint32 len = 0;
-		
-	public List<uint8> data = new List<uint8> ();
-
-	public FontData () {
+	uint32 padding = 0;
+	
+	uint32 capacity;
+	
+	public uint8* table_data = null;
+	
+	public FontData (uint32 size = 1024) {
+		capacity = size;
+		table_data = malloc (size);
 	}
 	
-	public void write_table (OtfInputStream dis, uint32 offset, uint32 len) {
-		uint32 l = len + len % 4;  // padding after end of table
-		
-		dis.seek (offset);
-	
-		for (uint32 i = 0; i < l; i++) {
-			add (dis.read_byte ());
-		}	
+	~FontData () {
+		if (table_data != null) {
+			delete table_data;
+			table_data = null;
+		}
 	}
 	
-	public void print () {
-		unowned List<unowned uint8>? u = data;
+	public void write_at (uint pos, uint8 new_data) 
+		requires (pos <= capacity) 
+	{
+		if (unlikely (pos >= len)) {
+			warning ("end of table reached");
+		}
 		
-		stdout.printf (@"Table data:\n");
+		table_data[pos]= new_data;
+	}
+	
+	public void write_table (OtfInputStream dis, uint32 offset, uint32 length) throws Error {
+		uint32 l = length + (length % 4);  // padding after end of table
+		uint8 b;
 		
-		if (u == null) {
-			stdout.printf (@"null\n");
+		if (length >= l) {
+			expand (l);
+		}
+		
+		if (table_data == null) {
+			warning ("Failed to allocate memory for ttf data.");
 			return;
 		}
 		
-		foreach (uint8 d in data) {
-			stdout.printf (@"$(d) ");
+		dis.seek (offset);
+	
+		for (wp = 0; wp < l; wp++) {
+			b = dis.read_byte ();
+			add (b);
 		}
 		
-		stdout.printf ("\n");
+		rp = 0;
+	}
+	
+	public void print () {
 	}
 	
 	public uint length_with_padding () {
-		return data.length ();
+		return len;
 	}	
 	
 	public uint length () {
-		return len;
+		return len - padding;
 	}
 	
 	public void pad () {
-		while (data.length () % 4 != 0) {
-			data.append (0);
-		}	
+		while (len % 4 != 0) {
+			add (0);
+			padding++;
+		}
 	}
 	
 	/** Add additional checksum data to this checksum. */
@@ -210,7 +252,12 @@ class FontData : Object {
 	}
 	
 	public uint8 read () {
-		return data.nth (rp++).data;
+		if (unlikely (rp >= len)) {
+			warning ("end of table reached");
+			return 0;
+		}
+		
+		return table_data [rp++];
 	}
 	
 	public Fixed read_fixed () {
@@ -234,6 +281,10 @@ class FontData : Object {
 		add_u32 (f);
 	}
 
+	public void add_fword (int16 word) {
+		add_16 (word);
+	}
+
 	public void add_f2dot14 (F2Dot14 f) throws Error {
 		add_u32 (f);
 	}
@@ -254,8 +305,24 @@ class FontData : Object {
 		add (b);
 	}
 	
+	private void expand (uint extra_bytes = 1024) {
+		capacity += extra_bytes;
+		table_data = (uint8*) try_realloc (table_data, capacity);
+		
+		if (table_data == null) {
+			warning ("Out of memory.");
+			capacity = 0;
+		}		
+	}
+	
 	public void add (uint8 d) {
-		data.append (d);
+		if (unlikely (len == capacity)) {
+			expand ();
+		}
+		
+		table_data[wp] = d;
+		
+		wp++;
 		len++;
 	}
 	
@@ -300,13 +367,16 @@ class FontData : Object {
 		add_u32 ((int32)(i - (s << 32)));		
 	}
 	
-	public void add_tag (string s) 
-		requires (s.length == 4 && s.data.length == 4) {
-		
+	public void add_str (string s) {
 		uint8[] data = s.data;
 		for (int n = 0; n < data.length; n++) { 
 			add (data[n]);
 		}		
+	}
+	
+	public void add_tag (string s) 
+		requires (s.length == 4 && s.data.length == 4) {
+		add_str (s);
 	}
 }
 
@@ -577,7 +647,9 @@ class GlyfTable : Table {
 	public List<uint32> location_offsets; 
 
 	// list of glyphs sorted in the order we expect to find them in a
-	// ttf font. notdef is the firs glyph followed by null and nonmarkingreturn.	
+	// ttf font. notdef is the firs glyph followed by null and nonmarkingreturn.
+	// after that will all assigned glyphs appear in sorted order, all 
+	// remaining unassigned glyphs live in the last part.	
 	public List<Glyph> glyphs;
 	
 	public GlyfTable (LocaTable l) {
@@ -600,15 +672,17 @@ class GlyfTable : Table {
 		idle.attach (null);
 	}
 	
-	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table) throws GLib.Error {
+	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
 		uint32 glyph_offset;
 		Glyph glyph = new Glyph ("");
 		double xmin, xmax;
 		double units_per_em = head_table.get_units_per_em ();
 		unichar character = 0;
-		StringBuilder name = new StringBuilder ();		
+		string name;	
 
 		print (@"loca.size: $(loca.size)\n");
+		
+		post_table.print_all ();
 		
 		// notdef character:
 		character = cmap.get_char (0);
@@ -620,22 +694,26 @@ class GlyfTable : Table {
 		glyph = parse_next_glyf (dis, 0, 0, out xmin, out xmax, units_per_em);
 		glyph.left_limit = 0;
 		glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (0);
-		glyph.name = "notdef";
+		glyph.name = post_table.get_name (0);
 		glyph.set_unassigned (true);		
 		add_glyph (glyph);				
 		
-		for (uint32 i = 1; i < loca.size; i++) {
+		if (glyph.name != ".notdef") {
+			warning ("First glyph must be .notdef");
+		}
+		
+		for (int i = 1; i < loca.size; i++) {
 			try {
 				character = cmap.get_char (i);
-				name = new StringBuilder ();
+				name = post_table.get_name (i);
 				
-				if (character == '\0') {
-					name.append ("null");
-				} else {
-					name.append_unichar (character);
+				if (name == "") {
+					StringBuilder name_c = new StringBuilder ();
+					name_c.append_unichar (character);
+					name = name_c.str;
 				}
 				
-				print (@"name: $(name.str)\n");
+				print (@"name: $(name)\n");
 				
 				if (!loca.is_empty (i)) {	
 					glyph_offset = loca.get_offset(i);
@@ -649,14 +727,14 @@ class GlyfTable : Table {
 					print (@"$(glyph.right_limit) = $(glyph.left_limit) + $(hmtx_table.get_advance (i))\n");
 					
 					if (xmin > glyph.right_limit || xmax < glyph.left_limit) {
-						warning (@"Glyph $(name.str) is outside of it's box.");
+						warning (@"Glyph $(name) is outside of it's box.");
 						glyph.left_limit = xmin;
 						glyph.right_limit = xmax;
 					}
 					
 				} else {
 					// add empty glyph
-					glyph = new Glyph (name.str, character);
+					glyph = new Glyph (name, character);
 					glyph.left_limit = -hmtx_table.get_lsb (i);
 					glyph.right_limit = hmtx_table.get_advance (i) - hmtx_table.get_lsb (i);				
 				}
@@ -665,13 +743,15 @@ class GlyfTable : Table {
 					glyph.set_unassigned (true);
 				}
 				
+				glyph.name = name;
+				
 				add_glyph (glyph);
 				
 			} catch (Error e) {
 				stderr.printf (@"Cmap length $(cmap.get_length ()) glyfs\n");
 				stderr.printf (@"Loca size: $(loca.size)\n");
 				stderr.printf (@"Loca offset at $i: $glyph_offset\n");
-				stderr.printf (@"Glyph name: $(name.str)\n");
+				stderr.printf (@"Glyph name: $(name)\n");
 				stderr.printf (@"Unicode character: $((uint64)character)\n");
 				stderr.printf (@"\n");
 				stderr.printf (@"Falied to parse glyf: $(e.message)\n");
@@ -1672,7 +1752,7 @@ class HeadTable : Table {
 	int16 xmax = 0;
 	int16 ymax = 0;
 	
-	uint32 check_sum_adjustment = 0;
+	uint32 adjusted_checksum = 0;
 
 	uint16 mac_style;
 	uint16 lowest_PPEM;
@@ -1684,7 +1764,6 @@ class HeadTable : Table {
 	Fixed version;
 	Fixed font_revision;
 	
-	uint32 checksum_adjustment;
 	uint32 magic_number;
 	
 	uint16 flags;
@@ -1720,8 +1799,7 @@ class HeadTable : Table {
 		}
 		
 		font_revision = dis.read_fixed ();
-		
-		checksum_adjustment = dis.read_ulong ();
+		adjusted_checksum = dis.read_ulong ();
 		magic_number = dis.read_ulong ();
 		
 		if (magic_number != 0x5F0F3CF5) {
@@ -1777,14 +1855,21 @@ class HeadTable : Table {
 		print (@"glyph_data_format: $glyph_data_format\n");
 	}
 	
+	public uint32 get_font_checksum () {
+		return adjusted_checksum;
+	}
+	
 	public void set_check_sum_adjustment (uint32 csa) {
-		check_sum_adjustment = csa;
+		this.adjusted_checksum = csa;
+	}
+	
+	public uint32 get_checksum_position () {
+		return offset + 8;
 	}
 	
 	public void process () {
 		FontData font_data = new FontData ();
 		Fixed version = 1 << 16;
-
 		Fixed font_revision = 0;
 
 		font_data.add_fixed (version);
@@ -1792,7 +1877,7 @@ class HeadTable : Table {
 		
 		// Zero on the first run and updated by directory tables checksum calculation
 		// for the entire font.
-		font_data.add_u32 (check_sum_adjustment); // TODO
+		font_data.add_u32 (adjusted_checksum);
 		
 		font_data.add_u32 (0x5F0F3CF5); // magic number
 		
@@ -2127,6 +2212,8 @@ class OffsetTable : Table {
 	public void parse (OtfInputStream dis) throws Error {
 		Fixed version;
 		
+		dis.seek (offset);
+		
 		version = dis.read_fixed ();
 		num_tables = dis.read_ushort ();
 		search_range = dis.read_ushort ();
@@ -2163,17 +2250,140 @@ class OffsetTable : Table {
 }
 
 class NameTable : Table {
+
+	static const uint16 COPYRIGHT_NOTICE = 0;
+	static const uint16 FONT_NAME = 1;
+	static const uint16 DESCRIPTION = 10;
 	
+	List<string> text;
+			
 	public NameTable () {
 		id = "name";
-	}
-	
-	public string get_id () {
-		return "name";
+		text = new List<string> ();
 	}
 
-	public void process () {	
+	public void print_all () {
+		stdout.printf (@"$(text.length ()) name table texts:\n");
+		foreach (string s in text) {
+			stdout.printf (s);
+			stdout.printf ("\n");
+		}
+	}
+
+	public void parse (OtfInputStream dis) throws Error {
+		uint16 format;
+
+		dis.seek (offset);
+		
+		format = dis.read_ushort ();
+		
+		switch (format) {
+			case 0:
+				parse_format0 (dis);
+				break;
+				
+			case 1:
+				warning ("name table format 1 is not implemented yet");
+				break;
+			
+			default:
+				warning (@"unknown format $format in name table");
+				break;
+		}
+		
+		print_all ();
+	}
+	
+	public void parse_format0 (OtfInputStream dis) throws Error {
+		uint16 count;
+		uint16 storage_offset;
+
+		uint16 platform;
+		uint16 encoding_id;
+		uint16 lang;
+		
+		List<uint16> strlen = new List<uint16> ();
+		List<uint16> off = new List<uint16> ();
+		List<uint16> name_id = new List<uint16> ();
+		
+		count = dis.read_ushort ();
+		storage_offset = dis.read_ushort ();
+		
+		for (int i = 0; i < count; i++) {
+			platform = dis.read_ushort ();
+			encoding_id = dis.read_ushort ();
+			lang = dis.read_ushort ();
+			name_id.append (dis.read_ushort ());
+			strlen.append (dis.read_ushort ());
+			off.append (dis.read_ushort ());
+			
+			print (@"platform $platform\n");
+			print (@"encoding_id $encoding_id\n");
+			print (@"lang $lang\n");
+			print (@"name_id $((!) name_id.last ().data)\n");
+			print (@"strlen $((!) strlen.last ().data)\n");
+			print (@"off $((!) off.last ().data)\n");
+		}
+
+		for (int i = 0; i < count; i++) {
+			dis.seek (offset + storage_offset + off.nth (i).data);
+			
+			StringBuilder str = new StringBuilder ();
+			for (int j = 0; j < strlen.nth (i).data; j++) {
+				char c = dis.read_char ();
+				str.append_c (c);
+			}
+			
+			text.append (str.str);
+			print (@"Name id: $(name_id.nth (i).data) str: \"$(str.str)\"\n");		
+		}
+	}
+	
+	public void process () {
 		FontData fd = new FontData ();
+		Font font = Supplement.get_current_font ();
+		uint16 len = 0;
+		string text;
+		uint16 num_records = 1;
+		
+		fd.add_ushort (0); // format 1
+		fd.add_ushort (num_records); // nrecords
+		fd.add_ushort (6 + 12 * num_records); // string storage offset
+
+/*		
+		// name record
+		text = "Copyright";
+		fd.add_ushort (1); // platform
+		fd.add_ushort (0); // encoding id deprecated
+		fd.add_ushort (0); // language
+		fd.add_ushort (COPYRIGHT_NOTICE); // name id 
+		fd.add_ushort ((uint16) text.len ()); // strlen
+		fd.add_ushort (len); // offset from begining of string storage
+		len += (uint16) text.len ();
+		
+		text = "A typeface.";
+		fd.add_ushort (1); // platform
+		fd.add_ushort (0); // encoding id 
+		fd.add_ushort (0); // language
+		fd.add_ushort (DESCRIPTION); // name id 
+		fd.add_ushort ((uint16) text.len ()); // strlen
+		fd.add_ushort (len); // offset from begining of string storage
+		len += (uint16) text.len ();
+*/
+		text = font.get_name ();
+		fd.add_ushort (1); // platform
+		fd.add_ushort (0); // encoding id deprecated
+		fd.add_ushort (0); // language
+		fd.add_ushort (FONT_NAME); // name id 
+		fd.add_ushort ((uint16) text.len ()); // strlen
+		fd.add_ushort (len); // offset from begining of string storage
+		len += (uint16) text.len ();		
+
+//		fd.add_str ("Copyright"); 
+//		fd.add_str ("A typeface.");
+		fd.add_str (font.get_name ());
+		
+		fd.pad ();
 		
 		this.font_data = fd;
 	}
@@ -2185,10 +2395,14 @@ class Os2Table : Table {
 		id = "OS/2";
 	}
 	
+	public void parse (OtfInputStream dis) throws Error {
+		
+	}
+	
 	public void process () {
 		FontData fd = new FontData ();
 		
-		fd.add_u16 (4); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
+		fd.add_u16 (0x0002); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
 
 		fd.add_16 (0); // SHORT xAvgCharWidth
 
@@ -2258,36 +2472,1480 @@ class Os2Table : Table {
 
 class PostTable : Table {
 	
-	public PostTable () {
-		id = "post";	
+	GlyfTable glyf_table;
+	
+	List<uint16> index = new List<uint16> ();
+	List<string> names = new List<string> ();
+
+	public PostTable (GlyfTable g) {
+		id = "post";
+		glyf_table = g;
+	}
+
+	public string get_name (int gid) {
+		uint16 i;
+		int k;
+		
+		if (!(0 <= gid <= index.length ())) {
+			warning ("gid is out of range.");
+			return "INVALID";
+		}
+				
+		k = (!) index.nth (gid).data;
+		
+		if (gid != 0 && k == 0) {
+			warning (@"Glyph $gid is assigned to name .notdef, only gid 0 can be .notdef character.");
+			return "";
+		}
+		
+		if (!(0 <= k <= names.length ())) {
+			warning ("k is out of range.");
+			return "INVALID";
+		}
+				
+		return (!) names.nth (k).data;
 	}
 	
-	public void process () {
-		FontData font_data = new FontData ();
+	public void parse (OtfInputStream dis) throws Error {
+		dis.seek (offset);
 		
-		// Version
-		font_data.add_u16 (3);
-		font_data.add_u16 (0);
-
-		// italicAngle
-		font_data.add_u16 (0); 
-		font_data.add_u16 (0);
+		Fixed format = dis.read_fixed ();
+		Fixed italic = dis.read_fixed ();
 		
-		font_data.add_16 (-2); // underlinePosition
-		font_data.add_16 (1); // underlineThickness
+		int16 underlie_pos = dis.read_short ();
+		int16 underlie_thickness = dis.read_short ();
+		uint32 is_fixed_pitch  = dis.read_ulong ();
+		
+		uint32 mem_min42  = dis.read_ulong ();
+		uint32 mem_max42  = dis.read_ulong ();
+		uint32 mem_min1  = dis.read_ulong ();
+		uint32 mem_max1  = dis.read_ulong ();
+		
+		uint16 nnames  = dis.read_ushort ();
+		
+		if (format != 0x00020000) {
+			warning ("Only post tables of version 2 will parset got $(format.get_string ())");
+			return;
+		}
+		
+		print (@"format: $(format.get_string ())\n");
+		print (@"italic: $(italic.get_string ())\n");
+		print (@"underlie_pos: $(underlie_pos)\n");
+		print (@"underlie_thickness: $(underlie_thickness)\n");
+		print (@"is_fixed_pitch: $(is_fixed_pitch)\n");
+		print (@"mem_min42: $(mem_min42)\n");
+		print (@"mem_max42: $(mem_max42)\n");
+		print (@"mem_min1: $(mem_min1)\n");
+		print (@"mem_max1: $(mem_max1)\n");
+		print (@"\n");
+		
+		print (@"Num names: $(nnames)\n");
+		
+		uint16 k;
+		int non_standard_names = 0;
+		for (uint16 i = 0; i < nnames; i++) {
+			k = dis.read_ushort ();
+			index.append (k);
+			
+			if (k >= 258) {
+				non_standard_names++;
+			}
+		}
+		
+		add_standard_names ();
+		
+		// read non standard names
+		for (int i = 0; i < non_standard_names; i++) {
+			uint8 len = dis.read_byte ();
+			StringBuilder name = new StringBuilder ();
+			int gid = (!) index.nth (i).data;
+			
+			for (int j = 0; j < len; j++) {
+				name.append_c (dis.read_char ());
+			}
+			
+			// print (@"Name gid: $gid len: $len: $(name.str)\n");
+			
+			names.append (name.str);
+		}		
+	}
+	
+	public void print_all () {
+		print (@"PostScript glyph mapping:\n");
+		for (int i = 0; i < index.length (); i++) {
+			print (@"gid $i -> $(get_name (i))\n");
+		}
+	}
+	
+	public void print_avaliable_names () {
+		print (@"Post table names:\n");
+		foreach (var n in names) {
+			print (@"$n\n");
+		}
+	}
+	
+	// the Macintosh standard order
+	private void add_standard_names () {
+		names.append (".notdef");
+		names.append (".null");
+		names.append ("nonmarkingreturn");
+		names.append ("space");
+		names.append ("exclam");
+		names.append ("quotedbl");
+		names.append ("numbersign");
+		names.append ("dollar");
+		names.append ("percent");
+		names.append ("ampersand");
+		names.append ("quotesingle");
+		names.append ("parenleft");
+		names.append ("parenright");
+		names.append ("asterisk");
+		names.append ("plus");
+		names.append ("comma");
+		names.append ("hyphen");
+		names.append ("period");
+		names.append ("slash");
+		names.append ("zero");
+		names.append ("one");
+		names.append ("two");
+		names.append ("three");
+		names.append ("four");
+		names.append ("five");
+		names.append ("six");
+		names.append ("seven");
+		names.append ("eight");
+		names.append ("nine");
+		names.append ("colon");
+		names.append ("semicolon");
+		names.append ("less");
+		names.append ("equal");
+		names.append ("greater");
+		names.append ("question");
+		names.append ("at");
+		names.append ("A");
+		names.append ("B");
+		names.append ("C");
+		names.append ("D");
+		names.append ("E");
+		names.append ("F");
+		names.append ("G");
+		names.append ("H");
+		names.append ("I");
+		names.append ("J");
+		names.append ("K");
+		names.append ("L");
+		names.append ("M");
+		names.append ("N");
+		names.append ("O");
+		names.append ("P");
+		names.append ("Q");
+		names.append ("R");
+		names.append ("S");
+		names.append ("T");
+		names.append ("U");
+		names.append ("V");
+		names.append ("W");
+		names.append ("X");
+		names.append ("Y");
+		names.append ("Z");
+		names.append ("bracketleft");
+		names.append ("backslash");
+		names.append ("bracketright");
+		names.append ("asciicircum");
+		names.append ("underscore");
+		names.append ("grave");
+		names.append ("a");
+		names.append ("b");
+		names.append ("c");
+		names.append ("d");
+		names.append ("e");
+		names.append ("f");
+		names.append ("g");
+		names.append ("h");
+		names.append ("i");
+		names.append ("j");
+		names.append ("k");
+		names.append ("l");
+		names.append ("m");
+		names.append ("n");
+		names.append ("o");
+		names.append ("p");
+		names.append ("q");
+		names.append ("r");
+		names.append ("s");
+		names.append ("t");
+		names.append ("u");
+		names.append ("v");
+		names.append ("w");
+		names.append ("x");
+		names.append ("y");
+		names.append ("z");
+		names.append ("braceleft");
+		names.append ("bar");
+		names.append ("braceright");
+		names.append ("asciitilde");
+		names.append ("Adieresis");
+		names.append ("Aring");
+		names.append ("Ccedilla");
+		names.append ("Eacute");
+		names.append ("Ntilde");
+		names.append ("Odieresis");
+		names.append ("Udieresis");
+		names.append ("aacute");
+		names.append ("agrave");
+		names.append ("acircumflex");
+		names.append ("adieresis");
+		names.append ("atilde");
+		names.append ("aring");
+		names.append ("ccedilla");
+		names.append ("eacute");
+		names.append ("egrave");
+		names.append ("ecircumflex");
+		names.append ("edieresis");
+		names.append ("iacute");
+		names.append ("igrave");
+		names.append ("icircumflex");
+		names.append ("idieresis");
+		names.append ("ntilde");
+		names.append ("oacute");
+		names.append ("ograve");
+		names.append ("ocircumflex");
+		names.append ("odieresis");
+		names.append ("otilde");
+		names.append ("uacute");
+		names.append ("ugrave");
+		names.append ("ucircumflex");
+		names.append ("udieresis");
+		names.append ("dagger");
+		names.append ("degree");
+		names.append ("cent");
+		names.append ("sterling");
+		names.append ("section");
+		names.append ("bullet");
+		names.append ("paragraph");
+		names.append ("germandbls");
+		names.append ("registered");
+		names.append ("copyright");
+		names.append ("trademark");
+		names.append ("acute");
+		names.append ("dieresis");
+		names.append ("notequal");
+		names.append ("AE");
+		names.append ("Oslash");
+		names.append ("infinity");
+		names.append ("plusminus");
+		names.append ("lessequal");
+		names.append ("greaterequal");
+		names.append ("yen");
+		names.append ("mu");
+		names.append ("partialdiff");
+		names.append ("summation");
+		names.append ("product");
+		names.append ("pi");
+		names.append ("integral");
+		names.append ("ordfeminine");
+		names.append ("ordmasculine");
+		names.append ("Omega");
+		names.append ("ae");
+		names.append ("oslash");
+		names.append ("questiondown");
+		names.append ("exclamdown");
+		names.append ("logicalnot");
+		names.append ("radical");
+		names.append ("florin");
+		names.append ("approxequal");
+		names.append ("Delta");
+		names.append ("guillemotleft");
+		names.append ("guillemotright");
+		names.append ("ellipsis");
+		names.append ("nonbreakingspace");
+		names.append ("Agrave");
+		names.append ("Atilde");
+		names.append ("Otilde");
+		names.append ("OE");
+		names.append ("oe");
+		names.append ("endash");
+		names.append ("emdash");
+		names.append ("quotedblleft");
+		names.append ("quotedblright");
+		names.append ("quoteleft");
+		names.append ("quoteright");
+		names.append ("divide");
+		names.append ("lozenge");
+		names.append ("ydieresis");
+		names.append ("Ydieresis");
+		names.append ("fraction");
+		names.append ("currency");
+		names.append ("guilsinglleft");
+		names.append ("guilsinglright");
+		names.append ("fi");
+		names.append ("fl");
+		names.append ("daggerdbl");
+		names.append ("periodcentered");
+		names.append ("quotesinglbase");
+		names.append ("quotedblbase");
+		names.append ("perthousand");
+		names.append ("Acircumflex");
+		names.append ("Ecircumflex");
+		names.append ("Aacute");
+		names.append ("Edieresis");
+		names.append ("Egrave");
+		names.append ("Iacute");
+		names.append ("Icircumflex");
+		names.append ("Idieresis");
+		names.append ("Igrave");
+		names.append ("Oacute");
+		names.append ("Ocircumflex");
+		names.append ("apple");
+		names.append ("Ograve");
+		names.append ("Uacute");
+		names.append ("Ucircumflex");
+		names.append ("Ugrave");
+		names.append ("dotlessi");
+		names.append ("circumflex");
+		names.append ("tilde");
+		names.append ("macron");
+		names.append ("breve");
+		names.append ("dotaccent");
+		names.append ("ring");
+		names.append ("cedilla");
+		names.append ("hungarumlaut");
+		names.append ("ogonek");
+		names.append ("caron");
+		names.append ("Lslash");
+		names.append ("lslash");
+		names.append ("Scaron");
+		names.append ("scaron");
+		names.append ("Zcaron");
+		names.append ("zcaron");
+		names.append ("brokenbar");
+		names.append ("Eth");
+		names.append ("eth");
+		names.append ("Yacute");
+		names.append ("yacute");
+		names.append ("Thorn");
+		names.append ("thorn");
+		names.append ("minus");
+		names.append ("multiply");
+		names.append ("onesuperior");
+		names.append ("twosuperior");
+		names.append ("threesuperior");
+		names.append ("onehalf");
+		names.append ("onequarter");
+		names.append ("threequarters");
+		names.append ("franc");
+		names.append ("Gbreve");
+		names.append ("gbreve");
+		names.append ("Idotaccent");
+		names.append ("Scedilla");
+		names.append ("scedilla");
+		names.append ("Cacute");
+		names.append ("cacute");
+		names.append ("Ccaron");
+		names.append ("ccaron");
+		names.append ("dcroat");
+	}
+	
+	// mapping with char code to standard order
+	int get_standard_index (unichar c) {
+		switch (c) {
+			// entry 0 is the .notdef
+			
+			case '\0':
+				return 1;
+				break;
 
-		font_data.add_u32 (0); // non zero for monospaced font
+			case '\r':
+				return 2;
+				break;
+
+			case ' ': // space
+				return 3;
+				break;
+
+			case '!':
+				return 4;
+				break;
+
+			case '"':
+				return 5;
+				break;
+
+			case '#':
+				return 6;
+				break;
+
+			case '$':
+				return 7;
+				break;
+
+			case '%':
+				return 8;
+				break;
+
+			case '&':
+				return 9;
+				break;
+
+			case '\'':
+				return 10;
+				break;
+
+			case '(':
+				return 11;
+				break;
+
+			case ')':
+				return 12;
+				break;
+
+			case '*':
+				return 13;
+				break;
+
+			case '+':
+				return 14;
+				break;
+
+			case ',':
+				return 15;
+				break;
+
+			case '-':
+				return 16;
+				break;
+
+			case '.':
+				return 17;
+				break;
+
+			case '/':
+				return 18;
+				break;
+
+			case '0':
+				return 19;
+				break;
+
+			case '1':
+				return 20;
+				break;
+
+			case '2':
+				return 21;
+				break;
+
+			case '3':
+				return 22;
+				break;
+
+			case '4':
+				return 23;
+				break;
+
+			case '5':
+				return 24;
+				break;
+
+			case '6':
+				return 25;
+				break;
+
+			case '7':
+				return 26;
+				break;
+
+			case '8':
+				return 27;
+				break;
+
+			case '9':
+				return 28;
+				break;
+
+			case ':':
+				return 29;
+				break;
+
+			case ';':
+				return 30;
+				break;
+
+			case '<':
+				return 31;
+				break;
+
+			case '=':
+				return 32;
+				break;
+
+			case '>':
+				return 33;
+				break;
+
+			case '?':
+				return 34;
+				break;
+
+			case '@':
+				return 35;
+				break;
+
+			case 'A':
+				return 36;
+				break;
+
+			case 'B':
+				return 37;
+				break;
+
+			case 'C':
+				return 38;
+				break;
+
+			case 'D':
+				return 39;
+				break;
+
+			case 'E':
+				return 40;
+				break;
+
+			case 'F':
+				return 41;
+				break;
+
+			case 'G':
+				return 42;
+				break;
+
+			case 'H':
+				return 43;
+				break;
+
+			case 'I':
+				return 44;
+				break;
+
+			case 'J':
+				return 45;
+				break;
+
+			case 'K':
+				return 46;
+				break;
+
+			case 'L':
+				return 47;
+				break;
+
+			case 'M':
+				return 48;
+				break;
+
+			case 'N':
+				return 49;
+				break;
+
+			case 'O':
+				return 50;
+				break;
+
+			case 'P':
+				return 51;
+				break;
+
+			case 'Q':
+				return 52;
+				break;
+
+			case 'R':
+				return 53;
+				break;
+
+			case 'S':
+				return 54;
+				break;
+
+			case 'T':
+				return 55;
+				break;
+
+			case 'U':
+				return 56;
+				break;
+
+			case 'V':
+				return 57;
+				break;
+
+			case 'W':
+				return 58;
+				break;
+
+			case 'X':
+				return 59;
+				break;
+
+			case 'Y':
+				return 60;
+				break;
+
+			case 'Z':
+				return 61;
+				break;
+
+			case '[':
+				return 62;
+				break;
+
+			case '\\':
+				return 63;
+				break;
+
+			case ']':
+				return 64;
+				break;
+
+			case '^':
+				return 65;
+				break;
+
+			case '_':
+				return 66;
+				break;
+
+			case '`':
+				return 67;
+				break;
+
+			case 'a':
+				return 68;
+				break;
+
+			case 'b':
+				return 69;
+				break;
+
+			case 'c':
+				return 70;
+				break;
+
+			case 'd':
+				return 71;
+				break;
+
+			case 'e':
+				return 72;
+				break;
+
+			case 'f':
+				return 73;
+				break;
+
+			case 'g':
+				return 74;
+				break;
+
+			case 'h':
+				return 75;
+				break;
+
+			case 'i':
+				return 76;
+				break;
+
+			case 'j':
+				return 77;
+				break;
+
+			case 'k':
+				return 78;
+				break;
+
+			case 'l':
+				return 79;
+				break;
+
+			case 'm':
+				return 80;
+				break;
+
+			case 'n':
+				return 81;
+				break;
+
+			case 'o':
+				return 82;
+				break;
+
+			case 'p':
+				return 83;
+				break;
+
+			case 'q':
+				return 84;
+				break;
+
+			case 'r':
+				return 85;
+				break;
+
+			case 's':
+				return 86;
+				break;
+
+			case 't':
+				return 87;
+				break;
+
+			case 'u':
+				return 88;
+				break;
+
+			case 'v':
+				return 89;
+				break;
+
+			case 'w':
+				return 90;
+				break;
+
+			case 'x':
+				return 91;
+				break;
+
+			case 'y':
+				return 92;
+				break;
+
+			case 'z':
+				return 93;
+				break;
+
+			case '{':
+				return 94;
+				break;
+
+			case '|':
+				return 95;
+				break;
+
+			case '}':
+				return 96;
+				break;
+
+			case '~':
+				return 97;
+				break;
+
+			case 'Ä':
+				return 98;
+				break;
+
+			case 'Å':
+				return 99;
+				break;
+
+			case 'Ç':
+				return 100;
+				break;
+
+			case 'É':
+				return 101;
+				break;
+
+			case 'Ñ':
+				return 102;
+				break;
+
+			case 'Ö':
+				return 103;
+				break;
+
+			case 'Ü':
+				return 104;
+				break;
+
+			case 'á':
+				return 105;
+				break;
+
+			case 'à':
+				return 106;
+				break;
+
+			case 'â':
+				return 107;
+				break;
+
+			case 'ä':
+				return 108;
+				break;
+
+			case 'ã':
+				return 109;
+				break;
+
+			case 'å':
+				return 110;
+				break;
+
+			case 'ç':
+				return 111;
+				break;
+
+			case 'é':
+				return 112;
+				break;
+
+			case 'è':
+				return 113;
+				break;
+
+			case 'ê':
+				return 114;
+				break;
+
+			case 'ë':
+				return 115;
+				break;
+
+			case 'í':
+				return 116;
+				break;
+
+			case 'ì':
+				return 117;
+				break;
+
+			case 'î':
+				return 118;
+				break;
+
+			case 'ï':
+				return 119;
+				break;
+
+			case 'ñ':
+				return 120;
+				break;
+
+			case 'ó':
+				return 121;
+				break;
+
+			case 'ò':
+				return 122;
+				break;
+
+			case 'ô':
+				return 123;
+				break;
+
+			case 'ö':
+				return 124;
+				break;
+
+			case 'õ':
+				return 125;
+				break;
+
+			case 'ú':
+				return 126;
+				break;
+
+			case 'ù':
+				return 127;
+				break;
+
+			case 'û':
+				return 128;
+				break;
+
+			case 'ü':
+				return 129;
+				break;
+
+			case '†':
+				return 130;
+				break;
+
+			case '°':
+				return 131;
+				break;
+
+			case '¢':
+				return 132;
+				break;
+
+			case '£':
+				return 133;
+				break;
+
+			case '§':
+				return 134;
+				break;
+
+			case '•':
+				return 135;
+				break;
+
+			case '¶':
+				return 136;
+				break;
+
+			case 'ß':
+				return 137;
+				break;
+
+			case '®':
+				return 138;
+				break;
+
+			case '©':
+				return 139;
+				break;
+
+			case '™':
+				return 140;
+				break;
+
+			case '´':
+				return 141;
+				break;
+
+			case '¨':
+				return 142;
+				break;
+
+			case '≠':
+				return 143;
+				break;
+
+			case 'Æ':
+				return 144;
+				break;
+
+			case 'Ø':
+				return 145;
+				break;
+
+			case '∞':
+				return 146;
+				break;
+
+			case '±':
+				return 147;
+				break;
+
+			case '≤':
+				return 148;
+				break;
+
+			case '≥':
+				return 149;
+				break;
+
+			case '¥':
+				return 150;
+				break;
+
+			case 'µ':
+				return 151;
+				break;
+
+			case '∂':
+				return 152;
+				break;
+
+			case '∑':
+				return 153;
+				break;
+
+			case '∏':
+				return 154;
+				break;
+
+			case 'π':
+				return 155;
+				break;
+
+			case '∫':
+				return 156;
+				break;
+
+			case 'ª':
+				return 157;
+				break;
+
+			case 'º':
+				return 158;
+				break;
+
+			case 'Ω':
+				return 159;
+				break;
+
+			case 'æ':
+				return 160;
+				break;
+
+			case 'ø':
+				return 161;
+				break;
+
+			case '¿':
+				return 162;
+				break;
+
+			case '¡':
+				return 163;
+				break;
+
+			case '¬':
+				return 164;
+				break;
+
+			case '√':
+				return 165;
+				break;
+
+			case 'ƒ':
+				return 166;
+				break;
+
+			case '≈':
+				return 167;
+				break;
+
+			case '∆':
+				return 168;
+				break;
+
+			case '«':
+				return 169;
+				break;
+
+			case '»':
+				return 170;
+				break;
+
+			case '…':
+				return 171;
+				break;
+
+			case ' ': // non breaking space
+				return 172;
+				break;
+							
+			case 'À':
+				return 173;
+				break;
+
+			case 'Ã':
+				return 174;
+				break;
+
+			case 'Õ':
+				return 175;
+				break;
+
+			case 'Œ':
+				return 176;
+				break;
+
+			case 'œ':
+				return 177;
+				break;
+
+			case '–':
+				return 178;
+				break;
+
+			case '—':
+				return 179;
+				break;
+
+			case '“':
+				return 180;
+				break;
+
+			case '”':
+				return 181;
+				break;
+
+			case '‘':
+				return 182;
+				break;
+
+			case '’':
+				return 183;
+				break;
+
+			case '÷':
+				return 184;
+				break;
+
+			case '◊':
+				return 185;
+				break;
+
+			case 'ÿ':
+				return 186;
+				break;
+
+			case 'Ÿ':
+				return 187;
+				break;
+
+			case '⁄':
+				return 188;
+				break;
+
+			case '¤':
+				return 189;
+				break;
+
+			case '‹':
+				return 190;
+				break;
+
+			case '›':
+				return 191;
+				break;
+
+			case 'ﬁ':
+				return 192;
+				break;
+
+			case 'ﬂ':
+				return 193;
+				break;
+
+			case '‡':
+				return 194;
+				break;
+
+			case '·':
+				return 195;
+				break;
+
+			case '‚':
+				return 196;
+				break;
+
+			case '„':
+				return 197;
+				break;
+
+			case '‰':
+				return 198;
+				break;
+
+			case 'Â':
+				return 199;
+				break;
+
+			case 'Ê':
+				return 200;
+				break;
+
+			case 'Á':
+				return 201;
+				break;
+
+			case 'Ë':
+				return 202;
+				break;
+
+			case 'È':
+				return 203;
+				break;
+
+			case 'Í':
+				return 204;
+				break;
+
+			case 'Î':
+				return 205;
+				break;
+
+			case 'Ï':
+				return 206;
+				break;
+
+			case 'Ì':
+				return 207;
+				break;
+
+			case 'Ó':
+				return 208;
+				break;
+
+			case 'Ô':
+				return 209;
+				break;
+				
+			// Machintosh apple goes here
+			// return 210;
+
+			case 'Ò':
+				return 211;
+				break;
+
+			case 'Ú':
+				return 212;
+				break;
+
+			case 'Û':
+				return 213;
+				break;
+
+			case 'Ù':
+				return 214;
+				break;
+
+			case 'ı':
+				return 215;
+				break;
+
+			case 'ˆ':
+				return 216;
+				break;
+
+			case '˜':
+				return 217;
+				break;
+
+			case '¯':
+				return 218;
+				break;
+
+			case '˘':
+				return 219;
+				break;
+
+			case '˙':
+				return 220;
+				break;
+
+			case '˚':
+				return 221;
+				break;
+
+			case '¸':
+				return 222;
+				break;
+
+			case '˝':
+				return 223;
+				break;
+
+			case '˛':
+				return 224;
+				break;
+
+			case 'ˇ':
+				return 225;
+				break;
+
+			case 'Ł':
+				return 226;
+				break;
+
+			case 'ł':
+				return 227;
+				break;
+
+			case 'Š':
+				return 228;
+				break;
+
+			case 'š':
+				return 229;
+				break;
+
+			case 'Ž':
+				return 230;
+				break;
+
+			case 'ž':
+				return 231;
+				break;
+
+			case '¦':
+				return 232;
+				break;
+
+			case 'Ð':
+				return 233;
+				break;
+
+			case 'ð':
+				return 234;
+				break;
+
+			case 'Ý':
+				return 235;
+				break;
+
+			case 'ý':
+				return 236;
+				break;
+
+			case 'Þ':
+				return 237;
+				break;
+
+			case 'þ':
+				return 238;
+				break;
+
+			case '−':
+				return 239;
+				break;
+
+			case '×':
+				return 240;
+				break;
+
+			case '¹':
+				return 241;
+				break;
+				
+			case '²':
+				return 242;
+				break;
+
+			case '³':
+				return 243;
+				break;
+
+			case '½':
+				return 244;
+				break;
+
+			case '¼':
+				return 245;
+				break;
+
+			case '¾':
+				return 246;
+				break;
+
+			case '₣':
+				return 247;
+				break;
+
+			case 'Ğ':
+				return 248;
+				break;
+
+			case 'ğ':
+				return 249;
+				break;
+
+			case 'İ':
+				return 250;
+				break;
+
+			case 'Ş':
+				return 251;
+				break;
+
+			case 'ş':
+				return 252;
+				break;
+
+			case 'Ć':
+				return 253;
+				break;
+
+			case 'ć':
+				return 254;
+				break;
+
+			case 'Č':
+				return 255;
+				break;
+
+			case 'č':
+				return 256;
+				break;
+
+			case 'đ':
+				return 257;
+				break;
+		}
+		
+		return 0;
+	}
+	
+	public void process () throws Error {
+		FontData fd = new FontData ();
+		string n;
+		
+		fd.add_fixed (0x00020000); // Version
+		fd.add_fixed (0x00000000); // italicAngle
+		
+		fd.add_short (-2); // underlinePosition
+		fd.add_short (1); // underlineThickness
+
+		fd.add_ulong (0); // non zero for monospaced font
 		
 		// mem boundries may be omitted
-		font_data.add_u32 (0); // min mem
-		font_data.add_u32 (0); // max mem
+		fd.add_ulong (0); // min mem for type 42
+		fd.add_ulong (0); // max mem for type 42
 		
-		font_data.add_u32 (0); // min mem for Type1
-		font_data.add_u32 (0); // max mem for Type1
+		fd.add_ulong (0); // min mem for Type1
+		fd.add_ulong (0); // max mem for Type1
 
-		font_data.pad ();
+		fd.add_ushort ((uint16) glyf_table.glyphs.length ());
+
+		// this part of the spec is so weird
 		
-		this.font_data = font_data;
+		fd.add_ushort ((uint16) 0); // first index is .notdef
+		index.append (0);
+		
+		assert (names.length () == 0);
+		add_standard_names ();
+
+		int index;
+		Glyph g;
+		for (int i = 1; i < glyf_table.glyphs.length (); i++) {
+			g = (!) glyf_table.glyphs.nth (i).data;
+			index = get_standard_index (g.unichar_code);
+			
+			if (index != 0) {
+				fd.add_ushort ((uint16) index);  // use standard name
+			} else {
+				index = (int) names.length (); // use font specific name
+				fd.add_ushort ((uint16) index);
+				names.append (g.get_name ());
+			}
+			
+			this.index.append ((uint16) index);
+		}
+
+		for (int i = 258; i < names.length (); i++) {
+			n = (!) names.nth (i).data;
+			
+			if (n.len () > 0xFF) {
+				warning ("too long name for glyph $n");
+			}
+						
+			fd.add ((uint8) n.len ()); // length of string
+			fd.add_str (n);
+		}		
+
+		fd.pad ();
+		
+		this.font_data = fd;
+		
+		fd.print ();
+		
+		print_all ();
 	}
 
 }
@@ -2322,7 +3980,7 @@ class DirectoryTable : Table {
 		maxp_table = new MaxpTable (glyf_table);
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (); 
-		post_table = new PostTable ();
+		post_table = new PostTable (glyf_table);
 		
 		id = "Directory table";
 	}
@@ -2349,16 +4007,16 @@ class DirectoryTable : Table {
 			tables.append (offset_table);
 			tables.append (this);
 
-			tables.append (head_table);
 			tables.append (cmap_table);  // The other required tables
 			tables.append (glyf_table);
+			tables.append (head_table);
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
 			tables.append (loca_table);
+			tables.append (name_table);
 			tables.append (maxp_table);
-			//tables.append (os_2_table);
-			//tables.append (name_table);
-			//tables.append (post_table);
+			tables.append (os_2_table);
+			tables.append (post_table);
 		}
 
 		return tables;
@@ -2368,7 +4026,7 @@ class DirectoryTable : Table {
 		offset_table = ot;
 	}
 	
-	public void parse (OtfInputStream dis) throws Error {
+	public void parse (OtfInputStream dis, File file) throws Error {
 		StringBuilder tag = new StringBuilder ();
 		uint32 checksum;
 		uint32 offset;
@@ -2425,72 +4083,162 @@ class DirectoryTable : Table {
 				head_table.checksum = checksum;
 				head_table.offset = offset;
 				head_table.length = length;
+			} else if (tag.str == "name") {
+				name_table.id = tag.str;
+				name_table.checksum = checksum;
+				name_table.offset = offset;
+				name_table.length = length;
+			} else if (tag.str == "OS/2") {
+				os_2_table.id = tag.str;
+				os_2_table.checksum = checksum;
+				os_2_table.offset = offset;
+				os_2_table.length = length;
+			} else if (tag.str == "post") {
+				post_table.id = tag.str;
+				post_table.checksum = checksum;
+				post_table.offset = offset;
+				post_table.length = length;
 			}
+			
 		}
 		
 		// FIXA: delete
+		/*
 		FontData fd = new FontData ();
-		fd.write_table (dis, cmap_table.offset, cmap_table.length);
+		fd.write_table (dis, post_table.offset, post_table.length);
 		fd.print ();
+		*/
 		
-		if (!validate_tables (dis)) {
+		print (@"fd.write_table (dis, post_table.offset, post_table.length) $(post_table.offset) $(post_table.length)\n");
+		
+		head_table.parse (dis);
+
+		if (!validate_checksum_for_entire_font (dis, file)) {
+			warning ("file has invalid checksum");
+		}
+					
+		if (!validate_tables (dis, file)) {
 			warning ("Missing required table or bad checksum.");
 			// Fixa: stop processing here, if we want to avoid loading bad fonts
 			// return;
 		}
 		
-		head_table.parse (dis);
+		post_table.parse (dis);
+		os_2_table.parse (dis);
 		hhea_table.parse (dis);
 		maxp_table.parse (dis);
 		loca_table.parse (dis, head_table, maxp_table);
 		hmtx_table.parse (dis, hhea_table, loca_table);
 		cmap_table.parse (dis);
-		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table);		
+		name_table.parse (dis);
+		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table, post_table);
 	}
 	
-	public bool validate_tables (OtfInputStream dis) {
+	public bool validate_tables (OtfInputStream dis, File file) {
 		bool valid = true;
 
-		if (!glyf_table.validate (dis)) {
-			warning ("glyf_table has invalid checksum");
+		try {
+			
+			if (!glyf_table.validate (dis)) {
+				warning ("glyf_table has invalid checksum");
+				valid = false;
+			}
+			
+			// head checksum is calculated without checksum adjustment for entire file 
+			// skip validation for now.
+			/*
+			if (!head_table.validate (dis)) {
+				warning ("head_table has is invalid checksum");
+				valid = false;
+			}
+			*/
+			
+			if (!maxp_table.validate (dis)) {
+				warning ("maxp_table has is invalid checksum");
+				valid = false;
+			}
+			
+			if (!loca_table.validate (dis)) {
+				warning ("loca_table has invalid checksum");
+				valid = false;
+			}
+			
+			if (!cmap_table.validate (dis)) {
+				warning ("cmap_table has invalid checksum");
+				valid = false;
+			}
+			
+			if (!hhea_table.validate (dis)) {
+				warning ("hhea_table has invalid checksum");
+				valid = false;
+			}
+			
+			if (!hmtx_table.validate (dis)) {
+				warning ("hmtx_table has invalid checksum");
+				valid = false;
+			}
+
+			if (!name_table.validate (dis)) {
+				warning ("name_table has invalid checksum");
+				valid = false;
+			}
+
+			if (!os_2_table.validate (dis)) {
+				warning ("os_2_table has invalid checksum");
+				valid = false;
+			}
+
+			if (!post_table.validate (dis)) {
+				warning ("post_table has invalid checksum");
+				valid = false;
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
 			valid = false;
 		}
 		
-		// head checksum is calculated without checksum adjustment for entire file 
-		// skip validation for now.
-		/*
-		if (!head_table.validate (dis)) {
-			warning ("head_table has is invalid checksum");
-			valid = false;
-		}
-		*/
-		
-		if (!maxp_table.validate (dis)) {
-			warning ("maxp_table has is invalid checksum");
-			valid = false;
-		}
-		
-		if (!loca_table.validate (dis)) {
-			warning ("loca_table has invalid checksum");
-			valid = false;
-		}
-		
-		if (!cmap_table.validate (dis)) {
-			warning ("cmap_table has invalid checksum");
-			valid = false;
-		}
-		
-		if (!hhea_table.validate (dis)) {
-			warning ("hhea_table has invalid checksum");
-			valid = false;
-		}
-		
-		if (!hmtx_table.validate (dis)) {
-			warning ("hmtx_table has invalid checksum");
-			valid = false;
-		}
-	
 		return valid;
+	}
+	
+	bool validate_checksum_for_entire_font (OtfInputStream dis, File f) {
+		FontData fd = new FontData ();
+		uint p = head_table.get_checksum_position ();
+		FileInfo file_info = f.query_info ("*", FileQueryInfoFlags.NONE);
+		uint32 checksum_font, checksum_head;
+		uint32 file_size = (uint32) file_info.get_size ();
+		
+		if (file_size % 4 != 0) {
+			warning ("Font has to be padded to size of uint32 in order to compute checksum.");
+			return false;
+		}
+		
+        stdout.printf ("File size: %lld bytes\n", file_info.get_size ());
+        
+        print ("WRITE\n");
+        try {
+			fd.write_table (dis, 0, file_size);
+		} catch (GLib.Error e) {
+			warning (@"Failed to compute checksum since $(e.message)");
+		}
+		print ("WRITTEN\n");
+		
+		// zero out checksum entry in head table before calculating it
+		fd.write_at (p + 0, 0);
+		fd.write_at (p + 1, 0);
+		fd.write_at (p + 2, 0);
+		fd.write_at (p + 3, 0);
+		
+		checksum_font = (uint32) (0xB1B0AFBA - fd.check_sum ());
+		checksum_head = head_table.get_font_checksum ();
+		
+		if (checksum_font != checksum_head) {
+			warning (@"Fontfile checksum in head table does not match calculated checksum. checksum_font: $checksum_font checksum_head: $checksum_head");
+			return false;
+		}
+		
+		print ("Checksum for font is valid.\n");
+		
+		return true;
 	}
 	
 	public string get_id () {
@@ -2517,10 +4265,19 @@ class DirectoryTable : Table {
 		create_directory (); // generate a valid directory
 	}
 
+	// Check sum adjustment for the entire font
+	public uint32 get_font_file_checksum () {
+		uint32 check_sum = 0;
+		foreach (Table t in tables) {
+			t.get_font_data ().continous_check_sum (ref check_sum);
+		}
+		return check_sum;
+	}
+
 	public void create_directory () {
 		FontData fd;
 	
-		uint32 table_offset;
+		uint32 table_offset = 0;
 		uint32 table_length = 0;
 		
 		uint32 check_sum = 0;
@@ -2529,27 +4286,15 @@ class DirectoryTable : Table {
 
 		return_val_if_fail (offset_table.num_tables > 0, fd);
 		
-		table_offset = 0;
-		
 		table_offset += offset_table.get_font_data ().length_with_padding ();
 		
 		if (this.font_data != null) {
 			table_offset += this.get_font_data ().length_with_padding ();
 		}
-	
-		// Check sum adjustment for the entire font
-		foreach (Table t in tables) {
-			if (t is DirectoryTable) {
-				fd.continous_check_sum (ref check_sum);
-				continue;
-			}
-			
-			t.get_font_data ().continous_check_sum (ref check_sum);
-		}
-	
-		head_table.set_check_sum_adjustment ((uint32)(0xB1B0AFBA - check_sum));
-		head_table.process (); // update the value		head_table.set_check_sum_adjustment (0); // Set this to zero, calculate the sum and update the value
 
+		head_table.set_check_sum_adjustment (0); // Set this to zero, calculate checksums and update the value
+		head_table.process ();
+		
 		// write the directory 
 		foreach (Table t in tables) {
 						
@@ -2573,6 +4318,10 @@ class DirectoryTable : Table {
 		fd.pad ();
 						
 		this.font_data = fd;
+
+		check_sum = get_font_file_checksum ();
+		head_table.set_check_sum_adjustment ((uint32)(0xB1B0AFBA - check_sum));
+		head_table.process (); // update the value		
 	}
 	
 }

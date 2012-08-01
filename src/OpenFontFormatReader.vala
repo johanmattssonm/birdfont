@@ -50,6 +50,7 @@ class OpenFontFormatReader : Object {
 	
 	OtfInputStream dis;
 	DirectoryTable directory_table;
+	File file;
 	
 	public OpenFontFormatReader (string file_name) {
 		try {
@@ -60,12 +61,12 @@ class OpenFontFormatReader : Object {
 	}
 	
 	void parse (string file_name) throws Error {
-		File f = File.new_for_path (file_name);
-		if (!f.query_exists ()) {
-			throw new FileError.EXIST(@"OpenFontFormatReader: file does not exist. $((!) f.get_path ())");
+		file = File.new_for_path (file_name);
+		if (!file.query_exists ()) {
+			throw new FileError.EXIST(@"OpenFontFormatReader: file does not exist. $((!) file.get_path ())");
 		}
 			
-		dis = new OtfInputStream (f.read ());
+		dis = new OtfInputStream (file.read ());
 		
 		parse_index ();
 		done ();
@@ -93,7 +94,7 @@ class OpenFontFormatReader : Object {
 		
 		directory_table = new DirectoryTable ();
 		directory_table.set_offset_table (offset_table);
-		directory_table.parse (dis);
+		directory_table.parse (dis, file);
 		
 		set_limits ();
 	}
