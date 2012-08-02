@@ -676,7 +676,7 @@ class Font : GLib.Object {
 	
 	/** Callbackt function for finishing parsing of font file. */ 
 	public void loading_finished_callback () {
-		print ("Done Loading.");
+		print ("Done Loading.\n");
 	}
 
 	/** Callback function for loading glyph in a separate thread. */
@@ -685,8 +685,6 @@ class Font : GLib.Object {
 		GlyphCollection gc;
 		
 		gcl = get_glyph_collection (g.get_name ());
-		
-		// print (@"added name: $(g.name)\n");
 		
 		if (gcl != null) {
 			warning (@"glyph \"$(g.get_name ())\" does already exist");
@@ -699,6 +697,8 @@ class Font : GLib.Object {
 				g.name = @"($(++next_unindexed))";
 			}
 			
+			// del: print (@"added name: $(g.name)\n");
+			
 			add_glyph_collection ((!) gc);
 		} else if (gcl == null) {
 			gc = new GlyphCollection (g);
@@ -709,7 +709,7 @@ class Font : GLib.Object {
 			g.name = @"($(++next_unindexed))";
 			add_glyph_collection ((!) gc);
 		}
-		
+				
 		// take xheight from appropriate lower case letter
 		// xheight_position = estimate_xheight ();
 	}

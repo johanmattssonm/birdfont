@@ -102,6 +102,7 @@ class GlyphTable : GLib.Object {
 		next = find_next (g.get_name ());
 		
 		item = new Item (g.get_name (), g);
+		
 		if (next == null) {
 			data.append (item);
 		} else {

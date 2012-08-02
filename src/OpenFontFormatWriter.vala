@@ -751,7 +751,7 @@ class GlyfTable : Table {
 					name_c.append_unichar (character);
 					name = name_c.str;
 				}
-				
+
 				printd (@"name: $(name)\n");
 				
 				if (!loca.is_empty (i)) {	
@@ -778,12 +778,18 @@ class GlyfTable : Table {
 					glyph.right_limit = hmtx_table.get_advance (i) - hmtx_table.get_lsb (i);				
 				}
 				
-				if (character == 0 && i != 0) {
+				glyph.name = name;
+
+				if (character == 0) {
 					glyph.set_unassigned (true);
 				}
 				
-				glyph.name = name;
-				
+				if (character == 0 && name != "") {
+					stderr.printf (@"gid: $i\n");
+					stderr.printf (@"char: $((uint) character)\n");
+					stderr.printf (@"name: $(name)\n");
+				}
+								
 				add_glyph (glyph);
 				
 			} catch (Error e) {

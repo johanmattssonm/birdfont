@@ -27,9 +27,9 @@ class OverView : FontDisplay {
 	
 	int rows = 0;
 	int items_per_row = 0;
-	unichar first_character = 0;
-	unichar first_visible = 0;
-	unichar selected = 0;
+	uint32 first_character = 0;
+	int64 first_visible = 0;
+	uint32 selected = 0;
 	
 	double view_offset_y = 0;
 	double view_offset_x = 0;
@@ -83,7 +83,6 @@ class OverView : FontDisplay {
 				z.store_current_view ();
 			}
 		});
-
 	}
 
 	public override void scroll_wheel_up (Gdk.EventScroll e) {
@@ -385,17 +384,17 @@ class OverView : FontDisplay {
 				items_per_row = n_items;
 				first_visible = first_character;
 				
-				while (selected < first_visible)
+				while (selected <= first_visible)
 					scroll (-nail_height);
 					
-				while (selected < first_visible + rows * n_items)
+				while (selected <= first_visible + rows * n_items)
 					scroll (nail_height);
 					
 			}
 			
 			scroll_top ();
 			
-			while (first_visible <= selected) {
+			while (first_visible < selected) {
 				scroll_rows (1);
 			}
 			scroll_rows (-2);
@@ -448,6 +447,10 @@ class OverView : FontDisplay {
 			view_offset_y = 0;
 			first_visible += items_per_row;
 		}
+		
+		if (first_visible < 0) {
+			scroll_top ();
+		}
 	}
 	
 	public void scroll_top () {
@@ -492,8 +495,8 @@ class OverView : FontDisplay {
 				selected++;
 			}
 			
-			if (selected > len) {
-				selected = len;
+			if (selected >= len) {
+				selected = len - 1;
 			}
 			
 			adjust_scroll ();
@@ -512,8 +515,11 @@ class OverView : FontDisplay {
 
 	private void key_up () {
 		if (glyph_range.length () == 0) return;
-				
+		
+		warn_if_fail (selected >= first_character);
+		
 		if (selected < first_character + items_per_row) {
+			scroll_top ();
 			return;
 		}
 		
@@ -529,6 +535,10 @@ class OverView : FontDisplay {
 		}
 		
 		adjust_scroll ();
+
+		if (first_visible < first_character) {
+			scroll_top ();
+		}
 	}	
 	
 	public void open_current_glyph () {
@@ -552,14 +562,14 @@ class OverView : FontDisplay {
 		
 		selected++;
 		
-		if (selected > len) {
-			selected = len;
+		if (selected >= len) {
+			selected = len - 1;
 		}
 
 		if (selected_offset_y (selected) > allocation.height - nail_height) {
 			selected -= items_per_row;
 			key_down ();
-		}		
+		}
 	}
 	
 	public void key_left () {
@@ -570,6 +580,8 @@ class OverView : FontDisplay {
 				key_up ();
 			}
 		}
+		
+		print (@"selected: $(selected)\n");
 	}
 	
 	public string get_selected_char () {
@@ -672,7 +684,7 @@ class OverView : FontDisplay {
 		full.use_full_unicode_range ();
 		
 		set_glyph_range (full);
-		selected = c + 1;
+		selected = c;
 		set_glyph_range (gr);
 	}
 		
@@ -733,7 +745,7 @@ class OverView : FontDisplay {
 		if (glyph_range.length () == 0) return;
 
 		// scroll to the selected glyph
-		selected = first_visible;
+		selected = (uint32) first_visible;
 
 		while (y < e.y < allocation.height) {
 			selected += items_per_row;
@@ -764,14 +776,14 @@ class OverView : FontDisplay {
 
 	/** Returns true if overview shows the last character. */
 	private bool at_bottom () {
-		return (rows * items_per_row + items_per_row + first_visible > glyph_range.length ());
+		return (rows * items_per_row + items_per_row + first_visible >= glyph_range.length ());
 	}
 
 	public void set_glyph_range (GlyphRange range) {
 		string c = glyph_range.get_char (selected);
 		bool done = false;
-		unichar i;
-		unichar len;
+		uint32 i;
+		uint32 len;
 		
 		glyph_range = range;
 		
@@ -795,7 +807,7 @@ class OverView : FontDisplay {
 		}
 
 		while (true) {
-			for (i = first_visible; i < first_visible + items_per_row * (rows + 1); i++) {
+			for (i = (uint32) first_visible; i < first_visible + items_per_row * (rows + 1); i++) {
 				if (range.get_char (i) == c) {
 					selected = i;
 					done = true;
@@ -818,9 +830,9 @@ class OverView : FontDisplay {
 		adjust_scroll ();
 		
 		if (at_bottom ()) {
-			while (c != glyph_range.get_char (selected) && glyph_range.get_length () > items_per_row) {
+			while (c != glyph_range.get_char (selected) && glyph_range.get_length () >= items_per_row) {
 				key_right ();	
-				if (selected > glyph_range.get_length () - items_per_row) {
+				if (selected >= glyph_range.get_length () - items_per_row) {
 					break;
 				}
 			}
