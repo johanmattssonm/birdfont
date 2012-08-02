@@ -721,8 +721,7 @@ class GlyfTable : Table {
 		string name;	
 
 		printd (@"loca.size: $(loca.size)\n");
-		
-		post_table.print_all ();
+		// post_table.print_all ();
 		
 		// notdef character:
 		character = cmap.get_char (0);
@@ -1557,7 +1556,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			}
 		}
 		
-		glyph_range.print_all ();
+		// glyph_range.print_all ();
 		
 		ranges = glyph_range.get_ranges ();
 		seg_count = (uint16) ranges.length () + 1;
@@ -2334,8 +2333,6 @@ class NameTable : Table {
 				warning (@"unknown format $format in name table");
 				break;
 		}
-		
-		print_all ();
 	}
 	
 	public void parse_format0 (OtfInputStream dis) throws Error {
@@ -4032,10 +4029,6 @@ class PostTable : Table {
 		fd.pad ();
 		
 		this.font_data = fd;
-		
-		fd.print ();
-		
-		print_all ();
 	}
 
 }
@@ -4423,7 +4416,7 @@ class DirectoryTable : Table {
 // this class. At some later point should this code present meaningfull info to the user but 
 // for now is the approach just to put a lot of info in the console if we need to do some debugging.
 void printd (string s) {
-	print (s);
+	// print (s);
 }
 
 }

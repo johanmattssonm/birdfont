@@ -686,7 +686,7 @@ class Font : GLib.Object {
 		
 		gcl = get_glyph_collection (g.get_name ());
 		
-		print (@"added name: $(g.name)\n");
+		// print (@"added name: $(g.name)\n");
 		
 		if (gcl != null) {
 			warning (@"glyph \"$(g.get_name ())\" does already exist");
