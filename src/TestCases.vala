@@ -23,6 +23,7 @@ class TestCases {
 	public List<Test> test_cases;
 
 	public TestCases () {
+		add (test_data_reader, "Font data reader");
 		add (test_argument, "Argument list");
 		add (test_glyph_ranges, "Glyph ranges");
 		add (test_glyph_table, "Glyph table");
@@ -35,6 +36,27 @@ class TestCases {
 		add (test_delete_points, "Delete edit points");
 		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
+	}
+
+	public static void test_data_reader () {
+		FontData fd = new FontData ();
+		
+		fd.add (7);
+		fd.add_ulong (0x5F0F3CF5);
+		fd.add_ulong (9);
+		
+		warn_if_fail (fd.table_data[0] == 7);
+		warn_if_fail (fd.read () == 7);
+		warn_if_fail (fd.read_ulong () == 0x5F0F3CF5);
+		warn_if_fail (fd.read_ulong () == 9);
+		
+		fd = new FontData ();
+		for (int16 i = 0; i < 2048; i++) {
+			fd.add_short (i);
+		}
+		
+		fd.seek (2 * 80);
+		warn_if_fail (fd.read_short () == 80);
 	}
 
 	public static void test_argument () {

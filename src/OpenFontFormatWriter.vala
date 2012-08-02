@@ -37,7 +37,6 @@ class OpenFontFormatWriter : Object  {
 	}
 	
 	public void write_ttf_font (Font font) throws Error {
-		print (@"Calculate size\n");
 		long dl;
 		uint8* data;
 		uint i = 0;
@@ -67,22 +66,6 @@ class OpenFontFormatWriter : Object  {
 				os.put_byte (data[j]);
 			}
 		}
-		
-		/*
-		data = new uint8[dl];
-
-		foreach (Table t in tables) {
-			foreach (uint8 d in t.get_font_data ().data) {
-				data[i] = d;
-				i++;
-			}	
-		}
-		
-		while (written < data.length) {
-			written += os.write (data[written:data.length]);
-		}
-		*/
-		// directory_table.cmap_table.get_font_data ().print ();
 	}
 	
 	public void close () throws Error {
@@ -145,10 +128,10 @@ class OtfInputStream : Object  {
 class FontData : Object {
 
 	// Read pointer
-	int rp = 0;
+	uint rp = 0;
 
 	// Write pointer
-	int wp = 0;
+	uint wp = 0;
 	
 	// length without pad
 	uint32 len = 0;
@@ -193,17 +176,16 @@ class FontData : Object {
 			return;
 		}
 		
+		seek (0);
 		dis.seek (offset);
-	
-		for (wp = 0; wp < l; wp++) {
+		
+		wp = 0;
+		while (wp < l) {
 			b = dis.read_byte ();
 			add (b);
 		}
 		
 		rp = 0;
-	}
-	
-	public void print () {
 	}
 	
 	public uint length_with_padding () {
@@ -223,7 +205,7 @@ class FontData : Object {
 	
 	/** Add additional checksum data to this checksum. */
 	public void continous_check_sum (ref uint32 current_check_sum) {
-		int trp = rp;
+		uint trp = rp;
 		uint l;
 		
 		if (length_with_padding () % 4 != 0) {
@@ -247,7 +229,7 @@ class FontData : Object {
 		return sum;
 	}
 	
-	public void seek (int i) {
+	public void seek (uint i) {
 		rp = i;
 	}
 	
@@ -264,12 +246,23 @@ class FontData : Object {
 		return (Fixed) read_uint32 ();
 	}
 
+	public uint32 read_ulong () {
+		return read_uint32 ();
+	}
+
+	public uint32 read_short () {
+		uint32 f;
+		f = read () << 8;
+		f += read ();
+		return f;
+	}
+		
 	public uint32 read_uint32 () {
 		uint32 f;
-		f = read () << 32 - 8 * 1;
-		f += read () << 32 - 8 * 2;
-		f += read () << 32 - 8 * 3;
-		f += read () << 32 - 8 * 4;
+		f = read () << 8 * 3;
+		f += read () << 8 * 2;
+		f += read () << 8 * 1;
+		f += read () << 8 * 0;
 		return f;
 	}
 	
@@ -365,6 +358,24 @@ class FontData : Object {
 		
 		add_u32 ((int32) s);
 		add_u32 ((int32)(i - (s << 32)));		
+	}
+	
+	public void add_str_utf16 (string s) {
+		int index = 0;
+		unichar c;
+		uint8 c0;
+		uint8 c1;
+		int l = 0;
+		
+		while (s.get_next_char (ref index, out c)) {
+			c0 = (uint8) (c >> 8);
+			c1 = (uint8) (c - (c0 << 8));
+			add (c0);
+			add (c1);
+			l += 2;
+		}
+		
+		assert (l == 2 * s.char_count ());
 	}
 	
 	public void add_str (string s) {
@@ -535,11 +546,11 @@ class LocaTable : Table {
 		
 		dis.seek (offset);
 		
-		print (@"size: $size\n");
-		print (@"length: $length\n");
-		print (@"length/4-1: $(length / 4 - 1)\n");
-		print (@"length/2-1: $(length / 2 - 1)\n");
-		print (@"head_table.loca_offset_size: $(head_table.loca_offset_size)\n");
+		printd (@"size: $size\n");
+		printd (@"length: $length\n");
+		printd (@"length/4-1: $(length / 4 - 1)\n");
+		printd (@"length/2-1: $(length / 2 - 1)\n");
+		printd (@"head_table.loca_offset_size: $(head_table.loca_offset_size)\n");
 		
 		switch (head_table.loca_offset_size) {
 			case 0:
@@ -557,7 +568,7 @@ class LocaTable : Table {
 				for (long i = 0; i < size + 1; i++) {
 					glyph_offsets[i] = 	dis.read_ulong ();
 					
-					print (@"glyph_offsets[i]: $(glyph_offsets[i])\n");
+					printd (@"glyph_offsets[i]: $(glyph_offsets[i])\n");
 					
 					if (0 < i < size && glyph_offsets[i - 1] > glyph_offsets[i]) {
 						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
@@ -591,7 +602,7 @@ class LocaTable : Table {
 			foreach (uint32 o in glyf_table.location_offsets) {
 				fd.add_u16 ((uint16) (o / 2));
 				
-				print (@"o0: $(o)\n");
+				printd (@"o0: $(o)\n");
 				
 				if (o < last) {
 					warning (@"Loca table must be sorted. ($o < $last)");
@@ -604,7 +615,7 @@ class LocaTable : Table {
 			foreach (uint32 o in glyf_table.location_offsets) {
 				fd.add_u32 (o);
 				
-				print (@"o1: $(o)\n");
+				printd (@"o1: $(o)\n");
 				
 				if (o < last) {
 					warning (@"Loca table must be sorted. ($o < $last)");
@@ -658,7 +669,36 @@ class GlyfTable : Table {
 		location_offsets = new List<uint32> ();
 		glyphs = new List<Glyph> ();
 	}	
+
+	public uint16 get_first_char () {
+		foreach (Glyph g in glyphs) {
+			if (g.is_unassigned ()) {
+				continue;
+			}
+			
+			return (uint16)g.unichar_code;
+		}
+		
+		return 0;
+	}
 	
+	public uint16 get_last_char () {
+		unowned List<Glyph> gl = glyphs.last ();
+		Glyph g = (!) gl.data;
+		
+		while (gl != glyphs.first ()) {
+			g = (!) gl.data;
+			
+			if (!g.is_unassigned ()) {
+				break;
+			}
+			
+			gl = gl.prev;
+		}
+		
+		return (uint16)g.unichar_code; 
+	}
+			
 	/** Add this glyph from thread safe callback to the running gui. */
 	void add_glyph (Glyph g) {
 		IdleSource idle = new IdleSource ();
@@ -680,7 +720,7 @@ class GlyfTable : Table {
 		unichar character = 0;
 		string name;	
 
-		print (@"loca.size: $(loca.size)\n");
+		printd (@"loca.size: $(loca.size)\n");
 		
 		post_table.print_all ();
 		
@@ -713,7 +753,7 @@ class GlyfTable : Table {
 					name = name_c.str;
 				}
 				
-				print (@"name: $(name)\n");
+				printd (@"name: $(name)\n");
 				
 				if (!loca.is_empty (i)) {	
 					glyph_offset = loca.get_offset(i);
@@ -724,7 +764,7 @@ class GlyfTable : Table {
 					glyph.left_limit = 0;
 					glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (i);
 					
-					print (@"$(glyph.right_limit) = $(glyph.left_limit) + $(hmtx_table.get_advance (i))\n");
+					printd (@"$(glyph.right_limit) = $(glyph.left_limit) + $(hmtx_table.get_advance (i))\n");
 					
 					if (xmin > glyph.right_limit || xmax < glyph.left_limit) {
 						warning (@"Glyph $(name) is outside of it's box.");
@@ -928,10 +968,10 @@ class GlyfTable : Table {
 		}
 		// assert (nflags == npoints);
 
-		print (@"npoints: $npoints\n");
-		print (@"ncontours: $ncontours\n");
-		print (@"ninstructions: $ninstructions\n");
-		print (@"nflags: $nflags\n");
+		printd (@"npoints: $npoints\n");
+		printd (@"ncontours: $ncontours\n");
+		printd (@"ninstructions: $ninstructions\n");
+		printd (@"nflags: $nflags\n");
 				
 		int16 last = 0;
 		xcoordinates = new int16[npoints + 1];
@@ -1386,7 +1426,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 
 		seg_count = seg_count_x2 / 2;
 		
-		print (@"seg_count: $seg_count\n");
+		printd (@"seg_count: $seg_count\n");
 		
 		end_char = new uint16[seg_count];
 		for (int i = 0; i < seg_count; i++) {
@@ -1420,8 +1460,8 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		}
 
 		gid_len = (length - 16 - 8 * seg_count) / 2;
-		print (@"length: $length\n");
-		print (@"gid_len: $gid_len\n");
+		printd (@"length: $length\n");
+		printd (@"gid_len: $gid_len\n");
 		glyph_id_array = new uint16[gid_len];
 		for (int i = 0; i < gid_len; i++) {
 			glyph_id_array[i] = dis.read_ushort ();
@@ -1509,7 +1549,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 				break;
 			}
 		}
-		print (@"first_assigned $first_assigned\n");
+		printd (@"first_assigned $first_assigned\n");
 		first_assigned = 1;
 		foreach (Glyph g in glyf_table.glyphs) {
 			if (!g.is_unassigned ()) {
@@ -1681,8 +1721,8 @@ class CmapTable : Table {
 		version = dis.read_ushort ();
 		nsubtables = dis.read_ushort ();
 
-		print (@"cmap version: $version\n");
-		print (@"cmap subtables: $nsubtables\n");
+		printd (@"cmap version: $version\n");
+		printd (@"cmap subtables: $nsubtables\n");
 				
 		if (version != 0) {
 			warning (@"Bad version for cmap table: $version expecting 0. Number of subtables: $nsubtables");
@@ -1695,7 +1735,7 @@ class CmapTable : Table {
 			sub_offset = dis.read_ulong ();	
 			
 			if (platform == 3 && encoding == 1) {
-				print (@"Parsing Unicode BMP (UCS-2) Platform: $platform Encoding: $encoding\n");
+				printd (@"Parsing Unicode BMP (UCS-2) Platform: $platform Encoding: $encoding\n");
 				subtable = new CmapSubtableWindowsUnicode ();
 				subtable.offset = offset + sub_offset;
 				subtables.append (subtable);
@@ -1733,7 +1773,7 @@ class CmapTable : Table {
 		fd.add_u16 (1); // encoding (Format Unicode UCS-4)
 
 		subtable_offset = fd.length () + 4;
-		print (@"subtable_offset: $(subtable_offset)\n");
+		printd (@"subtable_offset: $(subtable_offset)\n");
 		
 		fd.add_ulong (subtable_offset);
 		cmap.process (fd, glyf_table);
@@ -1864,7 +1904,7 @@ class HeadTable : Table {
 	}
 	
 	public uint32 get_checksum_position () {
-		return offset + 8;
+		return 8;
 	}
 	
 	public void process () {
@@ -1910,7 +1950,7 @@ class HeadTable : Table {
 		
 		this.font_data = font_data;
 		
-		print (@"loca_offset_size: $loca_offset_size\n");
+		printd (@"loca_offset_size: $loca_offset_size\n");
 	}
 }
 
@@ -2086,7 +2126,7 @@ class HmtxTable : Table {
 			advance_width[i] = dis.read_ushort ();
 			left_side_bearing[i] = dis.read_short ();
 			
-			print (@"advance_width[i] $(advance_width[i])    $(left_side_bearing[i]) \n");
+			// Delete: print (@"advance_width[i] $(advance_width[i])    $(left_side_bearing[i]) \n");
 		}
 		
 		for (int i = 0; i < nmonospaced; i++) {
@@ -2117,7 +2157,7 @@ class HmtxTable : Table {
 			extent = (int16) (lsb + (xmax - xmin) + 0.5);
 			rsb = (int16) (advance - extent);
 
-			print (@"$(g.name) advance: $advance  = $((int16) (g.right_limit))  -  $((int16) (g.left_limit))\n");
+			printd (@"$(g.name) advance: $advance  = $((int16) (g.right_limit))  -  $((int16) (g.left_limit))\n");
 						
 			fd.add_u16 (advance);
 			fd.add_16 (lsb);
@@ -2166,7 +2206,7 @@ class MaxpTable : Table {
 		dis.seek (offset);
 		
 		format = dis.read_fixed ();
-		print (@"Maxp version: $(format.get_string ())\n");
+		printd (@"Maxp version: $(format.get_string ())\n");
 		
 		num_glyphs = dis.read_ushort ();
 		
@@ -2220,8 +2260,8 @@ class OffsetTable : Table {
 		entry_selector = dis.read_ushort ();
 		range_shift = dis.read_ushort ();
 		
-		print (@"Font file version $(version.get_string ())\n");
-		print (@"Number of tables $num_tables\n");		
+		printd (@"Font file version $(version.get_string ())\n");
+		printd (@"Number of tables $num_tables\n");		
 	}
 	
 	public void process () {
@@ -2253,6 +2293,10 @@ class NameTable : Table {
 
 	static const uint16 COPYRIGHT_NOTICE = 0;
 	static const uint16 FONT_NAME = 1;
+	static const uint16 SUBFAMILY_NAME = 2;
+	static const uint16 UNIQUE_IDENTIFIER = 3;
+	static const uint16 FULL_FONT_NAME = 4; // name + subfamily
+	static const uint16 VERSION = 5;
 	static const uint16 DESCRIPTION = 10;
 	
 	List<string> text;
@@ -2297,45 +2341,60 @@ class NameTable : Table {
 	public void parse_format0 (OtfInputStream dis) throws Error {
 		uint16 count;
 		uint16 storage_offset;
-
-		uint16 platform;
-		uint16 encoding_id;
-		uint16 lang;
 		
 		List<uint16> strlen = new List<uint16> ();
 		List<uint16> off = new List<uint16> ();
 		List<uint16> name_id = new List<uint16> ();
-		
+		List<uint16> encoding_id = new List<uint16> ();
+		List<uint16> platform = new List<uint16> ();
+		List<uint16> lang = new List<uint16> ();
+				
 		count = dis.read_ushort ();
 		storage_offset = dis.read_ushort ();
 		
 		for (int i = 0; i < count; i++) {
-			platform = dis.read_ushort ();
-			encoding_id = dis.read_ushort ();
-			lang = dis.read_ushort ();
+			platform.append (dis.read_ushort ());
+			encoding_id.append (dis.read_ushort ());
+			lang.append (dis.read_ushort ());
 			name_id.append (dis.read_ushort ());
 			strlen.append (dis.read_ushort ());
 			off.append (dis.read_ushort ());
-			
-			print (@"platform $platform\n");
-			print (@"encoding_id $encoding_id\n");
-			print (@"lang $lang\n");
-			print (@"name_id $((!) name_id.last ().data)\n");
-			print (@"strlen $((!) strlen.last ().data)\n");
-			print (@"off $((!) off.last ().data)\n");
 		}
 
+		int plat;
+		StringBuilder str;
 		for (int i = 0; i < count; i++) {
+			plat = platform.nth (i).data;
 			dis.seek (offset + storage_offset + off.nth (i).data);
+			str = new StringBuilder ();
 			
-			StringBuilder str = new StringBuilder ();
-			for (int j = 0; j < strlen.nth (i).data; j++) {
-				char c = dis.read_char ();
-				str.append_c (c);
-			}
+			switch (plat) {
+				case 1:
+					for (int j = 0; j < strlen.nth (i).data; j++) {
+						char c = dis.read_char ();
+						str.append_c (c);
+					}
+					break;
+					
+				case 3:
+					for (int j = 0; j < strlen.nth (i).data; j += 2) {
+						unichar c;
+						char c0 = dis.read_char ();
+						char c1 = dis.read_char ();
+												
+						c = c0 << 8;
+						c += c1;
+						
+						str.append_unichar (c);
+					}
+					break;
+				
+				default:
+					break;
+			} 
 			
 			text.append (str.str);
-			print (@"Name id: $(name_id.nth (i).data) str: \"$(str.str)\"\n");		
+			printd (@"Name id: $(name_id.nth (i).data) platform:  $(platform.nth (i).data) enc: $(encoding_id.nth (i).data) len: $(strlen.nth (i).data) str: \"$(str.str)\"\n");		
 		}
 	}
 	
@@ -2343,46 +2402,76 @@ class NameTable : Table {
 		FontData fd = new FontData ();
 		Font font = Supplement.get_current_font ();
 		uint16 len = 0;
-		string text;
-		uint16 num_records = 1;
+		string t;
+		uint16 p;
+		uint16 l;
+		uint16 num_records;
+
+		List<uint16> type = new List<uint16> ();
+		List<string> text = new List<string> ();
+
+		text.append ("Copyright");
+		type.append (COPYRIGHT_NOTICE);
+		
+		text.append (font.get_name ());
+		type.append (FONT_NAME);
+
+		text.append ("Regular");
+		type.append (SUBFAMILY_NAME);
+
+		text.append (font.get_name ()); // TODO: validate
+		type.append (UNIQUE_IDENTIFIER);
+
+		text.append (font.get_name ());
+		type.append (FULL_FONT_NAME);
+
+		text.append ("Version 1.0");
+		type.append (VERSION);
+						
+		num_records = (uint16) text.length ();
 		
 		fd.add_ushort (0); // format 1
-		fd.add_ushort (num_records); // nrecords
-		fd.add_ushort (6 + 12 * num_records); // string storage offset
+		fd.add_ushort (2 * num_records); // nplatforms * nrecords 
+		fd.add_ushort (6 + 12 * 2 * num_records); // string storage offset
 
-/*		
-		// name record
-		text = "Copyright";
-		fd.add_ushort (1); // platform
-		fd.add_ushort (0); // encoding id deprecated
-		fd.add_ushort (0); // language
-		fd.add_ushort (COPYRIGHT_NOTICE); // name id 
-		fd.add_ushort ((uint16) text.len ()); // strlen
-		fd.add_ushort (len); // offset from begining of string storage
-		len += (uint16) text.len ();
-		
-		text = "A typeface.";
-		fd.add_ushort (1); // platform
-		fd.add_ushort (0); // encoding id 
-		fd.add_ushort (0); // language
-		fd.add_ushort (DESCRIPTION); // name id 
-		fd.add_ushort ((uint16) text.len ()); // strlen
-		fd.add_ushort (len); // offset from begining of string storage
-		len += (uint16) text.len ();
-*/
-		text = font.get_name ();
-		fd.add_ushort (1); // platform
-		fd.add_ushort (0); // encoding id deprecated
-		fd.add_ushort (0); // language
-		fd.add_ushort (FONT_NAME); // name id 
-		fd.add_ushort ((uint16) text.len ()); // strlen
-		fd.add_ushort (len); // offset from begining of string storage
-		len += (uint16) text.len ();		
+		for (int i = 0; i < num_records; i++) {
+			t = (!) text.nth (i).data;
+			p = (!) type.nth (i).data;
+			l = (uint16) t.len ();
+			
+			fd.add_ushort (1); // platform
+			fd.add_ushort (0); // encoding id
+			fd.add_ushort (0); // language
+			fd.add_ushort (p); // name id 
+			fd.add_ushort (l); // strlen
+			fd.add_ushort (len); // offset from begining of string storage
+			len += l;				
+		}	
 
-//		fd.add_str ("Copyright"); 
-//		fd.add_str ("A typeface.");
-		fd.add_str (font.get_name ());
+		for (int i = 0; i < num_records; i++) {
+			t = (!) text.nth (i).data;
+			p = (!) type.nth (i).data;
+			l = (uint16) (2 * t.char_count ());
+
+			fd.add_ushort (3); // platform
+			fd.add_ushort (1); 	// encoding id
+			fd.add_ushort (0x0809); // language
+			fd.add_ushort (p); // name id 
+			fd.add_ushort (l); // strlen
+			fd.add_ushort (len); // offset from begining of string storage
+			len += l;
+		}
+
+		// platform 1
+		foreach (string s in text) {
+			fd.add_str (s); 
+		}
 		
+		// platform 3
+		foreach (string s in text) {
+			fd.add_str_utf16 (s); 
+		}
+
 		fd.pad ();
 		
 		this.font_data = fd;
@@ -2399,7 +2488,7 @@ class Os2Table : Table {
 		
 	}
 	
-	public void process () {
+	public void process (GlyfTable glyf_table) {
 		FontData fd = new FontData ();
 		
 		fd.add_u16 (0x0002); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
@@ -2442,8 +2531,9 @@ class Os2Table : Table {
 		fd.add_tag ("----"); // VendID
 
 		fd.add_u16 (0); // USHORT fsSelection
-		fd.add_u16 (0); // USHORT usFirstCharIndex
-		fd.add_u16 (0); // USHORT usLastCharIndex
+		
+		fd.add_u16 (glyf_table.get_first_char ()); // USHORT usFirstCharIndex
+		fd.add_u16 (glyf_table.get_last_char ()); // USHORT usLastCharIndex
 
 		fd.add_16 (0); // SHORT sTypoAscender
 		fd.add_16 (0); // SHORT sTypoDescender
@@ -2528,18 +2618,18 @@ class PostTable : Table {
 			return;
 		}
 		
-		print (@"format: $(format.get_string ())\n");
-		print (@"italic: $(italic.get_string ())\n");
-		print (@"underlie_pos: $(underlie_pos)\n");
-		print (@"underlie_thickness: $(underlie_thickness)\n");
-		print (@"is_fixed_pitch: $(is_fixed_pitch)\n");
-		print (@"mem_min42: $(mem_min42)\n");
-		print (@"mem_max42: $(mem_max42)\n");
-		print (@"mem_min1: $(mem_min1)\n");
-		print (@"mem_max1: $(mem_max1)\n");
-		print (@"\n");
+		printd (@"format: $(format.get_string ())\n");
+		printd (@"italic: $(italic.get_string ())\n");
+		printd (@"underlie_pos: $(underlie_pos)\n");
+		printd (@"underlie_thickness: $(underlie_thickness)\n");
+		printd (@"is_fixed_pitch: $(is_fixed_pitch)\n");
+		printd (@"mem_min42: $(mem_min42)\n");
+		printd (@"mem_max42: $(mem_max42)\n");
+		printd (@"mem_min1: $(mem_min1)\n");
+		printd (@"mem_max1: $(mem_max1)\n");
+		printd (@"\n");
 		
-		print (@"Num names: $(nnames)\n");
+		printd (@"Num names: $(nnames)\n");
 		
 		uint16 k;
 		int non_standard_names = 0;
@@ -3994,7 +4084,7 @@ class DirectoryTable : Table {
 		hhea_table.process ();
 		maxp_table.process ();
 		name_table.process ();
-		os_2_table.process ();
+		os_2_table.process (glyf_table);
 		loca_table.process (glyf_table, head_table);
 		post_table.process ();
 		
@@ -4007,9 +4097,9 @@ class DirectoryTable : Table {
 			tables.append (offset_table);
 			tables.append (this);
 
-			tables.append (cmap_table);  // The other required tables
-			tables.append (glyf_table);
 			tables.append (head_table);
+			tables.append (cmap_table);
+			tables.append (glyf_table);
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
 			tables.append (loca_table);
@@ -4046,7 +4136,7 @@ class DirectoryTable : Table {
 			offset = dis.read_ulong ();
 			length = dis.read_ulong ();
 			
-			print (@"$(tag.str) \toffset: $offset \tlength: $length \tchecksum: $checksum.\n");
+			printd (@"$(tag.str) \toffset: $offset \tlength: $length \tchecksum: $checksum.\n");
 			
 			if (tag.str == "hmtx") {
 				hmtx_table.id = tag.str;
@@ -4109,18 +4199,14 @@ class DirectoryTable : Table {
 		fd.print ();
 		*/
 		
-		print (@"fd.write_table (dis, post_table.offset, post_table.length) $(post_table.offset) $(post_table.length)\n");
+		printd (@"fd.write_table (dis, post_table.offset, post_table.length) $(post_table.offset) $(post_table.length)\n");
 		
 		head_table.parse (dis);
-
-		if (!validate_checksum_for_entire_font (dis, file)) {
-			warning ("file has invalid checksum");
-		}
-					
+		
 		if (!validate_tables (dis, file)) {
 			warning ("Missing required table or bad checksum.");
 			// Fixa: stop processing here, if we want to avoid loading bad fonts
-			// return;
+			return;
 		}
 		
 		post_table.parse (dis);
@@ -4136,22 +4222,35 @@ class DirectoryTable : Table {
 	
 	public bool validate_tables (OtfInputStream dis, File file) {
 		bool valid = true;
-
+		uint p = head_table.get_checksum_position ();
+		FontData fd = new FontData ();	
+		uint32 checksum;
+		
 		try {
+
+			if (!validate_checksum_for_entire_font (dis, file)) {
+				warning ("file has invalid checksum");
+			}
+							
+			fd.write_table (dis, head_table.offset, head_table.length);
+			
+			// zero out checksum entry in head table before validating it
+			fd.write_at (p + 0, 0);
+			fd.write_at (p + 1, 0);
+			fd.write_at (p + 2, 0);
+			fd.write_at (p + 3, 0);	
+
+			checksum = (uint32) fd.check_sum ();	
+			
+			if (checksum != head_table.checksum) {
+				warning ("head_table has is invalid checksum");
+				valid = false;				
+			}
 			
 			if (!glyf_table.validate (dis)) {
 				warning ("glyf_table has invalid checksum");
 				valid = false;
 			}
-			
-			// head checksum is calculated without checksum adjustment for entire file 
-			// skip validation for now.
-			/*
-			if (!head_table.validate (dis)) {
-				warning ("head_table has is invalid checksum");
-				valid = false;
-			}
-			*/
 			
 			if (!maxp_table.validate (dis)) {
 				warning ("maxp_table has is invalid checksum");
@@ -4202,7 +4301,7 @@ class DirectoryTable : Table {
 	
 	bool validate_checksum_for_entire_font (OtfInputStream dis, File f) {
 		FontData fd = new FontData ();
-		uint p = head_table.get_checksum_position ();
+		uint p = head_table.offset + head_table.get_checksum_position ();
 		FileInfo file_info = f.query_info ("*", FileQueryInfoFlags.NONE);
 		uint32 checksum_font, checksum_head;
 		uint32 file_size = (uint32) file_info.get_size ();
@@ -4212,17 +4311,13 @@ class DirectoryTable : Table {
 			return false;
 		}
 		
-        stdout.printf ("File size: %lld bytes\n", file_info.get_size ());
-        
-        print ("WRITE\n");
         try {
 			fd.write_table (dis, 0, file_size);
 		} catch (GLib.Error e) {
 			warning (@"Failed to compute checksum since $(e.message)");
 		}
-		print ("WRITTEN\n");
 		
-		// zero out checksum entry in head table before calculating it
+		// zero out checksum entry in head table before validating it
 		fd.write_at (p + 0, 0);
 		fd.write_at (p + 1, 0);
 		fd.write_at (p + 2, 0);
@@ -4235,8 +4330,6 @@ class DirectoryTable : Table {
 			warning (@"Fontfile checksum in head table does not match calculated checksum. checksum_font: $checksum_font checksum_head: $checksum_head");
 			return false;
 		}
-		
-		print ("Checksum for font is valid.\n");
 		
 		return true;
 	}
@@ -4302,7 +4395,7 @@ class DirectoryTable : Table {
 				continue;
 			}
 			
-			print (@"c $(t.id)  offset: $(table_offset)  len with pad  $(t.get_font_data ().length_with_padding ())\n");
+			printd (@"c $(t.id)  offset: $(table_offset)  len with pad  $(t.get_font_data ().length_with_padding ())\n");
 
 			table_length = t.get_font_data ().length (); // without padding
 			
@@ -4324,6 +4417,13 @@ class DirectoryTable : Table {
 		head_table.process (); // update the value		
 	}
 	
+}
+
+// We could benifit greatly from error detection and validation at a fine grained level in
+// this class. At some later point should this code present meaningfull info to the user but 
+// for now is the approach just to put a lot of info in the console if we need to do some debugging.
+void printd (string s) {
+	print (s);
 }
 
 }
