@@ -23,6 +23,7 @@ class TestCases {
 	public List<Test> test_cases;
 
 	public TestCases () {
+		add (test_overview, "Overview");
 		add (test_data_reader, "Font data reader");
 		add (test_argument, "Argument list");
 		add (test_glyph_ranges, "Glyph ranges");
@@ -36,6 +37,40 @@ class TestCases {
 		add (test_delete_points, "Delete edit points");
 		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
+	}
+
+	public static void test_overview () {
+		OverView o = MainWindow.get_overview ();
+
+		warn_if_fail (o.selected_char_is_visible ());
+	
+		for (int i = 0; i < 10; i++) {
+			o.key_down ();
+			warn_if_fail (o.selected_char_is_visible ());
+		}
+
+		for (int i = 0; i < 15; i++) {
+			o.key_up ();
+			warn_if_fail (o.selected_char_is_visible ());
+		}
+
+		for (int i = 0; i < 6; i++) {
+			o.key_down ();
+			warn_if_fail (o.selected_char_is_visible ());
+		}
+
+		for (int i = 0; i < 3; i++) {
+			o.key_down ();
+			warn_if_fail (o.selected_char_is_visible ());
+		}
+		
+		for (int i = 0; i < 2000; i++) {
+			o.scroll_adjustment (5);
+		}
+
+		for (int i = 0; i < 2000; i++) {
+			o.scroll_adjustment (-5);
+		}
 	}
 
 	public static void test_data_reader () {

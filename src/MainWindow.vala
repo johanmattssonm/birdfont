@@ -22,7 +22,8 @@ namespace Supplement {
 
 public class MainWindow : Gtk.Window {
 
-	HBox hb;
+	HBox list_box;
+	HBox canvas_box;
 	
 	static TabBar tabs;
 	VBox tab_box;
@@ -36,6 +37,8 @@ public class MainWindow : Gtk.Window {
 		
 	static DrawingArea margin_bottom;
 	static DrawingArea margin_right;
+
+	static OverView over_view;
 	
 	public MainWindow (string title) {
 		singleton = this;
@@ -64,27 +67,31 @@ public class MainWindow : Gtk.Window {
 			FontDisplay fd = tab.get_display ();
 			glyph_canvas.set_current_glyph (fd);
 		});
-		
-		OverView over_view = new OverView();
-		
+
+		over_view = new OverView();
+				
 		tabs.add_unique_tab (content, 60, true);
 		tabs.add_unique_tab (over_view, 75, false);
 		
-		tabs.select_tab_name ("Content");
-				
-		hb = new HBox (false, 0);
+		tabs.select_tab_name ("File");
+		
+		canvas_box = new HBox (false, 0);
+		canvas_box.pack_start (glyph_canvas, true, true, 0);
 		
 		tab_box = new VBox (false, 0);
 		tab_box.pack_start (tabs, false, false, 0);	
-		tab_box.pack_start (glyph_canvas, true, true, 0);
+		
+		tab_box.pack_start (canvas_box, true, true, 0);
+
 		tab_box.pack_start (tool_tip, false, false, 0);
 		tab_box.pack_start (margin_bottom, false, false, 0);
 		
-		hb.pack_start (tab_box, true, true, 0);
-		hb.pack_start (tools, false, false, 0);
-		hb.pack_start (margin_right, false, false, 0);
+		list_box = new HBox (false, 0);
+		list_box.pack_start (tab_box, true, true, 0);
+		list_box.pack_start (tools, false, false, 0);
+		list_box.pack_start (margin_right, false, false, 0);
 
-		add (hb);
+		add (list_box);
 				
 		key_snooper_install (global_key_bindings, null);
 		

@@ -77,7 +77,8 @@ class GlyphRange {
 	}
 	
 	public void use_full_unicode_range () {
-		add_range ('\0', (unichar) 0xA868FE00);
+		// add_range ('\0', (unichar) 0xA868FE00);
+		add_range ('\0', (unichar) 0xFFF8);
 	}
 	
 	// Todo: complete localized alphabetical sort åäö is the right order for example.

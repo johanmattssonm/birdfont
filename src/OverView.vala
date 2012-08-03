@@ -51,10 +51,16 @@ class OverView : FontDisplay {
 
 	List<GlyphCollection> deleted_glyphs = new List<GlyphCollection> ();
 
+	Scrollbar scrollbar;
+	
 	public OverView (GlyphRange? range = null) {
+		GlyphRange gr;
+		
 		if (range == null) {
-			glyph_range = new GlyphRange ();
-			glyph_range.use_default_range ();
+			gr = new GlyphRange ();
+			gr.use_default_range ();
+			
+			set_glyph_range (gr);
 		}
 		
 		reset_zoom ();
@@ -83,6 +89,50 @@ class OverView : FontDisplay {
 				z.store_current_view ();
 			}
 		});
+		
+		scrollbar = new Scrollbar ();
+		scrollbar.signal_scroll.connect ((delta, delta_last, absolute) => {
+			int64 adjustement = (int64) (-delta_last * get_height ());
+			int64 pixels = (int64) (-5.0 * delta_last * nail_height);
+			
+			// print (@"(int64) $(-delta_last) * $(over_view.get_height ()) = $adjustement \n");
+			print (@"$delta\n");
+	
+			if (absolute <= 0.002) {
+				first_character = 0;
+				first_visible = 0;
+				selected = 0;
+				scroll_top ();
+			} else if (absolute >= 1) {
+				scroll_bottom ();
+			} else {
+				scroll_to (absolute);
+			}
+			
+/*
+			if (-0.1 < delta < 0.1) {
+				scroll_adjustment (pixels);
+			} else {
+				scroll_to (absolute);
+			}
+*/			
+			
+			redraw_area (0, 0, allocation.width, allocation.height);
+		});
+		
+		update_scrollbar ();
+	}
+	
+	void scroll_bottom () {
+		scroll_to_position (glyph_range.length () - items_per_row * (rows - 1));
+	}
+	
+	public double get_height () {
+		return 2.0 * nail_height * (glyph_range.length () / rows);
+	}
+
+	public bool selected_char_is_visible () {
+		return first_visible <= selected <= first_visible + items_per_row * rows;
 	}
 
 	public override void scroll_wheel_up (Gdk.EventScroll e) {
@@ -258,8 +308,8 @@ class OverView : FontDisplay {
 			character_string = glyph_range.get_char ((uint32) index);
 			
 			if (character_string == "") {
-				warning ("Got null character as name for glyph.");
-				break;
+				warning (@"Got null character as name for glyph. Index: $index");
+				// break;
 			}
 			
 			cr.save ();
@@ -359,7 +409,8 @@ class OverView : FontDisplay {
 		double y;
 		uint64 t;
 		int i;
-
+		int n_items;
+		
 		while (visible_characters.length () > 9) {
 			visible_characters.remove_link (visible_characters.first ());
 		}
@@ -372,11 +423,12 @@ class OverView : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 		
-		int n_items = (allocation.width / nail_width);
+		scrollbar.draw (cr, allocation);
+		
+		n_items = (allocation.width / nail_width);
 		rows = (allocation.height / nail_height);
-				
-		if (items_per_row != n_items) {
-				
+		
+		if (items_per_row != n_items) { 	
 			if (items_per_row == 0) {
 				items_per_row = n_items;
 				first_visible = first_character;
@@ -384,20 +436,14 @@ class OverView : FontDisplay {
 				items_per_row = n_items;
 				first_visible = first_character;
 				
-				while (selected <= first_visible)
+				while (selected < first_visible) {
 					scroll (-nail_height);
+				}
 					
-				while (selected <= first_visible + rows * n_items)
-					scroll (nail_height);
-					
+				while (selected < first_visible + rows * n_items) {
+					scroll (nail_height);	
+				}	
 			}
-			
-			scroll_top ();
-			
-			while (first_visible < selected) {
-				scroll_rows (1);
-			}
-			scroll_rows (-2);
 		}
 
 		width = nail_width * items_per_row;
@@ -435,22 +481,80 @@ class OverView : FontDisplay {
 		}
 	}
 	
-	public void scroll (int pixel_adjustment) {
-		view_offset_y += pixel_adjustment;
-		
-		if (view_offset_y >= 0) {			
-			view_offset_y = -nail_height;
-			first_visible -= items_per_row;
+	public void scroll_adjustment (double pixel_adjustment) {
+		if (first_visible <= 0) {
+			return;
+		}
+
+		if (first_visible + rows * items_per_row >= glyph_range.length ()) {
+			return;
 		}
 		
-		if (view_offset_y < -nail_height) {
+		scroll ((int64) pixel_adjustment);
+	}
+	
+	void default_position () {
+		scroll_top ();
+		scroll_rows (1);
+	}
+	
+	void scroll_to_position (int64 r) {
+		// bottom
+		if (r > glyph_range.length () - items_per_row * rows) {
+			return;
+		}
+		
+		if (r < 0) {
+			scroll_top ();
+			return;
+		}
+		
+		default_position ();
+		
+		// DEL:
+		// view_offset_y = 0;
+		// first_character = (uint32) r;
+		first_visible = r;
+		selected = (uint32) r;
+		
+		adjust_scroll ();
+	}
+	
+	public void scroll_to (double percent) {
+		int64 r;
+		
+		print (@"percent $percent\n");
+		
+		r = (int64) (percent * glyph_range.length () / rows);
+		r *= items_per_row;
+		
+		scroll_to_position (r);
+		
+		print (@"i: $r $(glyph_range.get_char ((uint32) r)) l: $(glyph_range.length ()) \n");
+	}
+		
+	private void scroll (int64 pixel_adjustment) {
+
+		if (first_visible < 0 && pixel_adjustment < 0) {
+			scroll_top ();
+			return;
+		}
+				
+		view_offset_y += pixel_adjustment;
+		
+		if (view_offset_y >= 0) {
+			while (view_offset_y > nail_height) {			
+				view_offset_y -= nail_height;
+				first_visible -= items_per_row;
+			}
+
+			first_visible -= items_per_row;
+			view_offset_y -= nail_height;
+		} else if (view_offset_y < -nail_height) {
 			view_offset_y = 0;
 			first_visible += items_per_row;
 		}
 		
-		if (first_visible < 0) {
-			scroll_top ();
-		}
 	}
 	
 	public void scroll_top () {
@@ -482,7 +586,9 @@ class OverView : FontDisplay {
 		}
 	}
 
-	private void key_down () {
+	public void key_down () {
+		update_scrollbar ();
+		
 		if (glyph_range.length () == 0) return;
 	
 		if (at_bottom ()) {
@@ -513,10 +619,14 @@ class OverView : FontDisplay {
 		adjust_scroll ();
 	}
 
-	private void key_up () {
+	public void key_up () {
+		update_scrollbar ();
+		
 		if (glyph_range.length () == 0) return;
 		
-		warn_if_fail (selected >= first_character);
+		if (selected < first_character) {		
+			warn_if_reached ();
+		}
 		
 		if (selected < first_character + items_per_row) {
 			scroll_top ();
@@ -689,9 +799,15 @@ class OverView : FontDisplay {
 	}
 		
 	public override void motion_notify (EventMotion e) {
+		if (e.x > allocation.x - 10) {
+			scrollbar.motion_notify (e);
+		}
 	}
 	
-	public override void button_release (EventButton event) {
+	public override void button_release (EventButton e) {
+		if (e.x > allocation.x - 10) {
+			scrollbar.button_release (e);
+		}
 	}
 	
 	public override void leave_notify (EventCrossing e) {
@@ -771,7 +887,11 @@ class OverView : FontDisplay {
 	}
 	
 	public override void button_press (EventButton e) {
-		selection_click (e);
+		if (e.x > allocation.width - 10) {
+			scrollbar.button_press (e);
+		} else {
+			selection_click (e);
+		}
 	}
 
 	/** Returns true if overview shows the last character. */
@@ -783,7 +903,7 @@ class OverView : FontDisplay {
 		string c = glyph_range.get_char (selected);
 		bool done = false;
 		uint32 i;
-		uint32 len;
+		uint32 len = 0;
 		
 		glyph_range = range;
 		
@@ -849,10 +969,15 @@ class OverView : FontDisplay {
 				scroll_top ();
 			}
 		}
-		
+
+		update_scrollbar ();
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 
+	public void update_scrollbar () {
+		scrollbar.set_handle_size (items_per_row * rows / (double) glyph_range.get_length ());
+		scrollbar.set_handle_position (first_visible / (double) glyph_range.get_length ());
+	}
 }
 
 }
