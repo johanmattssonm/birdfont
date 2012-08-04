@@ -298,7 +298,7 @@ class PenTool : Tool {
 		y *= -1;
 
 		set_active_edit_point (null);
-		
+
 		foreach (Path current_path in g.path_list) {
 			if (!current_path.is_editable ()) {
 				continue;
@@ -307,7 +307,7 @@ class PenTool : Tool {
 			foreach (EditPoint e in current_path.points) {
 				d = Math.sqrt (Math.fabs (Math.pow (e.x - x, 2) + Math.pow (e.y - y, 2)));
 								
-				if (d < m && d * g.view_zoom < 14) {
+				if (d < m && d * g.view_zoom < 14 && !is_over_handle (x, y)) {
 					m = d;
 					set_active_edit_point (e);
 				}
@@ -454,10 +454,13 @@ class PenTool : Tool {
 	public void begin_from_new_point_on_path () {
 		begin_new_point_on_path = true;
 	}
-
+	
 	private bool is_over_handle (double x, double y) {
-		return selected_corner.get_left_handle ().get_point ().is_close (x, y) 
-		|| selected_corner.get_right_handle ().get_point ().is_close (x, y);
+		double dp = selected_corner.get_close_distance (x, y);
+		double dl = selected_corner.get_left_handle ().get_point ().get_close_distance (x, y);
+		double dr = selected_corner.get_right_handle ().get_point ().get_close_distance (x, y);
+		
+		return (dl < dp || dr < dp);
 	}
 
 	private void curve_active_corner_event (double x, double y) {
@@ -465,6 +468,10 @@ class PenTool : Tool {
 		
 		active_handle.active = false;
 		
+		if (!is_over_handle (x, y)) {
+			return;
+		}		
+				
 		eh = selected_corner.get_left_handle ();
 		if (eh.get_point ().is_close (x, y)) {
 			eh.active = true;
@@ -482,6 +489,10 @@ class PenTool : Tool {
 		EditPointHandle eh;
 		
 		open_closest_path (x, y);
+		
+		if (!is_over_handle (x, y)) {
+			return;
+		}
 		
 		eh = selected_corner.get_left_handle ();
 		

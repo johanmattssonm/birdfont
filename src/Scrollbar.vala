@@ -69,7 +69,6 @@ class Scrollbar : DrawingArea {
 	
 	public void set_handle_size (double s) {
 		height = (s < 0.01) ? 0.01 : s;
-		print (@"height $height\n");
 		
 		if (height > 1) {
 			height = 1;
@@ -79,7 +78,6 @@ class Scrollbar : DrawingArea {
 	}
 
 	public void set_handle_position (double p) {
-		print (@"p: $p\n");
 		pos = (p > 0) ? p : 0;
 		y = pos * alloc.height;
 	}
@@ -88,8 +86,6 @@ class Scrollbar : DrawingArea {
 		move = true;
 		y_begin = e.y;
 		y_last = e.y;
-		
-		print ("press\n");
 	}
 	
 	public void button_release (EventButton event) {
@@ -101,7 +97,6 @@ class Scrollbar : DrawingArea {
 	}
 	
 	public void motion_notify (EventMotion e) {
-		print (@"notify $move \n");
 		double d = 0;
 		double dl = 0;
 		double m;
@@ -129,8 +124,6 @@ class Scrollbar : DrawingArea {
 		if (move) {
 			pos = y / alloc.height;
 		}
-		
-		print (@"pos $pos\n");
 		
 		if (move) {
 			signal_scroll (d / (m - h), dl / (m -h), y / (m - h));

@@ -996,9 +996,6 @@ class Path {
 		ymax = tymax;
 		ymin = tymin;
 
-		// Fixa:
-		// print (@"updated \n");
-
 		if (unlikely (!new_val)) {
 			// only one point, what should we do? probably skip it.
 		} else if (unlikely (!got_region_boundries ())) {

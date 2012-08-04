@@ -52,8 +52,6 @@ class Argument : GLib.Object {
 				a = expand_param (a);
 			}
 			
-			print (@"\"$a\"\n");
-			
 			// valid parameter
 			if (a == "--autosave" || a == "--exit" || a == "--slow" || a == "--help" || a == "--test") {
 				prev = a;
