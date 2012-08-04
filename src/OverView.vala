@@ -96,7 +96,7 @@ class OverView : FontDisplay {
 			int64 pixels = (int64) (-5.0 * delta_last * nail_height);
 			
 			// print (@"(int64) $(-delta_last) * $(over_view.get_height ()) = $adjustement \n");
-			print (@"$delta\n");
+			// print (@"$delta\n");
 	
 			if (absolute <= 0.002) {
 				first_character = 0;
@@ -382,13 +382,6 @@ class OverView : FontDisplay {
 			
 		g.boundries (out x1, out y1, out x2, out y2);
 		
-		/*
-		if (x1 < -8500) return false; 
-		if (x2 > 8500) return false;
-		if (y1 < -7600) return false;
-		if (y2 > 7600) return false;
-		*/
-		
 		gx = x + nail_width / 2.0 - g.get_width () / 2.0;
 		gy = y + nail_height;
 		
@@ -425,7 +418,7 @@ class OverView : FontDisplay {
 		
 		scrollbar.draw (cr, allocation);
 		
-		n_items = (allocation.width / nail_width);
+		n_items = ((allocation.width - 10) / nail_width);
 		rows = (allocation.height / nail_height);
 		
 		if (items_per_row != n_items) { 	
@@ -510,10 +503,7 @@ class OverView : FontDisplay {
 		}
 		
 		default_position ();
-		
-		// DEL:
-		// view_offset_y = 0;
-		// first_character = (uint32) r;
+
 		first_visible = r;
 		selected = (uint32) r;
 		
@@ -529,8 +519,6 @@ class OverView : FontDisplay {
 		r *= items_per_row;
 		
 		scroll_to_position (r);
-		
-		print (@"i: $r $(glyph_range.get_char ((uint32) r)) l: $(glyph_range.length ()) \n");
 	}
 		
 	private void scroll (int64 pixel_adjustment) {

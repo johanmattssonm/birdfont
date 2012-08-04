@@ -374,7 +374,7 @@ class FontData : Object {
 			add (c1);
 			l += 2;
 		}
-		
+				
 		assert (l == 2 * s.char_count ());
 	}
 	
@@ -567,9 +567,7 @@ class LocaTable : Table {
 			case 1:
 				for (long i = 0; i < size + 1; i++) {
 					glyph_offsets[i] = 	dis.read_ulong ();
-					
-					printd (@"glyph_offsets[i]: $(glyph_offsets[i])\n");
-					
+									
 					if (0 < i < size && glyph_offsets[i - 1] > glyph_offsets[i]) {
 						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
 						print_offsets ();
@@ -660,8 +658,11 @@ class GlyfTable : Table {
 	// list of glyphs sorted in the order we expect to find them in a
 	// ttf font. notdef is the firs glyph followed by null and nonmarkingreturn.
 	// after that will all assigned glyphs appear in sorted order, all 
-	// remaining unassigned glyphs live in the last part.	
+	// remaining unassigned glyphs live in the last part of the file.	
 	public List<Glyph> glyphs;
+	
+	uint16 max_points = 0;
+	uint16 max_contours = 0;
 	
 	public GlyfTable (LocaTable l) {
 		id = "glyf";
@@ -669,6 +670,14 @@ class GlyfTable : Table {
 		location_offsets = new List<uint32> ();
 		glyphs = new List<Glyph> ();
 	}	
+
+	public uint16 get_max_contours () {
+		return max_contours;
+	}
+
+	public uint16 get_max_points () {
+		return max_points;
+	}
 
 	public uint16 get_first_char () {
 		foreach (Glyph g in glyphs) {
@@ -1237,6 +1246,14 @@ class GlyfTable : Table {
 		// instructions should go here 
 		
 		npoints = (ncontours > 0) ? end_point : 0; // +1?
+		
+		if (npoints > max_points) {
+			max_points = npoints;
+		}
+		
+		if (ncontours > max_contours) {
+			max_contours = ncontours;
+		}
 		
 		// flags
 		nflags = 0;
@@ -1915,7 +1932,7 @@ class HeadTable : Table {
 	public void process () {
 		FontData font_data = new FontData ();
 		Fixed version = 1 << 16;
-		Fixed font_revision = 0;
+		Fixed font_revision = 1 << 16;
 
 		font_data.add_fixed (version);
 		font_data.add_fixed (font_revision);
@@ -1926,7 +1943,8 @@ class HeadTable : Table {
 		
 		font_data.add_u32 (0x5F0F3CF5); // magic number
 		
-		font_data.add_u16 (BASELINE_AT_ZERO | LSB_AT_ZERO); // flags
+		// font_data.add_u16 (BASELINE_AT_ZERO | LSB_AT_ZERO);
+		font_data.add_u16 (0); // flags
 		
 		font_data.add_u16 (100); // units per em (should be a power of two for ttf fonts)
 		
@@ -2227,7 +2245,7 @@ class MaxpTable : Table {
 		uint16 max_points, max_contours;
 				
 		// Version 0.5 for fonts with cff data and 1.0 for ttf
-		fd.add_u32 (0x00005000);
+		fd.add_u32 (0x00010000);
 		
 		if (glyf_table.glyphs.length () == 0) {
 			warning ("Zero glyphs in maxp table.");
@@ -2235,6 +2253,20 @@ class MaxpTable : Table {
 		
 		fd.add_u16 ((uint16) glyf_table.glyphs.length ()); // numGlyphs in the font
 
+		fd.add_u16 (glyf_table.get_max_points ()); // max points
+		fd.add_u16 (glyf_table.get_max_contours ()); // max contours
+		fd.add_u16 (0); // max composite points
+		fd.add_u16 (0); // max composite contours
+		fd.add_u16 (0); // max zones
+		fd.add_u16 (0); // twilight points
+		fd.add_u16 (0); // max storage
+		fd.add_u16 (0); // max function defs
+		fd.add_u16 (0); // max instruction defs
+		fd.add_u16 (0); // max stack elements
+		fd.add_u16 (0); // max size of instructions
+		fd.add_u16 (0); // max component elements
+		fd.add_u16 (0); // component depth
+		
 		fd.pad ();
 		
 		this.font_data = fd;
@@ -2397,7 +2429,7 @@ class NameTable : Table {
 			} 
 			
 			text.append (str.str);
-			printd (@"Name id: $(name_id.nth (i).data) platform:  $(platform.nth (i).data) enc: $(encoding_id.nth (i).data) len: $(strlen.nth (i).data) str: \"$(str.str)\"\n");		
+			printd (@"Name id: $(name_id.nth (i).data) platform:  $(platform.nth (i).data) enc: $(encoding_id.nth (i).data) lang: $(lang.nth (i).data) len: $(strlen.nth (i).data) str: \"$(str.str)\"\n");		
 		}
 	}
 	
@@ -2428,7 +2460,7 @@ class NameTable : Table {
 		text.append (font.get_name ());
 		type.append (FULL_FONT_NAME);
 
-		text.append ("Version 1.0");
+		text.append ("Version 1.0;");
 		type.append (VERSION);
 						
 		num_records = (uint16) text.length ();
@@ -2458,7 +2490,7 @@ class NameTable : Table {
 
 			fd.add_ushort (3); // platform
 			fd.add_ushort (1); 	// encoding id
-			fd.add_ushort (0x0809); // language
+			fd.add_ushort (1033); // language
 			fd.add_ushort (p); // name id 
 			fd.add_ushort (l); // strlen
 			fd.add_ushort (len); // offset from begining of string storage
@@ -4208,6 +4240,7 @@ class DirectoryTable : Table {
 			return;
 		}
 		
+		name_table.parse (dis);
 		post_table.parse (dis);
 		os_2_table.parse (dis);
 		hhea_table.parse (dis);
@@ -4215,7 +4248,6 @@ class DirectoryTable : Table {
 		loca_table.parse (dis, head_table, maxp_table);
 		hmtx_table.parse (dis, hhea_table, loca_table);
 		cmap_table.parse (dis);
-		name_table.parse (dis);
 		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table, post_table);
 	}
 	
@@ -4422,7 +4454,7 @@ class DirectoryTable : Table {
 // this class. At some later point should this code present meaningfull info to the user but 
 // for now is the approach just to put a lot of info in the console if we need to do some debugging.
 void printd (string s) {
-	// print (s);
+	print (s);
 }
 
 }
