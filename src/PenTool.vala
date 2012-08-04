@@ -840,8 +840,7 @@ class PenTool : Tool {
 		test_open_next_glyph ();
 		pen = select_pen ();
 
-		int skip = 0;
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 30; i++) {
 			this.yield ();
 			
 			ax = Random.int_range (0, 300);
@@ -869,10 +868,7 @@ class PenTool : Tool {
 				return false;
 			}
 			
-			if (++skip == 5) {
-				test_open_next_glyph ();
-				skip = 0;
-			}
+			test_open_next_glyph ();
 		}
 		
 		if (r) test_open_next_glyph ();

@@ -604,31 +604,77 @@ class Path {
 		}
 	}
 	
-	private bool is_clockwise_top () {
-		EditPoint top_point = new EditPoint (1000, 1000);
+	private bool validate_list () {
+		unowned List<EditPoint> ep = points.first ();
 		
-		return_if_fail (points.length () >= 3);
+		if (points.length () < 3) {
+			warning ("points.length () < 3");
+		}
 		
-		create_list ();
-		
-		foreach (EditPoint ep in points) {
-			if (ep.y < top_point.y) {
-				top_point = ep;
+		if (!is_open ()) {
+			for (int i = 0; i < points.length (); i++) {
+				if (ep.data.next == null) {
+					return false;
+				}
+
+				if (ep.data.prev == null) {
+					return false;
+				}
+								
+				ep = (!) ep.data.next;
+			}
+		}
+
+		if (is_open ()) {
+			for (int i = 1; i < points.length () - 1; i++) {
+				if (ep.data.next == null) {
+					return false;
+				}
+
+				if (ep.data.prev == null) {
+					return false;
+				}
+								
+				ep = (!) ep.data.next;
+			}
+			
+			if (ep.data.next != null) {
+				return false;
 			}
 		}
 		
-		return_if_fail (top_point.next != null && top_point.prev != null);
+		return true;
+	}
+	
+	private double clockwise_sum () {
+		return_if_fail (points.length () >= 3);
 		
-		return (top_point.get_prev ().data.x < top_point.get_next ().data.x);
+		double sum = 0;
+		EditPoint prev = points.last ().data;
+		foreach (EditPoint e in points) {
+			sum += (e.x - prev.x) * (e.y + prev.y);
+			prev = e;
+		}
+		
+		return sum;
 	}
 	
 	public bool is_clockwise () {
+		double s;
+		
 		if (unlikely (points.length () <= 2)) {
 			no_derived_direction = true;
 			return clockwise_direction;
 		}
 		
-		return is_clockwise_top ();
+		s = clockwise_sum ();
+		
+		if (s == 0) {
+			no_derived_direction = true;
+			return clockwise_direction;	
+		}
+		
+		return s > 0;
 	}
 	
 	public bool is_editable () {
@@ -853,14 +899,6 @@ class Path {
 		return np;
 		
 	}
-	
-	/*// FIXA: DELETE
-	public void add_point_on_path (double x, double y) {
-		EditPoint e = new EditPoint (0, 0);
-		get_closest_point_on_path (e, x, y);
-		add_after (x, y, e.prev);
-	}
-	*/
 
 	public void close () {
 		open = false;
@@ -1228,7 +1266,8 @@ class Path {
 	}
 	
 	public void create_list () {
-		unowned List<EditPoint> ep = points;
+		unowned List<EditPoint> ep = points.first ();
+		unowned List<EditPoint> prev = ep;
 		
 		if (points.length () == 0) {
 			return;
@@ -1241,21 +1280,32 @@ class Path {
 		}
 		
 		ep.data.next = ep.next;
-		ep.data.prev = ep.last ();
+		ep.data.prev = points.last ();
+		prev = ep;
+		
+		assert (ep.data.next != null);
+		assert (ep.data.prev != null);
 		
 		while (ep != ep.last ()) {
 			ep.data.next = ep.next;
-			ep.data.prev = ep.prev;
+			ep.data.prev = prev;
+			prev = ep;
+			
+			assert (ep.data.next != null);
+			assert (ep.data.prev != null);
+		
 			ep = ep.next;
 		}
 		
 		if (is_open ()) {
-			ep.data.next = null;
+			ep.data.next = points.first ();
 		} else {
-			ep.data.next = ep.first ();
+			ep.data.next = points.first ();
+			assert (ep.data.next != null);
 		}
 		
-		ep.data.prev = ep.prev;
+		ep.data.prev = prev;
+		assert (ep.data.prev != null);
 	}
 
 	public void delete_edit_point (EditPoint ep) 

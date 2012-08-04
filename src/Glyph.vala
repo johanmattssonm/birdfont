@@ -769,7 +769,8 @@ class Glyph : FontDisplay {
 		}
 
 		if (unlikely (min_distance == double.MAX)) {
-			warning (@"No path found in path_list. Length: $(path_list.length ())");
+			// put back important warning:
+			// warning (@"No path found in path_list. Length: $(path_list.length ())");
 			
 			if (path_list.length () > 0) {
 				stderr.printf (@"p.points.length () $(path_list.first ().data.points.length ()) \n");

@@ -152,8 +152,6 @@ class Toolbox : DrawingArea {
 		Tool tie_editpoint_tool = new Tool ("tie_point", "Tie curve handles for selected edit point", 'w');
 		tie_editpoint_tool.select_action.connect((self) => {
 				EditPoint ep;
-				EditPointHandle eh;
-				double a, b, c, length, angle;
 				bool tie;
 				
 				select_draw_tool ();
@@ -161,33 +159,8 @@ class Toolbox : DrawingArea {
 				ep = pen_tool.selected_corner;
 				tie = !ep.tie_handles;
 
-				eh = ep.right_handle;
-				
 				if (tie) {
-					a = ep.left_handle.x () - ep.right_handle.x ();
-					b = ep.left_handle.y () - ep.right_handle.y ();
-					c = a * a + b * b;
-					
-					if (c == 0) {
-						return;
-					}
-					
-					length = sqrt (fabs (c));
-					
-					if (ep.right_handle.y () < ep.left_handle.y ()) {
-						angle = acos (a / length) + PI;
-					} else {
-						angle = -acos (a / length) + PI;
-					}
-					
-					ep.left_handle.type = PointType.CURVE;
-					ep.right_handle.type = PointType.CURVE;
-					
-					ep.right_handle.angle = angle;
-					ep.left_handle.angle = angle;
-
-					ep.set_tie_handle (true);
-					eh.move_to_coordinate (ep.right_handle.x (), ep.right_handle.y ());
+					ep.process_tied_handle ();
 				}
 				
 				ep.set_tie_handle (tie);
