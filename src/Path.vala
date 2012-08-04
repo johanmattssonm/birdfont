@@ -180,32 +180,6 @@ class Path {
 		cr.curve_to (xb, yb, xc, yc, xd, yd);
 	}
 	
-	private static void print_curve (EditPoint e, EditPoint en) {
-		double xa, ya, xb, yb, xc, yc, xd, yd;
-		
-		get_bezier_points (e, en, out xa, out ya, out xb, out yb, out xc, out yc, out xd, out yd);
-
-		stdout.printf ("L");
-		
-		stdout.printf ("%s ",  round (xa));
-		stdout.printf ("%s ",  round (ya));	
-		
-		stdout.printf ("\n");
-
-		stdout.printf ("C");
-
-		stdout.printf ("%s ", round (xb));
-		stdout.printf ("%s ", round (yb));
-		
-		stdout.printf ("%s ", round (xc));
-		stdout.printf ("%s ", round (yc));	
-		
-		stdout.printf ("%s ", round (xd));
-		stdout.printf ("%s ", round (yd));	
-		
-		stdout.printf ("\n");
-	}
-	
 	/** Curve relative to window center. */
 	public static void get_bezier_points (EditPoint e, EditPoint en, out double xa, out double ya, out double xb, out double yb, out double xc, out double yc, out double xd, out double yd) {
 		Glyph g = MainWindow.get_current_glyph ();

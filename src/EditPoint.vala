@@ -23,6 +23,7 @@ using Math;
 namespace Supplement {
 
 enum PointType {
+	NONE,
 	NORMAL,
 	LINE,
 	CURVE,

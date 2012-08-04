@@ -1074,8 +1074,8 @@ class GlyfTable : Table {
 					path.add_point (edit_point);
 					
 					if (prev_is_curve) {
-						edit_point.get_left_handle ().set_point_type (PointType.CURVE);
-						edit_point.get_left_handle ().length = 0;						
+						edit_point.get_left_handle ().set_point_type (PointType.NONE);
+						edit_point.get_left_handle ().length = 0;
 					} else {
 						edit_point.recalculate_linear_handles ();
 					}
@@ -1095,7 +1095,7 @@ class GlyfTable : Table {
 					x = xcoordinates[j] * 1000.0 / units_per_em; // in proportion to em width
 					y = ycoordinates[j] * 1000.0 / units_per_em;
 
-					edit_point.get_left_handle ().set_point_type (PointType.CURVE);
+					edit_point.get_left_handle ().set_point_type (PointType.NONE);
 					edit_point.get_left_handle ().length = 0;
 						
 					edit_point.type = PointType.CURVE;
@@ -2460,8 +2460,10 @@ class NameTable : Table {
 		text.append (font.get_name ());
 		type.append (FULL_FONT_NAME);
 
-		text.append ("Version 1.0;");
-		type.append (VERSION);
+		// This does for some reason cause an internal error in ms fontvalidatior utility
+		// put it back when you have figured out how to solve the validation issue.
+		// text.append ("Version 1.0");
+		// type.append (VERSION);
 						
 		num_records = (uint16) text.length ();
 		
