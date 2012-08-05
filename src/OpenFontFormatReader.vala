@@ -94,9 +94,7 @@ class OpenFontFormatReader : Object {
 		
 		directory_table = new DirectoryTable ();
 		directory_table.set_offset_table (offset_table);
-		directory_table.parse (dis, file);
-		
-		set_limits ();
+		directory_table.parse (dis, file, this);
 	}
 
 	public void set_limits () {
@@ -108,6 +106,7 @@ class OpenFontFormatReader : Object {
 			f.base_line = 0;
 			f.top_position = -get_ascender ();
 			f.top_limit = f.top_position - 5;
+			f.xheight_position = f.top_position - 5;
 			f.bottom_position = -get_descender ();
 			f.bottom_limit = f.bottom_position + 5;	
 

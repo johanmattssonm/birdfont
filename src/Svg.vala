@@ -85,8 +85,10 @@ class Svg {
 	private static void add_abs_next (EditPoint start, EditPoint end, StringBuilder svg, Glyph g, bool do_glyph, double scale = 1) {
 		if (start.right_handle.type == PointType.LINE && end.left_handle.type == PointType.LINE) {
 			add_abs_line_to (end, start, svg, g, do_glyph, scale);
+		} else if (end.get_left_handle ().type == PointType.NONE) {
+			add_quadratic_abs_path (end, start, svg, g, do_glyph, scale);
 		} else {
-			add_abs_path (end, start, svg, g, do_glyph, scale);
+			add_cubic_abs_path (end, start, svg, g, do_glyph, scale);
 		}
 	}
 
@@ -141,9 +143,7 @@ class Svg {
 		}
 	}
 	
-	private static void add_abs_path (EditPoint start, EditPoint end, StringBuilder svg, Glyph g,  bool to_glyph, double scale = 1) {
-		// Just like Path.print_curve (e, m, svg);
-		
+	private static void add_quadratic_abs_path (EditPoint start, EditPoint end, StringBuilder svg, Glyph g,  bool to_glyph, double scale = 1) {
 		double left = g.left_limit;
 		double baseline = Supplement.get_current_font ().base_line;
 		double height = Supplement.get_current_font ().get_height (); // no probably not
@@ -155,6 +155,40 @@ class Svg {
 		double center_x = Glyph.xc ();
 		double center_y = Glyph.yc ();
 		
+		// cubic path
+		if (!to_glyph) {
+			svg.append_printf ("Q");
+
+			svg.append_printf ("%s ", round ((xb - center_x - left) * scale));
+			svg.append_printf ("%s ", round ((yb - center_y - baseline + height) * scale));
+			
+			svg.append_printf ("%s ", round ((xc - center_x - left) * scale));
+			svg.append_printf ("%s ", round ((yc - center_y - baseline + height) * scale));
+
+		} else {		
+			svg.append_printf ("Q");
+
+			svg.append_printf ("%s ", round ((xb - center_x - left) * scale));
+			svg.append_printf ("%s ", round ((-yb + center_y + baseline) * scale));
+			
+			svg.append_printf ("%s ", round ((xc - center_x - left) * scale));
+			svg.append_printf ("%s ", round ((-yc + center_y + baseline) * scale));	
+		}
+	}
+			
+	private static void add_cubic_abs_path (EditPoint start, EditPoint end, StringBuilder svg, Glyph g,  bool to_glyph, double scale = 1) {
+		double left = g.left_limit;
+		double baseline = Supplement.get_current_font ().base_line;
+		double height = Supplement.get_current_font ().get_height (); // no probably not
+		
+		double xa, ya, xb, yb, xc, yc, xd, yd;
+		
+		Path.get_bezier_points (start, end, out xa, out ya, out xb, out yb, out xc, out yc, out xd, out yd);
+
+		double center_x = Glyph.xc ();
+		double center_y = Glyph.yc ();
+		
+		// cubic path
 		if (!to_glyph) {
 			svg.append_printf ("C");
 
@@ -218,6 +252,23 @@ class Svg {
 				continue;
 			}
 
+			if (d[i].index_of ("Q") == 0) {
+				x1 = double.parse (d[i].substring (1)) + x;
+				y1 = -double.parse (d[i+1]) + y;
+
+				x2 = double.parse (d[i+2]) + x;
+				y2 = -double.parse (d[i+3]) + y;
+
+				x1 *= scale;
+				y1 *= scale;
+
+				x2 *= scale;
+				y2 *= scale;
+																
+				cr.curve_to (x1, y1, x2, y2, x2, y2);
+				continue;
+			}
+			
 			if (d[i].index_of ("C") == 0) {
 				x1 = double.parse (d[i].substring (1)) + x;
 				y1 = -double.parse (d[i+1]) + y;

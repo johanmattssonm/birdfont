@@ -418,7 +418,7 @@ class OverView : FontDisplay {
 		
 		scrollbar.draw (cr, allocation);
 		
-		n_items = ((allocation.width - 10) / nail_width);
+		n_items = ((allocation.width - 15) / nail_width);
 		rows = (allocation.height / nail_height);
 		
 		if (items_per_row != n_items) { 	
@@ -512,8 +512,6 @@ class OverView : FontDisplay {
 	
 	public void scroll_to (double percent) {
 		int64 r;
-		
-		print (@"percent $percent\n");
 		
 		r = (int64) (percent * glyph_range.length () / rows);
 		r *= items_per_row;

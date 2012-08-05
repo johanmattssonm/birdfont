@@ -178,7 +178,7 @@ class ExportTool : Tool {
 
 		@font-face{
 			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""';
-			src: url('""");     os.put_string (@"$(name).svg#$(name)");  os.put_string ("""') format('svg');
+			src: url('""");     os.put_string (@"$(name).svg#$(name)");  os.put_string ("""') format('svg'), url('""");     os.put_string (@"$(name).ttf"); os.put_string ("""') format('truetype');
 		}
 
 		h1 {

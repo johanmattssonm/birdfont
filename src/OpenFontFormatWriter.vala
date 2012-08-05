@@ -600,8 +600,6 @@ class LocaTable : Table {
 			foreach (uint32 o in glyf_table.location_offsets) {
 				fd.add_u16 ((uint16) (o / 2));
 				
-				printd (@"o0: $(o)\n");
-				
 				if (o < last) {
 					warning (@"Loca table must be sorted. ($o < $last)");
 				}
@@ -612,9 +610,7 @@ class LocaTable : Table {
 		} else if (head_table.loca_offset_size == 1) {
 			foreach (uint32 o in glyf_table.location_offsets) {
 				fd.add_u32 (o);
-				
-				printd (@"o1: $(o)\n");
-				
+
 				if (o < last) {
 					warning (@"Loca table must be sorted. ($o < $last)");
 				}
@@ -1075,8 +1071,8 @@ class GlyfTable : Table {
 					path.add_point (edit_point);
 					
 					if (prev_is_curve) {
-						edit_point.get_left_handle ().set_point_type (PointType.CURVE);
-						edit_point.get_left_handle ().length = 0;						
+						edit_point.get_left_handle ().set_point_type (PointType.NONE);
+						edit_point.get_left_handle ().length = 0;
 					} else {
 						edit_point.recalculate_linear_handles ();
 					}
@@ -1096,7 +1092,7 @@ class GlyfTable : Table {
 					x = xcoordinates[j] * 1000.0 / units_per_em; // in proportion to em width
 					y = ycoordinates[j] * 1000.0 / units_per_em;
 
-					edit_point.get_left_handle ().set_point_type (PointType.CURVE);
+					edit_point.get_left_handle ().set_point_type (PointType.NONE);
 					edit_point.get_left_handle ().length = 0;
 						
 					edit_point.type = PointType.CURVE;
@@ -1448,12 +1444,11 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		return_if_fail (seg_count_x2 % 2 == 0);
 
 		seg_count = seg_count_x2 / 2;
-		
-		printd (@"seg_count: $seg_count\n");
-		
+
 		end_char = new uint16[seg_count];
 		for (int i = 0; i < seg_count; i++) {
 			end_char[i] = dis.read_ushort ();
+			print (@"end_char[i] $(end_char[i])\n");
 		}
 		
 		if (end_char[seg_count - 1] != 0xFFFF) {
@@ -1483,8 +1478,6 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		}
 
 		gid_len = (length - 16 - 8 * seg_count) / 2;
-		printd (@"length: $length\n");
-		printd (@"gid_len: $gid_len\n");
 		glyph_id_array = new uint16[gid_len];
 		for (int i = 0; i < gid_len; i++) {
 			glyph_id_array[i] = dis.read_ushort ();
@@ -1547,6 +1540,19 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		// print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
 	}
 	
+	/** Largest power of two less than max. */
+	public static uint16 largest_pow2 (uint16 max) {
+		uint16 x = 1;
+		uint16 l = 0;
+		
+		while (x < max) {
+			l = x;
+			x = x << 1;
+		}
+		
+		return l;
+	}
+	
 	public void process (FontData fd, GlyfTable glyf_table) {
 		GlyphRange glyph_range = new GlyphRange ();
 		unowned List<UniRange> ranges;
@@ -1585,7 +1591,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		ranges = glyph_range.get_ranges ();
 		seg_count = (uint16) ranges.length () + 1;
 		seg_count_2 =  seg_count * 2;
-		search_range = 2 * ((uint16) Math.pow (2, (Math.log (seg_count) / Math.log (2))));
+		search_range = 2 * largest_pow2 (seg_count);
 		entry_selector = (uint16) (Math.log (search_range / 2) / Math.log (2));
 		range_shift = seg_count_2 - search_range;
 		
@@ -1640,7 +1646,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 			fd.add_ushort ((uint16) (indice - u.start));
 			indice += u.length ();
 		}
-		fd.add_ushort (0xFFFF);
+		fd.add_ushort (1);
 		
 		// range offset
 		foreach (UniRange u in ranges) {
@@ -2461,8 +2467,10 @@ class NameTable : Table {
 		text.append (font.get_name ());
 		type.append (FULL_FONT_NAME);
 
-		text.append ("Version 1.0;");
-		type.append (VERSION);
+		// This does for some reason cause an internal error in ms fontvalidatior utility
+		// put it back when you have figured out how to solve the validation issue.
+		// text.append ("Version 1.0");
+		// type.append (VERSION);
 						
 		num_records = (uint16) text.length ();
 		
@@ -4128,15 +4136,15 @@ class DirectoryTable : Table {
 		if (tables.length () == 0) {
 			tables.append (offset_table);
 			tables.append (this);
-
-			tables.append (head_table);
+			
 			tables.append (cmap_table);
+			tables.append (head_table);
 			tables.append (glyf_table);
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
 			tables.append (loca_table);
-			tables.append (name_table);
 			tables.append (maxp_table);
+			tables.append (name_table);
 			tables.append (os_2_table);
 			tables.append (post_table);
 		}
@@ -4148,7 +4156,7 @@ class DirectoryTable : Table {
 		offset_table = ot;
 	}
 	
-	public void parse (OtfInputStream dis, File file) throws Error {
+	public void parse (OtfInputStream dis, File file, OpenFontFormatReader reader_callback) throws Error {
 		StringBuilder tag = new StringBuilder ();
 		uint32 checksum;
 		uint32 offset;
@@ -4241,10 +4249,12 @@ class DirectoryTable : Table {
 			return;
 		}
 		
+		hhea_table.parse (dis);
+		reader_callback.set_limits ();
+		
 		name_table.parse (dis);
 		post_table.parse (dis);
 		os_2_table.parse (dis);
-		hhea_table.parse (dis);
 		maxp_table.parse (dis);
 		loca_table.parse (dis, head_table, maxp_table);
 		hmtx_table.parse (dis, hhea_table, loca_table);
