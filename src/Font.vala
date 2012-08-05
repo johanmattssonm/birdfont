@@ -291,6 +291,9 @@ class Font : GLib.Object {
 		ret.set_unassigned (true);
 		ret.left_limit = 0;
 		ret.right_limit = 0;
+		ret.remove_empty_paths ();
+		
+		assert (ret.path_list.length () == 0);
 		
 		return ret;
 	}
@@ -306,8 +309,33 @@ class Font : GLib.Object {
 		n.set_unassigned (true);
 		n.left_limit = 0;
 		n.right_limit = 0;
+		n.remove_empty_paths ();
+		
+		assert (n.path_list.length () == 0);
 		
 		return n;
+	}
+	
+	public Glyph get_space () {
+		Glyph n;
+		
+		if (has_glyph (" ")) {
+			return (!) get_glyph (" ");
+		}
+
+		if (has_glyph ("space")) {
+			return (!) get_glyph ("space");
+		}
+				
+		n = new Glyph ("space");
+		n.set_unassigned (false);
+		n.left_limit = 0;
+		n.right_limit = 27;
+		n.remove_empty_paths ();
+		
+		assert (n.path_list.length () == 0);
+		
+		return n;		
 	}
 	
 	public Glyph get_not_def_character () {

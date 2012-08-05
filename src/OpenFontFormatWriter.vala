@@ -229,8 +229,13 @@ class FontData : Object {
 		return sum;
 	}
 	
+	public void seek_end () {
+		seek (len);
+	}
+		
 	public void seek (uint i) {
 		rp = i;
+		wp = i;
 	}
 	
 	public uint8 read () {
@@ -631,6 +636,35 @@ class LocaTable : Table {
 	}
 }
 
+class Glyf : GLib.Object {
+	
+	public int16 xmin = 0;
+	public int16 ymin = 0;
+	public int16 xmax = 0;
+	public int16 ymax = 0;	
+	
+	List<uint16> end_points = new List<uint16> ();
+	List<uint8> instructions = new List<uint8> ();
+	List<uint8> flags = new List<uint8> ();
+	List<uint16> xcoordinates = new List<uint16> ();
+	List<uint16> ycoordinates = new List<uint16> ();
+		
+	int npoints = 0;
+		
+	int16 ncontours;	
+	uint16 ninstructions;	
+	int nflags;
+	
+	public Glyf () {
+	}
+	
+	public Glyf.process (Glyph g) {
+	
+	}
+
+			
+}
+
 class GlyfTable : Table {
 	
 	// Flags for composite glyph
@@ -660,12 +694,32 @@ class GlyfTable : Table {
 	uint16 max_points = 0;
 	uint16 max_contours = 0;
 	
+	double total_width = 0;
+	int non_zero_glyphs = 0;
+	
 	public GlyfTable (LocaTable l) {
 		id = "glyf";
 		loca_table = l;
 		location_offsets = new List<uint32> ();
 		glyphs = new List<Glyph> ();
 	}	
+
+	public int16 get_space_gid () {
+		int16 i = 0;
+		foreach (Glyph g in glyphs) {
+			if (g.unichar_code == ' ') {
+				return i;
+			}
+			i++;
+		}
+		
+		warning ("Required glyph for space character not found in ttf-font.");		
+		return 0;
+	}
+
+	public int16 get_average_width () {
+		return (int16) (total_width / non_zero_glyphs);
+	}
 
 	public uint16 get_max_contours () {
 		return max_contours;
@@ -1180,7 +1234,7 @@ class GlyfTable : Table {
 	}
 
 	public void process_glyph (Glyph g, FontData fd) {
-		double gxmin, gymin, gxmax, gymax;
+		int16 txmin, tymin, txmax, tymax;
 
 		int16 end_point;
 		int16 last_end_point;
@@ -1188,39 +1242,32 @@ class GlyfTable : Table {
 		int16 ncontours;
 		int16 nflags;
 		
-		int16 x, y;
+		double x, y;
 
 		Font font = Supplement.get_current_font ();
+		int glyph_offset = (int) location_offsets.last ().data;
 		
 		g.remove_empty_paths ();
 		if (g.path_list.length () == 0) {
-			// ensure that location_offsets == location_offset + 1
+			// ensure that location_offsets == location_offset + 1 to tell parser that this glyf does not have a body
 			return;
 		}
 		
-		g.remove_empty_paths ();
+		non_zero_glyphs++;
 		
 		ncontours = (int16) g.path_list.length ();
 		fd.add_short (ncontours);
+			
+		txmin = 0;
+		tymin = 0;
+		txmax = 0;
+		tymax = 0;
 		
-		g.boundries (out gxmin, out gymin, out gxmax, out gymax);
-		
-		// remove:
-		xmin = (int16) (gxmin - g.left_limit);
-		ymin = (int16) (gymin + font.base_line);
-		xmax = (int16) (gxmax - g.left_limit);
-		ymax = (int16) (gymax + font.base_line);
-		
-		fd.add_16 (xmin);
-		fd.add_16 (ymin);
-		fd.add_16 (xmax);
-		fd.add_16 (ymax);
-		
-		// save this for head table
-		if (this.xmin > xmin) this.xmin = xmin;
-		if (this.ymin > ymin) this.ymin = ymin;
-		if (this.xmax > xmax) this.xmax = xmax;
-		if (this.ymax > ymax) this.ymax = ymax;
+		// will be zero now and set again after coordinate arrays have been parsed
+		fd.add_16 (txmin);
+		fd.add_16 (tymin);
+		fd.add_16 (txmax);
+		fd.add_16 (tymax);
 		
 		// end points
 		end_point = 0;
@@ -1270,8 +1317,13 @@ class GlyfTable : Table {
 		double prev = 0;
 		foreach (Path p in g.path_list) {
 			foreach (EditPoint e in p.points) {
-				x = (int16) (e.x - prev - g.left_limit);
-				fd.add_16 (x);
+				x = e.x - prev - g.left_limit;
+				
+				fd.add_16 ((int16) x);
+				
+				if (x + prev < txmin) txmin = (int16) (x + prev);
+				if (x + prev > txmax) txmax = (int16) (x + prev);
+				
 				prev = e.x - g.left_limit;
 			}
 		}
@@ -1280,11 +1332,39 @@ class GlyfTable : Table {
 		prev = 0;
 		foreach (Path p in g.path_list) {
 			foreach (EditPoint e in p.points) {
-				y = (int16) (e.y - prev + font.base_line);
-				fd.add_16 (y);
+				y =  e.y - prev + font.base_line;
+				
+				fd.add_16 ((int16) y);
+
+				if (y + prev < tymin) tymin = (int16) (y + prev);
+				if (y + prev > tymax) tymax = (int16) (y + prev);
+
 				prev = e.y + font.base_line;
 			}
 		}
+		
+		fd.seek (glyph_offset + 2); // go to box boundries for this glyf
+		assert (fd.read_short () == 0);
+		fd.add_16 (txmin);
+		fd.add_16 (tymin);
+		fd.add_16 (txmax);
+		fd.add_16 (tymax);
+		fd.seek_end ();
+
+		print (@"\n");
+		print (@"txmin: $txmin\n");
+		print (@"tymin: $tymin\n");
+		print (@"txmax: $txmax\n");
+		print (@"tymax: $tymax\n");
+
+		// save this for head table
+		if (this.xmin > txmin) this.xmin = txmin;
+		if (this.ymin > tymin) this.ymin = tymin;
+		if (this.xmax > txmax) this.xmax = txmax;
+		if (this.ymax > tymax) this.ymax = tymax;
+		
+		// part of average width calculation for OS/2 table
+		total_width += xmax - xmin;
 		
 		// glyph need padding too for loca table to be correct
 		if (fd.length () % 4 != 0) {
@@ -1301,14 +1381,15 @@ class GlyfTable : Table {
 
 		// add notdef. character at index zero + other special chars first
 		glyphs.append (font.get_not_def_character ());
-		// glyphs.append (font.get_null_character ());
-		// glyphs.append (font.get_nonmarking_return ());
+		glyphs.append (font.get_null_character ());
+		glyphs.append (font.get_nonmarking_return ());
+		glyphs.append (font.get_space ());
 			
 		// add glyphs, first all assigned then the unassigned ones
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
 			g = (!) gl;
 			
-			if (g.name == "notdef" || g.name == "null"  || g.name == "nonmarkingreturn") {
+			if (g.name == "notdef" || g.name == "null"  || g.name == "nonmarkingreturn" || g.name == "space" || g.name == " ") {
 				continue;
 			}
 			
@@ -2467,10 +2548,10 @@ class NameTable : Table {
 		text.append (font.get_name ());
 		type.append (FULL_FONT_NAME);
 
-		// This does for some reason cause an internal error in ms fontvalidatior utility
-		// put it back when you have figured out how to solve the validation issue.
-		// text.append ("Version 1.0");
-		// type.append (VERSION);
+		// This does for some reason cause an internal error in ms fontvalidatior utility.
+		// Head table can't parse integer from string.
+		text.append ("Version 1.0");
+		type.append (VERSION);
 						
 		num_records = (uint16) text.length ();
 		
@@ -2538,10 +2619,10 @@ class Os2Table : Table {
 		
 		fd.add_u16 (0x0002); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
 
-		fd.add_16 (0); // SHORT xAvgCharWidth
+		fd.add_16 (glyf_table.get_average_width ()); // SHORT xAvgCharWidth
 
-		fd.add_u16 (0); // USHORT usWeightClass
-		fd.add_u16 (0); // USHORT usWidthClass
+		fd.add_u16 (400); // USHORT usWeightClass (400 is normal)
+		fd.add_u16 (5); // USHORT usWidthClass (5 is normal)
 		fd.add_u16 (0); // USHORT fsType
 
 		fd.add_16 (0); // SHORT ySubscriptXSize
@@ -2594,7 +2675,7 @@ class Os2Table : Table {
 		fd.add_16 (0); // SHORT sCapHeight version 0x0002 and later
 
 		fd.add_16 (0); // USHORT usDefaultChar version 0x0002 and later
-		fd.add_16 (0); // USHORT usBreakChar version 0x0002 and later
+		fd.add_16 (glyf_table.get_space_gid ()); // USHORT usBreakChar version 0x0002 and later, also known as space
 		fd.add_16 (0); // USHORT usMaxContext version 0x0002 and later
 
 		// padding
@@ -4119,13 +4200,13 @@ class DirectoryTable : Table {
 	public void process () {
 		// generate font data
 		glyf_table.process ();
-		head_table.process ();
 		cmap_table.process (glyf_table);
 		hmtx_table.process ();
 		hhea_table.process ();
 		maxp_table.process ();
 		name_table.process ();
 		os_2_table.process (glyf_table);
+		head_table.process ();
 		loca_table.process (glyf_table, head_table);
 		post_table.process ();
 		
@@ -4138,15 +4219,15 @@ class DirectoryTable : Table {
 			tables.append (offset_table);
 			tables.append (this);
 			
+			tables.append (os_2_table);
 			tables.append (cmap_table);
-			tables.append (head_table);
 			tables.append (glyf_table);
+			tables.append (head_table);
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
 			tables.append (loca_table);
 			tables.append (maxp_table);
 			tables.append (name_table);
-			tables.append (os_2_table);
 			tables.append (post_table);
 		}
 
