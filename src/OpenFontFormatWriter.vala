@@ -1529,7 +1529,6 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		end_char = new uint16[seg_count];
 		for (int i = 0; i < seg_count; i++) {
 			end_char[i] = dis.read_ushort ();
-			print (@"end_char[i] $(end_char[i])\n");
 		}
 		
 		if (end_char[seg_count - 1] != 0xFFFF) {
@@ -2423,6 +2422,8 @@ class NameTable : Table {
 	static const uint16 FULL_FONT_NAME = 4; // name + subfamily
 	static const uint16 VERSION = 5;
 	static const uint16 DESCRIPTION = 10;
+	static const uint16 PREFERED_FAMILY = 16;
+	static const uint16 PREFERED_SUB_FAMILY = 17;
 	
 	List<string> text;
 			
@@ -2547,6 +2548,12 @@ class NameTable : Table {
 
 		text.append (font.get_name ());
 		type.append (FULL_FONT_NAME);
+		
+		text.append (font.get_name ());
+		type.append (PREFERED_FAMILY);
+		
+		text.append ("Regular");
+		type.append (PREFERED_SUB_FAMILY);
 
 		// This does for some reason cause an internal error in ms fontvalidatior utility.
 		// Head table can't parse integer from string.
@@ -2580,7 +2587,7 @@ class NameTable : Table {
 
 			fd.add_ushort (3); // platform
 			fd.add_ushort (1); 	// encoding id
-			fd.add_ushort (1033); // language
+			fd.add_ushort (0x0409); // language
 			fd.add_ushort (p); // name id 
 			fd.add_ushort (l); // strlen
 			fd.add_ushort (len); // offset from begining of string storage
