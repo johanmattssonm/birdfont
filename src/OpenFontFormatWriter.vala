@@ -2341,6 +2341,8 @@ class NameTable : Table {
 	static const uint16 FULL_FONT_NAME = 4; // name + subfamily
 	static const uint16 VERSION = 5;
 	static const uint16 DESCRIPTION = 10;
+	static const uint16 PREFERED_FAMILY = 16;
+	static const uint16 PREFERED_SUB_FAMILY = 17;
 	
 	List<string> text;
 			
@@ -2465,11 +2467,17 @@ class NameTable : Table {
 
 		text.append (font.get_name ());
 		type.append (FULL_FONT_NAME);
+		
+		text.append (font.get_name ());
+		type.append (PREFERED_FAMILY);
+		
+		text.append ("Regular");
+		type.append (PREFERED_SUB_FAMILY);
 
 		// This does for some reason cause an internal error in ms fontvalidatior utility
 		// put it back when you have figured out how to solve the validation issue.
-		// text.append ("Version 1.0");
-		// type.append (VERSION);
+		text.append ("Version 1.0");
+		type.append (VERSION);
 						
 		num_records = (uint16) text.length ();
 		
