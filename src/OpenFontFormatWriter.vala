@@ -980,7 +980,8 @@ class GlyfTable : Table {
 			warning (@"(nflags != npoints) ($nflags != $npoints) in $(name.str)");
 			error = new BadFormat.PARSE (@"Wrong number of flags in glyph $(name.str). (nflags != npoints) ($nflags != $npoints)");
 		}
-		// assert (nflags == npoints);
+		
+		warn_if_fail (nflags == npoints);
 
 		printd (@"npoints: $npoints\n");
 		printd (@"ncontours: $ncontours\n");
