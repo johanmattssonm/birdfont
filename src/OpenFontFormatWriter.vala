@@ -2498,7 +2498,7 @@ class NameTable : Table {
 
 			fd.add_ushort (3); // platform
 			fd.add_ushort (1); 	// encoding id
-			fd.add_ushort (1033); // language
+			fd.add_ushort (0x0409); // language
 			fd.add_ushort (p); // name id 
 			fd.add_ushort (l); // strlen
 			fd.add_ushort (len); // offset from begining of string storage
