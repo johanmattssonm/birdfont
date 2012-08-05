@@ -1447,7 +1447,6 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		end_char = new uint16[seg_count];
 		for (int i = 0; i < seg_count; i++) {
 			end_char[i] = dis.read_ushort ();
-			print (@"end_char[i] $(end_char[i])\n");
 		}
 		
 		if (end_char[seg_count - 1] != 0xFFFF) {
