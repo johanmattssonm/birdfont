@@ -976,7 +976,8 @@ class GlyfTable : Table {
 			warning (@"(nflags != npoints) ($nflags != $npoints) in $(name.str)");
 			error = new BadFormat.PARSE (@"Wrong number of flags in glyph $(name.str). (nflags != npoints) ($nflags != $npoints)");
 		}
-		// assert (nflags == npoints);
+		
+		warn_if_fail (nflags == npoints);
 
 		printd (@"npoints: $npoints\n");
 		printd (@"ncontours: $ncontours\n");
@@ -1969,7 +1970,7 @@ class HeadTable : Table {
 		font_data.add_16 (ymax);
 		
 		font_data.add_u16 (0); // mac style
-		font_data.add_u16 (0); // smallest recommended size in pixels
+		font_data.add_u16 (2); // smallest recommended size in pixels, ppem
 		font_data.add_16 (2); // deprecated direction hint
 		font_data.add_16 (loca_offset_size);  // long offset
 		font_data.add_16 (0);  // Use current glyph data format
@@ -2532,6 +2533,7 @@ class Os2Table : Table {
 	
 	public void process (GlyfTable glyf_table) {
 		FontData fd = new FontData ();
+		Font font = Supplement.get_current_font ();
 		
 		fd.add_u16 (0x0002); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
 
@@ -2577,9 +2579,9 @@ class Os2Table : Table {
 		fd.add_u16 (glyf_table.get_first_char ()); // USHORT usFirstCharIndex
 		fd.add_u16 (glyf_table.get_last_char ()); // USHORT usLastCharIndex
 
-		fd.add_16 (0); // SHORT sTypoAscender
-		fd.add_16 (0); // SHORT sTypoDescender
-		fd.add_16 (0); // SHORT sTypoLineGap
+		fd.add_16 ((int16) (-1 * (font.top_position - font.base_line))); // SHORT sTypoAscender
+		fd.add_16 ((int16) (-1 * font.bottom_position)); // SHORT sTypoDescender
+		fd.add_16 (3); // SHORT sTypoLineGap
 
 		fd.add_u16 (0); // USHORT usWinAscent
 		fd.add_u16 (0); // USHORT usWinDescent
