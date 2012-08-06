@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+body {
+}
+
+div {
+	font-size: 10pt;
+}
+
+div.content {
+	width: 100%;
+}
+
+div.heading {
+	width: 100%;
+	background-color: #BAC8E7; 
+	color: #FFFFFF;
+}
+
+div.format_box {
+	margin: auto auto;
+}
+
+div.inner_format_box {
+	background-color: #EFEFEF; 
+	width: 170px;
+	height: 200px;
+	margin-top: 50px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0 0 0 0;
+	top: 50%;
+}
+
+h2 {
+	font-size: 12pt;
+	margin-left: 3px;
+	margin-bottom: 4px;
+}
+
+h3 {
+	font-size: 10pt;
+	margin-left: 3px;
+	margin-bottom: 4px;
+}
+
+input.text {
+	width: 100%;	
+}
