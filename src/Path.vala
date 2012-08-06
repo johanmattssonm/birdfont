@@ -263,12 +263,12 @@ class Path {
 		img_right = (e.get_right_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
 		img_left = (e.get_left_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
 		
-		if (e.next != null) {
+		if (!(is_open () && e == points.last ().data)) {
 			draw_img_center (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
 			draw_line (handle_right, e, cr, 0.15);
 		}
 		
-		if (e.prev != null) {
+		if (!(is_open () && e == points.first ().data)) {
 			draw_img_center (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
 			draw_line (handle_left, e, cr, 0.15);
 		}

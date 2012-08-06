@@ -26,6 +26,7 @@ class PenTool : Tool {
 	public static bool edit_active_corner = false;
 	public static EditPoint active_corner = new EditPoint ();
 	public static EditPoint selected_corner = new EditPoint ();
+	public static Path active_path = new Path ();
 
 	public static EditPointHandle active_handle = new EditPointHandle.empty ();
 	public static EditPointHandle selected_handle = new EditPointHandle.empty ();
@@ -310,6 +311,7 @@ class PenTool : Tool {
 				if (d < m && d * g.view_zoom < 14 && !is_over_handle (x, y)) {
 					m = d;
 					set_active_edit_point (e);
+					active_path = current_path;
 				}
 			}
 
@@ -459,7 +461,15 @@ class PenTool : Tool {
 		double dp = selected_corner.get_close_distance (x, y);
 		double dl = selected_corner.get_left_handle ().get_point ().get_close_distance (x, y);
 		double dr = selected_corner.get_right_handle ().get_point ().get_close_distance (x, y);
+
+		if (active_path.points.length () > 0 && selected_corner == active_path.points.last ().data) {
+			return dl < dp;
+		}
 		
+		if (active_path.points.length () > 0 && selected_corner == active_path.points.first ().data) {
+			return dr < dp;
+		}
+				
 		return (dl < dp || dr < dp);
 	}
 
@@ -471,12 +481,14 @@ class PenTool : Tool {
 		if (!is_over_handle (x, y)) {
 			return;
 		}		
-				
+
+
 		eh = selected_corner.get_left_handle ();
 		if (eh.get_point ().is_close (x, y)) {
 			eh.active = true;
 			active_handle = eh;
 		}
+		
 		
 		eh = selected_corner.get_right_handle ();
 		if (eh.get_point ().is_close (x, y)) {
