@@ -425,17 +425,12 @@ class OverView : FontDisplay {
 			if (items_per_row == 0) {
 				items_per_row = n_items;
 				first_visible = first_character;
+			
+				key_down ();
+				key_up ();
 			}	else {
 				items_per_row = n_items;
 				first_visible = first_character;
-				
-				while (selected < first_visible) {
-					scroll (-nail_height);
-				}
-					
-				while (selected < first_visible + rows * n_items) {
-					scroll (nail_height);	
-				}	
 			}
 		}
 

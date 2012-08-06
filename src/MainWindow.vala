@@ -17,6 +17,7 @@
 
 using Gdk;
 using Gtk;
+using WebKit;
 
 namespace Supplement {
 
@@ -24,6 +25,8 @@ public class MainWindow : Gtk.Window {
 
 	HBox list_box;
 	HBox canvas_box;
+	WebView html_canvas;
+	ScrolledWindow html_box;
 	
 	static TabBar tabs;
 	VBox tab_box;
@@ -63,20 +66,62 @@ public class MainWindow : Gtk.Window {
 		
 		set_size_and_position ();
 		
+		html_canvas = new WebView ();
+		
+		html_canvas.title_changed.connect ((p, s) => {
+			print (@"property $s\n");
+			FontDisplay fd = get_current_display ();
+			fd.process_property (s);
+		});
+		
+		html_box = new ScrolledWindow (null, null);
+		html_box.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+		html_box.add (html_canvas);
+		
 		tabs.signal_tab_selected.connect ((f, tab) => {
+			bool n;
+			File layout_dir;
+			string uri;
 			FontDisplay fd = tab.get_display ();
+			
 			glyph_canvas.set_current_glyph (fd);
+			n = fd.is_html_canvas ();
+			
+			if (n) {
+				layout_dir = FontDisplay.find_layout_dir ();
+				html_box.set_visible (n);
+				glyph_canvas.set_visible (!n);
+				
+				uri = @"file://$((!) layout_dir.get_path ())/$(fd.get_html_file ())";
+				if (fd.get_html_file () != "") {
+					assert (fd.get_html () == "");
+					html_canvas.load_uri (uri);
+				} else {
+					html_canvas.load_html_string (fd.get_html (), uri);
+				}
+			} else {
+				html_box.set_visible (false);
+				glyph_canvas.set_visible (true);
+			}
 		});
 
+		// Hide this canvas when windown is realized and flip canvas 
+		// visibility in tab selection signal.
+		html_canvas.expose_event.connect ((t, e) => {
+			glyph_canvas.set_visible (false);
+			return false;
+		});
+        
 		over_view = new OverView();
 				
 		tabs.add_unique_tab (content, 60, true);
 		tabs.add_unique_tab (over_view, 75, false);
 		
 		tabs.select_tab_name ("File");
-		
+
 		canvas_box = new HBox (false, 0);
-		canvas_box.pack_start (glyph_canvas, true, true, 0);
+		canvas_box.child = (glyph_canvas);
+		canvas_box.pack_start (html_box, true, true, 0);
 		
 		tab_box = new VBox (false, 0);
 		tab_box.pack_start (tabs, false, false, 0);	

@@ -4,6 +4,7 @@ SUPPLEMENT_MAIN = [
 	'BackgroundTool.vala',
 	'BackgroundSelection.vala',
 	'ExportTool.vala',
+	'ExportPreferences.vala',
 	'FontDisplay.vala',
 	'CharDatabase.vala',
 	'Context.vala',
@@ -64,7 +65,7 @@ def build (bld):
 		target        = 'supplement',
 		param         = '--disable-warnings --enable-experimental --enable-experimental-non-null --vapidir=../../',
 		packages      = 'gtk+-2.0 libxml-2.0',
-		uselib        = 'GTK GLIB GIO XML',
+		uselib        = 'GTK GLIB GIO XML WEB',
 		source        = SUPPLEMENT_MAIN
 	)
 

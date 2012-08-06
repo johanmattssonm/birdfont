@@ -39,6 +39,7 @@ class ContentDisplay : FontDisplay {
 	Tool open_tool;
 	Tool save_tool;
 	Tool browser_tool;
+	Tool export_preferences;
 	
 	ExportTool export_tool;
 
@@ -94,7 +95,15 @@ class ContentDisplay : FontDisplay {
 		kerning_context_tool.select_action.connect((self) => {
 			MainWindow.get_tab_bar ().add_unique_tab (new ContextDisplay (), 65, false);
 		});
-		
+
+		export_preferences = new Tool ("export_preferences", "Export preferences");
+		export_preferences.x = 250;
+		export_preferences.y = 25;
+		export_preferences.select_action.connect((self) => {
+			TabBar t = MainWindow.get_tab_bar ();
+			t.add_unique_tab (new ExportPreferences (), 75, false);
+		});
+				
 		add_new_grid_tool = new Tool ("add_new_grid", "Add new grid");
 		add_new_grid_tool.x = 15;
 		add_new_grid_tool.y = 95;
@@ -108,7 +117,7 @@ class ContentDisplay : FontDisplay {
 		delete_grid_tool.select_action.connect((self) => {
 			MainWindow.get_toolbox ().remove_current_grid ();
 		});
-					
+				
 		tools = new List<Tool> ();
 		tools.append (new_file_tool);
 		tools.append (open_tool);
@@ -118,6 +127,7 @@ class ContentDisplay : FontDisplay {
 		tools.append (add_new_grid_tool);
 		tools.append (delete_grid_tool);
 		tools.append (export_tool);
+		tools.append (export_preferences);
 		
 		name = new StringBuilder ();
 		name.append (Supplement.get_current_font ().get_name ());
@@ -348,7 +358,8 @@ class ContentDisplay : FontDisplay {
 		open_tool.draw (allocation, cr);
 		browser_tool.draw (allocation, cr);
 		export_tool.draw (allocation, cr);
-			
+		export_preferences.draw (allocation, cr);
+		
 		kerning_context_tool.draw (allocation, cr);
 	}
 	

@@ -61,6 +61,9 @@ class Font : GLib.Object {
 	
 	private string name = "typeface";
 	
+	bool ttf_export = true;
+	bool svg_export = true;
+	
 	public Font () {
 		// positions in pixels at first zoom level
 		// default x-height should be 60 in 1:1
@@ -74,6 +77,22 @@ class Font : GLib.Object {
 
 	public void touch () {
 		modified = true;
+	}
+
+	public bool get_ttf_export () {
+		return ttf_export;
+	}
+
+	public bool get_svg_export () {
+		return svg_export;
+	}
+
+	public void set_ttf_export (bool d) {
+		ttf_export = d;
+	}
+
+	public void set_svg_export (bool d) {
+		svg_export = d;
 	}
 
 	public File get_backgrounds_folder () {
@@ -238,7 +257,7 @@ class Font : GLib.Object {
 		double r = base_line - top_position;
 		return (r > 0) ? r : -r;
 	}
-	
+		
 	public void set_name (string name) {
 		this.name = name;
 	}
@@ -548,7 +567,13 @@ class Font : GLib.Object {
 			
 			os.put_string ("\n");
 			os.put_string (@"<name>$(get_name ())</name>\n");
-						
+			
+			os.put_string ("\n");
+			os.put_string (@"<ttf-export>$(ttf_export)</ttf-export>\n");
+
+			os.put_string ("\n");
+			os.put_string (@"<svg-export>$(svg_export)</svg-export>\n");
+			
 			os.put_string ("\n");
 			os.put_string ("<lines>\n");
 			
@@ -847,6 +872,15 @@ class Font : GLib.Object {
 			if (iter->name == "hkern") {
 				parse_kerning (iter);
 			}
+
+			if (iter->name == "ttf-export") {
+				ttf_export = bool.parse (iter->children->content);
+			}			
+
+			if (iter->name == "svg-export") {
+				svg_export = bool.parse (iter->children->content);
+			}			
+			
 		}
     
 		delete doc;

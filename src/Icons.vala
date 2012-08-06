@@ -74,7 +74,7 @@ class Icons {
 		return f;
 	}
 	
-	private static File find_file (string? path, string name) {
+	public static File find_file (string? path, string name) {
 		StringBuilder fn = new StringBuilder ();
 		string p = (path == null) ? "" : (!) path;
 		

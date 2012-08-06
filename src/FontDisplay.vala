@@ -21,13 +21,77 @@ using Gdk;
 
 namespace Supplement {
 
+/** Javascripts in webkit do use this callback. */
+public class PropertyFunction {
+	public delegate void PropertyCallback (string val);
+	public PropertyCallback call;
+}
+
 public abstract class FontDisplay : GLib.Object {
+	
+	List<string> property = new List<string> ();
+	List<PropertyFunction> call = new List<PropertyFunction> ();
+	
+	public void add_html_callback (string prop, PropertyFunction.PropertyCallback cb) {
+		PropertyFunction pf = new PropertyFunction ();
+		pf.call = cb;
+		property.append (prop);
+		call.append (pf);
+	}
+	
+	public void process_property (string prop) {
+		string k, v;
+		int i, j;
+		PropertyFunction cb;
+		
+		if (prop == "done") {
+			return;
+		}
+		
+		i = prop.index_of (":");
+		
+		return_if_fail (i > 0);
+		
+		k = prop.substring (0, i);
+		v = prop.substring (i + 1);
+		
+		j = 0;
+		
+		foreach (string p in property) {
+			if (p == k) {
+				break;
+			}
+			j++;
+		}
+		
+		if (j >= property.length ()) {
+			warning (@"key $k not found in property list");
+			return;
+		}
+		
+		cb = call.nth (j).data;
+		cb.call (v);
+		
+		print (@"Got $k -> $v\n");
+	}
 	
 	/** Queue redraw area */
 	public signal void redraw_area (double x, double y, double w, double h);
 	
 	/** Name of symbol or set of symbols in display selections like the tab panel. */
 	public virtual string get_name () {
+		return "";
+	}
+	
+	public virtual bool is_html_canvas () {
+		return false;
+	}
+
+	public virtual string get_html_file () {
+		return "";
+	}
+	
+	public virtual string get_html () {
 		return "";
 	}
 	
@@ -89,6 +153,31 @@ public abstract class FontDisplay : GLib.Object {
 	}
 
 	public virtual void undo () {
+	}
+
+	public static File find_layout_dir () {
+		File f;
+		string name = "layout";
+
+		f = Icons.find_file ("./", name);
+		if (likely (f.query_exists ())) return f;		
+
+		f = Icons.find_file ("../", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = Icons.find_file (".\\", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = Icons.find_file ("", name);
+		if (likely (f.query_exists ())) return f;
+		
+		f = Icons.find_file ("/usr/local/share/supplement/", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = Icons.find_file ("/usr/share/supplement/", name);
+		if (likely (f.query_exists ())) return f;
+					
+		return f;
 	}
 }
 
