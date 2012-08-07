@@ -87,18 +87,22 @@ public class MainWindow : Gtk.Window {
 			glyph_canvas.set_current_glyph (fd);
 			n = fd.is_html_canvas ();
 			
-			if (n) {
+			if (n) {			
 				layout_dir = FontDisplay.find_layout_dir ();
 				html_box.set_visible (n);
 				glyph_canvas.set_visible (!n);
 				
-				uri = @"file://$((!) layout_dir.get_path ())/$(fd.get_html_file ())";
-				if (fd.get_html_file () != "") {
-					assert (fd.get_html () == "");
+				uri = fd.get_uri ();
+				
+				if (uri == "") {
+					uri = @"file://$((!) layout_dir.get_path ())/$(fd.get_html_file ())";
+				}
+				
+				if (fd.get_html () == "") {
 					html_canvas.load_uri (uri);
 				} else {
 					html_canvas.load_html_string (fd.get_html (), uri);
-				}
+				}				
 			} else {
 				html_box.set_visible (false);
 				glyph_canvas.set_visible (true);
@@ -148,6 +152,10 @@ public class MainWindow : Gtk.Window {
 		});
 		
 		show_all ();
+	}
+
+	public static WebView get_webview () {
+		return singleton.html_canvas;
 	}
 
 	public static void hide_cursor () {

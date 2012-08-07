@@ -36,6 +36,7 @@ SUPPLEMENT_MAIN = [
 	'OverView.vala',
 	'Path.vala',
 	'PenTool.vala',
+	'Preview.vala',
 	'ResizeTool.vala',
 	'SaveDialog.vala',
 	'Scrollbar.vala',

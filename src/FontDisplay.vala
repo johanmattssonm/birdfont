@@ -32,49 +32,6 @@ public abstract class FontDisplay : GLib.Object {
 	List<string> property = new List<string> ();
 	List<PropertyFunction> call = new List<PropertyFunction> ();
 	
-	public void add_html_callback (string prop, PropertyFunction.PropertyCallback cb) {
-		PropertyFunction pf = new PropertyFunction ();
-		pf.call = cb;
-		property.append (prop);
-		call.append (pf);
-	}
-	
-	public void process_property (string prop) {
-		string k, v;
-		int i, j;
-		PropertyFunction cb;
-		
-		if (prop == "done") {
-			return;
-		}
-		
-		i = prop.index_of (":");
-		
-		return_if_fail (i > 0);
-		
-		k = prop.substring (0, i);
-		v = prop.substring (i + 1);
-		
-		j = 0;
-		
-		foreach (string p in property) {
-			if (p == k) {
-				break;
-			}
-			j++;
-		}
-		
-		if (j >= property.length ()) {
-			warning (@"key $k not found in property list");
-			return;
-		}
-		
-		cb = call.nth (j).data;
-		cb.call (v);
-		
-		print (@"Got $k -> $v\n");
-	}
-	
 	/** Queue redraw area */
 	public signal void redraw_area (double x, double y, double w, double h);
 	
@@ -87,6 +44,10 @@ public abstract class FontDisplay : GLib.Object {
 		return false;
 	}
 
+	public virtual string get_uri () {
+		return "";
+	}
+	
 	public virtual string get_html_file () {
 		return "";
 	}
@@ -98,10 +59,10 @@ public abstract class FontDisplay : GLib.Object {
 	public virtual void draw (Allocation allocation, Context cr) {
 	}
 	
-	public virtual void selected_canvas (){
+	public virtual void selected_canvas () {
 	}
 	
-	public virtual void key_press (EventKey e){
+	public virtual void key_press (EventKey e) {
 	}
 	
 	public virtual void key_release (EventKey e) {
@@ -179,6 +140,52 @@ public abstract class FontDisplay : GLib.Object {
 					
 		return f;
 	}
+
+	public void add_html_callback (string prop, PropertyFunction.PropertyCallback cb) {
+		PropertyFunction pf = new PropertyFunction ();
+		pf.call = cb;
+		property.append (prop);
+		call.append (pf);
+	}
+	
+	public void process_property (string prop) {
+		string k, v;
+		int i, j;
+		PropertyFunction cb;
+		
+		if (prop == "" || prop == "done") {
+			return;
+		}
+		
+		i = prop.index_of (":");
+		
+		if (i <= 0) {
+			return;
+		}
+		
+		k = prop.substring (0, i);
+		v = prop.substring (i + 1);
+		
+		j = 0;
+		
+		foreach (string p in property) {
+			if (p == k) {
+				break;
+			}
+			j++;
+		}
+		
+		if (j >= property.length ()) {
+			warning (@"key $k not found in property list");
+			return;
+		}
+		
+		cb = call.nth (j).data;
+		cb.call (v);
+		
+		print (@"Got $k -> $v\n");
+	}
+
 }
 
 }

@@ -40,6 +40,18 @@ class ExportTool : Tool {
 		});
 	}
 
+	public static void export_all () {
+		Font font = Supplement.get_current_font ();
+		
+		if (font.get_ttf_export ()) {
+			export_ttf_font ();
+		}
+
+		if (font.get_svg_export ()) {
+			export_svg_font ();
+		}
+	}
+
 	public void export_glyph_to_svg () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
@@ -160,7 +172,7 @@ class ExportTool : Tool {
 		return (!) prefered_browser;
 	}
 	
-	public void generate_html_document (string html_file, Font font) throws Error {
+	public static void generate_html_document (string html_file, Font font) throws Error {
 		File file = File.new_for_path (html_file);
 		DataOutputStream os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
 
@@ -293,7 +305,7 @@ class ExportTool : Tool {
 
 	}
 
-	public bool export_ttf_font () {
+	public static bool export_ttf_font () {
 		try {
 			Font font = Supplement.get_current_font ();
 			File file = font.get_folder ();
@@ -317,7 +329,7 @@ class ExportTool : Tool {
 		return true;		
 	}
 		
-	public bool export_svg_font () {
+	public static bool export_svg_font () {
 		TooltipArea ta = MainWindow.get_tool_tip ();
 		Font font = Supplement.get_current_font ();
 		string file_name = @"$(font.get_name ()).svg";
