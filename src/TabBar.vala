@@ -34,12 +34,29 @@ class TabBar : DrawingArea {
 	Tab? previous_tab = null;
 	Tab? current_tab = null;
 
-	public TabBar () {		
+	ImageSurface? tab1_left = null;
+	ImageSurface? tab1_right = null;
+
+	ImageSurface? tab2_left = null;
+	ImageSurface? tab2_right = null;
+
+	ImageSurface? tab3_left = null;
+	ImageSurface? tab3_right = null;
+				
+	public TabBar () {
+		tab1_left = Icons.get_icon ("tab1_left.png");
+		tab1_right = Icons.get_icon ("tab1_right.png");
+
+		tab2_left = Icons.get_icon ("tab2_left.png");
+		tab2_right = Icons.get_icon ("tab2_right.png");
+
+		tab3_left = Icons.get_icon ("tab3_left.png");
+		tab3_right = Icons.get_icon ("tab3_right.png");
+				
 		set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
+		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
 	  
-	  add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
-	  
-	  motion_notify_event.connect ((t, e)=> {
+		motion_notify_event.connect ((t, e)=> {
 			Allocation alloc;
 			is_over_close (e.x, e.y, out over, out over_close);
 			get_allocation (out alloc);
@@ -96,7 +113,7 @@ class TabBar : DrawingArea {
 			if ( offset < x < offset + t.get_width ()) {
 				over = i;
 				
-				if (15 < y < 50 - 15 && x > offset + t.get_width () - 16) {
+				if (28 < y < 46 && x > offset + t.get_width () - 16) {
 					over_close =  i;
 				} else {
 					over_close =  -1;
@@ -336,13 +353,13 @@ class TabBar : DrawingArea {
 				cr.set_source_rgba (142/255.0, 158/255.0, 190/255.0, 1);
 			}
 			
-			cr.rectangle(-2, 10, t.get_width (), 4);
+			cr.rectangle(-2, 5, t.get_width (), 18);
 			cr.set_line_width (0);
 			cr.fill ();
-			
+						
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.set_font_size (12);
-			cr.move_to (0, 0);
+			cr.move_to (0, 18);
 			cr.show_text (t.get_label ());
 			cr.stroke ();
 	
@@ -353,18 +370,40 @@ class TabBar : DrawingArea {
 				close_opacity = (over_close == i) ? 1 : 0.2; 
 				cr.set_source_rgba (0, 0, 0, close_opacity);
 				
-				cr.move_to (t.get_width () - 5, -6);
-				cr.line_to (t.get_width () - 10, -1);
+				cr.move_to (t.get_width () - 5, 11);
+				cr.line_to (t.get_width () - 10, 16);
 
-				cr.move_to (t.get_width () - 10, -6);
-				cr.line_to (t.get_width () - 5, -1);
+				cr.move_to (t.get_width () - 10, 11);
+				cr.line_to (t.get_width () - 5, 16);
 				
 				cr.stroke ();	
 			}
-							
+
+			if (tab1_left != null  && tab1_right != null && tab2_left != null  && tab2_right != null && tab3_left != null  && tab3_right != null) {
+				if (i == selected) {
+					cr.set_source_surface ((!) tab3_left, -7, 5);
+					cr.paint ();
+					
+					cr.set_source_surface ((!) tab3_right, t.get_width () - 2, 5);
+					cr.paint ();
+				} else if (i == over) {
+					cr.set_source_surface ((!) tab2_left, -7, 5);
+					cr.paint ();
+
+					cr.set_source_surface ((!) tab2_right, t.get_width () - 2, 5);
+					cr.paint ();
+				} else {
+					cr.set_source_surface ((!) tab1_left, -7, 5);
+					cr.paint ();
+
+					cr.set_source_surface ((!) tab1_right, t.get_width () - 2, 5);
+					cr.paint ();
+				}
+			}
+
 			cr.restore ();
 			
-			offset += t.get_width () + 10; // FIXA 10 shoud be x off marg eller så
+			offset += t.get_width () + 10; // FIXA 10 should be x off marg eller så
 			i++;
 		}
 	}

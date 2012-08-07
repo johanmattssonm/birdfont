@@ -371,6 +371,10 @@ class OverView : FontDisplay {
 		double gx, gy;
 		double x1, x2, y1, y2;
 		double scale = nail_zoom_width / 150.0;
+		double w, h, m;
+		
+		w = nail_width  - 19;
+		h = nail_height - 22;
 		
 		scale = nail_zoom_height / (210.0 - 15.0);
 		
@@ -383,18 +387,29 @@ class OverView : FontDisplay {
 		g = (!) gl;
 		g.boundries (out x1, out y1, out x2, out y2);
 		
-		gx = -x1;
-		gy = -f.bottom_position + 210 - 45;
+		if (g.get_width () > w) {
+			m = ((g.get_width () - w) / 2.0) / scale;
+		} else {
+			m = ((w - g.get_width ()) / 2.0) / scale;
+		}
 		
-		Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, nail_width, nail_height - 15);
+		gx = -x1 + m;
+		gy = -f.bottom_position + 210 - 65;
+		
+		Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h);
 		Context c = new Context (s);
 		
-		c.scale (scale, scale);
-	
-		Svg.draw_svg_path (c, g.get_svg_data (), gx, gy, 1.2);
+		/*
+		c.set_source_rgb (200/255.0, 200/255.0, 229/255.0);
+		c.rectangle (0, 0, w, h);	
+		c.fill ();
+		*/
+		
+		c.scale (scale, scale);				
+		Svg.draw_svg_path (c, g.get_svg_data (), gx, gy, 1.0);
 		
 		cr.save ();
-		cr.set_source_surface (s, x - 14 + nail_width / 4.0, y - 15);
+		cr.set_source_surface (s, x - 6, y);
 		cr.paint ();
 		cr.restore ();
 
