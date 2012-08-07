@@ -369,29 +369,34 @@ class OverView : FontDisplay {
 		Glyph? gl = Supplement.get_current_font ().get_glyph (name);
 		Glyph g;
 		double gx, gy;
-		
 		double x1, x2, y1, y2;
-		
 		double scale = nail_zoom_width / 150.0;
 		
+		scale = nail_zoom_height / (210.0 - 15.0);
+		
+		Font f = Supplement.get_current_font ();
+
 		if (gl == null) {
 			return false;
 		}
 		
 		g = (!) gl;
-			
 		g.boundries (out x1, out y1, out x2, out y2);
 		
-		gx = x + nail_width / 2.0 - g.get_width () / 2.0;
-		gy = y + nail_height;
+		gx = -x1;
+		gy = -f.bottom_position + 210 - 45;
 		
-		gx /= scale;
-		gy /= scale;
-
-		gx -= 20;
-		gy -= 80;
+		Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, nail_width, nail_height - 15);
+		Context c = new Context (s);
 		
-		Svg.draw_svg_path (cr, g.get_svg_data (), gx, gy, scale);
+		c.scale (scale, scale);
+	
+		Svg.draw_svg_path (c, g.get_svg_data (), gx, gy, 1.2);
+		
+		cr.save ();
+		cr.set_source_surface (s, x - 14 + nail_width / 4.0, y - 15);
+		cr.paint ();
+		cr.restore ();
 
 		return true;
 	}
