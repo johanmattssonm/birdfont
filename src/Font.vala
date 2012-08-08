@@ -643,11 +643,11 @@ class Font : GLib.Object {
 		bool loaded = false;
 		set_font_file (path);
 		
-		if (path.index_of (".ffi") != -1) {
+		if (path.has_suffix (".ffi")) {
 			loaded = parse_file (path);
 		}
 		
-		if (path.index_of (".ttf") != -1) {
+		if (path.has_suffix (".ttf")) {
 			loaded = parse_otf_file (path);
 		}
 		
