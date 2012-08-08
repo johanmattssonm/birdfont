@@ -56,27 +56,9 @@ class Preferences {
 		return files;
 	}
 
-	public static bool is_font_file (string file) {
-		// Valabug: char_count deal with non-ascii letters
-		// return (file.last_index_of (".ffi") != file.char_count () - 4);
-		int i = file.last_index_of (".ffi");
-		
-		if (i > -1) {
-			return true;
-		}
-		
-		i = file.last_index_of (".ttf");
-		return (i > -1);
-	}
-
 	public static void add_recent_files (string file) {
 		string escaped_string = file.replace ("\t", "\\t");
 		StringBuilder recent = new StringBuilder ();
-
-		if (!is_font_file (file)) {
-			warning (@"\"$file\" is not a .ffi file.");
-			return;
-		}
 
 		foreach (string f in get_recent_files ()) {
 			if (f != file) {

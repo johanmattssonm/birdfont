@@ -659,9 +659,11 @@ class Font : GLib.Object {
 		Glyph? gl = get_glyph ("a");
 		Glyph g;
 		ImageSurface img;
+		ImageSurface img_scale;
 		Context cr;
-		double gx, gy;
-		double x1, x2, y1, y2;
+		double scale;
+		
+		Font font = Supplement.get_current_font ();
 
 		if (gl == null) {
 			gl = get_glyph_indice (4);
@@ -672,18 +674,29 @@ class Font : GLib.Object {
 		}
 		
 		g = (!) gl;
+
+		img = g.get_thumbnail ();
+		scale = 70.0 / img.get_width ();
 		
-		g.boundries (out x1, out y1, out x2, out y2);
+		if (scale > 70.0 / img.get_height ()) {
+			scale = 70.0 / img.get_height ();
+		}
 		
-		gx = 0;
-		gy = y2 - y1;
+		if (scale > 1) {
+			scale = 1;
+		}
+
+		img_scale = new ImageSurface (Format.ARGB32, (int) (scale * img.get_width ()), (int) (scale * img.get_height ()));
+		cr = new Context (img_scale);
 		
-		img = new ImageSurface (Format.ARGB32, (int) (x2 - x1) + 5, (int) (y2 - y1) + 3);
-		cr = new Context (img);
+		cr.scale (scale, scale);
+
+		cr.save ();
+		cr.set_source_surface (img, 0, 0);
+		cr.paint ();
+		cr.restore ();
 		
-		Svg.draw_svg_path (cr, g.get_svg_data (), gx, gy, 1.0);	
-		
-		img.write_to_png ((!) f.get_path ());
+		img_scale.write_to_png ((!) f.get_path ());
 	}
 
 	/** Callbackt function for finishing parsing of font file. */ 

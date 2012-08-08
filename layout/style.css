@@ -41,12 +41,19 @@ div.inner_format_box {
 	top: 50%;
 }
 
+div.one_line {
+	position: relative;
+	top: 100px;
+	overflow: hidden;
+	white-space: nowrap;	
+}
+
 div.recent_font {
 	float: left;
 	overflow: hidden;
 	background-color: #EFEFEF; 
 	width: 100px;
-	height: 100px;
+	height: 120px;
 	margin: 5px 5px 5px 5px;
 	font-size: 10pt;
 	text-align: center;
@@ -72,8 +79,4 @@ h3 {
 
 input.text {
 	width: 100%;	
-}
-
-span.one_line {
-	overflow: hidden;
 }

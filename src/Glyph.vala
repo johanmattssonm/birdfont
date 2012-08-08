@@ -132,12 +132,14 @@ class Glyph : FontDisplay {
 			return;
 		}
 
-		x1 = double.MAX;
-		y1 = double.MAX;
-		x2 = double.MIN;
-		y2 = double.MIN;
+		x1 = path_list.first ().data.xmin;
+		y1 = path_list.first ().data.ymin;
+		x2 = path_list.first ().data.xmax;
+		y2 = path_list.first ().data.ymax;
 				
 		foreach (Path p in path_list) {
+			p.update_region_boundries ();
+						
 			if (p.xmin < x1) x1 = p.xmin;
 			if (p.xmax > x2) x2 = p.xmax;
 			if (p.ymin < y1) y1 = p.ymin;
@@ -1566,6 +1568,26 @@ class Glyph : FontDisplay {
 		undo_list.remove_link (undo_list.last ());
 	}
 	
+	public ImageSurface get_thumbnail () {
+		ImageSurface img;
+		Context cr;
+		double gx, gy;
+		double x1, x2, y1, y2;
+		Font font = Supplement.get_current_font ();
+
+		remove_empty_paths ();
+		boundries (out x1, out y1, out x2, out y2);
+		
+		gx = left_limit - x1;
+		gy = (y2 - y1) + font.base_line + y1;
+		
+		img = new ImageSurface (Format.ARGB32, (int) (x2 - x1), (int) (y2 - y1));
+		cr = new Context (img);
+		
+		Svg.draw_svg_path (cr, get_svg_data (), gx, gy, 1.0);	
+		
+		return img;
+	}
 }
 
 }

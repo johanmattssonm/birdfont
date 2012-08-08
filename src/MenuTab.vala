@@ -99,7 +99,7 @@ class MenuTab : FontDisplay {
 	}
 
 	public override void selected_canvas () {
-		MainWindow.get_webview ().reload_bypass_cache ();
+		MainWindow.get_webview ().reload ();
 	}
 		
 	public override string get_name () {
@@ -172,16 +172,17 @@ foreach (Font font in recent_fonts) {
 	fn = fn.substring (fn.replace ("\\", "/").last_index_of ("/") + 1);	
 	
 	c.append ("""<div class="recent_font" """ + "onclick=\"call ('load:" + (!) font.font_file + "');\">");
+
+	c.append ("<div class=\"one_line\">");
+	c.append (fn);
+	c.append ("</div>");
+		
 	c.append ("<img src=\"");
 	c.append ((!) Supplement.get_thumbnail_directory ().get_path ());
 	c.append ("/");
 	c.append (fn);
-	c.append (".png\" alt=\"\"><br /><br />");
-	
-	c.append ("<span class=\"one_line\">");
-	c.append (fn);
-	c.append ("</span>");
-	
+	c.append (@".png?$(Random.next_int ())\" alt=\"\"><br /><br />");
+
 	c.append ("</div>\n");
 }
 
