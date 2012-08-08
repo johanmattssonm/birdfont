@@ -57,8 +57,6 @@ class Font : GLib.Object {
 	
 	bool modified = false;
 	
-	private string? svg_thumbnail = null;
-	
 	private string name = "typeface";
 	
 	bool ttf_export = true;
@@ -133,7 +131,20 @@ class Font : GLib.Object {
 		
 		return sb.str;
 	}
-	
+
+	public string get_file_name () {
+		string p = get_path ();
+		int i = p.last_index_of ("/");
+		
+		if (i == -1) {
+			i = p.last_index_of ("\\");
+		}
+		
+		p = p.substring (i + 1);
+		
+		return p;
+	}
+		
 	public File get_folder () {
 		string p = get_path ();
 		int i = p.last_index_of ("/");
@@ -145,90 +156,6 @@ class Font : GLib.Object {
 		p = p.substring (0, i);
 		
 		return File.new_for_path (p);
-	}
-
-	public string get_svg_thumbnail () {
-		if (svg_thumbnail == null) {
-			svg_thumbnail = load_svg_thumbnail ();
-		}
-		
-		return (!) svg_thumbnail;
-	}
-	
-	public string load_svg_thumbnail () {
-		File file;
-		string line;
-		string? l;
-		DataInputStream dis;
-		
-		int start, stop, len;
-		
-		if (unlikely (font_file == null)) {
-			warning  (@"File is null in load_svg_thumbnail.\n");
-			return "";
-		}
-		
-		file = File.new_for_path ((!)font_file);
-		
-		if (unlikely (!file.query_exists ())) {
-			warning  (@"File '$((!)font_file)' doesn't exist.\n");
-			return "";
-		}
-
-		try {
-			dis = new DataInputStream (file.read ());
-			
-			while ((l = dis.read_line (null)) != null) {
-				
-				assert (l != null);
-				
-				line = (!) l;
-				
-				if (likely (line.index_of ("<thumbnail svg=\"") == 0)) {
-					start = line.index_of ("\"");
-					stop = line.last_index_of ("\"");
-					
-					if (unlikely (start == -1 || stop == -1)) {
-						warning ("No delimter found for line: $line\n");
-						return "";
-					}
-					
-					len = stop - start;
-					
-					return line.substring (start, len);
-				}
-			}
-			
-		} catch (GLib.Error e) {
-			warning (@"$(e.message)");
-		}
-		
-		warning (@"No thumbnail found in '$((!)font_file)'");
-		
-		return "";
-	}
-	
-	public string get_new_svg_thumbnail () {
-		Glyph? g;
-		Glyph glyph;
-			
-		g = get_glyph ("a");
-		
-		if (is_valid_thumbnail (g)) {
-			glyph = (!) g;
-			return glyph.get_svg_data ();
-		}
-		
-		for (int i = 0; i < 100; i++) {
-			g = get_glyph_indice (i);
-			
-			if (is_valid_thumbnail (g)) {
-				glyph = (!) g;
-				return glyph.get_svg_data ();
-			}
-		}
-		
-		return "";
 	}
 	
 	bool is_valid_thumbnail (Glyph? g) {
@@ -375,16 +302,16 @@ class Font : GLib.Object {
 		g.left_limit = -33;
 		g.right_limit = 33;
 		
-		p.add (-30, 30);
-		p.add (30, 30);
-		p.add (30, -30);
-		p.add (-30, -30);
+		p.add (-20, 20);
+		p.add (20, 20);
+		p.add (20, -20);
+		p.add (-20, -20);
 		p.close ();
 		
-		i.add (-25, 25);
-		i.add (25, 25);
-		i.add (25, -25);
-		i.add (-25, -25);
+		i.add (-15, 15);
+		i.add (15, 15);
+		i.add (15, -15);
+		i.add (-15, -15);
 		i.reverse ();
 		i.close ();
 
@@ -539,6 +466,8 @@ class Font : GLib.Object {
 		}
 		
 		modified = false;
+		add_thumbnail ();
+		Preferences.add_recent_files (get_path ());
 		
 		return r;
 	}
@@ -562,8 +491,6 @@ class Font : GLib.Object {
 			os.put_string ("\n");
 				
 			os.put_string ("<font>\n");
-			
-			os.put_string (@"<thumbnail svg=\"$(get_new_svg_thumbnail ())\"/>\n");
 			
 			os.put_string ("\n");
 			os.put_string (@"<name>$(get_name ())</name>\n");
@@ -726,9 +653,48 @@ class Font : GLib.Object {
 		
 		return loaded;
 	}
-	
+
+	private void add_thumbnail () {
+		File f = Supplement.get_thumbnail_directory ().get_child (@"$((!) get_file_name ()).png");
+		Glyph? gl = get_glyph ("a");
+		Glyph g;
+		ImageSurface img;
+		Context cr;
+		double gx, gy;
+		double x1, x2, y1, y2;
+
+		if (gl == null) {
+			print ("no glyph a\n");
+			glyph_cache.print_all ();
+		}
+
+		if (gl == null) {
+			gl = get_glyph_indice (4);
+		}		
+		
+		if (gl == null) {
+			gl = get_not_def_character ();
+		}
+		
+		g = (!) gl;
+		
+		g.boundries (out x1, out y1, out x2, out y2);
+		
+		gx = 0;
+		gy = y2 - y1;
+		
+		img = new ImageSurface (Format.ARGB32, (int) (x2 - x1) + 5, (int) (y2 - y1) + 3);
+		cr = new Context (img);
+		
+		Svg.draw_svg_path (cr, g.get_svg_data (), gx, gy, 1.0);	
+		
+		img.write_to_png ((!) f.get_path ());
+	}
+
 	/** Callbackt function for finishing parsing of font file. */ 
 	public void loading_finished_callback () {
+		add_thumbnail ();
+		Preferences.add_recent_files (get_path ());
 		print ("Done Loading.\n");
 	}
 
@@ -886,6 +852,7 @@ class Font : GLib.Object {
 		delete doc;
 		Parser.cleanup ();
 
+		loading_finished_callback ();
 		return true;
 	}
 	

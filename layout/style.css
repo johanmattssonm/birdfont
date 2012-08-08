@@ -1,5 +1,7 @@
 @charset "UTF-8";
 
+.clearBoth { clear:both; }
+
 body {
 }
 
@@ -17,19 +19,43 @@ div.heading {
 	color: #FFFFFF;
 }
 
-div.format_box {
-	margin: auto auto;
+div.menu_item {
+	width: 100%;
+	background-color: #CEDAE7; 
+	color: #000000;
+	margin: 0 0 2px 0;
+	padding: 0 -3px 0 3px;
+	cursor: default;
+}
+
+div.menu_item:hover {
+	background-color: #E6ECF6; 
 }
 
 div.inner_format_box {
-	background-color: #EFEFEF; 
+	float: left;
 	width: 170px;
 	height: 200px;
-	margin-top: 50px;
-	margin-left: auto;
-	margin-right: auto;
 	padding: 0 0 0 0;
+	margin: 0 10px 0 0;
 	top: 50%;
+}
+
+div.recent_font {
+	float: left;
+	overflow: hidden;
+	background-color: #EFEFEF; 
+	width: 100px;
+	height: 100px;
+	margin: 5px 5px 5px 5px;
+	font-size: 10pt;
+	text-align: center;
+	padding: 10px 10px 10px 10px;
+	cursor: default;
+}
+
+div.recent_list {
+	margin: 50px 0 0 0;	
 }
 
 h2 {
@@ -46,4 +72,8 @@ h3 {
 
 input.text {
 	width: 100%;	
+}
+
+span.one_line {
+	overflow: hidden;
 }

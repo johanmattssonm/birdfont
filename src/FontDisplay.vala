@@ -176,14 +176,12 @@ public abstract class FontDisplay : GLib.Object {
 		}
 		
 		if (j >= property.length ()) {
-			warning (@"key $k not found in property list");
+			warning (@"key  \"$k\" not found in property list, value: $v");
 			return;
 		}
 		
 		cb = call.nth (j).data;
 		cb.call (v);
-		
-		print (@"Got $k -> $v\n");
 	}
 
 }

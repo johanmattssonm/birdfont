@@ -35,7 +35,7 @@ public class MainWindow : Gtk.Window {
 	static GlyphCanvas glyph_canvas;
 	static MainWindow singleton;
 	static KeyBindings key_bindings;
-	static ContentDisplay content;
+	static MenuTab content;
 	static TooltipArea tool_tip;
 		
 	static DrawingArea margin_bottom;
@@ -51,7 +51,7 @@ public class MainWindow : Gtk.Window {
 		glyph_canvas = new GlyphCanvas ();
 		tools = new Toolbox (glyph_canvas);
 		tabs = new TabBar ();
-		content = new ContentDisplay ();
+		content = new MenuTab ();
 		tool_tip = new TooltipArea ();
 
 		margin_bottom = new DrawingArea ();
@@ -69,7 +69,6 @@ public class MainWindow : Gtk.Window {
 		html_canvas = new WebView ();
 		
 		html_canvas.title_changed.connect ((p, s) => {
-			print (@"property $s\n");
 			FontDisplay fd = get_current_display ();
 			fd.process_property (s);
 		});
@@ -109,7 +108,7 @@ public class MainWindow : Gtk.Window {
 			}
 		});
 
-		// Hide this canvas when windown is realized and flip canvas 
+		// Hide this canvas when window is realized and flip canvas 
 		// visibility in tab selection signal.
 		html_canvas.expose_event.connect ((t, e) => {
 			glyph_canvas.set_visible (false);
@@ -121,7 +120,7 @@ public class MainWindow : Gtk.Window {
 		tabs.add_unique_tab (content, 60, true);
 		tabs.add_unique_tab (over_view, 75, false);
 		
-		tabs.select_tab_name ("File");
+		tabs.select_tab_name ("Menu");
 
 		canvas_box = new HBox (false, 0);
 		canvas_box.child = (glyph_canvas);
@@ -261,9 +260,9 @@ public class MainWindow : Gtk.Window {
 		return over_view;
 	}
 	
-	internal static ContentDisplay get_content_display () {
-		if (unlikely ((ContentDisplay?) get_singleton ().content == null)) {
-			warning ("ContentDisplay not instantiated.");
+	internal static MenuTab get_content_display () {
+		if (unlikely ((MenuTab?) get_singleton ().content == null)) {
+			warning ("MenuTab not instantiated.");
 		}
 		
 		return get_singleton ().content;

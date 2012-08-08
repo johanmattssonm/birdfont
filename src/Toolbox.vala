@@ -827,11 +827,14 @@ class Toolbox : DrawingArea {
 			}
 		}
 		
+		// FIXA:
+		/*
 		foreach (Tool t in MainWindow.get_content_display ().tools) {
 			if (t.is_active ()) {
 				return t;
 			}	
 		}
+		*/
 		
 		return null;
 	}

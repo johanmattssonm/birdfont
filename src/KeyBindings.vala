@@ -94,13 +94,75 @@ class BindingList {
 				new CloseTab (),
 				new UndoAction (),
 				new Copy (),
-				new Paste ()
+				new Paste (),
+				new Save (),
+				new NewFile (),
+				new Load (),
+				new ShowKerningContext (),
+				new ShowPreview ()
 			};
 
 			nc = default_bindings;
 		}
 		return nc;
 	}
+}
+
+
+class ShowPreview : ShortCut {
+	
+	public override void run () {
+		MenuTab.preview ();
+	}
+	
+	public override uint get_default_modifier ()      { return CTRL; }
+	public override uint get_default_key ()           { return ',';	}	
+	public override unowned string get_description () { return "Preview"; }
+}
+
+
+class ShowKerningContext : ShortCut {
+	
+	public override void run () {
+		MenuTab.show_kerning_context ();
+	}
+	
+	public override uint get_default_modifier ()      { return CTRL; }
+	public override uint get_default_key ()           { return 'k';	}	
+	public override unowned string get_description () { return "Kerning context"; }
+}
+
+class Load : ShortCut {
+	
+	public override void run () {
+		MenuTab.load ();
+	}
+	
+	public override uint get_default_modifier ()      { return CTRL; }
+	public override uint get_default_key ()           { return 'o';	}	
+	public override unowned string get_description () { return "Open file"; }
+}
+
+class NewFile : ShortCut {
+	
+	public override void run () {
+		MenuTab.new_file ();
+	}
+	
+	public override uint get_default_modifier ()      { return CTRL; }
+	public override uint get_default_key ()           { return 'n';	}	
+	public override unowned string get_description () { return "New file"; }
+}
+
+class Save : ShortCut {
+	
+	public override void run () {
+		MenuTab.save ();
+	}
+	
+	public override uint get_default_modifier ()      { return CTRL; }
+	public override uint get_default_key ()           { return 's';	}	
+	public override unowned string get_description () { return "Save"; }
 }
 
 class Paste : ShortCut {
@@ -530,11 +592,13 @@ class KeyBindings {
 			}
 		}
 		
+		/* // FIXA
 		foreach (Tool t in MainWindow.get_content_display ().tools) {	
 			if (t.key == event.keyval && t.modifier_flag == modifier) {
 				t.select_action (t);
 			}
 		}
+		* */
 	}
 }
 

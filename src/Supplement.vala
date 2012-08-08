@@ -32,7 +32,17 @@ class Supplement {
 	public static void new_font () {
 		current_font = new Font ();
 	}
-	
+
+	public static File get_thumbnail_directory () {
+		File thumbnails = get_settings_directory ().get_child ("thumbnails");
+		
+		if (!thumbnails.query_exists ()) {
+			DirUtils.create ((!) thumbnails.get_path (), 0xFFFFFF);
+		}
+		
+		return thumbnails;
+	}
+		
 	public static File get_settings_directory () {
 		File home = File.new_for_path (Environment.get_home_dir ());
 		File settings = home.get_child (".supplement");

@@ -147,7 +147,7 @@ class ContentDisplay : FontDisplay {
 			t.set_default_color (1, 1, 1);
 		}
 	}
-
+	
 	private void save () {
 		SaveDialog s = new SaveDialog ();
 		save_dialog (s);
@@ -166,7 +166,7 @@ class ContentDisplay : FontDisplay {
 			s.finished ();
 		}
 	}
-
+	
 	private void new_file () {
 		SaveDialog save = new SaveDialog ();
 		save.finished.connect (() => {
@@ -276,7 +276,7 @@ class ContentDisplay : FontDisplay {
 		x = 10;
 		
 		foreach (var font in recent_fonts) {
-			string svg = font.get_svg_thumbnail ();
+			string svg = "";
 			string font_file = (!) font.font_file;
 			
 			cr.save ();
