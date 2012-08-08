@@ -1381,8 +1381,8 @@ class GlyfTable : Table {
 
 		// add notdef. character at index zero + other special chars first
 		glyphs.append (font.get_not_def_character ());
-		glyphs.append (font.get_null_character ());
-		glyphs.append (font.get_nonmarking_return ());
+		//glyphs.append (font.get_null_character ());
+		//glyphs.append (font.get_nonmarking_return ());
 		glyphs.append (font.get_space ());
 			
 		// add glyphs, first all assigned then the unassigned ones
@@ -4169,10 +4169,82 @@ class PostTable : Table {
 
 }
 
+class GaspTable : Table {
+	
+	public GaspTable () {
+		id = "gasp";
+	}
+	
+	public void parse (OtfInputStream dis) throws Error {
+	}
+	
+	public void process () {
+		FontData fd = new FontData ();
+
+		fd.add_ushort (0);
+		fd.add_ushort (0);
+
+		fd.pad ();
+	
+		this.font_data = fd;
+	}
+
+}
+
+class GdefTable : Table {
+	
+	public GdefTable () {
+		id = "GDEF";
+	}
+	
+	public void parse (OtfInputStream dis) throws Error {
+	}
+	
+	public void process () {
+		FontData fd = new FontData ();
+
+		fd.add_ulong (0x00010002);
+		fd.add_ushort (0); // class def
+		fd.add_ushort (0); // attach list
+		fd.add_ushort (0); // ligature carret
+		fd.add_ushort (0); // mark attach
+		fd.add_ushort (0); // mark glyf
+		fd.add_ushort (0); // mark glyf set def
+		
+		fd.pad ();
+	
+		this.font_data = fd;
+	}
+
+}
+
+class CvtTable : Table {
+	
+	public CvtTable () {
+		id = "cvt ";
+	}
+	
+	public void parse (OtfInputStream dis) throws Error {
+	}
+	
+	public void process () {
+		FontData fd = new FontData ();
+		
+		fd.add_ushort (0);
+		fd.pad ();
+	
+		this.font_data = fd;
+	}
+
+}
+
 /** Table with list of tables sorted by table tag. */
 class DirectoryTable : Table {
 	
 	public CmapTable cmap_table;
+	public CvtTable  cvt_table;
+	public GaspTable gasp_table;
+	public GdefTable gdef_table;
 	public GlyfTable glyf_table;
 	public HeadTable head_table;
 	public HheaTable hhea_table;
@@ -4191,8 +4263,11 @@ class DirectoryTable : Table {
 		offset_table = new OffsetTable (this);
 		
 		loca_table = new LocaTable ();
+		gasp_table = new GaspTable ();
+		gdef_table = new GdefTable ();
 		glyf_table = new GlyfTable (loca_table);
 		cmap_table = new CmapTable (glyf_table);
+		cvt_table  = new CvtTable ();
 		head_table = new HeadTable (glyf_table);
 		hmtx_table = new HmtxTable (head_table, glyf_table);
 		hhea_table = new HheaTable (glyf_table, head_table, hmtx_table);
@@ -4207,7 +4282,10 @@ class DirectoryTable : Table {
 	public void process () {
 		// generate font data
 		glyf_table.process ();
+		gasp_table.process ();
+		gdef_table.process ();
 		cmap_table.process (glyf_table);
+		cvt_table.process ();
 		hmtx_table.process ();
 		hhea_table.process ();
 		maxp_table.process ();
@@ -4216,6 +4294,7 @@ class DirectoryTable : Table {
 		head_table.process ();
 		loca_table.process (glyf_table, head_table);
 		post_table.process ();
+		
 		
 		offset_table.process ();
 		process_directory (); // this table
@@ -4226,8 +4305,11 @@ class DirectoryTable : Table {
 			tables.append (offset_table);
 			tables.append (this);
 			
+			tables.append (gdef_table);
 			tables.append (os_2_table);
 			tables.append (cmap_table);
+			tables.append (cvt_table);
+			tables.append (gasp_table);
 			tables.append (glyf_table);
 			tables.append (head_table);
 			tables.append (hhea_table);
@@ -4267,7 +4349,12 @@ class DirectoryTable : Table {
 			
 			printd (@"$(tag.str) \toffset: $offset \tlength: $length \tchecksum: $checksum.\n");
 			
-			if (tag.str == "hmtx") {
+			if (tag.str == "cvt") {
+				cvt_table.id = tag.str;
+				cvt_table.checksum = checksum;
+				cvt_table.offset = offset;
+				cvt_table.length = length;
+			} else if (tag.str == "hmtx") {
 				hmtx_table.id = tag.str;
 				hmtx_table.checksum = checksum;
 				hmtx_table.offset = offset;
@@ -4292,6 +4379,16 @@ class DirectoryTable : Table {
 				maxp_table.checksum = checksum;
 				maxp_table.offset = offset;
 				maxp_table.length = length;
+			} else if (tag.str == "gasp") {
+				gasp_table.id = tag.str;
+				gasp_table.checksum = checksum;
+				gasp_table.offset = offset;
+				gasp_table.length = length;
+			} else if (tag.str == "gdef") {
+				gdef_table.id = tag.str;
+				gdef_table.checksum = checksum;
+				gdef_table.offset = offset;
+				gdef_table.length = length;
 			} else if (tag.str == "glyf") {
 				glyf_table.id = tag.str;
 				glyf_table.checksum = checksum;
@@ -4349,6 +4446,9 @@ class DirectoryTable : Table {
 		hmtx_table.parse (dis, hhea_table, loca_table);
 		cmap_table.parse (dis);
 		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table, post_table);
+		gasp_table.parse (dis);
+		
+		cvt_table.parse (dis);
 	}
 	
 	public bool validate_tables (OtfInputStream dis, File file) {
