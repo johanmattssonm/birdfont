@@ -38,6 +38,9 @@ class PenTool : Tool {
 
 	private static bool move_selected_handle = false;
 
+	private static double last_point_x = 0;
+	private static double last_point_y = 0;
+
 	public PenTool (string name) {
 		base (name, "Edit path", 'p', CTRL);
 						
@@ -55,6 +58,9 @@ class PenTool : Tool {
 		});
 		
 		press_action.connect((self, b, x, y) => {
+			last_point_x = x;
+			last_point_y = y;
+			
 			press (b, x, y);
 		});
 
@@ -104,22 +110,27 @@ class PenTool : Tool {
 		if (move_selected_handle) {
 			if (GridTool.is_visible ()) {
 				GridTool.tie (ref x, ref y);
+				selected_handle.set_point_type (PointType.CURVE);
+				selected_handle.move_to (x, y);
+			} else {
+				selected_handle.set_point_type (PointType.CURVE);
+				selected_handle.move_delta (x - last_point_x, y - last_point_y);
 			}
-			
-			selected_handle.set_point_type (PointType.CURVE);
-			selected_handle.move_to (x, y);
 			
 			selected_handle.parent.recalculate_linear_handles ();
 			
 			// Fixa: redraw line only
 			glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
+						
+			last_point_x = x;
+			last_point_y = y;
 			
 			return;
 		}
 		
 		// move edit point
 		if (move_selected) {
-			glyph.move_selected_edit_point (x, y);
+			glyph.move_selected_edit_point_delta (x - last_point_x, y - last_point_y);
 			ep = (!) glyph.selected_point;
 			
 			if (tie_x_or_y_coordinates) {
@@ -138,6 +149,9 @@ class PenTool : Tool {
 			
 			ep.recalculate_linear_handles ();
 		}
+		
+		last_point_x = x;
+		last_point_y = y;
 	}
 	
 	public void press (int button, int x, int y) {

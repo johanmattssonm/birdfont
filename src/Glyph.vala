@@ -881,6 +881,18 @@ class Glyph : FontDisplay {
 		move_selected_edit_point (x, y);
 	}
 	
+	public void move_selected_edit_point_delta (double dx, double dy) 
+		requires (selected_point != null)
+	{
+		double px = ((!) selected_point).x + xc () - view_offset_x;
+		double py = -1 * (((!) selected_point).y - yc () + view_offset_y);
+		
+		px *= view_zoom;
+		py *= view_zoom;
+		
+		move_selected_edit_point (dx + px, dy + py);
+	}
+	
 	public void move_selected_edit_point (double x, double y) {		
 		double xc, yc, xt, yt;
 		double ivz = 1 / view_zoom;

@@ -140,6 +140,13 @@ class EditPointHandle  {
 		}
 	}
 	
+	public void move_delta (double dx, double dy) {
+		double px = px () + dx * Glyph.ivz ();
+		double py = py () - dy * Glyph.ivz ();
+		
+		move_to_coordinate (px, py);
+	}
+	
 	public void move_to (double x, double y) {
 		EditPoint.to_coordinate (ref x, ref y);
 		move_to_coordinate (x, y);

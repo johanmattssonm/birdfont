@@ -664,11 +664,6 @@ class Font : GLib.Object {
 		double x1, x2, y1, y2;
 
 		if (gl == null) {
-			print ("no glyph a\n");
-			glyph_cache.print_all ();
-		}
-
-		if (gl == null) {
 			gl = get_glyph_indice (4);
 		}		
 		
