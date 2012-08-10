@@ -97,10 +97,6 @@ class MenuTab : FontDisplay {
 		});	
 
 	}
-
-	public override void selected_canvas () {
-		MainWindow.get_webview ().reload ();
-	}
 		
 	public override string get_name () {
 		return "Menu";

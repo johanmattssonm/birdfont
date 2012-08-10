@@ -248,9 +248,7 @@ class Toolbox : DrawingArea {
 		avalilable_characters.select_action.connect((self) => {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);
 				OverView o = MainWindow.get_overview ();
-				Font f = Supplement.get_current_font ();
-				GlyphRange gr = f.get_available_glyph_ranges ();
-				o.set_glyph_range (gr);
+				o.display_all_available_glyphs ();
 				MainWindow.get_tab_bar ().select_tab_name ("Overview");
 			});
 		characterset_tools.add_tool (avalilable_characters);

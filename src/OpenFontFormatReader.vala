@@ -52,15 +52,15 @@ class OpenFontFormatReader : Object {
 	DirectoryTable directory_table;
 	File file;
 	
-	public OpenFontFormatReader (string file_name) {
-		try {
-			parse (file_name);
-		} catch (Error e) {
-			stderr.printf (e.message);
-		}
+	public OpenFontFormatReader () {
+		directory_table = new DirectoryTable ();
 	}
 	
-	void parse (string file_name) throws Error {
+	public Glyph? read_glyph (string name) {
+		return directory_table.glyf_table.read_glyph (name);
+	}
+	
+	public void parse_index (string file_name) throws Error {
 		file = File.new_for_path (file_name);
 		if (!file.query_exists ()) {
 			throw new FileError.EXIST(@"OpenFontFormatReader: file does not exist. $((!) file.get_path ())");
@@ -68,7 +68,7 @@ class OpenFontFormatReader : Object {
 			
 		dis = new OtfInputStream (file.read ());
 		
-		parse_index ();
+		parse_index_tables ();
 		done ();
 	}
 	
@@ -84,11 +84,9 @@ class OpenFontFormatReader : Object {
 		idle.attach (null);		
 	}
 	
-	void parse_index () throws Error {
+	void parse_index_tables () throws Error {
 		OffsetTable offset_table;
-		
-		directory_table = new DirectoryTable ();
-		
+
 		offset_table = new OffsetTable (directory_table);
 		offset_table.parse (dis);
 		
@@ -122,6 +120,10 @@ class OpenFontFormatReader : Object {
 	
 	public double get_descender () {
 		return directory_table.hhea_table.get_descender ();
-	}}
+	}
 
+	public unowned List<string> get_all_names () {
+		return directory_table.post_table.get_all_names ();
+	}
+}
 }

@@ -20,18 +20,14 @@ namespace Supplement {
 class GlyphRange {
 	
 	List<UniRange> ranges;
-
-	GlyphTable unassigned = new GlyphTable ();
+	
+	public unowned List<string> unassigned = new List<string> ();
 	
 	uint32 len = 0;
 	
 	public GlyphRange () {
 	}
-	
-	public void set_unassigned (GlyphTable unassigned) {
-		this.unassigned = unassigned;
-	}
-	
+		
 	public unowned List<UniRange> get_ranges () {
 		return ranges;
 	}
@@ -77,7 +73,6 @@ class GlyphRange {
 	}
 	
 	public void use_full_unicode_range () {
-		// add_range ('\0', (unichar) 0xA868FE00);
 		add_range ('\0', (unichar) 0xFFF8);
 	}
 	
@@ -192,7 +187,7 @@ class GlyphRange {
 				return "\0".dup();
 			} 
 			
-			chr = ((!) unassigned.nth (index - len)).get_name ();
+			chr = ((!) unassigned.nth (index - len)).data;
 			return chr;
 		}
 

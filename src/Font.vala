@@ -27,6 +27,8 @@ class Font : GLib.Object {
 	/** Glyphs that not are tied to a unichar value. */
 	GlyphTable unassigned_glyphs = new GlyphTable ();
 
+	List<string> glyph_names = new List<string> ();
+
 	/** Last unassigned index */
 	int next_unindexed = 0;
 		
@@ -61,6 +63,9 @@ class Font : GLib.Object {
 	
 	bool ttf_export = true;
 	bool svg_export = true;
+
+	bool loading = false;
+	OpenFontFormatReader otf;
 	
 	public Font () {
 		// positions in pixels at first zoom level
@@ -100,7 +105,7 @@ class Font : GLib.Object {
 	}
 
 	public uint get_length () {
-		return glyph_cache.length () + unassigned_glyphs.length ();
+		return glyph_names.length ();
 	}
 
 	/** Retuns true if the current font has be modified */
@@ -195,16 +200,7 @@ class Font : GLib.Object {
 
 	public GlyphRange get_available_glyph_ranges () {
 		GlyphRange gr = new GlyphRange ();
-		
-		Glyph? g = null;
-		unichar i = 0;
-		
-		while ((g = get_glyph_indice (i++)) != null) {
-			gr.add_single (((!) g).get_unichar ());
-		}
-		
-		gr.set_unassigned (unassigned_glyphs);
-		
+		gr.unassigned = glyph_names;
 		return gr;
 	}
 
@@ -330,7 +326,10 @@ class Font : GLib.Object {
 	}
 
 	public void add_glyph_collection (GlyphCollection glyph_collection) {
-		GlyphCollection? gc = get_glyph_collection (glyph_collection.get_name ());
+		GlyphCollection? gc = get_cached_glyph_collection (glyph_collection.get_name ());
+		unowned List<string>? nl;
+		
+		print (@"Adding: $(glyph_collection.get_name ())\n");
 		
 		if (glyph_collection.get_name () == "") {
 			warning ("Refusing to insert glyph with name \"\", null character should be named null.");
@@ -338,7 +337,8 @@ class Font : GLib.Object {
 		}
 		
 		if (gc != null) {
-			warning ("glyph has been inserted");
+			warning ("glyph has already been added");
+			return;
 		}
 		
 		if (glyph_collection.get_current ().is_unassigned ()) {
@@ -346,22 +346,54 @@ class Font : GLib.Object {
 		} else {
 			glyph_cache.insert (glyph_collection);
 		}
+
+		if (!has_name (glyph_collection.get_name ())) {
+			glyph_names.append (glyph_collection.get_name ());
+			glyph_names.sort (strcmp);
+		}
 	}
+	
+	bool has_name (string name) {
+		foreach (string n in glyph_names) {
+			if (n == name) {
+				return true;
+			}
+		}
 		
+		return false;
+	}
+	
 	public void delete_glyph (string glyph) {
+		glyph_names.remove_all (glyph);
 		glyph_cache.remove (glyph);
 	}
 	
 	/** Obtain all versions and alterntes for this glyph. */
 	public GlyphCollection? get_glyph_collection (string glyph) {
-		GlyphCollection? gc = glyph_cache.get (glyph);
+		GlyphCollection? gc = get_cached_glyph_collection (glyph);
+		Glyph? g;
+		
+		if (gc == null) {
+			// load it from otf file if we need to
+			g = otf.read_glyph (glyph);
+			
+			if (g != null) {
+				add_glyph_callback ((!) g);
+				return get_cached_glyph_collection (glyph);
+			}
+		}
+			
+		return gc;
+	}
+
+	public GlyphCollection? get_cached_glyph_collection (string glyph) {
+		GlyphCollection? gc = null;
+		Glyph? new_glyph;
+		
+		gc = glyph_cache.get (glyph);
 		
 		if (gc == null) {
 			gc = unassigned_glyphs.get (glyph);
-			
-			if (gc == null) {			
-				return null;
-			}
 		}
 		
 		return gc;
@@ -384,20 +416,22 @@ class Font : GLib.Object {
 	}
 	
 	public Glyph? get_glyph_indice (unichar glyph_indice) {
-		GlyphCollection gc;
+		GlyphCollection? gc;
+		string n;
 		
-		if (glyph_indice >= length ()) {
+		if (!(0 <= glyph_indice < glyph_names.length ())) {
+			warning ("glyph_indice is out of range");
 			return null;
-		} 
-		
-		if (glyph_indice >= glyph_cache.length ()) {
-			glyph_indice -= glyph_cache.length ();
-			gc = (!) unassigned_glyphs.nth (glyph_indice);
-		} else {
-			gc = (!) glyph_cache.nth (glyph_indice);
 		}
-				
-		return gc.get_current ();
+		
+		n = glyph_names.nth (glyph_indice).data;
+		gc = get_glyph_collection (n);
+		
+		if (gc != null) {
+			return ((!) gc).get_current ();
+		}
+		
+		return null;
 	}
 	
 	public void add_background_image (string file) {
@@ -632,11 +666,11 @@ class Font : GLib.Object {
 	}
 
 	public uint length () {
-		return glyph_cache.length () + unassigned_glyphs.length ();
+		return glyph_names.length ();
 	}
 
 	public bool is_empty () {
-		return (glyph_cache.length () == 0 && unassigned_glyphs.length () == 0);
+		return (glyph_names.length () == 0);
 	}
 
 	public bool load (string path) {
@@ -663,8 +697,6 @@ class Font : GLib.Object {
 		Context cr;
 		double scale;
 		
-		Font font = Supplement.get_current_font ();
-
 		if (gl == null) {
 			gl = get_glyph_indice (4);
 		}		
@@ -703,6 +735,7 @@ class Font : GLib.Object {
 	public void loading_finished_callback () {
 		add_thumbnail ();
 		Preferences.add_recent_files (get_path ());
+		loading = false;
 		print ("Done Loading.\n");
 	}
 
@@ -711,7 +744,7 @@ class Font : GLib.Object {
 		GlyphCollection? gcl;
 		GlyphCollection gc;
 		
-		gcl = get_glyph_collection (g.get_name ());
+		gcl = get_cached_glyph_collection (g.get_name ());
 		
 		if (gcl != null) {
 			warning (@"glyph \"$(g.get_name ())\" does already exist");
@@ -721,7 +754,9 @@ class Font : GLib.Object {
 			gc = new GlyphCollection (g);
 			
 			if (g.name == "") {
+				warning ("refusing to insert glyph without name");
 				g.name = @"($(++next_unindexed))";
+				return;
 			}
 			
 			// del: print (@"added name: $(g.name)\n");
@@ -742,14 +777,34 @@ class Font : GLib.Object {
 	}
 
 	public bool parse_otf_file (string path) {
+		otf = new OpenFontFormatReader ();
+		loading = true;
+		
+		while (glyph_names.length () > 0) {
+			glyph_names.remove_link (glyph_names.first ());
+		}
+		
 		glyph_cache.remove_all ();
 		unassigned_glyphs.remove_all ();
 		
 		font_file = path;
 		
+		otf.parse_index (path);
+		
+		foreach (string n in otf.get_all_names ()) {
+			glyph_names.append (n);
+		}
+				
+		/*
 		ThreadFunc<void*> run = () => {
 			string file = (!) font_file;
-			parse_otf_file_async (file);
+
+			try {
+				parse_otf_async ((!) font_file);
+			} catch (GLib.Error e) {
+				stderr.printf (e.message);
+			}
+
 			return null;
 		};
 		
@@ -759,12 +814,12 @@ class Font : GLib.Object {
 		} catch (ThreadError e) {
 			stderr.printf ("Thread error: %s\n", e.message);
 		}
-		
+		*/
 		return true;
 	}
-		
-	public static void parse_otf_file_async (string path) {
-		OpenFontFormatReader otf = new OpenFontFormatReader (path);
+	
+	void parse_otf_async (string fn) {
+		// otf.parse (fn);
 	}
 	
 	/** Measure height of x or other lower case letter. */

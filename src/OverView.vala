@@ -53,6 +53,8 @@ class OverView : FontDisplay {
 
 	Scrollbar scrollbar;
 	
+	bool all_avail = true;
+	
 	public OverView (GlyphRange? range = null) {
 		GlyphRange gr;
 		
@@ -128,6 +130,10 @@ class OverView : FontDisplay {
 	}
 	
 	public double get_height () {
+		if (rows == 0) {
+			return 0;
+		}
+				
 		return 2.0 * nail_height * (glyph_range.length () / rows);
 	}
 
@@ -271,6 +277,14 @@ class OverView : FontDisplay {
 		return "Overview";
 	}
 	
+	public void display_all_available_glyphs () {
+		all_avail = true;
+		
+		first_character = 0;
+		first_visible = 0;
+		selected = 0;
+	}
+	
 	private unowned List<GlyphCollection> get_visible_glyphs () {
 		return visible_characters;
 	}
@@ -280,6 +294,8 @@ class OverView : FontDisplay {
 		double left_margin, x, caption_y; // for glyph caption
 		uint64 index = index_begin;
 		int i = row * items_per_row;
+		Font f = Supplement.get_current_font ();
+		
 		cr.save ();
 		cr.set_line_width (1);
 		
@@ -288,24 +304,22 @@ class OverView : FontDisplay {
 		cr.set_font_size (14);
 
 		left_margin = 0;
-		
-		if (nail_width >= 70)
-			left_margin = 14;
-		else if (nail_width >= 60)
-			left_margin = 9;
-		else if (nail_width >= 36)
-			left_margin = -2;
-		else if (nail_width >= 26)
-			left_margin = -8;
-		else
-			warning ("Max zoom level reached");
 					
 		while (x < width) {
-			if (! (0 <= index < glyph_range.get_length ())) {
-				break;
-			}
 			
-			character_string = glyph_range.get_char ((uint32) index);
+			if (all_avail) {
+				if (! (0 <= index < f.length ())) {
+					break;
+				}
+				
+				character_string = ((!) f.get_glyph_indice ((uint32) index)).get_name ();
+			} else {
+				if (!(0 <= index < glyph_range.get_length ())) {
+					break;
+				}
+				
+				character_string = glyph_range.get_char ((uint32) index);
+			}
 			
 			if (character_string == "") {
 				warning (@"Got null character as name for glyph. Index: $index");
@@ -368,11 +382,12 @@ class OverView : FontDisplay {
 	private bool draw_thumbnail (Context cr, string name, double x, double y) {
 		Glyph? gl = Supplement.get_current_font ().get_glyph (name);
 		Glyph g;
+		
 		double gx, gy;
 		double x1, x2, y1, y2;
 		double scale = nail_zoom_width / 150.0;
 		double w, h, m;
-		
+
 		w = nail_width  - 19;
 		h = nail_height - 22;
 		
@@ -388,7 +403,7 @@ class OverView : FontDisplay {
 		g.boundries (out x1, out y1, out x2, out y2);
 		
 		if (g.get_width () > w) {
-			m = ((g.get_width () - w) / 2.0) / scale;
+			m = 0;
 		} else {
 			m = ((w - g.get_width ()) / 2.0) / scale;
 		}
@@ -398,13 +413,11 @@ class OverView : FontDisplay {
 		
 		Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h);
 		Context c = new Context (s);
-		
-		/*
+/*
 		c.set_source_rgb (200/255.0, 200/255.0, 229/255.0);
 		c.rectangle (0, 0, w, h);	
 		c.fill ();
-		*/
-		
+*/
 		c.scale (scale, scale);				
 		Svg.draw_svg_path (c, g.get_svg_data (), gx, gy, 1.0);
 		
@@ -691,11 +704,19 @@ class OverView : FontDisplay {
 				key_up ();
 			}
 		}
-		
-		print (@"selected: $(selected)\n");
 	}
 	
 	public string get_selected_char () {
+		Font f;
+		Glyph? g;
+		
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			g = f.get_glyph_indice (selected);
+			return_val_if_fail (g != null, "");
+			return ((!) g).get_name ();
+		}
+		
 		return glyph_range.get_char (selected);
 	}
 	
@@ -878,7 +899,7 @@ class OverView : FontDisplay {
 		selected--;
 		
 		if (current == selected && !menu_action) {
-			open_glyph_signal (glyph_range.get_char (selected));
+			open_glyph_signal (get_selected_char ());
 		}
 		
 		adjust_scroll ();
@@ -897,7 +918,15 @@ class OverView : FontDisplay {
 
 	/** Returns true if overview shows the last character. */
 	private bool at_bottom () {
-		return (rows * items_per_row + items_per_row + first_visible >= glyph_range.length ());
+		Font f;
+		double t = rows * items_per_row + items_per_row + first_visible;
+		
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			return t >= f.length ();
+		}
+		
+		return t >= glyph_range.length ();
 	}
 
 	public void set_glyph_range (GlyphRange range) {
@@ -906,8 +935,10 @@ class OverView : FontDisplay {
 		uint32 i;
 		uint32 len = 0;
 		
-		glyph_range = range;
+		all_avail = false;
 		
+		glyph_range = range;
+
 		// Todo: optimized search when full range is selected.
 		
 		// scroll to the selected character

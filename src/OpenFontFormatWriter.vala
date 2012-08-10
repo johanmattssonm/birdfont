@@ -680,8 +680,13 @@ class GlyfTable : Table {
 	public int16 ymin = 0;
 	public int16 xmax = 0;
 	public int16 ymax = 0;
-	
+
+	public OtfInputStream dis;
+	public HeadTable head_table;
+	public HmtxTable hmtx_table;
 	public LocaTable loca_table;
+	public CmapTable cmap_table; // hack, hack, hack. cmap and post is null when inistialized and set in parse method
+	public PostTable post_table;
 	
 	public List<uint32> location_offsets; 
 
@@ -696,12 +701,17 @@ class GlyfTable : Table {
 	
 	double total_width = 0;
 	int non_zero_glyphs = 0;
+
+	Mutex read_lock;
+	int64 next_index = -1;
+	List<int> loca_index = new List<int> ();
 	
 	public GlyfTable (LocaTable l) {
 		id = "glyf";
 		loca_table = l;
 		location_offsets = new List<uint32> ();
 		glyphs = new List<Glyph> ();
+		read_lock = new Mutex ();
 	}	
 
 	public int16 get_space_gid () {
@@ -757,6 +767,22 @@ class GlyfTable : Table {
 		
 		return (uint16)g.unichar_code; 
 	}
+	
+	int x = 0;
+	public Glyph? read_glyph (string name) {
+		Glyph glyph;
+		int i;
+		
+		i = post_table.get_gid (name);
+		
+		print (@"Parse index $i, name $name\n");
+		
+		if (i == -1) {
+			return null;
+		}
+		
+		return parse_index (i, dis, loca_table, hmtx_table, head_table, post_table);
+	}
 			
 	/** Add this glyph from thread safe callback to the running gui. */
 	void add_glyph (Glyph g) {
@@ -771,98 +797,126 @@ class GlyfTable : Table {
 		idle.attach (null);
 	}
 	
-	public void parse (OtfInputStream dis, CmapTable cmap, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
+	public void parse (OtfInputStream dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
+		printd (@"loca.size: $(loca.size)\n");
+			
+		Glyph glyph;
+		unowned List<int> ind;
+		int i;
+			
+		// read_lock.lock ();
+		this.cmap_table = cmap_table;
+		this.post_table = post_table;
+		this.loca_table = loca;
+		this.hmtx_table = hmtx_table;
+		this.head_table = head_table;
+		this.dis = dis;
+		
+		// post_table.print_all ();
+		
+		// create a list of indices since we might read them in a different order
+		for (i = 0; i < loca.size; i++) {
+			loca_index.append (i);
+		}
+		// read_lock.unlock ();
+/*				
+		while (true) {
+			read_lock.lock ();
+			
+			if (loca_index.length () == 0) {
+				break;
+			}
+
+			ind = loca_index.first ();
+			i = ind.data;
+
+			try {
+				glyph = parse_index (i, dis, loca, hmtx_table, head_table, post_table);
+				add_glyph (glyph);
+				
+				if (next_index != -1) {
+					i = (int) next_index;
+				}
+				
+				glyph = parse_index (i, dis, loca, hmtx_table, head_table, post_table);
+				add_glyph (glyph);				
+			} catch (Error e) {
+				stderr.printf (@"Cmap length $(cmap_table.get_length ()) glyfs\n");
+				stderr.printf (@"Loca size: $(loca.size)\n");
+				stderr.printf (@"Glyph name: $(post_table.get_name (i))\n");
+				stderr.printf (@"\n");
+				stderr.printf (@"Falied to parse glyf: $(e.message)\n");
+				
+				break;
+			}
+
+			if (i == next_index) {
+				next_index = -1;
+			}
+			
+			loca_index.remove_all (i);
+			read_lock.unlock ();
+		}
+		*/
+	}
+	
+	Glyph parse_index (int index, OtfInputStream dis, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
 		uint32 glyph_offset;
 		Glyph glyph = new Glyph ("");
 		double xmin, xmax;
 		double units_per_em = head_table.get_units_per_em ();
 		unichar character = 0;
 		string name;	
-
-		printd (@"loca.size: $(loca.size)\n");
-		// post_table.print_all ();
 		
-		// notdef character:
-		character = cmap.get_char (0);
-
-		if (character != 0) {
-			warning ("notdef has a another value in cmap table");
+		character = cmap_table.get_char (index);
+		name = post_table.get_name (index);
+		
+		if (name == "") {
+			StringBuilder name_c = new StringBuilder ();
+			name_c.append_unichar (character);
+			name = name_c.str;
 		}
-		
-		glyph = parse_next_glyf (dis, 0, 0, out xmin, out xmax, units_per_em);
-		glyph.left_limit = 0;
-		glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (0);
-		glyph.name = post_table.get_name (0);
-		glyph.set_unassigned (true);		
-		add_glyph (glyph);				
-		
-		if (glyph.name != ".notdef") {
-			warning ("First glyph must be .notdef");
-		}
-		
-		for (int i = 1; i < loca.size; i++) {
-			try {
-				character = cmap.get_char (i);
-				name = post_table.get_name (i);
-				
-				if (name == "") {
-					StringBuilder name_c = new StringBuilder ();
-					name_c.append_unichar (character);
-					name = name_c.str;
-				}
 
-				printd (@"name: $(name)\n");
-				
-				if (!loca.is_empty (i)) {	
-					glyph_offset = loca.get_offset(i);
-					
-					glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax, units_per_em);
-					
-					glyph.left_limit = xmin - hmtx_table.get_lsb (i);
-					glyph.left_limit = 0;
-					glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (i);
-					
-					printd (@"$(glyph.right_limit) = $(glyph.left_limit) + $(hmtx_table.get_advance (i))\n");
-					
-					if (xmin > glyph.right_limit || xmax < glyph.left_limit) {
-						warning (@"Glyph $(name) is outside of it's box.");
-						glyph.left_limit = xmin;
-						glyph.right_limit = xmax;
-					}
-					
-				} else {
-					// add empty glyph
-					glyph = new Glyph (name, character);
-					glyph.left_limit = -hmtx_table.get_lsb (i);
-					glyph.right_limit = hmtx_table.get_advance (i) - hmtx_table.get_lsb (i);				
-				}
-				
-				glyph.name = name;
+		printd (@"name: $(name)\n");
 
-				if (character == 0) {
-					glyph.set_unassigned (true);
-				}
-				
-				if (character == 0 && name != "") {
-					stderr.printf (@"gid: $i\n");
-					stderr.printf (@"char: $((uint) character)\n");
-					stderr.printf (@"name: $(name)\n");
-				}
-								
-				add_glyph (glyph);
-				
-			} catch (Error e) {
-				stderr.printf (@"Cmap length $(cmap.get_length ()) glyfs\n");
-				stderr.printf (@"Loca size: $(loca.size)\n");
-				stderr.printf (@"Loca offset at $i: $glyph_offset\n");
-				stderr.printf (@"Glyph name: $(name)\n");
-				stderr.printf (@"Unicode character: $((uint64)character)\n");
-				stderr.printf (@"\n");
-				stderr.printf (@"Falied to parse glyf: $(e.message)\n");
-				
-				break;
+		if (!loca.is_empty (index)) {	
+			glyph_offset = loca.get_offset(index);
+			
+			glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax, units_per_em);
+			
+			glyph.left_limit = xmin - hmtx_table.get_lsb (index);
+			glyph.left_limit = 0;
+			glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (index);
+			
+			// DEL: printd (@"$(glyph.right_limit) = $(glyph.left_limit) + $(hmtx_table.get_advance (i))\n");
+			
+			if (xmin > glyph.right_limit || xmax < glyph.left_limit) {
+				warning (@"Glyph $(name) is outside of it's box.");
+				glyph.left_limit = xmin;
+				glyph.right_limit = xmax;
 			}
+			
+		} else {
+			// add empty glyph
+			glyph = new Glyph (name, character);
+			glyph.left_limit = -hmtx_table.get_lsb (index);
+			glyph.right_limit = hmtx_table.get_advance (index) - hmtx_table.get_lsb (index);				
 		}
+		
+		glyph.name = name;
+
+		if (character == 0) {
+			glyph.set_unassigned (true);
+		}
+		
+		if (character == 0 && name != "") {
+			stderr.printf (@"Got null character\n");
+			stderr.printf (@"gid: $index\n");
+			stderr.printf (@"char: $((uint) character)\n");
+			stderr.printf (@"name: $(name)\n");
+		}
+		
+		return glyph;
 	}
 	
 	Glyph parse_next_composite_glyf (OtfInputStream dis, unichar character) throws Error {
@@ -2700,18 +2754,48 @@ class PostTable : Table {
 	List<uint16> index = new List<uint16> ();
 	List<string> names = new List<string> ();
 
+	List<string> available_names = new List<string> ();
+	
 	public PostTable (GlyfTable g) {
 		id = "post";
 		glyf_table = g;
+	}
+
+	public unowned List<string> get_all_names () {
+		return available_names;
+	}
+		
+	public int get_gid (string name) { // fixa do fast lookup
+		int i = 0;
+		int j = 0;
+		foreach (string n in names) {
+			if (n == name) {
+				print (@"found name $name == $n at $i\n");
+				
+				j = 0;
+				foreach (uint16 k in index) {
+					if (k == i) {
+						return j;
+					}
+					j++;
+				}
+								
+				return i;
+			}
+			i++;
+		}
+		
+		warn_if_reached ();
+		return -1;
 	}
 
 	public string get_name (int gid) {
 		uint16 i;
 		int k;
 		
-		if (!(0 <= gid <= index.length ())) {
+		if (!(0 <= gid < index.length ())) {
 			warning ("gid is out of range.");
-			return "INVALID";
+			return "";
 		}
 				
 		k = (!) index.nth (gid).data;
@@ -2721,9 +2805,9 @@ class PostTable : Table {
 			return "";
 		}
 		
-		if (!(0 <= k <= names.length ())) {
+		if (!(0 <= k < names.length ())) {
 			warning ("k is out of range.");
-			return "INVALID";
+			return "";
 		}
 				
 		return (!) names.nth (k).data;
@@ -2790,9 +2874,17 @@ class PostTable : Table {
 			// print (@"Name gid: $gid len: $len: $(name.str)\n");
 			
 			names.append (name.str);
-		}		
+		}
+		
+		populate_available ();
 	}
-	
+
+	void populate_available () {
+		for (int i = 0; i < index.length (); i++) {
+			available_names.append (get_name (i));
+		}
+	}
+		
 	public void print_all () {
 		print (@"PostScript glyph mapping:\n");
 		for (int i = 0; i < index.length (); i++) {
@@ -2800,7 +2892,7 @@ class PostTable : Table {
 		}
 	}
 	
-	public void print_avaliable_names () {
+	public void print_all_names () {
 		print (@"Post table names:\n");
 		foreach (var n in names) {
 			print (@"$n\n");
@@ -4431,8 +4523,6 @@ class DirectoryTable : Table {
 		
 		if (!validate_tables (dis, file)) {
 			warning ("Missing required table or bad checksum.");
-			// Fixa: stop processing here, if we want to avoid loading bad fonts
-			return;
 		}
 		
 		hhea_table.parse (dis);
