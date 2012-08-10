@@ -126,7 +126,14 @@ class OverView : FontDisplay {
 	}
 	
 	void scroll_bottom () {
-		scroll_to_position (glyph_range.length () - items_per_row * (rows - 1));
+		Font f;
+		
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			scroll_to_position (f.length () - items_per_row * (rows - 1));
+		} else {
+			scroll_to_position (glyph_range.length () - items_per_row * (rows - 1));
+		}
 	}
 	
 	public double get_height () {
@@ -1007,8 +1014,18 @@ class OverView : FontDisplay {
 	}
 
 	public void update_scrollbar () {
-		scrollbar.set_handle_size (items_per_row * rows / (double) glyph_range.get_length ());
-		scrollbar.set_handle_position (first_visible / (double) glyph_range.get_length ());
+		double len;
+		Font f;
+		
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			len = f.length ();
+		} else {
+			len = glyph_range.get_length ();
+		}
+		
+		scrollbar.set_handle_size (items_per_row * rows / len);
+		scrollbar.set_handle_position (first_visible / len);
 	}
 }
 

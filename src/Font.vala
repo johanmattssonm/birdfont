@@ -675,8 +675,16 @@ class Font : GLib.Object {
 
 	public bool load (string path) {
 		bool loaded = false;
-		set_font_file (path);
+
+		while (glyph_names.length () > 0) {
+			glyph_names.remove_link (glyph_names.first ());
+		}
 		
+		glyph_cache.remove_all ();
+		unassigned_glyphs.remove_all ();
+		
+		font_file = path;
+				
 		if (path.has_suffix (".ffi")) {
 			loaded = parse_file (path);
 		}
@@ -767,9 +775,9 @@ class Font : GLib.Object {
 			add_glyph_collection ((!) gc);
 		} else {
 			stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
-			gc = new GlyphCollection (g);
-			g.name = @"($(++next_unindexed))";
-			add_glyph_collection ((!) gc);
+			//gc = new GlyphCollection (g);
+			//g.name = @"($(++next_unindexed))";
+			//add_glyph_collection ((!) gc);
 		}
 				
 		// take xheight from appropriate lower case letter
@@ -779,15 +787,6 @@ class Font : GLib.Object {
 	public bool parse_otf_file (string path) {
 		otf = new OpenFontFormatReader ();
 		loading = true;
-		
-		while (glyph_names.length () > 0) {
-			glyph_names.remove_link (glyph_names.first ());
-		}
-		
-		glyph_cache.remove_all ();
-		unassigned_glyphs.remove_all ();
-		
-		font_file = path;
 		
 		otf.parse_index (path);
 		
