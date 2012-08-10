@@ -329,7 +329,7 @@ class Font : GLib.Object {
 		GlyphCollection? gc = get_cached_glyph_collection (glyph_collection.get_name ());
 		unowned List<string>? nl;
 		
-		print (@"Adding: $(glyph_collection.get_name ())\n");
+		// print (@"Adding: $(glyph_collection.get_name ())\n");
 		
 		if (glyph_collection.get_name () == "") {
 			warning ("Refusing to insert glyph with name \"\", null character should be named null.");

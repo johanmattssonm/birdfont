@@ -137,11 +137,21 @@ class OverView : FontDisplay {
 	}
 	
 	public double get_height () {
+		double l;
+		Font f;
+		
 		if (rows == 0) {
 			return 0;
 		}
 				
-		return 2.0 * nail_height * (glyph_range.length () / rows);
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			l = f.length ();
+		} else {
+			l = glyph_range.length ();
+		}
+				
+		return 2.0 * nail_height * (l / rows);
 	}
 
 	public bool selected_char_is_visible () {
@@ -510,11 +520,21 @@ class OverView : FontDisplay {
 	}
 	
 	public void scroll_adjustment (double pixel_adjustment) {
+		double l;
+		Font f;
+				
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			l = f.length ();
+		} else {
+			l = glyph_range.length ();
+		}
+		
 		if (first_visible <= 0) {
 			return;
 		}
 
-		if (first_visible + rows * items_per_row >= glyph_range.length ()) {
+		if (first_visible + rows * items_per_row >= l) {
 			return;
 		}
 		
@@ -527,8 +547,18 @@ class OverView : FontDisplay {
 	}
 	
 	void scroll_to_position (int64 r) {
+		int64 l;
+		Font f;
+		
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			l = f.length ();
+		} else {
+			l = glyph_range.length ();
+		}
+		
 		// bottom
-		if (r > glyph_range.length () - items_per_row * rows) {
+		if (r > l - items_per_row * rows) {
 			return;
 		}
 		
@@ -547,10 +577,17 @@ class OverView : FontDisplay {
 	
 	public void scroll_to (double percent) {
 		int64 r;
+		int64 l;
+		Font f;
 		
-		r = (int64) (percent * glyph_range.length () / rows);
-		r *= items_per_row;
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			l = f.length ();
+		} else {
+			l = glyph_range.length ();
+		}
 		
+		r = (int64) ((percent * l * items_per_row) / rows);
 		scroll_to_position (r);
 	}
 		
@@ -608,12 +645,22 @@ class OverView : FontDisplay {
 	}
 
 	public void key_down () {
+		double l;
+		Font f;
+				
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			l = f.length ();
+		} else {
+			l = glyph_range.length ();
+		}
+		
 		update_scrollbar ();
 		
-		if (glyph_range.length () == 0) return;
+		if (l == 0) return;
 	
 		if (at_bottom ()) {
-			int len = (int) glyph_range.get_length ();
+			int len = (int) l;
 			int s = (int) selected;
 			
 			if (len - items_per_row >= s) {
@@ -930,6 +977,7 @@ class OverView : FontDisplay {
 		
 		if (all_avail) {
 			f = Supplement.get_current_font ();
+			print (@"$t >= $(f.length ())\n");
 			return t >= f.length ();
 		}
 		

@@ -89,39 +89,9 @@ class OtfInputStream : Object  {
 		int64 p = fin.tell ();		
 		fin.seek (pos - p, SeekType.CUR);
 	}
-	
-	public Fixed read_fixed () throws Error {
-		Fixed f = (Fixed) din.read_uint32 ();
-		return f;
-	}
-
-	public F2Dot14 read_f2dot14 () throws Error {
-		F2Dot14 f = (F2Dot14) din.read_int16 ();
-		return f;
-	}
-
-	public uint64 read_udate () throws Error {
-		return din.read_int64 ();
-	}
-	
-	public int16 read_short () throws Error {
-		return din.read_int16 ();
-	}
-	
-	public uint16 read_ushort () throws Error {
-		return din.read_uint16 ();
-	}
-	
-	public uint32 read_ulong () throws Error {
-		return din.read_uint32 ();
-	}
 
 	public uint8 read_byte () throws Error {
 		return din.read_byte ();
-	}
-
-	public char read_char () throws Error {
-		return (char) din.read_byte ();
 	}
 }
 
@@ -153,11 +123,12 @@ class FontData : Object {
 		}
 	}
 	
-	public void write_at (uint pos, uint8 new_data) 
+	public void write_at (uint pos, uint8 new_data) throws GLib.Error
 		requires (pos <= capacity) 
-	{
+	{		
 		if (unlikely (pos >= len)) {
 			warning ("end of table reached");
+			throw new GLib.FileError.FAILED ("End of table");
 		}
 		
 		table_data[pos]= new_data;
@@ -255,13 +226,24 @@ class FontData : Object {
 		return read_uint32 ();
 	}
 
-	public uint32 read_short () {
-		uint32 f;
+	public uint16 read_ushort () {
+		uint16 f;
 		f = read () << 8;
 		f += read ();
 		return f;
 	}
-		
+	
+	public int16 read_int16 () {
+		int16 f;
+		f = read () << 8;
+		f += read ();
+		return f;		
+	}
+	
+	public int16 read_short () throws Error {
+		return read_int16 ();
+	}
+	
 	public uint32 read_uint32 () {
 		uint32 f;
 		f = read () << 8 * 3;
@@ -269,6 +251,36 @@ class FontData : Object {
 		f += read () << 8 * 1;
 		f += read () << 8 * 0;
 		return f;
+	}
+
+	public uint64 read_uint64 () {
+		uint64 f;
+		f = read () << 8 * 7;
+		f += read () << 8 * 6;
+		f += read () << 8 * 5;
+		f += read () << 8 * 4;
+		f += read () << 8 * 3;
+		f += read () << 8 * 2;
+		f += read () << 8 * 1;
+		f += read () << 8 * 0;
+		return f;
+	}
+
+	public F2Dot14 read_f2dot14 () throws Error {
+		F2Dot14 f = (F2Dot14) read_int16 ();
+		return f;
+	}
+
+	public uint64 read_udate () throws Error {
+		return read_uint64 ();
+	}
+
+	public uint8 read_byte () throws Error {
+		return read ();
+	}
+
+	public char read_char () throws Error {
+		return (char) read_byte ();
 	}
 	
 	public void add_udate (int64 d) throws Error {
@@ -435,12 +447,12 @@ class Table : Object {
 		return (!) font_data;
 	}
 
-	public virtual void parse (OtfInputStream dis) {
+	public virtual void parse (FontData dis) {
 		warning (@"Parse is not implemented for $(id).");
 	}
 
 	/** Validate table checksum. */
-	public bool validate (OtfInputStream dis) {
+	public bool validate (FontData dis) {
 		bool valid;
 		
 		if (length == 0) {
@@ -457,7 +469,7 @@ class Table : Object {
 		return valid;
 	}
 
-	public static bool validate_table (OtfInputStream dis, uint32 checksum, uint32 offset, uint32 length, string name) {
+	public static bool validate_table (FontData dis, uint32 checksum, uint32 offset, uint32 length, string name) {
 		uint32 ch = calculate_checksum (dis, offset, length, name);
 		bool c;
 		
@@ -472,7 +484,7 @@ class Table : Object {
 		return c;	
 	}
 	
-	public static uint32 calculate_checksum (OtfInputStream dis, uint32 offset, uint32 length, string name) {
+	public static uint32 calculate_checksum (FontData dis, uint32 offset, uint32 length, string name) {
 		uint32 checksum = 0;
 		uint32 l;
 			 
@@ -545,7 +557,7 @@ class LocaTable : Table {
 		return glyph_offsets[i] == glyph_offsets[i + 1];
 	}
 	
-	public void parse (OtfInputStream dis, HeadTable head_table, MaxpTable maxp_table) {
+	public void parse (FontData dis, HeadTable head_table, MaxpTable maxp_table) {
 		size = maxp_table.num_glyphs;
 		glyph_offsets = new uint32[size + 1];
 		
@@ -681,7 +693,7 @@ class GlyfTable : Table {
 	public int16 xmax = 0;
 	public int16 ymax = 0;
 
-	public OtfInputStream dis;
+	public FontData dis;
 	public HeadTable head_table;
 	public HmtxTable hmtx_table;
 	public LocaTable loca_table;
@@ -775,8 +787,6 @@ class GlyfTable : Table {
 		
 		i = post_table.get_gid (name);
 		
-		print (@"Parse index $i, name $name\n");
-		
 		if (i == -1) {
 			return null;
 		}
@@ -797,7 +807,7 @@ class GlyfTable : Table {
 		idle.attach (null);
 	}
 	
-	public void parse (OtfInputStream dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
+	public void parse (FontData dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
 		printd (@"loca.size: $(loca.size)\n");
 			
 		Glyph glyph;
@@ -860,7 +870,7 @@ class GlyfTable : Table {
 		*/
 	}
 	
-	Glyph parse_index (int index, OtfInputStream dis, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
+	Glyph parse_index (int index, FontData dis, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
 		uint32 glyph_offset;
 		Glyph glyph = new Glyph ("");
 		double xmin, xmax;
@@ -919,7 +929,7 @@ class GlyfTable : Table {
 		return glyph;
 	}
 	
-	Glyph parse_next_composite_glyf (OtfInputStream dis, unichar character) throws Error {
+	Glyph parse_next_composite_glyf (FontData dis, unichar character) throws Error {
 		uint16 component_flags = 0;
 		uint16 glyph_index;
 		int16 arg1;
@@ -983,7 +993,7 @@ class GlyfTable : Table {
 		return glyph;
 	}
 	
-	Glyph parse_next_glyf (OtfInputStream dis, unichar character, uint32 glyph_offset,
+	Glyph parse_next_glyf (FontData dis, unichar character, uint32 glyph_offset,
 		out double xmin, out double xmax, double units_per_em) throws Error {
 
 		uint16* end_points = null;
@@ -1537,7 +1547,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		return (unichar) c;
 	}
 	
-	public override void parse (OtfInputStream dis) {
+	public override void parse (FontData dis) {
 		dis.seek (offset);
 		
 		format = dis.read_ushort ();
@@ -1553,7 +1563,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		}
 	}
 		
-	public void parse_format4 (OtfInputStream dis) {
+	public void parse_format4 (FontData dis) {
 		uint16 lang;
 		uint16 seg_count_x2;
 		uint16 seg_count;
@@ -1867,7 +1877,7 @@ class CmapTable : Table {
 		return "cmap";
 	}
 	
-	public override void parse (OtfInputStream dis) 
+	public override void parse (FontData dis) 
 		requires (offset > 0 && length > 0) {
 			
 		uint16 version;
@@ -1990,7 +2000,7 @@ class HeadTable : Table {
 		return units_per_em * 10; // Fixa: we can refactor this number
 	}
 	
-	public override void parse (OtfInputStream dis) 
+	public override void parse (FontData dis) 
 		requires (offset > 0 && length > 0) {
 
 		dis.seek (offset);
@@ -2154,7 +2164,7 @@ class HheaTable : Table {
 		return descender * 1000 / head_table.get_units_per_em ();
 	}
 	
-	public void parse (OtfInputStream dis) throws Error {
+	public void parse (FontData dis) throws Error {
 		dis.seek (offset);
 		
 		version = dis.read_fixed ();
@@ -2271,7 +2281,7 @@ class HmtxTable : Table {
 		return left_side_bearing_monospaced[i] * 1000 / head_table.get_units_per_em ();
 	}
 		
-	public void parse (OtfInputStream dis, HheaTable hhea_table, LocaTable loca_table) {
+	public void parse (FontData dis, HheaTable hhea_table, LocaTable loca_table) {
 		nmetrics = hhea_table.num_horizontal_metrics;
 		nmonospaced = loca_table.size - nmetrics;
 		
@@ -2363,7 +2373,7 @@ class MaxpTable : Table {
 		id = "maxp";
 	}
 	
-	public override void parse (OtfInputStream dis) 
+	public override void parse (FontData dis) 
 		requires (offset > 0 && length > 0) {
 		Fixed format;
 		
@@ -2427,7 +2437,7 @@ class OffsetTable : Table {
 		directory_table = t;
 	}
 		
-	public void parse (OtfInputStream dis) throws Error {
+	public void parse (FontData dis) throws Error {
 		Fixed version;
 		
 		dis.seek (offset);
@@ -2494,7 +2504,7 @@ class NameTable : Table {
 		}
 	}
 
-	public void parse (OtfInputStream dis) throws Error {
+	public void parse (FontData dis) throws Error {
 		uint16 format;
 
 		dis.seek (offset);
@@ -2516,7 +2526,7 @@ class NameTable : Table {
 		}
 	}
 	
-	public void parse_format0 (OtfInputStream dis) throws Error {
+	public void parse_format0 (FontData dis) throws Error {
 		uint16 count;
 		uint16 storage_offset;
 		
@@ -2670,7 +2680,7 @@ class Os2Table : Table {
 		id = "OS/2";
 	}
 	
-	public void parse (OtfInputStream dis) throws Error {
+	public void parse (FontData dis) throws Error {
 		
 	}
 	
@@ -2769,9 +2779,7 @@ class PostTable : Table {
 		int i = 0;
 		int j = 0;
 		foreach (string n in names) {
-			if (n == name) {
-				print (@"found name $name == $n at $i\n");
-				
+			if (n == name) {				
 				j = 0;
 				foreach (uint16 k in index) {
 					if (k == i) {
@@ -2813,7 +2821,7 @@ class PostTable : Table {
 		return (!) names.nth (k).data;
 	}
 	
-	public void parse (OtfInputStream dis) throws Error {
+	public void parse (FontData dis) throws Error {
 		dis.seek (offset);
 		
 		Fixed format = dis.read_fixed ();
@@ -4267,7 +4275,7 @@ class GaspTable : Table {
 		id = "gasp";
 	}
 	
-	public void parse (OtfInputStream dis) throws Error {
+	public void parse (FontData dis) throws Error {
 	}
 	
 	public void process () {
@@ -4289,7 +4297,7 @@ class GdefTable : Table {
 		id = "GDEF";
 	}
 	
-	public void parse (OtfInputStream dis) throws Error {
+	public void parse (FontData dis) throws Error {
 	}
 	
 	public void process () {
@@ -4316,7 +4324,7 @@ class CvtTable : Table {
 		id = "cvt ";
 	}
 	
-	public void parse (OtfInputStream dis) throws Error {
+	public void parse (FontData dis) throws Error {
 	}
 	
 	public void process () {
@@ -4419,7 +4427,7 @@ class DirectoryTable : Table {
 		offset_table = ot;
 	}
 	
-	public void parse (OtfInputStream dis, File file, OpenFontFormatReader reader_callback) throws Error {
+	public void parse (FontData dis, File file, OpenFontFormatReader reader_callback) throws Error {
 		StringBuilder tag = new StringBuilder ();
 		uint32 checksum;
 		uint32 offset;
@@ -4541,7 +4549,7 @@ class DirectoryTable : Table {
 		cvt_table.parse (dis);
 	}
 	
-	public bool validate_tables (OtfInputStream dis, File file) {
+	public bool validate_tables (FontData dis, File file) {
 		bool valid = true;
 		uint p = head_table.get_checksum_position ();
 		FontData fd = new FontData ();	
@@ -4553,15 +4561,13 @@ class DirectoryTable : Table {
 				warning ("file has invalid checksum");
 			}
 							
-			fd.write_table (dis, head_table.offset, head_table.length);
-			
 			// zero out checksum entry in head table before validating it
 			fd.write_at (p + 0, 0);
 			fd.write_at (p + 1, 0);
 			fd.write_at (p + 2, 0);
 			fd.write_at (p + 3, 0);	
 
-			checksum = (uint32) fd.check_sum ();	
+			checksum = (uint32) dis.check_sum ();	
 			
 			if (checksum != head_table.checksum) {
 				warning ("head_table has is invalid checksum");
@@ -4620,33 +4626,21 @@ class DirectoryTable : Table {
 		return valid;
 	}
 	
-	bool validate_checksum_for_entire_font (OtfInputStream dis, File f) {
+	bool validate_checksum_for_entire_font (FontData dis, File f) {
 		FontData fd = new FontData ();
 		uint p = head_table.offset + head_table.get_checksum_position ();
-		FileInfo file_info = f.query_info ("*", FileQueryInfoFlags.NONE);
 		uint32 checksum_font, checksum_head;
-		uint32 file_size = (uint32) file_info.get_size ();
-		
-		if (file_size % 4 != 0) {
-			warning ("Font has to be padded to size of uint32 in order to compute checksum.");
-			return false;
-		}
-		
-        try {
-			fd.write_table (dis, 0, file_size);
-		} catch (GLib.Error e) {
-			warning (@"Failed to compute checksum since $(e.message)");
-		}
-		
-		// zero out checksum entry in head table before validating it
-		fd.write_at (p + 0, 0);
-		fd.write_at (p + 1, 0);
-		fd.write_at (p + 2, 0);
-		fd.write_at (p + 3, 0);
-		
-		checksum_font = (uint32) (0xB1B0AFBA - fd.check_sum ());
+
 		checksum_head = head_table.get_font_checksum ();
 		
+		// zero out checksum entry in head table before validating it
+		dis.write_at (p + 0, 0);
+		dis.write_at (p + 1, 0);
+		dis.write_at (p + 2, 0);
+		dis.write_at (p + 3, 0);
+		
+		checksum_font = (uint32) (0xB1B0AFBA - fd.check_sum ());
+
 		if (checksum_font != checksum_head) {
 			warning (@"Fontfile checksum in head table does not match calculated checksum. checksum_font: $checksum_font checksum_head: $checksum_head");
 			return false;
@@ -4740,11 +4734,11 @@ class DirectoryTable : Table {
 	
 }
 
-// We could benifit greatly from error detection and validation at a fine grained level in
+// users could benifit from error detection and validation at a fine grained level in
 // this class. At some later point should this code present meaningfull info to the user but 
 // for now is the approach just to put a lot of info in the console if we need to do some debugging.
 void printd (string s) {
-	print (s);
+	//print (s);
 }
 
 }

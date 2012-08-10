@@ -86,13 +86,23 @@ class OpenFontFormatReader : Object {
 	
 	void parse_index_tables () throws Error {
 		OffsetTable offset_table;
+		FontData fd = new FontData ();
+		
+		FileInfo file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
+		uint32 file_size = (uint32) file_info.get_size ();
+
+        try {
+			fd.write_table (dis, 0, file_size);
+		} catch (GLib.Error e) {
+			warning (@"Failed to read font data. $(e.message)");
+		}
 
 		offset_table = new OffsetTable (directory_table);
-		offset_table.parse (dis);
+		offset_table.parse (fd);
 		
 		directory_table = new DirectoryTable ();
 		directory_table.set_offset_table (offset_table);
-		directory_table.parse (dis, file, this);
+		directory_table.parse (fd, file, this);
 	}
 
 	public void set_limits () {
