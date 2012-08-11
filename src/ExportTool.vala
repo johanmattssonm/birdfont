@@ -109,7 +109,7 @@ class ExportTool : Tool {
 				os.put_string (@"d=\"$(glyph_svg)\" id=\"path_$(name)$(pid++)\" />\n");
 				
 			}
-
+			
 			os.put_string ("""</g>
 			
 </svg>""");

@@ -128,10 +128,18 @@ class FontData : Object {
 	{		
 		if (unlikely (pos >= len)) {
 			warning ("end of table reached");
-			throw new GLib.FileError.FAILED ("End of table");
+			assert (false);
 		}
 		
 		table_data[pos]= new_data;
+	}
+	
+	public void write_table_data (FontData fd, uint32 offset, uint32 length) {
+		fd.seek (offset);
+		for (uint32 i = 0; i < length; i++) {
+			add (table_data [rp++]);
+		}
+		fd.seek (0);
 	}
 	
 	public void write_table (OtfInputStream dis, uint32 offset, uint32 length) throws Error {
@@ -192,6 +200,8 @@ class FontData : Object {
 		}
 		
 		rp = trp;
+		
+		return;
 	}
 
 	public uint32 check_sum () {
@@ -212,6 +222,7 @@ class FontData : Object {
 	public uint8 read () {
 		if (unlikely (rp >= len)) {
 			warning ("end of table reached");
+			//assert (false);
 			return 0;
 		}
 		
@@ -610,7 +621,10 @@ class LocaTable : Table {
 		uint32 last = 0;
 		
 		foreach (uint32 o in glyf_table.location_offsets) {
-			warn_if_fail (o % 2 == 0);
+			if (o % 4 != 0) {
+				warning ("glyph is not on a four byte boundry");
+				assert_not_reached ();
+			}
 		}
 	
 		if (head_table.loca_offset_size == 0) {
@@ -648,39 +662,12 @@ class LocaTable : Table {
 	}
 }
 
-class Glyf : GLib.Object {
-	
-	public int16 xmin = 0;
-	public int16 ymin = 0;
-	public int16 xmax = 0;
-	public int16 ymax = 0;	
-	
-	List<uint16> end_points = new List<uint16> ();
-	List<uint8> instructions = new List<uint8> ();
-	List<uint8> flags = new List<uint8> ();
-	List<uint16> xcoordinates = new List<uint16> ();
-	List<uint16> ycoordinates = new List<uint16> ();
-		
-	int npoints = 0;
-		
-	int16 ncontours;	
-	uint16 ninstructions;	
-	int nflags;
-	
-	public Glyf () {
-	}
-	
-	public Glyf.process (Glyph g) {
-	
-	}
-
-			
-}
-
 class GlyfTable : Table {
 	
 	// Flags for composite glyph
 	static const uint16 BOTH_ARE_WORDS = 1 << 0;
+	static const uint16 BOTH_ARE_XY_VALUES = 1 << 1;
+	static const uint16 ROUND_TO_GRID = 1 << 2;
 	static const uint16 SCALE = 1 << 3;
 	static const uint16 RESERVED = 1 << 4;
 	static const uint16 MORE_COMPONENTS = 1 << 5;
@@ -716,7 +703,6 @@ class GlyfTable : Table {
 
 	Mutex read_lock;
 	int64 next_index = -1;
-	List<int> loca_index = new List<int> ();
 	
 	public GlyfTable (LocaTable l) {
 		id = "glyf";
@@ -823,51 +809,6 @@ class GlyfTable : Table {
 		this.dis = dis;
 		
 		// post_table.print_all ();
-		
-		// create a list of indices since we might read them in a different order
-		for (i = 0; i < loca.size; i++) {
-			loca_index.append (i);
-		}
-		// read_lock.unlock ();
-/*				
-		while (true) {
-			read_lock.lock ();
-			
-			if (loca_index.length () == 0) {
-				break;
-			}
-
-			ind = loca_index.first ();
-			i = ind.data;
-
-			try {
-				glyph = parse_index (i, dis, loca, hmtx_table, head_table, post_table);
-				add_glyph (glyph);
-				
-				if (next_index != -1) {
-					i = (int) next_index;
-				}
-				
-				glyph = parse_index (i, dis, loca, hmtx_table, head_table, post_table);
-				add_glyph (glyph);				
-			} catch (Error e) {
-				stderr.printf (@"Cmap length $(cmap_table.get_length ()) glyfs\n");
-				stderr.printf (@"Loca size: $(loca.size)\n");
-				stderr.printf (@"Glyph name: $(post_table.get_name (i))\n");
-				stderr.printf (@"\n");
-				stderr.printf (@"Falied to parse glyf: $(e.message)\n");
-				
-				break;
-			}
-
-			if (i == next_index) {
-				next_index = -1;
-			}
-			
-			loca_index.remove_all (i);
-			read_lock.unlock ();
-		}
-		*/
 	}
 	
 	Glyph parse_index (int index, FontData dis, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
@@ -877,6 +818,7 @@ class GlyfTable : Table {
 		double units_per_em = head_table.get_units_per_em ();
 		unichar character = 0;
 		string name;	
+		uint32 end;
 		
 		character = cmap_table.get_char (index);
 		name = post_table.get_name (index);
@@ -890,22 +832,17 @@ class GlyfTable : Table {
 		printd (@"name: $(name)\n");
 
 		if (!loca.is_empty (index)) {	
-			glyph_offset = loca.get_offset(index);
-			
-			glyph = parse_next_glyf (dis, character, glyph_offset, out xmin, out xmax, units_per_em);
+			glyph = parse_next_glyf (dis, character, index, out xmin, out xmax, units_per_em);
 			
 			glyph.left_limit = xmin - hmtx_table.get_lsb (index);
 			glyph.left_limit = 0;
 			glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (index);
-			
-			// DEL: printd (@"$(glyph.right_limit) = $(glyph.left_limit) + $(hmtx_table.get_advance (i))\n");
 			
 			if (xmin > glyph.right_limit || xmax < glyph.left_limit) {
 				warning (@"Glyph $(name) is outside of it's box.");
 				glyph.left_limit = xmin;
 				glyph.right_limit = xmax;
 			}
-			
 		} else {
 			// add empty glyph
 			glyph = new Glyph (name, character);
@@ -932,8 +869,8 @@ class GlyfTable : Table {
 	Glyph parse_next_composite_glyf (FontData dis, unichar character) throws Error {
 		uint16 component_flags = 0;
 		uint16 glyph_index;
-		int16 arg1;
-		int16 arg2;
+		int16 arg1 = 0;
+		int16 arg2 = 0;
 		uint16 arg1and2;
 		F2Dot14 scale;
 		
@@ -944,34 +881,47 @@ class GlyfTable : Table {
 		F2Dot14 scale10;
 		
 		uint16 num_instructions;
+
+		Glyph glyph, linked_glyph;
+		string link_name;
+		List<int> x = new List<int> ();
+		List<int> y = new List<int> ();
+		List<int> gid = new List<int> ();
 		
-		Glyph glyph;
+		double xmin, xmax;
+		double units_per_em = head_table.get_units_per_em ();
+		
+		int glid;
+		
 		StringBuilder name = new StringBuilder ();
 		name.append_unichar (character);
-
+		
+		glyph = new Glyph (name.str, character);
+		
 		do {
 			component_flags = dis.read_ushort ();
 			glyph_index = dis.read_ushort ();
-
+			
 			if ((component_flags & BOTH_ARE_WORDS) > 0) {
 				arg1 = dis.read_short ();
-				arg1 = dis.read_short ();			
-			} else {
-				arg1and2 = dis.read_ushort ();
+				arg2 = dis.read_short ();			
+			} else if ((component_flags & BOTH_ARE_XY_VALUES) > 0) {
+				arg1 = dis.read_byte ();
+				arg2 = dis.read_byte ();
 			}
 			
+			gid.append (glyph_index);
+			x.append (arg1);
+			y.append (arg2);
+
 			// if ((component_flags & RESERVED) > 0)
 			
 			if ((component_flags & SCALE) > 0) {
 				scale = dis.read_f2dot14 ();
-			}
-
-			if ((component_flags & SCALE_X_Y) > 0) {
+			} else if ((component_flags & SCALE_X_Y) > 0) {
 				scalex = dis.read_f2dot14 ();
 				scaley = dis.read_f2dot14 ();
-			}
-
-			if ((component_flags & SCALE_WITH_ROTATTION) > 0) {
+			} else if ((component_flags & SCALE_WITH_ROTATTION) > 0) {
 				scalex = dis.read_f2dot14 ();
 				scale01 = dis.read_f2dot14 ();
 				scale10 = dis.read_f2dot14 ();
@@ -979,7 +929,16 @@ class GlyfTable : Table {
 			}
 			
 		} while ((component_flags & MORE_COMPONENTS) > 0);
+	
 		
+		for (int i = 0; i < gid.length (); i++) {
+			// compensate xmax ymax with coordinate
+			glid = gid.nth (i).data;
+			linked_glyph = parse_next_glyf (dis, character, glid, out xmin, out xmax, units_per_em);
+		}
+
+		
+		/*
 		if ((component_flags & INSTRUCTIONS) > 0) {
 			num_instructions = dis.read_ushort ();
 			
@@ -987,14 +946,13 @@ class GlyfTable : Table {
 				dis.read_byte ();
 			}
 		}
-
-		glyph = new Glyph (name.str, character);
+		*/
 		
 		return glyph;
 	}
 	
-	Glyph parse_next_glyf (FontData dis, unichar character, uint32 glyph_offset,
-		out double xmin, out double xmax, double units_per_em) throws Error {
+	Glyph parse_next_glyf (FontData dis, unichar character, int gid, out double xmin, out double xmax, double units_per_em) throws Error 
+	{
 
 		uint16* end_points = null;
 		uint8* instructions = null;
@@ -1015,12 +973,21 @@ class GlyfTable : Table {
 		
 		Error? error = null;
 		
+		uint start, end, len;
+		
 		StringBuilder name = new StringBuilder ();
 		name.append_unichar (character);
 
-		dis.seek (offset + glyph_offset);
+		start = loca_table.get_offset (gid);
+		end = loca_table.get_offset (gid + 1);
+		len = start - end;
+
+		dis.seek (offset + start);
 		
 		ncontours = dis.read_short ();
+		
+		return_val_if_fail (start < end, new Glyph.no_lines (""));
+		return_val_if_fail (ncontours < len, new Glyph.no_lines (""));
 		
 		if (ncontours == 0) {
 			warning (@"Got zero contours in glyph $(name.str).");
@@ -1058,8 +1025,13 @@ class GlyfTable : Table {
 			npoints = 0;
 		}
 		
+		return_val_if_fail (npoints < len, new Glyph.no_lines (""));
+		
 		// FIXA: implement instructions (maybe)
-		ninstructions = dis.read_ushort ();		
+		ninstructions = dis.read_ushort ();
+		
+		return_val_if_fail (ninstructions < len, new Glyph.no_lines (""));
+		
 		instructions = new uint8[ninstructions + 1];
 		uint8 repeat;
 		for (int i = 0; i < ninstructions; i++) {
@@ -1313,7 +1285,7 @@ class GlyfTable : Table {
 		
 		g.remove_empty_paths ();
 		if (g.path_list.length () == 0) {
-			// ensure that location_offsets == location_offset + 1 to tell parser that this glyf does not have a body
+			// location_offsets == location_offset + 1 to tell parser that this glyf does not have a body
 			return;
 		}
 		
@@ -1409,6 +1381,7 @@ class GlyfTable : Table {
 		
 		fd.seek (glyph_offset + 2); // go to box boundries for this glyf
 		assert (fd.read_short () == 0);
+
 		fd.add_16 (txmin);
 		fd.add_16 (tymin);
 		fd.add_16 (txmax);
@@ -1431,7 +1404,7 @@ class GlyfTable : Table {
 		total_width += xmax - xmin;
 		
 		// glyph need padding too for loca table to be correct
-		if (fd.length () % 4 != 0) {
+		while (fd.length () % 4 != 0) {
 			fd.add (0);
 		}
 	}
@@ -1447,7 +1420,7 @@ class GlyfTable : Table {
 		glyphs.append (font.get_not_def_character ());
 		//glyphs.append (font.get_null_character ());
 		//glyphs.append (font.get_nonmarking_return ());
-		glyphs.append (font.get_space ());
+		//glyphs.append (font.get_space ());
 			
 		// add glyphs, first all assigned then the unassigned ones
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
@@ -1466,12 +1439,14 @@ class GlyfTable : Table {
 		FontData fd = new FontData ();
 		
 		create_glyph_table ();
-		
+		int i = 0;
 		foreach (Glyph g in glyphs) {
 			// set values for loca table
+			assert (fd.length () % 4 == 0);
 			location_offsets.append (fd.length ());
-			
 			process_glyph (g, fd);
+			
+			print (@"loca fd.length (): $(fd.length ())\n");
 		}
 
 		location_offsets.append (fd.length ()); // last entry in loca table is special
@@ -2004,6 +1979,8 @@ class HeadTable : Table {
 		requires (offset > 0 && length > 0) {
 
 		dis.seek (offset);
+		
+		font_data = new FontData ();		
 	
 		version = dis.read_fixed ();
 
@@ -2023,11 +2000,11 @@ class HeadTable : Table {
 		flags = dis.read_ushort ();
 		
 		if ((flags & BASELINE_AT_ZERO) > 0) {
-			warning ("Expected flag BASELINE_AT_ZERO  has not been set.");
+			printd ("Flag BASELINE_AT_ZERO has been set.\n");
 		}
 
 		if ((flags & LSB_AT_ZERO) > 0) {
-			warning ("Flags LSB_AT_ZERO has been set.");
+			printd ("Flags LSB_AT_ZERO has been set.\n");
 		}
 		
 		units_per_em = dis.read_ushort ();
@@ -2123,8 +2100,6 @@ class HeadTable : Table {
 		font_data.pad ();
 		
 		this.font_data = font_data;
-		
-		printd (@"loca_offset_size: $loca_offset_size\n");
 	}
 }
 
@@ -4550,29 +4525,19 @@ class DirectoryTable : Table {
 	
 	public bool validate_tables (FontData dis, File file) {
 		bool valid = true;
-		uint p = head_table.get_checksum_position ();
-		uint32 checksum;
 		
 		try {
 			dis.seek (0);
 			
 			if (!validate_checksum_for_entire_font (dis, file)) {
 				warning ("file has invalid checksum");
+			} else {
+				printd ("Font file has valid checksum.\n");
 			}
-							
-			// zero out checksum entry in head table before validating it
-			dis.write_at (p + 0, 0);
-			dis.write_at (p + 1, 0);
-			dis.write_at (p + 2, 0);
-			dis.write_at (p + 3, 0);	
 
-			checksum = (uint32) dis.check_sum ();	
-			
-			if (checksum != head_table.checksum) {
-				warning ("head_table has is invalid checksum");
-				valid = false;				
-			}
-			
+			// Skip validation of head table for now it should be realy simple but seems to
+			// be broken in some funny way.
+
 			if (!glyf_table.validate (dis)) {
 				warning ("glyf_table has invalid checksum");
 				valid = false;
@@ -4626,7 +4591,6 @@ class DirectoryTable : Table {
 	}
 	
 	bool validate_checksum_for_entire_font (FontData dis, File f) {
-		FontData fd = new FontData ();
 		uint p = head_table.offset + head_table.get_checksum_position ();
 		uint32 checksum_font, checksum_head;
 
@@ -4640,7 +4604,7 @@ class DirectoryTable : Table {
 		dis.write_at (p + 2, 0);
 		dis.write_at (p + 3, 0);
 		
-		checksum_font = (uint32) (0xB1B0AFBA - fd.check_sum ());
+		checksum_font = (uint32) (0xB1B0AFBA - dis.check_sum ());
 
 		if (checksum_font != checksum_head) {
 			warning (@"Fontfile checksum in head table does not match calculated checksum. checksum_font: $checksum_font checksum_head: $checksum_head");
@@ -4735,11 +4699,11 @@ class DirectoryTable : Table {
 	
 }
 
-// users could benifit from error detection and validation at a fine grained level in
+// developers could benifit from error detection and validation at a fine grained level in
 // this class. At some later point should this code present meaningfull info to the user but 
 // for now is the approach just to put a lot of info in the console if we need to do some debugging.
 void printd (string s) {
-	//print (s);
+	print (s);
 }
 
 }

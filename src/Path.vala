@@ -980,6 +980,7 @@ class Path {
 		
 	/** Test if @param path is a valid outline for this object. */	
 	public bool test_is_outline (Path path) {
+		assert (false);
 		return this.test_is_outline_of_path (path) && path.test_is_outline_of_path (this);
 	}
 	

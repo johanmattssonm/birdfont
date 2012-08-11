@@ -24,14 +24,9 @@ class Svg {
 	/** Export to svg glyph data. */
 	public static string to_svg_glyph (Glyph g, double scale = 1) {	
 		StringBuilder svg = new StringBuilder ();
+		Glyph gl;
 			
 		foreach (Path pl in g.path_list) {
-			if (pl.points.length () <= 2) {
-				continue;
-			}
-			
-			pl.create_list ();
-			
 			write_path_as_glyph (pl, svg, g, scale);
 		}
 		
@@ -46,18 +41,20 @@ class Svg {
 		return svg.str;
 	}
 
-	private static void write_path_as_glyph (Path pl, StringBuilder svg, Glyph g, double scale = 1) 
-		requires (pl.points.length () > 2)
-	{
+	private static void write_path_as_glyph (Path pl, StringBuilder svg, Glyph g, double scale = 1) {
 		write_path (pl, svg, g, true, scale);
 	}
 
-	private static void write_path (Path pl, StringBuilder svg, Glyph g, bool do_glyph, double scale = 1) 
-		requires (pl.points.length () > 2)
-	{
+	private static void write_path (Path pl, StringBuilder svg, Glyph g, bool do_glyph, double scale = 1) {
 		int i = 0;
 		EditPoint? n = null;
 		EditPoint m;
+		
+		if (pl.points.length () <= 2) {
+			return;
+		}
+		
+		pl.create_list ();
 		
 		foreach (var e in pl.points) {
 			if (i == 0) {

@@ -64,8 +64,8 @@ class Font : GLib.Object {
 	bool ttf_export = true;
 	bool svg_export = true;
 
-	bool loading = false;
 	OpenFontFormatReader otf;
+	bool otf_font = false;
 	
 	public Font () {
 		// positions in pixels at first zoom level
@@ -229,7 +229,7 @@ class Font : GLib.Object {
 			return (!) get_glyph ("nonmarkingreturn");
 		}
 				
-		ret = new Glyph ("nonmarkingreturn");
+		ret = new Glyph ("nonmarkingreturn", '\r');
 		ret.set_unassigned (true);
 		ret.left_limit = 0;
 		ret.right_limit = 0;
@@ -247,7 +247,7 @@ class Font : GLib.Object {
 			return (!) get_glyph ("null");
 		}
 		
-		n = new Glyph ("null");
+		n = new Glyph ("null", '\0');
 		n.set_unassigned (true);
 		n.left_limit = 0;
 		n.right_limit = 0;
@@ -269,7 +269,7 @@ class Font : GLib.Object {
 			return (!) get_glyph ("space");
 		}
 				
-		n = new Glyph ("space");
+		n = new Glyph ("space", ' ');
 		n.set_unassigned (false);
 		n.left_limit = 0;
 		n.right_limit = 27;
@@ -373,7 +373,7 @@ class Font : GLib.Object {
 		GlyphCollection? gc = get_cached_glyph_collection (glyph);
 		Glyph? g;
 		
-		if (gc == null) {
+		if (gc == null && otf_font) {
 			// load it from otf file if we need to
 			g = otf.read_glyph (glyph);
 			
@@ -676,6 +676,8 @@ class Font : GLib.Object {
 	public bool load (string path) {
 		bool loaded = false;
 
+		otf_font = false;
+
 		while (glyph_names.length () > 0) {
 			glyph_names.remove_link (glyph_names.first ());
 		}
@@ -743,8 +745,6 @@ class Font : GLib.Object {
 	public void loading_finished_callback () {
 		add_thumbnail ();
 		Preferences.add_recent_files (get_path ());
-		loading = false;
-		print ("Done Loading.\n");
 	}
 
 	/** Callback function for loading glyph in a separate thread. */
@@ -786,39 +786,15 @@ class Font : GLib.Object {
 
 	public bool parse_otf_file (string path) {
 		otf = new OpenFontFormatReader ();
-		loading = true;
+		otf_font = true;
 		
 		otf.parse_index (path);
 		
 		foreach (string n in otf.get_all_names ()) {
 			glyph_names.append (n);
 		}
-				
-		/*
-		ThreadFunc<void*> run = () => {
-			string file = (!) font_file;
-
-			try {
-				parse_otf_async ((!) font_file);
-			} catch (GLib.Error e) {
-				stderr.printf (e.message);
-			}
-
-			return null;
-		};
 		
-		try {
-			Thread.create<void*> (run, false);
-			yield;
-		} catch (ThreadError e) {
-			stderr.printf ("Thread error: %s\n", e.message);
-		}
-		*/
 		return true;
-	}
-	
-	void parse_otf_async (string fn) {
-		// otf.parse (fn);
 	}
 	
 	/** Measure height of x or other lower case letter. */

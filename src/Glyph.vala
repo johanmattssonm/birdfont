@@ -89,7 +89,7 @@ class Glyph : FontDisplay {
 	
 	bool editable = true;
 	
-	private static List <Glyph> undo_list = new List <Glyph> ();
+	private static List<Glyph> undo_list = new List<Glyph> ();
 
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
@@ -1327,7 +1327,7 @@ class Glyph : FontDisplay {
 
 		if (new_point_on_path != null) {
 			Path.draw_edit_point_center ((!) new_point_on_path, cr);
-		}			
+		}
 
 		cr.restore ();
 	}

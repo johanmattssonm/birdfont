@@ -60,8 +60,6 @@ class OverView : FontDisplay {
 		
 		if (range == null) {
 			gr = new GlyphRange ();
-			gr.use_default_range ();
-			
 			set_glyph_range (gr);
 		}
 		
@@ -97,9 +95,6 @@ class OverView : FontDisplay {
 			int64 adjustement = (int64) (-delta_last * get_height ());
 			int64 pixels = (int64) (-5.0 * delta_last * nail_height);
 			
-			// print (@"(int64) $(-delta_last) * $(over_view.get_height ()) = $adjustement \n");
-			// print (@"$delta\n");
-	
 			if (absolute <= 0.002) {
 				first_character = 0;
 				first_visible = 0;
@@ -978,7 +973,6 @@ class OverView : FontDisplay {
 		
 		if (all_avail) {
 			f = Supplement.get_current_font ();
-			print (@"$t >= $(f.length ())\n");
 			return t >= f.length ();
 		}
 		
