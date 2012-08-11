@@ -2454,10 +2454,9 @@ class OffsetTable : Table {
 	
 	public void process () {
 		FontData fd = new FontData ();
-		Fixed version = 1 << 16;
+
+		// sfnt version 1.0 for TTF CFF else use OTTO
 	
-		// version 1.0 for TTF CFF else use OTTO
-		assert (version.equals (1, 0));
 		
 		num_tables = (uint16) directory_table.get_tables ().length () - 2; // number of tables, skip DirectoryTable and OffsetTable
 		
@@ -2465,7 +2464,7 @@ class OffsetTable : Table {
 		entry_selector = max_log_2_less_than_i (num_tables);
 		range_shift = 16 * num_tables - search_range;
 
-		fd.add_fixed (version);
+		fd.add_tag ("OTTO");
 		fd.add_u16 (num_tables);
 		fd.add_u16 (search_range);
 		fd.add_u16 (entry_selector);
@@ -4552,20 +4551,20 @@ class DirectoryTable : Table {
 	public bool validate_tables (FontData dis, File file) {
 		bool valid = true;
 		uint p = head_table.get_checksum_position ();
-		FontData fd = new FontData ();	
 		uint32 checksum;
 		
 		try {
-
+			dis.seek (0);
+			
 			if (!validate_checksum_for_entire_font (dis, file)) {
 				warning ("file has invalid checksum");
 			}
 							
 			// zero out checksum entry in head table before validating it
-			fd.write_at (p + 0, 0);
-			fd.write_at (p + 1, 0);
-			fd.write_at (p + 2, 0);
-			fd.write_at (p + 3, 0);	
+			dis.write_at (p + 0, 0);
+			dis.write_at (p + 1, 0);
+			dis.write_at (p + 2, 0);
+			dis.write_at (p + 3, 0);	
 
 			checksum = (uint32) dis.check_sum ();	
 			
@@ -4632,6 +4631,8 @@ class DirectoryTable : Table {
 		uint32 checksum_font, checksum_head;
 
 		checksum_head = head_table.get_font_checksum ();
+		
+		dis.seek (0);
 		
 		// zero out checksum entry in head table before validating it
 		dis.write_at (p + 0, 0);

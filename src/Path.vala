@@ -868,7 +868,7 @@ class Path {
 		second_last_point = last_point;
 		last_point = p;
 				
-		update_region_boundries ();
+		// CPU hog update_region_boundries ();
 		
 		return np;
 		

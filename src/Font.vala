@@ -954,11 +954,18 @@ class Font : GLib.Object {
 		this.kerning.insert (@"$left$right", k);
 	}
 	
-	private void parse_background (Xml.Node* node) {
+	private void parse_background (Xml.Node* node) 
+		requires (node != null)
+	{
 		string attr_name;
 		string attr_content;
 				
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+			
+			return_if_fail (!is_null (prop->name));
+			return_if_fail (!is_null (prop->children));
+			return_if_fail (!is_null (prop->children->content));
+			
 			attr_name = prop->name;
 			attr_content = prop->children->content;
 			

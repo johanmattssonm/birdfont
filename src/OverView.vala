@@ -577,7 +577,7 @@ class OverView : FontDisplay {
 	
 	public void scroll_to (double percent) {
 		int64 r;
-		int64 l;
+		double l;
 		Font f;
 		
 		if (all_avail) {
@@ -587,7 +587,8 @@ class OverView : FontDisplay {
 			l = glyph_range.length ();
 		}
 		
-		r = (int64) ((percent * l * items_per_row) / rows);
+		l /= rows;
+		r = (int64) (percent * l * items_per_row);
 		scroll_to_position (r);
 	}
 		

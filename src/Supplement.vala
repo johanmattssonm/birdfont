@@ -73,8 +73,9 @@ class Supplement {
 		return args.get_argument (param);
 	}
 			
-	public static void main(string[] arg) {
+	public static int main(string[] arg) {
 		int err_arg;
+		File font_file;
 		
 		args = new Argument.command_line (arg);
 		
@@ -95,6 +96,15 @@ class Supplement {
        
 		current_font = new Font ();
 		
+		if (args.get_file () != "") {
+			font_file = File.new_for_path (args.get_file ());
+			
+			if (!font_file.query_exists ()) {
+				stderr.printf (@"File $(args.get_file ()) not found.");
+				return -1;
+			}
+		}
+		
 		Gtk.init (ref arg);
 		var window = new MainWindow ("Supplement");
 		window.show_all ();
@@ -102,6 +112,12 @@ class Supplement {
 		var idle = new IdleSource ();
 		idle.set_callback(() => {
 			preferences.load ();
+			
+			if (args.get_file () != "") {
+				current_font.load (args.get_file ());
+				MainWindow.get_toolbox ().select_tool_by_name ("available_characters");
+			}
+			
 			return false;
 		});
 		
@@ -110,8 +126,14 @@ class Supplement {
 		Gtk.main ();
 		
 		preferences.set_last_file (get_current_font ().get_path ());
+		
+		return 0;
 	}
 	
+}
+
+internal bool is_null (void* n) {
+	return n == null;
 }
 
 }

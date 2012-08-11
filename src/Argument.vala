@@ -46,6 +46,13 @@ class Argument : GLib.Object {
 				i++;
 				continue;
 			}
+			
+			// file name
+			if (i == 1 && !a.has_prefix ("-")) {
+				prev = a;
+				i++;
+				continue;
+			}
 
 			// a single character, like -t
 			if (!a.has_prefix ("--") && a.has_prefix ("-")) {
@@ -61,8 +68,8 @@ class Argument : GLib.Object {
 				return i;
 			}
 			
-			// not argument to test
-			if (prev != "--test") {
+			// not argument to parameter
+			if (!(prev == "--test")) {
 				return i;
 			}
 			
@@ -71,6 +78,21 @@ class Argument : GLib.Object {
 		}
 		
 		return 0;
+	}
+	
+	/** Return the font file parameter. */
+	public string get_file () {
+		string f = "";
+		
+		if (args.length () >= 2) {
+			f = args.nth (1).data;
+		}
+
+		if (f.has_prefix ("-")) {
+			return "";
+		}
+		
+		return f;
 	}
 	
 	public void print_all () {
@@ -200,7 +222,7 @@ class Argument : GLib.Object {
 	{
 		stdout.printf ("Usage: ");
 		stdout.printf (args.nth (0).data);
-		stdout.printf (" [OPTION ...]\n");
+		stdout.printf (" [FILE] [OPTION ...]\n");
 
 		print_padded ("-e, --exit", "exit if a testcase failes");
 		print_padded ("-h, --help", "show this message");
