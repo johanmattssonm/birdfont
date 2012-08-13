@@ -50,12 +50,6 @@ class Icons {
 		f = find_file (icon_dir, name);
 		if (likely (f.query_exists ())) return f;
 
-		f = find_file ("/usr/local/share/icons/supplement/", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = find_file ("/usr/share/icons/supplement/", name);
-		if (likely (f.query_exists ())) return f;
-
 		f = find_file ("./icons/", name);
 		if (likely (f.query_exists ())) return f;		
 
@@ -70,7 +64,13 @@ class Icons {
 
 		f = find_file ("icons\\", name);
 		if (likely (f.query_exists ())) return f;
-					
+
+		f = find_file ("/usr/local/share/supplement/icons/", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = find_file ("/usr/share/supplement/icons/", name);
+		if (likely (f.query_exists ())) return f;
+							
 		return f;
 	}
 	
