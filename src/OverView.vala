@@ -685,9 +685,7 @@ class OverView : FontDisplay {
 
 	public void key_up () {
 		update_scrollbar ();
-		
-		if (glyph_range.length () == 0) return;
-		
+
 		if (selected < first_character) {		
 			warn_if_reached ();
 		}
@@ -730,7 +728,15 @@ class OverView : FontDisplay {
 	}
 
 	public void key_right () {		
-		int len = (int) glyph_range.get_length ();
+		uint len;
+		Font f;
+		
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			len = f.length ();
+		} else {
+			len = glyph_range.length ();
+		}
 		
 		if (len == 0) return;
 		
@@ -747,7 +753,7 @@ class OverView : FontDisplay {
 	}
 	
 	public void key_left () {
-		if (selected > first_character && glyph_range.length () != 0) {
+		if (selected > first_character) {
 			selected--;					
 			if (selected_offset_y (selected) < 0) {
 				selected -= items_per_row;
@@ -896,7 +902,17 @@ class OverView : FontDisplay {
 		double m = (allocation.width - (n_items * nail_width)) / 2.0;
 		
 		bool menu_action = false;
+		
+		Font f;
+		uint len;
 	
+		if (all_avail) {
+			f = Supplement.get_current_font ();
+			len = f.length ();
+		} else {
+			len = glyph_range.length ();
+		}
+			
 		foreach (GlyphCollection g in get_visible_glyphs ()) {
 			bool a;
 
@@ -930,7 +946,7 @@ class OverView : FontDisplay {
 		}
 			
 		// empty set
-		if (glyph_range.length () == 0) return;
+		if (len == 0) return;
 
 		// scroll to the selected glyph
 		selected = (uint32) first_visible;

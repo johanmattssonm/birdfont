@@ -92,7 +92,7 @@ class SvgFontFormatWriter : Object  {
 				string l = Font.to_hex_code (kern.left.get_char (0));
 				string r = Font.to_hex_code (kern.right.get_char (0));
 				
-				os.put_string (@"<hkern left=\"&#x$l;\" right=\"&#x$r;\" kerning=\"$(kern.val)\"/>\n");
+				os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(kern.val)\"/>\n");
 			} catch (GLib.Error ef) {
 				stderr.printf (@"Failed export font \n");
 				stderr.printf (@"$(ef.message) \n");

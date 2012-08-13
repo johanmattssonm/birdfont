@@ -31,7 +31,7 @@ class ContextDisplay : FontDisplay {
 	double begin_handle_x = 0;
 	double begin_handle_y = 0;
 	
-	double current_kerning = 0;
+	double last_handle_x = 0;
 	
 	public ContextDisplay () {
 		Word w = new Word ();
@@ -40,7 +40,7 @@ class ContextDisplay : FontDisplay {
 	}
 
 	public override string get_name () {
-		return "Context";
+		return "Kerning";
 	}
 	
 	public override void draw (Allocation allocation, Context cr) {
@@ -89,8 +89,9 @@ class ContextDisplay : FontDisplay {
 				}
 
 				// handle
-				if (active_handle == i && active_handle < word.glyph.length ()) {
-					x2 = x + kern;
+				if (active_handle == i) {
+					//x2 = x + kern;
+					x2 = x + kern / 2.0;
 					
 					cr.save ();
 					cr.set_source_rgba (153/255.0, 153/255.0, 173/255.0, 1);
@@ -141,17 +142,22 @@ class ContextDisplay : FontDisplay {
 
 		font.touch ();
 
-		handle++; // use handle before next glyph
+		// handle++; // use handle before next glyph
 
 		a = "";
 		b = "";
 
 		foreach (Word word in row) {
 			foreach (string s in word.glyph) {
+				
+				if (s == "") {
+					continue;
+				}
+				
 				b = s;
 				
 				if (handle == wi) {
-					kern = current_kerning + val;
+					kern = font.get_kerning (a, b) + val;
 					font.set_kerning (a, b, kern);
 				}
 				
@@ -237,10 +243,12 @@ class ContextDisplay : FontDisplay {
 				y = ((Math.fabs (e.y - begin_handle_y) / 100) + 1);
 			}
 			
-			k = (e.x - begin_handle_x) / y; // y-axis is variable precision
+			k = (e.x - last_handle_x) / y; // y-axis is variable precision
 			set_kerning (selected_handle, k);
 			MainWindow.get_glyph_canvas ().redraw ();
 		}
+		
+		last_handle_x = e.x;
 	}
 	
 	public void set_active_handle (double ex, double ey) {
@@ -250,13 +258,18 @@ class ContextDisplay : FontDisplay {
 		double d, kern;
 		double min = double.MAX;
 		int i = 0;
+		int row_index = 0;
+		int col_index = 0;
 		Glyph? g;
-		Glyph glyph;
+		Glyph glyph = new Glyph.no_lines ("");
 		
 		string prev = "";
+		string gl_name = "";
 		
 		foreach (Word word in row) {
+			col_index = 0;
 			foreach (string s in word.glyph) {
+				
 				// draw glyph
 				g = (!) Supplement.get_current_font ().get_glyph (s);	
 				kern = get_kerning (prev, s);
@@ -266,27 +279,34 @@ class ContextDisplay : FontDisplay {
 				} else {
 					glyph = (!) g;
 					w = glyph.get_width ();
+					
 				}
 				
 				d = Math.pow (x + kern - ex, 2) + Math.pow (y - ey, 2);
 				
 				if (d < min) {
 					min = d;
+					gl_name = glyph.get_name ();
 					
-					if (active_handle != i) {
-						active_handle = i;
-						current_kerning = get_kerning (prev, s);
+					if (active_handle != i - row_index) {
+						active_handle = i - row_index;
 						MainWindow.get_glyph_canvas ().redraw ();
+					}
+
+					if (col_index == word.glyph.length () || col_index == 0) {
+						active_handle = -1;
 					}
 				}
 				
 				prev = s;
 				x += w + kern;
 				i++;
+				col_index++;
 			}
 			
+			row_index++;
 			y += MainWindow.get_current_glyph ().get_height () + 20;
-			x = 20;	
+			x = 20;
 		}
 	}
 	
@@ -300,6 +320,7 @@ class ContextDisplay : FontDisplay {
 		selected_handle = active_handle;
 		begin_handle_x = e.x;
 		begin_handle_y = e.y;
+		last_handle_x = e.x;
 	}
 
 }

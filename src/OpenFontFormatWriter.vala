@@ -2429,17 +2429,16 @@ class OffsetTable : Table {
 	
 	public void process () {
 		FontData fd = new FontData ();
+		Fixed version = 1 << 16;
 
 		// sfnt version 1.0 for TTF CFF else use OTTO
-	
-		
 		num_tables = (uint16) directory_table.get_tables ().length () - 2; // number of tables, skip DirectoryTable and OffsetTable
 		
 		search_range = max_pow_2_less_than_i (num_tables) * 16;
 		entry_selector = max_log_2_less_than_i (num_tables);
 		range_shift = 16 * num_tables - search_range;
 
-		fd.add_tag ("OTTO");
+		fd.add_fixed (version); 
 		fd.add_u16 (num_tables);
 		fd.add_u16 (search_range);
 		fd.add_u16 (entry_selector);
@@ -2767,7 +2766,7 @@ class PostTable : Table {
 			i++;
 		}
 		
-		warn_if_reached ();
+		// warn_if_reached ();
 		return -1;
 	}
 
@@ -4379,11 +4378,11 @@ class DirectoryTable : Table {
 			tables.append (offset_table);
 			tables.append (this);
 			
-			tables.append (gdef_table);
+			// tables.append (gdef_table); // invalid table
 			tables.append (os_2_table);
 			tables.append (cmap_table);
-			tables.append (cvt_table);
-			tables.append (gasp_table);
+			// tables.append (cvt_table);
+			// tables.append (gasp_table);
 			tables.append (glyf_table);
 			tables.append (head_table);
 			tables.append (hhea_table);
