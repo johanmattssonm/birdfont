@@ -71,11 +71,12 @@ class ContextDisplay : FontDisplay {
 			
 			foreach (string s in word.glyph) {				
 				g = (!) Supplement.get_current_font ().get_glyph (s);	
-				kern = get_kerning (prev, s);
 				
 				if (s == "") {
 					continue;
 				}
+				
+				kern = (prev != "") ? get_kerning (prev, s) : 0;
 				
 				// draw glyph				
 				if (g == null) {
@@ -157,6 +158,7 @@ class ContextDisplay : FontDisplay {
 				b = s;
 				
 				if (handle == wi) {
+					print (@"SET get $a\n");
 					kern = font.get_kerning (a, b) + val;
 					font.set_kerning (a, b, kern);
 				}
@@ -272,7 +274,7 @@ class ContextDisplay : FontDisplay {
 				
 				// draw glyph
 				g = (!) Supplement.get_current_font ().get_glyph (s);	
-				kern = get_kerning (prev, s);
+				kern = (prev != "") ? get_kerning (prev, s) : 0;
 				
 				if (g == null) {
 					w = 50;	
@@ -332,7 +334,6 @@ class Word {
 		glyph = new List <string> ();
 		glyph.append ("");
 	}
-
 }
 
 }

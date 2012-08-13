@@ -31,8 +31,6 @@ class Font : GLib.Object {
 
 	/** Last unassigned index */
 	int next_unindexed = 0;
-		
-	public HashTable <string, Kerning> kerning = new HashTable <string, Kerning> (str_hash, str_equal);
 	
 	public List <string> background_images = new List <string> ();
 	
@@ -439,38 +437,32 @@ class Font : GLib.Object {
 	}
 
 	public double get_kerning (string a, string b) {
-		Kerning? kern;
-		StringBuilder key = new StringBuilder ();
+		Glyph? gl = get_glyph (a);
+		Glyph g;
 		
-		key.append (a);
-		key.append (b);
-		
-		kern = kerning.lookup (key.str);
-		
-		if (kern != null) {
-			return ((!) kern).val;
+		if (gl == null) {
+			warning (@"glyph \"$a\" does not exist cannot obtain kerning");
+			return 0;
 		}
 		
-		return 0;
+		g = (!) gl;
+		
+		return g.get_kerning (b);
 	}
 
 	public void set_kerning (string a, string b, double val) {
-		Kerning? kern;
-		Kerning k;
-		StringBuilder key = new StringBuilder ();
+		Glyph? gl;
+		Glyph g;
 		
-		key.append (a);
-		key.append (b);
+		gl = get_glyph (a);
 		
-		kern = kerning.lookup (key.str);
-		
-		if (kern != null) {
-			k = (!) kern;
-			k.val = val;
-		} else {
-			k = new Kerning (a, b, val);
-			kerning.insert (key.str, k);
+		if (gl == null) {
+			warning ("glyph is not parsed yet cannot add kerning");
+			return;
 		}
+		
+		g = (!) gl;
+		g.add_kerning (b, val);
 	}
 		
 	public void save_backup () {
@@ -582,19 +574,27 @@ class Font : GLib.Object {
 				}
 			});
 		
-			// FIXME: implement kerning in webkit 
-			kerning.for_each ((key, kern) => {
-				try {
-					string l = to_hex (kern.left.get_char (0));
-					string r = to_hex (kern.right.get_char (0));
+			glyph_cache.for_each ((gc) => {
+				Glyph glyph = gc.get_current ();
+				
+				foreach (Kerning k in glyph.kerning) {
+					string l, r;
+					Glyph? gr = get_glyph (k.glyph_right);
+					Glyph glyph_right;
 					
-					os.put_string (@"<hkern left=\"$l\" right=\"$r\" kerning=\"$(kern.val)\"/>\n");
-				} catch (GLib.Error ef) {
-					stderr.printf (@"Failed to save $path \n");
-					stderr.printf (@"$(ef.message) \n");
+					if (gr == null) {
+						warning ("kerning glyph that does not exist.");
+					}
+					
+					glyph_right = (!) gr;
+					
+					l = Font.to_hex_code (glyph.unichar_code);
+					r = Font.to_hex_code (glyph_right.unichar_code);
+									
+					os.put_string (@"<hkern left=\"U+$l\" right=\"U+$r\" kerning=\"$(k.val)\"/>\n");
 				}
 			});
-						
+			
 			os.put_string ("</font>");
 			
 		} catch (GLib.Error e) {
@@ -900,9 +900,8 @@ class Font : GLib.Object {
 		string left = "";
 		string right = "";
 		string kern = "";
-		Kerning k;
+
 		StringBuilder b;
-		
 		
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -925,9 +924,7 @@ class Font : GLib.Object {
 			}
 		}
 		
-		k = new Kerning.from_attribute (left, right, kern);
-		
-		this.kerning.insert (@"$left$right", k);
+		set_kerning (left, right, double.parse (kern));
 	}
 	
 	private void parse_background (Xml.Node* node) 

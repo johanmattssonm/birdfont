@@ -89,7 +89,9 @@ class Glyph : FontDisplay {
 	
 	bool editable = true;
 	
-	private static List<Glyph> undo_list = new List<Glyph> ();
+	static List<Glyph> undo_list = new List<Glyph> ();
+
+	public List<Kerning> kerning = new List<Kerning> ();
 
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
@@ -115,6 +117,32 @@ class Glyph : FontDisplay {
 		path_list.append (new Path ());
 	}
 	
+	public void add_kerning (string right_glyph, double val) {
+		Kerning? kl = null;
+
+		foreach (Kerning k in kerning) {
+			if (k.glyph_right == right_glyph) {
+				kl = k;
+			}
+		}
+		
+		if (kl == null) {
+			kerning.append (new Kerning (right_glyph, val));
+		} else {
+			((!)kl).val = val;
+		}
+	}
+
+	public double get_kerning (string right_glyph) {
+		foreach (Kerning k in kerning) {
+			if (k.glyph_right == right_glyph) {
+				return k.val;
+			}
+		}
+		
+		return 0;
+	}
+		
 	public void set_unassigned (bool u) {
 		unassigned = u;
 	}

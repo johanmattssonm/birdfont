@@ -19,21 +19,14 @@ using Cairo;
 using Xml;
 
 namespace Supplement {
-class Kerning {
+
+class Kerning : GLib.Object {
+	public string glyph_right;
 	public double val;
-	public string left;
-	public string right;
 	
-	public Kerning (string l, string r, double v) {
+	public Kerning (string right, double v) {
+		glyph_right = right;
 		val = v;
-		left = l;
-		right = r;
-	}
-	
-	public Kerning.from_attribute (string l, string r, string xml_attr) {
-		val = double.parse (xml_attr); 
-		left = l;
-		right = r;
 	}
 }
 

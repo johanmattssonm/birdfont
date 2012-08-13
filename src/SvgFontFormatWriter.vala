@@ -86,19 +86,35 @@ class SvgFontFormatWriter : Object  {
 				}
 			}
 		}
-		
-		font.kerning.for_each ((key, kern) => {
-			try {
-				string l = Font.to_hex_code (kern.left.get_char (0));
-				string r = Font.to_hex_code (kern.right.get_char (0));
-				
-				os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(kern.val)\"/>\n");
-			} catch (GLib.Error ef) {
-				stderr.printf (@"Failed export font \n");
-				stderr.printf (@"$(ef.message) \n");
+
+		while (true) {
+			g = font.get_glyph_indice (indice++);
+			
+			if (g == null) {
+				break;
 			}
-		});
-		
+			
+			glyph = (!) g;
+			
+			foreach (Kerning k in glyph.kerning) {
+				string l, r;
+				Font f = Supplement.get_current_font ();
+				Glyph? gr = f.get_glyph (k.glyph_right);
+				Glyph glyph_right;
+				
+				if (gr == null) {
+					warning ("kerning glyph that does not exist.");
+				}
+				
+				glyph_right = (!) gr;
+				
+				l = Font.to_hex_code (glyph.unichar_code);
+				r = Font.to_hex_code (glyph_right.unichar_code);
+								
+				os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(k.val)\"/>\n");
+			}
+		}		
+
 		put ("</font>");
 		put ("</defs>");
 		put ("</svg>");

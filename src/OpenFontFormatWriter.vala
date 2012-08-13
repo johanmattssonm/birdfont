@@ -686,6 +686,7 @@ class GlyfTable : Table {
 	public LocaTable loca_table;
 	public CmapTable cmap_table; // hack, hack, hack. cmap and post is null when inistialized and set in parse method
 	public PostTable post_table;
+	public KernTable kern_table;
 	
 	public List<uint32> location_offsets; 
 
@@ -711,6 +712,19 @@ class GlyfTable : Table {
 		glyphs = new List<Glyph> ();
 		read_lock = new Mutex ();
 	}	
+
+	public int get_gid (string name) {
+		int i = 0;
+		foreach (Glyph g in glyphs) {
+			if (g.name == name) {
+				return i;
+			}
+		
+			i++;
+		}
+		
+		return -1;
+	}
 
 	public int16 get_space_gid () {
 		int16 i = 0;
@@ -766,10 +780,14 @@ class GlyfTable : Table {
 		return (uint16)g.unichar_code; 
 	}
 	
-	int x = 0;
 	public Glyph? read_glyph (string name) {
-		Glyph glyph;
+		Glyph? glyph;
+		Glyph g;
 		int i;
+		KernList kl;
+		string right;
+		double units_per_em;
+		double kern_val;
 		
 		i = post_table.get_gid (name);
 		
@@ -777,23 +795,26 @@ class GlyfTable : Table {
 			return null;
 		}
 		
-		return parse_index (i, dis, loca_table, hmtx_table, head_table, post_table);
-	}
-			
-	/** Add this glyph from thread safe callback to the running gui. */
-	void add_glyph (Glyph g) {
-		IdleSource idle = new IdleSource ();
-
-		idle.set_callback (() => {
-			Font font = Supplement.get_current_font ();
-			font.add_glyph_callback (g);
-			return false;
-		});
-
-		idle.attach (null);
+		glyph = parse_index (i, dis, loca_table, hmtx_table, head_table, post_table);
+		
+		if (glyph != null) {
+			printd (@"kern: ");
+			units_per_em = head_table.get_units_per_em ();
+			kl = kern_table.get_all_pairs (i);
+			foreach (Kern k in kl.kernings) {
+				g = (!) glyph;
+				right = post_table.get_name (k.right);
+				kern_val = k.kerning * 1000.0 / units_per_em;
+				g.add_kerning (right, kern_val);
+				
+				printd (@"add kerning $(g.get_name ()) to $right $(k.kerning)\n");
+			}
+		}
+		
+		return glyph;
 	}
 	
-	public void parse (FontData dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
+	public void parse (FontData dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table, KernTable kern_table) throws GLib.Error {
 		printd (@"loca.size: $(loca.size)\n");
 			
 		Glyph glyph;
@@ -806,6 +827,7 @@ class GlyfTable : Table {
 		this.loca_table = loca;
 		this.hmtx_table = hmtx_table;
 		this.head_table = head_table;
+		this.kern_table = kern_table;
 		this.dis = dis;
 		
 		// post_table.print_all ();
@@ -951,8 +973,7 @@ class GlyfTable : Table {
 		return glyph;
 	}
 	
-	Glyph parse_next_glyf (FontData dis, unichar character, int gid, out double xmin, out double xmax, double units_per_em) throws Error 
-	{
+	Glyph parse_next_glyf (FontData dis, unichar character, int gid, out double xmin, out double xmax, double units_per_em) throws Error {
 
 		uint16* end_points = null;
 		uint8* instructions = null;
@@ -4311,6 +4332,163 @@ class CvtTable : Table {
 
 }
 
+class Kern : GLib.Object {
+	public uint16 left;
+	public uint16 right;
+	public int16 kerning;
+	
+	public Kern (uint16 l, uint16 r, int16 k) {
+		left = l;
+		right = r;
+		kerning = k;
+	}
+}
+
+class KernList : GLib.Object {
+	public List<Kern> kernings;
+	
+	public KernList () {
+		kernings = new List<Kern> ();
+	}
+}
+
+class KernTable : Table {
+	
+	public static const uint16 HORIZONTAL = 1;
+	public static const uint16 MINIMUM = 1 << 1;
+	public static const uint16 CROSS_STREAM = 1 << 2;
+	public static const uint16 OVERRIDE = 1 << 3;
+	public static const uint16 FORMAT = 1 << 8;
+	
+	GlyfTable glyf_table;
+	
+	List<Kern> kernings = new List<Kern> ();
+	
+	public KernTable (GlyfTable gt) {
+		glyf_table = gt;
+		id = "kern";
+	}
+	
+	public KernList get_all_pairs (int gid) {
+		KernList kl = new KernList ();
+		
+		foreach (Kern k in kernings) {
+			if (k.left == gid) {
+				kl.kernings.append (k);
+			}
+		}
+		
+		return kl;
+	}
+	
+	public override void parse (FontData dis) {
+		uint16 version;
+		uint16 sub_tables;
+		
+		uint16 subtable_version;
+		uint16 subtable_length;
+		uint16 subtable_flags;
+
+		uint16 search_range;
+		uint16 entry_selector;
+		uint16 range_shift;
+		
+		uint16 n_pairs;
+			
+		dis.seek (offset);
+		
+		version = dis.read_ushort ();
+		warn_if_fail (version == 0);
+		sub_tables = dis.read_ushort ();
+		
+		for (uint16 i = 0; i < sub_tables; i++) {
+			subtable_version = dis.read_ushort ();			
+			subtable_length = dis.read_ushort ();			
+			subtable_flags = dis.read_ushort ();
+
+			n_pairs = dis.read_ushort ();
+			search_range = dis.read_ushort ();
+			entry_selector = dis.read_ushort ();
+			range_shift = dis.read_ushort ();
+						
+			// TODO: check more flags
+			if ((subtable_flags & HORIZONTAL) > 0 && (subtable_flags & CROSS_STREAM) == 0 && (subtable_flags & MINIMUM) == 0) {
+				parse_pairs (dis, n_pairs);
+			}
+		}
+	}
+	
+	public void parse_pairs (FontData dis, uint16 n_pairs) throws Error {
+		uint16 left;
+		uint16 right;
+		int16 kerning;
+		
+		for (int i = 0; i < n_pairs; i++) {
+			left = dis.read_ushort ();
+			right = dis.read_ushort ();
+			kerning = dis.read_short ();
+			
+			printd (@"gid $left -> gid $right  kern $kerning\n");
+			
+			kernings.append (new Kern (left, right, kerning));
+		}		
+	}
+	
+	public void process () {
+		FontData fd = new FontData ();
+		uint16 n_pairs = 0;
+		
+		uint16 gid_left;
+		int gid_right;
+		
+		uint16 range_shift = 0;
+		uint16 entry_selector = 0;
+		uint16 search_range = 0;
+		
+		fd.add_ushort (0); // version 
+		fd.add_ushort (1); // n subtables
+
+		fd.add_ushort (0); // subtable version 
+
+		foreach (Glyph g in glyf_table.glyphs) {
+			foreach (Kerning k in g.kerning) {
+				n_pairs++;
+			}
+		}
+		
+		fd.add_ushort (6 * n_pairs + 14); // subtable length
+		fd.add_ushort (HORIZONTAL); // subtable flags
+
+		fd.add_ushort (n_pairs);
+		
+		fd.add_ushort (search_range);
+		fd.add_ushort (entry_selector);
+		fd.add_ushort (range_shift);
+
+		gid_left = 0;
+		foreach (Glyph g in glyf_table.glyphs) {
+			
+			foreach (Kerning k in g.kerning) {
+				gid_right = glyf_table.get_gid (k.glyph_right);
+				
+				if (gid_right == -1) {
+					warning ("right glyph not found in kerning table");
+				}
+				
+				fd.add_ushort (gid_left);
+				fd.add_ushort ((uint16)gid_right);
+				fd.add_short ((int16)k.val);
+			}
+			
+			gid_left++;
+		}
+
+		fd.pad ();
+		this.font_data = fd;
+	}
+
+}
+
 /** Table with list of tables sorted by table tag. */
 class DirectoryTable : Table {
 	
@@ -4322,6 +4500,7 @@ class DirectoryTable : Table {
 	public HeadTable head_table;
 	public HheaTable hhea_table;
 	public HmtxTable hmtx_table;
+	public KernTable kern_table;
 	public MaxpTable maxp_table;
 	public NameTable name_table;
 	public Os2Table  os_2_table;
@@ -4344,6 +4523,7 @@ class DirectoryTable : Table {
 		head_table = new HeadTable (glyf_table);
 		hmtx_table = new HmtxTable (head_table, glyf_table);
 		hhea_table = new HheaTable (glyf_table, head_table, hmtx_table);
+		kern_table = new KernTable (glyf_table);
 		maxp_table = new MaxpTable (glyf_table);
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (); 
@@ -4367,7 +4547,7 @@ class DirectoryTable : Table {
 		head_table.process ();
 		loca_table.process (glyf_table, head_table);
 		post_table.process ();
-		
+		kern_table.process ();
 		
 		offset_table.process ();
 		process_directory (); // this table
@@ -4387,6 +4567,7 @@ class DirectoryTable : Table {
 			tables.append (head_table);
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
+			tables.append (kern_table);
 			tables.append (loca_table);
 			tables.append (maxp_table);
 			tables.append (name_table);
@@ -4487,8 +4668,12 @@ class DirectoryTable : Table {
 				post_table.checksum = checksum;
 				post_table.offset = offset;
 				post_table.length = length;
+			} else if (tag.str == "kern") {
+				kern_table.id = tag.str;
+				kern_table.checksum = checksum;
+				kern_table.offset = offset;
+				kern_table.length = length;
 			}
-			
 		}
 		
 		// FIXA: delete
@@ -4516,7 +4701,8 @@ class DirectoryTable : Table {
 		loca_table.parse (dis, head_table, maxp_table);
 		hmtx_table.parse (dis, hhea_table, loca_table);
 		cmap_table.parse (dis);
-		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table, post_table);
+		kern_table.parse (dis);
+		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table, post_table, kern_table);
 		gasp_table.parse (dis);
 		
 		cvt_table.parse (dis);
@@ -4581,6 +4767,12 @@ class DirectoryTable : Table {
 				warning ("post_table has invalid checksum");
 				valid = false;
 			}
+			
+			if (!kern_table.validate (dis)) {
+				warning ("kern_table has invalid checksum");
+				valid = false;
+			}
+			
 		} catch (GLib.Error e) {
 			warning (e.message);
 			valid = false;
@@ -4698,11 +4890,8 @@ class DirectoryTable : Table {
 	
 }
 
-// developers could benifit from error detection and validation at a fine grained level in
-// this class. At some later point should this code present meaningfull info to the user but 
-// for now is the approach just to put a lot of info in the console if we need to do some debugging.
 void printd (string s) {
-	print (s);
+	// print (s);
 }
 
 }
