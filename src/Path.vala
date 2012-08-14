@@ -867,9 +867,7 @@ class Path {
 		
 		second_last_point = last_point;
 		last_point = p;
-				
-		// CPU hog update_region_boundries ();
-		
+
 		return np;
 		
 	}
@@ -1030,7 +1028,51 @@ class Path {
 		
 		return true;
 	}
-	
+
+	public void insert_new_point_on_path (EditPoint ep) {
+		EditPoint start, stop;
+		double x0, x1, y0, y1;
+		double px, py;
+		
+		double position, t, d, min;
+		double steps = 100;
+
+		start = ep.get_prev ().data;
+		stop = ep.get_next ().data;
+
+		add_point_after (ep, ep.get_prev ());
+
+		min = double.MAX;
+
+		position = 0.5;
+
+		for (int i = 0; i < steps; i++) {
+			t = i / steps;
+			
+			px = bezier_path (t, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x);
+			py = bezier_path (t, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);
+			
+			d = Math.sqrt (Math.pow (ep.x - px, 2) + Math.pow (ep.y - py, 2));
+			
+			if (d < min) {
+				min = d;
+				position = t;
+			}
+		}
+			
+		bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
+		bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
+
+		ep.get_left_handle ().set_point_type (PointType.CURVE);
+		ep.get_left_handle ().move_to_coordinate (x0, y0);
+		
+		ep.get_right_handle ().set_point_type (PointType.CURVE);
+		ep.get_right_handle ().move_to_coordinate (x1, y1);
+
+		stop.get_left_handle ().length *= 1 - position;
+		start.get_right_handle ().length *= position;
+	}
+			
 	/** Get a point on the this path closest to x and y coordinates. */
 	public void get_closest_point_on_path (EditPoint edit_point, double x, double y) {
 		return_if_fail (points.length () != 0);

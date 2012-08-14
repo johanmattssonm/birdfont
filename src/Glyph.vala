@@ -570,7 +570,12 @@ class Glyph : FontDisplay {
 			move_offset_y = view_offset_y;
 		} else {
 			Tool t = MainWindow.get_toolbox ().get_current_tool ();
-			t.press_action (t, (int) e.button, (int) e.x, (int) e.y);
+			
+			if (e.type == EventType.BUTTON_PRESS) {
+				t.press_action (t, (int) e.button, (int) e.x, (int) e.y);
+			} else if (e.type == EventType.2BUTTON_PRESS) {
+				t.double_click_action (t, (int) e.button, (int) e.x, (int) e.y);
+			}
 		}
 		
 		MainWindow.hide_cursor ();
@@ -1615,6 +1620,41 @@ class Glyph : FontDisplay {
 		Svg.draw_svg_path (cr, get_svg_data (), gx, gy, 1.0);	
 		
 		return img;
+	}
+
+	/** Split curve in two parts and add a new point in between. */
+	public void insert_new_point_on_path (double x, double y) {
+		double min, distance;
+		Path? p = null;
+		EditPoint ep = new EditPoint ();
+		EditPoint lep = new EditPoint ();
+		
+		double xt;
+		double yt;
+
+		xt = x * ivz () - xc () + view_offset_x;
+		yt = yc () - y * ivz () - view_offset_y;
+		
+		min = double.MAX;
+		
+		delete_invisible_paths ();
+		
+		foreach (Path pp in path_list) {
+			pp.get_closest_point_on_path (lep, xt, yt);
+			distance = Math.sqrt (Math.pow (xt - ep.x, 2) + Math.pow (yt - ep.y, 2));
+			
+			if (distance < min) {
+				min = distance;
+				p = pp;
+				ep = lep;
+			}
+		}
+
+		if (p == null) {
+			return;
+		}
+
+		((!)p).insert_new_point_on_path (ep);
 	}
 }
 

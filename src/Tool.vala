@@ -49,6 +49,7 @@ class Tool : GLib.Object {
 	public signal void deselect_action (Tool selected);
 	
 	public signal void press_action (Tool selected, int button, int x, int y);
+	public signal void double_click_action (Tool selected, int button, int x, int y);
 	public signal void move_action (Tool selected, int x, int y);
 	public signal void release_action (Tool selected, int button, int x, int y);
 	

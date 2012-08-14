@@ -108,7 +108,14 @@ class Toolbox : DrawingArea {
 			});
 		draw_tool_modifiers.add_tool (corner_tool);
 
-		Tool new_point_on_path = new Tool ("new_point_on_path", "Add new point on path", 'n');
+		Tool insert_point_on_path = new Tool ("insert_point_on_path", "Add new point on path", 'n');
+		insert_point_on_path.select_action.connect((self) => {
+				select_draw_tool ();
+				pen_tool.begin_from_new_point_on_path ();
+			});
+		draw_tool_modifiers.add_tool (insert_point_on_path);
+		
+		Tool new_point_on_path = new Tool ("new_point_on_path", "Begin new path from point on path", 'n');
 		new_point_on_path.select_action.connect((self) => {
 				select_draw_tool ();
 				pen_tool.begin_from_new_point_on_path ();
@@ -617,9 +624,9 @@ class Toolbox : DrawingArea {
 					}
 				}
 			}
-
+			
 			return true;
-		});
+		});	
 				
 		button_release_event.connect ((se, e)=> {
 			release (e.button, e.x, e.y);

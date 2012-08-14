@@ -60,8 +60,11 @@ class PenTool : Tool {
 		press_action.connect((self, b, x, y) => {
 			last_point_x = x;
 			last_point_y = y;
-			
+
 			press (b, x, y);
+		});
+		
+		double_click_action.connect((self, b, x, y) => {
 		});
 
 		release_action.connect((self, b, ix, iy) => {
@@ -176,6 +179,11 @@ class PenTool : Tool {
 		// make path transparent and show edit points
 		if (!glyph.is_editable ()) {
 			glyph.open_path ();
+			return;
+		}
+
+		if (insert_new_point_on_path_selected ()) {
+			glyph.insert_new_point_on_path (x, y);
 			return;
 		}
 
@@ -335,6 +343,11 @@ class PenTool : Tool {
 	
 	public static bool is_move_point_selected () {
 		Tool t = MainWindow.get_toolbox ().get_tool ("move_point");
+		return t.is_selected ();
+	}
+
+	public static bool insert_new_point_on_path_selected () {
+		Tool t = MainWindow.get_toolbox ().get_tool ("insert_point_on_path");
 		return t.is_selected ();
 	}
 
