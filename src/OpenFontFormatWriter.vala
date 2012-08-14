@@ -2437,9 +2437,9 @@ class OffsetTable : Table {
 	
 	public void process () {
 		FontData fd = new FontData ();
-		Fixed version = 1 << 16;
+		Fixed version = 0x00010000; // sfnt version 1.0 for TTF CFF else use OTTO
 
-		// sfnt version 1.0 for TTF CFF else use OTTO
+		
 		num_tables = (uint16) directory_table.get_tables ().length () - 2; // number of tables, skip DirectoryTable and OffsetTable
 		
 		search_range = max_pow_2_less_than_i (num_tables) * 16;
