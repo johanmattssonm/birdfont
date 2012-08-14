@@ -1680,19 +1680,6 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		// print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
 	}
 	
-	/** Largest power of two less than max. */
-	public static uint16 largest_pow2 (uint16 max) {
-		uint16 x = 1;
-		uint16 l = 0;
-		
-		while (x < max) {
-			l = x;
-			x = x << 1;
-		}
-		
-		return l;
-	}
-	
 	public void process (FontData fd, GlyfTable glyf_table) {
 		GlyphRange glyph_range = new GlyphRange ();
 		unowned List<UniRange> ranges;
@@ -4460,6 +4447,10 @@ class KernTable : Table {
 		fd.add_ushort (HORIZONTAL); // subtable flags
 
 		fd.add_ushort (n_pairs);
+
+		search_range = 2 * largest_pow2 (n_pairs);
+		entry_selector = (uint16) (Math.log (search_range / 2) / Math.log (2));
+		range_shift = 6 * (n_pairs - largest_pow2 (n_pairs));
 		
 		fd.add_ushort (search_range);
 		fd.add_ushort (entry_selector);
@@ -4888,6 +4879,19 @@ class DirectoryTable : Table {
 		head_table.process (); // update the value		
 	}
 	
+}
+
+/** Largest power of two less than max. */
+public static uint16 largest_pow2 (uint16 max) {
+	uint16 x = 1;
+	uint16 l = 0;
+	
+	while (x < max) {
+		l = x;
+		x = x << 1;
+	}
+	
+	return l;
 }
 
 void printd (string s) {
