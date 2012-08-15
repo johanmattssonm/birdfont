@@ -323,10 +323,6 @@ class PenTool : Tool {
 		set_active_edit_point (null);
 
 		foreach (Path current_path in g.path_list) {
-			if (!current_path.is_editable ()) {
-				continue;
-			}
-
 			foreach (EditPoint e in current_path.points) {
 				d = Math.sqrt (Math.fabs (Math.pow (e.x - x, 2) + Math.pow (e.y - y, 2)));
 								
@@ -488,15 +484,7 @@ class PenTool : Tool {
 		double dp = selected_corner.get_close_distance (x, y);
 		double dl = selected_corner.get_left_handle ().get_point ().get_close_distance (x, y);
 		double dr = selected_corner.get_right_handle ().get_point ().get_close_distance (x, y);
-
-		if (active_path.points.length () > 0 && selected_corner == active_path.points.last ().data) {
-			return dl < dp;
-		}
 		
-		if (active_path.points.length () > 0 && selected_corner == active_path.points.first ().data) {
-			return dr < dp;
-		}
-				
 		return (dl < dp || dr < dp);
 	}
 
