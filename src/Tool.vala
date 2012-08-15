@@ -235,49 +235,49 @@ class Tool : GLib.Object {
 	
 	/** Help function to test button press actions. */
 	public void test_click_action (int b, int x, int y) {
-		this.yield ();
+		Tool.yield ();
 		press_action (this, b, x, y);
 		
-		this.yield ();
+		Tool.yield ();
 		release_action (this, b, x, y);
 	}
 
 	/** Help function to test select action for this tool. */
 	public void test_select_action () {
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_toolbox ().select_tool (this);
 	}
 
 	public void test_move_action (int x, int y) {
-		this.yield ();
+		Tool.yield ();
 		move_action (this, x, y);
 	}
 
 	public void test_press_action (int b, int x, int y) {
-		this.yield ();
+		Tool.yield ();
 		press_action (this, b, x, y);
 	}
 
 	public void test_release_action (int b, int x, int y) {
-		this.yield ();
+		Tool.yield ();
 		release_action (this, b, x, y);
 	}
 
-	public void test_open_next_glyph () {
-		this.yield ();
+	public static void test_open_next_glyph () {
+		Tool.yield ();
 		OverView o = MainWindow.get_overview ();
 		
 		MainWindow.get_tab_bar ().select_overview ();
 		
 		o.select_next_glyph ();
-		this.yield ();
+		Tool.yield ();
 		
 		o.open_current_glyph ();
-		this.yield ();
+		Tool.yield ();
 	}
 	
 	/** Run pending events in main loop before continue. */
-	public void @yield () {
+	public static void @yield () {
 		int t = 0;
 		var time = new TimeoutSource(500);
 		bool timeout;
@@ -313,7 +313,6 @@ class Tool : GLib.Object {
 			}
 						
 			if (unlikely (t > 100000)) {
-				warning (@"\nToo many interations in test suite main loop for $(get_name ())\n");
 				assert (false);
 				break;
 			}

@@ -19,6 +19,8 @@ using Math;
 
 namespace Supplement {
 
+const double UNITS = 10;
+
 class OpenFontFormatWriter : Object  {
 
 	DataOutputStream os;
@@ -422,6 +424,7 @@ class FontData : Object {
 class Coordinate {
 	/** TTF coordinate flags. */
 
+	public static const uint8 NONE           = 0;
 	public static const uint8 ON_PATH        = 1 << 0;
 	public static const uint8 X_SHORT_VECTOR = 1 << 1;
 	public static const uint8 Y_SHORT_VECTOR = 1 << 2;
@@ -1330,8 +1333,13 @@ class GlyfTable : Table {
 		end_point = 0;
 		last_end_point = 0;
 		foreach (Path p in g.path_list) {
+			p = p.get_quadratic_points ();
 			foreach (EditPoint e in p.points) {
 				end_point++;
+				
+				if (e.get_right_handle ().type == PointType.CURVE) {
+					end_point++;
+				}
 			}
 			fd.add_u16 (end_point - 1);
 			
@@ -1359,9 +1367,15 @@ class GlyfTable : Table {
 		// flags
 		nflags = 0;
 		foreach (Path p in g.path_list) {
+			p = p.get_quadratic_points ();
 			foreach (EditPoint e in p.points) {
 				fd.add_byte (Coordinate.ON_PATH);
 				nflags++;
+				
+				if (e.get_right_handle ().type == PointType.CURVE) {
+					fd.add_byte (Coordinate.NONE);
+					nflags++;
+				}
 			}
 		}
 		
@@ -1373,30 +1387,53 @@ class GlyfTable : Table {
 		// x coordinates
 		double prev = 0;
 		foreach (Path p in g.path_list) {
+			p = p.get_quadratic_points ();
 			foreach (EditPoint e in p.points) {
-				x = e.x - prev - g.left_limit;
+				x = e.x * UNITS - prev + g.left_limit * UNITS;
 				
 				fd.add_16 ((int16) x);
 				
 				if (x + prev < txmin) txmin = (int16) (x + prev);
 				if (x + prev > txmax) txmax = (int16) (x + prev);
 				
-				prev = e.x - g.left_limit;
+				prev = e.x * UNITS + g.left_limit * UNITS;
+				
+				if (e.get_right_handle ().type == PointType.CURVE) {
+					x = e.get_right_handle ().x () * UNITS - prev + g.left_limit  * UNITS;
+
+					fd.add_16 ((int16) x);
+					
+					if (x + prev < txmin) txmin = (int16) (x + prev);
+					if (x + prev > txmax) txmax = (int16) (x + prev);
+					
+					prev = e.get_right_handle ().x () * UNITS + g.left_limit  * UNITS;
+				}
 			}
 		}
 
-		// x coordinates
+		// y coordinates
 		prev = 0;
 		foreach (Path p in g.path_list) {
+			p = p.get_quadratic_points ();
 			foreach (EditPoint e in p.points) {
-				y =  e.y - prev + font.base_line;
-				
+				y = e.y * UNITS - prev + font.base_line  * UNITS;
 				fd.add_16 ((int16) y);
 
 				if (y + prev < tymin) tymin = (int16) (y + prev);
 				if (y + prev > tymax) tymax = (int16) (y + prev);
 
-				prev = e.y + font.base_line;
+				prev = e.y * UNITS + font.base_line * UNITS;
+				
+				if (e.get_right_handle ().type == PointType.CURVE) {
+					y = e.get_right_handle ().y () * UNITS - prev + font.base_line * UNITS;
+					
+					fd.add_16 ((int16) y);
+					
+					if (y + prev < tymin) tymin = (int16) (y + prev);
+					if (y + prev > tymax) tymax = (int16) (y + prev);
+					
+					prev = e.get_right_handle ().y () * UNITS + font.base_line  * UNITS;
+				}
 			}
 		}
 		
@@ -1442,17 +1479,27 @@ class GlyfTable : Table {
 		//glyphs.append (font.get_null_character ());
 		//glyphs.append (font.get_nonmarking_return ());
 		//glyphs.append (font.get_space ());
-			
+		
+		List<Glyph> unassigned_glyphs = new List<Glyph> ();
+		
 		// add glyphs, first all assigned then the unassigned ones
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
 			g = (!) gl;
 			
-			if (g.name == "notdef" || g.name == "null"  || g.name == "nonmarkingreturn" || g.name == "space" || g.name == " ") {
+			if (g.name == ".notdef" || g.unichar_code == 0) {
 				continue;
 			}
 			
-			glyphs.append (g);
-		}	
+			if (!g.is_unassigned ()) {
+				glyphs.append (g);
+			} else {
+				unassigned_glyphs.append (g);
+			}
+		}
+		
+		foreach (Glyph ug in unassigned_glyphs) {
+			glyphs.append (ug);
+		}
 		
 	}
 
@@ -1696,17 +1743,8 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		uint16 gid_length = 0;
 		
 		uint32 indice;
-		uint32 first_assigned = 0;
-
-		foreach (Glyph g in glyf_table.glyphs) {
-			if (!g.is_unassigned ()) {
-				first_assigned++;
-			} else {
-				break;
-			}
-		}
-		printd (@"first_assigned $first_assigned\n");
-		first_assigned = 1;
+		uint32 first_assigned = 1;
+		
 		foreach (Glyph g in glyf_table.glyphs) {
 			if (!g.is_unassigned ()) {
 				glyph_range.add_single (g.unichar_code);
@@ -2082,7 +2120,7 @@ class HeadTable : Table {
 		// font_data.add_u16 (BASELINE_AT_ZERO | LSB_AT_ZERO);
 		font_data.add_u16 (0); // flags
 		
-		font_data.add_u16 (100); // units per em (should be a power of two for ttf fonts)
+		font_data.add_u16 (1000); // units per em (should be a power of two for ttf fonts)
 		
 		font_data.add_64 (0); // creation time since 1904-01-01
 		font_data.add_64 (0); // modified time since 1904-01-01
@@ -2183,10 +2221,9 @@ class HheaTable : Table {
 		Fixed version = 1 << 16;
 		
 		fd.add_fixed (version); // table version
-				
-		// TODO: units per em
-		fd.add_16 ((int16) (-1 * (font.top_position - font.base_line))); // Ascender
-		fd.add_16 ((int16) (-1 * font.bottom_position)); // Descender
+		
+		fd.add_16 ((int16) (-1 * (font.top_position - font.base_line) * UNITS)); // Ascender
+		fd.add_16 ((int16) (-1 * font.bottom_position * UNITS)); // Descender
 		fd.add_16 (0); // LineGap
 				
 		fd.add_u16 (hmtx_table.max_advance); // maximum advance width value in 'hmtx' table.
@@ -2309,9 +2346,9 @@ class HmtxTable : Table {
 		foreach (Glyph g in glyf_table.glyphs) {
 			g.boundries (out xmin, out ymin, out xmax, out ymax);
 
-			lsb = (int16) (xmin - g.left_limit + 0.5);
-			advance = (int16) (g.right_limit - g.left_limit + 0.5);
-			extent = (int16) (lsb + (xmax - xmin) + 0.5);
+			lsb = (int16) ((xmin - g.left_limit) * UNITS + 0.5);
+			advance = (int16) (g.right_limit * UNITS  - g.left_limit * UNITS  + 0.5);
+			extent = (int16) (lsb + (xmax * UNITS  - xmin * UNITS ) + 0.5);
 			rsb = (int16) (advance - extent);
 
 			printd (@"$(g.name) advance: $advance  = $((int16) (g.right_limit))  -  $((int16) (g.left_limit))\n");

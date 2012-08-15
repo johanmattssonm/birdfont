@@ -284,11 +284,11 @@ class Font : GLib.Object {
 		Path p;
 		Path i;
 		
-		if (has_glyph ("notdef")) {
-			return (!) get_glyph ("notdef");
+		if (has_glyph (".notdef")) {
+			return (!) get_glyph (".notdef");
 		}
 		
-		g = new Glyph ("notdef", 0);
+		g = new Glyph (".notdef", 0);
 		p = new Path ();
 		i = new Path ();
 		

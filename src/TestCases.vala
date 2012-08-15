@@ -37,6 +37,48 @@ class TestCases {
 		add (test_delete_points, "Delete edit points");
 		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
+		add (test_convert_to_quadratic_bezier_path, "Convert to quadratic path");
+	}
+
+	public static void test_convert_to_quadratic_bezier_path () {
+		Tool.test_open_next_glyph ();
+		Glyph g = MainWindow.get_current_glyph ();
+		Path p = new Path ();
+		Path p1 = new Path ();
+		
+		EditPoint e0, e1, e2, e3;
+		
+		p.add (-10, 10);
+		p.add (10, 10);
+		p.add (10, -10);
+		p.add (-10, -10);
+		p.close ();
+		g.add_path (p);
+		g.add_path (p1.get_quadratic_points ());
+
+		e0 = new EditPoint (20, 40);
+		e1 = new EditPoint (40, 40);
+		e2 = new EditPoint (40, 20);
+		e3 = new EditPoint (20, 20);
+
+		p1.add_point (e0);
+		p1.add_point (e1);
+		p1.add_point (e2);
+		p1.add_point (e3);
+		p1.close ();
+
+		e0.set_tie_handle (true);
+		e1.set_tie_handle (true);
+		e2.set_tie_handle (true);
+		e3.set_tie_handle (true);
+
+		e0.process_tied_handle ();
+		e1.process_tied_handle ();
+		e2.process_tied_handle ();
+		e3.process_tied_handle ();
+
+		g.add_path (p1);
+		g.add_path (p1.get_quadratic_points ());
 	}
 
 	public static void test_overview () {

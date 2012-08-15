@@ -62,6 +62,8 @@ class Path {
 	private static ImageSurface? edit_point_handle_image = null;
 	private static ImageSurface? active_edit_point_handle_image = null;
 	
+	Path quadratic_path; // quadratic points for ttf export
+	
 	public Path () {
 		if (edit_point_image == null) {
 			edit_point_image = Icons.get_icon ("edit_point.png");
@@ -1029,13 +1031,163 @@ class Path {
 		return true;
 	}
 
+	/** Convert quadratic bezier points to cubic representation of the glyph
+	 * suitable for ttf-export.
+	 */ 
+	public Path get_quadratic_points () {
+		EditPoint middle = new EditPoint ();
+		unowned List<EditPoint> e;
+		int i = 0;
+		int j = 0;
+		
+		quadratic_path = copy ();
+		
+		if (quadratic_path.points.length () == 0) {
+			return quadratic_path;
+		}
+	
+		// split all curves in as many regions as we need
+		while (split_all_cubic_in_half (quadratic_path)) {
+			j++;
+			
+			if (j > 5) {
+				warning ("too many iterations in split path");
+				break;
+			}
+		}
+		
+		// estimate quatdratic form
+		middle.prev = quadratic_path.points.last ();
+		middle.next = quadratic_path.points.first ();
+
+		if (((!)middle.prev).data.get_left_handle ().type == PointType.CURVE) {
+			convert_to_quadratic (quadratic_path, middle);	
+		}	
+		
+		e = (!) quadratic_path.points.first ();
+		while (e != quadratic_path.points.last ()) {
+			middle.prev = e;
+			middle.next = e.next;
+							
+			if (e.data.get_left_handle ().type == PointType.CURVE) {
+				convert_to_quadratic (quadratic_path, middle);	
+			}
+			
+			e = (!) e.next;
+		}
+		
+		return quadratic_path;
+	}
+
+	void convert_to_quadratic (Path cubic_path, EditPoint middle) {
+		double curve_x, curve_y, distance;	
+		EditPointHandle eh;
+		
+		EditPoint start = middle.get_prev ().data;
+		EditPoint stop = middle.get_next ().data;
+
+		estimate_quadratic (start, stop, out curve_x, out curve_y);
+		
+		eh = start.get_left_handle ();
+		eh.set_point_type (PointType.NONE);
+		eh.length = 0;
+		
+		eh = start.get_right_handle ();
+		eh.set_point_type (PointType.CURVE);
+		eh.move_to_coordinate (curve_x, curve_y);
+	}
+
+	public bool split_all_cubic_in_half (Path cubic_path) {
+		EditPoint middle = new EditPoint ();
+		unowned List<EditPoint> e;
+		bool need_split = false;
+		uint len = cubic_path.points.length ();
+
+		middle.prev = cubic_path.points.last ();
+		middle.next = cubic_path.points.first ();
+		
+		if (split_cubic_in_half (cubic_path, middle)) {
+			need_split = true;
+		}
+				
+		e = (!) cubic_path.points.first ();
+		for (uint i = 0; i < len - 1; i++) {
+			middle.prev = e;
+			middle.next = e.next;
+			
+			if (e.data.get_left_handle ().type == PointType.CURVE 
+			    && split_cubic_in_half (cubic_path, middle)) {
+				e = (!) e.next.next;
+				need_split = true;
+			} else {
+				e = (!) e.next;
+			}
+		}
+				
+		return need_split;	
+	}
+
+	public void estimate_quadratic (EditPoint start, EditPoint stop, out double curve_x, out double curve_y) {
+		curve_x = -0.25 * start.x + 0.75 *  stop.get_left_handle ().x () + 0.75 * start.get_right_handle ().x () - 0.25 * stop.x;
+		curve_y = -0.25 * start.y + 0.75 *  stop.get_left_handle ().y () + 0.75 * start.get_right_handle ().y () - 0.25 * stop.y;		
+	}
+
+	bool split_cubic_in_half (Path cubic_path, EditPoint middle) {
+		double curve_x, curve_y, cx, cy, qx, qy, nx, ny, distance;	
+		
+		EditPoint start = middle.get_prev ().data;
+		EditPoint stop = middle.get_next ().data;
+		
+		estimate_quadratic (start, stop, out curve_x, out curve_y);
+	
+		qx = quadratic_bezier_path (0.75, start.x, curve_x, stop.x);
+		qy = quadratic_bezier_path (0.75, start.y, curve_y, stop.y);
+
+		cx = bezier_path (0.75, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x);
+		cy = bezier_path (0.75, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);
+
+		distance = Math.sqrt (Math.pow (cx - qx, 2) + Math.pow (cy - qy, 2));
+
+		nx = bezier_path (0.5, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x);
+		ny = bezier_path (0.5, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);
+
+		if (Math.fabs (distance) > 0.1) {
+			EditPoint new_edit_point = new EditPoint (nx, ny, PointType.CURVE);
+
+			new_edit_point.next = middle.get_next ();
+			new_edit_point.prev = middle.get_prev ();
+			cubic_path.insert_new_point_on_path (new_edit_point);
+			cubic_path.create_list ();
+
+			return true;	
+		}
+		
+		return false;
+	}
+
+	double distance_to_path (EditPoint start, EditPoint stop, double x, double y) {
+		double min = double.MAX;
+		
+		all_of (start, stop, (cx, cy, t) => {
+			double n = pow (x - cx, 2) + pow (y - cy, 2);
+			
+			if (n < min) {
+				min = n;
+			}
+			
+			return true;
+		});
+		
+		return min;
+	}
+
 	public void insert_new_point_on_path (EditPoint ep) {
 		EditPoint start, stop;
 		double x0, x1, y0, y1;
 		double px, py;
 		
 		double position, t, d, min;
-		double steps = 100;
+		double steps = 200;
 
 		start = ep.get_prev ().data;
 		stop = ep.get_next ().data;
@@ -1123,24 +1275,24 @@ class Path {
 			}
 			
 			all_of (prev.data, i.data, (cx, cy, t) => {
-					n = pow (x - cx, 2) + pow (y - cy, 2);
+				n = pow (x - cx, 2) + pow (y - cy, 2);
+				
+				if (n < min) {
+					min = n;
 					
-					if (n < min) {
-						min = n;
-						
-						ox = cx;
-						oy = cy;
+					ox = cx;
+					oy = cy;
+				
+					previous_point = prev;
+					next_point = i;
 					
-						previous_point = prev;
-						next_point = i;
-						
-						step = t;
-						
-						g = true;
-					}
+					step = t;
 					
-					return true;
-				});
+					g = true;
+				}
+				
+				return true;
+			});
 		}
 
 		if (previous_point == null) {
@@ -1245,7 +1397,14 @@ class Path {
 		a0 = step * (q1 - q0) + q0;
 		a1 = step * (q2 - q1) + q1;
 	}
-	
+
+	public static double quadratic_bezier_path (double step, double p0, double p1, double p2) {
+		double q0 = step * (p1 - p0) + p0;
+		double q1 = step * (p2 - p1) + p1;
+		
+		return step * (q1 - q0) + q0;
+	}
+			
 	public void plot (Context cr, Allocation allocation, double view_zoom) {
 			double px = 0, py = 0;
 			double xc = allocation.width / 2.0;
