@@ -43,6 +43,7 @@ class Path {
 	bool edit = true;
 	bool open = true;
 
+	bool set_direction_from_tool = true;
 	bool no_derived_direction = false;
 	bool clockwise_direction = true;
 
@@ -1040,11 +1041,12 @@ class Path {
 		EditPointHandle eh;
 		
 		quadratic_path = copy ();
-		
+		quadratic_path.close ();
+				
 		if (quadratic_path.points.length () < 2) {
 			return quadratic_path;
 		}
-	
+
 		// split all curves in as many regions as we need
 		split_cubic_in_parts (quadratic_path);	
 
@@ -1069,9 +1071,9 @@ class Path {
 		eh.length = 0;
 
 		eh = ((!)quadratic_path.points.last ().prev).data.get_right_handle ();
-		eh.set_point_type (PointType.NONE);
-		eh.length *= 1.7;
-						
+		eh.set_point_type (PointType.CURVE);
+		eh.length *= 1.6;
+
 		return quadratic_path;
 	}
 
@@ -1121,11 +1123,14 @@ class Path {
 		if (split_cubic_in_half (cubic_path, middle)) {
 			need_split = true;
 		}
-				
+			
 		e = (!) cubic_path.points.first ();
 		for (uint i = 0; i < len - 1; i++) {
 			middle.prev = e;
 			middle.next = e.next;
+			
+			middle.get_prev ().data.recalculate_linear_handles ();
+			middle.get_next ().data.recalculate_linear_handles ();
 			
 			if (split_cubic_in_half (cubic_path, middle)) {
 				e = (!) e.next.next;

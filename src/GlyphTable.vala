@@ -258,16 +258,6 @@ class GlyphTable : GLib.Object {
 
 	unowned List<Item>? find_next_index (string n) {
 		unowned List<Item>? next = find_next_via_index (n);
-		
-		if (next != null) {
-			/*
-			if (compare (n, ((!)next).data) == 0) { // not unique
-				warning (@"Index is not unique $n == $(((!)next).data.name)");
-			}
-			*/
-			//return ((!)next).prev;
-		}
-	
 		return next;
 	}
 

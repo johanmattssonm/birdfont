@@ -351,7 +351,32 @@ class Font : GLib.Object {
 		}
 	}
 	
-	bool has_name (string name) {
+	public string get_name_for_character (unichar c) {
+		// if some glyph is already mapped to unichar, return it's name
+		uint i = 0;
+		Glyph? gl;
+		Glyph g;
+		StringBuilder sb;
+		
+		while ((gl = get_glyph_indice (i++)) != null) {
+			g = (!) gl;
+			
+			if (g.unichar_code == c) {
+				return g.name;
+			}
+		}
+						
+		// otherwise return some default name, possibly from unicode database
+		if (c == 0) {
+			return ".null".dup ();
+		}
+		
+		sb = new StringBuilder ();
+		sb.append_unichar (c);
+		return sb.str;		
+	}
+	
+	public bool has_name (string name) {
 		foreach (string n in glyph_names) {
 			if (n == name) {
 				return true;
@@ -395,12 +420,6 @@ class Font : GLib.Object {
 		}
 		
 		return gc;
-	}
-	
-	public Glyph? get_glyph_from_unichar (unichar glyph) {
-		StringBuilder name = new StringBuilder ();
-		name.append_unichar (glyph);
-		return get_glyph (name.str);
 	}
 	
 	public Glyph? get_glyph (string glyph) {
@@ -795,32 +814,6 @@ class Font : GLib.Object {
 		}
 		
 		return true;
-	}
-	
-	/** Measure height of x or other lower case letter. */
-	private double estimate_xheight () {
-		Glyph? g;
-		double ym = 0;
-		for (unichar c = 'x'; c >= 'a' ; c--) {
-			g = get_glyph_from_unichar (c);
-			
-			// we want x-height skip letters with ascender
-			if (c == 'l' || c == 'k' || c == 'i' 
-				|| c == 'j' || c == 'h' || c == 'd') {
-				continue;
-			}
-			
-			if (g != null) {
-				foreach (Path path in ((!) g).path_list) {
-					path.update_region_boundries ();
-					if (path.ymax > ym) {
-						ym = path.ymax;
-					}
-				}
-			} 
-		}
-		
-		return -ym;
 	}
 	
 	public bool parse_file (string path) {

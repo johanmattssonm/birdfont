@@ -384,7 +384,7 @@ class PenTool : Tool {
 		((!)glyph.active_path).points.last ().data.right_handle.parent.recalculate_linear_handles ();
 	}
 
-	void set_default_handle_positions () {
+	public static void set_default_handle_positions () {
 		Glyph g = MainWindow.get_current_glyph ();
 		foreach (var p in g.path_list) {
 			if (p.is_editable ()) {
@@ -394,14 +394,7 @@ class PenTool : Tool {
 		}
 	}
 
-	void set_default_handle_positions_on_path (Path path) {
-		EditPointHandle h;
-		EditPoint n;
-		double nx, ny;
-		
-		// set handle pointing at next point to create a line to next point
-		// as default handle position for LINE points.
-		
+	static void set_default_handle_positions_on_path (Path path) {
 		foreach (EditPoint e in path.points) {
 			e.recalculate_linear_handles ();
 		}

@@ -143,8 +143,6 @@ class ContextDisplay : FontDisplay {
 
 		font.touch ();
 
-		// handle++; // use handle before next glyph
-
 		a = "";
 		b = "";
 
@@ -158,7 +156,6 @@ class ContextDisplay : FontDisplay {
 				b = s;
 				
 				if (handle == wi) {
-					print (@"SET get $a\n");
 					kern = font.get_kerning (a, b) + val;
 					font.set_kerning (a, b, kern);
 				}
@@ -212,7 +209,8 @@ class ContextDisplay : FontDisplay {
 	
 	public override void key_press (EventKey e) {
 		unichar c = (unichar) e.keyval;
-		StringBuilder s = new StringBuilder ();
+		Font f = Supplement.get_current_font ();
+		string name;
 		
 		if (e.type == EventType.KEY_PRESS && (KeyBindings.singleton.modifier == NONE || KeyBindings.singleton.modifier == SHIFT)) {
 					
@@ -225,8 +223,8 @@ class ContextDisplay : FontDisplay {
 			}
 			
 			if (!is_modifier_key (c) && c.validate ()) {
-				s.append_unichar (c);
-				row.first ().data.glyph.append (s.str);
+				name = f.get_name_for_character (c);
+				row.first ().data.glyph.append (name);
 			}
 		}
 		

@@ -38,6 +38,25 @@ class TestCases {
 		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
 		add (test_convert_to_quadratic_bezier_path, "Convert to quadratic path");
+		add (test_notdef, "Notdef");
+	}
+
+	public static void test_notdef () {
+		Font f = Supplement.get_current_font ();
+		Glyph n = f.get_not_def_character ();
+		Glyph g;
+		Path pn;
+		
+		f.add_glyph (n);
+		
+		Tool.test_open_next_glyph ();
+		g = MainWindow.get_current_glyph ();
+		foreach (Path p in n.path_list) {
+			pn = p.copy ().get_quadratic_points ();
+			g.path_list.append (pn);
+			pn.move (50, 0);
+			g.path_list.append (p.copy ());
+		}
 	}
 
 	public static void test_convert_to_quadratic_bezier_path () {
