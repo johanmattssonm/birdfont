@@ -41,12 +41,40 @@ class TestCases {
 	}
 
 	public static void test_convert_to_quadratic_bezier_path () {
-		Tool.test_open_next_glyph ();
-		Glyph g = MainWindow.get_current_glyph ();
+		Glyph g;
+		Path gqp;
+		Path gqp_points;
+		
 		Path p = new Path ();
 		Path p1 = new Path ();
+		List<Path> qpl = new List<Path> (); 
 		
 		EditPoint e0, e1, e2, e3;
+		
+		g = MainWindow.get_current_glyph ();
+		
+		// split_all_cubic_in_half
+		foreach (Path gp in g.path_list) {
+			gqp_points = gp.copy ();
+			gqp_points.split_cubic_in_parts (gqp_points);
+			gqp_points.move (50, 0);
+			qpl.append (gqp_points);
+		}
+		
+		// convert to quadratic points
+		foreach (Path gp in g.path_list) {
+			gqp = gp.get_quadratic_points ();
+			gqp.move (100, 0);
+			qpl.append (gqp);
+		}
+
+		foreach (Path gp in qpl) {
+			g.add_path (gp);
+		}
+
+		Tool.test_open_next_glyph ();
+		
+		g = MainWindow.get_current_glyph ();
 		
 		p.add (-10, 10);
 		p.add (10, 10);

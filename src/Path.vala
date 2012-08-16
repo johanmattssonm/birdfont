@@ -903,7 +903,6 @@ class Path {
 		return second_last_point;
 	}
 	
-
 	/** Move path. */
 	public void move (double delta_x, double delta_y) {
 		foreach (var ep in points) {
@@ -1038,44 +1037,41 @@ class Path {
 		EditPoint middle = new EditPoint ();
 		unowned List<EditPoint> e;
 		int i = 0;
-		int j = 0;
+		EditPointHandle eh;
 		
 		quadratic_path = copy ();
 		
-		if (quadratic_path.points.length () == 0) {
+		if (quadratic_path.points.length () < 2) {
 			return quadratic_path;
 		}
 	
 		// split all curves in as many regions as we need
-		while (split_all_cubic_in_half (quadratic_path)) {
-			j++;
-			
-			if (j > 5) {
-				warning ("too many iterations in split path");
-				break;
-			}
-		}
-		
+		split_cubic_in_parts (quadratic_path);	
+
 		// estimate quatdratic form
 		middle.prev = quadratic_path.points.last ();
 		middle.next = quadratic_path.points.first ();
 
-		if (((!)middle.prev).data.get_left_handle ().type == PointType.CURVE) {
-			convert_to_quadratic (quadratic_path, middle);	
-		}	
+		convert_to_quadratic (quadratic_path, middle);
 		
 		e = (!) quadratic_path.points.first ();
-		while (e != quadratic_path.points.last ()) {
+		while (e != quadratic_path.points.last ().prev) {
 			middle.prev = e;
 			middle.next = e.next;
 							
-			if (e.data.get_left_handle ().type == PointType.CURVE) {
-				convert_to_quadratic (quadratic_path, middle);	
-			}
+			convert_to_quadratic (quadratic_path, middle);	
 			
 			e = (!) e.next;
 		}
 		
+		eh = ((!)quadratic_path.points.last ().prev).data.get_left_handle ();
+		eh.set_point_type (PointType.NONE);
+		eh.length = 0;
+
+		eh = ((!)quadratic_path.points.last ().prev).data.get_right_handle ();
+		eh.set_point_type (PointType.NONE);
+		eh.length *= 1.7;
+						
 		return quadratic_path;
 	}
 
@@ -1097,11 +1093,27 @@ class Path {
 		eh.move_to_coordinate (curve_x, curve_y);
 	}
 
+	public void split_cubic_in_parts (Path cubic_path) {
+		int j = 0;
+		while (split_all_cubic_in_half (cubic_path)) {
+			j++;
+			
+			if (j > 5) {
+				warning ("too many iterations in split path");
+				break;
+			}
+		}	
+	}
+
 	public bool split_all_cubic_in_half (Path cubic_path) {
 		EditPoint middle = new EditPoint ();
 		unowned List<EditPoint> e;
 		bool need_split = false;
 		uint len = cubic_path.points.length ();
+	
+		if (len < 2) {
+			return false;
+		}
 
 		middle.prev = cubic_path.points.last ();
 		middle.next = cubic_path.points.first ();
@@ -1115,8 +1127,7 @@ class Path {
 			middle.prev = e;
 			middle.next = e.next;
 			
-			if (e.data.get_left_handle ().type == PointType.CURVE 
-			    && split_cubic_in_half (cubic_path, middle)) {
+			if (split_cubic_in_half (cubic_path, middle)) {
 				e = (!) e.next.next;
 				need_split = true;
 			} else {
@@ -1187,7 +1198,7 @@ class Path {
 		double px, py;
 		
 		double position, t, d, min;
-		double steps = 200;
+		double steps = 500;
 
 		start = ep.get_prev ().data;
 		stop = ep.get_next ().data;
