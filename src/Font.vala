@@ -437,7 +437,6 @@ class Font : GLib.Object {
 		string n;
 		
 		if (!(0 <= glyph_indice < glyph_names.length ())) {
-			warning ("glyph_indice is out of range");
 			return null;
 		}
 		

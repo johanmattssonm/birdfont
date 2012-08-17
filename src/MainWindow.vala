@@ -120,7 +120,6 @@ public class MainWindow : Gtk.Window {
 		over_view = new OverView();
 				
 		tabs.add_unique_tab (content, 60, true);
-		tabs.add_unique_tab (over_view, 75, false);
 		
 		tabs.select_tab_name ("Menu");
 

@@ -742,7 +742,6 @@ class GlyfTable : Table {
 			i++;
 		}
 		
-		warning ("Required glyph for space character not found in ttf-font.");		
 		return 0;
 	}
 
@@ -813,8 +812,6 @@ class GlyfTable : Table {
 				right = post_table.get_name (k.right);
 				kern_val = k.kerning * 1000.0 / units_per_em;
 				g.add_kerning (right, kern_val);
-				
-				printd (@"add kerning $(g.get_name ()) to $right $(k.kerning)\n");
 			}
 		}
 		
@@ -895,7 +892,7 @@ class GlyfTable : Table {
 		return glyph;
 	}
 	
-	Glyph parse_next_composite_glyf (FontData dis, unichar character) throws Error {
+	Glyph parse_next_composite_glyf (FontData dis, unichar character, int pgid) throws Error {
 		uint16 component_flags = 0;
 		uint16 glyph_index;
 		int16 arg1 = 0;
@@ -963,6 +960,12 @@ class GlyfTable : Table {
 		for (int i = 0; i < gid.length (); i++) {
 			// compensate xmax ymax with coordinate
 			glid = gid.nth (i).data;
+
+			if (glid == pgid) {
+				warning ("Cannot link a glyph to it self.");
+				continue;
+			}
+
 			linked_glyph = parse_next_glyf (dis, character, glid, out xmin, out xmax, units_per_em);
 		}
 
@@ -1014,9 +1017,8 @@ class GlyfTable : Table {
 		
 		ncontours = dis.read_short ();
 		
-		return_val_if_fail (start < end, new Glyph.no_lines (""));
-		return_val_if_fail (ncontours < len, new Glyph.no_lines (""));
-		
+		return_val_if_fail (start < end, new Glyph (""));
+
 		if (ncontours == 0) {
 			warning (@"Got zero contours in glyph $(name.str).");
 
@@ -1024,9 +1026,11 @@ class GlyfTable : Table {
 		}
 				
 		if (ncontours == -1) {
-			return parse_next_composite_glyf (dis, character);
+			return parse_next_composite_glyf (dis, character, gid);
 		}
-				
+
+		return_val_if_fail (ncontours < len, new Glyph (""));
+						
 		if (ncontours < -1) {
 			warning (@"Got $ncontours contours in glyf table.");
 			error = new BadFormat.PARSE ("Invalid glyf");
@@ -1942,7 +1946,7 @@ class CmapTable : Table {
 			}
 			
 			if (encoding == 3) {
-				warning ("Font contains a cmap table with the obsolete encoding 3.");
+				stderr.printf ("Font contains a cmap table with the obsolete encoding 3.");
 			}
 		}
 		
@@ -4459,9 +4463,7 @@ class KernTable : Table {
 			left = dis.read_ushort ();
 			right = dis.read_ushort ();
 			kerning = dis.read_short ();
-			
-			printd (@"gid $left -> gid $right  kern $kerning\n");
-			
+						
 			kernings.append (new Kern (left, right, kerning));
 		}		
 	}
@@ -4813,7 +4815,7 @@ class DirectoryTable : Table {
 				valid = false;
 			}
 			
-			if (!kern_table.validate (dis)) {
+			if (kern_table.has_data () && !kern_table.validate (dis)) {
 				warning ("kern_table has invalid checksum");
 				valid = false;
 			}
@@ -4949,7 +4951,7 @@ public static uint16 largest_pow2 (uint16 max) {
 }
 
 void printd (string s) {
-	print (s);
+	//print (s);
 }
 
 }

@@ -37,7 +37,6 @@ class Supplement {
 		}
 		
 		stderr.printf ("\n%s\n\n", message);
-		
 		assert (!fatal);
 	}
 	

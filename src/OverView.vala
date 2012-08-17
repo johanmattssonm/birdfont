@@ -996,10 +996,15 @@ class OverView : FontDisplay {
 	}
 
 	public void set_glyph_range (GlyphRange range) {
-		string c = glyph_range.get_char (selected);
+		GlyphRange? current = glyph_range;
+		string c = "";
 		bool done = false;
 		uint32 i;
 		uint32 len = 0;
+		
+		if (current != null) {
+			c = glyph_range.get_char (selected);
+		}
 		
 		all_avail = false;
 		
