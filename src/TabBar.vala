@@ -297,18 +297,26 @@ class TabBar : DrawingArea {
 		}
 	}
 	
-	public void add_tab (FontDisplay display_item, double tab_width = 30, bool always_open = false) {
+	public void add_tab (FontDisplay display_item, double tab_width = -1, bool always_open = false) {
+		ImageSurface im = new ImageSurface (Format.RGB24, 0, 0);
+		Context cr = new Context (im);
+		TextExtents	te;
+		
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 		
+		if (tab_width < 0) {
+			cr.text_extents (display_item.get_name (), out te);
+			tab_width = te.width + 30;
+		}
+				
 		tabs.insert (new Tab (display_item, tab_width, always_open), s);
 		select_tab (s);
 	}
 	
 	/** Returns true if the new item was added to the bar. */
-	public bool add_unique_tab (FontDisplay display_item, double tab_width = 30, bool always_open = false) {
-		
+	public bool add_unique_tab (FontDisplay display_item, double tab_width = -1, bool always_open = false) {
 		bool i = select_tab_name (display_item.get_name ());
-		
+
 		if (!i) {
 			add_tab (display_item, tab_width, always_open);
 			return true;

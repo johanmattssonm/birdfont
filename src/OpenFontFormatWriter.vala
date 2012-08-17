@@ -1446,11 +1446,11 @@ class GlyfTable : Table {
 		fd.add_16 (tymax);
 		fd.seek_end ();
 
-		print (@"\n");
-		print (@"txmin: $txmin\n");
-		print (@"tymin: $tymin\n");
-		print (@"txmax: $txmax\n");
-		print (@"tymax: $tymax\n");
+		printd (@"\n");
+		printd (@"txmin: $txmin\n");
+		printd (@"tymin: $tymin\n");
+		printd (@"txmax: $txmax\n");
+		printd (@"tymax: $tymax\n");
 
 		// save this for head table
 		if (this.xmin > txmin) this.xmin = txmin;
@@ -1514,7 +1514,7 @@ class GlyfTable : Table {
 			location_offsets.append (fd.length ());
 			process_glyph (g, fd);
 			
-			print (@"loca fd.length (): $(fd.length ())\n");
+			printd (@"loca fd.length (): $(fd.length ())\n");
 		}
 
 		location_offsets.append (fd.length ()); // last entry in loca table is special
@@ -1927,15 +1927,19 @@ class CmapTable : Table {
 			platform = dis.read_ushort ();
 			encoding = dis.read_ushort ();
 			sub_offset = dis.read_ulong ();	
-			
+		
 			if (platform == 3 && encoding == 1) {
 				printd (@"Parsing Unicode BMP (UCS-2) Platform: $platform Encoding: $encoding\n");
 				subtable = new CmapSubtableWindowsUnicode ();
 				subtable.offset = offset + sub_offset;
 				subtables.append (subtable);
 			} else {
-				stderr.printf (@"Unknown encoding. Platform: $platform Encoding: $encoding.\n");
-			}	
+				stderr.printf (@"Unknown cmap format. Platform: $platform Encoding: $encoding.\n");
+			}
+			
+			if (encoding == 3) {
+				warning ("Font contains a cmap table with the obsolete encoding 3.");
+			}
 		}
 		
 		if (subtables.length () == 0) {
@@ -4932,7 +4936,7 @@ public static uint16 largest_pow2 (uint16 max) {
 }
 
 void printd (string s) {
-	// print (s);
+	print (s);
 }
 
 }

@@ -112,7 +112,6 @@ class CutBackgroundTool : Tool {
 		return fabs (y1 - y2);
 	}
 
-	// Todo: nice gimp style crop
 	void do_cut () {
 		double x, y;
 		int h, w;

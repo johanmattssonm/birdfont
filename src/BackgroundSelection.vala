@@ -104,13 +104,11 @@ class BackgroundSelection : FontDisplay {
 	}
 		
 	private bool draw_thumbnail (string file, double x, double y, Context cr, int box_index) {
-		GlyphBackgroundImage bg = new GlyphBackgroundImage (file);
-		File thumbnail = bg.get_thumbnail_file ();
 		Pixbuf pixbuf = new Pixbuf.from_file (file);
 		ImageSurface img = new ImageSurface.for_data (pixbuf.get_pixels (), Format.ARGB32, pixbuf.get_width (), pixbuf.get_height (), pixbuf.get_rowstride ());
 		
 		if (img.status () != Cairo.Status.SUCCESS) {
-			warning (@"Failed to load $file (height: $(pixbuf.get_height ()), width: $(pixbuf.get_width ()), stride: $(pixbuf.get_rowstride ()))");
+			warning (@"Failed to load $file as gdk pixbuf. (height: $(pixbuf.get_height ()), width: $(pixbuf.get_width ()), stride: $(pixbuf.get_rowstride ()))");
 			return false;
 		}
 
