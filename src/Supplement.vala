@@ -29,6 +29,18 @@ class Supplement {
 		return current_font;
 	}
 
+	public static void fatal_warning (string? log_domain, LogLevelFlags log_levels, string message) {		
+		bool fatal = true;
+		
+		if (log_domain != null) {
+			stderr.printf ("%s: \n", (!) log_domain);
+		}
+		
+		stderr.printf ("\n%s\n\n", message);
+		
+		assert (!fatal);
+	}
+	
 	public static void new_font () {
 		current_font = new Font ();
 	}
@@ -106,10 +118,15 @@ class Supplement {
 		}
 		
 		Gtk.init (ref arg);
-		var window = new MainWindow ("Supplement");
+		MainWindow window = new MainWindow ("Supplement");
 		window.show_all ();
 
-		var idle = new IdleSource ();
+		if (has_argument ("--fatal-warning")) {
+			LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
+			Log.set_handler (null, levels, fatal_warning);
+		}
+			
+		IdleSource idle = new IdleSource ();
 		idle.set_callback(() => {
 			preferences.load ();
 			

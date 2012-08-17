@@ -60,7 +60,7 @@ class Argument : GLib.Object {
 			}
 			
 			// valid parameter
-			if (a == "--autosave" || a == "--exit" || a == "--slow" || a == "--help" || a == "--test") {
+			if (a == "--autosave" || a == "--exit" || a == "--slow" || a == "--help" || a == "--test" || a == "--fatal-warning") {
 				prev = a;
 				i++;
 				continue;
@@ -182,6 +182,8 @@ class Argument : GLib.Object {
 				return "--autosave";
 			case 'e': 
 				return "--exit";
+			case 'f': 
+				return "--fatal-warning";
 			case 's': 
 				return "--slow";
 			case 'h': 
@@ -225,6 +227,7 @@ class Argument : GLib.Object {
 		stdout.printf (" [FILE] [OPTION ...]\n");
 
 		print_padded ("-e, --exit", "exit if a testcase failes");
+		print_padded ("-f, --fatal-warning", "treat warnings as fatal");
 		print_padded ("-h, --help", "show this message");
 		print_padded ("-s, --slow", "sleep between each command in test suite");
 		print_padded ("-t, --test [TEST]", "run test case");

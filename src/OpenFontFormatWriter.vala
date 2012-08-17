@@ -461,6 +461,10 @@ class Table : Object {
 		return (!) font_data;
 	}
 
+	public bool has_data () {
+		return length > 0;
+	}
+
 	public virtual void parse (FontData dis) {
 		warning (@"Parse is not implemented for $(id).");
 	}
@@ -4733,11 +4737,20 @@ class DirectoryTable : Table {
 		loca_table.parse (dis, head_table, maxp_table);
 		hmtx_table.parse (dis, hhea_table, loca_table);
 		cmap_table.parse (dis);
-		kern_table.parse (dis);
-		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table, post_table, kern_table);
-		gasp_table.parse (dis);
 		
-		cvt_table.parse (dis);
+		if (kern_table.has_data ()) {
+			kern_table.parse (dis);
+		}
+		
+		glyf_table.parse (dis, cmap_table, loca_table, hmtx_table, head_table, post_table, kern_table);
+		
+		if (kern_table.has_data ()) {
+			gasp_table.parse (dis);
+		}
+		
+		if (kern_table.has_data ()) {
+			cvt_table.parse (dis);
+		}
 	}
 	
 	public bool validate_tables (FontData dis, File file) {
