@@ -1656,6 +1656,16 @@ class Glyph : FontDisplay {
 
 		((!)p).insert_new_point_on_path (ep);
 	}
+	
+	public void merge_all () {
+		Path? m;
+		int i = 0;
+		
+		delete_invisible_paths ();
+		
+		if (path_list.length () >= 2)
+			((!)path_list.first ()).data.merge (((!)path_list.last ()).data);
+	}
 }
 
 }

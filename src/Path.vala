@@ -1366,6 +1366,20 @@ class Path {
 			
 		}	
 	}
+	
+	void point_on_bezier_path (double t, EditPoint start, EditPoint stop, out double x, out double y) {		
+		double x0 = start.x;
+		double y0 = start.y; 
+		double x1 = start.get_right_handle ().x ();
+		double y1 = start.get_right_handle ().y ();
+		double x2 = stop.get_left_handle ().x ();
+		double y2 = stop.get_left_handle ().y (); 
+		double x3 = stop.x;
+		double y3 = stop.y;
+
+		x = bezier_path (t, x0, x1, x2, x3);
+		y = bezier_path (t, y0, y1, y2, y3);
+	}
 
 	private void all_of_path (RasterIterator iter, int steps = 400) {
 		unowned List<EditPoint> i, next;
@@ -1563,6 +1577,232 @@ class Path {
 		points = (owned) list;
 	}
 	
+	public Path? merge (Path p) {
+		EditPoint e;
+		IntersectionList il = create_intersection_list (this, p);
+		
+		foreach (Intersection inter in il.points) {
+			e = new EditPoint ();
+			get_closest_point_on_path (e, inter.x, inter.y);
+			inter.editpoint_a = e;
+					
+			if (!has_edit_point (e)) {
+				insert_new_point_on_path (e);
+			}
+
+			e = new EditPoint ();
+			p.get_closest_point_on_path (e, inter.x, inter.y);
+			inter.editpoint_b = e;
+			
+			if (!p.has_edit_point (e)) {
+				p.insert_new_point_on_path (e);
+			}
+
+			print (@" inter.x $(inter.x), $(inter.y)\n");
+		}
+		
+		return null;
+	}
+
+
+class IntersectionList {
+	public List<Intersection> points = new List<Intersection> ();
+	
+	public void add (Intersection i) {
+		double d;
+		Intersection l;
+				
+		if (points.length () == 0) {
+			print (@"GIOT\n");
+			points.append (i);
+			return;
+		}
+		
+		if (has_point (i)) {
+			return;
+		}
+	
+		l = ((!) points.last ()).data;
+		d = Math.fabs (Math.sqrt (Math.pow (i.x - l.x, 2) + Math.pow (i.y - l.y, 2)));
+		print (@"d $d\n");
+		
+		print (@"GIOT REM $(i.distance) $(l.distance)  $d\n");
+		
+		if (l.distance >= i.distance) {
+			points.remove_link (points.last ());
+			points.append (i);
+			print (@"GIOT REM $(i.distance)\n");
+			return;
+		}
+
+		if (d < 0.3) {
+			return;
+		}
+
+		print (@"GIOT NEW $(i.distance)\n");
+		points.append (i);
+	}
+	
+	bool has_point (Intersection i) {
+		foreach (Intersection n in points) {
+			if (i.x == n.x && i.y == n.y) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void append (IntersectionList i) {
+		foreach (Intersection inter in i.points) {
+			points.append (inter);
+		}
+	}
+}
+
+class Intersection {
+	public double x;
+	public double y;
+	public double distance;
+	
+	public EditPoint editpoint_a;
+	public EditPoint editpoint_b;
+	
+	public Intersection (double x, double y, double distance) {
+		this.x = x;
+		this.y = y;
+	}
+}
+	
+	IntersectionList create_intersection_list (Path p1, Path p2) {
+		Path new_path = new Path ();
+		IntersectionList il = new IntersectionList ();
+		
+		unowned List<EditPoint> a_start, a_stop;
+		unowned List<EditPoint> b_start, b_stop;
+		
+		if (p1 == p2) {
+			return il;
+		}
+		
+		a_start = p1.points.first ();
+		for (int i = 0; i < p1.points.length (); i++) {
+			
+			if (a_start.data.next == null) {
+				a_stop = p1.points.first ();
+			} else {
+				a_stop = a_start.data.get_next ();
+			}
+			
+			b_start = p2.points.first ();
+			for (int j = 0; j < p2.points.length (); j++) {
+				
+				if (b_start.data.next == null) {
+					b_stop = p2.points.first ();
+				} else {
+					b_stop = b_start.data.get_next ();
+				}
+				
+				//if (probably_intersecting (a_start.data, a_stop.data, b_start.data, b_stop.data)) {
+					il.append (find_intersections (a_start.data, a_stop.data, b_start.data, b_stop.data));
+				//}
+				
+				b_start = b_stop;
+			}
+			
+			a_start = a_stop;
+		} 
+
+		
+		foreach (Intersection inter in il.points) {
+			EditPoint e = new EditPoint ();
+			p1.get_closest_point_on_path (e, inter.x, inter.y);
+			inter.editpoint_a = e;
+					
+			if (!has_edit_point (e)) {
+				insert_new_point_on_path (e);
+			}
+
+			e = new EditPoint ();
+			p2.get_closest_point_on_path (e, inter.x, inter.y);
+			inter.editpoint_b = e;
+			
+			if (!p2.has_edit_point (e)) {
+				p2.insert_new_point_on_path (e);
+			}
+		
+			
+			print (@" inter.x $(inter.x), $(inter.y)\n");
+		}		
+		return il;
+	}
+
+	IntersectionList find_intersections (EditPoint a0, EditPoint a1, EditPoint b0, EditPoint b1) {
+		IntersectionList il = new IntersectionList ();
+		
+		double mind = double.MAX; ;
+		double distance = double.MAX;
+		
+		all_of (a0, a1, (ax, ay, at) => {
+			if (at == 0 || at == 1) {
+				return true;
+			}
+			
+			all_of (b0, b1, (bx, by, bt) => {
+				double d = Math.fabs (Math.sqrt (Math.pow (ax - bx, 2) + Math.pow (ay - by, 2)));
+				
+				if (d < 0.2) {
+					il.add (new Intersection (ax, ay, 0));
+				}
+				
+				if (d < mind) mind = d;
+				return true;
+			}, 200);
+			
+			return true;
+		}, 200);
+		
+		print (@"FIND $mind\n");
+		return il;
+	}
+
+	bool probably_intersecting (EditPoint a0, EditPoint a1, EditPoint b0, EditPoint b1) {
+		if (has_intersection (a0.x, a1.x, b0.x, b1.x) && has_intersection (a0.y, a1.y, b0.y, b1.y)) {
+			return true;
+		}	
+
+		if (has_intersection (a0.x, a1.x, b0.x, b1.x) && has_intersection (a0.y, a1.y, b0.y, b1.y)) {
+			return true;
+		}	
+	
+		return false;
+	}
+	
+	/** return true if ranges does overlap */
+	bool has_intersection (double a0, double a1, double b0, double b1) {
+		if (a0 <= b0 <= a1 || a1 <= b0 <= a0) {
+			if (a0 <= b1 <= a1 || a1 <= b1 <= a0) {
+				return true;
+			}
+			
+			if (b0 <= a1 <= b1 || b1 <= a1 <= b0) {
+				return true;
+			}
+		}
+		
+		if (b0 <= a0 <= b1 || b1 <= a0 <= b0) {
+			if (a0 <= a0 <= a1 || a1 <= a0 <= a0) {
+				return true;
+			}
+			
+			if (b0 <= a0 <= b1 || b1 <= a0 <= b0) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 }
 
 }
