@@ -29,6 +29,8 @@ SUPPLEMENT_MAIN = [
 	'MenuTab.vala',
 	'MergeTool.vala',
 	'MoveTool.vala',
+	'Intersection.vala',
+	'IntersectionList.vala',
 	'IOThread.vala',
 	'OpenFontFormatWriter.vala',
 	'OpenFontFormatReader.vala',

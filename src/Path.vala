@@ -47,7 +47,7 @@ class Path {
 	bool no_derived_direction = false;
 	bool clockwise_direction = true;
 
-	delegate bool RasterIterator (double x, double y, double step); // iterate over each pixel at a given zoom level
+	public delegate bool RasterIterator (double x, double y, double step); // iterate over each pixel at a given zoom level
 
 	public double r = 0;
 	public double g = 0;
@@ -1343,11 +1343,11 @@ class Path {
 	}
 
 	// TODO: Find a clever mathematical solutions instead
-	private void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = 400) {
+	public static void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = 400) {
 		all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.get_left_handle ().x (), stop.get_left_handle ().y (), stop.x, stop.y, iter, steps);
 	}
 
-	private void all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, int steps = 400) {
+	private static void all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, int steps = 400) {
 		double px = x1;
 		double py = y1;
 		
@@ -1579,13 +1579,24 @@ class Path {
 	
 	public Path? merge (Path p) {
 		EditPoint e;
-		IntersectionList il = create_intersection_list (this, p);
+		IntersectionList il = IntersectionList.create_intersection_list (this, p);
+		Path np = new Path ();
+		Intersection s = new Intersection (0, 0, 1);
+		EditPoint ex = points.last ().data;
+		EditPoint ix = points.last ().data;
+		uint offset_i = 0;
+		uint offset_j;
+		uint len_i = points.length ();
+		int i, j;
+		uint len_j;
 		
+		// add editpoints points on intersections 
 		foreach (Intersection inter in il.points) {
 			e = new EditPoint ();
 			get_closest_point_on_path (e, inter.x, inter.y);
 			inter.editpoint_a = e;
-					
+			
+			e = inter.editpoint_a;
 			if (!has_edit_point (e)) {
 				insert_new_point_on_path (e);
 			}
@@ -1594,213 +1605,92 @@ class Path {
 			p.get_closest_point_on_path (e, inter.x, inter.y);
 			inter.editpoint_b = e;
 			
+			e = inter.editpoint_b;
 			if (!p.has_edit_point (e)) {
 				p.insert_new_point_on_path (e);
 			}
 
-			print (@" inter.x $(inter.x), $(inter.y)\n");
 		}
 		
-		return null;
-	}
+		// create a new path 
+		for (i = 0; i < points.length (); i++) {
+			ex = points.nth (i).data;
 
-
-class IntersectionList {
-	public List<Intersection> points = new List<Intersection> ();
-	
-	public void add (Intersection i) {
-		double d;
-		Intersection l;
-				
-		if (points.length () == 0) {
-			print (@"GIOT\n");
-			points.append (i);
-			return;
-		}
-		
-		if (has_point (i)) {
-			return;
-		}
-	
-		l = ((!) points.last ()).data;
-		d = Math.fabs (Math.sqrt (Math.pow (i.x - l.x, 2) + Math.pow (i.y - l.y, 2)));
-		print (@"d $d\n");
-		
-		print (@"GIOT REM $(i.distance) $(l.distance)  $d\n");
-		
-		if (l.distance >= i.distance) {
-			points.remove_link (points.last ());
-			points.append (i);
-			print (@"GIOT REM $(i.distance)\n");
-			return;
-		}
-
-		if (d < 0.3) {
-			return;
-		}
-
-		print (@"GIOT NEW $(i.distance)\n");
-		points.append (i);
-	}
-	
-	bool has_point (Intersection i) {
-		foreach (Intersection n in points) {
-			if (i.x == n.x && i.y == n.y) {
-				return true;
+			if (ex == points.first ().data && i != 0) {
+				break;
 			}
-		}
-		
-		return false;
-	}
-	
-	public void append (IntersectionList i) {
-		foreach (Intersection inter in i.points) {
-			points.append (inter);
-		}
-	}
-}
 
-class Intersection {
-	public double x;
-	public double y;
-	public double distance;
-	
-	public EditPoint editpoint_a;
-	public EditPoint editpoint_b;
-	
-	public Intersection (double x, double y, double distance) {
-		this.x = x;
-		this.y = y;
-	}
-}
-	
-	IntersectionList create_intersection_list (Path p1, Path p2) {
-		Path new_path = new Path ();
-		IntersectionList il = new IntersectionList ();
-		
-		unowned List<EditPoint> a_start, a_stop;
-		unowned List<EditPoint> b_start, b_stop;
-		
-		if (p1 == p2) {
-			return il;
-		}
-		
-		a_start = p1.points.first ();
-		for (int i = 0; i < p1.points.length (); i++) {
+			// add new point for path a
+			np.add_point (ex);
+			ix.recalculate_linear_handles ();
 			
-			if (a_start.data.next == null) {
-				a_stop = p1.points.first ();
-			} else {
-				a_stop = a_start.data.get_next ();
-			}
-			
-			b_start = p2.points.first ();
-			for (int j = 0; j < p2.points.length (); j++) {
+			// swap paths
+			if (il.has_edit_point (ex)) {
+				s = (!) il.get_intersection (ex);
 				
-				if (b_start.data.next == null) {
-					b_stop = p2.points.first ();
-				} else {
-					b_stop = b_start.data.get_next ();
-				}
-				
-				//if (probably_intersecting (a_start.data, a_stop.data, b_start.data, b_stop.data)) {
-					il.append (find_intersections (a_start.data, a_stop.data, b_start.data, b_stop.data));
-				//}
-				
-				b_start = b_stop;
-			}
-			
-			a_start = a_stop;
-		} 
+				ex.type = PointType.CURVE;
+				ex.right_handle.type = PointType.CURVE;
+				ex.right_handle.angle  = s.editpoint_b.right_handle.angle;
+				ex.right_handle.length = s.editpoint_b.right_handle.length;
 
-		
-		foreach (Intersection inter in il.points) {
-			EditPoint e = new EditPoint ();
-			p1.get_closest_point_on_path (e, inter.x, inter.y);
-			inter.editpoint_a = e;
+				// read until we find ex
+				for (j = 0; j < p.points.length (); j++) {
+					ix = p.points.nth (j).data;
 					
-			if (!has_edit_point (e)) {
-				insert_new_point_on_path (e);
-			}
-
-			e = new EditPoint ();
-			p2.get_closest_point_on_path (e, inter.x, inter.y);
-			inter.editpoint_b = e;
-			
-			if (!p2.has_edit_point (e)) {
-				p2.insert_new_point_on_path (e);
-			}
-		
-			
-			print (@" inter.x $(inter.x), $(inter.y)\n");
-		}		
-		return il;
-	}
-
-	IntersectionList find_intersections (EditPoint a0, EditPoint a1, EditPoint b0, EditPoint b1) {
-		IntersectionList il = new IntersectionList ();
-		
-		double mind = double.MAX; ;
-		double distance = double.MAX;
-		
-		all_of (a0, a1, (ax, ay, at) => {
-			if (at == 0 || at == 1) {
-				return true;
-			}
-			
-			all_of (b0, b1, (bx, by, bt) => {
-				double d = Math.fabs (Math.sqrt (Math.pow (ax - bx, 2) + Math.pow (ay - by, 2)));
-				
-				if (d < 0.2) {
-					il.add (new Intersection (ax, ay, 0));
+					if (ix == s.editpoint_b) {
+						break;
+					}
 				}
 				
-				if (d < mind) mind = d;
-				return true;
-			}, 200);
-			
-			return true;
-		}, 200);
-		
-		print (@"FIND $mind\n");
-		return il;
-	}
+				offset_j = j + 1;
+				len_j = p.points.length ();
+				for (j = 0; j < p.points.length (); j++) {
+					
+					ix = p.points.nth ((j + offset_j) % len_j).data;
+					
+					// add
+					ix.right_handle .move_to_coordinate (0, 0);
+					np.add_point (ix);
+					ix.recalculate_linear_handles ();
+					
+					if (il.has_edit_point (ix)) {
+						s = (!) il.get_intersection (ix);
+						break;
+					}
+					
+				}
 
-	bool probably_intersecting (EditPoint a0, EditPoint a1, EditPoint b0, EditPoint b1) {
-		if (has_intersection (a0.x, a1.x, b0.x, b1.x) && has_intersection (a0.y, a1.y, b0.y, b1.y)) {
-			return true;
-		}	
+				ix.type = PointType.CURVE;
+				ix.right_handle.type = PointType.CURVE;
+				ix.right_handle.angle  = s.editpoint_a.right_handle.angle;
+				ix.right_handle.length = s.editpoint_a.right_handle.length;
+					
+				if (j == points.length ()) {
+					np.close ();
+					return np;
+				}
 
-		if (has_intersection (a0.x, a1.x, b0.x, b1.x) && has_intersection (a0.y, a1.y, b0.y, b1.y)) {
-			return true;
-		}	
-	
-		return false;
-	}
-	
-	/** return true if ranges does overlap */
-	bool has_intersection (double a0, double a1, double b0, double b1) {
-		if (a0 <= b0 <= a1 || a1 <= b0 <= a0) {
-			if (a0 <= b1 <= a1 || a1 <= b1 <= a0) {
-				return true;
+				// skip to next intersection
+				int k;
+				for (k = 0; k < points.length (); k++) {
+					ix = points.nth (k).data; 
+
+					if (ix == s.editpoint_a) {
+						break;
+					}
+				}
+				
+				if (k == points.length ()) {
+					return np;
+				}
+				
+				offset_i = 0;
+				i = k;
 			}
 			
-			if (b0 <= a1 <= b1 || b1 <= a1 <= b0) {
-				return true;
-			}
 		}
 		
-		if (b0 <= a0 <= b1 || b1 <= a0 <= b0) {
-			if (a0 <= a0 <= a1 || a1 <= a0 <= a0) {
-				return true;
-			}
-			
-			if (b0 <= a0 <= b1 || b1 <= a0 <= b0) {
-				return true;
-			}
-		}
-		
-		return false;
+		return np;
 	}
 
 }

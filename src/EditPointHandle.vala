@@ -53,6 +53,16 @@ class EditPointHandle  {
 		this.active = false;
 	}
 
+	public EditPointHandle copy () {
+		EditPointHandle n = new EditPointHandle.empty ();
+		n.angle = angle;
+		n.length = length;
+		n.parent = parent;
+		n.type = type;
+		n.active = active;
+		return n;
+	}
+
 	public void set_point_type (PointType point_type) {
 		type = point_type;
 	}

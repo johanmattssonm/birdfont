@@ -1663,8 +1663,15 @@ class Glyph : FontDisplay {
 		
 		delete_invisible_paths ();
 		
-		if (path_list.length () >= 2)
-			((!)path_list.first ()).data.merge (((!)path_list.last ()).data);
+		if (path_list.length () >= 2) {
+			m = ((!) path_list.first ()).data.merge (((!) path_list.last ()).data);
+			delete_path (path_list.first ().data);
+			delete_path (path_list.last ().data);
+
+			((!) m).close ();
+			
+			add_path (((!) m).copy ());
+		}
 	}
 }
 
