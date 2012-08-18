@@ -218,12 +218,10 @@ class PenTool : Tool {
 	}
 	
 	public void select_active_point (double x, double y) {
-		Path cp;
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
 		
-		if (glyph.has_active_path ()) {
-			cp = (!) glyph.active_path;
+		foreach (Path cp in glyph.active_paths) {
 			foreach (var e in cp.points) {
 				e.set_active (false);
 			}
@@ -256,11 +254,11 @@ class PenTool : Tool {
 				GridTool.tie (ref x, ref y);
 			}
 			
-			return_if_fail (g.active_path != null);
+			return_if_fail (g.active_paths.length () > 0);
 			return_if_fail (g.new_point_on_path != null);
 			
 			EditPoint ep = (!) g.new_point_on_path;
-			Path p = (!) g.active_path;
+			Path p = (!) g.get_active_path ();
 			
 			double rax, ray;
 			double pax, pay;
@@ -283,7 +281,8 @@ class PenTool : Tool {
 		
 		return_if_fail (ap.is_editable ());
 		
-		g.active_path = ap;
+		g.clear_active_paths ();
+		g.add_active_path (ap);
 
 		if (g.new_point_on_path == null) {
 			g.new_point_on_path = new EditPoint (0, 0, PointType.FLOATING);
@@ -329,7 +328,7 @@ class PenTool : Tool {
 				if (d < m && d * g.view_zoom < 14 && !is_over_handle (x, y)) {
 					m = d;
 					set_active_edit_point (e);
-					active_path = current_path;
+					g.add_active_path (active_path);
 				}
 			}
 
@@ -381,7 +380,9 @@ class PenTool : Tool {
 	void set_linear_handles_for_last_point () {
 		Glyph glyph;
 		glyph = MainWindow.get_current_glyph ();
-		((!)glyph.active_path).points.last ().data.right_handle.parent.recalculate_linear_handles ();
+		return_if_fail (glyph.active_paths.length () > 0);
+		return_if_fail (glyph.active_paths.last ().data.points.length () > 0);
+		glyph.active_paths.last ().data.points.last ().data.right_handle.parent.recalculate_linear_handles ();
 	}
 
 	public static void set_default_handle_positions () {

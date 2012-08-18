@@ -203,12 +203,11 @@ class Toolbox : DrawingArea {
 		Tool reverse_path_tool = new Tool ("reverse_path", "Create counter from outline", 'r');
 		reverse_path_tool.select_action.connect((self) => {
 				Glyph g = MainWindow.get_current_glyph ();
-				Path? p = g.active_path;
 				
-				if (p != null) {
-					((!)p).reverse ();
+				foreach (Path p in g.active_paths) {
+					p.reverse ();
 				}
-				
+			
 				g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 			});
 		path_tool_modifiers.add_tool (reverse_path_tool);
@@ -216,11 +215,8 @@ class Toolbox : DrawingArea {
 		Tool move_layer = new Tool ("move_layer", "Move to path to bottom layer", 'd');
 		move_layer.select_action.connect((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
-			Path p;
-			
-			if (g.active_path != null) {
-				p = (!) g.active_path;
-				
+
+			foreach (Path p in g.active_paths) {
 				g.path_list.remove (p);
 				g.path_list.prepend (p);
 			}

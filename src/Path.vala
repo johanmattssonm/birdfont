@@ -1538,7 +1538,7 @@ class Path {
 			if (pl != null) {
 				points.delete_link ((!) pl);
 				reopen ();
-				MainWindow.get_current_glyph ().active_path = this;
+				MainWindow.get_current_glyph ().add_active_path (this);
 				create_list ();
 			}
 	}
@@ -1582,11 +1582,11 @@ class Path {
 		IntersectionList il = IntersectionList.create_intersection_list (this, p);
 		Path np = new Path ();
 		Intersection s = new Intersection (0, 0, 1);
-		EditPoint ex = points.last ().data;
-		EditPoint ix = points.last ().data;
+		EditPoint ex;
+		EditPoint ix;
 		uint offset_i = 0;
 		uint offset_j;
-		uint len_i = points.length ();
+		uint len_i;
 		int i, j;
 		uint len_j;
 		
@@ -1613,8 +1613,12 @@ class Path {
 		}
 		
 		// create a new path 
+		ex = points.last ().data;
+		ix = points.last ().data;
+		len_i = points.length ();
+		
 		for (i = 0; i < points.length (); i++) {
-			ex = points.nth (i).data;
+			ex = points.nth ((i + offset_i) % len_i).data;
 
 			if (ex == points.first ().data && i != 0) {
 				break;
@@ -1687,7 +1691,6 @@ class Path {
 				offset_i = 0;
 				i = k;
 			}
-			
 		}
 		
 		return np;

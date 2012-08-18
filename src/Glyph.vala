@@ -39,8 +39,8 @@ class Glyph : FontDisplay {
 	
 	// Paths
 	public List<Path> path_list;	// outline // FIXME: private
-	public Path? active_path = null;
-	Path? union_path = null; 		// add this to active path
+	public List<Path> active_paths = new List<Path> ();
+	
 	bool move_edit_point = false;
 	double last_move_offset_x = 0;
 	double last_move_offset_y = 0;
@@ -116,6 +116,30 @@ class Glyph : FontDisplay {
 
 		path_list.append (new Path ());
 	}
+	
+	public void clear_active_paths () {
+		while (active_paths.length () > 0) {
+			active_paths.remove_link (active_paths.first ());
+		}
+	}
+	
+	public void add_active_path (Path? p) {
+		if (p != null) {
+			
+			foreach (Path pi in active_paths) {
+				if (pi == p) {
+					return;
+				}
+			}
+			
+			active_paths.append ((!) p);
+		}
+	}
+	
+	public Path? get_active_path () {
+		return active_paths.last ().data;
+	}
+	
 	
 	public void add_kerning (string right_glyph, double val) {
 		Kerning? kl = null;
@@ -471,11 +495,14 @@ class Glyph : FontDisplay {
 
 	public override void key_press (EventKey e) {	
 		if (e.keyval == Key.DEL) {
-			if (active_path != null) {
-				Path p = (!) active_path;
-				close_path ();
-				path_list.remove (p);
-				redraw_area (0, 0, allocation.width, allocation.height);
+			if (active_paths.length () != 0) {
+				foreach (Path p in active_paths) {
+					close_path ();
+					path_list.remove (p);
+					redraw_area (0, 0, allocation.width, allocation.height);	
+				}
+				
+				clear_active_paths ();
 			}
 			
 			if (selected_point != null) {
@@ -587,7 +614,10 @@ class Glyph : FontDisplay {
 	public EditPoint add_new_edit_point (int x, int y) {
 		insert_edit_point (x, y);
 		move_edit_point = true;
-		last_added_edit_point = ((!) active_path).get_last_point ();
+		
+		return_if_fail (active_paths.length () > 0);
+		
+		last_added_edit_point = active_paths.last ().data.get_last_point ();
 		return (!) last_added_edit_point;
 	}
 
@@ -716,48 +746,35 @@ class Glyph : FontDisplay {
 		ry = Glyph.reverse_path_coordinate_y (y);		
 	}	
 
-	public void move_selected_path (double x, double y) {	
-		if (active_path == null) {
-			return;
-		}
-				
-		move_selected_path_freely (path_coordinate_x (x), path_coordinate_y (y));
-	}
-	
-	public void move_selected_path_freely (double coordinate_x, double coordinate_y) 
-		requires (active_path != null)
-	{
-		double dx = coordinate_x - path_coordinate_x (pointer_begin_x);
-		double dy = coordinate_y - path_coordinate_y (pointer_begin_y);
-
-		Path path = (!) active_path;
-
-		path.move (dx - last_move_offset_x, dy - last_move_offset_y);
-		
-		last_move_offset_x = dx;
-		last_move_offset_y = dy;
-		
-		queue_redraw_path (path);
-	}
-	
-	public void move_path_begin (double x, double y) {
-		Supplement.get_current_font ().touch ();
+	public bool select_path (double x, double y) {
 		Path? p = null;
-				
-		foreach (var pt in path_list) {
+		bool found = false;
+		
+		foreach (Path pt in path_list) {
 			if (pt.is_over (x, y)) {
 				p = pt;
+				found = true;
 			}
 		}
 		
-		active_path = p;
+		if (!KeyBindings.has_shift ()) {
+			clear_active_paths ();
+		}
 		
-		last_move_offset_x = 0;
-		last_move_offset_y = 0;
-
-		move_selected_path (x, y);
+		add_active_path (p);
+		
+		return found;
 	}
-			
+	
+	public bool is_over_selected_path (double x, double y) {
+		foreach (Path pt in active_paths) {
+			if (pt.is_over (x, y)) {
+				return true;
+			}
+		}
+		return false;		
+	}
+		
 	public void queue_redraw_path (Path path) {
 		redraw_path (path.xmin, path.ymin, path.xmax, path.ymax);
 	}
@@ -815,38 +832,39 @@ class Glyph : FontDisplay {
 		return min_point;
 	}
 	
-	public Path? get_active_path () {
-		return active_path;
-	}
-	
 	private void insert_edit_point (double x, double y) {
 		unowned List<Path> paths;
 		double xt, yt;
 		bool added;
 		Path np;
 		
-		if (active_path == null) {
+		if (active_paths.length () == 0) {
+			print ("ADD empty\n");
 			np = new Path ();
-			active_path = np;
+			clear_active_paths ();
+			active_paths.append (np);
 			path_list.append (np);
 		}
 		
 		paths = path_list;
 		
-		xt = path_coordinate_x (x);
-		yt = path_coordinate_y (y);
-		
+		xt = x - xc () - view_offset_x;
+		yt = -y + yc () + view_offset_y;
+
+		xt *= view_zoom;
+		yt *= view_zoom;		
+			
 		added = false;
 
 		if (new_point_on_path != null) {
-			return_if_fail (active_path != null);
+			print ("ADD np\n");
+			return_if_fail (active_paths.length () > 0);
 
 			Path p = new Path ();
 			EditPoint e = (!) new_point_on_path;
 
 			return_if_fail (e.prev != null);
 			
-			union_path = p;
 			p.add_point (e);
 			e.type = PointType.CURVE;
 			
@@ -854,27 +872,20 @@ class Glyph : FontDisplay {
 			e.left_handle.type = PointType.CURVE;
 			
 			paths.append (p);
-			active_path = p;
+			add_active_path (p);
 			flipping_point_on_path = new_point_on_path;
 			new_point_on_path = null;
 			added = true;
 			return;
 		}
 		
-		if (!added && union_path != null) {
-			Path p = (!) union_path;
-			if (p.is_open ()) {
-				p.add (xt, yt);
-				active_path = p;
-				added = true;
-			}
-		}
-		
 		if (!added) {
+			print ("ADD a\n");
 			foreach (Path p in paths) {
 				if (p.is_open ()) {
 					p.add (xt, yt);
-					active_path = p;
+					clear_active_paths ();
+					add_active_path (p);
 					added = true;
 					break;
 				}
@@ -882,10 +893,11 @@ class Glyph : FontDisplay {
 		}
 
 		if (!added) {
+			print ("ADD X\n");
 			foreach (Path p in paths) {
 				if (p.is_over (xt, yt)) {
 					p.add (xt, yt);
-					active_path = p;
+					paths.append (p);
 					added = true;
 					queue_draw_area (0, 0, allocation.width, allocation.height);
 					break;
@@ -894,6 +906,7 @@ class Glyph : FontDisplay {
 		}
 		
 		if (!added) {
+			print ("ADD NEW\n");
 			if (paths.length () > 0 && paths.last ().data.is_open ()) {
 				paths.last().data.add (xt, yt);
 			}
@@ -906,13 +919,15 @@ class Glyph : FontDisplay {
 			paths.append (np);
 			np.add (xt, yt);
 			
-			active_path = np;
+			clear_active_paths ();
+			add_active_path (np);
 		}
 	
-		return_if_fail (active_path != null);
-	
-		selected_point = ((!) active_path).get_last_point ();
-	
+		assert (active_paths.length () > 0);
+		
+		selected_point = active_paths.last ().data.get_last_point ();
+		assert (selected_point != null);
+		
 		move_selected_edit_point (x, y);
 	}
 	
@@ -965,37 +980,39 @@ class Glyph : FontDisplay {
 	
 	private void redraw_last_stroke (double x, double y) {
 		// redraw line, if we have more than one new point on path
-		double px;
-		double py;
-		int tw;
-		int th;
+		double px = 0;
+		double py = 0;
+		int tw = 0;
+		int th = 0;
 
 		double xc = (allocation.width / 2.0);
 
-		if (active_path == null) {
+		if (active_paths.length () == 0) {
 			return;
 		}
 		
-		EditPoint? pt = ((!) active_path).get_second_last_point ();
-		if (pt != null) {
-			EditPoint p = (!) pt;
-			
-			px = p.x + xc;
-			py = p.y - xc;
-							
-			tw = (px > x) ? (int) (px - x) : (int) (x - px);
-			th = (py > y) ? (int) (py - y) : (int) (y - py);
-			
-			if (px > x) px -= tw + 60;
-			if (py > y) py -= th + 60;
-			
-		} else {
-			px = x - 60;
-			py = y - 60;
-			tw = 0;
-			th = 0;
+		foreach (Path path in active_paths) {
+			EditPoint? pt = path.get_second_last_point ();
+			if (pt != null) {
+				EditPoint p = (!) pt;
+				
+				px = p.x + xc;
+				py = p.y - xc;
+								
+				tw = (px > x) ? (int) (px - x) : (int) (x - px);
+				th = (py > y) ? (int) (py - y) : (int) (y - py);
+				
+				if (px > x) px -= tw + 60;
+				if (py > y) py -= th + 60;
+				
+			} else {
+				px = x - 60;
+				py = y - 60;
+				tw = 0;
+				th = 0;
+			}
 		}
-
+		
 		queue_draw_area ((int)px - 20, (int)py - 20, tw + 120, th + 120); 		
 	}
 	
@@ -1007,7 +1024,7 @@ class Glyph : FontDisplay {
 	}
 	
 	public bool has_active_path () {
-		return (active_path != null);
+		return active_paths.length () > 0;
 	}
 	
 	public bool is_editable () {
@@ -1030,8 +1047,7 @@ class Glyph : FontDisplay {
 		
 		editable = false;
 		
-		active_path = null;
-		union_path = null; 
+		clear_active_paths ();
 		new_point_on_path = null;
 		flipping_point_on_path = null;
 		selected_point = null;
@@ -1567,7 +1583,9 @@ class Glyph : FontDisplay {
 			g.add_path (p.copy ());
 		}
 		
-		g.active_path = active_path;
+		foreach (Path p in active_paths) {
+			g.active_paths.append (p);
+		}
 		
 		return g;
 	}
@@ -1595,8 +1613,11 @@ class Glyph : FontDisplay {
 		}
 
 		add_help_lines ();
-				
-		active_path = g.active_path;
+		
+		clear_active_paths ();
+		foreach (Path p in g.active_paths) {
+			add_path (p);
+		}
 		
 		undo_list.remove_link (undo_list.last ());
 	}

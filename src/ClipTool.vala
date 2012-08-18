@@ -39,7 +39,7 @@ class ClipTool : Tool {
 
 		if (fd is Glyph) {
 			glyph = null;
-			path = MainWindow.get_current_glyph ().active_path;
+			path = MainWindow.get_current_glyph ().get_active_path ();
 			
 			if (path == null) {
 				glyph = MainWindow.get_current_glyph ();

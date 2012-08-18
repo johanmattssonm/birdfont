@@ -43,24 +43,18 @@ class CutTool : Tool {
 
 	public static void force_direction () {
 		Glyph g = MainWindow.get_current_glyph ();
-		Path p;
 		Tool current_tool = MainWindow.get_toolbox ().get_current_tool ();
 		
-		if (g.active_path == null) {
-			return;
-		}
-		
-		p = (!) g.active_path;
-			
-		if (p.is_editable () && p.is_open ()) {
-			
-			if (current_tool is PenTool) {
-				p.force_direction (Direction.CLOCKWISE);
-			} else if (current_tool is CutTool) {
-				p.force_direction (Direction.COUNTER_CLOCKWISE);
+		foreach (Path p in g.active_paths) {
+			if (p.is_editable () && p.is_open ()) {
+				
+				if (current_tool is PenTool) {
+					p.force_direction (Direction.CLOCKWISE);
+				} else if (current_tool is CutTool) {
+					p.force_direction (Direction.COUNTER_CLOCKWISE);
+				}				
 			}
-			
-		}	
+		}
 	}
 	
 }

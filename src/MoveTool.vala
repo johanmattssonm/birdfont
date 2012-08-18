@@ -21,6 +21,9 @@ class MoveTool : Tool {
 
 	bool move_path = false;
 
+	double last_x = 0;
+	double last_y = 0;
+	
 	public MoveTool (string n) {
 		base (n, "Move paths", 'm', CTRL);
 	
@@ -30,6 +33,8 @@ class MoveTool : Tool {
 		deselect_action.connect((self) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 
+			glyph.clear_active_paths ();
+
 			foreach (Path p in glyph.path_list) {
 				p.set_color (0, 0, 0, 1);
 				p.set_selected (false);
@@ -38,14 +43,13 @@ class MoveTool : Tool {
 				
 		press_action.connect((self, b, x, y) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
-			Path path;
 			
 			glyph.store_undo_state ();
 			
-			glyph.move_path_begin (x, y);
-			
-			if (glyph.active_path == null) {
-				return;
+			if (!glyph.is_over_selected_path (x, y)) {
+				if (!glyph.select_path (x, y)) {
+					glyph.clear_active_paths ();
+				}
 			}
 			
 			move_path = true;
@@ -55,36 +59,48 @@ class MoveTool : Tool {
 				p.set_selected (false);
 			}
 			
-			return_if_fail (glyph.active_path != null);
+			return_if_fail (glyph.active_paths.length () != 0);
 			
-			path = (!) glyph.active_path;
-			
-			if (path.is_clockwise ()) {
-				path.set_color (0.2, 0.2, 0.4, 0.8);
-				path.set_selected (true);
-			} else {
-				path.set_color (0.5, 0.5, 0.7, 0.8);
-				path.set_selected (true);
+			foreach (Path path in glyph.active_paths) {
+				if (path.is_clockwise ()) {
+					path.set_color (0.2, 0.2, 0.4, 0.8);
+					path.set_selected (true);
+				} else {
+					path.set_color (0.5, 0.5, 0.7, 0.8);
+					path.set_selected (true);
+				}
 			}
-			
+					
+			last_x = x;
+			last_y = y;
 		});
 
 		release_action.connect((self, b, x, y) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			move_path = false;
-			
-					
-			if (GridTool.is_visible () && glyph.active_path != null) {
-				tie_path_to_grid ((!) glyph.active_path, x, y);
+				
+			if (GridTool.is_visible ()) {
+				foreach (Path p in glyph.active_paths) {
+					tie_path_to_grid (p, x, y);
+				}
 			}
-			
 		});
 		
 		move_action.connect ((self, x, y)	 => {
 			if (move_path) {
 				Glyph glyph = MainWindow.get_current_glyph ();
-				glyph.move_selected_path (x, y);
+
+				double dx = last_x - x;
+				double dy = last_y - y; 
+
+				foreach (Path path in glyph.active_paths) {
+					path.move (glyph.ivz () * -dx, glyph.ivz () * dy);
+				}
+				
 				MainWindow.get_glyph_canvas ().redraw ();
+				
+				last_x = x;
+				last_y = y;
 			}
 		});
 	}
