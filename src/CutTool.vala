@@ -22,7 +22,7 @@ class CutTool : Tool {
 	PenTool pen;
 	
 	public CutTool (string n) {
-		base (n, "Cut", 'u', CTRL);
+		base (n, "Create counter path", 'u', CTRL);
 		
 		select_action.connect((self) => {
 			pen = (PenTool) MainWindow.get_tool ("pen_tool");

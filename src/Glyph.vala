@@ -1697,7 +1697,7 @@ class Glyph : FontDisplay {
 		}
 		
 		open_path ();
-		close_path ();
+		// close_path ();
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
@@ -1705,6 +1705,7 @@ class Glyph : FontDisplay {
 	public bool merge_path (Path p0) {
 		Path? m;
 		Path mp;
+		PathList path_list;
 		int i = 0;
 		
 		foreach (Path p1 in active_paths) {
@@ -1713,20 +1714,24 @@ class Glyph : FontDisplay {
 				continue;
 			}
 			
-			m = p0.merge (p1);
+			//path_list = Path.merge (p0.copy(), p1.copy());
+			path_list = Path.merge (p1, p0);
 
-			if (m == null) {
+			if (path_list.paths.length () == 0) {
 				p0 = p1;
 				continue;
 			}
 			
-			mp = (!) m;
+			mp = path_list.paths.first ().data;
 
 			delete_path (p0);
 			delete_path (p1);
 			
-			mp.close ();			
-			add_path (mp.copy ());
+			// add new path + it's counter paths
+			foreach (Path p in path_list.paths) {
+				p.close ();			
+				add_path (p.copy ());
+			}
 			
 			add_active_path (mp);
 

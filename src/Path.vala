@@ -738,11 +738,51 @@ class Path {
 
 		y *= -1;
 		
+		return is_over_coordinate (x, y);
+	}
+	
+	public bool is_over_coordinate (double x, double y) {
+		List<EditPoint> ycoordinates = new List<EditPoint> ();
+		double last = 0;
+				
 		if (!is_over_boundry (x, y)) {
 			return false;
 		}
 
-		return true;
+		all_of_path ((cx, cy, ct) => {
+			if (Math.fabs (cx - x) < 0.2 && Math.fabs (last - cy) > 1) {
+				ycoordinates.append (new EditPoint (cx, cy));
+				last = cy;
+			}
+			return true;
+		});
+
+		ycoordinates.sort ((a, b) => {
+			return (a.y < b.y) ? 1 : -1;
+		});
+
+		return_val_if_fail (ycoordinates.length () >= 2, true);
+		
+		if (unlikely (ycoordinates.length () % 2 != 0)) {
+			warning (@"not an even number of coordinates ($(ycoordinates.length ()))");
+		}
+
+		for (unowned List<EditPoint> e = ycoordinates.first (); true; e = e.next) {
+			if (y < e.data.y) {
+				return_if_fail ((void*) e.next != null);
+				e = e.next;
+
+				if (y > e.data.y) {
+					return true;
+				}
+			}
+			
+			if (e == ycoordinates.last ()) {
+				break;
+			}
+		}
+
+		return false;
 	}
 	
 	public bool is_over_boundry (double x, double y) {
@@ -1159,9 +1199,11 @@ class Path {
 
 		ep.get_left_handle ().set_point_type (PointType.CURVE);
 		ep.get_left_handle ().move_to_coordinate (x0, y0);
+		ep.get_left_handle ().parent = ep;
 		
 		ep.get_right_handle ().set_point_type (PointType.CURVE);
 		ep.get_right_handle ().move_to_coordinate (x1, y1);
+		ep.get_right_handle ().parent = ep;
 
 		stop.get_left_handle ().length *= 1 - position;
 		start.get_right_handle ().length *= position;
@@ -1474,14 +1516,20 @@ class Path {
 		uint len = points.length ();
 		unowned List<EditPoint> iter = points.first ();
 		unowned List<EditPoint>? ni = null;
+		bool found = false;
 		
 		foreach (EditPoint it in points) {
 			if (it == ep) {
+				found = true;
 				break;
 			}
 			
 			iter = iter.next;
 			ni = (!) iter;
+		}
+		
+		if (unlikely (!found)) {
+			warning ("Could not find edit point.");
 		}
 		
 		if (ni == null) {
@@ -1510,11 +1558,27 @@ class Path {
 		
 	}
 	
-	public Path? merge (Path p) {
+	public static PathList merge (Path p0, Path p1) {
+		bool err;
+		PathList path_list;
+		
+		err = try_merge (p1.copy(), p0.copy(), out path_list);
+		
+		if (err) {
+			err = try_merge (p0.copy(), p1.copy(), out path_list);
+		}
+		
+		if (err) {
+			warning ("failed to merge paths");
+		}
+		
+		return path_list;
+	}
+	
+	private static bool try_merge (Path p0, Path p1, out PathList path_list) {
 		EditPoint e;
-		IntersectionList il = IntersectionList.create_intersection_list (this, p);
-		Path np = new Path ();
-		Intersection s = new Intersection (0, 0, 1);
+		IntersectionList il = IntersectionList.create_intersection_list (p0, p1);
+		
 		EditPoint ex;
 		EditPoint ix;
 		uint offset_i = 0;
@@ -1523,74 +1587,119 @@ class Path {
 		int i, j;
 		uint len_j;
 		bool over;
+		Path np;
+		Path np_counter;
+				
+		path_list = new PathList ();
 		
-		if (p == this) {
-			return null;
+		if (p0 == p1) {
+			return true;
 		}
 		
 		// add editpoints points on intersections 
 		foreach (Intersection inter in il.points) {
 			e = new EditPoint ();
-			get_closest_point_on_path (e, inter.x, inter.y);
+			p0.get_closest_point_on_path (e, inter.x, inter.y);
 			inter.editpoint_a = e;
 			
 			e = inter.editpoint_a;
-			if (!has_edit_point (e)) {
-				insert_new_point_on_path (e);
+			if (!p0.has_edit_point (e)) {
+				p0.insert_new_point_on_path (e);
 			}
 
 			e = new EditPoint ();
-			p.get_closest_point_on_path (e, inter.x, inter.y);
+			p1.get_closest_point_on_path (e, inter.x, inter.y);
 			inter.editpoint_b = e;
 			
 			e = inter.editpoint_b;
-			if (!p.has_edit_point (e)) {
-				p.insert_new_point_on_path (e);
+			if (!p1.has_edit_point (e)) {
+				p1.insert_new_point_on_path (e);
 			}
 
 		}
 		
 		if (il.points.length () == 0) {
-			return null;
+			return true;
 		}
 		
 		// begin outside intersection
-		ex = points.first ().data;
-		for (i = 0; i < points.length (); i++) {
+		ex = p0.points.first ().data;
+		for (i = 0; i < p0.points.length (); i++) {
 			ex = ex.get_next ().data;
 			
-			if (!p.is_over_boundry (ex.x, ex.y)) {
-				set_new_start (ex);
-				break;				
+			if (!p1.is_over_coordinate (ex.x, ex.y) && !il.has_edit_point (ex)) {
+				p0.set_new_start (ex);			
 			}
 		}
 
-		if (i == points.length ()) {
-			warning ("No point outside path.");
-			return null;
+		if (i == p0.points.length ()) {
+			warning ("no point outside path.");
 		}
 
-		// p.set_new_start (il.points.first ().data.editpoint_b);
-	
 		// create a new path 
-		ex = points.last ().data;
-		ix = points.last ().data;
-		len_i = points.length ();
+		np = create_merged_path (il, p0, p1);
 		
-		for (i = 0; i < points.length (); i++) {
-			ex = points.nth ((i + offset_i) % len_i).data;
+		path_list.paths.append (np);
+		
+		if (!np.is_clockwise ()) {
+			warning ("Outline is counter clockwise after merge");
+			return true;
+		}
 
-			if (ex == points.first ().data && i != 0) {
+		// find counter path if we have more intersections
+		if (il.points.length () > 0) { 
+			ex = p0.points.first ().data;
+			p0.set_new_start (il.points.first ().data.editpoint_a);
+
+			np_counter = create_merged_path (il, p0, p1);
+			
+			path_list.paths.append (np_counter);
+			
+			if (np_counter.is_clockwise ()) {
+				warning ("Counter is clockwise after merge");
+				return true;
+			}
+			
+		}
+		
+		return false;
+	}
+	
+	private static Path create_merged_path (IntersectionList il, Path p0, Path p1) {
+		EditPoint ex;
+		EditPoint ix;
+		uint offset_i = 0;
+		uint offset_j;
+		uint len_i;
+		int i, j;
+		uint len_j;
+		bool over;
+		Path np = new Path ();
+		Intersection s = new Intersection (0, 0, 1);
+		
+		ex = p0.points.last ().data;
+		ix = p0.points.last ().data;
+		len_i = p0.points.length ();
+		
+		for (i = 0; i < p0.points.length (); i++) {
+			ex = p0.points.nth ((i + offset_i) % len_i).data;
+
+			if (ex == p0.points.first ().data && i != 0) {	
 				break;
 			}
 
 			// add new point for path a
 			np.add_point (ex);
-			ex.recalculate_linear_handles ();
+			if (np.has_edit_point (ix)) {
+				// SPLIT
+			} else {
+				ex.recalculate_linear_handles ();
+			}
 			
 			// swap paths
 			if (il.has_edit_point (ex)) {
 				s = (!) il.get_intersection (ex);
+				il.remove_point (ex);
 				
 				ex.type = PointType.CURVE;
 				ex.right_handle.type = PointType.CURVE;
@@ -1600,8 +1709,8 @@ class Path {
 				ex.left_handle.type = PointType.CURVE;
 
 				// read until we find ex
-				for (j = 0; j < p.points.length (); j++) {
-					ix = p.points.nth (j).data;
+				for (j = 0; j < p1.points.length (); j++) {
+					ix = p1.points.nth (j).data;
 					
 					if (ix == s.editpoint_b) {
 						break;
@@ -1609,17 +1718,22 @@ class Path {
 				}
 				
 				offset_j = j + 1;
-				len_j = p.points.length ();
-				for (j = 0; j < p.points.length (); j++) {
+				len_j = p1.points.length ();
+				for (j = 0; j < p1.points.length (); j++) {
 					
-					ix = p.points.nth ((j + offset_j) % len_j).data;
+					ix = p1.points.nth ((j + offset_j) % len_j).data;
 					
 					// add
+					if (np.has_edit_point (ix)) {
+						// SPLIT
+					} else {
+						ix.recalculate_linear_handles ();
+					}
 					np.add_point (ix);
-					ix.recalculate_linear_handles ();
 					
 					if (il.has_edit_point (ix)) {
 						s = (!) il.get_intersection (ix);
+						il.remove_point (ix);
 						break;
 					}
 				}
@@ -1631,22 +1745,22 @@ class Path {
 				
 				ix.left_handle.type = PointType.CURVE;
 				
-				if (j == points.length ()) {
+				if (j == p0.points.length ()) {
 					np.close ();
 					return np;
 				}
 
 				// skip to next intersection
 				int k;
-				for (k = 0; k < points.length (); k++) {
-					ix = points.nth (k).data; 
+				for (k = 0; k < p0.points.length (); k++) {
+					ix = p0.points.nth (k).data; 
 
 					if (ix == s.editpoint_a) {
 						break;
 					}
 				}
 				
-				if (k == points.length ()) {
+				if (k == p0.points.length ()) {
 					return np;
 				}
 				
@@ -1655,9 +1769,21 @@ class Path {
 			}
 		}
 		
-		return np;
+		return np;		
 	}
+}
 
+class PathList : GLib.Object {
+	public List<Path> paths = new List<Path> ();
+	
+	public PathList () {
+	}
+	
+	public void clear () {
+		while (paths.length () > 0) {
+			paths.remove_link (paths.first ());
+		}
+	}
 }
 
 }

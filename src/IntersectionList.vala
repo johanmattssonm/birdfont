@@ -51,6 +51,14 @@ class IntersectionList {
 		points.append (i);
 	}
 	
+	public void remove_point (EditPoint e) {
+		foreach (Intersection n in points) {
+			if (n.editpoint_a == e || n.editpoint_b == e) {
+				points.remove_all (n);
+			}
+		}	
+	}
+	
 	public bool has_edit_point (EditPoint e) {
 		foreach (Intersection n in points) {
 			if (n.editpoint_a == e || n.editpoint_b == e) {

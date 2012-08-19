@@ -88,10 +88,12 @@ class EditPointHandle  {
 	}
 	
 	double px () {
+		assert ((EditPoint?) parent != null);
 		return cos (angle) * length + parent.x;
 	}
 
 	double py () {
+		assert ((EditPoint?) parent != null);
 		return sin (angle) * length + parent.y;
 	}
 		
