@@ -59,8 +59,6 @@ class MoveTool : Tool {
 				p.set_selected (false);
 			}
 			
-			return_if_fail (glyph.active_paths.length () != 0);
-			
 			foreach (Path path in glyph.active_paths) {
 				if (path.is_clockwise ()) {
 					path.set_color (0.2, 0.2, 0.4, 0.8);

@@ -91,7 +91,7 @@ class Toolbox : DrawingArea {
 		// Fixa: draw_tools.add_tool (shrink_tool);	
 		
 		// Draw tool modifiers
-		Tool new_point = new Tool ("new_point", "Add new points to path", 'a');
+		Tool new_point = new Tool ("new_point", "Add new points", 'a');
 		new_point.select_action.connect((self) => {
 				select_draw_tool ();
 			});

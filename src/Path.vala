@@ -350,20 +350,6 @@ class Path {
 		return false;
 	}
 	
-	private static unowned List<EditPoint>? first_outside (Path source, Path union) {
-		unowned List<EditPoint> p = source.points.first ();
-		bool begins_outside = false;
-		for (int i = 0; i < p.length (); i++) {
-			if (!union.is_over (p.data.x, p.data.y) && !union.has_edit_point (p.data)) {
-				return p; // a good place to start
-			}
-			
-			p = p.next;
-		}
-		
-		return null;
-	}
-	
 	private bool force_union_directions (Path union) {
 		bool r;
 		
@@ -408,66 +394,6 @@ class Path {
 		}
 		
 		return true;
-	}
-	
-	private static Path create_merged_path (Path source, Path union) {
-		Path merged = new Path ();
-		
-		uint ml = union.points.length () + source.points.length ();
-		
-		unowned List<EditPoint> p;
-		unowned List<EditPoint> eli;
-		
-		unowned List<EditPoint>? fou;
-		Path? swap;
-		
-		// begin outside.
-		fou = first_outside (source, union);
-		if (fou == null) {
-			swap = union;
-			union = source;
-			source = (!) swap;
-		}
-		
-		fou = first_outside (source, union);
-		return_if_fail (fou != null);
-		
-		p = (!) fou;
-		eli = p;
-		
-		// create a new path from this path + union
-		bool u = false;
-		uint i = 0;
-				
-		while (true) {
-			if (i == ml) break;
-			if (++i == ml) { // FIXME: do something better
-				break;
-			}
-						
-			if (!merged.has_edit_point_at (p.data.x, p.data.y)) {
-				merged.add (p.data.x, p.data.y);
-			}
-		
-			eli = (!u) ? union.points : source.points;
-			
-			int tni = 0;			
-			foreach (var t in eli) {
-				
-				if (p.data.x == t.x && p.data.y == t.y) {
-					p = eli.nth (tni);
-					u = !u;					
-					break;
-				}
-				
-				tni++;
-			}
-			
-			if (p == p.last ()) p = p.first ();
-			else p = p.next;
-		}
-		
-		return merged;	
 	}
 		
 	private bool has_edit_point_at (double x, double y) {
@@ -805,21 +731,21 @@ class Path {
 	}	
 	
 	public bool is_over (double x, double y) {
-		if (!is_over_boundry (x, y)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	public bool is_over_boundry (double x, double y) {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		x = x * Glyph.ivz () + g.view_offset_x - Glyph.xc ();
 		y = y * Glyph.ivz () + g.view_offset_y - Glyph.yc ();
 
 		y *= -1;
-				
+		
+		if (!is_over_boundry (x, y)) {
+			return false;
+		}
+
+		return true;
+	}
+	
+	public bool is_over_boundry (double x, double y) {
 		return (ymin <= y <= ymax) && (xmin <= x <= xmax);
 	}
 
@@ -1574,7 +1500,14 @@ class Path {
 		
 		}
 		
-		points = (owned) list;
+		while (points.length () > 0) {
+			points.remove_link (points.first ());
+		}
+		
+		foreach (EditPoint p in list) {
+			points.append (p);
+		}
+		
 	}
 	
 	public Path? merge (Path p) {
@@ -1589,6 +1522,11 @@ class Path {
 		uint len_i;
 		int i, j;
 		uint len_j;
+		bool over;
+		
+		if (p == this) {
+			return null;
+		}
 		
 		// add editpoints points on intersections 
 		foreach (Intersection inter in il.points) {
@@ -1612,6 +1550,28 @@ class Path {
 
 		}
 		
+		if (il.points.length () == 0) {
+			return null;
+		}
+		
+		// begin outside intersection
+		ex = points.first ().data;
+		for (i = 0; i < points.length (); i++) {
+			ex = ex.get_next ().data;
+			
+			if (!p.is_over_boundry (ex.x, ex.y)) {
+				set_new_start (ex);
+				break;				
+			}
+		}
+
+		if (i == points.length ()) {
+			warning ("No point outside path.");
+			return null;
+		}
+
+		// p.set_new_start (il.points.first ().data.editpoint_b);
+	
 		// create a new path 
 		ex = points.last ().data;
 		ix = points.last ().data;
@@ -1626,7 +1586,7 @@ class Path {
 
 			// add new point for path a
 			np.add_point (ex);
-			ix.recalculate_linear_handles ();
+			ex.recalculate_linear_handles ();
 			
 			// swap paths
 			if (il.has_edit_point (ex)) {
@@ -1636,6 +1596,8 @@ class Path {
 				ex.right_handle.type = PointType.CURVE;
 				ex.right_handle.angle  = s.editpoint_b.right_handle.angle;
 				ex.right_handle.length = s.editpoint_b.right_handle.length;
+
+				ex.left_handle.type = PointType.CURVE;
 
 				// read until we find ex
 				for (j = 0; j < p.points.length (); j++) {
@@ -1653,7 +1615,6 @@ class Path {
 					ix = p.points.nth ((j + offset_j) % len_j).data;
 					
 					// add
-					ix.right_handle .move_to_coordinate (0, 0);
 					np.add_point (ix);
 					ix.recalculate_linear_handles ();
 					
@@ -1661,14 +1622,15 @@ class Path {
 						s = (!) il.get_intersection (ix);
 						break;
 					}
-					
 				}
 
 				ix.type = PointType.CURVE;
 				ix.right_handle.type = PointType.CURVE;
 				ix.right_handle.angle  = s.editpoint_a.right_handle.angle;
 				ix.right_handle.length = s.editpoint_a.right_handle.length;
-					
+				
+				ix.left_handle.type = PointType.CURVE;
+				
 				if (j == points.length ()) {
 					np.close ();
 					return np;

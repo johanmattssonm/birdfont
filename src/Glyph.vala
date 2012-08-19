@@ -496,10 +496,10 @@ class Glyph : FontDisplay {
 	public override void key_press (EventKey e) {	
 		if (e.keyval == Key.DEL) {
 			if (active_paths.length () != 0) {
+				
 				foreach (Path p in active_paths) {
-					close_path ();
 					path_list.remove (p);
-					redraw_area (0, 0, allocation.width, allocation.height);	
+					redraw_area (0, 0, allocation.width, allocation.height);
 				}
 				
 				clear_active_paths ();
@@ -1616,10 +1616,15 @@ class Glyph : FontDisplay {
 		
 		clear_active_paths ();
 		foreach (Path p in g.active_paths) {
-			add_path (p);
+			add_active_path (p);
 		}
 		
 		undo_list.remove_link (undo_list.last ());
+		
+		open_path ();
+		close_path ();
+		
+		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
 	public ImageSurface get_thumbnail () {
@@ -1678,21 +1683,64 @@ class Glyph : FontDisplay {
 		((!)p).insert_new_point_on_path (ep);
 	}
 	
+	/** Merge selected paths. */
 	public void merge_all () {
-		Path? m;
-		int i = 0;
-		
 		delete_invisible_paths ();
 		
-		if (path_list.length () >= 2) {
-			m = ((!) path_list.first ()).data.merge (((!) path_list.last ()).data);
-			delete_path (path_list.first ().data);
-			delete_path (path_list.last ().data);
-
-			((!) m).close ();
-			
-			add_path (((!) m).copy ());
+		if (active_paths.length () < 2) {
+			return;
 		}
+		
+		foreach (Path p0 in active_paths) {
+			// while (merge_path (p0));
+			merge_path (p0);
+		}
+		
+		open_path ();
+		close_path ();
+		
+		redraw_area (0, 0, allocation.width, allocation.height);
+	}
+	
+	public bool merge_path (Path p0) {
+		Path? m;
+		Path mp;
+		int i = 0;
+		
+		foreach (Path p1 in active_paths) {
+			if (p0 == p1) {
+				p0 = p1;
+				continue;
+			}
+			
+			m = p0.merge (p1);
+
+			if (m == null) {
+				p0 = p1;
+				continue;
+			}
+			
+			mp = (!) m;
+
+			delete_path (p0);
+			delete_path (p1);
+			
+			mp.close ();			
+			add_path (mp.copy ());
+			
+			add_active_path (mp);
+
+			active_paths.remove_all (p0);
+			active_paths.remove_all (p1);
+
+			p0 = mp;
+			
+			mp.create_list ();
+			
+			return true;
+		}
+		
+		return false;
 	}
 }
 
