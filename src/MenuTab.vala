@@ -106,10 +106,6 @@ class MenuTab : FontDisplay {
 		return true;
 	}
 
-	public override string get_html_file () {
-		return "";
-	}
-
 	public override string get_html () {
 		Font f = Supplement.get_current_font ();
 		StringBuilder c = new StringBuilder ();

@@ -70,7 +70,7 @@ class Icons {
 
 		f = find_file ("/usr/share/supplement/icons/", name);
 		if (likely (f.query_exists ())) return f;
-							
+			
 		return f;
 	}
 	

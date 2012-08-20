@@ -709,7 +709,6 @@ class GlyfTable : Table {
 	double total_width = 0;
 	int non_zero_glyphs = 0;
 
-	Mutex read_lock;
 	int64 next_index = -1;
 	
 	public GlyfTable (LocaTable l) {
@@ -717,7 +716,6 @@ class GlyfTable : Table {
 		loca_table = l;
 		location_offsets = new List<uint32> ();
 		glyphs = new List<Glyph> ();
-		read_lock = new Mutex ();
 	}	
 
 	public int get_gid (string name) {

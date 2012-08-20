@@ -82,6 +82,7 @@ public class MainWindow : Gtk.Window {
 		tabs.signal_tab_selected.connect ((f, tab) => {
 			bool n;
 			File layout_dir;
+			File layout_uri;
 			string uri;
 			FontDisplay fd = tab.get_display ();
 			
@@ -96,8 +97,11 @@ public class MainWindow : Gtk.Window {
 				uri = fd.get_uri ();
 				
 				if (uri == "") {
-					uri = @"file://$((!) layout_dir.get_path ())/$(fd.get_html_file ())";
+					layout_uri = layout_dir.get_child (fd.get_html_file ());
+					uri = @"file://$((!) layout_uri.get_path ())";
 				}
+				
+				print (@"base uri: $uri\n");
 				
 				if (fd.get_html () == "") {
 					html_canvas.load_uri (uri);

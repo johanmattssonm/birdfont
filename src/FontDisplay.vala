@@ -49,7 +49,7 @@ public abstract class FontDisplay : GLib.Object {
 	}
 	
 	public virtual string get_html_file () {
-		return "";
+		return "index.html";
 	}
 	
 	public virtual string get_html () {
