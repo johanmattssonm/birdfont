@@ -99,7 +99,9 @@ class PenTool : Tool {
 		set_default_handle_positions ();
 		
 		// show new point on path
-		move_current_point_on_path (x, y);
+		if (glyph.new_point_on_path != null) {
+			move_current_point_on_path (x, y);
+		}
 		
 		// show curve handles
 		active_corner.set_active_handle (false);
@@ -197,6 +199,7 @@ class PenTool : Tool {
 			move_selected = true;
 			move_point_on_path = true;
 			glyph.selected_point = active_edit_point;
+			glyph.new_point_on_path = null;
 			return;
 		}
 		
@@ -244,36 +247,51 @@ class PenTool : Tool {
 	}
 	
 	public void move_current_point_on_path (double x, double y) {
-			Glyph g = MainWindow.get_current_glyph ();
+		Glyph g = MainWindow.get_current_glyph ();
 
-			if (g.new_point_on_path == null) {
-				return;
+		EditPoint e;
+		EditPoint ep = (!) g.new_point_on_path;
+		
+		double rax, ray;
+		double pax, pay;
+
+		double distance, min;
+		
+		return_if_fail (g.new_point_on_path != null);
+		
+		if (GridTool.is_visible ()) {
+			GridTool.tie (ref x, ref y);
+		}
+
+		min = double.MAX;
+
+		foreach (Path p in g.path_list) {
+			if (p.points.length () < 2) {
+				continue;
 			}
 			
-			if (GridTool.is_visible ()) {
-				GridTool.tie (ref x, ref y);
-			}
+			e = new EditPoint ();
 			
-			return_if_fail (g.active_paths.length () > 0);
-			return_if_fail (g.new_point_on_path != null);
-			
-			EditPoint ep = (!) g.new_point_on_path;
-			Path p = (!) g.get_active_path ();
-			
-			double rax, ray;
-			double pax, pay;
-
 			pax = x * Glyph.ivz () + g.view_offset_x - Glyph.xc ();
 			pay = y * Glyph.ivz () + g.view_offset_y - Glyph.yc ();
 
 			pay *= -1;
 
-			p.get_closest_point_on_path (ep, pax, pay);
+			p.get_closest_point_on_path (e, pax, pay);
 			
-			rax = (pax + g.view_offset_x - Glyph.xc ()) / Glyph.ivz ();
-			ray = (pax + g.view_offset_x - Glyph.xc ()) / Glyph.ivz ();
+			distance = Math.sqrt (Math.pow (Math.fabs (pax - e.x), 2) + Math.pow (Math.fabs (pay - e.y), 2));
 			
-			g.redraw_area (rax - 5, ray - 5, 10, 10);
+			if (distance < min) {
+				min = distance;
+				
+				g.new_point_on_path = e;
+				
+				rax = (pax + g.view_offset_x - Glyph.xc ()) / Glyph.ivz ();
+				ray = (pax + g.view_offset_x - Glyph.xc ()) / Glyph.ivz ();
+				
+				g.redraw_area (rax - 5, ray - 5, 10, 10);					
+			}
+		}
 	}
 
 	public void set_new_point_on_path (Path ap, int x, int y) {
