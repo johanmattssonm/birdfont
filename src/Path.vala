@@ -1163,13 +1163,21 @@ class Path {
 		return min;
 	}
 
-	public void insert_new_point_on_path (EditPoint ep) {
+	public void insert_new_point_on_path (EditPoint? epp) {
 		EditPoint start, stop;
 		double x0, x1, y0, y1;
 		double px, py;
 		
 		double position, t, d, min;
 		double steps = 500;
+		
+		EditPoint ep;
+
+		if (epp == null) {
+			return;
+		}
+
+		ep = (!) epp;
 
 		start = ep.get_prev ().data;
 		stop = ep.get_next ().data;

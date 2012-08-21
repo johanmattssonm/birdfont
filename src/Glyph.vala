@@ -1652,8 +1652,8 @@ class Glyph : FontDisplay {
 	public void insert_new_point_on_path (double x, double y) {
 		double min, distance;
 		Path? p = null;
-		EditPoint ep = new EditPoint ();
-		EditPoint lep = new EditPoint ();
+		EditPoint? np = null;
+		EditPoint lep;
 		
 		double xt;
 		double yt;
@@ -1666,13 +1666,14 @@ class Glyph : FontDisplay {
 		delete_invisible_paths ();
 		
 		foreach (Path pp in path_list) {
+			lep = new EditPoint ();
 			pp.get_closest_point_on_path (lep, xt, yt);
-			distance = Math.sqrt (Math.pow (xt - ep.x, 2) + Math.pow (yt - ep.y, 2));
+			distance = Math.sqrt (Math.pow (Math.fabs (xt - lep.x), 2) + Math.pow (Math.fabs (yt - lep.y), 2));
 			
 			if (distance < min) {
 				min = distance;
 				p = pp;
-				ep = lep;
+				np = lep;
 			}
 		}
 
@@ -1680,7 +1681,9 @@ class Glyph : FontDisplay {
 			return;
 		}
 
-		((!)p).insert_new_point_on_path (ep);
+		lep = new EditPoint ();
+		((!)p).get_closest_point_on_path (lep, xt, yt);
+		((!)p).insert_new_point_on_path (lep);
 	}
 	
 	/** Merge selected paths. */
