@@ -44,6 +44,20 @@ public abstract class FontDisplay : GLib.Object {
 		return false;
 	}
 
+	public static string path_to_uri (string path) {
+		int i;
+		string uri = path;
+		
+		uri = path.replace ("\\", "/");
+		i = uri.index_of (":");
+		
+		if (i != -1) {
+			uri = uri.substring (i + 2);
+		}
+		
+		return @"file:///$uri";
+	}
+
 	public virtual string get_uri () {
 		return "";
 	}

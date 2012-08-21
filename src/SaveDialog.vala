@@ -81,10 +81,10 @@ class SaveDialog : FontDisplay {
 		<p>""" + fn + """</p>
 		
 		<form>
-			<input type="button" value="Save" id="save" onclick="call ('save_dialog:save');"/>
-			<input type="button" value="Save as" id="save_as" onclick="call ('save_dialog:save_as');"/>
-			<input type="button" value="Discard" id="discard" onclick="call ('save_dialog:discard');"/>
-			<input type="button" value="Cancel" id="cancel" onclick="call ('save_dialog:cancel');"/>
+			<input class="button" type="button" value="Save"    onclick="call ('save_dialog:save');"/>
+			<input class="button" type="button" value="Save as" onclick="call ('save_dialog:save_as');"/>
+			<input class="button" type="button" value="Discard" onclick="call ('save_dialog:discard');"/>
+			<input class="button" type="button" value="Cancel"  onclick="call ('save_dialog:cancel');"/>
 			<br />
 		</form>
 	</div>

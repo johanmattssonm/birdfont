@@ -84,6 +84,7 @@ public class MainWindow : Gtk.Window {
 			File layout_dir;
 			File layout_uri;
 			string uri;
+			int i;
 			FontDisplay fd = tab.get_display ();
 			
 			glyph_canvas.set_current_glyph (fd);
@@ -98,10 +99,8 @@ public class MainWindow : Gtk.Window {
 				
 				if (uri == "") {
 					layout_uri = layout_dir.get_child (fd.get_html_file ());
-					uri = @"file://$((!) layout_uri.get_path ())";
+					uri = fd.path_to_uri ((!) layout_uri.get_path ());
 				}
-				
-				print (@"base uri: $uri\n");
 				
 				if (fd.get_html () == "") {
 					html_canvas.load_uri (uri);

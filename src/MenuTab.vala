@@ -63,6 +63,7 @@ class MenuTab : FontDisplay {
 		});		
 
 		add_html_callback ("load", (val) => {
+			print (@"Load: $val\n");
 			load_font (val);
 		});	
 
@@ -109,6 +110,7 @@ class MenuTab : FontDisplay {
 	public override string get_html () {
 		Font f = Supplement.get_current_font ();
 		StringBuilder c = new StringBuilder ();
+		string fn;
 		
 		propagate_recent_files ();
 		
@@ -140,14 +142,14 @@ class MenuTab : FontDisplay {
 		<div class="content">
 			<form>
 				<h3>Formats</h3>
-				<input type="checkbox" id="svg" checked="checked" onchange="update_export_settings ();"/> SVG<br />
-				<input type="checkbox" id="ttf" checked="checked" onchange="update_export_settings ();"/> TTF<br />
+				<input class="checkbox" type="checkbox" id="svg" checked="checked" onchange="update_export_settings ();"/> SVG<br />
+				<input class="checkbox" type="checkbox" id="ttf" checked="checked" onchange="update_export_settings ();"/> TTF<br />
 
 				<h3>Name</h3>
 				<input class="text" type="text" id="fontname" value=""" + "\"" + f.get_name () + "\"" + """ onchange="update_export_settings ();"/><br />
 				
-				<input type="button" value="Export" id="export_button" onclick="call ('export:fonts');"/>
-				<input type="button" value="Preview" id="preview_button" onclick="call ('preview:fonts');"/><br />
+				<input class="button" type="button" value="Export" id="export_button" onclick="call ('export:fonts');"/>
+				<input class="button" type="button" value="Preview" id="preview_button" onclick="call ('preview:fonts');"/><br />
 			</form> 
 		</div>
 	</div>
@@ -158,23 +160,22 @@ class MenuTab : FontDisplay {
 	<div class="heading"><h2>Recent files</h2></div>
 """);
 
-string fn;
 foreach (Font font in recent_fonts) {
 	fn = (!) font.font_file;
 	fn = fn.substring (fn.replace ("\\", "/").last_index_of ("/") + 1);	
 	
-	c.append ("""<div class="recent_font" """ + "onclick=\"call ('load:" + (!) font.font_file + "');\">");
+	c.append ("""<div class="recent_font" """ + "onclick=\"call ('load:" + ((!) font.font_file).replace ("\\", "\\\\") + "');\">");
 
 	c.append ("<div class=\"one_line\">");
 	c.append (fn);
 	c.append ("</div>");
 		
 	c.append ("<img src=\"");
-	c.append ((!) Supplement.get_thumbnail_directory ().get_path ());
+	c.append (path_to_uri ((!) Supplement.get_thumbnail_directory ().get_path ()));
 	c.append ("/");
 	c.append (fn);
 	c.append (@".png?$(Random.next_int ())\" alt=\"\"><br /><br />");
-
+	
 	c.append ("</div>\n");
 }
 
@@ -184,7 +185,6 @@ c.append ("""
 </body>
 </html>
 """);
-	
 		return c.str;
 	}
 

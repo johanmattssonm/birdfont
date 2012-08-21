@@ -47,8 +47,10 @@ class Preview : FontDisplay {
 		if (!file.query_exists ()) {
 			ExportTool.generate_html_document ((!)file.get_path (), font);				
 		}
+		
+		print (@"uri $(path_to_uri ((!)file.get_path ()))\n");
 
-		return @"file://$((!)file.get_path ())";
+		return path_to_uri ((!)file.get_path ());
 	}
 }
 }

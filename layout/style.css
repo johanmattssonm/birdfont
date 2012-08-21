@@ -78,5 +78,17 @@ h3 {
 }
 
 input.text {
+	border: 1px solid #bebebe;
+	background: #FFF;
 	width: 100%;	
+}
+
+input.button {
+	border: 1px solid #dedede;
+	background: #efefef;
+}
+
+input.checkbox {
+	border: 1px solid #dedede;
+	background: #efefef;
 }
