@@ -1014,7 +1014,6 @@ class OverView : FontDisplay {
 		
 		// scroll to the selected character
 		if (c == "") {
-			print (@"No glyph.. \"$c\" move to a\n");
 			c = "a";
 		}
 		

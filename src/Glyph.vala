@@ -839,7 +839,6 @@ class Glyph : FontDisplay {
 		Path np;
 		
 		if (active_paths.length () == 0) {
-			print ("ADD empty\n");
 			np = new Path ();
 			clear_active_paths ();
 			active_paths.append (np);
@@ -857,7 +856,6 @@ class Glyph : FontDisplay {
 		added = false;
 
 		if (new_point_on_path != null) {
-			print ("ADD np\n");
 			return_if_fail (active_paths.length () > 0);
 
 			Path p = new Path ();
@@ -880,7 +878,6 @@ class Glyph : FontDisplay {
 		}
 		
 		if (!added) {
-			print ("ADD a\n");
 			foreach (Path p in paths) {
 				if (p.is_open ()) {
 					p.add (xt, yt);
@@ -893,7 +890,6 @@ class Glyph : FontDisplay {
 		}
 
 		if (!added) {
-			print ("ADD X\n");
 			foreach (Path p in paths) {
 				if (p.is_over (xt, yt)) {
 					p.add (xt, yt);
@@ -906,7 +902,6 @@ class Glyph : FontDisplay {
 		}
 		
 		if (!added) {
-			print ("ADD NEW\n");
 			if (paths.length () > 0 && paths.last ().data.is_open ()) {
 				paths.last().data.add (xt, yt);
 			}

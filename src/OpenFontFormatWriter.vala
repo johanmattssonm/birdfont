@@ -344,9 +344,12 @@ class FontData : Object {
 		}
 		
 		table_data[wp] = d;
-		
+
+		if (wp == len) {
+			len++;
+		}
+				
 		wp++;
-		len++;
 	}
 	
 	public void add_u16 (uint16 d) {
@@ -1311,7 +1314,10 @@ class GlyfTable : Table {
 		double x, y;
 
 		Font font = Supplement.get_current_font ();
-		int glyph_offset = (int) location_offsets.last ().data;
+		int glyph_offset = (int) fd.length ();
+		
+		uint len; 
+		uint coordinate_length;
 		
 		g.remove_empty_paths ();
 		if (g.path_list.length () == 0) {
@@ -1358,6 +1364,9 @@ class GlyfTable : Table {
 		
 		fd.add_u16 (0); // instruction length 
 		
+		uint hl = fd.length ();
+		printd (@"glyf header length: $(hl)\n");
+		
 		// instructions should go here 
 		
 		npoints = (ncontours > 0) ? end_point : 0; // +1?
@@ -1389,6 +1398,8 @@ class GlyfTable : Table {
 			warning (@"(nflags != npoints)  ($nflags != $npoints) in glyph $(g.name). ncontours: $ncontours");
 		}
 		assert (nflags == npoints);
+
+		printd (@"flags: $(nflags)\n");
 		
 		// x coordinates
 		double prev = 0;
@@ -1443,6 +1454,11 @@ class GlyfTable : Table {
 			}
 		}
 		
+		coordinate_length = fd.length () - nflags - hl;
+		printd (@"coordinate_length: $(coordinate_length)\n");
+		
+		len = fd.length ();
+		
 		fd.seek (glyph_offset + 2); // go to box boundries for this glyf
 		assert (fd.read_short () == 0);
 
@@ -1451,6 +1467,8 @@ class GlyfTable : Table {
 		fd.add_16 (txmax);
 		fd.add_16 (tymax);
 		fd.seek_end ();
+
+		assert (len == fd.length ());
 
 		printd (@"\n");
 		printd (@"txmin: $txmin\n");
@@ -1467,10 +1485,13 @@ class GlyfTable : Table {
 		// part of average width calculation for OS/2 table
 		total_width += xmax - xmin;
 		
-		// glyph need padding too for loca table to be correct
+		printd (@"length before padding: $(fd.length ())\n");
+		
+		// all glyphs needs padding for loca table to be correct
 		while (fd.length () % 4 != 0) {
 			fd.add (0);
 		}
+		printd (@"length after padding: $(fd.length ())\n");
 	}
 
 	// necessary in order to have glyphs sorted according to ttf specification
@@ -1514,19 +1535,24 @@ class GlyfTable : Table {
 		
 		create_glyph_table ();
 		int i = 0;
+		uint last_len = 0;
 		foreach (Glyph g in glyphs) {
 			// set values for loca table
 			assert (fd.length () % 4 == 0);
 			location_offsets.append (fd.length ());
 			process_glyph (g, fd);
-			
+
+			printd (@"glyf length: $(fd.length () - last_len)\n");
 			printd (@"loca fd.length (): $(fd.length ())\n");
+
+			last_len = fd.length ();
 		}
 
 		location_offsets.append (fd.length ()); // last entry in loca table is special
 		
-		fd.pad ();
-						
+		// every glyph is padded, no padding to be done here
+		assert (fd.length () % 4 == 0);
+
 		font_data = fd;	
 	}
 }
@@ -4492,10 +4518,10 @@ class KernTable : Table {
 		fd.add_ushort (HORIZONTAL); // subtable flags
 
 		fd.add_ushort (n_pairs);
-
-		search_range = 2 * largest_pow2 (n_pairs);
-		entry_selector = (uint16) (Math.log (search_range / 2) / Math.log (2));
-		range_shift = 6 * (n_pairs - largest_pow2 (n_pairs));
+		
+		search_range = 6 * largest_pow2 (n_pairs);
+		entry_selector = largest_pow2_exponent (n_pairs);
+		range_shift = 6 * n_pairs - search_range;
 		
 		fd.add_ushort (search_range);
 		fd.add_ushort (entry_selector);
@@ -4940,7 +4966,7 @@ public static uint16 largest_pow2 (uint16 max) {
 	uint16 x = 1;
 	uint16 l = 0;
 	
-	while (x < max) {
+	while (x <= max) {
 		l = x;
 		x = x << 1;
 	}
@@ -4948,8 +4974,22 @@ public static uint16 largest_pow2 (uint16 max) {
 	return l;
 }
 
+public static uint16 largest_pow2_exponent (uint16 max) {
+	uint16 exp = 0;
+	uint16 l = 0;
+	uint16 x = 0;
+	
+	while (x <= max) {
+		l = exp;
+		exp++;
+		x = 1 << exp;
+	}	
+	
+	return l;
+}
+
 void printd (string s) {
-	//print (s);
+	// print (s);
 }
 
 }
