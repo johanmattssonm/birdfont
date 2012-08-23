@@ -1,5 +1,5 @@
-VERSION = '0.1'
-APPNAME = 'Supplement'
+VERSION = '0.1.1'
+APPNAME = 'birdfont'
 
 top = '.'
 out = 'build'
