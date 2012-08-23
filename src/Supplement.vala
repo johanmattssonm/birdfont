@@ -21,6 +21,8 @@ namespace Supplement {
 
 class Supplement {
 
+	public static const string VERSION = "0.1.1";
+	
 	public static Argument args;
 	public static bool experimental;
 
@@ -88,7 +90,7 @@ class Supplement {
 	public static int main(string[] arg) {
 		int err_arg;
 		File font_file;
-		
+
 		args = new Argument.command_line (arg);
 		
 		if (args.has_argument ("--help")) {
@@ -102,6 +104,8 @@ class Supplement {
 			args.print_help ();
 			Process.exit (0);
 		}
+
+		stdout.printf ("birdfont version %s\n", VERSION);		
 
 		experimental = args.has_argument ("--test");
 
