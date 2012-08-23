@@ -4297,6 +4297,8 @@ class PostTable : Table {
 			if (index != 0) {
 				fd.add_ushort ((uint16) index);  // use standard name
 			} else {
+				printd ("Adding non standard postscript name $(g.get_name ())\n");
+				
 				index = (int) names.length (); // use font specific name
 				fd.add_ushort ((uint16) index);
 				names.append (g.get_name ());
