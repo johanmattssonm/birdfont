@@ -495,19 +495,6 @@ class Toolbox : DrawingArea {
 			
 		});
 		trace.add_tool (background_threshold);
-
-		Tool auto_trace = new Tool ("auto_trace", "Auto trace path from background image");
-		auto_trace.select_action.connect((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			GlyphBackgroundImage? bg = g.get_background_image ();
-			GlyphBackgroundImage b;
-			
-			if (bg != null) {
-				b = (!) bg;
-				g.add_path (b.auto_trace ());
-			}
-		});
-		trace.add_tool (auto_trace);
 		
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
