@@ -696,9 +696,6 @@ class Font : GLib.Object {
 
 		otf_font = false;
 
-		font_file = "";
-		name = "typeface";
-
 		while (glyph_names.length () > 0) {
 			glyph_names.remove_link (glyph_names.first ());
 		}

@@ -194,11 +194,17 @@ class ExportTool : Tool {
 			src: url('""");     os.put_string (@"$(name).svg#$(name)");  os.put_string ("""') format('svg');
 		}
 
+""");
+
+if (Supplement.experimental) {	
+	os.put_string ("""
 		@font-face {
 			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""TTF';
 			src: url('""");     os.put_string (@"$(name).ttf"); os.put_string ("""') format('truetype');
-		}
-		
+		} """);
+}
+
+os.put_string ("""	
 		h1 {
 			margin: 0 0 5px 0;
 			color: #afafaf;
@@ -229,7 +235,20 @@ class ExportTool : Tool {
 		}
 		
 		div {
-			font-family: '"""); os.put_string (@"$(name)");  os.put_string ("""SVG', '"""); os.put_string (@"$(name)");  os.put_string ("""TTF';
+			font-family: """);
+			 
+			os.put_string ("'");
+			os.put_string (@"$(name)");
+			os.put_string ("SVG'");
+			
+			if (Supplement.experimental) {
+				os.put_string (", '");
+				os.put_string (@"$(name)");
+				os.put_string ("TTF'");
+			}	
+
+			os.put_string (";");
+			os.put_string ("""
 			margin: 0 0 30px 0;
 		}
 
