@@ -696,6 +696,9 @@ class Font : GLib.Object {
 
 		otf_font = false;
 
+		font_file = "";
+		name = "typeface";
+
 		while (glyph_names.length () > 0) {
 			glyph_names.remove_link (glyph_names.first ());
 		}
@@ -703,14 +706,16 @@ class Font : GLib.Object {
 		glyph_cache.remove_all ();
 		unassigned_glyphs.remove_all ();
 		
-		font_file = path;
-				
 		if (path.has_suffix (".ffi")) {
 			loaded = parse_file (path);
+			font_file = path;
 		}
 		
-		if (path.has_suffix (".ttf")) {
-			loaded = parse_otf_file (path);
+		if (Supplement.experimental) {
+			if (path.has_suffix (".ttf")) {
+				loaded = parse_otf_file (path);
+				font_file = path;
+			}
 		}
 		
 		return loaded;
@@ -785,17 +790,12 @@ class Font : GLib.Object {
 				return;
 			}
 			
-			// del: print (@"added name: $(g.name)\n");
-			
 			add_glyph_collection ((!) gc);
 		} else if (gcl == null) {
 			gc = new GlyphCollection (g);
 			add_glyph_collection ((!) gc);
 		} else {
 			stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
-			//gc = new GlyphCollection (g);
-			//g.name = @"($(++next_unindexed))";
-			//add_glyph_collection ((!) gc);
 		}
 				
 		// take xheight from appropriate lower case letter

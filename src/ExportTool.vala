@@ -25,7 +25,6 @@ class ExportTool : Tool {
 		base (n, "Export glyph to svg file", 'e', CTRL);
 	
 		select_action.connect((self) => {
-			print ("export_ttf_font:\n");
 			export_svg_font ();
 			// Fixa: add export_glyph_to_svg (); as tool in toolbox
 		});
@@ -43,10 +42,12 @@ class ExportTool : Tool {
 	public static void export_all () {
 		Font font = Supplement.get_current_font ();
 		
-		if (font.get_ttf_export ()) {
-			export_ttf_font ();
+		if (Supplement.experimental) {
+			if (font.get_ttf_export ()) {
+				export_ttf_font ();
+			}
 		}
-
+		
 		if (font.get_svg_export ()) {
 			export_svg_font ();
 		}

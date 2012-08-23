@@ -1567,16 +1567,16 @@ class Path {
 	}
 	
 	public static PathList merge (Path p0, Path p1) {
-		bool err;
+		bool done;
 		PathList path_list;
 		
-		err = try_merge (p1.copy(), p0.copy(), out path_list);
+		done = try_merge (p1.copy(), p0.copy(), out path_list);
 		
-		if (err) {
-			err = try_merge (p0.copy(), p1.copy(), out path_list);
+		if (!done) {
+			done = try_merge (p0.copy(), p1.copy(), out path_list);
 		}
 		
-		if (err) {
+		if (!done) {
 			warning ("failed to merge paths");
 		}
 		
@@ -1589,6 +1589,8 @@ class Path {
 		
 		EditPoint ex;
 		EditPoint ix;
+		EditPoint prev;
+		
 		uint offset_i = 0;
 		uint offset_j;
 		uint len_i;
@@ -1601,7 +1603,7 @@ class Path {
 		path_list = new PathList ();
 		
 		if (p0 == p1) {
-			return true;
+			return false;
 		}
 		
 		// add editpoints points on intersections 
@@ -1627,31 +1629,43 @@ class Path {
 		}
 		
 		if (il.points.length () == 0) {
-			return true;
+			return false;
 		}
 		
 		// begin outside intersection
 		ex = p0.points.first ().data;
+		prev = p0.points.first ().data;
 		for (i = 0; i < p0.points.length (); i++) {
-			ex = ex.get_next ().data;
+			ex = prev.get_next ().data;
 			
-			if (!p1.is_over_coordinate (ex.x, ex.y) && !il.has_edit_point (ex)) {
-				p0.set_new_start (ex);			
+			if (i != 0 && !p1.is_over_coordinate (ex.x, ex.y) && !p1.is_over_coordinate (prev.x, prev.y) && !il.has_edit_point (prev) && !il.has_edit_point (ex)) {
+				p0.set_new_start (ex);
+				break;
 			}
+			
+			prev = ex;
 		}
 
 		if (i == p0.points.length ()) {
 			warning ("no point outside path.");
 		}
 
+		print (@"il.points.length (): $(il.points.length ())\n");
+
+		//path_list.paths.append (p0);
+		//path_list.paths.append (p1);
+		//return false;
+		
 		// create a new path 
-		np = create_merged_path (il, p0, p1);
+		if (!create_merged_path (il, p0, p1, out np)) {
+			return false;
+		}
 		
 		path_list.paths.append (np);
 		
 		if (!np.is_clockwise ()) {
 			warning ("Outline is counter clockwise after merge");
-			return true;
+			return false;
 		}
 
 		// find counter path if we have more intersections
@@ -1659,21 +1673,23 @@ class Path {
 			ex = p0.points.first ().data;
 			p0.set_new_start (il.points.first ().data.editpoint_a);
 
-			np_counter = create_merged_path (il, p0, p1);
+			if (!create_merged_path (il, p0, p1, out np_counter)) {
+				warning ("Failed to merge counter");
+			}
 			
 			path_list.paths.append (np_counter);
 			
 			if (np_counter.is_clockwise ()) {
 				warning ("Counter is clockwise after merge");
-				return true;
+				return false;
 			}
 			
 		}
 		
-		return false;
+		return true;
 	}
 	
-	private static Path create_merged_path (IntersectionList il, Path p0, Path p1) {
+	private static bool create_merged_path (IntersectionList il, Path p0, Path p1, out Path new_path) {
 		EditPoint ex;
 		EditPoint ix;
 		uint offset_i = 0;
@@ -1697,10 +1713,11 @@ class Path {
 			}
 
 			// add new point for path a
-			np.add_point (ex);
-			if (np.has_edit_point (ix)) {
+			if (np.has_edit_point (ex)) {
 				// SPLIT
+				warning ("Merged path need split");
 			} else {
+				np.add_point (ex);
 				ex.recalculate_linear_handles ();
 			}
 			
@@ -1734,10 +1751,11 @@ class Path {
 					// add
 					if (np.has_edit_point (ix)) {
 						// SPLIT
+						warning ("Merged path need split");
 					} else {
+						np.add_point (ix);
 						ix.recalculate_linear_handles ();
 					}
-					np.add_point (ix);
 					
 					if (il.has_edit_point (ix)) {
 						s = (!) il.get_intersection (ix);
@@ -1755,7 +1773,8 @@ class Path {
 				
 				if (j == p0.points.length ()) {
 					np.close ();
-					return np;
+					new_path = np;
+					return true;
 				}
 
 				// skip to next intersection
@@ -1769,7 +1788,8 @@ class Path {
 				}
 				
 				if (k == p0.points.length ()) {
-					return np;
+					new_path = np;
+					return true;
 				}
 				
 				offset_i = 0;
@@ -1777,7 +1797,9 @@ class Path {
 			}
 		}
 		
-		return np;		
+		new_path = np;
+		
+		return true;
 	}
 }
 

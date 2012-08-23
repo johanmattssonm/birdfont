@@ -461,7 +461,9 @@ class OverView : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 		
-		scrollbar.draw (cr, allocation);
+		if (Supplement.experimental) {
+			scrollbar.draw (cr, allocation);
+		}
 		
 		n_items = ((allocation.width - 15) / nail_width);
 		rows = (allocation.height / nail_height);
@@ -976,7 +978,9 @@ class OverView : FontDisplay {
 	
 	public override void button_press (EventButton e) {
 		if (e.x > allocation.width - 10) {
-			scrollbar.button_press (e);
+			if (Supplement.experimental) {
+				scrollbar.button_press (e);
+			}
 		} else {
 			selection_click (e);
 		}

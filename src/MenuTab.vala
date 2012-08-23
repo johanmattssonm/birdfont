@@ -141,10 +141,17 @@ class MenuTab : FontDisplay {
 		
 		<div class="content">
 			<form>
+""");
+
+if (Supplement.experimental) {
+	c.append ("""
 				<h3>Formats</h3>
 				<input class="checkbox" type="checkbox" id="svg" checked="checked" onchange="update_export_settings ();"/> SVG<br />
 				<input class="checkbox" type="checkbox" id="ttf" checked="checked" onchange="update_export_settings ();"/> TTF<br />
+				""");
+}
 
+c.append ("""
 				<h3>Name</h3>
 				<input class="text" type="text" id="fontname" value=""" + "\"" + f.get_name () + "\"" + """ onchange="update_export_settings ();"/><br />
 				

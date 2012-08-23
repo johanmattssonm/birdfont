@@ -296,7 +296,6 @@ class Glyph : FontDisplay {
 	}
 	
 	public void add_help_lines () {
-		
 		remove_lines ();
 
 		double bgt = Supplement.get_current_font ().top_limit;

@@ -21,10 +21,11 @@ namespace Supplement {
 
 class Supplement {
 
+	public static Argument args;
+	public static bool experimental;
+
 	static Font current_font;
 
-	public static Argument args;
-	
 	public static Font get_current_font () {
 		return current_font;
 	}
@@ -102,6 +103,8 @@ class Supplement {
 			Process.exit (0);
 		}
 
+		experimental = args.has_argument ("--test");
+
 		Preferences preferences = new Preferences ();
 		preferences.load ();
        
@@ -132,6 +135,8 @@ class Supplement {
 			if (args.get_file () != "") {
 				current_font.load (args.get_file ());
 				MainWindow.get_toolbox ().select_tool_by_name ("available_characters");
+			} else {
+				MainWindow.get_tab_bar ().select_tab_name ("Menu");
 			}
 			
 			return false;

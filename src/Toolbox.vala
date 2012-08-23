@@ -98,16 +98,6 @@ class Toolbox : DrawingArea {
 		
 		draw_tool_modifiers.add_tool (new_point);
 
-		Tool corner_tool = new Tool ("corner", "Edit corner", 'e');
-		corner_tool.select_action.connect((self) => {
-				select_draw_tool ();
-				pen_tool.edit_active_corner = true;
-			});
-		corner_tool.deselect_action.connect((self) => {
-				pen_tool.edit_active_corner = false;
-			});
-		draw_tool_modifiers.add_tool (corner_tool);
-
 		Tool insert_point_on_path = new Tool ("insert_point_on_path", "Add new point on path", 'n');
 		insert_point_on_path.select_action.connect((self) => {
 				select_draw_tool ();
@@ -115,46 +105,14 @@ class Toolbox : DrawingArea {
 			});
 		draw_tool_modifiers.add_tool (insert_point_on_path);
 		
-		Tool new_point_on_path = new Tool ("new_point_on_path", "Begin new path from point on path", 'n');
-		new_point_on_path.select_action.connect((self) => {
-				select_draw_tool ();
-				pen_tool.begin_from_new_point_on_path ();
-			});
-		draw_tool_modifiers.add_tool (new_point_on_path);
-
-		Tool move_point_on_path = new Tool ("move_point", "Move edit point", 'm');
-		move_point_on_path.select_action.connect((self) => {
-				select_draw_tool ();
-				pen_tool.move_point_on_path = true;
-			});
-		corner_tool.deselect_action.connect((self) => {
-				pen_tool.move_point_on_path = false;
-			});
-		draw_tool_modifiers.add_tool (move_point_on_path);		
-
-		Tool close_paths_tool = new Tool ("close_paths", "Open or close paths", 'c');
-		close_paths_tool.select_action.connect((self) => {
-				Glyph g = MainWindow.get_current_glyph ();
-				
-				select_draw_tool ();
-				
-				// Set direction for inside or outside
-				cut_tool.force_direction ();
-						
-				if (!g.close_path ()) {
-					g.open_path ();
-				}
-								
-				TimeoutSource anim = new TimeoutSource (300);
-				anim.set_callback(() => {
-					select_tool (new_point);
-					return false;
+		if (Supplement.experimental) {
+			Tool new_point_on_path = new Tool ("new_point_on_path", "Begin new path from point on path", 'n');
+			new_point_on_path.select_action.connect((self) => {
+					select_draw_tool ();
+					pen_tool.begin_from_new_point_on_path ();
 				});
-				
-				anim.attach (null);
-				
-			});
-		draw_tool_modifiers.add_tool (close_paths_tool);	
+			draw_tool_modifiers.add_tool (new_point_on_path);	
+		}
 
 		Tool tie_editpoint_tool = new Tool ("tie_point", "Tie curve handles for selected edit point", 'w');
 		tie_editpoint_tool.select_action.connect((self) => {
@@ -170,16 +128,7 @@ class Toolbox : DrawingArea {
 					ep.process_tied_handle ();
 				}
 				
-				ep.set_tie_handle (tie);
-								
-				TimeoutSource anim = new TimeoutSource (300);
-				anim.set_callback(() => {
-					select_tool (corner_tool);
-					return false;
-				});
-				
-				anim.attach (null);
-				
+				ep.set_tie_handle (tie);				
 			});
 		draw_tool_modifiers.add_tool (tie_editpoint_tool);	
 
@@ -197,8 +146,10 @@ class Toolbox : DrawingArea {
 		draw_tool_modifiers.add_tool (erase_tool);	
 				
 		// path tools
-		Tool union_paths_tool = new MergeTool ("union_paths");
-		path_tool_modifiers.add_tool (union_paths_tool);
+		if (Supplement.experimental) {
+			Tool union_paths_tool = new MergeTool ("union_paths");
+			path_tool_modifiers.add_tool (union_paths_tool);
+		}
 		
 		Tool reverse_path_tool = new Tool ("reverse_path", "Create counter from outline", 'r');
 		reverse_path_tool.select_action.connect((self) => {
@@ -578,7 +529,10 @@ class Toolbox : DrawingArea {
 		add_expander (grid);
 		add_expander (view_tools);
 		
-		add_expander (background_tools);
+		if (Supplement.experimental) {
+			add_expander (background_tools);
+		}
+		
 		// Fixa: add_expander (trace);
 		
 		add_expander (test_tools);
@@ -653,6 +607,7 @@ class Toolbox : DrawingArea {
 		idle.set_callback (() => {
 			new_point.set_selected (true);
 			pen_tool.set_selected (true);
+			select_draw_tool ();			
 			
 			if (glyph_canvas.get_current_glyph ().get_show_help_lines ()) {
 				help_lines.set_selected (true);
@@ -701,10 +656,6 @@ class Toolbox : DrawingArea {
 	}
 	
 	private void select_draw_tool () {
-		if (current_tool is PenTool || current_tool is CutTool) {
-			return;
-		}
-		
 		select_tool_by_name ("pen_tool");
 	}
 	
