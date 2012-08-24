@@ -59,7 +59,7 @@ class Supplement {
 		
 	public static File get_settings_directory () {
 		File home = File.new_for_path (Environment.get_home_dir ());
-		File settings = home.get_child (".supplement");
+		File settings = home.get_child (".birdfont");
 		
 		if (!settings.query_exists ()) {
 			DirUtils.create ((!) settings.get_path (), 0xFFFFFF);
@@ -124,7 +124,7 @@ class Supplement {
 		}
 		
 		Gtk.init (ref arg);
-		MainWindow window = new MainWindow ("Supplement");
+		MainWindow window = new MainWindow ("Birdfont");
 		window.show_all ();
 
 		if (has_argument ("--fatal-warning")) {

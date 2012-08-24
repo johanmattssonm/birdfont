@@ -376,7 +376,7 @@ class KeyBindings {
 	
 	void load () {
 		File home = File.new_for_path (Environment.get_home_dir ());
-		File settings = home.get_child (".supplement");
+		File settings = home.get_child (".birdfont");
 		File bindings = settings.get_child ("keybindings");
 
 		if (!bindings.query_exists ()) {
