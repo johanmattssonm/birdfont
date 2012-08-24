@@ -1462,6 +1462,7 @@ class GlyfTable : Table {
 		fd.seek (glyph_offset + 2); // go to box boundries for this glyf
 		assert (fd.read_short () == 0);
 
+		// add bounding box
 		fd.add_16 (txmin);
 		fd.add_16 (tymin);
 		fd.add_16 (txmax);
@@ -1505,7 +1506,7 @@ class GlyfTable : Table {
 		glyphs.append (font.get_not_def_character ());
 		//glyphs.append (font.get_null_character ());
 		//glyphs.append (font.get_nonmarking_return ());
-		//glyphs.append (font.get_space ());
+		glyphs.append (font.get_space ());
 		
 		List<Glyph> unassigned_glyphs = new List<Glyph> ();
 		
@@ -1513,7 +1514,7 @@ class GlyfTable : Table {
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
 			g = (!) gl;
 			
-			if (g.name == ".notdef" || g.unichar_code == 0) {
+			if (g.name == ".notdef" || g.unichar_code == 0 || g.name == "space" || g.unichar_code == 0x0020) {
 				continue;
 			}
 			
@@ -2464,7 +2465,7 @@ class MaxpTable : Table {
 		fd.add_u16 (glyf_table.get_max_contours ()); // max contours
 		fd.add_u16 (0); // max composite points
 		fd.add_u16 (0); // max composite contours
-		fd.add_u16 (0); // max zones
+		fd.add_u16 (1); // max zones
 		fd.add_u16 (0); // twilight points
 		fd.add_u16 (0); // max storage
 		fd.add_u16 (0); // max function defs
@@ -2651,7 +2652,7 @@ class NameTable : Table {
 
 		List<uint16> type = new List<uint16> ();
 		List<string> text = new List<string> ();
-
+		
 		text.append ("Copyright");
 		type.append (COPYRIGHT_NOTICE);
 		
@@ -2667,16 +2668,21 @@ class NameTable : Table {
 		text.append (font.get_name ());
 		type.append (FULL_FONT_NAME);
 		
+		// This does for some reason cause an internal error in ms fontvalidatior utility.
+		// Head table can't parse integer from string.
+		text.append ("Version 1.0");
+		type.append (VERSION);		
+		
+		text.append ("");
+		type.append (DESCRIPTION);
+				
 		text.append (font.get_name ());
 		type.append (PREFERED_FAMILY);
 		
 		text.append ("Regular");
 		type.append (PREFERED_SUB_FAMILY);
 
-		// This does for some reason cause an internal error in ms fontvalidatior utility.
-		// Head table can't parse integer from string.
-		text.append ("Version 1.0");
-		type.append (VERSION);
+
 						
 		num_records = (uint16) text.length ();
 		
@@ -2800,7 +2806,7 @@ class Os2Table : Table {
 		fd.add_16 (0); // SHORT sCapHeight version 0x0002 and later
 
 		fd.add_16 (0); // USHORT usDefaultChar version 0x0002 and later
-		fd.add_16 (glyf_table.get_space_gid ()); // USHORT usBreakChar version 0x0002 and later, also known as space
+		fd.add_16 (0x0020); // USHORT usBreakChar version 0x0002 and later, also known as space
 		fd.add_16 (0); // USHORT usMaxContext version 0x0002 and later
 
 		// padding
@@ -4426,6 +4432,8 @@ class KernTable : Table {
 	
 	List<Kern> kernings = new List<Kern> ();
 	
+	public int kerning_pairs = 0;
+	
 	public KernTable (GlyfTable gt) {
 		glyf_table = gt;
 		id = "kern";
@@ -4515,6 +4523,8 @@ class KernTable : Table {
 				n_pairs++;
 			}
 		}
+		
+		this.kerning_pairs = n_pairs;
 		
 		fd.add_ushort (6 * n_pairs + 14); // subtable length
 		fd.add_ushort (HORIZONTAL); // subtable flags
@@ -4631,7 +4641,11 @@ class DirectoryTable : Table {
 			tables.append (head_table);
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
-			tables.append (kern_table);
+			
+			if (kern_table.kerning_pairs > 0) {
+				tables.append (kern_table);
+			}
+			
 			tables.append (loca_table);
 			tables.append (maxp_table);
 			tables.append (name_table);
@@ -4991,7 +5005,7 @@ public static uint16 largest_pow2_exponent (uint16 max) {
 }
 
 void printd (string s) {
-	// print (s);
+	print (s);
 }
 
 }
