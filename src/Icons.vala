@@ -65,10 +65,10 @@ class Icons {
 		f = find_file ("icons\\", name);
 		if (likely (f.query_exists ())) return f;
 
-		f = find_file ("/usr/local/share/supplement/icons/", name);
+		f = find_file ("/usr/local/share/birdfont/icons/", name);
 		if (likely (f.query_exists ())) return f;
 
-		f = find_file ("/usr/share/supplement/icons/", name);
+		f = find_file ("/usr/share/birdfont/icons/", name);
 		if (likely (f.query_exists ())) return f;
 			
 		return f;
