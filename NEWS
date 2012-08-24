@@ -1,4 +1,10 @@
-birdfont (0.1) stable;
+birdfont (0.1.1) stable;
+
+  * Several important bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Aug 24 02:03:29 CEST 2012
+
+birdfont (0.1.0) stable;
 
   * First release
 
