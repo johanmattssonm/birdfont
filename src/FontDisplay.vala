@@ -146,10 +146,10 @@ public abstract class FontDisplay : GLib.Object {
 		f = Icons.find_file ("", name);
 		if (likely (f.query_exists ())) return f;
 		
-		f = Icons.find_file ("/usr/local/share/supplement/", name);
+		f = Icons.find_file ("/usr/local/share/birdfont/", name);
 		if (likely (f.query_exists ())) return f;
 
-		f = Icons.find_file ("/usr/share/supplement/", name);
+		f = Icons.find_file ("/usr/share/birdfont/", name);
 		if (likely (f.query_exists ())) return f;
 					
 		return f;
