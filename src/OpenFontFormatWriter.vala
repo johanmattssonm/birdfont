@@ -685,10 +685,10 @@ class GlyfTable : Table {
 	static const uint16 SCALE_WITH_ROTATTION = 1 << 7;
 	static const uint16 INSTRUCTIONS = 1 << 8;
 
-	public int16 xmin = 0;
-	public int16 ymin = 0;
-	public int16 xmax = 0;
-	public int16 ymax = 0;
+	public int16 xmin = int16.MAX;
+	public int16 ymin = int16.MAX;
+	public int16 xmax = int16.MIN;
+	public int16 ymax = int16.MIN;
 
 	public FontData dis;
 	public HeadTable head_table;
@@ -1129,6 +1129,10 @@ class GlyfTable : Table {
 			if (!(ixmin <= last <= ixmax))	{
 				stderr.printf (@"x is out of bounds in glyph $(name.str). ($ixmin <= $last <= $ixmax)\n");
 			}
+			
+			if (!(head_table.xmin <= last <= head_table.xmax))	{
+				stderr.printf (@"x is outside of of font bounding box in glyph $(name.str). ($(head_table.xmin) <= $last <= $(head_table.xmax))\n");
+			}
 		}
 		
 		last = 0;
@@ -1152,6 +1156,10 @@ class GlyfTable : Table {
 			
 			if (!(iymin <= last <= iymax))	{
 				stderr.printf (@"y is out of bounds in glyph $(name.str). ($iymin <= $last <= $iymax)\n");
+			}
+			
+			if (!(head_table.ymin <= last <= head_table.ymax))	{
+				stderr.printf (@"y is outside of of font bounding box in glyph $(name.str). ($(head_table.ymin) <= $last <= $(head_table.ymax))\n");
 			}
 		}
 		
@@ -1410,20 +1418,20 @@ class GlyfTable : Table {
 				
 				fd.add_16 ((int16) x);
 				
-				if (x + prev < txmin) txmin = (int16) (x + prev);
-				if (x + prev > txmax) txmax = (int16) (x + prev);
+				if (x + prev <= txmin) txmin = (int16) (x + prev - 1);
+				if (x + prev >= txmax) txmax = (int16) (x + prev + 1);
 				
 				prev = e.x * UNITS + g.left_limit * UNITS;
 				
 				if (e.get_right_handle ().type == PointType.CURVE) {
-					x = e.get_right_handle ().x () * UNITS - prev + g.left_limit  * UNITS;
+					x = e.get_right_handle ().x () * UNITS - prev + g.left_limit * UNITS;
 
 					fd.add_16 ((int16) x);
 					
-					if (x + prev < txmin) txmin = (int16) (x + prev);
-					if (x + prev > txmax) txmax = (int16) (x + prev);
+					if (x + prev <= txmin) txmin = (int16) (x + prev - 1);
+					if (x + prev >= txmax) txmax = (int16) (x + prev + 1);
 					
-					prev = e.get_right_handle ().x () * UNITS + g.left_limit  * UNITS;
+					prev = e.get_right_handle ().x () * UNITS + g.left_limit * UNITS;
 				}
 			}
 		}
@@ -1436,8 +1444,8 @@ class GlyfTable : Table {
 				y = e.y * UNITS - prev + font.base_line  * UNITS;
 				fd.add_16 ((int16) y);
 
-				if (y + prev < tymin) tymin = (int16) (y + prev);
-				if (y + prev > tymax) tymax = (int16) (y + prev);
+				if (y + prev <= tymin) tymin = (int16) (y + prev - 1);
+				if (y + prev >= tymax) tymax = (int16) (y + prev + 1);
 
 				prev = e.y * UNITS + font.base_line * UNITS;
 				
@@ -1446,8 +1454,8 @@ class GlyfTable : Table {
 					
 					fd.add_16 ((int16) y);
 					
-					if (y + prev < tymin) tymin = (int16) (y + prev);
-					if (y + prev > tymax) tymax = (int16) (y + prev);
+					if (y + prev <= tymin) tymin = (int16) (y + prev - 1);
+					if (y + prev >= tymax) tymax = (int16) (y + prev + 1);
 					
 					prev = e.get_right_handle ().y () * UNITS + font.base_line  * UNITS;
 				}
@@ -1478,10 +1486,10 @@ class GlyfTable : Table {
 		printd (@"tymax: $tymax\n");
 
 		// save this for head table
-		if (this.xmin > txmin) this.xmin = txmin;
-		if (this.ymin > tymin) this.ymin = tymin;
-		if (this.xmax > txmax) this.xmax = txmax;
-		if (this.ymax > tymax) this.ymax = tymax;
+		if (txmin < this.xmin) this.xmin = txmin;
+		if (tymin < this.ymin) this.ymin = tymin;
+		if (txmax > this.xmax) this.xmax = txmax;
+		if (tymax > this.ymax) this.ymax = tymax;
 		
 		// part of average width calculation for OS/2 table
 		total_width += xmax - xmin;
@@ -2018,10 +2026,10 @@ class CmapTable : Table {
 
 class HeadTable : Table {
 
-	int16 xmin = 0;
-	int16 ymin = 0;
-	int16 xmax = 0;
-	int16 ymax = 0;
+	public int16 xmin = int16.MIN;
+	public int16 ymin = int16.MIN;
+	public int16 xmax = int16.MAX;
+	public int16 ymax = int16.MAX;
 	
 	uint32 adjusted_checksum = 0;
 
@@ -2162,13 +2170,17 @@ class HeadTable : Table {
 		font_data.add_64 (0); // creation time since 1904-01-01
 		font_data.add_64 (0); // modified time since 1904-01-01
 		
-		// glyf_table.get_boundries(out xmin, out ymin, out xmax, out ymax);
-		
 		xmin = glyf_table.xmin;
 		ymin = glyf_table.ymin;
 		xmax = glyf_table.xmax;
 		ymax = glyf_table.ymax;
-		
+
+		printd (@"font boundries:\n");
+		printd (@"xmin: $xmin\n");
+		printd (@"ymin: $ymin\n");
+		printd (@"xmax: $xmax\n");
+		printd (@"ymax: $ymax\n");
+				
 		font_data.add_16 (xmin);
 		font_data.add_16 (ymin);
 		font_data.add_16 (xmax);

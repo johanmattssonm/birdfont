@@ -62,7 +62,7 @@ TEST = [
 	'TestSupplement.vala'
 ]
 
-def build (bld):	
+def build (bld):
 	bld.program (
 		target        = 'birdfont',
 		param         = '--disable-warnings --enable-experimental --enable-experimental-non-null --vapidir=../../',
