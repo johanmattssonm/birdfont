@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Birdfont
+Name[ru]=Birdfont
+Comment=SVG Fonts editor
+Comment[ru]=Редактор шрифтов SVG
+Exec=birdfont %U
+Icon=birdfont
+StartupWMClass=birdfont
+Terminal=false
+Type=Application
+Categories=Graphics;
+

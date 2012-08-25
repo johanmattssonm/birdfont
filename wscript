@@ -33,7 +33,5 @@ def build(bld):
 	if bld.options.win32 :
 		bld.recurse('win32')
 
-
-
-
+	bld.install_files('${PREFIX}/share/applications/', ['birdfont.desktop'])
 
