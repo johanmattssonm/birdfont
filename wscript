@@ -7,7 +7,8 @@ out = 'build'
 def options(opt):
 	opt.load('compiler_c')
 	opt.load('vala')
-	
+	opt.add_option('--win32', action='store_true', default=False, help='Crosscompile and create windows installer')
+
 def configure(conf):
 	conf.load('compiler_c vala')
 
@@ -18,6 +19,9 @@ def configure(conf):
 	conf.check_cfg(package='webkit-1.0', uselib_store='WEB', mandatory=1, args='--cflags --libs')
 	
 	conf.env.append_unique('VALAFLAGS', ['--thread', '--pkg', 'webkit-1.0', '--enable-experimental', '--enable-experimental-non-null', '--vapidir=../../'])
+
+	if conf.options.win32 :
+		print ('Crosscompiling for windows32')
 	
 def build(bld):
 	bld.recurse('src')
@@ -25,3 +29,11 @@ def build(bld):
 	start_dir = bld.path.find_dir('./')
 	bld.install_files('${PREFIX}/share/birdfont/', start_dir.ant_glob('layout/*'), cwd=start_dir, relative_trick=True)
 	bld.install_files('${PREFIX}/share/birdfont/', start_dir.ant_glob('icons/*'), cwd=start_dir, relative_trick=True)
+	
+	if bld.options.win32 :
+		bld.recurse('win32')
+
+
+
+
+

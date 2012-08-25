@@ -164,6 +164,7 @@ class TestCases {
 
 	public static void test_data_reader () {
 		FontData fd = new FontData ();
+		uint len;
 		
 		fd.add (7);
 		fd.add_ulong (0x5F0F3CF5);
@@ -181,6 +182,16 @@ class TestCases {
 		
 		fd.seek (2 * 80);
 		warn_if_fail (fd.read_short () == 80);
+		
+		fd.seek (100);
+		fd.add_short (7);
+		fd.seek (100);
+		warn_if_fail (fd.read_short () == 7);
+		
+		fd.seek_end ();
+		len = fd.length ();
+		fd.add (0);
+		warn_if_fail (len + 1 == fd.length ());
 	}
 
 	public static void test_argument () {

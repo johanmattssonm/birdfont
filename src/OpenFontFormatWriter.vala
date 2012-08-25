@@ -1127,11 +1127,11 @@ class GlyfTable : Table {
 			last = xcoordinates[i];
 			
 			if (!(ixmin <= last <= ixmax))	{
-				stderr.printf (@"x is out of bounds in glyph $(name.str). ($ixmin <= $last <= $ixmax)\n");
+				stderr.printf (@"x is out of bounds in glyph $(name.str). ($ixmin <= $last <= $ixmax) char $((uint)character)\n");
 			}
 			
 			if (!(head_table.xmin <= last <= head_table.xmax))	{
-				stderr.printf (@"x is outside of of font bounding box in glyph $(name.str). ($(head_table.xmin) <= $last <= $(head_table.xmax))\n");
+				stderr.printf (@"x is outside of of font bounding box in glyph $(name.str). ($(head_table.xmin) <= $last <= $(head_table.xmax)) char $((uint)character)\n");
 			}
 		}
 		
@@ -1155,11 +1155,11 @@ class GlyfTable : Table {
 			last = ycoordinates[i];
 			
 			if (!(iymin <= last <= iymax))	{
-				stderr.printf (@"y is out of bounds in glyph $(name.str). ($iymin <= $last <= $iymax)\n");
+				stderr.printf (@"y is out of bounds in glyph $(name.str). ($iymin <= $last <= $iymax) char $((uint)character)\n");
 			}
 			
 			if (!(head_table.ymin <= last <= head_table.ymax))	{
-				stderr.printf (@"y is outside of of font bounding box in glyph $(name.str). ($(head_table.ymin) <= $last <= $(head_table.ymax))\n");
+				stderr.printf (@"y is outside of of font bounding box in glyph $(name.str). ($(head_table.ymin) <= $last <= $(head_table.ymax)) char $((uint)character)\n");
 			}
 		}
 		
@@ -1322,10 +1322,16 @@ class GlyfTable : Table {
 		double x, y;
 
 		Font font = Supplement.get_current_font ();
-		int glyph_offset = (int) fd.length ();
+		int glyph_offset;
 		
 		uint len; 
 		uint coordinate_length;
+		
+		fd.seek_end (); // append glyph
+		
+		glyph_offset = (int) fd.length ();
+		
+		printd (@"glyph_offset: $(glyph_offset)\n");
 		
 		g.remove_empty_paths ();
 		if (g.path_list.length () == 0) {
@@ -1337,17 +1343,17 @@ class GlyfTable : Table {
 		
 		ncontours = (int16) g.path_list.length ();
 		fd.add_short (ncontours);
-			
-		txmin = 0;
-		tymin = 0;
-		txmax = 0;
-		tymax = 0;
 		
-		// will be zero now and set again after coordinate arrays have been parsed
-		fd.add_16 (txmin);
-		fd.add_16 (tymin);
-		fd.add_16 (txmax);
-		fd.add_16 (tymax);
+		txmin = int16.MAX;
+		tymin = int16.MAX;
+		txmax = int16.MIN;
+		tymax = int16.MIN;
+		
+		// will be set again after coordinate arrays have been parsed
+		fd.add_16 (10);
+		fd.add_16 (20);
+		fd.add_16 (30);
+		fd.add_16 (40);
 		
 		// end points
 		end_point = 0;
@@ -1372,8 +1378,10 @@ class GlyfTable : Table {
 		
 		fd.add_u16 (0); // instruction length 
 		
-		uint hl = fd.length ();
-		printd (@"glyf header length: $(hl)\n");
+		uint glyph_header = 12 + ncontours * 2;
+		
+		printd (@"\next glyf: $(g.name)\n");
+		printd (@"glyf header length: $(glyph_header)\n");
 		
 		// instructions should go here 
 		
@@ -1418,8 +1426,8 @@ class GlyfTable : Table {
 				
 				fd.add_16 ((int16) x);
 				
-				if (x + prev <= txmin) txmin = (int16) (x + prev - 1);
-				if (x + prev >= txmax) txmax = (int16) (x + prev + 1);
+				if (x + prev <= txmin) txmin = (int16) (x + prev);
+				if (x + prev >= txmax) txmax = (int16) (x + prev + 0.5);
 				
 				prev = e.x * UNITS + g.left_limit * UNITS;
 				
@@ -1427,10 +1435,9 @@ class GlyfTable : Table {
 					x = e.get_right_handle ().x () * UNITS - prev + g.left_limit * UNITS;
 
 					fd.add_16 ((int16) x);
-					
-					if (x + prev <= txmin) txmin = (int16) (x + prev - 1);
-					if (x + prev >= txmax) txmax = (int16) (x + prev + 1);
-					
+
+					// Only on curve points are good for calculating bounding box
+
 					prev = e.get_right_handle ().x () * UNITS + g.left_limit * UNITS;
 				}
 			}
@@ -1444,8 +1451,8 @@ class GlyfTable : Table {
 				y = e.y * UNITS - prev + font.base_line  * UNITS;
 				fd.add_16 ((int16) y);
 
-				if (y + prev <= tymin) tymin = (int16) (y + prev - 1);
-				if (y + prev >= tymax) tymax = (int16) (y + prev + 1);
+				if (y + prev <= tymin) tymin = (int16) (y + prev);
+				if (y + prev >= tymax) tymax = (int16) (y + prev + 0.5);
 
 				prev = e.y * UNITS + font.base_line * UNITS;
 				
@@ -1454,21 +1461,23 @@ class GlyfTable : Table {
 					
 					fd.add_16 ((int16) y);
 					
-					if (y + prev <= tymin) tymin = (int16) (y + prev - 1);
-					if (y + prev >= tymax) tymax = (int16) (y + prev + 1);
-					
 					prev = e.get_right_handle ().y () * UNITS + font.base_line  * UNITS;
 				}
 			}
 		}
 		
-		coordinate_length = fd.length () - nflags - hl;
+		printd (@"fd.length (): $(fd.length ())\n");
+		coordinate_length = fd.length () - nflags - glyph_header;
 		printd (@"coordinate_length: $(coordinate_length)\n");
+		assert (fd.length () > nflags + glyph_header);
 		
 		len = fd.length ();
 		
+		printd (@"glyph_offset: $(glyph_offset)\n");
+		printd (@"len: $(len)\n");
+		
 		fd.seek (glyph_offset + 2); // go to box boundries for this glyf
-		assert (fd.read_short () == 0);
+		// assert (fd.read_short () == int16.MAX);
 
 		// add bounding box
 		fd.add_16 (txmin);
@@ -1476,8 +1485,15 @@ class GlyfTable : Table {
 		fd.add_16 (txmax);
 		fd.add_16 (tymax);
 		fd.seek_end ();
-
+	
 		assert (len == fd.length ());
+		
+		fd.seek (glyph_offset + 2);
+		assert (fd.read_int16 () == txmin);
+		assert (fd.read_int16 () == tymin);
+		assert (fd.read_int16 () == txmax);
+		assert (fd.read_int16 () == tymax);
+		fd.seek_end ();
 
 		printd (@"\n");
 		printd (@"txmin: $txmin\n");
@@ -1490,7 +1506,7 @@ class GlyfTable : Table {
 		if (tymin < this.ymin) this.ymin = tymin;
 		if (txmax > this.xmax) this.xmax = txmax;
 		if (tymax > this.ymax) this.ymax = tymax;
-		
+				
 		// part of average width calculation for OS/2 table
 		total_width += xmax - xmin;
 		
@@ -2108,7 +2124,13 @@ class HeadTable : Table {
 		
 		xmax = dis.read_short ();
 		ymax = dis.read_short ();
-		
+
+		printd (@"font boundries:\n");
+		printd (@"xmin: $xmin\n");
+		printd (@"ymin: $ymin\n");
+		printd (@"xmax: $xmax\n");
+		printd (@"ymax: $ymax\n");
+				
 		mac_style = dis.read_ushort ();
 		lowest_PPEM = dis.read_ushort ();
 		font_direction_hint = dis.read_short ();
@@ -2169,7 +2191,7 @@ class HeadTable : Table {
 		
 		font_data.add_64 (0); // creation time since 1904-01-01
 		font_data.add_64 (0); // modified time since 1904-01-01
-		
+
 		xmin = glyf_table.xmin;
 		ymin = glyf_table.ymin;
 		xmax = glyf_table.xmax;
@@ -2180,12 +2202,12 @@ class HeadTable : Table {
 		printd (@"ymin: $ymin\n");
 		printd (@"xmax: $xmax\n");
 		printd (@"ymax: $ymax\n");
-				
-		font_data.add_16 (xmin);
-		font_data.add_16 (ymin);
-		font_data.add_16 (xmax);
-		font_data.add_16 (ymax);
-		
+
+		font_data.add_short (xmin);
+		font_data.add_short (ymin);
+		font_data.add_short (xmax);
+		font_data.add_short (ymax);
+	
 		font_data.add_u16 (0); // mac style
 		font_data.add_u16 (2); // smallest recommended size in pixels, ppem
 		font_data.add_16 (2); // deprecated direction hint
@@ -2395,9 +2417,9 @@ class HmtxTable : Table {
 		foreach (Glyph g in glyf_table.glyphs) {
 			g.boundries (out xmin, out ymin, out xmax, out ymax);
 
-			lsb = (int16) ((xmin - g.left_limit) * UNITS + 0.5);
-			advance = (int16) (g.right_limit * UNITS  - g.left_limit * UNITS  + 0.5);
-			extent = (int16) (lsb + (xmax * UNITS  - xmin * UNITS ) + 0.5);
+			lsb = (int16) ((xmin - g.left_limit) * UNITS);
+			advance = (int16) (g.right_limit * UNITS  - g.left_limit * UNITS);
+			extent = (int16) (lsb + (xmax * UNITS  - xmin * UNITS ));
 			rsb = (int16) (advance - extent);
 
 			printd (@"$(g.name) advance: $advance  = $((int16) (g.right_limit))  -  $((int16) (g.left_limit))\n");
