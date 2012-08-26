@@ -20,9 +20,6 @@ using Gtk;
 namespace Supplement {
 
 class Supplement {
-
-	public static const string VERSION = "0.1.1";
-	
 	public static Argument args;
 	public static bool experimental;
 

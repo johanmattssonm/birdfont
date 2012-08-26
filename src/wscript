@@ -6,6 +6,7 @@ SUPPLEMENT_MAIN = [
 	'ExportTool.vala',
 	'FontDisplay.vala',
 	'CharDatabase.vala',
+	'Config.vala',
 	'Context.vala',
 	'CutBackgroundTool.vala',
 	'CutTool.vala',

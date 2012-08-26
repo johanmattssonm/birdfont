@@ -20,3 +20,19 @@ Configure, build and install with waf:
 su
 ./waf install
 
+
+------------------------
+Bulding windows binaries
+------------------------
+
+Windows binaries are cross compiled with mingw on a Ubuntu system. Install
+all dependencies from Gregs repository as described here:
+
+http://greg.thehellings.com/2012/02/a-better-ubuntu-mingw-experience/
+
+You need wine and nsis windows installer as well
+
+Compile and build the installer with:
+./waf configure --win32 --installer
+./waf build --win32 --installer
+
