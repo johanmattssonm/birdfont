@@ -5052,7 +5052,7 @@ public static uint16 largest_pow2_exponent (uint16 max) {
 }
 
 void printd (string s) {
-	print (s);
+	// print (s);
 }
 
 }

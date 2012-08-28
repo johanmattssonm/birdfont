@@ -749,8 +749,37 @@ class Path {
 		return Math.fabs (Math.sqrt (Math.pow (ax - bx, 2) + Math.pow (ay - by, 2)));
 	}
 	
+	/** Estimate length of path. */
+	private double get_length () {
+		double len = 0;
+		
+		return_if_fail (points.length () > 2);
+		
+		EditPoint prev = points.last ().data;
+		foreach (EditPoint p in points) {
+			len += get_length_from (prev, p);
+			prev = p;
+		}
+		
+		return len;
+	}
+	
+	private static double get_length_from (EditPoint a, EditPoint b) {
+		double x, y;
+		
+		x = Math.fabs (a.x - a.get_right_handle ().x ());
+		x += Math.fabs (a.get_right_handle ().x () - b.get_left_handle ().x ());
+		x += Math.fabs (b.get_left_handle ().x () - b.x);
+
+		y = Math.fabs (a.y - a.get_right_handle ().y ());
+		y += Math.fabs (a.get_right_handle ().y () - b.get_left_handle ().y ());
+		y += Math.fabs (b.get_left_handle ().y () - b.y);
+		
+		return Math.fabs (Math.sqrt (x * x + y * y));
+	} 
+	
 	/** Variable precision */
-	public bool is_over_coordinate_var (double x, double y, double precision) {
+	public bool is_over_coordinate_var (double x, double y, double tolerance) {
 		List<EditPoint> ycoordinates = new List<EditPoint> ();
 		double last = 0;
 		bool on_edge = false;
@@ -760,12 +789,12 @@ class Path {
 			return false;
 		}
 		
-		if (!is_over_boundry_precision (x, y, precision)) {
+		if (!is_over_boundry_precision (x, y, tolerance)) {
 			return false;
 		}
 
 		foreach (EditPoint e in points) {
-			if (distance (e.x, x, e.y, y) < precision) {
+			if (distance (e.x, x, e.y, y) < tolerance) {
 				return true;
 			}
 		}
@@ -773,12 +802,12 @@ class Path {
 		all_of_path ((cx, cy, ct) => {
 			double distance = Math.fabs (Math.sqrt (Math.pow (cx - x, 2) + Math.pow (cy - y, 2)));
 			
-			if (distance < precision) {
+			if (distance < tolerance) {
 				on_edge = true;
 				return false;
 			}
 			
-			if (Math.fabs (cx - x) < precision && Math.fabs (last - cy) > 1) {
+			if (Math.fabs (cx - x) < tolerance && Math.fabs (last - cy) > 2 * tolerance) {
 				ycoordinates.append (new EditPoint (cx, cy));
 				last = cy;
 			}
@@ -811,11 +840,11 @@ class Path {
 		}
 		
 		for (unowned List<EditPoint> e = ycoordinates.first (); true; e = e.next) {
-			if (y <= e.data.y + precision) {
+			if (y <= e.data.y + tolerance) {
 				return_if_fail ((void*) e.next != null);
 				e = e.next;
 
-				if (y >= e.data.y - precision) {
+				if (y >= e.data.y - tolerance) {
 					return true;
 				}
 			}
@@ -1374,19 +1403,23 @@ class Path {
 	}
 
 	// TODO: Find a clever mathematical solutions instead
-	public static void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = 400) {
+	public static void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = -1) {
+		
+		if (steps == -1) {
+			steps = (int) (10 * get_length_from (start, stop));
+		}
+		
 		all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.get_left_handle ().x (), stop.get_left_handle ().y (), stop.x, stop.y, iter, steps);
 	}
 
-	private static void all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, int steps = 400) {
+	private static void all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
 		double px = x1;
 		double py = y1;
 		
 		double t;
-		double s = steps;
 		
 		for (int i = 0; i < steps; i++) {
-			t = i / s;
+			t = i / steps;
 			
 			px = bezier_path (t, x0, x1, x2, x3);
 			py = bezier_path (t, y0, y1, y2, y3);
