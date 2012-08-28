@@ -602,7 +602,8 @@ class PenTool : Tool {
 
 		g = MainWindow.get_current_glyph ();
 
-		test_click_action (1, 130, 130); 
+		test_click_action (1, 130, 130); // open path
+		test_click_action (1, 130, 130); // add point
 		epa = g.get_last_edit_point ();
 		
 		test_click_action (1, 160, 130);
@@ -757,7 +758,9 @@ class PenTool : Tool {
 		MainWindow.get_overview ().open_current_glyph ();
 		
 		pen_tool.test_select_action ();
-				
+		
+		pen_tool.test_click_action (1, 0, 0); // open path
+		
 		pen_tool.test_click_action (1, a.x, a.y);
 		pen_tool.test_click_action (1, b.x, b.y);
 		pen_tool.test_click_action (1, c.x, c.y);
@@ -867,9 +870,11 @@ class PenTool : Tool {
 		Tool delete_tool = MainWindow.get_toolbox ().get_tool ("erase_tool");
 		
 		test_open_next_glyph ();
+				
+		pen = (PenTool) select_pen ();
+		pen.test_click_action (1, 0, 0); // open path
 		
 		// draw a line with ten points
-		pen = (PenTool) select_pen ();
 		for (int i = 1; i <= 10; i++) {
 			pen.test_click_action (1, 20*i, 20);
 		}	

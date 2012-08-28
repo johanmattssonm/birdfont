@@ -756,7 +756,7 @@ class Path {
 		bool on_edge = false;
 		double last_x = 0;
 		
-		if (points.length () == 0) {
+		if (points.length () < 3) {
 			return false;
 		}
 		
@@ -830,7 +830,7 @@ class Path {
 	
 	public bool is_over_boundry_precision (double x, double y, double p) {
 		if (unlikely (ymin == double.MAX)) {
-			warning ("no bounding box");
+			warning (@"no bounding box. length ($(points.length ()))");
 		}
 		
 		return (ymin - p <= y <= ymax + p) && (xmin - p <= x <= xmax + p);
