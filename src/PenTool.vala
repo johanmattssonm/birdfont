@@ -626,9 +626,10 @@ class PenTool : Tool {
 	/** Test path coordinates and reverse path coordinates. */
 	public void test_coordinates () {
 		int x, y, xc, yc;
-		double px, py;
+		double px, py, mx, my;
 		string n;
 		
+		Tool.test_open_next_glyph ();
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		xc = (int) (g.allocation.width / 2.0);
@@ -642,6 +643,13 @@ class PenTool : Tool {
 		px = g.path_coordinate_x (x);
 		py = g.path_coordinate_y (y);
 
+		mx = x * g.ivz () - g.xc () + g.view_offset_x;
+		my = g.yc () - y * g.ivz () - g.view_offset_y;
+		
+		if (mx != px || my != py) {
+			warning (@"bad coordinate $mx != $px || $my != $py");
+		}
+			
 		test_reverse_coordinate (x, y, px, py, "ten fifteen");
 		test_click_action (1, x, y);
 	
@@ -649,11 +657,9 @@ class PenTool : Tool {
 		n = "Offset no zoom";
 		g.reset_zoom ();
 		
-		
 		px = g.path_coordinate_x (x);
 		py = g.path_coordinate_y (y);
 		
-		test_coordinate (px, py, x, y, n);
 		test_reverse_coordinate (x, y, px, py, n);
 		test_click_action (1, x, y);
 				
@@ -693,7 +699,7 @@ class PenTool : Tool {
 		bool d = ((!)MainWindow.get_current_glyph ().get_last_path ()).is_clockwise ();
 		
 		if (d) {
-				critical (@"\nPath $name is clockwise, in test_last_is_counter_clockwise");
+			critical (@"\nPath $name is clockwise, in test_last_is_counter_clockwise");
 		}		
 	}
 	

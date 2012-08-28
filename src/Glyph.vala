@@ -710,42 +710,25 @@ class Glyph : FontDisplay {
 
 	public static double path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
-		double xc = Glyph.yc ();
-		
-		return_if_fail (xc != 0);
-		
-		x *= 1 / g.view_zoom;
-		return (x - xc + g.view_offset_x);
+		return_if_fail (g.view_zoom != 0);
+		return x * g.ivz () - g.xc () + g.view_offset_x;
 	}
 
 	public static int reverse_path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
-		double xc = Glyph.xc ();
-		
-		return_if_fail (xc != 0);
-		
-		x *= g.view_zoom;
-		return (int) (x + xc + g.view_offset_x);
+		return_if_fail (g.view_zoom != 0);
+		return (int) ((x - g.view_offset_x + g.xc ()) * g.view_zoom + 0.5);
 	}
 
 	public static double path_coordinate_y (double y) {
-		Glyph? t = MainWindow.get_current_glyph ();
-		
-		return_val_if_fail (t != null, 0);
-		
-		Glyph g = (!) t;
-		double yc = (g.allocation.height / 2.0);
-
-		y *= 1 / g.view_zoom;
-		
-		return (yc - y) - g.view_offset_y;
+		Glyph g = MainWindow.get_current_glyph ();
+		return g.yc () - y * g.ivz () - g.view_offset_y;
 	}
 
 	public static int reverse_path_coordinate_y (double y) {
 		Glyph g = MainWindow.get_current_glyph ();
-		double yc = (g.allocation.height / 2.0);
-		y *= g.view_zoom;
-		return (int) ((yc - y) + g.view_offset_y);
+		y = ((y + g.view_offset_y - g.yc ()) * g.view_zoom);
+		return (int) (-y + 0.5);
 	}
 
 	public static void reverse (double x, double y, out int rx, out int ry) {
