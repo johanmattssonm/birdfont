@@ -599,7 +599,7 @@ class LocaTable : Table {
 						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
 						print_offsets ();
 					}
-				} 
+				}
 				break;
 				
 			case 1:
@@ -611,6 +611,7 @@ class LocaTable : Table {
 						print_offsets ();
 					}				
 				}
+
 				break;
 			
 			default:
@@ -629,12 +630,25 @@ class LocaTable : Table {
 		FontData fd = new FontData ();
 		Font font = Supplement.get_current_font ();
 		uint32 last = 0;
+		uint32 prev = 0;
+		int i = 0;
 		
 		foreach (uint32 o in glyf_table.location_offsets) {
+			if (i != 0 && (o - prev) == 0) {
+				warning (@"gid $i is empty in loca table");
+			}
+
+			if (i != 0 && (o - prev) % 4 != 0) {
+				warning (@"glyph length is not a multiple of four in gid $i");
+			}
+			
 			if (o % 4 != 0) {
 				warning ("glyph is not on a four byte boundry");
 				assert_not_reached ();
 			}
+			
+			prev = o;
+			i++;
 		}
 	
 		if (head_table.loca_offset_size == 0) {
@@ -662,8 +676,7 @@ class LocaTable : Table {
 		} else {
 			warn_if_reached ();
 		}
-		
-		// err maybe not +1
+
 		if (!(glyf_table.location_offsets.length () == glyf_table.glyphs.length () + 1)) {
 			warning (@"(glyf_table.location_offsets.length () == glyf_table.glyphs.length () + 1) ($(glyf_table.location_offsets.length ()) == $(glyf_table.glyphs.length () + 1))");
 		}
@@ -1426,8 +1439,8 @@ class GlyfTable : Table {
 				
 				fd.add_16 ((int16) x);
 				
-				if (x + prev <= txmin) txmin = (int16) (x + prev);
-				if (x + prev >= txmax) txmax = (int16) (x + prev + 0.5);
+				if (x + prev <= txmin) txmin = (int16) x + (int16) prev;
+				if (x + prev >= txmax) txmax = (int16) x + (int16) prev;
 				
 				prev = e.x * UNITS + g.left_limit * UNITS;
 				
@@ -1451,8 +1464,8 @@ class GlyfTable : Table {
 				y = e.y * UNITS - prev + font.base_line  * UNITS;
 				fd.add_16 ((int16) y);
 
-				if (y + prev <= tymin) tymin = (int16) (y + prev);
-				if (y + prev >= tymax) tymax = (int16) (y + prev + 0.5);
+				if (y + prev <= tymin) tymin = (int16) y + (int16) prev;
+				if (y + prev >= tymax) tymax = (int16) y + (int16) prev;
 
 				prev = e.y * UNITS + font.base_line * UNITS;
 				

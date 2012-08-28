@@ -64,7 +64,7 @@ class TestCases {
 		warn_if_fail (g.active_paths.length () == 0);
 
 		g.select_path (50, 50);
-		
+
 		warn_if_fail (g.active_paths.length () == 1);
 		
 		p.add (-10, 10);
@@ -72,8 +72,8 @@ class TestCases {
 		p.add (10, -10);
 		p.add (-10, -10);
 		p.update_region_boundries ();
-		p.close ();
 		g.add_path (p);
+		g.close_path ();
 
 		if (!p.is_over_coordinate (0, 0)) {
 			warning ("Coordinate 0, 0 is not in path.");
@@ -83,7 +83,14 @@ class TestCases {
 			warning ("Corner corrdinate -10, 10 is not in path.");
 		}
 		
-		warn_if_fail (!p.is_over_coordinate (-20, -20));		
+		warn_if_fail (!p.is_over_coordinate (-20, -20));
+		
+		for (double x = -10; x <= 10; x += 0.1) {
+			for (double y = 10; y <= 10; y += 0.1) {
+				warn_if_fail (p.is_over_coordinate (x, y));
+			} 
+		} 
+		
 	}
 
 	public static void test_merge () {
