@@ -586,6 +586,7 @@ class PenTool : Tool {
 		
 		// merge it
 		
+		
 		this.yield ();
 		
 		return true;

@@ -93,6 +93,9 @@ class Glyph : FontDisplay {
 
 	public List<Kerning> kerning = new List<Kerning> ();
 
+	double motion_x = 0;
+	double motion_y = 0;
+	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -198,7 +201,7 @@ class Glyph : FontDisplay {
 			if (p.ymax > y2) y2 = p.ymax;
 		}
 	}
-
+	
 	/** @return centrum pixel for x coordinates. */
 	public static double xc () {
 		return MainWindow.get_current_glyph ().allocation.width / 2.0;
@@ -532,7 +535,12 @@ class Glyph : FontDisplay {
 		
 		t = MainWindow.get_toolbox ().get_current_tool ();
 		t.move_action (t, (int) e.x, (int) e.y);
-		
+
+		if (Supplement.show_coordinates) {
+			motion_x = e.x * ivz () - xc () + view_offset_x;
+			motion_y = yc () - e.y * ivz () - view_offset_y;
+		}
+	
 		help_line_event (e);	
 	}
 	
@@ -1350,6 +1358,14 @@ class Glyph : FontDisplay {
 		}		
 	}
 	
+	private void draw_coordinate (Context cr) {
+		cr.set_source_rgba (0.5, 0.5, 0.5, 1);
+		cr.set_font_size (12);
+		cr.move_to (0, 10);
+		cr.show_text (@"($motion_x, $motion_y)");
+		cr.stroke ();		
+	}
+	
 	private void draw_path (Context cr) {
 		double left, baseline;
 		
@@ -1395,14 +1411,11 @@ class Glyph : FontDisplay {
 	}
 	
 	private void draw_help_lines (Context cr) {
-		
-		// lines 
 		foreach (Line line in get_all_help_lines ()) {
 			cr.save ();
 			line.draw (cr, allocation);
 			cr.restore ();
 		}
-		
 	}
 	
 	public override void draw (Allocation allocation, Context cr) {
@@ -1419,6 +1432,10 @@ class Glyph : FontDisplay {
 		cr.save ();
 		draw_background_color (cr, 1);
 		cr.restore ();
+
+		if (Supplement.show_coordinates) {
+			draw_coordinate (cmp);
+		}
 
 		if (show_help_lines) {
 			cmp.save ();

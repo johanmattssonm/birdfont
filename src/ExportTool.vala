@@ -383,16 +383,6 @@ os.put_string ("""
 		ta.show_text (@"Wrote $file_name");
 		return true;
 	}
-	
-	public override bool test () {
-		this.yield ();
-		return true;
-	}
-
-	public void test_view_result () {
-		test ();
-		view_result ();
-	}
 }
 
 }

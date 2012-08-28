@@ -146,10 +146,8 @@ class Toolbox : DrawingArea {
 		draw_tool_modifiers.add_tool (erase_tool);	
 				
 		// path tools
-		if (Supplement.experimental) {
-			Tool union_paths_tool = new MergeTool ("union_paths");
-			path_tool_modifiers.add_tool (union_paths_tool);
-		}
+		Tool union_paths_tool = new MergeTool ("union_paths");
+		path_tool_modifiers.add_tool (union_paths_tool);
 		
 		Tool reverse_path_tool = new Tool ("reverse_path", "Create counter from outline", 'r');
 		reverse_path_tool.select_action.connect((self) => {

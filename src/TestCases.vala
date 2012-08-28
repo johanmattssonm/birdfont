@@ -35,10 +35,85 @@ class TestCases {
 		add (test_coordinates, "Coordinates");
 		add (test_drawing, "Pen tool");
 		add (test_delete_points, "Delete edit points");
-		add (test_view_result, "View result in web browser");
 		add (test_save_backup, "Save backup");
 		add (test_convert_to_quadratic_bezier_path, "Convert to quadratic path");
 		add (test_notdef, "Notdef");
+		add (test_merge, "Merge");
+		add (test_over_path, "Over path");
+	}
+
+	public static void test_over_path () {
+		Glyph g;
+		Path p = new Path ();
+		Path p2 = new Path ();
+		Tool pen_tool;
+		
+		pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+		pen_tool.test_select_action ();
+		Tool.test_open_next_glyph ();
+		
+		g = MainWindow.get_current_glyph ();
+
+		pen_tool.test_click_action (1, 10, 10);
+		pen_tool.test_click_action (1, 10, 10);
+		pen_tool.test_click_action (1, 100, 10);
+		pen_tool.test_click_action (1, 100, 100);
+		pen_tool.test_click_action (1, 10, 100);
+		pen_tool.test_click_action (3, 0, 0);
+
+		warn_if_fail (g.active_paths.length () == 0);
+
+		g.select_path (50, 50);
+		
+		warn_if_fail (g.active_paths.length () == 1);
+		
+		p.add (-10, 10);
+		p.add (10, 10);
+		p.add (10, -10);
+		p.add (-10, -10);
+		p.update_region_boundries ();
+		p.close ();
+		g.add_path (p);
+
+		if (!p.is_over_coordinate (0, 0)) {
+			warning ("Coordinate 0, 0 is not in path.");
+		}
+		
+		if (!p.is_over_coordinate (-10, 10)) {
+			warning ("Corner corrdinate -10, 10 is not in path.");
+		}
+		
+		warn_if_fail (!p.is_over_coordinate (-20, -20));		
+	}
+
+	public static void test_merge () {
+		Glyph g;
+		Path p = new Path ();
+		Path p2 = new Path ();
+		
+		Tool.test_open_next_glyph ();
+		g = MainWindow.get_current_glyph ();
+				
+		p.add (-10, 10);
+		p.add (10, 10);
+		p.add (10, -10);
+		p.add (-10, -10);
+		p.close ();
+		g.add_path (p);
+
+		p2.add (10, 10);
+		p2.add (10, -10);		
+		p2.add (20, -10);
+		p2.add (20, 10);
+		p2.reverse ();
+		p2.close ();
+		g.add_path (p2);
+		
+		g.add_active_path (p);
+		g.add_active_path (p);
+		
+		g.add_active_path (p);
+		g.merge_all	();
 	}
 
 	public static void test_notdef () {
@@ -347,11 +422,6 @@ class TestCases {
 	public static void test_coordinates () {
 		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
 		tool.test_coordinates ();		
-	}
-
-	public static void test_view_result () {
-		ExportTool tool = (ExportTool) MainWindow.get_toolbox ().get_tool ("export");
-		tool.test_view_result ();
 	}
 
 	public static void test_reverse_random_paths () {

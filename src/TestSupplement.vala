@@ -134,6 +134,8 @@ class TestSupplement : GLib.Object {
 		stderr.printf ("%s\n\n", message);	
 		
 		get_singleton ().has_failed = true;
+		
+		assert (!Supplement.fatal_wanings);
 	}
 
 	public static void @continue () {

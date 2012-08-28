@@ -60,7 +60,7 @@ class Argument : GLib.Object {
 			}
 			
 			// valid parameter
-			if (a == "--autosave" || a == "--exit" || a == "--slow" || a == "--help" || a == "--test" || a == "--fatal-warning") {
+			if (a == "--autosave" || a == "--exit" || a == "--slow" || a == "--help" || a == "--test" || a == "--fatal-warning" || a == "--show-coordinates") {
 				prev = a;
 				i++;
 				continue;
@@ -180,6 +180,8 @@ class Argument : GLib.Object {
 		switch (p.get_char (1)) {
 			case 'a': 
 				return "--autosave";
+			case 'c':
+				return "--show-coordinates";
 			case 'e': 
 				return "--exit";
 			case 'f': 
@@ -231,6 +233,7 @@ class Argument : GLib.Object {
 		print_padded ("-h, --help", "show this message");
 		print_padded ("-s, --slow", "sleep between each command in test suite");
 		print_padded ("-t, --test [TEST]", "run test case");
+		print_padded ("-c  --show-coordinates", "show coordinate in glyph view");
 		
 		stdout.printf ("\n");
 	}

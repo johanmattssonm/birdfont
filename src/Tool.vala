@@ -265,9 +265,11 @@ class Tool : GLib.Object {
 
 	public static void test_open_next_glyph () {
 		Tool.yield ();
+		Glyph g;
 		OverView o = MainWindow.get_overview ();
 		
 		MainWindow.get_tab_bar ().select_overview ();
+		MainWindow.get_toolbox ().select_tool_by_name ("utf_8");
 		
 		o.select_next_glyph ();
 		Tool.yield ();

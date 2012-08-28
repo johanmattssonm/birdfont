@@ -25,7 +25,8 @@ class IntersectionList {
 	public void add (Intersection i) {
 		double d;
 		Intersection l;
-				
+		bool close = false;
+			
 		if (points.length () == 0) {
 			points.append (i);
 			return;
@@ -35,20 +36,34 @@ class IntersectionList {
 			return;
 		}
 	
-		l = ((!) points.last ()).data;
-		d = Math.fabs (Math.sqrt (Math.pow (i.x - l.x, 2) + Math.pow (i.y - l.y, 2)));
+		for (unowned List<Intersection> pl = points.first (); ; pl = pl.next) {
+			l = pl.data;
+			d = Math.fabs (Math.sqrt (Math.pow (i.x - l.x, 2) + Math.pow (i.y - l.y, 2)));
 
-		if (l.distance >= i.distance) {
-			points.remove_link (points.last ());
+			if (l.distance >= i.distance) {
+				close = true;
+				
+				if (d < 0.3) {
+					points.remove_link (points.last ());
+					points.append (i);
+					return;
+				}
+			}
+			
+			if (pl == points.last ()) {
+				break;
+			}
+		}
+		
+		if (!close) {
 			points.append (i);
-			return;
 		}
-
-		if (d < 0.3) {
-			return;
+	}
+	
+	public void clear () {
+		while (points.length () > 0) {
+			points.remove_link (points.first ());
 		}
-
-		points.append (i);
 	}
 	
 	public void remove_point (EditPoint e) {
@@ -70,15 +85,19 @@ class IntersectionList {
 	}
 	
 	bool has_point (Intersection i) {
+		return has_point_at (i.x, i.y);
+	}
+
+	bool has_point_at (double x, double y) {
 		foreach (Intersection n in points) {
-			if (i.x == n.x && i.y == n.y) {
+			if (x == n.x && y == n.y) {
 				return true;
 			}
 		}
 		
 		return false;
 	}
-	
+		
 	public int get_point_index (EditPoint e) {
 		int i = 0;
 		foreach (Intersection n in points) {
@@ -105,13 +124,14 @@ class IntersectionList {
 	}
 	
 	public Intersection? get_intersection (EditPoint e) {
+		Intersection? p = null;
 		foreach (Intersection n in points) {
 			if (n.editpoint_a == e || n.editpoint_b == e) {
-				return n;
+				assert (p == null);
+				p = n;
 			}
 		}
-		
-		return null;
+		return p;
 	}
 	
 	public void append (IntersectionList i) {
@@ -133,6 +153,7 @@ class IntersectionList {
 			return il;
 		}
 		
+		// find crossing paths
 		a_start = p1.points.first ();
 		for (int i = 0; i < p1.points.length (); i++) {
 			
@@ -150,27 +171,15 @@ class IntersectionList {
 				} else {
 					b_stop = b_start.data.get_next ();
 				}
-				
-				//if (probably_intersecting (a_start.data, a_stop.data, b_start.data, b_stop.data)) {
-					il.append (find_intersections (a_start.data, a_stop.data, b_start.data, b_stop.data));
-				//}
-				
+
+				il.append (find_intersections (a_start.data, a_stop.data, b_start.data, b_stop.data));
+
 				b_start = b_stop;
 			}
 			
 			a_start = a_stop;
-		} 
-/*
-		foreach (Intersection inter in il.points) {
-			e = new EditPoint ();
-			p1.get_closest_point_on_path (e, inter.x, inter.y);
-			inter.editpoint_a = e;
-
-			e = new EditPoint ();
-			p2.get_closest_point_on_path (e, inter.x, inter.y);
-			inter.editpoint_b = e;
-		}		
-		*/
+		}
+		
 		return il;
 	}
 
@@ -189,7 +198,7 @@ class IntersectionList {
 				double d = Math.fabs (Math.sqrt (Math.pow (ax - bx, 2) + Math.pow (ay - by, 2)));
 				
 				if (d < 0.2) {
-					il.add (new Intersection (ax, ay, 0));
+					il.add (new Intersection (ax, ay, d));
 				}
 				
 				if (d < mind) mind = d;

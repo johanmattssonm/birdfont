@@ -333,11 +333,6 @@ class OverView : FontDisplay {
 				character_string = glyph_range.get_char ((uint32) index);
 			}
 			
-			if (character_string == "") {
-				warning (@"Got null character as name for glyph. Index: $index");
-				// break;
-			}
-			
 			cr.save ();
 			draw_thumbnail (cr, character_string, x, y);
 			cr.restore ();

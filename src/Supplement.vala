@@ -22,6 +22,8 @@ namespace Supplement {
 class Supplement {
 	public static Argument args;
 	public static bool experimental;
+	public static bool show_coordinates;
+	public static bool fatal_wanings;
 
 	static Font current_font;
 
@@ -105,6 +107,8 @@ class Supplement {
 		stdout.printf ("birdfont version %s\n", VERSION);		
 
 		experimental = args.has_argument ("--test");
+		show_coordinates = args.has_argument ("--show-coordinates");
+		fatal_wanings = has_argument ("--fatal-warning");
 
 		Preferences preferences = new Preferences ();
 		preferences.load ();
@@ -124,7 +128,7 @@ class Supplement {
 		MainWindow window = new MainWindow ("Birdfont");
 		window.show_all ();
 
-		if (has_argument ("--fatal-warning")) {
+		if (fatal_wanings) {
 			LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
 			Log.set_handler (null, levels, fatal_warning);
 		}
