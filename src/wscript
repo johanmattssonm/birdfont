@@ -66,7 +66,7 @@ TEST = [
 def build (bld):
 	bld.program (
 		target        = 'birdfont',
-		param         = '--disable-warnings --enable-experimental --enable-experimental-non-null --vapidir=../../',
+		param         = ['--disable-warnings', '--enable-experimental', '--enable-experimental-non-null', '--vapidir=../../'],
 		packages      = 'gtk+-2.0 libxml-2.0',
 		uselib        = 'GTK GLIB GIO XML WEB',
 		source        = SUPPLEMENT_MAIN
