@@ -228,7 +228,7 @@ class Font : GLib.Object {
 		}
 				
 		ret = new Glyph ("nonmarkingreturn", '\r');
-		ret.set_unassigned (true);
+		ret.set_unassigned (false);
 		ret.left_limit = 0;
 		ret.right_limit = 0;
 		ret.remove_empty_paths ();
@@ -246,7 +246,7 @@ class Font : GLib.Object {
 		}
 		
 		n = new Glyph ("null", '\0');
-		n.set_unassigned (true);
+		n.set_unassigned (false);
 		n.left_limit = 0;
 		n.right_limit = 0;
 		n.remove_empty_paths ();

@@ -1575,8 +1575,8 @@ class GlyfTable : Table {
 
 		// add notdef. character at index zero + other special chars first
 		glyphs.append (font.get_not_def_character ());
-		//glyphs.append (font.get_null_character ());
-		//glyphs.append (font.get_nonmarking_return ());
+		glyphs.append (font.get_null_character ());
+		glyphs.append (font.get_nonmarking_return ());
 		glyphs.append (font.get_space ());
 		
 		List<Glyph> unassigned_glyphs = new List<Glyph> ();
@@ -1585,7 +1585,7 @@ class GlyfTable : Table {
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
 			g = (!) gl;
 			
-			if (g.name == ".notdef" || g.unichar_code == 0 || g.name == "space" || g.unichar_code == 0x0020) {
+			if (g.name == ".notdef" || g.unichar_code == '\0' ||  g.unichar_code == '\r' || g.name == "space" || g.unichar_code == 0x0020 || g.name == "" || g.name == ".null" || g.unichar_code == 0 || g.name == "nonmarkingreturn") {
 				continue;
 			}
 			
