@@ -864,12 +864,6 @@ class GlyfTable : Table {
 			glyph.left_limit = xmin - hmtx_table.get_lsb (index);
 			glyph.left_limit = 0;
 			glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (index);
-			
-			if (xmin > glyph.right_limit || xmax < glyph.left_limit) {
-				warning (@"Glyph $(name) is outside of it's box.");
-				glyph.left_limit = xmin;
-				glyph.right_limit = xmax;
-			}
 		} else {
 			// add empty glyph
 			glyph = new Glyph (name, character);
@@ -995,12 +989,17 @@ class GlyfTable : Table {
 		int npoints = 0;
 		
 		int16 ncontours;
-		int16 ixmin;
+		int16 ixmin; // set boundries
 		int16 iymin;
 		int16 ixmax;
 		int16 iymax;
 		uint16 ninstructions;
-		
+
+		int16 rxmin = int16.MAX; // real xmin
+		int16 rymin = int16.MAX;;
+		int16 rxmax = int16.MIN;
+		int16 rymax = int16.MIN;
+				
 		int nflags;
 		
 		Error? error = null;
@@ -1126,13 +1125,16 @@ class GlyfTable : Table {
 			
 			last = xcoordinates[i];
 			
+			if (last > rxmax) rxmax = last;
+			if (last < rxmin) rxmin = last;
+			
 			if (!(ixmin <= last <= ixmax))	{
 				stderr.printf (@"x is out of bounds in glyph $(name.str). ($ixmin <= $last <= $ixmax) char $((uint)character)\n");
 			}
 			
 			if (!(head_table.xmin <= last <= head_table.xmax))	{
 				stderr.printf (@"x is outside of of font bounding box in glyph $(name.str). ($(head_table.xmin) <= $last <= $(head_table.xmax)) char $((uint)character)\n");
-			}
+			}			
 		}
 		
 		last = 0;
@@ -1153,6 +1155,9 @@ class GlyfTable : Table {
 			}
 			
 			last = ycoordinates[i];
+
+			if (last > rymax) rymax = last;
+			if (last < rymin) rymin = last;
 			
 			if (!(iymin <= last <= iymax))	{
 				stderr.printf (@"y is out of bounds in glyph $(name.str). ($iymin <= $last <= $iymax) char $((uint)character)\n");
@@ -1162,6 +1167,14 @@ class GlyfTable : Table {
 				stderr.printf (@"y is outside of of font bounding box in glyph $(name.str). ($(head_table.ymin) <= $last <= $(head_table.ymax)) char $((uint)character)\n");
 			}
 		}
+		
+		if (rymin != iymin || rxmin != ixmin || rxmax != ixmax || rymax != iymax) {
+			warning (@"Warning real boundry for glyph does not match boundry set in glyph header for glyph $(name.str).");
+			stderr.printf (@"ymin: $rymin header: $iymin\n");
+			stderr.printf (@"xmin: $rxmin header: $ixmin\n");
+			stderr.printf (@"ymax: $rymax header: $iymax\n");
+			stderr.printf (@"xmax: $rxmax header: $ixmax\n");
+		} 
 		
 		int j = 0;
 		int first_point;
@@ -1349,7 +1362,7 @@ class GlyfTable : Table {
 		txmax = int16.MIN;
 		tymax = int16.MIN;
 		
-		// will be set again after coordinate arrays have been parsed
+		// bounding box will be set again after coordinate arrays have been created
 		fd.add_16 (10);
 		fd.add_16 (20);
 		fd.add_16 (30);
@@ -1397,14 +1410,17 @@ class GlyfTable : Table {
 		
 		// flags
 		nflags = 0;
+		List<uint8> flags = new List<uint8> ();
 		foreach (Path p in g.path_list) {
 			p = p.get_quadratic_points ();
 			foreach (EditPoint e in p.points) {
 				fd.add_byte (Coordinate.ON_PATH);
+				flags.append (Coordinate.ON_PATH);
 				nflags++;
 				
 				if (e.get_right_handle ().type == PointType.CURVE) {
 					fd.add_byte (Coordinate.NONE);
+					flags.append (Coordinate.NONE);
 					nflags++;
 				}
 			}
@@ -1418,6 +1434,8 @@ class GlyfTable : Table {
 		printd (@"flags: $(nflags)\n");
 		
 		// x coordinates
+		List<int16> coordinate_x = new List<int16> ();
+		List<int16> coordinate_y = new List<int16> ();
 		double prev = 0;
 		foreach (Path p in g.path_list) {
 			p = p.get_quadratic_points ();
@@ -1425,19 +1443,16 @@ class GlyfTable : Table {
 				x = e.x * UNITS - prev + g.left_limit * UNITS;
 				
 				fd.add_16 ((int16) x);
-				
-				if (x + prev <= txmin) txmin = (int16) (x + prev);
-				if (x + prev >= txmax) txmax = (int16) (x + prev + 0.5);
+				coordinate_x.append ((int16) x);
 				
 				prev = e.x * UNITS + g.left_limit * UNITS;
-				
+						
 				if (e.get_right_handle ().type == PointType.CURVE) {
 					x = e.get_right_handle ().x () * UNITS - prev + g.left_limit * UNITS;
 
 					fd.add_16 ((int16) x);
-
-					// Only on curve points are good for calculating bounding box
-
+					coordinate_x.append ((int16) x);
+					
 					prev = e.get_right_handle ().x () * UNITS + g.left_limit * UNITS;
 				}
 			}
@@ -1450,28 +1465,60 @@ class GlyfTable : Table {
 			foreach (EditPoint e in p.points) {
 				y = e.y * UNITS - prev + font.base_line  * UNITS;
 				fd.add_16 ((int16) y);
-
-				if (y + prev <= tymin) tymin = (int16) (y + prev);
-				if (y + prev >= tymax) tymax = (int16) (y + prev + 0.5);
-
-				prev = e.y * UNITS + font.base_line * UNITS;
+				coordinate_y.append ((int16) y);
 				
+				prev = e.y * UNITS + font.base_line * UNITS;
+
 				if (e.get_right_handle ().type == PointType.CURVE) {
 					y = e.get_right_handle ().y () * UNITS - prev + font.base_line * UNITS;
 					
 					fd.add_16 ((int16) y);
+					coordinate_y.append ((int16) y);
 					
 					prev = e.get_right_handle ().y () * UNITS + font.base_line  * UNITS;
 				}
 			}
 		}
 		
+		len = fd.length ();
 		printd (@"fd.length (): $(fd.length ())\n");
 		coordinate_length = fd.length () - nflags - glyph_header;
 		printd (@"coordinate_length: $(coordinate_length)\n");
 		assert (fd.length () > nflags + glyph_header);
+				
+		// bounding box	
+		int16 last = 0;
+		int16 coordinate;
+			
+		int i = 0;
+		foreach (int16 c in coordinate_x) {
+			c += last;
+			
+			// Only on curve points are good for calculating bounding box
+			if ((flags.nth (i).data & Coordinate.ON_PATH) > 0) { 
+				if (c < txmin) txmin = c;
+				if (c > txmax) txmax = c;
+			}
+				
+			last = c;
+			i++;
+		}
+
+		last = 0;
+		i = 0;
+		foreach (int16 c in coordinate_y) {
+			c += last;
+			
+			if ((flags.nth (i).data & Coordinate.ON_PATH) > 0) {
+				if (c < tymin) tymin = c;
+				if (c > tymax) tymax = c;			
+			}
+			
+			last = c;
+			i++;
+		}
 		
-		len = fd.length ();
+		fd.seek_end ();
 		
 		printd (@"glyph_offset: $(glyph_offset)\n");
 		printd (@"len: $(len)\n");
@@ -5039,7 +5086,7 @@ public static uint16 largest_pow2_exponent (uint16 max) {
 }
 
 void printd (string s) {
-	print (s);
+	//print (s);
 }
 
 }
