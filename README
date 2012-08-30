@@ -1,6 +1,9 @@
---------------------------
-Birdfont – svg font editor
---------------------------
+----------------------
+Birdfont – font editor
+----------------------
+
+Birdfont is a font editor that creates outline vector graphics. It supports 
+fonts in both svg and ttf format.
 
 Author: Johan Mattsson
 License: GNU GPL v3
@@ -9,8 +12,8 @@ License: GNU GPL v3
 Building from source
 --------------------
 
-Install vala and all required libraries, they are most likely in packages with a 
--dev or -devel affix. You can run this as root if you are using Debian:
+Install vala and all required libraries, they are most likely in packages 
+with a -dev or -devel affix. You can run this as root if you are using Debian:
 
 sudo apt-get install valac libglib2.0-dev libgtk2.0-dev libxml2-dev libwebkitgtk-dev
 
