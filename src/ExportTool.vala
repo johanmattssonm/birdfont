@@ -206,21 +206,25 @@ if (Supplement.experimental) {
 
 os.put_string ("""	
 		h1 {
+			font-weight:normal;
 			margin: 0 0 5px 0;
 			color: #afafaf;
 		}
 
 		h2 {
+			font-weight:normal;
 			margin: 0 0 5px 0;
 			color: #afafaf;
 		}
 		
 		h3 {
+			font-weight:normal;
 			margin: 0 0 5px 0;
 			color: #afafaf;
 		}
 		
 		h4 {
+			font-weight:normal;
 			margin: 0 0 5px 0;
 			color: #afafaf;
 		}
