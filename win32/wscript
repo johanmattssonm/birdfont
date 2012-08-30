@@ -131,6 +131,8 @@ Name "Birdfont"
 InstallDir $PROGRAMFILES\Birdfont
 InstallDirRegKey HKLM "Software\NSIS_Birdfont" "Install_Dir"
 
+Icon "birdfont.ico"
+
 ; Request application privileges for Windows Vista
 RequestExecutionLevel admin
 
@@ -255,6 +257,8 @@ def copy_runtime_dependencies (bld):
 	
 	bld(rule="cp -ra ../layout/ supplement/")
 	bld(rule="cp -ra ../icons/ supplement/")
+
+	bld(rule="cp ../win32/birdfont.ico supplement/")
 
 	bld(rule="cp -r " + MINGW + "/etc supplement/")
 
