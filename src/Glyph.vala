@@ -409,7 +409,7 @@ class Glyph : FontDisplay {
 	
 	public void remove_empty_paths () {
 		foreach (var p in path_list) {
-			if (p.points.length () == 0) {
+			if (p.points.length () < 2) {
 				delete_path (p);
 			}
 		}

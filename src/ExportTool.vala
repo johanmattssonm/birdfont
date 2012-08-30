@@ -42,10 +42,8 @@ class ExportTool : Tool {
 	public static void export_all () {
 		Font font = Supplement.get_current_font ();
 		
-		if (Supplement.experimental) {
-			if (font.get_ttf_export ()) {
-				export_ttf_font ();
-			}
+		if (font.get_ttf_export ()) {
+			export_ttf_font ();
 		}
 		
 		if (font.get_svg_export ()) {
@@ -193,16 +191,13 @@ class ExportTool : Tool {
 			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""SVG';
 			src: url('""");     os.put_string (@"$(name).svg#$(name)");  os.put_string ("""') format('svg');
 		}
+	""");
 
-""");
-
-if (Supplement.experimental) {	
 	os.put_string ("""
 		@font-face {
 			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""TTF';
 			src: url('""");     os.put_string (@"$(name).ttf"); os.put_string ("""') format('truetype');
 		} """);
-}
 
 os.put_string ("""	
 		h1 {

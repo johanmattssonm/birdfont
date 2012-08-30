@@ -1449,11 +1449,13 @@ class GlyfTable : Table {
 		List<int16> coordinate_x = new List<int16> ();
 		List<int16> coordinate_y = new List<int16> ();
 		double prev = 0;
+		
 		foreach (Path p in g.path_list) {
 			p = p.get_quadratic_points ();
+			print (@"\n");
 			foreach (EditPoint e in p.points) {
 				x = e.x * UNITS - prev - g.left_limit * UNITS;
-				
+
 				fd.add_16 ((int16) x);
 				coordinate_x.append ((int16) x);
 				
@@ -1598,10 +1600,16 @@ class GlyfTable : Table {
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
 			g = (!) gl;
 			
-			if (g.name == ".notdef" || g.unichar_code == '\0' ||  g.unichar_code == '\r' || g.name == "space" || g.unichar_code == 0x0020 || g.name == "" || g.name == ".null" || g.unichar_code == 0 || g.name == "nonmarkingreturn") {
+			if (g.unichar_code <= 27) { // skip control characters
 				continue;
 			}
 			
+			if (g.name == ".notdef") {
+				continue;
+			}
+			
+			g.remove_empty_paths ();
+
 			if (!g.is_unassigned ()) {
 				glyphs.append (g);
 			} else {
@@ -1610,7 +1618,7 @@ class GlyfTable : Table {
 		}
 		
 		foreach (Glyph ug in unassigned_glyphs) {
-			glyphs.append (ug);
+			// glyphs.append (ug);
 		}
 		
 	}
@@ -2244,7 +2252,7 @@ class HeadTable : Table {
 		
 		font_data.add_u32 (0x5F0F3CF5); // magic number
 		
-		// font_data.add_u16 (BASELINE_AT_ZERO | LSB_AT_ZERO);
+		//font_data.add_u16 (BASELINE_AT_ZERO | LSB_AT_ZERO);
 		font_data.add_u16 (0); // flags
 		
 		font_data.add_u16 (1000); // units per em (should be a power of two for ttf fonts)
@@ -2500,13 +2508,10 @@ class HmtxTable : Table {
 		// advance and lsb
 		foreach (Glyph g in glyf_table.glyphs) {
 			g.boundries (out xmin, out ymin, out xmax, out ymax);
-
-			lsb = (int16) ((xmin - g.left_limit) * UNITS);
-			advance = (int16) (g.right_limit * UNITS  - g.left_limit * UNITS);
-			extent = (int16) (lsb + (xmax * UNITS  - xmin * UNITS ));
+			lsb = (int16) (-1 * (g.left_limit - xmin) * UNITS);
+			advance = (int16) ((g.right_limit - g.left_limit) * UNITS);
+			extent = (int16) (lsb + (xmax - xmin) * UNITS);
 			rsb = (int16) (advance - extent);
-
-			printd (@"$(g.name) advance: $advance  = $((int16) (g.right_limit))  -  $((int16) (g.left_limit))\n");
 						
 			fd.add_u16 (advance);
 			fd.add_16 (lsb);
