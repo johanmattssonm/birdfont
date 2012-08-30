@@ -667,7 +667,8 @@ class LocaTable : Table {
 		if (!(glyf_table.location_offsets.length () == glyf_table.glyphs.length () + 1)) {
 			warning (@"(glyf_table.location_offsets.length () == glyf_table.glyphs.length () + 1) ($(glyf_table.location_offsets.length ()) == $(glyf_table.glyphs.length () + 1))");
 		}
-		
+
+		fd.pad ();		
 		font_data = fd;		
 	}
 }
@@ -721,6 +722,25 @@ class GlyfTable : Table {
 		glyphs = new List<Glyph> ();
 	}	
 
+	public double get_xheight () {
+		return get_capheight (); // FIXME
+	}
+
+	public double get_capheight () {
+		double x1, x2, y1, y2;
+		Font f = Supplement.get_current_font ();
+		double max = double.MIN;
+		
+		foreach (Glyph g in glyphs) {
+			g.boundries (out x1, out y1, out x2, out y2);
+			if (y2 > max) {
+				max = y2;
+			}
+		}
+		
+		return max - f.base_line;
+	}
+
 	public int get_gid (string name) {
 		int i = 0;
 		foreach (Glyph g in glyphs) {
@@ -732,18 +752,6 @@ class GlyfTable : Table {
 		}
 		
 		return -1;
-	}
-
-	public int16 get_space_gid () {
-		int16 i = 0;
-		foreach (Glyph g in glyphs) {
-			if (g.unichar_code == ' ') {
-				return i;
-			}
-			i++;
-		}
-		
-		return 0;
 	}
 
 	public int16 get_average_width () {
@@ -759,15 +767,7 @@ class GlyfTable : Table {
 	}
 
 	public uint16 get_first_char () {
-		foreach (Glyph g in glyphs) {
-			if (g.is_unassigned ()) {
-				continue;
-			}
-			
-			return (uint16)g.unichar_code;
-		}
-		
-		return 0;
+		return 32; // space
 	}
 	
 	public uint16 get_last_char () {
@@ -1059,7 +1059,6 @@ class GlyfTable : Table {
 		
 		return_val_if_fail (npoints < len, new Glyph.no_lines (""));
 		
-		// FIXA: implement instructions (maybe)
 		ninstructions = dis.read_ushort ();
 		
 		return_val_if_fail (ninstructions < len, new Glyph.no_lines (""));
@@ -1440,20 +1439,20 @@ class GlyfTable : Table {
 		foreach (Path p in g.path_list) {
 			p = p.get_quadratic_points ();
 			foreach (EditPoint e in p.points) {
-				x = e.x * UNITS - prev + g.left_limit * UNITS;
+				x = e.x * UNITS - prev - g.left_limit * UNITS;
 				
 				fd.add_16 ((int16) x);
 				coordinate_x.append ((int16) x);
 				
-				prev = e.x * UNITS + g.left_limit * UNITS;
+				prev = e.x * UNITS - g.left_limit * UNITS;
 						
 				if (e.get_right_handle ().type == PointType.CURVE) {
-					x = e.get_right_handle ().x () * UNITS - prev + g.left_limit * UNITS;
+					x = e.get_right_handle ().x () * UNITS - prev - g.left_limit * UNITS;
 
 					fd.add_16 ((int16) x);
 					coordinate_x.append ((int16) x);
 					
-					prev = e.get_right_handle ().x () * UNITS + g.left_limit * UNITS;
+					prev = e.get_right_handle ().x () * UNITS - g.left_limit * UNITS;
 				}
 			}
 		}
@@ -1652,7 +1651,7 @@ class CmapSubtable : Table {
 			s = new StringBuilder ();
 			c = get_char (i);
 			s.append_unichar (c);
-			print (@"Char: $(s.str)  val ($((uint32)c))\tindice: $(i)\n");
+			printd (@"Char: $(s.str)  val ($((uint32)c))\tindice: $(i)\n");
 		}
 	}
 }
@@ -1861,7 +1860,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		seg_count = (uint16) ranges.length () + 1;
 		seg_count_2 =  seg_count * 2;
 		search_range = 2 * largest_pow2 (seg_count);
-		entry_selector = (uint16) (Math.log (search_range / 2) / Math.log (2));
+		entry_selector = largest_pow2_exponent (seg_count);
 		range_shift = seg_count_2 - search_range;
 		
 		// format
@@ -2042,7 +2041,7 @@ class CmapTable : Table {
 			}
 			
 			if (encoding == 3) {
-				stderr.printf ("Font contains a cmap table with the obsolete encoding 3.");
+				stderr.printf ("Font contains a cmap table with the obsolete encoding 3.\n");
 			}
 		}
 		
@@ -2052,7 +2051,7 @@ class CmapTable : Table {
 		
 		foreach (CmapSubtable t in subtables) {
 			t.parse (dis);
-			// t.print_cmap ();
+			t.print_cmap ();
 		}
 
 	}
@@ -2100,7 +2099,7 @@ class HeadTable : Table {
 	uint16 lowest_PPEM;
 	int16 font_direction_hint;
 		
-	public int16 loca_offset_size = 1;
+	public int16 loca_offset_size = 0; // 0 for int16 1 for int32
 	int16 glyph_data_format;
 
 	Fixed version;
@@ -2399,7 +2398,11 @@ class HmtxTable : Table {
 	}
 
 	public double get_advance (uint32 i) {
-		return_val_if_fail (i < nmetrics, 0.0);
+		if (i >= nmetrics) {
+			warning (@"i >= nmetrics $i >= $nmetrics");
+			return 0;
+		}
+		
 		return_val_if_fail (advance_width != null, 0.0);
 		
 		return advance_width[i] * 1000 / head_table.get_units_per_em ();
@@ -2418,7 +2421,24 @@ class HmtxTable : Table {
 		requires (i < nmonospaced && left_side_bearing_monospaced != null) {
 		return left_side_bearing_monospaced[i] * 1000 / head_table.get_units_per_em ();
 	}
+	
+	public void print_all () {
+		return_if_fail (advance_width != null);
+		return_if_fail (left_side_bearing != null);
 		
+		for (int i = 0; i < nmetrics; i++) {
+			print (@"get_lsb ($i): $(get_lsb(i))\n");
+			print (@"get_advance ($i): $(get_advance(i))\n");
+		}
+
+		if (left_side_bearing_monospaced != null) {
+			for (int i = 0; i < nmonospaced; i++) {
+				print (@"get_lsb_mono ($i): $(get_lsb_mono(i))\n");
+			}
+		}
+
+	}
+			
 	public void parse (FontData dis, HheaTable hhea_table, LocaTable loca_table) {
 		nmetrics = hhea_table.num_horizontal_metrics;
 		nmonospaced = loca_table.size - nmetrics;
@@ -2430,6 +2450,9 @@ class HmtxTable : Table {
 			return;
 		}
 		
+		printd (@"nmetrics: $nmetrics\n");
+		printd (@"loca_table.size: $(loca_table.size)\n");
+		
 		advance_width = new uint16[nmetrics];
 		left_side_bearing = new uint16[nmetrics];
 		left_side_bearing_monospaced = new uint16[nmonospaced];
@@ -2437,13 +2460,13 @@ class HmtxTable : Table {
 		for (int i = 0; i < nmetrics; i++) {
 			advance_width[i] = dis.read_ushort ();
 			left_side_bearing[i] = dis.read_short ();
-			
-			// Delete: print (@"advance_width[i] $(advance_width[i])    $(left_side_bearing[i]) \n");
 		}
 		
 		for (int i = 0; i < nmonospaced; i++) {
 			left_side_bearing_monospaced[i] = dis.read_short ();
 		}
+		
+		print_all ();
 	}
 	
 	public void process () {
@@ -2829,6 +2852,9 @@ class Os2Table : Table {
 		FontData fd = new FontData ();
 		Font font = Supplement.get_current_font ();
 		
+		int16 ascender;
+		int16 descender;
+		
 		fd.add_u16 (0x0002); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
 
 		fd.add_16 (glyf_table.get_average_width ()); // SHORT xAvgCharWidth
@@ -2837,17 +2863,17 @@ class Os2Table : Table {
 		fd.add_u16 (5); // USHORT usWidthClass (5 is normal)
 		fd.add_u16 (0); // USHORT fsType
 
-		fd.add_16 (0); // SHORT ySubscriptXSize
-		fd.add_16 (0); // SHORT ySubscriptYSize
-		fd.add_16 (0); // SHORT ySubscriptXOffset
-		fd.add_16 (0); // SHORT ySubscriptYOffset
-		fd.add_16 (0); // SHORT ySuperscriptXSize
-		fd.add_16 (0); // SHORT ySuperscriptYSize
-		fd.add_16 (0); // SHORT ySuperscriptXOffset
-		fd.add_16 (0); // SHORT ySuperscriptYOffset
-		fd.add_16 (0); // SHORT yStrikeoutSize
-		fd.add_16 (0); // SHORT yStrikeoutPosition
-		fd.add_16 (0); // SHORT sFamilyClass
+		fd.add_16 (40); // SHORT ySubscriptXSize
+		fd.add_16 (40); // SHORT ySubscriptYSize
+		fd.add_16 (40); // SHORT ySubscriptXOffset
+		fd.add_16 (40); // SHORT ySubscriptYOffset
+		fd.add_16 (40); // SHORT ySuperscriptXSize
+		fd.add_16 (40); // SHORT ySuperscriptYSize
+		fd.add_16 (40); // SHORT ySuperscriptXOffset
+		fd.add_16 (40); // SHORT ySuperscriptYOffset
+		fd.add_16 (40); // SHORT yStrikeoutSize
+		fd.add_16 (200); // SHORT yStrikeoutPosition
+		fd.add_16 (40); // SHORT sFamilyClass
 
 		// PANOSE
 		fd.add (0); 
@@ -2873,22 +2899,31 @@ class Os2Table : Table {
 		fd.add_u16 (glyf_table.get_first_char ()); // USHORT usFirstCharIndex
 		fd.add_u16 (glyf_table.get_last_char ()); // USHORT usLastCharIndex
 
-		fd.add_16 ((int16) (-1 * (font.top_position - font.base_line))); // SHORT sTypoAscender
-		fd.add_16 ((int16) (-1 * font.bottom_position)); // SHORT sTypoDescender
+		// DELETE
+		//ascender = (int16) (-1 * (font.top_position - font.base_line)* UNITS);
+		//descender = (int16) (-font.bottom_position * UNITS);
+
+		ascender = (int16) (-font.top_position * UNITS);
+		descender = (int16) (-font.bottom_position * UNITS);
+		
+		fd.add_16 (ascender); // SHORT sTypoAscender
+		fd.add_16 (descender); // SHORT sTypoDescender
 		fd.add_16 (3); // SHORT sTypoLineGap
 
-		fd.add_u16 (0); // USHORT usWinAscent
-		fd.add_u16 (0); // USHORT usWinDescent
+		fd.add_u16 (ascender); // USHORT usWinAscent
+		fd.add_u16 (descender); // USHORT usWinDescent
 
 		fd.add_u32 (0); // ULONG ulCodePageRange1 Bits 0-31
 		fd.add_u32 (0); // ULONG ulCodePageRange2 Bits 32-63
 
-		fd.add_16 (0); // SHORT sxHeight version 0x0002 and later
-		fd.add_16 (0); // SHORT sCapHeight version 0x0002 and later
+		fd.add_16 (ascender); // SHORT sxHeight version 0x0002 and later
+		fd.add_16 (ascender); // SHORT sCapHeight version 0x0002 and later
 
 		fd.add_16 (0); // USHORT usDefaultChar version 0x0002 and later
 		fd.add_16 (0x0020); // USHORT usBreakChar version 0x0002 and later, also known as space
-		fd.add_16 (0); // USHORT usMaxContext version 0x0002 and later
+		
+		// FIXA: calculate these values
+		fd.add_16 (1); // USHORT usMaxContext version 0x0002 and later
 
 		// padding
 		fd.pad ();
@@ -5086,7 +5121,7 @@ public static uint16 largest_pow2_exponent (uint16 max) {
 }
 
 void printd (string s) {
-	//print (s);
+	print (s);
 }
 
 }
