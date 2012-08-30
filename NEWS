@@ -1,3 +1,13 @@
+birdfont (0.2.0) stable;
+
+  * TTF support
+  * Desktop file and icon
+  * Merge paths
+
+  Contributions by Alexandre Prokoudine and Johan Mattsson
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Aug 30 23:51:17 CEST 2012
+
 birdfont (0.1.1) stable;
 
   * Several important bug fixes
