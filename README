@@ -12,13 +12,12 @@ Building from source
 Install vala and all required libraries, they are most likely in packages with a 
 -dev or -devel affix. You can run this as root if you are using Debian:
 
-apt-get install valac libglib-2.0-dev libgtk+2.0-dev libxml2-dev libwebkitgtk-dev
+sudo apt-get install valac libglib2.0-dev libgtk2.0-dev libxml2-dev libwebkitgtk-dev
 
 Configure, build and install with waf:
 ./waf configure
 ./waf build
-su
-./waf install
+sudo ./waf install
 
 
 ------------------------
