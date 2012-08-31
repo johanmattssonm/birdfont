@@ -138,8 +138,7 @@ RequestExecutionLevel admin
 
 ;--------------------------------
 
-; Pages
-
+Page components
 Page directory
 Page instfiles
 
@@ -169,9 +168,12 @@ Section "Birdfont (required)"
   
 SectionEnd
 
-; Optional section (can be disabled by the user)
 Section "Start Menu Shortcuts"
-  CreateDirectory "$SMPROGRAMS\Birdfont" 
+
+  CreateDirectory "$SMPROGRAMS\Birdfont"
+  CreateShortCut "$SMPROGRAMS\Birdfont\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\Birdfont\Birdfont.lnk" "$INSTDIR\birdfont.exe" "" "$INSTDIR\birdfont.exe" 0
+  
 SectionEnd
 
 ;--------------------------------
@@ -183,15 +185,18 @@ Section "Uninstall"
   ; Remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Birdfont"
   DeleteRegKey HKLM SOFTWARE\NSIS_Birdfont
+
 """)
 
 	remove_files ('.', f)
 
 	f.write("""
-  ; Remove shortcuts, if any
+
+  Delete $INSTDIR\uninstall.exe
+  RMDir "$INSTDIR\Birdfont"
+   
   Delete "$SMPROGRAMS\Birdfont\*.*"
   
-  ; Remove directories used
   RMDir "$SMPROGRAMS\Birdfont"
 
 SectionEnd
@@ -250,7 +255,7 @@ def copy_runtime_dependencies (bld):
 	MINGW = "/usr/i686-w64-mingw32/sys-root/mingw"
 	MINGW_BIN = MINGW + "/bin"
 
-	bld(rule="cp birdfont.exe supplement/")
+	bld(rule="mv birdfont.exe supplement/", depends_on='mingw link')
 	bld(rule="cp ../README supplement/")
 	bld(rule="cp ../COPYING supplement/")
 	bld(rule="cp ../NEWS supplement/")

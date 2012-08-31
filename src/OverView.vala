@@ -104,15 +104,7 @@ class OverView : FontDisplay {
 				scroll_bottom ();
 			} else {
 				scroll_to (absolute);
-			}
-			
-/*
-			if (-0.1 < delta < 0.1) {
-				scroll_adjustment (pixels);
-			} else {
-				scroll_to (absolute);
-			}
-*/			
+			}		
 			
 			redraw_area (0, 0, allocation.width, allocation.height);
 		});
@@ -1043,11 +1035,11 @@ class OverView : FontDisplay {
 		}
 
 		if (unlikely (!done)) {
-			print (@"No glyph.. \"$c\"\n");
-			selected = 0;
+			MainWindow.get_toolbox ().select_tool_by_name ("custom_character_set");
+			warning (@"No glyph \"$c\"\n");
+			return;
 		}
 		
-		//scroll_rows (-1);
 		adjust_scroll ();
 		
 		if (at_bottom ()) {

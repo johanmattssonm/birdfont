@@ -68,7 +68,9 @@ public class MainWindow : Gtk.Window {
 		set_size_and_position ();
 		
 		html_canvas = new WebView ();
-		
+		WebKit.set_cache_model (CacheModel.DOCUMENT_VIEWER);
+		html_canvas.get_settings ().enable_default_context_menu = false;
+				
 		html_canvas.title_changed.connect ((p, s) => {
 			FontDisplay fd = get_current_display ();
 			fd.process_property (s);
@@ -90,7 +92,7 @@ public class MainWindow : Gtk.Window {
 			glyph_canvas.set_current_glyph (fd);
 			n = fd.is_html_canvas ();
 			
-			if (n) {			
+			if (n) {
 				layout_dir = FontDisplay.find_layout_dir ();
 				html_box.set_visible (n);
 				glyph_canvas.set_visible (!n);
@@ -104,9 +106,11 @@ public class MainWindow : Gtk.Window {
 				
 				if (fd.get_html () == "") {
 					html_canvas.load_uri (uri);
+					print (@"URI: $uri\n");
+					//html_canvas.reload_bypass_cache ();
 				} else {
 					html_canvas.load_html_string (fd.get_html (), uri);
-				}				
+				}
 			} else {
 				html_box.set_visible (false);
 				glyph_canvas.set_visible (true);
