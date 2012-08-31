@@ -249,7 +249,21 @@ class TabBar : DrawingArea {
 		
 		return false;
 	}
-	
+
+	public bool selected_open_tab_by_name (string t) {
+		int i = 0;
+		foreach (var n in tabs) {
+			if (n.get_label () == t) {
+				select_tab (i);
+				return true;
+			}
+			
+			i++;
+		}
+		
+		return false;
+	}
+		
 	public Tab get_selected_tab () {
 		return tabs.nth (get_selected ()).data;
 	}

@@ -24,6 +24,7 @@ class Supplement {
 	public static bool experimental;
 	public static bool show_coordinates;
 	public static bool fatal_wanings;
+	public static bool win32;
 
 	static Font current_font;
 
@@ -109,6 +110,7 @@ class Supplement {
 		experimental = args.has_argument ("--test");
 		show_coordinates = args.has_argument ("--show-coordinates");
 		fatal_wanings = has_argument ("--fatal-warning");
+		win32 = (arg[0].index_of (".exe") > -1);
 
 		Preferences preferences = new Preferences ();
 		preferences.load ();

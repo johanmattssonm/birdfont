@@ -32,7 +32,10 @@ class Preview : FontDisplay {
 		return true;
 	}
 
+	bool b = false;
+
 	public override void selected_canvas () {
+		
 		WebView w = MainWindow.get_webview ();
 		string uri = get_uri ();
 
@@ -40,6 +43,26 @@ class Preview : FontDisplay {
 		
 		w.open (uri);
 		w.reload_bypass_cache ();
+		
+		// this is a hack forces webkit to reload the font and ignore cached data
+		// it's only required on windows platform and in wine 
+		if (Supplement.win32) {
+			TimeoutSource idle = new TimeoutSource (0);
+			idle.set_callback(() => {
+				File layout_dir = FontDisplay.find_layout_dir ();
+				File layout_uri = layout_dir.get_child (get_html_file ());
+				w.load_html_string ("", path_to_uri ((!) layout_uri.get_path ()));
+				return false;
+			});
+			idle.attach (null);
+			
+			TimeoutSource idle2 = new TimeoutSource (500);
+			idle2.set_callback(() => {
+				w.load_uri (get_uri ());
+				return false;
+			});
+			idle2.attach (null);
+		}
 	}
 
 	public override string get_uri () {

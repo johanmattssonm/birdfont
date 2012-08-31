@@ -105,9 +105,11 @@ public class MainWindow : Gtk.Window {
 				}
 				
 				if (fd.get_html () == "") {
+					html_canvas.load_html_string (fd.get_html (), uri);
+					html_canvas.reload_bypass_cache ();
 					html_canvas.load_uri (uri);
-					print (@"URI: $uri\n");
-					//html_canvas.reload_bypass_cache ();
+					
+					print (@"uri: $uri\n");
 				} else {
 					html_canvas.load_html_string (fd.get_html (), uri);
 				}

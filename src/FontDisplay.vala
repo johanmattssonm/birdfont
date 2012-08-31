@@ -47,14 +47,24 @@ public abstract class FontDisplay : GLib.Object {
 	public static string path_to_uri (string path) {
 		int i;
 		string uri = path;
+		string wp;
 		
-		uri = path.replace ("\\", "/");
-		i = uri.index_of (":");
-		
-		if (i != -1) {
-			uri = uri.substring (i + 2);
+		if (Supplement.win32) {
+			uri = path.replace ("\\", "/");
+			i = uri.index_of (":");
+			
+			if (i != -1) {
+				uri = uri.substring (i + 2);
+			}
+
+			// wine uri hack
+			wp = @"/home/$(Environment.get_user_name ())/.wine/drive_c/" + uri;
+			
+			if (Icons.find_file (null, wp).query_exists ()) {
+				uri = wp.substring (i);
+			}
 		}
-		
+
 		return @"file:///$uri";
 	}
 
