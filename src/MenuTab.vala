@@ -185,9 +185,7 @@ foreach (Font font in recent_fonts) {
 	c.append ("<div class=\"one_line\">");
 	c.append (fn);
 	c.append ("</div>");
-	
-	print (@"path_to_uri ((!) Supplement.get_thumbnail_directory ().get_path ()) $(path_to_uri ((!) Supplement.get_thumbnail_directory ().get_path ()))\n");
-	
+
 	c.append ("<img src=\"");
 	c.append (path_to_uri ((!) Supplement.get_thumbnail_directory ().get_path ()));
 	c.append ("/");

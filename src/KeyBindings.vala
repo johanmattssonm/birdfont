@@ -116,7 +116,7 @@ class ShowPreview : ShortCut {
 	}
 	
 	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return ',';	}	
+	public override uint get_default_key ()           { return 'p';	}	
 	public override unowned string get_description () { return "Preview"; }
 }
 

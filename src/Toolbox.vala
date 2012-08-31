@@ -352,7 +352,7 @@ class Toolbox : DrawingArea {
 			});
 		view_tools.add_tool (zoom_bg);
 
-		Tool zoom_prev = new Tool ("prev", "previous view", 'p', CTRL);
+		Tool zoom_prev = new Tool ("prev", "previous view", 'j', CTRL);
 		zoom_prev.select_action.connect((self) => {
 				zoom_tool.previous_view ();
 			});

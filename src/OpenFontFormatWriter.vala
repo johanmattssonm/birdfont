@@ -634,10 +634,6 @@ class LocaTable : Table {
 		int i = 0;
 		
 		foreach (uint32 o in glyf_table.location_offsets) {
-			if (i != 0 && (o - prev) == 0) {
-				warning (@"gid $i is empty in loca table");
-			}
-
 			if (i != 0 && (o - prev) % 4 != 0) {
 				warning (@"glyph length is not a multiple of four in gid $i");
 			}
