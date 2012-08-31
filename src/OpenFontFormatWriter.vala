@@ -2918,12 +2918,8 @@ class Os2Table : Table {
 		fd.add_u16 (glyf_table.get_first_char ()); // USHORT usFirstCharIndex
 		fd.add_u16 (glyf_table.get_last_char ()); // USHORT usLastCharIndex
 
-		// DELETE
-		//ascender = (int16) (-1 * (font.top_position - font.base_line)* UNITS);
-		//descender = (int16) (-font.bottom_position * UNITS);
-
-		ascender = (int16) (-font.top_position * UNITS);
-		descender = (int16) (-font.bottom_position * UNITS);
+		ascender = (int16) (glyf_table.xmax + font.base_line * UNITS);
+		descender = (int16) (-glyf_table.xmin  + font.base_line * UNITS);
 		
 		fd.add_16 (ascender); // SHORT sTypoAscender
 		fd.add_16 (descender); // SHORT sTypoDescender
