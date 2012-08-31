@@ -35,8 +35,9 @@ class Preview : FontDisplay {
 	public override void selected_canvas () {
 		ExportTool.export_all ();
 		string uri = get_uri ();
-		MainWindow.get_webview ().reload_bypass_cache ();
+		
 		MainWindow.get_webview ().load_uri (uri);
+		MainWindow.get_webview ().reload ();
 	}
 
 	public override string get_uri () {
