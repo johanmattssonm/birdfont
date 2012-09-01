@@ -43,6 +43,8 @@ public class MainWindow : Gtk.Window {
 	static DrawingArea margin_right;
 
 	static OverView over_view;
+
+	static List<uint> key_pressed = new List<uint> ();
 	
 	public MainWindow (string title) {
 		singleton = this;
@@ -285,8 +287,18 @@ public class MainWindow : Gtk.Window {
 	public static int global_key_bindings (Widget grab_widget, EventKey event, void* data) {		
 		MainWindow window = get_singleton ();
 		
-		window.glyph_canvas.key_press (event);
-		window.key_bindings.key_press (event);
+		foreach (uint k in key_pressed) {
+			if (k == event.keyval) {
+				key_pressed.remove_all (k);
+				window.glyph_canvas.key_release (event.keyval);
+				window.key_bindings.key_release (event.keyval);
+				return 0;
+			}
+		}
+		
+		key_pressed.append (event.keyval);
+		window.glyph_canvas.key_press (event.keyval);
+		window.key_bindings.key_press (event.keyval);
 		
 		return 0;
 	}

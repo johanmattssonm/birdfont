@@ -106,16 +106,6 @@ class GlyphCanvas : DrawingArea  {
 			return true;
 		});
 		
-		key_press_event.connect ((t, e)=> {
-			key_press (e);
-			return true;
-		});
-
-		key_release_event.connect ((t, e)=> {
-			key_release (e);
-			return true;
-		});
-		
 		scroll_event.connect ((t, e)=> {
 			if (e.direction == Gdk.ScrollDirection.UP) {
 				current_display.scroll_wheel_up (e);
@@ -128,11 +118,11 @@ class GlyphCanvas : DrawingArea  {
 		
 	}
 	
-	public void key_release (EventKey e) {
+	public void key_release (uint e) {
 		current_display.key_release (e);
 	}
 	
-	public void key_press (EventKey e) {
+	public void key_press (uint e) {
 		current_display.key_press (e);
 	}
 	

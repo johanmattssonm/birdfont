@@ -703,17 +703,11 @@ class OverView : FontDisplay {
 	}	
 	
 	public void open_current_glyph () {
-		EventKey e = { 0 };
-		e.type = EventType.KEY_PRESS;
-		e.keyval = Key.ENTER;
-		key_press (e);
+		key_press (Key.ENTER);
 	}
 
 	public void select_next_glyph () {
-		EventKey e = { 0 };
-		e.type = EventType.KEY_PRESS;
-		e.keyval = Key.RIGHT;
-		key_press (e);
+		key_press (Key.RIGHT);
 	}
 
 	public void key_right () {		
@@ -765,19 +759,15 @@ class OverView : FontDisplay {
 		return glyph_range.get_char (selected);
 	}
 	
-	public override void key_press (EventKey e) {
+	public override void key_press (uint keyval) {
 		redraw_area (0, 0, allocation.width, allocation.height);
 		close_menus ();
-	
-		if (e.type != EventType.KEY_PRESS) {
-			return;
-		}
 
 		if (KeyBindings.modifier == CTRL) {
 			return;
 		}
 
-		switch (e.keyval) {
+		switch (keyval) {
 			case Key.ENTER:
 				open_glyph_signal (get_selected_char ());
 				return;
@@ -815,7 +805,7 @@ class OverView : FontDisplay {
 				return;
 		}
 
-		scroll_to_char (e.keyval);
+		scroll_to_char (keyval);
 	}
 
 	public void delete_selected_glyph () {

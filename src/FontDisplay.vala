@@ -86,10 +86,10 @@ public abstract class FontDisplay : GLib.Object {
 	public virtual void selected_canvas () {
 	}
 	
-	public virtual void key_press (EventKey e) {
+	public virtual void key_press (uint keyval) {
 	}
 	
-	public virtual void key_release (EventKey e) {
+	public virtual void key_release (uint keyval) {
 	}
 	
 	public virtual void motion_notify (EventMotion e) {

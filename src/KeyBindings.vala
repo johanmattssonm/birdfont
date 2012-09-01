@@ -564,16 +564,15 @@ class KeyBindings {
 		return singleton.modifier_ctrl;
 	}
 	
-	public void key_press (EventKey event) {
-		bool press = (event.type == EventType.KEY_PRESS);
-		uint key = event.keyval;
+	public void key_release (uint keyval) {
+		set_modifier (keyval, false);
+	}
+	
+	public void key_press (uint keyval) {
+		uint key = keyval;
 		ShortCut? short_cut;
 		
-		set_modifier (key, press);
-		
-		if (!press) {
-			return;
-		}
+		set_modifier (keyval, true);
 	
 		if (get_short_cut (modifier, key, out short_cut)) {
 			if (short_cut != null)
@@ -584,21 +583,13 @@ class KeyBindings {
 			foreach (Tool t in exp.tool) {
 				t.set_active (false);
 				
-				if (t.key == event.keyval && t.modifier_flag == modifier) {
+				if (t.key == keyval && t.modifier_flag == modifier) {
 					if (!(require_modifier && (modifier == NONE || modifier == SHIFT))) {
 						MainWindow.get_toolbox ().select_tool (t);
 					}
 				}
 			}
 		}
-		
-		/* // FIXA
-		foreach (Tool t in MainWindow.get_content_display ().tools) {	
-			if (t.key == event.keyval && t.modifier_flag == modifier) {
-				t.select_action (t);
-			}
-		}
-		* */
 	}
 }
 

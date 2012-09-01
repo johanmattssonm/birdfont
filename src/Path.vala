@@ -745,7 +745,7 @@ class Path {
 		return is_over_coordinate_var (x, y, 0.1);
 	}
 	
-	public double distance (double ax, double bx, double ay, double by) {
+	public static double distance (double ax, double bx, double ay, double by) {
 		return Math.fabs (Math.sqrt (Math.pow (ax - bx, 2) + Math.pow (ay - by, 2)));
 	}
 	

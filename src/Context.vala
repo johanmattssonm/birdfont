@@ -207,14 +207,14 @@ class ContextDisplay : FontDisplay {
 		}					
 	}
 	
-	public override void key_press (EventKey e) {
-		unichar c = (unichar) e.keyval;
+	public override void key_press (uint keyval) {
+		unichar c = (unichar) keyval;
 		Font f = Supplement.get_current_font ();
 		string name;
 		
-		if (e.type == EventType.KEY_PRESS && (KeyBindings.singleton.modifier == NONE || KeyBindings.singleton.modifier == SHIFT)) {
+		if (KeyBindings.singleton.modifier == NONE || KeyBindings.singleton.modifier == SHIFT) {
 					
-			if (e.keyval == Key.BACK_SPACE && row.length () > 0) {	
+			if (keyval == Key.BACK_SPACE && row.length () > 0) {	
 				row.first ().data.glyph.remove_link (row.first ().data.glyph.last ());
 			}
 			

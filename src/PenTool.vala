@@ -41,10 +41,15 @@ class PenTool : Tool {
 	private static double last_point_x = 0;
 	private static double last_point_y = 0;
 
+	private static bool adjust_precision = false;
+	private static double adjust_precision_begin_x = 0;
+	private static double adjust_precision_begin_y = 0;
+	private static double precision = 1;
+	
 	public PenTool (string name) {
-		base (name, "Edit path", 'p', CTRL);
+		base (name, "Edit path", ',', CTRL);
 						
-		select_action.connect((self) => {
+		select_action.connect ((self) => {
 		});
 
 		deselect_action.connect ((self) => {
@@ -53,21 +58,23 @@ class PenTool : Tool {
 			CutTool.force_direction ();
 			glyph.close_path ();
 			
-			move_point_on_path = false; 		// Fixa: this might be better as toggle buttons
+			move_point_on_path = false;
 			begin_new_point_on_path = false;
 		});
 		
-		press_action.connect((self, b, x, y) => {
+		press_action.connect ((self, b, x, y) => {
 			last_point_x = x;
 			last_point_y = y;
+			
+			precision = 1;
 
 			press (b, x, y);
 		});
 		
-		double_click_action.connect((self, b, x, y) => {
+		double_click_action.connect ((self, b, x, y) => {
 		});
 
-		release_action.connect((self, b, ix, iy) => {
+		release_action.connect ((self, b, ix, iy) => {
 			double x = ix;
 			double y = iy;
 			Glyph g = MainWindow.get_current_glyph ();
@@ -82,17 +89,45 @@ class PenTool : Tool {
 			edit_active_corner = false;
 			
 			selected_handle = new EditPointHandle.empty ();
-			active_handle = new EditPointHandle.empty ();			
+			active_handle = new EditPointHandle.empty ();
 		});
 
-		move_action.connect((self, x, y) => {
+		move_action.connect ((self, x, y) => {
 			move (x, y);
+		});
+		
+		key_press_action.connect ((self, keyval) => {
+			if (keyval == Key.SHIFT_LEFT) {
+				adjust_precision = true;
+				
+				adjust_precision_begin_x = last_point_x;
+				adjust_precision_begin_y = last_point_y;
+			}
+		});
+		
+		key_release_action.connect ((self, keyval) => {
+			if (keyval == Key.SHIFT_LEFT) {
+				adjust_precision = false;
+				precision = 1.0 / Path.distance (adjust_precision_begin_x, last_point_x, adjust_precision_begin_y, last_point_y);
+				
+				precision *= 30;
+				
+				if (precision > 1) {
+					precision = 1;
+				}				
+			}
 		});
 	}
 		
 	public void move (double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		EditPoint ep;
+		
+		if (adjust_precision) {
+			last_point_x = x;
+			last_point_y = y;
+			return;
+		}
 		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
@@ -119,7 +154,7 @@ class PenTool : Tool {
 				selected_handle.move_to (x, y);
 			} else {
 				selected_handle.set_point_type (PointType.CURVE);
-				selected_handle.move_delta (x - last_point_x, y - last_point_y);
+				selected_handle.move_delta ((x - last_point_x) * precision, (y - last_point_y) * precision);
 			}
 			
 			selected_handle.parent.recalculate_linear_handles ();
@@ -135,7 +170,7 @@ class PenTool : Tool {
 		
 		// move edit point
 		if (move_selected) {
-			glyph.move_selected_edit_point_delta (x - last_point_x, y - last_point_y);
+			glyph.move_selected_edit_point_delta ((x - last_point_x) * precision, (y - last_point_y) * precision);
 			ep = (!) glyph.selected_point;
 			
 			if (tie_x_or_y_coordinates) {

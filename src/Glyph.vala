@@ -495,8 +495,16 @@ class Glyph : FontDisplay {
 		}
 	}
 
-	public override void key_press (EventKey e) {	
-		if (e.keyval == Key.DEL) {
+	public override void key_release (uint keyval) {	
+		Tool t;
+		t = MainWindow.get_toolbox ().get_current_tool ();
+		t.key_release_action (t, keyval);		
+	}
+
+	public override void key_press (uint keyval) {	
+		Tool t;
+		
+		if (keyval == Key.DEL) {
 			if (active_paths.length () != 0) {
 				
 				foreach (Path p in active_paths) {
@@ -510,8 +518,10 @@ class Glyph : FontDisplay {
 			if (selected_point != null) {
 				delete_edit_point ((!) selected_point);
 			}
-			
 		}
+		
+		t = MainWindow.get_toolbox ().get_current_tool ();
+		t.key_press_action (t, keyval);
 	}
 	
 	/** Delete edit point from path. */
@@ -527,13 +537,13 @@ class Glyph : FontDisplay {
 	
 	public override void motion_notify (EventMotion e) {
 		Tool t;
+		t = MainWindow.get_toolbox ().get_current_tool ();
 		
-		if (KeyBindings.has_ctrl ()) {
+		if (move_view && KeyBindings.has_ctrl ()) {
 			move_view_offset  (e.x, e.y);
 			return;
 		}
-		
-		t = MainWindow.get_toolbox ().get_current_tool ();
+
 		t.move_action (t, (int) e.x, (int) e.y);
 
 		if (Supplement.show_coordinates) {
@@ -1548,11 +1558,9 @@ class Glyph : FontDisplay {
 	}
 	
 	private void move_view_offset (double x, double y) {
-		if (move_view) {
-			view_offset_x = move_offset_x + (pointer_begin_x - x) * (1/view_zoom);
-			view_offset_y = move_offset_y + (pointer_begin_y - y) * (1/view_zoom);
-			redraw_area (0, 0, allocation.width, allocation.height);
-		}
+		view_offset_x = move_offset_x + (pointer_begin_x - x) * (1/view_zoom);
+		view_offset_y = move_offset_y + (pointer_begin_y - y) * (1/view_zoom);
+		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 
 	public void store_undo_state () {

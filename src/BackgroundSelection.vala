@@ -275,10 +275,10 @@ class BackgroundSelection : FontDisplay {
 		}
 	}
 	
-	public override void key_press (EventKey e) {
+	public override void key_press (uint e) {
 	}
 
-	public override void key_release (EventKey e) {
+	public override void key_release (uint e) {
 	}
 	
 	public override void motion_notify (EventMotion e) {
