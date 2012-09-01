@@ -2,7 +2,7 @@
 Birdfont – font editor
 ----------------------
 
-Birdfont is a font editor that creates outline vector graphics. It supports 
+Birdfont is a font editor that creates outline vector graphics and exports
 fonts in both svg and ttf format.
 
 Author: Johan Mattsson

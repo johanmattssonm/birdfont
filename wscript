@@ -35,8 +35,8 @@ def build(bld):
 	bld.install_files('${PREFIX}/share/birdfont/', start_dir.ant_glob('layout/*'), cwd=start_dir, relative_trick=True)
 	bld.install_files('${PREFIX}/share/birdfont/', start_dir.ant_glob('icons/*'), cwd=start_dir, relative_trick=True)
 	
-	bld.install_files('${PREFIX}/share/applications/', ['birdfont.desktop'])
-	bld.install_files('${PREFIX}/share/icons/hicolor/48x48/apps/', ['birdfont.png'])
+	bld.install_files('${PREFIX}/share/applications/', ['linux/birdfont.desktop'])
+	bld.install_files('${PREFIX}/share/icons/hicolor/48x48/apps/', ['linux/birdfont.png'])
 
 	if bld.options.win32:
 		bld.recurse('win32')

@@ -365,6 +365,10 @@ class PenTool : Tool {
 	}
 
 	public static bool is_new_point_on_path_selected () {
+		if (!Supplement.experimental) {
+			return false;
+		}
+		
 		Tool t = MainWindow.get_toolbox ().get_tool ("new_point_on_path");
 		return t.is_selected ();
 	}
@@ -663,21 +667,6 @@ class PenTool : Tool {
 		
 		test_reverse_coordinate (x, y, px, py, n);
 		test_click_action (1, x, y);
-				
-		// zoom + offset
-		n = "View zoom";
-		g.default_zoom ();
-		
-		x = xc + 10;
-		y = yc - 10;
-		
-		px = g.path_coordinate_x (x);
-		py = g.path_coordinate_y (y);
-		
-		test_click_action (1, x, y);
-
-		test_coordinate (px * g.view_zoom, py - yc * g.view_zoom, 10, 10, n);
-		test_reverse_coordinate (x, y, px, py, n);
 		
 		// close path
 		test_click_action (3, x, y);

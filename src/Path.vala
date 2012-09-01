@@ -1372,7 +1372,7 @@ class Path {
 		}
 
 		if (previous_point == null) {
-			warning ("previous_point == null");
+			warning (@"previous_point == null, points.length (): $(points.length ())");
 			return;
 		}
 		
