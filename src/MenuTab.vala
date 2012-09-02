@@ -24,16 +24,6 @@ class MenuTab : FontDisplay {
 	
 	List<Font> recent_fonts = new List<Font> ();
 
-	Tool new_file_tool;
-	Tool open_tool;
-	Tool save_tool;
-	Tool browser_tool;
-	Tool export_preferences;
-	ExportTool export_tool;
-	Tool kerning_context_tool;
-	Tool add_new_grid_tool;
-	Tool delete_grid_tool;
-		
 	public MenuTab () {
 		// html callbacks:
 		add_html_callback ("export_svg", (val) => {
@@ -233,7 +223,6 @@ c.append ("""
 			
 		SaveDialog save = new SaveDialog ();
 		save.finished.connect (() => {
-			string? fnn;
 			Font f;
 			bool loaded;
 			

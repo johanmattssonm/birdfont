@@ -20,6 +20,7 @@ namespace Supplement {
 class ExportTool : Tool {
 
 	private static string? prefered_browser = null;
+	private static ExportThread export_thread;
 
 	public ExportTool (string n) {
 		base (n, "Export glyph to svg file", 'e', CTRL);
@@ -350,8 +351,7 @@ os.put_string ("""
 		string path;
 		OpenFontFormatWriter fo;
 		Font temp_font = new Font ();
-		ExportThread th;
-		unowned Thread<void*> export_thread;
+		unowned Thread<void*> th;
 		File file;
 		string temp_file;
 		
@@ -367,17 +367,17 @@ os.put_string ("""
 
 			path = (!) file.get_path ();
 
-			th = new ExportThread (temp_file, path);
+			export_thread = new ExportThread (temp_file, path);
 			
 			if (async) {
 				try {
-					export_thread = Thread.create<void*> (th.run, true);
+					th = Thread.create<void*> (export_thread.run, true);
 				} catch (ThreadError e) {
 					stderr.printf ("%s\n", e.message);
 					return false;
 				}
 			} else {
-				th.run ();
+				export_thread.run ();
 			}
 				
 		} catch (Error e) {
@@ -436,8 +436,11 @@ os.put_string ("""
 			OpenFontFormatWriter fo = new OpenFontFormatWriter ();
 			Font f = new Font ();
 			
+			assert (!is_null (from));
+			assert (!is_null (to));
+			
 			try {
-				if (!f.load (from)) {
+				if (!f.load (from, false)) {
 					warning (@"Can't read $from");
 					return null;
 				}

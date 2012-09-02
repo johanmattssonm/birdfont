@@ -57,7 +57,13 @@ class OpenFontFormatReader : Object {
 	}
 	
 	public Glyph? read_glyph (string name) {
-		return directory_table.glyf_table.read_glyph (name);
+		try {
+			return directory_table.glyf_table.read_glyph (name);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+		
+		return null;
 	}
 	
 	public void parse_index (string file_name) throws Error {
@@ -69,19 +75,6 @@ class OpenFontFormatReader : Object {
 		dis = new OtfInputStream (file.read ());
 		
 		parse_index_tables ();
-		done ();
-	}
-	
-	void done () {
-		IdleSource idle = new IdleSource ();
-
-		idle.set_callback (() => {
-			Font f = Supplement.get_current_font ();
-			f.loading_finished_callback ();
-			return false;
-		});
-
-		idle.attach (null);		
 	}
 	
 	void parse_index_tables () throws Error {

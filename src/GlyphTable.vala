@@ -75,7 +75,7 @@ class GlyphTable : GLib.Object {
 		return data.length ();
 	}
 
-	public GlyphCollection? @get (string name) {
+	public new GlyphCollection? @get (string name) {
 		unowned List<Item>? d = find_index (name);
 		
 		if (d == null) {

@@ -50,11 +50,7 @@ class OpenFontFormatWriter : Object  {
 	public void write_ttf_font (Font font) throws Error {
 		long dl;
 		uint8* data;
-		uint i = 0;
-		long written = 0;
-		Glyph? g;
 		unowned List<Table> tables;
-		unichar indice = 0;
 		FontData fd;
 		uint l;
 		
@@ -479,7 +475,7 @@ class Table : Object {
 		return length > 0;
 	}
 
-	public virtual void parse (FontData dis) {
+	public virtual void parse (FontData dis) throws GLib.Error {
 		warning (@"Parse is not implemented for $(id).");
 	}
 
@@ -589,7 +585,7 @@ class LocaTable : Table {
 		return glyph_offsets[i] == glyph_offsets[i + 1];
 	}
 	
-	public void parse (FontData dis, HeadTable head_table, MaxpTable maxp_table) {
+	public new void parse (FontData dis, HeadTable head_table, MaxpTable maxp_table) throws GLib.Error {
 		size = maxp_table.num_glyphs;
 		glyph_offsets = new uint32[size + 1];
 		
@@ -807,7 +803,7 @@ class GlyfTable : Table {
 		return (uint16)g.unichar_code; 
 	}
 	
-	public Glyph? read_glyph (string name) {
+	public Glyph? read_glyph (string name) throws GLib.Error {
 		Glyph? glyph;
 		Glyph g;
 		int i;
@@ -839,7 +835,7 @@ class GlyfTable : Table {
 		return glyph;
 	}
 	
-	public void parse (FontData dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table, KernTable kern_table) throws GLib.Error {
+	public new void parse (FontData dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table, KernTable kern_table) throws GLib.Error {
 		printd (@"loca.size: $(loca.size)\n");
 			
 		Glyph glyph;
@@ -859,7 +855,6 @@ class GlyfTable : Table {
 	}
 	
 	Glyph parse_index (int index, FontData dis, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
-		uint32 glyph_offset;
 		Glyph glyph = new Glyph ("");
 		double xmin, xmax;
 		double units_per_em = head_table.get_units_per_em ();
@@ -924,7 +919,6 @@ class GlyfTable : Table {
 		uint16 num_instructions;
 
 		Glyph glyph, linked_glyph;
-		string link_name;
 		List<int> x = new List<int> ();
 		List<int> y = new List<int> ();
 		List<int> gid = new List<int> ();
@@ -1199,8 +1193,7 @@ class GlyfTable : Table {
 		int first_point;
 		int last_point = 0;
 		Glyph glyph;
-		double startx, starty;
-		double x, y, rx, ry, lx, ly, nx, ny;
+		double x, y;
 
 		glyph = new Glyph (name.str, character);
 		
@@ -1342,7 +1335,7 @@ class GlyfTable : Table {
 		return glyph;
 	}
 
-	public void process_glyph (Glyph g, FontData fd) {
+	public void process_glyph (Glyph g, FontData fd) throws GLib.Error {
 		int16 txmin, tymin, txmax, tymax;
 
 		int16 end_point;
@@ -1630,11 +1623,10 @@ class GlyfTable : Table {
 		
 	}
 
-	public void process () {
+	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 		
 		create_glyph_table ();
-		int i = 0;
 		uint last_len = 0;
 		foreach (Glyph g in glyphs) {
 			// set values for loca table
@@ -1722,7 +1714,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		return (unichar) c;
 	}
 	
-	public override void parse (FontData dis) {
+	public override void parse (FontData dis) throws GLib.Error {
 		dis.seek (offset);
 		
 		format = dis.read_ushort ();
@@ -1738,7 +1730,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		}
 	}
 		
-	public void parse_format4 (FontData dis) {
+	public void parse_format4 (FontData dis) throws GLib.Error {
 		uint16 lang;
 		uint16 seg_count_x2;
 		uint16 seg_count;
@@ -1859,13 +1851,10 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
 	}
 	
-	public void process (FontData fd, GlyfTable glyf_table) {
+	public void process (FontData fd, GlyfTable glyf_table) throws GLib.Error {
 		GlyphRange glyph_range = new GlyphRange ();
 		unowned List<UniRange> ranges;
-			
-		unichar i = 0;
-		Glyph? gl;
-		
+
 		uint16 seg_count_2;
 		uint16 seg_count;
 		uint16 search_range;
@@ -2030,9 +2019,7 @@ class CmapTable : Table {
 		return "cmap";
 	}
 	
-	public override void parse (FontData dis) 
-		requires (offset > 0 && length > 0) {
-			
+	public override void parse (FontData dis) throws GLib.Error {
 		uint16 version;
 		uint16 nsubtables;
 		
@@ -2041,6 +2028,8 @@ class CmapTable : Table {
 		uint32 sub_offset;
 		
 		CmapSubtable subtable;
+
+		return_if_fail (offset > 0 && length > 0);
 		
 		dis.seek (offset);
 		
@@ -2086,7 +2075,7 @@ class CmapTable : Table {
 	}
 	
 	/** Character to glyph mapping */
-	public void process (GlyfTable glyf_table) {
+	public void process (GlyfTable glyf_table) throws GLib.Error {
 		FontData fd = new FontData ();
 		CmapSubtableWindowsUnicode cmap = new CmapSubtableWindowsUnicode ();
 		uint16 n_encoding_tables;
@@ -2157,8 +2146,8 @@ class HeadTable : Table {
 		return units_per_em * 10; // Fixa: we can refactor this number
 	}
 	
-	public override void parse (FontData dis) 
-		requires (offset > 0 && length > 0) {
+	public override void parse (FontData dis) throws GLib.Error {
+		return_if_fail (offset > 0 && length > 0);
 
 		dis.seek (offset);
 		
@@ -2245,7 +2234,7 @@ class HeadTable : Table {
 		return 8;
 	}
 	
-	public void process () {
+	public void process () throws GLib.Error {
 		FontData font_data = new FontData ();
 		Fixed version = 1 << 16;
 		Fixed font_revision = 1 << 16;
@@ -2331,7 +2320,7 @@ class HheaTable : Table {
 		return descender * 1000 / head_table.get_units_per_em ();
 	}
 	
-	public void parse (FontData dis) throws Error {
+	public override void parse (FontData dis) throws GLib.Error {
 		dis.seek (offset);
 		
 		version = dis.read_fixed ();
@@ -2361,7 +2350,7 @@ class HheaTable : Table {
 		num_horizontal_metrics = dis.read_short ();
 	}
 	
-	public void process () {
+	public void process () throws GLib.Error {
 		Font font = OpenFontFormatWriter.get_current_font ();
 		FontData fd = new FontData ();
 		Fixed version = 1 << 16;
@@ -2468,7 +2457,7 @@ class HmtxTable : Table {
 
 	}
 			
-	public void parse (FontData dis, HheaTable hhea_table, LocaTable loca_table) {
+	public new void parse (FontData dis, HheaTable hhea_table, LocaTable loca_table) throws GLib.Error {
 		nmetrics = hhea_table.num_horizontal_metrics;
 		nmonospaced = loca_table.size - nmetrics;
 		
@@ -2580,8 +2569,7 @@ class MaxpTable : Table {
 	
 	public void process () {
 		FontData fd = new FontData();
-		uint16 max_points, max_contours;
-				
+
 		// Version 0.5 for fonts with cff data and 1.0 for ttf
 		fd.add_u32 (0x00010000);
 		
@@ -2624,7 +2612,7 @@ class OffsetTable : Table {
 		directory_table = t;
 	}
 		
-	public void parse (FontData dis) throws Error {
+	public override void parse (FontData dis) throws Error {
 		Fixed version;
 		
 		dis.seek (offset);
@@ -2639,7 +2627,7 @@ class OffsetTable : Table {
 		printd (@"Number of tables $num_tables\n");		
 	}
 	
-	public void process () {
+	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 		Fixed version = 0x00010000; // sfnt version 1.0 for TTF CFF else use OTTO
 
@@ -2689,7 +2677,7 @@ class NameTable : Table {
 		}
 	}
 
-	public void parse (FontData dis) throws Error {
+	public override void parse (FontData dis) throws Error {
 		uint16 format;
 
 		dis.seek (offset);
@@ -2771,7 +2759,7 @@ class NameTable : Table {
 		}
 	}
 	
-	public void process () {
+	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 		Font font = OpenFontFormatWriter.get_current_font ();
 		uint16 len = 0;
@@ -2823,7 +2811,7 @@ class NameTable : Table {
 		for (int i = 0; i < num_records; i++) {
 			t = (!) text.nth (i).data;
 			p = (!) type.nth (i).data;
-			l = (uint16) t.len ();
+			l = (uint16) t.length;
 			
 			fd.add_ushort (1); // platform
 			fd.add_ushort (0); // encoding id
@@ -2870,7 +2858,7 @@ class Os2Table : Table {
 		id = "OS/2";
 	}
 	
-	public void parse (FontData dis) throws Error {
+	public override void parse (FontData dis) throws Error {
 		
 	}
 	
@@ -3019,7 +3007,7 @@ class PostTable : Table {
 		return (!) names.nth (k).data;
 	}
 	
-	public void parse (FontData dis) throws Error {
+	public override void parse (FontData dis) throws Error {
 		dis.seek (offset);
 		
 		Fixed format = dis.read_fixed ();
@@ -3372,1030 +3360,774 @@ class PostTable : Table {
 			
 			case '\0':
 				return 1;
-				break;
 
 			case '\r':
 				return 2;
-				break;
 
 			case ' ': // space
 				return 3;
-				break;
 
 			case '!':
 				return 4;
-				break;
 
 			case '"':
 				return 5;
-				break;
 
 			case '#':
 				return 6;
-				break;
 
 			case '$':
 				return 7;
-				break;
 
 			case '%':
 				return 8;
-				break;
 
 			case '&':
 				return 9;
-				break;
 
 			case '\'':
 				return 10;
-				break;
 
 			case '(':
 				return 11;
-				break;
 
 			case ')':
 				return 12;
-				break;
 
 			case '*':
 				return 13;
-				break;
 
 			case '+':
 				return 14;
-				break;
 
 			case ',':
 				return 15;
-				break;
 
 			case '-':
 				return 16;
-				break;
 
 			case '.':
 				return 17;
-				break;
 
 			case '/':
 				return 18;
-				break;
 
 			case '0':
 				return 19;
-				break;
 
 			case '1':
 				return 20;
-				break;
 
 			case '2':
 				return 21;
-				break;
 
 			case '3':
 				return 22;
-				break;
 
 			case '4':
 				return 23;
-				break;
 
 			case '5':
 				return 24;
-				break;
 
 			case '6':
 				return 25;
-				break;
 
 			case '7':
 				return 26;
-				break;
 
 			case '8':
 				return 27;
-				break;
 
 			case '9':
 				return 28;
-				break;
 
 			case ':':
 				return 29;
-				break;
 
 			case ';':
 				return 30;
-				break;
 
 			case '<':
 				return 31;
-				break;
 
 			case '=':
 				return 32;
-				break;
 
 			case '>':
 				return 33;
-				break;
 
 			case '?':
 				return 34;
-				break;
 
 			case '@':
 				return 35;
-				break;
 
 			case 'A':
 				return 36;
-				break;
 
 			case 'B':
 				return 37;
-				break;
 
 			case 'C':
 				return 38;
-				break;
 
 			case 'D':
 				return 39;
-				break;
 
 			case 'E':
 				return 40;
-				break;
 
 			case 'F':
 				return 41;
-				break;
 
 			case 'G':
 				return 42;
-				break;
 
 			case 'H':
 				return 43;
-				break;
 
 			case 'I':
 				return 44;
-				break;
 
 			case 'J':
 				return 45;
-				break;
 
 			case 'K':
 				return 46;
-				break;
 
 			case 'L':
 				return 47;
-				break;
 
 			case 'M':
 				return 48;
-				break;
 
 			case 'N':
 				return 49;
-				break;
 
 			case 'O':
 				return 50;
-				break;
 
 			case 'P':
 				return 51;
-				break;
 
 			case 'Q':
 				return 52;
-				break;
 
 			case 'R':
 				return 53;
-				break;
 
 			case 'S':
 				return 54;
-				break;
 
 			case 'T':
 				return 55;
-				break;
 
 			case 'U':
 				return 56;
-				break;
 
 			case 'V':
 				return 57;
-				break;
 
 			case 'W':
 				return 58;
-				break;
 
 			case 'X':
 				return 59;
-				break;
 
 			case 'Y':
 				return 60;
-				break;
 
 			case 'Z':
 				return 61;
-				break;
 
 			case '[':
 				return 62;
-				break;
 
 			case '\\':
 				return 63;
-				break;
 
 			case ']':
 				return 64;
-				break;
 
 			case '^':
 				return 65;
-				break;
 
 			case '_':
 				return 66;
-				break;
 
 			case '`':
 				return 67;
-				break;
 
 			case 'a':
 				return 68;
-				break;
 
 			case 'b':
 				return 69;
-				break;
 
 			case 'c':
 				return 70;
-				break;
 
 			case 'd':
 				return 71;
-				break;
 
 			case 'e':
 				return 72;
-				break;
 
 			case 'f':
 				return 73;
-				break;
 
 			case 'g':
 				return 74;
-				break;
 
 			case 'h':
 				return 75;
-				break;
 
 			case 'i':
 				return 76;
-				break;
 
 			case 'j':
 				return 77;
-				break;
 
 			case 'k':
 				return 78;
-				break;
 
 			case 'l':
 				return 79;
-				break;
 
 			case 'm':
 				return 80;
-				break;
 
 			case 'n':
 				return 81;
-				break;
 
 			case 'o':
 				return 82;
-				break;
 
 			case 'p':
 				return 83;
-				break;
 
 			case 'q':
 				return 84;
-				break;
 
 			case 'r':
 				return 85;
-				break;
 
 			case 's':
 				return 86;
-				break;
 
 			case 't':
 				return 87;
-				break;
 
 			case 'u':
 				return 88;
-				break;
 
 			case 'v':
 				return 89;
-				break;
 
 			case 'w':
 				return 90;
-				break;
 
 			case 'x':
 				return 91;
-				break;
 
 			case 'y':
 				return 92;
-				break;
 
 			case 'z':
 				return 93;
-				break;
 
 			case '{':
 				return 94;
-				break;
 
 			case '|':
 				return 95;
-				break;
 
 			case '}':
 				return 96;
-				break;
 
 			case '~':
 				return 97;
-				break;
 
 			case 'Ä':
 				return 98;
-				break;
 
 			case 'Å':
 				return 99;
-				break;
 
 			case 'Ç':
 				return 100;
-				break;
 
 			case 'É':
 				return 101;
-				break;
 
 			case 'Ñ':
 				return 102;
-				break;
 
 			case 'Ö':
 				return 103;
-				break;
 
 			case 'Ü':
 				return 104;
-				break;
 
 			case 'á':
 				return 105;
-				break;
 
 			case 'à':
 				return 106;
-				break;
 
 			case 'â':
 				return 107;
-				break;
 
 			case 'ä':
 				return 108;
-				break;
 
 			case 'ã':
 				return 109;
-				break;
 
 			case 'å':
 				return 110;
-				break;
 
 			case 'ç':
 				return 111;
-				break;
 
 			case 'é':
 				return 112;
-				break;
 
 			case 'è':
 				return 113;
-				break;
 
 			case 'ê':
 				return 114;
-				break;
 
 			case 'ë':
 				return 115;
-				break;
 
 			case 'í':
 				return 116;
-				break;
 
 			case 'ì':
 				return 117;
-				break;
 
 			case 'î':
 				return 118;
-				break;
 
 			case 'ï':
 				return 119;
-				break;
 
 			case 'ñ':
 				return 120;
-				break;
 
 			case 'ó':
 				return 121;
-				break;
 
 			case 'ò':
 				return 122;
-				break;
 
 			case 'ô':
 				return 123;
-				break;
 
 			case 'ö':
 				return 124;
-				break;
 
 			case 'õ':
 				return 125;
-				break;
 
 			case 'ú':
 				return 126;
-				break;
 
 			case 'ù':
 				return 127;
-				break;
 
 			case 'û':
 				return 128;
-				break;
 
 			case 'ü':
 				return 129;
-				break;
 
 			case '†':
 				return 130;
-				break;
 
 			case '°':
 				return 131;
-				break;
 
 			case '¢':
 				return 132;
-				break;
 
 			case '£':
 				return 133;
-				break;
 
 			case '§':
 				return 134;
-				break;
 
 			case '•':
 				return 135;
-				break;
 
 			case '¶':
 				return 136;
-				break;
 
 			case 'ß':
 				return 137;
-				break;
 
 			case '®':
 				return 138;
-				break;
 
 			case '©':
 				return 139;
-				break;
 
 			case '™':
 				return 140;
-				break;
 
 			case '´':
 				return 141;
-				break;
 
 			case '¨':
 				return 142;
-				break;
 
 			case '≠':
 				return 143;
-				break;
 
 			case 'Æ':
 				return 144;
-				break;
 
 			case 'Ø':
 				return 145;
-				break;
 
 			case '∞':
 				return 146;
-				break;
 
 			case '±':
 				return 147;
-				break;
 
 			case '≤':
 				return 148;
-				break;
 
 			case '≥':
 				return 149;
-				break;
 
 			case '¥':
 				return 150;
-				break;
 
 			case 'µ':
 				return 151;
-				break;
 
 			case '∂':
 				return 152;
-				break;
 
 			case '∑':
 				return 153;
-				break;
 
 			case '∏':
 				return 154;
-				break;
 
 			case 'π':
 				return 155;
-				break;
 
 			case '∫':
 				return 156;
-				break;
 
 			case 'ª':
 				return 157;
-				break;
 
 			case 'º':
 				return 158;
-				break;
 
 			case 'Ω':
 				return 159;
-				break;
 
 			case 'æ':
 				return 160;
-				break;
 
 			case 'ø':
 				return 161;
-				break;
 
 			case '¿':
 				return 162;
-				break;
 
 			case '¡':
 				return 163;
-				break;
 
 			case '¬':
 				return 164;
-				break;
 
 			case '√':
 				return 165;
-				break;
 
 			case 'ƒ':
 				return 166;
-				break;
 
 			case '≈':
 				return 167;
-				break;
 
 			case '∆':
 				return 168;
-				break;
 
 			case '«':
 				return 169;
-				break;
 
 			case '»':
 				return 170;
-				break;
 
 			case '…':
 				return 171;
-				break;
 
 			case ' ': // non breaking space
 				return 172;
-				break;
 							
 			case 'À':
 				return 173;
-				break;
 
 			case 'Ã':
 				return 174;
-				break;
 
 			case 'Õ':
 				return 175;
-				break;
 
 			case 'Œ':
 				return 176;
-				break;
 
 			case 'œ':
 				return 177;
-				break;
 
 			case '–':
 				return 178;
-				break;
 
 			case '—':
 				return 179;
-				break;
 
 			case '“':
 				return 180;
-				break;
 
 			case '”':
 				return 181;
-				break;
 
 			case '‘':
 				return 182;
-				break;
 
 			case '’':
 				return 183;
-				break;
 
 			case '÷':
 				return 184;
-				break;
 
 			case '◊':
 				return 185;
-				break;
 
 			case 'ÿ':
 				return 186;
-				break;
 
 			case 'Ÿ':
 				return 187;
-				break;
 
 			case '⁄':
 				return 188;
-				break;
 
 			case '¤':
 				return 189;
-				break;
 
 			case '‹':
 				return 190;
-				break;
 
 			case '›':
 				return 191;
-				break;
 
 			case 'ﬁ':
 				return 192;
-				break;
 
 			case 'ﬂ':
 				return 193;
-				break;
 
 			case '‡':
 				return 194;
-				break;
 
 			case '·':
 				return 195;
-				break;
 
 			case '‚':
 				return 196;
-				break;
 
 			case '„':
 				return 197;
-				break;
 
 			case '‰':
 				return 198;
-				break;
 
 			case 'Â':
 				return 199;
-				break;
 
 			case 'Ê':
 				return 200;
-				break;
 
 			case 'Á':
 				return 201;
-				break;
 
 			case 'Ë':
 				return 202;
-				break;
 
 			case 'È':
 				return 203;
-				break;
 
 			case 'Í':
 				return 204;
-				break;
 
 			case 'Î':
 				return 205;
-				break;
 
 			case 'Ï':
 				return 206;
-				break;
 
 			case 'Ì':
 				return 207;
-				break;
 
 			case 'Ó':
 				return 208;
-				break;
 
 			case 'Ô':
 				return 209;
-				break;
 				
 			// Machintosh apple goes here
 			// return 210;
 
 			case 'Ò':
 				return 211;
-				break;
 
 			case 'Ú':
 				return 212;
-				break;
 
 			case 'Û':
 				return 213;
-				break;
 
 			case 'Ù':
 				return 214;
-				break;
 
 			case 'ı':
 				return 215;
-				break;
 
 			case 'ˆ':
 				return 216;
-				break;
 
 			case '˜':
 				return 217;
-				break;
 
 			case '¯':
 				return 218;
-				break;
 
 			case '˘':
 				return 219;
-				break;
 
 			case '˙':
 				return 220;
-				break;
 
 			case '˚':
 				return 221;
-				break;
 
 			case '¸':
 				return 222;
-				break;
 
 			case '˝':
 				return 223;
-				break;
 
 			case '˛':
 				return 224;
-				break;
 
 			case 'ˇ':
 				return 225;
-				break;
 
 			case 'Ł':
 				return 226;
-				break;
 
 			case 'ł':
 				return 227;
-				break;
 
 			case 'Š':
 				return 228;
-				break;
 
 			case 'š':
 				return 229;
-				break;
 
 			case 'Ž':
 				return 230;
-				break;
 
 			case 'ž':
 				return 231;
-				break;
 
 			case '¦':
 				return 232;
-				break;
 
 			case 'Ð':
 				return 233;
-				break;
 
 			case 'ð':
 				return 234;
-				break;
 
 			case 'Ý':
 				return 235;
-				break;
 
 			case 'ý':
 				return 236;
-				break;
 
 			case 'Þ':
 				return 237;
-				break;
 
 			case 'þ':
 				return 238;
-				break;
 
 			case '−':
 				return 239;
-				break;
 
 			case '×':
 				return 240;
-				break;
 
 			case '¹':
 				return 241;
-				break;
 				
 			case '²':
 				return 242;
-				break;
 
 			case '³':
 				return 243;
-				break;
 
 			case '½':
 				return 244;
-				break;
 
 			case '¼':
 				return 245;
-				break;
 
 			case '¾':
 				return 246;
-				break;
 
 			case '₣':
 				return 247;
-				break;
 
 			case 'Ğ':
 				return 248;
-				break;
 
 			case 'ğ':
 				return 249;
-				break;
 
 			case 'İ':
 				return 250;
-				break;
 
 			case 'Ş':
 				return 251;
-				break;
 
 			case 'ş':
 				return 252;
-				break;
 
 			case 'Ć':
 				return 253;
-				break;
 
 			case 'ć':
 				return 254;
-				break;
 
 			case 'Č':
 				return 255;
-				break;
 
 			case 'č':
 				return 256;
-				break;
 
 			case 'đ':
 				return 257;
-				break;
 		}
 		
 		return 0;
@@ -4452,11 +4184,11 @@ class PostTable : Table {
 		for (int i = 258; i < names.length (); i++) {
 			n = (!) names.nth (i).data;
 			
-			if (n.len () > 0xFF) {
+			if (n.length > 0xFF) {
 				warning ("too long name for glyph $n");
 			}
 						
-			fd.add ((uint8) n.len ()); // length of string
+			fd.add ((uint8) n.length); // length of string
 			fd.add_str (n);
 		}		
 
@@ -4473,10 +4205,10 @@ class GaspTable : Table {
 		id = "gasp";
 	}
 	
-	public void parse (FontData dis) throws Error {
+	public override void parse (FontData dis) throws Error {
 	}
 	
-	public void process () {
+	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 
 		fd.add_ushort (0);
@@ -4495,10 +4227,10 @@ class GdefTable : Table {
 		id = "GDEF";
 	}
 	
-	public void parse (FontData dis) throws Error {
+	public override void parse (FontData dis) throws Error {
 	}
 	
-	public void process () {
+	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 
 		fd.add_ulong (0x00010002);
@@ -4522,10 +4254,10 @@ class CvtTable : Table {
 		id = "cvt ";
 	}
 	
-	public void parse (FontData dis) throws Error {
+	public override void parse (FontData dis) throws Error {
 	}
 	
-	public void process () {
+	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 		
 		fd.add_ushort (0);
@@ -4587,7 +4319,7 @@ class KernTable : Table {
 		return kl;
 	}
 	
-	public override void parse (FontData dis) {
+	public override void parse (FontData dis) throws GLib.Error {
 		uint16 version;
 		uint16 sub_tables;
 		
@@ -4638,7 +4370,7 @@ class KernTable : Table {
 		}		
 	}
 	
-	public void process () {
+	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 		uint16 n_pairs = 0;
 		
@@ -4742,7 +4474,7 @@ class DirectoryTable : Table {
 		id = "Directory table";
 	}
 
-	public void process () {
+	public void process () throws GLib.Error {
 		// generate font data
 		glyf_table.process ();
 		gasp_table.process ();
@@ -4795,7 +4527,7 @@ class DirectoryTable : Table {
 		offset_table = ot;
 	}
 	
-	public void parse (FontData dis, File file, OpenFontFormatReader reader_callback) throws Error {
+	public new void parse (FontData dis, File file, OpenFontFormatReader reader_callback) throws Error {
 		StringBuilder tag = new StringBuilder ();
 		uint32 checksum;
 		uint32 offset;
@@ -4995,7 +4727,7 @@ class DirectoryTable : Table {
 		return valid;
 	}
 	
-	bool validate_checksum_for_entire_font (FontData dis, File f) {
+	bool validate_checksum_for_entire_font (FontData dis, File f) throws GLib.Error {
 		uint p = head_table.offset + head_table.get_checksum_position ();
 		uint32 checksum_font, checksum_head;
 
@@ -5019,7 +4751,7 @@ class DirectoryTable : Table {
 		return true;
 	}
 	
-	public string get_id () {
+	public new string get_id () {
 		warning ("Don't write id for table directory.");		
 		return "Directory table"; // Table id should be ignored for directory table, none the less it has one declared here.
 	}
@@ -5038,7 +4770,7 @@ class DirectoryTable : Table {
 		return length;
 	}
 	
-	public void process_directory () {
+	public void process_directory () throws GLib.Error {
 		create_directory (); // create directory without offsets to calculate length of offset table and checksum for entre file
 		create_directory (); // generate a valid directory
 	}
@@ -5052,7 +4784,7 @@ class DirectoryTable : Table {
 		return check_sum;
 	}
 
-	public void create_directory () {
+	public void create_directory () throws GLib.Error {
 		FontData fd;
 	
 		uint32 table_offset = 0;

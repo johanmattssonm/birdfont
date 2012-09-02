@@ -706,7 +706,7 @@ class Font : GLib.Object {
 		return (glyph_names.length () == 0);
 	}
 
-	public bool load (string path) {
+	public bool load (string path, bool recent = true) {
 		bool loaded = false;
 
 		otf_font = false;
@@ -728,6 +728,11 @@ class Font : GLib.Object {
 				loaded = parse_otf_file (path);
 				font_file = path;
 			}
+		}
+		
+		if (recent) {
+			add_thumbnail ();
+			Preferences.add_recent_files (get_path ());
 		}
 		
 		return loaded;
@@ -776,12 +781,6 @@ class Font : GLib.Object {
 		img_scale.write_to_png ((!) f.get_path ());
 	}
 
-	/** Callbackt function for finishing parsing of font file. */ 
-	public void loading_finished_callback () {
-		add_thumbnail ();
-		Preferences.add_recent_files (get_path ());
-	}
-
 	/** Callback function for loading glyph in a separate thread. */
 	public void add_glyph_callback (Glyph g) {
 		GlyphCollection? gcl;
@@ -814,7 +813,7 @@ class Font : GLib.Object {
 		// xheight_position = estimate_xheight ();
 	}
 
-	public bool parse_otf_file (string path) {
+	public bool parse_otf_file (string path) throws GLib.Error {
 		otf = new OpenFontFormatReader ();
 		otf_font = true;
 		
@@ -827,7 +826,7 @@ class Font : GLib.Object {
 		return true;
 	}
 	
-	public bool parse_file (string path) {
+	public bool parse_file (string path) throws GLib.Error {
 		Parser.init ();
 		
 		Xml.Doc* doc = Parser.parse_file (path);
@@ -894,7 +893,6 @@ class Font : GLib.Object {
 		delete doc;
 		Parser.cleanup ();
 
-		loading_finished_callback ();
 		return true;
 	}
 	

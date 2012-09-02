@@ -141,13 +141,10 @@ class IntersectionList {
 	}
 
 	public static IntersectionList create_intersection_list (Path p1, Path p2) {
-		Path new_path = new Path ();
 		IntersectionList il = new IntersectionList ();
 		
 		unowned List<EditPoint> a_start, a_stop;
 		unowned List<EditPoint> b_start, b_stop;
-		
-		EditPoint e;
 		
 		if (p1 == p2) {
 			return il;
