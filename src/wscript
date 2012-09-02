@@ -85,10 +85,3 @@ def build (bld):
 		source        = BIRDFONT + BIRDFONT_MAIN
 	)
 
-	bld.program (
-		target        = 'birdfont-export',
-		param         = PARAM,
-		packages      = 'gtk+-2.0 libxml-2.0',
-		uselib        = 'GTK GLIB GIO XML WEB',
-		source        = BIRDFONT + BIRDFONT_EXPORT
-	)

@@ -15,9 +15,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Cairo;
-using Gtk;
-using Gdk;
 using Math;
 
 namespace Supplement {

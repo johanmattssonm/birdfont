@@ -770,7 +770,7 @@ class Path {
 		double last = 0;
 		bool on_edge = false;
 		double last_x = 0;
-		
+
 		if (points.length () < 3) {
 			return false;
 		}
@@ -810,11 +810,19 @@ class Path {
 			return (a.y < b.y) ? 1 : -1;
 		});
 		
+		for (int i = 0; i < ycoordinates.length () - 1; i++) {
+			if (Math.fabs (ycoordinates.nth (i).data.y - ycoordinates.nth (i + 1).data.y) < 4 * tolerance) {
+				ycoordinates.remove_link (ycoordinates.nth (i));
+			}
+		}
+		
 		if (unlikely (ycoordinates.length () % 2 != 0)) {
 			warning (@"not an even number of coordinates ($(ycoordinates.length ()))");
 			stderr.printf (@"(ymin <= y <= ymax) && (xmin <= x <= xmax);\n");
 			stderr.printf (@"($ymin <= $y <= $ymax) && ($xmin <= $x <= $xmax);\n");
 		
+			stderr.printf (@"tolerance: $(tolerance)\n");
+			
 			stderr.printf ("ycoordinates:\n");
 			foreach (EditPoint e in ycoordinates) {
 				stderr.printf (@"$(e.y)\n");
@@ -826,8 +834,11 @@ class Path {
 		}
 		
 		for (unowned List<EditPoint> e = ycoordinates.first (); true; e = e.next) {
+			return_val_if_fail (!is_null (e), true);
+			
 			if (y <= e.data.y + tolerance) {
-				return_if_fail ((void*) e.next != null);
+				return_val_if_fail (!is_null (e.next), true);
+				
 				e = e.next;
 
 				if (y >= e.data.y - tolerance) {
@@ -1007,7 +1018,7 @@ class Path {
 		ymin = tymin;
 
 		if (unlikely (!new_val)) {
-			// only one point, what should we do? probably skip it.
+			// only one point
 		} else if (unlikely (!got_region_boundries ())) {
 			warning (@"No new region boundries.\nPoints.length: $(points.length ())");
 			print_boundries ();
@@ -1388,9 +1399,7 @@ class Path {
 		}
 	}
 
-	// TODO: Find a clever mathematical solutions instead
 	public static void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = -1) {
-		
 		if (steps == -1) {
 			steps = (int) (10 * get_length_from (start, stop));
 		}
@@ -1431,7 +1440,7 @@ class Path {
 		y = bezier_path (t, y0, y1, y2, y3);
 	}
 
-	private void all_of_path (RasterIterator iter, int steps = 400) {
+	private void all_of_path (RasterIterator iter) {
 		unowned List<EditPoint> i, next;
 		
 		if (points.length () < 2) {
@@ -1514,7 +1523,7 @@ class Path {
 	}
 	
 	public bool got_region_boundries () {
-			return !(xmax == -10000 || xmin ==  10000 || ymax == -10000 || ymin ==  10000);
+		return !(xmax == -10000 || xmin ==  10000 || ymax == -10000 || ymin ==  10000);
 	}
 	
 	public void create_list () {
@@ -1671,7 +1680,7 @@ class Path {
 			return false;
 		}
 		
-		// add editpoints points on intersections 
+		// add editpoints on intersections 
 		p0.update_region_boundries ();
 		p1.update_region_boundries ();
 		foreach (Intersection inter in il.points) {
@@ -1719,23 +1728,28 @@ class Path {
 		// remove duplicate paths
 		for (i = 0; i < path_list.paths.length (); i++) {
 			pi = path_list.paths.nth (i);
-			
+
 			if (is_duplicated (path_list, pi.data)) {
 				path_list.paths.remove_link (pi);
 				--i;			
 			}
 		}
 		
-		// remova paths contained in other paths
+		// remove paths contained in other paths
 		for (i = 0; i < path_list.paths.length (); i++) {
 			pi = path_list.paths.nth (i);
+			
+			print (@"\n");
+			foreach (var p in path_list.paths) {
+				print (@"Paths: $(is_clasped (path_list, p))  Length: $(p.points.length ())\n");
+			}
 			
 			if (pi.data.is_clockwise () && is_clasped (path_list, pi.data)) {
 				path_list.paths.remove_link (pi);
 				i--;
 			}
 		}
-		
+	
 		return true;
 	}
 	
@@ -1746,7 +1760,7 @@ class Path {
 				continue;
 			}
 			
-			if (is_duplicated_path (pd, p)) {
+			if (is_duplicated_path (p, pd)) {
 				duplicate = true;
 			}
 		}
@@ -1799,6 +1813,7 @@ class Path {
 		foreach (EditPoint e in inside.points) {
 			if (!outside.is_over_coordinate_var (e.x, e.y, 0.5)) { // high tolerance since point may be off curve in both paths
 				i = false;
+				break;
 			}
 		}
 		return i;
