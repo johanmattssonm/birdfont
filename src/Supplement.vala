@@ -21,12 +21,12 @@ namespace Supplement {
 
 class Supplement {
 	public static Argument args;
-	public static bool experimental;
-	public static bool show_coordinates;
-	public static bool fatal_wanings;
-	public static bool win32;
+	public static bool experimental = false;
+	public static bool show_coordinates = false;
+	public static bool fatal_wanings = false;
+	public static bool win32 = false;
 
-	static Font current_font;
+	public static Font current_font;
 
 	public static Font get_current_font () {
 		return current_font;
@@ -85,79 +85,7 @@ class Supplement {
 	
 	public static string? get_argument (string param) {
 		return args.get_argument (param);
-	}
-			
-	public static int main(string[] arg) {
-		int err_arg;
-		File font_file;
-
-		args = new Argument.command_line (arg);
-		
-		if (args.has_argument ("--help")) {
-			args.print_help ();
-			Process.exit (0);
-		}
-
-		err_arg = args.validate ();
-		if (err_arg != 0) {
-			stdout.printf (@"Unknown parameter $(arg [err_arg])\n\n");
-			args.print_help ();
-			Process.exit (0);
-		}
-
-		stdout.printf ("birdfont version %s\n", VERSION);		
-
-		experimental = args.has_argument ("--test");
-		show_coordinates = args.has_argument ("--show-coordinates");
-		fatal_wanings = has_argument ("--fatal-warning");
-		win32 = (arg[0].index_of (".exe") > -1);
-
-		Preferences preferences = new Preferences ();
-		preferences.load ();
-       
-		current_font = new Font ();
-		
-		if (args.get_file () != "") {
-			font_file = File.new_for_path (args.get_file ());
-			
-			if (!font_file.query_exists ()) {
-				stderr.printf (@"File $(args.get_file ()) not found.");
-				return -1;
-			}
-		}
-		
-		Gtk.init (ref arg);
-		MainWindow window = new MainWindow ("Birdfont");
-		window.show_all ();
-
-		if (fatal_wanings) {
-			LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
-			Log.set_handler (null, levels, fatal_warning);
-		}
-			
-		IdleSource idle = new IdleSource ();
-		idle.set_callback(() => {
-			preferences.load ();
-			
-			if (args.get_file () != "") {
-				current_font.load (args.get_file ());
-				MainWindow.get_toolbox ().select_tool_by_name ("available_characters");
-			} else {
-				MainWindow.get_tab_bar ().select_tab_name ("Menu");
-			}
-			
-			return false;
-		});
-		
-		idle.attach (null);
-		
-		Gtk.main ();
-		
-		preferences.set_last_file (get_current_font ().get_path ());
-		
-		return 0;
-	}
-	
+	}	
 }
 
 internal bool is_null (void* n) {

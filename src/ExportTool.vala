@@ -39,16 +39,29 @@ class ExportTool : Tool {
 		});
 	}
 
-	public static void export_all () {
+	public static bool export_all () {
 		Font font = Supplement.get_current_font ();
+		bool f;
 		
 		if (font.get_ttf_export ()) {
-			export_ttf_font ();
+			f = export_ttf_font ();
+			
+			if (!f) {
+				warning ("Failed to export font");
+				return false;
+			}
 		}
 		
 		if (font.get_svg_export ()) {
-			export_svg_font ();
+			f = export_svg_font ();
+
+			if (!f) {
+				warning ("Failed to export font");
+				return false;
+			}
 		}
+		
+		return true;
 	}
 
 	public void export_glyph_to_svg () {
@@ -73,8 +86,6 @@ class ExportTool : Tool {
 		if (!(fd is Glyph)) {
 			return;
 		}
-		
-		print (@"Writing file $((!)file.get_path ())\n");
 		
 		try {
 			
@@ -328,21 +339,48 @@ os.put_string ("""
 	}
 
 	public static bool export_ttf_font () {
+		Font font = Supplement.get_current_font ();
+		File file = font.get_folder ();
+		return export_ttf_font_path (file);
+	}
+	
+	public static bool export_ttf_font_path (File folder, bool async = true) 
+		requires (Supplement.get_current_font ().font_file != null) {
+		Font current_font = Supplement.get_current_font ();
+		string path;
+		OpenFontFormatWriter fo;
+		Font temp_font = new Font ();
+		ExportThread th;
+		unowned Thread<void*> export_thread;
+		File file;
+		string temp_file;
+		
 		try {
-			Font font = Supplement.get_current_font ();
-			File file = font.get_folder ();
-			file = file.get_child (font.get_name () + ".ttf");
-			OpenFontFormatWriter fo;
-			
+			// create a copy of current font and use it in a separate 
+			// export thread
+			temp_file = current_font.save_backup ();
+			file = folder.get_child (temp_font.get_name () + ".ttf");
+
 			if (file.query_exists ()) {
 				file.delete ();
 			}
+
+			path = (!) file.get_path ();
+
+			th = new ExportThread (temp_file, path);
 			
-			fo = new OpenFontFormatWriter ();
-			fo.open (file);
-			fo.write_ttf_font (font);
-			fo.close ();
-			
+			if (async) {
+				try {
+					export_thread = Thread.create<void*> (th.run, true);
+					export_thread.join ();
+				} catch (ThreadError e) {
+					stderr.printf ("%s\n", e.message);
+					return false;
+				}
+			} else {
+				th.run ();
+			}
+				
 		} catch (Error e) {
 			critical (@"$(e.message)");
 			return false;
@@ -350,8 +388,13 @@ os.put_string ("""
 		
 		return true;		
 	}
-		
+	
 	public static bool export_svg_font () {
+		Font font = Supplement.get_current_font ();
+		return export_svg_font_path (font.get_folder ());
+	}
+		
+	public static bool export_svg_font_path (File folder) {
 		TooltipArea ta = MainWindow.get_tool_tip ();
 		Font font = Supplement.get_current_font ();
 		string file_name = @"$(font.get_name ()).svg";
@@ -359,11 +402,9 @@ os.put_string ("""
 		SvgFontFormatWriter fo;
 		
 		try {
-			file = font.get_folder ();
-			file = file.get_child (file_name);
+			file = folder.get_child (file_name);
 			
 			if (file.query_exists ()) {
-				stderr.printf (@"ExportTool: Output file (\"$((!) file.get_path ())\") exists. Deleting it.\n");
 				file.delete ();
 			}
 			
@@ -379,6 +420,39 @@ os.put_string ("""
 		
 		ta.show_text (@"Wrote $file_name");
 		return true;
+	}
+
+
+	class ExportThread {
+
+		private string from;
+		private string to;
+
+		public ExportThread (string from, string to) {
+			this.from = from;
+			this.to = to;
+		}
+
+		public void* run () {
+			OpenFontFormatWriter fo = new OpenFontFormatWriter ();
+			Font f = new Font ();
+			
+			try {
+				if (!f.load (from)) {
+					warning (@"Can't read $from");
+					return null;
+				}
+				
+				fo.open ((!) File.new_for_path (to));
+				fo.write_ttf_font (f);
+				fo.close ();
+			} catch (Error e) {
+				critical (@"$(e.message)");
+				return null;
+			}	
+			
+			return null;
+		}
 	}
 }
 

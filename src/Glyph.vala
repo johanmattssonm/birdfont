@@ -301,6 +301,8 @@ class Glyph : FontDisplay {
 	public void add_help_lines () {
 		remove_lines ();
 
+		assert (!is_null (Supplement.get_current_font ()));
+
 		double bgt = Supplement.get_current_font ().top_limit;
 		Line top_margin_line = new Line ("top margin", bgt, false);
 		top_margin_line.set_color (0.7, 0, 0, 0.5);

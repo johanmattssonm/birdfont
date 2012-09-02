@@ -26,16 +26,25 @@ class OpenFontFormatWriter : Object  {
 	DataOutputStream os;
 	DirectoryTable directory_table;
 	
+	public static Font font;
+	
 	public OpenFontFormatWriter () {
 		directory_table = new DirectoryTable ();
 	}
 	
+	public static Font get_current_font () {
+		return font;
+	}
+	
 	public void open (File file) throws Error {
+		assert (!is_null (file));
+		
 		if (file.query_exists ()) {
+			warning ("File exists in export.");
 			throw new FileError.EXIST("OpenFontFormatWriter: file exists.");
 		}
 		
-		os = new DataOutputStream(file.create(FileCreateFlags.REPLACE_DESTINATION));
+		os = new DataOutputStream(file.create (FileCreateFlags.REPLACE_DESTINATION));
 	}
 	
 	public void write_ttf_font (Font font) throws Error {
@@ -48,7 +57,9 @@ class OpenFontFormatWriter : Object  {
 		unichar indice = 0;
 		FontData fd;
 		uint l;
-			
+		
+		this.font = font;
+				
 		directory_table.process ();	
 		tables = directory_table.get_tables ();
 
@@ -628,7 +639,7 @@ class LocaTable : Table {
 	
 	public void process (GlyfTable glyf_table, HeadTable head_table) {
 		FontData fd = new FontData ();
-		Font font = Supplement.get_current_font ();
+		Font font = OpenFontFormatWriter.get_current_font ();
 		uint32 last = 0;
 		uint32 prev = 0;
 		int i = 0;
@@ -737,7 +748,7 @@ class GlyfTable : Table {
 
 	public double get_capheight () {
 		double x1, x2, y1, y2;
-		Font f = Supplement.get_current_font ();
+		Font f = OpenFontFormatWriter.get_current_font ();
 		double max = double.MIN;
 		
 		foreach (Glyph g in glyphs) {
@@ -1342,7 +1353,7 @@ class GlyfTable : Table {
 		
 		double x, y;
 
-		Font font = Supplement.get_current_font ();
+		Font font = OpenFontFormatWriter.get_current_font ();
 		int glyph_offset;
 		
 		uint len; 
@@ -1448,7 +1459,7 @@ class GlyfTable : Table {
 		
 		foreach (Path p in g.path_list) {
 			p = p.get_quadratic_points ();
-			print (@"\n");
+
 			foreach (EditPoint e in p.points) {
 				x = e.x * UNITS - prev - g.left_limit * UNITS;
 
@@ -1581,7 +1592,7 @@ class GlyfTable : Table {
 	public void create_glyph_table () {
 		Glyph? gl;
 		Glyph g;
-		Font font = Supplement.get_current_font ();
+		Font font = OpenFontFormatWriter.get_current_font ();
 		uint32 indice;
 
 		// add notdef. character at index zero + other special chars first
@@ -1845,7 +1856,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		s.append_unichar (start_char);
 		e.append_unichar (end_char);
 		
-		// print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
+		print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
 	}
 	
 	public void process (FontData fd, GlyfTable glyf_table) {
@@ -2351,7 +2362,7 @@ class HheaTable : Table {
 	}
 	
 	public void process () {
-		Font font = Supplement.get_current_font ();
+		Font font = OpenFontFormatWriter.get_current_font ();
 		FontData fd = new FontData ();
 		Fixed version = 1 << 16;
 		
@@ -2489,7 +2500,7 @@ class HmtxTable : Table {
 	
 	public void process () {
 		FontData fd = new FontData ();
-		Font font = Supplement.get_current_font ();
+		Font font = OpenFontFormatWriter.get_current_font ();
 
 		int16 advance;
 		int16 extent;
@@ -2762,7 +2773,7 @@ class NameTable : Table {
 	
 	public void process () {
 		FontData fd = new FontData ();
-		Font font = Supplement.get_current_font ();
+		Font font = OpenFontFormatWriter.get_current_font ();
 		uint16 len = 0;
 		string t;
 		uint16 p;
@@ -2865,7 +2876,7 @@ class Os2Table : Table {
 	
 	public void process (GlyfTable glyf_table) {
 		FontData fd = new FontData ();
-		Font font = Supplement.get_current_font ();
+		Font font = OpenFontFormatWriter.get_current_font ();
 		
 		int16 ascender;
 		int16 descender;
@@ -3065,9 +3076,7 @@ class PostTable : Table {
 			for (int j = 0; j < len; j++) {
 				name.append_c (dis.read_char ());
 			}
-			
-			// print (@"Name gid: $gid len: $len: $(name.str)\n");
-			
+
 			names.append (name.str);
 		}
 		
@@ -4880,16 +4889,7 @@ class DirectoryTable : Table {
 				kern_table.length = length;
 			}
 		}
-		
-		// FIXA: delete
-		/*
-		FontData fd = new FontData ();
-		fd.write_table (dis, post_table.offset, post_table.length);
-		fd.print ();
-		*/
-		
-		printd (@"fd.write_table (dis, post_table.offset, post_table.length) $(post_table.offset) $(post_table.length)\n");
-		
+
 		head_table.parse (dis);
 		
 		if (!validate_tables (dis, file)) {

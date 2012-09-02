@@ -1,4 +1,4 @@
-SUPPLEMENT_MAIN = [
+BIRDFONT = [
 	'Argument.vala',
 	'Font.vala',
 	'BackgroundTool.vala',
@@ -59,16 +59,35 @@ SUPPLEMENT_MAIN = [
 	'ZoomTool.vala'
 ]
 
-TEST = [
-	'TestSupplement.vala'
+BIRDFONT_MAIN = [
+	'Main.vala'
+]
+
+BIRDFONT_EXPORT = [
+	'BirdfontExport.vala'
+]
+
+PARAM = [
+	'--thread',
+	'--disable-warnings',
+	'--enable-experimental',
+	'--enable-experimental-non-null',
+	'--vapidir=../../'
 ]
 
 def build (bld):
 	bld.program (
 		target        = 'birdfont',
-		param         = ['--disable-warnings', '--enable-experimental', '--enable-experimental-non-null', '--vapidir=../../'],
+		param         = PARAM,
 		packages      = 'gtk+-2.0 libxml-2.0',
 		uselib        = 'GTK GLIB GIO XML WEB',
-		source        = SUPPLEMENT_MAIN
+		source        = BIRDFONT + BIRDFONT_MAIN
 	)
 
+	bld.program (
+		target        = 'birdfont-export',
+		param         = PARAM,
+		packages      = 'gtk+-2.0 libxml-2.0',
+		uselib        = 'GTK GLIB GIO XML WEB',
+		source        = BIRDFONT + BIRDFONT_EXPORT
+	)

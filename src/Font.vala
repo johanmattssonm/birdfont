@@ -54,6 +54,7 @@ class Font : GLib.Object {
 	
 	public string? backup_file = null;
 	public string? font_file = null;
+	public string? export_dir = null;
 	
 	bool modified = false;
 	
@@ -78,6 +79,16 @@ class Font : GLib.Object {
 
 	public void touch () {
 		modified = true;
+	}
+
+	public string get_export_dir () 
+		requires (font_file != null) 
+	{
+		if (export_dir == null) {
+			return ((!) font_file).substring (0, ((!) font_file).last_index_of ("/") - 1);
+		}
+		
+		return (!) export_dir;
 	}
 
 	public bool get_ttf_export () {
@@ -483,23 +494,27 @@ class Font : GLib.Object {
 		g.add_kerning (b, val);
 	}
 		
-	public void save_backup () {
+	/** Returns path to backup file. */
+	public string save_backup () {
 		File dir = Supplement.get_backup_directory ();
-		File temp_file;
+		File? temp_file = null;
 		int i = 0;
 
 		if (backup_file == null) {
-			temp_file = dir.get_child (@"current_font_$i.ffs");
+			temp_file = dir.get_child (@"current_font_$i.ffi");
 			
-			while (temp_file.query_exists ()) {
+			while (((!) temp_file).query_exists ()) {
 				i++;
-				temp_file = dir.get_child (@"current_font_$i.ffs");
+				temp_file = dir.get_child (@"current_font_$i.ffi");
 			}
 			
-			backup_file = temp_file.get_path ();
+			backup_file = ((!) temp_file).get_path ();
 		}
-		
+
+		assert (backup_file != null);		
 		write_font_file ((!) backup_file);
+		
+		return (!) backup_file;
 	}
 	
 	public bool save (string path) {
