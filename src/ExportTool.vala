@@ -372,7 +372,6 @@ os.put_string ("""
 			if (async) {
 				try {
 					export_thread = Thread.create<void*> (th.run, true);
-					export_thread.join ();
 				} catch (ThreadError e) {
 					stderr.printf ("%s\n", e.message);
 					return false;
