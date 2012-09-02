@@ -634,6 +634,10 @@ class Font : GLib.Object {
 			stderr.printf (@"Failed to save $path \n");
 			stderr.printf (@"$(e.message) \n");
 			return false;
+		} catch (GLib.IOError e) {
+			stderr.printf (@"Failed to save $path \n");
+			stderr.printf (@"$(e.message) \n");
+			return false;
 		}
 		
 		return true;
@@ -708,31 +712,36 @@ class Font : GLib.Object {
 
 	public bool load (string path, bool recent = true) {
 		bool loaded = false;
+		
+		try {
+			otf_font = false;
 
-		otf_font = false;
-
-		while (glyph_names.length () > 0) {
-			glyph_names.remove_link (glyph_names.first ());
-		}
-		
-		glyph_cache.remove_all ();
-		unassigned_glyphs.remove_all ();
-		
-		if (path.has_suffix (".ffi")) {
-			loaded = parse_file (path);
-			font_file = path;
-		}
-		
-		if (Supplement.experimental) {
-			if (path.has_suffix (".ttf")) {
-				loaded = parse_otf_file (path);
+			while (glyph_names.length () > 0) {
+				glyph_names.remove_link (glyph_names.first ());
+			}
+			
+			glyph_cache.remove_all ();
+			unassigned_glyphs.remove_all ();
+			
+			if (path.has_suffix (".ffi")) {
+				loaded = parse_file (path);
 				font_file = path;
 			}
-		}
-		
-		if (recent) {
-			add_thumbnail ();
-			Preferences.add_recent_files (get_path ());
+			
+			if (Supplement.experimental) {
+				if (path.has_suffix (".ttf")) {
+					loaded = parse_otf_file (path);
+					font_file = path;
+				}
+			}
+			
+			if (recent) {
+				add_thumbnail ();
+				Preferences.add_recent_files (get_path ());
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
+			return false;
 		}
 		
 		return loaded;

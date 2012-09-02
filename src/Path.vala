@@ -43,7 +43,6 @@ class Path {
 	bool edit = true;
 	bool open = true;
 
-	bool set_direction_from_tool = true;
 	bool no_derived_direction = false;
 	bool clockwise_direction = true;
 
@@ -74,24 +73,11 @@ class Path {
 		}
 	}
 
-	public EditPoint get_end_point () 
-		requires (points.length () > 0) {
-		return points.last ().data;
-	}
-
 	public void set_color (double r, double g, double b, double a) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
 		this.a = a;
-	}
-
-	public void set_name (string n) {
-		name = n;
-	}
-	
-	public string get_name () {
-		return (name == null) ? "NO_NAME" : (!) name;
 	}
 
 	public double get_width () {
@@ -1482,7 +1468,6 @@ class Path {
 
 	public static void bezier_vector (double step, double p0, double p1, double p2, double p3, out double a0, out double a1) {
 		double q0, q1, q2;
-		double r0, r1;
 
 		q0 = step * (p1 - p0) + p0;
 		q1 = step * (p2 - p1) + p1;
@@ -1670,16 +1655,8 @@ class Path {
 	private static bool try_merge (Path p0, Path p1, out PathList path_list) {
 		EditPoint e;
 		IntersectionList il;
-		
-		EditPoint ex;
-		EditPoint ix;
-		EditPoint prev;
-		
-		uint offset_i = 0;
-		uint offset_j;
-		uint len_i;
-		int i, j;
-		uint len_j;
+
+		int i;
 		bool over;
 		Path np;
 		Path np_counter;

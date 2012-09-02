@@ -53,7 +53,6 @@ class BirdfontExport {
 			if (arg[i] == "-h" || arg[i] == "--help") {
 				print_help (arg);
 				return 0;
-				continue;
 			}
 			
 			if (arg[i] == "-o" || arg[i] == "--output" && i + 1 < arg.length) {

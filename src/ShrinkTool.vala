@@ -80,7 +80,7 @@ class ShrinkTool : Tool {
 			
 			if (unlikely (lep == null)) {
 				warning ("Bad list.");
-				stderr.printf (@"No links in path $(path_index (p)) ($(p.get_name ())). Length: $(p.points.length ())\n");
+				stderr.printf (@"No links in path $(path_index (p)). Length: $(p.points.length ())\n");
 				p.print_boundries ();
 				continue;
 			}

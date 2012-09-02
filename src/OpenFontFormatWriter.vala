@@ -635,7 +635,6 @@ class LocaTable : Table {
 	
 	public void process (GlyfTable glyf_table, HeadTable head_table) {
 		FontData fd = new FontData ();
-		Font font = OpenFontFormatWriter.get_current_font ();
 		uint32 last = 0;
 		uint32 prev = 0;
 		int i = 0;
@@ -1503,7 +1502,6 @@ class GlyfTable : Table {
 				
 		// bounding box	
 		int16 last = 0;
-		int16 coordinate;
 			
 		int i = 0;
 		foreach (int16 c in coordinate_x) {
@@ -2984,7 +2982,6 @@ class PostTable : Table {
 	}
 
 	public string get_name (int gid) {
-		uint16 i;
 		int k;
 		
 		if (!(0 <= gid < index.length ())) {
@@ -3059,7 +3056,6 @@ class PostTable : Table {
 		for (int i = 0; i < non_standard_names; i++) {
 			uint8 len = dis.read_byte ();
 			StringBuilder name = new StringBuilder ();
-			int gid = (!) index.nth (i).data;
 			
 			for (int j = 0; j < len; j++) {
 				name.append_c (dis.read_char ());

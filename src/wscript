@@ -73,7 +73,7 @@ PARAM = [
 	'--enable-experimental',
 	'--enable-experimental-non-null',
 	'--vapidir=../../'
-	'--Xcc="-lm"'
+	'--Xcc=-lm'
 ]
 
 def build (bld):
