@@ -727,8 +727,6 @@ class GlyfTable : Table {
 	
 	double total_width = 0;
 	int non_zero_glyphs = 0;
-
-	int64 next_index = -1;
 	
 	public GlyfTable (LocaTable l) {
 		id = "glyf";
@@ -736,25 +734,6 @@ class GlyfTable : Table {
 		location_offsets = new List<uint32> ();
 		glyphs = new List<Glyph> ();
 	}	
-
-	public double get_xheight () {
-		return get_capheight (); // FIXME
-	}
-
-	public double get_capheight () {
-		double x1, x2, y1, y2;
-		Font f = OpenFontFormatWriter.get_current_font ();
-		double max = double.MIN;
-		
-		foreach (Glyph g in glyphs) {
-			g.boundries (out x1, out y1, out x2, out y2);
-			if (y2 > max) {
-				max = y2;
-			}
-		}
-		
-		return max - f.base_line;
-	}
 
 	public int get_gid (string name) {
 		int i = 0;
@@ -835,13 +814,6 @@ class GlyfTable : Table {
 	}
 	
 	public new void parse (FontData dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table, KernTable kern_table) throws GLib.Error {
-		printd (@"loca.size: $(loca.size)\n");
-			
-		Glyph glyph;
-		unowned List<int> ind;
-		int i;
-			
-		// read_lock.lock ();
 		this.cmap_table = cmap_table;
 		this.post_table = post_table;
 		this.loca_table = loca;
@@ -849,8 +821,6 @@ class GlyfTable : Table {
 		this.head_table = head_table;
 		this.kern_table = kern_table;
 		this.dis = dis;
-		
-		// post_table.print_all ();
 	}
 	
 	Glyph parse_index (int index, FontData dis, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
@@ -914,8 +884,6 @@ class GlyfTable : Table {
 		
 		F2Dot14 scale01;
 		F2Dot14 scale10;
-		
-		uint16 num_instructions;
 
 		Glyph glyph, linked_glyph;
 		List<int> x = new List<int> ();
@@ -2078,8 +2046,6 @@ class CmapTable : Table {
 		CmapSubtableWindowsUnicode cmap = new CmapSubtableWindowsUnicode ();
 		uint16 n_encoding_tables;
 		uint32 subtable_offset = 0;
-
-		uint16 glyph_indice = 0;
 			
 		n_encoding_tables = 1;
 		
@@ -2487,7 +2453,6 @@ class HmtxTable : Table {
 	
 	public void process () {
 		FontData fd = new FontData ();
-		Font font = OpenFontFormatWriter.get_current_font ();
 
 		int16 advance;
 		int16 extent;
@@ -4745,15 +4710,6 @@ class DirectoryTable : Table {
 		}
 		
 		return true;
-	}
-	
-	public new string get_id () {
-		warning ("Don't write id for table directory.");		
-		return "Directory table"; // Table id should be ignored for directory table, none the less it has one declared here.
-	}
-	
-	public GlyfTable get_glyf_table () {
-		return glyf_table;
 	}
 	
 	public long get_font_file_size () {

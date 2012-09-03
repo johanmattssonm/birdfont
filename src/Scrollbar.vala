@@ -92,10 +92,6 @@ class Scrollbar : DrawingArea {
 		move = false;
 	}
 	
-	public double get_height () {
-		return alloc.height;
-	}
-	
 	public void motion_notify (EventMotion e) {
 		double d = 0;
 		double dl = 0;

@@ -184,7 +184,6 @@ class IntersectionList {
 		IntersectionList il = new IntersectionList ();
 		
 		double mind = double.MAX; ;
-		double distance = double.MAX;
 		
 		Path.all_of (a0, a1, (ax, ay, at) => {
 			if (at == 0 || at == 1) {
@@ -206,18 +205,6 @@ class IntersectionList {
 		});
 
 		return il;
-	}
-
-	bool probably_intersecting (EditPoint a0, EditPoint a1, EditPoint b0, EditPoint b1) {
-		if (has_intersection (a0.x, a1.x, b0.x, b1.x) && has_intersection (a0.y, a1.y, b0.y, b1.y)) {
-			return true;
-		}	
-
-		if (has_intersection (a0.x, a1.x, b0.x, b1.x) && has_intersection (a0.y, a1.y, b0.y, b1.y)) {
-			return true;
-		}	
-	
-		return false;
 	}
 	
 	/** return true if ranges does overlap */

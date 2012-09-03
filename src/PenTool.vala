@@ -285,7 +285,6 @@ class PenTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 
 		EditPoint e;
-		EditPoint ep = (!) g.new_point_on_path;
 		
 		double rax, ray;
 		double pax, pay;
@@ -388,11 +387,6 @@ class PenTool : Tool {
 		}
 		
 	}
-	
-	public static bool is_move_point_selected () {
-		Tool t = MainWindow.get_toolbox ().get_tool ("move_point");
-		return t.is_selected ();
-	}
 
 	public static bool insert_new_point_on_path_selected () {
 		Tool t = MainWindow.get_toolbox ().get_tool ("insert_point_on_path");
@@ -408,16 +402,6 @@ class PenTool : Tool {
 		return t.is_selected ();
 	}
 
-	public static bool is_new_point () {
-		Tool t = MainWindow.get_toolbox ().get_tool ("new_point");
-		return t.is_selected ();
-	}
-
-	public static bool is_corner_selected () {
-		Tool t = MainWindow.get_toolbox ().get_tool ("corner");
-		return t.is_selected ();
-	}
-	
 	public static bool is_erase_selected () {
 		Tool t = MainWindow.get_toolbox ().get_tool ("erase_tool");
 		return t.is_selected ();

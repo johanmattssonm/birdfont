@@ -1094,52 +1094,6 @@ class Glyph : FontDisplay {
 		}
 	}
 
-	public Line get_left_line () {
-		foreach (var line in horizontal_help_lines) {
-			if (line.get_label () == "left") {
-				return line;
-			}
-		}
-		
-		warn_if_reached ();
-		return new Line ();
-	}	
-
-	public Line get_right_line () {
-		foreach (var line in horizontal_help_lines) {
-			if (line.get_label () == "right") {
-				return line;
-			}
-		}
-		
-		warn_if_reached ();
-		return new Line ();
-	}	
-
-	/** lsb */
-	public double get_left_marker () {
-		foreach (var line in vertical_help_lines) {
-			if (line.get_label () == "left") {
-				return line.get_coordinate ();
-			}
-		}
-		
-		warn_if_reached ();
-		return 0;
-	}	
-
-	/** rsb */
-	public double get_right_marker () {
-		foreach (var line in vertical_help_lines) {
-			if (line.get_label () == "right") {
-				return line.get_coordinate ();
-			}
-		}
-		
-		warn_if_reached ();
-		return 0;
-	}
-
 	public Line get_line (string name) {		
 		foreach (Line line in vertical_help_lines) {
 			if (likely (line.get_label () == name)) {
@@ -1417,9 +1371,6 @@ class Glyph : FontDisplay {
 		
 		this.allocation = allocation;
 
-		ImageSurface ims = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
-		Context cms = new Context (ims);
-		
 		ImageSurface ps = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
 		Context cmp = new Context (ps);
 
@@ -1691,6 +1642,10 @@ class Glyph : FontDisplay {
 	
 	/** Merge selected paths. */
 	public void merge_all () {
+		bool merged = false;
+		bool m = false;
+		
+		store_undo_state ();
 		delete_invisible_paths ();
 		
 		if (active_paths.length () < 2) {
@@ -1698,7 +1653,6 @@ class Glyph : FontDisplay {
 		}
 		
 		foreach (Path p0 in active_paths) {
-			// while (merge_path (p0));
 			merge_path (p0);
 		}
 		

@@ -32,8 +32,6 @@ class Preview : FontDisplay {
 		return true;
 	}
 
-	bool b = false;
-
 	public override void selected_canvas () {
 		WebView w = MainWindow.get_webview ();
 		string uri = get_uri ();
@@ -50,8 +48,6 @@ class Preview : FontDisplay {
 		if (Supplement.win32) {
 			TimeoutSource t1 = new TimeoutSource (300);
 			t1.set_callback (() => {
-				File layout_dir = FontDisplay.find_layout_dir ();
-				File layout_uri = layout_dir.get_child (get_html_file ());
 				w.load_html_string ("<html><body>Loading ...</body></html>", uri);
 				return false;
 			});

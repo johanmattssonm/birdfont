@@ -52,8 +52,6 @@ class Path {
 	public double g = 0;
 	public double b = 0;
 	public double a = 1;
-
-	private string? name = null;
 	
 	bool selected = false;
 	
@@ -78,11 +76,6 @@ class Path {
 		this.g = g;
 		this.b = b;
 		this.a = a;
-	}
-
-	public double get_width () {
-		return_if_fail (xmax != double.MIN && xmin != double.MAX);
-		return (xmax - xmin);
 	}
 
 	public bool empty () {
@@ -291,41 +284,6 @@ class Path {
 		cr.restore ();		
 	}
 	
-	public static void draw_edit_point_center_testing (EditPoint e, Context cr) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		double ivz = 1 / g.view_zoom;
-
-		double xc = g.allocation.width / 2.0;
-		double yc = g.allocation.height / 2.0;
-
-		double x = xc + e.x;
-		double y = yc - e.y;
-
-		double thickness = (e.active) ? 5 * ivz : 4 * ivz;
-
-		if (e.active) 
-			cr.set_source_rgba (1, 0, 0, 1);
-		else
-			cr.set_source_rgba (e.r, e.g, e.b, e.a);
-
-		cr.set_line_width (thickness);
-
-		cr.new_path ();
-		
-		cr.move_to (x - 0.7 * ivz, y - 0.7 * ivz);
-		cr.line_to (x + 0.7 * ivz, y + 0.7 * ivz);
-		
-		cr.move_to (x + 0.7 * ivz, y - 0.7 * ivz);
-		cr.line_to (x - 0.7 * ivz, y + 0.7 * ivz);
-		
-		cr.close_path ();
-
-		cr.stroke ();
-
-		cr.save ();	
-	}
-	
 	/** Returns true if there is an edit point at (p.x, p.y). */
 	private bool has_edit_point (EditPoint p) {
 		foreach (var t in points) {
@@ -333,60 +291,6 @@ class Path {
 				return true;
 			}
 		}
-		return false;
-	}
-	
-	private bool force_union_directions (Path union) {
-		bool r;
-		
-		r = force_union_direction (union); // do force direction
-		r = force_union_direction (union); // check result, direction should not change
-		
-		if (unlikely (!r)) {
-			warning ("Path direction is still not correct.");
-		}
-		
-		return true;
-	}
-	
-	private bool force_union_direction (Path union) {
-		EditPoint? e;
-		unowned List<EditPoint>? ed;
-		EditPoint ep;
-		EditPoint next;
-		
-		create_list ();
-		union.create_list ();
-		
-		foreach (var p in points) {
-			e = union.get_edit_point_at (p.x, p.y);
-			
-			if (e != null) {
-				ep = (!) e;
-				ed = ep.get_next ();
-				
-				if (unlikely (ed != null)) {
-					warning ("next edit point is null");
-					return false;
-				}
-				
-				next = ((!)ed).data;
-				
-				if (is_over_coordinate (ep.x, ep.y)) {
-					union.reverse ();
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-		
-	private bool has_edit_point_at (double x, double y) {
-		foreach (var p in points) {
-			if (p.x == x && p.y == y) return true;
-		}
-		
 		return false;
 	}
 
@@ -1084,7 +988,6 @@ class Path {
 	public Path get_quadratic_points () {
 		EditPoint middle = new EditPoint ();
 		unowned List<EditPoint> e;
-		int i = 0;
 		EditPointHandle eh;
 		
 		quadratic_path = copy ();
@@ -1125,7 +1028,7 @@ class Path {
 	}
 
 	void convert_to_quadratic (Path cubic_path, EditPoint middle) {
-		double curve_x, curve_y, distance;	
+		double curve_x, curve_y;	
 		EditPointHandle eh;
 		
 		EditPoint start = middle.get_prev ().data;
@@ -1664,11 +1567,8 @@ class Path {
 	private static bool try_merge (Path p0, Path p1, out PathList path_list) {
 		EditPoint e;
 		IntersectionList il;
-
 		int i;
-		bool over;
 		Path np;
-		Path np_counter;
 		
 		unowned List<Path> pi;
 		
@@ -1739,11 +1639,6 @@ class Path {
 		for (i = 0; i < path_list.paths.length (); i++) {
 			pi = path_list.paths.nth (i);
 			
-			print (@"\n");
-			foreach (var p in path_list.paths) {
-				print (@"Paths: $(is_clasped (path_list, p))  Length: $(p.points.length ())\n");
-			}
-			
 			if (pi.data.is_clockwise () && is_clasped (path_list, pi.data)) {
 				path_list.paths.remove_link (pi);
 				i--;
@@ -1804,7 +1699,7 @@ class Path {
 				return true;
 			}
 		}
-				
+		
 		return false;
 	}
 
@@ -1828,7 +1723,6 @@ class Path {
 		uint len_i;
 		int i, j;
 		uint len_j;
-		bool over;
 		Path np = new Path ();
 		Intersection s = new Intersection (0, 0, 1);
 		
@@ -1937,125 +1831,7 @@ class Path {
 		
 		return true;	
 	}
-	
-	private static bool create_merged_path (IntersectionList il, Path p0, Path p1, out Path new_path) {
-		EditPoint ex;
-		EditPoint ix;
-		uint offset_i = 0;
-		uint offset_j;
-		uint len_i;
-		int i, j;
-		uint len_j;
-		bool over;
-		Path np = new Path ();
-		Intersection s = new Intersection (0, 0, 1);
-		
-		ex = p0.points.last ().data;
-		ix = p0.points.last ().data;
-		len_i = p0.points.length ();
-		
-		for (i = 0; i < p0.points.length (); i++) {
-			ex = p0.points.nth ((i + offset_i) % len_i).data;
 
-			if (ex == p0.points.first ().data && i != 0) {	
-				break;
-			}
-
-			// add new point for path a
-			if (np.has_edit_point (ex)) {
-				// SPLIT
-				warning ("Merged path need split");
-				np.close ();
-				new_path = np;
-				return false;
-			} else {
-				np.add_point (ex);
-				ex.recalculate_linear_handles ();
-			}
-			
-			// swap paths
-			if (il.has_edit_point (ex)) {
-				s = (!) il.get_intersection (ex);
-				il.remove_point (ex);
-				
-				ex.type = PointType.CURVE;
-				ex.right_handle.type = PointType.CURVE;
-				ex.right_handle.angle  = s.editpoint_b.right_handle.angle;
-				ex.right_handle.length = s.editpoint_b.right_handle.length;
-
-				ex.left_handle.type = PointType.CURVE;
-
-				// read until we find ex
-				for (j = 0; j < p1.points.length (); j++) {
-					ix = p1.points.nth (j).data;
-					
-					if (ix == s.editpoint_b) {
-						break;
-					}
-				}
-				
-				offset_j = j + 1;
-				len_j = p1.points.length ();
-				for (j = 0; j < p1.points.length (); j++) {
-					
-					ix = p1.points.nth ((j + offset_j) % len_j).data;
-					
-					// add
-					if (np.has_edit_point (ix)) {
-						// SPLIT
-						warning ("Merged path need split");
-						np.close ();
-						new_path = np;
-						return false;
-					} else {
-						np.add_point (ix);
-						ix.recalculate_linear_handles ();
-					}
-					
-					if (il.has_edit_point (ix)) {
-						s = (!) il.get_intersection (ix);
-						il.remove_point (ix);
-						break;
-					}
-				}
-
-				ix.type = PointType.CURVE;
-				ix.right_handle.type = PointType.CURVE;
-				ix.right_handle.angle  = s.editpoint_a.right_handle.angle;
-				ix.right_handle.length = s.editpoint_a.right_handle.length;
-				
-				ix.left_handle.type = PointType.CURVE;
-				
-				if (j == p0.points.length ()) {
-					np.close ();
-					new_path = np;
-					return true;
-				}
-
-				// skip to next intersection
-				int k;
-				for (k = 0; k < p0.points.length (); k++) {
-					ix = p0.points.nth (k).data; 
-
-					if (ix == s.editpoint_a) {
-						break;
-					}
-				}
-				
-				if (k == p0.points.length ()) {
-					new_path = np;
-					return true;
-				}
-				
-				offset_i = 0;
-				i = k;
-			}
-		}
-		
-		new_path = np;
-		
-		return true;
-	}
 }
 
 class PathList : GLib.Object {

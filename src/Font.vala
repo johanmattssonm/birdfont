@@ -81,16 +81,6 @@ class Font : GLib.Object {
 		modified = true;
 	}
 
-	public string get_export_dir () 
-		requires (font_file != null) 
-	{
-		if (export_dir == null) {
-			return ((!) font_file).substring (0, ((!) font_file).last_index_of ("/") - 1);
-		}
-		
-		return (!) export_dir;
-	}
-
 	public bool get_ttf_export () {
 		return ttf_export;
 	}
@@ -170,28 +160,6 @@ class Font : GLib.Object {
 		p = p.substring (0, i);
 		
 		return File.new_for_path (p);
-	}
-	
-	bool is_valid_thumbnail (Glyph? g) {
-		Glyph glyph;
-		double x1, x2, y1, y2;
-
-		if (g == null) {
-			return false;
-		}
-		
-		glyph = (!) g;
-		
-		glyph.boundries (out x1, out y1, out x2, out y2);
-		
-		if (x1 < -120) return false;
-		if (x2 > 120) return false;
-		if (y1 < -76) return false;
-		if (y2 > 76) return false;
-		
-		if (x1 == 0 && x2 == 0 && y1 == 0 && y2 == 0) return false;
-		
-		return true;
 	}
 	
 	public double get_height () {

@@ -24,8 +24,7 @@ class Svg {
 	/** Export to svg glyph data. */
 	public static string to_svg_glyph (Glyph g, double scale = 1) {	
 		StringBuilder svg = new StringBuilder ();
-		Glyph gl;
-			
+
 		foreach (Path pl in g.path_list) {
 			write_path_as_glyph (pl, svg, g, scale);
 		}

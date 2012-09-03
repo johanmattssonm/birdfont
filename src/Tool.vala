@@ -102,16 +102,6 @@ class Tool : GLib.Object {
 		b = b_default;
 	}
 	
-	public void set_default_color (double r, double g, double b) {
-		r_default = r;
-		g_default = g;
-		b_default = b;
-		
-		this.r = r;
-		this.g = g;
-		this.b = b;
-	}
-	
 	public void set_icon (string name) {
 		StringBuilder n = new StringBuilder ();
 		n.append ((!) name);

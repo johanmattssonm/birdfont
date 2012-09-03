@@ -183,13 +183,15 @@ class ExportTool : Tool {
 		return (!) prefered_browser;
 	}
 	
-	public static void generate_html_document (string html_file, Font font) throws Error {
+	public static void generate_html_document (string html_file, Font font) {
 		File file = File.new_for_path (html_file);
 		DataOutputStream os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
 
 		string name = font.get_name ();
 
-		os.put_string (
+		try {
+
+os.put_string (
 """<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -337,6 +339,9 @@ os.put_string ("""
 </html>
 """);
 
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 	}
 
 	public static bool export_ttf_font () {

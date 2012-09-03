@@ -45,7 +45,6 @@ class TestCases {
 	public static void test_over_path () {
 		Glyph g;
 		Path p = new Path ();
-		Path p2 = new Path ();
 		Tool pen_tool;
 		
 		pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
