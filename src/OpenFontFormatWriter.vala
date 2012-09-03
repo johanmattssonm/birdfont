@@ -2106,6 +2106,10 @@ class HeadTable : Table {
 		id = "head";
 	}
 	
+	public uint32 get_adjusted_checksum () {
+		return adjusted_checksum;
+	}
+	
 	public double get_units_per_em () {
 		return units_per_em * 10; // Fixa: we can refactor this number
 	}

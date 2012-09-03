@@ -349,21 +349,26 @@ os.put_string ("""
 		OpenFontFormatWriter fo;
 		Font temp_font = new Font ();
 		unowned Thread<void*> th;
-		File file;
+		File ttf_file;
+		File eot_file;
 		string temp_file;
 
 		try {
 			// create a copy of current font and use it in a separate 
 			// export thread
 			temp_file = current_font.save_backup ();
-			file = folder.get_child (current_font.get_name () + ".ttf");
+			ttf_file = folder.get_child (current_font.get_name () + ".ttf");
+			eot_file = folder.get_child (current_font.get_name () + ".eot");
 
-			if (file.query_exists ()) {
-				file.delete ();
+			if (ttf_file.query_exists ()) {
+				ttf_file.delete ();
 			}
 
-			path = (!) file.get_path ();
-			export_thread = new ExportThread (temp_file, path);
+			if (eot_file.query_exists ()) {
+				eot_file.delete ();
+			}
+			
+			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path ());
 
 			try {
 				th = Thread.create<void*> (export_thread.run, true);
@@ -418,36 +423,53 @@ os.put_string ("""
 
 	class ExportThread {
 
-		private string from;
-		private string to;
+		private string ffi;
+		private string ttf;
+		private string eot;
 
-		public ExportThread (string from, string to) {
-			this.from = from;
-			this.to = to;
+		public ExportThread (string ffi, string ttf, string eot) {
+			this.ffi = ffi;
+			this.ttf = ttf;
+			this.eot = eot;
 		}
 
 		public void* run () {
+			assert (!is_null (ffi));
+			assert (!is_null (ttf));
+			assert (!is_null (eot));
+			
+			write_ttf ();
+			write_eof ();
+			
+			return null;
+		}
+		
+		void write_ttf () {
 			OpenFontFormatWriter fo = new OpenFontFormatWriter ();
 			Font f = new Font ();
 			
-			assert (!is_null (from));
-			assert (!is_null (to));
-			
 			try {
-				if (!f.load (from, false)) {
-					warning (@"Can't read $from");
-					return null;
+				if (!f.load (ffi, false)) {
+					warning (@"Can't read $ffi");
 				}
 				
-				fo.open ((!) File.new_for_path (to));
+				fo.open ((!) File.new_for_path (ttf));
 				fo.write_ttf_font (f);
 				fo.close ();
 			} catch (Error e) {
 				critical (@"$(e.message)");
-				return null;
-			}	
+			}
+		}
+		
+		void write_eof () {
+			EotWriter fo = new EotWriter (ttf, eot);
+			Font f = new Font ();
 			
-			return null;
+			try {
+				fo.write ();
+			} catch (Error e) {
+				critical (@"$(e.message)");
+			}
 		}
 	}
 	

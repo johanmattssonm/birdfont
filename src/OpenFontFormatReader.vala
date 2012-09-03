@@ -48,8 +48,9 @@ errordomain BadFormat {
 
 class OpenFontFormatReader : Object {
 	
-	OtfInputStream dis;
 	DirectoryTable directory_table;
+	
+	OtfInputStream dis;
 	File file;
 	
 	public OpenFontFormatReader () {
@@ -119,6 +120,10 @@ class OpenFontFormatReader : Object {
 
 	public unowned List<string> get_all_names () {
 		return directory_table.post_table.get_all_names ();
+	}
+	
+	public uint32 get_head_checksum () {
+		return directory_table.head_table.get_adjusted_checksum ();
 	}
 }
 }

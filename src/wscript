@@ -4,6 +4,7 @@ BIRDFONT = [
 	'BackgroundTool.vala',
 	'BackgroundSelection.vala',
 	'Birdfont.vala',
+	'EotWriter.vala',
 	'ExportTool.vala',
 	'FontDisplay.vala',
 	'CharDatabase.vala',
