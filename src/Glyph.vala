@@ -89,7 +89,7 @@ class Glyph : FontDisplay {
 	
 	bool editable = true;
 	
-	static List<Glyph> undo_list = new List<Glyph> ();
+	List<Glyph> undo_list = new List<Glyph> ();
 
 	public List<Kerning> kerning = new List<Kerning> ();
 
