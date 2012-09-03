@@ -59,9 +59,6 @@ class VersionList : DropMenu {
 	public void add_new_version () {
 		Glyph g = get_current ();
 		Glyph new_version = g.copy ();
-		TabBar tb = MainWindow.get_tab_bar ();
-		
-		tb.close_background_tab_by_name (g.name);
 		add_glyph (new_version);
 	}
 	
@@ -70,8 +67,7 @@ class VersionList : DropMenu {
 		int i = ma.index;
 		
 		return_if_fail (0 <= i < glyphs.length ());
-		
-		MainWindow.get_tab_bar ().close_by_name (g.name);
+
 		current_version = i;
 		
 		return_if_fail (ma.parent != null);

@@ -16,7 +16,7 @@
 */
 namespace Supplement {
 
-class Preferences {
+internal class Preferences {
 		
 	static HashTable<string, string> data;
 

@@ -600,6 +600,7 @@ class Toolbox : DrawingArea {
 			}
 
 			add_new_grid ();
+			add_new_grid ();
 			
 			move (0, 0);
 			
@@ -678,7 +679,7 @@ class Toolbox : DrawingArea {
 	}
 	
 	public void remove_all_grid_buttons () {
-		while (grid_expander.tool.length () > 2) {
+		while (grid_expander.tool.length () > 0) {
 			grid_expander.tool.remove_link (grid_expander.tool.last ());
 		}
 		

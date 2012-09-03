@@ -325,7 +325,7 @@ class Svg {
 
 }
 
-public static string round (double p) {
+internal static string round (double p) {
 	string v = @"$p";
 	
 	if (v.index_of ("e") != -1) {

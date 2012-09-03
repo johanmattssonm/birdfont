@@ -16,23 +16,25 @@
 */
 
 using Gtk;
+using Supplement;
 
 namespace Supplement {
 
-class Supplement {
-	public static Argument args;
-	public static bool experimental = false;
-	public static bool show_coordinates = false;
-	public static bool fatal_wanings = false;
-	public static bool win32 = false;
+internal class Supplement {
+	internal static Argument args;
+	internal static bool experimental = false;
+	internal static bool show_coordinates = false;
+	internal static bool fatal_wanings = false;
+	internal static bool win32 = false;
 
-	public static Font current_font;
-
-	public static Font get_current_font () {
+	internal static Font current_font;
+	internal static Glyph current_glyph;
+	
+	internal static Font get_current_font () {
 		return current_font;
 	}
 
-	public static void fatal_warning (string? log_domain, LogLevelFlags log_levels, string message) {		
+	internal static void fatal_warning (string? log_domain, LogLevelFlags log_levels, string message) {		
 		bool fatal = true;
 		
 		if (log_domain != null) {
@@ -43,11 +45,11 @@ class Supplement {
 		assert (!fatal);
 	}
 	
-	public static void new_font () {
+	internal static void new_font () {
 		current_font = new Font ();
 	}
 
-	public static File get_thumbnail_directory () {
+	internal static File get_thumbnail_directory () {
 		File thumbnails = get_settings_directory ().get_child ("thumbnails");
 		
 		if (!thumbnails.query_exists ()) {
@@ -57,7 +59,7 @@ class Supplement {
 		return thumbnails;
 	}
 		
-	public static File get_settings_directory () {
+	internal static File get_settings_directory () {
 		File home = File.new_for_path (Environment.get_home_dir ());
 		File settings = home.get_child (".birdfont");
 		
@@ -68,7 +70,7 @@ class Supplement {
 		return settings;
 	}
 
-	public static File get_backup_directory () {
+	internal static File get_backup_directory () {
 		File settings = get_settings_directory ();
 		File backup = settings.get_child ("backup");
 		
@@ -79,11 +81,11 @@ class Supplement {
 		return backup;
 	}
 
-	public static bool has_argument (string param) {
+	internal static bool has_argument (string param) {
 		return args.has_argument (param);
 	}
 	
-	public static string? get_argument (string param) {
+	internal static string? get_argument (string param) {
 		return args.get_argument (param);
 	}	
 }

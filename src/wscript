@@ -3,6 +3,7 @@ BIRDFONT = [
 	'Font.vala',
 	'BackgroundTool.vala',
 	'BackgroundSelection.vala',
+	'Birdfont.vala',
 	'ExportTool.vala',
 	'FontDisplay.vala',
 	'CharDatabase.vala',
@@ -56,7 +57,7 @@ BIRDFONT = [
 	'TooltipArea.vala',
 	'UniRange.vala',
 	'VersionList.vala',
-	'ZoomTool.vala'
+	'ZoomTool.vala',
 ]
 
 BIRDFONT_MAIN = [
@@ -72,16 +73,58 @@ PARAM = [
 	'--disable-warnings',
 	'--enable-experimental',
 	'--enable-experimental-non-null',
-	'--vapidir=../../'
-	'--Xcc=-lm'
+	'--vapidir=./'
 ]
 
 def build (bld):
-	bld.program (
+
+	bld.shlib (
 		target        = 'birdfont',
 		param         = PARAM,
 		packages      = 'gtk+-2.0 libxml-2.0',
 		uselib        = 'GTK GLIB GIO XML WEB',
-		source        = BIRDFONT + BIRDFONT_MAIN
+		source        = BIRDFONT,
+		name          = "libbirdfont"
 	)
 
+	bld (
+		rule = "valac -C ./src/birdfont.vapi ../src/Main.vala -X ../build/src/libbirdfont.so -X ../build/src/birdfont.h --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0"
+	)
+
+	bld (
+		rule = "valac -C ./src/birdfont.vapi ../src/BirdfontExport.vala -X ../build/src/libbirdfont.so -X ../build/src/birdfont.h --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0"
+	)
+
+	bld (
+		rule          = "mv src/birdfont.h ./",
+		depends       = "libbirdfont",
+		name          = "birdfont_h"
+	)
+
+	bld (
+		rule = 'gcc  ../build/Main.c -L  ../build/src -l birdfont -o ${TGT} \
+				$(pkg-config --cflags --libs glib-2.0) \
+				$(pkg-config --cflags --libs libxml-2.0) \
+				$(pkg-config --cflags --libs gio-2.0) \
+				$(pkg-config --cflags --libs libsoup-2.4) \
+				$(pkg-config --cflags --libs gtk+-2.0) \
+				$(pkg-config --cflags --libs webkit-1.0)',
+		source  = ['Main.c'],
+		target  = 'birdfont',
+		depends = 'birdfont_h'
+	)
+
+	bld (
+		rule = 'gcc  ../build/BirdfontExport.c -L  ../build/src -l birdfont -o ${TGT} \
+				$(pkg-config --cflags --libs glib-2.0) \
+				$(pkg-config --cflags --libs libxml-2.0) \
+				$(pkg-config --cflags --libs gio-2.0) \
+				$(pkg-config --cflags --libs libsoup-2.4) \
+				$(pkg-config --cflags --libs gtk+-2.0) \
+				$(pkg-config --cflags --libs webkit-1.0)',
+		source  = ['Main.c'],
+		target  = 'birdfont-export',
+		depends = 'birdfont_h'
+	)
+	
+	bld.install_files('${PREFIX}/bin/', ['birdfont', 'birdfont-export'])

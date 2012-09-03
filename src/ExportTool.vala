@@ -67,22 +67,14 @@ class ExportTool : Tool {
 
 	public void export_glyph_to_svg () {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		
 		Font font = Supplement.get_current_font ();
 		FontDisplay fd = MainWindow.get_current_display ();
-		
 		string glyph_svg;
 		string svg_file = @"$(glyph.get_name ()).svg";
-		
 		File file = font.get_folder ().get_child (svg_file);
-		
 		DataOutputStream os;
-
 		string name = glyph.get_name ();
-		
 		int pid = 0;
-		
-		TooltipArea status = MainWindow.get_tool_tip ();
 		
 		if (!(fd is Glyph)) {
 			return;
@@ -128,10 +120,10 @@ class ExportTool : Tool {
 		} catch (Error e) {
 			stderr.printf (@"Export \"$svg_file\" \n");
 			critical (@"$(e.message)");
-			status.show_text ("Can't export $svg_file.");
+			status ("Can't export $svg_file.");
 		}
 		
-		status.show_text ("Wrote $svg_file.");
+		status ("Wrote $svg_file.");
 	}
 
 	/** Export font and open html document */
@@ -359,32 +351,30 @@ os.put_string ("""
 		unowned Thread<void*> th;
 		File file;
 		string temp_file;
-		
+
 		try {
 			// create a copy of current font and use it in a separate 
 			// export thread
 			temp_file = current_font.save_backup ();
-			file = folder.get_child (temp_font.get_name () + ".ttf");
+			file = folder.get_child (current_font.get_name () + ".ttf");
 
 			if (file.query_exists ()) {
 				file.delete ();
 			}
 
 			path = (!) file.get_path ();
-
 			export_thread = new ExportThread (temp_file, path);
+
+			try {
+				th = Thread.create<void*> (export_thread.run, true);
 			
-			if (async) {
-				try {
-					th = Thread.create<void*> (export_thread.run, true);
-				} catch (ThreadError e) {
-					stderr.printf ("%s\n", e.message);
-					return false;
+				if (!async) {
+					th.join ();
 				}
-			} else {
-				export_thread.run ();
-			}
-				
+			} catch (ThreadError e) {
+				stderr.printf ("%s\n", e.message);
+				return false;
+			}			
 		} catch (Error e) {
 			critical (@"$(e.message)");
 			return false;
@@ -399,7 +389,6 @@ os.put_string ("""
 	}
 		
 	public static bool export_svg_font_path (File folder) {
-		TooltipArea ta = MainWindow.get_tool_tip ();
 		Font font = Supplement.get_current_font ();
 		string file_name = @"$(font.get_name ()).svg";
 		File file;
@@ -418,11 +407,11 @@ os.put_string ("""
 			fo.close ();
 		} catch (Error e) {
 			critical (@"$(e.message)");
-			ta.show_text (e.message);
+			status (e.message);
 			return false;
 		}
 		
-		ta.show_text (@"Wrote $file_name");
+		status (@"Wrote $file_name");
 		return true;
 	}
 
@@ -460,6 +449,16 @@ os.put_string ("""
 			
 			return null;
 		}
+	}
+	
+	private static void status (string s) {
+		TooltipArea status = MainWindow.get_tool_tip ();
+		
+		if (is_null (status)) {
+			return;
+		}
+		
+		status.show_text (s);
 	}
 }
 

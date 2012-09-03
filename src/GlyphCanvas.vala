@@ -23,8 +23,7 @@ using Math;
 namespace Supplement {
 
 class GlyphCanvas : DrawingArea  {
-	
-	public Glyph current_glyph = new Glyph ("");
+
 	FontDisplay current_display;
 	
 	Allocation alloc;
@@ -35,7 +34,7 @@ class GlyphCanvas : DrawingArea  {
 		alloc.width = 0;
 		alloc.height = 0;
 		
-		current_display = current_glyph;
+		current_display = new Glyph ("");
 		
 		expose_event.connect ((t, e)=> {
 				
@@ -63,7 +62,7 @@ class GlyphCanvas : DrawingArea  {
 						warning (@"\nGlyph canvas is not divisible by two.\nWidth: $(allocation.width)\nHeight: $(allocation.height)");
 					}
 					
-					current_glyph.resized (alloc, allocation);
+					Supplement.current_glyph.resized (alloc, allocation);
 					Preferences.update_window_size ();
 				}
 				
@@ -135,7 +134,7 @@ class GlyphCanvas : DrawingArea  {
 			
 			g.allocation = allocation;
 			
-			current_glyph = g;
+			Supplement.current_glyph = g;
 		}
 		
 		current_display = fd;
@@ -149,8 +148,8 @@ class GlyphCanvas : DrawingArea  {
 		redraw ();
 	}
 	
-	public Glyph get_current_glyph ()  {
-		return current_glyph;
+	public static Glyph get_current_glyph ()  {
+		return Supplement.current_glyph;
 	}
 	
 	public FontDisplay get_current_display () {

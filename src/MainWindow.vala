@@ -21,7 +21,7 @@ using WebKit;
 
 namespace Supplement {
 
-public class MainWindow : Gtk.Window {
+internal class MainWindow : Gtk.Window {
 
 	HBox list_box;
 	HBox canvas_box;
@@ -223,14 +223,12 @@ public class MainWindow : Gtk.Window {
 	}
 	
 	internal static Glyph get_current_glyph () {
-		Glyph? g = get_singleton ().glyph_canvas.get_current_glyph ();
-		
-		if (unlikely (g == null)) {
+		if (unlikely (is_null (Supplement.current_glyph))) {
 				warning ("No default glyph have been set yet.\n");
 				return new Glyph ("no_glyph_created");
 		}
 		
-		return (!) g;
+		return Supplement.current_glyph;
 	}
 	
 	internal static Toolbox get_toolbox () {

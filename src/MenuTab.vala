@@ -240,7 +240,14 @@ c.append ("""
 			}
 				
 			MainWindow.get_singleton ().set_title (f.get_name ());
-
+			
+			MainWindow.get_toolbox ().remove_all_grid_buttons ();
+			foreach (string v in f.grid_width) {
+				MainWindow.get_toolbox ().parse_grid (v);
+			}
+			
+			MainWindow.get_toolbox ().background_scale.set_value (f.background_scale);
+			
 			select_overview ();
 		});
 		
@@ -304,6 +311,16 @@ c.append ("""
 		fn = (!) f.font_file;
 		
 		if (f.font_file != null && fn.has_suffix (".ffi")) {
+			f.background_scale = MainWindow.get_toolbox ().background_scale.get_display_value ();
+			
+			while (f.grid_width.length () > 0) {
+				f.grid_width.remove_link (f.grid_width.first ());
+			}
+			
+			foreach (SpinButton s in GridTool.sizes) {
+				f.grid_width.append (s.get_display_value ());
+			}
+			
 			f.save (fn);
 			saved = true;
 		} else {
@@ -322,6 +339,10 @@ c.append ("""
 			
 			Supplement.new_font ();
 			MainWindow.close_all_tabs ();
+			
+			MainWindow.get_toolbox ().remove_all_grid_buttons ();
+			MainWindow.get_toolbox ().add_new_grid ();
+			MainWindow.get_toolbox ().add_new_grid ();
 			
 			select_overview ();
 		});

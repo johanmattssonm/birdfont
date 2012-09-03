@@ -22,12 +22,12 @@ using Gdk;
 namespace Supplement {
 
 /** Javascripts in webkit do use this callback. */
-public class PropertyFunction {
+internal class PropertyFunction {
 	public delegate void PropertyCallback (string val);
 	public PropertyCallback call;
 }
 
-public abstract class FontDisplay : GLib.Object {
+internal abstract class FontDisplay : GLib.Object {
 	
 	List<string> property = new List<string> ();
 	List<PropertyFunction> call = new List<PropertyFunction> ();

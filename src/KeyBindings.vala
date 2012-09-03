@@ -68,12 +68,12 @@ bool is_modifier_key (uint i) {
 }
 
 /** Modifier flags */
-public static const uint NONE  = 0;
-public static const uint CTRL  = 1 << 0;
-public static const uint ALT   = 1 << 2;
-public static const uint SHIFT = 1 << 3;
+internal static const uint NONE  = 0;
+internal static const uint CTRL  = 1 << 0;
+internal static const uint ALT   = 1 << 2;
+internal static const uint SHIFT = 1 << 3;
 
-public bool is_mod (EventKey e) {
+internal bool is_mod (EventKey e) {
 	return (e.keyval == Key.CTRL_RIGHT || e.keyval == Key.CTRL_LEFT || e.keyval == Key.ALT_RIGHT || e.keyval == Key.ALT_LEFT);
 }
 

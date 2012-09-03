@@ -33,7 +33,8 @@ class Font : GLib.Object {
 	int next_unindexed = 0;
 	
 	public List <string> background_images = new List <string> ();
-	
+	public string background_scale = "1";
+		
 	/** Top margin */
 	public double top_limit;
 		
@@ -54,7 +55,6 @@ class Font : GLib.Object {
 	
 	public string? backup_file = null;
 	public string? font_file = null;
-	public string? export_dir = null;
 	
 	bool modified = false;
 	
@@ -65,6 +65,8 @@ class Font : GLib.Object {
 
 	OpenFontFormatReader otf;
 	bool otf_font = false;
+	
+	public List<string> grid_width = new List<string> ();
 	
 	public Font () {
 		// positions in pixels at first zoom level
@@ -540,15 +542,15 @@ class Font : GLib.Object {
 			
 			os.put_string ("</lines>\n\n");
 
-			foreach (SpinButton s in GridTool.sizes) {
-				os.put_string (@"<grid width=\"$(s.get_display_value ())\"/>\n");
+			foreach (string gv in grid_width) {
+				os.put_string (@"<grid width=\"$(gv)\"/>\n");
 			}
 			
 			if (GridTool.sizes.length () > 0) {
 				os.put_string ("\n");
 			}
 			
-			os.put_string (@"<background scale=\"$(MainWindow.get_toolbox ().background_scale.get_display_value ())\" />\n");
+			os.put_string (@"<background scale=\"$(background_scale)\" />\n");
 			os.put_string ("\n");
 			
 			if (background_images.length () > 0) {
@@ -683,6 +685,10 @@ class Font : GLib.Object {
 		
 		try {
 			otf_font = false;
+
+			while (grid_width.length () > 0) {
+				grid_width.remove_link (grid_width.first ());
+			}
 
 			while (glyph_names.length () > 0) {
 				glyph_names.remove_link (glyph_names.first ());
@@ -820,8 +826,7 @@ class Font : GLib.Object {
 		// empty cache and fill it with new glyphs from disk
 		glyph_cache.remove_all ();
 		unassigned_glyphs.remove_all ();
-		
-		MainWindow.get_toolbox ().remove_all_grid_buttons ();
+
 		while (background_images.length () > 0) {
 			background_images.remove_link (background_images.first ());
 		}
@@ -922,7 +927,7 @@ class Font : GLib.Object {
 			attr_content = prop->children->content;
 			
 			if (attr_name == "scale") {
-				MainWindow.get_toolbox ().background_scale.set_value (attr_content);
+				background_scale = attr_content;
 			}
 		}
 	}
@@ -953,7 +958,7 @@ class Font : GLib.Object {
 			string attr_content = prop->children->content;
 			
 			if (attr_name == "width") {
-				MainWindow.get_toolbox ().parse_grid (attr_content);
+				grid_width.append (attr_content);
 			}
 		}		
 	}

@@ -88,7 +88,7 @@ def build(bld):
 	bld(rule="windres ${SRC} -O coff -o ${TGT}", source="../win32/icon.rc", target="icon.res", always=True)
 	bld(rule="mv ${SRC} ${TGT}", source="../win32/icon.res", target="../build/", name="icon", always=True)
 
-	bld(rule="""i686-w64-mingw32-gcc -c ./src/*.c \
+	bld(rule="""i686-w64-mingw32-gcc -c ./Main.c ./src/*.c \
 		-s \
 		-mthreads \
 		$(i686-w64-mingw32-pkg-config --cflags --libs glib-2.0) \

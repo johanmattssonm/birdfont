@@ -201,10 +201,8 @@ class Path {
 		
 	/** Line points relative to center. */
 	public static void get_line_points (EditPoint e, EditPoint en, out double xa, out double ya, out double xb, out double yb) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		double xc = g.allocation.width / 2.0;
-		double yc = g.allocation.height / 2.0;
+		double xc = Glyph.xc ();
+		double yc = Glyph.yc ();
 		
 		xa = xc + en.x;
 		ya = yc - en.y;

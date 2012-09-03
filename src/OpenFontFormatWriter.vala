@@ -4789,7 +4789,7 @@ class DirectoryTable : Table {
 }
 
 /** Largest power of two less than max. */
-public static uint16 largest_pow2 (uint16 max) {
+internal static uint16 largest_pow2 (uint16 max) {
 	uint16 x = 1;
 	uint16 l = 0;
 	
@@ -4801,7 +4801,7 @@ public static uint16 largest_pow2 (uint16 max) {
 	return l;
 }
 
-public static uint16 largest_pow2_exponent (uint16 max) {
+internal static uint16 largest_pow2_exponent (uint16 max) {
 	uint16 exp = 0;
 	uint16 l = 0;
 	uint16 x = 0;

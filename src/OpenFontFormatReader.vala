@@ -19,7 +19,7 @@ namespace Supplement {
 
 [SimpleType]
 [CCode (has_type_id = false)] // Vala bug
-public struct Fixed : uint32 {
+internal struct Fixed : uint32 {
 
 	public void @set (uint16 upper, uint16 lower) {
 		uint32* p = &this;
@@ -39,7 +39,7 @@ public struct Fixed : uint32 {
 
 [SimpleType]
 [CCode (has_type_id = false)] // same as above
-public struct F2Dot14 : uint32 {
+internal struct F2Dot14 : uint32 {
 }
 
 errordomain BadFormat {
