@@ -63,7 +63,6 @@ class VersionList : DropMenu {
 	}
 	
 	private void set_selected_item (MenuAction ma) {
-		Glyph g = get_current ();
 		int i = ma.index;
 		
 		return_if_fail (0 <= i < glyphs.length ());

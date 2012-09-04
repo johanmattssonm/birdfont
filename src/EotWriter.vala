@@ -41,6 +41,8 @@ class EotWriter {
 		DataOutputStream os;
 		uint8* data;
 		uint32 l;
+		NameTable names;
+		string tn;
 		
 		ttf_file = File.new_for_path (ttf_file_name);
 		
@@ -59,8 +61,6 @@ class EotWriter {
 		os = new DataOutputStream(eot_file.create (FileCreateFlags.REPLACE_DESTINATION));
 
 		file_info = ttf_file.query_info ("*", FileQueryInfoFlags.NONE);
-		stdout.printf ("File size: %lld bytes\n", file_info.get_size ());
-
 		ttf_length = (uint32) file_info.get_size ();
 		 
 		if (ttf_length == 0) {
@@ -74,67 +74,83 @@ class EotWriter {
 		// parse file to find head checksum
 		input = new OpenFontFormatReader ();
 		input.parse_index (ttf_file_name);
-			
-		fd.add_ulong (0); // table length
-		fd.add_ulong (ttf_length);
+ 
+		names = input.directory_table.name_table;
+		
+		fd.add_littleendian_u32 (0); // table length
+		fd.add_littleendian_u32 (ttf_length);
 	
-		fd.add_ulong (0x00010000); // table format version
-		fd.add_ulong (0); // flags
+		fd.add_littleendian_u32 (0x00020001); // table format version
+		fd.add_littleendian_u32 (0); // flags
 		
 		// panose
 		for (int i = 0; i < 10; i++) {
 			fd.add (0);
 		}
 		
-		fd.add (1 << 6); // italic set to regular		
-		fd.add_ulong (400); // weight
-		fd.add_ushort (0); // 0 drm, designer must be notified
-		fd.add_ushort (0x504C); // magic number
- 	
+		// according to specification should charset and italic be added the 
+		// other way around, but it does not work
+				
+		fd.add (1); // default charset
+		fd.add (0); // italic set to regular
+				
+		fd.add_littleendian_u32 (400); // weight
+		fd.add_littleendian_u16 (0); // 0 drm, designer must know that notified
+		fd.add_littleendian_u16 (0x504C); // magic number
+
 		// FIXA:
 		// unicode ranges 
-		fd.add_ulong (1);
-		fd.add_ulong (0);
-		fd.add_ulong (0);
-		fd.add_ulong (0);
+		fd.add_littleendian_u32 (0);
+		fd.add_littleendian_u32 (0);
+		fd.add_littleendian_u32 (0);
+		fd.add_littleendian_u32 (0);
 		
 		// FIXA:
 		// code page range
-		fd.add_ulong (1);
-		fd.add_ulong (0);
+		fd.add_littleendian_u32 (0);
+		fd.add_littleendian_u32 (0);
 		
-		fd.add_ulong (input.get_head_checksum ()); // head checksum adjustment
+		fd.add_littleendian_u32 (input.get_head_checksum ()); // head checksum adjustment
 		
 		// reserved
-		fd.add_ulong (0);
-		fd.add_ulong (0);
-		fd.add_ulong (0);
-		fd.add_ulong (0);
+		fd.add_littleendian_u32 (0);
+		fd.add_littleendian_u32 (0);
+		fd.add_littleendian_u32 (0);
+		fd.add_littleendian_u32 (0);
 	
-		// padding
-		fd.add_ulong (0);
+		fd.add_littleendian_u16 (0); // padding
 		
-		fd.add_ushort ((uint16) (2 * "TEST".char_count ())); // strlen of family name
-		fd.add_str_utf16 ("TEST");
+		tn = names.get_name (names.FONT_NAME);
+		fd.add_littleendian_u16 ((uint16) (2 * tn.char_count ())); // strlen of family name
+		fd.add_str_littleendian_utf16 (tn);
 		
-		fd.add_ushort (0); // padding
+		fd.add_littleendian_u16 (0); // padding
 		
-		fd.add_ushort ((uint16) (2 * "Regular".char_count ())); // strlen of style name
-		fd.add_str_utf16 ("Regular");
+		tn = names.get_name (names.SUBFAMILY_NAME);
+		fd.add_littleendian_u16 ((uint16) (2 * tn.char_count ())); // strlen of family name
+		fd.add_str_littleendian_utf16 (tn);
+
+		fd.add_littleendian_u16 (0); // padding
 		
-		fd.add_ushort (0); // padding
+		// FIXA version or name + version
+		tn = names.get_name (names.VERSION);
+		fd.add_littleendian_u16 ((uint16) (2 * tn.char_count ())); // strlen of family name
+		fd.add_str_littleendian_utf16 (tn);
 		
-		fd.add_ushort ((uint16) (2 * "Version 1.0".char_count ()));
-		fd.add_str_utf16 ("Version 1.0");
+		fd.add_littleendian_u16 (0); // padding
 		
-		fd.add_ushort (0); // padding
+		tn = names.get_name (names.FULL_FONT_NAME);
+		fd.add_littleendian_u16 ((uint16) (2 * tn.char_count ())); // strlen of family name
+		fd.add_str_littleendian_utf16 (tn);
 		
-		fd.add_ushort ((uint16) (2 * "TEST-Regular".char_count ()));
-		fd.add_str_utf16 ("TEST-Regular");
+		fd.add_littleendian_u16 (0); // padding
+		
+		fd.add_littleendian_u16 (0); // length of root string
+		// the root string goes here.
 		
 		// update length of this table
 		fd.seek (0);
-		fd.add_ulong (fd.length () + ttf_length);
+		fd.add_littleendian_u32 (fd.length () + ttf_length);
 		
 		l = fd.length_with_padding ();
 		data = fd.table_data;

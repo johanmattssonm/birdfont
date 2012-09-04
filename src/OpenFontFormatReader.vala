@@ -48,7 +48,7 @@ errordomain BadFormat {
 
 class OpenFontFormatReader : Object {
 	
-	DirectoryTable directory_table;
+	public DirectoryTable directory_table;
 	
 	OtfInputStream dis;
 	File file;

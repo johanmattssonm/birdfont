@@ -326,11 +326,11 @@ class FontData : Object {
 	public void add_ushort (uint16 d) throws Error {
 		add_u16 (d);
 	}
-	
+		
 	public void add_ulong (uint32 d) throws Error {
 		add_u32 (d);
 	}
-
+		
 	public void add_byte (uint8 b) throws Error {
 		add (b);
 	}
@@ -358,7 +358,12 @@ class FontData : Object {
 				
 		wp++;
 	}
-	
+
+	public void add_littleendian_u16 (uint32 i) {
+		add ((int8) (i & 0x00FF));
+		add ((int8) ((i & 0xFF00) >> 8));
+	}
+		
 	public void add_u16 (uint16 d) {
 		uint16 n = d >> 8;
 		add ((uint8)n);
@@ -371,7 +376,14 @@ class FontData : Object {
 		add ((uint8) s);
 		add ((uint8) (i - (s << 8)));
 	}
-	
+
+	public void add_littleendian_u32 (uint32 i) {
+		add ((int8) (i & 0x000000FF));
+		add ((int8) ((i & 0x0000FF00) >> 8));
+		add ((int8) ((i & 0x00FF0000) >> 16));
+		add ((int8) ((i & 0xFF000000) >> 24));
+	}
+		
 	public void add_u32 (uint32 i) {
 		uint32 s = (uint16) (i >> 16);
 		
@@ -400,7 +412,11 @@ class FontData : Object {
 		add_u32 ((int32)(i - (s << 32)));		
 	}
 	
-	public void add_str_utf16 (string s) {
+	public void add_str_littleendian_utf16 (string s) {
+		add_str_utf16 (s, true);
+	}
+	
+	public void add_str_utf16 (string s, bool little_endian = false) {
 		int index = 0;
 		unichar c;
 		uint8 c0;
@@ -410,8 +426,15 @@ class FontData : Object {
 		while (s.get_next_char (ref index, out c)) {
 			c0 = (uint8) (c >> 8);
 			c1 = (uint8) (c - (c0 << 8));
-			add (c0);
-			add (c1);
+			
+			if (little_endian) {
+				add (c1);
+				add (c0);
+			} else {
+				add (c0);
+				add (c1);
+			}
+			
 			l += 2;
 		}
 				
@@ -2619,21 +2642,36 @@ class OffsetTable : Table {
 
 class NameTable : Table {
 
-	static const uint16 COPYRIGHT_NOTICE = 0;
-	static const uint16 FONT_NAME = 1;
-	static const uint16 SUBFAMILY_NAME = 2;
-	static const uint16 UNIQUE_IDENTIFIER = 3;
-	static const uint16 FULL_FONT_NAME = 4; // name + subfamily
-	static const uint16 VERSION = 5;
-	static const uint16 DESCRIPTION = 10;
-	static const uint16 PREFERED_FAMILY = 16;
-	static const uint16 PREFERED_SUB_FAMILY = 17;
+	public static const uint16 COPYRIGHT_NOTICE = 0;
+	public static const uint16 FONT_NAME = 1;
+	public static const uint16 SUBFAMILY_NAME = 2;
+	public static const uint16 UNIQUE_IDENTIFIER = 3;
+	public static const uint16 FULL_FONT_NAME = 4; // name + subfamily
+	public static const uint16 VERSION = 5;
+	public static const uint16 DESCRIPTION = 10;
+	public static const uint16 PREFERED_FAMILY = 16;
+	public static const uint16 PREFERED_SUB_FAMILY = 17;
 	
+	List<uint16> identifiers;
 	List<string> text;
 			
 	public NameTable () {
 		id = "name";
 		text = new List<string> ();
+		identifiers = new List<uint16> ();
+	}
+	
+	public string get_name (uint16 identifier) {
+		int i = 0;
+		
+		foreach (uint16 n in identifiers) {
+			if (n == identifier) {
+				return text.nth (i).data;
+			}
+			i++;
+		}
+		
+		return "";
 	}
 
 	public void print_all () {
@@ -2687,6 +2725,8 @@ class NameTable : Table {
 			name_id.append (dis.read_ushort ());
 			strlen.append (dis.read_ushort ());
 			off.append (dis.read_ushort ());
+			
+			identifiers.append (name_id.last ().data);	
 		}
 
 		int plat;
@@ -2766,9 +2806,7 @@ class NameTable : Table {
 		
 		text.append ("Regular");
 		type.append (PREFERED_SUB_FAMILY);
-
-
-						
+			
 		num_records = (uint16) text.length ();
 		
 		fd.add_ushort (0); // format 1
@@ -2868,6 +2906,7 @@ class Os2Table : Table {
 		fd.add (0); 
 		fd.add (0); 
 
+		// FIXA:
 		fd.add_u32 (0); // ulUnicodeRange1 Bits 0-31
 		fd.add_u32 (0); // ULONG ulUnicodeRange2 Bits 32-63
 		fd.add_u32 (0); // ULONG ulUnicodeRange3 Bits 64-95
@@ -2890,6 +2929,7 @@ class Os2Table : Table {
 		fd.add_u16 (ascender); // USHORT usWinAscent
 		fd.add_u16 (descender); // USHORT usWinDescent
 
+		// FIXA:
 		fd.add_u32 (0); // ULONG ulCodePageRange1 Bits 0-31
 		fd.add_u32 (0); // ULONG ulCodePageRange2 Bits 32-63
 

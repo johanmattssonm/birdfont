@@ -205,7 +205,13 @@ os.put_string (
 			src: url('""");     os.put_string (@"$(name).ttf"); os.put_string ("""') format('truetype');
 		} """);
 
-os.put_string ("""	
+	os.put_string ("""
+		@font-face {
+			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""EOT';
+			src: url('""");     os.put_string (@"$(name).eot"); os.put_string ("""');
+		} """);
+		
+	os.put_string ("""	
 		h1 {
 			font-weight:normal;
 			margin: 0 0 5px 0;
@@ -241,8 +247,12 @@ os.put_string ("""
 		
 		div {
 			font-family: """);
-			 
+
 			os.put_string ("'");
+			os.put_string (@"$(name)");
+			os.put_string ("EOT'");
+			
+			os.put_string (", '");
 			os.put_string (@"$(name)");
 			os.put_string ("SVG'");
 			
