@@ -89,43 +89,49 @@ def build (bld):
 	)
 
 	bld (
-		rule = "valac -C ./src/birdfont.vapi ../src/Main.vala -X ../build/src/libbirdfont.so -X ../build/src/birdfont.h --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0"
-	)
-
-	bld (
-		rule = "valac -C ./src/birdfont.vapi ../src/BirdfontExport.vala -X ../build/src/libbirdfont.so -X ../build/src/birdfont.h --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0"
-	)
-
-	bld (
 		rule          = "mv src/birdfont.h ./",
 		depends       = "libbirdfont",
 		name          = "birdfont_h"
 	)
-
+	
 	bld (
-		rule = 'gcc  ../build/Main.c -L  ../build/src -l birdfont -o ${TGT} \
-				$(pkg-config --cflags --libs glib-2.0) \
-				$(pkg-config --cflags --libs libxml-2.0) \
-				$(pkg-config --cflags --libs gio-2.0) \
-				$(pkg-config --cflags --libs libsoup-2.4) \
-				$(pkg-config --cflags --libs gtk+-2.0) \
-				$(pkg-config --cflags --libs webkit-1.0)',
-		source  = ['Main.c'],
-		target  = 'birdfont',
-		depends = 'birdfont_h'
+		rule = 'valac -C ./src/birdfont.vapi ../src/Main.vala -X ../build/src/libbirdfont.so -X ./birdfont.h --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0',
+		name = 'main_c',
+		target = '../Main.c',
+		depends = 'libbirdfont'
 	)
 
 	bld (
-		rule = 'gcc  ../build/BirdfontExport.c -L  ../build/src -l birdfont -o ${TGT} \
+		rule = "valac -C ./src/birdfont.vapi ../src/BirdfontExport.vala -X ../build/src/libbirdfont.so -X ./birdfont.h --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0",
+		depends = 'libbirdfont',
+		target = '../BirdfontExport.c',
+		name = 'birdfont_export'
+	)
+
+	bld (
+		rule = 'gcc  ../build/Main.c -I../build/ -L  ../build/src -l birdfont -o ${TGT} \
 				$(pkg-config --cflags --libs glib-2.0) \
 				$(pkg-config --cflags --libs libxml-2.0) \
 				$(pkg-config --cflags --libs gio-2.0) \
 				$(pkg-config --cflags --libs libsoup-2.4) \
 				$(pkg-config --cflags --libs gtk+-2.0) \
 				$(pkg-config --cflags --libs webkit-1.0)',
-		source  = ['Main.c'],
+		source  = ['../Main.c'],
+		target  = 'birdfont',
+		depends = 'main_c'
+	)
+
+	bld (
+		rule = 'gcc  ../build/BirdfontExport.c -I../build/ -L  ../build/src -l birdfont -o ${TGT} \
+				$(pkg-config --cflags --libs glib-2.0) \
+				$(pkg-config --cflags --libs libxml-2.0) \
+				$(pkg-config --cflags --libs gio-2.0) \
+				$(pkg-config --cflags --libs libsoup-2.4) \
+				$(pkg-config --cflags --libs gtk+-2.0) \
+				$(pkg-config --cflags --libs webkit-1.0)',
+		source  = ['../BirdfontExport.c'],
 		target  = 'birdfont-export',
-		depends = 'birdfont_h'
+		depends = 'birdfont_export'
 	)
 	
 	bld.install_files('${PREFIX}/bin/', ['birdfont', 'birdfont-export'])
