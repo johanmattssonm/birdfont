@@ -86,7 +86,7 @@ class EotWriter {
 			fd.add (0);
 		}
 		
-		fd.add (0); // italic		
+		fd.add (1 << 6); // italic set to regular		
 		fd.add_ulong (400); // weight
 		fd.add_ushort (0); // 0 drm, designer must be notified
 		fd.add_ushort (0x504C); // magic number
@@ -134,7 +134,7 @@ class EotWriter {
 		
 		// update length of this table
 		fd.seek (0);
-		fd.add_ulong (fd.length ());
+		fd.add_ulong (fd.length () + ttf_length);
 		
 		l = fd.length_with_padding ();
 		data = fd.table_data;
