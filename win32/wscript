@@ -75,10 +75,11 @@ def configure(conf):
 	
 	conf.find_program('i686-w64-mingw32-gcc', var='MINGW32GCC')
 	conf.find_program('i686-w64-mingw32-pkg-config', var='MINGW32PKG-CONFIG')
+	conf.find_program('windres', var='WINDRES')
 	conf.check_cc(features='have_windows_runtime', msg='Checking windows runtimes')
-	conf.find_program('wine', var='wine')
 
 	if conf.options.installer :
+		conf.find_program('wine', var='wine')	
 		conf.find_program(os.getenv("HOME") + "/.wine/drive_c/Program/NSIS/makensis.exe", always=True)
 
 def build(bld):
