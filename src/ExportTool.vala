@@ -22,6 +22,10 @@ class ExportTool : Tool {
 	private static string? prefered_browser = null;
 	private static ExportThread export_thread;
 
+	public static StaticMutex export_mutex;
+	public static bool export_thread_is_running = false;
+	private static unowned Thread<void*> export_thread_handle;
+
 	public ExportTool (string n) {
 		base (n, "Export glyph to svg file", 'e', CTRL);
 	
@@ -38,6 +42,8 @@ class ExportTool : Tool {
 		
 		move_action.connect ((self, x, y)	 => {
 		});
+		
+		export_mutex = new StaticMutex ();
 	}
 
 	public static bool export_all () {
@@ -358,10 +364,12 @@ os.put_string (
 		string path;
 		OpenFontFormatWriter fo;
 		Font temp_font = new Font ();
-		unowned Thread<void*> th;
 		File ttf_file;
 		File eot_file;
 		string temp_file;
+		bool done = true;
+
+		export_mutex.lock ();
 
 		try {
 			// create a copy of current font and use it in a separate 
@@ -381,21 +389,24 @@ os.put_string (
 			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path ());
 
 			try {
-				th = Thread.create<void*> (export_thread.run, true);
+				export_thread_is_running = true;
+				export_thread_handle = Thread.create<void*> (export_thread.run, true);
 			
 				if (!async) {
-					th.join ();
+					export_thread_handle.join ();
 				}
 			} catch (ThreadError e) {
-				stderr.printf ("%s\n", e.message);
-				return false;
+				warning (e.message);
+				done = false;
 			}			
 		} catch (Error e) {
 			critical (@"$(e.message)");
-			return false;
+			done = false;
 		}
 		
-		return true;		
+		export_mutex.unlock ();
+		
+		return done;		
 	}
 	
 	public static bool export_svg_font () {
@@ -431,19 +442,21 @@ os.put_string (
 	}
 
 
-	class ExportThread {
+	class ExportThread : GLib.Object {
 
 		private string ffi;
 		private string ttf;
 		private string eot;
 
 		public ExportThread (string ffi, string ttf, string eot) {
-			this.ffi = ffi;
-			this.ttf = ttf;
-			this.eot = eot;
+			this.ffi = ffi.dup ();
+			this.ttf = ttf.dup ();
+			this.eot = eot.dup ();
 		}
-
+		
 		public void* run () {
+			ExportTool.export_mutex.lock ();
+			
 			assert (!is_null (ffi));
 			assert (!is_null (ttf));
 			assert (!is_null (eot));
@@ -451,12 +464,18 @@ os.put_string (
 			write_ttf ();
 			write_eof ();
 			
+			ExportTool.export_thread_is_running = false;
+			
+			ExportTool.export_mutex.unlock ();
 			return null;
 		}
 		
 		void write_ttf () {
 			OpenFontFormatWriter fo = new OpenFontFormatWriter ();
 			Font f = new Font ();
+
+			return_if_fail (!is_null (ffi));			
+			return_if_fail (!is_null (ttf));
 			
 			try {
 				if (!f.load (ffi, false)) {
@@ -472,12 +491,20 @@ os.put_string (
 		}
 		
 		void write_eof () {
-			EotWriter fo = new EotWriter (ttf, eot);
-			Font f = new Font ();
+			EotWriter fo;
+
+			return_if_fail (!is_null (this));
+			return_if_fail (!is_null (ttf));
+			return_if_fail (!is_null (eot));
+			
+			fo = new EotWriter (ttf, eot);
+
+			return_if_fail (!is_null (fo));
 			
 			try {
 				fo.write ();
 			} catch (Error e) {
+				warning ("EOF convertion falied.");
 				critical (@"$(e.message)");
 			}
 		}

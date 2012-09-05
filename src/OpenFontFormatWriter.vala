@@ -2474,8 +2474,6 @@ class HmtxTable : Table {
 		for (int i = 0; i < nmonospaced; i++) {
 			left_side_bearing_monospaced[i] = dis.read_short ();
 		}
-		
-		print_all ();
 	}
 	
 	public void process () {
