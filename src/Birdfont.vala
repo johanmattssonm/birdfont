@@ -44,6 +44,7 @@ public static int run_gui (string[] arg) {
 	stdout.printf ("birdfont version %s\n", VERSION);		
 
 	supplement.current_font = new Font ();
+	supplement.current_glyph = new Glyph ("");
 
 	supplement.experimental = args.has_argument ("--test");
 	supplement.show_coordinates = args.has_argument ("--show-coordinates");

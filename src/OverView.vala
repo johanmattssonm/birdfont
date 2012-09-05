@@ -666,7 +666,7 @@ class OverView : FontDisplay {
 		selected += items_per_row;
 		
 		if (selected > rows * items_per_row + first_visible) {
-				scroll (-nail_height);
+			scroll (-nail_height);
 		}
 		
 		adjust_scroll ();
@@ -752,7 +752,7 @@ class OverView : FontDisplay {
 		if (all_avail) {
 			f = Supplement.get_current_font ();
 			g = f.get_glyph_indice (selected);
-			return_val_if_fail (g != null, "");
+			return_val_if_fail (g != null, "".dup ());
 			return ((!) g).get_name ();
 		}
 		
@@ -885,13 +885,17 @@ class OverView : FontDisplay {
 		Font f;
 		uint len;
 	
+		if (get_visible_glyphs ().length () == 0) {
+			return;
+		}
+	
 		if (all_avail) {
 			f = Supplement.get_current_font ();
 			len = f.length ();
 		} else {
 			len = glyph_range.length ();
 		}
-			
+		
 		foreach (GlyphCollection g in get_visible_glyphs ()) {
 			bool a;
 
@@ -942,6 +946,12 @@ class OverView : FontDisplay {
 		}
 		
 		selected--;
+	
+		if (at_bottom () && selected >= len) {
+			selected = len - 1;
+		}
+		
+		adjust_scroll ();
 		
 		if (current == selected && !menu_action) {
 			open_glyph_signal (get_selected_char ());
