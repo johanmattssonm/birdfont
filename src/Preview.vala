@@ -35,11 +35,12 @@ class Preview : FontDisplay {
 	public override void selected_canvas () {
 		WebView w = MainWindow.get_webview ();
 		string uri = get_uri ();
+		File new_dest;
 
-		ExportTool.export_all ();
-
+		ExportTool.export_svg_font ();
+		
 		w.open (uri);
-		w.reload_bypass_cache ();	
+		w.reload_bypass_cache ();
 
 		// this is a hack forces webkit to reload the font and ignore cached data
 		// it's only required on windows platform and in wine 

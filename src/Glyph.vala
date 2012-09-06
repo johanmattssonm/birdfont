@@ -821,6 +821,11 @@ class Glyph : FontDisplay {
 			}
 
 		}
+		
+		// a path without any editpoints
+		if (path_list.length () > 0) {
+			return path_list.first ().data;
+		}
 
 		if (unlikely (min_distance == double.MAX)) {
 			warning (@"No path found in path_list. Length: $(path_list.length ())");

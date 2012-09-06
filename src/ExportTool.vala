@@ -358,8 +358,7 @@ os.put_string (
 		return export_ttf_font_path (file);
 	}
 	
-	public static bool export_ttf_font_path (File folder, bool async = true) 
-		requires (Supplement.get_current_font ().font_file != null) {
+	public static bool export_ttf_font_path (File folder, bool async = true) {
 		Font current_font = Supplement.get_current_font ();
 		string path;
 		OpenFontFormatWriter fo;
@@ -370,6 +369,12 @@ os.put_string (
 		bool done = true;
 
 		export_mutex.lock ();
+
+		while (ExportTool.export_thread_is_running) {
+			export_mutex.unlock ();
+			Thread.usleep (100);
+			export_mutex.lock ();
+		}
 
 		try {
 			// create a copy of current font and use it in a separate 
@@ -385,6 +390,10 @@ os.put_string (
 			if (eot_file.query_exists ()) {
 				eot_file.delete ();
 			}
+			
+			assert (!is_null (temp_file));
+			assert (!is_null (ttf_file.get_path ()));
+			assert (!is_null (eot_file.get_path ()));
 			
 			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path ());
 

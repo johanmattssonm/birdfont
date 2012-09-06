@@ -116,7 +116,7 @@ def build(bld):
 	bld(rule="""i686-w64-mingw32-ar rcs libbirdfont.dll.a win32/*.o""", name="mingw link static", depends_on="mingw link shared")
 
 	bld(rule="""i686-w64-mingw32-gcc \
-		./win32/*.o \
+		./win32/Main.o \
 		./icon.res \
 		-s \
 		-Wl,-subsystem,windows \
@@ -128,6 +128,9 @@ def build(bld):
 		-B static -lgio-2.0.dll -B static -l soup-2.4.dll \
 		-B static -l webkitgtk-1.0.dll  -B static -lgtk-win32-2.0.dll -B static -lgdk-win32-2.0.dll -B static -latk-1.0.dll -B static -lgio-2.0.dll -B static -lpangowin32-1.0.dll -B static -lpangocairo-1.0.dll -B static -lgdk_pixbuf-2.0.dll -B static -lpango-1.0.dll -B static -lcairo.dll -B static -lgobject-2.0.dll -B static -lgmodule-2.0.dll -B static -lgthread-2.0.dll -B static -lglib-2.0.dll \
 		-static -o birdfont.exe""", source="../build/src/Supplement.c", target="../birdfont.exe", depends_on=['mingw link shared', 'icon'], name="mingw link", always=True)
+
+	bld(rule="mv birdfont.exe supplement/", depends_on='mingw link', always=True)
+	bld(rule="mv libbirdfont.dll supplement/", depends_on='mingw link', always=True)
 
 	if bld.options.installer:
 		copy_runtime_dependencies (bld)
@@ -278,9 +281,6 @@ def copy_runtime_dependencies (bld):
 
 	MINGW = "/usr/i686-w64-mingw32/sys-root/mingw"
 	MINGW_BIN = MINGW + "/bin"
-
-	bld(rule="mv birdfont.exe supplement/", depends_on='mingw link', always=True)
-	bld(rule="mv libbirdfont.dll supplement/", depends_on='mingw link', always=True)
 
 	bld(rule="cp ../README supplement/")
 	bld(rule="cp ../COPYING supplement/")

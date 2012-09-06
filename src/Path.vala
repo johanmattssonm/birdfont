@@ -221,9 +221,9 @@ class Path {
 		cr.set_line_width (1 * (1/g.view_zoom));
 
 		cr.line_to (ax, ay);
-	
 		cr.line_to (bx, by);
-
+		
+		cr.stroke ();
 	}
 	
 	public void draw_edit_point  (EditPoint e, Context cr) {

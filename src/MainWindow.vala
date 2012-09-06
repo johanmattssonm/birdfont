@@ -83,6 +83,8 @@ internal class MainWindow : Gtk.Window {
 		
 		html_box.add (html_canvas);
 		
+		html_canvas.set_editable (true);
+		
 		tabs.signal_tab_selected.connect ((f, tab) => {
 			bool n;
 			File layout_dir;
@@ -96,9 +98,6 @@ internal class MainWindow : Gtk.Window {
 			
 			if (n) {
 				layout_dir = FontDisplay.find_layout_dir ();
-				html_box.set_visible (n);
-				glyph_canvas.set_visible (!n);
-				
 				uri = fd.get_uri ();
 				
 				if (uri == "") {
@@ -107,14 +106,15 @@ internal class MainWindow : Gtk.Window {
 				}
 				
 				if (fd.get_html () == "") {
-					html_canvas.load_html_string (fd.get_html (), uri);
+					html_canvas.load_html_string (fd.get_html (), uri);	
 					html_canvas.reload_bypass_cache ();
 					html_canvas.load_uri (uri);
-					
-					print (@"uri: $uri\n");
 				} else {
 					html_canvas.load_html_string (fd.get_html (), uri);
 				}
+				
+				html_box.set_visible (n);
+				glyph_canvas.set_visible (!n);
 			} else {
 				html_box.set_visible (false);
 				glyph_canvas.set_visible (true);

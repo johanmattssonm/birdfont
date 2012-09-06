@@ -40,6 +40,59 @@ class TestCases {
 		add (test_notdef, "Notdef");
 		add (test_merge, "Merge");
 		add (test_over_path, "Over path");
+		add (test_preview, "Preview");
+		add (test_export, "Export");
+	}
+
+	public static void test_export () {
+		Glyph g;
+		Path p = new Path ();
+		
+		Tool.test_open_next_glyph ();
+		g = MainWindow.get_current_glyph ();
+				
+		p.add (-10, -10);
+		p.add (50, 50);
+		p.add (10, -10);
+		
+		p.close ();
+		g.add_path (p);	
+
+		MenuTab.preview ();
+
+		// TODO: run this many times on big font
+		for (int i = 0; i < 10; i++) {
+			ExportTool.export_all ();
+			Tool.yield ();
+		}		
+	}
+
+
+	public static void test_preview () {
+		Glyph g;
+		Path p = new Path ();
+		
+		Tool.test_open_next_glyph ();
+		g = MainWindow.get_current_glyph ();
+				
+		p.add (-10, 10);
+		p.add (10, 10);
+		p.add (10, -10);
+		p.add (-10, -10);
+		p.close ();
+		g.add_path (p);	
+
+		MenuTab.preview ();
+
+		// TODO: run this many times on big font
+		for (int i = 0; i < 10; i++) {
+			MainWindow.get_tab_bar ().select_tab_name ("Menu");
+			Tool.yield ();
+			
+			MainWindow.get_tab_bar ().select_tab_name ("Preview");
+			Tool.yield ();
+		}
+		
 	}
 
 	public static void test_over_path () {

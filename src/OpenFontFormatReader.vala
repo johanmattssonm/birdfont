@@ -100,9 +100,7 @@ class OpenFontFormatReader : Object {
 	}
 
 	public void set_limits () {
-		Font f = Supplement.get_current_font ();
-		
-		f.base_line = 0;
+		Font f = OpenFontFormatWriter.font;
 		f.top_position = -get_ascender ();
 		f.top_limit = f.top_position - 5;
 		f.xheight_position = f.top_position - 5;
