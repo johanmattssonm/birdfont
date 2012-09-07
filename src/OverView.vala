@@ -884,11 +884,7 @@ class OverView : FontDisplay {
 		
 		Font f;
 		uint len;
-	
-		if (get_visible_glyphs ().length () == 0) {
-			return;
-		}
-	
+
 		if (all_avail) {
 			f = Supplement.get_current_font ();
 			len = f.length ();

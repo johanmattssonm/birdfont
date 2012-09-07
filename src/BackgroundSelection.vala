@@ -81,7 +81,7 @@ class BackgroundSelection : FontDisplay {
 		cr.paint ();
 			
 		cr.save ();
-		x = 140;
+		x = 160;
 		y = 20;
 		zoom = 0.04;
 		
@@ -89,32 +89,68 @@ class BackgroundSelection : FontDisplay {
 		foreach (string file in background_images) {
 			box_index++;
 
-			if (x > allocation.width - 120) {
+			if (x > allocation.width - 140) {
 				x = 20;
-				y += 120;
+				y += 140;
 			}
 
 			draw_box (box_index, x, y, cr);
 			draw_thumbnail (file, x, y, cr, box_index);
 			
-			x += 120;	
+			x += 140;	
 		}
 		cr.restore ();
 			
 	}
 		
 	private bool draw_thumbnail (string file, double x, double y, Context cr, int box_index) {
-		Pixbuf pixbuf = new Pixbuf.from_file (file);
-		ImageSurface img = new ImageSurface.for_data (pixbuf.get_pixels (), Format.ARGB32, pixbuf.get_width (), pixbuf.get_height (), pixbuf.get_rowstride ());
+		Pixbuf pixbuf;
+		ImageSurface img;
+		uint8* data;
+		uint8* dest;
+		int pixels;
+		int pr, ir;
 		
-		if (img.status () != Cairo.Status.SUCCESS) {
-			warning (@"Failed to load $file as gdk pixbuf. (height: $(pixbuf.get_height ()), width: $(pixbuf.get_width ()), stride: $(pixbuf.get_rowstride ()))");
-			return false;
-		}
+		try {
+			pixbuf = new Pixbuf.from_file_at_scale (file, 100, 100, true);
+			
+			if (is_null (pixbuf)) {
+				warning ("Failed to load pixbuf.");
+				return false;
+			}
+			
+			pixels = pixbuf.get_width () * pixbuf.get_height ();
+			
+			img = new ImageSurface (Format.ARGB32, pixbuf.get_width (), pixbuf.get_height ());
+			
+			if (img.status () != Cairo.Status.SUCCESS) {
+				warning (@"Failed to load $file as gdk pixbuf. (height: $(pixbuf.get_height ()), width: $(pixbuf.get_width ()), stride: $(pixbuf.get_rowstride ()))");
+				return false;
+			}
+			
+			data = pixbuf.get_pixels ();
+			dest = img.get_data ();
+			
+			assert (!is_null (data));
+			assert (!is_null (dest));
 
-		cr.set_source_surface (img, x + 10, y + 10);
-		cr.paint ();
-		
+			pr = pixbuf.get_rowstride () / pixbuf.get_width ();
+			ir = img.get_stride () / img.get_width ();
+			
+			for (int i = 0; i < pixels; i++) {
+				dest[i * ir + 0] = data[i * pr + 2];
+				dest[i * ir + 1] = data[i * pr + 1];
+				dest[i * ir + 2] = data[i * pr + 0];
+				dest[i * ir + 3] = 255;
+			}
+			
+			img = new ImageSurface.for_data ((uchar[])dest, Format.ARGB32, pixbuf.get_width (),  pixbuf.get_height (), img.get_stride ());
+
+			cr.set_source_surface (img, x + 10, y + 10);
+			cr.paint ();
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 		return true;	
 	}
 	
@@ -129,7 +165,7 @@ class BackgroundSelection : FontDisplay {
 			cr.set_source_rgba (183/255.0, 200/255.0, 223/255.0, 1);
 		}
 		
-		cr.rectangle (x, y, 100, 100);
+		cr.rectangle (x, y, 120, 120);
 		cr.fill_preserve ();
 		cr.stroke ();
 		
@@ -149,9 +185,7 @@ class BackgroundSelection : FontDisplay {
 	private void add_image () {
 		FileChooserDialog file_chooser;
 		string file;
-		ImageSurface image;
-		Pixbuf pixbuf;
-		
+				
 		try {
 			file_chooser = new FileChooserDialog ("Add background image", MainWindow.get_current_window (), FileChooserAction.OPEN, Stock.CANCEL, ResponseType.CANCEL, Stock.OPEN, ResponseType.ACCEPT);
 			file_chooser.set_current_folder_file (Supplement.get_current_font ().get_folder ());
@@ -159,15 +193,9 @@ class BackgroundSelection : FontDisplay {
 			if (file_chooser.run () == ResponseType.ACCEPT) {
 				// Fixa: Set file name relative to font folder
 				file = file_chooser.get_filename ();
-				pixbuf = new Pixbuf.from_file (file);
-				image = new ImageSurface.for_data (pixbuf.get_pixels (), Format.ARGB32, pixbuf.get_height (), pixbuf.get_width (), pixbuf.get_rowstride ());
-				
-				if (image.status () == Cairo.Status.SUCCESS) {
-					Supplement.get_current_font ().add_background_image (file);
-					MainWindow.get_glyph_canvas ().redraw ();				
-				} else {
-					warning (@"Failed to load $file (height: $(pixbuf.get_height ()), width: $(pixbuf.get_width ()), stride: $(pixbuf.get_rowstride ()))");
-				}
+
+				Supplement.get_current_font ().add_background_image (file);
+				MainWindow.get_glyph_canvas ().redraw ();				
 			}
 
 			file_chooser.destroy ();
@@ -288,8 +316,8 @@ class BackgroundSelection : FontDisplay {
 	public void motion (double x, double y) {
 		int active;
 		
-		active = (int) (x / 120); // column
-		active += (int) (y / 120) * (int) (allocation.width / 120.0); // row
+		active = (int) (x / 140); // column
+		active += (int) (y / 140) * (int) (allocation.width / 140.0); // row
 		
 		if (active != active_box) {
 			MainWindow.get_glyph_canvas ().redraw ();

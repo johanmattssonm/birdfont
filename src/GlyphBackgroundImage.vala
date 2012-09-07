@@ -69,23 +69,21 @@ class GlyphBackgroundImage {
 		ImageSurface img;
 		Context ct;
 		string fn = @"$path.png";
+		
 		Font font = Supplement.get_current_font ();
 		File folder = font.get_backgrounds_folder ();
 		File original = File.new_for_path (fn);
 		File png_image = folder.get_child (@"full_$((!)original.get_basename ())");
-		
+
 		Pixbuf pixbuf;
 		
 		if (png_image.query_exists ()) {
 			path = (!) png_image.get_path ();
 			return;
 		}
-
-		pixbuf = new Pixbuf.from_file (path);
-		img = new ImageSurface.for_data (pixbuf.get_pixels (), Format.ARGB32, pixbuf.get_width (), pixbuf.get_height (), pixbuf.get_rowstride ());
 		
-		ct = new Context (img);
-		ct.get_target ().write_to_png ((!) png_image.get_path ());
+		pixbuf = new Pixbuf.from_file (path);
+		pixbuf.save ((!) png_image.get_path (), "png");
 		path = (!) png_image.get_path ();
 	}
 	

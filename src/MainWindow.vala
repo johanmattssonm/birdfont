@@ -164,7 +164,7 @@ internal class MainWindow : Gtk.Window {
 		
 		show_all ();
 	}
-	
+
 	public static WebView get_webview () {
 		return singleton.html_canvas;
 	}
