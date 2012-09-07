@@ -28,9 +28,8 @@ class GlyphBackgroundImage {
 	public double img_scale_x = 1;
 	public double img_scale_y = 1;
 	public double img_rotation = 0;
-	
-	public double img_pos_x = 1000;
-	public double img_pos_y = 1000;
+	public int width_margin = 0;
+
 	
 	public int active_handle = -1;
 	public int selected_handle = -1;
@@ -229,16 +228,16 @@ class GlyphBackgroundImage {
 		}
 		
 		// add margin
-		int sq = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
+		width_margin = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
 
-		sg = new Surface.similar (get_img (), get_img ().get_content (), sq, sq);
+		sg = new Surface.similar (get_img (), get_img ().get_content (), width_margin, width_margin);
 		cg = new Context (sg);
 		
-		int wc = (int) ((sq - get_img ().get_width ()) / 2);
-		int hc = (int) ((sq - get_img ().get_height ()) / 2);
+		int wc = (int) ((width_margin - get_img ().get_width ()) / 2);
+		int hc = (int) ((width_margin - get_img ().get_height ()) / 2);
 
 		cg.set_source_rgba (0, 0.5, 0, 1);
-		cg.rectangle (0, 0, sq, sq);
+		cg.rectangle (0, 0, width_margin, width_margin);
 		cg.fill ();
 		
 		cg.set_source_surface (get_img (), wc, hc);
@@ -255,8 +254,8 @@ class GlyphBackgroundImage {
 		w = (int) iw;
 		h = (int) ih;
 
-		oy = sq;
-		ox = sq;
+		oy = width_margin;
+		ox = width_margin;
 
 		// rotate image
 		s = new Surface.similar (sg, sg.get_content (), (int) (ox), (int) (oy));
@@ -264,9 +263,9 @@ class GlyphBackgroundImage {
 	
 		c.save ();
 	
-   		c.translate (sq * 0.5, sq * 0.5);
+   		c.translate (width_margin * 0.5, width_margin * 0.5);
 		c.rotate (img_rotation);
-		c.translate (-sq * 0.5, -sq * 0.5);
+		c.translate (-width_margin * 0.5, -width_margin * 0.5);
 
 		c.set_source_surface (cg.get_target (), 0, 0);
 		c.paint ();	
@@ -277,8 +276,8 @@ class GlyphBackgroundImage {
 		ct = new Context (st);
 		ct.save ();
 
-		double xmip = img_offset_x - Glyph.path_coordinate_x (sq / 2.0) + view_offset_x;
-		double ymip = img_offset_y - Glyph.path_coordinate_y (sq / 2.0) - view_offset_y;
+		double xmip = img_offset_x - Glyph.path_coordinate_x (width_margin / 2.0) + view_offset_x;
+		double ymip = img_offset_y - Glyph.path_coordinate_y (width_margin / 2.0) - view_offset_y;
 
 		// scale
 		scale_x = view_zoom * img_scale_x;
@@ -318,20 +317,11 @@ class GlyphBackgroundImage {
 		double a, b;
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		x = img_offset_x - g.view_offset_x + g.allocation.width  / 2.0;
-		y = img_offset_y - g.view_offset_y + g.allocation.height / 2.0;
-		
+		x = img_offset_x - g.view_offset_x + (width_margin / 2) * img_scale_x;
+		y = img_offset_y - g.view_offset_y + (width_margin / 2) * img_scale_y;
+
 		y *= g.view_zoom;
 		x *= g.view_zoom;
-		
-		a = get_img ().get_width () / 2.0 * img_scale_x;
-		b = get_img ().get_height () / 2.0 * img_scale_y;
-
-		a *= g.view_zoom;
-		b *= g.view_zoom;
-		
-		x += a;
-		y += b;
 	}
 
 	bool is_over_rotate (double nx, double ny) {
@@ -353,19 +343,10 @@ class GlyphBackgroundImage {
 		bool inx, iny;
 
 		size = 12 * g.view_zoom;
-		
-		x = img_offset_x - g.view_offset_x;
-		y = img_offset_y - g.view_offset_y + get_img ().get_height () * img_scale_y;
 
-		cx = g.allocation.width / 2.0;
-		cy = g.allocation.height / 2.0;
-		
-		w = 0;
-		h = get_img ().get_height () * img_scale_y;
-		
-		x = img_offset_x + w - g.view_offset_x + g.allocation.width  / 2.0;
-		y = img_offset_y + h - g.view_offset_y + g.allocation.height / 2.0;
-		
+		x = img_offset_x - g.view_offset_x;
+		y = img_offset_y - g.view_offset_y + (width_margin) * img_scale_y;
+				
 		y *= g.view_zoom;
 		x *= g.view_zoom;
 				
@@ -395,63 +376,55 @@ class GlyphBackgroundImage {
 		draw_resize_handle (cr, g);
 		draw_rotate_handle (cr, g);
 	}
-	
+
+	public void draw_resize_handle (Context cr, Glyph g) {
+		double x, y;
+		cr.save ();
+		
+		cr.scale (g.view_zoom, g.view_zoom);
+		cr.set_source_rgba (1, 0, 0.3, 1);
+
+		x = img_offset_x - g.view_offset_x;
+		y = img_offset_y - g.view_offset_y + (width_margin) * img_scale_y;
+		
+		draw_handle_triangle (x - 1, y - 1, cr, g, 6);
+										
+		cr.restore ();
+	}
+		
 	public void draw_rotate_handle (Context cr, Glyph g) {
-		double x, y, a, b, hx, hy, x1, y1, x2, y2;
+		double x, y, hx, hy, x1, y1, x2, y2;
 		
 		double ivz = 1.0 / (g.view_zoom);
 		
 		cr.save ();
-
+		
+		cr.scale (g.view_zoom, g.view_zoom);
+		
 		if (selected_handle == 2) cr.set_source_rgba (1, 0, 0.3, 1);
 		else if (active_handle == 2) cr.set_source_rgba (0, 0, 0.3, 1);
 		else cr.set_source_rgba (0.7, 0.7, 0.8, 1);
-		
-		cr.set_line_width (ivz);
 
-		a = get_img ().get_width () / 2.0 * img_scale_x;
-		b = get_img ().get_height () / 2.0 * img_scale_y;
-
-		cr.scale (g.view_zoom, g.view_zoom);
-		
-		x = img_offset_x + a - g.view_offset_x + g.allocation.width  / 2.0;
-		y = img_offset_y + b - g.view_offset_y + g.allocation.height / 2.0;
-		
-		hx = cos (img_rotation) * 75;
-		hy = sin (img_rotation) * 75;
-		
-		x1 = x + 2.5 * ivz;
-		y1 = y + 2.5 * ivz;
-		
-		x2 = x + 2.5 * ivz + hx * ivz;
-		y2 = y + 2.5 * ivz + hy * ivz;
-		
-		cr.move_to (x1, y1);
-		cr.line_to (x2, y2);
-		cr.stroke ();
-		
+		x = img_offset_x - g.view_offset_x + (width_margin / 2) * img_scale_x;
+		y = img_offset_y - g.view_offset_y + (width_margin / 2) * img_scale_y;
+				
 		cr.rectangle (x, y, 5 * ivz, 5 * ivz);
-		cr.rectangle (x2 - 5 * ivz, y2 - 5 * ivz, 10 * ivz, 10 * ivz); // Fixa: do arc instead
-
 		cr.fill ();
 
-		cr.restore ();
-	}
-	
-	public void draw_resize_handle (Context cr, Glyph g) {
-		double x, y;
+		hx = cos (img_rotation) * 75 * ivz;
+		hy = sin (img_rotation) * 75 * ivz;
 		
-		double w = 0;
-		double h = get_img ().get_height () * img_scale_y;
+		x2 = x + hx;
+		y2 = y + hy;
 
-		cr.save ();
-		
-		cr.scale (g.view_zoom, g.view_zoom);
-		
-		x = img_offset_x + w - g.view_offset_x + g.allocation.width  / 2.0;
-		y = img_offset_y + h - g.view_offset_y + g.allocation.height / 2.0;
-		
-		draw_handle_triangle (x - 1, y - 1, cr, g, 6);
+		cr.rectangle (x2, y2, 5 * ivz, 5 * ivz);
+		cr.fill ();
+
+		cr.set_line_width (ivz);
+		cr.move_to (x + 2.5* ivz, y + 2.5* ivz);
+		cr.line_to (x2 + 2.5* ivz, y2 + 2.5* ivz);
+		cr.stroke ();
+										
 		cr.restore ();
 	}
 
