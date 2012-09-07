@@ -29,6 +29,9 @@ class GlyphBackgroundImage {
 	public double img_scale_y = 1;
 	public double img_rotation = 0;
 	
+	public double img_pos_x = 1000;
+	public double img_pos_y = 1000;
+	
 	public int active_handle = -1;
 	public int selected_handle = -1;
 	
@@ -205,59 +208,94 @@ class GlyphBackgroundImage {
 
 	public void draw (Context cr, Allocation allocation, double view_offset_x, double view_offset_y, double view_zoom) {
 		double x, y;
+		double iw, ih;
 		int h, w;
-		
+		double scale_x, scale_y;
+		double oy, ox;
+				
 		Surface s;
 		Context c;
+
+		Surface sg;
+		Context cg;
+
+		Surface st;
+		Context ct;
 
 		if (unlikely (get_img ().status () != Cairo.Status.SUCCESS)) {
 			stderr.printf (@"Background image is invalid. (\"$path\")\n");
 			MainWindow.get_current_glyph ().set_background_visible (false);
 			return;
 		}
-	
-		x = -view_offset_x + allocation.width / 2.0; // center for glyph
-		y = -view_offset_y + allocation.height / 2.0;
 		
-		x += img_offset_x;
-		y += img_offset_y;
+		// add margin
+		int sq = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
+
+		sg = new Surface.similar (get_img (), get_img ().get_content (), sq, sq);
+		cg = new Context (sg);
+		
+		int wc = (int) ((sq - get_img ().get_width ()) / 2);
+		int hc = (int) ((sq - get_img ().get_height ()) / 2);
+
+		cg.set_source_rgba (0, 0.5, 0, 1);
+		cg.rectangle (0, 0, sq, sq);
+		cg.fill ();
+		
+		cg.set_source_surface (get_img (), wc, hc);
+		cg.paint ();
+
+		x = Glyph.reverse_path_coordinate_x (img_offset_x);
+		y = Glyph.reverse_path_coordinate_y (img_offset_y);
 				
 		cr.save ();
 		
-		h = (int) get_img ().get_height ();
-		w = (int) get_img ().get_width ();
+		ih = (int) get_img ().get_height ();
+		iw = (int) get_img ().get_width ();
 		
-		if (w < allocation.width) {
-			w = allocation.width;
-		}
-		
-		if (h < allocation.height) {
-			h = allocation.height;
-		}
-			
-		s = new Surface.similar (get_img (), get_img ().get_content (), w, h);
-		c = new Context (s);
+		w = (int) iw;
+		h = (int) ih;
 
+		oy = sq;
+		ox = sq;
+
+		// rotate image
+		s = new Surface.similar (sg, sg.get_content (), (int) (ox), (int) (oy));
+		c = new Context (s);
+	
 		c.save ();
-		c.set_source_rgba (1, 1, 1, 1);
-		c.rectangle (0, 0, w, h);
-		c.fill ();
-		c.restore ();
-		
+	
+   		c.translate (sq * 0.5, sq * 0.5);
 		c.rotate (img_rotation);
-		c.scale (view_zoom * img_scale_x, view_zoom * img_scale_y);
-		c.set_source_surface (get_img (), 0, 0);
-		c.paint ();
+		c.translate (-sq * 0.5, -sq * 0.5);
+
+		c.set_source_surface (cg.get_target (), 0, 0);
+		c.paint ();	
+		c.restore ();
+
+		// mask
+		st = new Surface.similar (s, s.get_content (), allocation.width, allocation.height);
+		ct = new Context (st);
+		ct.save ();
+
+		double xmip = img_offset_x - Glyph.path_coordinate_x (sq / 2.0) + view_offset_x;
+		double ymip = img_offset_y - Glyph.path_coordinate_y (sq / 2.0) - view_offset_y;
+
+		// scale
+		scale_x = view_zoom * img_scale_x;
+		scale_y = view_zoom * img_scale_y;
 		
+		ct.scale (scale_x, scale_y);
+		ct.translate (-view_offset_x / img_scale_x, -view_offset_y / img_scale_y);
+		
+		ct.set_source_surface (s, img_offset_x / img_scale_x, img_offset_y / img_scale_y);
+
+		ct.paint ();
+		ct.restore ();
+		
+		// append it
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
-		cr.rectangle (0, 0, w, h);
-		cr.fill ();
-		cr.restore ();
-		
-		cr.set_source_surface (s, x * view_zoom, y * view_zoom);
+		cr.set_source_surface (st, 0, 0);
 		cr.paint ();
-		
 		cr.restore ();
 	}
 	
@@ -414,7 +452,6 @@ class GlyphBackgroundImage {
 		y = img_offset_y + h - g.view_offset_y + g.allocation.height / 2.0;
 		
 		draw_handle_triangle (x - 1, y - 1, cr, g, 6);
-		
 		cr.restore ();
 	}
 

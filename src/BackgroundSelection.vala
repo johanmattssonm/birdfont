@@ -228,10 +228,13 @@ class BackgroundSelection : FontDisplay {
 		
 		cut_background_canvas.set_background_image (bg);
 		
-		tb.select_tab_name (glyph.get_name ());
-		tb.close_display (this);
+		MainWindow.get_current_glyph ().set_background_image (bg);
+		tb.select_tab_name (MainWindow.get_current_glyph ().get_name ());
 		
-		tb.add_tab (cut_background_canvas, 110, false);
+		//tb.select_tab_name (glyph.get_name ());
+		//tb.close_display (this);
+		
+		//tb.add_tab (cut_background_canvas, 110, false);
 
 		cut_background_canvas.set_show_help_lines (false);
 		cut_background_canvas.set_background_visible (true);
