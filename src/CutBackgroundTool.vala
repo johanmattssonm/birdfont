@@ -36,7 +36,7 @@ class CutBackgroundTool : Tool {
 	string? destination_file_name = null;
 	
 	public CutBackgroundTool (string name) {
-		base (name, "cut background image", 'u', CTRL);		
+		base (name, "Cut background image");		
 
 		select_action.connect((self) => {
 		});
@@ -95,7 +95,7 @@ class CutBackgroundTool : Tool {
 			tb.select_tab_name (glyph.get_name ());
 			
 			glyph.set_background_visible (true);
-			
+
 			zoom_background = MainWindow.get_tool ("zoom_background_image");
 			zoom_background.select_action (zoom_background);
 		});

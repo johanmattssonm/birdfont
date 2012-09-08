@@ -24,38 +24,22 @@ namespace Supplement {
 class BackgroundSelection : FontDisplay {
 
 	int active_box = -1;
-	ImageSurface add_icon; 
-	Glyph glyph;
+	ImageSurface add_icon;
 	CutBackgroundCanvas cut_background_canvas;
 	List <string> background_images = new List <string> ();
 	Allocation allocation;
+	Glyph glyph;
 	
-	public BackgroundSelection (Glyph glyph) {
+	public BackgroundSelection () {
 		ImageSurface? i;
+		glyph = MainWindow.get_current_glyph ();
+		
 		i = Icons.get_icon ("add_background_image.png");
 		return_if_fail (i != null);
 		add_icon = (!) i;
-		this.glyph = glyph;
-		
+
 		CutBackgroundTool cb = (CutBackgroundTool) MainWindow.get_toolbox ().get_tool ("cut_background");
-		
 		cb.set_destination_file_name (glyph.get_name ());
-		
-		cb.new_image.connect ((file) => {
-			Tool zoom_background;
-			TabBar tb = MainWindow.get_tab_bar ();
-			
-			glyph.set_background_image (new GlyphBackgroundImage (file));
-
-			tb.close_display (cut_background_canvas);
-			tb.select_tab_name (glyph.get_name ());
-			
-			glyph.set_background_visible (true);
-			
-			zoom_background = MainWindow.get_tool ("zoom_background_image");
-			zoom_background.select_action (zoom_background);
-
-		});
 	}
 
 	public override string get_name () {
@@ -227,6 +211,7 @@ class BackgroundSelection : FontDisplay {
 		bg.reset_scale (glyph);
 		
 		cut_background_canvas.set_background_image (bg);
+		glyph.set_background_visible (true);
 		
 		MainWindow.get_current_glyph ().set_background_image (bg);
 		tb.select_tab_name (MainWindow.get_current_glyph ().get_name ());

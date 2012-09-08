@@ -141,11 +141,7 @@ class Path {
 	}
 	
 	private void draw_next (EditPoint e, EditPoint en, Context cr) {
-		if (en.right_handle.type == PointType.LINE && e.left_handle.type == PointType.LINE) {
-			draw_line (e, en, cr);
-		} else {
-			draw_curve (e, en, cr);
-		}
+		draw_curve (e, en, cr);
 	}
 	
 	private static void draw_curve (EditPoint e, EditPoint en, Context cr, double alpha = 1) {
@@ -1402,7 +1398,7 @@ class Path {
 			cr.save ();
 			
 			all_of_path ((x, y) => {
-				cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+				//cr.set_source_rgba (0.3, 0.3, 0.3, 1);
 				cr.move_to (px + xc, -py + yc);
 				cr.line_to (x + xc, -y + yc);
 				

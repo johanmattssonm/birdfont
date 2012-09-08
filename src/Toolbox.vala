@@ -399,7 +399,7 @@ class Toolbox : DrawingArea {
 		background_tools.add_tool (cut_background);
 		this.cut_background = cut_background;
 		
-		Tool show_bg = new Tool ("show_background", "Show background image", 'F', SHIFT);
+		Tool show_bg = new Tool ("show_background", "Show background image");
 		show_bg.select_action.connect((self) => {
 				Glyph g = MainWindow.get_current_glyph ();
 				g.set_background_visible (!g.get_background_visible ());
@@ -445,7 +445,7 @@ class Toolbox : DrawingArea {
 				return;
 			}
 			
-			BackgroundSelection bgs = new BackgroundSelection ((!) g);
+			BackgroundSelection bgs = new BackgroundSelection ();
 			MainWindow.get_tab_bar ().add_unique_tab (bgs , 120, false);
 			
 			tp.show_text ("");

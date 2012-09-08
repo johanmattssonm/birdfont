@@ -398,8 +398,6 @@ class GlyphBackgroundImage {
 				
 		draw_handle_triangle (x, y, cr, g, 6);
 		
-		draw_handle_triangle (0, 0, cr, g, 6);
-										
 		cr.restore ();
 	}
 		

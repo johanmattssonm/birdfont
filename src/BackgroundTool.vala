@@ -40,7 +40,7 @@ class BackgroundTool : Tool {
 	bool resize_bg; // DEL
 	
 	public BackgroundTool (string name) {
-		base (name, "move, resize and rotate background image", 'M', CTRL|SHIFT);
+		base (name, "Move, resize and rotate background image");
 		
 		top_limit = 0;
 		bottom_limit = 0;

@@ -135,6 +135,8 @@ class Glyph : FontDisplay {
 				}
 			}
 			
+			((!) p).set_selected (true);
+			
 			active_paths.append ((!) p);
 		}
 	}
@@ -1660,8 +1662,12 @@ class Glyph : FontDisplay {
 			merge_path (p0);
 		}
 		
-		open_path ();
-		// close_path ();
+		//open_path ();
+		close_path ();
+
+		foreach (Path p in path_list) {
+			p.update_region_boundries ();
+		}		
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
@@ -1678,7 +1684,6 @@ class Glyph : FontDisplay {
 				continue;
 			}
 			
-			//path_list = Path.merge (p0.copy(), p1.copy());
 			path_list = Path.merge (p1, p0);
 
 			if (path_list.paths.length () == 0) {
@@ -1698,7 +1703,7 @@ class Glyph : FontDisplay {
 			}
 			
 			add_active_path (mp);
-
+			
 			active_paths.remove_all (p0);
 			active_paths.remove_all (p1);
 
