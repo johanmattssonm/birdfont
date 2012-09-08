@@ -513,10 +513,7 @@ class Toolbox : DrawingArea {
 		add_expander (guideline_tools);
 		add_expander (grid);
 		add_expander (view_tools);
-		
-		if (Supplement.experimental) {
-			add_expander (background_tools);
-		}
+		add_expander (background_tools);
 		
 		// Fixa: add_expander (trace);
 		
