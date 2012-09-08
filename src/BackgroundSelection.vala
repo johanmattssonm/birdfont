@@ -25,7 +25,6 @@ class BackgroundSelection : FontDisplay {
 
 	int active_box = -1;
 	ImageSurface add_icon;
-	CutBackgroundCanvas cut_background_canvas;
 	List <string> background_images = new List <string> ();
 	Allocation allocation;
 	Glyph glyph;
@@ -86,55 +85,41 @@ class BackgroundSelection : FontDisplay {
 		cr.restore ();
 			
 	}
-		
-	private bool draw_thumbnail (string file, double x, double y, Context cr, int box_index) {
+	
+	private ImageSurface create_thumbnail (string file) throws GLib.Error {
 		Pixbuf pixbuf;
-		ImageSurface img;
-		uint8* data;
-		uint8* dest;
-		int pixels;
-		int pr, ir;
 		
+		Font font = Supplement.get_current_font ();
+		File folder = font.get_backgrounds_folder ();
+		string fn = Checksum.compute_for_string (ChecksumType.SHA1, file);
+		File original = File.new_for_path (file);
+		File png_image = folder.get_child (@"thumbnail_$(fn).png");
+		
+		if (!png_image.query_exists ()) {
+			pixbuf = new Pixbuf.from_file_at_scale ((!) original.get_path (), 100, 100, true);
+			if (!pixbuf.save ((!) png_image.get_path (), "png")) {
+				warning (@"can't save $((!) png_image.get_path ())");
+			}
+		}
+		
+		return new ImageSurface.from_png ((!) png_image.get_path ());
+	}
+	
+	private bool draw_thumbnail (string file, double x, double y, Context cr, int box_index) {
+		ImageSurface img;
+	
 		try {
-			pixbuf = new Pixbuf.from_file_at_scale (file, 100, 100, true);
+			img = create_thumbnail (file);
 			
-			if (is_null (pixbuf)) {
-				warning ("Failed to load pixbuf.");
-				return false;
+			if (img.status () == Cairo.Status.SUCCESS) {
+				cr.set_source_surface (img, x + 10, y + 10);
+				cr.paint ();
 			}
-			
-			pixels = pixbuf.get_width () * pixbuf.get_height ();
-			
-			img = new ImageSurface (Format.ARGB32, pixbuf.get_width (), pixbuf.get_height ());
-			
-			if (img.status () != Cairo.Status.SUCCESS) {
-				warning (@"Failed to load $file as gdk pixbuf. (height: $(pixbuf.get_height ()), width: $(pixbuf.get_width ()), stride: $(pixbuf.get_rowstride ()))");
-				return false;
-			}
-			
-			data = pixbuf.get_pixels ();
-			dest = img.get_data ();
-			
-			assert (!is_null (data));
-			assert (!is_null (dest));
-
-			pr = pixbuf.get_rowstride () / pixbuf.get_width ();
-			ir = img.get_stride () / img.get_width ();
-			
-			for (int i = 0; i < pixels; i++) {
-				dest[i * ir + 0] = data[i * pr + 2];
-				dest[i * ir + 1] = data[i * pr + 1];
-				dest[i * ir + 2] = data[i * pr + 0];
-				dest[i * ir + 3] = 255;
-			}
-			
-			img = new ImageSurface.for_data ((uchar[])dest, Format.ARGB32, pixbuf.get_width (),  pixbuf.get_height (), img.get_stride ());
-
-			cr.set_source_surface (img, x + 10, y + 10);
-			cr.paint ();
 		} catch (GLib.Error e) {
 			warning (e.message);
+			return false;
 		}
+		
 		return true;	
 	}
 	
@@ -206,29 +191,18 @@ class BackgroundSelection : FontDisplay {
 		file = background_images.nth (active_box - 1).data; // Fixa: check bounds
 		bg = new GlyphBackgroundImage (file);
 		tb = MainWindow.get_tab_bar ();
-		cut_background_canvas = new CutBackgroundCanvas (glyph);
 		
 		bg.reset_scale (glyph);
 		
-		cut_background_canvas.set_background_image (bg);
 		glyph.set_background_visible (true);
 		
 		MainWindow.get_current_glyph ().set_background_image (bg);
 		tb.select_tab_name (MainWindow.get_current_glyph ().get_name ());
-		
-		//tb.select_tab_name (glyph.get_name ());
-		//tb.close_display (this);
-		
-		//tb.add_tab (cut_background_canvas, 110, false);
-
-		cut_background_canvas.set_show_help_lines (false);
-		cut_background_canvas.set_background_visible (true);
 
 		zoom_background = MainWindow.get_tool ("zoom_background_image");
 		zoom_background.select_action (zoom_background);
 
 		MainWindow.get_toolbox ().select_tool_by_name ("cut_background");
-
 	}
 
 	private void add_unique_background (string file) {
@@ -332,16 +306,6 @@ class BackgroundSelection : FontDisplay {
 	public override void scroll_wheel_down (Gdk.EventScroll e) {
 	}
 
-}
-
-class CutBackgroundCanvas : Glyph {
-	Glyph glyph;
-
-	public CutBackgroundCanvas (Glyph g) {
-		base ("Background");
-		glyph = g;
-		redraw_help_lines ();
-	}
 }
 
 }

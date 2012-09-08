@@ -755,6 +755,7 @@ class Path {
 	public bool is_over_boundry_precision (double x, double y, double p) {
 		if (unlikely (ymin == double.MAX)) {
 			warning (@"no bounding box. length ($(points.length ()))");
+			update_region_boundries ();
 		}
 		
 		return (ymin - p <= y <= ymax + p) && (xmin - p <= x <= xmax + p);

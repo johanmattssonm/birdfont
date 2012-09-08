@@ -1077,7 +1077,8 @@ class Font : GLib.Object {
 	}
 	
 	private void parse_background_scale (Glyph g, Xml.Node* node) {
-		GlyphBackgroundImage img = new GlyphBackgroundImage ();
+		GlyphBackgroundImage img;
+		GlyphBackgroundImage? new_img = null;
 		
 		string attr_name;
 		string attr_content;
@@ -1087,10 +1088,17 @@ class Font : GLib.Object {
 			attr_content = prop->children->content;
 							
 			if (attr_name == "src") {
-				img = new GlyphBackgroundImage (attr_content);
-				g.set_background_image (img);
+				new_img = new GlyphBackgroundImage (attr_content);
+				g.set_background_image ((!) new_img);
 			}
 		}
+		
+		if (new_img == null) {
+			warning ("No source for image found.");
+			return;
+		}
+	
+		img = (!) new_img;
 	
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;

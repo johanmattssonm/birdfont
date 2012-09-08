@@ -42,6 +42,7 @@ class Toolbox : DrawingArea {
 	Tool press_tool = new Tool (null); // activate the pressed button on release
 	
 	public SpinButton background_scale = new SpinButton ();
+	public SpinButton precision;
 	
 	public Toolbox (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
@@ -92,14 +93,14 @@ class Toolbox : DrawingArea {
 		
 		// Draw tool modifiers
 		Tool new_point = new Tool ("new_point", "Add new points", 'a');
-		new_point.select_action.connect((self) => {
+		new_point.select_action.connect ((self) => {
 				select_draw_tool ();
 			});
 		
 		draw_tool_modifiers.add_tool (new_point);
 
 		Tool insert_point_on_path = new Tool ("insert_point_on_path", "Add new point on path", 'n');
-		insert_point_on_path.select_action.connect((self) => {
+		insert_point_on_path.select_action.connect ((self) => {
 				select_draw_tool ();
 				pen_tool.begin_from_new_point_on_path ();
 			});
@@ -107,7 +108,7 @@ class Toolbox : DrawingArea {
 		
 		if (Supplement.experimental) {
 			Tool new_point_on_path = new Tool ("new_point_on_path", "Begin new path from point on path", 'n');
-			new_point_on_path.select_action.connect((self) => {
+			new_point_on_path.select_action.connect ((self) => {
 					select_draw_tool ();
 					pen_tool.begin_from_new_point_on_path ();
 				});
@@ -115,7 +116,7 @@ class Toolbox : DrawingArea {
 		}
 
 		Tool tie_editpoint_tool = new Tool ("tie_point", "Tie curve handles for selected edit point", 'w');
-		tie_editpoint_tool.select_action.connect((self) => {
+		tie_editpoint_tool.select_action.connect ((self) => {
 				EditPoint ep;
 				bool tie;
 				
@@ -144,13 +145,28 @@ class Toolbox : DrawingArea {
 			select_draw_tool ();
 		});
 		draw_tool_modifiers.add_tool (erase_tool);	
-				
+
+		// adjust precision
+		precision = new SpinButton ("precision", "Set precision");
+		precision.set_value_round (1);
+
+		precision.new_value_action.connect ((self) => {
+			pen_tool.set_precision (self.get_value ());
+			select_tool (precision);
+			
+		});
+		
+		precision.set_min (0.001);
+		precision.set_max (1);
+		
+		draw_tool_modifiers.add_tool (precision);
+						
 		// path tools
 		Tool union_paths_tool = new MergeTool ("union_paths");
 		path_tool_modifiers.add_tool (union_paths_tool);
 		
 		Tool reverse_path_tool = new Tool ("reverse_path", "Create counter from outline", 'r');
-		reverse_path_tool.select_action.connect((self) => {
+		reverse_path_tool.select_action.connect ((self) => {
 				Glyph g = MainWindow.get_current_glyph ();
 				
 				foreach (Path p in g.active_paths) {
@@ -162,7 +178,7 @@ class Toolbox : DrawingArea {
 		path_tool_modifiers.add_tool (reverse_path_tool);
 
 		Tool move_layer = new Tool ("move_layer", "Move to path to bottom layer", 'd');
-		move_layer.select_action.connect((self) => {
+		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 
 			foreach (Path p in g.active_paths) {
@@ -174,7 +190,7 @@ class Toolbox : DrawingArea {
 		
 		// Character set tools
 		Tool full_unicode = new Tool ("utf_8", "Show full unicode characters set", 'a', CTRL);
-		full_unicode.select_action.connect((self) => {
+		full_unicode.select_action.connect ((self) => {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);	
 				OverView o = MainWindow.get_overview ();
 				GlyphRange gr = new GlyphRange ();
@@ -185,7 +201,7 @@ class Toolbox : DrawingArea {
 		characterset_tools.add_tool (full_unicode);
 
 		Tool custom_character_set = new Tool ("custom_character_set", "Show default characters set", 'r', CTRL);
-		custom_character_set.select_action.connect((self) => {
+		custom_character_set.select_action.connect ((self) => {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);
 				OverView o = MainWindow.get_overview ();
 				GlyphRange gr = new GlyphRange ();
@@ -196,7 +212,7 @@ class Toolbox : DrawingArea {
 		characterset_tools.add_tool (custom_character_set);
 
 		Tool avalilable_characters = new Tool ("available_characters", "Show characters in font", 'd', CTRL);
-		avalilable_characters.select_action.connect((self) => {
+		avalilable_characters.select_action.connect ((self) => {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);
 				OverView o = MainWindow.get_overview ();
 				o.display_all_available_glyphs ();
@@ -205,7 +221,7 @@ class Toolbox : DrawingArea {
 		characterset_tools.add_tool (avalilable_characters);
 
 		Tool delete_glyph = new Tool ("delete_selected_glyph", "Delete selected glyph or path");
-		delete_glyph.select_action.connect((self) => {
+		delete_glyph.select_action.connect ((self) => {
 					OverView o = MainWindow.get_overview ();
 					
 					if (MainWindow.get_current_display () is OverView) {
@@ -260,7 +276,7 @@ class Toolbox : DrawingArea {
 		
 		// help lines, grid and other guidlines
 		Tool help_lines = new Tool ("help_lines", "Show help lines", 'l');
-		help_lines.select_action.connect((self) => {
+		help_lines.select_action.connect ((self) => {
 				bool h;
 				h = glyph_canvas.get_current_glyph ().get_show_help_lines ();
 				glyph_canvas.get_current_glyph ().set_show_help_lines (!h);
@@ -271,7 +287,7 @@ class Toolbox : DrawingArea {
 		guideline_tools.add_tool (help_lines);
 
 		Tool xheight_help_lines = new Tool ("show_xheight_helplines", "Show help lines for x-height and baseline", 'x');
-		xheight_help_lines.select_action.connect((self) => {
+		xheight_help_lines.select_action.connect ((self) => {
 				Glyph g = MainWindow.get_current_glyph ();
 				bool v = !g.get_xheight_lines_visible ();
 				g.set_xheight_lines_visible (v);
@@ -286,7 +302,7 @@ class Toolbox : DrawingArea {
 		guideline_tools.add_tool (xheight_help_lines);
 
 		Tool background_help_lines = new Tool ("background_help_lines", "Show help lines at top and bottom margin", 't');
-		background_help_lines.select_action.connect((self) => {
+		background_help_lines.select_action.connect ((self) => {
 				Glyph g = MainWindow.get_current_glyph ();
 				bool v = !g.get_margin_lines_visible ();
 				g.set_margin_lines_visible (v);
@@ -304,21 +320,21 @@ class Toolbox : DrawingArea {
 
 		// Zoom tools 
 		Tool zoom_in = new Tool ("zoom_in", "zoom in", '+', CTRL);
-		zoom_in.select_action.connect((self) => {
+		zoom_in.select_action.connect ((self) => {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().zoom_in ();
 			});
 		view_tools.add_tool (zoom_in);
 
 		Tool zoom_out = new Tool ("zoom_out", "Zoom out", '-', CTRL);
-		zoom_out.select_action.connect((self) => {
+		zoom_out.select_action.connect ((self) => {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().zoom_out ();
 			});
 		view_tools.add_tool (zoom_out);
 
 		Tool reset_zoom = new Tool ("zoom_1_1", "Zoom to scale 1:1", '0', CTRL);
-		reset_zoom.select_action.connect((self) => {
+		reset_zoom.select_action.connect ((self) => {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().reset_zoom ();
 				glyph_canvas.queue_draw_area(0, 0, glyph_canvas.allocation.width, glyph_canvas.allocation.height);
@@ -378,10 +394,6 @@ class Toolbox : DrawingArea {
 			GlyphBackgroundImage? img = g.get_background_image ();
 			double s = sb.get_value ();
 			
-			if (MainWindow.get_current_display () is CutBackgroundCanvas) {
-				return;
-			}
-			
 			if (img != null) {
 				((!)img).set_img_scale (s, s);
 			}
@@ -400,7 +412,7 @@ class Toolbox : DrawingArea {
 		this.cut_background = cut_background;
 		
 		Tool show_bg = new Tool ("show_background", "Show background image");
-		show_bg.select_action.connect((self) => {
+		show_bg.select_action.connect ((self) => {
 				Glyph g = MainWindow.get_current_glyph ();
 				g.set_background_visible (!g.get_background_visible ());
 				MainWindow.get_glyph_canvas ().redraw ();
@@ -408,7 +420,7 @@ class Toolbox : DrawingArea {
 		background_tools.add_tool (show_bg);
 
 		Tool background_size_to_boundries = new Tool ("size_to_boundries", "Fit image between margin lines", 'F', SHIFT);
-		background_size_to_boundries.select_action.connect((self) => {
+		background_size_to_boundries.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			GlyphBackgroundImage? bg = g.get_background_image ();
 			GlyphBackgroundImage b = (!) bg;
@@ -456,11 +468,11 @@ class Toolbox : DrawingArea {
 		SpinButton background_contrast = new SpinButton ("background_contrast", "Set background contrast");
 		background_contrast.set_value_round (1);
 
-		background_contrast.new_value_action.connect((self) => {
+		background_contrast.new_value_action.connect ((self) => {
 			background_contrast.select_action (self);
 		});
 		
-		background_contrast.select_action.connect((self) => {		
+		background_contrast.select_action.connect ((self) => {		
 			Glyph g = MainWindow.get_current_glyph ();
 			GlyphBackgroundImage? bg = g.get_background_image ();
 			GlyphBackgroundImage b;
@@ -477,11 +489,11 @@ class Toolbox : DrawingArea {
 		SpinButton background_threshold = new SpinButton ("background_threshold", "Set threshold");
 		background_threshold.set_value_round (1);
 
-		background_threshold.new_value_action.connect((self) => {
+		background_threshold.new_value_action.connect ((self) => {
 			background_threshold.select_action (self);
 		});
 		
-		background_threshold.select_action.connect((self) => {		
+		background_threshold.select_action.connect ((self) => {		
 			Glyph g = MainWindow.get_current_glyph ();
 			GlyphBackgroundImage? bg = g.get_background_image ();
 			GlyphBackgroundImage b;

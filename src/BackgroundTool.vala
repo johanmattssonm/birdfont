@@ -54,13 +54,12 @@ class BackgroundTool : Tool {
 		press_action.connect((self, b, x, y) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			GlyphBackgroundImage? bg = g.get_background_image ();
-
-			bool selection = MainWindow.get_current_display () is CutBackgroundCanvas;			
-
-			if (!selection) {
-				if (bg == null) return;
-				((!)bg).handler_press (x, y);
+			
+			if (bg == null) {
+				return;
 			}
+			
+			((!)bg).handler_press (x, y);
 			
 			begin_x = x;
 			begin_y = y;
@@ -80,7 +79,9 @@ class BackgroundTool : Tool {
 			Glyph g = MainWindow.get_current_glyph ();
 			GlyphBackgroundImage? bg = g.get_background_image ();
 			
-			if (bg == null) return;
+			if (bg == null) {
+				return;
+			}
 			
 			img_offset_x = ((!)bg).img_offset_x;
 			img_offset_y = ((!)bg).img_offset_y;
@@ -96,16 +97,11 @@ class BackgroundTool : Tool {
 		});
 		
 		draw_action.connect ((self, cairo_context, glyph) => {
-			bool selection;
 			Glyph g = MainWindow.get_current_glyph ();
 			GlyphBackgroundImage? background_image = g.get_background_image ();
 			if (background_image == null) return;
 			
-			selection = MainWindow.get_current_display () is CutBackgroundCanvas;
-			
-			if (!selection) {
-				((!) background_image).draw_handle (cairo_context, glyph);
-			}
+			((!) background_image).draw_handle (cairo_context, glyph);
 		});
 	}
 		
@@ -119,7 +115,7 @@ class BackgroundTool : Tool {
 		if (background_image == null) return;
 		 		
 		bg.handler_move (x, y);
-		
+	
 		if (!(move_bg || resize_bg)) return;
 		
 		dx = x - begin_x;

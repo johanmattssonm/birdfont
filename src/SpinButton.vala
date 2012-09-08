@@ -35,6 +35,9 @@ class SpinButton : Tool {
 	double begin_y = 0;
 	double begin_value = 0;
 	
+	double max = 9.999;
+	double min = 0;
+	
 	public SpinButton (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		base (null , tip, key, modifier_flag);
 		
@@ -78,6 +81,14 @@ class SpinButton : Tool {
 		});
 	}
 	
+	public void set_max (double max) {
+		this.max = max;
+	}
+
+	public void set_min (double min) {
+		this.min = min;
+	}
+	
 	public void increase () {	
 		if (deka == 9 && deci == 9 && centi == 9 && milli == 9) {
 			return;
@@ -100,6 +111,10 @@ class SpinButton : Tool {
 			deci = 0;
 		}
 		
+		if (get_value () > max) {
+			set_value_round (max, false);
+		}
+
 		new_value_action (this);
 	}
 
@@ -128,21 +143,46 @@ class SpinButton : Tool {
 		if (get_value () < 0.05) { // lower limit
 			set_value_round (0.05);
 		}
-		
+
+		if (get_value () < min) {
+			set_value_round (min, false);
+		}
+				
 		new_value_action (this);
 	}
 
-	public void set_value (string v) 
-		requires (v.char_count () >= 5)
-	{
+	public void set_value (string new_value, bool check_boundries = true, bool emit_signal = true) {
+		string v = new_value;
+		
+		while (!(v.char_count () >= 5)) {
+			if (v.index_of (".") == -1) {
+				v += ".";
+			} else {
+				v += "0";
+			}
+			
+			return;
+		}
+		
 		deka = (int8) int.parse (v.substring (0, 1));
 		deci = (int8) int.parse (v.substring (2, 1));
 		centi = (int8) int.parse (v.substring (3, 1));
 		milli = (int8) int.parse (v.substring (4, 1));
-		new_value_action (this);
+		
+		if (emit_signal) {
+			new_value_action (this);
+		}
+		
+		if (check_boundries && get_value () > max) {
+			set_value_round (max, false);
+		}
+
+		if (check_boundries && get_value () < min) {
+			set_value_round (min, false);
+		}
 	}
 
-	public void set_value_round (double v) {
+	public void set_value_round (double v, bool check_boundries = true, bool emit_signal = true) {
 		int8 m;
 		
 		v += 0.005;
@@ -151,7 +191,7 @@ class SpinButton : Tool {
 		if (v < 0.001) v = 0.001;
 				
 		m = milli; // ignore milli value
-		set_value (@"$v");
+		set_value (@"$v", check_boundries, emit_signal);
 		milli = m;
 	}
 	

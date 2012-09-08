@@ -65,8 +65,6 @@ class PenTool : Tool {
 		press_action.connect ((self, b, x, y) => {
 			last_point_x = x;
 			last_point_y = y;
-			
-			precision = 1;
 
 			press (b, x, y);
 		});
@@ -108,17 +106,26 @@ class PenTool : Tool {
 		key_release_action.connect ((self, keyval) => {
 			if (keyval == Key.SHIFT_LEFT) {
 				adjust_precision = false;
-				precision = 1.0 / Path.distance (adjust_precision_begin_x, last_point_x, adjust_precision_begin_y, last_point_y);
+				set_precision (1.0 / Path.distance (adjust_precision_begin_x, last_point_x, adjust_precision_begin_y, last_point_y));
 				
 				precision *= 30;
 				
 				if (precision > 1) {
-					precision = 1;
+					set_precision (precision);
 				}				
 			}
 		});
 	}
-		
+	
+	public double get_precision () {
+		return precision;
+	}
+	
+	public void set_precision (double p) {
+		precision = p;
+		MainWindow.get_toolbox ().precision.set_value_round (p, false, false);
+	}
+	
 	public void move (double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		EditPoint ep;

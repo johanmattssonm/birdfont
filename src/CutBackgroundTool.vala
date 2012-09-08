@@ -81,7 +81,7 @@ class CutBackgroundTool : Tool {
 				cr.set_line_width (2.0);
 				cr.set_source_rgba (0, 0, 1, 0.3);
 				cr.rectangle (fmin (x1, x2), fmin (y1, y2), fabs (x1 - x2), fabs (y1 - y2));
-				cr.fill_preserve ();
+				cr.stroke ();
 				cr.restore ();
 			}
 		});
@@ -157,8 +157,8 @@ class CutBackgroundTool : Tool {
 		ty *= g.view_zoom;
 		tx *= g.view_zoom;
 
-		vx = g.path_coordinate_x (tx) - g.path_coordinate_x (x1);			
-		vy = g.path_coordinate_y (ty) - g.path_coordinate_y (y1);
+		vx = g.path_coordinate_x (tx) - g.path_coordinate_x (fmin (x1, x2));			
+		vy = g.path_coordinate_y (ty) - g.path_coordinate_y (fmin (y1, y2));
 		
 		x = (int) (vx / bg.img_scale_x);
 		y = (int) (-vy / bg.img_scale_y);
@@ -173,14 +173,6 @@ class CutBackgroundTool : Tool {
 		cr = new Context (sr);
 	
 		cr.scale (bg.img_scale_x, bg.img_scale_y);
-		
-		/*
-		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
-		cr.rectangle (0, 0, w, h);
-		cr.fill ();
-		cr.restore ();
-		*/
 		
 		cr.set_source_surface (sg, x, y);
 		cr.paint ();

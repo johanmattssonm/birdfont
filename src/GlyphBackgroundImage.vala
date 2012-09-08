@@ -365,7 +365,7 @@ class GlyphBackgroundImage {
 		int prev_handle = active_handle;
 
 		if (is_over_rotate (nx, ny)) {
-			active_handle = 2;		
+			active_handle = 2;
 		} else if (is_over_resize (nx, ny)) {
 			active_handle = 1;
 		} else {

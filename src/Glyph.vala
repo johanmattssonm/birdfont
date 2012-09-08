@@ -135,7 +135,7 @@ class Glyph : FontDisplay {
 				}
 			}
 			
-			((!) p).set_selected (true);
+			// ((!) p).set_selected (true);
 			
 			active_paths.append ((!) p);
 		}
@@ -237,8 +237,15 @@ class Glyph : FontDisplay {
 		}
 	}
 
-	public void set_background_image (GlyphBackgroundImage bg) {
+	public void set_background_image (GlyphBackgroundImage? b) {
 		double default_img_offset_x, default_img_offset_y;
+		GlyphBackgroundImage bg;
+		
+		if (b == null) {
+			background_image = null;
+		}
+		
+		bg = (!) b;
 		
 		default_img_offset_x = -get_width () / 2;
 		default_img_offset_y = get_height () / 4;
@@ -1044,7 +1051,6 @@ class Glyph : FontDisplay {
 			if (p.is_editable ()) {
 				r = true;
 				p.close ();
-				redraw_path_region (p);
 			}
 		}
 		
@@ -1057,6 +1063,8 @@ class Glyph : FontDisplay {
 		
 		delete_invisible_paths ();
 		
+		queue_draw_area (0, 0, allocation.width, allocation.height);
+		
 		return r;
 	}
 
@@ -1065,8 +1073,9 @@ class Glyph : FontDisplay {
 		
 		foreach (var p in path_list) {
 			p.set_editable (true);
-			redraw_path_region (p);
 		}
+		
+		queue_draw_area (0, 0, allocation.width, allocation.height);
 	}
 	
 	public void redraw_path_region (Path p) {
@@ -1326,8 +1335,6 @@ class Glyph : FontDisplay {
 		
 		// plot_outline (cr);
 			
-		cr.save ();
-		
 		baseline = get_line ("baseline").pos;
 		left = get_line ("left").pos;
 		
@@ -1342,16 +1349,14 @@ class Glyph : FontDisplay {
 		if (new_point_on_path != null) {
 			Path.draw_edit_point_center ((!) new_point_on_path, cr);
 		}
-
-		cr.restore ();
 	}
 	
 	private void draw_zoom_area(Context cr) {
 		cr.save ();
 		cr.set_line_width (2.0);
-		cr.set_source_rgba (1, 0, 0, 0.3);
+		cr.set_source_rgba (0, 0, 1, 0.3);
 		cr.rectangle (Math.fmin (zoom_x1, zoom_x2), Math.fmin (zoom_y1, zoom_y2), Math.fabs (zoom_x1 - zoom_x2), Math.fabs (zoom_y1 - zoom_y2));
-		cr.fill_preserve ();
+		cr.stroke ();
 		cr.restore ();
 	}
 
@@ -1403,6 +1408,12 @@ class Glyph : FontDisplay {
 			cmp.restore ();
 		}
 
+		cmp.save ();
+		cmp.scale (view_zoom, view_zoom);
+		cmp.translate (-view_offset_x, -view_offset_y);
+		draw_path (cmp); // This does mess up scale (sometimes) for unknown reasons	
+		cmp.restore ();
+		
 		cmp.save (); 
 		tool = MainWindow.get_toolbox ().get_current_tool ();
 		tool.draw_action (tool, cmp, this);
@@ -1413,12 +1424,6 @@ class Glyph : FontDisplay {
 			draw_zoom_area (cmp);
 			cmp.restore ();
 		}
-			
-		cmp.save ();
-		cmp.scale (view_zoom, view_zoom);
-		cmp.translate (-view_offset_x, -view_offset_y);
-		draw_path (cmp); // This does mess up scale for some unknown reason		
-		cmp.restore ();
 		
 		cr.save ();
 		cr.set_source_surface (ps, 0, 0);
