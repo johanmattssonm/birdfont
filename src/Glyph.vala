@@ -1400,24 +1400,23 @@ class Glyph : FontDisplay {
 			((!)background_image).draw (cr, allocation, view_offset_x, view_offset_y, view_zoom);
 			cmp.restore ();
 		}
-						
-		cmp.save ();
-		cmp.scale (view_zoom, view_zoom);
-		cmp.translate (-view_offset_x, -view_offset_y);
-		draw_path (cmp);
-		cmp.restore ();
-		
+
 		cmp.save (); 
 		tool = MainWindow.get_toolbox ().get_current_tool ();
 		tool.draw_action (tool, cmp, this);
 		cmp.restore ();
-		
-		// detta kanske är en del av verktyget
+
 		if (zoom_area_is_visible) {
 			cmp.save ();
 			draw_zoom_area (cmp);
 			cmp.restore ();
 		}
+			
+		cmp.save ();
+		cmp.scale (view_zoom, view_zoom);
+		cmp.translate (-view_offset_x, -view_offset_y);
+		draw_path (cmp); // This does mess up scale for some unknown reason		
+		cmp.restore ();
 		
 		cr.save ();
 		cr.set_source_surface (ps, 0, 0);

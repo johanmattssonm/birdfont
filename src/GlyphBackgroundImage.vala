@@ -28,9 +28,8 @@ class GlyphBackgroundImage {
 	public double img_scale_x = 1;
 	public double img_scale_y = 1;
 	public double img_rotation = 0;
-	public int width_margin = 0;
+	public int size_margin = 0;
 
-	
 	public int active_handle = -1;
 	public int selected_handle = -1;
 	
@@ -52,6 +51,7 @@ class GlyphBackgroundImage {
 	
 	public GlyphBackgroundImage (string fn = "") {
 		path = fn;
+		size_margin = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
 	}
 	
 	public ImageSurface get_img () {
@@ -221,6 +221,8 @@ class GlyphBackgroundImage {
 		Surface st;
 		Context ct;
 
+		int wc, hc;
+
 		if (unlikely (get_img ().status () != Cairo.Status.SUCCESS)) {
 			stderr.printf (@"Background image is invalid. (\"$path\")\n");
 			MainWindow.get_current_glyph ().set_background_visible (false);
@@ -228,16 +230,14 @@ class GlyphBackgroundImage {
 		}
 		
 		// add margin
-		width_margin = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
-
-		sg = new Surface.similar (get_img (), get_img ().get_content (), width_margin, width_margin);
+		sg = new Surface.similar (get_img (), get_img ().get_content (), size_margin, size_margin);
 		cg = new Context (sg);
 		
-		int wc = (int) ((width_margin - get_img ().get_width ()) / 2);
-		int hc = (int) ((width_margin - get_img ().get_height ()) / 2);
+		wc = (int) ((size_margin - get_img ().get_width ()) / 2);
+		hc = (int) ((size_margin - get_img ().get_height ()) / 2);
 
-		cg.set_source_rgba (0, 0.5, 0, 1);
-		cg.rectangle (0, 0, width_margin, width_margin);
+		cg.set_source_rgba (1, 1, 1, 1);
+		cg.rectangle (0, 0, size_margin, size_margin);
 		cg.fill ();
 		
 		cg.set_source_surface (get_img (), wc, hc);
@@ -254,18 +254,22 @@ class GlyphBackgroundImage {
 		w = (int) iw;
 		h = (int) ih;
 
-		oy = width_margin;
-		ox = width_margin;
+		oy = size_margin;
+		ox = size_margin;
 
 		// rotate image
 		s = new Surface.similar (sg, sg.get_content (), (int) (ox), (int) (oy));
 		c = new Context (s);
 	
 		c.save ();
-	
-   		c.translate (width_margin * 0.5, width_margin * 0.5);
+
+		c.set_source_rgba (1, 1, 1, 1);
+		c.rectangle (0, 0, size_margin, size_margin);
+		c.fill ();
+			
+   		c.translate (size_margin * 0.5, size_margin * 0.5);
 		c.rotate (img_rotation);
-		c.translate (-width_margin * 0.5, -width_margin * 0.5);
+		c.translate (-size_margin * 0.5, -size_margin * 0.5);
 
 		c.set_source_surface (cg.get_target (), 0, 0);
 		c.paint ();	
@@ -276,10 +280,11 @@ class GlyphBackgroundImage {
 		ct = new Context (st);
 		ct.save ();
 
-		double xmip = img_offset_x - Glyph.path_coordinate_x (width_margin / 2.0) + view_offset_x;
-		double ymip = img_offset_y - Glyph.path_coordinate_y (width_margin / 2.0) - view_offset_y;
+		ct.set_source_rgba (1, 1, 1, 1);
+		ct.rectangle (0, 0, allocation.width, allocation.height);
+		ct.fill ();
 
-		// scale
+		// scale both canvas and image at the same time; rather tricky.
 		scale_x = view_zoom * img_scale_x;
 		scale_y = view_zoom * img_scale_y;
 		
@@ -317,8 +322,8 @@ class GlyphBackgroundImage {
 		double a, b;
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		x = img_offset_x - g.view_offset_x + (width_margin / 2) * img_scale_x;
-		y = img_offset_y - g.view_offset_y + (width_margin / 2) * img_scale_y;
+		x = img_offset_x - g.view_offset_x + (size_margin / 2) * img_scale_x;
+		y = img_offset_y - g.view_offset_y + (size_margin / 2) * img_scale_y;
 
 		y *= g.view_zoom;
 		x *= g.view_zoom;
@@ -345,7 +350,7 @@ class GlyphBackgroundImage {
 		size = 12 * g.view_zoom;
 
 		x = img_offset_x - g.view_offset_x;
-		y = img_offset_y - g.view_offset_y + (width_margin) * img_scale_y;
+		y = img_offset_y - g.view_offset_y + (size_margin) * img_scale_y;
 				
 		y *= g.view_zoom;
 		x *= g.view_zoom;
@@ -381,13 +386,19 @@ class GlyphBackgroundImage {
 		double x, y;
 		cr.save ();
 		
-		cr.scale (g.view_zoom, g.view_zoom);
+		// cr.scale (g.view_zoom, g.view_zoom);
+		
 		cr.set_source_rgba (1, 0, 0.3, 1);
 
 		x = img_offset_x - g.view_offset_x;
-		y = img_offset_y - g.view_offset_y + (width_margin) * img_scale_y;
+		y = img_offset_y - g.view_offset_y + (size_margin) * img_scale_y;
+				
+		y *= g.view_zoom;
+		x *= g.view_zoom;
+				
+		draw_handle_triangle (x, y, cr, g, 6);
 		
-		draw_handle_triangle (x - 1, y - 1, cr, g, 6);
+		draw_handle_triangle (0, 0, cr, g, 6);
 										
 		cr.restore ();
 	}
@@ -405,8 +416,8 @@ class GlyphBackgroundImage {
 		else if (active_handle == 2) cr.set_source_rgba (0, 0, 0.3, 1);
 		else cr.set_source_rgba (0.7, 0.7, 0.8, 1);
 
-		x = img_offset_x - g.view_offset_x + (width_margin / 2) * img_scale_x;
-		y = img_offset_y - g.view_offset_y + (width_margin / 2) * img_scale_y;
+		x = img_offset_x - g.view_offset_x + (size_margin / 2) * img_scale_x;
+		y = img_offset_y - g.view_offset_y + (size_margin / 2) * img_scale_y;
 				
 		cr.rectangle (x, y, 5 * ivz, 5 * ivz);
 		cr.fill ();
@@ -441,7 +452,7 @@ class GlyphBackgroundImage {
 		else if (active_handle == 1) cr.set_source_rgba (0, 0, 0.3, 1);
 		else cr.set_source_rgba (0.7, 0.7, 0.8, 1);	
 
-		size = (8 * ivz) * s;
+		size = (8) * s;
 		
 		cr.scale (1, 1);
 		cr.new_path ();

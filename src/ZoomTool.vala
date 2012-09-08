@@ -81,10 +81,10 @@ class ZoomTool : Tool {
 		
 		bg = (!) g.get_background_image ();
 		
-		x = (int) (Glyph.xc () + bg.img_offset_x);
-		y = (int) (Glyph.yc () + bg.img_offset_y);
+		x = (int) (bg.img_offset_x);
+		y = (int) (bg.img_offset_y);
 		
-		g.set_zoom_area (x, y, (int) (x + bg.get_current_width ()), (int) (y + bg.get_current_height ()));
+		g.set_zoom_area (x, y, (int) (x + bg.size_margin * bg.img_scale_x), (int) (y + bg.size_margin * bg.img_scale_y));
 		g.set_zoom_from_area ();
 	}
 

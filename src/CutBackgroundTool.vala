@@ -44,13 +44,7 @@ class CutBackgroundTool : Tool {
 		deselect_action.connect ((self) => {
 		});
 		
-		press_action.connect((self, b, x, y) => {
-			bool selection = MainWindow.get_current_display () is CutBackgroundCanvas;
-
-			if (!selection) {
-				return;
-			}
-						
+		press_action.connect((self, b, x, y) => {				
 			if (!is_over_rectangle (x, y)) {
 				x1 = x;
 				y1 = y;
@@ -58,13 +52,11 @@ class CutBackgroundTool : Tool {
 				cut_background_is_moving = true;
 				cut_background_is_visible = true;
 			} else {
-		
 				do_cut ();
 				
 				cut_background_is_visible = false;
 				cut_background_is_moving = false;
 			}
-			
 		});
 
 		release_action.connect((self, b, x, y) => {
@@ -78,9 +70,9 @@ class CutBackgroundTool : Tool {
 			if (cut_background_is_moving) {
 				x2 = x;
 				y2 = y;
+				
+				MainWindow.get_glyph_canvas ().redraw ();
 			}
-			
-			MainWindow.get_glyph_canvas ().redraw ();
 		});
 		
 		draw_action.connect ((self, cr, glyph) => {
@@ -92,6 +84,20 @@ class CutBackgroundTool : Tool {
 				cr.fill_preserve ();
 				cr.restore ();
 			}
+		});
+
+		new_image.connect ((file) => {
+			Tool zoom_background;
+			Glyph glyph = MainWindow.get_current_glyph ();
+			TabBar tb = MainWindow.get_tab_bar ();
+			
+			glyph.set_background_image (new GlyphBackgroundImage (file));
+			tb.select_tab_name (glyph.get_name ());
+			
+			glyph.set_background_visible (true);
+			
+			zoom_background = MainWindow.get_tool ("zoom_background_image");
+			zoom_background.select_action (zoom_background);
 		});
 
 	}
@@ -125,49 +131,68 @@ class CutBackgroundTool : Tool {
 		Surface sr;
 		Context cr;
 		
+		double tx, ty, vx, vy;	
 		if (b == null) {
 			return;
 		}
 
+		// Add margin
+		Surface sg = new Surface.similar (bg.get_img (), bg.get_img ().get_content (), bg.size_margin, bg.size_margin);
+		Context cg = new Context (sg);
+		
+		int wc = (int) ((bg.size_margin - bg.get_img ().get_width ()) / 2);
+		int hc = (int) ((bg.size_margin - bg.get_img ().get_height ()) / 2);
+
+		cg.set_source_rgba (1, 1, 1, 1);
+		cg.rectangle (0, 0, bg.size_margin, bg.size_margin);
+		cg.fill ();
+		
+		cg.set_source_surface (bg.get_img (), wc, hc);
+		cg.paint ();
+
+		// find start
+		tx = bg.img_offset_x - g.view_offset_x;
+		ty = bg.img_offset_y - g.view_offset_y;
+				
+		ty *= g.view_zoom;
+		tx *= g.view_zoom;
+
+		vx = g.path_coordinate_x (tx) - g.path_coordinate_x (x1);			
+		vy = g.path_coordinate_y (ty) - g.path_coordinate_y (y1);
+		
+		x = (int) (vx / bg.img_scale_x);
+		y = (int) (-vy / bg.img_scale_y);
+
+		// do the cut
 		img = bg.get_img ();
 
 		w = (int) (get_width () / g.view_zoom);
 		h = (int) (get_height () / g.view_zoom);
 
-		sr = new Surface.similar (img, img.get_content (), w, h);
+		sr = new Surface.similar (sg, img.get_content (), w, h);
 		cr = new Context (sr);
+	
+		cr.scale (bg.img_scale_x, bg.img_scale_y);
 		
-		// fine for 1:1 but not for scaled image
-		x = bg.img_offset_x;
-		y = bg.img_offset_y;
-		
-		x -= fmin (x1, x2);
-		y -= fmin (y1, y2);
-
-		x *= Glyph.ivz ();
-		y *= Glyph.ivz ();
-
-		x += Glyph.xc ();
-		y += Glyph.yc ();
-
-		x -= g.view_offset_x;
-		y -= g.view_offset_y;
-
-		x -= bg.img_offset_x * (Glyph.ivz () - 1);
-		y -= bg.img_offset_y * (Glyph.ivz () - 1);
-
+		/*
 		cr.save ();
 		cr.set_source_rgba (1, 1, 1, 1);
 		cr.rectangle (0, 0, w, h);
 		cr.fill ();
 		cr.restore ();
+		*/
 		
-		cr.set_source_surface (img, x, y);
+		cr.set_source_surface (sg, x, y);
 		cr.paint ();
 		
 		save_img (sr, g);
 		
-		cr.restore ();		
+		cr.restore ();
+		
+		// 
+		
+		bg.img_offset_x = x + g.view_offset_x;
+		bg.img_offset_y = y + g.view_offset_y;		
 	}
 	
 	void save_img (Surface sr, Glyph g) {
@@ -197,6 +222,7 @@ class CutBackgroundTool : Tool {
 		
 		newbg = new GlyphBackgroundImage (fn);
 		g.set_background_image (newbg);
+		
 		newbg.reset_scale (g);
 		
 		new_image (fn);
