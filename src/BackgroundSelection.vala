@@ -93,7 +93,12 @@ class BackgroundSelection : FontDisplay {
 		File folder = font.get_backgrounds_folder ();
 		string fn = Checksum.compute_for_string (ChecksumType.SHA1, file);
 		File original = File.new_for_path (file);
-		File png_image = folder.get_child (@"thumbnail_$(fn).png");
+		File thumbnail_path = folder.get_child (@"thumbnail");
+		File png_image = thumbnail_path.get_child (@"$(fn).png");
+		
+		if (!thumbnail_path.query_exists ()) {
+			DirUtils.create ((!) thumbnail_path.get_path (), 0xFFFFFF);
+		}
 		
 		if (!png_image.query_exists ()) {
 			pixbuf = new Pixbuf.from_file_at_scale ((!) original.get_path (), 100, 100, true);

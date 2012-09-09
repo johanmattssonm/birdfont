@@ -49,7 +49,7 @@ class GlyphBackgroundImage {
 
 	public signal void updated ();
 	
-	public GlyphBackgroundImage (string fn = "") {
+	public GlyphBackgroundImage (string fn) {
 		path = fn;
 		size_margin = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
 	}
@@ -65,6 +65,42 @@ class GlyphBackgroundImage {
 		}
 		
 		return (!) background_image;
+	}
+
+	public string get_png_base64 () {
+		try {
+			File file = File.new_for_path (path);
+			var file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
+			uint8[] buffer = new uint8[file_info.get_size ()];
+			FileInputStream file_stream = file.read ();
+			DataInputStream png_stream = new DataInputStream (file_stream);
+
+			png_stream.read (buffer);
+			
+			return Base64.encode (buffer);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+		
+		return "";
+	}
+
+	public string get_sha1 () {
+		try {
+			File file = File.new_for_path (path);
+			var file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
+			uint8[] buffer = new uint8[file_info.get_size ()];
+			FileInputStream file_stream = file.read ();
+			DataInputStream png_stream = new DataInputStream (file_stream);
+
+			png_stream.read (buffer);
+			
+			return Checksum.compute_for_data (ChecksumType.SHA1, buffer);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+		
+		return "";
 	}
 	
 	private void create_png () {

@@ -308,8 +308,6 @@ class Font : GLib.Object {
 		GlyphCollection? gc = get_cached_glyph_collection (glyph_collection.get_name ());
 		unowned List<string>? nl;
 		
-		// print (@"Adding: $(glyph_collection.get_name ())\n");
-		
 		if (glyph_collection.get_name () == "") {
 			warning ("Refusing to insert glyph with name \"\", null character should be named null.");
 			return;
@@ -597,7 +595,32 @@ class Font : GLib.Object {
 					os.put_string (@"<hkern left=\"U+$l\" right=\"U+$r\" kerning=\"$(k.val)\"/>\n");
 				}
 			});
-			
+
+			glyph_cache.for_each ((gc) => {
+				GlyphBackgroundImage bg;
+				
+				try {
+					bool selected;
+					foreach (Glyph g in gc.get_version_list ().glyphs) {
+						
+						if (g.get_background_image () != null) {
+							bg = (!) g.get_background_image ();
+							
+							os.put_string (@"<background-image sha1=\"");
+							os.put_string (bg.get_sha1 ());
+							os.put_string ("\" ");
+							os.put_string (" data=\"");
+							os.put_string (bg.get_png_base64 ());
+							os.put_string ("");
+							os.put_string ("\" />\n");	
+						}
+					}
+				} catch (GLib.Error ef) {
+					stderr.printf (@"Failed to save $path \n");
+					stderr.printf (@"$(ef.message) \n");
+				}
+			});
+						
 			os.put_string ("</font>");
 			
 		} catch (GLib.Error e) {
@@ -660,7 +683,7 @@ class Font : GLib.Object {
 			
 			double rotation = background_image.img_rotation;
 			
-			os.put_string (@"\t<background src =\"$(background_image.get_path ())\" offset_x=\"$off_x\" offset_y=\"$off_y\" scale_x=\"$scale_x\" scale_y=\"$scale_y\" rotation=\"$rotation\"/>\n");
+			os.put_string (@"\t<background sha1=\"$(background_image.get_sha1 ())\" offset_x=\"$off_x\" offset_y=\"$off_y\" scale_x=\"$scale_x\" scale_y=\"$scale_y\" rotation=\"$rotation\"/>\n");
 		}
 		
 		os.put_string ("</glyph>\n\n"); 
@@ -812,13 +835,9 @@ class Font : GLib.Object {
 	public bool parse_file (string path) throws GLib.Error {
 		Parser.init ();
 		
-		Xml.Doc* doc = Parser.parse_file (path);
-		Xml.Node* root = doc->get_root_element ();
-
-		if (root == null) {
-			delete doc;
-			return false;
-		}
+		Xml.Doc* doc;
+		Xml.Node* root;
+		Xml.Node* node;
 
 		// set this path as file for this font
 		font_file = path;
@@ -831,7 +850,18 @@ class Font : GLib.Object {
 			background_images.remove_link (background_images.first ());
 		}
 
-		Xml.Node* node = root;
+		create_background_files (path);
+
+		doc = Parser.parse_file (path);
+		root = doc->get_root_element ();
+		
+		if (root == null) {
+			delete doc;
+			return false;
+		}
+
+		node = root;
+		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 		
 			if (iter->name == "glyph") {
@@ -868,7 +898,7 @@ class Font : GLib.Object {
 
 			if (iter->name == "svg-export") {
 				svg_export = bool.parse (iter->children->content);
-			}			
+			}
 			
 		}
     
@@ -876,6 +906,34 @@ class Font : GLib.Object {
 		Parser.cleanup ();
 
 		return true;
+	}
+	
+	private void create_background_files (string path) {
+		Xml.Doc* doc = Parser.parse_file (path);
+		Xml.Node* root;
+		Xml.Node* node;
+		
+		root = doc->get_root_element ();
+		
+		if (root == null) {
+			delete doc;
+			return;
+		}
+
+		node = root;
+		
+		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
+			if (iter->name == "name") {
+				name = iter->children->content;
+			}
+			
+			if (iter->name == "background-image") {
+				parse_background_image (iter);
+			}
+		}
+    
+		delete doc;
+		Parser.cleanup ();
 	}
 	
 	private void parse_kerning (Xml.Node* node) {
@@ -909,6 +967,56 @@ class Font : GLib.Object {
 		}
 		
 		set_kerning (left, right, double.parse (kern));
+	}
+	
+	private void parse_background_image (Xml.Node* node) 
+		requires (node != null)
+	{
+		string attr_name;
+		string attr_content;
+		
+		string file = "";
+		string data = "";
+		
+		File img_dir;
+		File img_file;
+		FileOutputStream file_stream;
+		DataOutputStream png_stream;
+		
+		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+			return_if_fail (!is_null (prop->name));
+			return_if_fail (!is_null (prop->children));
+			return_if_fail (!is_null (prop->children->content));
+			
+			attr_name = prop->name;
+			attr_content = prop->children->content;
+			
+			if (attr_name == "sha1") {
+				file = attr_content;
+			}
+			
+			if (attr_name == "data") {
+				data = attr_content;
+			}
+		}
+		
+		img_dir = get_backgrounds_folder ().get_child ("parts");
+
+		if (!img_dir.query_exists ()) {
+			DirUtils.create ((!) img_dir.get_path (), 0xFFFFFF);
+		}
+	
+		img_file = img_dir.get_child (@"$(file).png");
+		
+		if (img_file.query_exists ()) {
+			return;
+		}
+		
+		file_stream = img_file.create (FileCreateFlags.REPLACE_DESTINATION);
+		png_stream = new DataOutputStream (file_stream);
+
+		png_stream.write (Base64.decode (data));
+		png_stream.close ();
 	}
 	
 	private void parse_background (Xml.Node* node) 
@@ -1083,12 +1191,20 @@ class Font : GLib.Object {
 		string attr_name;
 		string attr_content;
 		
+		File img_file = get_backgrounds_folder ().get_child ("parts");
+		
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
-							
-			if (attr_name == "src") {
-				new_img = new GlyphBackgroundImage (attr_content);
+			
+			if (attr_name == "sha1") {
+				img_file = img_file.get_child (attr_content + ".png");
+
+				if (!img_file.query_exists ()) {
+					warning (@"Background file has not been created yet. $((!) img_file.get_path ())");
+				}
+				
+				new_img = new GlyphBackgroundImage ((!) img_file.get_path ());
 				g.set_background_image ((!) new_img);
 			}
 		}
@@ -1232,7 +1348,6 @@ class Font : GLib.Object {
 			stderr.printf (@"Failed to delete backup\n");
 			stderr.printf (@"$(e.message) \n");
 		}
-
 	}
 		
 	public static string to_hex (unichar ch) {
