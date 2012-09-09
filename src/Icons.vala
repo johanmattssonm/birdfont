@@ -44,7 +44,7 @@ class Icons {
 		return img;
 	}
 	
-	private static File find_icon (string name) {
+	public static File find_icon (string name) {
 		File f;
 
 		f = find_file (icon_dir, name);

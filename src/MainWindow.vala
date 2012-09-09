@@ -162,6 +162,8 @@ internal class MainWindow : Gtk.Window {
 			return true;
 		});
 		
+		set_icon_from_file ((!) Icons.find_icon ("window_icon.png").get_path ());
+		
 		show_all ();
 	}
 
