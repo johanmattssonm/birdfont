@@ -373,6 +373,10 @@ os.put_string (
 
 		export_mutex.lock ();
 
+		if (Supplement.win32) {
+			async = false;
+		}
+
 		while (ExportTool.export_thread_is_running) {
 			export_mutex.unlock ();
 			Thread.usleep (100);
