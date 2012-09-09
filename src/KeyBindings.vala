@@ -108,6 +108,16 @@ class BindingList {
 	}
 }
 
+class ExportFonts : ShortCut {
+	
+	public override void run () {
+		ExportTool.export_all ();
+	}
+	
+	public override uint get_default_modifier ()      { return CTRL; }
+	public override uint get_default_key ()           { return 'e';	}	
+	public override unowned string get_description () { return "Export"; }
+}
 
 class ShowPreview : ShortCut {
 	

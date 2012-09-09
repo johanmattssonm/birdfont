@@ -1602,11 +1602,16 @@ class Glyph : FontDisplay {
 
 		remove_empty_paths ();
 		boundries (out x1, out y1, out x2, out y2);
+
+		if (x2 - x1 < 1 || y2 - y1 < 1) { // create an empty thumbnail 
+			img = new ImageSurface (Format.ARGB32, 100, 100);
+		} else {
+			img = new ImageSurface (Format.ARGB32, (int) (x2 - x1), (int) (y2 - y1));
+		}
 		
 		gx = left_limit - x1;
 		gy = (y2 - y1) + font.base_line + y1;
 		
-		img = new ImageSurface (Format.ARGB32, (int) (x2 - x1), (int) (y2 - y1));
 		cr = new Context (img);
 		
 		Svg.draw_svg_path (cr, get_svg_data (), gx, gy, 1.0);	

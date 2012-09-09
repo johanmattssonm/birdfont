@@ -220,7 +220,7 @@ class Toolbox : DrawingArea {
 			});
 		characterset_tools.add_tool (avalilable_characters);
 
-		Tool delete_glyph = new Tool ("delete_selected_glyph", "Delete selected glyph or path");
+		Tool delete_glyph = new Tool ("delete_selected_glyph", "Delete selected glyph");
 		delete_glyph.select_action.connect ((self) => {
 					OverView o = MainWindow.get_overview ();
 					
@@ -368,7 +368,7 @@ class Toolbox : DrawingArea {
 			});
 		view_tools.add_tool (zoom_bg);
 
-		Tool zoom_prev = new Tool ("prev", "previous view", 'j', CTRL);
+		Tool zoom_prev = new Tool ("prev", "Previous view", 'j', CTRL);
 		zoom_prev.select_action.connect((self) => {
 				zoom_tool.previous_view ();
 			});

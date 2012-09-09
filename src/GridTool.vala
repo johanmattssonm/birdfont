@@ -33,7 +33,7 @@ class GridTool : Tool {
 	public static List <SpinButton> sizes;
 	
 	public GridTool (string n) {
-		base (n, "show grid", 'g', NONE);
+		base (n, "Show grid", 'g', NONE);
 		
 		horizontal = new List <Line> ();
 		vertical = new List <Line> ();

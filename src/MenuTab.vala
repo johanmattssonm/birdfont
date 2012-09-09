@@ -87,6 +87,9 @@ class MenuTab : FontDisplay {
 			show_kerning_context ();
 		});	
 
+		add_html_callback ("help", (val) => {
+			MainWindow.get_tool_tip ().show_text (val);
+		});
 	}
 		
 	public override string get_name () {
@@ -117,13 +120,13 @@ class MenuTab : FontDisplay {
 <body>
 	<div class="inner_format_box">
 		<div class="heading"><h2>Menu</h2></div>
-		<div class="menu_item" onclick="call ('newfile:');">New</div>
-		<div class="menu_item" onclick="call ('open:');">Open</div>
-		<div class="menu_item" onclick="call ('save:');">Save</div>
-		<div class="menu_item" onclick="call ('save_as:');">Save as</div>
-		<div class="menu_item" onclick="call ('kerning_context:');">Kerning context</div>
-		<div class="menu_item" onclick="call ('grid:add');">Add grid</div>
-		<div class="menu_item" onclick="call ('grid:remove');">Remove grid</div>
+		<div class="menu_item" onclick="call ('newfile:');" onmouseover="call ('help:(Ctrl+n) Create a new font');">New</div>
+		<div class="menu_item" onclick="call ('open:');" onmouseover="call ('help:(Ctrl+o) Open an existing ffi file');">Open</div>
+		<div class="menu_item" onclick="call ('save:');" onmouseover="call ('help:(Ctrl+s) Save font');">Save</div>
+		<div class="menu_item" onclick="call ('save_as:');" onmouseover="call ('help:Save font with a different name');">Save as</div>
+		<div class="menu_item" onclick="call ('kerning_context:');" onmouseover="call ('help:(Ctrl+k) Show kerning context');">Kerning context</div>
+		<div class="menu_item" onclick="call ('grid:add');" onmouseover="call ('help:Add a new size for grid');">Add grid</div>
+		<div class="menu_item" onclick="call ('grid:remove');" onmouseover="call ('help:Remove current grid size');">Remove grid</div>
 	</div>
 	
 	<div class="inner_format_box">
@@ -137,23 +140,9 @@ c.append ("""
 				<h3>Name</h3>
 				<input class="text" type="text" id="fontname" value=""" + "\"" + f.get_name () + "\"" + """ onchange="update_export_settings ();"/><br />
 				
-				<input class="button" type="button" value="Export" id="export_button" onclick="call ('export:fonts');"/>
-				<input class="button" type="button" value="Preview" id="preview_button" onclick="call ('preview:fonts');"/><br />
+				<input class="button" type="button" value="Export" id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) Export SVG, TTF & EOF fonts');"/>
+				<input class="button" type="button" value="Preview" id="preview_button" onclick="call ('preview:fonts');" onmouseover="call ('help:(Ctrl+p) Export SVG font and view the result');"/><br />
 """);
-
-	if (!Supplement.experimental) {
-		c.append ("""<div style="visibility:hidden;">""");
-	}
-	
-	c.append ("""
-				<h3>Formats</h3>
-				<input class="checkbox" type="checkbox" id="svg" checked="checked" onchange="update_export_settings ();"/> SVG<br />
-				<input class="checkbox" type="checkbox" id="ttf" checked="checked" onchange="update_export_settings ();"/> TTF<br />
-				""");
-
-	if (!Supplement.experimental) {
-		c.append ("</div>");
-	}
 	
 c.append ("""
 			</form> 
@@ -180,8 +169,9 @@ foreach (Font font in recent_fonts) {
 	c.append (path_to_uri ((!) Supplement.get_thumbnail_directory ().get_path ()));
 	c.append ("/");
 	c.append (fn);
-	c.append (@".png?$(Random.next_int ())\" alt=\"\"><br /><br />");
+	c.append (@".png?$(Random.next_int ())\" alt=\"\">");
 	
+	c.append ("<br /><br />");
 	c.append ("</div>\n");
 }
 
