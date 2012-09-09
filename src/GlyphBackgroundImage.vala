@@ -22,9 +22,11 @@ using Math;
 
 namespace Supplement {
 	
-class GlyphBackgroundImage {	
-	public double img_offset_x = 0;
-	public double img_offset_y = 0;
+class GlyphBackgroundImage {
+	
+	public double img_x = 0;
+	public double img_y = 0;
+	
 	public double img_scale_x = 1;
 	public double img_scale_y = 1;
 	public double img_rotation = 0;
@@ -51,9 +53,32 @@ class GlyphBackgroundImage {
 	
 	public GlyphBackgroundImage (string fn) {
 		path = fn;
-		size_margin = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
+		
+		if (fn != "") {
+			size_margin = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
+		}
 	}
-	
+
+	public double img_offset_x {
+		get { return img_x + Glyph.xc (); }
+		set { img_x = value - Glyph.xc (); }
+	}
+
+	public double img_offset_y {
+		get { return Glyph.yc () - img_y; }
+		set { img_y = Glyph.yc () - value; }
+	}
+
+	public void set_img_offset (double x, double y) {
+		img_offset_x = x;
+		img_offset_y = y;
+	}
+
+	public void set_position (double coordinate_x, double coordinate_y) {
+		img_x = coordinate_x;
+		img_y = coordinate_y;
+	}
+			
 	public ImageSurface get_img () {
 		if (path.index_of (".png") == -1) {
 			create_png ();
@@ -202,11 +227,6 @@ class GlyphBackgroundImage {
 	public void set_img_scale (double xs, double ys) {
 		img_scale_x = xs;
 		img_scale_y = ys;
-	}
-
-	public void set_img_offset (double x, double y) {
-		img_offset_x = x;
-		img_offset_y = y;
 	}
 
 	public string get_path () {

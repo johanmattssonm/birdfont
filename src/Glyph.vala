@@ -206,19 +206,20 @@ class Glyph : FontDisplay {
 	
 	/** @return centrum pixel for x coordinates. */
 	public static double xc () {
-		return MainWindow.get_current_glyph ().allocation.width / 2.0;
+		double c = MainWindow.get_current_glyph ().allocation.width / 2.0;
+		return c;	
 	}
 
 	/** @return centrum pixel for y coordinates. */
 	public static double yc () {
-		return MainWindow.get_current_glyph ().allocation.height / 2.0;
+		double c = MainWindow.get_current_glyph ().allocation.height / 2.0;
+		return c;
 	}
 
 	/** @return 1/view_zoom */
 	public static double ivz () {
 		return 1 / MainWindow.get_current_glyph ().view_zoom;
 	}
-
 
 	public void resized (Allocation o, Allocation n) {
 		double a, b, c, d;
@@ -1407,12 +1408,6 @@ class Glyph : FontDisplay {
 			((!)background_image).draw (cr, allocation, view_offset_x, view_offset_y, view_zoom);
 			cmp.restore ();
 		}
-
-		cmp.save ();
-		cmp.scale (view_zoom, view_zoom);
-		cmp.translate (-view_offset_x, -view_offset_y);
-		draw_path (cmp); // This does mess up scale (sometimes) for unknown reasons	
-		cmp.restore ();
 		
 		cmp.save (); 
 		tool = MainWindow.get_toolbox ().get_current_tool ();
@@ -1424,7 +1419,13 @@ class Glyph : FontDisplay {
 			draw_zoom_area (cmp);
 			cmp.restore ();
 		}
-		
+
+		cmp.save ();
+		cmp.scale (view_zoom, view_zoom);
+		cmp.translate (-view_offset_x, -view_offset_y);
+		draw_path (cmp); // Fixa: This does mess up scale (sometimes) for unknown reasons	
+		cmp.restore ();
+				
 		cr.save ();
 		cr.set_source_surface (ps, 0, 0);
 		cr.paint ();

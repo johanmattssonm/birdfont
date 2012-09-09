@@ -42,6 +42,19 @@ class TestCases {
 		add (test_over_path, "Over path");
 		add (test_preview, "Preview");
 		add (test_export, "Export");
+		add (test_background_coordinates, "Background coordinates");
+	}
+
+	public static void test_background_coordinates () {
+		GlyphBackgroundImage bg = new GlyphBackgroundImage ("");
+		
+		bg.set_position (100, 100);
+		bg.set_img_offset (bg.img_offset_x, bg.img_offset_y);
+		warn_if_fail (bg.img_x == 100 && bg.img_y == 100);
+
+		bg.set_img_offset (100, 100);
+		bg.set_position (bg.img_x, bg.img_y);
+		warn_if_fail (bg.img_offset_x == 100 && bg.img_offset_y == 100);
 	}
 
 	public static void test_export () {

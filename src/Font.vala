@@ -675,15 +675,15 @@ class Font : GLib.Object {
 		if (bg != null) {
 			GlyphBackgroundImage background_image = (!) bg;
 
-			double off_x = background_image.img_offset_x;
-			double off_y = background_image.img_offset_y;
+			double pos_x = background_image.img_x;
+			double pos_y = background_image.img_y;
 			
 			double scale_x = background_image.img_scale_x;
 			double scale_y = background_image.img_scale_y;
 			
 			double rotation = background_image.img_rotation;
 			
-			os.put_string (@"\t<background sha1=\"$(background_image.get_sha1 ())\" offset_x=\"$off_x\" offset_y=\"$off_y\" scale_x=\"$scale_x\" scale_y=\"$scale_y\" rotation=\"$rotation\"/>\n");
+			os.put_string (@"\t<background sha1=\"$(background_image.get_sha1 ())\" x=\"$pos_x\" y=\"$pos_y\" scale_x=\"$scale_x\" scale_y=\"$scale_y\" rotation=\"$rotation\"/>\n");
 		}
 		
 		os.put_string ("</glyph>\n\n"); 
@@ -1220,27 +1220,28 @@ class Font : GLib.Object {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
 							
-			if (attr_name == "offset_x") {
-				img.img_offset_x = double.parse (attr_content);
-			}
-
-			if (attr_name == "offset_y") {
-				img.img_offset_y = double.parse (attr_content);
+			if (attr_name == "x") {
+				img.img_x = double.parse (attr_content);
 			}
 			
+			if (attr_name == "y") {
+				img.img_y = double.parse (attr_content);
+			}	
+
 			if (attr_name == "scale_x") {
 				img.img_scale_x = double.parse (attr_content);
 			}
-			
+
 			if (attr_name == "scale_y") {
 				img.img_scale_y = double.parse (attr_content);
-			}	
-			
+			}
+						
 			if (attr_name == "rotation") {
 				img.img_rotation = double.parse (attr_content);
 			}
 		}
-				
+		
+		img.set_position(img.img_x, img.img_y);	
 	}
 	
 	private void parse_point (Path p, Xml.Node* iter) {

@@ -135,6 +135,9 @@ class GlyphCanvas : DrawingArea  {
 			g.allocation = allocation;
 			
 			Supplement.current_glyph = g;
+			Supplement.current_glyph.resized (alloc, allocation);
+			
+			warn_if_fail (g.allocation.width != 0 && g.allocation.height != 0);
 		}
 		
 		current_display = fd;
