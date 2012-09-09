@@ -37,15 +37,16 @@ class Preview : FontDisplay {
 		string uri = get_uri ();
 		File new_dest;
 
-		ExportTool.export_svg_font ();
+		// ExportTool.export_svg_font (); windows requires all fonts to be available
+		ExportTool.export_all ();
 		
 		w.open (uri);
 		w.reload_bypass_cache ();
 
-		// this is a hack forces webkit to reload the font and ignore cached data
+		// this  hack forces webkit to reload the font and ignore cached data
 		// it's only required on windows platform and in wine 
 		//
-		// it would be nice to get remove it.
+		// it would be nice to remove it.
 		if (Supplement.win32) {
 			TimeoutSource t1 = new TimeoutSource (300);
 			t1.set_callback (() => {

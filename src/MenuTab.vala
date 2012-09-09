@@ -26,18 +26,6 @@ class MenuTab : FontDisplay {
 
 	public MenuTab () {
 		// html callbacks:
-		add_html_callback ("export_svg", (val) => {
-			Font f = Supplement.get_current_font ();
-			f.set_svg_export (bool.parse (val));
-			f.touch ();
-		});
-		
-		add_html_callback ("export_ttf", (val) => {
-			Font f = Supplement.get_current_font ();
-			f.set_ttf_export (bool.parse (val));
-			f.touch ();
-		});
-
 		add_html_callback ("export_name", (val) => {
 			Font f = Supplement.get_current_font ();
 			f.set_name (val);
@@ -53,7 +41,6 @@ class MenuTab : FontDisplay {
 		});		
 
 		add_html_callback ("load", (val) => {
-			print (@"Load: $val\n");
 			load_font (val);
 		});	
 

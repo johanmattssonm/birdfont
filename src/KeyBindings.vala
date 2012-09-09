@@ -99,7 +99,8 @@ class BindingList {
 				new NewFile (),
 				new Load (),
 				new ShowKerningContext (),
-				new ShowPreview ()
+				new ShowPreview (),
+				new ExportFonts ()
 			};
 
 			nc = default_bindings;

@@ -209,13 +209,16 @@ os.put_string (
 		@font-face {
 			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""TTF';
 			src: url('""");     os.put_string (@"$(name).ttf"); os.put_string ("""') format('truetype');
-		} """);
+		} 
+		""");
 
 	os.put_string ("""
 		@font-face {
 			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""EOT';
 			src: url('""");     os.put_string (@"$(name).eot"); os.put_string ("""');
-		} """);
+		} 
+		
+		""");
 		
 	os.put_string ("""	
 		h1 {
@@ -446,7 +449,7 @@ os.put_string (
 			return false;
 		}
 		
-		status (@"Wrote $file_name");
+		status (@"Wrote font files");
 		return true;
 	}
 
