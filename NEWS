@@ -1,3 +1,13 @@
+birdfont (0.3.0) stable;
+
+  * Embedded OpenType (EOT) support
+  * Utility for exporting fonts from the command line (birdfont-export)
+  * New preview and export codes
+  * Rotate, scale and crop background images
+  * New key bindings
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Sep  9 20:54:18 CEST 2012
+
 birdfont (0.2.0) stable;
 
   * TTF support
