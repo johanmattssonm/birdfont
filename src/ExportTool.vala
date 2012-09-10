@@ -405,11 +405,13 @@ os.put_string (
 			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path ());
 
 			try {
-				export_thread_is_running = true;
-				export_thread_handle = Thread.create<void*> (export_thread.run, true);
-			
+				if (async) {
+					export_thread_is_running = true;
+					export_thread_handle = Thread.create<void*> (export_thread.run, true);
+				}
+				
 				if (!async) {
-					export_thread_handle.join ();
+					export_thread.run ();
 				}
 			} catch (ThreadError e) {
 				warning (e.message);

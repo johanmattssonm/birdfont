@@ -41,7 +41,8 @@ public static int run_gui (string[] arg) {
 		Process.exit (0);
 	}
 
-	stdout.printf ("birdfont version %s\n", VERSION);		
+	stdout.printf ("birdfont version %s\n", VERSION);
+	stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 
 	supplement.current_font = new Font ();
 	supplement.current_glyph = new Glyph ("");
