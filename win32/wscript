@@ -84,10 +84,12 @@ def configure(conf):
 
 def build(bld):
 	
-	bld.exec_command("mkdir -p build/supplement")
+	bld(rule="mkdir -p build/supplement")
 
 	bld(rule="windres ${SRC} -O coff -o ${TGT}", source="../win32/icon.rc", target="icon.res", always=True)
 	bld(rule="mv ${SRC} ${TGT}", source="../win32/icon.res", target="../build/", name="icon", always=True)
+
+	#bld(rule="rm -f ../build/*.c && rm -f ../build/src/*.o && rm -rf ../build/win32/*", depends_on="libbirdfont", name="clean_src")
 
 	bld(rule="""i686-w64-mingw32-gcc -c ./Main.c ./src/*.c ./ \
 		-I./ \
@@ -98,7 +100,7 @@ def build(bld):
 		$(i686-w64-mingw32-pkg-config --cflags --libs gio-2.0) \
 		$(i686-w64-mingw32-pkg-config --cflags --libs libsoup-2.4) \
 		$(i686-w64-mingw32-pkg-config --cflags --libs gtk+-2.0) \
-		$(i686-w64-mingw32-pkg-config --cflags --libs webkit-1.0) && mv *.o win32/""", source="../build/src/Supplement.c", target="./Supplement.o", name="mingw compile", always=True);
+		$(i686-w64-mingw32-pkg-config --cflags --libs webkit-1.0) && mv *.o win32/""", source="../build/src/Supplement.c", target="./Supplement.o", name="mingw compile", depends_on="clean_src", always=True);
 	
 	bld(rule="""i686-w64-mingw32-gcc \
 		-shared \

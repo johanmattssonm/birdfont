@@ -60,7 +60,7 @@ class BackgroundSelection : FontDisplay {
 		cr.restore ();
 		
 		draw_box (box_index, 20, 20, cr);
-		cr.set_source_surface (add_icon, 52, 52);
+		cr.set_source_surface (add_icon, 62, 62);
 		cr.paint ();
 			
 		cr.save ();
