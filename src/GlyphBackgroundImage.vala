@@ -23,19 +23,17 @@ using Math;
 namespace Supplement {
 	
 class GlyphBackgroundImage {
-	
+		
 	public double img_x = 0;
 	public double img_y = 0;
 	
 	public double img_scale_x = 1;
 	public double img_scale_y = 1;
 	public double img_rotation = 0;
-	public int size_margin = 0;
+	private int size = -1;
 
 	public int active_handle = -1;
 	public int selected_handle = -1;
-	
-	public bool scaled = false;
 	
 	private ImageSurface? background_image = null;
 	private ImageSurface? original_image = null;
@@ -50,14 +48,6 @@ class GlyphBackgroundImage {
 	private bool background_image_is_processing = false;
 
 	public signal void updated ();
-	
-	public GlyphBackgroundImage (string fn) {
-		path = fn;
-		
-		if (fn != "") {
-			size_margin = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
-		}
-	}
 
 	public double img_offset_x {
 		get { return img_x + Glyph.xc (); }
@@ -67,6 +57,38 @@ class GlyphBackgroundImage {
 	public double img_offset_y {
 		get { return Glyph.yc () - img_y; }
 		set { img_y = Glyph.yc () - value; }
+	}
+	
+	public int size_margin {
+		get {
+			if (unlikely (size == -1)) {
+				size = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
+			}
+			
+			return size;
+		}
+	}
+		
+	public GlyphBackgroundImage (string fn) {
+		path = fn;
+	}
+
+	public GlyphBackgroundImage copy () {
+		GlyphBackgroundImage bg = new GlyphBackgroundImage (path);
+			
+		bg.img_x = img_x;
+		bg.img_y = img_y;
+
+		bg.img_scale_x = img_scale_x;
+		bg.img_scale_y = img_scale_y;
+		bg.img_rotation = img_rotation;
+
+		bg.contrast = contrast;
+		bg.desaturate = desaturate;
+		bg.threshold = threshold;
+
+		return bg;
+		
 	}
 
 	public void set_img_offset (double x, double y) {
@@ -113,10 +135,20 @@ class GlyphBackgroundImage {
 	public string get_sha1 () {
 		try {
 			File file = File.new_for_path (path);
-			var file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
-			uint8[] buffer = new uint8[file_info.get_size ()];
-			FileInputStream file_stream = file.read ();
-			DataInputStream png_stream = new DataInputStream (file_stream);
+			FileInfo file_info;
+			uint8[] buffer;
+			FileInputStream file_stream;
+			DataInputStream png_stream;
+			
+			if (!file.query_exists ()) {
+				warning (@"Can't save $path file does not exist.");
+				return "";
+			}
+			
+			file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
+			buffer = new uint8[file_info.get_size ()];
+			file_stream = file.read ();
+			png_stream = new DataInputStream (file_stream);
 
 			png_stream.read (buffer);
 			
@@ -148,41 +180,6 @@ class GlyphBackgroundImage {
 		pixbuf = new Pixbuf.from_file (path);
 		pixbuf.save ((!) png_image.get_path (), "png");
 		path = (!) png_image.get_path ();
-	}
-	
-	public File get_thumbnail_file () {
-		Font font = Supplement.get_current_font ();
-		File folder = font.get_backgrounds_folder ();
-		File full = File.new_for_path (path);
-		File thumbnail = folder.get_child (@"thumbnail_$((!)full.get_basename ())");
-		
-		if (!thumbnail.query_exists ()) {
-			create_thumbnail (get_img (), thumbnail);
-		}
-		
-		return thumbnail;
-	}
-
-	private void create_thumbnail (ImageSurface source, File thumbnail) {
-		Context c;
-		Surface s;
-		double zoom;
-		ImageSurface img = source;
-		
-		zoom = Math.fmin (80.0 / img.get_width(), 80.0 / img.get_height());
-
-		s = new Surface.similar (img, img.get_content (), 80, 80);
-		c = new Context (s);
-
-		c.set_source_rgba (1, 1, 1, 1);
-		c.rectangle (0, 0, 80, 80);
-		c.fill ();
-							
-		c.scale (zoom, zoom);
-		c.set_source_surface (img, 0, 0);
-		c.paint ();
-		
-		c.get_target ().write_to_png ((!) thumbnail.get_path ());
 	}
 	
 	public double get_current_width () {
@@ -441,8 +438,6 @@ class GlyphBackgroundImage {
 	public void draw_resize_handle (Context cr, Glyph g) {
 		double x, y;
 		cr.save ();
-		
-		// cr.scale (g.view_zoom, g.view_zoom);
 		
 		cr.set_source_rgba (1, 0, 0.3, 1);
 

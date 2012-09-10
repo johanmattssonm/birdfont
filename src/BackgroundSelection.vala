@@ -36,9 +36,6 @@ class BackgroundSelection : FontDisplay {
 		i = Icons.get_icon ("add_background_image.png");
 		return_if_fail (i != null);
 		add_icon = (!) i;
-
-		CutBackgroundTool cb = (CutBackgroundTool) MainWindow.get_toolbox ().get_tool ("cut_background");
-		cb.set_destination_file_name (glyph.get_name ());
 	}
 
 	public override string get_name () {

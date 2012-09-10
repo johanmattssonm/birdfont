@@ -33,8 +33,6 @@ class CutBackgroundTool : Tool {
 	
 	public signal void new_image (string file);
 	
-	string? destination_file_name = null;
-	
 	public CutBackgroundTool (string name) {
 		base (name, "Cut background image");		
 
@@ -91,6 +89,8 @@ class CutBackgroundTool : Tool {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			TabBar tb = MainWindow.get_tab_bar ();
 			
+			glyph.store_undo_state ();
+			
 			glyph.set_background_image (new GlyphBackgroundImage (file));
 			tb.select_tab_name (glyph.get_name ());
 			
@@ -100,10 +100,6 @@ class CutBackgroundTool : Tool {
 			zoom_background.select_action (zoom_background);
 		});
 
-	}
-
-	public void set_destination_file_name (string fn) {
-		destination_file_name = fn;
 	}
 
 	bool is_over_rectangle (double x, double y) {
@@ -171,7 +167,11 @@ class CutBackgroundTool : Tool {
 
 		sr = new Surface.similar (sg, img.get_content (), w, h);
 		cr = new Context (sr);
-	
+
+		cr.set_source_rgba (1, 1, 1, 1);
+		cr.rectangle (0, 0, w, h);
+		cr.fill ();
+			
 		cr.scale (bg.img_scale_x, bg.img_scale_y);
 		
 		cr.set_source_surface (sg, x, y);
@@ -181,12 +181,10 @@ class CutBackgroundTool : Tool {
 		
 		cr.restore ();
 		
-		// 
-		
 		bg.img_offset_x = x + g.view_offset_x;
 		bg.img_offset_y = y + g.view_offset_y;		
 	}
-	
+
 	void save_img (Surface sr, Glyph g) {
 		GlyphBackgroundImage newbg;
 		Font f = Supplement.get_current_font ();
@@ -195,29 +193,23 @@ class CutBackgroundTool : Tool {
 		string fn;
 		string name;
 		
-		if (destination_file_name != null) {
-			name = (!) destination_file_name;
-		} else {
-			name = g.get_name ();
-		}
-		
 		img_dir =  f.get_backgrounds_folder ().get_child ("parts");
 
 		if (!img_dir.query_exists ()) {
 			DirUtils.create ((!) img_dir.get_path (), 0xFFFFFF);
 		}
 	
-		img_file = img_dir.get_child (@"$(name).png");
+		img_file = img_dir.get_child (@"NEW_BACKGROUND.png");
 		fn = (!) img_file.get_path ();
 		
 		sr.write_to_png (fn);
 		
 		newbg = new GlyphBackgroundImage (fn);
-		g.set_background_image (newbg);
 		
-		newbg.reset_scale (g);
+		fn = newbg.get_sha1 () + ".png";
+		img_file.set_display_name (fn);
 		
-		new_image (fn);
+		new_image ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
 	}
 }
 

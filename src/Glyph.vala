@@ -1552,6 +1552,10 @@ class Glyph : FontDisplay {
 		foreach (Path p in active_paths) {
 			g.active_paths.append (p);
 		}
+
+		if (background_image != null) {
+			g.background_image = ((!) background_image).copy ();
+		}
 		
 		return g;
 	}
@@ -1579,6 +1583,10 @@ class Glyph : FontDisplay {
 		}
 
 		add_help_lines ();
+		
+		if (g.background_image != null) {
+			background_image = ((!) g.background_image).copy ();
+		}
 		
 		clear_active_paths ();
 		foreach (Path p in g.active_paths) {

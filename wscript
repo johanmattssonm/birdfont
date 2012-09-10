@@ -26,15 +26,20 @@ def configure(conf):
 
 	if conf.options.win32 :
 		conf.recurse('win32')
-		
-def build(bld):
-	bld.recurse('src')
 
+def pre (bld):
 	bld.env.VERSION = VERSION
 	
 	if not bld.options.noconfig:
 		write_config ()
+		
+def build(bld):
+	bld.env.VERSION = VERSION
 	
+	bld.add_pre_fun(pre)
+
+	bld.recurse('src')
+
 	start_dir = bld.path.find_dir('./')
 	bld.install_files('${PREFIX}/share/birdfont/', start_dir.ant_glob('layout/*'), cwd=start_dir, relative_trick=True)
 	bld.install_files('${PREFIX}/share/birdfont/', start_dir.ant_glob('icons/*'), cwd=start_dir, relative_trick=True)

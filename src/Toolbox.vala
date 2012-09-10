@@ -419,29 +419,6 @@ class Toolbox : DrawingArea {
 			});
 		background_tools.add_tool (show_bg);
 
-		Tool background_size_to_boundries = new Tool ("size_to_boundries", "Fit image between margin lines", 'F', SHIFT);
-		background_size_to_boundries.select_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			GlyphBackgroundImage? bg = g.get_background_image ();
-			GlyphBackgroundImage b = (!) bg;
-			
-			if (bg != null) {
-				
-				if (!b.scaled) {
-					b.scale_image_proportional_to_boundries (g);
-					g.set_background_visible (true);
-					MainWindow.get_glyph_canvas ().redraw ();
-				} else {
-					b.reset_scale (g);
-					g.set_background_visible (true);
-					MainWindow.get_glyph_canvas ().redraw ();						
-				}
-				
-				b.scaled = !b.scaled;
-			}
-		});
-		// Fixa: remove this tool background_tools.add_tool (background_size_to_boundries);
-
 		Tool bg_selection = new Tool ("insert_background", "Insert new background image");
 		bg_selection.select_action.connect((self) => {
 			Glyph? g = null;

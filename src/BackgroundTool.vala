@@ -54,23 +54,28 @@ class BackgroundTool : Tool {
 		press_action.connect((self, b, x, y) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			GlyphBackgroundImage? bg = g.get_background_image ();
+			GlyphBackgroundImage background;
 			
 			if (bg == null) {
 				return;
 			}
 			
-			((!)bg).handler_press (x, y);
+			background = (!) bg;
+			
+			g.store_undo_state ();
+			
+			background.handler_press (x, y);
 			
 			begin_x = x;
 			begin_y = y;
 			
-			img_offset_x = ((!)bg).img_offset_x;
-			img_offset_y = ((!)bg).img_offset_y;
+			img_offset_x = background.img_offset_x;
+			img_offset_y = background.img_offset_y;
 			
-			img_scale_x = ((!)bg).img_scale_x;
+			img_scale_x = background.img_scale_x;
 			
-			img_width = ((!)bg).get_img ().get_width () * img_scale_x;
-			img_height = ((!)bg).get_img ().get_height () * ((!)bg).img_scale_y;
+			img_width = background.get_img ().get_width () * background.img_scale_x;
+			img_height = background.get_img ().get_height () * background.img_scale_y;
 			
 			move_bg = true;
 		});
