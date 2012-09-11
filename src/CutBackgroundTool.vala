@@ -31,7 +31,7 @@ class CutBackgroundTool : Tool {
 	bool cut_background_is_visible = false;
 	bool cut_background_is_moving = false;
 	
-	public signal void new_image (string file);
+	public signal void new_image (GlyphBackgroundImage file);
 	
 	public CutBackgroundTool (string name) {
 		base (name, "Cut background image");		
@@ -91,7 +91,7 @@ class CutBackgroundTool : Tool {
 			
 			glyph.store_undo_state ();
 			
-			glyph.set_background_image (new GlyphBackgroundImage (file));
+			glyph.set_background_image (file);
 			tb.select_tab_name (glyph.get_name ());
 			
 			glyph.set_background_visible (true);
@@ -180,9 +180,6 @@ class CutBackgroundTool : Tool {
 		save_img (sr, g);
 		
 		cr.restore ();
-		
-		bg.img_offset_x = x + g.view_offset_x;
-		bg.img_offset_y = y + g.view_offset_y;		
 	}
 
 	void save_img (Surface sr, Glyph g) {
@@ -191,7 +188,6 @@ class CutBackgroundTool : Tool {
 		File img_dir;
 		File img_file;
 		string fn;
-		string name;
 		
 		img_dir =  f.get_backgrounds_folder ().get_child ("parts");
 
@@ -208,8 +204,18 @@ class CutBackgroundTool : Tool {
 		
 		fn = newbg.get_sha1 () + ".png";
 		img_file.set_display_name (fn);
+
+		// set position for the new background
 		
-		new_image ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
+		newbg = new GlyphBackgroundImage ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
+		
+		newbg.img_x = g.path_coordinate_x (fmin (x1, x2));
+		newbg.img_y = g.path_coordinate_y (fmin (y1, y2));
+		
+		newbg.img_x = 100;
+		newbg.img_y = 100;
+		
+		new_image (newbg);
 	}
 }
 
