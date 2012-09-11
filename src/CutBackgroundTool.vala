@@ -50,10 +50,15 @@ class CutBackgroundTool : Tool {
 				cut_background_is_moving = true;
 				cut_background_is_visible = true;
 			} else {
-				do_cut ();
 				
-				cut_background_is_visible = false;
-				cut_background_is_moving = false;
+				if (cut_background_is_visible) {
+					do_cut ();
+					cut_background_is_visible = false;
+					cut_background_is_moving = false;
+				} else {
+					cut_background_is_moving = true;
+					cut_background_is_visible = true;
+				}
 			}
 		});
 
@@ -95,9 +100,6 @@ class CutBackgroundTool : Tool {
 			tb.select_tab_name (glyph.get_name ());
 			
 			glyph.set_background_visible (true);
-
-			zoom_background = MainWindow.get_tool ("zoom_background_image");
-			zoom_background.select_action (zoom_background);
 		});
 
 	}
@@ -117,6 +119,7 @@ class CutBackgroundTool : Tool {
 	void do_cut () {
 		double x, y;
 		int h, w;
+		double wc, hc;
 		
 		Glyph g = MainWindow.get_current_glyph ();
 		GlyphBackgroundImage? b = g.get_background_image ();
@@ -136,9 +139,9 @@ class CutBackgroundTool : Tool {
 		Surface sg = new Surface.similar (bg.get_img (), bg.get_img ().get_content (), bg.size_margin, bg.size_margin);
 		Context cg = new Context (sg);
 		
-		int wc = (int) ((bg.size_margin - bg.get_img ().get_width ()) / 2);
-		int hc = (int) ((bg.size_margin - bg.get_img ().get_height ()) / 2);
-
+		wc = bg.get_margin_width ();
+		hc = bg.get_margin_height ();
+		
 		cg.set_source_rgba (1, 1, 1, 1);
 		cg.rectangle (0, 0, bg.size_margin, bg.size_margin);
 		cg.fill ();
@@ -188,6 +191,7 @@ class CutBackgroundTool : Tool {
 		File img_dir;
 		File img_file;
 		string fn;
+		double wc, hc;
 		
 		img_dir =  f.get_backgrounds_folder ().get_child ("parts");
 
@@ -205,16 +209,15 @@ class CutBackgroundTool : Tool {
 		fn = newbg.get_sha1 () + ".png";
 		img_file.set_display_name (fn);
 
-		// set position for the new background
-		
 		newbg = new GlyphBackgroundImage ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
 		
-		newbg.img_x = g.path_coordinate_x (fmin (x1, x2));
-		newbg.img_y = g.path_coordinate_y (fmin (y1, y2));
+		// set position for the new background
+		wc = newbg.get_margin_width ();
+		hc = newbg.get_margin_height ();
 		
-		newbg.img_x = 100;
-		newbg.img_y = 100;
-		
+		newbg.img_x = g.path_coordinate_x (fmin (x1, x2)) - wc - 0.5;
+		newbg.img_y = g.path_coordinate_y (fmin (y1, y2)) + hc + 0.5;
+
 		new_image (newbg);
 	}
 }

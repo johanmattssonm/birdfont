@@ -213,8 +213,8 @@ class Path {
 
 		get_line_points (e, en, out ax, out ay, out bx, out by);
 	
-		cr.set_source_rgba (0.4, 0.4, 0.4, alpha);
-		cr.set_line_width (1 * (1/g.view_zoom));
+		cr.set_source_rgba (0/255.0, 0/255.0, 0/255.0, 1);
+		cr.set_line_width (1.7 * (1/g.view_zoom));
 
 		cr.line_to (ax, ay);
 		cr.line_to (bx, by);
@@ -240,13 +240,13 @@ class Path {
 		img_left = (e.get_left_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
 		
 		if (!(is_open () && e == points.last ().data)) {
-			draw_img_center (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
 			draw_line (handle_right, e, cr, 0.15);
+			draw_img_center (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
 		}
 		
 		if (!(is_open () && e == points.first ().data)) {
-			draw_img_center (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
 			draw_line (handle_left, e, cr, 0.15);
+			draw_img_center (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
 		}
 	}
 

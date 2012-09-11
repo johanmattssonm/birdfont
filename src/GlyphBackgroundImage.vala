@@ -91,6 +91,14 @@ class GlyphBackgroundImage {
 		
 	}
 
+	public double get_margin_width () {
+		return ((size_margin - get_img ().get_width ()) / 2.0);
+	}
+
+	public double get_margin_height () {
+		return ((size_margin - get_img ().get_height ()) / 2.0);
+	}
+
 	public void set_img_offset (double x, double y) {
 		img_offset_x = x;
 		img_offset_y = y;
@@ -274,7 +282,7 @@ class GlyphBackgroundImage {
 		Surface st;
 		Context ct;
 
-		int wc, hc;
+		double wc, hc;
 
 		if (unlikely (get_img ().status () != Cairo.Status.SUCCESS)) {
 			stderr.printf (@"Background image is invalid. (\"$path\")\n");
@@ -286,9 +294,9 @@ class GlyphBackgroundImage {
 		sg = new Surface.similar (get_img (), get_img ().get_content (), size_margin, size_margin);
 		cg = new Context (sg);
 		
-		wc = (int) ((size_margin - get_img ().get_width ()) / 2);
-		hc = (int) ((size_margin - get_img ().get_height ()) / 2);
-
+		wc = get_margin_width ();
+		hc = get_margin_height ();
+		
 		cg.set_source_rgba (1, 1, 1, 1);
 		cg.rectangle (0, 0, size_margin, size_margin);
 		cg.fill ();

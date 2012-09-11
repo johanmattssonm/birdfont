@@ -135,8 +135,6 @@ class Glyph : FontDisplay {
 				}
 			}
 			
-			// ((!) p).set_selected (true);
-			
 			active_paths.append ((!) p);
 		}
 	}
@@ -247,14 +245,6 @@ class Glyph : FontDisplay {
 		}
 		
 		bg = (!) b;
-		
-		default_img_offset_x = -get_width () / 2;
-		default_img_offset_y = get_height () / 4;
-
-		default_img_offset_x = 0;
-		default_img_offset_y = 0;
-		
-		bg.set_img_offset (default_img_offset_x, default_img_offset_y);
 		
 		background_image = bg;
 		
