@@ -28,9 +28,11 @@ class CutBackgroundTool : Tool {
 	double y1 = 0;
 	double x2 = 0;
 	double y2 = 0;
-	bool cut_background_is_visible = false;
-	bool cut_background_is_moving = false;
 	
+	bool is_visible = false;
+	bool is_set = false;
+	bool is_done = false;
+		
 	public signal void new_image (GlyphBackgroundImage file);
 	
 	public CutBackgroundTool (string name) {
@@ -43,34 +45,43 @@ class CutBackgroundTool : Tool {
 		});
 		
 		press_action.connect((self, b, x, y) => {				
-			if (!is_over_rectangle (x, y)) {
+			if (!is_over_rectangle (x, y) || !is_visible) {
 				x1 = x;
 				y1 = y;
+	
+				x2 = x;
+				y2 = y;
 				
-				cut_background_is_moving = true;
-				cut_background_is_visible = true;
-			} else {
+				is_visible = true;
+				is_set = false;
+				is_done = false;
+			}
+			
+			if (is_set && is_visible && is_over_rectangle (x, y)) {
+				do_cut ();
+				is_set = false;
+				is_visible = false;
+				is_done = true;
 				
-				if (cut_background_is_visible) {
-					do_cut ();
-					cut_background_is_visible = false;
-					cut_background_is_moving = false;
-				} else {
-					cut_background_is_moving = true;
-					cut_background_is_visible = true;
-				}
+				x1 = 0;
+				y1 = 0;
+				x2 = 0;
+				y2 = 0;
 			}
 		});
 
 		release_action.connect((self, b, x, y) => {
-			x2 = x;
-			y2 = y;
+			if (!is_set && !is_done) {
+				x2 = x;
+				y2 = y;
+				is_set = true;
+			}
 			
-			cut_background_is_moving = false;
+			is_done = false;
 		});
 
 		move_action.connect((self, x, y) => {
-			if (cut_background_is_moving) {
+			if (is_visible && !is_set) {
 				x2 = x;
 				y2 = y;
 				
@@ -79,7 +90,7 @@ class CutBackgroundTool : Tool {
 		});
 		
 		draw_action.connect ((self, cr, glyph) => {
-			if (cut_background_is_visible) {
+			if (is_visible) {
 				cr.save ();
 				cr.set_line_width (2.0);
 				cr.set_source_rgba (0, 0, 1, 0.3);
@@ -105,7 +116,7 @@ class CutBackgroundTool : Tool {
 	}
 
 	bool is_over_rectangle (double x, double y) {
-		return fmin (x1, x2) < x < fmax (x1, x2) && fmin (y1, y2) < y < fmax (y1, y2);
+		return fmin (x1, x2) + 1 < x < fmax (x1, x2) - 1 && fmin (y1, y2) + 1 < y < fmax (y1, y2) - 1;
 	}
 
 	double get_width () {
@@ -190,6 +201,7 @@ class CutBackgroundTool : Tool {
 		Font f = Supplement.get_current_font ();
 		File img_dir;
 		File img_file;
+		File img_file_next;
 		string fn;
 		double wc, hc;
 		
@@ -207,6 +219,13 @@ class CutBackgroundTool : Tool {
 		newbg = new GlyphBackgroundImage (fn);
 		
 		fn = newbg.get_sha1 () + ".png";
+
+		img_file_next = img_dir.get_child (fn);
+		
+		if (img_file_next.query_exists ()) {
+			img_file_next.delete ();
+		}
+
 		img_file.set_display_name (fn);
 
 		newbg = new GlyphBackgroundImage ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
