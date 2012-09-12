@@ -203,14 +203,14 @@ class SpinButton : Tool {
 		return @"$deka.$deci$centi$milli";
 	}
 
-	public override void draw (Allocation allocation, Context cr) {
+	public override void draw (Context cr) {
 		double xt = x + 3 + w;
 		double yt = y + h + 17;
 
 		double text_x = -4.5;
 		double text_y = 11;
 
-		base.draw (allocation, cr);
+		base.draw (cr);
 	
 		cr.save ();
 	

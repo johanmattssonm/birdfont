@@ -21,195 +21,49 @@ using WebKit;
 
 namespace Supplement {
 
-internal class MainWindow : Gtk.Window {
+public interface NativeWindow : GLib.Object {
+	public abstract string? file_chooser (string title);
+	public abstract string? set_title (string title);
+}
 
-	HBox list_box;
-	HBox canvas_box;
+internal class MainWindow {
 	
-	WebView html_canvas;
-	ScrolledWindow html_box;
-		
-	static TabBar tabs;
-	VBox tab_box;
+	public static Toolbox tools;
+	public static GlyphCanvas glyph_canvas;
+	public static MainWindow singleton;
+	public static KeyBindings key_bindings;
+	public static MenuTab content;
+	public static TooltipArea tool_tip;
+	public static OverView over_view;	
+	public static TabBar tabs;
+	public static NativeWindow native_window;
 	
-	static Toolbox tools;
-	static GlyphCanvas glyph_canvas;
-	static MainWindow singleton;
-	static KeyBindings key_bindings;
-	static MenuTab content;
-	static TooltipArea tool_tip;
-		
-	static DrawingArea margin_bottom;
-	static DrawingArea margin_right;
-
-	static OverView over_view;
-
 	static List<uint> key_pressed = new List<uint> ();
 	
-	public MainWindow (string title) {
+	public MainWindow () {
 		singleton = this;
-		
+
 		key_bindings = new KeyBindings ();
-		
 		glyph_canvas = new GlyphCanvas ();
 		tools = new Toolbox (glyph_canvas);
 		tabs = new TabBar ();
 		content = new MenuTab ();
 		tool_tip = new TooltipArea ();
-
-		margin_bottom = new DrawingArea ();
-		margin_right = new DrawingArea ();
-	
-		margin_bottom.set_size_request (0, 0);
-		margin_right.set_size_request (0, 0);
-		
-		set_title (title);
-		
-		delete_event.connect (quit);
-		
-		set_size_and_position ();
-		
-		html_canvas = new WebView ();
-		WebKit.set_cache_model (CacheModel.DOCUMENT_VIEWER);
-		html_canvas.get_settings ().enable_default_context_menu = false;
-				
-		html_canvas.title_changed.connect ((p, s) => {
-			FontDisplay fd = get_current_display ();
-			fd.process_property (s);
-		});
-		
-		html_box = new ScrolledWindow (null, null);
-		html_box.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
-		
-		html_box.add (html_canvas);
-		
-		html_canvas.set_editable (true);
-		
-		tabs.signal_tab_selected.connect ((f, tab) => {
-			bool n;
-			File layout_dir;
-			File layout_uri;
-			string uri;
-			int i;
-			FontDisplay fd = tab.get_display ();
-			
-			glyph_canvas.set_current_glyph (fd);
-			n = fd.is_html_canvas ();
-			
-			if (n) {
-				layout_dir = FontDisplay.find_layout_dir ();
-				uri = fd.get_uri ();
-				
-				if (uri == "") {
-					layout_uri = layout_dir.get_child (fd.get_html_file ());
-					uri = fd.path_to_uri ((!) layout_uri.get_path ());
-				}
-				
-				if (fd.get_html () == "") {
-					html_canvas.load_html_string (fd.get_html (), uri);	
-					html_canvas.reload_bypass_cache ();
-					html_canvas.load_uri (uri);
-				} else {
-					html_canvas.load_html_string (fd.get_html (), uri);
-				}
-				
-				html_box.set_visible (n);
-				glyph_canvas.set_visible (!n);
-			} else {
-				html_box.set_visible (false);
-				glyph_canvas.set_visible (true);
-			} 
-		});
-
-		// Hide this canvas when window is realized and flip canvas 
-		// visibility in tab selection signal.
-		html_canvas.expose_event.connect ((t, e) => {
-			glyph_canvas.set_visible (false);
-			return false;
-		});
-
 		over_view = new OverView();
-				
-		tabs.add_unique_tab (content, 60, true);
-		
-		tabs.select_tab_name ("Menu");
-
-		canvas_box = new HBox (false, 0);
-		canvas_box.pack_start (glyph_canvas, true, true, 0);
-		canvas_box.pack_start (html_box, true, true, 0);
-		
-		tab_box = new VBox (false, 0);
-		tab_box.pack_start (tabs, false, false, 0);	
-		
-		tab_box.pack_start (canvas_box, true, true, 0);
-
-		tab_box.pack_start (tool_tip, false, false, 0);
-		tab_box.pack_start (margin_bottom, false, false, 0);
-		
-		list_box = new HBox (false, 0);
-		list_box.pack_start (tab_box, true, true, 0);
-		list_box.pack_start (tools, false, false, 0);
-		list_box.pack_start (margin_right, false, false, 0);
-
-		add (list_box);
-				
-		key_snooper_install (global_key_bindings, null);
-		
-		add_events (EventMask.FOCUS_CHANGE_MASK);
-		
-		focus_in_event.connect ((t, e)=> {
-			key_bindings.reset ();
-			return true;
-		});
-		
-		set_icon_from_file ((!) Icons.find_icon ("window_icon.png").get_path ());
-		
-		show_all ();
 	}
 
+	public void set_native (NativeWindow nw) {
+		native_window = nw;
+	}
+
+/* // FIXA:
 	public static WebView get_webview () {
 		return singleton.html_canvas;
 	}
+*/
 
-	public static void hide_cursor () {
-		Pixmap pixmap = new Pixmap (null, 1, 1, 1);
-		Color color = { 0, 0, 0, 0 };
-		Cursor cursor = new Cursor.from_pixmap (pixmap, pixmap, color, color, 0, 0);
-
-		// Fixa: But why?
-		// (Supplement.exe:1300): Gdk-CRITICAL **: gdk_window_set_cursor: assertion `GDK_IS_WINDOW (window)' failed		
-		// singleton.frame.set_cursor (cursor);
-	}
-	
-	private void set_size_and_position () {
-		int w = Preferences.get_window_width();
-		int h = Preferences.get_window_height();
-		
-		set_default_size (w, h);
-		// move (10, 240);
-	}
-	
-	public bool quit () {
-		bool added;
-		SaveDialog s = new SaveDialog ();
-		
-		if (Supplement.get_current_font ().is_modified ()) {
-			added = tabs.add_unique_tab (s, 50);
-		} else {
-			added = false;
-		}
-		
-		if (!added) {
-			Supplement.get_current_font ().save_backup ();
-			Gtk.main_quit ();
-		}
-		
-		s.finished.connect (() => {
-			Supplement.get_current_font ().delete_backup ();
-			Gtk.main_quit ();
-		});
-		
-		return true;
+	internal static NativeWindow get_native () {
+		return native_window;
 	}
 	
 	internal static MainWindow get_current_window () {
@@ -303,6 +157,15 @@ internal class MainWindow : Gtk.Window {
 		return 0;
 	}
 	
+	public static string? file_chooser (string title) {
+		return get_singleton ().native_window.file_chooser (title);
+	}
+	
+	public void set_title (string title) {
+		// FIXA:
+		// native_window.set_title (title);
+	}
+	
 	/** Reaload all paths and help lines from disk. */
 	internal static void clear_glyph_cache () {
 		Glyph g;
@@ -325,26 +188,6 @@ internal class MainWindow : Gtk.Window {
 				i++;
 			}
 		}
-	}
-
-	internal static void toggle_expanded_margin_bottom () {
-		int w, h;
-		margin_bottom.get_size_request (out w, out h);
-		
-		if (h == 1) h = 2; 
-		else h = 1;
-		
-		margin_bottom.set_size_request (w, h);
-	}
-	
-	internal static void toggle_expanded_margin_right () {	
-		int w, h;
-		margin_right.get_size_request (out w, out h);
-
-		if (w == 1) w = 2; 
-		else w = 1;
-
-		margin_right.set_size_request (w, h);
 	}
 }
 

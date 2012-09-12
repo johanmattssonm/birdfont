@@ -24,6 +24,7 @@ BIRDFONT = [
 	'GlyphRange.vala',
 	'GlyphTable.vala',
 	'GridTool.vala',
+	'GtkInterface.vala',
 	'Icons.vala',
 	'Kerning.vala', 
 	'KeyBindings.vala', 

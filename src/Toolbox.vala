@@ -15,14 +15,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Gtk;
-using Gdk;
 using Cairo;
 using Math;
 
 namespace Supplement {
 
-class Toolbox : DrawingArea {
+class Toolbox : GLib.Object  {
 	GlyphCanvas glyph_canvas;
 	
 	bool expanded = true;
@@ -39,21 +37,19 @@ class Toolbox : DrawingArea {
 	BackgroundTool move_background;
 	CutBackgroundTool cut_background;
 	
-	Tool press_tool = new Tool (null); // activate the pressed button on release
+	public Tool press_tool = new Tool (null); // activate the pressed button on release
 	
 	public SpinButton background_scale = new SpinButton ();
 	public SpinButton precision;
 	
+	public signal void redraw (int x, int y, int w, int h);
+	
+	public int allocation_width = 0;
+	public int allocation_height = 0;
+	
 	public Toolbox (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
-		
-		set_size_request (158, 100);
 
-		leave_notify_event.connect ((t, e)=> {
-			reset_active_tool ();
-			return true;
-		});
-		
 		toolbox_expander = new ToolboxExpander ();
 		
 		add_expander (toolbox_expander);
@@ -101,9 +97,9 @@ class Toolbox : DrawingArea {
 
 		Tool insert_point_on_path = new Tool ("insert_point_on_path", "Add new point on path", 'n');
 		insert_point_on_path.select_action.connect ((self) => {
-				select_draw_tool ();
-				pen_tool.begin_from_new_point_on_path ();
-			});
+			select_draw_tool ();
+			pen_tool.begin_from_new_point_on_path ();
+		});
 		draw_tool_modifiers.add_tool (insert_point_on_path);
 		
 		if (Supplement.experimental) {
@@ -117,20 +113,20 @@ class Toolbox : DrawingArea {
 
 		Tool tie_editpoint_tool = new Tool ("tie_point", "Tie curve handles for selected edit point", 'w');
 		tie_editpoint_tool.select_action.connect ((self) => {
-				EditPoint ep;
-				bool tie;
-				
-				select_draw_tool ();
-				
-				ep = pen_tool.selected_corner;
-				tie = !ep.tie_handles;
+			EditPoint ep;
+			bool tie;
+			
+			select_draw_tool ();
+			
+			ep = pen_tool.selected_corner;
+			tie = !ep.tie_handles;
 
-				if (tie) {
-					ep.process_tied_handle ();
-				}
-				
-				ep.set_tie_handle (tie);				
-			});
+			if (tie) {
+				ep.process_tied_handle ();
+			}
+			
+			ep.set_tie_handle (tie);				
+		});
 		draw_tool_modifiers.add_tool (tie_editpoint_tool);	
 
 		Tool tie_x_or_y = new Tool ("tie_x_or_y", "Tie coordinates to previous edit point", 'q');
@@ -162,7 +158,7 @@ class Toolbox : DrawingArea {
 			select_tool (precision);
 			
 			Preferences.set ("precision", self.get_display_value ());
-			MainWindow.get_toolbox ().queue_draw_area ((int) precision.x, (int) precision.y, 70, 70);
+			redraw ((int) precision.x, (int) precision.y, 70, 70);
 		});
 		
 		precision.set_min (0.001);
@@ -176,14 +172,14 @@ class Toolbox : DrawingArea {
 		
 		Tool reverse_path_tool = new Tool ("reverse_path", "Create counter from outline", 'r');
 		reverse_path_tool.select_action.connect ((self) => {
-				Glyph g = MainWindow.get_current_glyph ();
-				
-				foreach (Path p in g.active_paths) {
-					p.reverse ();
-				}
+			Glyph g = MainWindow.get_current_glyph ();
 			
-				g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-			});
+			foreach (Path p in g.active_paths) {
+				p.reverse ();
+			}
+		
+			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+		});
 		path_tool_modifiers.add_tool (reverse_path_tool);
 
 		Tool move_layer = new Tool ("move_layer", "Move to path to bottom layer", 'd');
@@ -211,34 +207,34 @@ class Toolbox : DrawingArea {
 
 		Tool custom_character_set = new Tool ("custom_character_set", "Show default characters set", 'r', CTRL);
 		custom_character_set.select_action.connect ((self) => {
-				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);
-				OverView o = MainWindow.get_overview ();
-				GlyphRange gr = new GlyphRange ();
-				gr.use_default_range ();
-				o.set_glyph_range (gr);
-				MainWindow.get_tab_bar ().select_tab_name ("Overview");
-			});
+			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);
+			OverView o = MainWindow.get_overview ();
+			GlyphRange gr = new GlyphRange ();
+			gr.use_default_range ();
+			o.set_glyph_range (gr);
+			MainWindow.get_tab_bar ().select_tab_name ("Overview");
+		});
 		characterset_tools.add_tool (custom_character_set);
 
 		Tool avalilable_characters = new Tool ("available_characters", "Show characters in font", 'd', CTRL);
 		avalilable_characters.select_action.connect ((self) => {
-				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);
-				OverView o = MainWindow.get_overview ();
-				o.display_all_available_glyphs ();
-				MainWindow.get_tab_bar ().select_tab_name ("Overview");
-			});
+			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);
+			OverView o = MainWindow.get_overview ();
+			o.display_all_available_glyphs ();
+			MainWindow.get_tab_bar ().select_tab_name ("Overview");
+		});
 		characterset_tools.add_tool (avalilable_characters);
 
 		Tool delete_glyph = new Tool ("delete_selected_glyph", "Delete selected glyph");
 		delete_glyph.select_action.connect ((self) => {
-					OverView o = MainWindow.get_overview ();
-					
-					if (MainWindow.get_current_display () is OverView) {
-						o.delete_selected_glyph ();
-					}
-					
-					MainWindow.get_tab_bar ().select_tab_name ("Overview");
-			});
+			OverView o = MainWindow.get_overview ();
+			
+			if (MainWindow.get_current_display () is OverView) {
+				o.delete_selected_glyph ();
+			}
+			
+			MainWindow.get_tab_bar ().select_tab_name ("Overview");
+		});
 		characterset_tools.add_tool (delete_glyph);
 						
 		if (Supplement.has_argument ("--test")) {
@@ -297,31 +293,31 @@ class Toolbox : DrawingArea {
 
 		Tool xheight_help_lines = new Tool ("show_xheight_helplines", "Show help lines for x-height and baseline", 'x');
 		xheight_help_lines.select_action.connect ((self) => {
-				Glyph g = MainWindow.get_current_glyph ();
-				bool v = !g.get_xheight_lines_visible ();
-				g.set_xheight_lines_visible (v);
-				self.set_selected (v);
-				MainWindow.get_glyph_canvas ().redraw ();
-				
-				if (v && !help_lines.is_selected ()) {
-					select_tool (help_lines);
-				}
-				
-			});
+			Glyph g = MainWindow.get_current_glyph ();
+			bool v = !g.get_xheight_lines_visible ();
+			g.set_xheight_lines_visible (v);
+			self.set_selected (v);
+			MainWindow.get_glyph_canvas ().redraw ();
+			
+			if (v && !help_lines.is_selected ()) {
+				select_tool (help_lines);
+			}
+			
+		});
 		guideline_tools.add_tool (xheight_help_lines);
 
 		Tool background_help_lines = new Tool ("background_help_lines", "Show help lines at top and bottom margin", 't');
 		background_help_lines.select_action.connect ((self) => {
-				Glyph g = MainWindow.get_current_glyph ();
-				bool v = !g.get_margin_lines_visible ();
-				g.set_margin_lines_visible (v);
-				self.set_selected (v);
-				MainWindow.get_glyph_canvas ().redraw ();
-				
-				if (v && !help_lines.is_selected ()) {
-					select_tool (help_lines);
-				}
-			});
+			Glyph g = MainWindow.get_current_glyph ();
+			bool v = !g.get_margin_lines_visible ();
+			g.set_margin_lines_visible (v);
+			self.set_selected (v);
+			MainWindow.get_glyph_canvas ().redraw ();
+			
+			if (v && !help_lines.is_selected ()) {
+				select_tool (help_lines);
+			}
+		});
 		guideline_tools.add_tool (background_help_lines);
 
 		Tool new_grid = new GridTool ("new_grid");
@@ -330,16 +326,16 @@ class Toolbox : DrawingArea {
 		// Zoom tools 
 		Tool zoom_in = new Tool ("zoom_in", "zoom in", '+', CTRL);
 		zoom_in.select_action.connect ((self) => {
-				zoom_tool.store_current_view ();
-				glyph_canvas.get_current_display ().zoom_in ();
-			});
+			zoom_tool.store_current_view ();
+			glyph_canvas.get_current_display ().zoom_in ();
+		});
 		view_tools.add_tool (zoom_in);
 
 		Tool zoom_out = new Tool ("zoom_out", "Zoom out", '-', CTRL);
 		zoom_out.select_action.connect ((self) => {
-				zoom_tool.store_current_view ();
-				glyph_canvas.get_current_display ().zoom_out ();
-			});
+			zoom_tool.store_current_view ();
+			glyph_canvas.get_current_display ().zoom_out ();
+		});
 		view_tools.add_tool (zoom_out);
 
 		Tool reset_zoom = new Tool ("zoom_1_1", "Zoom to scale 1:1", '0', CTRL);
@@ -352,41 +348,41 @@ class Toolbox : DrawingArea {
 
 		Tool full_glyph = new Tool ("full_glyph", "Show full glyph", 'f');
 		full_glyph.select_action.connect((self) => {
-				zoom_tool.store_current_view ();
-				zoom_tool.zoom_full_glyph ();
-			});
+			zoom_tool.store_current_view ();
+			zoom_tool.zoom_full_glyph ();
+		});
 		view_tools.add_tool (full_glyph);
 
 		Tool zoom_boundries = new Tool ("zoom_boundries", "Zoom in at region boundries", 'v');
 		zoom_boundries.select_action.connect((self) => {
-				zoom_tool.store_current_view ();
-				glyph_canvas.get_current_display ().zoom_max ();
-			});
+			zoom_tool.store_current_view ();
+			glyph_canvas.get_current_display ().zoom_max ();
+		});
 		view_tools.add_tool (zoom_boundries);
 
 		Tool zoom_bg = new Tool ("zoom_background_image", "Zoom in background image", 'b');
 		zoom_bg.select_action.connect((self) => {
-				if (MainWindow.get_current_glyph ().get_background_image () != null) {
-					zoom_tool.store_current_view ();					
-					glyph_canvas.get_current_display ().reset_zoom ();
-					
-					zoom_tool.zoom_full_background_image ();
-					
-					glyph_canvas.queue_draw_area(0, 0, glyph_canvas.allocation.width, glyph_canvas.allocation.height);
-				}
-			});
+			if (MainWindow.get_current_glyph ().get_background_image () != null) {
+				zoom_tool.store_current_view ();					
+				glyph_canvas.get_current_display ().reset_zoom ();
+				
+				zoom_tool.zoom_full_background_image ();
+				
+				glyph_canvas.queue_draw_area(0, 0, glyph_canvas.allocation.width, glyph_canvas.allocation.height);
+			}
+		});
 		view_tools.add_tool (zoom_bg);
 
 		Tool zoom_prev = new Tool ("prev", "Previous view", 'j', CTRL);
 		zoom_prev.select_action.connect((self) => {
-				zoom_tool.previous_view ();
-			});
+			zoom_tool.previous_view ();
+		});
 		view_tools.add_tool (zoom_prev);
 
 		Tool zoom_next = new Tool ("next", "Next view", 'l', CTRL);
 		zoom_next.select_action.connect((self) => {
-				zoom_tool.next_view ();
-			});
+			zoom_tool.next_view ();
+		});
 		view_tools.add_tool (zoom_next);
 				
 		// background tools
@@ -422,10 +418,10 @@ class Toolbox : DrawingArea {
 		
 		Tool show_bg = new Tool ("show_background", "Show background image");
 		show_bg.select_action.connect ((self) => {
-				Glyph g = MainWindow.get_current_glyph ();
-				g.set_background_visible (!g.get_background_visible ());
-				MainWindow.get_glyph_canvas ().redraw ();
-			});
+			Glyph g = MainWindow.get_current_glyph ();
+			g.set_background_visible (!g.get_background_visible ());
+			MainWindow.get_glyph_canvas ().redraw ();
+		});
 		background_tools.add_tool (show_bg);
 
 		Tool bg_selection = new Tool ("insert_background", "Insert new background image");
@@ -448,6 +444,7 @@ class Toolbox : DrawingArea {
 			
 			tp.show_text ("");
 		});
+		
 		bg_selection.set_show_background (true);
 		background_tools.add_tool (bg_selection);
 		
@@ -467,7 +464,6 @@ class Toolbox : DrawingArea {
 				b = (!) bg;
 				b.set_contrast (background_contrast.get_value ());
 			}
-			
 		});
 		
 		// Fixa: background_tools.add_tool (background_contrast);
@@ -543,42 +539,7 @@ class Toolbox : DrawingArea {
 		
 		trace.set_persistent (false);
 		trace.set_unique (false);
-		
-		button_press_event.connect ((se, e)=> {
-			foreach (var exp in expanders) {
-				foreach (Tool t in exp.tool) {
-					if (t.is_over (e.x, e.y)) {
-						t.panel_press_action (t, e.button, e.x, e.y);
-						press_tool = t;
-					}
-				}
-			}
-			
-			return true;
-		});	
-				
-		button_release_event.connect ((se, e)=> {
-			release (e.button, e.x, e.y);
-			return true;
-		});
 
-		motion_notify_event.connect ((sen, e)=> {
-			move (e.x, e.y);
-			return true;
-		});
-		
-		expose_event.connect ((t, e)=> {
-				Allocation allocation;
-				get_allocation (out allocation);
-				
-				Context cw = cairo_create(get_window());
-				draw (allocation, cw);
-				
-				return true;
-			});
-		
-		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
-		
 		update_expanders ();
 		reset_active_tool ();
 
@@ -601,10 +562,22 @@ class Toolbox : DrawingArea {
 			
 			return false;
 		});
+		
 		idle.attach (null);
 	}
 	
-	private void release (uint button, double x, double y) {
+	public void press (uint button, double x, double y) {
+		foreach (var exp in expanders) {
+			foreach (Tool t in exp.tool) {
+				if (t.is_over (x, y)) {
+					t.panel_press_action (t, button, x, y);
+					press_tool = t;
+				}
+			}
+		}
+	}
+	
+	public void release (uint button, double x, double y) {
 		foreach (var exp in expanders) {
 			if (exp.is_over (x, y)) {
 				exp.set_open (! exp.is_open ());					
@@ -615,9 +588,7 @@ class Toolbox : DrawingArea {
 
 				update_expanders ();
 				
-				Allocation allocation;
-				get_allocation (out allocation);
-				queue_draw_area ((int) exp.x - 10, (int) exp.y - 10, allocation.width, (int) (allocation.height - exp.y + 10));
+				redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
 			}
 			
 			if (exp.is_open ()) {
@@ -640,7 +611,7 @@ class Toolbox : DrawingArea {
 		select_tool_by_name ("pen_tool");
 	}
 	
-	private void move (double x, double y) {
+	public void move (double x, double y) {
 		bool update;
 		bool a;
 		foreach (var exp in expanders) {
@@ -648,7 +619,7 @@ class Toolbox : DrawingArea {
 			update = exp.set_active (a);
 			
 			if (update) {
-				queue_draw_area ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 10), (int) (exp.y + exp.h + 10));
+				MainWindow.get_toolbox ().redraw ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 10), (int) (exp.y + exp.h + 10));
 			}
 			
 			if (exp.is_open ()) {
@@ -664,7 +635,7 @@ class Toolbox : DrawingArea {
 					}
 					
 					if (update) {
-						queue_draw_area (0, 0, allocation.width, allocation.height);
+						MainWindow.get_toolbox ().redraw (0, 0, allocation_width, allocation_height);
 					}
 					
 					t.panel_move_action (t, x, y);
@@ -684,7 +655,7 @@ class Toolbox : DrawingArea {
 		
 		grid_expander.set_open (true);
 		update_expanders ();
-		MainWindow.get_toolbox ().queue_draw_area (0, 0, allocation.width, allocation.height);		
+		redraw (0, 0, allocation_width, allocation_height);		
 	}
 	
 	public void parse_grid (string spin_button_value) {
@@ -713,7 +684,7 @@ class Toolbox : DrawingArea {
 		grid_expander.set_open (true);
 		update_expanders ();
 		
-		MainWindow.get_toolbox ().queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw (0, 0, allocation_width, allocation_height);
 		
 		select_tool (grid_width);
 		grid_width.set_active (false);
@@ -739,7 +710,7 @@ class Toolbox : DrawingArea {
 		}
 		
 		update_expanders ();
-		MainWindow.get_toolbox ().queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw (0, 0, allocation_width, allocation_height);
 	}
 
 	public void reset_active_tool () {
@@ -758,15 +729,6 @@ class Toolbox : DrawingArea {
 				}
 			}
 		}
-		
-		// FIXA:
-		/*
-		foreach (Tool t in MainWindow.get_content_display ().tools) {
-			if (t.is_active ()) {
-				return t;
-			}	
-		}
-		*/
 		
 		return null;
 	}
@@ -790,7 +752,7 @@ class Toolbox : DrawingArea {
 					tool.select_action (tool); // execute command
 					
 					if (update) {							
-						queue_draw_area ((int) exp.x - 10, (int) exp.y - 10, allocation.width, (int) (allocation.height - exp.y + 10));
+						redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
 					}
 					
 					if (exp == draw_tools || t == move_background || t == cut_background) {
@@ -841,29 +803,29 @@ class Toolbox : DrawingArea {
 		expanders.append (e);
 	}
 	
-	private void draw_expanders (Allocation allocation, Context cr) {
+	private void draw_expanders (int w, int h, Context cr) {
 		foreach (Expander e in expanders) {
-			e.draw (allocation, cr);
+			e.draw (w, h, cr);
 			if (e.is_open ()) {
-				e.draw_content (allocation, cr);
+				e.draw_content (w, h, cr);
 			}
 		}
 	}
 	
-	public void draw (Allocation allocation, Context cr) { 
+	public void draw (int w, int h, Context cr) { 
 		cr.save ();
 		
-		cr.rectangle(0, 0, allocation.width, allocation.height);
+		cr.rectangle(0, 0, w, h);
 		cr.set_line_width(0);
 		cr.set_source_rgba(124/255.0, 124/255.0, 124/255.0, 1);
 		cr.fill();
 
-		cr.rectangle(0, 0, 1, allocation.height);
+		cr.rectangle(0, 0, 1, h);
 		cr.set_line_width(0);
 		cr.set_source_rgba(0/255.0, 0/255.0, 0/255.0, 1);
 		cr.fill();
 
-		draw_expanders (allocation, cr);
+		draw_expanders (w, h, cr);
 		
 		cr.restore ();
 	}
@@ -873,19 +835,22 @@ class Toolbox : DrawingArea {
 	}
 	
 	public void maximize () {
-		Allocation a;
+/*		Allocation a;
 		get_allocation (out a);
 		expanded = true;
 		toolbox_expander.set_open (expanded);
 		set_size_request (158, a.height);
+*/
 	}
 	
 	public void minimize () {
+/*
 		Allocation a;
 		get_allocation (out a);
 		expanded = false;
 		toolbox_expander.set_open (expanded);
 		set_size_request (18, a.height);	
+*/
 	}
 }
 
@@ -987,7 +952,7 @@ class Expander : GLib.Object {
 					}
 				}
 			
-				MainWindow.get_toolbox ().queue_draw_area ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
+				MainWindow.get_toolbox ().redraw ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
 			
 				if (is_unique ()) {
 					foreach (var deselected in tool) {
@@ -1001,7 +966,7 @@ class Expander : GLib.Object {
 						var time = new TimeoutSource(200);
 						time.set_callback(() => {
 							selected.set_selected (false);
-							MainWindow.get_toolbox ().queue_draw_area ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
+							MainWindow.get_toolbox ().redraw ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
 							return false;
 						});
 						time.attach(null);
@@ -1045,7 +1010,7 @@ class Expander : GLib.Object {
 		return r;
 	}
 	
-	public void draw (Allocation allocation, Context cr) {
+	public void draw (int wd, int hd, Context cr) {
 		double lx, ly;
 		double ih2 = 5.4 / 2;
 		double iw2 = 5.4 / 2;
@@ -1081,22 +1046,22 @@ class Expander : GLib.Object {
 		cr.save ();
 		lx = x + w + 7;
 		ly = y + ih2;
-		if (lx < allocation.width) {
+		if (lx < wd) {
 			cr.set_line_width(1);
 			cr.set_source_rgba (0, 0, 0, 0.2);
 			cr.move_to (lx, ly);
-			cr.line_to (allocation.width - w - x + 4, ly);	
+			cr.line_to (wd - w - x + 4, ly);	
 			cr.stroke ();
 		}
 		cr.restore ();
 
 	}
 	
-	public void draw_content (Allocation allocation, Context cr) {
+	public void draw_content (int w, int h, Context cr) {
 		if (open) {
 			cr.save ();
 			foreach (var t in tool) {
-				t.draw (allocation, cr);
+				t.draw (cr);
 			}
 			cr.restore ();
 		}

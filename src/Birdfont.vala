@@ -65,8 +65,9 @@ public static int run_gui (string[] arg) {
 	}
 	
 	Gtk.init (ref arg);
-	MainWindow window = new MainWindow ("Birdfont");
-	window.show_all ();
+	MainWindow window = new MainWindow ();
+	GtkWindow native_window = new GtkWindow ("birdfont");
+	window.set_native (native_window);
 
 	if (supplement.fatal_wanings) {
 		LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;

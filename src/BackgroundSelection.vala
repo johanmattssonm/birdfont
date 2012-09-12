@@ -154,25 +154,15 @@ class BackgroundSelection : FontDisplay {
 	}
 
 	private void add_image () {
-		FileChooserDialog file_chooser;
-		string file;
-				
-		try {
-			file_chooser = new FileChooserDialog ("Add background image", MainWindow.get_current_window (), FileChooserAction.OPEN, Stock.CANCEL, ResponseType.CANCEL, Stock.OPEN, ResponseType.ACCEPT);
-			file_chooser.set_current_folder_file (Supplement.get_current_font ().get_folder ());
-			
-			if (file_chooser.run () == ResponseType.ACCEPT) {
-				// Fixa: Set file name relative to font folder
-				file = file_chooser.get_filename ();
+		string? file;
 
-				Supplement.get_current_font ().add_background_image (file);
-				MainWindow.get_glyph_canvas ().redraw ();				
-			}
+		file = MainWindow.file_chooser ("Add image");
 
-			file_chooser.destroy ();
-		} catch (GLib.Error e) {
-			warning (e.message);
+		if (file != null) {
+			Supplement.get_current_font ().add_background_image ((!) file);
 		}
+		
+		MainWindow.get_glyph_canvas ().redraw ();				
 		
 		collect_background_images ();
 	}

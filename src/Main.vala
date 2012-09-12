@@ -18,5 +18,7 @@
 using Birdfont;
 	
 public static int main (string[] arg) {
+	GtkWindow gtk_window = new GtkWindow ("Birdfont");
+	gtk_window.show_all ();
 	return run_gui (arg);
 }

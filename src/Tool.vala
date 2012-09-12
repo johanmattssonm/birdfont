@@ -16,8 +16,6 @@
 */
 
 using Cairo;
-using Gtk;
-using Gdk;
 
 namespace Supplement {
 
@@ -190,7 +188,7 @@ class Tool : GLib.Object {
 		return ret;
 	}
 		
-	public virtual void draw (Allocation allocation, Context cr) {
+	public virtual void draw (Context cr) {
 		double xt = x + 3 + w;
 		double yt = y + h + 17;
 

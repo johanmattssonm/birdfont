@@ -33,6 +33,7 @@ class Preview : FontDisplay {
 	}
 
 	public override void selected_canvas () {
+/*
 		WebView w = MainWindow.get_webview ();
 		string uri = get_uri ();
 		File new_dest;
@@ -63,6 +64,7 @@ class Preview : FontDisplay {
 			});
 			t2.attach (null);
 		}
+*/
 	}
 
 	public override string get_uri () {

@@ -623,8 +623,6 @@ class Glyph : FontDisplay {
 				t.double_click_action (t, (int) e.button, (int) e.x, (int) e.y);
 			}
 		}
-		
-		MainWindow.hide_cursor ();
 	}
 
 	/** Insert new edit point for current path on the appropriate zoom

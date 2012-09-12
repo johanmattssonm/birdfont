@@ -250,18 +250,8 @@ c.append ("""
 		string f;
 		bool saved = false;
 		Font font = Supplement.get_current_font ();
-		FileChooserDialog file_chooser = new FileChooserDialog ("Save", MainWindow.get_current_window (), FileChooserAction.SAVE, Stock.CANCEL, ResponseType.CANCEL, Stock.SAVE, ResponseType.ACCEPT);
 		
-		try {
-			file_chooser.set_current_folder_file (font.get_folder ());
-		} catch (GLib.Error e) {
-			stderr.printf (e.message);
-		}
-		
-		if (file_chooser.run () == ResponseType.ACCEPT) {	
-			MainWindow.get_glyph_canvas ().redraw ();
-			fn = file_chooser.get_filename ();
-		}
+		fn = MainWindow.file_chooser ("Save");
 		
 		if (fn != null) {
 			f = (!) fn;
@@ -275,8 +265,6 @@ c.append ("""
 			saved = true;
 		}
 
-		file_chooser.destroy ();
-		
 		return saved;
 	}
 
@@ -340,34 +328,19 @@ c.append ("""
 	}
 
 	private static void load_new_font () {
-		string? fn;
-		FileChooserDialog file_chooser = new FileChooserDialog ("Open font file", MainWindow.get_current_window (), FileChooserAction.OPEN, Stock.CANCEL, ResponseType.CANCEL, Stock.OPEN, ResponseType.ACCEPT);
+		string? fn = MainWindow.file_chooser ("load");
 		Font f = Supplement.get_current_font ();
 		
-		try {
-			file_chooser.set_current_folder_file (f.get_folder ());
-		} catch (GLib.Error e) {
-			stderr.printf (e.message);
+		if (fn != null) {
+			f.delete_backup ();
+			
+			MainWindow.clear_glyph_cache ();
+			MainWindow.close_all_tabs ();
+			f.load ((!)fn);
+			
+			MainWindow.get_singleton ().set_title (f.get_name ());
+			select_overview ();		
 		}
-		
-		if (file_chooser.run () == ResponseType.ACCEPT) {	
-			MainWindow.get_glyph_canvas ().redraw ();
-	
-			fn = file_chooser.get_filename ();
-
-			if (fn != null) {
-				f.delete_backup ();
-				
-				MainWindow.clear_glyph_cache ();
-				MainWindow.close_all_tabs ();
-				f.load ((!)fn);
-				
-				MainWindow.get_singleton ().set_title (f.get_name ());
-				select_overview ();		
-			}
-		}
-		
-		file_chooser.destroy ();
 	}
 	
 	public static void show_kerning_context () {

@@ -82,15 +82,16 @@ internal class Preferences {
 		int h = int.parse (get ("window_height"));
 		return (h == 0) ? 500 : h;
 	}
-		
+	
 	public static void update_window_size () {
-		int w, h;
+/*		int w, h;
 		MainWindow.get_current_window ().get_size (out w, out h);
 		
 		set ("window_width", @"$w");
 		set ("window_height", @"$h");
+*/
 	}
-
+	
 	public static void load () {
 		File app_dir = Supplement.get_settings_directory ();
 		File settings = app_dir.get_child ("settings");
