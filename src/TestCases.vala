@@ -98,7 +98,7 @@ class TestCases {
 		MenuTab.preview ();
 
 		// TODO: run this many times on big font
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 			MainWindow.get_tab_bar ().select_tab_name ("Menu");
 			Tool.yield ();
 			

@@ -75,6 +75,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			int i;
 			FontDisplay fd = tab.get_display ();
 			
+			if (fd.get_name () == "Preview") {
+				html_canvas.load_html_string ("", "");	
+				Tool.yield ();
+				ExportTool.export_all ();
+			}
+			
 			MainWindow.glyph_canvas.set_current_glyph (fd);
 			n = fd.is_html_canvas ();
 			

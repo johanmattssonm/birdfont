@@ -414,6 +414,7 @@ os.put_string (
 					export_thread.run ();
 				}
 			} catch (ThreadError e) {
+				export_mutex.unlock ();
 				warning (e.message);
 				done = false;
 			}			

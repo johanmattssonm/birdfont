@@ -33,38 +33,6 @@ class Preview : FontDisplay {
 	}
 
 	public override void selected_canvas () {
-/*
-		WebView w = MainWindow.get_webview ();
-		string uri = get_uri ();
-		File new_dest;
-
-		// ExportTool.export_svg_font (); windows requires all fonts to be available
-		ExportTool.export_all ();
-		
-		w.open (uri);
-		w.reload_bypass_cache ();
-
-		// this  hack forces webkit to reload the font and ignore cached data
-		// it's only required on windows platform and in wine 
-		//
-		// it would be nice to remove it.
-		if (Supplement.win32) {
-			TimeoutSource t1 = new TimeoutSource (300);
-			t1.set_callback (() => {
-				w.load_html_string ("<html><body>Loading ...</body></html>", uri);
-				return false;
-			});
-			t1.attach (null);
-			
-			TimeoutSource t2 = new TimeoutSource (1000);
-			t2.set_callback (() => {
-				w.load_uri (get_uri ());
-				w.reload_bypass_cache ();
-				return false;
-			});
-			t2.attach (null);
-		}
-*/
 	}
 
 	public override string get_uri () {
