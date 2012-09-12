@@ -55,6 +55,10 @@ class Glyph : FontDisplay {
 	// The point where edit event begun 
 	double pointer_begin_x = 0;
 	double pointer_begin_y = 0;
+
+	// Current pointer position
+	double motion_x = 0;
+	double motion_y = 0;
 		
 	// Zoom area
 	double zoom_x1 = 0;
@@ -76,13 +80,13 @@ class Glyph : FontDisplay {
 	public double left_limit;
 	public double right_limit;
 	
-	// x-height l-bearing etc.
+	// x-height, lsb, etc.
 	public List<Line> vertical_help_lines = new List<Line> ();
 	public List<Line> horizontal_help_lines = new List<Line> ();
 	List<Line> all_lines = new List<Line> (); 	// vertical, horzontal and grid lines
-	bool show_help_lines = true;           			// grey lines
-	bool xheight_lines_visible = false;   		 	// blue lines
-	bool margin_boundries_visible = false; 			// red lines
+	bool show_help_lines = true;
+	bool xheight_lines_visible = false;
+	bool margin_boundries_visible = false;
 	
 	bool unassigned = false;
 	public unichar unichar_code = 0;
@@ -92,9 +96,8 @@ class Glyph : FontDisplay {
 	List<Glyph> undo_list = new List<Glyph> ();
 
 	public List<Kerning> kerning = new List<Kerning> ();
-
-	double motion_x = 0;
-	double motion_y = 0;
+	
+	string glyph_sequence = "";
 	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
@@ -286,6 +289,7 @@ class Glyph : FontDisplay {
 	public override void selected_canvas () {
 		add_help_lines ();
 		KeyBindings.singleton.set_require_modifier (false);
+		glyph_sequence = Preferences.get ("glyph_sequence");
 	}
 	
 	private void remove_lines () {
@@ -1319,7 +1323,7 @@ class Glyph : FontDisplay {
 		cr.stroke ();		
 	}
 	
-	private void draw_path (Context cr) {
+	public void draw_path (Context cr) {
 		double left, baseline;
 		
 		// plot_outline (cr);
@@ -1722,6 +1726,68 @@ class Glyph : FontDisplay {
 		}
 		
 		return false;
+	}
+
+	public void juxtapose (Allocation allocation, Context cr) {
+		string glyph_sequence = Preferences.get ("glyph_sequence");
+		unichar c;
+		Font font = Supplement.get_current_font ();
+		Glyph glyph = MainWindow.get_current_glyph ();
+		Glyph juxtaposed;
+		StringBuilder current = new StringBuilder ();
+		int pos;
+		string name;
+		double x, kern;
+		double left, baseline;
+		string last_name;
+				
+		x = 0;
+		
+		current.append_unichar (glyph.unichar_code);
+		pos = glyph_sequence.index_of (current.str);
+		
+		baseline = glyph.get_line ("baseline").pos;
+		left = glyph.get_line ("left").pos;
+
+		x = glyph.get_width ();
+		last_name = glyph.name;
+		for (int i = pos + 1; i < glyph_sequence.char_count (); i++) {
+			c = glyph_sequence.get_char (i);
+			name = font.get_name_for_character (c);			
+			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_not_def_character ();
+			kern = font.get_kerning (last_name, name);
+
+			cr.save ();
+			cr.scale (glyph.view_zoom, glyph.view_zoom);
+			cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
+
+			Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x + kern, Glyph.yc () + baseline, Glyph.SCALE);
+			cr.restore ();
+			
+			x += juxtaposed.get_width () + font.get_kerning (glyph.name, name) + kern;
+			last_name = name;
+		}
+		
+		x = 0;
+		last_name = glyph.name;
+		for (int i = pos - 1; i >= 0; i--) {
+			c = glyph_sequence.get_char (i);
+			name = font.get_name_for_character (c);			
+			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_not_def_character ();
+			kern = font.get_kerning (name, last_name);
+			
+			x -= juxtaposed.get_width ();
+			x -= kern;
+			
+			cr.save ();
+			cr.scale (glyph.view_zoom, glyph.view_zoom);
+			cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
+
+			Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x, Glyph.yc () + baseline, Glyph.SCALE);
+			cr.restore ();
+			
+			last_name = name;
+		}	
 	}
 }
 

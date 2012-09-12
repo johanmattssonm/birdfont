@@ -77,6 +77,10 @@ class GlyphCanvas : DrawingArea  {
 		
 				current_display.draw (allocation, c);
 				
+				if (current_display is Glyph) {
+					((Glyph) current_display).juxtapose (allocation, c);
+				}
+				
 				cw.save ();
 				cw.set_source_surface (c.get_target (), 0, 0);
 				cw.paint ();

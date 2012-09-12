@@ -54,6 +54,10 @@ class MenuTab : FontDisplay {
 			}
 		});
 
+		add_html_callback ("glyph_sequence", (val) => {
+			Preferences.set ("glyph_sequence", val);
+		});
+
 		add_html_callback ("newfile", (val) => {
 			new_file ();
 		});
@@ -101,7 +105,7 @@ class MenuTab : FontDisplay {
 	<script type="text/javascript" src="supplement.js"></script>
 	<style type="text/css">@import url("style.css");</style>
 	<script type="text/javascript">
-		document.onkeyup = update_export_settings; 
+		document.onkeyup = update_text_fields; 
 	</script>
 </head>
 <body>
@@ -125,7 +129,7 @@ class MenuTab : FontDisplay {
 				
 c.append ("""
 				<h3>Name</h3>
-				<input class="text" type="text" id="fontname" value=""" + "\"" + f.get_name () + "\"" + """ onchange="update_export_settings ();"/><br />
+				<input class="text" type="text" id="fontname" value=""" + "\"" + f.get_name () + "\"" + """ onchange="update_text_fields ();"/><br />
 				
 				<input class="button" type="button" value="Export" id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) Export SVG, TTF & EOF fonts');"/>
 				<input class="button" type="button" value="Preview" id="preview_button" onclick="call ('preview:fonts');" onmouseover="call ('help:(Ctrl+p) Export SVG font and view the result');"/><br />
@@ -134,6 +138,13 @@ c.append ("""
 c.append ("""
 			</form> 
 		</div>
+	</div>
+
+	<div class="inner_format_box">
+		<div class="heading"><h2>Edit</h2></div>
+		
+		<h3>Glyph sequence</h3>
+		<input class="text" type="text" id="glyph_sequence" value=""" + "\"" + Preferences.get ("glyph_sequence") + "\"" + """ onchange="update_text_fields ();"/><br />
 	</div>
 	
 	<br class="clearBoth" />
