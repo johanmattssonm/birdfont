@@ -147,20 +147,29 @@ class Toolbox : DrawingArea {
 		draw_tool_modifiers.add_tool (erase_tool);	
 
 		// adjust precision
+		string precision_value = Preferences.get ("precision");
+		
 		precision = new SpinButton ("precision", "Set precision");
-		precision.set_value_round (1);
-
+		
+		if (precision_value != "") {
+			precision.set_value (precision_value);
+		} else {
+			precision.set_value_round (1);
+		}
+		
 		precision.new_value_action.connect ((self) => {
 			pen_tool.set_precision (self.get_value ());
 			select_tool (precision);
 			
+			Preferences.set ("precision", self.get_display_value ());
+			MainWindow.get_toolbox ().queue_draw_area ((int) precision.x, (int) precision.y, 70, 70);
 		});
 		
 		precision.set_min (0.001);
 		precision.set_max (1);
 		
 		draw_tool_modifiers.add_tool (precision);
-						
+				
 		// path tools
 		Tool union_paths_tool = new MergeTool ("union_paths");
 		path_tool_modifiers.add_tool (union_paths_tool);
