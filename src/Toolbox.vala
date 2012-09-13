@@ -154,11 +154,14 @@ class Toolbox : GLib.Object  {
 		}
 		
 		precision.new_value_action.connect ((self) => {
-			pen_tool.set_precision (self.get_value ());
 			select_tool (precision);
 			
 			Preferences.set ("precision", self.get_display_value ());
 			redraw ((int) precision.x, (int) precision.y, 70, 70);
+		});
+
+		precision.select_action.connect((self) => {
+			pen_tool.set_precision (((SpinButton)self).get_value ());
 		});
 		
 		precision.set_min (0.001);
