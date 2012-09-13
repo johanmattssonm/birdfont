@@ -1290,9 +1290,13 @@ class Glyph : FontDisplay {
 	}
 	
 	public bool is_empty () {
-		bool p = path_list.length () == 0 || path_list.first ().data.points.length () == 0;
-		return p && background_image == null;
-		return false;
+		foreach (Path p in path_list) {
+			if (p.points.length () > 0) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	private void set_zoom (double z)
@@ -1412,12 +1416,14 @@ class Glyph : FontDisplay {
 			cmp.restore ();
 		}
 
-		cmp.save ();
-		cmp.scale (view_zoom, view_zoom);
-		cmp.translate (-view_offset_x, -view_offset_y);
-		draw_path (cmp); // Fixa: This does mess up scale (sometimes) for unknown reasons	
-		cmp.restore ();
-				
+		if (!is_empty ()) {
+			cmp.save ();
+			cmp.scale (view_zoom, view_zoom);
+			cmp.translate (-view_offset_x, -view_offset_y);
+			draw_path (cmp);
+			cmp.restore ();
+		}
+		
 		cr.save ();
 		cr.set_source_surface (ps, 0, 0);
 		cr.paint ();
@@ -1757,12 +1763,15 @@ class Glyph : FontDisplay {
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_not_def_character ();
 			kern = font.get_kerning (last_name, name);
 
-			cr.save ();
-			cr.scale (glyph.view_zoom, glyph.view_zoom);
-			cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
+			print (@"name $name is empty?: $(juxtaposed.is_empty ())\n");
 
-			Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x + kern, Glyph.yc () + baseline, Glyph.SCALE);
-			cr.restore ();
+			if (!juxtaposed.is_empty ()) {
+				cr.save ();
+				cr.scale (glyph.view_zoom, glyph.view_zoom);
+				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
+				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x + kern, Glyph.yc () + baseline, Glyph.SCALE);
+				cr.restore ();
+			}
 			
 			x += juxtaposed.get_width () + font.get_kerning (glyph.name, name) + kern;
 			last_name = name;
@@ -1779,12 +1788,14 @@ class Glyph : FontDisplay {
 			x -= juxtaposed.get_width ();
 			x -= kern;
 			
-			cr.save ();
-			cr.scale (glyph.view_zoom, glyph.view_zoom);
-			cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
+			if (!juxtaposed.is_empty ()) {
+				cr.save ();
+				cr.scale (glyph.view_zoom, glyph.view_zoom);
+				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
 
-			Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x, Glyph.yc () + baseline, Glyph.SCALE);
-			cr.restore ();
+				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x, Glyph.yc () + baseline, Glyph.SCALE);
+				cr.restore ();
+			}
 			
 			last_name = name;
 		}	
