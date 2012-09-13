@@ -1394,13 +1394,7 @@ class Glyph : FontDisplay {
 			draw_help_lines (cmp);
 			cmp.restore ();
 		}
-
-		if (background_image != null && background_image_visible) {
-			cmp.save ();
-			((!)background_image).draw (cr, allocation, view_offset_x, view_offset_y, view_zoom);
-			cmp.restore ();
-		}
-		
+				
 		cmp.save (); 
 		tool = MainWindow.get_toolbox ().get_current_tool ();
 		tool.draw_action (tool, cmp, this);
@@ -1746,6 +1740,10 @@ class Glyph : FontDisplay {
 		cr.save ();
 		draw_background_color (cr, 1);
 		cr.restore ();
+
+		if (background_image != null && background_image_visible) {
+			((!)background_image).draw (cr, allocation, view_offset_x, view_offset_y, view_zoom);
+		}
 				
 		x = 0;
 		

@@ -540,7 +540,6 @@ os.put_string (
 		}
 		
 		void write_eof () {
-			print ("WRITE EOF\n");
 			EotWriter fo;
 
 			return_if_fail (!is_null (this));

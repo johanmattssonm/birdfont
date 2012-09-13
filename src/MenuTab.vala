@@ -239,7 +239,7 @@ c.append ("""
 			select_overview ();
 		});
 		
-		MainWindow.get_tab_bar ().add_unique_tab (save, 50);
+		MainWindow.get_tab_bar ().add_unique_tab (save, 70);
 		
 		if (!font.is_modified ()) {
 			save.finished ();
@@ -323,7 +323,7 @@ c.append ("""
 			select_overview ();
 		});
 		
-		MainWindow.get_tab_bar ().add_unique_tab (save, 50);
+		MainWindow.get_tab_bar ().add_unique_tab (save, 70);
 		
 		if (!font.is_modified ()) {
 			save.finished ();
@@ -335,7 +335,7 @@ c.append ("""
 		save.finished.connect (() => {
 			load_new_font ();
 		});
-		MainWindow.get_tab_bar ().add_unique_tab (save, 50);
+		MainWindow.get_tab_bar ().add_unique_tab (save);
 	}
 
 	private static void load_new_font () {
@@ -355,12 +355,12 @@ c.append ("""
 	}
 	
 	public static void show_kerning_context () {
-		MainWindow.get_tab_bar ().add_unique_tab (new ContextDisplay (), 65, false);
+		MainWindow.get_tab_bar ().add_unique_tab (new ContextDisplay (), 85, false);
 	}
 	
 	public static void preview () {
 		TabBar t = MainWindow.get_tab_bar ();
-		t.add_unique_tab (new Preview (), 64);		
+		t.add_unique_tab (new Preview (), 80);		
 	}
 }
 }

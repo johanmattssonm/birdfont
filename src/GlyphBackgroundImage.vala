@@ -306,8 +306,6 @@ class GlyphBackgroundImage {
 
 		x = Glyph.reverse_path_coordinate_x (img_offset_x);
 		y = Glyph.reverse_path_coordinate_y (img_offset_y);
-				
-		cr.save ();
 		
 		ih = (int) get_img ().get_height ();
 		iw = (int) get_img ().get_width ();
