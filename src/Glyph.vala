@@ -1760,10 +1760,13 @@ class Glyph : FontDisplay {
 		for (int i = pos + 1; i < glyph_sequence.char_count (); i++) {
 			c = glyph_sequence.get_char (i);
 			name = font.get_name_for_character (c);			
-			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_not_def_character ();
-			kern = font.get_kerning (last_name, name);
-
-			print (@"name $name is empty?: $(juxtaposed.is_empty ())\n");
+			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ();
+			
+			if (font.has_glyph (last_name) && font.has_glyph (name)) {
+				kern = font.get_kerning (last_name, name);
+			} else {
+				kern = 0;
+			}
 
 			if (!juxtaposed.is_empty ()) {
 				cr.save ();
@@ -1782,8 +1785,13 @@ class Glyph : FontDisplay {
 		for (int i = pos - 1; i >= 0; i--) {
 			c = glyph_sequence.get_char (i);
 			name = font.get_name_for_character (c);			
-			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_not_def_character ();
-			kern = font.get_kerning (name, last_name);
+			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ();
+			
+			if (font.has_glyph (last_name) && font.has_glyph (name)) {
+				kern = font.get_kerning (name, last_name);
+			} else {
+				kern = 0;
+			}
 			
 			x -= juxtaposed.get_width ();
 			x -= kern;
