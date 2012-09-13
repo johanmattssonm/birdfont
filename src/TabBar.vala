@@ -101,19 +101,19 @@ class TabBar : DrawingArea {
 				return true;
 			});	
 		
-		set_size_request (20, 50);
+		set_size_request (20, 25);
 	}
 	
 	private void is_over_close (double x, double y, out int over, out int over_close) {
 		int i = 0;
-		double offset = 40;
+		double offset = 0;
 		
 		foreach (Tab t in tabs) {
 						
 			if ( offset < x < offset + t.get_width ()) {
 				over = i;
 				
-				if (28 < y < 46 && x > offset + t.get_width () - 16) {
+				if (8 < y < 20 && x > offset + t.get_width () - 16) {
 					over_close =  i;
 				} else {
 					over_close =  -1;
@@ -122,7 +122,7 @@ class TabBar : DrawingArea {
 				return;
 			}
 			
-			offset += t.get_width () + 10;
+			offset += t.get_width () + 3;
 			i++;
 		}
 
@@ -361,30 +361,30 @@ class TabBar : DrawingArea {
 		get_allocation(out alloc);
 
 		double close_opacity;
-		double offset = 40;
+		double offset = 0;
 		int i = 0;
 		foreach (Tab t in tabs) {
 			cr.save ();
-			cr.translate (offset, 27);
+			cr.translate (offset, 0);
 
+			// background
 			if (i == selected) {
-				cr.set_source_rgba (1, 1, 1, 1);
+				for (int j = 0; j < t.get_width (); j++) {
+					cr.set_source_surface ((!) tab3_right, j, 2);
+					cr.paint ();
+				}							
 			} else if (i == over) {
-				cr.set_source_rgba (230/255.0, 236/255.0, 244/255.0, 1);
+				for (int j = 0; j < t.get_width (); j++) {
+					cr.set_source_surface ((!) tab2_right, j, 2);
+					cr.paint ();
+				}				
 			} else {
-				cr.set_source_rgba (142/255.0, 158/255.0, 190/255.0, 1);
+				for (int j = 0; j < t.get_width (); j++) {
+					cr.set_source_surface ((!) tab1_right, j, 2);
+					cr.paint ();
+				}
 			}
 			
-			cr.rectangle(-2, 5, t.get_width (), 18);
-			cr.set_line_width (0);
-			cr.fill ();
-						
-			cr.set_source_rgba (0, 0, 0, 1);
-			cr.set_font_size (12);
-			cr.move_to (0, 18);
-			cr.show_text (t.get_label ());
-			cr.stroke ();
-	
 			// close
 			if (t.has_close_button ()) {
 				cr.set_line_width (1);
@@ -401,31 +401,38 @@ class TabBar : DrawingArea {
 				cr.stroke ();	
 			}
 
+			cr.set_source_rgba (0, 0, 0, 1);
+			cr.set_font_size (14);
+			cr.move_to (8, 18);
+			cr.show_text (t.get_label ());
+			cr.stroke ();
+			
+			// edges
 			if (tab1_left != null  && tab1_right != null && tab2_left != null  && tab2_right != null && tab3_left != null  && tab3_right != null) {
 				if (i == selected) {
-					cr.set_source_surface ((!) tab3_left, -7, 5);
+					cr.set_source_surface ((!) tab3_left, 0, 2);
 					cr.paint ();
 					
-					cr.set_source_surface ((!) tab3_right, t.get_width () - 2, 5);
+					cr.set_source_surface ((!) tab3_right, t.get_width () - 2, 2);
 					cr.paint ();
 				} else if (i == over) {
-					cr.set_source_surface ((!) tab2_left, -7, 5);
+					cr.set_source_surface ((!) tab2_left, 0, 2);
 					cr.paint ();
 
-					cr.set_source_surface ((!) tab2_right, t.get_width () - 2, 5);
+					cr.set_source_surface ((!) tab2_right, t.get_width () - 2, 2);
 					cr.paint ();
 				} else {
-					cr.set_source_surface ((!) tab1_left, -7, 5);
+					cr.set_source_surface ((!) tab1_left, 0, 2);
 					cr.paint ();
 
-					cr.set_source_surface ((!) tab1_right, t.get_width () - 2, 5);
+					cr.set_source_surface ((!) tab1_right, t.get_width () - 2, 2);
 					cr.paint ();
 				}
 			}
 
 			cr.restore ();
 			
-			offset += t.get_width () + 10; // FIXA 10 should be x off marg eller så
+			offset += t.get_width () + 3;
 			i++;
 		}
 	}

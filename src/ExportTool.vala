@@ -26,6 +26,8 @@ class ExportTool : Tool {
 	public static bool export_thread_is_running = false;
 	private static unowned Thread<void*> export_thread_handle;
 
+	private static bool stop_export_thread = false;
+
 	public ExportTool (string n) {
 		base (n, "Export glyph to svg file", 'e', CTRL);
 	
@@ -361,6 +363,21 @@ os.put_string (
 		return export_ttf_font_path (file);
 	}
 	
+	/** Stop a running export thread.*/
+	public static void stop_export () {
+		lock (stop_export_thread) {
+			stop_export_thread = true;
+		}
+	}
+	
+	public static bool should_stop () {
+		bool r;
+		lock (stop_export_thread) {
+			r = stop_export_thread;
+		}
+		return r;
+	} 
+	
 	public static bool export_ttf_font_path (File folder, bool async = true) {
 		Font current_font = Supplement.get_current_font ();
 		string path;
@@ -371,7 +388,15 @@ os.put_string (
 		string temp_file;
 		bool done = true;
 
+		lock (stop_export_thread) {
+			stop_export_thread = true;
+		}
+
 		export_mutex.lock ();
+
+		lock (stop_export_thread) {
+			stop_export_thread = false;
+		}
 
 		if (Supplement.win32) {
 			async = false;
@@ -480,8 +505,13 @@ os.put_string (
 			assert (!is_null (ttf));
 			assert (!is_null (eot));
 			
-			write_ttf ();
-			write_eof ();
+			if (!should_stop ()) { 
+				write_ttf ();
+			}
+			
+			if (!should_stop ()) { 
+				write_eof ();
+			}
 			
 			ExportTool.export_thread_is_running = false;
 			
@@ -510,6 +540,7 @@ os.put_string (
 		}
 		
 		void write_eof () {
+			print ("WRITE EOF\n");
 			EotWriter fo;
 
 			return_if_fail (!is_null (this));

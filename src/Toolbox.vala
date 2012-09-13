@@ -199,7 +199,7 @@ class Toolbox : GLib.Object  {
 		// Character set tools
 		Tool full_unicode = new Tool ("utf_8", "Show full unicode characters set", 'a', CTRL);
 		full_unicode.select_action.connect ((self) => {
-				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);	
+				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);	
 				OverView o = MainWindow.get_overview ();
 				GlyphRange gr = new GlyphRange ();
 				gr.use_full_unicode_range ();
@@ -210,7 +210,7 @@ class Toolbox : GLib.Object  {
 
 		Tool custom_character_set = new Tool ("custom_character_set", "Show default characters set", 'r', CTRL);
 		custom_character_set.select_action.connect ((self) => {
-			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);
+			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
 			GlyphRange gr = new GlyphRange ();
 			gr.use_default_range ();
@@ -221,7 +221,7 @@ class Toolbox : GLib.Object  {
 
 		Tool avalilable_characters = new Tool ("available_characters", "Show characters in font", 'd', CTRL);
 		avalilable_characters.select_action.connect ((self) => {
-			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 75, false);
+			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
 			o.display_all_available_glyphs ();
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");

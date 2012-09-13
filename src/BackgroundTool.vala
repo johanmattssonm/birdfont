@@ -129,6 +129,9 @@ class BackgroundTool : Tool {
 		dx *= 1/g.view_zoom;
 		dy *= 1/g.view_zoom;
 	
+		dx *= PenTool.precision;
+		dy *= PenTool.precision;
+		
 		if (bg.selected_handle == 2) {
 			bg.set_img_rotation_from_coordinate (x, y);
 		}

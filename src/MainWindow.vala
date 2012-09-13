@@ -125,7 +125,7 @@ internal class MainWindow {
 		}
 		
 		over_view = new OverView();
-		tabs.add_unique_tab (over_view, 75, false);
+		tabs.add_unique_tab (over_view, 100, false);
 				
 		return over_view;
 	}

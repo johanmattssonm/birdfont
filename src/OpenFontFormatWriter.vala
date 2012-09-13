@@ -627,7 +627,6 @@ class LocaTable : Table {
 					
 					if (0 < i < size && glyph_offsets[i - 1] > glyph_offsets[i]) {
 						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
-						print_offsets ();
 					}
 				}
 				break;
@@ -638,8 +637,7 @@ class LocaTable : Table {
 									
 					if (0 < i < size && glyph_offsets[i - 1] > glyph_offsets[i]) {
 						warning (@"Invalid loca table, it must be sorted. ($(glyph_offsets[i - 1]) > $(glyph_offsets[i]))");
-						print_offsets ();
-					}				
+					}		
 				}
 
 				break;
@@ -1627,6 +1625,10 @@ class GlyfTable : Table {
 			printd (@"loca fd.length (): $(fd.length ())\n");
 
 			last_len = fd.length ();
+			
+			if (ExportTool.should_stop ()) {
+				break;
+			}
 		}
 
 		location_offsets.append (fd.length ()); // last entry in loca table is special

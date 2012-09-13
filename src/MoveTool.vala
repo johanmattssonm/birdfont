@@ -87,12 +87,12 @@ class MoveTool : Tool {
 		move_action.connect ((self, x, y)	 => {
 			if (move_path) {
 				Glyph glyph = MainWindow.get_current_glyph ();
-
 				double dx = last_x - x;
 				double dy = last_y - y; 
+				double p = PenTool.precision;
 
 				foreach (Path path in glyph.active_paths) {
-					path.move (glyph.ivz () * -dx, glyph.ivz () * dy);
+					path.move (glyph.ivz () * -dx * p, glyph.ivz () * dy * p);
 				}
 				
 				MainWindow.get_glyph_canvas ().redraw ();

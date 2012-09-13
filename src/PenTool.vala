@@ -44,7 +44,7 @@ class PenTool : Tool {
 	private static bool adjust_precision = false;
 	private static double adjust_precision_begin_x = 0;
 	private static double adjust_precision_begin_y = 0;
-	private static double precision = 1;
+	public static double precision = 1;
 	
 	public PenTool (string name) {
 		base (name, "Edit path", ',', CTRL);

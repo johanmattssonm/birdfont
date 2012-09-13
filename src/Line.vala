@@ -135,9 +135,6 @@ class Line : GLib.Object {
 		event_move_to (x, y, x, y, allocation);
 	}
 	
-	/** Move to line to @param x, @param y and execute ove line handle 
-	 * event for @param x, @param y.
-	 */
 	public void event_move_to (double x, double y, double ax, double ay, Allocation allocation) {
 		double p, c, mx, my;
 		bool a = false;

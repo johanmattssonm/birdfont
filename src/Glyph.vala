@@ -438,7 +438,7 @@ class Glyph : FontDisplay {
 		return (int) Math.fabs (a.data.pos / SCALE - b.data.pos / SCALE); 
 	}
 	
-	public int get_width () {
+	public double get_width () {
 		return (int) Math.fabs (right_limit / SCALE - left_limit / SCALE);
 	}
 
@@ -1383,10 +1383,6 @@ class Glyph : FontDisplay {
 		ImageSurface ps = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
 		Context cmp = new Context (ps);
 
-		cr.save ();
-		draw_background_color (cr, 1);
-		cr.restore ();
-
 		if (Supplement.show_coordinates) {
 			draw_coordinate (cmp);
 		}
@@ -1746,6 +1742,10 @@ class Glyph : FontDisplay {
 		double x, kern;
 		double left, baseline;
 		string last_name;
+
+		cr.save ();
+		draw_background_color (cr, 1);
+		cr.restore ();
 				
 		x = 0;
 		

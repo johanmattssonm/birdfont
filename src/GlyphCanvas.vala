@@ -72,13 +72,13 @@ class GlyphCanvas : DrawingArea  {
 				
 				Surface s = new Surface.similar (cw.get_target (), Cairo.Content.COLOR_ALPHA, allocation.width, allocation.height);
 				Context c = new Context (s); 
-		
-				current_display.draw (allocation, c);
-				
+
 				if (current_display is Glyph) {
 					((Glyph) current_display).juxtapose (allocation, c);
 				}
-				
+						
+				current_display.draw (allocation, c);
+
 				cw.save ();
 				cw.set_source_surface (c.get_target (), 0, 0);
 				cw.paint ();

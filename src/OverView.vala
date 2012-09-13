@@ -400,15 +400,9 @@ class OverView : FontDisplay {
 		
 		g = (!) gl;
 		g.boundries (out x1, out y1, out x2, out y2);
-		
-		if (g.get_width () > w) {
-			m = 0;
-		} else {
-			m = ((w - g.get_width ()) / 2.0) / scale;
-		}
-		
-		gx = -x1 + m;
-		gy = -f.bottom_position + 210 - 65;
+
+		gx = 0;
+		gy = h / scale - 40;
 		
 		Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h);
 		Context c = new Context (s);
