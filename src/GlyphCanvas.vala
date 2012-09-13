@@ -47,14 +47,12 @@ class GlyphCanvas : DrawingArea  {
 					bool ug = false;
 					
 					if (allocation.height % 2 != 0) {
-						warning ("MainWindow.toggle_expanded_margin_bottom ();");
-						// MainWindow.toggle_expanded_margin_bottom ();
+						MainWindow.native_window.toggle_expanded_margin_bottom ();
 						ug = true;
 					}
 					
 					if (allocation.width % 2 != 0) {
-						warning ("MainWindow.toggle_expanded_margin_right ();");
-						// MainWindow.toggle_expanded_margin_right ();
+						MainWindow.native_window.toggle_expanded_margin_right ();
 						ug = true;
 					}					
 					

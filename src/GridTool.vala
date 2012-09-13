@@ -198,8 +198,8 @@ class GridTool : Tool {
 		}
 		
 		if (!coordinate) {
-			x = (xmin.get_pos () - g.view_offset_x + (g.allocation.width / 2)) * g.view_zoom;	
-			y = (ymin.get_pos () - g.view_offset_y + (g.allocation.height / 2)) * g.view_zoom;
+			x = Glyph.reverse_path_coordinate_x (xmin.get_pos ());
+			y = Glyph.reverse_path_coordinate_y (-ymin.get_pos ());
 		} else {
 			x = xmin.get_pos ();
 			y = ymin.get_pos ();

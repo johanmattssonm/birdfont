@@ -154,7 +154,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	}
 
-	internal static void toggle_expanded_margin_bottom () {
+	internal void toggle_expanded_margin_bottom () {
 		int w, h;
 		margin_bottom.get_size_request (out w, out h);
 		
@@ -164,7 +164,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		margin_bottom.set_size_request (w, h);
 	}
 	
-	internal static void toggle_expanded_margin_right () {	
+	internal void toggle_expanded_margin_right () {	
 		int w, h;
 		margin_right.get_size_request (out w, out h);
 
