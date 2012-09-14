@@ -1,3 +1,15 @@
+birdfont (0.4.0) stable;
+
+  * Larger control points
+  * Crop background updates position of the image
+  * Undo command for background images
+  * Faster multithreaded export
+  * Juxtapose glyphs and draw every glyph in it's context
+  * New notdef. character
+  * New tab bar
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Sep 14 13:11:13 CEST 2012
+
 birdfont (0.3.0) stable;
 
   * Embedded OpenType (EOT) support

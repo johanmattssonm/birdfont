@@ -150,8 +150,12 @@ c.append ("""
 	<br class="clearBoth" />
 	
 	<div class="recent_list">
-	<div class="heading"><h2>Recent files</h2></div>
 """);
+
+if (recent_fonts.length () > 0) {
+	c.append ("""<div class="heading"><h2>Recent files</h2></div>""");
+	c.append ("\n");
+}
 
 foreach (Font font in recent_fonts) {
 	fn = (!) font.font_file;
