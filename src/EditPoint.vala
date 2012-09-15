@@ -71,6 +71,12 @@ class EditPoint {
 	
 		right_handle = new EditPointHandle (this, 0, 7);
 		left_handle = new EditPointHandle (this, PI, 7);
+
+		if (unlikely (nx.is_nan () || ny.is_nan ())) {
+			warning (@"Invalid point at ($nx,$ny).");
+			x = 0;
+			y = 0;
+		}
 	}
 
 	/** Flip handles if next point on path is in the other direction. 
@@ -321,6 +327,12 @@ class EditPoint {
 	public void set_position (double tx, double ty) {
 		x = tx;
 		y = ty;
+
+		if (unlikely (tx.is_nan () || ty.is_nan ())) {
+			warning (@"Invalid point at ($tx,$ty).");
+			x = 0;
+			y = 0;
+		}
 	}
 	
 	public static void to_coordinate (ref double x, ref double y) {

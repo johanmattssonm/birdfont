@@ -69,6 +69,7 @@ class EditPointHandle  {
 		
 		if (unlikely (r <= -100000)) {
 			print_position ();
+			move_to (0, 0);
 		}
 	
 		return r;
@@ -79,6 +80,7 @@ class EditPointHandle  {
 		
 		if (unlikely (r <= -100000)) {
 			print_position ();
+			move_to (0, 0);
 		}
 		
 		return r;
