@@ -144,7 +144,11 @@ class Glyph : FontDisplay {
 	
 	public Path? get_active_path () {
 		return_if_fail (!is_null(active_paths));
-		return_if_fail (!is_null(active_paths.last ()));
+		
+		if (!is_null(active_paths.last ())) {
+			return null;
+		}
+		
 		return active_paths.last ().data;
 	}
 	

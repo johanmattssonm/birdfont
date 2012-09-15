@@ -303,13 +303,15 @@ class OverView : FontDisplay {
 		cr.save ();
 		cr.set_line_width (1);
 		
-		x = 20;
+		x = 0;
 		
 		cr.set_font_size (14);
 
 		left_margin = 0;
+				
+		print (@"items_per_row: $items_per_row \n");
 					
-		while (x < width) {
+		for (int j = 0; j < items_per_row; j++) {
 			
 			if (all_avail) {
 				if (! (0 <= index < f.length ())) {
@@ -446,8 +448,10 @@ class OverView : FontDisplay {
 			scrollbar.draw (cr, allocation);
 		}
 		
-		n_items = ((allocation.width - 15) / nail_width);
+		n_items = ((allocation.width - 40) / nail_width);
 		rows = (allocation.height / nail_height);
+		
+		print (@"n_items: $n_items  (2)\n");
 		
 		if (items_per_row != n_items) { 	
 			if (items_per_row == 0) {
@@ -470,10 +474,10 @@ class OverView : FontDisplay {
 		y = 0;
 		t = first_visible;
 		i = 0;
-		while (y < allocation.height + nail_height) {
+		for (int j = 0; j < rows + 1; j++) {
 			draw_caption (i, width, cr, y, t);
 
-			t += (allocation.width / nail_width);
+			t += items_per_row;
 			y += nail_height;
 			i++;
 		}
@@ -871,13 +875,15 @@ class OverView : FontDisplay {
 		unichar current = selected;
 
 		// click in margin
-		int n_items = (allocation.width / nail_width);
-		double m = (allocation.width - (n_items * nail_width)) / 2.0;
+		int n_items = (allocation.width - 40 / nail_width);
+		double m = (allocation.width - 40 - (n_items * nail_width)) / 2.0;
 		
 		bool menu_action = false;
 		
 		Font f;
 		uint len;
+
+		print (@"n_items: $n_items\n");
 
 		if (all_avail) {
 			f = Supplement.get_current_font ();
