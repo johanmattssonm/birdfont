@@ -71,8 +71,6 @@ class Glyph : FontDisplay {
 	public double move_offset_x = 0;
 	public double move_offset_y = 0;
 
-	public signal void queue_draw_area (int x, int y, int w, int h);
-	
 	public Allocation allocation;
 	
 	public string name;
@@ -109,11 +107,6 @@ class Glyph : FontDisplay {
 
 		left_limit = -28 * SCALE;
 		right_limit = 28 * SCALE;
-		
-		// TODO: call redraw direcly
-		queue_draw_area.connect ((x, y, w, h) => {
-			redraw_area (x, y, w, h);
-		});
 	}
 
 	public Glyph.no_lines (string name, unichar unichar_code = 0) {
@@ -273,7 +266,7 @@ class Glyph : FontDisplay {
 			view_offset_y -= 10 / view_zoom;
 		}
 		
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
 	public override void scroll_wheel_down (Gdk.EventScroll e) {
@@ -285,7 +278,7 @@ class Glyph : FontDisplay {
 			view_offset_y += 10 / view_zoom;
 		}
 		
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
 	public void add_path (Path p) {
@@ -457,7 +450,7 @@ class Glyph : FontDisplay {
 	}
 	
 	public void redraw_help_lines () {
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
 	public void set_show_help_lines (bool hl) {
@@ -476,7 +469,7 @@ class Glyph : FontDisplay {
 		sort_help_lines ();
 		
 		line.queue_draw_area.connect ((x, y, w, h) => {
-			this.queue_draw_area (x, y, w, h);
+			this.redraw_area (x, y, w, h);
 		});
 	}
 	
@@ -718,7 +711,7 @@ class Glyph : FontDisplay {
 		w = Math.fabs (zoom_x1 - zoom_x2) + 100;
 		h = Math.fabs (zoom_y1 - zoom_y2) + 100;
 				
-		queue_draw_area ((int)x, (int)y, (int)w, (int)h);
+		redraw_area ((int)x, (int)y, (int)w, (int)h);
 	}
 
 	public void set_zoom_area (int sx, int sy, int nx, int ny) {
@@ -798,7 +791,7 @@ class Glyph : FontDisplay {
 		double xta = -view_offset_x - xmin;
 		double xtb = -view_offset_x - xmax;
 
-		queue_draw_area ((int)xtb - 10, (int)yta - 10, (int)(xtb - xta) + 10, (int) (yta - ytb) + 10);
+		redraw_area ((int)xtb - 10, (int)yta - 10, (int)(xtb - xta) + 10, (int) (yta - ytb) + 10);
 	}
 
 	public Path get_closeset_path (double x, double y) {
@@ -909,7 +902,7 @@ class Glyph : FontDisplay {
 					p.add (xt, yt);
 					paths.append (p);
 					added = true;
-					queue_draw_area (0, 0, allocation.width, allocation.height);
+					redraw_area (0, 0, allocation.width, allocation.height);
 					break;
 				}
 			}
@@ -969,13 +962,13 @@ class Glyph : FontDisplay {
 		yt = yc - y - view_offset_y;
 		
 		// redraw control point
-		queue_draw_area ((int)(x - 4*view_zoom), (int)(y - 4*view_zoom), (int)(x + 3*view_zoom), (int)(y + 3*view_zoom));
+		redraw_area ((int)(x - 4*view_zoom), (int)(y - 4*view_zoom), (int)(x + 3*view_zoom), (int)(y + 3*view_zoom));
 		
 		// update position of selected point
 		((!) selected_point).set_position (xt, yt);
 		
 		if (view_zoom >= 2) {
-			queue_draw_area (0, 0, allocation.width, allocation.height);
+			redraw_area (0, 0, allocation.width, allocation.height);
 		} else {
 			redraw_last_stroke (x, y);
 		}
@@ -983,7 +976,7 @@ class Glyph : FontDisplay {
 		if (flipping_point_on_path != null) {
 			p = (!) flipping_point_on_path;
 			p.recalculate_handles (x, y);
-			queue_draw_area (0, 0, allocation.width, allocation.height);
+			redraw_area (0, 0, allocation.width, allocation.height);
 		}		
 	}
 	
@@ -1022,7 +1015,7 @@ class Glyph : FontDisplay {
 			}
 		}
 		
-		queue_draw_area ((int)px - 20, (int)py - 20, tw + 120, th + 120); 		
+		redraw_area ((int)px - 20, (int)py - 20, tw + 120, th + 120); 		
 	}
 	
 	public Path? get_last_path () 
@@ -1062,7 +1055,7 @@ class Glyph : FontDisplay {
 		
 		delete_invisible_paths ();
 		
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw_area (0, 0, allocation.width, allocation.height);
 		
 		return r;
 	}
@@ -1074,7 +1067,7 @@ class Glyph : FontDisplay {
 			p.set_editable (true);
 		}
 		
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
 	public void redraw_path_region (Path p) {
@@ -1087,7 +1080,7 @@ class Glyph : FontDisplay {
 		w = reverse_path_coordinate_x (p.xmax) - x;
 		h = reverse_path_coordinate_x (p.ymax) - y; // FIXME: redraw path
 					
-		queue_draw_area (x, y, w, h);		
+		redraw_area (x, y, w, h);		
 	}
 
 	/** Delete all paths without area. */
@@ -1176,7 +1169,7 @@ class Glyph : FontDisplay {
 		set_zoom_from_area ();
 		zoom_out (); // add some margin
 		
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw_area (0, 0, allocation.width, allocation.height);
 		
 	}
 

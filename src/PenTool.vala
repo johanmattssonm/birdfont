@@ -364,7 +364,7 @@ class PenTool : Tool {
 			((!)e).set_active (true);
 		}
 
-		g.queue_draw_area (0, 0, g.allocation.width, g.allocation.height);
+		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 	}
 
 	public void control_point_event (double event_x, double event_y) {

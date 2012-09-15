@@ -178,8 +178,8 @@ class ResizeTool : Tool {
 			x = (int) (p.xmax * ivz + g.view_offset_x + (g.allocation.width / 2) * ivz);
 			y = (int) (p.ymax * ivz + g.view_offset_y + (g.allocation.height / 2) * ivz);
 
-			g.queue_draw_area (x, y, (int) move_icon.get_width (), (int) move_icon.get_height ());
-			g.queue_draw_area (0, 0, g.allocation.width, g.allocation.height);
+			g.redraw_area (x, y, (int) move_icon.get_width (), (int) move_icon.get_height ());
+			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 		}
 	}
 

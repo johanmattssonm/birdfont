@@ -71,9 +71,7 @@ class OverView : FontDisplay {
 			bool selected = tabs.select_char (s);
 			unichar new_char = s.get_char (0);
 			Font f = Supplement.get_current_font ();
-			
-			stdout.printf ("Open '%s' character: %u (%s)\n", s, new_char, Font.to_hex (new_char));
-								
+							
 			if (!selected) {
 				GlyphCollection? fg = f.get_glyph_collection (s);
 				Glyph g = (fg == null) ? new Glyph (s, new_char) : ((!) fg).get_current ();
@@ -308,9 +306,7 @@ class OverView : FontDisplay {
 		cr.set_font_size (14);
 
 		left_margin = 0;
-				
-		print (@"items_per_row: $items_per_row \n");
-					
+			
 		for (int j = 0; j < items_per_row; j++) {
 			
 			if (all_avail) {
@@ -450,9 +446,7 @@ class OverView : FontDisplay {
 		
 		n_items = ((allocation.width - 40) / nail_width);
 		rows = (allocation.height / nail_height);
-		
-		print (@"n_items: $n_items  (2)\n");
-		
+
 		if (items_per_row != n_items) { 	
 			if (items_per_row == 0) {
 				items_per_row = n_items;
@@ -883,7 +877,7 @@ class OverView : FontDisplay {
 		Font f;
 		uint len;
 
-		print (@"n_items: $n_items\n");
+		redraw_area (0, 0, allocation.width, allocation.height);
 
 		if (all_avail) {
 			f = Supplement.get_current_font ();
@@ -955,8 +949,6 @@ class OverView : FontDisplay {
 		
 		adjust_scroll ();
 		adjust_scroll ();
-		
-		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
 	public override void button_press (EventButton e) {

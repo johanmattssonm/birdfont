@@ -73,6 +73,10 @@ class VersionList : DropMenu {
 		
 		((!)ma.parent).deselect_all ();
 		ma.set_selected (true);		
+
+		MainWindow.get_tab_bar ().close_by_name (get_current ().name);			
+		// MainWindow.get_glyph_canvas ().set_current_glyph (get_current ());
+		// MainWindow.get_overview ().open_glyph_signal (get_current ().name);
 	}
 	
 	public void add_glyph (Glyph new_version, bool selected = true) {
