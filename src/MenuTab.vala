@@ -16,7 +16,6 @@
 */
 
 using WebKit;
-using Gtk;
 
 namespace Supplement {
 
@@ -121,13 +120,16 @@ class MenuTab : FontDisplay {
 	</div>
 	
 	<div class="inner_format_box">
-		<div class="heading"><h2>Export</h2></div>
+		<div class="heading"><h2>Edit</h2></div>
 		
 		<div class="content">
 			<form>
 """);
 				
 c.append ("""
+				<h3>Glyph sequence</h3>
+				<input class="text" type="text" id="glyph_sequence" value=""" + "\"" + Preferences.get ("glyph_sequence") + "\"" + """ onchange="update_text_fields ();"/><br />
+
 				<h3>Name</h3>
 				<input class="text" type="text" id="fontname" value=""" + "\"" + f.get_name () + "\"" + """ onchange="update_text_fields ();"/><br />
 				
@@ -136,15 +138,13 @@ c.append ("""
 """);
 	
 c.append ("""
+
 			</form> 
+
 		</div>
 	</div>
 
 	<div class="inner_format_box">
-		<div class="heading"><h2>Edit</h2></div>
-		
-		<h3>Glyph sequence</h3>
-		<input class="text" type="text" id="glyph_sequence" value=""" + "\"" + Preferences.get ("glyph_sequence") + "\"" + """ onchange="update_text_fields ();"/><br />
 	</div>
 	
 	<br class="clearBoth" />
