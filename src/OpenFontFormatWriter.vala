@@ -1590,7 +1590,11 @@ class GlyfTable : Table {
 			if (g.unichar_code <= 27) { // skip control characters
 				continue;
 			}
-			
+
+			if (g.unichar_code == 32) { // skip space
+				continue;
+			}
+						
 			if (g.name == ".notdef") {
 				continue;
 			}
