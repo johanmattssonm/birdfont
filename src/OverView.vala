@@ -85,8 +85,17 @@ class OverView : FontDisplay {
 				
 				MainWindow.get_glyph_canvas ().set_current_glyph (g);
 				
+				g.close_path ();
 				g.default_zoom ();
 				z.store_current_view ();
+
+				g.clear_active_paths ();
+
+				foreach (Path p in g.path_list) {
+					p.set_color (0, 0, 0, 1);
+					p.set_selected (false);
+				}
+			
 			}
 		});
 		

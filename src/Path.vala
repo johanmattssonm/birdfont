@@ -100,18 +100,20 @@ class Path {
 		cr.new_path ();
 					
 		// draw lines
-		foreach (EditPoint e in ep) {
-			if (n != null) {
-				en = (!) n;
-				draw_next (e, en, cr);
+		if (is_editable ()) {
+			foreach (EditPoint e in ep) {
+				if (n != null) {
+					en = (!) n;
+					draw_next (e, en, cr);
+				}
+				
+				n = e;
 			}
-			
-			n = e;
 		}
 		
 		// close path
-		if (!is_open () && ep.length () >= 2) {
-			en = (!)n;
+		if (!is_open () && ep.length () >= 2 && n != null) {
+			en = (!) n;
 			em = ep.first ().data;
 			
 			draw_next (em, en, cr);
