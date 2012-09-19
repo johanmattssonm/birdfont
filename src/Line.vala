@@ -122,10 +122,10 @@ class Line : GLib.Object {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		if (vertical) {
-			p = (pos - g.view_offset_x + (g.allocation.width / 2.0)) * g.view_zoom;
+			p = g.reverse_path_coordinate_x (pos);
 			queue_draw_area ((int)p - 10, 0, 200, g.allocation.height);
 		} else {
-			p = (pos - g.view_offset_y + (g.allocation.height / 2.0)) * g.view_zoom;
+			p = g.reverse_path_coordinate_y (pos);
 			queue_draw_area (0, (int)p - 10, g.allocation.width, 300);
 		}
 	}	
@@ -150,10 +150,10 @@ class Line : GLib.Object {
 			redraw_line (); // clear old position
 			
 			if (is_vertical ()) {
-				pos = x * ivz + g.view_offset_x - (g.allocation.width / 2.0);
+				pos = Glyph.path_coordinate_x (x);
 				redraw_line (); // draw at new position
 			} else {
-				pos = y * ivz + g.view_offset_y - (g.allocation.height / 2.0);
+				pos = Glyph.path_coordinate_y (y);
 				redraw_line ();
 			}
 

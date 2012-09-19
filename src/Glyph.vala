@@ -436,7 +436,7 @@ class Glyph : FontDisplay {
 	}
 	
 	public double get_width () {
-		return (int) Math.fabs (right_limit / SCALE - left_limit / SCALE);
+		return Math.fabs (right_limit / SCALE - left_limit / SCALE);
 	}
 
 	public unichar get_unichar () {
@@ -728,7 +728,7 @@ class Glyph : FontDisplay {
 	public static int reverse_path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
 		return_if_fail (g.view_zoom != 0);
-		return (int) ((x - g.view_offset_x + g.xc ()) * g.view_zoom + 0.5);
+		return (int) ((x - g.view_offset_x + g.xc ()) * g.view_zoom);
 	}
 
 	public static double path_coordinate_y (double y) {
@@ -739,7 +739,7 @@ class Glyph : FontDisplay {
 	public static int reverse_path_coordinate_y (double y) {
 		Glyph g = MainWindow.get_current_glyph ();
 		y = ((y + g.view_offset_y - g.yc ()) * g.view_zoom);
-		return (int) (-y + 0.5);
+		return (int) (-y);
 	}
 
 	public static void reverse (double x, double y, out int rx, out int ry) {
@@ -1774,6 +1774,8 @@ class Glyph : FontDisplay {
 			}
 
 			if (!juxtaposed.is_empty ()) {
+				print (@"Glyph.xc () $(Glyph.xc ()) + left $left + x $x + kern $kern\n");
+						
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
 				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
