@@ -1,3 +1,9 @@
+birdfont (0.4.1) stable;
+
+  * Bugfixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Sep 19 15:37:40 CEST 2012
+
 birdfont (0.4.0) stable;
 
   * Larger control points
