@@ -197,7 +197,7 @@ class Toolbox : GLib.Object  {
 		path_tool_modifiers.add_tool (move_layer);
 		
 		// Character set tools
-		Tool full_unicode = new Tool ("utf_8", "Show full unicode characters set", 'a', CTRL);
+		Tool full_unicode = new Tool ("utf_8", "Show full unicode characters set");
 		full_unicode.select_action.connect ((self) => {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);	
 				OverView o = MainWindow.get_overview ();

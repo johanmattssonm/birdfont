@@ -134,5 +134,9 @@ def build (bld):
 		target  = 'birdfont-export',
 		depends = 'birdfont_export'
 	)
+
+def install (bld):	
+	bld (rule = 'chmod 755 src/birdfont src/birdfont-export', name = "privileges", always=True)
+	bld (rule = 'cp src/birdfont ${DEST}/${PREFIX}/bin/', depends = "privileges")
+	bld (rule = 'cp src/birdfont-export ${DEST}/${PREFIX}/bin/', depends = "privileges")	
 	
-	bld.install_files('${PREFIX}/bin/', ['birdfont', 'birdfont-export'])

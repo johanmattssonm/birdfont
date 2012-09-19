@@ -89,7 +89,7 @@ def build(bld):
 	bld(rule="windres ${SRC} -O coff -o ${TGT}", source="../win32/icon.rc", target="icon.res", always=True)
 	bld(rule="mv ${SRC} ${TGT}", source="../win32/icon.res", target="../build/", name="icon", always=True)
 
-	bld(rule="""i686-w64-mingw32-gcc -c ./Main.c ./src/*.c ./ \
+	bld(rule="""i686-w64-mingw32-gcc -c ./Main.c ./BirdfontExport.c ./src/*.c ./ \
 		-I./ \
 		-mthreads \
 		$(i686-w64-mingw32-pkg-config --cflags --libs glib-2.0) \
@@ -98,6 +98,9 @@ def build(bld):
 		$(i686-w64-mingw32-pkg-config --cflags --libs libsoup-2.4) \
 		$(i686-w64-mingw32-pkg-config --cflags --libs gtk+-2.0) \
 		$(i686-w64-mingw32-pkg-config --cflags --libs webkit-1.0) && mv *.o win32/""", source="../build/src/Supplement.c", target="./Supplement.o", name="mingw compile", depends_on="clean_src", always=True);
+	
+	bld(rule="""mv win32/BirdfontExport.* ./ """, always=True);
+	bld(rule="""mv win32/Main.* ./ """, always=True);
 	
 	bld(rule="""i686-w64-mingw32-gcc \
 		-shared \
@@ -114,7 +117,7 @@ def build(bld):
 	bld(rule="""i686-w64-mingw32-ar rcs libbirdfont.dll.a win32/*.o""", name="mingw link static", depends_on="mingw link shared")
 
 	bld(rule="""i686-w64-mingw32-gcc \
-		./win32/Main.o \
+		./Main.o \
 		./icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
@@ -126,6 +129,20 @@ def build(bld):
 		-B static -l webkitgtk-1.0.dll  -B static -l gtk-win32-2.0.dll -B static -l gdk-win32-2.0.dll -B static -l atk-1.0.dll -B static -l gio-2.0.dll -B static -l pangowin32-1.0.dll -B static -l pangocairo-1.0.dll -B static -l gdk_pixbuf-2.0.dll -B static -l pango-1.0.dll -B static -l cairo.dll -B static -l gobject-2.0.dll -B static -l gmodule-2.0.dll -B static -l gthread-2.0.dll -B static -l glib-2.0.dll \
 		-static -o birdfont.exe""", source="../build/src/Supplement.c", target="../birdfont.exe", depends_on=['mingw link shared', 'icon'], name="mingw link", always=True)
 
+	bld(rule="""i686-w64-mingw32-gcc \
+		./BirdfontExport.o \
+		./icon.res \
+		-Wl,-subsystem,windows \
+		-mthreads \
+		-L./ \
+		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
+		-static -B -static -l birdfont.dll \
+		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
+		-B static -l gio-2.0.dll -B static -l soup-2.4.dll \
+		-B static -l webkitgtk-1.0.dll  -B static -l gtk-win32-2.0.dll -B static -l gdk-win32-2.0.dll -B static -l atk-1.0.dll -B static -l gio-2.0.dll -B static -l pangowin32-1.0.dll -B static -l pangocairo-1.0.dll -B static -l gdk_pixbuf-2.0.dll -B static -l pango-1.0.dll -B static -l cairo.dll -B static -l gobject-2.0.dll -B static -l gmodule-2.0.dll -B static -l gthread-2.0.dll -B static -l glib-2.0.dll \
+		-static -o birdfont-export.exe""", source="../build/src/Supplement.c", target="../birdfont-export.exe", depends_on=['mingw link shared', 'icon'], name="mingw link", always=True)
+
+	bld(rule="mv birdfont-export.exe supplement/", depends_on='mingw link', always=True)
 	bld(rule="mv birdfont.exe supplement/", depends_on='mingw link', always=True)
 	bld(rule="mv libbirdfont.dll supplement/", depends_on='mingw link', always=True)
 
@@ -196,7 +213,9 @@ Section "Start Menu Shortcuts"
 
   CreateDirectory "$SMPROGRAMS\Birdfont"
   CreateShortCut "$SMPROGRAMS\Birdfont\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\Birdfont\Birdfont.lnk" "$INSTDIR\birdfont.exe" "" "$INSTDIR\birdfont.exe" 0
+  CreateShortCut "$SMPROGRAMS\Birdfont\Birdfont.lnk" "$INSTDIR\birdfont.exe" ""
+  
+  CreateShortCut "$DESKTOP\Birdfont.lnk" "$INSTDIR\birdfont.exe" ""
   
 SectionEnd
 
@@ -287,8 +306,10 @@ def copy_runtime_dependencies (bld):
 	bld(rule="cp -ra ../icons/ supplement/")
 
 	bld(rule="cp ../win32/birdfont.ico supplement/")
-
 	bld(rule="cp -r " + MINGW + "/etc supplement/")
+
+	bld(rule="cp " + MINGW_BIN + "/gspawn-win32-helper.exe supplement/")
+	bld(rule="cp " + MINGW_BIN + "/gspawn-win32-helper-console.exe supplement/")
 
 	# DLL-hell
 	for dll in WIN32_DLLS:

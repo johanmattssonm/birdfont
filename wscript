@@ -24,6 +24,8 @@ def configure(conf):
 	
 	conf.env.append_unique('VALAFLAGS', ['--thread', '--pkg', 'webkit-1.0', '--enable-experimental', '--enable-experimental-non-null', '--vapidir=../../'])
 
+	conf.find_program('ldconfig', var='LDCONFIG', mandatory=False)
+
 	if conf.options.win32 :
 		conf.recurse('win32')
 
@@ -32,12 +34,16 @@ def pre (bld):
 	
 	if not bld.options.noconfig:
 		write_config ()
-		
+
+def post (bld):
+	bld.exec_command ('${LDCONFIG}')
+				
 def build(bld):
 	bld.env.VERSION = VERSION
 	
 	bld.add_pre_fun(pre)
-
+	bld.add_post_fun(post)
+	
 	bld.recurse('src')
 
 	start_dir = bld.path.find_dir('./')
@@ -68,5 +74,10 @@ def write_config ():
 	f.write(localtime)
 	f.write("\"");
 	f.write(";\n")
-		
+
+	f.write("	internal static const string PREFIX = \"")
+	f.write("${PREFIX}")
+	f.write("\"");
+	f.write(";\n")
+			
 	f.write("}");

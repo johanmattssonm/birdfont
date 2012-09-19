@@ -103,13 +103,17 @@ static void print_export_help (string[] arg) {
 	stdout.printf (" [OPTION ...] FILE\n");
 	stdout.printf ("-h, --help                      print this message\n");
 	stdout.printf ("-o, --output [DIRECTORY]        write files to this directory\n");
+	stdout.printf ("-s, --svg                       write file\n");
+	stdout.printf ("-t, --ttf                       write ttf and eot files\n");
 	stdout.printf ("\n");
 }
 
 public static int run_export (string[] arg) {
 	string output_directory = ".";
 	string file_name = "";
-	
+	bool specific_formats = false;	
+	bool write_ttf = false;
+	bool write_svg = false;
 	Supplement.Supplement supplement = new Supplement.Supplement ();
 	
 	File directory;
@@ -132,6 +136,20 @@ public static int run_export (string[] arg) {
 		
 		if (arg[i] == "-o" || arg[i] == "--output" && i + 1 < arg.length) {
 			output_directory = arg[i + 1];
+			i++;
+			continue;
+		}
+
+		if (arg[i] == "-t" || arg[i] == "--ttf") {
+			write_ttf = true;
+			specific_formats = true;
+			i++;
+			continue;
+		}
+
+		if (arg[i] == "-s" || arg[i] == "--svg") {
+			write_svg = true;
+			specific_formats = true;
 			i++;
 			continue;
 		}
@@ -183,9 +201,16 @@ public static int run_export (string[] arg) {
 		return 1;
 	}
 
-	ExportTool.export_svg_font_path (File.new_for_path (output_directory));
-	ExportTool.export_ttf_font_path (File.new_for_path (output_directory), false);
-					
+	if (!specific_formats || write_svg) {
+		print (@"Writing $(supplement.current_font.get_name ()).svg to $output_directory\n");
+		ExportTool.export_svg_font_path (File.new_for_path (output_directory));
+	}
+
+	if (!specific_formats || write_ttf) {
+		print (@"Writing $(supplement.current_font.get_name ()).ttf to $output_directory\n");
+		ExportTool.export_ttf_font_path (File.new_for_path (output_directory), false);
+	}
+	
 	return 0;
 }
 

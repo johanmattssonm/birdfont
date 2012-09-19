@@ -1188,7 +1188,7 @@ class Font : GLib.Object {
 		GlyphBackgroundImage img;
 		GlyphBackgroundImage? new_img = null;
 		
-		string attr_name;
+		string attr_name = "";
 		string attr_content;
 		
 		File img_file = get_backgrounds_folder ().get_child ("parts");
@@ -1209,8 +1209,8 @@ class Font : GLib.Object {
 			}
 		}
 		
-		if (new_img == null) {
-			warning ("No source for image found.");
+		if (unlikely (new_img == null)) {
+			warning (@"No source for image found for $attr_name in $(g.name)");
 			return;
 		}
 	

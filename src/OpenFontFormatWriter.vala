@@ -1629,10 +1629,6 @@ class GlyfTable : Table {
 			printd (@"loca fd.length (): $(fd.length ())\n");
 
 			last_len = fd.length ();
-			
-			if (ExportTool.should_stop ()) {
-				break;
-			}
 		}
 
 		location_offsets.append (fd.length ()); // last entry in loca table is special

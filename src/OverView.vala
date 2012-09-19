@@ -77,6 +77,8 @@ class OverView : FontDisplay {
 				Glyph g = (fg == null) ? new Glyph (s, new_char) : ((!) fg).get_current ();
 				ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");
 				
+				stdout.printf (@"Open '%s' %u (%s)\n", s, new_char, Font.to_hex (new_char));
+				
 				z.store_current_view ();
 				f.add_glyph (g);
 				tabs.add_tab (g);

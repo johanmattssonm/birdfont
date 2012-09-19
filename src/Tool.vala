@@ -292,8 +292,7 @@ class Tool : GLib.Object {
 		
 		while (unlikely (!a)) {
 			warning ("Failed to acquire main loop.\n");
-			a = c.acquire ();
-			Thread.usleep (2*1000000);
+			return;
 		}
 
 		while (c.pending () || TestSupplement.is_slow_test ()) {

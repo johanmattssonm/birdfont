@@ -87,7 +87,7 @@ class TestSupplement : GLib.Object {
 		}	
 		
 		if (s == "" || s == "All") {
-			print ("No speceific tescase given run all test cases.\n");
+			print ("No specific tescase given run all test cases.\n");
 			return true;
 		}
 		

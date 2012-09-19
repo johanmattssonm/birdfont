@@ -143,9 +143,6 @@ c.append ("""
 
 		</div>
 	</div>
-
-	<div class="inner_format_box">
-	</div>
 	
 	<br class="clearBoth" />
 	
@@ -243,7 +240,7 @@ c.append ("""
 			select_overview ();
 		});
 		
-		MainWindow.get_tab_bar ().add_unique_tab (save, 70);
+		MainWindow.get_tab_bar ().add_unique_tab (save, 80);
 		
 		if (!font.is_modified ()) {
 			save.finished ();
@@ -327,7 +324,7 @@ c.append ("""
 			select_overview ();
 		});
 		
-		MainWindow.get_tab_bar ().add_unique_tab (save, 70);
+		MainWindow.get_tab_bar ().add_unique_tab (save, 80);
 		
 		if (!font.is_modified ()) {
 			save.finished ();
@@ -339,7 +336,7 @@ c.append ("""
 		save.finished.connect (() => {
 			load_new_font ();
 		});
-		MainWindow.get_tab_bar ().add_unique_tab (save);
+		MainWindow.get_tab_bar ().add_unique_tab (save, 80);
 	}
 
 	private static void load_new_font () {

@@ -21,9 +21,7 @@ class ExportTool : Tool {
 
 	private static string? prefered_browser = null;
 	private static ExportThread export_thread;
-
-	public static StaticMutex export_mutex;
-	public static bool export_thread_is_running = false;
+	
 	private static unowned Thread<void*> export_thread_handle;
 
 	private static bool stop_export_thread = false;
@@ -44,8 +42,6 @@ class ExportTool : Tool {
 		
 		move_action.connect ((self, x, y)	 => {
 		});
-		
-		export_mutex = new StaticMutex ();
 	}
 
 	public static bool export_all () {
@@ -378,6 +374,34 @@ os.put_string (
 		return r;
 	} 
 	
+	public static string get_birdfont_export () {
+		File f;
+		
+		f = File.new_for_path ("birdfont-export.sh");
+		if (f.query_exists ()) {
+			return "sh birdfont-export.sh";
+		}
+
+		f = File.new_for_path ("../birdfont-export.sh");	
+		if (f.query_exists ()) {
+			return "sh ../birdfont-export.sh";
+		}
+
+		f = File.new_for_path ("birdfont-export.exe");	
+		if (f.query_exists ()) {
+			return (!) f.get_path ();
+		}
+
+		f = File.new_for_path (@"$PREFIX/birdfont-export");
+		if (f.query_exists ()) {
+			return @"$PREFIX/birdfont-export";
+		}
+
+		warning ("Can't fint birdfont-export.");
+		
+		return "birdfont-export";
+	}
+	
 	public static bool export_ttf_font_path (File folder, bool async = true) {
 		Font current_font = Supplement.get_current_font ();
 		string path;
@@ -387,25 +411,10 @@ os.put_string (
 		File eot_file;
 		string temp_file;
 		bool done = true;
-
-		lock (stop_export_thread) {
-			stop_export_thread = true;
-		}
-
-		export_mutex.lock ();
-
-		lock (stop_export_thread) {
-			stop_export_thread = false;
-		}
-
+		string export_command;
+		
 		if (Supplement.win32) {
 			async = false;
-		}
-
-		while (ExportTool.export_thread_is_running) {
-			export_mutex.unlock ();
-			Thread.usleep (100);
-			export_mutex.lock ();
 		}
 
 		try {
@@ -426,29 +435,33 @@ os.put_string (
 			assert (!is_null (temp_file));
 			assert (!is_null (ttf_file.get_path ()));
 			assert (!is_null (eot_file.get_path ()));
-			
+
 			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path ());
 
 			try {
 				if (async) {
-					export_thread_is_running = true;
-					export_thread_handle = Thread.create<void*> (export_thread.run, true);
+					export_command = @"$(get_birdfont_export ()) --ttf -o $((!) folder.get_path ()) $temp_file";
+					
+					try {
+						Process.spawn_command_line_async (export_command);
+					} catch (Error e) {
+						stderr.printf (@"Failed to execute \"$export_command\" \n");
+						critical (@"$(e.message)");
+					}
 				}
 				
 				if (!async) {
 					export_thread.run ();
 				}
 			} catch (ThreadError e) {
-				export_mutex.unlock ();
 				warning (e.message);
 				done = false;
-			}			
+			}	
+			
 		} catch (Error e) {
 			critical (@"$(e.message)");
 			done = false;
 		}
-		
-		export_mutex.unlock ();
 		
 		return done;		
 	}
@@ -499,8 +512,6 @@ os.put_string (
 		}
 		
 		public void* run () {
-			ExportTool.export_mutex.lock ();
-			
 			assert (!is_null (ffi));
 			assert (!is_null (ttf));
 			assert (!is_null (eot));
@@ -512,10 +523,7 @@ os.put_string (
 			if (!should_stop ()) { 
 				write_eof ();
 			}
-			
-			ExportTool.export_thread_is_running = false;
-			
-			ExportTool.export_mutex.unlock ();
+
 			return null;
 		}
 		

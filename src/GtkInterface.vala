@@ -45,7 +45,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		margin_bottom.set_size_request (0, 0);
 		margin_right.set_size_request (0, 0);
 		
-		//set_title (title);
+		// set_title (title);
 
 		delete_event.connect (quit);
 		
@@ -71,15 +71,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			bool n;
 			File layout_dir;
 			File layout_uri;
-			string uri;
+			string uri = "";
 			int i;
 			FontDisplay fd = tab.get_display ();
-			
-			if (fd.get_name () == "Preview") {
-				html_canvas.load_html_string ("", "");	
-				Tool.yield ();
-				ExportTool.export_all ();
-			}
 			
 			MainWindow.glyph_canvas.set_current_glyph (fd);
 			n = fd.is_html_canvas ();
@@ -92,11 +86,19 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 					layout_uri = layout_dir.get_child (fd.get_html_file ());
 					uri = fd.path_to_uri ((!) layout_uri.get_path ());
 				}
+
+				if (fd.get_name () == "Preview") {
+					ExportTool.export_all ();
+				}
 				
 				if (fd.get_html () == "") {
-					html_canvas.load_html_string (fd.get_html (), uri);	
+					html_canvas.load_html_string ("<html></html>", "file:///");	
+					html_canvas.reload_bypass_cache ();
+					
+					html_canvas.load_uri (uri);
 					html_canvas.reload_bypass_cache ();
 					html_canvas.load_uri (uri);
+					
 				} else {
 					html_canvas.load_html_string (fd.get_html (), uri);
 				}
@@ -107,6 +109,25 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				html_box.set_visible (false);
 				MainWindow.glyph_canvas.set_visible (true);
 			}
+			/*
+			if (fd.get_name () == "Preview") {
+				if (Supplement.win32) {
+					TimeoutSource t1 = new TimeoutSource (300);
+					t1.set_callback (() => {
+						html_canvas.load_html_string ("<html><body>Loading</body></html>", "file:///");	
+						return false;
+					});
+					t1.attach (null);
+
+					TimeoutSource t2 = new TimeoutSource (10000);
+					t2.set_callback (() => {
+						html_canvas.load_uri (uri);
+						html_canvas.reload ();
+						return false;
+					});
+					t2.attach (null);
+				}	
+			}*/
 		});
 
 		// Hide this canvas when window is realized and flip canvas 
