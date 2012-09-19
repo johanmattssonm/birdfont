@@ -221,10 +221,7 @@ class PenTool : Tool {
 		}
 
 		// make path transparent and show edit points
-		if (!glyph.is_editable ()) {
-			glyph.open_path ();
-			return;
-		}
+		glyph.open_path ();
 
 		if (insert_new_point_on_path_selected ()) {
 			glyph.insert_new_point_on_path (x, y);

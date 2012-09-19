@@ -87,7 +87,7 @@ class Line : GLib.Object {
 		this.a = a;
 	}
 	
-	// Valabug: should be public “void set_list_item (unowned List<Line> ll) {”
+	// Valabug, it should be: public “void set_list_item (unowned List<Line> ll) {”
 	// Keeping list_item public for now
 	public void set_list_item (void* ll) {
 		// list_item = ll;

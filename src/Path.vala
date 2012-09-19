@@ -89,44 +89,43 @@ class Path {
 	public bool is_selected () {
 		return selected;
 	}
-	
-	public void draw_edit_points (Context cr, Allocation allocation, double view_zoom) {
+
+	public void draw_outline (Context cr, Allocation allocation, double view_zoom) {
 		unowned List<EditPoint> ep = points;
 		
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
 		unowned EditPoint em;
 		
+		if (ep.length () < 2) {
+			return;
+		}
+		
 		cr.new_path ();
 					
 		// draw lines
-		if (is_editable ()) {
-			foreach (EditPoint e in ep) {
-				if (n != null) {
-					en = (!) n;
-					draw_next (e, en, cr);
-				}
-				
-				n = e;
+		foreach (EditPoint e in ep) {
+			if (n != null) {
+				en = (!) n;
+				draw_next (e, en, cr);
 			}
+			
+			n = e;
 		}
-		
+
 		// close path
-		if (!is_open () && ep.length () >= 2 && n != null) {
+		if (!is_open () && n != null) {
 			en = (!) n;
 			em = ep.first ().data;
 			
 			draw_next (em, en, cr);
 		}
 
-		// fill path
-		if (is_selected ()) {	
-			cr.close_path ();
-			cr.set_source_rgba (r, g, b, a);
-			cr.fill ();
-		}
-
 		cr.stroke ();
+	}
+	
+	public void draw_edit_points (Context cr, Allocation allocation, double view_zoom) {
+		unowned List<EditPoint> ep = points;
 		
 		if (is_editable ()) {
 			// control points for curvature
@@ -141,7 +140,40 @@ class Path {
 			}
 		}
 	}
-	
+
+	public void fill_path (Context cr, Allocation allocation, double view_zoom) {
+		unowned List<EditPoint> ep = points;
+		
+		unowned EditPoint? n = null;
+		unowned EditPoint en;
+		unowned EditPoint em;
+		
+		cr.new_path ();
+					
+		// draw lines
+		foreach (EditPoint e in ep) {
+			if (n != null) {
+				en = (!) n;
+				draw_next (e, en, cr);
+			}
+			
+			n = e;
+		}
+		
+		// close path
+		if (!is_open () && ep.length () >= 2 && n != null) {
+			en = (!) n;
+			em = ep.first ().data;
+			
+			draw_next (em, en, cr);
+		}
+
+		// fill path
+		cr.close_path ();
+		cr.set_source_rgba (r, g, b, a);
+		cr.fill ();
+	}
+
 	private void draw_next (EditPoint e, EditPoint en, Context cr) {
 		draw_curve (e, en, cr);
 	}
@@ -703,6 +735,11 @@ class Path {
 		});
 
 		if (on_edge) {
+			return true;
+		}
+
+		if (ycoordinates.length () == 0) {
+			warning ("No ycoordinates is empty");
 			return true;
 		}
 

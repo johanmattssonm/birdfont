@@ -220,6 +220,10 @@ class Svg {
 		
 		x /= scale;
 		y /= scale;
+
+		if (d.length == 0) {
+			return;
+		}
 		
 		cr.save ();
 
@@ -326,9 +330,12 @@ class Svg {
 }
 
 internal static string round (double p) {
-	string v = @"$p";
+	string v = p.to_string ();
+	char[] c = new char [501];
 	
-	if (v.index_of ("e") != -1) {
+	v = p.format (c, "%3.15f");
+	
+	if (v.index_of ("e") != -1) {	
 		return "0.0";
 	}
 	
