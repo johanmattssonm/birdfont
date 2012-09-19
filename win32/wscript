@@ -213,9 +213,9 @@ Section "Start Menu Shortcuts"
 
   CreateDirectory "$SMPROGRAMS\Birdfont"
   CreateShortCut "$SMPROGRAMS\Birdfont\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\Birdfont\Birdfont.lnk" "$INSTDIR\birdfont.exe" ""
+  CreateShortCut "$SMPROGRAMS\Birdfont\Birdfont.lnk" "$INSTDIR\\birdfont.exe" ""
   
-  CreateShortCut "$DESKTOP\Birdfont.lnk" "$INSTDIR\birdfont.exe" ""
+  CreateShortCut "$DESKTOP\Birdfont.lnk" "$INSTDIR\\birdfont.exe" ""
   
 SectionEnd
 
