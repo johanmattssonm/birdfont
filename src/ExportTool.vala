@@ -443,7 +443,6 @@ os.put_string (
 					export_command = @"$(get_birdfont_export ()) --ttf -o $((!) folder.get_path ()) $temp_file";
 					
 					try {
-						print (@"Execute \"$export_command\" \n");
 						Process.spawn_command_line_async (export_command);
 					} catch (Error e) {
 						stderr.printf (@"Failed to execute \"$export_command\" \n");

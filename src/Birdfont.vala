@@ -156,15 +156,8 @@ public static int run_export (string[] arg) {
 			return 0;
 		}
 		
-		if (arg[i] == "-o" || arg[i] == "--output" && i + 1 < arg.length) {
+		if ((arg[i] == "-o" || arg[i] == "--output") && i + 1 < arg.length) {
 			output_directory = arg[i + 1];
-			i++;
-			continue;
-		}
-
-		if (arg[i] == "-t" || arg[i] == "--ttf") {
-			write_ttf = true;
-			specific_formats = true;
 			i++;
 			continue;
 		}
@@ -172,19 +165,23 @@ public static int run_export (string[] arg) {
 		if (arg[i] == "-s" || arg[i] == "--svg") {
 			write_svg = true;
 			specific_formats = true;
-			i++;
+			continue;
+		}
+		
+		if (arg[i] == "-t" || arg[i] == "--ttf") {
+			write_ttf = true;
+			specific_formats = true;
 			continue;
 		}
 		
 		if (arg[i].has_prefix ("-")) {
 			print_export_help (arg);
 			return 1;
-			continue;
 		}
 		
 		if (!arg[i].has_prefix ("-")) {
 			file_name = arg[i];
-			
+						
 			if (i != arg.length - 1) {
 				print_export_help (arg);
 				return 1;
