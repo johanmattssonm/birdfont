@@ -109,25 +109,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				html_box.set_visible (false);
 				MainWindow.glyph_canvas.set_visible (true);
 			}
-			/*
-			if (fd.get_name () == "Preview") {
-				if (Supplement.win32) {
-					TimeoutSource t1 = new TimeoutSource (300);
-					t1.set_callback (() => {
-						html_canvas.load_html_string ("<html><body>Loading</body></html>", "file:///");	
-						return false;
-					});
-					t1.attach (null);
-
-					TimeoutSource t2 = new TimeoutSource (10000);
-					t2.set_callback (() => {
-						html_canvas.load_uri (uri);
-						html_canvas.reload ();
-						return false;
-					});
-					t2.attach (null);
-				}	
-			}*/
 		});
 
 		// Hide this canvas when window is realized and flip canvas 

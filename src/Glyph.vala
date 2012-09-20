@@ -1774,8 +1774,6 @@ class Glyph : FontDisplay {
 			}
 
 			if (!juxtaposed.is_empty ()) {
-				print (@"Glyph.xc () $(Glyph.xc ()) + left $left + x $x + kern $kern\n");
-						
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
 				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);

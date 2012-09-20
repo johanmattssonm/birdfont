@@ -18,6 +18,7 @@
 using Cairo;
 using Gtk;
 using Gdk;
+using Birdfont;
 
 namespace Supplement {
 
@@ -45,27 +46,31 @@ internal abstract class FontDisplay : GLib.Object {
 	}
 
 	public static string path_to_uri (string path) {
-		int i;
 		string uri = path;
 		string wp;
 		
+		// wine uri hack
 		if (Supplement.win32) {
-			uri = path.replace ("\\", "/");
-			i = uri.index_of (":");
+			wp = wine_to_unix_path (uri);
 			
-			if (i != -1) {
-				uri = uri.substring (i + 2);
+			print (@"wp: $wp\n");
+			
+			if (find_file (wp, "").query_exists ()) {
+				uri = wp;
 			}
 
-			// wine uri hack
-			wp = @"/home/$(Environment.get_user_name ())/.wine/drive_c/" + uri;
-			
-			if (Icons.find_file (null, wp).query_exists ()) {
-				uri = wp.substring (i);
+			if (uri.index_of ("\\") > -1) {
+				uri = uri.replace ("\\", "/");
 			}
 		}
 
-		return @"file:///$uri";
+		if (uri.index_of ("/") == 0) {
+			uri = @"file://$uri";
+		} else {
+			uri = @"file:///$uri";
+		}
+		
+		return uri;
 	}
 
 	public virtual string get_uri () {
@@ -141,28 +146,7 @@ internal abstract class FontDisplay : GLib.Object {
 	}
 
 	public static File find_layout_dir () {
-		File f;
-		string name = "layout";
-
-		f = Icons.find_file ("./", name);
-		if (likely (f.query_exists ())) return f;		
-
-		f = Icons.find_file ("../", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = Icons.find_file (".\\", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = Icons.find_file ("", name);
-		if (likely (f.query_exists ())) return f;
-		
-		f = Icons.find_file ("/usr/local/share/birdfont/", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = Icons.find_file ("/usr/share/birdfont/", name);
-		if (likely (f.query_exists ())) return f;
-					
-		return f;
+		return find_file (null, "layout");
 	}
 
 	public void add_html_callback (string prop, PropertyFunction.PropertyCallback cb) {
@@ -208,6 +192,49 @@ internal abstract class FontDisplay : GLib.Object {
 		cb.call (v);
 	}
 
+	public static File find_file (string? dir, string name) {
+		File f;
+		string d = (dir == null) ? "" : (!) dir;
+		
+		f = get_file (Supplement.exec_path + "/", name + "/");
+		if (likely (f.query_exists ())) return f;
+		
+		f = get_file (Supplement.exec_path + "/" + d + "/", name);
+		if (likely (f.query_exists ())) return f;
+		
+		f = get_file ("./" + d + "/", name);
+		if (likely (f.query_exists ())) return f;		
+
+		f = get_file ("../" + d + "/", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = get_file (".\\" + d + "\\", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = get_file ("", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = get_file (d + "\\", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = get_file ("/usr/local/share/birdfont/" + d + "/", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = get_file ("/usr/share/birdfont/" + d + "/", name);
+		if (likely (f.query_exists ())) return f;
+		
+		warning (@"Did not find file $name in $d");
+			
+		return f;		
+	}
+
+	public static File get_file (string? path, string name) {
+		StringBuilder fn = new StringBuilder ();
+		string p = (path == null) ? "" : (!) path;
+		fn.append (p);
+		fn.append ((!) name);
+		return File.new_for_path (fn.str);
+	}
 }
 
 }

@@ -21,8 +21,6 @@ using Cairo;
 
 class Icons {
 	
-	static string icon_dir = "";
-	
 	public static ImageSurface? get_icon (string? name) {
 		ImageSurface? img = null;
 		File f;
@@ -43,45 +41,9 @@ class Icons {
 		
 		return img;
 	}
-	
+
 	public static File find_icon (string name) {
-		File f;
-
-		f = find_file (icon_dir, name);
-		if (likely (f.query_exists ())) return f;
-
-		f = find_file ("./icons/", name);
-		if (likely (f.query_exists ())) return f;		
-
-		f = find_file ("../icons/", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = find_file (".\\icons\\", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = find_file ("", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = find_file ("icons\\", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = find_file ("/usr/local/share/birdfont/icons/", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = find_file ("/usr/share/birdfont/icons/", name);
-		if (likely (f.query_exists ())) return f;
-			
-		return f;
-	}
-	
-	public static File find_file (string? path, string name) {
-		StringBuilder fn = new StringBuilder ();
-		string p = (path == null) ? "" : (!) path;
-		
-		icon_dir = p;
-		fn.append (icon_dir);
-		fn.append ((!) name);
-		return File.new_for_path (fn.str);
+		return FontDisplay.find_file ("icons", name);
 	}
 }
 	

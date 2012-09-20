@@ -1574,14 +1574,15 @@ class GlyfTable : Table {
 		Glyph g;
 		Font font = OpenFontFormatWriter.get_current_font ();
 		uint32 indice;
-
+		List<Glyph> unassigned_glyphs;
+		
 		// add notdef. character at index zero + other special chars first
 		glyphs.append (font.get_not_def_character ());
 		glyphs.append (font.get_null_character ());
 		glyphs.append (font.get_nonmarking_return ());
 		glyphs.append (font.get_space ());
 		
-		List<Glyph> unassigned_glyphs = new List<Glyph> ();
+		unassigned_glyphs = new List<Glyph> ();
 		
 		// add glyphs, first all assigned then the unassigned ones
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		

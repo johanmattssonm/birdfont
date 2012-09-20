@@ -23,6 +23,8 @@ public static int run_gui (string[] arg) {
 	File font_file;
 	Argument args;
 	IdleSource idle;
+	int i;
+	string exec_path;
 
 	Supplement.Supplement supplement = new Supplement.Supplement ();
 
@@ -50,8 +52,28 @@ public static int run_gui (string[] arg) {
 	supplement.experimental = args.has_argument ("--test");
 	supplement.show_coordinates = args.has_argument ("--show-coordinates");
 	supplement.fatal_wanings = args.has_argument ("--fatal-warning");
-	supplement.win32 = (arg[0].index_of (".exe") > -1);
+	supplement.win32 = (arg[0].index_of (".exe") > -1) || arg[0] == "wine";
+	supplement.exec_path = "";
+	
+	print (@"$(arg[0]) \n");
 
+	if (supplement.win32) {
+		// wine hack to get "." folder in win32 environment
+		i = arg[0].last_index_of ("\\");
+		
+		if (i != -1) {	
+			exec_path = arg[0];
+			exec_path = exec_path.substring (0, i);
+			supplement.exec_path = wine_to_unix_path (exec_path);			
+		}
+	} else {
+		supplement.exec_path = "./";
+	}
+	
+	print (@"arg[0]: $(arg[0])\n");
+	print (@"supplement.win32: $(supplement.win32)\n");
+	print (@"supplement.exec_path: $(supplement.exec_path)\n");
+		
 	Preferences preferences = new Preferences ();
 	preferences.load ();
 	
@@ -212,6 +234,34 @@ public static int run_export (string[] arg) {
 	}
 	
 	return 0;
+}
+
+public static string wine_to_unix_path (string exec_path) {
+	bool drive_c, drive_z;
+	int i;
+	string p;
+	
+	p = exec_path;
+	p = p.replace ("\\", "/");
+	
+	drive_c = exec_path.index_of ("C:") == 0;
+	drive_z = exec_path.index_of ("Z:") == 0;
+	
+	i = p.index_of (":");
+	
+	if (i != -1) {
+		p = p.substring (i + 2);
+	}
+
+	if (drive_c) {
+		return (@"/home/$(Environment.get_user_name ())/.wine/drive_c/" + p).dup ();
+	}
+	
+	if (drive_z) {
+		return ("/" + p).dup ();
+	}
+
+	return exec_path.dup ();
 }
 
 }

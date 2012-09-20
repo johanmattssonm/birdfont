@@ -443,6 +443,7 @@ os.put_string (
 					export_command = @"$(get_birdfont_export ()) --ttf -o $((!) folder.get_path ()) $temp_file";
 					
 					try {
+						print (@"Execute \"$export_command\" \n");
 						Process.spawn_command_line_async (export_command);
 					} catch (Error e) {
 						stderr.printf (@"Failed to execute \"$export_command\" \n");
@@ -530,16 +531,20 @@ os.put_string (
 		void write_ttf () {
 			OpenFontFormatWriter fo = new OpenFontFormatWriter ();
 			Font f = new Font ();
+			File file = (!) File.new_for_path (ttf);
 
 			return_if_fail (!is_null (ffi));			
 			return_if_fail (!is_null (ttf));
+			return_if_fail (!is_null (file));
+			return_if_fail (!is_null (f));
+			return_if_fail (!is_null (fo));
 			
 			try {
 				if (!f.load (ffi, false)) {
 					warning (@"Can't read $ffi");
 				}
 				
-				fo.open ((!) File.new_for_path (ttf));
+				fo.open (file);
 				fo.write_ttf_font (f);
 				fo.close ();
 			} catch (Error e) {

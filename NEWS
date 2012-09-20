@@ -1,5 +1,6 @@
 birdfont (0.4.1) stable;
 
+  * Edit filled paths
   * Bugfixes
 
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Sep 19 15:37:40 CEST 2012

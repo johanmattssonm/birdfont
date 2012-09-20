@@ -26,6 +26,7 @@ internal class Supplement {
 	internal static bool show_coordinates = false;
 	internal static bool fatal_wanings = false;
 	internal static bool win32 = false;
+	internal static string exec_path = "";
 
 	internal static Font current_font;
 	internal static Glyph current_glyph;
