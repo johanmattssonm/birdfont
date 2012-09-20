@@ -239,7 +239,8 @@ public static int run_export (string[] arg) {
 public static string wine_to_unix_path (string exec_path) {
 	bool drive_c, drive_z;
 	int i;
-	string p;
+	string p, q;
+	File f;
 	
 	p = exec_path;
 	p = p.replace ("\\", "/");
@@ -254,7 +255,13 @@ public static string wine_to_unix_path (string exec_path) {
 	}
 
 	if (drive_c) {
-		return (@"/home/$(Environment.get_user_name ())/.wine/drive_c/" + p).dup ();
+		q = @"/home/$(Environment.get_user_name ())/.wine/drive_c/" + p;
+		
+		if (File.new_for_path (q).query_exists ()) {
+			return q;
+		} else {
+			return p;
+		}
 	}
 	
 	if (drive_z) {

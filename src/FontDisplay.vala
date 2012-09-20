@@ -53,8 +53,6 @@ internal abstract class FontDisplay : GLib.Object {
 		if (Supplement.win32) {
 			wp = wine_to_unix_path (uri);
 			
-			print (@"wp: $wp\n");
-			
 			if (find_file (wp, "").query_exists ()) {
 				uri = wp;
 			}
