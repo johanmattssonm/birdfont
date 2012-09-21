@@ -601,16 +601,23 @@ class Font : GLib.Object {
 				
 				try {
 					bool selected;
+					string data;
+					
 					foreach (Glyph g in gc.get_version_list ().glyphs) {
-						
+
 						if (g.get_background_image () != null) {
 							bg = (!) g.get_background_image ();
+							data = bg.get_png_base64 ();
+							
+							if (!bg.is_valid ()) {
+								continue;
+							}
 							
 							os.put_string (@"<background-image sha1=\"");
 							os.put_string (bg.get_sha1 ());
 							os.put_string ("\" ");
 							os.put_string (" data=\"");
-							os.put_string (bg.get_png_base64 ());
+							os.put_string (data);
 							os.put_string ("");
 							os.put_string ("\" />\n");	
 						}
@@ -683,7 +690,9 @@ class Font : GLib.Object {
 			
 			double rotation = background_image.img_rotation;
 			
-			os.put_string (@"\t<background sha1=\"$(background_image.get_sha1 ())\" x=\"$pos_x\" y=\"$pos_y\" scale_x=\"$scale_x\" scale_y=\"$scale_y\" rotation=\"$rotation\"/>\n");
+			if (background_image.is_valid ()) {
+				os.put_string (@"\t<background sha1=\"$(background_image.get_sha1 ())\" x=\"$pos_x\" y=\"$pos_y\" scale_x=\"$scale_x\" scale_y=\"$scale_y\" rotation=\"$rotation\"/>\n");
+			}
 		}
 		
 		os.put_string ("</glyph>\n\n"); 

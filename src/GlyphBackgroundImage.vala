@@ -122,14 +122,43 @@ class GlyphBackgroundImage {
 		return (!) background_image;
 	}
 
+	public bool is_valid () {
+		File file = File.new_for_path (path);
+	
+		if (!file.query_exists ()) {
+			return false;
+		}
+		
+		var file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
+		
+		if (file_info.get_size () == 0) {
+			return false;
+		}
+		
+		return true;
+	}
+
 	public string get_png_base64 () {
 		try {
 			File file = File.new_for_path (path);
 			var file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
 			uint8[] buffer = new uint8[file_info.get_size ()];
-			FileInputStream file_stream = file.read ();
-			DataInputStream png_stream = new DataInputStream (file_stream);
-
+			FileInputStream file_stream;
+			DataInputStream png_stream;
+			
+			if (!file.query_exists ()) {
+				warning (@"Failed to save image $path, file does not exist.");
+				return "";
+			}
+			
+			if (is_null (buffer)) {
+				warning (@"Colud not allocate a buffer of $(file_info.get_size ()) bytes to store $path.");
+				return "";
+			}
+			
+			file_stream = file.read ();
+			
+			png_stream = new DataInputStream (file_stream);
 			png_stream.read (buffer);
 			
 			return Base64.encode (buffer);
@@ -154,6 +183,12 @@ class GlyphBackgroundImage {
 			}
 			
 			file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
+			
+			if (file_info.get_size () == 0) {
+				warning (@"length of image $path is zero");
+				return "";
+			}
+			
 			buffer = new uint8[file_info.get_size ()];
 			file_stream = file.read ();
 			png_stream = new DataInputStream (file_stream);
