@@ -178,14 +178,14 @@ class ExportTool : Tool {
 		prefered_browser = "sensible-browser";
 		return (!) prefered_browser;
 	}
-	
+
 	public static void generate_html_document (string html_file, Font font) {
 		File file = File.new_for_path (html_file);
-		DataOutputStream os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
-
+		DataOutputStream os;
 		string name = font.get_name ();
 
 		try {
+			os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
 
 os.put_string (
 """<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -404,9 +404,6 @@ os.put_string (
 	
 	public static bool export_ttf_font_path (File folder, bool async = true) {
 		Font current_font = Supplement.get_current_font ();
-		string path;
-		OpenFontFormatWriter fo;
-		Font temp_font = new Font ();
 		File ttf_file;
 		File eot_file;
 		string temp_file;

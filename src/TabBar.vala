@@ -42,7 +42,9 @@ class TabBar : DrawingArea {
 
 	ImageSurface? tab3_left = null;
 	ImageSurface? tab3_right = null;
-				
+	
+	ImageSurface? bar_background = null;
+	
 	public TabBar () {
 		tab1_left = Icons.get_icon ("tab1_left.png");
 		tab1_right = Icons.get_icon ("tab1_right.png");
@@ -52,7 +54,9 @@ class TabBar : DrawingArea {
 
 		tab3_left = Icons.get_icon ("tab3_left.png");
 		tab3_right = Icons.get_icon ("tab3_right.png");
-				
+		
+		bar_background = Icons.get_icon ("tabbar_background.png");
+		
 		set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
 		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
 	  
@@ -352,6 +356,11 @@ class TabBar : DrawingArea {
 		cr.fill_preserve ();
 		cr.stroke ();
 		cr.restore ();
+
+		for (int j = 0; j < alloc.width; j++) {
+			cr.set_source_surface ((!) bar_background, j, 0);
+			cr.paint ();
+		}
 
 		draw_tabs (cr);
 	}

@@ -105,10 +105,6 @@ class Font : GLib.Object {
 		return f;
 	}
 
-	public uint get_length () {
-		return glyph_names.length ();
-	}
-
 	/** Retuns true if the current font has be modified */
 	public bool is_modified () {
 		return modified;
@@ -175,12 +171,6 @@ class Font : GLib.Object {
 	
 	public string get_name () {
 		return name;
-	}
-
-	public GlyphRange get_available_glyph_ranges () {
-		GlyphRange gr = new GlyphRange ();
-		gr.unassigned = glyph_names;
-		return gr;
 	}
 
 	public void print_all () {
@@ -306,7 +296,6 @@ class Font : GLib.Object {
 
 	public void add_glyph_collection (GlyphCollection glyph_collection) {
 		GlyphCollection? gc = get_cached_glyph_collection (glyph_collection.get_name ());
-		unowned List<string>? nl;
 		
 		if (glyph_collection.get_name () == "") {
 			warning ("Refusing to insert glyph with name \"\", null character should be named null.");
@@ -390,7 +379,6 @@ class Font : GLib.Object {
 
 	public GlyphCollection? get_cached_glyph_collection (string glyph) {
 		GlyphCollection? gc = null;
-		Glyph? new_glyph;
 		
 		gc = glyph_cache.get (glyph);
 		
@@ -576,23 +564,27 @@ class Font : GLib.Object {
 			});
 		
 			glyph_cache.for_each ((gc) => {
-				Glyph glyph = gc.get_current ();
-				
-				foreach (Kerning k in glyph.kerning) {
-					string l, r;
-					Glyph? gr = get_glyph (k.glyph_right);
-					Glyph glyph_right;
+				try {
+					Glyph glyph = gc.get_current ();
 					
-					if (gr == null) {
-						warning ("kerning glyph that does not exist.");
+					foreach (Kerning k in glyph.kerning) {
+						string l, r;
+						Glyph? gr = get_glyph (k.glyph_right);
+						Glyph glyph_right;
+						
+						if (gr == null) {
+							warning ("kerning glyph that does not exist.");
+						}
+						
+						glyph_right = (!) gr;
+						
+						l = Font.to_hex_code (glyph.unichar_code);
+						r = Font.to_hex_code (glyph_right.unichar_code);
+										
+						os.put_string (@"<hkern left=\"U+$l\" right=\"U+$r\" kerning=\"$(k.val)\"/>\n");
 					}
-					
-					glyph_right = (!) gr;
-					
-					l = Font.to_hex_code (glyph.unichar_code);
-					r = Font.to_hex_code (glyph_right.unichar_code);
-									
-					os.put_string (@"<hkern left=\"U+$l\" right=\"U+$r\" kerning=\"$(k.val)\"/>\n");
+				} catch (GLib.Error e) {
+					warning (e.message);
 				}
 			});
 
@@ -600,7 +592,6 @@ class Font : GLib.Object {
 				GlyphBackgroundImage bg;
 				
 				try {
-					bool selected;
 					string data;
 					
 					foreach (Glyph g in gc.get_version_list ().glyphs) {
@@ -1021,11 +1012,15 @@ class Font : GLib.Object {
 			return;
 		}
 		
-		file_stream = img_file.create (FileCreateFlags.REPLACE_DESTINATION);
-		png_stream = new DataOutputStream (file_stream);
+		try {
+			file_stream = img_file.create (FileCreateFlags.REPLACE_DESTINATION);
+			png_stream = new DataOutputStream (file_stream);
 
-		png_stream.write (Base64.decode (data));
-		png_stream.close ();
+			png_stream.write (Base64.decode (data));
+			png_stream.close ();	
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 	}
 	
 	private void parse_background (Xml.Node* node) 

@@ -44,7 +44,6 @@ class GlyphBackgroundImage {
 	private bool desaturate = false;
 	private double threshold = 1.0;
 	
-	private bool update_sheduled = false;	
 	private bool background_image_is_processing = false;
 
 	public signal void updated ();
@@ -123,25 +122,31 @@ class GlyphBackgroundImage {
 	}
 
 	public bool is_valid () {
+		FileInfo file_info;
 		File file = File.new_for_path (path);
 	
 		if (!file.query_exists ()) {
 			return false;
 		}
 		
-		var file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
-		
-		if (file_info.get_size () == 0) {
+		try {
+			file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
+			
+			if (file_info.get_size () == 0) {
+				return false;
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
 			return false;
 		}
-		
+				
 		return true;
 	}
 
 	public string get_png_base64 () {
 		try {
 			File file = File.new_for_path (path);
-			var file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
+			FileInfo file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
 			uint8[] buffer = new uint8[file_info.get_size ()];
 			FileInputStream file_stream;
 			DataInputStream png_stream;
@@ -204,8 +209,6 @@ class GlyphBackgroundImage {
 	}
 	
 	private void create_png () {
-		ImageSurface img;
-		Context ct;
 		string fn = @"$path.png";
 		
 		Font font = Supplement.get_current_font ();
@@ -220,9 +223,13 @@ class GlyphBackgroundImage {
 			return;
 		}
 		
-		pixbuf = new Pixbuf.from_file (path);
-		pixbuf.save ((!) png_image.get_path (), "png");
-		path = (!) png_image.get_path ();
+		try {
+			pixbuf = new Pixbuf.from_file (path);
+			pixbuf.save ((!) png_image.get_path (), "png");
+			path = (!) png_image.get_path ();
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 	}
 	
 	public double get_current_width () {
@@ -413,7 +420,6 @@ class GlyphBackgroundImage {
 	}
 
 	void img_center (out double x, out double y) {
-		double a, b;
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		x = img_offset_x - g.view_offset_x + (size_margin / 2) * img_scale_x;
@@ -438,7 +444,7 @@ class GlyphBackgroundImage {
 
 	bool is_over_resize (double nx, double ny) {
 		Glyph g = MainWindow.get_current_glyph ();
-		double x, y, cx, cy, size, w, h;
+		double x, y, cx, cy, size;
 		bool inx, iny;
 
 		size = 12 * g.view_zoom;
@@ -494,7 +500,7 @@ class GlyphBackgroundImage {
 	}
 		
 	public void draw_rotate_handle (Context cr, Glyph g) {
-		double x, y, hx, hy, x1, y1, x2, y2;
+		double x, y, hx, hy, x2, y2;
 		
 		double ivz = 1.0 / (g.view_zoom);
 		

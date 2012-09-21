@@ -282,7 +282,14 @@ class PenTool : Tool {
 			if (active_edit_point != null) {
 				selected_corner = (!) active_edit_point;
 			}
-		}		
+		}
+		
+		// continue adding points from the selected one
+		foreach (Path p in glyph.active_paths) {
+			if (p.points.length () > 0 && active_edit_point == p.points.first ().data) {
+				p.reverse ();
+			}
+		}
 	}
 	
 	public void move_current_point_on_path (double x, double y) {
@@ -376,7 +383,7 @@ class PenTool : Tool {
 		y *= -1;
 
 		set_active_edit_point (null);
-
+		
 		foreach (Path current_path in g.path_list) {
 			foreach (EditPoint e in current_path.points) {
 				d = Math.sqrt (Math.fabs (Math.pow (e.x - x, 2) + Math.pow (e.y - y, 2)));

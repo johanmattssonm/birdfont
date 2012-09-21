@@ -237,8 +237,7 @@ public static string wine_to_unix_path (string exec_path) {
 	bool drive_c, drive_z;
 	int i;
 	string p, q;
-	File f;
-	
+
 	p = exec_path;
 	p = p.replace ("\\", "/");
 	

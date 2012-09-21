@@ -198,35 +198,6 @@ class EditPoint {
 		eh.move_to_coordinate (right_handle.x (), right_handle.y ());
 	}
 
-	public void set_point_type (PointType point_type) {
-		type = point_type;
-	}
-
-	public double get_average_angle () {
-		double a, b, c, length, angle;
-
-		recalculate_linear_handles ();
-		
-		a = left_handle.x () - right_handle.x ();
-		b = left_handle.y () - right_handle.y ();
-		c = a * a + b * b;
-		
-		if (c == 0) {
-			warning ("Can't calculate average length");
-			return 0;
-		}
-		
-		length = sqrt (fabs (c));
-		
-		if (right_handle.y () < left_handle.y ()) {
-			angle = acos (a / length) + PI;		
-		} else {
-			angle = -acos (a / length) + PI;
-		}	
-		
-		return angle;
-	}
-
 	public EditPoint copy () {
 		EditPoint new_point = new EditPoint ();
 		

@@ -67,11 +67,6 @@ class FileSelection {
     time.attach (null);
 	}
 	
-	public void set_path (string fn) {
-		path = new StringBuilder ();
-		path.append (fn);
-	}
-	
 	public void draw (Allocation allocation, Context cr) {
 		FontExtents fe;
 		

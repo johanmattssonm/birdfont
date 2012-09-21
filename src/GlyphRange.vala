@@ -169,8 +169,6 @@ class GlyphRange {
 	}
 
 	public string get_char (uint32 index) {
-		uint i = 0;
-		uint next = 0;
 		int64 ti;
 		string chr;
 		UniRange r;

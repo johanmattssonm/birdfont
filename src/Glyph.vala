@@ -237,7 +237,6 @@ class Glyph : FontDisplay {
 	}
 
 	public void set_background_image (GlyphBackgroundImage? b) {
-		double default_img_offset_x, default_img_offset_y;
 		GlyphBackgroundImage bg;
 		
 		if (b == null) {
@@ -741,11 +740,6 @@ class Glyph : FontDisplay {
 		y = ((y + g.view_offset_y - g.yc ()) * g.view_zoom);
 		return (int) (-y);
 	}
-
-	public static void reverse (double x, double y, out int rx, out int ry) {
-		rx = Glyph.reverse_path_coordinate_x (x);
-		ry = Glyph.reverse_path_coordinate_y (y);		
-	}	
 
 	public bool select_path (double x, double y) {
 		Path? p = null;
@@ -1670,9 +1664,6 @@ class Glyph : FontDisplay {
 	
 	/** Merge selected paths. */
 	public void merge_all () {
-		bool merged = false;
-		bool m = false;
-		
 		store_undo_state ();
 		delete_invisible_paths ();
 		
@@ -1695,10 +1686,8 @@ class Glyph : FontDisplay {
 	}
 	
 	public bool merge_path (Path p0) {
-		Path? m;
 		Path mp;
 		PathList path_list;
-		int i = 0;
 		
 		foreach (Path p1 in active_paths) {
 			if (p0 == p1) {

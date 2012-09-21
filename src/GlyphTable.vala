@@ -179,10 +179,6 @@ class GlyphTable : GLib.Object {
 			return (ac < bc) ? 1 : -1;
 		}
 		
-		if (ac == bc) {
-			return 0;
-		}
-		
 		return (ac < bc) ? 1 : -1;
 	}
 	
@@ -282,7 +278,6 @@ class GlyphTable : GLib.Object {
 	unowned List<Item>? find_next_via_index (string n) {
 		unowned List<Item> i = data.first ();
 		unowned List<RowItem> r;
-		unowned List<Item> start, stop;
 		int cmp;
 		
 		if (data.length () == 0) {

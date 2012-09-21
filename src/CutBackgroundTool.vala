@@ -222,12 +222,17 @@ class CutBackgroundTool : Tool {
 
 		img_file_next = img_dir.get_child (fn);
 		
-		if (img_file_next.query_exists ()) {
-			img_file_next.delete ();
+		try {
+			if (img_file_next.query_exists ()) {
+				img_file_next.delete ();
+			}
+
+			img_file.set_display_name (fn);
+		} catch (GLib.Error e) {
+			warning (e.message);
+			return;
 		}
-
-		img_file.set_display_name (fn);
-
+		
 		newbg = new GlyphBackgroundImage ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
 		
 		// set position for the new background
