@@ -38,12 +38,8 @@ class Glyph : FontDisplay {
 	int zoom_list_index = 0;
 	
 	// Paths
-	public List<Path> path_list;	// outline // FIXME: private
+	public List<Path> path_list;
 	public List<Path> active_paths = new List<Path> ();
-	
-	bool move_edit_point = false;
-	double last_move_offset_x = 0;
-	double last_move_offset_y = 0;
 
 	// Control points
 	public EditPoint? new_point_on_path = null;
@@ -555,7 +551,6 @@ class Glyph : FontDisplay {
 			t.release_action (t, (int) event.button, (int) event.x, (int) event.y);
 		}
 		
-		move_edit_point = false;
 		update_view ();
 	}
 
@@ -610,7 +605,6 @@ class Glyph : FontDisplay {
 	 */
 	public EditPoint add_new_edit_point (int x, int y) {
 		insert_edit_point (x, y);
-		move_edit_point = true;
 		
 		return_if_fail (active_paths.length () > 0);
 		

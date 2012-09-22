@@ -20,29 +20,33 @@ namespace Supplement {
 class ClipTool : Tool {
 
 	static Glyph? glyph = null; 
-	static Path? path = null; 
+	static List<Path> path = new List<Path> ();
 
 	public static void copy () {
 		Font font = Supplement.get_current_font ();
 		OverView overview  = MainWindow.get_overview ();
 		FontDisplay fd = MainWindow.get_current_display ();
 		string gc;
-		
+		Glyph g = MainWindow.get_current_glyph ();
+
+		glyph = null;
+
+		while (path.length () > 0) {
+			path.remove_link (path.first ());
+		}
+					
 		if (fd is OverView) {
 			gc = overview.get_selected_char ();
-			
-			print (@"SELECTED: $gc \n");
-			
 			glyph = font.get_glyph (gc);
-			path = null;
-		}
-
+		} 
+		
 		if (fd is Glyph) {
-			glyph = null;
-			path = MainWindow.get_current_glyph ().get_active_path ();
-			
-			if (path == null) {
-				glyph = MainWindow.get_current_glyph ();
+			foreach (Path p in g.active_paths) {
+				path.append (p.copy ());
+			}
+
+			if (path.length () == 0) {
+				glyph = g.copy ();
 			}
 		}
 
@@ -55,7 +59,8 @@ class ClipTool : Tool {
 		string gc;
 		Glyph? destination = null;
 		unichar new_char;
-				
+		Path inserted;
+		
 		if (fd is OverView) {
 			gc = overview.get_selected_char ();
 			destination = font.get_glyph (gc);
@@ -69,25 +74,27 @@ class ClipTool : Tool {
 		
 		if (fd is Glyph) {
 			destination = (Glyph) fd;
-		}
-		
-		return_if_fail (destination != null);
 
-		if (destination == glyph) {
-			return;
-		}
-			
-		if (glyph != null) {
-			foreach (Path p in ((!)glyph).path_list) {
-				((!)destination).add_path (p.copy ());
+			if (destination == glyph) {
+				return;
 			}
-		}
+			
+			((!)destination).store_undo_state ();
+			
+			if (glyph != null) {
+				foreach (Path p in ((!)glyph).path_list) {
+					inserted = p.copy ();
+					((!)destination).add_path (inserted);
+				}
+			}
 
-		if (path != null) {
-			((!)destination).add_path (((!)path).copy ());
+			foreach (Path p in path) {
+				inserted = p.copy ();
+				((!)destination).add_path (inserted);
+			}
+			
+			((!)destination).update_view ();
 		}
-		
-		((!)destination).update_view ();
 	}
 
 }
