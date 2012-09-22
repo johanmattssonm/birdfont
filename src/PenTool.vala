@@ -25,8 +25,8 @@ class PenTool : Tool {
 
 	public static bool edit_active_corner = false;
 	public static EditPoint active_corner = new EditPoint ();
-	public static EditPoint selected_corner = new EditPoint ();
 	public static Path active_path = new Path ();
+	public static List<EditPoint> selected_points = new List<EditPoint> (); 
 
 	public static EditPointHandle active_handle = new EditPointHandle.empty ();
 	public static EditPointHandle selected_handle = new EditPointHandle.empty ();
@@ -41,9 +41,6 @@ class PenTool : Tool {
 	private static double last_point_x = 0;
 	private static double last_point_y = 0;
 
-	private static bool adjust_precision = false;
-	private static double adjust_precision_begin_x = 0;
-	private static double adjust_precision_begin_y = 0;
 	public static double precision = 1;
 	
 	public PenTool (string name) {
@@ -76,18 +73,21 @@ class PenTool : Tool {
 			double x = ix;
 			double y = iy;
 			Glyph g = MainWindow.get_current_glyph ();
+			EditPoint selected_corner;
 			
-			if (move_selected && GridTool.is_visible ()) {
+			if (move_selected && GridTool.is_visible () && selected_points.length () > 0) {
+				selected_corner = selected_points.last ().data;
 				GridTool.tie (ref x, ref y);
-				g.move_selected_edit_point (x, y);
+				g.move_selected_edit_point (selected_corner, x, y);
 			}
 
 			move_selected = false;
 			move_selected_handle = false;
 			edit_active_corner = false;
 			
-			selected_handle = new EditPointHandle.empty ();
 			active_handle = new EditPointHandle.empty ();
+			
+			move (x, y);
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -95,25 +95,18 @@ class PenTool : Tool {
 		});
 		
 		key_press_action.connect ((self, keyval) => {
-			if (keyval == Key.SHIFT_LEFT) {
-				adjust_precision = true;
+			Glyph g = MainWindow.get_current_glyph ();
+			
+			if (keyval == Key.DEL) {
+				foreach (EditPoint p in selected_points) {
+					g.delete_edit_point (p);
+				}
 				
-				adjust_precision_begin_x = last_point_x;
-				adjust_precision_begin_y = last_point_y;
+				g.update_view ();
 			}
 		});
 		
 		key_release_action.connect ((self, keyval) => {
-			if (keyval == Key.SHIFT_LEFT) {
-				adjust_precision = false;
-				set_precision (1.0 / Path.distance (adjust_precision_begin_x, last_point_x, adjust_precision_begin_y, last_point_y));
-				
-				precision *= 30;
-				
-				if (precision > 1) {
-					set_precision (precision);
-				}				
-			}
 		});
 	}
 	
@@ -130,29 +123,15 @@ class PenTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		EditPoint ep;
 		
-		if (adjust_precision) {
-			last_point_x = x;
-			last_point_y = y;
-			return;
-		}
-		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
 		set_default_handle_positions ();
-		
+
 		// show new point on path
 		if (glyph.new_point_on_path != null) {
 			move_current_point_on_path (x, y);
 		}
 		
-		// show curve handles
-		active_corner.set_active_handle (false);
-		selected_corner.set_active_handle (true);
-		if (active_edit_point != null) {
-			active_corner = (!) active_edit_point;
-			active_corner.set_active_handle (true);
-		}
-
 		// move curve handles
 		if (move_selected_handle) {
 			if (GridTool.is_visible ()) {
@@ -177,24 +156,15 @@ class PenTool : Tool {
 		
 		// move edit point
 		if (move_selected) {
-			glyph.move_selected_edit_point_delta ((x - last_point_x) * precision, (y - last_point_y) * precision);
-			ep = (!) glyph.selected_point;
-			
-			if (tie_x_or_y_coordinates) {
-				return_if_fail (glyph.selected_point != null);
-				GridTool.tie_to_prev (ep, x, y);
+			foreach (EditPoint p in selected_points) {
+				glyph.move_selected_edit_point_delta (p, (x - last_point_x) * precision, (y - last_point_y) * precision);
+				
+				if (tie_x_or_y_coordinates) {
+					GridTool.tie_to_prev (p, x, y);
+				}
+				
+				p.recalculate_linear_handles ();
 			}
-			
-			if (active_corner != selected_corner) {
-				active_corner.set_active_handle (false);
-			}
-			
-			if (!is_over_handle (x, y) && active_edit_point != null) { 
-				active_corner = (!) active_edit_point;
-				active_corner.set_active_handle (true);
-			}
-			
-			ep.recalculate_linear_handles ();
 		}
 		
 		last_point_x = x;
@@ -206,6 +176,9 @@ class PenTool : Tool {
 		Glyph glyph = (!) g;
 			
 		return_if_fail (g != null);
+
+		// make path transparent and show edit points
+		glyph.open_path ();
 
 		// select or deselect a path
 		if (button == 3) {
@@ -219,9 +192,6 @@ class PenTool : Tool {
 			
 			return;
 		}
-
-		// make path transparent and show edit points
-		glyph.open_path ();
 
 		if (insert_new_point_on_path_selected ()) {
 			glyph.insert_new_point_on_path (x, y);
@@ -237,7 +207,6 @@ class PenTool : Tool {
 		if (is_new_point_on_path_selected ()) {
 			move_selected = true;
 			move_point_on_path = true;
-			glyph.selected_point = active_edit_point;
 			glyph.new_point_on_path = null;
 			return;
 		}
@@ -250,8 +219,12 @@ class PenTool : Tool {
 		}
 				
 		control_point_event (x, y);
-		select_active_point (x, y);
 		curve_corner_event (x, y);
+		
+		if (!move_selected_handle) {
+			select_active_point (x, y);
+		}
+		
 		glyph.store_undo_state ();
 		
 		if (is_erase_selected () && active_edit_point != null) {
@@ -263,24 +236,27 @@ class PenTool : Tool {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
 		
-		foreach (Path cp in glyph.active_paths) {
-			foreach (var e in cp.points) {
-				e.set_active (false);
+		if (KeyBindings.modifier != SHIFT) {
+			if (active_edit_point != null) {
+				((!)active_edit_point).set_active (false);
 			}
+
+			remove_all_selected_points ();
 		}
 		
 		move_selected = true;
 		move_point_on_path = true;
-		
-		glyph.selected_point = active_edit_point;
+
+		if (active_edit_point != null) {
+			((!)active_edit_point).set_selected (true);
+		}
 
 		if (!is_over_handle (x, y)) {
-			selected_corner.set_active_handle (false);
 			edit_active_corner = true;
 			set_default_handle_positions ();
 			
 			if (active_edit_point != null) {
-				selected_corner = (!) active_edit_point;
+				add_selected_point ((!) active_edit_point);
 			}
 		}
 		
@@ -420,11 +396,18 @@ class PenTool : Tool {
 	
 	public void new_point_action (int x, int y) {
 		Glyph glyph;
+		EditPoint new_point;
 		glyph = MainWindow.get_current_glyph ();
 		glyph.open_path ();
-		glyph.add_new_edit_point (x, y);
 		
-		set_linear_handles_for_last_point ();
+		new_point = glyph.add_new_edit_point (x, y);
+		new_point.set_selected (true);
+		
+		if (KeyBindings.modifier != SHIFT) {
+			remove_all_selected_points ();
+		}
+		
+		add_selected_point (new_point);
 		
 		move_selected = true;
 	}
@@ -496,10 +479,12 @@ class PenTool : Tool {
 			begin_new_point_on_path = false;
 		}
 		
+		/* // DELETE
 		if (glyph.active_point != null) {
 			move_selected = true;
 			return false;
 		}
+		*/
 		
 		return true;
 	}
@@ -527,11 +512,19 @@ class PenTool : Tool {
 	}
 	
 	private bool is_over_handle (double x, double y) {
-		double dp = selected_corner.get_close_distance (x, y);
-		double dl = selected_corner.get_left_handle ().get_point ().get_close_distance (x, y);
-		double dr = selected_corner.get_right_handle ().get_point ().get_close_distance (x, y);
+		double dp, dl, dr;
 		
-		return (dl < dp || dr < dp);
+		foreach (EditPoint selected_corner in selected_points) {
+			dp = selected_corner.get_close_distance (x, y);
+			dl = selected_corner.get_left_handle ().get_point ().get_close_distance (x, y);
+			dr = selected_corner.get_right_handle ().get_point ().get_close_distance (x, y);
+			
+			if (dl < dp || dr < dp) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	private void curve_active_corner_event (double x, double y) {
@@ -542,19 +535,19 @@ class PenTool : Tool {
 		if (!is_over_handle (x, y)) {
 			return;
 		}		
-
-
-		eh = selected_corner.get_left_handle ();
-		if (eh.get_point ().is_close (x, y)) {
-			eh.active = true;
-			active_handle = eh;
-		}
 		
-		
-		eh = selected_corner.get_right_handle ();
-		if (eh.get_point ().is_close (x, y)) {
-			eh.active = true;
-			active_handle = eh;	
+		foreach (EditPoint selected_corner in selected_points) {
+			eh = selected_corner.get_left_handle ();
+			if (eh.get_point ().is_close (x, y)) {
+				eh.active = true;
+				active_handle = eh;
+			}
+			
+			eh = selected_corner.get_right_handle ();
+			if (eh.get_point ().is_close (x, y)) {
+				eh.active = true;
+				active_handle = eh;	
+			}
 		}
 	}
 
@@ -563,24 +556,42 @@ class PenTool : Tool {
 		
 		open_closest_path (x, y);
 		
-		if (!is_over_handle (x, y)) {
-			return;
-		}
-		
-		eh = selected_corner.get_left_handle ();
-		
-		if (eh.get_point ().is_close (x, y)) {
-			selected_handle = eh;
-			move_selected_handle = true;
-		}
+		foreach (EditPoint selected_corner in selected_points) {
+			eh = selected_corner.get_left_handle ();
+			
+			if (eh.get_point ().is_close (x, y)) {
+				selected_handle = eh;
+				move_selected_handle = true;
+			}
 
-		eh = selected_corner.get_right_handle ();
-		
-		if (eh.get_point ().is_close (x, y)) {
-			selected_handle = eh;
-			move_selected_handle = true;
+			eh = selected_corner.get_right_handle ();
+			
+			if (eh.get_point ().is_close (x, y)) {
+				selected_handle = eh;
+				move_selected_handle = true;
+			}
+		}		
+	}
+
+	void add_selected_point (EditPoint p) {
+		foreach (EditPoint ep in selected_points) {
+			if (p == ep) {
+				return;
+			}
 		}
-				
+		
+		selected_points.append (p);
+	}
+	
+	void remove_all_selected_points () {
+		foreach (EditPoint e in selected_points) {
+			e.set_active (false);
+			e.set_selected (false);
+		}
+			
+		while (selected_points.length () > 0) {
+			selected_points.remove_link (selected_points.first ());
+		}
 	}
 	
 	/** Draw a test glyph. */

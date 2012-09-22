@@ -101,6 +101,17 @@ class MoveTool : Tool {
 				last_y = y;
 			}
 		});
+		
+		key_press_action.connect ((self, keyval) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			
+			if (keyval == Key.DEL) {
+				foreach (Path p in g.active_paths) {
+					g.path_list.remove (p);
+					g.update_view ();
+				}
+			}
+		});
 	}
 
 	void tie_path_to_grid (Path p, double x, double y) {

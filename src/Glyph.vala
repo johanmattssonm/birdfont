@@ -46,8 +46,6 @@ class Glyph : FontDisplay {
 	double last_move_offset_y = 0;
 
 	// Control points
-	public EditPoint? active_point = null;
-	public EditPoint? selected_point = null;
 	public EditPoint? new_point_on_path = null;
 	public EditPoint? flipping_point_on_path = null;
 	public EditPoint? last_added_edit_point = null;
@@ -504,25 +502,7 @@ class Glyph : FontDisplay {
 	}
 
 	public override void key_press (uint keyval) {	
-		Tool t;
-		
-		if (keyval == Key.DEL) {
-			if (active_paths.length () != 0) {
-				
-				foreach (Path p in active_paths) {
-					path_list.remove (p);
-					redraw_area (0, 0, allocation.width, allocation.height);
-				}
-				
-				clear_active_paths ();
-			}
-			
-			if (selected_point != null) {
-				delete_edit_point ((!) selected_point);
-			}
-		}
-		
-		t = MainWindow.get_toolbox ().get_current_tool ();
+		Tool t = MainWindow.get_toolbox ().get_current_tool ();
 		t.key_press_action (t, keyval);
 	}
 	
@@ -831,11 +811,12 @@ class Glyph : FontDisplay {
 		return min_point;
 	}
 	
-	private void insert_edit_point (double x, double y) {
+	private EditPoint insert_edit_point (double x, double y) {
 		unowned List<Path> paths;
 		double xt, yt;
 		bool added;
 		Path np;
+		EditPoint inserted;
 		
 		if (active_paths.length () == 0) {
 			np = new Path ();
@@ -846,12 +827,9 @@ class Glyph : FontDisplay {
 		
 		paths = path_list;
 		
-		xt = x - xc () - view_offset_x;
-		yt = -y + yc () + view_offset_y;
-
-		xt *= view_zoom;
-		yt *= view_zoom;		
-			
+		xt = path_coordinate_x (x);
+		yt = path_coordinate_y (y);
+	
 		added = false;
 
 		if (new_point_on_path != null) {
@@ -873,7 +851,7 @@ class Glyph : FontDisplay {
 			flipping_point_on_path = new_point_on_path;
 			new_point_on_path = null;
 			added = true;
-			return;
+			return e;
 		}
 		
 		if (!added) {
@@ -918,26 +896,24 @@ class Glyph : FontDisplay {
 		}
 	
 		assert (active_paths.length () > 0);
+		assert (active_paths.last ().data.points.length () > 0);
 		
-		selected_point = active_paths.last ().data.get_last_point ();
-		assert (selected_point != null);
+		inserted = active_paths.last ().data.points.data;
 		
-		move_selected_edit_point (x, y);
+		return inserted;
 	}
 	
-	public void move_selected_edit_point_delta (double dx, double dy) 
-		requires (selected_point != null)
-	{
-		double px = ((!) selected_point).x + xc () - view_offset_x;
-		double py = -1 * (((!) selected_point).y - yc () + view_offset_y);
+	public void move_selected_edit_point_delta (EditPoint selected_point, double dx, double dy) {
+		double px = selected_point.x + xc () - view_offset_x;
+		double py = -1 * (selected_point.y - yc () + view_offset_y);
 		
 		px *= view_zoom;
 		py *= view_zoom;
 		
-		move_selected_edit_point (dx + px, dy + py);
+		move_selected_edit_point (selected_point, dx + px, dy + py);
 	}
 	
-	public void move_selected_edit_point (double x, double y) {		
+	public void move_selected_edit_point (EditPoint selected_point, double x, double y) {		
 		double xc, yc, xt, yt;
 		double ivz = 1 / view_zoom;
 		EditPoint p;
@@ -957,7 +933,7 @@ class Glyph : FontDisplay {
 		redraw_area ((int)(x - 4*view_zoom), (int)(y - 4*view_zoom), (int)(x + 3*view_zoom), (int)(y + 3*view_zoom));
 		
 		// update position of selected point
-		((!) selected_point).set_position (xt, yt);
+		selected_point.set_position (xt, yt);
 		
 		if (view_zoom >= 2) {
 			redraw_area (0, 0, allocation.width, allocation.height);
@@ -1037,7 +1013,6 @@ class Glyph : FontDisplay {
 		clear_active_paths ();
 		new_point_on_path = null;
 		flipping_point_on_path = null;
-		selected_point = null;
 		
 		delete_invisible_paths ();
 		

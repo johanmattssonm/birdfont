@@ -57,8 +57,12 @@ class Path {
 	
 	private static ImageSurface? edit_point_image = null;
 	private static ImageSurface? active_edit_point_image = null;
+	
 	private static ImageSurface? edit_point_handle_image = null;
 	private static ImageSurface? active_edit_point_handle_image = null;
+
+	private static ImageSurface? selected_edit_point_image = null;
+	private static ImageSurface? active_selected_edit_point_image = null;
 	
 	Path quadratic_path; // quadratic points for ttf export
 	
@@ -68,6 +72,8 @@ class Path {
 			active_edit_point_image = Icons.get_icon ("active_edit_point.png");
 			edit_point_handle_image = Icons.get_icon ("edit_point_handle.png");
 			active_edit_point_handle_image = Icons.get_icon ("active_edit_point_handle.png");
+			selected_edit_point_image  = Icons.get_icon ("selected_edit_point.png");
+			active_selected_edit_point_image = Icons.get_icon ("active_selected_edit_point.png");
 		}
 	}
 
@@ -130,7 +136,7 @@ class Path {
 		if (is_editable ()) {
 			// control points for curvature
 			foreach (EditPoint e in ep) {
-				if (e.get_active_handle () || e.selected_handle > 0)
+				if (e.selected || e.selected_handle > 0)
 					draw_edit_point_handles (e, cr);
 			}
 						
@@ -287,7 +293,14 @@ class Path {
 	public static void draw_edit_point_center (EditPoint e, Context cr) 
 		requires (active_edit_point_image != null && edit_point_image != null)
 	{	
-		ImageSurface img = (e.active) ? (!) active_edit_point_image : (!) edit_point_image;
+		ImageSurface img;
+		
+		if (e.is_selected ()) {
+			img = (e.active) ? (!) active_selected_edit_point_image : (!) selected_edit_point_image;
+		} else {
+			img = (e.active) ? (!) active_edit_point_image : (!) edit_point_image;
+		}
+		
 		draw_img_center (cr, img, e.x, e.y);
 	}
 	
@@ -855,19 +868,16 @@ class Path {
 		
 		second_last_point = last_point;
 		last_point = p;
-
-		return np;
 		
+		PenTool.set_default_handle_positions ();
+		
+		return np;
 	}
 
 	public void close () {
 		open = false;
 		edit = false;
-		
-		foreach (EditPoint ep in points) {
-			ep.set_active_handle (false);
-		}
-		
+
 		create_list ();
 		
 		if (points.length () > 2) {

@@ -113,19 +113,21 @@ class Toolbox : GLib.Object  {
 
 		Tool tie_editpoint_tool = new Tool ("tie_point", "Tie curve handles for selected edit point", 'w');
 		tie_editpoint_tool.select_action.connect ((self) => {
-			EditPoint ep;
 			bool tie;
 			
 			select_draw_tool ();
 			
-			ep = pen_tool.selected_corner;
-			tie = !ep.tie_handles;
+			foreach (EditPoint ep in pen_tool.selected_points) {
+				tie = !ep.tie_handles;
 
-			if (tie) {
-				ep.process_tied_handle ();
+				if (tie) {
+					ep.process_tied_handle ();
+				}
+
+				ep.set_tie_handle (tie);
+				
+				MainWindow.get_current_glyph ().update_view ();				
 			}
-			
-			ep.set_tie_handle (tie);				
 		});
 		draw_tool_modifiers.add_tool (tie_editpoint_tool);	
 

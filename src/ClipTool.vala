@@ -87,6 +87,7 @@ class ClipTool : Tool {
 			((!)destination).add_path (((!)path).copy ());
 		}
 		
+		((!)destination).update_view ();
 	}
 
 }

@@ -44,8 +44,8 @@ class EditPoint {
 	public unowned List<EditPoint>? next = null;
 
 	public bool active = false;
-	bool active_handle = false;
-	
+	public bool selected = false;
+		
 	public int selected_handle = 0;
 	
 	public EditPointHandle right_handle;
@@ -220,14 +220,6 @@ class EditPoint {
 		return new_point;
 	}
 
-	public bool get_active_handle () {
-		return active_handle;	
-	}
-		
-	public void set_active_handle (bool a) {
-		active_handle = a;	
-	}
-	
 	public bool is_close (double x, double y) {
 		return get_close_distance (x, y) < double.MAX;
 	}
@@ -323,6 +315,14 @@ class EditPoint {
 		
 		x = xt;
 		y = yt;
+	}
+	
+	public bool is_selected () {
+		return selected;
+	}
+	
+	public void set_selected (bool s) {
+		selected = s;
 	}
 	
 	public bool set_active (bool active) {
