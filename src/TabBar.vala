@@ -25,9 +25,14 @@ class TabBar : DrawingArea {
 	
 	public List<Tab> tabs = new List<Tab> ();
 
+	static const int NO_TAB = -1;
+	static const int NEXT_TAB = -2;
+	static const int PREVIOUS_TAB = -3;
+
+	int first_tab = 0;
 	int selected = 0;
-	int over = -1;
-	int over_close = -1;
+	int over = NO_TAB;
+	int over_close = NO_TAB;
 	
 	public signal void signal_tab_selected (Tab selected_tab);
 
@@ -44,7 +49,9 @@ class TabBar : DrawingArea {
 	ImageSurface? tab3_right = null;
 	
 	ImageSurface? bar_background = null;
-	
+	ImageSurface next_tab;
+	ImageSurface to_previous_tab;
+			
 	public TabBar () {
 		tab1_left = Icons.get_icon ("tab1_left.png");
 		tab1_right = Icons.get_icon ("tab1_right.png");
@@ -56,6 +63,11 @@ class TabBar : DrawingArea {
 		tab3_right = Icons.get_icon ("tab3_right.png");
 		
 		bar_background = Icons.get_icon ("tabbar_background.png");
+		
+		next_tab = (!) Icons.get_icon ("next_tab.png");
+		to_previous_tab = (!) Icons.get_icon ("previous_tab.png");
+		
+		return_if_fail (!is_null (next_tab));
 		
 		set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
 		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
@@ -87,40 +99,42 @@ class TabBar : DrawingArea {
 				return true;
 			});
 		
-		drag_begin.connect ((t, e)=> {
-				stdout.printf("Drag.");
-			});
-		
-		drag_end.connect ((t, e)=> {
-				stdout.printf("Drag end.");
-			});
-			
-		drag_motion.connect ((t, e, x, y, time)=> {
-				stdout.printf("Drag motion.");
-				return true;				
-			});
-			
-		drag_drop.connect ((t, e, x, y, time)=> {
-				stdout.printf("Drag motion.");
-				return true;
-			});	
-		
 		set_size_request (20, 25);
 	}
 	
 	private void is_over_close (double x, double y, out int over, out int over_close) {
 		int i = 0;
-		double offset = 0;
+		double offset = 19;
+		
+		Allocation alloc;
+		get_allocation(out alloc);
+		
+		if (x < 19 && has_scroll ()) {
+			over_close = NO_TAB;
+			over = PREVIOUS_TAB;
+			return;
+		}
 		
 		foreach (Tab t in tabs) {
-						
-			if ( offset < x < offset + t.get_width ()) {
+			
+			if (i < first_tab) {
+				i++;
+				continue;
+			}
+			
+			if (offset + t.get_width () + 3 > alloc.width && has_scroll ()) {
+				over_close = NO_TAB;
+				over = NEXT_TAB;
+				return;
+			}
+			
+			if (offset < x < offset + t.get_width ()) {
 				over = i;
 				
 				if (8 < y < 20 && x > offset + t.get_width () - 16) {
 					over_close =  i;
 				} else {
-					over_close =  -1;
+					over_close =  NO_TAB;
 				}
 				
 				return;
@@ -130,8 +144,8 @@ class TabBar : DrawingArea {
 			i++;
 		}
 
-		over_close = -1;		
-		over = -1;
+		over_close = NO_TAB;		
+		over = NO_TAB;
 	}	
 	
 	
@@ -203,6 +217,10 @@ class TabBar : DrawingArea {
 		
 		if (lt == null || ((!) lt).data == null) {
 			return false;
+		}
+
+		if (first_tab > 0) {
+			first_tab--;
 		}
 
 		t = (!) ((!) lt).data;
@@ -280,12 +298,37 @@ class TabBar : DrawingArea {
 		return selected;
 	}
 	
-	public void select_tab (int index)
-		requires (0 <= index < tabs.length ())
-	{
+	public void select_tab (int index) {
 		Tab t;
 		Allocation alloc;
 		get_allocation(out alloc);
+		
+		if (index == NEXT_TAB) {
+			selected++;
+			
+			if (selected >=  tabs.length ()) {
+				selected = (int) tabs.length () - 1;
+			}
+			
+			scroll_to_tab (selected);
+			queue_draw_area(0, 0, alloc.width, alloc.height);			
+			return;
+		}
+		
+		if (index == PREVIOUS_TAB) {
+
+			if (selected > 0) {
+				selected--;
+			}
+			
+			scroll_to_tab (selected);
+			queue_draw_area(0, 0, alloc.width, alloc.height);
+			return;
+		}
+		
+		if (!(0 <= index < tabs.length ())) {
+			return;
+		}
 		
 		selected = index;
 		
@@ -299,19 +342,81 @@ class TabBar : DrawingArea {
 		previous_tab = current_tab;
 		current_tab = t;
 
+		scroll_to_tab (selected);
 		queue_draw_area(0, 0, alloc.width, alloc.height);
+	}
+	
+	private bool has_scroll () {
+		int i = 0;
+		double offset = 19;
+
+		Allocation alloc;
+		get_allocation(out alloc);
+				
+		if (first_tab > 0) {
+			return true;
+		}
+		
+		foreach (Tab t in tabs) {	
+			if (i < first_tab) {
+				i++;
+				continue;
+			}
+			
+			if (offset + t.get_width () + 3 > alloc.width - 19) {
+				return true;
+			}
+
+			offset += t.get_width () + 3;
+			i++;
+		}
+		
+		return false;		
+	}
+	
+	private void scroll_to_tab (int index) {
+		double offset = 19;
+		int i = 0;
+		
+		if (index < first_tab) {
+			first_tab = index;
+			return;
+		}
+		
+		Allocation alloc;
+		get_allocation(out alloc);
+		
+		foreach (Tab t in tabs) {
+			
+			if (i < first_tab) {
+				i++;
+				continue;
+			}
+			
+			if (offset + t.get_width () + 3 > alloc.width - 19) {
+				// out of view
+				first_tab++;
+				scroll_to_tab (index);
+				return;
+			}
+
+			if (i == index) {
+				return; // in view
+			}
+
+			offset += t.get_width () + 3;
+			i++;
+		}		
 	}
 	
 	private void select_tab_click (double x, double y) {
 		int over, close;
 		is_over_close (x, y, out over, out close);
 
-		if (over >= 0) {
-			if (over_close >= 0 && over == selected) {
-				close_tab (over_close);
-			} else {
-				select_tab (over);
-			}
+		if (over_close >= 0 && over == selected) {
+			close_tab (over_close);
+		} else {
+			select_tab (over);
 		}
 	}
 	
@@ -323,8 +428,11 @@ class TabBar : DrawingArea {
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 		
 		if (tab_width < 0) {
-			cr.text_extents (display_item.get_name (), out te);
-			tab_width = te.width + 30;
+			//cr.text_extents (display_item.get_name (), out te); // this is not a good estimation
+			//tab_width = te.width + 30;
+			
+			tab_width = 9 * display_item.get_name ().char_count ();
+			tab_width += 30;
 		}
 				
 		tabs.insert (new Tab (display_item, tab_width, always_open), s);
@@ -362,7 +470,18 @@ class TabBar : DrawingArea {
 			cr.paint ();
 		}
 
+		if (has_scroll ()) {
+			// left arrow
+			cr.set_source_surface (to_previous_tab, 3, (alloc.height - to_previous_tab.get_height ()) / 2.0);
+			cr.paint ();
+
+			// right arrow
+			cr.set_source_surface (next_tab, alloc.width - 19, (alloc.height - next_tab.get_height ()) / 2.0);
+			cr.paint ();
+		}
+		
 		draw_tabs (cr);
+		
 	}
 	
 	private void draw_tabs (Context cr) {
@@ -370,12 +489,21 @@ class TabBar : DrawingArea {
 		get_allocation(out alloc);
 
 		double close_opacity;
-		double offset = 0;
+		double offset = 19;
 		int i = 0;
 		foreach (Tab t in tabs) {
+			if (i < first_tab) {
+				i++;
+				continue;
+			}
+
 			cr.save ();
 			cr.translate (offset, 0);
-
+						
+			if (offset + t.get_width () + next_tab.get_width () + 3 > alloc.width) {
+				break;
+			}
+		
 			// background
 			if (i == selected) {
 				for (int j = 0; j < t.get_width (); j++) {
