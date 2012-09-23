@@ -16,12 +16,13 @@
 */
 
 using Cairo;
-using Gdk;
-using Gtk;
 
 namespace Supplement {
 
-class TabBar : DrawingArea {
+class TabBar : GLib.Object {
+	
+	int width = 0;
+	int height = 0;
 	
 	public List<Tab> tabs = new List<Tab> ();
 
@@ -68,46 +69,15 @@ class TabBar : DrawingArea {
 		to_previous_tab = (!) Icons.get_icon ("previous_tab.png");
 		
 		return_if_fail (!is_null (next_tab));
-		
-		set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
-		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
-	  
-		motion_notify_event.connect ((t, e)=> {
-			Allocation alloc;
-			is_over_close (e.x, e.y, out over, out over_close);
-			get_allocation (out alloc);
-			queue_draw_area (0, 0, alloc.width, alloc.height);
-			return true;
-		});	
-		
-		leave_notify_event.connect ((t, e)=> {
-			Allocation alloc;
-			get_allocation (out alloc);
-			over = -1;
-			over_close = -1;
-			queue_draw_area (0, 0, alloc.width, alloc.height);
-			return true;
-		});
-				
-		button_press_event.connect ((t, e)=> {
-			select_tab_click (e.x, e.y);
-			return true;
-			});
-			
-		expose_event.connect ((t, e)=> {
-				draw (e);
-				return true;
-			});
-		
-		set_size_request (20, 25);
+	}
+	
+	public void motion (double x, double y) {
+		is_over_close (x, y, out over, out over_close);
 	}
 	
 	private void is_over_close (double x, double y, out int over, out int over_close) {
 		int i = 0;
 		double offset = 19;
-		
-		Allocation alloc;
-		get_allocation(out alloc);
 		
 		if (x < 19 && has_scroll ()) {
 			over_close = NO_TAB;
@@ -122,7 +92,7 @@ class TabBar : DrawingArea {
 				continue;
 			}
 			
-			if (offset + t.get_width () + 3 > alloc.width && has_scroll ()) {
+			if (offset + t.get_width () + 3 > width && has_scroll ()) {
 				over_close = NO_TAB;
 				over = NEXT_TAB;
 				return;
@@ -206,8 +176,6 @@ class TabBar : DrawingArea {
 	public bool close_tab (int index, bool background_tab = false) {
 		unowned List<Tab?>? lt;
 		Tab t;
-		Allocation alloc;
-		get_allocation(out alloc);
 		
 		if (!(0 <= index < tabs.length ())) {
 			return false;
@@ -300,8 +268,6 @@ class TabBar : DrawingArea {
 	
 	public void select_tab (int index) {
 		Tab t;
-		Allocation alloc;
-		get_allocation(out alloc);
 		
 		if (index == NEXT_TAB) {
 			selected++;
@@ -311,7 +277,7 @@ class TabBar : DrawingArea {
 			}
 			
 			scroll_to_tab (selected);
-			queue_draw_area(0, 0, alloc.width, alloc.height);			
+//FIXA			queue_draw_area(0, 0, alloc.width, alloc.height);			
 			return;
 		}
 		
@@ -322,7 +288,7 @@ class TabBar : DrawingArea {
 			}
 			
 			scroll_to_tab (selected);
-			queue_draw_area(0, 0, alloc.width, alloc.height);
+//FIXA			queue_draw_area(0, 0, alloc.width, alloc.height);
 			return;
 		}
 		
@@ -343,16 +309,13 @@ class TabBar : DrawingArea {
 		current_tab = t;
 
 		scroll_to_tab (selected);
-		queue_draw_area(0, 0, alloc.width, alloc.height);
+//FIXA		queue_draw_area(0, 0, alloc.width, alloc.height);
 	}
 	
 	private bool has_scroll () {
 		int i = 0;
 		double offset = 19;
-
-		Allocation alloc;
-		get_allocation(out alloc);
-				
+		
 		if (first_tab > 0) {
 			return true;
 		}
@@ -363,7 +326,7 @@ class TabBar : DrawingArea {
 				continue;
 			}
 			
-			if (offset + t.get_width () + 3 > alloc.width - 19) {
+			if (offset + t.get_width () + 3 > width - 19) {
 				return true;
 			}
 
@@ -383,9 +346,6 @@ class TabBar : DrawingArea {
 			return;
 		}
 		
-		Allocation alloc;
-		get_allocation(out alloc);
-		
 		foreach (Tab t in tabs) {
 			
 			if (i < first_tab) {
@@ -393,7 +353,7 @@ class TabBar : DrawingArea {
 				continue;
 			}
 			
-			if (offset + t.get_width () + 3 > alloc.width - 19) {
+			if (offset + t.get_width () + 3 > width - 19) {
 				// out of view
 				first_tab++;
 				scroll_to_tab (index);
@@ -409,8 +369,12 @@ class TabBar : DrawingArea {
 		}		
 	}
 	
-	private void select_tab_click (double x, double y) {
+	public void select_tab_click (double x, double y, int width, int height) {
 		int over, close;
+		
+		this.width = width;
+		this.height = height;
+		
 		is_over_close (x, y, out over, out close);
 
 		if (over_close >= 0 && over == selected) {
@@ -451,47 +415,46 @@ class TabBar : DrawingArea {
 		return false;
 	}
 	
-	private void draw (EventExpose event) {
-		Allocation alloc;
-		Context cr = cairo_create (get_window ());
-		
-		get_allocation (out alloc);
+	public void draw (Context cr, int width, int height) {
+		this.width = width;
+		this.height = height;
 		
 		cr.save ();
-		cr.rectangle (0, 0, alloc.width, alloc.height);
+		cr.rectangle (0, 0, width, height);
 		cr.set_line_width (0);
 		cr.set_source_rgba (183/255.0, 200/255.0, 223/255.0, 1);
 		cr.fill_preserve ();
 		cr.stroke ();
 		cr.restore ();
 
-		for (int j = 0; j < alloc.width; j++) {
+		for (int j = 0; j < width; j++) {
 			cr.set_source_surface ((!) bar_background, j, 0);
 			cr.paint ();
 		}
 
 		if (has_scroll ()) {
 			// left arrow
-			cr.set_source_surface (to_previous_tab, 3, (alloc.height - to_previous_tab.get_height ()) / 2.0);
+			cr.set_source_surface (to_previous_tab, 3, (height - to_previous_tab.get_height ()) / 2.0);
 			cr.paint ();
 
 			// right arrow
-			cr.set_source_surface (next_tab, alloc.width - 19, (alloc.height - next_tab.get_height ()) / 2.0);
+			cr.set_source_surface (next_tab, width - 19, (height - next_tab.get_height ()) / 2.0);
 			cr.paint ();
 		}
+		
+		print (@"DRAW\n");
 		
 		draw_tabs (cr);
 		
 	}
 	
 	private void draw_tabs (Context cr) {
-		Allocation alloc;
-		get_allocation(out alloc);
-
 		double close_opacity;
 		double offset = 19;
 		int i = 0;
+		
 		foreach (Tab t in tabs) {
+			
 			if (i < first_tab) {
 				i++;
 				continue;
@@ -500,7 +463,7 @@ class TabBar : DrawingArea {
 			cr.save ();
 			cr.translate (offset, 0);
 						
-			if (offset + t.get_width () + next_tab.get_width () + 3 > alloc.width) {
+			if (offset + t.get_width () + next_tab.get_width () + 3 > width) {
 				break;
 			}
 		

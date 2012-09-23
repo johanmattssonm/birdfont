@@ -30,6 +30,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	HBox list_box;
 	HBox canvas_box;
 	
+	TabbarCanvas tabbar;
 	WebView html_canvas;
 	ScrolledWindow html_box;
 
@@ -72,7 +73,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			File layout_dir;
 			File layout_uri;
 			string uri = "";
-			int i;
 			FontDisplay fd = tab.get_display ();
 			
 			MainWindow.glyph_canvas.set_current_glyph (fd);
@@ -127,7 +127,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		canvas_box.pack_start (html_box, true, true, 0);
 		
 		tab_box = new VBox (false, 0);
-		tab_box.pack_start (MainWindow.tabs, false, false, 0);	
+		tab_box.pack_start (new TabbarCanvas (MainWindow.tabs), false, false, 0);	
 		
 		tab_box.pack_start (canvas_box, true, true, 0);
 
@@ -239,6 +239,51 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}	
 }
 
+class TabbarCanvas : DrawingArea {
+	TabBar tabbar;
+	
+	public TabbarCanvas (TabBar tb) {		
+		tabbar = tb;
+
+		set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
+		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
+	  
+		motion_notify_event.connect ((t, e)=> {
+			Allocation alloc;
+			tabbar.motion (e.x, e.y);
+			get_allocation (out alloc);
+			queue_draw_area (0, 0, alloc.width, alloc.height);
+			return true;
+		});	
+				
+		button_press_event.connect ((t, e)=> {
+			Allocation alloc;
+			get_allocation (out alloc);
+			tabbar.select_tab_click (e.x, e.y, alloc.width, alloc.height);
+			queue_draw_area (0, 0, alloc.width, alloc.height);
+			return true;
+		});
+
+		expose_event.connect ((t, e)=> {
+			Context cr = cairo_create (get_window ());
+
+			Allocation alloc;
+			get_allocation (out alloc);
+
+			tabbar.draw (cr, alloc.width, alloc.height);
+			return true;
+		});
+	
+		tabbar.signal_tab_selected.connect ((t) => {
+			Allocation alloc;
+			get_allocation (out alloc);
+			queue_draw_area (0, 0, alloc.width, alloc.height);	
+		});
+		
+		set_size_request (20, 25);
+	}
+	
+}
 
 class ToolboxCanvas : DrawingArea {
 	Toolbox tb;
