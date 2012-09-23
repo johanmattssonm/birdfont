@@ -72,9 +72,31 @@ class TabBar : GLib.Object {
 	}
 	
 	public void motion (double x, double y) {
+		TooltipArea status = MainWindow.get_tool_tip ();
+
 		is_over_close (x, y, out over, out over_close);
+
+		if (over_close >= 0) {
+			status.show_text ("(Ctrl+w) Close tab");
+		}
+		
+		if (is_over_next (x)) {
+			status.show_text ("(Ctrl+rigth arrow) Next tab");
+		}
+
+		if (is_over_previous (x)) {
+			status.show_text ("(Ctrl+left arrow) Previous tab");
+		}
 	}
 	
+	private bool is_over_next (double x) {
+		return x > width - 19 && has_scroll ();
+	}
+
+	private bool is_over_previous (double x) {
+		return x < 19  && has_scroll ();
+	}
+
 	private void is_over_close (double x, double y, out int over, out int over_close) {
 		int i = 0;
 		double offset = 19;
@@ -277,7 +299,6 @@ class TabBar : GLib.Object {
 			}
 			
 			scroll_to_tab (selected);
-//FIXA			queue_draw_area(0, 0, alloc.width, alloc.height);			
 			return;
 		}
 		
@@ -288,7 +309,6 @@ class TabBar : GLib.Object {
 			}
 			
 			scroll_to_tab (selected);
-//FIXA			queue_draw_area(0, 0, alloc.width, alloc.height);
 			return;
 		}
 		
@@ -309,7 +329,6 @@ class TabBar : GLib.Object {
 		current_tab = t;
 
 		scroll_to_tab (selected);
-//FIXA		queue_draw_area(0, 0, alloc.width, alloc.height);
 	}
 	
 	private bool has_scroll () {
@@ -441,8 +460,6 @@ class TabBar : GLib.Object {
 			cr.set_source_surface (next_tab, width - 19, (height - next_tab.get_height ()) / 2.0);
 			cr.paint ();
 		}
-		
-		print (@"DRAW\n");
 		
 		draw_tabs (cr);
 		
