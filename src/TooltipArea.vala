@@ -107,10 +107,24 @@ class TooltipArea : DrawingArea {
 		cr.restore ();
 
 		cr.save ();
-		cr.set_font_size (14);
-		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.BOLD);
-				
-		cr.move_to (25, 15);
+		cr.rectangle (0, 0, alloc.width, 1);
+		cr.set_line_width (0);
+		cr.set_source_rgba (107/255.0, 127/255.0, 168/255.0, 1);
+		cr.fill_preserve ();
+		cr.stroke ();
+		cr.restore ();
+		
+		cr.save ();
+		cr.rectangle (0, 1, alloc.width, 1);
+		cr.set_line_width (0);
+		cr.set_source_rgba (145/255.0, 160/255.0, 190/255.0, 1);
+		cr.fill_preserve ();
+		cr.stroke ();
+		cr.restore ();
+		
+		cr.save ();
+		cr.set_font_size (14);				
+		cr.move_to (5, 15);
 		cr.show_text (tool_tip);
 		cr.restore ();
 
