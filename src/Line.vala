@@ -103,7 +103,7 @@ class Line : GLib.Object {
 		return (r == moving);
 	}
 	
-	public bool button_press (EventButton e, Allocation allocation) {
+	public bool button_press () {
 		Glyph g;
 		if (get_active ()) {
 			move = true;

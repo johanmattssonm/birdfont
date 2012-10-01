@@ -194,7 +194,7 @@ class PenTool : Tool {
 			return;
 		}
 
-		if (double_click || insert_new_point_on_path_selected ()) {
+		if (double_click) {
 			glyph.insert_new_point_on_path (x, y);
 			return;
 		}
@@ -225,10 +225,6 @@ class PenTool : Tool {
 		
 		if (!move_selected_handle) {
 			select_active_point (x, y);
-		}
-
-		if (is_erase_selected () && active_edit_point != null) {
-			glyph.delete_edit_point ((!) active_edit_point);
 		}
 
 		glyph.store_undo_state ();

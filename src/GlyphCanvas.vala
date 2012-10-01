@@ -84,32 +84,32 @@ class GlyphCanvas : DrawingArea  {
 			});
 
 		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK | EventMask.SCROLL_MASK);
-		
-		leave_notify_event.connect ((t, e)=> {
-			current_display.leave_notify (e);
-			return true;
-		});
 				           
 		button_press_event.connect ((t, e)=> {
-			current_display.button_press (e);		
+			if (e.type == EventType.BUTTON_PRESS) {
+				current_display.button_press (e.button, e.x, e.y);	
+			} else if (e.type == EventType.2BUTTON_PRESS) {
+				current_display.double_click (e.button, e.x, e.y);
+			}
+				
 			return true;
 		});
 
 		button_release_event.connect ((t, e)=> {
-			current_display.button_release (e);
+			current_display.button_release ((int) e.button, e.x, e.y);
 			return true;
 		});
 		
 		motion_notify_event.connect ((t, e)=> {
-			current_display.motion_notify (e);		
+			current_display.motion_notify (e.x, e.y);		
 			return true;
 		});
 		
 		scroll_event.connect ((t, e)=> {
 			if (e.direction == Gdk.ScrollDirection.UP) {
-				current_display.scroll_wheel_up (e);
+				current_display.scroll_wheel_up (e.x, e.y);
 			} else if (e.direction == Gdk.ScrollDirection.DOWN) {
-				current_display.scroll_wheel_down (e);
+				current_display.scroll_wheel_down (e.x, e.y);
 			}
 			
 			return true;

@@ -95,17 +95,17 @@ internal abstract class FontDisplay : GLib.Object {
 	public virtual void key_release (uint keyval) {
 	}
 	
-	public virtual void motion_notify (EventMotion e) {
+	public virtual void motion_notify (double x, double y) {
 	}
 	
-	public virtual void button_release (EventButton event) {
+	public virtual void button_release (int button, double x, double y) {
 	}
 	
-	public virtual void leave_notify (EventCrossing e) {
+	public virtual void button_press (uint button, double x, double y) {
 	}
-	
-	public virtual void button_press (EventButton e) {
-	}
+
+	public virtual void double_click (uint button, double ex, double ey) {
+	}	
 
 	public virtual void zoom_in () {
 	}
@@ -134,10 +134,10 @@ internal abstract class FontDisplay : GLib.Object {
 		warning ("next_view not implemented for this class.");
 	}
 	
-	public virtual void scroll_wheel_up (Gdk.EventScroll e) {
+	public virtual void scroll_wheel_up (double x, double y) {
 	}
 	
-	public virtual void scroll_wheel_down (Gdk.EventScroll e) {
+	public virtual void scroll_wheel_down (double x, double y) {
 	}
 
 	public virtual void undo () {

@@ -143,8 +143,8 @@ class BackgroundSelection : FontDisplay {
 		cr.restore ();		
 	}
 	
-	public override void button_release (EventButton e) {
-		motion (e.x, e.y);
+	public override void button_release (int button, double ex, double ey) {
+		motion (ex, ey);
 		
 		if (active_box == 0) {
 			add_image ();
@@ -263,8 +263,8 @@ class BackgroundSelection : FontDisplay {
 	public override void key_release (uint e) {
 	}
 	
-	public override void motion_notify (EventMotion e) {
-		motion (e.x, e.y);
+	public override void motion_notify (double x, double y) {
+		motion (x, y);
 	}
 	
 	public void motion (double x, double y) {
@@ -279,8 +279,8 @@ class BackgroundSelection : FontDisplay {
 		}
 	}
 
-	public override void button_press (EventButton e) {
-		motion (e.x, e.y);
+	public override void button_press (uint button, double ex, double ey) {
+		motion (ex, ey);
 	}
 
 	public override void store_current_view () {
@@ -292,10 +292,10 @@ class BackgroundSelection : FontDisplay {
 	public override void next_view () {
 	}
 	
-	public override void scroll_wheel_up (Gdk.EventScroll e) {
+	public override void scroll_wheel_up (double x, double y) {
 	}
 
-	public override void scroll_wheel_down (Gdk.EventScroll e) {
+	public override void scroll_wheel_down (double x, double y) {
 	}
 
 }

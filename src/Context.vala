@@ -231,24 +231,24 @@ class ContextDisplay : FontDisplay {
 		MainWindow.get_glyph_canvas ().redraw ();
 	}
 	
-	public override void motion_notify (EventMotion e) {
+	public override void motion_notify (double ex, double ey) {
 		double k, y;
 		
 		if (selected_handle == -1) {
-			set_active_handle (e.x, e.y);
+			set_active_handle (ex, ey);
 		} else {
 			y = 1;
 			
-			if (Math.fabs (e.y - begin_handle_y) > 20) {
-				y = ((Math.fabs (e.y - begin_handle_y) / 100) + 1);
+			if (Math.fabs (ey - begin_handle_y) > 20) {
+				y = ((Math.fabs (ey - begin_handle_y) / 100) + 1);
 			}
 			
-			k = (e.x - last_handle_x) / y; // y-axis is variable precision
+			k = (ex - last_handle_x) / y; // y-axis is variable precision
 			set_kerning (selected_handle, k);
 			MainWindow.get_glyph_canvas ().redraw ();
 		}
 		
-		last_handle_x = e.x;
+		last_handle_x = ex;
 	}
 	
 	public void set_active_handle (double ex, double ey) {
@@ -310,17 +310,17 @@ class ContextDisplay : FontDisplay {
 		}
 	}
 	
-	public override void button_release (EventButton e) {
-		set_active_handle (e.x, e.y);
+	public override void button_release (int button, double ex, double ey) {
+		set_active_handle (ex, ey);
 		selected_handle = -1;
 	}
 	
-	public override void button_press (EventButton e) {
-		set_active_handle (e.x, e.y);
+	public override void button_press (uint button, double ex, double ey) {
+		set_active_handle (ex, ey);
 		selected_handle = active_handle;
-		begin_handle_x = e.x;
-		begin_handle_y = e.y;
-		last_handle_x = e.x;
+		begin_handle_x = ex;
+		begin_handle_y = ey;
+		last_handle_x = ex;
 	}
 
 }

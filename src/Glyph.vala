@@ -250,9 +250,9 @@ class Glyph : FontDisplay {
 		return (!) background_image;
 	}
 		
-	public override void scroll_wheel_up (Gdk.EventScroll e) {
+	public override void scroll_wheel_up (double x, double y) {
 		if (KeyBindings.has_ctrl ()) {
-			zoom_in_at_point (e.x, e.y);
+			zoom_in_at_point (x, y);
 		} else if (KeyBindings.has_alt ()) { 
 			view_offset_x -= 10 / view_zoom;
 		} else {
@@ -262,9 +262,9 @@ class Glyph : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
-	public override void scroll_wheel_down (Gdk.EventScroll e) {
+	public override void scroll_wheel_down (double x, double y) {
 		if (KeyBindings.has_ctrl ()) {
-			zoom_out_at_point (e.x, e.y);
+			zoom_out_at_point (x, y);
 		} else	if (KeyBindings.has_alt ()) { 
 			view_offset_x += 10 / view_zoom;
 		} else {
@@ -480,16 +480,16 @@ class Glyph : FontDisplay {
 		return name;
 	}
 			
-	private void help_line_event (EventMotion e) {
-		double mx = e.x;
-		double my = e.y;
+	private void help_line_event (double x, double y) {
+		double mx = x;
+		double my = y;
 		
 		if (GridTool.is_visible ()) {
 			GridTool.tie (ref mx, ref my);
 		}
 		
 		foreach (Line line in get_all_help_lines ()) {
-			line.event_move_to (mx, my, e.x, e.y, allocation);
+			line.event_move_to (mx, my, x, y, allocation);
 		}
 	}
 
@@ -515,26 +515,26 @@ class Glyph : FontDisplay {
 		}
 	}
 	
-	public override void motion_notify (EventMotion e) {
+	public override void motion_notify (double x, double y) {
 		Tool t;
 		t = MainWindow.get_toolbox ().get_current_tool ();
 		
 		if (move_view && KeyBindings.has_ctrl ()) {
-			move_view_offset  (e.x, e.y);
+			move_view_offset  (x, y);
 			return;
 		}
 
-		t.move_action (t, (int) e.x, (int) e.y);
+		t.move_action (t, (int) x, (int) y);
 
 		if (Supplement.show_coordinates) {
-			motion_x = e.x * ivz () - xc () + view_offset_x;
-			motion_y = yc () - e.y * ivz () - view_offset_y;
+			motion_x = x * ivz () - xc () + view_offset_x;
+			motion_y = yc () - y * ivz () - view_offset_y;
 		}
 	
-		help_line_event (e);	
+		help_line_event (x, y);	
 	}
 	
-	public override void button_release (EventButton event) {
+	public override void button_release (int button, double ex, double ey) {
 		bool line_moving = false;
 		
 		if (KeyBindings.has_ctrl ()) {
@@ -550,7 +550,7 @@ class Glyph : FontDisplay {
 
 		if (!line_moving) {
 			Tool t = MainWindow.get_toolbox ().get_current_tool ();
-			t.release_action (t, (int) event.button, (int) event.x, (int) event.y);
+			t.release_action (t, (int) button, (int) ex, (int) ey);
 		}
 		
 		update_view ();
@@ -574,15 +574,17 @@ class Glyph : FontDisplay {
 		MainWindow.get_glyph_canvas ().redraw ();
 	}
 	
-	public override void leave_notify (EventCrossing e) {
+	public override void double_click (uint button, double ex, double ey) {	
+		Tool t = MainWindow.get_toolbox ().get_current_tool ();
+		t.double_click_action (t, (int) button, (int) ex, (int) ey);
 	}
 	
-	public override void button_press (EventButton e) {				
-		pointer_begin_x = e.x;
-		pointer_begin_y = e.y;
+	public override void button_press (uint button, double ex, double ey) {				
+		pointer_begin_x = ex;
+		pointer_begin_y = ey;
 		
 		foreach (Line line in get_all_help_lines ()) {
-			if (line.button_press (e, allocation)) {
+			if (line.button_press ()) {
 				return;
 			}
 		}
@@ -593,12 +595,7 @@ class Glyph : FontDisplay {
 			move_offset_y = view_offset_y;
 		} else {
 			Tool t = MainWindow.get_toolbox ().get_current_tool ();
-			
-			if (e.type == EventType.BUTTON_PRESS) {
-				t.press_action (t, (int) e.button, (int) e.x, (int) e.y);
-			} else if (e.type == EventType.2BUTTON_PRESS) {
-				t.double_click_action (t, (int) e.button, (int) e.x, (int) e.y);
-			}
+			t.press_action (t, (int) button, (int) ex, (int) ey);
 		}
 	}
 

@@ -88,20 +88,21 @@ class Toolbox : GLib.Object  {
 		// Fixa: draw_tools.add_tool (shrink_tool);	
 		
 		// Draw tool modifiers
-		// DELETE
+		// DELETE tools:
+		
 		Tool new_point = new Tool ("new_point", "Right click to add new point, left click to move points and double click to ad new point on path", 'a');
 		new_point.select_action.connect ((self) => {
 				select_draw_tool ();
 			});
 		
-		draw_tool_modifiers.add_tool (new_point);
+		// draw_tool_modifiers.add_tool (new_point);
 
 		Tool insert_point_on_path = new Tool ("insert_point_on_path", "Add new point on path", 'n');
 		insert_point_on_path.select_action.connect ((self) => {
 			select_draw_tool ();
 			pen_tool.begin_from_new_point_on_path ();
 		});
-		draw_tool_modifiers.add_tool (insert_point_on_path);
+		// draw_tool_modifiers.add_tool (insert_point_on_path);
 		
 		if (Supplement.experimental) {
 			Tool new_point_on_path = new Tool ("new_point_on_path", "Begin new path from point on path", 'n');
@@ -143,7 +144,7 @@ class Toolbox : GLib.Object  {
 		erase_tool.select_action.connect((self) => {
 			select_draw_tool ();
 		});
-		draw_tool_modifiers.add_tool (erase_tool);	
+		// draw_tool_modifiers.add_tool (erase_tool);	
 
 		// adjust precision
 		string precision_value = Preferences.get ("precision");

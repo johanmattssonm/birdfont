@@ -146,13 +146,13 @@ class OverView : FontDisplay {
 		return first_visible <= selected <= first_visible + items_per_row * rows;
 	}
 
-	public override void scroll_wheel_up (Gdk.EventScroll e) {
+	public override void scroll_wheel_up (double x, double y) {
 		key_up ();
 		close_menus ();
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
-	public override void scroll_wheel_down (Gdk.EventScroll e) {
+	public override void scroll_wheel_down (double x, double y) {
 		key_down ();
 		close_menus ();
 		redraw_area (0, 0, allocation.width, allocation.height);
@@ -850,22 +850,19 @@ class OverView : FontDisplay {
 		set_glyph_range (gr);
 	}
 		
-	public override void motion_notify (EventMotion e) {
-		if (e.x > allocation.x - 10) {
-			scrollbar.motion_notify (e);
+	public override void motion_notify (double x, double y) {
+		if (x > allocation.x - 10) {
+			scrollbar.motion_notify ((int) x, (int) y);
 		}
 	}
 	
-	public override void button_release (EventButton e) {
-		if (e.x > allocation.x - 10) {
-			scrollbar.button_release (e);
+	public override void button_release (int button, double ex, double ey) {
+		if (ex > allocation.x - 10) {
+			scrollbar.button_release (button, ex, ey);
 		}
 	}
 	
-	public override void leave_notify (EventCrossing e) {
-	}
-	
-	private void selection_click (EventButton e) {
+	private void selection_click (uint button, double ex, double ey) {
 		double x = view_offset_x;
 		double y = view_offset_y;
 
@@ -892,33 +889,33 @@ class OverView : FontDisplay {
 		foreach (GlyphCollection g in get_visible_glyphs ()) {
 			bool a;
 
-			a = g.get_version_list ().menu_item_action (e.x - view_offset_x, e.y - view_offset_y); // select one item on the menu
+			a = g.get_version_list ().menu_item_action (ex - view_offset_x, ey - view_offset_y); // select one item on the menu
 			
 			if (a) {
 				return;
 			}
 						
-			a = g.get_version_list ().menu_icon_action (e.x - view_offset_x, e.y - view_offset_y); // open menu
+			a = g.get_version_list ().menu_icon_action (ex - view_offset_x, ey - view_offset_y); // open menu
 			
 			if (a) {
 				menu_action = true;
 			}
 		}
 		
-		if (e.x < m) {
-			e.x = m + 1;
+		if (ex < m) {
+			ex = m + 1;
 		}
 		
-		if (e.x > allocation.width - m) {
-			e.x = allocation.width - m - 1;
+		if (ex > allocation.width - m) {
+			ex = allocation.width - m - 1;
 		}
 		
-		if (e.y < 5) {
-			e.y = 5;
+		if (ey < 5) {
+			ey = 5;
 		}
 		
-		if (e.y > allocation.height - 5) {
-			e.y = allocation.height - 5;
+		if (ey > allocation.height - 5) {
+			ey = allocation.height - 5;
 		}
 			
 		// empty set
@@ -927,13 +924,13 @@ class OverView : FontDisplay {
 		// scroll to the selected glyph
 		selected = (uint32) first_visible;
 
-		while (y < e.y < allocation.height) {
+		while (y < ey < allocation.height) {
 			selected += items_per_row;
 			y += nail_height;
 		}
 		selected -= items_per_row;
 
-		while (x < e.x < allocation.width) {
+		while (x < ex < allocation.width) {
 			selected++;
 			x += nail_width;
 		}
@@ -954,13 +951,13 @@ class OverView : FontDisplay {
 		adjust_scroll ();
 	}
 	
-	public override void button_press (EventButton e) {
-		if (e.x > allocation.width - 10) {
+	public override void button_press (uint button, double x, double y) {
+		if (x > allocation.width - 10) {
 			if (Supplement.experimental) {
-				scrollbar.button_press (e);
+				scrollbar.button_press (button, x, y);
 			}
 		} else {
-			selection_click (e);
+			selection_click (button, x, y);
 		}
 	}
 

@@ -21,7 +21,7 @@ using Gtk;
 
 namespace Supplement {
 
-class Scrollbar : DrawingArea {
+class Scrollbar : GLib.Object {
 	Allocation alloc;
 
 	double pos = 0;
@@ -38,33 +38,6 @@ class Scrollbar : DrawingArea {
 	public signal void signal_scroll (double delta, double delta_last, double absolute);
 
 	public Scrollbar () {
-		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK);
-		
-		expose_event.connect ((t, e)=> {
-			Context cr = cairo_create (get_window ());
-			
-			get_allocation (out alloc);
-			allocation = alloc;
-			
-			draw (cr, alloc);
-			
-			return true;
-		});
-		
-		button_press_event.connect ((t, e)=> {
-			button_press (e);			
-			return true;
-		});
-
-		button_release_event.connect ((t, e)=> {
-			button_release (e);
-			return true;
-		});
-		
-		motion_notify_event.connect ((t, e)=> {
-			motion_notify (e);		
-			return true;
-		});
 	}
 	
 	public void set_handle_size (double s) {
@@ -82,17 +55,17 @@ class Scrollbar : DrawingArea {
 		y = pos * alloc.height;
 	}
 	
-	public void button_press (EventButton e) {
+	public void button_press (uint button, double x, double y) {
 		move = true;
-		y_begin = e.y;
-		y_last = e.y;
+		y_begin = y;
+		y_last = y;
 	}
 	
-	public void button_release (EventButton event) {
+	public void button_release (int button, double ex, double ey) {
 		move = false;
 	}
 	
-	public void motion_notify (EventMotion e) {
+	public void motion_notify (double ex, double ey) {
 		double d = 0;
 		double dl = 0;
 		double m;
@@ -100,11 +73,11 @@ class Scrollbar : DrawingArea {
 		h = height * alloc.height;
 		m = alloc.height;
 				
-		if (move && 0 < e.y < m) {
-			d = e.y - y_begin;
-			dl = e.y - y_last;
+		if (move && 0 < ey < m) {
+			d = ey - y_begin;
+			dl = ey - y_last;
 			y += dl;
-			y_last = e.y;
+			y_last = ey;
 		}
 
 		if (y < 0) {
