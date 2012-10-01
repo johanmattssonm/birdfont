@@ -88,7 +88,8 @@ class Toolbox : GLib.Object  {
 		// Fixa: draw_tools.add_tool (shrink_tool);	
 		
 		// Draw tool modifiers
-		Tool new_point = new Tool ("new_point", "Add new points", 'a');
+		// DELETE
+		Tool new_point = new Tool ("new_point", "Right click to add new point, left click to move points and double click to ad new point on path", 'a');
 		new_point.select_action.connect ((self) => {
 				select_draw_tool ();
 			});
@@ -586,13 +587,7 @@ class Toolbox : GLib.Object  {
 		foreach (var exp in expanders) {
 			if (exp.is_over (x, y)) {
 				exp.set_open (! exp.is_open ());					
-				if (exp is ToolboxExpander) {
-					if (is_expanded ()) minimize ();
-					else maximize ();
-				}
-
-				update_expanders ();
-				
+				update_expanders ();			
 				redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
 			}
 			
@@ -837,25 +832,6 @@ class Toolbox : GLib.Object  {
 				
 	public bool is_expanded () {
 		return expanded;
-	}
-	
-	public void maximize () {
-/*		Allocation a;
-		get_allocation (out a);
-		expanded = true;
-		toolbox_expander.set_open (expanded);
-		set_size_request (158, a.height);
-*/
-	}
-	
-	public void minimize () {
-/*
-		Allocation a;
-		get_allocation (out a);
-		expanded = false;
-		toolbox_expander.set_open (expanded);
-		set_size_request (18, a.height);	
-*/
 	}
 }
 

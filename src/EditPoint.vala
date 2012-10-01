@@ -220,32 +220,8 @@ class EditPoint {
 		return new_point;
 	}
 
-	public bool is_close (double x, double y) {
-		return get_close_distance (x, y) < double.MAX;
-	}
-
-	public double get_close_distance (double x, double y, double m = 15) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		double xt, yt, d;
-		double ivz = 1 / g.view_zoom;
-		
-		double xc = (g.allocation.width / 2.0);
-		double yc = (g.allocation.height / 2.0);
-		
-		m /= g.view_zoom;
-		
-		x *= ivz;
-		y *= ivz;
-
-		xt = x - xc + g.view_offset_x;
-		yt = yc - y - g.view_offset_y;		
-		
-		d = Math.sqrt (Math.pow (this.x - xt, 2) + Math.pow (this.y - yt, 2));
-		
-		if (d < m) return d;
-		
-		return double.MAX;
+	public double get_distance (double x, double y) {
+		return Path.distance (this.x, x, this.y, y);
 	}
 
 	public unowned EditPointHandle get_left_handle () {

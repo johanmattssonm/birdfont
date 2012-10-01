@@ -88,7 +88,6 @@ class BindingList {
 			// add all bindings to this list
 			ShortCut[] default_bindings = { 
 				new ShowMenu (),
-				new ToggleToolBar (),
 				new NextTab (),
 				new PreviousTab (),
 				new CloseTab (),
@@ -218,24 +217,6 @@ class ShowMenu : ShortCut {
 	public override uint get_default_modifier ()      { return CTRL; }
 	public override uint get_default_key ()           { return 'f';	}	
 	public override unowned string get_description () { return "Show menu"; }
-}
-
-class ToggleToolBar : ShortCut {
-	
-	public override void run () {
-		Toolbox t = MainWindow.get_toolbox ();
-		
-		if (t.is_expanded ()) {
-			t.minimize ();
-		} else {
-			t.maximize ();
-		}
-
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'b';	}	
-	public override unowned string get_description () { return "Show toolbox"; }
 }
 
 class NextTab : ShortCut {

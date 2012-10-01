@@ -36,7 +36,7 @@ class CutBackgroundTool : Tool {
 	public signal void new_image (GlyphBackgroundImage file);
 	
 	public CutBackgroundTool (string name) {
-		base (name, "Cut background image");		
+		base (name, "Crop background image");		
 
 		select_action.connect((self) => {
 		});

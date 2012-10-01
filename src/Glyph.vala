@@ -89,6 +89,8 @@ class Glyph : FontDisplay {
 	
 	string glyph_sequence = "";
 	
+	bool open = true;
+	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -991,6 +993,10 @@ class Glyph : FontDisplay {
 		return active_paths.length () > 0;
 	}
 	
+	public bool is_open () {
+		return open;
+	}
+	
 	/** Close all editable paths and return false if no path have boon closed. 
 	 * Paths without area (points and lines) will be deleted.
 	 */
@@ -1012,6 +1018,8 @@ class Glyph : FontDisplay {
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
 		
+		open = false;
+		
 		return r;
 	}
 
@@ -1020,6 +1028,7 @@ class Glyph : FontDisplay {
 			p.set_editable (true);
 		}
 		
+		open = true;
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
@@ -1281,33 +1290,24 @@ class Glyph : FontDisplay {
 	
 	public void draw_path (Context cr) {
 		double left, baseline;
-		bool is_open = false;
-		
+
 		// plot_outline (cr);
 			
 		baseline = get_line ("baseline").pos;
 		left = get_line ("left").pos;
 		
-		foreach (unowned Path p in path_list) {
-			if (p.is_open ()) {
-				is_open = true;
-				break;
-			}
-		}
-		
-		if (!is_open) {
+		if (!is_open ()) {
 			Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () + baseline, SCALE);
 		}
 		
-		foreach (unowned Path p in path_list) {
-			if (is_open) {
+		if (is_open ()) {
+			foreach (unowned Path p in path_list) {
 				p.draw_outline (cr, allocation, view_zoom);
-			}
-
-			p.draw_edit_points (cr, allocation, view_zoom);
-			
-			if (p.is_selected ()) {
-				p.fill_path (cr, allocation, view_zoom);
+				p.draw_edit_points (cr, allocation, view_zoom);
+				
+				if (!p.is_editable ()) {
+					// p.fill_path (cr, allocation, view_zoom);
+				}
 			}
 		}
 

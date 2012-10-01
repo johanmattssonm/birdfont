@@ -1271,6 +1271,18 @@ class Path {
 		EditPoint previous;
 		EditPoint next;
 		double step = 0;
+
+		if (points.length () == 1) {
+			edit_point.x = i.data.x;
+			edit_point.y = i.data.y;
+			
+			edit_point.prev = i;
+			edit_point.next = i;
+			
+			exit = true;
+			
+			return;
+		}
 		
 		if (points.length () != 1) {
 			edit_point.x = i.data.x;

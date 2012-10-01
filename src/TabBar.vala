@@ -290,7 +290,7 @@ class TabBar : GLib.Object {
 	
 	public void select_tab (int index) {
 		Tab t;
-		
+
 		if (index == NEXT_TAB) {
 			selected++;
 			
@@ -315,7 +315,7 @@ class TabBar : GLib.Object {
 		if (!(0 <= index < tabs.length ())) {
 			return;
 		}
-		
+
 		selected = index;
 		
 		unowned List<Tab?>? lt = tabs.nth(index);
@@ -323,8 +323,6 @@ class TabBar : GLib.Object {
 		return_if_fail(lt != null);
 		t = (!) ((!) lt).data;
 		
-		signal_tab_selected (t);
-
 		previous_tab = current_tab;
 		current_tab = t;
 
@@ -356,12 +354,24 @@ class TabBar : GLib.Object {
 		return false;		
 	}
 	
+	private void signal_selected (int index) {
+		unowned List<Tab?>? lt;
+		Tab t;
+		
+		lt = tabs.nth(index);
+		return_if_fail(lt != null);		
+		t = (!) ((!) lt).data;
+		
+		signal_tab_selected (t);		
+	}
+	
 	private void scroll_to_tab (int index) {
 		double offset = 19;
 		int i = 0;
 		
 		if (index < first_tab) {
 			first_tab = index;
+			signal_selected (index);
 			return;
 		}
 		
@@ -380,12 +390,16 @@ class TabBar : GLib.Object {
 			}
 
 			if (i == index) {
-				return; // in view
+				// in view
+				signal_selected (index);
+				return;
 			}
 
 			offset += t.get_width () + 3;
 			i++;
-		}		
+		}
+		
+		warning ("");
 	}
 	
 	public void select_tab_click (double x, double y, int width, int height) {
