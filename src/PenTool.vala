@@ -528,8 +528,8 @@ class PenTool : Tool {
 	private bool is_over_handle (double event_x, double event_y) {
 		double x = Glyph.path_coordinate_x (event_x);
 		double y = Glyph.path_coordinate_y (event_y);
-		double d_point = get_distance_to_closest_edit_point (event_x, event_y);
 		Glyph g = MainWindow.get_current_glyph (); 
+		double d_point = g.view_zoom * get_distance_to_closest_edit_point (event_x, event_y);
 		
 		double dp, dl, dr;
 	
