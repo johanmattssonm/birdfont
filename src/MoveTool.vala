@@ -32,13 +32,7 @@ class MoveTool : Tool {
 
 		deselect_action.connect((self) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
-
 			glyph.clear_active_paths ();
-
-			foreach (Path p in glyph.path_list) {
-				p.set_color (0, 0, 0, 1);
-				p.set_selected (false);
-			}
 		});
 				
 		press_action.connect((self, b, x, y) => {
@@ -53,22 +47,7 @@ class MoveTool : Tool {
 			}
 			
 			move_path = true;
-			
-			foreach (Path p in glyph.path_list) {
-				p.set_color (0, 0, 0, 1);
-				p.set_selected (false);
-			}
-			
-			foreach (Path path in glyph.active_paths) {
-				if (path.is_clockwise ()) {
-					path.set_color (0.2, 0.2, 0.4, 0.8);
-					path.set_selected (true);
-				} else {
-					path.set_color (0.5, 0.5, 0.7, 0.8);
-					path.set_selected (true);
-				}
-			}
-					
+				
 			last_x = x;
 			last_y = y;
 		});

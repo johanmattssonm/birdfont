@@ -1301,9 +1301,13 @@ class Glyph : FontDisplay {
 			foreach (unowned Path p in path_list) {
 				p.draw_outline (cr, allocation, view_zoom);
 				p.draw_edit_points (cr, allocation, view_zoom);
-				
+			}
+		}
+
+		if (!is_open ()) {
+			foreach (unowned Path p in active_paths) {
 				if (!p.is_editable ()) {
-					// p.fill_path (cr, allocation, view_zoom);
+					p.fill_path (cr, allocation, view_zoom);
 				}
 			}
 		}

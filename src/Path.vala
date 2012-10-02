@@ -47,11 +47,6 @@ class Path {
 	bool clockwise_direction = true;
 
 	public delegate bool RasterIterator (double x, double y, double step); // iterate over each pixel at a given zoom level
-
-	public double r = 0;
-	public double g = 0;
-	public double b = 0;
-	public double a = 1;
 	
 	bool selected = false;
 	
@@ -75,13 +70,6 @@ class Path {
 			selected_edit_point_image  = Icons.get_icon ("selected_edit_point.png");
 			active_selected_edit_point_image = Icons.get_icon ("active_selected_edit_point.png");
 		}
-	}
-
-	public void set_color (double r, double g, double b, double a) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		this.a = a;
 	}
 
 	public bool empty () {
@@ -176,7 +164,13 @@ class Path {
 
 		// fill path
 		cr.close_path ();
-		cr.set_source_rgba (r, g, b, a);
+			
+		if (is_clockwise ()) {
+			cr.set_source_rgba (80/255.0, 95/255.0, 137/255.0, 0.5);
+		} else {
+			cr.set_source_rgba (144/255.0, 145/255.0, 236/255.0, 0.5);
+		}
+		
 		cr.fill ();
 	}
 
