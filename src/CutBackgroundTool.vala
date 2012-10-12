@@ -101,7 +101,6 @@ class CutBackgroundTool : Tool {
 		});
 
 		new_image.connect ((file) => {
-			Tool zoom_background;
 			Glyph glyph = MainWindow.get_current_glyph ();
 			TabBar tb = MainWindow.get_tab_bar ();
 			

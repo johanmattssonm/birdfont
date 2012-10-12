@@ -16,7 +16,6 @@ BIRDFONT = [
 	'DropMenu.vala',
 	'EditPoint.vala',
 	'EditPointHandle.vala',
-	'FileSelection.vala',
 	'Glyph.vala',
 	'GlyphBackgroundImage.vala',
 	'GlyphCanvas.vala',
