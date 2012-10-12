@@ -815,7 +815,6 @@ public class OverView : FontDisplay {
 			deleted_glyphs.append ((!) gc);
 		}
 
-		select_next_glyph ();
 		f.delete_glyph (g);
 		MainWindow.get_tab_bar ().close_by_name (g);
 		set_glyph_range (glyph_range);
