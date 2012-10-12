@@ -190,8 +190,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		int w, h;
 		get_size (out w, out h);
 		
-		print ("window_width $w\n");
-		
 		Preferences.set ("window_width", @"$w");
 		Preferences.set ("window_height", @"$h");
 	}

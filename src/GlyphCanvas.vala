@@ -63,7 +63,6 @@ class GlyphCanvas : DrawingArea  {
 					}
 					
 					Supplement.current_glyph.resized (alloc, allocation);
-					MainWindow.native_window.update_window_size ();
 				}
 				
 				alloc = allocation;
@@ -149,6 +148,8 @@ class GlyphCanvas : DrawingArea  {
 		});
 
 		redraw ();
+
+		MainWindow.native_window.update_window_size ();
 	}
 	
 	public static Glyph get_current_glyph ()  {

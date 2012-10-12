@@ -232,22 +232,6 @@ class GlyphBackgroundImage {
 		}
 	}
 	
-	public double get_current_width () {
-		return get_img ().get_width () * img_scale_x;
-	}
-
-	public double get_current_height () {
-		return get_img ().get_height () * img_scale_y;
-	}
-	
-	public void set_img_rotation (double angle) {
-		img_rotation = angle;
-	}
-	
-	public double get_img_rotation () {
-		return img_rotation;
-	}
-		
 	public void set_img_rotation_from_coordinate (double x, double y) {
 		double bcx, bcy;
 		double a, b, c, length;
@@ -274,25 +258,6 @@ class GlyphBackgroundImage {
 	public void set_img_scale (double xs, double ys) {
 		img_scale_x = xs;
 		img_scale_y = ys;
-	}
-
-	public string get_path () {
-		return path;
-	}
-
-	public void scale_image_proportional_to_boundries (Glyph g) {
-		double w, h;
-		
-		w = g.get_width ();
-		h = g.get_height ();
-						
-		g.reset_zoom ();
-
-		img_scale_y = h / get_img ().get_height ();
-		
-		img_offset_x = g.get_line ("left").pos;		
-		img_offset_y = g.vertical_help_lines.first ().data.pos;
-
 	}
 
 	public void reset_scale (Glyph g) {
@@ -444,7 +409,7 @@ class GlyphBackgroundImage {
 
 	bool is_over_resize (double nx, double ny) {
 		Glyph g = MainWindow.get_current_glyph ();
-		double x, y, cx, cy, size;
+		double x, y, size;
 		bool inx, iny;
 
 		size = 12 * g.view_zoom;
