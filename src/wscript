@@ -33,6 +33,7 @@ BIRDFONT = [
 	'MenuTab.vala',
 	'MergeTool.vala',
 	'MoveTool.vala',
+	'NativeWindow.vala',
 	'Intersection.vala',
 	'IntersectionList.vala',
 	'IOThread.vala',

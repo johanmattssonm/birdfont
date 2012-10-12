@@ -185,12 +185,24 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		// (Supplement.exe:1300): Gdk-CRITICAL **: gdk_window_set_cursor: assertion `GDK_IS_WINDOW (window)' failed		
 		// singleton.frame.set_cursor (cursor);
 	}
-	
+
+	public void update_window_size () {
+		int w, h;
+		get_size (out w, out h);
+		
+		print ("window_width $w\n");
+		
+		Preferences.set ("window_width", @"$w");
+		Preferences.set ("window_height", @"$h");
+	}
+		
 	private void set_size_and_position () {
 		int w = Preferences.get_window_width ();
 		int h = Preferences.get_window_height ();
 		
-		set_default_size (w, h);
+		print ("window_width $w\n");
+		
+		set_default_size (1000, h);
 		// move (10, 240);
 	}
 	

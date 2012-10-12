@@ -63,7 +63,7 @@ class GlyphCanvas : DrawingArea  {
 					}
 					
 					Supplement.current_glyph.resized (alloc, allocation);
-					Preferences.update_window_size ();
+					MainWindow.native_window.update_window_size ();
 				}
 				
 				alloc = allocation;
