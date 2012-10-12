@@ -827,7 +827,7 @@ public class OverView : FontDisplay {
 		if (deleted_glyphs.length () == 0) {
 			return;
 		}
-		
+			
 		f.add_glyph_collection (deleted_glyphs.last ().data);
 		deleted_glyphs.remove_link (deleted_glyphs.last ());
 	}
