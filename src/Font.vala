@@ -91,14 +91,6 @@ class Font : GLib.Object {
 		return svg_export;
 	}
 
-	public void set_ttf_export (bool d) {
-		ttf_export = d;
-	}
-
-	public void set_svg_export (bool d) {
-		svg_export = d;
-	}
-
 	public File get_backgrounds_folder () {
 		string fn = @"$(get_name ()) backgrounds";
 		File f = Supplement.get_settings_directory ().get_child (fn);

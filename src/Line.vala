@@ -136,7 +136,7 @@ class Line : GLib.Object {
 	}
 	
 	public void event_move_to (double x, double y, double ax, double ay, Allocation allocation) {
-		double p, c, mx, my;
+		double p, c;
 		bool a = false;
 		Glyph g = MainWindow.get_current_glyph ();
 		double ivz = 1/g.view_zoom;

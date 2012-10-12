@@ -178,8 +178,6 @@ class GlyphTable : GLib.Object {
 			
 			return (ac < bc) ? 1 : -1;
 		}
-		
-		return (ac < bc) ? 1 : -1;
 	}
 	
 	public void build_index () {
@@ -356,9 +354,7 @@ class GlyphTable : GLib.Object {
 			} else { 
 				i = i.prev;
 			}
-		}
-		
-		return null;				
+		}			
 	}
 
 	public bool validate_index () {

@@ -386,15 +386,13 @@ class OverView : FontDisplay {
 		double gx, gy;
 		double x1, x2, y1, y2;
 		double scale = nail_zoom_width / 150.0;
-		double w, h, m;
+		double w, h;
 
 		w = nail_width  - 19;
 		h = nail_height - 22;
 		
 		scale = nail_zoom_height / (210.0 - 15.0);
 		
-		Font f = Supplement.get_current_font ();
-
 		if (gl == null) {
 			return false;
 		}

@@ -830,10 +830,6 @@ class Toolbox : GLib.Object  {
 		
 		cr.restore ();
 	}
-				
-	public bool is_expanded () {
-		return expanded;
-	}
 }
 
 class ToolboxExpander : Expander {

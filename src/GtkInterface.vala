@@ -24,13 +24,10 @@ using WebKit;
 namespace Supplement {
 
 public class GtkWindow : Gtk.Window, NativeWindow {
-	
-	MainWindow window;
 
 	HBox list_box;
 	HBox canvas_box;
 	
-	TabbarCanvas tabbar;
 	WebView html_canvas;
 	ScrolledWindow html_box;
 
@@ -198,9 +195,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		int w = Preferences.get_window_width ();
 		int h = Preferences.get_window_height ();
 		
-		print ("window_width $w\n");
-		
-		set_default_size (1000, h);
+		set_default_size (w, h);
 		// move (10, 240);
 	}
 	

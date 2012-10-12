@@ -26,8 +26,7 @@ class PenTool : Tool {
 	public static bool move_point_on_path = false;
 
 	public static bool edit_active_corner = false;
-	public static EditPoint active_corner = new EditPoint ();
-	public static Path active_path = new Path ();
+	
 	public static List<EditPoint> selected_points = new List<EditPoint> (); 
 
 	public static EditPointHandle active_handle = new EditPointHandle.empty ();
@@ -127,7 +126,6 @@ class PenTool : Tool {
 	
 	public void move (double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		EditPoint ep;
 		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
@@ -374,8 +372,7 @@ class PenTool : Tool {
 		Path? p;
 		EditPoint e;
 		EditPoint? ep = get_closest_point (event_x, event_y, out p);
-		Glyph g = MainWindow.get_current_glyph ();
-		
+
 		double x = Glyph.path_coordinate_x (event_x);
 		double y = Glyph.path_coordinate_y (event_y);
 		
@@ -531,7 +528,7 @@ class PenTool : Tool {
 		Glyph g = MainWindow.get_current_glyph (); 
 		double d_point = g.view_zoom * get_distance_to_closest_edit_point (event_x, event_y);
 		
-		double dp, dl, dr;
+		double dl, dr;
 	
 		foreach (EditPoint selected_corner in selected_points) {
 			dl = g.view_zoom * selected_corner.get_left_handle ().get_point ().get_distance (x, y);

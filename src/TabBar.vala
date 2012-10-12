@@ -418,10 +418,6 @@ class TabBar : GLib.Object {
 	}
 	
 	public void add_tab (FontDisplay display_item, double tab_width = -1, bool always_open = false) {
-		ImageSurface im = new ImageSurface (Format.RGB24, 0, 0);
-		Context cr = new Context (im);
-		TextExtents	te;
-		
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 		
 		if (tab_width < 0) {
