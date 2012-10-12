@@ -22,7 +22,7 @@ using Gdk;
 namespace Supplement {
 
 /** Help line */
-class Line : GLib.Object {
+public class Line : GLib.Object {
 	public static const bool VERTICAL = true;
 	public static const bool HOROIZONTAL = false;
 	

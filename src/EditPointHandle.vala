@@ -19,7 +19,7 @@ using Math;
 
 namespace Supplement {
 		
-class EditPointHandle  {
+public class EditPointHandle  {
 	
 	public double angle;
 	public double length;

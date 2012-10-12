@@ -23,12 +23,12 @@ using Birdfont;
 namespace Supplement {
 
 /** Javascripts in webkit do use this callback. */
-internal class PropertyFunction {
+public class PropertyFunction {
 	public delegate void PropertyCallback (string val);
 	public PropertyCallback call;
 }
 
-internal abstract class FontDisplay : GLib.Object {
+public abstract class FontDisplay : GLib.Object {
 	
 	List<string> property = new List<string> ();
 	List<PropertyFunction> call = new List<PropertyFunction> ();

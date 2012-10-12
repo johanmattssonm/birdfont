@@ -22,7 +22,7 @@ using Math;
 
 namespace Supplement {
 
-class GlyphCollection : GLib.Object {
+public class GlyphCollection : GLib.Object {
 	VersionList versions;
 	
 	public GlyphCollection (Glyph? current = null) {

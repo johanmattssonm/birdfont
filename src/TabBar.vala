@@ -19,7 +19,7 @@ using Cairo;
 
 namespace Supplement {
 
-class TabBar : GLib.Object {
+public class TabBar : GLib.Object {
 	
 	int width = 0;
 	int height = 0;
@@ -565,7 +565,7 @@ class TabBar : GLib.Object {
 	}
 }
 
-class Tab : GLib.Object {
+public class Tab : GLib.Object {
 
 	bool always_open;
 	double width; 

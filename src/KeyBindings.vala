@@ -19,7 +19,7 @@ using Gdk;
 
 namespace Supplement {
 
-enum Key {
+public enum Key {
 	NONE = 0,
 	UP = 65362,
 	RIGHT = 65363,
@@ -68,17 +68,17 @@ bool is_modifier_key (uint i) {
 }
 
 /** Modifier flags */
-internal static const uint NONE  = 0;
-internal static const uint CTRL  = 1 << 0;
-internal static const uint ALT   = 1 << 2;
-internal static const uint SHIFT = 1 << 3;
+public static const uint NONE  = 0;
+public static const uint CTRL  = 1 << 0;
+public static const uint ALT   = 1 << 2;
+public static const uint SHIFT = 1 << 3;
 
-internal bool is_mod (EventKey e) {
+public bool is_mod (EventKey e) {
 	return (e.keyval == Key.CTRL_RIGHT || e.keyval == Key.CTRL_LEFT || e.keyval == Key.ALT_RIGHT || e.keyval == Key.ALT_LEFT);
 }
 
 /** A list of all valid key bindings. */
-class BindingList {
+public class BindingList {
 	static ShortCut[]? nc = null;
 	
 	public static ShortCut[] get_default_bindings () {	
@@ -274,7 +274,7 @@ class CloseTab : ShortCut {
 }
 
 /** Function to be executed for each global key binding. */
-abstract class ShortCut : GLib.Object {
+public abstract class ShortCut : GLib.Object {
 	uint modifier = 0;
 	uint key = 0;
 	
@@ -310,7 +310,7 @@ abstract class ShortCut : GLib.Object {
 	
 }
 
-class KeyBindings {
+public class KeyBindings {
 	
 	bool modifier_ctrl = false;
 	bool modifier_alt = false;

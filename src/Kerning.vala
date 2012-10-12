@@ -20,7 +20,7 @@ using Xml;
 
 namespace Supplement {
 
-class Kerning : GLib.Object {
+public class Kerning : GLib.Object {
 	public string glyph_right;
 	public double val;
 	

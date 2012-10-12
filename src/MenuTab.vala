@@ -19,7 +19,7 @@ using WebKit;
 
 namespace Supplement {
 
-class MenuTab : FontDisplay {	
+public class MenuTab : FontDisplay {	
 	
 	List<Font> recent_fonts = new List<Font> ();
 

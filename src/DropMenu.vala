@@ -19,12 +19,12 @@ using Cairo;
 
 namespace Supplement {
 
-enum MenuDirection {
+public enum MenuDirection {
 	DROP_DOWN,
 	POP_UP;
 }
 
-class DropMenu : GLib.Object {
+public class DropMenu : GLib.Object {
 
 	public delegate void Selected (MenuAction self);
 	public signal void selected (DropMenu self);
@@ -198,7 +198,7 @@ class DropMenu : GLib.Object {
 	}
 }
 
-class MenuAction : GLib.Object {
+public class MenuAction : GLib.Object {
 	public string label;
 	public DropMenu.Selected action;
 	public DropMenu? parent = null;

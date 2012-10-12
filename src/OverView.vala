@@ -22,7 +22,7 @@ using Gdk;
 namespace Supplement {
 
 /** A display with all glyphs present in this font. */
-class OverView : FontDisplay {
+public class OverView : FontDisplay {
 	Allocation allocation;
 	
 	int rows = 0;

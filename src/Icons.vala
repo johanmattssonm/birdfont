@@ -19,7 +19,7 @@ namespace Supplement {
 
 using Cairo;	
 
-class Icons {
+public class Icons {
 	
 	public static ImageSurface? get_icon (string? name) {
 		ImageSurface? img = null;

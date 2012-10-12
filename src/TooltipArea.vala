@@ -21,7 +21,7 @@ using Gtk;
 
 namespace Supplement {
 
-class TooltipArea : DrawingArea {
+public class TooltipArea : DrawingArea {
 
 	string tool_tip;
 

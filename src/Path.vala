@@ -22,12 +22,12 @@ using Math;
 
 namespace Supplement {
 
-enum Direction {
+public enum Direction {
 	CLOCKWISE,
 	COUNTER_CLOCKWISE
 }
 
-class Path {
+public class Path {
 	
 	public List<EditPoint> points = new List<EditPoint> ();
 
@@ -76,14 +76,6 @@ class Path {
 		return points.length () == 0;
 	}
 
-	public void set_selected (bool s) {
-		selected = s;
-	}
-
-	public bool is_selected () {
-		return selected;
-	}
-
 	public void draw_outline (Context cr, Allocation allocation, double view_zoom) {
 		unowned List<EditPoint> ep = points;
 		
@@ -96,7 +88,7 @@ class Path {
 		}
 		
 		cr.new_path ();
-					
+		
 		// draw lines
 		foreach (EditPoint e in ep) {
 			if (n != null) {
@@ -1883,7 +1875,7 @@ class Path {
 
 }
 
-class PathList : GLib.Object {
+public class PathList : GLib.Object {
 	public List<Path> paths = new List<Path> ();
 	
 	public PathList () {

@@ -17,10 +17,11 @@
 
 using Gtk;
 using Supplement;
+using Birdfont;
 
 namespace Supplement {
 
-internal class Supplement {
+public class Supplement {
 	internal static Argument args;
 	internal static bool experimental = false;
 	internal static bool show_coordinates = false;
@@ -31,7 +32,74 @@ internal class Supplement {
 	internal static Font current_font;
 	internal static Glyph current_glyph;
 	
-	internal static Font get_current_font () {
+	public void init (string[] arg) {
+		int err_arg;
+		int i;
+		File font_file;
+		Argument args;
+		IdleSource idle;
+		string exec_path;
+
+		stdout.printf ("birdfont version %s\n", VERSION);
+		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
+		
+		args = new Argument.command_line (arg);
+
+		if (args.has_argument ("--help")) {
+			args.print_help ();
+			Process.exit (0);
+		}
+
+		err_arg = args.validate ();
+		if (err_arg != 0) {
+			stdout.printf (@"Unknown parameter $(arg [err_arg])\n\n");
+			args.print_help ();
+			Process.exit (0);
+		}
+
+		current_font = new Font ();
+		current_glyph = new Glyph ("");
+
+		experimental = args.has_argument ("--test");
+		show_coordinates = args.has_argument ("--show-coordinates");
+		fatal_wanings = args.has_argument ("--fatal-warning");
+		win32 = (arg[0].index_of (".exe") > -1) || arg[0] == "wine";
+		exec_path = "";
+
+		if (win32) {
+			// wine hack to get "." folder in win32 environment
+			i = arg[0].last_index_of ("\\");
+			
+			if (i != -1) {	
+				exec_path = arg[0];
+				exec_path = exec_path.substring (0, i);
+				exec_path = wine_to_unix_path (exec_path);			
+			}
+		} else {
+			exec_path = "./";
+		}
+		
+		Preferences preferences = new Preferences ();
+		preferences.load ();
+		
+		if (args.get_file () != "") {
+			font_file = File.new_for_path (args.get_file ());
+			
+			if (!font_file.query_exists ()) {
+				stderr.printf (@"File $(args.get_file ()) not found.");
+				Process.exit (-1);
+			}
+		}
+
+		if (fatal_wanings) {
+			LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
+			Log.set_handler (null, levels, fatal_warning);
+		}
+		
+		preferences.set_last_file (get_current_font ().get_path ());
+	}
+	
+	public static Font get_current_font () {
 		return current_font;
 	}
 

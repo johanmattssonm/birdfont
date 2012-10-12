@@ -21,7 +21,7 @@ using Cairo;
 
 namespace Supplement {
 
-class SaveDialog : FontDisplay {
+public class SaveDialog : FontDisplay {
 
 	public signal void finished ();
 

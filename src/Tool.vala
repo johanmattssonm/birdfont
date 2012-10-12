@@ -19,7 +19,7 @@ using Cairo;
 
 namespace Supplement {
 
-class Tool : GLib.Object {
+public class Tool : GLib.Object {
 	
 	public double x = 0;
 	public double y = 0;

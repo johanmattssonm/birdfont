@@ -22,7 +22,7 @@ using Math;
 
 namespace Supplement {
 
-class GlyphCanvas : DrawingArea  {
+public class GlyphCanvas : DrawingArea  {
 
 	FontDisplay current_display;
 	

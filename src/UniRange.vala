@@ -15,33 +15,35 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Supplement {	
-	class UniRange : GLib.Object {
-		
-		public unichar start;
-		public unichar stop;
-		
-		public UniRange (unichar start, unichar stop) {
-			this.start = start;
-			this.stop = stop;
-		}
-		
-		public unichar length () {
-			return stop - start + 1;
-		}
-
-		public unichar get_char (unichar index) {
-			unichar result = start + index;
-			
-			if (unlikely (index < 0)) {
-				warning ("Index is negative in UniRange.");
-			}
-			
-			if (unlikely (!(start <= result <= stop))) {
-				warning ("Index out of range in UniRange (%u <= %u <= %u) (index: %u)\n", start, result, stop, index);
-			}
-			
-			return result;
-		}
+namespace Supplement {
+	
+public class UniRange : GLib.Object {
+	
+	public unichar start;
+	public unichar stop;
+	
+	public UniRange (unichar start, unichar stop) {
+		this.start = start;
+		this.stop = stop;
 	}
+	
+	public unichar length () {
+		return stop - start + 1;
+	}
+
+	public unichar get_char (unichar index) {
+		unichar result = start + index;
+		
+		if (unlikely (index < 0)) {
+			warning ("Index is negative in UniRange.");
+		}
+		
+		if (unlikely (!(start <= result <= stop))) {
+			warning ("Index out of range in UniRange (%u <= %u <= %u) (index: %u)\n", start, result, stop, index);
+		}
+		
+		return result;
+	}
+}
+
 }

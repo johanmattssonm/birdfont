@@ -17,7 +17,7 @@
 
 namespace Supplement {
 
-class GlyphRange {
+public class GlyphRange {
 	
 	List<UniRange> ranges;
 	

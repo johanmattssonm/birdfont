@@ -19,7 +19,7 @@ using Math;
 
 namespace Supplement {
 
-enum PointType {
+public enum PointType {
 	NONE,
 	NORMAL,
 	LINE,
@@ -29,7 +29,7 @@ enum PointType {
 	FLOATING
 }
 
-class EditPoint {
+public class EditPoint {
 	
 	public double x;
 	public double y;

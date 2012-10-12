@@ -15,6 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+namespace Supplement {
+
 public interface NativeWindow : GLib.Object {
 	public abstract string? file_chooser (string title);
 	public abstract string? set_title (string title);
@@ -23,4 +25,11 @@ public interface NativeWindow : GLib.Object {
 	public abstract void toggle_expanded_margin_right ();
 	
 	public abstract void update_window_size ();
+
+	protected void webkit_callback (string s) {
+		FontDisplay fd = MainWindow.get_current_display ();
+		fd.process_property (s);
+	}
+}
+
 }

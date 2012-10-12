@@ -21,7 +21,7 @@ using Gdk;
 
 namespace Supplement {
 
-class SpinButton : Tool {
+public class SpinButton : Tool {
 
 	public signal void new_value_action (SpinButton selected);
 	

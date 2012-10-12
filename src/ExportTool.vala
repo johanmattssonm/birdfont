@@ -17,7 +17,7 @@
 
 namespace Supplement {
 
-class ExportTool : Tool {
+public class ExportTool : Tool {
 
 	private static string? prefered_browser = null;
 	private static ExportThread export_thread;
@@ -496,7 +496,7 @@ os.put_string (
 	}
 
 
-	class ExportThread : GLib.Object {
+	public class ExportThread : GLib.Object {
 
 		private string ffi;
 		private string ttf;

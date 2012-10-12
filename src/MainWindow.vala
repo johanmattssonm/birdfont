@@ -17,11 +17,10 @@
 
 using Gdk;
 using Gtk;
-using WebKit;
 
 namespace Supplement {
 
-internal class MainWindow {
+public class MainWindow {
 	
 	public static Toolbox tools;
 	public static GlyphCanvas glyph_canvas;
@@ -69,7 +68,7 @@ internal class MainWindow {
 		return get_glyph_canvas ().get_current_display ();
 	}
 	
-	internal static GlyphCanvas get_glyph_canvas () {
+	public static GlyphCanvas get_glyph_canvas () {
 		return glyph_canvas;
 	}
 	
@@ -90,7 +89,7 @@ internal class MainWindow {
 		return get_singleton ().tools.get_tool (n);
 	}
 	
-	internal static TabBar get_tab_bar () {
+	public static TabBar get_tab_bar () {
 		return get_singleton ().tabs;
 	}
 

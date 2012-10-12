@@ -20,7 +20,7 @@ using Xml;
 
 namespace Supplement {
 
-class Font : GLib.Object {
+public class Font : GLib.Object {
 	
 	GlyphTable glyph_cache = new GlyphTable ();
 	

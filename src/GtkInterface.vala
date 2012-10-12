@@ -54,8 +54,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		html_canvas.get_settings ().enable_default_context_menu = false;
 				
 		html_canvas.title_changed.connect ((p, s) => {
-			FontDisplay fd = MainWindow.get_current_display ();
-			fd.process_property (s);
+			webkit_callback (s);
 		});
 		
 		html_box = new ScrolledWindow (null, null);
@@ -151,6 +150,23 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		show_all ();		
 	
+	}
+
+	void set_first_view () {
+/*//FIXA		IdleSource idle = new IdleSource ();
+		idle.set_callback(() => {
+			if (args.get_file () != "") {
+				Supplement.get_current_font ().load (args.get_file ());
+				MainWindow.get_toolbox ().select_tool_by_name ("available_characters");
+			} else {
+				MainWindow.get_tab_bar ().select_tab_name ("Menu");
+			}
+			
+			return false;
+		});
+		
+		idle.attach (null);		
+*/
 	}
 
 	internal void toggle_expanded_margin_bottom () {

@@ -22,7 +22,7 @@ using Math;
 
 namespace Supplement {
 
-class VersionList : DropMenu {
+public class VersionList : DropMenu {
 	int versions = 1;
 	int current_version = 0;
 	public List<Glyph> glyphs = new List<Glyph> ();

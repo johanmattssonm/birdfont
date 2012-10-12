@@ -22,7 +22,7 @@ using Math;
 
 namespace Supplement {
 
-class Glyph : FontDisplay {
+public class Glyph : FontDisplay {
 
 	public const double SCALE = 1.0;
 

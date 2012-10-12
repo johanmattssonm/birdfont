@@ -22,7 +22,7 @@ using Math;
 
 namespace Supplement {
 	
-class GlyphBackgroundImage {
+public class GlyphBackgroundImage {
 		
 	public double img_x = 0;
 	public double img_y = 0;
