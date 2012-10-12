@@ -187,8 +187,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	private void set_size_and_position () {
-		int w = Preferences.get_window_width();
-		int h = Preferences.get_window_height();
+		int w = Preferences.get_window_width ();
+		int h = Preferences.get_window_height ();
 		
 		set_default_size (w, h);
 		// move (10, 240);

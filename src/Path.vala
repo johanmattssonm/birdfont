@@ -158,7 +158,6 @@ class Path {
 		if (!is_open () && ep.length () >= 2 && n != null) {
 			en = (!) n;
 			em = ep.first ().data;
-			
 			draw_next (em, en, cr);
 		}
 
@@ -185,7 +184,7 @@ class Path {
 		get_bezier_points (e, en, out xa, out ya, out xb, out yb, out xc, out yc, out xd, out yd);
 
 		cr.set_source_rgba (0, 0, 0, alpha);
-		cr.set_line_width (1 * (1/g.view_zoom));
+		cr.set_line_width (1 / g.view_zoom);
 		
 		cr.line_to (xa, ya); // this point makes sense only if it is the first or last position, the other points are meaning less don't export them
 
