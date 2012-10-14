@@ -19,13 +19,19 @@ using Birdfont;
 using Supplement;
 	
 public static int main (string[] arg) {
+	GtkWindow native_window;
+	MainWindow window;
+	
 	Supplement.Supplement supplement = new Supplement.Supplement ();
 	supplement.init (arg);
 	
 	Gtk.init (ref arg);
-	MainWindow window = new MainWindow ();
-	GtkWindow native_window = new GtkWindow ("birdfont");	
+	native_window = new GtkWindow ("birdfont");	
+	window = new MainWindow ();
+	
 	window.set_native (native_window);
+	native_window.init ();
+	
 	Gtk.main ();
 
 	return 0;

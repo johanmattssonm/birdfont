@@ -37,14 +37,16 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	static DrawingArea margin_right;
 		
 	public GtkWindow (string title) {
+		// set_title (title);
+	}
+	
+	public void init () {
 		margin_bottom = new DrawingArea ();
 		margin_right = new DrawingArea ();
 	
 		margin_bottom.set_size_request (0, 0);
 		margin_right.set_size_request (0, 0);
 		
-		// set_title (title);
-
 		delete_event.connect (quit);
 		
 		set_size_and_position ();
@@ -150,23 +152,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		show_all ();		
 	
-	}
-
-	void set_first_view () {
-/*//FIXA		IdleSource idle = new IdleSource ();
-		idle.set_callback(() => {
-			if (args.get_file () != "") {
-				Supplement.get_current_font ().load (args.get_file ());
-				MainWindow.get_toolbox ().select_tool_by_name ("available_characters");
-			} else {
-				MainWindow.get_tab_bar ().select_tab_name ("Menu");
-			}
-			
-			return false;
-		});
-		
-		idle.attach (null);		
-*/
 	}
 
 	internal void toggle_expanded_margin_bottom () {

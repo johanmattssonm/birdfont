@@ -90,6 +90,7 @@ def build (bld):
 	bld (
 		rule = 'valac -C ./src/birdfont.vapi ../src/Main.vala ../src/GtkInterface.vala -X ../build/src/libbirdfont.so -X ./birdfont.h --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0',
 		name = 'main_c',
+		source  = ['../src/Main.vala', '../src/GtkInterface.vala'],
 		target = '../Main.c',
 		depends = 'libbirdfont'
 	)
