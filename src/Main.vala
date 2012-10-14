@@ -20,7 +20,6 @@ using Supplement;
 	
 public static int main (string[] arg) {
 	Supplement.Supplement supplement = new Supplement.Supplement ();
-	
 	supplement.init (arg);
 	
 	Gtk.init (ref arg);

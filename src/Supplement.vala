@@ -36,7 +36,6 @@ public class Supplement {
 		int err_arg;
 		int i;
 		File font_file;
-		Argument args;
 		IdleSource idle;
 		string exec_path;
 
@@ -151,6 +150,11 @@ public class Supplement {
 	}
 
 	internal static bool has_argument (string param) {
+		if (is_null (args)) {
+			warning ("args is null");
+			return false;
+		}
+		
 		return args.has_argument (param);
 	}
 	
