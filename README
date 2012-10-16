@@ -7,6 +7,7 @@ fonts in both svg and ttf format.
 
 Author: Johan Mattsson
 License: GNU GPL v3
+Webpage: http://birdfont.org
 
 --------------------
 Building from source
@@ -39,3 +40,8 @@ Compile and build the installer with:
 ./waf clean
 ./waf build --win32 --installer
 
+--------------------
+Precompiled packages
+--------------------
+
+A windows binary is avalilable at http://birdfont.org
