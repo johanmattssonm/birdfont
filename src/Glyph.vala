@@ -215,14 +215,12 @@ public class Glyph : FontDisplay {
 		return 1 / MainWindow.get_current_glyph ().view_zoom;
 	}
 
-	public void resized (Allocation o, Allocation n) {
+	public void resized () {
 		double a, b, c, d;
 		
 		if (view_zoom > 1) {	
 			a = vertical_help_lines.first ().data.get_coordinate ();
 			c = horizontal_help_lines.first ().data.get_coordinate ();
-			
-			this.allocation = n;
 			
 			b = vertical_help_lines.first ().data.get_coordinate ();
 			d = horizontal_help_lines.first ().data.get_coordinate ();

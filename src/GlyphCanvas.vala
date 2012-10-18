@@ -22,98 +22,13 @@ using Math;
 
 namespace Supplement {
 
-public class GlyphCanvas : DrawingArea  {
+public class GlyphCanvas : GLib.Object {
 
-	FontDisplay current_display;
-	
-	Allocation alloc;
+	public FontDisplay current_display;
+	public signal void signal_redraw_area (int x, int y, int w, int h);
+	public Allocation allocation;
 	
 	public GlyphCanvas () {
-		set_size_request (300, 50);
-
-		alloc.width = 0;
-		alloc.height = 0;
-		
-		current_display = new Glyph ("");
-		
-		expose_event.connect ((t, e)=> {
-				
-				Allocation allocation;
-				get_allocation (out allocation);
-				
-				if (unlikely (allocation != alloc && alloc.width != 0)) {
-					// Set size of glyph widget to an even number and notify 
-					// set new allocation for glyph
-					bool ug = false;
-					
-					if (allocation.height % 2 != 0) {
-						MainWindow.native_window.toggle_expanded_margin_bottom ();
-						ug = true;
-					}
-					
-					if (allocation.width % 2 != 0) {
-						MainWindow.native_window.toggle_expanded_margin_right ();
-						ug = true;
-					}					
-					
-					if (ug) {
-						redraw_area (1, 1, 2, 2);
-					} else if (unlikely (allocation.width % 2 != 0 || allocation.height % 2 != 0)) {
-						warning (@"\nGlyph canvas is not divisible by two.\nWidth: $(allocation.width)\nHeight: $(allocation.height)");
-					}
-					
-					Supplement.current_glyph.resized (alloc, allocation);
-				}
-				
-				alloc = allocation;
-				
-				Context cw = cairo_create (get_window());
-				
-				Surface s = new Surface.similar (cw.get_target (), Cairo.Content.COLOR_ALPHA, allocation.width, allocation.height);
-				Context c = new Context (s); 
-
-				current_display.draw (allocation, c);
-
-				cw.save ();
-				cw.set_source_surface (c.get_target (), 0, 0);
-				cw.paint ();
-				cw.restore ();
-				
-				return true;
-			});
-
-		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK | EventMask.SCROLL_MASK);
-				           
-		button_press_event.connect ((t, e)=> {
-			if (e.type == EventType.BUTTON_PRESS) {
-				current_display.button_press (e.button, e.x, e.y);	
-			} else if (e.type == EventType.2BUTTON_PRESS) {
-				current_display.double_click (e.button, e.x, e.y);
-			}
-				
-			return true;
-		});
-
-		button_release_event.connect ((t, e)=> {
-			current_display.button_release ((int) e.button, e.x, e.y);
-			return true;
-		});
-		
-		motion_notify_event.connect ((t, e)=> {
-			current_display.motion_notify (e.x, e.y);		
-			return true;
-		});
-		
-		scroll_event.connect ((t, e)=> {
-			if (e.direction == Gdk.ScrollDirection.UP) {
-				current_display.scroll_wheel_up (e.x, e.y);
-			} else if (e.direction == Gdk.ScrollDirection.DOWN) {
-				current_display.scroll_wheel_down (e.x, e.y);
-			}
-			
-			return true;
-		});
-		
 	}
 	
 	public void key_release (uint e) {
@@ -126,25 +41,22 @@ public class GlyphCanvas : DrawingArea  {
 	
 	public void set_current_glyph (FontDisplay fd) {
 		if (fd is Glyph) {
-			Allocation allocation;
-			get_allocation (out allocation);
-
 			Glyph g = (Glyph) fd;
 			
-			g.allocation = allocation;
-			
 			Supplement.current_glyph = g;
-			Supplement.current_glyph.resized (alloc, allocation);
+			Supplement.current_glyph.resized ();
+
+			g.allocation = allocation;
 			
 			warn_if_fail (g.allocation.width != 0 && g.allocation.height != 0);
 		}
-		
+
 		current_display = fd;
 		
 		fd.selected_canvas ();
 		
 		fd.redraw_area.connect ((x, y, w, h) => {
-			queue_draw_area ((int)x, (int)y, (int)w, (int)h);
+			signal_redraw_area ((int)x, (int)y, (int)w, (int)h);
 		});
 
 		redraw ();
@@ -161,14 +73,12 @@ public class GlyphCanvas : DrawingArea  {
 	}
 	
 	// Deprecated
-	private void redraw_area (int x, int y, int w, int h) {
-		queue_draw_area (x, y, w, h);
+	public void redraw_area (int x, int y, int w, int h) {
+		signal_redraw_area (x, y, w, h);
 	}
 	
 	public void redraw () {
-		Allocation allocation;
-		get_allocation(out allocation);
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		signal_redraw_area (0, 0, allocation.width, allocation.height);
 	}
 }
 

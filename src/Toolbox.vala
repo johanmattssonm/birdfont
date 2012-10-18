@@ -349,7 +349,7 @@ public class Toolbox : GLib.Object  {
 		reset_zoom.select_action.connect ((self) => {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().reset_zoom ();
-				glyph_canvas.queue_draw_area(0, 0, glyph_canvas.allocation.width, glyph_canvas.allocation.height);
+				glyph_canvas.redraw_area(0, 0, glyph_canvas.allocation.width, glyph_canvas.allocation.height);
 			});
 		view_tools.add_tool (reset_zoom);
 
@@ -375,7 +375,7 @@ public class Toolbox : GLib.Object  {
 				
 				zoom_tool.zoom_full_background_image ();
 				
-				glyph_canvas.queue_draw_area(0, 0, glyph_canvas.allocation.width, glyph_canvas.allocation.height);
+				glyph_canvas.redraw_area(0, 0, glyph_canvas.allocation.width, glyph_canvas.allocation.height);
 			}
 		});
 		view_tools.add_tool (zoom_bg);

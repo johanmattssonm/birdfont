@@ -30,7 +30,7 @@ public class Supplement {
 	internal static string exec_path = "";
 
 	internal static Font current_font;
-	internal static Glyph current_glyph;
+	public static Glyph current_glyph;
 	
 	public void init (string[] arg) {
 		int err_arg;

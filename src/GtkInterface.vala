@@ -35,7 +35,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 	static DrawingArea margin_bottom;
 	static DrawingArea margin_right;
-		
+	
+	GlyphCanvasArea glyph_canvas_area;
+	
 	public GtkWindow (string title) {
 		// set_title (title);
 	}
@@ -102,17 +104,17 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				}
 				
 				html_box.set_visible (n);
-				MainWindow.glyph_canvas.set_visible (!n);
+				glyph_canvas_area.set_visible (!n);
 			} else {
 				html_box.set_visible (false);
-				MainWindow.glyph_canvas.set_visible (true);
+				glyph_canvas_area.set_visible (true);
 			}
 		});
 
 		// Hide this canvas when window is realized and flip canvas 
 		// visibility in tab selection signal.
 		html_canvas.expose_event.connect ((t, e) => {
-			MainWindow.glyph_canvas.set_visible (false);
+			glyph_canvas_area.set_visible (false);
 			return false;
 		});
 				
@@ -120,8 +122,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		MainWindow.tabs.select_tab_name ("Menu");
 
+		glyph_canvas_area = new GlyphCanvasArea (MainWindow.glyph_canvas);
+
 		canvas_box = new HBox (false, 0);
-		canvas_box.pack_start (MainWindow.glyph_canvas, true, true, 0);
+		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
 		
 		tab_box = new VBox (false, 0);
@@ -337,6 +341,98 @@ class ToolboxCanvas : DrawingArea {
 			return true;
 		});
 		
+	}
+}
+
+public class GlyphCanvasArea : DrawingArea  {
+	GlyphCanvas glyph_canvas;
+	Allocation alloc;
+	
+	public GlyphCanvasArea (GlyphCanvas gc) {
+		glyph_canvas = gc;
+
+		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK | EventMask.SCROLL_MASK);
+
+		glyph_canvas.signal_redraw_area.connect ((x, y, w, h) => {
+			queue_draw_area ((int)x, (int)y, (int)w, (int)h);
+		});
+
+		expose_event.connect ((t, e)=> {		
+			Allocation allocation;
+			get_allocation (out allocation);
+			
+			glyph_canvas.allocation = allocation;
+			
+			if (unlikely (allocation != alloc && alloc.width != 0)) {
+				// Set size of glyph widget to an even number and notify 
+				// set new allocation for glyph
+				bool ug = false;
+				
+				if (allocation.height % 2 != 0) {
+					MainWindow.native_window.toggle_expanded_margin_bottom ();
+					ug = true;
+				}
+				
+				if (allocation.width % 2 != 0) {
+					MainWindow.native_window.toggle_expanded_margin_right ();
+					ug = true;
+				}					
+				
+				if (ug) {
+					//redraw_area (1, 1, 2, 2);
+				} else if (unlikely (allocation.width % 2 != 0 || allocation.height % 2 != 0)) {
+					warning (@"\nGlyph canvas is not divisible by two.\nWidth: $(allocation.width)\nHeight: $(allocation.height)");
+				}
+				
+				Supplement.current_glyph.resized ();
+			}
+			
+			alloc = allocation;
+			
+			Context cw = cairo_create (get_window());
+			
+			Surface s = new Surface.similar (cw.get_target (), Cairo.Content.COLOR_ALPHA, allocation.width, allocation.height);
+			Context c = new Context (s); 
+
+			glyph_canvas.current_display.draw (allocation, c);
+
+			cw.save ();
+			cw.set_source_surface (c.get_target (), 0, 0);
+			cw.paint ();
+			cw.restore ();
+			
+			return true;
+		});
+
+		button_press_event.connect ((t, e)=> {
+			if (e.type == EventType.BUTTON_PRESS) {
+				glyph_canvas.current_display.button_press (e.button, e.x, e.y);	
+			} else if (e.type == EventType.2BUTTON_PRESS) {
+				glyph_canvas.current_display.double_click (e.button, e.x, e.y);
+			}
+				
+			return true;
+		});
+		
+		button_release_event.connect ((t, e)=> {
+			glyph_canvas.current_display.button_release ((int) e.button, e.x, e.y);
+			return true;
+		});
+		
+		motion_notify_event.connect ((t, e)=> {
+			glyph_canvas.current_display.motion_notify (e.x, e.y);		
+			return true;
+		});
+		
+		scroll_event.connect ((t, e)=> {
+			if (e.direction == Gdk.ScrollDirection.UP) {
+				glyph_canvas.current_display.scroll_wheel_up (e.x, e.y);
+			} else if (e.direction == Gdk.ScrollDirection.DOWN) {
+				glyph_canvas.current_display.scroll_wheel_down (e.x, e.y);
+			}
+			
+			return true;
+		});	
 	}
 }
 
