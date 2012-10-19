@@ -20,13 +20,6 @@ using Math;
 
 namespace Supplement {
 
-public struct Allocation {
-	public int width;
-	public int height;
-	public int x;
-	public int y;
-}
-
 public class GlyphCanvas : GLib.Object {
 
 	public FontDisplay current_display;

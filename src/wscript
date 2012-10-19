@@ -1,4 +1,5 @@
 BIRDFONT = [
+	'Allocation.vala',
 	'Argument.vala',
 	'Font.vala',
 	'BackgroundTool.vala',
