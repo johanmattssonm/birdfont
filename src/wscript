@@ -75,8 +75,8 @@ def build (bld):
 	bld.shlib (
 		target        = 'birdfont',
 		param         = PARAM,
-		packages      = 'gtk+-2.0 libxml-2.0',
-		uselib        = 'GTK GLIB GIO XML WEB',
+		packages      = 'libxml-2.0',
+		uselib        = 'CAIRO GLIB GIO PIXBUF XML',
 		source        = BIRDFONT,
 		name          = "libbirdfont"
 	)
@@ -88,9 +88,9 @@ def build (bld):
 	)
 	
 	bld (
-		rule = 'valac -C ./src/birdfont.vapi ../src/Main.vala ../src/GtkInterface.vala -X ../build/src/libbirdfont.so -X ./birdfont.h --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0',
+		rule = 'valac -C ./src/birdfont.vapi ../src/Main.vala ../src/GtkWindow.vala -X ../build/src/libbirdfont.so -X ./birdfont.h --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0',
 		name = 'main_c',
-		source  = ['../src/Main.vala', '../src/GtkInterface.vala'],
+		source  = ['../src/Main.vala', '../src/GtkWindow.vala'],
 		target = '../Main.c',
 		depends = 'libbirdfont'
 	)
@@ -103,7 +103,7 @@ def build (bld):
 	)
 
 	bld (
-		rule = 'gcc ../build/Main.c ../build/GtkInterface.c -I ../build/ -I ../build/src -L ../build/src -l birdfont -o ${TGT} \
+		rule = 'gcc ../build/Main.c ../build/GtkWindow.c -I ../build/ -I ../build/src -L ../build/src -l birdfont -o ${TGT} \
 				$(pkg-config --cflags --libs glib-2.0) \
 				$(pkg-config --cflags --libs libxml-2.0) \
 				$(pkg-config --cflags --libs gio-2.0) \

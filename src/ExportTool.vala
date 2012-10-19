@@ -18,7 +18,6 @@
 namespace Supplement {
 
 public class ExportTool : Tool {
-
 	private static string? prefered_browser = null;
 	private static ExportThread export_thread;
 	
@@ -128,55 +127,6 @@ public class ExportTool : Tool {
 		}
 		
 		status ("Wrote $svg_file.");
-	}
-
-	/** Export font and open html document */
-	public void view_result () {
-		Font font = Supplement.get_current_font ();
-		string path = @"$(font.get_name ()).html";
-		File dir = font.get_folder ();
-		File file = dir.get_child (path);
-		string browser = "";		
-		
-		if (!export_svg_font ()) {
-			warning ("Failed to export svg font.");
-			return;
-		}
-		
-		if (!export_ttf_font ()) {
-			warning ("Failed to export ttf font.");
-			return;
-		}
-		
-		try {			
-			if (!file.query_exists ()) {
-				generate_html_document ((!)file.get_path (), font);				
-			}
-
-			browser = find_browser ();
-			Process.spawn_command_line_async (@"$browser $(file.get_uri ())");
-		} catch (Error e) {
-			stderr.printf (@"Failed to execute \"$browser $path\" \n");
-			critical (@"$(e.message)");
-		}
-		
-	}
-		
-	private string find_browser () {				
-		File f;
-		string b;
-		if (prefered_browser != null) return (!) prefered_browser;
-		
-		b = @"C:\\Users\\$(Environment.get_user_name())\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe"; // mind the hyphen
-		
-		f = File.new_for_path (b);
-		if (f.query_exists ()) {
-			prefered_browser = @"'$b'"; // hyphen for windows command
-			return (!) prefered_browser;
-		}
-		
-		prefered_browser = "sensible-browser";
-		return (!) prefered_browser;
 	}
 
 	public static void generate_html_document (string html_file, Font font) {

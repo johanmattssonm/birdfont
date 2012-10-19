@@ -73,10 +73,6 @@ public static const uint CTRL  = 1 << 0;
 public static const uint ALT   = 1 << 2;
 public static const uint SHIFT = 1 << 3;
 
-public bool is_mod (EventKey e) {
-	return (e.keyval == Key.CTRL_RIGHT || e.keyval == Key.CTRL_LEFT || e.keyval == Key.ALT_RIGHT || e.keyval == Key.ALT_LEFT);
-}
-
 /** A list of all valid key bindings. */
 public class BindingList {
 	static ShortCut[]? nc = null;

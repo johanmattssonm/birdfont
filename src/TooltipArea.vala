@@ -21,40 +21,28 @@ using Gtk;
 
 namespace Supplement {
 
-public class TooltipArea : DrawingArea {
+public class TooltipArea : GLib.Object {
 
 	string tool_tip;
+	public signal void redraw ();
 
 	public TooltipArea () {
 		set_text_from_tool ();
-		
-		expose_event.connect ((t, e)=> {
-				Allocation alloc;
-				Context cr = cairo_create (get_window ());
-				
-				get_allocation (out alloc);
-				allocation = alloc;
-				
-				draw (cr, alloc);
-				return true;
-		});
-		
-		set_size_request (10, 20);
 	}
 
 	public void update_text () {
 		set_text_from_current_tool ();
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw ();
 	}
 	
 	public void show_text (string text) {
 		tool_tip = text;
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw ();
 	}
 	
 	public void set_text_from_tool () {
 		set_text_from_current_tool ();
-		queue_draw_area (0, 0, allocation.width, allocation.height);
+		redraw ();
 	}
 	
 	private void set_text_from_current_tool () {

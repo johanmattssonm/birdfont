@@ -16,8 +16,6 @@
 */
 
 using Cairo;
-using Gtk;
-using Gdk;
 
 namespace Supplement {
 

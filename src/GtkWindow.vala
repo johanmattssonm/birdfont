@@ -38,6 +38,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	GlyphCanvasArea glyph_canvas_area;
 	
+	static List<uint> key_pressed = new List<uint> ();
+	
 	public GtkWindow (string title) {
 		// set_title (title);
 	}
@@ -133,7 +135,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		tab_box.pack_start (canvas_box, true, true, 0);
 
-		tab_box.pack_start (MainWindow.tool_tip, false, false, 0);
+		tab_box.pack_start (new TooltipCanvas (MainWindow.tool_tip), false, false, 0);
 		tab_box.pack_start (margin_bottom, false, false, 0);
 		
 		list_box = new HBox (false, 0);
@@ -143,7 +145,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		add (list_box);
 				
-		key_snooper_install (MainWindow.global_key_bindings, null);
+		key_snooper_install (GtkWindow.global_key_bindings, null);
 		
 		add_events (EventMask.FOCUS_CHANGE_MASK);
 		
@@ -156,6 +158,25 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		show_all ();		
 	
+	}
+
+	public static int global_key_bindings (Widget grab_widget, EventKey event, void* data) {		
+		MainWindow window = MainWindow.get_singleton ();
+		
+		foreach (uint k in key_pressed) {
+			if (k == event.keyval) {
+				key_pressed.remove_all (k);
+				window.glyph_canvas.key_release (event.keyval);
+				window.key_bindings.key_release (event.keyval);
+				return 0;
+			}
+		}
+		
+		key_pressed.append (event.keyval);
+		window.glyph_canvas.key_press (event.keyval);
+		window.key_bindings.key_press (event.keyval);
+		
+		return 0;
 	}
 
 	internal void toggle_expanded_margin_bottom () {
@@ -259,7 +280,7 @@ class TabbarCanvas : DrawingArea {
 		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
 	  
 		motion_notify_event.connect ((t, e)=> {
-			Allocation alloc;
+			Gtk.Allocation alloc;
 			tabbar.motion (e.x, e.y);
 			get_allocation (out alloc);
 			queue_draw_area (0, 0, alloc.width, alloc.height);
@@ -267,7 +288,7 @@ class TabbarCanvas : DrawingArea {
 		});	
 				
 		button_press_event.connect ((t, e)=> {
-			Allocation alloc;
+			Gtk.Allocation alloc;
 			get_allocation (out alloc);
 			tabbar.select_tab_click (e.x, e.y, alloc.width, alloc.height);
 			queue_draw_area (0, 0, alloc.width, alloc.height);
@@ -277,7 +298,7 @@ class TabbarCanvas : DrawingArea {
 		expose_event.connect ((t, e)=> {
 			Context cr = cairo_create (get_window ());
 
-			Allocation alloc;
+			Gtk.Allocation alloc;
 			get_allocation (out alloc);
 
 			tabbar.draw (cr, alloc.width, alloc.height);
@@ -285,7 +306,7 @@ class TabbarCanvas : DrawingArea {
 		});
 	
 		tabbar.signal_tab_selected.connect ((t) => {
-			Allocation alloc;
+			Gtk.Allocation alloc;
 			get_allocation (out alloc);
 			queue_draw_area (0, 0, alloc.width, alloc.height);	
 		});
@@ -321,7 +342,7 @@ class ToolboxCanvas : DrawingArea {
 		});
 		
 		expose_event.connect ((t, e)=> {
-			Allocation allocation;
+			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
 			Context cw = cairo_create(get_window());
@@ -346,7 +367,7 @@ class ToolboxCanvas : DrawingArea {
 
 public class GlyphCanvasArea : DrawingArea  {
 	GlyphCanvas glyph_canvas;
-	Allocation alloc;
+	Gtk.Allocation alloc;
 	
 	public GlyphCanvasArea (GlyphCanvas gc) {
 		glyph_canvas = gc;
@@ -358,11 +379,14 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 
 		expose_event.connect ((t, e)=> {		
-			Allocation allocation;
+			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
-			glyph_canvas.allocation = allocation;
-			
+			glyph_canvas.allocation.width = allocation.width;
+			glyph_canvas.allocation.height = allocation.height;
+			glyph_canvas.allocation.y = allocation.x;
+			glyph_canvas.allocation.y = allocation.y;
+				
 			if (unlikely (allocation != alloc && alloc.width != 0)) {
 				// Set size of glyph widget to an even number and notify 
 				// set new allocation for glyph
@@ -394,7 +418,7 @@ public class GlyphCanvasArea : DrawingArea  {
 			Surface s = new Surface.similar (cw.get_target (), Cairo.Content.COLOR_ALPHA, allocation.width, allocation.height);
 			Context c = new Context (s); 
 
-			glyph_canvas.current_display.draw (allocation, c);
+			glyph_canvas.current_display.draw (glyph_canvas.allocation, c);
 
 			cw.save ();
 			cw.set_source_surface (c.get_target (), 0, 0);
@@ -434,6 +458,41 @@ public class GlyphCanvasArea : DrawingArea  {
 			return true;
 		});	
 	}
+}
+
+public class TooltipCanvas : DrawingArea {
+	TooltipArea tooltip_area;
+	
+	public TooltipCanvas (TooltipArea ta) {
+		tooltip_area = ta;
+
+		expose_event.connect ((t, e)=> {
+				Allocation allocation = {0, 0, 0, 0};
+				Gtk.Allocation alloc;
+				Context cr = cairo_create (get_window ());
+				
+				get_allocation (out alloc);
+
+				allocation.width = alloc.width;
+				allocation.height = alloc.height;
+				allocation.y = alloc.x;
+				allocation.y = alloc.y;
+				
+				tooltip_area.draw (cr, allocation);
+
+				return true;
+		});
+		
+		tooltip_area.redraw.connect (() => {
+			Gtk.Allocation alloc;
+			get_allocation (out alloc);
+			queue_draw_area (0, 0, alloc.width, alloc.height);
+		});
+		
+		set_size_request (10, 20);
+	}
+
+	
 }
 
 }

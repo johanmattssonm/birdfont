@@ -16,11 +16,16 @@
 */
 
 using Cairo;
-using Gtk;
-using Gdk;
 using Math;
 
 namespace Supplement {
+
+public struct Allocation {
+	public int width;
+	public int height;
+	public int x;
+	public int y;
+}
 
 public class GlyphCanvas : GLib.Object {
 
@@ -71,8 +76,7 @@ public class GlyphCanvas : GLib.Object {
 	public FontDisplay get_current_display () {
 		return current_display;
 	}
-	
-	// Deprecated
+
 	public void redraw_area (int x, int y, int w, int h) {
 		signal_redraw_area (x, y, w, h);
 	}

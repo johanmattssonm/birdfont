@@ -16,8 +16,6 @@
 */
 
 using Cairo;
-using Gtk;
-using Gdk;
 using Math;
 
 namespace Supplement {
@@ -233,7 +231,7 @@ class CutBackgroundTool : Tool {
 		}
 		
 		newbg = new GlyphBackgroundImage ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
-		
+			
 		// set position for the new background
 		wc = newbg.get_margin_width ();
 		hc = newbg.get_margin_height ();

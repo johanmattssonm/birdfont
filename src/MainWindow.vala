@@ -15,9 +15,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Gdk;
-using Gtk;
-
 namespace Supplement {
 
 public class MainWindow {
@@ -31,9 +28,7 @@ public class MainWindow {
 	public static OverView over_view;	
 	public static TabBar tabs;
 	public static NativeWindow native_window;
-	
-	static List<uint> key_pressed = new List<uint> ();
-	
+
 	public MainWindow () {
 		singleton = this;
 
@@ -130,25 +125,6 @@ public class MainWindow {
 	
 	public static MainWindow get_singleton () {
 		return singleton;
-	}
-	
-	public static int global_key_bindings (Widget grab_widget, EventKey event, void* data) {		
-		MainWindow window = get_singleton ();
-		
-		foreach (uint k in key_pressed) {
-			if (k == event.keyval) {
-				key_pressed.remove_all (k);
-				window.glyph_canvas.key_release (event.keyval);
-				window.key_bindings.key_release (event.keyval);
-				return 0;
-			}
-		}
-		
-		key_pressed.append (event.keyval);
-		window.glyph_canvas.key_press (event.keyval);
-		window.key_bindings.key_press (event.keyval);
-		
-		return 0;
 	}
 	
 	public static string? file_chooser (string title) {
