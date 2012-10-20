@@ -40,6 +40,7 @@ public class Path {
 
 	bool edit = true;
 	bool open = true;
+	bool direction_is_set = false;
 
 	bool no_derived_direction = false;
 	bool clockwise_direction = true;
@@ -68,6 +69,10 @@ public class Path {
 			selected_edit_point_image  = Icons.get_icon ("selected_edit_point.png");
 			active_selected_edit_point_image = Icons.get_icon ("active_selected_edit_point.png");
 		}
+	}
+
+	public bool has_direction () {
+		return direction_is_set;
 	}
 
 	public bool empty () {
@@ -368,6 +373,7 @@ public class Path {
 	 */
 	public bool force_direction (Direction direction) {
 		bool c = (direction == Direction.CLOCKWISE);
+		direction_is_set = true;
 		
 		if (c != is_clockwise ()) {
 			this.reverse ();
@@ -377,7 +383,7 @@ public class Path {
 			warning ("Failed to set direction for path in force_direction.");
 			return true;
 		}
-		
+				
 		return false;
 	}
 

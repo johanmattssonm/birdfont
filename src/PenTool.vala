@@ -258,7 +258,7 @@ class PenTool : Tool {
 		
 		// continue adding points from the selected one
 		foreach (Path p in glyph.active_paths) {
-			if (p.points.length () > 0 && active_edit_point == p.points.first ().data) {
+			if (p.is_open () && p.points.length () > 0 && active_edit_point == p.points.first ().data) {
 				p.reverse ();
 			}
 		}

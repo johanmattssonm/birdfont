@@ -447,7 +447,6 @@ os.put_string (
 
 
 	public class ExportThread : GLib.Object {
-
 		private string ffi;
 		private string ttf;
 		private string eot;

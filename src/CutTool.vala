@@ -46,8 +46,7 @@ class CutTool : Tool {
 		Tool current_tool = MainWindow.get_toolbox ().get_current_tool ();
 		
 		foreach (Path p in g.active_paths) {
-			if (p.is_editable () && p.is_open ()) {
-				
+			if (p.is_open () && !p.has_direction ()) {
 				if (current_tool is PenTool) {
 					p.force_direction (Direction.CLOCKWISE);
 				} else if (current_tool is CutTool) {
