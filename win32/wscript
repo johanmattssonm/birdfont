@@ -88,7 +88,7 @@ def build(bld):
 	bld(rule="windres ${SRC} -O coff -o ${TGT}", source="../win32/icon.rc", target="icon.res", always=True)
 	bld(rule="mv ${SRC} ${TGT}", source="../win32/icon.res", target="../build/", name="icon", always=True)
 
-	bld(rule="""i686-w64-mingw32-gcc -c ./Main.c ./GtkInterface.c ./BirdfontExport.c ./src/*.c ./ \
+	bld(rule="""i686-w64-mingw32-gcc -c ./Main.c ./GtkWindow.c ./BirdfontExport.c ./src/*.c ./ \
 		-I./ \
 		-mthreads \
 		$(i686-w64-mingw32-pkg-config --cflags --libs glib-2.0) \
@@ -100,7 +100,7 @@ def build(bld):
 	
 	bld(rule="""mv win32/BirdfontExport.* ./ """, always=True);
 	bld(rule="""mv win32/Main.* ./ """, always=True);
-	bld(rule="""mv win32/GtkInterface.* ./ """, always=True);
+	bld(rule="""mv win32/GtkWindow.* ./ """, always=True);
 	
 	bld(rule="""i686-w64-mingw32-gcc \
 		-shared \
@@ -118,7 +118,7 @@ def build(bld):
 
 	bld(rule="""i686-w64-mingw32-gcc \
 		./Main.o \
-		./GtkInterface.o \
+		./GtkWindow.o \
 		./icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
@@ -133,7 +133,7 @@ def build(bld):
 	bld(rule="""i686-w64-mingw32-gcc \
 		./Main.o \
 		./icon.res \
-		./GtkInterface.o \
+		./GtkWindow.o \
 		-mthreads \
 		-L./ \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
