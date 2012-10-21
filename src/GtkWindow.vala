@@ -94,7 +94,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 					// this hack forces webkit to reload the font and ignore cached data
 					// it's only required on windows platform and in wine
 					//
-					// webkit will crash if the loaded file is updated with export_all
+					// webkit will crash if the loaded font file is updated with export_all
 					//
 					if (Supplement.win32) {
 						html_canvas.load_uri (uri);
@@ -102,6 +102,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 						TimeoutSource loadscreen = new TimeoutSource(300);
 						loadscreen.set_callback(() => {
 							html_canvas.load_html_string ("<html>Loading ...</html>", "file:///");
+							html_canvas.reload_bypass_cache ();
+							
 							html_box.set_visible (n);
 							glyph_canvas_area.set_visible (!n);
 							
@@ -116,6 +118,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 						TimeoutSource update = new TimeoutSource(2000);						
 						update.set_callback(() => {
 							html_canvas.load_uri (uri);
+							html_canvas.reload_bypass_cache ();
 							return false;
 						});
 						update.attach(null);

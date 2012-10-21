@@ -4,6 +4,7 @@ birdfont (0.5) stable;
   * Draw path from both ends
   * New edit commands
   * Man pages
+
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Oct 20 19:52:27 CEST 2012
 
 birdfont (0.4.1) stable;
