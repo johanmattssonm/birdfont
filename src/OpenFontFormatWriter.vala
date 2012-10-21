@@ -112,7 +112,7 @@ class FontData : Object {
 	// Write pointer
 	uint wp = 0;
 	
-	// length without pad
+	// length without padding
 	uint32 len = 0;
 	uint32 padding = 0;
 	
@@ -231,7 +231,6 @@ class FontData : Object {
 	public uint8 read () {
 		if (unlikely (rp >= len)) {
 			warning ("end of table reached");
-			//assert (false);
 			return 0;
 		}
 		
@@ -1442,20 +1441,20 @@ class GlyfTable : Table {
 			p = p.get_quadratic_points ();
 
 			foreach (EditPoint e in p.points) {
-				x = e.x * UNITS - prev - g.left_limit * UNITS;
+				x = rint (e.x * UNITS - prev - g.left_limit * UNITS);
 
 				fd.add_16 ((int16) x);
 				coordinate_x.append ((int16) x);
 				
-				prev = e.x * UNITS - g.left_limit * UNITS;
+				prev = rint (e.x * UNITS - g.left_limit * UNITS);
 				
 				if (e.get_right_handle ().type == PointType.CURVE) {
-					x = e.get_right_handle ().x () * UNITS - prev - g.left_limit * UNITS;
+					x = rint (e.get_right_handle ().x () * UNITS - prev - g.left_limit * UNITS);
 
 					fd.add_16 ((int16) x);
 					coordinate_x.append ((int16) x);
 					
-					prev = e.get_right_handle ().x () * UNITS - g.left_limit * UNITS;
+					prev = rint (e.get_right_handle ().x () * UNITS - g.left_limit * UNITS);
 				}
 			}
 		}
@@ -1465,20 +1464,20 @@ class GlyfTable : Table {
 		foreach (Path p in g.path_list) {
 			p = p.get_quadratic_points ();
 			foreach (EditPoint e in p.points) {
-				y = e.y * UNITS - prev + font.base_line  * UNITS;
+				y = rint (e.y * UNITS - prev + font.base_line  * UNITS);
 				fd.add_16 ((int16) y);
 				
 				coordinate_y.append ((int16) y);
 				
-				prev = e.y * UNITS + font.base_line * UNITS;
+				prev = rint (e.y * UNITS + font.base_line * UNITS);
 
 				if (e.get_right_handle ().type == PointType.CURVE) {
-					y = e.get_right_handle ().y () * UNITS - prev + font.base_line * UNITS;
+					y = rint (e.get_right_handle ().y () * UNITS - prev + font.base_line * UNITS);
 					
 					fd.add_16 ((int16) y);
 					coordinate_y.append ((int16) y);
 					
-					prev = e.get_right_handle ().y () * UNITS + font.base_line  * UNITS;
+					prev = rint (e.get_right_handle ().y () * UNITS + font.base_line  * UNITS);
 				}
 			}
 		}
@@ -2120,7 +2119,7 @@ class HeadTable : Table {
 	uint64 created;
 	uint64 modified;
 		
-	uint16 units_per_em = 100;
+	uint16 units_per_em = 2048;
 	
 	const uint8 BASELINE_AT_ZERO = 1 << 0;
 	const uint8 LSB_AT_ZERO = 1 << 1;
