@@ -207,7 +207,7 @@ c.append ("""
 		recent_fonts.reverse ();
 	}
 	
-	private void load_font (string fn) {
+	public void load_font (string fn) {
 		Font font = Supplement.get_current_font ();
 			
 		SaveDialog save = new SaveDialog ();

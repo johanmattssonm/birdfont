@@ -152,7 +152,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			return false;
 		});
 				
-		MainWindow.tabs.add_unique_tab (MainWindow.content, 60, true);
+		MainWindow.tabs.add_unique_tab (MainWindow.menu_tab, 60, true);
 		
 		MainWindow.tabs.select_tab_name ("Menu");
 

@@ -21,7 +21,7 @@ using Supplement;
 public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;
-	
+	string file;
 	Supplement.Supplement supplement = new Supplement.Supplement ();
 	supplement.init (arg);
 	
@@ -31,6 +31,11 @@ public static int main (string[] arg) {
 	
 	window.set_native (native_window);
 	native_window.init ();
+
+	file = supplement.args.get_file ();
+	if (file != "") {
+		window.menu_tab.load_font (file);
+	}
 	
 	Gtk.main ();
 

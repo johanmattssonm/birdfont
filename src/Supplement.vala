@@ -21,7 +21,7 @@ using Birdfont;
 namespace Supplement {
 
 public class Supplement {
-	internal static Argument args;
+	public static Argument args;
 	internal static bool experimental = false;
 	internal static bool show_coordinates = false;
 	internal static bool fatal_wanings = false;

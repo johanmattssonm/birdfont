@@ -23,7 +23,7 @@ public class MainWindow {
 	public static GlyphCanvas glyph_canvas;
 	public static MainWindow singleton;
 	public static KeyBindings key_bindings;
-	public static MenuTab content;
+	public static MenuTab menu_tab;
 	public static TooltipArea tool_tip;
 	public static OverView over_view;	
 	public static TabBar tabs;
@@ -36,7 +36,7 @@ public class MainWindow {
 		glyph_canvas = new GlyphCanvas ();
 		tools = new Toolbox (glyph_canvas);
 		tabs = new TabBar ();
-		content = new MenuTab ();
+		menu_tab = new MenuTab ();
 		tool_tip = new TooltipArea ();
 		over_view = new OverView();
 	}
@@ -116,11 +116,11 @@ public class MainWindow {
 	}
 	
 	internal static MenuTab get_content_display () {
-		if (unlikely ((MenuTab?) get_singleton ().content == null)) {
+		if (unlikely ((MenuTab?) get_singleton ().menu_tab == null)) {
 			warning ("MenuTab not instantiated.");
 		}
 		
-		return get_singleton ().content;
+		return get_singleton ().menu_tab;
 	}
 	
 	public static MainWindow get_singleton () {

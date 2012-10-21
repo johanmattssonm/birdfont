@@ -17,7 +17,7 @@
 
 namespace Supplement {
 	
-class Argument : GLib.Object {
+public class Argument : GLib.Object {
 	
 	List<string> args;
 	
@@ -60,7 +60,7 @@ class Argument : GLib.Object {
 			}
 			
 			// valid parameter
-			if (a == "--autosave" || a == "--exit" || a == "--slow" || a == "--help" || a == "--test" || a == "--fatal-warning" || a == "--show-coordinates") {
+			if (a == "--exit" || a == "--slow" || a == "--help" || a == "--test" || a == "--fatal-warning" || a == "--show-coordinates") {
 				prev = a;
 				i++;
 				continue;
@@ -166,7 +166,7 @@ class Argument : GLib.Object {
 		stdout.printf ("\n");
 	}
 
-	/** Return full command line parameter for an abbrevation.
+	/** Return full command line parameter for the abbrevation.
 	 * -t becomes --test.
 	 */
 	private string expand_param (string? param) {
@@ -178,18 +178,16 @@ class Argument : GLib.Object {
 		if (p.char_count () != 2) return "";
 		
 		switch (p.get_char (1)) {
-			case 'a': 
-				return "--autosave";
 			case 'c':
 				return "--show-coordinates";
 			case 'e': 
 				return "--exit";
 			case 'f': 
 				return "--fatal-warning";
-			case 's': 
-				return "--slow";
 			case 'h': 
 				return "--help";
+			case 's': 
+				return "--slow";
 			case 't': 
 				return "--test";
 		}
@@ -228,12 +226,12 @@ class Argument : GLib.Object {
 		stdout.printf (args.nth (0).data);
 		stdout.printf (" [FILE] [OPTION ...]\n");
 
+		print_padded ("-c, --show-coordinates", "show coordinate in glyph view");
 		print_padded ("-e, --exit", "exit if a testcase failes");
 		print_padded ("-f, --fatal-warning", "treat warnings as fatal");
 		print_padded ("-h, --help", "show this message");
 		print_padded ("-s, --slow", "sleep between each command in test suite");
 		print_padded ("-t, --test [TEST]", "run test case");
-		print_padded ("-c  --show-coordinates", "show coordinate in glyph view");
 		
 		stdout.printf ("\n");
 	}
