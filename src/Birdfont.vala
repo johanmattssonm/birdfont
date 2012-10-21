@@ -24,7 +24,7 @@ static void print_export_help (string[] arg) {
 	stdout.printf (" [OPTION ...] FILE\n");
 	stdout.printf ("-h, --help                      print this message\n");
 	stdout.printf ("-o, --output [DIRECTORY]        write files to this directory\n");
-	stdout.printf ("-s, --svg                       write file\n");
+	stdout.printf ("-s, --svg                       write svg file\n");
 	stdout.printf ("-t, --ttf                       write ttf and eot files\n");
 	stdout.printf ("\n");
 }

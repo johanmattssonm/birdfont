@@ -88,19 +88,51 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 					layout_uri = layout_dir.get_child (fd.get_html_file ());
 					uri = fd.path_to_uri ((!) layout_uri.get_path ());
 				}
-
-				if (fd.get_name () == "Preview") {
-					ExportTool.export_all ();
-				}
 				
 				if (fd.get_html () == "") {
-					html_canvas.load_html_string ("<html></html>", "file:///");	
-					html_canvas.reload_bypass_cache ();
 					
-					html_canvas.load_uri (uri);
-					html_canvas.reload_bypass_cache ();
-					html_canvas.load_uri (uri);
-					
+					// this hack forces webkit to reload the font and ignore cached data
+					// it's only required on windows platform and in wine
+					//
+					// webkit will crash if the loaded file is updated with export_all
+					//
+					if (Supplement.win32) {
+						html_canvas.load_uri (uri);
+						
+						TimeoutSource loadscreen = new TimeoutSource(300);
+						loadscreen.set_callback(() => {
+							html_canvas.load_html_string ("<html>Loading ...</html>", "file:///");
+							html_box.set_visible (n);
+							glyph_canvas_area.set_visible (!n);
+							
+							if (fd.get_name () == "Preview") {
+								ExportTool.export_all ();
+							}
+						
+							return false;
+						});
+						loadscreen.attach(null);
+						
+						TimeoutSource update = new TimeoutSource(2000);						
+						update.set_callback(() => {
+							html_canvas.load_uri (uri);
+							return false;
+						});
+						update.attach(null);
+
+					} else {
+
+						if (fd.get_name () == "Preview") {
+							ExportTool.export_all ();
+						}
+				
+						html_canvas.load_html_string ("<html></html>", "file:///");	
+						html_canvas.reload_bypass_cache ();
+						
+						html_canvas.load_uri (uri);
+						html_canvas.reload_bypass_cache ();
+						html_canvas.load_uri (uri);
+					}
 				} else {
 					html_canvas.load_html_string (fd.get_html (), uri);
 				}
