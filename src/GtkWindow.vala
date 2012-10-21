@@ -182,14 +182,21 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				
 		key_snooper_install (GtkWindow.global_key_bindings, null);
 		
-		add_events (EventMask.FOCUS_CHANGE_MASK);
-		
-		focus_in_event.connect ((t, e)=> {
-			MainWindow.key_bindings.reset ();
+		// FIXME: This value should obviously be obtained in a gtk signal 
+		TimeoutSource window_is_active = new TimeoutSource(1000);
+		window_is_active.set_callback(() => {
+			if (!has_toplevel_focus) {
+				MainWindow.key_bindings.reset ();
+			}
 			return true;
 		});
-	
-		set_icon_from_file ((!) Icons.find_icon ("window_icon.png").get_path ());
+		window_is_active.attach(null);
+		
+		try {
+			set_icon_from_file ((!) Icons.find_icon ("window_icon.png").get_path ());
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 		
 		show_all ();		
 	
@@ -235,10 +242,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 
 	public static void hide_cursor () {
+		/*
 		Pixmap pixmap = new Pixmap (null, 1, 1, 1);
 		Color color = { 0, 0, 0, 0 };
 		Cursor cursor = new Cursor.from_pixmap (pixmap, pixmap, color, color, 0, 0);
-
+		*/
+		
 		// Fixa: But why?
 		// (Supplement.exe:1300): Gdk-CRITICAL **: gdk_window_set_cursor: assertion `GDK_IS_WINDOW (window)' failed		
 		// singleton.frame.set_cursor (cursor);
