@@ -57,6 +57,10 @@ class OpenFontFormatReader : Object {
 		directory_table = new DirectoryTable ();
 	}
 	
+	public void close () {
+		dis.close ();
+	}
+	
 	public Glyph? read_glyph (string name) {
 		try {
 			return directory_table.glyf_table.read_glyph (name);

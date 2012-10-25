@@ -102,6 +102,15 @@ class OtfInputStream : Object  {
 	public uint8 read_byte () throws Error {
 		return din.read_byte ();
 	}
+	
+	public void close () {
+		try {
+			fin.close ();
+			din.close ();
+		} catch (GLib.IOError e) {
+			warning (e.message);
+		}
+	}
 }
 
 class FontData : Object {

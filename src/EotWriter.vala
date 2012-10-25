@@ -163,6 +163,10 @@ class EotWriter {
 		for (int i = 0; i < l; i++) {
 			os.put_byte (data[i]);
 		}
+		
+		dis.close ();
+		os.close ();
+		input.close ();
 	}
 	
 }

@@ -364,6 +364,9 @@ os.put_string (
 			async = false;
 		}
 
+		// the font be created before html is loaded into webkit, see the hack in GtkWindow
+		async = false;
+
 		try {
 			// create a copy of current font and use it in a separate 
 			// export thread
@@ -498,7 +501,7 @@ os.put_string (
 		}
 		
 		void write_eof () {
-			EotWriter fo;
+/*			EotWriter fo;
 
 			return_if_fail (!is_null (this));
 			return_if_fail (!is_null (ttf));
@@ -513,7 +516,7 @@ os.put_string (
 			} catch (Error e) {
 				warning ("EOF convertion falied.");
 				critical (@"$(e.message)");
-			}
+			}*/
 		}
 	}
 	

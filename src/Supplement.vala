@@ -116,6 +116,17 @@ public class Supplement {
 		current_font = new Font ();
 	}
 
+	public static File get_preview_directory () {
+		File settings = get_settings_directory ();
+		File backup = settings.get_child ("preview");
+		
+		if (!backup.query_exists ()) {
+			DirUtils.create ((!) backup.get_path (), 0xFFFFFF);
+		}
+			
+		return backup;
+	}
+
 	internal static File get_thumbnail_directory () {
 		File thumbnails = get_settings_directory ().get_child ("thumbnails");
 		

@@ -19,7 +19,7 @@ using WebKit;
 
 namespace Supplement {
 
-class Preview : FontDisplay {	
+public class Preview : FontDisplay {	
 	
 	public Preview () {
 	}
@@ -35,7 +35,7 @@ class Preview : FontDisplay {
 	public override void selected_canvas () {
 	}
 
-	public override string get_uri () {
+	public File get_html_file () {
 		Font font = Supplement.get_current_font ();
 		string path = @"$(font.get_name ()).html";
 		File dir = font.get_folder ();
@@ -45,7 +45,11 @@ class Preview : FontDisplay {
 			ExportTool.generate_html_document ((!)file.get_path (), font);				
 		}
 		
-		return path_to_uri ((!)file.get_path ());
+		return file;	
+	}
+
+	public override string get_uri () {
+		return path_to_uri ((!) get_html_file ().get_path ());
 	}
 }
 }

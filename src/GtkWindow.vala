@@ -88,54 +88,73 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 					layout_uri = layout_dir.get_child (fd.get_html_file ());
 					uri = fd.path_to_uri ((!) layout_uri.get_path ());
 				}
-				
+		
 				if (fd.get_html () == "") {
 					
-					// this hack forces webkit to reload the font and ignore cached data
-					// it's only required on windows platform and in wine
-					//
-					// webkit will crash if the loaded font file is updated with export_all
-					//
-					if (Supplement.win32) {
-						html_canvas.load_uri (uri);
-						
-						TimeoutSource loadscreen = new TimeoutSource(300);
-						loadscreen.set_callback(() => {
-							html_canvas.load_html_string ("<html>Loading ...</html>", "file:///");
-							html_canvas.reload_bypass_cache ();
-							
-							html_box.set_visible (n);
-							glyph_canvas_area.set_visible (!n);
-							
-							if (fd.get_name () == "Preview") {
-								ExportTool.export_all ();
-							}
-						
-							return false;
-						});
-						loadscreen.attach(null);
-						
-						TimeoutSource update = new TimeoutSource(2000);						
-						update.set_callback(() => {
-							html_canvas.load_uri (uri);
-							html_canvas.reload_bypass_cache ();
-							return false;
-						});
-						update.attach(null);
+					if (fd.get_name () == "Preview") {
+						// hack: force webkit to ignore cache in preview
+						//ExportTool.export_all ();
 
-					} else {
-
-						if (fd.get_name () == "Preview") {
-							ExportTool.export_all ();
-						}
-				
+						html_canvas.reload_bypass_cache ();
 						html_canvas.load_html_string ("<html></html>", "file:///");	
 						html_canvas.reload_bypass_cache ();
 						
+						html_box.set_visible (false);
+						glyph_canvas_area.set_visible (true);
+												
+						try {
+							Preview preview = (Preview) fd;
+							DataInputStream dis = new DataInputStream (preview.get_html_file ().read ());
+							string? line;
+							StringBuilder sb = new StringBuilder ();
+							uint rid = Random.next_int ();
+							Font font = Supplement.get_current_font ();
+							
+							File preview_directory = Supplement.get_preview_directory ();
+							
+							File f_ttf = font.get_folder ().get_child (@"$(font.get_name ()).ttf");
+							File f_eot = font.get_folder ().get_child (@"$(font.get_name ()).eot");
+							File f_svg = font.get_folder ().get_child (@"$(font.get_name ()).svg");
+
+							if (f_ttf.query_exists ())
+								f_ttf.delete ();
+								
+							if (f_eot.query_exists ())
+								f_eot.delete ();
+								
+							if (f_svg.query_exists ())
+								f_svg.delete ();
+
+							ExportTool.export_ttf_font ();
+							ExportTool.export_svg_font ();
+							
+							File r_ttf = preview_directory.get_child (@"$(font.get_name ())$rid.ttf");
+							//File r_eot = preview_directory.get_child (@"$(font.get_name ())$rid.eot");
+							File r_svg = preview_directory.get_child (@"$(font.get_name ())$rid.svg");
+							
+							f_ttf.copy (r_ttf, FileCopyFlags.NONE);
+							//f_eot.copy (r_eot, FileCopyFlags.NONE);
+							f_svg.copy (r_svg, FileCopyFlags.NONE);
+
+							while ((line = dis.read_line (null)) != null) {
+								line = ((!) line).replace (@"$(font.get_name ()).ttf", @"$(FontDisplay.path_to_uri ((!) f_ttf.get_path ()))?$rid");
+								line = ((!) line).replace (@"$(font.get_name ()).eot", @"$(FontDisplay.path_to_uri ((!) f_eot.get_path ()))?$rid");
+								line = ((!) line).replace (@"$(font.get_name ()).svg", @"$(FontDisplay.path_to_uri ((!) f_svg.get_path ()))?$rid");
+								sb.append ((!) line);
+							}
+					
+							html_canvas.load_html_string (sb.str, uri);							
+						} catch (Error e) {
+							warning (e.message);
+							warning ("Failed to load html into canvas.");
+						}
+						
+					} else {
+						// normal way to load a uri for all other pages
 						html_canvas.load_uri (uri);
-						html_canvas.reload_bypass_cache ();
-						html_canvas.load_uri (uri);
+						html_canvas.reload_bypass_cache ();			
 					}
+						
 				} else {
 					html_canvas.load_html_string (fd.get_html (), uri);
 				}
@@ -146,6 +165,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				html_box.set_visible (false);
 				glyph_canvas_area.set_visible (true);
 			}
+
 		});
 
 		// Hide this canvas when window is realized and flip canvas 
