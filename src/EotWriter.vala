@@ -19,7 +19,7 @@ using Math;
 
 namespace Supplement {
 
-class EotWriter {
+class EotWriter : GLib.Object {
 	
 	string ttf_file_name;
 	string eot_file_name;

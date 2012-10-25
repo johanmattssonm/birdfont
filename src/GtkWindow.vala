@@ -92,13 +92,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				if (fd.get_html () == "") {
 					
 					if (fd.get_name () == "Preview") {
-						// hack: force webkit to ignore cache in preview
-						//ExportTool.export_all ();
-
-						html_canvas.reload_bypass_cache ();
-						html_canvas.load_html_string ("<html></html>", "file:///");	
-						html_canvas.reload_bypass_cache ();
-						
+						// hack: force webkit to ignore cache in preview					
 						html_box.set_visible (false);
 						glyph_canvas_area.set_visible (true);
 												
@@ -116,24 +110,28 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 							File f_eot = font.get_folder ().get_child (@"$(font.get_name ()).eot");
 							File f_svg = font.get_folder ().get_child (@"$(font.get_name ()).svg");
 
-							if (f_ttf.query_exists ())
+							if (f_ttf.query_exists ()) {
 								f_ttf.delete ();
+							}
 								
-							if (f_eot.query_exists ())
+							if (f_eot.query_exists ()) {
 								f_eot.delete ();
-								
-							if (f_svg.query_exists ())
+							}
+							
+							if (f_svg.query_exists ()) {
 								f_svg.delete ();
-
-							ExportTool.export_ttf_font ();
+							}
+							
+							ExportTool.export_ttf_font ();							
 							ExportTool.export_svg_font ();
 							
 							File r_ttf = preview_directory.get_child (@"$(font.get_name ())$rid.ttf");
-							//File r_eot = preview_directory.get_child (@"$(font.get_name ())$rid.eot");
 							File r_svg = preview_directory.get_child (@"$(font.get_name ())$rid.svg");
 							
-							f_ttf.copy (r_ttf, FileCopyFlags.NONE);
-							//f_eot.copy (r_eot, FileCopyFlags.NONE);
+							if (Supplement.win32) {
+								f_ttf.copy (r_ttf, FileCopyFlags.NONE);
+							}
+							
 							f_svg.copy (r_svg, FileCopyFlags.NONE);
 
 							while ((line = dis.read_line (null)) != null) {

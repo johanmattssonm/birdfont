@@ -364,9 +364,6 @@ os.put_string (
 			async = false;
 		}
 
-		// the font be created before html is loaded into webkit, see the hack in GtkWindow
-		async = false;
-
 		try {
 			// create a copy of current font and use it in a separate 
 			// export thread
@@ -448,11 +445,10 @@ os.put_string (
 		return true;
 	}
 
-
 	public class ExportThread : GLib.Object {
-		private string ffi;
-		private string ttf;
-		private string eot;
+		private static string ffi;
+		private static string ttf;
+		private static string eot;
 
 		public ExportThread (string ffi, string ttf, string eot) {
 			this.ffi = ffi.dup ();
@@ -501,7 +497,7 @@ os.put_string (
 		}
 		
 		void write_eof () {
-/*			EotWriter fo;
+			EotWriter fo;
 
 			return_if_fail (!is_null (this));
 			return_if_fail (!is_null (ttf));
@@ -510,14 +506,15 @@ os.put_string (
 			fo = new EotWriter (ttf, eot);
 
 			return_if_fail (!is_null (fo));
-			
+
 			try {
 				fo.write ();
 			} catch (Error e) {
 				warning ("EOF convertion falied.");
 				critical (@"$(e.message)");
-			}*/
+			}
 		}
+
 	}
 	
 	private static void status (string s) {
