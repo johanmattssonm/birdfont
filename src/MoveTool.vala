@@ -15,17 +15,27 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Math;
+using Cairo;
+
 namespace Supplement {
 
 class MoveTool : Tool {
 
 	bool move_path = false;
-
 	double last_x = 0;
 	double last_y = 0;
+
+	bool resize_path = false;
+	Path? resized_path = null;
+	double last_resize_y;
+	
+	ImageSurface? resize_handle;
 	
 	public MoveTool (string n) {
 		base (n, "Move paths", 'm', CTRL);
+		
+		resize_handle = Icons.get_icon ("resize_handle.png");
 	
 		select_action.connect((self) => {
 		});
@@ -36,9 +46,18 @@ class MoveTool : Tool {
 		});
 				
 		press_action.connect((self, b, x, y) => {
+			double handle_x, handle_y;
 			Glyph glyph = MainWindow.get_current_glyph ();
-			
+						
 			glyph.store_undo_state ();
+			
+			foreach (Path p in glyph.active_paths) {
+				is_over_resize_handle (p, x, y);
+			}
+			
+			if (resized_path != null) {
+				is_over_resize_handle ((!) resized_path, x, y);
+			}
 			
 			if (!glyph.is_over_selected_path (x, y)) {
 				if (!glyph.select_path (x, y)) {
@@ -54,7 +73,9 @@ class MoveTool : Tool {
 
 		release_action.connect((self, b, x, y) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
+			
 			move_path = false;
+			resize_path = false;
 				
 			if (GridTool.is_visible ()) {
 				foreach (Path p in glyph.active_paths) {
@@ -64,21 +85,35 @@ class MoveTool : Tool {
 		});
 		
 		move_action.connect ((self, x, y)	 => {
+			Glyph glyph = MainWindow.get_current_glyph ();
+			double dx = last_x - x;
+			double dy = last_y - y; 
+			double p = PenTool.precision;
+			Path rp;
+			double h, ratio;
+			
 			if (move_path) {
-				Glyph glyph = MainWindow.get_current_glyph ();
-				double dx = last_x - x;
-				double dy = last_y - y; 
-				double p = PenTool.precision;
-
 				foreach (Path path in glyph.active_paths) {
 					path.move (glyph.ivz () * -dx * p, glyph.ivz () * dy * p);
 				}
-				
-				MainWindow.get_glyph_canvas ().redraw ();
-				
-				last_x = x;
-				last_y = y;
 			}
+			
+			if (resize_path) {
+				return_if_fail (!is_null (resized_path));
+				rp = (!) resized_path;
+				h = rp.xmax - rp.xmin;
+				
+				ratio = 1;
+				ratio -= p * (Glyph.path_coordinate_y (last_resize_y) - Glyph.path_coordinate_y (y)) / h;
+				
+				rp.resize (ratio);
+				last_resize_y = y;
+			}
+
+			last_x = x;
+			last_y = y;
+
+			MainWindow.get_glyph_canvas ().redraw ();
 		});
 		
 		key_press_action.connect ((self, keyval) => {
@@ -91,6 +126,32 @@ class MoveTool : Tool {
 				}
 			}
 		});
+		
+		draw_action.connect ((self, cr, glyph) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			ImageSurface img = (!) resize_handle;
+		
+			foreach (Path p in g.active_paths) {
+				cr.set_source_surface (img, Glyph.reverse_path_coordinate_x (p.xmax) - 10, Glyph.reverse_path_coordinate_y (p.ymax) - 10);
+				cr.paint ();	
+			}
+			
+			if (resized_path != null) {
+				cr.set_source_surface (img, Glyph.reverse_path_coordinate_x (((!) resized_path).xmax) - 10, Glyph.reverse_path_coordinate_y (((!)resized_path).ymax) - 10);
+				cr.paint ();
+			}
+		});
+	}
+
+	void is_over_resize_handle (Path p, double x, double y) {
+		double handle_x = Math.fabs (Glyph.reverse_path_coordinate_x (p.xmax)); 
+		double handle_y = Math.fabs (Glyph.reverse_path_coordinate_y (p.ymax));
+	
+		if (fabs (handle_x - x + 10) < 20 && fabs (handle_y - y + 10) < 20) {
+			resize_path = true;
+			resized_path = p;
+			last_resize_y = y;
+		}		
 	}
 
 	void tie_path_to_grid (Path p, double x, double y) {

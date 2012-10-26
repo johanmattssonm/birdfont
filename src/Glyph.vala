@@ -1369,11 +1369,6 @@ public class Glyph : FontDisplay {
 			draw_help_lines (cmp);
 			cmp.restore ();
 		}
-				
-		cmp.save (); 
-		tool = MainWindow.get_toolbox ().get_current_tool ();
-		tool.draw_action (tool, cmp, this);
-		cmp.restore ();
 
 		if (zoom_area_is_visible) {
 			cmp.save ();
@@ -1388,7 +1383,12 @@ public class Glyph : FontDisplay {
 			draw_path (cmp);
 			cmp.restore ();
 		}
-		
+
+		cmp.save (); 
+		tool = MainWindow.get_toolbox ().get_current_tool ();
+		tool.draw_action (tool, cmp, this);
+		cmp.restore ();
+				
 		cr.save ();
 		cr.set_source_surface (ps, 0, 0);
 		cr.paint ();

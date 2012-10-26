@@ -591,48 +591,32 @@ public class Path {
 	}
 	
 	public void resize (double ratio) {
-		double w, h, cx, cy;
-		
-		update_region_boundries ();
-		
-		w = Math.fabs(xmax - xmin);
-		h = Math.fabs(ymax - ymin);
-		cx = w / 2 + xmin; 
-		cy = h / 2 + ymin;
-		
-		if (ratio == 1) return;
-		
-		if (ratio < 1) {
-			ratio = 1 - ratio;
-			
-			foreach (var p in points) {
-				if (p.x < cx)
-					p.x += (cx - p.x) * ratio;
-				else
-					p.x -= (p.x - cx) * ratio;
+		double h = ymax - ymin;
+		double px, py, nx, ny;
 
-				if (p.y > cy)
-					p.y += (cy - p.y) * ratio;
-				else
-					p.y -= (p.y - cy) * ratio;				
-			}
-				
-		} else {
-			ratio = ratio - 1;
-			
-			foreach (var p in points) {
-				if (p.x < cx)
-					p.x -= (cx - p.x) * ratio;
-				else
-					p.x += (p.x - cx) * ratio;
-
-				if (p.y > cy)
-					p.y -= (cy - p.y) * ratio;
-				else
-					p.y += (p.y - cy) * ratio;				
-			}
-			
+		px = xmin;
+		py = ymin;
+		
+		if (ratio < 1 && h < 2) {
+			return;
 		}
+		
+		foreach (var p in points) {
+			p.x *= ratio;
+			p.y *= ratio;
+			p.right_handle.length *= ratio;
+			p.left_handle.length *= ratio;
+		}
+		
+		xmin *= ratio;	
+		xmax *= ratio;
+		ymin *= ratio;
+		ymax *= ratio;
+
+		nx = xmin;
+		ny = ymin;
+		
+		move (px - nx, py - ny);
 	}
 	
 	public Path copy () {
