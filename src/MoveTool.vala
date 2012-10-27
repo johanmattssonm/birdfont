@@ -46,17 +46,25 @@ class MoveTool : Tool {
 		});
 				
 		press_action.connect((self, b, x, y) => {
-			double handle_x, handle_y;
 			Glyph glyph = MainWindow.get_current_glyph ();
 						
 			glyph.store_undo_state ();
 			
 			foreach (Path p in glyph.active_paths) {
-				is_over_resize_handle (p, x, y);
+				if (is_over_resize_handle (p, x, y)) {
+					resize_path = true;
+					resized_path = p;
+					last_resize_y = y;
+					return;
+				}
 			}
 			
 			if (resized_path != null) {
-				is_over_resize_handle ((!) resized_path, x, y);
+				if (is_over_resize_handle ((!) resized_path, x, y)) {
+					resize_path = true;
+					last_resize_y = y;
+					return;					
+				}
 			}
 			
 			if (!glyph.is_over_selected_path (x, y)) {
@@ -104,7 +112,7 @@ class MoveTool : Tool {
 				h = rp.xmax - rp.xmin;
 				
 				ratio = 1;
-				ratio -= p * (Glyph.path_coordinate_y (last_resize_y) - Glyph.path_coordinate_y (y)) / h;
+				ratio -= 0.7 * p * (Glyph.path_coordinate_y (last_resize_y) - Glyph.path_coordinate_y (y)) / h;
 				
 				rp.resize (ratio);
 				last_resize_y = y;
@@ -143,15 +151,10 @@ class MoveTool : Tool {
 		});
 	}
 
-	void is_over_resize_handle (Path p, double x, double y) {
+	bool is_over_resize_handle (Path p, double x, double y) {
 		double handle_x = Math.fabs (Glyph.reverse_path_coordinate_x (p.xmax)); 
 		double handle_y = Math.fabs (Glyph.reverse_path_coordinate_y (p.ymax));
-	
-		if (fabs (handle_x - x + 10) < 20 && fabs (handle_y - y + 10) < 20) {
-			resize_path = true;
-			resized_path = p;
-			last_resize_y = y;
-		}		
+		return fabs (handle_x - x + 10) < 20 && fabs (handle_y - y + 10) < 20;
 	}
 
 	void tie_path_to_grid (Path p, double x, double y) {
