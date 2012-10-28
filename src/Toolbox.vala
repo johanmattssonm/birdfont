@@ -47,8 +47,12 @@ public class Toolbox : GLib.Object  {
 	public int allocation_width = 0;
 	public int allocation_height = 0;
 	
+	ImageSurface? toolbox_background = null;
+	
 	public Toolbox (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
+
+		toolbox_background = Icons.get_icon ("toolbox_background.png");
 
 		toolbox_expander = new ToolboxExpander ();
 		
@@ -818,14 +822,19 @@ public class Toolbox : GLib.Object  {
 		
 		cr.rectangle(0, 0, w, h);
 		cr.set_line_width(0);
-		cr.set_source_rgba(124/255.0, 124/255.0, 124/255.0, 1);
+		cr.set_source_rgba(255/255.0, 255/255.0, 255/255.0, 1);
 		cr.fill();
+
+		for (int i = 0; i < w; i++) {
+			cr.set_source_surface ((!) toolbox_background, i, 0);
+			cr.paint ();
+		}
 
 		cr.rectangle(0, 0, 1, h);
 		cr.set_line_width(0);
 		cr.set_source_rgba(0/255.0, 0/255.0, 0/255.0, 1);
 		cr.fill();
-
+		
 		draw_expanders (w, h, cr);
 		
 		cr.restore ();
