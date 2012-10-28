@@ -83,10 +83,7 @@ public class Toolbox : GLib.Object  {
 		draw_tools.add_tool (cut_tool);	
 
 		Tool move_tool = new MoveTool ("move");
-		draw_tools.add_tool (move_tool);	
-
-		Tool resize_tool = new ResizeTool ("resize");
-		// Fixa: draw_tools.add_tool (resize_tool);	
+		draw_tools.add_tool (move_tool);
 
 		Tool shrink_tool = new ShrinkTool ("shrink");
 		// Fixa: draw_tools.add_tool (shrink_tool);	
