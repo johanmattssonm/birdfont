@@ -212,7 +212,7 @@ public class SpinButton : Tool {
 	
 		cr.save ();
 	
-		cr.set_source_rgba (0.8, 0.8, 0.8, 1);
+		cr.set_source_rgba (99/255.0, 99/255.0, 99/255.0, 1);
 		
 		cr.set_font_size (10);
 		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);

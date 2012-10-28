@@ -29,18 +29,21 @@ public class Tool : GLib.Object {
 	protected bool active = false;
 	protected bool selected = false;
 	
-	double r_default_selected = 50/255.0;
-	double g_default_selected = 50/255.0;
-	double b_default_selected = 50/255.0;
+	double r_default_selected = 131/255.0;
+	double g_default_selected = 179/255.0;
+	double b_default_selected = 231/255.0;
+	double a_default_selected = 1;
 	
-	double r_default = 82/255.0;
-	double g_default = 82/255.0;
-	double b_default = 82/255.0;
+	double r_default = 185/255.0;
+	double g_default = 207/255.0;
+	double b_default = 231/255.0;
+	double a_default = 1;
 	
 	double r;
 	double g;
 	double b;
-
+	double a;
+	
 	ImageSurface? icon = null;
 		
 	public signal void select_action (Tool selected);
@@ -76,9 +79,21 @@ public class Tool : GLib.Object {
 	public uint modifier_flag;
 	public unichar key;
 	
+	private static ImageSurface? selected_button = null;
+	private static ImageSurface? active_selected_button = null;
+	private static ImageSurface? deselected_button = null;
+	private static ImageSurface? active_deselected_button = null;
+	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		this.tip = tip;
+		
+		if (selected_button == null) {
+			selected_button = Icons.get_icon ("tool_button_selected.png");
+			active_selected_button = Icons.get_icon ("tool_button_selected_active.png");
+			deselected_button = Icons.get_icon ("tool_button_deselected.png");
+			active_deselected_button = Icons.get_icon ("tool_button_deselected_active.png");
+		}
 		
 		if (name != null) {
 			set_icon ((!) name);
@@ -98,6 +113,7 @@ public class Tool : GLib.Object {
 		r = r_default;
 		g = g_default;
 		b = b_default;
+		a = a_default;
 	}
 	
 	public void set_icon (string name) {
@@ -159,32 +175,36 @@ public class Tool : GLib.Object {
 		return true;
 	}
 	
-	public bool set_active (bool a) {
-		bool ret = (active != a);
+	public bool set_active (bool ac) {
+		bool ret = (active != ac);
 
 		if (selected) {
-			if (a) {
-				r = r_default_selected * 0.9;
-				g = r_default_selected * 0.9;
-				b = r_default_selected * 0.9;
+			if (ac) {
+				r = r_default_selected;
+				g = g_default_selected;
+				b = b_default_selected;
+				a = a_default_selected * 0.5;
 			} else {
 				r = r_default_selected;
 				g = g_default_selected;
 				b = b_default_selected;
+				a = a_default_selected;
 			}			
 		} else {
-			if (a) {
-				r = r_default * 0.9;
-				g = r_default * 0.9;
-				b = r_default * 0.9;
+			if (ac) {
+				r = r_default;
+				g = g_default;
+				b = b_default;
+				a = a_default * 0.2;
 			} else {
 				r = r_default;
 				g = g_default;
 				b = b_default;
+				a = a_default;
 			}
 		}
 
-		active = a;
+		active = ac;
 		return ret;
 	}
 		
@@ -192,18 +212,34 @@ public class Tool : GLib.Object {
 		double xt = x + 3 + w;
 		double yt = y + h + 17;
 
+		double bgx, bgy;
+		
+		bgx = xt - 6;
+		bgy = yt - 7;
+
 		cr.save ();
 
-		// Buttons
-		if (show_bg || icon == null || active || selected) {
-			cr.set_line_join (LineJoin.ROUND);
-			cr.set_line_width (12);
-			cr.set_source_rgba (r, g, b, 1);
-			cr.rectangle (xt, yt, 18, 15);
-			cr.fill_preserve ();
-			cr.stroke ();
+		// Button in four states
+		if (selected && selected_button != null) {
+			cr.set_source_surface ((!) selected_button, bgx, bgy);
+			cr.paint ();
 		}
-		
+
+		if (selected && active && active_selected_button != null) {
+			cr.set_source_surface ((!) active_selected_button, bgx, bgy);
+			cr.paint ();
+		}
+
+		if (!selected && deselected_button != null) {
+			cr.set_source_surface ((!) deselected_button, bgx, bgy);
+			cr.paint ();
+		}
+
+		if (!selected && active && active_deselected_button != null) {
+			cr.set_source_surface ((!) active_deselected_button, bgx, bgy);
+			cr.paint ();
+		}
+				
 		if (icon != null) {
 			ImageSurface i = (!) icon;
 			
