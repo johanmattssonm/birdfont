@@ -15,7 +15,8 @@ def options(opt):
         
 def configure(conf):
 	conf.load('compiler_c vala')
-
+	conf.check_vala(min_version=(0,17,3))
+	
 	conf.check_cfg(package='cairo', uselib_store='CAIRO', mandatory=1, args='--cflags --libs')
 	conf.check_cfg(package='gdk-pixbuf-2.0',  uselib_store='PIXBUF', mandatory=1, args='--cflags --libs')
 	conf.check_cfg(package='gio-2.0',  uselib_store='GIO', atleast_version='2.16.0', mandatory=1, args='--cflags --libs')
