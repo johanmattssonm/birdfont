@@ -39,17 +39,13 @@ public class MainWindow {
 		menu_tab = new MenuTab ();
 		tool_tip = new TooltipArea ();
 		over_view = new OverView();
+
+		print (@"\n\nPREFIX: $PREFIX\n\n");
 	}
 
 	public void set_native (NativeWindow nw) {
 		native_window = nw;
 	}
-
-/* // FIXA:
-	public static WebView get_webview () {
-		return singleton.html_canvas;
-	}
-*/
 
 	internal static NativeWindow get_native () {
 		return native_window;

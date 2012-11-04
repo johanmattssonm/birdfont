@@ -36,7 +36,7 @@ def pre (bld):
 	bld.env.VERSION = VERSION
 	
 	if not bld.options.noconfig:
-		write_config ()
+		write_config (bld)
 
 def post (bld):
 	bld.exec_command ('${LDCONFIG}')
@@ -59,7 +59,7 @@ def build(bld):
 	if bld.options.win32:
 		bld.recurse('win32')
 		
-def write_config ():
+def write_config (cfg):
 	print ("Writing Config.vala")	
 
 	f = open('./src/Config.vala', 'w+')
@@ -79,7 +79,7 @@ def write_config ():
 	f.write(";\n")
 
 	f.write("	internal static const string PREFIX = \"")
-	f.write("${PREFIX}")
+	f.write(cfg.options.prefix)
 	f.write("\"");
 	f.write(";\n")
 			

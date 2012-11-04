@@ -344,7 +344,7 @@ os.put_string (
 
 		f = File.new_for_path (@"$PREFIX/birdfont-export");
 		if (f.query_exists ()) {
-			return @"$PREFIX/birdfont-export";
+			return @"$PREFIX/bin/birdfont-export";
 		}
 
 		warning ("Can't fint birdfont-export.");
