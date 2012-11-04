@@ -218,7 +218,10 @@ public abstract class FontDisplay : GLib.Object {
 
 		f = get_file ("/usr/share/birdfont/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
-		
+
+		f = get_file (@"$PREFIX/share/birdfont/" + d + "/", name);
+		if (likely (f.query_exists ())) return f;
+				
 		warning (@"Did not find file $name in $d");
 			
 		return f;		

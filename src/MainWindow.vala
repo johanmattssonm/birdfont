@@ -39,8 +39,6 @@ public class MainWindow {
 		menu_tab = new MenuTab ();
 		tool_tip = new TooltipArea ();
 		over_view = new OverView();
-
-		print (@"\n\nPREFIX: $PREFIX\n\n");
 	}
 
 	public void set_native (NativeWindow nw) {
@@ -65,8 +63,8 @@ public class MainWindow {
 	
 	internal static Glyph get_current_glyph () {
 		if (unlikely (is_null (Supplement.current_glyph))) {
-				warning ("No default glyph have been set yet.\n");
-				return new Glyph ("no_glyph_created");
+			warning ("No default glyph have been set yet.\n");
+			return new Glyph ("no_glyph_created");
 		}
 		
 		return Supplement.current_glyph;
