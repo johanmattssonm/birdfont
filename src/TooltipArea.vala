@@ -111,7 +111,7 @@ public class TooltipArea : GLib.Object {
 		cr.restore ();
 		
 		cr.save ();
-		cr.set_font_size (14);				
+		cr.set_font_size (14);
 		cr.move_to (5, 15);
 		cr.show_text (tool_tip);
 		cr.restore ();
