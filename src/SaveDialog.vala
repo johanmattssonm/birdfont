@@ -74,15 +74,15 @@ public class SaveDialog : FontDisplay {
 <body>
 	
 	<div style="width:300px; margin: 50px auto 0 auto;">
-		<div class="heading"><h2>Save?</h2></div>
+		<div class="heading"><h2>""" + _("Save?") + """</h2></div>
 		
 		<p>""" + fn + """</p>
 		
 		<form>
-			<input class="button" type="button" value="Save"    onclick="call ('save_dialog:save');"/>
-			<input class="button" type="button" value="Save as" onclick="call ('save_dialog:save_as');"/>
-			<input class="button" type="button" value="Discard" onclick="call ('save_dialog:discard');"/>
-			<input class="button" type="button" value="Cancel"  onclick="call ('save_dialog:cancel');"/>
+			<input class="button" type="button" value=""" + "\"" + _("Save") + "\"" + """    onclick="call ('save_dialog:save');"/>
+			<input class="button" type="button" value=""" + "\"" + _("Save as") + "\"" + """ onclick="call ('save_dialog:save_as');"/>
+			<input class="button" type="button" value=""" + "\"" + _("Discard") + "\"" + """ onclick="call ('save_dialog:discard');"/>
+			<input class="button" type="button" value=""" + "\"" + _("Cancel") + "\"" + """  onclick="call ('save_dialog:cancel');"/>
 			<br />
 		</form>
 	</div>

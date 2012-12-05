@@ -30,6 +30,8 @@ def configure(conf):
 
 	conf.find_program('ldconfig', var='LDCONFIG', mandatory=False)
 
+	conf.define('GETTEXT_PACKAGE', 'birdfont')
+
 	if conf.options.win32 :
 		conf.recurse('win32')
 

@@ -17,7 +17,7 @@
 
 using Birdfont;
 using Supplement;
-	
+
 public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;

@@ -91,14 +91,14 @@ public class Toolbox : GLib.Object  {
 		// Draw tool modifiers
 		// DELETE tools:
 		
-		Tool new_point = new Tool ("new_point", "Right click to add new point, left click to move points and double click to ad new point on path", 'a');
+		Tool new_point = new Tool ("new_point", _("Right click to add new point, left click to move points and double click to ad new point on path"), 'a');
 		new_point.select_action.connect ((self) => {
 				select_draw_tool ();
 			});
 		
 		// draw_tool_modifiers.add_tool (new_point);
 
-		Tool insert_point_on_path = new Tool ("insert_point_on_path", "Add new point on path", 'n');
+		Tool insert_point_on_path = new Tool ("insert_point_on_path", _("Add new point on path"), 'n');
 		insert_point_on_path.select_action.connect ((self) => {
 			select_draw_tool ();
 			pen_tool.begin_from_new_point_on_path ();
@@ -106,7 +106,7 @@ public class Toolbox : GLib.Object  {
 		// draw_tool_modifiers.add_tool (insert_point_on_path);
 		
 		if (Supplement.experimental) {
-			Tool new_point_on_path = new Tool ("new_point_on_path", "Begin new path from point on path", 'n');
+			Tool new_point_on_path = new Tool ("new_point_on_path", _("Begin new path from point on path"), 'n');
 			new_point_on_path.select_action.connect ((self) => {
 					select_draw_tool ();
 					pen_tool.begin_from_new_point_on_path ();
@@ -114,7 +114,7 @@ public class Toolbox : GLib.Object  {
 			draw_tool_modifiers.add_tool (new_point_on_path);	
 		}
 
-		Tool tie_editpoint_tool = new Tool ("tie_point", "Tie curve handles for selected edit point", 'w');
+		Tool tie_editpoint_tool = new Tool ("tie_point", _("Tie curve handles for selected edit point"), 'w');
 		tie_editpoint_tool.select_action.connect ((self) => {
 			bool tie;
 			
@@ -134,14 +134,14 @@ public class Toolbox : GLib.Object  {
 		});
 		draw_tool_modifiers.add_tool (tie_editpoint_tool);	
 
-		Tool tie_x_or_y = new Tool ("tie_x_or_y", "Tie coordinates to previous edit point", 'q');
+		Tool tie_x_or_y = new Tool ("tie_x_or_y", _("Tie coordinates to previous edit point"), 'q');
 		tie_x_or_y.select_action.connect((self) => {
 			select_draw_tool ();
 			pen_tool.tie_x_or_y_coordinates = !pen_tool.tie_x_or_y_coordinates;
 		});
 		// Fixa: draw_tool_modifiers.add_tool (tie_x_or_y);	
 
-		Tool erase_tool = new Tool ("erase_tool", "Delete edit points");
+		Tool erase_tool = new Tool ("erase_tool", _("Delete edit points"));
 		erase_tool.select_action.connect((self) => {
 			select_draw_tool ();
 		});
@@ -150,7 +150,7 @@ public class Toolbox : GLib.Object  {
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
 		
-		precision = new SpinButton ("precision", "Set precision");
+		precision = new SpinButton ("precision", _("Set precision"));
 		
 		if (precision_value != "") {
 			precision.set_value (precision_value);
@@ -178,7 +178,7 @@ public class Toolbox : GLib.Object  {
 		Tool union_paths_tool = new MergeTool ("union_paths");
 		path_tool_modifiers.add_tool (union_paths_tool);
 		
-		Tool reverse_path_tool = new Tool ("reverse_path", "Create counter from outline", 'r');
+		Tool reverse_path_tool = new Tool ("reverse_path", _("Create counter from outline"), 'r');
 		reverse_path_tool.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			
@@ -190,7 +190,7 @@ public class Toolbox : GLib.Object  {
 		});
 		path_tool_modifiers.add_tool (reverse_path_tool);
 
-		Tool move_layer = new Tool ("move_layer", "Move to path to bottom layer", 'd');
+		Tool move_layer = new Tool ("move_layer", _("Move to path to bottom layer"), 'd');
 		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 
@@ -202,7 +202,7 @@ public class Toolbox : GLib.Object  {
 		path_tool_modifiers.add_tool (move_layer);
 		
 		// Character set tools
-		Tool full_unicode = new Tool ("utf_8", "Show full unicode characters set");
+		Tool full_unicode = new Tool ("utf_8", _("Show full unicode characters set"));
 		full_unicode.select_action.connect ((self) => {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);	
 				OverView o = MainWindow.get_overview ();
@@ -213,7 +213,7 @@ public class Toolbox : GLib.Object  {
 			});
 		characterset_tools.add_tool (full_unicode);
 
-		Tool custom_character_set = new Tool ("custom_character_set", "Show default characters set", 'r', CTRL);
+		Tool custom_character_set = new Tool ("custom_character_set", _("Show default characters set"), 'r', CTRL);
 		custom_character_set.select_action.connect ((self) => {
 			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
@@ -224,7 +224,7 @@ public class Toolbox : GLib.Object  {
 		});
 		characterset_tools.add_tool (custom_character_set);
 
-		Tool avalilable_characters = new Tool ("available_characters", "Show characters in font", 'd', CTRL);
+		Tool avalilable_characters = new Tool ("available_characters", _("Show characters in font"), 'd', CTRL);
 		avalilable_characters.select_action.connect ((self) => {
 			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
@@ -233,7 +233,7 @@ public class Toolbox : GLib.Object  {
 		});
 		characterset_tools.add_tool (avalilable_characters);
 
-		Tool delete_glyph = new Tool ("delete_selected_glyph", "Delete selected glyph");
+		Tool delete_glyph = new Tool ("delete_selected_glyph", _("Delete selected glyph"));
 		delete_glyph.select_action.connect ((self) => {
 			OverView o = MainWindow.get_overview ();
 			
@@ -299,7 +299,7 @@ public class Toolbox : GLib.Object  {
 
 		guideline_tools.add_tool (help_lines);
 
-		Tool xheight_help_lines = new Tool ("show_xheight_helplines", "Show help lines for x-height and baseline", 'x');
+		Tool xheight_help_lines = new Tool ("show_xheight_helplines", _("Show help lines for x-height and baseline"), 'x');
 		xheight_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_xheight_lines_visible ();
@@ -314,7 +314,7 @@ public class Toolbox : GLib.Object  {
 		});
 		guideline_tools.add_tool (xheight_help_lines);
 
-		Tool background_help_lines = new Tool ("background_help_lines", "Show help lines at top and bottom margin", 't');
+		Tool background_help_lines = new Tool ("background_help_lines", _("Show help lines at top and bottom margin"), 't');
 		background_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_margin_lines_visible ();
@@ -332,21 +332,21 @@ public class Toolbox : GLib.Object  {
 		guideline_tools.add_tool (new_grid);
 
 		// Zoom tools 
-		Tool zoom_in = new Tool ("zoom_in", "zoom in", '+', CTRL);
+		Tool zoom_in = new Tool ("zoom_in", _("Zoom in"), '+', CTRL);
 		zoom_in.select_action.connect ((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_in ();
 		});
 		view_tools.add_tool (zoom_in);
 
-		Tool zoom_out = new Tool ("zoom_out", "Zoom out", '-', CTRL);
+		Tool zoom_out = new Tool ("zoom_out", _("Zoom out"), '-', CTRL);
 		zoom_out.select_action.connect ((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_out ();
 		});
 		view_tools.add_tool (zoom_out);
 
-		Tool reset_zoom = new Tool ("zoom_1_1", "Zoom to scale 1:1", '0', CTRL);
+		Tool reset_zoom = new Tool ("zoom_1_1", _("Zoom to scale 1:1"), '0', CTRL);
 		reset_zoom.select_action.connect ((self) => {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().reset_zoom ();
@@ -354,21 +354,21 @@ public class Toolbox : GLib.Object  {
 			});
 		view_tools.add_tool (reset_zoom);
 
-		Tool full_glyph = new Tool ("full_glyph", "Show full glyph", 'f');
+		Tool full_glyph = new Tool ("full_glyph", _("Show full glyph"), 'f');
 		full_glyph.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			zoom_tool.zoom_full_glyph ();
 		});
 		view_tools.add_tool (full_glyph);
 
-		Tool zoom_boundries = new Tool ("zoom_boundries", "Zoom in at region boundries", 'v');
+		Tool zoom_boundries = new Tool ("zoom_boundries", _("Zoom in at region boundries"), 'v');
 		zoom_boundries.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_max ();
 		});
 		view_tools.add_tool (zoom_boundries);
 
-		Tool zoom_bg = new Tool ("zoom_background_image", "Zoom in background image", 'b');
+		Tool zoom_bg = new Tool ("zoom_background_image", _("Zoom in background image"), 'b');
 		zoom_bg.select_action.connect((self) => {
 			if (MainWindow.get_current_glyph ().get_background_image () != null) {
 				zoom_tool.store_current_view ();					
@@ -381,20 +381,20 @@ public class Toolbox : GLib.Object  {
 		});
 		view_tools.add_tool (zoom_bg);
 
-		Tool zoom_prev = new Tool ("prev", "Previous view", 'j', CTRL);
+		Tool zoom_prev = new Tool ("prev", _("Previous view"), 'j', CTRL);
 		zoom_prev.select_action.connect((self) => {
 			zoom_tool.previous_view ();
 		});
 		view_tools.add_tool (zoom_prev);
 
-		Tool zoom_next = new Tool ("next", "Next view", 'l', CTRL);
+		Tool zoom_next = new Tool ("next", _("Next view"), 'l', CTRL);
 		zoom_next.select_action.connect((self) => {
 			zoom_tool.next_view ();
 		});
 		view_tools.add_tool (zoom_next);
 				
 		// background tools
-		background_scale = new SpinButton ("scale_background", "Set size for background image");
+		background_scale = new SpinButton ("scale_background", _("Set size for background image"));
 		background_scale.set_value_round (1);
 		
 		background_scale.new_value_action.connect((self) => {
@@ -424,7 +424,7 @@ public class Toolbox : GLib.Object  {
 		background_tools.add_tool (cut_background);
 		this.cut_background = cut_background;
 		
-		Tool show_bg = new Tool ("show_background", "Show/hide background image");
+		Tool show_bg = new Tool ("show_background", _("Show/hide background image"));
 		show_bg.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			g.set_background_visible (!g.get_background_visible ());
@@ -432,12 +432,12 @@ public class Toolbox : GLib.Object  {
 		});
 		background_tools.add_tool (show_bg);
 
-		Tool bg_selection = new Tool ("insert_background", "Insert new background image");
+		Tool bg_selection = new Tool ("insert_background", _("Insert new background image"));
 		bg_selection.select_action.connect((self) => {
 			Glyph? g = null;
 			FontDisplay fd = MainWindow.get_current_display ();
 			TooltipArea tp = MainWindow.get_tool_tip ();
-			tp.show_text ("Creating thumbnails");
+			tp.show_text (_("Creating thumbnails"));
 			
 			bg_selection.yield ();
 		
@@ -456,7 +456,7 @@ public class Toolbox : GLib.Object  {
 		bg_selection.set_show_background (true);
 		background_tools.add_tool (bg_selection);
 		
-		SpinButton background_contrast = new SpinButton ("background_contrast", "Set background contrast");
+		SpinButton background_contrast = new SpinButton ("background_contrast", _("Set background contrast"));
 		background_contrast.set_value_round (1);
 
 		background_contrast.new_value_action.connect ((self) => {
@@ -476,7 +476,7 @@ public class Toolbox : GLib.Object  {
 		
 		// Fixa: background_tools.add_tool (background_contrast);
 
-		SpinButton background_threshold = new SpinButton ("background_threshold", "Set threshold");
+		SpinButton background_threshold = new SpinButton ("background_threshold", _("Set threshold"));
 		background_threshold.set_value_round (1);
 
 		background_threshold.new_value_action.connect ((self) => {
@@ -667,7 +667,7 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public SpinButton add_new_grid () {
-		SpinButton grid_width = new SpinButton ("grid_width", "Set size for grid");
+		SpinButton grid_width = new SpinButton ("grid_width", _("Set size for grid"));
 		
 		grid_width.new_value_action.connect((self) => {
 			grid_width.select_action (grid_width);

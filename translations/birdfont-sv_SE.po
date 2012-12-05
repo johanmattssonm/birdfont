@@ -1,0 +1,224 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-12-05 16:30+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/Birdfont.vala:22
+msgid "Usage:"
+msgstr ""
+
+#: src/Birdfont.vala:25
+msgid "print this message\n"
+msgstr ""
+
+#: src/Birdfont.vala:26
+msgid "write files to this directory\n"
+msgstr ""
+
+#: src/Birdfont.vala:27
+msgid "write svg file\n"
+msgstr ""
+
+#: src/Birdfont.vala:28
+msgid "write ttf and eot files\n"
+msgstr ""
+
+#: src/Birdfont.vala:118
+msgid "Can't find output directory"
+msgstr ""
+
+#: src/Birdfont.vala:123 src/Birdfont.vala:128
+msgid "Writing"
+msgstr ""
+
+#: src/MenuTab.vala:113
+msgid "Create a new font"
+msgstr ""
+
+#: src/MenuTab.vala:114
+msgid "Open an existing ffi file"
+msgstr ""
+
+#: src/MenuTab.vala:115
+msgid "Save font"
+msgstr ""
+
+#: src/MenuTab.vala:116
+msgid "Save font with a different name"
+msgstr ""
+
+#: src/MenuTab.vala:117
+msgid "Show kerning context"
+msgstr ""
+
+#: src/MenuTab.vala:118
+msgid "Add a new size for grid"
+msgstr ""
+
+#: src/MenuTab.vala:119
+msgid "Remove current grid size"
+msgstr ""
+
+#: src/MenuTab.vala:136
+msgid "Export"
+msgstr ""
+
+#: src/MenuTab.vala:137
+msgid "Preview"
+msgstr ""
+
+#: src/MenuTab.vala:153
+msgid "Recent files"
+msgstr ""
+
+#: src/MenuTab.vala:266 src/SaveDialog.vala:82
+msgid "Save"
+msgstr "Spara"
+
+#: src/SaveDialog.vala:83
+msgid "Save as"
+msgstr "Spara som"
+
+#: src/SaveDialog.vala:84
+msgid "Discard"
+msgstr ""
+
+#: src/SaveDialog.vala:85
+msgid "Cancel"
+msgstr ""
+
+#: src/Toolbox.vala:94
+msgid ""
+"Right click to add new point, left click to move points and double click to "
+"ad new point on path"
+msgstr ""
+
+#: src/Toolbox.vala:101
+msgid "Add new point on path"
+msgstr ""
+
+#: src/Toolbox.vala:109
+msgid "Begin new path from point on path"
+msgstr ""
+
+#: src/Toolbox.vala:117
+msgid "Tie curve handles for selected edit point"
+msgstr ""
+
+#: src/Toolbox.vala:137
+msgid "Tie coordinates to previous edit point"
+msgstr ""
+
+#: src/Toolbox.vala:144
+msgid "Delete edit points"
+msgstr ""
+
+#: src/Toolbox.vala:153
+msgid "Set precision"
+msgstr ""
+
+#: src/Toolbox.vala:181
+msgid "Create counter from outline"
+msgstr ""
+
+#: src/Toolbox.vala:193
+msgid "Move to path to bottom layer"
+msgstr ""
+
+#: src/Toolbox.vala:205
+msgid "Show full unicode characters set"
+msgstr ""
+
+#: src/Toolbox.vala:216
+msgid "Show default characters set"
+msgstr ""
+
+#: src/Toolbox.vala:227
+msgid "Show characters in font"
+msgstr ""
+
+#: src/Toolbox.vala:236
+msgid "Delete selected glyph"
+msgstr ""
+
+#: src/Toolbox.vala:302
+msgid "Show help lines for x-height and baseline"
+msgstr ""
+
+#: src/Toolbox.vala:317
+msgid "Show help lines at top and bottom margin"
+msgstr ""
+
+#: src/Toolbox.vala:335
+msgid "Zoom in"
+msgstr ""
+
+#: src/Toolbox.vala:342
+msgid "Zoom out"
+msgstr ""
+
+#: src/Toolbox.vala:349
+msgid "Zoom to scale 1:1"
+msgstr ""
+
+#: src/Toolbox.vala:357
+msgid "Show full glyph"
+msgstr ""
+
+#: src/Toolbox.vala:364
+msgid "Zoom in at region boundries"
+msgstr ""
+
+#: src/Toolbox.vala:371
+msgid "Zoom in background image"
+msgstr ""
+
+#: src/Toolbox.vala:384
+msgid "Previous view"
+msgstr ""
+
+#: src/Toolbox.vala:390
+msgid "Next view"
+msgstr ""
+
+#: src/Toolbox.vala:397
+msgid "Set size for background image"
+msgstr ""
+
+#: src/Toolbox.vala:427
+msgid "Show/hide background image"
+msgstr ""
+
+#: src/Toolbox.vala:435
+msgid "Insert new background image"
+msgstr ""
+
+#: src/Toolbox.vala:440
+msgid "Creating thumbnails"
+msgstr ""
+
+#: src/Toolbox.vala:459
+msgid "Set background contrast"
+msgstr ""
+
+#: src/Toolbox.vala:479
+msgid "Set threshold"
+msgstr ""
+
+#: src/Toolbox.vala:670
+msgid "Set size for grid"
+msgstr ""

@@ -19,13 +19,13 @@ using Supplement;
 namespace Birdfont {
 
 static void print_export_help (string[] arg) {
-	stdout.printf ("Usage: ");
+	stdout.printf (_("Usage:"));
 	stdout.printf (arg[0]);
 	stdout.printf (" [OPTION ...] FILE\n");
-	stdout.printf ("-h, --help                      print this message\n");
-	stdout.printf ("-o, --output [DIRECTORY]        write files to this directory\n");
-	stdout.printf ("-s, --svg                       write svg file\n");
-	stdout.printf ("-t, --ttf                       write ttf and eot files\n");
+	stdout.printf ("-h, --help                      " + _("print this message\n"));
+	stdout.printf ("-o, --output [DIRECTORY]        " + _("write files to this directory\n"));
+	stdout.printf ("-s, --svg                       " + _("write svg file\n"));
+	stdout.printf ("-t, --ttf                       " + _("write ttf and eot files\n"));
 	stdout.printf ("\n");
 }
 
@@ -115,17 +115,17 @@ public static int run_export (string[] arg) {
 	directory = File.new_for_path (output_directory);
 	
 	if (!directory.query_exists ()) {
-		stderr.printf ("Can't find output directory $directory\n");
+		stderr.printf (_("Can't find output directory") + @"$((!)directory.get_path ())\n");
 		return 1;
 	}
 
 	if (!specific_formats || write_svg) {
-		print (@"Writing $(supplement.current_font.get_name ()).svg to $output_directory\n");
+		print (_("Writing") + @" $(supplement.current_font.get_name ()).svg to $output_directory\n");
 		ExportTool.export_svg_font_path (File.new_for_path (output_directory));
 	}
 
 	if (!specific_formats || write_ttf) {
-		print (@"Writing $(supplement.current_font.get_name ()).ttf to $output_directory\n");
+		print (_("Writing") + @" $(supplement.current_font.get_name ()).ttf to $output_directory\n");
 		ExportTool.export_ttf_font_path (File.new_for_path (output_directory), false);
 	}
 	

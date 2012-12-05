@@ -64,11 +64,12 @@ BIRDFONT = [
 ]
 
 PARAM = [
+	'-X -D\'GETTEXT_PACKAGE="birdfont"\' '
 	'--thread',
 	'--disable-warnings',
 	'--enable-experimental',
 	'--enable-experimental-non-null',
-	'--vapidir=./'
+	'--vapidir=./',
 ]
 
 def build (bld):
@@ -79,7 +80,7 @@ def build (bld):
 		packages      = 'libxml-2.0',
 		uselib        = 'CAIRO GLIB GIO PIXBUF XML',
 		source        = BIRDFONT,
-		name          = "libbirdfont"
+		name          = "libbirdfont",
 	)
 
 	bld (

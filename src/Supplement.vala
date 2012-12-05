@@ -18,6 +18,8 @@
 using Supplement;
 using Birdfont;
 
+const string GETTEXT_PACKAGE = "birdfont"; 
+
 namespace Supplement {
 
 public class Supplement {
@@ -40,6 +42,8 @@ public class Supplement {
 
 		stdout.printf ("birdfont version %s\n", VERSION);
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
+		
+		init_gettext ();		
 		
 		args = new Argument.command_line (arg);
 
@@ -95,6 +99,39 @@ public class Supplement {
 		}
 		
 		preferences.set_last_file (get_current_font ().get_path ());
+	}
+
+	static void init_gettext () {
+		File f;
+
+		Intl.setlocale (LocaleCategory.MESSAGES, "");
+		Intl.bind_textdomain_codeset (GETTEXT_PACKAGE, "utf-8");
+
+		f = File.new_for_path ("./locale");
+		if (f.query_exists ()) {
+			Intl.bindtextdomain (GETTEXT_PACKAGE, "./locale");
+			return;
+		}
+
+		f = File.new_for_path ("../locale");
+		if (f.query_exists ()) {
+			Intl.bindtextdomain (GETTEXT_PACKAGE, "../locale");
+			return;
+		}
+
+		f = File.new_for_path ("/usr/share/locale/sv/LC_MESSAGES/birdfont.mo");
+		if (f.query_exists ()) {
+			Intl.bindtextdomain (GETTEXT_PACKAGE, "/usr/local/share/locale");
+			return;
+		}		
+
+		f = File.new_for_path ("/usr/share/locale/sv/LC_MESSAGES/birdfont.mo");
+		if (f.query_exists ()) {
+			Intl.bindtextdomain (GETTEXT_PACKAGE, "/usr/share/locale");
+			return;
+		}
+		
+		warning ("translations not found");
 	}
 	
 	public static Font get_current_font () {

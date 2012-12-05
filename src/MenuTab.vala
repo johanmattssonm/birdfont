@@ -110,31 +110,31 @@ public class MenuTab : FontDisplay {
 <body>
 	<div class="inner_format_box">
 		<div class="heading"><h2>Menu</h2></div>
-		<div class="menu_item" onclick="call ('newfile:');" onmouseover="call ('help:(Ctrl+n) Create a new font');">New</div>
-		<div class="menu_item" onclick="call ('open:');" onmouseover="call ('help:(Ctrl+o) Open an existing ffi file');">Open</div>
-		<div class="menu_item" onclick="call ('save:');" onmouseover="call ('help:(Ctrl+s) Save font');">Save</div>
-		<div class="menu_item" onclick="call ('save_as:');" onmouseover="call ('help:Save font with a different name');">Save as</div>
-		<div class="menu_item" onclick="call ('kerning_context:');" onmouseover="call ('help:(Ctrl+k) Show kerning context');">Kerning context</div>
-		<div class="menu_item" onclick="call ('grid:add');" onmouseover="call ('help:Add a new size for grid');">Add grid</div>
-		<div class="menu_item" onclick="call ('grid:remove');" onmouseover="call ('help:Remove current grid size');">Remove grid</div>
+		<div class="menu_item" onclick="call ('newfile:');" onmouseover="call ('help:(Ctrl+n) """ + _("Create a new font") + """');">""" + _("New") + """</div>
+		<div class="menu_item" onclick="call ('open:');" onmouseover="call ('help:(Ctrl+o) """ + _("Open an existing ffi file") + """');">""" + _("Open") + """</div>
+		<div class="menu_item" onclick="call ('save:');" onmouseover="call ('help:(Ctrl+s) """ + _("Save font") + """');">""" + _("Save") + """</div>
+		<div class="menu_item" onclick="call ('save_as:');" onmouseover="call ('help:""" + _("Save font with a different name") + """');">""" + _("Save as") + """</div>
+		<div class="menu_item" onclick="call ('kerning_context:');" onmouseover="call ('help:(Ctrl+k) """ + _("Show kerning context") + """');">""" + _("Kerning context") + """</div>
+		<div class="menu_item" onclick="call ('grid:add');" onmouseover="call ('help:""" + _("Add a new size for grid") + """');">""" + _("Add grid") + """</div>
+		<div class="menu_item" onclick="call ('grid:remove');" onmouseover="call ('help:""" + _("Remove current grid size") + """');">""" + _("Remove grid") + """</div>
 	</div>
 	
 	<div class="inner_format_box">
-		<div class="heading"><h2>Edit</h2></div>
+		<div class="heading"><h2>""" + _("Edit") + """</h2></div>
 		
 		<div class="content">
 			<form>
 """);
 				
 c.append ("""
-				<h3>Glyph sequence</h3>
+				<h3>""" + _("Glyph sequence") + """</h3>
 				<input class="text" type="text" id="glyph_sequence" value=""" + "\"" + Preferences.get ("glyph_sequence") + "\"" + """ onchange="update_text_fields ();"/><br />
 
-				<h3>Name</h3>
+				<h3>""" + _("Name") + """</h3>
 				<input class="text" type="text" id="fontname" value=""" + "\"" + f.get_name () + "\"" + """ onchange="update_text_fields ();"/><br />
 				
-				<input class="button" type="button" value="Export" id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) Export SVG, TTF & EOF fonts');"/>
-				<input class="button" type="button" value="Preview" id="preview_button" onclick="call ('preview:fonts');" onmouseover="call ('help:(Ctrl+p) Export SVG font and view the result');"/><br />
+				<input class="button" type="button" value=""" + "\"" + _("Export") + "\"" + """ id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) """ + _("Export SVG, TTF & EOF fonts") + """');"/>
+				<input class="button" type="button" value=""" + "\"" + _("Preview") + "\"" + """ id="preview_button" onclick="call ('preview:fonts');" onmouseover="call ('help:(Ctrl+p) """ + _("Export SVG font and view the result") + """');"/><br />
 """);
 	
 c.append ("""
@@ -150,7 +150,7 @@ c.append ("""
 """);
 
 if (recent_fonts.length () > 0) {
-	c.append ("""<div class="heading"><h2>Recent files</h2></div>""");
+	c.append ("""<div class="heading"><h2>""" + _("Recent files") + """</h2></div>""");
 	c.append ("\n");
 }
 
@@ -263,7 +263,7 @@ c.append ("""
 		bool saved = false;
 		Font font = Supplement.get_current_font ();
 		
-		fn = MainWindow.file_chooser ("Save");
+		fn = MainWindow.file_chooser (_("Save"));
 		
 		if (fn != null) {
 			f = (!) fn;
