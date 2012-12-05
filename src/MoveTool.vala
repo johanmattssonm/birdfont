@@ -33,7 +33,7 @@ class MoveTool : Tool {
 	ImageSurface? resize_handle;
 	
 	public MoveTool (string n) {
-		base (n, "Move paths", 'm', CTRL);
+		base (n, _("Move paths"), 'm', CTRL);
 		
 		resize_handle = Icons.get_icon ("resize_handle.png");
 	

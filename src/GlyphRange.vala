@@ -33,18 +33,17 @@ public class GlyphRange {
 	}
 	
 	public void use_default_range () {
-		add_range ('a', 'z');
+		string lower_case = _("a b c d e f g h i j k l m n o p q r s t u v w x y z");
+		string upper_case = _("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
 
-		add_single ('å');
-		add_single ('ä');
-		add_single ('ö');
+		foreach (string c in lower_case.split (" ")) {
+			add_single (c.get_char ());
+		}
 
-		add_range ('A', 'Z');
-
-		add_single ('Å');
-		add_single ('Ä');
-		add_single ('Ö');
-		
+		foreach (string c in upper_case.split (" ")) {
+			add_single (c.get_char ());
+		}
+				
 		add_range ('0', '9');
 		
 		add_single (' '); // TODO: add all spaces here.

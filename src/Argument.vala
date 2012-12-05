@@ -222,16 +222,16 @@ public class Argument : GLib.Object {
 	public void print_help () 
 		requires (args.length () > 0)
 	{
-		stdout.printf ("Usage: ");
+		stdout.printf (_("Usage") + ": ");
 		stdout.printf (args.nth (0).data);
 		stdout.printf (" [FILE] [OPTION ...]\n");
 
-		print_padded ("-c, --show-coordinates", "show coordinate in glyph view");
-		print_padded ("-e, --exit", "exit if a testcase failes");
-		print_padded ("-f, --fatal-warning", "treat warnings as fatal");
-		print_padded ("-h, --help", "show this message");
-		print_padded ("-s, --slow", "sleep between each command in test suite");
-		print_padded ("-t, --test [TEST]", "run test case");
+		print_padded ("-c, --show-coordinates", _("show coordinate in glyph view"));
+		print_padded ("-e, --exit", _("exit if a testcase failes"));
+		print_padded ("-f, --fatal-warning", _("treat warnings as fatal"));
+		print_padded ("-h, --help", _("show this message"));
+		print_padded ("-s, --slow", _("sleep between each command in test suite"));
+		print_padded ("-t, --test [TEST]", _("run test case"));
 		
 		stdout.printf ("\n");
 	}

@@ -26,7 +26,7 @@ public class ExportTool : Tool {
 	private static bool stop_export_thread = false;
 
 	public ExportTool (string n) {
-		base (n, "Export glyph to svg file", 'e', CTRL);
+		base (n, _("Export glyph to svg file"), 'e', CTRL);
 	
 		select_action.connect((self) => {
 			export_svg_font ();
@@ -289,8 +289,8 @@ os.put_string (
 
 <div>
 	<h4 class="smaller">Alphabet</h4>
-	<p class="smaller">a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö</p>
-	<p class="smaller">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö</p>
+	<p class="smaller">""" + _("a b c d e f g h i j k l m n o p q r s t u v w x y z") + """</p>
+	<p class="smaller">""" + _("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z") + """</p>
 	<p class="smaller">0 1 2 3 4 5 6 7 8 9</p>
 </div>
 
@@ -347,7 +347,7 @@ os.put_string (
 			return @"$PREFIX/bin/birdfont-export";
 		}
 
-		warning ("Can't fint birdfont-export.");
+		warning ("Can't find birdfont-export.");
 		
 		return "birdfont-export";
 	}
@@ -510,7 +510,7 @@ os.put_string (
 			try {
 				fo.write ();
 			} catch (Error e) {
-				warning ("EOF convertion falied.");
+				warning ("EOF conversion falied.");
 				critical (@"$(e.message)");
 			}
 		}

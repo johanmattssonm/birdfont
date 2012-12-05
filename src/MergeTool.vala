@@ -20,7 +20,7 @@ namespace Supplement {
 class MergeTool : Tool {
 
 	public MergeTool (string n) {
-		base (n, "Merge paths");
+		base (n, _("Merge paths"));
 	
 		select_action.connect((self) => {
 			Glyph g = MainWindow.get_current_glyph ();

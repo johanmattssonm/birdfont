@@ -29,7 +29,7 @@ public class VersionList : DropMenu {
 		base ("version");
 		set_direction (MenuDirection.POP_UP);
 		
-		MenuAction ma = add_item ("New version");
+		MenuAction ma = add_item (_("New version"));
 		ma.action = (self) => {
 			return_if_fail (self.parent != null);
 			return_if_fail (glyphs.length () > 0);
@@ -83,7 +83,7 @@ public class VersionList : DropMenu {
 		versions++;
 		glyphs.append (new_version);
 
-		ma = add_item (@"Version $(versions - 1)");
+		ma = add_item (_("Version") + @" $(versions - 1)");
 		ma.index = (int) glyphs.length () - 1;
 		ma.action = (self) => {
 			Font font = Supplement.get_current_font ();
