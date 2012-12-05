@@ -1,4 +1,5 @@
 import time;
+import os
 
 VERSION = '0.6'
 APPNAME = 'birdfont'
@@ -35,6 +36,8 @@ def configure(conf):
 	if conf.options.win32 :
 		conf.recurse('win32')
 
+	write_config (conf)
+
 def pre (bld):
 	bld.env.VERSION = VERSION
 	
@@ -61,7 +64,31 @@ def build(bld):
 
 	if bld.options.win32:
 		bld.recurse('win32')
+
+	compile_translations (bld)
+
+def compile_translations (bld):
+	for file in os.listdir('./translations'):
+		# extract LANG from birdfont-sv_SE.po and create .mo files
 		
+		loc = file.replace (".po", "")
+		loc = loc.replace ("birdfont-", "")
+		
+		bld (
+			rule = "mkdir -p ./locale/" + loc + "/LC_MESSAGES/",
+			name = loc
+		)
+		
+		bld (
+			rule = "msgfmt --output=./locale/" + loc + "/LC_MESSAGES/birdfont.mo ../translations/birdfont-" + loc + ".po",
+			depends = loc
+		)
+		
+		bld.install_files(
+			'${PREFIX}/locale/" + loc + "/LC_MESSAGES/', 
+			['locale/" + loc + "/LC_MESSAGES/birdfont.mo']
+		)
+	
 def write_config (cfg):
 	print ("Writing Config.vala")	
 
