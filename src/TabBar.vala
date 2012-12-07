@@ -194,8 +194,8 @@ public class TabBar : GLib.Object {
 		
 		return_if_fail (i != -1);
 	} 
-	
-	public bool close_tab (int index, bool background_tab = false) {
+
+	public bool close_tab (int index, bool background_tab = false) {	
 		unowned List<Tab?>? lt;
 		Tab t;
 		
@@ -260,6 +260,16 @@ public class TabBar : GLib.Object {
 		}
 		
 		return false;
+	}
+
+	public Tab? get_tab (string name) {
+		foreach (var n in tabs) {
+			if (n.get_label () == name) {
+				return n;
+			}
+		}
+		
+		return null;
 	}
 
 	public bool selected_open_tab_by_name (string t) {
@@ -382,15 +392,15 @@ public class TabBar : GLib.Object {
 				continue;
 			}
 			
+			// out of view
 			if (offset + t.get_width () + 3 > width - 19) {
-				// out of view
 				first_tab++;
 				scroll_to_tab (index);
 				return;
 			}
 
+			// in view
 			if (i == index) {
-				// in view
 				signal_selected (index);
 				return;
 			}
@@ -421,7 +431,7 @@ public class TabBar : GLib.Object {
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 		
 		if (tab_width < 0) {
-			//cr.text_extents (display_item.get_name (), out te); // this is not a good estimation
+			//cr.text_extents (display_item.get_name (), out te); // this is not a good estimation, pango might solve it
 			//tab_width = te.width + 30;
 			
 			tab_width = 9 * display_item.get_name ().char_count ();
@@ -562,35 +572,6 @@ public class TabBar : GLib.Object {
 			offset += t.get_width () + 3;
 			i++;
 		}
-	}
-}
-
-public class Tab : GLib.Object {
-
-	bool always_open;
-	double width; 
-	FontDisplay display;
-
-	public Tab (FontDisplay glyph, double tab_width, bool always_open) {
-		width = tab_width;
-		this.display = glyph;
-		this.always_open = always_open;
-	}
-
-	public bool has_close_button () {
-		return !always_open;
-	}
-
-	public FontDisplay get_display () {
-		return display;
-	}
-	
-	public string get_label () {
-		return display.get_name ();
-	}
-	
-	public double get_width () {
-		return width;
 	}
 }
 

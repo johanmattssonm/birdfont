@@ -65,9 +65,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		html_box = new ScrolledWindow (null, null);
 		html_box.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
-		
 		html_box.add (html_canvas);
-		
 		html_canvas.set_editable (true);
 		
 		MainWindow.get_tab_bar ().signal_tab_selected.connect ((f, tab) => {

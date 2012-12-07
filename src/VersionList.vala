@@ -24,6 +24,7 @@ public class VersionList : DropMenu {
 	int versions = 1;
 	int current_version = 0;
 	public List<Glyph> glyphs = new List<Glyph> ();
+	public static bool suppress_signal = false;
 
 	public VersionList (Glyph? g = null) {
 		base ("version");
@@ -45,6 +46,10 @@ public class VersionList : DropMenu {
 		}
 	}
 	
+	public static void set_suppress_signal (bool s) {
+		suppress_signal = s;
+	}
+	
 	public Glyph get_current () {
 		if (unlikely (current_version >= glyphs.length ())) {
 			warning (@"current_version >= glyphs.length ($current_version >= $(glyphs.length ()))");
@@ -62,7 +67,10 @@ public class VersionList : DropMenu {
 	
 	private void set_selected_item (MenuAction ma) {
 		int i = ma.index;
-		
+		Tab? t;
+		Tab tab;
+		Font font = Supplement.get_current_font ();
+					
 		return_if_fail (0 <= i < glyphs.length ());
 
 		current_version = i;
@@ -71,9 +79,9 @@ public class VersionList : DropMenu {
 		
 		((!)ma.parent).deselect_all ();
 		ma.set_selected (true);		
-			
+		
 		if (!is_null (MainWindow.get_tab_bar ())) {
-			MainWindow.get_tab_bar ().close_by_name (get_current ().name);			
+			MainWindow.get_tab_bar ().close_by_name (get_current ().name);
 		}	
 	}
 	
@@ -85,13 +93,20 @@ public class VersionList : DropMenu {
 
 		ma = add_item (_("Version") + @" $(versions - 1)");
 		ma.index = (int) glyphs.length () - 1;
+		
 		ma.action = (self) => {
-			Font font = Supplement.get_current_font ();
+			Font font;
+			
+			if (suppress_signal) {
+				return;
+			}
+			
+			font = Supplement.get_current_font ();
 			set_selected_item (self);
 			font.touch ();
 		};
-		
-		if (selected) {
+
+		if (selected && !suppress_signal) {
 			set_selected_item (ma);
 		}
 	}

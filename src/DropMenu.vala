@@ -198,44 +198,4 @@ public class DropMenu : GLib.Object {
 	}
 }
 
-public class MenuAction : GLib.Object {
-	public string label;
-	public DropMenu.Selected action;
-	public DropMenu? parent = null;
-	public int index = -1;
-	bool selected = false;
-	
-	public MenuAction (string label) {
-		this.label = label;
-	}
-	
-	public void set_selected (bool s) {
-		selected = s;
-	}
-	
-	public virtual void draw (double x, double y, Context cr) {
-		if (selected) {
-			cr.save ();
-			cr.set_line_join (LineJoin.ROUND);
-			cr.set_line_width (12);
-			cr.set_source_rgba (102/255.0, 120/255.0, 149/255.0, 1);
-			cr.rectangle (x - 2, y - 9, 88, 8);
-			cr.fill_preserve ();
-			cr.stroke ();
-			cr.restore ();			
-		}
-		
-		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
-		
-		cr.set_font_size (12);
-		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
-		
-		cr.move_to (x, y);
-
-		cr.show_text (label);
-		cr.restore ();
-	}
-}
-
 }

@@ -22,7 +22,7 @@ namespace Supplement {
 
 public class Glyph : FontDisplay {
 
-	public const double SCALE = 1.0;
+	public static const double SCALE = 1.0;
 
 	// Background image
 	GlyphBackgroundImage? background_image = null;
@@ -82,11 +82,10 @@ public class Glyph : FontDisplay {
 	public unichar unichar_code = 0;
 	
 	List<Glyph> undo_list = new List<Glyph> ();
-
+	
 	public List<Kerning> kerning = new List<Kerning> ();
 	
 	string glyph_sequence = "";
-	
 	bool open = true;
 	
 	public Glyph (string name, unichar unichar_code = 0) {
@@ -1458,6 +1457,15 @@ public class Glyph : FontDisplay {
 		return g;
 	}
 
+	public void reload () {
+		Glyph g;
+		Font f = Supplement.get_current_font ();
+		
+		if (f.has_glyph (name)) {
+			set_glyph_data ((!) f.get_glyph (name));
+		}
+	}
+
 	public override void undo () {
 		Glyph g;
 		
@@ -1465,8 +1473,13 @@ public class Glyph : FontDisplay {
 			return;
 		}
 		
-		g = undo_list.last ().data;
+		g = undo_list.last ().data;	
+		set_glyph_data (g);
 		
+		undo_list.remove_link (undo_list.last ());
+	}
+	
+	void set_glyph_data (Glyph g) {
 		while (path_list.length () > 0) {
 			path_list.remove_link (path_list.last ());
 		}
@@ -1491,12 +1504,10 @@ public class Glyph : FontDisplay {
 			add_active_path (p);
 		}
 		
-		undo_list.remove_link (undo_list.last ());
-		
 		open_path ();
 		close_path ();
 		
-		redraw_area (0, 0, allocation.width, allocation.height);
+		redraw_area (0, 0, allocation.width, allocation.height);		
 	}
 	
 	public ImageSurface get_thumbnail () {

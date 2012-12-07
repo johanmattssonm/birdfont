@@ -361,9 +361,10 @@ os.put_string (
 		string export_command;
 		
 		if (Supplement.win32) {
+			VersionList.set_suppress_signal (true);
 			async = false;
 		}
-
+		
 		try {
 			// create a copy of current font and use it in a separate 
 			// export thread
@@ -408,6 +409,10 @@ os.put_string (
 		} catch (Error e) {
 			critical (@"$(e.message)");
 			done = false;
+		}
+
+		if (Supplement.win32) {
+			VersionList.set_suppress_signal (false);
 		}
 		
 		return done;		
