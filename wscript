@@ -13,7 +13,8 @@ def options(opt):
 	opt.add_option('--win32', action='store_true', default=False, help='Crosscompile for Windows')
 	opt.add_option('--installer', action='store_true', default=False, help='Create Windows installer')
 	opt.add_option('--noconfig', action='store_true', default=False, help="Don't write Config.vala")
-        
+	opt.add_option('--translations', action='store_true', default=False, help="Update translation template (.pot file)")
+   
 def configure(conf):
 	conf.load('compiler_c vala')
 	conf.check_vala(min_version=(0,17,3))
@@ -65,7 +66,31 @@ def build(bld):
 	if bld.options.win32:
 		bld.recurse('win32')
 
+	if bld.options.translations:
+		update_translations (bld)
+	
 	compile_translations (bld)
+
+def update_translations (bld):
+	bld (
+		rule = "xgettext --language=C# --keyword=_ --from-code=utf-8 --output=birdfont.pot src/* 2&> xgettext.errors",
+		name = "update pot",
+		always = True
+	)
+			
+	for file in os.listdir('./translations'):
+		loc = file.replace (".po", "")
+		loc = loc.replace ("birdfont-", "")
+
+		d = "../translations/birdfont-" + loc + ".po"
+
+		bld (
+			rule = "msgmerge " + d + """ birdfont.pot > """ + d + """.new && mv """ + d + ".new " + d,
+				
+			depends = "update pot",
+			always = True
+		)		
+		
 
 def compile_translations (bld):
 	for file in os.listdir('./translations'):

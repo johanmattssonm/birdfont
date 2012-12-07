@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-05 16:30+0100\n"
+"POT-Creation-Date: 2012-12-05 18:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,208 +17,311 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Birdfont.vala:22
+#: src/Argument.c:1067
+msgid "Usage"
+msgstr ""
+
+#: src/Argument.c:1079
+msgid "show coordinate in glyph view"
+msgstr ""
+
+#: src/Argument.c:1081
+msgid "exit if a testcase failes"
+msgstr ""
+
+#: src/Argument.c:1083
+msgid "treat warnings as fatal"
+msgstr ""
+
+#: src/Argument.c:1085
+msgid "show this message"
+msgstr ""
+
+#: src/Argument.c:1087
+msgid "sleep between each command in test suite"
+msgstr ""
+
+#: src/Argument.c:1089
+msgid "run test case"
+msgstr ""
+
+#: src/BackgroundTool.c:587
+msgid "Move, resize and rotate background image"
+msgstr ""
+
+#: src/Birdfont.c:169
 msgid "Usage:"
 msgstr ""
 
-#: src/Birdfont.vala:25
+#: src/Birdfont.c:179
 msgid "print this message\n"
 msgstr ""
 
-#: src/Birdfont.vala:26
+#: src/Birdfont.c:185
 msgid "write files to this directory\n"
 msgstr ""
 
-#: src/Birdfont.vala:27
+#: src/Birdfont.c:191
 msgid "write svg file\n"
 msgstr ""
 
-#: src/Birdfont.vala:28
+#: src/Birdfont.c:197
 msgid "write ttf and eot files\n"
 msgstr ""
 
-#: src/Birdfont.vala:118
+#: src/Birdfont.c:633
 msgid "Can't find output directory"
 msgstr ""
 
-#: src/Birdfont.vala:123 src/Birdfont.vala:128
+#: src/Birdfont.c:679 src/Birdfont.c:726
 msgid "Writing"
 msgstr ""
 
-#: src/MenuTab.vala:113
+#: src/ExportTool.c:461
+msgid "Export glyph to svg file"
+msgstr ""
+
+#: src/ExportTool.c:1229 src/GlyphRange.c:208
+msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö"
+msgstr ""
+
+#: src/ExportTool.c:1261 src/GlyphRange.c:211
+msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö"
+msgstr ""
+
+#: src/MenuTab.c:992
 msgid "Create a new font"
 msgstr ""
 
-#: src/MenuTab.vala:114
+#: src/MenuTab.c:1010
+msgid "New"
+msgstr ""
+
+#: src/MenuTab.c:1017
 msgid "Open an existing ffi file"
 msgstr ""
 
-#: src/MenuTab.vala:115
+#: src/MenuTab.c:1022
+msgid "Open"
+msgstr ""
+
+#: src/MenuTab.c:1029
 msgid "Save font"
 msgstr ""
 
-#: src/MenuTab.vala:116
-msgid "Save font with a different name"
-msgstr ""
-
-#: src/MenuTab.vala:117
-msgid "Show kerning context"
-msgstr ""
-
-#: src/MenuTab.vala:118
-msgid "Add a new size for grid"
-msgstr ""
-
-#: src/MenuTab.vala:119
-msgid "Remove current grid size"
-msgstr ""
-
-#: src/MenuTab.vala:136
-msgid "Export"
-msgstr ""
-
-#: src/MenuTab.vala:137
-msgid "Preview"
-msgstr ""
-
-#: src/MenuTab.vala:153
-msgid "Recent files"
-msgstr ""
-
-#: src/MenuTab.vala:266 src/SaveDialog.vala:82
+#: src/MenuTab.c:1034 src/MenuTab.c:1687 src/SaveDialog.c:334
 msgid "Save"
 msgstr "Spara"
 
-#: src/SaveDialog.vala:83
+#: src/MenuTab.c:1041
+msgid "Save font with a different name"
+msgstr ""
+
+#: src/MenuTab.c:1046 src/SaveDialog.c:344
 msgid "Save as"
 msgstr "Spara som"
 
-#: src/SaveDialog.vala:84
+#: src/MenuTab.c:1053
+msgid "Show kerning context"
+msgstr ""
+
+#: src/MenuTab.c:1058
+msgid "Kerning context"
+msgstr ""
+
+#: src/MenuTab.c:1065
+msgid "Add a new size for grid"
+msgstr ""
+
+#: src/MenuTab.c:1070
+msgid "Add grid"
+msgstr ""
+
+#: src/MenuTab.c:1077
+msgid "Remove current grid size"
+msgstr ""
+
+#: src/MenuTab.c:1082
+msgid "Remove grid"
+msgstr ""
+
+#: src/MenuTab.c:1091
+msgid "Edit"
+msgstr ""
+
+#: src/MenuTab.c:1128
+msgid "Glyph sequence"
+msgstr ""
+
+#: src/MenuTab.c:1145
+msgid "Name"
+msgstr ""
+
+#: src/MenuTab.c:1166
+msgid "Export"
+msgstr ""
+
+#: src/MenuTab.c:1174
+msgid "Export SVG, TTF & EOF fonts"
+msgstr ""
+
+#: src/MenuTab.c:1181
+msgid "Preview"
+msgstr ""
+
+#: src/MenuTab.c:1189
+msgid "Export SVG font and view the result"
+msgstr ""
+
+#: src/MenuTab.c:1243
+msgid "Recent files"
+msgstr ""
+
+#: src/MergeTool.c:224
+msgid "Merge paths"
+msgstr ""
+
+#: src/MoveTool.c:823
+msgid "Move paths"
+msgstr ""
+
+#: src/PenTool.c:883 src/Toolbox.c:2376
+msgid "Right click to add new point, left click to move points and double cli"
+msgstr ""
+
+#: src/SaveDialog.c:310
+#, fuzzy
+msgid "Save?"
+msgstr "Spara"
+
+#: src/SaveDialog.c:354
 msgid "Discard"
 msgstr ""
 
-#: src/SaveDialog.vala:85
+#: src/SaveDialog.c:364
 msgid "Cancel"
 msgstr ""
 
-#: src/Toolbox.vala:94
-msgid ""
-"Right click to add new point, left click to move points and double click to "
-"ad new point on path"
-msgstr ""
-
-#: src/Toolbox.vala:101
-msgid "Add new point on path"
-msgstr ""
-
-#: src/Toolbox.vala:109
-msgid "Begin new path from point on path"
-msgstr ""
-
-#: src/Toolbox.vala:117
-msgid "Tie curve handles for selected edit point"
-msgstr ""
-
-#: src/Toolbox.vala:137
-msgid "Tie coordinates to previous edit point"
-msgstr ""
-
-#: src/Toolbox.vala:144
-msgid "Delete edit points"
-msgstr ""
-
-#: src/Toolbox.vala:153
-msgid "Set precision"
-msgstr ""
-
-#: src/Toolbox.vala:181
-msgid "Create counter from outline"
-msgstr ""
-
-#: src/Toolbox.vala:193
-msgid "Move to path to bottom layer"
-msgstr ""
-
-#: src/Toolbox.vala:205
-msgid "Show full unicode characters set"
-msgstr ""
-
-#: src/Toolbox.vala:216
-msgid "Show default characters set"
-msgstr ""
-
-#: src/Toolbox.vala:227
-msgid "Show characters in font"
-msgstr ""
-
-#: src/Toolbox.vala:236
-msgid "Delete selected glyph"
-msgstr ""
-
-#: src/Toolbox.vala:302
-msgid "Show help lines for x-height and baseline"
-msgstr ""
-
-#: src/Toolbox.vala:317
-msgid "Show help lines at top and bottom margin"
-msgstr ""
-
-#: src/Toolbox.vala:335
-msgid "Zoom in"
-msgstr ""
-
-#: src/Toolbox.vala:342
-msgid "Zoom out"
-msgstr ""
-
-#: src/Toolbox.vala:349
-msgid "Zoom to scale 1:1"
-msgstr ""
-
-#: src/Toolbox.vala:357
-msgid "Show full glyph"
-msgstr ""
-
-#: src/Toolbox.vala:364
-msgid "Zoom in at region boundries"
-msgstr ""
-
-#: src/Toolbox.vala:371
-msgid "Zoom in background image"
-msgstr ""
-
-#: src/Toolbox.vala:384
-msgid "Previous view"
-msgstr ""
-
-#: src/Toolbox.vala:390
-msgid "Next view"
-msgstr ""
-
-#: src/Toolbox.vala:397
-msgid "Set size for background image"
-msgstr ""
-
-#: src/Toolbox.vala:427
-msgid "Show/hide background image"
-msgstr ""
-
-#: src/Toolbox.vala:435
-msgid "Insert new background image"
-msgstr ""
-
-#: src/Toolbox.vala:440
+#: src/Toolbox.c:1882
 msgid "Creating thumbnails"
 msgstr ""
 
-#: src/Toolbox.vala:459
+#: src/Toolbox.c:2382
+msgid "Add new point on path"
+msgstr ""
+
+#: src/Toolbox.c:2395
+msgid "Begin new path from point on path"
+msgstr ""
+
+#: src/Toolbox.c:2405
+msgid "Tie curve handles for selected edit point"
+msgstr ""
+
+#: src/Toolbox.c:2413
+msgid "Tie coordinates to previous edit point"
+msgstr ""
+
+#: src/Toolbox.c:2418
+msgid "Delete edit points"
+msgstr ""
+
+#: src/Toolbox.c:2425
+msgid "Set precision"
+msgstr ""
+
+#: src/Toolbox.c:2457
+msgid "Create counter from outline"
+msgstr ""
+
+#: src/Toolbox.c:2465
+msgid "Move to path to bottom layer"
+msgstr ""
+
+#: src/Toolbox.c:2473
+msgid "Show full unicode characters set"
+msgstr ""
+
+#: src/Toolbox.c:2481
+msgid "Show default characters set"
+msgstr ""
+
+#: src/Toolbox.c:2489
+msgid "Show characters in font"
+msgstr ""
+
+#: src/Toolbox.c:2497
+msgid "Delete selected glyph"
+msgstr ""
+
+#: src/Toolbox.c:2582
+msgid "Show help lines for x-height and baseline"
+msgstr ""
+
+#: src/Toolbox.c:2588
+msgid "Show help lines at top and bottom margin"
+msgstr ""
+
+#: src/Toolbox.c:2598
+msgid "Zoom in"
+msgstr ""
+
+#: src/Toolbox.c:2604
+msgid "Zoom out"
+msgstr ""
+
+#: src/Toolbox.c:2610
+msgid "Zoom to scale 1:1"
+msgstr ""
+
+#: src/Toolbox.c:2616
+msgid "Show full glyph"
+msgstr ""
+
+#: src/Toolbox.c:2622
+msgid "Zoom in at region boundries"
+msgstr ""
+
+#: src/Toolbox.c:2628
+msgid "Zoom in background image"
+msgstr ""
+
+#: src/Toolbox.c:2634
+msgid "Previous view"
+msgstr ""
+
+#: src/Toolbox.c:2640
+msgid "Next view"
+msgstr ""
+
+#: src/Toolbox.c:2646
+msgid "Set size for background image"
+msgstr ""
+
+#: src/Toolbox.c:2673
+msgid "Show/hide background image"
+msgstr ""
+
+#: src/Toolbox.c:2679
+msgid "Insert new background image"
+msgstr ""
+
+#: src/Toolbox.c:2686
 msgid "Set background contrast"
 msgstr ""
 
-#: src/Toolbox.vala:479
+#: src/Toolbox.c:2692
 msgid "Set threshold"
 msgstr ""
 
-#: src/Toolbox.vala:670
+#: src/Toolbox.c:3313
 msgid "Set size for grid"
+msgstr ""
+
+#: src/VersionList.c:382
+msgid "New version"
+msgstr ""
+
+#: src/VersionList.c:585
+msgid "Version"
 msgstr ""
