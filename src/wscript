@@ -107,13 +107,16 @@ def build (bld):
 	)
 
 	bld (
-		rule = 'gcc ../build/Main.c ../build/GtkWindow.c -I ../build/ -I ../build/src -L ../build/src -l birdfont -o ${TGT} \
+		rule = """gcc ../build/Main.c ../build/GtkWindow.c \
+				-D 'GETTEXT_PACKAGE="birdfont"' \
+				-I ../build/ -I ../build/src -L ../build/src -l birdfont \
+				-o ${TGT} \
 				$(pkg-config --cflags --libs glib-2.0) \
 				$(pkg-config --cflags --libs libxml-2.0) \
 				$(pkg-config --cflags --libs gio-2.0) \
 				$(pkg-config --cflags --libs libsoup-2.4) \
 				$(pkg-config --cflags --libs gtk+-2.0) \
-				$(pkg-config --cflags --libs webkit-1.0)',
+				$(pkg-config --cflags --libs webkit-1.0)""",
 		source  = ['../Main.c'],
 		target  = 'birdfont',
 		depends = 'main_c'

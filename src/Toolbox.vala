@@ -202,7 +202,7 @@ public class Toolbox : GLib.Object  {
 		path_tool_modifiers.add_tool (move_layer);
 		
 		// Character set tools
-		Tool full_unicode = new Tool ("utf_8", _("Show full unicode characters set"));
+		Tool full_unicode = new Tool ("utf_8", _("Show full unicode characters set"), 'f', CTRL);
 		full_unicode.select_action.connect ((self) => {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);	
 				OverView o = MainWindow.get_overview ();
@@ -354,7 +354,7 @@ public class Toolbox : GLib.Object  {
 			});
 		view_tools.add_tool (reset_zoom);
 
-		Tool full_glyph = new Tool ("full_glyph", _("Show full glyph"), 'f');
+		Tool full_glyph = new Tool ("full_glyph", _("Show full glyph"));
 		full_glyph.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			zoom_tool.zoom_full_glyph ();
@@ -574,6 +574,19 @@ public class Toolbox : GLib.Object  {
 		idle.attach (null);
 	}
 	
+	public void key_press (uint keyval) {
+		print ("key_press\n");
+		foreach (var exp in MainWindow.get_toolbox ().expanders) {
+			foreach (Tool t in exp.tool) {
+				t.set_active (false);
+				
+				if (t.key == keyval && t.modifier_flag == NONE) {
+					MainWindow.get_toolbox ().select_tool (t);
+				}
+			}
+		}
+	}
+	
 	public void press (uint button, double x, double y) {
 		foreach (var exp in expanders) {
 			foreach (Tool t in exp.tool) {
@@ -784,8 +797,9 @@ public class Toolbox : GLib.Object  {
 		return new Tool ("no_icon");
 	}
 	
-	public void select_tool_by_name (string name) {
-		select_tool (get_tool (name));
+	public static void select_tool_by_name (string name) {
+		Toolbox b = MainWindow.get_toolbox ();
+		b.select_tool (b.get_tool (name));
 	}
 		
 	private void update_expanders () {

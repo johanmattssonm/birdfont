@@ -18,6 +18,8 @@
 using Birdfont;
 using Supplement;
 
+const string GETTEXT_PACKAGE = "birdfont"; 
+
 public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;

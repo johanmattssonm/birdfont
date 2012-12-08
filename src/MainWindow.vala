@@ -53,7 +53,7 @@ public class MainWindow {
 		return singleton;
 	}
 	 
-	internal static FontDisplay get_current_display () {
+	public static FontDisplay get_current_display () {
 		return get_glyph_canvas ().get_current_display ();
 	}
 	
@@ -70,7 +70,7 @@ public class MainWindow {
 		return Supplement.current_glyph;
 	}
 	
-	internal static Toolbox get_toolbox () {
+	public static Toolbox get_toolbox () {
 		return get_singleton ().tools;
 	}
 	

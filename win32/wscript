@@ -90,8 +90,8 @@ def build(bld):
 
 	bld(
 		rule="""i686-w64-mingw32-gcc \
-			-D 'GETTEXT_PACKAGE="birdfont"' \
 			-c ./Main.c ./GtkWindow.c ./BirdfontExport.c ./src/*.c ./ \
+			-D 'GETTEXT_PACKAGE="birdfont"' \
 			-I ./ \
 			-mthreads \
 			$(i686-w64-mingw32-pkg-config --cflags --libs glib-2.0) \

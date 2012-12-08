@@ -19,6 +19,8 @@ using Gdk;
 
 namespace Supplement {
 
+// FIXA a lot of these things have been replaced and can safely be removed
+
 public enum Key {
 	NONE = 0,
 	UP = 65362,
@@ -82,192 +84,15 @@ public class BindingList {
 		if (nc == null) {
 		
 			// add all bindings to this list
-			ShortCut[] default_bindings = { 
-				new ShowMenu (),
-				new NextTab (),
-				new PreviousTab (),
-				new CloseTab (),
-				new UndoAction (),
-				new Copy (),
-				new Paste (),
-				new Save (),
-				new NewFile (),
-				new Load (),
-				new ShowKerningContext (),
-				new ShowPreview (),
-				new ExportFonts ()
-			};
+			ShortCut[] default_bindings = { };
 
 			nc = default_bindings;
 		}
+		
 		return nc;
 	}
 }
 
-class ExportFonts : ShortCut {
-	
-	public override void run () {
-		ExportTool.export_all ();
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'e';	}	
-	public override unowned string get_description () { return "Export"; }
-}
-
-class ShowPreview : ShortCut {
-	
-	public override void run () {
-		MenuTab.preview ();
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'p';	}	
-	public override unowned string get_description () { return "Preview"; }
-}
-
-
-class ShowKerningContext : ShortCut {
-	
-	public override void run () {
-		MenuTab.show_kerning_context ();
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'k';	}	
-	public override unowned string get_description () { return "Kerning context"; }
-}
-
-class Load : ShortCut {
-	
-	public override void run () {
-		MenuTab.load ();
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'o';	}	
-	public override unowned string get_description () { return "Open file"; }
-}
-
-class NewFile : ShortCut {
-	
-	public override void run () {
-		MenuTab.new_file ();
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'n';	}	
-	public override unowned string get_description () { return "New file"; }
-}
-
-class Save : ShortCut {
-	
-	public override void run () {
-		MenuTab.save ();
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 's';	}	
-	public override unowned string get_description () { return "Save"; }
-}
-
-class Paste : ShortCut {
-	
-	public override void run () {
-		ClipTool.paste ();
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'v';	}	
-	public override unowned string get_description () { return "Paste"; }
-}
-
-class Copy : ShortCut {
-	
-	public override void run () {
-		ClipTool.copy ();
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'c';	}	
-	public override unowned string get_description () { return "Copy"; }
-}
-
-class UndoAction : ShortCut {
-	
-	public override void run () {
-		MainWindow.get_current_display ().undo ();
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'z';	}	
-	public override unowned string get_description () { return "Undo"; }
-}
-
-class ShowMenu : ShortCut {
-	
-	public override void run () {
-		MainWindow.get_tab_bar ().select_tab_name ("Content");
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return 'f';	}	
-	public override unowned string get_description () { return "Show menu"; }
-}
-
-class NextTab : ShortCut {
-		
-	public override void run () {
-		TabBar tb = MainWindow.get_tab_bar ();
-		int n = tb.get_selected () + 1;
-		
-		if (!(0 <= n < tb.get_length ())) {
-			return;
-		}
-		
-		tb.select_tab (n);
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return Key.RIGHT;	}	
-	public override unowned string get_description () { return "Next tab"; }
-}
-
-class PreviousTab : ShortCut {
-		
-	public override void run () {
-		TabBar tb = MainWindow.get_tab_bar ();
-		int n = tb.get_selected () - 1;
-
-		if (!(0 <= n < tb.get_length ())) {
-			return;
-		}
-		
-		tb.select_tab (n);
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return Key.LEFT;	}	
-	public override unowned string get_description () { return "Previous tab"; }
-}
-
-class CloseTab : ShortCut {
-		
-	public override void run () {
-		TabBar tb = MainWindow.get_tab_bar ();
-		int n = tb.get_selected ();
-
-		if (!(0 <= n < tb.get_length ())) {
-			return;
-		}
-		
-		tb.close_tab (n);
-	}
-	
-	public override uint get_default_modifier ()      { return CTRL; }
-	public override uint get_default_key ()           { return (uint) 'w';	}	
-	public override unowned string get_description () { return "Close tab"; }
-}
 
 /** Function to be executed for each global key binding. */
 public abstract class ShortCut : GLib.Object {
@@ -510,34 +335,13 @@ public class KeyBindings {
 		
 		return false;
 	}
-	
-	void set_modifier (uint k, bool v) {
-		switch (k) {
-			case Key.CTRL_LEFT:
-				modifier_ctrl = v;
-				break;
-			case Key.CTRL_RIGHT:
-				modifier_ctrl = v;
-				break;
-			case Key.ALT_LEFT:
-				modifier_alt = v;
-				break;
-			case Key.ALT_GR:
-				modifier_alt = v;
-				break;
-			case Key.SHIFT_LEFT:
-				modifier_shift = v;
-				break;
-			case Key.SHIFT_RIGHT:
-				modifier_shift = v;
-				break;
-		}
-		
-		modifier = 0;
 
-		if (modifier_ctrl)  modifier |= CTRL;
-		if (modifier_alt)   modifier |= ALT;		
-		if (modifier_shift) modifier |= SHIFT;
+	public static void set_modifier (uint mod) {
+		modifier = mod;
+
+		singleton.modifier_ctrl = ((modifier & CTRL) > 0);
+		singleton.modifier_alt = ((modifier & ALT) > 0);
+		singleton.modifier_shift = ((modifier & SHIFT) > 0);
 	}
 
 	public static bool has_alt () {
@@ -553,31 +357,9 @@ public class KeyBindings {
 	}
 	
 	public void key_release (uint keyval) {
-		set_modifier (keyval, false);
 	}
 	
 	public void key_press (uint keyval) {
-		uint key = keyval;
-		ShortCut? short_cut;
-		
-		set_modifier (keyval, true);
-	
-		if (get_short_cut (modifier, key, out short_cut)) {
-			if (short_cut != null)
-				((!)short_cut).run ();
-		}
-				
-		foreach (var exp in MainWindow.get_toolbox ().expanders) {
-			foreach (Tool t in exp.tool) {
-				t.set_active (false);
-				
-				if (t.key == keyval && t.modifier_flag == modifier) {
-					if (!(require_modifier && (modifier == NONE || modifier == SHIFT))) {
-						MainWindow.get_toolbox ().select_tool (t);
-					}
-				}
-			}
-		}
 	}
 }
 

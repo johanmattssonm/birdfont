@@ -75,7 +75,7 @@ public class Preferences {
 	public static int get_window_width() {
 		string wp = get ("window_width");
 		int w = int.parse (wp);
-		return (w == 0) ? 360 : w;
+		return (w == 0) ? 860 : w;
 	}
 
 	public static int get_window_height() {

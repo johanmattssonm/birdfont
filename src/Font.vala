@@ -1071,7 +1071,7 @@ public class Font : GLib.Object {
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "top_limit") top_limit = parse_double_from_node (iter);
 			if (iter->name == "top_position") top_position = parse_double_from_node (iter);
-			if (iter->name == "x-heigh") xheight_position = parse_double_from_node (iter);
+			if (iter->name == "x-height") xheight_position = parse_double_from_node (iter);
 			if (iter->name == "base_line") base_line = parse_double_from_node (iter);
 			if (iter->name == "bottom_position") bottom_position = parse_double_from_node (iter);
 			if (iter->name == "bottom_limit") bottom_limit = parse_double_from_node (iter);

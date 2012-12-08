@@ -17,7 +17,7 @@
 
 namespace Supplement {
 
-class ClipTool : Tool {
+public class ClipTool : Tool {
 
 	static Glyph? glyph = null; 
 	static List<Path> path = new List<Path> ();

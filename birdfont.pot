@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-05 18:37+0100\n"
+"POT-Creation-Date: 2012-12-09 00:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,274 +17,382 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Argument.vala:225
+#: src/Argument.c:1067
 msgid "Usage"
 msgstr ""
 
-#: src/Argument.vala:229
+#: src/Argument.c:1079
 msgid "show coordinate in glyph view"
 msgstr ""
 
-#: src/Argument.vala:230
+#: src/Argument.c:1081
 msgid "exit if a testcase failes"
 msgstr ""
 
-#: src/Argument.vala:231
+#: src/Argument.c:1083
 msgid "treat warnings as fatal"
 msgstr ""
 
-#: src/Argument.vala:232
+#: src/Argument.c:1085
 msgid "show this message"
 msgstr ""
 
-#: src/Argument.vala:233
+#: src/Argument.c:1087
 msgid "sleep between each command in test suite"
 msgstr ""
 
-#: src/Argument.vala:234
+#: src/Argument.c:1089
 msgid "run test case"
 msgstr ""
 
-#: src/BackgroundTool.vala:40
+#: src/BackgroundTool.c:587
 msgid "Move, resize and rotate background image"
 msgstr ""
 
-#: src/Birdfont.vala:22
+#: src/Birdfont.c:169
 msgid "Usage:"
 msgstr ""
 
-#: src/Birdfont.vala:25
+#: src/Birdfont.c:179
 msgid "print this message\n"
 msgstr ""
 
-#: src/Birdfont.vala:26
+#: src/Birdfont.c:185
 msgid "write files to this directory\n"
 msgstr ""
 
-#: src/Birdfont.vala:27
+#: src/Birdfont.c:191
 msgid "write svg file\n"
 msgstr ""
 
-#: src/Birdfont.vala:28
+#: src/Birdfont.c:197
 msgid "write ttf and eot files\n"
 msgstr ""
 
-#: src/Birdfont.vala:118
+#: src/Birdfont.c:633
 msgid "Can't find output directory"
 msgstr ""
 
-#: src/Birdfont.vala:123 src/Birdfont.vala:128
+#: src/Birdfont.c:679 src/Birdfont.c:726
 msgid "Writing"
 msgstr ""
 
-#: src/ExportTool.vala:29
+#: src/ExportTool.c:462
 msgid "Export glyph to svg file"
 msgstr ""
 
-#: src/GlyphRange.vala:36
+#: src/ExportTool.c:865
+msgid "Can't export"
+msgstr ""
+
+#: src/ExportTool.c:891
+msgid "Wrote"
+msgstr ""
+
+#: src/ExportTool.c:1267
+msgid "Alphabet"
+msgstr ""
+
+#: src/ExportTool.c:1298 src/GlyphRange.c:208
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr ""
 
-#: src/GlyphRange.vala:37
+#: src/ExportTool.c:1303 src/GlyphRange.c:211
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 
-#: src/MenuTab.vala:113
-msgid "Create a new font"
+#: src/ExportTool.c:1913
+msgid "Wrote font files"
 msgstr ""
 
-#: src/MenuTab.vala:114
-msgid "Open an existing ffi file"
+#: src/MenuTab.c:814
+msgid "Preferences"
 msgstr ""
 
-#: src/MenuTab.vala:115
-msgid "Save font"
+#: src/MenuTab.c:835
+msgid "Glyph sequence"
 msgstr ""
 
-#: src/MenuTab.vala:116
-msgid "Save font with a different name"
+#: src/MenuTab.c:852
+msgid "Name"
 msgstr ""
 
-#: src/MenuTab.vala:117
-msgid "Show kerning context"
-msgstr ""
-
-#: src/MenuTab.vala:118
-msgid "Add a new size for grid"
-msgstr ""
-
-#: src/MenuTab.vala:119
-msgid "Remove current grid size"
-msgstr ""
-
-#: src/MenuTab.vala:136
+#: src/MenuTab.c:873
 msgid "Export"
 msgstr ""
 
-#: src/MenuTab.vala:137
+#: src/MenuTab.c:881
+msgid "Export SVG, TTF & EOF fonts"
+msgstr ""
+
+#: src/MenuTab.c:888
 msgid "Preview"
 msgstr ""
 
-#: src/MenuTab.vala:153
+#: src/MenuTab.c:896
+msgid "Export SVG font and view the result"
+msgstr ""
+
+#: src/MenuTab.c:953
 msgid "Recent files"
 msgstr ""
 
-#: src/MenuTab.vala:266 src/SaveDialog.vala:82
+#: src/MenuTab.c:1397 src/SaveDialog.c:334
 msgid "Save"
 msgstr ""
 
-#: src/MergeTool.vala:23
+#: src/MergeTool.c:224
 msgid "Merge paths"
 msgstr ""
 
-#: src/MoveTool.vala:36
+#: src/MoveTool.c:823
 msgid "Move paths"
 msgstr ""
 
-#: src/PenTool.vala:48
-msgid ""
-"Right click to add new point, left click to move points and double click to "
-"add new point on path"
+#: src/PenTool.c:883 src/Toolbox.c:2378
+msgid "Right click to add new point, left click to move points and double cli"
 msgstr ""
 
-#: src/SaveDialog.vala:83
+#: src/SaveDialog.c:310
+msgid "Save?"
+msgstr ""
+
+#: src/SaveDialog.c:344
 msgid "Save as"
 msgstr ""
 
-#: src/SaveDialog.vala:84
+#: src/SaveDialog.c:354
 msgid "Discard"
 msgstr ""
 
-#: src/SaveDialog.vala:85
+#: src/SaveDialog.c:364
 msgid "Cancel"
 msgstr ""
 
-#: src/Toolbox.vala:94
-msgid ""
-"Right click to add new point, left click to move points and double click to "
-"ad new point on path"
-msgstr ""
-
-#: src/Toolbox.vala:101
-msgid "Add new point on path"
-msgstr ""
-
-#: src/Toolbox.vala:109
-msgid "Begin new path from point on path"
-msgstr ""
-
-#: src/Toolbox.vala:117
-msgid "Tie curve handles for selected edit point"
-msgstr ""
-
-#: src/Toolbox.vala:137
-msgid "Tie coordinates to previous edit point"
-msgstr ""
-
-#: src/Toolbox.vala:144
-msgid "Delete edit points"
-msgstr ""
-
-#: src/Toolbox.vala:153
-msgid "Set precision"
-msgstr ""
-
-#: src/Toolbox.vala:181
-msgid "Create counter from outline"
-msgstr ""
-
-#: src/Toolbox.vala:193
-msgid "Move to path to bottom layer"
-msgstr ""
-
-#: src/Toolbox.vala:205
-msgid "Show full unicode characters set"
-msgstr ""
-
-#: src/Toolbox.vala:216
-msgid "Show default characters set"
-msgstr ""
-
-#: src/Toolbox.vala:227
-msgid "Show characters in font"
-msgstr ""
-
-#: src/Toolbox.vala:236
-msgid "Delete selected glyph"
-msgstr ""
-
-#: src/Toolbox.vala:302
-msgid "Show help lines for x-height and baseline"
-msgstr ""
-
-#: src/Toolbox.vala:317
-msgid "Show help lines at top and bottom margin"
-msgstr ""
-
-#: src/Toolbox.vala:335
-msgid "Zoom in"
-msgstr ""
-
-#: src/Toolbox.vala:342
-msgid "Zoom out"
-msgstr ""
-
-#: src/Toolbox.vala:349
-msgid "Zoom to scale 1:1"
-msgstr ""
-
-#: src/Toolbox.vala:357
-msgid "Show full glyph"
-msgstr ""
-
-#: src/Toolbox.vala:364
-msgid "Zoom in at region boundries"
-msgstr ""
-
-#: src/Toolbox.vala:371
-msgid "Zoom in background image"
-msgstr ""
-
-#: src/Toolbox.vala:384
-msgid "Previous view"
-msgstr ""
-
-#: src/Toolbox.vala:390
-msgid "Next view"
-msgstr ""
-
-#: src/Toolbox.vala:397
-msgid "Set size for background image"
-msgstr ""
-
-#: src/Toolbox.vala:427
-msgid "Show/hide background image"
-msgstr ""
-
-#: src/Toolbox.vala:435
-msgid "Insert new background image"
-msgstr ""
-
-#: src/Toolbox.vala:440
+#: src/Toolbox.c:1884
 msgid "Creating thumbnails"
 msgstr ""
 
-#: src/Toolbox.vala:459
+#: src/Toolbox.c:2384
+msgid "Add new point on path"
+msgstr ""
+
+#: src/Toolbox.c:2397
+msgid "Begin new path from point on path"
+msgstr ""
+
+#: src/Toolbox.c:2407
+msgid "Tie curve handles for selected edit point"
+msgstr ""
+
+#: src/Toolbox.c:2415
+msgid "Tie coordinates to previous edit point"
+msgstr ""
+
+#: src/Toolbox.c:2420
+msgid "Delete edit points"
+msgstr ""
+
+#: src/Toolbox.c:2427
+msgid "Set precision"
+msgstr ""
+
+#: src/Toolbox.c:2459
+msgid "Create counter from outline"
+msgstr ""
+
+#: src/Toolbox.c:2467
+msgid "Move to path to bottom layer"
+msgstr ""
+
+#: src/Toolbox.c:2475
+msgid "Show full unicode characters set"
+msgstr ""
+
+#: src/Toolbox.c:2483
+msgid "Show default characters set"
+msgstr ""
+
+#: src/Toolbox.c:2491 GtkWindow.c:2074
+msgid "Show characters in font"
+msgstr ""
+
+#: src/Toolbox.c:2499
+msgid "Delete selected glyph"
+msgstr ""
+
+#: src/Toolbox.c:2584
+msgid "Show help lines for x-height and baseline"
+msgstr ""
+
+#: src/Toolbox.c:2590
+msgid "Show help lines at top and bottom margin"
+msgstr ""
+
+#: src/Toolbox.c:2600 GtkWindow.c:2093
+msgid "Zoom in"
+msgstr ""
+
+#: src/Toolbox.c:2606 GtkWindow.c:2100
+msgid "Zoom out"
+msgstr ""
+
+#: src/Toolbox.c:2612 GtkWindow.c:2107
+msgid "Zoom to scale 1:1"
+msgstr ""
+
+#: src/Toolbox.c:2618
+msgid "Show full glyph"
+msgstr ""
+
+#: src/Toolbox.c:2624
+msgid "Zoom in at region boundries"
+msgstr ""
+
+#: src/Toolbox.c:2630
+msgid "Zoom in background image"
+msgstr ""
+
+#: src/Toolbox.c:2636
+msgid "Previous view"
+msgstr ""
+
+#: src/Toolbox.c:2642
+msgid "Next view"
+msgstr ""
+
+#: src/Toolbox.c:2648
+msgid "Set size for background image"
+msgstr ""
+
+#: src/Toolbox.c:2675
+msgid "Show/hide background image"
+msgstr ""
+
+#: src/Toolbox.c:2681
+msgid "Insert new background image"
+msgstr ""
+
+#: src/Toolbox.c:2688
 msgid "Set background contrast"
 msgstr ""
 
-#: src/Toolbox.vala:479
+#: src/Toolbox.c:2694
 msgid "Set threshold"
 msgstr ""
 
-#: src/Toolbox.vala:670
+#: src/Toolbox.c:3393
 msgid "Set size for grid"
 msgstr ""
 
-#: src/VersionList.vala:32
+#: src/VersionList.c:385
 msgid "New version"
 msgstr ""
 
-#: src/VersionList.vala:86
+#: src/VersionList.c:606
 msgid "Version"
+msgstr ""
+
+#: GtkWindow.c:1939
+msgid "_New"
+msgstr ""
+
+#: GtkWindow.c:1946
+msgid "_Open"
+msgstr ""
+
+#: GtkWindow.c:1953
+msgid "_Save"
+msgstr ""
+
+#: GtkWindow.c:1960
+msgid "Save _as"
+msgstr ""
+
+#: GtkWindow.c:1966
+msgid "_Export"
+msgstr ""
+
+#: GtkWindow.c:1973
+msgid "_Preview"
+msgstr ""
+
+#: GtkWindow.c:1980
+msgid "_Kerning"
+msgstr ""
+
+#: GtkWindow.c:1987
+msgid "_Quit"
+msgstr ""
+
+#: GtkWindow.c:1993
+msgid "_Undo"
+msgstr ""
+
+#: GtkWindow.c:2000
+msgid "_Copy"
+msgstr ""
+
+#: GtkWindow.c:2007
+msgid "_Paste"
+msgstr ""
+
+#: GtkWindow.c:2014
+msgid "_Next tab"
+msgstr ""
+
+#: GtkWindow.c:2020
+msgid "_Previous tab"
+msgstr ""
+
+#: GtkWindow.c:2026
+msgid "_Close tab"
+msgstr ""
+
+#: GtkWindow.c:2033
+msgid "_Create path"
+msgstr ""
+
+#: GtkWindow.c:2040
+msgid "_Zoom"
+msgstr ""
+
+#: GtkWindow.c:2046
+msgid "_Create counter path"
+msgstr ""
+
+#: GtkWindow.c:2053
+msgid "_Move"
+msgstr ""
+
+#: GtkWindow.c:2060
+msgid "Show _full unicode characters set"
+msgstr ""
+
+#: GtkWindow.c:2067
+msgid "Show de_fault characters set"
+msgstr ""
+
+#: GtkWindow.c:2081
+msgid "Add new _grid item"
+msgstr ""
+
+#: GtkWindow.c:2087
+msgid "Remove gr_id item"
+msgstr ""
+
+#: GtkWindow.c:2114
+msgid "_File"
+msgstr ""
+
+#: GtkWindow.c:2119
+msgid "_Edit"
+msgstr ""
+
+#: GtkWindow.c:2124
+msgid "_Tab"
+msgstr ""
+
+#: GtkWindow.c:2129
+msgid "T_ool"
 msgstr ""

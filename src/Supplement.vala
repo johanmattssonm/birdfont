@@ -107,13 +107,19 @@ public class Supplement {
 		Intl.setlocale (LocaleCategory.MESSAGES, "");
 		Intl.bind_textdomain_codeset (GETTEXT_PACKAGE, "utf-8");
 
-		f = File.new_for_path ("./locale");
+		f = File.new_for_path ("./build/locale/sv/LC_MESSAGES/birdfont.mo");
+		if (f.query_exists ()) {
+			Intl.bindtextdomain (GETTEXT_PACKAGE, "./build/locale");
+			return;
+		}
+		
+		f = File.new_for_path ("./locale/sv/LC_MESSAGES/birdfont.mo");
 		if (f.query_exists ()) {
 			Intl.bindtextdomain (GETTEXT_PACKAGE, "./locale");
 			return;
 		}
 
-		f = File.new_for_path ("../locale");
+		f = File.new_for_path ("../locale/sv/LC_MESSAGES/birdfont.mo");
 		if (f.query_exists ()) {
 			Intl.bindtextdomain (GETTEXT_PACKAGE, "../locale");
 			return;

@@ -73,7 +73,7 @@ def build(bld):
 
 def update_translations (bld):
 	bld (
-		rule = "xgettext --language=C# --keyword=_ --from-code=utf-8 --output=../birdfont.pot src/* 2&> xgettext.errors",
+		rule = "xgettext --language=C# --keyword=_ --from-code=utf-8 --output=../birdfont.pot src/* ./*.c",
 		name = "update pot",
 		always = True
 	)

@@ -161,7 +161,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				html_box.set_visible (false);
 				glyph_canvas_area.set_visible (true);
 			}
-
 		});
 
 		// Hide this canvas when window is realized and flip canvas 
@@ -194,47 +193,253 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		list_box.pack_start (new ToolboxCanvas (MainWindow.tools), false, false, 0);
 		list_box.pack_start (margin_right, false, false, 0);
 
-		add (list_box);
-				
-		key_snooper_install (GtkWindow.global_key_bindings, null);
+		VBox vbox = new VBox (false, 0);
 		
-		// FIXME: This value should obviously be obtained in a gtk signal 
-		TimeoutSource window_is_active = new TimeoutSource(1000);
-		window_is_active.set_callback(() => {
-			if (!has_toplevel_focus) {
-				MainWindow.key_bindings.reset ();
-			}
-			return true;
-		});
-		window_is_active.attach(null);
+		vbox.pack_start(create_menu (), false, false, 0);
+		vbox.pack_start(list_box, true, true, 0);
+
+		add (vbox);
 		
 		try {
 			set_icon_from_file ((!) Icons.find_icon ("window_icon.png").get_path ());
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
+
+		key_press_event.connect ((t, event) => {
+			MainWindow window = MainWindow.get_singleton ();
+			FontDisplay fd = window.glyph_canvas.current_display;
+			
+			if (fd is Glyph) {
+				window.glyph_canvas.key_press (event.keyval);
+				window.tools.key_press (event.keyval);
+			}
+			
+			if (fd is ContextDisplay) {
+				window.glyph_canvas.key_press (event.keyval);
+			}
+
+			return false;
+		});
 		
-		show_all ();		
-	
+		key_release_event.connect ((t, event) => {
+			MainWindow window = MainWindow.get_singleton ();
+			if (window.glyph_canvas is Glyph) {
+				window.glyph_canvas.key_release (event.keyval);
+			}
+			return false;
+		});
+		
+		show_all ();
 	}
 
-	public static int global_key_bindings (Widget grab_widget, EventKey event, void* data) {		
-		MainWindow window = MainWindow.get_singleton ();
+	MenuBar create_menu () {
+		MenuBar menubar = new MenuBar ();
+		Gtk.Menu file_menu = new Gtk.Menu ();
+		Gtk.Menu edit_menu = new Gtk.Menu ();
+		Gtk.Menu tab_menu = new Gtk.Menu ();
+		Gtk.Menu tool_menu = new Gtk.Menu ();
+
+		AccelGroup accel_group = new Gtk.AccelGroup();
+		add_accel_group (accel_group);
 		
-		foreach (uint k in key_pressed) {
-			if (k == event.keyval) {
-				key_pressed.remove_all (k);
-				window.glyph_canvas.key_release (event.keyval);
-				window.key_bindings.key_release (event.keyval);
-				return 0;
+		// File
+		Gtk.MenuItem new_item = new Gtk.MenuItem.with_mnemonic (_("_New"));
+		file_menu.append (new_item);
+		new_item.activate.connect (() => { MenuTab.new_file (); });
+		new_item.add_accelerator ("activate", accel_group, 'N', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem load_item = new Gtk.MenuItem.with_mnemonic (_("_Open"));
+		file_menu.append (load_item);
+		load_item.activate.connect (() => { MenuTab.load (); });
+		load_item.add_accelerator ("activate", accel_group, 'O', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem save_item = new Gtk.MenuItem.with_mnemonic (_("_Save"));
+		file_menu.append (save_item);
+		save_item.activate.connect (() => { MenuTab.save (); });
+		save_item.add_accelerator ("activate", accel_group, 'S', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem save_as_item = new Gtk.MenuItem.with_mnemonic (_("Save _as"));
+		file_menu.append (save_as_item);
+		save_as_item.activate.connect (() => { MenuTab.save_as (); });
+				
+		Gtk.MenuItem export_item = new Gtk.MenuItem.with_mnemonic (_("_Export"));
+		file_menu.append (export_item);
+		export_item.activate.connect (() => { ExportTool.export_all (); });
+		export_item.add_accelerator ("activate", accel_group, 'E', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem preview_item = new Gtk.MenuItem.with_mnemonic(_("_Preview"));
+		file_menu.append (preview_item);
+		preview_item.activate.connect (() => { MenuTab.preview (); });
+		preview_item.add_accelerator ("activate", accel_group, 'P', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem kerning_item = new Gtk.MenuItem.with_mnemonic (_("_Kerning"));
+		file_menu.append (kerning_item);
+		kerning_item.activate.connect (() => { MenuTab.show_kerning_context (); });
+		kerning_item.add_accelerator ("activate", accel_group, 'K', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem quit_item = new Gtk.MenuItem.with_mnemonic (_("_Quit"));
+		file_menu.append (quit_item);
+		quit_item.activate.connect (() => { quit(); });
+
+		// Edit
+		Gtk.MenuItem undo_item = new Gtk.MenuItem.with_mnemonic (_("_Undo"));
+		edit_menu.append (undo_item);
+		undo_item.activate.connect (() => { MainWindow.get_current_display ().undo (); });	
+		undo_item.add_accelerator ("activate", accel_group, 'Z', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+		
+		Gtk.MenuItem copy_item = new Gtk.MenuItem.with_mnemonic (_("_Copy"));
+		edit_menu.append (copy_item);
+		copy_item.activate.connect (() => { ClipTool.copy (); });		
+		copy_item.add_accelerator ("activate", accel_group, 'C', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem paste_item = new Gtk.MenuItem.with_mnemonic (_("_Paste"));
+		edit_menu.append (paste_item);
+		paste_item.activate.connect (() => { ClipTool.paste (); });	
+		paste_item.add_accelerator ("activate", accel_group, 'V', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+		
+		// Tab
+		Gtk.MenuItem next_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Next tab"));
+		tab_menu.append (next_tab_item);
+		next_tab_item.activate.connect (() => { 
+			TabBar tb = MainWindow.get_tab_bar ();
+			int n = tb.get_selected () + 1;
+			
+			if (!(0 <= n < tb.get_length ())) {
+				return;
 			}
-		}
+			
+			tb.select_tab (n);
+		});	
+
+		Gtk.MenuItem prevoius_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Previous tab"));
+		tab_menu.append (prevoius_tab_item);
+		prevoius_tab_item.activate.connect (() => { 
+			TabBar tb = MainWindow.get_tab_bar ();
+			int n = tb.get_selected () - 1;
+
+			if (!(0 <= n < tb.get_length ())) {
+				return;
+			}
+			
+			tb.select_tab (n);
+		});					
+
+		Gtk.MenuItem close_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Close tab"));
+		tab_menu.append (close_tab_item);
+		close_tab_item.activate.connect (() => { 
+			TabBar tb = MainWindow.get_tab_bar ();
+			int n = tb.get_selected ();
+
+			if (!(0 <= n < tb.get_length ())) {
+				return;
+			}
+			
+			tb.close_tab (n);
+		});	
+		close_tab_item.add_accelerator ("activate", accel_group, 'W', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		// Tool
+		Gtk.MenuItem pen_item = new Gtk.MenuItem.with_mnemonic (_("_Create path"));
+		tool_menu.append (pen_item);
+		pen_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("pen_tool");
+		});
+		pen_item.add_accelerator ("activate", accel_group, ',', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem zoom_item = new Gtk.MenuItem.with_mnemonic (_("_Zoom"));
+		tool_menu.append (zoom_item);
+		zoom_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("zoom_tool");
+		});
+
+		Gtk.MenuItem counter_item = new Gtk.MenuItem.with_mnemonic (_("_Create counter path"));
+		tool_menu.append (counter_item);
+		counter_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("cut");
+		});
+		counter_item.add_accelerator ("activate", accel_group, 'U', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem move_item = new Gtk.MenuItem.with_mnemonic (_("_Move"));
+		tool_menu.append (move_item);
+		move_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("move");
+		});
+		move_item.add_accelerator ("activate", accel_group, 'M', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem full_unicode_item = new Gtk.MenuItem.with_mnemonic (_("Show _full unicode characters set"));
+		tool_menu.append (full_unicode_item);
+		full_unicode_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("utf_8");
+		});
+		full_unicode_item.add_accelerator ("activate", accel_group, 'F', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem default_charset_item = new Gtk.MenuItem.with_mnemonic (_("Show de_fault characters set"));
+		tool_menu.append (default_charset_item);
+		default_charset_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("custom_character_set");
+		});
+		default_charset_item.add_accelerator ("activate", accel_group, 'R', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem avalilable_characters_item = new Gtk.MenuItem.with_mnemonic (_("Show characters in font"));
+		tool_menu.append (avalilable_characters_item);
+		avalilable_characters_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("available_characters");
+		});
+		avalilable_characters_item.add_accelerator ("activate", accel_group, 'D', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem add_grid_item = new Gtk.MenuItem.with_mnemonic (_("Add new _grid item"));
+		tool_menu.append (add_grid_item);
+		add_grid_item.activate.connect (() => { 
+			MainWindow.get_toolbox ().add_new_grid ();
+		});
+
+		Gtk.MenuItem remove_grid_item = new Gtk.MenuItem.with_mnemonic (_("Remove gr_id item"));
+		tool_menu.append (remove_grid_item);
+		remove_grid_item.activate.connect (() => { 
+			MainWindow.get_toolbox ().remove_current_grid ();
+		});
 		
-		key_pressed.append (event.keyval);
-		window.glyph_canvas.key_press (event.keyval);
-		window.key_bindings.key_press (event.keyval);
+		Gtk.MenuItem zoom_in_item = new Gtk.MenuItem.with_mnemonic (_("Zoom in"));
+		tool_menu.append (zoom_in_item);
+		zoom_in_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("zoom_in");
+		});
+		zoom_in_item.add_accelerator ("activate", accel_group, '+', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem zoom_out_item = new Gtk.MenuItem.with_mnemonic (_("Zoom out"));
+		tool_menu.append (zoom_out_item);
+		zoom_out_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("zoom_out");
+		});
+		zoom_out_item.add_accelerator ("activate", accel_group, '-', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem zoom_1_1_item = new Gtk.MenuItem.with_mnemonic (_("Zoom to scale 1:1"));
+		tool_menu.append (zoom_1_1_item);
+		zoom_1_1_item.activate.connect (() => { 
+			Toolbox.select_tool_by_name ("zoom_1_1");
+		});
+		zoom_1_1_item.add_accelerator ("activate", accel_group, '0', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		// Add menus
+		Gtk.MenuItem file_launcher = new Gtk.MenuItem.with_mnemonic (_("_File"));
+		file_launcher.set_submenu (file_menu);
+
+		Gtk.MenuItem edit_launcher = new Gtk.MenuItem.with_mnemonic (_("_Edit"));
+		edit_launcher.set_submenu (edit_menu);
+
+		Gtk.MenuItem tab_launcher = new Gtk.MenuItem.with_mnemonic (_("_Tab"));
+		tab_launcher.set_submenu (tab_menu);
+
+		Gtk.MenuItem tool_launcher = new Gtk.MenuItem.with_mnemonic (_("T_ool"));
+		tool_launcher.set_submenu (tool_menu);
+						
+		menubar.append (file_launcher);
+		menubar.append (edit_launcher);
+		menubar.append (tab_launcher);
+		menubar.append (tool_launcher);
 		
-		return 0;
+		return menubar;	
 	}
 
 	internal void toggle_expanded_margin_bottom () {
@@ -428,11 +633,29 @@ class ToolboxCanvas : DrawingArea {
 public class GlyphCanvasArea : DrawingArea  {
 	GlyphCanvas glyph_canvas;
 	Gtk.Allocation alloc;
-	
-	public GlyphCanvasArea (GlyphCanvas gc) {
-		glyph_canvas = gc;
 
-		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK | EventMask.SCROLL_MASK);
+	/* State on linux */
+	public static const int L_SHIFT = 17;
+	public static const int L_CTRL = 20;
+	public static const int L_SHIFT_CTRL = 21;
+
+	/* State on windows */
+	public static const int W_SHIFT = 1;
+	public static const int W_CTRL = 4;
+	public static const int W_SHIFT_CTRL = 5;
+		
+	public GlyphCanvasArea (GlyphCanvas gc) {
+		int event_flags;
+		
+		glyph_canvas = gc;
+		
+		event_flags = EventMask.BUTTON_PRESS_MASK;
+		event_flags |= EventMask.BUTTON_RELEASE_MASK;
+		event_flags |= EventMask.POINTER_MOTION_MASK;
+		event_flags |= EventMask.LEAVE_NOTIFY_MASK;
+		event_flags |= EventMask.SCROLL_MASK;
+		
+		add_events (event_flags);
 
 		glyph_canvas.signal_redraw_area.connect ((x, y, w, h) => {
 			queue_draw_area ((int)x, (int)y, (int)w, (int)h);
@@ -489,6 +712,8 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 
 		button_press_event.connect ((t, e)=> {
+			set_modifier ((int) e.state);
+			
 			if (e.type == EventType.BUTTON_PRESS) {
 				glyph_canvas.current_display.button_press (e.button, e.x, e.y);	
 			} else if (e.type == EventType.2BUTTON_PRESS) {
@@ -499,6 +724,7 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 		
 		button_release_event.connect ((t, e)=> {
+			set_modifier ((int) e.state);
 			glyph_canvas.current_display.button_release ((int) e.button, e.x, e.y);
 			return true;
 		});
@@ -509,6 +735,8 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 		
 		scroll_event.connect ((t, e)=> {
+			set_modifier ((int) e.state);
+			
 			if (e.direction == Gdk.ScrollDirection.UP) {
 				glyph_canvas.current_display.scroll_wheel_up (e.x, e.y);
 			} else if (e.direction == Gdk.ScrollDirection.DOWN) {
@@ -516,7 +744,34 @@ public class GlyphCanvasArea : DrawingArea  {
 			}
 			
 			return true;
-		});	
+		});		
+	}
+
+	static void set_modifier (int k) {
+		switch (k) {
+			case L_SHIFT:
+				KeyBindings.set_modifier (SHIFT);
+				break;
+			case L_CTRL:
+				KeyBindings.set_modifier (CTRL);
+				break;
+			case L_SHIFT_CTRL:
+				KeyBindings.set_modifier (SHIFT | CTRL);
+				break;
+			case W_SHIFT:
+				KeyBindings.set_modifier (SHIFT);
+				break;
+			case W_CTRL:
+				KeyBindings.set_modifier (CTRL);
+				break;
+			case W_SHIFT_CTRL:
+				KeyBindings.set_modifier (SHIFT | CTRL);
+				break;
+
+			default:
+				KeyBindings.set_modifier (NONE);
+				break;
+		}		
 	}
 }
 
@@ -551,8 +806,6 @@ public class TooltipCanvas : DrawingArea {
 		
 		set_size_request (10, 20);
 	}
-
-	
 }
 
 }

@@ -20,7 +20,7 @@ using Cairo;
 namespace Supplement {
 
 /** Kerning context. */
-class ContextDisplay : FontDisplay {
+public class ContextDisplay : FontDisplay {
 
 	List <Word> row;
 	int active_handle = -1;

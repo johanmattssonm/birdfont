@@ -43,39 +43,9 @@ public class MenuTab : FontDisplay {
 			load_font (val);
 		});	
 
-		add_html_callback ("grid", (val) => {
-			if (val == "add") {
-				MainWindow.get_toolbox ().add_new_grid ();
-			}
-
-			if (val == "remove") {
-				MainWindow.get_toolbox ().remove_current_grid ();
-			}
-		});
-
 		add_html_callback ("glyph_sequence", (val) => {
 			Preferences.set ("glyph_sequence", val);
 		});
-
-		add_html_callback ("newfile", (val) => {
-			new_file ();
-		});
-		
-		add_html_callback ("open", (val) => {
-			load ();
-		});	
-
-		add_html_callback ("save", (val) => {
-			save ();
-		});
-		
-		add_html_callback ("save_as", (val) => {
-			save_as ();
-		});
-
-		add_html_callback ("kerning_context", (val) => {
-			show_kerning_context ();
-		});	
 
 		add_html_callback ("help", (val) => {
 			MainWindow.get_tool_tip ().show_text (val);
@@ -109,20 +79,8 @@ public class MenuTab : FontDisplay {
 </head>
 <body>
 	<div class="inner_format_box">
-		<div class="heading"><h2>Menu</h2></div>
-		<div class="menu_item" onclick="call ('newfile:');" onmouseover="call ('help:(Ctrl+n) """ + _("Create a new font") + """');">""" + _("New") + """</div>
-		<div class="menu_item" onclick="call ('open:');" onmouseover="call ('help:(Ctrl+o) """ + _("Open an existing ffi file") + """');">""" + _("Open") + """</div>
-		<div class="menu_item" onclick="call ('save:');" onmouseover="call ('help:(Ctrl+s) """ + _("Save font") + """');">""" + _("Save") + """</div>
-		<div class="menu_item" onclick="call ('save_as:');" onmouseover="call ('help:""" + _("Save font with a different name") + """');">""" + _("Save as") + """</div>
-		<div class="menu_item" onclick="call ('kerning_context:');" onmouseover="call ('help:(Ctrl+k) """ + _("Show kerning context") + """');">""" + _("Kerning context") + """</div>
-		<div class="menu_item" onclick="call ('grid:add');" onmouseover="call ('help:""" + _("Add a new size for grid") + """');">""" + _("Add grid") + """</div>
-		<div class="menu_item" onclick="call ('grid:remove');" onmouseover="call ('help:""" + _("Remove current grid size") + """');">""" + _("Remove grid") + """</div>
-	</div>
-	
-	<div class="inner_format_box">
-		<div class="heading"><h2>""" + _("Edit") + """</h2></div>
-		
 		<div class="content">
+			<div class="heading"><h2>""" + _("Preferences") + """</h2></div>
 			<form>
 """);
 				
@@ -143,6 +101,8 @@ c.append ("""
 
 		</div>
 	</div>
+	
+	<img src="birdfont_logo.png" alt="" style="float:right;margin: 50px 0 0 0;">
 	
 	<br class="clearBoth" />
 	
