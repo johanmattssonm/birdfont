@@ -334,7 +334,8 @@ def copy_runtime_dependencies (bld):
 	
 	bld(rule="cp -ra ../layout/ supplement/")
 	bld(rule="cp -ra ../icons/ supplement/")
-
+	bld(rule="cp -ra locale supplement/")
+	
 	bld(rule="cp ../win32/birdfont.ico supplement/")
 	bld(rule="cp -r " + MINGW + "/etc supplement/")
 
