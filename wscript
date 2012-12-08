@@ -1,7 +1,7 @@
 import time;
 import os
 
-VERSION = '0.6'
+VERSION = '0.7'
 APPNAME = 'birdfont'
 
 top = '.'
