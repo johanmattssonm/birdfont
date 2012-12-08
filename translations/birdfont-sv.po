@@ -111,7 +111,7 @@ msgstr ""
 
 #: src/MenuTab.c:835
 msgid "Glyph sequence"
-msgstr "Tecken sekvens"
+msgstr "Teckensekvens"
 
 #: src/MenuTab.c:852
 msgid "Name"
