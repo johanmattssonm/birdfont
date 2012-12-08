@@ -123,10 +123,10 @@ public class ExportTool : Tool {
 		} catch (Error e) {
 			stderr.printf (@"Export \"$svg_file\" \n");
 			critical (@"$(e.message)");
-			status ("Can't export $svg_file.");
+			status (_("Can't export") + @" $svg_file.");
 		}
 		
-		status ("Wrote $svg_file.");
+		status (_("Wrote") + @" $svg_file.");
 	}
 
 	public static void generate_html_document (string html_file, Font font) {
@@ -288,7 +288,7 @@ os.put_string (
 </div>
 
 <div>
-	<h4 class="smaller">Alphabet</h4>
+	<h4 class="smaller">""" +  _("Alphabet") + """</h4>
 	<p class="smaller">""" + _("a b c d e f g h i j k l m n o p q r s t u v w x y z") + """</p>
 	<p class="smaller">""" + _("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z") + """</p>
 	<p class="smaller">0 1 2 3 4 5 6 7 8 9</p>
@@ -446,7 +446,7 @@ os.put_string (
 			return false;
 		}
 		
-		status (@"Wrote font files");
+		status (_ ("Wrote font files"));
 		return true;
 	}
 

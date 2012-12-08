@@ -67,10 +67,7 @@ public class VersionList : DropMenu {
 	
 	private void set_selected_item (MenuAction ma) {
 		int i = ma.index;
-		Tab? t;
-		Tab tab;
-		Font font = Supplement.get_current_font ();
-					
+				
 		return_if_fail (0 <= i < glyphs.length ());
 
 		current_version = i;

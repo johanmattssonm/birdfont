@@ -73,7 +73,7 @@ def build(bld):
 
 def update_translations (bld):
 	bld (
-		rule = "xgettext --language=C# --keyword=_ --from-code=utf-8 --output=birdfont.pot src/* 2&> xgettext.errors",
+		rule = "xgettext --language=C# --keyword=_ --from-code=utf-8 --output=../birdfont.pot src/* 2&> xgettext.errors",
 		name = "update pot",
 		always = True
 	)
@@ -85,9 +85,22 @@ def update_translations (bld):
 		d = "../translations/birdfont-" + loc + ".po"
 
 		bld (
-			rule = "msgmerge " + d + """ birdfont.pot > """ + d + """.new && mv """ + d + ".new " + d,
-				
+			rule = "ls",
+			always = True
+		)
+
+		print (d)
+
+		bld (
+			rule = "msgmerge " + d + """ ../birdfont.pot > build/birdfont-""" + loc + ".po.new",
 			depends = "update pot",
+			name = "merge pot",
+			always = True
+		)		
+
+		bld (
+			rule = "mv build/birdfont-""" + loc + ".po.new " + d,
+			depends = "merge pot",
 			always = True
 		)		
 		
