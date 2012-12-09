@@ -20,6 +20,11 @@ using Supplement;
 
 const string GETTEXT_PACKAGE = "birdfont"; 
 
+void parse_gtk_rc () {
+	File f = FontDisplay.find_file ("layout", "birdfont.rc");
+	Gtk.rc_parse ((!) f.get_path ());
+}
+
 public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;
@@ -28,6 +33,8 @@ public static int main (string[] arg) {
 	supplement.init (arg);
 	
 	Gtk.init (ref arg);
+	parse_gtk_rc ();
+
 	native_window = new GtkWindow ("birdfont");	
 	window = new MainWindow ();
 	

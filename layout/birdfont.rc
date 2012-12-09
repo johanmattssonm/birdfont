@@ -1,0 +1,25 @@
+style "birdfont-menu" {
+	bg[NORMAL] = "#9eaec3"
+	fg[NORMAL] = "#000000"
+}
+
+style "birdfont-scrollbar" {
+	bg[NORMAL] = "#9eaec3"
+	bg[INSENSITIVE] = "#7c92af"
+	bg[SELECTED] = "#c1d4e9"
+	bg[PRELIGHT] = "#a8c0d9"
+	bg[ACTIVE] = "#ccdae9"
+	fg[NORMAL] = "#000000"
+	fg[PRELIGHT] = "#446f9c"
+	fg[ACTIVE] = "#446f9c"
+	fg[INSENSITIVE] = "#446f9c"
+}
+
+style "birdfont-window" {
+	bg[NORMAL] = "#ffffff"
+}
+
+
+widget "*Window*" style "birdfont-window" 
+widget "*Menu*" style "birdfont-menu" 
+widget "*Scroll*" style "birdfont-scrollbar" 
