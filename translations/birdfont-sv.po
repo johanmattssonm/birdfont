@@ -95,11 +95,11 @@ msgstr ""
 
 #: src/ExportTool.c:1298 src/GlyphRange.c:208
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-msgstr ""
+msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö"
 
 #: src/ExportTool.c:1303 src/GlyphRange.c:211
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-msgstr ""
+msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö"
 
 #: src/ExportTool.c:1913
 msgid "Wrote font files"
