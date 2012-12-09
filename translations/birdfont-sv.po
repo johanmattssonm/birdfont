@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-09 00:20+0100\n"
+"POT-Creation-Date: 2012-12-09 00:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -386,11 +386,11 @@ msgstr ""
 
 #: GtkWindow.c:2114
 msgid "_File"
-msgstr "Arkiv"
+msgstr "_Arkiv"
 
 #: GtkWindow.c:2119
 msgid "_Edit"
-msgstr "Redigera"
+msgstr "_Redigera"
 
 #: GtkWindow.c:2124
 msgid "_Tab"
@@ -398,4 +398,4 @@ msgstr ""
 
 #: GtkWindow.c:2129
 msgid "T_ool"
-msgstr "Verktyg"
+msgstr "_Verktyg"
