@@ -743,6 +743,7 @@ public class GlyphCanvasArea : DrawingArea  {
 				glyph_canvas.current_display.scroll_wheel_down (e.x, e.y);
 			}
 			
+			glyph_canvas.current_display.button_release (2, e.x, e.y);
 			return true;
 		});		
 	}
