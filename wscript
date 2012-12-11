@@ -120,7 +120,7 @@ def compile_translations (bld):
 		bld (
 			rule = "msgfmt --output=locale/" + loc + "/LC_MESSAGES/birdfont.mo ../translations/birdfont-" + loc + ".po",
 			depends = loc,
-			target = 'build/locale/'  + loc + '/LC_MESSAGES/birdfont.mo'
+			target = 'locale/'  + loc + '/LC_MESSAGES/birdfont.mo'
 		)
 		
 		bld.install_files(
