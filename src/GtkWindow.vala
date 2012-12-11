@@ -211,14 +211,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			FontDisplay fd = window.glyph_canvas.current_display;
 			
 			if (fd is Glyph) {
-				window.glyph_canvas.key_press (event.keyval);
 				window.tools.key_press (event.keyval);
 			}
 			
-			if (fd is ContextDisplay) {
-				window.glyph_canvas.key_press (event.keyval);
-			}
-
+			window.glyph_canvas.key_press (event.keyval);
+			
 			return false;
 		});
 		
