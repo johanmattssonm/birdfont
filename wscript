@@ -113,18 +113,19 @@ def compile_translations (bld):
 		loc = loc.replace ("birdfont-", "")
 		
 		bld (
-			rule = "mkdir -p ./locale/" + loc + "/LC_MESSAGES/",
+			rule = "mkdir -p locale/" + loc + "/LC_MESSAGES/",
 			name = loc
 		)
 		
 		bld (
-			rule = "msgfmt --output=./locale/" + loc + "/LC_MESSAGES/birdfont.mo ../translations/birdfont-" + loc + ".po",
-			depends = loc
+			rule = "msgfmt --output=locale/" + loc + "/LC_MESSAGES/birdfont.mo ../translations/birdfont-" + loc + ".po",
+			depends = loc,
+			target = 'build/locale/'  + loc + '/LC_MESSAGES/birdfont.mo'
 		)
 		
 		bld.install_files(
 			'${PREFIX}/locale/" + loc + "/LC_MESSAGES/', 
-			['locale/" + loc + "/LC_MESSAGES/birdfont.mo']
+			['build/locale/'  + loc + '/LC_MESSAGES/birdfont.mo']
 		)
 	
 def write_config (cfg):

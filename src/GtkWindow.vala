@@ -215,7 +215,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			}
 			
 			window.glyph_canvas.key_press (event.keyval);
-			
 			return false;
 		});
 		
