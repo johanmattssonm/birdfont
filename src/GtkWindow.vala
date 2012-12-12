@@ -396,21 +396,21 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			MainWindow.get_toolbox ().remove_current_grid ();
 		});
 		
-		Gtk.MenuItem zoom_in_item = new Gtk.MenuItem.with_mnemonic (_("Zoom in"));
+		Gtk.MenuItem zoom_in_item = new Gtk.MenuItem.with_mnemonic (_("_Zoom in"));
 		tool_menu.append (zoom_in_item);
 		zoom_in_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("zoom_in");
 		});
 		zoom_in_item.add_accelerator ("activate", accel_group, '+', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem zoom_out_item = new Gtk.MenuItem.with_mnemonic (_("Zoom out"));
+		Gtk.MenuItem zoom_out_item = new Gtk.MenuItem.with_mnemonic (_("Zoom _out"));
 		tool_menu.append (zoom_out_item);
 		zoom_out_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("zoom_out");
 		});
 		zoom_out_item.add_accelerator ("activate", accel_group, '-', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem zoom_1_1_item = new Gtk.MenuItem.with_mnemonic (_("Zoom to scale 1:1"));
+		Gtk.MenuItem zoom_1_1_item = new Gtk.MenuItem.with_mnemonic (_("Zoom to _scale 1:1"));
 		tool_menu.append (zoom_1_1_item);
 		zoom_1_1_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("zoom_1_1");

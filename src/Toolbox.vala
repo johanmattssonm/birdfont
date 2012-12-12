@@ -91,7 +91,7 @@ public class Toolbox : GLib.Object  {
 		// Draw tool modifiers
 		// DELETE tools:
 		
-		Tool new_point = new Tool ("new_point", _("Right click to add new point, left click to move points and double click to ad new point on path"), 'a');
+		Tool new_point = new Tool ("new_point", _("Right click to add new point, left click to move points") + " " + _("and double click to ad new point on path"), 'a');
 		new_point.select_action.connect ((self) => {
 				select_draw_tool ();
 			});

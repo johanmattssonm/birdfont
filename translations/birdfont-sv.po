@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-10 12:08+0100\n"
+"POT-Creation-Date: 2012-12-12 10:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,8 +149,12 @@ msgstr ""
 msgid "Move paths"
 msgstr ""
 
-#: src/PenTool.c:883 src/Toolbox.c:2378
-msgid "Right click to add new point, left click to move points and double cli"
+#: src/PenTool.c:888 src/Toolbox.c:2384
+msgid "Right click to add new point, left click to move points"
+msgstr ""
+
+#: src/PenTool.c:891
+msgid "and double click to add new point on path"
 msgstr ""
 
 #: src/SaveDialog.c:310
@@ -174,115 +178,119 @@ msgstr ""
 msgid "Creating thumbnails"
 msgstr ""
 
-#: src/Toolbox.c:2384
-msgid "Add new point on path"
+#: src/Toolbox.c:2387
+msgid "and double click to ad new point on path"
 msgstr ""
 
 #: src/Toolbox.c:2397
+msgid "Add new point on path"
+msgstr ""
+
+#: src/Toolbox.c:2410
 msgid "Begin new path from point on path"
 msgstr ""
 
-#: src/Toolbox.c:2407
+#: src/Toolbox.c:2420
 msgid "Tie curve handles for selected edit point"
 msgstr ""
 
-#: src/Toolbox.c:2415
+#: src/Toolbox.c:2428
 msgid "Tie coordinates to previous edit point"
 msgstr ""
 
-#: src/Toolbox.c:2420
+#: src/Toolbox.c:2433
 msgid "Delete edit points"
 msgstr ""
 
-#: src/Toolbox.c:2427
+#: src/Toolbox.c:2440
 msgid "Set precision"
 msgstr ""
 
-#: src/Toolbox.c:2459
+#: src/Toolbox.c:2472
 msgid "Create counter from outline"
 msgstr ""
 
-#: src/Toolbox.c:2467
+#: src/Toolbox.c:2480
 msgid "Move to path to bottom layer"
 msgstr ""
 
-#: src/Toolbox.c:2475
+#: src/Toolbox.c:2488
 msgid "Show full unicode characters set"
 msgstr ""
 
-#: src/Toolbox.c:2483
+#: src/Toolbox.c:2496
 msgid "Show default characters set"
 msgstr ""
 
-#: src/Toolbox.c:2491 GtkWindow.c:2074
+#: src/Toolbox.c:2504 GtkWindow.c:2061
 msgid "Show characters in font"
 msgstr ""
 
-#: src/Toolbox.c:2499
+#: src/Toolbox.c:2512
 msgid "Delete selected glyph"
 msgstr ""
 
-#: src/Toolbox.c:2584
+#: src/Toolbox.c:2597
 msgid "Show help lines for x-height and baseline"
 msgstr ""
 
-#: src/Toolbox.c:2590
+#: src/Toolbox.c:2603
 msgid "Show help lines at top and bottom margin"
 msgstr ""
 
-#: src/Toolbox.c:2600 GtkWindow.c:2093
+#: src/Toolbox.c:2613
 msgid "Zoom in"
 msgstr ""
 
-#: src/Toolbox.c:2606 GtkWindow.c:2100
+#: src/Toolbox.c:2619
 msgid "Zoom out"
 msgstr ""
 
-#: src/Toolbox.c:2612 GtkWindow.c:2107
+#: src/Toolbox.c:2625
 msgid "Zoom to scale 1:1"
 msgstr ""
 
-#: src/Toolbox.c:2618
+#: src/Toolbox.c:2631
 msgid "Show full glyph"
 msgstr ""
 
-#: src/Toolbox.c:2624
+#: src/Toolbox.c:2637
 msgid "Zoom in at region boundries"
 msgstr ""
 
-#: src/Toolbox.c:2630
+#: src/Toolbox.c:2643
 msgid "Zoom in background image"
 msgstr ""
 
-#: src/Toolbox.c:2636
+#: src/Toolbox.c:2649
 msgid "Previous view"
 msgstr ""
 
-#: src/Toolbox.c:2642
+#: src/Toolbox.c:2655
 msgid "Next view"
 msgstr ""
 
-#: src/Toolbox.c:2648
+#: src/Toolbox.c:2661
 msgid "Set size for background image"
 msgstr ""
 
-#: src/Toolbox.c:2675
+#: src/Toolbox.c:2688
 msgid "Show/hide background image"
 msgstr ""
 
-#: src/Toolbox.c:2681
+#: src/Toolbox.c:2694
 msgid "Insert new background image"
 msgstr ""
 
-#: src/Toolbox.c:2688
+#: src/Toolbox.c:2701
 msgid "Set background contrast"
 msgstr ""
 
-#: src/Toolbox.c:2694
+#: src/Toolbox.c:2707
 msgid "Set threshold"
 msgstr ""
 
-#: src/Toolbox.c:3393
+#: src/Toolbox.c:3406
 msgid "Set size for grid"
 msgstr ""
 
@@ -294,108 +302,120 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: GtkWindow.c:1939
+#: GtkWindow.c:1926
 msgid "_New"
 msgstr ""
 
-#: GtkWindow.c:1946
+#: GtkWindow.c:1933
 msgid "_Open"
 msgstr ""
 
-#: GtkWindow.c:1953
+#: GtkWindow.c:1940
 #, fuzzy
 msgid "_Save"
 msgstr "Spara"
 
-#: GtkWindow.c:1960
+#: GtkWindow.c:1947
 #, fuzzy
 msgid "Save _as"
 msgstr "Spara som"
 
-#: GtkWindow.c:1966
+#: GtkWindow.c:1953
 msgid "_Export"
 msgstr ""
 
-#: GtkWindow.c:1973
+#: GtkWindow.c:1960
 msgid "_Preview"
 msgstr ""
 
-#: GtkWindow.c:1980
+#: GtkWindow.c:1967
 msgid "_Kerning"
 msgstr ""
 
-#: GtkWindow.c:1987
+#: GtkWindow.c:1974
 msgid "_Quit"
 msgstr ""
 
-#: GtkWindow.c:1993
+#: GtkWindow.c:1980
 msgid "_Undo"
 msgstr ""
 
-#: GtkWindow.c:2000
+#: GtkWindow.c:1987
 msgid "_Copy"
 msgstr ""
 
-#: GtkWindow.c:2007
+#: GtkWindow.c:1994
 msgid "_Paste"
 msgstr ""
 
-#: GtkWindow.c:2014
+#: GtkWindow.c:2001
 msgid "_Next tab"
 msgstr ""
 
-#: GtkWindow.c:2020
+#: GtkWindow.c:2007
 msgid "_Previous tab"
 msgstr ""
 
-#: GtkWindow.c:2026
+#: GtkWindow.c:2013
 msgid "_Close tab"
 msgstr ""
 
-#: GtkWindow.c:2033
+#: GtkWindow.c:2020
 msgid "_Create path"
 msgstr ""
 
-#: GtkWindow.c:2040
+#: GtkWindow.c:2027
 msgid "_Zoom"
 msgstr ""
 
-#: GtkWindow.c:2046
+#: GtkWindow.c:2033
 msgid "_Create counter path"
 msgstr ""
 
-#: GtkWindow.c:2053
+#: GtkWindow.c:2040
 msgid "_Move"
 msgstr ""
 
-#: GtkWindow.c:2060
+#: GtkWindow.c:2047
 msgid "Show _full unicode characters set"
 msgstr ""
 
-#: GtkWindow.c:2067
+#: GtkWindow.c:2054
 msgid "Show de_fault characters set"
 msgstr ""
 
-#: GtkWindow.c:2081
+#: GtkWindow.c:2068
 msgid "Add new _grid item"
 msgstr ""
 
-#: GtkWindow.c:2087
+#: GtkWindow.c:2074
 msgid "Remove gr_id item"
 msgstr ""
 
-#: GtkWindow.c:2114
+#: GtkWindow.c:2080
+msgid "_Zoom in"
+msgstr ""
+
+#: GtkWindow.c:2087
+msgid "Zoom _out"
+msgstr ""
+
+#: GtkWindow.c:2094
+msgid "Zoom to _scale 1:1"
+msgstr ""
+
+#: GtkWindow.c:2101
 msgid "_File"
 msgstr "_Arkiv"
 
-#: GtkWindow.c:2119
+#: GtkWindow.c:2106
 msgid "_Edit"
 msgstr "_Redigera"
 
-#: GtkWindow.c:2124
+#: GtkWindow.c:2111
 msgid "_Tab"
 msgstr ""
 
-#: GtkWindow.c:2129
+#: GtkWindow.c:2116
 msgid "T_ool"
 msgstr "_Verktyg"
