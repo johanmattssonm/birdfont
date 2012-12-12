@@ -73,44 +73,36 @@ def build(bld):
 
 def update_translations (bld):
 	bld (
-		rule = "xgettext --language=C# --keyword=_ --from-code=utf-8 --output=../birdfont.pot src/* ./*.c",
+		rule = "xgettext --language=C# --keyword=_ --add-comments=/ --from-code=utf-8 --output=../birdfont.pot ../src/*.vala",
 		name = "update pot",
 		always = True
 	)
 			
-	for file in os.listdir('./translations'):
+	for file in os.listdir('./po'):
+		if file == "birdfont.pot": continue
+	
 		loc = file.replace (".po", "")
-		loc = loc.replace ("birdfont-", "")
-
-		d = "../translations/birdfont-" + loc + ".po"
+		d = "../po/" + loc + ".po"
 
 		bld (
-			rule = "ls",
-			always = True
-		)
-
-		print (d)
-
-		bld (
-			rule = "msgmerge " + d + """ ../birdfont.pot > build/birdfont-""" + loc + ".po.new",
+			rule = "msgmerge " + d + """ ../po/birdfont.pot > build/""" + loc + ".po.new",
 			depends = "update pot",
 			name = "merge pot",
 			always = True
 		)		
 
 		bld (
-			rule = "mv build/birdfont-""" + loc + ".po.new " + d,
+			rule = "mv build/""" + loc + ".po.new " + d,
 			depends = "merge pot",
 			always = True
 		)		
 		
 
 def compile_translations (bld):
-	for file in os.listdir('./translations'):
-		# extract LANG from birdfont-sv_SE.po and create .mo files
+	for file in os.listdir('./po'):
+		if file == "birdfont.pot": continue
 		
 		loc = file.replace (".po", "")
-		loc = loc.replace ("birdfont-", "")
 		
 		bld (
 			rule = "mkdir -p locale/" + loc + "/LC_MESSAGES/",
@@ -118,7 +110,7 @@ def compile_translations (bld):
 		)
 		
 		bld (
-			rule = "msgfmt --output=locale/" + loc + "/LC_MESSAGES/birdfont.mo ../translations/birdfont-" + loc + ".po",
+			rule = "msgfmt --output=locale/" + loc + "/LC_MESSAGES/birdfont.mo ../po/" + loc + ".po",
 			depends = loc,
 			target = 'locale/'  + loc + '/LC_MESSAGES/birdfont.mo'
 		)
