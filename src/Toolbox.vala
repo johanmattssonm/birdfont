@@ -91,7 +91,7 @@ public class Toolbox : GLib.Object  {
 		// Draw tool modifiers
 		// DELETE tools:
 		
-		Tool new_point = new Tool ("new_point", _("Right click to add new point, left click to move points") + " " + _("and double click to ad new point on path"), 'a');
+		Tool new_point = new Tool ("new_point", _("Right click to add new point, left click to move points") + " " + _("and double click to add new point on path"), 'a');
 		new_point.select_action.connect ((self) => {
 				select_draw_tool ();
 			});
@@ -106,7 +106,7 @@ public class Toolbox : GLib.Object  {
 		// draw_tool_modifiers.add_tool (insert_point_on_path);
 		
 		if (Supplement.experimental) {
-			Tool new_point_on_path = new Tool ("new_point_on_path", _("Begin new path from point on path"), 'n');
+			Tool new_point_on_path = new Tool ("new_point_on_path", _("Begin new line from point on path"), 'n');
 			new_point_on_path.select_action.connect ((self) => {
 					select_draw_tool ();
 					pen_tool.begin_from_new_point_on_path ();
@@ -190,7 +190,7 @@ public class Toolbox : GLib.Object  {
 		});
 		path_tool_modifiers.add_tool (reverse_path_tool);
 
-		Tool move_layer = new Tool ("move_layer", _("Move to path to bottom layer"), 'd');
+		Tool move_layer = new Tool ("move_layer", _("Move to path to the bottom layer"), 'd');
 		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 
@@ -224,7 +224,7 @@ public class Toolbox : GLib.Object  {
 		});
 		characterset_tools.add_tool (custom_character_set);
 
-		Tool avalilable_characters = new Tool ("available_characters", _("Show characters in font"), 'd', CTRL);
+		Tool avalilable_characters = new Tool ("available_characters", _("Show all characters in font"), 'd', CTRL);
 		avalilable_characters.select_action.connect ((self) => {
 			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
@@ -432,7 +432,7 @@ public class Toolbox : GLib.Object  {
 		});
 		background_tools.add_tool (show_bg);
 
-		Tool bg_selection = new Tool ("insert_background", _("Insert new background image"));
+		Tool bg_selection = new Tool ("insert_background", _("Insert a new background image"));
 		bg_selection.select_action.connect((self) => {
 			Glyph? g = null;
 			FontDisplay fd = MainWindow.get_current_display ();
@@ -456,7 +456,7 @@ public class Toolbox : GLib.Object  {
 		bg_selection.set_show_background (true);
 		background_tools.add_tool (bg_selection);
 		
-		SpinButton background_contrast = new SpinButton ("background_contrast", _("Set background contrast"));
+		SpinButton background_contrast = new SpinButton ("background_contrast", _("Set contrast for background image"));
 		background_contrast.set_value_round (1);
 
 		background_contrast.new_value_action.connect ((self) => {

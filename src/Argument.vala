@@ -224,10 +224,10 @@ public class Argument : GLib.Object {
 	{
 		stdout.printf (_("Usage") + ": ");
 		stdout.printf (args.nth (0).data);
-		stdout.printf (" [FILE] [OPTION ...]\n");
+		stdout.printf (" [" + _("FILE") + "] [" + _("OPTION") + " ...]\n");
 
 		print_padded ("-c, --show-coordinates", _("show coordinate in glyph view"));
-		print_padded ("-e, --exit", _("exit if a testcase failes"));
+		print_padded ("-e, --exit", _("exit if a test case failes"));
 		print_padded ("-f, --fatal-warning", _("treat warnings as fatal"));
 		print_padded ("-h, --help", _("show this message"));
 		print_padded ("-s, --slow", _("sleep between each command in test suite"));

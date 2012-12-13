@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-12 18:39+0100\n"
-"PO-Revision-Date: 2012-12-13 13:53+0000\n"
+"POT-Creation-Date: 2012-12-14 07:49+0100\n"
+"PO-Revision-Date: 2012-12-14 06:48+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,19 +16,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1355406838.0\n"
+"X-POOTLE-MTIME: 1355467690.0\n"
 
 #: ../src/Argument.vala:225
 msgid "Usage"
 msgstr "Användning"
+
+#: ../src/Argument.vala:227
+msgid "FILE"
+msgstr "FIL"
+
+#: ../src/Argument.vala:227
+msgid "OPTION"
+msgstr "FLAGGOR"
 
 #: ../src/Argument.vala:229
 msgid "show coordinate in glyph view"
 msgstr "visa koordinater i redigeringsfönstret"
 
 #: ../src/Argument.vala:230
-msgid "exit if a testcase failes"
-msgstr ""
+msgid "exit if a test case failes"
+msgstr "avsluta om ett test misslyckas"
 
 #: ../src/Argument.vala:231
 msgid "treat warnings as fatal"
@@ -40,15 +48,15 @@ msgstr "visa detta meddelande"
 
 #: ../src/Argument.vala:233
 msgid "sleep between each command in test suite"
-msgstr ""
+msgstr "vänta mellan varje test"
 
 #: ../src/Argument.vala:234
 msgid "run test case"
-msgstr ""
+msgstr "utför automatisk testning"
 
 #: ../src/BackgroundTool.vala:40
 msgid "Move, resize and rotate background image"
-msgstr ""
+msgstr "Flytta, ändra storlek på och rotera bakgrundsbilden"
 
 #: ../src/Birdfont.vala:22
 msgid "Usage:"
@@ -60,7 +68,7 @@ msgstr "skriv ut detta meddelande\n"
 
 #: ../src/Birdfont.vala:26
 msgid "write files to this directory\n"
-msgstr ""
+msgstr "skriv filer till denna katalog\n"
 
 #: ../src/Birdfont.vala:27
 msgid "write svg file\n"
@@ -78,55 +86,67 @@ msgstr "Kan inte hitta mappen som filerna ska skrivas till"
 msgid "Writing"
 msgstr "Skriver"
 
+#: ../src/CutBackgroundTool.vala:37
+msgid "Crop background image"
+msgstr "Beskär bakgrundsbilden"
+
 #: ../src/ExportTool.vala:29
 msgid "Export glyph to svg file"
-msgstr ""
+msgstr "Exportera tecken till svg-fil"
 
-#: ../src/ExportTool.vala:126
+#: ../src/ExportTool.vala:94
+msgid "Alphabet"
+msgstr "Alfabetet"
+
+#: ../src/ExportTool.vala:128
 msgid "Can't export"
-msgstr ""
+msgstr "Kan inte exportera"
 
-#: ../src/ExportTool.vala:129
+#: ../src/ExportTool.vala:131
 msgid "Wrote"
-msgstr ""
+msgstr "Har skrivit"
 
-#: ../src/ExportTool.vala:449
+#: ../src/ExportTool.vala:451
 msgid "Wrote font files"
-msgstr ""
+msgstr "Har skrivit typsnittsfiler"
 
-#. / All lower case letters in alphabetic order
+#. / All lower case letters in alphabetic order separated by space
 #: ../src/GlyphRange.vala:37
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö"
 
-#. / All upper case letters in alphabetic order
+#. / All upper case letters in alphabetic order separated by space
 #: ../src/GlyphRange.vala:40
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö"
 
+#: ../src/GridTool.vala:36
+msgid "Show grid"
+msgstr "Visa rutnät"
+
 #: ../src/GtkWindow.vala:243
 msgid "_New"
-msgstr ""
+msgstr "_Nytt"
 
 #: ../src/GtkWindow.vala:248
 msgid "_Open"
-msgstr ""
+msgstr "_Öppna"
 
 #: ../src/GtkWindow.vala:253
 msgid "_Save"
-msgstr ""
+msgstr "_Spara"
 
 #: ../src/GtkWindow.vala:258
 msgid "Save _as"
-msgstr ""
+msgstr "Spara so_m"
 
 #: ../src/GtkWindow.vala:262
 msgid "_Export"
-msgstr ""
+msgstr "_Exportera"
 
 #: ../src/GtkWindow.vala:267
 msgid "_Preview"
-msgstr ""
+msgstr "_Förhandsgranska"
 
 #: ../src/GtkWindow.vala:272
 msgid "_Kerning"
@@ -134,43 +154,43 @@ msgstr ""
 
 #: ../src/GtkWindow.vala:277
 msgid "_Quit"
-msgstr ""
+msgstr "_Avsluta"
 
 #: ../src/GtkWindow.vala:282
 msgid "_Undo"
-msgstr ""
+msgstr "_Ångra"
 
 #: ../src/GtkWindow.vala:287
 msgid "_Copy"
-msgstr ""
+msgstr "_Kopiera"
 
 #: ../src/GtkWindow.vala:292
 msgid "_Paste"
-msgstr ""
+msgstr "Klistra _in"
 
 #: ../src/GtkWindow.vala:298
 msgid "_Next tab"
-msgstr ""
+msgstr "_Nästa flik"
 
 #: ../src/GtkWindow.vala:311
 msgid "_Previous tab"
-msgstr ""
+msgstr "_Föregående flik"
 
 #: ../src/GtkWindow.vala:324
 msgid "_Close tab"
-msgstr ""
+msgstr "_Stäng flik"
 
 #: ../src/GtkWindow.vala:339
 msgid "_Create path"
-msgstr ""
+msgstr "Skapa _kontur"
 
 #: ../src/GtkWindow.vala:346
 msgid "_Zoom"
-msgstr ""
+msgstr "_Zoom"
 
 #: ../src/GtkWindow.vala:352
 msgid "_Create counter path"
-msgstr ""
+msgstr "Skapa _insida"
 
 #: ../src/GtkWindow.vala:359
 msgid "_Move"
@@ -182,19 +202,19 @@ msgstr "Visa alla _unicode tecken"
 
 #: ../src/GtkWindow.vala:373
 msgid "Show de_fault characters set"
-msgstr ""
+msgstr "Visa svenska tecken"
 
-#: ../src/GtkWindow.vala:380 ../src/Toolbox.vala:227
+#: ../src/GtkWindow.vala:380
 msgid "Show characters in font"
-msgstr ""
+msgstr "Visa alla typsnittets tecken"
 
 #: ../src/GtkWindow.vala:387
 msgid "Add new _grid item"
-msgstr ""
+msgstr "Lägg till storlek för nytt _rutnät"
 
 #: ../src/GtkWindow.vala:393
 msgid "Remove gr_id item"
-msgstr ""
+msgstr "Ta bort storlek för rutnätet"
 
 #: ../src/GtkWindow.vala:399
 msgid "_Zoom in"
@@ -206,7 +226,7 @@ msgstr ""
 
 #: ../src/GtkWindow.vala:413
 msgid "Zoom to _scale 1:1"
-msgstr ""
+msgstr "Visa i skala _1:1"
 
 #: ../src/GtkWindow.vala:421
 msgid "_File"
@@ -218,7 +238,7 @@ msgstr "_Redigera"
 
 #: ../src/GtkWindow.vala:427
 msgid "_Tab"
-msgstr ""
+msgstr "_Flik"
 
 #: ../src/GtkWindow.vala:430
 msgid "T_ool"
@@ -226,35 +246,57 @@ msgstr "_Verktyg"
 
 #: ../src/MenuTab.vala:94
 msgid "Export"
-msgstr ""
+msgstr "Exportera"
 
 #: ../src/MenuTab.vala:95
 msgid "Preview"
-msgstr ""
+msgstr "Förhandsgranska"
 
 #: ../src/MenuTab.vala:113
 msgid "Recent files"
-msgstr ""
+msgstr "Senast använda filer"
 
-#: ../src/MenuTab.vala:226 ../src/SaveDialog.vala:82
+#: ../src/MenuTab.vala:150
+msgid "Preferences"
+msgstr "Inställningar"
+
+#: ../src/MenuTab.vala:151
+msgid "Export SVG, TTF & EOT fonts"
+msgstr "Exportera SVG, TTF & EOT filer"
+
+#: ../src/MenuTab.vala:152
+msgid "Name"
+msgstr "Namn"
+
+#: ../src/MenuTab.vala:153
+msgid "Glyph sequence"
+msgstr "Teckensekvens"
+
+#: ../src/MenuTab.vala:154 ../src/MenuTab.vala:155
+msgid "Export SVG font and view the result"
+msgstr "Exportera SVG-typsnitt och visa resultatet"
+
+#: ../src/MenuTab.vala:238 ../src/SaveDialog.vala:82
 msgid "Save"
 msgstr "Spara"
 
 #: ../src/MergeTool.vala:23
 msgid "Merge paths"
-msgstr ""
+msgstr "Sammanfoga slingor"
 
 #: ../src/MoveTool.vala:36
 msgid "Move paths"
-msgstr ""
-
-#: ../src/PenTool.vala:48 ../src/Toolbox.vala:94
-msgid "Right click to add new point, left click to move points"
-msgstr ""
+msgstr "Flytta objekt"
 
 #: ../src/PenTool.vala:48
-msgid "and double click to add new point on path"
+msgid "Right click to add new points, left click to move points"
 msgstr ""
+"Högerklicka för att lägga till nya punkter, vänsterklicka för att flytta "
+"punkter"
+
+#: ../src/PenTool.vala:48
+msgid "and double click to add new point on path."
+msgstr "och dubbelklicka för att lägga till ny punkt på slingan."
 
 #: ../src/SaveDialog.vala:83
 msgid "Save as"
@@ -262,67 +304,93 @@ msgstr "Spara som"
 
 #: ../src/SaveDialog.vala:84
 msgid "Discard"
-msgstr ""
+msgstr "Spara inte"
 
 #: ../src/SaveDialog.vala:85
 msgid "Cancel"
+msgstr "Avbryt"
+
+#: ../src/SaveDialog.vala:94
+msgid "Save?"
+msgstr "Spara?"
+
+#: ../src/TabBar.vala:479
+msgid "Overview"
+msgstr "Översikt"
+
+#: ../src/TabBar.vala:482
+msgid "Kerning"
 msgstr ""
 
+#: ../src/TabBar.vala:485
+msgid "Menu"
+msgstr "Meny"
+
 #: ../src/Toolbox.vala:94
-msgid "and double click to ad new point on path"
+msgid "Right click to add new point, left click to move points"
 msgstr ""
+"Högerklicka för att lägga till nya punkter, vänsterklicka för att flytta "
+"punkter"
+
+#: ../src/Toolbox.vala:94
+msgid "and double click to add new point on path"
+msgstr "och dubbelklicka för att lägga till en ny punkt på slingan"
 
 #: ../src/Toolbox.vala:101
 msgid "Add new point on path"
-msgstr ""
+msgstr "Lägg till en ny punkt på slingan"
 
 #: ../src/Toolbox.vala:109
-msgid "Begin new path from point on path"
-msgstr ""
+msgid "Begin new line from point on path"
+msgstr "Börja ny linje från en punkt på slingan"
 
 #: ../src/Toolbox.vala:117
 msgid "Tie curve handles for selected edit point"
-msgstr ""
+msgstr "Knyt handtagen på den valda kontrollpunkten"
 
 #: ../src/Toolbox.vala:137
 msgid "Tie coordinates to previous edit point"
-msgstr ""
+msgstr "Knyt handtag till föregående kontrollpunkt"
 
 #: ../src/Toolbox.vala:144
 msgid "Delete edit points"
-msgstr ""
+msgstr "Radera kontrollpunkter"
 
 #: ../src/Toolbox.vala:153
 msgid "Set precision"
-msgstr ""
+msgstr "Ställ in precision"
 
 #: ../src/Toolbox.vala:181
 msgid "Create counter from outline"
-msgstr "Skapa insida från objekt"
+msgstr "Skapa insida från kontur"
 
 #: ../src/Toolbox.vala:193
-msgid "Move to path to bottom layer"
-msgstr ""
+msgid "Move to path to the bottom layer"
+msgstr "Flytta slingan till bottenlagret"
 
 #: ../src/Toolbox.vala:205
 msgid "Show full unicode characters set"
-msgstr ""
+msgstr "Visa alla unicodetecken"
 
 #: ../src/Toolbox.vala:216
 msgid "Show default characters set"
-msgstr ""
+msgstr "Visa förvald teckenkodning"
+
+#: ../src/Toolbox.vala:227
+msgid "Show all characters in font"
+msgstr "Visa alla typsnittets tecken"
 
 #: ../src/Toolbox.vala:236
 msgid "Delete selected glyph"
-msgstr ""
+msgstr "Radera markerade tecken"
 
 #: ../src/Toolbox.vala:302
 msgid "Show help lines for x-height and baseline"
-msgstr ""
+msgstr "Visa stödlinjer för x-höjd och baslinje"
 
 #: ../src/Toolbox.vala:317
 msgid "Show help lines at top and bottom margin"
-msgstr ""
+msgstr "Visa stödlinjer för botten- och toppmarginaler"
 
 #: ../src/Toolbox.vala:335
 msgid "Zoom in"
@@ -334,60 +402,78 @@ msgstr ""
 
 #: ../src/Toolbox.vala:349
 msgid "Zoom to scale 1:1"
-msgstr ""
+msgstr "Visa i skala 1:1"
 
 #: ../src/Toolbox.vala:357
 msgid "Show full glyph"
-msgstr ""
+msgstr "Visa hela"
 
 #: ../src/Toolbox.vala:364
 msgid "Zoom in at region boundries"
-msgstr ""
+msgstr "Visa avgränsningar"
 
 #: ../src/Toolbox.vala:371
 msgid "Zoom in background image"
-msgstr ""
+msgstr "Visa hela bakgrundsbilden"
 
 #: ../src/Toolbox.vala:384
 msgid "Previous view"
-msgstr ""
+msgstr "Föregående vy"
 
 #: ../src/Toolbox.vala:390
 msgid "Next view"
-msgstr ""
+msgstr "Nästa vy"
 
 #: ../src/Toolbox.vala:397
 msgid "Set size for background image"
-msgstr ""
+msgstr "Ställ in storleken på bakgrundsbilden"
 
 #: ../src/Toolbox.vala:427
 msgid "Show/hide background image"
-msgstr ""
+msgstr "Visa/dölj bakgrundsbilden"
 
 #: ../src/Toolbox.vala:435
-msgid "Insert new background image"
-msgstr ""
+msgid "Insert a new background image"
+msgstr "Lägg till en ny bakgrundsbild"
 
 #: ../src/Toolbox.vala:440
 msgid "Creating thumbnails"
-msgstr ""
+msgstr "Skapar miniatyrbilder"
 
 #: ../src/Toolbox.vala:459
-msgid "Set background contrast"
-msgstr ""
+msgid "Set contrast for background image"
+msgstr "Ställ in bakgrundsbildens kontrast"
 
 #: ../src/Toolbox.vala:479
 msgid "Set threshold"
-msgstr ""
+msgstr "Ställ in gränsvärde"
 
 #: ../src/Toolbox.vala:683
 msgid "Set size for grid"
-msgstr ""
+msgstr "Ange storlek på rutmönstret"
 
 #: ../src/VersionList.vala:33
 msgid "New version"
-msgstr ""
+msgstr "Ny version"
 
 #: ../src/VersionList.vala:91
 msgid "Version"
-msgstr ""
+msgstr "Version"
+
+#~ msgid "exit if a testcase failes"
+#~ msgstr "avsluta om ett test misslyckas"
+
+#~ msgid "Export SVG, TTF & EOF fonts"
+#~ msgstr "Exportera SVG, TTF & EOT filer"
+
+#~ msgid "Begin new path from point on path"
+#~ msgstr "Börja ny linje från en punkt på figuren"
+
+#~ msgid "Move to path to bottom layer"
+#~ msgstr "Flytta objekt till bottenlagret"
+
+#~ msgid "Insert new background image"
+#~ msgstr "Lägg till en ny bakgrundsbild"
+
+#~ msgid "Set background contrast"
+#~ msgstr "Ställ in kontrast för bakgrundsbilden"

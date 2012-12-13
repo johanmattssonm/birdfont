@@ -97,7 +97,7 @@ def update_translations (bld):
 		)		
 
 	bld (
-		rule = "xgettext --language=C# --keyword=_ --add-comments=/ --from-code=utf-8 --output=../birdfont.pot ../src/*.vala",
+		rule = "xgettext --language=C# --keyword=_ --add-comments=/ --from-code=utf-8 --output=../po/birdfont.pot ../src/*.vala",
 		name = "update pot",
 		always = True
 	)
@@ -123,6 +123,7 @@ def update_translations (bld):
 		
 
 def compile_translations (bld):
+
 	for file in os.listdir('./po'):
 		if file == "birdfont.pot": continue
 		
@@ -130,12 +131,13 @@ def compile_translations (bld):
 		
 		bld (
 			rule = "mkdir -p locale/" + loc + "/LC_MESSAGES/",
-			name = loc
+			name = loc,
 		)
 		
 		bld (
-			rule = "msgfmt --output=locale/" + loc + "/LC_MESSAGES/birdfont.mo ../po/" + loc + ".po",
+			rule = "msgfmt --output=${TGT} ${SRC}",
 			depends = loc,
+			source = "./po/" + loc + ".po",
 			target = 'locale/'  + loc + '/LC_MESSAGES/birdfont.mo'
 		)
 		

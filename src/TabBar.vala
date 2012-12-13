@@ -73,20 +73,7 @@ public class TabBar : GLib.Object {
 	
 	public void motion (double x, double y) {
 		TooltipArea status = MainWindow.get_tool_tip ();
-
 		is_over_close (x, y, out over, out over_close);
-
-		if (over_close >= 0) {
-			status.show_text ("(Ctrl+w) Close tab");
-		}
-		
-		if (is_over_next (x)) {
-			status.show_text ("(Ctrl+rigth arrow) Next tab");
-		}
-
-		if (is_over_previous (x)) {
-			status.show_text ("(Ctrl+left arrow) Previous tab");
-		}
 	}
 	
 	private bool is_over_next (double x) {
@@ -485,6 +472,24 @@ public class TabBar : GLib.Object {
 		
 	}
 	
+	// this can be removed when tabs are not referenced by name
+	string translate (string s) {
+		switch (s) {
+			case "Overview":
+				return _("Overview");
+				break;
+			case "Kerning":
+				return _("Kerning");
+				break;
+			case "Menu":
+				return _("Menu");
+				break;
+			default:
+				return s;
+				break;
+		}
+	}
+	
 	private void draw_tabs (Context cr) {
 		double close_opacity;
 		double offset = 19;
@@ -541,7 +546,7 @@ public class TabBar : GLib.Object {
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.set_font_size (14);
 			cr.move_to (8, 18);
-			cr.show_text (t.get_label ());
+			cr.show_text (translate (t.get_label ()));
 			cr.stroke ();
 			
 			// edges

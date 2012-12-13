@@ -45,7 +45,7 @@ class PenTool : Tool {
 	public static double precision = 1;
 	
 	public PenTool (string name) {
-		base (name, _("Right click to add new point, left click to move points") + " " + _("and double click to add new point on path"), ',', CTRL);
+		base (name, _("Right click to add new points, left click to move points") + " " + _("and double click to add new point on path."), ',', CTRL);
 		
 		select_action.connect ((self) => {
 		});
