@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-12 18:39+0100\n"
+"POT-Creation-Date: 2012-12-14 07:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,12 +21,20 @@ msgstr ""
 msgid "Usage"
 msgstr ""
 
+#: ../src/Argument.vala:227
+msgid "FILE"
+msgstr ""
+
+#: ../src/Argument.vala:227
+msgid "OPTION"
+msgstr ""
+
 #: ../src/Argument.vala:229
 msgid "show coordinate in glyph view"
 msgstr ""
 
 #: ../src/Argument.vala:230
-msgid "exit if a testcase failes"
+msgid "exit if a test case failes"
 msgstr ""
 
 #: ../src/Argument.vala:231
@@ -77,30 +85,42 @@ msgstr ""
 msgid "Writing"
 msgstr ""
 
+#: ../src/CutBackgroundTool.vala:37
+msgid "Crop background image"
+msgstr ""
+
 #: ../src/ExportTool.vala:29
 msgid "Export glyph to svg file"
 msgstr ""
 
-#: ../src/ExportTool.vala:126
+#: ../src/ExportTool.vala:94
+msgid "Alphabet"
+msgstr ""
+
+#: ../src/ExportTool.vala:128
 msgid "Can't export"
 msgstr ""
 
-#: ../src/ExportTool.vala:129
+#: ../src/ExportTool.vala:131
 msgid "Wrote"
 msgstr ""
 
-#: ../src/ExportTool.vala:449
+#: ../src/ExportTool.vala:451
 msgid "Wrote font files"
 msgstr ""
 
-#. / All lower case letters in alphabetic order
+#. / All lower case letters in alphabetic order separated by space
 #: ../src/GlyphRange.vala:37
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr ""
 
-#. / All upper case letters in alphabetic order
+#. / All upper case letters in alphabetic order separated by space
 #: ../src/GlyphRange.vala:40
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+msgstr ""
+
+#: ../src/GridTool.vala:36
+msgid "Show grid"
 msgstr ""
 
 #: ../src/GtkWindow.vala:243
@@ -183,7 +203,7 @@ msgstr ""
 msgid "Show de_fault characters set"
 msgstr ""
 
-#: ../src/GtkWindow.vala:380 ../src/Toolbox.vala:227
+#: ../src/GtkWindow.vala:380
 msgid "Show characters in font"
 msgstr ""
 
@@ -235,7 +255,27 @@ msgstr ""
 msgid "Recent files"
 msgstr ""
 
-#: ../src/MenuTab.vala:226 ../src/SaveDialog.vala:82
+#: ../src/MenuTab.vala:150
+msgid "Preferences"
+msgstr ""
+
+#: ../src/MenuTab.vala:151
+msgid "Export SVG, TTF & EOT fonts"
+msgstr ""
+
+#: ../src/MenuTab.vala:152
+msgid "Name"
+msgstr ""
+
+#: ../src/MenuTab.vala:153
+msgid "Glyph sequence"
+msgstr ""
+
+#: ../src/MenuTab.vala:154 ../src/MenuTab.vala:155
+msgid "Export SVG font and view the result"
+msgstr ""
+
+#: ../src/MenuTab.vala:238 ../src/SaveDialog.vala:82
 msgid "Save"
 msgstr ""
 
@@ -247,12 +287,12 @@ msgstr ""
 msgid "Move paths"
 msgstr ""
 
-#: ../src/PenTool.vala:48 ../src/Toolbox.vala:94
-msgid "Right click to add new point, left click to move points"
+#: ../src/PenTool.vala:48
+msgid "Right click to add new points, left click to move points"
 msgstr ""
 
 #: ../src/PenTool.vala:48
-msgid "and double click to add new point on path"
+msgid "and double click to add new point on path."
 msgstr ""
 
 #: ../src/SaveDialog.vala:83
@@ -267,8 +307,28 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: ../src/SaveDialog.vala:94
+msgid "Save?"
+msgstr ""
+
+#: ../src/TabBar.vala:479
+msgid "Overview"
+msgstr ""
+
+#: ../src/TabBar.vala:482
+msgid "Kerning"
+msgstr ""
+
+#: ../src/TabBar.vala:485
+msgid "Menu"
+msgstr ""
+
 #: ../src/Toolbox.vala:94
-msgid "and double click to ad new point on path"
+msgid "Right click to add new point, left click to move points"
+msgstr ""
+
+#: ../src/Toolbox.vala:94
+msgid "and double click to add new point on path"
 msgstr ""
 
 #: ../src/Toolbox.vala:101
@@ -276,7 +336,7 @@ msgid "Add new point on path"
 msgstr ""
 
 #: ../src/Toolbox.vala:109
-msgid "Begin new path from point on path"
+msgid "Begin new line from point on path"
 msgstr ""
 
 #: ../src/Toolbox.vala:117
@@ -300,7 +360,7 @@ msgid "Create counter from outline"
 msgstr ""
 
 #: ../src/Toolbox.vala:193
-msgid "Move to path to bottom layer"
+msgid "Move to path to the bottom layer"
 msgstr ""
 
 #: ../src/Toolbox.vala:205
@@ -309,6 +369,10 @@ msgstr ""
 
 #: ../src/Toolbox.vala:216
 msgid "Show default characters set"
+msgstr ""
+
+#: ../src/Toolbox.vala:227
+msgid "Show all characters in font"
 msgstr ""
 
 #: ../src/Toolbox.vala:236
@@ -364,7 +428,7 @@ msgid "Show/hide background image"
 msgstr ""
 
 #: ../src/Toolbox.vala:435
-msgid "Insert new background image"
+msgid "Insert a new background image"
 msgstr ""
 
 #: ../src/Toolbox.vala:440
@@ -372,7 +436,7 @@ msgid "Creating thumbnails"
 msgstr ""
 
 #: ../src/Toolbox.vala:459
-msgid "Set background contrast"
+msgid "Set contrast for background image"
 msgstr ""
 
 #: ../src/Toolbox.vala:479

@@ -91,7 +91,7 @@ c.append ("""
 				<h3>""" + _("Name") + """</h3>
 				<input class="text" type="text" id="fontname" value=""" + "\"" + f.get_name () + "\"" + """ onchange="update_text_fields ();"/><br />
 				
-				<input class="button" type="button" value=""" + "\"" + _("Export") + "\"" + """ id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) """ + _("Export SVG, TTF & EOF fonts") + """');"/>
+				<input class="button" type="button" value=""" + "\"" + _("Export") + "\"" + """ id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) """ + _("Export SVG, TTF & EOT fonts") + """');"/>
 				<input class="button" type="button" value=""" + "\"" + _("Preview") + "\"" + """ id="preview_button" onclick="call ('preview:fonts');" onmouseover="call ('help:(Ctrl+p) """ + _("Export SVG font and view the result") + """');"/><br />
 """);
 	
@@ -140,7 +140,19 @@ c.append ("""
 </body>
 </html>
 """);
+
 		return c.str;
+	}
+	
+	void translations () {
+		// xgettext needs these lines in order to extract strings properly
+		// TODO: update xgettext to handle vala strings well.
+		_("Preferences");
+		_("Export SVG, TTF & EOT fonts");
+		_("Name");
+		_("Glyph sequence");
+		_("Export SVG font and view the result");
+		_("Export SVG font and view the result");
 	}
 
 	public void propagate_recent_files () {

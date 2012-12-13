@@ -88,6 +88,10 @@ public class SaveDialog : FontDisplay {
 	</div>
 </body>
 </html>""";
+
+		// FIXME:
+		// tell xgettext to extract this:
+		_("Save?");
 	}
 }
 	
