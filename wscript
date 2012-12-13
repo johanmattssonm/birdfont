@@ -72,6 +72,30 @@ def build(bld):
 	compile_translations (bld)
 
 def update_translations (bld):
+	for file in os.listdir('./po'):
+		if file == "birdfont.pot": continue
+	
+		loc = file.replace (".po", "")
+		d = "../po/" + loc + ".po"
+
+		bld (
+			rule = "wget -O " + loc + ".po.zip http://pootle.locamotion.org/" + loc + "/birdfont/export/zip",
+			name = "download translations",
+			always = True
+		)
+
+		bld (
+			rule = "unzip " + loc + ".po.zip ",
+			depends = "unzip translations",
+			always = True
+		)	
+				
+		bld (
+			rule = "mv " + loc + ".po " + d,
+			depends = "unzip translations",
+			always = True
+		)		
+
 	bld (
 		rule = "xgettext --language=C# --keyword=_ --add-comments=/ --from-code=utf-8 --output=../birdfont.pot ../src/*.vala",
 		name = "update pot",
@@ -85,15 +109,15 @@ def update_translations (bld):
 		d = "../po/" + loc + ".po"
 
 		bld (
-			rule = "msgmerge " + d + """ ../po/birdfont.pot > build/""" + loc + ".po.new",
+			rule = "msgmerge " + d + " ../po/birdfont.pot > " + loc + ".po.new",
 			depends = "update pot",
-			name = "merge pot",
+			name = "merge pot " + loc,
 			always = True
 		)		
 
 		bld (
-			rule = "mv build/""" + loc + ".po.new " + d,
-			depends = "merge pot",
+			rule = "mv """ + loc + ".po.new " + d,
+			depends = "merge pot " + loc,
 			always = True
 		)		
 		

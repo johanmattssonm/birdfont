@@ -2,28 +2,29 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-12 18:39+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-13 13:53+0000\n"
+"Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: sv\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.0-beta1\n"
+"X-POOTLE-MTIME: 1355406838.0\n"
 
 #: ../src/Argument.vala:225
 msgid "Usage"
-msgstr ""
+msgstr "Användning"
 
 #: ../src/Argument.vala:229
 msgid "show coordinate in glyph view"
-msgstr ""
+msgstr "visa koordinater i redigeringsfönstret"
 
 #: ../src/Argument.vala:230
 msgid "exit if a testcase failes"
@@ -31,11 +32,11 @@ msgstr ""
 
 #: ../src/Argument.vala:231
 msgid "treat warnings as fatal"
-msgstr ""
+msgstr "behandla varningar som fel"
 
 #: ../src/Argument.vala:232
 msgid "show this message"
-msgstr ""
+msgstr "visa detta meddelande"
 
 #: ../src/Argument.vala:233
 msgid "sleep between each command in test suite"
@@ -51,11 +52,11 @@ msgstr ""
 
 #: ../src/Birdfont.vala:22
 msgid "Usage:"
-msgstr ""
+msgstr "Användning:"
 
 #: ../src/Birdfont.vala:25
 msgid "print this message\n"
-msgstr ""
+msgstr "skriv ut detta meddelande\n"
 
 #: ../src/Birdfont.vala:26
 msgid "write files to this directory\n"
@@ -63,19 +64,19 @@ msgstr ""
 
 #: ../src/Birdfont.vala:27
 msgid "write svg file\n"
-msgstr ""
+msgstr "skriv svg-fil\n"
 
 #: ../src/Birdfont.vala:28
 msgid "write ttf and eot files\n"
-msgstr ""
+msgstr "skriv ttf- och eot-filer\n"
 
 #: ../src/Birdfont.vala:118
 msgid "Can't find output directory"
-msgstr ""
+msgstr "Kan inte hitta mappen som filerna ska skrivas till"
 
 #: ../src/Birdfont.vala:123 ../src/Birdfont.vala:128
 msgid "Writing"
-msgstr ""
+msgstr "Skriver"
 
 #: ../src/ExportTool.vala:29
 msgid "Export glyph to svg file"
@@ -112,14 +113,12 @@ msgid "_Open"
 msgstr ""
 
 #: ../src/GtkWindow.vala:253
-#, fuzzy
 msgid "_Save"
-msgstr "Spara"
+msgstr ""
 
 #: ../src/GtkWindow.vala:258
-#, fuzzy
 msgid "Save _as"
-msgstr "Spara som"
+msgstr ""
 
 #: ../src/GtkWindow.vala:262
 msgid "_Export"
@@ -175,11 +174,11 @@ msgstr ""
 
 #: ../src/GtkWindow.vala:359
 msgid "_Move"
-msgstr ""
+msgstr "_Flytta"
 
 #: ../src/GtkWindow.vala:366
 msgid "Show _full unicode characters set"
-msgstr ""
+msgstr "Visa alla _unicode tecken"
 
 #: ../src/GtkWindow.vala:373
 msgid "Show de_fault characters set"
@@ -299,7 +298,7 @@ msgstr ""
 
 #: ../src/Toolbox.vala:181
 msgid "Create counter from outline"
-msgstr ""
+msgstr "Skapa insida från objekt"
 
 #: ../src/Toolbox.vala:193
 msgid "Move to path to bottom layer"
@@ -392,10 +391,3 @@ msgstr ""
 #: ../src/VersionList.vala:91
 msgid "Version"
 msgstr ""
-
-#~ msgid "Glyph sequence"
-#~ msgstr "Teckensekvens"
-
-#, fuzzy
-#~ msgid "Save?"
-#~ msgstr "Spara"
