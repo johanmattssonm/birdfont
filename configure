@@ -1,0 +1,6 @@
+#!/bin/bash
+cd waf-* && \
+./configure && \
+cp ./waf ../ && \
+cd .. && \
+./waf configure
