@@ -1,0 +1,34 @@
+#! /usr/bin/env python
+
+"""
+System libraries may be linked by setting flags into the variables XYZ_NAME
+where NAME is added to the use keyword, and XYZ can be DEFINES, INCLUDES, LINKFLAGS, etc
+"""
+
+import sys
+
+def options(opt):
+	opt.load('compiler_c')
+
+def configure(conf):
+	conf.load('compiler_c')
+
+	conf.env.INCLUDES_TEST = ['/usr/include']
+
+	if sys.platform != 'win32':
+		conf.env.DEFINES_TEST    = ['TEST']
+		conf.env.CFLAGS_TEST     = ['-O0']
+		conf.env.LIB_TEST        = ['m']
+		conf.env.LIBPATH_TEST    = ['/usr/lib']
+		conf.env.LINKFLAGS_TEST  = ['-g']
+		conf.env.INCLUDES_TEST   = ['/opt/gnome/include']
+
+def build(bld):
+	mylib = bld.stlib(
+		source   = 'test_staticlib.c',
+		target   = 'teststaticlib',
+		use      = 'TEST')
+
+	if mylib.env.CC_NAME == 'gcc':
+		mylib.cxxflags = ['-O2']
+

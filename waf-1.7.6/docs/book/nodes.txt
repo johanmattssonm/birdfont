@@ -1,0 +1,341 @@
+== Node objects
+
+Node objects represent files or folders and are used to ease the operations dealing with the file system. This chapter provides an overview of their usage.
+
+=== Design of the node class
+
+==== The node tree
+
+The Waf nodes inherit the class _waflib.Node.Node_ and provide a tree structure to represent the file system:
+
+. *parent*: parent node
+. *children*: folder contents - or empty if the node is a file
+
+In practice, the reference to the filesystem tree is bound to the context classes for access from Waf commands. Here is an illustration:
+
+// nodes_tree
+[source,python]
+---------------
+top = '.'
+out = 'build'
+
+def configure(ctx):
+    pass
+
+def dosomething(ctx):
+    print(ctx.path.abspath()) <1>
+    print(ctx.root.abspath()) <2>
+    print("ctx.path contents %r" % ctx.path.children)
+    print("ctx.path parent   %r" % ctx.path.parent.abspath())
+    print("ctx.root parent   %r" % ctx.root.parent)
+---------------
+
+<1> *ctx.path* represents the path to the +wscript+ file being executed
+<2> *ctx.root* is the root of the file system or the folder containing the drive letters (win32 systems)
+
+The execution output will be the following:
+
+[source,shishell]
+---------------
+$ waf configure dosomething
+Setting top to    : /tmp/node_tree
+Setting out to    : /tmp/node_tree/build
+'configure' finished successfully (0.007s)
+/tmp/node_tree <1>
+/
+ctx.path contents {'wscript': /tmp/node_tree/wscript} <2>
+ctx.path parent   '/tmp' <3>
+ctx.root parent   None <4>
+'dosomething' finished successfully (0.001s)
+---------------
+
+<1> Absolute paths are used frequently
+<2> The folder contents are stored in the dict _children_ which maps names to node objects
+<3> Each node keeps reference to his _parent_ node
+<4> The root node has no _parent_
+
+NOTE: There is a strict correspondance between nodes and filesystem elements: a node represents exactly one file or one folder, and only one node can represent a file or a folder.
+
+==== Node caching
+
+By default, only the necessary nodes are created:
+
+// nodes_cache
+[source,python]
+---------------
+def configure(ctx):
+    pass
+
+def dosomething(ctx):
+    print(ctx.root.children)
+---------------
+
+The filesystem root appears to only contain one node, although the real filesystem root contains more folders than just +/tmp+:
+
+[source,shishell]
+---------------
+$ waf configure dosomething
+Setting top to   : /tmp/nodes_cache
+Setting out to   : /tmp/nodes_cache/build
+'configure' finished successfully (0.086s)
+{'tmp': /tmp}
+'dosomething' finished successfully (0.001s)
+
+$ ls /
+bin boot dev etc home tmp usr var
+---------------
+
+This means in particular that some nodes may have to be read from the file system or created before being used.
+
+// ==== nodes and signatures TODO
+
+
+=== General usage
+
+==== Searching and creating nodes
+
+Nodes may be created manually or read from the file system. Three methods are provided for this purpose:
+
+// nodes_search
+[source,python]
+---------------
+def configure(ctx):
+	pass
+
+def dosomething(ctx):
+	print(ctx.path.find_node('wscript')) <1>
+
+	nd1 = ctx.path.make_node('foo.txt') <2>
+	print(nd1)
+
+	nd2 = ctx.path.search('foo.txt') <3>
+	print(nd2)
+
+	nd3 = ctx.path.search('bar.txt') <4>
+	print(nd3)
+
+	nd2.write('some text') <5>
+	print(nd2.read())
+
+	print(ctx.path.listdir())
+---------------
+
+<1> Search for a node by reading the file system
+<2> Search for a node or create it if it does not exist
+<3> Search for a node but do not try to create it
+<4> Search for a file which does not exist
+<5> Write to the file pointed by the node, creating or overwriting the file
+
+The output will be the following:
+
+[source,shishell]
+---------------
+$ waf distclean configure dosomething
+'distclean' finished successfully (0.005s)
+Setting top to    : /tmp/nodes_search
+Setting out to    : /tmp/nodes_search/build
+'configure' finished successfully (0.006s)
+wscript
+foo.txt
+foo.txt
+None
+some text
+['.lock-wafbuild', 'foo.txt', 'build', 'wscript', '.git']
+---------------
+
+NOTE: More methods may be found in the http://docs.waf.googlecode.com/git/apidocs_17/index.html[API documentation]
+
+WARNING: The Node methods are not meant to be safe for concurrent access. The code executed in parallel (method run() of task objects for example) must avoid modifying the Node object data structure.
+
+WARNING: The Node methods read/write must be used to prevent file handle inheritance issues on win32 systems instead of plain open/read/write. Such problems arise when spawning processes during parallel builds.
+
+==== Listing files and folders
+
+The method *ant_glob* is used to list files and folders recursively:
+
+// nodes_ant_glob
+[source,python]
+---------------
+top = '.'
+out = 'build'
+
+def configure(ctx):
+	pass
+
+def dosomething(ctx):
+	print(ctx.path.ant_glob('wsc*')) <1>
+	print(ctx.path.ant_glob('w?cr?p?')) <2>
+	print(ctx.root.ant_glob('usr/include/**/zlib*', <3> dir=False, src=True)) <4>
+	print(ctx.path.ant_glob(['**/*py', '**/*p'], excl=['**/default*'])) <5>
+---------------
+
+<1> The method ant_glob is called on a node object, and not on the build context, it returns only files by default
+<2> Patterns may contain wildcards such as '*' or '?', but they are http://ant.apache.org/manual/dirtasks.html[Ant patterns], not regular expressions
+<3> The symbol '**' enable recursion. Complex folder hierarchies may take a lot of time, so use with care.
+<4> Even though recursion is enabled, only files are returned by default. To turn directory listing on, use 'dir=True'
+<5> Patterns are either lists of strings or space-delimited values. Patterns to exclude are defined in 'waflib.Node.exclude_regs'.
+
+The execution output will be the following:
+
+[source,shishell]
+---------------
+$ waf configure dosomething
+Setting top to    : /tmp/nodes_ant_glob
+Setting out to    : /tmp/nodes_ant_glob/build
+'configure' finished successfully (0.006s)
+[/tmp/nodes_ant_glob/wscript]
+[/tmp/nodes_ant_glob/wscript]
+[/usr/include/zlib.h]
+[/tmp/nodes_ant_glob/build/c4che/build.config.py]
+---------------
+
+The sequence '..' represents exactly two dot characters, and not the parent directory. This is used to guarantee that the search will terminate, and that the same files will not be listed multiple times. Consider the following:
+
+[source,python]
+---------------
+ctx.path.ant_glob('../wscript') <1>
+ctx.path.parent.ant_glob('wscript') <2>
+---------------
+
+<1> Invalid, this pattern will never return anything
+<2> Call 'ant_glob' from the parent directory
+
+==== Path manipulation: abspath, path_from
+
+The following example illustrates a few ways of obtaining absolute and relative paths:
+
+[source,python]
+---------------
+top = '.'
+out = 'build'
+
+def configure(conf):
+	pass
+
+def build(ctx):
+	dir = ctx.path <1>
+	src = ctx.path.find_resource('wscript')
+	bld = ctx.path.find_or_declare('out.out')
+
+	print(src.abspath()) <2>
+	print(bld.abspath())
+	print(dir.abspath())
+	print(src.path_from(dir.parent)) <3>
+	print(ctx.root.path_from(src)) <4>
+---------------
+
+<1> Directory node, source node and build node
+<2> Print the absolute path
+<3> Compute the path relative to another node
+<4> Compute the relative path in reverse order
+
+Here is the execution trace on a unix-like system:
+
+[source,shishell]
+---------------
+$ waf distclean configure build
+'distclean' finished successfully (0.002s)
+'configure' finished successfully (0.005s)
+Waf: Entering directory `/tmp/nested/build'
+/tmp/nested/wscript
+/tmp/nested/build/out.out
+/tmp/nested/build/
+/tmp/nested
+nested/wscript
+../../../..
+Waf: Leaving directory `/tmp/nested/build'
+'build' finished successfully (0.003s)
+---------------
+
+=== BuildContext-specific methods
+
+==== Source and build nodes
+
+Although the _sources_ and _targets_ in the +wscript+ files are declared as if they were in the current directory, the target files are output into the build directory. To enable this behaviour, the directory structure below the _top_ directory must be replicated in the _out_ directory. For example, the folder *program* from +demos/c+ has its equivalent in the build directory:
+
+[source,shishell]
+---------------
+$ cd demos/c
+$ tree
+.
+|-- build
+|   |-- c4che
+|   |   |-- build.config.py
+|   |   `-- _cache.py
+|   |-- config.h
+|   |-- config.log
+|   `-- program
+|       |-- main.c.0.o
+|       `-- myprogram
+|-- program
+|   |-- a.h
+|   |-- main.c
+|   `-- wscript_build
+`-- wscript
+---------------
+
+To support this, the build context provides two additional nodes:
+
+. srcnode: node representing the top-level directory
+. bldnode: node representing the build directory
+
+To obtain a build node from a src node and vice-versa, the following methods may be used:
+
+. Node.get_src()
+. Node.get_bld()
+
+==== Using Nodes during the build phase
+
+Although using _srcnode_ and _bldnode_ directly is possible, the three following wrapper methods are much easier to use. They accept a string representing the target as input and return a single node:
+
+. *find_dir*: returns a node or None if the folder cannot be found on the system.
+. *find_resource*: returns a node under the source directory, a node under the corresponding build directory, or None if no such a node exists. If the file is not in the build directory, the node signature is computed and put into a cache (file contents hash).
+. *find_or_declare*: returns a node or create the corresponding node in the build directory.
+
+Besides, they all use _find_dir_ internally which will create the required directory structure in the build directory. Because the folders may be replicated in the build directory before the build starts, it is recommended to use it whenever possible:
+
+[source,python]
+---------------
+def build(bld):
+    p = bld.path.parent.find_dir('src') <1>
+    p = bld.path.find_dir('../src') <2>
+---------------
+
+<1> Not recommended, use _find_dir_ instead
+<2> Path separators are converted automatically according to the platform.
+
+==== Nodes, tasks, and task generators
+
+As seen in the previous chapter, Task objects can process files represented as lists of input and output nodes. The task generators
+will usually process the input files given as strings to obtain such nodes and bind them to the tasks.
+
+Because the build directory can be enabled or disabled, the following file copy would be ambiguous: footnote:[When file copies cannot be avoided, the best practice is to change the file names]
+
+[source,python]
+---------------
+def build(bld):
+    bld(rule='cp ${SRC} ${TGT}', source='foo.txt', target='foo.txt')
+---------------
+
+To actually copy a file into the corresponding build directory with the same name, the ambiguity must be removed:
+
+[source,python]
+---------------
+def build(bld):
+    bld(
+        rule   = 'cp ${SRC} ${TGT}',
+        source = bld.path.make_node('foo.txt'),
+        target = bld.path.get_bld().make_node('foo.txt')
+    )
+---------------
+
+In practice, it is easier to use a wrapper that conceals these details (more examples can be found in +demos/subst+):
+
+[source,python]
+---------------
+def build(bld):
+    bld(features='subst', source='wscript', target='wscript', is_copy=True)
+---------------
+
+// ==== Serialization concerns
+

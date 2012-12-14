@@ -1,0 +1,18 @@
+#! /usr/bin/env python
+
+"""
+Here we do not define the top or the out folders
+The build directory may be controlled by setting
+the WAFLOCK variable with the name convention .lock-wafNAME
+where NAME will be the build directory
+
+WAFLOCK=.lock-waffoo waf configure build
+WAFLOCK=.lock-wafbar waf configure build
+"""
+
+def configure(conf):
+	pass
+
+def build(bld):
+	bld(rule='touch ${TGT}', target='foo.txt')
+

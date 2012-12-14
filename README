@@ -19,7 +19,7 @@ with a -dev or -devel affix. You can run this as root if you are using Debian:
 sudo apt-get install valac libglib2.0-dev libgtk2.0-dev libxml2-dev libwebkitgtk-dev
 
 Configure, build and install with waf:
-./waf configure
+./configure
 ./waf build
 sudo ./waf install
 
@@ -36,6 +36,7 @@ http://greg.thehellings.com/2012/02/a-better-ubuntu-mingw-experience/
 You need wine and nsis windows installer as well.
 
 Compile and build the installer with:
+./configure
 ./waf configure --win32 --installer
 ./waf clean
 ./waf build --win32 --installer

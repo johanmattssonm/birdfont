@@ -1,0 +1,389 @@
+== Builds
+
+We will now provide a detailed description of the build phase, which is used for processing the build targets.
+
+=== Essential build concepts
+
+==== Build order and dependencies
+
+To illustrate the various concepts that are part of the build process, we are now going to use a new example.
+The files +foo.txt+ and +bar.txt+ will be created by copying the file +wscript+, and the file +foobar.txt+ will be created from the concatenation of the generated files. Here is a summary: footnote:[It is actually considered a best practice to avoid copying files. When this is required, consider installing files or re-using the examples provided under the folder `demos/subst` of the source ditribution.]
+
+[source,shishell]
+---------------
+cp: wscript -> foo.txt
+cp: wscript -> bar.txt
+cat: foo.txt, bar.txt -> foobar.txt
+--------------
+
+Each of the three lines represents a command to execute. While the _cp_ commands may be executed in any order or even in parallel, the _cat_ command may only be executed after all the others are done. The constraints on *the build order* are represented on the following http://en.wikipedia.org/wiki/Directed_acyclic_graph[Directed acyclic graph]:
+
+image::dag_tasks{PIC}["Task representation of the same build"{backend@docbook:,width=260:},align="center"]
+
+When the +wscript+ input file changes, the +foo.txt+ output file has to be created once again. The file +foo.txt+ is said to depend on the +wscript+ file. The *file dependencies* can be represented by a Direct acyclic graph too:
+
+image::dag_nodes{PIC}["File dependencies on a simple build"{backend@docbook:,width=120:},align="center"]
+
+Building a project consists in executing the commands according to a schedule which will respect these constraints. Faster build will be obtained when commands are executed in parallel (by using the build order), and when commands can be skipped (by using the dependencies).
+
+In Waf, the commands are represented by *task objects*. The dependencies are used by the task classes, and may be file-based or abstract to enforce particular constraints.
+
+==== Direct task declaration
+
+We will now represent the build from the previous section by declaring the tasks directly in the build section:
+
+// build_manual_tasks
+[source,python]
+---------------
+def configure(ctx):
+	pass
+
+from waflib.Task import Task
+class cp(Task): <1>
+	def run(self): <2>
+		return self.exec_command('cp %s %s' % (
+				self.inputs[0].abspath(), <3>
+				self.outputs[0].abspath()
+			)
+		)
+
+class cat(Task):
+	def run(self):
+		return self.exec_command('cat %s %s > %s' % (
+				self.inputs[0].abspath(),
+				self.inputs[1].abspath(),
+				self.outputs[0].abspath()
+			)
+		)
+
+def build(ctx):
+
+	cp_1 = cp(env=ctx.env) <4>
+	cp_1.set_inputs(ctx.path.find_resource('wscript')) <5>
+	cp_1.set_outputs(ctx.path.find_or_declare('foo.txt'))
+	ctx.add_to_group(cp_1) <6>
+
+	cp_2 = cp(env=ctx.env)
+	cp_2.set_inputs(ctx.path.find_resource('wscript'))
+	cp_2.set_outputs(ctx.path.find_or_declare('bar.txt'))
+	ctx.add_to_group(cp_2)
+
+	cat_1 = cat(env=ctx.env)
+	cat_1.set_inputs(cp_1.outputs + cp_2.outputs)
+	cat_1.set_outputs(ctx.path.find_or_declare('foobar.txt'))
+	ctx.add_to_group(cat_1)
+---------------
+
+<1> Task class declaration
+<2> Waf tasks have a method named *run* to generate the targets
+<3> Instances of _waflib.Task.Task_ have input and output objects representing the files to use (Node objects)
+<4> Create a new task instance manually
+<5> Set input and output files represented as _waflib.Node.Node_ objects
+<6> Add the task to the build context for execution (but do not execute them immediately)
+
+The execution output will be the following:
+
+[source,shishell]
+---------------
+$ waf clean build <1>
+'clean' finished successfully (0.003s)
+Waf: Entering directory `/tmp/build_manual_tasks/build'
+[1/3] cp: wscript -> build/foo.txt
+[2/3] cp: wscript -> build/bar.txt
+[3/3] cat: build/foo.txt build/bar.txt -> build/foobar.txt
+Waf: Leaving directory `/tmp/build_manual_tasks/build'
+'build' finished successfully (0.047s)
+
+$ waf build <2>
+Waf: Entering directory `/tmp/build_manual_tasks/build'
+Waf: Leaving directory `/tmp/build_manual_tasks/build'
+'build' finished successfully (0.007s)
+
+$ echo " " >> wscript <3>
+
+$ waf build
+Waf: Entering directory `/tmp/build_manual_tasks/build'
+[1/3] cp: wscript -> build/foo.txt <4>
+[2/3] cp: wscript -> build/bar.txt
+[3/3] cat: build/foo.txt build/bar.txt -> build/foobar.txt
+Waf: Leaving directory `/tmp/build_manual_tasks/build'
+'build' finished successfully (0.043s)
+---------------
+
+<1> The tasks are not executed in the _clean_ command
+<2> The build keeps track of the files that were generated to avoid generating them again
+<3> Modify one of the source files
+<4> Rebuild according to the dependency graph
+
+Please remember:
+
+. The execution order was *computed automatically*, by using the file inputs and outputs set on the task instances
+. The dependencies were *computed automatically* (the files were rebuilt when necessary), by using the node objects (hashes of the file contents were stored between the builds and then compared)
+. The tasks that have no order constraints are executed in parallel by default
+
+==== Task encapsulation by task generators
+
+Declaring the tasks directly is tedious and results in lengthy scripts. Feature-wise, the following is equivalent to the previous example:
+
+// build_task_gen
+[source,python]
+---------------
+def configure(ctx):
+	pass
+
+def build(ctx):
+	ctx(rule='cp ${SRC} ${TGT}', source='wscript', target='foo.txt')
+	ctx(rule='cp ${SRC} ${TGT}', source='wscript', target='bar.txt')
+	ctx(rule='cat ${SRC} > ${TGT}', source='foo.txt bar.txt', target='foobar.txt')
+---------------
+
+The *ctx(...)* call is a shortcut to the class _waflib.TaskGen.task_gen_, instances of this class are called *task generator objects*. The task generators are lazy containers and will only create the tasks and the task classes when they are actually needed:
+
+// build_lazy_tg
+[source,python]
+---------------
+def configure(ctx):
+	pass
+
+def build(ctx):
+	tg = ctx(rule='touch ${TGT}', target='foo')
+	print(type(tg))
+	print(tg.tasks)
+	tg.post()
+	print(tg.tasks)
+	print(type(tg.tasks[0]))
+---------------
+
+Here is the output:
+
+[source,shishell]
+---------------
+waf configure build
+Setting top to   : /tmp/build_lazy_tg
+Setting out to   : /tmp/build_lazy_tg/build
+'configure' finished successfully (0.204s)
+Waf: Entering directory `/tmp/build_lazy_tg/build'
+<class 'waflib.TaskGen.task_gen'> <1>
+[] <2>
+[{task: foo  -> foo}] <3>
+<class 'waflib.Task.foo'> <4>
+[1/1] foo:  -> build/foo
+Waf: Leaving directory `/tmp/build_lazy_tg/build'
+'build' finished successfully (0.023s)
+---------------
+
+<1> Task generator type
+<2> The tasks created are stored in the list _tasks_ (0..n tasks may be added)
+<3> Tasks are created after calling the method post() - it is usually called automatically internally
+<4> A new task class was created dynamically for the target +foo+
+
+==== Overview of the build phase
+
+A high level overview of the build process is represented on the following diagram:
+
+image::build_overview{PIC}["Overview of the build phase"{backend@docbook:,width=250:},align="center"]
+
+NOTE: The tasks are all created before any of them is executed. New tasks may be created after the build has started, but the dependencies have to be set by using low-level apis.
+
+=== More build options
+
+Although any operation can be executed as part of a task, a few scenarios are typical and it makes sense to provide convenience functions for them.
+
+==== Executing specific routines before or after the build
+
+User functions may be bound to be executed at two key moments during the build command (callbacks):
+
+. immediately before the build starts (bld.add_pre_fun)
+. immediately after the build is completed successfully (bld.add_post_fun)
+
+Here is how to execute a test after the build is finished:
+
+// build_pre_post
+[source,python]
+---------------
+top = '.'
+out = 'build'
+
+def options(ctx):
+	ctx.add_option('--exe', action='store_true', default=False,
+		help='execute the program after it is built')
+
+def configure(ctx):
+	pass
+
+def pre(ctx): <1>
+	print('before the build is started')
+
+def post(ctx):
+	print('after the build is complete')
+	if ctx.cmd == 'install': <2>
+		if ctx.options.exe: <3>
+			ctx.exec_command('/sbin/ldconfig') <4>
+
+def build(ctx):
+	ctx.add_pre_fun(pre) <5>
+	ctx.add_post_fun(post)
+---------------
+
+<1> The callbacks take the build context as unique parameter 'ctx'
+<2> Access the command type
+<3> Access to the command-line options
+<4> A common scenario is to call ldconfig after the files are installed.
+<5> Scheduling the functions for later execution. Python functions are objects too.
+
+Upon execution, the following output will be produced:
+
+[source,shishell]
+---------------
+$ waf distclean configure build install --exe
+'distclean' finished successfully (0.005s)
+'configure' finished successfully (0.011s)
+Waf: Entering directory `/tmp/build_pre_post/build'
+before the build is started <1>
+Waf: Leaving directory `/tmp/build_pre_post/build'
+after the build is complete <2>
+'build' finished successfully (0.004s)
+Waf: Entering directory `/tmp/build_pre_post/build'
+before the build is started
+Waf: Leaving directory `/tmp/build_pre_post/build'
+after the build is complete
+/sbin/ldconfig: Can't create temporary cache file /etc/ld.so.cache~: Permission denied <3>
+'install' finished successfully (15.730s)
+---------------
+
+<1> output of the function bound by 'bld.add_pre_fun'
+<2> output of the function bound by 'bld.add_post_fun'
+<3> execution at installation time
+
+
+==== Installing files
+
+Three build context methods are provided for installing files created during or after the build:
+
+. install_files: install several files in a folder
+. install_as: install a target with a different name
+. symlink_as: create a symbolic link on the platforms that support it
+
+[source,python]
+---------------
+def build(bld):
+	bld.install_files('${PREFIX}/include', ['a1.h', 'a2.h']) <1>
+	bld.install_as('${PREFIX}/dir/bar.png', 'foo.png') <2>
+	bld.symlink_as('${PREFIX}/lib/libfoo.so.1', 'libfoo.so.1.2.3') <3>
+
+	env_foo = bld.env.derive()
+	env_foo.PREFIX = '/opt'
+	bld.install_as('${PREFIX}/dir/test.png', 'foo.png', env=env_foo) <4>
+
+	start_dir = bld.path.find_dir('src/bar')
+	bld.install_files('${PREFIX}/share', ['foo/a1.h'],
+		cwd=start_dir, relative_trick=True) <5>
+
+	bld.install_files('${PREFIX}/share', start_dir.ant_glob('**/*.png'), <6>
+		cwd=start_dir, relative_trick=True)
+---------------
+
+<1> Install various files in the target destination
+<2> Install one file, changing its name
+<3> Create a symbolic link
+<4> Overridding the configuration set ('env' is optional in the three methods install_files, install_as and symlink_as)
+<5> Install src/bar/foo/a1.h as seen from the current script into '$\{PREFIX}/share/foo/a1.h'
+<6> Install the png files recursively, preserving the folder structure read from src/bar/
+
+NOTE: the methods _install_files_, _install_as_ and _symlink_as_ will do something only during _waf install_ or _waf uninstall_, they have no effect in other build commands
+
+==== Listing the task generators and forcing specific task generators
+
+The _list_ command is used to display the task generators that are declared:
+
+// build_list
+[source,python]
+---------------
+top = '.'
+out = 'build'
+
+def configure(ctx):
+	pass
+
+def build(ctx):
+	ctx(source='wscript', target='foo.txt', rule='cp ${SRC} ${TGT}')
+	ctx(target='bar.txt', rule='touch ${TGT}', name='bar')
+---------------
+
+By default, the name of the task generator is computed from the _target_ attribute:
+
+[source,shishell]
+---------------
+$ waf configure list
+'configure' finished successfully (0.005s)
+foo.txt
+bar
+'list' finished successfully (0.008s)
+---------------
+
+The main usage of the name values is to force a partial build with the _--targets_ option. Compare the following:
+
+[source,shishell]
+---------------
+$ waf clean build
+'clean' finished successfully (0.003s)
+Waf: Entering directory `/tmp/build_list/build'
+[1/2] foo.txt: wscript -> build/foo.txt
+[2/2] bar:  -> build/bar.txt
+Waf: Leaving directory `/tmp/build_list/build'
+'build' finished successfully (0.028s)
+
+$ waf clean build --targets=foo.txt
+'clean' finished successfully (0.003s)
+Waf: Entering directory `/tmp/build_list/build'
+[1/1] foo.txt: wscript -> build/foo.txt
+Waf: Leaving directory `/tmp/build_list/build'
+'build' finished successfully (0.022s)
+---------------
+
+==== Execution step by step for debugging (the _step_ command)
+
+The _step_ is used to execute specific tasks and to return the exit status and any error message. It is particularly useful for debugging:
+
+[source,shishell]
+---------------
+waf step --files=test_shlib.c,test_staticlib.c
+Waf: Entering directory `/tmp/demos/c/build'
+c: shlib/test_shlib.c -> build/shlib/test_shlib.c.1.o
+ -> 0
+cshlib: build/shlib/test_shlib.c.1.o -> build/shlib/libmy_shared_lib.so
+ -> 0
+c: stlib/test_staticlib.c -> build/stlib/test_staticlib.c.1.o
+ -> 0
+cstlib: build/stlib/test_staticlib.c.1.o -> build/stlib/libmy_static_lib.a
+ -> 0
+Waf: Leaving directory `/tmp/demos/c/build'
+'step' finished successfully (0.201s)
+---------------
+
+In this case the +.so+ files were also rebuilt. Since the files attribute is interpreted as a comma-separated list of regular expressions, the following will produce a different output:
+
+[source,shishell]
+---------------
+$ waf step --files=test_shlib.c$
+Waf: Entering directory `/tmp/demos/c/build'
+c: shlib/test_shlib.c -> build/shlib/test_shlib.c.1.o
+ -> 0
+Waf: Leaving directory `/tmp/demos/c/build'
+'step' finished successfully (0.083s)
+---------------
+
+Finally, the tasks to execute may be prefixed by 'in:' or 'out:' to specify if it is a source or a target file:
+
+[source,shishell]
+---------------
+$ waf step --files=out:build/shlib/test_shlib.c.1.o
+Waf: Entering directory `/tmp/demos/c/build'
+cc: shlib/test_shlib.c -> build/shlib/test_shlib.c.1.o
+ -> 0
+Waf: Leaving directory `/tmp/demos/c/build'
+'step' finished successfully (0.091s)
+---------------
+
+NOTE: when using _waf step_, all tasks are executed sequentially, even if some of them return a non-zero exit status
+

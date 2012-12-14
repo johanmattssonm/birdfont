@@ -1,0 +1,156 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Thomas Nagy, 2006-2010 (ita)
+
+"""
+call 'waf --targets=waf.pdf' or use 'waf list' to see the targets available
+"""
+
+VERSION='0.0.1'
+APPNAME='wafdocs'
+
+import os, re, shutil
+
+top = '.'
+out = 'build'
+
+re_xi = re.compile('''^(include|image)::([^.]*.(txt|\\{PIC\\}))\[''', re.M)
+def ascii_doc_scan(self):
+	p = self.inputs[0].parent
+	node_lst = [self.inputs[0]]
+	seen = []
+	depnodes = []
+	while node_lst:
+		nd = node_lst.pop(0)
+		if nd in seen: continue
+		seen.append(nd)
+
+		code = nd.read()
+		for m in re_xi.finditer(code):
+			name = m.group(2)
+			if m.group(3) == '{PIC}':
+
+				ext = '.eps'
+				if self.generator.rule.rfind('A2X') > 0:
+					ext = '.png'
+
+				k = p.find_resource(name.replace('{PIC}', ext))
+				if k:
+					depnodes.append(k)
+			else:
+				k = p.find_resource(name)
+				if k:
+					depnodes.append(k)
+					node_lst.append(k)
+	return [depnodes, ()]
+
+import re
+def scansize(self):
+	name = 'image::%s\\{PIC\\}\\[.*,(width|height)=(\\d+)' % self.inputs[0].name[:-4]
+	re_src = re.compile(name)
+	lst = self.inputs[0].parent.get_src().ant_glob('*.txt')
+	for x in lst:
+		m = re_src.search(x.read())
+		if m:
+			val = str(int(1.6 * int(m.group(2))))
+			if m.group(1) == 'width':
+				w = val
+				h = "800"
+			else:
+				w = "800"
+				h = val
+
+			ext = self.inputs[0].name[-3:]
+			if ext == 'eps':
+				code = '-geometry %sx%s' % (w, h)
+			elif ext == 'dia':
+				if m.group(1) == 'width':
+					h = ''
+				else:
+					w = ''
+				code = '--size %sx%s' % (w, h)
+			else:
+				code = '-Gsize="%s,%s"' % (w, h)
+			break
+	else:
+		return ([], '')
+
+	return ([], code)
+
+def options(opt):
+	opt.add_option('--exe', action='store_true', default=False, help='Execute the program after it is compiled')
+
+def configure(conf):
+	conf.find_program('a2x', var='A2X')
+	conf.find_program('asciidoc', var='ADOC')
+	conf.find_program('dia', var='DIA')
+	conf.find_program('convert', var='CONVERT')
+	conf.find_program('source-highlight', var='SOURCE_HIGHLIGHT')
+	conf.find_program('dot')
+
+def build(bld):
+
+	#bld(features='subst', is_copy=True, source='asciidoc-dblatex.sty asciidoc-dblatex.xsl', target='asciidoc-dblatex.sty asciidoc-dblatex.xsl')
+
+	for x in bld.path.ant_glob('*.eps'):
+		bld(features='subst', source=x.name, target=x.name, is_copy=True)
+		bld(rule='${CONVERT} ${bld.raw_deps[tsk.uid()]} -density 600 ${SRC} ${TGT}', source=x, target=x.change_ext('.png'), scan=scansize)
+
+	for x in bld.path.ant_glob('*.dot'):
+		tg = bld(rule='${DOT} -Teps -o${TGT} ${SRC}', source=x, target=x.change_ext('.eps'))
+		tg = bld(rule='${DOT} -Tpng -o${TGT} ${SRC}', source=x, target=x.change_ext('.png'), scan=scansize)
+		#tg = bld(rule='${CONVERT} ${bld.raw_deps[tsk.uid()]} ${SRC} ${TGT}', source=x.change_ext('.eps'), target=x.change_ext('.png'), scan=scansize)
+
+	for x in bld.path.ant_glob('*.dia'):
+		tg = bld(rule='${DIA} -t eps ${SRC} -e ${TGT}', source=x, target=x.change_ext('.eps'))
+		tg = bld(rule='${DIA} -t png ${SRC} -e ${TGT}', source=x, target=x.change_ext('.png'), scan=scansize)
+		#bld(rule='${CONVERT} ${bld.raw_deps[tsk.uid()]} ${SRC} ${TGT}', source=tg.target, target=tg.target.change_ext('.png'), scan=scansize)
+
+	for x in bld.path.ant_glob('pics/*.png'):
+		bld(features='subst', source=x, target=x.name, is_copy=True)
+
+	for x in bld.path.ant_glob('callouts/*.png'):
+		 bld(features='subst', source=x.name, target=x.name, is_copy=True, path=x.parent)
+
+	#bld(rule='mkdir -p ${SRC[0].parent.get_bld().abspath()} && cp ${SRC} ${SRC[0].parent.get_bld().abspath()}',
+	#	source=bld.path.ant_glob('callouts/*.png'))
+
+	for x in 'shishell.lang symbols.lang default.style lang.map waf.css'.split():
+		bld(features='subst', source=x, target=x, is_copy=True)
+
+	bld.add_group() # separator, the documents may require any of the pictures from above
+
+	bld(rule='${ADOC} -a icons=true -a stylesheet=${SRC[1].abspath()} -a iconsdir=. -a toc -d book -o ${TGT} ${SRC[0].abspath()}',
+		source='waf.txt waf.css', target='single.html', scan=ascii_doc_scan)
+
+	bld(rule='${A2X} -L -a toc --icons-dir=. --icons -D ${gen.path.get_bld().abspath()} \
+                -d book -f pdf --dblatex-opts "-s ${SRC[1].abspath()} -p ${SRC[2].abspath()}" ${SRC[0].bldpath()}',
+		shell=True,
+		source='waf.txt asciidoc-dblatex.sty asciidoc-dblatex.xsl', target='waf.pdf', scan=ascii_doc_scan)
+
+	bld(rule='${A2X} -L -a toc --icons-dir=. --icons -D ${gen.path.get_bld().abspath()} \
+                -d article -f pdf --dblatex-opts "-s ${SRC[1].abspath()} -p ${SRC[2].abspath()}" ${SRC[0].bldpath()}',
+		shell=True,
+		source='intro_waf_1.6.txt asciidoc-dblatex.sty asciidoc-dblatex.xsl', target='intro_waf_1.6.pdf', scan=ascii_doc_scan)
+
+	bld(rule='ln -sf single.html index.html', shell=True)
+
+	if bld.options.exe:
+		def exe(ctx):
+			bld.exec_command('firefox build/single.html')
+		bld.add_post_fun(exe)
+
+"""
+For vim highlighting:
+cp vim/syntax/asciidoc.vim /usr/share/vim/site/syntax/
+cp vim/ftdetect/asciidoc_filetype.vim /usr/share/vim/site/ftdetect/
+
+When adding an eps from a svg file, convert it with inscape first
+convert (imagemagick) does not process svg files too well
+
+colors:
+ yellow fffea6
+ green  aef9a5
+ blue   d2d5ff
+"""
+

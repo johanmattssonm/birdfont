@@ -1,0 +1,145 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# J. Carretero, 2010 (zougloub)
+# Thomas Nagy, 2010 (ita)
+
+"""
+https://launchpad.net/subunit/
+"""
+
+
+
+import sys, os
+
+if "uname" in dir(os): machine = os.uname()[1]
+elif sys.platform == "win32": machine = os.environ["COMPUTERNAME"]
+else: raise Exception("Unknown platform, cannot get machine name")
+
+from waflib import Logs
+
+# python 2.3 tends to hang for whatever reason :-/
+PYTHONS = "2.4 2.5 2.6 2.7 3.0 3.1 3.2 3.3".split()
+
+DIRS = ['c', 'python']
+
+def options(opt):
+	for d in opt.path.ant_glob(DIRS, excl=['build', 'variants'], src=False, dir=True):
+		if d.name[0] == '.' or d.name == 'variants' or d.name == 'build':
+			continue
+
+		try:
+			opt.recurse(d.name)
+		except:
+			pass
+	# one sub-project uses autoconfig, but i do not want it here
+	from waflib import Configure
+	Configure.autoconfig = False
+
+def configure(conf):
+
+	#Logs.info('Running action configure') # build farm
+	try:
+		sub = conf.find_file('subprocess.py', ['/usr/lib64/python', '/usr/lib/python', '/usr/local/lib64/python', '/usr/local/lib/python'])
+	except:
+		sub = ''
+
+	curwaf = os.path.abspath(sys.argv[0])
+	conf.exec_command('%s %s configure build --zip-type=gz --tools=doxygen,fluid,ocaml,swig,compiler_fc,fc_config,fc,fc_scan,g95,ifort,gfortran,batched_cc,%s --prelude='' && /bin/cp waf demos/' % (sys.executable, curwaf, sub),
+		cwd=conf.path.parent.abspath())
+
+	node = conf.path.find_resource('waf')
+	if not node:
+		conf.fatal('Could not find Waf')
+	#if conf.exec_command([node.abspath(), '--help'], shell=False, env={}, cwd=node.parent.abspath()):
+	#	conf.fatal('the waf file cannot be executed')
+	conf.env.WAF = node.abspath()
+
+	conf.in_msg += 1
+	for d in conf.path.ant_glob(DIRS, excl=['build', 'variants', 'precious'], src=False, dir=True):
+		if d.name[0] == '.':
+			continue
+
+		try:
+			conf.recurse(d.name)
+		except Exception:
+			node = conf.path.find_node('%s/build/config.log' % d.name)
+			if node:
+				Logs.info("-- BEGIN %s config.log --\n%s-- END %s config.log --" % (d.name, node.read(), d.name))
+			try:
+				e = sys.exc_info()[1]
+				print(e)
+				print(e.stdout, e.stderr)
+			except Exception:
+				pass
+		else:
+			conf.env.append_value('CFG', [d.name])
+
+	print("The configurations enabled are %r" % conf.env.CFG)
+
+	# now remove the cache folders and re-create them
+	conf.cmd_and_log('rm -rf .waf*')
+	for x in PYTHONS:
+		try:
+			conf.find_program('python'+x, var=x)
+			# unpacking the waf directory concurrently can lead to a race condition, we'll need to take care of this (thanks, build farm!)
+			conf.cmd_and_log(conf.env[x] + " ./waf --version", env={})
+		except:
+			pass
+		else:
+			conf.env.append_value('PYTHONS', x)
+
+	Logs.info("executing the build for folders %r and with pythons %r" % (conf.env.CFG, conf.env.PYTHONS))
+	Logs.info("contents of config.log:")
+	Logs.info(conf.path.find_node('build/config.log').read())
+
+def build(bld):
+	print('Note: call "waf installcheck" (the default build does not do anything)')
+
+from waflib.Build import BuildContext
+class abc(BuildContext):
+	cmd = "installcheck"
+	fun = "installcheck"
+
+def installcheck(bld):
+	bld.jobs = 1
+	#if bld.cmd == 'build':
+	#	Logs.info('Running action build') # build farm
+
+	#print('testsuite: waflib')
+	def waf_cmd(self):
+		cmd = [self.env[self.generator.python], self.env.WAF, 'distclean', 'configure', 'build', 'clean', 'build', '-o', 'build' + self.generator.python]
+		cwd = self.generator.cwd
+		env = dict(os.environ)
+		env['WAFDIR'] = ''
+		env['WAFLOCK'] = '.lock-wscript' + self.generator.python # use a different build directory for each build
+		try:
+			bld.cmd_and_log(cmd, cwd=cwd, env=env, quiet=0, )
+		except:
+			e = sys.exc_info()[1]
+			s = "testsuite: %s\ntestsuite-xfail: %s [ %s \n %s ]\n" % (self.generator.name, self.generator.name, e.stderr, e.stdout)
+			Logs.info(s)
+		else:
+			s = "testsuite: %s\ntestsuite-success: %s\n" % (self.generator.name, self.generator.name)
+			Logs.info(s)
+
+	for x in bld.env.PYTHONS:
+		for dirname in bld.env.CFG:
+			bld(rule    = waf_cmd,
+				cwd     = dirname,
+				always  = 1,
+				python  = x,
+				name    = '%s_%s' % (dirname, x))
+
+	#if bld.cmd == 'build':
+	#	Logs.info('BUILD STATUS: 0\nACTION PASSED: build') # build farm
+	#	Logs.info('Running action test') # build farm
+	#Logs.info('testsuite: abc')
+	#def end(bld):
+	#	Logs.info('testsuite-success: abc')
+	#		Logs.info('TEST STATUS: 0\nACTION FAILED: test')
+	#bld.add_post_fun(end)
+	#elif bld.cmd == 'install':
+	#	Logs.info('Running action install') # build farm
+	#	Logs.info('INSTALL STATUS: 0\nACTION PASSED: install') # build farm
+
+

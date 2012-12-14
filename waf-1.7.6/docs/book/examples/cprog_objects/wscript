@@ -1,0 +1,28 @@
+#! /usr/bin/env python
+
+"""
+Compile some files with -O2 and others with -O3
+"""
+
+def options(opt):
+	opt.load('compiler_c')
+
+def configure(conf):
+	conf.load('compiler_c')
+
+def build(bld):
+	bld.objects(
+		source   = 'test.c',
+		ccflags  = '-O3',
+		target   = 'my_objs')
+
+	bld.shlib(
+		source   = 'a.c',
+		ccflags  = '-O2',
+		target   = 'lib1',
+		use      = 'my_objs')
+
+	bld.program(
+		source   = 'main.c',
+		target   = 'test_c_program',
+		use      = 'lib1')

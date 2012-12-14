@@ -1,0 +1,35 @@
+#! /usr/bin/env python
+
+"""
+Demonstrate how to bind functions to be executed before or after the build
+
+Try executing:
+$ waf configure clean build
+"""
+
+top = '.'
+out = 'build'
+
+def options(ctx):
+	ctx.add_option('--exe', action='store_true', default=False,
+		help='execute the program after it is built')
+
+def configure(ctx):
+	pass
+
+def pre(ctx):
+	print('before the build is started')
+
+def post(ctx):
+	print('after the build is complete')
+	if ctx.cmd == 'install':
+		from waflib import Options, Utils
+		if Options.options.exe:
+			ctx.exec_command('/sbin/ldconfig')
+
+def build(ctx):
+	ctx(rule='touch ${TGT}', target='bar.txt', always=True)
+
+	ctx.add_pre_fun(pre)
+	ctx.add_post_fun(post)
+

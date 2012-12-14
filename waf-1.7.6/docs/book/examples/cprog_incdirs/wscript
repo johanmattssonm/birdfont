@@ -1,0 +1,29 @@
+#! /usr/bin/env python
+
+"""
+include paths added by export_includes are propagated to other targets
+"""
+
+def options(opt):
+	opt.load('compiler_c')
+
+def configure(conf):
+	conf.load('compiler_c')
+
+def build(bld):
+	bld(
+		includes        = '. src',
+		export_includes = 'src',
+		name            = 'com_includes')
+
+	bld.stlib(
+		source          = 'a.c',
+		target          = 'shlib1',
+		use             = 'com_includes')
+
+	bld.program(
+		source          = 'main.c',
+		target          = 'app',
+		use             = 'shlib1',
+		)
+

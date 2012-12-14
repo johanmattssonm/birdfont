@@ -1,0 +1,48 @@
+#! /usr/bin/env python
+
+"""
+share the idl outputs by other task generators
+$ waf configure clean build
+"""
+
+top = '.'
+out = 'build'
+
+def configure(ctx):
+	ctx.load('g++')
+
+def build(ctx):
+	ctx(
+		source   = 'foo.idl',
+		name     = 'idl_gen')
+
+	ctx.program(
+		source   = ['main.cpp'],
+		target   = 'testprog',
+		includes = '.',
+		add_idl  = 'idl_gen')
+
+from waflib.Task import Task
+from waflib.TaskGen import feature, before_method, extension
+
+class idl(Task):
+	run_str = 'cp ${SRC} ${TGT[0].abspath()} && touch ${TGT[1].abspath()}'
+	color   = 'BLUE'
+	ext_out = ['.h']
+
+@extension('.idl')
+def process_idl(self, node):
+	cpp_node = node.change_ext('.cpp')
+	hpp_node = node.change_ext('.hpp')
+	self.create_task('idl', node, [cpp_node, hpp_node])
+	self.more_source = [cpp_node]
+
+@feature('*')
+@before_method('process_source')
+def process_add_source(self):
+	for x in self.to_list(getattr(self, 'add_idl', [])):
+		y = self.bld.get_tgen_by_name(x)
+		y.post()
+		if getattr(y, 'more_source', None):
+			self.source.extend(y.more_source)
+

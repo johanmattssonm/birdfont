@@ -1,0 +1,16 @@
+#! /usr/bin/env python
+
+"""
+The following command:
+$ waf ping
+Will not give the expected result because this folder belongs to a bigger project.
+Call 'configure' first:
+$ waf configure
+Then after:
+$ waf ping
+"""
+
+def ping(ctx):
+	print('→ ping from ' + ctx.path.abspath())
+	ctx.recurse('src')
+

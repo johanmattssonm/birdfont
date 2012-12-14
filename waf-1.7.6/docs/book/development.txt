@@ -1,0 +1,235 @@
+== Using the development version
+
+A few notes on the waf development follow.
+
+=== Execution traces
+
+==== Logging
+
+The generic flags to add more information to the stack traces or to the messages is '-v' (verbosity), it is used to display the command-lines executed during a build:
+
+[source,shishell]
+---------------
+$ waf -v
+---------------
+
+To display all the traces (useful for bug reports), use the following flag:
+
+[source,shishell]
+---------------
+$ waf -vvv
+---------------
+
+Debugging information can be filtered easily with the flag 'zones':
+
+[source,shishell]
+---------------
+$ waf --zones=action
+---------------
+
+Tracing zones must be comma-separated, for example:
+
+[source,shishell]
+---------------
+$ waf --zones=action,envhash,task_gen
+---------------
+
+The Waf module 'Logs' replaces the Python module logging. In the source code, traces are provided by using the 'debug' function, they must obey the format "zone: message" like in the following:
+
+[source,python]
+---------------
+Logs.debug("task: executing %r - it was never run before or its class changed" % self)
+---------------
+
+The following zones are used in Waf:
+
+.Debugging zones
+[options="header",cols='1,5']
+|=================
+|Zone    | Description
+|runner  | command-lines executed (enabled when -v is provided without debugging zones)
+|deps    | implicit dependencies found (task scanners)
+|task_gen| task creation (from task generators) and task generator method execution
+|action  | functions to execute for building the targets
+|env     | environment contents
+|envhash | hashes of the environment objects - helps seeing what changes
+|build   | build context operations such as filesystem access
+|preproc | preprocessor execution
+|group   | groups and task generators
+|=================
+
+WARNING: Debugging information can be displayed only after the command-line has been parsed. For example, no debugging information will be displayed when a waf tool is being by for the command-line options 'opt.load()' or by the global init method function 'init.tool()'
+
+==== Build visualization
+
+The Waf tool named _parallel_debug_ is used to inject code in Waf modules and to obtain a detailed execution trace. This module is provided in the folder +waflib/extras+ and must be imported in one's project before use:
+
+[source,python]
+---------------
+def options(ctx):
+	ctx.load('parallel_debug', tooldir='.')
+
+def configure(ctx):
+	ctx.load('parallel_debug', tooldir='.')
+
+def build(ctx):
+	bld(rule='touch ${TGT}', target='foo')
+---------------
+
+The execution will generate a diagram of the tasks executed during the build in the file +pdebug.svg+:
+
+image::pdebug{PIC}["Parallel execution diagram"{backend@docbook:,width=500:},align="center"]
+
+The details will be generated in the file +pdebug.dat+ as space-separated values. The file can be processed by other applications such as Gnuplot to obtain other diagrams:
+
+[source,shishell]
+---------------
+#! /usr/bin/env gnuplot
+set terminal png
+set output "output.png"
+set ylabel "Amount of active threads"
+set xlabel "Time in seconds"
+set title "Active threads on a parallel build (waf -j5)"
+unset label
+set yrange [-0.1:5.2]
+set ytic 1
+plot 'pdebug.dat' using 3:7 with lines title "" lt 2
+---------------
+
+image::dev{PIC}["Thread activity during the build"{backend@docbook:,width=410:},align="center"]
+
+The data file columns are the following:
+
+.pdebug file format
+[options="header", cols="1,2,6"]
+|=================
+|Column | Type | Description
+|1 |int| Identifier of the thread which has started or finished processing a task
+|2 |int| Identifier of the task processed
+|3 |float| Event time
+|4 |string| Type of the task processed
+|5 |int| Amount of tasks processed
+|6 |int| Amount of tasks waiting to be processed by the task consumers
+|7 |int| Amount of active threads
+|=================
+
+
+=== Profiling
+
+==== Benchmark projects
+
+The script +utils/genbench.py+ is used as a base to create large c-like project files. The habitual use is the following:
+
+[source,shishell]
+---------------
+$ utils/genbench.py /tmp/build 50 100 15 5
+$ cd /tmp/build
+$ waf configure
+$ waf -p -j2
+---------------
+
+The C++ project created will generate 50 libraries from 100 class files for each, each source file having 15 include headers pointing at the same library and 5 headers pointing at other headers randomly chosen.
+
+The compilation time may be discarded easily by disabling the actual compilation, for example:
+
+[source,python]
+---------------
+def build(bld):
+	from waflib import Task
+	def touch_func(task):
+		for x in task.outputs:
+			x.write('')
+	for x in Task.TaskBase.classes.keys():
+		cls = Task.TaskBase.classes[x]
+		cls.func = touch_func
+		cls.color = 'CYAN'
+---------------
+
+==== Profile traces
+
+Profiling information is obtained by calling the module cProfile and by injecting specific code. The most interesting methods to profile is 'waflib.Build.BuildContext.compile'. The amount of function calls is usually a bottleneck, and reducing it results in noticeable speedups. Here is an example on the method compile:
+
+[source,python]
+---------------
+from waflib.Build import BuildContext
+def ncomp(self):
+	import cProfile, pstats
+	cProfile.runctx('self.orig_compile()', {}, {'self': self}, 'profi.txt')
+	p = pstats.Stats('profi.txt')
+	p.sort_stats('time').print_stats(45)
+
+BuildContext.orig_compile = BuildContext.compile
+BuildContext.compile = ncomp
+---------------
+
+Here the output obtained on a benchmark build created as explained in the previous section:
+
+[source,shishell]
+---------------
+Fri Jul 23 15:11:15 2010    profi.txt
+
+         1114979 function calls (1099879 primitive calls) in 5.768 CPU seconds
+
+   Ordered by: internal time
+   List reduced from 139 to 45 due to restriction 45
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   109500    0.523    0.000    1.775    0.000 /comp/waf/waflib/Node.py:615(get_bld_sig)
+     5000    0.381    0.000    1.631    0.000 /comp/waf/waflib/Task.py:475(compute_sig_implicit_deps)
+   154550    0.286    0.000    0.286    0.000 {method 'update' of '_hashlib.HASH' objects}
+   265350    0.232    0.000    0.232    0.000 {id}
+40201/25101    0.228    0.000    0.228    0.000 /comp/waf/waflib/Node.py:319(abspath)
+    10000    0.223    0.000    0.223    0.000 {open}
+    20000    0.197    0.000    0.197    0.000 {method 'read' of 'file' objects}
+    15000    0.193    0.000    0.349    0.000 /comp/waf/waflib/Task.py:270(uid)
+    10000    0.189    0.000    0.850    0.000 /comp/waf/waflib/Utils.py:96(h_file)
+---------------
+
+A few known hot spots are present in the library:
+
+. The persistence implemented by the cPickle module (the cache file to serialize may take a few megabytes)
+. Accessing configuration data from the Environment instances
+. Computing implicit dependencies in general
+
+==== Optimizations tips
+
+The Waf source code has already been optimized in various ways. In practice, the projects may use additional assumptions to replace certain methods or parameters from its build scripts. For example, if a project is always executed on Windows, then the _framework_ and _rpath_ variables may be removed:
+
+[source,python]
+---------------
+from waflib.Tools.ccroot import USELIB_VARS
+USELIB_VARS['cprogram'] = USELIB_VARS['cxxprogram'] = \
+	set(['LIB', 'STLIB', 'LIBPATH', 'STLIBPATH', 'LINKFLAGS', 'LINKDEPS'])
+---------------
+
+=== Waf programming
+
+==== Setting up a Waf directory for development
+
+Waf is hosted on http://code.google.com/p/waf/source[Google code], and uses Subversion for source control. To obtain the development copy, use:
+
+[source,shishell]
+---------------
+$ git clone http://code.google.com/p/waf/ wafdir
+$ cd wafdir
+$ ./waf-light --make-waf
+---------------
+
+To avoid regenerating Waf each time, the environment variable *WAFDIR* should be used to point at the directory containing _waflib_:
+
+[source,shishell]
+---------------
+$ export WAFDIR=/path/to/directory/
+---------------
+
+==== Specific guidelines
+
+Though Waf is written in Python, additional restrictions apply to the source code:
+
+. Identation is tab-only, and the maximum line length should be about 200 characters
+. The development code is kept compatible with Python 2.3, to the exception of decorators in the Tools directory. In particular, the Waf binary can be generated using Python 2.3
+. The _waflib_ modules must be insulated from the _Tools_ modules to keep the Waf core small and language independent
+. Api compatibility is maintained in the cycle of a minor version (from 1.5.0 to 1.5.n)
+
+NOTE: More code always means more bugs. Whenever possible, unnecessary code must be removed, and the existing code base should be simplified.
+

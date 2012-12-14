@@ -1,0 +1,43 @@
+#! /usr/bin/env python
+
+"""
+Task generators may create any kind of task
+
+In this example, the tasks create configuration contexts
+and execute configuration tests.
+
+Execute
+$ waf configure build
+"""
+
+import os
+from waflib.Configure import conf, ConfigurationContext
+from waflib import Task, Build, Logs
+
+def run_test(self):
+	top = self.generator.bld.srcnode.abspath()
+	out = self.generator.bld.bldnode.abspath()
+
+	ctx = ConfigurationContext(top_dir=top, out_dir=out)
+	ctx.init_dirs()
+
+	ctx.in_msg = 1
+	ctx.env = self.env.derive()
+
+	header = self.generator.header_name
+	logfile = self.generator.path.get_bld().abspath() + os.sep \
+		+ header + '.log'
+	ctx.logger = Logs.make_logger(logfile, header)
+
+	ctx.check(header_name=header)
+
+def options(ctx):
+	ctx.load('compiler_c')
+
+def configure(ctx):
+	ctx.load('compiler_c')
+
+def build(ctx):
+	ctx(rule=run_test, always=True, header_name='stdio.h')
+	ctx(rule=run_test, always=True, header_name='unistd.h')
+

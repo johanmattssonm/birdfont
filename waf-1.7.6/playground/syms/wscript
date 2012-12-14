@@ -1,0 +1,11 @@
+#! /usr/bin/env python
+
+def options(ctx):
+	ctx.load('compiler_c')
+
+def configure(ctx):
+	ctx.load('compiler_c syms')
+
+def build(ctx):
+	ctx(features='c cshlib syms', source='a.c b.c', export_symbols_regex='mylib_.*', target='testlib')
+	ctx(features='c cprogram', source='main.c', target='app', use='testlib')

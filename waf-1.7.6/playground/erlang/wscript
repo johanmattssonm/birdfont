@@ -1,0 +1,8 @@
+#! /usr/bin/env python
+
+def configure(conf):
+	conf.load('erlang')
+
+def build(bld):
+	bld(source='hello.erl')
+

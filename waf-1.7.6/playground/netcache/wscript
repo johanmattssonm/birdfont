@@ -1,0 +1,33 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Thomas Nagy, 2006-2012 (ita)
+
+# A test script for the network cache
+
+APPNAME='cc_test'
+
+top = '.'
+out = 'build'
+
+def options(opt):
+	#opt.tool_options('compiler_c')
+	pass
+
+def configure(conf):
+	#conf.check_tool('compiler_c')
+	conf.check_tool('gcc')
+	conf.check_tool('netcache_client')
+
+def build(bld):
+	bld(
+		features = 'c cprogram',
+		source = 'main.c',
+		target = 'test_c_app',
+		uselib_local = 'my_static_lib',
+		includes = '. /usr/include')
+
+	bld(
+		features = 'c cstlib',
+		source = 'test_staticlib.c',
+		target='my_static_lib')
+

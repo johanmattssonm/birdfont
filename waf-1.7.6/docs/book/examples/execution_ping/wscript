@@ -1,0 +1,14 @@
+#! /usr/bin/env python
+
+"""
+Move the folder to /tmp for example and call
+$ waf ping pong
+
+The context objects 'ctx' are different instances
+"""
+
+def ping(ctx):
+    print(' ping! %d' % id(ctx))
+
+def pong(ctx):
+    print(' pong! %d' % id(ctx))

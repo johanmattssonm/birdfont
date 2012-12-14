@@ -1,0 +1,17 @@
+#! /usr/bin/env python
+
+"""
+This example illustrates several configuration methods:
+. find_program for finding executables
+. check_waf_version to throw a configuration error if the waf version is too old/too new
+. find_file for finding files in particular folders
+"""
+
+top = '.'
+out = 'build'
+
+def configure(ctx):
+	ctx.find_program('touch', var='TOUCH')
+	ctx.check_waf_version(mini='1.6.0')
+	ctx.find_file('fstab', ['/opt/', '/etc'])
+

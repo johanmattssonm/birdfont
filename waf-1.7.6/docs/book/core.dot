@@ -1,0 +1,46 @@
+digraph G {
+	label="Dependencies between the core modules";
+
+	Build[fillcolor="#fffea6",style=filled]
+	ConfigSet[fillcolor="#fffea6",style=filled]
+	Configure[fillcolor="#fffea6",style=filled]
+	Context[fillcolor="#fffea6",style=filled]
+	Logs[fillcolor="#fffea6",style=filled]
+	Nod3[fillcolor="#fffea6",style=filled, label="Node"]
+	Options[fillcolor="#fffea6",style=filled]
+	Runner[fillcolor="#fffea6",style=filled]
+	Scripting[fillcolor="#fffea6",style=filled]
+	TaskGen[fillcolor="#fffea6",style=filled]
+	Task[fillcolor="#fffea6",style=filled]
+	Utils[fillcolor="#fffea6",style=filled]
+	Errors[fillcolor="#fffea6",style=filled]
+
+	Build -> Runner;
+	Build -> TaskGen;
+	Build -> ConfigSet;
+	Build -> Options;
+
+	ConfigSet -> Utils;
+	ConfigSet -> Logs;
+
+	Configure -> Build;
+
+	Context -> Logs;
+	Context -> Nod3;
+
+	Nod3 -> Utils;
+
+	Options -> Context;
+
+	Runner -> Task;
+
+	Scripting -> Configure;
+
+	TaskGen -> Task;
+
+	//Task -> Utils;
+	Task -> Logs;
+
+	Utils -> Errors;
+}
+

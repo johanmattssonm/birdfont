@@ -1,0 +1,46 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Gustavo Carneiro, 2007
+
+import sys
+
+VERSION='0.0.1'
+APPNAME='python_test'
+
+top = '.'
+out = 'build'
+
+def options(opt):
+	opt.load('python') # options for disabling pyc or pyo compilation
+	opt.load('compiler_c')
+
+def configure(conf):
+	conf.load('compiler_c')
+	conf.load('python')
+	conf.check_python_version((2,4,2))
+	conf.check_python_headers()
+
+	conf.check_python_module('os')
+	conf.check_python_module('re', condition="ver > num(2,0,4) and ver <= num(2,3,0)")
+	try:
+		conf.check_python_module('pygccxml')
+	except conf.errors.ConfigurationError:
+		print('could not find pygccxml (ignored)')
+
+def build(bld):
+
+	# first compile a few pyc and pyo files (set install_path=None to disable the installation...)
+	bld(features='py', source=bld.path.ant_glob('*.py'), install_from='.')
+
+	# then a c extension module
+	bld(
+		features = 'c cshlib pyext',
+		source   = 'spammodule.c',
+		target   = 'spam')
+
+	# then a c program
+	bld(
+		features = 'c cprogram pyembed',
+		source   = 'test.c',
+		target   = 'test')
+

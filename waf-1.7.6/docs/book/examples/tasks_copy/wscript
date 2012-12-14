@@ -1,0 +1,22 @@
+#! /usr/bin/env python
+
+"""
+Simple copy task
+
+The attribute 'run_str' is compiled into the task method 'run' by a metaclass
+"""
+
+def configure(ctx):
+	pass
+
+def build(ctx):
+	from waflib import Task
+	class copy(Task.Task):
+		run_str = 'cp ${SRC} ${TGT}'
+	copy = Task.always_run(copy)
+
+	tsk = copy(env=ctx.env)
+	tsk.set_inputs(ctx.path.find_resource('wscript'))
+	tsk.set_outputs(ctx.path.find_or_declare('b.out'))
+	ctx.add_to_group(tsk)
+

@@ -1,0 +1,22 @@
+#! /usr/bin/env python
+
+"""
+$ waf configure dist
+"""
+
+APPNAME = 'webe'
+VERSION = '1.0'
+
+top = '.'
+out = 'build_directory'
+
+def configure(ctx):
+    print('→ configuring the project in ' + ctx.path.abspath())
+
+def dist(ctx):
+	ctx.base_name = 'foo_2.0'
+	#ctx.base_path = ctx.path.find_node('build_directory')
+	ctx.algo      = 'zip'
+	ctx.excl      = ' **/.waf-1* **/*~ **/*.pyc **/*.swp **/.lock-w*'
+	ctx.files     = ctx.path.ant_glob('**/wscript')
+

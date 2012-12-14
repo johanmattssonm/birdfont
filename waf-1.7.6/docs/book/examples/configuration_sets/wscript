@@ -1,0 +1,25 @@
+#! /usr/bin/env python
+
+"""
+The configuration set such as conf.env behave like dicts
+Lists are usually stored in them, and may be shared by several
+configuration sets.
+
+For this reason, the methods append_unique, append_value
+and prepend_value should be used whenever possible
+"""
+
+top = '.'
+out = 'build'
+
+def configure(ctx):
+	ctx.env['CFLAGS'] = ['-g']
+	ctx.env.CFLAGS = ['-g']
+	ctx.env.append_value('CXXFLAGS', ['-O2', '-g'])
+	ctx.env.append_unique('CFLAGS', ['-g', '-O2'])
+	ctx.env.prepend_value('CFLAGS', ['-O3'])
+
+	print(type(ctx.env))
+	print(ctx.env)
+	print(ctx.env.FOO)
+

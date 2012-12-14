@@ -1,0 +1,154 @@
+== Download and installation
+
+=== Obtaining the Waf file
+
+The Waf project is located on http://code.google.com/p/waf[Google Code].
+The current Waf version requires an interpreter for the Python programming language such as http://www.python.org[cPython] 2.3 to 3.1 or http://www.jython.org[Jython] >= 2.5.
+
+==== Downloading and using the Waf binary
+
+The Waf binary is a python script which does not require any installation whatsoever. It may be executed directly from a writable folder. Just rename it as +waf+ if necessary:
+
+[source,shishell]
+---------------
+$ wget http://waf.googlecode.com/files/waf-1.7.3
+$ mv waf-1.7.3 waf
+$ python waf --version
+waf 1.7.3 (54dc13ba5f51bfe2ae277451ec5ac1d0a91c7aaf)
+---------------
+
+The +waf+ file has its own library compressed in a binary stream in the same file. Upon execution, the library is uncompressed in a hidden folder in the current directory. The folder will be re-created if removed. This scheme enables different Waf versions to be executed from the same folders:
+
+[source,shishell]
+---------------
+$ ls -ld .waf*
+.waf-1.7.3-2c924e3f453eb715218b9cc852291170
+---------------
+
+NOTE: The binary file requires http://docs.python.org/library/bz2.html[bzip2] compression support, which may be unavailable in some self-compiled cPython installations.
+
+==== Building Waf from the source code
+
+Building Waf requires a Python interpreter having a version number in the range 2.6-3.1. The source code is then processed to support Python 2.3, 2.4 and 2.5.
+
+[source,shishell]
+---------------
+$ wget http://waf.googlecode.com/files/waf-1.7.3.tar.bz2
+$ tar xjvf waf-1.7.3.tar.bz2
+$ cd waf-1.7.3
+$ python waf-light
+Configuring the project
+'build' finished successfully (0.001s)
+Checking for program python              : /usr/bin/python
+Checking for python version              : (2, 6, 5, 'final', 0)
+'configure' finished successfully (0.176s)
+Waf: Entering directory `/waf-1.7.3/build'
+[1/1] create_waf:  -> waf
+Waf: Leaving directory `/waf-1.7.3/build'
+'build' finished successfully (2.050s)
+---------------
+
+For older interpreters, it is possible to build the +waf+ file with gzip compression instead of bzip2:
+
+[source,shishell]
+---------------
+$ python waf-light --zip-type=gz
+---------------
+
+The files present in the folder _waflib/extras_ represent extensions (Waf tools) that are in a testing phase. They may be added to the Waf binary by using the _--tools_ switch:
+
+[source,shishell]
+---------------
+$ python waf-light --tools=compat15,swig,doxygen
+---------------
+
+The tool _compat15_ is required to provide some compatibility with previous Waf versions.
+To remove it, it is necessary to modify the initialization by changing the _--prelude_ switch:
+
+[source,shishell]
+---------------
+$ python waf-light --make-waf --prelude='' --tools=swig
+---------------
+
+Finally, here is how to import an external tool and load it in the initialization. Assuming the file `aba.py` is present in the current directory:
+
+[source,python]
+---------------
+def foo():
+	from waflib.Context import WAFVERSION
+	print("This is Waf %s" % WAFVERSION)
+---------------
+
+The following will create a custom waf file which will import and execute 'foo' whenever it is executed:
+
+[source,shishell]
+---------------
+$ python waf-light --make-waf --tools=compat15,$PWD/aba.py
+   --prelude=$'\tfrom waflib.extras import aba\n\taba.foo()'
+$ ./waf --help
+This is Waf 1.7.3
+[...]
+---------------
+
+Foreign files to add into the folder 'extras' must be given by absolute paths in the _--tools_ switch.
+Such files do not have to be Python files, yet, a typical scenario is to add an initializer to modify existing
+functions and classes from the Waf modules. Various from the http://code.google.com/p/waf/source/browse/trunk/build_system_kit/[build system kit] illustrate how to create custom
+build systems derived from Waf.
+
+=== Using the Waf file
+
+==== Permissions and aliases
+
+Because the waf script is a python script, it is usually executed by calling +python+ on it:
+
+[source,shishell]
+---------------
+$ python waf
+---------------
+
+On unix-like systems, it is usually much more convenient to set the executable permissions and avoid calling +python+ each time:
+
+[source,shishell]
+---------------
+$ chmod 755 waf
+$ ./waf --version
+waf 1.7.3 (54dc13ba5f51bfe2ae277451ec5ac1d0a91c7aaf)
+---------------
+
+If the command-line interpreter supports aliases, it is recommended to set the alias once:
+
+[source,shishell]
+---------------
+$ alias waf=$PWD/waf
+$ waf --version
+waf 1.7.3 (54dc13ba5f51bfe2ae277451ec5ac1d0a91c7aaf)
+---------------
+
+Or, the execution path may be modified to point at the location of the waf binary:
+
+[source,shishell]
+---------------
+$ export PATH=$PWD:$PATH
+$ waf --version
+waf 1.7.3 (54dc13ba5f51bfe2ae277451ec5ac1d0a91c7aaf)
+---------------
+
+In the next sections of the book, we assume that either an alias or the execution path have been set in a way that +waf+ may be called directly.
+
+==== Local waflib folders
+
+Although the waf library is unpacked automatically from the waf binary file, it is sometimes necessary to keep the files in a visible folder, which may even be kept in a source control tool (subversion, git, etc). For example, the +waf-light+ script does not contain the waf library, yet it is used to create the +waf+ script by using the directory +waflib+.
+
+The following diagram represents the process used to find the +waflib+ directory:
+
+image::waflib{PIC}["Waflib discovery"{backend@docbook:,width=220:},align="center"]
+
+
+==== Portability concerns
+
+By default, the recommended Python interpreter is cPython, for which the supported versions are 2.3 to 3.1. For maximum convenience for the user, a copy of the http://www.jython.org[Jython] interpreter in the version 2.5 may be redistributed along with a copy of the Waf executable.
+
+NOTE: A project containing 'waf', 'jython2.5.jar' and the source code may be used almost anywhere.
+
+WARNING: The 'waf' script must reside in a writable folder to unpack its cache files.
+

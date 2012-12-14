@@ -1,0 +1,82 @@
+#! /usr/bin/env python
+# encoding: utf-8
+# Thomas Nagy, 2010 (ita)
+
+VERSION='0.0.1'
+APPNAME='cc_test'
+
+"""
+The build groups can be processed all at once (required for the progress bar)
+or sequentially in a lazy manner.
+
+Each time one more .c file will be added during the build and compiled and linked in app
+
+$ waf distclean configure build build
+'distclean' finished successfully (0.005s)
+Setting top to                           : /dynamic_build
+Setting out to                           : /dynamic_build/build
+Checking for 'gcc' (c compiler)          : ok
+'configure' finished successfully (0.091s)
+
+Waf: Entering directory `/dynamic_build/build'
+[1/1] foo_3.c:  -> build/foo_3.c
+[2/4] c: main.c -> build/main.c.1.o
+[3/4] c: build/foo_3.c -> build/foo_3.c.1.o
+[4/4] cprogram: build/main.c.1.o build/foo_3.c.1.o -> build/app
+Waf: Leaving directory `/dynamic_build/build'
+'build' finished successfully (5.169s)
+
+Waf: Entering directory `/dynamic_build/build'
+[1/1] foo_17.c:  -> build/foo_17.c
+[3/5] c: build/foo_17.c -> build/foo_17.c.1.o
+[5/5] cprogram: build/main.c.1.o build/foo_17.c.1.o build/foo_3.c.1.o -> build/app
+Waf: Leaving directory `/dynamic_build/build'
+'build' finished successfully (5.144s)
+"""
+
+top = '.'
+
+def options(opt):
+	opt.load('compiler_c')
+
+def configure(conf):
+	conf.load('compiler_c')
+
+
+def build(bld):
+	"""
+	groups will be processed one by one during the build
+	the progress bar display will be inaccurate
+	"""
+
+	bld.post_mode = Build.POST_LAZY
+
+	import random
+	rnd = random.randint(0, 25)
+	bld(
+		rule           = "sleep 2 && (echo 'int num%d = %d;' > ${TGT})" % (rnd, rnd),
+		target         = 'foo_%d.c' % rnd,
+       )
+
+	bld.add_group()
+
+	bld.program(source='main.c', target='app', dynamic_source='*.c')
+
+# support for the "dynamic_source" attribute follows
+
+from waflib import Build, Utils, TaskGen
+@TaskGen.feature('c')
+@TaskGen.before('process_source', 'process_rule')
+def dynamic_post(self):
+	"""
+	bld(dynamic_source='*.c', ..) will search for source files to add to the attribute 'source'
+	we could also call "eval" or whatever expression
+	"""
+	if not getattr(self, 'dynamic_source', None):
+		return
+	self.source = Utils.to_list(self.source)
+	self.source.extend(self.path.get_bld().ant_glob(self.dynamic_source, remove=False))
+
+	# if headers are created dynamically, assign signatures manually:
+	# for x in self.path.get_bld().ant_glob('**/*.h', remove=False): x.sig = Utils.h_file(x.abspath())
+

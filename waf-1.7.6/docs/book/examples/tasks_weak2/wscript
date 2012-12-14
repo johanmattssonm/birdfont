@@ -1,0 +1,47 @@
+#! /usr/bin/env python
+
+"""
+Illustrate the effect of weak order constraints for the build (generates diagrams)
+
+waf configure clean build -j2 --dwidth=800 --dtitle='Default constraints on "waf -j2"' --dmaxtime=15
+waf configure clean build -j2 --dwidth=800 --dtitle='Additional constraints on "waf -j2"' --dmaxtime=15
+"""
+
+def options(ctx):
+	ctx.load('parallel_debug')
+
+def configure(ctx):
+	ctx.load('parallel_debug')
+
+def build(ctx):
+	ctx(rule='sleep 1', color='BLUE', name='blue')
+	for x in range(80):
+		ctx(rule='sleep 0.1', color='GREEN', name='green', always=True)
+	ctx(rule='sleep 6', color='RED', name='red', after='blue')
+
+
+from waflib import Task, Runner
+
+old = Task.set_file_constraints
+def bluefirst(lst):
+	lst.sort(cmp=lambda x, y: cmp(x.__class__.__name__, y.__class__.__name__))
+	old(lst)
+Task.set_file_constraints = bluefirst
+
+def get_out(self):
+	tsk = self.prev_get_out()
+	if tsk.__class__.__name__ == 'blue':
+		def remove_red(lst):
+			reds = []
+			lst.reverse()
+			for tsk in lst:
+				if tsk.__class__.__name__ == 'red':
+					lst.remove(tsk)
+					reds.append(tsk)
+			lst.reverse()
+			return reds
+		self.outstanding = remove_red(self.outstanding) + remove_red(self.frozen) + self.outstanding
+	return tsk
+Runner.Parallel.prev_get_out = Runner.Parallel.get_out
+Runner.Parallel.get_out      = get_out
+

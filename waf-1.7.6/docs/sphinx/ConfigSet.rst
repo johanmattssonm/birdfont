@@ -1,0 +1,5 @@
+ConfigSet
+---------
+
+.. automodule:: waflib.ConfigSet
+

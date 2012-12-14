@@ -1,0 +1,18 @@
+#! /usr/bin/env python
+
+"""
+Use a system library as if it were part of the project
+Among others:
+- it may be present in the 'use' argument
+- the program will be rebuilt if the library changes (hash)
+"""
+
+def options(opt):
+	opt.load('compiler_c')
+
+def configure(conf):
+	conf.load('compiler_c')
+
+def build(bld):
+	bld.read_shlib('m', paths=['/usr/lib64'])
+	bld.program(source='main.c', target='app', use='m')

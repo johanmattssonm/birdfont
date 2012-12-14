@@ -1,0 +1,50 @@
+#! /usr/bin/env python
+
+"""
+The program below will link against all other libraries (except the static one)
+"""
+
+def options(opt):
+	opt.load('compiler_c')
+
+def configure(conf):
+	conf.load('compiler_c')
+
+def build(bld):
+	bld.shlib(
+		source = 'a.c',
+		target = 'lib1')
+
+	bld.stlib(
+		source = 'b.c',
+		use    = 'cshlib', # add the shared library flags
+		target = 'lib2')
+
+	bld.shlib(
+		source = 'c.c',
+		target = 'lib3',
+		use    = 'lib1 lib2')
+
+	bld.program(
+		source = 'main.c',
+		target = 'app',
+		use    = 'lib3')
+
+	"""
+	The static library from this example is completely useless, and will add the -fPIC
+	flags to the program which might be annoying. It will be much better
+	to get rid of those static libraries but if you cannot live without them, use the following:
+	"""
+
+	from waflib.TaskGen import feature, after_method
+	@feature('c', 'cxx')
+	@after_method('propagate_uselib_vars', 'process_use')
+	def skip_cshlib_or_cxxshlib(self):
+		self.uselib = self.to_list(getattr(self, 'uselib', []))
+		self.use = self.to_list(getattr(self, 'use', []))
+		for x in ('cshlib', 'cxxshlib', 'dshlib'):
+			while x in self.uselib:
+				self.uselib.remove(x)
+			while x in self.use:
+				self.use.remove(x)
+

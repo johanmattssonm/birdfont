@@ -1,0 +1,68 @@
+#! /usr/bin/env python3
+
+top = '.'
+out = 'bin'
+
+def options(opt):
+	opt.load('compiler_c')
+
+def configure(conf):
+	conf.load('compiler_c')
+
+def build(bld):
+
+	bld(rule='echo hi')
+	bld(rule='touch ${TGT}', target='foo.txt')
+
+
+	bld(rule='touch ${TGT}', target='aaa')
+	t = bld(rule='touch ${TGT}', target='bbb', source='aaa')
+	t = bld(rule='touch ${TGT}', target='ccc', source='bbb')
+	t = bld(rule='touch ${TGT}', target='ddd', source='ccc')
+	t.create_task('foo')
+
+	#print( 'path from srcnode', bld.path.find_or_declare('aaa').path_from(bld.bldnode) )
+
+	bld.install_files('/tmp/bar', 'wscript')
+
+	bld(features='c cprogram', source='main.c', target='app')
+
+
+def init(self):
+	print('init')
+
+def shutdown(self):
+	print('shutdown')
+
+def bar(ctx):
+	print("command ok")
+
+from waflib import Task
+
+# TODO update_outputs is a decorator too .. now
+@Task.always_run
+class foo_task(Task.Task):
+	def run(self):
+		print("running foo")
+
+print("classes", Task.classes)
+
+#-----------------------------------------------
+# variant example below
+# call "../waf debug"
+#
+
+import os
+from waflib import Build, Options
+
+class debug_context(Build.BuildContext):
+	cmd = 'debug'
+	fun = 'build'
+	variant = 'test'
+	def __init__(self, start=None):
+		Build.BuildContext.__init__(self, start=start)
+
+# looks evil
+#def debug(bld):
+#	build(bld)
+

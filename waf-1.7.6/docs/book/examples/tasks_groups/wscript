@@ -1,0 +1,38 @@
+#! /usr/bin/env python
+
+"""
+waf configure clean build -j4 --dwidth=800 --dtitle='Parallel build representation for "waf -j4"'
+
+for this to work, make sure to either use waf git or to create waf with './waf-light --make-waf --tools=compat15,parallel_debug'
+"""
+
+def options(ctx):
+	ctx.load('parallel_debug')
+
+def configure(ctx):
+	ctx.load('parallel_debug')
+
+def build(ctx):
+	for i in range(8):
+		ctx(rule='cp ${SRC} ${TGT}', source='wscript', target='wscript_a_%d' % i,
+			color='YELLOW', name='tasks a')
+		ctx(rule='cp ${SRC} ${TGT}', source='wscript_a_%d' % i, target='wscript_b_%d' % i,
+			color='GREEN', name='tasks b')
+	ctx.add_group()
+	for i in range(8):
+		ctx(rule='cp ${SRC} ${TGT}', source='wscript', target='wscript_c_%d' % i,
+			color='BLUE', name='tasks c')
+		ctx(rule='cp ${SRC} ${TGT}', source='wscript_c_%d' % i, target='wscript_d_%d' % i,
+			color='PINK', name='tasks d')
+
+# just to make the diagrams more interesting, shuffle the tasks
+
+from waflib import Task
+
+old = Task.set_file_constraints
+def meth(lst):
+	import random
+	random.shuffle(lst)
+	old(lst)
+Task.set_file_constraints = meth
+

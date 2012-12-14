@@ -1,0 +1,371 @@
+
+=== Name and extension-based file processing
+
+Transformations may be performed automatically based on the file name or on the extension.
+
+==== Refactoring repeated rule-based task generators into implicit rules
+
+The explicit rules described in the previous chapter become limited for processing several files of the same kind. The following code may lead to unmaintainable scripts and to slow builds (for loop):
+
+[source, python]
+----------------
+def build(bld):
+	for x in 'a.lua b.lua c.lua'.split():
+		y = x.replace('.lua', '.luac')
+		bld(source=x, target=y, rule='${LUAC} -s -o ${TGT} ${SRC}')
+		bld.install_files('${LUADIR}', x)
+----------------
+
+Rather, the rule should be removed from the user script, like this:
+
+[source,python]
+---------------
+def build(bld):
+	bld(source='a.lua b.lua c.lua')
+---------------
+
+The equivalent logic may then be provided by using the following code. It may be located in either the same 'wscript', or in a waf tool:
+
+[source,python]
+---------------
+from waflib import TaskGen
+TaskGen.declare_chain(
+	name         = 'luac', <1>
+	rule         = '${LUAC} -s -o ${TGT} ${SRC}', <2>
+	shell        = False,
+	ext_in       = '.lua', <3>
+	ext_out      = '.luac', <4>
+	reentrant    = False, <5>
+	install_path = '${LUADIR}', <6>
+)
+---------------
+
+<1> The name for the corresponding task class to use
+<2> The rule is the same as for any rule-based task generator
+<3> Input file, processed by extension
+<4> Output files extensions separated by spaces. In this case there is only one output file
+<5> The reentrant attribute is used to add the output files as source again, for processing by another implicit rule
+<6> String representing the installation path for the output files, similar to the destination path from 'bld.install_files'. To disable installation, set it to False.
+
+==== Chaining more than one command
+
+Now consider the long chain 'uh.in' → 'uh.a' → 'uh.b' → 'uh.c'. The following implicit rules demonstrate how to generate the files while maintaining a minimal user script:
+
+[source,python]
+---------------
+top = '.'
+out = 'build'
+
+def configure(conf):
+	pass
+
+def build(bld):
+	bld(source='uh.in')
+
+from waflib import TaskGen
+TaskGen.declare_chain(name='a', rule='cp ${SRC} ${TGT}', ext_in='.in', ext_out='.a',)
+TaskGen.declare_chain(name='b', rule='cp ${SRC} ${TGT}', ext_in='.a',  ext_out='.b',)
+TaskGen.declare_chain(name='c', rule='cp ${SRC} ${TGT}', ext_in='.b',  ext_out='.c', reentrant = False)
+---------------
+
+During the build phase, the correct compilation order is computed based on the extensions given:
+
+[source,shishell]
+---------------
+$ waf distclean configure build
+'distclean' finished successfully (0.000s)
+'configure' finished successfully (0.090s)
+Waf: Entering directory `/comp/waf/demos/simple_scenarios/chaining/build'
+[1/3] a: uh.in -> build/uh.a
+[2/3] b: build/uh.a -> build/uh.b
+[3/3] c: build/uh.b -> build/uh.c
+Waf: Leaving directory `/comp/waf/demos/simple_scenarios/chaining/build'
+'build' finished successfully (0.034s)
+---------------
+
+==== Scanner methods
+
+Because transformation chains rely on implicit transformations, it may be desirable to hide some files from the list of sources. Or, some dependencies may be produced conditionally and may not be known in advance. A 'scanner method' is a kind of callback used to find additional dependencies just before the target is generated. For illustration purposes, let us start with an empty project containing three files: the 'wscript', 'ch.in' and 'ch.dep'
+
+[source,shishell]
+---------------
+$ cd /tmp/smallproject
+
+$ tree
+.
+|-- ch.dep
+|-- ch.in
+`-- wscript
+---------------
+
+The build will create a copy of 'ch.in' called 'ch.out'. Also, 'ch.out' must be rebuild whenever 'ch.dep' changes. This corresponds more or less to the following Makefile:
+
+[source,make]
+-----------------
+ch.out: ch.in ch.dep
+	cp ch.in ch.out
+-----------------
+
+The user script should only contain the following code:
+
+[source,python]
+---------------
+top = '.'
+out = 'build'
+
+def configure(conf):
+	pass
+
+def build(bld):
+	bld(source = 'ch.in')
+---------------
+
+The code below is independent from the user scripts and may be located in a Waf tool.
+
+[source,python]
+---------------
+def scan_meth(task): <1>
+	node = task.inputs[0]
+	dep = node.parent.find_resource(node.name.replace('.in', '.dep')) <2>
+	if not dep:
+		raise ValueError("Could not find the .dep file for %r" % node)
+	return ([dep], []) <3>
+
+from waflib import TaskGen
+TaskGen.declare_chain(
+	name      = 'copy',
+	rule      = 'cp ${SRC} ${TGT}',
+	ext_in    = '.in',
+	ext_out   = '.out',
+	reentrant = False,
+	scan      = scan_meth, <4>
+)
+--------------
+<1> The scanner method accepts a task object as input (not a task generator)
+<2> Use node methods to locate the dependency (and raise an error if it cannot be found)
+<3> Scanner methods return a tuple containing two lists. The first list contains the list of node objects to depend on. The second list contains private data such as debugging information. The results are cached between build calls so the contents must be serializable.
+<4> Add the scanner method to chain declaration
+
+The execution trace will be the following:
+
+[source,shishell]
+--------------
+$ echo 1 > ch.in
+$ echo 1 > ch.dep <1>
+
+$ waf distclean configure build
+'distclean' finished successfully (0.001s)
+'configure' finished successfully (0.001s)
+Waf: Entering directory `/tmp/smallproject/build'
+[1/1] copy: ch.in -> build/ch.out <2>
+Waf: Leaving directory `/tmp/smallproject/build'
+'build' finished successfully (0.010s)
+
+$ waf
+Waf: Entering directory `/tmp/smallproject/build'
+Waf: Leaving directory `/tmp/smallproject/build'
+'build' finished successfully (0.005s) <3>
+
+$ echo 2 > ch.dep <4>
+
+$ waf
+Waf: Entering directory `/tmp/smallproject/build'
+[1/1] copy: ch.in -> build/ch.out <5>
+Waf: Leaving directory `/tmp/smallproject/build'
+'build' finished successfully (0.012s)
+--------------
+
+<1> Initialize the file contents of 'ch.in' and 'ch.dep'
+<2> Execute a first clean build. The file 'ch.out' is produced
+<3> The target 'ch.out' is up-to-date because nothing has changed
+<4> Change the contents of 'ch.dep'
+<5> The dependency has changed, so the target is rebuilt
+
+Here are a few important points about scanner methods:
+
+. they are executed only when the target is not up-to-date.
+. they may not modify the 'task' object or the contents of the configuration set 'task.env'
+. they are executed in a single main thread to avoid concurrency issues
+. the results of the scanner (tuple of two lists) are re-used between build executions (and it is possible to access programatically those results)
+. the make-like rules also accept a 'scan' argument (scanner methods are bound to the task rather than the task generators)
+. they are used by Waf internally for c/c++ support, to add dependencies dynamically on the header files ('.c' → '.h')
+
+
+==== Extension callbacks
+
+In the chain declaration from the previous sections, the attribute 'reentrant' was described to control if the generated files are to be processed or not. There are cases however where one of the two generated files must be declared (because it will be used as a dependency) but where it cannot be considered as a source file in itself (like a header in c/c\++). Now consider the following two chains ('uh.in' → 'uh.a1' + 'uh.a2') and ('uh.a1' → 'uh.b') in the following example:
+
+[source,python]
+---------------
+top = '.'
+out = 'build'
+
+def configure(conf):
+	pass
+
+def build(bld):
+	obj = bld(source='uh.in')
+
+from waflib import TaskGen
+TaskGen.declare_chain(
+	name      = 'a',
+	rule      = 'cp ${SRC} ${TGT}',
+	ext_in    = '.in',
+	ext_out   = ['.a1', '.a2'],
+	reentrant = True,
+)
+
+TaskGen.declare_chain(
+	name      = 'b',
+	rule      = 'cp ${SRC} ${TGT}',
+	ext_in    = '.a1',
+	ext_out   = '.b',
+	reentrant = False,
+)
+--------------
+
+The following error message will be produced:
+
+[source,shishell]
+--------------
+$ waf distclean configure build
+'distclean' finished successfully (0.001s)
+'configure' finished successfully (0.001s)
+Waf: Entering directory `/tmp/smallproject'
+Waf: Leaving directory `/tmp/smallproject'
+Cannot guess how to process bld:///tmp/smallproject/uh.a2 (got mappings ['.a1', '.in'] in
+   class TaskGen.task_gen) -> try conf.load(..)?
+--------------
+
+The error message indicates that there is no way to process 'uh.a2'. Only files of extension '.a1' or '.in' can be processed. Internally, extension names are bound to callback methods. The error is raised because no such method could be found, and here is how to register an extension callback globally:
+
+[source,python]
+---------------
+@TaskGen.extension('.a2')
+def foo(*k, **kw):
+	pass
+---------------
+
+To register an extension callback locally, a reference to the task generator object must be kept:
+
+[source,python]
+---------------
+def build(bld):
+	obj = bld(source='uh.in')
+	def callback(*k, **kw):
+		pass
+	obj.mappings['.a2'] = callback
+---------------
+
+The exact method signature and typical usage for the extension callbacks is the following:
+
+[source,python]
+---------------
+from waflib import TaskGen
+@TaskGen.extension(".a", ".b") <1>
+def my_callback(task_gen_object<2>, node<3>):
+	task_gen_object.create_task(
+		task_name, <4>
+		node,  <5>
+		output_nodes) <6>
+---------------
+
+<1> Comma-separated list of extensions (strings)
+<2> Task generator instance holding the data
+<3> Instance of Node, representing a file (either source or build)
+<4> The first argument to create a task is the name of the task class
+<5> The second argument is the input node (or a list of nodes for several inputs)
+<6> The last parameter is the output node (or a list of nodes for several outputs)
+
+The creation of new task classes will be described in the next section.
+
+==== Task class declaration
+
+Waf tasks are instances of the class Task.TaskBase. Yet, the base class contains the real minimum, and the immediate subclass 'Task.Task' is usually chosen in user scripts. We will now start over with a simple project containing only one project 'wscript' file and and example file named 'ah.in'. A task class will be added.
+
+[source,python]
+---------------
+top = '.'
+out = 'build'
+
+def configure(conf):
+	pass
+
+def build(bld):
+	bld(source='uh.in')
+
+from waflib import Task, TaskGen
+
+@TaskGen.extension('.in')
+def process(self, node):
+	tsk = self.create_task('abcd') <1>
+	print(tsk.__class__)
+
+class abcd(Task.Task): <2>
+	def run(self): <3>
+		print('executing...')
+		return 0 <4>
+---------------
+
+<1> Create a new instance of 'abcd'. The method 'create_task' is a shortcut to make certain the task will keep a reference on its task generator.
+<2> Inherit the class Task located in the module Task.py
+<3> The method run is called when the task is executed
+<4> The task return status must be an integer, which is zero to indicate success. The tasks that have failed will be executed on subsequent builds
+
+The output of the build execution will be the following:
+
+[source,shishell]
+---------------
+$ waf distclean configure build
+'distclean' finished successfully (0.002s)
+'configure' finished successfully (0.001s)
+Waf: Entering directory `/tmp/simpleproject/build'
+<class 'wscript_main.abcd'>
+[1/1] abcd:
+executing...
+Waf: Leaving directory `/tmp/simpleproject/build'
+'build' finished successfully (0.005s)
+---------------
+
+Although it is possible to write down task classes in plain python, two functions (factories) are provided to simplify the work, for example:
+
+[source,python]
+---------------
+Task.simple_task_type( <1>
+	'xsubpp', <2>
+	rule    = '${PERL} ${XSUBPP} ${SRC} > ${TGT}', <3>
+	color   = 'BLUE', <4>
+	before  = 'cc') <5>
+
+def build_it(task):
+	return 0
+
+Task.task_type_from_func(<6>
+	'sometask', <7>
+	func    = build_it, <8>
+	vars    = ['SRT'],
+	color   = 'RED',
+	ext_in  = '.in',
+	ext_out = '.out') <9>
+---------------
+
+<1> Create a new task class executing a rule string
+<2> Task class name
+<3> Rule to execute during the build
+<4> Color for the output during the execution
+<5> Execute the task instance before any instance of task classes named 'cc'. The opposite of 'before' is 'after'
+<6> Create a new task class from a custom python function. The 'vars' attribute represents additional configuration set values to use as dependencies
+<7> Task class name
+<8> Function to use
+<9> In this context, the extension names are meant to be used for computing the execution order with other tasks, without naming the other task classes explicitly
+
+Note that most attributes are common between the two function factories. More usage examples may be found in most Waf tools.
+
+==== Source attribute processing
+
+The first step in processing the source file attribute is to convert all file names into Nodes. Special methods may be mapped to intercept names by the exact file name entry (no extension). The Node objects are then added to the task generator attribute 'source'.
+
+The list of nodes is then consumed by regular extension mappings. Extension methods may re-inject the output nodes for further processing by appending them to the the attribute 'source' (hence the name re-entrant provided in declare_chain).
+
+image::source{PIC}["Source attribute processing"{backend@docbook:,width=250:},align="center"]
+

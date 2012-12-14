@@ -1,0 +1,20 @@
+#! /usr/bin/env python
+
+"""
+Task generators do not create their tasks immediately
+Here is an illustration
+
+$ waf configure clean build
+"""
+
+def configure(ctx):
+	pass
+
+def build(ctx):
+	tg = ctx(rule='touch ${TGT}', target='foo')
+	print(type(tg))
+	print(tg.tasks)
+	tg.post()
+	print(tg.tasks)
+	print(type(tg.tasks[0]))
+

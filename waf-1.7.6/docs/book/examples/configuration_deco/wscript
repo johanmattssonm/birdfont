@@ -1,0 +1,25 @@
+#! /usr/bin/env python
+
+"""
+The @conf is a python decorator - decorators are used to replace functions
+
+This particular decorator will bind the function to
+the configuration context
+
+Try:
+$ waf configure
+"""
+
+top = '.'
+out = 'build'
+
+from waflib.Configure import conf
+
+@conf
+def hi(ctx):
+    print('→ hello, world!')
+
+# hi = conf(hi)
+
+def configure(ctx):
+    ctx.hi()

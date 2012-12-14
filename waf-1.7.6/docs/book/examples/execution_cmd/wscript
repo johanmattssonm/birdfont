@@ -1,0 +1,19 @@
+#! /usr/bin/env python
+
+"""
+Several build commands are defined by default, for example:
+$ waf configure clean build list install uninstall
+"""
+
+top = '.'
+out = 'build_directory'
+
+def configure(ctx):
+	print(ctx.cmd)
+
+def build(ctx):
+	if ctx.cmd == 'clean':
+		print('cleaning!')
+	else:
+		print(ctx.cmd)
+
