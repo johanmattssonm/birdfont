@@ -3,7 +3,6 @@ src/Config.vala
 *.pyc
 .lock-waf_linux2_build
 .waf-1.7.6-*/
-waf
 waf-1.7.6/.lock-waf_linux2_build
 waf-1.7.6/Makefile
 waf-1.7.6/waf
