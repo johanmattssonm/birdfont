@@ -1,5 +1,0 @@
-Utils
------
-
-.. automodule:: waflib.Utils
-

@@ -1,5 +1,0 @@
-Task
-----
-
-.. automodule:: waflib.Task
-

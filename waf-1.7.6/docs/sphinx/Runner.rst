@@ -1,5 +1,0 @@
-Runner
-------
-
-.. automodule:: waflib.Runner
-

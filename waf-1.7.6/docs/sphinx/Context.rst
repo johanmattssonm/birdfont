@@ -1,5 +1,0 @@
-Context
----------
-
-.. automodule:: waflib.Context
-

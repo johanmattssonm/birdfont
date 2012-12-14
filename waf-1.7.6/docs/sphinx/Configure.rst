@@ -1,5 +1,0 @@
-Configure
----------
-
-.. automodule:: waflib.Configure
-

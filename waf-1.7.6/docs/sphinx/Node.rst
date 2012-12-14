@@ -1,5 +1,0 @@
-Node
-----
-
-.. automodule:: waflib.Node
-

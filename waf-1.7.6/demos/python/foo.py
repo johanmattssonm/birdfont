@@ -1,5 +1,0 @@
-
-zbr = "bar"
-
-assert zbr
-

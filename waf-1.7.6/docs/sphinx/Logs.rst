@@ -1,5 +1,0 @@
-Logs
-----
-
-.. automodule:: waflib.Logs
-

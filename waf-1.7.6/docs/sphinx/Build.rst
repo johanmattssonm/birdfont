@@ -1,5 +1,0 @@
-Build
------
-
-.. automodule:: waflib.Build
-

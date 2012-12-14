@@ -1,5 +1,0 @@
-Errors
-------
-
-.. automodule:: waflib.Errors
-

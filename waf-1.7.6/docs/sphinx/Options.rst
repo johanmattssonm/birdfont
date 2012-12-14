@@ -1,5 +1,0 @@
-Options
--------
-
-.. automodule:: waflib.Options
-

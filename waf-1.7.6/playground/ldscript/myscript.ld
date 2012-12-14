@@ -1,2 +1,0 @@
-ENTRY(init)
-

@@ -1,5 +1,0 @@
-Scripting
----------
-
-.. automodule:: waflib.Scripting
-

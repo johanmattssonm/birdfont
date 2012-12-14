@@ -1,5 +1,0 @@
-TaskGen
--------
-
-.. automodule:: waflib.TaskGen
-
