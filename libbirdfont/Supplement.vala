@@ -125,7 +125,7 @@ public class Supplement {
 			return;
 		}
 
-		f = File.new_for_path ("/usr/share/locale/sv/LC_MESSAGES/birdfont.mo");
+		f = File.new_for_path ("/usr/local/share/locale/sv/LC_MESSAGES/birdfont.mo");
 		if (f.query_exists ()) {
 			Intl.bindtextdomain (GETTEXT_PACKAGE, "/usr/local/share/locale");
 			return;
