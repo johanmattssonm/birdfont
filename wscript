@@ -42,7 +42,7 @@ def configure(conf):
 def pre (bld):
 	bld.env.VERSION = VERSION
 	
-	if not bld.options.noconfig:
+	if not bld.options.noconfig and bld.cmd == 'build':
 		write_config (bld)
 
 def post (bld):
