@@ -65,6 +65,10 @@ def build(bld):
 	bld.install_files('${PREFIX}/share/applications/', ['linux/birdfont.desktop'])
 	bld.install_files('${PREFIX}/share/icons/hicolor/48x48/apps/', ['linux/birdfont.png'])
 
+	bld.install_files('${PREFIX}/share/applications/', ['linux/birdfont.desktop'])
+
+	bld.recurse('linux')
+
 	if bld.options.win32:
 		bld.recurse('win32')
 

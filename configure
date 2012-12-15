@@ -1,6 +1,7 @@
 #!/bin/bash
 cd waf-* && \
-./configure && \
+./waf-light configure && \
+./waf-light build && \
 cp ./waf ../ && \
 cd .. && \
 ./waf configure $*
