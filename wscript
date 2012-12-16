@@ -101,7 +101,7 @@ def update_translations (bld):
 		)		
 
 	bld (
-		rule = "xgettext --language=C# --keyword=_ --add-comments=/ --from-code=utf-8 --output=../po/birdfont.pot ../src/*.vala",
+		rule = "xgettext --language=C# --keyword=_ --add-comments=/ --from-code=utf-8 --output=../po/birdfont.pot ../libbirdfont/*.vala ../birdfont/*.vala ../birdfont-export/*.vala",
 		name = "update pot",
 		always = True
 	)
