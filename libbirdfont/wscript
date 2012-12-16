@@ -75,18 +75,18 @@ PARAM = [
 ]
 
 def build (bld):
-
 	bld.shlib (
 		target        = 'birdfont',
 		param         = PARAM,
 		packages      = 'libxml-2.0',
 		uselib        = 'CAIRO GLIB GIO PIXBUF XML',
 		source        = BIRDFONT,
-		name          = "libbirdfont",
+		name          = "libbirdfont"
 	)
 
 	bld (
-		rule          = "mv libbirdfont/birdfont.h ./",
-		depends       = "libbirdfont",
-		name          = "birdfont_h"
+		rule           = "mv libbirdfont/birdfont.h ./",
+		dynamic_source = 'libbirdfont/birdfont.h',
+		depends        = "libbirdfont",
+		name           = "birdfont_h"
 	)

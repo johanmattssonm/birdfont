@@ -37,8 +37,6 @@ def configure(conf):
 	if conf.options.win32 :
 		conf.recurse('win32')
 
-	write_config (conf)
-
 def pre (bld):
 	bld.env.VERSION = VERSION
 	
