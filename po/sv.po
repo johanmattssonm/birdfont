@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-16 21:03+0100\n"
-"PO-Revision-Date: 2012-12-14 07:23+0000\n"
+"POT-Creation-Date: 2012-12-17 18:05+0100\n"
+"PO-Revision-Date: 2012-12-17 10:14+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1355469825.0\n"
+"X-POOTLE-MTIME: 1355739262.0\n"
 
 #: ../libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -200,7 +200,7 @@ msgstr "Översikt"
 
 #: ../libbirdfont/TabBar.vala:482
 msgid "Kerning"
-msgstr ""
+msgstr "Kerning"
 
 #: ../libbirdfont/TabBar.vala:485
 msgid "Menu"
@@ -274,11 +274,11 @@ msgstr "Visa stödlinjer för botten- och toppmarginaler"
 
 #: ../libbirdfont/Toolbox.vala:335
 msgid "Zoom in"
-msgstr ""
+msgstr "Zooma in"
 
 #: ../libbirdfont/Toolbox.vala:342
 msgid "Zoom out"
-msgstr ""
+msgstr "Zooma ut"
 
 #: ../libbirdfont/Toolbox.vala:349
 msgid "Zoom to scale 1:1"
@@ -366,7 +366,7 @@ msgstr "_Förhandsgranska"
 
 #: ../birdfont/GtkWindow.vala:272
 msgid "_Kerning"
-msgstr ""
+msgstr "_Kerning"
 
 #: ../birdfont/GtkWindow.vala:277
 msgid "_Quit"
@@ -418,7 +418,7 @@ msgstr "Visa alla _unicode tecken"
 
 #: ../birdfont/GtkWindow.vala:373
 msgid "Show de_fault characters set"
-msgstr "Visa svenska tecken"
+msgstr "Visa _svenska tecken"
 
 #: ../birdfont/GtkWindow.vala:380
 msgid "Show characters in font"
@@ -430,15 +430,15 @@ msgstr "Lägg till storlek för nytt _rutnät"
 
 #: ../birdfont/GtkWindow.vala:393
 msgid "Remove gr_id item"
-msgstr "Ta bort storlek för rutnätet"
+msgstr "Ta bort storlek för rut_nätet"
 
 #: ../birdfont/GtkWindow.vala:399
 msgid "_Zoom in"
-msgstr ""
+msgstr "_Zooma in"
 
 #: ../birdfont/GtkWindow.vala:406
 msgid "Zoom _out"
-msgstr ""
+msgstr "Zooma _ut"
 
 #: ../birdfont/GtkWindow.vala:413
 msgid "Zoom to _scale 1:1"

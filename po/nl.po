@@ -7,451 +7,455 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-17 18:05+0100\n"
-"PO-Revision-Date: 2012-12-14 07:59+0000\n"
-"Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
+"PO-Revision-Date: 2012-12-17 13:54+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: de\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1355471940.0\n"
+"X-POOTLE-MTIME: 1355752451.0\n"
 
 #: ../libbirdfont/Argument.vala:225
 msgid "Usage"
-msgstr ""
+msgstr "Gebruik"
 
 #: ../libbirdfont/Argument.vala:227
 msgid "FILE"
-msgstr ""
+msgstr "BESTAND"
 
 #: ../libbirdfont/Argument.vala:227
 msgid "OPTION"
-msgstr "OPTIONEN"
+msgstr "OPTIE"
 
 #: ../libbirdfont/Argument.vala:229
 msgid "show coordinate in glyph view"
-msgstr ""
+msgstr "toon coördinaten in glief zicht"
 
 #: ../libbirdfont/Argument.vala:230
 msgid "exit if a test case failes"
-msgstr ""
+msgstr "afsluiten als een test case faalt"
 
 #: ../libbirdfont/Argument.vala:231
 msgid "treat warnings as fatal"
-msgstr ""
+msgstr "behandel waarschuwing als fataal"
 
 #: ../libbirdfont/Argument.vala:232
 msgid "show this message"
-msgstr ""
+msgstr "toon dit bericht"
 
 #: ../libbirdfont/Argument.vala:233
 msgid "sleep between each command in test suite"
-msgstr ""
+msgstr "sluimer tussen elke opdracht in test suite"
 
 #: ../libbirdfont/Argument.vala:234
 msgid "run test case"
-msgstr ""
+msgstr "test case uitvoeren"
 
 #: ../libbirdfont/BackgroundTool.vala:40
 msgid "Move, resize and rotate background image"
-msgstr ""
+msgstr "Verplaats, vergroot of verklein en draai achtergrond afbeelding"
 
 #: ../libbirdfont/Birdfont.vala:22
 msgid "Usage:"
-msgstr ""
+msgstr "Gebruik:"
 
 #: ../libbirdfont/Birdfont.vala:25
 msgid "print this message\n"
-msgstr ""
+msgstr "druk dit bericht af\n"
 
 #: ../libbirdfont/Birdfont.vala:26
 msgid "write files to this directory\n"
-msgstr ""
+msgstr "schrijf bestanden naar deze locatie\n"
 
 #: ../libbirdfont/Birdfont.vala:27
 msgid "write svg file\n"
-msgstr ""
+msgstr "schrijf svg bestand\n"
 
 #: ../libbirdfont/Birdfont.vala:28
 msgid "write ttf and eot files\n"
-msgstr ""
+msgstr "schrijf ttf en oet bestanden\n"
 
 #: ../libbirdfont/Birdfont.vala:118
 msgid "Can't find output directory"
-msgstr ""
+msgstr "Kan output locatie niet vinden"
 
 #: ../libbirdfont/Birdfont.vala:123 ../libbirdfont/Birdfont.vala:128
 msgid "Writing"
-msgstr ""
+msgstr "Schrijven"
 
 #: ../libbirdfont/CutBackgroundTool.vala:37
 msgid "Crop background image"
-msgstr ""
+msgstr "Knip achtergrond afbeelding"
 
 #: ../libbirdfont/ExportTool.vala:29
 msgid "Export glyph to svg file"
-msgstr ""
+msgstr "Exporteer glief naar svg bestand"
 
 #: ../libbirdfont/ExportTool.vala:94
 msgid "Alphabet"
-msgstr ""
+msgstr "Alfabet"
 
 #: ../libbirdfont/ExportTool.vala:128
 msgid "Can't export"
-msgstr ""
+msgstr "Kan niet exporteren"
 
 #: ../libbirdfont/ExportTool.vala:131
 msgid "Wrote"
-msgstr ""
+msgstr "Schreef"
 
 #: ../libbirdfont/ExportTool.vala:451
 msgid "Wrote font files"
-msgstr ""
+msgstr "Schreef lettertype bestanden"
 
 #. / All lower case letters in alphabetic order separated by space
 #: ../libbirdfont/GlyphRange.vala:37
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-msgstr ""
+msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 
 #. / All upper case letters in alphabetic order separated by space
 #: ../libbirdfont/GlyphRange.vala:40
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-msgstr ""
+msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
 #: ../libbirdfont/GridTool.vala:36
 msgid "Show grid"
-msgstr ""
+msgstr "Toon rooster"
 
 #: ../libbirdfont/MenuTab.vala:94
 msgid "Export"
-msgstr ""
+msgstr "Exporteren"
 
 #: ../libbirdfont/MenuTab.vala:95
 msgid "Preview"
-msgstr ""
+msgstr "Voorbeeld"
 
 #: ../libbirdfont/MenuTab.vala:113
 msgid "Recent files"
-msgstr ""
+msgstr "Recente bestanden"
 
 #: ../libbirdfont/MenuTab.vala:150
 msgid "Preferences"
-msgstr ""
+msgstr "Voorkeuren"
 
 #: ../libbirdfont/MenuTab.vala:151
 msgid "Export SVG, TTF & EOT fonts"
-msgstr ""
+msgstr "Exporteer SVG, TTF & EOT lettertypen"
 
 #: ../libbirdfont/MenuTab.vala:152
 msgid "Name"
-msgstr ""
+msgstr "Naam"
 
 #: ../libbirdfont/MenuTab.vala:153
 msgid "Glyph sequence"
-msgstr ""
+msgstr "Glief volgorde"
 
 #: ../libbirdfont/MenuTab.vala:154 ../libbirdfont/MenuTab.vala:155
 msgid "Export SVG font and view the result"
-msgstr ""
+msgstr "Exporteer SVG lettertype en bekijk het resultaat"
 
 #: ../libbirdfont/MenuTab.vala:238 ../libbirdfont/SaveDialog.vala:82
 msgid "Save"
-msgstr ""
+msgstr "Opslaan"
 
 #: ../libbirdfont/MergeTool.vala:23
 msgid "Merge paths"
-msgstr ""
+msgstr "Paden samenvoegen"
 
 #: ../libbirdfont/MoveTool.vala:36
 msgid "Move paths"
-msgstr ""
+msgstr "Paden verplaatsen"
 
 #: ../libbirdfont/PenTool.vala:48
 msgid "Right click to add new points, left click to move points"
 msgstr ""
+"Rechts klik om nieuwe punten toe te voegen, links klik om punten te "
+"verplaatsen"
 
 #: ../libbirdfont/PenTool.vala:48
 msgid "and double click to add new point on path."
-msgstr ""
+msgstr "en dubbel klik om nieuwe punten op het pad te plaatsen"
 
 #: ../libbirdfont/SaveDialog.vala:83
 msgid "Save as"
-msgstr ""
+msgstr "Opslaan als"
 
 #: ../libbirdfont/SaveDialog.vala:84
 msgid "Discard"
-msgstr ""
+msgstr "Verwerpen"
 
 #: ../libbirdfont/SaveDialog.vala:85
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #: ../libbirdfont/SaveDialog.vala:94
 msgid "Save?"
-msgstr ""
+msgstr "Opslaan?"
 
 #: ../libbirdfont/TabBar.vala:479
 msgid "Overview"
-msgstr ""
+msgstr "Overzicht"
 
 #: ../libbirdfont/TabBar.vala:482
 msgid "Kerning"
-msgstr ""
+msgstr "Overhang"
 
 #: ../libbirdfont/TabBar.vala:485
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: ../libbirdfont/Toolbox.vala:94
 msgid "Right click to add new point, left click to move points"
 msgstr ""
+"Rechts klik om een nieuw punt toe te voegen, links klik om punten te "
+"verplaatsen"
 
 #: ../libbirdfont/Toolbox.vala:94
 msgid "and double click to add new point on path"
-msgstr ""
+msgstr "en dubbel klik om een nieuw punt op een pad toe te voegen"
 
 #: ../libbirdfont/Toolbox.vala:101
 msgid "Add new point on path"
-msgstr ""
+msgstr "Voeg nieuw punt op pad toe"
 
 #: ../libbirdfont/Toolbox.vala:109
 msgid "Begin new line from point on path"
-msgstr ""
+msgstr "Begin nieuwe lijn van punt op pad"
 
 #: ../libbirdfont/Toolbox.vala:117
 msgid "Tie curve handles for selected edit point"
-msgstr ""
+msgstr "Bind gebogen handvatten voor geselecteerd bewerkingspunt"
 
 #: ../libbirdfont/Toolbox.vala:137
 msgid "Tie coordinates to previous edit point"
-msgstr ""
+msgstr "Bind coördinaten aan vorige bewerkingspunt"
 
 #: ../libbirdfont/Toolbox.vala:144
 msgid "Delete edit points"
-msgstr ""
+msgstr "Verwijder bewerkingspunten"
 
 #: ../libbirdfont/Toolbox.vala:153
 msgid "Set precision"
-msgstr ""
+msgstr "Stel precisie in"
 
 #: ../libbirdfont/Toolbox.vala:181
 msgid "Create counter from outline"
-msgstr ""
+msgstr "Creëer tegenstelling van omlijning"
 
 #: ../libbirdfont/Toolbox.vala:193
 msgid "Move to path to the bottom layer"
-msgstr ""
+msgstr "Verplaats naar pad naar de onderste laag"
 
 #: ../libbirdfont/Toolbox.vala:205
 msgid "Show full unicode characters set"
-msgstr ""
+msgstr "Toon volledig unicode karater set"
 
 #: ../libbirdfont/Toolbox.vala:216
 msgid "Show default characters set"
-msgstr ""
+msgstr "Toon standaard karakter set"
 
 #: ../libbirdfont/Toolbox.vala:227
 msgid "Show all characters in font"
-msgstr ""
+msgstr "Toon alle karakters in lettertype"
 
 #: ../libbirdfont/Toolbox.vala:236
 msgid "Delete selected glyph"
-msgstr ""
+msgstr "Verwijder geselecteerde glief"
 
 #: ../libbirdfont/Toolbox.vala:302
 msgid "Show help lines for x-height and baseline"
-msgstr ""
+msgstr "Toon hulplijnen voor x-hoogte en basislijn"
 
 #: ../libbirdfont/Toolbox.vala:317
 msgid "Show help lines at top and bottom margin"
-msgstr ""
+msgstr "Toon hulplijnen aan boven- en ondermarge"
 
 #: ../libbirdfont/Toolbox.vala:335
 msgid "Zoom in"
-msgstr ""
+msgstr "Inzoomen"
 
 #: ../libbirdfont/Toolbox.vala:342
 msgid "Zoom out"
-msgstr ""
+msgstr "Uitzoomen"
 
 #: ../libbirdfont/Toolbox.vala:349
 msgid "Zoom to scale 1:1"
-msgstr ""
+msgstr "Zoom naar schaal 1:1"
 
 #: ../libbirdfont/Toolbox.vala:357
 msgid "Show full glyph"
-msgstr ""
+msgstr "Toon volledig glief"
 
 #: ../libbirdfont/Toolbox.vala:364
 msgid "Zoom in at region boundries"
-msgstr ""
+msgstr "Zoom in op regio grenzen"
 
 #: ../libbirdfont/Toolbox.vala:371
 msgid "Zoom in background image"
-msgstr ""
+msgstr "Zoom in op achtergrond afbeelding"
 
 #: ../libbirdfont/Toolbox.vala:384
 msgid "Previous view"
-msgstr ""
+msgstr "Vorige weergave"
 
 #: ../libbirdfont/Toolbox.vala:390
 msgid "Next view"
-msgstr ""
+msgstr "Volgende weergave"
 
 #: ../libbirdfont/Toolbox.vala:397
 msgid "Set size for background image"
-msgstr ""
+msgstr "Stel grootte in voor achtergrond afbeelding"
 
 #: ../libbirdfont/Toolbox.vala:427
 msgid "Show/hide background image"
-msgstr ""
+msgstr "Toon/verberg achtergrond afbeelding"
 
 #: ../libbirdfont/Toolbox.vala:435
 msgid "Insert a new background image"
-msgstr ""
+msgstr "Voeg een nieuwe achtergrond afbeelding toe"
 
 #: ../libbirdfont/Toolbox.vala:440
 msgid "Creating thumbnails"
-msgstr ""
+msgstr "Creëer miniaturen"
 
 #: ../libbirdfont/Toolbox.vala:459
 msgid "Set contrast for background image"
-msgstr ""
+msgstr "Stel contrast voor achtergrond afbeelding in"
 
 #: ../libbirdfont/Toolbox.vala:479
 msgid "Set threshold"
-msgstr ""
+msgstr "Stel drempel in"
 
 #: ../libbirdfont/Toolbox.vala:683
 msgid "Set size for grid"
-msgstr ""
+msgstr "Stel grootte voor rooster in"
 
 #: ../libbirdfont/VersionList.vala:33
 msgid "New version"
-msgstr ""
+msgstr "Nieuwe versie"
 
 #: ../libbirdfont/VersionList.vala:91
 msgid "Version"
-msgstr ""
+msgstr "Versie"
 
 #: ../birdfont/GtkWindow.vala:243
 msgid "_New"
-msgstr ""
+msgstr "_Nieuw"
 
 #: ../birdfont/GtkWindow.vala:248
 msgid "_Open"
-msgstr ""
+msgstr "_Openen"
 
 #: ../birdfont/GtkWindow.vala:253
 msgid "_Save"
-msgstr ""
+msgstr "_Opslaan"
 
 #: ../birdfont/GtkWindow.vala:258
 msgid "Save _as"
-msgstr ""
+msgstr "Opslaan _als"
 
 #: ../birdfont/GtkWindow.vala:262
 msgid "_Export"
-msgstr ""
+msgstr "_Exporteer"
 
 #: ../birdfont/GtkWindow.vala:267
 msgid "_Preview"
-msgstr ""
+msgstr "_Voorbeeld"
 
 #: ../birdfont/GtkWindow.vala:272
 msgid "_Kerning"
-msgstr ""
+msgstr "_Overhang"
 
 #: ../birdfont/GtkWindow.vala:277
 msgid "_Quit"
-msgstr ""
+msgstr "_Afsluiten"
 
 #: ../birdfont/GtkWindow.vala:282
 msgid "_Undo"
-msgstr ""
+msgstr "_Ongedaan maken"
 
 #: ../birdfont/GtkWindow.vala:287
 msgid "_Copy"
-msgstr ""
+msgstr "_Kopiëren"
 
 #: ../birdfont/GtkWindow.vala:292
 msgid "_Paste"
-msgstr ""
+msgstr "_Plakken"
 
 #: ../birdfont/GtkWindow.vala:298
 msgid "_Next tab"
-msgstr ""
+msgstr "_Volgend tabblad"
 
 #: ../birdfont/GtkWindow.vala:311
 msgid "_Previous tab"
-msgstr ""
+msgstr "_Vorig tabblad"
 
 #: ../birdfont/GtkWindow.vala:324
 msgid "_Close tab"
-msgstr ""
+msgstr "_Sluit tabblad"
 
 #: ../birdfont/GtkWindow.vala:339
 msgid "_Create path"
-msgstr ""
+msgstr "_Creëer pad"
 
 #: ../birdfont/GtkWindow.vala:346
 msgid "_Zoom"
-msgstr ""
+msgstr "_Zoomen"
 
 #: ../birdfont/GtkWindow.vala:352
 msgid "_Create counter path"
-msgstr ""
+msgstr "_Creëer tegengesteld pad"
 
 #: ../birdfont/GtkWindow.vala:359
 msgid "_Move"
-msgstr ""
+msgstr "_Verplaatsen"
 
 #: ../birdfont/GtkWindow.vala:366
 msgid "Show _full unicode characters set"
-msgstr ""
+msgstr "Toon _volledig unicode karakter set"
 
 #: ../birdfont/GtkWindow.vala:373
 msgid "Show de_fault characters set"
-msgstr ""
+msgstr "Toon standaard karakter set"
 
 #: ../birdfont/GtkWindow.vala:380
 msgid "Show characters in font"
-msgstr ""
+msgstr "Toon karakters in lettertype"
 
 #: ../birdfont/GtkWindow.vala:387
 msgid "Add new _grid item"
-msgstr ""
+msgstr "Voeg nieuw _rooster item toe"
 
 #: ../birdfont/GtkWindow.vala:393
 msgid "Remove gr_id item"
-msgstr ""
+msgstr "Verwijder ro_oster item"
 
 #: ../birdfont/GtkWindow.vala:399
 msgid "_Zoom in"
-msgstr ""
+msgstr "_Zoom in"
 
 #: ../birdfont/GtkWindow.vala:406
 msgid "Zoom _out"
-msgstr ""
+msgstr "Zoom _uit"
 
 #: ../birdfont/GtkWindow.vala:413
 msgid "Zoom to _scale 1:1"
-msgstr ""
+msgstr "Zoom naar _schaal 1:1"
 
 #: ../birdfont/GtkWindow.vala:421
 msgid "_File"
-msgstr ""
+msgstr "_Bestand"
 
 #: ../birdfont/GtkWindow.vala:424
 msgid "_Edit"
-msgstr ""
+msgstr "_Bewerk"
 
 #: ../birdfont/GtkWindow.vala:427
 msgid "_Tab"
-msgstr ""
+msgstr "_Tabblad"
 
 #: ../birdfont/GtkWindow.vala:430
 msgid "T_ool"
-msgstr ""
+msgstr "H_ulpmiddelen"
