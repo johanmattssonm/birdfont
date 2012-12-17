@@ -125,6 +125,11 @@ public class MainWindow {
 		return get_singleton ().native_window.file_chooser (title);
 	}
 	
+	public void set_title (string title) {
+		// FIXA:
+		// native_window.set_title (title);
+	}
+	
 	/** Reaload all paths and help lines from disk. */
 	internal static void clear_glyph_cache () {
 		Glyph g;

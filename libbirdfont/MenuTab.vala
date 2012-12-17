@@ -199,7 +199,9 @@ c.append ("""
 				warning (@"Failed to load fond $fn");
 				return;
 			}
-
+				
+			MainWindow.get_singleton ().set_title (f.get_name ());
+			
 			MainWindow.get_toolbox ().remove_all_grid_buttons ();
 			foreach (string v in f.grid_width) {
 				MainWindow.get_toolbox ().parse_grid (v);
@@ -319,7 +321,8 @@ c.append ("""
 			MainWindow.clear_glyph_cache ();
 			MainWindow.close_all_tabs ();
 			f.load ((!)fn);
-
+			
+			MainWindow.get_singleton ().set_title (f.get_name ());
 			select_overview ();		
 		}
 	}
