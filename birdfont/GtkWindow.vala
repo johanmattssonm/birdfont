@@ -41,7 +41,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	static List<uint> key_pressed = new List<uint> ();
 	
 	public GtkWindow (string title) {
-		// set_title (title);
+		set_title ("Birdfont");
 	}
 	
 	public void init () {
