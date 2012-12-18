@@ -18,11 +18,10 @@ with a -dev or -devel affix. You can run this as root if you are using Debian:
 
 sudo apt-get install valac libglib2.0-dev libgtk2.0-dev libxml2-dev libwebkitgtk-dev
 
-Configure, build and install with waf:
+Configure, build and install:
 ./configure
-./waf build
-sudo ./waf install
-
+./doit
+sudo ./install
 
 ------------------------
 Bulding windows binaries
