@@ -117,7 +117,7 @@ def task_birdfont ():
 
 	build_action = """gcc ./build/main/*.c \
 				-D 'GETTEXT_PACKAGE="birdfont"' \
-				-I ./build/ -l birdfont \
+				-I ./build/ -L ./build -l birdfont \
 				-o ./build/birdfont \
 				$(pkg-config --cflags --libs glib-2.0) \
 				$(pkg-config --cflags --libs libxml-2.0) \
@@ -157,7 +157,7 @@ def task_birdfont_export ():
 
 	build_action = """gcc ./build/main/*.c \
 				-D 'GETTEXT_PACKAGE="birdfont"' \
-				-I ./build/ -l birdfont \
+				-I ./build -L ./build -l birdfont \
 				-o ./build/birdfont-export \
 				$(pkg-config --cflags --libs glib-2.0) \
 				$(pkg-config --cflags --libs libxml-2.0) \
