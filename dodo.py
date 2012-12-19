@@ -129,7 +129,7 @@ def task_birdfont ():
 	yield {
 		'name': "build_birdfont_executable",
 		'actions': [ build_action ],
-		'file_dep': [ 'build/main/Main.c' ],
+		'file_dep': [ 'build/main/Main.c', 'build/libbirdfont.so'],
 		'targets': [ 'build/birdfont' ],
 	}
 
