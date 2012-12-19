@@ -150,7 +150,7 @@ def task_birdfont_export ():
 	yield {
 		'name': 'compile_birdfont_export_executable',
 		'actions': [ action ],
-		'file_dep': files,
+		'file_dep': files + [ 'build/libbirdfont.so' ],
 		'targets': [ 'build/export/BirdfontExport.c' ],
 		'task_dep': ['libbirdfont_o'], 
 	}
