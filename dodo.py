@@ -83,7 +83,7 @@ def task_libbirdfont_c ():
 def task_libbirdfont_o ():
     """compile C files to obj `.o` """
     action = "gcc "
-    param = """ -D 'GETTEXT_PACKAGE="birdfont"' \
+    param = """ -fPIC -D 'GETTEXT_PACKAGE="birdfont"' \
                 $(pkg-config --cflags --libs glib-2.0) \
                 $(pkg-config --cflags --libs libxml-2.0) \
                 $(pkg-config --cflags --libs gio-2.0) \
