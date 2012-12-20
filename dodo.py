@@ -209,7 +209,7 @@ def make_task(func):
 @make_task
 def task_distclean ():
 	return  {
-		'actions': ['rm -rf build dodo.pyc libbirdfont/Config.vala'],
+		'actions': ['rm -rf build dodo.pyc .doit_db libbirdfont/Config.vala'],
 	}	
 
 def is_configured ():
