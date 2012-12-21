@@ -7,6 +7,13 @@ from optparse import OptionParser
 
 VERSION = '0.8'
 
+HEADER = '\033[95m'
+OKBLUE = '\033[94m'
+OKGREEN = '\033[92m'
+WARNING = '\033[93m'
+FAIL = '\033[91m'
+ENDC = '\033[0m'
+
 def write_config ():
 	print ("Writing Config.vala")
 
@@ -27,8 +34,12 @@ def write_config ():
 
 def test_vala_version (a, b, c):
 	print ("Checking for vala version >= %s.%s.%s" % (a, b, c))
-	v = subprocess.check_output ("valac --version", shell=True)
-	v = v.replace ("Vala ", "");
+	process = subprocess.Popen ("valac --version", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	v = process.stdout.readline()
+	v = v.replace ("Vala ", "");	
+	if not process.returncode == 0:
+		print (FAIL + "Can't find valac" + ENDC)
+		exit (1)		
 	print ("Found version " + v)
 	valac_version = [int(n) for n in v.split (".")]
 	return [a,b,c] < valac_version
@@ -36,7 +47,7 @@ def test_vala_version (a, b, c):
 
 def configure ():
 	if not test_vala_version (0, 17, 3):
-		print ("Can't find a suitable vala compiler.")
+		print (FAIL + "Can't find a suitable vala compiler." + ENDC)
 		exit (1)
 
 	libs = [ 'cairo', 'gdk-pixbuf-2.0', 'gio-2.0', 'glib-2.0', 'gtk+-2.0', 'libxml-2.0', 'webkit-1.0', 'libsoup-2.4' ]
@@ -46,7 +57,7 @@ def configure ():
 		process = subprocess.Popen ('pkg-config --modversion ' + lib, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		process.communicate()[0]
 		if not process.returncode == 0:
-			print ("\x1B[31;40mCan not find " + lib + "\x1B[0m")
+			print (FAIL + "Can't find " + lib + ENDC)
 			exit (1)
 	
 	write_config ()
@@ -55,7 +66,7 @@ def configure ():
 	v = subprocess.check_output ('touch build/configured', shell=True)
 
 	print ("");
-	print ("Done");
+	print (OKGREEN + "Done" + ENDC);
 
 
 parser = OptionParser()
