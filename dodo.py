@@ -43,6 +43,9 @@ def task_build ():
         print ("Project is not configured")
         exit (1)
 
+    subprocess.check_output ('mkdir -p build', shell=True)
+    subprocess.check_output ('touch build/installed', shell=True)
+
     return  {
         'actions': ['echo "Build"'],
         }

@@ -3,13 +3,25 @@ import os
 import subprocess
 from optparse import OptionParser
 
+def install (file, dir):
+	f = dest + prefix + dir + '/'
+	s = file.rfind ('/')
+	if s > -1:
+		f += file[s + 1:]
+	else:
+		f += file
+	print ("install: " + f)
+	subprocess.check_output ('install -d ' + dest + prefix + dir, shell=True)
+	subprocess.check_output ('install ' + file + ' ' + dest + prefix + dir + '/', shell=True)
+	installed.write (f + "\n")
+
 if not os.path.exists ("build/configured"):
 	print ("Project is not configured")
 	exit (1)
 
 parser = OptionParser()
-parser.add_option("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
-parser.add_option("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
+parser.add_option ("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
+parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
 
 (options, args) = parser.parse_args()
 
@@ -22,29 +34,23 @@ if not options.dest:
 prefix = options.prefix
 dest = options.dest
 
-subprocess.check_output ('install -d ' + dest + prefix + '/share/birdfont/layout', shell=True)
+# create uninstall file
+installed = open ('build/installed', 'w')
+installed.write ('build/installed\n')
+
+# install it:
 for file in os.listdir('./layout'):
-	subprocess.check_output ('install layout/' + file + ' ' + dest + prefix + '/share/birdfont/layout/', shell=True)
+	install ('layout/' + file, '/share/birdfont/layout')
 
-subprocess.check_output ('install -d ' + dest + prefix + '/share/birdfont/icons', shell=True)
 for file in os.listdir('./icons'):
-	subprocess.check_output ('install icons/' + file + ' ' + dest + prefix + '/share/birdfont/icons/', shell=True)
+	install ('icons/' + file, '/share/birdfont/icons')
 
-subprocess.check_output ('install -d ' + dest + prefix + '/share/applications/', shell=True)
-subprocess.check_output ('install linux/birdfont.desktop ' + dest + prefix + '/share/applications/', shell=True)
+install ('linux/birdfont.desktop', '/share/birdfont/applications')
+install ('linux/birdfont.png', '/share/icons/hicolor/48x48/apps')
+install ('build/birdfont', '/bin')
+install ('build/birdfont-export', '/bin')
+install ('build/libbirdfont.so', '/lib')
+install ('build/birdfont.1.gz', '/share/man/man1')
+install ('build/birdfont-export.1.gz', '/share/man/man1')
 
-subprocess.check_output ('install -d ' + dest + prefix + '/share/icons/hicolor/48x48/apps/', shell=True)
-subprocess.check_output ('install linux/birdfont.png ' + dest + prefix + '/share/icons/hicolor/48x48/apps/', shell=True)
-
-subprocess.check_output ('install -d ' + dest + prefix + '/bin/', shell=True)
-subprocess.check_output ('install build/birdfont ' + dest + prefix + '/bin/', shell=True)
-
-subprocess.check_output ('install -d ' + dest + prefix + '/bin/', shell=True)
-subprocess.check_output ('install build/birdfont-export ' + dest + prefix + '/bin/', shell=True)
-
-subprocess.check_output ('install -d ' + dest + prefix + '/lib/', shell=True)
-subprocess.check_output ('install build/libbirdfont.so ' + dest + prefix + '/lib/', shell=True)
-
-subprocess.check_output ('install -d ' + dest + prefix + '/share/man/man1/', shell=True)
-subprocess.check_output ('install build/birdfont.1.gz ' + dest + prefix + '/share/man/man1/', shell=True)
-subprocess.check_output ('install build/birdfont-export.1.gz ' + dest + prefix + '/share/man/man1/', shell=True)
+installed.close ()
