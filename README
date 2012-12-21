@@ -23,6 +23,9 @@ Configure, build and install:
 ./doit
 sudo ./install
 
+You need to obtain the latest version of doit from 
+https://bitbucket.org/schettino72/doit
+
 ------------------------
 Bulding windows binaries
 ------------------------
