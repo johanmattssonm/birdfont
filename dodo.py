@@ -20,6 +20,7 @@ def task_build ():
 		print ("Project is not configured")
 		exit (1)
 	
+	print ("Creating build directory")
 	subprocess.check_output ('mkdir -p build', shell=True)
 	subprocess.check_output ('touch build/installed', shell=True)
 	
