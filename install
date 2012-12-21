@@ -4,18 +4,24 @@ import subprocess
 from optparse import OptionParser
 
 def install (file, dir):
-	print ("install: " + dest + prefix + dir + '/' + file)
+	f = dest + prefix + dir + '/'
+	s = file.rfind ('/')
+	if s > -1:
+		f += file[s + 1:]
+	else:
+		f += file
+	print ("install: " + f)
 	subprocess.check_output ('install -d ' + dest + prefix + dir, shell=True)
 	subprocess.check_output ('install ' + file + ' ' + dest + prefix + dir + '/', shell=True)
-
+	installed.write (f + "\n")
 
 if not os.path.exists ("build/configured"):
 	print ("Project is not configured")
 	exit (1)
 
 parser = OptionParser()
-parser.add_option("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
-parser.add_option("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
+parser.add_option ("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
+parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
 
 (options, args) = parser.parse_args()
 
@@ -28,11 +34,16 @@ if not options.dest:
 prefix = options.prefix
 dest = options.dest
 
+# create uninstall file
+installed = open ('build/installed', 'w')
+installed.write ('build/installed\n')
+
+# install it:
 for file in os.listdir('./layout'):
-	install ('./layout/' + file, '/share/birdfont/layout')
+	install ('layout/' + file, '/share/birdfont/layout')
 
 for file in os.listdir('./icons'):
-	install ('./icons/' + file, '/share/birdfont/icons')
+	install ('icons/' + file, '/share/birdfont/icons')
 
 install ('linux/birdfont.desktop', '/share/birdfont/applications')
 install ('linux/birdfont.png', '/share/icons/hicolor/48x48/apps')
@@ -41,3 +52,5 @@ install ('build/birdfont-export', '/bin')
 install ('build/libbirdfont.so', '/lib')
 install ('build/birdfont.1.gz', '/share/man/man1')
 install ('build/birdfont-export.1.gz', '/share/man/man1')
+
+installed.close ()

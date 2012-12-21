@@ -1,0 +1,17 @@
+#!/usr/bin/python 
+import os
+import subprocess
+
+if not os.path.exists ("build/configured"):
+	print ("Project is not configured")
+	exit (1)
+
+if not os.path.exists ("build/installed"):
+	print ("Project is not installed")
+	exit (1)
+		
+f = open('build/installed')
+for file in iter(f):
+	print ('Removing ' + file.replace ('\n', ''))
+	subprocess.check_output ('rm ' + file, shell=True)
+f.close()
