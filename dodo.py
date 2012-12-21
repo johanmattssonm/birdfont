@@ -58,7 +58,7 @@ def task_libbirdfont_c ():
 
 def task_libbirdfont_o ():
 	action = "gcc "
-	param = """ -D 'GETTEXT_PACKAGE="birdfont"' \
+	param = """ -fPIC -D 'GETTEXT_PACKAGE="birdfont"' \
 			$(pkg-config --cflags --libs glib-2.0) \
 			$(pkg-config --cflags --libs libxml-2.0) \
 			$(pkg-config --cflags --libs gio-2.0) \
@@ -212,7 +212,7 @@ def make_task(func):
 @make_task
 def task_distclean ():
 	return  {
-		'actions': ['rm -rf build dodo.pyc libbirdfont/Config.vala'],
+		'actions': ['rm -rf build dodo.pyc .doit_db libbirdfont/Config.vala'],
 	}	
 
 def is_configured ():
