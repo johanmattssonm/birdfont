@@ -68,7 +68,6 @@ public class Toolbox : GLib.Object  {
 		Expander view_tools = new Expander ();
 		Expander grid = new Expander ();
 		Expander background_tools = new Expander ();
-		Expander trace = new Expander ();
 		
 		grid_expander = grid;
 
@@ -475,26 +474,6 @@ public class Toolbox : GLib.Object  {
 		});
 		
 		// Fixa: background_tools.add_tool (background_contrast);
-
-		SpinButton background_threshold = new SpinButton ("background_threshold", _("Set threshold"));
-		background_threshold.set_value_round (1);
-
-		background_threshold.new_value_action.connect ((self) => {
-			background_threshold.select_action (self);
-		});
-		
-		background_threshold.select_action.connect ((self) => {		
-			Glyph g = MainWindow.get_current_glyph ();
-			GlyphBackgroundImage? bg = g.get_background_image ();
-			GlyphBackgroundImage b;
-			
-			if (bg != null) {
-				b = (!) bg;
-				b.set_threshold (background_threshold.get_value ());
-			}
-			
-		});
-		trace.add_tool (background_threshold);
 		
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
@@ -505,7 +484,6 @@ public class Toolbox : GLib.Object  {
 		test_tools.set_open (true);
 		guideline_tools.set_open (true);
 		background_tools.set_open (true);
-		trace.set_open (true);
 		
 		add_expander (draw_tools);
 		add_expander (draw_tool_modifiers);
@@ -544,9 +522,6 @@ public class Toolbox : GLib.Object  {
 		
 		background_tools.set_persistent (true);
 		background_tools.set_unique (true);
-		
-		trace.set_persistent (false);
-		trace.set_unique (false);
 
 		update_expanders ();
 		reset_active_tool ();
