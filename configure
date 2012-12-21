@@ -46,7 +46,7 @@ def configure ():
 		process = subprocess.Popen ('pkg-config --modversion ' + lib, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		process.communicate()[0]
 		if not process.returncode == 0:
-			print ("Not found")
+			print ("\x1B[31;40mCan not find " + lib + "\x1B[0m")
 			exit (1)
 	
 	write_config ()
