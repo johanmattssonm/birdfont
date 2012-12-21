@@ -1,7 +1,8 @@
 import subprocess
 import os
-import time;
 
+from doit.tools import run_once
+from doit.action import CmdAction
 
 
 ############ helpers
@@ -24,19 +25,41 @@ def cmd(name, *args):
 
 ###############################################
 
-
 DOIT_CONFIG = {
-        'default_tasks': [
-                'build',
-                'birdfont',
-                'birdfont_export',
-                'libbirdfont_c',
-                'libbirdfont_o',
-                'libbirdfont_so',
-                'compile_translations',
-                'man'
-        ]
-}
+    'verbosity': 2,
+    'default_tasks': [
+        'build',
+        'birdfont',
+        'birdfont_export',
+        'libbirdfont_c',
+        'libbirdfont_o',
+        'libbirdfont_so',
+        'compile_translations',
+        'man'
+        ],
+    }
+
+LIBS = [
+    'glib-2.0',
+    'libxml-2.0',
+    'gio-2.0',
+    'libsoup-2.4',
+    'cairo',
+    'gdk-pixbuf-2.0',
+    'webkit-1.0',
+    ]
+
+
+def task_pkg_flags():
+    """get compiler flags for libs/pkgs """
+    for pkg in LIBS:
+        cmd = 'pkg-config --cflags --libs {pkg}'
+        yield {
+            'name': pkg,
+            'actions': [CmdAction(cmd.format(pkg=pkg), save_out='out')],
+            'uptodate': [run_once],
+            }
+
 
 def task_build ():
     if not os.path.exists ("build/configured"):
@@ -83,29 +106,25 @@ def task_libbirdfont_c ():
         }
 
 
+
+def compile_cmd(conf, pos, libs):
+    opts = ['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""]
+    flags = [conf[l].strip() for l in LIBS]
+    return cmd('gcc', opts, flags, pos)
 def task_libbirdfont_o ():
     """compile C files to obj `.o` """
-    action = "gcc "
-    param = """ -fPIC -D 'GETTEXT_PACKAGE="birdfont"' \
-                $(pkg-config --cflags --libs glib-2.0) \
-                $(pkg-config --cflags --libs libxml-2.0) \
-                $(pkg-config --cflags --libs gio-2.0) \
-                $(pkg-config --cflags --libs libsoup-2.4) \
-                $(pkg-config --cflags --libs cairo) \
-                $(pkg-config --cflags --libs gdk-pixbuf-2.0) \
-                $(pkg-config --cflags --libs webkit-1.0)"""
-
-    libbirdfont_sources = os.listdir('libbirdfont/')
-
-    for vala in libbirdfont_sources:
+    for vala in os.listdir('libbirdfont/'):
         cee = vala.replace ('.vala', '.c')
         obj = vala.replace ('.vala', '.o')
+        pos = ["-c build/libbirdfont/" + cee,
+               "-o build/libbirdfont/" + obj,
+               ]
+
         yield {
             'name': obj,
             'file_dep': [ 'build/libbirdfont/' + cee ],
-            'actions': [action + param +
-                        " -c build/libbirdfont/" + cee +
-                        " -o build/libbirdfont/" + obj],
+            'actions': [ CmdAction((compile_cmd, [], {'pos':pos, 'libs':LIBS}))],
+            'getargs': { 'conf': ('pkg_flags', 'out') },
             'targets': [ 'build/libbirdfont/' + obj ],
             }
 
