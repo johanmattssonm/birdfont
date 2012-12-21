@@ -37,6 +37,7 @@ def test_vala_version (a, b, c):
 	process = subprocess.Popen ("valac --version", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 	v = process.stdout.readline()
 	v = v.replace ("Vala ", "");	
+	process.communicate()[0]
 	if not process.returncode == 0:
 		print (FAIL + "Can't find valac" + ENDC)
 		exit (1)		
