@@ -1,6 +1,7 @@
 import os
 import glob
 import subprocess
+from os.path import join
 
 
 from doit.tools import run_once
@@ -31,11 +32,9 @@ DOIT_CONFIG = {
     'verbosity': 2,
     'default_tasks': [
         'build',
+        'libbirdfont',
         'birdfont',
         'birdfont_export',
-        'libbirdfont_c',
-        'libbirdfont_o',
-        'libbirdfont_so',
         'compile_translations',
         'man'
         ],
@@ -76,159 +75,136 @@ def task_build ():
         }
 
 
-def task_libbirdfont_c ():
-    """translate code from vala to C and create .vapi"""
-    options = [
-        '--ccode', # output C code
-        '--enable-experimental-non-null',
-        '--thread',
-        '--save-temps',
-        ]
-
-    # include binding for pakages
-    params = {
-        'basedir': './build/libbirdfont',
-        'vapidir': './',
-        'library': 'birdfont',
-        'vapi': './build/birdfont.vapi',
-        'header': './build/birdfont.h',
-        'pkg': ['gtk+-2.0', 'libxml-2.0', 'webkit-1.0'],
-        }
-
-    src = 'libbirdfont/*.vala'
-    actions = [ cmd('valac', options, params, src) ]
-    file_dep = list(glob.glob(src))
-    targets = ["build/" + f.replace('.vala', '.c') for f in file_dep]
-    targets.extend([ 'build/birdfont.h', 'build/birdfont.vapi'])
-    return {
-        'actions': actions,
-        'file_dep': file_dep,
-        'targets': targets,
-        }
 
 
+####################### vala build tool
 
-def task_libbirdfont_o ():
-    """compile C files to obj `.o` """
-    def compile_cmd(conf, libs, pos):
-        opts = ['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""]
-        flags = [conf[l].strip() for l in LIBS]
-        return cmd('gcc', opts, flags, pos)
 
-    for vala in glob.glob('libbirdfont/*.vala'):
-        cee = vala.replace ('.vala', '.c')
-        obj = vala.replace ('.vala', '.o')
-        pos = ["-c build/" + cee,
-               "-o build/" + obj ]
+class Vala(object):
+    """helper to generate tasks to compile vala code"""
 
-        yield {
-            'name': obj,
-            'file_dep': [ 'build/' + cee ],
-            'actions': [ CmdAction((compile_cmd, [], {'pos':pos, 'libs':LIBS}))],
-            'getargs': { 'conf': ('pkg_flags', 'out') },
-            'targets': [ 'build/' + obj ],
+    def __init__(self, src, build, pkg_libs, library=None, vala_deps=None):
+        self.src = src
+        self.build = build
+        self.library = library
+        self.pkg_libs = pkg_libs
+        self.vala_deps = vala_deps or []
+
+        self.vala = list(glob.glob(src + '/*.vala'))
+        self.cc = [join(build, f.replace('.vala', '.c')) for f in self.vala]
+        self.obj = [join(build, f.replace('.vala', '.o')) for f in self.vala]
+        if library:
+            self.header = join(build, library) + '.h'
+            self.vapi = join(build, library) + '.vapi'
+            self.so = join(build, src) + '.so'
+
+
+    def gen_c(self, opts):
+        """translate code from vala to C and create .vapi"""
+        options = ['--ccode', '--save-temps']
+        options.extend(opts)
+        params = {
+            'basedir': join(self.build, self.src),
+            'vapidir': './',
+            'pkg': self.pkg_libs,
+            }
+        if self.library:
+            params['library'] = self.library
+            params['vapi'] = self.vapi
+            params['header'] = self.header
+
+        dep_vapi = [d.vapi for d in self.vala_deps]
+        action = cmd('valac', options, params, dep_vapi, self.vala)
+        targets = self.cc[:]
+        if self.library:
+            targets += [self.header, self.vapi]
+        return {
+            'name': 'compile_c',
+            'actions': [ action ],
+            'file_dep': self.vala + dep_vapi,
+            'targets': targets,
             }
 
 
-def task_libbirdfont_so():
-    def compile_cmd(conf, libs):
-        opts = ['-shared build/libbirdfont/*.o',
-                '-o build/libbirdfont.so']
-        flags = [conf[l].strip() for l in LIBS]
-        return cmd('gcc', opts, flags)
+    def gen_o(self, opts):
+        """compile C files to obj `.o` """
+        def compile_cmd(conf, opts, libs, pos):
+            flags = [conf[l].strip() for l in libs]
+            return cmd('gcc', opts, flags, pos)
 
-    file_dep = []
-    for vala in glob.glob('libbirdfont/*.vala'):
-        file_dep.append("build/" + vala.replace ('.vala', '.o'))
+        for cc, obj in zip(self.cc, self.obj):
+            pos = ["-c " + cc, "-o " + obj ]
+            cmd_args = {'libs':self.pkg_libs, 'opts':opts, 'pos':pos}
+            action = CmdAction((compile_cmd, [], cmd_args))
+            yield {
+                'name': obj.rsplit('/')[-1],
+                'file_dep': [ cc ],
+                'actions': [ action ],
+                'getargs': { 'conf': ('pkg_flags', 'out') },
+                'targets': [ obj ],
+                }
 
-    return {
-        'actions': [ CmdAction((compile_cmd, [], {'libs':LIBS})) ],
-        'getargs': { 'conf': ('pkg_flags', 'out') },
-        'file_dep': file_dep,
-        'targets': [ 'build/libbirdfont.so' ],
-        }
+    def gen_so(self):
+        """generate ".so" lib file"""
+        def compile_cmd(conf, libs):
+            obj_glob = join(self.build, self.src, '*.o')
+            opts = ['-shared ' + obj_glob,
+                    '-o ' + self.so ]
+            flags = [conf[l].strip() for l in libs]
+            return cmd('gcc', opts, flags)
+
+        return {
+            'name': self.so.rsplit('/')[-1],
+            'actions': [ CmdAction((compile_cmd, [], {'libs':self.pkg_libs})) ],
+            'getargs': { 'conf': ('pkg_flags', 'out') },
+            'file_dep': self.obj,
+            'targets': [ self.so ],
+            }
+
+    def gen_bin(self, opts):
+        """generate binary"""
+        def compile_cmd(conf, opts, libs):
+            flags = [conf[l].strip() for l in libs]
+            return cmd('gcc', opts, flags)
+
+        bin_path = join(self.build, 'bin')
+        target = join(bin_path, self.src)
+        opts = (self.cc + opts +
+                ['-o ' + target, '-I ' + self.build, '-L ' + self.build] +
+                ['-l ' + d.library for d in self.vala_deps])
+        action = CmdAction((compile_cmd, [], {'opts':opts, 'libs':self.pkg_libs}))
+        yield {
+            'name': "bin",
+            'actions': [ 'mkdir -p %s' % bin_path, action ],
+            'getargs': { 'conf': ('pkg_flags', 'out') },
+            'file_dep': self.cc + [ d.so for d in self.vala_deps ],
+            'targets': [ target ],
+            }
+
+
+
+#########  BIRDFONT
+
+libbird = Vala(src='libbirdfont', build='build', library='birdfont',
+                pkg_libs=LIBS)
+def task_libbirdfont():
+    yield libbird.gen_c(['--enable-experimental-non-null', '--thread'])
+    yield libbird.gen_o(['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
+    yield libbird.gen_so()
 
 
 def task_birdfont ():
-    birdfont_sources = os.listdir('birdfont/')
-
-    files = []
-    for f in birdfont_sources:
-        files += ["birdfont/" + f]
-    files.append('build/birdfont.vapi')
-
-    options = ['--ccode']
-    params = {
-        'basedir': './build/main',
-        'pkg': ['gtk+-2.0', 'libxml-2.0', 'gdk-2.0', 'webkit-1.0'],
-        }
-
-    yield {
-        'name': 'compile_birdfont_executable',
-        'actions': [ cmd('valac', options, params,
-                         './build/birdfont.vapi', './birdfont/*.vala') ],
-        'file_dep': files,
-        'targets': [ 'build/main/Main.c', 'build/main/GtkWindow.c' ],
-        }
-
-    build_action = """gcc ./build/main/*.c \
-                      -D 'GETTEXT_PACKAGE="birdfont"' \
-                      -I ./build/ -L ./build -l birdfont \
-                      -o ./build/birdfont \
-                      $(pkg-config --cflags --libs glib-2.0) \
-                      $(pkg-config --cflags --libs libxml-2.0) \
-                      $(pkg-config --cflags --libs gio-2.0) \
-                      $(pkg-config --cflags --libs libsoup-2.4) \
-                      $(pkg-config --cflags --libs gtk+-2.0) \
-                      $(pkg-config --cflags --libs webkit-1.0)"""
-
-    yield {
-        'name': "build_birdfont_executable",
-        'actions': [ build_action ],
-        'file_dep': [ 'build/main/Main.c', 'build/libbirdfont.so'],
-        'targets': [ 'build/birdfont' ],
-        }
+    bird = Vala(src='birdfont', build='build', pkg_libs=LIBS, vala_deps=[libbird])
+    yield bird.gen_c([])
+    yield bird.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
 
 def task_birdfont_export ():
-    birdfont_sources = os.listdir('birdfont-export/')
+     exp = Vala(src='birdfont-export', build='build', pkg_libs=LIBS,
+                vala_deps=[libbird])
+     yield exp.gen_c([])
+     yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
-    files = []
-    for f in birdfont_sources:
-        files += ["birdfont-export/" + f]
-
-    action = """valac \
-                --basedir ./build/export \
-                -C ./build/birdfont.vapi \
-                ./birdfont-export/*.vala \
-                -X ../build/libbirdfont/libbirdfont.so -X ./build/birdfont.h \
-                --pkg gtk+-2.0 --pkg libxml-2.0 --pkg gdk-2.0 --pkg webkit-1.0"""
-
-    yield {
-        'name': 'compile_birdfont_export_executable',
-        'actions': [ action ],
-        'file_dep': files,
-        'targets': [ 'build/export/BirdfontExport.c' ],
-        'task_dep': ['libbirdfont_o'],
-        }
-
-    build_action = """gcc ./build/main/*.c \
-                                -D 'GETTEXT_PACKAGE="birdfont"' \
-                                -I ./build -L ./build -l birdfont \
-                                -o ./build/birdfont-export \
-                                $(pkg-config --cflags --libs glib-2.0) \
-                                $(pkg-config --cflags --libs libxml-2.0) \
-                                $(pkg-config --cflags --libs gio-2.0) \
-                                $(pkg-config --cflags --libs libsoup-2.4) \
-                                $(pkg-config --cflags --libs gtk+-2.0) \
-                                $(pkg-config --cflags --libs webkit-1.0)"""
-
-    yield {
-        'name': "build_birdfont_export_executable",
-        'actions': [ build_action ],
-        'file_dep': [ 'build/export/BirdfontExport.c' ],
-        'targets': [ 'build/birdfont-export' ],
-        }
 
 
 def task_compile_translations ():
