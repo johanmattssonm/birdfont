@@ -1,5 +1,7 @@
-import subprocess
 import os
+import glob
+import subprocess
+
 
 from doit.tools import run_once
 from doit.action import CmdAction
@@ -229,33 +231,28 @@ def task_birdfont_export ():
         }
 
 def task_compile_translations ():
-    for file in os.listdir('./po'):
-        if file == "birdfont.pot": continue
-
-        loc = file.replace (".po", "")
-
+    for f_name in glob.glob('po/*.po'):
+        lang = os.path.relpath(f_name)[:-3] # remove ".po"
+        build_path = "build/locale/" + lang + "/LC_MESSAGES/"
+        target = build_path + "birdfont.mo"
+        cmd = "msgfmt --output=%s %s" % (target, f_name)
         yield {
-            'name': loc + "_dir",
-            'actions': ["mkdir -p build/locale/" + loc + "/LC_MESSAGES/"],
-            'targets': [ "build/locale/" + loc + "/LC_MESSAGES/" ]
+            'name': lang,
+            'actions': ["mkdir -p " + build_path, cmd],
+            'file_dep': [f_name],
+            'targets': [ target ],
             }
 
+def task_man():
+    """gzip linux man pages"""
+    for name in ("birdfont.1", "birdfont-export.1"):
         yield {
-            'name': loc + "_msgfmt",
-            'actions': ["msgfmt --output=build/locale/" + loc + "/LC_MESSAGES/birdfont.mo ./po/" + loc + ".po"],
-            'targets': [ "build/locale/" + loc + "/LC_MESSAGES/birdfont.mo" ]
+            'name': name,
+            'file_dep': ['linux/%s' % name],
+            'targets': ['build/%s.gz' % name],
+            'actions': ["gzip -9 -c %(dependencies)s > %(targets)s"],
             }
 
-def task_man ():
-    yield {
-        'name': "birdfont.1",
-        'actions': ["gzip -9 -c ./linux/birdfont.1  > build/birdfont.1.gz"],
-        }
-
-    yield {
-        'name': "birdfont-export.1",
-        'actions': ["gzip -9 -c ./linux/birdfont-export.1  > build/birdfont-export.1.gz"],
-        }
 
 def task_distclean ():
     return  {
