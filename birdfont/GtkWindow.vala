@@ -293,7 +293,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		edit_menu.append (paste_item);
 		paste_item.activate.connect (() => { ClipTool.paste (); });	
 		paste_item.add_accelerator ("activate", accel_group, 'V', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-		
+
+		Gtk.MenuItem export_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Export glyph as SVG"));
+		edit_menu.append (export_svg_item);
+		export_svg_item.activate.connect (() => { SvgFile.export (); });	
+				
 		// Tab
 		Gtk.MenuItem next_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Next tab"));
 		tab_menu.append (next_tab_item);

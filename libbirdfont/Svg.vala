@@ -32,7 +32,7 @@ class Svg {
 		return svg.str;
 	}
 
-	/** Export to regular svg path data. */
+	/** Export to svg-font data. */
 	public static string to_svg_path (Path pl, Glyph g, double scale = 1) {	
 		StringBuilder svg = new StringBuilder ();
 		pl.create_list ();
@@ -91,11 +91,15 @@ class Svg {
 	private static void add_abs_start (EditPoint ep, StringBuilder svg, Glyph g, bool do_glyph, double scale = 1) {		
 		double left = g.left_limit;
 		double baseline = Supplement.get_current_font ().base_line;
+		double height = Supplement.get_current_font ().get_height (); // no probably not
 		
 		svg.append_printf ("M");
 
-		svg.append_printf ("%s ",  round ((ep.x - left) * scale));
-		svg.append_printf ("%s ",  round ((ep.y + baseline) * scale));
+		//svg.append_printf ("%s ",  round ((ep.x - left) * scale));
+		//svg.append_printf ("%s ",  round ((ep.y + baseline) * scale));
+		
+		svg.append_printf ("%s ", round ((ep.x - Glyph.xc () - left) * scale));
+		svg.append_printf ("%s ", round ((ep.y - Glyph.yc () - baseline + height) * scale));	
 	}
 		
 	private static void close_path (StringBuilder svg) {
