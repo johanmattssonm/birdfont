@@ -95,10 +95,9 @@ def task_libbirdfont_c ():
         'pkg': ['gtk+-2.0', 'libxml-2.0', 'webkit-1.0'],
         }
 
-    actions = [ cmd('valac', options, params, 'libbirdfont/*.vala') ]
-
-    libbirdfont_sources = os.listdir('libbirdfont/')
-    file_dep = ["libbirdfont/" + f for f in libbirdfont_sources]
+    src = 'libbirdfont/*.vala'
+    actions = [ cmd('valac', options, params, src) ]
+    file_dep = list(glob.glob(src))
     targets = ["build/" + f.replace('.vala', '.c') for f in file_dep]
     targets.extend([ 'build/birdfont.h', 'build/birdfont.vapi'])
     return {
@@ -109,45 +108,46 @@ def task_libbirdfont_c ():
 
 
 
-def compile_cmd(conf, pos, libs):
-    opts = ['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""]
-    flags = [conf[l].strip() for l in LIBS]
-    return cmd('gcc', opts, flags, pos)
 def task_libbirdfont_o ():
     """compile C files to obj `.o` """
-    for vala in os.listdir('libbirdfont/'):
+    def compile_cmd(conf, libs, pos):
+        opts = ['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""]
+        flags = [conf[l].strip() for l in LIBS]
+        return cmd('gcc', opts, flags, pos)
+
+    for vala in glob.glob('libbirdfont/*.vala'):
         cee = vala.replace ('.vala', '.c')
         obj = vala.replace ('.vala', '.o')
-        pos = ["-c build/libbirdfont/" + cee,
-               "-o build/libbirdfont/" + obj,
-               ]
+        pos = ["-c build/" + cee,
+               "-o build/" + obj ]
 
         yield {
             'name': obj,
-            'file_dep': [ 'build/libbirdfont/' + cee ],
+            'file_dep': [ 'build/' + cee ],
             'actions': [ CmdAction((compile_cmd, [], {'pos':pos, 'libs':LIBS}))],
             'getargs': { 'conf': ('pkg_flags', 'out') },
-            'targets': [ 'build/libbirdfont/' + obj ],
+            'targets': [ 'build/' + obj ],
             }
 
 
-def task_libbirdfont_so ():
-    action = """gcc -shared build/libbirdfont/*.o \
-                        $(pkg-config --cflags --libs glib-2.0) \
-                        $(pkg-config --cflags --libs libxml-2.0) \
-                        $(pkg-config --cflags --libs gio-2.0) \
-                        $(pkg-config --cflags --libs libsoup-2.4) \
-                        $(pkg-config --cflags --libs cairo) \
-                        $(pkg-config --cflags --libs gdk-pixbuf-2.0) \
-                        $(pkg-config --cflags --libs webkit-1.0) \
-                        -o build/libbirdfont.so"""
+def task_libbirdfont_so():
+    def compile_cmd(conf, libs):
+        opts = ['-shared build/libbirdfont/*.o',
+                '-o build/libbirdfont.so']
+        flags = [conf[l].strip() for l in LIBS]
+        return cmd('gcc', opts, flags)
+
+    file_dep = []
+    for vala in glob.glob('libbirdfont/*.vala'):
+        file_dep.append("build/" + vala.replace ('.vala', '.o'))
 
     return {
-        'actions': [ action ],
-        'file_dep': [ 'build/libbirdfont/Config.c' ],
+        'actions': [ CmdAction((compile_cmd, [], {'libs':LIBS})) ],
+        'getargs': { 'conf': ('pkg_flags', 'out') },
+        'file_dep': file_dep,
         'targets': [ 'build/libbirdfont.so' ],
-        'task_dep': ['libbirdfont_o'],
         }
+
 
 def task_birdfont ():
     birdfont_sources = os.listdir('birdfont/')
@@ -230,7 +230,9 @@ def task_birdfont_export ():
         'targets': [ 'build/birdfont-export' ],
         }
 
+
 def task_compile_translations ():
+    """translate po files"""
     for f_name in glob.glob('po/*.po'):
         lang = os.path.relpath(f_name)[:-3] # remove ".po"
         build_path = "build/locale/" + lang + "/LC_MESSAGES/"
