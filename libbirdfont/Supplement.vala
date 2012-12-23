@@ -24,7 +24,7 @@ namespace Supplement {
 
 public class Supplement {
 	public static Argument args;
-	internal static bool experimental = false;
+	public static bool experimental = false;
 	internal static bool show_coordinates = false;
 	internal static bool fatal_wanings = false;
 	public static bool win32 = false;

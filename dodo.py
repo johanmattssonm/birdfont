@@ -30,6 +30,7 @@ LIBS = [
     ]
 
 
+
 def task_build ():
     if not os.path.exists ("build/configured"):
         print ("Project is not configured")
@@ -106,3 +107,4 @@ def task_distclean ():
     return  {
         'actions': ['rm -rf build dodo.pyc libbirdfont/Config.vala'],
         }
+

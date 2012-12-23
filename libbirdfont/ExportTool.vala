@@ -101,8 +101,7 @@ public class ExportTool : Tool {
 			os.put_string (@"style=\"fill:#000000;stroke-width:0px\" ");
 			os.put_string (@"d=\"$(glyph_svg)\" id=\"path_$(name)$(pid++)\" />\n");
 		
-			os.put_string ("""</g>
-			
+			os.put_string ("""</g>			
 </svg>""");
 	
 		} catch (Error e) {

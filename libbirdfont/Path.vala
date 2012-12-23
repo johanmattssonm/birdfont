@@ -58,7 +58,7 @@ public class Path {
 	private static ImageSurface? selected_edit_point_image = null;
 	private static ImageSurface? active_selected_edit_point_image = null;
 	
-	Path quadratic_path; // quadratic points for ttf export
+	Path quadratic_path; // quadratic points for TrueType export
 	
 	public Path () {
 		if (edit_point_image == null) {
