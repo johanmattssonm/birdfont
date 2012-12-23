@@ -296,7 +296,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		Gtk.MenuItem export_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Export glyph as SVG"));
 		edit_menu.append (export_svg_item);
-		export_svg_item.activate.connect (() => { SvgFile.export (); });	
+		export_svg_item.activate.connect (() => { ExportTool.export_current_glyph (); });	
 				
 		// Tab
 		Gtk.MenuItem next_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Next tab"));

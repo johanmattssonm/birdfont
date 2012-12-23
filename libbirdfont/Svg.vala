@@ -54,7 +54,7 @@ class Svg {
 		}
 		
 		pl.create_list ();
-		
+			
 		foreach (var e in pl.points) {
 			if (i == 0) {
 				add_abs_start (e, svg, g, do_glyph, scale);
@@ -71,10 +71,8 @@ class Svg {
 			i++;
 		}
 
-		m = pl.points.first ().data;
-		
+		m = pl.points.first ().data;	
 		add_abs_next ((!) n, m, svg, g, do_glyph, scale);
-
 		close_path (svg);
 	}
 
@@ -88,18 +86,20 @@ class Svg {
 		}
 	}
 
-	private static void add_abs_start (EditPoint ep, StringBuilder svg, Glyph g, bool do_glyph, double scale = 1) {		
+	private static void add_abs_start (EditPoint ep, StringBuilder svg, Glyph g, bool to_glyph, double scale = 1) {		
 		double left = g.left_limit;
 		double baseline = Supplement.get_current_font ().base_line;
-		double height = Supplement.get_current_font ().get_height (); // no probably not
+		double height = Supplement.get_current_font ().get_height ();
 		
 		svg.append_printf ("M");
 
-		//svg.append_printf ("%s ",  round ((ep.x - left) * scale));
-		//svg.append_printf ("%s ",  round ((ep.y + baseline) * scale));
-		
-		svg.append_printf ("%s ", round ((ep.x - Glyph.xc () - left) * scale));
-		svg.append_printf ("%s ", round ((ep.y - Glyph.yc () - baseline + height) * scale));	
+		if (!to_glyph) {
+			svg.append_printf ("%s ",  round ((ep.x - left) * scale));
+			svg.append_printf ("%s ",  round ((-ep.y - baseline + height) * scale));
+		} else {
+			svg.append_printf ("%s ",  round ((ep.x - left) * scale));
+			svg.append_printf ("%s ",  round ((ep.y + baseline) * scale));
+		}
 	}
 		
 	private static void close_path (StringBuilder svg) {
