@@ -118,26 +118,13 @@ class Svg {
 
 		double center_x = Glyph.xc ();
 		double center_y = Glyph.yc ();
+		
+		svg.append ("L");
 	
 		if (!to_glyph) {
-			svg.append ("L");
-						
-			svg.append_printf ("%s ", round ((xa - center_x - left) * scale));
-			svg.append_printf ("%s ", round ((ya - center_y - baseline + height) * scale));		
-
-			svg.append ("L");
-			
 			svg.append_printf ("%s ", round ((xb - center_x - left) * scale));
 			svg.append_printf ("%s ", round ((yb - center_y - baseline + height) * scale));	
-
 		} else {
-			svg.append ("L");
-			
-			svg.append_printf ("%s ", round ((xa - center_x - left) * scale));
-			svg.append_printf ("%s ", round ((-ya + center_y + baseline) * scale));
-
-			svg.append ("L");
-			
 			svg.append_printf ("%s ", round ((xb - center_x - left) * scale));
 			svg.append_printf ("%s ", round ((-yb + center_y + baseline) * scale));
 		}
