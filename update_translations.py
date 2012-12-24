@@ -1,3 +1,7 @@
+#!/usr/bin/python
+import subprocess
+import os
+
 def task_update_translations ():
 	subprocess.check_output ("xgettext --language=C# --keyword=_ --add-comments=/ --from-code=utf-8 --output=./po/birdfont.pot ./libbirdfont/*.vala ./birdfont/*.vala ./birdfont-export/*.vala", shell=True)
 
@@ -17,3 +21,6 @@ def task_update_translations ():
 	return  {
 		'actions': ['echo "done updating translations"'],
 	}
+
+
+task_update_translations ()

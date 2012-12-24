@@ -468,18 +468,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		margin_right.set_size_request (w, h);
 	}
 
-	public static void hide_cursor () {
-		/*
-		Pixmap pixmap = new Pixmap (null, 1, 1, 1);
-		Color color = { 0, 0, 0, 0 };
-		Cursor cursor = new Cursor.from_pixmap (pixmap, pixmap, color, color, 0, 0);
-		*/
-		
-		// Fixa: But why?
-		// (Supplement.exe:1300): Gdk-CRITICAL **: gdk_window_set_cursor: assertion `GDK_IS_WINDOW (window)' failed		
-		// singleton.frame.set_cursor (cursor);
-	}
-
 	public void update_window_size () {
 		int w, h;
 		get_size (out w, out h);
@@ -490,10 +478,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 	private void set_size_and_position () {
 		int w = Preferences.get_window_width ();
-		int h = Preferences.get_window_height ();
-		
+		int h = Preferences.get_window_height ();	
 		set_default_size (w, h);
-		// move (10, 240);
 	}
 	
 	public bool quit () {
