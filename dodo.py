@@ -82,7 +82,7 @@ def task_birdfont_export ():
 def task_compile_translations ():
     """translate po files"""
     for f_name in glob.glob('po/*.po'):
-        lang = os.path.relpath(f_name)[:-3] # remove ".po"
+        lang = f_name.replace ("po/", "").replace (".po", "")
         build_path = "build/locale/" + lang + "/LC_MESSAGES/"
         target = build_path + "birdfont.mo"
         cmd = "msgfmt --output=%s %s" % (target, f_name)
