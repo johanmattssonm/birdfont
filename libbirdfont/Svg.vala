@@ -139,7 +139,7 @@ class Svg {
 			svg.append ("L");
 			
 			svg.append_printf ("%s ", round ((xb - center_x - left) * scale));
-			svg.append_printf ("%s ", round ((-yb + center_y + baseline) * scale));				
+			svg.append_printf ("%s ", round ((-yb + center_y + baseline) * scale));
 		}
 	}
 	

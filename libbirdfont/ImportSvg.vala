@@ -99,13 +99,16 @@ public class ImportSvg {
 		int pi = 0;
 		string data = d;
 		
-		// add separator 
+		// add separators
+		data = data.replace (",", " ");
 		data = data.replace ("m", "m ");
 		data = data.replace ("M", "M ");
 		data = data.replace ("l", "l ");
 		data = data.replace ("L", "L ");
 		data = data.replace ("c", "c ");
 		data = data.replace ("C", "C ");
+		data = data.replace ("zM", "z M ");
+		data = data.replace ("zm", "z m ");
 		data = data.replace ("  ", " ");
 		print (data);
 		
@@ -115,16 +118,15 @@ public class ImportSvg {
 		
 		print (@"A: $(c.length)\n");
 		
+		// parse path
 		for (int i = 0; i < c.length; i++) {
-			print (@"c[i]: \"$(c[i])\"\n");
+			print (@"c[i]: \"$(c[i])\" next is point $(is_point (c[i + 1])) \n");
 			if (c[i] == "m") {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "M";
 
-					i++;
-					cp = c[i].split (",");
-					px += double.parse (cp[0]);
-					py += -double.parse (cp[1]);
+					px += double.parse (c[++i]);
+					py += -double.parse (c[++i]);
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -135,10 +137,8 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "M";
 
-					i++;
-					cp = c[i].split (",");
-					px = double.parse (cp[0]);
-					py = -double.parse (cp[1]);
+					px = double.parse (c[++i]);
+					py = -double.parse (c[++i]);
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -149,10 +149,8 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
 					
-					i++;
-					cp = c[i].split (",");
-					cx = px + double.parse (cp[0]);
-					cy = py + -double.parse (cp[1]);
+					cx = px + double.parse (c[++i]);
+					cy = py + -double.parse (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -165,10 +163,8 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
 					
-					i++;
-					cp = c[i].split (",");
-					cx = double.parse (cp[0]);
-					cy = -double.parse (cp[1]);
+					cx = double.parse (c[++i]);
+					cy = -double.parse (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -181,24 +177,18 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "C";
 					
-					i++;
-					cp = c[i].split (",");
-					cx = px + double.parse (cp[0]);
-					cy = py + -double.parse (cp[1]);
+					cx = px + double.parse (c[++i]);
+					cy = py + -double.parse (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
-					i++;
-					cp = c[i].split (",");
-					cx = px + double.parse (cp[0]);
-					cy = py + -double.parse (cp[1]);
+					cx = px + double.parse (c[++i]);
+					cy = py + -double.parse (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
-					i++;
-					cp = c[i].split (",");
-					cx = px + double.parse (cp[0]);
-					cy = py + -double.parse (cp[1]);
+					cx = px + double.parse (c[++i]);
+					cy = py + -double.parse (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -208,34 +198,32 @@ public class ImportSvg {
 			}
 			
 			if (c[i] == "C") {
-				print ("FOUND C\n");
+				print (@"FOUND C\n");
 				while (is_point (c[i + 1])) {
 					command[ci++] = "C";
 					
-					i++;
-					cp = c[i].split (",");
-					cx = double.parse (cp[0]);
-					cy = -double.parse (cp[1]);
+					cx = double.parse (c[++i]);
+					cy = -double.parse (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
-					i++;
-					cp = c[i].split (",");
-					cx = double.parse (cp[0]);
-					cy = -double.parse (cp[1]);
+					cx = double.parse (c[++i]);
+					cy = -double.parse (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
-					i++;
-					cp = c[i].split (",");
-					cx = double.parse (cp[0]);
-					cy = -double.parse (cp[1]);
+					cx = double.parse (c[++i]);
+					cy = -double.parse (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
 					px = cx;
 					py = cy;					
 				}	
+			}
+			
+			if (c[i] == "z") {
+				command[ci++] = "z";
 			}
 		}
 		
@@ -247,6 +235,7 @@ public class ImportSvg {
 			path.add (p[i], p[i+1]);
 		}*/
 		
+		// add points
 		int ic = 0;
 		double x0, x1, x2;
 		double y0, y1, y2;
@@ -294,13 +283,17 @@ public class ImportSvg {
 				ep2.get_left_handle ().type = PointType.CURVE;
 				ep2.get_left_handle ().move_to_coordinate (x1, y1);
 			}
+			
+			if (command[i] == "z") {
+				print ("Z\n");
+				MainWindow.get_current_glyph ().add_path (path);
+				path = new Path ();
+			}
 		}
-				
-		MainWindow.get_current_glyph ().add_path (path);
 	}
 	
 	static bool is_point (string s) {
-		return s.index_of (",") > -1;
+		return double.try_parse (s);
 	}
 	
 	static void parse_c (string[] data, int index, Path p, double posx, double posy) {
