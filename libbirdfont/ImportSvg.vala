@@ -53,6 +53,10 @@ public class ImportSvg {
 			if (iter->name == "g") {
 				parse_layer (iter);
 			}
+			
+			if (iter->name == "path") {
+				parse_path (iter);
+			}
 		}
 				
 		delete doc;
@@ -98,6 +102,8 @@ public class ImportSvg {
 		double[] p;
 		int pi = 0;
 		string data = d;
+		Glyph glyph = MainWindow.get_current_glyph ();
+		Font font = Supplement.get_current_font ();
 		
 		// add separators
 		data = data.replace (",", " ");
@@ -110,17 +116,13 @@ public class ImportSvg {
 		data = data.replace ("zM", "z M ");
 		data = data.replace ("zm", "z m ");
 		data = data.replace ("  ", " ");
-		print (data);
 		
 		c = data.split (" ");
 		p = new double[2 * c.length];
 		command = new string[2 * c.length];
 		
-		print (@"A: $(c.length)\n");
-		
 		// parse path
 		for (int i = 0; i < c.length; i++) {
-			print (@"c[i]: \"$(c[i])\" next is point $(is_point (c[i + 1])) \n");
 			if (c[i] == "m") {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "M";
@@ -226,23 +228,21 @@ public class ImportSvg {
 				command[ci++] = "z";
 			}
 		}
-		
-		
+
 		Path path = new Path ();
-		print ("B\n");
-		/*
+		
+		// move
 		for (int i = 0; i < pi; i += 2) {
-			path.add (p[i], p[i+1]);
-		}*/
+			p[i] += glyph.left_limit;
+			p[i+1] -= font.top_position;
+		}	
 		
 		// add points
 		int ic = 0;
 		double x0, x1, x2;
 		double y0, y1, y2;
 		EditPoint ep1, ep2;
-		print (@"C fount elements $ci\n");
 		for (int i = 0; i < ci; i++) {
-			print (@" $i of $ci > $(command[i])\n");
 			if (is_null (command[i])) {
 				warning ("Parser error.");
 				return;
@@ -257,14 +257,12 @@ public class ImportSvg {
 			}
 						
 			if (command[i] == "C") {
-				print ("X");
 				x0 = p[ic++];
 				y0 = p[ic++];
 				x1 = p[ic++];
 				y1 = p[ic++];
 				x2 = p[ic++];
 				y2 = p[ic++];
-				print ("DONE\n");
 				
 				if (is_null (path.points.last ().data)) {
 					warning ("Paths must begin with M");
@@ -272,7 +270,6 @@ public class ImportSvg {
 				}
 			
 				ep1 = path.points.last ().data;
-				print ("PL\n");
 				
 				ep1.get_right_handle ().type = PointType.CURVE;
 				ep1.get_right_handle ().move_to_coordinate (x0, y0);
@@ -285,8 +282,7 @@ public class ImportSvg {
 			}
 			
 			if (command[i] == "z") {
-				print ("Z\n");
-				MainWindow.get_current_glyph ().add_path (path);
+				glyph.add_path (path);
 				path = new Path ();
 			}
 		}
