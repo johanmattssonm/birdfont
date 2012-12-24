@@ -6,6 +6,7 @@ from doit.tools import run_once
 from doit.action import CmdAction
 from bavala import Vala
 
+VERSION = '0.8'
 
 DOIT_CONFIG = {
     'default_tasks': [

@@ -1,7 +1,12 @@
+#!/usr/bin/python
+
 import os
 import shutil
+import subprocess
+import sys
 
-from waflib.TaskGen import feature, before_method
+sys.path.append('../')
+import dodo # import version number
 
 WIN32_LIBS = [
 	'glib-2.0',
@@ -62,37 +67,34 @@ WIN32_DLLS = [
 	"pthreadGC2.dll"
 ]
 
-@feature('have_windows_runtime')
-@before_method('process_source')
-def have_windows_runtime(self):
-	for pkg in WIN32_LIBS:
-		self.bld(rule='i686-w64-mingw32-pkg-config --cflags --libs '+ pkg, always=True, name=pkg)
-	self.source = []
-
-def configure(conf):
+def run(cmd):
+	process = subprocess.Popen (cmd, shell=True)
+	process.communicate()[0]
+	if not process.returncode == 0:
+		print("Error: " + cmd)
+		exit(1)
+		
+def configure():
 	print("")
 	print("Crosscompile for windows")
 	
-	conf.find_program('i686-w64-mingw32-gcc', var='MINGW32GCC')
-	conf.find_program('i686-w64-mingw32-pkg-config', var='MINGW32PKG-CONFIG')
-	conf.find_program('windres', var='WINDRES')
-	conf.check_cc(features='have_windows_runtime', msg='Checking windows runtimes')
+	run('i686-w64-mingw32-gcc --version')
+	run('i686-w64-mingw32-pkg-config --version')	
+	run('windres --version')	
+	run('wine --version')
+	run('ls ' + os.getenv("HOME") + "/.wine/drive_c/Program/NSIS/makensis.exe")
+	
+	for pkg in WIN32_LIBS:
+		 run('i686-w64-mingw32-pkg-config --cflags --libs '+ pkg)
 
-	if conf.options.installer :
-		conf.find_program('wine', var='wine')	
-		conf.find_program(os.getenv("HOME") + "/.wine/drive_c/Program/NSIS/makensis.exe", always=True)
-
-def build(bld):
-	bld(rule="mkdir -p build/supplement")
-
-	bld(rule="windres ${SRC} -O coff -o ${TGT}", source="../win32/icon.rc", target="icon.res", always=True)
-	bld(rule="mv ${SRC} ${TGT}", source="../win32/icon.res", target="../build/", name="icon", always=True)
-
-	bld(
-		rule="""i686-w64-mingw32-gcc \
-			-c ./Main.c ./GtkWindow.c ./BirdfontExport.c ./libbirdfont/*.c ./ \
+def build():
+	run("mkdir -p ../build/supplement")
+	run("mkdir -p ../build/win32")
+	run("windres ../win32/icon.rc -O coff -o ../build/icon.res")
+	run("""i686-w64-mingw32-gcc \
+			-c ../build/birdfont.h ../build/birdfont/Main.c ../build/birdfont/GtkWindow.c ../build/birdfont-export/BirdfontExport.c ../build/libbirdfont/*.c ./ \
 			-D 'GETTEXT_PACKAGE="birdfont"' \
-			-I ./ \
+			-I ../build/ \
 			-mthreads \
 			$(i686-w64-mingw32-pkg-config --cflags --libs glib-2.0) \
 			$(i686-w64-mingw32-pkg-config --cflags --libs libxml-2.0) \
@@ -100,98 +102,90 @@ def build(bld):
 			$(i686-w64-mingw32-pkg-config --cflags --libs libsoup-2.4) \
 			$(i686-w64-mingw32-pkg-config --cflags --libs gtk+-2.0) \
 			$(i686-w64-mingw32-pkg-config --cflags --libs webkit-1.0) && \
-			mv *.o win32/""",
-		source="../build/libbirdfont/Supplement.c", 
-		target="./Supplement.o", 
-		name="mingw compile", 
-		depends_on="clean_src", 
-		always=True);
+			mv *.o ../build/win32/""");
 	
-	bld(rule="""mv win32/BirdfontExport.* ./ """, always=True);
-	bld(rule="""mv win32/Main.* ./ """, always=True);
-	bld(rule="""mv win32/GtkWindow.* ./ """, always=True);
+	run("""mv ../build/win32/BirdfontExport.* ../build """)
+	run("""mv ../build/win32/Main.* ../build """)
+	run("""mv ../build/win32/GtkWindow.* ../build """)
 	
-	bld(rule="""i686-w64-mingw32-gcc \
+	run("""i686-w64-mingw32-gcc \
 		-shared \
-		./win32/*.o \
-		./icon.res \
+		../build/win32/*.o \
+		../build/icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
 		-B static -lgio-2.0.dll -B static -l soup-2.4.dll \
 		-B static -l webkitgtk-1.0.dll  -B static -lgtk-win32-2.0.dll -B static -lgdk-win32-2.0.dll -B static -latk-1.0.dll -B static -lgio-2.0.dll -B static -lpangowin32-1.0.dll -B static -lpangocairo-1.0.dll -B static -lgdk_pixbuf-2.0.dll -B static -lpango-1.0.dll -B static -lcairo.dll -B static -lgobject-2.0.dll -B static -lgmodule-2.0.dll -B static -lgthread-2.0.dll -B static -lglib-2.0.dll \
-		-static -o libbirdfont.dll""", source="../build/libbirdfont/Supplement.c", target="../libbirdfont.dll", depends_on=['mingw compile', 'icon'], name="mingw link shared", always=True)
+		-static -o libbirdfont.dll""")
 	
-	bld(rule="""i686-w64-mingw32-ar rcs libbirdfont.dll.a win32/*.o""", name="mingw link static", depends_on="mingw link shared")
+	run("""i686-w64-mingw32-ar rcs ../build/libbirdfont.dll.a ../build/win32/*.o""")
 
-	bld(rule="""i686-w64-mingw32-gcc \
-		./Main.o \
-		./GtkWindow.o \
-		./icon.res \
+	run("""i686-w64-mingw32-gcc \
+		../build/Main.o \
+		../build/GtkWindow.o \
+		../build/icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
-		-L./ \
+		-L../build/ \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
 		-static -B -static -l birdfont.dll \
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
 		-B static -l gio-2.0.dll -B static -l soup-2.4.dll \
 		-B static -l webkitgtk-1.0.dll  -B static -l gtk-win32-2.0.dll -B static -l gdk-win32-2.0.dll -B static -l atk-1.0.dll -B static -l gio-2.0.dll -B static -l pangowin32-1.0.dll -B static -l pangocairo-1.0.dll -B static -l gdk_pixbuf-2.0.dll -B static -l pango-1.0.dll -B static -l cairo.dll -B static -l gobject-2.0.dll -B static -l gmodule-2.0.dll -B static -l gthread-2.0.dll -B static -l glib-2.0.dll \
-		-static -o birdfont.exe""", source="../build/libbirdfont/Supplement.c", target="../birdfont.exe", depends_on=['mingw link shared', 'icon'], name="mingw link", always=True)
+		-static -o birdfont.exe""")
 
-	bld(rule="""i686-w64-mingw32-gcc \
-		./Main.o \
-		./icon.res \
-		./GtkWindow.o \
+	run("""i686-w64-mingw32-gcc \
+		../build/Main.o \
+		../build/icon.res \
+		../build/GtkWindow.o \
 		-mthreads \
-		-L./ \
+		-L../build/ \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
 		-static -B -static -l birdfont.dll \
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
 		-B static -l gio-2.0.dll -B static -l soup-2.4.dll \
 		-B static -l webkitgtk-1.0.dll  -B static -l gtk-win32-2.0.dll -B static -l gdk-win32-2.0.dll -B static -l atk-1.0.dll -B static -l gio-2.0.dll -B static -l pangowin32-1.0.dll -B static -l pangocairo-1.0.dll -B static -l gdk_pixbuf-2.0.dll -B static -l pango-1.0.dll -B static -l cairo.dll -B static -l gobject-2.0.dll -B static -l gmodule-2.0.dll -B static -l gthread-2.0.dll -B static -l glib-2.0.dll \
-		-static -o birdfont_terminal.exe""", source="../build/libbirdfont/Supplement.c", target="../birdfont.exe", depends_on=['mingw link shared', 'icon'], name="mingw link terminal", always=True)
+		-static -o birdfont_terminal.exe""")
 
-	bld(rule="""i686-w64-mingw32-gcc \
-		./BirdfontExport.o \
-		./icon.res \
+	run("""i686-w64-mingw32-gcc \
+		../build/BirdfontExport.o \
+		../build/icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
-		-L./ \
+		-L../build/ \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
 		-static -B -static -l birdfont.dll \
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
 		-B static -l gio-2.0.dll -B static -l soup-2.4.dll \
 		-B static -l webkitgtk-1.0.dll  -B static -l gtk-win32-2.0.dll -B static -l gdk-win32-2.0.dll -B static -l atk-1.0.dll -B static -l gio-2.0.dll -B static -l pangowin32-1.0.dll -B static -l pangocairo-1.0.dll -B static -l gdk_pixbuf-2.0.dll -B static -l pango-1.0.dll -B static -l cairo.dll -B static -l gobject-2.0.dll -B static -l gmodule-2.0.dll -B static -l gthread-2.0.dll -B static -l glib-2.0.dll \
-		-static -o birdfont-export.exe""", source="../build/libbirdfont/Supplement.c", target="../birdfont-export.exe", depends_on=['mingw link shared', 'icon'], name="mingw link", always=True)
+		-static -o birdfont-export.exe""")
 
-	bld(rule="mv birdfont-export.exe supplement/", depends_on='mingw link', always=True)
-	bld(rule="mv birdfont.exe supplement/", depends_on='mingw link', always=True)
-	bld(rule="mv birdfont_terminal.exe supplement/", depends_on='mingw link terminal', always=True)
-	bld(rule="mv libbirdfont.dll supplement/", depends_on='mingw link', always=True)
+	run("mv birdfont-export.exe ../build/supplement/")
+	run("mv birdfont.exe ../build/supplement/")
+	run("mv birdfont_terminal.exe ../build/supplement/")
+	run("mv libbirdfont.dll ../build/supplement/")
 
-	if bld.options.installer:
-		copy_runtime_dependencies (bld)
-		generate_nsi(bld)
-				
-		fn = "birdfont-" + bld.env.VERSION + ".exe"
-		bld(rule=os.getenv("HOME") + "/.wine/drive_c/Program/NSIS/makensis.exe supplement/birdfont_installer.nsi", source='', target='supplement/' + fn, depends_on='mingw link', name="nsis installer")
-		bld(rule="mv ./${SRC} ${TGT}", source='supplement/' + fn, target='../', depends_on='nsis installer')
+	copy_runtime_dependencies ()
+	generate_nsi()
+			
+	run(os.getenv("HOME") + "/.wine/drive_c/Program/NSIS/makensis.exe ../build/supplement/birdfont_installer.nsi")
 	
-def generate_nsi(bld):
+def generate_nsi():
 	print ('generating build/supplement/birdfont_installer.nsi')
 
-	bld.exec_command('mkdir -p build/supplement')
+	run('mkdir -p ../build/supplement')
 
-	f = open('build/supplement/birdfont_installer.nsi', 'w+')
-	f.write("""; windows installation script generated by by win32/wscript
+	f = open('../build/supplement/birdfont_installer.nsi', 'w+')
+	f.write("""; windows installation script generated by by build script
 
 Name "Birdfont"
 """)
 
-	f.write("OutFile \"..\\win32\\supplement\\")
+	f.write("OutFile \"..\\")
 	f.write("birdfont-")
-	f.write(bld.env.VERSION)
+	f.write(dodo.VERSION)
 	f.write(".exe\"")
 	
 	f.write("""
@@ -219,7 +213,7 @@ Section "Birdfont (required)"
   SectionIn RO
 """);
 
-	os.chdir('./build/supplement')
+	os.chdir('../build/supplement')
 	write_files ('.', f)
 
 	f.write("""
@@ -274,7 +268,7 @@ Section "Uninstall"
 
 SectionEnd
 """)
-	os.chdir('../../')
+	os.chdir('../../win32')
 
 def write_files (dir, f):
 	filenames = os.walk(dir)
@@ -323,26 +317,29 @@ def remove_files (dir, f):
 		f.write(dir.replace ('./', '').replace ('/', '\\'))
 		f.write("\"\n")
 		
-def copy_runtime_dependencies (bld):
+def copy_runtime_dependencies ():
 
 	MINGW = "/usr/i686-w64-mingw32/sys-root/mingw"
 	MINGW_BIN = MINGW + "/bin"
 
-	bld(rule="cp ../README supplement/")
-	bld(rule="cp ../COPYING supplement/")
-	bld(rule="cp ../NEWS supplement/")
+	run("cp ../README ../build/supplement/")
+	run("cp ../COPYING ../build/supplement/")
+	run("cp ../NEWS ../build/supplement/")
 	
-	bld(rule="cp -ra ../layout/ supplement/")
-	bld(rule="cp -ra ../icons/ supplement/")
-	bld(rule="cp -ra locale supplement/")
+	run("cp -ra ../layout/ ../build/supplement/")
+	run("cp -ra ../icons/ ../build/supplement/")
+	run("cp -ra ../build/locale ../build/supplement/")
 	
-	bld(rule="cp ../win32/birdfont.ico supplement/")
-	bld(rule="cp -r " + MINGW + "/etc supplement/")
+	run("cp ../win32/birdfont.ico ../build/supplement/")
+	run("cp -r " + MINGW + "/etc ../build/supplement/")
 
-	bld(rule="cp " + MINGW_BIN + "/gspawn-win32-helper.exe supplement/")
-	bld(rule="cp " + MINGW_BIN + "/gspawn-win32-helper-console.exe supplement/")
+	run("cp " + MINGW_BIN + "/gspawn-win32-helper.exe ../build/supplement/")
+	run("cp " + MINGW_BIN + "/gspawn-win32-helper-console.exe ../build/supplement/")
 
 	# DLL-hell
 	for dll in WIN32_DLLS:
-		bld(rule="cp " + MINGW_BIN + "/" + dll + " supplement/")
-		
+		run("cp " + MINGW_BIN + "/" + dll + " ../build/supplement/")
+
+
+configure ()
+build ()	

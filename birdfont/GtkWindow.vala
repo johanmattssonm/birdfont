@@ -298,12 +298,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		edit_menu.append (export_svg_item);
 		export_svg_item.activate.connect (() => { ExportTool.export_current_glyph (); });	
 	
-		if (Supplement.experimental) {
-			Gtk.MenuItem import_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Import SVG"));
-			edit_menu.append (import_svg_item);
-			import_svg_item.activate.connect (() => { ImportSvg.import (); });	
-		}
-		
+		Gtk.MenuItem import_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Import SVG"));
+		edit_menu.append (import_svg_item);
+		import_svg_item.activate.connect (() => { ImportSvg.import (); });	
+	
 		// Tab
 		Gtk.MenuItem next_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Next tab"));
 		tab_menu.append (next_tab_item);
