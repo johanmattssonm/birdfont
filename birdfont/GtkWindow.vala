@@ -39,8 +39,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	GlyphCanvasArea glyph_canvas_area;
 	
 	static List<uint> key_pressed = new List<uint> ();
-	Clipboard clipboard;
 	
+	Clipboard clipboard;
+	string clipboard_svg = "";
+		
 	public GtkWindow (string title) {
 		((Gtk.Window)this).set_title ("Birdfont");
 	}
@@ -237,11 +239,33 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Atom target;
 		target = Atom.intern_static_string ("image/svg+xml");
 		selection_data = clipboard.wait_for_contents (target);
+		
+		if (is_null (selection_data) || is_null (selection_data.data)) {
+			return "";
+		}
+		
 		return (string) selection_data.data;
 	}
-
-	public void set_clipboard (string data) {
-		clipboard.set_text (data, -1);
+	
+	public void set_clipboard (string svg) {
+		//clipboard.set_text (data, -1);
+		TargetEntry t = { "image/svg+xml", 0, 0 };
+		TargetEntry[] targets = { t };
+		clipboard_svg = svg;
+		clipboard.set_with_owner (targets,
+		
+			// obtain clipboard data 
+			(clipboard, selection_data, info, owner) => {
+				Atom type;
+				uchar[] data = (uchar[])(!)((GtkWindow*)owner)->clipboard_svg.to_utf8 ();
+				type = Atom.intern_static_string ("image/svg+xml");
+				selection_data.set (type, 0, data);
+			},
+			
+			// clear clipboard data
+			(clipboard, user_data) => {
+			},
+			this);
 	}
 	
 	MenuBar create_menu () {

@@ -204,7 +204,7 @@ public class Supplement {
 	}	
 }
 
-internal bool is_null (void* n) {
+public bool is_null (void* n) {
 	return n == null;
 }
 

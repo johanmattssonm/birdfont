@@ -28,13 +28,14 @@ public class ClipTool : Tool {
 		FontDisplay fd = MainWindow.get_current_display ();
 		string gc;
 		Glyph g = MainWindow.get_current_glyph ();
-
+		string svg;
+		
 		glyph = null;
 
 		while (path.length () > 0) {
 			path.remove_link (path.first ());
 		}
-					
+		
 		if (fd is OverView) {
 			gc = overview.get_selected_char ();
 			glyph = font.get_glyph (gc);
@@ -48,6 +49,9 @@ public class ClipTool : Tool {
 			if (path.length () == 0) {
 				glyph = g.copy ();
 			}
+			
+			svg = ExportTool.export_current_glyph_to_string ();
+			MainWindow.get_singleton ().native_window.set_clipboard (svg);
 		}
 
 	}
@@ -73,7 +77,8 @@ public class ClipTool : Tool {
 				font.add_glyph ((!) destination);
 			}
 		}
-		
+
+		// paste from clipboard		
 		if (fd is Glyph) {
 			destination = (Glyph) fd;
 
@@ -83,25 +88,10 @@ public class ClipTool : Tool {
 			
 			((!)destination).store_undo_state ();
 			
-			if (glyph != null) {
-				foreach (Path p in ((!)glyph).path_list) {
-					inserted = p.copy ();
-					((!)destination).add_path (inserted);
-				}
-			}
-
-			foreach (Path p in path) {
-				inserted = p.copy ();
-				((!)destination).add_path (inserted);
-			}
-			
-			((!)destination).update_view ();
-		}
-		
-		// paste from clipboard
-		if (fd is Glyph) {
 			svg = MainWindow.get_singleton ().native_window.get_clipboard ();
 			ImportSvg.import_svg (svg);
+			
+			((!)destination).update_view ();
 		}
 	}
 

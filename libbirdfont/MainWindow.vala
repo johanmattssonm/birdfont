@@ -31,7 +31,7 @@ public class MainWindow {
 
 	public MainWindow () {
 		singleton = this;
-
+		
 		key_bindings = new KeyBindings ();
 		glyph_canvas = new GlyphCanvas ();
 		tools = new Toolbox (glyph_canvas);

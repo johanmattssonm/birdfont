@@ -43,6 +43,46 @@ public class ExportTool : Tool {
 		});
 	}
 
+	public static string export_current_glyph_to_string () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		Font font = Supplement.get_current_font ();
+		FontDisplay fd = MainWindow.get_current_display ();
+		string glyph_svg;
+		string name;
+		int pid = 0;
+		
+		name = glyph.get_name ();
+		StringBuilder s = new StringBuilder ();
+		
+		s.append ("""<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg """);
+
+		s.append (@"xmlns=\"http://www.w3.org/2000/svg\"\n");
+		s.append (@"\twidth=\"$(glyph.get_width () / Glyph.SCALE)\"\n");
+		s.append (@"\theight=\"$(glyph.get_height () / Glyph.SCALE)\"\n");
+		s.append (@"\tid=\"glyph_$(name)\"\n");
+		s.append (@"\tversion=\"1.1\">\n");
+		
+		s.append (@"\n");
+		
+		s.append (@"<g id=\"$(name)\">\n");
+
+		glyph_svg = "";
+		foreach (Path p in glyph.path_list) {
+			glyph_svg += Svg.to_svg_path (p, glyph);
+		}
+
+		s.append (@"<path ");
+		s.append (@"style=\"fill:#000000;stroke-width:0px\" ");
+		s.append (@"d=\"$(glyph_svg)\" id=\"path_$(name)$(pid++)\" />\n");
+	
+		s.append ("</g>\n");
+		s.append ("</svg>");
+	
+		return s.str;
+	}
+	
 	public static void export_current_glyph () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Font font = Supplement.get_current_font ();
@@ -53,7 +93,6 @@ public class ExportTool : Tool {
 		File file;
 		DataOutputStream os;
 		string name;
-		int pid = 0;
 
 		name = glyph.get_name ();
 				
@@ -75,34 +114,9 @@ public class ExportTool : Tool {
 				file.delete ();
 			}
 			
-			os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));	
-		
-			os.put_string (
-"""<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
-<svg """);
-
-			os.put_string (@"xmlns=\"http://www.w3.org/2000/svg\"\n");
-			os.put_string (@"\twidth=\"$(glyph.get_width () / Glyph.SCALE)\"\n");
-			os.put_string (@"\theight=\"$(glyph.get_height () / Glyph.SCALE)\"\n");
-			os.put_string (@"\tid=\"glyph_$(name)\"\n");
-			os.put_string (@"\tversion=\"1.1\">\n");
-			
-			os.put_string (@"\n");
-			
-			os.put_string (@"<g id=\"$(name)\">\n");
-
-			glyph_svg = "";
-			foreach (Path p in glyph.path_list) {
-				glyph_svg += Svg.to_svg_path (p, glyph);
-			}
-
-			os.put_string (@"<path ");
-			os.put_string (@"style=\"fill:#000000;stroke-width:0px\" ");
-			os.put_string (@"d=\"$(glyph_svg)\" id=\"path_$(name)$(pid++)\" />\n");
-		
-			os.put_string ("""</g>			
-</svg>""");
+			glyph_svg = export_current_glyph_to_string ();
+			os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
+			os.put_string (glyph_svg);
 	
 		} catch (Error e) {
 			stderr.printf (@"Export \"$svg_file\" \n");
