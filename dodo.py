@@ -106,6 +106,6 @@ def task_man():
 
 def task_distclean ():
     return  {
-        'actions': ['rm -rf build dodo.pyc libbirdfont/Config.vala'],
+        'actions': ['rm -rf .doit.db build bavala.pyc dodo.pyc libbirdfont/Config.vala'],
         }
 
