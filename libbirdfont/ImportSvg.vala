@@ -223,7 +223,6 @@ public class ImportSvg {
 			}
 			
 			if (c[i] == "C") {
-				print (@"FOUND C\n");
 				while (is_point (c[i + 1])) {
 					command[ci++] = "C";
 					
@@ -293,7 +292,6 @@ public class ImportSvg {
 				}
 			
 				ep1 = path.points.last ().data;
-				
 				ep1.get_right_handle ().type = PointType.CURVE;
 				ep1.get_right_handle ().move_to_coordinate (x0, y0);
 			
@@ -305,6 +303,15 @@ public class ImportSvg {
 			}
 			
 			if (command[i] == "z") {
+				// last point is first
+				ep1 = path.points.last ().data;
+				path.points.remove_link (path.points.last ());
+				ep2 = path.points.first ().data;
+
+				ep2.left_handle.angle = ep1.left_handle.angle;
+				ep2.left_handle.length = ep1.left_handle.length;
+				ep2.left_handle.type = ep1.left_handle.type;
+
 				glyph.add_path (path);
 				path = new Path ();
 			}

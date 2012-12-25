@@ -550,7 +550,6 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void key_press (uint keyval) {
-		print ("key_press\n");
 		foreach (var exp in MainWindow.get_toolbox ().expanders) {
 			foreach (Tool t in exp.tool) {
 				t.set_active (false);
