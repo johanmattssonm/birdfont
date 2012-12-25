@@ -26,6 +26,9 @@ public interface NativeWindow : GLib.Object {
 	
 	public abstract void update_window_size ();
 
+	public abstract string get_clipboard ();
+	public abstract void set_clipboard (string data);
+
 	protected void webkit_callback (string s) {
 		FontDisplay fd = MainWindow.get_current_display ();
 		fd.process_property (s);

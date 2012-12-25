@@ -25,7 +25,6 @@ public class ImportSvg {
 	public static void import () {
 		Xml.Doc* doc;
 		Xml.Node* root = null;
-		Xml.Node* node;
 		string? p;
 		string path;
 		
@@ -34,11 +33,9 @@ public class ImportSvg {
 		if (p == null) {
 			return;
 		}
-
 		path = (!) p;
 
 		Parser.init ();
-
 		doc = Parser.parse_file (path);
 		root = doc->get_root_element ();
 				
@@ -47,6 +44,35 @@ public class ImportSvg {
 			return;
 		}
 
+		parse_svg_file (root);
+				
+		delete doc;
+		Parser.cleanup ();
+	}
+	
+	public static void import_svg (string data) {
+		Xml.Doc* doc;
+		Xml.Node* root = null;
+		
+		Parser.init ();
+		
+		doc = Parser.parse_doc (data);
+		root = doc->get_root_element ();
+				
+		if (root == null) {
+			delete doc;
+			return;
+		}
+
+		parse_svg_file (root);		
+		
+		delete doc;
+		Parser.cleanup ();
+	}
+	
+	private static void parse_svg_file (Xml.Node* root) {
+		Xml.Node* node;
+		
 		node = root;
 		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
@@ -57,10 +83,7 @@ public class ImportSvg {
 			if (iter->name == "path") {
 				parse_path (iter);
 			}
-		}
-				
-		delete doc;
-		Parser.cleanup ();				
+		}		
 	}
 	
 	private static void parse_layer (Xml.Node* node) {

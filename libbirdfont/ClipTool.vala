@@ -60,7 +60,9 @@ public class ClipTool : Tool {
 		Glyph? destination = null;
 		unichar new_char;
 		Path inserted;
+		string svg;
 		
+		// paste internal
 		if (fd is OverView) {
 			gc = overview.get_selected_char ();
 			destination = font.get_glyph (gc);
@@ -94,6 +96,12 @@ public class ClipTool : Tool {
 			}
 			
 			((!)destination).update_view ();
+		}
+		
+		// paste from clipboard
+		if (fd is Glyph) {
+			svg = MainWindow.get_singleton ().native_window.get_clipboard ();
+			ImportSvg.import_svg (svg);
 		}
 	}
 

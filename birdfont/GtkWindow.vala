@@ -39,12 +39,15 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	GlyphCanvasArea glyph_canvas_area;
 	
 	static List<uint> key_pressed = new List<uint> ();
+	Clipboard clipboard;
 	
 	public GtkWindow (string title) {
 		((Gtk.Window)this).set_title ("Birdfont");
 	}
 	
 	public void init () {
+		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
+		
 		margin_bottom = new DrawingArea ();
 		margin_right = new DrawingArea ();
 	
@@ -228,7 +231,19 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		show_all ();
 	}
+	
+	public string get_clipboard () {
+		SelectionData selection_data;
+		Atom target;
+		target = Atom.intern_static_string ("image/svg+xml");
+		selection_data = clipboard.wait_for_contents (target);
+		return (string) selection_data.data;
+	}
 
+	public void set_clipboard (string data) {
+		clipboard.set_text (data, -1);
+	}
+	
 	MenuBar create_menu () {
 		MenuBar menubar = new MenuBar ();
 		Gtk.Menu file_menu = new Gtk.Menu ();
@@ -735,7 +750,7 @@ public class GlyphCanvasArea : DrawingArea  {
 			
 			glyph_canvas.current_display.button_release (2, e.x, e.y);
 			return true;
-		});		
+		});
 	}
 
 	static void set_modifier (int k) {
