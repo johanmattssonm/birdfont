@@ -78,6 +78,11 @@ def configure():
 	print("")
 	print("Crosscompile for windows")
 	
+	os.chdir('../')
+	run('./configure')
+	run('doit')
+	os.chdir('./win32')
+	
 	run('i686-w64-mingw32-gcc --version')
 	run('i686-w64-mingw32-pkg-config --version')	
 	run('windres --version')	
