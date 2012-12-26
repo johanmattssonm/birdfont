@@ -28,8 +28,10 @@ public class ClipTool : Tool {
 		FontDisplay fd = MainWindow.get_current_display ();
 		string gc;
 		Glyph g = MainWindow.get_current_glyph ();
+		NativeWindow native_window;
 		string svg;
-		
+		string inkscape_svg;
+				
 		glyph = null;
 
 		while (path.length () > 0) {
@@ -50,8 +52,12 @@ public class ClipTool : Tool {
 				glyph = g.copy ();
 			}
 			
+			native_window = MainWindow.get_singleton ().native_window;
 			svg = ExportTool.export_current_glyph_to_string ();
-			MainWindow.get_singleton ().native_window.set_clipboard (svg);
+			native_window.set_clipboard (svg);
+			
+			inkscape_svg = ExportTool.export_current_glyph_to_inkscape_clipboard ();
+			native_window.set_inkscape_clipboard (inkscape_svg);
 		}
 
 	}

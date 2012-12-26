@@ -42,7 +42,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	Clipboard clipboard;
 	string clipboard_svg = "";
-		
+	string inkscape_clipboard = "";
+	
 	public GtkWindow (string title) {
 		((Gtk.Window)this).set_title ("Birdfont");
 	}
@@ -237,6 +238,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public string get_clipboard () {
 		SelectionData selection_data;
 		Atom target;
+
 		target = Atom.intern_static_string ("image/svg+xml");
 		selection_data = clipboard.wait_for_contents (target);
 		
@@ -247,8 +249,31 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		return (string) selection_data.data;
 	}
 	
+	public void set_inkscape_clipboard (string inkscape_clipboard_data) {
+		TargetEntry t = { "image/x-inkscape-svg", 0, 0 };
+		TargetEntry[] targets = { t };
+		inkscape_clipboard = inkscape_clipboard_data;
+		
+		// we can't add data to this closure because the third argument 
+		// is owner and not private data.
+		clipboard.set_with_owner (targets,
+		
+			// obtain clipboard data 
+			(clipboard, selection_data, info, owner) => {
+				Atom type;
+				uchar[] data = (uchar[])(!)((GtkWindow*)owner)->inkscape_clipboard.to_utf8 ();
+				type = Atom.intern_static_string ("image/x-inkscape-svg");
+				selection_data.set (type, 8, data);
+			},
+			
+			// clear clipboard data
+			(clipboard, user_data) => {
+			},
+			
+			this);		
+	}
+	
 	public void set_clipboard (string svg) {
-		//clipboard.set_text (data, -1);
 		TargetEntry t = { "image/svg+xml", 0, 0 };
 		TargetEntry[] targets = { t };
 		clipboard_svg = svg;
@@ -265,6 +290,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			// clear clipboard data
 			(clipboard, user_data) => {
 			},
+			
 			this);
 	}
 	

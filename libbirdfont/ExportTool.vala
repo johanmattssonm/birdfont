@@ -46,13 +46,12 @@ public class ExportTool : Tool {
 	public static string export_current_glyph_to_string () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Font font = Supplement.get_current_font ();
-		FontDisplay fd = MainWindow.get_current_display ();
 		string glyph_svg;
 		string name;
-		int pid = 0;
-		
+		StringBuilder s;
+
 		name = glyph.get_name ();
-		StringBuilder s = new StringBuilder ();
+		s = new StringBuilder ();
 		
 		s.append ("""<?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
@@ -68,6 +67,43 @@ public class ExportTool : Tool {
 		
 		s.append (@"<g id=\"$(name)\">\n");
 
+		s.append (get_svg_path_elements ());
+	
+		s.append ("</g>\n");
+		s.append ("</svg>");
+	
+		return s.str;
+	}
+	
+	public static string export_current_glyph_to_inkscape_clipboard () {
+		StringBuilder s;
+		
+		s = new StringBuilder ();
+		s.append ("""<?xml version="1.0" encoding="UTF-8" standalone="no"?>""");
+		s.append ("\n");
+		s.append ("<svg>\n");
+
+		s.append ("""<inkscape:clipboard
+			id="clipboard3009"
+			style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+			min="0,0"
+			max="0,0" />
+     """);
+
+		s.append (get_svg_path_elements ());
+		s.append ("</svg>");
+		
+		return s.str;
+	}
+
+	public static string get_svg_path_elements () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		string glyph_svg;
+		StringBuilder s;
+		string name;
+		name = glyph.get_name ();
+								
+		s = new StringBuilder ();
 		glyph_svg = "";
 		foreach (Path p in glyph.path_list) {
 			glyph_svg += Svg.to_svg_path (p, glyph);
@@ -75,11 +111,8 @@ public class ExportTool : Tool {
 
 		s.append (@"<path ");
 		s.append (@"style=\"fill:#000000;stroke-width:0px\" ");
-		s.append (@"d=\"$(glyph_svg)\" id=\"path_$(name)$(pid++)\" />\n");
-	
-		s.append ("</g>\n");
-		s.append ("</svg>");
-	
+		s.append (@"d=\"$(glyph_svg)\" id=\"path_$(name)\" />\n");
+		
 		return s.str;
 	}
 	
