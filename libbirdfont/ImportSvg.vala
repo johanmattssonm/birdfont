@@ -292,12 +292,14 @@ public class ImportSvg {
 				}
 			
 				ep1 = path.points.last ().data;
+				ep1.recalculate_linear_handles ();
 				ep1.get_right_handle ().type = PointType.CURVE;
 				ep1.get_right_handle ().move_to_coordinate (x0, y0);
 			
 				path.add (x2, y2);
 				
 				ep2 = path.points.last ().data;
+				ep2.recalculate_linear_handles ();
 				ep2.get_left_handle ().type = PointType.CURVE;
 				ep2.get_left_handle ().move_to_coordinate (x1, y1);
 			}
