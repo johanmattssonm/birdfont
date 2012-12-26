@@ -26,7 +26,7 @@ parser.add_option ("-d", "--dest", dest="dest", help="install to this directory"
 (options, args) = parser.parse_args()
 
 if not options.prefix:
-	options.prefix = "/usr/local"
+	options.prefix = "/usr"
 
 if not options.dest:
 	options.dest = ""
@@ -54,3 +54,5 @@ install ('build/birdfont.1.gz', '/share/man/man1')
 install ('build/birdfont-export.1.gz', '/share/man/man1')
 
 installed.close ()
+
+subprocess.check_output ('ldconfig', shell=True)
