@@ -783,7 +783,7 @@ public class Font : GLib.Object {
 	public void add_glyph_callback (Glyph g) {
 		GlyphCollection? gcl;
 		GlyphCollection gc;
-		
+							
 		gcl = get_cached_glyph_collection (g.get_name ());
 		
 		if (gcl != null) {
@@ -1152,7 +1152,6 @@ public class Font : GLib.Object {
 		} else {
 			((!)gc).insert_glyph (g, selected);
 		}
-		
 	}
 	
 	/** Parse visual objects and paths */
@@ -1267,10 +1266,6 @@ public class Font : GLib.Object {
 			if (attr_name == "y") y = double.parse (attr_content);
 			
 			if (attr_name == "right_angle") {
-				type = PointType.CURVE; // FIXA: delete, maybe
-			}	
-			
-			if (attr_name == "right_angle") {
 				type_right = PointType.CURVE;
 			}	
 
@@ -1287,8 +1282,6 @@ public class Font : GLib.Object {
 		}
 		
 		ep = new EditPoint (x, y);
-		
-		ep.type = type;
 		
 		ep.right_handle.angle = angle_right;
 		ep.right_handle.length = length_right;
