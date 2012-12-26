@@ -239,7 +239,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		SelectionData selection_data;
 		Atom target;
 
-		target = Atom.intern_static_string ("image/svg+xml");
+		target = Atom.intern_static_string ("image/x-inkscape-svg");
 		selection_data = clipboard.wait_for_contents (target);
 		
 		if (is_null (selection_data) || is_null (selection_data.data)) {
