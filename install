@@ -54,3 +54,5 @@ install ('build/birdfont.1.gz', '/share/man/man1')
 install ('build/birdfont-export.1.gz', '/share/man/man1')
 
 installed.close ()
+
+subprocess.check_output ('ldconfig', shell=True)
