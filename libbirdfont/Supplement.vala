@@ -112,7 +112,13 @@ public class Supplement {
 			Intl.bindtextdomain (GETTEXT_PACKAGE, "./build/locale");
 			return;
 		}
-		
+
+		f = File.new_for_path (".\\locale\\sv\\LC_MESSAGES\\birdfont.mo");
+		if (f.query_exists ()) {
+			Intl.bindtextdomain (GETTEXT_PACKAGE, ".\\locale");
+			return;
+		}
+				
 		f = File.new_for_path ("/usr/local/share/locale/sv/LC_MESSAGES/birdfont.mo");
 		if (f.query_exists ()) {
 			Intl.bindtextdomain (GETTEXT_PACKAGE, "/usr/local/share/locale");
