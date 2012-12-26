@@ -264,6 +264,7 @@ public class ImportSvg {
 		double x0, x1, x2;
 		double y0, y1, y2;
 		EditPoint ep1, ep2;
+		double lx, ly;
 		for (int i = 0; i < ci; i++) {
 			if (is_null (command[i])) {
 				warning ("Parser error.");
@@ -290,18 +291,34 @@ public class ImportSvg {
 					warning ("Paths must begin with M");
 					return;
 				}
-			
+
+				// start with line handles
+				ep1 = path.points.last ().data;
+				ep1.get_right_handle ().type = PointType.LINE;
+				if (ep1.next == null) {
+					warning (@"$(ep1.x) $(ep1.y) is null");
+				}
+				
+				lx = ep1.x + ((x2 - ep1.x) / 3);
+				ly = ep1.y + ((y2 - ep1.y) / 3);
+								
+				ep1.get_right_handle ().move_to_coordinate (lx, ly);
+				ep1.recalculate_linear_handles ();
+				
+				// set curve handles
 				ep1 = path.points.last ().data;
 				ep1.recalculate_linear_handles ();
 				ep1.get_right_handle ().type = PointType.CURVE;
-				ep1.get_right_handle ().move_to_coordinate (x0, y0);
-			
+				ep1.get_right_handle ().move_to_coordinate (x0, y0);				
+
 				path.add (x2, y2);
-				
+								
 				ep2 = path.points.last ().data;
 				ep2.recalculate_linear_handles ();
 				ep2.get_left_handle ().type = PointType.CURVE;
 				ep2.get_left_handle ().move_to_coordinate (x1, y1);
+			
+				ep1.recalculate_linear_handles ();
 			}
 			
 			if (command[i] == "z") {
