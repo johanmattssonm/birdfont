@@ -23,15 +23,10 @@ public class EditPointHandle  {
 	
 	public double angle;
 	public double length;
-	
 	public EditPoint parent;
-	
 	public PointType type;
-	
 	EditPoint? visual_handle = null;
-
 	static EditPoint none = new EditPoint ();
-
 	public bool active;
 
 	public EditPointHandle.empty() {
