@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-25 00:01+0100\n"
+"POT-Creation-Date: 2012-12-26 23:31+0100\n"
 "PO-Revision-Date: 2012-12-24 20:42+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr "Beskär bakgrundsbild"
 msgid "Export glyph to svg file"
 msgstr "Exportera tecken till svg-fil"
 
-#: libbirdfont/ExportTool.vala:456
+#: libbirdfont/ExportTool.vala:503
 msgid "Wrote font files"
 msgstr "Har skrivit typsnittsfiler"
 
@@ -312,7 +312,7 @@ msgstr "Skapar miniatyrbilder"
 msgid "Set contrast for background image"
 msgstr "Ställ in bakgrundsbildens kontrast"
 
-#: libbirdfont/Toolbox.vala:658
+#: libbirdfont/Toolbox.vala:657
 msgid "Set size for grid"
 msgstr "Ange storlek på rutmönstret"
 
@@ -324,131 +324,131 @@ msgstr "Ny version"
 msgid "Version"
 msgstr "Version"
 
-#: birdfont/GtkWindow.vala:243
+#: birdfont/GtkWindow.vala:308
 msgid "_New"
 msgstr "_Nytt"
 
-#: birdfont/GtkWindow.vala:248
+#: birdfont/GtkWindow.vala:313
 msgid "_Open"
 msgstr "_Öppna"
 
-#: birdfont/GtkWindow.vala:253
+#: birdfont/GtkWindow.vala:318
 msgid "_Save"
 msgstr "_Spara"
 
-#: birdfont/GtkWindow.vala:258
+#: birdfont/GtkWindow.vala:323
 msgid "Save _as"
 msgstr "Spara so_m"
 
-#: birdfont/GtkWindow.vala:262
+#: birdfont/GtkWindow.vala:327
 msgid "_Export"
 msgstr "_Exportera"
 
-#: birdfont/GtkWindow.vala:267
+#: birdfont/GtkWindow.vala:332
 msgid "_Preview"
 msgstr "_Förhandsgranska"
 
-#: birdfont/GtkWindow.vala:272
+#: birdfont/GtkWindow.vala:337
 msgid "_Kerning"
 msgstr "_Kerning"
 
-#: birdfont/GtkWindow.vala:277
+#: birdfont/GtkWindow.vala:342
 msgid "_Quit"
 msgstr "_Avsluta"
 
-#: birdfont/GtkWindow.vala:282
+#: birdfont/GtkWindow.vala:347
 msgid "_Undo"
 msgstr "_Ångra"
 
-#: birdfont/GtkWindow.vala:287
+#: birdfont/GtkWindow.vala:352
 msgid "_Copy"
 msgstr "_Kopiera"
 
-#: birdfont/GtkWindow.vala:292
+#: birdfont/GtkWindow.vala:357
 msgid "_Paste"
 msgstr "Klistra _in"
 
-#: birdfont/GtkWindow.vala:297
+#: birdfont/GtkWindow.vala:362
 msgid "_Export glyph as SVG"
 msgstr "_Exportera tecken som SVG"
 
-#: birdfont/GtkWindow.vala:301
+#: birdfont/GtkWindow.vala:366
 msgid "_Import SVG"
 msgstr "_Importera SVG"
 
-#: birdfont/GtkWindow.vala:306
+#: birdfont/GtkWindow.vala:371
 msgid "_Next tab"
 msgstr "_Nästa flik"
 
-#: birdfont/GtkWindow.vala:319
+#: birdfont/GtkWindow.vala:384
 msgid "_Previous tab"
 msgstr "_Föregående flik"
 
-#: birdfont/GtkWindow.vala:332
+#: birdfont/GtkWindow.vala:397
 msgid "_Close tab"
 msgstr "_Stäng flik"
 
-#: birdfont/GtkWindow.vala:347
+#: birdfont/GtkWindow.vala:412
 msgid "_Create path"
 msgstr "Skapa _kontur"
 
-#: birdfont/GtkWindow.vala:354
+#: birdfont/GtkWindow.vala:419
 msgid "_Zoom"
 msgstr "_Zoom"
 
-#: birdfont/GtkWindow.vala:360
+#: birdfont/GtkWindow.vala:425
 msgid "_Create counter path"
 msgstr "Skapa _insida"
 
-#: birdfont/GtkWindow.vala:367
+#: birdfont/GtkWindow.vala:432
 msgid "_Move"
 msgstr "_Flytta"
 
-#: birdfont/GtkWindow.vala:374
+#: birdfont/GtkWindow.vala:439
 msgid "Show _full unicode characters set"
 msgstr "Visa alla _unicode tecken"
 
-#: birdfont/GtkWindow.vala:381
+#: birdfont/GtkWindow.vala:446
 msgid "Show de_fault characters set"
 msgstr "Visa _svenska tecken"
 
-#: birdfont/GtkWindow.vala:388
+#: birdfont/GtkWindow.vala:453
 msgid "Show characters in font"
 msgstr "Visa alla typsnittets tecken"
 
-#: birdfont/GtkWindow.vala:395
+#: birdfont/GtkWindow.vala:460
 msgid "Add new _grid item"
 msgstr "Lägg till storlek för nytt _rutnät"
 
-#: birdfont/GtkWindow.vala:401
+#: birdfont/GtkWindow.vala:466
 msgid "Remove gr_id item"
 msgstr "Ta bort storlek för rut_nätet"
 
-#: birdfont/GtkWindow.vala:407
+#: birdfont/GtkWindow.vala:472
 msgid "_Zoom in"
 msgstr "_Zooma in"
 
-#: birdfont/GtkWindow.vala:414
+#: birdfont/GtkWindow.vala:479
 msgid "Zoom _out"
 msgstr "Zooma _ut"
 
-#: birdfont/GtkWindow.vala:421
+#: birdfont/GtkWindow.vala:486
 msgid "Zoom to _scale 1:1"
 msgstr "Visa i skala _1:1"
 
-#: birdfont/GtkWindow.vala:429
+#: birdfont/GtkWindow.vala:494
 msgid "_File"
 msgstr "_Arkiv"
 
-#: birdfont/GtkWindow.vala:432
+#: birdfont/GtkWindow.vala:497
 msgid "_Edit"
 msgstr "_Redigera"
 
-#: birdfont/GtkWindow.vala:435
+#: birdfont/GtkWindow.vala:500
 msgid "_Tab"
 msgstr "_Flik"
 
-#: birdfont/GtkWindow.vala:438
+#: birdfont/GtkWindow.vala:503
 msgid "T_ool"
 msgstr "_Verktyg"
 

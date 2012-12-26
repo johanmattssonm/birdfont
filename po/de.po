@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-25 00:01+0100\n"
-"PO-Revision-Date: 2012-12-20 09:59+0000\n"
-"Last-Translator: Robert <r.kabinger@gmail.com>\n"
+"POT-Creation-Date: 2012-12-26 23:31+0100\n"
+"PO-Revision-Date: 2012-12-26 10:16+0000\n"
+"Last-Translator: MtaÄ <marc@wikia-inc.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1355997595.0\n"
+"X-POOTLE-MTIME: 1356517012.0\n"
 
 #: libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -36,7 +36,7 @@ msgstr "Zeige Koordinaten in Strukturanzeige"
 
 #: libbirdfont/Argument.vala:230
 msgid "exit if a test case failes"
-msgstr "Beenden wenn Testfall fehlschlägt"
+msgstr "Beenden, wenn Testfall fehlschlägt"
 
 #: libbirdfont/Argument.vala:231
 msgid "treat warnings as fatal"
@@ -48,7 +48,7 @@ msgstr "Diese Meldung anzeigen"
 
 #: libbirdfont/Argument.vala:233
 msgid "sleep between each command in test suite"
-msgstr "Pause nach jedem Befehl in Teststruktur"
+msgstr "Pause nach jedem Befehl in Teststruktur machen"
 
 #: libbirdfont/Argument.vala:234
 msgid "run test case"
@@ -88,13 +88,13 @@ msgstr "Wird geschrieben"
 
 #: libbirdfont/CutBackgroundTool.vala:37
 msgid "Crop background image"
-msgstr "Hintergrundbild beschneiden"
+msgstr "Hintergrundbild zuschneiden"
 
 #: libbirdfont/ExportTool.vala:29
 msgid "Export glyph to svg file"
 msgstr "Glyph-Datei als SVG exportieren"
 
-#: libbirdfont/ExportTool.vala:456
+#: libbirdfont/ExportTool.vala:503
 msgid "Wrote font files"
 msgstr "Schriftdateien geschrieben"
 
@@ -110,7 +110,7 @@ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
 #: libbirdfont/GridTool.vala:36
 msgid "Show grid"
-msgstr "Gitternetz anzeigen"
+msgstr "Raster anzeigen"
 
 #: libbirdfont/MenuTab.vala:94
 msgid "Export"
@@ -122,43 +122,45 @@ msgstr "Vorschau"
 
 #: libbirdfont/MenuTab.vala:113
 msgid "Recent files"
-msgstr ""
+msgstr "Zuletzt geöffnete Dateien"
 
 #: libbirdfont/MenuTab.vala:150
 msgid "Preferences"
-msgstr ""
+msgstr "Einstellungen"
 
 #: libbirdfont/MenuTab.vala:151
 msgid "Export SVG, TTF & EOT fonts"
-msgstr ""
+msgstr "Expertiere SVG, TTF und EOT-Schriftarten"
 
 #: libbirdfont/MenuTab.vala:152
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: libbirdfont/MenuTab.vala:153
 msgid "Glyph sequence"
-msgstr ""
+msgstr "Glyphen-Abfolge"
 
 #: libbirdfont/MenuTab.vala:154 libbirdfont/MenuTab.vala:155
 msgid "Export SVG font and view the result"
-msgstr ""
+msgstr "Exportiere als SVG-Schriftart und zeige das Resultat an"
 
 #: libbirdfont/MenuTab.vala:238 libbirdfont/SaveDialog.vala:82
 msgid "Save"
-msgstr ""
+msgstr "Speichern"
 
 #: libbirdfont/MergeTool.vala:23
 msgid "Merge paths"
-msgstr ""
+msgstr "Pfade verbinden"
 
 #: libbirdfont/MoveTool.vala:36
 msgid "Move paths"
-msgstr ""
+msgstr "Pfade verschieben"
 
 #: libbirdfont/PenTool.vala:48
 msgid "Right click to add new points, left click to move points"
 msgstr ""
+"Rechtsklick zum Hinzufügen von neuen Punkten, Linksklick zum Verschieben von "
+"Punkten"
 
 #: libbirdfont/PenTool.vala:48
 msgid "and double click to add new point on path."
@@ -200,15 +202,15 @@ msgstr ""
 
 #: libbirdfont/Toolbox.vala:93
 msgid "and double click to add new point on path"
-msgstr ""
+msgstr "und Doppelklick zum Hinzufügen eines neuen Punktes zum Pfad"
 
 #: libbirdfont/Toolbox.vala:100
 msgid "Add new point on path"
-msgstr ""
+msgstr "Neuen Punkt zum Pfad hinzufügen"
 
 #: libbirdfont/Toolbox.vala:108
 msgid "Begin new line from point on path"
-msgstr ""
+msgstr "Neue Linie von diesem Punkt auf dem Pfad erstellen"
 
 #: libbirdfont/Toolbox.vala:116
 msgid "Tie curve handles for selected edit point"
@@ -220,19 +222,19 @@ msgstr ""
 
 #: libbirdfont/Toolbox.vala:143
 msgid "Delete edit points"
-msgstr ""
+msgstr "Lösche Bearbeitungspunkte"
 
 #: libbirdfont/Toolbox.vala:152
 msgid "Set precision"
-msgstr ""
+msgstr "Präzision festlegen"
 
 #: libbirdfont/Toolbox.vala:180
 msgid "Create counter from outline"
-msgstr ""
+msgstr "Counter aus Außenlinie erstellen"
 
 #: libbirdfont/Toolbox.vala:192
 msgid "Move to path to the bottom layer"
-msgstr ""
+msgstr "Pfad auf die unterste Ebene verschieben"
 
 #: libbirdfont/Toolbox.vala:204
 msgid "Show full unicode characters set"
@@ -256,197 +258,198 @@ msgstr "Zeige Hilfelinien für x-Höhe und Grundlinie"
 
 #: libbirdfont/Toolbox.vala:316
 msgid "Show help lines at top and bottom margin"
-msgstr ""
+msgstr "Zeige Hilfslinien beim oberen und unteren Außenabstand"
 
 #: libbirdfont/Toolbox.vala:334
 msgid "Zoom in"
-msgstr ""
+msgstr "Vergrößern"
 
 #: libbirdfont/Toolbox.vala:341
 msgid "Zoom out"
-msgstr ""
+msgstr "Verkleinern"
 
 #: libbirdfont/Toolbox.vala:348
 msgid "Zoom to scale 1:1"
-msgstr ""
+msgstr "Originalgröße (100%) anzeigen"
 
 #: libbirdfont/Toolbox.vala:356
 msgid "Show full glyph"
-msgstr ""
+msgstr "Gesamten Glyph anzeigen"
 
 #: libbirdfont/Toolbox.vala:363
 msgid "Zoom in at region boundries"
 msgstr ""
 
 #: libbirdfont/Toolbox.vala:370
+#, fuzzy
 msgid "Zoom in background image"
-msgstr ""
+msgstr "Hintergrundbild beschneiden"
 
 #: libbirdfont/Toolbox.vala:383
 msgid "Previous view"
-msgstr ""
+msgstr "Vorherige Ansicht"
 
 #: libbirdfont/Toolbox.vala:389
 msgid "Next view"
-msgstr ""
+msgstr "Nächste Ansicht"
 
 #: libbirdfont/Toolbox.vala:396
 msgid "Set size for background image"
-msgstr ""
+msgstr "Größe des Hintergrundbildes festlegen"
 
 #: libbirdfont/Toolbox.vala:426
 msgid "Show/hide background image"
-msgstr ""
+msgstr "Zeige/verstecke Hintergrundbild"
 
 #: libbirdfont/Toolbox.vala:434
 msgid "Insert a new background image"
-msgstr ""
+msgstr "Neues Hintergrundbild einfügen"
 
 #: libbirdfont/Toolbox.vala:439
 msgid "Creating thumbnails"
-msgstr ""
+msgstr "Neue Vorschau erstellen"
 
 #: libbirdfont/Toolbox.vala:458
 msgid "Set contrast for background image"
-msgstr ""
+msgstr "Kontrast für Hintergrundbild festlegen"
 
-#: libbirdfont/Toolbox.vala:658
+#: libbirdfont/Toolbox.vala:657
 msgid "Set size for grid"
-msgstr ""
+msgstr "Größe für Raster festlegen"
 
 #: libbirdfont/VersionList.vala:33
 msgid "New version"
-msgstr ""
+msgstr "Neue Version"
 
 #: libbirdfont/VersionList.vala:91
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
-#: birdfont/GtkWindow.vala:243
+#: birdfont/GtkWindow.vala:308
 msgid "_New"
 msgstr "_Neu"
 
-#: birdfont/GtkWindow.vala:248
+#: birdfont/GtkWindow.vala:313
 msgid "_Open"
 msgstr "_Öffnen"
 
-#: birdfont/GtkWindow.vala:253
+#: birdfont/GtkWindow.vala:318
 msgid "_Save"
 msgstr "_Speichern"
 
-#: birdfont/GtkWindow.vala:258
+#: birdfont/GtkWindow.vala:323
 msgid "Save _as"
 msgstr "Speichern _unter"
 
-#: birdfont/GtkWindow.vala:262
+#: birdfont/GtkWindow.vala:327
 msgid "_Export"
 msgstr "_Exportieren"
 
-#: birdfont/GtkWindow.vala:267
+#: birdfont/GtkWindow.vala:332
 msgid "_Preview"
 msgstr "_Vorschau"
 
-#: birdfont/GtkWindow.vala:272
+#: birdfont/GtkWindow.vala:337
 msgid "_Kerning"
 msgstr "_Unterschneidung"
 
-#: birdfont/GtkWindow.vala:277
+#: birdfont/GtkWindow.vala:342
 msgid "_Quit"
 msgstr "_Beenden"
 
-#: birdfont/GtkWindow.vala:282
+#: birdfont/GtkWindow.vala:347
 msgid "_Undo"
 msgstr "_Rückgängig"
 
-#: birdfont/GtkWindow.vala:287
+#: birdfont/GtkWindow.vala:352
 msgid "_Copy"
 msgstr "_Kopieren"
 
-#: birdfont/GtkWindow.vala:292
+#: birdfont/GtkWindow.vala:357
 msgid "_Paste"
 msgstr "_Einfügen"
 
-#: birdfont/GtkWindow.vala:297
+#: birdfont/GtkWindow.vala:362
 msgid "_Export glyph as SVG"
-msgstr ""
+msgstr "Glyph als SVG exportieren"
 
-#: birdfont/GtkWindow.vala:301
+#: birdfont/GtkWindow.vala:366
 msgid "_Import SVG"
-msgstr ""
+msgstr "SVG importieren"
 
-#: birdfont/GtkWindow.vala:306
+#: birdfont/GtkWindow.vala:371
 msgid "_Next tab"
 msgstr "_Nächster Reiter"
 
-#: birdfont/GtkWindow.vala:319
+#: birdfont/GtkWindow.vala:384
 msgid "_Previous tab"
 msgstr "_Vorheriger Reiter"
 
-#: birdfont/GtkWindow.vala:332
+#: birdfont/GtkWindow.vala:397
 msgid "_Close tab"
 msgstr "_Reiter schließen"
 
-#: birdfont/GtkWindow.vala:347
+#: birdfont/GtkWindow.vala:412
 msgid "_Create path"
 msgstr "_Pfad erstellen"
 
-#: birdfont/GtkWindow.vala:354
+#: birdfont/GtkWindow.vala:419
 msgid "_Zoom"
 msgstr "_Zoom"
 
-#: birdfont/GtkWindow.vala:360
+#: birdfont/GtkWindow.vala:425
 msgid "_Create counter path"
 msgstr "_Gegenpfad erzeugen"
 
-#: birdfont/GtkWindow.vala:367
+#: birdfont/GtkWindow.vala:432
 msgid "_Move"
 msgstr "_Verschieben"
 
-#: birdfont/GtkWindow.vala:374
+#: birdfont/GtkWindow.vala:439
 msgid "Show _full unicode characters set"
 msgstr "Zeige _alle Unicode-Zeichen"
 
-#: birdfont/GtkWindow.vala:381
+#: birdfont/GtkWindow.vala:446
 msgid "Show de_fault characters set"
 msgstr "Zeige Standardzeichen"
 
-#: birdfont/GtkWindow.vala:388
+#: birdfont/GtkWindow.vala:453
 msgid "Show characters in font"
 msgstr "Zeige in Schriftart enthaltene Zeichen"
 
-#: birdfont/GtkWindow.vala:395
+#: birdfont/GtkWindow.vala:460
 msgid "Add new _grid item"
 msgstr "Neues _Gitterelement hinzufügen"
 
-#: birdfont/GtkWindow.vala:401
+#: birdfont/GtkWindow.vala:466
 msgid "Remove gr_id item"
 msgstr "Gitterelement _entfernen"
 
-#: birdfont/GtkWindow.vala:407
+#: birdfont/GtkWindow.vala:472
 msgid "_Zoom in"
 msgstr "_Vergrößern"
 
-#: birdfont/GtkWindow.vala:414
+#: birdfont/GtkWindow.vala:479
 msgid "Zoom _out"
 msgstr "_Verkleinern"
 
-#: birdfont/GtkWindow.vala:421
+#: birdfont/GtkWindow.vala:486
 msgid "Zoom to _scale 1:1"
 msgstr "Zoom auf Originalgröße setzen"
 
-#: birdfont/GtkWindow.vala:429
+#: birdfont/GtkWindow.vala:494
 msgid "_File"
 msgstr "_Datei"
 
-#: birdfont/GtkWindow.vala:432
+#: birdfont/GtkWindow.vala:497
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: birdfont/GtkWindow.vala:435
+#: birdfont/GtkWindow.vala:500
 msgid "_Tab"
 msgstr "_Reiter"
 
-#: birdfont/GtkWindow.vala:438
+#: birdfont/GtkWindow.vala:503
 msgid "T_ool"
 msgstr "Werkzeug"
 
