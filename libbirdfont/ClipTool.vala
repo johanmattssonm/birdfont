@@ -54,9 +54,11 @@ public class ClipTool : Tool {
 			
 			native_window = MainWindow.get_singleton ().native_window;
 			
-			// several clipboards does not work
-			//svg = ExportTool.export_current_glyph_to_string ();
-			//native_window.set_clipboard (svg);
+			// several clipboards does not work on windows
+			if (!Supplement.win32) {
+				svg = ExportTool.export_current_glyph_to_string ();
+				native_window.set_clipboard (svg);
+			}
 			
 			inkscape_svg = ExportTool.export_current_glyph_to_inkscape_clipboard ();
 			native_window.set_inkscape_clipboard (inkscape_svg);
