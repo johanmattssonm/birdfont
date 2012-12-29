@@ -64,7 +64,12 @@ public class Path {
 	public static double line_color_g = 0;
 	public static double line_color_b = 0;
 	public static double line_color_a = 1;
-	
+
+	public static double handle_color_r = 0;
+	public static double handle_color_g = 0;
+	public static double handle_color_b = 0;
+	public static double handle_color_a = 1;
+		
 	public static double stroke_width = 1;
 	
 	public Path () {
@@ -86,6 +91,11 @@ public class Path {
 				line_color_g = double.parse (Preferences.get ("line_color_g"));
 				line_color_b = double.parse (Preferences.get ("line_color_b"));
 				line_color_a = double.parse (Preferences.get ("line_color_a"));
+
+				handle_color_r = double.parse (Preferences.get ("handle_color_r"));
+				handle_color_g = double.parse (Preferences.get ("handle_color_g"));
+				handle_color_b = double.parse (Preferences.get ("handle_color_b"));
+				handle_color_a = double.parse (Preferences.get ("handle_color_a"));
 			}
 		}
 	}
@@ -260,7 +270,7 @@ public class Path {
 
 		get_line_points (e, en, out ax, out ay, out bx, out by);
 	
-		cr.set_source_rgba (line_color_r, line_color_g, line_color_b, line_color_a);
+		cr.set_source_rgba (handle_color_r, handle_color_g, handle_color_b, handle_color_a);
 		cr.set_line_width (1.7 * (stroke_width / g.view_zoom));
 
 		cr.line_to (ax, ay);

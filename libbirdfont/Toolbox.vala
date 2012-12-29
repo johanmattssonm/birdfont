@@ -490,12 +490,10 @@ public class Toolbox : GLib.Object  {
 			Glyph g = MainWindow.get_current_glyph ();
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 		});
-		
 		stroke_color.set_r (double.parse (Preferences.get ("line_color_r")));
 		stroke_color.set_g (double.parse (Preferences.get ("line_color_g")));
 		stroke_color.set_b (double.parse (Preferences.get ("line_color_b")));
 		stroke_color.set_a (double.parse (Preferences.get ("line_color_a")));
-		
 		style_tools.add_tool (stroke_color);
 		
 		SpinButton stroke_width;
@@ -516,6 +514,27 @@ public class Toolbox : GLib.Object  {
 		});
 		style_tools.add_tool (stroke_width);
 
+		ColorTool handle_color = new ColorTool (_("Handle color"));
+		handle_color.color_updated.connect (() => {
+			Path.handle_color_r = handle_color.color_r;
+			Path.handle_color_g = handle_color.color_g;
+			Path.handle_color_b = handle_color.color_b;
+			Path.handle_color_a = handle_color.color_a;
+
+			Preferences.set ("handle_color_r", @"$(Path.line_color_r)");
+			Preferences.set ("handle_color_g", @"$(Path.line_color_g)");
+			Preferences.set ("handle_color_b", @"$(Path.line_color_b)");
+			Preferences.set ("handle_color_a", @"$(Path.line_color_a)");
+
+			Glyph g = MainWindow.get_current_glyph ();
+			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+		});
+		handle_color.set_r (double.parse (Preferences.get ("handle_color_r")));
+		handle_color.set_g (double.parse (Preferences.get ("handle_color_g")));
+		handle_color.set_b (double.parse (Preferences.get ("handle_color_b")));
+		handle_color.set_a (double.parse (Preferences.get ("handle_color_a")));
+		style_tools.add_tool (handle_color);
+		
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
 		path_tool_modifiers.set_open (true);
