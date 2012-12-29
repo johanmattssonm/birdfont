@@ -405,7 +405,6 @@ class PenTool : Tool {
 
 		if (distance < CONTACT_SURFACE) {
 			set_active_edit_point (ep);
-			g.add_active_path (p);
 		}
 	}
 
