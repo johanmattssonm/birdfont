@@ -29,7 +29,7 @@ public class ColorTool : Tool {
 	public signal void color_updated ();
 	
 	public ColorTool (string tool_tip) {
-		base ("color_selection", tool_tip);
+		base (null, tool_tip);
 
 		select_action.connect((self) => {
 			MainWindow.native_window.color_selection (this);

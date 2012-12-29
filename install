@@ -19,6 +19,10 @@ if not os.path.exists ("build/configured"):
 	print ("Project is not configured")
 	exit (1)
 
+if not os.path.exists ("build/installed"):
+        print ("Project is not built")
+        exit (1)
+
 parser = OptionParser()
 parser.add_option ("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
 parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")

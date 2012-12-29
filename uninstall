@@ -9,7 +9,7 @@ if not os.path.exists ("build/configured"):
 if not os.path.exists ("build/installed"):
 	print ("Project is not installed")
 	exit (1)
-		
+
 f = open('build/installed')
 for file in iter(f):
 	print ('Removing ' + file.replace ('\n', ''))

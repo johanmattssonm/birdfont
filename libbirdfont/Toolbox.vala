@@ -521,10 +521,10 @@ public class Toolbox : GLib.Object  {
 			Path.handle_color_b = handle_color.color_b;
 			Path.handle_color_a = handle_color.color_a;
 
-			Preferences.set ("handle_color_r", @"$(Path.line_color_r)");
-			Preferences.set ("handle_color_g", @"$(Path.line_color_g)");
-			Preferences.set ("handle_color_b", @"$(Path.line_color_b)");
-			Preferences.set ("handle_color_a", @"$(Path.line_color_a)");
+			Preferences.set ("handle_color_r", @"$(Path.handle_color_r)");
+			Preferences.set ("handle_color_g", @"$(Path.handle_color_g)");
+			Preferences.set ("handle_color_b", @"$(Path.handle_color_b)");
+			Preferences.set ("handle_color_a", @"$(Path.handle_color_a)");
 
 			Glyph g = MainWindow.get_current_glyph ();
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
