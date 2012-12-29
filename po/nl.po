@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-26 23:31+0100\n"
-"PO-Revision-Date: 2012-12-17 13:54+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"POT-Creation-Date: 2012-12-29 14:23+0100\n"
+"PO-Revision-Date: 2012-12-27 13:24+0000\n"
+"Last-Translator: Sven <sven@santegoeds.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1355752451.0\n"
+"X-POOTLE-MTIME: 1356614699.0\n"
 
 #: libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -370,11 +370,11 @@ msgstr "_Plakken"
 
 #: birdfont/GtkWindow.vala:362
 msgid "_Export glyph as SVG"
-msgstr ""
+msgstr "_Glief als SVG exporteren"
 
 #: birdfont/GtkWindow.vala:366
 msgid "_Import SVG"
-msgstr ""
+msgstr "_SVG importeren"
 
 #: birdfont/GtkWindow.vala:371
 msgid "_Next tab"
