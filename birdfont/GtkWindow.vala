@@ -235,6 +235,29 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		show_all ();
 	}
 	
+	public void color_selection (ColorTool color_tool) {
+		ColorWindow c = new ColorWindow (color_tool);
+	}
+	
+	class ColorWindow : Gtk.Window {
+		ColorSelection color_selection = new ColorSelection ();
+
+		public ColorWindow (ColorTool color_tool) {			
+			color_selection.color_changed.connect (() => {
+				Color c;
+				color_selection.get_current_color (out c);
+				color_tool.color_r = (double) c.red / uint16.MAX;
+				color_tool.color_g = (double) c.green / uint16.MAX;
+				color_tool.color_b = (double) c.blue / uint16.MAX;
+				color_tool.color_a = (double) color_selection.get_current_alpha () / uint16.MAX; 
+				color_tool.color_updated ();
+			});
+			
+			add (color_selection);
+			show_all ();
+		}	
+	}
+	
 	public string get_clipboard () {
 		SelectionData selection_data;
 		Atom target;

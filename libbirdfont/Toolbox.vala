@@ -68,6 +68,7 @@ public class Toolbox : GLib.Object  {
 		Expander view_tools = new Expander ();
 		Expander grid = new Expander ();
 		Expander background_tools = new Expander ();
+		Expander style_tools = new Expander ();
 		
 		grid_expander = grid;
 
@@ -172,7 +173,7 @@ public class Toolbox : GLib.Object  {
 		precision.set_max (1);
 		
 		draw_tool_modifiers.add_tool (precision);
-				
+		
 		// path tools
 		Tool union_paths_tool = new MergeTool ("union_paths");
 		path_tool_modifiers.add_tool (union_paths_tool);
@@ -243,7 +244,7 @@ public class Toolbox : GLib.Object  {
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		});
 		characterset_tools.add_tool (delete_glyph);
-						
+
 		if (Supplement.has_argument ("--test")) {
 			Tool test_case = new Tool ("test_case");
 			test_case.select_action.connect((self) => {
@@ -472,9 +473,49 @@ public class Toolbox : GLib.Object  {
 				b.set_contrast (background_contrast.get_value ());
 			}
 		});
+
+		// color and style
+		ColorTool stroke_color = new ColorTool (_("Stroke color"));
+		stroke_color.color_updated.connect (() => {
+			Path.line_color_r = stroke_color.color_r;
+			Path.line_color_g = stroke_color.color_g;
+			Path.line_color_b = stroke_color.color_b;
+			Path.line_color_a = stroke_color.color_a;
+
+			Preferences.set ("line_color_r", @"$(Path.line_color_r)");
+			Preferences.set ("line_color_g", @"$(Path.line_color_g)");
+			Preferences.set ("line_color_b", @"$(Path.line_color_b)");
+			Preferences.set ("line_color_a", @"$(Path.line_color_a)");
+
+			Glyph g = MainWindow.get_current_glyph ();
+			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+		});
 		
-		// Fixa: background_tools.add_tool (background_contrast);
+		stroke_color.set_r (double.parse (Preferences.get ("line_color_r")));
+		stroke_color.set_g (double.parse (Preferences.get ("line_color_g")));
+		stroke_color.set_b (double.parse (Preferences.get ("line_color_b")));
+		stroke_color.set_a (double.parse (Preferences.get ("line_color_a")));
 		
+		style_tools.add_tool (stroke_color);
+		
+		SpinButton stroke_width;
+		stroke_width = new SpinButton ("stroke_width", _("Stroke width"));
+		
+		if (Preferences.get ("stroke_width") == "") {
+			stroke_width.set_value_round (1);
+		} else {
+			stroke_width.set_value (Preferences.get ("stroke_width"));
+		}
+		
+		stroke_width.new_value_action.connect((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			Path.stroke_width = stroke_width.get_value ();
+			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+			Preferences.set ("stroke_width", @"$(Path.stroke_width)");
+			redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
+		});
+		style_tools.add_tool (stroke_width);
+
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
 		path_tool_modifiers.set_open (true);
@@ -484,6 +525,7 @@ public class Toolbox : GLib.Object  {
 		test_tools.set_open (true);
 		guideline_tools.set_open (true);
 		background_tools.set_open (true);
+		style_tools.set_open (true);
 		
 		add_expander (draw_tools);
 		add_expander (draw_tool_modifiers);
@@ -494,6 +536,7 @@ public class Toolbox : GLib.Object  {
 		add_expander (grid);
 		add_expander (view_tools);
 		add_expander (background_tools);
+		add_expander (style_tools);
 		
 		// Fixa: add_expander (trace);
 		

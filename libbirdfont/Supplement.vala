@@ -59,6 +59,9 @@ public class Supplement {
 			Process.exit (0);
 		}
 
+		Preferences preferences = new Preferences ();
+		preferences.load ();
+		
 		current_font = new Font ();
 		current_glyph = new Glyph ("");
 
@@ -80,10 +83,7 @@ public class Supplement {
 		} else {
 			exec_path = "./";
 		}
-		
-		Preferences preferences = new Preferences ();
-		preferences.load ();
-		
+
 		if (args.get_file () != "") {
 			font_file = File.new_for_path (args.get_file ());
 			

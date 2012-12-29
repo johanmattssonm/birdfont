@@ -30,6 +30,8 @@ public interface NativeWindow : GLib.Object {
 	public abstract void set_clipboard (string data);
 	public abstract void set_inkscape_clipboard (string data);
 
+	public abstract void color_selection (ColorTool color_tool);
+
 	protected void webkit_callback (string s) {
 		FontDisplay fd = MainWindow.get_current_display ();
 		fd.process_property (s);

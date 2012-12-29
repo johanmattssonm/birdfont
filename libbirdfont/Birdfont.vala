@@ -94,10 +94,10 @@ public static int run_export (string[] arg) {
 		LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
 		Log.set_handler (null, levels, supplement.fatal_warning);		
 	}
-
+	
 	Preferences preferences = new Preferences ();
 	preferences.load ();
-		
+			
 	supplement.args = new Argument ("");
 	supplement.current_font = new Font ();
 	supplement.current_glyph = new Glyph ("");

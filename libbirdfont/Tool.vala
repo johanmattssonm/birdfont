@@ -140,7 +140,7 @@ public class Tool : GLib.Object {
 	}
 
 	public bool is_selected () {
-			return selected;
+		return selected;
 	}
 		
 	public virtual void set_properties (double tx, double ty, double tw, double th) {

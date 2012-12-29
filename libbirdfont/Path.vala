@@ -60,7 +60,16 @@ public class Path {
 	
 	Path quadratic_path; // quadratic points for TrueType export
 	
+	public static double line_color_r = 0;
+	public static double line_color_g = 0;
+	public static double line_color_b = 0;
+	public static double line_color_a = 1;
+	
+	public static double stroke_width = 1;
+	
 	public Path () {
+		string width;
+		
 		if (edit_point_image == null) {
 			edit_point_image = Icons.get_icon ("edit_point.png");
 			active_edit_point_image = Icons.get_icon ("active_edit_point.png");
@@ -68,6 +77,16 @@ public class Path {
 			active_edit_point_handle_image = Icons.get_icon ("active_edit_point_handle.png");
 			selected_edit_point_image  = Icons.get_icon ("selected_edit_point.png");
 			active_selected_edit_point_image = Icons.get_icon ("active_selected_edit_point.png");
+		
+			width = Preferences.get ("stroke_width");
+			if (width != "") {
+				stroke_width = double.parse (width);
+
+				line_color_r = double.parse (Preferences.get ("line_color_r"));
+				line_color_g = double.parse (Preferences.get ("line_color_g"));
+				line_color_b = double.parse (Preferences.get ("line_color_b"));
+				line_color_a = double.parse (Preferences.get ("line_color_a"));
+			}
 		}
 	}
 
@@ -178,8 +197,8 @@ public class Path {
 		
 		get_bezier_points (e, en, out xa, out ya, out xb, out yb, out xc, out yc, out xd, out yd);
 
-		cr.set_source_rgba (0, 0, 0, alpha);
-		cr.set_line_width (1 / g.view_zoom);
+		cr.set_source_rgba (line_color_r, line_color_g, line_color_b, line_color_a);
+		cr.set_line_width (stroke_width / g.view_zoom);
 		
 		cr.line_to (xa, ya); // this point makes sense only if it is the first or last position, the other points are meaning less don't export them
 
@@ -241,8 +260,8 @@ public class Path {
 
 		get_line_points (e, en, out ax, out ay, out bx, out by);
 	
-		cr.set_source_rgba (0/255.0, 0/255.0, 0/255.0, 1);
-		cr.set_line_width (1.7 * (1/g.view_zoom));
+		cr.set_source_rgba (line_color_r, line_color_g, line_color_b, line_color_a);
+		cr.set_line_width (1.7 * (stroke_width / g.view_zoom));
 
 		cr.line_to (ax, ay);
 		cr.line_to (bx, by);
@@ -294,22 +313,24 @@ public class Path {
 	
 	public static void draw_img_center (Context cr, ImageSurface img, double x, double y) {
 		Glyph g = MainWindow.get_current_glyph ();
+		double r = 1.0 / 10.0;
+		
+		double width = Math.sqrt (stroke_width);
 		
 		double ivz = 1 / g.view_zoom;
+		double ivs = 1 / width;
 
 		double xc = g.allocation.width / 2.0;
 		double yc = g.allocation.height / 2.0;
 
 		cr.save ();
-
-		cr.scale (ivz, ivz);
+		cr.scale (ivz * width * r, ivz * width * r);
 		
-		x = xc + x - (img.get_width () / 2.0) * ivz; 
-		y = yc - y - (img.get_height () / 2.0) * ivz;
+		x = xc + x - (width * r * img.get_width () / 2.0) * ivz; 
+		y = yc - y - (width * r * img.get_height () / 2.0) * ivz;
 		
-		cr.set_source_surface (img, x * g.view_zoom, y * g.view_zoom);
+		cr.set_source_surface (img, x * g.view_zoom * ivs * 1/r, y * g.view_zoom * ivs * 1/r);
 		cr.paint ();
-		
 		cr.restore ();		
 	}
 	
