@@ -212,9 +212,9 @@ c.append ("""
 			select_overview ();
 		});
 		
-		MainWindow.get_tab_bar ().add_unique_tab (save, 80);
-		
-		if (!font.is_modified ()) {
+		if (font.is_modified ()) {
+			MainWindow.get_tab_bar ().add_unique_tab (save, 80);
+		} else {
 			save.finished ();
 		}
 	}
@@ -305,10 +305,17 @@ c.append ("""
 	
 	public static void load () {
 		SaveDialog save = new SaveDialog ();
+		Font font = Supplement.get_current_font ();
+
 		save.finished.connect (() => {
 			load_new_font ();
 		});
-		MainWindow.get_tab_bar ().add_unique_tab (save, 80);
+
+		if (font.is_modified ()) {
+			MainWindow.get_tab_bar ().add_unique_tab (save, 80);
+		} else {
+			save.finished ();
+		}
 	}
 
 	private static void load_new_font () {
