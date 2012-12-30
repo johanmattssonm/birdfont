@@ -127,11 +127,16 @@ class MoveTool : Tool {
 		key_press_action.connect ((self, keyval) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			
+			// delete selected paths
 			if (keyval == Key.DEL) {
 				foreach (Path p in g.active_paths) {
 					g.path_list.remove (p);
 					g.update_view ();
 				}
+			}
+			
+			while (g.active_paths.length () > 0) {
+				g.active_paths.remove_link (g.active_paths.first ());
 			}
 		});
 		
