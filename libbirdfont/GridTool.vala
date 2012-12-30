@@ -214,7 +214,7 @@ class GridTool : Tool {
 		
 		pp = ep.get_prev ().data;
 		
-		ep.to_coordinate (ref tx, ref ty);
+		EditPoint.to_coordinate (ref tx, ref ty);
 		
 		a = fabs (tx - pp.x);
 		b = fabs (ty - pp.y);

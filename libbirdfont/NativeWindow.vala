@@ -26,7 +26,7 @@ public interface NativeWindow : GLib.Object {
 	
 	public abstract void update_window_size ();
 
-	public abstract string get_clipboard ();
+	public abstract string get_clipboard_data ();
 	public abstract void set_clipboard (string data);
 	public abstract void set_inkscape_clipboard (string data);
 

@@ -35,7 +35,7 @@ public class Preview : FontDisplay {
 	public override void selected_canvas () {
 	}
 
-	public File get_html_file () {
+	public new File get_html_file () {
 		Font font = Supplement.get_current_font ();
 		string path = @"$(font.get_name ()).html";
 		File dir = font.get_folder ();

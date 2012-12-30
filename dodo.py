@@ -56,24 +56,30 @@ def task_pkg_flags():
             }
 
 
-
+valac_options = [
+	'--enable-experimental-non-null',
+	'--thread',
+	'--enable-deprecated',
+	'--enable-experimental'
+	]		
 libbird = Vala(src='libbirdfont', build='build', library='birdfont', pkg_libs=LIBS)
 def task_libbirdfont():
-    yield libbird.gen_c(['--enable-experimental-non-null', '--thread'])
+
+    yield libbird.gen_c(valac_options)
     yield libbird.gen_o(['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
     yield libbird.gen_so()
 
 
 def task_birdfont ():
     bird = Vala(src='birdfont', build='build', pkg_libs=LIBS, vala_deps=[libbird])
-    yield bird.gen_c([])
+    yield bird.gen_c(valac_options)
     yield bird.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
 
 def task_birdfont_export ():
      exp = Vala(src='birdfont-export', build='build', pkg_libs=LIBS,
                 vala_deps=[libbird])
-     yield exp.gen_c([])
+     yield exp.gen_c(valac_options)
      yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
 

@@ -47,14 +47,14 @@ class OpenFontFormatWriter : Object  {
 		os = new DataOutputStream(file.create (FileCreateFlags.REPLACE_DESTINATION));
 	}
 	
-	public void write_ttf_font (Font font) throws Error {
+	public void write_ttf_font (Font nfont) throws Error {
 		long dl;
 		uint8* data;
 		unowned List<Table> tables;
 		FontData fd;
 		uint l;
 		
-		this.font = font;
+		font = nfont;
 				
 		directory_table.process ();	
 		tables = directory_table.get_tables ();
@@ -150,14 +150,6 @@ class FontData : Object {
 		}
 		
 		table_data[pos]= new_data;
-	}
-	
-	public void write_table_data (FontData fd, uint32 offset, uint32 length) {
-		fd.seek (offset);
-		for (uint32 i = 0; i < length; i++) {
-			add (table_data [rp++]);
-		}
-		fd.seek (0);
 	}
 	
 	public void write_table (OtfInputStream dis, uint32 offset, uint32 length) throws Error {
@@ -311,19 +303,7 @@ class FontData : Object {
 		return (char) read_byte ();
 	}
 	
-	public void add_udate (int64 d) throws Error {
-		add_64 (d);
-	}
-	
 	public void add_fixed (Fixed f) throws Error {
-		add_u32 (f);
-	}
-
-	public void add_fword (int16 word) {
-		add_16 (word);
-	}
-
-	public void add_f2dot14 (F2Dot14 f) throws Error {
 		add_u32 (f);
 	}
 
@@ -397,20 +377,6 @@ class FontData : Object {
 		
 		add_u16 ((uint16) s);
 		add_u16 ((uint16) (i - (s << 16)));
-	}
-
-	public void add_32 (int32 i) {
-		int32 s = (int16) (i >> 16);
-		
-		add_16 ((int16) s);
-		add_16 ((int16) (i - (s << 16)));
-	}
-	
-	public void add_u64(uint64 i) {
-		uint64 s = (uint32) (i >> 32);
-		
-		add_u32 ((uint32) s);
-		add_u32 ((uint32)(i - (s << 32)));		
 	}
 
 	public void add_64(int64 i) {
@@ -857,8 +823,7 @@ class GlyfTable : Table {
 		double xmin, xmax;
 		double units_per_em = head_table.get_units_per_em ();
 		unichar character = 0;
-		string name;	
-		uint32 end;
+		string name;
 		
 		character = cmap_table.get_char (index);
 		name = post_table.get_name (index);
@@ -905,7 +870,7 @@ class GlyfTable : Table {
 		uint16 glyph_index;
 		int16 arg1 = 0;
 		int16 arg2 = 0;
-		uint16 arg1and2;
+
 		F2Dot14 scale;
 		
 		F2Dot14 scalex;
@@ -989,7 +954,6 @@ class GlyfTable : Table {
 	}
 	
 	Glyph parse_next_glyf (FontData dis, unichar character, int gid, out double xmin, out double xmax, double units_per_em) throws Error {
-
 		uint16* end_points = null;
 		uint8* instructions = null;
 		uint8* flags = null;
@@ -1018,6 +982,9 @@ class GlyfTable : Table {
 		
 		StringBuilder name = new StringBuilder ();
 		name.append_unichar (character);
+
+		xmin = 0;
+		xmax = 0;
 
 		start = loca_table.get_offset (gid);
 		end = loca_table.get_offset (gid + 1);
@@ -1841,16 +1808,6 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		// assert (validate_subtable ());
 	}
 	
-	void print_range (unichar start_char, unichar end_char, uint16 delta_offset, uint16 range_offset) {
-		StringBuilder s = new StringBuilder ();
-		StringBuilder e = new StringBuilder ();
-		
-		s.append_unichar (start_char);
-		e.append_unichar (end_char);
-		
-		print (@"New range $(s.str) - $(e.str) delta: $delta_offset, range: $range_offset\n");
-	}
-	
 	public void process (FontData fd, GlyfTable glyf_table) throws GLib.Error {
 		GlyphRange glyph_range = new GlyphRange ();
 		unowned List<UniRange> ranges;
@@ -1996,10 +1953,6 @@ class CmapTable : Table {
 		glyf_table = gt;
 		subtables = new List<CmapSubtable> ();
 		id = "cmap";
-	}
-	
-	public uint32 get_length () {
-		return get_prefered_table ().get_length ();
 	}
 	
 	public unichar get_char (uint32 i) {

@@ -47,8 +47,6 @@ public class Path {
 
 	public delegate bool RasterIterator (double x, double y, double step); // iterate over each pixel at a given zoom level
 	
-	bool selected = false;
-	
 	private static ImageSurface? edit_point_image = null;
 	private static ImageSurface? active_edit_point_image = null;
 	
@@ -353,20 +351,6 @@ public class Path {
 		}
 		return false;
 	}
-
-	private EditPoint? get_edit_point_at (double x, double y) {
-		foreach (var p in points) {
-			if (p.x == x && p.y == y) return p;
-		}
-				
-		return null;
-	}
-		
-	private void remove_all_edit_points () {
-		while (points.length () > 0) {
-			points.remove_link (points.first ());
-		}
-	}
 	
 	/** Replace edit points in this path with @param new_path.points. */
 	public void replace_path (Path new_path) {
@@ -379,24 +363,6 @@ public class Path {
 		}
 		
 		close ();
-	}
-	
-	/** Returns true if this path can be merged with @param union */ 
-	private bool is_valid_union (Path union) {
-		if (union == this) {
-			warning ("Path can't union with it self.");
-			return false;
-		}
-		
-		if (union.points.length () <= 2 || points.length () <= 2) {
-			return false;
-		}
-
-		if (!has_overlapping_boundry (union)) {
-			return false;
-		}
-
-		return true;
 	}
 	
 	/** Set direction for this path to clockwise for outline and 
@@ -456,48 +422,6 @@ public class Path {
 			string t = (p.type == PointType.END) ? " endpoint" : "";
 			stdout.printf (@"Point $i at ($(p.x), $(p.y)) $t \n");
 		}
-	}
-	
-	private bool validate_list () {
-		unowned List<EditPoint> ep = points.first ();
-		
-		if (points.length () < 3) {
-			warning ("points.length () < 3");
-		}
-		
-		if (!is_open ()) {
-			for (int i = 0; i < points.length (); i++) {
-				if (ep.data.next == null) {
-					return false;
-				}
-
-				if (ep.data.prev == null) {
-					return false;
-				}
-								
-				ep = (!) ep.data.next;
-			}
-		}
-
-		if (is_open ()) {
-			for (int i = 1; i < points.length () - 1; i++) {
-				if (ep.data.next == null) {
-					return false;
-				}
-
-				if (ep.data.prev == null) {
-					return false;
-				}
-								
-				ep = (!) ep.data.next;
-			}
-			
-			if (ep.data.next != null) {
-				return false;
-			}
-		}
-		
-		return true;
 	}
 	
 	private double clockwise_sum () {
@@ -682,21 +606,6 @@ public class Path {
 	
 	public static double distance (double ax, double bx, double ay, double by) {
 		return Math.fabs (Math.sqrt (Math.pow (ax - bx, 2) + Math.pow (ay - by, 2)));
-	}
-	
-	/** Estimate length of path. */
-	private double get_length () {
-		double len = 0;
-		
-		return_if_fail (points.length () > 2);
-		
-		EditPoint prev = points.last ().data;
-		foreach (EditPoint p in points) {
-			len += get_length_from (prev, p);
-			prev = p;
-		}
-		
-		return len;
 	}
 	
 	private static double get_length_from (EditPoint a, EditPoint b) {
@@ -1177,22 +1086,6 @@ public class Path {
 		}
 		
 		return false;
-	}
-
-	double distance_to_path (EditPoint start, EditPoint stop, double x, double y) {
-		double min = double.MAX;
-		
-		all_of (start, stop, (cx, cy, t) => {
-			double n = pow (x - cx, 2) + pow (y - cy, 2);
-			
-			if (n < min) {
-				min = n;
-			}
-			
-			return true;
-		});
-		
-		return min;
 	}
 
 	public void insert_new_point_on_path (EditPoint? epp) {

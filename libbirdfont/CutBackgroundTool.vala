@@ -164,8 +164,8 @@ class CutBackgroundTool : Tool {
 		ty *= g.view_zoom;
 		tx *= g.view_zoom;
 
-		vx = g.path_coordinate_x (tx) - g.path_coordinate_x (fmin (x1, x2));			
-		vy = g.path_coordinate_y (ty) - g.path_coordinate_y (fmin (y1, y2));
+		vx = Glyph.path_coordinate_x (tx) - Glyph.path_coordinate_x (fmin (x1, x2));			
+		vy = Glyph.path_coordinate_y (ty) - Glyph.path_coordinate_y (fmin (y1, y2));
 		
 		x = (int) (vx / bg.img_scale_x);
 		y = (int) (-vy / bg.img_scale_y);
@@ -236,8 +236,8 @@ class CutBackgroundTool : Tool {
 		wc = newbg.get_margin_width ();
 		hc = newbg.get_margin_height ();
 		
-		newbg.img_x = g.path_coordinate_x (fmin (x1, x2)) - wc - 0.5;
-		newbg.img_y = g.path_coordinate_y (fmin (y1, y2)) + hc + 0.5;
+		newbg.img_x = Glyph.path_coordinate_x (fmin (x1, x2)) - wc - 0.5;
+		newbg.img_y = Glyph.path_coordinate_y (fmin (y1, y2)) + hc + 0.5;
 
 		new_image (newbg);
 	}

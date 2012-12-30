@@ -115,10 +115,6 @@ class PenTool : Tool {
 		});
 	}
 	
-	public double get_precision () {
-		return precision;
-	}
-	
 	public void set_precision (double p) {
 		precision = p;
 		MainWindow.get_toolbox ().precision.set_value_round (p, false, false);
@@ -408,22 +404,12 @@ class PenTool : Tool {
 		}
 	}
 
-	public static bool insert_new_point_on_path_selected () {
-		Tool t = MainWindow.get_toolbox ().get_tool ("insert_point_on_path");
-		return t.is_selected ();
-	}
-
 	public static bool is_new_point_from_path_selected () {
 		if (!Supplement.experimental) {
 			return false;
 		}
 		
 		Tool t = MainWindow.get_toolbox ().get_tool ("new_point_on_path");
-		return t.is_selected ();
-	}
-
-	public static bool is_erase_selected () {
-		Tool t = MainWindow.get_toolbox ().get_tool ("erase_tool");
 		return t.is_selected ();
 	}
 	
@@ -445,14 +431,6 @@ class PenTool : Tool {
 		move_selected = true;
 	}
 
-	void set_linear_handles_for_last_point () {
-		Glyph glyph;
-		glyph = MainWindow.get_current_glyph ();
-		return_if_fail (glyph.active_paths.length () > 0);
-		return_if_fail (glyph.active_paths.last ().data.points.length () > 0);
-		glyph.active_paths.last ().data.points.last ().data.right_handle.parent.recalculate_linear_handles ();
-	}
-
 	public static void set_default_handle_positions () {
 		Glyph g = MainWindow.get_current_glyph ();
 		foreach (var p in g.path_list) {
@@ -472,7 +450,8 @@ class PenTool : Tool {
 	bool new_point_on_path_at (int x, int y) {
 		EditPoint ep;
 		Glyph glyph = MainWindow.get_current_glyph ();
-		
+		int px, py;
+						
 		if (is_new_point_from_path_selected ()) {
 			
 			if (glyph.new_point_on_path != null) {
@@ -480,10 +459,12 @@ class PenTool : Tool {
 				
 				begin_new_point_on_path = false;
 				
-				glyph.add_new_edit_point (glyph.reverse_path_coordinate_x (ep.x), glyph.reverse_path_coordinate_x (ep.y));
+				px = Glyph.reverse_path_coordinate_x (ep.x);
+				py = Glyph.reverse_path_coordinate_x (ep.y);
+				glyph.add_new_edit_point (px, py);
 				glyph.new_point_on_path = null;
 				
-				MainWindow.get_toolbox ().select_tool_by_name ("new_point");
+				Toolbox.select_tool_by_name ("new_point");
 
 				return false;
 			}
@@ -660,7 +641,7 @@ class PenTool : Tool {
 		// merge it
 		
 		
-		this.yield ();
+		Tool.yield ();
 		
 		return true;
 	}
@@ -714,11 +695,11 @@ class PenTool : Tool {
 		x = 10;
 		y = 15;
 		
-		px = g.path_coordinate_x (x);
-		py = g.path_coordinate_y (y);
+		px = Glyph.path_coordinate_x (x);
+		py = Glyph.path_coordinate_y (y);
 
-		mx = x * g.ivz () - g.xc () + g.view_offset_x;
-		my = g.yc () - y * g.ivz () - g.view_offset_y;
+		mx = x * Glyph.ivz () - Glyph.xc () + g.view_offset_x;
+		my = Glyph.yc () - y * Glyph.ivz () - g.view_offset_y;
 		
 		if (mx != px || my != py) {
 			warning (@"bad coordinate $mx != $px || $my != $py");
@@ -731,8 +712,8 @@ class PenTool : Tool {
 		n = "Offset no zoom";
 		g.reset_zoom ();
 		
-		px = g.path_coordinate_x (x);
-		py = g.path_coordinate_y (y);
+		px = Glyph.path_coordinate_x (x);
+		py = Glyph.path_coordinate_y (y);
 		
 		test_reverse_coordinate (x, y, px, py, n);
 		test_click_action (1, x, y);
@@ -741,25 +722,10 @@ class PenTool : Tool {
 		test_click_action (3, x, y);
 	}
 	
-	private void test_coordinate (double x, double y, double px, double py, string n) {
-		if (!(px - 0.5 <= x <= px + 0.5|| py - 0.5 <= y <= py + 0.5)) {
-			warning (@"Expecting (x == px || y == py) got ($x == $px || $y == $py) in \"$n\"\n");
-		}
-	}
-	
 	private void test_reverse_coordinate (int x, int y, double px, double py, string n) {
-		Glyph g = MainWindow.get_current_glyph ();
-		if (x != g.reverse_path_coordinate_x (px) || g.reverse_path_coordinate_y (py) != y) {
-			warning (@"Reverse coordinates does not match current point for test case \"$n\".\n $x != $(g.reverse_path_coordinate_x (px)) || $(g.reverse_path_coordinate_y (py)) != $y (x != g.reverse_path_coordinate_x (px) || g.reverse_path_coordinate_y (py) != y)");
+		if (x != Glyph.reverse_path_coordinate_x (px) || Glyph.reverse_path_coordinate_y (py) != y) {
+			warning (@"Reverse coordinates does not match current point for test case \"$n\".\n $x != $(Glyph.reverse_path_coordinate_x (px)) || $(Glyph.reverse_path_coordinate_y (py)) != $y (x != Glyph.reverse_path_coordinate_x (px) || Glyph.reverse_path_coordinate_y (py) != y)");
 		}
-	}
-
-	private void test_last_is_counter_clockwise (string name) {
-		bool d = ((!)MainWindow.get_current_glyph ().get_last_path ()).is_clockwise ();
-		
-		if (d) {
-			critical (@"\nPath $name is clockwise, in test_last_is_counter_clockwise");
-		}		
 	}
 	
 	private void test_last_is_clockwise (string name) {
@@ -786,7 +752,7 @@ class PenTool : Tool {
 			return false;
 		}
 
-		this.yield ();
+		Tool.yield ();
 		return true;
 	}
 	
@@ -809,10 +775,10 @@ class PenTool : Tool {
 	private void test_triangle (Point a, Point b, Point c, string name = "") {
 		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
 		
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_tab_bar ().select_overview ();
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_overview ().open_current_glyph ();
 		
 		pen_tool.test_select_action ();
@@ -826,7 +792,7 @@ class PenTool : Tool {
 		
 		test_reverse_last (@"Triangle reverse \"$name\" ($(a.x), $(a.y)), ($(b.x), $(b.y)), ($(c.x), $(c.y)) failed.");
 		
-		this.yield ();
+		Tool.yield ();
 	}
 	
 	private void test_various_triangles () {
@@ -840,10 +806,10 @@ class PenTool : Tool {
 		// open a new glyph
 		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_tab_bar ().select_overview ();
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_overview ().open_current_glyph ();
 		
 		pen_tool.test_select_action ();
@@ -961,7 +927,7 @@ class PenTool : Tool {
 		pen = select_pen ();
 
 		for (int i = 0; i < 30; i++) {
-			this.yield ();
+			Tool.yield ();
 			
 			ax = Random.int_range (0, 300);
 			bx = Random.int_range (0, 300);

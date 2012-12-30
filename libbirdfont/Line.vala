@@ -120,10 +120,10 @@ public class Line : GLib.Object {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		if (vertical) {
-			p = g.reverse_path_coordinate_x (pos);
+			p = Glyph.reverse_path_coordinate_x (pos);
 			queue_draw_area ((int)p - 10, 0, 200, g.allocation.height);
 		} else {
-			p = g.reverse_path_coordinate_y (pos);
+			p = Glyph.reverse_path_coordinate_y (pos);
 			queue_draw_area (0, (int)p - 10, g.allocation.width, 300);
 		}
 	}	

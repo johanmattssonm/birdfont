@@ -35,7 +35,6 @@ public static int run_export (string[] arg) {
 	bool specific_formats = false;	
 	bool write_ttf = false;
 	bool write_svg = false;
-	Supplement.Supplement supplement = new Supplement.Supplement ();
 	
 	File directory;
 		
@@ -46,7 +45,7 @@ public static int run_export (string[] arg) {
 	for (int i = 1; i < arg.length; i++) {
 
 		if (arg[i] == "-f" || arg[i] == "--fatal-warnings") {
-			supplement.fatal_wanings = true;
+			Supplement.Supplement.fatal_wanings = true;
 			return 0;
 		}
 
@@ -90,19 +89,19 @@ public static int run_export (string[] arg) {
 		}
 	}
 
-	if (supplement.fatal_wanings) {
+	if (Supplement.Supplement.fatal_wanings) {
 		LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
-		Log.set_handler (null, levels, supplement.fatal_warning);		
+		Log.set_handler (null, levels, Supplement.Supplement.fatal_warning);		
 	}
 	
 	Preferences preferences = new Preferences ();
-	preferences.load ();
+	Preferences.load ();
 			
-	supplement.args = new Argument ("");
-	supplement.current_font = new Font ();
-	supplement.current_glyph = new Glyph ("");
+	Supplement.Supplement.args = new Argument ("");
+	Supplement.Supplement.current_font = new Font ();
+	Supplement.Supplement.current_glyph = new Glyph ("");
 	
-	if (!supplement.get_current_font ().load (file_name, false)) {
+	if (!Supplement.Supplement.get_current_font ().load (file_name, false)) {
 		stderr.printf (@"Failed to load font $file_name.\n");
 		
 		if (!file_name.has_suffix (".ffi")) {
@@ -120,12 +119,12 @@ public static int run_export (string[] arg) {
 	}
 
 	if (!specific_formats || write_svg) {
-		print (_("Writing") + @" $(supplement.current_font.get_name ()).svg to $output_directory\n");
+		print (_("Writing") + @" $(Supplement.Supplement.current_font.get_name ()).svg to $output_directory\n");
 		ExportTool.export_svg_font_path (File.new_for_path (output_directory));
 	}
 
 	if (!specific_formats || write_ttf) {
-		print (_("Writing") + @" $(supplement.current_font.get_name ()).ttf to $output_directory\n");
+		print (_("Writing") + @" $(Supplement.Supplement.current_font.get_name ()).ttf to $output_directory\n");
 		ExportTool.export_ttf_font_path (File.new_for_path (output_directory), false);
 	}
 	

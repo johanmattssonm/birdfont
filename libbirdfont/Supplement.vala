@@ -37,7 +37,6 @@ public class Supplement {
 		int err_arg;
 		int i;
 		File font_file;
-		IdleSource idle;
 		string exec_path;
 
 		stdout.printf ("birdfont version %s\n", VERSION);
@@ -59,8 +58,7 @@ public class Supplement {
 			Process.exit (0);
 		}
 
-		Preferences preferences = new Preferences ();
-		preferences.load ();
+		Preferences.load ();
 		
 		current_font = new Font ();
 		current_glyph = new Glyph ("");
@@ -98,7 +96,7 @@ public class Supplement {
 			Log.set_handler (null, levels, fatal_warning);
 		}
 		
-		preferences.set_last_file (get_current_font ().get_path ());
+		Preferences.set_last_file (get_current_font ().get_path ());
 	}
 
 	static void init_gettext () {

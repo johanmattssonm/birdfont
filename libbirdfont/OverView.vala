@@ -91,9 +91,6 @@ public class OverView : FontDisplay {
 		
 		scrollbar = new Scrollbar ();
 		scrollbar.signal_scroll.connect ((delta, delta_last, absolute) => {
-			int64 adjustement = (int64) (-delta_last * get_height ());
-			int64 pixels = (int64) (-5.0 * delta_last * nail_height);
-			
 			if (absolute <= 0.002) {
 				first_character = 0;
 				first_visible = 0;
@@ -1018,7 +1015,7 @@ public class OverView : FontDisplay {
 		}
 
 		if (unlikely (!done)) {
-			MainWindow.get_toolbox ().select_tool_by_name ("custom_character_set");
+			Toolbox.select_tool_by_name ("custom_character_set");
 			warning (@"No glyph \"$c\"\n");
 			return;
 		}

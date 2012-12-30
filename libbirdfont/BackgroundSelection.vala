@@ -193,7 +193,7 @@ class BackgroundSelection : FontDisplay {
 		zoom_background = MainWindow.get_tool ("zoom_background_image");
 		zoom_background.select_action (zoom_background);
 
-		MainWindow.get_toolbox ().select_tool_by_name ("cut_background");
+		Toolbox.select_tool_by_name ("cut_background");
 	}
 
 	private void add_unique_background (string file) {

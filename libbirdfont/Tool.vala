@@ -295,7 +295,7 @@ public class Tool : GLib.Object {
 		OverView o = MainWindow.get_overview ();
 		
 		MainWindow.get_tab_bar ().select_overview ();
-		MainWindow.get_toolbox ().select_tool_by_name ("utf_8");
+		Toolbox.select_tool_by_name ("utf_8");
 		
 		o.select_next_glyph ();
 		Tool.yield ();

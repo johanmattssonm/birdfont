@@ -203,7 +203,7 @@ class ResizeTool : Tool {
 			resize_test_glyph (i);
 		}
 
-		this.yield ();
+		Tool.yield ();
 		
 		return true;
 	}
@@ -211,7 +211,7 @@ class ResizeTool : Tool {
 	private void resize_test_glyph (double ratio_percent) {
 		test_select_action ();
 		
-		this.yield ();
+		Tool.yield ();
 		
 		Glyph g = MainWindow.get_current_glyph ();
 		Path? pn = g.get_last_path ();
@@ -225,11 +225,10 @@ class ResizeTool : Tool {
 	private void draw_test_glyph (int x_offset, int y_offset) {
 		// open a new glyph
 		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
-
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_tab_bar ().select_overview ();
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_overview ().open_current_glyph ();
 		
 		pen_tool.test_select_action ();

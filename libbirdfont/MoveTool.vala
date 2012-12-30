@@ -102,7 +102,7 @@ class MoveTool : Tool {
 			
 			if (move_path) {
 				foreach (Path path in glyph.active_paths) {
-					path.move (glyph.ivz () * -dx * p, glyph.ivz () * dy * p);
+					path.move (Glyph.ivz () * -dx * p, Glyph.ivz () * dy * p);
 				}
 			}
 			

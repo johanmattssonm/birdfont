@@ -18,11 +18,7 @@
 namespace Supplement {
 
 public class ExportTool : Tool {
-	private static string? prefered_browser = null;
 	private static ExportThread export_thread;
-	
-	private static unowned Thread<void*> export_thread_handle;
-
 	private static bool stop_export_thread = false;
 
 	public ExportTool (string n) {
@@ -118,7 +114,6 @@ public class ExportTool : Tool {
 	
 	public static void export_current_glyph () {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		Font font = Supplement.get_current_font ();
 		FontDisplay fd = MainWindow.get_current_display ();
 		string glyph_svg;
 		string? f;
@@ -440,25 +435,20 @@ os.put_string (
 
 			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path ());
 
-			try {
-				if (async) {
-					export_command = @"$(get_birdfont_export ()) --ttf -o $((!) folder.get_path ()) $temp_file";
-					
-					try {
-						Process.spawn_command_line_async (export_command);
-					} catch (Error e) {
-						stderr.printf (@"Failed to execute \"$export_command\" \n");
-						critical (@"$(e.message)");
-					}
-				}
+			if (async) {
+				export_command = @"$(get_birdfont_export ()) --ttf -o $((!) folder.get_path ()) $temp_file";
 				
-				if (!async) {
-					export_thread.run ();
+				try {
+					Process.spawn_command_line_async (export_command);
+				} catch (Error e) {
+					stderr.printf (@"Failed to execute \"$export_command\" \n");
+					critical (@"$(e.message)");
 				}
-			} catch (ThreadError e) {
-				warning (e.message);
-				done = false;
-			}	
+			}
+			
+			if (!async) {
+				export_thread.run ();
+			}
 			
 		} catch (Error e) {
 			critical (@"$(e.message)");
@@ -509,10 +499,10 @@ os.put_string (
 		private static string ttf;
 		private static string eot;
 
-		public ExportThread (string ffi, string ttf, string eot) {
-			this.ffi = ffi.dup ();
-			this.ttf = ttf.dup ();
-			this.eot = eot.dup ();
+		public ExportThread (string nffi, string nttf, string neot) {
+			ffi = nffi.dup ();
+			ttf = nttf.dup ();
+			eot = neot.dup ();
 		}
 		
 		public void* run () {

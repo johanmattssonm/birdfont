@@ -220,12 +220,10 @@ c.append ("""
 	}
 	
 	private static void select_overview () {
-		Toolbox tb = MainWindow.get_toolbox ();
-		
 		if (Supplement.get_current_font ().is_empty ()) {
-			tb.select_tool_by_name ("custom_character_set");
+			Toolbox.select_tool_by_name ("custom_character_set");
 		} else {
-			tb.select_tool_by_name ("available_characters");	
+			Toolbox.select_tool_by_name ("available_characters");	
 		}
 	}
 

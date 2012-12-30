@@ -43,7 +43,7 @@ public static int main (string[] arg) {
 
 	file = supplement.args.get_file ();
 	if (file != "") {
-		window.menu_tab.load_font (file);
+		MainWindow.menu_tab.load_font (file);
 	}
 	
 	Gtk.main ();

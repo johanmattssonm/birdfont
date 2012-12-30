@@ -59,21 +59,7 @@ class IntersectionList {
 			points.append (i);
 		}
 	}
-	
-	public void clear () {
-		while (points.length () > 0) {
-			points.remove_link (points.first ());
-		}
-	}
-	
-	public void remove_point (EditPoint e) {
-		foreach (Intersection n in points) {
-			if (n.editpoint_a == e || n.editpoint_b == e) {
-				points.remove_all (n);
-			}
-		}	
-	}
-	
+		
 	public bool has_edit_point (EditPoint e) {
 		foreach (Intersection n in points) {
 			if (n.editpoint_a == e || n.editpoint_b == e) {
@@ -96,31 +82,6 @@ class IntersectionList {
 		}
 		
 		return false;
-	}
-		
-	public int get_point_index (EditPoint e) {
-		int i = 0;
-		foreach (Intersection n in points) {
-			if (e.x == n.x && e.y == n.y) {
-				return i;
-			}
-			i++;
-		}
-		return -1;
-	}
-	
-	public Intersection? get_next_intersection (EditPoint e) {
-		bool found = false;
-		foreach (Intersection n in points) {
-			if (found) {
-				return n;
-			}
-			
-			if (n.editpoint_a == e || n.editpoint_b == e) {
-				found = true;
-			}
-		}
-		return null;
 	}
 	
 	public Intersection? get_intersection (EditPoint e) {
@@ -205,31 +166,6 @@ class IntersectionList {
 		});
 
 		return il;
-	}
-	
-	/** return true if ranges does overlap */
-	bool has_intersection (double a0, double a1, double b0, double b1) {
-		if (a0 <= b0 <= a1 || a1 <= b0 <= a0) {
-			if (a0 <= b1 <= a1 || a1 <= b1 <= a0) {
-				return true;
-			}
-			
-			if (b0 <= a1 <= b1 || b1 <= a1 <= b0) {
-				return true;
-			}
-		}
-		
-		if (b0 <= a0 <= b1 || b1 <= a0 <= b0) {
-			if (a0 <= a0 <= a1 || a1 <= a0 <= a0) {
-				return true;
-			}
-			
-			if (b0 <= a0 <= b1 || b1 <= a0 <= b0) {
-				return true;
-			}
-		}
-		
-		return false;
 	}
 }
 

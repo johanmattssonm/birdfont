@@ -23,8 +23,6 @@ namespace Supplement {
 public class Toolbox : GLib.Object  {
 	GlyphCanvas glyph_canvas;
 	
-	bool expanded = true;
-	
 	ToolboxExpander toolbox_expander;
 	
 	public List<Expander> expanders;
@@ -85,9 +83,6 @@ public class Toolbox : GLib.Object  {
 		Tool move_tool = new MoveTool ("move");
 		draw_tools.add_tool (move_tool);
 
-		Tool shrink_tool = new ShrinkTool ("shrink");
-		// Fixa: draw_tools.add_tool (shrink_tool);	
-		
 		// Draw tool modifiers
 		// DELETE tools:
 		
@@ -120,7 +115,7 @@ public class Toolbox : GLib.Object  {
 			
 			select_draw_tool ();
 			
-			foreach (EditPoint ep in pen_tool.selected_points) {
+			foreach (EditPoint ep in PenTool.selected_points) {
 				tie = !ep.tie_handles;
 
 				if (tie) {
@@ -137,7 +132,7 @@ public class Toolbox : GLib.Object  {
 		Tool tie_x_or_y = new Tool ("tie_x_or_y", _("Tie coordinates to previous edit point"), 'q');
 		tie_x_or_y.select_action.connect((self) => {
 			select_draw_tool ();
-			pen_tool.tie_x_or_y_coordinates = !pen_tool.tie_x_or_y_coordinates;
+			PenTool.tie_x_or_y_coordinates = !PenTool.tie_x_or_y_coordinates;
 		});
 		// Fixa: draw_tool_modifiers.add_tool (tie_x_or_y);	
 
@@ -291,10 +286,10 @@ public class Toolbox : GLib.Object  {
 		Tool help_lines = new Tool ("help_lines", "Show help lines", 'l');
 		help_lines.select_action.connect ((self) => {
 				bool h;
-				h = glyph_canvas.get_current_glyph ().get_show_help_lines ();
-				glyph_canvas.get_current_glyph ().set_show_help_lines (!h);
+				h = GlyphCanvas.get_current_glyph ().get_show_help_lines ();
+				GlyphCanvas.get_current_glyph ().set_show_help_lines (!h);
 				self.set_selected (!h);
-				glyph_canvas.get_current_glyph ().redraw_help_lines ();
+				GlyphCanvas.get_current_glyph ().redraw_help_lines ();
 			});	
 
 		guideline_tools.add_tool (help_lines);
@@ -439,7 +434,7 @@ public class Toolbox : GLib.Object  {
 			TooltipArea tp = MainWindow.get_tool_tip ();
 			tp.show_text (_("Creating thumbnails"));
 			
-			bg_selection.yield ();
+			Tool.yield ();
 		
 			if (fd is Glyph) {
 				g = (Glyph) fd;
@@ -595,7 +590,7 @@ public class Toolbox : GLib.Object  {
 			pen_tool.set_selected (true);
 			select_draw_tool ();			
 			
-			if (glyph_canvas.get_current_glyph ().get_show_help_lines ()) {
+			if (GlyphCanvas.get_current_glyph ().get_show_help_lines ()) {
 				help_lines.set_selected (true);
 				help_lines.set_active (false);
 			}

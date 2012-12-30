@@ -44,14 +44,6 @@ public class MainWindow {
 	public void set_native (NativeWindow nw) {
 		native_window = nw;
 	}
-
-	internal static NativeWindow get_native () {
-		return native_window;
-	}
-	
-	internal static MainWindow get_current_window () {
-		return singleton;
-	}
 	 
 	public static FontDisplay get_current_display () {
 		return get_glyph_canvas ().get_current_display ();
@@ -71,19 +63,19 @@ public class MainWindow {
 	}
 	
 	public static Toolbox get_toolbox () {
-		return get_singleton ().tools;
+		return tools;
 	}
 	
 	internal static Tool get_tool (string n) {
-		return get_singleton ().tools.get_tool (n);
+		return tools.get_tool (n);
 	}
 	
 	public static TabBar get_tab_bar () {
-		return get_singleton ().tabs;
+		return tabs;
 	}
 
 	internal static Tab get_current_tab () {
-		return get_singleton ().tabs.get_selected_tab ();
+		return tabs.get_selected_tab ();
 	}
 
 	internal static TooltipArea get_tool_tip () {
@@ -91,7 +83,7 @@ public class MainWindow {
 	}
 
 	internal static bool select_tab (Tab t) {
-		return get_singleton ().tabs.selected_open_tab (t);
+		return tabs.selected_open_tab (t);
 	}
 
 	internal static OverView get_overview () {
@@ -110,11 +102,11 @@ public class MainWindow {
 	}
 	
 	internal static MenuTab get_content_display () {
-		if (unlikely ((MenuTab?) get_singleton ().menu_tab == null)) {
+		if (unlikely ((MenuTab?) menu_tab == null)) {
 			warning ("MenuTab not instantiated.");
 		}
 		
-		return get_singleton ().menu_tab;
+		return menu_tab;
 	}
 	
 	public static MainWindow get_singleton () {
@@ -122,7 +114,7 @@ public class MainWindow {
 	}
 	
 	public static string? file_chooser (string title) {
-		return get_singleton ().native_window.file_chooser (title);
+		return MainWindow.native_window.file_chooser (title);
 	}
 	
 	public void set_title (string title) {

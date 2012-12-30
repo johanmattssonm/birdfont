@@ -90,7 +90,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				
 				if (uri == "") {
 					layout_uri = layout_dir.get_child (fd.get_html_file ());
-					uri = fd.path_to_uri ((!) layout_uri.get_path ());
+					uri = FontDisplay.path_to_uri ((!) layout_uri.get_path ());
 				}
 		
 				if (fd.get_html () == "") {
@@ -213,21 +213,19 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}
 
 		key_press_event.connect ((t, event) => {
-			MainWindow window = MainWindow.get_singleton ();
-			FontDisplay fd = window.glyph_canvas.current_display;
+			FontDisplay fd = MainWindow.glyph_canvas.current_display;
 			
 			if (fd is Glyph) {
-				window.tools.key_press (event.keyval);
+				MainWindow.tools.key_press (event.keyval);
 			}
 			
-			window.glyph_canvas.key_press (event.keyval);
+			MainWindow.glyph_canvas.key_press (event.keyval);
 			return false;
 		});
 		
 		key_release_event.connect ((t, event) => {
-			MainWindow window = MainWindow.get_singleton ();
-			if (window.glyph_canvas is Glyph) {
-				window.glyph_canvas.key_release (event.keyval);
+			if (MainWindow.glyph_canvas is Glyph) {
+				MainWindow.glyph_canvas.key_release (event.keyval);
 			}
 			return false;
 		});
@@ -236,7 +234,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void color_selection (ColorTool color_tool) {
-		ColorWindow c = new ColorWindow (color_tool);
+		new ColorWindow (color_tool);
 	}
 	
 	class ColorWindow : Gtk.Window {
@@ -258,18 +256,18 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}	
 	}
 	
-	public string get_clipboard () {
-		SelectionData selection_data;
+	public string get_clipboard_data () {
+		SelectionData? selection_data;
 		Atom target;
 
 		target = Atom.intern_static_string ("image/x-inkscape-svg");
 		selection_data = clipboard.wait_for_contents (target);
 		
-		if (is_null (selection_data) || is_null (selection_data.data)) {
+		if (is_null (selection_data) || is_null (((!) selection_data).data)) {
 			return "";
 		}
 		
-		return (string) selection_data.data;
+		return (string) ((!) selection_data).data;
 	}
 	
 	public void set_inkscape_clipboard (string inkscape_clipboard_data) {

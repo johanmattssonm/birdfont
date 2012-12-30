@@ -617,10 +617,6 @@ public class Font : GLib.Object {
 			stderr.printf (@"Failed to save $path \n");
 			stderr.printf (@"$(e.message) \n");
 			return false;
-		} catch (GLib.IOError e) {
-			stderr.printf (@"Failed to save $path \n");
-			stderr.printf (@"$(e.message) \n");
-			return false;
 		}
 		
 		return true;
@@ -1243,8 +1239,6 @@ public class Font : GLib.Object {
 		double x = 0;
 		double y = 0;
 		
-		PointType type = PointType.LINE;
-		
 		double angle_right = 0;
 		double angle_left = 0;
 		
@@ -1298,10 +1292,19 @@ public class Font : GLib.Object {
 	
 	public bool restore_backup () {
 		string? b = present_backup_file ();
+		bool r = false;
 		
-		if (b == null) return false;
+		if (b == null) {
+			return false;
+		}
 		
-		return parse_file ((!)b);
+		try {
+			r = parse_file ((!)b);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+		
+		return r;
 	}
 	
 	private string? present_backup_file () {

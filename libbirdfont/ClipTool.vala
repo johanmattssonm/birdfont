@@ -52,7 +52,7 @@ public class ClipTool : Tool {
 				glyph = g.copy ();
 			}
 			
-			native_window = MainWindow.get_singleton ().native_window;
+			native_window = MainWindow.native_window;
 			
 			// several clipboards does not work on windows
 			if (!Supplement.win32) {
@@ -73,7 +73,6 @@ public class ClipTool : Tool {
 		string gc;
 		Glyph? destination = null;
 		unichar new_char;
-		Path inserted;
 		string svg;
 		
 		// paste internal
@@ -98,7 +97,7 @@ public class ClipTool : Tool {
 			
 			((!)destination).store_undo_state ();
 			
-			svg = MainWindow.get_singleton ().native_window.get_clipboard ();
+			svg = MainWindow.native_window.get_clipboard_data ();
 			ImportSvg.import_svg (svg);
 			
 			((!)destination).update_view ();

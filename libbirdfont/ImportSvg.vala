@@ -87,9 +87,6 @@ public class ImportSvg {
 	}
 	
 	private static void parse_layer (Xml.Node* node) {
-		string attr_name = "";
-		string attr_content;
-		
 		return_if_fail (node != null);
 				
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
@@ -115,7 +112,6 @@ public class ImportSvg {
 	
 	private static void parse_svg_data (string d) {
 		string[] c;
-		string[] cp;
 		string[] command;
 		int ci = 0;
 		double px = 0;
@@ -341,9 +337,6 @@ public class ImportSvg {
 	
 	static bool is_point (string s) {
 		return double.try_parse (s);
-	}
-	
-	static void parse_c (string[] data, int index, Path p, double posx, double posy) {
 	}
 }
 

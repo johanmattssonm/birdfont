@@ -72,16 +72,7 @@ public class TabBar : GLib.Object {
 	}
 	
 	public void motion (double x, double y) {
-		TooltipArea status = MainWindow.get_tool_tip ();
 		is_over_close (x, y, out over, out over_close);
-	}
-	
-	private bool is_over_next (double x) {
-		return x > width - 19 && has_scroll ();
-	}
-
-	private bool is_over_previous (double x) {
-		return x < 19  && has_scroll ();
 	}
 
 	private void is_over_close (double x, double y, out int over, out int over_close) {
@@ -477,16 +468,12 @@ public class TabBar : GLib.Object {
 		switch (s) {
 			case "Overview":
 				return _("Overview");
-				break;
 			case "Kerning":
 				return _("Kerning");
-				break;
 			case "Menu":
 				return _("Menu");
-				break;
 			default:
 				return s;
-				break;
 		}
 	}
 	

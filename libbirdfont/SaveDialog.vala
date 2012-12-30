@@ -64,7 +64,11 @@ public class SaveDialog : FontDisplay {
 		if (fn == "") {
 			fn = f.get_name () + ".ffi";
 		}
-				
+
+		// FIXME:
+		// tell xgettext to extract this:
+		_("Save?");
+					
 		return """
 <html>
 <head>
@@ -88,10 +92,6 @@ public class SaveDialog : FontDisplay {
 	</div>
 </body>
 </html>""";
-
-		// FIXME:
-		// tell xgettext to extract this:
-		_("Save?");
 	}
 }
 	

@@ -39,10 +39,10 @@ class MergeTool : Tool {
 	private void test_merge_simple_path_box () {
 		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_tab_bar ().select_overview ();
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_overview ().open_current_glyph ();
 		
 		pen_tool.test_select_action ();
@@ -102,10 +102,10 @@ class MergeTool : Tool {
 	private void test_merge_simple_path_box_and_triangle () {
 		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_tab_bar ().select_overview ();
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_overview ().open_current_glyph ();
 		
 		pen_tool.test_select_action ();
@@ -158,10 +158,10 @@ class MergeTool : Tool {
 	private void test_merge_second_triangle () {
 		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_tab_bar ().select_overview ();
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_overview ().open_current_glyph ();
 		
 		pen_tool.test_select_action ();
@@ -213,18 +213,16 @@ class MergeTool : Tool {
 	}
 	
 	private void add_point_on_path (Path p, int x, int y) {
-		Glyph g = MainWindow.get_current_glyph ();
-		p.add (g.path_coordinate_x (x), g.path_coordinate_y (y));
+		p.add (Glyph.path_coordinate_x (x), Glyph.path_coordinate_y (y));
 	}
-	
 	
 	private void test_merge_odd_paths () {
 		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_tab_bar ().select_overview ();
 
-		this.yield ();
+		Tool.yield ();
 		MainWindow.get_overview ().open_current_glyph ();
 		
 		pen_tool.test_select_action ();
@@ -262,7 +260,7 @@ class MergeTool : Tool {
 		pen_tool.test_click_action (1, 203, 260); 
 		pen_tool.test_click_action (3, 203, 260); 
 
-		this.yield ();
+		Tool.yield ();
 		
 		test_select_action ();
 	}	

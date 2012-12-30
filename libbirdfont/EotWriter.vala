@@ -120,26 +120,26 @@ class EotWriter : GLib.Object {
 	
 		fd.add_littleendian_u16 (0); // padding
 		
-		tn = names.get_name (names.FONT_NAME);
+		tn = names.get_name (NameTable.FONT_NAME);
 		fd.add_littleendian_u16 ((uint16) (2 * tn.char_count ())); // strlen of family name
 		fd.add_str_littleendian_utf16 (tn);
 		
 		fd.add_littleendian_u16 (0); // padding
 		
-		tn = names.get_name (names.SUBFAMILY_NAME);
+		tn = names.get_name (NameTable.SUBFAMILY_NAME);
 		fd.add_littleendian_u16 ((uint16) (2 * tn.char_count ())); // strlen of family name
 		fd.add_str_littleendian_utf16 (tn);
 
 		fd.add_littleendian_u16 (0); // padding
 		
 		// FIXA version or name + version
-		tn = names.get_name (names.VERSION);
+		tn = names.get_name (NameTable.VERSION);
 		fd.add_littleendian_u16 ((uint16) (2 * tn.char_count ())); // strlen of family name
 		fd.add_str_littleendian_utf16 (tn);
 		
 		fd.add_littleendian_u16 (0); // padding
 		
-		tn = names.get_name (names.FULL_FONT_NAME);
+		tn = names.get_name (NameTable.FULL_FONT_NAME);
 		fd.add_littleendian_u16 ((uint16) (2 * tn.char_count ())); // strlen of family name
 		fd.add_str_littleendian_utf16 (tn);
 		

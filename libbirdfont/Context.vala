@@ -210,7 +210,7 @@ public class ContextDisplay : FontDisplay {
 		Font f = Supplement.get_current_font ();
 		string name;
 		
-		if (KeyBindings.singleton.modifier == NONE || KeyBindings.singleton.modifier == SHIFT) {
+		if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {
 					
 			if (keyval == Key.BACK_SPACE && row.length () > 0) {	
 				row.first ().data.glyph.remove_link (row.first ().data.glyph.last ());

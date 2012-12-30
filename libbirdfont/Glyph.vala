@@ -689,23 +689,23 @@ public class Glyph : FontDisplay {
 	public static double path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
 		return_if_fail (g.view_zoom != 0);
-		return x * g.ivz () - g.xc () + g.view_offset_x;
+		return x * ivz () - xc () + g.view_offset_x;
 	}
 
 	public static int reverse_path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
 		return_if_fail (g.view_zoom != 0);
-		return (int) ((x - g.view_offset_x + g.xc ()) * g.view_zoom);
+		return (int) ((x - g.view_offset_x + xc ()) * g.view_zoom);
 	}
 
 	public static double path_coordinate_y (double y) {
 		Glyph g = MainWindow.get_current_glyph ();
-		return g.yc () - y * g.ivz () - g.view_offset_y;
+		return yc () - y * ivz () - g.view_offset_y;
 	}
 
 	public static int reverse_path_coordinate_y (double y) {
 		Glyph g = MainWindow.get_current_glyph ();
-		y = ((y + g.view_offset_y - g.yc ()) * g.view_zoom);
+		y = ((y + g.view_offset_y - yc ()) * g.view_zoom);
 		return (int) (-y);
 	}
 
@@ -1458,7 +1458,6 @@ public class Glyph : FontDisplay {
 	}
 
 	public void reload () {
-		Glyph g;
 		Font f = Supplement.get_current_font ();
 		
 		if (f.has_glyph (name)) {
