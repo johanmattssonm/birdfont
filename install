@@ -1,6 +1,7 @@
 #!/usr/bin/python 
 import os
 import subprocess
+import glob
 from optparse import OptionParser
 
 def install (file, dir):
@@ -57,6 +58,11 @@ install ('build/libbirdfont.so', '/lib')
 install ('build/birdfont.1.gz', '/share/man/man1')
 install ('build/birdfont-export.1.gz', '/share/man/man1')
 
+# translations
+for lang_dir in glob.glob('build/locale/*'):
+	lc = lang_dir.replace ('build/locale/', "")
+	install ('build/locale/' + lc + '/LC_MESSAGES/birdfont.mo', '/share/locale/' + lc + '/LC_MESSAGES' );
+	
 installed.close ()
 
 subprocess.check_output ('ldconfig', shell=True)

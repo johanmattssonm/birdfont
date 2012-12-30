@@ -142,7 +142,8 @@ public abstract class FontDisplay : GLib.Object {
 	}
 
 	public static File find_layout_dir () {
-		return find_file (null, "layout");
+		File f = find_file (null, "layout");
+		return f;		
 	}
 
 	public void add_html_callback (string prop, PropertyFunction.PropertyCallback cb) {
@@ -191,7 +192,7 @@ public abstract class FontDisplay : GLib.Object {
 	public static File find_file (string? dir, string name) {
 		File f;
 		string d = (dir == null) ? "" : (!) dir;
-		
+
 		f = get_file (Supplement.exec_path + "/", name + "/");
 		if (likely (f.query_exists ())) return f;
 		
