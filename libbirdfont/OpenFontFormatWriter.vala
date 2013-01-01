@@ -938,17 +938,6 @@ class GlyfTable : Table {
 
 			linked_glyph = parse_next_glyf (dis, character, glid, out xmin, out xmax, units_per_em);
 		}
-
-		
-		/*
-		if ((component_flags & INSTRUCTIONS) > 0) {
-			num_instructions = dis.read_ushort ();
-			
-			for (int i = 0; i < num_instructions; i++) {
-				dis.read_byte ();
-			}
-		}
-		*/
 		
 		return glyph;
 	}
