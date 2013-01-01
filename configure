@@ -33,44 +33,46 @@ def write_config ():
 		f.write(var_line % (name, value))
 
 	f.write("}")
-	
-def test_doit_version (a, b, c):
-	print ("Checking for doit version >= %s.%s.%s" % (a, b, c))
-	process = subprocess.Popen ("doit --version", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	v = process.stdout.readline()
-	process.communicate()[0]
-	if not process.returncode == 0:
-		print (FAIL + "Can't find doit" + ENDC)
-		exit (1)		
-	print ("Found version " + v)
-	version = [int(n.replace ("dev", "")) for n in v.split (".")]
-	return [a,b,c] <= version
-		
-def test_vala_version (a, b, c):
-	print ("Checking for vala version >= %s.%s.%s" % (a, b, c))
-	process = subprocess.Popen ("valac --version", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-	v = process.stdout.readline()
-	v = v.replace ("Vala ", "");	
-	process.communicate()[0]
-	if not process.returncode == 0:
-		print (FAIL + "Can't find valac" + ENDC)
-		exit (1)		
-	print ("Found version " + v)
-	v = re.sub(r'-.*', '', v)
-	valac_version = [int(n) for n in v.split (".")]
-	return [a,b,c] <= valac_version
 
+def test_version (program, a, b, c):
+	print ("Checking for %s version >= %s.%s.%s" % (program, a, b, c))
+	process = subprocess.Popen (program + ' --version', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	v = process.stdout.readline()
+	process.communicate()[0]
+	if not process.returncode == 0:
+		print (FAIL + "Not found" + ENDC)
+		exit (1)		
+	print ("Found version " + v)
+	
+	o = v.split (" ");
+	for s in o:
+		if re.search( r'[0-9]*\.', s):
+			v = s
+			break
+			
+	v = re.sub(r'[a-zA-Z\-].*', '0', v)
+	version = [int(n) for n in v.split (".")]
+	return [a,b,c] <= version	
 
 def configure ():
-	if not test_vala_version (0, 17, 3):
+	if not test_version ("valac", 0, 17, 3):
 		print (FAIL + "Can't find a suitable vala compiler." + ENDC)
 		exit (1)
 
-	if not test_doit_version (0, 20, 0):		
+	if not test_version ("doit", 0, 20, 0):		
 		print (FAIL + "Doit is too old" + ENDC)
 		exit (1)
 
-	libs = [ 'cairo', 'gdk-pixbuf-2.0', 'gio-2.0', 'glib-2.0', 'gtk+-2.0', 'libxml-2.0', 'webkit-1.0', 'libsoup-2.4' ]
+	libs = [
+			'cairo', 
+			'gdk-pixbuf-2.0', 
+			'gio-2.0', 
+			'glib-2.0', 
+			'gtk+-2.0',
+			'libxml-2.0', 
+			'webkit-1.0', 
+			'libsoup-2.4'
+			]
 
 	for lib in libs:
 		print ("Looking for library: " + lib + "\t\t")
