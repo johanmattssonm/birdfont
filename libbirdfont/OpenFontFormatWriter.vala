@@ -622,12 +622,6 @@ class LocaTable : Table {
 		}
 	}
 
-	public void print_offsets () {
-		for (int i = 0; i < size; i++) {
-			print (@"get_offset ($i): $(get_offset (i))\n");
-		}
-	}
-	
 	public void process (GlyfTable glyf_table, HeadTable head_table) {
 		FontData fd = new FontData ();
 		uint32 last = 0;
@@ -1892,45 +1886,6 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		
 		// Fixa: implement rest of type 4 (mind gid_length in length field)
 	}
-	
-	public bool validate_subtable () {
-		uint32 length = get_length ();
-		unichar c;
-		unichar prev;
-		uint32 i = 0;
-		uint32 err = 0;
-		StringBuilder s;
-		
-		c = get_char (i);
-		if (c != 0) {
-			s = new StringBuilder ();
-			s.append_unichar (c);
-			warning ("nodef. is mapped to $(s.str)");
-		}
-		
-		i++;
-		
-		while (i < length) {
-			if (c == 0) {
-				s = new StringBuilder ();
-				s.append_unichar (c);
-				warning (@"No entry in cmap for index $i. Last avalable char is $(s.str) Got $(s.str), ($((uint32)c))");
-				err++;
-				return false;
-			} else {
-				prev = c;
-			}
-			
-			c = get_char (i);
-			i++;
-		}
-		
-		if (err > 0) {
-			stderr.printf (@"$err glyphs without mapping to a charactercode were found in this font.\n");
-		}
-		
-		return true;
-	}
 }
 
 class CmapTable : Table { 
@@ -2150,20 +2105,17 @@ class HeadTable : Table {
 			warning (@"Unknown glyph data format. Expecting 0 got $glyph_data_format.");
 		}
 		
-		// print_values ();
+		printd (@"Version: $(version.get_string ())\n");
+		printd (@"flags: $flags\n");
+		printd (@"font_revision: $(font_revision.get_string ())\n");
+		printd (@"flags: $flags\n");
+		printd (@"Units per em: $units_per_em\n");
+		printd (@"lowest_PPEM: $lowest_PPEM\n");
+		printd (@"font_direction_hint: $font_direction_hint\n");
+		printd (@"loca_offset_size: $loca_offset_size\n");
+		printd (@"glyph_data_format: $glyph_data_format\n");
+		
 		// Some deprecated values follow here ...
-	}
-	
-	void print_values () {
-		print (@"Version: $(version.get_string ())\n");
-		print (@"flags: $flags\n");
-		print (@"font_revision: $(font_revision.get_string ())\n");
-		print (@"flags: $flags\n");
-		print (@"Units per em: $units_per_em\n");
-		print (@"lowest_PPEM: $lowest_PPEM\n");
-		print (@"font_direction_hint: $font_direction_hint\n");
-		print (@"loca_offset_size: $loca_offset_size\n");
-		print (@"glyph_data_format: $glyph_data_format\n");
 	}
 	
 	public uint32 get_font_checksum () {
@@ -2382,23 +2334,6 @@ class HmtxTable : Table {
 	public double get_lsb_mono (uint32 i) 
 		requires (i < nmonospaced && left_side_bearing_monospaced != null) {
 		return left_side_bearing_monospaced[i] * 1000 / head_table.get_units_per_em ();
-	}
-	
-	public void print_all () {
-		return_if_fail (advance_width != null);
-		return_if_fail (left_side_bearing != null);
-		
-		for (int i = 0; i < nmetrics; i++) {
-			print (@"get_lsb ($i): $(get_lsb(i))\n");
-			print (@"get_advance ($i): $(get_advance(i))\n");
-		}
-
-		if (left_side_bearing_monospaced != null) {
-			for (int i = 0; i < nmonospaced; i++) {
-				print (@"get_lsb_mono ($i): $(get_lsb_mono(i))\n");
-			}
-		}
-
 	}
 			
 	public new void parse (FontData dis, HheaTable hhea_table, LocaTable loca_table) throws GLib.Error {
@@ -2623,14 +2558,6 @@ class NameTable : Table {
 		}
 		
 		return "";
-	}
-
-	public void print_all () {
-		stdout.printf (@"$(text.length ()) name table texts:\n");
-		foreach (string s in text) {
-			stdout.printf (s);
-			stdout.printf ("\n");
-		}
 	}
 
 	public override void parse (FontData dis) throws Error {
@@ -3023,27 +2950,13 @@ class PostTable : Table {
 
 			names.append (name.str);
 		}
-		
+
 		populate_available ();
 	}
 
 	void populate_available () {
 		for (int i = 0; i < index.length (); i++) {
 			available_names.append (get_name (i));
-		}
-	}
-		
-	public void print_all () {
-		print (@"PostScript glyph mapping:\n");
-		for (int i = 0; i < index.length (); i++) {
-			print (@"gid $i -> $(get_name (i))\n");
-		}
-	}
-	
-	public void print_all_names () {
-		print (@"Post table names:\n");
-		foreach (var n in names) {
-			print (@"$n\n");
 		}
 	}
 	

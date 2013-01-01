@@ -291,9 +291,6 @@ public class ImportSvg {
 				// start with line handles
 				ep1 = path.points.last ().data;
 				ep1.get_right_handle ().type = PointType.LINE;
-				if (ep1.next == null) {
-					warning (@"$(ep1.x) $(ep1.y) is null");
-				}
 				
 				lx = ep1.x + ((x2 - ep1.x) / 3);
 				ly = ep1.y + ((y2 - ep1.y) / 3);

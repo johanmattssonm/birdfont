@@ -60,17 +60,6 @@ class GlyphTable : GLib.Object {
 		build_index ();
 	}
 
-	public GlyphCollection? nth (uint i) {
-		unowned List<Item>? d = data.nth (i);
-		
-		if (d == null) {
-			warning (@"no glyph for index $i");
-			return null;
-		}
-		
-		return ((!) d).data.glyph_collection;
-	}
-
 	public uint length () {
 		return data.length ();
 	}

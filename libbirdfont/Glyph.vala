@@ -1263,12 +1263,6 @@ public class Glyph : FontDisplay {
 		return background_image_visible;
 	}
 	
-	private void plot_outline (Context cr) {
-		foreach (unowned Path p in path_list) {
-			p.plot (cr, allocation, view_zoom);
-		}		
-	}
-	
 	private void draw_coordinate (Context cr) {
 		cr.set_source_rgba (0.5, 0.5, 0.5, 1);
 		cr.set_font_size (12);

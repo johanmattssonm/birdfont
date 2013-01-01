@@ -21,11 +21,6 @@ namespace Supplement {
 [CCode (has_type_id = false)] // Vala bug
 internal struct Fixed : uint32 {
 
-	public void @set (uint16 upper, uint16 lower) {
-		uint32* p = &this;
-		*p = (upper << 16) + lower;
-	}
-
 	public bool @equals (uint16 upper, uint16 lower) {
 		uint32 t = (upper << 16) + lower;
 		return (t == this);		

@@ -322,19 +322,6 @@ public class KeyBindings {
 		var events = (!) e;
 		events.insert (binding.get_key (), binding);
 	}
-	
-	bool get_short_cut (uint modifier, uint key, out ShortCut? sc) {
-		sc = null;
-		
-		foreach (var v in BindingList.get_default_bindings ()) {
-			if (v.get_default_modifier () == modifier && v.get_default_key () == key) {
-				sc = v;
-				return true;
-			}
-		}
-		
-		return false;
-	}
 
 	public static void set_modifier (uint mod) {
 		modifier = mod;

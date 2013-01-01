@@ -101,14 +101,6 @@ public class MainWindow {
 		return over_view;
 	}
 	
-	internal static MenuTab get_content_display () {
-		if (unlikely ((MenuTab?) menu_tab == null)) {
-			warning ("MenuTab not instantiated.");
-		}
-		
-		return menu_tab;
-	}
-	
 	public static MainWindow get_singleton () {
 		return singleton;
 	}

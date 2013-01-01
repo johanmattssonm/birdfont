@@ -1281,20 +1281,6 @@ public class Path {
 			
 		}	
 	}
-	
-	void point_on_bezier_path (double t, EditPoint start, EditPoint stop, out double x, out double y) {		
-		double x0 = start.x;
-		double y0 = start.y; 
-		double x1 = start.get_right_handle ().x ();
-		double y1 = start.get_right_handle ().y ();
-		double x2 = stop.get_left_handle ().x ();
-		double y2 = stop.get_left_handle ().y (); 
-		double x3 = stop.x;
-		double y3 = stop.y;
-
-		x = bezier_path (t, x0, x1, x2, x3);
-		y = bezier_path (t, y0, y1, y2, y3);
-	}
 
 	private void all_of_path (RasterIterator iter) {
 		unowned List<EditPoint> i, next;

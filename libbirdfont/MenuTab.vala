@@ -141,18 +141,17 @@ c.append ("""
 </html>
 """);
 
-		return c.str;
-	}
-	
-	void translations () {
+#if traslations 
 		// xgettext needs these lines in order to extract strings properly
-		// TODO: update xgettext to handle vala strings well.
 		_("Preferences");
 		_("Export SVG, TTF & EOT fonts");
 		_("Name");
 		_("Glyph sequence");
 		_("Export SVG font and view the result");
 		_("Export SVG font and view the result");
+#endif
+
+		return c.str;
 	}
 
 	public void propagate_recent_files () {

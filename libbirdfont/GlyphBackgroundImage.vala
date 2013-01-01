@@ -641,19 +641,9 @@ public class GlyphBackgroundImage {
 			return null;
 		}
 		
-		// Fixa: Add multi threading
-		//ThreadFunc<void*> run = () => {
-			output = process_background_colors ((!)original_image, contrast, desaturate, threshold);
-			Idle.add ((owned) callback);
-			//return null;
-		//};
-		
-		try {
-			//Thread.create<void*> (run, false);
-			yield;
-		} catch (ThreadError e) {
-			stderr.printf ("Thread error: %s\n", e.message);
-		}
+		// TODO: Add multi threading
+		output = process_background_colors ((!)original_image, contrast, desaturate, threshold);
+		Idle.add ((owned) callback);
 
 		return output;
 	}
