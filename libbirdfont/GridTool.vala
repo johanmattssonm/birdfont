@@ -84,7 +84,7 @@ class GridTool : Tool {
 	
 	private static void updata_lines () {
 		Glyph g = MainWindow.get_current_glyph ();
-		double step = size_y * Glyph.SCALE;
+		double step = size_y;
 		double i;
 		int max_lines = 400;
 		int n;

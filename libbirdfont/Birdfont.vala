@@ -94,7 +94,6 @@ public static int run_export (string[] arg) {
 		Log.set_handler (null, levels, Supplement.Supplement.fatal_warning);		
 	}
 	
-	Preferences preferences = new Preferences ();
 	Preferences.load ();
 			
 	Supplement.Supplement.args = new Argument ("");

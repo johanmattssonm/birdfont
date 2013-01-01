@@ -21,9 +21,6 @@ using Math;
 namespace Supplement {
 
 public class Glyph : FontDisplay {
-
-	public static const double SCALE = 1.0;
-
 	// Background image
 	GlyphBackgroundImage? background_image = null;
 	bool background_image_visible = true;
@@ -96,8 +93,8 @@ public class Glyph : FontDisplay {
 		
 		add_help_lines ();
 
-		left_limit = -28 * SCALE;
-		right_limit = 28 * SCALE;
+		left_limit = -28;
+		right_limit = 28;
 	}
 
 	public Glyph.no_lines (string name, unichar unichar_code = 0) {
@@ -413,7 +410,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	public string get_svg_data () {
-		return Svg.to_svg_glyph (this, 1 / SCALE);
+		return Svg.to_svg_glyph (this);
 	}
 	
 	public int get_height () 
@@ -422,11 +419,11 @@ public class Glyph : FontDisplay {
 		unowned List<Line> a = horizontal_help_lines.first ();
 		unowned List<Line> b = horizontal_help_lines.last ();
 		
-		return (int) Math.fabs (a.data.pos / SCALE - b.data.pos / SCALE); 
+		return (int) Math.fabs (a.data.pos - b.data.pos); 
 	}
 	
 	public double get_width () {
-		return Math.fabs (right_limit / SCALE - left_limit / SCALE);
+		return Math.fabs (right_limit - left_limit);
 	}
 
 	public unichar get_unichar () {
@@ -1289,7 +1286,7 @@ public class Glyph : FontDisplay {
 		left = get_line ("left").pos;
 		
 		if (!is_open ()) {
-			Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () + baseline, SCALE);
+			Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () + baseline);
 		}
 		
 		if (is_open ()) {
@@ -1530,7 +1527,7 @@ public class Glyph : FontDisplay {
 		
 		cr = new Context (img);
 		
-		Svg.draw_svg_path (cr, get_svg_data (), gx, gy, 1.0);	
+		Svg.draw_svg_path (cr, get_svg_data (), gx, gy);	
 		
 		return img;
 	}
@@ -1677,7 +1674,7 @@ public class Glyph : FontDisplay {
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
 				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
-				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x + kern, Glyph.yc () + baseline, Glyph.SCALE);
+				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x + kern, Glyph.yc () + baseline);
 				cr.restore ();
 			}
 			
@@ -1706,7 +1703,7 @@ public class Glyph : FontDisplay {
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
 				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
 
-				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x, Glyph.yc () + baseline, Glyph.SCALE);
+				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x, Glyph.yc () + baseline);
 				cr.restore ();
 			}
 			

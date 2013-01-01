@@ -406,7 +406,7 @@ public class OverView : FontDisplay {
 		c.fill ();
 */
 		c.scale (scale, scale);				
-		Svg.draw_svg_path (c, g.get_svg_data (), gx, gy, 1.0);
+		Svg.draw_svg_path (c, g.get_svg_data (), gx, gy);
 		
 		cr.save ();
 		cr.set_source_surface (s, x - 6, y);

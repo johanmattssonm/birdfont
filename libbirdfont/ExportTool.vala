@@ -42,7 +42,6 @@ public class ExportTool : Tool {
 	public static string export_current_glyph_to_string () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Font font = Supplement.get_current_font ();
-		string glyph_svg;
 		string name;
 		StringBuilder s;
 		double baseline;
@@ -56,8 +55,8 @@ public class ExportTool : Tool {
 
 		s.append ("xmlns=\"http://www.w3.org/2000/svg\"\n");
 		s.append ("\txmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\"\n");
-		s.append (@"\twidth=\"$(glyph.get_width () / Glyph.SCALE)\"\n");
-		s.append (@"\theight=\"$(glyph.get_height () / Glyph.SCALE)\"\n");
+		s.append (@"\twidth=\"$(glyph.get_width ())\"\n");
+		s.append (@"\theight=\"$(glyph.get_height ())\"\n");
 		s.append (@"\tid=\"glyph_$(name)\"\n");
 		s.append (@"\tversion=\"1.1\">\n");
 		s.append (@"\n");

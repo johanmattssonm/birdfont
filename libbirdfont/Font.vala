@@ -71,12 +71,12 @@ public class Font : GLib.Object {
 	public Font () {
 		// positions in pixels at first zoom level
 		// default x-height should be 60 in 1:1
-		top_limit = -66 * Glyph.SCALE;
-		top_position = -54 * Glyph.SCALE;
-		xheight_position = -38 * Glyph.SCALE;
-		base_line = 18 * Glyph.SCALE;
-		bottom_position = 38 * Glyph.SCALE;
-		bottom_limit = 45 * Glyph.SCALE;
+		top_limit = -66 ;
+		top_position = -54;
+		xheight_position = -38;
+		base_line = 18;
+		bottom_position = 38;
+		bottom_limit = 45;
 	}
 
 	public void touch () {
