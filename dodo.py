@@ -1,12 +1,13 @@
 import os
 import glob
 import subprocess
+import version
 
 from doit.tools import run_once
 from doit.action import CmdAction
 from bavala import Vala
 
-VERSION = '0.9'
+VERSION = version.VERSION
 
 DOIT_CONFIG = {
     'default_tasks': [

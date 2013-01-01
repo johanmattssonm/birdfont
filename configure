@@ -4,9 +4,10 @@ import os
 import sys
 import time;
 from optparse import OptionParser
-import dodo
+import version
+import re
 
-VERSION = dodo.VERSION
+VERSION = version.VERSION
 
 HEADER = '\033[95m'
 OKBLUE = '\033[94m'
@@ -55,6 +56,7 @@ def test_vala_version (a, b, c):
 		print (FAIL + "Can't find valac" + ENDC)
 		exit (1)		
 	print ("Found version " + v)
+	v = re.sub(r'-.*', '', v)
 	valac_version = [int(n) for n in v.split (".")]
 	return [a,b,c] <= valac_version
 
