@@ -60,11 +60,11 @@ def task_pkg_flags():
 valac_options = [
 	'--enable-experimental-non-null',
 	'--thread',
-	'--enable-experimental'
-	]		
+	'--enable-experimental',
+	'--target-glib=2.34' # see bug 0000004
+	]	
 libbird = Vala(src='libbirdfont', build='build', library='birdfont', pkg_libs=LIBS)
 def task_libbirdfont():
-
     yield libbird.gen_c(valac_options)
     yield libbird.gen_o(['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
     yield libbird.gen_so()
