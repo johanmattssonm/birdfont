@@ -60,7 +60,6 @@ def task_pkg_flags():
 valac_options = [
 	'--enable-experimental-non-null',
 	'--thread',
-	'--enable-deprecated',
 	'--enable-experimental'
 	]		
 libbird = Vala(src='libbirdfont', build='build', library='birdfont', pkg_libs=LIBS)

@@ -1310,7 +1310,7 @@ public class Font : GLib.Object {
 	private string? present_backup_file () {
 		try {
 			File dir = Supplement.get_settings_directory ();
-			var files = dir.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME, 0);
+			var files = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 
 			// What if we have more than one backup file left?
 			FileInfo? file_info;

@@ -240,7 +240,7 @@ class BackgroundSelection : FontDisplay {
 		}
 				
 		try {
-			enumerator = directory.enumerate_children (FILE_ATTRIBUTE_STANDARD_NAME, 0);
+			enumerator = directory.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 			
 			while ((file_info = enumerator.next_file ()) != null) {
 				fi = (!) file_info;
