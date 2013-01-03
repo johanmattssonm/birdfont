@@ -97,8 +97,6 @@ class MoveTool : Tool {
 			double dx = last_x - x;
 			double dy = last_y - y; 
 			double p = PenTool.precision;
-			Path rp;
-			double h, ratio;
 			
 			if (move_path) {
 				foreach (Path path in glyph.active_paths) {
@@ -106,16 +104,8 @@ class MoveTool : Tool {
 				}
 			}
 			
-			if (resize_path) {
-				return_if_fail (!is_null (resized_path));
-				rp = (!) resized_path;
-				h = rp.xmax - rp.xmin;
-				
-				ratio = 1;
-				ratio -= 0.7 * p * (Glyph.path_coordinate_y (last_resize_y) - Glyph.path_coordinate_y (y)) / h;
-				
-				rp.resize (ratio);
-				last_resize_y = y;
+			if (resize_path && can_resize (x, y)) {
+				resize (x, y);
 			}
 
 			last_x = x;
@@ -154,6 +144,70 @@ class MoveTool : Tool {
 				cr.paint ();
 			}
 		});
+	}
+
+	double get_resize_ratio (double x, double y) {
+		double ratio;
+		double h;
+		Path rp;
+		
+		return_if_fail (!is_null (resized_path));
+		rp = (!) resized_path;
+		h = rp.xmax - rp.xmin;
+
+		ratio = 1;
+		ratio -= 0.7 * PenTool.precision * (Glyph.path_coordinate_y (last_resize_y) - Glyph.path_coordinate_y (y)) / h;		
+
+		return ratio;
+	}
+
+	/** Move resize handle to pixel x,y. */
+	void resize (double x, double y) {
+		Path rp;
+		double ratio;
+		double resize_pos_x = 0;
+		double resize_pos_y = 0;
+		Glyph glyph = MainWindow.get_current_glyph ();
+
+		ratio = get_resize_ratio (x, y);
+
+		return_if_fail (!is_null (resized_path));
+		rp = (!) resized_path;
+		resize_pos_x = rp.xmin;
+		resize_pos_y = rp.ymin; 
+		
+		foreach (Path selected_path in glyph.active_paths) {
+			selected_path.resize (ratio);
+		}
+		
+		// resize paths
+		foreach (Path selected_path in glyph.active_paths) {
+			selected_path.resize (ratio);
+		}
+		
+		// move paths relative to the updated xmin and xmax
+		foreach (Path selected_path in glyph.active_paths) {
+			selected_path.move (resize_pos_x - rp.xmin, resize_pos_y - rp.ymin);
+		}
+		
+		last_resize_y = y;
+	}
+
+	bool can_resize (double x, double y) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		double h, w;
+		double ratio = get_resize_ratio (x, y);
+		
+		foreach (Path selected_path in glyph.active_paths) {
+			h = selected_path.ymax - selected_path.ymin;
+			w = selected_path.xmax - selected_path.xmin;
+			
+			if (h * ratio < 1 || w * ratio < 1) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	bool is_over_resize_handle (Path p, double x, double y) {

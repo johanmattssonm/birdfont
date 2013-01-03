@@ -699,7 +699,7 @@ class GlyfTable : Table {
 	public HeadTable head_table;
 	public HmtxTable hmtx_table;
 	public LocaTable loca_table;
-	public CmapTable cmap_table; // hack, hack, hack. cmap and post is null when inistialized and set in parse method
+	public CmapTable cmap_table; // cmap and post is null when inistialized and set in parse method
 	public PostTable post_table;
 	public KernTable kern_table;
 	
@@ -708,7 +708,7 @@ class GlyfTable : Table {
 	// list of glyphs sorted in the order we expect to find them in a
 	// ttf font. notdef is the firs glyph followed by null and nonmarkingreturn.
 	// after that will all assigned glyphs appear in sorted order, all 
-	// remaining unassigned glyphs live in the last part of the file.	
+	// remaining unassigned glyphs is in the last part of the file.	
 	public List<Glyph> glyphs;
 	
 	uint16 max_points = 0;

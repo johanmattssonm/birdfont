@@ -544,16 +544,16 @@ public class Path {
 			i = i.next;
 		}
 	}
-	
+
+	/** Resize path relative to bottom left coordinates.
+	 * @param cx xmin position during resize
+	 * @param cy ymin position during resize
+	 */
 	public void resize (double ratio) {
 		double h = ymax - ymin;
-		double px, py, nx, ny;
 
-		px = xmin;
-		py = ymin;
-		
-		if (ratio < 1 && h < 2) {
-			return;
+		if (unlikely (ratio < 1 && h < 2)) {
+			warning ("Minimum size");
 		}
 		
 		foreach (var p in points) {
@@ -567,11 +567,6 @@ public class Path {
 		xmax *= ratio;
 		ymin *= ratio;
 		ymax *= ratio;
-
-		nx = xmin;
-		ny = ymin;
-		
-		move (px - nx, py - ny);
 	}
 	
 	public Path copy () {

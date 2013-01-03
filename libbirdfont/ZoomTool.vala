@@ -15,8 +15,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Gtk;
-
 namespace Supplement {
 
 class ZoomTool : Tool {
