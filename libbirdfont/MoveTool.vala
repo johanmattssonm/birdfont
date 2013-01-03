@@ -138,11 +138,6 @@ class MoveTool : Tool {
 				cr.set_source_surface (img, Glyph.reverse_path_coordinate_x (p.xmax) - 10, Glyph.reverse_path_coordinate_y (p.ymax) - 10);
 				cr.paint ();	
 			}
-			
-			if (resized_path != null) {
-				cr.set_source_surface (img, Glyph.reverse_path_coordinate_x (((!) resized_path).xmax) - 10, Glyph.reverse_path_coordinate_y (((!)resized_path).ymax) - 10);
-				cr.paint ();
-			}
 		});
 	}
 
