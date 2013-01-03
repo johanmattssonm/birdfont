@@ -38,8 +38,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	GlyphCanvasArea glyph_canvas_area;
 	
-	static List<uint> key_pressed = new List<uint> ();
-	
 	Clipboard clipboard;
 	string clipboard_svg = "";
 	string inkscape_clipboard = "";

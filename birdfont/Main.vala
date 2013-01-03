@@ -41,7 +41,7 @@ public static int main (string[] arg) {
 	window.set_native (native_window);
 	native_window.init ();
 
-	file = supplement.args.get_file ();
+	file = Supplement.Supplement.args.get_file ();
 	if (file != "") {
 		MainWindow.menu_tab.load_font (file);
 	}
