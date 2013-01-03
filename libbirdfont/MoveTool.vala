@@ -168,13 +168,13 @@ class MoveTool : Tool {
 		double resize_pos_x = 0;
 		double resize_pos_y = 0;
 		Glyph glyph = MainWindow.get_current_glyph ();
-
+		double selection_minx, selection_miny, dx, dy;
+		
 		ratio = get_resize_ratio (x, y);
 
 		return_if_fail (!is_null (resized_path));
 		rp = (!) resized_path;
-		resize_pos_x = rp.xmin;
-		resize_pos_y = rp.ymin; 
+		get_selection_min (out resize_pos_x, out resize_pos_y);
 		
 		foreach (Path selected_path in glyph.active_paths) {
 			selected_path.resize (ratio);
@@ -186,11 +186,29 @@ class MoveTool : Tool {
 		}
 		
 		// move paths relative to the updated xmin and xmax
+		get_selection_min (out selection_minx, out selection_miny);
+		dx = resize_pos_x - selection_minx;
+		dy = resize_pos_y - selection_miny;
 		foreach (Path selected_path in glyph.active_paths) {
-			selected_path.move (resize_pos_x - rp.xmin, resize_pos_y - rp.ymin);
+			selected_path.move (dx, dy);
 		}
 		
 		last_resize_y = y;
+	}
+
+	void get_selection_min (out double x, out double y) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		x = double.MAX;
+		y = double.MAX;
+		foreach (Path p in glyph.active_paths) {
+			if (p.xmin < x) {
+				x = p.xmin;
+			}
+			
+			if (p.ymin < y) {
+				y = p.ymin;
+			}
+		}
 	}
 
 	bool can_resize (double x, double y) {

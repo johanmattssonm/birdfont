@@ -103,6 +103,14 @@ public class Glyph : FontDisplay {
 
 		path_list.append (new Path ());
 	}
+
+	public void select_all_paths () {
+		clear_active_paths ();
+		
+		foreach (Path p in path_list) {
+			active_paths.append (p);
+		}
+	}
 	
 	public void clear_active_paths () {
 		while (active_paths.length () > 0) {

@@ -549,13 +549,7 @@ public class Path {
 	 * @param cx xmin position during resize
 	 * @param cy ymin position during resize
 	 */
-	public void resize (double ratio) {
-		double h = ymax - ymin;
-
-		if (unlikely (ratio < 1 && h < 2)) {
-			warning ("Minimum size");
-		}
-		
+	public void resize (double ratio) {	
 		foreach (var p in points) {
 			p.x *= ratio;
 			p.y *= ratio;
@@ -811,7 +805,7 @@ public class Path {
 	public void move (double delta_x, double delta_y) {
 		foreach (var ep in points) {
 			ep.x += delta_x;
-			ep.y += delta_y; // kanske -y
+			ep.y += delta_y;
 		}
 		
 		update_region_boundries ();

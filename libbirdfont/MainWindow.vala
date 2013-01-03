@@ -53,7 +53,7 @@ public class MainWindow {
 		return glyph_canvas;
 	}
 	
-	internal static Glyph get_current_glyph () {
+	public static Glyph get_current_glyph () {
 		if (unlikely (is_null (Supplement.current_glyph))) {
 			warning ("No default glyph have been set yet.\n");
 			return new Glyph ("no_glyph_created");
