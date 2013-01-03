@@ -378,6 +378,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		paste_item.activate.connect (() => { ClipTool.paste (); });	
 		paste_item.add_accelerator ("activate", accel_group, 'V', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		Gtk.MenuItem select_all_item = new Gtk.MenuItem.with_mnemonic (_("_Select all paths"));
+		edit_menu.append (select_all_item);
+		select_all_item.activate.connect (() => { MainWindow.get_current_glyph ().select_all_paths (); });	
+		select_all_item.add_accelerator ("activate", accel_group, 'A', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
 		Gtk.MenuItem export_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Export glyph as SVG"));
 		edit_menu.append (export_svg_item);
 		export_svg_item.activate.connect (() => { ExportTool.export_current_glyph (); });	
