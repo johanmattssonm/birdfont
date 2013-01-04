@@ -671,7 +671,9 @@ class ToolboxCanvas : DrawingArea {
 		});
 		
 		button_press_event.connect ((se, e)=> {
-			tb.press (e.button, e.x, e.y);
+			if (e.type != EventType.2BUTTON_PRESS)	{
+				tb.press (e.button, e.x, e.y);
+			}
 			return true;
 		});	
 				

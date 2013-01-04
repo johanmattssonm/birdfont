@@ -183,15 +183,9 @@ public class SpinButton : Tool {
 	}
 
 	public void set_value_round (double v, bool check_boundries = true, bool emit_signal = true) {
-		int8 m;
-
 		v *= 1000;
 		v = Math.rint (v);
-		print (@"v: $v\n");
-		
-		m = milli; // ignore milli value
 		set_value (@"$v", check_boundries, emit_signal);
-		milli = m;
 	}
 	
 	public double get_value () {
