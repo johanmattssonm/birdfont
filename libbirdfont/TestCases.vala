@@ -43,6 +43,59 @@ class TestCases {
 		add (test_preview, "Preview");
 		add (test_export, "Export");
 		add (test_background_coordinates, "Background coordinates");
+		add (test_spin_button, "Spin button");
+	}
+
+	public static void test_spin_button () {
+		SpinButton s = new SpinButton ();
+		double last;
+		string e = "Wrong value in SpinButton";
+		
+		s.set_max (1);
+		s.set_min (0);
+		s.set_value ("0.000");
+		
+		if (s.get_display_value () != "0.000") {
+			warning (e);
+		}
+
+		s.increase ();
+		
+		if (s.get_display_value () != "0.001") {
+			warning (e);
+		}
+		
+		last = s.get_value ();
+		for (int i = 0; i < 100; i++) {
+			s.increase ();
+			if (last > s.get_value ()) {
+				warning (e);
+			}
+			last = s.get_value ();
+		}
+
+		if (s.get_display_value () != "0.101") {
+			warning (e);
+		}
+		
+		s.set_value ("1.000");
+
+		if (s.get_display_value () != "1.000") {
+			warning (e);
+		}
+
+		last = s.get_value ();
+		for (int i = 0; i < 100; i++) {
+			s.decrease ();
+			if (last < s.get_value ()) {
+				warning (e);
+			}
+			last = s.get_value ();
+		}
+
+		if (s.get_display_value () != "0.900") {
+			warning (e);
+		}
 	}
 
 	public static void test_background_coordinates () {

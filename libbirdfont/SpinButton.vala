@@ -29,12 +29,11 @@ public class SpinButton : Tool {
 	public int8 milli = 0;
 	
 	bool value_from_motion = false;
-	double begin_x = 0;
 	double begin_y = 0;
-	double begin_value = 0;
+	int begin_value = 0;
 	
-	double max = 9.999;
-	double min = 0;
+	int max = 9999;
+	int min = 0;
 	
 	public SpinButton (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		base (null , tip, key, modifier_flag);
@@ -48,7 +47,7 @@ public class SpinButton : Tool {
 		panel_press_action.connect ((selected, button, tx, ty) => {
 			double py = Math.fabs (y - ty);
 			int n;
-			
+
 			if (is_selected ()) {
 				n = (button == 3) ? 10 : 1;
 					
@@ -59,18 +58,29 @@ public class SpinButton : Tool {
 			}
 			
 			value_from_motion = true;
-			begin_x = tx;
 			begin_y = ty;
 			
-			begin_value = double.parse (get_display_value ());
+			begin_value = get_int_value ();
 		});
 
 		panel_move_action.connect ((selected, button, tx, ty) => {
 			double d;
+			int new_value;
+			
 			if (value_from_motion) {
-			 d = (begin_y - ty) / 200;
-			 d = (d < 0) ? -Math.pow (d, 2) : Math.pow (d, 2);
-			 set_value_round (begin_value + d);
+				d = (begin_y - ty) / 200;
+				d = (d < 0) ? -Math.pow (d, 2) : Math.pow (d, 2);
+				d *= 1000;
+
+				new_value = (int)(begin_value + d);
+				
+				if (new_value < min) {
+					set_int_value (@"$min");
+				} else if (new_value > max) {
+					set_int_value (@"$max");
+				} else {
+					set_int_value (@"$new_value");
+				}
 			}
 		});
 
@@ -80,78 +90,70 @@ public class SpinButton : Tool {
 	}
 	
 	public void set_max (double max) {
-		this.max = max;
+		this.max = (int) Math.rint (max * 1000);
 	}
 
 	public void set_min (double min) {
-		this.min = min;
+		this.min = (int) Math.rint (min * 1000);
 	}
 	
 	public void increase () {	
-		if (deka == 9 && deci == 9 && centi == 9 && milli == 9) {
-			return;
-		}
+		int v;
 		
-		milli++;
-
-		if (milli == 10) {
-			centi++;
-			milli = 0;
-		}
-				
-		if (centi == 10) {
-			deci++;
-			centi = 0;
-		}
-
-		if (deci == 10) {
-			deka++;
-			deci = 0;
-		}
+		v = get_int_value ();
+		v++;
 		
-		if (get_value () > max) {
-			set_value_round (max, false);
+		if (v > max) {
+			set_int_value (@"$max");
+		} else {
+			set_int_value (@"$v");
 		}
 
 		new_value_action (this);
 	}
 
 	public void decrease () {
-		if (deka == 0 && deci == 0 && centi == 0) {
-			return;
-		}
+		int v;
 		
-		milli--;
-		
-		if (milli == -1) {
-			centi--;
-			milli = 9;
-		}
-		
-		if (centi == -1) {
-			deci--;
-			centi = 9;
-		}
+		v = get_int_value ();
+		v--;
 
-		if (deci == -1) {
-			deka--;
-			deci = 9;
-		}
-		
-		if (get_value () < 0.05) { // lower limit
-			set_value_round (0.05);
-		}
-
-		if (get_value () < min) {
-			set_value_round (min, false);
+		if (v <= min) {
+			set_int_value (@"$min");
+		} else {
+			set_int_value (@"$v");
 		}
 				
 		new_value_action (this);
 	}
 
-	public void set_value (string new_value, bool check_boundries = true, bool emit_signal = true) {
+	private void set_int_value (string new_value) {
 		string v = new_value;
 		
+		while (!(v.char_count () >= 4)) {
+			v = "0" + v;
+		}
+		
+		deka = parse (v.substring (v.index_of_nth_char (0), 1));
+		deci = parse (v.substring (v.index_of_nth_char (1), 1));
+		centi = parse (v.substring (v.index_of_nth_char (2), 1));
+		milli = parse (v.substring (v.index_of_nth_char (3), 1));
+		
+		new_value_action (this);
+	}
+
+	int8 parse (string s) {
+		int v = int.parse (s);
+		if (v < 0) {
+			warning ("Failed to parse integer.");
+			return 0;
+		}
+		return (int8) v;
+	}
+
+	public void set_value (string new_value, bool check_boundries = true, bool emit_signal = true) {
+		string v = new_value;
+
 		while (!(v.char_count () >= 5)) {
 			if (v.index_of (".") == -1) {
 				v += ".";
@@ -161,11 +163,11 @@ public class SpinButton : Tool {
 			
 			return;
 		}
-		
-		deka = (int8) int.parse (v.substring (0, 1));
-		deci = (int8) int.parse (v.substring (2, 1));
-		centi = (int8) int.parse (v.substring (3, 1));
-		milli = (int8) int.parse (v.substring (4, 1));
+
+		deka = (int8) int.parse (v.substring (v.index_of_nth_char (0), 1));
+		deci = (int8) int.parse (v.substring (v.index_of_nth_char (2), 1));
+		centi = (int8) int.parse (v.substring (v.index_of_nth_char (3), 1));
+		milli = (int8) int.parse (v.substring (v.index_of_nth_char (4), 1));
 		
 		if (emit_signal) {
 			new_value_action (this);
@@ -182,12 +184,11 @@ public class SpinButton : Tool {
 
 	public void set_value_round (double v, bool check_boundries = true, bool emit_signal = true) {
 		int8 m;
+
+		v *= 1000;
+		v = Math.rint (v);
+		print (@"v: $v\n");
 		
-		v += 0.005;
-		
-		if (v > 10) v = 9.999;
-		if (v < 0.001) v = 0.001;
-				
 		m = milli; // ignore milli value
 		set_value (@"$v", check_boundries, emit_signal);
 		milli = m;
@@ -195,6 +196,10 @@ public class SpinButton : Tool {
 	
 	public double get_value () {
 		return deka + (deci / 10.0) + (centi / 100.0) + (milli / 1000.0);
+	}
+	
+	private int get_int_value () {
+		return deka * 1000 + deci * 100 + centi * 10 + milli;
 	}
 
 	public string get_display_value () {
