@@ -38,10 +38,8 @@ http://greg.thehellings.com/2012/02/a-better-ubuntu-mingw-experience/
 You need wine and nsis windows installer as well.
 
 Compile and build the installer with:
-./configure
-./waf configure --win32 --installer
-./waf clean
-./waf build --win32 --installer
+cd win32
+./build_win32.py
 
 --------------------
 Precompiled packages
