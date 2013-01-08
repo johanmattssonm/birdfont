@@ -416,9 +416,14 @@ os.put_string (
 		string export_command;
 		
 		if (Supplement.win32) {
-			VersionList.set_suppress_signal (true);
 			async = false;
 		}
+		
+		/* // This ugly hack causes problems; TODO: fix it
+		if (Supplement.win32) {
+			VersionList.set_suppress_signal (true);
+		}
+		*/
 		
 		try {
 			// create a copy of current font and use it in a separate 
