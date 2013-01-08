@@ -46,4 +46,7 @@ Precompiled packages
 --------------------
 
 A Windows binary is avalilable at http://birdfont.org
+You need to install the windows version on drive C:.
+
 A Ubuntu package is avalilable at https://launchpad.net
+You can apt-get install birdfont.
