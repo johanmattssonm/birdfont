@@ -1079,6 +1079,7 @@ public class Path {
 
 	public void insert_new_point_on_path (EditPoint? epp) {
 		EditPoint start, stop;
+		
 		double x0, x1, y0, y1;
 		double px, py;
 		
@@ -1095,6 +1096,11 @@ public class Path {
 
 		start = ep.get_prev ().data;
 		stop = ep.get_next ().data;
+
+		if (start.get_right_handle ().type == PointType.CURVE || stop.get_left_handle ().type  == PointType.CURVE) {
+			start.get_right_handle ().type = PointType.CURVE;
+			stop.get_left_handle ().type = PointType.CURVE;
+		}
 
 		add_point_after (ep, ep.get_prev ());
 
@@ -1129,6 +1135,13 @@ public class Path {
 
 		stop.get_left_handle ().length *= 1 - position;
 		start.get_right_handle ().length *= position;
+
+		// this is a point on a line
+		if (start.get_right_handle ().type == PointType.LINE && stop.get_left_handle ().type  == PointType.LINE) {
+			ep.get_right_handle ().set_point_type (PointType.LINE);
+			ep.get_left_handle ().set_point_type (PointType.LINE);
+			ep.recalculate_linear_handles ();
+		}
 	}
 			
 	/** Get a point on the this path closest to x and y coordinates. */
