@@ -39,7 +39,15 @@ public class ExportTool : Tool {
 		});
 	}
 
-	public static string export_current_glyph_to_string () {
+	public static string export_selected_paths_to_string () {
+		return export_current_glyph_to_string (true);		
+	}
+	
+	public static string export_selected_paths_to_inkscape_clipboard () {
+		return export_current_glyph_to_inkscape_clipboard (true);
+	}
+
+	public static string export_current_glyph_to_string (bool only_selected_paths = false) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Font font = Supplement.get_current_font ();
 		string name;
@@ -69,7 +77,7 @@ public class ExportTool : Tool {
 		
 		s.append (@"<g id=\"$(name)\">\n");
 
-		s.append (get_svg_path_elements ());
+		s.append (get_svg_path_elements (only_selected_paths));
 	
 		s.append ("</g>\n");
 		s.append ("</svg>");
@@ -77,7 +85,7 @@ public class ExportTool : Tool {
 		return s.str;
 	}
 	
-	public static string export_current_glyph_to_inkscape_clipboard () {
+	public static string export_current_glyph_to_inkscape_clipboard (bool only_selected_paths = false) {
 		StringBuilder s;
 		
 		s = new StringBuilder ();
@@ -92,13 +100,13 @@ public class ExportTool : Tool {
 			max="0,0" />
      """);
 
-		s.append (get_svg_path_elements ());
+		s.append (get_svg_path_elements (only_selected_paths));
 		s.append ("</svg>");
 		
 		return s.str;
 	}
 
-	public static string get_svg_path_elements () {
+	private static string get_svg_path_elements (bool only_selected_paths) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		string glyph_svg;
 		StringBuilder s;
@@ -107,8 +115,15 @@ public class ExportTool : Tool {
 								
 		s = new StringBuilder ();
 		glyph_svg = "";
-		foreach (Path p in glyph.path_list) {
-			glyph_svg += Svg.to_svg_path (p, glyph);
+		
+		if (only_selected_paths) {
+			foreach (Path p in glyph.active_paths) {
+				glyph_svg += Svg.to_svg_path (p, glyph);
+			}		
+		} else {
+			foreach (Path p in glyph.path_list) {
+				glyph_svg += Svg.to_svg_path (p, glyph);
+			}
 		}
 
 		s.append (@"<path ");

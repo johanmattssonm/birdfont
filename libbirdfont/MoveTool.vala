@@ -123,10 +123,10 @@ class MoveTool : Tool {
 					g.path_list.remove (p);
 					g.update_view ();
 				}
-			}
-			
-			while (g.active_paths.length () > 0) {
-				g.active_paths.remove_link (g.active_paths.first ());
+
+				while (g.active_paths.length () > 0) {
+					g.active_paths.remove_link (g.active_paths.first ());
+				}
 			}
 		});
 		
