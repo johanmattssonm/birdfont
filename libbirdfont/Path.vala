@@ -1121,7 +1121,7 @@ public class Path {
 				position = t;
 			}
 		}
-			
+
 		bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
 		bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
 

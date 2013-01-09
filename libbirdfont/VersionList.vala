@@ -24,7 +24,6 @@ public class VersionList : DropMenu {
 	int versions = 1;
 	int current_version = 0;
 	public List<Glyph> glyphs = new List<Glyph> ();
-	public static bool suppress_signal = false;
 
 	public VersionList (Glyph? g = null) {
 		base ("version");
@@ -44,10 +43,6 @@ public class VersionList : DropMenu {
 		if (g != null) {
 			add_glyph ((!) g);
 		}
-	}
-	
-	public static void set_suppress_signal (bool s) {
-		suppress_signal = s;
 	}
 	
 	public Glyph get_current () {
@@ -75,11 +70,61 @@ public class VersionList : DropMenu {
 		return_if_fail (ma.parent != null);
 		
 		((!)ma.parent).deselect_all ();
-		ma.set_selected (true);		
+		ma.set_selected (true);
 		
-		if (!is_null (MainWindow.get_tab_bar ())) {
-			MainWindow.get_tab_bar ().close_by_name (get_current ().name);
-		}	
+		reload_all_open_glyphs ();
+	}
+	
+	/** Reload a glyph when a new version is selected. Updates the path
+	 * in glyph view, not from disk but from the glyph table.
+	 */
+	void reload_all_open_glyphs () {
+		TabBar b;
+		Tab tab;
+		Tab? tn;
+		Glyph glyph;
+		Glyph updated_glyph;
+		Glyph? ug;
+		Font font = Supplement.get_current_font ();
+		StringBuilder uni = new StringBuilder ();
+		
+		if (is_null (MainWindow.get_tab_bar ())) {
+			return;
+		}
+		
+		b = MainWindow.get_tab_bar ();
+		
+		for (int i = 0; i < b.get_length (); i++) {
+			tn = b.get_nth (i);
+			
+			if (tn == null) {
+				warning ("tab is null");
+				return;
+			}
+
+			tab = (!) tn;
+
+			if (! (tab.get_display () is Glyph)) {
+				continue; 
+			}
+			
+			glyph = (Glyph) tab.get_display ();
+			uni.truncate (0);
+			uni.append_unichar (glyph.unichar_code);
+			ug = font.get_glyph (uni.str);
+			
+			if (ug == null) {
+				warning ("display is null");
+				return;
+			}
+			
+			updated_glyph = (!) ug;
+			tab.set_display (updated_glyph);
+			updated_glyph.view_zoom = glyph.view_zoom;
+			updated_glyph.view_offset_x = glyph.view_offset_x;
+			updated_glyph.view_offset_y = glyph.view_offset_y;
+			updated_glyph.close_path ();
+		}
 	}
 	
 	public void add_glyph (Glyph new_version, bool selected = true) {
@@ -94,16 +139,12 @@ public class VersionList : DropMenu {
 		ma.action = (self) => {
 			Font font;
 			
-			if (suppress_signal) {
-				return;
-			}
-			
 			font = Supplement.get_current_font ();
 			set_selected_item (self);
 			font.touch ();
 		};
 
-		if (selected && !suppress_signal) {
+		if (selected) {
 			set_selected_item (ma);
 		}
 	}

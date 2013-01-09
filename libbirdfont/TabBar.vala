@@ -240,6 +240,14 @@ public class TabBar : GLib.Object {
 		return false;
 	}
 
+	public Tab? get_nth (int i) {
+		if (!(0 <= i < get_length ())) {
+			return null;
+		}
+		
+		return tabs.nth (i).data;
+	}
+
 	public Tab? get_tab (string name) {
 		foreach (var n in tabs) {
 			if (n.get_label () == name) {
@@ -263,7 +271,7 @@ public class TabBar : GLib.Object {
 		
 		return false;
 	}
-		
+	
 	public Tab get_selected_tab () {
 		return tabs.nth (get_selected ()).data;
 	}

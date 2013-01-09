@@ -419,12 +419,6 @@ os.put_string (
 			async = false;
 		}
 		
-		/* // This ugly hack causes problems; TODO: fix it
-		if (Supplement.win32) {
-			VersionList.set_suppress_signal (true);
-		}
-		*/
-		
 		try {
 			// create a copy of current font and use it in a separate 
 			// export thread
@@ -466,10 +460,6 @@ os.put_string (
 			done = false;
 		}
 
-		if (Supplement.win32) {
-			VersionList.set_suppress_signal (false);
-		}
-		
 		return done;		
 	}
 	

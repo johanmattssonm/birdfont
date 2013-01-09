@@ -33,6 +33,10 @@ public class Tab : GLib.Object {
 		return !always_open;
 	}
 
+	public void set_display (FontDisplay fd) {
+		display = fd;
+	}
+
 	public FontDisplay get_display () {
 		return display;
 	}
