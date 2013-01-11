@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-11 13:30+0100\n"
-"PO-Revision-Date: 2012-12-24 20:42+0000\n"
+"POT-Creation-Date: 2013-01-11 13:35+0100\n"
+"PO-Revision-Date: 2013-01-11 12:35+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1356381748.0\n"
+"X-POOTLE-MTIME: 1357907708.0\n"
 
 #: libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -314,15 +314,16 @@ msgstr "Ställ in bakgrundsbildens kontrast"
 
 #: libbirdfont/Toolbox.vala:473
 msgid "Stroke color"
-msgstr ""
+msgstr "Linjefärg"
 
 #: libbirdfont/Toolbox.vala:495
 msgid "Stroke width"
-msgstr ""
+msgstr "Linjebredd"
 
 #: libbirdfont/Toolbox.vala:512
+#, fuzzy
 msgid "Handle color"
-msgstr ""
+msgstr "Handtagsfärg"
 
 #: libbirdfont/Toolbox.vala:714
 msgid "Set size for grid"
@@ -382,7 +383,7 @@ msgstr "Klistra _in"
 
 #: birdfont/GtkWindow.vala:381
 msgid "_Select all paths"
-msgstr ""
+msgstr "_Markera alla slingor"
 
 #: birdfont/GtkWindow.vala:386
 msgid "_Export glyph as SVG"
