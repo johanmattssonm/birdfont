@@ -4288,7 +4288,7 @@ class KernTable : Table {
 				
 				fd.add_ushort (gid_left);
 				fd.add_ushort ((uint16)gid_right);
-				fd.add_short ((int16)k.val);
+				fd.add_short ((int16) (k.val * UNITS));
 			}
 			
 			gid_left++;

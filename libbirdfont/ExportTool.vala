@@ -217,6 +217,15 @@ os.put_string (
 	
 	<style type="text/css">
 
+		body {
+			text-rendering: optimizeLegibility;
+			font-feature-settings: "kern";
+			-moz-font-feature-settings: "kern=1";
+			-ms-font-feature-settings: "kern";
+			-webkit-font-feature-settings: "kern";
+			-o-font-feature-settings: "kern";
+		}
+
 		@font-face {
 			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""SVG';
 			src: url('""");     os.put_string (@"$(name).svg#$(name)");  os.put_string ("""') format('svg');

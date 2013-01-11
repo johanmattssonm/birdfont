@@ -87,6 +87,7 @@ class SvgFontFormatWriter : Object  {
 			}
 		}
 
+		indice = 0;
 		while (true) {
 			g = font.get_glyph_indice (indice++);
 			
@@ -111,7 +112,7 @@ class SvgFontFormatWriter : Object  {
 				l = Font.to_hex_code (glyph.unichar_code);
 				r = Font.to_hex_code (glyph_right.unichar_code);
 								
-				os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(k.val)\"/>\n");
+				os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(-k.val)\"/>\n");
 			}
 		}		
 
