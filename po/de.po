@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-11 14:19+0100\n"
+"POT-Creation-Date: 2013-01-12 14:23+0100\n"
 "PO-Revision-Date: 2013-01-09 08:14+0000\n"
 "Last-Translator: Robert <r.kabinger@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr "Hintergrundbild zuschneiden"
 msgid "Export glyph to svg file"
 msgstr "Glyph-Datei als SVG exportieren"
 
-#: libbirdfont/ExportTool.vala:509
+#: libbirdfont/ExportTool.vala:518
 msgid "Wrote font files"
 msgstr "Schriftdateien geschrieben"
 
