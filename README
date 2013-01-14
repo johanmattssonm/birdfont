@@ -3,9 +3,9 @@ Birdfont – font editor
 ----------------------
 
 Birdfont is a font editor that creates outline vector graphics and exports
-fonts in both svg and ttf format.
+fonts in svg, eot and ttf format.
 
-Author: Johan Mattsson and others see AUTORS for full attribution.
+Author: Johan Mattsson and others see AUTHORS for full attribution.
 License: GNU GPL v3
 Webpage: http://birdfont.org
 
@@ -52,4 +52,4 @@ A Windows binary is avalilable at http://birdfont.org
 You need to install the windows version on drive C:.
 
 A Ubuntu package is avalilable at https://launchpad.net
-You can apt-get install birdfont.
+You can apt-get install birdfont form Olivier Bertens repository.
