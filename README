@@ -14,17 +14,20 @@ Building from source
 --------------------
 
 Install vala and all required libraries, they are most likely in packages 
-with a -dev or -devel affix. You can run this if you are using Debian:
+with a -dev or -devel affix. 
 
-sudo apt-get install valac python-doit libglib2.0-dev libgtk2.0-dev libxml2-dev libwebkitgtk-dev
+On debian based systems will the you need the following packages:
+valac 
+python-doit 
+libglib2.0-dev 
+libgtk2.0-dev 
+libxml2-dev 
+libwebkitgtk-dev
 
 Configure, build and install:
 ./configure
-./doit
+doit
 sudo ./install
-
-You need to obtain the latest version of doit from 
-https://bitbucket.org/schettino72/doit
 
 ------------------------
 Bulding windows binaries
