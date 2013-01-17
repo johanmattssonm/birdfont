@@ -44,6 +44,9 @@ class PenTool : Tool {
 
 	public static double precision = 1;
 	
+	/** Move curve handle instead of control point. */
+	private bool last_selected_is_handle = false;
+	
 	public PenTool (string name) {
 		base (name, _("Right click to add new points, left click to move points") + " " + _("and double click to add new point on path."), ',', CTRL);
 		
@@ -85,14 +88,14 @@ class PenTool : Tool {
 				GridTool.tie (ref x, ref y);
 				g.move_selected_edit_point (selected_corner, x, y);
 			}
+			
+			move (x, y);
+
+			active_handle = new EditPointHandle.empty ();
 
 			move_selected = false;
 			move_selected_handle = false;
 			edit_active_corner = false;
-			
-			active_handle = new EditPointHandle.empty ();
-			
-			move (x, y);
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -108,6 +111,10 @@ class PenTool : Tool {
 				}
 				
 				g.update_view ();
+			}
+			
+			if (is_arrow_key (keyval)) {
+				move_selected_points (keyval);
 			}
 		});
 		
@@ -151,6 +158,8 @@ class PenTool : Tool {
 			last_point_x = x;
 			last_point_y = y;
 			
+			last_selected_is_handle = true;
+			
 			return;
 		}
 		
@@ -165,10 +174,13 @@ class PenTool : Tool {
 				
 				p.recalculate_linear_handles ();
 			}
+		
+			last_selected_is_handle = false;
 		}
 		
 		last_point_x = x;
 		last_point_y = y;
+		
 	}
 	
 	public void press (int button, int x, int y, bool double_click) {
@@ -601,6 +613,60 @@ class PenTool : Tool {
 		while (selected_points.length () > 0) {
 			selected_points.remove_link (selected_points.first ());
 		}
+	}
+
+	/**
+	 * Move the selected editpoint one pixel with keyboard irrespectivly of 
+	 * current zoom.
+	 */
+	void move_selected_points (uint keyval) {
+		Glyph g = MainWindow.get_current_glyph();
+		
+		if (!last_selected_is_handle) {
+			if (keyval == Key.UP) {
+				foreach (EditPoint e in selected_points) {
+					e.set_position (e.x, e.y + Glyph.ivz ());
+				}
+			}
+			
+			if (keyval == Key.DOWN) {
+				foreach (EditPoint e in selected_points) {
+					e.set_position (e.x, e.y - Glyph.ivz ());
+				}
+			}
+
+			if (keyval == Key.LEFT) {
+				foreach (EditPoint e in selected_points) {
+					e.set_position (e.x - Glyph.ivz (), e.y);
+				}
+			}
+
+			if (keyval == Key.RIGHT) {
+				foreach (EditPoint e in selected_points) {
+					e.set_position (e.x + Glyph.ivz (), e.y);
+				}
+			}		
+		} else {
+			if (keyval == Key.UP) {
+				selected_handle.move_delta (0, -1);
+			}
+			
+			if (keyval == Key.DOWN) {
+				selected_handle.move_delta (0, 1);
+			}
+
+			if (keyval == Key.LEFT) {
+				selected_handle.move_delta (-1, 0);
+			}
+
+			if (keyval == Key.RIGHT) {
+				selected_handle.move_delta (1, 0);
+			}				
+		}
+		
+		
+		// TODO: redraw only the relevant parts
+		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 	}
 	
 	/** Draw a test glyph. */

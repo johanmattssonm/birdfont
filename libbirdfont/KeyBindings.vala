@@ -19,7 +19,7 @@ using Gdk;
 
 namespace Supplement {
 
-// FIXA a lot of these things have been replaced and can safely be removed
+// FIXME a lot of these things have been replaced and can safely be removed
 
 public enum Key {
 	NONE = 0,
@@ -44,6 +44,13 @@ public enum Key {
 	CONTEXT_MENU = 65383,
 	TAB = 65289,
 	DEL = 65535
+}
+
+bool is_arrow_key (uint keyval) {
+	return keyval == Key.UP ||
+		keyval == Key.DOWN ||
+		keyval == Key.LEFT ||
+		keyval == Key.RIGHT;
 }
 
 bool is_modifier_key (uint i) {
