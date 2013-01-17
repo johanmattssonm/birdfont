@@ -435,6 +435,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});	
 		close_tab_item.add_accelerator ("activate", accel_group, 'W', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		Gtk.MenuItem close_all_tabs_item = new Gtk.MenuItem.with_mnemonic (_("Close _all tabs"));
+		tab_menu.append (close_all_tabs_item);
+		close_all_tabs_item.activate.connect (() => { 
+			TabBar tb = MainWindow.get_tab_bar ();
+			tb.close_all_tabs ();			
+		});	
+
 		// Tool
 		Gtk.MenuItem pen_item = new Gtk.MenuItem.with_mnemonic (_("_Create path"));
 		tool_menu.append (pen_item);

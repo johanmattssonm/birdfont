@@ -173,6 +173,14 @@ public class TabBar : GLib.Object {
 		return_if_fail (i != -1);
 	} 
 
+	public void close_all_tabs () {
+		for (int i = 0; i < get_length (); i++) {
+			if (close_tab (i)) {
+				close_all_tabs ();
+			}
+		}
+	}
+
 	public bool close_tab (int index, bool background_tab = false) {	
 		unowned List<Tab?>? lt;
 		Tab t;
