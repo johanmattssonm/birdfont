@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-14 00:58+0100\n"
-"PO-Revision-Date: 2013-01-13 20:49+0000\n"
+"POT-Creation-Date: 2013-01-17 18:46+0100\n"
+"PO-Revision-Date: 2013-01-15 06:30+0000\n"
 "Last-Translator: Cédric <cvalmary@yahoo.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: oc\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1358110172.0\n"
+"X-POOTLE-MTIME: 1358231427.0\n"
 
 #: libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -331,7 +331,7 @@ msgstr "Version novèla"
 
 #: libbirdfont/VersionList.vala:136
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: birdfont/GtkWindow.vala:327
 msgid "_New"
@@ -347,11 +347,11 @@ msgstr "_Enregistrar"
 
 #: birdfont/GtkWindow.vala:342
 msgid "Save _as"
-msgstr ""
+msgstr "Enregistrar _jos"
 
 #: birdfont/GtkWindow.vala:346
 msgid "_Export"
-msgstr ""
+msgstr "_Exportar"
 
 #: birdfont/GtkWindow.vala:351
 msgid "_Preview"
@@ -407,7 +407,7 @@ msgstr ""
 
 #: birdfont/GtkWindow.vala:443
 msgid "_Zoom"
-msgstr ""
+msgstr "_Zoom"
 
 #: birdfont/GtkWindow.vala:449
 msgid "_Create counter path"
