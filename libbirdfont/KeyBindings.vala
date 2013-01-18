@@ -330,6 +330,24 @@ public class KeyBindings {
 		events.insert (binding.get_key (), binding);
 	}
 
+	private static uint get_mod_from_key (uint keyval) {
+		uint mod = 0;
+		mod |= (keyval == Key.CTRL_RIGHT || keyval == Key.CTRL_LEFT) ? CTRL : 0;
+		mod |= (keyval == Key.SHIFT_RIGHT || keyval == Key.SHIFT_LEFT) ? SHIFT : 0;
+		mod |= (keyval == Key.ALT_LEFT || keyval == Key.ALT_GR) ? ALT : 0;
+		return mod;		
+	}
+
+	public static void remove_modifier_from_keyval (uint keyval) {
+		uint mod = get_mod_from_key (keyval);
+		set_modifier (modifier ^ mod);		
+	}
+
+	public static void add_modifier_from_keyval (uint keyval) {
+		uint mod = get_mod_from_key (keyval);
+		set_modifier (modifier | mod);
+	}
+
 	public static void set_modifier (uint mod) {
 		modifier = mod;
 

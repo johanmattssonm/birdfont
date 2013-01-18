@@ -17,7 +17,7 @@
 
 namespace Supplement {
 
-class PenTool : Tool {
+public class PenTool : Tool {
 
 	private static const double CONTACT_SURFACE = 50;
 
@@ -114,8 +114,13 @@ class PenTool : Tool {
 			}
 			
 			if (is_arrow_key (keyval)) {
-				move_selected_points (keyval);
+				if (KeyBindings.modifier != CTRL) {
+					move_selected_points (keyval);
+				} else {
+					move_select_next_point (keyval);
+				}
 			}
+					
 		});
 		
 		key_release_action.connect ((self, keyval) => {
@@ -594,7 +599,7 @@ class PenTool : Tool {
 		selected_handle = get_closest_handle (event_x, event_y);
 	}
 
-	void add_selected_point (EditPoint p) {
+	static void add_selected_point (EditPoint p) {
 		foreach (EditPoint ep in selected_points) {
 			if (p == ep) {
 				return;
@@ -604,7 +609,7 @@ class PenTool : Tool {
 		selected_points.append (p);
 	}
 	
-	void remove_all_selected_points () {
+	static void remove_all_selected_points () {
 		foreach (EditPoint e in selected_points) {
 			e.set_active (false);
 			e.set_selected (false);
@@ -613,6 +618,116 @@ class PenTool : Tool {
 		while (selected_points.length () > 0) {
 			selected_points.remove_link (selected_points.first ());
 		}
+	}
+
+	static void move_select_next_point (uint keyval) {
+		EditPoint next = new EditPoint ();
+		Glyph g = MainWindow.get_current_glyph();
+		
+		if (selected_points.length () == 0) {
+			return;
+		}
+
+		switch (keyval) {
+			case Key.UP:
+				next = get_next_point_up ();
+				break;
+			case Key.DOWN:
+				next = get_next_point_down ();
+				break;
+			case Key.LEFT:
+				next = get_next_point_left ();
+				break;
+			case Key.RIGHT:
+				next = get_next_point_right ();
+				break;
+			default:
+				break;
+		}
+
+		set_selected_point (next);		
+		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);	
+	}
+
+	private static EditPoint get_next_point_up () 
+		requires (selected_points.length () != 0) {
+		EditPoint e = selected_points.last ().data;		
+		
+		return_if_fail (e.next != null);
+		return_if_fail (e.prev != null);
+		
+		if (e.get_next ().data.y > e.get_prev ().data.y) {
+			return e.get_next ().data;
+		}
+		
+		return e.get_prev ().data;
+	}
+
+	private static EditPoint get_next_point_down () 
+		requires (selected_points.length () != 0) {
+		EditPoint e = selected_points.last ().data;		
+		
+		return_if_fail (e.next != null);
+		return_if_fail (e.prev != null);
+		
+		if (e.get_next ().data.y < e.get_prev ().data.y) {
+			return e.get_next ().data;
+		}
+		
+		return e.get_prev ().data;
+	}
+
+	private static EditPoint get_next_point_left () 
+		requires (selected_points.length () != 0) {
+		EditPoint e = selected_points.last ().data;		
+		
+		return_if_fail (e.next != null);
+		return_if_fail (e.prev != null);
+		
+		if (e.get_next ().data.x < e.get_prev ().data.x) {
+			return e.get_next ().data;
+		}
+		
+		return e.get_prev ().data;
+	}
+
+	private static EditPoint get_next_point_right () 
+		requires (selected_points.length () != 0) {
+		EditPoint e = selected_points.last ().data;		
+		
+		return_if_fail (e.next != null);
+		return_if_fail (e.prev != null);
+		
+		if (e.get_next ().data.x > e.get_prev ().data.x) {
+			return e.get_next ().data;
+		}
+		
+		return e.get_prev ().data;
+	}
+
+	private static void set_selected_point (EditPoint ep) {
+		remove_all_selected_points ();
+		add_selected_point (ep);
+		set_active_edit_point (ep);
+		edit_active_corner = true;
+		ep.set_selected (true);
+		set_default_handle_positions ();		
+	}
+
+	public static void select_point_up () {	
+		move_select_next_point (Key.UP);
+	}
+
+	public static void select_point_down () {
+		move_select_next_point (Key.DOWN);
+	}
+
+	public static void select_point_right () {
+		move_select_next_point (Key.RIGHT);
+	}
+
+	public static void select_point_left () {
+		move_select_next_point (Key.LEFT);
 	}
 
 	/**
@@ -663,7 +778,6 @@ class PenTool : Tool {
 				selected_handle.move_delta (1, 0);
 			}				
 		}
-		
 		
 		// TODO: redraw only the relevant parts
 		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);

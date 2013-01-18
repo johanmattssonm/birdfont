@@ -218,6 +218,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			}
 			
 			MainWindow.glyph_canvas.key_press (event.keyval);
+			KeyBindings.add_modifier_from_keyval (event.keyval);
 			return false;
 		});
 		
@@ -225,6 +226,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			if (MainWindow.glyph_canvas is Glyph) {
 				MainWindow.glyph_canvas.key_release (event.keyval);
 			}
+			
+			KeyBindings.remove_modifier_from_keyval (event.keyval);
 			return false;
 		});
 		
@@ -393,7 +396,25 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem import_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Import SVG"));
 		edit_menu.append (import_svg_item);
 		import_svg_item.activate.connect (() => { ImportSvg.import (); });	
-	
+
+		edit_menu.append (new SeparatorMenuItem ());
+
+		Gtk.MenuItem select_point_above = new Gtk.MenuItem.with_mnemonic (" Ctrl+↑  " + _("_Select point above"));
+		edit_menu.append (select_point_above);
+		select_point_above.activate.connect (() => { PenTool.select_point_up (); });
+
+		Gtk.MenuItem select_next_point = new Gtk.MenuItem.with_mnemonic (" Ctrl+→  " + _("Select _next point"));
+		edit_menu.append (select_next_point);
+		select_next_point.activate.connect (() => { PenTool.select_point_right (); });
+
+		Gtk.MenuItem select_previous_point = new Gtk.MenuItem.with_mnemonic (" Ctrl+←  " + _("Select _previous point"));
+		edit_menu.append (select_previous_point);
+		select_previous_point.activate.connect (() => { PenTool.select_point_left (); });
+
+		Gtk.MenuItem select_point_below = new Gtk.MenuItem.with_mnemonic (" Ctrl+↓  " + _("Select point _below"));
+		edit_menu.append (select_point_below);
+		select_point_below.activate.connect (() => { PenTool.select_point_down (); });
+				
 		// Tab
 		Gtk.MenuItem next_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Next tab"));
 		tab_menu.append (next_tab_item);
