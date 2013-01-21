@@ -1371,8 +1371,8 @@ public class Path {
 	}
 	
 	public void create_list () {
+		unowned List<EditPoint> prev = points.last ();;
 		unowned List<EditPoint> ep = points.first ();
-		unowned List<EditPoint> prev = ep;
 		
 		if (points.length () == 0) {
 			return;
@@ -1402,15 +1402,11 @@ public class Path {
 			ep = ep.next;
 		}
 		
-		if (is_open ()) {
-			ep.data.next = points.first ();
-		} else {
-			ep.data.next = points.first ();
-			assert (ep.data.next != null);
-		}
-		
+		ep.data.next = points.first ();
 		ep.data.prev = prev;
 		assert (ep.data.prev != null);
+
+		points.first ().data.prev = points.last ();
 	}
 
 	public void delete_edit_point (EditPoint ep) 

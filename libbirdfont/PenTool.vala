@@ -651,76 +651,53 @@ public class PenTool : Tool {
 		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);	
 	}
 
-	private static EditPoint get_next_point_up () 
+	private static EditPoint get_next_point (double angle) 
 		requires (selected_points.length () != 0) {
-		double angle = PI / 2;
 		EditPoint e = selected_points.last ().data;		
+		double right_angle = e.right_handle.angle;
+		double left_angle = e.left_handle.angle;
+		double min_right, min_left;
+		double min;
 		
 		return_if_fail (e.next != null);
 		return_if_fail (e.prev != null);
+			
+		// angle might be greater than 2 PI or less than 0
+		min_right = double.MAX;
+		min_left = double.MAX;
+		for (double i = -2 * PI; i <= 2 * PI; i += 2 * PI) {
+			min = fabs (right_angle - (angle + i));
+			if (min < min_right) {
+				min_right = min;
+			}
+			
+			min = fabs (left_angle - (angle + i));
+			if (min < min_left) {
+				min_left = min;
+			}
+		}
 		
-		print (@"e.right_handle.angle: $(e.right_handle.angle)\n");
-		print (@"e.left_handle.angle: $(e.left_handle.angle)\n");
-
-		if (fabs (e.right_handle.angle - angle) < fabs (e.left_handle.angle - angle)) {
+		if (min_right < min_left) {
 			return e.get_next ().data;
 		}
 		
 		return e.get_prev ().data;
 	}
-
-	private static EditPoint get_next_point_down () 
-		requires (selected_points.length () != 0) {
-		double angle = 1.5 * PI;
-		EditPoint e = selected_points.last ().data;		
-		
-		return_if_fail (e.next != null);
-		return_if_fail (e.prev != null);
-		
-		print (@"e.right_handle.angle: $(e.right_handle.angle)\n");
-		print (@"e.left_handle.angle: $(e.left_handle.angle)\n");
-
-		if (fabs (e.right_handle.angle - angle) < fabs (e.left_handle.angle - angle)) {
-			return e.get_next ().data;
-		}
-		
-		return e.get_prev ().data;
+	
+	private static EditPoint get_next_point_up () {
+		return get_next_point (PI / 2);
 	}
 
-	private static EditPoint get_next_point_left () 
-		requires (selected_points.length () != 0) {
-		double angle = PI;
-		EditPoint e = selected_points.last ().data;		
-		
-		return_if_fail (e.next != null);
-		return_if_fail (e.prev != null);
-		
-		print (@"e.right_handle.angle: $(e.right_handle.angle)\n");
-		print (@"e.left_handle.angle: $(e.left_handle.angle)\n");
-
-		if (fabs (e.right_handle.angle - angle) < fabs (e.left_handle.angle - angle)) {
-			return e.get_next ().data;
-		}
-		
-		return e.get_prev ().data;
+	private static EditPoint get_next_point_down () {
+		return get_next_point (PI + PI / 2);
 	}
 
-	private static EditPoint get_next_point_right () 
-		requires (selected_points.length () != 0) {
-		double angle = 0;
-		EditPoint e = selected_points.last ().data;		
-		
-		return_if_fail (e.next != null);
-		return_if_fail (e.prev != null);
-		
-		print (@"e.right_handle.angle: $(e.right_handle.angle)\n");
-		print (@"e.left_handle.angle: $(e.left_handle.angle)\n");
+	private static EditPoint get_next_point_left () {
+		return get_next_point (PI);
+	}
 
-		if (fabs (e.right_handle.angle - angle) < fabs (e.left_handle.angle - angle)) {
-			return e.get_next ().data;
-		}
-		
-		return e.get_prev ().data;
+	private static EditPoint get_next_point_right () {
+		return get_next_point (0);
 	}
 
 	private static void set_selected_point (EditPoint ep) {
@@ -759,26 +736,31 @@ public class PenTool : Tool {
 			if (keyval == Key.UP) {
 				foreach (EditPoint e in selected_points) {
 					e.set_position (e.x, e.y + Glyph.ivz ());
+					e.recalculate_linear_handles ();
 				}
 			}
 			
 			if (keyval == Key.DOWN) {
 				foreach (EditPoint e in selected_points) {
 					e.set_position (e.x, e.y - Glyph.ivz ());
+					e.recalculate_linear_handles ();
 				}
 			}
 
 			if (keyval == Key.LEFT) {
 				foreach (EditPoint e in selected_points) {
 					e.set_position (e.x - Glyph.ivz (), e.y);
+					e.recalculate_linear_handles ();
 				}
 			}
 
 			if (keyval == Key.RIGHT) {
 				foreach (EditPoint e in selected_points) {
 					e.set_position (e.x + Glyph.ivz (), e.y);
+					e.recalculate_linear_handles ();
 				}
-			}		
+			}
+			
 		} else {
 			if (keyval == Key.UP) {
 				selected_handle.move_delta (0, -1);
