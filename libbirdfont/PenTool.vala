@@ -82,14 +82,6 @@ public class PenTool : Tool {
 		release_action.connect ((self, b, ix, iy) => {
 			double x = ix;
 			double y = iy;
-			Glyph g = MainWindow.get_current_glyph ();
-			EditPoint selected_corner;
-			
-			if (move_selected && GridTool.is_visible () && selected_points.length () > 0) {
-				selected_corner = selected_points.last ().data;
-				GridTool.tie (ref x, ref y);
-				g.move_selected_edit_point (selected_corner, x, y);
-			}
 			
 			move (x, y);
 
@@ -136,6 +128,7 @@ public class PenTool : Tool {
 	
 	public void move (double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
+		double coordinate_x, coordinate_y;
 		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
@@ -149,9 +142,11 @@ public class PenTool : Tool {
 		// move curve handles
 		if (move_selected_handle) {
 			if (GridTool.is_visible ()) {
-				GridTool.tie (ref x, ref y);
+				coordinate_x = Glyph.path_coordinate_x (x);
+				coordinate_y = Glyph.path_coordinate_y (y);
+				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
 				selected_handle.set_point_type (PointType.CURVE);
-				selected_handle.move_to (x, y);
+				selected_handle.move_to_coordinate (coordinate_x, coordinate_y);
 			} else {
 				selected_handle.set_point_type (PointType.CURVE);
 				selected_handle.move_delta ((x - last_point_x) * precision, (y - last_point_y) * precision);
@@ -173,7 +168,14 @@ public class PenTool : Tool {
 		// move edit point
 		if (move_selected) {
 			foreach (EditPoint p in selected_points) {
-				glyph.move_selected_edit_point_delta (p, (x - last_point_x) * precision, (y - last_point_y) * precision);
+				if (GridTool.is_visible ()) {
+					coordinate_x = Glyph.path_coordinate_x (x);
+					coordinate_y = Glyph.path_coordinate_y (y);
+					GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
+					glyph.move_selected_edit_point_coordinates (p, coordinate_x, coordinate_y);
+				} else {
+					glyph.move_selected_edit_point_delta (p, (x - last_point_x) * precision, (y - last_point_y) * precision);
+				}
 				
 				if (tie_x_or_y_coordinates) {
 					GridTool.tie_to_prev (p, x, y);

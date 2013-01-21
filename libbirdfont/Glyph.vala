@@ -906,21 +906,14 @@ public class Glyph : FontDisplay {
 		move_selected_edit_point (selected_point, dx + px, dy + py);
 	}
 	
-	public void move_selected_edit_point (EditPoint selected_point, double x, double y) {		
-		double xc, yc, xt, yt;
-		double ivz = 1 / view_zoom;
+	public void move_selected_edit_point_coordinates (EditPoint selected_point, double xt, double yt) {	
+		double x, y;
 		EditPoint p;
-		
+				
 		Supplement.get_current_font ().touch ();
 
-		xc = (allocation.width / 2.0);
-		yc = (allocation.height / 2.0);
-				
-		x *= ivz;
-		y *= ivz;
-	
-		xt = x - xc + view_offset_x;
-		yt = yc - y - view_offset_y;
+		x = reverse_path_coordinate_x (xt);
+		y = reverse_path_coordinate_y (yt);
 		
 		// redraw control point
 		redraw_area ((int)(x - 4*view_zoom), (int)(y - 4*view_zoom), (int)(x + 3*view_zoom), (int)(y + 3*view_zoom));
@@ -939,6 +932,12 @@ public class Glyph : FontDisplay {
 			p.recalculate_handles (x, y);
 			redraw_area (0, 0, allocation.width, allocation.height);
 		}		
+	}
+
+	public void move_selected_edit_point (EditPoint selected_point, double x, double y) {		
+		double xt = path_coordinate_x (x);
+		double yt = path_coordinate_y (y);
+		move_selected_edit_point_coordinates (selected_point, xt, yt);
 	}
 	
 	private void redraw_last_stroke (double x, double y) {
