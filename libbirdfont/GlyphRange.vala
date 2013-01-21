@@ -38,11 +38,10 @@ public class GlyphRange {
 		
 		if (languages.length == 0) {
 			use_default_range_alphabetic ();
+			return;
 		}
 		
-		lang = languages[0];
-
-		if (lang.has_prefix ("zh_CN")) {
+		if (languages[0].has_prefix ("zh_CN")) {
 			use_default_range_chinese ();
 		} else {
 			use_default_range_alphabetic ();

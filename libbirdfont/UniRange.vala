@@ -34,10 +34,6 @@ public class UniRange : GLib.Object {
 	public unichar get_char (unichar index) {
 		unichar result = start + index;
 		
-		if (unlikely (index < 0)) {
-			warning ("Index is negative in UniRange.");
-		}
-		
 		if (unlikely (!(start <= result <= stop))) {
 			warning ("Index out of range in UniRange (%u <= %u <= %u) (index: %u)\n", start, result, stop, index);
 		}
