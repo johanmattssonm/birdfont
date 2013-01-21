@@ -139,6 +139,10 @@ public class GlyphRange {
 		add_single ('﨧');
 		add_single ('﨨');
 		add_single ('﨩');
+		
+		add_range ('㈠', '㈩');
+		add_single ('㈱');
+		add_single ('㊣');
 	}
 	
 	public void use_full_unicode_range () {
