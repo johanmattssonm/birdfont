@@ -15,6 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using Math;
+
 namespace Supplement {
 
 public class PenTool : Tool {
@@ -651,12 +653,16 @@ public class PenTool : Tool {
 
 	private static EditPoint get_next_point_up () 
 		requires (selected_points.length () != 0) {
+		double angle = PI / 2;
 		EditPoint e = selected_points.last ().data;		
 		
 		return_if_fail (e.next != null);
 		return_if_fail (e.prev != null);
 		
-		if (e.get_next ().data.y > e.get_prev ().data.y) {
+		print (@"e.right_handle.angle: $(e.right_handle.angle)\n");
+		print (@"e.left_handle.angle: $(e.left_handle.angle)\n");
+
+		if (fabs (e.right_handle.angle - angle) < fabs (e.left_handle.angle - angle)) {
 			return e.get_next ().data;
 		}
 		
@@ -665,12 +671,16 @@ public class PenTool : Tool {
 
 	private static EditPoint get_next_point_down () 
 		requires (selected_points.length () != 0) {
+		double angle = 1.5 * PI;
 		EditPoint e = selected_points.last ().data;		
 		
 		return_if_fail (e.next != null);
 		return_if_fail (e.prev != null);
 		
-		if (e.get_next ().data.y < e.get_prev ().data.y) {
+		print (@"e.right_handle.angle: $(e.right_handle.angle)\n");
+		print (@"e.left_handle.angle: $(e.left_handle.angle)\n");
+
+		if (fabs (e.right_handle.angle - angle) < fabs (e.left_handle.angle - angle)) {
 			return e.get_next ().data;
 		}
 		
@@ -679,12 +689,16 @@ public class PenTool : Tool {
 
 	private static EditPoint get_next_point_left () 
 		requires (selected_points.length () != 0) {
+		double angle = PI;
 		EditPoint e = selected_points.last ().data;		
 		
 		return_if_fail (e.next != null);
 		return_if_fail (e.prev != null);
 		
-		if (e.get_next ().data.x < e.get_prev ().data.x) {
+		print (@"e.right_handle.angle: $(e.right_handle.angle)\n");
+		print (@"e.left_handle.angle: $(e.left_handle.angle)\n");
+
+		if (fabs (e.right_handle.angle - angle) < fabs (e.left_handle.angle - angle)) {
 			return e.get_next ().data;
 		}
 		
@@ -693,12 +707,16 @@ public class PenTool : Tool {
 
 	private static EditPoint get_next_point_right () 
 		requires (selected_points.length () != 0) {
+		double angle = 0;
 		EditPoint e = selected_points.last ().data;		
 		
 		return_if_fail (e.next != null);
 		return_if_fail (e.prev != null);
 		
-		if (e.get_next ().data.x > e.get_prev ().data.x) {
+		print (@"e.right_handle.angle: $(e.right_handle.angle)\n");
+		print (@"e.left_handle.angle: $(e.left_handle.angle)\n");
+
+		if (fabs (e.right_handle.angle - angle) < fabs (e.left_handle.angle - angle)) {
 			return e.get_next ().data;
 		}
 		
