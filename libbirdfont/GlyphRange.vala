@@ -33,11 +33,30 @@ public class GlyphRange {
 	}
 	
 	public void use_default_range () {
+		string[] languages = Intl.get_language_names ();
+		string lang;
+		
+		if (languages.length == 0) {
+			use_default_range_alphabetic ();
+		}
+		
+		lang = languages[0];
+
+		if (lang.has_prefix ("zh_CN")) {
+			use_default_range_chinese ();
+		} else {
+			use_default_range_alphabetic ();
+		}
+	}
+	
+	public void use_default_range_alphabetic () {
+		string lower_case, upper_case;
+						
 		/// All lower case letters in alphabetic order separated by space
-		string lower_case = _("a b c d e f g h i j k l m n o p q r s t u v w x y z");
+		lower_case = _("a b c d e f g h i j k l m n o p q r s t u v w x y z");
 		
 		/// All upper case letters in alphabetic order separated by space
-		string upper_case = _("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
+		upper_case = _("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
 
 		foreach (string c in lower_case.split (" ")) {
 			add_single (c.get_char ());
@@ -72,6 +91,54 @@ public class GlyphRange {
 		add_range ('‐', '—');
 		add_range ('<', '@');
 		add_range ('(', ')');
+	}
+	
+	public void use_default_range_chinese () {
+		string pinyin_tones;
+		
+		// pinyin
+		pinyin_tones  = "ˇ ˉ ˊ ˋ ˙ ā á ǎ à ō ó ǒ ò ē é ě è ī í ǐ ì ū ú ǔ ù ǖ ǘ ǚ ǜ ü Ā Á Ǎ À Ō Ó Ǒ Ò Ē É Ě È";
+		add_range ('a', 'z');
+		
+		foreach (string c in pinyin_tones.split (" ")) {
+			add_single (c.get_char ());
+		}		
+
+		add_single ('「');
+		add_single ('」');
+
+		add_single ('（');
+		add_single ('）');
+
+		add_single ('：');
+
+		add_single ('，');
+		add_single ('。');
+		add_single ('？');
+
+		add_range ('0', '9');
+		
+		// GB2312 (U+4e00 to U+fa20)
+		add_range ('一', '龥');
+		add_single ('郎');
+		add_single ('凉');
+		add_single ('秊');
+		add_single ('裏');
+		add_single ('隣');
+		
+		add_range ('兀', '﨏');
+		add_single ('﨑');
+		add_single ('﨓');
+		add_single ('﨔');
+		add_single ('礼');
+		add_single ('﨟');
+		add_single ('蘒');
+		add_single ('﨡');
+		add_single ('﨣');
+		add_single ('﨤');
+		add_single ('﨧');
+		add_single ('﨨');
+		add_single ('﨩');
 	}
 	
 	public void use_full_unicode_range () {
