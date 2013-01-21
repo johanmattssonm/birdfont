@@ -73,6 +73,7 @@ class Svg {
 
 		m = pl.points.first ().data;	
 		add_abs_next ((!) n, m, svg, g, do_glyph);
+		
 		close_path (svg);
 	}
 
