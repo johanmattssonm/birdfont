@@ -39,6 +39,14 @@ class CutTool : Tool {
 		move_action.connect ((self, x, y)	 => {
 			pen.move_action (pen, x, y);
 		});
+		
+		key_press_action.connect ((self, keyval) => {
+			pen.key_press_action (pen, keyval);
+		});
+
+		key_release_action.connect ((self, keyval) => {
+			pen.key_release_action (pen, keyval);
+		});
 	}
 
 	public static void force_direction () {

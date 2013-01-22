@@ -34,7 +34,6 @@ public class GlyphRange {
 	
 	public void use_default_range () {
 		string[] languages = Intl.get_language_names ();
-		string lang;
 		
 		if (languages.length == 0) {
 			use_default_range_alphabetic ();
