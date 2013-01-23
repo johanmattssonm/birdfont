@@ -84,6 +84,7 @@ public class PenTool : Tool {
 			double y = iy;
 			
 			move (x, y);
+			join_paths (x, y);
 
 			active_handle = new EditPointHandle.empty ();
 
@@ -279,6 +280,80 @@ public class PenTool : Tool {
 				p.reverse ();
 			}
 		}
+	}
+	
+	private static void join_paths (double x, double y) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		EditPoint ep_last, ep_first;
+		Path? m = null;
+		Path merge;
+		
+		if (glyph.path_list.length () < 2) {
+			return;
+		}
+		
+		// find the path to merge
+		foreach (Path path in glyph.path_list) {
+			
+			if (path.points.length () < 2) {
+				continue;
+			}
+			
+			ep_last = path.points.last ().data;
+			ep_first = path.points.first ().data;	
+			
+			if (active_edit_point == ep_last || active_edit_point == ep_first) {
+				m = path;
+			}			
+		}
+		
+		if (m == null) {
+			return;
+		}
+		
+		merge = (!) m;
+		
+		foreach (Path path in glyph.path_list) {
+
+			// don't join path with it self
+			if (path == merge) {
+				continue;
+			}
+
+			// we need both start and end points
+			if (path.points.length () < 2) {
+				continue;
+			}
+
+			ep_last = path.points.last ().data;
+			ep_first = path.points.first ().data;	
+						
+			if (path.is_open ()) {
+				if (is_close_to_point (ep_last, x, y)) {
+					merge.reverse ();
+					path.append_path (merge);
+					glyph.delete_path (merge);
+					return;
+				}
+							
+				if (is_close_to_point (ep_first, x, y)) {
+					path.append_path (merge);
+					glyph.delete_path (merge);
+					return;
+				}
+			}
+		}
+	}
+	
+	private static bool is_close_to_point (EditPoint ep, double x, double y) {
+		double px, py, distance;
+		
+		px = Glyph.reverse_path_coordinate_x (ep.x);
+		py = Glyph.reverse_path_coordinate_y (ep.y);		
+
+		distance = sqrt (fabs (pow (px - x, 2)) + fabs (pow (py - y, 2)));
+				
+		return (distance < 8);
 	}
 	
 	public void move_current_point_on_path (double x, double y) {

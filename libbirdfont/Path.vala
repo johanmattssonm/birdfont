@@ -1769,6 +1769,36 @@ public class Path {
 		return true;	
 	}
 
+	public void append_path (Path path)
+	requires (points.length () > 0 && is_open () && path.is_open ()) {
+		EditPointHandle handle;
+		EditPoint first;
+
+		// link points at the other end
+		first = points.first ().data;
+		handle = path.points.first ().data.right_handle;
+		handle.move_to_coordinate (first.right_handle.x (), first.right_handle.y ());		
+		handle.type = first.right_handle.type;
+		path.points.remove_link (path.points.first ());
+				
+		// copy remaining points
+		foreach (EditPoint p in path.points) {
+			add_point (p.copy ());
+		}
+
+		// close path
+		first = points.first ().data;
+		points.remove_link (points.first ());
+		handle = points.last ().data.right_handle;
+		handle.move_to_coordinate (first.right_handle.x (), first.right_handle.y ());		
+		handle.type = first.right_handle.type;
+		
+		while (path.points.length () > 0) {
+			path.points.remove_link (path.points.first ());
+		}
+		
+		close ();
+	}
 }
 
 public class PathList : GLib.Object {
