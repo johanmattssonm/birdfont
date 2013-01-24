@@ -296,6 +296,8 @@ public class PenTool : Tool {
 		EditPoint ep_last, ep_first;
 		Path? m = null;
 		Path merge;
+		bool direction;
+		bool start_point = false;
 		
 		if (glyph.path_list.length () < 2) {
 			return;
@@ -311,9 +313,17 @@ public class PenTool : Tool {
 			ep_last = path.points.last ().data;
 			ep_first = path.points.first ().data;	
 			
-			if (active_edit_point == ep_last || active_edit_point == ep_first) {
+			if (active_edit_point == ep_last) {
+				start_point = false;
 				m = path;
-			}			
+				break;
+			}
+			
+			if (active_edit_point == ep_first) {
+				start_point = true;
+				m = path;
+				break;				
+			}
 		}
 		
 		if (m == null) {
@@ -338,23 +348,40 @@ public class PenTool : Tool {
 			ep_first = path.points.first ().data;	
 						
 			if (path.is_open ()) {
-				if (is_close_to_point (ep_last, x, y)) {
+				
+				if (start_point) {
+					if (is_close_to_point (ep_last, x, y)) {
+						direction = path.is_clockwise ();
+						glyph.store_undo_state ();
+						path.append_path (merge);
+						glyph.delete_path (merge);
+						
+						if (path.is_clockwise () != direction) {
+							path.reverse ();
+						}
+						
+						return;
+					}
+								
+					if (is_close_to_point (ep_first, x, y)) {
+						glyph.store_undo_state ();
+						path.append_path (merge);
+						glyph.delete_path (merge);
+						return;
+					}
+				} else {
+					if (is_close_to_point (ep_last, x, y)) {
+						path.reverse ();
+						glyph.store_undo_state ();
+						path.append_path (merge);
+						glyph.delete_path (merge);
+					}
 					
-					if (merge.is_clockwise ()) merge.reverse ();
-					if (!path.is_clockwise ()) path.reverse ();
-					
-					glyph.store_undo_state ();
-					merge.reverse ();
-					path.append_path (merge);
-					glyph.delete_path (merge);
-					return;
-				}
-							
-				if (is_close_to_point (ep_first, x, y)) {
-					glyph.store_undo_state ();
-					path.append_path (merge);
-					glyph.delete_path (merge);
-					return;
+					if (is_close_to_point (ep_first, x, y)) {
+						glyph.store_undo_state ();
+						path.append_path (merge);
+						glyph.delete_path (merge);
+					}
 				}
 			}
 		}
@@ -411,6 +438,11 @@ public class PenTool : Tool {
 		py = Glyph.reverse_path_coordinate_y (active.y);
 
 		foreach (Path path in glyph.path_list) {
+			
+			if (!path.is_open ()) {
+				continue;
+			}
+			
 			foreach (EditPoint ep in path.points) {
 			
 				if (ep == active || !is_endpoint (ep)) {

@@ -1777,9 +1777,9 @@ public class Path {
 		// link points at the other end
 		first = points.first ().data;
 		handle = path.points.first ().data.right_handle;
+		handle.type = PointType.CURVE;
 		handle.angle = first.right_handle.angle;
 		handle.length = first.right_handle.length;
-		handle.type = first.right_handle.type;
 		path.points.remove_link (path.points.first ());
 				
 		// copy remaining points
@@ -1791,10 +1791,10 @@ public class Path {
 		first = points.first ().data;
 		points.remove_link (points.first ());
 		handle = points.last ().data.right_handle;
+		handle.type = PointType.CURVE;
 		handle.angle = first.right_handle.angle;
 		handle.length = first.right_handle.length;
-		handle.type = first.right_handle.type;
-		
+	
 		while (path.points.length () > 0) {
 			path.points.remove_link (path.points.first ());
 		}
