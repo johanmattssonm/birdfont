@@ -339,7 +339,7 @@ public class Path {
 		
 		cr.set_source_surface (img, x * g.view_zoom * ivs * 1/r, y * g.view_zoom * ivs * 1/r);
 		cr.paint ();
-		cr.restore ();		
+		cr.restore ();
 	}
 	
 	/** Returns true if there is an edit point at (p.x, p.y). */
@@ -1777,7 +1777,8 @@ public class Path {
 		// link points at the other end
 		first = points.first ().data;
 		handle = path.points.first ().data.right_handle;
-		handle.move_to_coordinate (first.right_handle.x (), first.right_handle.y ());		
+		handle.angle = first.right_handle.angle;
+		handle.length = first.right_handle.length;
 		handle.type = first.right_handle.type;
 		path.points.remove_link (path.points.first ());
 				
@@ -1790,7 +1791,8 @@ public class Path {
 		first = points.first ().data;
 		points.remove_link (points.first ());
 		handle = points.last ().data.right_handle;
-		handle.move_to_coordinate (first.right_handle.x (), first.right_handle.y ());		
+		handle.angle = first.right_handle.angle;
+		handle.length = first.right_handle.length;
 		handle.type = first.right_handle.type;
 		
 		while (path.points.length () > 0) {

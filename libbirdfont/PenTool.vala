@@ -16,6 +16,7 @@
 */
 
 using Math;
+using Cairo;
 
 namespace Supplement {
 
@@ -45,12 +46,16 @@ public class PenTool : Tool {
 	private static double last_point_y = 0;
 
 	public static double precision = 1;
+	private static ImageSurface? tie_icon = null;
+	
 	
 	/** Move curve handle instead of control point. */
 	private bool last_selected_is_handle = false;
 	
 	public PenTool (string name) {
 		base (name, _("Right click to add new points, left click to move points") + " " + _("and double click to add new point on path."), ',', CTRL);
+		
+		tie_icon = Icons.get_icon ("tie_is_active.png");
 		
 		select_action.connect ((self) => {
 		});
@@ -119,6 +124,10 @@ public class PenTool : Tool {
 		});
 		
 		key_release_action.connect ((self, keyval) => {
+		});
+		
+		draw_action.connect ((tool, cairo_context, glyph) => {
+			draw_on_canvas (cairo_context, glyph);
 		});
 	}
 	
@@ -330,6 +339,11 @@ public class PenTool : Tool {
 						
 			if (path.is_open ()) {
 				if (is_close_to_point (ep_last, x, y)) {
+					
+					if (merge.is_clockwise ()) merge.reverse ();
+					if (!path.is_clockwise ()) path.reverse ();
+					
+					glyph.store_undo_state ();
 					merge.reverse ();
 					path.append_path (merge);
 					glyph.delete_path (merge);
@@ -337,6 +351,7 @@ public class PenTool : Tool {
 				}
 							
 				if (is_close_to_point (ep_first, x, y)) {
+					glyph.store_undo_state ();
 					path.append_path (merge);
 					glyph.delete_path (merge);
 					return;
@@ -354,6 +369,82 @@ public class PenTool : Tool {
 		distance = sqrt (fabs (pow (px - x, 2)) + fabs (pow (py - y, 2)));
 				
 		return (distance < 8);
+	}
+
+	/** Show the user that curves will be tied on release. */
+	public void draw_on_canvas (Context cr, Glyph glyph) {
+		ImageSurface img;
+		double x, y;
+		
+		return_if_fail (tie_icon != null);
+		
+		img = (!) tie_icon;	
+			
+		cr.save ();
+		get_tie_position (out x, out y);
+		cr.set_source_surface (img, x - img.get_width () / 2, y - img.get_height () / 2);
+		cr.paint ();
+		cr.restore ();		
+	}
+	
+	/** Obtain the position where to ends meet. */
+	void get_tie_position (out double x, out double y) {
+		Glyph glyph;
+		EditPoint active;
+		double px, py;
+
+		x = -100;
+		y = -100;
+				
+		if (active_edit_point == null) {
+			return;
+		}
+		
+		if (!is_endpoint ((!) active_edit_point)) {
+			return;
+		}
+		
+		glyph = MainWindow.get_current_glyph ();
+		active = (!) active_edit_point;
+		
+		px = Glyph.reverse_path_coordinate_x (active.x);
+		py = Glyph.reverse_path_coordinate_y (active.y);
+
+		foreach (Path path in glyph.path_list) {
+			foreach (EditPoint ep in path.points) {
+			
+				if (ep == active || !is_endpoint (ep)) {
+					continue;
+				}
+
+				if (is_close_to_point (ep, px, py)) {
+					x = Glyph.reverse_path_coordinate_x (ep.x);
+					y = Glyph.reverse_path_coordinate_y (ep.y);
+					return;
+				}
+			}
+		}
+	}
+	
+	public bool is_endpoint (EditPoint ep) {
+		EditPoint start;
+		EditPoint end;
+		Glyph glyph = MainWindow.get_current_glyph ();
+		
+		foreach (Path path in glyph.path_list) {
+			if (path.points.length () < 2) {
+				continue;
+			}
+			
+			start = path.points.first ().data;
+			end = path.points.last ().data;
+			
+			if (ep == start || ep == end) {
+				return true;
+			}		
+		}
+		
+		return false;
 	}
 	
 	public void move_current_point_on_path (double x, double y) {
