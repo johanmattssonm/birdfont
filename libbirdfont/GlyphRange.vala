@@ -102,19 +102,54 @@ public class GlyphRange {
 			add_single (c.get_char ());
 		}		
 
-		add_single ('「');
-		add_single ('」');
+		// CJK punctuations and symbols
+		add_range ('　', '々');
+		add_range ('〇', '】');
+		add_range ('〓', '〟');
+		add_range ('︐', '︙'); 
 
-		add_single ('（');
-		add_single ('）');
-
-		add_single ('：');
-
-		add_single ('，');
-		add_single ('。');
-		add_single ('？');
-
+		// CJK numbers and months
 		add_range ('0', '9');
+		add_range ('㈠', '㈩');
+		add_range ('㋀', '㋋');
+		add_range ('㉑', '㉟');
+		add_range ('㊱', '㊿');
+		add_range ('㊀', '㊉');
+
+		// CJK fullwidth letters and symbols
+		add_range ('！', '･');
+		add_range ('￠', '￦');
+		add_single ('￨');
+
+		// CJK special characters
+		add_range ('㍘', '㏿');
+		add_range ('㋌', '㋏');
+
+		// CJK strokes
+		add_range ('㇀', '㇢');
+
+		// CJK supplements
+		add_range ('⺀', '⺙');
+		add_range ('⺛', '⻳');
+
+		// GB2312 (punctuations)
+		add_single ('―');
+		add_single ('¤');
+		add_single ('§');
+		add_single ('¨');
+		add_single ('°');
+		add_single ('±');
+		add_single ('×');
+		add_single ('÷');
+
+		// GB2312 (greek letters)
+		add_range ('Α', 'Ω');
+		add_range ('α', 'ω');
+
+		// GB2312 (cyrillic letters)
+		add_range ('А', 'я');
+		add_single ('ё');
+		add_single ('Ё') 
 		
 		// GB2312 (U+4e00 to U+fa20)
 		add_range ('一', '龥');
@@ -137,10 +172,6 @@ public class GlyphRange {
 		add_single ('﨧');
 		add_single ('﨨');
 		add_single ('﨩');
-		
-		add_range ('㈠', '㈩');
-		add_single ('㈱');
-		add_single ('㊣');
 	}
 	
 	public void use_full_unicode_range () {
