@@ -238,7 +238,7 @@ public class PenTool : Tool {
 		}
 		
 		// add new point
-		if (button == 3) {
+		if (button == 3 || (KeyBindings.modifier & LOGO) > 0) {
 			remove_all_selected_points ();
 			new_point_action (x, y);
 			glyph.store_undo_state ();

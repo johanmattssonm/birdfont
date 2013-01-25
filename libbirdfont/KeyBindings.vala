@@ -81,6 +81,7 @@ public static const uint NONE  = 0;
 public static const uint CTRL  = 1 << 0;
 public static const uint ALT   = 1 << 2;
 public static const uint SHIFT = 1 << 3;
+public static const uint LOGO  = 1 << 4;
 
 /** A list of all valid key bindings. */
 public class BindingList {
