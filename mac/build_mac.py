@@ -128,7 +128,9 @@ def build():
 
 	run("install_name_tool -change /usr/local/lib/libbirdfont.dylib @executable_path/libbirdfont.dylib "
 		+ "build/mac/birdfont.app/Contents/MacOs/birdfont")	
-	
+
+	run("install_name_tool -change /usr/local/lib/libbirdfont.dylib @executable_path/libbirdfont.dylib "
+		+ "build/mac/birdfont.app/Contents/MacOs/birdfont-export")		
 #	run("rm -rf build/mac/birdfont.dmg")	
 #	run("hdiutil create -megabytes 50 -fs HFS+ -volname birdfont build/mac/birdfont")
 #	run("open build/mac/birdfont.dmg")	
