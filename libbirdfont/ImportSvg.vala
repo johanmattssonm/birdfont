@@ -367,6 +367,10 @@ public class ImportSvg {
 			if (c[i] == "z") {
 				command[ci++] = "z";
 			}
+
+			if (c[i] == "Z") {
+				command[ci++] = "z";
+			}
 		}
 
 		Path path = new Path ();
