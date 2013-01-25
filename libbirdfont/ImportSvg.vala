@@ -116,6 +116,8 @@ public class ImportSvg {
 		int ci = 0;
 		double px = 0;
 		double py = 0;
+		double px2 = 0;
+		double py2 = 0;
 		double cx = 0;
 		double cy = 0;
 		double[] p;
@@ -126,22 +128,35 @@ public class ImportSvg {
 		
 		// add separators
 		data = data.replace (",", " ");
-		data = data.replace ("m", "m ");
-		data = data.replace ("M", "M ");
-		data = data.replace ("l", "l ");
-		data = data.replace ("L", "L ");
-		data = data.replace ("c", "c ");
-		data = data.replace ("C", "C ");
-		data = data.replace ("zM", "z M ");
-		data = data.replace ("zm", "z m ");
-		data = data.replace ("  ", " ");
+		data = data.replace ("m", " m ");
+		data = data.replace ("M", " M ");
+		data = data.replace ("h", " h ");
+		data = data.replace ("H", " H ");
+		data = data.replace ("v", " v ");
+		data = data.replace ("V", " V ");
+		data = data.replace ("l", " l ");
+		data = data.replace ("L", " L ");
+		data = data.replace ("c", " c ");
+		data = data.replace ("C", " C ");
+		data = data.replace ("s", " s ");
+		data = data.replace ("S", " S ");
+		data = data.replace ("zM", " z M ");
+		data = data.replace ("zm", " z m ");
+		data = data.replace ("z", " z ");
+		data = data.replace ("-", " -");
+		data = data.replace ("\t", " ");
 		
+		while (data.index_of ("  ") > -1) {
+			data = data.replace ("  ", " ");
+		}
+				
 		c = data.split (" ");
 		p = new double[2 * c.length];
 		command = new string[2 * c.length];
 		
 		// parse path
 		for (int i = 0; i < c.length; i++) {
+
 			if (c[i] == "m") {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "M";
@@ -166,6 +181,49 @@ public class ImportSvg {
 				}
 			}
 
+			if (c[i] == "h") {
+				while (is_point (c[i + 1])) {
+					command[ci++] = "L";
+
+					px += double.parse (c[++i]);
+
+					p[pi++] = px;
+					p[pi++] = py;
+				}
+			}
+
+			if (c[i] == "H") {
+				while (is_point (c[i + 1])) {
+					command[ci++] = "L";
+
+					px = double.parse (c[++i]);
+
+					p[pi++] = px;
+					p[pi++] = py;
+				}
+			}
+
+			if (c[i] == "v") {
+				while (is_point (c[i + 1])) {
+					command[ci++] = "L";
+					
+					py = py + -double.parse (c[++i]);
+					
+					p[pi++] = px;
+					p[pi++] = py;
+				}				
+			}
+
+			if (c[i] == "V") {
+				while (is_point (c[i + 1])) {
+					command[ci++] = "L";
+					py = -double.parse (c[++i]);
+					
+					p[pi++] = px;
+					p[pi++] = py;
+				}
+			}
+						
 			if (c[i] == "l") {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
@@ -205,8 +263,12 @@ public class ImportSvg {
 					
 					cx = px + double.parse (c[++i]);
 					cy = py + -double.parse (c[++i]);
-					p[pi++] = cx;
-					p[pi++] = cy;
+					
+					px2 = cx;
+					py2 = cy;
+					
+					p[pi++] = px2;
+					p[pi++] = py2;
 					
 					cx = px + double.parse (c[++i]);
 					cy = py + -double.parse (c[++i]);
@@ -219,6 +281,7 @@ public class ImportSvg {
 			}
 			
 			if (c[i] == "C") {
+
 				while (is_point (c[i + 1])) {
 					command[ci++] = "C";
 					
@@ -241,7 +304,66 @@ public class ImportSvg {
 					py = cy;					
 				}	
 			}
-			
+
+			if (c[i] == "s") {
+				while (is_point (c[i + 1])) {
+					command[ci++] = "C";
+					
+					// the first point is the reflection
+					cx = 2 * px - px2;
+					cy = 2 * py - py2;
+					p[pi++] = cx;
+					p[pi++] = cy;
+					
+					cx = px + double.parse (c[++i]);
+					cy = py + -double.parse (c[++i]);
+					
+					px2 = cx;
+					py2 = cy;
+					
+					p[pi++] = px2;
+					p[pi++] = py2;
+					
+					cx = px + double.parse (c[++i]);
+					cy = py + -double.parse (c[++i]);
+					p[pi++] = cx;
+					p[pi++] = cy;
+					
+					px = cx;
+					py = cy;
+				}
+			}
+
+			if (c[i] == "S") {
+				while (is_point (c[i + 1])) {
+					command[ci++] = "C";
+					
+					// the reflection again
+					cx = 2 * px - px2;
+					cy = 2 * py - py2;
+					p[pi++] = cx;
+					p[pi++] = cy;
+
+					// the other two are regular cubic points
+					cx = double.parse (c[++i]);
+					cy = -double.parse (c[++i]);
+					
+					px2 = cx;
+					py2 = cy;
+					
+					p[pi++] = px2;
+					p[pi++] = py2;
+					
+					cx = double.parse (c[++i]);
+					cy = -double.parse (c[++i]);
+					p[pi++] = cx;
+					p[pi++] = cy;
+					
+					px = cx;
+					py = cy;					
+				}
+			}
+						
 			if (c[i] == "z") {
 				command[ci++] = "z";
 			}
@@ -329,6 +451,8 @@ public class ImportSvg {
 				path = new Path ();
 			}
 		}
+		
+		// TODO: Find out if it is possible to tie handles.
 	}
 	
 	static bool is_point (string s) {
