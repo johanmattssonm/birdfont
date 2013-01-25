@@ -1,5 +1,5 @@
 ----------------------
-Birdfont – font editor
+Birdfont – Font Editor
 ----------------------
 
 Birdfont is a font editor that creates outline vector graphics and exports
@@ -10,7 +10,7 @@ License: GNU GPL v3
 Webpage: http://birdfont.org
 
 --------------------
-Building from source
+Building from Source
 --------------------
 
 Install vala and all required libraries, they are most likely in packages 
@@ -30,7 +30,7 @@ doit
 sudo ./install
 
 ------------------------
-Bulding windows binaries
+Bulding Windows Binaries
 ------------------------
 
 Windows binaries are cross compiled with mingw on a Ubuntu system. Install
@@ -44,8 +44,15 @@ Compile and build the installer with:
 cd win32
 ./build_win32.py
 
+---------------------
+Building Mac binaries
+---------------------
+
+Compile all dependencies using MacPorts and run:
+./mac/build_mac.py
+
 --------------------
-Precompiled packages
+Precompiled Packages
 --------------------
 
 A Windows binary is avalilable at http://birdfont.org
