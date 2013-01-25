@@ -752,11 +752,12 @@ public class GlyphCanvasArea : DrawingArea  {
 	public static const int L_SHIFT_CTRL = 21;
 	public static const int L_LEFT_LOGO = 128;
 
-	/* State on windows */
+	/* State on windows and mac */
 	public static const int W_SHIFT = 1;
 	public static const int W_CTRL = 4;
 	public static const int W_SHIFT_CTRL = 5;
-	
+	public static const int M_LEFT_LOGO = 16;	
+
 	public GlyphCanvasArea (GlyphCanvas gc) {
 		int event_flags;
 		
@@ -884,7 +885,10 @@ public class GlyphCanvasArea : DrawingArea  {
 			case W_SHIFT_CTRL:
 				KeyBindings.set_modifier (SHIFT | CTRL);
 				break;
-
+			case M_LEFT_LOGO:
+				KeyBindings.set_modifier (LOGO);
+				break;
+			
 			default:
 				KeyBindings.set_modifier (NONE);
 				break;
