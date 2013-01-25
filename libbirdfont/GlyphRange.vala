@@ -149,7 +149,7 @@ public class GlyphRange {
 		// GB2312 (cyrillic letters)
 		add_range ('А', 'я');
 		add_single ('ё');
-		add_single ('Ё') 
+		add_single ('Ё');
 		
 		// GB2312 (U+4e00 to U+fa20)
 		add_range ('一', '龥');
