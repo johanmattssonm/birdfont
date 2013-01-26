@@ -1,3 +1,22 @@
+birdfont (0.9) stable;
+
+  * Color
+  * Adjustable control point size
+  * Select all path
+  * Resize all selected paths
+  * Import SVG files from Inkscape and Adobe Illustrator
+  * Move control points with keyboard
+  * Bugfixes
+  * Join paths
+  * German translation
+  * Chinese translation
+
+Coding for the release was done by Zhantong Zhang and Johan Mattsson. 
+Translation was done by Zhantong Zhang, Robert Kabinger, Marc-Philipp 
+Beuter and DiGro.
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Jan 26 13:57:48 CET 2013
+
 birdfont (0.8) stable;
 
   * Copy and paste paths from inkscape
