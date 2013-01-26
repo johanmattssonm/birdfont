@@ -50,7 +50,7 @@ def build():
 	run("mkdir -p build/mac/libbirdfont")
 	run("mkdir -p build/mac/bin")
 
-	run("valac -C --library libbirdfont -H birdfont.h libbirdfont/* --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
+	run("valac -C --define=MAC --library libbirdfont -H birdfont.h libbirdfont/* --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
 	run("mv libbirdfont/*.c build/mac/libbirdfont/ ")
 	run("mv ./*.h build/mac/libbirdfont/")
 
@@ -63,7 +63,7 @@ def build():
 	# birdfont
 	run("mkdir -p build/mac/birdfont")
 	
-	run("valac -C birdfont/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
+	run("valac -C --define=MAC birdfont/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
 	run("mv birdfont/*.c build/mac/birdfont/")
 
 	run("""gcc -c ./build/mac/libbirdfont/birdfont.h build/mac/birdfont/*.c -D 'GETTEXT_PACKAGE="birdfont"' $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) -I ./build/mac/libbirdfont/""")
@@ -74,7 +74,7 @@ def build():
 	# birdfont-export
 	run("mkdir -p build/mac/birdfont-export")
 	
-	run("valac -C birdfont-export/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
+	run("valac -C --define=MAC birdfont-export/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
 	run("mv birdfont-export/*.c build/mac/birdfont-export/")
 
 	run("""gcc -c ./build/mac/libbirdfont/birdfont.h build/mac/birdfont-export/*.c -D 'GETTEXT_PACKAGE="birdfont"' $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) -I ./build/mac/libbirdfont/""")
