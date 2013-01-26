@@ -31,7 +31,7 @@ public static int main (string[] arg) {
 	string file;
 	Supplement.Supplement supplement = new Supplement.Supplement ();
 	supplement.init (arg);
-	
+
 	Gtk.init (ref arg);
 	parse_gtk_rc ();
 

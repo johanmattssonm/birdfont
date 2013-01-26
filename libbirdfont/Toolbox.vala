@@ -83,71 +83,6 @@ public class Toolbox : GLib.Object  {
 		Tool move_tool = new MoveTool ("move");
 		draw_tools.add_tool (move_tool);
 
-		// Draw tool modifiers
-		// DELETE tools:
-		
-#if MAC
-		string click_to_add_points = _("Right click to add new point, left click to move points");
-#else 
-		string click_to_add_points = _("Hold down command key + click to add new point ");
-#endif	
-		
-		Tool new_point = new Tool ("new_point", click_to_add_points + " " + _("and double click to add new point on path"), 'a');
-		new_point.select_action.connect ((self) => {
-				select_draw_tool ();
-			});
-		
-		// draw_tool_modifiers.add_tool (new_point);
-
-		Tool insert_point_on_path = new Tool ("insert_point_on_path", _("Add new point on path"), 'n');
-		insert_point_on_path.select_action.connect ((self) => {
-			select_draw_tool ();
-			pen_tool.begin_from_new_point_on_path ();
-		});
-		// draw_tool_modifiers.add_tool (insert_point_on_path);
-		
-		if (Supplement.experimental) {
-			Tool new_point_on_path = new Tool ("new_point_on_path", _("Begin new line from point on path"), 'n');
-			new_point_on_path.select_action.connect ((self) => {
-					select_draw_tool ();
-					pen_tool.begin_from_new_point_on_path ();
-				});
-			draw_tool_modifiers.add_tool (new_point_on_path);	
-		}
-
-		Tool tie_editpoint_tool = new Tool ("tie_point", _("Tie curve handles for selected edit point"), 'w');
-		tie_editpoint_tool.select_action.connect ((self) => {
-			bool tie;
-			
-			select_draw_tool ();
-			
-			foreach (EditPoint ep in PenTool.selected_points) {
-				tie = !ep.tie_handles;
-
-				if (tie) {
-					ep.process_tied_handle ();
-				}
-
-				ep.set_tie_handle (tie);
-				
-				MainWindow.get_current_glyph ().update_view ();				
-			}
-		});
-		draw_tool_modifiers.add_tool (tie_editpoint_tool);	
-
-		Tool tie_x_or_y = new Tool ("tie_x_or_y", _("Tie coordinates to previous edit point"), 'q');
-		tie_x_or_y.select_action.connect((self) => {
-			select_draw_tool ();
-			PenTool.tie_x_or_y_coordinates = !PenTool.tie_x_or_y_coordinates;
-		});
-		// Fixa: draw_tool_modifiers.add_tool (tie_x_or_y);	
-
-		Tool erase_tool = new Tool ("erase_tool", _("Delete edit points"));
-		erase_tool.select_action.connect((self) => {
-			select_draw_tool ();
-		});
-		// draw_tool_modifiers.add_tool (erase_tool);	
-
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
 		
@@ -592,7 +527,6 @@ public class Toolbox : GLib.Object  {
 		// Default selection
 		var idle = new IdleSource();
 		idle.set_callback (() => {
-			new_point.set_selected (true);
 			pen_tool.set_selected (true);
 			select_draw_tool ();			
 			

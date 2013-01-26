@@ -53,7 +53,15 @@ public class PenTool : Tool {
 	private bool last_selected_is_handle = false;
 	
 	public PenTool (string name) {
-		base (name, _("Right click to add new points, left click to move points") + " " + _("and double click to add new point on path."), ',', CTRL);
+		string click_to_add_points;
+		
+		if (Supplement.mac) {
+			click_to_add_points = _("Use left command key + click to add new point ");
+		} else {
+			click_to_add_points = _("Right click to add new point, left click to move points");
+		}		
+		
+		base (name, click_to_add_points + " " + _("and double click to add new point on path."), ',', CTRL);
 		
 		tie_icon = Icons.get_icon ("tie_is_active.png");
 		

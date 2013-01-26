@@ -28,6 +28,7 @@ public class Supplement {
 	internal static bool show_coordinates = false;
 	internal static bool fatal_wanings = false;
 	public static bool win32 = false;
+	public static bool mac = false;
 	internal static string exec_path = "";
 
 	internal static Font current_font;
@@ -41,6 +42,11 @@ public class Supplement {
 
 		stdout.printf ("birdfont version %s\n", VERSION);
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
+		
+#if MAC
+		print ("Mac version.\n");
+		Supplement.mac = true;
+#endif
 		
 		init_gettext ();		
 		
