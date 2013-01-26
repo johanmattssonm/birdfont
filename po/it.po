@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-26 15:03+0100\n"
+"POT-Creation-Date: 2013-01-26 15:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -190,135 +190,139 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:89
+#: libbirdfont/Toolbox.vala:90
 msgid "Right click to add new point, left click to move points"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:89
+#: libbirdfont/Toolbox.vala:92
+msgid "Hold down command key + click to add new point "
+msgstr ""
+
+#: libbirdfont/Toolbox.vala:95
 msgid "and double click to add new point on path"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:96
+#: libbirdfont/Toolbox.vala:102
 msgid "Add new point on path"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:104
+#: libbirdfont/Toolbox.vala:110
 msgid "Begin new line from point on path"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:112
+#: libbirdfont/Toolbox.vala:118
 msgid "Tie curve handles for selected edit point"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:132
+#: libbirdfont/Toolbox.vala:138
 msgid "Tie coordinates to previous edit point"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:139
+#: libbirdfont/Toolbox.vala:145
 msgid "Delete edit points"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:148
+#: libbirdfont/Toolbox.vala:154
 msgid "Set precision"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:176
+#: libbirdfont/Toolbox.vala:182
 msgid "Create counter from outline"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:188
+#: libbirdfont/Toolbox.vala:194
 msgid "Move to path to the bottom layer"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:200
+#: libbirdfont/Toolbox.vala:206
 msgid "Show full unicode characters set"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:211
+#: libbirdfont/Toolbox.vala:217
 msgid "Show default characters set"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:222
+#: libbirdfont/Toolbox.vala:228
 msgid "Show all characters in font"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:231
+#: libbirdfont/Toolbox.vala:237
 msgid "Delete selected glyph"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:297
+#: libbirdfont/Toolbox.vala:303
 msgid "Show help lines for x-height and baseline"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:312
+#: libbirdfont/Toolbox.vala:318
 msgid "Show help lines at top and bottom margin"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:330
+#: libbirdfont/Toolbox.vala:336
 msgid "Zoom in"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:337
+#: libbirdfont/Toolbox.vala:343
 msgid "Zoom out"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:344
+#: libbirdfont/Toolbox.vala:350
 msgid "Zoom to scale 1:1"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:352
+#: libbirdfont/Toolbox.vala:358
 msgid "Show full glyph"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:359
+#: libbirdfont/Toolbox.vala:365
 msgid "Zoom in at region boundries"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:366
+#: libbirdfont/Toolbox.vala:372
 msgid "Zoom in background image"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:379
+#: libbirdfont/Toolbox.vala:385
 msgid "Previous view"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:385
+#: libbirdfont/Toolbox.vala:391
 msgid "Next view"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:392
+#: libbirdfont/Toolbox.vala:398
 msgid "Set size for background image"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:422
+#: libbirdfont/Toolbox.vala:428
 msgid "Show/hide background image"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:430
+#: libbirdfont/Toolbox.vala:436
 msgid "Insert a new background image"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:435
+#: libbirdfont/Toolbox.vala:441
 msgid "Creating thumbnails"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:454
+#: libbirdfont/Toolbox.vala:460
 msgid "Set contrast for background image"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:473
+#: libbirdfont/Toolbox.vala:479
 msgid "Stroke color"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:495
+#: libbirdfont/Toolbox.vala:501
 msgid "Stroke width"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:512
+#: libbirdfont/Toolbox.vala:518
 msgid "Handle color"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:714
+#: libbirdfont/Toolbox.vala:720
 msgid "Set size for grid"
 msgstr ""
 
