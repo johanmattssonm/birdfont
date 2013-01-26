@@ -1,26 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>CFBundleGetInfoString</key>
-  <string>Birdfont</string>
-  <key>CFBundleExecutable</key>
-  <string>birdfont.sh</string>
-  <key>CFBundleIdentifier</key>
-  <string>org.birdfont</string>
-  <key>CFBundleName</key>
-  <string>birdfont</string>
-  <key>CFBundleIconFile</key>
-  <string>birdfont.icns</string>
-  <key>CFBundleShortVersionString</key>
-  <string>0.01</string>
-  <key>CFBundleInfoDictionaryVersion</key>
-  <string>6.0</string>
-  <key>CFBundlePackageType</key>
-  <string>APPL</string>
-  <key>IFMajorVersion</key>
-  <integer>0</integer>
-  <key>IFMinorVersion</key>
-  <integer>9</integer>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDisplayName</key>
+	<string>birdfont</string>
+	<key>CFBundleExecutable</key>
+	<string>birdfont.sh</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Birdfont</string>
+	<key>CFBundleIconFile</key>
+	<string>birdfont.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.birdfont</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>makeBundle</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>nono</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>LSEnvironment</key>
+	<dict>
+		<key>APP_BUNDLER</key>
+		<string>makeBundle.tcl 1.0</string>
+	</dict>
+	<key>LSHasLocalizedDisplayName</key>
+	<false/>
+	<key>LSUIElement</key>
+	<false/>
+	<key>NSAppleScriptEnabled</key>
+	<false/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Birdfont Copyright Johan Mattsson and others. See AUTHORS file.</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
 </dict>
 </plist>
+

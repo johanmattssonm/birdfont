@@ -89,6 +89,9 @@ def build():
 
 	run("gcc build/mac/birdfont-export/*.o ./build/mac/bin/libbirdfont.dylib $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) $(pkg-config --cflags --libs gtk+-2.0) -o ./build/mac/bin/birdfont-export")
 
+	# clean
+	run("rm -rf build/mac/birdfont.app")
+
 	# copy files 
 	run("mkdir -p build/mac/birdfont.app")
 	run("mkdir -p build/mac/birdfont.app/Contents")
@@ -97,7 +100,7 @@ def build():
 
 	run("cp build/mac/bin/* build/mac/birdfont.app/Contents/MacOs")
 	run("cp mac/birdfont.sh build/mac/birdfont.app/Contents/MacOs")
-	run("cp mac/Info.plist build/mac/birdfont.app/")
+	run("cp mac/Info.plist build/mac/birdfont.app/Contents/")
 	run("cp -r layout build/mac/birdfont.app/Contents/MacOs")
 	run("cp -r icons build/mac/birdfont.app/Contents/MacOs")
 	run("cp mac/birdfont.icns build/mac/birdfont.app/Contents/Resources")
@@ -131,6 +134,7 @@ def build():
 
 	run("install_name_tool -change /usr/local/lib/libbirdfont.dylib @executable_path/libbirdfont.dylib "
 		+ "build/mac/birdfont.app/Contents/MacOs/birdfont-export")		
+
 #	run("rm -rf build/mac/birdfont.dmg")	
 #	run("hdiutil create -megabytes 50 -fs HFS+ -volname birdfont build/mac/birdfont")
 #	run("open build/mac/birdfont.dmg")	
