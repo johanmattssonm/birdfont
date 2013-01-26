@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-26 19:01+0100\n"
-"PO-Revision-Date: 2013-01-24 07:47+0000\n"
+"POT-Creation-Date: 2013-01-26 19:13+0100\n"
+"PO-Revision-Date: 2013-01-26 18:11+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1359013628.0\n"
+"X-POOTLE-MTIME: 1359223918.0\n"
 
 #: libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -158,11 +158,12 @@ msgstr "Flytta objekt"
 
 #: libbirdfont/PenTool.vala:59
 #, fuzzy
-msgid "Use left command key + click to add new point "
-msgstr "och dubbelklicka för att lägga till en ny punkt på slingan"
+msgid "Use left command key + click to add new points"
+msgstr ""
+"Använd vänster Command tangenten + klicka för att lägga till en ny punkt"
 
 #: libbirdfont/PenTool.vala:61
-msgid "Right click to add new point, left click to move points"
+msgid "Right click to add new points, left click to move points"
 msgstr ""
 "Högerklicka för att lägga till nya punkter, vänsterklicka för att flytta "
 "punkter"
@@ -464,10 +465,13 @@ msgstr "_Flik"
 msgid "T_ool"
 msgstr "_Verktyg"
 
-#~ msgid "Right click to add new points, left click to move points"
+#~ msgid "Right click to add new point, left click to move points"
 #~ msgstr ""
 #~ "Högerklicka för att lägga till nya punkter, vänsterklicka för att flytta "
 #~ "punkter"
+
+#~ msgid "and double click to add new point on path"
+#~ msgstr "och dubbelklicka för att lägga till en ny punkt på slingan"
 
 #~ msgid "Add new point on path"
 #~ msgstr "Lägg till en ny punkt på slingan"

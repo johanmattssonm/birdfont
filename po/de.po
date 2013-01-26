@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-26 19:01+0100\n"
+"POT-Creation-Date: 2013-01-26 19:13+0100\n"
 "PO-Revision-Date: 2013-01-09 08:14+0000\n"
 "Last-Translator: Robert <r.kabinger@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,11 +158,11 @@ msgstr "Pfade verschieben"
 
 #: libbirdfont/PenTool.vala:59
 #, fuzzy
-msgid "Use left command key + click to add new point "
+msgid "Use left command key + click to add new points"
 msgstr "und Doppelklick zum Hinzufügen eines neuen Punktes zum Pfad"
 
 #: libbirdfont/PenTool.vala:61
-msgid "Right click to add new point, left click to move points"
+msgid "Right click to add new points, left click to move points"
 msgstr ""
 "Rechtsklick zum Hinzufügen von neuen Punkten, Linksklick zum Verschieben von "
 "Punkten"
@@ -463,7 +463,7 @@ msgstr "_Reiter"
 msgid "T_ool"
 msgstr "Werkzeug"
 
-#~ msgid "Right click to add new points, left click to move points"
+#~ msgid "Right click to add new point, left click to move points"
 #~ msgstr ""
 #~ "Rechtsklick zum Hinzufügen von neuen Punkten, Linksklick zum Verschieben "
 #~ "von Punkten"

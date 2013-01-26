@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-26 19:01+0100\n"
+"POT-Creation-Date: 2013-01-26 19:13+0100\n"
 "PO-Revision-Date: 2013-01-13 05:44+0000\n"
 "Last-Translator: aamrs_mansil <manuela.silva@sky.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -157,11 +157,11 @@ msgid "Move paths"
 msgstr ""
 
 #: libbirdfont/PenTool.vala:59
-msgid "Use left command key + click to add new point "
+msgid "Use left command key + click to add new points"
 msgstr ""
 
 #: libbirdfont/PenTool.vala:61
-msgid "Right click to add new point, left click to move points"
+msgid "Right click to add new points, left click to move points"
 msgstr ""
 
 #: libbirdfont/PenTool.vala:64

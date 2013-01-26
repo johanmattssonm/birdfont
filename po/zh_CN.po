@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-26 19:01+0100\n"
+"POT-Creation-Date: 2013-01-26 19:13+0100\n"
 "PO-Revision-Date: 2013-01-24 02:26+0000\n"
 "Last-Translator: Zhantong <zhantongz@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,11 +158,11 @@ msgstr "移动路径"
 
 #: libbirdfont/PenTool.vala:59
 #, fuzzy
-msgid "Use left command key + click to add new point "
+msgid "Use left command key + click to add new points"
 msgstr "双击以在已有路径上增加新点"
 
 #: libbirdfont/PenTool.vala:61
-msgid "Right click to add new point, left click to move points"
+msgid "Right click to add new points, left click to move points"
 msgstr "右键单击以增加新点，左键单击以移动点"
 
 #: libbirdfont/PenTool.vala:64
@@ -461,7 +461,7 @@ msgstr "标签（_T）"
 msgid "T_ool"
 msgstr "工具（_T）"
 
-#~ msgid "Right click to add new points, left click to move points"
+#~ msgid "Right click to add new point, left click to move points"
 #~ msgstr "右键单击以增加新点，左键单击以移动点"
 
 #~ msgid "Add new point on path"

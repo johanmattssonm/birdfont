@@ -56,9 +56,9 @@ public class PenTool : Tool {
 		string click_to_add_points;
 		
 		if (Supplement.mac) {
-			click_to_add_points = _("Use left command key + click to add new point ");
+			click_to_add_points = _("Use left command key + click to add new points");
 		} else {
-			click_to_add_points = _("Right click to add new point, left click to move points");
+			click_to_add_points = _("Right click to add new points, left click to move points");
 		}		
 		
 		base (name, click_to_add_points + " " + _("and double click to add new point on path."), ',', CTRL);

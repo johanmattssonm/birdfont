@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-26 19:01+0100\n"
+"POT-Creation-Date: 2013-01-26 19:13+0100\n"
 "PO-Revision-Date: 2013-01-20 13:18+0000\n"
 "Last-Translator: DiGro <th.groskamp@quicknet.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,13 +158,13 @@ msgstr "Paden verplaatsen"
 
 #: libbirdfont/PenTool.vala:59
 #, fuzzy
-msgid "Use left command key + click to add new point "
+msgid "Use left command key + click to add new points"
 msgstr "en dubbel klik om een nieuw punt op een pad toe te voegen"
 
 #: libbirdfont/PenTool.vala:61
-msgid "Right click to add new point, left click to move points"
+msgid "Right click to add new points, left click to move points"
 msgstr ""
-"Rechts klik om een nieuw punt toe te voegen, links klik om punten te "
+"Rechts klik om nieuwe punten toe te voegen, links klik om punten te "
 "verplaatsen"
 
 #: libbirdfont/PenTool.vala:64
@@ -463,9 +463,9 @@ msgstr "_Tabblad"
 msgid "T_ool"
 msgstr "H_ulpmiddelen"
 
-#~ msgid "Right click to add new points, left click to move points"
+#~ msgid "Right click to add new point, left click to move points"
 #~ msgstr ""
-#~ "Rechts klik om nieuwe punten toe te voegen, links klik om punten te "
+#~ "Rechts klik om een nieuw punt toe te voegen, links klik om punten te "
 #~ "verplaatsen"
 
 #~ msgid "Add new point on path"
