@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-20 23:01+0100\n"
-"PO-Revision-Date: 2013-01-19 20:18+0000\n"
+"POT-Creation-Date: 2013-01-26 15:03+0100\n"
+"PO-Revision-Date: 2013-01-24 02:26+0000\n"
 "Last-Translator: Zhantong <zhantongz@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1358626737.0\n"
+"X-POOTLE-MTIME: 1358994401.0\n"
 
 #: libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -94,17 +94,17 @@ msgstr "剪裁背景图像"
 msgid "Export glyph to svg file"
 msgstr "将字形输出为SVG文件"
 
-#: libbirdfont/ExportTool.vala:518
+#: libbirdfont/ExportTool.vala:523
 msgid "Wrote font files"
 msgstr "已写入字体文件"
 
 #. / All lower case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:37
+#: libbirdfont/GlyphRange.vala:54
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 
 #. / All upper case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:40
+#: libbirdfont/GlyphRange.vala:57
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
@@ -156,11 +156,11 @@ msgstr "合并路径"
 msgid "Move paths"
 msgstr "移动路径"
 
-#: libbirdfont/PenTool.vala:51
+#: libbirdfont/PenTool.vala:56
 msgid "Right click to add new points, left click to move points"
 msgstr "右键单击以增加新点，左键单击以移动点"
 
-#: libbirdfont/PenTool.vala:51
+#: libbirdfont/PenTool.vala:56
 msgid "and double click to add new point on path."
 msgstr "双击可以在已有路径上增加新点"
 
@@ -318,7 +318,7 @@ msgstr "笔划宽度"
 
 #: libbirdfont/Toolbox.vala:512
 msgid "Handle color"
-msgstr ""
+msgstr "柄颜色"
 
 #: libbirdfont/Toolbox.vala:714
 msgid "Set size for grid"
@@ -390,21 +390,19 @@ msgstr "导入SVG文件（_I）"
 
 #: birdfont/GtkWindow.vala:402
 msgid "_Select point above"
-msgstr ""
+msgstr "选择上层点（_S）"
 
 #: birdfont/GtkWindow.vala:406
-#, fuzzy
 msgid "Select _next point"
-msgstr "删除编辑点"
+msgstr "选择下个点（_N）"
 
 #: birdfont/GtkWindow.vala:410
-#, fuzzy
 msgid "Select _previous point"
-msgstr "删除编辑点"
+msgstr "选择上个点（_P）"
 
 #: birdfont/GtkWindow.vala:414
 msgid "Select point _below"
-msgstr ""
+msgstr "选择下层点"
 
 #: birdfont/GtkWindow.vala:419
 msgid "_Next tab"
@@ -419,9 +417,8 @@ msgid "_Close tab"
 msgstr "关闭标签（_C）"
 
 #: birdfont/GtkWindow.vala:459
-#, fuzzy
 msgid "Close _all tabs"
-msgstr "关闭标签（_C）"
+msgstr "关闭所有标签（_A）"
 
 #: birdfont/GtkWindow.vala:467
 msgid "_Create path"
@@ -429,11 +426,11 @@ msgstr "创建路径（_C）"
 
 #: birdfont/GtkWindow.vala:474
 msgid "_Zoom"
-msgstr "缩放（_Z）"
+msgstr "创建孔路径（_C）"
 
 #: birdfont/GtkWindow.vala:480
 msgid "_Create counter path"
-msgstr ""
+msgstr "创建孔路径（_C）"
 
 #: birdfont/GtkWindow.vala:487
 msgid "_Move"

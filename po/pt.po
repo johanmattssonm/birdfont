@@ -2,12 +2,11 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-20 23:01+0100\n"
+"POT-Creation-Date: 2013-01-26 15:03+0100\n"
 "PO-Revision-Date: 2013-01-13 05:44+0000\n"
 "Last-Translator: aamrs_mansil <manuela.silva@sky.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,17 +94,17 @@ msgstr "Cortar imagem de fundo"
 msgid "Export glyph to svg file"
 msgstr ""
 
-#: libbirdfont/ExportTool.vala:518
+#: libbirdfont/ExportTool.vala:523
 msgid "Wrote font files"
 msgstr ""
 
 #. / All lower case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:37
+#: libbirdfont/GlyphRange.vala:54
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr ""
 
 #. / All upper case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:40
+#: libbirdfont/GlyphRange.vala:57
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 
@@ -157,11 +156,11 @@ msgstr ""
 msgid "Move paths"
 msgstr ""
 
-#: libbirdfont/PenTool.vala:51
+#: libbirdfont/PenTool.vala:56
 msgid "Right click to add new points, left click to move points"
 msgstr ""
 
-#: libbirdfont/PenTool.vala:51
+#: libbirdfont/PenTool.vala:56
 msgid "and double click to add new point on path."
 msgstr ""
 
@@ -418,9 +417,8 @@ msgid "_Close tab"
 msgstr "_Fechar Separador"
 
 #: birdfont/GtkWindow.vala:459
-#, fuzzy
 msgid "Close _all tabs"
-msgstr "_Fechar Separador"
+msgstr ""
 
 #: birdfont/GtkWindow.vala:467
 msgid "_Create path"

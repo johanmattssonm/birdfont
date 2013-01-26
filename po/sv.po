@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-20 23:01+0100\n"
-"PO-Revision-Date: 2013-01-11 12:35+0000\n"
+"POT-Creation-Date: 2013-01-26 15:03+0100\n"
+"PO-Revision-Date: 2013-01-24 07:47+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1357907708.0\n"
+"X-POOTLE-MTIME: 1359013628.0\n"
 
 #: libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -94,17 +94,17 @@ msgstr "Beskär bakgrundsbild"
 msgid "Export glyph to svg file"
 msgstr "Exportera tecken till svg-fil"
 
-#: libbirdfont/ExportTool.vala:518
+#: libbirdfont/ExportTool.vala:523
 msgid "Wrote font files"
 msgstr "Har skrivit typsnittsfiler"
 
 #. / All lower case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:37
+#: libbirdfont/GlyphRange.vala:54
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö"
 
 #. / All upper case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:40
+#: libbirdfont/GlyphRange.vala:57
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö"
 
@@ -156,13 +156,13 @@ msgstr "Sammanfoga slingor"
 msgid "Move paths"
 msgstr "Flytta objekt"
 
-#: libbirdfont/PenTool.vala:51
+#: libbirdfont/PenTool.vala:56
 msgid "Right click to add new points, left click to move points"
 msgstr ""
 "Högerklicka för att lägga till nya punkter, vänsterklicka för att flytta "
 "punkter"
 
-#: libbirdfont/PenTool.vala:51
+#: libbirdfont/PenTool.vala:56
 msgid "and double click to add new point on path."
 msgstr "och dubbelklicka för att lägga till ny punkt på slingan."
 
@@ -395,21 +395,19 @@ msgstr "_Importera SVG"
 
 #: birdfont/GtkWindow.vala:402
 msgid "_Select point above"
-msgstr ""
+msgstr "Markera punkten _ovanför"
 
 #: birdfont/GtkWindow.vala:406
-#, fuzzy
 msgid "Select _next point"
-msgstr "Radera kontrollpunkter"
+msgstr "Markera punkten till _höger"
 
 #: birdfont/GtkWindow.vala:410
-#, fuzzy
 msgid "Select _previous point"
-msgstr "Radera kontrollpunkter"
+msgstr "Markera punkten till _vänster"
 
 #: birdfont/GtkWindow.vala:414
 msgid "Select point _below"
-msgstr ""
+msgstr "Markera punkten _nedanför"
 
 #: birdfont/GtkWindow.vala:419
 msgid "_Next tab"
@@ -424,9 +422,8 @@ msgid "_Close tab"
 msgstr "_Stäng flik"
 
 #: birdfont/GtkWindow.vala:459
-#, fuzzy
 msgid "Close _all tabs"
-msgstr "_Stäng flik"
+msgstr "Stäng _alla flikar"
 
 #: birdfont/GtkWindow.vala:467
 msgid "_Create path"

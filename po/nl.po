@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-20 23:01+0100\n"
+"POT-Creation-Date: 2013-01-26 15:03+0100\n"
 "PO-Revision-Date: 2013-01-20 13:18+0000\n"
 "Last-Translator: DiGro <th.groskamp@quicknet.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,17 +94,17 @@ msgstr "Knip achtergrond afbeelding"
 msgid "Export glyph to svg file"
 msgstr "Exporteer glief naar svg bestand"
 
-#: libbirdfont/ExportTool.vala:518
+#: libbirdfont/ExportTool.vala:523
 msgid "Wrote font files"
 msgstr "Schreef lettertype bestanden"
 
 #. / All lower case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:37
+#: libbirdfont/GlyphRange.vala:54
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 
 #. / All upper case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:40
+#: libbirdfont/GlyphRange.vala:57
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
@@ -156,13 +156,13 @@ msgstr "Paden samenvoegen"
 msgid "Move paths"
 msgstr "Paden verplaatsen"
 
-#: libbirdfont/PenTool.vala:51
+#: libbirdfont/PenTool.vala:56
 msgid "Right click to add new points, left click to move points"
 msgstr ""
 "Rechts klik om nieuwe punten toe te voegen, links klik om punten te "
 "verplaatsen"
 
-#: libbirdfont/PenTool.vala:51
+#: libbirdfont/PenTool.vala:56
 msgid "and double click to add new point on path."
 msgstr "en dubbel klik om nieuwe punten op het pad te plaatsen"
 
@@ -397,14 +397,12 @@ msgid "_Select point above"
 msgstr ""
 
 #: birdfont/GtkWindow.vala:406
-#, fuzzy
 msgid "Select _next point"
-msgstr "Verwijder bewerkingspunten"
+msgstr ""
 
 #: birdfont/GtkWindow.vala:410
-#, fuzzy
 msgid "Select _previous point"
-msgstr "Verwijder bewerkingspunten"
+msgstr ""
 
 #: birdfont/GtkWindow.vala:414
 msgid "Select point _below"
@@ -423,9 +421,8 @@ msgid "_Close tab"
 msgstr "_Sluit tabblad"
 
 #: birdfont/GtkWindow.vala:459
-#, fuzzy
 msgid "Close _all tabs"
-msgstr "_Sluit tabblad"
+msgstr ""
 
 #: birdfont/GtkWindow.vala:467
 msgid "_Create path"
