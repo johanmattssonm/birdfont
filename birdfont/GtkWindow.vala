@@ -865,8 +865,6 @@ public class GlyphCanvasArea : DrawingArea  {
 	}
 
 	static void set_modifier (int k) {
-		print (@"K: $k\n");
-		
 		switch (k) {
 			case STATE_SHIFT:
 				KeyBindings.set_modifier (SHIFT);
