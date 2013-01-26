@@ -128,6 +128,10 @@ class MoveTool : Tool {
 					g.active_paths.remove_link (g.active_paths.first ());
 				}
 			}
+			
+			if (is_arrow_key (keyval)) {
+				move_selected_paths (keyval);
+			}
 		});
 		
 		draw_action.connect ((self, cr, glyph) => {
@@ -139,6 +143,37 @@ class MoveTool : Tool {
 				cr.paint ();	
 			}
 		});
+	}
+
+	void move_selected_paths (uint key) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		double x, y;
+		
+		x = 0;
+		y = 0;
+		
+		switch (key) {
+			case Key.UP:
+				y = 1;
+				break;
+			case Key.DOWN:
+				y = -1;
+				break;
+			case Key.LEFT:
+				x = -1;
+				break;
+			case Key.RIGHT:
+				x = 1;
+				break;
+			default:
+				break;
+		}
+		
+		foreach (Path path in glyph.active_paths) {
+			path.move (x * Glyph.ivz (), y * Glyph.ivz ());
+		}
+		
+		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
 	}
 
 	double get_resize_ratio (double x, double y) {
