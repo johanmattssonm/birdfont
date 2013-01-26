@@ -80,7 +80,6 @@ def configure():
 	
 	os.chdir('../')
 	run('./configure')
-	run('doit')
 	os.chdir('./win32')
 	
 	run('i686-w64-mingw32-gcc --version')
@@ -95,11 +94,32 @@ def configure():
 def build():
 	run("mkdir -p ../build/supplement")
 	run("mkdir -p ../build/win32")
+	run("mkdir -p ../build/win32/libbirdfont")
+	run("mkdir -p ../build/win32/birdfont")
+	run("mkdir -p ../build/win32/birdfont-export")
+
 	run("windres ../win32/icon.rc -O coff -o ../build/icon.res")
+
+	# generate c code
+	run("valac -C --library libbirdfont -H birdfont.h ../libbirdfont/* --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
+	run("mv ./*.c ../build/win32/libbirdfont/ ")
+	run("mv ./*.h ../build/win32/libbirdfont/")
+
+	run("valac -C ../birdfont/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
+	run("mv ./*.c ../build/win32/birdfont/")
+
+	run("valac -C ../birdfont-export/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
+	run("mv ./*.c ../build/win32/birdfont-export/")
+
+	# compile c code
 	run("""i686-w64-mingw32-gcc \
-			-c ../build/birdfont.h ../build/birdfont/Main.c ../build/birdfont/GtkWindow.c ../build/birdfont-export/BirdfontExport.c ../build/libbirdfont/*.c ./ \
+			-c ../build/win32/libbirdfont/birdfont.h \
+			../build/win32/birdfont/Main.c \
+			../build/win32/birdfont/GtkWindow.c \
+			../build/win32/birdfont-export/BirdfontExport.c \
+			../build/win32/libbirdfont/*.c ./ \
 			-D 'GETTEXT_PACKAGE="birdfont"' \
-			-I ../build/ \
+			-I ../build/win32/libbirdfont/ \
 			-mthreads \
 			$(i686-w64-mingw32-pkg-config --cflags --libs glib-2.0) \
 			$(i686-w64-mingw32-pkg-config --cflags --libs libxml-2.0) \
@@ -112,10 +132,11 @@ def build():
 	run("""mv ../build/win32/BirdfontExport.* ../build """)
 	run("""mv ../build/win32/Main.* ../build """)
 	run("""mv ../build/win32/GtkWindow.* ../build """)
-	
+
+	# link binaries
 	run("""i686-w64-mingw32-gcc \
 		-shared \
-		../build/win32/*.o \
+		../build/win32/libbirdfont/*.o \
 		../build/icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \

@@ -51,27 +51,22 @@ def build():
 	run("mkdir -p build/mac/bin")
 
 	run("valac -C --library libbirdfont -H birdfont.h libbirdfont/* --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
-
 	run("mv libbirdfont/*.c build/mac/libbirdfont/ ")
 	run("mv ./*.h build/mac/libbirdfont/")
 
 	run("""gcc -c build/mac/libbirdfont/*.c -shared -fno-common -fPIC -D 'GETTEXT_PACKAGE="birdfont"' $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) -I ./build/mac/birdfont""")
-
 	run("mv ./*.o build/mac/libbirdfont/ ")
 
 	run("gcc -dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,/usr/local/lib/libbirdfont.dylib -shared build/mac/libbirdfont/*.o $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) -shared -o libbirdfont.dylib")
-
 	run("mv libbirdfont.dylib build/mac/bin/")
 
 	# birdfont
 	run("mkdir -p build/mac/birdfont")
 	
 	run("valac -C birdfont/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
-
 	run("mv birdfont/*.c build/mac/birdfont/")
 
 	run("""gcc -c ./build/mac/libbirdfont/birdfont.h build/mac/birdfont/*.c -D 'GETTEXT_PACKAGE="birdfont"' $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) -I ./build/mac/libbirdfont/""")
-
 	run("mv ./*.o build/mac/birdfont/")
 
 	run("gcc build/mac/birdfont/*.o ./build/mac/bin/libbirdfont.dylib $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) $(pkg-config --cflags --libs gtk+-2.0) -o ./build/mac/bin/birdfont")
@@ -80,11 +75,9 @@ def build():
 	run("mkdir -p build/mac/birdfont-export")
 	
 	run("valac -C birdfont-export/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
-
 	run("mv birdfont-export/*.c build/mac/birdfont-export/")
 
 	run("""gcc -c ./build/mac/libbirdfont/birdfont.h build/mac/birdfont-export/*.c -D 'GETTEXT_PACKAGE="birdfont"' $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) -I ./build/mac/libbirdfont/""")
-
 	run("mv ./*.o build/mac/birdfont-export/")
 
 	run("gcc build/mac/birdfont-export/*.o ./build/mac/bin/libbirdfont.dylib $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) $(pkg-config --cflags --libs gtk+-2.0) -o ./build/mac/bin/birdfont-export")
@@ -133,13 +126,7 @@ def build():
 		+ "build/mac/birdfont.app/Contents/MacOs/birdfont")	
 
 	run("install_name_tool -change /usr/local/lib/libbirdfont.dylib @executable_path/libbirdfont.dylib "
-		+ "build/mac/birdfont.app/Contents/MacOs/birdfont-export")		
-
-#	run("rm -rf build/mac/birdfont.dmg")	
-#	run("hdiutil create -megabytes 50 -fs HFS+ -volname birdfont build/mac/birdfont")
-#	run("open build/mac/birdfont.dmg")	
-#	run("cp -r build/mac/birdfont.app /Volumes/birdfont/")
-#	run("hdiutil detach /Volumes/birdfont")	
+		+ "build/mac/birdfont.app/Contents/MacOs/birdfont-export")
 
 	print ("Done.");
 
