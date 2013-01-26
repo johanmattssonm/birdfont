@@ -746,17 +746,19 @@ public class GlyphCanvasArea : DrawingArea  {
 	GlyphCanvas glyph_canvas;
 	Gtk.Allocation alloc;
 
+#if LINUX
 	/* State on linux */
-	public static const int L_SHIFT = 17;
-	public static const int L_CTRL = 20;
-	public static const int L_SHIFT_CTRL = 21;
-	public static const int L_LEFT_LOGO = 128;
-
+	public static const int STATE_SHIFT = 17;
+	public static const int STATE_CTRL = 20;
+	public static const int STATE_SHIFT_CTRL = 21;
+	public static const int STATE_LEFT_LOGO = 80;
+#else
 	/* State on windows and mac */
-	public static const int W_SHIFT = 1;
-	public static const int W_CTRL = 4;
-	public static const int W_SHIFT_CTRL = 5;
-	public static const int M_LEFT_LOGO = 16;	
+	public static const int STATE_SHIFT = 1;
+	public static const int STATE_CTRL = 4;
+	public static const int STATE_SHIFT_CTRL = 5;
+	public static const int STATE_LEFT_LOGO = 16;	
+#endif
 
 	public GlyphCanvasArea (GlyphCanvas gc) {
 		int event_flags;
@@ -863,32 +865,21 @@ public class GlyphCanvasArea : DrawingArea  {
 	}
 
 	static void set_modifier (int k) {
+		print (@"K: $k\n");
+		
 		switch (k) {
-			case L_SHIFT:
+			case STATE_SHIFT:
 				KeyBindings.set_modifier (SHIFT);
 				break;
-			case L_CTRL:
+			case STATE_CTRL:
 				KeyBindings.set_modifier (CTRL);
 				break;
-			case L_SHIFT_CTRL:
+			case STATE_SHIFT_CTRL:
 				KeyBindings.set_modifier (SHIFT | CTRL);
 				break;
-			case L_LEFT_LOGO:
+			case STATE_LEFT_LOGO:
 				KeyBindings.set_modifier (LOGO);
 				break;
-			case W_SHIFT:
-				KeyBindings.set_modifier (SHIFT);
-				break;
-			case W_CTRL:
-				KeyBindings.set_modifier (CTRL);
-				break;
-			case W_SHIFT_CTRL:
-				KeyBindings.set_modifier (SHIFT | CTRL);
-				break;
-			case M_LEFT_LOGO:
-				KeyBindings.set_modifier (LOGO);
-				break;
-			
 			default:
 				KeyBindings.set_modifier (NONE);
 				break;

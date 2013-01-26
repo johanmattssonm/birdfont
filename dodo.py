@@ -61,7 +61,8 @@ valac_options = [
 	'--enable-experimental-non-null',
 	'--thread',
 	'--enable-experimental',
-	'--target-glib=2.34' # see bug 0000004
+	'--target-glib=2.34', # see bug 0000004
+	'--define=LINUX'
 	]	
 libbird = Vala(src='libbirdfont', build='build', library='birdfont', pkg_libs=LIBS)
 def task_libbirdfont():
