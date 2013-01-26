@@ -451,12 +451,15 @@ public class PenTool : Tool {
 				continue;
 			}
 			
-			foreach (EditPoint ep in path.points) {
+			if (path.points.first ().data == active  || path.points.last ().data == active) {
+				continue;
+			}
 			
+			foreach (EditPoint ep in path.points) {
 				if (ep == active || !is_endpoint (ep)) {
 					continue;
 				}
-
+				
 				if (is_close_to_point (ep, px, py)) {
 					x = Glyph.reverse_path_coordinate_x (ep.x);
 					y = Glyph.reverse_path_coordinate_y (ep.y);
