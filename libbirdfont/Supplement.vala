@@ -44,7 +44,6 @@ public class Supplement {
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 		
 #if MAC
-		print ("Mac version.\n");
 		Supplement.mac = true;
 #endif
 		
@@ -67,6 +66,7 @@ public class Supplement {
 		Preferences.load ();
 		
 		current_font = new Font ();
+		current_font.set_name ("");
 		current_glyph = new Glyph ("");
 
 		experimental = args.has_argument ("--test");
