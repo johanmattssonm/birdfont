@@ -536,11 +536,7 @@ public class Glyph : FontDisplay {
 	
 	public override void button_release (int button, double ex, double ey) {
 		bool line_moving = false;
-		
-		if (KeyBindings.has_ctrl ()) {
-			move_view = false;
-			return;
-		}
+		move_view = false;
 		
 		foreach (Line line in get_all_help_lines ()) {
 			if (!line.set_move (false)) {
