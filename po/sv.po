@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-26 19:13+0100\n"
-"PO-Revision-Date: 2013-01-26 18:11+0000\n"
+"POT-Creation-Date: 2013-01-27 20:33+0100\n"
+"PO-Revision-Date: 2013-01-27 18:42+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1359223918.0\n"
+"X-POOTLE-MTIME: 1359312128.0\n"
 
 #: libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -112,39 +112,43 @@ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö"
 msgid "Show grid"
 msgstr "Visa rutnät"
 
-#: libbirdfont/MenuTab.vala:94
+#: libbirdfont/MenuTab.vala:98
 msgid "Export"
 msgstr "Exportera"
 
-#: libbirdfont/MenuTab.vala:95
+#: libbirdfont/MenuTab.vala:99
 msgid "Preview"
 msgstr "Förhandsgranska"
 
-#: libbirdfont/MenuTab.vala:113
+#: libbirdfont/MenuTab.vala:116 libbirdfont/MenuTab.vala:184
+msgid "Recover"
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:146 libbirdfont/MenuTab.vala:183
 msgid "Recent files"
 msgstr "Senast använda filer"
 
-#: libbirdfont/MenuTab.vala:146
+#: libbirdfont/MenuTab.vala:179
 msgid "Preferences"
 msgstr "Inställningar"
 
-#: libbirdfont/MenuTab.vala:147
+#: libbirdfont/MenuTab.vala:180
 msgid "Export SVG, TTF & EOT fonts"
 msgstr "Exportera SVG, TTF & EOT filer"
 
-#: libbirdfont/MenuTab.vala:148
+#: libbirdfont/MenuTab.vala:181
 msgid "Name"
 msgstr "Namn"
 
-#: libbirdfont/MenuTab.vala:149
+#: libbirdfont/MenuTab.vala:182
 msgid "Glyph sequence"
 msgstr "Teckensekvens"
 
-#: libbirdfont/MenuTab.vala:150 libbirdfont/MenuTab.vala:151
+#: libbirdfont/MenuTab.vala:185 libbirdfont/MenuTab.vala:186
 msgid "Export SVG font and view the result"
 msgstr "Exportera SVG-typsnitt och visa resultatet"
 
-#: libbirdfont/MenuTab.vala:235 libbirdfont/SaveDialog.vala:86
+#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:86
 msgid "Save"
 msgstr "Spara"
 
@@ -157,10 +161,8 @@ msgid "Move paths"
 msgstr "Flytta objekt"
 
 #: libbirdfont/PenTool.vala:59
-#, fuzzy
 msgid "Use left command key + click to add new points"
-msgstr ""
-"Använd vänster Command tangenten + klicka för att lägga till en ny punkt"
+msgstr "Använd vänster Command tangent + klicka för att lägga till punkter"
 
 #: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
@@ -200,110 +202,116 @@ msgstr "Kerning"
 msgid "Menu"
 msgstr "Meny"
 
-#: libbirdfont/Toolbox.vala:89
+#: libbirdfont/Toolbox.vala:87
+#, fuzzy
+msgid "Tie curve handles for the selected edit point"
+msgstr "Knyt handtagen på den valda kontrollpunkten"
+
+#: libbirdfont/Toolbox.vala:108
 msgid "Set precision"
 msgstr "Ställ in precision"
 
-#: libbirdfont/Toolbox.vala:117
+#: libbirdfont/Toolbox.vala:136
 msgid "Create counter from outline"
 msgstr "Skapa insida från kontur"
 
-#: libbirdfont/Toolbox.vala:129
+#: libbirdfont/Toolbox.vala:148
 msgid "Move to path to the bottom layer"
 msgstr "Flytta slingan till bottenlagret"
 
-#: libbirdfont/Toolbox.vala:141
+#: libbirdfont/Toolbox.vala:160
 msgid "Show full unicode characters set"
 msgstr "Visa alla unicodetecken"
 
-#: libbirdfont/Toolbox.vala:152
+#: libbirdfont/Toolbox.vala:171
 msgid "Show default characters set"
 msgstr "Visa förvald teckenkodning"
 
-#: libbirdfont/Toolbox.vala:163
+#: libbirdfont/Toolbox.vala:182
 msgid "Show all characters in font"
 msgstr "Visa alla typsnittets tecken"
 
-#: libbirdfont/Toolbox.vala:172
+#: libbirdfont/Toolbox.vala:191
 msgid "Delete selected glyph"
 msgstr "Radera markerade tecken"
 
-#: libbirdfont/Toolbox.vala:238
+#: libbirdfont/Toolbox.vala:257
 msgid "Show help lines for x-height and baseline"
 msgstr "Visa stödlinjer för x-höjd och baslinje"
 
-#: libbirdfont/Toolbox.vala:253
+#: libbirdfont/Toolbox.vala:272
 msgid "Show help lines at top and bottom margin"
 msgstr "Visa stödlinjer för botten- och toppmarginaler"
 
-#: libbirdfont/Toolbox.vala:271
+#: libbirdfont/Toolbox.vala:290
 msgid "Zoom in"
 msgstr "Zooma in"
 
-#: libbirdfont/Toolbox.vala:278
+#: libbirdfont/Toolbox.vala:297
 msgid "Zoom out"
 msgstr "Zooma ut"
 
-#: libbirdfont/Toolbox.vala:285
+#: libbirdfont/Toolbox.vala:304
 msgid "Zoom to scale 1:1"
 msgstr "Visa i skala 1:1"
 
-#: libbirdfont/Toolbox.vala:293
+#: libbirdfont/Toolbox.vala:312
 msgid "Show full glyph"
 msgstr "Visa hela"
 
-#: libbirdfont/Toolbox.vala:300
+#: libbirdfont/Toolbox.vala:319
 msgid "Zoom in at region boundries"
 msgstr "Visa avgränsningar"
 
-#: libbirdfont/Toolbox.vala:307
+#: libbirdfont/Toolbox.vala:326
 msgid "Zoom in background image"
 msgstr "Visa hela bakgrundsbilden"
 
-#: libbirdfont/Toolbox.vala:320
+#: libbirdfont/Toolbox.vala:339
 msgid "Previous view"
 msgstr "Föregående vy"
 
-#: libbirdfont/Toolbox.vala:326
+#: libbirdfont/Toolbox.vala:345
 msgid "Next view"
 msgstr "Nästa vy"
 
-#: libbirdfont/Toolbox.vala:333
+#: libbirdfont/Toolbox.vala:352
 msgid "Set size for background image"
 msgstr "Ställ in storleken på bakgrundsbilden"
 
-#: libbirdfont/Toolbox.vala:363
+#: libbirdfont/Toolbox.vala:382
 msgid "Show/hide background image"
 msgstr "Visa/dölj bakgrundsbilden"
 
-#: libbirdfont/Toolbox.vala:371
+#: libbirdfont/Toolbox.vala:390
 msgid "Insert a new background image"
 msgstr "Lägg till en ny bakgrundsbild"
 
-#: libbirdfont/Toolbox.vala:376
+#: libbirdfont/Toolbox.vala:395
 msgid "Creating thumbnails"
 msgstr "Skapar miniatyrbilder"
 
-#: libbirdfont/Toolbox.vala:395
+#: libbirdfont/Toolbox.vala:414
 msgid "Set contrast for background image"
 msgstr "Ställ in bakgrundsbildens kontrast"
 
-#: libbirdfont/Toolbox.vala:414
+#: libbirdfont/Toolbox.vala:433
 msgid "Stroke color"
 msgstr "Linjefärg"
 
-#: libbirdfont/Toolbox.vala:436
+#: libbirdfont/Toolbox.vala:455
 msgid "Stroke width"
 msgstr "Linjebredd"
 
-#: libbirdfont/Toolbox.vala:453
+#: libbirdfont/Toolbox.vala:472
 #, fuzzy
 msgid "Handle color"
 msgstr "Handtagsfärg"
 
-#: libbirdfont/Toolbox.vala:654
+#: libbirdfont/Toolbox.vala:673
+#, fuzzy
 msgid "Set size for grid"
-msgstr "Ange storlek på rutmönstret"
+msgstr "Handtagsfärg"
 
 #: libbirdfont/VersionList.vala:32
 msgid "New version"
@@ -465,6 +473,10 @@ msgstr "_Flik"
 msgid "T_ool"
 msgstr "_Verktyg"
 
+#~ msgid "Use left command key + click to add new point "
+#~ msgstr ""
+#~ "Använd vänster Command tangenten + klicka för att lägga till en ny punkt"
+
 #~ msgid "Right click to add new point, left click to move points"
 #~ msgstr ""
 #~ "Högerklicka för att lägga till nya punkter, vänsterklicka för att flytta "
@@ -478,9 +490,6 @@ msgstr "_Verktyg"
 
 #~ msgid "Begin new line from point on path"
 #~ msgstr "Börja ny linje från en punkt på slingan"
-
-#~ msgid "Tie curve handles for selected edit point"
-#~ msgstr "Knyt handtagen på den valda kontrollpunkten"
 
 #~ msgid "Tie coordinates to previous edit point"
 #~ msgstr "Knyt handtag till föregående kontrollpunkt"
