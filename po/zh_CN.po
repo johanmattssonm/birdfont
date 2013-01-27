@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-26 19:13+0100\n"
-"PO-Revision-Date: 2013-01-24 02:26+0000\n"
+"POT-Creation-Date: 2013-01-27 20:33+0100\n"
+"PO-Revision-Date: 2013-01-27 19:07+0000\n"
 "Last-Translator: Zhantong <zhantongz@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1358994401.0\n"
+"X-POOTLE-MTIME: 1359313668.0\n"
 
 #: libbirdfont/Argument.vala:225
 msgid "Usage"
@@ -112,39 +112,43 @@ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgid "Show grid"
 msgstr "显示网格"
 
-#: libbirdfont/MenuTab.vala:94
+#: libbirdfont/MenuTab.vala:98
 msgid "Export"
 msgstr "导出"
 
-#: libbirdfont/MenuTab.vala:95
+#: libbirdfont/MenuTab.vala:99
 msgid "Preview"
 msgstr "预览"
 
-#: libbirdfont/MenuTab.vala:113
+#: libbirdfont/MenuTab.vala:116 libbirdfont/MenuTab.vala:184
+msgid "Recover"
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:146 libbirdfont/MenuTab.vala:183
 msgid "Recent files"
 msgstr "最近打开的文件"
 
-#: libbirdfont/MenuTab.vala:146
+#: libbirdfont/MenuTab.vala:179
 msgid "Preferences"
 msgstr "偏好"
 
-#: libbirdfont/MenuTab.vala:147
+#: libbirdfont/MenuTab.vala:180
 msgid "Export SVG, TTF & EOT fonts"
 msgstr "输出为SVG、TTF和EOT字体"
 
-#: libbirdfont/MenuTab.vala:148
+#: libbirdfont/MenuTab.vala:181
 msgid "Name"
 msgstr "名称"
 
-#: libbirdfont/MenuTab.vala:149
+#: libbirdfont/MenuTab.vala:182
 msgid "Glyph sequence"
 msgstr "字形序列"
 
-#: libbirdfont/MenuTab.vala:150 libbirdfont/MenuTab.vala:151
+#: libbirdfont/MenuTab.vala:185 libbirdfont/MenuTab.vala:186
 msgid "Export SVG font and view the result"
 msgstr "导出为SVG字体并查看结果"
 
-#: libbirdfont/MenuTab.vala:235 libbirdfont/SaveDialog.vala:86
+#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:86
 msgid "Save"
 msgstr "保存"
 
@@ -157,9 +161,8 @@ msgid "Move paths"
 msgstr "移动路径"
 
 #: libbirdfont/PenTool.vala:59
-#, fuzzy
 msgid "Use left command key + click to add new points"
-msgstr "双击以在已有路径上增加新点"
+msgstr "在按下左命令键时单机增加新点"
 
 #: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
@@ -197,107 +200,112 @@ msgstr "字距"
 msgid "Menu"
 msgstr "菜单"
 
-#: libbirdfont/Toolbox.vala:89
+#: libbirdfont/Toolbox.vala:87
+#, fuzzy
+msgid "Tie curve handles for the selected edit point"
+msgstr "将选定编辑点以曲线连接"
+
+#: libbirdfont/Toolbox.vala:108
 msgid "Set precision"
 msgstr "设置精度"
 
-#: libbirdfont/Toolbox.vala:117
+#: libbirdfont/Toolbox.vala:136
 msgid "Create counter from outline"
 msgstr "从轮廓创建计数器"
 
-#: libbirdfont/Toolbox.vala:129
+#: libbirdfont/Toolbox.vala:148
 msgid "Move to path to the bottom layer"
 msgstr "将路径移动到底层"
 
-#: libbirdfont/Toolbox.vala:141
+#: libbirdfont/Toolbox.vala:160
 msgid "Show full unicode characters set"
 msgstr "显示完整的Unicode字符集"
 
-#: libbirdfont/Toolbox.vala:152
+#: libbirdfont/Toolbox.vala:171
 msgid "Show default characters set"
 msgstr "显示默认字符集"
 
-#: libbirdfont/Toolbox.vala:163
+#: libbirdfont/Toolbox.vala:182
 msgid "Show all characters in font"
 msgstr "显示字体中的全部字符"
 
-#: libbirdfont/Toolbox.vala:172
+#: libbirdfont/Toolbox.vala:191
 msgid "Delete selected glyph"
 msgstr "删除选定的字形"
 
-#: libbirdfont/Toolbox.vala:238
+#: libbirdfont/Toolbox.vala:257
 msgid "Show help lines for x-height and baseline"
 msgstr "显示x-高度线及底线"
 
-#: libbirdfont/Toolbox.vala:253
+#: libbirdfont/Toolbox.vala:272
 msgid "Show help lines at top and bottom margin"
 msgstr "显示顶线及底部边缘线"
 
-#: libbirdfont/Toolbox.vala:271
+#: libbirdfont/Toolbox.vala:290
 msgid "Zoom in"
 msgstr "放大"
 
-#: libbirdfont/Toolbox.vala:278
+#: libbirdfont/Toolbox.vala:297
 msgid "Zoom out"
 msgstr "缩小"
 
-#: libbirdfont/Toolbox.vala:285
+#: libbirdfont/Toolbox.vala:304
 msgid "Zoom to scale 1:1"
 msgstr "缩放至1：1"
 
-#: libbirdfont/Toolbox.vala:293
+#: libbirdfont/Toolbox.vala:312
 msgid "Show full glyph"
 msgstr "显示完整字形"
 
-#: libbirdfont/Toolbox.vala:300
+#: libbirdfont/Toolbox.vala:319
 msgid "Zoom in at region boundries"
 msgstr "在区域范围内缩放"
 
-#: libbirdfont/Toolbox.vala:307
+#: libbirdfont/Toolbox.vala:326
 msgid "Zoom in background image"
 msgstr "缩放背景图像"
 
-#: libbirdfont/Toolbox.vala:320
+#: libbirdfont/Toolbox.vala:339
 msgid "Previous view"
 msgstr "上一个视图"
 
-#: libbirdfont/Toolbox.vala:326
+#: libbirdfont/Toolbox.vala:345
 msgid "Next view"
 msgstr "下一个视图"
 
-#: libbirdfont/Toolbox.vala:333
+#: libbirdfont/Toolbox.vala:352
 msgid "Set size for background image"
 msgstr "设置背景图像的大小"
 
-#: libbirdfont/Toolbox.vala:363
+#: libbirdfont/Toolbox.vala:382
 msgid "Show/hide background image"
 msgstr "显示或隐藏背景图像"
 
-#: libbirdfont/Toolbox.vala:371
+#: libbirdfont/Toolbox.vala:390
 msgid "Insert a new background image"
 msgstr "插入新的背景图像"
 
-#: libbirdfont/Toolbox.vala:376
+#: libbirdfont/Toolbox.vala:395
 msgid "Creating thumbnails"
 msgstr "创建缩略图"
 
-#: libbirdfont/Toolbox.vala:395
+#: libbirdfont/Toolbox.vala:414
 msgid "Set contrast for background image"
 msgstr "设置背景图像的对比度"
 
-#: libbirdfont/Toolbox.vala:414
+#: libbirdfont/Toolbox.vala:433
 msgid "Stroke color"
 msgstr "笔划颜色"
 
-#: libbirdfont/Toolbox.vala:436
+#: libbirdfont/Toolbox.vala:455
 msgid "Stroke width"
 msgstr "笔划宽度"
 
-#: libbirdfont/Toolbox.vala:453
+#: libbirdfont/Toolbox.vala:472
 msgid "Handle color"
 msgstr "柄颜色"
 
-#: libbirdfont/Toolbox.vala:654
+#: libbirdfont/Toolbox.vala:673
 msgid "Set size for grid"
 msgstr "设置网格大小"
 
@@ -464,14 +472,14 @@ msgstr "工具（_T）"
 #~ msgid "Right click to add new point, left click to move points"
 #~ msgstr "右键单击以增加新点，左键单击以移动点"
 
+#~ msgid "and double click to add new point on path"
+#~ msgstr "双击以在已有路径上增加新点"
+
 #~ msgid "Add new point on path"
 #~ msgstr "在已有路径上增加新点"
 
 #~ msgid "Begin new line from point on path"
 #~ msgstr "以已有路径上的点为起点画一条新线"
-
-#~ msgid "Tie curve handles for selected edit point"
-#~ msgstr "将选定编辑点以曲线连接"
 
 #~ msgid "Tie coordinates to previous edit point"
 #~ msgstr "将上个编辑点与坐标相连"
