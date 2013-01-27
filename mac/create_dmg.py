@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import sys
 
-sys.path.append('../')
+sys.path.append('./')
 import version
 
 def run(cmd):
@@ -16,8 +16,8 @@ def run(cmd):
 		exit(1)
 		
 def create_dmg ():
-	run("rm -rf build/mac/birdfont-" + VERSION + ".dmg")	
-	run("hdiutil create -megabytes 55 -fs HFS+ -volname birdfont build/mac/birdfont-" + VERSION)
+	run("rm -rf build/mac/birdfont-" + version.VERSION + ".dmg")	
+	run("hdiutil create -megabytes 55 -fs HFS+ -volname birdfont build/mac/birdfont-" + version.VERSION)
 	# run("cp -r build/mac/birdfont.app /Volumes/birdfont/")
 	print ("Copy the files with Finder, we don't know the path here.")
 
