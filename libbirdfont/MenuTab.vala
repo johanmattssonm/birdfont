@@ -330,6 +330,8 @@ c.append ("""
 		Font f = Supplement.get_current_font ();
 		string fn;
 		bool saved = false;
+
+		f.delete_backup ();
 		
 		fn = (!) f.font_file;
 		
@@ -357,9 +359,6 @@ c.append ("""
 		Font font = Supplement.get_current_font ();
 		SaveDialog save = new SaveDialog ();
 		save.finished.connect (() => {
-			Font f = Supplement.get_current_font ();
-			f.delete_backup ();
-			
 			Supplement.new_font ();
 			MainWindow.close_all_tabs ();
 			

@@ -53,7 +53,6 @@ public class Font : GLib.Object {
 	/** Bottom margin */
 	public double bottom_limit;
 	
-	public string? backup_file = null;
 	public string? font_file = null;
 	
 	bool modified = false;
@@ -444,20 +443,22 @@ public class Font : GLib.Object {
 
 	/** Delete temporary rescue files. */
 	public void delete_backup () {
-		string backup;
-
-		if (backup_file == null) {
-			return;
-		}
-
-		backup = (!) backup_file;
+		File dir = Supplement.get_backup_directory ();
+		File? new_file = null;
+		File file;
+		string backup_file;
+		
+		new_file = dir.get_child (@"$(name).ffi");
+		backup_file = (!) ((!) new_file).get_path ();
 		
 		try {
-			File f = File.new_for_path (backup);
-			f.delete ();		
+			file = File.new_for_path (backup_file);
+			if (file.query_exists ()) {
+				file.delete ();	
+			}
 		} catch (GLib.Error e) {
 			stderr.printf (@"Failed to delete backup\n");
-			stderr.printf (@"$(e.message) \n");
+			warning (@"$(e.message) \n");
 		}
 	}
 	
@@ -465,16 +466,14 @@ public class Font : GLib.Object {
 	public string save_backup () {
 		File dir = Supplement.get_backup_directory ();
 		File? temp_file = null;
-
-		if (backup_file == null) {
-			temp_file = dir.get_child (@"$(name).ffi");
-			backup_file = ((!) temp_file).get_path ();
-		}
+		string backup_file;
+	
+		temp_file = dir.get_child (@"$(name).ffi");
+		backup_file = (!) ((!) temp_file).get_path ();
+				
+		write_font_file (backup_file, true);
 		
-		assert (backup_file != null);		
-		write_font_file ((!) backup_file, true);
-		
-		return (!) backup_file;
+		return backup_file;
 	}
 	
 	public bool save (string path) {
@@ -1320,46 +1319,6 @@ public class Font : GLib.Object {
 		ep.tie_handles = tie_handles;
 		
 		p.add_point (ep);
-	}
-	
-	public bool restore_backup () {
-		string? b = present_backup_file ();
-		bool r = false;
-		
-		if (b == null) {
-			return false;
-		}
-		
-		try {
-			r = parse_file ((!)b);
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
-		
-		return r;
-	}
-	
-	private string? present_backup_file () {
-		try {
-			File dir = Supplement.get_settings_directory ();
-			var files = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-
-			// What if we have more than one backup file left?
-			FileInfo? file_info;
-			while ((file_info = files.next_file ()) != null) {
-				FileInfo fi = (!) file_info;
-				if (fi.get_name ().index_of ("current_font_") != -1) {
-					File f = dir.get_child (fi.get_name ());
-					backup_file = f.get_path ();
-					return backup_file;
-				}
-			}
-		} catch (GLib.Error e) {
-			stderr.printf (@"Failed to load backup\n");
-			stderr.printf (@"$(e.message) \n");
-		}
-		
-		return null;
 	}
 		
 	public static string to_hex (unichar ch) {

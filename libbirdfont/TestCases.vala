@@ -35,7 +35,6 @@ class TestCases {
 		add (test_coordinates, "Coordinates");
 		add (test_drawing, "Pen tool");
 		add (test_delete_points, "Delete edit points");
-		add (test_save_backup, "Save backup");
 		add (test_convert_to_quadratic_bezier_path, "Convert to quadratic path");
 		add (test_notdef, "Notdef");
 		add (test_merge, "Merge");
@@ -525,12 +524,6 @@ class TestCases {
 	public static void test_active_edit_point () {
 		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
 		tool.test_active_edit_point ();
-	}
-	
-	public static void test_save_backup () {
-		// TODO draw various things and assert that they are restored correctly
-		Supplement.get_current_font ().save_backup ();
-		Supplement.get_current_font ().restore_backup ();
 	}
 
 	public static void test_hex () {
