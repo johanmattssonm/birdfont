@@ -126,12 +126,13 @@ def build():
 			$(i686-w64-mingw32-pkg-config --cflags --libs gio-2.0) \
 			$(i686-w64-mingw32-pkg-config --cflags --libs libsoup-2.4) \
 			$(i686-w64-mingw32-pkg-config --cflags --libs gtk+-2.0) \
-			$(i686-w64-mingw32-pkg-config --cflags --libs webkit-1.0) && \
-			mv *.o ../build/win32/""");
+			$(i686-w64-mingw32-pkg-config --cflags --libs webkit-1.0)""");
 	
-	run("""mv ../build/win32/BirdfontExport.* ../build """)
-	run("""mv ../build/win32/Main.* ../build """)
-	run("""mv ../build/win32/GtkWindow.* ../build """)
+	# move object files to their folders
+	run("""mv BirdfontExport.o ../build/win32/birdfont-export """)
+	run("""mv Main.o ../build/win32/birdfont """)
+	run("""mv GtkWindow.o ../build/win32/birdfont """)
+	run("""mv *.o ../build/win32/libbirdfont/ """)
 
 	# link binaries
 	run("""i686-w64-mingw32-gcc \
@@ -146,11 +147,11 @@ def build():
 		-B static -l webkitgtk-1.0.dll  -B static -lgtk-win32-2.0.dll -B static -lgdk-win32-2.0.dll -B static -latk-1.0.dll -B static -lgio-2.0.dll -B static -lpangowin32-1.0.dll -B static -lpangocairo-1.0.dll -B static -lgdk_pixbuf-2.0.dll -B static -lpango-1.0.dll -B static -lcairo.dll -B static -lgobject-2.0.dll -B static -lgmodule-2.0.dll -B static -lgthread-2.0.dll -B static -lglib-2.0.dll \
 		-static -o libbirdfont.dll""")
 	
-	run("""i686-w64-mingw32-ar rcs ../build/libbirdfont.dll.a ../build/win32/*.o""")
+	run("""i686-w64-mingw32-ar rcs ../build/libbirdfont.dll.a ../build/win32/libbirdfont/*.o""")
 
 	run("""i686-w64-mingw32-gcc \
-		../build/Main.o \
-		../build/GtkWindow.o \
+		../build/win32/birdfont/Main.o \
+		../build/win32/birdfont/GtkWindow.o \
 		../build/icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
@@ -163,9 +164,9 @@ def build():
 		-static -o birdfont.exe""")
 
 	run("""i686-w64-mingw32-gcc \
-		../build/Main.o \
+		../build/win32/birdfont/Main.o \
+		../build/win32/birdfont/GtkWindow.o \
 		../build/icon.res \
-		../build/GtkWindow.o \
 		-mthreads \
 		-L../build/ \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
@@ -176,7 +177,7 @@ def build():
 		-static -o birdfont_terminal.exe""")
 
 	run("""i686-w64-mingw32-gcc \
-		../build/BirdfontExport.o \
+		../build/win32/birdfont-export/BirdfontExport.o \
 		../build/icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
