@@ -139,6 +139,14 @@ public class PenTool : Tool {
 		});
 	}
 	
+	public static void close_all_paths () {
+		Glyph g = MainWindow.get_current_glyph ();
+		foreach (Path p in g.path_list) {
+			p.close ();
+		}
+		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+	}
+	
 	public void set_precision (double p) {
 		precision = p;
 		MainWindow.get_toolbox ().precision.set_value_round (p, false, false);

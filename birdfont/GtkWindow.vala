@@ -397,6 +397,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		edit_menu.append (import_svg_item);
 		import_svg_item.activate.connect (() => { ImportSvg.import (); });	
 
+		Gtk.MenuItem close_path_item = new Gtk.MenuItem.with_mnemonic (_("Close _path"));
+		edit_menu.append (close_path_item);
+		close_path_item.activate.connect (() => { PenTool.close_all_paths (); });
+		close_path_item.add_accelerator ("activate", accel_group, 'B', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+		
 		edit_menu.append (new SeparatorMenuItem ());
 
 		Gtk.MenuItem select_point_above = new Gtk.MenuItem.with_mnemonic (" Ctrl+↑  " + _("_Select point above"));

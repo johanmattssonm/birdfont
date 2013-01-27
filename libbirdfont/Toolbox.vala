@@ -323,7 +323,7 @@ public class Toolbox : GLib.Object  {
 		});
 		view_tools.add_tool (zoom_boundries);
 
-		Tool zoom_bg = new Tool ("zoom_background_image", _("Zoom in background image"), 'b');
+		Tool zoom_bg = new Tool ("zoom_background_image", _("Zoom in background image"));
 		zoom_bg.select_action.connect((self) => {
 			if (MainWindow.get_current_glyph ().get_background_image () != null) {
 				zoom_tool.store_current_view ();					
