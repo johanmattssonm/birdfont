@@ -50,7 +50,7 @@ public class Font : GLib.Object {
 	/** Descender position */
 	public double bottom_position;
 	
-	/** Bottom margon */
+	/** Bottom margin */
 	public double bottom_limit;
 	
 	public string? backup_file = null;
@@ -472,26 +472,31 @@ public class Font : GLib.Object {
 		}
 		
 		assert (backup_file != null);		
-		write_font_file ((!) backup_file);
+		write_font_file ((!) backup_file, true);
 		
 		return (!) backup_file;
 	}
 	
 	public bool save (string path) {
-		bool r = write_font_file (path);
+		Font font;
+		bool file_written = write_font_file (path);
 		
-		if (r) {
+		if (file_written) {
 			font_file = path;
+			
+			// delete backup when font is saved
+			font = Supplement.get_current_font ();
+			font.delete_backup ();
 		}
 		
 		modified = false;
 		add_thumbnail ();
 		Preferences.add_recent_files (get_path ());
 		
-		return r;
+		return file_written;
 	}
 
-	public bool write_font_file (string path) {
+	public bool write_font_file (string path, bool backup = false) {
 		try {
 			File file = File.new_for_path (path);
 
@@ -510,6 +515,16 @@ public class Font : GLib.Object {
 			os.put_string ("\n");
 				
 			os.put_string ("<font>\n");
+			
+			// this a backup of another font
+			if (backup) {
+				if (unlikely (font_file == null)) {
+					warning ("No file name is set, can't create backup.");
+				} else {
+					os.put_string ("\n");
+					os.put_string (@"<backup>$((!) font_file)</backup>\n");	
+				}
+			}
 			
 			os.put_string ("\n");
 			os.put_string (@"<name>$(get_name ())</name>\n");
@@ -721,14 +736,14 @@ public class Font : GLib.Object {
 			unassigned_glyphs.remove_all ();
 			
 			if (path.has_suffix (".ffi")) {
-				loaded = parse_file (path);
 				font_file = path;
+				loaded = parse_file (path);
 			}
 			
 			if (Supplement.experimental) {
 				if (path.has_suffix (".ttf")) {
-					loaded = parse_otf_file (path);
 					font_file = path;
+					loaded = parse_otf_file (path);
 				}
 			}
 			
@@ -839,7 +854,7 @@ public class Font : GLib.Object {
 		Xml.Node* root;
 		Xml.Node* node;
 
-		// set this path as file for this font
+		// set this path as file for this font, it will be updated if this is a backup
 		font_file = path;
 		
 		// empty cache and fill it with new glyphs from disk
@@ -863,7 +878,12 @@ public class Font : GLib.Object {
 		node = root;
 		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-		
+
+			// this is a backup file set path to the original 
+			if (iter->name == "backup") {
+				font_file = iter->children->content;
+			}
+	
 			if (iter->name == "glyph") {
 				parse_glyph (iter);
 			}
