@@ -47,6 +47,7 @@ def build():
 	# Compile birdfont on MacOSX 10.5 (Leopard)
 	
 	#libbirdfont
+	run("rm -rf build")
 	run("mkdir -p build/mac/libbirdfont")
 	run("mkdir -p build/mac/bin")
 
