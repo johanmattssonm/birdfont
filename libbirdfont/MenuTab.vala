@@ -41,7 +41,11 @@ public class MenuTab : FontDisplay {
 
 		add_html_callback ("load", (val) => {
 			load_font (val);
-		});	
+		});
+
+		add_html_callback ("load_backup", (val) => {
+			load_backup (val);
+		});
 
 		add_html_callback ("glyph_sequence", (val) => {
 			Preferences.set ("glyph_sequence", val);
@@ -103,9 +107,38 @@ c.append ("""
 	</div>
 	
 	<img src="birdfont_logo.png" alt="" style="float:right;margin: 50px 0 0 0;">
-	
+
+""");
+
+if (has_backup ()) {
+	c.append ("""<br class="clearBoth" />""");
+	c.append ("""<div class="recent_list">""");
+	c.append ("""	<div class="heading"><h2>""" + _("Recover") + """</h2></div>""");
+
+	foreach (string backup in get_backups ()) {
+		fn = backup;
+
+		c.append ("""<div class="recent_font" """ + "onclick=\"call ('load_backup:" + fn + "')\">");
+
+		c.append ("<div class=\"one_line\">");
+		c.append (fn);
+		c.append ("</div>");
+
+		c.append ("<img src=\"");
+		c.append (path_to_uri ((!) Supplement.get_thumbnail_directory ().get_path ()));
+		c.append ("/");
+		c.append (fn);
+		c.append (@".png?$(Random.next_int ())\" alt=\"\">");
+		
+		c.append ("<br /><br />");
+		c.append ("</div>\n");		
+	}
+
+	c.append ("""</div>""");
+}
+
+c.append ("""
 	<br class="clearBoth" />
-	
 	<div class="recent_list">
 """);
 
@@ -147,11 +180,49 @@ c.append ("""
 		_("Export SVG, TTF & EOT fonts");
 		_("Name");
 		_("Glyph sequence");
+		_("Recent files")
+		_("Recover");
 		_("Export SVG font and view the result");
 		_("Export SVG font and view the result");
 #endif
 
 		return c.str;
+	}
+
+	bool has_backup () {
+		return get_backups ().length () > 0;
+	}
+
+	public List<string> get_backups () {
+		FileEnumerator enumerator;
+		string file_name;
+		FileInfo? file_info;
+		List<string> backups = new List<string> ();
+		File dir = Supplement.get_backup_directory ();
+		Font font = Supplement.get_current_font ();
+
+		try {
+			enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+			while ((file_info = enumerator.next_file ()) != null) {
+				file_name = ((!) file_info).get_name ();
+				
+				// ignore old backup files
+				if (file_name.has_prefix ("current_font_")) {
+					continue;
+				}
+				
+				// ignore backup of the current font
+				if (file_name == @"$(font.get_name ()).ffi") {
+					continue;
+				}
+				
+				backups.append (file_name);
+			}
+		} catch (Error e) {
+			warning (e.message);
+		}
+    
+		return backups;	
 	}
 
 	public void propagate_recent_files () {
@@ -176,6 +247,12 @@ c.append ("""
 		}
 		
 		recent_fonts.reverse ();
+	}
+	
+	public void load_backup (string file_name) {
+		File backup_file = Supplement.get_backup_directory ();
+		backup_file = backup_file.get_child (file_name);
+		load_font ((!) backup_file.get_path ());
 	}
 	
 	public void load_font (string fn) {
@@ -253,6 +330,8 @@ c.append ("""
 		Font f = Supplement.get_current_font ();
 		string fn;
 		bool saved = false;
+
+		f.delete_backup ();
 		
 		fn = (!) f.font_file;
 		
@@ -280,9 +359,6 @@ c.append ("""
 		Font font = Supplement.get_current_font ();
 		SaveDialog save = new SaveDialog ();
 		save.finished.connect (() => {
-			Font f = Supplement.get_current_font ();
-			f.delete_backup ();
-			
 			Supplement.new_font ();
 			MainWindow.close_all_tabs ();
 			

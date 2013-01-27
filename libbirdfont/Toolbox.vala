@@ -83,6 +83,25 @@ public class Toolbox : GLib.Object  {
 		Tool move_tool = new MoveTool ("move");
 		draw_tools.add_tool (move_tool);
 
+		// tie edit point handles
+		Tool tie_handles = new Tool ("tie_point", _("Tie curve handles for the selected edit point"), 'w');
+		tie_handles.select_action.connect ((self) => {
+			bool tie;
+			
+			foreach (EditPoint ep in PenTool.selected_points) {
+				tie = !ep.tie_handles;
+				
+				if (tie) {
+					ep.process_tied_handle ();
+				}
+				
+				ep.set_tie_handle (tie);
+				
+				MainWindow.get_current_glyph ().update_view ();
+			}
+		});
+		draw_tool_modifiers.add_tool (tie_handles);
+
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
 		

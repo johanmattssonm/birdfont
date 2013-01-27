@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-26 15:27+0100\n"
+"POT-Creation-Date: 2013-01-26 19:13+0100\n"
 "PO-Revision-Date: 2013-01-20 13:18+0000\n"
 "Last-Translator: DiGro <th.groskamp@quicknet.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -156,13 +156,18 @@ msgstr "Paden samenvoegen"
 msgid "Move paths"
 msgstr "Paden verplaatsen"
 
-#: libbirdfont/PenTool.vala:56
+#: libbirdfont/PenTool.vala:59
+#, fuzzy
+msgid "Use left command key + click to add new points"
+msgstr "en dubbel klik om een nieuw punt op een pad toe te voegen"
+
+#: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
 msgstr ""
 "Rechts klik om nieuwe punten toe te voegen, links klik om punten te "
 "verplaatsen"
 
-#: libbirdfont/PenTool.vala:56
+#: libbirdfont/PenTool.vala:64
 msgid "and double click to add new point on path."
 msgstr "en dubbel klik om nieuwe punten op het pad te plaatsen"
 
@@ -194,142 +199,107 @@ msgstr "Overhang"
 msgid "Menu"
 msgstr "Menu"
 
-#: libbirdfont/Toolbox.vala:90
-msgid "Right click to add new point, left click to move points"
-msgstr ""
-"Rechts klik om een nieuw punt toe te voegen, links klik om punten te "
-"verplaatsen"
-
-#: libbirdfont/Toolbox.vala:92
-#, fuzzy
-msgid "Hold down command key + click to add new point "
-msgstr "en dubbel klik om een nieuw punt op een pad toe te voegen"
-
-#: libbirdfont/Toolbox.vala:95
-msgid "and double click to add new point on path"
-msgstr "en dubbel klik om een nieuw punt op een pad toe te voegen"
-
-#: libbirdfont/Toolbox.vala:102
-msgid "Add new point on path"
-msgstr "Voeg nieuw punt op pad toe"
-
-#: libbirdfont/Toolbox.vala:110
-msgid "Begin new line from point on path"
-msgstr "Begin nieuwe lijn van punt op pad"
-
-#: libbirdfont/Toolbox.vala:118
-msgid "Tie curve handles for selected edit point"
-msgstr "Bind gebogen handvatten voor geselecteerd bewerkingspunt"
-
-#: libbirdfont/Toolbox.vala:138
-msgid "Tie coordinates to previous edit point"
-msgstr "Bind coördinaten aan vorige bewerkingspunt"
-
-#: libbirdfont/Toolbox.vala:145
-msgid "Delete edit points"
-msgstr "Verwijder bewerkingspunten"
-
-#: libbirdfont/Toolbox.vala:154
+#: libbirdfont/Toolbox.vala:89
 msgid "Set precision"
 msgstr "Stel precisie in"
 
-#: libbirdfont/Toolbox.vala:182
+#: libbirdfont/Toolbox.vala:117
 msgid "Create counter from outline"
 msgstr "Creëer tegenstelling van omlijning"
 
-#: libbirdfont/Toolbox.vala:194
+#: libbirdfont/Toolbox.vala:129
 msgid "Move to path to the bottom layer"
 msgstr "Verplaats naar pad naar de onderste laag"
 
-#: libbirdfont/Toolbox.vala:206
+#: libbirdfont/Toolbox.vala:141
 msgid "Show full unicode characters set"
 msgstr "Toon volledig unicode karater set"
 
-#: libbirdfont/Toolbox.vala:217
+#: libbirdfont/Toolbox.vala:152
 msgid "Show default characters set"
 msgstr "Toon standaard karakter set"
 
-#: libbirdfont/Toolbox.vala:228
+#: libbirdfont/Toolbox.vala:163
 msgid "Show all characters in font"
 msgstr "Toon alle karakters in lettertype"
 
-#: libbirdfont/Toolbox.vala:237
+#: libbirdfont/Toolbox.vala:172
 msgid "Delete selected glyph"
 msgstr "Verwijder geselecteerde glief"
 
-#: libbirdfont/Toolbox.vala:303
+#: libbirdfont/Toolbox.vala:238
 msgid "Show help lines for x-height and baseline"
 msgstr "Toon hulplijnen voor x-hoogte en basislijn"
 
-#: libbirdfont/Toolbox.vala:318
+#: libbirdfont/Toolbox.vala:253
 msgid "Show help lines at top and bottom margin"
 msgstr "Toon hulplijnen aan boven- en ondermarge"
 
-#: libbirdfont/Toolbox.vala:336
+#: libbirdfont/Toolbox.vala:271
 msgid "Zoom in"
 msgstr "Inzoomen"
 
-#: libbirdfont/Toolbox.vala:343
+#: libbirdfont/Toolbox.vala:278
 msgid "Zoom out"
 msgstr "Uitzoomen"
 
-#: libbirdfont/Toolbox.vala:350
+#: libbirdfont/Toolbox.vala:285
 msgid "Zoom to scale 1:1"
 msgstr "Zoom naar schaal 1:1"
 
-#: libbirdfont/Toolbox.vala:358
+#: libbirdfont/Toolbox.vala:293
 msgid "Show full glyph"
 msgstr "Toon volledig glief"
 
-#: libbirdfont/Toolbox.vala:365
+#: libbirdfont/Toolbox.vala:300
 msgid "Zoom in at region boundries"
 msgstr "Zoom in op regio grenzen"
 
-#: libbirdfont/Toolbox.vala:372
+#: libbirdfont/Toolbox.vala:307
 msgid "Zoom in background image"
 msgstr "Zoom in op achtergrond afbeelding"
 
-#: libbirdfont/Toolbox.vala:385
+#: libbirdfont/Toolbox.vala:320
 msgid "Previous view"
 msgstr "Vorige weergave"
 
-#: libbirdfont/Toolbox.vala:391
+#: libbirdfont/Toolbox.vala:326
 msgid "Next view"
 msgstr "Volgende weergave"
 
-#: libbirdfont/Toolbox.vala:398
+#: libbirdfont/Toolbox.vala:333
 msgid "Set size for background image"
 msgstr "Stel grootte in voor achtergrond afbeelding"
 
-#: libbirdfont/Toolbox.vala:428
+#: libbirdfont/Toolbox.vala:363
 msgid "Show/hide background image"
 msgstr "Toon/verberg achtergrond afbeelding"
 
-#: libbirdfont/Toolbox.vala:436
+#: libbirdfont/Toolbox.vala:371
 msgid "Insert a new background image"
 msgstr "Voeg een nieuwe achtergrond afbeelding toe"
 
-#: libbirdfont/Toolbox.vala:441
+#: libbirdfont/Toolbox.vala:376
 msgid "Creating thumbnails"
 msgstr "Creëer miniaturen"
 
-#: libbirdfont/Toolbox.vala:460
+#: libbirdfont/Toolbox.vala:395
 msgid "Set contrast for background image"
 msgstr "Stel contrast voor achtergrond afbeelding in"
 
-#: libbirdfont/Toolbox.vala:479
+#: libbirdfont/Toolbox.vala:414
 msgid "Stroke color"
 msgstr "Lijnkleur"
 
-#: libbirdfont/Toolbox.vala:501
+#: libbirdfont/Toolbox.vala:436
 msgid "Stroke width"
 msgstr "Lijnbreedte"
 
-#: libbirdfont/Toolbox.vala:518
+#: libbirdfont/Toolbox.vala:453
 msgid "Handle color"
 msgstr "Kleur greep"
 
-#: libbirdfont/Toolbox.vala:720
+#: libbirdfont/Toolbox.vala:654
 msgid "Set size for grid"
 msgstr "Stel grootte voor rooster in"
 
@@ -492,6 +462,26 @@ msgstr "_Tabblad"
 #: birdfont/GtkWindow.vala:558
 msgid "T_ool"
 msgstr "H_ulpmiddelen"
+
+#~ msgid "Right click to add new point, left click to move points"
+#~ msgstr ""
+#~ "Rechts klik om een nieuw punt toe te voegen, links klik om punten te "
+#~ "verplaatsen"
+
+#~ msgid "Add new point on path"
+#~ msgstr "Voeg nieuw punt op pad toe"
+
+#~ msgid "Begin new line from point on path"
+#~ msgstr "Begin nieuwe lijn van punt op pad"
+
+#~ msgid "Tie curve handles for selected edit point"
+#~ msgstr "Bind gebogen handvatten voor geselecteerd bewerkingspunt"
+
+#~ msgid "Tie coordinates to previous edit point"
+#~ msgstr "Bind coördinaten aan vorige bewerkingspunt"
+
+#~ msgid "Delete edit points"
+#~ msgstr "Verwijder bewerkingspunten"
 
 #~ msgid "Alphabet"
 #~ msgstr "Alfabet"
