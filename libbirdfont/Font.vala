@@ -441,24 +441,36 @@ public class Font : GLib.Object {
 		g = (!) gl;
 		g.add_kerning (b, val);
 	}
+
+	/** Delete temporary rescue files. */
+	public void delete_backup () {
+		string backup;
+
+		if (backup_file == null) {
+			return;
+		}
+
+		backup = (!) backup_file;
 		
+		try {
+			File f = File.new_for_path (backup);
+			f.delete ();		
+		} catch (GLib.Error e) {
+			stderr.printf (@"Failed to delete backup\n");
+			stderr.printf (@"$(e.message) \n");
+		}
+	}
+	
 	/** Returns path to backup file. */
 	public string save_backup () {
 		File dir = Supplement.get_backup_directory ();
 		File? temp_file = null;
-		int i = 0;
 
 		if (backup_file == null) {
-			temp_file = dir.get_child (@"current_font_$i.ffi");
-			
-			while (((!) temp_file).query_exists ()) {
-				i++;
-				temp_file = dir.get_child (@"current_font_$i.ffi");
-			}
-			
+			temp_file = dir.get_child (@"$(name).ffi");
 			backup_file = ((!) temp_file).get_path ();
 		}
-
+		
 		assert (backup_file != null);		
 		write_font_file ((!) backup_file);
 		
@@ -1328,19 +1340,6 @@ public class Font : GLib.Object {
 		}
 		
 		return null;
-	}
-	
-	/** Delete temporary rescue files. */
-	public void delete_backup () {
-		if (backup_file == null) return;
-
-		try {
-			File f = File.new_for_path ((!) backup_file);
-			f.delete ();		
-		} catch (GLib.Error e) {
-			stderr.printf (@"Failed to delete backup\n");
-			stderr.printf (@"$(e.message) \n");
-		}
 	}
 		
 	public static string to_hex (unichar ch) {

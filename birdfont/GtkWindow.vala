@@ -602,21 +602,22 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	public bool quit () {
 		bool added;
-		SaveDialog s = new SaveDialog ();
+		Font font = Supplement.get_current_font ();
+		SaveDialog save_tab = new SaveDialog ();
 		
 		if (Supplement.get_current_font ().is_modified ()) {
-			added = MainWindow.get_tab_bar ().add_unique_tab (s, 50);
+			added = MainWindow.get_tab_bar ().add_unique_tab (save_tab, 50);
 		} else {
 			added = false;
 		}
 		
 		if (!added) {
-			Supplement.get_current_font ().save_backup ();
+			font.delete_backup ();
 			Gtk.main_quit ();
 		}
 		
-		s.finished.connect (() => {
-			Supplement.get_current_font ().delete_backup ();
+		save_tab.finished.connect (() => {
+			font.delete_backup ();
 			Gtk.main_quit ();
 		});
 		
