@@ -44,7 +44,7 @@ public class Supplement {
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 		
 #if MAC
-		Supplement.mac = true;
+		mac = true;
 #endif
 		
 		init_gettext ();		
@@ -73,6 +73,8 @@ public class Supplement {
 		show_coordinates = args.has_argument ("--show-coordinates");
 		fatal_wanings = args.has_argument ("--fatal-warning");
 		win32 = (arg[0].index_of (".exe") > -1) || arg[0] == "wine";
+		mac = args.has_argument ("--mac");
+		
 		exec_path = "";
 
 		if (win32) {
@@ -222,6 +224,10 @@ public class Supplement {
 
 public bool is_null (void* n) {
 	return n == null;
+}
+
+public bool has_flag (uint32 a, uint32 b) {
+	return (a & b) > 0;
 }
 
 }

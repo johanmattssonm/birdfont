@@ -752,20 +752,6 @@ public class GlyphCanvasArea : DrawingArea  {
 	GlyphCanvas glyph_canvas;
 	Gtk.Allocation alloc;
 
-#if LINUX
-	/* State on linux */
-	public static const int STATE_SHIFT = 17;
-	public static const int STATE_CTRL = 20;
-	public static const int STATE_SHIFT_CTRL = 21;
-	public static const int STATE_LEFT_LOGO = 80;
-#else
-	/* State on windows and mac */
-	public static const int STATE_SHIFT = 1;
-	public static const int STATE_CTRL = 4;
-	public static const int STATE_SHIFT_CTRL = 5;
-	public static const int STATE_LEFT_LOGO = 16;	
-#endif
-
 	public GlyphCanvasArea (GlyphCanvas gc) {
 		int event_flags;
 		
@@ -871,23 +857,17 @@ public class GlyphCanvasArea : DrawingArea  {
 	}
 
 	static void set_modifier (int k) {
-		switch (k) {
-			case STATE_SHIFT:
-				KeyBindings.set_modifier (SHIFT);
-				break;
-			case STATE_CTRL:
-				KeyBindings.set_modifier (CTRL);
-				break;
-			case STATE_SHIFT_CTRL:
-				KeyBindings.set_modifier (SHIFT | CTRL);
-				break;
-			case STATE_LEFT_LOGO:
-				KeyBindings.set_modifier (LOGO);
-				break;
-			default:
-				KeyBindings.set_modifier (NONE);
-				break;
-		}		
+		if (has_flag (k, ModifierType.MOD5_MASK)) {
+			KeyBindings.set_modifier (LOGO);
+		} else if (has_flag (k, ModifierType.SHIFT_MASK)) {
+			KeyBindings.set_modifier (SHIFT);
+		} else if (has_flag (k, ModifierType.CONTROL_MASK)) {
+			KeyBindings.set_modifier (CTRL);
+		} else if (has_flag (k, ModifierType.CONTROL_MASK | ModifierType.SHIFT_MASK)) {
+			KeyBindings.set_modifier (SHIFT | CTRL);
+		} else {
+			KeyBindings.set_modifier (NONE);
+		} 
 	}
 }
 

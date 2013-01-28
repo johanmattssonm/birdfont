@@ -34,7 +34,7 @@ public class Argument : GLib.Object {
 		}
 	}
 	
-	/** returns 0 if valid or index the bad parameter. */ 
+	/** returns 0 if all arguments are valid or index of the invalid parameter. */ 
 	public int validate () {
 		string prev = "";
 		int i = 0;
@@ -59,8 +59,14 @@ public class Argument : GLib.Object {
 				a = expand_param (a);
 			}
 			
-			// valid parameter
-			if (a == "--exit" || a == "--slow" || a == "--help" || a == "--test" || a == "--fatal-warning" || a == "--show-coordinates") {
+			// valid parameters
+			if (a == "--exit" || 
+				a == "--slow" || 
+				a == "--help" ||
+				a == "--test" || 
+				a == "--fatal-warning" || 
+				a == "--show-coordinates" || 
+				a == "--mac") {
 				prev = a;
 				i++;
 				continue;
@@ -186,6 +192,8 @@ public class Argument : GLib.Object {
 				return "--fatal-warning";
 			case 'h': 
 				return "--help";
+			case 'm': 
+				return "--mac";
 			case 's': 
 				return "--slow";
 			case 't': 
@@ -230,6 +238,7 @@ public class Argument : GLib.Object {
 		print_padded ("-e, --exit", _("exit if a test case failes"));
 		print_padded ("-f, --fatal-warning", _("treat warnings as fatal"));
 		print_padded ("-h, --help", _("show this message"));
+		print_padded ("-m, --mac", _("enable Machintosh customizations"));
 		print_padded ("-s, --slow", _("sleep between each command in test suite"));
 		print_padded ("-t, --test [TEST]", _("run test case"));
 		
