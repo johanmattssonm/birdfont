@@ -226,8 +226,8 @@ public bool is_null (void* n) {
 	return n == null;
 }
 
-public bool has_flag (uint32 a, uint32 b) {
-	return (a & b) > 0;
+public bool has_flag (uint32 flag, uint32 mask) {
+	return (flag & mask) > 0;
 }
 
 }

@@ -34,29 +34,55 @@ public class ImportSvg {
 			return;
 		}
 		path = (!) p;
-
-		Parser.init ();
-		doc = Parser.parse_file (path);
-		root = doc->get_root_element ();
+		
+		// FIXME: libxml2 (2.7.8) refuses to parse svg files created with Adobe Illustrator on 
+		// windows. This is a way around it.
+		if (Supplement.win32) {
+			File f = File.new_for_path (path);
+			DataInputStream dis = new DataInputStream (f.read ());
+			string xml_data;
+			string? line;
+			StringBuilder sb = new StringBuilder ();
+			string svg;
+			
+			while ((line = dis.read_line (null)) != null) {
+				sb.append ((!) line);
+				sb.append ("\n");
+			}
+			
+			xml_data = sb.str;
+			
+			foreach (string svg_data in xml_data.split ("d=\"")) {
+				svg = svg_data.substring (0, svg_data.index_of ("\""));
 				
-		if (root == null) {
+				if (svg.has_prefix ("M")) {
+					parse_svg_data (svg);
+				}
+			}
+		} else {
+			Parser.init ();
+			doc = Parser.parse_file (path);
+			root = doc->get_root_element ();
+					
+			if (root == null) {
+				delete doc;
+				return;
+			}
+
+			parse_svg_file (root);
+					
 			delete doc;
-			return;
+			Parser.cleanup ();
 		}
-
-		parse_svg_file (root);
-				
-		delete doc;
-		Parser.cleanup ();
 	}
 	
-	public static void import_svg (string data) {
+	public static void import_svg (string file) {
 		Xml.Doc* doc;
 		Xml.Node* root = null;
 		
 		Parser.init ();
 		
-		doc = Parser.parse_doc (data);
+		doc = Parser.parse_doc (file);
 		root = doc->get_root_element ();
 				
 		if (root == null) {
@@ -145,6 +171,8 @@ public class ImportSvg {
 		data = data.replace ("z", " z ");
 		data = data.replace ("-", " -");
 		data = data.replace ("\t", " ");
+		data = data.replace ("\r\n", " ");
+		data = data.replace ("\n", " ");
 		
 		while (data.index_of ("  ") > -1) {
 			data = data.replace ("  ", " ");
