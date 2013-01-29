@@ -242,8 +242,8 @@ public class Toolbox : GLib.Object  {
 			
 		}
 		
-		// help lines, grid and other guidlines
-		Tool help_lines = new Tool ("help_lines", "Show help lines", 'l');
+		// guide lines, grid and other guidlines
+		Tool help_lines = new Tool ("help_lines", "Show guidelines", 'l');
 		help_lines.select_action.connect ((self) => {
 				bool h;
 				h = GlyphCanvas.get_current_glyph ().get_show_help_lines ();
@@ -254,7 +254,7 @@ public class Toolbox : GLib.Object  {
 
 		guideline_tools.add_tool (help_lines);
 
-		Tool xheight_help_lines = new Tool ("show_xheight_helplines", _("Show help lines for x-height and baseline"), 'x');
+		Tool xheight_help_lines = new Tool ("show_xheight_helplines", _("Show guidelines for x-height and baseline"), 'x');
 		xheight_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_xheight_lines_visible ();
@@ -269,7 +269,7 @@ public class Toolbox : GLib.Object  {
 		});
 		guideline_tools.add_tool (xheight_help_lines);
 
-		Tool background_help_lines = new Tool ("background_help_lines", _("Show help lines at top and bottom margin"), 't');
+		Tool background_help_lines = new Tool ("background_help_lines", _("Show guidelines at top and bottom margin"), 't');
 		background_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_margin_lines_visible ();

@@ -943,12 +943,7 @@ public class Font : GLib.Object {
 		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			
-			if (iter->children == null) {
-				warning ("node is empty");
-				continue;
-			}
-			
-			if (iter->name == "name") {
+			if (iter->name == "name" && iter->children != null) {
 				name = iter->children->content;
 			}
 			
