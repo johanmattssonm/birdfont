@@ -40,6 +40,7 @@ public class ImportSvg {
 		root = doc->get_root_element ();
 				
 		if (root == null) {
+			warning ("Failed to load SVG file");
 			delete doc;
 			return;
 		}
