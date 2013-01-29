@@ -37,7 +37,7 @@ public class ImportSvg {
 		
 		// FIXME: libxml2 (2.7.8) refuses to parse svg files created with Adobe Illustrator on 
 		// windows. This is a way around it.
-		if (Supplement.win32) {
+		if (Supplement.win32 || true) {
 			File f = File.new_for_path (path);
 			DataInputStream dis = new DataInputStream (f.read ());
 			string xml_data;
@@ -65,12 +65,13 @@ public class ImportSvg {
 			root = doc->get_root_element ();
 					
 			if (root == null) {
+				warning ("Failed to load SVG file");
 				delete doc;
 				return;
 			}
 
 			parse_svg_file (root);
-					
+
 			delete doc;
 			Parser.cleanup ();
 		}
