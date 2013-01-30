@@ -145,7 +145,7 @@ public class ExportTool : Tool {
 
 		name = glyph.get_name ();
 				
-		f = MainWindow.file_chooser ("Save");
+		f = MainWindow.file_chooser_save ("Save");
 		if (f == null) {
 			return;
 		}

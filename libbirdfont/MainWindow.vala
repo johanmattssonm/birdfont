@@ -105,8 +105,12 @@ public class MainWindow {
 		return singleton;
 	}
 	
-	public static string? file_chooser (string title) {
-		return MainWindow.native_window.file_chooser (title);
+	public static string? file_chooser_save (string title) {
+		return MainWindow.native_window.file_chooser_save (title);
+	}
+
+	public static string? file_chooser_open (string title) {
+		return MainWindow.native_window.file_chooser_open (title);
 	}
 	
 	public void set_title (string title) {

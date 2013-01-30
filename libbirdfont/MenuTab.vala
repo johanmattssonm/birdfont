@@ -309,7 +309,7 @@ c.append ("""
 		bool saved = false;
 		Font font = Supplement.get_current_font ();
 		
-		fn = MainWindow.file_chooser (_("Save"));
+		fn = MainWindow.file_chooser_save (_("Save"));
 		
 		if (fn != null) {
 			f = (!) fn;
@@ -392,7 +392,7 @@ c.append ("""
 	}
 
 	private static void load_new_font () {
-		string? fn = MainWindow.file_chooser ("load");
+		string? fn = MainWindow.file_chooser_open (_("Open"));
 		Font f = Supplement.get_current_font ();
 		
 		if (fn != null) {

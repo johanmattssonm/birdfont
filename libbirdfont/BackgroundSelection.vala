@@ -155,7 +155,7 @@ class BackgroundSelection : FontDisplay {
 	private void add_image () {
 		string? file;
 
-		file = MainWindow.file_chooser ("Add image");
+		file = MainWindow.file_chooser_open ("Add image");
 
 		if (file != null) {
 			Supplement.get_current_font ().add_background_image ((!) file);

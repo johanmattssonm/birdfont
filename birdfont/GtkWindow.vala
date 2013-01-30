@@ -629,9 +629,17 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		return true;
 	}
 	
-	public string? file_chooser (string title) {
+	public string? file_chooser_save (string title) {
+		return file_chooser (title, FileChooserAction.SAVE);
+	}
+
+	public string? file_chooser_open (string title) {
+		return file_chooser (title, FileChooserAction.OPEN);
+	}
+	
+	public string? file_chooser (string title, FileChooserAction action) {
 		string? fn = null;
-		FileChooserDialog file_chooser = new FileChooserDialog (title, this, FileChooserAction.SAVE, Stock.CANCEL, ResponseType.CANCEL, Stock.SAVE, ResponseType.ACCEPT);
+		FileChooserDialog file_chooser = new FileChooserDialog (title, this, action, Stock.CANCEL, ResponseType.CANCEL, Stock.SAVE, ResponseType.ACCEPT);
 		Font font = Supplement.get_current_font ();
 		
 		try {
