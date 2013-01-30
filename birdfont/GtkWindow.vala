@@ -865,20 +865,27 @@ public class GlyphCanvasArea : DrawingArea  {
 	}
 
 	static void set_modifier (int k) {
+		KeyBindings.set_modifier (NONE);
+
 		// MOD5 is logo button on Linux
 		// MOD2 is logo button on Mac OS X
-		uint logo = (Supplement.mac) ? ModifierType.MOD2_MASK : ModifierType.MOD5_MASK;
-		
-		if (has_flag (k, logo)) {
-			KeyBindings.set_modifier (LOGO);
-		} else if (has_flag (k, ModifierType.SHIFT_MASK)) {
+
+		if (Supplement.mac) {
+			if (has_flag (k, ModifierType.MOD2_MASK)) {
+				KeyBindings.set_modifier (LOGO);
+			}
+		} else {
+			if (has_flag (k, ModifierType.MOD5_MASK)) {
+				KeyBindings.set_modifier (LOGO);
+			}			
+		}
+				
+		if (has_flag (k, ModifierType.SHIFT_MASK)) {
 			KeyBindings.set_modifier (SHIFT);
 		} else if (has_flag (k, ModifierType.CONTROL_MASK)) {
 			KeyBindings.set_modifier (CTRL);
 		} else if (has_flag (k, ModifierType.CONTROL_MASK | ModifierType.SHIFT_MASK)) {
 			KeyBindings.set_modifier (SHIFT | CTRL);
-		} else {
-			KeyBindings.set_modifier (NONE);
 		} 
 	}
 }

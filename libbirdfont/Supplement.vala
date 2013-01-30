@@ -42,11 +42,7 @@ public class Supplement {
 
 		stdout.printf ("birdfont version %s\n", VERSION);
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
-		
-#if MAC
-		mac = true;
-#endif
-		
+
 		init_gettext ();		
 		
 		args = new Argument.command_line (arg);
@@ -73,7 +69,12 @@ public class Supplement {
 		show_coordinates = args.has_argument ("--show-coordinates");
 		fatal_wanings = args.has_argument ("--fatal-warning");
 		win32 = (arg[0].index_of (".exe") > -1) || arg[0] == "wine";
+
+#if MAC
+		mac = true;
+#else
 		mac = args.has_argument ("--mac");
+#endif
 		
 		exec_path = "";
 
