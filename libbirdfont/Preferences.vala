@@ -90,7 +90,6 @@ public class Preferences {
 		data = new HashTable<string, string> (str_hash, str_equal);
 
 		if (!settings.query_exists ()) {
-			stderr.printf ("No settings file.\n");
 			return;
 		}
 

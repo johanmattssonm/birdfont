@@ -400,11 +400,7 @@ public class OverView : FontDisplay {
 		
 		Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h);
 		Context c = new Context (s);
-/*
-		c.set_source_rgb (200/255.0, 200/255.0, 229/255.0);
-		c.rectangle (0, 0, w, h);	
-		c.fill ();
-*/
+		
 		c.scale (scale, scale);				
 		Svg.draw_svg_path (c, g.get_svg_data (), gx, gy);
 		
@@ -423,7 +419,8 @@ public class OverView : FontDisplay {
 		uint64 t;
 		int i;
 		int n_items;
-		
+		Font font = Supplement.get_current_font ();
+					
 		while (visible_characters.length () > 9) {
 			visible_characters.remove_link (visible_characters.first ());
 		}
@@ -435,6 +432,10 @@ public class OverView : FontDisplay {
 		cr.rectangle (0, 0, allocation.width, allocation.height + nail_height);
 		cr.fill ();
 		cr.restore ();
+
+		if (all_avail && font.length () == 0) {
+			draw_empty_canvas (allocation, cr);
+		}
 		
 		if (Supplement.experimental) {
 			scrollbar.draw (cr, allocation);
@@ -472,10 +473,15 @@ public class OverView : FontDisplay {
 			i++;
 		}
 		
-		draw_menus (allocation, cr);
 	}
 
-	private void draw_menus (Allocation allocation, Context cr) {
+	void draw_empty_canvas (Allocation allocation, Context cr) {
+		cr.save ();
+		cr.set_source_rgba (156/255.0, 156/255.0, 156/255.0, 1);
+		cr.move_to (30, 40);
+		cr.set_font_size (18);
+		cr.show_text (_("No glyphs in this view."));
+		cr.restore ();
 	}
 
 	private void close_menus () {
