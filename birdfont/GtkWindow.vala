@@ -867,7 +867,9 @@ public class GlyphCanvasArea : DrawingArea  {
 	static void set_modifier (int k) {
 		// MOD5 is logo button on Linux
 		// MOD2 is logo button on Mac OS X
-		if (has_flag (k, ModifierType.MOD5_MASK | ModifierType.MOD2_MASK)) {
+		uint logo = (Supplement.mac) ? ModifierType.MOD2_MASK : ModifierType.MOD5_MASK;
+		
+		if (has_flag (k, logo)) {
 			KeyBindings.set_modifier (LOGO);
 		} else if (has_flag (k, ModifierType.SHIFT_MASK)) {
 			KeyBindings.set_modifier (SHIFT);

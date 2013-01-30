@@ -95,8 +95,7 @@ public class PenTool : Tool {
 		release_action.connect ((self, b, ix, iy) => {
 			double x = ix;
 			double y = iy;
-			
-			move (x, y);
+
 			join_paths (x, y);
 
 			active_handle = new EditPointHandle.empty ();
@@ -269,6 +268,11 @@ public class PenTool : Tool {
 		}
 
 		glyph.store_undo_state ();
+	}
+	
+	bool is_new_point_from_path_selected () {
+		// TODO:
+		return false;
 	}
 	
 	public void select_active_point (double x, double y) {
@@ -641,15 +645,6 @@ public class PenTool : Tool {
 			set_active_edit_point (ep);
 		}
 	}
-
-	public static bool is_new_point_from_path_selected () {
-		if (!Supplement.experimental) {
-			return false;
-		}
-		
-		Tool t = MainWindow.get_toolbox ().get_tool ("new_point_on_path");
-		return t.is_selected ();
-	}
 	
 	public void new_point_action (int x, int y) {
 		Glyph glyph;
@@ -689,32 +684,25 @@ public class PenTool : Tool {
 		EditPoint ep;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		int px, py;
-						
-		if (is_new_point_from_path_selected ()) {
-			
-			if (glyph.new_point_on_path != null) {
-				ep = (!)glyph.new_point_on_path; 
-				
-				begin_new_point_on_path = false;
-				
-				px = Glyph.reverse_path_coordinate_x (ep.x);
-				py = Glyph.reverse_path_coordinate_x (ep.y);
-				glyph.add_new_edit_point (px, py);
-				glyph.new_point_on_path = null;
-				
-				Toolbox.select_tool_by_name ("new_point");
 
-				return false;
-			}
+		if (glyph.new_point_on_path != null) {
+			ep = (!)glyph.new_point_on_path; 
 			
-			start_from_new_point_on_path (x, y);
-			begin_new_point_on_path = true;
-			
-			return false;
-		} else {
 			begin_new_point_on_path = false;
+			
+			px = Glyph.reverse_path_coordinate_x (ep.x);
+			py = Glyph.reverse_path_coordinate_x (ep.y);
+			glyph.add_new_edit_point (px, py);
+			glyph.new_point_on_path = null;
+			
+			Toolbox.select_tool_by_name ("new_point");
+
+			return false;
 		}
 		
+		start_from_new_point_on_path (x, y);
+		begin_new_point_on_path = true;
+			
 		return true;
 	}
 
