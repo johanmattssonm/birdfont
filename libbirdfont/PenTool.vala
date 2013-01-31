@@ -454,12 +454,18 @@ public class PenTool : Tool {
 		glyph = MainWindow.get_current_glyph ();
 		active = (!) active_edit_point;
 		
+		return_if_fail (is_null (glyph));
+		
 		px = Glyph.reverse_path_coordinate_x (active.x);
 		py = Glyph.reverse_path_coordinate_y (active.y);
 
 		foreach (Path path in glyph.path_list) {
 			
 			if (!path.is_open ()) {
+				continue;
+			}
+			
+			if (path.points.length () == 0) {
 				continue;
 			}
 			
