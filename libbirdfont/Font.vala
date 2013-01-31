@@ -720,6 +720,7 @@ public class Font : GLib.Object {
 
 	public bool load (string path, bool recent = true) {
 		bool loaded = false;
+		initialised = true;
 		
 		try {
 			otf_font = false;
