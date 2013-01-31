@@ -61,7 +61,7 @@ public class ClipTool : Tool {
 			((!)destination).store_undo_state ();
 			
 			svg = MainWindow.native_window.get_clipboard_data ();
-			ImportSvg.import_svg (svg);
+			ImportSvg.import_svg_data (svg);
 			
 			((!)destination).update_view ();
 		}

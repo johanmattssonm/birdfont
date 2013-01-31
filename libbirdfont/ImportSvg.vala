@@ -35,6 +35,35 @@ public class ImportSvg {
 		import_svg (path);
 	}
 	
+	public static void import_svg_data (string xml_data) {
+		// FIXME:
+		if (Supplement.win32) {		
+			string svg;
+			string xml;
+			xml = xml_data.replace ("id", "__");
+			foreach (string svg_data in xml.split ("d=\"")) {
+				svg = svg_data.substring (0, svg_data.index_of ("\""));
+				
+				if (svg.has_prefix ("M") || svg.has_prefix ("m")) {
+					parse_svg_data (svg);
+				}
+			}
+		} else {
+			Xml.Doc* doc;
+			Xml.Node* root = null;
+			
+			Parser.init ();
+			
+			doc = Parser.parse_doc (xml_data);
+			root = doc->get_root_element ();
+			return_if_fail (root != null);
+			parse_svg_file (root);
+
+			delete doc;
+			Parser.cleanup ();
+		}
+	}
+	
 	public static void import_svg (string path) {
 		// FIXME: libxml2 (2.7.8) refuses to parse svg files created with Adobe Illustrator on 
 		// windows. This is a way around it.
@@ -45,22 +74,14 @@ public class ImportSvg {
 				string xml_data;
 				string? line;
 				StringBuilder sb = new StringBuilder ();
-				string svg;
-				
+
 				while ((line = dis.read_line (null)) != null) {
 					sb.append ((!) line);
 					sb.append ("\n");
 				}
 				
 				xml_data = sb.str;
-				
-				foreach (string svg_data in xml_data.split ("d=\"")) {
-					svg = svg_data.substring (0, svg_data.index_of ("\""));
-					
-					if (svg.has_prefix ("M")) {
-						parse_svg_data (svg);
-					}
-				}
+				import_svg_data (xml_data);
 			} catch (GLib.Error e) {
 				warning (e.message);
 			}
