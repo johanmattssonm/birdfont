@@ -36,8 +36,7 @@ public class ImportSvg {
 	}
 	
 	public static void import_svg_data (string xml_data) {
-		// FIXME:
-		if (Supplement.win32) {		
+		if (Supplement.win32) {
 			string svg;
 			string xml;
 			xml = xml_data.replace ("id", "__");

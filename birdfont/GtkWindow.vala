@@ -257,42 +257,71 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}	
 	}
 	
-	public string get_clipboard_data () {
-		SelectionData? selection_data;
-		Atom target;
+	public void dump_clipboard_content (Clipboard clipboard, SelectionData selection_data) {
+		string d;
+		return_if_fail (!is_null (selection_data));
+		d = (string) ((!) selection_data).data;
+		stdout.printf (d);
+	}
 
-		target = Atom.intern_static_string ("image/x-inkscape-svg");
-		selection_data = clipboard.wait_for_contents (target);
-		
-		if (is_null (selection_data) || is_null (((!) selection_data).data)) {
-			return "";
+	public void dump_clipboard_target (Clipboard clipboard, Atom[] atoms) {
+		foreach (Atom target in atoms) {
+			print ("Target: " + target.name () + "\n");
+			clipboard.request_contents (target, dump_clipboard_content);
 		}
-		
-		return (string) ((!) selection_data).data;
+	}
+	
+	public void dump_clipboard () {
+		clipboard.request_targets (dump_clipboard_target);
+	}
+	
+	public string get_clipboard_data () {
+		if (Supplement.mac) {
+			string? t;
+			t = clipboard.wait_for_text ();
+			return (t == null) ? "" : (!) t;
+		} else {
+			SelectionData? selection_data;
+			Atom target;
+
+			target = Atom.intern_static_string ("image/x-inkscape-svg");
+			selection_data = clipboard.wait_for_contents (target);
+			
+			if (is_null (selection_data) || is_null (((!) selection_data).data)) {
+				return "";
+			}
+			
+			return (string) ((!) selection_data).data;
+		}
 	}
 	
 	public void set_inkscape_clipboard (string inkscape_clipboard_data) {
-		TargetEntry t = { "image/x-inkscape-svg", 0, 0 };
-		TargetEntry[] targets = { t };
-		inkscape_clipboard = inkscape_clipboard_data;
-		
-		// we can't add data to this closure because the third argument 
-		// is owner and not private data.
-		clipboard.set_with_owner (targets,
-		
-			// obtain clipboard data 
-			(clipboard, selection_data, info, owner) => {
-				Atom type;
-				uchar[] data = (uchar[])(!)((GtkWindow*)owner)->inkscape_clipboard.to_utf8 ();
-				type = Atom.intern_static_string ("image/x-inkscape-svg");
-				selection_data.set (type, 8, data);
-			},
+		// FIXME: clipboard seems to be rather broken on Mac 
+		if (Supplement.mac) {
+			clipboard.set_text (inkscape_clipboard_data, -1);
+		} else {
+			TargetEntry t = { "image/x-inkscape-svg", 0, 0 };
+			TargetEntry[] targets = { t };
+			inkscape_clipboard = inkscape_clipboard_data;
 			
-			// clear clipboard data
-			(clipboard, user_data) => {
-			},
+			// we can't add data to this closure because the third argument 
+			// is owner and not private data.
+			clipboard.set_with_owner (targets,
 			
-			this);		
+				// obtain clipboard data 
+				(clipboard, selection_data, info, owner) => {
+					Atom type;
+					uchar[] data = (uchar[])(!)((GtkWindow*)owner)->inkscape_clipboard.to_utf8 ();
+					type = Atom.intern_static_string ("image/x-inkscape-svg");
+					selection_data.set (type, 8, data);
+				},
+				
+				// clear clipboard data
+				(clipboard, user_data) => {
+				},
+				
+				this);		
+		}
 	}
 	
 	public void set_clipboard (string svg) {
@@ -854,7 +883,7 @@ public class GlyphCanvasArea : DrawingArea  {
 			if (e.direction == Gdk.ScrollDirection.UP) {
 				glyph_canvas.current_display.scroll_wheel_up (e.x, e.y);
 			} else if (e.direction == Gdk.ScrollDirection.DOWN) {
-				glyph_canvas.current_display.scroll_wheel_down (e.x, e.y);
+				glyph_canvas.current_display.scroll_wheel_down (e.x, e.y)		;
 			}
 			
 			glyph_canvas.current_display.button_release (2, e.x, e.y);
