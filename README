@@ -1,9 +1,9 @@
 ----------------------
-Birdfont – Font Editor
+Birdfont - Font Editor
 ----------------------
 
 Birdfont is a font editor that creates outline vector graphics and exports
-fonts in svg, eot and ttf format.
+fonts in SVG, EOT and TTF format.
 
 Author: Johan Mattsson and others see AUTHORS for full attribution.
 License: GNU GPL v3
@@ -16,7 +16,7 @@ Building from Source
 Install vala and all required libraries, they are most likely in packages 
 with a -dev or -devel affix. 
 
-On debian based systems will the you need the following packages:
+Install the following packages:
 valac 
 python-doit 
 libglib2.0-dev 
