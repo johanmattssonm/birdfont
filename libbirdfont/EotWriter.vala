@@ -54,8 +54,8 @@ class EotWriter : GLib.Object {
 		eot_file = File.new_for_path (eot_file_name);
 		
 		if (eot_file.query_exists ()) {
-			warning ("File exists in eot export.");
-			return;
+			warning ("EOT file exists in eot export.");
+			eot_file.delete ();
 		}
 		
 		os = new DataOutputStream(eot_file.create (FileCreateFlags.REPLACE_DESTINATION));

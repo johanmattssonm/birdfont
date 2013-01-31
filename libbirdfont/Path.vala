@@ -708,7 +708,6 @@ public class Path {
 	
 	public bool is_over_boundry_precision (double x, double y, double p) {
 		if (unlikely (ymin == double.MAX || ymin == 10000)) {
-			warning (@"no bounding box. length ($(points.length ()))");
 			update_region_boundries ();
 		}
 		
@@ -1769,10 +1768,18 @@ public class Path {
 		return true;	
 	}
 
-	public void append_path (Path path)
-	requires (points.length () > 0 && is_open () && path.is_open ()) {
+	public void append_path (Path path) {
 		EditPointHandle handle;
 		EditPoint first;
+
+		if (points.length () == 0) {
+			warning ("No points");
+			return;
+		}
+
+		if (!is_open () || !path.is_open ()) {
+			warning ("Path is closed.");
+		}
 
 		// link points at the other end
 		first = points.first ().data;

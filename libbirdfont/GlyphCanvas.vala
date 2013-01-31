@@ -46,7 +46,9 @@ public class GlyphCanvas : GLib.Object {
 
 			g.allocation = allocation;
 			
-			warn_if_fail (g.allocation.width != 0 && g.allocation.height != 0);
+			if (g.allocation.width == 0 || g.allocation.height == 0) {
+				warning ("area is zero in glyph canvas");
+			}
 		}
 
 		current_display = fd;

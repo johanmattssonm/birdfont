@@ -106,16 +106,28 @@ class TestCases {
      inkscape:connector-curvature="0" />
 </svg>""";
 		try {
-			File temp_file = Supplement.get_settings_directory ().get_child ("inkscape_test.svg");
-			FileIOStream? ios = temp_file.create_readwrite (FileCreateFlags.PRIVATE);
-			FileOutputStream? os = ((!) ios).output_stream as FileOutputStream?;
-			DataOutputStream d = new DataOutputStream ((!) os);
+			File temp_file;
+			FileIOStream? ios;
+			DataOutputStream d;
+			FileOutputStream? os;
+			
+			temp_file = Supplement.get_settings_directory ().get_child ("inkscape_test.svg");
+			
+			if (temp_file.query_exists ()) {
+				temp_file.delete ();
+			}
+			
+			ios = temp_file.create_readwrite (FileCreateFlags.PRIVATE);
+			os = ((!) ios).output_stream as FileOutputStream?;
+			d = new DataOutputStream ((!) os);
 			
 			d.put_string (inkscape_data);
 			d.close ();
 			
 			Tool.test_open_next_glyph ();
 			ImportSvg.import_svg ((!) temp_file.get_path ());
+
+			temp_file.delete ();
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
@@ -247,12 +259,14 @@ class TestCases {
 		
 		g = MainWindow.get_current_glyph ();
 
-		pen_tool.test_click_action (1, 10, 10);
-		pen_tool.test_click_action (1, 10, 10);
-		pen_tool.test_click_action (1, 100, 10);
-		pen_tool.test_click_action (1, 100, 100);
-		pen_tool.test_click_action (1, 10, 100);
-		pen_tool.test_click_action (3, 0, 0);
+		pen_tool.test_click_action (3, 10, 10);
+		pen_tool.test_click_action (3, 10, 10);
+		pen_tool.test_click_action (3, 100, 10);
+		pen_tool.test_click_action (3, 100, 100);
+		pen_tool.test_click_action (3, 10, 100);
+		pen_tool.test_click_action (2, 0, 0);
+
+		g.close_path ();
 
 		warn_if_fail (g.active_paths.length () == 0);
 

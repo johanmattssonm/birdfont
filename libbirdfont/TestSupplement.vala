@@ -169,7 +169,7 @@ class TestSupplement : GLib.Object {
 
 	public void print_result () {
 		stdout.printf ("\n");
-		stdout.printf ("Testcase results:\n");
+		stdout.printf ("Test case results:\n");
 
 		foreach (var t in skipped) {
 			stdout.printf ("%s", t.name);
@@ -200,7 +200,8 @@ class TestSupplement : GLib.Object {
 
 	/** Run tests in main loop. */
 	public void run_all_tests () {
-		var idle = new TimeoutSource (20);
+		TimeoutSource idle = new TimeoutSource (20);
+		MenuTab.new_file ();
 		
 		idle.set_callback(() => {
 			int s = AtomicInt.get (ref state);

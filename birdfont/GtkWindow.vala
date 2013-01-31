@@ -801,9 +801,7 @@ public class GlyphCanvasArea : DrawingArea  {
 					ug = true;
 				}					
 				
-				if (ug) {
-					//redraw_area (1, 1, 2, 2);
-				} else if (unlikely (allocation.width % 2 != 0 || allocation.height % 2 != 0)) {
+				if (unlikely (allocation.width % 2 != 0 || allocation.height % 2 != 0)) {
 					warning (@"\nGlyph canvas is not divisible by two.\nWidth: $(allocation.width)\nHeight: $(allocation.height)");
 				}
 				

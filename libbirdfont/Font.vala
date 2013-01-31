@@ -517,9 +517,9 @@ public class Font : GLib.Object {
 			os.put_string ("<font>\n");
 			
 			// this a backup of another font
-			if (backup) {
+			if (!backup) {
 				if (unlikely (font_file == null)) {
-					warning ("No file name is set, can't create backup.");
+					warning ("No file name is set, write backup file name to font file.");
 				} else {
 					os.put_string ("\n");
 					os.put_string (@"<backup>$((!) font_file)</backup>\n");	

@@ -110,14 +110,8 @@ public class PenTool : Tool {
 		});
 		
 		key_press_action.connect ((self, keyval) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			
 			if (keyval == Key.DEL) {
-				foreach (EditPoint p in selected_points) {
-					g.delete_edit_point (p);
-				}
-				
-				g.update_view ();
+				delete_selected_points ();
 			}
 			
 			if (is_arrow_key (keyval)) {
@@ -137,6 +131,17 @@ public class PenTool : Tool {
 			draw_on_canvas (cairo_context, glyph);
 		});
 	}
+	
+	void delete_selected_points () {
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		foreach (EditPoint p in selected_points) {
+			g.delete_edit_point (p);
+		}
+		
+		g.update_view ();
+	}
+
 	
 	public static void close_all_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
@@ -454,7 +459,7 @@ public class PenTool : Tool {
 		glyph = MainWindow.get_current_glyph ();
 		active = (!) active_edit_point;
 		
-		return_if_fail (is_null (glyph));
+		return_if_fail (!is_null (glyph));
 		
 		px = Glyph.reverse_path_coordinate_x (active.x);
 		py = Glyph.reverse_path_coordinate_y (active.y);
@@ -1175,12 +1180,9 @@ public class PenTool : Tool {
 		
 		pen_tool.test_select_action ();
 		
-		pen_tool.test_click_action (1, 0, 0); // open path
-		
-		pen_tool.test_click_action (1, a.x, a.y);
-		pen_tool.test_click_action (1, b.x, b.y);
-		pen_tool.test_click_action (1, c.x, c.y);
-		pen_tool.test_click_action (3, 0, 0);
+		pen_tool.test_click_action (3, a.x, a.y);
+		pen_tool.test_click_action (3, b.x, b.y);
+		pen_tool.test_click_action (3, c.x, c.y);
 		
 		test_reverse_last (@"Triangle reverse \"$name\" ($(a.x), $(a.y)), ($(b.x), $(b.y)), ($(c.x), $(c.y)) failed.");
 		
@@ -1217,60 +1219,61 @@ public class PenTool : Tool {
 		// draw clockwise and check direction		
 
 		y_offset += 160;
-		pen_tool.test_click_action (1, 10 + x_offset, 20 + y_offset);
-		pen_tool.test_click_action (1, 17 + x_offset, 17 + y_offset);
-		pen_tool.test_click_action (1, 20 + x_offset, 0 + y_offset);
-		pen_tool.test_click_action (3, 0, 0);
+		pen_tool.test_click_action (3, 10 + x_offset, 20 + y_offset);
+		pen_tool.test_click_action (3, 17 + x_offset, 17 + y_offset);
+		pen_tool.test_click_action (3, 20 + x_offset, 0 + y_offset);
+		pen_tool.test_click_action (2, 0, 0);
 		test_last_is_clockwise ("Clockwise triangle 1.2");
 
 		// draw paths clockwise / counter clockwise and reverse them
 		
-		pen_tool.test_click_action (1, 115, 137);
-		pen_tool.test_click_action (1, 89, 74);
-		pen_tool.test_click_action (1, 188, 232);
-		pen_tool.test_click_action (3, 0, 0);
+		pen_tool.test_click_action (3, 115, 137);
+		pen_tool.test_click_action (3, 89, 74);
+		pen_tool.test_click_action (3, 188, 232);
+		pen_tool.test_click_action (2, 0, 0);
 		test_reverse_last ("Triangle 0");
 
 		// draw incomplete paths
 		y_offset += 20;
-		pen_tool.test_click_action (1, 10 + x_offset, 20 + y_offset);
-		pen_tool.test_click_action (3, 0, 0);
+		pen_tool.test_click_action (3, 10 + x_offset, 20 + y_offset);
 		test_reverse_last ("Point");
+		pen_tool.test_click_action (2, 0, 0);
 
 		y_offset += 20;
-		pen_tool.test_click_action (1, 10 + x_offset, 20 + y_offset);
-		pen_tool.test_click_action (1, 10 + x_offset, 20 + y_offset);
-		pen_tool.test_click_action (3, 0, 0);
+		pen_tool.test_click_action (3, 10 + x_offset, 20 + y_offset);
+		pen_tool.test_click_action (3, 10 + x_offset, 20 + y_offset);
 		test_reverse_last ("Double point");
-
+		pen_tool.test_click_action (2, 0, 0);
+		
 		y_offset += 20;
-		pen_tool.test_click_action (1, 10 + x_offset, 30 + y_offset);
-		pen_tool.test_click_action (1, 10 + x_offset, 20 + y_offset);
-		pen_tool.test_click_action (3, 0, 0);
+		pen_tool.test_click_action (3, 10 + x_offset, 30 + y_offset);
+		pen_tool.test_click_action (3, 10 + x_offset, 20 + y_offset);
 		test_reverse_last ("Vertical line");
-
+		pen_tool.test_click_action (2, 0, 0);
+		
 		y_offset += 20;
 		pen_tool.test_click_action (1, 30 + x_offset, 20 + y_offset);
 		pen_tool.test_click_action (1, 10 + x_offset, 20 + y_offset);
 		pen_tool.test_click_action (3, 0, 0);
 		test_reverse_last ("Horisontal line");
-
+		pen_tool.test_click_action (2, 0, 0);
+		
 		// triangle 1
 		y_offset += 20;
-		pen_tool.test_click_action (1, 10 + x_offset, -10 + y_offset);
-		pen_tool.test_click_action (1, 20 + x_offset, 20 + y_offset);
-		pen_tool.test_click_action (1, 30 + x_offset, 0 + y_offset);
-		pen_tool.test_click_action (3, 0, 0);
+		pen_tool.test_click_action (3, 10 + x_offset, -10 + y_offset);
+		pen_tool.test_click_action (3, 20 + x_offset, 20 + y_offset);
+		pen_tool.test_click_action (3, 30 + x_offset, 0 + y_offset);
 		test_reverse_last ("Triangle reverse 1");
-
+		pen_tool.test_click_action (2, 0, 0);
+		
 		// box
 		y_offset += 20;
-		pen_tool.test_click_action (1, 100 + x_offset, 150 + y_offset);
-		pen_tool.test_click_action (1, 150 + x_offset, 150 + y_offset);
-		pen_tool.test_click_action (1, 150 + x_offset, 100 + y_offset);
-		pen_tool.test_click_action (1, 100 + x_offset, 100 + y_offset); 
-		pen_tool.test_click_action (3, 0, 0); // close
+		pen_tool.test_click_action (3, 100 + x_offset, 150 + y_offset);
+		pen_tool.test_click_action (3, 150 + x_offset, 150 + y_offset);
+		pen_tool.test_click_action (3, 150 + x_offset, 100 + y_offset);
+		pen_tool.test_click_action (3, 100 + x_offset, 100 + y_offset); 
 		test_reverse_last ("Box 1");
+		pen_tool.test_click_action (2, 0, 0);
 		
 		return true;
 	}
@@ -1283,25 +1286,23 @@ public class PenTool : Tool {
 	
 	public bool test_delete_points () {
 		PenTool pen;
-		Tool delete_tool = MainWindow.get_toolbox ().get_tool ("erase_tool");
-		
+
 		test_open_next_glyph ();
 				
 		pen = (PenTool) select_pen ();
-		pen.test_click_action (1, 0, 0); // open path
 		
 		// draw a line with ten points
 		for (int i = 1; i <= 10; i++) {
-			pen.test_click_action (1, 20*i, 20);
+			pen.test_click_action (3, 20*i, 20);
 		}	
 	
 		// TODO: it would be nice to test if points were created here
 		
 		// delete points
-		delete_tool.test_select_action ();
 		for (int i = 1; i <= 10; i++) {
 			pen.move (20*i, 20);
 			pen.test_click_action (1, 20*i, 20);
+			pen.delete_selected_points ();
 		}
 		
 		return true;
@@ -1329,19 +1330,20 @@ public class PenTool : Tool {
 			by = Random.int_range (0, 300);
 			cy = Random.int_range (0, 300);
 
-			pen.test_click_action (1, ax, ay);
-			pen.test_click_action (1, bx, by);
-			pen.test_click_action (1, cx, cy);
-			pen.test_click_action (3, 0, 0);
-		
+			pen.test_click_action (3, ax, ay);
+			pen.test_click_action (3, bx, by);
+			pen.test_click_action (3, cx, cy);
+			pen.test_click_action (2, 0, 0);
+			
 			r = test_reverse_last (@"Random triangle № $(i + 1) ($ax, $ay), ($bx, $by), ($cx, $cy)");
 			if (!r) {
 				test_open_next_glyph ();
 				pen = select_pen ();
 
-				pen.test_click_action (1, ax, ay);
-				pen.test_click_action (1, bx, by);
-				pen.test_click_action (1, cx, cy);
+				pen.test_click_action (3, ax, ay);
+				pen.test_click_action (3, bx, by);
+				pen.test_click_action (3, cx, cy);
+				pen.test_click_action (2, 0, 0);
 		
 				return false;
 			}

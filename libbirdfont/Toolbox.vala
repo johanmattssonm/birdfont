@@ -162,6 +162,11 @@ public class Toolbox : GLib.Object  {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);	
 				OverView o = MainWindow.get_overview ();
 				GlyphRange gr = new GlyphRange ();
+				
+				if (!Supplement.get_current_font ().initialised) {
+					MenuTab.new_file ();
+				}
+				
 				gr.use_full_unicode_range ();
 				o.set_glyph_range (gr);
 				MainWindow.get_tab_bar ().select_tab_name ("Overview");
@@ -173,6 +178,11 @@ public class Toolbox : GLib.Object  {
 			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
 			GlyphRange gr = new GlyphRange ();
+
+			if (!Supplement.get_current_font ().initialised) {
+				MenuTab.new_file ();
+			}
+			
 			gr.use_default_range ();
 			o.set_glyph_range (gr);
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");
@@ -183,6 +193,11 @@ public class Toolbox : GLib.Object  {
 		avalilable_characters.select_action.connect ((self) => {
 			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
+			
+			if (!Supplement.get_current_font ().initialised) {
+				MenuTab.new_file ();
+			}
+			
 			o.display_all_available_glyphs ();
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		});
