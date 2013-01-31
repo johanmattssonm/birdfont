@@ -1,3 +1,9 @@
+birdfont (0.12) stable;
+
+  * Bugfixes and updated test suit
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Jan 31 19:01:04 CET 2013
+
 birdfont (0.11) stable;
 
   * Bugfixes
