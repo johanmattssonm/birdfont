@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2013 Johan Mattsson
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,8 +23,6 @@ public class ImportSvg {
 	}
 	
 	public static void import () {
-		Xml.Doc* doc;
-		Xml.Node* root = null;
 		string? p;
 		string path;
 		
@@ -34,7 +32,10 @@ public class ImportSvg {
 			return;
 		}
 		path = (!) p;
-		
+		import_svg (path);
+	}
+	
+	public static void import_svg (string path) {
 		// FIXME: libxml2 (2.7.8) refuses to parse svg files created with Adobe Illustrator on 
 		// windows. This is a way around it.
 		if (Supplement.win32) {
@@ -64,7 +65,11 @@ public class ImportSvg {
 				warning (e.message);
 			}
 		} else {
+			Xml.Doc* doc;
+			Xml.Node* root = null;
+			
 			Parser.init ();
+			
 			doc = Parser.parse_file (path);
 			root = doc->get_root_element ();
 					
@@ -79,26 +84,6 @@ public class ImportSvg {
 			delete doc;
 			Parser.cleanup ();
 		}
-	}
-	
-	public static void import_svg (string file) {
-		Xml.Doc* doc;
-		Xml.Node* root = null;
-		
-		Parser.init ();
-		
-		doc = Parser.parse_doc (file);
-		root = doc->get_root_element ();
-				
-		if (root == null) {
-			delete doc;
-			return;
-		}
-
-		parse_svg_file (root);		
-		
-		delete doc;
-		Parser.cleanup ();
 	}
 	
 	private static void parse_svg_file (Xml.Node* root) {
@@ -175,6 +160,7 @@ public class ImportSvg {
 		data = data.replace ("zm", " z m ");
 		data = data.replace ("z", " z ");
 		data = data.replace ("-", " -");
+		data = data.replace ("e -", "e-"); // - can be either separator or a negative exponent
 		data = data.replace ("\t", " ");
 		data = data.replace ("\r\n", " ");
 		data = data.replace ("\n", " ");
@@ -187,6 +173,11 @@ public class ImportSvg {
 		p = new double[2 * c.length];
 		command = new string[2 * c.length];
 		
+		for (int i = 0; i < 2 * c.length; i++) {
+			command[i] = "";
+			p[i] = 0;
+		}
+		
 		// parse path
 		for (int i = 0; i < c.length; i++) {
 
@@ -194,8 +185,8 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "M";
 
-					px += double.parse (c[++i]);
-					py += -double.parse (c[++i]);
+					px += parse_double (c[++i]);
+					py += -parse_double (c[++i]);
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -206,8 +197,8 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "M";
 
-					px = double.parse (c[++i]);
-					py = -double.parse (c[++i]);
+					px = parse_double (c[++i]);
+					py = -parse_double (c[++i]);
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -218,7 +209,7 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
 
-					px += double.parse (c[++i]);
+					px += parse_double (c[++i]);
 
 					p[pi++] = px;
 					p[pi++] = py;
@@ -229,7 +220,7 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
 
-					px = double.parse (c[++i]);
+					px = parse_double (c[++i]);
 
 					p[pi++] = px;
 					p[pi++] = py;
@@ -240,7 +231,7 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
 					
-					py = py + -double.parse (c[++i]);
+					py = py + -parse_double (c[++i]);
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -250,7 +241,7 @@ public class ImportSvg {
 			if (c[i] == "V") {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
-					py = -double.parse (c[++i]);
+					py = -parse_double (c[++i]);
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -261,8 +252,8 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
 					
-					cx = px + double.parse (c[++i]);
-					cy = py + -double.parse (c[++i]);
+					cx = px + parse_double (c[++i]);
+					cy = py + -parse_double (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -275,8 +266,8 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
 					
-					cx = double.parse (c[++i]);
-					cy = -double.parse (c[++i]);
+					cx = parse_double (c[++i]);
+					cy = -parse_double (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -289,13 +280,13 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "C";
 					
-					cx = px + double.parse (c[++i]);
-					cy = py + -double.parse (c[++i]);
+					cx = px + parse_double (c[++i]);
+					cy = py + -parse_double (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
-					cx = px + double.parse (c[++i]);
-					cy = py + -double.parse (c[++i]);
+					cx = px + parse_double (c[++i]);
+					cy = py + -parse_double (c[++i]);
 					
 					px2 = cx;
 					py2 = cy;
@@ -303,8 +294,8 @@ public class ImportSvg {
 					p[pi++] = px2;
 					p[pi++] = py2;
 					
-					cx = px + double.parse (c[++i]);
-					cy = py + -double.parse (c[++i]);
+					cx = px + parse_double (c[++i]);
+					cy = py + -parse_double (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -318,18 +309,18 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "C";
 					
-					cx = double.parse (c[++i]);
-					cy = -double.parse (c[++i]);
+					cx = parse_double (c[++i]);
+					cy = -parse_double (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
-					cx = double.parse (c[++i]);
-					cy = -double.parse (c[++i]);
+					cx = parse_double (c[++i]);
+					cy = -parse_double (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
-					cx = double.parse (c[++i]);
-					cy = -double.parse (c[++i]);
+					cx = parse_double (c[++i]);
+					cy = -parse_double (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -348,8 +339,8 @@ public class ImportSvg {
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
-					cx = px + double.parse (c[++i]);
-					cy = py + -double.parse (c[++i]);
+					cx = px + parse_double (c[++i]);
+					cy = py + -parse_double (c[++i]);
 					
 					px2 = cx;
 					py2 = cy;
@@ -357,8 +348,8 @@ public class ImportSvg {
 					p[pi++] = px2;
 					p[pi++] = py2;
 					
-					cx = px + double.parse (c[++i]);
-					cy = py + -double.parse (c[++i]);
+					cx = px + parse_double (c[++i]);
+					cy = py + -parse_double (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -378,8 +369,8 @@ public class ImportSvg {
 					p[pi++] = cy;
 
 					// the other two are regular cubic points
-					cx = double.parse (c[++i]);
-					cy = -double.parse (c[++i]);
+					cx = parse_double (c[++i]);
+					cy = -parse_double (c[++i]);
 					
 					px2 = cx;
 					py2 = cy;
@@ -387,8 +378,8 @@ public class ImportSvg {
 					p[pi++] = px2;
 					p[pi++] = py2;
 					
-					cx = double.parse (c[++i]);
-					cy = -double.parse (c[++i]);
+					cx = parse_double (c[++i]);
+					cy = -parse_double (c[++i]);
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -421,7 +412,7 @@ public class ImportSvg {
 		EditPoint ep1, ep2;
 		double lx, ly;
 		for (int i = 0; i < ci; i++) {
-			if (is_null (command[i])) {
+			if (is_null (command[i]) || command[i] == "") {
 				warning ("Parser error.");
 				return;
 			}
@@ -490,6 +481,20 @@ public class ImportSvg {
 		}
 		
 		// TODO: Find out if it is possible to tie handles.
+	}
+	
+	static double parse_double (string? s) {
+		if (is_null (s)) {
+			warning ("Got null instead of expected string.");
+			return 0;
+		}
+		
+		if (!is_point ((!) s)) {
+			warning (@"Expecting a double got: $((!) s)");
+			return 0;
+		}
+		
+		return double.parse ((!) s);
 	}
 	
 	static bool is_point (string s) {
