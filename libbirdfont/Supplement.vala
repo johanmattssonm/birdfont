@@ -63,6 +63,7 @@ public class Supplement {
 		
 		current_font = new Font ();
 		current_font.set_name ("");
+		current_font.initialised = false;
 		current_glyph = new Glyph ("");
 
 		experimental = args.has_argument ("--test");

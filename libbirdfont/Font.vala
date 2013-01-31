@@ -58,6 +58,7 @@ public class Font : GLib.Object {
 	bool modified = false;
 	
 	private string name = "typeface";
+	public bool initialised = true;
 	
 	bool ttf_export = true;
 	bool svg_export = true;

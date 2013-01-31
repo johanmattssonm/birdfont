@@ -1049,12 +1049,11 @@ public class PenTool : Tool {
 
 		g = MainWindow.get_current_glyph ();
 
-		test_click_action (1, 130, 130); // open path
-		test_click_action (1, 130, 130); // add point
+		test_click_action (3, 130, 130); // add point
 		epa = g.get_last_edit_point ();
 		
-		test_click_action (1, 160, 130);
-		test_click_action (1, 160, 160);
+		test_click_action (3, 160, 130);
+		test_click_action (3, 160, 160);
 		epb = g.get_last_edit_point ();
 		
 		test_click_action (1, 130, 160);
@@ -1063,7 +1062,7 @@ public class PenTool : Tool {
 		test_move_action (130, 130);
 		warn_if_fail (active_edit_point == epa);
 		
-		test_move_action (161, 161); // close but not on
+		test_move_action (161, 161);
 		warn_if_fail (active_edit_point == epb);
 		
 		warn_if_fail (epa != epb);
