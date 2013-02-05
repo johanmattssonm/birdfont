@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-31 20:15+0100\n"
+"POT-Creation-Date: 2013-02-05 15:15+0100\n"
 "PO-Revision-Date: 2013-01-13 05:44+0000\n"
 "Last-Translator: aamrs_mansil <manuela.silva@sky.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,9 +117,8 @@ msgid "Show grid"
 msgstr ""
 
 #: libbirdfont/ImportSvg.vala:29
-#, fuzzy
 msgid "Import"
-msgstr "_Importar SVG"
+msgstr ""
 
 #: libbirdfont/MenuTab.vala:98
 msgid "Export"
@@ -333,161 +332,160 @@ msgstr "Nova Versão"
 msgid "Version"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:330
+#: birdfont/GtkWindow.vala:359
 msgid "_New"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:335
+#: birdfont/GtkWindow.vala:364
 msgid "_Open"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:340
+#: birdfont/GtkWindow.vala:369
 msgid "_Save"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:345
+#: birdfont/GtkWindow.vala:374
 msgid "Save _as"
 msgstr "Guardar_como ..."
 
-#: birdfont/GtkWindow.vala:349
+#: birdfont/GtkWindow.vala:378
 msgid "_Export"
 msgstr "_Exportar"
 
-#: birdfont/GtkWindow.vala:354
+#: birdfont/GtkWindow.vala:383
 msgid "_Preview"
 msgstr "_Pré-visualizar"
 
-#: birdfont/GtkWindow.vala:359
+#: birdfont/GtkWindow.vala:388
 msgid "_Kerning"
 msgstr "_Ajustar Espaçamento"
 
-#: birdfont/GtkWindow.vala:364
+#: birdfont/GtkWindow.vala:393
 msgid "_Quit"
 msgstr "_Sair"
 
-#: birdfont/GtkWindow.vala:369
+#: birdfont/GtkWindow.vala:398
 msgid "_Undo"
 msgstr "_Desfazer"
 
-#: birdfont/GtkWindow.vala:374
+#: birdfont/GtkWindow.vala:403
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: birdfont/GtkWindow.vala:379
+#: birdfont/GtkWindow.vala:408
 msgid "_Paste"
 msgstr "Co_lar"
 
-#: birdfont/GtkWindow.vala:384
+#: birdfont/GtkWindow.vala:413
 msgid "_Select all paths"
 msgstr "Se_lecionar Todos os Caminhos"
 
-#: birdfont/GtkWindow.vala:392
+#: birdfont/GtkWindow.vala:421
 msgid "_Export glyph as SVG"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:396
+#: birdfont/GtkWindow.vala:425
 msgid "_Import SVG"
 msgstr "_Importar SVG"
 
-#: birdfont/GtkWindow.vala:400
-#, fuzzy
+#: birdfont/GtkWindow.vala:429
 msgid "Close _path"
-msgstr "_Fechar Separador"
+msgstr ""
 
-#: birdfont/GtkWindow.vala:407
+#: birdfont/GtkWindow.vala:436
 msgid "_Select point above"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:411
+#: birdfont/GtkWindow.vala:440
 msgid "Select _next point"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:415
+#: birdfont/GtkWindow.vala:444
 msgid "Select _previous point"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:419
+#: birdfont/GtkWindow.vala:448
 msgid "Select point _below"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:424
+#: birdfont/GtkWindow.vala:453
 msgid "_Next tab"
 msgstr "Separador Segui_nte"
 
-#: birdfont/GtkWindow.vala:437
+#: birdfont/GtkWindow.vala:466
 msgid "_Previous tab"
 msgstr "Separador An_terior"
 
-#: birdfont/GtkWindow.vala:450
+#: birdfont/GtkWindow.vala:479
 msgid "_Close tab"
 msgstr "_Fechar Separador"
 
-#: birdfont/GtkWindow.vala:464
+#: birdfont/GtkWindow.vala:493
 msgid "Close _all tabs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:472
+#: birdfont/GtkWindow.vala:501
 msgid "_Create path"
 msgstr "_Criar Caminho"
 
-#: birdfont/GtkWindow.vala:479
+#: birdfont/GtkWindow.vala:508
 #, fuzzy
 msgid "_Zoom"
 msgstr "_Zoom"
 
-#: birdfont/GtkWindow.vala:485
+#: birdfont/GtkWindow.vala:514
 msgid "_Create counter path"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:492
+#: birdfont/GtkWindow.vala:521
 msgid "_Move"
 msgstr "_Mover"
 
-#: birdfont/GtkWindow.vala:499
+#: birdfont/GtkWindow.vala:528
 msgid "Show _full unicode characters set"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:506
+#: birdfont/GtkWindow.vala:535
 msgid "Show de_fault characters set"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:513
+#: birdfont/GtkWindow.vala:542
 msgid "Show characters in font"
 msgstr "Mostrar carateres no tipo de letra"
 
-#: birdfont/GtkWindow.vala:520
+#: birdfont/GtkWindow.vala:549
 msgid "Add new _grid item"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:526
+#: birdfont/GtkWindow.vala:555
 msgid "Remove gr_id item"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:532
+#: birdfont/GtkWindow.vala:561
 msgid "_Zoom in"
 msgstr "_Zoom +"
 
-#: birdfont/GtkWindow.vala:539
+#: birdfont/GtkWindow.vala:568
 msgid "Zoom _out"
 msgstr "Zoo_m -"
 
-#: birdfont/GtkWindow.vala:546
+#: birdfont/GtkWindow.vala:575
 msgid "Zoom to _scale 1:1"
 msgstr "Zoom à  e_scala 1:1"
 
-#: birdfont/GtkWindow.vala:554
+#: birdfont/GtkWindow.vala:583
 msgid "_File"
 msgstr "_Ficheiro"
 
-#: birdfont/GtkWindow.vala:557
+#: birdfont/GtkWindow.vala:586
 msgid "_Edit"
 msgstr "_Editar"
 
-#: birdfont/GtkWindow.vala:560
+#: birdfont/GtkWindow.vala:589
 msgid "_Tab"
 msgstr "_Separador"
 
-#: birdfont/GtkWindow.vala:563
+#: birdfont/GtkWindow.vala:592
 msgid "T_ool"
 msgstr "_Ferramenta"
 
