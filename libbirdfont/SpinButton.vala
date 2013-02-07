@@ -127,7 +127,7 @@ public class SpinButton : Tool {
 		new_value_action (this);
 	}
 
-	private void set_int_value (string new_value) {
+	public void set_int_value (string new_value) {
 		string v = new_value;
 		
 		while (!(v.char_count () >= 4)) {

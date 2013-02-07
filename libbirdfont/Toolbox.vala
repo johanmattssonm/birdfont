@@ -365,7 +365,7 @@ public class Toolbox : GLib.Object  {
 				
 		// background tools
 		background_scale = new SpinButton ("scale_background", _("Set size for background image"));
-		background_scale.set_value_round (1);
+		background_scale.set_int_value ("1.000");
 		
 		background_scale.new_value_action.connect((self) => {
 			background_scale.select_action (self);
