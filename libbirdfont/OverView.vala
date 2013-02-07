@@ -991,9 +991,9 @@ public class OverView : FontDisplay {
 		
 		// scroll to the selected character
 		if (c == "") {
-			c = "a";
+			c = glyph_range.get_char (0);
 		}
-		
+
 		if (items_per_row == 0) {
 			return;
 		}
