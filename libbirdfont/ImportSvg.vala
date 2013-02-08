@@ -129,6 +129,10 @@ public class ImportSvg {
 			if (iter->name == "path") {
 				parse_path (iter);
 			}
+			
+			if (iter->name == "g") {
+				parse_layer (iter);
+			}
 		}
 	}
 	
@@ -200,7 +204,7 @@ public class ImportSvg {
 		
 		// parse path
 		for (int i = 0; i < c.length; i++) {
-
+			
 			if (c[i] == "m") {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "M";
@@ -517,8 +521,13 @@ public class ImportSvg {
 		return double.parse ((!) s);
 	}
 	
-	static bool is_point (string s) {
-		return double.try_parse (s);
+	static bool is_point (string? s) {
+		if (s == null) {
+			warning ("s is null");
+			return false;
+		}
+		
+		return double.try_parse ((!) s);
 	}
 }
 
