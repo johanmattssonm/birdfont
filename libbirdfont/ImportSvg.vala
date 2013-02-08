@@ -39,12 +39,14 @@ public class ImportSvg {
 		if (Supplement.win32) {
 			string svg;
 			string xml;
+			Glyph glyph = MainWindow.get_current_glyph ();
+			
 			xml = xml_data.replace ("id", "__");
 			foreach (string svg_data in xml.split ("d=\"")) {
 				svg = svg_data.substring (0, svg_data.index_of ("\""));
 				
 				if (svg.has_prefix ("M") || svg.has_prefix ("m")) {
-					parse_svg_data (svg);
+					parse_svg_data (svg, glyph);
 				}
 			}
 		} else {
@@ -139,34 +141,24 @@ public class ImportSvg {
 	private static void parse_path (Xml.Node* node) {
 		string attr_name = "";
 		string attr_content;
-		
+		Glyph glyph = MainWindow.get_current_glyph ();
+				
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
 			
 			if (attr_name == "d") {
-				parse_svg_data (attr_content);
+				parse_svg_data (attr_content, glyph);
 			}
 		}
 	}
 	
-	private static void parse_svg_data (string d) {
-		string[] c;
-		string[] command;
-		int ci = 0;
-		double px = 0;
-		double py = 0;
-		double px2 = 0;
-		double py2 = 0;
-		double cx = 0;
-		double cy = 0;
-		double[] p;
-		int pi = 0;
+	/** Add space as separator to svg data. 
+	 * @param d svg data
+	 */
+	static string add_separators (string d) {
 		string data = d;
-		Glyph glyph = MainWindow.get_current_glyph ();
-		Font font = Supplement.get_current_font ();
 		
-		// add separators
 		data = data.replace (",", " ");
 		data = data.replace ("m", " m ");
 		data = data.replace ("M", " M ");
@@ -184,15 +176,41 @@ public class ImportSvg {
 		data = data.replace ("zm", " z m ");
 		data = data.replace ("z", " z ");
 		data = data.replace ("-", " -");
-		data = data.replace ("e -", "e-"); // - can be either separator or a negative exponent
+		data = data.replace ("e -", "e-"); // minus can be either separator or a negative exponent
 		data = data.replace ("\t", " ");
 		data = data.replace ("\r\n", " ");
 		data = data.replace ("\n", " ");
 		
+		// use only a single space as separator
 		while (data.index_of ("  ") > -1) {
 			data = data.replace ("  ", " ");
 		}
-				
+		
+		return data;
+	}
+	
+	/** 
+	 * Add svg paths to glyph.
+	 * 
+	 * @param d svg data
+	 * @param glyph add paths to this glyph
+	 * @param svg_glyph parse svg glyph (origo in lower left corner)
+	 */
+	public static void parse_svg_data (string d, Glyph glyph, bool svg_glyph = false, double units = 1) {
+		string[] c;
+		string[] command;
+		int ci = 0;
+		double px = 0;
+		double py = 0;
+		double px2 = 0;
+		double py2 = 0;
+		double cx = 0;
+		double cy = 0;
+		double[] p;
+		int pi = 0;
+		string data = add_separators (d);
+		Font font = Supplement.get_current_font ();
+
 		c = data.split (" ");
 		p = new double[2 * c.length];
 		command = new string[2 * c.length];
@@ -210,7 +228,12 @@ public class ImportSvg {
 					command[ci++] = "M";
 
 					px += parse_double (c[++i]);
-					py += -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						py += parse_double (c[++i]);
+					} else {
+						py += -parse_double (c[++i]);
+					}
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -222,7 +245,12 @@ public class ImportSvg {
 					command[ci++] = "M";
 
 					px = parse_double (c[++i]);
-					py = -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						py = parse_double (c[++i]);
+					} else {
+						py = -parse_double (c[++i]);
+					}
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -255,7 +283,11 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
 					
-					py = py + -parse_double (c[++i]);
+					if (svg_glyph) {
+						py = py + parse_double (c[++i]);
+					} else {
+						py = py + -parse_double (c[++i]);
+					}
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -265,7 +297,12 @@ public class ImportSvg {
 			if (c[i] == "V") {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "L";
-					py = -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						py = parse_double (c[++i]);
+					} else {
+						py = -parse_double (c[++i]);
+					}
 					
 					p[pi++] = px;
 					p[pi++] = py;
@@ -277,7 +314,13 @@ public class ImportSvg {
 					command[ci++] = "L";
 					
 					cx = px + parse_double (c[++i]);
-					cy = py + -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py + -parse_double (c[++i]);
+					}
+					
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -291,7 +334,13 @@ public class ImportSvg {
 					command[ci++] = "L";
 					
 					cx = parse_double (c[++i]);
-					cy = -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
+					
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -305,12 +354,23 @@ public class ImportSvg {
 					command[ci++] = "C";
 					
 					cx = px + parse_double (c[++i]);
-					cy = py + -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py + -parse_double (c[++i]);
+					}
+					
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
 					cx = px + parse_double (c[++i]);
-					cy = py + -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py + -parse_double (c[++i]);
+					}
 					
 					px2 = cx;
 					py2 = cy;
@@ -319,7 +379,13 @@ public class ImportSvg {
 					p[pi++] = py2;
 					
 					cx = px + parse_double (c[++i]);
-					cy = py + -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py + -parse_double (c[++i]);
+					}
+					
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -334,17 +400,35 @@ public class ImportSvg {
 					command[ci++] = "C";
 					
 					cx = parse_double (c[++i]);
-					cy = -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
+					
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
 					cx = parse_double (c[++i]);
-					cy = -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
+					
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
 					cx = parse_double (c[++i]);
-					cy = -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
+					
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -359,12 +443,17 @@ public class ImportSvg {
 					
 					// the first point is the reflection
 					cx = 2 * px - px2;
-					cy = 2 * py - py2;
+					cy = 2 * py - py2; // if (svg_glyph) ?
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
 					cx = px + parse_double (c[++i]);
-					cy = py + -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py + -parse_double (c[++i]);
+					}
 					
 					px2 = cx;
 					py2 = cy;
@@ -373,7 +462,13 @@ public class ImportSvg {
 					p[pi++] = py2;
 					
 					cx = px + parse_double (c[++i]);
-					cy = py + -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py + -parse_double (c[++i]);
+					}
+					
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -388,13 +483,18 @@ public class ImportSvg {
 					
 					// the reflection again
 					cx = 2 * px - px2;
-					cy = 2 * py - py2;
+					cy = 2 * py - py2; // if (svg_glyph) ?
 					p[pi++] = cx;
 					p[pi++] = cy;
 
 					// the other two are regular cubic points
 					cx = parse_double (c[++i]);
-					cy = -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
 					
 					px2 = cx;
 					py2 = cy;
@@ -403,7 +503,13 @@ public class ImportSvg {
 					p[pi++] = py2;
 					
 					cx = parse_double (c[++i]);
-					cy = -parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
+					
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -424,10 +530,19 @@ public class ImportSvg {
 		Path path = new Path ();
 		
 		// move
-		for (int i = 0; i < pi; i += 2) {
-			p[i] += glyph.left_limit;
-			p[i+1] -= font.top_position;
-		}	
+		if (svg_glyph) {
+			for (int i = 0; i < pi; i += 2) {
+				p[i] *= units; 						// TODO: test it.
+				p[i] += glyph.left_limit;
+				//p[i+1] += font.top_position;
+				p[i+1] -= font.base_line; 	// FIXME: is the font at the baseline?
+			}
+		} else {
+			for (int i = 0; i < pi; i += 2) {
+				p[i] += glyph.left_limit;
+				p[i+1] -= font.top_position;
+			}
+		}
 		
 		// add points
 		int ic = 0;

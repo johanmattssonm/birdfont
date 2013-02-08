@@ -152,7 +152,7 @@ class TestCases {
 
 			temp_file.delete ();
 			
-			MainWindow.get_toolbox ().select_tool_by_name ("full_glyph");
+			Toolbox.select_tool_by_name ("full_glyph");
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}

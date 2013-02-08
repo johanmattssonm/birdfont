@@ -433,8 +433,8 @@ public class Font : GLib.Object {
 		
 		gl = get_glyph (a);
 		
-		if (gl == null) {
-			warning ("glyph is not parsed yet cannot add kerning");
+		if (unlikely (gl == null)) {
+			warning (@"glyph \"$a\" is not parsed yet cannot add kerning");
 			return;
 		}
 		
@@ -737,6 +737,11 @@ public class Font : GLib.Object {
 			glyph_cache.remove_all ();
 			unassigned_glyphs.remove_all ();
 			
+			if (path.has_suffix (".svg")) {
+				font_file = path;
+				loaded = parse_svg_file (path);
+			}
+			
 			if (path.has_suffix (".ffi")) {
 				font_file = path;
 				loaded = parse_file (path);
@@ -759,6 +764,13 @@ public class Font : GLib.Object {
 		}
 		
 		return loaded;
+	}
+
+	private bool parse_svg_file (string path) {
+		print ("parse_svg_file\n");
+		SvgFont svg_font = new SvgFont (this);
+		svg_font.load (path);
+		return true;
 	}
 
 	private void add_thumbnail () {
