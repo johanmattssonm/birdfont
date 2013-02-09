@@ -773,10 +773,12 @@ public class ImportSvg {
 				ep1 = path.points.last ().data;
 				ep2 = path.points.first ().data;
 				
-				path.points.remove_link (path.points.last ());
-				ep2.left_handle.angle = ep1.left_handle.angle;
-				ep2.left_handle.length = ep1.left_handle.length;
-				ep2.left_handle.type = ep1.left_handle.type;
+				if (ep1.x == ep2.x && ep1.y == ep2.y) {
+					path.points.remove_link (path.points.last ());
+					ep2.left_handle.angle = ep1.left_handle.angle;
+					ep2.left_handle.length = ep1.left_handle.length;
+					ep2.left_handle.type = ep1.left_handle.type;
+				}
 				
 				glyph.add_path (path);
 				path.close ();

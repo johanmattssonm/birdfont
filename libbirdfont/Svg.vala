@@ -87,10 +87,6 @@ class Svg {
 		} else if (end.get_left_handle ().type == PointType.CURVE) {
 			add_cubic_abs_path (end, start, svg, g, do_glyph);
 		}
-
-		if (end.get_left_handle ().type == PointType.NONE) {
-			warning ("No point type.");
-		}
 	}
 
 	private static void add_abs_start (EditPoint ep, StringBuilder svg, Glyph g, bool to_glyph) {		

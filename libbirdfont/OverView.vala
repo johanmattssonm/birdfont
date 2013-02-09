@@ -869,8 +869,6 @@ public class OverView : FontDisplay {
 		double x = view_offset_x;
 		double y = view_offset_y;
 
-		unichar current = selected;
-
 		// click in margin
 		int n_items = (allocation.width - 40 / nail_width);
 		double m = (allocation.width - 40 - (n_items * nail_width)) / 2.0;
