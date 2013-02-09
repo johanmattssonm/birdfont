@@ -860,6 +860,11 @@ public class OverView : FontDisplay {
 		}
 	}
 	
+	public override void double_click (uint button, double ex, double ey) {
+		selection_click (button, ex, ey);
+		open_glyph_signal (get_selected_char ());
+	}
+	
 	private void selection_click (uint button, double ex, double ey) {
 		double x = view_offset_x;
 		double y = view_offset_y;
@@ -940,10 +945,6 @@ public class OverView : FontDisplay {
 		}
 		
 		adjust_scroll ();
-		
-		if (current == selected && !menu_action) {
-			open_glyph_signal (get_selected_char ());
-		}
 		
 		adjust_scroll ();
 		adjust_scroll ();
