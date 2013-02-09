@@ -22,7 +22,8 @@ namespace Supplement {
 class SvgFont : GLib.Object {
 	Font font;
 	double units = 1;
-		
+	double font_advance = 0;
+	
 	public SvgFont (Font f) {
 		this.font = f;
 	}
@@ -43,16 +44,13 @@ class SvgFont : GLib.Object {
 	}
 	
 	void parse_svg_font (Xml.Node* node) {
-		print ("parse_svg_font" + node->name + "\n");
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			print (iter->name + "\n");
-			
 			if (iter->name == "defs") {
 				parse_svg_font (iter);
 			}
 			
 			if (iter->name == "font") {
-				parse_font_name (iter);
+				parse_font_tag (iter);
 				parse_svg_font (iter);
 			}
 
@@ -73,6 +71,8 @@ class SvgFont : GLib.Object {
 	void parse_hkern (Xml.Node* node) {
 		string left = "";
 		string right = "";
+		string left_name = "";
+		string right_name = "";
 		double kerning = 0;
 		unichar l, r;
 		StringBuilder sl, sr;
@@ -83,8 +83,6 @@ class SvgFont : GLib.Object {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
 			
-			print (attr_name + "\n");
-			
 			// left
 			if (attr_name == "u1") {
 				left = attr_content;
@@ -94,29 +92,37 @@ class SvgFont : GLib.Object {
 			if (attr_name == "u2") {
 				right = attr_content;
 			}
+
+			if (attr_name == "g1") {
+				left_name = attr_content;
+			}
 			
+			if (attr_name == "g2") {
+				right_name = attr_content;
+			}
+				
 			// kerning
 			if (attr_name == "k") {
 				kerning = double.parse (attr_content);
 			}
-			
-			// TODO: ranges and sequences for u1 & u2 + g1 & g2
 		}
 		
-		print ("L " + left + "\n");
 		
-		l = get_unichar (left);
-		r = get_unichar (right);
-		
-		sl = new StringBuilder ();
-		sl.append_unichar (l);
-		
-		print ("L " + sl.str + "\n");
-		
-		sr = new StringBuilder ();
-		sr.append_unichar (r);
-		
-		font.set_kerning (sl.str, sr.str, -kerning);
+		// TODO: ranges and sequences for u1 & u2 + g1 & g2
+		foreach (string lk in left.split (",")) {
+			foreach (string rk in right.split (",")) {
+				l = get_unichar (lk);
+				r = get_unichar (rk);
+				
+				sl = new StringBuilder ();
+				sl.append_unichar (l);
+				
+				sr = new StringBuilder ();
+				sr.append_unichar (r);
+				
+				font.set_kerning (sl.str, sr.str, -kerning);				
+			}
+		}
 	}
 
 	void parse_font_limits (Xml.Node* node) {
@@ -149,7 +155,7 @@ class SvgFont : GLib.Object {
 		font.top_limit = top_limit;
 	}
 	
-	void parse_font_name (Xml.Node* node) {
+	void parse_font_tag (Xml.Node* node) {
 		string attr_name = "";
 		string attr_content;
 		
@@ -157,6 +163,10 @@ class SvgFont : GLib.Object {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
 			
+			if (attr_name == "horiz-adv-x") {
+				font_advance = double.parse (attr_content);
+			}
+						
 			if (attr_name == "id") {
 				font.set_name (attr_content);
 			}
@@ -169,6 +179,10 @@ class SvgFont : GLib.Object {
 	static unichar get_unichar (string val) {
 		string v = val;
 		unichar unicode_value;
+		
+		if (val == "&") {
+			return '&';
+		}
 		
 		// TODO: parse ligatures
 		if (v.has_prefix ("&")) {
@@ -192,7 +206,7 @@ class SvgFont : GLib.Object {
 		string glyph_name = "";
 		string svg = "";
 		Glyph glyph;
-		double advance = 100;
+		double advance = font_advance;
 
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -200,10 +214,7 @@ class SvgFont : GLib.Object {
 
 			if (attr_name == "unicode") {
 				unicode_value = get_unichar (attr_content);
-				
-				if (glyph_name == "") {
-					glyph_name = attr_content;
-				}
+				glyph_name = attr_content;
 			}
 			
 			// svg data
@@ -212,12 +223,14 @@ class SvgFont : GLib.Object {
 			}
 			
 			if (attr_name == "glyph-name") {
-				glyph_name = attr_content;
+				// use glyph value as name until ligatures is properly implemented
+				if (glyph_name == "") {
+					glyph_name = attr_content;
+				}
 			}
 
 			if (attr_name == "horiz-adv-x") {
 				advance = double.parse (attr_content);
-				print (@"horiz-adv-x $advance\n");
 			}
 		}
 		

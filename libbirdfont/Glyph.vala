@@ -1275,8 +1275,6 @@ public class Glyph : FontDisplay {
 	
 	public void draw_path (Context cr) {
 		double left, baseline;
-
-		// plot_outline (cr);
 			
 		baseline = get_line ("baseline").pos;
 		left = get_line ("left").pos;

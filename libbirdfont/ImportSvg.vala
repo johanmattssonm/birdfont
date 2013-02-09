@@ -168,13 +168,18 @@ public class ImportSvg {
 		data = data.replace ("V", " V ");
 		data = data.replace ("l", " l ");
 		data = data.replace ("L", " L ");
+		data = data.replace ("q", " q ");
+		data = data.replace ("Q", " Q ");		
 		data = data.replace ("c", " c ");
 		data = data.replace ("C", " C ");
+		data = data.replace ("t", " t ");
+		data = data.replace ("T", " T ");
 		data = data.replace ("s", " s ");
 		data = data.replace ("S", " S ");
 		data = data.replace ("zM", " z M ");
 		data = data.replace ("zm", " z m ");
 		data = data.replace ("z", " z ");
+		data = data.replace ("Z", " Z ");
 		data = data.replace ("-", " -");
 		data = data.replace ("e -", "e-"); // minus can be either separator or a negative exponent
 		data = data.replace ("\t", " ");
@@ -348,7 +353,7 @@ public class ImportSvg {
 					py = cy;					
 				}	
 			}
-			
+						
 			if (c[i] == "c") {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "C";
@@ -406,7 +411,10 @@ public class ImportSvg {
 					} else {
 						cy = -parse_double (c[++i]);
 					}
-					
+
+					px2 = cx;
+					py2 = cy;
+										
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -435,6 +443,135 @@ public class ImportSvg {
 					px = cx;
 					py = cy;					
 				}	
+			}
+
+			// quadratic
+			if (c[i] == "q") {
+				while (is_point (c[i + 1])) {
+					command[ci++] = "Q";
+					
+					cx = px + parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py + -parse_double (c[++i]);
+					}
+					
+					p[pi++] = cx;
+					p[pi++] = cy;
+					
+					px2 = cx;
+					py2 = cy;
+										
+					cx = px + parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py + -parse_double (c[++i]);
+					}
+					
+					p[pi++] = cx;
+					p[pi++] = cy;
+					
+					px = cx;
+					py = cy;
+				}
+			}
+			
+			if (c[i] == "Q") {
+
+				while (is_point (c[i + 1])) {
+					command[ci++] = "Q";
+					
+					cx = parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
+					
+					p[pi++] = cx;
+					p[pi++] = cy;
+
+					px2 = cx;
+					py2 = cy;
+										
+					cx = parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
+					
+					p[pi++] = cx;
+					p[pi++] = cy;
+					
+					px = cx;
+					py = cy;			
+				}	
+			}
+
+			if (c[i] == "t") {
+				while (is_point (c[i + 1])) {
+					command[ci++] = "Q";
+					
+					// the first point is the reflection
+					cx = 2 * px - px2;
+					cy = 2 * py - py2; // if (svg_glyph) ?
+					
+					p[pi++] = cx;
+					p[pi++] = cy;
+
+					px2 = cx;
+					py2 = cy;
+										
+					cx = px + parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py + -parse_double (c[++i]);
+					}
+					
+					px = cx;
+					py = cy;
+					
+					p[pi++] = px;
+					p[pi++] = py;
+				}
+			}
+
+			if (c[i] == "T") {
+				while (is_point (c[i + 1])) {
+					command[ci++] = "Q";
+					
+					// the reflection
+					cx = 2 * px - px2;
+					cy = 2 * py - py2; // if (svg_glyph) ?
+					p[pi++] = cx;
+					p[pi++] = cy;
+
+					px2 = cx;
+					py2 = cy;
+					
+					cx = parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
+					
+					px = cx;
+					py = cy;
+					
+					p[pi++] = px;
+					p[pi++] = py;					
+				}
 			}
 
 			if (c[i] == "s") {
@@ -529,13 +666,17 @@ public class ImportSvg {
 
 		Path path = new Path ();
 		
-		// move
+		// move and resize
 		if (svg_glyph) {
+			// resize all points
+			for (int i = 0; i < pi; i++) {
+				p[i] *= units;
+			}
+			
+			// move only y 
 			for (int i = 0; i < pi; i += 2) {
-				p[i] *= units; 						// TODO: test it.
 				p[i] += glyph.left_limit;
-				//p[i+1] += font.top_position;
-				p[i+1] -= font.base_line; 	// FIXME: is the font at the baseline?
+				p[i+1] -= font.base_line;
 			}
 		} else {
 			for (int i = 0; i < pi; i += 2) {
@@ -563,7 +704,31 @@ public class ImportSvg {
 			if (command[i] == "L") {
 				path.add (p[ic++], p[ic++]);
 			}
-						
+			
+			if (command[i] == "Q") {
+				x0 = p[ic++];
+				y0 = p[ic++];
+				x1 = p[ic++];
+				y1 = p[ic++];
+
+				if (is_null (path.points.last ().data)) {
+					warning ("Paths must begin with M");
+					return;
+				}
+				
+				ep1 = path.points.last ().data;
+				ep1.recalculate_linear_handles ();
+				ep1.get_right_handle ().type = PointType.QUADRATIC;
+				ep1.get_right_handle ().move_to_coordinate (x0, y0);	
+
+				path.add (x1, y1);
+
+				ep2 = path.points.last ().data;
+				ep2.recalculate_linear_handles ();
+				ep2.get_left_handle ().type = PointType.QUADRATIC;
+				ep2.get_left_handle ().move_to_coordinate (x0, y0);				
+			}
+					
 			if (command[i] == "C") {
 				x0 = p[ic++];
 				y0 = p[ic++];

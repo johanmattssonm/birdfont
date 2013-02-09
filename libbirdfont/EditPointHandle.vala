@@ -111,7 +111,7 @@ public class EditPointHandle  {
 		
 		return p;
 	}
-	
+
 	public void move_to_coordinate (double x, double y) {
 		double a, b, c;
 

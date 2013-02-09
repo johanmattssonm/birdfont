@@ -210,7 +210,11 @@ public class Path {
 		
 		cr.line_to (xa, ya); // this point makes sense only if it is the first or last position, the other points are meaning less don't export them
 
-		cr.curve_to (xb, yb, xc, yc, xd, yd);
+		if (en.get_right_handle ().type == PointType.QUADRATIC) {
+			cr.curve_to ((xa + 2 * xb) / 3, (ya + 2 * yb) / 3, (xd + 2 * xb) / 3, (yd + 2 * yb) / 3, xd, yd);		
+		} else {
+			cr.curve_to (xb, yb, xc, yc, xd, yd);
+		}
 	}
 	
 	/** Curve relative to window center. */
@@ -299,7 +303,7 @@ public class Path {
 			draw_img_center (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
 		}
 		
-		if (!(is_open () && e == points.first ().data)) {
+		if (!(is_open () && e == points.first ().data) && e.get_left_handle ().type != PointType.QUADRATIC) {
 			draw_line (handle_left, e, cr, 0.15);
 			draw_img_center (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
 		}
@@ -966,7 +970,7 @@ public class Path {
 		eh.length = 0;
 
 		eh = ((!)quadratic_path.points.last ().prev).data.get_right_handle ();
-		eh.set_point_type (PointType.CURVE);
+		eh.set_point_type (PointType.QUADRATIC);
 		eh.length *= 1.6;
 
 		return quadratic_path;
@@ -986,7 +990,7 @@ public class Path {
 		eh.length = 0;
 		
 		eh = start.get_right_handle ();
-		eh.set_point_type (PointType.CURVE);
+		eh.set_point_type (PointType.QUADRATIC);
 		eh.move_to_coordinate (curve_x, curve_y);
 	}
 

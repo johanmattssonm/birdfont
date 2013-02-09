@@ -1378,7 +1378,8 @@ public class Font : GLib.Object {
 		bool r;
 
 		if (unlikely (unicode.index_of ("U+") != 0)) {
-			warning ("All unicode values must begin with U+");
+			warning (@"All unicode values must begin with U+ ($unicode");
+			return '\0';
 		}
 		
 		while (r = unicode.get_next_char (ref index, out c)) {

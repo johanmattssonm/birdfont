@@ -24,6 +24,7 @@ public enum PointType {
 	NORMAL,
 	LINE,
 	CURVE,
+	QUADRATIC,
 	DOUBLE_CURVE,
 	END,
 	FLOATING

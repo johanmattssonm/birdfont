@@ -78,12 +78,18 @@ class Svg {
 	}
 
 	private static void add_abs_next (EditPoint start, EditPoint end, StringBuilder svg, Glyph g, bool do_glyph) {
+		if (end.get_left_handle ().type == PointType.QUADRATIC) {
+			add_quadratic_abs_path (end, start, svg, g, do_glyph);
+		}
+		
 		if (start.right_handle.type == PointType.LINE && end.left_handle.type == PointType.LINE) {
 			add_abs_line_to (end, start, svg, g, do_glyph);
-		} else if (end.get_left_handle ().type == PointType.NONE) {
-			add_quadratic_abs_path (end, start, svg, g, do_glyph);
-		} else {
+		} else if (end.get_left_handle ().type == PointType.CURVE) {
 			add_cubic_abs_path (end, start, svg, g, do_glyph);
+		}
+
+		if (end.get_left_handle ().type == PointType.NONE) {
+			warning ("No point type.");
 		}
 	}
 
@@ -142,6 +148,8 @@ class Svg {
 
 		double center_x = Glyph.xc ();
 		double center_y = Glyph.yc ();
+
+		// FIXME xc or xd, right or left handle?:
 		
 		// cubic path
 		if (!to_glyph) {
@@ -150,8 +158,8 @@ class Svg {
 			svg.append_printf ("%s ", round (xb - center_x - left));
 			svg.append_printf ("%s ", round (yb - center_y - baseline + height));
 			
-			svg.append_printf ("%s ", round (xc - center_x - left));
-			svg.append_printf ("%s ", round (yc - center_y - baseline + height));
+			svg.append_printf ("%s ", round (xd - center_x - left));
+			svg.append_printf ("%s ", round (yd - center_y - baseline + height));
 
 		} else {		
 			svg.append_printf ("Q");
@@ -159,8 +167,8 @@ class Svg {
 			svg.append_printf ("%s ", round (xb - center_x - left));
 			svg.append_printf ("%s ", round (-yb + center_y + baseline));
 			
-			svg.append_printf ("%s ", round (xc - center_x - left));
-			svg.append_printf ("%s ", round (-yc + center_y + baseline));	
+			svg.append_printf ("%s ", round (xd - center_x - left));
+			svg.append_printf ("%s ", round (-yd + center_y + baseline));	
 		}
 	}
 			
@@ -207,12 +215,15 @@ class Svg {
 	public static void draw_svg_path (Context cr, string svg, double x, double y) {
 		double x1, x2, x3;
 		double y1, y2, y3;
-
+		double px, py;
 		string[] d = svg.split (" ");
 
 		if (d.length == 0) {
 			return;
 		}
+		
+		px = 0;
+		py = 0;
 		
 		cr.save ();
 
@@ -227,13 +238,16 @@ class Svg {
 			
 			// trim off leading white space	
 			while (d[i].index_of (" ") == 0) { 
-				d[i] = d[i].substring (1);
+				d[i] = d[i].substring (1); // FIXME: maybe no ascii
 			}
 			
 			if (d[i].index_of ("L") == 0) {
 				x1 = double.parse (d[i].substring (1)) + x;
 				y1 = -double.parse (d[i+1]) + y;
 				cr.line_to (x1, y1);
+				
+				px = x1;
+				py = y1;			
 				continue;
 			}
 
@@ -243,8 +257,11 @@ class Svg {
 
 				x2 = double.parse (d[i+2]) + x;
 				y2 = -double.parse (d[i+3]) + y;
-																
-				cr.curve_to (x1, y1, x2, y2, x2, y2);
+											
+				cr.curve_to ((px + 2 * x1) / 3, (py + 2 * y1) / 3, (x2 + 2 * x1) / 3, (y2 + 2 * y1) / 3, x2, y2);
+				
+				px = x2;
+				py = y2;
 				continue;
 			}
 			
@@ -259,6 +276,9 @@ class Svg {
 				y3 = -double.parse (d[i+5]) + y;
 																
 				cr.curve_to (x1, y1, x2, y2, x3, y3);
+				
+				px = x3;
+				py = y3;
 				continue;
 			}
 
@@ -267,6 +287,9 @@ class Svg {
 				y1 = -double.parse (d[i+1]) + y;
 				
 				cr.move_to (x1, y1);
+
+				px = x1;
+				py = y1;
 				continue;
 			}
 								
@@ -277,6 +300,9 @@ class Svg {
 				y1 = -double.parse (d[i+1]) + y;
 				
 				cr.move_to (x1, y1);
+
+				px = x1;
+				py = y1;
 				continue;
 			}
 

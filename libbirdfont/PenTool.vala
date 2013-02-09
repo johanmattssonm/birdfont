@@ -171,14 +171,16 @@ public class PenTool : Tool {
 		
 		// move curve handles
 		if (move_selected_handle) {
+			if (selected_handle.type == PointType.LINE) {
+				selected_handle.set_point_type (PointType.CURVE); // TODO: quadratic
+			}
+				
 			if (GridTool.is_visible ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
 				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
-				selected_handle.set_point_type (PointType.CURVE);
 				selected_handle.move_to_coordinate (coordinate_x, coordinate_y);
 			} else {
-				selected_handle.set_point_type (PointType.CURVE);
 				selected_handle.move_delta ((x - last_point_x) * precision, (y - last_point_y) * precision);
 			}
 			
