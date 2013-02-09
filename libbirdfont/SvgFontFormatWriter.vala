@@ -105,6 +105,7 @@ class SvgFontFormatWriter : Object  {
 				
 				if (gr == null) {
 					warning ("kerning glyph that does not exist.");
+					continue;
 				}
 				
 				glyph_right = (!) gr;

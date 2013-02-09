@@ -35,7 +35,17 @@ class GlyphTable : GLib.Object {
 	}
 
 	public void @for_each (Func<GlyphCollection> func) {
+		if (unlikely (is_null (data))) {
+			warning ("No data in table");
+			return;
+		}
+		
 		data.foreach ((v) => {
+			if (unlikely (is_null (v))) {
+				warning ("No value found in GlyphTable.");
+				return;
+			}
+						
 			func (v.glyph_collection);
 		});
 	}

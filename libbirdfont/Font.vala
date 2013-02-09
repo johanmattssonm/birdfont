@@ -571,8 +571,13 @@ public class Font : GLib.Object {
 			}
 			
 			glyph_cache.for_each ((gc) => {
+				bool selected;
+				
+				if (is_null (gc)) {
+					warning ("No glyph collection");
+				}
+				
 				try {
-					bool selected;
 					foreach (Glyph g in gc.get_version_list ().glyphs) {
 						selected = (g == gc.get_current ());
 						write_glyph (g, selected, os);
@@ -584,16 +589,19 @@ public class Font : GLib.Object {
 			});
 		
 			glyph_cache.for_each ((gc) => {
+				Glyph glyph;
+				
 				try {
-					Glyph glyph = gc.get_current ();
+					glyph = gc.get_current ();
 					
 					foreach (Kerning k in glyph.kerning) {
 						string l, r;
 						Glyph? gr = get_glyph (k.glyph_right);
 						Glyph glyph_right;
-						
+
 						if (gr == null) {
-							warning ("kerning glyph that does not exist.");
+							warning ("kerning a glyph that does not exist. (" + glyph.name + " -> " + k.glyph_right + ")");
+							continue;
 						}
 						
 						glyph_right = (!) gr;

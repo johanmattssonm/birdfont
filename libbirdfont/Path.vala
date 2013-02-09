@@ -970,7 +970,7 @@ public class Path {
 		eh.length = 0;
 
 		eh = ((!)quadratic_path.points.last ().prev).data.get_right_handle ();
-		eh.set_point_type (PointType.QUADRATIC);
+		eh.set_point_type (PointType.CURVE);
 		eh.length *= 1.6;
 
 		return quadratic_path;
@@ -990,7 +990,7 @@ public class Path {
 		eh.length = 0;
 		
 		eh = start.get_right_handle ();
-		eh.set_point_type (PointType.QUADRATIC);
+		eh.set_point_type (PointType.CURVE);
 		eh.move_to_coordinate (curve_x, curve_y);
 	}
 
