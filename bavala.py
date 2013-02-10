@@ -69,7 +69,10 @@ class Vala(object):
         for f in self.c:
             yield {
                 'name': 'copy_c',
-                'actions': [ 'cp ' + f + ' ' + self.build + '/' + self.src ],
+                'actions': [ 
+                    'mkdir -p '+  self.build + '/' + self.src + '/', 
+                    'cp ' + f + ' ' + self.build + '/' + self.src + '/'
+                    ],
                 }
                                     
         yield {
