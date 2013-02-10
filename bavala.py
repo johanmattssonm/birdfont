@@ -40,8 +40,6 @@ class Vala(object):
         self.obj = [f.replace('.c', '.o') for f in self.cc]
         self.obj += [join(build, f.replace('.vala', '.o')) for f in self.vala]
         
-        print (self.cc)
-        
         if library:
             self.header = join(build, library) + '.h'
             self.vapi = join(build, library) + '.vapi'
