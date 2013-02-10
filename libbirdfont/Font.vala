@@ -18,6 +18,11 @@
 using Cairo;
 using Xml;
 
+enum FontFormat {
+	FFI,
+	SVG
+}
+
 namespace Supplement {
 
 public class Font : GLib.Object {
@@ -67,6 +72,9 @@ public class Font : GLib.Object {
 	bool otf_font = false;
 	
 	public List<string> grid_width = new List<string> ();
+	
+	/** File format. */
+	public FontFormat format = FontFormat.FFI;
 	
 	public Font () {
 		// positions in pixels at first zoom level

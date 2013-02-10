@@ -15,6 +15,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+[CCode (cname = "load_svg_font")]
+public extern static string? load_svg_font (string file, out bool error);
+
 namespace Supplement {
 
 [SimpleType]

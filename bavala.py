@@ -34,8 +34,14 @@ class Vala(object):
         self.vala_deps = vala_deps or []
 
         self.vala = list(glob.glob(src + '/*.vala'))
-        self.cc = [join(build, f.replace('.vala', '.c')) for f in self.vala]
-        self.obj = [join(build, f.replace('.vala', '.o')) for f in self.vala]
+        self.c = list(glob.glob(src + '/*.c')) # copy regular c sources
+        self.cc = [join(build, f) for f in self.c]
+        self.cc += [join(build, f.replace('.vala', '.c')) for f in self.vala]
+        self.obj = [f.replace('.c', '.o') for f in self.cc]
+        self.obj += [join(build, f.replace('.vala', '.o')) for f in self.vala]
+        
+        print (self.cc)
+        
         if library:
             self.header = join(build, library) + '.h'
             self.vapi = join(build, library) + '.vapi'
@@ -61,7 +67,14 @@ class Vala(object):
         targets = self.cc[:]
         if self.library:
             targets += [self.header, self.vapi]
-        return {
+        
+        for f in self.c:
+            yield {
+                'name': 'copy_c',
+                'actions': [ 'cp ' + f + ' ' + self.build + '/' + self.src ],
+                }
+                                    
+        yield {
             'name': 'compile_c',
             'actions': [ action ],
             'file_dep': self.vala + dep_vapi,

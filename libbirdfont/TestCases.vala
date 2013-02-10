@@ -46,11 +46,35 @@ class TestCases {
 		add (test_inkscape_import, "Inkscape import");
 		add (test_illustrator_import, "Illustrator import");
 		add (test_parse_quadratic_paths, "Quadratic paths");
+		add (test_freetype, "Freetype");
+	}
+
+	public static void test_freetype () {
+		string svg;
+		string? data;
+		bool error;
+		
+		data = load_svg_font ("", out error);
+		
+		if (error) {
+			warning ("Failed to load font.");
+			return;
+		}
+		
+		if (data == null) {
+			warning ("No svg data.");
+			return;
+		}
+		
+		svg = (!) data;
+		
+		print (@"svg: $svg\n");
 	}
 
 	public static void test_parse_quadratic_paths () {
 		Glyph g;
 		Tool.test_open_next_glyph ();
+		
 		g = MainWindow.get_current_glyph ();
 		ImportSvg.parse_svg_data ("M20,300 Q400,50 600,300 T1000,300Q1200 50 1400 300Q1600 50 1800 600 L 1800 700 L 200 700 z", g);
 		Toolbox.select_tool_by_name ("full_glyph");
