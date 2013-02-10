@@ -18,12 +18,12 @@
 using Cairo;
 using Xml;
 
-enum FontFormat {
+namespace Supplement {
+
+public enum FontFormat {
 	FFI,
 	SVG
 }
-
-namespace Supplement {
 
 public class Font : GLib.Object {
 	
@@ -756,11 +756,13 @@ public class Font : GLib.Object {
 			if (path.has_suffix (".svg")) {
 				font_file = path;
 				loaded = parse_svg_file (path);
+				format = FontFormat.SVG;
 			}
 			
 			if (path.has_suffix (".ffi")) {
 				font_file = path;
 				loaded = parse_file (path);
+				format = FontFormat.FFI;
 			}
 			
 			if (Supplement.experimental) {

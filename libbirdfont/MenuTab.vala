@@ -412,8 +412,19 @@ c.append ("""
 	}
 	
 	public static void preview () {
-		TabBar t = MainWindow.get_tab_bar ();
-		t.add_unique_tab (new Preview (), 80);		
+		TabBar tab_bar = MainWindow.get_tab_bar ();
+		FontFormat format = Supplement.get_current_font ().format;
+		OverwriteDialog overwrite = new OverwriteDialog ();
+
+		overwrite.finished.connect (() => {
+			tab_bar.add_unique_tab (new Preview (), 80);	
+		});
+				
+		if (format == FontFormat.SVG && !OverwriteDialog.ignore) {
+			tab_bar.add_unique_tab (overwrite);
+		} else {
+			overwrite.finished ();
+		}
 	}
 }
 }
