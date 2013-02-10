@@ -680,6 +680,30 @@ public class Font : GLib.Object {
 				os.put_string (@"<point x=\"$(ep.x)\" y=\"$(ep.y)\" ");
 				
 				if (ep.right_handle.type == PointType.CURVE) {
+					os.put_string (@"right_type=\"cubic\" ");
+				}
+
+				if (ep.left_handle.type == PointType.CURVE) {
+					os.put_string (@"left_type=\"cubic\" ");
+				}
+
+				if (ep.right_handle.type == PointType.QUADRATIC) {
+					os.put_string (@"right_type=\"quadratic\" ");
+				}
+
+				if (ep.left_handle.type == PointType.QUADRATIC) {
+					os.put_string (@"left_type=\"quadratic\" ");
+				}
+
+				if (ep.right_handle.type == PointType.LINE) {
+					os.put_string (@"right_type=\"linear\" ");
+				}
+
+				if (ep.left_handle.type == PointType.LINE) {
+					os.put_string (@"left_type=\"linear\" ");
+				}
+								
+				if (ep.right_handle.type == PointType.CURVE || ep.right_handle.type == PointType.QUADRATIC) {
 					os.put_string (@"right_angle=\"$(ep.right_handle.angle)\" ");
 					os.put_string (@"right_length=\"$(ep.right_handle.length)\" ");
 				}
@@ -1323,15 +1347,31 @@ public class Font : GLib.Object {
 						
 			if (attr_name == "x") x = double.parse (attr_content);
 			if (attr_name == "y") y = double.parse (attr_content);
-			
-			if (attr_name == "right_angle") {
+
+			if (attr_name == "right_type" && attr_content == "linear") {
+				type_right = PointType.LINE;
+			}	
+
+			if (attr_name == "left_type" && attr_content == "linear") {
+				type_left = PointType.LINE;
+			}	
+
+			if (attr_name == "right_type" && attr_content == "quadratic") {
+				type_right = PointType.QUADRATIC;
+			}	
+
+			if (attr_name == "left_type" && attr_content == "quadratic") {
+				type_left = PointType.QUADRATIC;
+			}
+
+			if (attr_name == "right_type" && attr_content == "cubic") {
 				type_right = PointType.CURVE;
 			}	
 
-			if (attr_name == "left_angle") {
+			if (attr_name == "left_type" && attr_content == "cubic") {
 				type_left = PointType.CURVE;
 			}
-						
+					
 			if (attr_name == "right_angle") angle_right = double.parse (attr_content);
 			if (attr_name == "right_length") length_right = double.parse (attr_content);
 			if (attr_name == "left_angle") angle_left = double.parse (attr_content);
