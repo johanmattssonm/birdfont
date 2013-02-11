@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-07 13:17+0100\n"
+"POT-Creation-Date: 2013-02-11 22:48+0100\n"
 "PO-Revision-Date: 2013-02-05 22:45+0000\n"
 "Last-Translator: pAUL <paul_pricootz@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -176,9 +176,26 @@ msgstr "Sposta percorso"
 msgid "No glyphs in this view."
 msgstr "Nessun Glyph in questa modalità"
 
+#: libbirdfont/OverwriteDialog.vala:57
+msgid ""
+"The loaded font will be overwritten if you choose to continue with preview."
+msgstr ""
+
+#: libbirdfont/OverwriteDialog.vala:72
+msgid "Continue"
+msgstr ""
+
+#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:89
+msgid "Cancel"
+msgstr "Annulla"
+
+#: libbirdfont/OverwriteDialog.vala:74
+msgid "Continue and don't ask me again."
+msgstr ""
+
 #: libbirdfont/PenTool.vala:59
-msgid "Use left command key + click to add new points"
-msgstr "Utilizzare il tasto sinistro + clic per aggiungere nuovi punti"
+msgid "Use left command key (⌘) + click to add new points"
+msgstr ""
 
 #: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
@@ -201,10 +218,6 @@ msgstr "Salva con nome"
 #: libbirdfont/SaveDialog.vala:88
 msgid "Discard"
 msgstr "Ignora"
-
-#: libbirdfont/SaveDialog.vala:89
-msgid "Cancel"
-msgstr "Annulla"
 
 #: libbirdfont/TabBar.vala:486
 msgid "Overview"
@@ -489,3 +502,6 @@ msgstr "_Scheda"
 #: birdfont/GtkWindow.vala:592
 msgid "T_ool"
 msgstr "_Strumenti"
+
+#~ msgid "Use left command key + click to add new points"
+#~ msgstr "Utilizzare il tasto sinistro + clic per aggiungere nuovi punti"

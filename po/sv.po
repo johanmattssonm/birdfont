@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-07 13:17+0100\n"
-"PO-Revision-Date: 2013-01-31 19:23+0000\n"
+"POT-Creation-Date: 2013-02-11 22:48+0100\n"
+"PO-Revision-Date: 2013-02-11 15:43+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1359660218.0\n"
+"X-POOTLE-MTIME: 1360597401.0\n"
 
 #: libbirdfont/Argument.vala:233
 msgid "Usage"
@@ -176,9 +176,28 @@ msgstr "Flytta objekt"
 msgid "No glyphs in this view."
 msgstr "Inga tecken att visa."
 
+#: libbirdfont/OverwriteDialog.vala:57
+msgid ""
+"The loaded font will be overwritten if you choose to continue with preview."
+msgstr ""
+"Den öppna fonten kommer att skrivas över om du väljer att fortsätta till "
+"förhandsgranskningen."
+
+#: libbirdfont/OverwriteDialog.vala:72
+msgid "Continue"
+msgstr "Fortsätt"
+
+#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:89
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: libbirdfont/OverwriteDialog.vala:74
+msgid "Continue and don't ask me again."
+msgstr "Fortsätt och fråga inte igen."
+
 #: libbirdfont/PenTool.vala:59
-msgid "Use left command key + click to add new points"
-msgstr "Använd vänster Command tangent + klicka för att lägga till punkter"
+msgid "Use left command key (⌘) + click to add new points"
+msgstr "Använd vänster Command tangent (⌘) + klicka för att lägga till punkter"
 
 #: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
@@ -202,10 +221,6 @@ msgstr "Spara som"
 msgid "Discard"
 msgstr "Spara inte"
 
-#: libbirdfont/SaveDialog.vala:89
-msgid "Cancel"
-msgstr "Avbryt"
-
 #: libbirdfont/TabBar.vala:486
 msgid "Overview"
 msgstr "Översikt"
@@ -219,7 +234,6 @@ msgid "Menu"
 msgstr "Meny"
 
 #: libbirdfont/Toolbox.vala:87
-#, fuzzy
 msgid "Tie curve handles for the selected edit point"
 msgstr "Knyt handtagen för den valda kontrollpunkten"
 
@@ -252,12 +266,10 @@ msgid "Delete selected glyph"
 msgstr "Radera markerade tecken"
 
 #: libbirdfont/Toolbox.vala:272
-#, fuzzy
 msgid "Show guidelines for x-height and baseline"
 msgstr "Visa stödlinjer för x-höjd och baslinje"
 
 #: libbirdfont/Toolbox.vala:287
-#, fuzzy
 msgid "Show guidelines at top and bottom margin"
 msgstr "Visa stödlinjer för botten- och toppmarginaler"
 
@@ -322,14 +334,12 @@ msgid "Stroke width"
 msgstr "Linjebredd"
 
 #: libbirdfont/Toolbox.vala:487
-#, fuzzy
 msgid "Handle color"
 msgstr "Handtagsfärg"
 
 #: libbirdfont/Toolbox.vala:688
-#, fuzzy
 msgid "Set size for grid"
-msgstr "Handtagsfärg"
+msgstr "Ställ in storleken på rutmönstret"
 
 #: libbirdfont/VersionList.vala:32
 msgid "New version"
@@ -494,6 +504,9 @@ msgstr "_Flik"
 #: birdfont/GtkWindow.vala:592
 msgid "T_ool"
 msgstr "_Verktyg"
+
+#~ msgid "Use left command key + click to add new points"
+#~ msgstr "Använd vänster Command tangent + klicka för att lägga till punkter"
 
 #~ msgid "Show help lines for x-height and baseline"
 #~ msgstr "Visa stödlinjer för x-höjd och baslinje"

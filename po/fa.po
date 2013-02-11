@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-07 13:17+0100\n"
+"POT-Creation-Date: 2013-02-11 22:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -174,8 +174,25 @@ msgstr ""
 msgid "No glyphs in this view."
 msgstr ""
 
+#: libbirdfont/OverwriteDialog.vala:57
+msgid ""
+"The loaded font will be overwritten if you choose to continue with preview."
+msgstr ""
+
+#: libbirdfont/OverwriteDialog.vala:72
+msgid "Continue"
+msgstr ""
+
+#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:89
+msgid "Cancel"
+msgstr ""
+
+#: libbirdfont/OverwriteDialog.vala:74
+msgid "Continue and don't ask me again."
+msgstr ""
+
 #: libbirdfont/PenTool.vala:59
-msgid "Use left command key + click to add new points"
+msgid "Use left command key (⌘) + click to add new points"
 msgstr ""
 
 #: libbirdfont/PenTool.vala:61
@@ -196,10 +213,6 @@ msgstr ""
 
 #: libbirdfont/SaveDialog.vala:88
 msgid "Discard"
-msgstr ""
-
-#: libbirdfont/SaveDialog.vala:89
-msgid "Cancel"
 msgstr ""
 
 #: libbirdfont/TabBar.vala:486

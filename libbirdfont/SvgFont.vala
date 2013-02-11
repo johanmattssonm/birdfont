@@ -193,6 +193,12 @@ class SvgFont : GLib.Object {
 			unicode_value = Font.to_unichar (v);
 		} else {
 			// obtain unicode value
+			
+			if (v.char_count () > 1) {
+				warning ("font contains ligatures");
+				return '\0';
+			}
+			
 			unicode_value = v.get_char (0);
 		}
 		
@@ -234,12 +240,15 @@ class SvgFont : GLib.Object {
 			}
 		}
 		
-		glyph = new Glyph (glyph_name, unicode_value);
-		ImportSvg.parse_svg_data (svg, glyph, true, units);
-		
-		glyph.right_limit = glyph.left_limit + advance * units;
-				
-		font.add_glyph_callback (glyph);
+		// FIXME: this code will ignore characters that are mapped several glyphs
+		if (unicode_value != '\0') {
+			glyph = new Glyph (glyph_name, unicode_value);
+			ImportSvg.parse_svg_data (svg, glyph, true, units);			
+			glyph.right_limit = glyph.left_limit + advance * units;
+			font.add_glyph_callback (glyph);
+		} else {
+			warning ("ignoring glyph");
+		}
 	}
 }
 

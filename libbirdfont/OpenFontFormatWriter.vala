@@ -1584,6 +1584,7 @@ class GlyfTable : Table {
 			location_offsets.append (fd.length ());
 			process_glyph (g, fd);
 
+			printd (@"adding glyph: $(g.name)\n");
 			printd (@"glyf length: $(fd.length () - last_len)\n");
 			printd (@"loca fd.length (): $(fd.length ())\n");
 
@@ -2012,7 +2013,7 @@ class HeadTable : Table {
 	uint16 lowest_PPEM;
 	int16 font_direction_hint;
 		
-	public int16 loca_offset_size = 0; // 0 for int16 1 for int32
+	public int16 loca_offset_size = 1; // 0 for int16 1 for int32
 	int16 glyph_data_format;
 
 	Fixed version;
@@ -4040,7 +4041,7 @@ class PostTable : Table {
 			if (index != 0) {
 				fd.add_ushort ((uint16) index);  // use standard name
 			} else {
-				printd ("Adding non standard postscript name $(g.get_name ())\n");
+				printd (@"Adding non standard postscript name $(g.get_name ())\n");
 				
 				index = (int) names.length (); // use font specific name
 				fd.add_ushort ((uint16) index);
@@ -4054,7 +4055,7 @@ class PostTable : Table {
 			n = (!) names.nth (i).data;
 			
 			if (n.length > 0xFF) {
-				warning ("too long name for glyph $n");
+				warning (@"too long name for glyph $n");
 			}
 						
 			fd.add ((uint8) n.length); // length of string
@@ -4724,7 +4725,7 @@ internal static uint16 largest_pow2_exponent (uint16 max) {
 }
 
 void printd (string s) {
-	// print (s);
+	print (s);
 }
 
 }

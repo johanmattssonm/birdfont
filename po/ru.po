@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-07 13:17+0100\n"
-"PO-Revision-Date: 2013-02-07 02:52+0000\n"
+"POT-Creation-Date: 2013-02-11 22:48+0100\n"
+"PO-Revision-Date: 2013-02-08 11:43+0000\n"
 "Last-Translator: Garab <voron-tengu@mail.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1360205532.0\n"
+"X-POOTLE-MTIME: 1360323788.0\n"
 
 #: libbirdfont/Argument.vala:233
 msgid "Usage"
-msgstr ""
+msgstr "Применить"
 
 #: libbirdfont/Argument.vala:235
 msgid "FILE"
@@ -33,15 +33,15 @@ msgstr "ПАРАМЕТРЫ"
 
 #: libbirdfont/Argument.vala:237
 msgid "show coordinate in glyph view"
-msgstr ""
+msgstr "показывать координаты в окне редактора"
 
 #: libbirdfont/Argument.vala:238
 msgid "exit if a test case failes"
-msgstr ""
+msgstr "выйти, если тест неудачен"
 
 #: libbirdfont/Argument.vala:239
 msgid "treat warnings as fatal"
-msgstr ""
+msgstr "рассматривать предупреждение как критическую ошибку"
 
 #: libbirdfont/Argument.vala:240
 msgid "show this message"
@@ -49,11 +49,11 @@ msgstr "показать это сообщение"
 
 #: libbirdfont/Argument.vala:241
 msgid "enable Machintosh customizations"
-msgstr "включить настройки Macintosh "
+msgstr "включить настройки Machintosh"
 
 #: libbirdfont/Argument.vala:242
 msgid "sleep between each command in test suite"
-msgstr ""
+msgstr "пауза между действиями в тестовом режиме"
 
 #: libbirdfont/Argument.vala:243
 msgid "run test case"
@@ -65,15 +65,15 @@ msgstr "Перемещение, изменение размера и повор�
 
 #: libbirdfont/Birdfont.vala:22
 msgid "Usage:"
-msgstr "Использовать:"
+msgstr "Применить:"
 
 #: libbirdfont/Birdfont.vala:25
 msgid "print this message\n"
-msgstr "Распечатать это сообщение\n"
+msgstr "распечатать это сообщение\n"
 
 #: libbirdfont/Birdfont.vala:26
 msgid "write files to this directory\n"
-msgstr "записать файл в эту директорию\n"
+msgstr "записать файлы в директорию\n"
 
 #: libbirdfont/Birdfont.vala:27
 msgid "write svg file\n"
@@ -177,15 +177,32 @@ msgstr "Перемещение контура"
 msgid "No glyphs in this view."
 msgstr "Не показывать глифы"
 
+#: libbirdfont/OverwriteDialog.vala:57
+msgid ""
+"The loaded font will be overwritten if you choose to continue with preview."
+msgstr ""
+
+#: libbirdfont/OverwriteDialog.vala:72
+msgid "Continue"
+msgstr ""
+
+#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:89
+msgid "Cancel"
+msgstr "Отмена"
+
+#: libbirdfont/OverwriteDialog.vala:74
+msgid "Continue and don't ask me again."
+msgstr ""
+
 #: libbirdfont/PenTool.vala:59
-msgid "Use left command key + click to add new points"
-msgstr "Нажмите левый Ctrl + клик чтобы добавить новые узлы"
+msgid "Use left command key (⌘) + click to add new points"
+msgstr ""
 
 #: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
 msgstr ""
-"Кликните правой кнопкой мыши, чтобы добавить новые узлы, кликните левой "
-"кнопкой мыши, чтобы перемещать узлы"
+"Кликните правой кнопкой мыши, чтобы добавить новые узлы, зажмите левую "
+"кнопку мыши, чтобы перемещать узлы"
 
 #: libbirdfont/PenTool.vala:64
 msgid "and double click to add new point on path."
@@ -202,10 +219,6 @@ msgstr "Сохранить как"
 #: libbirdfont/SaveDialog.vala:88
 msgid "Discard"
 msgstr "Не сохранять"
-
-#: libbirdfont/SaveDialog.vala:89
-msgid "Cancel"
-msgstr "Отмена"
 
 #: libbirdfont/TabBar.vala:486
 msgid "Overview"
@@ -228,8 +241,9 @@ msgid "Set precision"
 msgstr "Чуствительность рычагов"
 
 #: libbirdfont/Toolbox.vala:136
+#, fuzzy
 msgid "Create counter from outline"
-msgstr ""
+msgstr "Создание общего контура"
 
 #: libbirdfont/Toolbox.vala:148
 msgid "Move to path to the bottom layer"
@@ -257,7 +271,7 @@ msgstr "Показать ограничители для строчных лит
 
 #: libbirdfont/Toolbox.vala:287
 msgid "Show guidelines at top and bottom margin"
-msgstr "Показать ограничители для верхних и нижних полей"
+msgstr "Показать ограничители верхних и нижних полей"
 
 #: libbirdfont/Toolbox.vala:305
 msgid "Zoom in"
@@ -285,11 +299,11 @@ msgstr "Увеличить фоновое изображение"
 
 #: libbirdfont/Toolbox.vala:354
 msgid "Previous view"
-msgstr "Предыдущий вид"
+msgstr "Предыдущая вкладка"
 
 #: libbirdfont/Toolbox.vala:360
 msgid "Next view"
-msgstr "Следующий вид"
+msgstr "Следующая вкладка"
 
 #: libbirdfont/Toolbox.vala:367
 msgid "Set size for background image"
@@ -393,7 +407,7 @@ msgstr "_Импортировать SVG"
 
 #: birdfont/GtkWindow.vala:429
 msgid "Close _path"
-msgstr "Замкнуть _контур"
+msgstr "_Замкнуть контур"
 
 #: birdfont/GtkWindow.vala:436
 msgid "_Select point above"
@@ -401,15 +415,15 @@ msgstr "_Выбрать узел выше"
 
 #: birdfont/GtkWindow.vala:440
 msgid "Select _next point"
-msgstr "Выбрать _следующий узел"
+msgstr "_Выбрать следующий узел"
 
 #: birdfont/GtkWindow.vala:444
 msgid "Select _previous point"
-msgstr "Выбрать _предыдущий узел"
+msgstr "_Выбрать предыдущий узел"
 
 #: birdfont/GtkWindow.vala:448
 msgid "Select point _below"
-msgstr "Выбрать узел _ниже"
+msgstr "_Выбрать узел ниже"
 
 #: birdfont/GtkWindow.vala:453
 msgid "_Next tab"
@@ -425,7 +439,7 @@ msgstr "_Закрыть вкладку"
 
 #: birdfont/GtkWindow.vala:493
 msgid "Close _all tabs"
-msgstr "Закрыть _все вкладки"
+msgstr "_Закрыть все вкладки"
 
 #: birdfont/GtkWindow.vala:501
 msgid "_Create path"
@@ -445,23 +459,23 @@ msgstr "_Переместить"
 
 #: birdfont/GtkWindow.vala:528
 msgid "Show _full unicode characters set"
-msgstr "Показать _полный набор символов Unicode"
+msgstr "_Показать полный набор символов Unicode"
 
 #: birdfont/GtkWindow.vala:535
 msgid "Show de_fault characters set"
-msgstr "Показать набор символов по умолчанию"
+msgstr "_Показать набор символов по умолчанию"
 
 #: birdfont/GtkWindow.vala:542
 msgid "Show characters in font"
-msgstr "Показать символы шрифта"
+msgstr "_Показать символы шрифта"
 
 #: birdfont/GtkWindow.vala:549
 msgid "Add new _grid item"
-msgstr "Добавить новый _элемент сетки"
+msgstr "_Добавить новый элемент сетки"
 
 #: birdfont/GtkWindow.vala:555
 msgid "Remove gr_id item"
-msgstr "Удалить _элемент сетки"
+msgstr "_Удалить элемент сетки"
 
 #: birdfont/GtkWindow.vala:561
 msgid "_Zoom in"
@@ -473,7 +487,7 @@ msgstr "_Уменьшить"
 
 #: birdfont/GtkWindow.vala:575
 msgid "Zoom to _scale 1:1"
-msgstr "Масштабировать 1:1"
+msgstr "_Масштабировать 1:1"
 
 #: birdfont/GtkWindow.vala:583
 msgid "_File"
@@ -490,3 +504,7 @@ msgstr "_Вкладки"
 #: birdfont/GtkWindow.vala:592
 msgid "T_ool"
 msgstr "_Инструменты"
+
+# Command key is the Mac specific command key (⌘) it is not the Ctrl key.
+#~ msgid "Use left command key + click to add new points"
+#~ msgstr "Нажмите левую командную клавишу+ клик чтобы добавить новые узлы"

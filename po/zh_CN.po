@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-07 13:17+0100\n"
+"POT-Creation-Date: 2013-02-11 22:48+0100\n"
 "PO-Revision-Date: 2013-02-02 06:34+0000\n"
 "Last-Translator: Zhantong <zhantongz@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -176,9 +176,26 @@ msgstr "移动路径"
 msgid "No glyphs in this view."
 msgstr "在此视图中没有字形"
 
+#: libbirdfont/OverwriteDialog.vala:57
+msgid ""
+"The loaded font will be overwritten if you choose to continue with preview."
+msgstr ""
+
+#: libbirdfont/OverwriteDialog.vala:72
+msgid "Continue"
+msgstr ""
+
+#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:89
+msgid "Cancel"
+msgstr "取消"
+
+#: libbirdfont/OverwriteDialog.vala:74
+msgid "Continue and don't ask me again."
+msgstr ""
+
 #: libbirdfont/PenTool.vala:59
-msgid "Use left command key + click to add new points"
-msgstr "在按下左命令键时单机增加新点"
+msgid "Use left command key (⌘) + click to add new points"
+msgstr ""
 
 #: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
@@ -199,10 +216,6 @@ msgstr "另存为"
 #: libbirdfont/SaveDialog.vala:88
 msgid "Discard"
 msgstr "放弃"
-
-#: libbirdfont/SaveDialog.vala:89
-msgid "Cancel"
-msgstr "取消"
 
 #: libbirdfont/TabBar.vala:486
 msgid "Overview"
@@ -487,6 +500,9 @@ msgstr "标签（_T）"
 #: birdfont/GtkWindow.vala:592
 msgid "T_ool"
 msgstr "工具（_T）"
+
+#~ msgid "Use left command key + click to add new points"
+#~ msgstr "在按下左命令键时单机增加新点"
 
 #~ msgid "Show help lines for x-height and baseline"
 #~ msgstr "显示x-高度线及底线"
