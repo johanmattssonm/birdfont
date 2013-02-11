@@ -140,11 +140,11 @@ class SvgFont : GLib.Object {
 			}	
 						
 			if (attr_name == "ascent") {
-				top_limit = double.parse (attr_content);
+				top_limit = -double.parse (attr_content);
 			}
 			
 			if (attr_name == "descent") {
-				bottom_limit = double.parse (attr_content);
+				bottom_limit = -double.parse (attr_content);
 			}		
 		}
 		
