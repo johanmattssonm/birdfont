@@ -4262,6 +4262,11 @@ class KernTable : Table {
 			}
 		}
 		
+		if (n_pairs > (uint16.MAX - 14) / 6.0) {
+			warning ("Too many kerning pairs!"); // TODO: find a way to deal with it.
+			n_pairs = 0;
+		}
+		
 		this.kerning_pairs = n_pairs;
 		
 		fd.add_ushort (6 * n_pairs + 14); // subtable length
@@ -4278,23 +4283,26 @@ class KernTable : Table {
 		fd.add_ushort (range_shift);
 
 		gid_left = 0;
-		foreach (Glyph g in glyf_table.glyphs) {
-			
-			foreach (Kerning k in g.kerning) {
-				gid_right = glyf_table.get_gid (k.glyph_right);
+		
+		if (n_pairs != 0) { // n_pairs will be set to zero to prevent buffer overflow
+			foreach (Glyph g in glyf_table.glyphs) {
 				
-				if (gid_right == -1) {
-					warning ("right glyph not found in kerning table");
+				foreach (Kerning k in g.kerning) {
+					gid_right = glyf_table.get_gid (k.glyph_right);
+					
+					if (gid_right == -1) {
+						warning ("right glyph not found in kerning table");
+					}
+					
+					fd.add_ushort (gid_left);
+					fd.add_ushort ((uint16)gid_right);
+					fd.add_short ((int16) (k.val * UNITS));
 				}
 				
-				fd.add_ushort (gid_left);
-				fd.add_ushort ((uint16)gid_right);
-				fd.add_short ((int16) (k.val * UNITS));
+				gid_left++;
 			}
-			
-			gid_left++;
 		}
-
+		
 		fd.pad ();
 		this.font_data = fd;
 	}
@@ -4725,7 +4733,7 @@ internal static uint16 largest_pow2_exponent (uint16 max) {
 }
 
 void printd (string s) {
-	print (s);
+	//print (s);
 }
 
 }
