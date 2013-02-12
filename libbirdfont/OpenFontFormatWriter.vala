@@ -1351,7 +1351,7 @@ class GlyfTable : Table {
 		
 		uint glyph_header = 12 + ncontours * 2;
 		
-		printd (@"\next glyf: $(g.name)\n");
+		printd (@"next glyf: $(g.name) ($((uint32)g.unichar_code))\n");
 		printd (@"glyf header length: $(glyph_header)\n");
 		
 		// instructions should go here 
@@ -1568,6 +1568,7 @@ class GlyfTable : Table {
 		}
 		
 		foreach (Glyph ug in unassigned_glyphs) {
+			// FIXME: ligatures
 			// glyphs.append (ug);
 		}
 		
@@ -2842,12 +2843,8 @@ class PostTable : Table {
 		id = "post";
 		glyf_table = g;
 	}
-
-	public unowned List<string> get_all_names () {
-		return available_names;
-	}
 		
-	public int get_gid (string name) { // fixa do fast lookup
+	public int get_gid (string name) { // FIXME: do fast lookup
 		int i = 0;
 		int j = 0;
 		foreach (string n in names) {
@@ -2864,8 +2861,6 @@ class PostTable : Table {
 			}
 			i++;
 		}
-		
-		// warn_if_reached ();
 		return -1;
 	}
 
@@ -4733,7 +4728,7 @@ internal static uint16 largest_pow2_exponent (uint16 max) {
 }
 
 void printd (string s) {
-	//print (s);
+	// print (s);
 }
 
 }

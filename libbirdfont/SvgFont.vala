@@ -220,7 +220,10 @@ class SvgFont : GLib.Object {
 
 			if (attr_name == "unicode") {
 				unicode_value = get_unichar (attr_content);
-				glyph_name = attr_content;
+				
+				if (glyph_name == "") {
+					glyph_name = attr_content;
+				}
 			}
 			
 			// svg data
@@ -229,10 +232,7 @@ class SvgFont : GLib.Object {
 			}
 			
 			if (attr_name == "glyph-name") {
-				// use glyph value as name until ligatures is properly implemented
-				if (glyph_name == "") {
-					glyph_name = attr_content;
-				}
+				glyph_name = attr_content;
 			}
 
 			if (attr_name == "horiz-adv-x") {

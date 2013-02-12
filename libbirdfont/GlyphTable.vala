@@ -32,6 +32,7 @@ class GlyphTable : GLib.Object {
 		while (data.length () > 0) {
 			data.remove_link (data.first ());
 		}
+		build_index ();
 	}
 
 	public void @for_each (Func<GlyphCollection> func) {
@@ -48,6 +49,10 @@ class GlyphTable : GLib.Object {
 						
 			func (v.glyph_collection);
 		});
+	}
+
+	public bool has_key (string n) {
+		return find (n) != null;
 	}
 
 	unowned List<Item>? find (string n) {
@@ -84,23 +89,34 @@ class GlyphTable : GLib.Object {
 		return ((!) d).data.glyph_collection;
 	}
 
-	public bool insert (GlyphCollection g) {
+	public new GlyphCollection? nth (uint index) {
+		unowned List<Item>? d = data.nth (index);
+		
+		if (d == null) {
+			return null;
+		}
+		
+		return ((!) d).data.glyph_collection;
+	}
+
+	public bool insert (string key, GlyphCollection g) {
 		Item item;
 		unowned List<Item>? next;
 		
-		if (g.get_name () == "") {
-			warning (@"No proper name for glyph collection. g.get_name (): \"$(g.get_name ())\"");
+		if (key == "") {
+			warning (@"No proper name key for glyph. \"$(g.get_name ())\"");
 			return false;
 		}
 
-		if (find (g.get_name ()) != null) {
-			warning (@"Table does already contain character \"$(g.get_name ())\".");
+		if (find (key) != null) {
+			warning (@"Table does already contains a glyph for key \"$key\".");
+			stderr.printf ("char: %u\n", (uint) key.get_char (0));
 			return false;
 		}
 				
-		next = find_next (g.get_name ());
+		next = find_next (key);
 		
-		item = new Item (g.get_name (), g);
+		item = new Item (key, g);
 		
 		if (next == null) {
 			data.append (item);
@@ -110,8 +126,9 @@ class GlyphTable : GLib.Object {
 		
 		build_index ();
 		
-		if (find (g.get_name ()) == null) {
-			warning (@"Can not find glyph \"$(g.get_name ())\".");
+		if (find (key) == null) {
+			warning (@"Can not find glyph \"$(key)\".");
+			validate_index ();
 			print_all ();
 			return false;
 		}
@@ -121,8 +138,10 @@ class GlyphTable : GLib.Object {
 
 	public void print_all () {
 		int indice = 0;
+		
+		print ("Data:\n");
 		foreach (Item i in data) {
-			print (@"$(i.name) indice: $(indice)\n");
+			print (@"key: $(i.name) indice: $(indice)\n");
 			indice++;
 		}
 		
@@ -147,7 +166,7 @@ class GlyphTable : GLib.Object {
 	}
 
 	static int compare (string an, Item b) {
-		string? bt = b.glyph_collection.get_name ();
+		string? bt = b.name;
 		string bn = (!) bt;
 		
 		uint32 ac = 0;
@@ -268,7 +287,7 @@ class GlyphTable : GLib.Object {
 		if (((!)next) != data.first () && compare (n, ((!)next).prev.data) == 0) {
 			return ((!)next).prev; // fetch previous since we are searching for the next one
 		}
-				
+		
 		return null; 
 	}
 	
@@ -306,6 +325,7 @@ class GlyphTable : GLib.Object {
 
 		while (true) {
 			cmp = compare (n, r.data.item.data);
+			
 			if (cmp == -1) {
 				break;
 			}
@@ -322,6 +342,7 @@ class GlyphTable : GLib.Object {
 		
 		while (true) {
 			cmp = compare (n, r.data.item.data);
+			
 			if (cmp == 1) {
 				break;
 			}

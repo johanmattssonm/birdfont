@@ -375,7 +375,7 @@ public class OverView : FontDisplay {
 	}
 		
 	private bool draw_thumbnail (Context cr, string name, double x, double y) {
-		Glyph? gl = BirdFont.get_current_font ().get_glyph (name);
+		Glyph? gl = BirdFont.get_current_font ().get_glyph_by_name (name);
 		Glyph g;
 		
 		double gx, gy;
@@ -814,9 +814,9 @@ public class OverView : FontDisplay {
 
 		if (gc != null) {
 			deleted_glyphs.append ((!) gc);
+			f.delete_glyph ((!) gc);
 		}
-
-		f.delete_glyph (g);
+		
 		MainWindow.get_tab_bar ().close_by_name (g);
 		set_glyph_range (glyph_range);
 		f.touch ();

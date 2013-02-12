@@ -706,13 +706,20 @@ class TestCases {
 			gc.append (new GlyphCollection (new Glyph (@"TEST $i", i + 'a')));
 		}
 
+		g = gc.first ().data;
+		if (!table.insert (g.get_unicode (), g)) {
+			warning (@"Failed to insert $(g.get_name ())");
+			return;
+		}
+		gc.append (g);
+		
 		// insert in random order
 		gc_copy = gc.copy ();
 		for (uint i = 0; gc_copy.length () > 0; i++) {
 			int t = (int) ((gc_copy.length () - 1) * Random.next_double ());
 			g = gc_copy.nth (t).data;
 			
-			if (!table.insert (g)) {
+			if (!table.insert (g.get_name (), g)) {
 				warning (@"Failed to insert $(g.get_name ())");
 				return;
 			}
@@ -726,7 +733,10 @@ class TestCases {
 			}
 		}
 		
-		return_if_fail (table.length () == gc.length ());
+		if (table.length () != gc.length ()) {
+			warning ("Table length does not match number of glyphs, $(table.length ()) != $(gc.length ())");
+			return;
+		}
 		
 		// validate table
 		for (uint i = 0; i > 1000; i++) {
@@ -743,7 +753,7 @@ class TestCases {
 				return;
 			}
 		}
-
+		
 		// remove
 		table.remove ("TEST 0");
 		table.remove ("TEST 53");

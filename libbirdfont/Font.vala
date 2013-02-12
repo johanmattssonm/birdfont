@@ -27,12 +27,11 @@ public enum FontFormat {
 
 public class Font : GLib.Object {
 	
+	/** Table with glyphs sorted by their unicode value. */
 	GlyphTable glyph_cache = new GlyphTable ();
 	
-	/** Glyphs that not are tied to a unichar value. */
-	GlyphTable unassigned_glyphs = new GlyphTable ();
-
-	List<string> glyph_names = new List<string> ();
+	/** Table with glyphs sorted by their name. */
+	GlyphTable glyph_name = new GlyphTable ();
 
 	/** Last unassigned index */
 	int next_unindexed = 0;
@@ -174,17 +173,15 @@ public class Font : GLib.Object {
 	}
 
 	public void print_all () {
-		stdout.printf ("Assigned:\n");		
+		stdout.printf ("Unicode:\n");		
 		glyph_cache.for_each((g) => {
+			stdout.printf (@"$(g.get_unicode ())\n");
+		});
+		
+		stdout.printf ("Names:\n");	
+		glyph_name.for_each((g) => {
 			stdout.printf (@"$(g.get_name ())\n");
 		});
-
-		stdout.printf ("\n");
-		stdout.printf ("Unssigned:\n");		
-		unassigned_glyphs.for_each ((g) => {
-			stdout.printf (@"$(g.get_name ())\n");
-		});
-
 	}
 
 	public bool has_glyph (string n) {
@@ -295,28 +292,24 @@ public class Font : GLib.Object {
 	}
 
 	public void add_glyph_collection (GlyphCollection glyph_collection) {
-		GlyphCollection? gc = get_cached_glyph_collection (glyph_collection.get_name ());
+		GlyphCollection? gc;
 		
 		if (glyph_collection.get_name () == "") {
 			warning ("Refusing to insert glyph with name \"\", null character should be named null.");
 			return;
 		}
 		
+		gc = glyph_name.get (glyph_collection.get_name ());
 		if (gc != null) {
 			warning ("glyph has already been added");
 			return;
 		}
 		
-		if (glyph_collection.get_current ().is_unassigned ()) {
-			unassigned_glyphs.insert (glyph_collection);
-		} else {
-			glyph_cache.insert (glyph_collection);
+		if (glyph_collection.get_unicode () != "") {
+			glyph_name.insert (glyph_collection.get_name (), glyph_collection);			
 		}
-
-		if (!has_name (glyph_collection.get_name ())) {
-			glyph_names.append (glyph_collection.get_name ());
-			glyph_names.sort (strcmp);
-		}
+		
+		glyph_cache.insert (glyph_collection.get_unicode (), glyph_collection);
 	}
 	
 	public string get_name_for_character (unichar c) {
@@ -345,18 +338,13 @@ public class Font : GLib.Object {
 	}
 	
 	public bool has_name (string name) {
-		foreach (string n in glyph_names) {
-			if (n == name) {
-				return true;
-			}
-		}
-		
-		return false;
+		return glyph_name.has_key (name);
 	}
 	
-	public void delete_glyph (string glyph) {
-		glyph_names.remove_all (glyph);
-		glyph_cache.remove (glyph);
+	public void delete_glyph (GlyphCollection glyph) {
+		glyph_cache.remove (glyph.get_unicode ());
+		glyph_name.remove (glyph.get_name ());
+		// FIXME: DELETE: glyph_cache.remove (glyph);
 	}
 	
 	/** Obtain all versions and alterntes for this glyph. */
@@ -377,18 +365,14 @@ public class Font : GLib.Object {
 		return gc;
 	}
 
-	public GlyphCollection? get_cached_glyph_collection (string glyph) {
+	/** Get glyph collection by unichar code. */
+	public GlyphCollection? get_cached_glyph_collection (string unichar_code) {
 		GlyphCollection? gc = null;
-		
-		gc = glyph_cache.get (glyph);
-		
-		if (gc == null) {
-			gc = unassigned_glyphs.get (glyph);
-		}
-		
+		gc = glyph_cache.get (unichar_code);
 		return gc;
 	}
-	
+
+	/** Get glyph by unichar code. */	
 	public Glyph? get_glyph (string glyph) {
 		GlyphCollection? gc = get_glyph_collection (glyph);
 		
@@ -399,16 +383,25 @@ public class Font : GLib.Object {
 		return ((!)gc).get_current ();
 	}
 	
-	public Glyph? get_glyph_indice (unichar glyph_indice) {
-		GlyphCollection? gc;
-		string n;
+	public Glyph? get_glyph_by_name (string name) {
+		GlyphCollection? gc = null;
+		gc = glyph_name.get (name);
 		
-		if (!(0 <= glyph_indice < glyph_names.length ())) {
+		if (gc == null) {
 			return null;
 		}
 		
-		n = glyph_names.nth (glyph_indice).data;
-		gc = get_glyph_collection (n);
+		return ((!)gc).get_current ();
+	}
+	
+	public Glyph? get_glyph_indice (unichar glyph_indice) {
+		GlyphCollection? gc;
+		
+		if (!(0 <= glyph_indice < glyph_name.length ())) {
+			return null;
+		}
+		
+		gc = glyph_name.nth (glyph_indice);
 		
 		if (gc != null) {
 			return ((!) gc).get_current ();
@@ -752,11 +745,11 @@ public class Font : GLib.Object {
 	}
 
 	public uint length () {
-		return glyph_names.length ();
+		return glyph_name.length ();
 	}
 
 	public bool is_empty () {
-		return (glyph_names.length () == 0);
+		return (glyph_name.length () == 0);
 	}
 
 	public bool load (string path, bool recent = true) {
@@ -770,12 +763,8 @@ public class Font : GLib.Object {
 				grid_width.remove_link (grid_width.first ());
 			}
 
-			while (glyph_names.length () > 0) {
-				glyph_names.remove_link (glyph_names.first ());
-			}
-			
 			glyph_cache.remove_all ();
-			unassigned_glyphs.remove_all ();
+			glyph_name.remove_all ();
 			
 			if (path.has_suffix (".svg")) {
 				font_file = path;
@@ -893,13 +882,7 @@ public class Font : GLib.Object {
 	public bool parse_otf_file (string path) throws GLib.Error {
 		otf = new OpenFontFormatReader ();
 		otf_font = true;
-		
 		otf.parse_index (path);
-		
-		foreach (string n in otf.get_all_names ()) {
-			glyph_names.append (n);
-		}
-		
 		return true;
 	}
 	
@@ -915,7 +898,7 @@ public class Font : GLib.Object {
 		
 		// empty cache and fill it with new glyphs from disk
 		glyph_cache.remove_all ();
-		unassigned_glyphs.remove_all ();
+		glyph_name.remove_all ();
 
 		while (background_images.length () > 0) {
 			background_images.remove_link (background_images.first ());
@@ -1371,13 +1354,22 @@ public class Font : GLib.Object {
 			if (attr_name == "left_type" && attr_content == "cubic") {
 				type_left = PointType.CURVE;
 			}
-					
+			
 			if (attr_name == "right_angle") angle_right = double.parse (attr_content);
 			if (attr_name == "right_length") length_right = double.parse (attr_content);
 			if (attr_name == "left_angle") angle_left = double.parse (attr_content);
 			if (attr_name == "left_length") length_left = double.parse (attr_content);
 			
 			if (attr_name == "tie_handles") tie_handles = bool.parse (attr_content);
+		}
+	
+		// backward compabtility
+		if (type_right == PointType.LINE && length_right != 0) {
+			type_right = PointType.CURVE;
+		}
+
+		if (type_left == PointType.LINE && length_left != 0) {
+			type_left = PointType.CURVE;
 		}
 		
 		ep = new EditPoint (x, y);

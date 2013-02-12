@@ -44,6 +44,12 @@ public class GlyphCollection : GLib.Object {
 		return versions.glyphs.length ();
 	}
 	
+	public string get_unicode () {
+		StringBuilder unicode = new StringBuilder ();
+		unicode.append_unichar (get_current ().unichar_code);
+		return unicode.str;
+	}
+	
 	public string get_name () {
 		return get_current ().get_name ();
 	}
