@@ -20,7 +20,7 @@ using Cairo;
 namespace BirdFont {
 
 /** Kerning context. */
-public class ContextDisplay : FontDisplay {
+public class KerningDisplay : FontDisplay {
 
 	List <Word> row;
 	int active_handle = -1;
@@ -31,7 +31,7 @@ public class ContextDisplay : FontDisplay {
 	
 	double last_handle_x = 0;
 	
-	public ContextDisplay () {
+	public KerningDisplay () {
 		Word w = new Word ();
 		row = new List <Word> ();
 		row.append (w);

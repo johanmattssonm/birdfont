@@ -75,7 +75,6 @@ public class Glyph : FontDisplay {
 	bool xheight_lines_visible = false;
 	bool margin_boundries_visible = false;
 	
-	bool unassigned = false;
 	public unichar unichar_code = 0;
 	
 	List<Glyph> undo_list = new List<Glyph> ();
@@ -84,6 +83,9 @@ public class Glyph : FontDisplay {
 	
 	string glyph_sequence = "";
 	bool open = true;
+	
+	bool ligature = false;
+	public List<string> substitution = new List<string> ();
 	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
@@ -102,6 +104,15 @@ public class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 
 		path_list.append (new Path ());
+	}
+	
+	public void add_ligature_substitution (string glyph_sequence) {
+		ligature = true;
+		substitution.append (glyph_sequence);
+	}
+	
+	public bool is_ligature () {
+		return ligature;
 	}
 
 	public void select_all_paths () {
@@ -166,14 +177,6 @@ public class Glyph : FontDisplay {
 		}
 		
 		return 0;
-	}
-		
-	public void set_unassigned (bool u) {
-		unassigned = u;
-	}
-	
-	public bool is_unassigned () {
-		return unassigned;
 	}
 
 	public void boundries (out double x1, out double y1, out double x2, out double y2) {
@@ -1445,6 +1448,11 @@ public class Glyph : FontDisplay {
 			g.background_image = ((!) background_image).copy ();
 		}
 		
+		g.ligature = ligature;
+		foreach (string s in substitution) {
+			g.substitution.append (s);
+		}
+				
 		return g;
 	}
 
