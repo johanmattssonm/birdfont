@@ -372,9 +372,17 @@ public class Font : GLib.Object {
 		return gc;
 	}
 
-	/** Get glyph by unichar code. */	
-	public Glyph? get_glyph (string glyph) {
-		GlyphCollection? gc = get_glyph_collection (glyph);
+	/** Get glyph collection by name. */
+	public GlyphCollection? get_glyph_collection_by_name (string glyph) {
+		// TODO: load from disk here if needed.
+		GlyphCollection? gc = null;
+		gc = glyph_name.get (glyph);
+		return gc;
+	}
+
+	/** Get glyph by name. */	
+	public Glyph? get_glyph_by_name (string glyph) {
+		GlyphCollection? gc = get_glyph_collection_by_name (glyph);
 		
 		if (gc == null) {
 			return null;
@@ -382,10 +390,10 @@ public class Font : GLib.Object {
 		
 		return ((!)gc).get_current ();
 	}
-	
-	public Glyph? get_glyph_by_name (string name) {
+		
+	public Glyph? get_glyph (string name) {
 		GlyphCollection? gc = null;
-		gc = glyph_name.get (name);
+		gc = glyph_cache.get (name);
 		
 		if (gc == null) {
 			return null;

@@ -51,7 +51,7 @@ public class OverView : FontDisplay {
 
 	Scrollbar scrollbar;
 	
-	bool all_avail = true;
+	bool all_available = true;
 	
 	public OverView (GlyphRange? range = null) {
 		GlyphRange gr;
@@ -71,8 +71,16 @@ public class OverView : FontDisplay {
 			Font f = BirdFont.get_current_font ();
 							
 			if (!selected) {
-				GlyphCollection? fg = f.get_glyph_collection (s);
-				Glyph g = (fg == null) ? new Glyph (s, new_char) : ((!) fg).get_current ();
+				GlyphCollection? fg;
+				Glyph g;
+				
+				if (all_available) {
+					fg = f.get_glyph_collection_by_name (s);
+				} else {
+					fg = f.get_glyph_collection (s);
+				}
+				
+				g = (fg == null) ? new Glyph (s, new_char) : ((!) fg).get_current ();
 				ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");
 				
 				stdout.printf (@"Open '%s' %u (%s)\n", s, new_char, Font.to_hex (new_char));
@@ -111,7 +119,7 @@ public class OverView : FontDisplay {
 	void scroll_bottom () {
 		Font f;
 		
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			scroll_to_position (f.length () - items_per_row * (rows - 1));
 		} else {
@@ -127,7 +135,7 @@ public class OverView : FontDisplay {
 			return 0;
 		}
 				
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
@@ -278,7 +286,7 @@ public class OverView : FontDisplay {
 	}
 	
 	public void display_all_available_glyphs () {
-		all_avail = true;
+		all_available = true;
 		
 		first_character = 0;
 		first_visible = 0;
@@ -307,7 +315,7 @@ public class OverView : FontDisplay {
 			
 		for (int j = 0; j < items_per_row; j++) {
 			
-			if (all_avail) {
+			if (all_available) {
 				if (! (0 <= index < f.length ())) {
 					break;
 				}
@@ -374,14 +382,21 @@ public class OverView : FontDisplay {
 		visible_characters.append (g);
 	}
 		
-	private bool draw_thumbnail (Context cr, string name, double x, double y) {
-		Glyph? gl = BirdFont.get_current_font ().get_glyph_by_name (name);
+	private bool draw_thumbnail (Context cr, string caption, double x, double y) {
+		Glyph? gl;
 		Glyph g;
+		Font f = BirdFont.get_current_font ();
 		
 		double gx, gy;
 		double x1, x2, y1, y2;
 		double scale = nail_zoom_width / 150.0;
 		double w, h;
+
+		if (all_available) {
+			gl = f.get_glyph_by_name (caption);
+		} else {
+			gl = f.get_glyph (caption);
+		}
 
 		w = nail_width  - 19;
 		h = nail_height - 22;
@@ -433,7 +448,7 @@ public class OverView : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 
-		if (all_avail && font.length () == 0) {
+		if (all_available && font.length () == 0) {
 			draw_empty_canvas (allocation, cr);
 		}
 		
@@ -501,7 +516,7 @@ public class OverView : FontDisplay {
 		double l;
 		Font f;
 				
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
@@ -528,7 +543,7 @@ public class OverView : FontDisplay {
 		int64 l;
 		Font f;
 		
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
@@ -558,7 +573,7 @@ public class OverView : FontDisplay {
 		double l;
 		Font f;
 		
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
@@ -627,7 +642,7 @@ public class OverView : FontDisplay {
 		double l;
 		Font f;
 				
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
@@ -708,7 +723,7 @@ public class OverView : FontDisplay {
 		uint len;
 		Font f;
 		
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			len = f.length ();
 		} else {
@@ -743,7 +758,7 @@ public class OverView : FontDisplay {
 		Font f;
 		Glyph? g;
 		
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			g = f.get_glyph_indice (selected);
 			return_val_if_fail (g != null, "".dup ());
@@ -880,7 +895,7 @@ public class OverView : FontDisplay {
 
 		redraw_area (0, 0, allocation.width, allocation.height);
 
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			len = f.length ();
 		} else {
@@ -963,7 +978,7 @@ public class OverView : FontDisplay {
 		Font f;
 		double t = rows * items_per_row + items_per_row + first_visible;
 		
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			return t >= f.length ();
 		}
@@ -982,7 +997,7 @@ public class OverView : FontDisplay {
 			c = glyph_range.get_char (selected);
 		}
 		
-		all_avail = false;
+		all_available = false;
 		
 		glyph_range = range;
 
@@ -1056,7 +1071,7 @@ public class OverView : FontDisplay {
 		double len;
 		Font f;
 		
-		if (all_avail) {
+		if (all_available) {
 			f = BirdFont.get_current_font ();
 			len = f.length ();
 		} else {
