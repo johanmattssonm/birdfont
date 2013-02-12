@@ -65,8 +65,7 @@ public class SaveDialog : FontDisplay {
 			fn = f.get_name () + ".ffi";
 		}
 
-		// FIXME:
-		// tell xgettext to extract this:
+		// FIXME: tell xgettext to extract this:
 		_("Save?");
 					
 		return """

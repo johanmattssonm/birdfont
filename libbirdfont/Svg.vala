@@ -143,8 +143,6 @@ class Svg {
 		double center_x = Glyph.xc ();
 		double center_y = Glyph.yc ();
 
-		// FIXME xc or xd, right or left handle?:
-		
 		// cubic path
 		if (!to_glyph) {
 			svg.append_printf ("Q");

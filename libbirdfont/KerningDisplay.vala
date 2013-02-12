@@ -22,7 +22,7 @@ namespace BirdFont {
 /** Kerning context. */
 public class KerningDisplay : FontDisplay {
 
-	List <Word> row;
+	List <GlyphSequence> row;
 	int active_handle = -1;
 	int selected_handle = -1;
 	
@@ -32,8 +32,8 @@ public class KerningDisplay : FontDisplay {
 	double last_handle_x = 0;
 	
 	public KerningDisplay () {
-		Word w = new Word ();
-		row = new List <Word> ();
+		GlyphSequence w = new GlyphSequence ();
+		row = new List <GlyphSequence> ();
 		row.append (w);
 	}
 
@@ -42,12 +42,12 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public override void draw (Allocation allocation, Context cr) {
-		Glyph? g;
 		Glyph glyph;
 		double x, y, w, kern, alpha;
 		double x2;
 		int i, wi;
-		string prev;
+		Glyph? prev;
+		Font font = BirdFont.get_current_font ();
 		
 		i = 0;
 		
@@ -62,20 +62,23 @@ public class KerningDisplay : FontDisplay {
 		y = 100;
 		x = 20;
 		w = 0;
-		prev = "";
+		prev = null;
 		
-		foreach (Word word in row) {
+		foreach (GlyphSequence word in row) {
 			wi = 0;
 			
-			foreach (string s in word.glyph) {				
-				g = (!) BirdFont.get_current_font ().get_glyph_by_name (s);	
-				
-				if (s == "") {
+			word.process_ligatures ();
+			foreach (Glyph? g in word.glyph_with_ligatures) {
+				if (g == null) {
 					continue;
 				}
 				
-				kern = (prev != "") ? get_kerning (prev, s) : 0;
-				
+				if (prev == null) {
+					kern = 0;
+				} else {
+					kern = font.get_kerning_by_name (((!)prev).get_name (), ((!)g).get_name ());
+				}
+								
 				// draw glyph				
 				if (g == null) {
 					w = 50;
@@ -100,7 +103,7 @@ public class KerningDisplay : FontDisplay {
 					cr.fill ();
 					
 					cr.set_font_size (10);
-					cr.show_text (s);
+					cr.show_text (((!)g).get_name ());
 					cr.restore ();
 				}	
 				
@@ -112,11 +115,11 @@ public class KerningDisplay : FontDisplay {
 					cr.set_source_rgba (153/255.0, 153/255.0, 153/255.0, alpha);
 					cr.move_to (x - w / 2.0 - 5, y + 20);
 					cr.set_font_size (10);
-					cr.show_text (s);
+					cr.show_text ("?"); // ?
 					cr.restore ();
 				}
 							
-				prev = s;
+				prev = g;
 				
 				wi++;
 				i++;
@@ -144,14 +147,14 @@ public class KerningDisplay : FontDisplay {
 		a = "";
 		b = "";
 
-		foreach (Word word in row) {
-			foreach (string s in word.glyph) {
+		foreach (GlyphSequence word in row) {
+			foreach (Glyph? g in word.glyph) {
 				
-				if (s == "") {
+				if (g == null) {
 					continue;
 				}
 				
-				b = s;
+				b = ((!) g).get_name ();
 				
 				if (handle == wi) {
 					kern = font.get_kerning_by_name (a, b) + val;
@@ -174,11 +177,11 @@ public class KerningDisplay : FontDisplay {
 	
 	public override void selected_canvas () {
 		Glyph g;
-		Word w;
-		unowned List<Word>? r;
-		unowned List<string>? rw;
+		GlyphSequence w;
+		unowned List<GlyphSequence>? r;
 		StringBuilder s = new StringBuilder ();
 		bool append_char = false;
+		Font font = BirdFont.get_current_font ();
 		
 		KeyBindings.singleton.set_require_modifier (true);
 		
@@ -192,21 +195,16 @@ public class KerningDisplay : FontDisplay {
 			append_char = true;
 		}
 		
-		if (row.length () > 0) {
-			rw = row.first ().data.glyph;
-			return_if_fail (rw != null);
-			append_char = (row.first ().data.glyph.data.index_of (s.str) == -1);
-		}
-		
 		if (append_char) {
-			w = new Word ();
+			w = new GlyphSequence ();
 			row.append (w);
-			w.glyph.prepend (s.str);
-		}					
+			w.glyph.prepend (font.get_glyph (s.str));
+		}		
 	}
 	
 	public override void key_press (uint keyval) {
 		unichar c = (unichar) keyval;
+		Glyph? g;
 		Font f = BirdFont.get_current_font ();
 		string name;
 		
@@ -217,12 +215,13 @@ public class KerningDisplay : FontDisplay {
 			}
 			
 			if (row.length () == 0 || c == Key.ENTER) {
-				row.prepend (new Word ());
+				row.prepend (new GlyphSequence ());
 			}
 			
 			if (!is_modifier_key (c) && c.validate ()) {
 				name = f.get_name_for_character (c);
-				row.first ().data.glyph.append (name);
+				g = f.get_glyph_by_name (name);
+				row.first ().data.glyph.append (g);
 			}
 		}
 		
@@ -258,33 +257,37 @@ public class KerningDisplay : FontDisplay {
 		int i = 0;
 		int row_index = 0;
 		int col_index = 0;
-		Glyph? g;
 		Glyph glyph = new Glyph.no_lines ("");
+		Font font = BirdFont.get_current_font ();
 		
-		string prev = "";
+		Glyph? prev = null;
 		string gl_name = "";
 		
-		foreach (Word word in row) {
+		foreach (GlyphSequence word in row) {
 			col_index = 0;
-			foreach (string s in word.glyph) {
-				
+			
+			foreach (Glyph? g in word.glyph) {
 				// draw glyph
-				g = (!) BirdFont.get_current_font ().get_glyph_by_name (s);	
-				kern = (prev != "") ? get_kerning (prev, s) : 0;
-				
+
 				if (g == null) {
 					w = 50;	
 				} else {
 					glyph = (!) g;
 					w = glyph.get_width ();
-					
 				}
 				
+				gl_name = glyph.get_name ();
+				
+				if (prev == null) {
+					kern = 0;
+				} else {
+					kern = font.get_kerning_by_name (((!)prev).get_name (), gl_name);
+				}
+								
 				d = Math.pow (x + kern - ex, 2) + Math.pow (y - ey, 2);
 				
 				if (d < min) {
 					min = d;
-					gl_name = glyph.get_name ();
 					
 					if (active_handle != i - row_index) {
 						active_handle = i - row_index;
@@ -296,7 +299,7 @@ public class KerningDisplay : FontDisplay {
 					}
 				}
 				
-				prev = s;
+				prev = g;
 				x += w + kern;
 				i++;
 				col_index++;
@@ -321,15 +324,6 @@ public class KerningDisplay : FontDisplay {
 		last_handle_x = ex;
 	}
 
-}
-
-class Word {
-	public List <string> glyph;
-	
-	public Word () {
-		glyph = new List <string> ();
-		glyph.append ("");
-	}
 }
 
 }

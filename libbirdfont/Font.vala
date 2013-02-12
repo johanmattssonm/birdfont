@@ -343,7 +343,6 @@ public class Font : GLib.Object {
 	public void delete_glyph (GlyphCollection glyph) {
 		glyph_unicode.remove (glyph.get_unicode ());
 		glyph_name.remove (glyph.get_name ());
-		// FIXME: DELETE: glyph_unicode.remove (glyph);
 	}
 	
 	/** Obtain all versions and alterntes for this glyph. */

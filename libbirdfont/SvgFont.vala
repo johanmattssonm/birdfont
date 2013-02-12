@@ -104,7 +104,7 @@ class SvgFont : GLib.Object {
 				
 			// kerning
 			if (attr_name == "k") {
-				kerning = double.parse (attr_content);
+				kerning = double.parse (attr_content) * units;
 			}
 		}
 		
