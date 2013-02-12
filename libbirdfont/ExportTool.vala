@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Supplement {
+namespace BirdFont {
 
 public class ExportTool : Tool {
 	private static ExportThread export_thread;
@@ -49,7 +49,7 @@ public class ExportTool : Tool {
 
 	public static string export_current_glyph_to_string (bool only_selected_paths = false) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		string name;
 		StringBuilder s;
 		double baseline;
@@ -175,7 +175,7 @@ public class ExportTool : Tool {
 	
 
 	public static bool export_all () {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		bool f;
 		
 		if (font.get_ttf_export ()) {
@@ -383,7 +383,7 @@ os.put_string (
 	}
 
 	public static bool export_ttf_font () {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		File file = font.get_folder ();
 		return export_ttf_font_path (file);
 	}
@@ -437,14 +437,14 @@ os.put_string (
 	}
 	
 	public static bool export_ttf_font_path (File folder, bool async = true) {
-		Font current_font = Supplement.get_current_font ();
+		Font current_font = BirdFont.get_current_font ();
 		File ttf_file;
 		File eot_file;
 		string temp_file;
 		bool done = true;
 		string export_command;
 		
-		if (Supplement.win32) {
+		if (BirdFont.win32) {
 			async = false;
 		}
 		
@@ -493,12 +493,12 @@ os.put_string (
 	}
 	
 	public static bool export_svg_font () {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		return export_svg_font_path (font.get_folder ());
 	}
 		
 	public static bool export_svg_font_path (File folder) {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		string file_name = @"$(font.get_name ()).svg";
 		File file;
 		SvgFontFormatWriter fo;

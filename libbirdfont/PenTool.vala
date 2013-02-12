@@ -18,7 +18,7 @@
 using Math;
 using Cairo;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class PenTool : Tool {
 
@@ -55,7 +55,7 @@ public class PenTool : Tool {
 	public PenTool (string name) {
 		string click_to_add_points;
 		
-		if (Supplement.mac) {
+		if (BirdFont.mac) {
 			click_to_add_points = _("Use left command key (⌘) + click to add new points");
 		} else {
 			click_to_add_points = _("Right click to add new points, left click to move points");

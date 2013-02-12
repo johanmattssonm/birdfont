@@ -17,7 +17,7 @@
 
 using Cairo;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class OverwriteDialog : FontDisplay {
 

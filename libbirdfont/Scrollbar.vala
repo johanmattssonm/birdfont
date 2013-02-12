@@ -17,7 +17,7 @@
 
 using Cairo;
 
-namespace Supplement {
+namespace BirdFont {
 
 class Scrollbar : GLib.Object {
 	Allocation alloc;

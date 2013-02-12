@@ -17,7 +17,7 @@
 
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 class Intersection {
 	public double x;

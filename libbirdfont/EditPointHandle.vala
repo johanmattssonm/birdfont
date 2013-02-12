@@ -17,7 +17,7 @@
 
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 		
 public class EditPointHandle  {
 	

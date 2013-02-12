@@ -18,7 +18,7 @@
 using Cairo;
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 class CutBackgroundTool : Tool {
 
@@ -195,7 +195,7 @@ class CutBackgroundTool : Tool {
 
 	void save_img (Surface sr, Glyph g) {
 		GlyphBackgroundImage newbg;
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		File img_dir;
 		File img_file;
 		File img_file_next;

@@ -18,7 +18,7 @@
 using Cairo;
 using Xml;
 
-namespace Supplement {
+namespace BirdFont {
 
 public enum FontFormat {
 	FFI,
@@ -101,7 +101,7 @@ public class Font : GLib.Object {
 
 	public File get_backgrounds_folder () {
 		string fn = @"$(get_name ()) backgrounds";
-		File f = Supplement.get_settings_directory ().get_child (fn);
+		File f = BirdFont.get_settings_directory ().get_child (fn);
 		return f;
 	}
 
@@ -452,7 +452,7 @@ public class Font : GLib.Object {
 
 	/** Delete temporary rescue files. */
 	public void delete_backup () {
-		File dir = Supplement.get_backup_directory ();
+		File dir = BirdFont.get_backup_directory ();
 		File? new_file = null;
 		File file;
 		string backup_file;
@@ -473,7 +473,7 @@ public class Font : GLib.Object {
 	
 	/** Returns path to backup file. */
 	public string save_backup () {
-		File dir = Supplement.get_backup_directory ();
+		File dir = BirdFont.get_backup_directory ();
 		File? temp_file = null;
 		string backup_file;
 	
@@ -493,7 +493,7 @@ public class Font : GLib.Object {
 			font_file = path;
 			
 			// delete backup when font is saved
-			font = Supplement.get_current_font ();
+			font = BirdFont.get_current_font ();
 			font.delete_backup ();
 		}
 		
@@ -789,7 +789,7 @@ public class Font : GLib.Object {
 				format = FontFormat.FFI;
 			}
 			
-			if (Supplement.experimental) {
+			if (BirdFont.experimental) {
 				if (path.has_suffix (".ttf")) {
 					font_file = path;
 					loaded = parse_otf_file (path);
@@ -816,7 +816,7 @@ public class Font : GLib.Object {
 	}
 
 	private void add_thumbnail () {
-		File f = Supplement.get_thumbnail_directory ().get_child (@"$((!) get_file_name ()).png");
+		File f = BirdFont.get_thumbnail_directory ().get_child (@"$((!) get_file_name ()).png");
 		Glyph? gl = get_glyph ("a");
 		Glyph g;
 		ImageSurface img;

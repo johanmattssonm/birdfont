@@ -18,7 +18,7 @@
 using Cairo;
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class GlyphCollection : GLib.Object {
 	VersionList versions;

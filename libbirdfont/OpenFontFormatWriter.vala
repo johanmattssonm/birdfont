@@ -17,7 +17,7 @@
 
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 const double UNITS = 10;
 

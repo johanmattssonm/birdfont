@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Supplement {
+namespace BirdFont {
 
 public class ClipTool : Tool {
 
@@ -38,7 +38,7 @@ public class ClipTool : Tool {
 			}
 			
 			// several clipboards does not work on windows
-			if (!Supplement.win32) {
+			if (!BirdFont.win32) {
 				svg = ExportTool.export_selected_paths_to_string ();
 				native_window.set_clipboard (svg);
 			}

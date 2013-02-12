@@ -17,7 +17,7 @@
 
 using Gdk;
 
-namespace Supplement {
+namespace BirdFont {
 
 // FIXME a lot of these things have been replaced and can safely be removed
 
@@ -247,7 +247,7 @@ public class KeyBindings {
 	
 	void save () {
 		try {
-			File settings = Supplement.get_settings_directory ();
+			File settings = BirdFont.get_settings_directory ();
 			File bindings = settings.get_child ("keybindings");
 			
 			if (bindings.query_exists ()) {
@@ -260,7 +260,7 @@ public class KeyBindings {
 			
 			StringBuilder sb = new StringBuilder ();
 			
-			sb.append_printf ("# Supplement keybindings\n");
+			sb.append_printf ("# BirdFont keybindings\n");
 			sb.append_printf ("# Version: 1.0\n");
 			
 			short_cuts.foreach ( (k, v) => {

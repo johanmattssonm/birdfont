@@ -17,7 +17,7 @@
 
 using Cairo;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class SaveDialog : FontDisplay {
 
@@ -58,7 +58,7 @@ public class SaveDialog : FontDisplay {
 	}
 
 	public override string get_html () {
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		string fn = f.get_file_name ();
 		
 		if (fn == "") {

@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Supplement {
+namespace BirdFont {
 
 public class MainWindow {
 	
@@ -54,12 +54,12 @@ public class MainWindow {
 	}
 	
 	public static Glyph get_current_glyph () {
-		if (unlikely (is_null (Supplement.current_glyph))) {
+		if (unlikely (is_null (BirdFont.current_glyph))) {
 			warning ("No default glyph have been set yet.\n");
 			return new Glyph ("no_glyph_created");
 		}
 		
-		return Supplement.current_glyph;
+		return BirdFont.current_glyph;
 	}
 	
 	public static Toolbox get_toolbox () {

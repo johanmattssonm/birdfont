@@ -15,8 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Birdfont;
-using Supplement;
+using BirdFont;
 
 const string GETTEXT_PACKAGE = "birdfont"; 
 
@@ -29,7 +28,7 @@ public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;
 	string file;
-	Supplement.Supplement supplement = new Supplement.Supplement ();
+	BirdFont.BirdFont supplement = new BirdFont.BirdFont ();
 	supplement.init (arg);
 
 	Gtk.init (ref arg);
@@ -41,7 +40,7 @@ public static int main (string[] arg) {
 	window.set_native (native_window);
 	native_window.init ();
 
-	file = Supplement.Supplement.args.get_file ();
+	file = BirdFont.BirdFont.args.get_file ();
 	if (file != "") {
 		MainWindow.menu_tab.load_font (file);
 	}

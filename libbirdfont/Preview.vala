@@ -17,7 +17,7 @@
 
 using WebKit;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class Preview : FontDisplay {	
 	
@@ -36,7 +36,7 @@ public class Preview : FontDisplay {
 	}
 
 	public new File get_html_file () {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		string path = @"$(font.get_name ()).html";
 		File dir = font.get_folder ();
 		File file = dir.get_child (path);

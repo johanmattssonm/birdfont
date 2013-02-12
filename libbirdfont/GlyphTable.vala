@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Supplement {
+namespace BirdFont {
 
 /** A sorted table of glyphs with search index. */
 class GlyphTable : GLib.Object {

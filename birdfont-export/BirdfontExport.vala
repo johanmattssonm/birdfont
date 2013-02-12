@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Birdfont;
+using BirdFont;
 
 /** Stand alone command line utility for exporting fonts. */
 public static int main (string[] arg) {				

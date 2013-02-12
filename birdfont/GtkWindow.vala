@@ -18,10 +18,10 @@
 using Cairo;
 using Gtk;
 using Gdk;
-using Supplement;
+using BirdFont;
 using WebKit;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class GtkWindow : Gtk.Window, NativeWindow {
 
@@ -43,7 +43,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	string inkscape_clipboard = "";
 	
 	public GtkWindow (string title) {
-		((Gtk.Window)this).set_title ("Birdfont");
+		((Gtk.Window)this).set_title ("BirdFont");
 	}
 	
 	public void init () {
@@ -104,9 +104,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 							string? line;
 							StringBuilder sb = new StringBuilder ();
 							uint rid = Random.next_int ();
-							Font font = Supplement.get_current_font ();
+							Font font = BirdFont.get_current_font ();
 							
-							File preview_directory = Supplement.get_preview_directory ();
+							File preview_directory = BirdFont.get_preview_directory ();
 							
 							File f_ttf = font.get_folder ().get_child (@"$(font.get_name ()).ttf");
 							File f_eot = font.get_folder ().get_child (@"$(font.get_name ()).eot");
@@ -130,7 +130,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 							File r_ttf = preview_directory.get_child (@"$(font.get_name ())$rid.ttf");
 							File r_svg = preview_directory.get_child (@"$(font.get_name ())$rid.svg");
 							
-							if (Supplement.win32) {
+							if (BirdFont.win32) {
 								f_ttf.copy (r_ttf, FileCopyFlags.NONE);
 							}
 							
@@ -276,7 +276,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public string get_clipboard_data () {
-		if (Supplement.mac) {
+		if (BirdFont.mac) {
 			string? t;
 			t = clipboard.wait_for_text ();
 			return (t == null) ? "" : (!) t;
@@ -297,7 +297,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	public void set_inkscape_clipboard (string inkscape_clipboard_data) {
 		// FIXME: clipboard seems to be rather broken on Mac 
-		if (Supplement.mac) {
+		if (BirdFont.mac) {
 			clipboard.set_text (inkscape_clipboard_data, -1);
 		} else {
 			TargetEntry t = { "image/x-inkscape-svg", 0, 0 };
@@ -636,10 +636,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	public bool quit () {
 		bool added;
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		SaveDialog save_tab = new SaveDialog ();
 		
-		if (Supplement.get_current_font ().is_modified ()) {
+		if (BirdFont.get_current_font ().is_modified ()) {
 			added = MainWindow.get_tab_bar ().add_unique_tab (save_tab, 50);
 		} else {
 			added = false;
@@ -669,7 +669,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public string? file_chooser (string title, FileChooserAction action, string label) {
 		string? fn = null;
 		FileChooserDialog file_chooser = new FileChooserDialog (title, this, action, Stock.CANCEL, ResponseType.CANCEL, label, ResponseType.ACCEPT);
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		
 		try {
 			file_chooser.set_current_folder_file (font.get_folder ());
@@ -834,7 +834,7 @@ public class GlyphCanvasArea : DrawingArea  {
 					warning (@"\nGlyph canvas is not divisible by two.\nWidth: $(allocation.width)\nHeight: $(allocation.height)");
 				}
 				
-				Supplement.current_glyph.resized ();
+				BirdFont.current_glyph.resized ();
 			}
 			
 			alloc = allocation;
@@ -897,7 +897,7 @@ public class GlyphCanvasArea : DrawingArea  {
 		// MOD5 is logo button on Linux
 		// MOD2 is logo button on Mac OS X
 
-		if (Supplement.mac) {
+		if (BirdFont.mac) {
 			if (has_flag (k, ModifierType.MOD2_MASK)) {
 				KeyBindings.set_modifier (LOGO);
 			}

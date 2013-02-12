@@ -18,7 +18,7 @@
 using Cairo;
 using Xml;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class Kerning : GLib.Object {
 	public string glyph_right;

@@ -16,7 +16,7 @@
 */
 using Xml;
 
-namespace Supplement {
+namespace BirdFont {
 	
 public class ImportSvg {
 	public ImportSvg () {
@@ -36,7 +36,7 @@ public class ImportSvg {
 	}
 	
 	public static void import_svg_data (string xml_data) {
-		if (Supplement.win32) {
+		if (BirdFont.win32) {
 			string svg;
 			string xml;
 			Glyph glyph = MainWindow.get_current_glyph ();
@@ -68,7 +68,7 @@ public class ImportSvg {
 	public static void import_svg (string path) {
 		// FIXME: libxml2 (2.7.8) refuses to parse svg files created with Adobe Illustrator on 
 		// windows. This is a way around it.
-		if (Supplement.win32) {
+		if (BirdFont.win32) {
 			try {
 				File f = File.new_for_path (path);
 				DataInputStream dis = new DataInputStream (f.read ());
@@ -214,7 +214,7 @@ public class ImportSvg {
 		double[] p;
 		int pi = 0;
 		string data = add_separators (d);
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 
 		c = data.split (" ");
 		p = new double[2 * c.length];

@@ -16,9 +16,8 @@
 */
 
 using Cairo;
-using Birdfont;
 
-namespace Supplement {
+namespace BirdFont {
 
 /** Javascripts in webkit do use this callback. */
 public class PropertyFunction {
@@ -48,7 +47,7 @@ public abstract class FontDisplay : GLib.Object {
 		string wp;
 		
 		// wine uri hack
-		if (Supplement.win32) {
+		if (BirdFont.win32) {
 			wp = wine_to_unix_path (uri);
 			
 			if (find_file (wp, "").query_exists ()) {
@@ -193,10 +192,10 @@ public abstract class FontDisplay : GLib.Object {
 		File f;
 		string d = (dir == null) ? "" : (!) dir;
 
-		f = get_file (Supplement.exec_path + "/", name + "/");
+		f = get_file (BirdFont.exec_path + "/", name + "/");
 		if (likely (f.query_exists ())) return f;
 		
-		f = get_file (Supplement.exec_path + "/" + d + "/", name);
+		f = get_file (BirdFont.exec_path + "/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
 		
 		f = get_file ("./" + d + "/", name);

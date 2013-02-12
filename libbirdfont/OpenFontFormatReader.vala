@@ -18,7 +18,7 @@
 [CCode (cname = "load_svg_font")]
 public extern static string? load_svg_font (string file, out bool error);
 
-namespace Supplement {
+namespace BirdFont {
 
 [SimpleType]
 [CCode (has_type_id = false)] // Vala bug
@@ -105,7 +105,7 @@ class OpenFontFormatReader : Object {
 		Font f = OpenFontFormatWriter.font;
 		
 		if (is_null (f)) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 		}
 		
 		f.top_position = -get_ascender ();

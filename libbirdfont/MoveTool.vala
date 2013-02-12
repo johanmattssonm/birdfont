@@ -18,7 +18,7 @@
 using Math;
 using Cairo;
 
-namespace Supplement {
+namespace BirdFont {
 
 class MoveTool : Tool {
 

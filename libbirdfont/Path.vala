@@ -18,7 +18,7 @@
 using Cairo;
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 public enum Direction {
 	CLOCKWISE,

@@ -18,7 +18,7 @@
 using Cairo;
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class Glyph : FontDisplay {
 	// Background image
@@ -243,7 +243,7 @@ public class Glyph : FontDisplay {
 		
 		background_image = bg;
 		
-		Supplement.get_current_font ().touch ();
+		BirdFont.get_current_font ().touch ();
 	}
 	
 	public GlyphBackgroundImage? get_background_image () {
@@ -297,50 +297,50 @@ public class Glyph : FontDisplay {
 	public void add_help_lines () {
 		remove_lines ();
 
-		assert (!is_null (Supplement.get_current_font ()));
+		assert (!is_null (BirdFont.get_current_font ()));
 
-		double bgt = Supplement.get_current_font ().top_limit;
+		double bgt = BirdFont.get_current_font ().top_limit;
 		Line top_margin_line = new Line ("top margin", bgt, false);
 		top_margin_line.set_color (0.7, 0, 0, 0.5);
 		top_margin_line.position_updated.connect ((pos) => {
-			Supplement.get_current_font ().top_limit = pos;
+			BirdFont.get_current_font ().top_limit = pos;
 		});
 						
-		double thp = Supplement.get_current_font ().top_position;
+		double thp = BirdFont.get_current_font ().top_position;
 		Line top_line = new Line ("top", thp, false);
 		top_line.position_updated.connect ((pos) => {
-				Font f = Supplement.get_current_font ();
+				Font f = BirdFont.get_current_font ();
 				f.top_position = pos;
 			});
 		
-		double xhp = Supplement.get_current_font ().xheight_position;
+		double xhp = BirdFont.get_current_font ().xheight_position;
 		Line xheight_line = new Line ("x-height", xhp, false);
 		xheight_line.set_color (33 / 255.0, 68 / 255.0, 120 / 255.0, 166 / 255.0);
 		xheight_line.position_updated.connect ((pos) => {				
-				Font f = Supplement.get_current_font ();
+				Font f = BirdFont.get_current_font ();
 				f.xheight_position = pos;
 			});
 
-		double xbl = Supplement.get_current_font ().base_line;
+		double xbl = BirdFont.get_current_font ().base_line;
 		Line base_line = new Line ("baseline", xbl, false);
 		base_line.position_updated.connect ((pos) => {
-				Font f = Supplement.get_current_font ();
+				Font f = BirdFont.get_current_font ();
 				f.base_line = pos;
 			});
 
 		
-		double bp = Supplement.get_current_font ().bottom_position;
+		double bp = BirdFont.get_current_font ().bottom_position;
 		Line bottom_line = new Line ("bottom", bp, false);
 		bottom_line.set_color (33 / 255.0, 68 / 255.0, 120 / 255.0, 166 / 255.0);
 		bottom_line.position_updated.connect ((pos) => {
-				Supplement.get_current_font ().bottom_position = pos;
+				BirdFont.get_current_font ().bottom_position = pos;
 			});
 
-		double bgb = Supplement.get_current_font ().bottom_limit;
+		double bgb = BirdFont.get_current_font ().bottom_limit;
 		Line bottom_margin_line = new Line ("bottom margin", bgb, false);
 		bottom_margin_line.set_color (0.7, 0, 0, 0.5);
 		bottom_margin_line.position_updated.connect ((pos) => {
-			Supplement.get_current_font ().bottom_limit = pos;
+			BirdFont.get_current_font ().bottom_limit = pos;
 		});
 							
 		Line left_line = new Line ("left", left_limit, true);
@@ -525,7 +525,7 @@ public class Glyph : FontDisplay {
 
 		t.move_action (t, (int) x, (int) y);
 
-		if (Supplement.show_coordinates) {
+		if (BirdFont.show_coordinates) {
 			motion_x = x * ivz () - xc () + view_offset_x;
 			motion_y = yc () - y * ivz () - view_offset_y;
 		}
@@ -905,7 +905,7 @@ public class Glyph : FontDisplay {
 		double x, y;
 		EditPoint p;
 				
-		Supplement.get_current_font ().touch ();
+		BirdFont.get_current_font ().touch ();
 
 		x = reverse_path_coordinate_x (xt);
 		y = reverse_path_coordinate_y (yt);
@@ -1348,7 +1348,7 @@ public class Glyph : FontDisplay {
 		
 		juxtapose (allocation, cr);
 
-		if (Supplement.show_coordinates) {
+		if (BirdFont.show_coordinates) {
 			draw_coordinate (cmp);
 		}
 
@@ -1449,7 +1449,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public void reload () {
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		
 		if (f.has_glyph (name)) {
 			set_glyph_data ((!) f.get_glyph (name));
@@ -1505,7 +1505,7 @@ public class Glyph : FontDisplay {
 		Context cr;
 		double gx, gy;
 		double x1, x2, y1, y2;
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 
 		remove_empty_paths ();
 		boundries (out x1, out y1, out x2, out y2);
@@ -1633,7 +1633,7 @@ public class Glyph : FontDisplay {
 	public void juxtapose (Allocation allocation, Context cr) {
 		string glyph_sequence = Preferences.get ("glyph_sequence");
 		unichar c;
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Glyph juxtaposed;
 		StringBuilder current = new StringBuilder ();

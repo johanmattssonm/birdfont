@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Supplement {
+namespace BirdFont {
 
 /** All the things we want to test listed is here. */
 class TestCases {
@@ -171,7 +171,7 @@ class TestCases {
 			DataOutputStream d;
 			FileOutputStream? os;
 			
-			temp_file = Supplement.get_settings_directory ().get_child ("illustrator_test.svg");
+			temp_file = BirdFont.get_settings_directory ().get_child ("illustrator_test.svg");
 			
 			if (temp_file.query_exists ()) {
 				temp_file.delete ();
@@ -260,7 +260,7 @@ class TestCases {
 			DataOutputStream d;
 			FileOutputStream? os;
 			
-			temp_file = Supplement.get_settings_directory ().get_child ("inkscape_test.svg");
+			temp_file = BirdFont.get_settings_directory ().get_child ("inkscape_test.svg");
 			
 			if (temp_file.query_exists ()) {
 				temp_file.delete ();
@@ -480,7 +480,7 @@ class TestCases {
 	}
 
 	public static void test_notdef () {
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		Glyph n = f.get_not_def_character ();
 		Glyph g;
 		Path pn;

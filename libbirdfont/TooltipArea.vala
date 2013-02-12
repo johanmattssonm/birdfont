@@ -18,7 +18,7 @@
 using Cairo;
 using Gdk;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class TooltipArea : GLib.Object {
 

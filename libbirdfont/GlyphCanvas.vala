@@ -18,7 +18,7 @@
 using Cairo;
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class GlyphCanvas : GLib.Object {
 
@@ -41,8 +41,8 @@ public class GlyphCanvas : GLib.Object {
 		if (fd is Glyph) {
 			Glyph g = (Glyph) fd;
 			
-			Supplement.current_glyph = g;
-			Supplement.current_glyph.resized ();
+			BirdFont.current_glyph = g;
+			BirdFont.current_glyph.resized ();
 
 			g.allocation = allocation;
 			
@@ -65,7 +65,7 @@ public class GlyphCanvas : GLib.Object {
 	}
 	
 	public static Glyph get_current_glyph ()  {
-		return Supplement.current_glyph;
+		return BirdFont.current_glyph;
 	}
 	
 	public FontDisplay get_current_display () {

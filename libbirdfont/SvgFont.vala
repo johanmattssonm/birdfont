@@ -17,7 +17,7 @@
 
 using Xml;
 
-namespace Supplement {
+namespace BirdFont {
 
 class SvgFont : GLib.Object {
 	Font font;

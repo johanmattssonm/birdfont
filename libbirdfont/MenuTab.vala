@@ -17,7 +17,7 @@
 
 using WebKit;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class MenuTab : FontDisplay {	
 	
@@ -26,7 +26,7 @@ public class MenuTab : FontDisplay {
 	public MenuTab () {
 		// html callbacks:
 		add_html_callback ("export_name", (val) => {
-			Font f = Supplement.get_current_font ();
+			Font f = BirdFont.get_current_font ();
 			f.set_name (val);
 			f.touch ();
 		});
@@ -65,7 +65,7 @@ public class MenuTab : FontDisplay {
 	}
 
 	public override string get_html () {
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		StringBuilder c = new StringBuilder ();
 		string fn;
 		
@@ -125,7 +125,7 @@ if (has_backup ()) {
 		c.append ("</div>");
 
 		c.append ("<img src=\"");
-		c.append (path_to_uri ((!) Supplement.get_thumbnail_directory ().get_path ()));
+		c.append (path_to_uri ((!) BirdFont.get_thumbnail_directory ().get_path ()));
 		c.append ("/");
 		c.append (fn);
 		c.append (@".png?$(Random.next_int ())\" alt=\"\">");
@@ -158,7 +158,7 @@ foreach (Font font in recent_fonts) {
 	c.append ("</div>");
 
 	c.append ("<img src=\"");
-	c.append (path_to_uri ((!) Supplement.get_thumbnail_directory ().get_path ()));
+	c.append (path_to_uri ((!) BirdFont.get_thumbnail_directory ().get_path ()));
 	c.append ("/");
 	c.append (fn);
 	c.append (@".png?$(Random.next_int ())\" alt=\"\">");
@@ -198,8 +198,8 @@ c.append ("""
 		string file_name;
 		FileInfo? file_info;
 		List<string> backups = new List<string> ();
-		File dir = Supplement.get_backup_directory ();
-		Font font = Supplement.get_current_font ();
+		File dir = BirdFont.get_backup_directory ();
+		Font font = BirdFont.get_current_font ();
 
 		try {
 			enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
@@ -250,20 +250,20 @@ c.append ("""
 	}
 	
 	public void load_backup (string file_name) {
-		File backup_file = Supplement.get_backup_directory ();
+		File backup_file = BirdFont.get_backup_directory ();
 		backup_file = backup_file.get_child (file_name);
 		load_font ((!) backup_file.get_path ());
 	}
 	
 	public void load_font (string fn) {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 			
 		SaveDialog save = new SaveDialog ();
 		save.finished.connect (() => {
 			Font f;
 			bool loaded;
 			
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			f.delete_backup ();
 			
 			MainWindow.clear_glyph_cache ();
@@ -296,7 +296,7 @@ c.append ("""
 	}
 	
 	private static void select_overview () {
-		if (Supplement.get_current_font ().is_empty ()) {
+		if (BirdFont.get_current_font ().is_empty ()) {
 			Toolbox.select_tool_by_name ("custom_character_set");
 		} else {
 			Toolbox.select_tool_by_name ("available_characters");	
@@ -307,7 +307,7 @@ c.append ("""
 		string? fn = null;
 		string f;
 		bool saved = false;
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		
 		fn = MainWindow.file_chooser_save (_("Save"));
 		
@@ -327,7 +327,7 @@ c.append ("""
 	}
 
 	public static bool save () {
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		string fn;
 		bool saved = false;
 
@@ -356,10 +356,10 @@ c.append ("""
 	}
 	
 	public static void new_file () {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		SaveDialog save = new SaveDialog ();
 		save.finished.connect (() => {
-			Supplement.new_font ();
+			BirdFont.new_font ();
 			MainWindow.close_all_tabs ();
 			
 			MainWindow.get_toolbox ().remove_all_grid_buttons ();
@@ -378,7 +378,7 @@ c.append ("""
 	
 	public static void load () {
 		SaveDialog save = new SaveDialog ();
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 
 		save.finished.connect (() => {
 			load_new_font ();
@@ -393,7 +393,7 @@ c.append ("""
 
 	private static void load_new_font () {
 		string? fn = MainWindow.file_chooser_open (_("Open"));
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		
 		if (fn != null) {
 			f.delete_backup ();
@@ -413,7 +413,7 @@ c.append ("""
 	
 	public static void preview () {
 		TabBar tab_bar = MainWindow.get_tab_bar ();
-		FontFormat format = Supplement.get_current_font ().format;
+		FontFormat format = BirdFont.get_current_font ().format;
 		OverwriteDialog overwrite = new OverwriteDialog ();
 
 		overwrite.finished.connect (() => {

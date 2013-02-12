@@ -17,7 +17,7 @@
 
 using Cairo;
 
-namespace Supplement {
+namespace BirdFont {
 
 /** Kerning context. */
 public class ContextDisplay : FontDisplay {
@@ -68,7 +68,7 @@ public class ContextDisplay : FontDisplay {
 			wi = 0;
 			
 			foreach (string s in word.glyph) {				
-				g = (!) Supplement.get_current_font ().get_glyph (s);	
+				g = (!) BirdFont.get_current_font ().get_glyph (s);	
 				
 				if (s == "") {
 					continue;
@@ -137,7 +137,7 @@ public class ContextDisplay : FontDisplay {
 		int wi = 0;
 		double kern;
 		
-		font = Supplement.get_current_font ();
+		font = BirdFont.get_current_font ();
 
 		font.touch ();
 
@@ -168,7 +168,7 @@ public class ContextDisplay : FontDisplay {
 	}
 	
 	private double get_kerning (string a, string b) {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		return font.get_kerning (a, b);
 	}
 	
@@ -207,7 +207,7 @@ public class ContextDisplay : FontDisplay {
 	
 	public override void key_press (uint keyval) {
 		unichar c = (unichar) keyval;
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		string name;
 		
 		if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {
@@ -269,7 +269,7 @@ public class ContextDisplay : FontDisplay {
 			foreach (string s in word.glyph) {
 				
 				// draw glyph
-				g = (!) Supplement.get_current_font ().get_glyph (s);	
+				g = (!) BirdFont.get_current_font ().get_glyph (s);	
 				kern = (prev != "") ? get_kerning (prev, s) : 0;
 				
 				if (g == null) {

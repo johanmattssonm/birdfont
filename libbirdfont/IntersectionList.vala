@@ -17,7 +17,7 @@
 
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 class IntersectionList {
 	public List<Intersection> points = new List<Intersection> ();

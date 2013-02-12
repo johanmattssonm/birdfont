@@ -18,7 +18,7 @@
 using Cairo;
 using Gdk;
 
-namespace Supplement {
+namespace BirdFont {
 
 class BackgroundSelection : FontDisplay {
 
@@ -64,7 +64,7 @@ class BackgroundSelection : FontDisplay {
 		y = 20;
 		zoom = 0.04;
 		
-		font = Supplement.get_current_font ();
+		font = BirdFont.get_current_font ();
 		foreach (string file in background_images) {
 			box_index++;
 
@@ -85,7 +85,7 @@ class BackgroundSelection : FontDisplay {
 	private ImageSurface create_thumbnail (string file) throws GLib.Error {
 		Pixbuf pixbuf;
 		
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		File folder = font.get_backgrounds_folder ();
 		string fn = Checksum.compute_for_string (ChecksumType.SHA1, file);
 		File original = File.new_for_path (file);
@@ -158,7 +158,7 @@ class BackgroundSelection : FontDisplay {
 		file = MainWindow.file_chooser_open ("Add image");
 
 		if (file != null) {
-			Supplement.get_current_font ().add_background_image ((!) file);
+			BirdFont.get_current_font ().add_background_image ((!) file);
 		}
 		
 		MainWindow.get_glyph_canvas ().redraw ();				
@@ -173,7 +173,7 @@ class BackgroundSelection : FontDisplay {
 		TabBar tb;
 		Tool zoom_background;
 
-		font = Supplement.get_current_font ();
+		font = BirdFont.get_current_font ();
 				
 		if (!(0 <= active_box - 1 < background_images.length ())) {
 			return;
@@ -207,7 +207,7 @@ class BackgroundSelection : FontDisplay {
 	}
 
 	public override void selected_canvas () {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		File folder = font.get_backgrounds_folder ();
 		
 		if (!folder.query_exists ()) {
@@ -224,7 +224,7 @@ class BackgroundSelection : FontDisplay {
 	}
 
 	void collect_background_images () {
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		File directory = font.get_folder ();
 		FileEnumerator enumerator;
 		FileInfo? file_info;

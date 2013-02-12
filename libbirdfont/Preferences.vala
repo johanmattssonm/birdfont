@@ -14,7 +14,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-namespace Supplement {
+namespace BirdFont {
 
 public class Preferences {
 		
@@ -84,7 +84,7 @@ public class Preferences {
 	}
 	
 	public static void load () {
-		File app_dir = Supplement.get_settings_directory ();
+		File app_dir = BirdFont.get_settings_directory ();
 		File settings = app_dir.get_child ("settings");
 
 		data = new HashTable<string, string> (str_hash, str_equal);
@@ -135,7 +135,7 @@ public class Preferences {
 	
 	public static void save () {
 		try {
-			File app_dir = Supplement.get_settings_directory ();
+			File app_dir = BirdFont.get_settings_directory ();
 			File settings = app_dir.get_child ("settings");
 
 			return_if_fail (app_dir.query_exists ());
@@ -150,7 +150,7 @@ public class Preferences {
 			
 			StringBuilder sb = new StringBuilder ();
 			
-			sb.append ("# Supplement settings\n");
+			sb.append ("# BirdFont settings\n");
 			sb.append ("# Version: 1.0\n");
 			
 			foreach (var k in data.get_keys ()) {

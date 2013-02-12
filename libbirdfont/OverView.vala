@@ -17,7 +17,7 @@
 
 using Cairo;
 
-namespace Supplement {
+namespace BirdFont {
 
 /** A display with all glyphs present in this font. */
 public class OverView : FontDisplay {
@@ -68,7 +68,7 @@ public class OverView : FontDisplay {
 			Toolbox tools = MainWindow.get_toolbox ();
 			bool selected = tabs.select_char (s);
 			unichar new_char = s.get_char (0);
-			Font f = Supplement.get_current_font ();
+			Font f = BirdFont.get_current_font ();
 							
 			if (!selected) {
 				GlyphCollection? fg = f.get_glyph_collection (s);
@@ -112,7 +112,7 @@ public class OverView : FontDisplay {
 		Font f;
 		
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			scroll_to_position (f.length () - items_per_row * (rows - 1));
 		} else {
 			scroll_to_position (glyph_range.length () - items_per_row * (rows - 1));
@@ -128,7 +128,7 @@ public class OverView : FontDisplay {
 		}
 				
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
 			l = glyph_range.length ();
@@ -294,7 +294,7 @@ public class OverView : FontDisplay {
 		double left_margin, x, caption_y; // for glyph caption
 		uint64 index = index_begin;
 		int i = row * items_per_row;
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		
 		cr.save ();
 		cr.set_line_width (1);
@@ -356,7 +356,7 @@ public class OverView : FontDisplay {
 	}
 		
 	private void draw_menu (Context cr, string name, double x, double y) {
-		GlyphCollection? gl = Supplement.get_current_font ().get_glyph_collection (name);
+		GlyphCollection? gl = BirdFont.get_current_font ().get_glyph_collection (name);
 		GlyphCollection g;
 		DropMenu menu;
 		
@@ -375,7 +375,7 @@ public class OverView : FontDisplay {
 	}
 		
 	private bool draw_thumbnail (Context cr, string name, double x, double y) {
-		Glyph? gl = Supplement.get_current_font ().get_glyph (name);
+		Glyph? gl = BirdFont.get_current_font ().get_glyph (name);
 		Glyph g;
 		
 		double gx, gy;
@@ -419,7 +419,7 @@ public class OverView : FontDisplay {
 		uint64 t;
 		int i;
 		int n_items;
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 					
 		while (visible_characters.length () > 9) {
 			visible_characters.remove_link (visible_characters.first ());
@@ -437,7 +437,7 @@ public class OverView : FontDisplay {
 			draw_empty_canvas (allocation, cr);
 		}
 		
-		if (Supplement.experimental) {
+		if (BirdFont.experimental) {
 			scrollbar.draw (cr, allocation);
 		}
 		
@@ -502,7 +502,7 @@ public class OverView : FontDisplay {
 		Font f;
 				
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
 			l = glyph_range.length ();
@@ -529,7 +529,7 @@ public class OverView : FontDisplay {
 		Font f;
 		
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
 			l = glyph_range.length ();
@@ -559,7 +559,7 @@ public class OverView : FontDisplay {
 		Font f;
 		
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
 			l = glyph_range.length ();
@@ -628,7 +628,7 @@ public class OverView : FontDisplay {
 		Font f;
 				
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			l = f.length ();
 		} else {
 			l = glyph_range.length ();
@@ -709,7 +709,7 @@ public class OverView : FontDisplay {
 		Font f;
 		
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			len = f.length ();
 		} else {
 			len = glyph_range.length ();
@@ -744,7 +744,7 @@ public class OverView : FontDisplay {
 		Glyph? g;
 		
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			g = f.get_glyph_indice (selected);
 			return_val_if_fail (g != null, "".dup ());
 			return ((!) g).get_name ();
@@ -808,7 +808,7 @@ public class OverView : FontDisplay {
 		
 	public void delete_glyph (string g) {
 		GlyphCollection? gc;
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		
 		gc = f.get_glyph_collection (g);
 
@@ -823,7 +823,7 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void undo () {
-		Font f = Supplement.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		
 		if (deleted_glyphs.length () == 0) {
 			return;
@@ -881,7 +881,7 @@ public class OverView : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			len = f.length ();
 		} else {
 			len = glyph_range.length ();
@@ -950,7 +950,7 @@ public class OverView : FontDisplay {
 	
 	public override void button_press (uint button, double x, double y) {
 		if (x > allocation.width - 10) {
-			if (Supplement.experimental) {
+			if (BirdFont.experimental) {
 				scrollbar.button_press (button, x, y);
 			}
 		} else {
@@ -964,7 +964,7 @@ public class OverView : FontDisplay {
 		double t = rows * items_per_row + items_per_row + first_visible;
 		
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			return t >= f.length ();
 		}
 		
@@ -1057,7 +1057,7 @@ public class OverView : FontDisplay {
 		Font f;
 		
 		if (all_avail) {
-			f = Supplement.get_current_font ();
+			f = BirdFont.get_current_font ();
 			len = f.length ();
 		} else {
 			len = glyph_range.get_length ();

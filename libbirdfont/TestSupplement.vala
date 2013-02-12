@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Supplement {
+namespace BirdFont {
 
 class Test : Object {
 	public Callback callback;
@@ -28,7 +28,7 @@ class Test : Object {
 }
 
 /** Class for executing tests cases. */
-class TestSupplement : GLib.Object {
+class TestBirdFont : GLib.Object {
 
 	const int NOT_STARTED = 0;
 	const int RUNNING = 1;
@@ -46,7 +46,7 @@ class TestSupplement : GLib.Object {
 	unowned List<Test> failed;
 	unowned List<Test> skipped;
 
-	static TestSupplement? singleton = null;
+	static TestBirdFont? singleton = null;
 
 	bool has_failed = false;
 	bool has_skipped = false;
@@ -55,7 +55,7 @@ class TestSupplement : GLib.Object {
 	
 	string test_cases_to_run; // name of specific test case or all to run all test cases
 	
-	public TestSupplement () {
+	public TestBirdFont () {
 		assert (singleton == null);
 		tests = new TestCases ();
 		test_cases = tests.get_test_functions ();
@@ -73,9 +73,9 @@ class TestSupplement : GLib.Object {
 		slow_test = s;
 	}
 	
-	public static TestSupplement get_singleton () {
+	public static TestBirdFont get_singleton () {
 		if (singleton == null) {
-			singleton = new TestSupplement ();
+			singleton = new TestBirdFont ();
 		}
 		
 		return (!) singleton;
@@ -96,7 +96,7 @@ class TestSupplement : GLib.Object {
 
 	/** Run only test specified on the command line. */
 	private void from_command_line () {
-		string? stn = Supplement.get_argument ("--test");
+		string? stn = BirdFont.get_argument ("--test");
 	
 		if (stn != null) {
 			string st = (!) stn;
@@ -135,7 +135,7 @@ class TestSupplement : GLib.Object {
 		
 		get_singleton ().has_failed = true;
 		
-		assert (!Supplement.fatal_wanings);
+		assert (!BirdFont.fatal_wanings);
 	}
 
 	public static void @continue () {
@@ -144,7 +144,7 @@ class TestSupplement : GLib.Object {
 			singleton = null;
 		}
 
-		TestSupplement t = get_singleton ();
+		TestBirdFont t = get_singleton ();
 		
 		LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
 		Log.set_handler (null, levels, log);
@@ -224,7 +224,7 @@ class TestSupplement : GLib.Object {
 			if (has_failed) {
 				failed.append ((!) test);
 				
-				if (Supplement.has_argument ("--exit")) {
+				if (BirdFont.has_argument ("--exit")) {
 					print_result ();
 					Process.exit (1);
 				}
@@ -243,7 +243,7 @@ class TestSupplement : GLib.Object {
 
 				print_result ();
 				
-				if (Supplement.has_argument ("--exit")) {
+				if (BirdFont.has_argument ("--exit")) {
 					print_result ();
 					Process.exit ((failed.length () == 0) ? 0 : 1);
 				}

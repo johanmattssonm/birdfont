@@ -18,7 +18,7 @@
 using Cairo;
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class Toolbox : GLib.Object  {
 	GlyphCanvas glyph_canvas;
@@ -163,7 +163,7 @@ public class Toolbox : GLib.Object  {
 				OverView o = MainWindow.get_overview ();
 				GlyphRange gr = new GlyphRange ();
 				
-				if (!Supplement.get_current_font ().initialised) {
+				if (!BirdFont.get_current_font ().initialised) {
 					MenuTab.new_file ();
 				}
 				
@@ -179,7 +179,7 @@ public class Toolbox : GLib.Object  {
 			OverView o = MainWindow.get_overview ();
 			GlyphRange gr = new GlyphRange ();
 
-			if (!Supplement.get_current_font ().initialised) {
+			if (!BirdFont.get_current_font ().initialised) {
 				MenuTab.new_file ();
 			}
 			
@@ -194,7 +194,7 @@ public class Toolbox : GLib.Object  {
 			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
 			
-			if (!Supplement.get_current_font ().initialised) {
+			if (!BirdFont.get_current_font ().initialised) {
 				MenuTab.new_file ();
 			}
 			
@@ -215,14 +215,14 @@ public class Toolbox : GLib.Object  {
 		});
 		characterset_tools.add_tool (delete_glyph);
 
-		if (Supplement.has_argument ("--test")) {
+		if (BirdFont.has_argument ("--test")) {
 			Tool test_case = new Tool ("test_case");
 			test_case.select_action.connect((self) => {
 					if (self.is_selected ()) {
-						if (TestSupplement.is_running ()) {
-							TestSupplement.pause ();
+						if (TestBirdFont.is_running ()) {
+							TestBirdFont.pause ();
 						} else {
-							TestSupplement.continue ();
+							TestBirdFont.continue ();
 						}
 					}
 				});
@@ -230,16 +230,16 @@ public class Toolbox : GLib.Object  {
 
 			Tool slow_test = new Tool ("slow_test");
 			slow_test.select_action.connect((self) => {
-					bool s = TestSupplement.is_slow_test ();
-					TestSupplement.set_slow_test (!s);
-					s = TestSupplement.is_slow_test ();
+					bool s = TestBirdFont.is_slow_test ();
+					TestBirdFont.set_slow_test (!s);
+					s = TestBirdFont.is_slow_test ();
 					self.set_selected (s);
 				});
 		
 			test_tools.add_tool (slow_test);
 					
 			// Run from commad line
-			string? st = Supplement.get_argument ("--test");
+			string? st = BirdFont.get_argument ("--test");
 			if (st != null && ((!)st).char_count () > 0) {
 				IdleSource idle = new IdleSource ();
 
@@ -251,7 +251,7 @@ public class Toolbox : GLib.Object  {
 				idle.attach (null);
 			}
 			
-			if (Supplement.has_argument ("--slow")) {
+			if (BirdFont.has_argument ("--slow")) {
 				select_tool (slow_test);
 			}
 			

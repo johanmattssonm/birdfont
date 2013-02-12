@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-namespace Supplement {
+namespace BirdFont {
 
 class SvgFontFormatWriter : Object  {
 
@@ -99,7 +99,7 @@ class SvgFontFormatWriter : Object  {
 			
 			foreach (Kerning k in glyph.kerning) {
 				string l, r;
-				Font f = Supplement.get_current_font ();
+				Font f = BirdFont.get_current_font ();
 				Glyph? gr = f.get_glyph (k.glyph_right);
 				Glyph glyph_right;
 				

@@ -17,7 +17,7 @@
 
 using Cairo;
 
-namespace Supplement {
+namespace BirdFont {
 
 /** Help line */
 public class Line : GLib.Object {
@@ -161,7 +161,7 @@ public class Line : GLib.Object {
 
 			position_updated (pos); // sinal update
 
-			Supplement.get_current_font ().touch ();
+			BirdFont.get_current_font ().touch ();
 			
 			swap_lines ();
 		}

@@ -19,7 +19,7 @@ using Cairo;
 using Math;
 using Gdk;
 
-namespace Supplement {
+namespace BirdFont {
 	
 public class GlyphBackgroundImage {
 		
@@ -210,7 +210,7 @@ public class GlyphBackgroundImage {
 	private void create_png () {
 		string fn = @"$path.png";
 		
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		File folder = font.get_backgrounds_folder ();
 		File original = File.new_for_path (fn);
 		File png_image = folder.get_child (@"full_$((!)original.get_basename ())");

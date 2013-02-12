@@ -17,7 +17,7 @@
 
 using Cairo;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class Tool : GLib.Object {
 	
@@ -309,7 +309,7 @@ public class Tool : GLib.Object {
 		var time = new TimeoutSource(500);
 		bool timeout;
 
-		if (TestSupplement.is_slow_test ()) {
+		if (TestBirdFont.is_slow_test ()) {
 			timeout = false;
 			
 			time.set_callback(() => {
@@ -330,11 +330,11 @@ public class Tool : GLib.Object {
 			return;
 		}
 
-		while (c.pending () || TestSupplement.is_slow_test ()) {
+		while (c.pending () || TestBirdFont.is_slow_test ()) {
 			c.iteration (true);
 			t++;
 
-			if (!c.pending () && TestSupplement.is_slow_test ()) {
+			if (!c.pending () && TestBirdFont.is_slow_test ()) {
 				if (timeout) break;
 			}
 						

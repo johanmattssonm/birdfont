@@ -18,7 +18,7 @@
 using Cairo;
 using Math;
 
-namespace Supplement {
+namespace BirdFont {
 
 public class VersionList : DropMenu {
 	int versions = 1;
@@ -34,7 +34,7 @@ public class VersionList : DropMenu {
 			return_if_fail (self.parent != null);
 			return_if_fail (glyphs.length () > 0);
 			
-			Supplement.get_current_font ().touch ();
+			BirdFont.get_current_font ().touch ();
 			
 			add_new_version ();
 			current_version = (int) glyphs.length () - 1;
@@ -85,7 +85,7 @@ public class VersionList : DropMenu {
 		Glyph glyph;
 		Glyph updated_glyph;
 		Glyph? ug;
-		Font font = Supplement.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		StringBuilder uni = new StringBuilder ();
 		
 		if (is_null (MainWindow.get_tab_bar ())) {
@@ -139,7 +139,7 @@ public class VersionList : DropMenu {
 		ma.action = (self) => {
 			Font font;
 			
-			font = Supplement.get_current_font ();
+			font = BirdFont.get_current_font ();
 			set_selected_item (self);
 			font.touch ();
 		};
