@@ -414,6 +414,45 @@ public class Font : GLib.Object {
 		background_images.append (file);
 	}
 
+	/** Obtain kerning for pair with name a and b.
+	 * @param a name of left glyph kerning pair
+	 * @param b name of right glyph kerning pair
+	 */
+	public double get_kerning_by_name (string a, string b) {
+		Glyph? gl = get_glyph_by_name (a);
+		Glyph g;
+		
+		if (gl == null) {
+			warning (@"glyph \"$a\" does not exist cannot obtain kerning");
+			return 0;
+		}
+		
+		g = (!) gl;
+		
+		return g.get_kerning (b);
+	}
+
+	/** Set kerning for pair with name a and b.
+	 * @param a name of left glyph kerning pair
+	 * @param b name of right glyph kerning pair
+	 * @param val kerning
+	 */	
+	public void set_kerning_by_name (string a, string b, double val) {
+		Glyph? gl;
+		Glyph g;
+		
+		gl = get_glyph_by_name (a);
+		
+		if (unlikely (gl == null)) {
+			warning (@"glyph \"$a\" is not parsed yet cannot add kerning");
+			return;
+		}
+		
+		g = (!) gl;
+		g.add_kerning (b, val);		
+	}
+
+	// TODO: this can be removed
 	public double get_kerning (string a, string b) {
 		Glyph? gl = get_glyph (a);
 		Glyph g;
@@ -428,6 +467,7 @@ public class Font : GLib.Object {
 		return g.get_kerning (b);
 	}
 
+	// TODO: this can be removed
 	public void set_kerning (string a, string b, double val) {
 		Glyph? gl;
 		Glyph g;

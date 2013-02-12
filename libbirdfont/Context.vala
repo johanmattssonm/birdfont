@@ -68,7 +68,7 @@ public class ContextDisplay : FontDisplay {
 			wi = 0;
 			
 			foreach (string s in word.glyph) {				
-				g = (!) BirdFont.get_current_font ().get_glyph (s);	
+				g = (!) BirdFont.get_current_font ().get_glyph_by_name (s);	
 				
 				if (s == "") {
 					continue;
@@ -154,8 +154,8 @@ public class ContextDisplay : FontDisplay {
 				b = s;
 				
 				if (handle == wi) {
-					kern = font.get_kerning (a, b) + val;
-					font.set_kerning (a, b, kern);
+					kern = font.get_kerning_by_name (a, b) + val;
+					font.set_kerning_by_name (a, b, kern);
 				}
 				
 				wi++;
@@ -169,7 +169,7 @@ public class ContextDisplay : FontDisplay {
 	
 	private double get_kerning (string a, string b) {
 		Font font = BirdFont.get_current_font ();
-		return font.get_kerning (a, b);
+		return font.get_kerning_by_name (a, b);
 	}
 	
 	public override void selected_canvas () {
@@ -269,7 +269,7 @@ public class ContextDisplay : FontDisplay {
 			foreach (string s in word.glyph) {
 				
 				// draw glyph
-				g = (!) BirdFont.get_current_font ().get_glyph (s);	
+				g = (!) BirdFont.get_current_font ().get_glyph_by_name (s);	
 				kern = (prev != "") ? get_kerning (prev, s) : 0;
 				
 				if (g == null) {
