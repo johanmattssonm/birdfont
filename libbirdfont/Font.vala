@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2013 Johan Mattsson
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -344,6 +344,11 @@ public class Font : GLib.Object {
 		glyph_unicode.remove (glyph.get_unicode ());
 		glyph_name.remove (glyph.get_name ());
 	}
+
+	// FIXME: order if ligature substitution is important
+	public GlyphCollection? get_ligature (uint indice) {
+		return ligature.nth (indice);
+	}
 	
 	/** Obtain all versions and alterntes for this glyph. */
 	public GlyphCollection? get_glyph_collection (string glyph) {
@@ -389,9 +394,9 @@ public class Font : GLib.Object {
 		return ((!)gc).get_current ();
 	}
 		
-	public Glyph? get_glyph (string name) {
+	public Glyph? get_glyph (string unicode) {
 		GlyphCollection? gc = null;
-		gc = glyph_unicode.get (name);
+		gc = glyph_unicode.get (unicode);
 		
 		if (gc == null) {
 			return null;
@@ -910,6 +915,7 @@ public class Font : GLib.Object {
 	public void add_glyph_callback (Glyph g) {
 		GlyphCollection? gcl;
 		GlyphCollection gc;
+		string liga;
 							
 		gcl = get_cached_glyph_collection (g.get_name ());
 		
@@ -922,9 +928,8 @@ public class Font : GLib.Object {
 		add_glyph_collection (gc);
 
 		if (g.is_ligature ()) {
-			foreach (string s in g.substitution) {
-				ligature.insert (s, gc);
-			}
+			liga = g.get_ligature_string ();
+			ligature.insert (liga, gc);
 		}
 	}
 

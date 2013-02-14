@@ -46,12 +46,21 @@ public class VersionList : DropMenu {
 	}
 	
 	public Glyph get_current () {
-		if (unlikely (current_version >= glyphs.length ())) {
+		unowned List<Glyph> g;
+		
+		if (unlikely (!(0 <= current_version < glyphs.length ()))) {
 			warning (@"current_version >= glyphs.length ($current_version >= $(glyphs.length ()))");
 			return new Glyph ("");
 		}
 		
-		return glyphs.nth (current_version).data;
+		g = glyphs.nth (current_version);
+		
+		if (unlikely (is_null (g.data))) {
+			warning ("No data in glyph collection.");
+			return new Glyph ("");
+		}
+		
+		return g.data;
 	}
 
 	public void add_new_version () {

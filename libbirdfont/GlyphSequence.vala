@@ -16,32 +16,101 @@
 */
 namespace BirdFont {
 	
-class GlyphSequence {
+public class GlyphSequence {
 	
-	/** A list of all letters */
+	/** A list of all glyphs */
 	public List <Glyph?> glyph;
-	
-	/** A list of all letters with ligature substitution. */
-	public List <Glyph?> glyph_with_ligatures;
 
 	public GlyphSequence () {
 		glyph = new List <Glyph?> ();
-		glyph_with_ligatures = new List <Glyph?> ();
 	}
 	
-	/** Do ligature substitution. */
-	public void process_ligatures () {
-		while (glyph_with_ligatures.length () > 0) {
-			glyph_with_ligatures.remove_link (glyph_with_ligatures.first ());
-		}
+	/** Do ligature substitution.
+	 * @return a new sequence with ligatures
+	 */
+	public GlyphSequence process_ligatures () {
+		GlyphSequence ligatures = new GlyphSequence ();
+		Font font = BirdFont.get_current_font ();
+		Glyph liga;
+		GlyphCollection? gc;
 		
 		foreach (Glyph? g in glyph) {
-			glyph_with_ligatures.append (g);
+			ligatures.glyph.append (g);
 		}
+		
+		for (uint i = 0; ; i++) {
+			gc = font.get_ligature (i);
+			
+			if (gc == null) {
+				break;
+			}
+			
+			liga = ((!) gc).get_current ();		
+			ligatures.replace (liga.get_ligature (), liga);
+			i++;
+		}
+		
+		return ligatures;
 	}
 	
-	int index_of_needle () {
-		return -1;
+	void replace (GlyphSequence old, Glyph replacement) {
+		int i = 0;
+		while (i < glyph.length ()) {
+			if (starts_with (old, i)) {
+				substitute (i, old.glyph.length (), replacement);
+				i = 0;
+			} else {
+				i++;
+			}
+		}		
+	}
+	
+	bool starts_with (GlyphSequence old, uint index) {
+		unowned List<Glyph?>? gl;
+		
+		foreach (Glyph? g in old.glyph) {
+			gl = glyph.nth (index);
+			
+			if (gl == null) {
+				return false;
+			}
+			
+			if (g != ((!) gl).data) {
+				return false;
+			}
+			
+			index++;
+		}
+		
+		return true;
+	}
+	
+	void substitute (uint index, uint length, Glyph substitute) {
+		List<Glyph?> new_list = new List<Glyph?> ();
+		int i = 0;
+		
+		foreach (Glyph? g in glyph) {
+			if (i == index) {
+				new_list.append (substitute);
+			}
+
+			if (!(i >= index && i < index + length)) {
+				new_list.append (g);
+			}
+
+			i++;
+		}
+		
+		while (glyph.length () > 0) {
+			glyph.remove_link (glyph.first ());
+		}
+		
+		glyph = new_list.copy ();
+		
+		while (new_list.length () > 0) {
+			new_list.remove_link (new_list.first ());
+		}
+				
 	}
 }
 

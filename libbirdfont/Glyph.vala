@@ -85,7 +85,7 @@ public class Glyph : FontDisplay {
 	bool open = true;
 	
 	bool ligature = false;
-	public List<string> substitution = new List<string> ();
+	string substitution = "";
 	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
@@ -106,9 +106,36 @@ public class Glyph : FontDisplay {
 		path_list.append (new Path ());
 	}
 	
-	public void add_ligature_substitution (string glyph_sequence) {
+	public string get_ligature_string () {
+		return substitution;
+	}
+	
+	public GlyphSequence get_ligature () {
+		int index = 0;
+		unichar c;
+		GlyphSequence gs = new GlyphSequence ();
+		Font font = BirdFont.get_current_font ();
+		StringBuilder s;
+		Glyph? g;
+		
+		while (substitution.get_next_char (ref index, out c)) {
+			s = new StringBuilder ();
+			s.append_unichar (c);
+			g = font.get_glyph (s.str);
+			
+			if (g == null) {
+				warning ("Glyph for $(s.str) does not exsist.");
+			} else {
+				gs.glyph.append (g);
+			}
+		}
+
+		return gs;		
+	}
+	
+	public void set_ligature_substitution (string glyph_sequence) {
 		ligature = true;
-		substitution.append (glyph_sequence);
+		substitution = glyph_sequence;
 	}
 	
 	public bool is_ligature () {
@@ -1449,10 +1476,8 @@ public class Glyph : FontDisplay {
 		}
 		
 		g.ligature = ligature;
-		foreach (string s in substitution) {
-			g.substitution.append (s);
-		}
-				
+		g.substitution = substitution;
+		
 		return g;
 	}
 

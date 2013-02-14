@@ -293,7 +293,7 @@ class SvgFont : GLib.Object {
 		glyph.right_limit = glyph.left_limit + advance * units;
 		
 		if (ligature != "") {
-			glyph.add_ligature_substitution (ligature);
+			glyph.set_ligature_substitution (ligature);
 		}
 		
 		font.add_glyph_callback (glyph);

@@ -48,6 +48,7 @@ public class KerningDisplay : FontDisplay {
 		int i, wi;
 		Glyph? prev;
 		Font font = BirdFont.get_current_font ();
+		GlyphSequence word_with_ligatures;
 		
 		i = 0;
 		
@@ -66,9 +67,8 @@ public class KerningDisplay : FontDisplay {
 		
 		foreach (GlyphSequence word in row) {
 			wi = 0;
-			
-			word.process_ligatures ();
-			foreach (Glyph? g in word.glyph_with_ligatures) {
+			word_with_ligatures = word.process_ligatures ();
+			foreach (Glyph? g in word_with_ligatures.glyph) {
 				if (g == null) {
 					continue;
 				}
@@ -139,6 +139,7 @@ public class KerningDisplay : FontDisplay {
 		Font font;
 		int wi = 0;
 		double kern;
+		GlyphSequence word_with_ligatures;
 		
 		font = BirdFont.get_current_font ();
 
@@ -148,7 +149,8 @@ public class KerningDisplay : FontDisplay {
 		b = "";
 
 		foreach (GlyphSequence word in row) {
-			foreach (Glyph? g in word.glyph) {
+			word_with_ligatures = word.process_ligatures ();
+			foreach (Glyph? g in word_with_ligatures.glyph) {
 				
 				if (g == null) {
 					continue;
@@ -262,11 +264,13 @@ public class KerningDisplay : FontDisplay {
 		
 		Glyph? prev = null;
 		string gl_name = "";
+		GlyphSequence word_with_ligatures;
 		
 		foreach (GlyphSequence word in row) {
 			col_index = 0;
 			
-			foreach (Glyph? g in word.glyph) {
+			word_with_ligatures = word.process_ligatures ();
+			foreach (Glyph? g in word_with_ligatures.glyph) {
 				// draw glyph
 
 				if (g == null) {
