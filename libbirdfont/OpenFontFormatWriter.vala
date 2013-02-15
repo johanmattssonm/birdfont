@@ -2316,12 +2316,6 @@ class HmtxTable : Table {
 		
 		return left_side_bearing[i] * 1000 / head_table.get_units_per_em ();
 	}
-
-	/** Get left side bearing relative to xmin for monospaces fonts. */
-	public double get_lsb_mono (uint32 i) 
-		requires (i < nmonospaced && left_side_bearing_monospaced != null) {
-		return left_side_bearing_monospaced[i] * 1000 / head_table.get_units_per_em ();
-	}
 			
 	public new void parse (FontData dis, HheaTable hhea_table, LocaTable loca_table) throws GLib.Error {
 		nmetrics = hhea_table.num_horizontal_metrics;

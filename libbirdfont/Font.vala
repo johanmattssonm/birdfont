@@ -875,7 +875,7 @@ public class Font : GLib.Object {
 		int error;
 		SvgFont svg_loader = new SvgFont (this);
 		
-		data = load_svg_font (path, out error);
+		data = load_freetype_font (path, out error);
 		
 		if (error != 0) {
 			warning ("Failed to load font.");

@@ -16,7 +16,7 @@
 */
 
 [CCode (cname = "load_svg_font")]
-public extern static StringBuilder? load_svg_font (string file, out int error);
+public extern static StringBuilder? load_freetype_font (string file, out int error);
 
 [CCode (cname = "validate_freetype_font")]
 public extern static bool validate_freetype_font (string file);

@@ -171,12 +171,7 @@ public class KerningDisplay : FontDisplay {
 		
 		
 	}
-	
-	private double get_kerning (string a, string b) {
-		Font font = BirdFont.get_current_font ();
-		return font.get_kerning_by_name (a, b);
-	}
-	
+
 	public override void selected_canvas () {
 		Glyph g;
 		GlyphSequence w;

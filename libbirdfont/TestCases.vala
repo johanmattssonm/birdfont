@@ -78,7 +78,7 @@ class TestCases {
 			warning ("The font does not pass freetype validation.");
 		}
 		
-		data = load_svg_font ((!) f.get_path (), out error);
+		data = load_freetype_font ((!) f.get_path (), out error);
 		if (error != 0) {
 			warning ("Failed to load font.");
 			return;

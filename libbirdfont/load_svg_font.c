@@ -332,7 +332,7 @@ int validate_font (FT_Face face) {
 /** Load typeface with freetype2 and return the result as a SVG font. 
  *  Parameter err will be set to non zero vaule if an error occurs.
  */
-GString* load_svg_font (char* file, int* err) {
+GString* load_freetype_font (char* file, int* err) {
 	GString* svg = NULL;
 
 	FT_Library library;
@@ -343,7 +343,7 @@ GString* load_svg_font (char* file, int* err) {
 
 	error = FT_Init_FreeType (&library);
 	if (error != OK) {
-		fprintf (stderr, "Freetype init error %d\n", error);
+		fprintf (stderr, "Freetype init error %d.\n", error);
 		*err = error;
 		return svg;
 	}
