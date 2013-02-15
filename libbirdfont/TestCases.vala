@@ -54,7 +54,8 @@ class TestCases {
 		int error;
 		File f = BirdFont.get_settings_directory ();
 		Font font = BirdFont.get_current_font ();
-
+		bool valid;
+		
 		font.set_name ("TEST_FONT");
 				
 		// draw some test glyphs
@@ -67,14 +68,17 @@ class TestCases {
 			warning ("TTF export failed.");
 		}
 		
-		f = f.get_child (font.get_name () + ".ttf");
-		
+		f = f.get_child (font.get_name () + ".ttf")
 		if (!f.query_exists ()) {
 			warning ("File does not exist.");
 		}
 		
-		data = load_svg_font ((!) f.get_path (), out error);
+		valid = validate_freetype_font ((!) f.get_path ());
+		if (!valid) {
+			warning ("The font does not pass freetype validation.");
+		}
 		
+		data = load_svg_font ((!) f.get_path (), out error);
 		if (error != 0) {
 			warning ("Failed to load font.");
 			return;

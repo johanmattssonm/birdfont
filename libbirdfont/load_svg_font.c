@@ -249,7 +249,7 @@ GString* get_svg_font (FT_Face face, int* err) {
 	*err = OK;
 	
 	g_string_append (svg, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
-	g_string_append (svg, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n");
+	// g_string_append (svg, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n");
 	g_string_append (svg, "<svg xmlns=\"http://www.w3.org/2000/svg\">\n");
 	g_string_append (svg, "<defs>\n");
 	g_string_append_printf (svg, "<font id=\"%s\" horiz-adv-x=\"250\">\n", face->family_name);
@@ -355,12 +355,6 @@ GString* load_svg_font (char* file, int* err) {
 		return svg;
 	}
 
-	error = validate_font (face);
-	if (error) {
-		*err = error;
-		return svg;
-	}
-
 	error = FT_Set_Char_Size (face, 0, 800, 300, 300);
 	if (error) {
 		printf ("Freetype FT_Set_Char_Size failed, error: %d.\n", error);
@@ -380,4 +374,30 @@ GString* load_svg_font (char* file, int* err) {
 	
 	*err = OK;
 	return svg;
+}
+
+guint validate_freetype_font (char* file) {
+	FT_Library library;
+	FT_Face face;
+	int error;
+	
+	error = FT_Init_FreeType (&library);
+	if (error != OK) {
+		printf ("Freetype init error %d\n", error);
+		return FALSE;
+	}
+
+	error = FT_New_Face (library, file, 0, &face);
+	if (error) {
+		printf ("Freetype font face error %d\n", error);
+		return FALSE;
+	}
+		
+	error = validate_font (face);
+	if (error) {
+		printf ("Validation failed.\n", error);
+		return FALSE;
+	}
+	
+	return TRUE;
 }
