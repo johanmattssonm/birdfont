@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
@@ -36,16 +35,16 @@
 #define CUBIC_CURVE 2
 #define QUADRATIC_OFF_CURVE 0
 
-guint is_cubic (char* flags, int index, int len) {
-	return flags[index] & CUBIC_CURVE && (flags[index] & ON_CURVE) == 0;
+guint is_cubic (char flag) {
+	return flag & CUBIC_CURVE && (flag & ON_CURVE) == 0;
 }
 
-guint is_quadratic (char* flags, int index, int len) {
-	return (flags[index] & CUBIC_CURVE) == 0 && (flags[index] & ON_CURVE) == 0;
+guint is_quadratic (char flag) {
+	return (flag & CUBIC_CURVE) == 0 && (flag & ON_CURVE) == 0;
 }
 
-guint is_line (char* flags, int index, int len) {
-	return flags[index] & ON_CURVE;
+guint is_line (char flag) {
+	return flag & ON_CURVE;
 }
 
 /** Add extra point where two ore more off curve points follow each other. */
@@ -75,17 +74,17 @@ void create_contour (FT_Vector* points, char* flags, int* length, FT_Vector** ne
 		return;
 	}
 	
-	prev_is_curve = is_quadratic (points, len - 1, len);
+	prev_is_curve = is_quadratic (flags[len - 1]);
 	
-	if (is_quadratic (flags, 0, len)) {
-		printf ("WARNING: path begins at off curve point.\n");
+	if (is_quadratic (flags[0])) {
+		fprintf (stderr, "WARNING: path begins at off curve point.\n");
 	} 
 
-	// FIXME: What if first and last point is off curve?
+	// FIXME: What if both first and last point is off curve?
 	
 	j = 0;
 	for (i = 0; i < len; i++) {
-		if (is_quadratic (flags, i, len)) {
+		if (is_quadratic (flags[i])) {
 			if (prev_is_curve && j != 0) { // i == 0?
 				x = p[j - 1].x + ((points[i].x - p[j - 1].x) / 2.0);
 				y = p[j - 1].y + ((points[i].y - p[j - 1].y) / 2.0);
@@ -97,12 +96,12 @@ void create_contour (FT_Vector* points, char* flags, int* length, FT_Vector** ne
 			}
 			
 			prev_is_curve = TRUE;
-		} else if (is_line (flags, i, len)) {
+		} else if (is_line (flags[i])) {
 			prev_is_curve = FALSE;
-		} else if (is_cubic (flags, i, len)) {
+		} else if (is_cubic (flags[i])) {
 			prev_is_curve = TRUE;
 		} else {
-			printf ("WARNING invalid point flags: %d index: %d.\n", flags[i], i);
+			fprintf (stderr, "WARNING invalid point flags: %d index: %d.\n", flags[i], i);
 			prev_is_curve = TRUE;
 		}
 		
@@ -164,18 +163,19 @@ GString* get_svg_contour_data (FT_Vector* points, char* flags, int length, int* 
 	while (i < length) {
 		contour = g_string_new ("");
 		
-		if (is_cubic (new_flags, i, length)) {
+		if (is_cubic (new_flags[i])) {
 			g_string_printf (contour, "C %d,%d  %d,%d  %d,%d ", (int)new_points[i].x, (int)new_points[i].y, (int)new_points[i+1].x, (int)new_points[i+1].y, (int)new_points[i+2].x, (int)new_points[i+2].y);
 			i += 3;
-		} else if (is_quadratic (new_flags, i, length)) {
-			g_string_append_printf (contour, "Q %d,%d %d,%d ", (int)new_points[i].x, (int)new_points[i].y, (int)new_points[i+1].x, (int)new_points[i+1].y);	
+		} else if (is_quadratic (new_flags[i])) {
+			g_string_printf (contour, "Q %d,%d %d,%d ", (int)new_points[i].x, (int)new_points[i].y, (int)new_points[i+1].x, (int)new_points[i+1].y);	
 			i += 2;
-		} else if (is_line (new_flags, i, length)) {
+		} else if (is_line (new_flags[i])) {
 			g_string_printf (contour, "L %d,%d ", (int)new_points[i].x, (int)new_points[i].y);
 			i += 1;
 		} else {
-			printf ("WARNING Can not parse outline.\n");
+			fprintf (stderr, "WARNING Can not parse outline.\n");
 			err = 1;
+			i++;
 		}
 		
 		g_string_append (svg, contour->str);
@@ -199,7 +199,7 @@ GString* get_svg_glyph_data (FT_Face face, int* err) {
 	int end;
 	
 	if (face->glyph->outline.n_points == 0) {
-		printf ("Freetype error no points for outline in glyph.\n"); // FIXME: DELETE
+		fprintf (stderr, "Freetype error no points for outline in glyph.\n"); // FIXME: DELETE
 		return svg;			
 	}
 
@@ -262,8 +262,8 @@ GString* get_svg_font (FT_Face face, int* err) {
 	for (i = 0; i < face->num_glyphs; i++) {
 		error = FT_Load_Glyph (face, i, FT_LOAD_DEFAULT);
 		if (error) {
-			printf ("Freetype failed to load glyph %d.\n", i);
-			printf ("FT_Load_Glyph error %d\n", error);
+			fprintf (stderr, "Freetype failed to load glyph %d.\n", i);
+			fprintf (stderr, "FT_Load_Glyph error %d\n", error);
 			*err = error;
 			return svg;
 		}
@@ -284,7 +284,7 @@ GString* get_svg_font (FT_Face face, int* err) {
 		g_string_append (svg, "d=\"");
 				
 		if (face->glyph->format != ft_glyph_format_outline) {
-			printf ("Freetype error no outline found in glyph.\n");
+			fprintf (stderr, "Freetype error no outline found in glyph.\n");
 			*err = 1;
 			return svg;
 		}
@@ -316,7 +316,7 @@ int validate_font (FT_Face face) {
 	error = FT_OpenType_Validate (face, FT_VALIDATE_BASE | FT_VALIDATE_GDEF | FT_VALIDATE_GPOS | FT_VALIDATE_GSUB | FT_VALIDATE_JSTF, &BASE_table, &GDEF_table, &GPOS_table, &GSUB_table, &JSTF_table);
 
 	if (error) {
-		printf ("Freetype validation error %d\n", error);
+		fprintf (stderr, "Freetype validation error %d\n", error);
 		return error;
 	} 
 	
@@ -343,28 +343,28 @@ GString* load_svg_font (char* file, int* err) {
 
 	error = FT_Init_FreeType (&library);
 	if (error != OK) {
-		printf ("Freetype init error %d\n", error);
+		fprintf (stderr, "Freetype init error %d\n", error);
 		*err = error;
 		return svg;
 	}
 
 	error = FT_New_Face (library, file, 0, &face);
 	if (error) {
-		printf ("Freetype font face error %d\n", error);
+		fprintf (stderr, "Freetype font face error %d\n", error);
 		*err = error;
 		return svg;
 	}
 
 	error = FT_Set_Char_Size (face, 0, 800, 300, 300);
 	if (error) {
-		printf ("Freetype FT_Set_Char_Size failed, error: %d.\n", error);
+		fprintf (stderr, "Freetype FT_Set_Char_Size failed, error: %d.\n", error);
 		*err = error;
 		return svg;
 	}
 
 	svg = get_svg_font (face, &error);
 	if (error != OK) {
-		printf ("Failed to parse font.\n");
+		fprintf (stderr, "Failed to parse font.\n");
 		*err = error;
 		return svg;	
 	}
@@ -383,21 +383,24 @@ guint validate_freetype_font (char* file) {
 	
 	error = FT_Init_FreeType (&library);
 	if (error != OK) {
-		printf ("Freetype init error %d\n", error);
+		fprintf (stderr, "Freetype init error %d\n", error);
 		return FALSE;
 	}
 
 	error = FT_New_Face (library, file, 0, &face);
 	if (error) {
-		printf ("Freetype font face error %d\n", error);
+		fprintf (stderr, "Freetype font face error %d\n", error);
 		return FALSE;
 	}
 		
 	error = validate_font (face);
 	if (error) {
-		printf ("Validation failed.\n", error);
+		fprintf (stderr, "Validation failed.\n", error);
 		return FALSE;
 	}
+
+	FT_Done_Face ( face );
+	FT_Done_FreeType( library );
 	
 	return TRUE;
 }

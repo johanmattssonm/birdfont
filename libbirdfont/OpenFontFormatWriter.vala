@@ -4524,7 +4524,7 @@ class DirectoryTable : Table {
 				printd ("Font file has valid checksum.\n");
 			}
 
-			// Skip validation of head table for now it should be realy simple but seems to
+			// Skip validation of head table for now it should be simple but it seems to
 			// be broken in some funny way.
 
 			if (!glyf_table.validate (dis)) {

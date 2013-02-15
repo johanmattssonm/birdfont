@@ -68,7 +68,7 @@ class TestCases {
 			warning ("TTF export failed.");
 		}
 		
-		f = f.get_child (font.get_name () + ".ttf")
+		f = f.get_child (font.get_name () + ".ttf");
 		if (!f.query_exists ()) {
 			warning ("File does not exist.");
 		}
