@@ -1047,6 +1047,7 @@ public class Glyph : FontDisplay {
 	public void open_path () {	
 		foreach (var p in path_list) {
 			p.set_editable (true);
+			p.recalculate_linear_handles ();
 		}
 		
 		open = true;

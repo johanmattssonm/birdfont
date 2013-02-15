@@ -467,7 +467,7 @@ public class Path {
 	public void set_editable (bool e) {
 		edit = e;
 	}
-		
+	
 	public bool is_open () {
 		return open;
 	}
@@ -777,6 +777,12 @@ public class Path {
 		PenTool.set_default_handle_positions ();
 		
 		return np;
+	}
+
+	public void recalculate_linear_handles () {
+		foreach (EditPoint e in points) {
+			e.recalculate_linear_handles ();
+		}
 	}
 
 	public void close () {
