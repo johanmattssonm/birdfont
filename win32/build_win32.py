@@ -101,9 +101,8 @@ def build():
 	run("windres ../win32/icon.rc -O coff -o ../build/icon.res")
 
 	# generate c code
-	run("valac -C --library libbirdfont -H birdfont.h ../libbirdfont/* --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
-	run("mv ./*.c ../build/win32/libbirdfont/ ")
-	run("mv ./*.h ../build/win32/libbirdfont/")
+	run("cp ../libbirdfont/*.c ../build/win32/libbirdfont/")
+	run("valac -C --basedir ../build/win32/libbirdfont/ --library libbirdfont -H birdfont.h ../libbirdfont/*.vala --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
 
 	run("valac -C ../birdfont/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
 	run("mv ./*.c ../build/win32/birdfont/")
@@ -145,6 +144,7 @@ def build():
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
 		-B static -lgio-2.0.dll -B static -l soup-2.4.dll \
 		-B static -l webkitgtk-1.0.dll  -B static -lgtk-win32-2.0.dll -B static -lgdk-win32-2.0.dll -B static -latk-1.0.dll -B static -lgio-2.0.dll -B static -lpangowin32-1.0.dll -B static -lpangocairo-1.0.dll -B static -lgdk_pixbuf-2.0.dll -B static -lpango-1.0.dll -B static -lcairo.dll -B static -lgobject-2.0.dll -B static -lgmodule-2.0.dll -B static -lgthread-2.0.dll -B static -lglib-2.0.dll \
+		-l freetype.dll \
 		-static -o libbirdfont.dll""")
 	
 	run("""i686-w64-mingw32-ar rcs ../build/libbirdfont.dll.a ../build/win32/libbirdfont/*.o""")
@@ -161,6 +161,7 @@ def build():
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
 		-B static -l gio-2.0.dll -B static -l soup-2.4.dll \
 		-B static -l webkitgtk-1.0.dll  -B static -l gtk-win32-2.0.dll -B static -l gdk-win32-2.0.dll -B static -l atk-1.0.dll -B static -l gio-2.0.dll -B static -l pangowin32-1.0.dll -B static -l pangocairo-1.0.dll -B static -l gdk_pixbuf-2.0.dll -B static -l pango-1.0.dll -B static -l cairo.dll -B static -l gobject-2.0.dll -B static -l gmodule-2.0.dll -B static -l gthread-2.0.dll -B static -l glib-2.0.dll \
+		-l freetype.dll \
 		-static -o birdfont.exe""")
 
 	run("""i686-w64-mingw32-gcc \
@@ -174,6 +175,7 @@ def build():
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
 		-B static -l gio-2.0.dll -B static -l soup-2.4.dll \
 		-B static -l webkitgtk-1.0.dll  -B static -l gtk-win32-2.0.dll -B static -l gdk-win32-2.0.dll -B static -l atk-1.0.dll -B static -l gio-2.0.dll -B static -l pangowin32-1.0.dll -B static -l pangocairo-1.0.dll -B static -l gdk_pixbuf-2.0.dll -B static -l pango-1.0.dll -B static -l cairo.dll -B static -l gobject-2.0.dll -B static -l gmodule-2.0.dll -B static -l gthread-2.0.dll -B static -l glib-2.0.dll \
+		-l freetype.dll \
 		-static -o birdfont_terminal.exe""")
 
 	run("""i686-w64-mingw32-gcc \
@@ -182,11 +184,13 @@ def build():
 		-Wl,-subsystem,windows \
 		-mthreads \
 		-L../build/ \
+		-L/usr/local/lib -lfreetype -lz \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
 		-static -B -static -l birdfont.dll \
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
 		-B static -l gio-2.0.dll -B static -l soup-2.4.dll \
 		-B static -l webkitgtk-1.0.dll  -B static -l gtk-win32-2.0.dll -B static -l gdk-win32-2.0.dll -B static -l atk-1.0.dll -B static -l gio-2.0.dll -B static -l pangowin32-1.0.dll -B static -l pangocairo-1.0.dll -B static -l gdk_pixbuf-2.0.dll -B static -l pango-1.0.dll -B static -l cairo.dll -B static -l gobject-2.0.dll -B static -l gmodule-2.0.dll -B static -l gthread-2.0.dll -B static -l glib-2.0.dll \
+		-l freetype.dll \
 		-static -o birdfont-export.exe""")
 
 	run("mv birdfont-export.exe ../build/supplement/")

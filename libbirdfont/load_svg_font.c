@@ -36,15 +36,15 @@
 #define CUBIC_CURVE 2
 #define QUADRATIC_OFF_CURVE 0
 
-uint is_cubic (char* flags, int index, int len) {
+guint is_cubic (char* flags, int index, int len) {
 	return flags[index] & CUBIC_CURVE && (flags[index] & ON_CURVE) == 0;
 }
 
-uint is_quadratic (char* flags, int index, int len) {
+guint is_quadratic (char* flags, int index, int len) {
 	return (flags[index] & CUBIC_CURVE) == 0 && (flags[index] & ON_CURVE) == 0;
 }
 
-uint is_line (char* flags, int index, int len) {
+guint is_line (char* flags, int index, int len) {
 	return flags[index] & ON_CURVE;
 }
 
@@ -52,7 +52,7 @@ uint is_line (char* flags, int index, int len) {
 void create_contour (FT_Vector* points, char* flags, int* length, FT_Vector** new_points, char** new_flags, int* err) {
 	int i;
 	int j;
-	uint prev_is_curve;
+	guint prev_is_curve;
 	double x = 0;
 	double y = 0;
 	FT_Vector* p;
@@ -273,7 +273,7 @@ GString* get_svg_font (FT_Face face, int* err) {
 		
 		if (charcode != 0) {
 			g_string_append (glyph_element,"unicode=\"&#x");
-			g_string_append_printf (glyph_element, "%x", (uint)charcode);
+			g_string_append_printf (glyph_element, "%x", (guint)charcode);
 			g_string_append (glyph_element, ";\" ");
 		}
 		
