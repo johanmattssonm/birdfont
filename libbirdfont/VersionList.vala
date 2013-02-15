@@ -123,7 +123,7 @@ public class VersionList : DropMenu {
 			ug = font.get_glyph (uni.str);
 			
 			if (ug == null) {
-				warning ("display is null");
+				warning (@"display is null for tab $(tab.get_label ())");
 				return;
 			}
 			

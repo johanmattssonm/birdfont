@@ -1169,7 +1169,7 @@ class GlyfTable : Table {
 					} else {
 						edit_point.recalculate_linear_handles ();
 					}
-									
+					
 					prev_is_curve = false;
 				} else {
 									

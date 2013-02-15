@@ -50,13 +50,32 @@ class TestCases {
 	}
 
 	public static void test_freetype () {
-		string svg;
-		string? data;
-		bool error;
+		StringBuilder? data;
+		int error;
+		File f = BirdFont.get_settings_directory ();
+		Font font = BirdFont.get_current_font ();
+
+		font.set_name ("TEST_FONT");
+				
+		// draw some test glyphs
+		test_illustrator_import ();
+		test_inkscape_import ();
 		
-		data = load_svg_font ("", out error);
+		Tool.yield ();
 		
-		if (error) {
+		if (!ExportTool.export_ttf_font_path (f, false)) {
+			warning ("TTF export failed.");
+		}
+		
+		f = f.get_child (font.get_name () + ".ttf");
+		
+		if (!f.query_exists ()) {
+			warning ("File does not exist.");
+		}
+		
+		data = load_svg_font ((!) f.get_path (), out error);
+		
+		if (error != 0) {
 			warning ("Failed to load font.");
 			return;
 		}
@@ -66,9 +85,9 @@ class TestCases {
 			return;
 		}
 		
-		svg = (!) data;
+		Tool.yield ();
 		
-		print (@"svg: $svg\n");
+		font.load ((!) f.get_path ());
 	}
 
 	public static void test_parse_quadratic_paths () {

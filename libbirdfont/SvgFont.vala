@@ -28,19 +28,34 @@ class SvgFont : GLib.Object {
 		this.font = f;
 	}
 	
+	/** Load svg font from file. */
 	public void load (string path) {
+		load_font_data (path, true);
+	}
+
+	/** Parse svg data. */
+	public void load_svg_data (string path) {
+		load_font_data (path, false);
+	}
+	
+	void load_font_data (string d, bool file) {
 		Xml.Doc* doc;
 		Xml.Node* root = null;
 		
 		Parser.init ();
 		
-		doc = Parser.parse_file (path);
+		if (file) {
+			doc = Parser.parse_file (d);
+		} else {
+			doc = Parser.parse_doc (d);
+		}
+		
 		root = doc->get_root_element ();
 		return_if_fail (root != null);
 		parse_svg_font (root);
 
 		delete doc;
-		Parser.cleanup ();
+		Parser.cleanup ();		
 	}
 	
 	void parse_svg_font (Xml.Node* node) {

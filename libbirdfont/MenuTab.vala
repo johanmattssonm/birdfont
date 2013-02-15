@@ -420,7 +420,7 @@ c.append ("""
 			tab_bar.add_unique_tab (new Preview (), 80);	
 		});
 				
-		if (format == FontFormat.SVG && !OverwriteDialog.ignore) {
+		if ((format == FontFormat.SVG || format == FontFormat.FREETYPE) && !OverwriteDialog.ignore) {
 			tab_bar.add_unique_tab (overwrite);
 		} else {
 			overwrite.finished ();

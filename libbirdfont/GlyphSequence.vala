@@ -45,6 +45,8 @@ public class GlyphSequence {
 				break;
 			}
 			
+			print (@"LIGA: $(((!) gc).get_current ().get_ligature_string ())\n");
+			
 			liga = ((!) gc).get_current ();		
 			ligatures.replace (liga.get_ligature (), liga);
 			i++;
@@ -62,7 +64,7 @@ public class GlyphSequence {
 			} else {
 				i++;
 			}
-		}		
+		}
 	}
 	
 	bool starts_with (GlyphSequence old, uint index) {
@@ -101,7 +103,9 @@ public class GlyphSequence {
 			i++;
 		}
 		
-		while (glyph.length () > 0) {
+		// remove all links in order to prevent the g_list to delete all items
+		// when the list is deleted.
+		while (glyph.length () > 0) { 
 			glyph.remove_link (glyph.first ());
 		}
 		

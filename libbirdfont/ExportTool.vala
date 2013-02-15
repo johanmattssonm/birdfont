@@ -481,6 +481,7 @@ os.put_string (
 			}
 			
 			if (!async) {
+				print ("sync\n");
 				export_thread.run ();
 			}
 			

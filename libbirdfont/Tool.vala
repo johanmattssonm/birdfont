@@ -306,18 +306,18 @@ public class Tool : GLib.Object {
 	/** Run pending events in main loop before continue. */
 	public static void @yield () {
 		int t = 0;
-		var time = new TimeoutSource(500);
+		var time = new TimeoutSource (500);
 		bool timeout;
 
 		if (TestBirdFont.is_slow_test ()) {
 			timeout = false;
 			
-			time.set_callback(() => {
+			time.set_callback (() => {
 				timeout = true;
 				return false;
 			});
 
-			time.attach(null);		
+			time.attach (null);		
 		} else {
 			timeout = true;
 		}

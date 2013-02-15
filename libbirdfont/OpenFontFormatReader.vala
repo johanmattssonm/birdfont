@@ -16,7 +16,7 @@
 */
 
 [CCode (cname = "load_svg_font")]
-public extern static string? load_svg_font (string file, out bool error);
+public extern static StringBuilder? load_svg_font (string file, out int error);
 
 namespace BirdFont {
 

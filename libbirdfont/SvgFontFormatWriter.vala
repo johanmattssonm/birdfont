@@ -65,6 +65,7 @@ class SvgFontFormatWriter : Object  {
 
 		// (missing-glyph goes here)
 
+		// regular glyphs 
 		while (true) {
 			g = font.get_glyph_indice (indice++);
 			
@@ -86,6 +87,8 @@ class SvgFontFormatWriter : Object  {
 				}
 			}
 		}
+		
+		// FIXME: ligatures
 
 		indice = 0;
 		while (true) {

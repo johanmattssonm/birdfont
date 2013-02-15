@@ -22,7 +22,8 @@ namespace BirdFont {
 
 public enum FontFormat {
 	FFI,
-	SVG
+	SVG,
+	FREETYPE
 }
 
 public class Font : GLib.Object {
@@ -842,12 +843,19 @@ public class Font : GLib.Object {
 				format = FontFormat.FFI;
 			}
 			
+			if (path.has_suffix (".ttf") || path.has_suffix (".otf")) {
+				font_file = path;
+				loaded = parse_freetype_file (path);
+				format = FontFormat.FREETYPE;
+			}			
+			
+			/* // TODO: Remove the old way of loading ttfs when testing of the OTF writer is complete.
 			if (BirdFont.experimental) {
 				if (path.has_suffix (".ttf")) {
 					font_file = path;
 					loaded = parse_otf_file (path);
 				}
-			}
+			}*/
 			
 			if (recent) {
 				add_thumbnail ();
@@ -859,6 +867,30 @@ public class Font : GLib.Object {
 		}
 		
 		return loaded;
+	}
+
+	private bool parse_freetype_file (string path) {
+		string svg;
+		StringBuilder? data;
+		int error;
+		SvgFont svg_loader = new SvgFont (this);
+		
+		data = load_svg_font (path, out error);
+		
+		if (error != 0) {
+			warning ("Failed to load font.");
+			return false;
+		}
+		
+		if (data == null) {
+			warning ("No svg data.");
+			return false;
+		}
+		
+		svg = ((!) data).str;
+		svg_loader.load_svg_data (svg);
+		
+		return true;
 	}
 
 	private bool parse_svg_file (string path) {
