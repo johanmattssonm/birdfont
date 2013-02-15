@@ -665,14 +665,14 @@ public class ImportSvg {
 		}
 
 		Path path = new Path ();
-		
+
+		// resize all points
+		for (int i = 0; i < pi; i++) {
+			p[i] *= units;
+		}
+					
 		// move and resize
 		if (svg_glyph) {
-			// resize all points
-			for (int i = 0; i < pi; i++) {
-				p[i] *= units;
-			}
-			
 			// move only y 
 			for (int i = 0; i < pi; i += 2) {
 				p[i] += glyph.left_limit;

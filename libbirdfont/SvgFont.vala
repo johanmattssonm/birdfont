@@ -21,7 +21,7 @@ namespace BirdFont {
 
 class SvgFont : GLib.Object {
 	Font font;
-	double units = 1;
+	double units = 1; // 1000 is default in svg spec.
 	double font_advance = 0;
 	
 	public SvgFont (Font f) {
@@ -184,7 +184,12 @@ class SvgFont : GLib.Object {
 			if (attr_name == "units-per-em") {
 				units = 100.0 / double.parse (attr_content);
 			}	
-						
+		}
+
+		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+			attr_name = prop->name;
+			attr_content = prop->children->content;
+					
 			if (attr_name == "ascent") {
 				top_limit = -double.parse (attr_content);
 			}

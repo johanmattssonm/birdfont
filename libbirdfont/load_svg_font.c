@@ -78,7 +78,7 @@ void create_contour (FT_Vector* points, char* flags, int* length, FT_Vector** ne
 	prev_is_curve = is_quadratic (points, len - 1, len);
 	
 	if (is_quadratic (flags, 0, len)) {
-		printf ("WARNING: path begins at off curve point.");
+		printf ("WARNING: path begins at off curve point.\n");
 	} 
 
 	// FIXME: What if first and last point is off curve?
@@ -244,6 +244,7 @@ GString* get_svg_font (FT_Face face, int* err) {
 	FT_Error error;
 	FT_Long i;
 	FT_ULong charcode;
+	double units_per_em;
 
 	*err = OK;
 	
@@ -253,7 +254,9 @@ GString* get_svg_font (FT_Face face, int* err) {
 	g_string_append (svg, "<defs>\n");
 	g_string_append_printf (svg, "<font id=\"%s\" horiz-adv-x=\"250\">\n", face->family_name);
 
-	g_string_printf (font_element, "<font-face units-per-em=\"%d\" ascent=\"%d\" descent=\"%d\" />\n", (int) face->units_per_EM, (int) face->ascender, (int) face->descender);	
+	units_per_em = face->units_per_EM;
+	units_per_em *= 10.0 / 3.0; 	// TODO: find out why size is different in svg fonts
+	g_string_printf (font_element, "<font-face units-per-em=\"%f\" ascent=\"%d\" descent=\"%d\" />\n", units_per_em, (int) face->ascender, (int) face->descender);	
 	g_string_append (svg, font_element->str);
 	
 	for (i = 0; i < face->num_glyphs; i++) {
