@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-16 08:18+0100\n"
+"POT-Creation-Date: 2013-02-16 10:52+0100\n"
 "PO-Revision-Date: 2013-02-15 02:14+0000\n"
 "Last-Translator: Garab <voron-tengu@mail.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,11 +83,11 @@ msgstr "записать svg файл\n"
 msgid "write ttf and eot files\n"
 msgstr "записать ttf и eot файлы\n"
 
-#: libbirdfont/BirdFont.vala:117
+#: libbirdfont/BirdFont.vala:118
 msgid "Can't find output directory"
 msgstr "Выходной каталог не найден"
 
-#: libbirdfont/BirdFont.vala:122 libbirdfont/BirdFont.vala:127
+#: libbirdfont/BirdFont.vala:123 libbirdfont/BirdFont.vala:128
 msgid "Writing"
 msgstr "Запись"
 

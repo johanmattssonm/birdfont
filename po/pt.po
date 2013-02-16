@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-16 08:18+0100\n"
+"POT-Creation-Date: 2013-02-16 10:52+0100\n"
 "PO-Revision-Date: 2013-01-13 05:44+0000\n"
 "Last-Translator: aamrs_mansil <manuela.silva@sky.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,11 +82,11 @@ msgstr "gravar ficheiro svg\n"
 msgid "write ttf and eot files\n"
 msgstr "gravar ficheiros ttf e eot\n"
 
-#: libbirdfont/BirdFont.vala:117
+#: libbirdfont/BirdFont.vala:118
 msgid "Can't find output directory"
 msgstr "Não é possível encontrar a diretoria de destino"
 
-#: libbirdfont/BirdFont.vala:122 libbirdfont/BirdFont.vala:127
+#: libbirdfont/BirdFont.vala:123 libbirdfont/BirdFont.vala:128
 msgid "Writing"
 msgstr "Gravação"
 

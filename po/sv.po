@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-16 08:18+0100\n"
+"POT-Creation-Date: 2013-02-16 10:52+0100\n"
 "PO-Revision-Date: 2013-02-11 15:43+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,11 +82,11 @@ msgstr "skriv svg-fil\n"
 msgid "write ttf and eot files\n"
 msgstr "skriv ttf- och eot-filer\n"
 
-#: libbirdfont/BirdFont.vala:117
+#: libbirdfont/BirdFont.vala:118
 msgid "Can't find output directory"
 msgstr "Kan inte hitta mappen som filerna ska skrivas till"
 
-#: libbirdfont/BirdFont.vala:122 libbirdfont/BirdFont.vala:127
+#: libbirdfont/BirdFont.vala:123 libbirdfont/BirdFont.vala:128
 msgid "Writing"
 msgstr "Skriver"
 

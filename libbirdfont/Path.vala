@@ -1055,9 +1055,15 @@ public class Path {
 
 	bool split_cubic_in_half (Path cubic_path, EditPoint middle) {
 		double curve_x, curve_y, cx, cy, qx, qy, nx, ny, distance;	
+		EditPoint start;
+		EditPoint stop;
 		
-		EditPoint start = middle.get_prev ().data;
-		EditPoint stop = middle.get_next ().data;
+		if (middle.get_right_handle ().type == PointType.QUADRATIC) {
+			return false;
+		}
+		
+		start = middle.get_prev ().data;
+		stop = middle.get_next ().data;
 		
 		estimate_quadratic (start, stop, out curve_x, out curve_y);
 	
