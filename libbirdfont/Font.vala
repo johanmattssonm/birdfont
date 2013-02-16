@@ -34,6 +34,9 @@ public class Font : GLib.Object {
 	/** Table with glyphs sorted by their name. */
 	GlyphTable glyph_name = new GlyphTable ();
 
+	/** Table with ligatures. */
+	GlyphTable ligature = new GlyphTable ();
+
 	/** Last unassigned index */
 	int next_unindexed = 0;
 	
@@ -345,17 +348,12 @@ public class Font : GLib.Object {
 	public void delete_glyph (GlyphCollection glyph) {
 		glyph_cache.remove (glyph.get_unicode ());
 		glyph_name.remove (glyph.get_name ());
-/*
-<<<<<<< HEAD
+		ligature.remove (glyph.get_current ().get_ligature_string ());
 	}
 
-	// FIXME: order if ligature substitution is important
+	// FIXME: order of ligature substitutions is important
 	public GlyphCollection? get_ligature (uint indice) {
 		return ligature.nth (indice);
-=======
-*/
-		// FIXME: DELETE: glyph_cache.remove (glyph);
-//>>>>>>> parent of a76d9a8... parse ligatures from svg font
 	}
 	
 	/** Obtain all versions and alterntes for this glyph. */
@@ -387,7 +385,7 @@ public class Font : GLib.Object {
 	public GlyphCollection? get_glyph_collection_by_name (string glyph) {
 		// TODO: load from disk here if needed.
 		GlyphCollection? gc = null;
-		gc = glyph_name.get (glyph);
+		gc = glyph_name.get (glyph);		
 		return gc;
 	}
 
@@ -404,12 +402,8 @@ public class Font : GLib.Object {
 		
 	public Glyph? get_glyph (string unicode) {
 		GlyphCollection? gc = null;
-//<<<<<<< HEAD
-//		gc = glyph_unicode.get (unicode);
-//=======
-		gc = glyph_cache.get (name);
-//>>>>>>> parent of a76d9a8... parse ligatures from svg font
-		
+		gc = glyph_cache.get (unicode);
+
 		if (gc == null) {
 			return null;
 		}
@@ -828,6 +822,7 @@ public class Font : GLib.Object {
 
 			glyph_cache.remove_all ();
 			glyph_name.remove_all ();
+			ligature.remove_all ();
 			
 			if (path.has_suffix (".svg")) {
 				font_file = path;
@@ -954,35 +949,25 @@ public class Font : GLib.Object {
 		if (gcl != null) {
 			warning (@"glyph \"$(g.get_name ())\" does already exist");
 		}
-		
+/*
+		if (g.name == "") { // FIXME: DELETE?
+			warning ("refusing to insert glyph without name");
+			g.name = @"($(++next_unindexed))";
+			return;
+		}
+*/					
 		if (g.is_unassigned ()) {
 			gc = new GlyphCollection (g);
-	
-/*		
-<<<<<<< HEAD
+		}
+
 		gc = new GlyphCollection (g);
 		add_glyph_collection (gc);
 
 		if (g.is_ligature ()) {
 			liga = g.get_ligature_string ();
 			ligature.insert (liga, gc);
-=======
-*/
-			if (g.name == "") {
-				warning ("refusing to insert glyph without name");
-				g.name = @"($(++next_unindexed))";
-				return;
-			}
-			
-			add_glyph_collection ((!) gc);
-		} else if (gcl == null) {
-			gc = new GlyphCollection (g);
-			add_glyph_collection ((!) gc);
-		} else {
-			stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
-//>>>>>>> parent of a76d9a8... parse ligatures from svg font
 		}
-				
+						
 		// take xheight from appropriate lower case letter
 		// xheight_position = estimate_xheight ();
 	}

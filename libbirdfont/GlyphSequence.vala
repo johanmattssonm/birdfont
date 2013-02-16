@@ -30,7 +30,7 @@ public class GlyphSequence {
 	 */
 	public GlyphSequence process_ligatures () {
 		GlyphSequence ligatures = new GlyphSequence ();
-/* // FIXME		Font font = BirdFont.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		Glyph liga;
 		GlyphCollection? gc;
 		
@@ -45,13 +45,14 @@ public class GlyphSequence {
 				break;
 			}
 			
+			// FIXME: DELETE
 			print (@"LIGA: $(((!) gc).get_current ().get_ligature_string ())\n");
 			
 			liga = ((!) gc).get_current ();		
 			ligatures.replace (liga.get_ligature (), liga);
 			i++;
 		}
-		*/
+		
 		return ligatures;
 	}
 	

@@ -408,7 +408,7 @@ c.append ("""
 	}
 	
 	public static void show_kerning_context () {
-		MainWindow.get_tab_bar ().add_unique_tab (new ContextDisplay (), 85, false);
+		MainWindow.get_tab_bar ().add_unique_tab (new KerningDisplay (), 85, false);
 	}
 	
 	public static void preview () {

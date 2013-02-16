@@ -20,7 +20,7 @@ using Cairo;
 namespace BirdFont {
 
 /** Kerning context. */
-public class ContextDisplay : FontDisplay {
+public class KerningDisplay : FontDisplay {
 
 	List <GlyphSequence> row;
 	int active_handle = -1;
@@ -30,17 +30,10 @@ public class ContextDisplay : FontDisplay {
 	double begin_handle_y = 0;
 	
 	double last_handle_x = 0;
-/*
-<<<<<<< HEAD
+
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
 		row = new List <GlyphSequence> ();
-=======
-*/
-	public ContextDisplay () {
-		GlyphSequence w = new GlyphSequence ();
-		row = new List <GlyphSequence> ();
-//>>>>>>> parent of a76d9a8... parse ligatures from svg font
 		row.append (w);
 	}
 

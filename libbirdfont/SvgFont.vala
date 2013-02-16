@@ -225,6 +225,14 @@ class SvgFont : GLib.Object {
 		return unicode_value;	
 	}
 	
+	bool is_ligature (string v) {
+		if (v.has_prefix ("&")) {
+			return false;
+		}
+		
+		return v.char_count () > 1;
+	}
+	
 	void parse_glyph (Xml.Node* node) {
 		string attr_name = "";
 		string attr_content;
@@ -233,6 +241,7 @@ class SvgFont : GLib.Object {
 		string svg = "";
 		Glyph glyph;
 		double advance = font_advance;
+		string ligature = "";
 
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -243,6 +252,10 @@ class SvgFont : GLib.Object {
 				
 				if (glyph_name == "") {
 					glyph_name = attr_content;
+				}
+				
+				if (is_ligature (attr_content)) {
+					ligature = attr_content;
 				}
 			}
 			
@@ -260,26 +273,15 @@ class SvgFont : GLib.Object {
 			}
 		}
 
-/*		
-<<<<<<< HEAD
 		glyph = new Glyph (glyph_name, unicode_value);
 		ImportSvg.parse_svg_data (svg, glyph, true, units);			
 		glyph.right_limit = glyph.left_limit + advance * units;
 		
 		if (ligature != "") {
 			glyph.set_ligature_substitution (ligature);
-=======
-*/
-		// FIXME: this code will ignore characters that are mapped several glyphs
-		if (unicode_value != '\0') {
-			glyph = new Glyph (glyph_name, unicode_value);
-			ImportSvg.parse_svg_data (svg, glyph, true, units);			
-			glyph.right_limit = glyph.left_limit + advance * units;
-			font.add_glyph_callback (glyph);
-		} else {
-			warning ("ignoring glyph");
-//>>>>>>> parent of a76d9a8... parse ligatures from svg font
 		}
+		
+		font.add_glyph_callback (glyph);
 	}
 }
 
