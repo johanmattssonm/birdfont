@@ -29,13 +29,13 @@ public enum FontFormat {
 public class Font : GLib.Object {
 	
 	/** Table with glyphs sorted by their unicode value. */
-	GlyphTable glyph_unicode = new GlyphTable ();
+	GlyphTable glyph_cache = new GlyphTable ();
 	
 	/** Table with glyphs sorted by their name. */
 	GlyphTable glyph_name = new GlyphTable ();
 
-	/** Ligatures */
-	GlyphTable ligature = new GlyphTable ();
+	/** Last unassigned index */
+	int next_unindexed = 0;
 	
 	public List <string> background_images = new List <string> ();
 	public string background_scale = "1";
@@ -175,7 +175,7 @@ public class Font : GLib.Object {
 
 	public void print_all () {
 		stdout.printf ("Unicode:\n");		
-		glyph_unicode.for_each((g) => {
+		glyph_cache.for_each((g) => {
 			stdout.printf (@"$(g.get_unicode ())\n");
 		});
 		
@@ -197,7 +197,7 @@ public class Font : GLib.Object {
 		}
 				
 		ret = new Glyph ("nonmarkingreturn", '\r');
-
+		ret.set_unassigned (false);
 		ret.left_limit = 0;
 		ret.right_limit = 0;
 		ret.remove_empty_paths ();
@@ -215,7 +215,7 @@ public class Font : GLib.Object {
 		}
 		
 		n = new Glyph ("null", '\0');
-		
+		n.set_unassigned (false);
 		n.left_limit = 0;
 		n.right_limit = 0;
 		n.remove_empty_paths ();
@@ -237,7 +237,7 @@ public class Font : GLib.Object {
 		}
 				
 		n = new Glyph ("space", ' ');
-
+		n.set_unassigned (false);
 		n.left_limit = 0;
 		n.right_limit = 27;
 		n.remove_empty_paths ();
@@ -261,6 +261,7 @@ public class Font : GLib.Object {
 		p = new Path ();
 		i = new Path ();
 		
+		g.set_unassigned (true);
 		g.left_limit = -33;
 		g.right_limit = 33;
 		
@@ -306,10 +307,10 @@ public class Font : GLib.Object {
 		}
 		
 		if (glyph_collection.get_unicode () != "") {
-			glyph_unicode.insert (glyph_collection.get_unicode (), glyph_collection);
+			glyph_name.insert (glyph_collection.get_name (), glyph_collection);			
 		}
 		
-		glyph_name.insert (glyph_collection.get_name (), glyph_collection);			
+		glyph_cache.insert (glyph_collection.get_unicode (), glyph_collection);
 	}
 	
 	public string get_name_for_character (unichar c) {
@@ -342,13 +343,19 @@ public class Font : GLib.Object {
 	}
 	
 	public void delete_glyph (GlyphCollection glyph) {
-		glyph_unicode.remove (glyph.get_unicode ());
+		glyph_cache.remove (glyph.get_unicode ());
 		glyph_name.remove (glyph.get_name ());
+/*
+<<<<<<< HEAD
 	}
 
 	// FIXME: order if ligature substitution is important
 	public GlyphCollection? get_ligature (uint indice) {
 		return ligature.nth (indice);
+=======
+*/
+		// FIXME: DELETE: glyph_cache.remove (glyph);
+//>>>>>>> parent of a76d9a8... parse ligatures from svg font
 	}
 	
 	/** Obtain all versions and alterntes for this glyph. */
@@ -372,7 +379,7 @@ public class Font : GLib.Object {
 	/** Get glyph collection by unichar code. */
 	public GlyphCollection? get_cached_glyph_collection (string unichar_code) {
 		GlyphCollection? gc = null;
-		gc = glyph_unicode.get (unichar_code);
+		gc = glyph_cache.get (unichar_code);
 		return gc;
 	}
 
@@ -397,7 +404,11 @@ public class Font : GLib.Object {
 		
 	public Glyph? get_glyph (string unicode) {
 		GlyphCollection? gc = null;
-		gc = glyph_unicode.get (unicode);
+//<<<<<<< HEAD
+//		gc = glyph_unicode.get (unicode);
+//=======
+		gc = glyph_cache.get (name);
+//>>>>>>> parent of a76d9a8... parse ligatures from svg font
 		
 		if (gc == null) {
 			return null;
@@ -424,19 +435,6 @@ public class Font : GLib.Object {
 	
 	public void add_background_image (string file) {
 		background_images.append (file);
-	}
-
-	public string get_name_from_unicode (string unicode) {
-		string v = "";
-		Glyph? g = get_glyph (unicode);
-		
-		if (g != null) {
-			v = ((!)g).get_name ();
-		} else {
-			warning (@"no name for \"$unicode\"");
-		}
-		
-		return v;
 	}
 
 	/** Obtain kerning for pair with name a and b.
@@ -636,7 +634,7 @@ public class Font : GLib.Object {
 				os.put_string ("\n");
 			}
 			
-			glyph_unicode.for_each ((gc) => {
+			glyph_cache.for_each ((gc) => {
 				bool selected;
 				
 				if (is_null (gc)) {
@@ -654,7 +652,7 @@ public class Font : GLib.Object {
 				}
 			});
 		
-			glyph_unicode.for_each ((gc) => {
+			glyph_cache.for_each ((gc) => {
 				Glyph glyph;
 				
 				try {
@@ -682,7 +680,7 @@ public class Font : GLib.Object {
 				}
 			});
 
-			glyph_unicode.for_each ((gc) => {
+			glyph_cache.for_each ((gc) => {
 				GlyphBackgroundImage bg;
 				
 				try {
@@ -828,7 +826,7 @@ public class Font : GLib.Object {
 				grid_width.remove_link (grid_width.first ());
 			}
 
-			glyph_unicode.remove_all ();
+			glyph_cache.remove_all ();
 			glyph_name.remove_all ();
 			
 			if (path.has_suffix (".svg")) {
@@ -955,16 +953,38 @@ public class Font : GLib.Object {
 		
 		if (gcl != null) {
 			warning (@"glyph \"$(g.get_name ())\" does already exist");
-			return;
 		}
-			
+		
+		if (g.is_unassigned ()) {
+			gc = new GlyphCollection (g);
+	
+/*		
+<<<<<<< HEAD
 		gc = new GlyphCollection (g);
 		add_glyph_collection (gc);
 
 		if (g.is_ligature ()) {
 			liga = g.get_ligature_string ();
 			ligature.insert (liga, gc);
+=======
+*/
+			if (g.name == "") {
+				warning ("refusing to insert glyph without name");
+				g.name = @"($(++next_unindexed))";
+				return;
+			}
+			
+			add_glyph_collection ((!) gc);
+		} else if (gcl == null) {
+			gc = new GlyphCollection (g);
+			add_glyph_collection ((!) gc);
+		} else {
+			stderr.printf (@"Glyph collection does already have an entry for $(g.get_name ()) char $((uint64) g.unichar_code).\n");
+//>>>>>>> parent of a76d9a8... parse ligatures from svg font
 		}
+				
+		// take xheight from appropriate lower case letter
+		// xheight_position = estimate_xheight ();
 	}
 
 	public bool parse_otf_file (string path) throws GLib.Error {
@@ -985,7 +1005,7 @@ public class Font : GLib.Object {
 		font_file = path;
 		
 		// empty cache and fill it with new glyphs from disk
-		glyph_unicode.remove_all ();
+		glyph_cache.remove_all ();
 		glyph_name.remove_all ();
 
 		while (background_images.length () > 0) {

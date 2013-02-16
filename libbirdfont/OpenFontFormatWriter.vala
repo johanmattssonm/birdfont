@@ -759,6 +759,11 @@ class GlyfTable : Table {
 		
 		while (gl != glyphs.first ()) {
 			g = (!) gl.data;
+			
+			if (!g.is_unassigned ()) {
+				break;
+			}
+			
 			gl = gl.prev;
 		}
 		
@@ -840,6 +845,10 @@ class GlyfTable : Table {
 		
 		glyph.name = name;
 
+		if (character == 0) {
+			glyph.set_unassigned (true);
+		}
+		
 		if (character == 0 && name != "") {
 			stderr.printf (@"Got null character\n");
 			stderr.printf (@"gid: $index\n");
@@ -1551,7 +1560,11 @@ class GlyfTable : Table {
 			
 			g.remove_empty_paths ();
 
-			glyphs.append (g);
+			if (!g.is_unassigned ()) {
+				glyphs.append (g);
+			} else {
+				unassigned_glyphs.append (g);
+			}
 		}
 		
 		foreach (Glyph ug in unassigned_glyphs) {
@@ -1796,7 +1809,9 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 		uint32 first_assigned = 1;
 		
 		foreach (Glyph g in glyf_table.glyphs) {
-			glyph_range.add_single (g.unichar_code);
+			if (!g.is_unassigned ()) {
+				glyph_range.add_single (g.unichar_code);
+			}
 		}
 		
 		// glyph_range.print_all ();

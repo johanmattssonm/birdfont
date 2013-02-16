@@ -93,7 +93,6 @@ class SvgFont : GLib.Object {
 		StringBuilder sl, sr;
 		string attr_name = "";
 		string attr_content;
-		string ln, rn;
 		
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -123,52 +122,22 @@ class SvgFont : GLib.Object {
 			}
 		}
 		
-		// , is used as separator
-		if (left == ",") {
-			left = "&#x2c;";
-		}
-
-		if (right == ",") {
-			right = "&#x2c;";
-		}
 		
-		// TODO: ranges for u1 & u2 + g1 & g2
-		
-		// u1 + u2 or g2
+		// TODO: ranges and sequences for u1 & u2 + g1 & g2
 		foreach (string lk in left.split (",")) {
-			l = get_unichar (lk);
-			sl = new StringBuilder ();
-			sl.append_unichar (l);
-			ln = font.get_name_from_unicode (sl.str);
-					
 			foreach (string rk in right.split (",")) {
+				l = get_unichar (lk);
 				r = get_unichar (rk);
+				
+				sl = new StringBuilder ();
+				sl.append_unichar (l);
+				
 				sr = new StringBuilder ();
 				sr.append_unichar (r);
-				rn = font.get_name_from_unicode (sr.str);
-				font.set_kerning_by_name (ln, rn, -kerning);
-			}
-
-			foreach (string rk in right_name.split (",")) {
-				font.set_kerning_by_name (ln, rk, -kerning);
+				
+				font.set_kerning (sl.str, sr.str, -kerning);				
 			}
 		}
-
-		// g1 + u2 or g2
-		foreach (string lk in left_name.split (",")) {
-			foreach (string rk in right.split (",")) {
-				r = get_unichar (rk);
-				sr = new StringBuilder ();
-				sr.append_unichar (r);
-				rn = font.get_name_from_unicode (sr.str);
-				font.set_kerning_by_name (lk, rn, -kerning);
-			}
-
-			foreach (string rk in right_name.split (",")) {
-				font.set_kerning_by_name (lk, rk, -kerning);
-			}
-		}
-
 	}
 
 	void parse_font_limits (Xml.Node* node) {
@@ -227,18 +196,14 @@ class SvgFont : GLib.Object {
 	/** Obtain unichar value from either a character, a hex representation of
 	 *  a character or series of characters (f, &#x6d; or ffi).
 	 */
-	unichar get_unichar (string val) {
+	static unichar get_unichar (string val) {
 		string v = val;
 		unichar unicode_value;
-
+		
 		if (val == "&") {
 			return '&';
 		}
-
-		if (val == ",") {
-			return ',';
-		}
-
+		
 		// TODO: parse ligatures
 		if (v.has_prefix ("&")) {
 			// parse hex value
@@ -247,25 +212,17 @@ class SvgFont : GLib.Object {
 			v = v.replace (";", "");
 			unicode_value = Font.to_unichar (v);
 		} else {
+			// obtain unicode value
 			
-			// don't assign ligatures to any code point
-			if (is_ligature (val)) {
+			if (v.char_count () > 1) {
+				warning ("font contains ligatures");
 				return '\0';
 			}
 			
-			// obtain unicode value
 			unicode_value = v.get_char (0);
 		}
 		
 		return unicode_value;	
-	}
-	
-	bool is_ligature (string v) {
-		if (v.has_prefix ("&")) {
-			return false;
-		}
-		
-		return v.char_count () > 1; 
 	}
 	
 	void parse_glyph (Xml.Node* node) {
@@ -276,7 +233,6 @@ class SvgFont : GLib.Object {
 		string svg = "";
 		Glyph glyph;
 		double advance = font_advance;
-		string ligature = "";
 
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -287,10 +243,6 @@ class SvgFont : GLib.Object {
 				
 				if (glyph_name == "") {
 					glyph_name = attr_content;
-				}
-				
-				if (is_ligature (attr_content)) {
-					ligature = attr_content;
 				}
 			}
 			
@@ -307,16 +259,27 @@ class SvgFont : GLib.Object {
 				advance = double.parse (attr_content);
 			}
 		}
-		
+
+/*		
+<<<<<<< HEAD
 		glyph = new Glyph (glyph_name, unicode_value);
 		ImportSvg.parse_svg_data (svg, glyph, true, units);			
 		glyph.right_limit = glyph.left_limit + advance * units;
 		
 		if (ligature != "") {
 			glyph.set_ligature_substitution (ligature);
+=======
+*/
+		// FIXME: this code will ignore characters that are mapped several glyphs
+		if (unicode_value != '\0') {
+			glyph = new Glyph (glyph_name, unicode_value);
+			ImportSvg.parse_svg_data (svg, glyph, true, units);			
+			glyph.right_limit = glyph.left_limit + advance * units;
+			font.add_glyph_callback (glyph);
+		} else {
+			warning ("ignoring glyph");
+//>>>>>>> parent of a76d9a8... parse ligatures from svg font
 		}
-		
-		font.add_glyph_callback (glyph);
 	}
 }
 

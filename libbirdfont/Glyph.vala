@@ -75,6 +75,7 @@ public class Glyph : FontDisplay {
 	bool xheight_lines_visible = false;
 	bool margin_boundries_visible = false;
 	
+	bool unassigned = false;
 	public unichar unichar_code = 0;
 	
 	List<Glyph> undo_list = new List<Glyph> ();
@@ -83,10 +84,14 @@ public class Glyph : FontDisplay {
 	
 	string glyph_sequence = "";
 	bool open = true;
-	
+/*
+<<<<<<< HEAD
 	bool ligature = false;
 	string substitution = "";
 	
+=======
+>>>>>>> parent of a76d9a8... parse ligatures from svg font
+*/
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -105,6 +110,8 @@ public class Glyph : FontDisplay {
 
 		path_list.append (new Path ());
 	}
+/*
+<<<<<<< HEAD
 	
 	public string get_ligature_string () {
 		return substitution;
@@ -141,7 +148,9 @@ public class Glyph : FontDisplay {
 	public bool is_ligature () {
 		return ligature;
 	}
-
+=======
+>>>>>>> parent of a76d9a8... parse ligatures from svg font
+*/
 	public void select_all_paths () {
 		clear_active_paths ();
 		
@@ -204,6 +213,14 @@ public class Glyph : FontDisplay {
 		}
 		
 		return 0;
+	}
+		
+	public void set_unassigned (bool u) {
+		unassigned = u;
+	}
+	
+	public bool is_unassigned () {
+		return unassigned;
 	}
 
 	public void boundries (out double x1, out double y1, out double x2, out double y2) {
@@ -1475,10 +1492,14 @@ public class Glyph : FontDisplay {
 		if (background_image != null) {
 			g.background_image = ((!) background_image).copy ();
 		}
-		
+	/*	
+<<<<<<< HEAD
 		g.ligature = ligature;
 		g.substitution = substitution;
 		
+=======
+>>>>>>> parent of a76d9a8... parse ligatures from svg font
+*/
 		return g;
 	}
 
