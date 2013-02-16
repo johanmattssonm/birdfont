@@ -246,6 +246,11 @@ GString* get_kerning_data (FT_Face face, FT_Long gid) {
 	
 	char_left = get_charcode (face, gid);
 	
+	if (char_left <= 31) {
+		fprintf (stderr, "Ignoring kerning for control character.\n");
+		return svg;
+	}
+	
 	if (char_left == 0) {
 		fprintf (stderr, "No character code could be found for left kerning value.\n");
 		return svg;
@@ -263,8 +268,8 @@ GString* get_kerning_data (FT_Face face, FT_Long gid) {
 			fprintf (stderr, "No character code could be found for right kerning value.\n");
 			return svg;
 		}
-		
-		if (kerning.x > 0) {
+
+		if (kerning.x > 0 && char_left > 31) {
 			g_string_append_printf (svg, "<hkern u1=\"&#x%x;\" u2=\"&#x%x;\" k=\"%d\" />\n", char_left, char_right, kerning.x);
 		}
 	}
@@ -312,7 +317,7 @@ GString* get_svg_font (FT_Face face, int* err) {
 		charcode = get_charcode (face, i);
 		glyph_element = g_string_new ("<glyph ");
 		
-		if (charcode != 0) {
+		if (charcode > 31) {
 			g_string_append (glyph_element,"unicode=\"&#x");
 			g_string_append_printf (glyph_element, "%x", (guint)charcode);
 			g_string_append (glyph_element, ";\" ");
