@@ -352,7 +352,7 @@ os.put_string (
 
 <div>
 	<h2 class="big">Hamburgerfonstiv</h2>
-	<p class="big">Inspirerande</p>
+	<p class="big">""" + name + """</p>
 </div>
 
 <div>
