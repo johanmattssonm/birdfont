@@ -166,7 +166,7 @@ public class Font : GLib.Object {
 	}
 		
 	public void set_name (string name) {
-		string n = name.replace (" ", "");
+		string n = name;
 		this.name = n;
 	}
 	
@@ -524,10 +524,11 @@ public class Font : GLib.Object {
 		File dir = BirdFont.get_backup_directory ();
 		File? temp_file = null;
 		string backup_file;
-	
+
 		temp_file = dir.get_child (@"$(name).ffi");
 		backup_file = (!) ((!) temp_file).get_path ();
-				
+		backup_file = backup_file.replace (" ", "_");
+		
 		write_font_file (backup_file, true);
 		
 		return backup_file;

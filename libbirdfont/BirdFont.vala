@@ -41,6 +41,7 @@ public static int run_export (string[] arg) {
 		
 	if (arg.length < 2) {
 		print_export_help (arg);
+		return -1;
 	}
 	
 	for (int i = 1; i < arg.length; i++) {
