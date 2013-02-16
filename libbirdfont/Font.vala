@@ -890,6 +890,8 @@ public class Font : GLib.Object {
 		svg = ((!) data).str;
 		svg_loader.load_svg_data (svg);
 		
+		print (svg);
+		
 		return true;
 	}
 

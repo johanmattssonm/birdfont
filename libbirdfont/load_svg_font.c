@@ -174,7 +174,7 @@ GString* get_svg_contour_data (FT_Vector* points, char* flags, int length, int* 
 			i += 1;
 		} else {
 			fprintf (stderr, "WARNING Can not parse outline.\n");
-			err = 1;
+			*err = 1;
 			i++;
 		}
 		
@@ -236,9 +236,46 @@ FT_ULong get_charcode (FT_Face face, FT_UInt gid) {
 	return 0;
 }
 
+GString* get_kerning_data (FT_Face face, FT_Long gid) {
+	FT_Error error;
+	FT_Vector kerning;
+	GString* svg = g_string_new ("");
+	FT_ULong char_left;
+	FT_ULong char_right;
+	FT_Long right;
+	
+	char_left = get_charcode (face, gid);
+	
+	if (char_left == 0) {
+		fprintf (stderr, "No character code could be found for left kerning value.\n");
+		return svg;
+	}
+	
+	for (right = 0; right < face->num_glyphs; right++) {
+		error = FT_Get_Kerning (face, gid, right, FT_KERNING_UNSCALED, &kerning);
+		if (error) {
+			fprintf (stderr, "Failed to obtain kerning value.\n");
+			break;
+		}
+		
+		char_right = get_charcode (face, right);
+		if (char_left == 0) {
+			fprintf (stderr, "No character code could be found for right kerning value.\n");
+			return svg;
+		}
+		
+		if (kerning.x > 0) {
+			g_string_append_printf (svg, "<hkern u1=\"&#x%x;\" u2=\"&#x%x;\" k=\"%d\" />\n", char_left, char_right, kerning.x);
+		}
+	}
+	
+	return svg;
+}
+
 GString* get_svg_font (FT_Face face, int* err) {
 	GString* svg = g_string_new ("");
 	GString* svg_data;
+	GString* hkern;
 	GString* font_element = g_string_new ("");
 	GString* glyph_element;
 	FT_Error error;
@@ -249,7 +286,10 @@ GString* get_svg_font (FT_Face face, int* err) {
 	*err = OK;
 	
 	g_string_append (svg, "<?xml version=\"1.0\" standalone=\"no\"?>\n");
+	
+	// libxml2 fails on this in windows:
 	// g_string_append (svg, "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\" >\n");
+	
 	g_string_append (svg, "<svg xmlns=\"http://www.w3.org/2000/svg\">\n");
 	g_string_append (svg, "<defs>\n");
 	g_string_append_printf (svg, "<font id=\"%s\" horiz-adv-x=\"250\">\n", face->family_name);
@@ -259,10 +299,11 @@ GString* get_svg_font (FT_Face face, int* err) {
 	g_string_printf (font_element, "<font-face units-per-em=\"%f\" ascent=\"%d\" descent=\"%d\" />\n", units_per_em, (int) face->ascender, (int) face->descender);	
 	g_string_append (svg, font_element->str);
 	
+	// glyph outlines
 	for (i = 0; i < face->num_glyphs; i++) {
 		error = FT_Load_Glyph (face, i, FT_LOAD_DEFAULT);
 		if (error) {
-			fprintf (stderr, "Freetype failed to load glyph %d.\n", i);
+			fprintf (stderr, "Freetype failed to load glyph %d.\n", (int)i);
 			fprintf (stderr, "FT_Load_Glyph error %d\n", error);
 			*err = error;
 			return svg;
@@ -293,6 +334,13 @@ GString* get_svg_font (FT_Face face, int* err) {
 		g_string_append (svg, svg_data->str);
 		
 		g_string_append (svg, "\" />\n");
+	}
+
+	// kerning
+	for (i = 0; i < face->num_glyphs; i++) {
+		hkern = get_kerning_data (face, i);
+		g_string_append (svg, hkern->str);
+		g_string_free (hkern, 0);
 	}
 
 	g_string_append (svg, "</font>\n");

@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-[CCode (cname = "load_svg_font")]
+[CCode (cname = "load_freetype_font")]
 public extern static StringBuilder? load_freetype_font (string file, out int error);
 
 [CCode (cname = "validate_freetype_font")]
