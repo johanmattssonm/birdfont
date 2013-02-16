@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-11 22:48+0100\n"
-"PO-Revision-Date: 2013-02-08 11:43+0000\n"
+"POT-Creation-Date: 2013-02-16 08:18+0100\n"
+"PO-Revision-Date: 2013-02-15 02:14+0000\n"
 "Last-Translator: Garab <voron-tengu@mail.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1360323788.0\n"
+"X-POOTLE-MTIME: 1360894443.0\n"
 
 #: libbirdfont/Argument.vala:233
 msgid "Usage"
@@ -63,31 +63,31 @@ msgstr "запустить тест"
 msgid "Move, resize and rotate background image"
 msgstr "Перемещение, изменение размера и поворот фонового изображения"
 
-#: libbirdfont/Birdfont.vala:22
+#: libbirdfont/BirdFont.vala:23
 msgid "Usage:"
 msgstr "Применить:"
 
-#: libbirdfont/Birdfont.vala:25
+#: libbirdfont/BirdFont.vala:26
 msgid "print this message\n"
 msgstr "распечатать это сообщение\n"
 
-#: libbirdfont/Birdfont.vala:26
+#: libbirdfont/BirdFont.vala:27
 msgid "write files to this directory\n"
 msgstr "записать файлы в директорию\n"
 
-#: libbirdfont/Birdfont.vala:27
+#: libbirdfont/BirdFont.vala:28
 msgid "write svg file\n"
 msgstr "записать svg файл\n"
 
-#: libbirdfont/Birdfont.vala:28
+#: libbirdfont/BirdFont.vala:29
 msgid "write ttf and eot files\n"
 msgstr "записать ttf и eot файлы\n"
 
-#: libbirdfont/Birdfont.vala:116
+#: libbirdfont/BirdFont.vala:117
 msgid "Can't find output directory"
 msgstr "Выходной каталог не найден"
 
-#: libbirdfont/Birdfont.vala:121 libbirdfont/Birdfont.vala:126
+#: libbirdfont/BirdFont.vala:122 libbirdfont/BirdFont.vala:127
 msgid "Writing"
 msgstr "Запись"
 
@@ -99,7 +99,7 @@ msgstr "Обрезать фоновое изображение"
 msgid "Export glyph to svg file"
 msgstr "Экспортировать глиф в SVG файл"
 
-#: libbirdfont/ExportTool.vala:523
+#: libbirdfont/ExportTool.vala:524
 msgid "Wrote font files"
 msgstr "Записать файл шрифта"
 
@@ -157,7 +157,7 @@ msgstr "Последовательность глифов"
 msgid "Export SVG font and view the result"
 msgstr "Экспортировать SVG шрифт и просмотреть результат"
 
-#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:86
+#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:85
 msgid "Save"
 msgstr "Сохранить"
 
@@ -173,7 +173,7 @@ msgstr "Объединить контуры"
 msgid "Move paths"
 msgstr "Перемещение контура"
 
-#: libbirdfont/OverView.vala:483
+#: libbirdfont/OverView.vala:498
 msgid "No glyphs in this view."
 msgstr "Не показывать глифы"
 
@@ -184,19 +184,20 @@ msgstr ""
 
 #: libbirdfont/OverwriteDialog.vala:72
 msgid "Continue"
-msgstr ""
+msgstr "Продолжить"
 
-#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:89
+#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:88
 msgid "Cancel"
 msgstr "Отмена"
 
 #: libbirdfont/OverwriteDialog.vala:74
 msgid "Continue and don't ask me again."
-msgstr ""
+msgstr "Продолжить и больше не спрашивать."
 
+# Command key is the Mac specific command key (⌘) it is not the Ctrl key.
 #: libbirdfont/PenTool.vala:59
 msgid "Use left command key (⌘) + click to add new points"
-msgstr ""
+msgstr "Нажмите левую командную клавишу (⌘)+ клик чтобы добавить новые узлы"
 
 #: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
@@ -208,15 +209,15 @@ msgstr ""
 msgid "and double click to add new point on path."
 msgstr "и двойной клик чтобы добавить новый узел на контур."
 
-#: libbirdfont/SaveDialog.vala:70
+#: libbirdfont/SaveDialog.vala:69
 msgid "Save?"
 msgstr "Сохранить?"
 
-#: libbirdfont/SaveDialog.vala:87
+#: libbirdfont/SaveDialog.vala:86
 msgid "Save as"
 msgstr "Сохранить как"
 
-#: libbirdfont/SaveDialog.vala:88
+#: libbirdfont/SaveDialog.vala:87
 msgid "Discard"
 msgstr "Не сохранять"
 
@@ -345,7 +346,7 @@ msgstr "Установить размер сетки"
 msgid "New version"
 msgstr "Новая версия"
 
-#: libbirdfont/VersionList.vala:136
+#: libbirdfont/VersionList.vala:145
 msgid "Version"
 msgstr "Версия"
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-11 22:48+0100\n"
-"PO-Revision-Date: 2013-02-02 06:34+0000\n"
+"POT-Creation-Date: 2013-02-16 08:18+0100\n"
+"PO-Revision-Date: 2013-02-14 01:49+0000\n"
 "Last-Translator: Zhantong <zhantongz@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1359786841.0\n"
+"X-POOTLE-MTIME: 1360806557.0\n"
 
 #: libbirdfont/Argument.vala:233
 msgid "Usage"
@@ -62,31 +62,31 @@ msgstr "执行测试案例"
 msgid "Move, resize and rotate background image"
 msgstr "移动，旋转背景图像并调整其大小"
 
-#: libbirdfont/Birdfont.vala:22
+#: libbirdfont/BirdFont.vala:23
 msgid "Usage:"
 msgstr "用法："
 
-#: libbirdfont/Birdfont.vala:25
+#: libbirdfont/BirdFont.vala:26
 msgid "print this message\n"
 msgstr "打印该信息\n"
 
-#: libbirdfont/Birdfont.vala:26
+#: libbirdfont/BirdFont.vala:27
 msgid "write files to this directory\n"
 msgstr "将文件写入此目录\n"
 
-#: libbirdfont/Birdfont.vala:27
+#: libbirdfont/BirdFont.vala:28
 msgid "write svg file\n"
 msgstr "对选定编辑点连接成曲线\n"
 
-#: libbirdfont/Birdfont.vala:28
+#: libbirdfont/BirdFont.vala:29
 msgid "write ttf and eot files\n"
 msgstr "写入TTF及EOT文件\n"
 
-#: libbirdfont/Birdfont.vala:116
+#: libbirdfont/BirdFont.vala:117
 msgid "Can't find output directory"
 msgstr "无法找到输出目录"
 
-#: libbirdfont/Birdfont.vala:121 libbirdfont/Birdfont.vala:126
+#: libbirdfont/BirdFont.vala:122 libbirdfont/BirdFont.vala:127
 msgid "Writing"
 msgstr "写入中"
 
@@ -98,7 +98,7 @@ msgstr "剪裁背景图像"
 msgid "Export glyph to svg file"
 msgstr "将字形输出为SVG文件"
 
-#: libbirdfont/ExportTool.vala:523
+#: libbirdfont/ExportTool.vala:524
 msgid "Wrote font files"
 msgstr "已写入字体文件"
 
@@ -156,7 +156,7 @@ msgstr "字形序列"
 msgid "Export SVG font and view the result"
 msgstr "导出为SVG字体并查看结果"
 
-#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:86
+#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:85
 msgid "Save"
 msgstr "保存"
 
@@ -172,30 +172,30 @@ msgstr "合并路径"
 msgid "Move paths"
 msgstr "移动路径"
 
-#: libbirdfont/OverView.vala:483
+#: libbirdfont/OverView.vala:498
 msgid "No glyphs in this view."
 msgstr "在此视图中没有字形"
 
 #: libbirdfont/OverwriteDialog.vala:57
 msgid ""
 "The loaded font will be overwritten if you choose to continue with preview."
-msgstr ""
+msgstr "如果你选择继续预览则载入的字体将会被覆盖"
 
 #: libbirdfont/OverwriteDialog.vala:72
 msgid "Continue"
-msgstr ""
+msgstr "继续"
 
-#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:89
+#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:88
 msgid "Cancel"
 msgstr "取消"
 
 #: libbirdfont/OverwriteDialog.vala:74
 msgid "Continue and don't ask me again."
-msgstr ""
+msgstr "记住了并不要再问我"
 
 #: libbirdfont/PenTool.vala:59
 msgid "Use left command key (⌘) + click to add new points"
-msgstr ""
+msgstr "在按下左命令键（⌘）时单击以增加新点"
 
 #: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
@@ -205,15 +205,15 @@ msgstr "右键单击以增加新点，左键单击以移动点"
 msgid "and double click to add new point on path."
 msgstr "双击可以在已有路径上增加新点"
 
-#: libbirdfont/SaveDialog.vala:70
+#: libbirdfont/SaveDialog.vala:69
 msgid "Save?"
 msgstr "保存？"
 
-#: libbirdfont/SaveDialog.vala:87
+#: libbirdfont/SaveDialog.vala:86
 msgid "Save as"
 msgstr "另存为"
 
-#: libbirdfont/SaveDialog.vala:88
+#: libbirdfont/SaveDialog.vala:87
 msgid "Discard"
 msgstr "放弃"
 
@@ -341,7 +341,7 @@ msgstr "设置网格大小"
 msgid "New version"
 msgstr "新版本"
 
-#: libbirdfont/VersionList.vala:136
+#: libbirdfont/VersionList.vala:145
 msgid "Version"
 msgstr "版本"
 

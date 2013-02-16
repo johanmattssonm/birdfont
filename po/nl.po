@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-11 22:48+0100\n"
+"POT-Creation-Date: 2013-02-16 08:18+0100\n"
 "PO-Revision-Date: 2013-01-20 13:18+0000\n"
 "Last-Translator: DiGro <th.groskamp@quicknet.nl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,31 +62,31 @@ msgstr "test case uitvoeren"
 msgid "Move, resize and rotate background image"
 msgstr "Verplaats, vergroot of verklein en draai achtergrond afbeelding"
 
-#: libbirdfont/Birdfont.vala:22
+#: libbirdfont/BirdFont.vala:23
 msgid "Usage:"
 msgstr "Gebruik:"
 
-#: libbirdfont/Birdfont.vala:25
+#: libbirdfont/BirdFont.vala:26
 msgid "print this message\n"
 msgstr "druk dit bericht af\n"
 
-#: libbirdfont/Birdfont.vala:26
+#: libbirdfont/BirdFont.vala:27
 msgid "write files to this directory\n"
 msgstr "schrijf bestanden naar deze locatie\n"
 
-#: libbirdfont/Birdfont.vala:27
+#: libbirdfont/BirdFont.vala:28
 msgid "write svg file\n"
 msgstr "schrijf svg bestand\n"
 
-#: libbirdfont/Birdfont.vala:28
+#: libbirdfont/BirdFont.vala:29
 msgid "write ttf and eot files\n"
 msgstr "schrijf ttf en oet bestanden\n"
 
-#: libbirdfont/Birdfont.vala:116
+#: libbirdfont/BirdFont.vala:117
 msgid "Can't find output directory"
 msgstr "Kan output locatie niet vinden"
 
-#: libbirdfont/Birdfont.vala:121 libbirdfont/Birdfont.vala:126
+#: libbirdfont/BirdFont.vala:122 libbirdfont/BirdFont.vala:127
 msgid "Writing"
 msgstr "Schrijven"
 
@@ -98,7 +98,7 @@ msgstr "Knip achtergrond afbeelding"
 msgid "Export glyph to svg file"
 msgstr "Exporteer glief naar svg bestand"
 
-#: libbirdfont/ExportTool.vala:523
+#: libbirdfont/ExportTool.vala:524
 msgid "Wrote font files"
 msgstr "Schreef lettertype bestanden"
 
@@ -156,7 +156,7 @@ msgstr "Glief volgorde"
 msgid "Export SVG font and view the result"
 msgstr "Exporteer SVG lettertype en bekijk het resultaat"
 
-#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:86
+#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:85
 msgid "Save"
 msgstr "Opslaan"
 
@@ -172,7 +172,7 @@ msgstr "Paden samenvoegen"
 msgid "Move paths"
 msgstr "Paden verplaatsen"
 
-#: libbirdfont/OverView.vala:483
+#: libbirdfont/OverView.vala:498
 msgid "No glyphs in this view."
 msgstr ""
 
@@ -185,7 +185,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:89
+#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:88
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -207,15 +207,15 @@ msgstr ""
 msgid "and double click to add new point on path."
 msgstr "en dubbel klik om nieuwe punten op het pad te plaatsen"
 
-#: libbirdfont/SaveDialog.vala:70
+#: libbirdfont/SaveDialog.vala:69
 msgid "Save?"
 msgstr "Opslaan?"
 
-#: libbirdfont/SaveDialog.vala:87
+#: libbirdfont/SaveDialog.vala:86
 msgid "Save as"
 msgstr "Opslaan als"
 
-#: libbirdfont/SaveDialog.vala:88
+#: libbirdfont/SaveDialog.vala:87
 msgid "Discard"
 msgstr "Verwerpen"
 
@@ -343,7 +343,7 @@ msgstr "Stel grootte voor rooster in"
 msgid "New version"
 msgstr "Nieuwe versie"
 
-#: libbirdfont/VersionList.vala:136
+#: libbirdfont/VersionList.vala:145
 msgid "Version"
 msgstr "Versie"
 

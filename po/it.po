@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-11 22:48+0100\n"
+"POT-Creation-Date: 2013-02-16 08:18+0100\n"
 "PO-Revision-Date: 2013-02-05 22:45+0000\n"
 "Last-Translator: pAUL <paul_pricootz@yahoo.it>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,31 +62,31 @@ msgstr "Esegui test"
 msgid "Move, resize and rotate background image"
 msgstr "Muovi, ridimensiona e ruota sfondo"
 
-#: libbirdfont/Birdfont.vala:22
+#: libbirdfont/BirdFont.vala:23
 msgid "Usage:"
 msgstr "Utilizzo:"
 
-#: libbirdfont/Birdfont.vala:25
+#: libbirdfont/BirdFont.vala:26
 msgid "print this message\n"
 msgstr "Stampa questo messaggio\n"
 
-#: libbirdfont/Birdfont.vala:26
+#: libbirdfont/BirdFont.vala:27
 msgid "write files to this directory\n"
 msgstr "Scrivi files in questa directory\n"
 
-#: libbirdfont/Birdfont.vala:27
+#: libbirdfont/BirdFont.vala:28
 msgid "write svg file\n"
 msgstr "Scrivi file svg\n"
 
-#: libbirdfont/Birdfont.vala:28
+#: libbirdfont/BirdFont.vala:29
 msgid "write ttf and eot files\n"
 msgstr "Scrivi files TTF e EOT\n"
 
-#: libbirdfont/Birdfont.vala:116
+#: libbirdfont/BirdFont.vala:117
 msgid "Can't find output directory"
 msgstr "Impossibile trovare la directory di output"
 
-#: libbirdfont/Birdfont.vala:121 libbirdfont/Birdfont.vala:126
+#: libbirdfont/BirdFont.vala:122 libbirdfont/BirdFont.vala:127
 msgid "Writing"
 msgstr "Scrittura in corso"
 
@@ -98,7 +98,7 @@ msgstr "Mostra immagine di sfondo"
 msgid "Export glyph to svg file"
 msgstr "Esporta Glyph in file SVG"
 
-#: libbirdfont/ExportTool.vala:523
+#: libbirdfont/ExportTool.vala:524
 msgid "Wrote font files"
 msgstr "Files FONT scritti"
 
@@ -156,7 +156,7 @@ msgstr "Sequenza glyph"
 msgid "Export SVG font and view the result"
 msgstr "Esporta font in SVG e visualizza il risultato"
 
-#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:86
+#: libbirdfont/MenuTab.vala:312 libbirdfont/SaveDialog.vala:85
 msgid "Save"
 msgstr "Salva"
 
@@ -172,7 +172,7 @@ msgstr "Unisci destinazioni"
 msgid "Move paths"
 msgstr "Sposta percorso"
 
-#: libbirdfont/OverView.vala:483
+#: libbirdfont/OverView.vala:498
 msgid "No glyphs in this view."
 msgstr "Nessun Glyph in questa modalità"
 
@@ -185,7 +185,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:89
+#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:88
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -207,15 +207,15 @@ msgstr ""
 msgid "and double click to add new point on path."
 msgstr "e doppio clic per aggiungere un nuovo punto al percorso."
 
-#: libbirdfont/SaveDialog.vala:70
+#: libbirdfont/SaveDialog.vala:69
 msgid "Save?"
 msgstr "Salvare?"
 
-#: libbirdfont/SaveDialog.vala:87
+#: libbirdfont/SaveDialog.vala:86
 msgid "Save as"
 msgstr "Salva con nome"
 
-#: libbirdfont/SaveDialog.vala:88
+#: libbirdfont/SaveDialog.vala:87
 msgid "Discard"
 msgstr "Ignora"
 
@@ -343,7 +343,7 @@ msgstr "Imposta la dimensione per la griglia"
 msgid "New version"
 msgstr "Nuova versione"
 
-#: libbirdfont/VersionList.vala:136
+#: libbirdfont/VersionList.vala:145
 msgid "Version"
 msgstr "Versione"
 
