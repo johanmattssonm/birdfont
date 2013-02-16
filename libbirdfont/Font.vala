@@ -36,9 +36,6 @@ public class Font : GLib.Object {
 
 	/** Table with ligatures. */
 	GlyphTable ligature = new GlyphTable ();
-
-	/** Last unassigned index */
-	int next_unindexed = 0;
 	
 	public List <string> background_images = new List <string> ();
 	public string background_scale = "1";
@@ -169,7 +166,8 @@ public class Font : GLib.Object {
 	}
 		
 	public void set_name (string name) {
-		this.name = name;
+		string n = name.replace (" ", "");
+		this.name = n;
 	}
 	
 	public string get_name () {
@@ -882,9 +880,7 @@ public class Font : GLib.Object {
 		
 		svg = ((!) data).str;
 		svg_loader.load_svg_data (svg);
-		
-		print (svg);
-		
+
 		return true;
 	}
 
@@ -949,13 +945,7 @@ public class Font : GLib.Object {
 		if (gcl != null) {
 			warning (@"glyph \"$(g.get_name ())\" does already exist");
 		}
-/*
-		if (g.name == "") { // FIXME: DELETE?
-			warning ("refusing to insert glyph without name");
-			g.name = @"($(++next_unindexed))";
-			return;
-		}
-*/					
+				
 		if (g.is_unassigned ()) {
 			gc = new GlyphCollection (g);
 		}
@@ -1037,7 +1027,7 @@ public class Font : GLib.Object {
 			}
 
 			if (iter->name == "name" && iter->children != null) {
-				name = iter->children->content;
+				set_name (iter->children->content);
 			}
 
 			if (iter->name == "hkern") {
@@ -1077,7 +1067,7 @@ public class Font : GLib.Object {
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			
 			if (iter->name == "name" && iter->children != null) {
-				name = iter->children->content;
+				set_name (iter->children->content);
 			}
 			
 			if (iter->name == "background-image") {
