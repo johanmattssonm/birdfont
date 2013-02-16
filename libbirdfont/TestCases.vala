@@ -39,7 +39,6 @@ class TestCases {
 		add (test_notdef, "Notdef");
 		add (test_merge, "Merge");
 		add (test_over_path, "Over path");
-		add (test_preview, "Preview");
 		add (test_export, "Export");
 		add (test_background_coordinates, "Background coordinates");
 		add (test_spin_button, "Spin button");
@@ -47,6 +46,7 @@ class TestCases {
 		add (test_illustrator_import, "Illustrator import");
 		add (test_parse_quadratic_paths, "Quadratic paths");
 		add (test_freetype, "Freetype");
+		add (test_preview, "Preview");
 	}
 
 	public static void test_freetype () {
