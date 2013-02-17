@@ -4157,8 +4157,7 @@ class KernTable : Table {
 	
 	GlyfTable glyf_table;
 	
-	List<Kern> kernings = new List<Kern> ();
-	
+	public List<Kern> kernings = new List<Kern> ();
 	public int kerning_pairs = 0;
 	
 	public KernTable (GlyfTable gt) {
@@ -4240,6 +4239,8 @@ class KernTable : Table {
 		uint16 entry_selector = 0;
 		uint16 search_range = 0;
 		
+		Kern kern;
+		
 		fd.add_ushort (0); // version 
 		fd.add_ushort (1); // n subtables
 
@@ -4283,9 +4284,13 @@ class KernTable : Table {
 						warning ("right glyph not found in kerning table");
 					}
 					
-					fd.add_ushort (gid_left);
-					fd.add_ushort ((uint16)gid_right);
-					fd.add_short ((int16) (k.val * UNITS));
+					kern = new Kern (gid_left, (uint16)gid_right, (int16) (k.val * UNITS));
+					
+					fd.add_ushort (kern.left);
+					fd.add_ushort (kern.right);
+					fd.add_short (kern.kerning);
+					
+					kernings.append (kern);
 				}
 				
 				gid_left++;
@@ -4300,19 +4305,25 @@ class KernTable : Table {
 
 class GposTable : Table {
 	
-	GlyfTable glyf_table;
-	
-	public GposTable (GlyfTable glyf_table) {
+	public GposTable () {
 		id = "GPOS";
-		this.glyf_table = glyf_table;
 	}
 	
 	public override void parse (FontData dis) throws Error {
 		warning ("Not implemented.");
 	}
 
-	public void process () throws GLib.Error {
+	public void process (KernTable kern_table) throws GLib.Error {
 		FontData fd = new FontData ();
+		uint16 num_kerning_values = (uint16) kern_table.kernings.length ();
+		int i;
+		int size_of_pair;
+		
+		if (num_kerning_values == 0) {
+			warning ("No kerning to add to gpos table.");
+		}
+		
+		printd (@"Adding $num_kerning_values kerning pairs to gpos table.");
 		
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
@@ -4320,7 +4331,7 @@ class GposTable : Table {
 		fd.add_ushort (38); // offset to lookup list
 		
 		// script list ?
-		fd.add_ushort (0); // n items in script list
+		fd.add_ushort (0); // number of items in script list
 		
 		// script table
 		fd.add_ushort (4); // offset to default language system
@@ -4356,25 +4367,36 @@ class GposTable : Table {
 		// MarkFilteringSet 
 		
 		// the kerning pair table
+		size_of_pair = 6;
 		fd.add_ushort (1); // position format
-		fd.add_ushort (18);  // offset to coverage from beginning of kern pair table
+		// offset to coverage table from beginning of kern pair table
+		fd.add_ushort (10 + 2 * num_kerning_values + size_of_pair * num_kerning_values);  
 		fd.add_ushort (0x0004); // ValueFormat1 (0x0004 is x advance)
 		fd.add_ushort (0); // ValueFormat2 (0 is null)
-		fd.add_ushort (1); // n pairs
-		fd.add_ushort (14);// pair set offsets orderd by coverage index
+		fd.add_ushort (num_kerning_values); // n pairs
 		
-		// pair set table 
-		fd.add_ushort (1); // n pair vaules
+		// pair offsets orderd by coverage index
+		i = 0;
+		foreach (Kern k in kern_table.kernings) {
+			fd.add_ushort (10 + 2 * num_kerning_values + i * size_of_pair);
+			i++;
+		}
 		
-		// pair value record
-		fd.add_ushort (0); // gid to second glyph
-		fd.add_ushort (0); // value of ValueFormat1
-		//fd.add_ushort (0); // value of ValueFormat2
+		// pair table 
+		foreach (Kern k in kern_table.kernings) {
+			// pair value record
+			fd.add_ushort (1); // n pair vaules
+			fd.add_ushort (k.right); // gid to second glyph
+			fd.add_short (k.kerning); // value of ValueFormat1, horizontal adjustment for advance			
+			// value of ValueFormat2 is null
+		}
 		
 		// coverage
 		fd.add_ushort (1); // format
-		fd.add_ushort (1); // number of gid
-		fd.add_ushort (0); // gid
+		fd.add_ushort (num_kerning_values); // number of gid
+		foreach (Kern k in kern_table.kernings) {
+			fd.add_ushort (k.left); // gid
+		}
 		
 		fd.pad ();	
 		this.font_data = fd;
@@ -4412,13 +4434,13 @@ class DirectoryTable : Table {
 		gasp_table = new GaspTable ();
 		gdef_table = new GdefTable ();
 		glyf_table = new GlyfTable (loca_table);
-		gpos_table = new GposTable (glyf_table);
 		cmap_table = new CmapTable (glyf_table);
 		cvt_table  = new CvtTable ();
 		head_table = new HeadTable (glyf_table);
 		hmtx_table = new HmtxTable (head_table, glyf_table);
 		hhea_table = new HheaTable (glyf_table, head_table, hmtx_table);
 		kern_table = new KernTable (glyf_table);
+		gpos_table = new GposTable ();
 		maxp_table = new MaxpTable (glyf_table);
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (); 
@@ -4443,7 +4465,7 @@ class DirectoryTable : Table {
 		loca_table.process (glyf_table, head_table);
 		post_table.process ();
 		kern_table.process ();
-		gpos_table.process ();
+		gpos_table.process (kern_table);
 		
 		offset_table.process ();
 		process_directory (); // this table
@@ -4464,11 +4486,11 @@ class DirectoryTable : Table {
 			tables.append (head_table);
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
-			
+
 			if (kern_table.kerning_pairs > 0) {
 				tables.append (kern_table);
 			}
-			
+				
 			tables.append (loca_table);
 			tables.append (maxp_table);
 			tables.append (name_table);
