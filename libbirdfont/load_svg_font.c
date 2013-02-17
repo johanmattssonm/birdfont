@@ -199,7 +199,6 @@ GString* get_svg_glyph_data (FT_Face face, int* err) {
 	int end;
 	
 	if (face->glyph->outline.n_points == 0) {
-		fprintf (stderr, "Freetype error no points for outline in glyph.\n"); // FIXME: DELETE
 		return svg;			
 	}
 

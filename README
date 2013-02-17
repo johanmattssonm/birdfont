@@ -61,6 +61,8 @@ You need to install the windows version on drive C:.
 A Ubuntu package is avalilable at https://launchpad.net
 You can apt-get install birdfont form Olivier Bertens repository.
 
+A Debian packages is available at http://packages.debian.org
+
 A Machintosh binary image is available at http://birdfont.org
 You might need to install a more recent version of XOrg. Install 
 the server and run:

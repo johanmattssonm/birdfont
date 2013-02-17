@@ -275,14 +275,14 @@ class FontData : Object {
 
 	public uint64 read_uint64 () {
 		uint64 f;
-		f = read () << 8 * 7;
-		f += read () << 8 * 6;
-		f += read () << 8 * 5;
-		f += read () << 8 * 4;
-		f += read () << 8 * 3;
-		f += read () << 8 * 2;
-		f += read () << 8 * 1;
-		f += read () << 8 * 0;
+		f = (uint64) read () << 8 * 7;
+		f += (uint64) read () << 8 * 6;
+		f += (uint64) read () << 8 * 5;
+		f += (uint64) read () << 8 * 4;
+		f += (uint64) read () << 8 * 3;
+		f += (uint64) read () << 8 * 2;
+		f += (uint64) read () << 8 * 1;
+		f += (uint64) read () << 8 * 0;
 		return f;
 	}
 
@@ -4240,6 +4240,7 @@ class KernTable : Table {
 		uint16 search_range = 0;
 		
 		Kern kern;
+		int i;
 		
 		fd.add_ushort (0); // version 
 		fd.add_ushort (1); // n subtables
@@ -4253,8 +4254,8 @@ class KernTable : Table {
 		}
 		
 		if (n_pairs > (uint16.MAX - 14) / 6.0) {
-			warning ("Too many kerning pairs!"); // TODO: find a way to deal with it.
-			n_pairs = 0;
+			warning ("Too many kerning pairs!"); 
+			n_pairs = (uint16) ((uint16.MAX - 14) / 6.0);
 		}
 		
 		this.kerning_pairs = n_pairs;
@@ -4274,27 +4275,31 @@ class KernTable : Table {
 
 		gid_left = 0;
 		
-		if (n_pairs != 0) { // n_pairs will be set to zero to prevent buffer overflow
-			foreach (Glyph g in glyf_table.glyphs) {
+		i = 0;
+		foreach (Glyph g in glyf_table.glyphs) {
+			
+			foreach (Kerning k in g.kerning) {
+				// n_pairs is used to truncate this table to prevent buffer overflow
+				if (n_pairs == ++i) {
+					break;
+				}
+
+				gid_right = glyf_table.get_gid (k.glyph_right);
 				
-				foreach (Kerning k in g.kerning) {
-					gid_right = glyf_table.get_gid (k.glyph_right);
-					
-					if (gid_right == -1) {
-						warning ("right glyph not found in kerning table");
-					}
-					
-					kern = new Kern (gid_left, (uint16)gid_right, (int16) (k.val * UNITS));
-					
-					fd.add_ushort (kern.left);
-					fd.add_ushort (kern.right);
-					fd.add_short (kern.kerning);
-					
-					kernings.append (kern);
+				if (gid_right == -1) {
+					warning ("right glyph not found in kerning table");
 				}
 				
-				gid_left++;
+				kern = new Kern (gid_left, (uint16)gid_right, (int16) (k.val * UNITS));
+				
+				fd.add_ushort (kern.left);
+				fd.add_ushort (kern.right);
+				fd.add_short (kern.kerning);
+				
+				kernings.append (kern);
 			}
+			
+			gid_left++;
 		}
 		
 		fd.pad ();
@@ -4772,7 +4777,7 @@ class DirectoryTable : Table {
 		
 		fd = new FontData ();
 
-		return_val_if_fail (offset_table.num_tables > 0, fd);
+		return_if_fail (offset_table.num_tables > 0);
 		
 		table_offset += offset_table.get_font_data ().length_with_padding ();
 		
@@ -4842,7 +4847,7 @@ internal static uint16 largest_pow2_exponent (uint16 max) {
 }
 
 void printd (string s) {
-	print (s);
+	//print (s);
 }
 
 }

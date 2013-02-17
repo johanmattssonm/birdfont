@@ -471,6 +471,7 @@ os.put_string (
 
 			if (async) {
 				export_command = @"$(get_birdfont_export ()) --ttf -o \"$((!) folder.get_path ())\" \"$temp_file\"";
+				print (@"Running export command: $export_command\n");
 				
 				try {
 					Process.spawn_command_line_async (export_command);
@@ -481,7 +482,6 @@ os.put_string (
 			}
 			
 			if (!async) {
-				print ("sync\n");
 				export_thread.run ();
 			}
 			

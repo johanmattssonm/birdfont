@@ -18,7 +18,7 @@ using BirdFont;
 const string GETTEXT_PACKAGE = "birdfont"; 
 
 namespace BirdFont {
-
+	
 static void print_export_help (string[] arg) {
 	stdout.printf (_("Usage:"));
 	stdout.printf (arg[0]);
@@ -38,7 +38,7 @@ public static int run_export (string[] arg) {
 	bool write_svg = false;
 	
 	File directory;
-		
+
 	if (arg.length < 2) {
 		print_export_help (arg);
 		return -1;
@@ -177,13 +177,13 @@ public bool has_flag (uint32 flag, uint32 mask) {
 public class BirdFont {
 	public static Argument args;
 	public static bool experimental = false;
-	internal static bool show_coordinates = false;
-	internal static bool fatal_wanings = false;
+	public static bool show_coordinates = false;
+	public static bool fatal_wanings = false;
 	public static bool win32 = false;
 	public static bool mac = false;
-	internal static string exec_path = "";
+	public static string exec_path = "";
 
-	internal static Font current_font;
+	public static Font current_font;
 	public static Glyph current_glyph;
 	
 	public void init (string[] arg) {

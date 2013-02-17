@@ -17,7 +17,6 @@
 
 using BirdFont;
 
-/** Stand alone command line utility for exporting fonts. */
-public static int main (string[] arg) {				
+public static int main (string[] arg) {
 	return run_export (arg);
 }

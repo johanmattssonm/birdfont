@@ -886,7 +886,6 @@ public class Font : GLib.Object {
 	}
 
 	private bool parse_svg_file (string path) {
-		print ("parse_svg_file\n");
 		SvgFont svg_font = new SvgFont (this);
 		svg_font.load (path);
 		return true;
