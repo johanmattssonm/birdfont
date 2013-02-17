@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2013 Johan Mattsson
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -4298,6 +4298,90 @@ class KernTable : Table {
 
 }
 
+class GposTable : Table {
+	
+	GlyfTable glyf_table;
+	
+	public GposTable (GlyfTable glyf_table) {
+		id = "GPOS";
+		this.glyf_table = glyf_table;
+	}
+	
+	public override void parse (FontData dis) throws Error {
+		warning ("Not implemented.");
+	}
+
+	public void process () throws GLib.Error {
+		FontData fd = new FontData ();
+		
+		fd.add_ulong (0x00010000); // table version
+		fd.add_ushort (10); // offset to script list
+		fd.add_ushort (24); // offset to feature list
+		fd.add_ushort (38); // offset to lookup list
+		
+		// script list ?
+		fd.add_ushort (0); // n items in script list
+		
+		// script table
+		fd.add_ushort (4); // offset to default language system
+		fd.add_ushort (0); // number of languages
+		
+		// script record, none right now
+		
+		// LangSys table 
+		fd.add_ushort (0); // reserved
+		fd.add_ushort (0xFFFF); // required features (0xFFFF is none)
+		fd.add_ushort (1); // number of features
+		fd.add_ushort (0); // feature index
+		
+		// feature table
+		fd.add_ushort (1); // number of features
+		
+		fd.add_tag ("kern"); // feature tag
+		fd.add_ushort (8); // offset to feature
+		
+		fd.add_ushort (0); // feature prameters (null)
+		fd.add_ushort (1); // number of lookups
+		fd.add_ushort (0); // lookup indice
+		
+		// lookup table
+		fd.add_ushort (1); // number of lookups
+		fd.add_ushort (4); // offset to lookup 1
+		
+		fd.add_ushort (2); // lookup type // FIXME	
+		fd.add_ushort (0); // lookup flags
+		fd.add_ushort (1); // number of subtables
+		fd.add_ushort (8); // array of offsets to subtables
+		
+		// MarkFilteringSet 
+		
+		// the kerning pair table
+		fd.add_ushort (1); // position format
+		fd.add_ushort (18);  // offset to coverage from beginning of kern pair table
+		fd.add_ushort (0x0004); // ValueFormat1 (0x0004 is x advance)
+		fd.add_ushort (0); // ValueFormat2 (0 is null)
+		fd.add_ushort (1); // n pairs
+		fd.add_ushort (14);// pair set offsets orderd by coverage index
+		
+		// pair set table 
+		fd.add_ushort (1); // n pair vaules
+		
+		// pair value record
+		fd.add_ushort (0); // gid to second glyph
+		fd.add_ushort (0); // value of ValueFormat1
+		//fd.add_ushort (0); // value of ValueFormat2
+		
+		// coverage
+		fd.add_ushort (1); // format
+		fd.add_ushort (1); // number of gid
+		fd.add_ushort (0); // gid
+		
+		fd.pad ();	
+		this.font_data = fd;
+	}
+
+}
+
 /** Table with list of tables sorted by table tag. */
 class DirectoryTable : Table {
 	
@@ -4306,6 +4390,7 @@ class DirectoryTable : Table {
 	public GaspTable gasp_table;
 	public GdefTable gdef_table;
 	public GlyfTable glyf_table;
+	public GposTable gpos_table;
 	public HeadTable head_table;
 	public HheaTable hhea_table;
 	public HmtxTable hmtx_table;
@@ -4327,6 +4412,7 @@ class DirectoryTable : Table {
 		gasp_table = new GaspTable ();
 		gdef_table = new GdefTable ();
 		glyf_table = new GlyfTable (loca_table);
+		gpos_table = new GposTable (glyf_table);
 		cmap_table = new CmapTable (glyf_table);
 		cvt_table  = new CvtTable ();
 		head_table = new HeadTable (glyf_table);
@@ -4357,6 +4443,7 @@ class DirectoryTable : Table {
 		loca_table.process (glyf_table, head_table);
 		post_table.process ();
 		kern_table.process ();
+		gpos_table.process ();
 		
 		offset_table.process ();
 		process_directory (); // this table
@@ -4367,6 +4454,7 @@ class DirectoryTable : Table {
 			tables.append (offset_table);
 			tables.append (this);
 			
+			tables.append (gpos_table);			
 			// tables.append (gdef_table); // invalid table
 			tables.append (os_2_table);
 			tables.append (cmap_table);
@@ -4486,6 +4574,11 @@ class DirectoryTable : Table {
 				kern_table.checksum = checksum;
 				kern_table.offset = offset;
 				kern_table.length = length;
+			} else if (tag.str == "GPOS") {
+				gpos_table.id = tag.str;
+				gpos_table.checksum = checksum;
+				gpos_table.offset = offset;
+				gpos_table.length = length;
 			}
 		}
 
@@ -4505,6 +4598,7 @@ class DirectoryTable : Table {
 		loca_table.parse (dis, head_table, maxp_table);
 		hmtx_table.parse (dis, hhea_table, loca_table);
 		cmap_table.parse (dis);
+		gpos_table.parse (dis);
 		
 		if (kern_table.has_data ()) {
 			kern_table.parse (dis);
@@ -4586,6 +4680,10 @@ class DirectoryTable : Table {
 				valid = false;
 			}
 			
+			if (!gpos_table.validate (dis)) {
+				warning ("gpos_table has invalid checksum");
+				valid = false;
+			}		
 		} catch (GLib.Error e) {
 			warning (e.message);
 			valid = false;
@@ -4722,7 +4820,7 @@ internal static uint16 largest_pow2_exponent (uint16 max) {
 }
 
 void printd (string s) {
-	// print (s);
+	print (s);
 }
 
 }
