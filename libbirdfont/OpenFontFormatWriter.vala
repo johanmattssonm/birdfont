@@ -4550,7 +4550,7 @@ class KernTable : Table {
 			
 			foreach (Kerning k in g.kerning) {
 				// n_pairs is used to truncate this table to prevent buffer overflow
-				if (n_pairs == ++i) {
+				if (n_pairs == i++) {
 					break;
 				}
 
@@ -4751,7 +4751,10 @@ class DirectoryTable : Table {
 			tables.append (offset_table);
 			tables.append (this);
 			
-			tables.append (gpos_table);			
+			if (kern_table.kerning_pairs > 0) {
+				tables.append (gpos_table);
+			}
+			
 			// tables.append (gdef_table); // invalid table
 			tables.append (os_2_table);
 			tables.append (cmap_table);
