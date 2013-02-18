@@ -299,7 +299,7 @@ GString* get_svg_font (FT_Face face, int* err) {
 	g_string_append_printf (svg, "<font id=\"%s\" horiz-adv-x=\"250\">\n", face->family_name);
 
 	units_per_em = face->units_per_EM;
-	units_per_em *= 10.0 / 3.0; 	// TODO: find out why size is different in svg fonts
+	units_per_em *= (1000.0 / face->units_per_EM) * (10.0 / 3.0); 	// TODO: find out why size is different in svg fonts
 	g_string_printf (font_element, "<font-face units-per-em=\"%f\" ascent=\"%d\" descent=\"%d\" />\n", units_per_em, (int) face->ascender, (int) face->descender);	
 	g_string_append (svg, font_element->str);
 	
