@@ -626,7 +626,8 @@ class TestCases {
 	public static void test_data_reader () {
 		FontData fd = new FontData ();
 		uint len;
-
+		int v;
+		
 		try {
 			fd.add (7);
 			fd.add_ulong (0x5F0F3CF5);
@@ -654,10 +655,24 @@ class TestCases {
 			len = fd.length ();
 			fd.add (0);
 			warn_if_fail (len + 1 == fd.length ());
+			
+			fd.seek_end ();
+			for (int i = -1131; i < 1131; i++) {
+				fd.add_charstring_value (i);
+			}
+
+			for (int i = -1131; i < 1131; i++) {
+				v = fd.read_charstring_value ();
+				if (v != i) {
+					warning (@"expecting $i got $v\n");
+				}
+			}
+
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
 	}
+
 
 	public static void test_argument () {
 		Argument arg = new Argument ("supplement -t \"Argument list\" --unknown -unknown --help -s");
