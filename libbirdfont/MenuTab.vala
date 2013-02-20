@@ -331,7 +331,7 @@ c.append ("""
 		Font font = BirdFont.get_current_font ();
 
 		if (!suppress_event) {
-			return;
+			return false;
 		}
 		
 		fn = MainWindow.file_chooser_save (_("Save"));
@@ -357,7 +357,7 @@ c.append ("""
 		bool saved = false;
 
 		if (!suppress_event) {
-			return;
+			return false;
 		}
 
 		f.delete_backup ();
