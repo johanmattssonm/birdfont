@@ -84,8 +84,6 @@ def configure ():
 
 	for lib in libs:
 		test_library_version (lib)
-	
-	write_config ()
 
 	v = subprocess.check_output ('mkdir -p build', shell=True)
 	v = subprocess.check_output ('touch build/configured', shell=True)
@@ -102,4 +100,5 @@ parser.add_option("-p", "--prefix", dest="prefix", help="install prefix", metava
 if not options.prefix:
 	options.prefix = "/usr"
 
+write_config ()
 configure ()

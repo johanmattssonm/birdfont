@@ -33,7 +33,8 @@ LOCAL_LIBS = [
 	"libXext.6",
 	"libpango-1.0.0",
 	"libfreetype.6",
-	"libfontconfig.1"
+	"libfontconfig.1",
+	"liblzma.5"
 ]
 
 def run(cmd):
@@ -51,9 +52,8 @@ def build():
 	run("mkdir -p build/mac/libbirdfont")
 	run("mkdir -p build/mac/bin")
 
-	run("valac -C --enable-experimental-non-null --enable-experimental --define=MAC --library libbirdfont -H birdfont.h libbirdfont/* --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
-	run("mv libbirdfont/*.c build/mac/libbirdfont/ ")
-	run("mv ./*.h build/mac/libbirdfont/")
+	run("valac -C --basedir build/mac/libbirdfont/ --enable-experimental-non-null --enable-experimental --define=MAC --library libbirdfont -H build/mac/libbirdfont/birdfont.h libbirdfont/* --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
+	run("cp libbirdfont/*.c build/mac/libbirdfont/")
 
 	run("""gcc -c build/mac/libbirdfont/*.c -shared -fno-common -fPIC -D 'GETTEXT_PACKAGE="birdfont"' $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) -I ./build/mac/birdfont""")
 	run("mv ./*.o build/mac/libbirdfont/ ")
