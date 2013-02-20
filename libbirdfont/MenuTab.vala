@@ -259,7 +259,7 @@ c.append ("""
 	public void load_backup (string file_name) {
 		File backup_file;
 		
-		if (!suppress_event) {
+		if (suppress_event) {
 			return;
 		}
 		
@@ -271,7 +271,7 @@ c.append ("""
 	public void load_font (string fn) {
 		Font font = BirdFont.get_current_font ();
 
-		if (!suppress_event) {
+		if (suppress_event) {
 			return;
 		}
 			
@@ -313,7 +313,7 @@ c.append ("""
 	}
 	
 	private static void select_overview () {
-		if (!suppress_event) {
+		if (suppress_event) {
 			return;
 		}
 		
@@ -330,8 +330,8 @@ c.append ("""
 		bool saved = false;
 		Font font = BirdFont.get_current_font ();
 
-		if (!suppress_event) {
-			return;
+		if (suppress_event) {
+			return false;
 		}
 		
 		fn = MainWindow.file_chooser_save (_("Save"));
@@ -356,8 +356,8 @@ c.append ("""
 		string fn;
 		bool saved = false;
 
-		if (!suppress_event) {
-			return;
+		if (suppress_event) {
+			return false;
 		}
 
 		f.delete_backup ();
@@ -388,7 +388,7 @@ c.append ("""
 		Font font;
 		SaveDialog save;
 
-		if (!suppress_event) {
+		if (suppress_event) {
 			return;
 		}
 
@@ -417,7 +417,7 @@ c.append ("""
 		SaveDialog save = new SaveDialog ();
 		Font font = BirdFont.get_current_font ();
 
-		if (!suppress_event) {
+		if (suppress_event) {
 			return;
 		}
 
@@ -436,7 +436,7 @@ c.append ("""
 		string? fn;
 		Font f;
 
-		if (!suppress_event) {
+		if (suppress_event) {
 			return;
 		}
 		
@@ -464,7 +464,7 @@ c.append ("""
 		FontFormat format;
 		OverwriteDialog overwrite;
 
-		if (!suppress_event) {
+		if (suppress_event) {
 			return;
 		}
 

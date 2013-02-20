@@ -1094,12 +1094,8 @@ public class Path {
 
 	public void insert_new_point_on_path (EditPoint? epp) {
 		EditPoint start, stop;
-		
 		double x0, x1, y0, y1;
-		double px, py;
-		
-		double position, t, d, min;
-		double steps = 500;
+		double position, min;
 		
 		EditPoint ep;
 
@@ -1123,40 +1119,45 @@ public class Path {
 
 		position = 0.5;
 
-		for (int i = 0; i < steps; i++) {
-			t = i / steps;
+		all_of (start, stop, (cx, cy, t) => {
+			double n = pow (ep.x - cx, 2) + pow (ep.y - cy, 2);
 			
-			px = bezier_path (t, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x);
-			py = bezier_path (t, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);
-			
-			d = Math.sqrt (Math.pow (ep.x - px, 2) + Math.pow (ep.y - py, 2));
-			
-			if (d < min) {
-				min = d;
+			if (n < min) {
+				min = n;
 				position = t;
 			}
-		}
-
-		bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
-		bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
-
-		ep.get_left_handle ().set_point_type (PointType.CURVE);
-		ep.get_left_handle ().move_to_coordinate (x0, y0);
-		ep.get_left_handle ().parent = ep;
-		
-		ep.get_right_handle ().set_point_type (PointType.CURVE);
-		ep.get_right_handle ().move_to_coordinate (x1, y1);
-		ep.get_right_handle ().parent = ep;
-
-		stop.get_left_handle ().length *= 1 - position;
-		start.get_right_handle ().length *= position;
+			
+			return true;
+		});
 
 		// this is a point on a line
 		if (start.get_right_handle ().type == PointType.LINE && stop.get_left_handle ().type  == PointType.LINE) {
 			ep.get_right_handle ().set_point_type (PointType.LINE);
 			ep.get_left_handle ().set_point_type (PointType.LINE);
 			ep.recalculate_linear_handles ();
+		} else if (start.get_right_handle ().type == PointType.QUADRATIC) { 
+			x0 = quadratic_bezier_vector (1 - position, stop.x, start.get_right_handle ().x (), start.x);
+			y0 = quadratic_bezier_vector (1 - position, stop.y, start.get_right_handle ().y (), start.y);
+			ep.get_right_handle ().move_to_coordinate (x0, y0);
+			
+			ep.get_left_handle ().set_point_type (PointType.QUADRATIC);	
+			ep.get_right_handle ().set_point_type (PointType.QUADRATIC);	
+		} else {
+			bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
+			bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
+
+			ep.get_left_handle ().set_point_type (PointType.CURVE);
+			ep.get_left_handle ().move_to_coordinate (x0, y0);
+			
+			ep.get_right_handle ().set_point_type (PointType.CURVE);
+			ep.get_right_handle ().move_to_coordinate (x1, y1);
 		}
+
+		ep.get_left_handle ().parent = ep;
+		ep.get_right_handle ().parent = ep;
+		
+		stop.get_left_handle ().length *= 1 - position;
+		start.get_right_handle ().length *= position;
 	}
 			
 	/** Get a point on the this path closest to x and y coordinates. */
@@ -1257,19 +1258,10 @@ public class Path {
 		bezier_vector (step, previous.x, previous.get_right_handle ().x (), next.get_left_handle ().x (), next.x, out handle_x0, out handle_x1);
 		bezier_vector (step, previous.y, previous.get_right_handle ().y (), next.get_left_handle ().y (), next.y, out handle_y0, out handle_y1);
 
-		// position 
-		edit_point.set_position (ox, oy);
 		edit_point.prev = previous_point;
 		edit_point.next = next_point;
-
-		// curve (angle)
-		edit_point.get_right_handle ().move_to_coordinate (handle_x0, handle_y0);
-		edit_point.get_left_handle ().move_to_coordinate (handle_x1, handle_y1);
-		// FIXA: maybe just edit_point.set_tie_handle (true);
-
-		if (unlikely (!g)) {
-			warning (@"Error: Got no coordinates for point on path. Num points $(points.length ())\n");
-		}
+		
+		edit_point.set_position (ox, oy);
 	}
 
 	public static void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = -1) {
@@ -1277,7 +1269,30 @@ public class Path {
 			steps = (int) (10 * get_length_from (start, stop));
 		}
 		
-		all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.get_left_handle ().x (), stop.get_left_handle ().y (), stop.x, stop.y, iter, steps);
+		if (start.get_right_handle ().type == PointType.QUADRATIC) {
+			all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.x, stop.y, iter, steps);
+		} else {
+			all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.get_left_handle ().x (), stop.get_left_handle ().y (), stop.x, stop.y, iter, steps);
+		}
+	}
+
+	private static void all_of_quadratic_curve (double x0, double y0, double x1, double y1, double x2, double y2, RasterIterator iter, double steps = 400) {
+		double px = x1;
+		double py = y1;
+		
+		double t;
+		
+		for (int i = 0; i < steps; i++) {
+			t = i / steps;
+			
+			px = quadratic_bezier_path (t, x0, x1, x2);
+			py = quadratic_bezier_path (t, y0, y1, y2);
+			
+			if (!iter (px, py, t)) {
+				return;
+			}
+			
+		}			
 	}
 
 	private static void all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
@@ -1345,6 +1360,10 @@ public class Path {
 		a1 = step * (q2 - q1) + q1;
 	}
 
+	public static double quadratic_bezier_vector (double step, double p0, double p1, double p2) {
+		return step * (p1 - p0) + p0;
+	}
+	
 	public static double quadratic_bezier_path (double step, double p0, double p1, double p2) {
 		double q0 = step * (p1 - p0) + p0;
 		double q1 = step * (p2 - p1) + p1;
