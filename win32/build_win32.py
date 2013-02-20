@@ -102,7 +102,7 @@ def build():
 
 	# generate c code
 	run("cp ../libbirdfont/*.c ../build/win32/libbirdfont/")
-	run("valac -C --basedir ../build/win32/libbirdfont/ --library libbirdfont -H birdfont.h ../libbirdfont/*.vala --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
+	run("valac -C --basedir ../build/win32/libbirdfont/ --library libbirdfont -H ../build/win32/libbirdfont/birdfont.h ../libbirdfont/*.vala --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
 
 	run("valac -C ../birdfont/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
 	run("mv ./*.c ../build/win32/birdfont/")

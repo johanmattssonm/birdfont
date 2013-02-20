@@ -16,6 +16,7 @@
 */
 
 #include <assert.h>
+#include <glib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -25,7 +26,7 @@
 #include FT_OPENTYPE_VALIDATE_H
 #include FT_TRUETYPE_TABLES_H
 
-#include <glib.h>
+//#include "birdfont.h"
 
 /** Error codes. */
 #define OK 0
@@ -85,7 +86,8 @@ void create_contour (FT_Vector* points, char* flags, int* length, FT_Vector** ne
 	j = 0;
 	for (i = 0; i < len; i++) {
 		if (is_quadratic (flags[i])) {
-			if (prev_is_curve && j != 0) { // i == 0?
+			if (prev_is_curve && j != 0) {
+				// add a new point if half way between two off curve points
 				x = p[j - 1].x + ((points[i].x - p[j - 1].x) / 2.0);
 				y = p[j - 1].y + ((points[i].y - p[j - 1].y) / 2.0);
 
@@ -338,6 +340,8 @@ GString* get_svg_font (FT_Face face, int* err) {
 		g_string_append (svg, svg_data->str);
 		
 		g_string_append (svg, "\" />\n");
+		
+		bird_font_progress_bar_set_progress ((double)i / face->num_glyphs);
 	}
 
 	// kerning
@@ -345,6 +349,8 @@ GString* get_svg_font (FT_Face face, int* err) {
 		hkern = get_kerning_data (face, i);
 		g_string_append (svg, hkern->str);
 		g_string_free (hkern, 0);
+
+		bird_font_progress_bar_set_progress ((double)(face->num_glyphs - i) / face->num_glyphs);
 	}
 
 	g_string_append (svg, "</font>\n");
@@ -363,7 +369,7 @@ int validate_font (FT_Face face) {
 	const FT_Byte* GPOS_table = NULL;
 	const FT_Byte* GSUB_table = NULL;
 	const FT_Byte* JSTF_table = NULL;
-	int error = OK;
+	int error;
 
 	error = FT_OpenType_Validate (face, FT_VALIDATE_BASE | FT_VALIDATE_GDEF | FT_VALIDATE_GPOS | FT_VALIDATE_GSUB | FT_VALIDATE_JSTF, &BASE_table, &GDEF_table, &GPOS_table, &GSUB_table, &JSTF_table);
 

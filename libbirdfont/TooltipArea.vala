@@ -23,10 +23,22 @@ namespace BirdFont {
 public class TooltipArea : GLib.Object {
 
 	string tool_tip;
+	ProgressBar progress_bar;
+	
 	public signal void redraw ();
 
 	public TooltipArea () {
+		progress_bar = new ProgressBar ();
+		progress_bar.new_progress.connect (progress);
+		
 		set_text_from_tool ();
+	}
+
+	void progress () {
+		redraw ();
+		MenuTab.set_suppress_event (true);
+		Tool.yield ();
+		MenuTab.set_suppress_event (false);
 	}
 
 	public void update_text () {
@@ -109,6 +121,14 @@ public class TooltipArea : GLib.Object {
 		cr.stroke ();
 		cr.restore ();
 		
+		cr.save ();
+		cr.rectangle (0, 0, alloc.width * ProgressBar.get_progress (), alloc.height);
+		cr.set_line_width (0);
+		cr.set_source_rgba (255/255.0, 255/255.0, 255/255.0, 1);
+		cr.fill_preserve ();
+		cr.stroke ();
+		cr.restore ();
+				
 		cr.save ();
 		cr.set_font_size (14);
 		cr.move_to (5, 15);

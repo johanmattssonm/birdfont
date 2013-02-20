@@ -22,6 +22,9 @@ namespace BirdFont {
 public class MenuTab : FontDisplay {	
 	
 	List<Font> recent_fonts = new List<Font> ();
+	
+	/** Ignore actions when export is in progress. */
+	public static bool suppress_event = false;
 
 	public MenuTab () {
 		// html callbacks:
@@ -55,7 +58,11 @@ public class MenuTab : FontDisplay {
 			MainWindow.get_tool_tip ().show_text (val);
 		});
 	}
-		
+	
+	public static void set_suppress_event (bool e) {
+		suppress_event = e;
+	}
+	
 	public override string get_name () {
 		return "Menu";
 	}
@@ -250,13 +257,23 @@ c.append ("""
 	}
 	
 	public void load_backup (string file_name) {
-		File backup_file = BirdFont.get_backup_directory ();
+		File backup_file;
+		
+		if (!suppress_event) {
+			return;
+		}
+		
+		backup_file = BirdFont.get_backup_directory ();
 		backup_file = backup_file.get_child (file_name);
 		load_font ((!) backup_file.get_path ());
 	}
 	
 	public void load_font (string fn) {
 		Font font = BirdFont.get_current_font ();
+
+		if (!suppress_event) {
+			return;
+		}
 			
 		SaveDialog save = new SaveDialog ();
 		save.finished.connect (() => {
@@ -296,6 +313,10 @@ c.append ("""
 	}
 	
 	private static void select_overview () {
+		if (!suppress_event) {
+			return;
+		}
+		
 		if (BirdFont.get_current_font ().is_empty ()) {
 			Toolbox.select_tool_by_name ("custom_character_set");
 		} else {
@@ -308,6 +329,10 @@ c.append ("""
 		string f;
 		bool saved = false;
 		Font font = BirdFont.get_current_font ();
+
+		if (!suppress_event) {
+			return;
+		}
 		
 		fn = MainWindow.file_chooser_save (_("Save"));
 		
@@ -330,6 +355,10 @@ c.append ("""
 		Font f = BirdFont.get_current_font ();
 		string fn;
 		bool saved = false;
+
+		if (!suppress_event) {
+			return;
+		}
 
 		f.delete_backup ();
 		
@@ -356,8 +385,16 @@ c.append ("""
 	}
 	
 	public static void new_file () {
-		Font font = BirdFont.get_current_font ();
-		SaveDialog save = new SaveDialog ();
+		Font font;
+		SaveDialog save;
+
+		if (!suppress_event) {
+			return;
+		}
+
+		save = new SaveDialog ();
+		font = BirdFont.get_current_font ();
+		
 		save.finished.connect (() => {
 			BirdFont.new_font ();
 			MainWindow.close_all_tabs ();
@@ -380,6 +417,10 @@ c.append ("""
 		SaveDialog save = new SaveDialog ();
 		Font font = BirdFont.get_current_font ();
 
+		if (!suppress_event) {
+			return;
+		}
+
 		save.finished.connect (() => {
 			load_new_font ();
 		});
@@ -392,8 +433,15 @@ c.append ("""
 	}
 
 	private static void load_new_font () {
-		string? fn = MainWindow.file_chooser_open (_("Open"));
-		Font f = BirdFont.get_current_font ();
+		string? fn;
+		Font f;
+
+		if (!suppress_event) {
+			return;
+		}
+		
+		f = BirdFont.get_current_font ();
+		fn = MainWindow.file_chooser_open (_("Open"));
 		
 		if (fn != null) {
 			f.delete_backup ();
@@ -412,9 +460,17 @@ c.append ("""
 	}
 	
 	public static void preview () {
-		TabBar tab_bar = MainWindow.get_tab_bar ();
-		FontFormat format = BirdFont.get_current_font ().format;
-		OverwriteDialog overwrite = new OverwriteDialog ();
+		TabBar tab_bar;
+		FontFormat format;
+		OverwriteDialog overwrite;
+
+		if (!suppress_event) {
+			return;
+		}
+
+		tab_bar = MainWindow.get_tab_bar ();
+		format = BirdFont.get_current_font ().format;
+		overwrite = new OverwriteDialog ();
 
 		overwrite.finished.connect (() => {
 			tab_bar.add_unique_tab (new Preview (), 80);	

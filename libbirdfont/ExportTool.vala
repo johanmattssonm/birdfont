@@ -17,26 +17,11 @@
 
 namespace BirdFont {
 
-public class ExportTool : Tool {
+public class ExportTool : GLib.Object {
 	private static ExportThread export_thread;
 	private static bool stop_export_thread = false;
 
 	public ExportTool (string n) {
-		base (n, _("Export glyph to svg file"), 'e', CTRL);
-	
-		select_action.connect((self) => {
-			export_svg_font ();
-			// Fixa: add export_glyph_to_svg (); as tool in toolbox
-		});
-		
-		press_action.connect((self, b, x, y) => {
-		});
-
-		release_action.connect((self, b, x, y) => {
-		});
-		
-		move_action.connect ((self, x, y)	 => {
-		});
 	}
 
 	public static string export_selected_paths_to_string () {
@@ -177,13 +162,14 @@ public class ExportTool : Tool {
 	public static bool export_all () {
 		Font font = BirdFont.get_current_font ();
 		bool f;
+		bool r = true;
 		
 		if (font.get_ttf_export ()) {
 			f = export_ttf_font ();
 			
 			if (!f) {
 				warning ("Failed to export font");
-				return false;
+				r = false;
 			}
 		}
 		
@@ -192,11 +178,11 @@ public class ExportTool : Tool {
 
 			if (!f) {
 				warning ("Failed to export font");
-				return false;
+				r = false;
 			}
 		}
 		
-		return true;
+		return r;
 	}
 
 	public static void generate_html_document (string html_file, Font font) {
@@ -403,37 +389,70 @@ os.put_string (
 		return r;
 	} 
 	
-	public static string get_birdfont_export () {
+	private static string[] get_birdfont_export (File folder, string temp_file) {
 		File f;
+		string dest = @"\"$((!) folder.get_path ())\" \"$temp_file\"";
 		
 		f = File.new_for_path ("birdfont-export.sh");
 		if (f.query_exists ()) {
-			return "sh birdfont-export.sh";
+			return { 
+				"sh", 
+				"birdfont-export.sh",
+				"-ttf",
+				"--o",
+				dest
+			};
 		}
 
 		f = File.new_for_path ("../birdfont-export.sh");	
 		if (f.query_exists ()) {
-			return "sh ../birdfont-export.sh";
+			return { 
+				"sh", 
+				"../birdfont-export.sh",
+				"-ttf",
+				"--o",
+				dest
+			};
 		}
 
 		f = File.new_for_path ("birdfont-export.exe");	
 		if (f.query_exists ()) {
-			return (!) f.get_path ();
+			return { 
+				(!) f.get_path (),
+				"-ttf",
+				"--o",
+				dest
+			};
 		}
 
 		f = File.new_for_path (@"$PREFIX/birdfont-export");
 		if (f.query_exists ()) {
-			return @"$PREFIX/bin/birdfont-export";
+			return { 
+				@"$PREFIX/bin/birdfont-export",
+				"-ttf",
+				"--o",
+				dest
+			};
 		}
 
 		f = File.new_for_path ("birdfont-export");	
 		if (f.query_exists ()) {
-			return (!) f.get_path ();
+			return { 
+				(!) f.get_path (),
+				"-ttf",
+				"--o",
+				dest
+			};
 		}
 
 		warning ("Can't find birdfont-export.");
 		
-		return "birdfont-export";
+		return { 
+				"birdfont-export",
+				"-ttf",
+				"--o",
+				dest
+			};
 	}
 	
 	public static bool export_ttf_font_path (File folder, bool async = true) {
@@ -442,7 +461,6 @@ os.put_string (
 		File eot_file;
 		string temp_file;
 		bool done = true;
-		string export_command;
 		
 		if (BirdFont.win32) {
 			async = false;
@@ -470,15 +488,7 @@ os.put_string (
 			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path ());
 
 			if (async) {
-				export_command = @"$(get_birdfont_export ()) --ttf -o \"$((!) folder.get_path ())\" \"$temp_file\"";
-				print (@"Running export command: $export_command\n");
-				
-				try {
-					Process.spawn_command_line_async (export_command);
-				} catch (Error e) {
-					stderr.printf (@"Failed to execute \"$export_command\" \n");
-					critical (@"$(e.message)");
-				}
+				spawn_export (folder, temp_file);
 			}
 			
 			if (!async) {
@@ -491,6 +501,34 @@ os.put_string (
 		}
 
 		return done;		
+	}
+
+	public static int spawn_export (File folder, string temp_file) {
+		try {
+			string[] spawn_env = Environ.get ();
+			Pid child_pid;
+			int cin, cout, cerr;
+			string[] spawn_args = get_birdfont_export (folder, temp_file);
+
+			Process.spawn_async_with_pipes (
+				"/",
+				spawn_args,
+				spawn_env,
+				SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
+				null,
+				out child_pid,
+				out cin,
+				out cout,
+				out cerr);
+
+			ChildWatch.add (child_pid, (pid, exit_status) => {
+				status (_ ("Wrote font files."));
+			});
+		} catch (SpawnError e) {
+			warning (e.message);
+		}
+		
+		return 0;
 	}
 	
 	public static bool export_svg_font () {
@@ -521,7 +559,6 @@ os.put_string (
 			return false;
 		}
 		
-		status (_ ("Wrote font files"));
 		return true;
 	}
 

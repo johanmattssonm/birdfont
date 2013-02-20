@@ -1660,9 +1660,14 @@ class GlyfTable : Table {
 
 	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
+		uint last_len = 0;
+		uint i = 0;
+		uint num_glyphs;
 		
 		create_glyph_table ();
-		uint last_len = 0;
+		
+		num_glyphs = glyphs.length ();
+		
 		foreach (Glyph g in glyphs) {
 			// set values for loca table
 			assert (fd.length () % 4 == 0);
@@ -1674,6 +1679,8 @@ class GlyfTable : Table {
 			printd (@"loca fd.length (): $(fd.length ())\n");
 
 			last_len = fd.length ();
+			
+			ProgressBar.set_progress ((double) (++i) / num_glyphs);
 		}
 
 		location_offsets.append (fd.length ()); // last entry in loca table is special
@@ -4187,10 +4194,9 @@ class CffTable : Table {
 		return 0;
 	}
 
-	List<uint32> read_index () {
+	List<uint32> read_index () throws Error {
 		uint32 offset_size, off;
-		int entries, len;
-		string data;
+		int entries;
 		List<uint32> offsets = new List<uint32> ();
 		
 		entries = dis.read_ushort ();
@@ -4215,7 +4221,7 @@ class CffTable : Table {
 	}
 
 	public override void parse (FontData dis) throws Error {
-		uint v1, v2, offset_size, entries, header_size, len;
+		uint v1, v2, offset_size, header_size, len;
 		string data;
 		List<uint32> offsets, dict_index;
 		int id, val;
@@ -4291,7 +4297,6 @@ class CffTable : Table {
 	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 		string name = "typeface";
-		uint8 dict_length;
 		
 		// header
 		fd.add_byte (1); // format version (1.0)
@@ -4658,13 +4663,19 @@ class GposTable : Table {
 		}
 		
 		// pair table 
+		i = 0;
+		
 		foreach (Kern k in kern_table.kernings) {
 			// pair value record
 			fd.add_ushort (1); // n pair vaules
 			fd.add_ushort (k.right); // gid to second glyph
 			fd.add_short (k.kerning); // value of ValueFormat1, horizontal adjustment for advance			
 			// value of ValueFormat2 is null
+			
+			ProgressBar.set_progress ((double) (num_kerning_values - ++i) / num_kerning_values);
 		}
+		
+		ProgressBar.set_progress (0); // reset progress bar
 		
 		// coverage
 		fd.add_ushort (1); // format

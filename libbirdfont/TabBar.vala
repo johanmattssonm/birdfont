@@ -409,6 +409,10 @@ public class TabBar : GLib.Object {
 	public void select_tab_click (double x, double y, int width, int height) {
 		int over, close;
 		
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
 		this.width = width;
 		this.height = height;
 		
