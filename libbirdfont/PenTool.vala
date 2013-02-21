@@ -172,7 +172,11 @@ public class PenTool : Tool {
 		// move curve handles
 		if (move_selected_handle) {
 			if (selected_handle.type == PointType.LINE_CUBIC) {
-				selected_handle.set_point_type (PointType.CUBIC); // TODO: quadratic
+				selected_handle.set_point_type (PointType.CUBIC);
+			}
+
+			if (selected_handle.type == PointType.LINE_QUADRATIC) {
+				selected_handle.set_point_type (PointType.QUADRATIC);
 			}
 				
 			if (GridTool.is_visible ()) {

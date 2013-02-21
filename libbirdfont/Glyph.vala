@@ -861,6 +861,7 @@ public class Glyph : FontDisplay {
 	
 		added = false;
 
+		// FIXME: what about removeing this feature
 		if (new_point_on_path != null) {
 			return_if_fail (active_paths.length () > 0);
 

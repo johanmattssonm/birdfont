@@ -703,6 +703,8 @@ public class ImportSvg {
 			
 			if (command[i] == "L") {
 				path.add (p[ic++], p[ic++]);
+				ep1 = path.points.last ().data;
+				ep1.recalculate_linear_handles ();
 			}
 			
 			if (command[i] == "Q") {
@@ -781,11 +783,12 @@ public class ImportSvg {
 				}
 				
 				glyph.add_path (path);
-				path.close ();
+				glyph.close_path ();
+								
 				path = new Path ();
 			}
 		}
-		
+
 		// TODO: Find out if it is possible to tie handles.
 	}
 	

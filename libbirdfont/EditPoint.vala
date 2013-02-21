@@ -22,6 +22,7 @@ namespace BirdFont {
 public enum PointType {
 	NONE,
 	NORMAL,
+	LINE_QUADRATIC,
 	LINE_CUBIC,
 	CUBIC,
 	QUADRATIC,
@@ -54,7 +55,7 @@ public class EditPoint {
 	
 	public bool tie_handles = false;
 	
-	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.LINE_CUBIC) {
+	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {
 		x = nx;
 		y = ny;
 		type = nt;
@@ -126,9 +127,7 @@ public class EditPoint {
 			
 				h.move_to_coordinate (nx, ny);
 			}
-
-			h = n.get_right_handle ();
-			
+						
 			// on the other side
 			h = n.get_right_handle ();
 			
@@ -148,6 +147,13 @@ public class EditPoint {
 			if (h.type == PointType.LINE_CUBIC) {
 				nx = x + ((n.x - x) / 3);
 				ny = y + ((n.y - y) / 3);
+				
+				h.move_to_coordinate (nx, ny);
+			}
+
+			if (h.type == PointType.LINE_QUADRATIC) {
+				nx = x + ((n.x - x) / 2);
+				ny = y + ((n.y - y) / 2);
 				
 				h.move_to_coordinate (nx, ny);
 			}

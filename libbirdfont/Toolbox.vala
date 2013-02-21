@@ -47,6 +47,8 @@ public class Toolbox : GLib.Object  {
 	
 	ImageSurface? toolbox_background = null;
 	
+	public static bool use_quadratic_bezierpoints = false;
+	
 	public Toolbox (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
 
@@ -128,6 +130,20 @@ public class Toolbox : GLib.Object  {
 		precision.set_max (1);
 		
 		draw_tool_modifiers.add_tool (precision);
+		
+		// quadratic Bézier points
+		Tool quadratic_points = new Tool ("quadratic_points", _("Create quadratic Bézier curves"));
+		quadratic_points.select_action.connect ((self) => {
+			Toolbox.use_quadratic_bezierpoints = true;
+		});
+		draw_tool_modifiers.add_tool (quadratic_points);		
+		
+		// cubic Bézier points
+		Tool cubic_points = new Tool ("cubic_points", _("Create cubic Bézier curves"));
+		cubic_points.select_action.connect ((self) => {
+			Toolbox.use_quadratic_bezierpoints = false;
+		});
+		draw_tool_modifiers.add_tool (cubic_points);
 		
 		// path tools
 		Tool union_paths_tool = new MergeTool ("union_paths");
@@ -562,6 +578,8 @@ public class Toolbox : GLib.Object  {
 		var idle = new IdleSource();
 		idle.set_callback (() => {
 			pen_tool.set_selected (true);
+			select_tool (cubic_points);
+			
 			select_draw_tool ();			
 			
 			if (GlyphCanvas.get_current_glyph ().get_show_help_lines ()) {
@@ -578,6 +596,13 @@ public class Toolbox : GLib.Object  {
 		});
 		
 		idle.attach (null);
+	}
+
+	/**
+	 * @return true if new points should be quadratic instead of cubic.
+	 */
+	public static bool use_quadratic_points () {
+		return use_quadratic_bezierpoints;
 	}
 	
 	public void key_press (uint keyval) {

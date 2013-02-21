@@ -824,23 +824,33 @@ public class Font : GLib.Object {
 			ligature.remove_all ();
 			
 			if (path.has_suffix (".svg")) {
+				Toolbox.select_tool_by_name ("cubic_points");
 				font_file = path;
 				loaded = parse_svg_file (path);
 				format = FontFormat.SVG;
 			}
 			
 			if (path.has_suffix (".ffi")) {
+				Toolbox.select_tool_by_name ("cubic_points");
 				font_file = path;
 				loaded = parse_file (path);
 				format = FontFormat.FFI;
 			}
 			
-			if (path.has_suffix (".ttf") || path.has_suffix (".otf")) {
+			if (path.has_suffix (".ttf")) {
+				Toolbox.select_tool_by_name ("quadratic_points");
 				font_file = path;
 				loaded = parse_freetype_file (path);
 				format = FontFormat.FREETYPE;
 			}			
-			
+
+			if (path.has_suffix (".otf")) {
+				Toolbox.select_tool_by_name ("cubic_points");
+				font_file = path;
+				loaded = parse_freetype_file (path);
+				format = FontFormat.FREETYPE;
+			}	
+						
 			/* // TODO: Remove the old way of loading ttfs when testing of the OTF writer is complete.
 			if (BirdFont.experimental) {
 				if (path.has_suffix (".ttf")) {

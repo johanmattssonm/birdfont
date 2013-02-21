@@ -202,6 +202,7 @@ public class Path {
 	private static void draw_curve (EditPoint e, EditPoint en, Context cr, double alpha = 1) {
 		Glyph g = MainWindow.get_current_glyph ();
 		double xa, ya, xb, yb, xc, yc, xd, yd;
+		PointType t = en.get_right_handle ().type;
 		
 		get_bezier_points (e, en, out xa, out ya, out xb, out yb, out xc, out yc, out xd, out yd);
 
@@ -210,7 +211,7 @@ public class Path {
 		
 		cr.line_to (xa, ya); // this point makes sense only if it is the first or last position, the other points are meaningless don't export them
 
-		if (en.get_right_handle ().type == PointType.QUADRATIC) {
+		if (t == PointType.QUADRATIC || t == PointType.LINE_QUADRATIC) {
 			cr.curve_to ((xa + 2 * xb) / 3, (ya + 2 * yb) / 3, (xd + 2 * xb) / 3, (yd + 2 * yb) / 3, xd, yd);		
 		} else {
 			cr.curve_to (xb, yb, xc, yc, xd, yd);
@@ -293,6 +294,8 @@ public class Path {
 		EditPoint handle_right = e.get_right_handle ().get_point ();
 		EditPoint handle_left = e.get_left_handle ().get_point ();
 
+		PointType type = e.get_left_handle ().type;
+
 		cr.stroke ();
 		
 		img_right = (e.get_right_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
@@ -303,7 +306,7 @@ public class Path {
 			draw_img_center (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
 		}
 		
-		if (!(is_open () && e == points.first ().data) && e.get_left_handle ().type != PointType.QUADRATIC) {
+		if (!(is_open () && e == points.first ().data) && type != PointType.QUADRATIC && type != PointType.LINE_QUADRATIC) {
 			draw_line (handle_left, e, cr, 0.15);
 			draw_img_center (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
 		}
@@ -742,7 +745,7 @@ public class Path {
 	 * to the new item in list.
 	 */
 	public unowned List<EditPoint> add_after (double x, double y, List<EditPoint>? previous_point) {
-		EditPoint p = new EditPoint (x, y, PointType.LINE_CUBIC);	
+		EditPoint p = new EditPoint (x, y);	
 		return add_point_after (p, previous_point);
 	}
 	
@@ -776,10 +779,13 @@ public class Path {
 		
 		PenTool.set_default_handle_positions ();
 		
-		if (p.prev != null) {
-				if (p.get_prev ().data.right_handle.type == PointType.QUADRATIC) {
-					p.left_handle.type = PointType.QUADRATIC;
-				}
+		if (p.prev != null && p.get_prev ().data.right_handle.type == PointType.QUADRATIC) {
+			p.left_handle.type = PointType.QUADRATIC;
+			p.right_handle.type = PointType.LINE_QUADRATIC;
+		} else if (Toolbox.use_quadratic_points ()) {
+			p.left_handle.type = PointType.LINE_QUADRATIC;
+			p.right_handle.type = PointType.LINE_QUADRATIC;
+			p.type = PointType.LINE_QUADRATIC;
 		}
 		
 		return np;
@@ -1137,7 +1143,12 @@ public class Path {
 		});
 
 		// this is a point on a line
-		if (start.get_right_handle ().type == PointType.LINE_CUBIC && stop.get_left_handle ().type  == PointType.LINE_CUBIC) {
+		
+		if (start.get_right_handle ().type == PointType.LINE_QUADRATIC && stop.get_left_handle ().type  == PointType.LINE_QUADRATIC) {
+			ep.get_right_handle ().set_point_type (PointType.LINE_QUADRATIC);
+			ep.get_left_handle ().set_point_type (PointType.LINE_QUADRATIC);
+			ep.recalculate_linear_handles ();
+		} else if (start.get_right_handle ().type == PointType.LINE_CUBIC && stop.get_left_handle ().type  == PointType.LINE_CUBIC) {
 			ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
 			ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
 			ep.recalculate_linear_handles ();
