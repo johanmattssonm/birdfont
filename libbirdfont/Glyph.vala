@@ -870,10 +870,10 @@ public class Glyph : FontDisplay {
 			return_if_fail (e.prev != null);
 			
 			p.add_point (e);
-			e.type = PointType.CURVE;
+			e.type = PointType.CUBIC;
 			
-			e.right_handle.type = PointType.CURVE;
-			e.left_handle.type = PointType.CURVE;
+			e.right_handle.type = PointType.CUBIC;
+			e.left_handle.type = PointType.CUBIC;
 			
 			paths.append (p);
 			add_active_path (p);
@@ -1088,7 +1088,7 @@ public class Glyph : FontDisplay {
 			}
 			
 			if (p.points.length () == 2) {
-				if (p.points.first ().data.type == PointType.LINE && p.points.last ().data.type == PointType.LINE) {
+				if (p.points.first ().data.type == PointType.LINE_CUBIC && p.points.last ().data.type == PointType.LINE_CUBIC) {
 					path_list.remove (p);
 					continue;
 				}

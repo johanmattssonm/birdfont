@@ -742,7 +742,7 @@ public class Path {
 	 * to the new item in list.
 	 */
 	public unowned List<EditPoint> add_after (double x, double y, List<EditPoint>? previous_point) {
-		EditPoint p = new EditPoint (x, y, PointType.LINE);	
+		EditPoint p = new EditPoint (x, y, PointType.LINE_CUBIC);	
 		return add_point_after (p, previous_point);
 	}
 	
@@ -982,7 +982,7 @@ public class Path {
 		eh.length = 0;
 
 		eh = ((!)quadratic_path.points.last ().prev).data.get_right_handle ();
-		eh.set_point_type (PointType.CURVE);
+		eh.set_point_type (PointType.CUBIC);
 		eh.length *= 1.6;
 
 		return quadratic_path;
@@ -1002,7 +1002,7 @@ public class Path {
 		eh.length = 0;
 		
 		eh = start.get_right_handle ();
-		eh.set_point_type (PointType.CURVE);
+		eh.set_point_type (PointType.CUBIC);
 		eh.move_to_coordinate (curve_x, curve_y);
 	}
 
@@ -1085,7 +1085,7 @@ public class Path {
 		ny = bezier_path (0.5, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);
 
 		if (Math.fabs (distance) > 0.01) {
-			EditPoint new_edit_point = new EditPoint (nx, ny, PointType.CURVE);
+			EditPoint new_edit_point = new EditPoint (nx, ny, PointType.CUBIC);
 
 			new_edit_point.next = middle.get_next ();
 			new_edit_point.prev = middle.get_prev ();
@@ -1114,9 +1114,9 @@ public class Path {
 		start = ep.get_prev ().data;
 		stop = ep.get_next ().data;
 
-		if (start.get_right_handle ().type == PointType.CURVE || stop.get_left_handle ().type  == PointType.CURVE) {
-			start.get_right_handle ().type = PointType.CURVE;
-			stop.get_left_handle ().type = PointType.CURVE;
+		if (start.get_right_handle ().type == PointType.CUBIC || stop.get_left_handle ().type  == PointType.CUBIC) {
+			start.get_right_handle ().type = PointType.CUBIC;
+			stop.get_left_handle ().type = PointType.CUBIC;
 		}
 
 		add_point_after (ep, ep.get_prev ());
@@ -1137,9 +1137,9 @@ public class Path {
 		});
 
 		// this is a point on a line
-		if (start.get_right_handle ().type == PointType.LINE && stop.get_left_handle ().type  == PointType.LINE) {
-			ep.get_right_handle ().set_point_type (PointType.LINE);
-			ep.get_left_handle ().set_point_type (PointType.LINE);
+		if (start.get_right_handle ().type == PointType.LINE_CUBIC && stop.get_left_handle ().type  == PointType.LINE_CUBIC) {
+			ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
+			ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
 			ep.recalculate_linear_handles ();
 		} else if (start.get_right_handle ().type == PointType.QUADRATIC) { 
 			x0 = quadratic_bezier_vector (1 - position, stop.x, start.get_right_handle ().x (), start.x);
@@ -1152,10 +1152,10 @@ public class Path {
 			bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
 			bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
 
-			ep.get_left_handle ().set_point_type (PointType.CURVE);
+			ep.get_left_handle ().set_point_type (PointType.CUBIC);
 			ep.get_left_handle ().move_to_coordinate (x0, y0);
 			
-			ep.get_right_handle ().set_point_type (PointType.CURVE);
+			ep.get_right_handle ().set_point_type (PointType.CUBIC);
 			ep.get_right_handle ().move_to_coordinate (x1, y1);
 		}
 
@@ -1733,8 +1733,8 @@ public class Path {
 			if (il.has_edit_point (ex)) {
 				s = (!) il.get_intersection (ex);
 			
-				en.type = PointType.CURVE;
-				en.right_handle.type = PointType.CURVE;
+				en.type = PointType.CUBIC;
+				en.right_handle.type = PointType.CUBIC;
 				en.right_handle.angle  = s.editpoint_b.right_handle.angle;
 				en.right_handle.length = s.editpoint_b.right_handle.length;
 							
@@ -1773,8 +1773,8 @@ public class Path {
 					}
 				}
 
-				en.type = PointType.CURVE;
-				en.right_handle.type = PointType.CURVE;
+				en.type = PointType.CUBIC;
+				en.right_handle.type = PointType.CUBIC;
 				en.right_handle.angle  = s.editpoint_a.right_handle.angle;
 				en.right_handle.length = s.editpoint_a.right_handle.length;
 								
@@ -1825,7 +1825,7 @@ public class Path {
 		// link points at the other end
 		first = points.first ().data;
 		handle = path.points.first ().data.right_handle;
-		handle.type = PointType.CURVE;
+		handle.type = PointType.CUBIC;
 		handle.angle = first.right_handle.angle;
 		handle.length = first.right_handle.length;
 		path.points.remove_link (path.points.first ());
@@ -1839,7 +1839,7 @@ public class Path {
 		first = points.first ().data;
 		points.remove_link (points.first ());
 		handle = points.last ().data.right_handle;
-		handle.type = PointType.CURVE;
+		handle.type = PointType.CUBIC;
 		handle.angle = first.right_handle.angle;
 		handle.length = first.right_handle.length;
 	

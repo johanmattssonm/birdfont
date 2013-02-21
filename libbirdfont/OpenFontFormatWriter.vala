@@ -1281,8 +1281,8 @@ class GlyfTable : Table {
 					edit_point.get_left_handle ().set_point_type (PointType.NONE);
 					edit_point.get_left_handle ().length = 0;
 						
-					edit_point.type = PointType.CURVE;
-					edit_point.get_right_handle ().set_point_type (PointType.CURVE);
+					edit_point.type = PointType.CUBIC;
+					edit_point.get_right_handle ().set_point_type (PointType.CUBIC);
 					edit_point.get_right_handle ().move_to_coordinate (x, y);
 					
 					prev_is_curve = true;
@@ -1304,19 +1304,19 @@ class GlyfTable : Table {
 				x = xcoordinates[first_point] * 1000.0 / units_per_em; // in proportion to em width
 				y = ycoordinates[first_point] * 1000.0 / units_per_em;
 
-				edit_point.get_left_handle ().set_point_type (PointType.CURVE);
+				edit_point.get_left_handle ().set_point_type (PointType.CUBIC);
 				edit_point.get_left_handle ().length = 0;
 					
-				edit_point.type = PointType.CURVE;
-				edit_point.get_right_handle ().set_point_type (PointType.CURVE);
+				edit_point.type = PointType.CUBIC;
+				edit_point.get_right_handle ().set_point_type (PointType.CUBIC);
 				edit_point.get_right_handle ().move_to_coordinate (x, y);
 			}
 			
 			// curve last to first
 			x = xcoordinates[first_point] * 1000.0 / units_per_em; // in proportion to em width
 			y = ycoordinates[first_point] * 1000.0 / units_per_em;
-			edit_point.type = PointType.CURVE;
-			edit_point.get_right_handle ().set_point_type (PointType.CURVE);
+			edit_point.type = PointType.CUBIC;
+			edit_point.get_right_handle ().set_point_type (PointType.CUBIC);
 			edit_point.get_right_handle ().move_to_coordinate (x, y);
 			
 			path.close ();
@@ -1418,7 +1418,7 @@ class GlyfTable : Table {
 			foreach (EditPoint e in p.points) {
 				end_point++;
 				
-				if (e.get_right_handle ().type == PointType.CURVE) {
+				if (e.get_right_handle ().type == PointType.CUBIC) {
 					end_point++;
 				}
 			}
@@ -1460,7 +1460,7 @@ class GlyfTable : Table {
 				flags.append (Coordinate.ON_PATH);
 				nflags++;
 				
-				if (e.get_right_handle ().type == PointType.CURVE) {
+				if (e.get_right_handle ().type == PointType.CUBIC) {
 					fd.add_byte (Coordinate.NONE);
 					flags.append (Coordinate.NONE);
 					nflags++;
@@ -1491,7 +1491,7 @@ class GlyfTable : Table {
 				
 				prev = rint (e.x * UNITS - g.left_limit * UNITS);
 				
-				if (e.get_right_handle ().type == PointType.CURVE) {
+				if (e.get_right_handle ().type == PointType.CUBIC) {
 					x = rint (e.get_right_handle ().x () * UNITS - prev - g.left_limit * UNITS);
 
 					fd.add_16 ((int16) x);
@@ -1514,7 +1514,7 @@ class GlyfTable : Table {
 				
 				prev = rint (e.y * UNITS + font.base_line * UNITS);
 
-				if (e.get_right_handle ().type == PointType.CURVE) {
+				if (e.get_right_handle ().type == PointType.CUBIC) {
 					y = rint (e.get_right_handle ().y () * UNITS - prev + font.base_line * UNITS);
 					
 					fd.add_16 ((int16) y);

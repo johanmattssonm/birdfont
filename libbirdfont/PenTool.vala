@@ -171,8 +171,8 @@ public class PenTool : Tool {
 		
 		// move curve handles
 		if (move_selected_handle) {
-			if (selected_handle.type == PointType.LINE) {
-				selected_handle.set_point_type (PointType.CURVE); // TODO: quadratic
+			if (selected_handle.type == PointType.LINE_CUBIC) {
+				selected_handle.set_point_type (PointType.CUBIC); // TODO: quadratic
 			}
 				
 			if (GridTool.is_visible ()) {

@@ -33,7 +33,7 @@ public class EditPointHandle  {
 		this.parent = none;
 		this.angle = 0;
 		this.length = 10;
-		this.type = PointType.LINE;
+		this.type = PointType.LINE_CUBIC;
 		this.active = false;
 	}
 	
@@ -41,7 +41,7 @@ public class EditPointHandle  {
 		this.parent = parent;
 		this.angle = angle;
 		this.length = length;
-		this.type = PointType.LINE;
+		this.type = PointType.LINE_CUBIC;
 		this.active = false;
 	}
 

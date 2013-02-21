@@ -22,8 +22,8 @@ namespace BirdFont {
 public enum PointType {
 	NONE,
 	NORMAL,
-	LINE,
-	CURVE,
+	LINE_CUBIC,
+	CUBIC,
 	QUADRATIC,
 	DOUBLE_CURVE,
 	END,
@@ -54,7 +54,7 @@ public class EditPoint {
 	
 	public bool tie_handles = false;
 	
-	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.LINE) {
+	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.LINE_CUBIC) {
 		x = nx;
 		y = ny;
 		type = nt;
@@ -120,7 +120,7 @@ public class EditPoint {
 			n = get_prev ().data;
 			h = get_left_handle ();
 			
-			if (h.type == PointType.LINE) {
+			if (h.type == PointType.LINE_CUBIC) {
 				nx = x + ((n.x - x) / 3);
 				ny = y + ((n.y - y) / 3);
 			
@@ -132,7 +132,7 @@ public class EditPoint {
 			// on the other side
 			h = n.get_right_handle ();
 			
-			if (h.type == PointType.LINE) {
+			if (h.type == PointType.LINE_CUBIC) {
 				nx = n.x + ((x - n.x) / 3);
 				ny = n.y + ((y - n.y) / 3);
 			
@@ -145,7 +145,7 @@ public class EditPoint {
 			n = get_next ().data;
 			h = get_right_handle ();
 			
-			if (h.type == PointType.LINE) {
+			if (h.type == PointType.LINE_CUBIC) {
 				nx = x + ((n.x - x) / 3);
 				ny = y + ((n.y - y) / 3);
 				
@@ -154,7 +154,7 @@ public class EditPoint {
 
 			h = n.get_left_handle ();
 			
-			if (h.type == PointType.LINE) {
+			if (h.type == PointType.LINE_CUBIC) {
 				nx = n.x + ((x - n.x) / 3);
 				ny = n.y + ((y - n.y) / 3);
 
@@ -189,8 +189,8 @@ public class EditPoint {
 			angle = -acos (a / length) + PI;
 		}
 		
-		left_handle.type = PointType.CURVE;
-		right_handle.type = PointType.CURVE;
+		left_handle.type = PointType.CUBIC;
+		right_handle.type = PointType.CUBIC;
 		
 		right_handle.angle = angle;
 		left_handle.angle = angle;

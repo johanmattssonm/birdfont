@@ -80,7 +80,7 @@ class Svg {
 	private static void add_abs_next (EditPoint start, EditPoint end, StringBuilder svg, Glyph g, bool do_glyph) {
 		if (end.get_left_handle ().type == PointType.QUADRATIC) {
 			add_quadratic_abs_path (end, start, svg, g, do_glyph);
-		} else if (start.right_handle.type == PointType.LINE && end.left_handle.type == PointType.LINE) {
+		} else if (start.right_handle.type == PointType.LINE_CUBIC && end.left_handle.type == PointType.LINE_CUBIC) {
 			add_abs_line_to (end, start, svg, g, do_glyph);
 		} else {
 			add_cubic_abs_path (end, start, svg, g, do_glyph);

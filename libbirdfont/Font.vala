@@ -728,11 +728,11 @@ public class Font : GLib.Object {
 			foreach (var ep in p.points) {
 				os.put_string (@"<point x=\"$(ep.x)\" y=\"$(ep.y)\" ");
 				
-				if (ep.right_handle.type == PointType.CURVE) {
+				if (ep.right_handle.type == PointType.CUBIC) {
 					os.put_string (@"right_type=\"cubic\" ");
 				}
 
-				if (ep.left_handle.type == PointType.CURVE) {
+				if (ep.left_handle.type == PointType.CUBIC) {
 					os.put_string (@"left_type=\"cubic\" ");
 				}
 
@@ -744,25 +744,25 @@ public class Font : GLib.Object {
 					os.put_string (@"left_type=\"quadratic\" ");
 				}
 
-				if (ep.right_handle.type == PointType.LINE) {
+				if (ep.right_handle.type == PointType.LINE_CUBIC) {
 					os.put_string (@"right_type=\"linear\" ");
 				}
 
-				if (ep.left_handle.type == PointType.LINE) {
+				if (ep.left_handle.type == PointType.LINE_CUBIC) {
 					os.put_string (@"left_type=\"linear\" ");
 				}
 								
-				if (ep.right_handle.type == PointType.CURVE || ep.right_handle.type == PointType.QUADRATIC) {
+				if (ep.right_handle.type == PointType.CUBIC || ep.right_handle.type == PointType.QUADRATIC) {
 					os.put_string (@"right_angle=\"$(ep.right_handle.angle)\" ");
 					os.put_string (@"right_length=\"$(ep.right_handle.length)\" ");
 				}
 				
-				if (ep.left_handle.type == PointType.CURVE) {
+				if (ep.left_handle.type == PointType.CUBIC) {
 					os.put_string (@"left_angle=\"$(ep.left_handle.angle)\" ");
 					os.put_string (@"left_length=\"$(ep.left_handle.length)\" ");						
 				}
 				
-				if (ep.right_handle.type == PointType.CURVE || ep.left_handle.type == PointType.CURVE) {
+				if (ep.right_handle.type == PointType.CUBIC || ep.left_handle.type == PointType.CUBIC) {
 					os.put_string (@"tie_handles=\"$(ep.tie_handles)\" ");
 				}
 				
@@ -1400,8 +1400,8 @@ public class Font : GLib.Object {
 		double length_right = 0;
 		double length_left = 0;
 		
-		PointType type_right = PointType.LINE;
-		PointType type_left = PointType.LINE;
+		PointType type_right = PointType.LINE_CUBIC;
+		PointType type_left = PointType.LINE_CUBIC;
 		
 		bool tie_handles = false;
 		
@@ -1415,11 +1415,11 @@ public class Font : GLib.Object {
 			if (attr_name == "y") y = double.parse (attr_content);
 
 			if (attr_name == "right_type" && attr_content == "linear") {
-				type_right = PointType.LINE;
+				type_right = PointType.LINE_CUBIC;
 			}	
 
 			if (attr_name == "left_type" && attr_content == "linear") {
-				type_left = PointType.LINE;
+				type_left = PointType.LINE_CUBIC;
 			}	
 
 			if (attr_name == "right_type" && attr_content == "quadratic") {
@@ -1431,11 +1431,11 @@ public class Font : GLib.Object {
 			}
 
 			if (attr_name == "right_type" && attr_content == "cubic") {
-				type_right = PointType.CURVE;
+				type_right = PointType.CUBIC;
 			}	
 
 			if (attr_name == "left_type" && attr_content == "cubic") {
-				type_left = PointType.CURVE;
+				type_left = PointType.CUBIC;
 			}
 			
 			if (attr_name == "right_angle") angle_right = double.parse (attr_content);
@@ -1447,12 +1447,12 @@ public class Font : GLib.Object {
 		}
 	
 		// backward compabtility
-		if (type_right == PointType.LINE && length_right != 0) {
-			type_right = PointType.CURVE;
+		if (type_right == PointType.LINE_CUBIC && length_right != 0) {
+			type_right = PointType.CUBIC;
 		}
 
-		if (type_left == PointType.LINE && length_left != 0) {
-			type_left = PointType.CURVE;
+		if (type_left == PointType.LINE_CUBIC && length_left != 0) {
+			type_left = PointType.CUBIC;
 		}
 		
 		ep = new EditPoint (x, y);
