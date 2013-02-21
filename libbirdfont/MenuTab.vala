@@ -30,8 +30,12 @@ public class MenuTab : FontDisplay {
 		// html callbacks:
 		add_html_callback ("export_name", (val) => {
 			Font f = BirdFont.get_current_font ();
+			
+			if (f.get_name () != val) {
+				f.touch ();
+			}
+			
 			f.set_name (val);
-			f.touch ();
 		});
 
 		add_html_callback ("export", (val) => {
