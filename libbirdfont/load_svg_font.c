@@ -80,8 +80,6 @@ void create_contour (FT_Vector* points, char* flags, int* length, FT_Vector** ne
 	if (is_quadratic (flags[0])) {
 		fprintf (stderr, "WARNING: path begins at off curve point.\n");
 	} 
-
-	// FIXME: What if both first and last point is off curve?
 	
 	j = 0;
 	for (i = 0; i < len; i++) {
@@ -113,7 +111,28 @@ void create_contour (FT_Vector* points, char* flags, int* length, FT_Vector** ne
 	}
 	
 	// last to first
-	if (prev_is_curve) { // j == 0?
+	if (prev_is_curve && (flags[0] & ON_CURVE) == 0) {
+		// First point off curve
+		x = p[j - 1].x + ((points[i].x - p[j - 1].x) / 2.0); 
+		y = p[j - 1].y + ((points[i].y - p[j - 1].y) / 2.0);
+		p[j].x = x;
+		p[j].y = y;
+		f[j] = ON_CURVE;
+		j++;
+		
+		p[j] = points[i];
+		f[j] = flags[i];
+		j++;		
+
+		x = p[j - 1].x + ((points[0].x - p[j - 1].x) / 2.0);
+		y = p[j - 1].y + ((points[0].y - p[j - 1].y) / 2.0);
+
+		p[j].x = x;
+		p[j].y = y;
+		f[j] = ON_CURVE;
+		j++;
+	} else if (prev_is_curve && is_quadratic (flags[i])) {
+		// add a new point if half way between first and last point
 		x = p[j - 1].x + ((points[i].x - p[j - 1].x) / 2.0);
 		y = p[j - 1].y + ((points[i].y - p[j - 1].y) / 2.0);
 		p[j].x = x;
@@ -125,16 +144,14 @@ void create_contour (FT_Vector* points, char* flags, int* length, FT_Vector** ne
 		f[j] = QUADRATIC_OFF_CURVE;
 		j++;
 		i++;
-				
-		x = p[j - 1].x + ((p[0].x - p[j - 1].x) / 2.0);
-		y = p[j - 1].y + ((p[0].y - p[j - 1].y) / 2.0);
-		p[j].x = x;
-		p[j].y = y;
-		f[j] = ON_CURVE;
+		
+		p[j] = p[0];
+		f[j] = f[0];
 		j++;
-
+			
 		prev_is_curve = TRUE;
 	} else {
+		// close the path
 		p[j] = points[i];
 		f[j] = flags[i];
 		j++;
