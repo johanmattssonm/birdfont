@@ -776,6 +776,12 @@ public class Path {
 		
 		PenTool.set_default_handle_positions ();
 		
+		if (p.prev != null) {
+				if (p.get_prev ().data.right_handle.type == PointType.QUADRATIC) {
+					p.left_handle.type = PointType.QUADRATIC;
+				}
+		}
+		
 		return np;
 	}
 
