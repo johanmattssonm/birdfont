@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 
+
 LOCAL_LIBS = [
 	"libxml2.2",
 	"libgio-2.0.0",
@@ -34,7 +35,75 @@ LOCAL_LIBS = [
 	"libpango-1.0.0",
 	"libfreetype.6",
 	"libfontconfig.1",
-	"liblzma.5"
+	"liblzma.5",
+	"libGL.1", # GL
+	"libICE.6",
+	"libSM.6",
+	"libX11-xcb.1",
+	"libX11.6",
+	"libXau.6",
+	"libXcomposite.1",
+	"libXcursor.1",
+	"libXdamage.1",
+	"libXdmcp.6",
+	"libXext.6",
+	"libXfixes.3",
+	"libXi.6",
+	"libXinerama.1",
+	"libXrandr.2",
+	"libXrender.1",
+	"libXt.6",
+	"libatk-1.0.0",
+	"libbz2.1.0",
+	"libcairo.2",
+	"libdbus-1.3",
+	"libdbus-glib-1.2",
+	"libenchant.1",
+	"libexpat.1",
+	"libffi.6",
+	"libfontconfig.1",
+	"libfreetype.6",
+	"libgailutil.18",
+	"libgdk-x11-2.0.0",
+	"libgdk_pixbuf-2.0.0",
+	"libgeoclue.0",
+	"libgio-2.0.0",
+	"libglib-2.0.0",
+	"libgmodule-2.0.0",
+	"libgobject-2.0.0",
+	"libgstapp-0.10.0",
+	"libgstaudio-0.10.0",
+	"libgstbase-0.10.0",
+	"libgstfft-0.10.0",
+	"libgstinterfaces-0.10.0",
+	"libgstpbutils-0.10.0",
+	"libgstreamer-0.10.0",
+	"libgstvideo-0.10.0",
+	"libgthread-2.0.0",
+	"libgtk-x11-2.0.0",
+	"libiconv.2",
+	"libicudata.49",
+	"libicui18n.49",
+	"libicuuc.49",
+	"libintl.8",
+	"libjavascriptcoregtk-1.0.0",
+	"libjpeg.8",
+	"liblzma.5",
+	"liborc-0.4.0",
+	"libpango-1.0.0",
+	"libpangocairo-1.0.0",
+	"libpangoft2-1.0.0",
+	"libpixman-1.0",
+	"libpng15.15",
+	"libsoup-2.4.1",
+	"libsqlite3.0",
+	"libwebkitgtk-1.0.0",
+	"libxcb-render.0",
+	"libxcb-shm.0",
+	"libxcb.1",
+	"libxml2.2",
+	"libxslt.1",
+	"libz.1"
 ]
 
 def run(cmd):
@@ -43,7 +112,7 @@ def run(cmd):
 	if not process.returncode == 0:
 		print("Error: " + cmd)
 		exit(1)
-
+		
 def build():
 	# Compile birdfont on MacOSX 10.5 (Leopard)
 	
@@ -83,9 +152,10 @@ def build():
 
 	run("gcc build/mac/birdfont-export/*.o ./build/mac/bin/libbirdfont.dylib $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) $(pkg-config --cflags --libs gtk+-2.0) -o ./build/mac/bin/birdfont-export")
 
+def copy_libs ():
 	# clean
 	run("rm -rf build/mac/birdfont.app")
-
+	
 	# copy files 
 	run("mkdir -p build/mac/birdfont.app")
 	run("mkdir -p build/mac/birdfont.app/Contents")
@@ -105,10 +175,16 @@ def build():
 	run("cp /usr/lib/libgcc_s.1.dylib ./build/mac/birdfont.app/Contents/MacOs")
 
 	# library path for libbirdfont	
-	for lib in LOCAL_LIBS:
-		run("install_name_tool -change /opt/local/lib/" + lib + ".dylib @executable_path/" + lib 
-			+ ".dylib build/mac/birdfont.app/Contents/MacOs/libbirdfont.dylib")
-		
+	for program in ['libbirdfont.dylib', 'birdfont', 'birdfont-export']:
+		for lib in LOCAL_LIBS:
+			run("install_name_tool -change /opt/local/lib/" + lib + ".dylib @executable_path/" + lib 
+				+ ".dylib build/mac/birdfont.app/Contents/MacOs/" + program)
+	
+	for program in LOCAL_LIBS:
+		for lib in LOCAL_LIBS:
+			run("install_name_tool -change /opt/local/lib/" + lib + ".dylib @executable_path/" + lib 
+				+ ".dylib build/mac/birdfont.app/Contents/MacOs/" + program + ".dylib")
+				
 	run("install_name_tool -change /usr/lib/libgcc_s.1.dylib @executable_path/libgcc_s.1.dylib "
 		+ "build/mac/birdfont.app/Contents/MacOs/libbirdfont.dylib")
 
@@ -129,6 +205,17 @@ def build():
 	run("install_name_tool -change /usr/local/lib/libbirdfont.dylib @executable_path/libbirdfont.dylib "
 		+ "build/mac/birdfont.app/Contents/MacOs/birdfont-export")
 
-	print ("Done.");
+	# pango
+	run("cp /opt/local/lib/pango/1.6.0/modules/pango-* ./build/mac/birdfont.app/Contents/MacOs")
+	
+	# configuration
+	run("cp -r /opt/local/etc build/mac/birdfont.app/Contents/MacOs/")
+
+	run("pango-querymodules | sed -e 's:/opt/local/lib/pango/1.6.0/modules/::g'> etc/pango/pango.modules")
+)
+
+	print ("Done.")
+
 
 build()
+copy_libs ()

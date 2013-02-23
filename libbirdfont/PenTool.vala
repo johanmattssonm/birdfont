@@ -148,6 +148,7 @@ public class PenTool : Tool {
 		foreach (Path p in g.path_list) {
 			p.close ();
 		}
+		g.close_path ();
 		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 	}
 	
