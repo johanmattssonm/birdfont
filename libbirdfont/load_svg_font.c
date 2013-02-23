@@ -144,12 +144,13 @@ void create_contour (FT_Vector* points, char* flags, int* length, FT_Vector** ne
 		f[j] = QUADRATIC_OFF_CURVE;
 		j++;
 		i++;
-		
+
 		p[j] = p[0];
 		f[j] = f[0];
 		j++;
 			
 		prev_is_curve = TRUE;
+
 	} else {
 		// close the path
 		p[j] = points[i];
