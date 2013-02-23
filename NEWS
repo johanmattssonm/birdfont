@@ -1,3 +1,17 @@
+birdfont (0.13) stable;
+
+  * Quadratic Bézier paths
+  * Edit SVG fonts
+  * Open OTF and TTF fonts with freetype2
+  * Open Type kerning (GPOS pair adjustment positioning subtable)
+  * Bugfixes
+  * Spanish translation
+  * Russian translation
+  * Italian translation
+  * Brasilian Portuguese translation
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Feb 23 19:56:51 CET 2013
+
 birdfont (0.12) stable;
 
   * Bugfixes and updated test suit
