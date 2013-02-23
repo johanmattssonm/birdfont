@@ -1,3 +1,3 @@
 #!/bin/bash
 cd "${0%/*}"
-./birdfont 
+/opt/local/bin/birdfont 
