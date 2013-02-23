@@ -84,4 +84,4 @@ if not options.prefix:
 	options.prefix = "/usr"
 
 configure ()
-write_config ()
+write_config.write_config (options.prefix)

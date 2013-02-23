@@ -55,7 +55,7 @@ install ('linux/birdfont.png', '/share/icons/hicolor/48x48/apps')
 
 install ('build/bin/birdfont', '/bin')
 install ('build/bin/birdfont-export', '/bin')
-install ('build/bin/libbirdfont.so', '/lib')
+install ('build/libbirdfont.so', '/lib')
 
 install ('build/birdfont.1.gz', '/share/man/man1')
 install ('build/birdfont-export.1.gz', '/share/man/man1')

@@ -1,11 +1,15 @@
 #!/usr/bin/python
+import version
+import time;
 
-def write_config ():
+VERSION = version.VERSION
+
+def write_config (prefix):
 	print ("Writing Config.vala")
 
 	vars = (('VERSION', VERSION),
 		('BUILD_TIMESTAMP', time.asctime( time.localtime(time.time()))),
-		('PREFIX', options.prefix),
+		('PREFIX', prefix),
 		)
 
 	f = open('./libbirdfont/Config.vala', 'w+')
