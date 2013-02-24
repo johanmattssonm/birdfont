@@ -1,5 +1,11 @@
 birdfont (0.13) stable;
 
+  * Bugfixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Feb 24 17:43:00 CET 2013
+
+birdfont (0.13) stable;
+
   * Quadratic Bézier paths
   * Edit SVG fonts
   * Open OTF and TTF fonts with freetype2
