@@ -15,7 +15,7 @@ def install (file, dir):
 		f += file[s + 1:]
 	else:
 		f += file
-	print ("install: " + f + " in " + file + ' ' + dest + prefix + dir + '/')
+	print ("install: " + file + " in " + ' ' + dest + prefix + dir + '/')
 	subprocess.check_call ('install -d ' + dest + prefix + dir, shell=True)
 	subprocess.check_call ('install ' + file + ' ' + dest + prefix + dir + '/', shell=True)
 

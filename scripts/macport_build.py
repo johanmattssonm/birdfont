@@ -61,9 +61,9 @@ def build ():
 	run("mkdir -p build/BirdFont.app/Contents/MacOs")
 	run("mkdir -p build/BirdFont.app/Contents/Resources")
 
-	run("cp mac/birdfont.sh build/BirdFont.app/Contents/MacOs")
-	run("cp mac/Info.plist build/BirdFont.app/Contents/")	
-	run("cp mac/birdfont.icns build/BirdFont.app/Contents/Resources")
+	run("cp resources/mac/birdfont.sh build/BirdFont.app/Contents/MacOs")
+	run("cp resources/mac/Info.plist build/BirdFont.app/Contents/")	
+	run("cp resources/mac/birdfont.icns build/BirdFont.app/Contents/Resources")
 
 build ()
 
