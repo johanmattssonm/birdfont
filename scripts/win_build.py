@@ -5,8 +5,10 @@ import shutil
 import subprocess
 import sys
 
-sys.path.append('../')
-import dodo # import version number
+import configfile
+import version
+
+VERSION = version.VERSION
 
 WIN32_LIBS = [
 	'glib-2.0',
@@ -78,10 +80,8 @@ def configure():
 	print("")
 	print("Crosscompile for windows")
 	
-	os.chdir('../')
 	run('./configure')
-	os.chdir('./win32')
-	
+		
 	run('i686-w64-mingw32-gcc --version')
 	run('i686-w64-mingw32-pkg-config --version')	
 	run('windres --version')	
@@ -92,33 +92,61 @@ def configure():
 		 run('i686-w64-mingw32-pkg-config --cflags --libs '+ pkg)
 
 def build():
-	run("mkdir -p ../build/supplement")
-	run("mkdir -p ../build/win32")
-	run("mkdir -p ../build/win32/libbirdfont")
-	run("mkdir -p ../build/win32/birdfont")
-	run("mkdir -p ../build/win32/birdfont-export")
+	run("mkdir -p ./build/supplement")
+	run("mkdir -p ./build/win32")
+	run("mkdir -p ./build/win32/libbirdfont")
+	run("mkdir -p ./build/win32/birdfont")
+	run("mkdir -p ./build/win32/birdfont-export")
 
-	run("windres ../win32/icon.rc -O coff -o ../build/icon.res")
+	run("windres ./resources/win32/icon.rc -O coff -o ./build/icon.res")
 
 	# generate c code
-	run("cp ../libbirdfont/*.c ../build/win32/libbirdfont/")
-	run("valac -C --basedir ../build/win32/libbirdfont/ --library libbirdfont -H ../build/win32/libbirdfont/birdfont.h ../libbirdfont/*.vala --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0")
+	run("cp ./libbirdfont/*.c ./build/win32/libbirdfont/")
+	run("""valac -C \
+		./libbirdfont/*.vala \
+		--basedir ./build/win32/libbirdfont/ \
+		--library libbirdfont \
+		-H ./build/win32/libbirdfont/birdfont.h \
+		--pkg libxml-2.0 \
+		--pkg gio-2.0 \
+		--pkg cairo \
+		--pkg libsoup-2.4 \
+		--pkg gdk-pixbuf-2.0 \
+		--pkg webkit-1.0""")
 
-	run("valac -C ../birdfont/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
-	run("mv ./*.c ../build/win32/birdfont/")
-
-	run("valac -C ../birdfont-export/* --vapidir=./ --pkg libxml-2.0 --pkg gio-2.0  --pkg cairo --pkg libsoup-2.4 --pkg gdk-pixbuf-2.0 --pkg webkit-1.0 --pkg gtk+-2.0 --pkg libbirdfont")
-	run("mv ./*.c ../build/win32/birdfont-export/")
+	run("""valac -C --basedir ./build/win32/birdfont \
+		./birdfont/* \
+		--vapidir=./ \
+		--pkg libxml-2.0 \
+		--pkg gio-2.0 \
+		--pkg cairo \
+		--pkg libsoup-2.4 \
+		--pkg gdk-pixbuf-2.0 \
+		--pkg webkit-1.0 \
+		--pkg gtk+-2.0 \
+		--pkg libbirdfont""")
+	
+	run("""valac -C --basedir ./build/win32/birdfont-export/ \
+		./birdfont-export/* \
+		--vapidir=./ \
+		--pkg libxml-2.0 \
+		--pkg gio-2.0 \
+		--pkg cairo \
+		--pkg libsoup-2.4 \
+		--pkg gdk-pixbuf-2.0 \
+		--pkg webkit-1.0 \
+		--pkg gtk+-2.0 \
+		--pkg libbirdfont""")
 
 	# compile c code
 	run("""i686-w64-mingw32-gcc \
-			-c ../build/win32/libbirdfont/birdfont.h \
-			../build/win32/birdfont/Main.c \
-			../build/win32/birdfont/GtkWindow.c \
-			../build/win32/birdfont-export/BirdfontExport.c \
-			../build/win32/libbirdfont/*.c ./ \
+			-c ./build/win32/libbirdfont/birdfont.h \
+			./build/win32/birdfont/Main.c \
+			./build/win32/birdfont/GtkWindow.c \
+			./build/win32/birdfont-export/BirdfontExport.c \
+			./build/win32/libbirdfont/*.c ./ \
 			-D 'GETTEXT_PACKAGE="birdfont"' \
-			-I ../build/win32/libbirdfont/ \
+			-I ./build/win32/libbirdfont/ \
 			-mthreads \
 			$(i686-w64-mingw32-pkg-config --cflags --libs glib-2.0) \
 			$(i686-w64-mingw32-pkg-config --cflags --libs libxml-2.0) \
@@ -128,16 +156,16 @@ def build():
 			$(i686-w64-mingw32-pkg-config --cflags --libs webkit-1.0)""");
 	
 	# move object files to their folders
-	run("""mv BirdfontExport.o ../build/win32/birdfont-export """)
-	run("""mv Main.o ../build/win32/birdfont """)
-	run("""mv GtkWindow.o ../build/win32/birdfont """)
-	run("""mv *.o ../build/win32/libbirdfont/ """)
+	run("""mv BirdfontExport.o ./build/win32/birdfont-export """)
+	run("""mv Main.o ./build/win32/birdfont """)
+	run("""mv GtkWindow.o ./build/win32/birdfont """)
+	run("""mv *.o ./build/win32/libbirdfont/ """)
 
 	# link binaries
 	run("""i686-w64-mingw32-gcc \
 		-shared \
-		../build/win32/libbirdfont/*.o \
-		../build/icon.res \
+		./build/win32/libbirdfont/*.o \
+		./build/icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
@@ -147,15 +175,15 @@ def build():
 		-l freetype.dll \
 		-static -o libbirdfont.dll""")
 	
-	run("""i686-w64-mingw32-ar rcs ../build/libbirdfont.dll.a ../build/win32/libbirdfont/*.o""")
+	run("""i686-w64-mingw32-ar rcs ./build/libbirdfont.dll.a ./build/win32/libbirdfont/*.o""")
 
 	run("""i686-w64-mingw32-gcc \
-		../build/win32/birdfont/Main.o \
-		../build/win32/birdfont/GtkWindow.o \
-		../build/icon.res \
+		./build/win32/birdfont/Main.o \
+		./build/win32/birdfont/GtkWindow.o \
+		./build/icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
-		-L../build/ \
+		-L./build/ \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
 		-static -B -static -l birdfont.dll \
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
@@ -165,11 +193,11 @@ def build():
 		-static -o birdfont.exe""")
 
 	run("""i686-w64-mingw32-gcc \
-		../build/win32/birdfont/Main.o \
-		../build/win32/birdfont/GtkWindow.o \
-		../build/icon.res \
+		./build/win32/birdfont/Main.o \
+		./build/win32/birdfont/GtkWindow.o \
+		./build/icon.res \
 		-mthreads \
-		-L../build/ \
+		-L./build/ \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
 		-static -B -static -l birdfont.dll \
 		-static -B static -lintl.dll -B static -l glib-2.0.dll -B static -l xml2.dll  \
@@ -179,11 +207,11 @@ def build():
 		-static -o birdfont_terminal.exe""")
 
 	run("""i686-w64-mingw32-gcc \
-		../build/win32/birdfont-export/BirdfontExport.o \
-		../build/icon.res \
+		./build/win32/birdfont-export/BirdfontExport.o \
+		./build/icon.res \
 		-Wl,-subsystem,windows \
 		-mthreads \
-		-L../build/ \
+		-L./build/ \
 		-L/usr/local/lib -lfreetype -lz \
 		-L/usr/i686-w64-mingw32/sys-root/mingw/lib \
 		-static -B -static -l birdfont.dll \
@@ -193,30 +221,31 @@ def build():
 		-l freetype.dll \
 		-static -o birdfont-export.exe""")
 
-	run("mv birdfont-export.exe ../build/supplement/")
-	run("mv birdfont.exe ../build/supplement/")
-	run("mv birdfont_terminal.exe ../build/supplement/")
-	run("mv libbirdfont.dll ../build/supplement/")
+	run("mv birdfont-export.exe ./build/supplement/")
+	run("mv birdfont.exe ./build/supplement/")
+	run("mv birdfont_terminal.exe ./build/supplement/")
+	run("mv libbirdfont.dll ./build/supplement/")
 
 	copy_runtime_dependencies ()
 	generate_nsi()
-			
-	run(os.getenv("HOME") + "/.wine/drive_c/Program/NSIS/makensis.exe ../build/supplement/birdfont_installer.nsi")
+	
+	os.chdir('../../')
+	run(os.getenv("HOME") + "/.wine/drive_c/Program/NSIS/makensis.exe ./build/supplement/birdfont_installer.nsi")
 	
 def generate_nsi():
 	print ('generating build/supplement/birdfont_installer.nsi')
 
-	run('mkdir -p ../build/supplement')
+	run('mkdir -p ./build/supplement')
 
-	f = open('../build/supplement/birdfont_installer.nsi', 'w+')
+	f = open('./build/supplement/birdfont_installer.nsi', 'w+')
 	f.write("""; windows installation script generated by by build script
 
 Name "Birdfont"
 """)
 
-	f.write("OutFile \"..\\")
+	f.write("OutFile \".\\")
 	f.write("birdfont-")
-	f.write(dodo.VERSION)
+	f.write(VERSION)
 	f.write(".exe\"")
 	
 	f.write("""
@@ -244,7 +273,7 @@ Section "Birdfont (required)"
   SectionIn RO
 """);
 
-	os.chdir('../build/supplement')
+	os.chdir('./build/supplement')
 	write_files ('.', f)
 
 	f.write("""
@@ -299,7 +328,6 @@ Section "Uninstall"
 
 SectionEnd
 """)
-	os.chdir('../../win32')
 
 def write_files (dir, f):
 	filenames = os.walk(dir)
@@ -353,24 +381,23 @@ def copy_runtime_dependencies ():
 	MINGW = "/usr/i686-w64-mingw32/sys-root/mingw"
 	MINGW_BIN = MINGW + "/bin"
 
-	run("cp ../README ../build/supplement/")
-	run("cp ../COPYING ../build/supplement/")
-	run("cp ../NEWS ../build/supplement/")
+	run("cp ./README ./build/supplement/")
+	run("cp ./COPYING ./build/supplement/")
+	run("cp ./NEWS ./build/supplement/")
 	
-	run("cp -ra ../layout/ ../build/supplement/")
-	run("cp -ra ../icons/ ../build/supplement/")
-	run("cp -ra ../build/locale ../build/supplement/")
+	run("cp -ra ./layout/ ./build/supplement/")
+	run("cp -ra ./icons/ ./build/supplement/")
+	run("cp -ra ./build/locale ./build/supplement/")
 	
-	run("cp ../win32/birdfont.ico ../build/supplement/")
-	run("cp -r " + MINGW + "/etc ../build/supplement/")
+	run("cp ./resources/win32/birdfont.ico ./build/supplement/")
+	run("cp -r " + MINGW + "/etc ./build/supplement/")
 
-	run("cp " + MINGW_BIN + "/gspawn-win32-helper.exe ../build/supplement/")
-	run("cp " + MINGW_BIN + "/gspawn-win32-helper-console.exe ../build/supplement/")
+	run("cp " + MINGW_BIN + "/gspawn-win32-helper.exe ./build/supplement/")
+	run("cp " + MINGW_BIN + "/gspawn-win32-helper-console.exe ./build/supplement/")
 
 	# DLL-hell
 	for dll in WIN32_DLLS:
-		run("cp " + MINGW_BIN + "/" + dll + " ../build/supplement/")
+		run("cp " + MINGW_BIN + "/" + dll + " ./build/supplement/")
 
-
-configure ()
+configfile.write_config ("")
 build ()	
