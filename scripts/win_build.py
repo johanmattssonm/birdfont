@@ -7,6 +7,8 @@ import sys
 
 import configfile
 import version
+from run import run
+from translations import compile_translations
 
 VERSION = version.VERSION
 
@@ -68,13 +70,6 @@ WIN32_DLLS = [
 	"libwebkitgtk-1.0-0.dll",
 	"pthreadGC2.dll"
 ]
-
-def run(cmd):
-	process = subprocess.Popen (cmd, shell=True)
-	process.communicate()[0]
-	if not process.returncode == 0:
-		print("Error: " + cmd)
-		exit(1)
 		
 def configure():
 	print("")
@@ -225,6 +220,8 @@ def build():
 	run("mv birdfont.exe ./build/supplement/")
 	run("mv birdfont_terminal.exe ./build/supplement/")
 	run("mv libbirdfont.dll ./build/supplement/")
+
+	compile_translations ()
 
 	copy_runtime_dependencies ()
 	generate_nsi()

@@ -6,8 +6,7 @@ from doit.tools import run_once
 from doit.action import CmdAction
 from scripts.bavala import Vala
 from scripts import version
-
-VERSION = version.VERSION
+from scripts.translations import compile_translations
 
 DOIT_CONFIG = {
     'default_tasks': [
@@ -63,7 +62,7 @@ valac_options = [
 	'--enable-experimental',
 	'--target-glib=2.34', # see bug 0000004
 	'--define=LINUX'
-	]	
+	]
 libbird = Vala(src='libbirdfont', build='build', library='birdfont', pkg_libs=LIBS)
 def task_libbirdfont():
     yield libbird.gen_c(valac_options)
@@ -78,8 +77,7 @@ def task_birdfont ():
 
 
 def task_birdfont_export ():
-     exp = Vala(src='birdfont-export', build='build', pkg_libs=LIBS,
-                vala_deps=[libbird])
+     exp = Vala(src='birdfont-export', build='build', pkg_libs=LIBS, vala_deps=[libbird])
      yield exp.gen_c(valac_options)
      yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
@@ -88,17 +86,9 @@ def task_birdfont_export ():
 
 def task_compile_translations ():
     """translate po files"""
-    for f_name in glob.glob('po/*.po'):
-        lang = f_name.replace ("po/", "").replace (".po", "")
-        build_path = "build/locale/" + lang + "/LC_MESSAGES/"
-        target = build_path + "birdfont.mo"
-        cmd = "msgfmt --output=%s %s" % (target, f_name)
-        yield {
-            'name': lang,
-            'actions': ["mkdir -p " + build_path, cmd],
-            'file_dep': [f_name],
-            'targets': [ target ],
-            }
+    return  {
+        'actions': [compile_translations]
+        }
 
 def task_man():
     """gzip linux man pages"""
@@ -113,6 +103,6 @@ def task_man():
 
 def task_distclean ():
     return  {
-        'actions': ['rm -rf .doit.db build bavala.pyc dodo.pyc libbirdfont/Config.vala'],
+        'actions': ['rm -rf .doit.db build scripts/*.pyc dodo.pyc libbirdfont/Config.vala'],
         }
 

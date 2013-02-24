@@ -74,7 +74,8 @@ class Vala(object):
                     'cp ' + f + ' ' + self.build + '/' + self.src + '/'
                     ],
                 }
-                                    
+        
+        print (action)                     
         yield {
             'name': 'compile_c',
             'actions': [ action ],
