@@ -4,8 +4,8 @@ import os
 import sys
 import time;
 from optparse import OptionParser
-import version
-import write_config
+from scripts import version
+from scripts import configfile
 import re
 
 VERSION = version.VERSION
@@ -84,4 +84,4 @@ if not options.prefix:
 	options.prefix = "/usr"
 
 configure ()
-write_config.write_config (options.prefix)
+configfile.write_config (options.prefix)

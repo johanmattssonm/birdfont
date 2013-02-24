@@ -1,11 +1,11 @@
 import os
 import glob
 import subprocess
-import version
 
 from doit.tools import run_once
 from doit.action import CmdAction
-from bavala import Vala
+from scripts.bavala import Vala
+from scripts import version
 
 VERSION = version.VERSION
 
@@ -105,7 +105,7 @@ def task_man():
     for name in ("birdfont.1", "birdfont-export.1"):
         yield {
             'name': name,
-            'file_dep': ['linux/%s' % name],
+            'file_dep': ['resources/linux/%s' % name],
             'targets': ['build/%s.gz' % name],
             'actions': ["gzip -9 -c %(dependencies)s > %(targets)s"],
             }

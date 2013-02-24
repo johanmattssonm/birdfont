@@ -50,8 +50,8 @@ for file in os.listdir('./layout'):
 for file in os.listdir('./icons'):
 	install ('icons/' + file, '/share/birdfont/icons')
 
-install ('linux/birdfont.desktop', '/share/applications')
-install ('linux/birdfont.png', '/share/icons/hicolor/48x48/apps')
+install ('resources/linux/birdfont.desktop', '/share/applications')
+install ('resources/linux/birdfont.png', '/share/icons/hicolor/48x48/apps')
 
 install ('build/bin/birdfont', '/bin')
 install ('build/bin/birdfont-export', '/bin')
