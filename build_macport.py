@@ -4,6 +4,9 @@ import os
 import shutil
 import subprocess
 import sys
+from optparse import OptionParser
+
+import write_config
 
 def run(cmd):
 	process = subprocess.Popen (cmd, shell=True)
@@ -61,7 +64,17 @@ def build ():
 	run("cp mac/birdfont.sh build/BirdFont.app/Contents/MacOs")
 	run("cp mac/Info.plist build/BirdFont.app/Contents/")	
 	run("cp mac/birdfont.icns build/BirdFont.app/Contents/Resources")
-	
+
+parser = OptionParser()
+parser.add_option("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
+
+(options, args) = parser.parse_args()
+
+if not options.prefix:
+	options.prefix = "/usr"
+
+write_config.write_config (options.prefix)
+
 build ()
 
 
