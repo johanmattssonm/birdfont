@@ -398,8 +398,8 @@ os.put_string (
 			return { 
 				"sh", 
 				"birdfont-export.sh",
-				"-ttf",
-				"--o",
+				"--ttf",
+				"-o",
 				dest
 			};
 		}
@@ -409,8 +409,8 @@ os.put_string (
 			return { 
 				"sh", 
 				"../birdfont-export.sh",
-				"-ttf",
-				"--o",
+				"--ttf",
+				"-o",
 				dest
 			};
 		}
@@ -419,8 +419,8 @@ os.put_string (
 		if (f.query_exists ()) {
 			return { 
 				(!) f.get_path (),
-				"-ttf",
-				"--o",
+				"--ttf",
+				"-o",
 				dest
 			};
 		}
@@ -429,8 +429,8 @@ os.put_string (
 		if (f.query_exists ()) {
 			return { 
 				@"$PREFIX/bin/birdfont-export",
-				"-ttf",
-				"--o",
+				"--ttf",
+				"-o",
 				dest
 			};
 		}
@@ -439,8 +439,8 @@ os.put_string (
 		if (f.query_exists ()) {
 			return { 
 				(!) f.get_path (),
-				"-ttf",
-				"--o",
+				"--ttf",
+				"-o",
 				dest
 			};
 		}
@@ -449,8 +449,8 @@ os.put_string (
 		
 		return { 
 				"birdfont-export",
-				"-ttf",
-				"--o",
+				"--ttf",
+				"-o",
 				dest
 			};
 	}
@@ -504,26 +504,15 @@ os.put_string (
 	}
 
 	public static int spawn_export (File folder, string temp_file) {
+		string[] spawn_args = get_birdfont_export (folder, temp_file);
+		string c = "";
+		
 		try {
-			string[] spawn_env = Environ.get ();
-			Pid child_pid;
-			int cin, cout, cerr;
-			string[] spawn_args = get_birdfont_export (folder, temp_file);
+			foreach (string s in spawn_args) {
+				c += s + " ";
+			}
 
-			Process.spawn_async_with_pipes (
-				"/",
-				spawn_args,
-				spawn_env,
-				SpawnFlags.SEARCH_PATH | SpawnFlags.DO_NOT_REAP_CHILD,
-				null,
-				out child_pid,
-				out cin,
-				out cout,
-				out cerr);
-
-			ChildWatch.add (child_pid, (pid, exit_status) => {
-				status (_ ("Wrote font files."));
-			});
+			Process.spawn_command_line_async (c);
 		} catch (SpawnError e) {
 			warning (e.message);
 		}
