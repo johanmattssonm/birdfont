@@ -240,7 +240,7 @@ def generate_nsi():
 Name "Birdfont"
 """)
 
-	f.write("OutFile \".\\")
+	f.write("OutFile \"..\\")
 	f.write("birdfont-")
 	f.write(VERSION)
 	f.write(".exe\"")
