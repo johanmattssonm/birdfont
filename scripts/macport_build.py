@@ -15,7 +15,7 @@ def run(cmd):
 		print("Error: " + cmd)
 		exit(1)
 
-def build ():
+def build (prefix):
 	#libbirdfont
 	run("rm -rf build")
 	run("mkdir -p build/libbirdfont")
@@ -29,6 +29,7 @@ def build ():
 
 	run("gcc -dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,/usr/local/lib/libbirdfont.dylib -shared build/libbirdfont/*.o $(pkg-config --cflags --libs libxml-2.0) $(pkg-config --cflags --libs gio-2.0) $(pkg-config --cflags --libs cairo) $(pkg-config --cflags --libs glib-2.0) $(pkg-config --cflags --libs gdk-pixbuf-2.0) $(pkg-config --cflags --libs webkit-1.0) -shared -o libbirdfont.dylib")
 	run("mv libbirdfont.dylib build/bin/")
+	run ("install_name_tool -id " + prefix + "/lib/libbirdfont.dylib build/bin/libbirdfont.dylib")
 
 	# birdfont
 	run("mkdir -p build/birdfont")
@@ -68,13 +69,14 @@ def build_app ():
 
 parser = OptionParser()
 parser.add_option ("-a", "--application-launcher", dest="app", help="create application launcher in /Applications, set to no to skip it.", metavar="APP")
+parser.add_option ("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
 
 (options, args) = parser.parse_args()
 
-if not options.app:
-	options.prefix = "yes"
+if not options.prefix:
+	options.prefix = "/opt/local"
 
-build ()
+build (options.prefix)
 
 if not options.app == "no":
 	build_app ()

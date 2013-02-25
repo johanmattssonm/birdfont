@@ -1,3 +1,21 @@
+birdfont (0.16) stable;
+
+  * Correct location in ID loadcommand for Macports
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Feb 25 23:46:00 CET 2013
+
+birdfont (0.14) stable;
+
+  * Macports file
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Feb 25 23:46:00 CET 2013
+
+birdfont (0.14) stable;
+
+  * Build on Linux
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Feb 25 23:46:00 CET 2013
+
 birdfont (0.13) stable;
 
   * Bugfixes
