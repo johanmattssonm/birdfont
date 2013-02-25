@@ -55,6 +55,7 @@ def build ():
 	run("touch build/installed")
 	run("touch build/configured")
 
+def build_app ():
 	# application launcher
 	run("mkdir -p build/BirdFont.app")
 	run("mkdir -p build/BirdFont.app/Contents")
@@ -65,6 +66,18 @@ def build ():
 	run("cp resources/mac/Info.plist build/BirdFont.app/Contents/")	
 	run("cp resources/mac/birdfont.icns build/BirdFont.app/Contents/Resources")
 
+parser = OptionParser()
+parser.add_option ("-a", "--application-launcher", dest="app", help="create application launcher in /Applications, set to no to skip it.", metavar="APP")
+
+(options, args) = parser.parse_args()
+
+if not options.app:
+	options.prefix = "yes"
+
 build ()
+
+if not options.app == "no":
+	build_app ()
+
 
 
