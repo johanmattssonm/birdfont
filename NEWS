@@ -1,3 +1,9 @@
+birdfont (0.18) stable;
+
+  * Bugfixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue Feb 26 16:28:20 CET 2013
+
 birdfont (0.17) stable;
 
   * Macports validation
@@ -17,12 +23,6 @@ birdfont (0.15) stable;
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Feb 25 23:46:00 CET 2013
 
 birdfont (0.14) stable;
-
-  * Build on Linux
-
- -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Feb 25 23:46:00 CET 2013
-
-birdfont (0.13) stable;
 
   * Bugfixes
 
