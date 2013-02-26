@@ -610,7 +610,7 @@ public class Toolbox : GLib.Object  {
 			foreach (Tool t in exp.tool) {
 				t.set_active (false);
 				
-				if (t.key == keyval && t.modifier_flag == NONE) {
+				if (t.key == keyval && t.modifier_flag == NONE && KeyBindings.modifier == NONE) {
 					MainWindow.get_toolbox ().select_tool (t);
 				}
 			}

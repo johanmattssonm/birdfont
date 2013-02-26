@@ -120,8 +120,7 @@ public class PenTool : Tool {
 				} else {
 					move_select_next_point (keyval);
 				}
-			}
-					
+			}	
 		});
 		
 		key_release_action.connect ((self, keyval) => {

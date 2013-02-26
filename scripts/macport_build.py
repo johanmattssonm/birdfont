@@ -17,7 +17,6 @@ def run(cmd):
 
 def build (prefix):
 	#libbirdfont
-	run("rm -rf build")
 	run("mkdir -p build/libbirdfont")
 	run("mkdir -p build/bin")
 
@@ -69,6 +68,7 @@ def build_app ():
 
 parser = OptionParser()
 parser.add_option ("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
+parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
 
 (options, args) = parser.parse_args()
 
@@ -76,7 +76,7 @@ if not options.prefix:
 	options.prefix = "/opt/local"
 
 build (options.prefix)
-
+build_app ()
 
 
 

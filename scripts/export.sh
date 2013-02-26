@@ -2,7 +2,7 @@
 
 rep="$(pwd)"
 
-mkdir build
+mkdir -p build
 cd build
 mkdir -p export
 cd export 
