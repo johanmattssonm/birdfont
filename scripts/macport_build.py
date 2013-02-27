@@ -55,7 +55,7 @@ def build(prefix, cc, cflags, ldflags):
 	run("mv ./*.o build/libbirdfont/ ")
 
 	run(cc + " " + ldflags + """ \
-		-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name," + prefix + "/lib/libbirdfont.dylib -shared build/libbirdfont/*.o \
+		-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,""" + prefix + """/lib/libbirdfont.dylib -shared build/libbirdfont/*.o \
 		 $(pkg-config --libs libxml-2.0) \
 		 $(pkg-config --libs gio-2.0) \
 		 $(pkg-config --libs cairo) \
