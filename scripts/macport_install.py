@@ -3,7 +3,6 @@ import os
 import subprocess
 import glob
 from optparse import OptionParser
-from translations import compile_translations
 
 def install (file, dir):
 	if dest == "":

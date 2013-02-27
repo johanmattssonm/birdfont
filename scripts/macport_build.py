@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 from optparse import OptionParser
+from translations import compile_translations
 
 import configfile
 
@@ -16,6 +17,8 @@ def run(cmd):
 		exit(1)
 
 def build(prefix, cc, cflags, ldflags):
+	compile_translations ()
+	
 	#libbirdfont
 	run("mkdir -p build/libbirdfont")
 	run("mkdir -p build/bin")
@@ -52,15 +55,7 @@ def build(prefix, cc, cflags, ldflags):
 	run("mv ./*.o build/libbirdfont/ ")
 
 	run(cc + " " + ldflags + """ \
-		-dynamiclib \
-		-Wl,\
-		-headerpad_max_install_names,\
-		-undefined,\
-		-dynamic_lookup,\
-		-compatibility_version,1.0,\
-		-current_version,1.0,\
-		-install_name," + prefix + "/lib/libbirdfont.dylib\
-		 -shared build/libbirdfont/*.o \
+		-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name," + prefix + "/lib/libbirdfont.dylib -shared build/libbirdfont/*.o \
 		 $(pkg-config --libs libxml-2.0) \
 		 $(pkg-config --libs gio-2.0) \
 		 $(pkg-config --libs cairo) \
@@ -84,8 +79,8 @@ def build(prefix, cc, cflags, ldflags):
 		--pkg cairo \
 		--pkg libsoup-2.4 \
 		--pkg gdk-pixbuf-2.0 \
-		--pkg webkit-1.0 
-		--pkg gtk+-2.0 \
+		--pkg webkit-1.0 \
+		--pkg gtk+-2.0\
 		--pkg libbirdfont""")
 	run("mv birdfont/*.c build/birdfont/")
 
@@ -115,7 +110,7 @@ def build(prefix, cc, cflags, ldflags):
 	# birdfont-export
 	run("mkdir -p build/birdfont-export")
 	
-	run("valac \
+	run("""valac \
 		-C \
 		--enable-experimental-non-null \
 		--enable-experimental \
@@ -128,7 +123,7 @@ def build(prefix, cc, cflags, ldflags):
 		--pkg gdk-pixbuf-2.0 \
 		--pkg webkit-1.0 \
 		--pkg gtk+-2.0 \
-		--pkg libbirdfont")
+		--pkg libbirdfont""")
 	run("mv birdfont-export/*.c build/birdfont-export/")
 
 	run(cc + " " + cflags + """ \
@@ -157,18 +152,20 @@ def build(prefix, cc, cflags, ldflags):
 
 	run("touch build/installed")
 	run("touch build/configured")
-
-	compile_translations ()
 	
 
-def build_app ():
+def build_app (prefix):
 	# application launcher
 	run("mkdir -p build/BirdFont.app")
 	run("mkdir -p build/BirdFont.app/Contents")
 	run("mkdir -p build/BirdFont.app/Contents/MacOs")
 	run("mkdir -p build/BirdFont.app/Contents/Resources")
-
-	run("cp resources/mac/birdfont.sh build/BirdFont.app/Contents/MacOs")
+	
+	startup = open ('build/BirdFont.app/Contents/MacOs/birdfont.sh', 'w+')
+	startup.write ("#!/bin/bash\n")
+	startup.write ("cd \"${0%/*}\"\n")
+	startup.write (prefix + "/bin/birdfont\n")
+	
 	run("cp resources/mac/Info.plist build/BirdFont.app/Contents/")	
 	run("cp resources/mac/birdfont.icns build/BirdFont.app/Contents/Resources")
 
@@ -189,9 +186,9 @@ if not options.cflags:
 	options.cflags = ""
 if not options.ldflags:
 	options.ldflags = ""
-	
+
+build_app (options.prefix)	
 build (options.prefix, options.cc, options.cflags, options.ldflags)
-build_app ()
 
 
 
