@@ -54,6 +54,9 @@ def build (prefix, cc, cflags, ldflags):
 	run("touch build/installed")
 	run("touch build/configured")
 
+	compile_translations ()
+	
+
 def build_app ():
 	# application launcher
 	run("mkdir -p build/BirdFont.app")

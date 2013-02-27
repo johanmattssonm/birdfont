@@ -3,6 +3,7 @@ import os
 import subprocess
 import glob
 from optparse import OptionParser
+from translations import compile_translations
 
 def install (file, dir):
 	if dest == "":
@@ -39,6 +40,16 @@ install ('build/bin/birdfont', '/bin')
 install ('build/bin/birdfont-export', '/bin')	
 install ('build/bin/libbirdfont.dylib', '/lib')
 
+for file in os.listdir('./layout'):
+	install ('layout/' + file, '/share/birdfont/layout')
+
+for file in os.listdir('./icons'):
+	install ('icons/' + file, '/share/birdfont/icons')
+	
+for lang_dir in glob.glob('build/locale/*'):
+	lc = lang_dir.replace ('build/locale/', "")
+	install ('build/locale/' + lc + '/LC_MESSAGES/birdfont.mo', '/share/locale/' + lc + '/LC_MESSAGES' );
+		
 # install application launcher
 if options.app:
 	subprocess.check_call ('mkdir -p ' + dest + '/Applications/', shell=True)
