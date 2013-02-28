@@ -20,7 +20,6 @@ def install (file, dir):
 	subprocess.check_call ('install ' + file + ' ' + dest + prefix + dir + '/', shell=True)
 
 parser = OptionParser()
-parser.add_option ("-a", "--application-launcher", dest="app", help="create application launcher in /Applications", metavar="APP")
 parser.add_option ("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
 parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
 
@@ -48,10 +47,3 @@ for file in os.listdir('./icons'):
 for lang_dir in glob.glob('build/locale/*'):
 	lc = lang_dir.replace ('build/locale/', "")
 	install ('build/locale/' + lc + '/LC_MESSAGES/birdfont.mo', '/share/locale/' + lc + '/LC_MESSAGES' );
-		
-# install application launcher
-if options.app:
-	subprocess.check_call ('mkdir -p ' + dest + '/Applications/', shell=True)
-	subprocess.check_call ('cp -r build/BirdFont.app ' + dest + '/Applications/', shell=True)
-
-

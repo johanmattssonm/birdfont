@@ -166,8 +166,10 @@ def build_app (prefix):
 	startup.write ("cd \"${0%/*}\"\n")
 	startup.write (prefix + "/bin/birdfont\n")
 	
-	run("cp resources/mac/Info.plist build/BirdFont.app/Contents/")	
-	run("cp resources/mac/birdfont.icns build/BirdFont.app/Contents/Resources")
+	run("chmod 755 build/BirdFont.app/Contents/MacOS/birdfont.sh")
+	
+	run("cp -R -p resources/mac/Info.plist build/BirdFont.app/Contents/")	
+	run("cp -R -p resources/mac/birdfont.icns build/BirdFont.app/Contents/Resources")
 
 parser = OptionParser()
 parser.add_option("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
