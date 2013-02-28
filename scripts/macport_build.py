@@ -157,11 +157,11 @@ def build(prefix, cc, cflags, ldflags):
 def build_app (prefix):
 	# application launcher
 	run("mkdir -p build/BirdFont.app")
-	run("mkdir -p build/BirdFont.app/Content")
-	run("mkdir -p build/BirdFont.app/Content/MacOs")
-	run("mkdir -p build/BirdFont.app/Content/Resources")
+	run("mkdir -p build/BirdFont.app/Contents")
+	run("mkdir -p build/BirdFont.app/Contents/MacOS")
+	run("mkdir -p build/BirdFont.app/Contents/Resources")
 	
-	startup = open ('build/BirdFont.app/Contents/MacOs/birdfont.sh', 'w+')
+	startup = open ('build/BirdFont.app/Contents/MacOS/birdfont.sh', 'w+')
 	startup.write ("#!/bin/bash\n")
 	startup.write ("cd \"${0%/*}\"\n")
 	startup.write (prefix + "/bin/birdfont\n")
