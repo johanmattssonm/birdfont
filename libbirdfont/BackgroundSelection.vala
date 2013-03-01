@@ -33,7 +33,10 @@ class BackgroundSelection : FontDisplay {
 		glyph = MainWindow.get_current_glyph ();
 		
 		i = Icons.get_icon ("add_background_image.png");
-		return_if_fail (i != null);
+		if (i == null) {
+			warning ("Could not find icon.");	
+		}
+		
 		add_icon = (!) i;
 	}
 

@@ -564,13 +564,13 @@ public class GlyphBackgroundImage {
 		len = 4 * w * h;
 		
 		pix_buff_t = img.get_data ();
-		return_if_fail (pix_buff_t != null);
+		return_val_if_fail (pix_buff_t != null, null);
 		pix_buff = pix_buff_t;
 		
 		contrast_img = new uchar[len];
 
 		pix_buff_t = contrast_img;
-		return_if_fail (pix_buff_t != null);
+		return_val_if_fail (pix_buff_t != null, null);
 		
 		contrast += 70;
 		contrast /= 71;

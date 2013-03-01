@@ -175,7 +175,7 @@ class GlyphTable : GLib.Object {
 		int i1 = 0;
 		int i2 = 0;
 		
-		return_if_fail (bt != null);
+		return_val_if_fail (bt != null, 0);
 		
 		int ca = an.char_count ();
 		int cb = bn.char_count ();

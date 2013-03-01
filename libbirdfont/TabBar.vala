@@ -68,7 +68,9 @@ public class TabBar : GLib.Object {
 		next_tab = (!) Icons.get_icon ("next_tab.png");
 		to_previous_tab = (!) Icons.get_icon ("previous_tab.png");
 		
-		return_if_fail (!is_null (next_tab));
+		if (is_null (next_tab)) {
+			warning ("Next tab is null");
+		}
 	}
 	
 	public void motion (double x, double y) {

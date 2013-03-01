@@ -883,8 +883,8 @@ public class PenTool : Tool {
 		double min_right, min_left;
 		double min;
 		
-		return_if_fail (e.next != null);
-		return_if_fail (e.prev != null);
+		return_val_if_fail (e.next != null, new EditPoint ());
+		return_val_if_fail (e.prev != null, new EditPoint ());
 			
 		// angle might be greater than 2 PI or less than 0
 		min_right = double.MAX;

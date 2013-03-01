@@ -638,7 +638,7 @@ class LocaTable : Table {
 	}
 	
 	public uint32 get_offset (uint32 i) {
-		return_if_fail (glyph_offsets != null);
+		return_val_if_fail (glyph_offsets != null, 0);
 		
 		if (size == 0) {
 			warning ("No glyphs in loca table");
@@ -653,7 +653,7 @@ class LocaTable : Table {
 	
 	/** Returns true if glyph at index i is empty and have no body to parse. */
 	public bool is_empty (uint32 i) {
-		return_if_fail (glyph_offsets != null);
+		return_val_if_fail (glyph_offsets != null, true);
 
 		if (size == 0) {
 			warning ("No glyphs in loca table");

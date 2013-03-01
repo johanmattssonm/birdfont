@@ -181,7 +181,7 @@ class MoveTool : Tool {
 		double h;
 		Path rp;
 		
-		return_if_fail (!is_null (resized_path));
+		return_val_if_fail (!is_null (resized_path), 0);
 		rp = (!) resized_path;
 		h = rp.xmax - rp.xmin;
 

@@ -183,7 +183,7 @@ public class GlyphRange {
 		ranges.sort ((a, b) => {
 			bool r = a.start > b.start;
 			
-			return_if_fail (a.start != b.start);
+			return_val_if_fail (a.start != b.start, 0);
 			
 			return (r) ? 1 : -1;
 		});

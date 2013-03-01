@@ -432,7 +432,7 @@ public class Path {
 	}
 	
 	private double clockwise_sum () {
-		return_if_fail (points.length () >= 3);
+		return_val_if_fail (points.length () >= 3, 0);
 		
 		double sum = 0;
 		EditPoint prev = points.last ().data;

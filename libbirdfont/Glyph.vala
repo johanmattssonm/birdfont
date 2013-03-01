@@ -171,7 +171,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	public Path? get_active_path () {
-		return_if_fail (!is_null(active_paths));
+		return_val_if_fail (!is_null(active_paths), null);
 		
 		if (!is_null(active_paths.last ())) {
 			return null;
@@ -641,7 +641,7 @@ public class Glyph : FontDisplay {
 	public EditPoint add_new_edit_point (int x, int y) {
 		insert_edit_point (x, y);
 		
-		return_if_fail (active_paths.length () > 0);
+		return_val_if_fail (active_paths.length () > 0, new EditPoint ());
 		
 		last_added_edit_point = active_paths.last ().data.get_last_point ();
 		return (!) last_added_edit_point;
@@ -729,13 +729,13 @@ public class Glyph : FontDisplay {
 
 	public static double path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
-		return_if_fail (g.view_zoom != 0);
+		return_val_if_fail (g.view_zoom != 0, 0);
 		return x * ivz () - xc () + g.view_offset_x;
 	}
 
 	public static int reverse_path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
-		return_if_fail (g.view_zoom != 0);
+		return_val_if_fail (g.view_zoom != 0, 0);
 		return (int) Math.rint ((x - g.view_offset_x + xc ()) * g.view_zoom);
 	}
 
@@ -863,12 +863,12 @@ public class Glyph : FontDisplay {
 
 		// FIXME: what about removeing this feature
 		if (new_point_on_path != null) {
-			return_if_fail (active_paths.length () > 0);
+			return_val_if_fail (active_paths.length () > 0, new EditPoint ());
 
 			Path p = new Path ();
 			EditPoint e = (!) new_point_on_path;
 
-			return_if_fail (e.prev != null);
+			return_val_if_fail (e.prev != null, new EditPoint ());
 			
 			p.add_point (e);
 			e.type = PointType.CUBIC;
@@ -1018,7 +1018,7 @@ public class Glyph : FontDisplay {
 	public Path? get_last_path () 
 		ensures (result != null)
 	{
-		return_if_fail (path_list.length () > 0);
+		return_val_if_fail (path_list.length () > 0, null);
 		return path_list.last ().data;
 	}
 	
