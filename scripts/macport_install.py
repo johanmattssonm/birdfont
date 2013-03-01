@@ -3,6 +3,7 @@ import os
 import subprocess
 import glob
 from optparse import OptionParser
+from run import run
 
 def install (file, dir):
 	if dest == "":
@@ -22,6 +23,7 @@ def install (file, dir):
 parser = OptionParser()
 parser.add_option ("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
 parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
+parser.add_option ("-a", "--app", dest="app", help="install application launcher in this directory", metavar="APP")
 
 (options, args) = parser.parse_args()
 
@@ -30,6 +32,9 @@ if not options.prefix:
 
 if not options.dest:
 	options.dest = ""
+
+if not options.app:
+	options.app = "/Applications"
 
 prefix = options.prefix
 dest = options.dest
@@ -47,3 +52,5 @@ for file in os.listdir('./icons'):
 for lang_dir in glob.glob('build/locale/*'):
 	lc = lang_dir.replace ('build/locale/', "")
 	install ('build/locale/' + lc + '/LC_MESSAGES/birdfont.mo', '/share/locale/' + lc + '/LC_MESSAGES' );
+
+run ("cp -R -p build/BirdFont.app " + options.app)
