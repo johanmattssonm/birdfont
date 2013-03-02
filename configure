@@ -77,11 +77,18 @@ def configure ():
 
 parser = OptionParser()
 parser.add_option("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
+parser.add_option("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
+parser.add_option("-c", "--cc", dest="cc", help="C compiler", metavar="CC")
 
 (options, args) = parser.parse_args()
 
 if not options.prefix:
 	options.prefix = "/usr"
-
+if not options.dest:
+	options.dest = "/"
+if not options.cc:
+	options.cc = "gcc"
+	
 configure ()
 configfile.write_config (options.prefix)
+configfile.write_compile_parameters (options.prefix, options.dest, options.cc)

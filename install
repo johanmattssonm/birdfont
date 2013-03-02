@@ -3,6 +3,7 @@ import os
 import subprocess
 import glob
 from optparse import OptionParser
+from scripts import config
 
 def install (file, dir):
 	f = dest + prefix + dir + '/'
@@ -25,18 +26,14 @@ if not os.path.exists ("build/installed"):
         exit (1)
 
 parser = OptionParser()
-parser.add_option ("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
 parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
 
 (options, args) = parser.parse_args()
 
-if not options.prefix:
-	options.prefix = "/usr"
-
 if not options.dest:
 	options.dest = ""
 
-prefix = options.prefix
+prefix = config.PREFIX
 dest = options.dest
 
 # create uninstall file

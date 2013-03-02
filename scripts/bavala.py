@@ -1,9 +1,11 @@
 """bavala is a build-tool for Vala based on doit (http://pydoit.org)"""
 
 import glob
+import os
+import sys
 from os.path import join
-
 from doit.action import CmdAction
+import config
 
 
 def cmd(name, *args):
@@ -88,7 +90,7 @@ class Vala(object):
         """compile C files to obj `.o` """
         def compile_cmd(conf, opts, libs, pos):
             flags = [conf[l].strip() for l in libs]
-            return cmd('gcc', opts, flags, pos)
+            return cmd(config.CC, opts, flags, pos)
 
         for cc, obj in zip(self.cc, self.obj):
             pos = ["-c " + cc, "-o " + obj ]
@@ -110,7 +112,7 @@ class Vala(object):
             opts = ['-shared ' + obj_glob,
                     '-o ' + self.so ]
             flags = [conf[l].strip() for l in libs]
-            return cmd('gcc', opts, flags)
+            return cmd(config.CC, opts, flags)
 
         return {
             'name': self.so.rsplit('/')[-1],
@@ -125,7 +127,7 @@ class Vala(object):
         """generate binary"""
         def compile_cmd(conf, opts, libs):
             flags = [conf[l].strip() for l in libs]
-            return cmd('gcc', opts, flags)
+            return cmd(config.CC, opts, flags)
 
         bin_path = join(self.build, 'bin')
         target = join(bin_path, self.src)

@@ -1,6 +1,7 @@
 import os
 import glob
 import subprocess
+from optparse import OptionParser
 
 from doit.tools import run_once
 from doit.action import CmdAction
@@ -103,6 +104,6 @@ def task_man():
 
 def task_distclean ():
     return  {
-        'actions': ['rm -rf .doit.db build scripts/*.pyc dodo.pyc libbirdfont/Config.vala'],
+        'actions': ['rm -rf .doit.db build scripts/config.py scripts/*.pyc dodo.pyc libbirdfont/Config.vala'],
         }
 

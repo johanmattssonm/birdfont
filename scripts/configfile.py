@@ -21,3 +21,10 @@ def write_config (prefix):
 		f.write(var_line % (name, value))
 
 	f.write("}")
+
+def write_compile_parameters (prefix, dest, cc):
+	f = open('./scripts/config.py', 'w+')
+	f.write("#!/usr/bin/python\n")
+	f.write("PREFIX =  \"" + prefix + "\"\n")
+	f.write("DEST = \"" + dest + "\"\n")
+	f.write("CC = \"" + cc + "\"\n")
