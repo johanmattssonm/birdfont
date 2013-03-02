@@ -16,11 +16,11 @@
 */
 
 using Cairo;
-using Xml;
 
 namespace BirdFont {
 
 public enum FontFormat {
+	BIRDFONT,
 	FFI,
 	SVG,
 	FREETYPE
@@ -29,13 +29,13 @@ public enum FontFormat {
 public class Font : GLib.Object {
 	
 	/** Table with glyphs sorted by their unicode value. */
-	GlyphTable glyph_cache = new GlyphTable ();
+	public GlyphTable glyph_cache = new GlyphTable ();
 	
 	/** Table with glyphs sorted by their name. */
-	GlyphTable glyph_name = new GlyphTable ();
+	public GlyphTable glyph_name = new GlyphTable ();
 
 	/** Table with ligatures. */
-	GlyphTable ligature = new GlyphTable ();
+	public GlyphTable ligature = new GlyphTable ();
 	
 	public List <string> background_images = new List <string> ();
 	public string background_scale = "1";
@@ -64,9 +64,6 @@ public class Font : GLib.Object {
 	
 	private string name = "typeface";
 	public bool initialised = true;
-	
-	bool ttf_export = true;
-	bool svg_export = true;
 
 	OpenFontFormatReader otf;
 	bool otf_font = false;
@@ -74,7 +71,7 @@ public class Font : GLib.Object {
 	public List<string> grid_width = new List<string> ();
 	
 	/** File format. */
-	public FontFormat format = FontFormat.FFI;
+	public FontFormat format = FontFormat.BIRDFONT;
 	
 	public Font () {
 		// positions in pixels at first zoom level
@@ -89,14 +86,6 @@ public class Font : GLib.Object {
 
 	public void touch () {
 		modified = true;
-	}
-
-	public bool get_ttf_export () {
-		return ttf_export;
-	}
-
-	public bool get_svg_export () {
-		return svg_export;
 	}
 
 	public File get_backgrounds_folder () {
@@ -120,14 +109,14 @@ public class Font : GLib.Object {
 		
 		StringBuilder sb = new StringBuilder ();
 		sb.append (Environment.get_home_dir ());
-		sb.append (@"/$(get_name ()).ffi");
+		sb.append (@"/$(get_name ()).bf");
 		
 		File f = File.new_for_path (sb.str);
 
 		while (f.query_exists ()) {
 			sb.erase ();
 			sb.append (Environment.get_home_dir ());
-			sb.append (@"/$(get_name ())$(++i).ffi");
+			sb.append (@"/$(get_name ())$(++i).bf");
 			f = File.new_for_path (sb.str);
 		}
 		
@@ -505,7 +494,7 @@ public class Font : GLib.Object {
 		File file;
 		string backup_file;
 		
-		new_file = dir.get_child (@"$(name).ffi");
+		new_file = dir.get_child (@"$(name).bf");
 		backup_file = (!) ((!) new_file).get_path ();
 		
 		try {
@@ -524,19 +513,25 @@ public class Font : GLib.Object {
 		File dir = BirdFont.get_backup_directory ();
 		File? temp_file = null;
 		string backup_file;
+		BirdFontFile birdfont_file = new BirdFontFile (this);
 
-		temp_file = dir.get_child (@"$(name).ffi");
+		temp_file = dir.get_child (@"$(name).bf");
 		backup_file = (!) ((!) temp_file).get_path ();
 		backup_file = backup_file.replace (" ", "_");
-		
-		write_font_file (backup_file, true);
+		birdfont_file.write_font_file (backup_file, true);
 		
 		return backup_file;
 	}
 	
 	public bool save (string path) {
 		Font font;
-		bool file_written = write_font_file (path);
+		BirdFontFile birdfont_file = new BirdFontFile (this);
+		bool file_written = birdfont_file.write_font_file (path);
+		
+		if (!path.has_suffix (".bf")) {
+			warning ("Expecting .bf format.");
+			return false;
+		}
 		
 		if (file_written) {
 			font_file = path;
@@ -551,248 +546,6 @@ public class Font : GLib.Object {
 		Preferences.add_recent_files (get_path ());
 		
 		return file_written;
-	}
-
-	public bool write_font_file (string path, bool backup = false) {
-		try {
-			File file = File.new_for_path (path);
-
-			if (file.query_file_type (0) == FileType.DIRECTORY) {
-				stderr.printf (@"Can not save font. $path is a directory.");
-				return false;
-			}
-			
-			if (file.query_exists ()) {
-				file.delete ();
-			}
-			
-			DataOutputStream os = new DataOutputStream(file.create(FileCreateFlags.REPLACE_DESTINATION));
-			
-			os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
-			os.put_string ("\n");
-				
-			os.put_string ("<font>\n");
-			
-			// this a backup of another font
-			if (backup) {
-				if (unlikely (font_file == null)) {
-					warning ("No file name is set, write backup file name to font file.");
-				} else {
-					os.put_string ("\n");
-					os.put_string (@"<!-- This is a backup of the following font: -->\n");	
-					os.put_string (@"<backup>$((!) font_file)</backup>\n");	
-				}
-			}
-			
-			os.put_string ("\n");
-			os.put_string (@"<name>$(get_name ())</name>\n");
-			
-			os.put_string ("\n");
-			os.put_string (@"<ttf-export>$(ttf_export)</ttf-export>\n");
-
-			os.put_string ("\n");
-			os.put_string (@"<svg-export>$(svg_export)</svg-export>\n");
-			
-			os.put_string ("\n");
-			os.put_string ("<lines>\n");
-			
-			os.put_string (@"\t<top_limit>$top_limit</top_limit>\n");
-			os.put_string (@"\t<top_position>$top_position</top_position>\n");
-			os.put_string (@"\t<x-height>$xheight_position</x-height>\n");
-			os.put_string (@"\t<base_line>$base_line</base_line>\n");
-			os.put_string (@"\t<bottom_position>$bottom_position</bottom_position>\n");
-			os.put_string (@"\t<bottom_limit>$bottom_limit</bottom_limit>\n");
-			
-			os.put_string ("</lines>\n\n");
-
-			foreach (string gv in grid_width) {
-				os.put_string (@"<grid width=\"$(gv)\"/>\n");
-			}
-			
-			if (GridTool.sizes.length () > 0) {
-				os.put_string ("\n");
-			}
-			
-			os.put_string (@"<background scale=\"$(background_scale)\" />\n");
-			os.put_string ("\n");
-			
-			if (background_images.length () > 0) {
-				os.put_string (@"<images>\n");
-				
-				foreach (string f in background_images) {
-					os.put_string (@"\t<img src=\"$f\"/>\n");
-				}
-			
-				os.put_string (@"</images>\n");
-				os.put_string ("\n");
-			}
-			
-			glyph_cache.for_each ((gc) => {
-				bool selected;
-				
-				if (is_null (gc)) {
-					warning ("No glyph collection");
-				}
-				
-				try {
-					foreach (Glyph g in gc.get_version_list ().glyphs) {
-						selected = (g == gc.get_current ());
-						write_glyph (g, selected, os);
-					}
-				} catch (GLib.Error ef) {
-					stderr.printf (@"Failed to save $path \n");
-					stderr.printf (@"$(ef.message) \n");
-				}
-			});
-		
-			glyph_cache.for_each ((gc) => {
-				Glyph glyph;
-				
-				try {
-					glyph = gc.get_current ();
-					
-					foreach (Kerning k in glyph.kerning) {
-						string l, r;
-						Glyph? gr = get_glyph (k.glyph_right);
-						Glyph glyph_right;
-
-						if (gr == null) {
-							warning ("kerning a glyph that does not exist. (" + glyph.name + " -> " + k.glyph_right + ")");
-							continue;
-						}
-						
-						glyph_right = (!) gr;
-						
-						l = Font.to_hex_code (glyph.unichar_code);
-						r = Font.to_hex_code (glyph_right.unichar_code);
-										
-						os.put_string (@"<hkern left=\"U+$l\" right=\"U+$r\" kerning=\"$(k.val)\"/>\n");
-					}
-				} catch (GLib.Error e) {
-					warning (e.message);
-				}
-			});
-
-			glyph_cache.for_each ((gc) => {
-				GlyphBackgroundImage bg;
-				
-				try {
-					string data;
-					
-					foreach (Glyph g in gc.get_version_list ().glyphs) {
-
-						if (g.get_background_image () != null) {
-							bg = (!) g.get_background_image ();
-							data = bg.get_png_base64 ();
-							
-							if (!bg.is_valid ()) {
-								continue;
-							}
-							
-							os.put_string (@"<background-image sha1=\"");
-							os.put_string (bg.get_sha1 ());
-							os.put_string ("\" ");
-							os.put_string (" data=\"");
-							os.put_string (data);
-							os.put_string ("");
-							os.put_string ("\" />\n");	
-						}
-					}
-				} catch (GLib.Error ef) {
-					stderr.printf (@"Failed to save $path \n");
-					stderr.printf (@"$(ef.message) \n");
-				}
-			});
-						
-			os.put_string ("</font>");
-			
-		} catch (GLib.Error e) {
-			stderr.printf (@"Failed to save $path \n");
-			stderr.printf (@"$(e.message) \n");
-			return false;
-		}
-		
-		return true;
-	}
-
-	private void write_glyph (Glyph g, bool selected, DataOutputStream os) throws GLib.Error {
-		os.put_string (@"<glyph unicode=\"$(to_hex (g.unichar_code))\" selected=\"$selected\" left=\"$(g.left_limit)\" right=\"$(g.right_limit)\">\n");
-
-		foreach (var p in g.path_list) {
-			if (p.points.length () == 0) {
-				continue;
-			}
-			
-			os.put_string ("\t<object>");
-
-			foreach (var ep in p.points) {
-				os.put_string (@"<point x=\"$(ep.x)\" y=\"$(ep.y)\" ");
-				
-				if (ep.right_handle.type == PointType.CUBIC) {
-					os.put_string (@"right_type=\"cubic\" ");
-				}
-
-				if (ep.left_handle.type == PointType.CUBIC) {
-					os.put_string (@"left_type=\"cubic\" ");
-				}
-
-				if (ep.right_handle.type == PointType.QUADRATIC) {
-					os.put_string (@"right_type=\"quadratic\" ");
-				}
-
-				if (ep.left_handle.type == PointType.QUADRATIC) {
-					os.put_string (@"left_type=\"quadratic\" ");
-				}
-
-				if (ep.right_handle.type == PointType.LINE_CUBIC) {
-					os.put_string (@"right_type=\"linear\" ");
-				}
-
-				if (ep.left_handle.type == PointType.LINE_CUBIC) {
-					os.put_string (@"left_type=\"linear\" ");
-				}
-								
-				if (ep.right_handle.type == PointType.CUBIC || ep.right_handle.type == PointType.QUADRATIC) {
-					os.put_string (@"right_angle=\"$(ep.right_handle.angle)\" ");
-					os.put_string (@"right_length=\"$(ep.right_handle.length)\" ");
-				}
-				
-				if (ep.left_handle.type == PointType.CUBIC) {
-					os.put_string (@"left_angle=\"$(ep.left_handle.angle)\" ");
-					os.put_string (@"left_length=\"$(ep.left_handle.length)\" ");						
-				}
-				
-				if (ep.right_handle.type == PointType.CUBIC || ep.left_handle.type == PointType.CUBIC) {
-					os.put_string (@"tie_handles=\"$(ep.tie_handles)\" ");
-				}
-				
-				os.put_string ("/>");
-				
-			}
-			
-			os.put_string ("</object>\n");
-		}
-		
-		GlyphBackgroundImage? bg = g.get_background_image ();
-		
-		if (bg != null) {
-			GlyphBackgroundImage background_image = (!) bg;
-
-			double pos_x = background_image.img_x;
-			double pos_y = background_image.img_y;
-			
-			double scale_x = background_image.img_scale_x;
-			double scale_y = background_image.img_scale_y;
-			
-			double rotation = background_image.img_rotation;
-			
-			if (background_image.is_valid ()) {
-				os.put_string (@"\t<background sha1=\"$(background_image.get_sha1 ())\" x=\"$pos_x\" y=\"$pos_y\" scale_x=\"$scale_x\" scale_y=\"$scale_y\" rotation=\"$rotation\"/>\n");
-			}
-		}
-		
-		os.put_string ("</glyph>\n\n"); 
-
 	}
 
 	public void set_font_file (string path) {
@@ -811,64 +564,71 @@ public class Font : GLib.Object {
 	public bool load (string path, bool recent = true) {
 		bool loaded = false;
 		initialised = true;
+		otf_font = false;
+
+		while (grid_width.length () > 0) {
+			grid_width.remove_link (grid_width.first ());
+		}
+	
+		// empty cache and fill it with new glyphs from disk
+		glyph_cache.remove_all ();
+		glyph_name.remove_all ();
+		ligature.remove_all ();
 		
-		try {
-			otf_font = false;
-
-			while (grid_width.length () > 0) {
-				grid_width.remove_link (grid_width.first ());
-			}
-
-			glyph_cache.remove_all ();
-			glyph_name.remove_all ();
-			ligature.remove_all ();
-			
-			if (path.has_suffix (".svg")) {
-				Toolbox.select_tool_by_name ("cubic_points");
-				font_file = path;
-				loaded = parse_svg_file (path);
-				format = FontFormat.SVG;
-			}
-			
-			if (path.has_suffix (".ffi")) {
-				Toolbox.select_tool_by_name ("cubic_points");
-				font_file = path;
-				loaded = parse_file (path);
-				format = FontFormat.FFI;
-			}
-			
-			if (path.has_suffix (".ttf")) {
-				Toolbox.select_tool_by_name ("quadratic_points");
-				font_file = path;
-				loaded = parse_freetype_file (path);
-				format = FontFormat.FREETYPE;
-			}			
-
-			if (path.has_suffix (".otf")) {
-				Toolbox.select_tool_by_name ("cubic_points");
-				font_file = path;
-				loaded = parse_freetype_file (path);
-				format = FontFormat.FREETYPE;
-			}	
-						
-			/* // TODO: Remove the old way of loading ttfs when testing of the OTF writer is complete.
-			if (BirdFont.experimental) {
-				if (path.has_suffix (".ttf")) {
-					font_file = path;
-					loaded = parse_otf_file (path);
-				}
-			}*/
-			
-			if (recent) {
-				add_thumbnail ();
-				Preferences.add_recent_files (get_path ());
-			}
-		} catch (GLib.Error e) {
-			warning (e.message);
-			return false;
+		if (path.has_suffix (".svg")) {
+			Toolbox.select_tool_by_name ("cubic_points");
+			font_file = path;
+			loaded = parse_svg_file (path);
+			format = FontFormat.SVG;
 		}
 		
+		if (path.has_suffix (".ffi")) {
+			Toolbox.select_tool_by_name ("cubic_points");
+			font_file = path;
+			loaded = parse_bf_file (path);
+			format = FontFormat.FFI;
+		}
+
+		if (path.has_suffix (".bf")) {
+			Toolbox.select_tool_by_name ("cubic_points");
+			font_file = path;
+			loaded = parse_bf_file (path);
+			format = FontFormat.BIRDFONT;
+		}
+		
+		if (path.has_suffix (".ttf")) {
+			Toolbox.select_tool_by_name ("quadratic_points");
+			font_file = path;
+			loaded = parse_freetype_file (path);
+			format = FontFormat.FREETYPE;
+		}			
+
+		if (path.has_suffix (".otf")) {
+			Toolbox.select_tool_by_name ("cubic_points");
+			font_file = path;
+			loaded = parse_freetype_file (path);
+			format = FontFormat.FREETYPE;
+		}	
+					
+		/* // TODO: Remove the old way of loading ttfs when testing of the OTF writer is complete.
+		if (BirdFont.experimental) {
+			if (path.has_suffix (".ttf")) {
+				font_file = path;
+				loaded = parse_otf_file (path);
+			}
+		}*/
+		
+		if (recent) {
+			add_thumbnail ();
+			Preferences.add_recent_files (get_path ());
+		}
+					
 		return loaded;
+	}
+	
+	private bool parse_bf_file (string path) {
+		BirdFontFile font = new BirdFontFile (this);
+		return font.load (path);
 	}
 
 	private bool parse_freetype_file (string path) {
@@ -978,540 +738,6 @@ public class Font : GLib.Object {
 		otf.parse_index (path);
 		return true;
 	}
-	
-	public bool parse_file (string path) throws GLib.Error {
-		Parser.init ();
-		
-		Xml.Doc* doc;
-		Xml.Node* root;
-		Xml.Node* node;
-
-		// set this path as file for this font, it will be updated if this is a backup
-		font_file = path;
-		
-		// empty cache and fill it with new glyphs from disk
-		glyph_cache.remove_all ();
-		glyph_name.remove_all ();
-
-		while (background_images.length () > 0) {
-			background_images.remove_link (background_images.first ());
-		}
-
-		create_background_files (path);
-
-		doc = Parser.parse_file (path);
-		root = doc->get_root_element ();
-		
-		if (root == null) {
-			delete doc;
-			return false;
-		}
-
-		node = root;
-		
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-
-			// this is a backup file set path to the original 
-			if (iter->name == "backup") {
-				font_file = iter->children->content;
-			}
-	
-			if (iter->name == "glyph") {
-				parse_glyph (iter);
-			}
-
-			if (iter->name == "lines") {
-				parse_font_boundries (iter);
-			}
-
-			if (iter->name == "grid") {
-				parse_grid (iter);
-			}
-
-			if (iter->name == "background") {
-				parse_background (iter);
-			}
-			
-			if (iter->name == "images") {
-				parse_background_selection (iter);
-			}
-
-			if (iter->name == "name" && iter->children != null) {
-				set_name (iter->children->content);
-			}
-
-			if (iter->name == "hkern") {
-				parse_kerning (iter);
-			}
-
-			if (iter->name == "ttf-export") {
-				ttf_export = bool.parse (iter->children->content);
-			}			
-
-			if (iter->name == "svg-export") {
-				svg_export = bool.parse (iter->children->content);
-			}
-			
-		}
-    
-		delete doc;
-		Parser.cleanup ();
-
-		return true;
-	}
-	
-	private void create_background_files (string path) {
-		Xml.Doc* doc = Parser.parse_file (path);
-		Xml.Node* root;
-		Xml.Node* node;
-		
-		root = doc->get_root_element ();
-		
-		if (root == null) {
-			delete doc;
-			return;
-		}
-
-		node = root;
-		
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			
-			if (iter->name == "name" && iter->children != null) {
-				set_name (iter->children->content);
-			}
-			
-			if (iter->name == "background-image") {
-				parse_background_image (iter);
-			}
-		}
-    
-		delete doc;
-		Parser.cleanup ();
-	}
-	
-	private void parse_kerning (Xml.Node* node) {
-		string attr_name;
-		string attr_content;
-		string left = "";
-		string right = "";
-		string kern = "";
-
-		StringBuilder b;
-		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "left") {
-				b = new StringBuilder ();
-				b.append_unichar (to_unichar (attr_content));
-				left = @"$(b.str)";
-			}
-
-			if (attr_name == "right") {
-				b = new StringBuilder ();
-				b.append_unichar (to_unichar (attr_content));
-				right = @"$(b.str)";
-			}
-			
-			if (attr_name == "kerning") {
-				kern = attr_content;
-			}
-		}
-		
-		set_kerning (left, right, double.parse (kern));
-	}
-	
-	private void parse_background_image (Xml.Node* node) 
-		requires (node != null)
-	{
-		string attr_name;
-		string attr_content;
-		
-		string file = "";
-		string data = "";
-		
-		File img_dir;
-		File img_file;
-		FileOutputStream file_stream;
-		DataOutputStream png_stream;
-		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			return_if_fail (!is_null (prop->name));
-			return_if_fail (!is_null (prop->children));
-			return_if_fail (!is_null (prop->children->content));
-			
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "sha1") {
-				file = attr_content;
-			}
-			
-			if (attr_name == "data") {
-				data = attr_content;
-			}
-		}
-		
-		img_dir = get_backgrounds_folder ().get_child ("parts");
-
-		if (!img_dir.query_exists ()) {
-			DirUtils.create ((!) img_dir.get_path (), 0xFFFFFF);
-		}
-	
-		img_file = img_dir.get_child (@"$(file).png");
-		
-		if (img_file.query_exists ()) {
-			return;
-		}
-		
-		try {
-			file_stream = img_file.create (FileCreateFlags.REPLACE_DESTINATION);
-			png_stream = new DataOutputStream (file_stream);
-
-			png_stream.write (Base64.decode (data));
-			png_stream.close ();	
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
-	}
-	
-	private void parse_background (Xml.Node* node) 
-		requires (node != null)
-	{
-		string attr_name;
-		string attr_content;
-				
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			
-			return_if_fail (!is_null (prop->name));
-			return_if_fail (!is_null (prop->children));
-			return_if_fail (!is_null (prop->children->content));
-			
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "scale") {
-				background_scale = attr_content;
-			}
-		}
-	}
-	
-	private void parse_background_selection (Xml.Node* node) {
-		string attr_name = "";
-		string attr_content;
-		
-		return_if_fail (node != null);
-				
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "img") {
-				for (Xml.Attr* prop = iter->properties; prop != null; prop = prop->next) {
-					attr_name = prop->name;
-					attr_content = prop->children->content;
-					
-					if (attr_name == "src") {
-						background_images.append (attr_content);
-					}
-				}
-			}
-		}
-	}
-	
-	private void parse_grid (Xml.Node* node) {
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			string attr_name = prop->name;
-			string attr_content = prop->children->content;
-			
-			if (attr_name == "width") {
-				grid_width.append (attr_content);
-			}
-		}		
-	}
-	
-	private void parse_font_boundries (Xml.Node* node) {
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "top_limit") top_limit = parse_double_from_node (iter);
-			if (iter->name == "top_position") top_position = parse_double_from_node (iter);
-			if (iter->name == "x-height") xheight_position = parse_double_from_node (iter);
-			if (iter->name == "base_line") base_line = parse_double_from_node (iter);
-			if (iter->name == "bottom_position") bottom_position = parse_double_from_node (iter);
-			if (iter->name == "bottom_limit") bottom_limit = parse_double_from_node (iter);
-		}			
-	}
-	
-	private double parse_double_from_node (Xml.Node* iter) {
-		double d;
-		bool r = double.try_parse (iter->children->content, out d);
-		
-		if (unlikely (!r)) {
-			string? s = iter->content;
-			if (s == null) warning (@"Content is null for node $(iter->name)\n");
-			else warning (@"Failed to parse double for \"$(iter->content)\"\n");
-		}
-		
-		return (r) ? d : 0;
-	}
-	
-	/** Parse one glyph. */
-	public void parse_glyph (Xml.Node* node) {
-		string name = "";
-		int left = 0;
-		int right = 0;
-		unichar uni = 0;
-		int version = 0;
-		bool selected = false;
-		Glyph g;
-		GlyphCollection? gc;
-		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			string attr_name = prop->name;
-			string attr_content = prop->children->content;
-			StringBuilder b;
-			
-			if (attr_name == "unicode") {
-				uni = to_unichar (attr_content);
-				b = new StringBuilder ();
-				b.append_unichar (uni);
-				name = b.str;
-			}
-
-			if (attr_name == "left") {
-				left = int.parse (attr_content);
-			}
-			
-			if (attr_name == "right") {
-				right = int.parse (attr_content);
-			}
-			
-			if (attr_name == "version") {
-				version = int.parse (attr_content);
-			}
-			
-			if (attr_name == "selected") {
-				selected = bool.parse (attr_content);
-			}
-		}
-
-		g = new Glyph (name, uni);
-		
-		g.left_limit = left;
-		g.right_limit = right;
-
-		parse_content (g, node);
-		
-		// todo: use disk thread and idle add this:
-		
-		gc = get_glyph_collection (g.get_name ());
-		
-		if (g.get_name () == "") {
-			warning ("No name set for glyph.");
-		}
-				
-		if (gc == null) {
-			gc = new GlyphCollection (g);
-			add_glyph_collection ((!) gc);
-		} else {
-			((!)gc).insert_glyph (g, selected);
-		}
-	}
-	
-	/** Parse visual objects and paths */
-	private void parse_content (Glyph g, Xml.Node* node) {
-		Xml.Node* i;
-		return_if_fail (node != null);
-		
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "object") {
-				Path p = new Path ();
-				
-				for (i = iter->children; i != null; i = i->next) {
-					if (i->name == "point") {
-						parse_point (p, i);
-					}					
-				}
-
-				p.close ();
-				g.add_path (p);
-			}
-			
-			if (iter->name == "background") {
-				parse_background_scale (g, iter);
-			}
-		}
-	}
-	
-	private void parse_background_scale (Glyph g, Xml.Node* node) {
-		GlyphBackgroundImage img;
-		GlyphBackgroundImage? new_img = null;
-		
-		string attr_name = "";
-		string attr_content;
-		
-		File img_file = get_backgrounds_folder ().get_child ("parts");
-		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "sha1") {
-				img_file = img_file.get_child (attr_content + ".png");
-
-				if (!img_file.query_exists ()) {
-					warning (@"Background file has not been created yet. $((!) img_file.get_path ())");
-				}
-				
-				new_img = new GlyphBackgroundImage ((!) img_file.get_path ());
-				g.set_background_image ((!) new_img);
-			}
-		}
-		
-		if (unlikely (new_img == null)) {
-			warning (@"No source for image found for $attr_name in $(g.name)");
-			return;
-		}
-	
-		img = (!) new_img;
-	
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-							
-			if (attr_name == "x") {
-				img.img_x = double.parse (attr_content);
-			}
-			
-			if (attr_name == "y") {
-				img.img_y = double.parse (attr_content);
-			}	
-
-			if (attr_name == "scale_x") {
-				img.img_scale_x = double.parse (attr_content);
-			}
-
-			if (attr_name == "scale_y") {
-				img.img_scale_y = double.parse (attr_content);
-			}
-						
-			if (attr_name == "rotation") {
-				img.img_rotation = double.parse (attr_content);
-			}
-		}
-		
-		img.set_position(img.img_x, img.img_y);	
-	}
-	
-	private void parse_point (Path p, Xml.Node* iter) {
-		double x = 0;
-		double y = 0;
-		
-		double angle_right = 0;
-		double angle_left = 0;
-		
-		double length_right = 0;
-		double length_left = 0;
-		
-		PointType type_right = PointType.LINE_CUBIC;
-		PointType type_left = PointType.LINE_CUBIC;
-		
-		bool tie_handles = false;
-		
-		EditPoint ep;
-		
-		for (Xml.Attr* prop = iter->properties; prop != null; prop = prop->next) {
-			string attr_name = prop->name;
-			string attr_content = prop->children->content;
-						
-			if (attr_name == "x") x = double.parse (attr_content);
-			if (attr_name == "y") y = double.parse (attr_content);
-
-			if (attr_name == "right_type" && attr_content == "linear") {
-				type_right = PointType.LINE_CUBIC;
-			}	
-
-			if (attr_name == "left_type" && attr_content == "linear") {
-				type_left = PointType.LINE_CUBIC;
-			}	
-
-			if (attr_name == "right_type" && attr_content == "quadratic") {
-				type_right = PointType.QUADRATIC;
-			}	
-
-			if (attr_name == "left_type" && attr_content == "quadratic") {
-				type_left = PointType.QUADRATIC;
-			}
-
-			if (attr_name == "right_type" && attr_content == "cubic") {
-				type_right = PointType.CUBIC;
-			}	
-
-			if (attr_name == "left_type" && attr_content == "cubic") {
-				type_left = PointType.CUBIC;
-			}
-			
-			if (attr_name == "right_angle") angle_right = double.parse (attr_content);
-			if (attr_name == "right_length") length_right = double.parse (attr_content);
-			if (attr_name == "left_angle") angle_left = double.parse (attr_content);
-			if (attr_name == "left_length") length_left = double.parse (attr_content);
-			
-			if (attr_name == "tie_handles") tie_handles = bool.parse (attr_content);
-		}
-	
-		// backward compabtility
-		if (type_right == PointType.LINE_CUBIC && length_right != 0) {
-			type_right = PointType.CUBIC;
-		}
-
-		if (type_left == PointType.LINE_CUBIC && length_left != 0) {
-			type_left = PointType.CUBIC;
-		}
-		
-		ep = new EditPoint (x, y);
-		
-		ep.right_handle.angle = angle_right;
-		ep.right_handle.length = length_right;
-		ep.right_handle.type = type_right;
-		
-		ep.left_handle.angle = angle_left;
-		ep.left_handle.length = length_left;
-		ep.left_handle.type = type_left;
-		
-		ep.tie_handles = tie_handles;
-		
-		p.add_point (ep);
-	}
-		
-	public static string to_hex (unichar ch) {
-		StringBuilder s = new StringBuilder ();
-		s.append ("U+");
-		s.append (to_hex_code (ch));
-		return s.str;
-	}
-
-	public static string to_hex_code (unichar ch) {
-		StringBuilder s = new StringBuilder ();
-		
-		uint8 a = (uint8)(ch & 0x00000F);
-		uint8 b = (uint8)((ch & 0x0000F0) >> 4 * 1);
-		uint8 c = (uint8)((ch & 0x000F00) >> 4 * 2);
-		uint8 d = (uint8)((ch & 0x00F000) >> 4 * 3);
-		uint8 e = (uint8)((ch & 0x0F0000) >> 4 * 4);
-		uint8 f = (uint8)((ch & 0xF00000) >> 4 * 5);
-		
-		if (e != 0 || f != 0) {
-			s.append (oct_to_hex (f));
-			s.append (oct_to_hex (e));
-		}
-		
-		if (c != 0 || d != 0) {
-			s.append (oct_to_hex (d));
-			s.append (oct_to_hex (c));
-		}
-				
-		s.append (oct_to_hex (b));
-		s.append (oct_to_hex (a));
-		
-		return s.str;
-	}
 
 	public static unichar to_unichar (string unicode) {
 		int index = 2;
@@ -1520,7 +746,7 @@ public class Font : GLib.Object {
 		unichar rc = 0;
 		bool r;
 
-		if (unlikely (unicode.index_of ("U+") != 0)) {
+		if (unlikely (!unicode.has_prefix ("U+"))) {
 			warning (@"All unicode values must begin with U+ ($unicode)");
 			return '\0';
 		}
@@ -1568,6 +794,38 @@ public class Font : GLib.Object {
 		return (uint8) (o - '0');
 	}
 
+	public static string to_hex (unichar ch) {
+		StringBuilder s = new StringBuilder ();
+		s.append ("U+");
+		s.append (to_hex_code (ch));
+		return s.str;
+	}
+
+	public static string to_hex_code (unichar ch) {
+		StringBuilder s = new StringBuilder ();
+		
+		uint8 a = (uint8)(ch & 0x00000F);
+		uint8 b = (uint8)((ch & 0x0000F0) >> 4 * 1);
+		uint8 c = (uint8)((ch & 0x000F00) >> 4 * 2);
+		uint8 d = (uint8)((ch & 0x00F000) >> 4 * 3);
+		uint8 e = (uint8)((ch & 0x0F0000) >> 4 * 4);
+		uint8 f = (uint8)((ch & 0xF00000) >> 4 * 5);
+		
+		if (e != 0 || f != 0) {
+			s.append (oct_to_hex (f));
+			s.append (oct_to_hex (e));
+		}
+		
+		if (c != 0 || d != 0) {
+			s.append (oct_to_hex (d));
+			s.append (oct_to_hex (c));
+		}
+				
+		s.append (oct_to_hex (b));
+		s.append (oct_to_hex (a));
+		
+		return s.str;
+	}
 }
 
 }

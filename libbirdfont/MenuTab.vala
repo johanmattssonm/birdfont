@@ -263,7 +263,7 @@ c.append ("""
 				}
 				
 				// ignore backup of the current font
-				if (file_name == @"$(font.get_name ()).ffi") {
+				if (file_name == @"$(font.get_name ()).bf") {
 					continue;
 				}
 				
@@ -383,8 +383,8 @@ c.append ("""
 		if (fn != null) {
 			f = (!) fn;
 			
-			if (!f.has_suffix (".ffi")) {
-				f += ".ffi";
+			if (!f.has_suffix (".bf")) {
+				f += ".bf";
 			}
 			
 			font.font_file = f;
@@ -408,7 +408,7 @@ c.append ("""
 		
 		fn = (!) f.font_file;
 		
-		if (f.font_file != null && fn.has_suffix (".ffi")) {
+		if (f.font_file != null && fn.has_suffix (".bf")) {
 			f.background_scale = MainWindow.get_toolbox ().background_scale.get_display_value ();
 			
 			while (f.grid_width.length () > 0) {

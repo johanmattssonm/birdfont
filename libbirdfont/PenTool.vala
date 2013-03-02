@@ -1159,7 +1159,6 @@ public class PenTool : Tool {
 		return true;
 	}
 	
-	
 	class Point {
 		
 		public int x;

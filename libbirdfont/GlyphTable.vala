@@ -18,7 +18,7 @@
 namespace BirdFont {
 
 /** A sorted table of glyphs with search index. */
-class GlyphTable : GLib.Object {
+public class GlyphTable : GLib.Object {
 	List<Item> data = new List<Item> ();
 	
 	List<RowItem> row1 = new List<RowItem> ();

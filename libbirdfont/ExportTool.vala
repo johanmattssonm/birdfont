@@ -19,7 +19,6 @@ namespace BirdFont {
 
 public class ExportTool : GLib.Object {
 	private static ExportThread export_thread;
-	private static bool stop_export_thread = false;
 
 	public ExportTool (string n) {
 	}
@@ -159,30 +158,18 @@ public class ExportTool : GLib.Object {
 	}
 	
 
-	public static bool export_all () {
-		Font font = BirdFont.get_current_font ();
+	public static void export_all () {
 		bool f;
-		bool r = true;
-		
-		if (font.get_ttf_export ()) {
-			f = export_ttf_font ();
-			
-			if (!f) {
-				warning ("Failed to export font");
-				r = false;
-			}
-		}
-		
-		if (font.get_svg_export ()) {
-			f = export_svg_font ();
 
-			if (!f) {
-				warning ("Failed to export font");
-				r = false;
-			}
+		f = export_ttf_font ();
+		if (!f) {
+			warning ("Failed to export ttf font");
 		}
-		
-		return r;
+
+		f = export_svg_font ();
+		if (!f) {
+			warning ("Failed to export svg font");
+		}
 	}
 
 	public static void generate_html_document (string html_file, Font font) {
@@ -374,21 +361,6 @@ os.put_string (
 		return export_ttf_font_path (file);
 	}
 	
-	/** Stop a running export thread.*/
-	public static void stop_export () {
-		lock (stop_export_thread) {
-			stop_export_thread = true;
-		}
-	}
-	
-	public static bool should_stop () {
-		bool r;
-		lock (stop_export_thread) {
-			r = stop_export_thread;
-		}
-		return r;
-	} 
-	
 	private static string[] get_birdfont_export (File folder, string temp_file) {
 		File f;
 		string dest = @"\"$((!) folder.get_path ())\" \"$temp_file\"";
@@ -567,13 +539,8 @@ os.put_string (
 			assert (!is_null (ttf));
 			assert (!is_null (eot));
 			
-			if (!should_stop ()) { 
-				write_ttf ();
-			}
-			
-			if (!should_stop ()) { 
-				write_eof ();
-			}
+			write_ttf ();
+			write_eof ();
 
 			return null;
 		}
