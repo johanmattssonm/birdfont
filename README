@@ -41,15 +41,17 @@ http://greg.thehellings.com/2012/02/a-better-ubuntu-mingw-experience/
 You need wine and nsis windows installer as well.
 
 Compile and build the installer with:
-cd win32
-./build_win32.py
+./scripts/build_win32.py
 
 ---------------------
 Building Mac binaries
 ---------------------
 
 Compile all dependencies using MacPorts and run:
-./mac/build_mac.py
+
+./scripts/macports_configure.py
+./scripts/macports_build.py
+./scripts/macports_install.py
 
 --------------------
 Precompiled Packages
