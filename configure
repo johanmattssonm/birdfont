@@ -85,7 +85,7 @@ parser.add_option("-c", "--cc", dest="cc", help="C compiler", metavar="CC")
 if not options.prefix:
 	options.prefix = "/usr"
 if not options.dest:
-	options.dest = "/"
+	options.dest = ""
 if not options.cc:
 	options.cc = "gcc"
 	

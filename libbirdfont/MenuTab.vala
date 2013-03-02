@@ -61,6 +61,11 @@ public class MenuTab : FontDisplay {
 		add_html_callback ("help", (val) => {
 			MainWindow.get_tool_tip ().show_text (val);
 		});
+
+		add_html_callback ("delete_backups", (val) => {
+			delete_backups ();
+			MainWindow.get_tab_bar ().select_tab_name ("Menu");
+		});		
 	}
 	
 	public static void set_suppress_event (bool e) {
@@ -145,6 +150,21 @@ if (has_backup ()) {
 		c.append ("</div>\n");		
 	}
 
+	if (get_backups ().length () > 0) {
+		c.append ("""<div class="recent_font" """ + "onclick=\"call ('delete_backups:')\">");
+
+		c.append ("<div class=\"one_line\">");
+		c.append (_("Delete all"));
+		c.append ("</div>");
+		
+		c.append ("<img src=\"");
+		c.append (path_to_uri ((!) FontDisplay.find_layout_dir ().get_child ("delete_backup.png").get_path ()));
+		c.append ("\" alt=\"\">");	
+		c.append ("<br /><br />");
+
+		c.append ("</div>\n");
+	}
+
 	c.append ("""</div>""");
 }
 
@@ -195,6 +215,7 @@ c.append ("""
 		_("Recover");
 		_("Export SVG font and view the result");
 		_("Export SVG font and view the result");
+		_("Delete all")
 #endif
 
 		return c.str;
@@ -202,6 +223,25 @@ c.append ("""
 
 	bool has_backup () {
 		return get_backups ().length () > 0;
+	}
+
+	public static void delete_backups () {
+		FileEnumerator enumerator;
+		FileInfo? file_info;
+		string file_name;
+		File backup_file;
+		File dir = BirdFont.get_backup_directory ();
+
+		try {
+			enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+			while ((file_info = enumerator.next_file ()) != null) {
+				file_name = ((!) file_info).get_name ();
+				backup_file = dir.get_child (file_name);
+				backup_file.delete ();
+			}
+		} catch (Error e) {
+			warning (e.message);
+		}
 	}
 
 	public List<string> get_backups () {
