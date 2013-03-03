@@ -1075,8 +1075,9 @@ public class Path {
 		double curve_x, curve_y, cx, cy, qx, qy, nx, ny, distance;	
 		EditPoint start;
 		EditPoint stop;
+		PointType rt = middle.get_right_handle ().type;
 		
-		if (middle.get_right_handle ().type == PointType.QUADRATIC) {
+		if (rt == PointType.QUADRATIC || rt == PointType.LINE_CUBIC || rt == PointType.LINE_QUADRATIC) {
 			return false;
 		}
 		

@@ -446,7 +446,6 @@ public class Glyph : FontDisplay {
 		return margin_boundries_visible;
 	}
 	
-	/** @return true if a path was removed. */
 	public void remove_empty_paths () {
 		foreach (Path p in path_list) {
 			if (p.points.length () <= 2) {

@@ -35,8 +35,7 @@ public static int run_export (string[] arg) {
 	string file_name = "";
 	bool specific_formats = false;	
 	bool write_ttf = false;
-	bool write_svg = false;
-	
+	bool write_svg = false;	
 	File directory;
 
 	if (arg.length < 2) {
@@ -105,8 +104,8 @@ public static int run_export (string[] arg) {
 	if (!BirdFont.get_current_font ().load (file_name, false)) {
 		stderr.printf (@"Failed to load font $file_name.\n");
 		
-		if (!file_name.has_suffix (".ffi")) {
-			stderr.printf (@"Is it a .ffi file?\n");
+		if (!file_name.has_suffix (".bf")) {
+			stderr.printf (@"Is it a .bf file?\n");
 		}
 		
 		return 1;

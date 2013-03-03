@@ -264,11 +264,15 @@ class BirdFontFile {
 
 	private void write_glyph (Glyph g, GlyphCollection gc, DataOutputStream os) throws GLib.Error {
 		bool selected = (gc.get_current () == g);
-
+		string data;
+		
 		os.put_string (@"\t<glyph left=\"$(g.left_limit)\" right=\"$(g.right_limit)\" selected=\"$selected\">\n");
 		
 		foreach (Path p in g.path_list) {
-			os.put_string (@"\t\t<path data=\"$(get_point_data (p))\" />\n");
+			data = get_point_data (p);
+			if (data != "") {
+				os.put_string (@"\t\t<path data=\"$(data)\" />\n");
+			}
 		}
 		
 		write_glyph_background (g, os);
@@ -600,6 +604,8 @@ class BirdFontFile {
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			parse_glyph (iter, gc, name, unicode);
 		}
+		
+		font.add_glyph_collection (gc);
 	}
 
 	private void parse_glyph (Xml.Node* node, GlyphCollection gc, string name, unichar unicode) {	
@@ -638,7 +644,6 @@ class BirdFontFile {
 		}
 		
 		gc.insert_glyph (glyph, selected);
-		font.add_glyph_collection (gc);
 	}
 
 	private Path parse_path (Xml.Node* node) {	

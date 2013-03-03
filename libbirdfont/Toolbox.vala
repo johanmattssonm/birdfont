@@ -829,6 +829,11 @@ public class Toolbox : GLib.Object  {
 	
 	public static void select_tool_by_name (string name) {
 		Toolbox b = MainWindow.get_toolbox ();
+		
+		if (is_null (b)) {
+			return;
+		}
+				
 		b.select_tool (b.get_tool (name));
 	}
 		
