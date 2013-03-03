@@ -1381,6 +1381,8 @@ class GlyfTable : Table {
 		
 		uint len; 
 		uint coordinate_length;
+		Path quadratic;
+		PointType pt;
 		
 		fd.seek_end (); // append glyph
 		
@@ -1405,27 +1407,38 @@ class GlyfTable : Table {
 		tymax = int16.MIN;
 		
 		// bounding box will be set again after coordinate arrays have been created
-		fd.add_16 (10);
-		fd.add_16 (20);
-		fd.add_16 (30);
-		fd.add_16 (40);
+		fd.add_16 (0);
+		fd.add_16 (0);
+		fd.add_16 (0);
+		fd.add_16 (0);
 		
 		// end points
 		end_point = 0;
 		last_end_point = 0;
 		foreach (Path p in g.path_list) {
-			p = p.get_quadratic_points ();
-			foreach (EditPoint e in p.points) {
+			quadratic = p.get_quadratic_points ();
+			
+			if (quadratic.points.length () == 0) {
+				warning (@"No points in path (quadratic points $(quadratic.points.length ())) (before conversion $(p.points.length ()))");
+				continue;
+			}
+			
+			foreach (EditPoint e in quadratic.points) {
 				end_point++;
+				pt = e.get_right_handle ().type;
 				
-				if (e.get_right_handle ().type == PointType.CUBIC) {
+				if (pt == PointType.CUBIC || pt == PointType.QUADRATIC) {
 					end_point++;
+				}
+				
+				if (end_point == 0xFFFF) {
+					warning ("Too many points");
 				}
 			}
 			fd.add_u16 (end_point - 1);
 			
 			if (end_point - 1 < last_end_point) {
-				warning (@"Next endpoint has bad value. (end_point - 1 < last_end_point)  ($(end_point - 1) < $last_end_point");
+				warning (@"Next endpoint has bad value. (end_point - 1 < last_end_point)  ($(end_point - 1) < $last_end_point)");
 			}
 			
 			last_end_point = end_point - 1;

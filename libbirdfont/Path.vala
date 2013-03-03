@@ -123,7 +123,7 @@ public class Path {
 		foreach (EditPoint e in ep) {
 			if (n != null) {
 				en = (!) n;
-				draw_next (e, en, cr);
+				draw_next (en, e, cr);
 			}
 			
 			n = e;
@@ -134,7 +134,7 @@ public class Path {
 			en = (!) n;
 			em = ep.first ().data;
 			
-			draw_next (em, en, cr);
+			draw_next (en, em, cr);
 		}
 
 		cr.stroke ();
@@ -170,7 +170,7 @@ public class Path {
 		foreach (EditPoint e in ep) {
 			if (n != null) {
 				en = (!) n;
-				draw_next (e, en, cr);
+				draw_next (en, e, cr);
 			}
 			
 			n = e;
@@ -180,7 +180,7 @@ public class Path {
 		if (!is_open () && ep.length () >= 2 && n != null) {
 			en = (!) n;
 			em = ep.first ().data;
-			draw_next (em, en, cr);
+			draw_next (en, em, cr);
 		}
 
 		// fill path
@@ -196,7 +196,13 @@ public class Path {
 	}
 
 	private void draw_next (EditPoint e, EditPoint en, Context cr) {
-		draw_curve (e, en, cr);
+		PointType t = e.get_right_handle ().type;
+		
+		if (t == PointType.DOUBLE_CURVE) {
+			
+		} else {
+			draw_curve (e, en, cr);
+		}
 	}
 	
 	private static void draw_curve (EditPoint e, EditPoint en, Context cr, double alpha = 1) {
@@ -227,32 +233,32 @@ public class Path {
 		center_x = g.allocation.width / 2.0;
 		center_y = g.allocation.height / 2.0;
 				
-		xa = center_x + en.x;
-		ya = center_y - en.y;
+		xa = center_x + e.x;
+		ya = center_y - e.y;
 
-		xb = center_x + en.get_right_handle ().x ();
-		yb = center_y - en.get_right_handle ().y ();
+		xb = center_x + e.get_right_handle ().x ();
+		yb = center_y - e.get_right_handle ().y ();
 		
-		xc = center_x + e.get_left_handle ().x ();
-		yc = center_y - e.get_left_handle ().y ();
+		xc = center_x + en.get_left_handle ().x ();
+		yc = center_y - en.get_left_handle ().y ();
 		
-		xd = center_x + e.x;
-		yd = center_y - e.y;		
+		xd = center_x + en.x;
+		yd = center_y - en.y;		
 	}
 
 	/** Curve absolute glyph data. */
 	public static void get_abs_bezier_points (EditPoint e, EditPoint en, out double xa, out double ya, out double xb, out double yb, out double xc, out double yc, out double xd, out double yd) {
-		xa =  + en.x;
-		ya =  - en.y;
+		xa =  + e.x;
+		ya =  - e.y;
 
-		xb =  + en.get_right_handle ().x ();
-		yb =  - en.get_right_handle ().y ();
+		xb =  + e.get_right_handle ().x ();
+		yb =  - e.get_right_handle ().y ();
 		
-		xc =  + e.get_left_handle ().x ();
-		yc =  - e.get_left_handle ().y ();
+		xc =  + en.get_left_handle ().x ();
+		yc =  - en.get_left_handle ().y ();
 		
-		xd =  + e.x;
-		yd =  - e.y;		
+		xd =  + en.x;
+		yd =  - en.y;		
 	}
 		
 	/** Line points relative to center. */
@@ -260,11 +266,11 @@ public class Path {
 		double xc = Glyph.xc ();
 		double yc = Glyph.yc ();
 		
-		xa = xc + en.x;
-		ya = yc - en.y;
+		xa = xc + e.x;
+		ya = yc - e.y;
 		
-		xb = xc + e.x;
-		yb = yc - e.y;
+		xb = xc + en.x;
+		yb = yc - en.y;
 	}
 		
 	public void draw_line (EditPoint e, EditPoint en, Context cr, double alpha = 1) { 

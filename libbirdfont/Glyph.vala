@@ -446,16 +446,32 @@ public class Glyph : FontDisplay {
 		return margin_boundries_visible;
 	}
 	
+	/** @return true if a path was removed. */
 	public void remove_empty_paths () {
-		foreach (var p in path_list) {
-			if (p.points.length () < 2) {
+		foreach (Path p in path_list) {
+			if (p.points.length () <= 2) {
 				delete_path (p);
+				remove_empty_paths ();
+				return;
 			}
+		}
+
+		foreach (Path p in path_list) {
+			assert (p.points.length () > 2);
 		}
 	}
 	
-	public void delete_path (Path p) {
-		path_list.remove_all (p);
+	public void delete_path (Path p) requires (path_list.length () > 0) {
+		for (unowned List<Path> pl = path_list.first ();  pl != path_list.last (); pl = pl.next) {
+			if (pl.data == p) {
+				path_list.remove_link (pl);
+				return;
+			}
+		}
+		
+		if (path_list.last ().data == p) {
+			path_list.remove_link (path_list.last ());
+		}
 	}
 	
 	public string get_svg_data () {
