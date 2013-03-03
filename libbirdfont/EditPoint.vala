@@ -37,11 +37,6 @@ public class EditPoint {
 	public double y;
 	public PointType type;
 	
-	public double r = 1;
-	public double g = 0;
-	public double b = 0;
-	public double a = 1;
-	
 	public unowned List<EditPoint>? prev = null;
 	public unowned List<EditPoint>? next = null;
 
@@ -64,10 +59,6 @@ public class EditPoint {
 		set_active (true);
 		
 		if (nt == PointType.FLOATING) {
-			r = 1;
-			g = 1;
-			b = 0;
-			a = 1;
 			active = false;
 		}
 	
@@ -212,7 +203,6 @@ public class EditPoint {
 		new_point.y = y;
 		
 		new_point.type = type;
-		new_point.set_color (r, g, b, a);
 		
 		new_point.tie_handles = tie_handles;
 		
@@ -237,13 +227,6 @@ public class EditPoint {
 	
 	public unowned EditPointHandle get_right_handle () {
 		return right_handle;
-	}
-	
-	public void set_color (double r, double g, double b, double a) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		this.a = a;
 	}
 	
 	public unowned List<EditPoint> get_prev () {
@@ -313,18 +296,6 @@ public class EditPoint {
 		
 		if (update) {
 			this.active = active;
-		
-			if (active) {
-				r = 0.5;
-				g = 0;
-				b = 1;
-				a = 1;
-			} else {
-				r = 0;
-				g = 1;
-				b = 0.5;
-				a = 1;
-			}
 		}
 		
 		return update;

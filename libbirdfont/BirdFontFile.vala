@@ -276,7 +276,7 @@ class BirdFontFile {
 		os.put_string ("\t</glyph>\n");
 	}
 
-	private void write_glyph_background (Glyph g, DataOutputStream os) {
+	private void write_glyph_background (Glyph g, DataOutputStream os) throws GLib.Error {
 		GlyphBackgroundImage? bg;
 		GlyphBackgroundImage background_image;
 		double pos_x, pos_y, scale_x, scale_y, rotation;
