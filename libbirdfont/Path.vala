@@ -985,53 +985,97 @@ public class Path {
 	public Path get_quadratic_points () {
 		EditPoint middle = new EditPoint ();
 		unowned List<EditPoint> e;
-		EditPointHandle eh;
 		EditPointHandle last;
 		EditPoint first;
 		
 		quadratic_path = copy ();
-		
-		last = quadratic_path.points.last ().data.get_right_handle ();
-		if (last.type == PointType.QUADRATIC) {
-			first = quadratic_path.points.first ().data;
-			quadratic_path.points.append (first);
-		}
-		quadratic_path.close ();
-/*				
-		if (quadratic_path.points.length () < 2) {
-			return quadratic_path;
-		}
 
-		// split all curves in as many regions as we need
-		split_cubic_in_parts (quadratic_path);	
+		// split all cubic curves in smaller sections	
+		for (int i = 0; quadratic_path.split_cubic_curves (this); i++) {
+			if (i == 5) {
+				warning ("Too many points in converted path.");
+				break;
+			}
+		}
 
 		// estimate quatdratic form
 		middle.prev = quadratic_path.points.last ();
 		middle.next = quadratic_path.points.first ();
-
-		convert_to_quadratic (quadratic_path, middle);
+		
+		if (middle.get_right_handle ().type == PointType.CUBIC) {
+			convert_to_quadratic (quadratic_path, middle);
+		}
 		
 		e = (!) quadratic_path.points.first ();
 		while (e != quadratic_path.points.last ().prev) {
 			middle.prev = e;
 			middle.next = e.next;
 			
-			convert_to_quadratic (quadratic_path, middle);	
+			if (middle.get_right_handle ().type == PointType.CUBIC) {
+				convert_to_quadratic (quadratic_path, middle);
+			}
 
 			e = (!) e.next;
 		}
-		
-		eh = ((!)quadratic_path.points.last ().prev).data.get_left_handle ();
-		eh.set_point_type (PointType.NONE);
-		eh.length = 0;
 
-		eh = ((!)quadratic_path.points.last ().prev).data.get_right_handle ();
-		eh.set_point_type (PointType.CUBIC);
-		eh.length *= 1.6;
-*/
+		last = quadratic_path.points.last ().data.get_right_handle ();
+		if (last.type == PointType.QUADRATIC) {
+			first = quadratic_path.points.first ().data;
+			quadratic_path.points.append (first);
+		}
+		quadratic_path.close ();
+		
 		return quadratic_path;
 	}
+	
+	private bool split (Path cubic, EditPoint start, EditPoint stop) {
+		double curve_x, curve_y, cx, cy, qx, qy, nx, ny, distance;
+				
+		estimate_quadratic (start, stop, out curve_x, out curve_y);
+	
+		qx = quadratic_bezier_path (0.75, start.x, curve_x, stop.x);
+		qy = quadratic_bezier_path (0.75, start.y, curve_y, stop.y);
 
+		cx = bezier_path (0.75, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x);
+		cy = bezier_path (0.75, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);
+
+		distance = Math.sqrt (Math.pow (cx - qx, 2) + Math.pow (cy - qy, 2));
+
+		nx = bezier_path (0.5, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x);
+		ny = bezier_path (0.5, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);
+
+		if (Math.fabs (distance) > 0.01) {
+			EditPoint new_edit_point = new EditPoint (nx, ny, PointType.CUBIC);
+
+			new_edit_point.next = start.get_next ();
+			new_edit_point.prev = start.get_next ().data.get_prev ();
+			
+			insert_new_point_on_path (new_edit_point);
+			create_list ();
+
+			return true;	
+		}
+		
+		return false;
+	}
+	
+	private bool split_cubic_curves (Path cubic) requires (points.length () > 2) {
+		EditPoint start = points.last ().data;
+		int i = 0;
+		bool n = false;
+		
+		foreach (EditPoint stop in points) {
+			if (start.get_right_handle ().type == PointType.CUBIC) {
+				if (split (cubic, start, stop)) {
+					n = true;
+				}
+			}
+			start = stop;			
+		}
+		
+		return n;
+	}
+	
 	void convert_to_quadratic (Path cubic_path, EditPoint middle) {
 		double curve_x, curve_y;	
 		EditPointHandle eh;
@@ -1046,7 +1090,7 @@ public class Path {
 		eh.length = 0;
 		
 		eh = start.get_right_handle ();
-		eh.set_point_type (PointType.CUBIC);
+		eh.set_point_type (PointType.QUADRATIC);
 		eh.move_to_coordinate (curve_x, curve_y);
 	}
 
@@ -1109,12 +1153,10 @@ public class Path {
 		EditPoint start;
 		EditPoint stop;
 		PointType rt = middle.get_right_handle ().type;
-		
-		/* // FIXME: DELETE
-		if (rt == PointType.QUADRATIC || rt == PointType.LINE_CUBIC || rt == PointType.LINE_QUADRATIC) {
-			return false;
+
+		if (rt != PointType.CUBIC) {
+			warning ("Expecting cubic path");
 		}
-		*/
 		
 		start = middle.get_prev ().data;
 		stop = middle.get_next ().data;

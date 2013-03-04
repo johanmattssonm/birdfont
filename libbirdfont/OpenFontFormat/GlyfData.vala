@@ -120,8 +120,6 @@ class GlyfData : GLib.Object {
 		nflags = 0;
 		
 		foreach (Path p in paths) {
-			p = p.get_quadratic_points ();
-			
 			foreach (EditPoint e in p.points) {
 				flags.append (Coordinate.ON_PATH);
 				nflags++;

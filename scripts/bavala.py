@@ -57,8 +57,8 @@ class Vala(object):
         self.c = get_sources_path (src, '*.c') # copy regular c sources
         self.cc = [join(build + '/' + src, f) for f in get_sources_name (src, '*.c') ]
         self.cc += [join(build + '/' + src, f.replace('.vala', '.c')) for f in get_sources_name (src, '*.vala')]
-        self.obj = [f.replace('.c', '.o') for f in get_sources_name (src, '*.c')]
-        self.obj += [join(build, f.replace('.vala', '.o')) for f in get_sources_name (src, '*.vala')]
+        self.obj = [self.build + '/' + self.src + '/' + f.replace('.c', '.o') for f in get_sources_name (src, '*.c')]
+        self.obj += [self.build + '/' + self.src + '/' +  f.replace('.vala', '.o') for f in get_sources_name (src, '*.vala')]
         
         if library:
             self.header = join(build, library) + '.h'

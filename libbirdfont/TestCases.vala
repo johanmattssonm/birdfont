@@ -531,27 +531,6 @@ class TestCases {
 		
 		EditPoint e0, e1, e2, e3;
 		
-		g = MainWindow.get_current_glyph ();
-		
-		// split_all_cubic_in_half
-		foreach (Path gp in g.path_list) {
-			gqp_points = gp.copy ();
-			gqp_points.split_cubic_in_parts (gqp_points);
-			gqp_points.move (50, 0);
-			qpl.append (gqp_points);
-		}
-		
-		// convert to quadratic points
-		foreach (Path gp in g.path_list) {
-			gqp = gp.get_quadratic_points ();
-			gqp.move (100, 0);
-			qpl.append (gqp);
-		}
-
-		foreach (Path gp in qpl) {
-			g.add_path (gp);
-		}
-
 		Tool.test_open_next_glyph ();
 		
 		g = MainWindow.get_current_glyph ();
