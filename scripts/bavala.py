@@ -6,6 +6,7 @@ import sys
 from os.path import join
 from doit.action import CmdAction
 import config
+import fnmatch
 
 
 def cmd(name, *args):
@@ -24,6 +25,23 @@ def cmd(name, *args):
     return ' '.join(parts)
 
 
+def get_sources_path (folder, pattern):
+    files = []
+    for root, dirnames, filenames in os.walk(folder):
+        for filename in fnmatch.filter(filenames, pattern):
+            files.append(os.path.join(root, filename))
+    return files
+
+
+
+def get_sources_name (folder, pattern):
+    files = []
+    for root, dirnames, filenames in os.walk(folder):
+        for filename in fnmatch.filter(filenames, pattern):
+            files.append(filename)
+    return files
+
+
 
 class Vala(object):
     """helper to generate tasks to compile vala code"""
@@ -35,18 +53,17 @@ class Vala(object):
         self.pkg_libs = pkg_libs
         self.vala_deps = vala_deps or []
 
-        self.vala = list(glob.glob(src + '/*.vala'))
-        self.c = list(glob.glob(src + '/*.c')) # copy regular c sources
-        self.cc = [join(build, f) for f in self.c]
-        self.cc += [join(build, f.replace('.vala', '.c')) for f in self.vala]
-        self.obj = [f.replace('.c', '.o') for f in self.cc]
-        self.obj += [join(build, f.replace('.vala', '.o')) for f in self.vala]
+        self.vala = get_sources_path (src, '*.vala')
+        self.c = get_sources_path (src, '*.c') # copy regular c sources
+        self.cc = [join(build + '/' + src, f) for f in get_sources_name (src, '*.c') ]
+        self.cc += [join(build + '/' + src, f.replace('.vala', '.c')) for f in get_sources_name (src, '*.vala')]
+        self.obj = [f.replace('.c', '.o') for f in get_sources_name (src, '*.c')]
+        self.obj += [join(build, f.replace('.vala', '.o')) for f in get_sources_name (src, '*.vala')]
         
         if library:
             self.header = join(build, library) + '.h'
             self.vapi = join(build, library) + '.vapi'
             self.so = join(build, src) + '.so'
-
 
     def gen_c(self, opts):
         """translate code from vala to C and create .vapi"""
