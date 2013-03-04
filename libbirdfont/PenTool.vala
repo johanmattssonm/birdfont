@@ -178,7 +178,11 @@ public class PenTool : Tool {
 			if (selected_handle.type == PointType.LINE_QUADRATIC) {
 				selected_handle.set_point_type (PointType.QUADRATIC);
 			}
-				
+
+			if (selected_handle.type == PointType.LINE_DOUBLE_CURVE) {
+				selected_handle.set_point_type (PointType.DOUBLE_CURVE);
+			}
+							
 			if (GridTool.is_visible ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);

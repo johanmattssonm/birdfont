@@ -187,7 +187,10 @@ class BirdFontFile {
 	 * S - Start point for path 
 	 * L - Line
 	 * Q - Quadratic Bézier path
+	 * D - Two quadratic off curve points
 	 * C - Cubic Bézier path
+	 * 
+	 * T - Tie handles for previous curve
 	 */
 	private string get_point_data (Path pl) {
 		StringBuilder data = new StringBuilder ();
@@ -213,12 +216,23 @@ class BirdFontFile {
 			data.append (" ");
 			add_next_point (m, e, data);
 			n = e;
+			
+			if (e.tie_handles) {
+				data.append (" ");
+				data.append (@"T");
+			}
+			
 			i++;
 		}
 
 		data.append (" ");
 		m = pl.points.first ().data;	
 		add_next_point ((!) n, m, data);
+
+		if (m.tie_handles) {
+			data.append (" ");
+			data.append (@"T");
+		}
 		
 		return data.str;
 	}
@@ -236,6 +250,12 @@ class BirdFontFile {
 		data.append (@"Q $(h.x ()),$(h.y ()) $(end.x),$(end.y)");
 	}
 
+	private void add_double (EditPoint start, EditPoint end, StringBuilder data) {
+		EditPointHandle h1 = start.get_right_handle ();
+		EditPointHandle h2 = end.get_left_handle ();
+		data.append (@"D $(h1.x ()),$(h1.y ()) $(h2.x ()),$(h2.y ()) $(end.x),$(end.y)");
+	}
+
 	private void add_cubic (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h1 = start.get_right_handle ();
 		EditPointHandle h2 = end.get_left_handle ();
@@ -247,6 +267,8 @@ class BirdFontFile {
 			add_line_to (end, data);
 		} else if (start.right_handle.type == PointType.LINE_CUBIC && end.left_handle.type == PointType.LINE_CUBIC) {
 			add_line_to (end, data);
+		} else if (end.left_handle.type == PointType.DOUBLE_CURVE || start.right_handle.type == PointType.DOUBLE_CURVE) {
+			add_double (start, end, data);
 		} else if (end.left_handle.type == PointType.QUADRATIC || start.right_handle.type == PointType.QUADRATIC) {
 			add_quadratic (start, end, data);
 		} else {
@@ -736,6 +758,50 @@ class BirdFontFile {
 		ep1.recalculate_linear_handles ();
 	}
 	
+	/** Two quadratic off curve points. */
+	private void double_curve (Path path, string px0, string py0, string px1, string py1, string px2, string py2) {
+		EditPoint ep1, ep2;
+		
+		double x0 = parse_double (px0);
+		double y0 = parse_double (py0);
+		double x1 = parse_double (px1);
+		double y1 = parse_double (py1);
+		double x2 = parse_double (px2);
+		double y2 = parse_double (py2);
+		
+		double lx, ly;
+				
+		if (is_null (path.points.last ().data)) {
+			warning ("No point");
+			return;
+		}
+
+		// start with line handles
+		ep1 = path.points.last ().data;
+		ep1.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
+		
+		lx = ep1.x + ((x2 - ep1.x) / 4);
+		ly = ep1.y + ((y2 - ep1.y) / 4);
+						
+		ep1.get_right_handle ().move_to_coordinate (lx, ly);
+		ep1.recalculate_linear_handles ();
+		
+		// set curve handles
+		ep1 = path.points.last ().data;
+		ep1.recalculate_linear_handles ();
+		ep1.get_right_handle ().type = PointType.DOUBLE_CURVE;
+		ep1.get_right_handle ().move_to_coordinate (x0, y0);				
+
+		path.add (x2, y2);
+						
+		ep2 = path.points.last ().data;
+		ep2.recalculate_linear_handles ();
+		ep2.get_left_handle ().type = PointType.DOUBLE_CURVE;
+		ep2.get_left_handle ().move_to_coordinate (x1, y1);
+	
+		ep1.recalculate_linear_handles ();
+	}
+	
 	private void close (Path path) {
 		EditPoint ep1, ep2;
 		
@@ -744,6 +810,8 @@ class BirdFontFile {
 		ep2 = path.points.first ().data;
 		
 		path.points.remove_link (path.points.last ());
+		
+		ep2.tie_handles = ep1.tie_handles;
 		ep2.left_handle.angle = ep1.left_handle.angle;
 		ep2.left_handle.length = ep1.left_handle.length;
 		ep2.left_handle.type = ep1.left_handle.type;
@@ -760,6 +828,7 @@ class BirdFontFile {
 		
 		if (d[0] != "S") {
 			warning ("No start point.");
+			return path;
 		}
 		
 		if (d[i++] == "S") {
@@ -791,6 +860,18 @@ class BirdFontFile {
 				return_val_if_fail (p1.length == 2, path);
 				
 				quadratic (path, p[0], p[1], p1[0], p1[1]);
+			} else if (instruction == "D") {
+				return_val_if_fail (i + 2 < d.length, path);
+				
+				p = d[i++].split (",");
+				p1 = d[i++].split (",");
+				p2 = d[i++].split (",");
+
+				return_val_if_fail (p.length == 2, path);
+				return_val_if_fail (p1.length == 2, path);
+				return_val_if_fail (p2.length == 2, path);
+				
+				double_curve (path, p[0], p[1], p1[0], p1[1], p2[0], p2[1]);
 			} else if (instruction == "C") {
 				return_val_if_fail (i + 2 < d.length, path);
 				
@@ -803,6 +884,8 @@ class BirdFontFile {
 				return_val_if_fail (p2.length == 2, path);
 				
 				cubic (path, p[0], p[1], p1[0], p1[1], p2[0], p2[1]);
+			} else if (instruction == "T") {
+				path.points.last ().data.tie_handles = true;
 			} else {
 				warning (@"invalid instruction $instruction");
 				return path;

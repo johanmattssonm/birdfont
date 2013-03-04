@@ -853,7 +853,126 @@ class GlyfTable : Table {
 		
 		return (uint16)g.unichar_code; 
 	}
+
+	public void process_glyph (Glyph g, FontData fd) throws GLib.Error {
+		uint16 end_point;
+		uint16 npoints;
+		int16 ncontours;
+		int16 nflags;
+		int glyph_offset;
+		uint len; 
+		uint coordinate_length;
+
+		fd.seek_end (); // append glyph
+		
+		glyph_offset = (int) fd.length ();
+		
+		printd (@"glyph_offset: $(glyph_offset)\n");
+		
+		g.remove_empty_paths ();
+		if (g.path_list.length () == 0) {
+			// location_offsets == location_offset + 1 to tell parser that this glyf does not have a body
+			return;
+		}
+		
+		non_zero_glyphs++;
+		
+		ncontours = (int16) g.path_list.length ();
+		fd.add_short (ncontours);
+		
+		GlyfData glyf_data = new GlyfData (g);
+				
+		// bounding box
+		fd.add_16 (glyf_data.bounding_box_xmin);
+		fd.add_16 (glyf_data.bounding_box_ymin);
+		fd.add_16 (glyf_data.bounding_box_xmax);
+		fd.add_16 (glyf_data.bounding_box_ymax);
+
+		// end points
+		foreach (uint16 end in glyf_data.end_points) {
+			fd.add_u16 (end);
+		}
+
+		fd.add_u16 (0); // instruction length 
+		
+		uint glyph_header = 12 + ncontours * 2;
+		
+		printd (@"next glyf: $(g.name) ($((uint32)g.unichar_code))\n");
+		printd (@"glyf header length: $(glyph_header)\n");
+				
+		end_point = glyf_data.get_end_point ();
+		ncontours = glyf_data.get_ncontours ();
+		npoints = (ncontours > 0) ? end_point : 0; // +1?
+		
+		if (npoints > max_points) {
+			max_points = npoints;
+		}
+		
+		if (ncontours > max_contours) {
+			max_contours = ncontours;
+		}
+		
+		// flags		
+		nflags = glyf_data.get_nflags ();
+		if (nflags != npoints) {
+			warning (@"(nflags != npoints)  ($nflags != $npoints) in glyph $(g.name). ncontours: $ncontours");
+		}
+		assert (nflags == npoints);
 	
+		foreach (uint8 flag in glyf_data.flags) {
+			fd.add_byte (flag);
+		}
+
+		printd (@"flags: $(nflags)\n");
+		
+		// x coordinates
+		foreach (int16 x in glyf_data.coordinate_x) {
+			fd.add_16 (x);
+		}	
+
+		// y coordinates
+		foreach (int16 y in glyf_data.coordinate_y) {
+			fd.add_16 (y);
+		}
+	
+		len = fd.length ();
+		coordinate_length = fd.length () - nflags - glyph_header;
+		printd (@"coordinate_length: $(coordinate_length)\n");
+		printd (@"fd.length (): $(fd.length ())\n");
+		assert (fd.length () > nflags + glyph_header);
+		
+		printd (@"glyph_offset: $(glyph_offset)\n");
+		printd (@"len: $(len)\n");
+
+		// save bounding box for head table
+		if (glyf_data.bounding_box_xmin < this.xmin) {
+			this.xmin = glyf_data.bounding_box_xmin;
+		}
+		
+		if (glyf_data.bounding_box_ymin < this.ymin) {
+			this.ymin = glyf_data.bounding_box_ymin;
+		}
+		
+		if (glyf_data.bounding_box_xmax > this.xmax) {
+			this.xmax = glyf_data.bounding_box_xmax;
+		}
+		
+		if (glyf_data.bounding_box_ymax > this.ymax) {
+			this.ymax = glyf_data.bounding_box_ymax;
+		}
+				
+		// part of average width calculation for OS/2 table
+		total_width += xmax - xmin;
+		
+		printd (@"length before padding: $(fd.length ())\n");
+		
+		// all glyphs needs padding for loca table to be correct
+		while (fd.length () % 4 != 0) {
+			fd.add (0);
+		}
+		printd (@"length after padding: $(fd.length ())\n");
+	}
+
 	public Glyph? read_glyph (string name) throws GLib.Error {
 		Glyph? glyph;
 		Glyph g;
@@ -1365,172 +1484,137 @@ class GlyfTable : Table {
 		return glyph;
 	}
 
-	public void process_glyph (Glyph g, FontData fd) throws GLib.Error {
-		int16 txmin, tymin, txmax, tymax;
-
-		int16 end_point;
-		int16 last_end_point;
-		int16 npoints;
-		int16 ncontours;
-		int16 nflags;
+	/** Data for one entry in the glyf table. */
+	class GlyfData : GLib.Object {		
+		public List<Path> paths = new List<Path> ();
+		public List<uint16> end_points = new List<uint16> ();
+		public List<uint8> flags = new List<uint8> ();
+		public List<int16> coordinate_x = new List<int16> ();
+		public List<int16> coordinate_y = new List<int16> ();
 		
-		double x, y;
-
-		Font font = OpenFontFormatWriter.get_current_font ();
-		int glyph_offset;
+		uint16 end_point = 0;
+		int16 nflags = 0;
 		
-		uint len; 
-		uint coordinate_length;
-		Path quadratic;
-		PointType pt;
+		Glyph glyph;
 		
-		fd.seek_end (); // append glyph
+		public int16 bounding_box_xmin = 0;
+		public int16 bounding_box_ymin = 0;
+		public int16 bounding_box_xmax = 0;
+		public int16 bounding_box_ymax = 0;
 		
-		glyph_offset = (int) fd.length ();
-		
-		printd (@"glyph_offset: $(glyph_offset)\n");
-		
-		g.remove_empty_paths ();
-		if (g.path_list.length () == 0) {
-			// location_offsets == location_offset + 1 to tell parser that this glyf does not have a body
-			return;
-		}
-		
-		non_zero_glyphs++;
-		
-		ncontours = (int16) g.path_list.length ();
-		fd.add_short (ncontours);
-		
-		txmin = int16.MAX;
-		tymin = int16.MAX;
-		txmax = int16.MIN;
-		tymax = int16.MIN;
-		
-		// bounding box will be set again after coordinate arrays have been created
-		fd.add_16 (0);
-		fd.add_16 (0);
-		fd.add_16 (0);
-		fd.add_16 (0);
-		
-		// end points
-		end_point = 0;
-		last_end_point = 0;
-		foreach (Path p in g.path_list) {
-			quadratic = p.get_quadratic_points ();
+		public GlyfData (Glyph g) {	
+			glyph = g;
 			
-			if (quadratic.points.length () == 0) {
-				warning (@"No points in path (quadratic points $(quadratic.points.length ())) (before conversion $(p.points.length ()))");
-				continue;
+			foreach (Path p in g.path_list) {
+				paths.append (p.get_quadratic_points ());
 			}
 			
-			foreach (EditPoint e in quadratic.points) {
-				end_point++;
-				pt = e.get_right_handle ().type;
+			process_end_points ();
+			process_flags ();
+			process_x ();
+			process_y ();
+			process_bounding_box ();			
+		}
+	
+		public uint16 get_end_point () {
+			return end_point;
+		}
 				
-				if (pt == PointType.CUBIC || pt == PointType.QUADRATIC) {
+		public int16 get_ncontours () {
+			return (int16) paths.length ();
+		}
+	
+		public int16 get_nflags () {
+			return nflags;
+		}
+		
+		void process_end_points () {	
+			uint16 last_end_point = 0;
+			PointType type;
+			
+			end_point = 0;
+			
+			foreach (Path quadratic in paths) {
+				if (quadratic.points.length () == 0) {
+					warning (@"No points in path (before conversion $(quadratic.points.length ()))");
+					continue;
+				}
+				
+				foreach (EditPoint e in quadratic.points) {
 					end_point++;
+					type = e.get_right_handle ().type;
+					
+					// off curve
+					end_point++;
+					
+					if (end_point == 0xFFFF) {
+						warning ("Too many points");
+					}
+				}
+				end_points.append (end_point - 1);
+				
+				if (end_point - 1 < last_end_point) {
+					warning (@"Next endpoint has bad value. (end_point - 1 < last_end_point)  ($(end_point - 1) < $last_end_point)");
 				}
 				
-				if (end_point == 0xFFFF) {
-					warning ("Too many points");
-				}
-			}
-			fd.add_u16 (end_point - 1);
-			
-			if (end_point - 1 < last_end_point) {
-				warning (@"Next endpoint has bad value. (end_point - 1 < last_end_point)  ($(end_point - 1) < $last_end_point)");
+				last_end_point = end_point - 1;
 			}
 			
-			last_end_point = end_point - 1;
+			assert (end_point > 0);			
 		}
-		
-		fd.add_u16 (0); // instruction length 
-		
-		uint glyph_header = 12 + ncontours * 2;
-		
-		printd (@"next glyf: $(g.name) ($((uint32)g.unichar_code))\n");
-		printd (@"glyf header length: $(glyph_header)\n");
-		
-		// instructions should go here 
-		
-		npoints = (ncontours > 0) ? end_point : 0; // +1?
-		
-		if (npoints > max_points) {
-			max_points = npoints;
-		}
-		
-		if (ncontours > max_contours) {
-			max_contours = ncontours;
-		}
-		
-		// flags
-		nflags = 0;
-		List<uint8> flags = new List<uint8> ();
-		foreach (Path p in g.path_list) {
-			p = p.get_quadratic_points ();
-			foreach (EditPoint e in p.points) {
-				fd.add_byte (Coordinate.ON_PATH);
-				flags.append (Coordinate.ON_PATH);
-				nflags++;
+
+		void process_flags () {
+			flags = new List<uint8> ();
+			nflags = 0;
+			
+			foreach (Path p in paths) {
+				p = p.get_quadratic_points ();
 				
-				if (e.get_right_handle ().type == PointType.CUBIC) {
-					fd.add_byte (Coordinate.NONE);
+				foreach (EditPoint e in p.points) {
+					flags.append (Coordinate.ON_PATH);
+					nflags++;
+					
+					// off curve
 					flags.append (Coordinate.NONE);
 					nflags++;
 				}
 			}
 		}
 		
-		if (nflags != npoints) {
-			warning (@"(nflags != npoints)  ($nflags != $npoints) in glyph $(g.name). ncontours: $ncontours");
-		}
-		assert (nflags == npoints);
-
-		printd (@"flags: $(nflags)\n");
-		
-		// x coordinates
-		List<int16> coordinate_x = new List<int16> ();
-		List<int16> coordinate_y = new List<int16> ();
-		double prev = 0;
-		
-		foreach (Path p in g.path_list) {
-			p = p.get_quadratic_points ();
-
-			foreach (EditPoint e in p.points) {
-				x = rint (e.x * UNITS - prev - g.left_limit * UNITS);
-
-				fd.add_16 ((int16) x);
-				coordinate_x.append ((int16) x);
-				
-				prev = rint (e.x * UNITS - g.left_limit * UNITS);
-				
-				if (e.get_right_handle ().type == PointType.CUBIC) {
-					x = rint (e.get_right_handle ().x () * UNITS - prev - g.left_limit * UNITS);
-
-					fd.add_16 ((int16) x);
+		void process_x () {
+			double prev = 0;
+			double x;
+			
+			foreach (Path p in paths) {
+				foreach (EditPoint e in p.points) {
+					x = rint (e.x * UNITS - prev - glyph.left_limit * UNITS);
 					coordinate_x.append ((int16) x);
 					
-					prev = rint (e.get_right_handle ().x () * UNITS - g.left_limit * UNITS);
+					prev = rint (e.x * UNITS - glyph.left_limit * UNITS);
+
+					// off curve
+					x = rint (e.get_right_handle ().x () * UNITS - prev - glyph.left_limit * UNITS);
+					coordinate_x.append ((int16) x);
+					
+					prev = rint (e.get_right_handle ().x () * UNITS - glyph.left_limit * UNITS);
 				}
 			}
 		}
-
-		// y coordinates
-		prev = 0;
-		foreach (Path p in g.path_list) {
-			p = p.get_quadratic_points ();
-			foreach (EditPoint e in p.points) {
-				y = rint (e.y * UNITS - prev + font.base_line  * UNITS);
-				fd.add_16 ((int16) y);
-				
-				coordinate_y.append ((int16) y);
-				
-				prev = rint (e.y * UNITS + font.base_line * UNITS);
-
-				if (e.get_right_handle ().type == PointType.CUBIC) {
-					y = rint (e.get_right_handle ().y () * UNITS - prev + font.base_line * UNITS);
+		
+		void process_y () {
+			double prev = 0;
+			double y;
+			Font font = OpenFontFormatWriter.get_current_font ();
+			
+			foreach (Path p in paths) {
+				foreach (EditPoint e in p.points) {
+					y = rint (e.y * UNITS - prev + font.base_line  * UNITS);
+					coordinate_y.append ((int16) y);
 					
-					fd.add_16 ((int16) y);
+					prev = rint (e.y * UNITS + font.base_line * UNITS);
+
+					// off curve
+					y = rint (e.get_right_handle ().y () * UNITS - prev + font.base_line * UNITS);
 					coordinate_y.append ((int16) y);
 					
 					prev = rint (e.get_right_handle ().y () * UNITS + font.base_line  * UNITS);
@@ -1538,89 +1622,52 @@ class GlyfTable : Table {
 			}
 		}
 		
-		len = fd.length ();
-		printd (@"fd.length (): $(fd.length ())\n");
-		coordinate_length = fd.length () - nflags - glyph_header;
-		printd (@"coordinate_length: $(coordinate_length)\n");
-		assert (fd.length () > nflags + glyph_header);
-				
-		// bounding box	
-		int16 last = 0;
-			
-		int i = 0;
-		foreach (int16 c in coordinate_x) {
-			c += last;
-			
-			// Only on curve points are good for calculating bounding box
-			if ((flags.nth (i).data & Coordinate.ON_PATH) > 0) { 
-				if (c < txmin) txmin = c;
-				if (c > txmax) txmax = c;
-			}
-				
-			last = c;
-			i++;
-		}
+		void process_bounding_box () {
+			int16 last = 0;			
+			int i = 0;
 
-		last = 0;
-		i = 0;
-		foreach (int16 c in coordinate_y) {
-			c += last;
-			
-			if ((flags.nth (i).data & Coordinate.ON_PATH) > 0) {
-				if (c < tymin) tymin = c;
-				if (c > tymax) tymax = c;			
+			bounding_box_xmin = int16.MAX;
+			bounding_box_ymin = int16.MAX;
+			bounding_box_xmax = int16.MIN;
+			bounding_box_ymax = int16.MIN;
+					
+			if (coordinate_x.length () == 0) {
+				warning ("no points in coordinate_y");
 			}
 			
-			last = c;
-			i++;
-		}
-		
-		fd.seek_end ();
-		
-		printd (@"glyph_offset: $(glyph_offset)\n");
-		printd (@"len: $(len)\n");
-		
-		fd.seek (glyph_offset + 2); // go to box boundries for this glyf
-		// assert (fd.read_short () == int16.MAX);
-
-		// add bounding box
-		fd.add_16 (txmin);
-		fd.add_16 (tymin);
-		fd.add_16 (txmax);
-		fd.add_16 (tymax);
-		fd.seek_end ();
-	
-		assert (len == fd.length ());
-		
-		fd.seek (glyph_offset + 2);
-		assert (fd.read_int16 () == txmin);
-		assert (fd.read_int16 () == tymin);
-		assert (fd.read_int16 () == txmax);
-		assert (fd.read_int16 () == tymax);
-		fd.seek_end ();
-
-		printd (@"\n");
-		printd (@"txmin: $txmin\n");
-		printd (@"tymin: $tymin\n");
-		printd (@"txmax: $txmax\n");
-		printd (@"tymax: $tymax\n");
-
-		// save this for head table
-		if (txmin < this.xmin) this.xmin = txmin;
-		if (tymin < this.ymin) this.ymin = tymin;
-		if (txmax > this.xmax) this.xmax = txmax;
-		if (tymax > this.ymax) this.ymax = tymax;
+			foreach (int16 c in coordinate_x) {
+				c += last;
 				
-		// part of average width calculation for OS/2 table
-		total_width += xmax - xmin;
-		
-		printd (@"length before padding: $(fd.length ())\n");
-		
-		// all glyphs needs padding for loca table to be correct
-		while (fd.length () % 4 != 0) {
-			fd.add (0);
+				// Only on curve points are good for calculating bounding box
+				if ((flags.nth (i).data & Coordinate.ON_PATH) > 0) { 
+					if (c < bounding_box_xmin) bounding_box_xmin = c;
+					if (c > bounding_box_xmax) bounding_box_xmax = c;
+				}
+					
+				last = c;
+				i++;
+			}
+
+			if (coordinate_y.length () == 0) {
+				warning ("no points in coordinate_y");
+			}
+			
+			last = 0;
+			i = 0;
+			foreach (int16 c in coordinate_y) {
+				c += last;
+				
+				if ((flags.nth (i).data & Coordinate.ON_PATH) > 0) {
+					if (c < bounding_box_ymin) bounding_box_ymin = c;
+					if (c > bounding_box_ymax) bounding_box_ymax = c;			
+				}
+				
+				last = c;
+				i++;
+			}
+			
+			printd (@"Bounding box: $bounding_box_xmin,$bounding_box_ymin  $bounding_box_xmax,$bounding_box_ymax\n");
 		}
-		printd (@"length after padding: $(fd.length ())\n");
 	}
 
 	// necessary in order to have glyphs sorted according to ttf specification
@@ -2872,7 +2919,7 @@ class Os2Table : Table {
 		fd.add_16 (200); // SHORT yStrikeoutPosition
 		fd.add_16 (40); // SHORT sFamilyClass
 
-		// PANOSE
+		// FIXME: PANOSE
 		fd.add (0); 
 		fd.add (0); 
 		fd.add (0); 
@@ -2884,7 +2931,7 @@ class Os2Table : Table {
 		fd.add (0); 
 		fd.add (0); 
 
-		// FIXA:
+		// FIXME:
 		fd.add_u32 (0); // ulUnicodeRange1 Bits 0-31
 		fd.add_u32 (0); // ULONG ulUnicodeRange2 Bits 32-63
 		fd.add_u32 (0); // ULONG ulUnicodeRange3 Bits 64-95
@@ -4616,7 +4663,7 @@ class GposTable : Table {
 			warning ("No kerning to add to gpos table.");
 		}
 		
-		printd (@"Adding $num_kerning_values kerning pairs to gpos table.");
+		printd (@"Adding $num_kerning_values kerning pairs to gpos table.\n");
 		
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
@@ -4776,6 +4823,10 @@ class DirectoryTable : Table {
 			tables.append (this);
 			
 			if (kern_table.kerning_pairs > 0) {
+				// FIXME: Firefox will ignore the Kern table of GPOS is present 
+				// but not adjust the values according to the GPOS table.
+				// 
+				// Maybe there is a problem with gpos_table that I am not aware of.
 				tables.append (gpos_table);
 			}
 			

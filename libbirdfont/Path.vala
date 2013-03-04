@@ -133,7 +133,6 @@ public class Path {
 		if (!is_open () && n != null) {
 			en = (!) n;
 			em = ep.first ().data;
-			
 			draw_next (en, em, cr);
 		}
 
@@ -196,19 +195,38 @@ public class Path {
 	}
 
 	private void draw_next (EditPoint e, EditPoint en, Context cr) {
-		PointType t = e.get_right_handle ().type;
+		PointType r = e.get_right_handle ().type;
+		PointType l = en.get_left_handle ().type;
 		
-		if (t == PointType.DOUBLE_CURVE) {
-			
+		if (r == PointType.DOUBLE_CURVE || l == PointType.DOUBLE_CURVE) {
+			draw_double_curve (e, en, cr);
 		} else {
 			draw_curve (e, en, cr);
 		}
 	}
 	
+	private static void draw_double_curve (EditPoint e, EditPoint en, Context cr) {
+		EditPoint middle;
+		double x, y;
+		
+		x = e.get_right_handle ().x () + (en.get_left_handle ().x () - e.get_right_handle ().x ()) / 2;
+		y = e.get_right_handle ().y () + (en.get_left_handle ().y () - e.get_right_handle ().y ()) / 2;
+		
+		middle = new EditPoint (x, y, PointType.DOUBLE_CURVE);
+		middle.right_handle = en.get_left_handle ().copy ();
+		
+		middle.right_handle.type = PointType.DOUBLE_CURVE;
+		middle.left_handle.type = PointType.DOUBLE_CURVE;
+		
+		draw_curve (e, middle, cr);
+		draw_curve (middle, en, cr);		
+	}
+		
 	private static void draw_curve (EditPoint e, EditPoint en, Context cr, double alpha = 1) {
 		Glyph g = MainWindow.get_current_glyph ();
 		double xa, ya, xb, yb, xc, yc, xd, yd;
-		PointType t = en.get_right_handle ().type;
+		PointType t = e.get_right_handle ().type;
+		PointType u = en.get_left_handle ().type;
 		
 		get_bezier_points (e, en, out xa, out ya, out xb, out yb, out xc, out yc, out xd, out yd);
 
@@ -217,7 +235,7 @@ public class Path {
 		
 		cr.line_to (xa, ya); // this point makes sense only if it is the first or last position, the other points are meaningless don't export them
 
-		if (t == PointType.QUADRATIC || t == PointType.LINE_QUADRATIC) {
+		if (t == PointType.QUADRATIC || t == PointType.LINE_QUADRATIC || t == PointType.DOUBLE_CURVE || u == PointType.QUADRATIC || u == PointType.LINE_QUADRATIC || u == PointType.DOUBLE_CURVE) {
 			cr.curve_to ((xa + 2 * xb) / 3, (ya + 2 * yb) / 3, (xd + 2 * xb) / 3, (yd + 2 * yb) / 3, xd, yd);		
 		} else {
 			cr.curve_to (xb, yb, xc, yc, xd, yd);
@@ -763,7 +781,9 @@ public class Path {
 			points.delete_link ((!) previous_point);
 		}
 
-		if (unlikely (previous_point == null && points.length () != 0)) warning ("previous_point == null");
+		if (unlikely (previous_point == null && points.length () != 0)) {
+			warning ("previous_point == null");
+		}
 
 		if (points.length () == 0) {
 			points.append (p);
@@ -788,10 +808,14 @@ public class Path {
 		if (p.prev != null && p.get_prev ().data.right_handle.type == PointType.QUADRATIC) {
 			p.left_handle.type = PointType.QUADRATIC;
 			p.right_handle.type = PointType.LINE_QUADRATIC;
-		} else if (Toolbox.use_quadratic_points ()) {
+		} else if (Toolbox.get_selected_point_type () == PointType.QUADRATIC) {
 			p.left_handle.type = PointType.LINE_QUADRATIC;
 			p.right_handle.type = PointType.LINE_QUADRATIC;
 			p.type = PointType.LINE_QUADRATIC;
+		} else if (Toolbox.get_selected_point_type () == PointType.DOUBLE_CURVE) {
+			p.left_handle.type = PointType.LINE_DOUBLE_CURVE;
+			p.right_handle.type = PointType.LINE_DOUBLE_CURVE;
+			p.type = PointType.DOUBLE_CURVE;
 		}
 		
 		return np;
@@ -962,10 +986,18 @@ public class Path {
 		EditPoint middle = new EditPoint ();
 		unowned List<EditPoint> e;
 		EditPointHandle eh;
+		EditPointHandle last;
+		EditPoint first;
 		
 		quadratic_path = copy ();
+		
+		last = quadratic_path.points.last ().data.get_right_handle ();
+		if (last.type == PointType.QUADRATIC) {
+			first = quadratic_path.points.first ().data;
+			quadratic_path.points.append (first);
+		}
 		quadratic_path.close ();
-				
+/*				
 		if (quadratic_path.points.length () < 2) {
 			return quadratic_path;
 		}
@@ -983,9 +1015,9 @@ public class Path {
 		while (e != quadratic_path.points.last ().prev) {
 			middle.prev = e;
 			middle.next = e.next;
-							
-			convert_to_quadratic (quadratic_path, middle);	
 			
+			convert_to_quadratic (quadratic_path, middle);	
+
 			e = (!) e.next;
 		}
 		
@@ -996,7 +1028,7 @@ public class Path {
 		eh = ((!)quadratic_path.points.last ().prev).data.get_right_handle ();
 		eh.set_point_type (PointType.CUBIC);
 		eh.length *= 1.6;
-
+*/
 		return quadratic_path;
 	}
 
@@ -1061,6 +1093,7 @@ public class Path {
 			} else {
 				e = (!) e.next;
 			}
+
 		}
 				
 		return need_split;	
@@ -1077,9 +1110,11 @@ public class Path {
 		EditPoint stop;
 		PointType rt = middle.get_right_handle ().type;
 		
+		/* // FIXME: DELETE
 		if (rt == PointType.QUADRATIC || rt == PointType.LINE_CUBIC || rt == PointType.LINE_QUADRATIC) {
 			return false;
 		}
+		*/
 		
 		start = middle.get_prev ().data;
 		stop = middle.get_next ().data;

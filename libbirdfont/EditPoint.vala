@@ -21,12 +21,12 @@ namespace BirdFont {
 
 public enum PointType {
 	NONE,
-	NORMAL,
-	LINE_QUADRATIC,
-	LINE_CUBIC,
+	LINE_QUADRATIC,      // line with quadratic handles
+	LINE_DOUBLE_CURVE,   // line with two quadratic handles
+	LINE_CUBIC,          // line with cubic handles
 	CUBIC,
+	DOUBLE_CURVE,        // two quadratic points with a hidden point half way between the two line handles
 	QUADRATIC,
-	DOUBLE_CURVE,
 	END,
 	FLOATING
 }
@@ -115,17 +115,28 @@ public class EditPoint {
 			if (h.type == PointType.LINE_CUBIC) {
 				nx = x + ((n.x - x) / 3);
 				ny = y + ((n.y - y) / 3);
-			
 				h.move_to_coordinate (nx, ny);
 			}
-						
+
+			if (h.type == PointType.LINE_DOUBLE_CURVE) {
+				nx = x + ((n.x - x) / 4);
+				ny = y + ((n.y - y) / 4);
+				h.move_to_coordinate (nx, ny);
+			}
+									
 			// on the other side
 			h = n.get_right_handle ();
 			
+			if (h.type == PointType.LINE_DOUBLE_CURVE) {
+				nx = n.x + ((x - n.x) / 4);
+				ny = n.y + ((y - n.y) / 4);	
+				h.move_to_coordinate (nx, ny);
+				
+			}
+			
 			if (h.type == PointType.LINE_CUBIC) {
 				nx = n.x + ((x - n.x) / 3);
-				ny = n.y + ((y - n.y) / 3);
-			
+				ny = n.y + ((y - n.y) / 3);	
 				h.move_to_coordinate (nx, ny);
 			}
 		}
@@ -142,6 +153,13 @@ public class EditPoint {
 				h.move_to_coordinate (nx, ny);
 			}
 
+			if (h.type == PointType.LINE_DOUBLE_CURVE) {
+				nx = x + ((n.x - x) / 4);
+				ny = y + ((n.y - y) / 4);
+				
+				h.move_to_coordinate (nx, ny);
+			}
+
 			if (h.type == PointType.LINE_QUADRATIC) {
 				nx = x + ((n.x - x) / 2);
 				ny = y + ((n.y - y) / 2);
@@ -154,6 +172,13 @@ public class EditPoint {
 			if (h.type == PointType.LINE_CUBIC) {
 				nx = n.x + ((x - n.x) / 3);
 				ny = n.y + ((y - n.y) / 3);
+
+				h.move_to_coordinate (nx, ny);
+			}
+			
+			if (h.type == PointType.LINE_DOUBLE_CURVE) {
+				nx = n.x + ((x - n.x) / 4);
+				ny = n.y + ((y - n.y) / 4);
 
 				h.move_to_coordinate (nx, ny);
 			}
@@ -186,9 +211,14 @@ public class EditPoint {
 			angle = -acos (a / length) + PI;
 		}
 		
-		left_handle.type = PointType.CUBIC;
-		right_handle.type = PointType.CUBIC;
-		
+		if (left_handle.type == PointType.LINE_DOUBLE_CURVE || left_handle.type == PointType.QUADRATIC) {
+			left_handle.type = PointType.DOUBLE_CURVE;
+			right_handle.type = PointType.DOUBLE_CURVE;			
+		} else if (left_handle.type == PointType.LINE_CUBIC) {
+			left_handle.type = PointType.CUBIC;
+			right_handle.type = PointType.CUBIC;
+		}
+				
 		right_handle.angle = angle;
 		left_handle.angle = angle;
 

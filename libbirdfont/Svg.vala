@@ -84,6 +84,8 @@ class Svg {
 			add_abs_line_to (start, end, svg, g, do_glyph);
 		} else if (end.left_handle.type == PointType.QUADRATIC || start.right_handle.type == PointType.QUADRATIC) {
 			add_quadratic_abs_path (start, end, svg, g, do_glyph);
+		} else if (end.left_handle.type == PointType.DOUBLE_CURVE || start.right_handle.type == PointType.DOUBLE_CURVE) {
+			add_double_quadratic_abs_path (start, end, svg, g, do_glyph);
 		} else {
 			add_cubic_abs_path (start, end, svg, g, do_glyph);
 		}
@@ -133,6 +135,20 @@ class Svg {
 		}
 	}
 	
+	private static void add_double_quadratic_abs_path (EditPoint start, EditPoint end, StringBuilder svg, Glyph g,  bool to_glyph) {
+		EditPoint middle;
+		double x, y;
+		
+		x = start.get_right_handle ().x () + (end.get_left_handle ().x () - start.get_right_handle ().x ()) / 2;
+		y = start.get_right_handle ().y () + (end.get_left_handle ().y () - start.get_right_handle ().y ()) / 2;
+		
+		middle = new EditPoint (x, y, PointType.QUADRATIC);
+		middle.right_handle = end.get_left_handle ().copy ();
+		
+		add_quadratic_abs_path (start, middle, svg, g, to_glyph);
+		add_quadratic_abs_path (middle, end, svg, g, to_glyph);
+	}
+		
 	private static void add_quadratic_abs_path (EditPoint start, EditPoint end, StringBuilder svg, Glyph g,  bool to_glyph) {
 		double left = g.left_limit;
 		double baseline = BirdFont.get_current_font ().base_line;
