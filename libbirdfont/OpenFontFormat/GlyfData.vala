@@ -116,6 +116,8 @@ class GlyfData : GLib.Object {
 	}
 
 	void process_flags () {
+		PointType type;
+		
 		flags = new List<uint8> ();
 		nflags = 0;
 		
@@ -123,6 +125,8 @@ class GlyfData : GLib.Object {
 			foreach (EditPoint e in p.points) {
 				flags.append (Coordinate.ON_PATH);
 				nflags++;
+				
+				type = e.get_right_handle ().type;
 				
 				// off curve
 				flags.append (Coordinate.NONE);
@@ -134,6 +138,7 @@ class GlyfData : GLib.Object {
 	void process_x () {
 		double prev = 0;
 		double x;
+		PointType type;
 		
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
@@ -141,7 +146,9 @@ class GlyfData : GLib.Object {
 				coordinate_x.append ((int16) x);
 				
 				prev = rint (e.x * UNITS - glyph.left_limit * UNITS);
-
+				
+				type = e.get_right_handle ().type;
+				
 				// off curve
 				x = rint (e.get_right_handle ().x () * UNITS - prev - glyph.left_limit * UNITS);
 				coordinate_x.append ((int16) x);
@@ -155,6 +162,7 @@ class GlyfData : GLib.Object {
 		double prev = 0;
 		double y;
 		Font font = OpenFontFormatWriter.get_current_font ();
+		PointType type;
 		
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
@@ -162,11 +170,13 @@ class GlyfData : GLib.Object {
 				coordinate_y.append ((int16) y);
 				
 				prev = rint (e.y * UNITS + font.base_line * UNITS);
-
+				
+				type = e.get_right_handle ().type;
+				
 				// off curve
 				y = rint (e.get_right_handle ().y () * UNITS - prev + font.base_line * UNITS);
 				coordinate_y.append ((int16) y);
-				
+			
 				prev = rint (e.get_right_handle ().y () * UNITS + font.base_line  * UNITS);
 			}
 		}

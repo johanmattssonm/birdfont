@@ -522,12 +522,9 @@ class TestCases {
 
 	public static void test_convert_to_quadratic_bezier_path () {
 		Glyph g;
-		Path gqp;
-		Path gqp_points;
 		
 		Path p = new Path ();
 		Path p1 = new Path ();
-		List<Path> qpl = new List<Path> (); 
 		
 		EditPoint e0, e1, e2, e3;
 		

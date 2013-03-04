@@ -683,6 +683,29 @@ public class PenTool : Tool {
 		add_selected_point (new_point);
 		
 		move_selected = true;
+		
+		set_point_type (new_point);
+		set_default_handle_positions ();
+	}
+
+	void set_point_type (EditPoint p) {
+		if (p.prev != null && p.get_prev ().data.right_handle.type == PointType.QUADRATIC) {
+			p.left_handle.type = PointType.QUADRATIC;
+			p.right_handle.type = PointType.LINE_QUADRATIC;
+			p.type = PointType.QUADRATIC;
+		} else if (Toolbox.get_selected_point_type () == PointType.QUADRATIC) {
+			p.left_handle.type = PointType.LINE_QUADRATIC;
+			p.right_handle.type = PointType.LINE_QUADRATIC;
+			p.type = PointType.LINE_QUADRATIC;
+		} else if (Toolbox.get_selected_point_type () == PointType.DOUBLE_CURVE) {
+			p.left_handle.type = PointType.LINE_DOUBLE_CURVE;
+			p.right_handle.type = PointType.LINE_DOUBLE_CURVE;
+			p.type = PointType.DOUBLE_CURVE;
+		} else {
+			p.left_handle.type = PointType.LINE_CUBIC;
+			p.right_handle.type = PointType.LINE_CUBIC;
+			p.type = PointType.CUBIC;				
+		}
 	}
 
 	public static void set_default_handle_positions () {

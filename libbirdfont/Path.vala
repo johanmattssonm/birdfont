@@ -769,7 +769,7 @@ public class Path {
 	 * to the new item in list.
 	 */
 	public unowned List<EditPoint> add_after (double x, double y, List<EditPoint>? previous_point) {
-		EditPoint p = new EditPoint (x, y);	
+		EditPoint p = new EditPoint (x, y, PointType.NONE);	
 		return add_point_after (p, previous_point);
 	}
 	
@@ -802,22 +802,7 @@ public class Path {
 		
 		second_last_point = last_point;
 		last_point = p;
-		
-		PenTool.set_default_handle_positions ();
-		
-		if (p.prev != null && p.get_prev ().data.right_handle.type == PointType.QUADRATIC) {
-			p.left_handle.type = PointType.QUADRATIC;
-			p.right_handle.type = PointType.LINE_QUADRATIC;
-		} else if (Toolbox.get_selected_point_type () == PointType.QUADRATIC) {
-			p.left_handle.type = PointType.LINE_QUADRATIC;
-			p.right_handle.type = PointType.LINE_QUADRATIC;
-			p.type = PointType.LINE_QUADRATIC;
-		} else if (Toolbox.get_selected_point_type () == PointType.DOUBLE_CURVE) {
-			p.left_handle.type = PointType.LINE_DOUBLE_CURVE;
-			p.right_handle.type = PointType.LINE_DOUBLE_CURVE;
-			p.type = PointType.DOUBLE_CURVE;
-		}
-		
+
 		return np;
 	}
 
@@ -979,6 +964,38 @@ public class Path {
 		return true;
 	}
 
+	/** Add the extra point between line handles for double curve. */
+	void add_hidden_double_points () requires (points.length () > 1) {
+		EditPoint hidden;
+		unowned List<EditPoint> first = points.last ();
+		PointType left;
+		PointType right;
+		double x, y;
+
+		for (unowned List<EditPoint> next = points.first (); !is_null (next); next = next.next ) {
+			left = first.data.get_right_handle ().type;
+			right = next.data.get_left_handle ().type;
+			if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
+				first.data.get_right_handle ().type = PointType.QUADRATIC;
+
+				// half the way between handles
+				x = first.data.get_right_handle ().x () + (next.data.get_left_handle ().x () - first.data.get_right_handle ().x ()) / 2;
+				y = first.data.get_right_handle ().y () + (next.data.get_left_handle ().y () - first.data.get_right_handle ().y ()) / 2;
+				
+				hidden = new EditPoint (x, y, PointType.QUADRATIC);
+				hidden.right_handle = next.data.get_left_handle ().copy ();
+				hidden.get_right_handle ().type = PointType.QUADRATIC;
+				hidden.type = PointType.QUADRATIC;
+				
+				first.data.get_right_handle ().type = PointType.QUADRATIC;
+				first.data.type = PointType.QUADRATIC;
+				
+				add_point_after (hidden, first);
+			}
+			first = next;
+		}
+	}
+
 	/** Convert quadratic bezier points to cubic representation of the glyph
 	 * suitable for ttf-export.
 	 */ 
@@ -989,6 +1006,9 @@ public class Path {
 		EditPoint first;
 		
 		quadratic_path = copy ();
+		
+		// add hidden points
+		quadratic_path.add_hidden_double_points ();
 
 		// split all cubic curves in smaller sections	
 		for (int i = 0; quadratic_path.split_cubic_curves (this); i++) {
@@ -997,7 +1017,7 @@ public class Path {
 				break;
 			}
 		}
-
+		
 		// estimate quatdratic form
 		middle.prev = quadratic_path.points.last ();
 		middle.next = quadratic_path.points.first ();
@@ -1019,11 +1039,13 @@ public class Path {
 		}
 
 		last = quadratic_path.points.last ().data.get_right_handle ();
-		if (last.type == PointType.QUADRATIC) {
-			first = quadratic_path.points.first ().data;
-			quadratic_path.points.append (first);
-		}
+		
+		first = quadratic_path.points.first ().data;
+		quadratic_path.points.append (first);
+		quadratic_path.recalculate_linear_handles ();
 		quadratic_path.close ();
+		
+		recalculate_linear_handles ();
 		
 		return quadratic_path;
 	}
@@ -1092,55 +1114,6 @@ public class Path {
 		eh = start.get_right_handle ();
 		eh.set_point_type (PointType.QUADRATIC);
 		eh.move_to_coordinate (curve_x, curve_y);
-	}
-
-	public void split_cubic_in_parts (Path cubic_path) {
-		int j = 0;
-		while (split_all_cubic_in_half (cubic_path)) {
-			j++;
-			
-			if (j > 5) {
-				warning ("too many iterations in split path");
-				break;
-			}
-		}	
-	}
-
-	public bool split_all_cubic_in_half (Path cubic_path) {
-		EditPoint middle = new EditPoint ();
-		unowned List<EditPoint> e;
-		bool need_split = false;
-		uint len = cubic_path.points.length ();
-	
-		if (len < 2) {
-			return false;
-		}
-
-		middle.prev = cubic_path.points.last ();
-		middle.next = cubic_path.points.first ();
-		
-		if (split_cubic_in_half (cubic_path, middle)) {
-			need_split = true;
-		}
-			
-		e = (!) cubic_path.points.first ();
-		for (uint i = 0; i < len - 1; i++) {
-			middle.prev = e;
-			middle.next = e.next;
-			
-			middle.get_prev ().data.recalculate_linear_handles ();
-			middle.get_next ().data.recalculate_linear_handles ();
-			
-			if (split_cubic_in_half (cubic_path, middle)) {
-				e = (!) e.next.next;
-				need_split = true;
-			} else {
-				e = (!) e.next;
-			}
-
-		}
-				
-		return need_split;	
 	}
 
 	public void estimate_quadratic (EditPoint start, EditPoint stop, out double curve_x, out double curve_y) {
