@@ -624,7 +624,9 @@ class BirdFontFile {
 		}
 		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			parse_glyph (iter, gc, name, unicode);
+			if (iter->name == "glyph") {
+				parse_glyph (iter, gc, name, unicode);
+			}
 		}
 		
 		font.add_glyph_collection (gc);
