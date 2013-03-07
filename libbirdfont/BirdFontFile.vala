@@ -30,6 +30,65 @@ class BirdFontFile {
 		font = f;
 	}
 
+	/** Load a new .bf file.
+	 * @param path path to a valid .bf file
+	 */
+	public bool load (string path) {
+		bool ok = true;
+		Xml.Doc* doc;
+		Xml.Node* root;
+		
+		Parser.init ();
+
+		font.font_file = path; // this will be updated if we are loading a backup file
+
+		doc = Parser.parse_file (path);
+		root = doc->get_root_element ();
+		
+		if (root == null) {
+			warning ("no root element");
+			delete doc;
+			return false;
+		}
+
+		create_background_files (root);
+		ok = parse_file (root);
+
+		delete doc;
+		Parser.cleanup ();
+		
+		return ok;
+	}
+
+	/** Load a new .bf file.
+	 * @param xml_data data for a valid .bf file
+	 */
+	public bool load_data (string xml_data) {
+		bool ok = true;
+		Xml.Doc* doc;
+		Xml.Node* root;
+		
+		Parser.init ();
+		
+		font.font_file = "typeface.bf"; // FIXME
+		doc = Parser.parse_doc (xml_data);
+		root = doc->get_root_element ();
+		
+		if (root == null) {
+			warning ("no root element");
+			delete doc;
+			return false;
+		}
+
+		create_background_files (root);
+		ok = parse_file (root);
+
+		delete doc;
+		Parser.cleanup ();
+		
+		return ok;
+	}
+
 	public bool write_font_file (string path, bool backup = false) {
 		try {
 			File file = File.new_for_path (path);
@@ -326,41 +385,8 @@ class BirdFontFile {
 		}			
 	}
 
-	public bool load (string path) {
-		try {
-			return parse_file (path);
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
-		return false;
-	}
-
-	private bool parse_file (string path) throws GLib.Error {
-		Parser.init ();
-		
-		Xml.Doc* doc;
-		Xml.Node* root;
-		Xml.Node* node;
-
-		// set this path as file for this font, it will be updated if this is a backup
-		font.font_file = path;
-
-		while (font.background_images.length () > 0) {
-			font.background_images.remove_link (font.background_images.first ());
-		}
-
-		create_background_files (path);
-
-		doc = Parser.parse_file (path);
-		root = doc->get_root_element ();
-		
-		if (root == null) {
-			warning ("no root element");
-			delete doc;
-			return false;
-		}
-
-		node = root;
+	private bool parse_file (Xml.Node* root) {
+		Xml.Node* node = root;
 		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 
@@ -403,28 +429,16 @@ class BirdFontFile {
 				parse_kerning (iter);
 			}
 		}
-    
-		delete doc;
-		Parser.cleanup ();
 
 		return true;
 	}
 	
-	private void create_background_files (string path) {
-		Xml.Doc* doc = Parser.parse_file (path);
-		Xml.Node* root;
-		Xml.Node* node;
-		
-		root = doc->get_root_element ();
-		
-		if (root == null) {
-			delete doc;
-			return;
+	private void create_background_files (Xml.Node* root) requires (root != null) {
+		while (font.background_images.length () > 0) {
+			font.background_images.remove_link (font.background_images.first ());
 		}
-
-		node = root;
-		
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
+	
+		for (Xml.Node* iter = root->children; iter != null; iter = iter->next) {
 			
 			if (iter->name == "name" && iter->children != null) {
 				font.set_name (iter->children->content);
@@ -434,9 +448,6 @@ class BirdFontFile {
 				parse_background_image (iter);
 			}
 		}
-    
-		delete doc;
-		Parser.cleanup ();
 	}
 	
 	private void parse_kerning (Xml.Node* node) {

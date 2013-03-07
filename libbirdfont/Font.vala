@@ -597,7 +597,7 @@ public class Font : GLib.Object {
 		}
 		
 		if (path.has_suffix (".ttf")) {
-			Toolbox.select_tool_by_name ("quadratic_points");
+			Toolbox.select_tool_by_name ("double_points");
 			font_file = path;
 			loaded = parse_freetype_file (path);
 			format = FontFormat.FREETYPE;
@@ -632,10 +632,11 @@ public class Font : GLib.Object {
 	}
 
 	private bool parse_freetype_file (string path) {
-		string svg;
+		string font_data;
 		StringBuilder? data;
 		int error;
-		SvgFont svg_loader = new SvgFont (this);
+		bool parsed;
+		BirdFontFile bf_font = new BirdFontFile (this);
 		
 		data = load_freetype_font (path, out error);
 		
@@ -649,10 +650,14 @@ public class Font : GLib.Object {
 			return false;
 		}
 		
-		svg = ((!) data).str;
-		svg_loader.load_svg_data (svg);
-
-		return true;
+		font_data = ((!) data).str;
+		parsed = bf_font.load_data (font_data);
+		
+		if (parsed) {
+			Preferences.add_recent_files (path);
+		}
+		
+		return parsed;
 	}
 
 	private bool parse_svg_file (string path) {
