@@ -162,7 +162,6 @@ public class Path {
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
 		unowned EditPoint em;
-		
 		cr.new_path ();
 					
 		// draw lines

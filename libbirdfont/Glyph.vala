@@ -448,7 +448,7 @@ public class Glyph : FontDisplay {
 	
 	public void remove_empty_paths () {
 		foreach (Path p in path_list) {
-			if (p.points.length () <= 2) {
+			if (p.points.length () == 0) {
 				delete_path (p);
 				remove_empty_paths ();
 				return;
@@ -456,7 +456,7 @@ public class Glyph : FontDisplay {
 		}
 
 		foreach (Path p in path_list) {
-			assert (p.points.length () > 2);
+			assert (p.points.length () > 0);
 		}
 	}
 	
@@ -1062,8 +1062,6 @@ public class Glyph : FontDisplay {
 		new_point_on_path = null;
 		flipping_point_on_path = null;
 		
-		delete_invisible_paths ();
-		
 		redraw_area (0, 0, allocation.width, allocation.height);
 		
 		open = false;
@@ -1092,25 +1090,6 @@ public class Glyph : FontDisplay {
 		h = reverse_path_coordinate_x (p.ymax) - y; // FIXME: redraw path
 					
 		redraw_area (x, y, w, h);		
-	}
-
-	/** Delete all paths without area. */
-	private void delete_invisible_paths () {
-		foreach (var p in path_list) {
-			
-			if (p.points.length () < 2) {
-				path_list.remove (p);
-				continue;
-			}
-			
-			if (p.points.length () == 2) {
-				if (p.points.first ().data.type == PointType.LINE_CUBIC && p.points.last ().data.type == PointType.LINE_CUBIC) {
-					path_list.remove (p);
-					continue;
-				}
-			}
-			
-		}
 	}
 
 	public Line get_line (string name) {		
@@ -1602,8 +1581,6 @@ public class Glyph : FontDisplay {
 		
 		min = double.MAX;
 		
-		delete_invisible_paths ();
-		
 		foreach (Path pp in path_list) {
 			lep = new EditPoint ();
 			pp.get_closest_point_on_path (lep, xt, yt);
@@ -1628,7 +1605,6 @@ public class Glyph : FontDisplay {
 	/** Merge selected paths. */
 	public void merge_all () {
 		store_undo_state ();
-		delete_invisible_paths ();
 		
 		if (active_paths.length () < 2) {
 			return;

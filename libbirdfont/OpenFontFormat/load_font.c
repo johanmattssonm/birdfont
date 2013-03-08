@@ -388,7 +388,7 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 	y0 = new_points[0].y * units;
 	g_string_printf (bf, "S %f,%f", x0, y0); // FIXME: ???
 
-	i = 0;
+	i = 1;
 	while (i < length) {
 		contour = g_string_new ("");
 		

@@ -49,7 +49,7 @@ class Svg {
 		EditPoint? n = null;
 		EditPoint m;
 		
-		if (pl.points.length () <= 2) {
+		if (pl.points.length () < 2) {
 			return;
 		}
 		
