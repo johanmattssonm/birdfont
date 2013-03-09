@@ -69,7 +69,7 @@ guint is_hidden (char flag) {
 	return flag & HIDDEN_CURVE;
 }
 
-/** Convert every second hidden curve to a double curve and keep the 
+/** Convert every second hidden curve to a double curve and keep 
  * other points as on curve points.
  */ 
 void set_double_curves (char* flag, int length) {
@@ -131,6 +131,8 @@ double remove_hidden_points (FT_Vector* points, char* flags, guint length, guint
 
 /** Add extra point where two ore more off curve points follow each other. */
 void create_contour (guint unicode, FT_Vector* points, char* flags, int* length, FT_Vector** new_points, char** new_flags, int* err) {
+	// This function has been tested with many fonts. ElsieSwashCaps-Regular
+	// is one of the more interesting fonts.
 	int i;
 	int j;
 	guint prev_is_curve;

@@ -104,46 +104,12 @@ public class Toolbox : GLib.Object  {
 		});
 		draw_tool_modifiers.add_tool (tie_handles);
 
-		// adjust precision
-		string precision_value = Preferences.get ("precision");
-		
-		precision = new SpinButton ("precision", _("Set precision"));
-		
-		if (precision_value != "") {
-			precision.set_value (precision_value);
-		} else {
-			precision.set_value_round (1);
-		}
-		
-		precision.new_value_action.connect ((self) => {
-			select_tool (precision);
-			
-			Preferences.set ("precision", self.get_display_value ());
-			redraw ((int) precision.x, (int) precision.y, 70, 70);
-		});
-
-		precision.select_action.connect((self) => {
-			pen_tool.set_precision (((SpinButton)self).get_value ());
-		});
-		
-		precision.set_min (0.001);
-		precision.set_max (1);
-		
-		draw_tool_modifiers.add_tool (precision);
-		
 		// quadratic Bézier points
 		Tool quadratic_points = new Tool ("quadratic_points", _("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
 			point_type = PointType.QUADRATIC;
 		});
 		draw_tool_modifiers.add_tool (quadratic_points);		
-		
-		// cubic Bézier points
-		Tool cubic_points = new Tool ("cubic_points", _("Create cubic Bézier curves"));
-		cubic_points.select_action.connect ((self) => {
-			point_type = PointType.CUBIC;
-		});
-		draw_tool_modifiers.add_tool (cubic_points);
 
 		// two quadratic points off curve for each quadratic control point
 		Tool double_points = new Tool ("double_points", _("Quadratic double point"));
@@ -151,6 +117,13 @@ public class Toolbox : GLib.Object  {
 			point_type = PointType.DOUBLE_CURVE;
 		});
 		draw_tool_modifiers.add_tool (double_points);
+				
+		// cubic Bézier points
+		Tool cubic_points = new Tool ("cubic_points", _("Create cubic Bézier curves"));
+		cubic_points.select_action.connect ((self) => {
+			point_type = PointType.CUBIC;
+		});
+		draw_tool_modifiers.add_tool (cubic_points);
 		
 		// path tools
 		Tool union_paths_tool = new MergeTool ("union_paths");
@@ -178,6 +151,33 @@ public class Toolbox : GLib.Object  {
 			}
 		});
 		path_tool_modifiers.add_tool (move_layer);
+
+		// adjust precision
+		string precision_value = Preferences.get ("precision");
+		
+		precision = new SpinButton ("precision", _("Set precision"));
+		
+		if (precision_value != "") {
+			precision.set_value (precision_value);
+		} else {
+			precision.set_value_round (1);
+		}
+		
+		precision.new_value_action.connect ((self) => {
+			select_tool (precision);
+			
+			Preferences.set ("precision", self.get_display_value ());
+			redraw ((int) precision.x, (int) precision.y, 70, 70);
+		});
+
+		precision.select_action.connect((self) => {
+			pen_tool.set_precision (((SpinButton)self).get_value ());
+		});
+		
+		precision.set_min (0.001);
+		precision.set_max (1);
+		
+		path_tool_modifiers.add_tool (precision);
 		
 		// Character set tools
 		Tool full_unicode = new Tool ("utf_8", _("Show full unicode characters set"), 'f', CTRL);
