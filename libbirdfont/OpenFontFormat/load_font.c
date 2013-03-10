@@ -38,7 +38,6 @@
 
 /** Convert units per em in font file format to the BirdFont format. */
 double get_units (double units_per_em) {
-	units_per_em *= (1000.0 / units_per_em) * (10.0 / 3.0);
 	return 100.0 / units_per_em;
 }
 
@@ -535,6 +534,50 @@ GString* get_kerning_data (FT_Face face, FT_Long gid) {
 	return bf;
 }
 
+/** Height of letter. */
+int get_height (FT_Face face, guint unichar) {
+	int error;
+	FT_ULong charcode = (FT_ULong) unichar;
+	FT_UInt index = FT_Get_Char_Index (face, charcode);
+
+	error = FT_Load_Glyph (face, index, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
+	if (error) {
+		fprintf (stderr, "Failed to obtain height. (%d)\n", error);
+		return 0;
+	}
+		
+	return (int) -face->glyph->metrics.height;	
+}
+
+/** Height of lower case letters. */
+int get_xheight (FT_Face face) {
+	return get_height (face, 'x');
+}
+
+/** Height of upper case letters. */
+int get_top (FT_Face face) {
+	return get_height (face, 'X');
+}
+/** Obtain descender. */
+int get_descender (FT_Face face) {
+	int error;
+	FT_BBox bbox;
+	FT_ULong charcode = (FT_ULong) 'g';
+	FT_UInt index = FT_Get_Char_Index (face, charcode);
+	FT_Glyph glyph;
+	
+	error = FT_Load_Glyph (face, index, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
+	if (error) {
+		fprintf (stderr, "Failed to obtain descender. (%d)\n", error);
+		return 0;
+	}
+	
+	FT_Get_Glyph (face->glyph, &glyph); 
+	FT_Glyph_Get_CBox (glyph, FT_GLYPH_BBOX_UNSCALED, &bbox);
+	
+	return (int) -bbox.yMin;	
+}
+
 /** Convert font to bf format.
  * @param face freetype font face
  * @param err error code
@@ -567,17 +610,17 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	g_string_append_printf (bf, "<backup>%s</backup>\n", file);
 
 	g_string_append_printf (bf, "<lines>\n");
-	g_string_append_printf (bf, "\t<top_limit>-66</top_limit>\n");
-	g_string_append_printf (bf, "\t<top_position>%f</top_position>\n", -face->ascender * units);
-	g_string_append_printf (bf, "\t<x-height>-38</x-height>\n");
+	g_string_append_printf (bf, "\t<top_limit>%f</top_limit>\n", -face->ascender * units);
+	g_string_append_printf (bf, "\t<top_position>%f</top_position>\n", get_top (face) * units);
+	g_string_append_printf (bf, "\t<x-height>%f</x-height>\n", get_xheight (face) * units);
 	g_string_append_printf (bf, "\t<base_line>0</base_line>\n");
-	g_string_append_printf (bf, "\t<bottom_position>%f</bottom_position>\n", -face->descender * units);
-	g_string_append_printf (bf, "\t<bottom_limit>45</bottom_limit>\n");		
+	g_string_append_printf (bf, "\t<bottom_position>%f</bottom_position>\n", get_descender (face) * units);
+	g_string_append_printf (bf, "\t<bottom_limit>%f</bottom_limit>\n", -face->descender * units);		
 	g_string_append_printf (bf, "</lines>\n");
 
 	// glyph outlines
 	for (i = 0; i < face->num_glyphs; i++) {
-		error = FT_Load_Glyph (face, i, FT_LOAD_DEFAULT);
+		error = FT_Load_Glyph (face, i, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
 		if (error) {
 			fprintf (stderr, "Freetype failed to load glyph %d.\n", (int)i);
 			fprintf (stderr, "FT_Load_Glyph error %d\n", error);
