@@ -750,7 +750,7 @@ public class Font : GLib.Object {
 		unichar c;
 		unichar rc = 0;
 		bool r;
-
+		
 		if (unlikely (!unicode.has_prefix ("U+"))) {
 			warning (@"All unicode values must begin with U+ ($unicode)");
 			return '\0';

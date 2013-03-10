@@ -112,7 +112,7 @@ public class Toolbox : GLib.Object  {
 		draw_tool_modifiers.add_tool (quadratic_points);		
 
 		// two quadratic points off curve for each quadratic control point
-		Tool double_points = new Tool ("double_points", _("Quadratic double point"));
+		Tool double_points = new Tool ("double_points", _("Quadratic path with two line handles"));
 		double_points.select_action.connect ((self) => {
 			point_type = PointType.DOUBLE_CURVE;
 		});

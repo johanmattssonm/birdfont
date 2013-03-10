@@ -528,7 +528,7 @@ GString* get_kerning_data (FT_Face face, FT_Long gid) {
 		}
 
 		if (kerning.x > 0 && char_left > 31) {
-			g_string_append_printf (bf, "<hkern left=\"U+%x;\" right=\"U+%x;\" kerning=\"%d\"/>\n", char_left, char_right, kerning.x);
+			g_string_append_printf (bf, "<hkern left=\"U+%x\" right=\"U+%x\" kerning=\"%d\"/>\n", char_left, char_right, kerning.x);
 		}
 	}
 	
@@ -619,6 +619,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	}
 
 	g_string_append (bf, "</font>\n");
+	
+	bird_font_progress_bar_set_progress (0);
 	
 	return bf;
 }

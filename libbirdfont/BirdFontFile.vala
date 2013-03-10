@@ -837,6 +837,10 @@ class BirdFontFile {
 		Path path = new Path ();
 		string instruction = "";
 		
+		if (data == "") {
+			return path;
+		}
+		
 		return_val_if_fail (d.length > 1, path);
 		
 		if (d[0] != "S") {

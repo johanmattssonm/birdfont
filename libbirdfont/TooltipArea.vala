@@ -97,6 +97,8 @@ public class TooltipArea : GLib.Object {
 	}
 	
 	public void draw (Context cr, Allocation alloc) {
+		int w;
+		
 		cr.save ();
 		cr.rectangle (0, 0, alloc.width, alloc.height);
 		cr.set_line_width (0);
@@ -122,19 +124,21 @@ public class TooltipArea : GLib.Object {
 		cr.restore ();
 		
 		cr.save ();
-		cr.rectangle (0, 0, alloc.width * ProgressBar.get_progress (), alloc.height);
+		w = (int) (alloc.width * ProgressBar.get_progress ());
+		cr.rectangle (0, 2, w, alloc.height - 2);
 		cr.set_line_width (0);
-		cr.set_source_rgba (255/255.0, 255/255.0, 255/255.0, 1);
+		cr.set_source_rgba (145/255.0, 160/255.0, 190/255.0, 1);
 		cr.fill_preserve ();
 		cr.stroke ();
 		cr.restore ();
-				
-		cr.save ();
-		cr.set_font_size (14);
-		cr.move_to (5, 15);
-		cr.show_text (tool_tip);
-		cr.restore ();
-
+		
+		if (w == 0) {
+			cr.save ();
+			cr.set_font_size (14);
+			cr.move_to (5, 15);
+			cr.show_text (tool_tip);
+			cr.restore ();
+		}
 	}
 }
 
