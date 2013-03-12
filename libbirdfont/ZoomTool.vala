@@ -137,19 +137,5 @@ class ZoomTool : Tool {
 		MainWindow.get_glyph_canvas ().redraw ();
 	}
 }
-
-class ZoomView : GLib.Object {
-	public double x;
-	public double y;
-	public double zoom;
-	public Allocation allocation;
-	
-	public ZoomView (double x, double y, double zoom, Allocation allocation) {
-		this.x = x;
-		this.y = y;
-		this.zoom = zoom;
-		this.allocation = allocation;
-	}
-}
 	
 }

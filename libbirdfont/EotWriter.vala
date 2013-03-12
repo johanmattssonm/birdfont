@@ -95,17 +95,17 @@ class EotWriter : GLib.Object {
 		fd.add (0); // italic set to regular
 				
 		fd.add_littleendian_u32 (400); // weight
-		fd.add_littleendian_u16 (0); // 0 drm, designer must know that notified
+		fd.add_littleendian_u16 (0); // 0 drm, designer must be notified
 		fd.add_littleendian_u16 (0x504C); // magic number
 
-		// FIXA:
+		// FIXME:
 		// unicode ranges 
 		fd.add_littleendian_u32 (0);
 		fd.add_littleendian_u32 (0);
 		fd.add_littleendian_u32 (0);
 		fd.add_littleendian_u32 (0);
 		
-		// FIXA:
+		// FIXME:
 		// code page range
 		fd.add_littleendian_u32 (0);
 		fd.add_littleendian_u32 (0);

@@ -52,6 +52,7 @@ class CharDatabase {
 			case 'j': return true;
 			case 'p': return true;
 			case 'q': return true;
+			case 'y': return true;
 		}
 		
 		return false;		

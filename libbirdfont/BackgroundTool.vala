@@ -34,7 +34,6 @@ class BackgroundTool : Tool {
 	public static double bottom_limit;
 		
 	bool move_bg;
-	bool resize_bg; // DEL
 	
 	public BackgroundTool (string name) {
 		base (name, _("Move, resize and rotate background image"));
@@ -91,7 +90,6 @@ class BackgroundTool : Tool {
 			((!)bg).handler_release (x, y);
 			
 			move_bg = false;
-			resize_bg = false;
 		});
 
 		move_action.connect((self, x, y) => {			
@@ -118,7 +116,9 @@ class BackgroundTool : Tool {
 		 		
 		bg.handler_move (x, y);
 	
-		if (!(move_bg || resize_bg)) return;
+		if (move_bg) {
+			return;
+		}
 		
 		dx = x - begin_x;
 		dy = y - begin_y;

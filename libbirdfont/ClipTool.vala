@@ -26,7 +26,7 @@ public class ClipTool : Tool {
 		string inkscape_svg;
 		
 		if (fd is OverView) {
-			// TODO:
+			// TODO: copy glyphs in overview
 		} 
 		
 		if (fd is Glyph) {	

@@ -303,7 +303,7 @@ public class Tool : GLib.Object {
 		Tool.yield ();
 	}
 	
-	/** Run pending events in main loop before continue. */
+	/** Run pending events in main loop before continuing. */
 	public static void @yield () {
 		int t = 0;
 		var time = new TimeoutSource (500);

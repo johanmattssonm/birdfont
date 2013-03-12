@@ -575,10 +575,7 @@ public class Path {
 		}
 	}
 
-	/** Resize path relative to bottom left coordinates.
-	 * @param cx xmin position during resize
-	 * @param cy ymin position during resize
-	 */
+	/** Resize path relative to bottom left coordinates. */
 	public void resize (double ratio) {	
 		foreach (var p in points) {
 			p.x *= ratio;
@@ -1006,6 +1003,10 @@ public class Path {
 		
 		quadratic_path = copy ();
 		
+		if (quadratic_path.points.length () < 2) {
+			return quadratic_path;
+		}
+		
 		// add hidden points
 		quadratic_path.add_hidden_double_points ();
 
@@ -1166,9 +1167,13 @@ public class Path {
 			ep.get_right_handle ().set_point_type (PointType.LINE_QUADRATIC);
 			ep.get_left_handle ().set_point_type (PointType.LINE_QUADRATIC);
 			ep.recalculate_linear_handles ();
-		} else if (right == PointType.LINE_CUBIC && left  == PointType.LINE_CUBIC) {
+		} else if (right == PointType.LINE_CUBIC && left == PointType.LINE_CUBIC) {
 			ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
 			ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
+			ep.recalculate_linear_handles ();
+		} else if (right == PointType.LINE_DOUBLE_CURVE && left == PointType.LINE_DOUBLE_CURVE) {
+			ep.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
+			ep.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
 			ep.recalculate_linear_handles ();
 		} else if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 			double_bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
@@ -1176,9 +1181,6 @@ public class Path {
 			
 			ep.get_left_handle ().move_to_coordinate (x1, y1);
 			ep.get_right_handle ().move_to_coordinate (x0, y0);
-
-//			ep.get_left_handle ().length = length0;
-//			ep.get_right_handle ().length = length1;
 
 			ep.get_left_handle ().set_point_type (PointType.DOUBLE_CURVE);	
 			ep.get_right_handle ().set_point_type (PointType.DOUBLE_CURVE);
@@ -1962,19 +1964,6 @@ public class Path {
 		}
 		
 		close ();
-	}
-}
-
-public class PathList : GLib.Object {
-	public List<Path> paths = new List<Path> ();
-	
-	public PathList () {
-	}
-	
-	public void clear () {
-		while (paths.length () > 0) {
-			paths.remove_link (paths.first ());
-		}
 	}
 }
 

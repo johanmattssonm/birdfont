@@ -207,7 +207,7 @@ class GlyfTable : Table {
 		
 		g.remove_empty_paths ();
 		if (g.path_list.length () == 0) {
-			// location_offsets == location_offset + 1 to tell parser that this glyf does not have a body
+			// location_offsets will be equal to location_offset + 1 to tell parser that this glyf does not have a body
 			return;
 		}
 		
