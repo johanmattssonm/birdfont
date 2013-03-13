@@ -732,9 +732,6 @@ public class Font : GLib.Object {
 			liga = g.get_ligature_string ();
 			ligature.insert (liga, gc);
 		}
-						
-		// take xheight from appropriate lower case letter
-		// xheight_position = estimate_xheight ();
 	}
 
 	public bool parse_otf_file (string path) throws GLib.Error {

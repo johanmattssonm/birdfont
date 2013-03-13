@@ -114,7 +114,7 @@ class GridTool : Tool {
 		
 		n = 0;
 		for (i = baseline.get_pos () - step; i >= top_margin.get_pos () - 7 * step; i -= step) {
-			t = new Line ("grid", i, Line.HOROIZONTAL);
+			t = new Line ("grid", i, Line.HORIZONTAL);
 			t.set_moveable (false);
 			t.set_color (0.2, 0.6, 0.2, 0.2);
 			vertical.append (t);	
@@ -126,7 +126,7 @@ class GridTool : Tool {
 		}
 		
 		for (i = baseline.get_pos (); i <= bottom_margin.get_pos () + 7 * step; i += step) {
-			u = new Line ("grid", i, Line.HOROIZONTAL);
+			u = new Line ("grid", i, Line.HORIZONTAL);
 			u.set_moveable (false);
 			u.set_color (0.2, 0.6, 0.2, 0.2);
 			vertical.append (u);	
@@ -162,7 +162,7 @@ class GridTool : Tool {
 		
 		if (!coordinate) {
 			xpos = new Line ("", 0, Line.VERTICAL);
-			ypos = new Line ("", 0, Line.HOROIZONTAL);
+			ypos = new Line ("", 0, Line.HORIZONTAL);
 
 			xpos.set_move (true);
 			ypos.set_move (true);
@@ -171,7 +171,7 @@ class GridTool : Tool {
 			ypos.move_line_to (x, y, g.allocation);
 		} else {
 			xpos = new Line ("", x, Line.VERTICAL);
-			ypos = new Line ("", y, Line.HOROIZONTAL);
+			ypos = new Line ("", y, Line.HORIZONTAL);
 		}
 
 		m = double.MAX;

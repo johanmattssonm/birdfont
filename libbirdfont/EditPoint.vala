@@ -189,11 +189,17 @@ public class EditPoint {
 		tie_handles = t;
 	}
 
-	public void process_tied_handle () {
+	public void process_tied_handle () 
+	requires (next != null && prev != null) {
 		double a, b, c, length, angle;
 		EditPointHandle eh;
+		EditPointHandle prev_rh, next_lh;
 		
 		eh = right_handle;
+		
+		if (left_handle.type == PointType.QUADRATIC) {
+			left_handle.length = 0;
+		}
 		
 		a = left_handle.x () - right_handle.x ();
 		b = left_handle.y () - right_handle.y ();
@@ -211,9 +217,30 @@ public class EditPoint {
 			angle = -acos (a / length) + PI;
 		}
 		
-		if (left_handle.type == PointType.LINE_DOUBLE_CURVE || left_handle.type == PointType.QUADRATIC) {
+		if (left_handle.type == PointType.QUADRATIC) {
 			left_handle.type = PointType.DOUBLE_CURVE;
-			right_handle.type = PointType.DOUBLE_CURVE;			
+			right_handle.type = PointType.DOUBLE_CURVE;
+			
+			prev_rh = get_prev ().data.get_right_handle ();
+			next_lh = get_next ().data.get_left_handle ();
+			
+			prev_rh.type = PointType.DOUBLE_CURVE;	
+			next_lh.type = PointType.DOUBLE_CURVE;
+			
+			left_handle.move_to_coordinate (prev_rh.x (), prev_rh.y ());
+			left_handle.length *= 0.5;
+			right_handle.length *= 0.5;
+			prev_rh.length *= 0.5;
+			next_lh.length *= 0.5;
+		} else if (left_handle.type == PointType.LINE_DOUBLE_CURVE) {
+			left_handle.type = PointType.DOUBLE_CURVE;
+			right_handle.type = PointType.DOUBLE_CURVE;
+			
+			prev_rh = get_prev ().data.get_right_handle ();
+			next_lh = get_next ().data.get_left_handle ();
+			
+			prev_rh.type = PointType.DOUBLE_CURVE;	
+			next_lh.type = PointType.DOUBLE_CURVE;
 		} else if (left_handle.type == PointType.LINE_CUBIC) {
 			left_handle.type = PointType.CUBIC;
 			right_handle.type = PointType.CUBIC;

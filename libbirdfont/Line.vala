@@ -22,7 +22,7 @@ namespace BirdFont {
 /** Help line */
 public class Line : GLib.Object {
 	public static const bool VERTICAL = true;
-	public static const bool HOROIZONTAL = false;
+	public static const bool HORIZONTAL = false;
 	
 	string label;
 	bool vertical;
@@ -83,12 +83,6 @@ public class Line : GLib.Object {
 		this.g = g;
 		this.b = b;
 		this.a = a;
-	}
-	
-	// Valabug, it should be: public “void set_list_item (unowned List<Line> ll) {”
-	// Keeping list_item public for now
-	public void set_list_item (void* ll) {
-		// list_item = ll;
 	}
 	
 	public bool is_moving () {

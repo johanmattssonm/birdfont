@@ -1120,19 +1120,16 @@ public class Path {
 		curve_y = -0.25 * start.y + 0.75 *  stop.get_left_handle ().y () + 0.75 * start.get_right_handle ().y () - 0.25 * stop.y;		
 	}
 
-	public void insert_new_point_on_path (EditPoint? epp) {
+	public void insert_new_point_on_path (EditPoint ep) {
 		EditPoint start, stop;
 		double x0, x1, y0, y1;
 		double position, min;
-		
-		EditPoint ep;
 		PointType left, right;
-
-		if (epp == null) {
+		
+		if (ep.next == null || ep.prev == null) {
+			warning ("missing point");
 			return;
 		}
-
-		ep = (!) epp;
 
 		start = ep.get_prev ().data;
 		stop = ep.get_next ().data;
@@ -1184,13 +1181,13 @@ public class Path {
 
 			ep.get_left_handle ().set_point_type (PointType.DOUBLE_CURVE);	
 			ep.get_right_handle ().set_point_type (PointType.DOUBLE_CURVE);
-		} else if (right == PointType.QUADRATIC) { 
+		} else if (right == PointType.QUADRATIC) {		
 			x0 = quadratic_bezier_vector (1 - position, stop.x, start.get_right_handle ().x (), start.x);
 			y0 = quadratic_bezier_vector (1 - position, stop.y, start.get_right_handle ().y (), start.y);
 			ep.get_right_handle ().move_to_coordinate (x0, y0);
 			
 			ep.get_left_handle ().set_point_type (PointType.QUADRATIC);	
-			ep.get_right_handle ().set_point_type (PointType.QUADRATIC);	
+			ep.get_right_handle ().set_point_type (PointType.QUADRATIC);
 		} else {
 			bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
 			bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);

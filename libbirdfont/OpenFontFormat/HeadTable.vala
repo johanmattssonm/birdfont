@@ -60,7 +60,7 @@ class HeadTable : Table {
 	}
 	
 	public double get_units_per_em () {
-		return units_per_em * 10; // Fixa: we can refactor this number
+		return units_per_em * 10;
 	}
 	
 	public override void parse (FontData dis) throws GLib.Error {
