@@ -28,8 +28,8 @@ public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;
 	string file;
-	BirdFont.BirdFont supplement = new BirdFont.BirdFont ();
-	supplement.init (arg);
+	BirdFont.BirdFont birdfont = new BirdFont.BirdFont ();
+	birdfont.init (arg);
 
 	Gtk.init (ref arg);
 	parse_gtk_rc ();

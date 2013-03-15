@@ -112,7 +112,15 @@ public class MainWindow {
 	public static string? file_chooser_open (string title) {
 		return MainWindow.native_window.file_chooser_open (title);
 	}
+
+	public static void set_scrollbar_size (double size) {
+		MainWindow.native_window.set_scrollbar_size (size);
+	}
 	
+	public static void set_scrollbar_position (double position) {
+		MainWindow.native_window.set_scrollbar_position (position);
+	}
+
 	public void set_title (string title) {
 		// FIXA:
 		// native_window.set_title (title);

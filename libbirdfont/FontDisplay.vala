@@ -38,6 +38,13 @@ public abstract class FontDisplay : GLib.Object {
 		return "";
 	}
 	
+	public virtual bool has_scrollbar () {
+		return false;
+	}
+	
+	public virtual void scroll_to (double percent) {
+	}
+	
 	public virtual bool is_html_canvas () {
 		return false;
 	}

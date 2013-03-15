@@ -42,6 +42,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	string clipboard_svg = "";
 	string inkscape_clipboard = "";
 	
+	VScrollbar scrollbar;
+	bool scrollbar_supress_signal = false;
+	
 	public GtkWindow (string title) {
 		((Gtk.Window)this).set_title ("BirdFont");
 	}
@@ -49,6 +52,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public void init () {
 		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
 		
+		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));
+		scrollbar.value_changed.connect (() => {
+			if (!scrollbar_supress_signal) {
+				FontDisplay display = MainWindow.get_current_display ();
+				display.scroll_to (scrollbar.get_value ());
+			}
+		});
+				
 		margin_bottom = new DrawingArea ();
 		margin_right = new DrawingArea ();
 	
@@ -73,16 +84,16 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		html_canvas.set_editable (true);
 		
 		MainWindow.get_tab_bar ().signal_tab_selected.connect ((f, tab) => {
-			bool n;
 			File layout_dir;
 			File layout_uri;
 			string uri = "";
 			FontDisplay fd = tab.get_display ();
-			
+			bool html = fd.is_html_canvas ();
 			MainWindow.glyph_canvas.set_current_glyph (fd);
-			n = fd.is_html_canvas ();
 			
-			if (n) {
+			scrollbar.set_visible (fd.has_scrollbar ());
+					
+			if (html) {
 				layout_dir = FontDisplay.find_layout_dir ();
 				uri = fd.get_uri ();
 				
@@ -159,8 +170,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 					html_canvas.load_html_string (fd.get_html (), uri);
 				}
 				
-				html_box.set_visible (n);
-				glyph_canvas_area.set_visible (!n);
+				html_box.set_visible (html);
+				glyph_canvas_area.set_visible (!html);
 			} else {
 				html_box.set_visible (false);
 				glyph_canvas_area.set_visible (true);
@@ -175,7 +186,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 				
 		MainWindow.tabs.add_unique_tab (MainWindow.menu_tab, 60, true);
-		
 		MainWindow.tabs.select_tab_name ("Menu");
 
 		glyph_canvas_area = new GlyphCanvasArea (MainWindow.glyph_canvas);
@@ -183,6 +193,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		canvas_box = new HBox (false, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
+		canvas_box.pack_start (scrollbar, false, true, 0);
 		
 		tab_box = new VBox (false, 0);
 		tab_box.pack_start (new TabbarCanvas (MainWindow.tabs), false, false, 0);	
@@ -232,6 +243,16 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		
 		show_all ();
+	}
+
+	public void set_scrollbar_size (double size) {
+		scrollbar.adjustment.page_size = size;
+	}
+	
+	public void set_scrollbar_position (double position) {
+		scrollbar_supress_signal = true;
+		scrollbar.adjustment.value = position;
+		scrollbar_supress_signal = false;
 	}
 	
 	public void color_selection (ColorTool color_tool) {

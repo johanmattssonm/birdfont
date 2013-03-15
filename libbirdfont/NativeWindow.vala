@@ -34,6 +34,9 @@ public interface NativeWindow : GLib.Object {
 
 	public abstract void color_selection (ColorTool color_tool);
 
+	public abstract void set_scrollbar_size (double size);
+	public abstract void set_scrollbar_position (double position);
+	
 	protected void webkit_callback (string s) {
 		FontDisplay fd = MainWindow.get_current_display ();
 		fd.process_property (s);

@@ -48,8 +48,6 @@ public class OverView : FontDisplay {
 	int zoom_list_index = 0;
 
 	List<GlyphCollection> deleted_glyphs = new List<GlyphCollection> ();
-
-	Scrollbar scrollbar;
 	
 	bool all_available = true;
 	
@@ -97,33 +95,17 @@ public class OverView : FontDisplay {
 			}
 		});
 		
-		scrollbar = new Scrollbar ();
-		scrollbar.signal_scroll.connect ((delta, delta_last, absolute) => {
-			if (absolute <= 0.002) {
-				first_character = 0;
-				first_visible = 0;
-				selected = 0;
-				scroll_top ();
-			} else if (absolute >= 1) {
-				scroll_bottom ();
-			} else {
-				scroll_to (absolute);
-			}		
-			
-			redraw_area (0, 0, allocation.width, allocation.height);
-		});
-		
 		update_scrollbar ();
 	}
-	
+
 	void scroll_bottom () {
 		Font f;
 		
 		if (all_available) {
 			f = BirdFont.get_current_font ();
-			scroll_to_position (f.length () - items_per_row * (rows - 1));
+			scroll_to_position (f.length () - items_per_row * rows);
 		} else {
-			scroll_to_position (glyph_range.length () - items_per_row * (rows - 1));
+			scroll_to_position (glyph_range.length () - items_per_row * rows);
 		}
 	}
 	
@@ -147,6 +129,10 @@ public class OverView : FontDisplay {
 
 	public bool selected_char_is_visible () {
 		return first_visible <= selected <= first_visible + items_per_row * rows;
+	}
+
+	public override bool has_scrollbar () {
+		return true;
 	}
 
 	public override void scroll_wheel_up (double x, double y) {
@@ -452,10 +438,6 @@ public class OverView : FontDisplay {
 			draw_empty_canvas (allocation, cr);
 		}
 		
-		if (BirdFont.experimental) {
-			scrollbar.draw (cr, allocation);
-		}
-		
 		n_items = ((allocation.width - 40) / nail_width);
 		rows = (allocation.height / nail_height);
 
@@ -550,11 +532,6 @@ public class OverView : FontDisplay {
 			l = glyph_range.length ();
 		}
 		
-		// bottom
-		if (r > l - items_per_row * rows) {
-			return;
-		}
-		
 		if (r < 0) {
 			scroll_top ();
 			return;
@@ -568,21 +545,21 @@ public class OverView : FontDisplay {
 		adjust_scroll ();
 	}
 	
-	public void scroll_to (double percent) {
+	public override void scroll_to (double percent) {
 		int64 r;
-		double l;
+		double nrows;
 		Font f;
 		
 		if (all_available) {
 			f = BirdFont.get_current_font ();
-			l = f.length ();
+			nrows = Math.ceil (f.length () / items_per_row);
 		} else {
-			l = glyph_range.length ();
+			nrows = Math.ceil (glyph_range.length () / items_per_row);
 		}
 		
-		l /= rows;
-		r = (int64) (percent * l * items_per_row);
+		r = (int64) (Math.ceil (percent * nrows) * items_per_row);
 		scroll_to_position (r);
+		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 		
 	private void scroll (int64 pixel_adjustment) {
@@ -862,18 +839,6 @@ public class OverView : FontDisplay {
 		selected = c;
 		set_glyph_range (gr);
 	}
-		
-	public override void motion_notify (double x, double y) {
-		if (x > allocation.x - 10) {
-			scrollbar.motion_notify ((int) x, (int) y);
-		}
-	}
-	
-	public override void button_release (int button, double ex, double ey) {
-		if (ex > allocation.x - 10) {
-			scrollbar.button_release (button, ex, ey);
-		}
-	}
 	
 	public override void double_click (uint button, double ex, double ey) {
 		selection_click (button, ex, ey);
@@ -964,13 +929,7 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void button_press (uint button, double x, double y) {
-		if (x > allocation.width - 10) {
-			if (BirdFont.experimental) {
-				scrollbar.button_press (button, x, y);
-			}
-		} else {
-			selection_click (button, x, y);
-		}
+		selection_click (button, x, y);
 	}
 
 	/** Returns true if overview shows the last character. */
@@ -1068,18 +1027,23 @@ public class OverView : FontDisplay {
 	}
 
 	public void update_scrollbar () {
-		double len;
 		Font f;
+		double nrows = 0;
 		
-		if (all_available) {
-			f = BirdFont.get_current_font ();
-			len = f.length ();
+		if (rows == 0) {
+			MainWindow.set_scrollbar_size (0);
+			MainWindow.set_scrollbar_position (0);
 		} else {
-			len = glyph_range.get_length ();
-		}
+			if (all_available) {
+				f = BirdFont.get_current_font ();
+				nrows = Math.ceil (f.length () / rows);
+			} else {
+				nrows = Math.ceil (glyph_range.length () / rows);
+			}
 		
-		scrollbar.set_handle_size (items_per_row * rows / len);
-		scrollbar.set_handle_position (first_visible / len);
+			MainWindow.set_scrollbar_size (rows / nrows);
+			MainWindow.set_scrollbar_position ((first_visible / rows) / nrows);
+		}
 	}
 }
 

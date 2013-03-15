@@ -21,7 +21,7 @@ namespace BirdFont {
 
 public enum PointType {
 	NONE,
-	LINE_QUADRATIC,      // line with quadratic handles
+	LINE_QUADRATIC,      // line with quadratic handle
 	LINE_DOUBLE_CURVE,   // line with two quadratic handles
 	LINE_CUBIC,          // line with cubic handles
 	CUBIC,
@@ -124,7 +124,7 @@ public class EditPoint {
 				h.move_to_coordinate (nx, ny);
 			}
 									
-			// on the other side
+			// the other side
 			h = n.get_right_handle ();
 			
 			if (h.type == PointType.LINE_DOUBLE_CURVE) {
@@ -218,20 +218,26 @@ public class EditPoint {
 		}
 		
 		if (left_handle.type == PointType.QUADRATIC) {
-			left_handle.type = PointType.DOUBLE_CURVE;
-			right_handle.type = PointType.DOUBLE_CURVE;
-			
 			prev_rh = get_prev ().data.get_right_handle ();
 			next_lh = get_next ().data.get_left_handle ();
 			
-			prev_rh.type = PointType.DOUBLE_CURVE;	
-			next_lh.type = PointType.DOUBLE_CURVE;
-			
+			if (next_lh.type == PointType.QUADRATIC) {
+				next_lh.type = PointType.DOUBLE_CURVE;
+				next_lh.length *= 0.5;
+			}
+
 			left_handle.move_to_coordinate (prev_rh.x (), prev_rh.y ());
 			left_handle.length *= 0.5;
-			right_handle.length *= 0.5;
+			
+			if (right_handle.type == PointType.QUADRATIC) {
+				right_handle.length *= 0.5;
+			}
+			
 			prev_rh.length *= 0.5;
-			next_lh.length *= 0.5;
+			
+			prev_rh.type = PointType.DOUBLE_CURVE;
+			left_handle.type = PointType.DOUBLE_CURVE;
+			right_handle.type = PointType.DOUBLE_CURVE;
 		} else if (left_handle.type == PointType.LINE_DOUBLE_CURVE) {
 			left_handle.type = PointType.DOUBLE_CURVE;
 			right_handle.type = PointType.DOUBLE_CURVE;
