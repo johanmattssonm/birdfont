@@ -22,11 +22,11 @@ namespace BirdFont {
 
 public class GlyphCollection : GLib.Object {
 	VersionList versions;
-	
+
 	public GlyphCollection (Glyph? current = null) {
 		versions = new VersionList (current);
 	}
-	
+
 	public VersionList get_version_list () {
 		return versions;
 	}

@@ -48,12 +48,16 @@ public class OverView : FontDisplay {
 	int zoom_list_index = 0;
 
 	List<GlyphCollection> deleted_glyphs = new List<GlyphCollection> ();
+	List<CharacterInfo> unicode_database_info = new List<CharacterInfo> ();
 	
 	bool all_available = true;
 	
+	/** Show unicode database info. */
+	CharacterInfo? character_info = null;
+	
 	public OverView (GlyphRange? range = null) {
 		GlyphRange gr;
-		
+
 		if (range == null) {
 			gr = new GlyphRange ();
 			set_glyph_range (gr);
@@ -92,6 +96,8 @@ public class OverView : FontDisplay {
 				g.close_path ();
 				g.default_zoom ();
 				z.store_current_view ();
+				
+				print (@"CHARDB: $(CharDatabase.get_unicode_database_entry (new_char))\n");
 			}
 		});
 		
@@ -330,11 +336,12 @@ public class OverView : FontDisplay {
 			cr.set_line_join (LineJoin.ROUND);
 			cr.set_line_width(12);
 			
-			cr.rectangle (x, y + nail_height - 20, nail_width - 30, 10);			
+			cr.rectangle (x, y + nail_height - 20, nail_width - 20, 10);			
 			cr.stroke ();
 			cr.restore ();
 			
 			draw_menu (cr, character_string, x, y);
+			draw_character_info_icon (cr, character_string, x, y);
 			
 			caption_y = y + 10 + nail_height - 20;
 			
@@ -348,9 +355,27 @@ public class OverView : FontDisplay {
 		
 		cr.stroke();
 	}
+	
+	private void draw_character_info_icon (Context cr, string character_string, double x, double y) {
+		double px = x + nail_width - 40;
+		double py = y + nail_height - 21;
+		CharacterInfo info;
+		unichar c = character_string.get_char ();
 		
+		if (character_string.char_count () > 1) {
+			warning ("Ligature - not a character");
+			c = '\0';
+		}
+		
+		info = new CharacterInfo (c);
+		unicode_database_info.append (info);
+		info.set_position (px, py);
+		info.draw_icon (cr);
+	}
+	
 	private void draw_menu (Context cr, string name, double x, double y) {
-		GlyphCollection? gl = BirdFont.get_current_font ().get_glyph_collection (name);
+		Font font = BirdFont.get_current_font ();
+		GlyphCollection? gl = font.get_glyph_collection (name);
 		GlyphCollection g;
 		DropMenu menu;
 		
@@ -361,7 +386,7 @@ public class OverView : FontDisplay {
 		g = (!) gl;
 		
 		menu = g.get_version_list ();
-		menu.set_position (x + nail_width - 40, y + nail_height - 21);
+		menu.set_position (x + nail_width - 55, y + nail_height - 21);
 		menu.draw_icon (cr);
 		menu.draw_menu (cr);
 		
@@ -421,7 +446,11 @@ public class OverView : FontDisplay {
 		int i;
 		int n_items;
 		Font font = BirdFont.get_current_font ();
-					
+		
+		while (unicode_database_info.length () > 0) {
+			unicode_database_info.remove_link (unicode_database_info.first ());
+		}
+		
 		while (visible_characters.length () > 9) {
 			visible_characters.remove_link (visible_characters.first ());
 		}
@@ -438,8 +467,8 @@ public class OverView : FontDisplay {
 			draw_empty_canvas (allocation, cr);
 		}
 		
-		n_items = ((allocation.width - 40) / nail_width);
-		rows = (allocation.height / nail_height);
+		n_items = allocation.width / nail_width;
+		rows = allocation.height / nail_height;
 
 		if (items_per_row != n_items) { 	
 			if (items_per_row == 0) {
@@ -454,10 +483,10 @@ public class OverView : FontDisplay {
 			}
 		}
 
-		width = nail_width * items_per_row;
+		width = (nail_width - 5) * items_per_row;
 		view_offset_x = (allocation.width - width) / 2.0;
 		
-		cr.translate(view_offset_x, view_offset_y);
+		cr.translate (view_offset_x, view_offset_y);
 	
 		y = 0;
 		t = first_visible;
@@ -470,8 +499,104 @@ public class OverView : FontDisplay {
 			i++;
 		}
 		
+		cr.restore (); // restore translation
+		
+		if (character_info != null) {
+			draw_character_info (allocation, cr, (!) character_info);
+		}
 	}
 
+	void draw_character_info (Allocation allocation, Context cr, CharacterInfo info) {
+		double x, y, w, h;
+		int i;
+		string unicode_value, unicode_description;
+		string[] column;
+		string entry = info.get_entry ();
+		int len = 0;
+		int length = 0;
+		bool see_also = false;
+		
+		foreach (string line in entry.split ("\n")) {
+			len = line.char_count ();
+			if (len > length) {
+				length = len;
+			}
+		}
+		
+		x = allocation.width * 0.1 - view_offset_x;
+		y = allocation.height * 0.1 - view_offset_y;
+		w = allocation.width * 0.9 - x - view_offset_x; 
+		h = allocation.height * 0.9 - y - view_offset_y;
+		
+		if (w < 8 * length) {
+			w = 8 * length;
+			if (w > allocation.width - view_offset_x) {
+				x = -view_offset_x;
+			} else {
+				x = (allocation.width - view_offset_x- w) / 2.0;
+			}
+		}
+		
+		// background	
+		cr.save ();
+		cr.set_source_rgba (1, 1, 1, 0.7);
+		cr.rectangle (x, y, w, h);
+		cr.fill ();
+		cr.restore ();
+
+		cr.save ();
+		cr.set_source_rgba (0, 0, 0, 0.7);
+		cr.set_line_width (2);
+		cr.rectangle (x, y, w, h);
+		cr.stroke ();
+		cr.restore ();
+
+		// database entry
+		i = 0;
+		foreach (string line in entry.split ("\n")) {
+			if (i == 0) {
+				column = line.split ("\t");
+				return_if_fail (column.length == 2);
+				unicode_value = "U+" + column[0];
+				unicode_description = column[1];
+
+				draw_line (unicode_description, cr, x, y, i);
+				i++;
+
+				draw_line (unicode_value, cr, x, y, i);
+				i++;			
+			} else {
+				
+				if (line.has_prefix ("\t*")) {
+					draw_line (line.replace ("\t*", "•"), cr, x, y, i);
+					i++;					
+				} else if (line.has_prefix ("\tx (")) {
+					if (!see_also) {
+						i++;
+						draw_line (_("See also:"), cr, x, y, i);
+						i++;
+						see_also = true;
+					}
+					
+					draw_line (line.replace ("\tx (", "•").replace (")", ""), cr, x, y, i);
+					i++;
+				} else {
+
+					i++;
+				}
+			}
+		}
+	}
+	
+	void draw_line (string line, Context cr, double x, double y, int row) {
+		cr.save ();
+		cr.set_font_size (12);
+		cr.set_source_rgba (0, 0, 0, 1);
+		cr.move_to (x + 10, y + 28 + row * 18 * 1.2);
+		cr.show_text (line);
+		cr.restore ();		
+	}
+	
 	void draw_empty_canvas (Allocation allocation, Context cr) {
 		cr.save ();
 		cr.set_source_rgba (156/255.0, 156/255.0, 156/255.0, 1);
@@ -594,7 +719,10 @@ public class OverView : FontDisplay {
 	private int selected_offset_y (unichar item) {
 		int64 di;
 		int64 a, b;
-		if (unlikely (items_per_row == 0)) return 0;
+		
+		if (unlikely (items_per_row == 0)) {
+			return 0;
+		}
 		
 		a = (int64) item;
 		b = (int64) first_visible;
@@ -848,7 +976,8 @@ public class OverView : FontDisplay {
 	private void selection_click (uint button, double ex, double ey) {
 		double x = view_offset_x;
 		double y = view_offset_y;
-
+		double px, py;
+		
 		// click in margin
 		int n_items = (allocation.width - 40 / nail_width);
 		double m = (allocation.width - 40 - (n_items * nail_width)) / 2.0;
@@ -867,19 +996,28 @@ public class OverView : FontDisplay {
 			len = glyph_range.length ();
 		}
 		
+		px = ex - view_offset_x;
+		py = ey - view_offset_y;
 		foreach (GlyphCollection g in get_visible_glyphs ()) {
 			bool a;
-
-			a = g.get_version_list ().menu_item_action (ex - view_offset_x, ey - view_offset_y); // select one item on the menu
+			
+			a = g.get_version_list ().menu_item_action (px, py); // select one item on the menu
 			
 			if (a) {
 				return;
 			}
 						
-			a = g.get_version_list ().menu_icon_action (ex - view_offset_x, ey - view_offset_y); // open menu
+			a = g.get_version_list ().menu_icon_action (px, py); // open menu
 			
 			if (a) {
 				menu_action = true;
+			}
+		}
+
+		character_info = null;
+		foreach (CharacterInfo info in unicode_database_info) {
+			if (info.is_over_icon (px, py)) {
+				character_info = info;
 			}
 		}
 		

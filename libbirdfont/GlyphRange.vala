@@ -175,16 +175,18 @@ public class GlyphRange {
 	}
 	
 	public void use_full_unicode_range () {
-		add_range ('\0', (unichar) 0xFFF8);
+		CharDatabase.get_full_unicode (this);
+		
+		if (len == 0) {
+			add_range ('\0', (unichar) 0xFFF8);
+		}
 	}
 	
 	// Todo: complete localized alphabetical sort åäö is the right order for example.
 	public void sort () {
 		ranges.sort ((a, b) => {
 			bool r = a.start > b.start;
-			
 			return_val_if_fail (a.start != b.start, 0);
-			
 			return (r) ? 1 : -1;
 		});
 	}
@@ -240,9 +242,9 @@ public class GlyphRange {
 	
 	private void append_range (unichar start, unichar stop) {
 		UniRange r;
-		
 		StringBuilder s = new StringBuilder ();
 		StringBuilder e = new StringBuilder ();
+		
 		s.append_unichar (start);
 		e.append_unichar (stop);
 		
@@ -345,17 +347,19 @@ public class GlyphRange {
 	}
 
 	public void print_all () {
-		StringBuilder s;
-		
 		stdout.printf ("Ranges:\n");
+		stdout.printf (get_all_ranges ());
+	}
+	
+	public string get_all_ranges () {
+		StringBuilder s = new StringBuilder ();
 		foreach (UniRange u in ranges) {
-			s = new StringBuilder ();
-			s.append_unichar (u.start);
+			s.append (Font.to_hex_code (u.start));
 			s.append (" - ");
-			s.append_unichar (u.stop);
+			s.append (Font.to_hex_code (u.stop));
 			s.append ("\n");
-			stdout.printf (s.str);
 		}
+		return s.str;
 	}
 }
 
