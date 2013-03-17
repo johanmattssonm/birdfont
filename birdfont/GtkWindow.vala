@@ -46,20 +46,20 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	bool scrollbar_supress_signal = false;
 	
 	public GtkWindow (string title) {
+		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));;
 		((Gtk.Window)this).set_title ("BirdFont");
 	}
 	
 	public void init () {
 		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
 		
-		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		scrollbar.value_changed.connect (() => {
 			if (!scrollbar_supress_signal) {
 				FontDisplay display = MainWindow.get_current_display ();
 				display.scroll_to (scrollbar.get_value ());
 			}
 		});
-				
+
 		margin_bottom = new DrawingArea ();
 		margin_right = new DrawingArea ();
 	
@@ -70,6 +70,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		set_size_and_position ();
 		
+		glyph_canvas_area = new GlyphCanvasArea (MainWindow.glyph_canvas);
+
 		html_canvas = new WebView ();
 		WebKit.set_cache_model (CacheModel.DOCUMENT_VIEWER);
 		html_canvas.get_settings ().enable_default_context_menu = false;
@@ -106,6 +108,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 					
 					if (fd.get_name () == "Preview") {
 						// hack: force webkit to ignore cache in preview					
+
 						html_box.set_visible (false);
 						glyph_canvas_area.set_visible (true);
 												
@@ -188,8 +191,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MainWindow.tabs.add_unique_tab (MainWindow.menu_tab, 60, true);
 		MainWindow.tabs.select_tab_name ("Menu");
 
-		glyph_canvas_area = new GlyphCanvasArea (MainWindow.glyph_canvas);
-
 		canvas_box = new HBox (false, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
@@ -243,6 +244,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		
 		show_all ();
+		scrollbar.set_visible (false);
 	}
 
 	public void set_scrollbar_size (double size) {

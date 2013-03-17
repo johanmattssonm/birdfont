@@ -43,11 +43,11 @@ class GridTool : Tool {
 		size_x = 2;
 		size_y = 2;
 	
-		updata_lines ();
+		update_lines ();
 			
 		select_action.connect((self) => {
 			visible = !visible;
-			updata_lines ();
+			update_lines ();
 			MainWindow.get_glyph_canvas ().redraw ();
 			
 			self.set_selected (visible);
@@ -79,10 +79,10 @@ class GridTool : Tool {
 		size_x = w;
 		size_y = w;
 		
-		updata_lines ();
+		update_lines ();
 	}
 	
-	private static void updata_lines () {
+	private static void update_lines () {
 		Glyph g = MainWindow.get_current_glyph ();
 		double step = size_y;
 		double i;
@@ -97,8 +97,13 @@ class GridTool : Tool {
 		Line left = g.get_line ("left");
 		Line right = g.get_line ("right");
 
-		while (vertical.length () > 0) vertical.delete_link (vertical.first ());
-		while (horizontal.length () > 0) horizontal.delete_link (horizontal.first ());
+		while (vertical.length () > 0) {
+			vertical.delete_link (vertical.first ());
+		}
+		
+		while (horizontal.length () > 0) {
+			horizontal.delete_link (horizontal.first ());
+		}
 	
 		n = 0;
 		for (i = left.get_pos () - 7 * step; i <= right.get_pos () + 7 * step; i += step) {	

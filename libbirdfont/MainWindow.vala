@@ -114,11 +114,15 @@ public class MainWindow {
 	}
 
 	public static void set_scrollbar_size (double size) {
-		MainWindow.native_window.set_scrollbar_size (size);
+		if (!is_null (MainWindow.native_window)) {
+			MainWindow.native_window.set_scrollbar_size (size);
+		}
 	}
 	
 	public static void set_scrollbar_position (double position) {
-		MainWindow.native_window.set_scrollbar_position (position);
+		if (!is_null (MainWindow.native_window)) {
+			MainWindow.native_window.set_scrollbar_position (position);
+		}
 	}
 
 	public void set_title (string title) {

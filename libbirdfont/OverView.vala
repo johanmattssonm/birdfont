@@ -506,15 +506,18 @@ public class OverView : FontDisplay {
 		}
 	}
 
+	/** Display one entry from the Unicode Character Database. */
 	void draw_character_info (Allocation allocation, Context cr, CharacterInfo info) {
 		double x, y, w, h;
 		int i;
 		string unicode_value, unicode_description;
 		string[] column;
-		string entry = info.get_entry ();
+		string entry;
 		int len = 0;
 		int length = 0;
 		bool see_also = false;
+		
+		entry = info.get_entry ();
 		
 		foreach (string line in entry.split ("\n")) {
 			len = line.char_count ();
@@ -539,13 +542,13 @@ public class OverView : FontDisplay {
 		
 		// background	
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 0.7);
+		cr.set_source_rgba (1, 1, 1, 0.8);
 		cr.rectangle (x, y, w, h);
 		cr.fill ();
 		cr.restore ();
 
 		cr.save ();
-		cr.set_source_rgba (0, 0, 0, 0.7);
+		cr.set_source_rgba (0, 0, 0, 0.8);
 		cr.set_line_width (2);
 		cr.rectangle (x, y, w, h);
 		cr.stroke ();
@@ -988,6 +991,11 @@ public class OverView : FontDisplay {
 		uint len;
 
 		redraw_area (0, 0, allocation.width, allocation.height);
+
+		if (character_info != null) {
+			character_info = null;
+			return;
+		}
 
 		if (all_available) {
 			f = BirdFont.get_current_font ();
