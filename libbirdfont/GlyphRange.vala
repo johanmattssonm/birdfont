@@ -40,7 +40,9 @@ public class GlyphRange {
 			return;
 		}
 		
-		if (languages[0].has_prefix ("zh_CN")) {
+		if (languages[0].has_prefix ("ja")) {
+			use_default_range_japanese ();
+		} else if (languages[0].has_prefix ("zh_CN")) {
 			use_default_range_chinese ();
 		} else {
 			use_default_range_alphabetic ();
@@ -89,6 +91,31 @@ public class GlyphRange {
 		add_range ('‐', '—');
 		add_range ('<', '@');
 		add_range ('(', ')');
+	}
+	
+	public void  use_default_range_japanese () {
+		// hiragana
+		add_range ('ぁ', 'ゖ');
+		add_range ('゙', 'ゟ');
+
+		// halfwidth and fullwidth forms
+		add_range ('!', 'ᄒ');
+		add_range ('ￂ', 'ￇ');
+		add_range ('ￊ', 'ￏ');
+		add_range ('ￒ', 'ￗ');
+		add_range ('ￚ', 'ￜ');
+		add_range ('¢', '₩');
+		add_range ('│', '○');
+
+		// katakana phonetic extensions
+		add_range ('ㇰ', 'ㇿ');
+
+		// kana supplement
+		add_single ('𛀀');
+		add_single ('𛀁');
+
+		// kanbun
+		add_range ('㆐', '㆟');
 	}
 	
 	public void use_default_range_chinese () {
