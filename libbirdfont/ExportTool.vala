@@ -397,7 +397,7 @@ os.put_string (
 			};
 		}
 
-		f = File.new_for_path (@"$PREFIX/birdfont-export");
+		f = File.new_for_path (@"$PREFIX/bin/birdfont-export");
 		if (f.query_exists ()) {
 			return { 
 				@"$PREFIX/bin/birdfont-export",

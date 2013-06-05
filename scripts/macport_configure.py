@@ -9,6 +9,6 @@ parser.add_option("-p", "--prefix", dest="prefix", help="install prefix", metava
 (options, args) = parser.parse_args()
 
 if not options.prefix:
-	options.prefix = "/usr"
+	options.prefix = "/opt/local"
 
 configfile.write_config (options.prefix)
