@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-27 05:37+0100\n"
-"PO-Revision-Date: 2013-03-17 11:50+0000\n"
+"POT-Creation-Date: 2013-06-06 08:22+0200\n"
+"PO-Revision-Date: 2013-05-21 18:51+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1363521037.0\n"
+"X-POOTLE-MTIME: 1369162315.0\n"
 
 #: libbirdfont/Argument.vala:233
 msgid "Usage"
@@ -411,7 +411,7 @@ msgstr "_Einfügen"
 
 #: birdfont/GtkWindow.vala:436
 msgid "_Select all paths"
-msgstr ""
+msgstr "Alle Pfade auswählen"
 
 #: birdfont/GtkWindow.vala:444
 msgid "_Export glyph as SVG"
@@ -423,7 +423,7 @@ msgstr "SVG importieren"
 
 #: birdfont/GtkWindow.vala:452
 msgid "Close _path"
-msgstr ""
+msgstr "Schließe den aktuellen Pfad"
 
 #: birdfont/GtkWindow.vala:459
 msgid "_Select point above"
@@ -435,7 +435,7 @@ msgstr ""
 
 #: birdfont/GtkWindow.vala:467
 msgid "Select _previous point"
-msgstr ""
+msgstr "_Vorherigen Punkt auswählen"
 
 #: birdfont/GtkWindow.vala:471
 msgid "Select point _below"

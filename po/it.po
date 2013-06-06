@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-27 05:37+0100\n"
-"PO-Revision-Date: 2013-02-05 22:45+0000\n"
-"Last-Translator: pAUL <paul_pricootz@yahoo.it>\n"
+"POT-Creation-Date: 2013-06-06 08:22+0200\n"
+"PO-Revision-Date: 2013-04-28 15:30+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1360104351.0\n"
+"X-POOTLE-MTIME: 1367163056.0\n"
 
 #: libbirdfont/Argument.vala:233
 msgid "Usage"
@@ -180,10 +180,11 @@ msgstr "Nessun Glyph in questa modalità"
 msgid ""
 "The loaded font will be overwritten if you choose to continue with preview."
 msgstr ""
+"Il font caricato sarà sovrascritto se scegli di continuare con l'anteprima."
 
 #: libbirdfont/OverwriteDialog.vala:72
 msgid "Continue"
-msgstr ""
+msgstr "Continua"
 
 #: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:88
 msgid "Cancel"
@@ -191,11 +192,11 @@ msgstr "Annulla"
 
 #: libbirdfont/OverwriteDialog.vala:74
 msgid "Continue and don't ask me again."
-msgstr ""
+msgstr "Continua e non chiederlo più."
 
 #: libbirdfont/PenTool.vala:59
 msgid "Use left command key (⌘) + click to add new points"
-msgstr ""
+msgstr "Utilizzare il tasto sinistro (⌘) + clic per aggiungere nuovi punti"
 
 #: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"

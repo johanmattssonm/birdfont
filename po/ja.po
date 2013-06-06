@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-27 05:37+0100\n"
-"PO-Revision-Date: 2013-03-26 02:01+0000\n"
+"POT-Creation-Date: 2013-06-06 08:22+0200\n"
+"PO-Revision-Date: 2013-03-28 02:29+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ja\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1364263294.0\n"
+"X-POOTLE-MTIME: 1364437758.0\n"
 
 #: libbirdfont/Argument.vala:233
 msgid "Usage"
@@ -207,7 +207,7 @@ msgstr "そして新しい点をパスに追加するにはダブルクリック
 
 #: libbirdfont/SaveDialog.vala:69
 msgid "Save?"
-msgstr "保存しますか？"
+msgstr "保存しますか?"
 
 #: libbirdfont/SaveDialog.vala:86
 msgid "Save as"
@@ -423,15 +423,15 @@ msgstr "上の点を選択する(_S)"
 
 #: birdfont/GtkWindow.vala:463
 msgid "Select _next point"
-msgstr "次のポイントを選択"
+msgstr "次の点を選択する(_N)"
 
 #: birdfont/GtkWindow.vala:467
 msgid "Select _previous point"
-msgstr "前のポイントを選択"
+msgstr "前の点を選択する(_P)"
 
 #: birdfont/GtkWindow.vala:471
 msgid "Select point _below"
-msgstr "下記の点を選択します"
+msgstr "下の点を選択する(_B)"
 
 #: birdfont/GtkWindow.vala:476
 msgid "_Next tab"
@@ -447,11 +447,11 @@ msgstr "タブを閉じる(_C)"
 
 #: birdfont/GtkWindow.vala:516
 msgid "Close _all tabs"
-msgstr "全てのタブを閉じる"
+msgstr "全てのタブを閉じる(_A)"
 
 #: birdfont/GtkWindow.vala:524
 msgid "_Create path"
-msgstr "パスを作成"
+msgstr "パスを作る(_C)"
 
 #: birdfont/GtkWindow.vala:531
 msgid "_Zoom"
