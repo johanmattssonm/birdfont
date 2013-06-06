@@ -25,14 +25,14 @@ def build(prefix, cc, cflags, ldflags):
 		--define=MAC \
 		--library libbirdfont \
 		-H build/libbirdfont/birdfont.h \
-		libbirdfont/* \
+		libbirdfont/*.vala \
+		libbirdfont/OpenFontFormat/*.vala \
 		--pkg libxml-2.0 \
 		--pkg gio-2.0 \
 		--pkg cairo \
 		--pkg libsoup-2.4 \
 		--pkg gdk-pixbuf-2.0 \
 		--pkg webkit-1.0""")
-	run("cp libbirdfont/*.c build/libbirdfont/")
 
 	run(cc + " " + cflags + """ \
 		-c build/libbirdfont/*.c \
@@ -157,7 +157,6 @@ def build_app (prefix):
 	
 	startup = open ('build/BirdFont.app/Contents/MacOS/birdfont.sh', 'w+')
 	startup.write ("#!/bin/bash\n")
-	startup.write ("cd \"${0%/*}\"\n")
 	startup.write (prefix + "/bin/birdfont\n")
 	
 	run("chmod 755 build/BirdFont.app/Contents/MacOS/birdfont.sh")
