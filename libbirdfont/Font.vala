@@ -590,7 +590,7 @@ public class Font : GLib.Object {
 		}
 
 		if (path.has_suffix (".bf")) {
-			Toolbox.select_tool_by_name ("cubic_points");
+			Toolbox.select_tool_by_name ("double_points");
 			font_file = path;
 			loaded = parse_bf_file (path);
 			format = FontFormat.BIRDFONT;
