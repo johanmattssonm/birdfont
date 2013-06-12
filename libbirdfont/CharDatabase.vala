@@ -67,7 +67,7 @@ class CharDatabase {
 		string description = "";
 		File file;
 				
-		file = (!) File.new_for_path ("/usr/share/unicode/NamesList.txt"); // FIXME
+		file = get_unicode_database ();
 		hex_char = Font.to_hex (c).replace ("U+", "");
 		
 		if (hex_char.char_count () == 2) {
@@ -112,6 +112,7 @@ class CharDatabase {
 			din.close ();
 		} catch (GLib.Error e) {
 			warning (e.message);
+			stderr.printf ("when reading %s", (!) get_unicode_database ().get_path ());
 		}
 		
 		return description;		
@@ -212,6 +213,11 @@ class CharDatabase {
 		if (f.query_exists ()) {
 			return f;
 		}
+
+		f = (!) File.new_for_path (PREFIX + "/share/unicode/ucd/NamesList.txt");
+		if (f.query_exists ()) {
+			return f;
+		}
 		
 		f = (!) File.new_for_path (".\\NamesList.txt");
 		if (f.query_exists ()) {
@@ -219,6 +225,12 @@ class CharDatabase {
 		}
 			
 		f = (!) File.new_for_path ("/usr/share/unicode/NamesList.txt");
+		if (f.query_exists ()) {
+			return f;
+		}
+
+		f = (!) File.new_for_path ("/usr/share/unicode/ucd/NamesList.txt");
+
 		return f;
 	}
 }
