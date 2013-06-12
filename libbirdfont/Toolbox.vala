@@ -47,7 +47,7 @@ public class Toolbox : GLib.Object  {
 	
 	ImageSurface? toolbox_background = null;
 	
-	public static PointType point_type = PointType.CUBIC;
+	public static PointType point_type = PointType.DOUBLE_CURVE;
 	
 	public Toolbox (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
@@ -111,19 +111,19 @@ public class Toolbox : GLib.Object  {
 		});
 		draw_tool_modifiers.add_tool (quadratic_points);		
 
-		// two quadratic points off curve for each quadratic control point
-		Tool double_points = new Tool ("double_points", _("Quadratic path with two line handles"));
-		double_points.select_action.connect ((self) => {
-			point_type = PointType.DOUBLE_CURVE;
-		});
-		draw_tool_modifiers.add_tool (double_points);
-				
 		// cubic Bézier points
 		Tool cubic_points = new Tool ("cubic_points", _("Create cubic Bézier curves"));
 		cubic_points.select_action.connect ((self) => {
 			point_type = PointType.CUBIC;
 		});
 		draw_tool_modifiers.add_tool (cubic_points);
+
+		// two quadratic points off curve for each quadratic control point
+		Tool double_points = new Tool ("double_points", _("Quadratic path with two line handles"));
+		double_points.select_action.connect ((self) => {
+			point_type = PointType.DOUBLE_CURVE;
+		});
+		draw_tool_modifiers.add_tool (double_points);
 		
 		// path tools
 		Tool union_paths_tool = new MergeTool ("union_paths");
@@ -585,7 +585,7 @@ public class Toolbox : GLib.Object  {
 		var idle = new IdleSource();
 		idle.set_callback (() => {
 			pen_tool.set_selected (true);
-			select_tool (cubic_points);
+			select_tool (double_points);
 			
 			select_draw_tool ();			
 			
