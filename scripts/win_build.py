@@ -96,9 +96,10 @@ def build():
 	run("windres ./resources/win32/icon.rc -O coff -o ./build/icon.res")
 
 	# generate c code
-	run("cp ./libbirdfont/*.c ./build/win32/libbirdfont/")
+	run("cp ./libbirdfont/OpenFontFormat/*.c ./build/win32/libbirdfont/")
 	run("""valac -C \
 		./libbirdfont/*.vala \
+		./libbirdfont/OpenFontFormat/*.vala \
 		--basedir ./build/win32/libbirdfont/ \
 		--library libbirdfont \
 		-H ./build/win32/libbirdfont/birdfont.h \
@@ -377,6 +378,8 @@ def copy_runtime_dependencies ():
 
 	MINGW = "/usr/i686-w64-mingw32/sys-root/mingw"
 	MINGW_BIN = MINGW + "/bin"
+
+	run("cp /usr/share/unicode/NamesList.txt ./build/supplement/")
 
 	run("cp ./README ./build/supplement/")
 	run("cp ./COPYING ./build/supplement/")
