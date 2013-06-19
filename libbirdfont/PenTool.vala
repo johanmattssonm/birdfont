@@ -200,8 +200,6 @@ public class PenTool : Tool {
 			last_point_x = x;
 			last_point_y = y;
 			
-			last_selected_is_handle = true;
-			
 			return;
 		}
 		
@@ -223,8 +221,6 @@ public class PenTool : Tool {
 				
 				p.recalculate_linear_handles ();
 			}
-		
-			last_selected_is_handle = false;
 		}
 		
 		last_point_x = x;
@@ -314,6 +310,7 @@ public class PenTool : Tool {
 			set_default_handle_positions ();
 			
 			if (active_edit_point != null) {
+				last_selected_is_handle = false;
 				add_selected_point ((!) active_edit_point);
 			}
 		}
@@ -849,6 +846,7 @@ public class PenTool : Tool {
 		}
 
 		move_selected_handle = true;
+		last_selected_is_handle = true;
 		selected_handle = get_closest_handle (event_x, event_y);
 	}
 
