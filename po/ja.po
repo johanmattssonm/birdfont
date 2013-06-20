@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-06 08:22+0200\n"
+"POT-Creation-Date: 2013-06-20 08:25+0200\n"
 "PO-Revision-Date: 2013-03-28 02:29+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -238,11 +238,11 @@ msgid "Create quadratic Bézier curves"
 msgstr ""
 
 #: libbirdfont/Toolbox.vala:115
-msgid "Quadratic path with two line handles"
+msgid "Create cubic Bézier curves"
 msgstr ""
 
 #: libbirdfont/Toolbox.vala:122
-msgid "Create cubic Bézier curves"
+msgid "Quadratic path with two line handles"
 msgstr ""
 
 #: libbirdfont/Toolbox.vala:132
