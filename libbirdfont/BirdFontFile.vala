@@ -243,8 +243,10 @@ class BirdFontFile {
 	 * cartesian coordinate system with origo in the middle.
 	 * 
 	 * Instructions:
-	 * S - Start point for path 
-	 * L - Line
+	 * S - Start point for a quadratic path
+	 * B - Start point for a cubic path
+	 * L - Line with quadratic control points
+	 * M - Line with cubic control points
 	 * Q - Quadratic Bézier path
 	 * D - Two quadratic off curve points
 	 * C - Cubic Bézier path
@@ -265,7 +267,12 @@ class BirdFontFile {
 			
 		foreach (EditPoint e in pl.points) {
 			if (i == 0) {
-				add_start (e, data);
+				if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
+					add_cubic_start (e, data);
+				} else {
+					add_quadratic_start (e, data);
+				}
+				
 				i++;
 				n = e;
 				continue;
@@ -296,12 +303,20 @@ class BirdFontFile {
 		return data.str;
 	}
 	
-	private void add_start (EditPoint p, StringBuilder data) {
+	private void add_quadratic_start (EditPoint p, StringBuilder data) {
 		data.append (@"S $(p.x),$(p.y)");
+	}
+
+	private void add_cubic_start (EditPoint p, StringBuilder data) {
+		data.append (@"B $(p.x),$(p.y)");
 	}
 
 	private void add_line_to (EditPoint p, StringBuilder data) {
 		data.append (@"L $(p.x),$(p.y)");
+	}
+
+	private void add_cubic_line_to (EditPoint p, StringBuilder data) {
+		data.append (@"M $(p.x),$(p.y)");
 	}
 
 	private void add_quadratic (EditPoint start, EditPoint end, StringBuilder data) {
@@ -322,15 +337,20 @@ class BirdFontFile {
 	}
 
 	private void add_next_point (EditPoint start, EditPoint end, StringBuilder data) {
-		if (start.right_handle.type == PointType.LINE_QUADRATIC) {
+		if (start.right_handle.type == PointType.LINE_QUADRATIC && end.left_handle.type == PointType.LINE_QUADRATIC) {
+			add_line_to (end, data);
+		} else if (start.right_handle.type == PointType.LINE_DOUBLE_CURVE && end.left_handle.type == PointType.LINE_DOUBLE_CURVE) {
 			add_line_to (end, data);
 		} else if (start.right_handle.type == PointType.LINE_CUBIC && end.left_handle.type == PointType.LINE_CUBIC) {
-			add_line_to (end, data);
+			add_cubic_line_to (end, data);
 		} else if (end.left_handle.type == PointType.DOUBLE_CURVE || start.right_handle.type == PointType.DOUBLE_CURVE) {
 			add_double (start, end, data);
 		} else if (end.left_handle.type == PointType.QUADRATIC || start.right_handle.type == PointType.QUADRATIC) {
 			add_quadratic (start, end, data);
+		} else if (end.left_handle.type == PointType.CUBIC || start.right_handle.type == PointType.CUBIC) {
+			add_cubic (start, end, data);
 		} else {
+			warning (@"Unknown point type. \nStart handle: $(end.left_handle.type) \nStop handle: $(end.left_handle.type)");
 			add_cubic (start, end, data);
 		}		
 	}
@@ -699,7 +719,23 @@ class BirdFontFile {
 	}
 	
 	private void line (Path path, string px, string py) {
+		EditPoint ep;
+		
 		path.add (parse_double (px), parse_double (py));
+		ep = path.points.last ().data;
+		ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
+		ep.type = PointType.LINE_DOUBLE_CURVE;
+		ep.recalculate_linear_handles ();			
+	}
+
+	private void cubic_line (Path path, string px, string py) {
+		EditPoint ep;
+
+		path.add (parse_double (px), parse_double (py));
+		ep = path.points.last ().data;
+		ep.get_right_handle ().type = PointType.LINE_CUBIC;
+		ep.type = PointType.LINE_CUBIC;
+		ep.recalculate_linear_handles ();
 	}
 
 	private void quadratic (Path path, string px0, string py0, string px1, string py1) {
@@ -719,13 +755,15 @@ class BirdFontFile {
 		ep1.recalculate_linear_handles ();
 		ep1.get_right_handle ().type = PointType.QUADRATIC;
 		ep1.get_right_handle ().move_to_coordinate (x0, y0);	
+		ep1.type = PointType.QUADRATIC;
 
 		path.add (x1, y1);
 
 		ep2 = path.points.last ().data;
 		ep2.recalculate_linear_handles ();
 		ep2.get_left_handle ().type = PointType.QUADRATIC;
-		ep2.get_left_handle ().move_to_coordinate (x0, y0);		
+		ep2.get_left_handle ().move_to_coordinate (x0, y0);
+		ep2.type = PointType.QUADRATIC;
 	}
 
 	private void cubic (Path path, string px0, string py0, string px1, string py1, string px2, string py2) {
@@ -760,14 +798,16 @@ class BirdFontFile {
 		ep1.recalculate_linear_handles ();
 		ep1.get_right_handle ().type = PointType.CUBIC;
 		ep1.get_right_handle ().move_to_coordinate (x0, y0);				
-
+		ep1.type = PointType.CUBIC;
+	
 		path.add (x2, y2);
 						
 		ep2 = path.points.last ().data;
 		ep2.recalculate_linear_handles ();
 		ep2.get_left_handle ().type = PointType.CUBIC;
 		ep2.get_left_handle ().move_to_coordinate (x1, y1);
-	
+		ep2.type = PointType.CUBIC;
+		
 		ep1.recalculate_linear_handles ();
 	}
 	
@@ -804,14 +844,16 @@ class BirdFontFile {
 		ep1.recalculate_linear_handles ();
 		ep1.get_right_handle ().type = PointType.DOUBLE_CURVE;
 		ep1.get_right_handle ().move_to_coordinate (x0, y0);				
-
+		ep1.type = PointType.DOUBLE_CURVE;
+		
 		path.add (x2, y2);
 						
 		ep2 = path.points.last ().data;
 		ep2.recalculate_linear_handles ();
 		ep2.get_left_handle ().type = PointType.DOUBLE_CURVE;
 		ep2.get_left_handle ().move_to_coordinate (x1, y1);
-	
+		ep2.type = PointType.DOUBLE_CURVE;
+		
 		ep1.recalculate_linear_handles ();
 	}
 	
@@ -843,15 +885,23 @@ class BirdFontFile {
 		
 		return_val_if_fail (d.length > 1, path);
 		
-		if (d[0] != "S") {
+		if (!(d[0] == "S" || d[0] == "B")) {
 			warning ("No start point.");
 			return path;
 		}
 		
-		if (d[i++] == "S") {
+		instruction = d[i++];
+		
+		if (instruction == "S") {
 			p = d[i++].split (",");
 			return_val_if_fail (p.length == 2, path);
 			line (path, p[0], p[1]);
+		}
+
+		if (instruction == "B") {
+			p = d[i++].split (",");
+			return_val_if_fail (p.length == 2, path);
+			cubic_line (path, p[0], p[1]);
 		}
 		
 		while (i < d.length) {
@@ -867,6 +917,11 @@ class BirdFontFile {
 				p = d[i++].split (",");
 				return_val_if_fail (p.length == 2, path);
 				line (path, p[0], p[1]);
+			}else if (instruction == "M") {
+				return_val_if_fail (i < d.length, path);
+				p = d[i++].split (",");
+				return_val_if_fail (p.length == 2, path);
+				cubic_line (path, p[0], p[1]);
 			} else if (instruction == "Q") {
 				return_val_if_fail (i + 1 < d.length, path);
 				
@@ -1136,7 +1191,7 @@ class BirdFontFile {
 		}
 		
 		ep = new EditPoint (x, y);
-		
+					
 		ep.right_handle.angle = angle_right;
 		ep.right_handle.length = length_right;
 		ep.right_handle.type = type_right;
@@ -1146,6 +1201,8 @@ class BirdFontFile {
 		ep.left_handle.type = type_left;
 		
 		ep.tie_handles = tie_handles;
+		
+		ep.type = type_right;
 		
 		p.add_point (ep);
 	}

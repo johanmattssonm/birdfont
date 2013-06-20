@@ -350,7 +350,7 @@ public class Path {
 	{	
 		ImageSurface img;
 		
-		if (e.type == PointType.CUBIC) {
+		if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
 			if (e.is_selected ()) {
 				img = (e.active) ? (!) cubic_active_selected_edit_point_image : (!) cubic_selected_edit_point_image;
 			} else {
