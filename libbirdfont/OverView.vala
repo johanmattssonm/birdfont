@@ -1186,7 +1186,11 @@ public class OverView : FontDisplay {
 			} else {
 				nrows = Math.ceil (glyph_range.length () / rows);
 			}
-		
+			
+			if (nrows <= 0) {
+				nrows = 1;
+			}
+			
 			MainWindow.set_scrollbar_size (rows / nrows);
 			MainWindow.set_scrollbar_position ((first_visible / rows) / nrows);
 		}

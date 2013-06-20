@@ -327,7 +327,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			TargetEntry[] targets = { t };
 			inkscape_clipboard = inkscape_clipboard_data;
 			
-			// we can't add data to this closure because the third argument 
+			// we can not add data to this closure because the third argument 
 			// is owner and not private data.
 			clipboard.set_with_owner (targets,
 			
