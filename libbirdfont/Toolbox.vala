@@ -85,25 +85,6 @@ public class Toolbox : GLib.Object  {
 		Tool move_tool = new MoveTool ("move");
 		draw_tools.add_tool (move_tool);
 
-		// tie edit point handles
-		Tool tie_handles = new Tool ("tie_point", _("Tie curve handles for the selected edit point"), 'w');
-		tie_handles.select_action.connect ((self) => {
-			bool tie;
-			
-			foreach (EditPoint ep in PenTool.selected_points) {
-				tie = !ep.tie_handles;
-				
-				if (tie) {
-					ep.process_tied_handle ();
-				}
-				
-				ep.set_tie_handle (tie);
-				
-				MainWindow.get_current_glyph ().update_view ();
-			}
-		});
-		draw_tool_modifiers.add_tool (tie_handles);
-
 		// quadratic Bézier points
 		Tool quadratic_points = new Tool ("quadratic_points", _("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
@@ -124,6 +105,44 @@ public class Toolbox : GLib.Object  {
 			point_type = PointType.DOUBLE_CURVE;
 		});
 		draw_tool_modifiers.add_tool (double_points);
+
+		// tie edit point handles
+		Tool tie_handles = new Tool ("tie_point", _("Tie curve handles for the selected edit point"), 'w');
+		tie_handles.select_action.connect ((self) => {
+			bool tie;
+			
+			foreach (EditPoint ep in PenTool.selected_points) {
+				tie = !ep.tie_handles;
+				
+				if (tie) {
+					ep.process_tied_handle ();
+				}
+				
+				ep.set_tie_handle (tie);
+				MainWindow.get_current_glyph ().update_view ();
+			}
+			
+			// don't select this tool. focus on the type selector:
+			var idle = new IdleSource();
+			idle.set_callback (() => {
+				if (point_type == PointType.QUADRATIC) {
+					select_tool (quadratic_points);
+				}
+
+				if (point_type == PointType.CUBIC) {
+					select_tool (cubic_points);
+				}
+
+				if (point_type == PointType.DOUBLE_CURVE) {
+					select_tool (double_points);
+				}
+				return false;
+			});
+			
+			idle.attach (null);
+				
+		});
+		draw_tool_modifiers.add_tool (tie_handles);
 		
 		// path tools
 		Tool union_paths_tool = new MergeTool ("union_paths");
