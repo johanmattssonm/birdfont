@@ -25,7 +25,6 @@ class CharDatabase {
 	public static bool has_ascender (unichar c) {
 		if (!c.islower()) return true;
 		
-		// todo: their derrivatives
 		switch (c) {
 			case 'b': return true;
 			case 'd': return true;
@@ -46,7 +45,6 @@ class CharDatabase {
 	}
 
 	public static bool has_descender (unichar c) {
-		// todo: their derrivatives
 		switch (c) {
 			case 'g': return true;
 			case 'j': return true;

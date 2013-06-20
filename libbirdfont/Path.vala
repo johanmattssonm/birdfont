@@ -55,6 +55,12 @@ public class Path {
 
 	private static ImageSurface? selected_edit_point_image = null;
 	private static ImageSurface? active_selected_edit_point_image = null;
+
+	private static ImageSurface? cubic_edit_point_image = null;
+	private static ImageSurface? cubic_active_edit_point_image = null;
+
+	private static ImageSurface? cubic_selected_edit_point_image = null;
+	private static ImageSurface? cubic_active_selected_edit_point_image = null;
 	
 	Path quadratic_path; // quadratic points for TrueType export
 	
@@ -78,9 +84,13 @@ public class Path {
 			active_edit_point_image = Icons.get_icon ("active_edit_point.png");
 			edit_point_handle_image = Icons.get_icon ("edit_point_handle.png");
 			active_edit_point_handle_image = Icons.get_icon ("active_edit_point_handle.png");
-			selected_edit_point_image  = Icons.get_icon ("selected_edit_point.png");
+			selected_edit_point_image = Icons.get_icon ("selected_edit_point.png");
 			active_selected_edit_point_image = Icons.get_icon ("active_selected_edit_point.png");
-		
+			cubic_edit_point_image = Icons.get_icon ("edit_point_cubic.png");
+			cubic_active_edit_point_image = Icons.get_icon ("active_edit_point_cubic.png");
+			cubic_selected_edit_point_image = Icons.get_icon ("selected_edit_point_cubic.png");
+			cubic_active_selected_edit_point_image  = Icons.get_icon ("active_selected_edit_point_cubic.png");
+	
 			width = Preferences.get ("stroke_width");
 			if (width != "") {
 				stroke_width = double.parse (width);
@@ -326,12 +336,12 @@ public class Path {
 		
 		if (!(is_open () && e == points.last ().data)) {
 			draw_line (handle_right, e, cr, 0.15);
-			draw_img_center (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
+			draw_image (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
 		}
 		
 		if (!(is_open () && e == points.first ().data) && type != PointType.QUADRATIC && type != PointType.LINE_QUADRATIC) {
 			draw_line (handle_left, e, cr, 0.15);
-			draw_img_center (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
+			draw_image (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
 		}
 	}
 
@@ -340,16 +350,24 @@ public class Path {
 	{	
 		ImageSurface img;
 		
-		if (e.is_selected ()) {
-			img = (e.active) ? (!) active_selected_edit_point_image : (!) selected_edit_point_image;
+		if (e.type == PointType.CUBIC) {
+			if (e.is_selected ()) {
+				img = (e.active) ? (!) cubic_active_selected_edit_point_image : (!) cubic_selected_edit_point_image;
+			} else {
+				img = (e.active) ? (!) cubic_active_edit_point_image : (!) cubic_edit_point_image;
+			}
 		} else {
-			img = (e.active) ? (!) active_edit_point_image : (!) edit_point_image;
+			if (e.is_selected ()) {
+				img = (e.active) ? (!) active_selected_edit_point_image : (!) selected_edit_point_image;
+			} else {
+				img = (e.active) ? (!) active_edit_point_image : (!) edit_point_image;
+			}			
 		}
 		
-		draw_img_center (cr, img, e.x, e.y);
+		draw_image (cr, img, e.x, e.y);
 	}
 	
-	public static void draw_img_center (Context cr, ImageSurface img, double x, double y) {
+	public static void draw_image (Context cr, ImageSurface img, double x, double y) {
 		Glyph g = MainWindow.get_current_glyph ();
 		double r = 1.0 / 10.0;
 		
