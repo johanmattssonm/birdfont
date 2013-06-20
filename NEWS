@@ -1,3 +1,16 @@
+birdfont (0.19) stable;
+
+  * Descriptions from the Unicode Character Database
+  * A new file format (.bf replaces .ffi)
+  * Bugfixes
+  * Two quadratic points with a hidden point in between creates a quadratic path with two line handles
+  * Quadratic points is now the default
+  * Scrollbar
+  * TTF export on MacOS
+  * French translation
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Jun 20 16:15:08 CEST 2013
+
 birdfont (0.18) stable;
 
   * Bugfixes
