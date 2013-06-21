@@ -447,6 +447,8 @@ c.append ("""
 			MainWindow.get_toolbox ().add_new_grid ();
 			MainWindow.get_toolbox ().add_new_grid ();
 			
+			Toolbox.select_tool_by_name ("double_points");
+			
 			select_overview ();
 		});
 		
