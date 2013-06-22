@@ -41,21 +41,21 @@ class GposTable : Table {
 		
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
-		fd.add_ushort (24); // offset to feature list
-		fd.add_ushort (38); // offset to lookup list
+		fd.add_ushort (30); // offset to feature list
+		fd.add_ushort (44); // offset to lookup list
 		
 		// script list ?
-		fd.add_ushort (0); // number of items in script list
+		fd.add_ushort (1);   // number of items in script list
+		fd.add_tag ("DFLT"); // default script
+		fd.add_ushort (8);	 // offset to script table from script list
 		
 		// script table
 		fd.add_ushort (4); // offset to default language system
 		fd.add_ushort (0); // number of languages
 		
-		// script record, none right now
-		
 		// LangSys table 
 		fd.add_ushort (0); // reserved
-		fd.add_ushort (0xFFFF); // required features (0xFFFF is none)
+		fd.add_ushort (0); // required features (0xFFFF is none)
 		fd.add_ushort (1); // number of features
 		fd.add_ushort (0); // feature index
 		

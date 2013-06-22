@@ -54,7 +54,7 @@ public class OverwriteDialog : FontDisplay {
 	}
 
 	public override string get_html () {
-		string mess = _("The loaded font will be overwritten if you choose to continue with preview.");
+		string mess = _("The loaded font can be overwritten if you choose to continue with preview.");
 		return """
 <html>
 <head>
