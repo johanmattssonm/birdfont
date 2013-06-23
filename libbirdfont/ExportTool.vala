@@ -260,14 +260,14 @@ os.put_string (
 			os.put_string ("'");
 			os.put_string (@"$(name)");
 			os.put_string ("EOT'");
+
+			os.put_string (", '");
+			os.put_string (@"$(name)");
+			os.put_string ("TTF'");
 			
 			os.put_string (", '");
 			os.put_string (@"$(name)");
 			os.put_string ("SVG'");
-			
-			os.put_string (", '");
-			os.put_string (@"$(name)");
-			os.put_string ("TTF'");
 
 			os.put_string (";");
 			os.put_string ("""
