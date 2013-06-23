@@ -213,9 +213,16 @@ public class ImportSvg {
 		double cy = 0;
 		double[] p;
 		int pi = 0;
-		string data = add_separators (d);
-		Font font = BirdFont.get_current_font ();
+		string data;
+		Font font;
 
+		if (d.index_of ("z") == -1) { // ignore all open paths
+			return;
+		}
+
+		font = BirdFont.get_current_font ();
+		
+		data = add_separators (d);
 		c = data.split (" ");
 		p = new double[2 * c.length];
 		command = new string[2 * c.length];
@@ -226,8 +233,7 @@ public class ImportSvg {
 		}
 		
 		// parse path
-		for (int i = 0; i < c.length; i++) {
-			
+		for (int i = 0; i < c.length; i++) {	
 			if (c[i] == "m") {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "M";
