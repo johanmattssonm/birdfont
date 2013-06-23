@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-20 08:25+0200\n"
-"PO-Revision-Date: 2013-03-11 07:29+0000\n"
-"Last-Translator: Wei <contact@huwei.name>\n"
+"POT-Creation-Date: 2013-06-23 12:50+0200\n"
+"PO-Revision-Date: 2013-06-20 14:50+0000\n"
+"Last-Translator: Yinghua <wantinghard@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1362986982.0\n"
+"X-POOTLE-MTIME: 1371739830.0\n"
 
 #: libbirdfont/Argument.vala:233
 msgid "Usage"
@@ -24,11 +24,11 @@ msgstr "用法"
 
 #: libbirdfont/Argument.vala:235
 msgid "FILE"
-msgstr "文件"
+msgstr "FILE"
 
 #: libbirdfont/Argument.vala:235
 msgid "OPTION"
-msgstr "首选项"
+msgstr "OPTION"
 
 #: libbirdfont/Argument.vala:237
 msgid "show coordinate in glyph view"
@@ -126,7 +126,7 @@ msgstr "恢复"
 
 #: libbirdfont/MenuTab.vala:157 libbirdfont/MenuTab.vala:218
 msgid "Delete all"
-msgstr ""
+msgstr "全部删除"
 
 #: libbirdfont/MenuTab.vala:177 libbirdfont/MenuTab.vala:214
 msgid "Recent files"
@@ -156,7 +156,7 @@ msgstr "导出为SVG字体并查看结果"
 msgid "Save"
 msgstr "保存"
 
-#: libbirdfont/MenuTab.vala:488
+#: libbirdfont/MenuTab.vala:490
 msgid "Open"
 msgstr "打开"
 
@@ -170,15 +170,16 @@ msgstr "移动路径"
 
 #: libbirdfont/OverView.vala:579
 msgid "See also:"
-msgstr ""
+msgstr "另见："
 
 #: libbirdfont/OverView.vala:608
 msgid "No glyphs in this view."
 msgstr "在此视图中没有字形"
 
 #: libbirdfont/OverwriteDialog.vala:57
+#, fuzzy
 msgid ""
-"The loaded font will be overwritten if you choose to continue with preview."
+"The loaded font can be overwritten if you choose to continue with preview."
 msgstr "如果你选择继续预览则载入的字体将会被覆盖"
 
 #: libbirdfont/OverwriteDialog.vala:72
@@ -230,122 +231,122 @@ msgid "Menu"
 msgstr "菜单"
 
 #: libbirdfont/Toolbox.vala:89
-msgid "Tie curve handles for the selected edit point"
-msgstr "对选定编辑点连接曲柄"
-
-#: libbirdfont/Toolbox.vala:108
 msgid "Create quadratic Bézier curves"
-msgstr ""
+msgstr "创建二次贝塞尔曲线"
 
-#: libbirdfont/Toolbox.vala:115
+#: libbirdfont/Toolbox.vala:96
 msgid "Create cubic Bézier curves"
-msgstr ""
+msgstr "创建三次贝塞尔曲线"
 
-#: libbirdfont/Toolbox.vala:122
+#: libbirdfont/Toolbox.vala:103
 msgid "Quadratic path with two line handles"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:132
+#: libbirdfont/Toolbox.vala:110
+msgid "Tie curve handles for the selected edit point"
+msgstr "对选定编辑点连接曲柄"
+
+#: libbirdfont/Toolbox.vala:151
 msgid "Create counter from outline"
 msgstr "从轮廓创建计数器"
 
-#: libbirdfont/Toolbox.vala:144
+#: libbirdfont/Toolbox.vala:163
 msgid "Move to path to the bottom layer"
 msgstr "将路径移动到底层"
 
-#: libbirdfont/Toolbox.vala:158
+#: libbirdfont/Toolbox.vala:177
 msgid "Set precision"
 msgstr "设置精度"
 
-#: libbirdfont/Toolbox.vala:183
+#: libbirdfont/Toolbox.vala:202
 msgid "Show full unicode characters set"
 msgstr "显示完整的Unicode字符集"
 
-#: libbirdfont/Toolbox.vala:199
+#: libbirdfont/Toolbox.vala:218
 msgid "Show default characters set"
 msgstr "显示默认字符集"
 
-#: libbirdfont/Toolbox.vala:215
+#: libbirdfont/Toolbox.vala:234
 msgid "Show all characters in font"
 msgstr "显示字体中的全部字符"
 
-#: libbirdfont/Toolbox.vala:229
+#: libbirdfont/Toolbox.vala:248
 msgid "Delete selected glyph"
 msgstr "删除选定的字形"
 
-#: libbirdfont/Toolbox.vala:295
+#: libbirdfont/Toolbox.vala:314
 msgid "Show guidelines for x-height and baseline"
 msgstr "显示x-高度线及底线"
 
-#: libbirdfont/Toolbox.vala:310
+#: libbirdfont/Toolbox.vala:329
 msgid "Show guidelines at top and bottom margin"
 msgstr "显示顶线及底部边缘线"
 
-#: libbirdfont/Toolbox.vala:328
+#: libbirdfont/Toolbox.vala:347
 msgid "Zoom in"
 msgstr "放大"
 
-#: libbirdfont/Toolbox.vala:335
+#: libbirdfont/Toolbox.vala:354
 msgid "Zoom out"
 msgstr "缩小"
 
-#: libbirdfont/Toolbox.vala:342
+#: libbirdfont/Toolbox.vala:361
 msgid "Zoom to scale 1:1"
 msgstr "缩放至1：1"
 
-#: libbirdfont/Toolbox.vala:350
+#: libbirdfont/Toolbox.vala:369
 msgid "Show full glyph"
 msgstr "显示完整字形"
 
-#: libbirdfont/Toolbox.vala:357
+#: libbirdfont/Toolbox.vala:376
 msgid "Zoom in at region boundries"
 msgstr "在区域范围内缩放"
 
-#: libbirdfont/Toolbox.vala:364
+#: libbirdfont/Toolbox.vala:383
 msgid "Zoom in background image"
 msgstr "缩放背景图像"
 
-#: libbirdfont/Toolbox.vala:377
+#: libbirdfont/Toolbox.vala:396
 msgid "Previous view"
 msgstr "上一个视图"
 
-#: libbirdfont/Toolbox.vala:383
+#: libbirdfont/Toolbox.vala:402
 msgid "Next view"
 msgstr "下一个视图"
 
-#: libbirdfont/Toolbox.vala:390
+#: libbirdfont/Toolbox.vala:409
 msgid "Set size for background image"
 msgstr "设置背景图像的大小"
 
-#: libbirdfont/Toolbox.vala:420
+#: libbirdfont/Toolbox.vala:439
 msgid "Show/hide background image"
 msgstr "显示或隐藏背景图像"
 
-#: libbirdfont/Toolbox.vala:428
+#: libbirdfont/Toolbox.vala:447
 msgid "Insert a new background image"
 msgstr "插入新的背景图像"
 
-#: libbirdfont/Toolbox.vala:433
+#: libbirdfont/Toolbox.vala:452
 msgid "Creating thumbnails"
 msgstr "创建缩略图"
 
-#: libbirdfont/Toolbox.vala:452
+#: libbirdfont/Toolbox.vala:471
 msgid "Set contrast for background image"
 msgstr "设置背景图像的对比度"
 
-#: libbirdfont/Toolbox.vala:471
+#: libbirdfont/Toolbox.vala:490
 msgid "Stroke color"
 msgstr "笔划颜色"
 
-#: libbirdfont/Toolbox.vala:493
+#: libbirdfont/Toolbox.vala:512
 msgid "Stroke width"
 msgstr "笔划宽度"
 
-#: libbirdfont/Toolbox.vala:510
+#: libbirdfont/Toolbox.vala:529
 msgid "Handle color"
 msgstr "柄颜色"
 
-#: libbirdfont/Toolbox.vala:718
+#: libbirdfont/Toolbox.vala:737
 msgid "Set size for grid"
 msgstr "设置网格大小"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-20 08:25+0200\n"
+"POT-Creation-Date: 2013-06-23 12:50+0200\n"
 "PO-Revision-Date: 2013-02-18 16:10+0000\n"
 "Last-Translator: Fabio Y. <fabio.goto@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -156,7 +156,7 @@ msgstr "Exportar fonte SVG e visualizar resultado"
 msgid "Save"
 msgstr "Salvar"
 
-#: libbirdfont/MenuTab.vala:488
+#: libbirdfont/MenuTab.vala:490
 msgid "Open"
 msgstr "Abrir"
 
@@ -177,8 +177,9 @@ msgid "No glyphs in this view."
 msgstr "Nenhum caractere para exibição."
 
 #: libbirdfont/OverwriteDialog.vala:57
+#, fuzzy
 msgid ""
-"The loaded font will be overwritten if you choose to continue with preview."
+"The loaded font can be overwritten if you choose to continue with preview."
 msgstr "A fonte carregada será sobrescrita se você continuar com a prévia."
 
 #: libbirdfont/OverwriteDialog.vala:72
@@ -233,122 +234,122 @@ msgid "Menu"
 msgstr "Menu"
 
 #: libbirdfont/Toolbox.vala:89
-msgid "Tie curve handles for the selected edit point"
-msgstr "Vincular alças de ajuste para o ponto selecionado"
-
-#: libbirdfont/Toolbox.vala:108
 msgid "Create quadratic Bézier curves"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:115
+#: libbirdfont/Toolbox.vala:96
 msgid "Create cubic Bézier curves"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:122
+#: libbirdfont/Toolbox.vala:103
 msgid "Quadratic path with two line handles"
 msgstr ""
 
-#: libbirdfont/Toolbox.vala:132
+#: libbirdfont/Toolbox.vala:110
+msgid "Tie curve handles for the selected edit point"
+msgstr "Vincular alças de ajuste para o ponto selecionado"
+
+#: libbirdfont/Toolbox.vala:151
 msgid "Create counter from outline"
 msgstr "Inverter caminho"
 
-#: libbirdfont/Toolbox.vala:144
+#: libbirdfont/Toolbox.vala:163
 msgid "Move to path to the bottom layer"
 msgstr "Mover para caminho para camada inferior"
 
-#: libbirdfont/Toolbox.vala:158
+#: libbirdfont/Toolbox.vala:177
 msgid "Set precision"
 msgstr "Definir precisão"
 
-#: libbirdfont/Toolbox.vala:183
+#: libbirdfont/Toolbox.vala:202
 msgid "Show full unicode characters set"
 msgstr "Exibir sequência de caracteres unicode completa"
 
-#: libbirdfont/Toolbox.vala:199
+#: libbirdfont/Toolbox.vala:218
 msgid "Show default characters set"
 msgstr "Exibir sequência de caracteres padrão"
 
-#: libbirdfont/Toolbox.vala:215
+#: libbirdfont/Toolbox.vala:234
 msgid "Show all characters in font"
 msgstr "Exibir todos os caracteres presentes na fonte"
 
-#: libbirdfont/Toolbox.vala:229
+#: libbirdfont/Toolbox.vala:248
 msgid "Delete selected glyph"
 msgstr "Excluír caractere selecionado"
 
-#: libbirdfont/Toolbox.vala:295
+#: libbirdfont/Toolbox.vala:314
 msgid "Show guidelines for x-height and baseline"
 msgstr "Exibir guias para x-height e baseline"
 
-#: libbirdfont/Toolbox.vala:310
+#: libbirdfont/Toolbox.vala:329
 msgid "Show guidelines at top and bottom margin"
 msgstr "Exibir guias de margem superior e inferior"
 
-#: libbirdfont/Toolbox.vala:328
+#: libbirdfont/Toolbox.vala:347
 msgid "Zoom in"
 msgstr "Aumentar zoom"
 
-#: libbirdfont/Toolbox.vala:335
+#: libbirdfont/Toolbox.vala:354
 msgid "Zoom out"
 msgstr "Diminuir zoom"
 
-#: libbirdfont/Toolbox.vala:342
+#: libbirdfont/Toolbox.vala:361
 msgid "Zoom to scale 1:1"
 msgstr "Zoom para escala 1:1"
 
-#: libbirdfont/Toolbox.vala:350
+#: libbirdfont/Toolbox.vala:369
 msgid "Show full glyph"
 msgstr "Ajustar para caractere"
 
-#: libbirdfont/Toolbox.vala:357
+#: libbirdfont/Toolbox.vala:376
 msgid "Zoom in at region boundries"
 msgstr "Ajustar para limites do caractere"
 
-#: libbirdfont/Toolbox.vala:364
+#: libbirdfont/Toolbox.vala:383
 msgid "Zoom in background image"
 msgstr "Ajustar zoom para imagem de fundo"
 
-#: libbirdfont/Toolbox.vala:377
+#: libbirdfont/Toolbox.vala:396
 msgid "Previous view"
 msgstr "Visualização anterior"
 
-#: libbirdfont/Toolbox.vala:383
+#: libbirdfont/Toolbox.vala:402
 msgid "Next view"
 msgstr "Próxima visualização"
 
-#: libbirdfont/Toolbox.vala:390
+#: libbirdfont/Toolbox.vala:409
 msgid "Set size for background image"
 msgstr "Definir tamanho da imagem de fundo"
 
-#: libbirdfont/Toolbox.vala:420
+#: libbirdfont/Toolbox.vala:439
 msgid "Show/hide background image"
 msgstr "Exibir/ocultar a imagem de fundo"
 
-#: libbirdfont/Toolbox.vala:428
+#: libbirdfont/Toolbox.vala:447
 msgid "Insert a new background image"
 msgstr "Inserir nova imagem de fundo"
 
-#: libbirdfont/Toolbox.vala:433
+#: libbirdfont/Toolbox.vala:452
 msgid "Creating thumbnails"
 msgstr "Gerar miniaturas"
 
-#: libbirdfont/Toolbox.vala:452
+#: libbirdfont/Toolbox.vala:471
 msgid "Set contrast for background image"
 msgstr "Definir contraste para a imagem de fundo"
 
-#: libbirdfont/Toolbox.vala:471
+#: libbirdfont/Toolbox.vala:490
 msgid "Stroke color"
 msgstr "Espessura do contorno"
 
-#: libbirdfont/Toolbox.vala:493
+#: libbirdfont/Toolbox.vala:512
 msgid "Stroke width"
 msgstr "Espessura do contorno"
 
-#: libbirdfont/Toolbox.vala:510
+#: libbirdfont/Toolbox.vala:529
 msgid "Handle color"
 msgstr "Cor das alças de ajuste"
 
-#: libbirdfont/Toolbox.vala:718
+#: libbirdfont/Toolbox.vala:737
 msgid "Set size for grid"
 msgstr "Cor das alças de ajuste"
 
