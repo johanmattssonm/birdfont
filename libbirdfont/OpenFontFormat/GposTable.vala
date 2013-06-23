@@ -24,7 +24,7 @@ class GposTable : Table {
 	}
 	
 	public override void parse (FontData dis) throws Error {
-		warning ("Not implemented.");
+		// Not implemented, freetype2 is used for loading fonts
 	}
 
 	public void process (KernTable kern_table) throws GLib.Error {
