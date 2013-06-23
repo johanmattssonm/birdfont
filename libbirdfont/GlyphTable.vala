@@ -102,11 +102,6 @@ public class GlyphTable : GLib.Object {
 	public bool insert (string key, GlyphCollection g) {
 		Item item;
 		unowned List<Item>? next;
-		
-		if (key == "") {
-			warning (@"No proper name key for glyph. \"$(g.get_name ())\"");
-			return false;
-		}
 
 		if (find (key) != null) {
 			warning (@"Table does already contains a glyph for key \"$key\".");

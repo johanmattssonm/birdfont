@@ -1949,10 +1949,6 @@ public class Path {
 			return;
 		}
 
-		if (!is_open () || !path.is_open ()) {
-			warning ("Path is closed.");
-		}
-
 		// link points at the other end
 		first = points.first ().data;
 		handle = path.points.first ().data.right_handle;
