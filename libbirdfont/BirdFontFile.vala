@@ -350,7 +350,7 @@ class BirdFontFile {
 		} else if (end.left_handle.type == PointType.CUBIC || start.right_handle.type == PointType.CUBIC) {
 			add_cubic (start, end, data);
 		} else {
-			warning (@"Unknown point type. \nStart handle: $(end.left_handle.type) \nStop handle: $(end.left_handle.type)");
+			warning (@"Unknown point type. \nStart handle: $(start.right_handle.type) \nStop handle: $(end.left_handle.type)");
 			add_cubic (start, end, data);
 		}		
 	}
@@ -724,6 +724,7 @@ class BirdFontFile {
 		path.add (parse_double (px), parse_double (py));
 		ep = path.points.last ().data;
 		ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
+		ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		ep.type = PointType.LINE_DOUBLE_CURVE;
 		ep.recalculate_linear_handles ();			
 	}
