@@ -727,14 +727,16 @@ public class ImportSvg {
 				ep1 = path.points.last ().data;
 				ep1.recalculate_linear_handles ();
 				ep1.get_right_handle ().type = PointType.QUADRATIC;
-				ep1.get_right_handle ().move_to_coordinate (x0, y0);	
+				ep1.get_right_handle ().move_to_coordinate (x0, y0);
+				ep1.type = PointType.QUADRATIC;		
 
 				path.add (x1, y1);
 
 				ep2 = path.points.last ().data;
 				ep2.recalculate_linear_handles ();
 				ep2.get_left_handle ().type = PointType.QUADRATIC;
-				ep2.get_left_handle ().move_to_coordinate (x0, y0);				
+				ep2.get_left_handle ().move_to_coordinate (x0, y0);
+				ep2.type = PointType.QUADRATIC;		
 			}
 					
 			if (command[i] == "C") {
@@ -753,6 +755,7 @@ public class ImportSvg {
 				// start with line handles
 				ep1 = path.points.last ().data;
 				ep1.get_right_handle ().type = PointType.LINE_CUBIC;
+				ep1.type = PointType.LINE_CUBIC;
 				
 				lx = ep1.x + ((x2 - ep1.x) / 3);
 				ly = ep1.y + ((y2 - ep1.y) / 3);
@@ -764,7 +767,9 @@ public class ImportSvg {
 				ep1 = path.points.last ().data;
 				ep1.recalculate_linear_handles ();
 				ep1.get_right_handle ().type = PointType.CUBIC;
-				ep1.get_right_handle ().move_to_coordinate (x0, y0);				
+				ep1.get_right_handle ().move_to_coordinate (x0, y0);
+				ep1.type = PointType.CUBIC;
+				
 
 				path.add (x2, y2);
 								
@@ -772,7 +777,8 @@ public class ImportSvg {
 				ep2.recalculate_linear_handles ();
 				ep2.get_left_handle ().type = PointType.CUBIC;
 				ep2.get_left_handle ().move_to_coordinate (x1, y1);
-			
+				ep2.type = PointType.CUBIC;
+				
 				ep1.recalculate_linear_handles ();
 			}
 			

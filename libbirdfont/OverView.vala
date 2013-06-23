@@ -96,25 +96,12 @@ public class OverView : FontDisplay {
 				g.close_path ();
 				g.default_zoom ();
 				z.store_current_view ();
-				
-				print (@"CHARDB: $(CharDatabase.get_unicode_database_entry (new_char))\n");
 			}
 		});
 		
 		update_scrollbar ();
 	}
 
-	void scroll_bottom () {
-		Font f;
-		
-		if (all_available) {
-			f = BirdFont.get_current_font ();
-			scroll_to_position (f.length () - items_per_row * rows);
-		} else {
-			scroll_to_position (glyph_range.length () - items_per_row * rows);
-		}
-	}
-	
 	public double get_height () {
 		double l;
 		Font f;

@@ -406,7 +406,7 @@ c.append ("""
 
 		f.delete_backup ();
 		
-		fn = (!) f.font_file;
+		fn = f.get_path ();
 		
 		if (f.font_file != null && fn.has_suffix (".bf")) {
 			f.background_scale = MainWindow.get_toolbox ().background_scale.get_display_value ();

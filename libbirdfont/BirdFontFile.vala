@@ -111,13 +111,9 @@ class BirdFontFile {
 			
 			// this a backup of another font
 			if (backup) {
-				if (unlikely (font.font_file == null)) {
-					warning ("No file name is set, write backup file name to font file.");
-				} else {
-					os.put_string ("\n");
-					os.put_string (@"<!-- This is a backup of the following font: -->\n");	
-					os.put_string (@"<backup>$((!) font.font_file)</backup>\n");	
-				}
+				os.put_string ("\n");
+				os.put_string (@"<!-- This is a backup of the following font: -->\n");	
+				os.put_string (@"<backup>$((!) font.get_path ())</backup>\n");	
 			}
 			
 			os.put_string ("\n");
@@ -651,6 +647,10 @@ class BirdFontFile {
 				b = new StringBuilder ();
 				b.append_unichar (unicode);
 				name = b.str;
+				
+				if (name == "") {
+					name = ".null";
+				}
 			}
 		}
 		

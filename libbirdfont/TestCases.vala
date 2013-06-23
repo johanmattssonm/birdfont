@@ -85,7 +85,7 @@ class TestCases {
 		}
 		
 		if (data == null) {
-			warning ("No svg data.");
+			warning ("No bf data.");
 			return;
 		}
 		
@@ -385,7 +385,7 @@ class TestCases {
 
 		MenuTab.preview ();
 
-		// TODO: run this many times on big font
+		// TODO: run this many times on big fonts
 		for (int i = 0; i < 10; i++) {
 			ExportTool.export_all ();
 			Tool.yield ();

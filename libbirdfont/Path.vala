@@ -1099,7 +1099,7 @@ public class Path {
 		return false;
 	}
 	
-	private bool split_cubic_curves (Path cubic) requires (points.length () > 2) {
+	private bool split_cubic_curves (Path cubic) requires (points.length () > 1) {
 		EditPoint start = points.last ().data;
 		bool n = false;
 		
