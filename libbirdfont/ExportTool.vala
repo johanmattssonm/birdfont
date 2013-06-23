@@ -23,7 +23,7 @@ public class ExportTool : GLib.Object {
 	public ExportTool (string n) {
 	}
 
-	public static string export_selected_paths_to_string () {
+	public static string export_selected_paths_to_svg () {
 		return export_current_glyph_to_string (true);		
 	}
 	
@@ -76,7 +76,7 @@ public class ExportTool : GLib.Object {
 		s.append ("""<?xml version="1.0" encoding="UTF-8" standalone="no"?>""");
 		s.append ("\n");
 		s.append ("<svg>\n");
-
+				
 		s.append ("""<inkscape:clipboard
 			id="clipboard3009"
 			style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
@@ -103,7 +103,7 @@ public class ExportTool : GLib.Object {
 		if (only_selected_paths) {
 			foreach (Path p in glyph.active_paths) {
 				glyph_svg += Svg.to_svg_path (p, glyph);
-			}		
+			}	
 		} else {
 			foreach (Path p in glyph.path_list) {
 				glyph_svg += Svg.to_svg_path (p, glyph);

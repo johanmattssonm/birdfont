@@ -249,7 +249,7 @@ class BirdFontFile {
 	 * 
 	 * T - Tie handles for previous curve
 	 */
-	private string get_point_data (Path pl) {
+	public static string get_point_data (Path pl) {
 		StringBuilder data = new StringBuilder ();
 		EditPoint? n = null;
 		EditPoint m;
@@ -299,40 +299,40 @@ class BirdFontFile {
 		return data.str;
 	}
 	
-	private void add_quadratic_start (EditPoint p, StringBuilder data) {
+	private static void add_quadratic_start (EditPoint p, StringBuilder data) {
 		data.append (@"S $(p.x),$(p.y)");
 	}
 
-	private void add_cubic_start (EditPoint p, StringBuilder data) {
+	private static void add_cubic_start (EditPoint p, StringBuilder data) {
 		data.append (@"B $(p.x),$(p.y)");
 	}
 
-	private void add_line_to (EditPoint p, StringBuilder data) {
+	private static void add_line_to (EditPoint p, StringBuilder data) {
 		data.append (@"L $(p.x),$(p.y)");
 	}
 
-	private void add_cubic_line_to (EditPoint p, StringBuilder data) {
+	private static void add_cubic_line_to (EditPoint p, StringBuilder data) {
 		data.append (@"M $(p.x),$(p.y)");
 	}
 
-	private void add_quadratic (EditPoint start, EditPoint end, StringBuilder data) {
+	private static void add_quadratic (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h = start.get_right_handle ();
 		data.append (@"Q $(h.x ()),$(h.y ()) $(end.x),$(end.y)");
 	}
 
-	private void add_double (EditPoint start, EditPoint end, StringBuilder data) {
+	private static void add_double (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h1 = start.get_right_handle ();
 		EditPointHandle h2 = end.get_left_handle ();
 		data.append (@"D $(h1.x ()),$(h1.y ()) $(h2.x ()),$(h2.y ()) $(end.x),$(end.y)");
 	}
 
-	private void add_cubic (EditPoint start, EditPoint end, StringBuilder data) {
+	private static void add_cubic (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h1 = start.get_right_handle ();
 		EditPointHandle h2 = end.get_left_handle ();
 		data.append (@"C $(h1.x ()),$(h1.y ()) $(h2.x ()),$(h2.y ()) $(end.x),$(end.y)");
 	}
 
-	private void add_next_point (EditPoint start, EditPoint end, StringBuilder data) {
+	private static void add_next_point (EditPoint start, EditPoint end, StringBuilder data) {
 		if (start.right_handle.type == PointType.LINE_QUADRATIC && end.left_handle.type == PointType.LINE_QUADRATIC) {
 			add_line_to (end, data);
 		} else if (start.right_handle.type == PointType.LINE_DOUBLE_CURVE && end.left_handle.type == PointType.LINE_DOUBLE_CURVE) {

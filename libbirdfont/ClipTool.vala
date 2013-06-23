@@ -19,55 +19,86 @@ namespace BirdFont {
 
 public class ClipTool : Tool {
 
+	static List<Path> internal_clipboard = new List<Path> ();
+
 	public static void copy () {
 		FontDisplay fd = MainWindow.get_current_display ();
 		NativeWindow native_window;
 		string svg;
 		string inkscape_svg;
+		string stamp = "\n<!-- BirdFontClipboard -->\n";
 		
 		if (fd is OverView) {
 			// TODO: copy glyphs in overview
 		} 
 		
 		if (fd is Glyph) {	
+			// the internal clipboard contains data in .bf format and the 
+			// external clibboard contains inkscape compatible vector graphics
+			while (internal_clipboard.length () > 0) {
+				internal_clipboard.remove_link (internal_clipboard.first ());
+			}
+			
+			foreach (Path p in ((Glyph) fd).active_paths) {
+				internal_clipboard.append (p.copy ());
+			}
+		
 			native_window = MainWindow.native_window;
 			
-			// copy only if paths are selected
+			// copy only if paths have been selected
 			if (MainWindow.get_current_glyph ().active_paths.length () == 0) {
 				return;
 			}
 			
-			// several clipboards does not work on windows
+			// there is only one clipboard in windows
 			if (!BirdFont.win32) {
-				svg = ExportTool.export_selected_paths_to_string ();
-				native_window.set_clipboard (svg);
+				svg = ExportTool.export_selected_paths_to_svg ();
+				native_window.set_clipboard (svg + stamp);
 			}
 			
 			inkscape_svg = ExportTool.export_selected_paths_to_inkscape_clipboard ();
-			native_window.set_inkscape_clipboard (inkscape_svg);
+			native_window.set_inkscape_clipboard (inkscape_svg + stamp);
 		}
 
 	}
 
 	public static void paste () {
+		bool internal;
+		FontDisplay fd;
+		
+		fd = MainWindow.get_current_display ();
+		
+		// Determine if the data in clipboard belongs to BirdFont.
+		internal = MainWindow.native_window.get_clipboard_data ().index_of ("BirdFontClipboard") > -1; 
+		
+		if (fd is Glyph) {
+			paste_to_glyph (internal);
+		}
+	}
+	
+	
+	public static void paste_to_glyph (bool internal) {
 		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph? destination = null;
 		string svg;
-
-		// paste from clipboard		
-		if (fd is Glyph) {
-			destination = (Glyph) fd;
-			
-			((!)destination).store_undo_state ();
-			
+		
+		return_if_fail (fd is Glyph);
+		
+		destination = (Glyph) fd;
+		((!)destination).store_undo_state ();
+		
+		if (internal) {
+			foreach (Path p in internal_clipboard) {
+				((!)destination).add_path (p);
+			}
+		} else {
 			svg = MainWindow.native_window.get_clipboard_data ();
-			
 			if (svg != "") {
 				ImportSvg.import_svg_data (svg);
 			}
-			
-			((!)destination).update_view ();
 		}
+		
+		((!)destination).update_view ();			
 	}
 
 }
