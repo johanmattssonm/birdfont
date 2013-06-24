@@ -33,7 +33,7 @@ public class ClipTool : Tool {
 		} 
 		
 		if (fd is Glyph) {	
-			// the internal clipboard contains data in .bf format and the 
+			// the internal clipboard contains path objects and the
 			// external clibboard contains inkscape compatible vector graphics
 			while (internal_clipboard.length () > 0) {
 				internal_clipboard.remove_link (internal_clipboard.first ());

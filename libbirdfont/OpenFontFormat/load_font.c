@@ -25,6 +25,7 @@
 #include FT_GLYPH_H
 #include FT_OPENTYPE_VALIDATE_H
 #include FT_TRUETYPE_TABLES_H
+#include FT_SFNT_NAMES_H
 
 /** Error codes. */
 #define OK 0
@@ -591,8 +592,10 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	FT_Error error;
 	FT_Long i;
 	FT_ULong charcode;
+	FT_SfntName name_table_data;
 	double units_per_em;
 	double units;
+	
 	
 	*err = OK;
 
@@ -602,11 +605,34 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	g_string_append (bf, "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n");
 	
 	// libxml2 fails on doctype declaration in windows.
-		
-	// TODO: load from font
+	
 	g_string_append (bf, "<font>\n");
 
+	g_string_append_printf (bf, "<postscript_name>%s</postscript_name>\n", FT_Get_Postscript_Name(face));
 	g_string_append_printf (bf, "<name>%s</name>\n", face->family_name);
+	
+	if (face->style_name != NULL) {
+		g_string_append_printf (bf, "<subfamily>%s</subfamily>\n", face->style_name);
+	}
+	
+	if (FT_Get_Sfnt_Name (face, 4, &name_table_data) == 0) { // full name
+		g_string_append (bf, "<full_name>");
+		g_string_append_len (bf, name_table_data.string, name_table_data.string_len);
+		g_string_append (bf, "</full_name>");
+	}	
+
+	if (FT_Get_Sfnt_Name (face, 3, &name_table_data) == 0) { // unique identifier
+		g_string_append (bf, "<unique_identifier>");
+		g_string_append_len (bf, name_table_data.string, name_table_data.string_len);
+		g_string_append (bf, "</unique_identifier>");
+	}
+
+	if (FT_Get_Sfnt_Name (face, 5, &name_table_data) == 0) { // version
+		g_string_append (bf, "<version>");
+		g_string_append_len (bf, name_table_data.string, name_table_data.string_len);
+		g_string_append (bf, "</version>");
+	}
+
 	g_string_append_printf (bf, "<backup>%s</backup>\n", file);
 
 	g_string_append_printf (bf, "<lines>\n");

@@ -115,9 +115,14 @@ class BirdFontFile {
 				os.put_string (@"<!-- This is a backup of the following font: -->\n");	
 				os.put_string (@"<backup>$((!) font.get_path ())</backup>\n");	
 			}
-			
+		
 			os.put_string ("\n");
-			os.put_string (@"<name>$(font.get_name ())</name>\n");
+			os.put_string (@"<postscript_name>$(font.postscript_name)</postscript_name>\n");
+			os.put_string (@"<name>$(font.name)</name>\n");
+			os.put_string (@"<subfamily>$(font.subfamily)</subfamily>\n");
+			os.put_string (@"<full_name>$(font.full_name)</full_name>\n");
+			os.put_string (@"<unique_identifier>$(font.unique_identifier)</unique_identifier>\n");
+			os.put_string (@"<version>$(font.version)</version>\n");
 			
 			os.put_string ("\n");
 			os.put_string ("<lines>\n");
@@ -437,10 +442,30 @@ class BirdFontFile {
 				parse_background_selection (iter);
 			}
 
+			if (iter->name == "postscript_name" && iter->children != null) {
+				font.postscript_name = iter->children->content;
+			}
+			
 			if (iter->name == "name" && iter->children != null) {
-				font.set_name (iter->children->content);
+				font.name = iter->children->content;
 			}
 
+			if (iter->name == "subfamily" && iter->children != null) {
+				font.subfamily = iter->children->content;
+			}
+
+			if (iter->name == "full_name" && iter->children != null) {
+				font.full_name = iter->children->content;
+			}
+			
+			if (iter->name == "unique_identifier" && iter->children != null) {
+				font.unique_identifier = iter->children->content;
+			}
+
+			if (iter->name == "version" && iter->children != null) {
+				font.version = iter->children->content;
+			}
+			
 			if (iter->name == "hkern") {
 				parse_kerning (iter);
 			}

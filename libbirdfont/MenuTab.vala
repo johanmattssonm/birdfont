@@ -73,7 +73,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public override string get_name () {
-		return "Menu";
+		return _("Menu");
 	}
 	
 	public override bool is_html_canvas () {
@@ -81,7 +81,6 @@ public class MenuTab : FontDisplay {
 	}
 
 	public override string get_html () {
-		Font f = BirdFont.get_current_font ();
 		StringBuilder c = new StringBuilder ();
 		string fn;
 		
@@ -108,9 +107,6 @@ c.append ("""
 				<h3>""" + _("Glyph sequence") + """</h3>
 				<input class="text" type="text" id="glyph_sequence" value=""" + "\"" + Preferences.get ("glyph_sequence") + "\"" + """ onchange="update_text_fields ();"/><br />
 
-				<h3>""" + _("Name") + """</h3>
-				<input class="text" type="text" id="fontname" value=""" + "\"" + f.get_name () + "\"" + """ onchange="update_text_fields ();"/><br />
-				
 				<input class="button" type="button" value=""" + "\"" + _("Export") + "\"" + """ id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) """ + _("Export SVG, TTF & EOT fonts") + """');"/>
 				<input class="button" type="button" value=""" + "\"" + _("Preview") + "\"" + """ id="preview_button" onclick="call ('preview:fonts');" onmouseover="call ('help:(Ctrl+p) """ + _("Export SVG font and view the result") + """');"/><br />
 """);
@@ -499,6 +495,10 @@ c.append ("""
 			MainWindow.get_singleton ().set_title (f.get_name ());
 			select_overview ();		
 		}
+	}
+	
+	public static void show_description () {
+		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionTab (), 110, false);
 	}
 	
 	public static void show_kerning_context () {

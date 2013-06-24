@@ -408,6 +408,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		preview_item.activate.connect (() => { MenuTab.preview (); });
 		preview_item.add_accelerator ("activate", accel_group, 'P', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		Gtk.MenuItem description_item = new Gtk.MenuItem.with_mnemonic(_("_Description"));
+		file_menu.append (description_item);
+		description_item.activate.connect (() => { MenuTab.show_description (); });
+
 		Gtk.MenuItem kerning_item = new Gtk.MenuItem.with_mnemonic (_("_Kerning"));
 		file_menu.append (kerning_item);
 		kerning_item.activate.connect (() => { MenuTab.show_kerning_context (); });

@@ -25,6 +25,7 @@ class NameTable : Table {
 	public static const uint16 UNIQUE_IDENTIFIER = 3;
 	public static const uint16 FULL_FONT_NAME = 4; // name + subfamily
 	public static const uint16 VERSION = 5;
+	public static const uint16 POSTSCRIPT_NAME = 6;
 	public static const uint16 DESCRIPTION = 10;
 	public static const uint16 PREFERED_FAMILY = 16;
 	public static const uint16 PREFERED_SUB_FAMILY = 17;
@@ -150,30 +151,31 @@ class NameTable : Table {
 		text.append ("Copyright");
 		type.append (COPYRIGHT_NOTICE);
 		
-		text.append (font.get_name ());
+		text.append (font.name);
 		type.append (FONT_NAME);
 
-		text.append ("Regular");
+		text.append (font.subfamily);
 		type.append (SUBFAMILY_NAME);
 
-		text.append (font.get_name ()); // TODO: validate
+		text.append (font.unique_identifier);
 		type.append (UNIQUE_IDENTIFIER);
 
-		text.append (font.get_name ());
+		text.append (font.full_name);
 		type.append (FULL_FONT_NAME);
 		
-		// This does for some reason cause an internal error in ms fontvalidatior utility.
-		// Head table can't parse integer from string.
-		text.append ("Version 1.0");
+		text.append (font.version);
 		type.append (VERSION);		
+
+		text.append (font.postscript_name);
+		type.append (POSTSCRIPT_NAME);
 		
 		text.append ("");
 		type.append (DESCRIPTION);
-				
-		text.append (font.get_name ());
+		
+		text.append (font.name);
 		type.append (PREFERED_FAMILY);
 		
-		text.append ("Regular");
+		text.append (font.subfamily);
 		type.append (PREFERED_SUB_FAMILY);
 			
 		num_records = (uint16) text.length ();
