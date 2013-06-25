@@ -452,6 +452,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem import_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Import SVG"));
 		edit_menu.append (import_svg_item);
 		import_svg_item.activate.connect (() => { ImportSvg.import (); });	
+		import_svg_item.add_accelerator ("activate", accel_group, 'I', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		Gtk.MenuItem close_path_item = new Gtk.MenuItem.with_mnemonic (_("Close _path"));
 		edit_menu.append (close_path_item);
