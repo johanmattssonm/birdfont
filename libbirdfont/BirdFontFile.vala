@@ -904,7 +904,7 @@ class BirdFontFile {
 		int i = 0;
 		Path path = new Path ();
 		string instruction = "";
-		
+
 		if (data == "") {
 			return path;
 		}

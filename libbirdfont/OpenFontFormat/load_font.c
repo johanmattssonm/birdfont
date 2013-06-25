@@ -377,9 +377,10 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 	char* new_flags;
 	double x0, x1, x2;
 	double y0, y1, y2;
+	gchar coordinate[80];
 	double units = get_units (units_per_em);
 	guint prev_is_curve;
-	
+
 	if (length == 0) {
 		return bf;
 	}
@@ -388,7 +389,15 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 	
 	x0 = new_points[0].x * units;
 	y0 = new_points[0].y * units;
-	g_string_printf (bf, "S %f,%f", x0, y0); // FIXME: ???
+	
+	g_string_printf (bf, "S ");
+	
+	g_ascii_formatd (&coordinate, 80, "%f", x0);
+	g_string_append_printf (bf, &coordinate);
+	g_string_append_printf (bf, ",");
+
+	g_ascii_formatd (&coordinate, 80, "%f", y0);
+	g_string_append_printf (bf, &coordinate);
 
 	i = 1;
 	while (i < length) {
@@ -405,7 +414,32 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 			y1 = new_points[i+1].y * units;
 			x2 = new_points[i+2].x * units;
 			y2 = new_points[i+2].y * units;
-			g_string_printf (contour, " C %f,%f %f,%f %f,%f", x0, y0, x1, y1, x2, y2);
+			
+			g_string_printf (contour, " C ");
+			
+			g_ascii_formatd (&coordinate, 80, "%f", x0);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, ",");
+
+			g_ascii_formatd (&coordinate, 80, "%f", y0);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, " ");
+
+			g_ascii_formatd (&coordinate, 80, "%f", x1);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, ",");
+
+			g_ascii_formatd (&coordinate, 80, "%f", y1);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, " ");
+
+			g_ascii_formatd (&coordinate, 80, "%f", x2);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, ",");
+
+			g_ascii_formatd (&coordinate, 80, "%f", y2);
+			g_string_append_printf (contour, &coordinate);
+			
 			i += 3;
 		} else if (is_double_curve (new_flags[i])) {
 			x0 = new_points[i].x * units;
@@ -414,19 +448,70 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 			y1 = new_points[i+1].y * units;
 			x2 = new_points[i+2].x * units;
 			y2 = new_points[i+2].y * units;
-			g_string_printf (contour, " D %f,%f %f,%f %f,%f", x0, y0, x1, y1, x2, y2);
+
+			g_string_printf (contour, " D ");
+			
+			g_ascii_formatd (&coordinate, 80, "%f", x0);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, ",");
+
+			g_ascii_formatd (&coordinate, 80, "%f", y0);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, " ");
+
+			g_ascii_formatd (&coordinate, 80, "%f", x1);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, ",");
+
+			g_ascii_formatd (&coordinate, 80, "%f", y1);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, " ");
+
+			g_ascii_formatd (&coordinate, 80, "%f", x2);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, ",");
+
+			g_ascii_formatd (&coordinate, 80, "%f", y2);
+			g_string_append_printf (contour, &coordinate);
+			
 			i += 3;
 		} else if (is_quadratic (new_flags[i])) {
 			x0 = new_points[i].x * units;
 			y0 = new_points[i].y * units;
 			x1 = new_points[i+1].x * units;
-			y1 = new_points[i+1].y * units;			
-			g_string_printf (contour, " Q %f,%f %f,%f", x0, y0, x1, y1);
+			y1 = new_points[i+1].y * units;
+
+			g_string_printf (contour, " Q ");
+			
+			g_ascii_formatd (&coordinate, 80, "%f", x0);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, ",");
+
+			g_ascii_formatd (&coordinate, 80, "%f", y0);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, " ");
+
+			g_ascii_formatd (&coordinate, 80, "%f", x1);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, ",");
+
+			g_ascii_formatd (&coordinate, 80, "%f", y1);
+			g_string_append_printf (contour, &coordinate);
+			
 			i += 2;
 		} else if (is_line (new_flags[i])) {
 			x0 = new_points[i].x * units;
 			y0 = new_points[i].y * units;
-			g_string_printf (contour, " L %f,%f", x0, y0);
+
+			g_string_printf (contour, " L ");
+			
+			g_ascii_formatd (&coordinate, 80, "%f", x0);
+			g_string_append_printf (contour, &coordinate);
+			g_string_append_printf (contour, ",");
+
+			g_ascii_formatd (&coordinate, 80, "%f", y0);
+			g_string_append_printf (contour, &coordinate);
+			
 			i += 1;
 		} else {
 			g_string_printf (contour, "");
