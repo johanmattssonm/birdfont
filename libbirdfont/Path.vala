@@ -1185,6 +1185,7 @@ public class Path {
 		} else if (right == PointType.LINE_CUBIC && left == PointType.LINE_CUBIC) {
 			ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
 			ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
+			ep.type = PointType.LINE_CUBIC;
 			ep.recalculate_linear_handles ();
 		} else if (right == PointType.LINE_DOUBLE_CURVE && left == PointType.LINE_DOUBLE_CURVE) {
 			ep.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
@@ -1215,6 +1216,8 @@ public class Path {
 			
 			ep.get_right_handle ().set_point_type (PointType.CUBIC);
 			ep.get_right_handle ().move_to_coordinate (x1, y1);
+			
+			ep.type = PointType.LINE_CUBIC;
 		}
 
 		ep.get_left_handle ().parent = ep;

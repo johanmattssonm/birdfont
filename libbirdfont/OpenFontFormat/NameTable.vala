@@ -148,7 +148,7 @@ class NameTable : Table {
 		List<uint16> type = new List<uint16> ();
 		List<string> text = new List<string> ();
 		
-		text.append ("Copyright");
+		text.append ("");
 		type.append (COPYRIGHT_NOTICE);
 		
 		text.append (font.name);
