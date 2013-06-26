@@ -117,9 +117,6 @@ c.append ("""
 
 		</div>
 	</div>
-	
-	<img src="birdfont_logo.png" alt="" style="float:right;margin: 50px 0 0 0;">
-
 """);
 
 if (has_backup ()) {
