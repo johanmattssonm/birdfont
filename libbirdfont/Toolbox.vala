@@ -300,7 +300,7 @@ public class Toolbox : GLib.Object  {
 		}
 		
 		// guide lines, grid and other guidlines
-		Tool help_lines = new Tool ("help_lines", "Show guidelines", 'l');
+		Tool help_lines = new Tool ("help_lines", _("Show guidelines"), 'l');
 		help_lines.select_action.connect ((self) => {
 				bool h;
 				h = GlyphCanvas.get_current_glyph ().get_show_help_lines ();

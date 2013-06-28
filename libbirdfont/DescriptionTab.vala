@@ -95,10 +95,10 @@ public class DescriptionTab : FontDisplay {
 			<h3>""" + _("Name") + """</h3>
 			<input class="text" type="text" id="name" value=""" + "\"" + font.name + "\"" + """ onchange="update_name_fields ();"/><br />
 
-			<h3>""" + _("Subfamily name") + " (Regular/Bold/Italic)" + """</h3>
+			<h3>""" + _("Style") + " (Regular/Bold/Italic)" + """</h3>
 			<input class="text" type="text" id="subfamily" value=""" + "\"" + font.subfamily + "\"" + """ onchange="update_name_fields ();"/><br />
 
-			<h3>""" + _("Full name (name & subfamily)") + """</h3>
+			<h3>""" + _("Full name (name & style)") + """</h3>
 			<input class="text" type="text" id="full_name" value=""" + "\"" + font.full_name + "\"" + """ onchange="update_name_fields ();"/><br />
 
 			<h3>""" + _("Unique identifier") + """</h3>
@@ -140,8 +140,8 @@ c.append (
 	// for xgettext:
 	_("Postscript name");
 	_("Name");
-	_("Subfamily name");
-	_("Full name (name & subfamily)");
+	_("Style");
+	_("Full name (name & style)");
 	_("Unique identifier");
 	_("Version");
 	_("Description");

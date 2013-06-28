@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-23 12:50+0200\n"
+"POT-Creation-Date: 2013-06-28 19:01+0200\n"
 "PO-Revision-Date: 2013-05-06 12:45+0000\n"
 "Last-Translator: Cédric <cvalmary@yahoo.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,6 +94,38 @@ msgstr "Escritura"
 msgid "Crop background image"
 msgstr "Rosegar l'imatge de rèire plan."
 
+#: libbirdfont/DescriptionTab.vala:64 libbirdfont/DescriptionTab.vala:147
+msgid "Description"
+msgstr ""
+
+#: libbirdfont/DescriptionTab.vala:141
+msgid "Postscript name"
+msgstr ""
+
+#: libbirdfont/DescriptionTab.vala:142 libbirdfont/MenuTab.vala:212
+msgid "Name"
+msgstr "Nom"
+
+#: libbirdfont/DescriptionTab.vala:143
+msgid "Style"
+msgstr ""
+
+#: libbirdfont/DescriptionTab.vala:144
+msgid "Full name (name & style)"
+msgstr ""
+
+#: libbirdfont/DescriptionTab.vala:145
+msgid "Unique identifier"
+msgstr ""
+
+#: libbirdfont/DescriptionTab.vala:146 libbirdfont/VersionList.vala:144
+msgid "Version"
+msgstr "Version"
+
+#: libbirdfont/DescriptionTab.vala:148
+msgid "Copyright"
+msgstr ""
+
 #. / All lower case letters in alphabetic order separated by space
 #: libbirdfont/GlyphRange.vala:56
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
@@ -112,6 +144,14 @@ msgstr "Afichar la grasilha"
 msgid "Import"
 msgstr "Importar"
 
+#: libbirdfont/MenuTab.vala:78 libbirdfont/TabBar.vala:496
+msgid "Menu"
+msgstr "Menú"
+
+#: libbirdfont/MenuTab.vala:113
+msgid "New font"
+msgstr ""
+
 #: libbirdfont/MenuTab.vala:114
 msgid "Export"
 msgstr "Exportar"
@@ -120,17 +160,29 @@ msgstr "Exportar"
 msgid "Preview"
 msgstr "Apercebut"
 
-#: libbirdfont/MenuTab.vala:132 libbirdfont/MenuTab.vala:215
+#: libbirdfont/MenuTab.vala:116 libbirdfont/MenuTab.vala:219
+msgid "Update name & description"
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:130 libbirdfont/MenuTab.vala:215
 msgid "Recover"
 msgstr "Recuperar"
 
-#: libbirdfont/MenuTab.vala:157 libbirdfont/MenuTab.vala:218
+#: libbirdfont/MenuTab.vala:155 libbirdfont/MenuTab.vala:218
 msgid "Delete all"
 msgstr ""
 
-#: libbirdfont/MenuTab.vala:177 libbirdfont/MenuTab.vala:214
+#: libbirdfont/MenuTab.vala:175 libbirdfont/MenuTab.vala:214
 msgid "Recent files"
 msgstr "Fichièrs recents"
+
+#: libbirdfont/MenuTab.vala:208
+msgid "Create a new font"
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:209
+msgid "Add name and description to this font."
+msgstr ""
 
 #: libbirdfont/MenuTab.vala:210
 msgid "Preferences"
@@ -140,10 +192,6 @@ msgstr "Preferéncias"
 msgid "Export SVG, TTF & EOT fonts"
 msgstr "Exportar la poliça al format SVG, TTF e EOT"
 
-#: libbirdfont/MenuTab.vala:212
-msgid "Name"
-msgstr "Nom"
-
 #: libbirdfont/MenuTab.vala:213
 msgid "Glyph sequence"
 msgstr "Sequéncia del glyph"
@@ -152,11 +200,11 @@ msgstr "Sequéncia del glyph"
 msgid "Export SVG font and view the result"
 msgstr "Exportar la poliça al format svg e afichar lo resultat."
 
-#: libbirdfont/MenuTab.vala:381 libbirdfont/SaveDialog.vala:85
+#: libbirdfont/MenuTab.vala:382 libbirdfont/SaveDialog.vala:85
 msgid "Save"
 msgstr "Enregistrar"
 
-#: libbirdfont/MenuTab.vala:490
+#: libbirdfont/MenuTab.vala:491
 msgid "Open"
 msgstr "Dobrir"
 
@@ -168,21 +216,18 @@ msgstr "Fusionar los camins"
 msgid "Move paths"
 msgstr "Cambiar los camins"
 
-#: libbirdfont/OverView.vala:579
+#: libbirdfont/OverView.vala:566
 msgid "See also:"
 msgstr ""
 
-#: libbirdfont/OverView.vala:608
+#: libbirdfont/OverView.vala:595
 msgid "No glyphs in this view."
 msgstr "Pas cap de glyph dins aqueste apercebut."
 
 #: libbirdfont/OverwriteDialog.vala:57
-#, fuzzy
 msgid ""
 "The loaded font can be overwritten if you choose to continue with preview."
 msgstr ""
-"La poliça de caractèr importada serà remplaçada se contunhatz amb aqueste "
-"apercebut."
 
 #: libbirdfont/OverwriteDialog.vala:72
 msgid "Continue"
@@ -228,10 +273,6 @@ msgstr "Resumit"
 msgid "Kerning"
 msgstr "Interletratge"
 
-#: libbirdfont/TabBar.vala:496
-msgid "Menu"
-msgstr "Menú"
-
 #: libbirdfont/Toolbox.vala:89
 msgid "Create quadratic Bézier curves"
 msgstr ""
@@ -275,6 +316,10 @@ msgstr "Afichar totes los caractèrs de la poliça."
 #: libbirdfont/Toolbox.vala:248
 msgid "Delete selected glyph"
 msgstr "Escafar lo glyph seleccionat."
+
+#: libbirdfont/Toolbox.vala:303
+msgid "Show guidelines"
+msgstr ""
 
 #: libbirdfont/Toolbox.vala:314
 msgid "Show guidelines for x-height and baseline"
@@ -356,10 +401,6 @@ msgstr "Definir las dimensions de la grasilha."
 msgid "New version"
 msgstr "Version novèla"
 
-#: libbirdfont/VersionList.vala:145
-msgid "Version"
-msgstr "Version"
-
 #: birdfont/GtkWindow.vala:382
 msgid "_New"
 msgstr "_Novèl"
@@ -385,136 +426,147 @@ msgid "_Preview"
 msgstr "_Previsualizacion"
 
 #: birdfont/GtkWindow.vala:411
+msgid "_Description"
+msgstr ""
+
+#: birdfont/GtkWindow.vala:415
 msgid "_Kerning"
 msgstr "_Interletratge"
 
-#: birdfont/GtkWindow.vala:416
+#: birdfont/GtkWindow.vala:420
 msgid "_Quit"
 msgstr "_Sortir"
 
-#: birdfont/GtkWindow.vala:421
+#: birdfont/GtkWindow.vala:425
 msgid "_Undo"
 msgstr "_Anullar"
 
-#: birdfont/GtkWindow.vala:426
+#: birdfont/GtkWindow.vala:430
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: birdfont/GtkWindow.vala:431
+#: birdfont/GtkWindow.vala:435
 msgid "_Paste"
 msgstr "_Pegar"
 
-#: birdfont/GtkWindow.vala:436
+#: birdfont/GtkWindow.vala:440
 msgid "_Select all paths"
 msgstr "_Seleccionar totes los camins. "
 
-#: birdfont/GtkWindow.vala:444
+#: birdfont/GtkWindow.vala:448
 msgid "_Export glyph as SVG"
 msgstr "_Exportar lo glyph al format SVG"
 
-#: birdfont/GtkWindow.vala:448
+#: birdfont/GtkWindow.vala:452
 msgid "_Import SVG"
 msgstr "_Importar SVG"
 
-#: birdfont/GtkWindow.vala:452
+#: birdfont/GtkWindow.vala:457
 msgid "Close _path"
 msgstr "Tampar _lo camin."
 
-#: birdfont/GtkWindow.vala:459
+#: birdfont/GtkWindow.vala:464
 msgid "_Select point above"
 msgstr "_Seleccionar lo punt lo mai pròche"
 
-#: birdfont/GtkWindow.vala:463
+#: birdfont/GtkWindow.vala:468
 msgid "Select _next point"
 msgstr "Seleccionar _lo punt seguent"
 
-#: birdfont/GtkWindow.vala:467
+#: birdfont/GtkWindow.vala:472
 msgid "Select _previous point"
 msgstr "Seleccionar _un punt precedent."
 
-#: birdfont/GtkWindow.vala:471
+#: birdfont/GtkWindow.vala:476
 msgid "Select point _below"
 msgstr "Seleccionar un punt _pròche"
 
-#: birdfont/GtkWindow.vala:476
+#: birdfont/GtkWindow.vala:481
 msgid "_Next tab"
 msgstr "Onglet _seguent"
 
-#: birdfont/GtkWindow.vala:489
+#: birdfont/GtkWindow.vala:494
 msgid "_Previous tab"
 msgstr "Onglet _precedent"
 
-#: birdfont/GtkWindow.vala:502
+#: birdfont/GtkWindow.vala:507
 msgid "_Close tab"
 msgstr "_Tampar l'onglet"
 
-#: birdfont/GtkWindow.vala:516
+#: birdfont/GtkWindow.vala:521
 msgid "Close _all tabs"
 msgstr "_Tampar totes los onglets"
 
-#: birdfont/GtkWindow.vala:524
+#: birdfont/GtkWindow.vala:529
 msgid "_Create path"
 msgstr "_Crear un camin"
 
-#: birdfont/GtkWindow.vala:531
+#: birdfont/GtkWindow.vala:536
 msgid "_Zoom"
 msgstr "_Zoom"
 
-#: birdfont/GtkWindow.vala:537
+#: birdfont/GtkWindow.vala:542
 msgid "_Create counter path"
 msgstr "_Crear un comptador de traçat."
 
-#: birdfont/GtkWindow.vala:544
+#: birdfont/GtkWindow.vala:549
 msgid "_Move"
 msgstr "_Desplaçar"
 
-#: birdfont/GtkWindow.vala:551
+#: birdfont/GtkWindow.vala:556
 msgid "Show _full unicode characters set"
 msgstr "Afichar _tota la lista dels caractèrs unicode"
 
-#: birdfont/GtkWindow.vala:558
+#: birdfont/GtkWindow.vala:563
 msgid "Show de_fault characters set"
 msgstr "Afichar l'ensemble dels caractèrs per de_faut"
 
-#: birdfont/GtkWindow.vala:565
+#: birdfont/GtkWindow.vala:570
 msgid "Show characters in font"
 msgstr "Afichar los caractèrs de la poliça"
 
-#: birdfont/GtkWindow.vala:572
+#: birdfont/GtkWindow.vala:577
 msgid "Add new _grid item"
 msgstr "Apondre un novèl element sus la _grasilha."
 
-#: birdfont/GtkWindow.vala:578
+#: birdfont/GtkWindow.vala:583
 msgid "Remove gr_id item"
 msgstr "Suprimir aqueste element de la g_rasilha"
 
-#: birdfont/GtkWindow.vala:584
+#: birdfont/GtkWindow.vala:589
 msgid "_Zoom in"
 msgstr "_Zoom avant"
 
-#: birdfont/GtkWindow.vala:591
+#: birdfont/GtkWindow.vala:596
 msgid "Zoom _out"
 msgstr "Zoom a_rrièr"
 
-#: birdfont/GtkWindow.vala:598
+#: birdfont/GtkWindow.vala:603
 msgid "Zoom to _scale 1:1"
 msgstr "Zoom a l'_escala 1:1"
 
-#: birdfont/GtkWindow.vala:606
+#: birdfont/GtkWindow.vala:611
 msgid "_File"
 msgstr "_Fichièr"
 
-#: birdfont/GtkWindow.vala:609
+#: birdfont/GtkWindow.vala:614
 msgid "_Edit"
 msgstr "_Edicion"
 
-#: birdfont/GtkWindow.vala:612
+#: birdfont/GtkWindow.vala:617
 msgid "_Tab"
 msgstr "_Onglet"
 
-#: birdfont/GtkWindow.vala:615
+#: birdfont/GtkWindow.vala:620
 msgid "T_ool"
 msgstr "_Aisina"
+
+#~ msgid ""
+#~ "The loaded font will be overwritten if you choose to continue with "
+#~ "preview."
+#~ msgstr ""
+#~ "La poliça de caractèr importada serà remplaçada se contunhatz amb aqueste "
+#~ "apercebut."
 
 #~ msgid "Export glyph to svg file"
 #~ msgstr "Exportar lo glyph al format svg"
