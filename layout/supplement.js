@@ -35,4 +35,13 @@ function update_name_fields () {
 	mess = 'version:';
 	mess += document.getElementById('version').value;
 	call (mess);
+
+	mess = 'description:';
+	mess += document.getElementById('description').value;
+	call (mess);
+	
+	mess = 'copyright:';
+	mess += document.getElementById('copyright').value;
+	call (mess);
+	
 }

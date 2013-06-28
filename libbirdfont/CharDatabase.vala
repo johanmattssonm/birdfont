@@ -104,6 +104,7 @@ class CharDatabase {
 			
 			if (description == "") {
 				warning ("no description found");
+				description = Font.to_hex (c).replace ("U+", "") + "\t";
 			}
 			
 			fin.close ();

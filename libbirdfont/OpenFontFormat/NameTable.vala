@@ -147,8 +147,8 @@ class NameTable : Table {
 
 		List<uint16> type = new List<uint16> ();
 		List<string> text = new List<string> ();
-		
-		text.append ("");
+
+		text.append (font.copyright);
 		type.append (COPYRIGHT_NOTICE);
 		
 		text.append (font.name);
@@ -164,12 +164,12 @@ class NameTable : Table {
 		type.append (FULL_FONT_NAME);
 		
 		text.append (font.version);
-		type.append (VERSION);		
-
+		type.append (VERSION);
+		
 		text.append (font.postscript_name);
 		type.append (POSTSCRIPT_NAME);
-		
-		text.append ("");
+
+		text.append (font.description);
 		type.append (DESCRIPTION);
 		
 		text.append (font.name);
@@ -177,7 +177,7 @@ class NameTable : Table {
 		
 		text.append (font.subfamily);
 		type.append (PREFERED_SUB_FAMILY);
-			
+		
 		num_records = (uint16) text.length ();
 		
 		fd.add_ushort (0); // format 1
@@ -201,7 +201,7 @@ class NameTable : Table {
 		for (int i = 0; i < num_records; i++) {
 			t = (!) text.nth (i).data;
 			p = (!) type.nth (i).data;
-			l = (uint16) (2 * t.char_count ());
+			l = (uint16) (2 * t.char_count ()); // FIXME: handle UTF-16 in a better way, gconvert it.
 
 			fd.add_ushort (3); // platform
 			fd.add_ushort (1); 	// encoding id

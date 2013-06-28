@@ -66,9 +66,11 @@ public class Font : GLib.Object {
 	public string postscript_name = "Typeface";
 	public string name = "Typeface";
 	public string subfamily = "Regular";
-	public string full_name = "Typeface-Regular";
+	public string full_name = "Typeface";
 	public string unique_identifier = "";
 	public string version = "Version 1.0";
+	public string description = "";
+	public string copyright = "";
 
 	public bool initialised = true;
 

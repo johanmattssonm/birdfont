@@ -351,6 +351,8 @@ class FontData : Object {
 		uint8 c1;
 		int l = 0;
 		
+		// FIXME: gconvert it instead.
+		
 		while (s.get_next_char (ref index, out c)) {
 			c0 = (uint8) (c >> 8);
 			c1 = (uint8) (c - (c0 << 8));

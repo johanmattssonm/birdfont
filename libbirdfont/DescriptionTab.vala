@@ -50,6 +50,14 @@ public class DescriptionTab : FontDisplay {
 		add_html_callback ("version", (val) => {
 			font.version = val;
 		});
+
+		add_html_callback ("description", (val) => {
+			font.description = val;
+		});
+
+		add_html_callback ("copyright", (val) => {
+			font.copyright = val;
+		});
 	}
 
 	public override string get_name () {
@@ -61,9 +69,7 @@ public class DescriptionTab : FontDisplay {
 	}
 
 	public override string get_html () {
-		StringBuilder c = new StringBuilder ();
-		
-		// TODO: description & license 
+		StringBuilder c = new StringBuilder (); 
 
 		// TODO: trademark, prefered family etc. 
 		// or maybe not, many fields in the name table seems to be irrelevant.
@@ -100,13 +106,37 @@ public class DescriptionTab : FontDisplay {
 
 			<h3>""" + _("Version") + """</h3>
 			<input class="text" type="text" id="version" value=""" + "\"" + font.version + "\"" + """ onchange="update_name_fields ();"/><br />
+
+""");
+
+	// There is a bug in webkit on windows that makes it imposible
+	// to display textareas.
+	if (BirdFont.win32) {
+		c.append ("""<div style="visibility: hidden;">""");
+	}
+	
+c.append (
+"""
+			<h3>""" + _("Description") + """</h3>
+			<textarea rows="4" cols="50" id="description" name="description" onchange="update_name_fields ();">""" + font.description + """</textarea>
+
+			<h3>""" + _("Copyright") + """</h3>
+			<textarea rows="4" cols="50" id="copyright" name="copyright" onchange="update_name_fields ();">""" + font.copyright + """</textarea>
+""");
+
+	if (BirdFont.win32) {
+		c.append ("</div>");
+	}
+
+c.append (
+"""
 		</form>
 	</div>
 </body>
 </html>
 """);
 
-#if traslations 
+#if translations 
 	// for xgettext:
 	_("Postscript name");
 	_("Name");
@@ -114,6 +144,8 @@ public class DescriptionTab : FontDisplay {
 	_("Full name (name & subfamily)");
 	_("Unique identifier");
 	_("Version");
+	_("Description");
+	_("Copyright");
 #endif
 		return c.str;
 	}

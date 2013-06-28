@@ -664,6 +664,28 @@ int get_descender (FT_Face face) {
 	return (int) -bbox.yMin;	
 }
 
+/** Append name table data to a gstring. */
+void append_description (GString* str, FT_SfntName* name_table_data) {
+	gchar* utf8_str;
+	gsize read, written;
+	GError* error = NULL;
+	
+	if (name_table_data->encoding_id == 0) {
+		g_string_append_len (str, name_table_data->string, name_table_data->string_len);
+	} else if (name_table_data->encoding_id == 1) {
+		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2", &read, &written, &error);
+		if (error == NULL) {
+			g_string_append (str, utf8_str);
+			g_free (utf8_str);
+		} else {
+			fprintf (stderr, "Error in append_description: %s\n", error->message);
+			g_error_free (error);
+		}
+	} else {
+		fprintf (stderr, "Encoding %u is not supported.\n", name_table_data->encoding_id);
+	}
+}
+
 /** Convert font to bf format.
  * @param face freetype font face
  * @param err error code
@@ -680,7 +702,6 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	FT_SfntName name_table_data;
 	double units_per_em;
 	double units;
-	
 	
 	*err = OK;
 
@@ -702,22 +723,34 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	
 	if (FT_Get_Sfnt_Name (face, 4, &name_table_data) == 0) { // full name
 		g_string_append (bf, "<full_name>");
-		g_string_append_len (bf, name_table_data.string, name_table_data.string_len);
-		g_string_append (bf, "</full_name>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</full_name>\n");
 	}	
 
 	if (FT_Get_Sfnt_Name (face, 3, &name_table_data) == 0) { // unique identifier
 		g_string_append (bf, "<unique_identifier>");
-		g_string_append_len (bf, name_table_data.string, name_table_data.string_len);
-		g_string_append (bf, "</unique_identifier>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</unique_identifier>\n");
 	}
 
 	if (FT_Get_Sfnt_Name (face, 5, &name_table_data) == 0) { // version
 		g_string_append (bf, "<version>");
-		g_string_append_len (bf, name_table_data.string, name_table_data.string_len);
-		g_string_append (bf, "</version>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</version>\n");
 	}
 
+	if (FT_Get_Sfnt_Name (face, 10, &name_table_data) == 0) { // description
+		g_string_append (bf, "<description>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</description>\n");
+	}
+	
+	if (FT_Get_Sfnt_Name (face, 0, &name_table_data) == 0) { // copyright
+		g_string_append (bf, "<copyright>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</copyright>\n");
+	}
+		
 	g_string_append_printf (bf, "<backup>%s</backup>\n", file);
 
 	g_string_append_printf (bf, "<lines>\n");

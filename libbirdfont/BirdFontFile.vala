@@ -123,6 +123,8 @@ class BirdFontFile {
 			os.put_string (@"<full_name>$(font.full_name)</full_name>\n");
 			os.put_string (@"<unique_identifier>$(font.unique_identifier)</unique_identifier>\n");
 			os.put_string (@"<version>$(font.version)</version>\n");
+			os.put_string (@"<description>$(font.description)</description>\n");
+			os.put_string (@"<copyright>$(font.copyright)</copyright>\n");
 			
 			os.put_string ("\n");
 			os.put_string ("<lines>\n");
@@ -465,7 +467,15 @@ class BirdFontFile {
 			if (iter->name == "version" && iter->children != null) {
 				font.version = iter->children->content;
 			}
+
+			if (iter->name == "description" && iter->children != null) {
+				font.description = iter->children->content;
+			}
 			
+			if (iter->name == "copyright" && iter->children != null) {
+				font.copyright = iter->children->content;
+			}
+						
 			if (iter->name == "hkern") {
 				parse_kerning (iter);
 			}

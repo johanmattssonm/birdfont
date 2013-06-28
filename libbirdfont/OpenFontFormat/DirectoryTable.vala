@@ -90,10 +90,6 @@ class DirectoryTable : Table {
 			tables.append (this);
 			
 			if (kern_table.kerning_pairs > 0) {
-				// FIXME: Firefox will ignore the Kern table of GPOS is present 
-				// but not adjust the values according to the GPOS table.
-				// 
-				// Maybe there is a problem with gpos_table that I am not aware of.
 				tables.append (gpos_table);
 			}
 			
@@ -107,10 +103,13 @@ class DirectoryTable : Table {
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
 
+			// FIXME: Remove the kern table.
+			// It looks like the old kerning table is no longer needed
+			// since the most important browsers uses the GPOS table.
 			if (kern_table.kerning_pairs > 0) {
 				tables.append (kern_table);
 			}
-				
+							
 			tables.append (loca_table);
 			tables.append (maxp_table);
 			tables.append (name_table);
