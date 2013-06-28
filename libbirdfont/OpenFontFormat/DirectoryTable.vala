@@ -105,7 +105,8 @@ class DirectoryTable : Table {
 
 			// FIXME: Remove the kern table.
 			// It looks like the old kerning table is no longer needed
-			// since the most important browsers uses the GPOS table.
+			// since the most important browsers uses the GPOS table
+			// but Windows does not accept fonts without a kern table.
 			if (kern_table.kerning_pairs > 0) {
 				tables.append (kern_table);
 			}

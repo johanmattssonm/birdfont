@@ -28,22 +28,16 @@ public class MenuTab : FontDisplay {
 
 	public MenuTab () {
 		// html callbacks:
-		add_html_callback ("export_name", (val) => {
-			Font f = BirdFont.get_current_font ();
-			
-			if (f.get_name () != val) {
-				f.touch ();
-			}
-			
-			f.set_name (val);
-		});
-
 		add_html_callback ("export", (val) => {
-			ExportTool.export_all ();
+			if (BirdFont.get_current_font ().initialised) {
+				ExportTool.export_all ();
+			}
 		});
 
 		add_html_callback ("preview", (val) => {
-			preview ();
+			if (BirdFont.get_current_font ().initialised) {
+				preview ();
+			}
 		});		
 
 		add_html_callback ("load", (val) => {
@@ -65,6 +59,14 @@ public class MenuTab : FontDisplay {
 		add_html_callback ("delete_backups", (val) => {
 			delete_backups ();
 			MainWindow.get_tab_bar ().select_tab_name ("Menu");
+		});
+		
+		add_html_callback ("set_name", (val) => {
+			show_description ();
+		});
+
+		add_html_callback ("new_font", (val) => {
+			new_file ();
 		});		
 	}
 	
@@ -106,9 +108,12 @@ public class MenuTab : FontDisplay {
 c.append ("""
 				<h3>""" + _("Glyph sequence") + """</h3>
 				<input class="text" type="text" id="glyph_sequence" value=""" + "\"" + Preferences.get ("glyph_sequence") + "\"" + """ onchange="update_text_fields ();"/><br />
-
-				<input class="button" type="button" value=""" + "\"" + _("Export") + "\"" + """ id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) """ + _("Export SVG, TTF & EOT fonts") + """');"/>
+				<br>
+				
+				<input class="button" type="button" value=""" + "\"" + _("New font") + "\"" + """ id="new_font" onclick="call ('new_font:');" onmouseover="call ('help:(Ctrl+n) """ + _("Create a new font") + """');"/><br />
+				<input class="button" type="button" value=""" + "\"" + _("Export") + "\"" + """ id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) """ + _("Export SVG, TTF & EOT fonts") + """');"/><br />
 				<input class="button" type="button" value=""" + "\"" + _("Preview") + "\"" + """ id="preview_button" onclick="call ('preview:fonts');" onmouseover="call ('help:(Ctrl+p) """ + _("Export SVG font and view the result") + """');"/><br />
+				<input class="button" type="button" value=""" + "\"" + _("Update name & description") + "\"" + """ id="description" onclick="call ('set_name:');" onmouseover="call ('help:""" + _("Add name and description to this font.") + """');"/><br />
 """);
 	
 c.append ("""
@@ -200,6 +205,8 @@ c.append ("""
 
 #if traslations 
 		// xgettext needs these lines in order to extract strings properly
+		_("Create a new font")
+		_("Add name and description to this font.");
 		_("Preferences");
 		_("Export SVG, TTF & EOT fonts");
 		_("Name");
@@ -208,7 +215,8 @@ c.append ("""
 		_("Recover");
 		_("Export SVG font and view the result");
 		_("Export SVG font and view the result");
-		_("Delete all")
+		_("Delete all");
+		_("Update name & description")
 #endif
 
 		return c.str;
