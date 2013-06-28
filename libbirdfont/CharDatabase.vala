@@ -104,7 +104,6 @@ class CharDatabase {
 			
 			if (description == "") {
 				warning ("no description found");
-				description = Font.to_hex (c).replace ("U+", "") + "\t";
 			}
 			
 			fin.close ();
@@ -112,6 +111,10 @@ class CharDatabase {
 		} catch (GLib.Error e) {
 			warning (e.message);
 			stderr.printf ("when reading %s", (!) get_unicode_database ().get_path ());
+		}
+		
+		if (description == "") {
+			description = Font.to_hex (c).replace ("U+", "") + "\t";
 		}
 		
 		return description;		

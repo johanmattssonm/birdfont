@@ -46,7 +46,7 @@ public class OverwriteDialog : FontDisplay {
 	}
 
 	public override string get_name () {
-		return "Overwrite?";
+		return _("Overwrite?");
 	}
 
 	public override bool is_html_canvas () {
@@ -63,7 +63,7 @@ public class OverwriteDialog : FontDisplay {
 </head>
 <body>
 	
-	<div style="width:300px; margin: 50px auto 0 auto;">
+	<div style="width:350px; margin: 50px auto 0 auto;">
 		<div class="heading"><h2>""" + _("Overwrite?") + """</h2></div>
 		
 		<p>""" + mess + """</p>
