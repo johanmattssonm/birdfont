@@ -533,5 +533,10 @@ c.append ("""
 			overwrite.finished ();
 		}
 	}
+	
+	/** Display the language selection tab. */
+	public static void select_language () {
+		MainWindow.get_tab_bar ().add_unique_tab (new LanguageSelectionTab (), 120, false);
+	}
 }
 }

@@ -258,6 +258,9 @@ public class BirdFont {
 		}
 		
 		Preferences.set_last_file (get_current_font ().get_path ());
+		DefaultGlyphs.create_default_character_sets ();
+		DefaultGlyphs.get_glyphs_for_prefered_language ();
+
 	}
 
 	static void init_gettext () {

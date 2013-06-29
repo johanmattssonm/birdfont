@@ -114,7 +114,7 @@ class CharDatabase {
 		}
 		
 		if (description == "") {
-			description = Font.to_hex (c).replace ("U+", "") + "\t";
+			description = Font.to_hex (c).replace ("U+", "") + "\tUNICODE CHARACTER";
 		}
 		
 		return description;		

@@ -41,7 +41,7 @@ public class Preferences {
 	public static void @set (string k, string v) {
 		lock (data) {
 			data.replace (k, v);
-			save (); // Fixa: save in separate io thread instead.
+			save ();
 		}
 	}
 
@@ -126,8 +126,6 @@ public class Preferences {
 			s = i + 1;
 			i = line.index_of_char('"', s);
 			string val = line.substring (s, i - s);
-			
-			// (key, val, description);
 			
 			data.insert (key, val);
 		}

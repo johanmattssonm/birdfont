@@ -417,6 +417,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		kerning_item.activate.connect (() => { MenuTab.show_kerning_context (); });
 		kerning_item.add_accelerator ("activate", accel_group, 'K', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		Gtk.MenuItem select_language_item = new Gtk.MenuItem.with_mnemonic (_("Select _character set"));
+		file_menu.append (select_language_item);
+		select_language_item.activate.connect (() => { MenuTab.select_language (); });
+		
 		Gtk.MenuItem quit_item = new Gtk.MenuItem.with_mnemonic (_("_Quit"));
 		file_menu.append (quit_item);
 		quit_item.activate.connect (() => { quit(); });

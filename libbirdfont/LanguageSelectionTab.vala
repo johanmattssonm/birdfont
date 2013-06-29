@@ -15,48 +15,34 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Cairo;
-
 namespace BirdFont {
 
-public class OverwriteDialog : FontDisplay {
-
-	public signal void finished ();
-	public static bool ignore = false; // ignore this dialog
+public class LanguageSelectionTab : FontDisplay {
 	
-	public OverwriteDialog () {
-		add_html_callback ("overwrite_dialog", (val) => {
+	public LanguageSelectionTab () {	
+		add_html_callback ("select_language", (val) => {
 			TabBar tb = MainWindow.get_tab_bar ();
-			
-			if (val == "overwrite") {
-				tb.close_display (this);
-				finished ();
-			}
-			
-			if (val == "cancel") {
-				tb.close_display (this);
-			}
-			
-			if (val == "ignore") {
-				ignore = true;
-				tb.close_display (this);
-				finished ();
-			}
+			print (val);
+			Preferences.set ("language", val);
+			print (Preferences.get ("language"));
+			tb.close_display (this);
+			Toolbox.select_tool_by_name ("custom_character_set");
 		});
 	}
 
 	public override string get_name () {
-		return _("Overwrite?");
+		return _("Character set");
 	}
 
 	public override bool is_html_canvas () {
 		return true;
 	}
-
+	
 	public override string get_html () {
-		string mess = _("The loaded font can be overwritten if you choose to continue with preview.");
-		string headline = _("Overwrite?");
-		return """
+		string headline = _("Select default character set");
+		StringBuilder c = new StringBuilder ();
+
+		c.append ("""
 <html>
 <head>
 	<script type="text/javascript" src="supplement.js"></script>
@@ -67,19 +53,29 @@ public class OverwriteDialog : FontDisplay {
 	<div style="width:350px; margin: 50px auto 0 auto;">
 		<div class="heading"><h2>""" + headline + """</h2></div>
 		
-		<p>""" + mess + """</p>
-		
 		<form>
-			<input class="button" type="button" value=""" + "\"" + _("Continue") + "\"" + """    onclick="call ('overwrite_dialog:overwrite');"/>
-			<input class="button" type="button" value=""" + "\"" + _("Cancel") + "\"" + """  onclick="call ('overwrite_dialog:cancel');"/>
-			<input class="button" type="button" value=""" + "\"" + _("Continue and don't ask me again.") + "\"" + """  onclick="call ('overwrite_dialog:ignore');"/>
-			<br />
+		""");
+		
+		int i = 0;
+		string language_code;
+		foreach (string language in DefaultLanguages.names) {
+			language_code = DefaultLanguages.codes.nth (i).data;
+			c.append ("""
+				<input class="button" type="button" value=""" + "\"" + language + "\"" 
+					+ """ onclick="call ('select_language:""" + language_code + """');"/>
+				<br />
+			""");
+			i++;
+		}
+		
+		c.append ("""
 		</form>
 	</div>
 </body>
-</html>""";
-	}
-}
-	
+</html>""");
+
+		return c.str;
+	}	
 }
 
+}
