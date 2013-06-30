@@ -259,7 +259,6 @@ public class OverView : FontDisplay {
 		zoom_list_index++;
 	}
 
-	
 	public override string get_name () {
 		return "Overview";
 	}
@@ -913,23 +912,24 @@ public class OverView : FontDisplay {
 	}
 
 	public void delete_selected_glyph () {
-		delete_glyph (glyph_range.get_char (selected));
-	}
-		
-	public void delete_glyph (string g) {
-		GlyphCollection? gc;
-		Font f = BirdFont.get_current_font ();
-		
-		gc = f.get_glyph_collection (g);
+		Font font = BirdFont.get_current_font ();
+		string glyph_name;
+		GlyphCollection? glyphs;
 
-		if (gc != null) {
-			deleted_glyphs.append ((!) gc);
-			f.delete_glyph ((!) gc);
+		if (all_available) {
+			glyphs = font.get_glyph_collection_indice (selected);
+		} else {
+			glyph_name = glyph_range.get_char (selected);
+			glyphs = font.get_glyph_collection (glyph_name);
 		}
 		
-		MainWindow.get_tab_bar ().close_by_name (g);
-		set_glyph_range (glyph_range);
-		f.touch ();
+		if (glyphs != null) {
+			deleted_glyphs.append ((!) glyphs);
+			font.delete_glyph ((!) glyphs);
+			MainWindow.get_tab_bar ().close_by_name (((!)glyphs).get_name ());
+		}
+		
+		font.touch ();
 	}
 	
 	public override void undo () {
@@ -1033,7 +1033,9 @@ public class OverView : FontDisplay {
 		}
 			
 		// empty set
-		if (len == 0) return;
+		if (len == 0) {
+			return;
+		}
 
 		// scroll to the selected glyph
 		selected = (uint32) first_visible;

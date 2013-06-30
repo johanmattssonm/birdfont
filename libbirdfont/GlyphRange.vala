@@ -129,12 +129,11 @@ public class GlyphRange {
 		StringBuilder sb;
 		unichar c;
 		
-		if (index > len + unassigned.length ()) { 
+		if (index > len + unassigned.length ()) {
 			return "\0".dup();
 		}
 		
 		if (index >= len) {
-			
 			if (index - len >= unassigned.length ()) {
 				return "\0".dup();
 			} 

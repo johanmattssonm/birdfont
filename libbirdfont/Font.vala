@@ -407,14 +407,18 @@ public class Font : GLib.Object {
 		return ((!)gc).get_current ();
 	}
 	
-	public Glyph? get_glyph_indice (unichar glyph_indice) {
-		GlyphCollection? gc;
-		
+	public GlyphCollection? get_glyph_collection_indice (unichar glyph_indice) {
 		if (!(0 <= glyph_indice < glyph_name.length ())) {
 			return null;
 		}
 		
-		gc = glyph_name.nth (glyph_indice);
+		return glyph_name.nth (glyph_indice);
+	}
+	
+	public Glyph? get_glyph_indice (unichar glyph_indice) {
+		GlyphCollection? gc;
+		
+		gc = get_glyph_collection_indice (glyph_indice);
 		
 		if (gc != null) {
 			return ((!) gc).get_current ();
