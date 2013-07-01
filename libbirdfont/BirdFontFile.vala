@@ -352,6 +352,10 @@ class BirdFontFile {
 			add_quadratic (start, end, data);
 		} else if (end.left_handle.type == PointType.CUBIC || start.right_handle.type == PointType.CUBIC) {
 			add_cubic (start, end, data);
+		} else if (start.right_handle.type == PointType.LINE_CUBIC && end.left_handle.type == PointType.LINE_DOUBLE_CURVE) {
+			add_line_to (end, data);
+		} else if (start.right_handle.type == PointType.LINE_DOUBLE_CURVE && end.left_handle.type == PointType.LINE_CUBIC) {
+			add_line_to (end, data);
 		} else {
 			warning (@"Unknown point type. \nStart handle: $(start.right_handle.type) \nStop handle: $(end.left_handle.type)");
 			add_cubic (start, end, data);

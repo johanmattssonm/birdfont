@@ -75,7 +75,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public override string get_name () {
-		return _("Menu");
+		return "Menu";
 	}
 	
 	public override bool is_html_canvas () {
@@ -109,7 +109,7 @@ c.append ("""
 				<h3>""" + _("Glyph sequence") + """</h3>
 				<input class="text" type="text" id="glyph_sequence" value=""" + "\"" + Preferences.get ("glyph_sequence") + "\"" + """ onchange="update_text_fields ();"/><br />
 				<br>
-				
+
 				<input class="button" type="button" value=""" + "\"" + _("New font") + "\"" + """ id="new_font" onclick="call ('new_font:');" onmouseover="call ('help:(Ctrl+n) """ + _("Create a new font") + """');"/><br />
 				<input class="button" type="button" value=""" + "\"" + _("Export") + "\"" + """ id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) """ + _("Export SVG, TTF & EOT fonts") + """');"/><br />
 				<input class="button" type="button" value=""" + "\"" + _("Preview") + "\"" + """ id="preview_button" onclick="call ('preview:fonts');" onmouseover="call ('help:(Ctrl+p) """ + _("Export SVG font and view the result") + """');"/><br />
@@ -232,7 +232,7 @@ c.append ("""
 		string file_name;
 		File backup_file;
 		File dir = BirdFont.get_backup_directory ();
-
+		
 		try {
 			enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 			while ((file_info = enumerator.next_file ()) != null) {
