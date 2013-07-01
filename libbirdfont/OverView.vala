@@ -951,7 +951,7 @@ public class OverView : FontDisplay {
 			return;
 		}
 		
-		DefaultGlyphs.use_full_unicode_range (full);
+		DefaultCharacterSet.use_full_unicode_range (full);
 		
 		set_glyph_range (full);
 		selected = c;

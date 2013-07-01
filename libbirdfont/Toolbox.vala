@@ -209,7 +209,7 @@ public class Toolbox : GLib.Object  {
 					MenuTab.new_file ();
 				}
 				
-				DefaultGlyphs.use_full_unicode_range (gr);
+				DefaultCharacterSet.use_full_unicode_range (gr);
 				o.set_glyph_range (gr);
 				MainWindow.get_tab_bar ().select_tab_name ("Overview");
 			});
@@ -225,7 +225,7 @@ public class Toolbox : GLib.Object  {
 				MenuTab.new_file ();
 			}
 			
-			DefaultGlyphs.use_default_range (gr);
+			DefaultCharacterSet.use_default_range (gr);
 			o.set_glyph_range (gr);
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		});
