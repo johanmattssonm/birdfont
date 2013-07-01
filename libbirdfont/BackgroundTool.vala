@@ -55,7 +55,7 @@ class BackgroundTool : Tool {
 			if (bg == null) {
 				return;
 			}
-			
+
 			background = (!) bg;
 			
 			g.store_undo_state ();
@@ -112,13 +112,11 @@ class BackgroundTool : Tool {
 		
 		double xscale, yscale, dx, dy;
 
-		if (background_image == null) return;
-		 		
-		bg.handler_move (x, y);
-	
-		if (move_bg) {
+		if (background_image == null) {
 			return;
 		}
+		 		
+		bg.handler_move (x, y);
 		
 		dx = x - begin_x;
 		dy = y - begin_y;
