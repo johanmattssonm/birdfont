@@ -211,26 +211,6 @@ class GridTool : Tool {
 		}
 	}
 
-	public static void tie_to_prev (EditPoint ep, double tx, double ty) {
-		EditPoint pp;
-		double a, b;
-		
-		return_if_fail (ep.prev != null);
-		
-		pp = ep.get_prev ().data;
-		
-		EditPoint.to_coordinate (ref tx, ref ty);
-		
-		a = fabs (tx - pp.x);
-		b = fabs (ty - pp.y);
-		
-		if (a > b) {
-			ep.y = pp.y;
-		} else {
-			ep.x = pp.x;
-		}
-	}	
-
 	public static bool is_visible () {
 		return visible;
 	}

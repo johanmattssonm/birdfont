@@ -132,7 +132,9 @@ if (has_backup ()) {
 	foreach (string backup in get_backups ()) {
 		fn = backup;
 
-		c.append ("""<div class="recent_font" """ + "onclick=\"call ('load_backup:" + fn + "')\">");
+		c.append ("""<div class="recent_font" """ 
+			+ "onclick=\"call ('load_backup:" + fn + "')\""
+			+ "onmouseover=\"call ('help: " + fn + "')\">");
 
 		c.append ("<div class=\"one_line\">");
 		c.append (fn);
@@ -149,7 +151,7 @@ if (has_backup ()) {
 	}
 
 	if (get_backups ().length () > 0) {
-		c.append ("""<div class="recent_font" """ + "onclick=\"call ('delete_backups:')\">");
+		c.append ("""<div class="recent_font" onclick=\"call ('delete_backups:')">""");
 
 		c.append ("<div class=\"one_line\">");
 		c.append (_("Delete all"));
@@ -180,7 +182,9 @@ foreach (Font font in recent_fonts) {
 	fn = (!) font.font_file;
 	fn = fn.substring (fn.replace ("\\", "/").last_index_of ("/") + 1);	
 	
-	c.append ("""<div class="recent_font" """ + "onclick=\"call ('load:" + ((!) font.font_file).replace ("\\", "\\\\") + "');\">");
+	c.append ("""<div class="recent_font" """ 
+		+ "onclick=\"call ('load:" + ((!) font.font_file).replace ("\\", "\\\\") + "');\" "
+		+ "onmouseover=\"call ('help: " + fn + "')\">");
 
 	c.append ("<div class=\"one_line\">");
 	c.append (fn);

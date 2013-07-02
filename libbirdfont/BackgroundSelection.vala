@@ -41,6 +41,9 @@ class BackgroundSelection : FontDisplay {
 	}
 
 	public override string get_name () {
+		#if translations
+			_("Backgrounds");
+		#endif
 		return "Backgrounds";
 	}
 
