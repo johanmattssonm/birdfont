@@ -149,7 +149,6 @@ public class EditPointHandle  {
 	public void move_delta (double dx, double dy) {
 		double px = px () + dx * Glyph.ivz ();
 		double py = py () - dy * Glyph.ivz ();
-		
 		move_to_coordinate (px, py);
 	}
 	

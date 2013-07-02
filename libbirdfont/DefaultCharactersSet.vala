@@ -39,8 +39,8 @@ public class DefaultCharacterSet {
 	/** Add a new language to the menu for default character set.
 	 * @param language A localized string of the language.
 	 * @param language_code ISO code
-	 * @param characters all characters (including characters with diacritical marks)
-	 * for the language. For languages with too many glyphs should this string be left empty. 
+	 * @param characters all characters (including characters with diacritical marks).
+	 * For languages with too many glyphs should this string be left empty. 
 	 * See the functions for chinese and japanese.
 	 */
 	public static void add_language (string language, string language_code, string characters) {

@@ -43,6 +43,7 @@ def cmd(name, *args):
 
 
 def get_sources_path (folder, pattern):
+    """obtain the path to all source files that matches pattern"""
     files = []
     for root, dirnames, filenames in os.walk(folder):
         for filename in fnmatch.filter(filenames, pattern):
@@ -52,6 +53,7 @@ def get_sources_path (folder, pattern):
 
 
 def get_sources_name (folder, pattern):
+    """obtain name of all source files that matches pattern"""
     files = []
     for root, dirnames, filenames in os.walk(folder):
         for filename in fnmatch.filter(filenames, pattern):

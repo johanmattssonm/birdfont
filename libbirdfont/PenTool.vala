@@ -37,9 +37,6 @@ public class PenTool : Tool {
 	
 	public static EditPoint? active_edit_point = new EditPoint ();
 
-	/** Move handle vertical or horizontal. */
-	public static bool tie_x_or_y_coordinates = false;
-
 	private static bool move_selected_handle = false;
 
 	private static double last_point_x = 0;
@@ -159,6 +156,8 @@ public class PenTool : Tool {
 	public void move (double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		double coordinate_x, coordinate_y;
+		double px = 0;
+		double py = 0;
 		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
@@ -169,7 +168,7 @@ public class PenTool : Tool {
 			move_current_point_on_path (x, y);
 		}
 		
-		// move curve handles
+		// move control point handles
 		if (move_selected_handle) {
 			if (selected_handle.type == PointType.LINE_CUBIC) {
 				selected_handle.set_point_type (PointType.CUBIC);
@@ -187,7 +186,9 @@ public class PenTool : Tool {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
 				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
-				selected_handle.move_to_coordinate (coordinate_x, coordinate_y);
+				px = Glyph.reverse_path_coordinate_x (coordinate_x);
+				py = Glyph.reverse_path_coordinate_y (coordinate_y);
+				selected_handle.move_delta ((px - last_point_x), (py - last_point_y));
 			} else {
 				selected_handle.move_delta ((x - last_point_x) * precision, (y - last_point_y) * precision);
 			}
@@ -196,9 +197,14 @@ public class PenTool : Tool {
 			
 			// Fixa: redraw line only
 			glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
-						
-			last_point_x = x;
-			last_point_y = y;
+			
+			if (GridTool.is_visible ()) {
+				last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_handle.x ());
+				last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_handle.y ());
+			} else {
+				last_point_x = x;
+				last_point_y = y;				
+			}
 			
 			return;
 		}
@@ -210,21 +216,24 @@ public class PenTool : Tool {
 					coordinate_x = Glyph.path_coordinate_x (x);
 					coordinate_y = Glyph.path_coordinate_y (y);
 					GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
-					glyph.move_selected_edit_point_coordinates (p, coordinate_x, coordinate_y);
+					px = Glyph.precise_reverse_path_coordinate_x (coordinate_x);
+					py = Glyph.precise_reverse_path_coordinate_y (coordinate_y);
+					glyph.move_selected_edit_point_delta (p, (px - last_point_x), (py - last_point_y));
 				} else {
 					glyph.move_selected_edit_point_delta (p, (x - last_point_x) * precision, (y - last_point_y) * precision);
-				}
-				
-				if (tie_x_or_y_coordinates) {
-					GridTool.tie_to_prev (p, x, y);
 				}
 				
 				p.recalculate_linear_handles ();
 			}
 		}
 		
-		last_point_x = x;
-		last_point_y = y;
+		if (GridTool.is_visible ()) {
+			last_point_x = px;
+			last_point_y = py;
+		} else {
+			last_point_x = x;
+			last_point_y = y;			
+		}
 		
 	}
 	

@@ -754,6 +754,12 @@ public class Glyph : FontDisplay {
 		return (int) Math.rint ((x - g.view_offset_x + xc ()) * g.view_zoom);
 	}
 
+	public static double precise_reverse_path_coordinate_x (double x) {
+		Glyph g = MainWindow.get_current_glyph ();
+		return_val_if_fail (g.view_zoom != 0, 0);
+		return (x - g.view_offset_x + xc ()) * g.view_zoom;
+	}
+	
 	public static double path_coordinate_y (double y) {
 		Glyph g = MainWindow.get_current_glyph ();
 		return yc () - y * ivz () - g.view_offset_y;
@@ -765,6 +771,12 @@ public class Glyph : FontDisplay {
 		return (int) (-y);
 	}
 
+	public static double precise_reverse_path_coordinate_y (double y) {
+		Glyph g = MainWindow.get_current_glyph ();
+		y = (y + g.view_offset_y - yc ()) * g.view_zoom;	
+		return -y;
+	}
+	
 	public bool select_path (double x, double y) {
 		Path? p = null;
 		bool found = false;
