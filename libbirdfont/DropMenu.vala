@@ -41,10 +41,29 @@ public class DropMenu : GLib.Object {
 	
 	ImageSurface? icon = null;
 	
+	public signal void signal_delete_item  (int item_index);
+	
 	public DropMenu (string icon_file = "") {
 		if (icon_file != "") {
 			icon = Icons.get_icon (@"$icon_file.png");
 		}
+	}
+	
+	public void recreate_index () {
+		int i = -1;
+		foreach (MenuAction a in actions) {
+			a.index = i;
+			i++;
+		}
+	}
+	
+	public MenuAction get_action_no2 () {
+		if (actions.length () < 2) {
+			warning ("No such action");
+			return new MenuAction ("NULL");
+		}
+		
+		return actions.nth (1).data;
 	}
 	
 	public void deselect_all () {
@@ -82,14 +101,40 @@ public class DropMenu : GLib.Object {
 
 	public bool menu_item_action (double px, double py) {
 		MenuAction? action;
-
+		MenuAction a;
+		unowned List <MenuAction> ma;
+		int index;
+		
 		if (menu_visible) {
 			action = get_menu_action_at (px, py);
 			
 			if (action != null) {
-				((!) action).action ((!)action);
-				selected (this);
-				menu_visible = false;
+				a = (!) action;
+				if (a.has_delete_button && x - 5 < px < x + 13 && actions.length () > 2) { // over delete button
+					
+					index = 0;
+					ma = actions.first ();
+					while (true) {
+						if (a == ma.data) {
+							actions.remove_link (ma);
+							signal_delete_item (index);
+							break;
+						}
+						
+						if (ma == actions.last ()) {
+							break;
+						} else {
+							ma = ma.next;
+							index++;
+						}
+					}
+					return false;
+				} else {
+					a.action (a);
+					selected (this);
+					menu_visible = false;
+				}
+				
 				return true;
 			}
 		}
@@ -143,14 +188,28 @@ public class DropMenu : GLib.Object {
 		cr.set_line_join (LineJoin.ROUND);
 		cr.set_line_width (12);
 			
-		if (direction == MenuDirection.DROP_DOWN)
+		if (direction == MenuDirection.DROP_DOWN) {
 			cr.rectangle (x - 100 + 18, y + 18, 88, actions.length () * item_height - 12);
-		else
+		} else {
 			cr.rectangle (x - 100 + 18, y + 6 - actions.length () * item_height, 88, actions.length () * item_height - 12);
-			
+		}
+		
 		cr.fill_preserve ();
 		cr.stroke ();
 		cr.restore ();
+		
+		// fill the lower right corner
+		if (direction != MenuDirection.DROP_DOWN) {
+			cr.save ();
+			cr.set_source_rgba (122/255.0, 150/255.0, 169/255.0, 1);
+			cr.set_line_width (0);		
+			
+			cr.rectangle (x, y - 7, 12, 7);
+
+			cr.fill_preserve ();
+			cr.stroke ();
+			cr.restore ();
+		}
 		
 		cr.save ();
 		

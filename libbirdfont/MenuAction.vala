@@ -24,10 +24,17 @@ public class MenuAction : GLib.Object {
 	public DropMenu.Selected action;
 	public DropMenu? parent = null;
 	public int index = -1;
+	public bool has_delete_button = true;
+	
 	bool selected = false;
+	static ImageSurface? delete_button = null;
 	
 	public MenuAction (string label) {
 		this.label = label;
+		
+		if (delete_button == null) {
+			delete_button = Icons.get_icon ("delete_menu_item.png");
+		}
 	}
 	
 	public void set_selected (bool s) {
@@ -35,6 +42,8 @@ public class MenuAction : GLib.Object {
 	}
 	
 	public virtual void draw (double x, double y, Context cr) {
+		ImageSurface img;
+		
 		if (selected) {
 			cr.save ();
 			cr.set_line_join (LineJoin.ROUND);
@@ -44,6 +53,14 @@ public class MenuAction : GLib.Object {
 			cr.fill_preserve ();
 			cr.stroke ();
 			cr.restore ();			
+		}
+
+		if (has_delete_button && delete_button != null) {
+			img = (!) delete_button;
+			cr.save ();
+			cr.set_source_surface (img, x - img.get_width () / 2 + 82, y - img.get_height () / 2 - 5);
+			cr.paint ();
+			cr.restore ();
 		}
 		
 		cr.save ();

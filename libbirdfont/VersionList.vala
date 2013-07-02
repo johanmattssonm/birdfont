@@ -30,6 +30,7 @@ public class VersionList : DropMenu {
 		set_direction (MenuDirection.POP_UP);
 		
 		MenuAction ma = add_item (_("New version"));
+		ma.has_delete_button = false;
 		ma.action = (self) => {
 			return_if_fail (self.parent != null);
 			return_if_fail (glyphs.length () > 0);
@@ -39,6 +40,22 @@ public class VersionList : DropMenu {
 			add_new_version ();
 			current_version = (int) glyphs.length () - 1;
 		};
+		
+		signal_delete_item.connect ((index) => {
+			unowned List<Glyph> gl;
+			index--; // first item is the add new action
+			return_if_fail (0 <= index < glyphs.length ());
+			gl = glyphs.nth (index);
+			glyphs.remove_link (gl);
+			
+			recreate_index ();
+			
+			if (index == current_version) {
+				set_selected_item (get_action_no2 ());
+			} else if (index < current_version) {
+				current_version--;
+			}
+		});
 		
 		if (g != null) {
 			add_glyph ((!) g);
