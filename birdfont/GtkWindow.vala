@@ -493,6 +493,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem glyph_sequence_item = new Gtk.MenuItem.with_mnemonic (_("_Glyph sequence"));
 		edit_menu.append (glyph_sequence_item);
 		glyph_sequence_item.activate.connect (() => { MainWindow.update_glyph_sequence (); });
+		glyph_sequence_item.add_accelerator ("activate", accel_group, 'Q', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 		
 		edit_menu.append (new SeparatorMenuItem ());
 
@@ -764,6 +765,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		listener.signal_submit.connect (() => {
 			hide_text_input ();
 		});
+		text_entry.activate.connect (() => {
+			listener.signal_submit (text_entry.text);
+			hide_text_input ();
+		});
+		text_entry.grab_focus ();
 	}
 }
 
