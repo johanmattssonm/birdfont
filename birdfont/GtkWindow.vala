@@ -408,7 +408,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		preview_item.activate.connect (() => { MenuTab.preview (); });
 		preview_item.add_accelerator ("activate", accel_group, 'P', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem description_item = new Gtk.MenuItem.with_mnemonic(_("_Description"));
+		Gtk.MenuItem description_item = new Gtk.MenuItem.with_mnemonic(_("Name and _description"));
 		file_menu.append (description_item);
 		description_item.activate.connect (() => { MenuTab.show_description (); });
 
@@ -804,8 +804,17 @@ class ToolboxCanvas : DrawingArea {
 			
 			return true;
 		});
+
+		scroll_event.connect ((t, e)=> {
+			if (e.direction == Gdk.ScrollDirection.UP) {
+				tb.scroll_up (e.x, e.y);
+			} else if (e.direction == Gdk.ScrollDirection.DOWN) {
+				tb.scroll_down (e.x, e.y);
+			}			
+			return true;
+		});
 		
-		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
+		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK | EventMask.SCROLL_MASK);
 
 		set_size_request (160, 100);
 

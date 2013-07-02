@@ -87,6 +87,14 @@ public class SpinButton : Tool {
 		panel_release_action.connect ((selected, button, tx, ty) => {
 			value_from_motion = false;
 		});
+		
+		scroll_wheel_up_action.connect ((selected) => {
+			increase ();
+		});
+
+		scroll_wheel_down_action.connect ((selected) => {
+			decrease ();
+		});
 	}
 	
 	public void set_max (double max) {

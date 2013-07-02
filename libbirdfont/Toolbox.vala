@@ -675,7 +675,29 @@ public class Toolbox : GLib.Object  {
 			}
 		}
 	}
-	
+
+	public void scroll_up (double x, double y) {
+		foreach (var exp in expanders) {
+			foreach (Tool t in exp.tool) {
+				if (t.is_over (x, y)) {
+					t.scroll_wheel_up_action (t);
+					press_tool = t;
+				}
+			}
+		}
+	}
+
+	public void scroll_down (double x, double y) {
+		foreach (var exp in expanders) {
+			foreach (Tool t in exp.tool) {
+				if (t.is_over (x, y)) {
+					t.scroll_wheel_down_action (t);
+					press_tool = t;
+				}
+			}
+		}
+	}
+		
 	private void select_draw_tool () {
 		select_tool_by_name ("pen_tool");
 	}
