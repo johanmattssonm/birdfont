@@ -296,6 +296,9 @@ public class TabBar : GLib.Object {
 	
 	public void select_tab (int index) {
 		Tab t;
+	
+		// always close any pending text input if the user switches tab
+		MainWindow.native_window.hide_text_input ();
 
 		if (index == NEXT_TAB) {
 			selected++;

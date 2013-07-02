@@ -28,28 +28,12 @@ public class MenuTab : FontDisplay {
 
 	public MenuTab () {
 		// html callbacks:
-		add_html_callback ("export", (val) => {
-			if (BirdFont.get_current_font ().initialised) {
-				ExportTool.export_all ();
-			}
-		});
-
-		add_html_callback ("preview", (val) => {
-			if (BirdFont.get_current_font ().initialised) {
-				preview ();
-			}
-		});		
-
 		add_html_callback ("load", (val) => {
 			load_font (val);
 		});
 
 		add_html_callback ("load_backup", (val) => {
 			load_backup (val);
-		});
-
-		add_html_callback ("glyph_sequence", (val) => {
-			Preferences.set ("glyph_sequence", val);
 		});
 
 		add_html_callback ("help", (val) => {
@@ -60,14 +44,6 @@ public class MenuTab : FontDisplay {
 			delete_backups ();
 			MainWindow.get_tab_bar ().select_tab_name ("Menu");
 		});
-		
-		add_html_callback ("set_name", (val) => {
-			show_description ();
-		});
-
-		add_html_callback ("new_font", (val) => {
-			new_file ();
-		});		
 	}
 	
 	public static void set_suppress_event (bool e) {
@@ -99,33 +75,10 @@ public class MenuTab : FontDisplay {
 	</script>
 </head>
 <body>
-	<div class="inner_format_box">
-		<div class="content">
-			<div class="heading"><h2>""" + _("Preferences") + """</h2></div>
-			<form>
-""");
-				
-c.append ("""
-				<h3>""" + _("Glyph sequence") + """</h3>
-				<input class="text" type="text" id="glyph_sequence" value=""" + "\"" + Preferences.get ("glyph_sequence") + "\"" + """ onchange="update_text_fields ();"/><br />
-				<br>
 
-				<input class="button" type="button" value=""" + "\"" + _("New font") + "\"" + """ id="new_font" onclick="call ('new_font:');" onmouseover="call ('help:(Ctrl+n) """ + _("Create a new font") + """');"/><br />
-				<input class="button" type="button" value=""" + "\"" + _("Export") + "\"" + """ id="export_button" onclick="call ('export:fonts');" onmouseover="call ('help:(Ctrl+e) """ + _("Export SVG, TTF & EOT fonts") + """');"/><br />
-				<input class="button" type="button" value=""" + "\"" + _("Preview") + "\"" + """ id="preview_button" onclick="call ('preview:fonts');" onmouseover="call ('help:(Ctrl+p) """ + _("Export SVG font and view the result") + """');"/><br />
-				<input class="button" type="button" value=""" + "\"" + _("Update name & description") + "\"" + """ id="description" onclick="call ('set_name:');" onmouseover="call ('help:""" + _("Add name and description to this font.") + """');"/><br />
-""");
-	
-c.append ("""
-
-			</form> 
-
-		</div>
-	</div>
 """);
 
 if (has_backup ()) {
-	c.append ("""<br class="clearBoth" />""");
 	c.append ("""<div class="recent_list">""");
 	c.append ("""	<div class="heading"><h2>""" + _("Recover") + """</h2></div>""");
 
@@ -151,7 +104,7 @@ if (has_backup ()) {
 	}
 
 	if (get_backups ().length () > 0) {
-		c.append ("""<div class="recent_font" onclick=\"call ('delete_backups:')">""");
+		c.append ("""<div class="recent_font" onclick="call ('delete_backups:')">""");
 
 		c.append ("<div class=\"one_line\">");
 		c.append (_("Delete all"));
@@ -166,17 +119,12 @@ if (has_backup ()) {
 	}
 
 	c.append ("""</div>""");
+	c.append ("""<br class="clearBoth" />""");
 }
 
 c.append ("""
-	<br class="clearBoth" />
 	<div class="recent_list">
 """);
-
-if (recent_fonts.length () > 0) {
-	c.append ("""<div class="heading"><h2>""" + _("Recent files") + """</h2></div>""");
-	c.append ("\n");
-}
 
 foreach (Font font in recent_fonts) {
 	fn = (!) font.font_file;

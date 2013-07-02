@@ -45,6 +45,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	VScrollbar scrollbar;
 	bool scrollbar_supress_signal = false;
 	
+	/** Text input and callbacks to libbirdfont. */
+	TextListener text_listener = new TextListener ();
+	Label text_input_label;
+	Entry text_entry;
+	HBox text_box;
+	Button submit_text_button;
+	
 	public GtkWindow (string title) {
 		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));;
 		((Gtk.Window)this).set_title ("BirdFont");
@@ -190,15 +197,33 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				
 		MainWindow.tabs.add_unique_tab (MainWindow.menu_tab, 60, true);
 		MainWindow.tabs.select_tab_name ("Menu");
-
+		
 		canvas_box = new HBox (false, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
 		canvas_box.pack_start (scrollbar, false, true, 0);
+
+		submit_text_button = new Button ();
+		submit_text_button.set_label ("Submit");
+		text_input_label = new Label ("   " + "Text");
+		text_entry = new Entry ();
+		text_box = new HBox (false, 6);
+		text_box.pack_start (text_input_label, false, false, 0);
+		text_box.pack_start (text_entry, true, true, 0);
+		text_box.pack_start (submit_text_button, false, false, 0);
+
+		text_entry.changed.connect (() => {
+			text_listener.signal_text_input (text_entry.text);
+		});
+
+		submit_text_button.clicked.connect (() => {
+			text_listener.signal_submit (text_entry.text);
+		});
 		
 		tab_box = new VBox (false, 0);
-		tab_box.pack_start (new TabbarCanvas (MainWindow.tabs), false, false, 0);	
 		
+		tab_box.pack_start (new TabbarCanvas (MainWindow.tabs), false, false, 0);
+		tab_box.pack_start (text_box, false, false, 5);	
 		tab_box.pack_start (canvas_box, true, true, 0);
 
 		tab_box.pack_start (new TooltipCanvas (MainWindow.tool_tip), false, false, 0);
@@ -244,7 +269,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		
 		show_all ();
+		
 		scrollbar.set_visible (false);
+		hide_text_input ();
 	}
 
 	public void set_scrollbar_size (double size) {
@@ -462,6 +489,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		edit_menu.append (close_path_item);
 		close_path_item.activate.connect (() => { PenTool.close_all_paths (); });
 		close_path_item.add_accelerator ("activate", accel_group, 'B', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem glyph_sequence_item = new Gtk.MenuItem.with_mnemonic (_("_Glyph sequence"));
+		edit_menu.append (glyph_sequence_item);
+		glyph_sequence_item.activate.connect (() => { MainWindow.update_glyph_sequence (); });
 		
 		edit_menu.append (new SeparatorMenuItem ());
 
@@ -717,7 +748,23 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		file_chooser.destroy ();
 		
 		return fn;
-	}	
+	}
+	
+	public void hide_text_input () {
+		text_listener = new TextListener ();
+		text_box.hide ();
+	}
+	
+	public void set_text_listener (string label, TextListener listener, string default_text, string button_label) {
+		text_listener = listener;
+		text_input_label.set_text ("   " + label);
+		submit_text_button.set_label (button_label);
+		text_box.show ();
+		text_entry.set_text (default_text);
+		listener.signal_submit.connect (() => {
+			hide_text_input ();
+		});
+	}
 }
 
 class TabbarCanvas : DrawingArea {

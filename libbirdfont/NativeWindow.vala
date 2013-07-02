@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2013 Johan Mattsson
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,6 +36,12 @@ public interface NativeWindow : GLib.Object {
 
 	public abstract void set_scrollbar_size (double size);
 	public abstract void set_scrollbar_position (double position);
+	
+	/** Request text input from the UI. */
+	public abstract void set_text_listener (string label, TextListener listener, string default_text, string button_label);
+	
+	/** Remove the text listener and hode the text area. */
+	public abstract void hide_text_input ();
 	
 	protected void webkit_callback (string s) {
 		FontDisplay fd = MainWindow.get_current_display ();

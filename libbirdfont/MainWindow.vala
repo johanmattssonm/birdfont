@@ -101,6 +101,15 @@ public class MainWindow {
 		return over_view;
 	}
 	
+	public static void update_glyph_sequence () {
+		TextListener listener = new TextListener ();
+		listener.signal_text_input.connect ((text) => {
+			Preferences.set ("glyph_sequence", text);
+			get_glyph_canvas ().redraw ();
+		});
+		native_window.set_text_listener (_("Glyph sequence"), listener, Preferences.get ("glyph_sequence"), _("Close"));
+	}
+	
 	public static MainWindow get_singleton () {
 		return singleton;
 	}
