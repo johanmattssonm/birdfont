@@ -1070,6 +1070,7 @@ public class Path {
 		return quadratic_path;
 	}
 	
+	// TODO: find out a better way to convert to quadratic curve
 	private bool split (Path cubic, EditPoint start, EditPoint stop) {
 		double curve_x, curve_y, cx, cy, qx, qy, nx, ny, distance;
 				
@@ -1086,7 +1087,7 @@ public class Path {
 		nx = bezier_path (0.5, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x);
 		ny = bezier_path (0.5, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);
 
-		if (Math.fabs (distance) > 0.01) {
+		if (Math.fabs (distance) > 0.001) {
 			EditPoint new_edit_point = new EditPoint (nx, ny, PointType.CUBIC);
 
 			new_edit_point.next = start.get_next ();
