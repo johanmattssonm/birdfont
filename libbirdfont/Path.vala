@@ -663,7 +663,7 @@ public class Path {
 		bool on_edge = false;
 		double last_x = 0;
 
-		if (points.length () < 3) {
+		if (points.length () < 2) {
 			return false;
 		}
 		
