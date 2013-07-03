@@ -725,16 +725,18 @@ public class Path {
 				stderr.printf (@"$(e.y)\n");
 			}
 
-			ycoordinates.append (ycoordinates.last ().data.copy ());
+			if (ycoordinates.length () != 0) {
+				ycoordinates.append (ycoordinates.last ().data.copy ());
+			}
 			
 			return true;
 		}
 		
 		for (unowned List<EditPoint> e = ycoordinates.first (); true; e = e.next) {
-			return_val_if_fail (!is_null (e), true);
+			return_val_if_fail (!is_null (e) || !is_null (e.data), true);
 			
 			if (y <= e.data.y + tolerance) {
-				return_val_if_fail (!is_null (e.next), true);
+				return_val_if_fail (!is_null (e.next) || !is_null (e.data), true);
 				
 				e = e.next;
 

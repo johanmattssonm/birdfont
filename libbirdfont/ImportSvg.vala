@@ -195,7 +195,7 @@ public class ImportSvg {
 	}
 	
 	/** 
-	 * Add svg paths to glyph.
+	 * Add svg paths to a glyph.
 	 * 
 	 * @param d svg data
 	 * @param glyph add paths to this glyph
@@ -589,7 +589,7 @@ public class ImportSvg {
 					cy = 2 * py - py2; // if (svg_glyph) ?
 					p[pi++] = cx;
 					p[pi++] = cy;
-					
+										
 					cx = px + parse_double (c[++i]);
 					
 					if (svg_glyph) {
@@ -603,7 +603,7 @@ public class ImportSvg {
 					
 					p[pi++] = px2;
 					p[pi++] = py2;
-					
+
 					cx = px + parse_double (c[++i]);
 					
 					if (svg_glyph) {
@@ -614,7 +614,7 @@ public class ImportSvg {
 					
 					p[pi++] = cx;
 					p[pi++] = cy;
-					
+							
 					px = cx;
 					py = cy;
 				}
@@ -738,7 +738,10 @@ public class ImportSvg {
 				ep2.get_left_handle ().move_to_coordinate (x0, y0);
 				ep2.type = PointType.QUADRATIC;		
 			}
-					
+
+
+			// all the (ep2.get_left_handle ().length == 0) is needed to parse corners in illustrator correctly 
+			// it should be a different point type.			
 			if (command[i] == "C") {
 				x0 = p[ic++];
 				y0 = p[ic++];
@@ -754,46 +757,56 @@ public class ImportSvg {
 
 				// start with line handles
 				ep1 = path.points.last ().data;
-				ep1.get_right_handle ().type = PointType.LINE_CUBIC;
-				ep1.type = PointType.LINE_CUBIC;
 				
-				lx = ep1.x + ((x2 - ep1.x) / 3);
-				ly = ep1.y + ((y2 - ep1.y) / 3);
-								
-				ep1.get_right_handle ().move_to_coordinate (lx, ly);
-				ep1.recalculate_linear_handles ();
+				if (ep1.get_right_handle ().length != 0) {
+					ep1.get_right_handle ().type = PointType.LINE_CUBIC;
+					ep1.type = PointType.LINE_CUBIC;
+					
+					lx = ep1.x + ((x2 - ep1.x) / 3);
+					ly = ep1.y + ((y2 - ep1.y) / 3);
+													
+					ep1.get_right_handle ().move_to_coordinate (lx, ly);
+					ep1.recalculate_linear_handles ();
+				}			
 				
 				// set curve handles
 				ep1 = path.points.last ().data;
-				ep1.recalculate_linear_handles ();
-				ep1.get_right_handle ().type = PointType.CUBIC;
-				ep1.get_right_handle ().move_to_coordinate (x0, y0);
-				ep1.type = PointType.CUBIC;
-				
+				if (ep1.get_right_handle ().length != 0 || path.points.length () == 1) {
+					ep1.recalculate_linear_handles ();
+					ep1.get_right_handle ().type = PointType.CUBIC;
+					ep1.get_right_handle ().move_to_coordinate (x0, y0);
+					ep1.type = PointType.CUBIC;
+				} else {
+					ep1.get_right_handle ().type = PointType.CUBIC;
+					ep1.get_right_handle ().length = 0;
+				}
 
 				path.add (x2, y2);
-								
+					
 				ep2 = path.points.last ().data;
 				ep2.recalculate_linear_handles ();
-				ep2.get_left_handle ().type = PointType.CUBIC;
-				ep2.get_left_handle ().move_to_coordinate (x1, y1);
 				ep2.type = PointType.CUBIC;
+				ep2.get_left_handle ().type = PointType.CUBIC;
 				
-				ep1.recalculate_linear_handles ();
+				ep2.get_left_handle ().move_to_coordinate (x1, y1);
+				
+				if (ep2.get_left_handle ().length == 0) {
+					ep2.get_right_handle ().length = 0;
+				}
 			}
 			
 			if (command[i] == "z") {
 				// last point is first
 				ep1 = path.points.last ().data;
 				ep2 = path.points.first ().data;
-				
+
 				if (ep1.x == ep2.x && ep1.y == ep2.y) {
-					path.points.remove_link (path.points.last ());
 					ep2.left_handle.angle = ep1.left_handle.angle;
 					ep2.left_handle.length = ep1.left_handle.length;
 					ep2.left_handle.type = ep1.left_handle.type;
+					path.points.remove_link (path.points.last ());
 				}
-				
+
 				glyph.add_path (path);
 				glyph.close_path ();
 								

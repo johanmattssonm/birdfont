@@ -51,7 +51,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public override string get_name () {
-		return "Menu";
+		return "Files";
 	}
 	
 	public override bool is_html_canvas () {
@@ -157,18 +157,10 @@ c.append ("""
 
 #if traslations 
 		// xgettext needs these lines in order to extract strings properly
-		_("Create a new font")
-		_("Add name and description to this font.");
-		_("Preferences");
-		_("Export SVG, TTF & EOT fonts");
-		_("Name");
-		_("Glyph sequence");
+		_("Files");
 		_("Recent files")
 		_("Recover");
-		_("Export SVG font and view the result");
-		_("Export SVG font and view the result");
-		_("Delete all");
-		_("Update name & description")
+		_("Delete all");	
 #endif
 
 		return c.str;
