@@ -417,10 +417,10 @@ public class ImportSvg {
 					} else {
 						cy = -parse_double (c[++i]);
 					}
-
+/*
 					px2 = cx;
 					py2 = cy;
-										
+					*/										
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -431,6 +431,9 @@ public class ImportSvg {
 					} else {
 						cy = -parse_double (c[++i]);
 					}
+					
+					px2 = cx;
+					py2 = cy;
 					
 					p[pi++] = cx;
 					p[pi++] = cy;
@@ -624,9 +627,9 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "C";
 					
-					// the reflection again
+					// the reflection
 					cx = 2 * px - px2;
-					cy = 2 * py - py2; // if (svg_glyph) ?
+					cy = 2 * py - py2; // if (svg_glyph) ?			
 					p[pi++] = cx;
 					p[pi++] = cy;
 
