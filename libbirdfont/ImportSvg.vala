@@ -844,15 +844,13 @@ public class ImportSvg {
 	
 	static void set_tied_handles (Path path) {
 		double a, b;
-		double da, db;
+		double d;
+		
 		foreach (EditPoint p in path.points) {
 			a = p.get_left_handle ().angle;
-			b = p.get_left_handle ().angle;
-			
-			da = a - b;
-			db = a - b;
-			
-			if (da < 0.0001 || db  < 0.0001) {
+			b = p.get_right_handle ().angle;
+			d = a - b;
+			if (fabs (d) - PI < 0.001) {
 				p.set_tie_handle (true);
 			}
 		}
