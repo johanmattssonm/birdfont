@@ -1,3 +1,13 @@
+birdfont (0.20) stable;
+
+  * Descriptive fields in TTF fonts (like version number and name)
+  * Kerning for both Chrome and Firefox
+  * Read TTF font instead of SVG font in html template
+  * Bugfixes
+  * Improved translations
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Jul  5 14:13:25 CEST 2013
+
 birdfont (0.19) stable;
 
   * Descriptions from the Unicode Character Database
