@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-28 19:01+0200\n"
+"POT-Creation-Date: 2013-07-05 14:14+0200\n"
 "PO-Revision-Date: 2013-03-28 02:29+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,6 +58,10 @@ msgstr "テストスイート内の各コマンド間にスリープする"
 msgid "run test case"
 msgstr "テストケースを実行する"
 
+#: libbirdfont/BackgroundSelection.vala:45
+msgid "Backgrounds"
+msgstr ""
+
 #: libbirdfont/BackgroundTool.vala:39
 msgid "Move, resize and rotate background image"
 msgstr "背景画像を移動、リサイズ、回転する"
@@ -94,6 +98,48 @@ msgstr "書き出し中"
 msgid "Crop background image"
 msgstr "背景画像を切り落とす"
 
+#: libbirdfont/DefaultCharactersSet.vala:28
+msgid "Default language"
+msgstr ""
+
+#: libbirdfont/DefaultCharactersSet.vala:29
+msgid "Private use area"
+msgstr ""
+
+#: libbirdfont/DefaultCharactersSet.vala:31
+msgid "Chinese"
+msgstr ""
+
+#: libbirdfont/DefaultCharactersSet.vala:32
+msgid "English"
+msgstr ""
+
+#: libbirdfont/DefaultCharactersSet.vala:33
+msgid "Japanese"
+msgstr ""
+
+#: libbirdfont/DefaultCharactersSet.vala:34
+msgid "Javanese"
+msgstr ""
+
+#: libbirdfont/DefaultCharactersSet.vala:35
+msgid "Russian"
+msgstr ""
+
+#: libbirdfont/DefaultCharactersSet.vala:36
+msgid "Swedish"
+msgstr ""
+
+#. / All lower case letters in alphabetic order separated by space
+#: libbirdfont/DefaultCharactersSet.vala:116
+msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+
+#. / All upper case letters in alphabetic order separated by space
+#: libbirdfont/DefaultCharactersSet.vala:119
+msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+
 #: libbirdfont/DescriptionTab.vala:64 libbirdfont/DescriptionTab.vala:147
 msgid "Description"
 msgstr ""
@@ -102,7 +148,7 @@ msgstr ""
 msgid "Postscript name"
 msgstr ""
 
-#: libbirdfont/DescriptionTab.vala:142 libbirdfont/MenuTab.vala:212
+#: libbirdfont/DescriptionTab.vala:142
 msgid "Name"
 msgstr "名前"
 
@@ -118,23 +164,13 @@ msgstr ""
 msgid "Unique identifier"
 msgstr ""
 
-#: libbirdfont/DescriptionTab.vala:146 libbirdfont/VersionList.vala:144
+#: libbirdfont/DescriptionTab.vala:146 libbirdfont/VersionList.vala:161
 msgid "Version"
 msgstr "バージョン"
 
 #: libbirdfont/DescriptionTab.vala:148
 msgid "Copyright"
 msgstr ""
-
-#. / All lower case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:56
-msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-
-#. / All upper case letters in alphabetic order separated by space
-#: libbirdfont/GlyphRange.vala:59
-msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
 #: libbirdfont/GridTool.vala:36
 msgid "Show grid"
@@ -144,67 +180,47 @@ msgstr "グリッドを表示"
 msgid "Import"
 msgstr "インポート"
 
-#: libbirdfont/MenuTab.vala:78 libbirdfont/TabBar.vala:496
-msgid "Menu"
-msgstr "メニュー"
+#: libbirdfont/LanguageSelectionTab.vala:34
+#, fuzzy
+msgid "Character set"
+msgstr "デフォルトの文字セットを表示する"
 
-#: libbirdfont/MenuTab.vala:113
-msgid "New font"
-msgstr ""
+#: libbirdfont/LanguageSelectionTab.vala:42
+#, fuzzy
+msgid "Select default character set"
+msgstr "デフォルトの文字セットを表示する"
 
-#: libbirdfont/MenuTab.vala:114
-msgid "Export"
-msgstr "エクスポート"
-
-#: libbirdfont/MenuTab.vala:115
-msgid "Preview"
-msgstr "プレビュー"
-
-#: libbirdfont/MenuTab.vala:116 libbirdfont/MenuTab.vala:219
-msgid "Update name & description"
-msgstr ""
-
-#: libbirdfont/MenuTab.vala:130 libbirdfont/MenuTab.vala:215
-msgid "Recover"
-msgstr "復元"
-
-#: libbirdfont/MenuTab.vala:155 libbirdfont/MenuTab.vala:218
-msgid "Delete all"
-msgstr ""
-
-#: libbirdfont/MenuTab.vala:175 libbirdfont/MenuTab.vala:214
-msgid "Recent files"
-msgstr "最近使ったファイル"
-
-#: libbirdfont/MenuTab.vala:208
-msgid "Create a new font"
-msgstr ""
-
-#: libbirdfont/MenuTab.vala:209
-msgid "Add name and description to this font."
-msgstr ""
-
-#: libbirdfont/MenuTab.vala:210
-msgid "Preferences"
-msgstr "設定一覧"
-
-#: libbirdfont/MenuTab.vala:211
-msgid "Export SVG, TTF & EOT fonts"
-msgstr "SVG/TTF/EOT フォントをエクスポート"
-
-#: libbirdfont/MenuTab.vala:213
+#: libbirdfont/MainWindow.vala:110
 msgid "Glyph sequence"
 msgstr "グリフシーケンス"
 
-#: libbirdfont/MenuTab.vala:216 libbirdfont/MenuTab.vala:217
-msgid "Export SVG font and view the result"
-msgstr "SVG フォントをエクスポートして結果を表示する"
+#: libbirdfont/MainWindow.vala:110
+#, fuzzy
+msgid "Close"
+msgstr "タブを閉じる(_C)"
 
-#: libbirdfont/MenuTab.vala:382 libbirdfont/SaveDialog.vala:85
+#: libbirdfont/MenuTab.vala:83 libbirdfont/MenuTab.vala:162
+msgid "Recover"
+msgstr "復元"
+
+#: libbirdfont/MenuTab.vala:110 libbirdfont/MenuTab.vala:163
+msgid "Delete all"
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:160
+#, fuzzy
+msgid "Files"
+msgstr "ファイル(_F)"
+
+#: libbirdfont/MenuTab.vala:161
+msgid "Recent files"
+msgstr "最近使ったファイル"
+
+#: libbirdfont/MenuTab.vala:326 libbirdfont/SaveDialog.vala:85
 msgid "Save"
 msgstr "保存する"
 
-#: libbirdfont/MenuTab.vala:491
+#: libbirdfont/MenuTab.vala:435
 msgid "Open"
 msgstr "開く"
 
@@ -216,40 +232,45 @@ msgstr "パスを結合する"
 msgid "Move paths"
 msgstr "パスを移動する"
 
-#: libbirdfont/OverView.vala:566
+#: libbirdfont/OverView.vala:565
 msgid "See also:"
 msgstr ""
 
-#: libbirdfont/OverView.vala:595
+#: libbirdfont/OverView.vala:594
 msgid "No glyphs in this view."
 msgstr "この表示内にはグリフがありません。"
+
+#: libbirdfont/OverwriteDialog.vala:49 libbirdfont/OverwriteDialog.vala:58
+#, fuzzy
+msgid "Overwrite?"
+msgstr "グリフ一覧"
 
 #: libbirdfont/OverwriteDialog.vala:57
 msgid ""
 "The loaded font can be overwritten if you choose to continue with preview."
 msgstr ""
 
-#: libbirdfont/OverwriteDialog.vala:72
+#: libbirdfont/OverwriteDialog.vala:73
 msgid "Continue"
 msgstr "続行"
 
-#: libbirdfont/OverwriteDialog.vala:73 libbirdfont/SaveDialog.vala:88
+#: libbirdfont/OverwriteDialog.vala:74 libbirdfont/SaveDialog.vala:88
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: libbirdfont/OverwriteDialog.vala:74
+#: libbirdfont/OverwriteDialog.vala:75
 msgid "Continue and don't ask me again."
 msgstr "続行して以後の確認をしない。"
 
-#: libbirdfont/PenTool.vala:59
+#: libbirdfont/PenTool.vala:56
 msgid "Use left command key (⌘) + click to add new points"
 msgstr "左のコマンドキー (⌘) とクリックを新しいポイントを追加するのに使う"
 
-#: libbirdfont/PenTool.vala:61
+#: libbirdfont/PenTool.vala:58
 msgid "Right click to add new points, left click to move points"
 msgstr "新しい点を追加するには右クリック、点を移動するには左クリックを、"
 
-#: libbirdfont/PenTool.vala:64
+#: libbirdfont/PenTool.vala:61
 msgid "and double click to add new point on path."
 msgstr "そして新しい点をパスに追加するにはダブルクリックです。"
 
@@ -265,13 +286,17 @@ msgstr "名前を付けて保存"
 msgid "Discard"
 msgstr "破棄"
 
-#: libbirdfont/TabBar.vala:492
+#: libbirdfont/TabBar.vala:495
 msgid "Overview"
 msgstr "グリフ一覧"
 
-#: libbirdfont/TabBar.vala:494
+#: libbirdfont/TabBar.vala:497
 msgid "Kerning"
 msgstr "カーニング"
+
+#: libbirdfont/TabBar.vala:499
+msgid "Menu"
+msgstr "メニュー"
 
 #: libbirdfont/Toolbox.vala:89
 msgid "Create quadratic Bézier curves"
@@ -393,7 +418,7 @@ msgstr "ストローク幅"
 msgid "Handle color"
 msgstr "色調整"
 
-#: libbirdfont/Toolbox.vala:737
+#: libbirdfont/Toolbox.vala:759
 msgid "Set size for grid"
 msgstr "サイズをグリッドに合わせる"
 
@@ -401,165 +426,190 @@ msgstr "サイズをグリッドに合わせる"
 msgid "New version"
 msgstr "新しいバージョン"
 
-#: birdfont/GtkWindow.vala:382
+#: birdfont/GtkWindow.vala:409
 msgid "_New"
 msgstr "新規(_N)"
 
-#: birdfont/GtkWindow.vala:387
+#: birdfont/GtkWindow.vala:414
 msgid "_Open"
 msgstr "開く(_O)"
 
-#: birdfont/GtkWindow.vala:392
+#: birdfont/GtkWindow.vala:419
 msgid "_Save"
 msgstr "保存(_S)"
 
-#: birdfont/GtkWindow.vala:397
+#: birdfont/GtkWindow.vala:424
 msgid "Save _as"
 msgstr "名前を付けて保存"
 
-#: birdfont/GtkWindow.vala:401
+#: birdfont/GtkWindow.vala:428
 msgid "_Export"
 msgstr "エクスポート(_E)"
 
-#: birdfont/GtkWindow.vala:406
+#: birdfont/GtkWindow.vala:433
 msgid "_Preview"
 msgstr "プレビュー(_P)"
 
-#: birdfont/GtkWindow.vala:411
-msgid "_Description"
+#: birdfont/GtkWindow.vala:438
+msgid "Name and _description"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:415
+#: birdfont/GtkWindow.vala:442
 msgid "_Kerning"
 msgstr "カーニング(_K)"
 
-#: birdfont/GtkWindow.vala:420
+#: birdfont/GtkWindow.vala:447
+#, fuzzy
+msgid "Select _character set"
+msgstr "デフォルトの文字セットを表示する"
+
+#: birdfont/GtkWindow.vala:451
 msgid "_Quit"
 msgstr "終了(_Q)"
 
-#: birdfont/GtkWindow.vala:425
+#: birdfont/GtkWindow.vala:456
 msgid "_Undo"
 msgstr "元に戻す(_U)"
 
-#: birdfont/GtkWindow.vala:430
+#: birdfont/GtkWindow.vala:461
 msgid "_Copy"
 msgstr "コピー(_C)"
 
-#: birdfont/GtkWindow.vala:435
+#: birdfont/GtkWindow.vala:466
 msgid "_Paste"
 msgstr "貼り付け(_P)"
 
-#: birdfont/GtkWindow.vala:440
+#: birdfont/GtkWindow.vala:471
 msgid "_Select all paths"
 msgstr "全てのパスを選択(_S)"
 
-#: birdfont/GtkWindow.vala:448
+#: birdfont/GtkWindow.vala:479
 msgid "_Export glyph as SVG"
 msgstr "グリフをSVGでエクスポート(_E)"
 
-#: birdfont/GtkWindow.vala:452
+#: birdfont/GtkWindow.vala:483
 msgid "_Import SVG"
 msgstr "SVGのインポート(_I)"
 
-#: birdfont/GtkWindow.vala:457
+#: birdfont/GtkWindow.vala:488
 msgid "Close _path"
 msgstr "パスを閉じる(_P)"
 
-#: birdfont/GtkWindow.vala:464
+#: birdfont/GtkWindow.vala:493
+#, fuzzy
+msgid "_Glyph sequence"
+msgstr "グリフシーケンス"
+
+#: birdfont/GtkWindow.vala:500
 msgid "_Select point above"
 msgstr "上の点を選択する(_S)"
 
-#: birdfont/GtkWindow.vala:468
+#: birdfont/GtkWindow.vala:504
 msgid "Select _next point"
 msgstr "次の点を選択する(_N)"
 
-#: birdfont/GtkWindow.vala:472
+#: birdfont/GtkWindow.vala:508
 msgid "Select _previous point"
 msgstr "前の点を選択する(_P)"
 
-#: birdfont/GtkWindow.vala:476
+#: birdfont/GtkWindow.vala:512
 msgid "Select point _below"
 msgstr "下の点を選択する(_B)"
 
-#: birdfont/GtkWindow.vala:481
+#: birdfont/GtkWindow.vala:517
 msgid "_Next tab"
 msgstr "次のタブ(_N)"
 
-#: birdfont/GtkWindow.vala:494
+#: birdfont/GtkWindow.vala:530
 msgid "_Previous tab"
 msgstr "前のタブ(_P)"
 
-#: birdfont/GtkWindow.vala:507
+#: birdfont/GtkWindow.vala:543
 msgid "_Close tab"
 msgstr "タブを閉じる(_C)"
 
-#: birdfont/GtkWindow.vala:521
+#: birdfont/GtkWindow.vala:557
 msgid "Close _all tabs"
 msgstr "全てのタブを閉じる(_A)"
 
-#: birdfont/GtkWindow.vala:529
+#: birdfont/GtkWindow.vala:565
 msgid "_Create path"
 msgstr "パスを作る(_C)"
 
-#: birdfont/GtkWindow.vala:536
+#: birdfont/GtkWindow.vala:572
 msgid "_Zoom"
 msgstr "ズーム(_Z)"
 
-#: birdfont/GtkWindow.vala:542
+#: birdfont/GtkWindow.vala:578
 msgid "_Create counter path"
 msgstr "カウンタパスを作成(_C)"
 
-#: birdfont/GtkWindow.vala:549
+#: birdfont/GtkWindow.vala:585
 msgid "_Move"
 msgstr "移動(_M)"
 
-#: birdfont/GtkWindow.vala:556
+#: birdfont/GtkWindow.vala:592
 msgid "Show _full unicode characters set"
 msgstr "フルセットのUnicode文字を表示"
 
-#: birdfont/GtkWindow.vala:563
+#: birdfont/GtkWindow.vala:599
 msgid "Show de_fault characters set"
 msgstr "デフォルトの文字セットを表示"
 
-#: birdfont/GtkWindow.vala:570
+#: birdfont/GtkWindow.vala:606
 msgid "Show characters in font"
 msgstr "文字をこのフォントで表示する"
 
-#: birdfont/GtkWindow.vala:577
+#: birdfont/GtkWindow.vala:613
 msgid "Add new _grid item"
 msgstr "新しいグリッドアイテムを追加する(_G)"
 
-#: birdfont/GtkWindow.vala:583
+#: birdfont/GtkWindow.vala:619
 msgid "Remove gr_id item"
 msgstr "グリッドアイテムを削除する(_I)"
 
-#: birdfont/GtkWindow.vala:589
+#: birdfont/GtkWindow.vala:625
 msgid "_Zoom in"
 msgstr "拡大(_Z)"
 
-#: birdfont/GtkWindow.vala:596
+#: birdfont/GtkWindow.vala:632
 msgid "Zoom _out"
 msgstr "縮小(_O)"
 
-#: birdfont/GtkWindow.vala:603
+#: birdfont/GtkWindow.vala:639
 msgid "Zoom to _scale 1:1"
 msgstr "1:1 スケールにする(_S)"
 
-#: birdfont/GtkWindow.vala:611
+#: birdfont/GtkWindow.vala:647
 msgid "_File"
 msgstr "ファイル(_F)"
 
-#: birdfont/GtkWindow.vala:614
+#: birdfont/GtkWindow.vala:650
 msgid "_Edit"
 msgstr "編集(_E)"
 
-#: birdfont/GtkWindow.vala:617
+#: birdfont/GtkWindow.vala:653
 msgid "_Tab"
 msgstr "タブ(_T)"
 
-#: birdfont/GtkWindow.vala:620
+#: birdfont/GtkWindow.vala:656
 msgid "T_ool"
 msgstr "ツール(_O)"
+
+#~ msgid "Export"
+#~ msgstr "エクスポート"
+
+#~ msgid "Preview"
+#~ msgstr "プレビュー"
+
+#~ msgid "Preferences"
+#~ msgstr "設定一覧"
+
+#~ msgid "Export SVG, TTF & EOT fonts"
+#~ msgstr "SVG/TTF/EOT フォントをエクスポート"
+
+#~ msgid "Export SVG font and view the result"
+#~ msgstr "SVG フォントをエクスポートして結果を表示する"
 
 #~ msgid ""
 #~ "The loaded font will be overwritten if you choose to continue with "
