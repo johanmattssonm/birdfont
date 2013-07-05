@@ -15,6 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 using Xml;
+using Math;
 
 namespace BirdFont {
 	
@@ -417,10 +418,7 @@ public class ImportSvg {
 					} else {
 						cy = -parse_double (c[++i]);
 					}
-
-					px2 = cx;
-					py2 = cy;
-										
+									
 					p[pi++] = cx;
 					p[pi++] = cy;
 					
@@ -431,6 +429,9 @@ public class ImportSvg {
 					} else {
 						cy = -parse_double (c[++i]);
 					}
+					
+					px2 = cx;
+					py2 = cy;
 					
 					p[pi++] = cx;
 					p[pi++] = cy;
@@ -624,9 +625,9 @@ public class ImportSvg {
 				while (is_point (c[i + 1])) {
 					command[ci++] = "C";
 					
-					// the reflection again
+					// the reflection
 					cx = 2 * px - px2;
-					cy = 2 * py - py2; // if (svg_glyph) ?
+					cy = 2 * py - py2; // if (svg_glyph) ?			
 					p[pi++] = cx;
 					p[pi++] = cy;
 
@@ -807,6 +808,7 @@ public class ImportSvg {
 					path.points.remove_link (path.points.last ());
 				}
 
+				set_tied_handles (path);
 				glyph.add_path (path);
 				glyph.close_path ();
 								
@@ -838,6 +840,22 @@ public class ImportSvg {
 		}
 		
 		return double.try_parse ((!) s);
+	}
+	
+	static void set_tied_handles (Path path) {
+		double a, b;
+		double da, db;
+		foreach (EditPoint p in path.points) {
+			a = p.get_left_handle ().angle;
+			b = p.get_left_handle ().angle;
+			
+			da = a - b;
+			db = a - b;
+			
+			if (da < 0.0001 || db  < 0.0001) {
+				p.set_tie_handle (true);
+			}
+		}
 	}
 }
 
