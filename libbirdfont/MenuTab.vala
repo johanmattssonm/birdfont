@@ -42,7 +42,7 @@ public class MenuTab : FontDisplay {
 
 		add_html_callback ("delete_backups", (val) => {
 			delete_backups ();
-			MainWindow.get_tab_bar ().select_tab_name ("Menu");
+			MainWindow.get_tab_bar ().select_tab_name ("Files");
 		});
 	}
 	

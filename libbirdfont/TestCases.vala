@@ -411,7 +411,7 @@ class TestCases {
 
 		// TODO: run this many times on big font
 		for (int i = 0; i < 100; i++) {
-			MainWindow.get_tab_bar ().select_tab_name ("Menu");
+			MainWindow.get_tab_bar ().select_tab_name ("Files");
 			Tool.yield ();
 			
 			MainWindow.get_tab_bar ().select_tab_name ("Preview");

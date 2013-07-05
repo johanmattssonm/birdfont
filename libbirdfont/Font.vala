@@ -67,7 +67,7 @@ public class Font : GLib.Object {
 	public string name = "Typeface";
 	public string subfamily = "Regular";
 	public string full_name = "Typeface";
-	public string unique_identifier = "";
+	public string unique_identifier = "Typeface";
 	public string version = "Version 1.0";
 	public string description = "";
 	public string copyright = "";
