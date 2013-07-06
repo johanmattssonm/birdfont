@@ -18,8 +18,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import glob
 import subprocess
+import scripts.version
 from optparse import OptionParser
-
 from doit.tools import run_once
 from doit.action import CmdAction
 from scripts.bavala import Vala
@@ -81,11 +81,12 @@ valac_options = [
 	'--target-glib=2.34', # see bug 0000004
 	'--define=LINUX'
 	]
-libbird = Vala(src='libbirdfont', build='build', library='birdfont', pkg_libs=LIBS)
+libbird = Vala(src='libbirdfont', build='build', library='birdfont', so_version=version.SO_VERSION, pkg_libs=LIBS)
 def task_libbirdfont():
     yield libbird.gen_c(valac_options)
     yield libbird.gen_o(['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
     yield libbird.gen_so()
+    yield libbird.gen_ln()
 
 
 def task_birdfont ():

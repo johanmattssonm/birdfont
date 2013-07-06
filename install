@@ -4,6 +4,7 @@ import subprocess
 import glob
 from optparse import OptionParser
 from scripts import config
+from scripts import version
 
 def install (file, dir):
 	f = dest + prefix + dir + '/'
@@ -27,12 +28,18 @@ if not os.path.exists ("build/installed"):
 
 parser = OptionParser()
 parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
+parser.add_option ("-m", "--bsd-manpages", dest="nogzip", help="don't gzip manpages")
 
 (options, args) = parser.parse_args()
 
 if not options.dest:
 	options.dest = ""
 
+if not options.nogzip:
+    bsd_manpages = True
+else:
+    bsd_manpages = False
+	
 prefix = config.PREFIX
 dest = options.dest
 
@@ -52,10 +59,16 @@ install ('resources/linux/birdfont.png', '/share/icons/hicolor/48x48/apps')
 
 install ('build/bin/birdfont', '/bin')
 install ('build/bin/birdfont-export', '/bin')
+install ('build/libbirdfont.so.' +  version.SO_VERSION, '/lib')
 install ('build/libbirdfont.so', '/lib')
 
-install ('build/birdfont.1.gz', '/share/man/man1')
-install ('build/birdfont-export.1.gz', '/share/man/man1')
+if not bsd_manpages:
+    install ('build/birdfont.1.gz', '/share/man/man1')
+    install ('build/birdfont-export.1.gz', '/share/man/man1')
+else:
+    install ('resources/linux/birdfont.1', '/man/man1')
+    install ('resources/linux/birdfont-export.1', '/man/man1')
+
 
 # translations
 for lang_dir in glob.glob('build/locale/*'):

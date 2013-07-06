@@ -17,3 +17,4 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 VERSION = '0.22'
+SO_VERSION = '0'

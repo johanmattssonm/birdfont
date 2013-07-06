@@ -25,7 +25,6 @@ from doit.action import CmdAction
 import config
 import fnmatch
 
-
 def cmd(name, *args):
     """create string for command line"""
     parts = [name]
@@ -65,13 +64,13 @@ def get_sources_name (folder, pattern):
 class Vala(object):
     """helper to generate tasks to compile vala code"""
 
-    def __init__(self, src, build, pkg_libs, library=None, vala_deps=None):
+    def __init__(self, src, build, pkg_libs, library=None, vala_deps=None, so_version=None):
         self.src = src
         self.build = build
-        self.library = library
         self.pkg_libs = pkg_libs
         self.vala_deps = vala_deps or []
-
+        self.library = library
+		
         self.vala = get_sources_path (src, '*.vala')
         self.c = get_sources_path (src, '*.c') # copy regular c sources
         self.cc = [join(build + '/' + src, f) for f in get_sources_name (src, '*.c') ]
@@ -82,7 +81,10 @@ class Vala(object):
         if library:
             self.header = join(build, library) + '.h'
             self.vapi = join(build, library) + '.vapi'
-            self.so = join(build, src) + '.so'
+            self.so = join(build, src) + '.so.' + so_version
+            self.so_link = join(build, src) + '.so'
+            self.so_link_name = src + '.so'
+            self.so_version = so_version
 
     def gen_c(self, opts):
         """translate code from vala to C and create .vapi"""
@@ -158,6 +160,17 @@ class Vala(object):
             'targets': [ self.so ],
             }
 
+    def gen_ln(self):
+        """generate a symbilic link to the generated ".so" file"""
+        so_file = self.so.rsplit('/')[-1]
+        create_link = "ln -s -T " + so_file + " " + self.so_link_name + " "
+        create_link += "&& mv " + self.so_link_name + " " + self.build + "/" 
+        return {
+            'name': self.so_link_name,
+            'actions': [ create_link],
+            'file_dep': [ self.so ],
+            'targets': [ self.so_link ],
+            }
 
     def gen_bin(self, opts):
         """generate binary"""
@@ -175,7 +188,7 @@ class Vala(object):
             'name': "bin",
             'actions': [ 'mkdir -p %s' % bin_path, action ],
             'getargs': { 'conf': ('pkg_flags', 'out') },
-            'file_dep': self.cc + [ d.so for d in self.vala_deps ],
+            'file_dep': self.cc + [ d.so_link for d in self.vala_deps ],
             'targets': [ target ],
             }
 
