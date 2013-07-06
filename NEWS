@@ -158,7 +158,7 @@ birdfont (0.4.0) stable;
   * Crop background updates position of the image
   * Undo command for background images
   * Faster multithreaded export
-  * Juxtapose glyphs and draw every glyph in it's context
+  * Juxtapose glyphs and draw every glyph in its context
   * New notdef. character
   * New tab bar
 

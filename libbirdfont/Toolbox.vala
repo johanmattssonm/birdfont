@@ -231,7 +231,7 @@ public class Toolbox : GLib.Object  {
 		});
 		characterset_tools.add_tool (custom_character_set);
 
-		Tool avalilable_characters = new Tool ("available_characters", _("Show all characters in font"), 'd', CTRL);
+		Tool avalilable_characters = new Tool ("available_characters", _("Show all characters in the font"), 'd', CTRL);
 		avalilable_characters.select_action.connect ((self) => {
 			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
