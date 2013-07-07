@@ -26,14 +26,14 @@ from run import run
 
 import configfile
 
-def build(prefix, cc, cflags, ldflags):
+def build(prefix, cc, cflags, ldflags, valac):
 	compile_translations ()
 	
 	#libbirdfont
 	run("mkdir -p build/libbirdfont")
 	run("mkdir -p build/bin")
 
-	run("""valac \
+	run(valac + """\
 		-C \
 		--basedir build/libbirdfont/ \
 		--enable-experimental-non-null \
@@ -78,7 +78,7 @@ def build(prefix, cc, cflags, ldflags):
 	# birdfont
 	run("mkdir -p build/birdfont")
 	
-	run("""valac \
+	run(valac + """\
 		-C \
 		--enable-experimental-non-null \
 		--enable-experimental \
@@ -120,7 +120,7 @@ def build(prefix, cc, cflags, ldflags):
 	# birdfont-export
 	run("mkdir -p build/birdfont-export")
 	
-	run("""valac \
+	run(valac + """ \
 		-C \
 		--enable-experimental-non-null \
 		--enable-experimental \
@@ -186,6 +186,7 @@ parser.add_option("-d", "--dest", dest="dest", help="install to this directory",
 parser.add_option("-c", "--cc", dest="cc", help="select the C compiler", metavar="CC")
 parser.add_option("-f", "--cflags", dest="cflags", help="set compiler flags", metavar="CFLAGS")
 parser.add_option("-l", "--ldflags", dest="ldflags", help="set linker flags", metavar="LDFLAGS")
+parser.add_option("-v", "--valac", dest="valac", help="select vala compiler", metavar="VALAC")
 
 (options, args) = parser.parse_args()
 
@@ -197,9 +198,11 @@ if not options.cflags:
 	options.cflags = ""
 if not options.ldflags:
 	options.ldflags = ""
+if not options.valac:
+	options.valac = "valac"
 
 build_app (options.prefix)	
-build (options.prefix, options.cc, options.cflags, options.ldflags)
+build (options.prefix, options.cc, options.cflags, options.ldflags, options.valac)
 
 
 

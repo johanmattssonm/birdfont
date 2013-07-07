@@ -23,7 +23,7 @@ cd export
 
 git clone --no-hardlinks --local $rep
 
-version=$(cat ../../scripts/version.py | grep "VERSION = '" | sed -e "s:VERSION = '::" | sed "s:'.*::g")
+version=$(cat ../../scripts/version.py | grep "VERSION = '" | grep -v "SO_VERSION" | sed -e "s:VERSION = '::" | sed "s:'.*::g")
 
 mv birdfont birdfont-$version
 

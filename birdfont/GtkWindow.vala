@@ -430,11 +430,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		export_item.activate.connect (() => { ExportTool.export_all (); });
 		export_item.add_accelerator ("activate", accel_group, 'E', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem preview_item = new Gtk.MenuItem.with_mnemonic(_("_Preview"));
-		file_menu.append (preview_item);
-		preview_item.activate.connect (() => { MenuTab.preview (); });
-		preview_item.add_accelerator ("activate", accel_group, 'P', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-
+		if (!BirdFont.mac) {
+			Gtk.MenuItem preview_item = new Gtk.MenuItem.with_mnemonic(_("_Preview"));
+			file_menu.append (preview_item);
+			preview_item.activate.connect (() => { MenuTab.preview (); });
+			preview_item.add_accelerator ("activate", accel_group, 'P', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+		}
+		
 		Gtk.MenuItem description_item = new Gtk.MenuItem.with_mnemonic(_("Name and _description"));
 		file_menu.append (description_item);
 		description_item.activate.connect (() => { MenuTab.show_description (); });

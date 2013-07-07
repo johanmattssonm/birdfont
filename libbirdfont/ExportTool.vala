@@ -160,6 +160,7 @@ public class ExportTool : GLib.Object {
 
 	public static void export_all () {
 		bool f;
+		Preview preview;
 
 		f = export_ttf_font ();
 		if (!f) {
@@ -170,6 +171,10 @@ public class ExportTool : GLib.Object {
 		if (!f) {
 			warning ("Failed to export svg font");
 		}
+		
+		// create html file
+		preview = new Preview ();
+		preview.get_html_file ();
 	}
 
 	public static void generate_html_document (string html_file, Font font) {
