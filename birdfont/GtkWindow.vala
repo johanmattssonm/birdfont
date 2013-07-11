@@ -274,6 +274,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		hide_text_input ();
 	}
 
+	public void spawn (string command) {
+		Process.spawn_command_line_async (c);
+	}
+
 	public void set_scrollbar_size (double size) {
 		scrollbar.adjustment.page_size = size;
 	}

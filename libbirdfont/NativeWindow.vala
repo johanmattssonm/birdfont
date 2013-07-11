@@ -37,6 +37,8 @@ public interface NativeWindow : GLib.Object {
 	public abstract void set_scrollbar_size (double size);
 	public abstract void set_scrollbar_position (double position);
 	
+	public abstract void spawn (string command);
+	
 	/** Request text input from the UI. */
 	public abstract void set_text_listener (string label, TextListener listener, string default_text, string button_label);
 	

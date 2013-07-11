@@ -488,8 +488,10 @@ os.put_string (
 			foreach (string s in spawn_args) {
 				c += s + " ";
 			}
-
-			Process.spawn_command_line_async (c);
+			
+			print (@"Running: $(c)\n");
+			
+			MainWindow.native_window.spawn (c);
 		} catch (SpawnError e) {
 			warning (e.message);
 		}
