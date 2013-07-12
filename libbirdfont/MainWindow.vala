@@ -102,12 +102,12 @@ public class MainWindow {
 	}
 	
 	public static void update_glyph_sequence () {
-		TextListener listener = new TextListener ();
+		TextListener listener = new TextListener (_("Glyph sequence"), Preferences.get ("glyph_sequence"), _("Close"));
 		listener.signal_text_input.connect ((text) => {
 			Preferences.set ("glyph_sequence", text);
 			get_glyph_canvas ().redraw ();
 		});
-		native_window.set_text_listener (_("Glyph sequence"), listener, Preferences.get ("glyph_sequence"), _("Close"));
+		native_window.set_text_listener (listener);
 	}
 	
 	public static MainWindow get_singleton () {

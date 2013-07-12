@@ -46,7 +46,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	bool scrollbar_supress_signal = false;
 	
 	/** Text input and callbacks to libbirdfont. */
-	TextListener text_listener = new TextListener ();
+	TextListener text_listener = new TextListener ("", "", "");
 	Label text_input_label;
 	Entry text_entry;
 	HBox text_box;
@@ -275,7 +275,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 
 	public void spawn (string command) {
-		Process.spawn_command_line_async (c);
+		Process.spawn_command_line_async (command);
 	}
 
 	public void set_scrollbar_size (double size) {
@@ -758,21 +758,18 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void hide_text_input () {
-		text_listener = new TextListener ();
+		text_listener = new TextListener ("", "", "");
 		text_box.hide ();
 	}
 	
-	public void set_text_listener (string label, TextListener listener, string default_text, string button_label) {
+	public void set_text_listener (TextListener listener) {
 		text_listener = listener;
-		text_input_label.set_text ("   " + label);
-		submit_text_button.set_label (button_label);
+		text_input_label.set_text ("   " + listener.label);
+		submit_text_button.set_label (listener.button_label);
 		text_box.show ();
-		text_entry.set_text (default_text);
-		listener.signal_submit.connect (() => {
-			hide_text_input ();
-		});
+		text_entry.set_text (listener.default_text);
 		text_entry.activate.connect (() => {
-			listener.signal_submit (text_entry.text);
+			listener.set_text (text_entry.text);
 			hide_text_input ();
 		});
 		text_entry.grab_focus ();

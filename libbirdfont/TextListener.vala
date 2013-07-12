@@ -18,8 +18,30 @@
 namespace BirdFont {
 
 public class TextListener : GLib.Object {
+
+	public string label;
+	public string default_text;
+	public string button_label;
+
 	public signal void signal_text_input (string text);
 	public signal void signal_submit (string text);	
+
+	private string text;
+
+	public TextListener (string label, string default_text, string button_label) {
+		this.label = label;
+		this.default_text = default_text;
+		this.button_label = button_label;
+	}
+	
+	public void set_text (string text) {
+		signal_text_input  (text);
+	}
+
+	public void submit () {
+		signal_text_input  (text);
+		signal_submit  (text);
+	}
 }
 
 }

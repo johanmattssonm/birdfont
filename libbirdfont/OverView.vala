@@ -334,6 +334,11 @@ public class OverView : FontDisplay {
 			cr.move_to (x, caption_y);
 			cr.show_text (character_string);
 			
+			cr.show_text ("Q");
+			
+			cr.move_to (0, 0);
+			cr.show_text ("X");
+			
 			x += nail_width;
 			index++;
 			i++;
