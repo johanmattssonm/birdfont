@@ -473,26 +473,22 @@ c.append ("""
 	}
 	
 	public static void preview () {
-		TabBar tab_bar;
-		FontFormat format;
-		OverwriteDialog overwrite;
-
+		OverWriteDialogListener dialog = new OverWriteDialogListener ();
+		TabBar tab_bar = MainWindow.get_tab_bar ();
+		FontFormat format = BirdFont.get_current_font ().format;
+		
 		if (suppress_event) {
 			return;
-		}
-
-		tab_bar = MainWindow.get_tab_bar ();
-		format = BirdFont.get_current_font ().format;
-		overwrite = new OverwriteDialog ();
-
-		overwrite.finished.connect (() => {
-			tab_bar.add_unique_tab (new Preview (), 80);	
+		}	
+			
+		dialog.overwrite_signal.connect (() => {
+			tab_bar.add_unique_tab (new Preview (), 80);
 		});
-				
-		if ((format == FontFormat.SVG || format == FontFormat.FREETYPE) && !OverwriteDialog.ignore) {
-			tab_bar.add_unique_tab (overwrite);
+			
+		if ((format == FontFormat.SVG || format == FontFormat.FREETYPE) && !OverWriteDialogListener.dont_ask_again) {
+			MainWindow.native_window.set_overwrite_dialog (dialog);
 		} else {
-			overwrite.finished ();
+			dialog.overwrite ();
 		}
 	}
 	

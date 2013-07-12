@@ -19,9 +19,31 @@ namespace BirdFont {
 
 public class OverWriteDialogListener : GLib.Object {
 	
+	public signal void overwrite_signal ();
+	public signal void cancel_signal ();
+	
+	public static bool dont_ask_again = false;
+	
+	public string message = _("Overwrite TTF file?");
+	public string overwrite_message = _("Overwrite");
+	public string cancel_message = _("Cancel");
+	public string dont_ask_again_message = _("Yes, don't ask again.");
+	
 	public OverWriteDialogListener () {
 	}
 	
+	public void overwrite () {
+		overwrite_signal ();
+	}
+	
+	public void cancel () {
+		cancel_signal ();	
+	}
+
+	public void overwrite_dont_ask_again () {
+		dont_ask_again = true;
+		overwrite ();
+	}
 }
 
 }
