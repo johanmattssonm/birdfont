@@ -539,11 +539,7 @@ public class Glyph : FontDisplay {
 	private void help_line_event (double x, double y) {
 		double mx = x;
 		double my = y;
-		
-		if (GridTool.is_visible ()) {
-			GridTool.tie (ref mx, ref my);
-		}
-		
+
 		foreach (Line line in get_all_help_lines ()) {
 			line.event_move_to (mx, my, x, y, allocation);
 		}
@@ -578,6 +574,8 @@ public class Glyph : FontDisplay {
 			move_view_offset  (x, y);
 			return;
 		}
+		
+		help_line_event (x, y);	
 
 		t.move_action (t, (int) x, (int) y);
 
@@ -585,8 +583,6 @@ public class Glyph : FontDisplay {
 			motion_x = x * ivz () - xc () + view_offset_x;
 			motion_y = yc () - y * ivz () - view_offset_y;
 		}
-	
-		help_line_event (x, y);	
 	}
 	
 	public override void button_release (int button, double ex, double ey) {

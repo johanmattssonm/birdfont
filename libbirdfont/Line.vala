@@ -143,10 +143,18 @@ public class Line : GLib.Object {
 			
 			if (is_vertical ()) {
 				pos = Glyph.path_coordinate_x (x);
+
+				if (GridTool.is_visible ()) {
+					GridTool.tie_coordinate (ref pos, ref ay);
+				}
+				
 				redraw_line (); // draw at new position
 			} else {
-				// SIC: strange ...
-				//pos = Glyph.path_coordinate_y (y);
+				// FIXME: where does g.allocation.height come from?
+				pos = Glyph.path_coordinate_y (-y + allocation.height);
+				if (GridTool.is_visible ()) {
+					GridTool.tie_coordinate (ref ax, ref pos);
+				}
 				
 				redraw_line ();
 			}
