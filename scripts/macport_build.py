@@ -50,6 +50,9 @@ def build(prefix, cc, cflags, ldflags, valac):
 		--pkg gdk-pixbuf-2.0 \
 		--pkg webkit-1.0""")
 
+	#copy c sources 
+	run("cp libbirdfont/OpenFontFormat/*.c build/libbirdfont/")
+
 	run(cc + " " + cflags + """ \
 		-c build/libbirdfont/*.c \
 		-fno-common \

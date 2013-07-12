@@ -592,6 +592,11 @@ public class Font : GLib.Object {
 			Toolbox.select_tool_by_name ("cubic_points");
 			font_file = path;
 			loaded = parse_svg_file (path);
+					
+			if (!loaded) {
+				warning ("Failed to load SVG font.");
+			}
+			
 			format = FontFormat.SVG;
 		}
 		
@@ -613,6 +618,11 @@ public class Font : GLib.Object {
 			Toolbox.select_tool_by_name ("double_points");
 			font_file = path;
 			loaded = parse_freetype_file (path);
+			
+			if (!loaded) {
+				warning ("Failed to load TTF font.");
+			}
+			
 			format = FontFormat.FREETYPE;
 		}			
 
@@ -620,6 +630,11 @@ public class Font : GLib.Object {
 			Toolbox.select_tool_by_name ("cubic_points");
 			font_file = path;
 			loaded = parse_freetype_file (path);
+						
+			if (!loaded) {
+				warning ("Failed to load OTF font.");
+			}
+			
 			format = FontFormat.FREETYPE;
 		}	
 					
@@ -654,7 +669,7 @@ public class Font : GLib.Object {
 		data = load_freetype_font (path, out error);
 		
 		if (error != 0) {
-			warning ("Failed to load font.");
+			warning ("Failed to load freetype font.");
 			return false;
 		}
 		
@@ -668,6 +683,8 @@ public class Font : GLib.Object {
 		
 		if (parsed) {
 			Preferences.add_recent_files (path);
+		} else {
+			warning ("Failed to parse loaded freetype font.");	
 		}
 		
 		return parsed;

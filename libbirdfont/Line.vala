@@ -145,7 +145,9 @@ public class Line : GLib.Object {
 				pos = Glyph.path_coordinate_x (x);
 				redraw_line (); // draw at new position
 			} else {
-				pos = -Glyph.path_coordinate_y (y);
+				// SIC: strange ...
+				//pos = Glyph.path_coordinate_y (y);
+				
 				redraw_line ();
 			}
 

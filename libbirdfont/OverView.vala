@@ -327,17 +327,15 @@ public class OverView : FontDisplay {
 			cr.restore ();
 			
 			draw_menu (cr, character_string, x, y);
+			
 			draw_character_info_icon (cr, character_string, x, y);
 			
 			caption_y = y + 10 + nail_height - 20;
 			
 			cr.move_to (x, caption_y);
+			
+			cr.set_source_rgba (80/255.0, 95/255.0, 137/255.0, 0.5);
 			cr.show_text (character_string);
-			
-			cr.show_text ("Q");
-			
-			cr.move_to (0, 0);
-			cr.show_text ("X");
 			
 			x += nail_width;
 			index++;

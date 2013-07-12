@@ -42,8 +42,10 @@ class ZoomTool : Tool {
 		});
 
 		move_action.connect((self, x, y) => {
+			Glyph g;
+			
 			if (zoom_area_begin_x > 0) {
-				Glyph g =	MainWindow.get_current_glyph ();
+				g = MainWindow.get_current_glyph ();
 				g.show_zoom_area (zoom_area_begin_x, zoom_area_begin_y, x, y);
 			}
 		});
