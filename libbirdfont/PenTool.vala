@@ -53,7 +53,7 @@ public class PenTool : Tool {
 		string click_to_add_points;
 		
 		if (BirdFont.mac) {
-			click_to_add_points = _("Use left command key (⌘) + click to add new points");
+			click_to_add_points = _("Right click or use left command key and click to add new points");
 		} else {
 			click_to_add_points = _("Right click to add new points, left click to move points");
 		}		
@@ -76,6 +76,10 @@ public class PenTool : Tool {
 		});
 		
 		press_action.connect ((self, b, x, y) => {
+			if (GridTool.is_visible ()) {
+				tie_pixels (ref x, ref y);
+			}
+			
 			last_point_x = x;
 			last_point_y = y;
 
@@ -208,7 +212,7 @@ public class PenTool : Tool {
 			
 			return;
 		}
-		
+
 		// move edit point
 		if (move_selected) {
 			foreach (EditPoint p in selected_points) {
@@ -235,6 +239,15 @@ public class PenTool : Tool {
 			last_point_y = y;			
 		}
 		
+	}
+	
+	private static void tie_pixels (ref int x, ref int y) {
+		double coordinate_x, coordinate_y;
+		coordinate_x = Glyph.path_coordinate_x (x);
+		coordinate_y = Glyph.path_coordinate_y (y);
+		GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
+		x = Glyph.reverse_path_coordinate_x (coordinate_x);
+		y = Glyph.reverse_path_coordinate_y (coordinate_y);
 	}
 	
 	public void press (int button, int x, int y, bool double_click) {
@@ -275,6 +288,7 @@ public class PenTool : Tool {
 		// add new point
 		if (button == 3 || (KeyBindings.modifier & LOGO) > 0) {
 			remove_all_selected_points ();
+			
 			new_point_action (x, y);
 			glyph.store_undo_state ();
 			return;
