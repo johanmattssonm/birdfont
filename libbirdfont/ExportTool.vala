@@ -490,7 +490,6 @@ os.put_string (
 			}
 			
 			print (@"Running: $(c)\n");
-			
 			MainWindow.native_window.spawn (c);
 		} catch (SpawnError e) {
 			warning (e.message);

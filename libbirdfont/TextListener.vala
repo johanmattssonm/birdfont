@@ -34,7 +34,8 @@ public class TextListener : GLib.Object {
 		this.button_label = button_label;
 	}
 	
-	public void set_text (string text) {
+	public void set_text (string t) {
+		text = t;
 		signal_text_input  (text);
 	}
 
