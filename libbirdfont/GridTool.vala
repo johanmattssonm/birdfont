@@ -210,10 +210,6 @@ class GridTool : Tool {
 			y = -ymin.get_pos ();
 		}
 	}
-
-	public static void set_visible (bool v) {
-		visible = v;
-	}
 	
 	public static bool is_visible () {
 		return visible;

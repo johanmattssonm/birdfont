@@ -258,14 +258,16 @@ c.append ("""
 	}
 	
 	public void load_font (string fn) {
-		Font font = BirdFont.get_current_font ();
+		Font font;
+		SaveDialogListener dialog = new SaveDialogListener ();
 
 		if (suppress_event) {
 			return;
 		}
-			
-		SaveDialog save = new SaveDialog ();
-		save.finished.connect (() => {
+		
+		font = BirdFont.get_current_font ();
+		
+		dialog.signal_discard.connect (() => {
 			Font f;
 			bool loaded;
 			
@@ -293,11 +295,16 @@ c.append ("""
 			
 			select_overview ();
 		});
+
+		dialog.signal_save.connect (() => {
+			MenuTab.save ();
+			dialog.signal_discard ();
+		});
 		
-		if (font.is_modified ()) {
-			MainWindow.get_tab_bar ().add_unique_tab (save, 80);
+		if (!font.is_modified ()) {
+			dialog.signal_discard ();
 		} else {
-			save.finished ();
+			MainWindow.native_window.set_save_dialog (dialog);
 		}
 	}
 	
@@ -375,16 +382,15 @@ c.append ("""
 	
 	public static void new_file () {
 		Font font;
-		SaveDialog save;
+		SaveDialogListener dialog = new SaveDialogListener ();
 
 		if (suppress_event) {
 			return;
 		}
-
-		save = new SaveDialog ();
+		
 		font = BirdFont.get_current_font ();
 		
-		save.finished.connect (() => {
+		dialog.signal_discard.connect (() => {
 			BirdFont.new_font ();
 			MainWindow.close_all_tabs ();
 			
@@ -396,30 +402,42 @@ c.append ("""
 			
 			select_overview ();
 		});
-		
-		MainWindow.get_tab_bar ().add_unique_tab (save, 80);
+
+		dialog.signal_save.connect (() => {
+			MenuTab.save ();
+			dialog.signal_discard ();
+		});
 		
 		if (!font.is_modified ()) {
-			save.finished ();
+			dialog.signal_discard ();
+		} else {
+			MainWindow.native_window.set_save_dialog (dialog);
 		}
+		
+		return;
 	}
 	
 	public static void load () {
-		SaveDialog save = new SaveDialog ();
+		SaveDialogListener dialog = new SaveDialogListener ();
 		Font font = BirdFont.get_current_font ();
-
+		
 		if (suppress_event) {
 			return;
 		}
-
-		save.finished.connect (() => {
+		
+		dialog.signal_discard.connect (() => {
 			load_new_font ();
 		});
 
-		if (font.is_modified ()) {
-			MainWindow.get_tab_bar ().add_unique_tab (save, 80);
+		dialog.signal_save.connect (() => {
+			MenuTab.save ();
+			dialog.signal_discard ();
+		});
+		
+		if (!font.is_modified ()) {
+			dialog.signal_discard ();
 		} else {
-			save.finished ();
+			MainWindow.native_window.set_save_dialog (dialog);
 		}
 	}
 

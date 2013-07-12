@@ -274,6 +274,31 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		hide_text_input ();
 	}
 
+	public void set_save_dialog (SaveDialogListener d) {
+		Gtk.Dialog dialog = new Gtk.Dialog.with_buttons (d.message, null, 0);
+		
+		dialog.add_button (d.save_message, 0);
+		dialog.add_button (d.discard_message, 1);
+		
+		dialog.response.connect ((respons) => {
+			switch (respons) {
+				case 0:
+					d.save ();
+					break;
+				case 1:
+					d.discard ();
+					break;
+			}
+			dialog.destroy ();
+		}); 
+		
+		dialog.show_all ();
+	}
+
+	public void set_overwrite_dialog (OverWriteDialogListener d) {
+		
+	}
+
 	public void spawn (string command) {
 		Process.spawn_command_line_async (command);
 	}
@@ -705,26 +730,29 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public bool quit () {
-		bool added;
+		SaveDialogListener dialog = new SaveDialogListener ();
 		Font font = BirdFont.get_current_font ();
-		SaveDialog save_tab = new SaveDialog ();
-		
-		if (BirdFont.get_current_font ().is_modified ()) {
-			added = MainWindow.get_tab_bar ().add_unique_tab (save_tab, 50);
+		bool modified = BirdFont.get_current_font ().is_modified ();
+
+		if (modified) {
+			dialog.signal_discard.connect (() => {
+				font.delete_backup ();
+				Gtk.main_quit ();
+			});
+
+			dialog.signal_save.connect (() => {
+				MenuTab.save ();
+				font.delete_backup ();
+				Gtk.main_quit ();
+			});
+			
+			set_save_dialog (dialog);
 		} else {
-			added = false;
+			font.delete_backup ();
+			Gtk.main_quit ();	
 		}
 		
-		if (!added) {
-			font.delete_backup ();
-			Gtk.main_quit ();
-		}
-		
-		save_tab.finished.connect (() => {
-			font.delete_backup ();
-			Gtk.main_quit ();
-		});
-		
+
 		return true;
 	}
 	
