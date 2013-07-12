@@ -160,7 +160,7 @@ public class Line : GLib.Object {
 			swap_lines ();
 		}
 
-		if (is_vertical ()) {
+		if (is_vertical ()) { // over line handle y
 			if (ay > g.allocation.height - 10) {
 				
 				p = get_coordinate ();
@@ -175,7 +175,7 @@ public class Line : GLib.Object {
 
 			set_active (a);
 			
-		} else {
+		} else { // over line handle x
 			if (ax > g.allocation.width - 10) {
 				p = get_coordinate ();
 				c = ay * ivz + g.view_offset_y;

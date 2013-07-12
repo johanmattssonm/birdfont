@@ -45,6 +45,8 @@ public class PenTool : Tool {
 	public static double precision = 1;
 	private static ImageSurface? tie_icon = null;
 	
+	/** First move action must move the current point in to the grid. */
+	bool first_move_action = false;
 	
 	/** Move curve handle instead of control point. */
 	private bool last_selected_is_handle = false;
@@ -76,6 +78,8 @@ public class PenTool : Tool {
 		});
 		
 		press_action.connect ((self, b, x, y) => {
+			first_move_action = true;
+			
 			if (GridTool.is_visible ()) {
 				tie_pixels (ref x, ref y);
 			}
@@ -162,7 +166,7 @@ public class PenTool : Tool {
 		double coordinate_x, coordinate_y;
 		double px = 0;
 		double py = 0;
-		
+	
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
 		set_default_handle_positions ();
@@ -684,6 +688,19 @@ public class PenTool : Tool {
 
 		if (distance < CONTACT_SURFACE) {
 			set_active_edit_point (ep);
+			
+			if (first_move_action && GridTool.is_visible () && move_selected) {
+				double coordinate_x = e.x;
+				double coordinate_y = e.y;
+				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
+				int px = Glyph.reverse_path_coordinate_x (coordinate_x);
+				int py = Glyph.reverse_path_coordinate_y (coordinate_y);
+				
+				last_point_x += Glyph.reverse_path_coordinate_x (e.x) - px;
+				last_point_y += Glyph.reverse_path_coordinate_y (e.y) - py;
+				
+				first_move_action = false;
+			}
 		}
 	}
 	

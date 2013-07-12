@@ -176,7 +176,7 @@ class GridTool : Tool {
 			ypos.move_line_to (x, y, g.allocation);
 		} else {
 			xpos = new Line ("", x, Line.VERTICAL);
-			ypos = new Line ("", y, Line.HORIZONTAL);
+			ypos = new Line ("", -y, Line.HORIZONTAL);
 		}
 
 		m = double.MAX;
@@ -204,13 +204,17 @@ class GridTool : Tool {
 		
 		if (!coordinate) {
 			x = Glyph.reverse_path_coordinate_x (xmin.get_pos ());
-			y = Glyph.reverse_path_coordinate_y (-ymin.get_pos ());
+			y = Glyph.reverse_path_coordinate_y (ymin.get_pos ());
 		} else {
 			x = xmin.get_pos ();
-			y = ymin.get_pos ();
+			y = -ymin.get_pos ();
 		}
 	}
 
+	public static void set_visible (bool v) {
+		visible = v;
+	}
+	
 	public static bool is_visible () {
 		return visible;
 	}
