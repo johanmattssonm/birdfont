@@ -134,11 +134,6 @@ public class MainWindow {
 		}
 	}
 
-	public void set_title (string title) {
-		// FIXA:
-		// native_window.set_title (title);
-	}
-	
 	/** Reaload all paths and help lines from disk. */
 	internal static void clear_glyph_cache () {
 		Glyph g;

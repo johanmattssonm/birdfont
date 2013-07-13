@@ -1,21 +1,16 @@
 /*
     Copyright (C) 2012 Johan Mattsson
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    This library is free software; you can redistribute it and/or modify 
+    it under the terms of the GNU Lesser General Public License as 
+    published by the Free Software Foundation; either version 3 of the 
+    License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    This library is distributed in the hope that it will be useful, but 
+    WITHOUT ANY WARRANTY; without even the implied warranty of 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+    Lesser General Public License for more details.
 */
-
-using WebKit;
 
 namespace BirdFont {
 
@@ -284,8 +279,6 @@ c.append ("""
 				return;
 			}
 				
-			MainWindow.get_singleton ().set_title (f.get_name ());
-			
 			MainWindow.get_toolbox ().remove_all_grid_buttons ();
 			foreach (string v in f.grid_width) {
 				MainWindow.get_toolbox ().parse_grid (v);
@@ -459,7 +452,6 @@ c.append ("""
 			MainWindow.close_all_tabs ();
 			f.load ((!)fn);
 			
-			MainWindow.get_singleton ().set_title (f.get_name ());
 			select_overview ();		
 		}
 	}
