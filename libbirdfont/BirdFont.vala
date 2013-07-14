@@ -266,6 +266,12 @@ public class BirdFont {
 		Intl.setlocale (LocaleCategory.MESSAGES, "");
 		Intl.bind_textdomain_codeset (GETTEXT_PACKAGE, "utf-8");
 
+		f = File.new_for_path (BirdFont.exec_path + "/Contents/Resources/locale/sv/LC_MESSAGES/birdfont.mo");
+		if (f.query_exists ()) {
+			Intl.bindtextdomain (GETTEXT_PACKAGE, BirdFont.exec_path + "/Contents/Resources/locale");
+			return;
+		}
+		
 		f = File.new_for_path ("./build/locale/sv/LC_MESSAGES/birdfont.mo");
 		if (f.query_exists ()) {
 			Intl.bindtextdomain (GETTEXT_PACKAGE, "./build/locale");

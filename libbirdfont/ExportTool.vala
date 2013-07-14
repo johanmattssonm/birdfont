@@ -419,6 +419,16 @@ os.put_string (
 			};
 		}
 
+		f = File.new_for_path (BirdFont.exec_path + "/Contents/MacOS/birdfont-export");	
+		if (f.query_exists ()) {
+			return { 
+				(!) f.get_path (),
+				"--ttf",
+				"-o",
+				dest
+			};
+		}
+		
 		warning ("Can't find birdfont-export.");
 		
 		return { 
