@@ -295,6 +295,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		dialog.show_all ();
 	}
 
+	public void font_loaded () {
+		Font f = BirdFont.get_current_font ();
+		set_title (@"BirdFont $(f.full_name)");
+	}
+
 	public void set_overwrite_dialog (OverWriteDialogListener d) {
 		Gtk.Dialog dialog = new Gtk.Dialog.with_buttons (d.message, null, 0);
 		
@@ -321,7 +326,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 
 	public void spawn (string command) {
-		Process.spawn_command_line_async (command);
+		try {
+			Process.spawn_command_line_async (command);
+		} catch (GLib.Error e) {
+			warning (@"Command failed: $command");
+			warning (e.message);
+		}
 	}
 
 	public void set_scrollbar_size (double size) {

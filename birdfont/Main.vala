@@ -29,7 +29,7 @@ public static int main (string[] arg) {
 	MainWindow window;
 	string file;
 	BirdFont.BirdFont birdfont = new BirdFont.BirdFont ();
-	birdfont.init (arg);
+	birdfont.init (arg, null);
 
 	Gtk.init (ref arg);
 	parse_gtk_rc ();

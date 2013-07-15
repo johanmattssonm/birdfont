@@ -46,6 +46,9 @@ public interface NativeWindow : GLib.Object {
 	/** Show overwrite dialog */
 	public abstract void set_overwrite_dialog (OverWriteDialogListener dialog);
 	
+	/** Notify the UI about the new font. */
+	public abstract void font_loaded ();
+	
 	protected void webkit_callback (string s) {
 		FontDisplay fd = MainWindow.get_current_display ();
 		fd.process_property (s);

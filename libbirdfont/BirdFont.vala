@@ -182,7 +182,11 @@ public class BirdFont {
 	public static Font current_font;
 	public static Glyph current_glyph;
 	
-	public void init (string[] arg) {
+	/**
+	 * @param arg command line arguments
+	 * @param program path
+	 */
+	public void init (string[] arg, string? program_path) {
 		int err_arg;
 		int i;
 		File font_file;
@@ -225,21 +229,25 @@ public class BirdFont {
 		mac = args.has_argument ("--mac");
 #endif
 		
-		exec_path = "";
+		if (program_path == null) {
+			exec_path = "";
 
-		if (win32) {
-			// wine hack to get "." folder in win32 environment
-			i = arg[0].last_index_of ("\\");
-			
-			if (i != -1) {	
-				exec_path = arg[0];
-				exec_path = exec_path.substring (0, i);
-				exec_path = wine_to_unix_path (exec_path);			
+			if (win32) {
+				// wine hack to get "." folder in win32 environment
+				i = arg[0].last_index_of ("\\");
+				
+				if (i != -1) {	
+					exec_path = arg[0];
+					exec_path = exec_path.substring (0, i);
+					exec_path = wine_to_unix_path (exec_path);			
+				}
+			} else {
+				exec_path = "./";
 			}
 		} else {
-			exec_path = "./";
+			exec_path = (!) program_path;
 		}
-
+		
 		if (args.get_file () != "") {
 			font_file = File.new_for_path (args.get_file ());
 			
