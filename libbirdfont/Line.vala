@@ -147,12 +147,14 @@ public class Line : GLib.Object {
 				
 				redraw_line (); // draw at new position
 			} else {
-				// FIXME: where does g.allocation.height come from?
-				pos = Glyph.path_coordinate_y (-y + allocation.height);
+				// FIXME: flip back the y axis for lines
 				if (GridTool.is_visible ()) {
-					GridTool.tie_coordinate (ref ax, ref pos);
+					double tpy = Glyph.path_coordinate_y (y);
+					GridTool.tie_coordinate (ref ax, ref tpy);
+					pos = -tpy;
+				} else {
+					pos = -Glyph.path_coordinate_y (y);
 				}
-				
 				redraw_line ();
 			}
 
@@ -213,6 +215,9 @@ public class Line : GLib.Object {
 					set_move (false);
 					pos = ll.prev.data.pos;
 					ll.prev.data.pos += 1 * ivz;
+					
+					ll.data.position_updated (ll.data.pos);
+					ll.prev.data.position_updated (ll.prev.data.pos);
 				}
 			}
 			
@@ -223,6 +228,9 @@ public class Line : GLib.Object {
 					pos = ll.next.data.pos;
 					ll.next.data.pos -= 1 * ivz;
 					set_move (false);
+
+					ll.data.position_updated (ll.data.pos);
+					ll.prev.data.position_updated (ll.prev.data.pos);
 				}
 			}
 			

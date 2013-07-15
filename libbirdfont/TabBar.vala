@@ -554,7 +554,7 @@ public class TabBar : GLib.Object {
 
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.set_font_size (14);
-			cr.move_to (8, 18);
+			cr.move_to (8, 19);
 			cr.show_text (translate (t.get_label ()));
 			cr.stroke ();
 			

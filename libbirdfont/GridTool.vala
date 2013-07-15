@@ -154,8 +154,6 @@ class GridTool : Tool {
 	{
 		double d, m;
 		
-		Glyph g = MainWindow.get_current_glyph ();
-		
 		Line xmin = horizontal.first ().data;
 		Line ymin = vertical.first ().data;
 
@@ -166,11 +164,8 @@ class GridTool : Tool {
 			xpos = new Line ("", 0, Line.VERTICAL);
 			ypos = new Line ("", 0, Line.HORIZONTAL);
 
-			xpos.set_move (true);
-			ypos.set_move (true);
-			
-			xpos.move_line_to (x, y, g.allocation);
-			ypos.move_line_to (x, y, g.allocation);
+			xpos.pos = Glyph.path_coordinate_x (x);
+			ypos.pos = Glyph.path_coordinate_y (y);
 		} else {
 			xpos = new Line ("", x, Line.VERTICAL);
 			ypos = new Line ("", -y, Line.HORIZONTAL);
