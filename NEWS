@@ -1,9 +1,14 @@
+birdfont (0.23) stable;
+
+  * Bugfixes 
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Jul  14 19:25:00 CEST 2013
+
 birdfont (0.22) stable;
 
-  * Bugfixes for changes to make BirdFont run on Mac OS X
-  * Preview is removed on Mac OS X
+  * Bugfixes and many changes to make BirdFont run on Mac OS X
 
- -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Jul  6 21:28:000 CEST 2013
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Jul  14 01:24:00 CEST 2013
 
 birdfont (0.21) stable;
 

@@ -1,18 +1,15 @@
 /*
     Copyright (C) 2012 Johan Mattsson
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    This library is free software; you can redistribute it and/or modify 
+    it under the terms of the GNU Lesser General Public License as 
+    published by the Free Software Foundation; either version 3 of the 
+    License, or (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    This library is distributed in the hope that it will be useful, but 
+    WITHOUT ANY WARRANTY; without even the implied warranty of 
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+    Lesser General Public License for more details.
 */
 using BirdFont;
 const string GETTEXT_PACKAGE = "birdfont"; 
@@ -269,6 +266,12 @@ public class BirdFont {
 		Intl.setlocale (LocaleCategory.MESSAGES, "");
 		Intl.bind_textdomain_codeset (GETTEXT_PACKAGE, "utf-8");
 
+		f = File.new_for_path (BirdFont.exec_path + "/Contents/Resources/locale/sv/LC_MESSAGES/birdfont.mo");
+		if (f.query_exists ()) {
+			Intl.bindtextdomain (GETTEXT_PACKAGE, BirdFont.exec_path + "/Contents/Resources/locale");
+			return;
+		}
+		
 		f = File.new_for_path ("./build/locale/sv/LC_MESSAGES/birdfont.mo");
 		if (f.query_exists ()) {
 			Intl.bindtextdomain (GETTEXT_PACKAGE, "./build/locale");
@@ -298,6 +301,9 @@ public class BirdFont {
 			Intl.bindtextdomain (GETTEXT_PACKAGE, "/usr/share/locale");
 			return;
 		}
+		
+		// FIXME: look the FontDisplay paths too, because it will be in 
+		// resources on Mac OS X
 		
 		warning ("translations not found");
 	}

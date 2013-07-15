@@ -47,8 +47,7 @@ def build(prefix, cc, cflags, ldflags, valac):
 		--pkg gio-2.0 \
 		--pkg cairo \
 		--pkg libsoup-2.4 \
-		--pkg gdk-pixbuf-2.0 \
-		--pkg webkit-1.0""")
+		--pkg gdk-pixbuf-2.0""")
 
 	#copy c sources 
 	run("cp libbirdfont/OpenFontFormat/*.c build/libbirdfont/")
@@ -63,7 +62,6 @@ def build(prefix, cc, cflags, ldflags, valac):
 		$(pkg-config --cflags cairo) \
 		$(pkg-config --cflags glib-2.0) \
 		$(pkg-config --cflags gdk-pixbuf-2.0) \
-		$(pkg-config --cflags webkit-1.0) \
 		-I ./build/mac/birdfont""")
 	run("mv ./*.o build/libbirdfont/ ")
 
@@ -74,7 +72,6 @@ def build(prefix, cc, cflags, ldflags, valac):
 		 $(pkg-config --libs cairo) \
 		 $(pkg-config --libs glib-2.0) \
 		 $(pkg-config --libs gdk-pixbuf-2.0) \
-		 $(pkg-config --libs webkit-1.0) \
 		 -shared -o libbirdfont.dylib""")
 	run("mv libbirdfont.dylib build/bin/")
 
@@ -132,9 +129,7 @@ def build(prefix, cc, cflags, ldflags, valac):
 		--pkg libxml-2.0 \
 		--pkg gio-2.0  \
 		--pkg cairo \
-		--pkg libsoup-2.4 \
 		--pkg gdk-pixbuf-2.0 \
-		--pkg webkit-1.0 \
 		--pkg gtk+-2.0 \
 		--pkg libbirdfont""")
 	run("mv birdfont-export/*.c build/birdfont-export/")
@@ -147,7 +142,6 @@ def build(prefix, cc, cflags, ldflags, valac):
 		$(pkg-config --cflags cairo) \
 		$(pkg-config --cflags glib-2.0) \
 		$(pkg-config --cflags gdk-pixbuf-2.0) \
-		$(pkg-config --cflags webkit-1.0) \
 		-I ./build/libbirdfont/""")
 	run("mv ./*.o build/birdfont-export/")
 
@@ -159,8 +153,6 @@ def build(prefix, cc, cflags, ldflags, valac):
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs gdk-pixbuf-2.0) \
-		$(pkg-config --libs webkit-1.0) \
-		$(pkg-config --libs gtk+-2.0) \
 		-o ./build/bin/birdfont-export")
 
 	run("touch build/installed")
