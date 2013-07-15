@@ -163,7 +163,7 @@ public class Line : GLib.Object {
 				queue_draw_area (0, 0, g.allocation.width, g.allocation.height);
 			}
 
-			position_updated (pos); // sinal update
+			position_updated (pos); // signal update
 
 			BirdFont.get_current_font ().touch ();
 			
