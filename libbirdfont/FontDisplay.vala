@@ -193,56 +193,7 @@ public abstract class FontDisplay : GLib.Object {
 	}
 
 	public static File find_file (string? dir, string name) {
-		File f;
-		string d = (dir == null) ? "" : (!) dir;
-
-		f = get_file (BirdFont.exec_path + "/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
-		
-		f = get_file (BirdFont.exec_path + "/", name + "/");
-		if (likely (f.query_exists ())) return f;
-
-		f = get_file (BirdFont.exec_path + "/Contents/Resources/", d + "/" + name);
-		if (likely (f.query_exists ())) return f;
-
-		f = get_file (BirdFont.exec_path + "/Contents/Resources/", name + "/");
-		if (likely (f.query_exists ())) return f;
-		
-		f = get_file ("./" + d + "/", name);
-		if (likely (f.query_exists ())) return f;		
-
-		f = get_file ("../" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = get_file (".\\" + d + "\\", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = get_file ("", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = get_file (d + "\\", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = get_file (@"$PREFIX/share/birdfont/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = get_file ("/usr/local/share/birdfont/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = get_file ("/usr/share/birdfont/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
-				
-		warning (@"Did not find file $name in $d");
-			
-		return f;		
-	}
-
-	public static File get_file (string? path, string name) {
-		StringBuilder fn = new StringBuilder ();
-		string p = (path == null) ? "" : (!) path;
-		fn.append (p);
-		fn.append ((!) name);
-		return File.new_for_path (fn.str);
+		return SearchPaths.find_file (dir, name);	
 	}
 }
 

@@ -269,51 +269,10 @@ public class BirdFont {
 	}
 
 	static void init_gettext () {
-		File f;
-
+		string locale_directory = SearchPaths.get_locale_directory ();
 		Intl.setlocale (LocaleCategory.MESSAGES, "");
 		Intl.bind_textdomain_codeset (GETTEXT_PACKAGE, "utf-8");
-
-		f = File.new_for_path (BirdFont.exec_path + "/Contents/Resources/locale/sv/LC_MESSAGES/birdfont.mo");
-		if (f.query_exists ()) {
-			Intl.bindtextdomain (GETTEXT_PACKAGE, BirdFont.exec_path + "/Contents/Resources/locale");
-			return;
-		}
-		
-		f = File.new_for_path ("./build/locale/sv/LC_MESSAGES/birdfont.mo");
-		if (f.query_exists ()) {
-			Intl.bindtextdomain (GETTEXT_PACKAGE, "./build/locale");
-			return;
-		}
-
-		f = File.new_for_path (".\\locale\\sv\\LC_MESSAGES\\birdfont.mo");
-		if (f.query_exists ()) {
-			Intl.bindtextdomain (GETTEXT_PACKAGE, ".\\locale");
-			return;
-		}
-
-		f = File.new_for_path (PREFIX + "/share/locale/sv/LC_MESSAGES/birdfont.mo");
-		if (f.query_exists ()) {
-			Intl.bindtextdomain (GETTEXT_PACKAGE, PREFIX + "/share/locale");
-			return;
-		}
-						
-		f = File.new_for_path ("/usr/local/share/locale/sv/LC_MESSAGES/birdfont.mo");
-		if (f.query_exists ()) {
-			Intl.bindtextdomain (GETTEXT_PACKAGE, "/usr/local/share/locale");
-			return;
-		}		
-
-		f = File.new_for_path ("/usr/share/locale/sv/LC_MESSAGES/birdfont.mo");
-		if (f.query_exists ()) {
-			Intl.bindtextdomain (GETTEXT_PACKAGE, "/usr/share/locale");
-			return;
-		}
-		
-		// FIXME: look the FontDisplay paths too, because it will be in 
-		// resources on Mac OS X
-		
-		warning ("translations not found");
+		Intl.bindtextdomain (GETTEXT_PACKAGE, locale_directory);
 	}
 	
 	public static Font get_current_font () {

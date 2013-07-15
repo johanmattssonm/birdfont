@@ -206,31 +206,7 @@ class CharDatabase {
 	}
 	
 	static File get_unicode_database () {
-		File f;
-
-		f = (!) File.new_for_path (PREFIX + "/share/unicode/NamesList.txt");
-		if (f.query_exists ()) {
-			return f;
-		}
-
-		f = (!) File.new_for_path (PREFIX + "/share/unicode/ucd/NamesList.txt");
-		if (f.query_exists ()) {
-			return f;
-		}
-		
-		f = (!) File.new_for_path (".\\NamesList.txt");
-		if (f.query_exists ()) {
-			return f;
-		}
-			
-		f = (!) File.new_for_path ("/usr/share/unicode/NamesList.txt");
-		if (f.query_exists ()) {
-			return f;
-		}
-
-		f = (!) File.new_for_path ("/usr/share/unicode/ucd/NamesList.txt");
-
-		return f;
+		return SearchPaths.get_char_database ();
 	}
 }
 
