@@ -643,12 +643,29 @@ class BirdFontFile {
 	
 	private void parse_font_boundries (Xml.Node* node) {
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "top_limit") font.top_limit = parse_double_from_node (iter);
-			if (iter->name == "top_position") font.top_position = parse_double_from_node (iter);
-			if (iter->name == "x-height") font.xheight_position = parse_double_from_node (iter);
-			if (iter->name == "base_line") font.base_line = parse_double_from_node (iter);
-			if (iter->name == "bottom_position") font.bottom_position = parse_double_from_node (iter);
-			if (iter->name == "bottom_limit") font.bottom_limit = parse_double_from_node (iter);
+			if (iter->name == "top_limit" && "" == iter->children->content) {
+				font.top_limit = parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "top_position" && "" == iter->children->content) {
+				font.top_position = parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "x-height" && "" == iter->children->content) {
+				font.xheight_position = parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "base_line" && "" == iter->children->content) {
+				font.base_line = parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "bottom_position" && "" == iter->children->content) {
+				font.bottom_position = parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "bottom_limit" && "" == iter->children->content) {
+				font.bottom_limit = parse_double_from_node (iter);
+			}
 		}			
 	}
 	
@@ -662,7 +679,7 @@ class BirdFontFile {
 			else warning (@"Failed to parse double for \"$(iter->content)\"\n");
 		}
 		
-		return (r) ? d : 0;
+		return (r) ? d : 0.0;
 	}
 
 	/** Parse the new glyph format */

@@ -534,11 +534,18 @@ public class Glyph : FontDisplay {
 	}
 			
 	private void help_line_event (double x, double y) {
-		double mx = x;
-		double my = y;
+		bool m = false;
+		
+		foreach (Line line in vertical_help_lines) {
+			if (!m && line.event_move_to (x, y, allocation)) {
+				m = true;
+			}
+		}
 
-		foreach (Line line in get_all_help_lines ()) {
-			line.event_move_to (mx, my, x, y, allocation);
+		foreach (Line line in horizontal_help_lines) {
+			if (!m && line.event_move_to (x, y, allocation)) {
+				m = true;
+			}
 		}
 	}
 
@@ -572,8 +579,8 @@ public class Glyph : FontDisplay {
 			return;
 		}
 		
-		help_line_event (x, y);	
-
+		help_line_event (x, y);
+		
 		t.move_action (t, (int) x, (int) y);
 
 		if (BirdFont.show_coordinates) {
@@ -601,7 +608,9 @@ public class Glyph : FontDisplay {
 	}
 
 	private unowned List<Line> get_all_help_lines () {
-		while (all_lines.length () > 0) all_lines.delete_link (all_lines.first ());
+		while (all_lines.length () > 0) {
+			all_lines.delete_link (all_lines.first ());
+		}
 		
 		all_lines.concat (vertical_help_lines.copy ());
 		all_lines.concat (horizontal_help_lines.copy ());
@@ -624,15 +633,26 @@ public class Glyph : FontDisplay {
 	}
 	
 	public override void button_press (uint button, double ex, double ey) {				
+		bool moving_lines = false;
 		pointer_begin_x = ex;
 		pointer_begin_y = ey;
 		
-		foreach (Line line in get_all_help_lines ()) {
-			if (line.button_press ()) {
-				return;
+		foreach (Line line in horizontal_help_lines) {
+			if (!moving_lines && line.is_visible () && line.button_press ()) {
+				moving_lines = true;
+			}
+		}
+
+		foreach (Line line in vertical_help_lines) {
+			if (!moving_lines && line.is_visible () && line.button_press ()) {
+				moving_lines = true;
 			}
 		}
 				
+		if (moving_lines) {
+			return;
+		}
+			
 		if (KeyBindings.has_ctrl ()) {
 			move_view = true;
 			move_offset_x = view_offset_x;

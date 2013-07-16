@@ -69,7 +69,10 @@ public class Line : GLib.Object {
 	public void set_visible (bool v) {
 		visible = v;
 	}
-	
+
+	public bool is_visible () {
+		return visible;
+	}
 
 	public void set_moveable (bool m) {
 		moveable = m;
@@ -99,11 +102,12 @@ public class Line : GLib.Object {
 			
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
-			
-			return true;
+		} else {
+			move = false;
+			active = false;
 		}
 		
-		return false;
+		return move;
 	}
 
 	void redraw_line () {
@@ -121,36 +125,69 @@ public class Line : GLib.Object {
 	
 	public void move_line_to (double x, double y, Allocation allocation) {
 		set_move (true);
-		event_move_to (x, y, x, y, allocation);
+		event_move_to (x, y, allocation);
 	}
 	
-	public void event_move_to (double x, double y, double ax, double ay, Allocation allocation) {
+	public bool event_move_to (double x, double y, Allocation allocation) {
 		double p, c;
 		bool a = false;
 		Glyph g = MainWindow.get_current_glyph ();
 		double ivz = 1/g.view_zoom;
 		double margin = 10;
+		double none = 0;
+		double tpy;
+		
+		if (!moveable) {
+			return false;
+		}
 
-		if (!moveable) return;
+		if (is_vertical ()) { // over line handle (y)
+			if (y > g.allocation.height - 10) {
+				
+				p = get_coordinate ();
 
+				c = x * ivz + g.view_offset_x;
+				a = (p - margin * ivz <= c <= p + margin * ivz);
+			}
+					
+			if (a != get_active ()) {
+				redraw_line ();
+			}
+
+			set_active (a);
+			
+		} else { // over line handle (x
+			if (x > g.allocation.width - 10) {
+				p = get_coordinate ();
+				c = y * ivz + g.view_offset_y;
+				a = (p - margin * ivz <= c <= p + margin * ivz);
+			}
+			
+			if (a != get_active ()) {
+				redraw_line ();
+			}
+			
+			set_active (a);
+		}
+
+		// move the line
 		if (move) {
 			double np = pos;
-		
 			redraw_line (); // clear old position
 			
 			if (is_vertical ()) {
 				pos = Glyph.path_coordinate_x (x);
 
 				if (GridTool.is_visible ()) {
-					GridTool.tie_coordinate (ref pos, ref ay);
+					GridTool.tie_coordinate (ref pos, ref none);
 				}
 				
 				redraw_line (); // draw at new position
 			} else {
-				// FIXME: flip back the y axis for lines
+				// FIXME: flip the y axis for lines
 				if (GridTool.is_visible ()) {
-					double tpy = Glyph.path_coordinate_y (y);
-					GridTool.tie_coordinate (ref ax, ref tpy);
+					tpy = Glyph.path_coordinate_y (y);
+					GridTool.tie_coordinate (ref none, ref tpy);
 					pos = -tpy;
 				} else {
 					pos = -Glyph.path_coordinate_y (y);
@@ -165,84 +202,16 @@ public class Line : GLib.Object {
 			position_updated (pos); // signal update
 
 			BirdFont.get_current_font ().touch ();
-			
-			swap_lines ();
 		}
 
-		if (is_vertical ()) { // over line handle y
-			if (ay > g.allocation.height - 10) {
-				
-				p = get_coordinate ();
-
-				c = ax * ivz + g.view_offset_x;
-				a = (p - margin * ivz <= c <= p + margin * ivz);
-			}
-					
-			if (a != get_active ()) {
-				redraw_line ();
-			}
-
-			set_active (a);
-			
-		} else { // over line handle x
-			if (ax > g.allocation.width - 10) {
-				p = get_coordinate ();
-				c = ay * ivz + g.view_offset_y;
-				a = (p - margin * ivz <= c <= p + margin * ivz);
-			}
-			
-			if (a != get_active ()) {
-				redraw_line ();
-			}
-			
-			set_active (a);
-		}
-	}
-	
-	private void swap_lines () {
-		double ivz = 1 / MainWindow.get_current_glyph ().view_zoom;
-		
-		if (!moveable) return;
-		
-		// switch to correct line if this line passes the next one in the sorted list
-		if (list_item != null) {
-			unowned List<Line> ll = (!) list_item;
-			
-			if (ll != ll.first ()) {
-				if (ll.prev.data.pos > pos) {
-					ll.prev.data.set_move (true);
-					ll.prev.data.set_visible (true);
-					set_move (false);
-					pos = ll.prev.data.pos;
-					ll.prev.data.pos += 1 * ivz;
-					
-					ll.data.position_updated (ll.data.pos);
-					ll.prev.data.position_updated (ll.prev.data.pos);
-				}
-			}
-			
-			if (ll != ll.last ()) {
-				if (ll.next.data.pos < pos) {
-					ll.next.data.set_move (true);
-					ll.next.data.set_visible (true);
-					pos = ll.next.data.pos;
-					ll.next.data.pos -= 1 * ivz;
-					set_move (false);
-
-					ll.data.position_updated (ll.data.pos);
-					ll.prev.data.position_updated (ll.prev.data.pos);
-				}
-			}
-			
-		}
-		
+		return move;
 	}
 	
 	public bool get_active () {
 		return active;
 	}
 	
-	protected void set_active (bool active) {
+	public void set_active (bool active) {
 		this.active = active;
 	}
 	

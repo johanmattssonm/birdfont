@@ -188,7 +188,7 @@ public class DropMenu : GLib.Object {
 		if (direction == MenuDirection.DROP_DOWN) {
 			cr.rectangle (x - 100 + 18, y + 18, 88, actions.length () * item_height - 12);
 		} else {
-			cr.rectangle (x - 100 + 18, y + 6 - actions.length () * item_height, 88, actions.length () * item_height - 12);
+			cr.rectangle (x - 100 + 19, y + 6 - actions.length () * item_height, 88, actions.length () * item_height - 12);
 		}
 		
 		cr.fill_preserve ();
@@ -201,7 +201,7 @@ public class DropMenu : GLib.Object {
 			cr.set_source_rgba (122/255.0, 150/255.0, 169/255.0, 1);
 			cr.set_line_width (0);		
 			
-			cr.rectangle (x, y - 7, 12, 7);
+			cr.rectangle (x, y - 7, 13, 7);
 
 			cr.fill_preserve ();
 			cr.stroke ();
@@ -218,7 +218,7 @@ public class DropMenu : GLib.Object {
 			else 
 				iy = y - 8 - n * item_height;
 			
-			ix = x - 100 + 20;
+			ix = x - 100 + 21;
 			
 			item.draw (ix, iy, cr);
 			n++;
