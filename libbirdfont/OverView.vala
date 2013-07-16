@@ -220,7 +220,7 @@ public class OverView : FontDisplay {
 		double x, y;
 		unichar character;
 		Glyph glyph;
-		
+
 		items_per_row = (int) Math.floor (allocation.width / OverViewItem.full_width ());
 		rows = (int) Math.floor (allocation.height /  OverViewItem.full_height ());
 		
@@ -282,6 +282,10 @@ public class OverView : FontDisplay {
 		
 		if (visible_items.length () == 0) {
 			draw_empty_canvas (allocation, cr);
+		}
+		
+		if (character_info != null) {
+			draw_character_info (cr);
 		}
 	}
 		
@@ -425,7 +429,7 @@ public class OverView : FontDisplay {
 		Font f = BirdFont.get_current_font ();
 		int64 len = (all_available) ? f.length () : glyph_range.length ();
 
-		if (at_bottom () && selected + items_per_row > len) { 
+		if (at_bottom () && selected + 1 > len) { 
 			return;
 		}
 		
@@ -588,9 +592,20 @@ public class OverView : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 
+	public void set_character_info (CharacterInfo i) {
+		character_info = i;
+	}
+
 	public override void button_press (uint button, double x, double y) {
 		// DELETE selection_click (button, x, y);
 		int index = 0;
+		
+		if (character_info != null) {
+			character_info = null;
+			redraw_area (0, 0, allocation.width, allocation.height);
+			return;
+		}
+		
 		foreach (OverViewItem i in visible_items) {
 			if (i.click (button, x, y)) {
 				selected = index;
@@ -665,6 +680,98 @@ public class OverView : FontDisplay {
 			MainWindow.set_scrollbar_size (rows / nrows);
 			MainWindow.set_scrollbar_position ((first_visible / rows) / nrows);
 		}
+	}
+
+	/** Display one entry from the Unicode Character Database. */
+	void draw_character_info (Context cr) 
+	requires (character_info != null) {
+		double x, y, w, h;
+		int i;
+		string unicode_value, unicode_description;
+		string[] column;
+		string entry;
+		int len = 0;
+		int length = 0;
+		bool see_also = false;
+		Allocation allocation = MainWindow.get_overview ().allocation;
+		
+		entry = ((!)character_info).get_entry ();
+		
+		foreach (string line in entry.split ("\n")) {
+			len = line.char_count ();
+			if (len > length) {
+				length = len;
+			}
+		}
+		
+		x = allocation.width * 0.1;
+		y = allocation.height * 0.1;
+		w = allocation.width * 0.9 - x; 
+		h = allocation.height * 0.9 - y;
+		
+		if (w < 8 * length) {
+			w = 8 * length;
+			x = (allocation.width - w) / 2.0;
+		}
+		
+		// background	
+		cr.save ();
+		cr.set_source_rgba (1, 1, 1, 0.98);
+		cr.rectangle (x, y, w, h);
+		cr.fill ();
+		cr.restore ();
+
+		cr.save ();
+		cr.set_source_rgba (0, 0, 0, 0.98);
+		cr.set_line_width (2);
+		cr.rectangle (x, y, w, h);
+		cr.stroke ();
+		cr.restore ();
+
+		// database entry
+		i = 0;
+		foreach (string line in entry.split ("\n")) {
+			if (i == 0) {
+				column = line.split ("\t");
+				return_if_fail (column.length == 2);
+				unicode_value = "U+" + column[0];
+				unicode_description = column[1];
+
+				draw_info_line (unicode_description, cr, x, y, i);
+				i++;
+
+				draw_info_line (unicode_value, cr, x, y, i);
+				i++;			
+			} else {
+				
+				if (line.has_prefix ("\t*")) {
+					draw_info_line (line.replace ("\t*", "•"), cr, x, y, i);
+					i++;					
+				} else if (line.has_prefix ("\tx (")) {
+					if (!see_also) {
+						i++;
+						draw_info_line (_("See also:"), cr, x, y, i);
+						i++;
+						see_also = true;
+					}
+					
+					draw_info_line (line.replace ("\tx (", "•").replace (")", ""), cr, x, y, i);
+					i++;
+				} else {
+
+					i++;
+				}
+			}
+		}
+	}
+
+	void draw_info_line (string line, Context cr, double x, double y, int row) {
+		cr.save ();
+		cr.set_font_size (12);
+		cr.set_source_rgba (0, 0, 0, 1);
+		cr.move_to (x + 10, y + 28 + row * 18 * 1.2);
+		cr.show_text (line);
+		cr.restore ();		
 	}
 }
 
