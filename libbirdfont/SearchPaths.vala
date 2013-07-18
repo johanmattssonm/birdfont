@@ -27,6 +27,12 @@ public class SearchPaths {
 		f = get_file (BirdFont.exec_path + "/", name + "/");
 		if (likely (f.query_exists ())) return f;
 
+		f = get_file (BirdFont.exec_path + "\\" + d + "\\", name);
+		if (likely (f.query_exists ())) return f;
+		
+		f = get_file (BirdFont.exec_path + "\\", name + "\\");
+		if (likely (f.query_exists ())) return f;
+		
 		f = get_file (BirdFont.exec_path + "/Contents/Resources/", d + "/" + name);
 		if (likely (f.query_exists ())) return f;
 

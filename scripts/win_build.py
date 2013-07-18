@@ -398,7 +398,6 @@ def copy_runtime_dependencies ():
 	run("cp /usr/share/unicode/NamesList.txt ./build/supplement/")
 
 	run("cp ./README ./build/supplement/")
-	run("cp ./COPYING ./build/supplement/")
 	run("cp ./NEWS ./build/supplement/")
 	
 	run("cp -ra ./layout/ ./build/supplement/")
