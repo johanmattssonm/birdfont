@@ -275,6 +275,12 @@ public class OverView : FontDisplay {
 		
 		update_item_list ();
 		
+		// clear canvas
+		cr.save ();
+		cr.set_source_rgba (1, 1, 1, 1);
+		cr.rectangle (0, 0, allocation.width, allocation.height);
+		cr.restore ();
+		
 		// FIXME: cr.translate (view_offset_x, view_offset_y);
 		foreach (OverViewItem i in visible_items) {
 			i.draw (cr);

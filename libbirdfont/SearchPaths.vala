@@ -142,6 +142,7 @@ public class SearchPaths {
 		string p = (path == null) ? "" : (!) path;
 		fn.append (p);
 		fn.append ((!) name);
+
 		return File.new_for_path (fn.str);
 	}
 	

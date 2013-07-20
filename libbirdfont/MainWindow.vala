@@ -53,6 +53,10 @@ public class MainWindow {
 		return glyph_canvas;
 	}
 	
+	public static OverView get_over_view () {
+		return over_view;
+	}
+	
 	public static Glyph get_current_glyph () {
 		if (unlikely (is_null (BirdFont.current_glyph))) {
 			warning ("No default glyph have been set yet.\n");
@@ -66,7 +70,7 @@ public class MainWindow {
 		return tools;
 	}
 	
-	internal static Tool get_tool (string n) {
+	public static Tool get_tool (string n) {
 		return tools.get_tool (n);
 	}
 	
@@ -74,19 +78,19 @@ public class MainWindow {
 		return tabs;
 	}
 
-	internal static Tab get_current_tab () {
+	public static Tab get_current_tab () {
 		return tabs.get_selected_tab ();
 	}
 
-	internal static TooltipArea get_tool_tip () {
+	public static TooltipArea get_tool_tip () {
 		return tool_tip;
 	}
 
-	internal static bool select_tab (Tab t) {
+	public static bool select_tab (Tab t) {
 		return tabs.selected_open_tab (t);
 	}
 
-	internal static OverView get_overview () {
+	public static OverView get_overview () {
 		OverView over_view;
 		
 		foreach (var t in tabs.tabs) {
@@ -135,7 +139,7 @@ public class MainWindow {
 	}
 
 	/** Reaload all paths and help lines from disk. */
-	internal static void clear_glyph_cache () {
+	public static void clear_glyph_cache () {
 		Glyph g;
 		foreach (Tab t in get_tab_bar ().tabs) {
 			if (t.get_display () is Glyph) {
@@ -147,7 +151,7 @@ public class MainWindow {
 		get_glyph_canvas ().redraw ();
 	}
 		
-	internal static void close_all_tabs () {
+	public static void close_all_tabs () {
 		uint i = 0;
 		uint len = get_tab_bar ().get_length ();
 		
@@ -156,6 +160,10 @@ public class MainWindow {
 				i++;
 			}
 		}
+	}
+	
+	public string translate (string s) {
+		return _(s);
 	}
 }
 
