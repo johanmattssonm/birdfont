@@ -86,8 +86,6 @@ public class DefaultCharacterSet {
 		foreach (unowned string code in DefaultLanguages.codes) {
 			if (lang.has_prefix (code)) {
 				characters = DefaultLanguages.characters.nth (i).data;
-				// Compiler bug, this line causes trouble:
-				// return default_characters.nth (i).data;
 			}
 			i++;
 		}
@@ -266,6 +264,10 @@ public class DefaultCharacterSet {
 			gr.add_range ('\0', (unichar) 0xFFF8);
 		}
 	}
+	
+	public static DefaultLanguages get_default_languages () {
+		return languages;
+	}
 }
 
 public class DefaultLanguages {
@@ -277,6 +279,22 @@ public class DefaultLanguages {
 		names = new List<string> ();
 		codes = new List<string> ();
 		characters = new List<string> ();		
+	}
+
+	public string? get_name (int index) {
+		if (0 <= index < names.length ()) {
+			return names.nth (index).data;
+		}
+		
+		return null;
+	}
+
+	public string? get_code (int index) {
+		if (0 <= index < codes.length ()) {
+			return codes.nth (index).data;
+		}
+		
+		return null;
 	}
 }
 
