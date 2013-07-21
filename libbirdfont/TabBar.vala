@@ -587,6 +587,24 @@ public class TabBar : GLib.Object {
 			i++;
 		}
 	}
+	
+	public void add_empty_tab (string name) {
+		add_tab (new EmptyTab (name));
+	}
 }
+
+public class EmptyTab : FontDisplay {
+	
+	public string name;
+	
+	public EmptyTab (string name) {
+		this.name = name;
+	}
+	
+	public override string get_name () {
+		return name;
+	}
+}
+
 
 }
