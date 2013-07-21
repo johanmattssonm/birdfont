@@ -32,9 +32,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	ScrolledWindow html_box;
 
 	VBox tab_box;
-
-	static DrawingArea margin_bottom;
-	static DrawingArea margin_right;
 	
 	GlyphCanvasArea glyph_canvas_area;
 	
@@ -66,12 +63,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				display.scroll_to (scrollbar.get_value ());
 			}
 		});
-
-		margin_bottom = new DrawingArea ();
-		margin_right = new DrawingArea ();
-	
-		margin_bottom.set_size_request (0, 0);
-		margin_right.set_size_request (0, 0);
 		
 		delete_event.connect (quit);
 		
@@ -227,12 +218,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		tab_box.pack_start (canvas_box, true, true, 0);
 
 		tab_box.pack_start (new TooltipCanvas (MainWindow.tool_tip), false, false, 0);
-		tab_box.pack_start (margin_bottom, false, false, 0);
 		
 		list_box = new HBox (false, 0);
 		list_box.pack_start (tab_box, true, true, 0);
 		list_box.pack_start (new ToolboxCanvas (MainWindow.tools), false, false, 0);
-		list_box.pack_start (margin_right, false, false, 0);
 
 		VBox vbox = new VBox (false, 0);
 		
@@ -726,26 +715,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		return menubar;	
 	}
 
-	internal void toggle_expanded_margin_bottom () {
-		int w, h;
-		margin_bottom.get_size_request (out w, out h);
-		
-		if (h == 1) h = 2; 
-		else h = 1;
-		
-		margin_bottom.set_size_request (w, h);
-	}
-	
-	internal void toggle_expanded_margin_right () {	
-		int w, h;
-		margin_right.get_size_request (out w, out h);
-
-		if (w == 1) w = 2; 
-		else w = 1;
-
-		margin_right.set_size_request (w, h);
-	}
-
 	public void update_window_size () {
 		int w, h;
 		get_size (out w, out h);
@@ -972,24 +941,6 @@ public class GlyphCanvasArea : DrawingArea  {
 			glyph_canvas.allocation.y = allocation.y;
 				
 			if (unlikely (allocation != alloc && alloc.width != 0)) {
-				// Set size of glyph widget to an even number and notify 
-				// set new allocation for glyph
-				bool ug = false;
-				
-				if (allocation.height % 2 != 0) {
-					MainWindow.native_window.toggle_expanded_margin_bottom ();
-					ug = true;
-				}
-				
-				if (allocation.width % 2 != 0) {
-					MainWindow.native_window.toggle_expanded_margin_right ();
-					ug = true;
-				}					
-				
-				if (unlikely (allocation.width % 2 != 0 || allocation.height % 2 != 0)) {
-					warning (@"\nGlyph canvas is not divisible by two.\nWidth: $(allocation.width)\nHeight: $(allocation.height)");
-				}
-				
 				BirdFont.current_glyph.resized ();
 			}
 			

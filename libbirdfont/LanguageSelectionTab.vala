@@ -18,15 +18,15 @@ public class LanguageSelectionTab : FontDisplay {
 	
 	public LanguageSelectionTab () {	
 		add_html_callback ("select_language", (val) => {
+			TabBar tb = MainWindow.get_tab_bar ();
 			set_prefered_character_set (val);
+			tb.close_display (this);
 		});
 	}
 
 	/** @param iso_code language iso code. */
 	public static void set_prefered_character_set (string iso_code) {
-		TabBar tb = MainWindow.get_tab_bar ();
-		Preferences.set ("language", val);
-		tb.close_display (this);
+		Preferences.set ("language", iso_code);
 		Toolbox.select_tool_by_name ("custom_character_set");		
 	}
 

@@ -17,9 +17,6 @@ namespace BirdFont {
 public interface NativeWindow : GLib.Object {
 	public abstract string? file_chooser_save (string title);
 	public abstract string? file_chooser_open (string title);
-
-	public abstract void toggle_expanded_margin_bottom ();
-	public abstract void toggle_expanded_margin_right ();
 	
 	public abstract void update_window_size ();
 
