@@ -21,13 +21,13 @@ public class LanguageSelectionTab : FontDisplay {
 			TabBar tb = MainWindow.get_tab_bar ();
 			set_prefered_character_set (val);
 			tb.close_display (this);
+			Toolbox.select_tool_by_name ("custom_character_set");	
 		});
 	}
 
 	/** @param iso_code language iso code. */
 	public static void set_prefered_character_set (string iso_code) {
-		Preferences.set ("language", iso_code);
-		Toolbox.select_tool_by_name ("custom_character_set");		
+		Preferences.set ("language", iso_code);	
 	}
 
 	public override string get_name () {

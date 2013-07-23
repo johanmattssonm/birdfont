@@ -46,5 +46,13 @@ public class Preview : FontDisplay {
 	public override string get_uri () {
 		return path_to_uri ((!) get_html_file ().get_path ());
 	}
+	
+	public static string get_windows_uri () {
+		Font font = BirdFont.get_current_font ();
+		string html = @"$(font.get_name ()).html";
+		File dir = font.get_folder ();
+		File file = dir.get_child (html);
+		return "file:///" + (!)	file.get_path ();
+	}
 }
 }

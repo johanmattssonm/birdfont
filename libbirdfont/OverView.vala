@@ -221,8 +221,8 @@ public class OverView : FontDisplay {
 		unichar character;
 		Glyph glyph;
 
-		items_per_row = (int) Math.floor (allocation.width / OverViewItem.full_width ());
-		rows = (int) Math.floor (allocation.height /  OverViewItem.full_height ());
+		items_per_row = (int) Math.ceil (allocation.width / OverViewItem.full_width ());
+		rows = (int) Math.ceil (allocation.height /  OverViewItem.full_height ());
 		
 		while (visible_items.length () > 0) {
 			visible_items.remove_link (visible_items.first ());
@@ -279,6 +279,7 @@ public class OverView : FontDisplay {
 		cr.save ();
 		cr.set_source_rgba (1, 1, 1, 1);
 		cr.rectangle (0, 0, allocation.width, allocation.height);
+		cr.fill ();
 		cr.restore ();
 		
 		// FIXME: cr.translate (view_offset_x, view_offset_y);
