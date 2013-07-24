@@ -158,12 +158,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 								sb.append ((!) line);
 							}
 					
-							html_canvas.load_html_string (sb.str, uri);							
+							html_canvas.load_html_string (sb.str, uri);
+												
 						} catch (Error e) {
 							warning (e.message);
 							warning ("Failed to load html into canvas.");
 						}
-						
 					} else {
 						// normal way to load a uri for all other pages
 						html_canvas.load_uri (uri);

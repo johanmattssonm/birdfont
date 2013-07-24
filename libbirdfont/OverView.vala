@@ -207,6 +207,13 @@ public class OverView : FontDisplay {
 		selected = 0;
 	}
 	
+	OverViewItem get_selected_item () {
+		return_val_if_fail (0 <= selected < visible_items.length (), 
+			new OverViewItem (null, '\0', 0, 0));
+			
+ 		return visible_items.nth (selected).data;
+	}
+	
 	void update_item_list () {
 		string character_string;
 		Font f = BirdFont.get_current_font ();
@@ -217,8 +224,8 @@ public class OverView : FontDisplay {
 		unichar character;
 		Glyph glyph;
 
-		items_per_row = (int) Math.ceil (allocation.width / OverViewItem.full_width ());
-		rows = (int) Math.ceil (allocation.height /  OverViewItem.full_height ());
+		items_per_row = (int) (allocation.width / OverViewItem.full_width ());
+		rows = (int) (allocation.height /  OverViewItem.full_height ());
 		
 		while (visible_items.length () > 0) {
 			visible_items.remove_link (visible_items.first ());
@@ -226,6 +233,7 @@ public class OverView : FontDisplay {
 		
 		visible_items = new List<OverViewItem> ();
 		
+		// update item list
 		index = (uint32) first_visible;
 		x = OverViewItem.margin;
 		y = OverViewItem.margin;
@@ -263,6 +271,20 @@ public class OverView : FontDisplay {
 			
 			visible_items.append (item);
 			index++;
+		}
+		
+		// offset 
+		item = get_selected_item ();
+		if (item.y + OverViewItem.height > allocation.height) {
+			view_offset_y = allocation.height - (item.y + OverViewItem.height);
+		}
+
+		if (item.y + view_offset_y < 0) {
+			view_offset_y = 0;
+		}
+		
+		foreach (OverViewItem i in visible_items) {
+			i.y += view_offset_y;
 		}
 	}
 	
@@ -403,22 +425,27 @@ public class OverView : FontDisplay {
 		first_visible = 0;
 	}
 
+	/** Returns true if the selected glyph is at last row. */
+	private bool last_row () {
+		return visible_items.length () - selected <= items_per_row;
+	}
+
 	public void key_down () {
 		Font f = BirdFont.get_current_font ();
 		int64 len = (all_available) ? f.length () : glyph_range.length ();
 		
-		selected += items_per_row;
-
-		if (at_bottom () && selected + items_per_row > len) { 
+		if (at_bottom () && last_row ()) {
 			return;
 		}
+		
+		selected += items_per_row;
 		
 		if (selected >= items_per_row * rows) {
 			first_visible += items_per_row;
 			selected -= items_per_row;
 		}
 		
-		if (first_visible + selected > len) {
+		if (first_visible + selected >= len) {
 			selected = (int) (len - first_visible - 1);
 			
 			if (selected < items_per_row * (rows - 1)) {
@@ -426,13 +453,18 @@ public class OverView : FontDisplay {
 				selected += items_per_row;
 			}
 		}
+		
+		if (selected >= visible_items.length ()) { 
+			selected = (int) (visible_items.length () - 1); 
+		} 
 	}
 
 	public void key_right () {
 		Font f = BirdFont.get_current_font ();
 		int64 len = (all_available) ? f.length () : glyph_range.length ();
 
-		if (at_bottom () && selected + 1 > len) { 
+		if (at_bottom () && first_visible + selected + 1 >= len) {
+			selected = (int) (visible_items.length () - 1);
 			return;
 		}
 		
@@ -444,7 +476,7 @@ public class OverView : FontDisplay {
 			selected -= 1;
 		}		
 
-		if (first_visible + selected > glyph_range.length ()) {
+		if (first_visible + selected > len) {
 			first_visible -= items_per_row;
 			selected = (int) (len - first_visible - 1);
 		}
@@ -459,8 +491,8 @@ public class OverView : FontDisplay {
 		}
 		
 		if (first_visible < 0) {
-			scroll_top ();
-		}		
+			first_visible = 0;		
+		}	
 	}
 	
 	public void key_left () {

@@ -42,13 +42,10 @@ LIBS = [
     'glib-2.0',
     'libxml-2.0',
     'gio-2.0',
-    'libsoup-2.4',
     'cairo',
     'gdk-pixbuf-2.0',
     'webkit-1.0',
     ]
-
-
 
 def task_build ():
     if not os.path.exists ("build/configured"):
@@ -76,7 +73,6 @@ def task_pkg_flags():
 
 valac_options = [
 	'--enable-experimental-non-null',
-	'--thread',
 	'--enable-experimental',
 	'--target-glib=2.34', # see bug 0000004
 	'--define=LINUX'
