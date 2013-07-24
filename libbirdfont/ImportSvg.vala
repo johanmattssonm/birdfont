@@ -805,7 +805,6 @@ public class ImportSvg {
 					path.points.remove_link (path.points.last ());
 				}
 
-				set_tied_handles (path);
 				glyph.add_path (path);
 				glyph.close_path ();
 								
@@ -837,20 +836,6 @@ public class ImportSvg {
 		}
 		
 		return double.try_parse ((!) s);
-	}
-	
-	static void set_tied_handles (Path path) {
-		double a, b;
-		double d;
-		
-		foreach (EditPoint p in path.points) {
-			a = p.get_left_handle ().angle;
-			b = p.get_right_handle ().angle;
-			d = a - b;
-			if (fabs (d) - PI < 0.001) {
-				p.set_tie_handle (true);
-			}
-		}
 	}
 }
 

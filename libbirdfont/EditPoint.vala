@@ -214,7 +214,9 @@ public class EditPoint {
 			angle = -acos (a / length) + PI;
 		}
 		
-		if (left_handle.type == PointType.QUADRATIC) {
+		if (left_handle.type == PointType.QUADRATIC 
+			|| right_handle.type == PointType.QUADRATIC) {
+				
 			prev_rh = get_prev ().data.get_right_handle ();
 			next_lh = get_next ().data.get_left_handle ();
 			
@@ -235,16 +237,20 @@ public class EditPoint {
 			prev_rh.type = PointType.DOUBLE_CURVE;
 			left_handle.type = PointType.DOUBLE_CURVE;
 			right_handle.type = PointType.DOUBLE_CURVE;
-		} else if (left_handle.type == PointType.LINE_DOUBLE_CURVE) {
+		} else if (left_handle.type == PointType.LINE_DOUBLE_CURVE 
+			|| right_handle.type == PointType.LINE_DOUBLE_CURVE) {
+				
 			left_handle.type = PointType.DOUBLE_CURVE;
 			right_handle.type = PointType.DOUBLE_CURVE;
 			
 			prev_rh = get_prev ().data.get_right_handle ();
 			next_lh = get_next ().data.get_left_handle ();
 			
-			prev_rh.type = PointType.DOUBLE_CURVE;	
+			prev_rh.type = PointType.DOUBLE_CURVE;
 			next_lh.type = PointType.DOUBLE_CURVE;
-		} else if (left_handle.type == PointType.LINE_CUBIC) {
+		} else if (left_handle.type == PointType.LINE_CUBIC
+			|| right_handle.type == PointType.LINE_CUBIC) {
+				
 			left_handle.type = PointType.CUBIC;
 			right_handle.type = PointType.CUBIC;
 		}
