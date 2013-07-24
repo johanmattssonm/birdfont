@@ -391,8 +391,6 @@ c.append ("""
 			MainWindow.get_toolbox ().add_new_grid ();
 			MainWindow.get_toolbox ().add_new_grid ();
 			
-			Toolbox.select_tool_by_name ("double_points");
-			
 			select_overview ();
 		});
 
@@ -455,7 +453,33 @@ c.append ("""
 			select_overview ();		
 		}
 	}
-	
+
+	public static void quit () {
+		SaveDialogListener dialog = new SaveDialogListener ();
+		Font font = BirdFont.get_current_font ();
+		
+		Preferences.save ();
+		
+		if (suppress_event) {
+			return;
+		}
+		
+		dialog.signal_discard.connect (() => {
+			MainWindow.native_window.quit ();
+		});
+
+		dialog.signal_save.connect (() => {
+			MenuTab.save ();
+			MainWindow.native_window.quit ();
+		});
+		
+		if (!font.is_modified ()) {
+			dialog.signal_discard ();
+		} else {
+			MainWindow.native_window.set_save_dialog (dialog);
+		}
+	} 
+		
 	public static void show_description () {
 		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionTab (), 110, false);
 	}

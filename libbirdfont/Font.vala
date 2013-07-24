@@ -598,21 +598,18 @@ public class Font : GLib.Object {
 		}
 		
 		if (path.has_suffix (".ffi")) {
-			Toolbox.select_tool_by_name ("cubic_points");
 			font_file = path;
 			loaded = parse_bf_file (path);
 			format = FontFormat.FFI;
 		}
 
 		if (path.has_suffix (".bf")) {
-			Toolbox.select_tool_by_name ("double_points");
 			font_file = path;
 			loaded = parse_bf_file (path);
 			format = FontFormat.BIRDFONT;
 		}
 		
 		if (path.has_suffix (".ttf")) {
-			Toolbox.select_tool_by_name ("double_points");
 			font_file = path;
 			loaded = parse_freetype_file (path);
 			
@@ -624,7 +621,6 @@ public class Font : GLib.Object {
 		}			
 
 		if (path.has_suffix (".otf")) {
-			Toolbox.select_tool_by_name ("cubic_points");
 			font_file = path;
 			loaded = parse_freetype_file (path);
 						

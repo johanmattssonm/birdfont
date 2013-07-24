@@ -324,8 +324,6 @@ public class Path {
 		EditPoint handle_right = e.get_right_handle ().get_point ();
 		EditPoint handle_left = e.get_left_handle ().get_point ();
 
-		PointType type = e.get_left_handle ().type;
-
 		cr.stroke ();
 		
 		img_right = (e.get_right_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;

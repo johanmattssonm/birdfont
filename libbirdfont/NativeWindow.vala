@@ -45,6 +45,9 @@ public interface NativeWindow : GLib.Object {
 	
 	/** Notify the UI about the new font. */
 	public abstract void font_loaded ();
+
+	/** Exit the application. */
+	public abstract void quit ();
 	
 	protected void webkit_callback (string s) {
 		FontDisplay fd = MainWindow.get_current_display ();

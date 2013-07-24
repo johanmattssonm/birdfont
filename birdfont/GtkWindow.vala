@@ -64,7 +64,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			}
 		});
 		
-		delete_event.connect (quit);
+		delete_event.connect (() => {
+			MenuTab.quit ();
+			return false;
+		});
 		
 		set_size_and_position ();
 		
@@ -501,7 +504,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		Gtk.MenuItem quit_item = new Gtk.MenuItem.with_mnemonic (_("_Quit"));
 		file_menu.append (quit_item);
-		quit_item.activate.connect (() => { quit(); });
+		quit_item.activate.connect (() => { MenuTab.quit (); });
 
 		// Edit
 		Gtk.MenuItem undo_item = new Gtk.MenuItem.with_mnemonic (_("_Undo"));
@@ -729,31 +732,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		set_default_size (w, h);
 	}
 	
-	public bool quit () {
-		SaveDialogListener dialog = new SaveDialogListener ();
-		Font font = BirdFont.get_current_font ();
-		bool modified = BirdFont.get_current_font ().is_modified ();
-
-		if (modified) {
-			dialog.signal_discard.connect (() => {
-				font.delete_backup ();
-				Gtk.main_quit ();
-			});
-
-			dialog.signal_save.connect (() => {
-				MenuTab.save ();
-				font.delete_backup ();
-				Gtk.main_quit ();
-			});
-			
-			set_save_dialog (dialog);
-		} else {
-			font.delete_backup ();
-			Gtk.main_quit ();	
-		}
-		
-
-		return true;
+	public void quit () {
+		Gtk.main_quit ();	
 	}
 	
 	public string? file_chooser_save (string title) {

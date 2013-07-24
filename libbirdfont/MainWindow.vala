@@ -161,7 +161,7 @@ public class MainWindow {
 			}
 		}
 	}
-	
+
 	public static string translate (string s) {
 		return _(s);
 	}

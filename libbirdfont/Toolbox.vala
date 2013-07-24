@@ -86,6 +86,7 @@ public class Toolbox : GLib.Object  {
 		Tool quadratic_points = new Tool ("quadratic_points", _("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
 			point_type = PointType.QUADRATIC;
+			Preferences.set ("point_type", "quadratic_points");
 		});
 		draw_tool_modifiers.add_tool (quadratic_points);		
 
@@ -93,13 +94,15 @@ public class Toolbox : GLib.Object  {
 		Tool cubic_points = new Tool ("cubic_points", _("Create cubic Bézier curves"));
 		cubic_points.select_action.connect ((self) => {
 			point_type = PointType.CUBIC;
+			Preferences.set ("point_type", "cubic_points");
 		});
 		draw_tool_modifiers.add_tool (cubic_points);
 
-		// two quadratic points off curve for each quadratic control point
+		// two quadratic points off curve points for each quadratic control point
 		Tool double_points = new Tool ("double_points", _("Quadratic path with two line handles"));
 		double_points.select_action.connect ((self) => {
 			point_type = PointType.DOUBLE_CURVE;
+			Preferences.set ("point_type", "double_points");
 		});
 		draw_tool_modifiers.add_tool (double_points);
 
@@ -119,7 +122,7 @@ public class Toolbox : GLib.Object  {
 				MainWindow.get_current_glyph ().update_view ();
 			}
 			
-			// don't select this tool. focus on the type selector:
+			// don't select the tie tool. give focus to the point type selection:
 			var idle = new IdleSource();
 			idle.set_callback (() => {
 				if (point_type == PointType.QUADRATIC) {
@@ -601,9 +604,9 @@ public class Toolbox : GLib.Object  {
 		var idle = new IdleSource();
 		idle.set_callback (() => {
 			pen_tool.set_selected (true);
-			select_tool (double_points);
 			
 			select_draw_tool ();			
+			set_point_type_from_preferences ();
 			
 			if (GlyphCanvas.get_current_glyph ().get_show_help_lines ()) {
 				help_lines.set_selected (true);
@@ -621,6 +624,19 @@ public class Toolbox : GLib.Object  {
 		idle.attach (null);
 	}
 
+	public static void set_point_type_from_preferences () {
+		string type = Preferences.get ("point_type");
+		print (type);
+		print ("\n");
+		if (type == "double_points") {
+			Toolbox.select_tool_by_name ("double_points");
+		} else if (type == "quadratic_points") {
+			Toolbox.select_tool_by_name ("quadratic_points");
+		} if (type == "cubic_points") {
+			Toolbox.select_tool_by_name ("cubic_points");
+		}
+	}
+	
 	/** Insert new points of this type. */
 	public static PointType get_selected_point_type () {
 		return point_type;
