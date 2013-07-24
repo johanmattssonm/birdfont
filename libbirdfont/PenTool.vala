@@ -33,6 +33,7 @@ public class PenTool : Tool {
 	public static EditPointHandle selected_handle = new EditPointHandle.empty ();
 	
 	public static EditPoint? active_edit_point = new EditPoint ();
+	public static EditPoint selected_point = new EditPoint ();
 
 	private static bool move_selected_handle = false;
 
@@ -233,8 +234,8 @@ public class PenTool : Tool {
 		}
 		
 		if (GridTool.is_visible ()) {
-			last_point_x = px;
-			last_point_y = py;
+			last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_point.x);
+			last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_point.y);
 		} else {
 			last_point_x = x;
 			last_point_y = y;			
@@ -327,6 +328,7 @@ public class PenTool : Tool {
 
 		if (active_edit_point != null) {
 			((!)active_edit_point).set_selected (true);
+			selected_point = (!)active_edit_point;
 		}
 
 		if (!is_over_handle (x, y)) {
@@ -715,6 +717,7 @@ public class PenTool : Tool {
 		}
 		
 		add_selected_point (new_point);
+		selected_point = new_point;
 		
 		move_selected = true;
 		
