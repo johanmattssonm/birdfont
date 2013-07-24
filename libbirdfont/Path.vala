@@ -336,7 +336,7 @@ public class Path {
 			draw_image (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
 		}
 		
-		if (!(is_open () && e == points.first ().data) && type != PointType.QUADRATIC && type != PointType.LINE_QUADRATIC) {
+		if (!(is_open () && e == points.first ().data)) {
 			draw_line (handle_left, e, cr, 0.15);
 			draw_image (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
 		}

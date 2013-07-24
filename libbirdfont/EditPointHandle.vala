@@ -17,14 +17,15 @@ using Math;
 namespace BirdFont {
 		
 public class EditPointHandle  {
-	
-	public double angle;
+		
 	public double length;
 	public EditPoint parent;
 	public PointType type;
 	EditPoint? visual_handle = null;
 	static EditPoint none = new EditPoint ();
 	public bool active;
+
+	public double angle;
 
 	public EditPointHandle.empty() {
 		this.parent = none;
@@ -109,7 +110,19 @@ public class EditPointHandle  {
 		return p;
 	}
 
+	bool is_left_handle () {
+		return parent.get_left_handle () == this;
+	}
+
 	public void move_to_coordinate (double x, double y) {
+		move_to_coordinate_internal (x, y);
+		if (parent.tie_handles) {
+			tie_handle ();
+		}
+		process_connected_handle ();
+	}
+		
+	private void move_to_coordinate_internal (double x, double y) {
 		double a, b, c;
 
 		a = parent.x - x;
@@ -131,18 +144,40 @@ public class EditPointHandle  {
 		} else {
 			angle = -acos (a / length) + PI;
 		}
+	}
+	
+	void process_connected_handle () {
+		EditPointHandle h;
 		
-		if (parent.tie_handles) {
-			tie_handle ();
+		if (type == PointType.QUADRATIC) {
+			if (!is_left_handle ()) {
+				if (parent.next != null) {
+					h = ((!)parent.next).data.get_left_handle ();
+					h.type = PointType.QUADRATIC;
+					h.move_to_coordinate_internal (px (), py ());
+					h.parent.set_tie_handle (false);
+				}
+			} else {
+				if (parent.prev != null) {
+					h = ((!)parent.prev).data.get_right_handle ();
+					h.type = PointType.QUADRATIC;
+					h.move_to_coordinate_internal (px (), py ());
+					h.parent.set_tie_handle (false);
+				}
+			}
 		}
 	}
 
 	private void tie_handle () {
-		if (this == parent.get_left_handle ()) {
+		if (is_left_handle ()) {
 			parent.get_right_handle ().angle = angle - PI;
+			parent.get_right_handle ().process_connected_handle ();
 		} else {
 			parent.get_left_handle ().angle = angle - PI;
+			parent.get_left_handle ().process_connected_handle ();
 		}
+		
+		process_connected_handle ();
 	}
 	
 	public void move_delta (double dx, double dy) {

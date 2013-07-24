@@ -186,10 +186,6 @@ public class OverView : FontDisplay {
 		OverViewItem.margin *= 0.9;	
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
-	
-	private bool zoom_value_in_range (int w, int h) {
-		return (25 < w <= allocation.width && 45 < h <= allocation.height);
-	}
 
 	public override void store_current_view () {
 	}

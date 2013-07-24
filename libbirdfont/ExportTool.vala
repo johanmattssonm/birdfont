@@ -490,17 +490,13 @@ os.put_string (
 	public static int spawn_export (File folder, string temp_file) {
 		string[] spawn_args = get_birdfont_export (folder, temp_file);
 		string c = "";
-		
-		try {
-			foreach (string s in spawn_args) {
-				c += s + " ";
-			}
-			
-			print (@"Running: $(c)\n");
-			MainWindow.native_window.spawn (c);
-		} catch (SpawnError e) {
-			warning (e.message);
+
+		foreach (string s in spawn_args) {
+			c += s + " ";
 		}
+		
+		debug (@"Running: $(c)\n");
+		MainWindow.native_window.spawn (c);
 		
 		return 0;
 	}

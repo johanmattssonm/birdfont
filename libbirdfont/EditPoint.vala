@@ -120,7 +120,13 @@ public class EditPoint {
 				ny = y + ((n.y - y) / 4);
 				h.move_to_coordinate (nx, ny);
 			}
-									
+
+			if (h.type == PointType.LINE_QUADRATIC) {
+				nx = x + ((n.x - x) / 2);
+				ny = y + ((n.y - y) / 2);
+				h.move_to_coordinate (nx, ny);
+			}
+												
 			// the other side
 			h = n.get_right_handle ();
 			
@@ -128,12 +134,17 @@ public class EditPoint {
 				nx = n.x + ((x - n.x) / 4);
 				ny = n.y + ((y - n.y) / 4);	
 				h.move_to_coordinate (nx, ny);
-				
 			}
 			
 			if (h.type == PointType.LINE_CUBIC) {
 				nx = n.x + ((x - n.x) / 3);
 				ny = n.y + ((y - n.y) / 3);	
+				h.move_to_coordinate (nx, ny);
+			}
+
+			if (h.type == PointType.LINE_QUADRATIC) {
+				nx = n.x + ((x - n.x) / 2);
+				ny = n.y + ((y - n.y) / 2);	
 				h.move_to_coordinate (nx, ny);
 			}
 		}
@@ -179,6 +190,13 @@ public class EditPoint {
 
 				h.move_to_coordinate (nx, ny);
 			}
+
+			if (h.type == PointType.LINE_QUADRATIC) {
+				nx = n.x + ((x - n.x) / 2);
+				ny = n.y + ((y - n.y) / 2);
+				
+				h.move_to_coordinate (nx, ny);
+			}
 		}
 	}
 	
@@ -193,10 +211,6 @@ public class EditPoint {
 		EditPointHandle prev_rh, next_lh;
 		
 		eh = right_handle;
-		
-		if (left_handle.type == PointType.QUADRATIC) {
-			left_handle.length = 0;
-		}
 		
 		a = left_handle.x () - right_handle.x ();
 		b = left_handle.y () - right_handle.y ();
@@ -215,28 +229,16 @@ public class EditPoint {
 		}
 		
 		if (left_handle.type == PointType.QUADRATIC 
-			|| right_handle.type == PointType.QUADRATIC) {
-				
+			|| right_handle.type == PointType.QUADRATIC
+			|| left_handle.type == PointType.LINE_QUADRATIC
+			|| right_handle.type == PointType.LINE_QUADRATIC) {
+			
 			prev_rh = get_prev ().data.get_right_handle ();
 			next_lh = get_next ().data.get_left_handle ();
-			
-			if (next_lh.type == PointType.QUADRATIC) {
-				next_lh.type = PointType.DOUBLE_CURVE;
-				next_lh.length *= 0.5;
-			}
 
-			left_handle.move_to_coordinate (prev_rh.x (), prev_rh.y ());
-			left_handle.length *= 0.5;
-			
-			if (right_handle.type == PointType.QUADRATIC) {
-				right_handle.length *= 0.5;
-			}
-			
-			prev_rh.length *= 0.5;
-			
-			prev_rh.type = PointType.DOUBLE_CURVE;
-			left_handle.type = PointType.DOUBLE_CURVE;
-			right_handle.type = PointType.DOUBLE_CURVE;
+			prev_rh.type = PointType.QUADRATIC;
+			left_handle.type = PointType.QUADRATIC;
+			right_handle.type = PointType.QUADRATIC;
 		} else if (left_handle.type == PointType.LINE_DOUBLE_CURVE 
 			|| right_handle.type == PointType.LINE_DOUBLE_CURVE) {
 				
@@ -260,6 +262,7 @@ public class EditPoint {
 
 		set_tie_handle (true);
 		eh.move_to_coordinate (right_handle.x (), right_handle.y ());
+		
 	}
 
 	public EditPoint copy () {
