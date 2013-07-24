@@ -605,18 +605,67 @@ public class OverView : FontDisplay {
 	
 	public void scroll_to_char (unichar c) {
 		GlyphRange gr = glyph_range;
-		GlyphRange full = new GlyphRange ();
+		int i, r, index;
+		StringBuilder s = new StringBuilder ();
+		string ch;
+		Font font = BirdFont.get_current_font ();
+		GlyphCollection? glyphs = null;
+		Glyph glyph;
+		
+		index = -1;
 		
 		if (is_modifier_key (c)) {
 			return;
 		}
 		
-		DefaultCharacterSet.use_full_unicode_range (full);
+		s.append_unichar (c);
+		ch = s.str;
+
+		// selected char is visible
+		i = 0;
+		foreach (OverViewItem o in visible_items) {
+			if (o.character == c) {
+				selected = i;
+				return;
+			}
+			i++;
+		}
 		
-		set_glyph_range (full);
-		// DELETE
-		//selected = c;
-		set_glyph_range (gr);
+		// scroll to char
+		if (all_available) {
+			for (r = 0; r < font.length (); r += items_per_row) {
+				for (i = 0; i < items_per_row; i++) {
+					glyphs = font.get_glyph_collection_indice ((uint32) r + i);
+					return_if_fail (glyphs != null);
+					glyph = ((!) glyphs).get_current ();
+					
+					if (glyph.name == ch) {
+						index = i;
+					}
+				}
+				
+				if (index > -1) {
+					break;
+				}
+			}			
+		} else {
+			for (r = 0; r < gr.length (); r += items_per_row) {
+				for (i = 0; i < items_per_row; i++) {
+					if (gr.get_char (r + i) == ch) {
+						index = i;
+					}
+				}
+				
+				if (index > -1) {
+					break;
+				}
+			}
+		}
+		
+		if (index > -1) {
+			first_visible = r;
+			selected = index;
+		}
 	}
 	
 	public override void double_click (uint button, double ex, double ey) {
