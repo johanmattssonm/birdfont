@@ -890,7 +890,7 @@ public class PenTool : Tool {
 		selected_handle = get_closest_handle (event_x, event_y);
 	}
 
-	static void add_selected_point (EditPoint p) {
+	public static void add_selected_point (EditPoint p) {
 		foreach (EditPoint ep in selected_points) {
 			if (p == ep) {
 				return;
@@ -900,7 +900,7 @@ public class PenTool : Tool {
 		selected_points.append (p);
 	}
 	
-	static void remove_all_selected_points () {
+	public static void remove_all_selected_points () {
 		foreach (EditPoint e in selected_points) {
 			e.set_active (false);
 			e.set_selected (false);

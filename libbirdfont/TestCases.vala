@@ -519,14 +519,23 @@ class TestCases {
 
 	public static void test_convert_to_quadratic_bezier_path () {
 		Glyph g;
-		
-		Path p = new Path ();
-		Path p1 = new Path ();
-		
+		Path p, p1;
 		EditPoint e0, e1, e2, e3;
+		List<Path> paths = new List<Path> ();
 		
+		// convert the current path
+		g = MainWindow.get_current_glyph ();
+		
+		foreach (Path path in g.path_list) {
+			paths.append (path.get_quadratic_points ());
+		}
+				
+		// create a new path and convert it
 		Tool.test_open_next_glyph ();
 		
+		p = new Path ();
+		p1 = new Path ();
+				
 		g = MainWindow.get_current_glyph ();
 		
 		p.add (-10, 10);
@@ -560,6 +569,10 @@ class TestCases {
 
 		g.add_path (p1);
 		g.add_path (p1.get_quadratic_points ());
+		
+		foreach (Path path in paths) {
+			g.add_path (path);
+		}
 	}
 
 	public static void test_overview () {

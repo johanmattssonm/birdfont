@@ -204,6 +204,7 @@ public class EditPoint {
 		tie_handles = t;
 	}
 
+	/** This can only be performed if the path has been closed. */
 	public void process_tied_handle () 
 	requires (next != null && prev != null) {
 		double a, b, c, length, angle;
