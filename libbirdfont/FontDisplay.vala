@@ -84,7 +84,7 @@ public abstract class FontDisplay : GLib.Object {
 		return "";
 	}
 	
-	public virtual void draw (Allocation allocation, Context cr) {
+	public virtual void draw (WidgetAllocation allocation, Context cr) {
 	}
 	
 	public virtual void selected_canvas () {

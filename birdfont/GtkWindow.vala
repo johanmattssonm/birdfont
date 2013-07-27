@@ -892,8 +892,9 @@ class ToolboxCanvas : DrawingArea {
 
 public class GlyphCanvasArea : DrawingArea  {
 	GlyphCanvas glyph_canvas;
-	Gtk.Allocation alloc;
-
+	WidgetAllocation alloc = new WidgetAllocation ();
+	WidgetAllocation prev_alloc = new WidgetAllocation ();
+	
 	public GlyphCanvasArea (GlyphCanvas gc) {
 		int event_flags;
 		
@@ -915,23 +916,28 @@ public class GlyphCanvasArea : DrawingArea  {
 			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
-			glyph_canvas.allocation.width = allocation.width;
-			glyph_canvas.allocation.height = allocation.height;
-			glyph_canvas.allocation.y = allocation.x;
-			glyph_canvas.allocation.y = allocation.y;
-				
-			if (unlikely (allocation != alloc && alloc.width != 0)) {
-				BirdFont.current_glyph.resized ();
-			}
+			alloc = new WidgetAllocation ();
+
+			alloc.width = allocation.width;
+			alloc.height = allocation.height;
+			alloc.x = allocation.x;
+			alloc.y = allocation.y;
 			
-			alloc = allocation;
+			glyph_canvas.set_allocation (alloc);
+			BirdFont.current_glyph.resized (alloc);
+				
+			prev_alloc = new WidgetAllocation ();
+			prev_alloc.width = allocation.width;
+			prev_alloc.height = allocation.height;
+			prev_alloc.x = allocation.x;
+			prev_alloc.y = allocation.y;
 			
 			Context cw = cairo_create (get_window());
 			
-			Surface s = new Surface.similar (cw.get_target (), Cairo.Content.COLOR_ALPHA, allocation.width, allocation.height);
+			Surface s = new Surface.similar (cw.get_target (), Cairo.Content.COLOR_ALPHA, alloc.width, alloc.height);
 			Context c = new Context (s); 
 
-			glyph_canvas.current_display.draw (glyph_canvas.allocation, c);
+			glyph_canvas.current_display.draw (alloc, c);
 
 			cw.save ();
 			cw.set_source_surface (c.get_target (), 0, 0);
@@ -1011,8 +1017,9 @@ public class TooltipCanvas : DrawingArea {
 		tooltip_area = ta;
 
 		expose_event.connect ((t, e)=> {
-				Allocation allocation = {0, 0, 0, 0};
+				WidgetAllocation allocation = new WidgetAllocation ();
 				Gtk.Allocation alloc;
+				
 				Context cr = cairo_create (get_window ());
 				
 				get_allocation (out alloc);

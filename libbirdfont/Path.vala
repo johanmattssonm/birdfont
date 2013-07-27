@@ -114,7 +114,7 @@ public class Path {
 		return points.length () == 0;
 	}
 
-	public void draw_outline (Context cr, Allocation allocation, double view_zoom) {
+	public void draw_outline (Context cr, WidgetAllocation allocation, double view_zoom) {
 		unowned List<EditPoint> ep = points;
 		
 		unowned EditPoint? n = null;
@@ -147,7 +147,7 @@ public class Path {
 		cr.stroke ();
 	}
 	
-	public void draw_edit_points (Context cr, Allocation allocation, double view_zoom) {
+	public void draw_edit_points (Context cr, WidgetAllocation allocation, double view_zoom) {
 		unowned List<EditPoint> ep = points;
 		
 		if (is_editable ()) {
@@ -164,7 +164,7 @@ public class Path {
 		}
 	}
 
-	public void fill_path (Context cr, Allocation allocation, double view_zoom) {
+	public void fill_path (Context cr, WidgetAllocation allocation, double view_zoom) {
 		unowned List<EditPoint> ep = points;
 		
 		unowned EditPoint? n = null;
@@ -1487,7 +1487,7 @@ public class Path {
 		a1 = d1;
 	}
 		
-	public void plot (Context cr, Allocation allocation, double view_zoom) {
+	public void plot (Context cr, WidgetAllocation allocation, double view_zoom) {
 			double px = 0, py = 0;
 			double xc = allocation.width / 2.0;
 			double yc = allocation.height / 2.0;

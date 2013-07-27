@@ -123,12 +123,12 @@ public class Line : GLib.Object {
 		}
 	}	
 	
-	public void move_line_to (double x, double y, Allocation allocation) {
+	public void move_line_to (double x, double y, WidgetAllocation allocation) {
 		set_move (true);
 		event_move_to (x, y, allocation);
 	}
 	
-	public bool event_move_to (double x, double y, Allocation allocation) {
+	public bool event_move_to (double x, double y, WidgetAllocation allocation) {
 		double p, c;
 		bool a = false;
 		Glyph g = MainWindow.get_current_glyph ();
@@ -239,7 +239,7 @@ public class Line : GLib.Object {
 		return (get_active ()) ? (10 * ivz) : (5 * ivz);
 	}
 	
-	public void draw (Context cr, Allocation allocation) {
+	public void draw (Context cr, WidgetAllocation allocation) {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		double p, h, w;

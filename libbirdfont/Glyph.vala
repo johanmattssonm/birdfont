@@ -57,7 +57,7 @@ public class Glyph : FontDisplay {
 	public double move_offset_x = 0;
 	public double move_offset_y = 0;
 
-	public Allocation allocation;
+	public static WidgetAllocation allocation = new WidgetAllocation ();
 	
 	public string name;
 
@@ -255,19 +255,19 @@ public class Glyph : FontDisplay {
 		return 1 / MainWindow.get_current_glyph ().view_zoom;
 	}
 
-	public void resized () {
-		double a, b, c, d;
+	public void resized (WidgetAllocation alloc) {
+		double a, b, c, d, e;
+
+		a = Glyph.path_coordinate_x (0);
+		b = Glyph.path_coordinate_y (0);
 		
-		if (view_zoom > 1) {	
-			a = vertical_help_lines.first ().data.get_coordinate ();
-			c = horizontal_help_lines.first ().data.get_coordinate ();
-			
-			b = vertical_help_lines.first ().data.get_coordinate ();
-			d = horizontal_help_lines.first ().data.get_coordinate ();
-		
-			view_offset_x -= a - b;
-			view_offset_y -= c - d;
-		}
+		this.allocation = alloc;
+
+		c = Glyph.path_coordinate_x (0);
+		d = Glyph.path_coordinate_y (0);
+
+		view_offset_x -= c - a;
+		view_offset_y -= b - d;
 	}
 
 	public void set_background_image (GlyphBackgroundImage? b) {
@@ -1392,7 +1392,7 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
-	public override void draw (Allocation allocation, Context cr) {
+	public override void draw (WidgetAllocation allocation, Context cr) {
 		Tool tool;
 		
 		this.allocation = allocation;
@@ -1692,7 +1692,7 @@ public class Glyph : FontDisplay {
 		return false;
 	}
 
-	public void juxtapose (Allocation allocation, Context cr) {
+	public void juxtapose (WidgetAllocation allocation, Context cr) {
 		string glyph_sequence = Preferences.get ("glyph_sequence");
 		unichar c;
 		Font font = BirdFont.get_current_font ();

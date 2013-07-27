@@ -24,11 +24,15 @@ public class GlyphCanvas : GLib.Object {
 
 	public FontDisplay current_display;
 	public signal void signal_redraw_area (int x, int y, int w, int h);
-	public Allocation allocation;
+	public static WidgetAllocation allocation = new WidgetAllocation ();
 	
 	public GlyphCanvas () {
 	}
-	
+
+	public static void set_allocation (WidgetAllocation w) {
+		allocation = w.copy ();
+	}
+
 	public void key_release (uint e) {
 		current_display.key_release (e);
 	}
@@ -42,9 +46,7 @@ public class GlyphCanvas : GLib.Object {
 			Glyph g = (Glyph) fd;
 			
 			BirdFont.current_glyph = g;
-			BirdFont.current_glyph.resized ();
-
-			g.allocation = allocation;
+			BirdFont.current_glyph.resized (allocation);
 			
 			if (g.allocation.width == 0 || g.allocation.height == 0) {
 				warning ("area is zero in glyph canvas");

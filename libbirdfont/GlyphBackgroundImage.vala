@@ -269,7 +269,7 @@ public class GlyphBackgroundImage {
 		img_offset_y = g.get_line ("top").pos;		
 	}
 
-	public void draw (Context cr, Allocation allocation, double view_offset_x, double view_offset_y, double view_zoom) {
+	public void draw (Context cr, WidgetAllocation allocation, double view_offset_x, double view_offset_y, double view_zoom) {
 		double x, y;
 		double iw, ih;
 		int h, w;

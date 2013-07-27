@@ -22,7 +22,7 @@ class BackgroundSelection : FontDisplay {
 	int active_box = -1;
 	ImageSurface add_icon;
 	List <string> background_images = new List <string> ();
-	Allocation allocation;
+	WidgetAllocation allocation;
 	Glyph glyph;
 	
 	public BackgroundSelection () {
@@ -44,7 +44,7 @@ class BackgroundSelection : FontDisplay {
 		return "Backgrounds";
 	}
 
-	public override void draw (Allocation allocation, Context cr) {		
+	public override void draw (WidgetAllocation allocation, Context cr) {		
 		double x, y, zoom;
 		int box_index = 0;
 		Font font;

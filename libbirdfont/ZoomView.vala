@@ -18,9 +18,9 @@ class ZoomView : GLib.Object {
 	public double x;
 	public double y;
 	public double zoom;
-	public Allocation allocation;
+	public WidgetAllocation allocation;
 	
-	public ZoomView (double x, double y, double zoom, Allocation allocation) {
+	public ZoomView (double x, double y, double zoom, WidgetAllocation allocation) {
 		this.x = x;
 		this.y = y;
 		this.zoom = zoom;

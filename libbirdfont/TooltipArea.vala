@@ -93,7 +93,7 @@ public class TooltipArea : GLib.Object {
 		
 	}
 	
-	public void draw (Context cr, Allocation alloc) {
+	public void draw (Context cr, WidgetAllocation alloc) {
 		int w;
 		
 		cr.save ();

@@ -18,7 +18,7 @@ namespace BirdFont {
 
 /** A display with all glyphs present in this font. */
 public class OverView : FontDisplay {
-	public Allocation allocation;
+	public WidgetAllocation allocation = new WidgetAllocation ();
 	
 	int selected = 0;
 	int first_visible = 0;
@@ -288,7 +288,7 @@ public class OverView : FontDisplay {
 		}
 	}
 	
-	public override void draw (Allocation allocation, Context cr) {
+	public override void draw (WidgetAllocation allocation, Context cr) {
 		this.allocation = allocation;
 		
 		update_item_list ();
@@ -314,7 +314,7 @@ public class OverView : FontDisplay {
 		}
 	}
 		
-	void draw_empty_canvas (Allocation allocation, Context cr) {
+	void draw_empty_canvas (WidgetAllocation allocation, Context cr) {
 		cr.save ();
 		cr.set_source_rgba (156/255.0, 156/255.0, 156/255.0, 1);
 		cr.move_to (30, 40);
@@ -777,7 +777,7 @@ public class OverView : FontDisplay {
 		int len = 0;
 		int length = 0;
 		bool see_also = false;
-		Allocation allocation = MainWindow.get_overview ().allocation;
+		WidgetAllocation allocation = MainWindow.get_overview ().allocation;
 		
 		entry = ((!)character_info).get_entry ();
 		

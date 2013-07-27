@@ -14,11 +14,20 @@
 
 namespace BirdFont {
 
-public struct Allocation {
-	public int width;
-	public int height;
-	public int x;
-	public int y;
+public class WidgetAllocation : GLib.Object {
+	public int width = 0;
+	public int height = 0;
+	public int x = 0;
+	public int y = 0;
+	
+	public WidgetAllocation copy () {
+		WidgetAllocation w = new WidgetAllocation ();
+		w.x = x;
+		w.y = y;
+		w.width = width;
+		w.height = height;
+		return w;
+	}
 }
 
 }

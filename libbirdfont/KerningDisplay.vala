@@ -38,7 +38,7 @@ public class KerningDisplay : FontDisplay {
 		return "Kerning";
 	}
 	
-	public override void draw (Allocation allocation, Context cr) {
+	public override void draw (WidgetAllocation allocation, Context cr) {
 		Glyph glyph;
 		double x, y, w, kern, alpha;
 		double x2;
