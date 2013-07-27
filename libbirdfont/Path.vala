@@ -60,7 +60,7 @@ public class Path {
 	private static ImageSurface? cubic_active_selected_edit_point_image = null;
 	
 	Path quadratic_path; // quadratic points for TrueType export
-	List<EditPoint> new_quadratic_points = new List<EditPoint> ();
+	List<EditPoint> new_quadratic_points;
 	
 	public static double line_color_r = 0;
 	public static double line_color_g = 0;
@@ -76,6 +76,7 @@ public class Path {
 	
 	public Path () {
 		string width;
+		new_quadratic_points = new List<EditPoint> ();
 		
 		if (edit_point_image == null) {
 			edit_point_image = Icons.get_icon ("edit_point.png");
@@ -1019,11 +1020,11 @@ public class Path {
 		while (new_quadratic_points.length () > 0) {
 			new_quadratic_points.remove_link (new_quadratic_points.first ());
 		}
-		
+
 		if (points.length () < 2) {
 			return quadratic_path;
 		}
-				
+
 		i = points.first ();
 		next = i.next;
 
@@ -1038,19 +1039,21 @@ public class Path {
 			i = i.next;
 			next = i.next;
 		}
-
-		if (!is_open ()) {
-			if (i.data.get_right_handle ().type == PointType.CUBIC 
-				|| next.data.get_left_handle ().type == PointType.CUBIC) {
-				add_quadratic_points (points.last ().data, points.first ().data);
-			} else {
-				quadratic_path.add_point (points.last ().data.copy ());
-			}			
+		
+		if (points.last ().data.get_right_handle ().type == PointType.CUBIC 
+			||  points.first ().data.get_left_handle ().type == PointType.CUBIC) {
+			add_quadratic_points (points.last ().data, points.first ().data);
+		} else {
+			quadratic_path.add_point (points.last ().data.copy ());
 		}
 		
 		quadratic_path.close ();
 		quadratic_path.create_list ();
 		process_quadratic_handles ();
+		
+		quadratic_path.close ();
+		quadratic_path.create_list ();
+		process_cubic_handles ();
 		
 		return quadratic_path;
 	}
@@ -1065,11 +1068,15 @@ public class Path {
 		}
 
 		steps = (int) get_length_from (start, stop);
-
+		
 		// create quadratic paths
 		all_of (start, stop, (x, y, step) => {
 			double prev_step = 0;
 			EditPoint e =  new EditPoint ();
+			
+			if (step == 1) {
+				return true;
+			}
 			
 			e = new EditPoint (x, y, PointType.QUADRATIC);
 			added_points++;
@@ -1091,15 +1098,49 @@ public class Path {
 		
 		quadratic_path.close ();
 	}
+
+	void process_cubic_handles () 
+		requires (quadratic_path.points.length () > 0) {	
+		
+		EditPoint prev = quadratic_path.points.last ().data;
+		quadratic_path.close ();
+		foreach (EditPoint ep in quadratic_path.points) {
+			if (ep.type == PointType.CUBIC) {
+				convert_remaining_cubic (ep, prev);
+			} 
+
+			if (ep.type == PointType.LINE_CUBIC) {
+				convert_remaining_cubic (ep, prev);
+			}
+			
+			prev = ep;
+		}
+	}
+	
+	void convert_remaining_cubic (EditPoint ep, EditPoint prev) {
+		double x, y;
+		
+		ep.set_tie_handle (true);
+		
+		if (ep.next != null) {
+			((!) ep.next).data.set_tie_handle (false);
+		}
+
+		prev.get_left_handle ().type = PointType.QUADRATIC;
+		prev.get_right_handle ().type = PointType.QUADRATIC;
+		prev.get_right_handle ().move_delta (0.000001, 0.000001);
+		
+		x = prev.get_right_handle ().x ();
+		y = prev.get_right_handle ().y ();
+		
+		ep.get_left_handle ().move_to_coordinate (ep.x - (ep.x - prev.x) / 2, 
+			ep.y - (ep.y - prev.y) / 2);		
+	}
 	
 	void process_quadratic_handles () {
 		
 		for (int t = 0; t < 2; t++) {
-			foreach (EditPoint ep in new_quadratic_points) {
-				if (!is_null (ep.next) && ((!)ep.next).data.type == PointType.CUBIC) {
-					((!)ep.next).data.get_left_handle ().move_to_coordinate (ep.get_right_handle ().x (), ep.get_right_handle ().y ());
-				}
-				
+			foreach (EditPoint ep in new_quadratic_points) {	
 				if (!is_null (ep.next) && !is_null (ep.next) 
 					&& ((!)ep.next).data.type != PointType.CUBIC
 					&& ((!)ep.next).data.type != PointType.LINE_CUBIC

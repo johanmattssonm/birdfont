@@ -146,7 +146,7 @@ public class EditPointHandle  {
 		}
 	}
 	
-	void process_connected_handle () {
+	public void process_connected_handle () {
 		EditPointHandle h;
 		
 		if (type == PointType.QUADRATIC) {
@@ -168,7 +168,7 @@ public class EditPointHandle  {
 		}
 	}
 
-	private void tie_handle () {
+	public void tie_handle () {
 		if (is_left_handle ()) {
 			parent.get_right_handle ().angle = angle - PI;
 			parent.get_right_handle ().process_connected_handle ();

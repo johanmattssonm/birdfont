@@ -319,6 +319,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 	public void spawn (string command) {
 		try {
+			print (command);
+			print ("\n");
 			Process.spawn_command_line_async (command);
 		} catch (GLib.Error e) {
 			warning (@"Command failed: $command");
