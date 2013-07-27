@@ -1070,9 +1070,7 @@ public class Glyph : FontDisplay {
 		return open;
 	}
 	
-	/** Close all editable paths and return false if no path have boon closed. 
-	 * Paths without area (points and lines) will be deleted.
-	 */
+	/** Close all editable paths and return false if no path have been closed. */
 	public bool close_path () {
 		bool r = false;
 		

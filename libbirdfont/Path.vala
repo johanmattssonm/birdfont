@@ -1024,7 +1024,7 @@ public class Path {
 		if (points.length () < 2) {
 			return quadratic_path;
 		}
-
+		
 		i = points.first ();
 		next = i.next;
 
@@ -1047,6 +1047,8 @@ public class Path {
 			quadratic_path.add_point (points.last ().data.copy ());
 		}
 		
+		quadratic_path.add_hidden_double_points ();
+
 		quadratic_path.close ();
 		quadratic_path.create_list ();
 		process_quadratic_handles ();
@@ -1055,7 +1057,7 @@ public class Path {
 		quadratic_path.create_list ();
 		process_cubic_handles ();
 		
-		quadratic_path.add_hidden_double_points ();
+		quadratic_path.close ();
 		
 		return quadratic_path;
 	}
@@ -1069,7 +1071,7 @@ public class Path {
 			return;
 		}
 
-		steps = (int) get_length_from (start, stop);
+		steps = (int) (0.6 * get_length_from (start, stop));
 		
 		// create quadratic paths
 		all_of (start, stop, (x, y, step) => {

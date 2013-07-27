@@ -40,7 +40,7 @@ class HeadTable : Table {
 	uint64 created;
 	uint64 modified;
 		
-	uint16 units_per_em = 2048;
+	uint16 units_per_em = 4096;
 	
 	const uint8 BASELINE_AT_ZERO = 1 << 0;
 	const uint8 LSB_AT_ZERO = 1 << 1;

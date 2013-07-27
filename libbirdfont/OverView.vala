@@ -214,6 +214,16 @@ public class OverView : FontDisplay {
  		return visible_items.nth (selected).data;
 	}
 	
+	int get_items_per_row () {
+		int i = 1;
+		double l = OverViewItem.full_width ();
+		while (l < allocation.width) {
+			l += OverViewItem.full_width ();
+			i++;
+		}
+		return i - 1;
+	}
+		
 	void update_item_list () {
 		string character_string;
 		Font f = BirdFont.get_current_font ();
@@ -224,8 +234,9 @@ public class OverView : FontDisplay {
 		unichar character;
 		Glyph glyph;
 
-		items_per_row = (int) (allocation.width / OverViewItem.full_width ());
-		rows = (int) (allocation.height /  OverViewItem.full_height ());
+		OverViewItem.margin = OverViewItem.width * 0.1;
+		items_per_row = get_items_per_row ();
+		rows = (int) (allocation.height /  OverViewItem.full_height ()) + 2;
 		
 		while (visible_items.length () > 0) {
 			visible_items.remove_link (visible_items.first ());
@@ -285,6 +296,7 @@ public class OverView : FontDisplay {
 		
 		foreach (OverViewItem i in visible_items) {
 			i.y += view_offset_y;
+			i.x += view_offset_x;
 		}
 	}
 	
