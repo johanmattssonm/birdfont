@@ -1055,6 +1055,8 @@ public class Path {
 		quadratic_path.create_list ();
 		process_cubic_handles ();
 		
+		quadratic_path.add_hidden_double_points ();
+		
 		return quadratic_path;
 	}
 	
@@ -1137,8 +1139,7 @@ public class Path {
 			ep.y - (ep.y - prev.y) / 2);		
 	}
 	
-	void process_quadratic_handles () {
-		
+	void process_quadratic_handles () {	
 		for (int t = 0; t < 2; t++) {
 			foreach (EditPoint ep in new_quadratic_points) {	
 				if (!is_null (ep.next) && !is_null (ep.next) 

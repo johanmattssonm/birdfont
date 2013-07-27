@@ -57,7 +57,7 @@ public class Glyph : FontDisplay {
 	public double move_offset_x = 0;
 	public double move_offset_y = 0;
 
-	public static WidgetAllocation allocation = new WidgetAllocation ();
+	public WidgetAllocation allocation = new WidgetAllocation ();
 	
 	public string name;
 
@@ -256,7 +256,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public void resized (WidgetAllocation alloc) {
-		double a, b, c, d, e;
+		double a, b, c, d;
 
 		a = Glyph.path_coordinate_x (0);
 		b = Glyph.path_coordinate_y (0);
