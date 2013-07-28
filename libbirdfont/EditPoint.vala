@@ -69,6 +69,15 @@ public class EditPoint {
 		}
 	}
 
+	public bool equals (EditPoint e) {
+		return e.x == x 
+			&& e.y == y 
+			&& get_right_handle ().x () == e.get_right_handle ().x ()
+			&& get_right_handle ().y () == e.get_right_handle ().y ()
+			&& get_left_handle ().x () == e.get_left_handle ().x ()
+			&& get_left_handle ().y () == e.get_left_handle ().y ();
+	}
+
 	/** Flip handles if next point on path is in the other direction. 
 	 *  Used to recalculate handles after new point is inserted on a path.
 	 */

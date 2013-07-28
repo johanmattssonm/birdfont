@@ -247,6 +247,10 @@ class MoveTool : Tool {
 			h = selected_path.ymax - selected_path.ymin;
 			w = selected_path.xmax - selected_path.xmin;
 			
+			if (selected_path.points.length () == 0) {
+				continue;
+			}
+			
 			if (h * ratio < 1 || w * ratio < 1) {
 				return false;
 			}

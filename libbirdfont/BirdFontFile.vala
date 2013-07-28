@@ -643,27 +643,27 @@ class BirdFontFile {
 	
 	private void parse_font_boundries (Xml.Node* node) {
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "top_limit" && "" == iter->children->content) {
+			if (iter->name == "top_limit" && "" != iter->children->content) {
 				font.top_limit = parse_double_from_node (iter);
 			}
 			
-			if (iter->name == "top_position" && "" == iter->children->content) {
+			if (iter->name == "top_position" && "" != iter->children->content) {
 				font.top_position = parse_double_from_node (iter);
 			}
 			
-			if (iter->name == "x-height" && "" == iter->children->content) {
+			if (iter->name == "x-height" && "" != iter->children->content) {
 				font.xheight_position = parse_double_from_node (iter);
 			}
 			
-			if (iter->name == "base_line" && "" == iter->children->content) {
+			if (iter->name == "base_line" && "" != iter->children->content) {
 				font.base_line = parse_double_from_node (iter);
 			}
 			
-			if (iter->name == "bottom_position" && "" == iter->children->content) {
+			if (iter->name == "bottom_position" && "" != iter->children->content) {
 				font.bottom_position = parse_double_from_node (iter);
 			}
 			
-			if (iter->name == "bottom_limit" && "" == iter->children->content) {
+			if (iter->name == "bottom_limit" && "" != iter->children->content) {
 				font.bottom_limit = parse_double_from_node (iter);
 			}
 		}			

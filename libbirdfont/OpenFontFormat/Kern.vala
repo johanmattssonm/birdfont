@@ -177,7 +177,7 @@ class KernTable : Table {
 					warning ("right glyph not found in kerning table");
 				}
 				
-				kern = new Kern (gid_left, (uint16)gid_right, (int16) (k.val * UNITS));
+				kern = new Kern (gid_left, (uint16)gid_right, (int16) (k.val * HeadTable.UNITS));
 				
 				fd.add_ushort (kern.left);
 				fd.add_ushort (kern.right);

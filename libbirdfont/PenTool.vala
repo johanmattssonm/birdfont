@@ -307,37 +307,51 @@ public class PenTool : Tool {
 	}
 	
 	bool is_new_point_from_path_selected () {
-		// TODO:
 		return false;
+	}
+	
+	public void remove_from_selected (EditPoint ep) 
+		requires (selected_points.length () > 0) {
+		for (unowned List<EditPoint> e = selected_points.first (); !is_null (e.next); e = e.next) {
+			if (ep.equals (e.data)) {
+				ep.set_selected (false);
+				selected_points.remove_link (e);
+				return;
+			}
+		}
 	}
 	
 	public void select_active_point (double x, double y) {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
-		
-		if (KeyBindings.modifier != SHIFT) {
-			if (active_edit_point != null) {
-				((!)active_edit_point).set_active (false);
-			}
-
-			remove_all_selected_points ();
-		}
+		bool new_selection;
 		
 		move_selected = true;
 		move_point_on_path = true;
-
+		
 		if (active_edit_point != null) {
-			((!)active_edit_point).set_selected (true);
-			selected_point = (!)active_edit_point;
+			if (KeyBindings.modifier == SHIFT) {
+				if (((!)active_edit_point).is_selected ()) {
+					((!)active_edit_point).set_selected (false);
+					remove_from_selected ((!)active_edit_point);
+				} else {
+					((!)active_edit_point).set_selected (true);
+					selected_point = (!)active_edit_point;
+					add_selected_point (selected_point);
+				}
+			} else {
+				if (!((!)active_edit_point).is_selected ()) {
+					remove_all_selected_points ();
+					((!)active_edit_point).set_selected (true);
+					selected_point = (!)active_edit_point;
+					add_selected_point (selected_point);
+				}
+			}
 		}
-
-		if (!is_over_handle (x, y)) {
-			edit_active_corner = true;
-			set_default_handle_positions ();
-			
-			if (active_edit_point != null) {
-				last_selected_is_handle = false;
-				add_selected_point ((!) active_edit_point);
+		
+		if (active_edit_point == null) {
+			if (KeyBindings.modifier != SHIFT) {
+				remove_all_selected_points ();
 			}
 		}
 		

@@ -14,8 +14,6 @@
 
 namespace BirdFont {
 
-const double UNITS = 10;
-
 class OpenFontFormatWriter : Object  {
 
 	DataOutputStream os;

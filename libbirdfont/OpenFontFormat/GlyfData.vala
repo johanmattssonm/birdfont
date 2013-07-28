@@ -51,6 +51,8 @@ class GlyfData : GLib.Object {
 	public int16 bounding_box_xmax = 0;
 	public int16 bounding_box_ymax = 0;
 	
+	private static double UNITS = HeadTable.UNITS;
+	
 	public GlyfData (Glyph g) {	
 		glyph = g;
 		

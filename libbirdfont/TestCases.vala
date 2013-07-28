@@ -528,6 +528,7 @@ class TestCases {
 		
 		foreach (Path path in g.path_list) {
 			paths.append (path.get_quadratic_points ());
+			paths.append (path.copy ());
 		}
 				
 		// create a new path and convert it

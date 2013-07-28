@@ -105,9 +105,9 @@ class HmtxTable : Table {
 		// advance and lsb
 		foreach (Glyph g in glyf_table.glyphs) {
 			g.boundries (out xmin, out ymin, out xmax, out ymax);
-			lsb = (int16) (-1 * (g.left_limit - xmin) * UNITS);
-			advance = (int16) ((g.right_limit - g.left_limit) * UNITS);
-			extent = (int16) (lsb + (xmax - xmin) * UNITS);
+			lsb = (int16) (-1 * (g.left_limit - xmin) * HeadTable.UNITS);
+			advance = (int16) ((g.right_limit - g.left_limit) * HeadTable.UNITS);
+			extent = (int16) (lsb + (xmax - xmin) * HeadTable.UNITS);
 			rsb = (int16) (advance - extent);
 						
 			fd.add_u16 (advance);
