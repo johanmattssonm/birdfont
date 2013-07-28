@@ -19,7 +19,7 @@ namespace BirdFont {
 
 public class PenTool : Tool {
 
-	private static const double CONTACT_SURFACE = 50;
+	private static const double CONTACT_SURFACE = 20;
 
 	public static bool move_selected = false;
 	public static bool begin_new_point_on_path = false;
@@ -290,7 +290,6 @@ public class PenTool : Tool {
 		// add new point
 		if (button == 3 || (KeyBindings.modifier & LOGO) > 0) {
 			remove_all_selected_points ();
-			
 			new_point_action (x, y);
 			glyph.store_undo_state ();
 			return;
@@ -334,6 +333,7 @@ public class PenTool : Tool {
 				if (((!)active_edit_point).is_selected ()) {
 					((!)active_edit_point).set_selected (false);
 					remove_from_selected ((!)active_edit_point);
+					selected_point = new EditPoint ();
 				} else {
 					((!)active_edit_point).set_selected (true);
 					selected_point = (!)active_edit_point;
@@ -459,6 +459,7 @@ public class PenTool : Tool {
 		}
 	}
 	
+	/** Merge paths if ends are close. */
 	private static bool is_close_to_point (EditPoint ep, double x, double y) {
 		double px, py, distance;
 		
