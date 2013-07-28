@@ -40,7 +40,8 @@ class HeadTable : Table {
 	uint64 created;
 	uint64 modified;
 		
-	uint16 units_per_em = 4096;
+	public static uint16 units_per_em = 4096;
+	public static double UNITS = 10 * (units_per_em / 1000);
 	
 	const uint8 BASELINE_AT_ZERO = 1 << 0;
 	const uint8 LSB_AT_ZERO = 1 << 1;
@@ -162,7 +163,7 @@ class HeadTable : Table {
 		//font_data.add_u16 (BASELINE_AT_ZERO | LSB_AT_ZERO);
 		font_data.add_u16 (0); // flags
 		
-		font_data.add_u16 (1000); // units per em (should be a power of two for ttf fonts)
+		font_data.add_u16 (units_per_em); // units per em (should be a power of two for ttf fonts)
 		
 		font_data.add_64 (0); // creation time since 1904-01-01
 		font_data.add_64 (0); // modified time since 1904-01-01

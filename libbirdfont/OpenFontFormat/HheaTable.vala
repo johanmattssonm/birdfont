@@ -87,8 +87,8 @@ class HheaTable : Table {
 		
 		fd.add_fixed (version); // table version
 		
-		fd.add_16 ((int16) (-1 * (font.top_position - font.base_line) * UNITS)); // Ascender
-		fd.add_16 ((int16) (-1 * font.bottom_position * UNITS)); // Descender
+		fd.add_16 ((int16) (-1 * (font.top_position - font.base_line) * HeadTable.UNITS)); // Ascender
+		fd.add_16 ((int16) (-1 * font.bottom_position * HeadTable.UNITS)); // Descender
 		fd.add_16 (0); // LineGap
 				
 		fd.add_u16 (hmtx_table.max_advance); // maximum advance width value in 'hmtx' table.
