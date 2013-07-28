@@ -1,3 +1,4 @@
+
 /*
     Copyright (C) 2012 Johan Mattsson
 
@@ -93,7 +94,7 @@ public class DescriptionTab : FontDisplay {
 			<h3>""" + _("Style") + " (Regular/Bold/Italic)" + """</h3>
 			<input class="text" type="text" id="subfamily" value=""" + "\"" + font.subfamily + "\"" + """ onchange="update_name_fields ();"/><br />
 
-			<h3>""" + _("Full name (name & style)") + """</h3>
+			<h3>""" + _("Full name (name and style)") + """</h3>
 			<input class="text" type="text" id="full_name" value=""" + "\"" + font.full_name + "\"" + """ onchange="update_name_fields ();"/><br />
 
 			<h3>""" + _("Unique identifier") + """</h3>
@@ -136,7 +137,7 @@ c.append (
 	_("Postscript name");
 	_("Name");
 	_("Style");
-	_("Full name (name & style)");
+	_("Full name (name and style)");
 	_("Unique identifier");
 	_("Version");
 	_("Description");
