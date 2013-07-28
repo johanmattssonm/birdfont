@@ -1071,7 +1071,7 @@ public class Path {
 			return;
 		}
 
-		steps = (int) (0.6 * get_length_from (start, stop));
+		steps = (int) (0.8 * get_length_from (start, stop));
 		
 		// create quadratic paths
 		all_of (start, stop, (x, y, step) => {
