@@ -63,7 +63,8 @@ public class Argument : GLib.Object {
 				a == "--test" || 
 				a == "--fatal-warning" || 
 				a == "--show-coordinates" || 
-				a == "--mac") {
+				a == "--mac" ||
+				a == "--donated") {
 				prev = a;
 				i++;
 				continue;
