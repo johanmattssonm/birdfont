@@ -340,13 +340,13 @@ public class PenTool : Tool {
 					add_selected_point (selected_point);
 				}
 			} else {
+				selected_point = (!)active_edit_point;
+				
 				if (!((!)active_edit_point).is_selected ()) {
 					remove_all_selected_points ();
 					((!)active_edit_point).set_selected (true);
-					add_selected_point (selected_point);
+					add_selected_point (((!)active_edit_point));
 				}
-				
-				selected_point = (!)active_edit_point;
 			}
 		}
 		
