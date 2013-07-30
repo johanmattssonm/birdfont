@@ -33,10 +33,10 @@ public class SearchPaths {
 		f = get_file (BirdFont.exec_path + "\\", name + "\\");
 		if (likely (f.query_exists ())) return f;
 		
-		f = get_file (BirdFont.exec_path + "/Contents/Resources/", d + "/" + name);
+		f = get_file (BirdFont.bundle_path + "/Contents/Resources/", d + "/" + name);
 		if (likely (f.query_exists ())) return f;
-
-		f = get_file (BirdFont.exec_path + "/Contents/Resources/", name + "/");
+		
+		f = get_file (BirdFont.bundle_path + "/Contents/Resources/", name + "/");
 		if (likely (f.query_exists ())) return f;
 		
 		f = get_file ("./" + d + "/", name);

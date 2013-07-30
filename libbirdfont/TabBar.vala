@@ -504,6 +504,15 @@ public class TabBar : GLib.Object {
 		double offset = 19;
 		int i = 0;
 		
+		return_if_fail (tab3_right != null);
+		return_if_fail (tab2_right != null);
+		return_if_fail (tab1_right != null);
+		return_if_fail (tab3_left != null);
+		return_if_fail (tab3_right != null);
+		return_if_fail (tab2_left != null);
+		return_if_fail (tab1_left != null);
+		return_if_fail (tab1_right != null);
+		
 		foreach (Tab t in tabs) {
 			
 			if (i < first_tab) {

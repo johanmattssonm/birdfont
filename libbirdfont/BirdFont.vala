@@ -181,6 +181,7 @@ public class BirdFont {
 	public static bool win32 = false;
 	public static bool mac = false;
 	public static string exec_path = "";
+	public static string bundle_path = "";
 
 	public static Font current_font;
 	public static Glyph current_glyph;
@@ -269,6 +270,10 @@ public class BirdFont {
 		DefaultCharacterSet.create_default_character_sets ();
 		DefaultCharacterSet.get_glyphs_for_prefered_language ();
 
+	}
+
+	public static void set_bundle_path (string path) {
+		bundle_path = path;	
 	}
 
 	static void init_gettext () {
