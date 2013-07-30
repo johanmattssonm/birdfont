@@ -40,7 +40,8 @@ class HeadTable : Table {
 	uint64 created;
 	uint64 modified;
 		
-	public static uint16 units_per_em = 4096;
+	// public static uint16 units_per_em = 4096; FIXME: windows testing
+	public static uint16 units_per_em = 1000;
 	public static double UNITS = 10 * (units_per_em / 1000);
 	
 	const uint8 BASELINE_AT_ZERO = 1 << 0;
@@ -178,7 +179,7 @@ class HeadTable : Table {
 		printd (@"ymin: $ymin\n");
 		printd (@"xmax: $xmax\n");
 		printd (@"ymax: $ymax\n");
-
+		
 		font_data.add_short (xmin);
 		font_data.add_short (ymin);
 		font_data.add_short (xmax);

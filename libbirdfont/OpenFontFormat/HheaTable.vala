@@ -81,14 +81,18 @@ class HheaTable : Table {
 	}
 	
 	public void process () throws GLib.Error {
+		int16 ascender, descender;
 		Font font = OpenFontFormatWriter.get_current_font ();
 		FontData fd = new FontData ();
 		Fixed version = 1 << 16;
 		
 		fd.add_fixed (version); // table version
 		
-		fd.add_16 ((int16) (-1 * (font.top_position - font.base_line) * HeadTable.UNITS)); // Ascender
-		fd.add_16 ((int16) (-1 * font.bottom_position * HeadTable.UNITS)); // Descender
+		ascender = glyf_table.ymax;
+		descender = glyf_table.ymin; // FIXME: look up, should it be -descender?
+		
+		fd.add_16 (ascender); // Ascender
+		fd.add_16 (descender); // Descender
 		fd.add_16 (0); // LineGap
 				
 		fd.add_u16 (hmtx_table.max_advance); // maximum advance width value in 'hmtx' table.
