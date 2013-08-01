@@ -323,7 +323,14 @@ public class PenTool : Tool {
 	public void select_active_point (double x, double y) {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
-		bool new_selection;
+
+		control_point_event (x, y);
+		
+		if (active_edit_point == null) {
+			if (KeyBindings.modifier != SHIFT) {
+				remove_all_selected_points ();
+			}
+		}
 		
 		move_selected = true;
 		move_point_on_path = true;
@@ -345,14 +352,9 @@ public class PenTool : Tool {
 				if (!((!)active_edit_point).is_selected ()) {
 					remove_all_selected_points ();
 					((!)active_edit_point).set_selected (true);
-					add_selected_point (((!)active_edit_point));
+					selected_point = (!)active_edit_point;
+					add_selected_point (selected_point);
 				}
-			}
-		}
-		
-		if (active_edit_point == null) {
-			if (KeyBindings.modifier != SHIFT) {
-				remove_all_selected_points ();
 			}
 		}
 		
@@ -734,6 +736,7 @@ public class PenTool : Tool {
 		
 		add_selected_point (new_point);
 		selected_point = new_point;
+		add_selected_point (selected_point);
 		
 		move_selected = true;
 		
@@ -917,12 +920,19 @@ public class PenTool : Tool {
 	}
 	
 	public static void remove_all_selected_points () {
+		selected_point.set_selected (false);
+		selected_point.set_active (false);
+		selected_point = new EditPoint ();
+		
 		foreach (EditPoint e in selected_points) {
 			e.set_active (false);
 			e.set_selected (false);
 		}
 			
 		while (selected_points.length () > 0) {
+			EditPoint ep = selected_points.first ().data;
+			ep.set_active (false);
+			ep.set_selected (false);
 			selected_points.remove_link (selected_points.first ());
 		}
 	}

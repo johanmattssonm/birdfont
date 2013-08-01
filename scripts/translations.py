@@ -22,7 +22,9 @@ from run import run
 def compile_translations ():
     for f_name in glob.glob('po/*.po'):
         lang = f_name.replace ("po/", "").replace (".po", "")
+        lang = lang.replace ("\\", "/")
         build_path = "build/locale/" + lang + "/LC_MESSAGES/"
         target = build_path + "birdfont.mo"
         run ("mkdir -p " + build_path);
+        f_name = f_name.replace ("\\", "/")
         run ("msgfmt --output=%s %s" % (target, f_name));	
