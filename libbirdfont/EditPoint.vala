@@ -341,6 +341,11 @@ public class EditPoint {
 			x = 0;
 			y = 0;
 		}
+		
+		if (type == PointType.QUADRATIC) {
+			right_handle.process_connected_handle ();
+			left_handle.process_connected_handle ();
+		}
 	}
 	
 	public static void to_coordinate (ref double x, ref double y) {
