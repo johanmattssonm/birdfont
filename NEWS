@@ -1,5 +1,11 @@
 birdfont (0.24) stable;
 
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Aug  1 23:08:20 CEST 2013
+
+birdfont (0.24) stable;
+
   * New overview tab
   * Two control point handles for quadratic paths
   * Better conversion from SVG to TTF
