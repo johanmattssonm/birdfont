@@ -335,16 +335,22 @@ public class EditPoint {
 	public void set_position (double tx, double ty) {
 		x = tx;
 		y = ty;
-
+		
 		if (unlikely (tx.is_nan () || ty.is_nan ())) {
 			warning (@"Invalid point at ($tx,$ty).");
 			x = 0;
 			y = 0;
 		}
 		
-		if (type == PointType.QUADRATIC) {
-			right_handle.process_connected_handle ();
-			left_handle.process_connected_handle ();
+		// move connected quadratic handle
+		if (left_handle.type == PointType.QUADRATIC || right_handle.type == PointType.QUADRATIC) {
+			if (next != null) {
+				((!)next).data.left_handle.move_to_coordinate_internal (right_handle.x (), right_handle.y ());
+			}
+
+			if (prev != null && !((!)prev).data.is_selected ()) {
+				((!)prev).data.right_handle.move_to_coordinate (left_handle.x (), left_handle.y ());
+			}
 		}
 	}
 	

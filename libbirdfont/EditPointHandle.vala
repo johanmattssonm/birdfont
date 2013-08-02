@@ -122,7 +122,7 @@ public class EditPointHandle  {
 		process_connected_handle ();
 	}
 		
-	private void move_to_coordinate_internal (double x, double y) {
+	public void move_to_coordinate_internal (double x, double y) {
 		double a, b, c;
 
 		a = parent.x - x;
