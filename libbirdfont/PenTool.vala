@@ -78,14 +78,17 @@ public class PenTool : Tool {
 		press_action.connect ((self, b, x, y) => {
 			first_move_action = true;
 			
+			last_point_x = x;
+			last_point_y = y;
+
+			press (b, x, y, false);
+			
 			if (GridTool.is_visible ()) {
 				tie_pixels (ref x, ref y);
 			}
 			
 			last_point_x = x;
 			last_point_y = y;
-
-			press (b, x, y, false);
 		});
 		
 		double_click_action.connect ((self, b, x, y) => {
@@ -165,9 +168,11 @@ public class PenTool : Tool {
 		double px = 0;
 		double py = 0;
 	
-		control_point_event (x, y);
-		curve_active_corner_event (x, y);
-		set_default_handle_positions ();
+		// DELETE if (!move_selected_handle) {
+			control_point_event (x, y);
+			curve_active_corner_event (x, y);
+			set_default_handle_positions (); // FIXME
+		//}
 
 		// show new point on path
 		if (glyph.new_point_on_path != null) {
@@ -187,7 +192,7 @@ public class PenTool : Tool {
 			if (selected_handle.type == PointType.LINE_DOUBLE_CURVE) {
 				selected_handle.set_point_type (PointType.DOUBLE_CURVE);
 			}
-							
+				
 			if (GridTool.is_visible ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
@@ -329,6 +334,7 @@ public class PenTool : Tool {
 		if (active_edit_point == null) {
 			if (KeyBindings.modifier != SHIFT) {
 				remove_all_selected_points ();
+				return;
 			}
 		}
 		
@@ -834,7 +840,7 @@ public class PenTool : Tool {
 		double d_point = g.view_zoom * get_distance_to_closest_edit_point (event_x, event_y);
 		
 		double dl, dr;
-	
+						
 		foreach (EditPoint selected_corner in selected_points) {
 			dl = g.view_zoom * selected_corner.get_left_handle ().get_point ().get_distance (x, y);
 			dr = g.view_zoom * selected_corner.get_right_handle ().get_point ().get_distance (x, y);
@@ -1095,6 +1101,89 @@ public class PenTool : Tool {
 		
 		// TODO: redraw only the relevant parts
 		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+	}
+	
+	public static void convert_point_to_line (EditPoint ep, bool both) {
+		ep.set_tie_handle (false);
+		ep.set_reflective_handles (false);
+		
+		if (ep.type == PointType.CUBIC || ep.type == PointType.LINE_CUBIC) {
+			ep.type = PointType.LINE_CUBIC;
+			
+			if (both) {
+				ep.get_left_handle ().type = PointType.LINE_CUBIC;
+				ep.get_right_handle ().type = PointType.LINE_CUBIC;
+			}
+			
+			if (ep.next != null && ep.get_next ().data.is_selected ()) {
+				ep.get_right_handle ().type = PointType.LINE_CUBIC;
+			}
+
+			if (ep.prev != null && ep.get_prev ().data.is_selected ()) {
+				ep.get_left_handle ().type = PointType.LINE_CUBIC;
+			}
+						
+		}
+
+		if (ep.type == PointType.DOUBLE_CURVE| ep.type == PointType.LINE_DOUBLE_CURVE) {
+			ep.type = PointType.LINE_DOUBLE_CURVE;
+			if (both) {
+				ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
+				ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
+			}
+
+			if (ep.next != null && ep.get_next ().data.is_selected ()) {
+				ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
+			}
+
+			if (ep.prev != null && ep.get_prev ().data.is_selected ()) {
+				ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
+			}
+		}
+
+		if (ep.type == PointType.QUADRATIC || ep.type == PointType.LINE_QUADRATIC) {
+			ep.type = PointType.LINE_QUADRATIC;
+			
+			if (both) {
+				ep.get_left_handle ().type = PointType.LINE_QUADRATIC;
+				ep.get_right_handle ().type = PointType.LINE_QUADRATIC;
+				
+				if (ep.next != null) {
+					ep.get_next ().data.get_left_handle ().type = PointType.LINE_QUADRATIC;		
+				}
+				
+				if (ep.prev != null) {
+					ep.get_prev ().data.get_right_handle ().type = PointType.LINE_QUADRATIC;		
+				}
+			}
+			
+			if (ep.next != null && ep.get_next ().data.is_selected ()) {
+				ep.get_right_handle ().type = PointType.LINE_QUADRATIC;
+				ep.get_next ().data.get_left_handle ().type = PointType.LINE_QUADRATIC;
+			}
+
+			if (ep.prev != null && ep.get_prev ().data.is_selected ()) {
+				ep.get_left_handle ().type = PointType.LINE_QUADRATIC;
+				ep.get_prev ().data.get_right_handle ().type = PointType.LINE_QUADRATIC;
+			}		
+			
+		}
+						
+		ep.recalculate_linear_handles ();
+	}
+	
+	public static void convert_segment_to_line () {
+		if (selected_points.length () == 0) {
+			return;
+		}
+		
+		if (selected_points.length () == 1) {
+			convert_point_to_line (selected_points.first ().data, true);
+		} else {
+			foreach (EditPoint p in selected_points) {
+				convert_point_to_line (p, false);
+			}
+		}
 	}
 	
 	/** Draw a test glyph. */

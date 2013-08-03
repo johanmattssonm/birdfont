@@ -46,6 +46,7 @@ public class EditPoint {
 	public EditPointHandle left_handle;
 	
 	public bool tie_handles = false;
+	public bool reflective_handles = false;
 	
 	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {
 		x = nx;
@@ -76,6 +77,11 @@ public class EditPoint {
 			&& get_right_handle ().y () == e.get_right_handle ().y ()
 			&& get_left_handle ().x () == e.get_left_handle ().x ()
 			&& get_left_handle ().y () == e.get_left_handle ().y ();
+	}
+
+	/** Make handles symetrical. */
+	public void set_reflective_handles (bool symmetrical) {
+		reflective_handles = symmetrical;
 	}
 
 	/** Flip handles if next point on path is in the other direction. 
@@ -212,6 +218,12 @@ public class EditPoint {
 	public void set_tie_handle (bool t) {
 		tie_handles = t;
 	}
+	
+	public void process_symmetrical_handles () {
+		process_tied_handle ();
+		right_handle.process_symmetrical_handle ();
+		left_handle.process_symmetrical_handle ();
+	}
 
 	/** This can only be performed if the path has been closed. */
 	public void process_tied_handle () 
@@ -345,10 +357,14 @@ public class EditPoint {
 		// move connected quadratic handle
 		if (left_handle.type == PointType.QUADRATIC || right_handle.type == PointType.QUADRATIC) {
 			if (next != null) {
+				((!)next).data.set_tie_handle (false);
+				((!)next).data.set_reflective_handles (false);
 				((!)next).data.left_handle.move_to_coordinate_internal (right_handle.x (), right_handle.y ());
 			}
 
 			if (prev != null && !((!)prev).data.is_selected ()) {
+				((!)prev).data.set_tie_handle (false);
+				((!)prev).data.set_reflective_handles (false);
 				((!)prev).data.right_handle.move_to_coordinate (left_handle.x (), left_handle.y ());
 			}
 		}
