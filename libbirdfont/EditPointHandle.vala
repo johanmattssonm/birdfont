@@ -116,13 +116,20 @@ public class EditPointHandle  {
 
 	public void move_to_coordinate (double x, double y) {
 		move_to_coordinate_internal (x, y);
+		
 		if (parent.tie_handles) {
 			tie_handle ();
 		}
+		
+		if (parent.reflective_handles) {
+			tie_handle ();
+			process_symmetrical_handle ();
+		}
+		
 		process_connected_handle ();
 	}
 		
-	private void move_to_coordinate_internal (double x, double y) {
+	public void move_to_coordinate_internal (double x, double y) {
 		double a, b, c;
 
 		a = parent.x - x;
@@ -166,6 +173,18 @@ public class EditPointHandle  {
 				}
 			}
 		}
+	}
+
+	public void process_symmetrical_handle () {
+		if (is_left_handle ()) {
+			parent.get_right_handle ().length = length;
+			parent.get_right_handle ().process_connected_handle ();
+		} else {
+			parent.get_left_handle ().length = length;
+			parent.get_left_handle ().process_connected_handle ();
+		}
+		
+		process_connected_handle ();
 	}
 
 	public void tie_handle () {

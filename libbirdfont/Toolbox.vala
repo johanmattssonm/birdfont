@@ -59,6 +59,7 @@ public class Toolbox : GLib.Object  {
 			
 		Expander path_tool_modifiers = new Expander ();
 		Expander draw_tool_modifiers = new Expander ();
+		Expander edit_point_modifiers = new Expander ();
 		Expander characterset_tools = new Expander ();
 		Expander test_tools = new Expander ();
 		Expander guideline_tools = new Expander ();
@@ -116,39 +117,50 @@ public class Toolbox : GLib.Object  {
 				
 				if (tie) {
 					ep.process_tied_handle ();
+					ep.set_reflective_handles (false);
 				}
-				
+			
 				ep.set_tie_handle (tie);
-				MainWindow.get_current_glyph ().update_view ();
 			}
 			
-			// don't select the tie tool. give focus to the point type selection:
-			var idle = new IdleSource();
-			idle.set_callback (() => {
-				if (point_type == PointType.QUADRATIC) {
-					select_tool (quadratic_points);
-				}
-
-				if (point_type == PointType.CUBIC) {
-					select_tool (cubic_points);
-				}
-
-				if (point_type == PointType.DOUBLE_CURVE) {
-					select_tool (double_points);
-				}
-				return false;
-			});
-			
-			idle.attach (null);
-				
+			MainWindow.get_current_glyph ().update_view ();
 		});
-		draw_tool_modifiers.add_tool (tie_handles);
+		edit_point_modifiers.add_tool (tie_handles);
 		
+		// symmetrical handles
+		Tool reflect_handle = new Tool ("symmetric", _("Symmetrical handles"), 'r');
+		reflect_handle.select_action.connect ((self) => {
+			bool symmetrical;
+			EditPoint ep;
+			if (PenTool.selected_points.length () > 0) {
+				ep = PenTool.selected_points.first ().data;
+				symmetrical = ep.reflective_handles;
+				foreach (EditPoint p in PenTool.selected_points) {
+					p.set_reflective_handles (!symmetrical);
+					p.process_symmetrical_handles ();
+					
+					if (symmetrical) {
+						ep.set_tie_handle (false);
+					}
+				}
+				
+				MainWindow.get_current_glyph ().update_view ();
+			}
+		});
+		edit_point_modifiers.add_tool (reflect_handle);
+
+		Tool create_line = new Tool ("create_line", _("Convert segment to line."), 'r');
+		create_line.select_action.connect ((self) => {
+			PenTool.convert_segment_to_line ();
+			MainWindow.get_current_glyph ().update_view ();
+		});
+		edit_point_modifiers.add_tool (create_line);
+	
 		// path tools
 		Tool union_paths_tool = new MergeTool ("union_paths");
 		path_tool_modifiers.add_tool (union_paths_tool);
 		
-		Tool reverse_path_tool = new Tool ("reverse_path", _("Create counter from outline"), 'r');
+		Tool reverse_path_tool = new Tool ("reverse_path", _("Create counter from outline"));
 		reverse_path_tool.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			
@@ -549,6 +561,7 @@ public class Toolbox : GLib.Object  {
 		
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
+		edit_point_modifiers.set_open (true);
 		path_tool_modifiers.set_open (true);
 		view_tools.set_open (true);
 		grid.set_open (true);
@@ -560,6 +573,7 @@ public class Toolbox : GLib.Object  {
 		
 		add_expander (draw_tools);
 		add_expander (draw_tool_modifiers);
+		add_expander (edit_point_modifiers);
 		add_expander (path_tool_modifiers);	
 		
 		add_expander (characterset_tools);
@@ -579,6 +593,9 @@ public class Toolbox : GLib.Object  {
 		draw_tool_modifiers.set_persistent (true);
 		draw_tool_modifiers.set_unique (true);
 
+		edit_point_modifiers.set_persistent (false);
+		edit_point_modifiers.set_unique (false);
+		
 		path_tool_modifiers.set_persistent (false);
 		path_tool_modifiers.set_unique (false);
 

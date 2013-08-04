@@ -811,6 +811,10 @@ public class Path {
 			
 			prev_index = points.position ((!) previous_point);
 			np = points.nth (prev_index + 1);
+			
+			if (unlikely (p.prev == null)) {
+				warning ("Prev point is null");
+			}
 		}
 		
 		second_last_point = last_point;
@@ -1565,7 +1569,7 @@ public class Path {
 	}
 	
 	public void create_list () {
-		unowned List<EditPoint> prev = points.last ();;
+		unowned List<EditPoint> prev = points.last ();
 		unowned List<EditPoint> ep = points.first ();
 		
 		if (points.length () == 0) {
