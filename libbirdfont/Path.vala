@@ -1607,36 +1607,90 @@ public class Path {
 		points.first ().data.prev = points.last ();
 	}
 
-	public void delete_edit_point (EditPoint ep) 
+	public bool has_point (EditPoint ep) {
+		foreach (EditPoint p in points) {
+			if (p == ep) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/** @return the remaining parts as a new path. */
+	public PathList delete_edit_point (EditPoint ep) 
 		requires (points.length () > 0)
 	{
-			unowned List<EditPoint>? pl = null;
-			EditPoint p;
+		unowned List<EditPoint>? pl = null;
+		EditPoint p;
+		Path current_path = new Path ();
+		Path remaining_points = new Path ();
+		PathList path_list = new PathList ();
+		uint i;
+		
+		if (!has_point (ep)) { 
+			return path_list;
+		}
+		
+		if (points.length () == 1) {
+			points.delete_link (points.first ());
+		}
+		
+		// set start position to the point that will be removed	
+		for (i = 0; i < points.length (); i++) {
+			pl = points.nth (i);
+			return_val_if_fail (pl != null, remaining_points);
+			p = ((!)pl).data;
 			
-			if (ep.prev != null) {
-				set_new_start (ep);
+			if (ep == p) {
+				i++;
+				break;
 			}
-			
-			p = points.first ().data;
-			
-			for (uint i = 0; i < points.length (); i++) {
-				p = points.nth (i).data;
-				
-				if (p == ep) {
-					p.prev = null;
-					p.next = null;
-					
-					pl = points.nth (i);
-					break;
-				}
-			}
+		}
 
-			if (pl != null) {
-				points.delete_link ((!) pl);
-				reopen ();
-				MainWindow.get_current_glyph ().add_active_path (this);
-				create_list ();
+		// copy points after the deleted point
+		while (i < points.length ()) {
+			pl = points.nth (i);
+			return_val_if_fail (pl != null, remaining_points);
+			p = ((!)pl).data;
+			current_path.add_point (p.copy ());			
+			i++;
+		}
+
+		// copy points before the deleted point
+		i = 0;
+		while (i < points.length ()) {
+			pl = points.nth (i);
+			return_val_if_fail (pl != null, remaining_points);
+			p = ((!)pl).data;
+			
+			if (ep == p) {
+				break;
+			} else {
+				remaining_points.add_point (p.copy ());
 			}
+			
+			i++;
+		}
+		
+		// merge if we still only have one path
+		if (!is_open ()) {
+			foreach (EditPoint point in remaining_points.points) {
+				current_path.add_point (point.copy ());
+			}
+			path_list.paths.append (current_path);
+		} else {
+			if (current_path.points.length () > 0) {
+				set_new_start (current_path.points.first ().data);
+				path_list.paths.append (current_path);
+			}
+			
+			if (remaining_points.points.length () > 0) {
+				set_new_start (remaining_points.points.first ().data);
+				path_list.paths.append (remaining_points);
+			}
+		}
+		
+		return path_list;
 	}
 		
 	public void set_new_start (EditPoint ep) {

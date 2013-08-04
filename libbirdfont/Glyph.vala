@@ -562,9 +562,17 @@ public class Glyph : FontDisplay {
 	
 	/** Delete edit point from path. */
 	public void delete_edit_point (EditPoint ep) {
+		PathList remaining_points;
 		foreach (Path p in path_list) {
 			if (p.points.length () > 0) {
-				p.delete_edit_point (ep);
+				remaining_points = p.delete_edit_point (ep);
+				foreach (Path path in remaining_points.paths) {
+					add_path (path);
+					path.reopen ();
+					path.create_list ();
+					MainWindow.get_current_glyph ().add_active_path (path);
+					delete_path (p);
+				}
 			} else {
 				delete_path (p);
 			}
