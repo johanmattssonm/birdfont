@@ -38,7 +38,10 @@ public class SearchPaths {
 		
 		f = get_file (BirdFont.bundle_path + "/Contents/Resources/", name + "/");
 		if (likely (f.query_exists ())) return f;
-		
+
+		f = get_file (BirdFont.bundle_path + "/Contents/MacOS/", name);
+		if (likely (f.query_exists ())) return f;
+				
 		f = get_file ("./" + d + "/", name);
 		if (likely (f.query_exists ())) return f;		
 

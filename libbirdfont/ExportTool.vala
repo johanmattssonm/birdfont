@@ -363,6 +363,7 @@ os.put_string (
 		return export_ttf_font_path (file);
 	}
 	
+	// FIXME: move to search path class
 	private static string[] get_birdfont_export (File folder, string temp_file) {
 		File f;
 		string dest = @"\"$((!) folder.get_path ())\" \"$temp_file\"";
@@ -389,6 +390,16 @@ os.put_string (
 			};
 		}
 
+		f = File.new_for_path (@"$(BirdFont.bundle_path)/Contents/MacOS/birdfont-export");
+		if (f.query_exists ()) {
+			return { 
+				@"$(BirdFont.bundle_path)/Contents/MacOS/birdfont-export",
+				"--ttf",
+				"-o",
+				dest
+			};
+		}
+		
 		f = File.new_for_path ("birdfont-export.exe");	
 		if (f.query_exists ()) {
 			return { 
