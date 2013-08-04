@@ -2003,6 +2003,25 @@ public class Path {
 		
 		close ();
 	}
+
+	/** Roatate around coordinate xc, xc. */
+	public void rotate (double theta, double xc, double yc) {
+		double a, radius;
+		
+		foreach (EditPoint ep in points) {
+			radius = Math.sqrt (Math.pow (xc - ep.x, 2) + Math.pow (yc + ep.y, 2));
+			a = acos ((ep.x - xc) / radius);
+			
+			ep.x = xc + cos (a - theta) * radius;
+			ep.y = yc + sin (a - theta) * radius;
+			
+			ep.get_right_handle ().angle -= theta;
+			ep.get_left_handle ().angle -= theta;
+		}
+
+		update_region_boundries ();
+	}
+	
 }
 
 }

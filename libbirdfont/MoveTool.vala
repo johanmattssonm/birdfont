@@ -26,6 +26,15 @@ class MoveTool : Tool {
 	bool resize_path = false;
 	Path? resized_path = null;
 	double last_resize_y;
+
+	bool rotate_path = false;
+	double last_rotate_y;
+	double rotation_box_width = 0;
+	double rotation_box_height = 0;
+	double rotation_box_center_x = 0;
+	double rotation_box_center_y = 0;
+	double rotation = 0;
+	double last_rotate = 0;
 	
 	ImageSurface? resize_handle;
 	
@@ -54,12 +63,18 @@ class MoveTool : Tool {
 					last_resize_y = y;
 					return;
 				}
+				
+				if (is_over_rotate_handle (p, x, y)) {
+					rotate_path = true;
+					return;
+				}
 			}
 			
 			if (resized_path != null) {
 				if (is_over_resize_handle ((!) resized_path, x, y)) {
 					resize_path = true;
 					last_resize_y = y;
+					rotation = 0;
 					return;					
 				}
 			}
@@ -71,7 +86,13 @@ class MoveTool : Tool {
 			}
 			
 			move_path = true;
-				
+
+			last_rotate = 0;
+			rotation = 0;
+			last_rotate_y = y;
+
+			update_selection_boundries ();
+						
 			last_x = x;
 			last_y = y;
 		});
@@ -81,7 +102,8 @@ class MoveTool : Tool {
 			
 			move_path = false;
 			resize_path = false;
-				
+			rotate_path = false;
+			
 			if (GridTool.is_visible ()) {
 				foreach (Path p in glyph.active_paths) {
 					tie_path_to_grid (p, x, y);
@@ -103,6 +125,16 @@ class MoveTool : Tool {
 			
 			if (resize_path && can_resize (x, y)) {
 				resize (x, y);
+			}
+
+			if (rotate_path) {
+				rotate (x, y);
+			}
+
+			if (!rotate_path) {
+				get_rotation_box_boundries (out rotation_box_center_x,
+					out rotation_box_center_y, out rotation_box_width,
+					out rotation_box_height);	
 			}
 
 			last_x = x;
@@ -133,15 +165,85 @@ class MoveTool : Tool {
 		
 		draw_action.connect ((self, cr, glyph) => {
 			Glyph g = MainWindow.get_current_glyph ();
-			ImageSurface img = (!) resize_handle;
-		
+			ImageSurface resize_img = (!) resize_handle;
+			
 			foreach (Path p in g.active_paths) {
-				cr.set_source_surface (img, Glyph.reverse_path_coordinate_x (p.xmax) - 10, Glyph.reverse_path_coordinate_y (p.ymax) - 10);
-				cr.paint ();	
+				cr.set_source_surface (resize_img, Glyph.reverse_path_coordinate_x (p.xmax) - 10, Glyph.reverse_path_coordinate_y (p.ymax) - 10);
+				cr.paint ();
+			}
+			
+			if (g.active_paths.length () > 0) {
+				draw_rotate_handle (cr);
 			}
 		});
 	}
 
+	void update_selection_boundries () {
+		get_rotation_box_boundries (out rotation_box_center_x,
+			out rotation_box_center_y, out rotation_box_width,
+			out rotation_box_height);	
+	}
+
+	void draw_rotate_handle (Context cr) {
+		double cx, cy, hx, hy;
+		
+		cx = Glyph.reverse_path_coordinate_x (rotation_box_center_x);
+		cy = Glyph.reverse_path_coordinate_y (rotation_box_center_y);
+		
+		cr.save ();
+		
+		cr.set_source_rgba (0, 0, 0.3, 1);
+		cr.rectangle (cx - 2.5, cy - 2.5, 5, 5);
+		cr.fill ();
+
+		hx = cos (rotation) * 75;
+		hy = sin (rotation) * 75;
+
+		cr.set_line_width (1);
+		cr.move_to (cx, cy);
+		cr.line_to (cx + hx, cy + hy);
+		cr.stroke ();
+
+		cr.set_source_rgba (0, 0, 0.3, 1);
+		cr.rectangle (cx + hx - 2.5, cy + hy - 2.5, 5, 5);
+		cr.fill ();
+					
+		cr.restore ();				
+	}
+	
+	void get_rotation_box_boundries (out double x, out double y, out double w, out double h) {
+		double px, py, px2, py2;
+		Glyph glyph = MainWindow.get_current_glyph ();
+		
+		px = 10000;
+		py = 10000;
+		px2 = -10000;
+		py2 = -10000;
+		
+		foreach (Path p in glyph.active_paths) {
+			if (px > p.xmin) {
+				px = p.xmin;
+			} 
+
+			if (py > p.ymin) {
+				py = p.ymin;
+			}
+
+			if (px2 < p.xmax) {
+				px2 = p.xmax;
+			}
+			
+			if (py2 < p.ymax) {
+				py2 = p.ymax;
+			}
+		}
+		
+		w = px2 - px;
+		h = py2 - py;
+		x = px + (w / 2);
+		y = py + (h / 2);
+	}
+	
 	void move_selected_paths (uint key) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		double x, y;
@@ -289,7 +391,61 @@ class MoveTool : Tool {
 			p.move (sx - p.xmax, 0);
 		}		
 	}
+	
+	/** Move rotate handle to pixel x,y. */
+	void rotate (double x, double y) {
+		double cx, cy, xc, yc, xc2, yc2, a, b, w, h;		
+		Glyph glyph = MainWindow.get_current_glyph ();  
 
+		cx = Glyph.reverse_path_coordinate_x (rotation_box_center_x);
+		cy = Glyph.reverse_path_coordinate_y (rotation_box_center_y);
+		xc = rotation_box_center_x;
+		yc = rotation_box_center_y;
+		
+		a = x - cx;
+		b = y - cy;
+		
+		rotation = atan (b / a);
+		
+		if (a < 0) {
+			rotation += PI;
+		}
+		
+		foreach (Path p in glyph.active_paths) {
+			p.rotate (rotation - last_rotate, rotation_box_center_x, rotation_box_center_y);
+		}
+
+		get_rotation_box_boundries (out xc2, out yc2, out w, out h); 
+	
+		double dx, dy;
+		
+		dx = -(xc2 - xc);
+		dy = -(yc2 - yc);
+		foreach (Path p in glyph.active_paths) {
+			p.move (dx, dy);
+		}
+		
+		last_rotate = rotation;
+		
+		update_selection_boundries ();
+	}
+
+	bool is_over_rotate_handle (Path p, double x, double y) {
+		double cx, cy, hx, hy;
+		double size = 10;
+		bool inx, iny;
+		
+		cx = Glyph.reverse_path_coordinate_x (rotation_box_center_x);
+		cy = Glyph.reverse_path_coordinate_y (rotation_box_center_y);
+
+		hx = cos (rotation) * 75;
+		hy = sin (rotation) * 75;
+
+		inx = x - size <= cx + hx - 2.5 <= x + size;
+		iny = y - size <= cy + hy - 2.5 <= y + size;
+		
+		return inx && iny;
+	}
 }
 
 }

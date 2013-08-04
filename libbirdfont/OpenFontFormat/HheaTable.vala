@@ -82,7 +82,6 @@ class HheaTable : Table {
 	
 	public void process () throws GLib.Error {
 		int16 ascender, descender;
-		Font font = OpenFontFormatWriter.get_current_font ();
 		FontData fd = new FontData ();
 		Fixed version = 1 << 16;
 		

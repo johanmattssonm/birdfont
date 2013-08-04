@@ -1,4 +1,10 @@
-birdfont (0.24) stable;
+birdfont (0.26) stable;
+
+  * Bug fixes for Mac OS X
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Aug  4 18:28:40 CEST 2013
+
+birdfont (0.25) stable;
 
   * Bug fixes
 

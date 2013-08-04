@@ -26,8 +26,7 @@ class Os2Table : Table {
 	
 	public void process (GlyfTable glyf_table) {
 		FontData fd = new FontData ();
-		Font font = OpenFontFormatWriter.get_current_font ();
-		
+
 		int16 ascender;
 		int16 descender;
 		
