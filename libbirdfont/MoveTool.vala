@@ -29,10 +29,10 @@ class MoveTool : Tool {
 
 	bool rotate_path = false;
 	double last_rotate_y;
-	double rotation_box_width = 0;
-	double rotation_box_height = 0;
-	double rotation_box_center_x = 0;
-	double rotation_box_center_y = 0;
+	static double selection_box_width = 0;
+	static double selection_box_height = 0;
+	static double selection_box_center_x = 0;
+	static double selection_box_center_y = 0;
 	double rotation = 0;
 	double last_rotate = 0;
 	
@@ -132,9 +132,9 @@ class MoveTool : Tool {
 			}
 
 			if (!rotate_path) {
-				get_rotation_box_boundries (out rotation_box_center_x,
-					out rotation_box_center_y, out rotation_box_width,
-					out rotation_box_height);	
+				get_selection_box_boundries (out selection_box_center_x,
+					out selection_box_center_y, out selection_box_width,
+					out selection_box_height);	
 			}
 
 			last_x = x;
@@ -178,17 +178,17 @@ class MoveTool : Tool {
 		});
 	}
 
-	void update_selection_boundries () {
-		get_rotation_box_boundries (out rotation_box_center_x,
-			out rotation_box_center_y, out rotation_box_width,
-			out rotation_box_height);	
+	static void update_selection_boundries () {
+		get_selection_box_boundries (out selection_box_center_x,
+			out selection_box_center_y, out selection_box_width,
+			out selection_box_height);	
 	}
 
 	void draw_rotate_handle (Context cr) {
 		double cx, cy, hx, hy;
 		
-		cx = Glyph.reverse_path_coordinate_x (rotation_box_center_x);
-		cy = Glyph.reverse_path_coordinate_y (rotation_box_center_y);
+		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
+		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
 		
 		cr.save ();
 		
@@ -211,7 +211,7 @@ class MoveTool : Tool {
 		cr.restore ();				
 	}
 	
-	void get_rotation_box_boundries (out double x, out double y, out double w, out double h) {
+	static void get_selection_box_boundries (out double x, out double y, out double w, out double h) {
 		double px, py, px2, py2;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
@@ -396,11 +396,12 @@ class MoveTool : Tool {
 	void rotate (double x, double y) {
 		double cx, cy, xc, yc, xc2, yc2, a, b, w, h;		
 		Glyph glyph = MainWindow.get_current_glyph ();  
+		double dx, dy;
 
-		cx = Glyph.reverse_path_coordinate_x (rotation_box_center_x);
-		cy = Glyph.reverse_path_coordinate_y (rotation_box_center_y);
-		xc = rotation_box_center_x;
-		yc = rotation_box_center_y;
+		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
+		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
+		xc = selection_box_center_x;
+		yc = selection_box_center_y;
 		
 		a = x - cx;
 		b = y - cy;
@@ -412,15 +413,14 @@ class MoveTool : Tool {
 		}
 		
 		foreach (Path p in glyph.active_paths) {
-			p.rotate (rotation - last_rotate, rotation_box_center_x, rotation_box_center_y);
+			p.rotate (rotation - last_rotate, selection_box_center_x, selection_box_center_y);
 		}
 
-		get_rotation_box_boundries (out xc2, out yc2, out w, out h); 
-	
-		double dx, dy;
-		
+		get_selection_box_boundries (out xc2, out yc2, out w, out h); 
+
 		dx = -(xc2 - xc);
 		dy = -(yc2 - yc);
+		
 		foreach (Path p in glyph.active_paths) {
 			p.move (dx, dy);
 		}
@@ -435,8 +435,8 @@ class MoveTool : Tool {
 		double size = 10;
 		bool inx, iny;
 		
-		cx = Glyph.reverse_path_coordinate_x (rotation_box_center_x);
-		cy = Glyph.reverse_path_coordinate_y (rotation_box_center_y);
+		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
+		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
 
 		hx = cos (rotation) * 75;
 		hy = sin (rotation) * 75;
@@ -445,6 +445,43 @@ class MoveTool : Tool {
 		iny = y - size <= cy + hy - 2.5 <= y + size;
 		
 		return inx && iny;
+	}
+
+
+	public static void flip_vertical () {
+		flip (true);
+	}
+	
+	public static void flip_horizontal () {
+		flip (false);
+	}
+
+	public static void flip (bool vertical) {
+		double xc, yc, xc2, yc2, w, h;		
+		double dx, dy;
+		Glyph glyph = MainWindow.get_current_glyph ();  
+
+		xc = selection_box_center_x;
+		yc = selection_box_center_y;
+
+		foreach (Path p in glyph.active_paths) {
+			if (vertical) {
+				p.flip_vertical ();
+			} else {
+				p.flip_horizontal ();
+			}
+		}
+
+		get_selection_box_boundries (out xc2, out yc2, out w, out h); 
+
+		dx = -(xc2 - xc);
+		dy = -(yc2 - yc);
+		
+		foreach (Path p in glyph.active_paths) {
+			p.move (dx, dy);
+		}
+		
+		update_selection_boundries ();	
 	}
 }
 

@@ -183,6 +183,20 @@ public class Toolbox : GLib.Object  {
 		});
 		path_tool_modifiers.add_tool (move_layer);
 
+		Tool flip_vertical = new Tool ("flip_vertical", _("Flip path vertically"));
+		flip_vertical.select_action.connect ((self) => {
+			MoveTool.flip_vertical ();
+			MainWindow.get_current_glyph ().update_view ();
+		});
+		path_tool_modifiers.add_tool (flip_vertical);
+
+		Tool flip_horizontal = new Tool ("flip_horizontal", _("Flip path horizontally"));
+		flip_horizontal.select_action.connect ((self) => {
+			MoveTool.flip_horizontal ();
+			MainWindow.get_current_glyph ().update_view ();
+		});
+		path_tool_modifiers.add_tool (flip_horizontal);
+		
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
 		

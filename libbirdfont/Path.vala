@@ -2022,6 +2022,47 @@ public class Path {
 		update_region_boundries ();
 	}
 	
+	public void flip_vertical () {
+		EditPointHandle hl, hr;
+		double lx, ly, rx, ry;
+		foreach (EditPoint e in points) {
+			hl = e.get_left_handle ();
+			hr = e.get_right_handle ();
+			
+			lx = hl.x ();
+			ly = hl.y ();
+			rx = hr.x ();
+			ry = hr.y ();
+						
+			e.y *= -1;
+			
+			hr.move_to_coordinate_internal (rx, -1 * ry);
+			hl.move_to_coordinate_internal (lx, -1 * ly);
+		}
+		
+		update_region_boundries ();
+	}
+
+	public void flip_horizontal () {
+		EditPointHandle hl, hr;
+		double lx, ly, rx, ry;
+		foreach (EditPoint e in points) {
+			hl = e.get_left_handle ();
+			hr = e.get_right_handle ();
+			
+			lx = hl.x ();
+			ly = hl.y ();
+			rx = hr.x ();
+			ry = hr.y ();
+						
+			e.x *= -1;
+			
+			hr.move_to_coordinate_internal (-1 * rx, ry);
+			hl.move_to_coordinate_internal (-1 * lx, ly);
+		}
+		
+		update_region_boundries ();
+	}
 }
 
 }
