@@ -48,7 +48,10 @@ public class PenTool : Tool {
 	
 	/** Move curve handle instead of control point. */
 	private bool last_selected_is_handle = false;
-	
+
+	List<Path> clockwise = new List<Path> ();
+	List<Path> counter_clockwise = new List<Path> ();
+			
 	public PenTool (string name) {
 		string click_to_add_points;
 		
@@ -76,6 +79,19 @@ public class PenTool : Tool {
 		});
 		
 		press_action.connect ((self, b, x, y) => {
+			// retain path direction
+			Glyph glyph = MainWindow.get_current_glyph ();
+			clockwise = new List<Path> ();
+			counter_clockwise = new List<Path> ();
+
+			foreach (Path p in glyph.path_list) {
+				if (p.is_clockwise ()) {
+					clockwise.append (p);
+				} else {
+					counter_clockwise.append (p);
+				}
+			}
+			
 			first_move_action = true;
 			
 			last_point_x = x;
@@ -99,6 +115,7 @@ public class PenTool : Tool {
 		});
 
 		release_action.connect ((self, b, ix, iy) => {
+			Glyph glyph = MainWindow.get_current_glyph ();
 			double x = ix;
 			double y = iy;
 
@@ -109,6 +126,19 @@ public class PenTool : Tool {
 			move_selected = false;
 			move_selected_handle = false;
 			edit_active_corner = false;
+			
+			// update path direction if it has changed
+			foreach (Path p in clockwise) {
+				if (!p.is_clockwise ()) {
+					p.reverse ();
+				}
+			}
+
+			foreach (Path p in counter_clockwise) {
+				if (p.is_clockwise ()) {
+					p.reverse ();
+				}
+			}
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -167,11 +197,11 @@ public class PenTool : Tool {
 		double coordinate_x, coordinate_y;
 		double px = 0;
 		double py = 0;
-	
-			control_point_event (x, y);
-			curve_active_corner_event (x, y);
-			set_default_handle_positions (); // FIXME: Delete
-
+		
+		control_point_event (x, y);
+		curve_active_corner_event (x, y);
+		set_default_handle_positions ();
+		
 		// show new point on path
 		if (glyph.new_point_on_path != null) {
 			move_current_point_on_path (x, y);
@@ -243,7 +273,6 @@ public class PenTool : Tool {
 			last_point_x = x;
 			last_point_y = y;			
 		}
-		
 	}
 	
 	private static void tie_pixels (ref int x, ref int y) {
