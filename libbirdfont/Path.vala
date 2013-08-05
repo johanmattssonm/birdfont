@@ -1231,6 +1231,8 @@ public class Path {
 			
 			ep.get_left_handle ().set_point_type (PointType.QUADRATIC);	
 			ep.get_right_handle ().set_point_type (PointType.QUADRATIC);
+			
+			ep.get_left_handle ().move_to_coordinate_internal (0, 0);				
 		} else {
 			bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
 			bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
@@ -1249,6 +1251,18 @@ public class Path {
 		
 		stop.get_left_handle ().length *= 1 - position;
 		start.get_right_handle ().length *= position;
+
+
+		if (right == PointType.QUADRATIC) { // update connected handle
+			if (ep.prev != null) {
+				ep.get_left_handle ().move_to_coordinate_internal (
+					ep.get_prev ().data.right_handle.x (), 
+					ep.get_prev ().data.right_handle.y ());
+
+			} else {
+				warning ("ep.prev is null for quadratic point");
+			}
+		}
 	}
 			
 	/** Get a point on the this path closest to x and y coordinates. */
