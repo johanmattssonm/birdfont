@@ -2030,27 +2030,25 @@ public class Path {
 			return;
 		}
 
-		// link points at the other end
-		first = points.first ().data;
-		handle = path.points.first ().data.right_handle;
-		handle.type = PointType.CUBIC;
-		handle.angle = first.right_handle.angle;
-		handle.length = first.right_handle.length;
+		points.last ().data.right_handle.type = path.points.first ().data.type;
+		points.last ().data.right_handle.move_to_coordinate (
+			path.points.first ().data.right_handle.x (),
+			path.points.first ().data.right_handle.y ());
+			
+		path.points.first ().data.right_handle.type = 
+			points.last ().data.right_handle.type;
+
+		path.points.first ().data.recalculate_linear_handles ();
+		points.last ().data.recalculate_linear_handles ();
+		
 		path.points.remove_link (path.points.first ());
-				
+		
 		// copy remaining points
 		foreach (EditPoint p in path.points) {
 			add_point (p.copy ());
 		}
-
+		
 		// close path
-		first = points.first ().data;
-		points.remove_link (points.first ());
-		handle = points.last ().data.right_handle;
-		handle.type = PointType.CUBIC;
-		handle.angle = first.right_handle.angle;
-		handle.length = first.right_handle.length;
-	
 		while (path.points.length () > 0) {
 			path.points.remove_link (path.points.first ());
 		}

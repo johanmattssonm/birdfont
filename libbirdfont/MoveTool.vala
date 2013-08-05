@@ -470,6 +470,8 @@ class MoveTool : Tool {
 			} else {
 				p.flip_horizontal ();
 			}
+			
+			p.reverse ();
 		}
 
 		get_selection_box_boundries (out xc2, out yc2, out w, out h); 

@@ -168,11 +168,9 @@ public class PenTool : Tool {
 		double px = 0;
 		double py = 0;
 	
-		// DELETE if (!move_selected_handle) {
 			control_point_event (x, y);
 			curve_active_corner_event (x, y);
-			set_default_handle_positions (); // FIXME
-		//}
+			set_default_handle_positions (); // FIXME: Delete
 
 		// show new point on path
 		if (glyph.new_point_on_path != null) {
@@ -372,19 +370,11 @@ public class PenTool : Tool {
 		}
 	}
 	
-	private static void join_paths (double x, double y) {
+	private static Path? find_path_to_join () {
+		Path? m = null;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		EditPoint ep_last, ep_first;
-		Path? m = null;
-		Path merge;
-		bool direction;
-		bool start_point = false;
-		
-		if (glyph.path_list.length () < 2) {
-			return;
-		}
-		
-		// find the path to merge
+
 		foreach (Path path in glyph.path_list) {
 			
 			if (path.points.length () < 2) {
@@ -395,75 +385,101 @@ public class PenTool : Tool {
 			ep_first = path.points.first ().data;	
 			
 			if (active_edit_point == ep_last) {
-				start_point = false;
 				m = path;
 				break;
 			}
 			
 			if (active_edit_point == ep_first) {
-				start_point = true;
 				m = path;
 				break;				
 			}
 		}
 		
-		if (m == null) {
+		return m;	
+	}
+	
+	private static void join_paths (double x, double y) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		Path? p;
+		Path path;
+		EditPointHandle hf, hn;
+		double a, l;
+		PointType t;
+		EditPoint corner;
+
+		if (glyph.path_list.length () < 1) {
+			return;
+		}
+
+		p = find_path_to_join ();
+		if (p == null) {
+			return;
+		}
+		path = (!) p;
+				
+		if (active_edit_point == path.points.first ().data) {
+			path.reverse ();
+		}
+		
+		// join path with it self
+		if (path.is_open () && path.points.first ().data != active_edit_point && is_endpoint ((!) active_edit_point)
+				&& is_close_to_point (path.points.first ().data, x, y)) {
+
+			// TODO: set point type
+			path.points.first ().data.left_handle.move_to_coordinate (
+				path.points.last ().data.left_handle.x (),
+				path.points.last ().data.left_handle.y ());
+				
+			path.points.first ().data.left_handle.type = 
+				path.points.last ().data.left_handle.type;
+
+			path.points.first ().data.recalculate_linear_handles ();
+			path.points.last ().data.recalculate_linear_handles ();
+			
+			// force the connected handle to move
+			path.points.first ().data.set_position (
+				path.points.first ().data.x, path.points.first ().data.y);
+		
+			path.points.remove_link (path.points.last ());
+			
+			path.close ();
 			return;
 		}
 		
-		merge = (!) m;
-		
-		foreach (Path path in glyph.path_list) {
-
-			// don't join path with it self
+		foreach (Path merge in glyph.path_list) {
+			// don't join path with it self here
 			if (path == merge) {
 				continue;
 			}
 
 			// we need both start and end points
-			if (path.points.length () < 2) {
+			if (merge.points.length () < 2 || path.points.length () < 2) {
 				continue;
 			}
+			
+			if (is_close_to_point (merge.points.last ().data, x, y)) {
+				merge.reverse ();
+			}
 
-			ep_last = path.points.last ().data;
-			ep_first = path.points.first ().data;	
-						
-			if (path.is_open ()) {
+			return_if_fail (merge.points.length () > 0);
+
+			if (is_close_to_point (merge.points.first ().data, x, y)) {
+				merge.points.first ().data.set_tie_handle (false);
+				merge.points.first ().data.set_reflective_handles (false);
 				
-				if (start_point) {
-					if (is_close_to_point (ep_last, x, y)) {
-						direction = path.is_clockwise ();
-						glyph.store_undo_state ();
-						path.append_path (merge);
-						glyph.delete_path (merge);
-						
-						if (path.is_clockwise () != direction) {
-							path.reverse ();
-						}
-						
-						return;
-					}
+				merge.points.last ().data.set_tie_handle (false);
+				merge.points.last ().data.set_reflective_handles (false);
 								
-					if (is_close_to_point (ep_first, x, y)) {
-						glyph.store_undo_state ();
-						path.append_path (merge);
-						glyph.delete_path (merge);
-						return;
-					}
-				} else {
-					if (is_close_to_point (ep_last, x, y)) {
-						path.reverse ();
-						glyph.store_undo_state ();
-						path.append_path (merge);
-						glyph.delete_path (merge);
-					}
-					
-					if (is_close_to_point (ep_first, x, y)) {
-						glyph.store_undo_state ();
-						path.append_path (merge);
-						glyph.delete_path (merge);
-					}
-				}
+				path.points.last ().data.set_tie_handle (false);
+				path.points.last ().data.set_reflective_handles (false);
+
+				path.points.first ().data.set_tie_handle (false);
+				path.points.first ().data.set_reflective_handles (false);
+
+				path.append_path (merge);
+				path.reopen ();
+	
+				return;
 			}
 		}
 	}
@@ -476,7 +492,7 @@ public class PenTool : Tool {
 		py = Glyph.reverse_path_coordinate_y (ep.y);		
 
 		distance = sqrt (fabs (pow (px - x, 2)) + fabs (pow (py - y, 2)));
-				
+		
 		return (distance < 8);
 	}
 
@@ -531,10 +547,6 @@ public class PenTool : Tool {
 				continue;
 			}
 			
-			if (path.points.first ().data == active  || path.points.last ().data == active) {
-				continue;
-			}
-			
 			foreach (EditPoint ep in path.points) {
 				if (ep == active || !is_endpoint (ep)) {
 					continue;
@@ -549,7 +561,7 @@ public class PenTool : Tool {
 		}
 	}
 	
-	public bool is_endpoint (EditPoint ep) {
+	public static bool is_endpoint (EditPoint ep) {
 		EditPoint start;
 		EditPoint end;
 		Glyph glyph = MainWindow.get_current_glyph ();

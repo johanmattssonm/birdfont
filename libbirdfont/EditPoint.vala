@@ -343,7 +343,7 @@ public class EditPoint {
 	public unowned List<EditPoint> get_list () {
 		return get_next ().first ();
 	}
-	
+		
 	public void set_position (double tx, double ty) {
 		x = tx;
 		y = ty;
