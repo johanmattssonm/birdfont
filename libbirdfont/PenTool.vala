@@ -165,17 +165,29 @@ public class PenTool : Tool {
 			draw_on_canvas (cairo_context, glyph);
 		});
 	}
-	
-	void delete_selected_points () {
+
+	public void delete_selected_points () {
 		Glyph g = MainWindow.get_current_glyph ();
-		
+
 		foreach (EditPoint p in selected_points) {
-			g.delete_edit_point (p);
+			p.deleted = true;
 		}
 		
+		process_deleted ();
+
+		foreach (var p in g.path_list) {
+			if (p.has_deleted_point ()) {
+				process_deleted ();
+			}
+		}
+								
 		g.update_view ();
 	}
-
+	
+	void process_deleted () {
+		Glyph g = MainWindow.get_current_glyph ();
+		while (g.process_deleted ());
+	}
 	
 	public static void close_all_paths () {
 		Glyph g = MainWindow.get_current_glyph ();

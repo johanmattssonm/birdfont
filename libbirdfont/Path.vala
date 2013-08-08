@@ -432,7 +432,7 @@ public class Path {
 	/** Switch direction from clockwise path to counter clockwise path or vise versa. */
 	public void reverse () {
 		bool direction = is_clockwise ();
-		print ("reverse\n");
+
 		if (no_derived_direction) {
 			clockwise_direction = !clockwise_direction;
 		}
@@ -1629,19 +1629,29 @@ public class Path {
 		}
 		return false;
 	}
-
+	
+	public bool has_deleted_point () {
+		foreach (EditPoint p in points) {
+			if (p.deleted) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/** @return the remaining parts as a new path. */
-	public PathList delete_edit_point (EditPoint ep) 
+	public PathList process_deleted_points () 
 		requires (points.length () > 0)
 	{
 		unowned List<EditPoint>? pl = null;
 		EditPoint p;
+		EditPoint ep = new EditPoint ();
 		Path current_path = new Path ();
 		Path remaining_points = new Path ();
 		PathList path_list = new PathList ();
 		uint i;
 		
-		if (!has_point (ep)) { 
+		if (!has_deleted_point ()) { 
 			return path_list;
 		}
 		
@@ -1655,8 +1665,9 @@ public class Path {
 			return_val_if_fail (pl != null, remaining_points);
 			p = ((!)pl).data;
 			
-			if (ep == p) {
+			if (p.deleted) {
 				i++;
+				ep = p;
 				break;
 			}
 		}
@@ -1666,7 +1677,7 @@ public class Path {
 			pl = points.nth (i);
 			return_val_if_fail (pl != null, remaining_points);
 			p = ((!)pl).data;
-			current_path.add_point (p.copy ());			
+			current_path.add_point (p);
 			i++;
 		}
 
@@ -1676,11 +1687,10 @@ public class Path {
 			pl = points.nth (i);
 			return_val_if_fail (pl != null, remaining_points);
 			p = ((!)pl).data;
-			
-			if (ep == p) {
+			if (p == ep) {
 				break;
 			} else {
-				remaining_points.add_point (p.copy ());
+				remaining_points.add_point (p);
 			}
 			
 			i++;

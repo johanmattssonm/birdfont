@@ -559,24 +559,31 @@ public class Glyph : FontDisplay {
 		Tool t = MainWindow.get_toolbox ().get_current_tool ();
 		t.key_press_action (t, keyval);
 	}
-	
-	/** Delete edit point from path. */
-	public void delete_edit_point (EditPoint ep) {
+
+	/** Delete edit point from path.
+	 * @return false if no points was deleted 
+	 */
+	public bool process_deleted () {
 		PathList remaining_points;
 		foreach (Path p in path_list) {
 			if (p.points.length () > 0) {
-				remaining_points = p.delete_edit_point (ep);
+				remaining_points = p.process_deleted_points ();
 				foreach (Path path in remaining_points.paths) {
 					add_path (path);
 					path.reopen ();
 					path.create_list ();
 					MainWindow.get_current_glyph ().add_active_path (path);
+				}
+				
+				if (remaining_points.paths.length () > 0) {
 					delete_path (p);
+					return true;
 				}
 			} else {
 				delete_path (p);
 			}
 		}
+		return false;
 	}
 	
 	public override void motion_notify (double x, double y) {

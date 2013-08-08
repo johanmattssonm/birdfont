@@ -39,7 +39,8 @@ public class EditPoint {
 
 	public bool active = false;
 	public bool selected = false;
-		
+	public bool deleted = false;
+	
 	public int selected_handle = 0;
 	
 	public EditPointHandle right_handle;
@@ -294,6 +295,7 @@ public class EditPoint {
 		new_point.y = y;
 		
 		new_point.type = type;
+		new_point.deleted = deleted;
 		
 		new_point.tie_handles = tie_handles;
 		
