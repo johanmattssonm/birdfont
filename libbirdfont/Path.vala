@@ -432,7 +432,7 @@ public class Path {
 	/** Switch direction from clockwise path to counter clockwise path or vise versa. */
 	public void reverse () {
 		bool direction = is_clockwise ();
-		
+		print ("reverse\n");
 		if (no_derived_direction) {
 			clockwise_direction = !clockwise_direction;
 		}
@@ -1892,7 +1892,7 @@ public class Path {
 		return true;
 	}
 	
-	private static bool is_clasped (PathList pl, Path p) {
+	public static bool is_clasped (PathList pl, Path p) {
 		foreach (Path o in pl.paths) {
 			if (o == p) {
 				continue;
@@ -1909,7 +1909,7 @@ public class Path {
 	private static bool is_clasped_path (Path outside, Path inside) {
 		bool i = true;
 		foreach (EditPoint e in inside.points) {
-			if (!outside.is_over_coordinate_var (e.x, e.y, 0.5)) { // high tolerance since point may be off curve in both paths
+			if (!outside.is_over_coordinate_var (e.x, e.y, 0.5)) { // point may be off curve in both paths
 				i = false;
 				break;
 			}
@@ -2036,9 +2036,6 @@ public class Path {
 	}
 
 	public void append_path (Path path) {
-		EditPointHandle handle;
-		EditPoint first;
-
 		if (points.length () == 0) {
 			warning ("No points");
 			return;

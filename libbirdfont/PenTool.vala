@@ -49,8 +49,8 @@ public class PenTool : Tool {
 	/** Move curve handle instead of control point. */
 	private bool last_selected_is_handle = false;
 
-	List<Path> clockwise = new List<Path> ();
-	List<Path> counter_clockwise = new List<Path> ();
+	static List<Path> clockwise = new List<Path> ();
+	static List<Path> counter_clockwise = new List<Path> ();
 			
 	public PenTool (string name) {
 		string click_to_add_points;
@@ -71,7 +71,7 @@ public class PenTool : Tool {
 		deselect_action.connect ((self) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			
-			CutTool.force_direction ();
+			force_direction ();
 			glyph.close_path ();
 			
 			move_point_on_path = false;
@@ -115,10 +115,9 @@ public class PenTool : Tool {
 		});
 
 		release_action.connect ((self, b, ix, iy) => {
-			Glyph glyph = MainWindow.get_current_glyph ();
 			double x = ix;
 			double y = iy;
-
+			
 			join_paths (x, y);
 
 			active_handle = new EditPointHandle.empty ();
@@ -129,13 +128,13 @@ public class PenTool : Tool {
 			
 			// update path direction if it has changed
 			foreach (Path p in clockwise) {
-				if (!p.is_clockwise ()) {
+				if (!p.is_open () && !p.is_clockwise ()) {
 					p.reverse ();
 				}
 			}
 
 			foreach (Path p in counter_clockwise) {
-				if (p.is_clockwise ()) {
+				if (!p.is_open () &&  p.is_clockwise ()) {
 					p.reverse ();
 				}
 			}
@@ -292,7 +291,7 @@ public class PenTool : Tool {
 
 		if (button == 2) {
 			if (glyph.is_open ()) {
-				CutTool.force_direction ();
+				force_direction ();
 				glyph.close_path ();
 			} else {
 				glyph.open_path ();
@@ -337,6 +336,43 @@ public class PenTool : Tool {
 		glyph.store_undo_state ();
 	}
 	
+	/** Set fill property to transparend for paths that is contained within 
+	 * another path.
+	 */ 
+	public static void force_direction () {
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		// don't retain direction
+		while (clockwise.length () > 0) {
+			clockwise.remove_link (clockwise.first ());
+		}
+		
+		while (counter_clockwise.length () > 0) {
+			counter_clockwise.remove_link (counter_clockwise.first ());
+		}
+
+		foreach (Path p in g.active_paths) {
+			if (p.is_open () && !p.has_direction ()) {
+				if (is_counter_path (p)) {
+					p.force_direction (Direction.COUNTER_CLOCKWISE);
+				} else {
+					p.force_direction (Direction.CLOCKWISE);
+				}				
+			}
+		}
+	}
+
+	public static bool is_counter_path (Path path) {
+		Glyph g = MainWindow.get_current_glyph ();
+		PathList pl = new PathList ();
+		
+		foreach (Path p in g.path_list) {
+			pl.paths.append (p);
+		}
+		
+		return Path.is_clasped (pl, path);
+	}
+		
 	bool is_new_point_from_path_selected () {
 		return false;
 	}
@@ -355,7 +391,8 @@ public class PenTool : Tool {
 	public void select_active_point (double x, double y) {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
-
+		bool reverse;
+		
 		control_point_event (x, y);
 		
 		if (active_edit_point == null) {
@@ -392,9 +429,21 @@ public class PenTool : Tool {
 		}
 		
 		// continue adding points from the selected one
+		reverse = false;
 		foreach (Path p in glyph.active_paths) {
 			if (p.is_open () && p.points.length () > 0 && active_edit_point == p.points.first ().data) {
 				p.reverse ();
+				reverse = true;
+			}
+		}
+		
+		if (reverse) {
+			while (clockwise.length () > 0) {
+				clockwise.remove_link (clockwise.first ());
+			}
+
+			while (counter_clockwise.length () > 0) {
+				counter_clockwise.remove_link (counter_clockwise.first ());
 			}
 		}
 	}
@@ -431,10 +480,7 @@ public class PenTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path? p;
 		Path path;
-		EditPointHandle hf, hn;
-		double a, l;
-		PointType t;
-		EditPoint corner;
+		bool direction_changed = false;
 
 		if (glyph.path_list.length () < 1) {
 			return;
@@ -448,6 +494,7 @@ public class PenTool : Tool {
 				
 		if (active_edit_point == path.points.first ().data) {
 			path.reverse ();
+			direction_changed = !direction_changed;
 		}
 		
 		// join path with it self
@@ -472,6 +519,12 @@ public class PenTool : Tool {
 			path.points.remove_link (path.points.last ());
 			
 			path.close ();
+			
+			force_direction ();
+
+			if (direction_changed) {
+				path.reverse ();
+			}
 			return;
 		}
 		
@@ -488,6 +541,7 @@ public class PenTool : Tool {
 			
 			if (is_close_to_point (merge.points.last ().data, x, y)) {
 				merge.reverse ();
+				direction_changed = !direction_changed;
 			}
 
 			return_if_fail (merge.points.length () > 0);
@@ -507,9 +561,18 @@ public class PenTool : Tool {
 
 				path.append_path (merge);
 				path.reopen ();
-	
+				
+				force_direction ();
+				
+				if (direction_changed) {
+					path.reverse ();
+				}
 				return;
 			}
+		}
+
+		if (direction_changed) {
+			path.reverse ();
 		}
 	}
 	

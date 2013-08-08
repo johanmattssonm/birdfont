@@ -19,15 +19,15 @@ namespace BirdFont {
 
 class GridTool : Tool {
 	
-	static List <Line> horizontal;
-	static List <Line> vertical;
+	static List<Line> horizontal;
+	static List<Line> vertical;
 	
 	static bool visible = false;
 	
 	public static double size_x;
 	public static double size_y;
 	
-	public static List <SpinButton> sizes;
+	public static List<SpinButton> sizes;
 	
 	public GridTool (string n) {
 		base (n, _("Show grid"), 'g', NONE);
@@ -83,7 +83,7 @@ class GridTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		double step = size_y;
 		double i;
-		int max_lines = 400;
+		int max_lines = 600;
 		int n;
 		Line t, l, u;
 
@@ -107,7 +107,7 @@ class GridTool : Tool {
 			l = new Line ("grid", i, Line.VERTICAL);
 			l.set_moveable (false);
 			l.set_color (0.2, 0.6, 0.2, 0.2);
-			horizontal.append (l);
+			vertical.append (l);
 			
 			if (++n >= max_lines) {
 				break;
@@ -119,7 +119,7 @@ class GridTool : Tool {
 			t = new Line ("grid", i, Line.HORIZONTAL);
 			t.set_moveable (false);
 			t.set_color (0.2, 0.6, 0.2, 0.2);
-			vertical.append (t);	
+			horizontal.prepend (t);	
 
 			if (++n >= max_lines) {
 				break;
@@ -131,7 +131,7 @@ class GridTool : Tool {
 			u = new Line ("grid", i, Line.HORIZONTAL);
 			u.set_moveable (false);
 			u.set_color (0.2, 0.6, 0.2, 0.2);
-			vertical.append (u);	
+			horizontal.append (u);	
 
 			if (++n >= max_lines) {
 				break;
@@ -148,43 +148,41 @@ class GridTool : Tool {
 	public static void tie_coordinate (ref double x, ref double y) {
 		tie_point (ref x, ref y, true);
 	}
-		
-	private static void tie_point (ref double x, ref double y, bool coordinate)
-		requires (horizontal.length () > 0 && vertical.length () > 0)
+
+	public static void tie_point (ref double x, ref double y, bool coordinate) {
+		x = tie_point_x (x, coordinate);
+		y = tie_point_y (y, coordinate);
+	}
+
+	public static double tie_point_x (double x, bool coordinate)
+		requires (vertical.length () >= 2)
 	{
 		double d, m;
-		
-		Line xmin = horizontal.first ().data;
-		Line ymin = vertical.first ().data;
-
+		Line xmin = vertical.first ().data;
 		Line xpos;
-		Line ypos;
-		
+		Line startx = vertical.first ().data;
+		Line stopx = vertical.last ().data;
+
+		// outside of the grid
+		if (!coordinate) {
+			if (!(startx.pos < Glyph.path_coordinate_x (x) < stopx.pos)) {
+				return x;
+			}
+		} else {
+			if (!(startx.pos < x < stopx.pos)) {
+				return x;
+			}
+		}
+			
 		if (!coordinate) {
 			xpos = new Line ("", 0, Line.VERTICAL);
-			ypos = new Line ("", 0, Line.HORIZONTAL);
-
 			xpos.pos = Glyph.path_coordinate_x (x);
-			ypos.pos = Glyph.path_coordinate_y (y);
 		} else {
 			xpos = new Line ("", x, Line.VERTICAL);
-			ypos = new Line ("", -y, Line.HORIZONTAL);
 		}
 
 		m = double.MAX;
-
 		foreach (Line line in vertical) {
-			d = Math.fabs (line.get_pos () - ypos.get_pos ());
-			
-			if (d <= m) {
-				m = d;
-				ymin = line;
-			}
-			
-		}
-
-		m = double.MAX;
-		foreach (Line line in horizontal) {
 			d = Math.fabs (line.get_pos () - xpos.get_pos ());
 			
 			if (d <= m) {
@@ -196,11 +194,58 @@ class GridTool : Tool {
 		
 		if (!coordinate) {
 			x = Glyph.reverse_path_coordinate_x (xmin.get_pos ());
-			y = Glyph.reverse_path_coordinate_y (ymin.get_pos ());
 		} else {
 			x = xmin.get_pos ();
+		}
+		
+		return x;
+	}
+
+	public static double tie_point_y (double y, bool coordinate)
+		requires (horizontal.length () >= 2)
+	{
+		double d, m;
+		Line ymin = horizontal.first ().data;
+		Line ypos;
+		Line starty = horizontal.first ().data;
+		Line stopy = horizontal.last ().data;
+		
+		// outside of the grid
+		if (!coordinate) {
+			if (!(starty.pos < Glyph.path_coordinate_y (y) < stopy.pos)) {
+				return y;
+			}
+		} else {
+			if (!(starty.pos < -y < stopy.pos)) {
+				return y;
+			}
+		}
+		
+		if (!coordinate) {
+			ypos = new Line ("", 0, Line.HORIZONTAL);
+			ypos.pos = Glyph.path_coordinate_y (y);
+		} else {
+			ypos = new Line ("", -y, Line.HORIZONTAL);
+		}
+
+		m = double.MAX;
+		foreach (Line line in horizontal) {
+			d = Math.fabs (line.get_pos () - ypos.get_pos ());
+			
+			if (d <= m) {
+				m = d;
+				ymin = line;
+			}
+			
+		}
+		
+		if (!coordinate) {
+			y = Glyph.reverse_path_coordinate_y (ymin.get_pos ());
+		} else {
 			y = -ymin.get_pos ();
 		}
+		
+		return y;
 	}
 	
 	public static bool is_visible () {

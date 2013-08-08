@@ -77,9 +77,6 @@ public class Toolbox : GLib.Object  {
 		ZoomTool zoom_tool = new ZoomTool ("zoom_tool");
 		draw_tools.add_tool (zoom_tool);
 
-		CutTool cut_tool = new CutTool ("cut");
-		draw_tools.add_tool (cut_tool);	
-
 		Tool move_tool = new MoveTool ("move");
 		draw_tools.add_tool (move_tool);
 
