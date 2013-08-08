@@ -102,6 +102,15 @@ public class OverView : FontDisplay {
 		update_scrollbar ();
 	}
 	
+	public Glyph? get_current_glyph () 
+	requires (selected > 0 && selected < visible_items.length ()) {
+		OverViewItem oi = visible_items.nth (selected).data;
+		if (oi.glyphs != null) {
+			return ((!) oi.glyphs).get_current ();
+		}
+		return null;
+	}
+	
 	private void set_initial_zoom () {
 		Toolbox tools = MainWindow.get_toolbox ();
 		ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");

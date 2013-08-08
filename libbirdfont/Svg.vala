@@ -234,8 +234,7 @@ class Svg {
 		
 		cr.save ();
 
-		cr.set_line_width (1);
-		cr.set_source_rgba (0, 0, 0, 1);
+		cr.set_line_width (0);
 		
 		if (svg == "") {
 			return;

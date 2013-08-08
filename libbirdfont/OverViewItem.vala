@@ -66,7 +66,7 @@ public class OverViewItem : GLib.Object {
 		if (has_icons () && info.is_over_icon (px, py)) {
 			MainWindow.get_overview ().set_character_info (info);
 		}
-		
+				
 		return selected;
 	}
 

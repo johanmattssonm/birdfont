@@ -512,5 +512,17 @@ c.append ("""
 	public static void select_language () {
 		MainWindow.get_tab_bar ().add_unique_tab (new LanguageSelectionTab (), 120, false);
 	}
+
+	public static void use_current_glyph_as_background () {
+		Glyph.background_glyph = MainWindow.get_current_glyph ();
+		
+		if (MainWindow.get_current_display () is OverView) {
+			Glyph.background_glyph = MainWindow.get_overview ().get_current_glyph ();
+		}
+	}
+	
+	public static void reset_glyph_background () {
+		Glyph.background_glyph = null;
+	}
 }
 }

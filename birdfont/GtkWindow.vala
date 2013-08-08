@@ -550,7 +550,15 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		edit_menu.append (glyph_sequence_item);
 		glyph_sequence_item.activate.connect (() => { MainWindow.update_glyph_sequence (); });
 		glyph_sequence_item.add_accelerator ("activate", accel_group, 'Q', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-		
+
+		Gtk.MenuItem background_glyph_item = new Gtk.MenuItem.with_mnemonic (_("Set Glyph _Background"));
+		edit_menu.append (background_glyph_item);
+		background_glyph_item.activate.connect (() => { MenuTab.use_current_glyph_as_background (); });
+
+		Gtk.MenuItem reset_background_glyph_item = new Gtk.MenuItem.with_mnemonic (_("Remove Glyph _Background"));
+		edit_menu.append (reset_background_glyph_item);
+		reset_background_glyph_item.activate.connect (() => { MenuTab.reset_glyph_background (); });
+
 		edit_menu.append (new SeparatorMenuItem ());
 
 		Gtk.MenuItem select_point_above = new Gtk.MenuItem.with_mnemonic (" Ctrl+↑  " + _("_Select Point Above"));

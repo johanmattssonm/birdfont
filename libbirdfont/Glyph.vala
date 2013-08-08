@@ -85,6 +85,8 @@ public class Glyph : FontDisplay {
 	bool ligature = false;
 	string substitution = "";
 	
+	public static Glyph? background_glyph = null;
+	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -1355,7 +1357,10 @@ public class Glyph : FontDisplay {
 		left = get_line ("left").pos;
 		
 		if (!is_open ()) {
+			cr.save ();
+			cr.set_source_rgba (0, 0, 0, 1);
 			Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () + baseline);
+			cr.restore ();
 		}
 		
 		if (is_open ()) {
@@ -1421,6 +1426,7 @@ public class Glyph : FontDisplay {
 			((!)background_image).draw (cr, allocation, view_offset_x, view_offset_y, view_zoom);
 		}
 		
+		draw_background_glyph (allocation, cr);
 		juxtapose (allocation, cr);
 
 		if (BirdFont.show_coordinates) {
@@ -1599,8 +1605,10 @@ public class Glyph : FontDisplay {
 		
 		cr = new Context (img);
 		
+		cr.save ();
+		cr.set_source_rgba (0, 0, 0, 1);
 		Svg.draw_svg_path (cr, get_svg_data (), gx, gy);	
-		
+		cr.restore ();
 		return img;
 	}
 
@@ -1704,7 +1712,7 @@ public class Glyph : FontDisplay {
 		
 		return false;
 	}
-
+	
 	public void juxtapose (WidgetAllocation allocation, Context cr) {
 		string glyph_sequence = Preferences.get ("glyph_sequence");
 		unichar c;
@@ -1743,6 +1751,7 @@ public class Glyph : FontDisplay {
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
 				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
+				cr.set_source_rgba (0, 0, 0, 1);
 				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x + kern, Glyph.yc () + baseline);
 				cr.restore ();
 			}
@@ -1771,13 +1780,36 @@ public class Glyph : FontDisplay {
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
 				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
-
+				cr.set_source_rgba (0, 0, 0, 1);
 				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x, Glyph.yc () + baseline);
 				cr.restore ();
 			}
 			
 			last_name = name;
 		}	
+	}
+	
+	void draw_background_glyph (WidgetAllocation allocation, Context cr) {
+		double left, baseline, current_baseline, current_left;
+		Glyph g;
+		
+		current_baseline = get_line ("baseline").pos;
+		current_left = get_line ("left").pos;
+		
+		if (background_glyph != null) {
+			g = (!) background_glyph;
+			baseline = get_line ("baseline").pos;
+			left = g.get_line ("left").pos;
+			cr.save ();
+			cr.scale (view_zoom, view_zoom);
+			cr.translate (-view_offset_x, -view_offset_y);
+			cr.set_source_rgba (0.2, 0.2, 0.2, 0.5);
+			Svg.draw_svg_path (cr, g.get_svg_data (), 
+				Glyph.xc () + left - (left - current_left) , 
+				Glyph.yc () + baseline - (current_baseline - baseline));
+			cr.restore ();
+		}
+		
 	}
 }
 
