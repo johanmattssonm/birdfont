@@ -253,55 +253,6 @@ public class Tool : GLib.Object {
 		cr.restore ();
 	}
 
-	/** Run a test case for this tool. */
-	public virtual bool test () {
-		stderr.printf (@"$(get_name ()) does not have a test case, implement one by overriding test method in Tool base class.");
-		return false;
-	}
-	
-	/** Help function to test button press actions. */
-	public void test_click_action (int b, int x, int y) {
-		Tool.yield ();
-		press_action (this, b, x, y);
-		
-		Tool.yield ();
-		release_action (this, b, x, y);
-	}
-
-	/** Help function to test select action for this tool. */
-	public void test_select_action () {
-		Tool.yield ();
-		MainWindow.get_toolbox ().select_tool (this);
-	}
-
-	public void test_move_action (int x, int y) {
-		Tool.yield ();
-		move_action (this, x, y);
-	}
-
-	public void test_press_action (int b, int x, int y) {
-		Tool.yield ();
-		press_action (this, b, x, y);
-	}
-
-	public void test_release_action (int b, int x, int y) {
-		Tool.yield ();
-		release_action (this, b, x, y);
-	}
-
-	public static void test_open_next_glyph () {
-		OverView o = MainWindow.get_overview ();
-		
-		MainWindow.get_tab_bar ().select_overview ();
-		Toolbox.select_tool_by_name ("utf_8");
-		
-		o.select_next_glyph ();
-		Tool.yield ();
-		
-		o.open_current_glyph ();
-		Tool.yield ();
-	}
-	
 	/** Run pending events in main loop before continuing. */
 	public static void @yield () {
 		int t = 0;
@@ -345,7 +296,6 @@ public class Tool : GLib.Object {
 		
 		c.release ();
 	}
-	
 }
 
 }

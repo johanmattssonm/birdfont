@@ -91,11 +91,6 @@ class ZoomTool : Tool {
 		MainWindow.get_current_display ().zoom_min ();
 	}
 	
-	public override bool test () {
-		test_select_action ();
-		return true;
-	}
-	
 	/** Add an item to zoom view list. */
 	public void store_current_view () {	
 		if (views.length () - 1 > view_index) {

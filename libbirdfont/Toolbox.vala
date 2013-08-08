@@ -154,7 +154,11 @@ public class Toolbox : GLib.Object  {
 		edit_point_modifiers.add_tool (create_line);
 	
 		// path tools
-		Tool union_paths_tool = new MergeTool ("union_paths");
+		Tool union_paths_tool = new Tool ("union_paths", _("Merge paths"));
+		union_paths_tool.select_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			g.merge_all ();
+		});
 		path_tool_modifiers.add_tool (union_paths_tool);
 		
 		Tool reverse_path_tool = new Tool ("reverse_path", _("Create counter from outline"));

@@ -142,10 +142,6 @@ class BackgroundTool : Tool {
 
 		MainWindow.get_glyph_canvas ().redraw ();
 	}
-	
-	public override bool test () {
-		return false;
-	}
 
 }
 

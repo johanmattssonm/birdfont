@@ -28,7 +28,7 @@ class TestCases {
 		add (test_active_edit_point, "Active edit point");
 		add (test_hex, "Unicode hex values");
 		add (test_reverse_path, "Reverse path");
-		add (test_reverse_random_paths, "Reverse random paths");
+		add (test_reverse_random_triangles, "Reverse random paths");
 		add (test_coordinates, "Coordinates");
 		add (test_drawing, "Pen tool");
 		add (test_delete_points, "Delete edit points");
@@ -45,7 +45,15 @@ class TestCases {
 		add (test_freetype, "Freetype");
 		add (test_preview, "Preview");
 	}
-
+	
+	private void add (Callback callback, string name) {
+		test_cases.append (new Test (callback, name));
+	}
+	
+	public unowned List<Test> get_test_functions () {
+		return test_cases;
+	}
+	
 	public static void test_freetype () {
 		StringBuilder? data;
 		int error;
@@ -93,7 +101,7 @@ class TestCases {
 
 	public static void test_parse_quadratic_paths () {
 		Glyph g;
-		Tool.test_open_next_glyph ();
+		test_open_next_glyph ();
 		
 		g = MainWindow.get_current_glyph ();
 		ImportSvg.parse_svg_data ("M20,300 Q400,50 600,300 T1000,300Q1200 50 1400 300Q1600 50 1800 600 L 1800 700 L 200 700 z", g);
@@ -204,7 +212,7 @@ class TestCases {
 			d.put_string (illustrator_data);
 			d.close ();
 			
-			Tool.test_open_next_glyph ();
+			test_open_next_glyph ();
 			ImportSvg.import_svg ((!) temp_file.get_path ());
 
 			temp_file.delete ();
@@ -293,7 +301,7 @@ class TestCases {
 			d.put_string (inkscape_data);
 			d.close ();
 			
-			Tool.test_open_next_glyph ();
+			test_open_next_glyph ();
 			ImportSvg.import_svg ((!) temp_file.get_path ());
 
 			temp_file.delete ();
@@ -370,7 +378,7 @@ class TestCases {
 		Glyph g;
 		Path p = new Path ();
 		
-		Tool.test_open_next_glyph ();
+		test_open_next_glyph ();
 		g = MainWindow.get_current_glyph ();
 				
 		p.add (-10, -10);
@@ -394,7 +402,7 @@ class TestCases {
 		Glyph g;
 		Path p = new Path ();
 		
-		Tool.test_open_next_glyph ();
+		test_open_next_glyph ();
 		g = MainWindow.get_current_glyph ();
 				
 		p.add (-10, 10);
@@ -423,17 +431,17 @@ class TestCases {
 		Tool pen_tool;
 		
 		pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
-		pen_tool.test_select_action ();
-		Tool.test_open_next_glyph ();
+		test_select_action (pen_tool);
+		test_open_next_glyph ();
 		
 		g = MainWindow.get_current_glyph ();
 
-		pen_tool.test_click_action (3, 10, 10);
-		pen_tool.test_click_action (3, 10, 10);
-		pen_tool.test_click_action (3, 100, 10);
-		pen_tool.test_click_action (3, 100, 100);
-		pen_tool.test_click_action (3, 10, 100);
-		pen_tool.test_click_action (2, 0, 0);
+		test_click_action (pen_tool, 3, 10, 10);
+		test_click_action (pen_tool, 3, 10, 10);
+		test_click_action (pen_tool, 3, 100, 10);
+		test_click_action (pen_tool, 3, 100, 100);
+		test_click_action (pen_tool, 3, 10, 100);
+		test_click_action (pen_tool, 2, 0, 0);
 
 		g.close_path ();
 
@@ -474,7 +482,7 @@ class TestCases {
 		Path p = new Path ();
 		Path p2 = new Path ();
 		
-		Tool.test_open_next_glyph ();
+		test_open_next_glyph ();
 		g = MainWindow.get_current_glyph ();
 				
 		p.add (-10, 10);
@@ -497,6 +505,11 @@ class TestCases {
 		
 		g.add_active_path (p);
 		g.merge_all	();
+		
+		test_merge_second_triangle ();
+		test_merge_simple_path_box_and_triangle ();
+		test_merge_simple_path_box ();
+		test_merge_odd_paths ();
 	}
 
 	public static void test_notdef () {
@@ -507,7 +520,7 @@ class TestCases {
 		
 		f.add_glyph (n);
 		
-		Tool.test_open_next_glyph ();
+		test_open_next_glyph ();
 		g = MainWindow.get_current_glyph ();
 		foreach (Path p in n.path_list) {
 			pn = p.copy ().get_quadratic_points ();
@@ -532,7 +545,7 @@ class TestCases {
 		}
 				
 		// create a new path and convert it
-		Tool.test_open_next_glyph ();
+		test_open_next_glyph ();
 		
 		p = new Path ();
 		p1 = new Path ();
@@ -790,16 +803,6 @@ class TestCases {
 		return_if_fail (table.get ("TEST 54") != null);
 	}
 
-	public static void test_delete_points () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_delete_points ();
-	}
-
-	public static void test_active_edit_point () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_active_edit_point ();
-	}
-
 	public static void test_hex () {
 		test_hex_conv ('H', "U+48", 72);
 		test_hex_conv ('1', "U+31", 49);
@@ -815,33 +818,626 @@ class TestCases {
 		if ((int)t != r || t != h) warning (@"$((int)t) != $r || $t != '$h'");
 	}
 
-	public static void test_coordinates () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_coordinates ();		
-	}
-
-	public static void test_reverse_random_paths () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_reverse_random_triangles ();		
-	}
-
-	public static void test_reverse_path () {
-		PenTool tool = (PenTool) MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test_reverse_path ();
-	}
-
+	// test pen tool
+	/** Draw a test glyph. */
 	public static void test_drawing () {
-		Tool tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
-		tool.test ();
-	}
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
 		
-	private void add (Callback callback, string name) {
-		test_cases.append (new Test (callback, name));
+		test_select_action (pen_tool);
+		
+		test_open_next_glyph ();
+		
+		// paint
+		test_click_action (pen_tool, 1, 30, 30); 
+		test_click_action (pen_tool, 1, 60, 30);
+		test_click_action (pen_tool, 1, 60, 60);
+		test_click_action (pen_tool, 1, 30, 60);
+		
+		// close
+		test_click_action (pen_tool, 3, 0, 0);
+
+		// reopen
+		test_click_action (pen_tool, 3, 35, 35);
+		
+		// move around
+		test_move_action (pen_tool, 100, 200);
+		test_move_action (pen_tool, 20, 300);
+		test_move_action (pen_tool, 0, 0);
+		
+		// add to path
+		test_move_action (pen_tool, 70, 50);
+		
+		test_click_action (pen_tool, 1, 70, 50);
+		test_click_action (pen_tool, 1, 70, 50);
+		test_click_action (pen_tool, 1, 70, 100);
+		test_click_action (pen_tool, 1, 50, 100); 
+		test_click_action (pen_tool, 1, 50, 50);
+		
+		// close
+		test_click_action (pen_tool, 3, 0, 0);
+		Tool.yield ();
+	}
+
+	public static void test_active_edit_point () {
+		Glyph g;
+		EditPoint epa, epb;
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+		
+		// paint
+		Toolbox.select_tool_by_name ("pen_tool");
+		test_open_next_glyph ();
+
+		g = MainWindow.get_current_glyph ();
+
+		test_click_action (pen_tool, 3, 130, 130); // add point
+		epa = g.get_last_edit_point ();
+		
+		test_click_action (pen_tool, 3, 160, 130);
+		test_click_action (pen_tool, 3, 160, 160);
+		epb = g.get_last_edit_point ();
+		
+		test_click_action (pen_tool, 1, 130, 160);
+		
+		// validate active point
+		test_move_action (pen_tool, 130, 130);
+		warn_if_fail (PenTool.active_edit_point == epa);
+		
+		test_move_action (pen_tool, 161, 161);
+		warn_if_fail (PenTool.active_edit_point == epb);
+		
+		warn_if_fail (epa != epb);
+		
+		// TODO: Test move handle here.
+	}
+
+	/** Test path coordinates and reverse path coordinates. */
+	public static void test_coordinates () {
+		int x, y, xc, yc;
+		double px, py, mx, my;
+		string n;
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+		
+		test_open_next_glyph ();
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		xc = (int) (g.allocation.width / 2.0);
+		yc = (int) (g.allocation.height / 2.0);
+
+		g.default_zoom ();
+		
+		x = 10;
+		y = 15;
+		
+		px = Glyph.path_coordinate_x (x);
+		py = Glyph.path_coordinate_y (y);
+
+		mx = x * Glyph.ivz () - Glyph.xc () + g.view_offset_x;
+		my = Glyph.yc () - y * Glyph.ivz () - g.view_offset_y;
+		
+		if (mx != px || my != py) {
+			warning (@"bad coordinate $mx != $px || $my != $py");
+		}
+			
+		test_reverse_coordinate (x, y, px, py, "ten fifteen");
+		test_click_action (pen_tool, 1, x, y);
+	
+		// offset no zoom
+		n = "Offset no zoom";
+		g.reset_zoom ();
+		
+		px = Glyph.path_coordinate_x (x);
+		py = Glyph.path_coordinate_y (y);
+		
+		test_reverse_coordinate (x, y, px, py, n);
+		test_click_action (pen_tool, 1, x, y);
+		
+		// close path
+		test_click_action (pen_tool, 3, x, y);
 	}
 	
-	public unowned List<Test> get_test_functions () {
-		return test_cases;
+	private static void test_reverse_coordinate (int x, int y, double px, double py, string n) {
+		if (x != Glyph.reverse_path_coordinate_x (px) || Glyph.reverse_path_coordinate_y (py) != y) {
+			warning (@"Reverse coordinates does not match current point for test case \"$n\".\n $x != $(Glyph.reverse_path_coordinate_x (px)) || $(Glyph.reverse_path_coordinate_y (py)) != $y (x != Glyph.reverse_path_coordinate_x (px) || Glyph.reverse_path_coordinate_y (py) != y)");
+		}
 	}
-}	
 	
+	private static void test_last_is_clockwise (string name) {
+		bool d = ((!)MainWindow.get_current_glyph ().get_last_path ()).is_clockwise ();
+		
+		if (!d) {
+			critical (@"\nPath $name is counter clockwise, in test_last_is_clockwise");
+		}
+
+	}
+	
+	private static bool test_reverse_last (string name) 
+		requires (MainWindow.get_current_glyph ().get_last_path () != null)
+	{
+		Glyph g = MainWindow.get_current_glyph ();
+		Path p = (!) g.get_last_path ();
+		bool direction = p.is_clockwise ();
+
+		p.reverse ();
+		
+		if (direction == p.is_clockwise ()) {
+			critical (@"Direction did not change after reverseing path \"$name\"\n");
+			stderr.printf (@"Path length: $(p.points.length ()) \n");
+			return false;
+		}
+
+		Tool.yield ();
+		return true;
+	}
+	
+	class Point {
+		
+		public int x;
+		public int y;
+		
+		public Point (int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+	
+	private static Point p (int x, int y) {
+		return new Point (x, y);
+	}
+	
+	private static void test_triangle (Point a, Point b, Point c, string name = "") {
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+		
+		Tool.yield ();
+		MainWindow.get_tab_bar ().select_overview ();
+
+		Tool.yield ();
+		MainWindow.get_overview ().open_current_glyph ();
+		
+		test_select_action (pen_tool);
+		
+		test_click_action (pen_tool, 3, a.x, a.y);
+		test_click_action (pen_tool, 3, b.x, b.y);
+		test_click_action (pen_tool, 3, c.x, c.y);
+		
+		test_reverse_last (@"Triangle reverse \"$name\" ($(a.x), $(a.y)), ($(b.x), $(b.y)), ($(c.x), $(c.y)) failed.");
+		
+		Tool.yield ();
+	}
+	
+	private static void test_various_triangles () {
+		test_triangle (p (287, 261), p (155, 81), p (200, 104), "First");
+		test_triangle (p (65, 100), p (168, 100), p (196, 177), "Second");
+		test_triangle (p (132, 68), p (195, 283), p (195, 222), "Third");
+		test_triangle (p (144, 267), p (147, 27), p (296, 267), "Fourth");
+	}
+	
+	public static void test_reverse_path () {
+		// open a new glyph
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+
+		Tool.yield ();
+		MainWindow.get_tab_bar ().select_overview ();
+
+		Tool.yield ();
+		MainWindow.get_overview ().open_current_glyph ();
+		
+		test_select_action (pen_tool);
+		
+		// paint
+		int x_offset = 10;
+		int y_offset = 10;
+		
+		test_open_next_glyph ();
+		test_various_triangles ();
+		
+		test_open_next_glyph ();
+		// draw clockwise and check direction		
+
+		y_offset += 160;
+		test_click_action (pen_tool, 3, 10 + x_offset, 20 + y_offset);
+		test_click_action (pen_tool, 3, 17 + x_offset, 17 + y_offset);
+		test_click_action (pen_tool, 3, 20 + x_offset, 0 + y_offset);
+		test_click_action (pen_tool, 2, 0, 0);
+		test_last_is_clockwise ("Clockwise triangle 1.2");
+
+		// draw paths clockwise / counter clockwise and reverse them
+		
+		test_click_action (pen_tool, 3, 115, 137);
+		test_click_action (pen_tool, 3, 89, 74);
+		test_click_action (pen_tool, 3, 188, 232);
+		test_click_action (pen_tool, 2, 0, 0);
+		test_reverse_last ("Triangle 0");
+
+		// draw incomplete paths
+		y_offset += 20;
+		test_click_action (pen_tool, 3, 10 + x_offset, 20 + y_offset);
+		test_reverse_last ("Point");
+		test_click_action (pen_tool, 2, 0, 0);
+
+		y_offset += 20;
+		test_click_action (pen_tool, 3, 10 + x_offset, 20 + y_offset);
+		test_click_action (pen_tool, 3, 10 + x_offset, 20 + y_offset);
+		test_reverse_last ("Double point");
+		test_click_action (pen_tool, 2, 0, 0);
+		
+		y_offset += 20;
+		test_click_action (pen_tool, 3, 10 + x_offset, 30 + y_offset);
+		test_click_action (pen_tool, 3, 10 + x_offset, 20 + y_offset);
+		test_reverse_last ("Vertical line");
+		test_click_action (pen_tool, 2, 0, 0);
+		
+		y_offset += 20;
+		test_click_action (pen_tool, 1, 30 + x_offset, 20 + y_offset);
+		test_click_action (pen_tool, 1, 10 + x_offset, 20 + y_offset);
+		test_click_action (pen_tool, 3, 0, 0);
+		test_reverse_last ("Horisontal line");
+		test_click_action (pen_tool, 2, 0, 0);
+		
+		// triangle 1
+		y_offset += 20;
+		test_click_action (pen_tool, 3, 10 + x_offset, -10 + y_offset);
+		test_click_action (pen_tool, 3, 20 + x_offset, 20 + y_offset);
+		test_click_action (pen_tool, 3, 30 + x_offset, 0 + y_offset);
+		test_reverse_last ("Triangle reverse 1");
+		test_click_action (pen_tool, 2, 0, 0);
+		
+		// box
+		y_offset += 20;
+		test_click_action (pen_tool, 3, 100 + x_offset, 150 + y_offset);
+		test_click_action (pen_tool, 3, 150 + x_offset, 150 + y_offset);
+		test_click_action (pen_tool, 3, 150 + x_offset, 100 + y_offset);
+		test_click_action (pen_tool, 3, 100 + x_offset, 100 + y_offset); 
+		test_reverse_last ("Box 1");
+		test_click_action (pen_tool, 2, 0, 0);
+	}
+	
+	private static Tool select_pen () {
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+		test_select_action (pen_tool);
+		return pen_tool;
+	}
+	
+	public static void test_delete_points () {
+		PenTool pen;
+
+		test_open_next_glyph ();
+				
+		pen = (PenTool) select_pen ();
+		
+		// draw a line with ten points
+		for (int i = 1; i <= 10; i++) {
+			test_click_action (pen, 3, 20*i, 20);
+		}	
+	
+		// TODO: it would be nice to test if points were created here
+		
+		// delete points
+		for (int i = 1; i <= 10; i++) {
+			test_move_action (pen, 20 * i, 20);
+			test_click_action (pen, 1, 20*i, 20);
+			PenTool.delete_selected_points ();
+		}
+	}
+	
+	public static void test_reverse_random_triangles () {
+		Tool pen;
+		
+		int ax, bx, cx;
+		int ay, by, cy;
+
+		bool r = true;
+
+		test_open_next_glyph ();
+		pen = select_pen ();
+
+		for (int i = 0; i < 30; i++) {
+			Tool.yield ();
+			
+			ax = Random.int_range (0, 300);
+			bx = Random.int_range (0, 300);
+			cx = Random.int_range (0, 300);
+
+			ay = Random.int_range (0, 300);
+			by = Random.int_range (0, 300);
+			cy = Random.int_range (0, 300);
+
+			test_click_action (pen, 3, ax, ay);
+			test_click_action (pen, 3, bx, by);
+			test_click_action (pen, 3, cx, cy);
+			test_click_action (pen, 2, 0, 0);
+			
+			r = test_reverse_last (@"Random triangle № $(i + 1) ($ax, $ay), ($bx, $by), ($cx, $cy)");
+			if (!r) {
+				test_open_next_glyph ();
+				pen = select_pen ();
+
+				test_click_action (pen, 3, ax, ay);
+				test_click_action (pen, 3, bx, by);
+				test_click_action (pen, 3, cx, cy);
+				test_click_action (pen, 2, 0, 0);
+				
+				return;
+			}
+			
+			test_open_next_glyph ();
+		}
+		
+		if (r) test_open_next_glyph ();
+	}
+
+	
+	/** Help function to test button press actions. */
+	public static void test_click_action (Tool t, int b, int x, int y) {
+		Tool.yield ();
+		t.press_action (t, b, x, y);
+		
+		Tool.yield ();
+		t.release_action (t, b, x, y);
+	}
+
+	/** Help function to test select action for this tool. */
+	public static  void test_select_action (Tool t) {
+		Toolbox tb = MainWindow.get_toolbox ();
+		Tool.yield ();
+		tb.select_tool (t);
+	}
+
+	public static  void test_move_action (Tool t, int x, int y) {
+		Tool.yield ();
+		t.move_action (t, x, y);
+	}
+
+	public static void test_press_action (Tool t, int b, int x, int y) {
+		Tool.yield ();
+		t.press_action (t, b, x, y);
+	}
+
+	public static void test_release_action (Tool t, int b, int x, int y) {
+		Tool.yield ();
+		t.release_action (t, b, x, y);
+	}
+
+	public static void test_open_next_glyph () {
+		OverView o = MainWindow.get_overview ();
+		
+		MainWindow.get_tab_bar ().select_overview ();
+		Toolbox.select_tool_by_name ("utf_8");
+		
+		o.select_next_glyph ();
+		Tool.yield ();
+		
+		o.open_current_glyph ();
+		Tool.yield ();
+	}
+
+	private static  void test_merge_odd_paths () {
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+
+		Tool.yield ();
+		MainWindow.get_tab_bar ().select_overview ();
+
+		Tool.yield ();
+		MainWindow.get_overview ().open_current_glyph ();
+		
+		test_select_action (pen_tool);
+
+		// paint
+		int x_offset = 100;
+		int y_offset = 100;
+						
+		// rectangle
+		test_click_action (pen_tool, 1, 100 + x_offset, 100 + y_offset);
+		test_click_action (pen_tool, 1, 170 + x_offset, 100 + y_offset);
+		test_click_action (pen_tool, 1, 170 + x_offset, 120 + y_offset);
+		test_click_action (pen_tool, 1, 100 + x_offset, 120 + y_offset); 
+		test_click_action (pen_tool, 3, 0, 0); // close
+		
+		// triangle
+		test_click_action (pen_tool, 1, 100 + x_offset, 110 + y_offset);
+		test_click_action (pen_tool, 1, 180 + x_offset, 130 + y_offset);
+		test_click_action (pen_tool, 1, -10 + x_offset, 140 + y_offset);
+		test_click_action (pen_tool, 3, 0, 0);
+
+		// several triangles
+		test_click_action (pen_tool, 1, 198, 379); 
+		test_click_action (pen_tool, 1, 274, 328); 
+		test_click_action (pen_tool, 1, 203, 286); 
+		test_click_action (pen_tool, 3, 230, 333);
+
+		test_click_action (pen_tool, 1, 233, 429); 
+		test_click_action (pen_tool, 1, 293, 382); 
+		test_click_action (pen_tool, 1, 222, 322); 
+		test_click_action (pen_tool, 3, 225, 406);
+
+		test_click_action (pen_tool, 1, 164, 316); 
+		test_click_action (pen_tool, 1, 262, 289); 
+		test_click_action (pen_tool, 1, 203, 260); 
+		test_click_action (pen_tool, 3, 203, 260); 
+
+		Tool.yield ();
+		
+		Toolbox.select_tool_by_name ("merge");
+	}	
+	
+	private static void test_merge_simple_path_box () {
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+
+		Tool.yield ();
+		MainWindow.get_tab_bar ().select_overview ();
+
+		Tool.yield ();
+		MainWindow.get_overview ().open_current_glyph ();
+		
+		test_select_action (pen_tool);
+
+		int x_offset = 10;
+		int y_offset = 350;
+		
+		// draw it
+		test_click_action (pen_tool, 1, 10 + x_offset, 10 + y_offset);
+		test_click_action (pen_tool, 1, 20 + x_offset, 10 + y_offset);
+		test_click_action (pen_tool, 1, 20 + x_offset, 20 + y_offset);
+		test_click_action (pen_tool, 1, 10 + x_offset, 20 + y_offset); 
+		test_click_action (pen_tool, 3, 0, 0);
+
+		test_press_action (pen_tool, 1, 1, 1);
+		test_move_action (pen_tool, 15 + x_offset, 15 + y_offset);
+		test_release_action (pen_tool, 1, 15 + x_offset, 15 + y_offset);
+				
+		test_click_action (pen_tool, 1, 25 + x_offset, 15 + y_offset);
+		test_click_action (pen_tool, 1, 25 + x_offset, 25 + y_offset);
+		test_click_action (pen_tool, 1, 15 + x_offset, 25 + y_offset); 
+		test_click_action (pen_tool, 3, 0, 0);
+		
+		// merge it
+		Toolbox.select_tool_by_name ("union_paths");
+		
+		// test result
+		Path merged_outline = new Path ();
+		add_point_on_path (merged_outline, 10 + x_offset, 10 + y_offset);
+		add_point_on_path (merged_outline, 20 + x_offset, 10 + y_offset);
+		add_point_on_path (merged_outline, 20 + x_offset, 15 + y_offset);
+		add_point_on_path (merged_outline, 25 + x_offset, 15 + y_offset);
+		add_point_on_path (merged_outline, 25 + x_offset, 25 + y_offset);
+		add_point_on_path (merged_outline, 15 + x_offset, 25 + y_offset);
+		add_point_on_path (merged_outline, 15 + x_offset, 20 + y_offset);
+		add_point_on_path (merged_outline, 10 + x_offset, 20 + y_offset);
+		merged_outline.close ();
+		
+		// select path
+		test_click_action (pen_tool, 3, 12 + x_offset, 12 + y_offset);
+		
+		Glyph g = MainWindow.get_current_glyph ();
+		Path? l = g.get_active_path ();
+		
+		if (l == null) {
+			critical ("No path found in merge test, it did not merge correctly.");
+			return;
+		}
+		
+		Path last = (!) l;
+		bool merged_path_looks_good = false;
+		 merged_path_looks_good = last.test_is_outline (merged_outline);
+		
+		if (!merged_path_looks_good) critical ("Failed to merge path correctly.");
+	}
+
+	private static void test_merge_simple_path_box_and_triangle () {
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+
+		Tool.yield ();
+		MainWindow.get_tab_bar ().select_overview ();
+
+		Tool.yield ();
+		MainWindow.get_overview ().open_current_glyph ();
+		
+		test_select_action (pen_tool);
+
+		int x_offset = 40;
+		int y_offset = 350;
+		
+		// draw it
+		test_click_action (pen_tool, 1, 0 + x_offset, -50 + y_offset);
+		test_click_action (pen_tool, 1, 25 + x_offset, -50 + y_offset);
+		test_click_action (pen_tool, 1, 25 + x_offset, 0 + y_offset);
+		test_click_action (pen_tool, 1, 0 + x_offset, 0 + y_offset); 
+		test_click_action (pen_tool, 3, 0, 0);
+		
+		test_click_action (pen_tool, 1, 0 + x_offset, 0 + y_offset);
+		test_click_action (pen_tool, 1, 50 + x_offset, -50 + y_offset);
+		test_click_action (pen_tool, 1, 50 + x_offset, 0 + y_offset); 
+		test_click_action (pen_tool, 3, 0, 0);
+
+		// merge it
+		Toolbox.select_tool_by_name ("union_paths");
+		
+		// test result
+		Path merged_outline = new Path ();
+		add_point_on_path (merged_outline, 0 + x_offset, -50 + y_offset);
+		add_point_on_path (merged_outline, 25 + x_offset, -50 + y_offset);
+		add_point_on_path (merged_outline, -50 + x_offset, -50 + y_offset);
+		add_point_on_path (merged_outline, -50 + x_offset, 0 + y_offset);
+		add_point_on_path (merged_outline, 0 + x_offset, 0 + y_offset);
+		merged_outline.close ();
+
+		// select path
+		test_click_action (pen_tool, 3, 21 + x_offset, -11 + y_offset);
+		
+		Glyph g = MainWindow.get_current_glyph ();
+		Path? l = g.get_active_path ();
+		
+		if (l == null) {
+			critical ("No path found in test_merge_simple_path_box_and_triangle, it did not merge correctly.");
+			return;
+		}
+		
+		Path last = (!) l;
+		bool merged_path_looks_good = false;
+		 merged_path_looks_good = last.test_is_outline (merged_outline);
+		
+		if (!merged_path_looks_good) critical ("Failed to merge path correctly.");
+	}
+
+	private static void test_merge_second_triangle () {
+		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
+
+		Tool.yield ();
+		MainWindow.get_tab_bar ().select_overview ();
+
+		Tool.yield ();
+		MainWindow.get_overview ().open_current_glyph ();
+		
+		test_select_action (pen_tool);
+
+		int x_offset = 100;
+		int y_offset = 350;
+		
+		// draw it
+		test_click_action (pen_tool, 1, 25 + x_offset, 0 + y_offset);
+		test_click_action (pen_tool, 1, 25 + x_offset, -50 + y_offset);
+		test_click_action (pen_tool, 1, 0 + x_offset, -50 + y_offset);
+		test_click_action (pen_tool, 1, 0 + x_offset, 0 + y_offset); 
+
+		test_click_action (pen_tool, 3, 0, 0);
+		
+		test_click_action (pen_tool, 1, 40 + x_offset, -50 + y_offset);
+		test_click_action (pen_tool, 1, 10 + x_offset, -20 + y_offset);
+		test_click_action (pen_tool, 1, 25 + x_offset, -20 + y_offset); 
+		test_click_action (pen_tool, 3, 0, 0);
+		
+		// merge it
+		Toolbox.select_tool_by_name ("union_paths");
+		
+		// test result
+		Path merged_outline = new Path ();
+		add_point_on_path (merged_outline, 0 + x_offset, -50 + y_offset);
+		add_point_on_path (merged_outline, 25 + x_offset, -50 + y_offset);
+		add_point_on_path (merged_outline, -50 + x_offset, -50 + y_offset);
+		add_point_on_path (merged_outline, -50 + x_offset, 0 + y_offset);
+		add_point_on_path (merged_outline, 0 + x_offset, 0 + y_offset);
+		merged_outline.close ();
+
+		// select path
+		test_click_action (pen_tool, 3, 21 + x_offset, -11 + y_offset);
+		
+		Glyph g = MainWindow.get_current_glyph ();
+		Path? l = g.get_active_path ();
+		
+		if (l == null) {
+			critical ("No path found in triangle_right, it did not merge correctly.");
+			return;
+		}
+		
+		Path last = (!) l;
+		bool merged_path_looks_good = false;
+		 merged_path_looks_good = last.test_is_outline (merged_outline);
+		
+		if (!merged_path_looks_good) critical ("Failed to merge path correctly.");
+	}
+	
+	private static void add_point_on_path (Path p, int x, int y) {
+		p.add (Glyph.path_coordinate_x (x), Glyph.path_coordinate_y (y));
+	}
+}
+
 }
