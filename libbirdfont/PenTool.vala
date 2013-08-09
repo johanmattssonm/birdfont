@@ -182,6 +182,16 @@ public class PenTool : Tool {
 		}
 								
 		g.update_view ();
+
+		while (selected_points.length () > 0) {
+			selected_points.remove_link (selected_points.first ());
+		}
+
+		active_handle = new EditPointHandle.empty ();
+		selected_handle = new EditPointHandle.empty ();
+	
+		active_edit_point = null;
+		selected_point = new EditPoint ();
 	}
 	
 	static void process_deleted () {

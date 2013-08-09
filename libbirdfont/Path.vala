@@ -1711,11 +1711,15 @@ public class Path {
 			path_list.paths.append (current_path);
 		} else {
 			if (current_path.points.length () > 0) {
+				current_path.points.first ().data.set_tie_handle (false);
+				current_path.points.first ().data.set_reflective_handles (false);
 				set_new_start (current_path.points.first ().data);
 				path_list.paths.append (current_path);
 			}
 			
 			if (remaining_points.points.length () > 0) {
+				remaining_points.points.first ().data.set_tie_handle (false);
+				remaining_points.points.first ().data.set_reflective_handles (false);
 				set_new_start (remaining_points.points.first ().data);
 				path_list.paths.append (remaining_points);
 			}
@@ -2089,7 +2093,12 @@ public class Path {
 		double a, radius;
 		
 		foreach (EditPoint ep in points) {
-			radius = Math.sqrt (Math.pow (xc - ep.x, 2) + Math.pow (yc + ep.y, 2));
+			radius = sqrt (pow (xc - ep.x, 2) + pow (yc + ep.y, 2));
+			
+			if (yc + ep.y  < 0) {
+				radius = -radius;
+			}
+			
 			a = acos ((ep.x - xc) / radius);
 			
 			ep.x = xc + cos (a - theta) * radius;
@@ -2097,6 +2106,14 @@ public class Path {
 			
 			ep.get_right_handle ().angle -= theta;
 			ep.get_left_handle ().angle -= theta;
+			
+			while (ep.get_right_handle ().angle < 0) {
+				ep.get_right_handle ().angle += 2 * PI;
+			}
+
+			while (ep.get_left_handle ().angle < 0) {
+				ep.get_left_handle ().angle += 2 * PI;
+			}
 		}
 
 		update_region_boundries ();
