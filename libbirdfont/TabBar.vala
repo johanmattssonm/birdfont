@@ -96,11 +96,11 @@ public class TabBar : GLib.Object {
 				over = NEXT_TAB;
 				return;
 			}
-			
+				
 			if (offset < x < offset + t.get_width ()) {
 				over = i;
 				
-				if (8 < y < 20 && x > offset + t.get_width () - 16) {
+				if (height - 18 < y < height - 5 && x > offset + t.get_width () - 16) {
 					over_close =  i;
 				} else {
 					over_close =  NO_TAB;
@@ -467,7 +467,7 @@ public class TabBar : GLib.Object {
 		cr.restore ();
 
 		for (int j = 0; j < width; j++) {
-			cr.set_source_surface ((!) bar_background, j, 0);
+			cr.set_source_surface ((!) bar_background, j, height - ((!) bar_background).get_height ());
 			cr.paint ();
 		}
 
@@ -530,17 +530,17 @@ public class TabBar : GLib.Object {
 			// background
 			if (i == selected) {
 				for (int j = 0; j < t.get_width (); j++) {
-					cr.set_source_surface ((!) tab3_right, j, 2);
+					cr.set_source_surface ((!) tab3_right, j, (height - ((!)tab1_left).get_height ()) + 1);
 					cr.paint ();
 				}							
 			} else if (i == over) {
 				for (int j = 0; j < t.get_width (); j++) {
-					cr.set_source_surface ((!) tab2_right, j, 2);
+					cr.set_source_surface ((!) tab2_right, j, (height - ((!)tab1_left).get_height ()) + 1);
 					cr.paint ();
 				}				
 			} else {
 				for (int j = 0; j < t.get_width (); j++) {
-					cr.set_source_surface ((!) tab1_right, j, 2);
+					cr.set_source_surface ((!) tab1_right, j, (height - ((!)tab1_left).get_height ()) + 1);
 					cr.paint ();
 				}
 			}
@@ -552,40 +552,40 @@ public class TabBar : GLib.Object {
 				close_opacity = (over_close == i) ? 1 : 0.2; 
 				cr.set_source_rgba (0, 0, 0, close_opacity);
 				
-				cr.move_to (t.get_width () - 5, 11);
-				cr.line_to (t.get_width () - 10, 16);
+				cr.move_to (t.get_width () - 5, height - 14);
+				cr.line_to (t.get_width () - 10, height - 9);
 
-				cr.move_to (t.get_width () - 10, 11);
-				cr.line_to (t.get_width () - 5, 16);
+				cr.move_to (t.get_width () - 10, height - 14);
+				cr.line_to (t.get_width () - 5, height - 9);
 				
 				cr.stroke ();	
 			}
 
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.set_font_size (14);
-			cr.move_to (8, 19);
+			cr.move_to (8, height - 6);
 			cr.show_text (translate (t.get_label ()));
 			cr.stroke ();
 			
 			// edges
 			if (tab1_left != null  && tab1_right != null && tab2_left != null  && tab2_right != null && tab3_left != null  && tab3_right != null) {
 				if (i == selected) {
-					cr.set_source_surface ((!) tab3_left, 0, 2);
+					cr.set_source_surface ((!) tab3_left, 0, (height - ((!)tab1_left).get_height ()) + 1);
 					cr.paint ();
 					
-					cr.set_source_surface ((!) tab3_right, t.get_width () - 2, 2);
+					cr.set_source_surface ((!) tab3_right, t.get_width () - 2, (height - ((!)tab1_left).get_height ()) + 1);
 					cr.paint ();
 				} else if (i == over) {
-					cr.set_source_surface ((!) tab2_left, 0, 2);
+					cr.set_source_surface ((!) tab2_left, 0, (height - ((!)tab1_left).get_height ()) + 1);
 					cr.paint ();
 
-					cr.set_source_surface ((!) tab2_right, t.get_width () - 2, 2);
+					cr.set_source_surface ((!) tab2_right, t.get_width () - 2, (height - ((!)tab1_left).get_height ()) + 1);
 					cr.paint ();
 				} else {
-					cr.set_source_surface ((!) tab1_left, 0, 2);
+					cr.set_source_surface ((!) tab1_left, 0, (height - ((!)tab1_left).get_height ()) + 1);
 					cr.paint ();
 
-					cr.set_source_surface ((!) tab1_right, t.get_width () - 2, 2);
+					cr.set_source_surface ((!) tab1_right, t.get_width () - 2, (height - ((!)tab1_left).get_height ()) + 1);
 					cr.paint ();
 				}
 			}

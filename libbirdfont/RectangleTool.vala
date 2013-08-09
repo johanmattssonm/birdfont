@@ -71,7 +71,8 @@ public class RectangleTool : Tool {
 			rectangle.add (x1, y2);
 
 			rectangle.init_point_type ();
-
+			rectangle.close ();
+			
 			g.add_path (rectangle);
 			
 			foreach (EditPoint e in rectangle.points) {
