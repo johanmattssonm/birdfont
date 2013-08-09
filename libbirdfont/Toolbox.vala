@@ -28,7 +28,8 @@ public class Toolbox : GLib.Object  {
 	
 	Expander draw_tools;
 	Expander grid_expander;
-		
+	Expander shape_tools;
+	
 	BackgroundTool move_background;
 	CutBackgroundTool cut_background;
 	
@@ -56,6 +57,7 @@ public class Toolbox : GLib.Object  {
 		add_expander (toolbox_expander);
 		
 		draw_tools = new Expander ();
+		shape_tools = new Expander ();
 			
 		Expander path_tool_modifiers = new Expander ();
 		Expander draw_tool_modifiers = new Expander ();
@@ -65,6 +67,7 @@ public class Toolbox : GLib.Object  {
 		Expander guideline_tools = new Expander ();
 		Expander view_tools = new Expander ();
 		Expander grid = new Expander ();
+		
 		Expander background_tools = new Expander ();
 		Expander style_tools = new Expander ();
 		
@@ -431,7 +434,11 @@ public class Toolbox : GLib.Object  {
 			zoom_tool.next_view ();
 		});
 		view_tools.add_tool (zoom_next);
-				
+		
+		// shape tools 
+		Tool circle = new CircleTool ("circle");
+		shape_tools.add_tool (circle);
+		
 		// background tools
 		background_scale = new SpinButton ("scale_background", _("Set size for background image"));
 		background_scale.set_int_value ("1.000");
@@ -583,6 +590,7 @@ public class Toolbox : GLib.Object  {
 		characterset_tools.set_open (true);
 		test_tools.set_open (true);
 		guideline_tools.set_open (true);
+		shape_tools.set_open (true);
 		background_tools.set_open (true);
 		style_tools.set_open (true);
 		
@@ -595,6 +603,7 @@ public class Toolbox : GLib.Object  {
 		add_expander (guideline_tools);
 		add_expander (grid);
 		add_expander (view_tools);
+		add_expander (shape_tools);
 		add_expander (background_tools);
 		add_expander (style_tools);
 		
@@ -625,6 +634,9 @@ public class Toolbox : GLib.Object  {
 		grid.set_persistent (true);
 		grid.set_unique (true);
 		grid.set_open (false);
+		
+		shape_tools.set_persistent (true);
+		shape_tools.set_unique (true);
 		
 		background_tools.set_persistent (true);
 		background_tools.set_unique (true);
@@ -891,7 +903,8 @@ public class Toolbox : GLib.Object  {
 						redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
 					}
 					
-					if (exp == draw_tools || t == move_background || t == cut_background) {
+					if (exp == draw_tools || t == move_background || t == cut_background
+						|| exp == shape_tools) {
 						current_tool = tool;
 					}
 				}

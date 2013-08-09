@@ -639,6 +639,13 @@ public class Path {
 		return Math.fabs (Math.sqrt (Math.pow (ax - bx, 2) + Math.pow (ay - by, 2)));
 	}
 	
+	public static double distance_pixels (double x1, double y1, double x2, double y2) {
+		return distance (Glyph.path_coordinate_x (x1),
+			Glyph.path_coordinate_x (x2),
+			Glyph.path_coordinate_x (y1),
+			Glyph.path_coordinate_x (y2));
+	}
+	
 	private static double get_length_from (EditPoint a, EditPoint b) {
 		double x, y;
 		
