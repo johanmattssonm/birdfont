@@ -83,7 +83,6 @@ public class RectangleTool : Tool {
 	}
 	
 	void press (int button, double x, double y) {
-		Glyph glyph = MainWindow.get_current_glyph ();
 		press_x = x;
 		press_y = y;
 		resize = true;

@@ -130,12 +130,14 @@ public class PenTool : Tool {
 			foreach (Path p in clockwise) {
 				if (!p.is_open () && !p.is_clockwise ()) {
 					p.reverse ();
+					update_selection ();
 				}
 			}
 
 			foreach (Path p in counter_clockwise) {
 				if (!p.is_open () &&  p.is_clockwise ()) {
 					p.reverse ();
+					update_selection ();
 				}
 			}
 		});
@@ -186,12 +188,27 @@ public class PenTool : Tool {
 		while (selected_points.length () > 0) {
 			selected_points.remove_link (selected_points.first ());
 		}
-
+		
 		active_handle = new EditPointHandle.empty ();
 		selected_handle = new EditPointHandle.empty ();
 	
 		active_edit_point = null;
 		selected_point = new EditPoint ();
+	}
+	
+	/** Retain selected points even if path is copied after running reverse. */
+	static void update_selection () {
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		remove_all_selected_points ();
+		
+		foreach (Path p in g.path_list) {
+			foreach (EditPoint e in p.points) {
+				if (e.is_selected ()) {
+					selected_points.append (e);
+				}
+			}
+		}
 	}
 	
 	static void process_deleted () {
@@ -431,10 +448,12 @@ public class PenTool : Tool {
 					((!)active_edit_point).set_selected (false);
 					remove_from_selected ((!)active_edit_point);
 					selected_point = new EditPoint ();
+					last_selected_is_handle = false;
 				} else {
 					((!)active_edit_point).set_selected (true);
 					selected_point = (!)active_edit_point;
 					add_selected_point (selected_point);
+					last_selected_is_handle = false;
 				}
 			} else {
 				selected_point = (!)active_edit_point;
@@ -444,6 +463,7 @@ public class PenTool : Tool {
 					((!)active_edit_point).set_selected (true);
 					selected_point = (!)active_edit_point;
 					add_selected_point (selected_point);
+					last_selected_is_handle = false;
 				}
 			}
 		}
@@ -453,6 +473,7 @@ public class PenTool : Tool {
 		foreach (Path p in glyph.active_paths) {
 			if (p.is_open () && p.points.length () > 0 && active_edit_point == p.points.first ().data) {
 				p.reverse ();
+				update_selection ();
 				reverse = true;
 			}
 		}
@@ -501,7 +522,8 @@ public class PenTool : Tool {
 		Path? p;
 		Path path;
 		bool direction_changed = false;
-
+		Path union;
+		
 		if (glyph.path_list.length () < 1) {
 			return;
 		}
@@ -511,9 +533,11 @@ public class PenTool : Tool {
 			return;
 		}
 		path = (!) p;
-				
-		if (active_edit_point == path.points.first ().data) {
+
+		if (path.is_open () && active_edit_point == path.points.first ().data) {
 			path.reverse ();
+			update_selection ();
+			path.recalculate_linear_handles ();
 			direction_changed = !direction_changed;
 		}
 		
@@ -544,10 +568,19 @@ public class PenTool : Tool {
 
 			if (direction_changed) {
 				path.reverse ();
+				update_selection ();
 			}
+			
+			remove_all_selected_points ();
+
 			return;
 		}
 		
+		union = new Path ();
+		foreach (EditPoint ep in path.points) {
+			union.add_point (ep.copy ());
+		}
+				
 		foreach (Path merge in glyph.path_list) {
 			// don't join path with it self here
 			if (path == merge) {
@@ -561,6 +594,7 @@ public class PenTool : Tool {
 			
 			if (is_close_to_point (merge.points.last ().data, x, y)) {
 				merge.reverse ();
+				update_selection ();
 				direction_changed = !direction_changed;
 			}
 
@@ -578,21 +612,29 @@ public class PenTool : Tool {
 
 				path.points.first ().data.set_tie_handle (false);
 				path.points.first ().data.set_reflective_handles (false);
-
-				path.append_path (merge);
-				path.reopen ();
+				
+				union.append_path (merge.copy ());
+				glyph.add_path (union);
+				
+				glyph.delete_path (path);
+				glyph.delete_path (merge);
+				
+				union.reopen ();
 				
 				force_direction ();
 				
 				if (direction_changed) {
 					path.reverse ();
+					update_selection ();
 				}
+				
 				return;
 			}
 		}
 
 		if (direction_changed) {
 			path.reverse ();
+			update_selection ();
 		}
 	}
 	

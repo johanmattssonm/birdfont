@@ -296,6 +296,7 @@ public class EditPoint {
 		
 		new_point.type = type;
 		new_point.deleted = deleted;
+		new_point.selected = selected;
 		
 		new_point.tie_handles = tie_handles;
 		

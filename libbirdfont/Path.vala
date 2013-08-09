@@ -448,15 +448,32 @@ public class Path {
 	}
 
 	private void reverse_points () {
-		points.reverse ();
-		
 		EditPointHandle t;
-		foreach (var e in points) {
-			t = e.right_handle;
-			e.right_handle = e.left_handle;
-			e.left_handle = t;
+		Path p = copy ();
+		unowned List<EditPoint> e;
+
+		create_list ();	
+		
+		while (points.length () > 0) {
+			points.remove_link (points.first ());
 		}
 		
+		e = p.points.last ();
+		while (!is_null (e) && !is_null (e.data)) {
+			t = e.data.right_handle;
+			e.data.right_handle = e.data.left_handle;
+			e.data.left_handle = t;
+			e.data.set_selected (false);
+			
+			add_point (e.data);
+			
+			if (is_null (e.prev)) {
+				break;
+			} else {
+				e = e.prev;
+			}
+		}
+
 		create_list ();
 	}
 
@@ -1664,6 +1681,7 @@ public class Path {
 		
 		if (points.length () == 1) {
 			points.delete_link (points.first ());
+			return path_list;
 		}
 		
 		// set start position to the point that will be removed	
@@ -1708,7 +1726,12 @@ public class Path {
 			foreach (EditPoint point in remaining_points.points) {
 				current_path.add_point (point.copy ());
 			}
-			path_list.paths.append (current_path);
+			
+			if (current_path.points.length () > 0) {
+				current_path.points.first ().data.set_tie_handle (false);
+				current_path.points.first ().data.set_reflective_handles (false);
+				path_list.paths.append (current_path);
+			}
 		} else {
 			if (current_path.points.length () > 0) {
 				current_path.points.first ().data.set_tie_handle (false);
@@ -1734,7 +1757,7 @@ public class Path {
 		unowned List<EditPoint> iter = points.first ();
 		unowned List<EditPoint>? ni = null;
 		bool found = false;
-		
+
 		foreach (EditPoint it in points) {
 			if (it == ep) {
 				found = true;
