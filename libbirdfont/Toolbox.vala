@@ -20,8 +20,6 @@ namespace BirdFont {
 public class Toolbox : GLib.Object  {
 	GlyphCanvas glyph_canvas;
 	
-	ToolboxExpander toolbox_expander;
-	
 	public List<Expander> expanders;
 	
 	Tool current_tool = new Tool ("no_icon");
@@ -51,10 +49,6 @@ public class Toolbox : GLib.Object  {
 		glyph_canvas = main_glyph_canvas;
 
 		toolbox_background = Icons.get_icon ("toolbox_background.png");
-
-		toolbox_expander = new ToolboxExpander ();
-		
-		add_expander (toolbox_expander);
 		
 		draw_tools = new Expander ();
 		shape_tools = new Expander ();
