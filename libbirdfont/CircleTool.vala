@@ -34,13 +34,6 @@ public class CircleTool : Tool {
 	
 	public CircleTool (string n) {
 		base (n, _("Circle"));
-		
-		select_action.connect((self) => {
-		});
-
-		deselect_action.connect((self) => {
-			Glyph glyph = MainWindow.get_current_glyph ();
-		});
 				
 		press_action.connect((self, b, x, y) => {
 			press (b, x, y);
@@ -101,7 +94,6 @@ public class CircleTool : Tool {
 		double radius = 2;
 		double px, py, steps;
 		Path path = new Path ();
-		PointType type;
 		
 		press_x = x;
 		press_y = y;
@@ -123,28 +115,7 @@ public class CircleTool : Tool {
 			path.add (px, py);
 		}
 		
-		switch (Toolbox.point_type) {
-			case PointType.QUADRATIC:
-				type = PointType.LINE_QUADRATIC;
-				break;
-			case PointType.DOUBLE_CURVE:
-				type = PointType.LINE_DOUBLE_CURVE;
-				break;
-			case PointType.CUBIC:
-				type = PointType.LINE_CUBIC;
-				break;
-			default:
-				warning ("No type is set");
-				type = PointType.LINE_CUBIC;
-				break;
-		}
-				
-		foreach (EditPoint ep in path.points) {
-			ep.type = type;
-			ep.get_right_handle ().type = type;
-			ep.get_left_handle ().type = type;
-		}
-		
+		path.init_point_type ();
 		path.close ();
 		path.recalculate_linear_handles ();
 

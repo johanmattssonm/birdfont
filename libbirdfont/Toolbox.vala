@@ -439,6 +439,9 @@ public class Toolbox : GLib.Object  {
 		Tool circle = new CircleTool ("circle");
 		shape_tools.add_tool (circle);
 		
+		Tool rectangle = new RectangleTool ("rectangle");
+		shape_tools.add_tool (rectangle);
+				
 		// background tools
 		background_scale = new SpinButton ("scale_background", _("Set size for background image"));
 		background_scale.set_int_value ("1.000");

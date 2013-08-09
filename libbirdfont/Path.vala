@@ -2143,6 +2143,32 @@ public class Path {
 		
 		update_region_boundries ();
 	}
+
+	public void init_point_type () {
+		PointType type;
+		
+		switch (Toolbox.point_type) {
+			case PointType.QUADRATIC:
+				type = PointType.LINE_QUADRATIC;
+				break;
+			case PointType.DOUBLE_CURVE:
+				type = PointType.LINE_DOUBLE_CURVE;
+				break;
+			case PointType.CUBIC:
+				type = PointType.LINE_CUBIC;
+				break;
+			default:
+				warning ("No type is set");
+				type = PointType.LINE_CUBIC;
+				break;
+		}
+				
+		foreach (EditPoint ep in points) {
+			ep.type = type;
+			ep.get_right_handle ().type = type;
+			ep.get_left_handle ().type = type;
+		}		
+	}
 }
 
 }
