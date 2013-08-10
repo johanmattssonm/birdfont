@@ -17,8 +17,7 @@ Install vala and all required libraries, they are most likely in packages
 with a -dev or -devel affix. 
 
 Install the following packages:
-valac 
-python-doit 
+valac
 libglib2.0-dev 
 libgtk2.0-dev 
 libxml2-dev 
@@ -27,22 +26,14 @@ unicode-data (unicode character database)
 
 Configure, build and install:
 ./configure
-doit
-sudo ./install
+./script/linux_build.py
+sudo ./birdfont_install
 
-------------------------
-Bulding Windows Binaries
-------------------------
-
-Windows binaries are cross compiled with mingw on a Ubuntu system. Install
-all dependencies from Gregs repository as described here:
-
-http://greg.thehellings.com/2012/02/a-better-ubuntu-mingw-experience/
-
-You need wine and nsis windows installer as well.
-
-Compile and build the installer with:
-./scripts/build_win32.py
+BirdFont have two build systems one very simple python script that
+builds all binaries at once and a better build system based on doit
+(pydoit.org). The doit scripts will only rebuild the parts that has 
+changed and is the prefered way to compile BirdFont if you are working 
+on a new feature.
 
 ---------------------
 Building Mac binaries
@@ -58,16 +49,10 @@ Compile all dependencies using MacPorts and run:
 Precompiled Packages
 --------------------
 
-A Windows binary is avalilable at http://birdfont.org
-You need to install the windows version on drive C:.
+Windows binaries are avalilable at http://birdfont.org
 
 A Ubuntu package is avalilable at https://launchpad.net
 You can apt-get install birdfont form Olivier Bertens repository.
 
-A Debian packages is available at http://packages.debian.org
-
-A Machintosh binary image is available at http://birdfont.org
-You might need to install a more recent version of XOrg. Install 
-the server and run:
-sudo launchctl load -w /Library/LaunchAgents/org.macports.startx.plist
-
+A Machintosh binary image is available at http://birdfont.org and
+a GTK version for Mac can be installed with MacPorts.

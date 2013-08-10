@@ -100,7 +100,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 
 	run(cc + " " + ldflags + " \
 		build/birdfont-export/*.o \
-		build/bin/""" + library + """ \
+		-L build/bin/ -l""" + library + """ \
 		$(pkg-config --libs libxml-2.0) \
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
@@ -145,7 +145,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library):
 
 	run(cc + " " + ldflags + """ \
 		build/birdfont/*.o \
-		""" + library + """ \
+		-L build/bin/ -l""" + library + """ \
 		$(pkg-config --libs libxml-2.0) \
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \

@@ -50,10 +50,6 @@ def configure ():
 		print (FAIL + "valac is too old." + ENDC)
 		exit (1)
 
-	if not test_program_version ("doit", 0, 20, 0):		
-		print (FAIL + "doit is too old" + ENDC)
-		exit (1)
-
 	libs = [
 			'cairo', 
 			'gdk-pixbuf-2.0', 
