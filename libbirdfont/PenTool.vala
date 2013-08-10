@@ -1352,6 +1352,125 @@ public class PenTool : Tool {
 			}
 		}
 	}
+	
+	public static bool is_line (PointType t) {
+		return t == PointType.LINE_QUADRATIC 
+			|| t == PointType.LINE_DOUBLE_CURVE
+			|| t == PointType.LINE_CUBIC;
+	}
+
+	public static PointType to_line (PointType t) {
+		switch (Toolbox.point_type) {
+			case PointType.QUADRATIC:
+				return PointType.LINE_QUADRATIC;
+			case PointType.DOUBLE_CURVE:
+				return PointType.LINE_DOUBLE_CURVE;
+			case PointType.CUBIC:
+				return PointType.LINE_CUBIC;
+			default:
+				break;
+		}
+		return t;
+	}
+	
+	public static void set_converted_handle_length (EditPointHandle e) {
+		if (e.type == PointType.QUADRATIC  && Toolbox.point_type == PointType.DOUBLE_CURVE) {
+			e.length *= 2;
+			e.length /= 4;
+		}
+
+		if (e.type == PointType.QUADRATIC  && Toolbox.point_type == PointType.CUBIC) {
+			e.length *= 2;
+			e.length /= 3;
+		}
+
+		if (e.type == PointType.DOUBLE_CURVE  && Toolbox.point_type == PointType.QUADRATIC) {
+			e.length *= 4;
+			e.length /= 2;			
+		}
+
+		if (e.type == PointType.DOUBLE_CURVE  && Toolbox.point_type == PointType.CUBIC) {
+			e.length *= 4;
+			e.length /= 3;		
+		}
+
+		if (e.type == PointType.CUBIC  && Toolbox.point_type == PointType.QUADRATIC) {
+			e.length *= 3;
+			e.length /= 2;		
+		}
+
+		if (e.type == PointType.CUBIC  && Toolbox.point_type == PointType.DOUBLE_CURVE) {
+			e.length *= 3;
+			e.length /= 4;			
+		}		
+	}
+	
+	public static void convert_point_types () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		glyph.store_undo_state ();
+		EditPoint selected = new EditPoint ();
+		bool reset_selected = false;
+		
+		if (selected_points.length () == 1) {
+			selected = selected_points.first ().data;
+			if (selected.next != null) {
+				selected_points.append (selected.get_next ().data);
+				selected.get_next ().data.set_selected (true);
+			}
+			
+			if (selected.prev != null) {
+				selected_points.append (selected.get_prev ().data);
+				selected.get_next ().data.set_selected (true);
+			}
+			
+			reset_selected = true;
+		}
+		
+		foreach (EditPoint e in selected_points) {
+			
+			// convert segments not control points
+			if (e.next == null || !e.get_next ().data.is_selected ()) {
+				continue;
+			}
+
+			set_converted_handle_length (e.get_right_handle ());
+			set_converted_handle_length (e.get_next ().data.get_left_handle ());
+														
+			if (!is_line (e.type)) {
+				e.type = Toolbox.point_type;
+			} else {
+				e.type = to_line (Toolbox.point_type);
+			}
+			
+			if (!is_line (e.get_right_handle ().type)) {
+				e.get_right_handle ().type = Toolbox.point_type;
+			} else {
+				e.get_right_handle ().type = to_line (Toolbox.point_type);
+			}
+
+			if (!is_line (e.type)) {
+				e.get_next ().data.get_left_handle ().type = Toolbox.point_type;
+			} else {
+				e.get_next ().data.get_left_handle ().type = to_line (Toolbox.point_type);
+			}
+/*
+			if (!is_line (e.type)) {
+				e.get_next ().data.type = Toolbox.point_type;
+			} else {
+				e.get_next ().data.type = to_line (Toolbox.point_type);
+			}
+*/						
+			// process connected handle
+			e.set_position (e.x, e.y);
+			e.recalculate_linear_handles ();
+		}
+		
+		if (reset_selected) {
+			remove_all_selected_points ();
+			selected_points.append (selected);
+			selected.set_selected (true);
+		}
+	}
 }
 
 }

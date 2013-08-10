@@ -94,7 +94,7 @@ public class Expander : GLib.Object {
 		update_tool_position ();
 		
 		t.select_action.connect ((selected) => {
-				if (!selected.new_selection) {
+				if (!selected.new_selection && selected.persistent) {
 					if (is_persistent ()) {
 						selected.set_selected (true);
 					} else {

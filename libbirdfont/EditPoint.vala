@@ -225,6 +225,22 @@ public class EditPoint {
 		right_handle.process_symmetrical_handle ();
 		left_handle.process_symmetrical_handle ();
 	}
+	
+	public static void convert_from_line_to_curve (EditPointHandle h) {
+		switch (h.type) {
+			case PointType.LINE_QUADRATIC:
+				h.type = PointType.QUADRATIC;
+				break;
+			case PointType.LINE_DOUBLE_CURVE:
+				h.type = PointType.DOUBLE_CURVE;
+				break;
+			case PointType.LINE_CUBIC:
+				h.type = PointType.CUBIC;
+				break;
+			default:
+				break;
+		}
+	}
 
 	/** This can only be performed if the path has been closed. */
 	public void process_tied_handle () 
@@ -255,13 +271,13 @@ public class EditPoint {
 			|| right_handle.type == PointType.QUADRATIC
 			|| left_handle.type == PointType.LINE_QUADRATIC
 			|| right_handle.type == PointType.LINE_QUADRATIC) {
-			
+
 			prev_rh = get_prev ().data.get_right_handle ();
 			next_lh = get_next ().data.get_left_handle ();
 
-			prev_rh.type = PointType.QUADRATIC;
-			left_handle.type = PointType.QUADRATIC;
-			right_handle.type = PointType.QUADRATIC;
+			convert_from_line_to_curve (prev_rh);
+			convert_from_line_to_curve (left_handle);
+			convert_from_line_to_curve (right_handle);			
 		} else if (left_handle.type == PointType.LINE_DOUBLE_CURVE 
 			|| right_handle.type == PointType.LINE_DOUBLE_CURVE) {
 				
@@ -358,13 +374,15 @@ public class EditPoint {
 		}
 		
 		// move connected quadratic handle
-		if (left_handle.type == PointType.QUADRATIC || right_handle.type == PointType.QUADRATIC) {
+		if (right_handle.type == PointType.QUADRATIC) {
 			if (next != null) {
 				((!)next).data.set_tie_handle (false);
 				((!)next).data.set_reflective_handles (false);
 				((!)next).data.left_handle.move_to_coordinate_internal (right_handle.x (), right_handle.y ());
 			}
-
+		}
+		
+		if (left_handle.type == PointType.QUADRATIC) {
 			if (prev != null && !((!)prev).data.is_selected ()) {
 				((!)prev).data.set_tie_handle (false);
 				((!)prev).data.set_reflective_handles (false);

@@ -101,6 +101,15 @@ public class Toolbox : GLib.Object  {
 		});
 		draw_tool_modifiers.add_tool (double_points);
 
+		// convert point
+		Tool convert_points = new Tool ("convert_point", _("Convert selected points"));
+		convert_points.select_action.connect ((self) => {
+			PenTool.convert_point_types ();
+			MainWindow.get_current_glyph ().update_view ();
+		});
+		convert_points.set_persistent (false);
+		draw_tool_modifiers.add_tool (convert_points);
+
 		// tie edit point handles
 		Tool tie_handles = new Tool ("tie_point", _("Tie curve handles for the selected edit point"), 'w');
 		tie_handles.select_action.connect ((self) => {
@@ -889,10 +898,12 @@ public class Toolbox : GLib.Object  {
 				if (tool.get_id () == t.get_id ()) {
 					exp.set_open (true);
 					
-					bool update;
+					bool update = false;
 					
 					update = tool.set_selected (true);
-					update = tool.set_active (true);
+					if (tool.persistent) {
+						update = tool.set_active (true);
+					}
 					
 					tool.select_action (tool); // execute command
 					
@@ -900,8 +911,8 @@ public class Toolbox : GLib.Object  {
 						redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
 					}
 					
-					if (exp == draw_tools || t == move_background || t == cut_background
-						|| exp == shape_tools) {
+					if (tool.persistent && exp == draw_tools || t == move_background 
+						|| t == cut_background || exp == shape_tools) {
 						current_tool = tool;
 					}
 				}

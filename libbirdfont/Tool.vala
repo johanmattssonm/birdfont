@@ -83,6 +83,8 @@ public class Tool : GLib.Object {
 	private static ImageSurface? deselected_button = null;
 	private static ImageSurface? active_deselected_button = null;
 	
+	public bool persistent = true;
+	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		this.tip = tip;
@@ -295,6 +297,10 @@ public class Tool : GLib.Object {
 		}
 		
 		c.release ();
+	}
+	
+	public void set_persistent (bool p) {
+		persistent = p;
 	}
 }
 
