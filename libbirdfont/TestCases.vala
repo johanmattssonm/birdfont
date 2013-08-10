@@ -857,7 +857,7 @@ class TestCases {
 		test_click_action (pen_tool, 3, 0, 0);
 		Tool.yield ();
 	}
-
+	
 	public static void test_active_edit_point () {
 		Glyph g;
 		EditPoint epa, epb;
@@ -1118,7 +1118,7 @@ class TestCases {
 			PenTool.delete_selected_points ();
 		}
 	}
-	
+
 	public static void test_reverse_random_triangles () {
 		Tool pen;
 		

@@ -197,11 +197,13 @@ public class PenTool : Tool {
 	}
 	
 	/** Retain selected points even if path is copied after running reverse. */
-	static void update_selection () {
+	public static void update_selection () {
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		remove_all_selected_points ();
-		
+		while (selected_points.length () > 0) {
+			selected_points.remove_link (selected_points.first ());
+		}
+		//remove_all_selected_points ();
 		foreach (Path p in g.path_list) {
 			foreach (EditPoint e in p.points) {
 				if (e.is_selected ()) {
@@ -468,10 +470,10 @@ public class PenTool : Tool {
 			}
 		}
 		
-		// continue adding points from the selected one
+		// continue adding points from the other end
 		reverse = false;
 		foreach (Path p in glyph.active_paths) {
-			if (p.is_open () && p.points.length () > 0 && active_edit_point == p.points.first ().data) {
+			if (p.is_open () && p.points.length () > 1 && active_edit_point == p.points.first ().data) {
 				p.reverse ();
 				update_selection ();
 				reverse = true;
@@ -533,7 +535,6 @@ public class PenTool : Tool {
 			return;
 		}
 		path = (!) p;
-
 		if (path.is_open () && active_edit_point == path.points.first ().data) {
 			path.reverse ();
 			update_selection ();
@@ -572,7 +573,6 @@ public class PenTool : Tool {
 			}
 			
 			remove_all_selected_points ();
-
 			return;
 		}
 		
@@ -620,6 +620,7 @@ public class PenTool : Tool {
 				glyph.delete_path (merge);
 				
 				union.reopen ();
+				union.create_list ();
 				
 				force_direction ();
 				
@@ -1092,20 +1093,24 @@ public class PenTool : Tool {
 	}
 	
 	public static void remove_all_selected_points () {
+		Glyph g = MainWindow.get_current_glyph ();
+		
 		selected_point.set_selected (false);
 		selected_point.set_active (false);
 		selected_point = new EditPoint ();
-		
-		foreach (EditPoint e in selected_points) {
-			e.set_active (false);
-			e.set_selected (false);
-		}
 			
 		while (selected_points.length () > 0) {
 			EditPoint ep = selected_points.first ().data;
 			ep.set_active (false);
 			ep.set_selected (false);
 			selected_points.remove_link (selected_points.first ());
+		}
+		
+		foreach (Path p in g.path_list) {
+			foreach (EditPoint e in p.points) {
+				e.set_active (false);
+				e.set_selected (false);
+			}
 		}
 	}
 
@@ -1453,13 +1458,7 @@ public class PenTool : Tool {
 			} else {
 				e.get_next ().data.get_left_handle ().type = to_line (Toolbox.point_type);
 			}
-/*
-			if (!is_line (e.type)) {
-				e.get_next ().data.type = Toolbox.point_type;
-			} else {
-				e.get_next ().data.type = to_line (Toolbox.point_type);
-			}
-*/						
+				
 			// process connected handle
 			e.set_position (e.x, e.y);
 			e.recalculate_linear_handles ();

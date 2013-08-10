@@ -451,7 +451,7 @@ public class Path {
 		EditPointHandle t;
 		Path p = copy ();
 		unowned List<EditPoint> e;
-
+		
 		create_list ();	
 		
 		while (points.length () > 0) {
@@ -463,7 +463,6 @@ public class Path {
 			t = e.data.right_handle;
 			e.data.right_handle = e.data.left_handle;
 			e.data.left_handle = t;
-			e.data.set_selected (false);
 			
 			add_point (e.data);
 			
