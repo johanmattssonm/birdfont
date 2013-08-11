@@ -1727,23 +1727,43 @@ public class Path {
 			}
 			
 			if (current_path.points.length () > 0) {
-				current_path.points.first ().data.set_tie_handle (false);
-				current_path.points.first ().data.set_reflective_handles (false);
+				ep = current_path.points.first ().data;
+				ep.set_tie_handle (false);
+				ep.set_reflective_handles (false);
+				ep.get_left_handle ().type = PenTool.to_line (ep.type);
 				path_list.paths.append (current_path);
+				
+				if (!is_null (current_path.points.last ())) {
+					ep = current_path.points.last ().data;
+					ep.get_right_handle ().type = PenTool.to_line (ep.type);
+				}
 			}
 		} else {
 			if (current_path.points.length () > 0) {
-				current_path.points.first ().data.set_tie_handle (false);
-				current_path.points.first ().data.set_reflective_handles (false);
+				ep = current_path.points.first ().data;
+				ep.set_tie_handle (false);
+				ep.set_reflective_handles (false);
+				ep.get_left_handle ().type = PenTool.to_line (ep.type);
 				set_new_start (current_path.points.first ().data);
 				path_list.paths.append (current_path);
+				
+				if (!is_null (current_path.points.last ())) {
+					ep = current_path.points.last ().data;
+					ep.get_right_handle ().type = PenTool.to_line (ep.type);
+				}
 			}
 			
 			if (remaining_points.points.length () > 0) {
 				remaining_points.points.first ().data.set_tie_handle (false);
 				remaining_points.points.first ().data.set_reflective_handles (false);
+				remaining_points.points.first ().data.type = PenTool.to_line (remaining_points.points.first ().data.type);
 				set_new_start (remaining_points.points.first ().data);
 				path_list.paths.append (remaining_points);
+				
+				if (!is_null (current_path.points.last ())) {
+					ep = current_path.points.last ().data;
+					ep.get_right_handle ().type = PenTool.to_line (ep.type);
+				}
 			}
 		}
 		

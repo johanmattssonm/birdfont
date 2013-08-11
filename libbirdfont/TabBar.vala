@@ -473,11 +473,11 @@ public class TabBar : GLib.Object {
 
 		if (has_scroll ()) {
 			// left arrow
-			cr.set_source_surface (to_previous_tab, 3, (height - to_previous_tab.get_height ()) / 2.0);
+			cr.set_source_surface (to_previous_tab, 3, height - to_previous_tab.get_height () - 5);
 			cr.paint ();
 
 			// right arrow
-			cr.set_source_surface (next_tab, width - 19, (height - next_tab.get_height ()) / 2.0);
+			cr.set_source_surface (next_tab, width - 19, height - next_tab.get_height () - 5);
 			cr.paint ();
 		}
 		
