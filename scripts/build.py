@@ -68,6 +68,8 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 		$(pkg-config --libs gdk-pixbuf-2.0) \
 		-o """ + library)
 	run("mv " + library + " build/bin/")
+	
+	run ("""cd build/bin && ln -s """ + library + " libbirdfont.so")
 
 def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	# birdfont-export

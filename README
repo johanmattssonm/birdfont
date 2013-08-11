@@ -26,7 +26,7 @@ unicode-data (unicode character database)
 
 Configure, build and install:
 ./configure
-./script/linux_build.py
+./scripts/linux_build.py
 sudo ./birdfont_install
 
 BirdFont have two build systems one very simple python script that
