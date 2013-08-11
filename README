@@ -29,11 +29,15 @@ Configure, build and install:
 ./scripts/linux_build.py
 sudo ./birdfont_install
 
-BirdFont have two build systems one very simple python script that
-builds all binaries at once and a better build system based on doit
-(pydoit.org). The doit scripts will only rebuild the parts that has 
-changed and is the prefered way to compile BirdFont if you are working 
-on a new feature.
+BirdFont have two build systems, one very simple python script that
+builds all binaries at once and one dependency based build system
+that uses doit.
+
+Configure, build and install with doit:
+./configure
+doit
+sudo ./birdfont_install
+
 
 ---------------------
 Building Mac binaries
