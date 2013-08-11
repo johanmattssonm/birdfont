@@ -433,7 +433,18 @@ public class PenTool : Tool {
 		bool reverse;
 		
 		control_point_event (x, y);
-		
+
+		// continue adding points from the other end
+		reverse = false;
+		foreach (Path p in glyph.active_paths) {
+			if (p.is_open () && p.points.length () > 1 && active_edit_point == p.points.first ().data) {
+				p.reverse ();
+				update_selection ();
+				reverse = true;
+				control_point_event (x, y);
+			}
+		}
+				
 		if (active_edit_point == null) {
 			if (KeyBindings.modifier != SHIFT) {
 				remove_all_selected_points ();
@@ -467,16 +478,6 @@ public class PenTool : Tool {
 					add_selected_point (selected_point);
 					last_selected_is_handle = false;
 				}
-			}
-		}
-		
-		// continue adding points from the other end
-		reverse = false;
-		foreach (Path p in glyph.active_paths) {
-			if (p.is_open () && p.points.length () > 1 && active_edit_point == p.points.first ().data) {
-				p.reverse ();
-				update_selection ();
-				reverse = true;
 			}
 		}
 		
@@ -1278,6 +1279,14 @@ public class PenTool : Tool {
 	public static void convert_point_to_line (EditPoint ep, bool both) {
 		ep.set_tie_handle (false);
 		ep.set_reflective_handles (false);
+		
+		if (ep.next == null) {
+			warning ("Next is null.");
+		}
+
+		if (ep.prev == null) {
+			warning ("Prev is null.");
+		}
 		
 		if (ep.type == PointType.CUBIC || ep.type == PointType.LINE_CUBIC) {
 			ep.type = PointType.LINE_CUBIC;
