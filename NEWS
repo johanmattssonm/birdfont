@@ -1,3 +1,13 @@
+birdfont (0.27) stable;
+
+  * Rotate paths
+  * Flip path
+  * Convert segments to lines
+  * Symmetrical control points
+  * Use glyphs as backgrounds
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Aug 11 16:33:47 CEST 2013
+
 birdfont (0.26) stable;
 
   * Bug fixes for Mac OS X
