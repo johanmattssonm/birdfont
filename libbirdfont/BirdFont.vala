@@ -199,9 +199,11 @@ public class BirdFont {
 		stdout.printf ("birdfont version %s\n", VERSION);
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 
-		init_gettext ();		
-		
 		args = new Argument.command_line (arg);
+
+		if (!args.has_argument ("--no-translation")) {
+			init_gettext ();
+		}
 
 		if (args.has_argument ("--help")) {
 			args.print_help ();

@@ -69,6 +69,9 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 		-o """ + library)
 	run("mv " + library + " build/bin/")
 	
+	if os.path.exists("build/bin/libbirdfont.so"):
+		run ("cd build/bin && unlink libbirdfont.so")
+
 	run ("""cd build/bin && ln -s """ + library + " libbirdfont.so")
 
 def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
