@@ -16,88 +16,98 @@ namespace BirdFont {
 
 public class ClipTool : Tool {
 
-	static List<Path> internal_clipboard = new List<Path> ();
-
 	public static void copy () {
 		FontDisplay fd = MainWindow.get_current_display ();
-		NativeWindow native_window;
-		string svg;
-		string inkscape_svg;
-		string stamp = "\n<!-- BirdFontClipboard -->\n";
+		string svg_data;
+		string bf_data;
+		string data;
 		
-		if (fd is OverView) {
-			// TODO: copy glyphs in overview
-		} 
-		
-		if (fd is Glyph) {	
-			// the internal clipboard contains path objects and the
-			// external clibboard contains inkscape compatible vector graphics
-			while (internal_clipboard.length () > 0) {
-				internal_clipboard.remove_link (internal_clipboard.first ());
-			}
-			
-			foreach (Path p in ((Glyph) fd).active_paths) {
-				internal_clipboard.append (p.copy ());
-			}
-		
-			native_window = MainWindow.native_window;
-			
-			// copy only if paths have been selected
-			if (MainWindow.get_current_glyph ().active_paths.length () == 0) {
-				return;
-			}
-			
-			// there is only one clipboard in windows
-			if (!BirdFont.win32) {
-				svg = ExportTool.export_selected_paths_to_svg ();
-				native_window.set_clipboard (svg + stamp);
-			}
-			
-			inkscape_svg = ExportTool.export_selected_paths_to_inkscape_clipboard ();
-			native_window.set_inkscape_clipboard (inkscape_svg + stamp);
+		if (fd is Glyph) {
+			svg_data = ExportTool.export_selected_paths_to_svg ();
+			bf_data = export_selected_paths_to_birdfont_clipboard ();
+			data = svg_data + bf_data;
+			MainWindow.native_window.set_clipboard (data);
+			MainWindow.native_window.set_inkscape_clipboard (data);
 		}
-
 	}
 
 	public static void paste () {
-		bool internal;
+		bool is_bf_clipboard;
 		FontDisplay fd;
+		string clipboard_data = MainWindow.native_window.get_clipboard_data ();
 		
 		fd = MainWindow.get_current_display ();
 		
-		// Determine if the data in clipboard belongs to BirdFont.
-		internal = MainWindow.native_window.get_clipboard_data ().index_of ("BirdFontClipboard") > -1; 
-		
+		// Determine if clipboard contains data in birdfont format.
+		is_bf_clipboard = clipboard_data.index_of ("BirdFontClipboard") > -1; 
+
 		if (fd is Glyph) {
-			paste_to_glyph (internal);
+			paste_to_glyph (is_bf_clipboard);
 		}
 	}
 	
-	
-	public static void paste_to_glyph (bool internal) {
+	public static void paste_to_glyph (bool bf_clipboard_data) {
 		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph? destination = null;
-		string svg;
+		string data;
 		
 		return_if_fail (fd is Glyph);
 		
 		destination = (Glyph) fd;
 		((!)destination).store_undo_state ();
 		
-		if (internal) {
-			foreach (Path p in internal_clipboard) {
-				((!)destination).add_path (p);
-			}
-		} else {
-			svg = MainWindow.native_window.get_clipboard_data ();
-			if (svg != "") {
-				ImportSvg.import_svg_data (svg);
-			}
+		data = MainWindow.native_window.get_clipboard_data ();
+
+		if (bf_clipboard_data) {
+			import_birdfont_clipboard (data);
+		} else if (data != "") {
+			ImportSvg.import_svg_data (data);
 		}
 		
 		((!)destination).update_view ();			
 	}
 
+	public static string export_selected_paths_to_birdfont_clipboard () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		StringBuilder s = new StringBuilder ();
+		
+		s.append ("\n");
+		s.append ("<!-- BirdFontClipboard\n");
+		
+		foreach (Path path in glyph.active_paths) {
+			s.append ("BF path: ");
+			s.append (BirdFontFile.get_point_data (path));
+			s.append ("\n");
+		}
+		
+		s.append ("-->");
+		
+		return s.str;
+	}
+	
+	public static void import_birdfont_clipboard (string data) {
+		string[] paths = data.split ("\nBF ");
+		string d;
+		int i;
+		
+		foreach (string p in paths) {
+			if (p.has_prefix ("path:")) {
+				i = p.index_of ("\n");
+				if (i > -1) {
+					p = p.substring (0, i);
+				}
+				d = p.replace ("path: ", "");
+				import_birdfont_path (d);
+			}
+		}	
+	}
+	
+	public static void import_birdfont_path (string data) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		Path path = BirdFontFile.parse_path_data (data);
+		path.close ();
+		glyph.add_path (path);
+	}
 }
 
 }

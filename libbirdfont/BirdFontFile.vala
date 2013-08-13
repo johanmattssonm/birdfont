@@ -771,7 +771,7 @@ class BirdFontFile {
 		return new Path ();	
 	}
 	
-	private void line (Path path, string px, string py) {
+	private static void line (Path path, string px, string py) {
 		EditPoint ep;
 		
 		path.add (parse_double (px), parse_double (py));
@@ -782,7 +782,7 @@ class BirdFontFile {
 		ep.recalculate_linear_handles ();			
 	}
 
-	private void cubic_line (Path path, string px, string py) {
+	private static void cubic_line (Path path, string px, string py) {
 		EditPoint ep;
 
 		path.add (parse_double (px), parse_double (py));
@@ -792,7 +792,7 @@ class BirdFontFile {
 		ep.recalculate_linear_handles ();
 	}
 
-	private void quadratic (Path path, string px0, string py0, string px1, string py1) {
+	private static void quadratic (Path path, string px0, string py0, string px1, string py1) {
 		EditPoint ep1, ep2;
 		
 		double x0 = parse_double (px0);
@@ -820,7 +820,7 @@ class BirdFontFile {
 		ep2.type = PointType.QUADRATIC;
 	}
 
-	private void cubic (Path path, string px0, string py0, string px1, string py1, string px2, string py2) {
+	private static void cubic (Path path, string px0, string py0, string px1, string py1, string px2, string py2) {
 		EditPoint ep1, ep2;
 		
 		double x0 = parse_double (px0);
@@ -866,7 +866,7 @@ class BirdFontFile {
 	}
 	
 	/** Two quadratic off curve points. */
-	private void double_curve (Path path, string px0, string py0, string px1, string py1, string px2, string py2) {
+	private static void double_curve (Path path, string px0, string py0, string px1, string py1, string px2, string py2) {
 		EditPoint ep1, ep2;
 		
 		double x0 = parse_double (px0);
@@ -911,7 +911,7 @@ class BirdFontFile {
 		ep1.recalculate_linear_handles ();
 	}
 	
-	private void close (Path path) {
+	private static void close (Path path) {
 		EditPoint ep1, ep2;
 		
 		// last point is first
@@ -926,7 +926,7 @@ class BirdFontFile {
 		ep2.left_handle.type = ep1.left_handle.type;
 	}
 	
-	private Path parse_path_data (string data) {
+	public static Path parse_path_data (string data) {
 		string[] d = data.split (" ");
 		string[] p, p1, p2;
 		int i = 0;
@@ -1023,7 +1023,7 @@ class BirdFontFile {
 		return path;	
 	}
 	
-	private double parse_double (string p) {
+	private static double parse_double (string p) {
 		double d;
 		if (double.try_parse (p, out d)) {
 			return d;
