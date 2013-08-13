@@ -249,18 +249,8 @@ public class PenTool : Tool {
 		
 		// move control point handles
 		if (move_selected_handle) {
-			if (selected_handle.type == PointType.LINE_CUBIC) {
-				selected_handle.set_point_type (PointType.CUBIC);
-			}
+			set_type_for_moving_handle ();
 
-			if (selected_handle.type == PointType.LINE_QUADRATIC) {
-				selected_handle.set_point_type (PointType.QUADRATIC);
-			}
-
-			if (selected_handle.type == PointType.LINE_DOUBLE_CURVE) {
-				selected_handle.set_point_type (PointType.DOUBLE_CURVE);
-			}
-				
 			if (GridTool.is_visible ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
@@ -375,6 +365,20 @@ public class PenTool : Tool {
 		}
 
 		glyph.store_undo_state ();
+	}
+	
+	void set_type_for_moving_handle () {
+		if (selected_handle.type == PointType.LINE_CUBIC) {
+			selected_handle.set_point_type (PointType.CUBIC);
+		}
+
+		if (selected_handle.type == PointType.LINE_QUADRATIC) {
+			selected_handle.set_point_type (PointType.QUADRATIC);
+		}
+
+		if (selected_handle.type == PointType.LINE_DOUBLE_CURVE) {
+			selected_handle.set_point_type (PointType.DOUBLE_CURVE);
+		}
 	}
 	
 	/** Set fill property to transparend for counter paths. */ 
@@ -1255,6 +1259,8 @@ public class PenTool : Tool {
 			}
 			
 		} else {
+			set_type_for_moving_handle ();
+			
 			if (keyval == Key.UP) {
 				selected_handle.move_delta (0, -1);
 			}
