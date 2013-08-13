@@ -189,6 +189,8 @@ public class PenTool : Tool {
 			selected_points.remove_link (selected_points.first ());
 		}
 		
+		selected_handle.selected = false;
+		
 		active_handle = new EditPointHandle.empty ();
 		selected_handle = new EditPointHandle.empty ();
 	
@@ -1084,7 +1086,9 @@ public class PenTool : Tool {
 
 		move_selected_handle = true;
 		last_selected_is_handle = true;
+		selected_handle.selected = false;
 		selected_handle = get_closest_handle (event_x, event_y);
+		selected_handle.selected = true;
 	}
 
 	public static void add_selected_point (EditPoint p) {
@@ -1260,6 +1264,8 @@ public class PenTool : Tool {
 			
 		} else {
 			set_type_for_moving_handle ();
+			active_handle.active = false;
+			active_handle = new EditPointHandle.empty ();
 			
 			if (keyval == Key.UP) {
 				selected_handle.move_delta (0, -1);

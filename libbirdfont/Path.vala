@@ -49,6 +49,7 @@ public class Path {
 	
 	private static ImageSurface? edit_point_handle_image = null;
 	private static ImageSurface? active_edit_point_handle_image = null;
+	private static ImageSurface? selected_edit_point_handle_image = null;
 
 	private static ImageSurface? selected_edit_point_image = null;
 	private static ImageSurface? active_selected_edit_point_image = null;
@@ -83,6 +84,7 @@ public class Path {
 			active_edit_point_image = Icons.get_icon ("active_edit_point.png");
 			edit_point_handle_image = Icons.get_icon ("edit_point_handle.png");
 			active_edit_point_handle_image = Icons.get_icon ("active_edit_point_handle.png");
+			selected_edit_point_handle_image = Icons.get_icon ("selected_edit_point_handle.png");
 			selected_edit_point_image = Icons.get_icon ("selected_edit_point.png");
 			active_selected_edit_point_image = Icons.get_icon ("active_selected_edit_point.png");
 			cubic_edit_point_image = Icons.get_icon ("edit_point_cubic.png");
@@ -328,9 +330,22 @@ public class Path {
 
 		cr.stroke ();
 		
-		img_right = (e.get_right_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
-		img_left = (e.get_left_handle ().active) ? (!) active_edit_point_handle_image : (!) edit_point_handle_image;
+		if (e.get_right_handle ().selected) {
+			img_right = (!) selected_edit_point_handle_image;
+		} else if (e.get_right_handle ().active) {
+			img_right = (!) active_edit_point_handle_image;
+		} else {
+			img_right = (!) edit_point_handle_image;
+		}
 		
+		if (e.get_left_handle ().selected) {
+			img_left = (!) selected_edit_point_handle_image;
+		} else if (e.get_left_handle ().active) {
+			img_left = (!) active_edit_point_handle_image;
+		} else {
+			img_left = (!) edit_point_handle_image;
+		}
+
 		if (!(is_open () && e == points.last ().data)) {
 			draw_line (handle_right, e, cr, 0.15);
 			draw_image (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());

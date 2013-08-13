@@ -24,6 +24,7 @@ public class EditPointHandle  {
 	EditPoint? visual_handle = null;
 	static EditPoint none = new EditPoint ();
 	public bool active;
+	public bool selected;
 
 	public double angle;
 
@@ -33,6 +34,7 @@ public class EditPointHandle  {
 		this.length = 10;
 		this.type = PointType.NONE;
 		this.active = false;
+		this.selected = false;
 	}
 	
 	public EditPointHandle (EditPoint parent, double angle, double length) {
@@ -41,6 +43,7 @@ public class EditPointHandle  {
 		this.length = length;
 		this.type = PointType.LINE_CUBIC;
 		this.active = false;
+		this.selected = false;
 	}
 
 	public EditPointHandle copy () {
@@ -50,6 +53,7 @@ public class EditPointHandle  {
 		n.parent = parent;
 		n.type = type;
 		n.active = active;
+		n.selected = selected;
 		return n;
 	}
 
