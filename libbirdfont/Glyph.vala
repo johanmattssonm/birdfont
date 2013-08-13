@@ -554,12 +554,12 @@ public class Glyph : FontDisplay {
 	public override void key_release (uint keyval) {	
 		Tool t;
 		t = MainWindow.get_toolbox ().get_current_tool ();
-		t.key_release_action (t, keyval);		
+		t.key_release_action (t, keyval);
 	}
 
 	public override void key_press (uint keyval) {	
 		Tool t = MainWindow.get_toolbox ().get_current_tool ();
-		t.key_press_action (t, keyval);
+		t.key_press_action (t, keyval);	
 	}
 
 	/** Delete edit point from path.

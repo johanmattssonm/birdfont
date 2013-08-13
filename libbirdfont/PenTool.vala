@@ -154,6 +154,7 @@ public class PenTool : Tool {
 			if (is_arrow_key (keyval)) {
 				if (KeyBindings.modifier != CTRL) {
 					move_selected_points (keyval);
+					active_edit_point = selected_point;
 				} else {
 					move_select_next_point (keyval);
 				}
@@ -161,6 +162,14 @@ public class PenTool : Tool {
 		});
 		
 		key_release_action.connect ((self, keyval) => {
+			double x, y;
+			if (is_arrow_key (keyval)) {
+				if (KeyBindings.modifier != CTRL) {
+					x = Glyph.reverse_path_coordinate_x (selected_point.x);
+					y = Glyph.reverse_path_coordinate_y (selected_point.y);
+					join_paths (x, y);
+				}
+			}	
 		});
 		
 		draw_action.connect ((tool, cairo_context, glyph) => {
@@ -504,11 +513,10 @@ public class PenTool : Tool {
 		EditPoint ep_last, ep_first;
 
 		foreach (Path path in glyph.path_list) {
-			
-			if (path.points.length () < 2) {
+			if (path.points.length () == 0) {
 				continue;
 			}
-			
+
 			ep_last = path.points.last ().data;
 			ep_first = path.points.first ().data;	
 			
@@ -542,17 +550,24 @@ public class PenTool : Tool {
 			return;
 		}
 		path = (!) p;
-		if (path.is_open () && active_edit_point == path.points.first ().data) {
+		
+		if (!path.is_open ()) {
+			return;
+		}
+		
+		if (active_edit_point == path.points.first ().data) {
 			path.reverse ();
 			update_selection ();
 			path.recalculate_linear_handles ();
-			direction_changed = !direction_changed;
+			direction_changed = true;
+			active_edit_point = path.points.last ().data;
 		}
 		
 		// join path with it self
-		if (path.is_open () && path.points.first ().data != active_edit_point && is_endpoint ((!) active_edit_point)
-				&& is_close_to_point (path.points.first ().data, x, y)) {
-
+		if (path.points.first ().data != active_edit_point
+			&& is_endpoint ((!) active_edit_point)
+			&& is_close_to_point (path.points.first ().data, x, y)) {
+				
 			// TODO: set point type
 			path.points.first ().data.left_handle.move_to_coordinate (
 				path.points.last ().data.left_handle.x (),
@@ -595,7 +610,7 @@ public class PenTool : Tool {
 			}
 
 			// we need both start and end points
-			if (merge.points.length () < 2 || path.points.length () < 2) {
+			if (merge.points.length () < 1 || path.points.length () < 1) {
 				continue;
 			}
 			
@@ -729,7 +744,7 @@ public class PenTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
 		foreach (Path path in glyph.path_list) {
-			if (path.points.length () < 2) {
+			if (path.points.length () < 1) {
 				continue;
 			}
 			

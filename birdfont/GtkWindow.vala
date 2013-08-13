@@ -252,7 +252,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		
 		key_release_event.connect ((t, event) => {
-			if (MainWindow.glyph_canvas is Glyph) {
+			FontDisplay fd = MainWindow.glyph_canvas.current_display;
+			
+			if (fd is Glyph) {
 				MainWindow.glyph_canvas.key_release (event.keyval);
 			}
 			
