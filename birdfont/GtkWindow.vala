@@ -555,7 +555,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		edit_menu.append (background_glyph_item);
 		background_glyph_item.activate.connect (() => { MenuTab.use_current_glyph_as_background (); });
 
-		Gtk.MenuItem reset_background_glyph_item = new Gtk.MenuItem.with_mnemonic (_("Remove Glyph _Background"));
+		Gtk.MenuItem reset_background_glyph_item = new Gtk.MenuItem.with_mnemonic (_("_Remove Glyph Background"));
 		edit_menu.append (reset_background_glyph_item);
 		reset_background_glyph_item.activate.connect (() => { MenuTab.reset_glyph_background (); });
 
