@@ -107,7 +107,7 @@ public class CircleTool : Tool {
 		
 		glyph.store_undo_state ();
 		
-		steps = (Toolbox.point_type == PointType.QUADRATIC) ? PI / 8 : PI / 4;  
+		steps = (DrawingTools.point_type == PointType.QUADRATIC) ? PI / 8 : PI / 4;  
 		
 		for (double angle = 0; angle < 2 * PI; angle += steps) {
 			px = radius * cos (angle) + Glyph.path_coordinate_x (x);

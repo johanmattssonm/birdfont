@@ -2221,7 +2221,7 @@ public class Path {
 	public void init_point_type () {
 		PointType type;
 		
-		switch (Toolbox.point_type) {
+		switch (DrawingTools.point_type) {
 			case PointType.QUADRATIC:
 				type = PointType.LINE_QUADRATIC;
 				break;

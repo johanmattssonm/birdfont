@@ -240,7 +240,7 @@ public class PenTool : Tool {
 	
 	public void set_precision (double p) {
 		precision = p;
-		MainWindow.get_toolbox ().precision.set_value_round (p, false, false);
+		DrawingTools.precision.set_value_round (p, false, false);
 	}
 	
 	public void move (double x, double y) {
@@ -944,11 +944,11 @@ public class PenTool : Tool {
 			p.left_handle.type = PointType.QUADRATIC;
 			p.right_handle.type = PointType.LINE_QUADRATIC;
 			p.type = PointType.QUADRATIC;
-		} else if (Toolbox.get_selected_point_type () == PointType.QUADRATIC) {
+		} else if (DrawingTools.get_selected_point_type () == PointType.QUADRATIC) {
 			p.left_handle.type = PointType.LINE_QUADRATIC;
 			p.right_handle.type = PointType.LINE_QUADRATIC;
 			p.type = PointType.LINE_QUADRATIC;
-		} else if (Toolbox.get_selected_point_type () == PointType.DOUBLE_CURVE) {
+		} else if (DrawingTools.get_selected_point_type () == PointType.DOUBLE_CURVE) {
 			p.left_handle.type = PointType.LINE_DOUBLE_CURVE;
 			p.right_handle.type = PointType.LINE_DOUBLE_CURVE;
 			p.type = PointType.DOUBLE_CURVE;
@@ -1401,7 +1401,7 @@ public class PenTool : Tool {
 	}
 
 	public static PointType to_line (PointType t) {
-		switch (Toolbox.point_type) {
+		switch (DrawingTools.point_type) {
 			case PointType.QUADRATIC:
 				return PointType.LINE_QUADRATIC;
 			case PointType.DOUBLE_CURVE:
@@ -1415,32 +1415,32 @@ public class PenTool : Tool {
 	}
 	
 	public static void set_converted_handle_length (EditPointHandle e) {
-		if (e.type == PointType.QUADRATIC  && Toolbox.point_type == PointType.DOUBLE_CURVE) {
+		if (e.type == PointType.QUADRATIC  && DrawingTools.point_type == PointType.DOUBLE_CURVE) {
 			e.length *= 2;
 			e.length /= 4;
 		}
 
-		if (e.type == PointType.QUADRATIC  && Toolbox.point_type == PointType.CUBIC) {
+		if (e.type == PointType.QUADRATIC  && DrawingTools.point_type == PointType.CUBIC) {
 			e.length *= 2;
 			e.length /= 3;
 		}
 
-		if (e.type == PointType.DOUBLE_CURVE  && Toolbox.point_type == PointType.QUADRATIC) {
+		if (e.type == PointType.DOUBLE_CURVE  && DrawingTools.point_type == PointType.QUADRATIC) {
 			e.length *= 4;
 			e.length /= 2;			
 		}
 
-		if (e.type == PointType.DOUBLE_CURVE  && Toolbox.point_type == PointType.CUBIC) {
+		if (e.type == PointType.DOUBLE_CURVE  && DrawingTools.point_type == PointType.CUBIC) {
 			e.length *= 4;
 			e.length /= 3;		
 		}
 
-		if (e.type == PointType.CUBIC  && Toolbox.point_type == PointType.QUADRATIC) {
+		if (e.type == PointType.CUBIC  && DrawingTools.point_type == PointType.QUADRATIC) {
 			e.length *= 3;
 			e.length /= 2;		
 		}
 
-		if (e.type == PointType.CUBIC  && Toolbox.point_type == PointType.DOUBLE_CURVE) {
+		if (e.type == PointType.CUBIC  && DrawingTools.point_type == PointType.DOUBLE_CURVE) {
 			e.length *= 3;
 			e.length /= 4;			
 		}		
@@ -1478,21 +1478,21 @@ public class PenTool : Tool {
 			set_converted_handle_length (e.get_next ().data.get_left_handle ());
 														
 			if (!is_line (e.type)) {
-				e.type = Toolbox.point_type;
+				e.type = DrawingTools.point_type;
 			} else {
-				e.type = to_line (Toolbox.point_type);
+				e.type = to_line (DrawingTools.point_type);
 			}
 			
 			if (!is_line (e.get_right_handle ().type)) {
-				e.get_right_handle ().type = Toolbox.point_type;
+				e.get_right_handle ().type = DrawingTools.point_type;
 			} else {
-				e.get_right_handle ().type = to_line (Toolbox.point_type);
+				e.get_right_handle ().type = to_line (DrawingTools.point_type);
 			}
 
 			if (!is_line (e.type)) {
-				e.get_next ().data.get_left_handle ().type = Toolbox.point_type;
+				e.get_next ().data.get_left_handle ().type = DrawingTools.point_type;
 			} else {
-				e.get_next ().data.get_left_handle ().type = to_line (Toolbox.point_type);
+				e.get_next ().data.get_left_handle ().type = to_line (DrawingTools.point_type);
 			}
 				
 			// process connected handle

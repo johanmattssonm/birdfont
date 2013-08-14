@@ -259,12 +259,19 @@ public class KerningDisplay : FontDisplay {
 		GlyphSequence word_with_ligatures;
 		
 		foreach (GlyphSequence word in row) {
+			foreach (Glyph? g in word.glyph) {
+				if (g == null) print ("null");
+				else print (((!)g).get_name ());
+				print ("\n");
+			}
+		}
+		print ("\n");
+		
+		foreach (GlyphSequence word in row) {
 			col_index = 0;
 			
 			word_with_ligatures = word.process_ligatures ();
 			foreach (Glyph? g in word_with_ligatures.glyph) {
-				// draw glyph
-
 				if (g == null) {
 					w = 50;	
 				} else {
@@ -289,9 +296,11 @@ public class KerningDisplay : FontDisplay {
 						active_handle = i - row_index;
 						MainWindow.get_glyph_canvas ().redraw ();
 					}
-
+					
 					if (col_index == word.glyph.length () || col_index == 0) {
 						active_handle = -1;
+					} else {
+						active_handle += row_index;
 					}
 				}
 				

@@ -679,13 +679,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem add_grid_item = new Gtk.MenuItem.with_mnemonic (_("Add New _Grid Item"));
 		tool_menu.append (add_grid_item);
 		add_grid_item.activate.connect (() => { 
-			MainWindow.get_toolbox ().add_new_grid ();
+			MainWindow.get_drawing_tools ().add_new_grid ();
 		});
 
 		Gtk.MenuItem remove_grid_item = new Gtk.MenuItem.with_mnemonic (_("Remove Gr_id Item"));
 		tool_menu.append (remove_grid_item);
 		remove_grid_item.activate.connect (() => { 
-			MainWindow.get_toolbox ().remove_current_grid ();
+			MainWindow.get_drawing_tools().remove_current_grid ();
 		});
 		
 		Gtk.MenuItem zoom_in_item = new Gtk.MenuItem.with_mnemonic (_("_Zoom In"));

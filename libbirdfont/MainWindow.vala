@@ -41,6 +41,10 @@ public class MainWindow {
 		over_view = new OverView();
 	}
 
+	public static DrawingTools get_drawing_tools () {
+		return tools.drawing_tools;
+	}
+
 	public void set_native (NativeWindow nw) {
 		native_window = nw;
 	}
