@@ -105,8 +105,12 @@ class SvgFontFormatWriter : Object  {
 			
 			l = Font.to_hex_code (glyph_left.unichar_code);
 			r = Font.to_hex_code (glyph_right.unichar_code);
-							
-			os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(-k)\"/>\n");
+			
+			try {			
+				os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(-k)\"/>\n");
+			} catch (GLib.Error e) {
+				warning (e.message);
+			}
 		});	
 
 		put ("</font>");

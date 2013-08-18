@@ -89,7 +89,6 @@ class BirdFontFile {
 	public bool write_font_file (string path, bool backup = false) {
 		try {
 			File file = File.new_for_path (path);
-			uint num_kerning_rows;
 			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
 				stderr.printf (@"Can not save font. $path is a directory.");
@@ -506,39 +505,44 @@ class BirdFontFile {
 		double hadjusment = 0;
 		KerningRange kerning_range;
 		
-		range_left = new GlyphRange ();
-		range_right = new GlyphRange ();
+		try {
+			range_left = new GlyphRange ();
+			range_right = new GlyphRange ();
+				
+			for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+				attr_name = prop->name;
+				attr_content = prop->children->content;
+				
+				if (attr_name == "left") {
+					range_left.parse_ranges (attr_content);
+				}
+
+				if (attr_name == "right") {
+					range_right.parse_ranges (attr_content);
+				}
+
+				if (attr_name == "hadjustment") {
+					hadjusment = double.parse (attr_content);
+				}
+			}
 			
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+			if (range_left.get_length () > 1) {
+				kerning_range = new KerningRange ();
+				kerning_range.set_ranges (range_left.get_all_ranges ());
+				KerningTools.add_unique_class (kerning_range);
+			}
+
+			if (range_right.get_length () > 1) {
+				kerning_range = new KerningRange ();
+				kerning_range.set_ranges (range_right.get_all_ranges ());
+				KerningTools.add_unique_class (kerning_range);
+			}
+
+			KerningClasses.set_kerning (range_left, range_right, hadjusment);
 			
-			if (attr_name == "left") {
-				range_left.parse_ranges (attr_content);
-			}
-
-			if (attr_name == "right") {
-				range_right.parse_ranges (attr_content);
-			}
-
-			if (attr_name == "hadjustment") {
-				hadjusment = double.parse (attr_content);
-			}
+		} catch (MarkupError e) {
+			warning (e.message);
 		}
-		
-		if (range_left.get_length () > 1) {
-			kerning_range = new KerningRange ();
-			kerning_range.set_ranges (range_left.get_all_ranges ());
-			KerningTools.add_unique_class (kerning_range);
-		}
-
-		if (range_right.get_length () > 1) {
-			kerning_range = new KerningRange ();
-			kerning_range.set_ranges (range_right.get_all_ranges ());
-			KerningTools.add_unique_class (kerning_range);
-		}
-
-		KerningClasses.set_kerning (range_left, range_right, hadjusment);
 	}
 		
 	private void parse_old_kerning (Xml.Node* node) {
@@ -572,13 +576,17 @@ class BirdFontFile {
 			}
 		}
 
-		grl = new GlyphRange ();
-		grl.parse_ranges (left);
+		try {
+			grl = new GlyphRange ();
+			grl.parse_ranges (left);
 
-		grr = new GlyphRange ();
-		grr.parse_ranges (right);
-
-		KerningClasses.set_kerning (grl, grr, double.parse (kern));		
+			grr = new GlyphRange ();
+			grr.parse_ranges (right);
+			
+			KerningClasses.set_kerning (grl, grr, double.parse (kern));	
+		} catch (MarkupError e) {
+			warning (e.message);
+		}
 	}
 	
 	private void parse_background_image (Xml.Node* node) 

@@ -554,9 +554,15 @@ public class Font : GLib.Object {
 			
 			format = FontFormat.FREETYPE;
 			
-			// DELETE
-			OpenFontFormatReader or = new OpenFontFormatReader ();
-			or.parse_index (path);
+			// run the old parser for debugging puposes
+			if (BirdFont.has_argument ("--test")) {
+				try {
+					OpenFontFormatReader or = new OpenFontFormatReader ();
+					or.parse_index (path);
+				} catch (GLib.Error e) {
+					warning (e.message);
+				}
+			}
 		}			
 
 		if (path.has_suffix (".otf")) {

@@ -116,13 +116,17 @@ class SvgFont : GLib.Object {
 				sr = new StringBuilder ();
 				sr.append_unichar (r);
 				
-				grl = new GlyphRange ();
-				grl.parse_ranges (sl.str);
+				try {
+					grl = new GlyphRange ();
+					grl.parse_ranges (sl.str);
+					
+					grr = new GlyphRange ();
+					grr.parse_ranges (sr.str);
 				
-				grr = new GlyphRange ();
-				grr.parse_ranges (sr.str);
-			
-				KerningClasses.set_kerning (grl, grr, -kerning);			
+					KerningClasses.set_kerning (grl, grr, -kerning);
+				} catch (MarkupError e) {
+					warning (e.message);
+				}			
 			}
 		}
 	}

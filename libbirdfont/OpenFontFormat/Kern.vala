@@ -52,18 +52,6 @@ class KernTable : Table {
 		id = "kern";
 	}
 	
-	public KernList get_all_pairs (int gid) {
-		KernList kl = new KernList ();
-		
-		foreach (Kern k in kernings) {
-			if (k.left == gid) {
-				kl.kernings.append (k);
-			}
-		}
-		
-		return kl;
-	}
-	
 	public override void parse (FontData dis) throws GLib.Error {
 		uint16 version;
 		uint16 sub_tables;
@@ -120,13 +108,11 @@ class KernTable : Table {
 		uint16 n_pairs = 0;
 		
 		uint16 gid_left;
-		int gid_right;
 		
 		uint16 range_shift = 0;
 		uint16 entry_selector = 0;
 		uint16 search_range = 0;
 		
-		Kern kern;
 		int i;
 		
 		fd.add_ushort (0); // version 
@@ -140,7 +126,7 @@ class KernTable : Table {
 		
 		if (n_pairs > (uint16.MAX - 14) / 6.0) {
 			warning ("Too many kerning pairs!"); 
-			n_pairs = (uint16) ((uint16.MAX - 14) / 6.0);
+ 			n_pairs = (uint16) ((uint16.MAX - 14) / 6.0);
 		}
 		
 		this.kerning_pairs = n_pairs;
@@ -165,14 +151,18 @@ class KernTable : Table {
 		KerningClasses.all_pairs ((left, right, k) => {
 			uint16 gid1, gid2;
 			
-			// n_pairs is used to truncate this table to prevent buffer overflow
-			if (n_pairs > i++) {
-				gid1 = (uint16) glyf_table.get_gid (left);
-				gid2 = (uint16) glyf_table.get_gid (right);
-				
-				fd.add_ushort (gid1);
-				fd.add_ushort (gid2);
-				fd.add_short ((int16) (k * HeadTable.UNITS));
+			try {
+				// n_pairs is used to truncate this table to prevent buffer overflow
+				if (n_pairs > i++) {
+					gid1 = (uint16) glyf_table.get_gid (left);
+					gid2 = (uint16) glyf_table.get_gid (right);
+					
+					fd.add_ushort (gid1);
+					fd.add_ushort (gid2);
+					fd.add_short ((int16) (k * HeadTable.UNITS));
+				}
+			} catch (GLib.Error e) {
+				warning (e.message);
 			}
 		});
 		

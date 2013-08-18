@@ -320,15 +320,8 @@ class GlyfTable : Table {
 	}
 
 	public Glyph? read_glyph (string name) throws GLib.Error {
-		// Obsolete, can be removed:
-/*
 		Glyph? glyph;
-		Glyph g;
 		int i;
-		KernList kl;
-		string right;
-		double units_per_em;
-		double kern_val;
 		
 		i = post_table.get_gid (name);
 		
@@ -337,23 +330,7 @@ class GlyfTable : Table {
 		}
 		
 		glyph = parse_index (i, dis, loca_table, hmtx_table, head_table, post_table);
-		
-		if (glyph != null) {
-			printd (@"kern: ");
-			units_per_em = head_table.get_units_per_em ();
-			kl = kern_table.get_all_pairs (i);
-			foreach (Kern k in kl.kernings) {
-				g = (!) glyph;
-				right = post_table.get_name (k.right);
-				kern_val = k.kerning * 1000.0 / units_per_em;
-				g.add_kerning (right, kern_val);
-			}
-		}
-		
 		return glyph;
-		*/
-		
-		return null;
 	}
 	
 	public new void parse (FontData dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table, KernTable kern_table) throws GLib.Error {
