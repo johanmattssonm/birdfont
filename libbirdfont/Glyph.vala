@@ -1713,7 +1713,7 @@ public class Glyph : FontDisplay {
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
-				kern = KerningClasses.get_kerning (last_name, name);
+				kern = KerningClasses.get_instance ().get_kerning (last_name, name);
 			} else {
 				kern = 0;
 			}
@@ -1727,7 +1727,7 @@ public class Glyph : FontDisplay {
 				cr.restore ();
 			}
 			
-			x += juxtaposed.get_width () + KerningClasses.get_kerning (glyph.name, name) + kern;
+			x += juxtaposed.get_width () + KerningClasses.get_instance ().get_kerning (glyph.name, name) + kern;
 			last_name = name;
 		}
 		
@@ -1739,7 +1739,7 @@ public class Glyph : FontDisplay {
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
-				kern = KerningClasses.get_kerning (name, last_name);
+				kern = KerningClasses.get_instance ().get_kerning (name, last_name);
 			} else {
 				kern = 0;
 			}

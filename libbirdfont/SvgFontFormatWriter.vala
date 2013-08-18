@@ -87,7 +87,7 @@ class SvgFontFormatWriter : Object  {
 		
 		// FIXME: ligatures
 
-		KerningClasses.all_pairs ((left, right, k) => {
+		KerningClasses.get_instance ().all_pairs ((left, right, k) => {
 			string l, r;
 			Font f = BirdFont.get_current_font ();
 			Glyph? gr = f.get_glyph (right);

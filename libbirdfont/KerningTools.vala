@@ -50,6 +50,22 @@ public class KerningTools : ToolCollection  {
 		expanders.append (classes);
 	}
 	
+	public static void remove_all_kerning_classes () {
+		if (is_null (classes) || is_null (classes.tool)) {
+			return; // FIXME: reorganize
+		}
+		
+		print ("Remove all kerning classes\n");
+		
+		while (classes.tool.length () > 0) {
+			classes.tool.remove_link (classes.tool.first ());
+		}
+		
+		if (!is_null (MainWindow.get_toolbox ())) {
+			MainWindow.get_toolbox ().update_expanders ();
+		}
+	}
+	
 	public static void add_unique_class (KerningRange kerning_class) {
 		KerningRange k;
 		

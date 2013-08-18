@@ -198,7 +198,7 @@ class GposTable : Table {
 			kerning_pairs.remove_link (kerning_pairs.first ());
 		}
 		
-		KerningClasses.all_pairs ((left, right, kerning) => {
+		KerningClasses.get_instance ().all_pairs ((left, right, kerning) => {
 			uint16 gid1, gid2;
 			PairFormat1 pair;
 			int pair_index;

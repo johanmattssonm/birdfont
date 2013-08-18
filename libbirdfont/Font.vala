@@ -79,7 +79,7 @@ public class Font : GLib.Object {
 	/** File format. */
 	public FontFormat format = FontFormat.BIRDFONT;
 	
-	KerningClasses kerning_classes;
+	KerningClasses kerning_classes = new KerningClasses ();
 	
 	public Font () {
 		// positions in pixels at first zoom level
@@ -90,14 +90,16 @@ public class Font : GLib.Object {
 		base_line = 0;
 		bottom_position = 20;
 		bottom_limit = 27;
-		
-		kerning_classes = new KerningClasses ();
 	}
 
 	public void touch () {
 		modified = true;
 	}
 
+	public KerningClasses get_kerning_classes () {
+		return kerning_classes;
+	}
+	
 	public File get_backgrounds_folder () {
 		string fn = @"$(get_name ()) backgrounds";
 		File f = BirdFont.get_settings_directory ().get_child (fn);

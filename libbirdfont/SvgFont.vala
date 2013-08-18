@@ -123,7 +123,7 @@ class SvgFont : GLib.Object {
 					grr = new GlyphRange ();
 					grr.parse_ranges (sr.str);
 				
-					KerningClasses.set_kerning (grl, grr, -kerning);
+					KerningClasses.get_instance ().set_kerning (grl, grr, -kerning);
 				} catch (MarkupError e) {
 					warning (e.message);
 				}			

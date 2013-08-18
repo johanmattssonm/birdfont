@@ -457,6 +457,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.Menu edit_menu = new Gtk.Menu ();
 		Gtk.Menu tab_menu = new Gtk.Menu ();
 		Gtk.Menu tool_menu = new Gtk.Menu ();
+		Gtk.Menu kerning_menu = new Gtk.Menu ();
 
 		AccelGroup accel_group = new Gtk.AccelGroup();
 		add_accel_group (accel_group);
@@ -496,11 +497,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem description_item = new Gtk.MenuItem.with_mnemonic(_("Name and _Description"));
 		file_menu.append (description_item);
 		description_item.activate.connect (() => { MenuTab.show_description (); });
-
-		Gtk.MenuItem kerning_item = new Gtk.MenuItem.with_mnemonic (_("_Kerning"));
-		file_menu.append (kerning_item);
-		kerning_item.activate.connect (() => { MenuTab.show_kerning_context (); });
-		kerning_item.add_accelerator ("activate", accel_group, 'K', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		Gtk.MenuItem select_language_item = new Gtk.MenuItem.with_mnemonic (_("Select _Character Set"));
 		file_menu.append (select_language_item);
@@ -709,6 +705,27 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		zoom_1_1_item.add_accelerator ("activate", accel_group, '0', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		// Kerning
+		Gtk.MenuItem show_kerning_tab = new Gtk.MenuItem.with_mnemonic (_("Show Kerning _Tab"));
+		kerning_menu.append (show_kerning_tab);
+		show_kerning_tab.activate.connect (() => { 
+			 MenuTab.show_kerning_context ();
+		});
+		show_kerning_tab.add_accelerator ("activate", accel_group, 'k', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem remove_all_kerning_pairs = new Gtk.MenuItem.with_mnemonic (_("_Remove All Kerning Pairs"));
+		kerning_menu.append (remove_all_kerning_pairs);
+		remove_all_kerning_pairs.activate.connect (() => { 
+			 KerningClasses.get_instance ().remove_all_pairs ();
+		});
+
+		Gtk.MenuItem remove_all_kerning_classes = new Gtk.MenuItem.with_mnemonic (_("Remove All Kerning _Classes"));
+		kerning_menu.append (remove_all_kerning_classes);
+		remove_all_kerning_classes.activate.connect (() => { 
+			 KerningClasses.get_instance ().remove_all_pairs ();
+			 KerningTools.remove_all_kerning_classes ();
+		});
+		
 		// Add menus
 		Gtk.MenuItem file_launcher = new Gtk.MenuItem.with_mnemonic (_("_File"));
 		file_launcher.set_submenu (file_menu);
@@ -721,11 +738,15 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		Gtk.MenuItem tool_launcher = new Gtk.MenuItem.with_mnemonic (_("T_ool"));
 		tool_launcher.set_submenu (tool_menu);
+
+		Gtk.MenuItem kerning_launcher = new Gtk.MenuItem.with_mnemonic (_("_Kerning"));
+		kerning_launcher.set_submenu (kerning_menu);
 						
 		menubar.append (file_launcher);
 		menubar.append (edit_launcher);
 		menubar.append (tab_launcher);
 		menubar.append (tool_launcher);
+		menubar.append (kerning_launcher);
 		
 		return menubar;	
 	}

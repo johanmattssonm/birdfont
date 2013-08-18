@@ -230,7 +230,10 @@ public class KerningDisplay : FontDisplay {
 				b = ((!) g).get_name ();
 				
 				if (handle == wi) {
-					return_if_fail (wi < word_with_ligatures.ranges.length ());
+					if (wi >= word_with_ligatures.ranges.length ()) {
+						warning (@"$wi > $(word_with_ligatures.ranges.length ())");
+						return;
+					}
 					return_if_fail (wi - 1 >= 0);
 					
 					if (word_with_ligatures.ranges.length () != word_with_ligatures.glyph.length ()) {
@@ -240,14 +243,6 @@ public class KerningDisplay : FontDisplay {
 					gr_left = word_with_ligatures.ranges.nth (wi - 1).data;
 					gr_right = word_with_ligatures.ranges.nth (wi).data;
 					
-					/*
-					 * // DELETE
-					// Kern table kerning and single glyph positioning
-					if (gr_left == null && gr_right == null) {
-						kern = font.get_kerning_by_name (a, b) + val;
-						font.set_kerning_by_name (a, b, kern);
-					}
-					*/
 					set_kerning_pair (a, b, ref gr_left, ref gr_right, val);
 				}
 				
@@ -282,13 +277,11 @@ public class KerningDisplay : FontDisplay {
 				grr = (!) gr_right;
 			}
 			
-			KerningClasses.set_kerning (grl, grr, kern + val);
+			KerningClasses.get_instance ().set_kerning (grl, grr, kern + val);
 		} catch (MarkupError e) {
 			// FIXME: unassigned glyphs and ligatures
 			warning (e.message);
 		}
-		
-		KerningClasses.print_all ();
 	}
 
 	/** Class based gpos kerning. */
@@ -310,19 +303,19 @@ public class KerningDisplay : FontDisplay {
 			}
 			
 			if (gr_left != null && gr_right != null) {
-				return KerningClasses.get_kerning_for_range (grl, grr);
+				return KerningClasses.get_instance ().get_kerning_for_range (grl, grr);
 			}
 
 			if (gr_left != null && gr_right == null) {
-				return KerningClasses.get_kern_for_range_to_char (grl, b);
+				return KerningClasses.get_instance ().get_kern_for_range_to_char (grl, b);
 			}
 			
 			if (gr_left == null && gr_right != null) {
-				return KerningClasses.get_kern_for_char_to_range (a, grr);
+				return KerningClasses.get_instance ().get_kern_for_char_to_range (a, grr);
 			}
 			
 			if (gr_left == null && gr_right == null) {
-				return KerningClasses.get_kerning (a, b);
+				return KerningClasses.get_instance ().get_kerning (a, b);
 			}			
 		} catch (MarkupError e) {
 			// FIXME: unassigned glyphs and ligatures

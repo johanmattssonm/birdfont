@@ -199,19 +199,19 @@ class BirdFontFile {
 				}
 			});
 			
-			uint num_kerning_pairs = KerningClasses.classes_first.length ();
+			uint num_kerning_pairs = KerningClasses.get_instance ().classes_first.length ();
 			for (uint i = 0; i < num_kerning_pairs; i++) {
 				os.put_string ("<kerning ");
 				os.put_string ("left=\"");
-				os.put_string (KerningClasses.classes_first.nth (i).data.get_all_ranges ());
+				os.put_string (KerningClasses.get_instance ().classes_first.nth (i).data.get_all_ranges ());
 				os.put_string ("\" ");
 				
 				os.put_string ("right=\"");
-				os.put_string (KerningClasses.classes_last.nth (i).data.get_all_ranges ());
+				os.put_string (KerningClasses.get_instance ().classes_last.nth (i).data.get_all_ranges ());
 				os.put_string ("\" ");
 				
 				os.put_string ("hadjustment=\"");
-				os.put_string (float_point (KerningClasses.classes_kerning.nth (i).data.val));
+				os.put_string (float_point (KerningClasses.get_instance ().classes_kerning.nth (i).data.val));
 				os.put_string ("\" />\n");
 			}
 			
@@ -538,7 +538,7 @@ class BirdFontFile {
 				KerningTools.add_unique_class (kerning_range);
 			}
 
-			KerningClasses.set_kerning (range_left, range_right, hadjusment);
+			KerningClasses.get_instance ().set_kerning (range_left, range_right, hadjusment);
 			
 		} catch (MarkupError e) {
 			warning (e.message);
@@ -583,7 +583,7 @@ class BirdFontFile {
 			grr = new GlyphRange ();
 			grr.parse_ranges (right);
 			
-			KerningClasses.set_kerning (grl, grr, double.parse (kern));	
+			KerningClasses.get_instance ().set_kerning (grl, grr, double.parse (kern));	
 		} catch (MarkupError e) {
 			warning (e.message);
 		}

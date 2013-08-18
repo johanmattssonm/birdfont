@@ -120,7 +120,7 @@ class KernTable : Table {
 
 		fd.add_ushort (0); // subtable version 
 
-		KerningClasses.all_pairs ((left, right, k) => {
+		KerningClasses.get_instance ().all_pairs ((left, right, k) => {
 			n_pairs++;
 		});
 		
@@ -148,7 +148,7 @@ class KernTable : Table {
 		
 		i = 0;
 		
-		KerningClasses.all_pairs ((left, right, k) => {
+		KerningClasses.get_instance ().all_pairs ((left, right, k) => {
 			uint16 gid1, gid2;
 			
 			try {
