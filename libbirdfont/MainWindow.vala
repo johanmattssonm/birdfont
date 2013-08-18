@@ -34,8 +34,8 @@ public class MainWindow {
 		
 		key_bindings = new KeyBindings ();
 		glyph_canvas = new GlyphCanvas ();
-		tools = new Toolbox (glyph_canvas);
 		tabs = new TabBar ();
+		tools = new Toolbox (glyph_canvas, tabs);
 		menu_tab = new MenuTab ();
 		tool_tip = new TooltipArea ();
 		over_view = new OverView();

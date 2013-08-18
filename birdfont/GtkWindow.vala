@@ -789,8 +789,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		text_box.show ();
 		text_entry.set_text (listener.default_text);
 		text_entry.activate.connect (() => {
-			listener.set_text (text_entry.text);
-			hide_text_input ();
+			listener.signal_submit (listener.default_text);
 		});
 		text_entry.grab_focus ();
 	}

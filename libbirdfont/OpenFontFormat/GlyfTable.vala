@@ -41,10 +41,10 @@ class GlyfTable : Table {
 	
 	public List<uint32> location_offsets; 
 
-	// list of glyphs sorted in the order we expect to find them in a
+	// a list of glyphs sorted in the order we expect to find them in a
 	// ttf font. notdef is the firs glyph followed by null and nonmarkingreturn.
-	// after that will all assigned glyphs appear in sorted order, all 
-	// remaining unassigned glyphs is in the last part of the file.	
+	// after that will all assigned glyphs appear in sorted (unicode) order, all 
+	// remaining unassigned glyphs will be added in the last part of the file.	
 	public List<Glyph> glyphs;
 	
 	uint16 max_points = 0;
@@ -60,13 +60,26 @@ class GlyfTable : Table {
 		glyphs = new List<Glyph> ();
 	}	
 
+	public int get_gid_from_unicode (unichar c) {
+		int i = 0;
+		foreach (Glyph g in glyphs) {
+			if (g.unichar_code == c) {
+				return i;
+			}
+		
+			i++;
+		}
+		
+		return -1;
+	}
+
 	public int get_gid (string name) {
 		int i = 0;
+		
 		foreach (Glyph g in glyphs) {
 			if (g.name == name) {
 				return i;
 			}
-		
 			i++;
 		}
 		
@@ -307,6 +320,8 @@ class GlyfTable : Table {
 	}
 
 	public Glyph? read_glyph (string name) throws GLib.Error {
+		// Obsolete, can be removed:
+/*
 		Glyph? glyph;
 		Glyph g;
 		int i;
@@ -336,6 +351,9 @@ class GlyfTable : Table {
 		}
 		
 		return glyph;
+		*/
+		
+		return null;
 	}
 	
 	public new void parse (FontData dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table, KernTable kern_table) throws GLib.Error {

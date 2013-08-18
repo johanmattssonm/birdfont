@@ -89,7 +89,8 @@ class BirdFontFile {
 	public bool write_font_file (string path, bool backup = false) {
 		try {
 			File file = File.new_for_path (path);
-
+			uint num_kerning_rows;
+			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
 				stderr.printf (@"Can not save font. $path is a directory.");
 				return false;
@@ -170,34 +171,6 @@ class BirdFontFile {
 			});
 		
 			font.glyph_cache.for_each ((gc) => {
-				Glyph glyph;
-				
-				try {
-					glyph = gc.get_current ();
-					
-					foreach (Kerning k in glyph.kerning) {
-						string l, r;
-						Glyph? gr = font.get_glyph (k.glyph_right);
-						Glyph glyph_right;
-
-						if (gr == null) {
-							warning ("kerning a glyph that does not exist. (" + glyph.name + " -> " + k.glyph_right + ")");
-							continue;
-						}
-						
-						glyph_right = (!) gr;
-						
-						l = Font.to_hex_code (glyph.unichar_code);
-						r = Font.to_hex_code (glyph_right.unichar_code);
-										
-						os.put_string (@"<hkern left=\"U+$l\" right=\"U+$r\" kerning=\"$(k.val)\"/>\n");
-					}
-				} catch (GLib.Error e) {
-					warning (e.message);
-				}
-			});
-
-			font.glyph_cache.for_each ((gc) => {
 				GlyphBackgroundImage bg;
 				
 				try {
@@ -218,7 +191,6 @@ class BirdFontFile {
 							os.put_string ("\" ");
 							os.put_string (" data=\"");
 							os.put_string (data);
-							os.put_string ("");
 							os.put_string ("\" />\n");	
 						}
 					}
@@ -227,7 +199,23 @@ class BirdFontFile {
 					stderr.printf (@"$(ef.message) \n");
 				}
 			});
-						
+			
+			uint num_kerning_pairs = KerningClasses.classes_first.length ();
+			for (uint i = 0; i < num_kerning_pairs; i++) {
+				os.put_string ("<kerning ");
+				os.put_string ("left=\"");
+				os.put_string (KerningClasses.classes_first.nth (i).data.get_all_ranges ());
+				os.put_string ("\" ");
+				
+				os.put_string ("right=\"");
+				os.put_string (KerningClasses.classes_last.nth (i).data.get_all_ranges ());
+				os.put_string ("\" ");
+				
+				os.put_string ("hadjustment=\"");
+				os.put_string (float_point (KerningClasses.classes_kerning.nth (i).data.val));
+				os.put_string ("\" />\n");
+			}
+			
 			os.put_string ("</font>");
 			
 		} catch (GLib.Error e) {
@@ -237,6 +225,11 @@ class BirdFontFile {
 		}
 		
 		return true;
+	}
+
+	private string float_point (double d) {
+		string s = @"$d";
+		return s.replace (",", ".");
 	}
 
 	/** Get control points in BirdFont format. This function is uses a
@@ -478,6 +471,10 @@ class BirdFontFile {
 			}
 						
 			if (iter->name == "hkern") {
+				parse_old_kerning (iter);
+			}
+
+			if (iter->name == "kerning") {
 				parse_kerning (iter);
 			}
 		}
@@ -501,13 +498,56 @@ class BirdFontFile {
 			}
 		}
 	}
-	
+
 	private void parse_kerning (Xml.Node* node) {
+		string attr_name;
+		string attr_content;
+		GlyphRange range_left, range_right;
+		double hadjusment = 0;
+		KerningRange kerning_range;
+		
+		range_left = new GlyphRange ();
+		range_right = new GlyphRange ();
+			
+		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+			attr_name = prop->name;
+			attr_content = prop->children->content;
+			
+			if (attr_name == "left") {
+				range_left.parse_ranges (attr_content);
+			}
+
+			if (attr_name == "right") {
+				range_right.parse_ranges (attr_content);
+			}
+
+			if (attr_name == "hadjustment") {
+				hadjusment = double.parse (attr_content);
+			}
+		}
+		
+		if (range_left.get_length () > 1) {
+			kerning_range = new KerningRange ();
+			kerning_range.set_ranges (range_left.get_all_ranges ());
+			KerningTools.add_unique_class (kerning_range);
+		}
+
+		if (range_right.get_length () > 1) {
+			kerning_range = new KerningRange ();
+			kerning_range.set_ranges (range_right.get_all_ranges ());
+			KerningTools.add_unique_class (kerning_range);
+		}
+
+		KerningClasses.set_kerning (range_left, range_right, hadjusment);
+	}
+		
+	private void parse_old_kerning (Xml.Node* node) {
 		string attr_name;
 		string attr_content;
 		string left = "";
 		string right = "";
 		string kern = "";
+		GlyphRange grr, grl;
 
 		StringBuilder b;
 		
@@ -531,8 +571,14 @@ class BirdFontFile {
 				kern = attr_content;
 			}
 		}
-		
-		font.set_kerning (left, right, double.parse (kern));
+
+		grl = new GlyphRange ();
+		grl.parse_ranges (left);
+
+		grr = new GlyphRange ();
+		grr.parse_ranges (right);
+
+		KerningClasses.set_kerning (grl, grr, double.parse (kern));		
 	}
 	
 	private void parse_background_image (Xml.Node* node) 

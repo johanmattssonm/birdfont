@@ -413,6 +413,20 @@ class FontData : Object {
 			// Todo add fraction
 		}
 	}
+	
+	public void append (FontData fd) {
+		fd.seek (0);
+		for (int i = 0; i < fd.length (); i++) {
+			add (fd.read ());
+		}
+	}
+	
+	public void dump () {
+		for (uint32 i = 0; i < length_with_padding (); i++) {
+			stdout.printf ("%x " , table_data[i]);
+		}
+		stdout.printf ("\n");
+	}
 }
 
 }

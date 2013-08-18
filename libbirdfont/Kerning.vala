@@ -18,11 +18,9 @@ using Xml;
 namespace BirdFont {
 
 public class Kerning : GLib.Object {
-	public string glyph_right;
 	public double val;
 	
-	public Kerning (string right, double v) {
-		glyph_right = right;
+	public Kerning (double v) {
 		val = v;
 	}
 }

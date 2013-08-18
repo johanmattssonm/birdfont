@@ -74,6 +74,7 @@ class SvgFont : GLib.Object {
 		StringBuilder sl, sr;
 		string attr_name = "";
 		string attr_content;
+		GlyphRange grr, grl;
 		
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -102,9 +103,8 @@ class SvgFont : GLib.Object {
 				kerning = double.parse (attr_content) * units;
 			}
 		}
-		
-		
-		// TODO: ranges and sequences for u1 & u2 + g1 & g2
+				
+		// FIXME: ranges and sequences for u1 & u2 + g1 & g2
 		foreach (string lk in left.split (",")) {
 			foreach (string rk in right.split (",")) {
 				l = get_unichar (lk);
@@ -116,7 +116,13 @@ class SvgFont : GLib.Object {
 				sr = new StringBuilder ();
 				sr.append_unichar (r);
 				
-				font.set_kerning (sl.str, sr.str, -kerning);				
+				grl = new GlyphRange ();
+				grl.parse_ranges (sl.str);
+				
+				grr = new GlyphRange ();
+				grr.parse_ranges (sr.str);
+			
+				KerningClasses.set_kerning (grl, grr, -kerning);			
 			}
 		}
 	}

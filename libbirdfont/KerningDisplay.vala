@@ -19,6 +19,8 @@ namespace BirdFont {
 /** Kerning context. */
 public class KerningDisplay : FontDisplay {
 
+	public bool suppress_input = false;
+	
 	List <GlyphSequence> row;
 	int active_handle = -1;
 	int selected_handle = -1;
@@ -27,6 +29,8 @@ public class KerningDisplay : FontDisplay {
 	double begin_handle_y = 0;
 	
 	double last_handle_x = 0;
+
+	bool parse_error = false;
 
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
@@ -37,15 +41,62 @@ public class KerningDisplay : FontDisplay {
 	public override string get_name () {
 		return "Kerning";
 	}
+
+	public void show_parse_error () {
+		parse_error = true;
+	}
+
+	public static KerningDisplay get_singleton () {
+		if (MainWindow.get_current_display () is KerningDisplay) {
+			return (KerningDisplay) MainWindow.get_current_display ();
+		}
+		
+		warning ("Current display is not for kerning");
+		return new KerningDisplay ();
+	}
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {
+		if (parse_error) {
+			draw_error_message (allocation, cr);
+		} else {
+			draw_kerning_pairs (allocation, cr);
+		}
+	}
+	
+	public void draw_error_message (WidgetAllocation allocation, Context cr) {
+		string line1 = _("The current kerning class is malformed.");
+		string line2 = _("Add single characters separated by space and ranges on the form A-Z.");
+		string line3 = _("Type “space” to kern the space character.");
+		
+		cr.save ();
+		cr.set_source_rgba (1, 1, 1, 1);
+		cr.rectangle (0, 0, allocation.width, allocation.height);
+		cr.fill ();
+		
+		cr.set_font_size (18);
+		cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+		cr.move_to (30, 40);
+		cr.show_text (line1);
+		
+		cr.set_font_size (14);
+		cr.move_to (30, 60);
+		cr.show_text (line2);
+
+		cr.set_font_size (14);
+		cr.move_to (30, 80);
+		cr.show_text (line3);
+							
+		cr.restore ();
+	}
+	
+	public void draw_kerning_pairs (WidgetAllocation allocation, Context cr) {
 		Glyph glyph;
 		double x, y, w, kern, alpha;
 		double x2;
 		int i, wi;
 		Glyph? prev;
-		Font font = BirdFont.get_current_font ();
 		GlyphSequence word_with_ligatures;
+		GlyphRange? gr_left, gr_right;
 		
 		i = 0;
 		
@@ -65,18 +116,26 @@ public class KerningDisplay : FontDisplay {
 		foreach (GlyphSequence word in row) {
 			wi = 0;
 			word_with_ligatures = word.process_ligatures ();
+			gr_left = null;
+			gr_right = null;
 			foreach (Glyph? g in word_with_ligatures.glyph) {
 				if (g == null) {
 					continue;
 				}
 				
-				if (prev == null) {
+				if (prev == null || wi == 0) {
 					kern = 0;
 				} else {
-					kern = font.get_kerning_by_name (((!)prev).get_name (), ((!)g).get_name ());
+					return_if_fail (wi < word_with_ligatures.ranges.length ());
+					return_if_fail (wi - 1 >= 0);
+					
+					gr_left = word_with_ligatures.ranges.nth (wi - 1).data;
+					gr_right = word_with_ligatures.ranges.nth (wi).data;
+
+					kern = get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 				}
-								
-				// draw glyph				
+						
+				// draw glyph
 				if (g == null) {
 					w = 50;
 					alpha = 1;
@@ -89,15 +148,28 @@ public class KerningDisplay : FontDisplay {
 
 				// handle
 				if (active_handle == i) {
-					//x2 = x + kern;
 					x2 = x + kern / 2.0;
 					
 					cr.save ();
-					cr.set_source_rgba (153/255.0, 153/255.0, 173/255.0, 1);
+					
+					if (gr_left == null && gr_right == null) {
+						cr.set_source_rgba (153/255.0, 153/255.0, 173/255.0, 1);
+					} else { 
+						cr.set_source_rgba (46/255.0, 170/255.0, 76/255.0, 1);
+					}
+					
 					cr.move_to (x2 - 5, y + 20);
 					cr.line_to (x2 + 0, y + 20 - 5);
 					cr.line_to (x2 + 5, y + 20);
 					cr.fill ();
+					
+					if (gr_left != null || gr_right != null) {
+						cr.move_to (x2 - 5, y + 22 - 2);
+						cr.line_to (x2 + 5, y + 22 - 2);
+						cr.line_to (x2 + 5, y + 22 + 2);
+						cr.line_to (x2 - 5, y + 22 + 2);
+						cr.fill ();
+					}
 					
 					cr.set_font_size (10);
 					cr.show_text (((!)g).get_name ());
@@ -135,8 +207,9 @@ public class KerningDisplay : FontDisplay {
 		string a, b;
 		Font font;
 		int wi = 0;
-		double kern;
 		GlyphSequence word_with_ligatures;
+		int ranges_index = 0;
+		GlyphRange? gr_left, gr_right;
 		
 		font = BirdFont.get_current_font ();
 
@@ -147,6 +220,7 @@ public class KerningDisplay : FontDisplay {
 
 		foreach (GlyphSequence word in row) {
 			word_with_ligatures = word.process_ligatures ();
+			ranges_index = 0;
 			foreach (Glyph? g in word_with_ligatures.glyph) {
 				
 				if (g == null) {
@@ -156,8 +230,25 @@ public class KerningDisplay : FontDisplay {
 				b = ((!) g).get_name ();
 				
 				if (handle == wi) {
-					kern = font.get_kerning_by_name (a, b) + val;
-					font.set_kerning_by_name (a, b, kern);
+					return_if_fail (wi < word_with_ligatures.ranges.length ());
+					return_if_fail (wi - 1 >= 0);
+					
+					if (word_with_ligatures.ranges.length () != word_with_ligatures.glyph.length ()) {
+						warning ("ranges and glyphs does not match.");
+					}
+					
+					gr_left = word_with_ligatures.ranges.nth (wi - 1).data;
+					gr_right = word_with_ligatures.ranges.nth (wi).data;
+					
+					/*
+					 * // DELETE
+					// Kern table kerning and single glyph positioning
+					if (gr_left == null && gr_right == null) {
+						kern = font.get_kerning_by_name (a, b) + val;
+						font.set_kerning_by_name (a, b, kern);
+					}
+					*/
+					set_kerning_pair (a, b, ref gr_left, ref gr_right, val);
 				}
 				
 				wi++;
@@ -165,10 +256,83 @@ public class KerningDisplay : FontDisplay {
 				a = b;
 			}
 		}
-		
-		
 	}
 
+	/** Class based gpos kerning. */
+	public void set_kerning_pair (string a, string b, ref GlyphRange? gr_left, ref GlyphRange? gr_right, double val) {
+		double kern;
+		GlyphRange grl, grr;
+		
+		kern = get_kerning_for_pair (a, b, gr_left, gr_right);
+		
+		try {
+			if (gr_left == null) {
+				grl = new GlyphRange ();
+				grl.parse_ranges (a);
+				gr_left = grl; // update the range list
+			} else {
+				grl = (!) gr_left;
+			}
+
+			if (gr_right == null) {
+				grr = new GlyphRange ();
+				grr.parse_ranges (b);
+				gr_right = grr;
+			} else {
+				grr = (!) gr_right;
+			}
+			
+			KerningClasses.set_kerning (grl, grr, kern + val);
+		} catch (MarkupError e) {
+			// FIXME: unassigned glyphs and ligatures
+			warning (e.message);
+		}
+		
+		KerningClasses.print_all ();
+	}
+
+	/** Class based gpos kerning. */
+	public double get_kerning_for_pair (string a, string b, GlyphRange? gr_left, GlyphRange? gr_right) {
+		GlyphRange grl, grr;
+		try {
+			if (gr_left == null) {
+				grl = new GlyphRange ();
+				grl.parse_ranges (a);
+			} else {
+				grl = (!) gr_left;
+			}
+
+			if (gr_right == null) {
+				grr = new GlyphRange ();
+				grr.parse_ranges (a);
+			} else {
+				grr = (!) gr_right;
+			}
+			
+			if (gr_left != null && gr_right != null) {
+				return KerningClasses.get_kerning_for_range (grl, grr);
+			}
+
+			if (gr_left != null && gr_right == null) {
+				return KerningClasses.get_kern_for_range_to_char (grl, b);
+			}
+			
+			if (gr_left == null && gr_right != null) {
+				return KerningClasses.get_kern_for_char_to_range (a, grr);
+			}
+			
+			if (gr_left == null && gr_right == null) {
+				return KerningClasses.get_kerning (a, b);
+			}			
+		} catch (MarkupError e) {
+			// FIXME: unassigned glyphs and ligatures
+			warning (e.message);
+		}
+		
+		warning ("no kerning found");
+		
+		return 0;
+	}
 	public override void selected_canvas () {
 		Glyph g;
 		GlyphSequence w;
@@ -196,11 +360,35 @@ public class KerningDisplay : FontDisplay {
 		}		
 	}
 	
+	public void add_range (GlyphRange range) {
+		Font font = BirdFont.get_current_font ();
+		Glyph? glyph;
+		
+		print ("add_range\n");
+		
+		glyph = font.get_glyph_by_name (range.get_char (0));
+		
+		if (glyph == null) {
+			glyph = font.get_not_def_character ();
+		}
+		
+		row.first ().data.glyph.append ((!) glyph);
+		row.first ().data.ranges.append (range);
+		
+		MainWindow.get_glyph_canvas ().redraw ();
+	}
+	
 	public override void key_press (uint keyval) {
 		unichar c = (unichar) keyval;
 		Glyph? g;
 		Font f = BirdFont.get_current_font ();
 		string name;
+		
+		parse_error = false;
+		
+		if (suppress_input) {
+			return;
+		}
 		
 		if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {
 					
@@ -216,6 +404,7 @@ public class KerningDisplay : FontDisplay {
 				name = f.get_name_for_character (c);
 				g = f.get_glyph_by_name (name);
 				row.first ().data.glyph.append (g);
+				row.first ().data.ranges.append (null);
 			}
 		}
 		
@@ -252,20 +441,12 @@ public class KerningDisplay : FontDisplay {
 		int row_index = 0;
 		int col_index = 0;
 		Glyph glyph = new Glyph.no_lines ("");
-		Font font = BirdFont.get_current_font ();
+		
+		GlyphRange? gr_left, gr_right;
 		
 		Glyph? prev = null;
 		string gl_name = "";
 		GlyphSequence word_with_ligatures;
-		
-		foreach (GlyphSequence word in row) {
-			foreach (Glyph? g in word.glyph) {
-				if (g == null) print ("null");
-				else print (((!)g).get_name ());
-				print ("\n");
-			}
-		}
-		print ("\n");
 		
 		foreach (GlyphSequence word in row) {
 			col_index = 0;
@@ -281,10 +462,16 @@ public class KerningDisplay : FontDisplay {
 				
 				gl_name = glyph.get_name ();
 				
-				if (prev == null) {
+				if (prev == null || col_index == 0) {
 					kern = 0;
 				} else {
-					kern = font.get_kerning_by_name (((!)prev).get_name (), gl_name);
+					return_if_fail (col_index < word_with_ligatures.ranges.length ());
+					return_if_fail (col_index - 1 >= 0);
+					
+					gr_left = word_with_ligatures.ranges.nth (col_index - 1).data;
+					gr_right = word_with_ligatures.ranges.nth (col_index).data;
+
+					kern = get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 				}
 								
 				d = Math.pow (x + kern - ex, 2) + Math.pow (y - ey, 2);
@@ -317,6 +504,7 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public override void button_release (int button, double ex, double ey) {
+		parse_error = false;
 		set_active_handle (ex, ey);
 		selected_handle = -1;
 	}

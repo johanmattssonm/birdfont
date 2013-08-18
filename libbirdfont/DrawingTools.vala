@@ -643,7 +643,18 @@ public class DrawingTools : ToolCollection  {
 
 		MainWindow.get_toolbox ().update_expanders ();
 		MainWindow.get_toolbox ().reset_active_tool ();
+		
+		// let these tools progagate events even when other tools are selectes			
+		foreach (Tool t in draw_tools.tool) {
+			t.persistent = true;
+		}
+		move_background.persistent = true;
+		cut_background.persistent = true;
 
+		foreach (Tool t in shape_tools.tool) {
+			t.persistent = true;
+		}
+		
 		// Default selection
 		var idle = new IdleSource();
 		idle.set_callback (() => {

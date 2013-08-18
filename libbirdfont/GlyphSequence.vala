@@ -12,29 +12,49 @@
     Lesser General Public License for more details.
 */
 namespace BirdFont {
-	
+
 public class GlyphSequence {
 	
 	/** A list of all glyphs */
 	public List <Glyph?> glyph;
 
+	/** A list of corresponding glyph ranges if applicable. */ 
+	public List <GlyphRange?> ranges;
+
 	public GlyphSequence () {
 		glyph = new List <Glyph?> ();
+		ranges = new List <GlyphRange?> ();
 	}
 	
 	/** Do ligature substitution.
 	 * @return a new sequence with ligatures
 	 */
 	public GlyphSequence process_ligatures () {
+		// FIXME add range to ligature
 		GlyphSequence ligatures = new GlyphSequence ();
 		Font font = BirdFont.get_current_font ();
 		Glyph liga;
 		GlyphCollection? gc;
+		bool has_range = false;
 		
 		foreach (Glyph? g in glyph) {
 			ligatures.glyph.append (g);
 		}
+				
+		foreach (GlyphRange? r in ranges) { 
+			ligatures.ranges.append (r);
+			if (r != null) {
+				has_range = true;
+			}
+		}
 		
+		// FIXME: ligatures make this list invalid
+		// skip ligature substitution if this sequence contains ranges
+		if (has_range) {
+			return ligatures;
+		}
+		
+			
 		for (uint i = 0; ; i++) {
 			gc = font.get_ligature (i);
 			

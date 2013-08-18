@@ -22,9 +22,35 @@ public class GlyphRange {
 	
 	uint32 len = 0;
 	
+	bool range_is_class = false;
+	
 	public GlyphRange () {
 	}
+	
+	public bool is_class () {
+		return range_is_class || len > 1;
+	}
+	
+	public void set_class (bool c) {
+		range_is_class = true;
+	}
+	
+	public bool is_empty () {
+		return len == 0;
+	}
+	
+	public void empty () {
+		while (unassigned.length () > 0) {
+			unassigned.remove_link (unassigned.first ());
+		}
+
+		while (ranges.length () > 0) {
+			ranges.remove_link (ranges.first ());
+		}
 		
+		len = 0;
+	}
+	
 	public unowned List<UniRange> get_ranges () {
 		return ranges;
 	}
@@ -85,6 +111,96 @@ public class GlyphRange {
 				}				
 			}
 		}
+	}
+	
+	/** Parse ranges on the form a-z. Single characters can be added as well as 
+	 * multiple ranges and characters can be added separated by space. The 
+	 * word "space" is used to kern against the space character and divis to
+	 * kern against "-".
+	 * @param ranges unicode ranges
+	 * @return true if the range could be fully parsed
+	 */
+	public void parse_ranges (string ranges) throws MarkupError {
+		string[] r = ranges.split (" ");
+		
+		foreach (string w in r) {
+			w = w.replace (" ", "");
+			
+			if (w == "") {
+				continue;
+			}
+			
+			if (w.char_count () == 1) {
+				add_single (w.get_char ());
+			} else if (w == "space") {
+				add_single (' ');
+			} else if (w == "divis") {
+				add_single ('-');
+			} else if (w.index_of ("-") > -1) {
+				parse_range (w);
+			} else {
+				throw new MarkupError.PARSE (@"$w is not a single letter or a unicode range.");
+			}
+		}
+	}
+
+	/** A readable representation of ranges, see parse_ranges for parsing 
+	 * this string. This function is used for storing ranges in th .bf format.
+	 */
+	public string get_all_ranges () {
+		StringBuilder s = new StringBuilder ();
+		foreach (UniRange u in ranges) {
+			
+			if (u.start == u.stop) {
+				s.append (get_serialized_char (u.start));
+				s.append (" ");
+			} else {
+				s.append (get_serialized_char (u.start));
+				s.append ("-");
+				s.append (get_serialized_char (u.stop));
+				s.append (" ");
+			}
+		}
+		return s.str;
+	}
+	
+	private string get_serialized_char (unichar c) {
+		StringBuilder s = new StringBuilder ();
+		
+		if (c == ' ') {
+			return "space";
+		}
+
+		if (c == '-') {
+			return "divis";
+		}
+	
+		s.append_unichar (c);	
+		return s.str;	
+	}
+	
+	private string unserialize (string c) {
+		if (c == "space") {
+			return " ";
+		}
+
+		if (c == "divis") {
+			return "-";
+		}
+	
+		return c;
+	}
+	
+	private void parse_range (string s) throws MarkupError {
+		string[] r = s.split ("-");
+		
+		if (r.length != 2
+			|| unserialize (r[0]).char_count () != 1 
+			|| unserialize (r[1]).char_count () != 1) {
+			throw new MarkupError.PARSE (@"$s is not a valid range, it should be on the form A-Z.");
+		}
+		
+		append_range (unserialize (r[0]).get_char (), unserialize (r[1]).get_char ());
 	}
 	
 	private void append_range (unichar start, unichar stop) {
@@ -162,6 +278,12 @@ public class GlyphRange {
 		return len;
 	}
 
+	public bool has_character (string c) 
+		requires (c.char_count () == 1) {
+		unichar s = c.get_char ();
+		return !unique (s, s);
+	}
+
 	private bool unique (unichar start, unichar stop) {
 		foreach (UniRange u in ranges) {
 			if (inside (start, u.start, u.stop)) return false;
@@ -195,16 +317,19 @@ public class GlyphRange {
 		stdout.printf (get_all_ranges ());
 	}
 	
+	// FIXME: DELETE
+	/*
 	public string get_all_ranges () {
 		StringBuilder s = new StringBuilder ();
 		foreach (UniRange u in ranges) {
 			s.append (Font.to_hex_code (u.start));
 			s.append (" - ");
 			s.append (Font.to_hex_code (u.stop));
-			s.append ("\n");
+			s.append (" ");
 		}
 		return s.str;
 	}
+	*/
 }
 
 }

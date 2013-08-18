@@ -20,8 +20,8 @@ public class Tool : GLib.Object {
 	
 	public double x = 0;
 	public double y = 0;
-	public double w = 0;
-	public double h = 0;
+	public double w = 30;
+	public double h = 30;
 
 	protected bool active = false;
 	protected bool selected = false;
@@ -83,7 +83,7 @@ public class Tool : GLib.Object {
 	private static ImageSurface? deselected_button = null;
 	private static ImageSurface? active_deselected_button = null;
 	
-	public bool persistent = true;
+	public bool persistent = false;
 	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
@@ -143,20 +143,13 @@ public class Tool : GLib.Object {
 	public bool is_selected () {
 		return selected;
 	}
-		
-	public virtual void set_properties (double tx, double ty, double tw, double th) {
-		x = tx;
-		y = ty;
-		w = tw;
-		h = th;
-	}
-
+	
 	public string get_tip () {
 		return tip;
 	}
 
-	public bool is_over (double xp, double yp) {	
-		return (x <= xp <= x + w  + 12 + 15 && y + 15 <= yp <= y + w + 12 + 30);  
+	public bool is_over (double xp, double yp) {
+		return (x <= xp - 28 <= x + w  && y <= yp - 37 <= y + h);  
 	}
 	
 	public bool set_selected (bool a) {

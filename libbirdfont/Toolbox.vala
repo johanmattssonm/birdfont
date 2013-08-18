@@ -34,20 +34,32 @@ public class Toolbox : GLib.Object  {
 	
 	ImageSurface? toolbox_background = null;
 	
-	public Toolbox (GlyphCanvas glyph_canvas) {
+	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		drawing_tools = new DrawingTools (glyph_canvas);
 		kerning_tools = new KerningTools ();
 		current_set = drawing_tools;
 		toolbox_background = Icons.get_icon ("toolbox_background.png");
+		
+		tab_bar.signal_tab_selected.connect ((tab) => {
+			if (tab.get_label () == "Kerning") {
+				current_set = kerning_tools;
+			} else {
+				current_set = drawing_tools;
+			}
+			
+			update_expanders ();
+			redraw (0, 0, allocation_width, allocation_height);
+		});
 	}
-
 
 	public void key_press (uint keyval) {
 		foreach (Expander exp in current_set.get_expanders ()) {
 			foreach (Tool t in exp.tool) {
 				t.set_active (false);
 				
-				if (t.key == keyval && t.modifier_flag == NONE && KeyBindings.modifier == NONE) {
+				if (t.key == keyval 
+					&& t.modifier_flag == NONE 
+					&& KeyBindings.modifier == NONE) {
 					select_tool (t);
 				}
 			}
@@ -119,7 +131,7 @@ public class Toolbox : GLib.Object  {
 			update = exp.set_active (a);
 			
 			if (update) {
-				MainWindow.get_toolbox ().redraw ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 10), (int) (exp.y + exp.h + 10));
+				redraw ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 10), (int) (exp.y + exp.h + 10));
 			}
 			
 			if (exp.is_open ()) {
@@ -135,7 +147,7 @@ public class Toolbox : GLib.Object  {
 					}
 					
 					if (update) {
-						MainWindow.get_toolbox ().redraw (0, 0, allocation_width, allocation_height);
+						redraw (0, 0, allocation_width, allocation_height);
 					}
 					
 					t.panel_move_action (t, x, y);
@@ -144,6 +156,11 @@ public class Toolbox : GLib.Object  {
 		}
 	}
 
+	public static void redraw_tool_box () {
+		Toolbox t = MainWindow.get_toolbox ();
+		t.redraw (0, 0, t.allocation_width, t.allocation_height);
+	}
+	
 	public void reset_active_tool () {
 		foreach (Expander exp in current_set.get_expanders ()) {
 			foreach (Tool t in exp.tool) {
@@ -187,9 +204,8 @@ public class Toolbox : GLib.Object  {
 						redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
 					}
 					
-					// FIXME: Set persistent to false for && exp == draw_tools || t == move_background 
-					//	|| t == cut_background || exp == shape_tool 
 					if (tool.persistent) {
+						print ("PERSIS\n");
 						current_tool = tool;
 					}
 				}
@@ -206,11 +222,6 @@ public class Toolbox : GLib.Object  {
 				}
 			}
 		}
-
-		// FIXME:
-		//if (name == cut_background.get_name ()) {
-		//	return cut_background;
-		//}
 				
 		warning ("No tool found for name \"%s\".\n", name);
 		
@@ -233,7 +244,7 @@ public class Toolbox : GLib.Object  {
 		foreach (Expander e in current_set.get_expanders ()) {
 			if (p != null) {
 				pp = (!) p;
-				e.set_offset (pp.y + pp.margin + 12);
+				e.set_offset (pp.y + pp.margin + 9);
 			}
 			
 			p = e;

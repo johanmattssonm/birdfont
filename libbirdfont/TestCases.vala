@@ -694,6 +694,7 @@ class TestCases {
 
 	public static void test_glyph_ranges () {
 		GlyphRange gr = new GlyphRange ();
+		GlyphRange gr_az = new GlyphRange ();
 		
 		gr.add_range ('b', 'c');
 		gr.add_single ('d');
@@ -728,6 +729,16 @@ class TestCases {
 		return_if_fail (gr.get_char (2) == "d");
 		return_if_fail (gr.get_char (3) == "e");
 		return_if_fail (gr.get_char (4) == "◊");
+		
+		// a-z 
+		gr_az.add_range ('a', 'z');
+		if (!gr_az.has_character ("g")) {
+			warning ("Can not g in range a-z ");
+		}
+		
+		if (gr_az.has_character ("å")) {
+			warning ("Range a-z has å");
+		}
 	}
 
 	public static void test_glyph_table () {

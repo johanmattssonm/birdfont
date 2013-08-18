@@ -77,8 +77,6 @@ public class Glyph : FontDisplay {
 	
 	List<Glyph> undo_list = new List<Glyph> ();
 	
-	public List<Kerning> kerning = new List<Kerning> ();
-	
 	string glyph_sequence = "";
 	bool open = true;
 
@@ -177,33 +175,6 @@ public class Glyph : FontDisplay {
 		}
 		
 		return active_paths.last ().data;
-	}
-	
-	
-	public void add_kerning (string right_glyph, double val) {
-		Kerning? kl = null;
-
-		foreach (Kerning k in kerning) {
-			if (k.glyph_right == right_glyph) {
-				kl = k;
-			}
-		}
-		
-		if (kl == null) {
-			kerning.append (new Kerning (right_glyph, val));
-		} else {
-			((!)kl).val = val;
-		}
-	}
-
-	public double get_kerning (string right_glyph) {
-		foreach (Kerning k in kerning) {
-			if (k.glyph_right == right_glyph) {
-				return k.val;
-			}
-		}
-		
-		return 0;
 	}
 	
 	// It looks like this can be remove but firefox refuses to load
@@ -1742,7 +1713,7 @@ public class Glyph : FontDisplay {
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
-				kern = font.get_kerning_by_name (last_name, name);
+				kern = KerningClasses.get_kerning (last_name, name);
 			} else {
 				kern = 0;
 			}
@@ -1756,7 +1727,7 @@ public class Glyph : FontDisplay {
 				cr.restore ();
 			}
 			
-			x += juxtaposed.get_width () + font.get_kerning_by_name (glyph.name, name) + kern;
+			x += juxtaposed.get_width () + KerningClasses.get_kerning (glyph.name, name) + kern;
 			last_name = name;
 		}
 		
@@ -1768,7 +1739,7 @@ public class Glyph : FontDisplay {
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
-				kern = font.get_kerning_by_name (name, last_name);
+				kern = KerningClasses.get_kerning (name, last_name);
 			} else {
 				kern = 0;
 			}

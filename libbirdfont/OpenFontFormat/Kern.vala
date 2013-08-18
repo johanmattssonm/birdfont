@@ -134,11 +134,9 @@ class KernTable : Table {
 
 		fd.add_ushort (0); // subtable version 
 
-		foreach (Glyph g in glyf_table.glyphs) {
-			foreach (Kerning k in g.kerning) {
-				n_pairs++;
-			}
-		}
+		KerningClasses.all_pairs ((left, right, k) => {
+			n_pairs++;
+		});
 		
 		if (n_pairs > (uint16.MAX - 14) / 6.0) {
 			warning ("Too many kerning pairs!"); 
@@ -163,31 +161,20 @@ class KernTable : Table {
 		gid_left = 0;
 		
 		i = 0;
-		foreach (Glyph g in glyf_table.glyphs) {
+		
+		KerningClasses.all_pairs ((left, right, k) => {
+			uint16 gid1, gid2;
 			
-			foreach (Kerning k in g.kerning) {
-				// n_pairs is used to truncate this table to prevent buffer overflow
-				if (n_pairs == i++) {
-					break;
-				}
-
-				gid_right = glyf_table.get_gid (k.glyph_right);
+			// n_pairs is used to truncate this table to prevent buffer overflow
+			if (n_pairs > i++) {
+				gid1 = (uint16) glyf_table.get_gid (left);
+				gid2 = (uint16) glyf_table.get_gid (right);
 				
-				if (gid_right == -1) {
-					warning ("right glyph not found in kerning table");
-				}
-				
-				kern = new Kern (gid_left, (uint16)gid_right, (int16) (k.val * HeadTable.UNITS));
-				
-				fd.add_ushort (kern.left);
-				fd.add_ushort (kern.right);
-				fd.add_short (kern.kerning);
-				
-				kernings.append (kern);
+				fd.add_ushort (gid1);
+				fd.add_ushort (gid2);
+				fd.add_short ((int16) (k * HeadTable.UNITS));
 			}
-			
-			gid_left++;
-		}
+		});
 		
 		fd.pad ();
 		this.font_data = fd;

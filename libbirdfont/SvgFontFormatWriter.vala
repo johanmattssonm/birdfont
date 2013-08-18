@@ -76,7 +76,7 @@ class SvgFontFormatWriter : Object  {
 			b.append_unichar (glyph.get_unichar ());
 
 			if (glyph.get_unichar () >= ' ' && b.str.validate ()) {
-				if (b.str == "\"" || b.str == "&" || b.str == "<") {
+				if (b.str == "\"" || b.str == "&" || b.str == "<" || b.str == ">") {
 					uni = Font.to_hex_code (glyph.get_unichar ());
 					put (@"<glyph unicode=\"&#x$(uni);\" horiz-adv-x=\"$(glyph.get_width ())\" d=\"$(glyph.get_svg_data ())\" />");			
 				} else {
@@ -87,35 +87,27 @@ class SvgFontFormatWriter : Object  {
 		
 		// FIXME: ligatures
 
-		indice = 0;
-		while (true) {
-			g = font.get_glyph_indice (indice++);
+		KerningClasses.all_pairs ((left, right, k) => {
+			string l, r;
+			Font f = BirdFont.get_current_font ();
+			Glyph? gr = f.get_glyph (right);
+			Glyph? gl = f.get_glyph (left);
+			Glyph glyph_right;
+			Glyph glyph_left;
 			
-			if (g == null) {
-				break;
+			if (gr == null || gl == null) {
+				warning ("kerning glyph that does not exist.");
+				return;
 			}
 			
-			glyph = (!) g;
+			glyph_right = (!) gr;
+			glyph_left = (!) gl;
 			
-			foreach (Kerning k in glyph.kerning) {
-				string l, r;
-				Font f = BirdFont.get_current_font ();
-				Glyph? gr = f.get_glyph (k.glyph_right);
-				Glyph glyph_right;
-				
-				if (gr == null) {
-					warning ("kerning glyph that does not exist.");
-					continue;
-				}
-				
-				glyph_right = (!) gr;
-				
-				l = Font.to_hex_code (glyph.unichar_code);
-				r = Font.to_hex_code (glyph_right.unichar_code);
-								
-				os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(-k.val)\"/>\n");
-			}
-		}		
+			l = Font.to_hex_code (glyph_left.unichar_code);
+			r = Font.to_hex_code (glyph_right.unichar_code);
+							
+			os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(-k)\"/>\n");
+		});	
 
 		put ("</font>");
 		put ("</defs>");

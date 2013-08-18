@@ -64,21 +64,40 @@ public class Expander : GLib.Object {
 	}
 	
 	private void update_tool_position () {
-		int i = 0;
-		double xt = x + 10;
-		double yt = y - 4;
-		foreach (var t in tool) {
-			t.set_properties (xt, yt, w, h);
+		double xt = x - 15;
+		double yt = y - 30;
+		
+		foreach (Tool t in tool) {
+			t.x = xt;
+			t.y = yt;
 			
-			if (i == 3) {
-				yt += 31;
-				i = 0;
-				xt = x + 10;
-			} else {
-				i++;
-				xt += w + 3 + 25;
+			xt += t.w + 4;
+			
+			if (xt + t.w > 160 - 20) {
+				xt = x - 15;
+				yt += t.h + 2;
 			}
 		}
+		
+		/*
+		foreach (Tool t in tool) {
+			// FIXME: delete
+			//t.set_properties (xt, yt, w, h);
+			t.x = xt;
+			t.y = yt;
+			
+			print (@"$(xt), $yt\n");
+			if (xt + t.w + 10 > 160) {
+				yt += t.h;
+				i = 0;
+				xt = x + 10;
+				print (@"NEW LINE\n");
+			} else {
+				i++;
+				print (@"t.w: $(t.w)\n");
+				xt += t.w + 5;
+			}
+		} */
 	}
 	
 	public void set_offset (double ty) {

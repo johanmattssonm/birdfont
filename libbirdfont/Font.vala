@@ -79,6 +79,8 @@ public class Font : GLib.Object {
 	/** File format. */
 	public FontFormat format = FontFormat.BIRDFONT;
 	
+	KerningClasses kerning_classes;
+	
 	public Font () {
 		// positions in pixels at first zoom level
 		// default x-height should be 60 in 1:1
@@ -88,6 +90,8 @@ public class Font : GLib.Object {
 		base_line = 0;
 		bottom_position = 20;
 		bottom_limit = 27;
+		
+		kerning_classes = new KerningClasses ();
 	}
 
 	public void touch () {
@@ -427,76 +431,7 @@ public class Font : GLib.Object {
 	public void add_background_image (string file) {
 		background_images.append (file);
 	}
-
-	/** Obtain kerning for pair with name a and b.
-	 * @param a name of left glyph kerning pair
-	 * @param b name of right glyph kerning pair
-	 */
-	public double get_kerning_by_name (string a, string b) {
-		Glyph? gl = get_glyph_by_name (a);
-		Glyph g;
-		
-		if (gl == null) {
-			warning (@"glyph \"$a\" does not exist cannot obtain kerning");
-			return 0;
-		}
-		
-		g = (!) gl;
-		
-		return g.get_kerning (b);
-	}
-
-	/** Set kerning for pair with name a and b.
-	 * @param a name of left glyph kerning pair
-	 * @param b name of right glyph kerning pair
-	 * @param val kerning
-	 */	
-	public void set_kerning_by_name (string a, string b, double val) {
-		Glyph? gl;
-		Glyph g;
-		
-		gl = get_glyph_by_name (a);
-		
-		if (unlikely (gl == null)) {
-			warning (@"glyph \"$a\" is not parsed yet cannot add kerning");
-			return;
-		}
-		
-		g = (!) gl;
-		g.add_kerning (b, val);		
-	}
-
-	// TODO: this can be removed
-	public double get_kerning (string a, string b) {
-		Glyph? gl = get_glyph (a);
-		Glyph g;
-		
-		if (gl == null) {
-			warning (@"glyph \"$a\" does not exist cannot obtain kerning");
-			return 0;
-		}
-		
-		g = (!) gl;
-		
-		return g.get_kerning (b);
-	}
-
-	// TODO: this can be removed
-	public void set_kerning (string a, string b, double val) {
-		Glyph? gl;
-		Glyph g;
-		
-		gl = get_glyph (a);
-		
-		if (unlikely (gl == null)) {
-			warning (@"glyph \"$a\" is not parsed yet cannot add kerning");
-			return;
-		}
-		
-		g = (!) gl;
-		g.add_kerning (b, val);
-	}
-
+	
 	/** Delete temporary rescue files. */
 	public void delete_backup () {
 		File dir = BirdFont.get_backup_directory ();
@@ -618,6 +553,10 @@ public class Font : GLib.Object {
 			}
 			
 			format = FontFormat.FREETYPE;
+			
+			// DELETE
+			OpenFontFormatReader or = new OpenFontFormatReader ();
+			or.parse_index (path);
 		}			
 
 		if (path.has_suffix (".otf")) {

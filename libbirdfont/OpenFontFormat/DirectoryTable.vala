@@ -75,7 +75,7 @@ class DirectoryTable : Table {
 		loca_table.process (glyf_table, head_table);
 		post_table.process ();
 		kern_table.process ();
-		gpos_table.process (kern_table);
+		gpos_table.process (glyf_table);
 		
 		offset_table.process ();
 		process_directory (); // this table
@@ -86,10 +86,8 @@ class DirectoryTable : Table {
 			tables.append (offset_table);
 			tables.append (this);
 			
-			if (kern_table.kerning_pairs > 0) {
-				tables.append (gpos_table);
-			}
-			
+			tables.append (gpos_table);
+
 			// tables.append (gdef_table); // invalid table
 			tables.append (os_2_table);
 			tables.append (cmap_table);
@@ -102,11 +100,10 @@ class DirectoryTable : Table {
 
 			// FIXME: Remove the kern table.
 			// It looks like the old kerning table is no longer needed
-			// since the most important browsers uses the GPOS table
+			// since the most browsers uses the GPOS table
 			// but Windows does not accept fonts without a kern table.
-			if (kern_table.kerning_pairs > 0) {
-				tables.append (kern_table);
-			}
+			
+			// FIXME tables.append (kern_table);
 							
 			tables.append (loca_table);
 			tables.append (maxp_table);
@@ -320,7 +317,14 @@ class DirectoryTable : Table {
 			}
 			
 			if (!gpos_table.validate (dis)) {
-				warning ("gpos_table has invalid checksum");
+				warning (@"gpos_table has invalid checksum");
+				
+				if (gpos_table.font_data != null) {
+					warning (@"Length: $(((!)gpos_table.font_data).length ())\n");
+				} else {
+					warning ("font_data is null");
+				}
+				
 				valid = false;
 			}		
 		} catch (GLib.Error e) {
