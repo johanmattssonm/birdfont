@@ -1243,6 +1243,7 @@ public class Path {
 		if (right == PointType.LINE_QUADRATIC && left == PointType.LINE_QUADRATIC) {
 			ep.get_right_handle ().set_point_type (PointType.LINE_QUADRATIC);
 			ep.get_left_handle ().set_point_type (PointType.LINE_QUADRATIC);
+			ep.type = PointType.QUADRATIC;
 			ep.recalculate_linear_handles ();
 		} else if (right == PointType.LINE_CUBIC && left == PointType.LINE_CUBIC) {
 			ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
@@ -1253,6 +1254,7 @@ public class Path {
 			ep.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
 			ep.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
 			ep.recalculate_linear_handles ();
+			ep.type = PointType.DOUBLE_CURVE;
 		} else if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 			double_bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
 			double_bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
@@ -1262,6 +1264,7 @@ public class Path {
 
 			ep.get_left_handle ().set_point_type (PointType.DOUBLE_CURVE);	
 			ep.get_right_handle ().set_point_type (PointType.DOUBLE_CURVE);
+			ep.type = PointType.DOUBLE_CURVE;
 		} else if (right == PointType.QUADRATIC) {		
 			x0 = quadratic_bezier_vector (1 - position, stop.x, start.get_right_handle ().x (), start.x);
 			y0 = quadratic_bezier_vector (1 - position, stop.y, start.get_right_handle ().y (), start.y);
@@ -1270,7 +1273,9 @@ public class Path {
 			ep.get_left_handle ().set_point_type (PointType.QUADRATIC);	
 			ep.get_right_handle ().set_point_type (PointType.QUADRATIC);
 			
-			ep.get_left_handle ().move_to_coordinate_internal (0, 0);				
+			ep.get_left_handle ().move_to_coordinate_internal (0, 0);
+			
+			ep.type = PointType.QUADRATIC;				
 		} else {
 			bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
 			bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
@@ -1746,11 +1751,13 @@ public class Path {
 				ep.set_tie_handle (false);
 				ep.set_reflective_handles (false);
 				ep.get_left_handle ().type = PenTool.to_line (ep.type);
+				ep.type = PenTool.to_curve (ep.type);
 				path_list.paths.append (current_path);
 				
 				if (!is_null (current_path.points.last ())) {
 					ep = current_path.points.last ().data;
 					ep.get_right_handle ().type = PenTool.to_line (ep.type);
+					ep.type = PenTool.to_curve (ep.get_right_handle ().type);
 				}
 			}
 		} else {
@@ -1759,25 +1766,28 @@ public class Path {
 				ep.set_tie_handle (false);
 				ep.set_reflective_handles (false);
 				ep.get_left_handle ().type = PenTool.to_line (ep.type);
+				ep.type = PenTool.to_curve (ep.type);
 				set_new_start (current_path.points.first ().data);
 				path_list.paths.append (current_path);
 				
 				if (!is_null (current_path.points.last ())) {
 					ep = current_path.points.last ().data;
 					ep.get_right_handle ().type = PenTool.to_line (ep.type);
+					ep.type = PenTool.to_curve (ep.get_right_handle ().type);
 				}
 			}
 			
 			if (remaining_points.points.length () > 0) {
 				remaining_points.points.first ().data.set_tie_handle (false);
 				remaining_points.points.first ().data.set_reflective_handles (false);
-				remaining_points.points.first ().data.type = PenTool.to_line (remaining_points.points.first ().data.type);
+				remaining_points.points.first ().data.type = remaining_points.points.first ().data.type;
 				set_new_start (remaining_points.points.first ().data);
 				path_list.paths.append (remaining_points);
 				
 				if (!is_null (current_path.points.last ())) {
 					ep = current_path.points.last ().data;
 					ep.get_right_handle ().type = PenTool.to_line (ep.type);
+					ep.type = PenTool.to_curve (ep.get_right_handle ().type);
 				}
 			}
 		}
@@ -1877,7 +1887,6 @@ public class Path {
 			e = new EditPoint ();
 			p1.get_closest_point_on_path (e, inter.x, inter.y);
 			inter.editpoint_b = e;
-			
 			inter.editpoint_b.x = inter.editpoint_a.x;
 			inter.editpoint_b.y = inter.editpoint_a.y;
 			
@@ -1885,6 +1894,9 @@ public class Path {
 			if (!p1.has_edit_point (e)) {
 				p1.insert_new_point_on_path (e);
 			}
+			
+			inter.editpoint_a.type = PenTool.to_curve (inter.editpoint_a.get_right_handle ().type);
+			inter.editpoint_b.type = PenTool.to_curve (inter.editpoint_b.get_right_handle ().type);
 		}
 			
 		if (il.points.length () < 2) {

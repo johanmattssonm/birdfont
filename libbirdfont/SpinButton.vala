@@ -49,8 +49,8 @@ public class SpinButton : Tool {
 				n = (button == 3) ? 10 : 1;
 					
 				for (int i = 0; i < n; i++) {
-					if (py < 28) increase ();
-					if (py > 35) decrease ();
+					if (py < 51) increase ();
+					if (py > 60) decrease ();
 				}
 			}
 			

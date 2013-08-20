@@ -198,33 +198,6 @@ public class DrawingTools : ToolCollection  {
 		});
 		path_tool_modifiers.add_tool (flip_horizontal);
 		
-		// adjust precision
-		string precision_value = Preferences.get ("precision");
-		
-		precision = new SpinButton ("precision", _("Set precision"));
-		
-		if (precision_value != "") {
-			precision.set_value (precision_value);
-		} else {
-			precision.set_value_round (1);
-		}
-		
-		precision.new_value_action.connect ((self) => {
-			MainWindow.get_toolbox ().select_tool (precision);
-			
-			Preferences.set ("precision", self.get_display_value ());
-			MainWindow.get_toolbox ().redraw ((int) precision.x, (int) precision.y, 70, 70);
-		});
-
-		precision.select_action.connect((self) => {
-			pen_tool.set_precision (((SpinButton)self).get_value ());
-		});
-		
-		precision.set_min (0.001);
-		precision.set_max (1);
-		
-		path_tool_modifiers.add_tool (precision);
-		
 		// Character set tools
 		Tool full_unicode = new Tool ("utf_8", _("Show full unicode characters set"), 'f', CTRL);
 		full_unicode.select_action.connect ((self) => {
@@ -438,7 +411,34 @@ public class DrawingTools : ToolCollection  {
 		
 		Tool rectangle = new RectangleTool ("rectangle");
 		shape_tools.add_tool (rectangle);
-				
+
+		// adjust precision
+		string precision_value = Preferences.get ("precision");
+		
+		precision = new SpinButton ("precision", _("Set precision"));
+		
+		if (precision_value != "") {
+			precision.set_value (precision_value);
+		} else {
+			precision.set_value_round (1);
+		}
+		
+		precision.new_value_action.connect ((self) => {
+			MainWindow.get_toolbox ().select_tool (precision);
+			
+			Preferences.set ("precision", self.get_display_value ());
+			MainWindow.get_toolbox ().redraw ((int) precision.x, (int) precision.y, 70, 70);
+		});
+
+		precision.select_action.connect((self) => {
+			pen_tool.set_precision (((SpinButton)self).get_value ());
+		});
+		
+		precision.set_min (0.001);
+		precision.set_max (1);
+		
+		shape_tools.add_tool (precision);
+								
 		// background tools
 		background_scale = new SpinButton ("scale_background", _("Set size for background image"));
 		background_scale.set_int_value ("1.000");
@@ -648,9 +648,10 @@ public class DrawingTools : ToolCollection  {
 		foreach (Tool t in draw_tools.tool) {
 			t.persistent = true;
 		}
+		
 		move_background.persistent = true;
 		cut_background.persistent = true;
-
+		
 		foreach (Tool t in shape_tools.tool) {
 			t.persistent = true;
 		}

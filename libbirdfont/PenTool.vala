@@ -1413,6 +1413,20 @@ public class PenTool : Tool {
 		}
 		return t;
 	}
+
+	public static PointType to_curve (PointType t) {
+		switch (DrawingTools.point_type) {
+			case PointType.LINE_QUADRATIC:
+				return PointType.QUADRATIC;
+			case PointType.LINE_DOUBLE_CURVE:
+				return PointType.DOUBLE_CURVE;
+			case PointType.LINE_CUBIC:
+				return PointType.CUBIC;
+			default:
+				break;
+		}
+		return t;
+	}
 	
 	public static void set_converted_handle_length (EditPointHandle e) {
 		if (e.type == PointType.QUADRATIC  && DrawingTools.point_type == PointType.DOUBLE_CURVE) {

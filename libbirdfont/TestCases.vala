@@ -44,6 +44,7 @@ class TestCases {
 		add (test_parse_quadratic_paths, "Quadratic paths");
 		add (test_freetype, "Freetype");
 		add (test_preview, "Preview");
+		add (test_kerning, "Kerning");
 	}
 	
 	private void add (Callback callback, string name) {
@@ -1448,6 +1449,35 @@ class TestCases {
 	
 	private static void add_point_on_path (Path p, int x, int y) {
 		p.add (Glyph.path_coordinate_x (x), Glyph.path_coordinate_y (y));
+	}
+	
+	private static void test_kerning () {
+		MenuTab.show_kerning_context ();
+		Font font = BirdFont.get_current_font ();
+		KerningDisplay kerning_display = KerningDisplay.get_singleton ();
+		unichar a, b;
+		StringBuilder sb1, sb2;
+		string sa, sb;
+		GlyphRange? r, l;
+		
+		for (int i = 0; i < 100; i++) {
+			l = null;
+			r = null;
+		
+			// kern single glyph
+			sb1 = new StringBuilder ();
+			sb2 = new StringBuilder ();
+			
+			a = (unichar)Random.int_range ((int)'a', (int)'ʙ');
+			b = (unichar)Random.int_range ((int)'a', (int)'ʙ');
+			
+			sb1.append_unichar (a);
+			sb2.append_unichar (b);
+			sa = (!)sb1.str;
+			sb = (!)sb2.str;
+			
+			kerning_display.set_kerning_pair (sa, sb, ref r, ref l, Random.int_range (0, 300));
+		}
 	}
 }
 

@@ -15,106 +15,83 @@
 using Cairo;
 using Xml;
 using Math;
+using Gee;
 
 namespace BirdFont {
 
 public class KerningClasses : GLib.Object {
 	
 	// kerning for classes
-	public List<GlyphRange> classes_first;
-	public List<GlyphRange> classes_last;
-	public List<Kerning> classes_kerning;
+	public GLib.List<GlyphRange> classes_first;
+	public GLib.List<GlyphRange> classes_last;
+	public GLib.List<Kerning> classes_kerning;
 
+	// kerning for single glyphs
+	Gee.HashMap<string, double?> single_kerning;
+	
 	public delegate void KerningIterator (string left, string right, double kerning);
 
 	public KerningClasses () {
-		classes_first = new List<GlyphRange> ();
-		classes_last = new List<GlyphRange> ();
-		classes_kerning = new List<Kerning> ();
+		classes_first = new GLib.List<GlyphRange> ();
+		classes_last = new GLib.List<GlyphRange> ();
+		classes_kerning = new GLib.List<Kerning> ();
+		
+		single_kerning = new HashMap<string, double?> ();
+		
+		KerningTools.remove_all_kerning_classes (); // TODO: move to menu tab
 	}
 	
 	public static KerningClasses get_instance () {
 		return BirdFont.get_current_font ().get_kerning_classes ();
 	}
 	
+	public double? get_kerning_for_single_glyphs (string l, string r) {
+		return single_kerning.get (@"$l$r");
+	} 
+
+	public void set_kerning_for_single_glyphs (string l, string r, double k) {
+		single_kerning.set (@"$l$r", k);
+	} 
+
 	public void set_kerning (GlyphRange left_range, GlyphRange right_range, double k) {
-		int index = get_kerning_item_index (left_range, right_range);
+		int index;
+		
+		if (left_range.get_length () == 1 && right_range.get_length () == 1) {
+			set_kerning_for_single_glyphs (left_range.get_all_ranges (), right_range.get_all_ranges (), k);
+			return;
+		}
+		
+		index = get_kerning_item_index (left_range, right_range);
 		
 		// keep the list sorted (classes first then single glyphs)
 		if (index == -1) {
 			classes_first.append (left_range);
 			classes_last.append (right_range);
 			classes_kerning.append (new Kerning (k));
-			update_order (classes_first.length () - 1);
 		} else {
 			return_if_fail (0 <= index <= classes_first.length ());
 			classes_kerning.nth (index).data.val = k;
-			update_order (index);
-		}
-	}
-	
-	void update_order (uint i) {
-		unowned List<GlyphRange> l;
-		unowned List<GlyphRange> r;
-		unowned List<Kerning> k;
-		int first;
-		
-		if (!(0 <= i < classes_first.length ())) {
-			warning (@"Index is out of range. Index: $i  Length: $(classes_first.length ())");
-			return;
-		}
-
-		l = classes_first.nth (i);
-		r = classes_last.nth (i);
-		k = classes_kerning.nth (i);
-		first = get_first_non_class ();
-
-		if (first < 0) {
-			return;
-		}
-				
-		if (first > classes_first.length ()) {
-			warning (@"Index is out of range. Index: $first  Length: $(classes_first.length ())");
-			return;
-		}
-		
-		if (l.data.is_class () || r.data.is_class ()) {
-			classes_first.insert_before (classes_first.nth (first), l.data);
-			classes_last.insert_before (classes_last.nth (first), r.data);
-			classes_kerning.insert_before (classes_kerning.nth (first), k.data);
-
-			classes_first.remove_link (l);
-			classes_last.remove_link (r);
-			classes_kerning.remove_link (k);
-		} else {
-			classes_first.append (l.data);
-			classes_last.append (r.data);
-			classes_kerning.append (k.data);
-
-			classes_first.remove_link (l);
-			classes_last.remove_link (r);
-			classes_kerning.remove_link (k);
 		}
 	}
 
 	public double get_kerning_for_range (GlyphRange range_first, GlyphRange range_last) {
-		unowned List<GlyphRange> r;
-		unowned List<GlyphRange> l;
+		unowned GLib.List<GlyphRange> r;
+		unowned GLib.List<GlyphRange> l;
 		int len = (int) classes_first.length ();
-		bool search_range_is_class = range_first.is_class () || range_last.is_class ();
-
+		
 		len = (int) classes_first.length ();
 		return_val_if_fail (len == classes_last.length (), 0);
 		return_val_if_fail (len == classes_kerning.length (), 0);
+
+		if (!(range_first.is_class () || range_last.is_class ())) {
+			warning ("Expecting a class");
+			return 0;
+		}
 		
 		for (int i = len - 1; i >= 0; i--) {
 			l = classes_first.nth (i);
 			r = classes_last.nth (i);
-
-			if (search_range_is_class && !l.data.is_class () && !r.data.is_class ()) {
-				continue;
-			}
-				
+	
 			if (l.data.get_all_ranges () == range_first.get_all_ranges ()
 				&& r.data.get_all_ranges () == range_last.get_all_ranges ()) {
 				return classes_kerning.nth (i).data.val;
@@ -124,46 +101,23 @@ public class KerningClasses : GLib.Object {
 		return 0;
 	}
 
-	public int get_first_non_class () {
-		unowned List<GlyphRange> r;
-		unowned List<GlyphRange> l;
-		int len = (int) classes_first.length ();
-		
-		len = (int)classes_first.length ();
-		return_val_if_fail (len == classes_last.length (), 0);
-		return_val_if_fail (len == classes_kerning.length (), 0);
-		
-		for (int i = 0; i < len; i++) {
-			l = classes_first.nth (i);
-			r = classes_last.nth (i);
-			
-			if (!l.data.is_class () && !r.data.is_class ()) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
 	public int get_kerning_item_index (GlyphRange range_first, GlyphRange range_last) {
-		unowned List<GlyphRange> r;
-		unowned List<GlyphRange> l;
+		unowned GLib.List<GlyphRange> r;
+		unowned GLib.List<GlyphRange> l;
 		int len = (int) classes_first.length ();
-		bool search_range_is_class;
 		
 		len = (int)classes_first.length ();
 		return_val_if_fail (len == classes_last.length (), 0);
 		return_val_if_fail (len == classes_kerning.length (), 0);
-		
-		search_range_is_class = range_first.is_class () || range_last.is_class ();
+
+		if (!(range_first.is_class () || range_last.is_class ())) {
+			warning ("Expecting a class");
+			return -1;
+		}
 		
 		for (int i = len - 1; i >= 0; i--) {
 			l = classes_first.nth (i);
 			r = classes_last.nth (i);
-			
-			if (!l.data.is_class () && !r.data.is_class () && search_range_is_class) {
-				continue;
-			}
 			
 			if (l.data.get_all_ranges () == range_first.get_all_ranges ()
 				&& r.data.get_all_ranges () == range_last.get_all_ranges ()) {
@@ -175,9 +129,15 @@ public class KerningClasses : GLib.Object {
 	}
 		
 	public double get_kerning (string left_glyph, string right_glyph) {
-		unowned List<GlyphRange> r;
-		unowned List<GlyphRange> l;
+		unowned GLib.List<GlyphRange> r;
+		unowned GLib.List<GlyphRange> l;
 		int len = (int) classes_first.length ();
+		double? d;
+		
+		d = get_kerning_for_single_glyphs (left_glyph, right_glyph);
+		if (d != null) {
+			return (!)d;
+		}
 
 		len = (int)classes_first.length ();
 		return_val_if_fail (len == classes_last.length (), 0);
@@ -197,22 +157,22 @@ public class KerningClasses : GLib.Object {
 	}
 
 	public double get_kern_for_range_to_char (GlyphRange left_range, string right_char) {
-		unowned List<GlyphRange> r;
-		unowned List<GlyphRange> l;
+		unowned GLib.List<GlyphRange> r;
+		unowned GLib.List<GlyphRange> l;
 		int len = (int) classes_first.length ();
-		bool search_range_is_class = left_range.is_class ();
 		
 		len = (int)classes_first.length ();
 		return_val_if_fail (len == classes_last.length (), 0);
 		return_val_if_fail (len == classes_kerning.length (), 0);
 		
+		if (!left_range.is_class ()) {
+			warning ("Expecting a class");
+			return -1;
+		}
+		
 		for (int i = len - 1; i >= 0; i--) {
 			l = classes_first.nth (i);
 			r = classes_last.nth (i);
-
-			if (!l.data.is_class () && !r.data.is_class () && search_range_is_class) {
-				continue;
-			}
 			
 			if (l.data.get_all_ranges () == left_range.get_all_ranges ()
 				&& r.data.has_character (right_char)) {
@@ -224,22 +184,22 @@ public class KerningClasses : GLib.Object {
 	}
 
 	public double get_kern_for_char_to_range (string left_char, GlyphRange right_range) {
-		unowned List<GlyphRange> r;
-		unowned List<GlyphRange> l;
+		unowned GLib.List<GlyphRange> r;
+		unowned GLib.List<GlyphRange> l;
 		int len = (int) classes_first.length ();
-		bool search_range_is_class = right_range.is_class ();
 
 		len = (int)classes_first.length ();
 		return_val_if_fail (len == classes_last.length (), 0);
 		return_val_if_fail (len == classes_kerning.length (), 0);
 		
+		if (!right_range.is_class ()) {
+			warning ("Expecting a class");
+			return 0;
+		}
+		
 		for (int i = len - 1; i >= 0; i--) {
 			l = classes_first.nth (i);
 			r = classes_last.nth (i);
-
-			if (search_range_is_class && !l.data.is_class () && !r.data.is_class ()) {
-				continue;
-			}
 			
 			if (l.data.has_character (left_char)
 				&& r.data.get_all_ranges () == right_range.get_all_ranges ()) {
@@ -254,7 +214,7 @@ public class KerningClasses : GLib.Object {
 		print ("Kernings:\n");
 		for (int i = 0; i < classes_first.length (); i++) {
 			print (classes_first.nth (i).data.get_all_ranges ());
-			print (@"\t\t");
+			print ("\t\t");
 			print (classes_last.nth (i).data.get_all_ranges ());
 			print ("\t\t");
 			print (@"$(classes_kerning.nth (i).data.val)");
@@ -265,6 +225,12 @@ public class KerningClasses : GLib.Object {
 			}
 			
 			print ("\n");
+		}
+		
+		foreach (string key in single_kerning.keys) {
+			print (key);
+			print ("\t\t");
+			print (@"$((!) single_kerning.get (key))\n");
 		}
 	}
 	

@@ -65,6 +65,8 @@ class BirdFontFile {
 		Xml.Doc* doc;
 		Xml.Node* root;
 		
+		print (xml_data);
+		
 		Parser.init ();
 		
 		font.font_file = "typeface.bf"; // FIXME
@@ -89,6 +91,7 @@ class BirdFontFile {
 	public bool write_font_file (string path, bool backup = false) {
 		try {
 			File file = File.new_for_path (path);
+			uint num_kerning_pairs;
 			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
 				stderr.printf (@"Can not save font. $path is a directory.");
@@ -199,15 +202,15 @@ class BirdFontFile {
 				}
 			});
 			
-			uint num_kerning_pairs = KerningClasses.get_instance ().classes_first.length ();
+			num_kerning_pairs = KerningClasses.get_instance ().classes_first.length ();
 			for (uint i = 0; i < num_kerning_pairs; i++) {
 				os.put_string ("<kerning ");
 				os.put_string ("left=\"");
-				os.put_string (KerningClasses.get_instance ().classes_first.nth (i).data.get_all_ranges ());
+				os.put_string (KerningClasses.get_instance ().classes_first.nth (i).data.get_all_ranges ().replace ("\"", "quote"));
 				os.put_string ("\" ");
 				
 				os.put_string ("right=\"");
-				os.put_string (KerningClasses.get_instance ().classes_last.nth (i).data.get_all_ranges ());
+				os.put_string (KerningClasses.get_instance ().classes_last.nth (i).data.get_all_ranges ().replace ("\"", "quote"));
 				os.put_string ("\" ");
 				
 				os.put_string ("hadjustment=\"");
@@ -498,11 +501,25 @@ class BirdFontFile {
 		}
 	}
 
+	private string unserialize (string s) {
+		StringBuilder b;
+		string r;
+		r = s.replace ("quote", "\"");
+		
+		if (s.has_prefix ("U+")) {
+			b = new StringBuilder ();
+			b.append_unichar (Font.to_unichar (s));
+			r = @"$(b.str)";
+		}
+		
+		return r;
+	}
+	
 	private void parse_kerning (Xml.Node* node) {
 		string attr_name;
 		string attr_content;
 		GlyphRange range_left, range_right;
-		double hadjusment = 0;
+		double hadjustment = 0;
 		KerningRange kerning_range;
 		
 		try {
@@ -514,16 +531,22 @@ class BirdFontFile {
 				attr_content = prop->children->content;
 				
 				if (attr_name == "left") {
-					range_left.parse_ranges (attr_content);
+					range_left.parse_ranges (unserialize (attr_content));
 				}
 
 				if (attr_name == "right") {
-					range_right.parse_ranges (attr_content);
+					range_right.parse_ranges (unserialize (attr_content));
 				}
 
 				if (attr_name == "hadjustment") {
-					hadjusment = double.parse (attr_content);
+					hadjustment = double.parse (attr_content);
+					print (@"$hadjustment");
 				}
+				
+				print (attr_name);
+				print (" ");
+				print (attr_content);
+				print ("\n");
 			}
 			
 			if (range_left.get_length () > 1) {
@@ -538,7 +561,8 @@ class BirdFontFile {
 				KerningTools.add_unique_class (kerning_range);
 			}
 
-			KerningClasses.get_instance ().set_kerning (range_left, range_right, hadjusment);
+			print (@"kern: $(range_left.get_all_ranges ())   $(range_right.get_all_ranges ()),    $hadjustment\n");
+			KerningClasses.get_instance ().set_kerning (range_left, range_right, hadjustment);
 			
 		} catch (MarkupError e) {
 			warning (e.message);

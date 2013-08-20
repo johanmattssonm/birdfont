@@ -66,7 +66,7 @@ public class KerningDisplay : FontDisplay {
 	public void draw_error_message (WidgetAllocation allocation, Context cr) {
 		string line1 = _("The current kerning class is malformed.");
 		string line2 = _("Add single characters separated by space and ranges on the form A-Z.");
-		string line3 = _("Type “space” to kern the space character.");
+		string line3 = _("Type “space” to kern the space character and “divis” to kern -.");
 		
 		cr.save ();
 		cr.set_source_rgba (1, 1, 1, 1);
@@ -237,7 +237,7 @@ public class KerningDisplay : FontDisplay {
 					return_if_fail (wi - 1 >= 0);
 					
 					if (word_with_ligatures.ranges.length () != word_with_ligatures.glyph.length ()) {
-						warning ("ranges and glyphs does not match.");
+						warning (@"ranges and glyphs does not match. $(word_with_ligatures.ranges.length ()) != $(word_with_ligatures.glyph.length ())");
 					}
 					
 					gr_left = word_with_ligatures.ranges.nth (wi - 1).data;
@@ -416,7 +416,7 @@ public class KerningDisplay : FontDisplay {
 				y = ((Math.fabs (ey - begin_handle_y) / 100) + 1);
 			}
 			
-			k = (ex - last_handle_x) / y; // y-axis is variable precision
+			k = (ex - last_handle_x) / y; // y-axis is for variable precision
 			set_kerning (selected_handle, k);
 			MainWindow.get_glyph_canvas ().redraw ();
 		}

@@ -148,18 +148,23 @@ public class GlyphRange {
 	 * this string. This function is used for storing ranges in th .bf format.
 	 */
 	public string get_all_ranges () {
+		bool first = true;
 		StringBuilder s = new StringBuilder ();
 		foreach (UniRange u in ranges) {
 			
+			if (!first) {
+				s.append (" ");
+			}
+			
 			if (u.start == u.stop) {
 				s.append (get_serialized_char (u.start));
-				s.append (" ");
 			} else {
 				s.append (get_serialized_char (u.start));
 				s.append ("-");
 				s.append (get_serialized_char (u.stop));
-				s.append (" ");
 			}
+			
+			first = false;
 		}
 		return s.str;
 	}
@@ -174,7 +179,7 @@ public class GlyphRange {
 		if (c == '-') {
 			return "divis";
 		}
-	
+		
 		s.append_unichar (c);	
 		return s.str;	
 	}
@@ -187,7 +192,7 @@ public class GlyphRange {
 		if (c == "divis") {
 			return "-";
 		}
-	
+		
 		return c;
 	}
 	
@@ -278,9 +283,12 @@ public class GlyphRange {
 		return len;
 	}
 
-	public bool has_character (string c) 
-		requires (c.char_count () == 1) {
-		unichar s = c.get_char ();
+	public bool has_character (string c) {
+		unichar s;
+		if (c.char_count () != 1) {
+			warning (@"Expecting a single character got $c");
+		}
+		s = c.get_char ();
 		return !unique (s, s);
 	}
 
@@ -316,20 +324,6 @@ public class GlyphRange {
 		stdout.printf ("Ranges:\n");
 		stdout.printf (get_all_ranges ());
 	}
-	
-	// FIXME: DELETE
-	/*
-	public string get_all_ranges () {
-		StringBuilder s = new StringBuilder ();
-		foreach (UniRange u in ranges) {
-			s.append (Font.to_hex_code (u.start));
-			s.append (" - ");
-			s.append (Font.to_hex_code (u.stop));
-			s.append (" ");
-		}
-		return s.str;
-	}
-	*/
 }
 
 }

@@ -18,6 +18,7 @@ with a -dev or -devel affix.
 
 Install the following packages:
 valac
+libgee-dev
 libglib2.0-dev 
 libgtk2.0-dev 
 libxml2-dev 
