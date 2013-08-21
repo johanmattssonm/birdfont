@@ -78,26 +78,6 @@ public class Expander : GLib.Object {
 				yt += t.h + 2;
 			}
 		}
-		
-		/*
-		foreach (Tool t in tool) {
-			// FIXME: delete
-			//t.set_properties (xt, yt, w, h);
-			t.x = xt;
-			t.y = yt;
-			
-			print (@"$(xt), $yt\n");
-			if (xt + t.w + 10 > 160) {
-				yt += t.h;
-				i = 0;
-				xt = x + 10;
-				print (@"NEW LINE\n");
-			} else {
-				i++;
-				print (@"t.w: $(t.w)\n");
-				xt += t.w + 5;
-			}
-		} */
 	}
 	
 	public void set_offset (double ty) {
@@ -113,14 +93,6 @@ public class Expander : GLib.Object {
 		update_tool_position ();
 		
 		t.select_action.connect ((selected) => {
-				if (!selected.new_selection && selected.persistent) {
-					if (is_persistent ()) {
-						selected.set_selected (true);
-					} else {
-						selected.set_selected (false);
-					}
-				}
-			
 				MainWindow.get_toolbox ().redraw ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
 			
 				if (is_unique ()) {
@@ -131,7 +103,15 @@ public class Expander : GLib.Object {
 					}
 				}
 
-				if (!is_persistent ()) {
+				if (!selected.new_selection && selected.persistent) {
+					if (is_persistent ()) {
+						selected.set_selected (true);
+					} else {
+						selected.set_selected (false);
+					}
+				}
+				
+				if (!is_persistent () && !selected.persistent) {
 						var time = new TimeoutSource(200);
 						time.set_callback(() => {
 							selected.set_selected (false);

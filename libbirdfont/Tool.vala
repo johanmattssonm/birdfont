@@ -84,6 +84,7 @@ public class Tool : GLib.Object {
 	private static ImageSurface? active_deselected_button = null;
 	
 	public bool persistent = false;
+	public bool editor_events = false;
 	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {

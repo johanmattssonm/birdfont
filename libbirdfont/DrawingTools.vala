@@ -411,33 +411,6 @@ public class DrawingTools : ToolCollection  {
 		
 		Tool rectangle = new RectangleTool ("rectangle");
 		shape_tools.add_tool (rectangle);
-
-		// adjust precision
-		string precision_value = Preferences.get ("precision");
-		
-		precision = new SpinButton ("precision", _("Set precision"));
-		
-		if (precision_value != "") {
-			precision.set_value (precision_value);
-		} else {
-			precision.set_value_round (1);
-		}
-		
-		precision.new_value_action.connect ((self) => {
-			MainWindow.get_toolbox ().select_tool (precision);
-			
-			Preferences.set ("precision", self.get_display_value ());
-			MainWindow.get_toolbox ().redraw ((int) precision.x, (int) precision.y, 70, 70);
-		});
-
-		precision.select_action.connect((self) => {
-			pen_tool.set_precision (((SpinButton)self).get_value ());
-		});
-		
-		precision.set_min (0.001);
-		precision.set_max (1);
-		
-		shape_tools.add_tool (precision);
 								
 		// background tools
 		background_scale = new SpinButton ("scale_background", _("Set size for background image"));
@@ -580,7 +553,34 @@ public class DrawingTools : ToolCollection  {
 		handle_color.set_b (double.parse (Preferences.get ("handle_color_b")));
 		handle_color.set_a (double.parse (Preferences.get ("handle_color_a")));
 		style_tools.add_tool (handle_color);
+
+		// adjust precision
+		string precision_value = Preferences.get ("precision");
 		
+		precision = new SpinButton ("precision", _("Set precision"));
+		
+		if (precision_value != "") {
+			precision.set_value (precision_value);
+		} else {
+			precision.set_value_round (1);
+		}
+		
+		precision.new_value_action.connect ((self) => {
+			MainWindow.get_toolbox ().select_tool (precision);
+			
+			Preferences.set ("precision", self.get_display_value ());
+			MainWindow.get_toolbox ().redraw ((int) precision.x, (int) precision.y, 70, 70);
+		});
+
+		precision.select_action.connect((self) => {
+			pen_tool.set_precision (((SpinButton)self).get_value ());
+		});
+		
+		precision.set_min (0.001);
+		precision.set_max (1);
+		
+		style_tools.add_tool (precision);
+
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
 		edit_point_modifiers.set_open (true);
@@ -640,17 +640,26 @@ public class DrawingTools : ToolCollection  {
 		
 		background_tools.set_persistent (true);
 		background_tools.set_unique (true);
+	
+		style_tools.set_persistent (true);
+		style_tools.set_unique (true);
 
 		MainWindow.get_toolbox ().update_expanders ();
 		MainWindow.get_toolbox ().reset_active_tool ();
 		
-		// let these tools progagate events even when other tools are selectes			
+		// let these tools progagate events even when other tools are selected			
 		foreach (Tool t in draw_tools.tool) {
-			t.persistent = true;
+			t.editor_events = true;
 		}
-		
+
+		move_background.editor_events = true;
+		cut_background.editor_events = true;
+				
 		move_background.persistent = true;
 		cut_background.persistent = true;
+		
+		precision.persistent = true;
+		stroke_width.persistent = true;
 		
 		foreach (Tool t in shape_tools.tool) {
 			t.persistent = true;

@@ -204,8 +204,7 @@ public class Toolbox : GLib.Object  {
 						redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
 					}
 					
-					if (tool.persistent) {
-						print ("PERSIS\n");
+					if (tool.editor_events) {
 						current_tool = tool;
 					}
 				}

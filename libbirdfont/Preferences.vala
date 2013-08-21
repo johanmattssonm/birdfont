@@ -13,12 +13,14 @@
 */
 namespace BirdFont {
 
+using Gee;
+
 public class Preferences {
 		
-	static HashTable<string, string> data;
+	static Gee.HashMap<string, string> data;
 
 	public Preferences () {
-		data = new HashTable<string, string> (str_hash, str_equal);
+		data = new HashMap<string, string> ();
 	}
 
 	public static void set_last_file (string fn) {
@@ -27,19 +29,14 @@ public class Preferences {
 
 	public static string @get (string k) {
 		string? s;
-		
-		lock (data) {
-			s = data.lookup (k);
-		}
+		s = data.get (k);
 		
 		return (s != null) ? (!) s : "";
 	}
 
 	public static void @set (string k, string v) {
-		lock (data) {
-			data.replace (k, v);
-			save ();
-		}
+		data.set (k, v);
+		save ();
 	}
 
 	public static string[] get_recent_files () {
@@ -84,7 +81,7 @@ public class Preferences {
 		File app_dir = BirdFont.get_settings_directory ();
 		File settings = app_dir.get_child ("settings");
 
-		data = new HashTable<string, string> (str_hash, str_equal);
+		data = new HashMap<string, string> ();
 
 		if (!settings.query_exists ()) {
 			return;
@@ -124,7 +121,7 @@ public class Preferences {
 			i = line.index_of_char('"', s);
 			string val = line.substring (s, i - s);
 			
-			data.insert (key, val);
+			data.set (key, val);
 		}
 	}
 	
@@ -148,10 +145,10 @@ public class Preferences {
 			sb.append ("# BirdFont settings\n");
 			sb.append ("# Version: 1.0\n");
 			
-			foreach (var k in data.get_keys ()) {
+			foreach (var k in data.keys) {
 				sb.append (k);
 				sb.append (" \"");
-				sb.append (data.lookup (k));
+				sb.append (data.get (k));
 				sb.append ("\"\n");
 			}
 			
