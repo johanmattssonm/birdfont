@@ -50,6 +50,8 @@ public class Toolbox : GLib.Object  {
 			update_expanders ();
 			redraw (0, 0, allocation_width, allocation_height);
 		});
+		
+		update_expanders ();
 	}
 
 	public void key_press (uint keyval) {

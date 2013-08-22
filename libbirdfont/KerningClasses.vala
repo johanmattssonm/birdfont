@@ -37,8 +37,6 @@ public class KerningClasses : GLib.Object {
 		classes_kerning = new GLib.List<Kerning> ();
 		
 		single_kerning = new HashMap<string, double?> ();
-		
-		KerningTools.remove_all_kerning_classes (); // TODO: move to menu tab
 	}
 	
 	public static KerningClasses get_instance () {
@@ -46,15 +44,20 @@ public class KerningClasses : GLib.Object {
 	}
 	
 	public double? get_kerning_for_single_glyphs (string l, string r) {
-		return single_kerning.get (@"$l$r");
+		return single_kerning.get (@"$l - $r");
 	} 
 
 	public void set_kerning_for_single_glyphs (string l, string r, double k) {
-		single_kerning.set (@"$l$r", k);
+		single_kerning.set (@"$l - $r", k);
 	} 
 
 	public void set_kerning (GlyphRange left_range, GlyphRange right_range, double k) {
 		int index;
+		
+		if (left_range.get_length () == 0 || right_range.get_length () == 0) {
+			warning ("range has no glyphs");
+			return;
+		}
 		
 		if (left_range.get_length () == 1 && right_range.get_length () == 1) {
 			set_kerning_for_single_glyphs (left_range.get_all_ranges (), right_range.get_all_ranges (), k);
@@ -111,7 +114,7 @@ public class KerningClasses : GLib.Object {
 		return_val_if_fail (len == classes_kerning.length (), 0);
 
 		if (!(range_first.is_class () || range_last.is_class ())) {
-			warning ("Expecting a class");
+			warning (@"Expecting a class, $(range_first.get_all_ranges ()) and $(range_last.get_all_ranges ())");
 			return -1;
 		}
 		
@@ -211,7 +214,7 @@ public class KerningClasses : GLib.Object {
 	}
 	
 	public void print_all () {
-		print ("Kernings:\n");
+		print ("Kernings classes:\n");
 		for (int i = 0; i < classes_first.length (); i++) {
 			print (classes_first.nth (i).data.get_all_ranges ());
 			print ("\t\t");
@@ -227,10 +230,27 @@ public class KerningClasses : GLib.Object {
 			print ("\n");
 		}
 		
+		print ("\n");
+		print ("Kernings for pairs:\n");
 		foreach (string key in single_kerning.keys) {
 			print (key);
 			print ("\t\t");
 			print (@"$((!) single_kerning.get (key))\n");
+		}
+	}
+	
+	public void get_single_position_pairs (KerningIterator kerningIterator) {
+		double k = 0;
+		
+		foreach (string key in single_kerning.keys) {
+			var chars = key.split (" - ");
+			
+			if (chars.length != 2) {
+				warning (@"Can not parse characters from key: $key");
+			} else {
+				k = (!) single_kerning.get (key);
+				kerningIterator (chars[0], chars[1], k);
+			}
 		}
 	}
 	
@@ -287,6 +307,8 @@ public class KerningClasses : GLib.Object {
 		if (!is_null (MainWindow.get_toolbox ())) { // FIXME: reorganize
 			Toolbox.redraw_tool_box ();
 		}
+		
+		single_kerning.clear ();
 	}
 }
 

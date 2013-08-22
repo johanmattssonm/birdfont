@@ -24,6 +24,7 @@ public class KerningDisplay : FontDisplay {
 	List <GlyphSequence> row;
 	int active_handle = -1;
 	int selected_handle = -1;
+	bool moving = false;
 	
 	double begin_handle_x = 0;
 	double begin_handle_y = 0;
@@ -97,7 +98,7 @@ public class KerningDisplay : FontDisplay {
 		Glyph? prev;
 		GlyphSequence word_with_ligatures;
 		GlyphRange? gr_left, gr_right;
-		
+		bool first_row = true;
 		i = 0;
 		
 		// bg color
@@ -147,15 +148,15 @@ public class KerningDisplay : FontDisplay {
 				}
 
 				// handle
-				if (active_handle == i) {
+				if (first_row && (active_handle == i || selected_handle == i)) {
 					x2 = x + kern / 2.0;
 					
 					cr.save ();
 					
-					if (gr_left == null && gr_right == null) {
-						cr.set_source_rgba (153/255.0, 153/255.0, 173/255.0, 1);
+					if (selected_handle == i) {
+						cr.set_source_rgba (0, 0, 0, 1);
 					} else { 
-						cr.set_source_rgba (46/255.0, 170/255.0, 76/255.0, 1);
+						cr.set_source_rgba (123/255.0, 123/255.0, 123/255.0, 1);
 					}
 					
 					cr.move_to (x2 - 5, y + 20);
@@ -199,17 +200,52 @@ public class KerningDisplay : FontDisplay {
 			}
 						
 			y += MainWindow.get_current_glyph ().get_height () + 20;
-			x = 20;			
+			x = 20;
+			first_row = false;	
+		}
+	}
+
+	private void display_kerning_value (double k) {
+		string kerning_label = _("Kerning:");
+		MainWindow.get_tool_tip ().show_text (@"$kerning_label $(k)");
+	}
+	
+	private void set_active_handle_index (int h) {
+		double kern = get_kerning_for_handle (h);
+		active_handle = h;
+		
+		if (1 <= active_handle < row.first ().data.glyph.length ()) {
+			display_kerning_value (kern);
 		}
 	}
 	
-	private void set_kerning (int handle, double val) {
+	private double get_kerning_for_handle (int handle) {
+		string a, b;
+		Font font;
+		GlyphRange? gr_left, gr_right;
+		bool got_pair;
+		
+		font = BirdFont.get_current_font ();
+		font.touch ();
+
+		got_pair = get_kerning_pair (handle, out a, out b, out gr_left, out gr_right);
+		
+		if (got_pair) {
+			return get_kerning_for_pair (a, b, gr_left, gr_right);
+		}
+		
+		return 0;
+	}
+
+	private bool get_kerning_pair (int handle, out string left, out string right, 
+		out GlyphRange? range_left, out GlyphRange? range_right) {
 		string a, b;
 		Font font;
 		int wi = 0;
 		GlyphSequence word_with_ligatures;
 		int ranges_index = 0;
 		GlyphRange? gr_left, gr_right;
+		int row_index = 0;
 		
 		font = BirdFont.get_current_font ();
 
@@ -217,7 +253,16 @@ public class KerningDisplay : FontDisplay {
 
 		a = "";
 		b = "";
-
+		
+		left = "";
+		right = "";
+		range_left = null;
+		range_right = null;
+		
+		if (handle <= 0) {
+			return false;
+		}
+		
 		foreach (GlyphSequence word in row) {
 			word_with_ligatures = word.process_ligatures ();
 			ranges_index = 0;
@@ -229,28 +274,50 @@ public class KerningDisplay : FontDisplay {
 				
 				b = ((!) g).get_name ();
 				
-				if (handle == wi) {
+				if (handle == wi && row_index == 0) {
 					if (wi >= word_with_ligatures.ranges.length ()) {
-						warning (@"$wi > $(word_with_ligatures.ranges.length ())");
-						return;
+						warning (@"$wi > $(word_with_ligatures.ranges.length ()) Number of glyphs: $(word_with_ligatures.glyph.length ())");
+						return false;
 					}
-					return_if_fail (wi - 1 >= 0);
+					return_val_if_fail (wi - 1 >= 0, false);
 					
 					if (word_with_ligatures.ranges.length () != word_with_ligatures.glyph.length ()) {
 						warning (@"ranges and glyphs does not match. $(word_with_ligatures.ranges.length ()) != $(word_with_ligatures.glyph.length ())");
+						return false;
 					}
 					
 					gr_left = word_with_ligatures.ranges.nth (wi - 1).data;
 					gr_right = word_with_ligatures.ranges.nth (wi).data;
 					
-					set_kerning_pair (a, b, ref gr_left, ref gr_right, val);
+					left = a;
+					right = b;
+					range_left = gr_left;
+					range_right = gr_right;
+					
+					return true;
 				}
 				
 				wi++;
 				
 				a = b;
 			}
+			
+			row_index++;
 		}
+		
+		return false;	
+	}
+
+	private void set_kerning (int handle, double val) {
+		string a, b;
+		Font font;
+		GlyphRange? gr_left, gr_right;
+		
+		font = BirdFont.get_current_font ();
+		font.touch ();
+
+		get_kerning_pair (handle, out a, out b, out gr_left, out gr_right);
+		set_kerning_pair (a, b, ref gr_left, ref gr_right, val);
 	}
 
 	/** Class based gpos kerning. */
@@ -278,6 +345,7 @@ public class KerningDisplay : FontDisplay {
 			}
 			
 			KerningClasses.get_instance ().set_kerning (grl, grr, kern + val);
+			display_kerning_value (kern + val);
 		} catch (MarkupError e) {
 			// FIXME: unassigned glyphs and ligatures
 			warning (e.message);
@@ -357,12 +425,10 @@ public class KerningDisplay : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 		Glyph? glyph;
 		
-		print ("add_range\n");
-		
 		glyph = font.get_glyph_by_name (range.get_char (0));
 		
 		if (glyph == null) {
-			glyph = font.get_not_def_character ();
+			return;
 		}
 		
 		row.first ().data.glyph.append ((!) glyph);
@@ -383,10 +449,38 @@ public class KerningDisplay : FontDisplay {
 			return;
 		}
 		
-		if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {
-					
+		if (keyval == Key.LEFT && KeyBindings.modifier == NONE) {
+			set_kerning (selected_handle, -1);
+		}
+		
+		if (keyval == Key.RIGHT && KeyBindings.modifier == NONE) {
+			set_kerning (selected_handle, 1);
+		}
+
+		if (KeyBindings.modifier == CTRL && (keyval == Key.LEFT || keyval == Key.RIGHT)) {
+			if (keyval == Key.LEFT) { 
+				selected_handle--;
+			}
+			
+			if (keyval == Key.RIGHT) {
+				selected_handle++;
+			}
+			
+			if (selected_handle <= 0) {
+				selected_handle = 1;
+			}
+			
+			if (selected_handle >= row.first ().data.glyph.length ()) {
+				selected_handle = (int) row.first ().data.glyph.length () - 1;
+			}
+			
+			set_active_handle_index (selected_handle);
+		}
+		
+		if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {		
 			if (keyval == Key.BACK_SPACE && row.length () > 0) {	
 				row.first ().data.glyph.remove_link (row.first ().data.glyph.last ());
+				row.first ().data.ranges.remove_link (row.first ().data.ranges.last ());
 			}
 			
 			if (row.length () == 0 || c == Key.ENTER) {
@@ -396,8 +490,13 @@ public class KerningDisplay : FontDisplay {
 			if (!is_modifier_key (c) && c.validate ()) {
 				name = f.get_name_for_character (c);
 				g = f.get_glyph_by_name (name);
-				row.first ().data.glyph.append (g);
-				row.first ().data.ranges.append (null);
+				if (g != null) {
+					row.first ().data.glyph.append (g);
+					row.first ().data.ranges.append (null);
+					
+					selected_handle = (int) row.first ().data.glyph.length () - 1;
+					set_active_handle_index (selected_handle);
+				}
 			}
 		}
 		
@@ -407,7 +506,7 @@ public class KerningDisplay : FontDisplay {
 	public override void motion_notify (double ex, double ey) {
 		double k, y;
 		
-		if (selected_handle == -1) {
+		if (!moving) {
 			set_active_handle (ex, ey);
 		} else {
 			y = 1;
@@ -447,13 +546,18 @@ public class KerningDisplay : FontDisplay {
 			word_with_ligatures = word.process_ligatures ();
 			foreach (Glyph? g in word_with_ligatures.glyph) {
 				if (g == null) {
-					w = 50;	
+					w = 50;
+					warning ("glyph does not exist");	
 				} else {
 					glyph = (!) g;
 					w = glyph.get_width ();
 				}
 				
 				gl_name = glyph.get_name ();
+				
+				if (prev == null && col_index != 0) {
+					warning (@"previous glyph does not exist row: $row_index column: $col_index");
+				}
 				
 				if (prev == null || col_index == 0) {
 					kern = 0;
@@ -473,14 +577,14 @@ public class KerningDisplay : FontDisplay {
 					min = d;
 					
 					if (active_handle != i - row_index) {
-						active_handle = i - row_index;
+						set_active_handle_index (i - row_index);
 						MainWindow.get_glyph_canvas ().redraw ();
 					}
 					
 					if (col_index == word.glyph.length () || col_index == 0) {
-						active_handle = -1;
+						set_active_handle_index (-1);
 					} else {
-						active_handle += row_index;
+						set_active_handle_index (active_handle + row_index);
 					}
 				}
 				
@@ -499,7 +603,7 @@ public class KerningDisplay : FontDisplay {
 	public override void button_release (int button, double ex, double ey) {
 		parse_error = false;
 		set_active_handle (ex, ey);
-		selected_handle = -1;
+		moving = false;
 	}
 	
 	public override void button_press (uint button, double ex, double ey) {
@@ -508,6 +612,7 @@ public class KerningDisplay : FontDisplay {
 		begin_handle_x = ex;
 		begin_handle_y = ey;
 		last_handle_x = ex;
+		moving = true;
 	}
 
 }

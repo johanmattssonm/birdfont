@@ -716,14 +716,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem remove_all_kerning_pairs = new Gtk.MenuItem.with_mnemonic (_("_Remove All Kerning Pairs"));
 		kerning_menu.append (remove_all_kerning_pairs);
 		remove_all_kerning_pairs.activate.connect (() => { 
-			 KerningClasses.get_instance ().remove_all_pairs ();
-		});
-
-		Gtk.MenuItem remove_all_kerning_classes = new Gtk.MenuItem.with_mnemonic (_("Remove All Kerning _Classes"));
-		kerning_menu.append (remove_all_kerning_classes);
-		remove_all_kerning_classes.activate.connect (() => { 
-			 KerningClasses.get_instance ().remove_all_pairs ();
-			 KerningTools.remove_all_kerning_classes ();
+			 MenuTab.remove_all_kerning_pairs ();
 		});
 		
 		// Add menus

@@ -24,7 +24,6 @@ public class KerningTools : ToolCollection  {
 	
 	public KerningTools () {
 		init ();
-		MainWindow.get_toolbox ().update_expanders ();
 	}
 	
 	public static void init () {
@@ -50,22 +49,6 @@ public class KerningTools : ToolCollection  {
 		expanders.append (classes);
 	}
 	
-	public static void remove_all_kerning_classes () {
-		if (is_null (classes) || is_null (classes.tool)) {
-			return; // FIXME: reorganize
-		}
-		
-		print ("Remove all kerning classes\n");
-		
-		while (classes.tool.length () > 0) {
-			classes.tool.remove_link (classes.tool.first ());
-		}
-		
-		if (!is_null (MainWindow.get_toolbox ())) {
-			MainWindow.get_toolbox ().update_expanders ();
-		}
-	}
-	
 	public static void add_unique_class (KerningRange kerning_class) {
 		KerningRange k;
 		
@@ -88,6 +71,41 @@ public class KerningTools : ToolCollection  {
 		classes.add_tool (kerning_class);
 	}
 	
+	public static void update_kerning_classes () {
+		KerningClasses k = KerningClasses.get_instance ();
+		KerningRange kr;
+		GlyphRange r;
+		int i;
+		
+		remove_all_kerning_classes ();
+		
+		for (i = 0; i < k.classes_first.length (); i++) {
+			r = k.classes_first.nth (i).data;
+			if (r.is_class ()) {
+				kr = new KerningRange ();
+				kr.set_ranges (r.get_all_ranges ());
+				add_unique_class (kr);
+			}
+			
+			r = k.classes_last.nth (i).data;
+			if (r.is_class ()) {
+				kr = new KerningRange ();
+				kr.set_ranges (r.get_all_ranges ());
+				add_unique_class (kr);
+			}
+		}
+	}
+
+	private static void remove_all_kerning_classes () {
+		while (classes.tool.length () > 0) {
+			classes.tool.remove_link (classes.tool.first ());
+		}
+		
+		if (!is_null (MainWindow.get_toolbox ())) {
+			MainWindow.get_toolbox ().update_expanders ();
+		}
+	}
+		
 	public static void remove_empty_classes () {
 		unowned List<Tool> t = classes.tool.first ();
 		KerningRange kr;
@@ -114,7 +132,7 @@ public class KerningTools : ToolCollection  {
 			}
 		}
 	}
-		
+	
 	public override unowned List<Expander> get_expanders () {
 		return expanders;
 	}

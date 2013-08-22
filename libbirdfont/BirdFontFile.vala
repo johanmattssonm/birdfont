@@ -218,6 +218,25 @@ class BirdFontFile {
 				os.put_string ("\" />\n");
 			}
 			
+			KerningClasses.get_instance ().get_single_position_pairs ((l, r, k) => {
+				try {
+					os.put_string ("<kerning ");
+					os.put_string ("left=\"");
+					os.put_string (l);
+					os.put_string ("\" ");
+					
+					os.put_string ("right=\"");
+					os.put_string (r);
+					os.put_string ("\" ");
+					
+					os.put_string ("hadjustment=\"");
+					os.put_string (float_point (k));
+					os.put_string ("\" />\n");
+				} catch (GLib.Error e) {
+					stderr.printf (@"$(e.message) \n");
+				}
+			});
+			
 			os.put_string ("</font>");
 			
 		} catch (GLib.Error e) {
@@ -542,11 +561,6 @@ class BirdFontFile {
 					hadjustment = double.parse (attr_content);
 					print (@"$hadjustment");
 				}
-				
-				print (attr_name);
-				print (" ");
-				print (attr_content);
-				print ("\n");
 			}
 			
 			if (range_left.get_length () > 1) {
@@ -561,7 +575,6 @@ class BirdFontFile {
 				KerningTools.add_unique_class (kerning_range);
 			}
 
-			print (@"kern: $(range_left.get_all_ranges ())   $(range_right.get_all_ranges ()),    $hadjustment\n");
 			KerningClasses.get_instance ().set_kerning (range_left, range_right, hadjustment);
 			
 		} catch (MarkupError e) {

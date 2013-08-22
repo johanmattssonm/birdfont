@@ -285,7 +285,7 @@ c.append ("""
 			}
 			
 			MainWindow.get_drawing_tools ().background_scale.set_value (f.background_scale);
-			
+			KerningTools.update_kerning_classes ();
 			select_overview ();
 		});
 
@@ -391,6 +391,8 @@ c.append ("""
 			MainWindow.get_drawing_tools ().add_new_grid ();
 			MainWindow.get_drawing_tools ().add_new_grid ();
 			
+			KerningTools.update_kerning_classes ();
+			
 			select_overview ();
 		});
 
@@ -449,6 +451,8 @@ c.append ("""
 			MainWindow.clear_glyph_cache ();
 			MainWindow.close_all_tabs ();
 			f.load ((!)fn);
+			
+			KerningTools.update_kerning_classes ();
 			
 			select_overview ();		
 		}
@@ -523,6 +527,11 @@ c.append ("""
 	
 	public static void reset_glyph_background () {
 		Glyph.background_glyph = null;
+	}
+	
+	public static void remove_all_kerning_pairs	() {
+		KerningClasses.get_instance ().remove_all_pairs ();
+		KerningTools.update_kerning_classes ();
 	}
 }
 }

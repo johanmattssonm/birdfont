@@ -643,9 +643,6 @@ public class DrawingTools : ToolCollection  {
 	
 		style_tools.set_persistent (true);
 		style_tools.set_unique (true);
-
-		MainWindow.get_toolbox ().update_expanders ();
-		MainWindow.get_toolbox ().reset_active_tool ();
 		
 		// let these tools progagate events even when other tools are selected			
 		foreach (Tool t in draw_tools.tool) {
@@ -666,8 +663,10 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		// Default selection
-		var idle = new IdleSource();
+		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
+			MainWindow.get_toolbox ().reset_active_tool ();
+		
 			pen_tool.set_selected (true);
 			
 			select_draw_tool ();			
@@ -685,7 +684,6 @@ public class DrawingTools : ToolCollection  {
 			
 			return false;
 		});
-		
 		idle.attach (null);
 	}
 
