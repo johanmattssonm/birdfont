@@ -46,7 +46,7 @@ class OpenFontFormatWriter : Object  {
 		unowned List<Table> tables;
 		FontData fd;
 		uint l;
-		
+
 		font = nfont;
 				
 		directory_table.process ();	

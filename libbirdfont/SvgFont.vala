@@ -126,7 +126,7 @@ class SvgFont : GLib.Object {
 					KerningClasses.get_instance ().set_kerning (grl, grr, -kerning);
 				} catch (MarkupError e) {
 					warning (e.message);
-				}			
+				}		
 			}
 		}
 	}

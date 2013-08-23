@@ -502,6 +502,8 @@ os.put_string (
 		string[] spawn_args = get_birdfont_export (folder, temp_file);
 		string c = "";
 
+		MainWindow.set_status (_("Writing TTF and EOT files."));
+
 		foreach (string s in spawn_args) {
 			c += s + " ";
 		}
@@ -514,6 +516,7 @@ os.put_string (
 	
 	public static bool export_svg_font () {
 		Font font = BirdFont.get_current_font ();
+		MainWindow.set_status (_("Writing SVG file."));
 		return export_svg_font_path (font.get_folder ());
 	}
 		

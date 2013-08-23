@@ -86,7 +86,6 @@ class SvgFontFormatWriter : Object  {
 		}
 		
 		// FIXME: ligatures
-
 		KerningClasses.get_instance ().all_pairs ((left, right, k) => {
 			string l, r;
 			Font f = BirdFont.get_current_font ();
@@ -111,6 +110,9 @@ class SvgFontFormatWriter : Object  {
 			} catch (GLib.Error e) {
 				warning (e.message);
 			}
+			
+			ProgressBar.set_progress (0);
+			Tool.yield ();
 		});	
 
 		put ("</font>");

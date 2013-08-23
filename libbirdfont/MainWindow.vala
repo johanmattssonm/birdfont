@@ -169,6 +169,13 @@ public class MainWindow {
 	public static string translate (string s) {
 		return _(s);
 	}
+	
+	public static void set_status (string s) {
+		if (!is_null (tool_tip)) {
+			tool_tip.show_text (s);
+			Tool.yield ();
+		}  
+	}
 }
 
 }

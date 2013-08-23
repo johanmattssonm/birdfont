@@ -90,6 +90,8 @@ class BirdFontFile {
 		try {
 			File file = File.new_for_path (path);
 			uint num_kerning_pairs;
+			uint progress;
+			uint num_glyphs;
 			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
 				warning (@"Can not save font. $path is a directory.");
@@ -201,6 +203,8 @@ class BirdFontFile {
 			});
 			
 			num_kerning_pairs = KerningClasses.get_instance ().classes_first.length ();
+			progress = num_kerning_pairs;
+			ProgressBar.set_progress (1);
 			for (uint i = 0; i < num_kerning_pairs; i++) {
 				os.put_string ("<kerning ");
 				os.put_string ("left=\"");
@@ -214,6 +218,9 @@ class BirdFontFile {
 				os.put_string ("hadjustment=\"");
 				os.put_string (float_point (KerningClasses.get_instance ().classes_kerning.nth (i).data.val));
 				os.put_string ("\" />\n");
+				
+				ProgressBar.set_progress (--progress / (double) num_kerning_pairs);
+				Tool.yield ();
 			}
 			
 			KerningClasses.get_instance ().get_single_position_pairs ((l, r, k) => {
@@ -230,6 +237,9 @@ class BirdFontFile {
 					os.put_string ("hadjustment=\"");
 					os.put_string (float_point (k));
 					os.put_string ("\" />\n");
+					
+					ProgressBar.set_progress (++progress / (double) num_kerning_pairs);
+					Tool.yield ();
 				} catch (GLib.Error e) {
 					warning (@"$(e.message) \n");
 				}
@@ -558,6 +568,8 @@ class BirdFontFile {
 				if (attr_name == "hadjustment") {
 					hadjustment = double.parse (attr_content);
 				}
+				
+				ProgressBar.set_progress (0);
 			}
 			
 			if (range_left.get_length () > 1) {
