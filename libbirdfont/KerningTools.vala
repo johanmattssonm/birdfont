@@ -36,7 +36,7 @@ public class KerningTools : ToolCollection  {
 			Toolbox.redraw_tool_box ();
 		});
 		class_tools.add_tool (new_kerning_class);
-		
+
 		class_tools.set_persistent (false);
 		class_tools.set_unique (false);
 		class_tools.set_open (true);

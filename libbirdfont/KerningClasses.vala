@@ -238,6 +238,14 @@ public class KerningClasses : GLib.Object {
 			print (@"$((!) single_kerning.get (key))\n");
 		}
 	}
+
+	public void get_classes (KerningIterator kerningIterator) {
+		for (int i = 0; i < classes_first.length (); i++) {
+			kerningIterator (classes_first.nth (i).data.get_all_ranges (),
+				classes_last.nth (i).data.get_all_ranges (),
+				classes_kerning.nth (i).data.val);
+		}
+	}
 	
 	public void get_single_position_pairs (KerningIterator kerningIterator) {
 		double k = 0;
@@ -309,6 +317,10 @@ public class KerningClasses : GLib.Object {
 		}
 		
 		single_kerning.clear ();
+	}
+	
+	public uint get_number_of_pairs () {
+		return single_kerning.keys.size + classes_first.length ();
 	}
 }
 

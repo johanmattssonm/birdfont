@@ -32,6 +32,8 @@ public class KerningDisplay : FontDisplay {
 	double last_handle_x = 0;
 
 	bool parse_error = false;
+	
+	KerningList kerning_list = new KerningList ();
 
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
@@ -62,6 +64,10 @@ public class KerningDisplay : FontDisplay {
 		} else {
 			draw_kerning_pairs (allocation, cr);
 		}
+	}
+	
+	private void draw_list (WidgetAllocation allocation, Context cr) {
+		kerning_list.draw (allocation, cr);
 	}
 	
 	public void draw_error_message (WidgetAllocation allocation, Context cr) {
@@ -614,7 +620,6 @@ public class KerningDisplay : FontDisplay {
 		last_handle_x = ex;
 		moving = true;
 	}
-
 }
 
 }

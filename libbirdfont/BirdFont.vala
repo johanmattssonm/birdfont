@@ -300,8 +300,9 @@ public class BirdFont {
 		assert (!fatal);
 	}
 	
-	internal static void new_font () {
+	internal static Font new_font () {
 		current_font = new Font ();
+		return current_font;
 	}
 
 	public static File get_preview_directory () {

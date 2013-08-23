@@ -1453,7 +1453,6 @@ class TestCases {
 	
 	private static void test_kerning () {
 		MenuTab.show_kerning_context ();
-		Font font = BirdFont.get_current_font ();
 		KerningDisplay kerning_display = KerningDisplay.get_singleton ();
 		unichar a, b;
 		StringBuilder sb1, sb2;

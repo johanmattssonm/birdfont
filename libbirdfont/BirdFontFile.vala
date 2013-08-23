@@ -65,8 +65,6 @@ class BirdFontFile {
 		Xml.Doc* doc;
 		Xml.Node* root;
 		
-		print (xml_data);
-		
 		Parser.init ();
 		
 		font.font_file = "typeface.bf"; // FIXME
@@ -94,7 +92,7 @@ class BirdFontFile {
 			uint num_kerning_pairs;
 			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
-				stderr.printf (@"Can not save font. $path is a directory.");
+				warning (@"Can not save font. $path is a directory.");
 				return false;
 			}
 			
@@ -197,8 +195,8 @@ class BirdFontFile {
 						}
 					}
 				} catch (GLib.Error ef) {
-					stderr.printf (@"Failed to save $path \n");
-					stderr.printf (@"$(ef.message) \n");
+					warning (@"Failed to save $path \n");
+					warning (@"$(ef.message) \n");
 				}
 			});
 			
@@ -233,15 +231,15 @@ class BirdFontFile {
 					os.put_string (float_point (k));
 					os.put_string ("\" />\n");
 				} catch (GLib.Error e) {
-					stderr.printf (@"$(e.message) \n");
+					warning (@"$(e.message) \n");
 				}
 			});
 			
 			os.put_string ("</font>");
 			
 		} catch (GLib.Error e) {
-			stderr.printf (@"Failed to save $path \n");
-			stderr.printf (@"$(e.message) \n");
+			warning (@"Failed to save $path \n");
+			warning (@"$(e.message) \n");
 			return false;
 		}
 		
@@ -559,7 +557,6 @@ class BirdFontFile {
 
 				if (attr_name == "hadjustment") {
 					hadjustment = double.parse (attr_content);
-					print (@"$hadjustment");
 				}
 			}
 			

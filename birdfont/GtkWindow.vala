@@ -713,6 +713,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		show_kerning_tab.add_accelerator ("activate", accel_group, 'k', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		Gtk.MenuItem list_all_kerning_pairs = new Gtk.MenuItem.with_mnemonic (_("_List Kerning Pairs"));
+		kerning_menu.append (list_all_kerning_pairs);
+		list_all_kerning_pairs.activate.connect (() => { 
+			 MenuTab.list_all_kerning_pairs ();
+		});
+		
 		Gtk.MenuItem remove_all_kerning_pairs = new Gtk.MenuItem.with_mnemonic (_("_Remove All Kerning Pairs"));
 		kerning_menu.append (remove_all_kerning_pairs);
 		remove_all_kerning_pairs.activate.connect (() => { 

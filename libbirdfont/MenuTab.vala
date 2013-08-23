@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class MenuTab : FontDisplay {	
+public class MenuTab : FontDisplay {
 	
 	List<Font> recent_fonts = new List<Font> ();
 	
@@ -266,7 +266,7 @@ c.append ("""
 			Font f;
 			bool loaded;
 			
-			f = BirdFont.get_current_font ();
+			f = BirdFont.new_font ();
 			f.delete_backup ();
 			
 			MainWindow.clear_glyph_cache ();
@@ -448,6 +448,8 @@ c.append ("""
 		if (fn != null) {
 			f.delete_backup ();
 			
+			f = BirdFont.new_font ();
+			
 			MainWindow.clear_glyph_cache ();
 			MainWindow.close_all_tabs ();
 			f.load ((!)fn);
@@ -532,6 +534,10 @@ c.append ("""
 	public static void remove_all_kerning_pairs	() {
 		KerningClasses.get_instance ().remove_all_pairs ();
 		KerningTools.update_kerning_classes ();
+	}
+	
+	public static void list_all_kerning_pairs () {
+		MainWindow.get_tab_bar ().add_unique_tab (new KerningList (), 130);
 	}
 }
 }
