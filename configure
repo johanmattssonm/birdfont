@@ -7,6 +7,7 @@ from optparse import OptionParser
 from scripts import version
 from scripts import configfile
 import re
+from scripts.run import run
 
 VERSION = version.VERSION
 
@@ -53,6 +54,7 @@ def configure ():
 	libs = [
 			'cairo', 
 			'gdk-pixbuf-2.0', 
+			'gee-1.0',
 			'gio-2.0', 
 			'glib-2.0', 
 			'gtk+-2.0',
@@ -64,8 +66,8 @@ def configure ():
 	for lib in libs:
 		test_library_version (lib)
 
-	v = subprocess.check_output ('mkdir -p build', shell=True)
-	v = subprocess.check_output ('touch build/configured', shell=True)
+	run ('mkdir -p build')
+	run ('touch build/configured')
 
 	print ("");
 	print (OKGREEN + "Done" + ENDC);

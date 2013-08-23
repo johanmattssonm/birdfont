@@ -2,8 +2,7 @@
 Birdfont - Font Editor
 ----------------------
 
-Birdfont is a font editor that creates outline vector graphics and exports
-fonts in SVG, EOT and TTF format.
+Birdfont is a font editor which can create vector graphics and export SVG, EOT and TTF fonts.
 
 Author: Johan Mattsson and others see AUTHORS for full attribution.
 License: GNU GPL v3
@@ -46,13 +45,13 @@ Building Mac binaries
 
 Compile all dependencies using MacPorts and run:
 
-./scripts/macports_configure.py
-./scripts/macports_build.py
-./scripts/macports_install.py
+python ./configure --prefix=/opt/birdfont 
+python ./scripts/mac_build.py
+sudo python ./birdfont_install
 
---------------------
-Precompiled Packages
---------------------
+--------
+Packages
+--------
 
 Windows binaries are avalilable at http://birdfont.org
 

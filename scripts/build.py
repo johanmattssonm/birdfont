@@ -75,8 +75,13 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	if os.path.exists("build/bin/libbirdfont.so"):
 		run ("cd build/bin && unlink libbirdfont.so")
 
-	run ("""cd build/bin && ln -s """ + library + " libbirdfont.so")
-
+	# create link to the versioned library
+	if library.find ('.so') > -1:
+		run ("""cd build/bin && ln -s """ + library + " libbirdfont.so")
+	elif library.find ('.dylib') > -1:
+		run ("""cd build/bin && ln -s """ + library + " libbirdfont.dylib")
+		
+	
 def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	# birdfont-export
 	run("mkdir -p build/birdfont-export")
@@ -110,7 +115,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 
 	run(cc + " " + ldflags + " \
 		build/birdfont-export/*.o \
-		-L build/bin/ -l birdfont \
+		-Lbuild/bin/ -lbirdfont \
 		$(pkg-config --libs gee-1.0) \
 		$(pkg-config --libs libxml-2.0) \
 		$(pkg-config --libs gio-2.0) \
@@ -158,7 +163,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library):
 
 	run(cc + " " + ldflags + """ \
 		build/birdfont/*.o \
-		-L build/bin/ -l birdfont \
+		-Lbuild/bin/ -lbirdfont \
 		$(pkg-config --libs gee-1.0) \
 		$(pkg-config --libs libxml-2.0) \
 		$(pkg-config --libs gio-2.0) \

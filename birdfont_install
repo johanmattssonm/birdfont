@@ -5,6 +5,7 @@ import glob
 from optparse import OptionParser
 from scripts import config
 from scripts import version
+from scripts.run import run
 
 def install (file, dir):
 	f = dest + prefix + dir + '/'
@@ -14,8 +15,8 @@ def install (file, dir):
 	else:
 		f += file
 	print ("install: " + f)
-	subprocess.check_output ('install -d ' + dest + prefix + dir, shell=True)
-	subprocess.check_output ('install ' + file + ' ' + dest + prefix + dir + '/', shell=True)
+	run ('install -d ' + dest + prefix + dir)
+	run ('install ' + file + ' ' + dest + prefix + dir + '/')
 	installed.write (f + "\n")
 
 if not os.path.exists ("build/configured"):
@@ -59,16 +60,22 @@ install ('resources/linux/birdfont.png', '/share/icons/hicolor/48x48/apps')
 
 install ('build/bin/birdfont', '/bin')
 install ('build/bin/birdfont-export', '/bin')
-install ('build/bin/libbirdfont.so.' + version.SO_VERSION, '/lib')
-install ('build/bin/libbirdfont.so', '/lib')
 
+#library
+if os.path.isfile ('build/bin/libbirdfont.so.' + version.SO_VERSION):
+	install ('build/bin/libbirdfont.so.' + version.SO_VERSION, '/lib')
+	install ('build/bin/libbirdfont.so', '/lib')
+else:
+	install ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib', '/lib')
+	install ('build/bin/libbirdfont.dylib', '/lib')
+
+#manpages
 if not bsd_manpages:
     install ('build/birdfont.1.gz', '/share/man/man1')
     install ('build/birdfont-export.1.gz', '/share/man/man1')
 else:
     install ('resources/linux/birdfont.1', '/man/man1')
     install ('resources/linux/birdfont-export.1', '/man/man1')
-
 
 # translations
 for lang_dir in glob.glob('build/locale/*'):
