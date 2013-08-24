@@ -48,12 +48,13 @@ cc = options.cc
 cflags = options.cflags
 ldflags = options.ldflags
 library_cflags = options.cflags
-library_ldflags= options.ldflags
+library_ldflags = options.ldflags + " " + """-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,""" + prefix + """/lib/libbirdfont.dylib""" 
 library = "libbirdfont." + version.SO_VERSION + ".dylib"
+library_cflags = "-fno-common -fPIC " + cflags 
 
 configfile.write_config (prefix)
 compile_translations()
-build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
+build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, library)
 build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library)
 build.birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library)
 

@@ -434,6 +434,7 @@ public class KerningDisplay : FontDisplay {
 		glyph = font.get_glyph_by_name (range.get_char (0));
 		
 		if (glyph == null) {
+			warning ("Kerning range is not represented by a valid glyph.");
 			return;
 		}
 		

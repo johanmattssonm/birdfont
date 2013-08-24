@@ -33,11 +33,9 @@ public class KerningRange : Tool {
 		panel_press_action.connect ((selected, button, tx, ty) => {
 			KerningDisplay kerning_display = KerningDisplay.get_singleton ();
 			
-			if (button == 3) {
+			if (button == 3 || KeyBindings.modifier == CTRL) {
 				update_kerning_classes ();
-			}
-			
-			if (malformed) {
+			} else if (malformed) {
 				kerning_display.show_parse_error ();
 			} else if (button == 1 && !glyph_range.is_empty ()) {
 				kerning_display.add_range (glyph_range);

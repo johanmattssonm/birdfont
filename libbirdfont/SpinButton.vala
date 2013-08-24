@@ -220,8 +220,12 @@ public class SpinButton : Tool {
 		
 		cr.set_font_size (10);
 		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
-
-		cr.move_to (xt + text_x, yt + text_y);
+		
+		if (BirdFont.mac)  {
+			cr.move_to (xt + text_x + 2, yt + text_y);
+		} else {
+			cr.move_to (xt + text_x, yt + text_y);
+		}
 		
 		cr.show_text (get_display_value ());
 		
