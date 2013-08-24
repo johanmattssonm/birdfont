@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-04 21:47+0200\n"
-"PO-Revision-Date: 2013-08-02 12:31+0000\n"
+"POT-Creation-Date: 2013-08-24 23:37+0200\n"
+"PO-Revision-Date: 2013-08-19 07:56+0000\n"
 "Last-Translator: Wei <contact@huwei.name>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -16,51 +16,55 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1375446676.0\n"
+"X-POOTLE-MTIME: 1376898966.0\n"
 
-#: libbirdfont/Argument.vala:231
+#: libbirdfont/Argument.vala:234
 msgid "Usage"
 msgstr "用法"
 
-#: libbirdfont/Argument.vala:233
+#: libbirdfont/Argument.vala:236
 msgid "FILE"
 msgstr "FILE"
 
-#: libbirdfont/Argument.vala:233
+#: libbirdfont/Argument.vala:236
 msgid "OPTION"
 msgstr "OPTION"
 
-#: libbirdfont/Argument.vala:235
+#: libbirdfont/Argument.vala:238
 msgid "show coordinate in glyph view"
 msgstr "在字形视图中显示坐标"
 
-#: libbirdfont/Argument.vala:236
+#: libbirdfont/Argument.vala:239
 msgid "exit if a test case failes"
 msgstr "当测试案例失败后退出"
 
-#: libbirdfont/Argument.vala:237
+#: libbirdfont/Argument.vala:240
 msgid "treat warnings as fatal"
 msgstr "将警告当作错误"
 
-#: libbirdfont/Argument.vala:238
+#: libbirdfont/Argument.vala:241
 msgid "show this message"
 msgstr "显示这条消息"
 
-#: libbirdfont/Argument.vala:239
+#: libbirdfont/Argument.vala:242
 msgid "enable Machintosh customizations"
 msgstr "启用Mac电脑自定义"
 
-#: libbirdfont/Argument.vala:240
+#: libbirdfont/Argument.vala:243
+msgid "don't translate"
+msgstr ""
+
+#: libbirdfont/Argument.vala:244
 msgid "sleep between each command in test suite"
 msgstr "在测试程序的每条命令间休眠"
 
-#: libbirdfont/Argument.vala:241
+#: libbirdfont/Argument.vala:245
 msgid "run test case"
 msgstr "执行测试案例"
 
 #: libbirdfont/BackgroundSelection.vala:42
 msgid "Backgrounds"
-msgstr ""
+msgstr "背景"
 
 #: libbirdfont/BackgroundTool.vala:36
 msgid "Move, resize and rotate background image"
@@ -94,41 +98,45 @@ msgstr "无法找到输出目录"
 msgid "Writing"
 msgstr "正在写入"
 
+#: libbirdfont/CircleTool.vala:36
+msgid "Circle"
+msgstr ""
+
 #: libbirdfont/CutBackgroundTool.vala:34
 msgid "Crop background image"
 msgstr "剪裁背景图像"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
 msgid "Default language"
-msgstr ""
+msgstr "默认语言"
 
 #: libbirdfont/DefaultCharactersSet.vala:26
 msgid "Private use area"
-msgstr ""
+msgstr "私用空间"
 
 #: libbirdfont/DefaultCharactersSet.vala:28
 msgid "Chinese"
-msgstr ""
+msgstr "中文"
 
 #: libbirdfont/DefaultCharactersSet.vala:29
 msgid "English"
-msgstr ""
+msgstr "英语"
 
 #: libbirdfont/DefaultCharactersSet.vala:30
 msgid "Japanese"
-msgstr ""
+msgstr "日语"
 
 #: libbirdfont/DefaultCharactersSet.vala:31
 msgid "Javanese"
-msgstr ""
+msgstr "爪哇语"
 
 #: libbirdfont/DefaultCharactersSet.vala:32
 msgid "Russian"
-msgstr ""
+msgstr "俄语"
 
 #: libbirdfont/DefaultCharactersSet.vala:33
 msgid "Swedish"
-msgstr ""
+msgstr "瑞典语"
 
 #. / All lower case letters in alphabetic order separated by space
 #: libbirdfont/DefaultCharactersSet.vala:111
@@ -158,7 +166,7 @@ msgstr "样式"
 
 #: libbirdfont/DescriptionTab.vala:140
 msgid "Full name (name and style)"
-msgstr ""
+msgstr "全名（名称和样式）"
 
 #: libbirdfont/DescriptionTab.vala:141
 msgid "Unique identifier"
@@ -172,6 +180,164 @@ msgstr "版本"
 msgid "Copyright"
 msgstr "版权"
 
+#: libbirdfont/DrawingTools.vala:75
+msgid "Create quadratic Bézier curves"
+msgstr "创建二次贝塞尔曲线"
+
+#: libbirdfont/DrawingTools.vala:83
+msgid "Create cubic Bézier curves"
+msgstr "创建三次贝塞尔曲线"
+
+#: libbirdfont/DrawingTools.vala:91
+msgid "Quadratic path with two line handles"
+msgstr "双柄二次路径"
+
+#: libbirdfont/DrawingTools.vala:99
+#, fuzzy
+msgid "Convert selected points"
+msgstr "将此分段转换为直线"
+
+#: libbirdfont/DrawingTools.vala:108
+msgid "Tie curve handles for the selected edit point"
+msgstr "对选定编辑点连接曲柄"
+
+#: libbirdfont/DrawingTools.vala:128
+msgid "Symmetrical handles"
+msgstr "对称控制柄"
+
+#: libbirdfont/DrawingTools.vala:149
+msgid "Convert segment to line."
+msgstr "将此分段转换为直线"
+
+#: libbirdfont/DrawingTools.vala:157
+msgid "Merge paths"
+msgstr "合并路径"
+
+#: libbirdfont/DrawingTools.vala:164
+msgid "Create counter from outline"
+msgstr "从轮廓创建孔"
+
+#: libbirdfont/DrawingTools.vala:176
+msgid "Move to path to the bottom layer"
+msgstr "将路径移动到底层"
+
+#: libbirdfont/DrawingTools.vala:187
+msgid "Flip path vertically"
+msgstr "垂直翻转路径"
+
+#: libbirdfont/DrawingTools.vala:194
+msgid "Flip path horizontally"
+msgstr "水平翻转路径"
+
+#: libbirdfont/DrawingTools.vala:202
+msgid "Show full unicode characters set"
+msgstr "显示完整的Unicode字符集"
+
+#: libbirdfont/DrawingTools.vala:218
+msgid "Show default characters set"
+msgstr "显示默认字符集"
+
+#: libbirdfont/DrawingTools.vala:234
+msgid "Show all characters in the font"
+msgstr "显示字体中的全部字符"
+
+#: libbirdfont/DrawingTools.vala:248
+msgid "Delete selected glyph"
+msgstr "删除选定的字形"
+
+#: libbirdfont/DrawingTools.vala:303
+msgid "Show guidelines"
+msgstr "显示准则"
+
+#: libbirdfont/DrawingTools.vala:314
+msgid "Show guidelines for x-height and baseline"
+msgstr "显示x-高度线及底线"
+
+#: libbirdfont/DrawingTools.vala:329
+msgid "Show guidelines at top and bottom margin"
+msgstr "显示顶线及底部边缘线"
+
+#: libbirdfont/DrawingTools.vala:347
+msgid "Zoom in"
+msgstr "放大"
+
+#: libbirdfont/DrawingTools.vala:354
+msgid "Zoom out"
+msgstr "缩小"
+
+#: libbirdfont/DrawingTools.vala:361
+msgid "Zoom to scale 1:1"
+msgstr "缩放至1：1"
+
+#: libbirdfont/DrawingTools.vala:369
+msgid "Show full glyph"
+msgstr "显示完整字形"
+
+#: libbirdfont/DrawingTools.vala:376
+msgid "Zoom in at region boundries"
+msgstr "在区域范围内缩放"
+
+#: libbirdfont/DrawingTools.vala:383
+msgid "Zoom in background image"
+msgstr "缩放背景图像"
+
+#: libbirdfont/DrawingTools.vala:396
+msgid "Previous view"
+msgstr "上一个视图"
+
+#: libbirdfont/DrawingTools.vala:402
+msgid "Next view"
+msgstr "下一个视图"
+
+#: libbirdfont/DrawingTools.vala:416
+msgid "Set size for background image"
+msgstr "设置背景图像的大小"
+
+#: libbirdfont/DrawingTools.vala:446
+msgid "Show/hide background image"
+msgstr "显示或隐藏背景图像"
+
+#: libbirdfont/DrawingTools.vala:454
+msgid "Insert a new background image"
+msgstr "插入新的背景图像"
+
+#: libbirdfont/DrawingTools.vala:459
+msgid "Creating thumbnails"
+msgstr "创建缩略图"
+
+#: libbirdfont/DrawingTools.vala:478
+msgid "Set contrast for background image"
+msgstr "设置背景图像的对比度"
+
+#: libbirdfont/DrawingTools.vala:497
+msgid "Stroke color"
+msgstr "笔划颜色"
+
+#: libbirdfont/DrawingTools.vala:519
+msgid "Stroke width"
+msgstr "笔划宽度"
+
+#: libbirdfont/DrawingTools.vala:536
+msgid "Handle color"
+msgstr "柄颜色"
+
+#: libbirdfont/DrawingTools.vala:560
+msgid "Set precision"
+msgstr "设置精度"
+
+#: libbirdfont/DrawingTools.vala:735
+msgid "Set size for grid"
+msgstr "设置网格大小"
+
+#: libbirdfont/ExportTool.vala:505
+#, fuzzy
+msgid "Writing TTF and EOT files."
+msgstr "写入TTF及EOT文件\n"
+
+#: libbirdfont/ExportTool.vala:519
+msgid "Writing SVG file."
+msgstr ""
+
 #: libbirdfont/GridTool.vala:33
 msgid "Show grid"
 msgstr "显示网格"
@@ -180,21 +346,62 @@ msgstr "显示网格"
 msgid "Import"
 msgstr "导入"
 
+#: libbirdfont/KerningDisplay.vala:74
+msgid "The current kerning class is malformed."
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:75
+msgid "Add single characters separated by space and ranges on the form A-Z."
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:76
+msgid "Type “space” to kern the space character and “divis” to kern -."
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:215
+#, fuzzy
+msgid "Kerning:"
+msgstr "字距"
+
+#: libbirdfont/KerningList.vala:88
+#, fuzzy
+msgid "Kerning Pairs"
+msgstr "字距"
+
+#: libbirdfont/KerningRange.vala:49
+#, fuzzy
+msgid ""
+"Right click to edit the class and left click to kern glyphs in the class."
+msgstr "右键单击以增加新点，左键单击以移动点"
+
+#: libbirdfont/KerningRange.vala:82
+#, fuzzy
+msgid "Kerning class"
+msgstr "字距"
+
+#: libbirdfont/KerningRange.vala:82
+msgid "Set"
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:33
+msgid "Create new kerning class"
+msgstr ""
+
 #: libbirdfont/LanguageSelectionTab.vala:34
 msgid "Character set"
-msgstr ""
+msgstr "字符集"
 
 #: libbirdfont/LanguageSelectionTab.vala:42
 msgid "Select default character set"
-msgstr ""
+msgstr "选择默认字符集"
 
-#: libbirdfont/MainWindow.vala:109
+#: libbirdfont/MainWindow.vala:113
 msgid "Glyph sequence"
 msgstr "字形序列"
 
-#: libbirdfont/MainWindow.vala:109
+#: libbirdfont/MainWindow.vala:113
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #: libbirdfont/MenuTab.vala:78 libbirdfont/MenuTab.vala:157
 msgid "Recover"
@@ -206,7 +413,7 @@ msgstr "全部删除"
 
 #: libbirdfont/MenuTab.vala:155
 msgid "Files"
-msgstr ""
+msgstr "文件"
 
 #: libbirdfont/MenuTab.vala:156
 msgid "Recent files"
@@ -216,33 +423,29 @@ msgstr "最近打开的文件"
 msgid "Save"
 msgstr "保存"
 
-#: libbirdfont/MenuTab.vala:444
+#: libbirdfont/MenuTab.vala:446
 msgid "Open"
 msgstr "打开"
-
-#: libbirdfont/MergeTool.vala:20
-msgid "Merge paths"
-msgstr "合并路径"
 
 #: libbirdfont/MoveTool.vala:42
 msgid "Move paths"
 msgstr "移动路径"
 
-#: libbirdfont/OverView.vala:334
+#: libbirdfont/OverView.vala:348
 msgid "No glyphs in this view."
 msgstr "在此视图中没有字形。"
 
-#: libbirdfont/OverView.vala:849
+#: libbirdfont/OverView.vala:867
 msgid "See also:"
 msgstr "另见："
 
 #: libbirdfont/OverWriteDialogListener.vala:24
 msgid "Overwrite TTF file?"
-msgstr ""
+msgstr "覆盖 TTF 文件？"
 
 #: libbirdfont/OverWriteDialogListener.vala:25
 msgid "Overwrite"
-msgstr ""
+msgstr "覆盖"
 
 #: libbirdfont/OverWriteDialogListener.vala:26
 msgid "Cancel"
@@ -250,19 +453,23 @@ msgstr "取消"
 
 #: libbirdfont/OverWriteDialogListener.vala:27
 msgid "Yes, don't ask again."
-msgstr ""
+msgstr "是的，不再询问"
 
-#: libbirdfont/PenTool.vala:56
+#: libbirdfont/PenTool.vala:59
 msgid "Right click or use left command key and click to add new points"
-msgstr ""
+msgstr "右键单击或使用左侧 command 键加单击以增加新点"
 
-#: libbirdfont/PenTool.vala:58
+#: libbirdfont/PenTool.vala:61
 msgid "Right click to add new points, left click to move points"
 msgstr "右键单击以增加新点，左键单击以移动点"
 
-#: libbirdfont/PenTool.vala:61
+#: libbirdfont/PenTool.vala:64
 msgid "and double click to add new point on path."
 msgstr "双击可以在已有路径上增加新点。"
+
+#: libbirdfont/RectangleTool.vala:30
+msgid "Rectangle"
+msgstr ""
 
 #: libbirdfont/SaveDialogListener.vala:27
 msgid "Save?"
@@ -284,317 +491,207 @@ msgstr "字距"
 msgid "Menu"
 msgstr "菜单"
 
-#: libbirdfont/Toolbox.vala:87
-msgid "Create quadratic Bézier curves"
-msgstr "创建二次贝塞尔曲线"
-
-#: libbirdfont/Toolbox.vala:95
-msgid "Create cubic Bézier curves"
-msgstr "创建三次贝塞尔曲线"
-
-#: libbirdfont/Toolbox.vala:103
-msgid "Quadratic path with two line handles"
-msgstr "两柄二次路径"
-
-#: libbirdfont/Toolbox.vala:111
-msgid "Tie curve handles for the selected edit point"
-msgstr "对选定编辑点连接曲柄"
-
-#: libbirdfont/Toolbox.vala:131
-msgid "Symmetrical handles"
-msgstr ""
-
-#: libbirdfont/Toolbox.vala:152
-msgid "Convert segment to line."
-msgstr ""
-
-#: libbirdfont/Toolbox.vala:163
-msgid "Create counter from outline"
-msgstr "从轮廓创建计数器"
-
-#: libbirdfont/Toolbox.vala:175
-msgid "Move to path to the bottom layer"
-msgstr "将路径移动到底层"
-
-#: libbirdfont/Toolbox.vala:186
-msgid "Flip path vertically"
-msgstr ""
-
-#: libbirdfont/Toolbox.vala:193
-msgid "Flip path horizontally"
-msgstr ""
-
-#: libbirdfont/Toolbox.vala:203
-msgid "Set precision"
-msgstr "设置精度"
-
-#: libbirdfont/Toolbox.vala:228
-msgid "Show full unicode characters set"
-msgstr "显示完整的Unicode字符集"
-
-#: libbirdfont/Toolbox.vala:244
-msgid "Show default characters set"
-msgstr "显示默认字符集"
-
-#: libbirdfont/Toolbox.vala:260
-msgid "Show all characters in the font"
-msgstr ""
-
-#: libbirdfont/Toolbox.vala:274
-msgid "Delete selected glyph"
-msgstr "删除选定的字形"
-
-#: libbirdfont/Toolbox.vala:329
-msgid "Show guidelines"
-msgstr "显示准则"
-
-#: libbirdfont/Toolbox.vala:340
-msgid "Show guidelines for x-height and baseline"
-msgstr "显示x-高度线及底线"
-
-#: libbirdfont/Toolbox.vala:355
-msgid "Show guidelines at top and bottom margin"
-msgstr "显示顶线及底部边缘线"
-
-#: libbirdfont/Toolbox.vala:373
-msgid "Zoom in"
-msgstr "放大"
-
-#: libbirdfont/Toolbox.vala:380
-msgid "Zoom out"
-msgstr "缩小"
-
-#: libbirdfont/Toolbox.vala:387
-msgid "Zoom to scale 1:1"
-msgstr "缩放至1：1"
-
-#: libbirdfont/Toolbox.vala:395
-msgid "Show full glyph"
-msgstr "显示完整字形"
-
-#: libbirdfont/Toolbox.vala:402
-msgid "Zoom in at region boundries"
-msgstr "在区域范围内缩放"
-
-#: libbirdfont/Toolbox.vala:409
-msgid "Zoom in background image"
-msgstr "缩放背景图像"
-
-#: libbirdfont/Toolbox.vala:422
-msgid "Previous view"
-msgstr "上一个视图"
-
-#: libbirdfont/Toolbox.vala:428
-msgid "Next view"
-msgstr "下一个视图"
-
-#: libbirdfont/Toolbox.vala:435
-msgid "Set size for background image"
-msgstr "设置背景图像的大小"
-
-#: libbirdfont/Toolbox.vala:465
-msgid "Show/hide background image"
-msgstr "显示或隐藏背景图像"
-
-#: libbirdfont/Toolbox.vala:473
-msgid "Insert a new background image"
-msgstr "插入新的背景图像"
-
-#: libbirdfont/Toolbox.vala:478
-msgid "Creating thumbnails"
-msgstr "创建缩略图"
-
-#: libbirdfont/Toolbox.vala:497
-msgid "Set contrast for background image"
-msgstr "设置背景图像的对比度"
-
-#: libbirdfont/Toolbox.vala:516
-msgid "Stroke color"
-msgstr "笔划颜色"
-
-#: libbirdfont/Toolbox.vala:538
-msgid "Stroke width"
-msgstr "笔划宽度"
-
-#: libbirdfont/Toolbox.vala:555
-msgid "Handle color"
-msgstr "柄颜色"
-
-#: libbirdfont/Toolbox.vala:803
-msgid "Set size for grid"
-msgstr "设置网格大小"
-
 #: libbirdfont/VersionList.vala:29
 msgid "New version"
 msgstr "新版本"
 
-#: birdfont/GtkWindow.vala:463
+#: birdfont/GtkWindow.vala:466
 msgid "_New"
 msgstr "新建（_N）"
 
-#: birdfont/GtkWindow.vala:468
+#: birdfont/GtkWindow.vala:471
 msgid "_Open"
 msgstr "打开（_O）"
 
-#: birdfont/GtkWindow.vala:473
+#: birdfont/GtkWindow.vala:476
 msgid "_Save"
 msgstr "保存（_S）"
 
-#: birdfont/GtkWindow.vala:478
+#: birdfont/GtkWindow.vala:481
 msgid "Save _as"
 msgstr "另存为（_A）"
 
-#: birdfont/GtkWindow.vala:482
+#: birdfont/GtkWindow.vala:485
 msgid "_Export"
 msgstr "导出（_E）"
 
-#: birdfont/GtkWindow.vala:488
+#: birdfont/GtkWindow.vala:491
 msgid "_Preview"
 msgstr "预览（_P）"
 
-#: birdfont/GtkWindow.vala:494
+#: birdfont/GtkWindow.vala:497
 msgid "Name and _Description"
-msgstr ""
+msgstr "名称和描述（_D）"
 
-#: birdfont/GtkWindow.vala:498
-msgid "_Kerning"
-msgstr "字距（_K）"
-
-#: birdfont/GtkWindow.vala:503
+#: birdfont/GtkWindow.vala:501
 msgid "Select _Character Set"
-msgstr ""
+msgstr "选择字符集（_C）"
 
-#: birdfont/GtkWindow.vala:507
+#: birdfont/GtkWindow.vala:505
 msgid "_Quit"
 msgstr "退出（_Q）"
 
-#: birdfont/GtkWindow.vala:512
+#: birdfont/GtkWindow.vala:510
 msgid "_Undo"
 msgstr "撤销（_U）"
 
-#: birdfont/GtkWindow.vala:517
+#: birdfont/GtkWindow.vala:515
 msgid "_Copy"
 msgstr "复制（_C）"
 
-#: birdfont/GtkWindow.vala:522
+#: birdfont/GtkWindow.vala:520
 msgid "_Paste"
 msgstr "粘贴（_P）"
 
-#: birdfont/GtkWindow.vala:527
+#: birdfont/GtkWindow.vala:525
 msgid "Select All Pa_ths"
-msgstr ""
+msgstr "选择所有路径（_T）"
 
-#: birdfont/GtkWindow.vala:535
+#: birdfont/GtkWindow.vala:533
 msgid "_Export Glyph as SVG"
-msgstr ""
+msgstr "导出字形为SVG文件（_E）"
 
-#: birdfont/GtkWindow.vala:539
+#: birdfont/GtkWindow.vala:537
 msgid "_Import SVG"
 msgstr "导入SVG文件（_I）"
 
-#: birdfont/GtkWindow.vala:544
+#: birdfont/GtkWindow.vala:542
 msgid "Close _Path"
-msgstr ""
+msgstr "关闭路径（_P）"
 
-#: birdfont/GtkWindow.vala:549
+#: birdfont/GtkWindow.vala:547
 msgid "_Glyph Sequence"
-msgstr ""
+msgstr "字形序列（_G）"
+
+#: birdfont/GtkWindow.vala:552
+#, fuzzy
+msgid "Set Glyph _Background"
+msgstr "背景"
 
 #: birdfont/GtkWindow.vala:556
+msgid "_Remove Glyph Background"
+msgstr ""
+
+#: birdfont/GtkWindow.vala:562
 msgid "_Select Point Above"
-msgstr ""
+msgstr "选择上层点（_S）"
 
-#: birdfont/GtkWindow.vala:560
+#: birdfont/GtkWindow.vala:566
+#, fuzzy
 msgid "Select _Next Point"
-msgstr ""
+msgstr "选择下个点（_N）"
 
-#: birdfont/GtkWindow.vala:564
+#: birdfont/GtkWindow.vala:570
 msgid "Select _Previous Point"
-msgstr ""
+msgstr "选择上个点（_P）"
 
-#: birdfont/GtkWindow.vala:568
+#: birdfont/GtkWindow.vala:574
 msgid "Select Point _Below"
-msgstr ""
+msgstr "选择下层点"
 
-#: birdfont/GtkWindow.vala:573
+#: birdfont/GtkWindow.vala:579
+#, fuzzy
 msgid "_Next Tab"
-msgstr ""
+msgstr "下个标签（_N）"
 
-#: birdfont/GtkWindow.vala:586
+#: birdfont/GtkWindow.vala:592
+#, fuzzy
 msgid "_Previous Tab"
-msgstr ""
+msgstr "上个标签（_P）"
 
-#: birdfont/GtkWindow.vala:599
+#: birdfont/GtkWindow.vala:605
 msgid "_Close tab"
 msgstr "关闭标签（_C）"
 
-#: birdfont/GtkWindow.vala:613
+#: birdfont/GtkWindow.vala:619
+#, fuzzy
 msgid "Close _All Tabs"
-msgstr ""
+msgstr "关闭所有标签（_A）"
 
-#: birdfont/GtkWindow.vala:621
+#: birdfont/GtkWindow.vala:627
 msgid "_Create Path"
-msgstr ""
+msgstr "创建路径（_C）"
 
-#: birdfont/GtkWindow.vala:628
+#: birdfont/GtkWindow.vala:634
 msgid "_Zoom"
 msgstr "创建孔路径（_C）"
 
-#: birdfont/GtkWindow.vala:634
+#: birdfont/GtkWindow.vala:640
 msgid "_Create Counter Path"
-msgstr ""
+msgstr "创建孔路径（_C）"
 
-#: birdfont/GtkWindow.vala:641
+#: birdfont/GtkWindow.vala:647
 msgid "_Move"
 msgstr "移动（_M）"
 
-#: birdfont/GtkWindow.vala:648
+#: birdfont/GtkWindow.vala:654
 msgid "Show _full unicode characters set"
 msgstr "显示完整Unicode字符集（_F）"
 
-#: birdfont/GtkWindow.vala:655
+#: birdfont/GtkWindow.vala:661
 msgid "Show De_fault Characters Set"
-msgstr ""
+msgstr "显示默认字符集（_F）"
 
-#: birdfont/GtkWindow.vala:662
+#: birdfont/GtkWindow.vala:668
+#, fuzzy
 msgid "Show Characters in Font"
-msgstr ""
-
-#: birdfont/GtkWindow.vala:669
-msgid "Add New _Grid Item"
-msgstr ""
+msgstr "显示字体中所有字符"
 
 #: birdfont/GtkWindow.vala:675
-msgid "Remove Gr_id Item"
-msgstr ""
+#, fuzzy
+msgid "Add New _Grid Item"
+msgstr "添加新网格（_G）"
 
 #: birdfont/GtkWindow.vala:681
+#, fuzzy
+msgid "Remove Gr_id Item"
+msgstr "删除此网格（_I）"
+
+#: birdfont/GtkWindow.vala:687
+#, fuzzy
 msgid "_Zoom In"
-msgstr ""
+msgstr "放大（_Z）"
 
-#: birdfont/GtkWindow.vala:688
+#: birdfont/GtkWindow.vala:694
+#, fuzzy
 msgid "Zoom _Out"
-msgstr ""
+msgstr "缩小（_O）"
 
-#: birdfont/GtkWindow.vala:695
+#: birdfont/GtkWindow.vala:701
 msgid "Zoom to _Scale 1:1"
+msgstr "缩放至 1:1（_S）"
+
+#: birdfont/GtkWindow.vala:709
+msgid "Show Kerning _Tab"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:703
+#: birdfont/GtkWindow.vala:716
+msgid "_List Kerning Pairs"
+msgstr ""
+
+#: birdfont/GtkWindow.vala:722
+msgid "_Remove All Kerning Pairs"
+msgstr ""
+
+#: birdfont/GtkWindow.vala:729
 msgid "_File"
 msgstr "文件（_F）"
 
-#: birdfont/GtkWindow.vala:706
+#: birdfont/GtkWindow.vala:732
 msgid "_Edit"
 msgstr "编辑（_E）"
 
-#: birdfont/GtkWindow.vala:709
+#: birdfont/GtkWindow.vala:735
 msgid "_Tab"
 msgstr "标签（_T）"
 
-#: birdfont/GtkWindow.vala:712
+#: birdfont/GtkWindow.vala:738
 msgid "T_ool"
 msgstr "工具（_T）"
+
+#: birdfont/GtkWindow.vala:741
+msgid "_Kerning"
+msgstr "字距（_K）"
 
 #~ msgid "Full name (name & style)"
 #~ msgstr "全名(名字和样式)"
@@ -724,9 +821,6 @@ msgstr "工具（_T）"
 
 #~ msgid "Show help lines at top and bottom margin"
 #~ msgstr "显示顶线及底部边缘线"
-
-#~ msgid "Right click to add new point, left click to move points"
-#~ msgstr "右键单击以增加新点，左键单击以移动点"
 
 #~ msgid "and double click to add new point on path"
 #~ msgstr "双击以在已有路径上增加新点"
