@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2013 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -99,7 +99,7 @@ public class TooltipArea : GLib.Object {
 		cr.save ();
 		cr.rectangle (0, 0, alloc.width, alloc.height);
 		cr.set_line_width (0);
-		cr.set_source_rgba (183/255.0, 200/255.0, 223/255.0, 1);
+		cr.set_source_rgba (200/255.0, 200/255.0, 200/255.0, 1);
 		cr.fill_preserve ();
 		cr.stroke ();
 		cr.restore ();
@@ -107,7 +107,7 @@ public class TooltipArea : GLib.Object {
 		cr.save ();
 		cr.rectangle (0, 0, alloc.width, 1);
 		cr.set_line_width (0);
-		cr.set_source_rgba (107/255.0, 127/255.0, 168/255.0, 1);
+		cr.set_source_rgba (127/255.0, 127/255.0, 127/255.0, 1);
 		cr.fill_preserve ();
 		cr.stroke ();
 		cr.restore ();
@@ -115,7 +115,7 @@ public class TooltipArea : GLib.Object {
 		cr.save ();
 		cr.rectangle (0, 1, alloc.width, 1);
 		cr.set_line_width (0);
-		cr.set_source_rgba (145/255.0, 160/255.0, 190/255.0, 1);
+		cr.set_source_rgba (170/255.0, 170/255.0, 170/255.0, 1);
 		cr.fill_preserve ();
 		cr.stroke ();
 		cr.restore ();
@@ -124,7 +124,7 @@ public class TooltipArea : GLib.Object {
 		w = (int) (alloc.width * ProgressBar.get_progress ());
 		cr.rectangle (0, 2, w, alloc.height - 2);
 		cr.set_line_width (0);
-		cr.set_source_rgba (145/255.0, 160/255.0, 190/255.0, 1);
+		cr.set_source_rgba (170/255.0, 170/255.0, 170/255.0, 1);
 		cr.fill_preserve ();
 		cr.stroke ();
 		cr.restore ();
