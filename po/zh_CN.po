@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-24 23:37+0200\n"
+"POT-Creation-Date: 2013-08-25 18:20+0200\n"
 "PO-Revision-Date: 2013-08-19 07:56+0000\n"
 "Last-Translator: Wei <contact@huwei.name>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,9 +193,8 @@ msgid "Quadratic path with two line handles"
 msgstr "双柄二次路径"
 
 #: libbirdfont/DrawingTools.vala:99
-#, fuzzy
 msgid "Convert selected points"
-msgstr "将此分段转换为直线"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:108
 msgid "Tie curve handles for the selected edit point"
@@ -317,22 +316,26 @@ msgstr "笔划颜色"
 msgid "Stroke width"
 msgstr "笔划宽度"
 
-#: libbirdfont/DrawingTools.vala:536
+#: libbirdfont/DrawingTools.vala:537
 msgid "Handle color"
 msgstr "柄颜色"
 
-#: libbirdfont/DrawingTools.vala:560
+#: libbirdfont/DrawingTools.vala:561
 msgid "Set precision"
 msgstr "设置精度"
 
-#: libbirdfont/DrawingTools.vala:735
+#: libbirdfont/DrawingTools.vala:585
+#, fuzzy
+msgid "Show all control point handles or only handles for the selected points."
+msgstr "对选定编辑点连接曲柄"
+
+#: libbirdfont/DrawingTools.vala:744
 msgid "Set size for grid"
 msgstr "设置网格大小"
 
 #: libbirdfont/ExportTool.vala:505
-#, fuzzy
 msgid "Writing TTF and EOT files."
-msgstr "写入TTF及EOT文件\n"
+msgstr ""
 
 #: libbirdfont/ExportTool.vala:519
 msgid "Writing SVG file."
@@ -359,25 +362,21 @@ msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr ""
 
 #: libbirdfont/KerningDisplay.vala:215
-#, fuzzy
 msgid "Kerning:"
-msgstr "字距"
+msgstr ""
 
 #: libbirdfont/KerningList.vala:88
-#, fuzzy
 msgid "Kerning Pairs"
-msgstr "字距"
+msgstr ""
 
 #: libbirdfont/KerningRange.vala:49
-#, fuzzy
 msgid ""
 "Right click to edit the class and left click to kern glyphs in the class."
-msgstr "右键单击以增加新点，左键单击以移动点"
+msgstr ""
 
 #: libbirdfont/KerningRange.vala:82
-#, fuzzy
 msgid "Kerning class"
-msgstr "字距"
+msgstr ""
 
 #: libbirdfont/KerningRange.vala:82
 msgid "Set"
@@ -495,201 +494,200 @@ msgstr "菜单"
 msgid "New version"
 msgstr "新版本"
 
-#: birdfont/GtkWindow.vala:466
+#: birdfont/GtkWindow.vala:474
 msgid "_New"
 msgstr "新建（_N）"
 
-#: birdfont/GtkWindow.vala:471
+#: birdfont/GtkWindow.vala:479
 msgid "_Open"
 msgstr "打开（_O）"
 
-#: birdfont/GtkWindow.vala:476
+#: birdfont/GtkWindow.vala:484
 msgid "_Save"
 msgstr "保存（_S）"
 
-#: birdfont/GtkWindow.vala:481
+#: birdfont/GtkWindow.vala:489
 msgid "Save _as"
 msgstr "另存为（_A）"
 
-#: birdfont/GtkWindow.vala:485
+#: birdfont/GtkWindow.vala:493
 msgid "_Export"
 msgstr "导出（_E）"
 
-#: birdfont/GtkWindow.vala:491
+#: birdfont/GtkWindow.vala:499
 msgid "_Preview"
 msgstr "预览（_P）"
 
-#: birdfont/GtkWindow.vala:497
+#: birdfont/GtkWindow.vala:505
 msgid "Name and _Description"
 msgstr "名称和描述（_D）"
 
-#: birdfont/GtkWindow.vala:501
+#: birdfont/GtkWindow.vala:509
 msgid "Select _Character Set"
 msgstr "选择字符集（_C）"
 
-#: birdfont/GtkWindow.vala:505
+#: birdfont/GtkWindow.vala:513
 msgid "_Quit"
 msgstr "退出（_Q）"
 
-#: birdfont/GtkWindow.vala:510
+#: birdfont/GtkWindow.vala:518
 msgid "_Undo"
 msgstr "撤销（_U）"
 
-#: birdfont/GtkWindow.vala:515
+#: birdfont/GtkWindow.vala:523
 msgid "_Copy"
 msgstr "复制（_C）"
 
-#: birdfont/GtkWindow.vala:520
+#: birdfont/GtkWindow.vala:528
 msgid "_Paste"
 msgstr "粘贴（_P）"
 
-#: birdfont/GtkWindow.vala:525
+#: birdfont/GtkWindow.vala:533
 msgid "Select All Pa_ths"
 msgstr "选择所有路径（_T）"
 
-#: birdfont/GtkWindow.vala:533
+#: birdfont/GtkWindow.vala:541
 msgid "_Export Glyph as SVG"
 msgstr "导出字形为SVG文件（_E）"
 
-#: birdfont/GtkWindow.vala:537
+#: birdfont/GtkWindow.vala:545
 msgid "_Import SVG"
 msgstr "导入SVG文件（_I）"
 
-#: birdfont/GtkWindow.vala:542
+#: birdfont/GtkWindow.vala:550
 msgid "Close _Path"
 msgstr "关闭路径（_P）"
 
-#: birdfont/GtkWindow.vala:547
+#: birdfont/GtkWindow.vala:555
 msgid "_Glyph Sequence"
 msgstr "字形序列（_G）"
 
-#: birdfont/GtkWindow.vala:552
-#, fuzzy
+#: birdfont/GtkWindow.vala:560
 msgid "Set Glyph _Background"
-msgstr "背景"
+msgstr ""
 
-#: birdfont/GtkWindow.vala:556
+#: birdfont/GtkWindow.vala:564
 msgid "_Remove Glyph Background"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:562
+#: birdfont/GtkWindow.vala:570
 msgid "_Select Point Above"
 msgstr "选择上层点（_S）"
 
-#: birdfont/GtkWindow.vala:566
+#: birdfont/GtkWindow.vala:574
 #, fuzzy
 msgid "Select _Next Point"
 msgstr "选择下个点（_N）"
 
-#: birdfont/GtkWindow.vala:570
+#: birdfont/GtkWindow.vala:578
 msgid "Select _Previous Point"
 msgstr "选择上个点（_P）"
 
-#: birdfont/GtkWindow.vala:574
+#: birdfont/GtkWindow.vala:582
 msgid "Select Point _Below"
 msgstr "选择下层点"
 
-#: birdfont/GtkWindow.vala:579
+#: birdfont/GtkWindow.vala:587
 #, fuzzy
 msgid "_Next Tab"
 msgstr "下个标签（_N）"
 
-#: birdfont/GtkWindow.vala:592
+#: birdfont/GtkWindow.vala:600
 #, fuzzy
 msgid "_Previous Tab"
 msgstr "上个标签（_P）"
 
-#: birdfont/GtkWindow.vala:605
+#: birdfont/GtkWindow.vala:613
 msgid "_Close tab"
 msgstr "关闭标签（_C）"
 
-#: birdfont/GtkWindow.vala:619
+#: birdfont/GtkWindow.vala:627
 #, fuzzy
 msgid "Close _All Tabs"
 msgstr "关闭所有标签（_A）"
 
-#: birdfont/GtkWindow.vala:627
+#: birdfont/GtkWindow.vala:635
 msgid "_Create Path"
 msgstr "创建路径（_C）"
 
-#: birdfont/GtkWindow.vala:634
+#: birdfont/GtkWindow.vala:642
 msgid "_Zoom"
 msgstr "创建孔路径（_C）"
 
-#: birdfont/GtkWindow.vala:640
+#: birdfont/GtkWindow.vala:648
 msgid "_Create Counter Path"
 msgstr "创建孔路径（_C）"
 
-#: birdfont/GtkWindow.vala:647
+#: birdfont/GtkWindow.vala:655
 msgid "_Move"
 msgstr "移动（_M）"
 
-#: birdfont/GtkWindow.vala:654
+#: birdfont/GtkWindow.vala:662
 msgid "Show _full unicode characters set"
 msgstr "显示完整Unicode字符集（_F）"
 
-#: birdfont/GtkWindow.vala:661
+#: birdfont/GtkWindow.vala:669
 msgid "Show De_fault Characters Set"
 msgstr "显示默认字符集（_F）"
 
-#: birdfont/GtkWindow.vala:668
+#: birdfont/GtkWindow.vala:676
 #, fuzzy
 msgid "Show Characters in Font"
 msgstr "显示字体中所有字符"
 
-#: birdfont/GtkWindow.vala:675
+#: birdfont/GtkWindow.vala:683
 #, fuzzy
 msgid "Add New _Grid Item"
 msgstr "添加新网格（_G）"
 
-#: birdfont/GtkWindow.vala:681
+#: birdfont/GtkWindow.vala:689
 #, fuzzy
 msgid "Remove Gr_id Item"
 msgstr "删除此网格（_I）"
 
-#: birdfont/GtkWindow.vala:687
+#: birdfont/GtkWindow.vala:695
 #, fuzzy
 msgid "_Zoom In"
 msgstr "放大（_Z）"
 
-#: birdfont/GtkWindow.vala:694
+#: birdfont/GtkWindow.vala:702
 #, fuzzy
 msgid "Zoom _Out"
 msgstr "缩小（_O）"
 
-#: birdfont/GtkWindow.vala:701
+#: birdfont/GtkWindow.vala:709
 msgid "Zoom to _Scale 1:1"
 msgstr "缩放至 1:1（_S）"
 
-#: birdfont/GtkWindow.vala:709
+#: birdfont/GtkWindow.vala:717
 msgid "Show Kerning _Tab"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:716
+#: birdfont/GtkWindow.vala:724
 msgid "_List Kerning Pairs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:722
+#: birdfont/GtkWindow.vala:730
 msgid "_Remove All Kerning Pairs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:729
+#: birdfont/GtkWindow.vala:737
 msgid "_File"
 msgstr "文件（_F）"
 
-#: birdfont/GtkWindow.vala:732
+#: birdfont/GtkWindow.vala:740
 msgid "_Edit"
 msgstr "编辑（_E）"
 
-#: birdfont/GtkWindow.vala:735
+#: birdfont/GtkWindow.vala:743
 msgid "_Tab"
 msgstr "标签（_T）"
 
-#: birdfont/GtkWindow.vala:738
+#: birdfont/GtkWindow.vala:746
 msgid "T_ool"
 msgstr "工具（_T）"
 
-#: birdfont/GtkWindow.vala:741
+#: birdfont/GtkWindow.vala:749
 msgid "_Kerning"
 msgstr "字距（_K）"
 
@@ -821,6 +819,9 @@ msgstr "字距（_K）"
 
 #~ msgid "Show help lines at top and bottom margin"
 #~ msgstr "显示顶线及底部边缘线"
+
+#~ msgid "Right click to add new point, left click to move points"
+#~ msgstr "右键单击以增加新点，左键单击以移动点"
 
 #~ msgid "and double click to add new point on path"
 #~ msgstr "双击以在已有路径上增加新点"
