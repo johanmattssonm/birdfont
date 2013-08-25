@@ -431,9 +431,6 @@ public class TabBar : GLib.Object {
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 		
 		if (tab_width < 0) {
-			//cr.text_extents (display_item.get_name (), out te); // this is not a good estimation, pango might solve it
-			//tab_width = te.width + 30;
-			
 			tab_width = 9 * display_item.get_name ().char_count ();
 			tab_width += 30;
 		}
@@ -485,18 +482,9 @@ public class TabBar : GLib.Object {
 		
 	}
 	
-	// this can be removed when tabs are not referenced by name
+	// translation is done here since tabs are selected by name
 	string translate (string s) {
-		switch (s) {
-			case "Overview":
-				return _("Overview");
-			case "Kerning":
-				return _("Kerning");
-			case "Menu":
-				return _("Menu");
-			default:
-				return s;
-		}
+		return _(s);
 	}
 	
 	private void draw_tabs (Context cr) {

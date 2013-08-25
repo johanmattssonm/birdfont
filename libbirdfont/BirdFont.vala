@@ -119,12 +119,12 @@ public static int run_export (string[] arg) {
 	}
 
 	if (!specific_formats || write_svg) {
-		print (_("Writing") + @" $(BirdFont.current_font.get_name ()).svg to $output_directory\n");
+		print (@"Writing $(BirdFont.current_font.get_name ()).svg to $output_directory\n");
 		ExportTool.export_svg_font_path (File.new_for_path (output_directory));
 	}
 
 	if (!specific_formats || write_ttf) {
-		print (_("Writing") + @" $(BirdFont.current_font.get_name ()).ttf to $output_directory\n");
+		print (@"Writing $(BirdFont.current_font.get_name ()).ttf to $output_directory\n");
 		ExportTool.export_ttf_font_path (File.new_for_path (output_directory), false);
 	}
 	

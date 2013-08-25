@@ -191,7 +191,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 				
 		MainWindow.tabs.add_unique_tab (MainWindow.menu_tab, 60, true);
-		MainWindow.tabs.select_tab_name ("Menu");
+		MainWindow.tabs.select_tab_name ("Files");
 		
 		canvas_box = new HBox (false, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);

@@ -33,10 +33,11 @@ public static int main (string[] arg) {
 
 	Gtk.init (ref arg);
 	parse_gtk_rc ();
-
-	native_window = new GtkWindow ("birdfont");	
+	
 	window = new MainWindow ();
 	
+	native_window = new GtkWindow ("birdfont");	
+
 	window.set_native (native_window);
 	native_window.init ();
 
