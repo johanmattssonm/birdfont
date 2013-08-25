@@ -1520,6 +1520,21 @@ public class PenTool : Tool {
 			selected.set_selected (true);
 		}
 	}
+	
+	public static void update_selected_points () {
+		Glyph g = MainWindow.get_current_glyph ();
+		while (selected_points.length () > 0) {
+			selected_points.remove_link (selected_points.first ());
+		}
+		
+		foreach (Path p in g.path_list) {
+			foreach (EditPoint ep in p.points) {
+				if (ep.is_selected ()) {
+					selected_points.append (ep);
+				}
+			}
+		}
+	}
 }
 
 }

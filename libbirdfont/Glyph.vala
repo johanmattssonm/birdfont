@@ -1500,6 +1500,8 @@ public class Glyph : FontDisplay {
 		g.ligature = ligature;
 		g.substitution = substitution;
 		
+		g.open = open;
+		
 		return g;
 	}
 
@@ -1522,6 +1524,8 @@ public class Glyph : FontDisplay {
 		set_glyph_data (g);
 		
 		undo_list.remove_link (undo_list.last ());
+
+		PenTool.update_selected_points ();
 	}
 	
 	void set_glyph_data (Glyph g) {
@@ -1548,10 +1552,7 @@ public class Glyph : FontDisplay {
 		foreach (Path p in g.active_paths) {
 			add_active_path (p);
 		}
-		
-		open_path ();
-		close_path ();
-		
+
 		redraw_area (0, 0, allocation.width, allocation.height);		
 	}
 	
