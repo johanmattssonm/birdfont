@@ -590,6 +590,38 @@ public class DrawingTools : ToolCollection  {
 		});
 		style_tools.add_tool (show_all_line_handles);
 
+		// fill color
+		ColorTool fill_color = new ColorTool (_("Object color"));
+		fill_color.color_updated.connect (() => {
+			Path.fill_color_r = fill_color.color_r;
+			Path.fill_color_g = fill_color.color_g;
+			Path.fill_color_b = fill_color.color_b;
+			Path.fill_color_a = fill_color.color_a;
+
+			Preferences.set ("fill_color_r", @"$(Path.fill_color_r)");
+			Preferences.set ("fill_color_g", @"$(Path.fill_color_g)");
+			Preferences.set ("fill_color_b", @"$(Path.fill_color_b)");
+			Preferences.set ("fill_color_a", @"$(Path.fill_color_a)");
+
+			Glyph g = MainWindow.get_current_glyph ();
+			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+		});
+		fill_color.set_r (double.parse (Preferences.get ("fill_color_r")));
+		fill_color.set_g (double.parse (Preferences.get ("fill_color_g")));
+		fill_color.set_b (double.parse (Preferences.get ("fill_color_b")));
+		fill_color.set_a (double.parse (Preferences.get ("fill_color_a")));
+		style_tools.add_tool (fill_color);
+
+		Tool fill_open_path = new Tool ("fill_open_path", _("Set fill color for open paths."));
+		fill_open_path.select_action.connect((self) => {
+			Path.fill_open_path = !Path.fill_open_path;
+			Glyph g = MainWindow.get_current_glyph ();
+			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
+		});
+		style_tools.add_tool (fill_open_path);
+		
+		// FIXME transparency on windows
+
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
 		edit_point_modifiers.set_open (true);

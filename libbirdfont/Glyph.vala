@@ -1333,7 +1333,16 @@ public class Glyph : FontDisplay {
 			Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () + baseline);
 			cr.restore ();
 		}
-		
+
+		if (is_open () && Path.fill_open_path) {
+			foreach (unowned Path p in path_list) {
+				cr.save ();
+				cr.set_source_rgba (Path.fill_color_r, Path.fill_color_g, Path.fill_color_b, Path.fill_color_a);
+				Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () + baseline);
+				cr.restore ();
+			}
+		}
+				
 		if (is_open ()) {
 			foreach (unowned Path p in path_list) {
 				p.draw_outline (cr, allocation, view_zoom);
