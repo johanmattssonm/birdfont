@@ -115,6 +115,9 @@ public class MainWindow {
 			Preferences.set ("glyph_sequence", text);
 			get_glyph_canvas ().redraw ();
 		});
+		listener.signal_submit.connect (() => {
+			MainWindow.native_window.hide_text_input ();
+		});
 		native_window.set_text_listener (listener);
 	}
 	

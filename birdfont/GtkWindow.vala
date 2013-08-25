@@ -42,7 +42,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	VScrollbar scrollbar;
 	bool scrollbar_supress_signal = false;
 	
-	/** Text input and callbacks to libbirdfont. */
+	/** Text input and callbacks. */
+	public static bool text_input_is_active = false;
 	TextListener text_listener = new TextListener ("", "", "");
 	Label text_input_label;
 	Entry text_entry;
@@ -212,6 +213,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		submit_text_button.clicked.connect (() => {
 			text_listener.signal_submit (text_entry.text);
+			text_input_is_active = false;
 		});
 		
 		tab_box = new VBox (false, 0);
@@ -240,25 +242,31 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}
 
 		key_press_event.connect ((t, event) => {
-			FontDisplay fd = MainWindow.glyph_canvas.current_display;
-			
-			if (fd is Glyph) {
-				MainWindow.tools.key_press (event.keyval);
+			if (!GtkWindow.text_input_is_active) {
+				FontDisplay fd = MainWindow.glyph_canvas.current_display;
+				
+				if (fd is Glyph) {
+					MainWindow.tools.key_press (event.keyval);
+				}
+				
+				MainWindow.glyph_canvas.key_press (event.keyval);
+				KeyBindings.add_modifier_from_keyval (event.keyval);
 			}
 			
-			MainWindow.glyph_canvas.key_press (event.keyval);
-			KeyBindings.add_modifier_from_keyval (event.keyval);
 			return false;
 		});
 		
 		key_release_event.connect ((t, event) => {
-			FontDisplay fd = MainWindow.glyph_canvas.current_display;
-			
-			if (fd is Glyph) {
-				MainWindow.glyph_canvas.key_release (event.keyval);
+			if (!GtkWindow.text_input_is_active) {
+				FontDisplay fd = MainWindow.glyph_canvas.current_display;
+				
+				if (fd is Glyph) {
+					MainWindow.glyph_canvas.key_release (event.keyval);
+				}
+				
+				KeyBindings.remove_modifier_from_keyval (event.keyval);
 			}
 			
-			KeyBindings.remove_modifier_from_keyval (event.keyval);
 			return false;
 		});
 		
@@ -800,6 +808,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public void hide_text_input () {
 		text_listener = new TextListener ("", "", "");
 		text_box.hide ();
+		text_input_is_active = false;
 	}
 	
 	public void set_text_listener (TextListener listener) {
@@ -810,8 +819,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		text_entry.set_text (listener.default_text);
 		text_entry.activate.connect (() => {
 			listener.signal_submit (listener.default_text);
+			text_input_is_active = false;
 		});
 		text_entry.grab_focus ();
+		text_input_is_active = true;
 	}
 }
 
@@ -1013,6 +1024,8 @@ public class GlyphCanvasArea : DrawingArea  {
 			glyph_canvas.current_display.button_release (2, e.x, e.y);
 			return true;
 		});
+		
+		can_focus = true;
 	}
 
 	static void set_modifier (int k) {
