@@ -19,7 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import subprocess
 
 def run(cmd):
-	cmd = "bash -c \"" + cmd.replace ("\"", "\\\"") + "\""
+	cmd = "sh -c \"" + cmd.replace ("\"", "\\\"") + "\""
 	process = subprocess.Popen (cmd, shell=True)
 	process.communicate()[0]
 	if not process.returncode == 0:
