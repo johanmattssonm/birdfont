@@ -74,6 +74,7 @@ public class Path {
 	public static double handle_color_a = 1;
 		
 	public static double stroke_width = 1;
+	public static bool show_all_line_handles = true;
 	
 	public Path () {
 		string width;
@@ -156,8 +157,9 @@ public class Path {
 		if (is_editable ()) {
 			// control points for curvature
 			foreach (EditPoint e in ep) {
-				if (e.selected || e.selected_handle > 0)
+				if (show_all_line_handles || e.selected || e.selected_handle > 0) {
 					draw_edit_point_handles (e, cr);
+				}
 			}
 						
 			// control points

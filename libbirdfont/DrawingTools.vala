@@ -532,6 +532,7 @@ public class DrawingTools : ToolCollection  {
 			MainWindow.get_toolbox ().redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
 		});
 		style_tools.add_tool (stroke_width);
+		stroke_width.set_max (4);
 
 		ColorTool handle_color = new ColorTool (_("Handle color"));
 		handle_color.color_updated.connect (() => {
@@ -580,6 +581,14 @@ public class DrawingTools : ToolCollection  {
 		precision.set_max (1);
 		
 		style_tools.add_tool (precision);
+
+		Tool show_all_line_handles = new Tool ("show_all_line_handles", _("Show all control point handles or only handles for the selected points."));
+		show_all_line_handles.select_action.connect((self) => {
+			Path.show_all_line_handles = !Path.show_all_line_handles;
+			Glyph g = MainWindow.get_current_glyph ();
+			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
+		});
+		style_tools.add_tool (show_all_line_handles);
 
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);

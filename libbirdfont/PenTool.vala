@@ -1023,58 +1023,82 @@ public class PenTool : Tool {
 		begin_new_point_on_path = true;
 	}
 	
-	private bool is_over_handle (double event_x, double event_y) {
-		double x = Glyph.path_coordinate_x (event_x);
-		double y = Glyph.path_coordinate_y (event_y);
-		Glyph g = MainWindow.get_current_glyph (); 
-		double d_point = g.view_zoom * get_distance_to_closest_edit_point (event_x, event_y);
+	private bool is_over_handle (double event_x, double event_y) {		
+		Glyph g;
 		
-		double dl, dr;
-						
-		foreach (EditPoint selected_corner in selected_points) {
-			dl = g.view_zoom * selected_corner.get_left_handle ().get_point ().get_distance (x, y);
-			dr = g.view_zoom * selected_corner.get_right_handle ().get_point ().get_distance (x, y);
-			
-			if (dl < CONTACT_SURFACE && dl < d_point) {
-				return true;
+		if (!Path.show_all_line_handles) {
+			foreach (EditPoint selected_corner in selected_points) {
+				if (is_close_to_handle (selected_corner, event_x, event_y)) {
+					return true;
+				}
 			}
-
-			if (dr < CONTACT_SURFACE && dr < d_point) {
-				return true;
+		} else {
+			g = MainWindow.get_current_glyph (); 
+			foreach (Path p in g.path_list) {
+				foreach (EditPoint ep in p.points) {
+					if (is_close_to_handle (ep, event_x, event_y)) {
+						return true;
+					}
+				}
 			}
 		}
 	
 		return false;
 	}
 
+	private bool is_close_to_handle (EditPoint selected_corner, double event_x, double event_y) {
+		double x = Glyph.path_coordinate_x (event_x);
+		double y = Glyph.path_coordinate_y (event_y);
+		Glyph g = MainWindow.get_current_glyph (); 
+		double d_point = g.view_zoom * get_distance_to_closest_edit_point (event_x, event_y);
+		double dl, dr;
+			
+		dl = g.view_zoom * selected_corner.get_left_handle ().get_point ().get_distance (x, y);
+		dr = g.view_zoom * selected_corner.get_right_handle ().get_point ().get_distance (x, y);
+		
+		if (dl < CONTACT_SURFACE && dl < d_point) {
+			return true;
+		}
+
+		if (dr < CONTACT_SURFACE && dr < d_point) {
+			return true;
+		}
+		
+		return false;
+	} 
+
 	EditPointHandle get_closest_handle (double event_x, double event_y) {
 		EditPointHandle left, right;
 		double x = Glyph.path_coordinate_x (event_x);
 		double y = Glyph.path_coordinate_y (event_y);		
 		EditPointHandle eh = new EditPointHandle.empty();
+		Glyph g = MainWindow.get_current_glyph (); 
 
 		double d = double.MAX;
 		double dn;
-				
-		foreach (EditPoint selected_corner in selected_points) {
-			left = selected_corner.get_left_handle ();
-			right = selected_corner.get_right_handle ();
 
-			dn = left.get_point ().get_distance (x, y);
-			
-			if (dn < d) {
-				eh = left;
-				d = dn;
-			}
+		foreach (Path p in g.path_list) {
+			foreach (EditPoint ep in p.points) {
+				if (ep.is_selected () || Path.show_all_line_handles) {
+					left = ep.get_left_handle ();
+					right = ep.get_right_handle ();
 
-			dn = right.get_point ().get_distance (x, y);
-			
-			if (dn < d) {
-				eh = right;
-				d = dn;
+					dn = left.get_point ().get_distance (x, y);
+					
+					if (dn < d) {
+						eh = left;
+						d = dn;
+					}
+
+					dn = right.get_point ().get_distance (x, y);
+					
+					if (dn < d) {
+						eh = right;
+						d = dn;
+					}
+				}
 			}
 		}
-		
 		return eh;
 	}
 
