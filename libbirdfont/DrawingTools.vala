@@ -108,16 +108,29 @@ public class DrawingTools : ToolCollection  {
 		Tool tie_handles = new Tool ("tie_point", _("Tie curve handles for the selected edit point"), 'w');
 		tie_handles.select_action.connect ((self) => {
 			bool tie;
+			EditPoint p;
 			
-			foreach (EditPoint ep in PenTool.selected_points) {
-				tie = !ep.tie_handles;
+			if (PenTool.move_selected_handle) {
+				p = PenTool.active_handle.parent;
+				tie = !p.tie_handles;
 				
 				if (tie) {
-					ep.process_tied_handle ();
-					ep.set_reflective_handles (false);
+					p.process_tied_handle ();
+					p.set_reflective_handles (false);
 				}
-			
-				ep.set_tie_handle (tie);
+				
+				p.set_tie_handle (tie);
+			} else {
+				foreach (EditPoint ep in PenTool.selected_points) {
+					tie = !ep.tie_handles;
+					
+					if (tie) {
+						ep.process_tied_handle ();
+						ep.set_reflective_handles (false);
+					}
+				
+					ep.set_tie_handle (tie);
+				}
 			}
 			
 			MainWindow.get_current_glyph ().update_view ();

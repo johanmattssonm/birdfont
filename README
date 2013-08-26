@@ -27,7 +27,7 @@ unicode-data (unicode character database)
 Configure, build and install:
 ./configure
 ./scripts/linux_build.py
-sudo ./birdfont_install
+sudo ./install.py
 
 BirdFont have two build systems, one very simple python script that
 builds all binaries at once and one dependency based build system
@@ -36,7 +36,7 @@ that uses doit.
 Configure, build and install with doit:
 ./configure
 doit
-sudo ./birdfont_install
+sudo ./install.py
 
 
 ---------------------
@@ -47,7 +47,7 @@ Compile all dependencies using MacPorts and run:
 
 python ./configure --prefix=/opt/birdfont 
 python ./scripts/mac_build.py
-sudo python ./birdfont_install
+sudo python ./install.py
 
 --------
 Packages
@@ -56,7 +56,8 @@ Packages
 Windows binaries are avalilable at http://birdfont.org
 
 A Ubuntu package is avalilable at https://launchpad.net
-You can apt-get install birdfont form Olivier Bertens repository.
+You can apt-get install birdfont form Olivier Bertens or
+Dariusz Dumas repository.
 
 A Machintosh binary image is available at http://birdfont.org and
 a GTK version for Mac can be installed with MacPorts.

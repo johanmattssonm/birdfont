@@ -35,7 +35,7 @@ public class PenTool : Tool {
 	public static EditPoint? active_edit_point = new EditPoint ();
 	public static EditPoint selected_point = new EditPoint ();
 
-	private static bool move_selected_handle = false;
+	public static bool move_selected_handle = false;
 
 	private static double last_point_x = 0;
 	private static double last_point_y = 0;
