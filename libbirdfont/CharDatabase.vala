@@ -24,6 +24,8 @@ public class CharDatabase {
 	static GlyphRange full_unicode_range;
 	static bool database_is_loaded = false;
 	
+	static double lines_in_ucd = 38876;
+	
 	public CharDatabase () {
 		entries = new HashMap<string, string> ();
 		index = new HashMultiMap<string, string> ();
@@ -74,10 +76,14 @@ public class CharDatabase {
 				ucd_result.add_single (c);
 			}
 		}
-    
-		if (ucd_result.get_length () > 0) {
-			ucd_result.sort ();
-			result.parse_ranges (ucd_result.get_all_ranges ());
+		
+		try {
+			if (ucd_result.get_length () > 0) {
+				ucd_result.sort ();
+				result.parse_ranges (ucd_result.get_all_ranges ());
+			}
+		} catch (MarkupError e) {
+			warning (e.message);
 		}
 		
 		return result;
@@ -144,6 +150,7 @@ public class CharDatabase {
 		string data;
 		string description = "";
 		File file;
+		int line_number = 0;
 
 		file = get_unicode_database ();
 		
@@ -167,6 +174,8 @@ public class CharDatabase {
 						}
 						break;
 					}
+					
+					ProgressBar.set_progress (++line_number / lines_in_ucd);
 					
 					Tool.yield ();
 				}
@@ -247,7 +256,7 @@ public class CharDatabase {
 	}
 	
 	static void show_loading_message () {
-		MainWindow.set_status (_("Loading the unicode database") + " ...");
+		MainWindow.set_status (_("Loading the unicode character database") + " ...");
 	}
 	
 	public static void get_full_unicode (GlyphRange glyph_range) {

@@ -705,18 +705,19 @@ public class DrawingTools : ToolCollection  {
 			t.editor_events = true;
 		}
 
+		foreach (Tool t in shape_tools.tool) {
+			t.editor_events = true;
+			t.persistent = true;
+		}
+		
 		move_background.editor_events = true;
 		cut_background.editor_events = true;
 				
 		move_background.persistent = true;
 		cut_background.persistent = true;
-		
+
 		precision.persistent = true;
 		stroke_width.persistent = true;
-		
-		foreach (Tool t in shape_tools.tool) {
-			t.persistent = true;
-		}
 		
 		// Default selection
 		IdleSource idle = new IdleSource ();

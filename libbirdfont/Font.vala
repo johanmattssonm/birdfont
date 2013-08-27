@@ -761,7 +761,10 @@ public class Font : GLib.Object {
 			case 'f': return 15;
 		}
 		
-		return_val_if_fail ('0' <= o <= '9', 0);
+		if (!('0' <= o <= '9')) {
+			warning (@"Excpecting a number ($(s.str)).");
+			return 0;
+		}
 		
 		return (uint8) (o - '0');
 	}
