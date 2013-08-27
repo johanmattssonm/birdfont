@@ -491,7 +491,8 @@ c.append ("""
 	}
 	
 	public static void show_kerning_context () {
-		MainWindow.get_tab_bar ().add_unique_tab (new KerningDisplay (), 85, false);
+		KerningDisplay kd = MainWindow.get_kerning_display ();
+		MainWindow.get_tab_bar ().add_unique_tab (kd, 85, false);
 	}
 	
 	public static void preview () {

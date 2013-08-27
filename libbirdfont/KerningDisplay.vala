@@ -48,15 +48,6 @@ public class KerningDisplay : FontDisplay {
 	public void show_parse_error () {
 		parse_error = true;
 	}
-
-	public static KerningDisplay get_singleton () {
-		if (MainWindow.get_current_display () is KerningDisplay) {
-			return (KerningDisplay) MainWindow.get_current_display ();
-		}
-		
-		warning ("Current display is not for kerning");
-		return new KerningDisplay ();
-	}
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {
 		if (parse_error) {
@@ -443,6 +434,30 @@ public class KerningDisplay : FontDisplay {
 		
 		MainWindow.get_glyph_canvas ().redraw ();
 	}
+
+	void set_selected_handle (int handle) {
+		selected_handle = handle;
+		
+		if (selected_handle <= 0) {
+			selected_handle = 1;
+		}
+		
+		if (selected_handle >= row.first ().data.glyph.length ()) {
+			selected_handle = (int) row.first ().data.glyph.length () - 1;
+		}
+		
+		MainWindow.get_glyph_canvas ().redraw ();
+	}
+
+	public static void previous_pair () {
+		KerningDisplay d = MainWindow.get_kerning_display ();
+		d.set_selected_handle (d.selected_handle - 1);
+	}
+	
+	public static void next_pair () {
+		KerningDisplay d = MainWindow.get_kerning_display ();
+		d.set_selected_handle (d.selected_handle + 1);
+	}
 	
 	public override void key_press (uint keyval) {
 		unichar c = (unichar) keyval;
@@ -473,15 +488,7 @@ public class KerningDisplay : FontDisplay {
 				selected_handle++;
 			}
 			
-			if (selected_handle <= 0) {
-				selected_handle = 1;
-			}
-			
-			if (selected_handle >= row.first ().data.glyph.length ()) {
-				selected_handle = (int) row.first ().data.glyph.length () - 1;
-			}
-			
-			set_active_handle_index (selected_handle);
+			set_selected_handle (selected_handle);
 		}
 		
 		if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {		

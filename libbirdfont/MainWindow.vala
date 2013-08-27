@@ -28,6 +28,8 @@ public class MainWindow {
 	public static OverView over_view;	
 	public static TabBar tabs;
 	public static NativeWindow native_window;
+	
+	public static KerningDisplay kerning_display;
 
 	public MainWindow () {
 		singleton = this;
@@ -39,6 +41,7 @@ public class MainWindow {
 		menu_tab = new MenuTab ();
 		tool_tip = new TooltipArea ();
 		over_view = new OverView();
+		kerning_display = new KerningDisplay ();
 	}
 
 	public static DrawingTools get_drawing_tools () {
@@ -178,6 +181,10 @@ public class MainWindow {
 			tool_tip.show_text (s);
 			Tool.yield ();
 		}  
+	}
+	
+	public static KerningDisplay get_kerning_display () {
+		return kerning_display;
 	}
 }
 

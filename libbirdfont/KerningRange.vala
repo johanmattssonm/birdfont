@@ -31,7 +31,7 @@ public class KerningRange : Tool {
 		}
 		
 		panel_press_action.connect ((selected, button, tx, ty) => {
-			KerningDisplay kerning_display = KerningDisplay.get_singleton ();
+			KerningDisplay kerning_display = MainWindow.get_kerning_display ();
 			
 			if (button == 3 || KeyBindings.modifier == CTRL) {
 				update_kerning_classes ();
@@ -78,7 +78,7 @@ public class KerningRange : Tool {
 	}
 	
 	public void update_kerning_classes () {
-		KerningDisplay kerning_display = KerningDisplay.get_singleton ();
+		KerningDisplay kerning_display = MainWindow.get_kerning_display ();
 		TextListener listener = new TextListener (_("Kerning class"), ranges, _("Set"));
 		listener.signal_text_input.connect ((text) => {
 			set_ranges (text);
@@ -86,7 +86,7 @@ public class KerningRange : Tool {
 		});
 		
 		listener.signal_submit.connect (() => {
-			KerningDisplay.get_singleton ().suppress_input = false;
+			MainWindow.get_kerning_display ().suppress_input = false;
 			MainWindow.native_window.hide_text_input ();
 			
 			// remove all empty classes

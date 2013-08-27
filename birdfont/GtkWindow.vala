@@ -732,6 +732,16 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		remove_all_kerning_pairs.activate.connect (() => { 
 			 MenuTab.remove_all_kerning_pairs ();
 		});
+
+		kerning_menu.append (new SeparatorMenuItem ());
+
+		Gtk.MenuItem select_next_kerning_pair = new Gtk.MenuItem.with_mnemonic (" Ctrl+→  " + _("Select _Next Kerning Pair"));
+		kerning_menu.append (select_next_kerning_pair);
+		select_next_kerning_pair.activate.connect (() => { KerningDisplay.next_pair (); });
+		
+		Gtk.MenuItem select_previous_kerning_pair = new Gtk.MenuItem.with_mnemonic (" Ctrl+←  " + _("Select _Previous Kerning Pair"));
+		kerning_menu.append (select_previous_kerning_pair);
+		select_previous_kerning_pair.activate.connect (() => { KerningDisplay.previous_pair (); });
 		
 		// Add menus
 		Gtk.MenuItem file_launcher = new Gtk.MenuItem.with_mnemonic (_("_File"));

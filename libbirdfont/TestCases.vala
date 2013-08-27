@@ -1453,7 +1453,7 @@ class TestCases {
 	
 	private static void test_kerning () {
 		MenuTab.show_kerning_context ();
-		KerningDisplay kerning_display = KerningDisplay.get_singleton ();
+		KerningDisplay kerning_display = MainWindow.get_kerning_display ();
 		unichar a, b;
 		StringBuilder sb1, sb2;
 		string sa, sb;
