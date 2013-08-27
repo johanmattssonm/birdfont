@@ -32,9 +32,9 @@ public class OverView : FontDisplay {
 	public signal void open_glyph_signal (GlyphCollection c);
 	
 	GlyphRange glyph_range;
+	string search_query = "";
 	
 	List<OverViewItem> visible_items = new List<OverViewItem> ();
-
 	List<GlyphCollection> deleted_glyphs = new List<GlyphCollection> ();
 		
 	bool all_available = true;
@@ -51,7 +51,7 @@ public class OverView : FontDisplay {
 			gr = new GlyphRange ();
 			set_glyph_range (gr);
 		}
-		
+
 		reset_zoom ();
 
 		this.open_glyph_signal.connect ((glyph_collection) => {
@@ -102,6 +102,26 @@ public class OverView : FontDisplay {
 		});
 		
 		update_scrollbar ();
+	}
+	
+	public static void search () {
+		OverView ow = MainWindow.get_overview ();
+		TextListener listener = new TextListener (_("Search"), ow.search_query, _("Filter"));
+		
+		listener.signal_text_input.connect ((text) => {
+			OverView o = MainWindow.get_overview ();
+			o.search_query = text;
+		});
+		
+		listener.signal_submit.connect (() => {
+			OverView o = MainWindow.get_overview ();
+			GlyphRange r = CharDatabase.search (o.search_query);
+			o.set_glyph_range (r);
+			MainWindow.native_window.hide_text_input ();
+			MainWindow.get_tab_bar ().select_tab_name ("Overview");
+		});
+		
+		MainWindow.native_window.set_text_listener (listener);
 	}
 	
 	public Glyph? get_current_glyph () 

@@ -28,8 +28,8 @@ public class MainWindow {
 	public static OverView over_view;	
 	public static TabBar tabs;
 	public static NativeWindow native_window;
-	
 	public static KerningDisplay kerning_display;
+	public static CharDatabase character_database;
 
 	public MainWindow () {
 		singleton = this;
@@ -42,6 +42,7 @@ public class MainWindow {
 		tool_tip = new TooltipArea ();
 		over_view = new OverView();
 		kerning_display = new KerningDisplay ();
+		character_database = new CharDatabase ();
 	}
 
 	public static DrawingTools get_drawing_tools () {
@@ -58,10 +59,6 @@ public class MainWindow {
 	
 	public static GlyphCanvas get_glyph_canvas () {
 		return glyph_canvas;
-	}
-	
-	public static OverView get_over_view () {
-		return over_view;
 	}
 	
 	public static Glyph get_current_glyph () {

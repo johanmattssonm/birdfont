@@ -261,6 +261,7 @@ public class DefaultCharacterSet {
 		CharDatabase.get_full_unicode (gr);
 		
 		if (gr.get_length () == 0) {
+			warning ("No items obtained from UCD.");
 			gr.add_range ('\0', (unichar) 0xFFF8);
 		}
 	}

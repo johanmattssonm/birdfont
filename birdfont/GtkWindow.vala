@@ -538,6 +538,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		select_all_item.add_accelerator ("activate", accel_group, 'A', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		Gtk.MenuItem search_item = new Gtk.MenuItem.with_mnemonic (_("Search"));
+		edit_menu.append (search_item);
+		search_item.activate.connect (() => { OverView.search (); });	
+		search_item.add_accelerator ("activate", accel_group, 'F', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+	
 		Gtk.MenuItem export_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Export Glyph as SVG"));
 		edit_menu.append (export_svg_item);
 		export_svg_item.activate.connect (() => { ExportTool.export_current_glyph (); });	

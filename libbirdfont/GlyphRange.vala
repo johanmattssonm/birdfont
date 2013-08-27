@@ -136,6 +136,8 @@ public class GlyphRange {
 				add_single (' ');
 			} else if (w == "divis") {
 				add_single ('-');
+			} else if (w == "null") {
+				add_single ('\0');
 			} else if (w.index_of ("-") > -1) {
 				parse_range (w);
 			} else {
@@ -179,7 +181,11 @@ public class GlyphRange {
 		if (c == '-') {
 			return "divis";
 		}
-		
+
+		if (c == '\0') {
+			return "null";
+		}
+				
 		s.append_unichar (c);	
 		return s.str;	
 	}
@@ -192,17 +198,30 @@ public class GlyphRange {
 		if (c == "divis") {
 			return "-";
 		}
+
+		if (c == "null") {
+			return "\0";
+		}
 		
 		return c;
 	}
 	
 	private void parse_range (string s) throws MarkupError {
 		string[] r = s.split ("-");
+		bool null_range = false;
 		
-		if (r.length != 2
-			|| unserialize (r[0]).char_count () != 1 
-			|| unserialize (r[1]).char_count () != 1) {
-			throw new MarkupError.PARSE (@"$s is not a valid range, it should be on the form A-Z.");
+		if (r.length == 2 && r[0] == "null" && r[1] == "null") {
+			null_range = true;
+		} else if (r.length == 2 && r[0] == "null" &&  unserialize (r[1]).char_count () == 1) {
+			null_range = true;
+		} 
+		
+		if (!null_range) {
+			if (r.length != 2
+				|| unserialize (r[0]).char_count () != 1 
+				|| unserialize (r[1]).char_count () != 1) {
+				throw new MarkupError.PARSE (@"$s is not a valid range, it should be on the form A-Z.");
+			}
 		}
 		
 		append_range (unserialize (r[0]).get_char (), unserialize (r[1]).get_char ());

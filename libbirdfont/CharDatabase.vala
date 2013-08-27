@@ -12,11 +12,180 @@
     Lesser General Public License for more details.
 */
 
+using Gee;
+
 namespace BirdFont {
 
-class CharDatabase {
+public class CharDatabase {
+	
+	static HashMap<string, string> entries;
+	static HashMultiMap<string, string> index;
 
+	static GlyphRange full_unicode_range;
+	static bool database_is_loaded = false;
+	
 	public CharDatabase () {
+		entries = new HashMap<string, string> ();
+		index = new HashMultiMap<string, string> ();
+	
+		full_unicode_range = new GlyphRange ();
+
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {
+			show_loading_message ();
+			parse_all_entries ();
+			database_is_loaded = true;
+			return false;
+		});
+		idle.attach (null);
+	}
+
+	public static GlyphRange search (string s) {
+		GlyphRange result = new GlyphRange ();
+		GlyphRange ucd_result = new GlyphRange ();
+		unichar c;
+		string i;
+		string? iv;
+		
+		if (!database_is_loaded) {
+			show_loading_message ();
+		}
+		
+		return_if_fail (result.get_length () == 0);
+		
+		if (s.has_prefix ("U+") || s.has_prefix ("u+")) {
+			c = Font.to_unichar (s.down ());
+			
+			if (c != '\0') {
+				result.add_single (c);
+			}
+		}
+		
+		if (s.char_count () == 1) {
+			result.add_single (s.get_char ()); 
+		}
+		
+		var it = index.get (s).iterator ();
+		for (var has_next = it.first (); has_next; has_next = it.next ()) {
+			iv = it.get ();
+			if (iv != null) {
+				i = (string) iv;
+				c = Font.to_unichar ("U+" + i.down ());
+				ucd_result.add_single (c);
+			}
+		}
+    
+		if (ucd_result.get_length () > 0) {
+			ucd_result.sort ();
+			result.parse_ranges (ucd_result.get_all_ranges ());
+		}
+		
+		return result;
+	}
+
+	private void add_entry (string data) {
+		string[] e;
+		string[] r;
+		string[] d;
+		string index_values;
+		unichar ch;
+		
+		string unicode_hex;
+		
+		if (data.has_prefix ("@")) { // ignore comments
+			return;
+		}
+		
+		index_values = data.down ();
+		index_values = index_values.replace ("\tx", "");
+		index_values = index_values.replace ("\t*", "");
+		index_values = index_values.replace ("\t=", "");
+		index_values = index_values.replace ("\t#", "");
+		index_values = index_values.replace (" - ", " ");
+		index_values = index_values.replace ("(", "");
+		index_values = index_values.replace (")", "");
+		index_values = index_values.replace ("<font>", "");
+		index_values = index_values.replace (" a ", " ");
+		index_values = index_values.replace (" is ", " ");
+		index_values = index_values.replace (" the ", " ");
+		
+		e = index_values.split ("\t");
+
+		return_if_fail (e.length > 0);
+		
+		unicode_hex = e[0].up ();
+		
+		ch = Font.to_unichar ("U+" + unicode_hex.down ());
+		full_unicode_range.add_single (ch);
+		Tool.yield ();
+
+		entries.set (unicode_hex, data);
+				
+		foreach (string s in e) {
+			r = s.split ("\n");
+			foreach (string t in r) {  
+				d = t.split (" ");
+				foreach (string token in d) {
+					if (token != "") {
+						index.set (token, unicode_hex);
+						Tool.yield ();
+					}
+				}
+			}
+		}
+		
+		Tool.yield ();
+	}
+
+	private void parse_all_entries () {
+		FileInputStream fin;
+		DataInputStream din;
+		string? line;
+		string data;
+		string description = "";
+		File file;
+
+		file = get_unicode_database ();
+		
+		try {
+			fin = file.read ();
+			din = new DataInputStream (fin);
+			
+			line = din.read_line (null);
+			while (true) {
+				data = (!) line;
+				description = data;
+				
+				while ((line = din.read_line (null)) != null) {
+					data = (!) line;
+					if (data.has_prefix ("\t")) {
+						description += "\n";
+						description += data;
+					} else {
+						if (description.index_of ("<not a character>") == -1) {
+							add_entry (description);
+						}
+						break;
+					}
+					
+					Tool.yield ();
+				}
+				
+				if (line == null) {
+					break;
+				}
+			}
+			
+			if (description == "") {
+				warning ("no description found");
+			}
+			
+			fin.close ();
+			din.close ();
+		} catch (GLib.Error e) {
+			warning (e.message);
+			warning ("In %s", (!) get_unicode_database ().get_path ());
+		}
 	}
 
 	public static bool has_ascender (unichar c) {
@@ -27,16 +196,9 @@ class CharDatabase {
 			case 'd': return true;
 			case 'f': return true;
 			case 'h': return true;
-			case 'i': return true;
-			case 'j': return true;
 			case 'k': return true;
 			case 'l': return true;	
 		}
-		
-		if ('à' <= c <= 'å') return true;
-		if ('è' <= c <= 'ö') return true;
-		if ('ù' <= c <= 'ă') return true;
-		if ('ć' <= c <= 'ė') return true;
 
 		return false;
 	}
@@ -53,18 +215,10 @@ class CharDatabase {
 		return false;		
 	}
 	
-	public static string get_unicode_database_entry (unichar c) {
-		FileInputStream fin;
-		DataInputStream din;
-		string? line;
-		string data;
-		string hex_char;
-		string description = "";
-		File file;
-				
-		file = get_unicode_database ();
-		hex_char = Font.to_hex (c).replace ("U+", "");
-		
+	/** Convert from the U+xx form to the unicode database hex value. */ 
+	static string to_database_hex (unichar c) {
+		string hex_char = Font.to_hex (c).replace ("U+", "");
+
 		if (hex_char.char_count () == 2) {
 			hex_char = "00" + hex_char;
 		}
@@ -73,136 +227,39 @@ class CharDatabase {
 			hex_char = hex_char.substring (1);
 		}
 		
-		hex_char += "\t";
-		hex_char = hex_char.up ();
+		hex_char = hex_char.up ();		
+		return hex_char;
+	}
+	
+	public static string get_unicode_database_entry (unichar c) {
+		string description;
+		string? d;
 		
-		try {
-			fin = file.read ();
-			din = new DataInputStream (fin);
-			
-			while ((line = din.read_line (null)) != null) {
-				data = (!) line;
-				if (data.has_prefix (hex_char)) {
-					description = data;
-					
-					while ((line = din.read_line (null)) != null) {
-						data = (!) line;
-						if (data.has_prefix ("\t")) {
-							description += "\n";
-							description += data;
-						} else {
-							break;
-						}
-					}
-					
-					break;
-				}
-			}
-			
-			if (description == "") {
-				warning ("no description found");
-			}
-			
-			fin.close ();
-			din.close ();
-		} catch (GLib.Error e) {
-			warning (e.message);
-			stderr.printf ("when reading %s", (!) get_unicode_database ().get_path ());
-		}
+		d = entries.get (to_database_hex (c));
 		
-		if (description == "") {
+		if (d == null) {
 			description = Font.to_hex (c).replace ("U+", "") + "\tUNICODE CHARACTER";
+		} else {
+			description = (!) d;
 		}
 		
 		return description;		
 	}
 	
-	public static void get_full_unicode (GlyphRange glyph_range) {
-		File file;
-		FileInputStream fin;
-		DataInputStream din;
-		DataOutputStream os;
-		string? line;
-		string data;
-		string[] range;
-		
-		try {		
-			file = BirdFont.get_settings_directory ().get_child ("full_unicode_range");
-			
-			if (file.query_exists ()) {
-				// read cached glyph ranges
-				fin = file.read ();
-				din = new DataInputStream (fin);
-				while ((line = din.read_line (null)) != null) {
-					data = (!) line;
-					
-					if (data == "") {
-						break;
-					}
-					
-					range = data.split (" - ");
-					return_if_fail (range.length == 2);
-					
-					glyph_range.add_range (Font.to_unichar ("U+" + range[0]), Font.to_unichar ("U+" + range[1]));
-				}
-				fin.close ();
-				din.close ();					
-			} else {
-				parse_full_unicode_database (glyph_range);
-				
-				// write cache
-				os = new DataOutputStream(file.create (FileCreateFlags.REPLACE_DESTINATION));
-				os.put_string (glyph_range.get_all_ranges ());
-				os.close ();
-			}
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
+	static void show_loading_message () {
+		MainWindow.set_status (_("Loading the unicode database") + " ...");
 	}
 	
-	/** Obtain full unicode range from unicode database. */
-	public static void parse_full_unicode_database (GlyphRange glyph_range) {
-		FileInputStream fin;
-		DataInputStream din;
-		string? line;
-		string data;
-		string hex_char;
-		File file;
-		unichar ch;
-		
-		file = get_unicode_database ();
-		
-		if (!file.query_exists ()) {
-			warning ("Can not find unicode database.");
-			return;
+	public static void get_full_unicode (GlyphRange glyph_range) {
+		if (!database_is_loaded) {
+			show_loading_message ();
 		}
-
+		
 		try {
-			fin = file.read ();
-			din = new DataInputStream (fin);
-			
-			while ((line = din.read_line (null)) != null) {
-				data = (!) line;
-				
-				if (data.has_prefix ("\t") || data.has_prefix (";") || data.has_prefix ("@")) {
-					continue;
-				}
-				
-				if (data.index_of ("<not a character>") != -1) {
-					continue;
-				}
-				
-				hex_char = "U+" + data.substring (0, data.index_of ("\t")).down ();
-				
-				ch = Font.to_unichar (hex_char);
-				glyph_range.add_single (ch);
-			}
-			
-			fin.close ();
-			din.close ();
-		} catch (GLib.Error e) {
+			glyph_range.parse_ranges (full_unicode_range.get_all_ranges ());
+		} catch (MarkupError e) {
 			warning (e.message);
-		}	
+		}
 	}
 	
 	static File get_unicode_database () {
