@@ -540,12 +540,14 @@ public class DrawingTools : ToolCollection  {
 		stroke_width.new_value_action.connect((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			Path.stroke_width = stroke_width.get_value ();
+			Path.stroke_width = Math.sqrt (Path.stroke_width);
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 			Preferences.set ("stroke_width", @"$(Path.stroke_width)");
 			MainWindow.get_toolbox ().redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
 		});
 		style_tools.add_tool (stroke_width);
 		stroke_width.set_max (4);
+		stroke_width.set_min (0.2);
 
 		ColorTool handle_color = new ColorTool (_("Handle color"));
 		handle_color.color_updated.connect (() => {
