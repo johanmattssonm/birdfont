@@ -723,13 +723,21 @@ public class Font : GLib.Object {
 			return '\0';
 		}
 		
-		while (r = unicode.get_next_char (ref index, out c)) {
-			rc <<= 4;
-			rc += hex_to_oct (c);
-			
-			return_val_if_fail (++i <= 6, '\0');
+		try {
+			while (r = unicode.get_next_char (ref index, out c)) {
+				rc <<= 4;
+				rc += hex_to_oct (c);
+				
+				if (++i > 6) {
+					throw new ConvertError.FAILED ("i > 6");
+				}
+			}
+		} catch (ConvertError e) {
+			warning (@"unicode: $unicode\n");
+			warning (e.message);
+			rc = '\0';
 		}
-
+		
 		return rc;
 	}
 	
@@ -748,7 +756,8 @@ public class Font : GLib.Object {
 		return o.to_string ();
 	}
 
-	private static uint8 hex_to_oct (unichar o) {
+	private static uint8 hex_to_oct (unichar o) 
+	throws ConvertError {
 		StringBuilder s = new StringBuilder ();
 		s.append_unichar (o);
 	
@@ -762,8 +771,7 @@ public class Font : GLib.Object {
 		}
 		
 		if (!('0' <= o <= '9')) {
-			warning (@"Excpecting a number ($(s.str)).");
-			return 0;
+			throw new ConvertError.FAILED (@"Excpecting a number ($(s.str)).");
 		}
 		
 		return (uint8) (o - '0');

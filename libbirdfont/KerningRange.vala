@@ -67,9 +67,6 @@ public class KerningRange : Tool {
 				glyph_range.set_class (true);
 				
 				malformed = false;
-				
-				// FIXME: create gui tool
-				KerningClasses.get_instance ().print_all ();
 			} catch (MarkupError e) {
 				KerningClasses.get_instance ().print_all ();
 				warning (e.message);

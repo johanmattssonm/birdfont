@@ -103,10 +103,10 @@ public class CharDatabase {
 		}
 		
 		index_values = data.down ();
-		index_values = index_values.replace ("\tx", "");
-		index_values = index_values.replace ("\t*", "");
-		index_values = index_values.replace ("\t=", "");
-		index_values = index_values.replace ("\t#", "");
+		index_values = index_values.replace ("\n\tx", "");
+		index_values = index_values.replace ("\n\t*", "");
+		index_values = index_values.replace ("\n\t=", "");
+		index_values = index_values.replace ("\n\t#", "");
 		index_values = index_values.replace (" - ", " ");
 		index_values = index_values.replace ("(", "");
 		index_values = index_values.replace (")", "");
