@@ -24,6 +24,7 @@ public class MainWindow {
 	public static MainWindow singleton;
 	public static KeyBindings key_bindings;
 	public static MenuTab menu_tab;
+	public static FileTab file_tab;
 	public static TooltipArea tool_tip;
 	public static OverView over_view;	
 	public static TabBar tabs;
@@ -39,10 +40,16 @@ public class MainWindow {
 		tabs = new TabBar ();
 		tools = new Toolbox (glyph_canvas, tabs);
 		menu_tab = new MenuTab ();
+		file_tab = new FileTab ();
 		tool_tip = new TooltipArea ();
 		over_view = new OverView();
 		kerning_display = new KerningDisplay ();
 		character_database = new CharDatabase ();
+	}
+
+	public static void open_recent_files_tab () {
+		tabs.add_unique_tab (file_tab);
+		tabs.select_tab_name ("Files");
 	}
 
 	public static DrawingTools get_drawing_tools () {

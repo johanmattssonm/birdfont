@@ -16,29 +16,10 @@ namespace BirdFont {
 
 public class MenuTab : FontDisplay {
 	
-	List<Font> recent_fonts = new List<Font> ();
-	
 	/** Ignore actions when export is in progress. */
 	public static bool suppress_event = false;
 
 	public MenuTab () {
-		// html callbacks:
-		add_html_callback ("load", (val) => {
-			load_font (val);
-		});
-
-		add_html_callback ("load_backup", (val) => {
-			load_backup (val);
-		});
-
-		add_html_callback ("help", (val) => {
-			MainWindow.get_tool_tip ().show_text (val);
-		});
-
-		add_html_callback ("delete_backups", (val) => {
-			delete_backups ();
-			MainWindow.get_tab_bar ().select_tab_name ("Files");
-		});
 	}
 	
 	public static void set_suppress_event (bool e) {
@@ -46,7 +27,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public override string get_name () {
-		return "Files";
+		return "Menu";
 	}
 	
 	public override bool is_html_canvas () {
@@ -54,254 +35,10 @@ public class MenuTab : FontDisplay {
 	}
 
 	public override string get_html () {
-		StringBuilder c = new StringBuilder ();
-		string fn;
-		
-		propagate_recent_files ();
-		
-		c.append (
-"""
-<html>
-<head>
-	<script type="text/javascript" src="supplement.js"></script>
-	<style type="text/css">@import url("style.css");</style>
-	<script type="text/javascript">
-		document.onkeyup = update_text_fields; 
-	</script>
-</head>
-<body>
-
-""");
-
-if (has_backup ()) {
-	c.append ("""<div class="recent_list">""");
-	c.append ("""	<div class="heading"><h2>""" + _("Recover") + """</h2></div>""");
-
-	foreach (string backup in get_backups ()) {
-		fn = backup;
-
-		c.append ("""<div class="recent_font" """ 
-			+ "onclick=\"call ('load_backup:" + fn + "')\""
-			+ "onmouseover=\"call ('help: " + fn + "')\">");
-
-		c.append ("<div class=\"one_line\">");
-		c.append (fn);
-		c.append ("</div>");
-
-		c.append ("<img src=\"");
-		c.append (path_to_uri ((!) BirdFont.get_thumbnail_directory ().get_path ()));
-		c.append ("/");
-		c.append (fn);
-		c.append (@".png?$(Random.next_int ())\" alt=\"\">");
-		
-		c.append ("<br /><br />");
-		c.append ("</div>\n");		
+		return "".dup ();
 	}
 
-	if (get_backups ().length () > 0) {
-		c.append ("""<div class="recent_font" onclick="call ('delete_backups:')">""");
-
-		c.append ("<div class=\"one_line\">");
-		c.append (_("Delete all"));
-		c.append ("</div>");
-		
-		c.append ("<img src=\"");
-		c.append (path_to_uri ((!) FontDisplay.find_layout_dir ().get_child ("delete_backup.png").get_path ()));
-		c.append ("\" alt=\"\">");	
-		c.append ("<br /><br />");
-
-		c.append ("</div>\n");
-	}
-
-	c.append ("""</div>""");
-	c.append ("""<br class="clearBoth" />""");
-}
-
-c.append ("""
-	<div class="recent_list">
-""");
-
-foreach (Font font in recent_fonts) {
-	fn = (!) font.font_file;
-	fn = fn.substring (fn.replace ("\\", "/").last_index_of ("/") + 1);	
-	
-	c.append ("""<div class="recent_font" """ 
-		+ "onclick=\"call ('load:" + ((!) font.font_file).replace ("\\", "\\\\") + "');\" "
-		+ "onmouseover=\"call ('help: " + fn + "')\">");
-
-	c.append ("<div class=\"one_line\">");
-	c.append (fn);
-	c.append ("</div>");
-
-	c.append ("<img src=\"");
-	c.append (path_to_uri ((!) BirdFont.get_thumbnail_directory ().get_path ()));
-	c.append ("/");
-	c.append (fn);
-	c.append (@".png?$(Random.next_int ())\" alt=\"\">");
-	
-	c.append ("<br /><br />");
-	c.append ("</div>\n");
-}
-
-c.append ("</div>\n");
-
-c.append ("""
-</body>
-</html>
-""");
-
-#if traslations 
-		// xgettext needs these lines in order to extract strings properly
-		_("Files");
-		_("Recent files")
-		_("Recover");
-		_("Delete all");	
-#endif
-
-		return c.str;
-	}
-
-	bool has_backup () {
-		return get_backups ().length () > 0;
-	}
-
-	public static void delete_backups () {
-		FileEnumerator enumerator;
-		FileInfo? file_info;
-		string file_name;
-		File backup_file;
-		File dir = BirdFont.get_backup_directory ();
-		
-		try {
-			enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-			while ((file_info = enumerator.next_file ()) != null) {
-				file_name = ((!) file_info).get_name ();
-				backup_file = dir.get_child (file_name);
-				backup_file.delete ();
-			}
-		} catch (Error e) {
-			warning (e.message);
-		}
-	}
-
-	public List<string> get_backups () {
-		FileEnumerator enumerator;
-		string file_name;
-		FileInfo? file_info;
-		List<string> backups = new List<string> ();
-		File dir = BirdFont.get_backup_directory ();
-		Font font = BirdFont.get_current_font ();
-
-		try {
-			enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-			while ((file_info = enumerator.next_file ()) != null) {
-				file_name = ((!) file_info).get_name ();
-				
-				// ignore old backup files
-				if (file_name.has_prefix ("current_font_")) {
-					continue;
-				}
-				
-				// ignore backup of the current font
-				if (file_name == @"$(font.get_name ()).bf") {
-					continue;
-				}
-				
-				backups.append (file_name);
-			}
-		} catch (Error e) {
-			warning (e.message);
-		}
-    
-		return backups;	
-	}
-
-	public void propagate_recent_files () {
-		Font font;
-
-		while (recent_fonts.length () != 0) {
-			recent_fonts.delete_link (recent_fonts.first ());
-		}
-		
-		foreach (var f in Preferences.get_recent_files ()) {
-			if (f == "") continue;
-			
-			File file = File.new_for_path (f);
-
-			font = new Font ();
-			
-			font.set_font_file (f);
-			
-			if (file.query_exists ()) { 
-				recent_fonts.append (font);
-			}
-		}
-		
-		recent_fonts.reverse ();
-	}
-	
-	public void load_backup (string file_name) {
-		File backup_file;
-		
-		if (suppress_event) {
-			return;
-		}
-		
-		backup_file = BirdFont.get_backup_directory ();
-		backup_file = backup_file.get_child (file_name);
-		load_font ((!) backup_file.get_path ());
-	}
-	
-	public void load_font (string fn) {
-		Font font;
-		SaveDialogListener dialog = new SaveDialogListener ();
-
-		if (suppress_event) {
-			return;
-		}
-		
-		font = BirdFont.get_current_font ();
-		
-		dialog.signal_discard.connect (() => {
-			Font f;
-			bool loaded;
-			
-			f = BirdFont.new_font ();
-			f.delete_backup ();
-			
-			MainWindow.clear_glyph_cache ();
-			MainWindow.close_all_tabs ();
-			
-			loaded = f.load (fn);
-			
-			if (!unlikely (loaded)) {
-				warning (@"Failed to load fond $fn");
-				return;
-			}
-				
-			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
-			foreach (string v in f.grid_width) {
-				MainWindow.get_drawing_tools ().parse_grid (v);
-			}
-			
-			MainWindow.get_drawing_tools ().background_scale.set_value (f.background_scale);
-			KerningTools.update_kerning_classes ();
-			select_overview ();
-		});
-
-		dialog.signal_save.connect (() => {
-			MenuTab.save ();
-			dialog.signal_discard ();
-		});
-		
-		if (!font.is_modified ()) {
-			dialog.signal_discard ();
-		} else {
-			MainWindow.native_window.set_save_dialog (dialog);
-		}
-	}
-	
-	private static void select_overview () {
+	public static void select_overview () {
 		if (suppress_event) {
 			return;
 		}

@@ -200,10 +200,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			glyph_canvas_area.set_visible (false);
 			return false;
 		});
-				
-		MainWindow.tabs.add_unique_tab (MainWindow.menu_tab, 60, true);
-		MainWindow.tabs.select_tab_name ("Files");
-		
+
 		canvas_box = new HBox (false, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
@@ -288,6 +285,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		description.canvas.set_visible (false);
 		
 		hide_text_input ();
+		
+		MainWindow.open_recent_files_tab ();
 	}
 
 	public void set_save_dialog (SaveDialogListener d) {
@@ -494,6 +493,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		file_menu.append (load_item);
 		load_item.activate.connect (() => { MenuTab.load (); });
 		load_item.add_accelerator ("activate", accel_group, 'O', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem recent_files_item = new Gtk.MenuItem.with_mnemonic (_("_Recent Files"));
+		file_menu.append (recent_files_item);
+		recent_files_item.activate.connect (() => { MainWindow.open_recent_files_tab (); });
 
 		Gtk.MenuItem save_item = new Gtk.MenuItem.with_mnemonic (_("_Save"));
 		file_menu.append (save_item);
@@ -1184,7 +1187,6 @@ public class DescriptionForm : GLib.Object {
 		description.get_buffer ().changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.description = description.get_buffer ().text;
-			print (description.get_buffer ().text);
 		});
 
 		copyright = new TextView ();

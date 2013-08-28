@@ -160,13 +160,16 @@ public class TabBar : GLib.Object {
 		
 	public void close_display (FontDisplay f) {
 		int i = -1;
-		foreach (var t in tabs) {
-			++i;
-			
-			if (t.get_display () == f) {
-				close_tab (i) ;
-				return;
-			}
+		
+		if (tabs.length () > 1) {
+			foreach (var t in tabs) {
+				++i;
+				
+				if (t.get_display () == f) {
+					close_tab (i) ;
+					return;
+				}
+			}	
 		}
 		
 		return_if_fail (i != -1);
@@ -183,6 +186,10 @@ public class TabBar : GLib.Object {
 	public bool close_tab (int index, bool background_tab = false) {	
 		unowned List<Tab?>? lt;
 		Tab t;
+		
+		if (tabs.length () <= 1) {
+			return false;
+		}
 		
 		if (!(0 <= index < tabs.length ())) {
 			return false;
@@ -533,7 +540,7 @@ public class TabBar : GLib.Object {
 				}
 			}
 			
-			// close
+			// close (x)
 			if (t.has_close_button ()) {
 				cr.set_line_width (1);
 				
@@ -546,7 +553,7 @@ public class TabBar : GLib.Object {
 				cr.move_to (t.get_width () - 10, height - 14);
 				cr.line_to (t.get_width () - 5, height - 9);
 				
-				cr.stroke ();	
+				cr.stroke ();
 			}
 
 			cr.set_source_rgba (0, 0, 0, 1);
