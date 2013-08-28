@@ -37,6 +37,7 @@ public class CharDatabase {
 			show_loading_message ();
 			parse_all_entries ();
 			database_is_loaded = true;
+			ProgressBar.set_progress (0);
 			return false;
 		});
 		idle.attach (null);

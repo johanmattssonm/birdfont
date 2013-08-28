@@ -42,6 +42,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	VScrollbar scrollbar;
 	bool scrollbar_supress_signal = false;
 	
+	DescriptionForm description;
+	
 	/** Text input and callbacks. */
 	public static bool text_input_is_active = false;
 	TextListener text_listener = new TextListener ("", "", "");
@@ -56,6 +58,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void init () {
+		description = new DescriptionForm ();
+		
 		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
 		
 		scrollbar.value_changed.connect (() => {
@@ -96,8 +100,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			MainWindow.glyph_canvas.set_current_glyph (fd);
 			
 			scrollbar.set_visible (fd.has_scrollbar ());
-					
-			if (html) {
+			
+			if (fd.get_name () == "Description") {
+				description.update_fields ();
+				description.canvas.set_visible (true);
+				html_box.set_visible (false);
+				glyph_canvas_area.set_visible (false);
+			} else if (html) {
 				layout_dir = FontDisplay.find_layout_dir ();
 				uri = fd.get_uri ();
 				
@@ -177,9 +186,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				
 				html_box.set_visible (html);
 				glyph_canvas_area.set_visible (!html);
+				description.canvas.set_visible (false);
 			} else {
 				html_box.set_visible (false);
 				glyph_canvas_area.set_visible (true);
+				description.canvas.set_visible (false);
 			}
 		});
 
@@ -196,6 +207,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		canvas_box = new HBox (false, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
+		canvas_box.pack_start (description.canvas, true, true, 0);
 		canvas_box.pack_start (scrollbar, false, true, 0);
 
 		submit_text_button = new Button ();
@@ -273,6 +285,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		show_all ();
 		
 		scrollbar.set_visible (false);
+		description.canvas.set_visible (false);
+		
 		hide_text_input ();
 	}
 
@@ -1100,6 +1114,137 @@ public class TooltipCanvas : DrawingArea {
 		});
 		
 		set_size_request (10, 20);
+	}
+}
+
+public class DescriptionForm : GLib.Object {
+	
+	public ScrolledWindow canvas;
+	public VBox box;
+	
+	Entry postscript_name;
+	Entry font_name;
+	Entry style;
+	Entry full_name;
+	Entry id;
+	Entry version;
+
+	TextView description;
+	TextView copyright;
+		
+	public DescriptionForm () {
+		box = new VBox (false, 6);
+		canvas = new ScrolledWindow (null, null);
+		canvas.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
+		
+		postscript_name = new Entry ();
+		add_entry (postscript_name, _("Postscript Name"));
+		postscript_name.changed.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.postscript_name = postscript_name.text;
+		});
+		
+		font_name = new Entry ();
+		add_entry (font_name, _("Name"));
+		font_name.changed.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.name = font_name.text;
+		});
+		
+		style = new Entry ();
+		add_entry (style, _("Style"));
+		style.changed.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.subfamily = style.text;
+		});
+		
+		full_name = new Entry ();
+		add_entry (full_name, _("Full name (name and style)"));
+		full_name.changed.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.full_name = full_name.text;
+		});
+		
+		id = new Entry ();
+		add_entry (id, _("Unique identifier"));
+		id.changed.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.unique_identifier = id.text;
+		});
+		
+		version = new Entry ();
+		add_entry (version, _("Version"));
+		version.changed.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.version = version.text;
+		});
+		
+		description = new TextView ();
+		add_textview (description, _("Description"));
+		description.get_buffer ().changed.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.description = description.get_buffer ().text;
+			print (description.get_buffer ().text);
+		});
+
+		copyright = new TextView ();
+		add_textview (copyright, _("Copyright"));
+		copyright.get_buffer ().changed.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.copyright = copyright.get_buffer ().text;
+		});
+		
+		update_fields ();
+		
+		canvas.add_with_viewport (box);
+		canvas.show_all ();
+	}
+	
+	public void update_fields () {
+		Font font = BirdFont.get_current_font ();
+		postscript_name.set_text (font.postscript_name);
+		font_name.set_text (font.name);
+		style.set_text (font.subfamily);
+		full_name.set_text (font.full_name);
+		id.set_text (font.unique_identifier);
+		version.set_text (font.version);
+		
+		description.get_buffer ().set_text (font.description.dup ());
+		copyright.get_buffer ().set_text (font.copyright.dup ());
+	}
+	
+	void add_entry (Entry e, string label) {
+		VBox vb;
+		HBox hb;
+		Label l;
+		HBox margin;
+		
+		margin = new HBox (false, 6);
+		l = new Label (label);
+		vb = new VBox (false, 2);
+		hb = new HBox (false, 2);
+		hb.pack_start (l, false, false, 0);
+		vb.pack_start (hb, true, true, 5);
+		vb.pack_start (e, true, true, 0);
+		margin.pack_start (vb, true, true, 5);
+		box.pack_start (margin, false, false, 5);
+	}
+
+	void add_textview (TextView t, string label) {
+		VBox vb;
+		HBox hb;
+		Label l;
+		HBox margin;
+		
+		margin = new HBox (false, 6);
+		l = new Label (label);
+		vb = new VBox (false, 2);
+		hb = new HBox (false, 2);
+		hb.pack_start (l, false, false, 0);
+		vb.pack_start (hb, true, true, 5);
+		vb.pack_start (t, true, true, 0);
+		margin.pack_start (vb, true, true, 5);
+		box.pack_start (margin, false, false, 5);
 	}
 }
 
