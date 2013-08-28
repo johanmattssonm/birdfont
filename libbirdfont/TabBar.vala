@@ -431,7 +431,7 @@ public class TabBar : GLib.Object {
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 		
 		if (tab_width < 0) {
-			tab_width = 9 * display_item.get_name ().char_count ();
+			tab_width = 9 * _(display_item.get_name ()).char_count ();
 			tab_width += 30;
 		}
 				

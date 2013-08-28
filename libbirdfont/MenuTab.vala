@@ -517,7 +517,7 @@ c.append ("""
 	
 	/** Display the language selection tab. */
 	public static void select_language () {
-		MainWindow.get_tab_bar ().add_unique_tab (new LanguageSelectionTab (), 120, false);
+		MainWindow.get_tab_bar ().add_unique_tab (new LanguageSelectionTab ());
 	}
 
 	public static void use_current_glyph_as_background () {
