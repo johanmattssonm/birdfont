@@ -81,10 +81,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		html_canvas = new WebView ();
 		WebKit.set_cache_model (CacheModel.DOCUMENT_VIEWER);
 		html_canvas.get_settings ().enable_default_context_menu = false;
-				
-		html_canvas.title_changed.connect ((p, s) => {
-			webkit_callback (s);
-		});
 		
 		html_box = new ScrolledWindow (null, null);
 		html_box.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
@@ -96,7 +92,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			File layout_uri;
 			string uri = "";
 			FontDisplay fd = tab.get_display ();
-			bool html = fd.is_html_canvas ();
+			bool html = fd.get_name () == "Preview";
 			MainWindow.glyph_canvas.set_current_glyph (fd);
 			
 			scrollbar.set_visible (fd.has_scrollbar ());

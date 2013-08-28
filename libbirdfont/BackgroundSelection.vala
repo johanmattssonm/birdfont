@@ -37,10 +37,11 @@ class BackgroundSelection : FontDisplay {
 		add_icon = (!) i;
 	}
 
+	public override string get_label () {
+		return _("Backgrounds");
+	}
+	
 	public override string get_name () {
-		#if translations
-			_("Backgrounds");
-		#endif
 		return "Backgrounds";
 	}
 

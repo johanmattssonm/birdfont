@@ -41,6 +41,10 @@ public class KerningDisplay : FontDisplay {
 		row.append (w);
 	}
 
+	public override string get_label () {
+		return _("Kerning");
+	}
+	
 	public override string get_name () {
 		return "Kerning";
 	}

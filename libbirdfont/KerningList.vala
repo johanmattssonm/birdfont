@@ -84,8 +84,11 @@ public class KerningList : FontDisplay {
 		cr.show_text (kerning);
 	}
 
+	public override string get_label () {
+		return _("Kerning Pairs");
+	}
+
 	public override string get_name () {
-		_("Kerning Pairs"); // translate later
 		return "Kerning Pairs";
 	}
 

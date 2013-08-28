@@ -438,7 +438,7 @@ public class TabBar : GLib.Object {
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 		
 		if (tab_width < 0) {
-			tab_width = 9 * _(display_item.get_name ()).char_count ();
+			tab_width = 9 * display_item.get_label ().char_count ();
 			tab_width += 30;
 		}
 				
@@ -487,11 +487,6 @@ public class TabBar : GLib.Object {
 		
 		draw_tabs (cr);
 		
-	}
-	
-	// translation is done here since tabs are selected by name
-	string translate (string s) {
-		return _(s);
 	}
 	
 	private void draw_tabs (Context cr) {
@@ -559,7 +554,7 @@ public class TabBar : GLib.Object {
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.set_font_size (14);
 			cr.move_to (8, height - 6);
-			cr.show_text (translate (t.get_label ()));
+			cr.show_text (t.get_label ());
 			cr.stroke ();
 			
 			// edges
@@ -591,24 +586,6 @@ public class TabBar : GLib.Object {
 			i++;
 		}
 	}
-	
-	public void add_empty_tab (string name) {
-		add_tab (new EmptyTab (name));
-	}
 }
-
-public class EmptyTab : FontDisplay {
-	
-	public string name;
-	
-	public EmptyTab (string name) {
-		this.name = name;
-	}
-	
-	public override string get_name () {
-		return name;
-	}
-}
-
 
 }

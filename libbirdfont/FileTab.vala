@@ -248,8 +248,11 @@ public class FileTab : FontDisplay {
 		cr.restore ();
 	}
 
+	public override string get_label () {
+		return _("Files");
+	}
+	
 	public override string get_name () {
-		_("Files");
 		return "Files";
 	}
 

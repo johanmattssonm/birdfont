@@ -48,11 +48,6 @@ public interface NativeWindow : GLib.Object {
 
 	/** Exit the application. */
 	public abstract void quit ();
-	
-	protected void webkit_callback (string s) {
-		FontDisplay fd = MainWindow.get_current_display ();
-		fd.process_property (s);
-	}
 }
 
 }

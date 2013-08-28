@@ -16,22 +16,16 @@ using Cairo;
 
 namespace BirdFont {
 
-/** Javascripts in webkit do use this callback. */
-public class PropertyFunction {
-	public delegate void PropertyCallback (string val);
-	public PropertyCallback call;
-}
-
 public abstract class FontDisplay : GLib.Object {
-	
-	List<string> property = new List<string> ();
-	List<PropertyFunction> call = new List<PropertyFunction> ();
 	
 	/** Queue redraw area */
 	public signal void redraw_area (double x, double y, double w, double h);
 	
-	/** Name of symbol or set of symbols in display selections like the tab panel. */
 	public virtual string get_name () {
+		return "";
+	}
+
+	public virtual string get_label () {
 		return "";
 	}
 	
@@ -40,10 +34,6 @@ public abstract class FontDisplay : GLib.Object {
 	}
 	
 	public virtual void scroll_to (double percent) {
-	}
-	
-	public virtual bool is_html_canvas () {
-		return false;
 	}
 
 	public static string path_to_uri (string path) {
@@ -147,49 +137,6 @@ public abstract class FontDisplay : GLib.Object {
 	public static File find_layout_dir () {
 		File f = find_file (null, "layout");
 		return f;		
-	}
-
-	public void add_html_callback (string prop, PropertyFunction.PropertyCallback cb) {
-		PropertyFunction pf = new PropertyFunction ();
-		pf.call = cb;
-		property.append (prop);
-		call.append (pf);
-	}
-	
-	public void process_property (string prop) {
-		string k, v;
-		int i, j;
-		PropertyFunction cb;
-		
-		if (prop == "" || prop == "done") {
-			return;
-		}
-		
-		i = prop.index_of (":");
-		
-		if (i <= 0) {
-			return;
-		}
-		
-		k = prop.substring (0, i);
-		v = prop.substring (i + 1);
-		
-		j = 0;
-		
-		foreach (string p in property) {
-			if (p == k) {
-				break;
-			}
-			j++;
-		}
-		
-		if (j >= property.length ()) {
-			warning (@"key  \"$k\" not found in property list, value: $v");
-			return;
-		}
-		
-		cb = call.nth (j).data;
-		cb.call (v);
 	}
 
 	public static File find_file (string? dir, string name) {

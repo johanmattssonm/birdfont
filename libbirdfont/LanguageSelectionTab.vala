@@ -87,9 +87,12 @@ public class LanguageSelectionTab : FontDisplay {
 		cr.show_text (language);
 	}
 
+	public override string get_label () {
+		return _("Character Set");
+	}
+	
 	public override string get_name () {
-		_("Character set");
-		return "Character set";
+		return "Character Set";
 	}
 
 	public override bool has_scrollbar () {

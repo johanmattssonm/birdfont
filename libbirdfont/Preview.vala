@@ -22,10 +22,6 @@ public class Preview : FontDisplay {
 	public override string get_name () {
 		return "Preview";
 	}
-	
-	public override bool is_html_canvas () {
-		return true;
-	}
 
 	public override void selected_canvas () {
 	}

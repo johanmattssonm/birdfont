@@ -230,6 +230,10 @@ public class OverView : FontDisplay {
 	public override void next_view () {
 	}
 
+	public override string get_label () {
+		return _("Overview");
+	}
+	
 	public override string get_name () {
 		return "Overview";
 	}

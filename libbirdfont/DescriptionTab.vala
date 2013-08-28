@@ -22,12 +22,11 @@ public class DescriptionTab : FontDisplay {
 	}
 	
 	public override string get_name () {
-		_("Description");
 		return "Description";
 	}
-	
-	public override bool is_html_canvas () {
-		return false;
+
+	public override string get_label () {
+		return _("Description");
 	}
 
 	public override string get_html () {

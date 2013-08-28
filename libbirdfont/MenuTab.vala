@@ -25,13 +25,13 @@ public class MenuTab : FontDisplay {
 	public static void set_suppress_event (bool e) {
 		suppress_event = e;
 	}
-	
+
+	public override string get_label () {
+		return _("Menu");
+	}
+		
 	public override string get_name () {
 		return "Menu";
-	}
-	
-	public override bool is_html_canvas () {
-		return true;
 	}
 
 	public override string get_html () {
