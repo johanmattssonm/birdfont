@@ -34,7 +34,7 @@ public class DefaultCharacterSet {
 	}
 	
 	/** Add a new language to the menu for default character set.
-	 * @param language A localized string of the language.
+	 * @param language A localized string for the name of the language.
 	 * @param language_code ISO code
 	 * @param characters all characters (including characters with diacritical marks).
 	 * For languages with too many glyphs should this string be left empty. 
@@ -78,7 +78,7 @@ public class DefaultCharacterSet {
 		return languages[0];
 	}
 	
-	public static string get_glyphs_for_prefered_language () {
+	public static string get_characters_for_prefered_language () {
 		string lang = get_prefered_language_code ();
 		int i = 0;
 		string characters = "";
@@ -101,7 +101,7 @@ public class DefaultCharacterSet {
 		string lower_case, upper_case;
 		string all_characters;
 		
-		all_characters = get_glyphs_for_prefered_language ();
+		all_characters = get_characters_for_prefered_language ();
 		if (all_characters != "") {
 			foreach (string c in all_characters.split (" ")) {
 				gr.add_single (c.get_char ());
@@ -272,7 +272,7 @@ public class DefaultCharacterSet {
 }
 
 public class DefaultLanguages {
- 	public static List<string> names;
+	public static List<string> names;
 	public static List<string> codes;
 	public static List<string> characters;
 	

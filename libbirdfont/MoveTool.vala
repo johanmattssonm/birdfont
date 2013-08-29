@@ -20,6 +20,7 @@ namespace BirdFont {
 class MoveTool : Tool {
 
 	bool move_path = false;
+	bool moved = false;
 	double last_x = 0;
 	double last_y = 0;
 
@@ -104,11 +105,13 @@ class MoveTool : Tool {
 			resize_path = false;
 			rotate_path = false;
 			
-			if (GridTool.is_visible ()) {
+			if (GridTool.is_visible () && moved) {
 				foreach (Path p in glyph.active_paths) {
 					tie_path_to_grid (p, x, y);
 				}
 			}
+			
+			moved = false;
 		});
 		
 		move_action.connect ((self, x, y)	 => {
@@ -117,7 +120,8 @@ class MoveTool : Tool {
 			double dy = last_y - y; 
 			double p = PenTool.precision;
 			
-			if (move_path) {
+			if (move_path && (fabs(dx) > 0 || fabs (dy) > 0)) {
+				moved = true;
 				foreach (Path path in glyph.active_paths) {
 					path.move (Glyph.ivz () * -dx * p, Glyph.ivz () * dy * p);
 				}
