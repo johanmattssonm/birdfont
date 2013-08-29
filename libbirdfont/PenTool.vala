@@ -849,15 +849,17 @@ public class PenTool : Tool {
 		path = null;
 		
 		foreach (Path current_path in g.path_list) {
-			foreach (EditPoint e in current_path.points) {
-				nd = e.get_distance (x, y);
-				
-				if (nd < d) {
-					d = nd;
-					ep = e;
-					path = current_path;
+			if (is_close_to_path (current_path, ex, ey)) {
+				foreach (EditPoint e in current_path.points) {
+					nd = e.get_distance (x, y);
+					
+					if (nd < d) {
+						d = nd;
+						ep = e;
+						path = current_path;
+					}
 				}
-			}	
+			}
 		}
 		
 		return ep;
@@ -1024,20 +1026,22 @@ public class PenTool : Tool {
 	}
 	
 	private bool is_over_handle (double event_x, double event_y) {		
-		Glyph g;
+		Glyph g = MainWindow.get_current_glyph (); 
+		double distance_to_edit_point = g.view_zoom * get_distance_to_closest_edit_point (event_x, event_y);
 		
 		if (!Path.show_all_line_handles) {
 			foreach (EditPoint selected_corner in selected_points) {
-				if (is_close_to_handle (selected_corner, event_x, event_y)) {
+				if (is_close_to_handle (selected_corner, event_x, event_y, distance_to_edit_point)) {
 					return true;
 				}
 			}
 		} else {
-			g = MainWindow.get_current_glyph (); 
 			foreach (Path p in g.path_list) {
-				foreach (EditPoint ep in p.points) {
-					if (is_close_to_handle (ep, event_x, event_y)) {
-						return true;
+				if (is_close_to_path (p, event_x, event_y)) {
+					foreach (EditPoint ep in p.points) {
+						if (is_close_to_handle (ep, event_x, event_y, distance_to_edit_point)) {
+							return true;
+						}
 					}
 				}
 			}
@@ -1046,11 +1050,26 @@ public class PenTool : Tool {
 		return false;
 	}
 
-	private bool is_close_to_handle (EditPoint selected_corner, double event_x, double event_y) {
+	bool is_close_to_path (Path p, double event_x, double event_y) {
+		double c = CONTACT_SURFACE * Glyph.ivz ();
+		double x = Glyph.path_coordinate_x (event_x);
+		double y = Glyph.path_coordinate_y (event_y);
+		
+		if (unlikely (p.xmin == 10000)) {
+			if (p.points.length () > 0) {
+				warning (@"No bounding box. $(p.points.length ())");
+				p.update_region_boundries ();
+			}
+		}
+		
+		return p.xmin - c <= x <= p.xmax + c && p.ymin - c <= y <= p.ymax + c;
+	}
+
+	private bool is_close_to_handle (EditPoint selected_corner, double event_x, double event_y, double distance_to_edit_point) {
 		double x = Glyph.path_coordinate_x (event_x);
 		double y = Glyph.path_coordinate_y (event_y);
 		Glyph g = MainWindow.get_current_glyph (); 
-		double d_point = g.view_zoom * get_distance_to_closest_edit_point (event_x, event_y);
+		double d_point = distance_to_edit_point;
 		double dl, dr;
 			
 		dl = g.view_zoom * selected_corner.get_left_handle ().get_point ().get_distance (x, y);
@@ -1078,23 +1097,25 @@ public class PenTool : Tool {
 		double dn;
 
 		foreach (Path p in g.path_list) {
-			foreach (EditPoint ep in p.points) {
-				if (ep.is_selected () || Path.show_all_line_handles) {
-					left = ep.get_left_handle ();
-					right = ep.get_right_handle ();
+			if (is_close_to_path (p, event_x, event_y)) {
+				foreach (EditPoint ep in p.points) {
+					if (ep.is_selected () || Path.show_all_line_handles) {
+						left = ep.get_left_handle ();
+						right = ep.get_right_handle ();
 
-					dn = left.get_point ().get_distance (x, y);
-					
-					if (dn < d) {
-						eh = left;
-						d = dn;
-					}
+						dn = left.get_point ().get_distance (x, y);
+						
+						if (dn < d) {
+							eh = left;
+							d = dn;
+						}
 
-					dn = right.get_point ().get_distance (x, y);
-					
-					if (dn < d) {
-						eh = right;
-						d = dn;
+						dn = right.get_point ().get_distance (x, y);
+						
+						if (dn < d) {
+							eh = right;
+							d = dn;
+						}
 					}
 				}
 			}

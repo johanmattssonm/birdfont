@@ -916,6 +916,16 @@ public class Path {
 	}
 
 	public void update_region_boundries () {
+		double txmax = -10000;
+		double txmin = 10000;
+		double tymax = -10000;
+		double tymin = 10000;
+		
+		EditPoint top = new EditPoint ();
+		EditPoint bottom = new EditPoint ();
+		EditPoint left = new EditPoint ();
+		EditPoint right = new EditPoint ();
+		
 		if (points.length () == 0) {
 			xmax = 0;
 			xmin = 0;
@@ -923,49 +933,110 @@ public class Path {
 			ymin = 0;			
 		}
 
+		// on curve points
+		foreach (EditPoint p in points) {
+			if (p.x > txmax) {
+				txmax = p.x;
+				right = p;
+			}
+			
+			if (p.x < txmin) {
+				txmin = p.x;
+				left = p;
+			}
+
+			if (p.y > tymax) {
+				tymax = p.y;
+				top = p;
+			}
+	
+			if (p.y < tymin) {
+				tymin = p.y;
+				bottom = p;
+			}
+		}
+
 		// inside and outside in vala lambda functions reveals a tricky problem
 		// (look at c code). that's the reason for the !new_val expression
-
 		xmax = -10000;
 		xmin = 10000;
 		ymax = -10000;
 		ymin = 10000;
 
-		double txmax = -10000;
-		double txmin = 10000;
-		double tymax = -10000;
-		double tymin = 10000;
-
 		bool new_val = false;
-			
-		all_of_path ((cx, cy) => {	
-			if (!new_val) {
-				txmax = cx;
-				txmin = cx;
-				tymax = cy;
-				tymin = cy;
-				new_val = true;
-			}
-			
-			if (cx < txmin) {
-				txmin = cx;
-			}
+		
+		if (top.prev != null) {
+			all_of (top.get_prev ().data, top, (cx, cy) => {
+				if (cy > tymax) {
+					tymax = cy;
+				}
+				return true;
+			});
+		}
 
-			if (cx > txmax) {
-				txmax = cx;
-			}
-			
-			if (cy < tymin) {
-				tymin = cy;
-			}
+		if (top.next != null) {
+			all_of (top, top.get_next ().data, (cx, cy) => {
+				if (cy > tymax) {
+					tymax = cy;
+				}
+				return true;
+			});
+		}
+		
+		if (bottom.prev != null) {
+			all_of (bottom.get_prev ().data, bottom, (cx, cy) => {
+				if (cy < tymin) {
+					tymin = cy;
+				}
+				return true;
+			});
+		}
+		
+		if (bottom.next != null) {
+			all_of (bottom, bottom.get_next ().data, (cx, cy) => {
+				if (cy < tymin) {
+					tymin = cy;
+				}
+				return true;
+			});
+		}
+		
+		if (right.prev != null) {
+			all_of (right.get_prev ().data, right, (cx, cy) => {
+				if (cx > txmax) {
+					txmax = cx;
+				}
+				return true;
+			});
+		}
 
-			if (cy > tymax) {
-				tymax = cy;
-			}
+		if (right.next != null) {
+			all_of (right, right.get_next ().data, (cx, cy) => {
+				if (cx > txmax) {
+					txmax = cx;
+				}
+				return true;
+			});
+		}
 
-			return true;
-		});
-				
+		if (left.prev != null) {
+			all_of (left.get_prev ().data, left, (cx, cy) => {
+				if (cx < txmin) {
+					txmin = cx;
+				}
+				return true;
+			});
+		}
+
+		if (left.next != null) {
+			all_of (left, left.get_next ().data, (cx, cy) => {
+				if (cx < txmin) {
+					txmin = cx;
+				}
+				return true;
+			});
+		}
+		
 		xmax = txmax;
 		xmin = txmin;
 		ymax = tymax;
