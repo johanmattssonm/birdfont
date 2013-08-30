@@ -731,7 +731,7 @@ public class Glyph : FontDisplay {
 		view_zoom_x = allocation.width * view_zoom / w;
 		view_zoom_y = allocation.height * view_zoom / h;
 				
-		// TODO: there is a max zoom level: probably ivz > 0.1
+		// TODO: there is a max zoom level
 		
 		if (view_zoom_x * allocation.width < view_zoom_y * allocation.height) {
 			view_zoom = view_zoom_x;

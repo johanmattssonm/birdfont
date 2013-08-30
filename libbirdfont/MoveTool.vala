@@ -24,6 +24,10 @@ class MoveTool : Tool {
 	double last_x = 0;
 	double last_y = 0;
 	
+	double selection_x = 0;
+	double selection_y = 0;	
+	bool group_selection= false;
+	
 	bool rotate_path = false;
 	double last_rotate_y;
 	static double selection_box_width = 0;
@@ -48,6 +52,7 @@ class MoveTool : Tool {
 			Glyph glyph = MainWindow.get_current_glyph ();
 						
 			glyph.store_undo_state ();
+			group_selection = false;
 			
 			foreach (Path p in glyph.active_paths) {
 				if (is_over_rotate_handle (p, x, y)) {
@@ -72,6 +77,12 @@ class MoveTool : Tool {
 						
 			last_x = x;
 			last_y = y;
+			
+			if (glyph.active_paths.length () == 0) {
+				group_selection = true;
+				selection_x = x;
+				selection_y = y;	
+			}
 		});
 
 		release_action.connect((self, b, x, y) => {
@@ -86,6 +97,11 @@ class MoveTool : Tool {
 				}
 			}
 			
+			if (group_selection) {
+				select_group ();
+			}
+			
+			group_selection = false;
 			moved = false;
 		});
 		
@@ -144,13 +160,50 @@ class MoveTool : Tool {
 			if (g.active_paths.length () > 0) {
 				draw_rotate_handle (cr);
 			}
+			
+			if (group_selection) {
+				draw_selection_box (cr);
+			}
 		});
 	}
-
+	
+	void select_group () {
+		double x1 = Glyph.path_coordinate_x (Math.fmin (selection_x, last_x));
+		double y1 = Glyph.path_coordinate_y (Math.fmin (selection_y, last_y));
+		double x2 = Glyph.path_coordinate_x (Math.fmax (selection_x, last_x));
+		double y2 = Glyph.path_coordinate_y (Math.fmax (selection_y, last_y));
+		Glyph glyph = MainWindow.get_current_glyph ();
+		
+		glyph.clear_active_paths ();
+		
+		foreach (Path p in glyph.path_list) {
+			if (p.xmin > x1 && p.xmax < x2 && p.ymin < y1 && p.ymax > y2) {
+				glyph.active_paths.append (p);
+			}
+		}
+	}
+	
 	static void update_selection_boundries () {
 		get_selection_box_boundries (out selection_box_center_x,
 			out selection_box_center_y, out selection_box_width,
 			out selection_box_height);	
+	}
+
+	void draw_selection_box (Context cr) {
+		double x = Math.fmin (selection_x, last_x);
+		double y = Math.fmin (selection_y, last_y);
+
+		double w = Math.fabs (selection_x - last_x);
+		double h = Math.fabs (selection_y - last_y);
+		
+		cr.save ();
+		
+		cr.set_source_rgba (0, 0, 0.3, 1);
+		cr.set_line_width (2);
+		cr.rectangle (x, y, w, h);
+		cr.stroke ();
+		
+		cr.restore ();
 	}
 
 	void draw_rotate_handle (Context cr) {
