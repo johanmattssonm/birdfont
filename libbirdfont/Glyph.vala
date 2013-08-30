@@ -1573,6 +1573,8 @@ public class Glyph : FontDisplay {
 		undo_list.remove_link (undo_list.last ());
 
 		PenTool.update_selected_points ();
+		
+		clear_active_paths ();
 	}
 	
 	void set_glyph_data (Glyph g) {
