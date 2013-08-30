@@ -32,14 +32,6 @@ class GposTable : Table {
 	
 	public override void parse (FontData dis) throws Error {
 		// Not implemented, freetype2 is used for loading fonts
-		return_if_fail (offset > 0 && length > 0);
-
-		stdout.printf ("GPOS data:\n");
-		dis.seek (offset);
-		for (int i = 0; i < length; i++) {
-			stdout.printf ("%x ", dis.read ());
-		}
-		stdout.printf ("\n");
 	}
 
 	public void process (GlyfTable glyf_table) throws GLib.Error {

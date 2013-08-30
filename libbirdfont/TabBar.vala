@@ -439,7 +439,7 @@ public class TabBar : GLib.Object {
 		
 		if (tab_width < 0) {
 			tab_width = 9 * display_item.get_label ().char_count ();
-			tab_width += 30;
+			tab_width += 36;
 		}
 				
 		tabs.insert (new Tab (display_item, tab_width, always_open), s);

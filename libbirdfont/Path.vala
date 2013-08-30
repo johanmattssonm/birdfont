@@ -1042,7 +1042,12 @@ public class Path {
 		ymax = tymax;
 		ymin = tymin;
 
-		if (unlikely (!got_region_boundries ())) {
+		if (points.length () == 0) {
+			xmax = 0;
+			xmin = 0;
+			ymax = 0;
+			ymin = 0;
+		} else if (unlikely (!got_region_boundries ())) {
 			warning (@"No new region boundries.\nPoints.length: $(points.length ())");
 			print_boundries ();
 		}
