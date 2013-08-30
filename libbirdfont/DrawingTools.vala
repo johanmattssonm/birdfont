@@ -70,7 +70,10 @@ public class DrawingTools : ToolCollection  {
 
 		Tool move_tool = new MoveTool ("move");
 		draw_tools.add_tool (move_tool);
-
+		
+		Tool resize_tool = new ResizeTool ("resize");
+		draw_tools.add_tool (resize_tool);
+		
 		// quadratic Bézier points
 		Tool quadratic_points = new Tool ("quadratic_points", _("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
