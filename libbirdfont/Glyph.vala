@@ -43,8 +43,8 @@ public class Glyph : FontDisplay {
 	double pointer_begin_y = 0;
 
 	// Current pointer position
-	double motion_x = 0;
-	double motion_y = 0;
+	public double motion_x = 0;
+	public double motion_y = 0;
 		
 	// Zoom area
 	double zoom_x1 = 0;
@@ -209,6 +209,46 @@ public class Glyph : FontDisplay {
 			if (p.ymin < y1) y1 = p.ymin;
 			if (p.ymax > y2) y2 = p.ymax;
 		}
+	}
+	
+	public void selection_boundries (out double x, out double y, out double w, out double h) {
+		double px, py, px2, py2;
+		
+		px = 10000;
+		py = 10000;
+		px2 = -10000;
+		py2 = -10000;
+				
+		foreach (Path p in active_paths) {
+			if (p.xmin < px) {
+				px = p.xmin;
+			} 
+
+			if (p.ymin < py) {
+				py = p.ymin;
+			}
+
+			if (p.xmax > px2) {
+				px2 = p.xmax;
+			}
+			
+			if (p.ymax > py2) {
+				py2 = p.ymax;
+			}
+		}
+		
+		if (px2 == -10000 || px == 10000) {
+			warning (@"No box for selected paths. ($(active_paths.length ()))");
+			px = 0;
+			py = 0;
+			px2 = 0;
+			py2 = 0;
+		}
+
+		x = px;
+		y = py2;		
+		w = px2 - px;
+		h = py2 - py;
 	}
 	
 	/** @return centrum pixel for x coordinates. */
@@ -571,10 +611,8 @@ public class Glyph : FontDisplay {
 		
 		t.move_action (t, (int) x, (int) y);
 
-		if (BirdFont.show_coordinates) {
-			motion_x = x * ivz () - xc () + view_offset_x;
-			motion_y = yc () - y * ivz () - view_offset_y;
-		}
+		motion_x = x * ivz () - xc () + view_offset_x;
+		motion_y = yc () - y * ivz () - view_offset_y;
 	}
 	
 	public override void button_release (int button, double ex, double ey) {

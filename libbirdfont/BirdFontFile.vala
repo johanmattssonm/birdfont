@@ -1119,6 +1119,7 @@ class BirdFontFile {
 		}
 
 		close (path);
+		path.update_region_boundries ();
 		
 		return path;	
 	}

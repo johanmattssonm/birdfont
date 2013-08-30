@@ -543,6 +543,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		paste_item.activate.connect (() => { ClipTool.paste (); });	
 		paste_item.add_accelerator ("activate", accel_group, 'V', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		Gtk.MenuItem paste_in_place_item = new Gtk.MenuItem.with_mnemonic (_("Paste _In Place"));
+		edit_menu.append (paste_in_place_item);
+		paste_in_place_item.activate.connect (() => { ClipTool.paste_in_place (); });	
+		paste_in_place_item.add_accelerator ("activate", accel_group, 'V', Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK, Gtk.AccelFlags.VISIBLE);
+
 		Gtk.MenuItem select_all_item = new Gtk.MenuItem.with_mnemonic (_("Select All Pa_ths"));
 		edit_menu.append (select_all_item);
 		select_all_item.activate.connect (() => {

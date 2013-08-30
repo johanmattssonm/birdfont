@@ -31,7 +31,29 @@ public class ClipTool : Tool {
 		}
 	}
 
+	public static void paste_in_place () {
+		paste_paths ();
+	}
+	
+	/** Paste at cursor. */
 	public static void paste () {
+		Glyph g = MainWindow.get_current_glyph ();
+		double x, y, w, h;
+		double dx, dy;
+		
+		paste_paths ();
+		
+		g.selection_boundries (out x, out y, out w, out h);
+		
+		dx = g.motion_x - x - w / 2.0;
+		dy = g.motion_y - y + h / 2.0;
+		
+		foreach (Path path in g.active_paths) {
+			path.move (dx, dy);
+		}
+	}
+	
+	static void paste_paths () {
 		bool is_bf_clipboard;
 		FontDisplay fd;
 		string clipboard_data = MainWindow.native_window.get_clipboard_data ();
@@ -46,7 +68,7 @@ public class ClipTool : Tool {
 		}
 	}
 	
-	public static void paste_to_glyph (bool bf_clipboard_data) {
+	static void paste_to_glyph (bool bf_clipboard_data) {
 		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph? destination = null;
 		string data;
@@ -71,7 +93,7 @@ public class ClipTool : Tool {
 		((!)destination).update_view ();			
 	}
 
-	public static string export_selected_paths_to_birdfont_clipboard () {
+	static string export_selected_paths_to_birdfont_clipboard () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		StringBuilder s = new StringBuilder ();
 		
@@ -89,7 +111,7 @@ public class ClipTool : Tool {
 		return s.str;
 	}
 	
-	public static void import_birdfont_clipboard (string data) {
+	static void import_birdfont_clipboard (string data) {
 		string[] paths = data.split ("\nBF ");
 		string d;
 		int i;
@@ -106,7 +128,7 @@ public class ClipTool : Tool {
 		}	
 	}
 	
-	public static void import_birdfont_path (string data) {
+	static void import_birdfont_path (string data) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path path = BirdFontFile.parse_path_data (data);
 		path.close ();
