@@ -256,6 +256,21 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				
 				MainWindow.glyph_canvas.key_press (event.keyval);
 				KeyBindings.add_modifier_from_keyval (event.keyval);
+				
+				if (KeyBindings.modifier == CTRL) {
+					switch (event.keyval) {
+						case 'a':
+							Toolbox.select_tool_by_name ("move");
+							MainWindow.get_current_glyph ().select_all_paths ();
+							break;
+						case 'c':
+							ClipTool.copy ();
+							break;
+						case 'v':
+							ClipTool.paste ();
+							break;
+					}
+				}
 			}
 			
 			return false;
@@ -536,12 +551,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem copy_item = new Gtk.MenuItem.with_mnemonic (_("_Copy"));
 		edit_menu.append (copy_item);
 		copy_item.activate.connect (() => { ClipTool.copy (); });		
-		copy_item.add_accelerator ("activate", accel_group, 'C', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		Gtk.MenuItem paste_item = new Gtk.MenuItem.with_mnemonic (_("_Paste"));
 		edit_menu.append (paste_item);
 		paste_item.activate.connect (() => { ClipTool.paste (); });	
-		paste_item.add_accelerator ("activate", accel_group, 'V', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		Gtk.MenuItem paste_in_place_item = new Gtk.MenuItem.with_mnemonic (_("Paste _In Place"));
 		edit_menu.append (paste_in_place_item);
@@ -554,7 +567,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			Toolbox.select_tool_by_name ("move");
 			MainWindow.get_current_glyph ().select_all_paths ();
 		});
-		select_all_item.add_accelerator ("activate", accel_group, 'A', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		Gtk.MenuItem search_item = new Gtk.MenuItem.with_mnemonic (_("Search"));
 		edit_menu.append (search_item);

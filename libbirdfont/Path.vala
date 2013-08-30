@@ -956,14 +956,14 @@ public class Path {
 			}
 		}
 
-		// inside and outside in vala lambda functions reveals a tricky problem
-		// (look at c code). that's the reason for the !new_val expression
 		xmax = -10000;
 		xmin = 10000;
 		ymax = -10000;
 		ymin = 10000;
 
 		bool new_val = false;
+		
+		// TODO: optimize (iterate over only x or y)
 		
 		if (top.prev != null) {
 			all_of (top.get_prev ().data, top, (cx, cy) => {
@@ -1042,9 +1042,7 @@ public class Path {
 		ymax = tymax;
 		ymin = tymin;
 
-		if (unlikely (!new_val)) {
-			// only one point
-		} else if (unlikely (!got_region_boundries ())) {
+		if (unlikely (!got_region_boundries ())) {
 			warning (@"No new region boundries.\nPoints.length: $(points.length ())");
 			print_boundries ();
 		}
