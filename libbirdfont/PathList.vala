@@ -20,6 +20,12 @@ public class PathList : GLib.Object {
 	public PathList () {
 	}
 	
+	public void append (PathList pl) {
+		foreach (Path p in pl.paths) {
+			paths.append (p);
+		}
+	}
+	
 	public void clear () {
 		while (paths.length () > 0) {
 			paths.remove_link (paths.first ());

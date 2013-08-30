@@ -50,18 +50,22 @@ public class ClipTool : Tool {
 		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph? destination = null;
 		string data;
-		
+		PathList new_paths;
 		return_if_fail (fd is Glyph);
 		
 		destination = (Glyph) fd;
 		((!)destination).store_undo_state ();
+		((!)destination).clear_active_paths ();
 		
 		data = MainWindow.native_window.get_clipboard_data ();
 
 		if (bf_clipboard_data) {
 			import_birdfont_clipboard (data);
 		} else if (data != "") {
-			ImportSvg.import_svg_data (data);
+			new_paths = ImportSvg.import_svg_data (data);
+			foreach (Path p in new_paths.paths) {
+				((!)destination).active_paths.append (p);
+			}
 		}
 		
 		((!)destination).update_view ();			
@@ -107,6 +111,7 @@ public class ClipTool : Tool {
 		Path path = BirdFontFile.parse_path_data (data);
 		path.close ();
 		glyph.add_path (path);
+		glyph.active_paths.append (path);
 	}
 }
 

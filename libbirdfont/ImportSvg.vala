@@ -33,11 +33,16 @@ public class ImportSvg {
 		import_svg (path);
 	}
 	
-	public static void import_svg_data (string xml_data) {
+	public static PathList import_svg_data (string xml_data) {
+		PathList path_list = new PathList ();
+		PathList pl;
+		Path p;
+		string svg;
+		string xml;
+		Glyph glyph;
+		
 		if (BirdFont.win32) {
-			string svg;
-			string xml;
-			Glyph glyph = MainWindow.get_current_glyph ();
+			glyph = MainWindow.get_current_glyph ();
 			
 			// Paths
 			xml = xml_data.replace ("id", "__");
@@ -45,7 +50,8 @@ public class ImportSvg {
 				svg = svg_data.substring (0, svg_data.index_of ("\""));
 				
 				if (svg.has_prefix ("M") || svg.has_prefix ("m")) {
-					parse_svg_data (svg, glyph);
+					pl = parse_svg_data (svg, glyph);
+					path_list.append (pl);
 				}
 			}
 			
@@ -53,7 +59,8 @@ public class ImportSvg {
 			xml = xml_data;
 			foreach (string svg_data in xml.split ("<polygon points=\"")) {
 				svg = svg_data.substring (0, svg_data.index_of ("\""));
-				parse_polygon_data (svg, glyph);
+				p = parse_polygon_data (svg, glyph);
+				path_list.paths.append (p);
 			}			
 		} else {
 			Xml.Doc* doc;
@@ -64,11 +71,13 @@ public class ImportSvg {
 			doc = Parser.parse_doc (xml_data);
 			root = doc->get_root_element ();
 			return_if_fail (root != null);
-			parse_svg_file (root);
+			path_list = parse_svg_file (root);
 
 			delete doc;
 			Parser.cleanup ();
 		}
+		
+		return path_list;
 	}
 	
 	public static void import_svg (string path) {
@@ -114,70 +123,77 @@ public class ImportSvg {
 		}
 	}
 	
-	private static void parse_svg_file (Xml.Node* root) {
+	private static PathList parse_svg_file (Xml.Node* root) {
 		Xml.Node* node;
+		PathList pl = new PathList ();
 		
 		node = root;
 		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "g") {
-				parse_layer (iter);
+				parse_layer (iter, pl);
 			}
 			
 			if (iter->name == "path") {
-				parse_path (iter);
+				parse_path (iter, pl);
 			}
 			
 			if (iter->name == "polygon") {
-				parse_polygon (iter);
+				parse_polygon (iter, pl);
 			}
-		}		
+		}
+		
+		return pl;
 	}
 	
-	private static void parse_layer (Xml.Node* node) {
+	private static void parse_layer (Xml.Node* node, PathList pl) {
 		return_if_fail (node != null);
 				
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "path") {
-				parse_path (iter);
+				parse_path (iter, pl);
 			}
 			
 			if (iter->name == "g") {
-				parse_layer (iter);
+				parse_layer (iter, pl);
 			}
 			
 			if (iter->name == "polygon") {
-				parse_polygon (iter);
+				parse_polygon (iter, pl);
 			}
 		}
 	}
 	
-	private static void parse_polygon (Xml.Node* node) {
+	private static void parse_polygon (Xml.Node* node, PathList pl) {
 		string attr_name = "";
 		string attr_content;
 		Glyph glyph = MainWindow.get_current_glyph ();
-				
+		Path p;
+			
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
 			
 			if (attr_name == "points") {
-				parse_polygon_data (attr_content, glyph);
+				p = parse_polygon_data (attr_content, glyph);
+				pl.paths.append (p);
 			}
 		}		
 	}
 	
-	private static void parse_path (Xml.Node* node) {
+	private static void parse_path (Xml.Node* node, PathList pl) {
 		string attr_name = "";
 		string attr_content;
 		Glyph glyph = MainWindow.get_current_glyph ();
-				
+		PathList path_list;
+			
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
 			
 			if (attr_name == "d") {
-				parse_svg_data (attr_content, glyph);
+				path_list = parse_svg_data (attr_content, glyph);
+				pl.append (path_list);
 			}
 		}
 	}
@@ -229,8 +245,10 @@ public class ImportSvg {
 	 * @param d svg data
 	 * @param glyph add paths to this glyph
 	 * @param svg_glyph parse svg glyph (origo in lower left corner)
+	 * 
+	 * @return the new paths
 	 */
-	public static void parse_svg_data (string d, Glyph glyph, bool svg_glyph = false, double units = 1) {
+	public static PathList parse_svg_data (string d, Glyph glyph, bool svg_glyph = false, double units = 1) {
 		string[] c;
 		string[] command;
 		int ci = 0;
@@ -244,9 +262,10 @@ public class ImportSvg {
 		int pi = 0;
 		string data;
 		Font font;
-
+		PathList path_list = new PathList ();
+		
 		if (d.index_of ("z") == -1) { // ignore all open paths
-			return;
+			return path_list;
 		}
 
 		font = BirdFont.get_current_font ();
@@ -729,7 +748,7 @@ public class ImportSvg {
 		for (int i = 0; i < ci; i++) {
 			if (is_null (command[i]) || command[i] == "") {
 				warning ("Parser error.");
-				return;
+				return path_list;
 			}
 			
 			if (command[i] == "M") {
@@ -750,7 +769,7 @@ public class ImportSvg {
 
 				if (is_null (path.points.last ().data)) {
 					warning ("Paths must begin with M");
-					return;
+					return path_list;
 				}
 				
 				ep1 = path.points.last ().data;
@@ -781,7 +800,7 @@ public class ImportSvg {
 				
 				if (is_null (path.points.last ().data)) {
 					warning ("Paths must begin with M");
-					return;
+					return path_list;
 				}
 
 				// start with line handles
@@ -838,12 +857,14 @@ public class ImportSvg {
 
 				glyph.add_path (path);
 				glyph.close_path ();
-								
+				
+				path_list.paths.append (path);
 				path = new Path ();
 			}
 		}
-
+	
 		// TODO: Find out if it is possible to tie handles.
+		return path_list;
 	}
 	
 	static double parse_double (string? s) {
@@ -869,7 +890,7 @@ public class ImportSvg {
 		return double.try_parse ((!) s);
 	}
 	
-	static void parse_polygon_data (string polygon_points, Glyph glyph) {
+	static Path parse_polygon_data (string polygon_points, Glyph glyph) {
 		string data = add_separators (polygon_points);
 		string[] c = data.split (" ");
 		Path path = new Path ();
@@ -880,6 +901,8 @@ public class ImportSvg {
 		
 		glyph.add_path (path);
 		glyph.close_path ();
+		
+		return path;
 	}
 }
 
