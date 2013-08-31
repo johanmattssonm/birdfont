@@ -48,8 +48,13 @@ public class MainWindow {
 	}
 
 	public static void open_recent_files_tab () {
+		IdleSource idle = new IdleSource ();
 		tabs.add_unique_tab (file_tab);
-		tabs.select_tab_name ("Files");
+		idle.set_callback (() => {			
+			tabs.select_tab_name ("Files");
+			return false;
+		});
+		idle.attach (null);
 	}
 
 	public static DrawingTools get_drawing_tools () {
