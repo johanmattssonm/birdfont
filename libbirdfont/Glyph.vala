@@ -1361,7 +1361,7 @@ public class Glyph : FontDisplay {
 	
 	public void draw_path (Context cr) {
 		double left, baseline;
-			
+		
 		baseline = get_line ("baseline").pos;
 		left = get_line ("left").pos;
 		
@@ -1380,7 +1380,7 @@ public class Glyph : FontDisplay {
 				cr.restore ();
 			}
 		}
-				
+						
 		if (is_open ()) {
 			foreach (unowned Path p in path_list) {
 				p.draw_outline (cr, allocation, view_zoom);
@@ -1442,6 +1442,12 @@ public class Glyph : FontDisplay {
 		
 		if (background_image != null && background_image_visible) {
 			((!)background_image).draw (cr, allocation, view_offset_x, view_offset_y, view_zoom);
+		}
+
+		if (unlikely (Preferences.draw_boundries)) {
+			foreach (unowned Path p in path_list) {
+				p.draw_boundries (cr, allocation, view_zoom);
+			}
 		}
 		
 		draw_background_glyph (allocation, cr);
@@ -1734,6 +1740,10 @@ public class Glyph : FontDisplay {
 		return false;
 	}
 	
+	static bool in_range (double offset_x, double coordinate_x1, double coordinate_x2) {
+		return coordinate_x1 <= offset_x <= coordinate_x2;
+	}
+	
 	public void juxtapose (WidgetAllocation allocation, Context cr) {
 		string glyph_sequence = Preferences.get ("glyph_sequence");
 		unichar c;
@@ -1746,8 +1756,16 @@ public class Glyph : FontDisplay {
 		double x, kern;
 		double left, baseline;
 		string last_name;
-				
+		
+		double box_x1, box_x2, box_y1, box_y2;
+		double marker_x, marker_y;
+		
 		x = 0;
+		
+		box_x1 = path_coordinate_x (0);
+		box_y1 = path_coordinate_y (0);
+		box_x2 = path_coordinate_x (allocation.width);
+		box_y2 = path_coordinate_y (allocation.height);
 		
 		current.append_unichar (glyph.unichar_code);
 		pos = glyph_sequence.index_of (current.str);
@@ -1767,20 +1785,27 @@ public class Glyph : FontDisplay {
 			} else {
 				kern = 0;
 			}
+			
+			if (!juxtaposed.is_empty ()
+				&& (in_range (left + x + kern, box_x1, box_x2) // the letter is visible
+				|| in_range (left + x + kern + juxtaposed.get_width (), box_x1, box_x2))) {
 
-			if (!juxtaposed.is_empty ()) {
+				marker_x = Glyph.xc () + left + x + kern - glyph.view_offset_x;
+				marker_y = Glyph.yc () + baseline - glyph.view_offset_y;
+				
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
-				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
 				cr.set_source_rgba (0, 0, 0, 1);
-				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x + kern, Glyph.yc () + baseline);
+
+				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), marker_x, marker_y);
 				cr.restore ();
 			}
 			
-			x += juxtaposed.get_width () + KerningClasses.get_instance ().get_kerning (glyph.name, name) + kern;
+			x += juxtaposed.get_width () + kern;
+
 			last_name = name;
 		}
-		
+
 		x = 0;
 		last_name = glyph.name;
 		for (int i = pos - 1; i >= 0; i--) {
@@ -1797,17 +1822,21 @@ public class Glyph : FontDisplay {
 			x -= juxtaposed.get_width ();
 			x -= kern;
 			
-			if (!juxtaposed.is_empty ()) {
+			marker_x = Glyph.xc () + left + x;
+			marker_y = Glyph.yc () + baseline;
+			if (!juxtaposed.is_empty () 
+				&&(in_range (left + x, box_x1, box_x2)
+				|| in_range (left + x + juxtaposed.get_width (), box_x1, box_x2))) {
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
 				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
 				cr.set_source_rgba (0, 0, 0, 1);
-				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), Glyph.xc () + left + x, Glyph.yc () + baseline);
+				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), marker_x, marker_y);
 				cr.restore ();
 			}
 			
 			last_name = name;
-		}	
+		}
 	}
 	
 	void draw_background_glyph (WidgetAllocation allocation, Context cr) {

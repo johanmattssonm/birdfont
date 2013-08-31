@@ -49,6 +49,8 @@ public class EditPoint {
 	public bool tie_handles = false;
 	public bool reflective_handles = false;
 	
+	Path? path = null;
+	
 	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {
 		x = nx;
 		y = ny;
@@ -69,6 +71,18 @@ public class EditPoint {
 			x = 0;
 			y = 0;
 		}
+	}
+
+	public void set_path (Path p) {
+		path = p;
+	}
+
+	public Path get_path () {
+		if (unlikely (path == null)) {
+			warning ("path is null");
+			return new Path ();
+		}	
+		return (!) path;
 	}
 
 	public bool equals (EditPoint e) {

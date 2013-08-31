@@ -274,6 +274,7 @@ public class PenTool : Tool {
 			}
 			
 			selected_handle.parent.recalculate_linear_handles ();
+			selected_handle.parent.get_path ().update_region_boundries_for_handle (selected_handle);
 			
 			// Fixa: redraw line only
 			glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
@@ -302,8 +303,8 @@ public class PenTool : Tool {
 				} else {
 					glyph.move_selected_edit_point_delta (p, (x - last_point_x) * precision, (y - last_point_y) * precision);
 				}
-				
 				p.recalculate_linear_handles ();
+				p.get_path ().update_region_boundries_for_point (p);
 			}
 		}
 		

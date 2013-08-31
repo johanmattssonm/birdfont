@@ -748,6 +748,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "</version>\n");
 	}
 
+	// FIXME: for some fonts will this return entry 0 (copyright)
 	if (FT_Get_Sfnt_Name (face, 10, &name_table_data) == 0) { // description
 		g_string_append (bf, "<description>");
 		append_description (bf, &name_table_data);

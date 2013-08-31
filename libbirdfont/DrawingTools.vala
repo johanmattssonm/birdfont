@@ -123,6 +123,7 @@ public class DrawingTools : ToolCollection  {
 				}
 				
 				p.set_tie_handle (tie);
+				p.get_path ().update_region_boundries_for_point (p);
 			} else {
 				foreach (EditPoint ep in PenTool.selected_points) {
 					tie = !ep.tie_handles;
@@ -133,8 +134,10 @@ public class DrawingTools : ToolCollection  {
 					}
 				
 					ep.set_tie_handle (tie);
+					ep.get_path ().update_region_boundries_for_point (ep);
 				}
 			}
+			
 			
 			MainWindow.get_current_glyph ().update_view ();
 		});
@@ -157,6 +160,7 @@ public class DrawingTools : ToolCollection  {
 					}
 				}
 				
+				ep.get_path ().update_region_boundries_for_point (ep);
 				MainWindow.get_current_glyph ().update_view ();
 			}
 		});

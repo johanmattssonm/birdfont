@@ -129,6 +129,22 @@ public class Path {
 		return points.length () == 0;
 	}
 
+	public void draw_boundries  (Context cr, WidgetAllocation allocation, double view_zoom) {
+		double x = Glyph.reverse_path_coordinate_x (xmin); 
+		double y = Glyph.reverse_path_coordinate_y (ymin);
+		double x2 = Glyph.reverse_path_coordinate_x (xmax);
+		double y2 = Glyph.reverse_path_coordinate_y (ymax);
+		
+		cr.save ();
+		
+		cr.set_source_rgba (0, 0, 0.3, 1);
+		cr.set_line_width (2);
+		cr.rectangle (x, y, x2 - x, y2 - y);
+		cr.stroke ();
+		
+		cr.restore ();
+	}
+
 	public void draw_outline (Context cr, WidgetAllocation allocation, double view_zoom) {
 		unowned List<EditPoint> ep = points;
 		
@@ -871,6 +887,8 @@ public class Path {
 		second_last_point = last_point;
 		last_point = p;
 
+		p.set_path (this);
+		
 		return np;
 	}
 
@@ -915,141 +933,66 @@ public class Path {
 		update_region_boundries ();
 	}
 
-	public void update_region_boundries () {
-		double txmax = -10000;
-		double txmin = 10000;
-		double tymax = -10000;
-		double tymin = 10000;
+	public void update_region_boundries_for_point (EditPoint p) {
+		EditPointHandle left_handle;
+		EditPointHandle right_handle;
 		
-		EditPoint top = new EditPoint ();
-		EditPoint bottom = new EditPoint ();
-		EditPoint left = new EditPoint ();
-		EditPoint right = new EditPoint ();
-		
-		if (points.length () == 0) {
-			xmax = 0;
-			xmin = 0;
-			ymax = 0;
-			ymin = 0;			
-		}
-
-		// on curve points
-		foreach (EditPoint p in points) {
-			if (p.x > txmax) {
-				txmax = p.x;
-				right = p;
-			}
-			
-			if (p.x < txmin) {
-				txmin = p.x;
-				left = p;
-			}
-
-			if (p.y > tymax) {
-				tymax = p.y;
-				top = p;
-			}
+		left_handle = p.get_left_handle ();
+		right_handle = p.get_right_handle ();
 	
-			if (p.y < tymin) {
-				tymin = p.y;
-				bottom = p;
-			}
+		if (p.x > xmax) {
+			xmax = p.x;
+		}
+		
+		if (p.x < xmin) {
+			xmin = p.x;
 		}
 
+		if (p.y > ymax) {
+			ymax = p.y;
+		}
+
+		if (p.y < ymin) {
+			ymin = p.y;
+		}
+		
+		update_region_boundries_for_handle (left_handle);
+		update_region_boundries_for_handle (right_handle);
+	}
+
+	public void update_region_boundries_for_handle (EditPointHandle h) {
+		if (h.x () > xmax) {
+			xmax = h.x ();
+		}
+
+		if (h.x () < xmin) {
+			xmin = h.x ();
+		}
+
+		if (h.y () > ymax) {
+			ymax = h.y ();
+		}
+
+		if (h.y () < ymin) {
+			ymin = h.y ();
+		}
+	}
+
+	public void update_region_boundries () {
 		xmax = -10000;
 		xmin = 10000;
 		ymax = -10000;
 		ymin = 10000;
-
-		bool new_val = false;
 		
-		// TODO: optimize (iterate over only x or y)
-		
-		if (top.prev != null) {
-			all_of (top.get_prev ().data, top, (cx, cy) => {
-				if (cy > tymax) {
-					tymax = cy;
-				}
-				return true;
-			});
-		}
-
-		if (top.next != null) {
-			all_of (top, top.get_next ().data, (cx, cy) => {
-				if (cy > tymax) {
-					tymax = cy;
-				}
-				return true;
-			});
-		}
-		
-		if (bottom.prev != null) {
-			all_of (bottom.get_prev ().data, bottom, (cx, cy) => {
-				if (cy < tymin) {
-					tymin = cy;
-				}
-				return true;
-			});
-		}
-		
-		if (bottom.next != null) {
-			all_of (bottom, bottom.get_next ().data, (cx, cy) => {
-				if (cy < tymin) {
-					tymin = cy;
-				}
-				return true;
-			});
-		}
-		
-		if (right.prev != null) {
-			all_of (right.get_prev ().data, right, (cx, cy) => {
-				if (cx > txmax) {
-					txmax = cx;
-				}
-				return true;
-			});
-		}
-
-		if (right.next != null) {
-			all_of (right, right.get_next ().data, (cx, cy) => {
-				if (cx > txmax) {
-					txmax = cx;
-				}
-				return true;
-			});
-		}
-
-		if (left.prev != null) {
-			all_of (left.get_prev ().data, left, (cx, cy) => {
-				if (cx < txmin) {
-					txmin = cx;
-				}
-				return true;
-			});
-		}
-
-		if (left.next != null) {
-			all_of (left, left.get_next ().data, (cx, cy) => {
-				if (cx < txmin) {
-					txmin = cx;
-				}
-				return true;
-			});
-		}
-		
-		xmax = txmax;
-		xmin = txmin;
-		ymax = tymax;
-		ymin = tymin;
-
 		if (points.length () == 0) {
 			xmax = 0;
 			xmin = 0;
 			ymax = 0;
-			ymin = 0;
-		} else if (unlikely (!got_region_boundries ())) {
-			warning (@"No new region boundries.\nPoints.length: $(points.length ())");
-			print_boundries ();
+			ymin = 0;		
+		}
+
+		foreach (EditPoint p in points) {
+			update_region_boundries_for_point (p);
 		}
 	}
 		
