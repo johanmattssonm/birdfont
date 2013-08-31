@@ -293,6 +293,11 @@ public class FileTab : FontDisplay {
 	public override void selected_canvas () {
 		update_recent_files ();
 		update_scrollbar ();
+		
+		while (backups.length () != 0) {
+			backups.delete_link (backups.first ());
+		}
+		
 		backups = get_backups ();
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}

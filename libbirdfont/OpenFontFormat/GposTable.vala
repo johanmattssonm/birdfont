@@ -92,27 +92,28 @@ class GposTable : Table {
 	FontData get_pair_pos_format1 () throws GLib.Error {
 		FontData fd = new FontData ();
 		uint16 pair_set_count;
+		uint coverage_offset = 10 + pairs_offset_length () + pairs_set_length ();
 		
 		create_kerning_pairs ();
 		
 		// FIXME: add more then current maximum of pairs
 		
-		if (pairs.length () > uint16.MAX) {
+		if (pairs.length () > uint16.MAX || coverage_offset > uint16.MAX) {
 			print_pairs ();
-			warning ("Too many kerning pairs.");
+			warning (@"Too many kerning pairs. $(pairs.length ())");
 		}
 		
 		pair_set_count = (uint16) pairs.length ();
 			
 		fd.add_ushort (1); // position format
 		// offset to coverage table from beginning of kern pair table
-		fd.add_ushort (10 + pairs_offset_length () + pairs_set_length ());  
+		fd.add_ushort ((uint16) coverage_offset);  
 		fd.add_ushort (0x0004); // ValueFormat1 (0x0004 is x advance)
 		fd.add_ushort (0); // ValueFormat2 (0 is null)
 		fd.add_ushort (pair_set_count); // n pairs
 		
 		// pair offsets orderd by coverage index
-		int pair_set_offset = 10 + pairs_offset_length ();
+		uint pair_set_offset = 10 + pairs_offset_length ();
 		foreach (PairFormat1 k in pairs) {
 			fd.add_ushort ((uint16) pair_set_offset);
 			pair_set_offset += 2;
@@ -154,23 +155,16 @@ class GposTable : Table {
 		}
 	}
 	
-	public int pairs_set_length () {
-		int len = 0;
+	public uint pairs_set_length () {
+		uint len = 0;
 		foreach (PairFormat1 p in pairs) {
-			len += 2;
-			foreach (Kern k in p.pairs) {
-				len += 4;
-			}
+			len += 2 + 4 * p.pairs.length ();
 		}
 		return len;
 	}
 	
-	public int pairs_offset_length () {
-		int len = 0;
-		foreach (PairFormat1 k in pairs) {
-			len += 2;
-		}
-		return len;
+	public uint pairs_offset_length () {
+		return 2 * pairs.length ();
 	}
 
 	public int get_pair_index (int gid) {

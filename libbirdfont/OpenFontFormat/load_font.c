@@ -201,7 +201,7 @@ void create_contour (guint unicode, FT_Vector* points, char* flags, int* length,
 			prev_is_curve = FALSE;
 			f[j] = CUBIC_CURVE;
 		} else {
-			fprintf (stderr, "WARNING invalid point flags: %d index: %d.\n", flags[i], i);
+			g_warning ("WARNING invalid point flags: %d index: %d.\n", flags[i], i);
 			prev_is_curve = FALSE;
 			f[j] = ON_CURVE;
 		}
@@ -512,7 +512,7 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 			i += 1;
 		} else {
 			g_string_printf (contour, "");
-			fprintf (stderr, "WARNING Can not parse outline.\n");
+			g_warning ("WARNING Can not parse outline.\n");
 			*err = 1;
 			i++;
 		}
@@ -588,25 +588,25 @@ GString* get_kerning_data (FT_Face face, FT_Long gid, double units) {
 	char_left = get_charcode (face, gid);
 	
 	if (char_left <= 31) {
-		fprintf (stderr, "Ignoring kerning for control character.\n");
+		g_warning ("Ignoring kerning for control character.\n");
 		return bf;
 	}
 	
 	if (char_left == 0) {
-		fprintf (stderr, "No character code could be found for left kerning value.\n");
+		g_warning ("No character code could be found for left kerning value.\n");
 		return bf;
 	}
 	
 	for (right = 0; right < face->num_glyphs; right++) {
 		error = FT_Get_Kerning (face, gid, right, FT_KERNING_UNSCALED, &kerning);
 		if (error) {
-			fprintf (stderr, "Failed to obtain kerning value.\n");
+			g_warning ("Failed to obtain kerning value.\n");
 			break;
 		}
 		
 		char_right = get_charcode (face, right);
 		if (char_left == 0) {
-			fprintf (stderr, "No character code could be found for right kerning value.\n");
+			g_warning ("No character code could be found for right kerning value.\n");
 			return bf;
 		}
 
@@ -627,7 +627,7 @@ int get_height (FT_Face face, guint unichar) {
 
 	error = FT_Load_Glyph (face, index, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
 	if (error) {
-		fprintf (stderr, "Failed to obtain height. (%d)\n", error);
+		g_warning ("Failed to obtain height. (%d)\n", error);
 		return 0;
 	}
 		
@@ -653,7 +653,7 @@ int get_descender (FT_Face face) {
 	
 	error = FT_Load_Glyph (face, index, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
 	if (error) {
-		fprintf (stderr, "Failed to obtain descender. (%d)\n", error);
+		g_warning ("Failed to obtain descender. (%d)\n", error);
 		return 0;
 	}
 	
@@ -672,17 +672,27 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 	if (name_table_data->encoding_id == 0) {
 		g_string_append_len (str, name_table_data->string, name_table_data->string_len);
 	} else if (name_table_data->encoding_id == 1) {
-		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2", &read, &written, &error);
+		
+		// Unicode BMP (UCS-2) is the right encoding
+		// utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2", &read, &written, &error);
+		
+		g_warning ("CONVERT");
+		
+		// DELETE utf-16be
+		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2be", &read, &written, &error);
+
 		if (error == NULL) {
 			g_string_append (str, utf8_str);
 			g_free (utf8_str);
 		} else {
-			fprintf (stderr, "Error in append_description: %s\n", error->message);
+			g_warning ("Error in append_description: %s\n", error->message);
 			g_error_free (error);
 		}
 	} else {
-		fprintf (stderr, "Encoding %u is not supported.\n", name_table_data->encoding_id);
+		g_warning ("Encoding %u is not supported.\n", name_table_data->encoding_id);
 	}
+	
+	g_warning ("name_table_data->encoding_id: %d, plat: %d str: %s \n", name_table_data->encoding_id, name_table_data->platform_id, str->str);	
 }
 
 /** Convert font to bf format.
@@ -765,14 +775,14 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	for (i = 0; i < face->num_glyphs; i++) {
 		error = FT_Load_Glyph (face, i, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
 		if (error) {
-			fprintf (stderr, "Freetype failed to load glyph %d.\n", (int)i);
-			fprintf (stderr, "FT_Load_Glyph error %d\n", error);
+			g_warning ("Freetype failed to load glyph %d.\n", (int)i);
+			g_warning ("FT_Load_Glyph error %d\n", error);
 			*err = error;
 			return bf;
 		}
 
 		if (face->glyph->format != ft_glyph_format_outline) {
-			fprintf (stderr, "Freetype error no outline found in glyph.\n");
+			g_warning ("Freetype error no outline found in glyph.\n");
 			*err = 1;
 			return bf;
 		}
@@ -823,7 +833,7 @@ int validate_font (FT_Face face) {
 	error = FT_OpenType_Validate (face, FT_VALIDATE_BASE | FT_VALIDATE_GDEF | FT_VALIDATE_GPOS | FT_VALIDATE_GSUB | FT_VALIDATE_JSTF, &BASE_table, &GDEF_table, &GPOS_table, &GSUB_table, &JSTF_table);
 
 	if (error) {
-		fprintf (stderr, "Freetype validation error %d\n", error);
+		g_warning ("Freetype validation error %d\n", error);
 		return error;
 	} 
 	
@@ -850,28 +860,28 @@ GString* load_freetype_font (char* file, int* err) {
 
 	error = FT_Init_FreeType (&library);
 	if (error != OK) {
-		fprintf (stderr, "Freetype init error %d.\n", error);
+		g_warning ("Freetype init error %d.\n", error);
 		*err = error;
 		return bf;
 	}
 
 	error = FT_New_Face (library, file, 0, &face);
 	if (error) {
-		fprintf (stderr, "Freetype font face error %d\n", error);
+		g_warning ("Freetype font face error %d\n", error);
 		*err = error;
 		return bf;
 	}
 
 	error = FT_Set_Char_Size (face, 0, 800, 300, 300);
 	if (error) {
-		fprintf (stderr, "Freetype FT_Set_Char_Size failed, error: %d.\n", error);
+		g_warning ("Freetype FT_Set_Char_Size failed, error: %d.\n", error);
 		*err = error;
 		return bf;
 	}
 
 	bf = get_bf_font (face, file, &error);
 	if (error != OK) {
-		fprintf (stderr, "Failed to parse font.\n");
+		g_warning ("Failed to parse font.\n");
 		*err = error;
 		return bf;	
 	}
@@ -891,19 +901,19 @@ guint validate_freetype_font (char* file) {
 	
 	error = FT_Init_FreeType (&library);
 	if (error != OK) {
-		fprintf (stderr, "Freetype init error %d\n", error);
+		g_warning ("Freetype init error %d\n", error);
 		return FALSE;
 	}
 
 	error = FT_New_Face (library, file, 0, &face);
 	if (error) {
-		fprintf (stderr, "Freetype font face error %d\n", error);
+		g_warning ("Freetype font face error %d\n", error);
 		return FALSE;
 	}
 		
 	error = validate_font (face);
 	if (error) {
-		fprintf (stderr, "Validation failed.\n", error);
+		g_warning ("Validation failed.\n", error);
 		return FALSE;
 	}
 

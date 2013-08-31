@@ -1201,6 +1201,7 @@ public class DescriptionForm : GLib.Object {
 			Font f = BirdFont.get_current_font ();
 			f.description = description.get_buffer ().text;
 		});
+		description.set_wrap_mode (Gtk.WrapMode.WORD);
 
 		copyright = new TextView ();
 		add_textview (copyright, _("Copyright"));
@@ -1208,6 +1209,7 @@ public class DescriptionForm : GLib.Object {
 			Font f = BirdFont.get_current_font ();
 			f.copyright = copyright.get_buffer ().text;
 		});
+		copyright.set_wrap_mode (Gtk.WrapMode.WORD);
 		
 		update_fields ();
 		
@@ -1217,13 +1219,23 @@ public class DescriptionForm : GLib.Object {
 	
 	public void update_fields () {
 		Font font = BirdFont.get_current_font ();
+
+		return_if_fail (font.postscript_name.validate ());
+		return_if_fail (font.name.validate ());
+		return_if_fail (font.subfamily.validate ());
+		return_if_fail (font.full_name.validate ());
+		return_if_fail (font.unique_identifier.validate ());
+		return_if_fail (font.version.validate ());
+		return_if_fail (font.description.validate ());
+		return_if_fail (font.copyright.validate ());
+		
 		postscript_name.set_text (font.postscript_name);
 		font_name.set_text (font.name);
 		style.set_text (font.subfamily);
 		full_name.set_text (font.full_name);
 		id.set_text (font.unique_identifier);
 		version.set_text (font.version);
-		
+
 		description.get_buffer ().set_text (font.description.dup ());
 		copyright.get_buffer ().set_text (font.copyright.dup ());
 	}
