@@ -129,9 +129,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 							
 							File preview_directory = BirdFont.get_preview_directory ();
 							
-							File f_ttf = font.get_folder ().get_child (@"$(font.get_name ()).ttf");
-							File f_eot = font.get_folder ().get_child (@"$(font.get_name ()).eot");
-							File f_svg = font.get_folder ().get_child (@"$(font.get_name ()).svg");
+							File f_ttf = font.get_folder ().get_child (@"$(font.get_full_name ()).ttf");
+							File f_eot = font.get_folder ().get_child (@"$(font.get_full_name ()).eot");
+							File f_svg = font.get_folder ().get_child (@"$(font.get_full_name ()).svg");
 
 							if (f_ttf.query_exists ()) {
 								f_ttf.delete ();
@@ -148,8 +148,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 							ExportTool.export_ttf_font ();							
 							ExportTool.export_svg_font ();
 							
-							File r_ttf = preview_directory.get_child (@"$(font.get_name ())$rid.ttf");
-							File r_svg = preview_directory.get_child (@"$(font.get_name ())$rid.svg");
+							File r_ttf = preview_directory.get_child (@"$(font.get_full_name ())$rid.ttf");
+							File r_svg = preview_directory.get_child (@"$(font.get_full_name ())$rid.svg");
 							
 							if (BirdFont.win32) {
 								f_ttf.copy (r_ttf, FileCopyFlags.NONE);
@@ -158,9 +158,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 							f_svg.copy (r_svg, FileCopyFlags.NONE);
 
 							while ((line = dis.read_line (null)) != null) {
-								line = ((!) line).replace (@"$(font.get_name ()).ttf", @"$(FontDisplay.path_to_uri ((!) f_ttf.get_path ()))?$rid");
-								line = ((!) line).replace (@"$(font.get_name ()).eot", @"$(FontDisplay.path_to_uri ((!) f_eot.get_path ()))?$rid");
-								line = ((!) line).replace (@"$(font.get_name ()).svg", @"$(FontDisplay.path_to_uri ((!) f_svg.get_path ()))?$rid");
+								line = ((!) line).replace (@"$(font.get_full_name ()).ttf", @"$(FontDisplay.path_to_uri ((!) f_ttf.get_path ()))?$rid");
+								line = ((!) line).replace (@"$(font.get_full_name ()).eot", @"$(FontDisplay.path_to_uri ((!) f_eot.get_path ()))?$rid");
+								line = ((!) line).replace (@"$(font.get_full_name ()).svg", @"$(FontDisplay.path_to_uri ((!) f_svg.get_path ()))?$rid");
 								sb.append ((!) line);
 							}
 					

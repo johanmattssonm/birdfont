@@ -153,7 +153,6 @@ public class ExportTool : GLib.Object {
 			critical (@"$(e.message)");
 		}
 	}
-	
 
 	public static void export_all () {
 		bool f;
@@ -177,7 +176,7 @@ public class ExportTool : GLib.Object {
 	public static void generate_html_document (string html_file, Font font) {
 		File file = File.new_for_path (html_file);
 		DataOutputStream os;
-		string name = font.get_name ();
+		string name = font.get_full_name ();
 
 		try {
 			os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
@@ -465,8 +464,8 @@ os.put_string (
 			// create a copy of current font and use it in a separate 
 			// export thread
 			temp_file = current_font.save_backup ();
-			ttf_file = folder.get_child (current_font.get_name () + ".ttf");
-			eot_file = folder.get_child (current_font.get_name () + ".eot");
+			ttf_file = folder.get_child (current_font.get_full_name () + ".ttf");
+			eot_file = folder.get_child (current_font.get_full_name () + ".eot");
 
 			if (ttf_file.query_exists ()) {
 				ttf_file.delete ();
@@ -522,7 +521,7 @@ os.put_string (
 		
 	public static bool export_svg_font_path (File folder) {
 		Font font = BirdFont.get_current_font ();
-		string file_name = @"$(font.get_name ()).svg";
+		string file_name = @"$(font.get_full_name ()).svg";
 		File file;
 		SvgFontFormatWriter fo;
 		

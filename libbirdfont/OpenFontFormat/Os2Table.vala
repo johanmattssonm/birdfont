@@ -26,29 +26,35 @@ class Os2Table : Table {
 	
 	public void process (GlyfTable glyf_table) {
 		FontData fd = new FontData ();
-
+		Font font = OpenFontFormatWriter.get_current_font ();
 		int16 ascender;
 		int16 descender;
 		
-		fd.add_u16 (0x0002); // USHORT Version 0x0000, 0x0001, 0x0002, 0x0003, 0x0004
+		fd.add_u16 (0x0002); // version
 
-		fd.add_16 (glyf_table.get_average_width ()); // SHORT xAvgCharWidth
+		fd.add_16 (glyf_table.get_average_width ()); // xAvgCharWidth
 
-		fd.add_u16 (400); // USHORT usWeightClass (400 is normal)
-		fd.add_u16 (5); // USHORT usWidthClass (5 is normal)
-		fd.add_u16 (0); // USHORT fsType
+		// usWeightClass (400 is normal, 700 is bold)
+		if (font.subfamily.index_of ("Bold") == -1) {
+			fd.add_u16 (400); 
+		} else {
+			fd.add_u16 (700);
+		} 
+		
+		fd.add_u16 (5); // usWidthClass (5 is normal)
+		fd.add_u16 (0); // fsType
 
-		fd.add_16 (40); // SHORT ySubscriptXSize
-		fd.add_16 (40); // SHORT ySubscriptYSize
-		fd.add_16 (40); // SHORT ySubscriptXOffset
-		fd.add_16 (40); // SHORT ySubscriptYOffset
-		fd.add_16 (40); // SHORT ySuperscriptXSize
-		fd.add_16 (40); // SHORT ySuperscriptYSize
-		fd.add_16 (40); // SHORT ySuperscriptXOffset
-		fd.add_16 (40); // SHORT ySuperscriptYOffset
-		fd.add_16 (40); // SHORT yStrikeoutSize
-		fd.add_16 (200); // SHORT yStrikeoutPosition
-		fd.add_16 (40); // SHORT sFamilyClass
+		fd.add_16 (40); // ySubscriptXSize
+		fd.add_16 (40); // ySubscriptYSize
+		fd.add_16 (40); // ySubscriptXOffset
+		fd.add_16 (40); // ySubscriptYOffset
+		fd.add_16 (40); // ySuperscriptXSize
+		fd.add_16 (40); // ySuperscriptYSize
+		fd.add_16 (40); // ySuperscriptXOffset
+		fd.add_16 (40); // ySuperscriptYOffset
+		fd.add_16 (40); // yStrikeoutSize
+		fd.add_16 (200); // yStrikeoutPosition
+		fd.add_16 (40); // sFamilyClass
 
 		// FIXME: PANOSE
 		fd.add (0); 
@@ -64,39 +70,44 @@ class Os2Table : Table {
 
 		// FIXME:
 		fd.add_u32 (0); // ulUnicodeRange1 Bits 0-31
-		fd.add_u32 (0); // ULONG ulUnicodeRange2 Bits 32-63
-		fd.add_u32 (0); // ULONG ulUnicodeRange3 Bits 64-95
-		fd.add_u32 (0); // ULONG ulUnicodeRange4 Bits 96-127
+		fd.add_u32 (0); // ulUnicodeRange2 Bits 32-63
+		fd.add_u32 (0); // ulUnicodeRange3 Bits 64-95
+		fd.add_u32 (0); // ulUnicodeRange4 Bits 96-127
 
 		fd.add_tag ("----"); // VendID
-
-		fd.add_u16 (0); // USHORT fsSelection
 		
-		fd.add_u16 (glyf_table.get_first_char ()); // USHORT usFirstCharIndex
-		fd.add_u16 (glyf_table.get_last_char ()); // USHORT usLastCharIndex
+		 // fsSelection (1 for italic 0 for upright)
+		if (font.subfamily.index_of ("Italic") == -1) {
+			fd.add_u16 (0);
+		} else {
+			fd.add_u16 (1);
+		}
+		
+		fd.add_u16 (glyf_table.get_first_char ()); // usFirstCharIndex
+		fd.add_u16 (glyf_table.get_last_char ()); // usLastCharIndex
 
 		ascender = glyf_table.ymax;
 		descender = -glyf_table.ymin;
 		
-		fd.add_16 (ascender); // SHORT sTypoAscender
-		fd.add_16 (descender); // SHORT sTypoDescender
-		fd.add_16 (3); // SHORT sTypoLineGap
+		fd.add_16 (ascender); // sTypoAscender
+		fd.add_16 (descender); // sTypoDescender
+		fd.add_16 (3); // sTypoLineGap
 
-		fd.add_u16 (ascender); // USHORT usWinAscent
-		fd.add_u16 (descender); // USHORT usWinDescent
+		fd.add_u16 (ascender); // usWinAscent
+		fd.add_u16 (descender); // usWinDescent
 
 		// FIXA:
-		fd.add_u32 (0); // ULONG ulCodePageRange1 Bits 0-31
-		fd.add_u32 (0); // ULONG ulCodePageRange2 Bits 32-63
+		fd.add_u32 (0); // ulCodePageRange1 Bits 0-31
+		fd.add_u32 (0); // ulCodePageRange2 Bits 32-63
 
-		fd.add_16 (ascender); // SHORT sxHeight version 0x0002 and later
-		fd.add_16 (ascender); // SHORT sCapHeight version 0x0002 and later
+		fd.add_16 (ascender); // sHeight
+		fd.add_16 (ascender); // sCapHeight
 
-		fd.add_16 (0); // USHORT usDefaultChar version 0x0002 and later
-		fd.add_16 (0x0020); // USHORT usBreakChar version 0x0002 and later, also known as space
+		fd.add_16 (0); // usDefaultChar
+		fd.add_16 (0x0020); // usBreakChar also known as space
 		
-		// FIXA: calculate these values
-		fd.add_16 (1); // USHORT usMaxContext version 0x0002 and later
+		// FIXME: calculate these values
+		fd.add_16 (1); // usMaxContext
 
 		// padding
 		fd.pad ();

@@ -212,8 +212,6 @@ class NameTable : Table {
 		// platform 1
 		foreach (string s in text) {
 			fd.add_str (s);
-			print (s);
-			print ("\n");
 		}
 		
 		// platform 3

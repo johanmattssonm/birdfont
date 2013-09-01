@@ -171,6 +171,10 @@ public class Font : GLib.Object {
 		this.name = n;
 	}
 	
+	public string get_full_name () {
+		return full_name;
+	}
+	
 	public string get_name () {
 		return name;
 	}

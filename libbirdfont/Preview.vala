@@ -32,7 +32,7 @@ public class Preview : FontDisplay {
 
 	public static File get_file () {
 		Font font = BirdFont.get_current_font ();
-		string path = @"$(font.get_name ()).html";
+		string path = @"$(font.get_full_name ()).html";
 		File dir = font.get_folder ();
 		File file = dir.get_child (path);
 		
