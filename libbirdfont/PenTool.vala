@@ -43,6 +43,10 @@ public class PenTool : Tool {
 	private static double last_point_x = 0;
 	private static double last_point_y = 0;
 
+	private static bool show_selection_box = false;
+	private static double selection_box_x = 0;
+	private static double selection_box_y = 0;
+
 	public static double precision = 1;
 	private static ImageSurface? tie_icon = null;
 	
@@ -124,10 +128,15 @@ public class PenTool : Tool {
 			join_paths (x, y);
 
 			active_handle = new EditPointHandle.empty ();
+			
+			if (show_selection_box) {
+				select_points_in_box ();
+			}
 
 			move_selected = false;
 			move_selected_handle = false;
 			edit_active_corner = false;
+			show_selection_box = false;
 			
 			// update path direction if it has changed
 			foreach (Path p in clockwise) {
@@ -178,6 +187,30 @@ public class PenTool : Tool {
 		draw_action.connect ((tool, cairo_context, glyph) => {
 			draw_on_canvas (cairo_context, glyph);
 		});
+	}
+
+	public static void select_points_in_box () {
+		double x1, y1, x2, y2;
+		Glyph g;
+		
+		g = MainWindow.get_current_glyph ();
+		
+		x1 = Glyph.path_coordinate_x (fmin (selection_box_x, last_point_x));
+		y1 = Glyph.path_coordinate_y (fmin (selection_box_y, last_point_y));
+		x2 = Glyph.path_coordinate_x (fmax (selection_box_x, last_point_x));
+		y2 = Glyph.path_coordinate_y (fmax (selection_box_y, last_point_y));
+		
+		remove_all_selected_points ();
+		
+		foreach (Path p in g.path_list) {
+			// TODO: Select path only of bounding box is in selection box
+			foreach (EditPoint ep in p.points) {
+				if (x1 <= ep.x <= x2 && y2 <= ep.y <= y1) {
+					add_selected_point (ep, p);
+					ep.set_selected (true);
+				}
+			}
+		}
 	}
 
 	public static void delete_selected_points () {
@@ -380,6 +413,12 @@ public class PenTool : Tool {
 			select_active_point (x, y);
 		}
 
+		if (selected_points.length () == 0) {
+			show_selection_box = true;
+			selection_box_x = x;
+			selection_box_y = y;
+		}
+
 		glyph.store_undo_state ();
 	}
 	
@@ -470,7 +509,6 @@ public class PenTool : Tool {
 				control_point_event (x, y);
 				break;
 			}
-				
 		}
 			
 		foreach (Path p in glyph.path_list) {
@@ -699,9 +737,33 @@ public class PenTool : Tool {
 
 	/** Show the user that curves will be tied on release. */
 	public void draw_on_canvas (Context cr, Glyph glyph) {
+		if (show_selection_box) {
+			draw_selection_box (cr);
+		}
+		
+		draw_merge_icon (cr);
+	}
+	
+	void draw_selection_box (Context cr) {
+		double x, y, w, h;
+		
+		x = fmin (selection_box_x, last_point_x);
+		y = fmin (selection_box_y, last_point_y);
+		w = fmax (selection_box_x, last_point_x) - x;
+		h = fmax (selection_box_y, last_point_y) - y;
+		
+		cr.save ();
+		cr.set_source_rgba (0, 0, 0.3, 1);
+		cr.set_line_width (2);
+		cr.rectangle (x, y, w, h);
+		cr.stroke ();
+		cr.restore ();
+	}
+	
+	void draw_merge_icon (Context cr) {
 		ImageSurface img;
 		double x, y;
-		
+	
 		return_if_fail (tie_icon != null);
 		
 		img = (!) tie_icon;	
@@ -945,26 +1007,23 @@ public class PenTool : Tool {
 	
 	public void new_point_action (int x, int y) {
 		Glyph glyph;
-		EditPoint new_point;
+		PointSelection new_point;
 		glyph = MainWindow.get_current_glyph ();
 		glyph.open_path ();
 		
+		remove_all_selected_points ();
+		
 		new_point = glyph.add_new_edit_point (x, y);
-		new_point.set_selected (true);
-		glyph.active_paths.last ().data.update_region_boundries_for_point (new_point);
-		
-		if (KeyBindings.modifier != SHIFT) {
-			remove_all_selected_points ();
-		}
-		
-		selected_point = new_point;
-		active_edit_point = new_point;
-		
+		new_point.point.set_selected (true);
+		new_point.path.update_region_boundries_for_point (new_point.point);
+
+		selected_point = new_point.point;
+		active_edit_point = new_point.point;	
 		add_selected_point (selected_point, glyph.active_paths.last ().data);
-		
+
 		move_selected = true;
 		
-		set_point_type (new_point);
+		set_point_type (selected_point);
 		set_default_handle_positions ();
 	}
 

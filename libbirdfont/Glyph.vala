@@ -711,13 +711,8 @@ public class Glyph : FontDisplay {
 	/** Insert new edit point for current path on the appropriate zoom
 	 * level.
 	 */
-	public EditPoint add_new_edit_point (int x, int y) {
-		insert_edit_point (x, y);
-		
-		return_val_if_fail (active_paths.length () > 0, new EditPoint ());
-		
-		last_added_edit_point = active_paths.last ().data.get_last_point ();
-		return (!) last_added_edit_point;
+	public PointSelection add_new_edit_point (int x, int y) {
+		return insert_edit_point (x, y);
 	}
 
 	public EditPoint get_last_edit_point () {
@@ -925,70 +920,36 @@ public class Glyph : FontDisplay {
 		return min_point;
 	}
 	
-	private EditPoint insert_edit_point (double x, double y) {
-		unowned List<Path> paths;
+	private PointSelection insert_edit_point (double x, double y) {
 		double xt, yt;
-		bool added;
 		Path np;
 		EditPoint inserted;
 		
-		if (active_paths.length () == 0) {
+		if (path_list.length () == 0) {
 			np = new Path ();
-			clear_active_paths ();
-			active_paths.append (np);
 			path_list.append (np);
 		}
-		
-		paths = path_list;
-		
+			
 		xt = path_coordinate_x (x);
 		yt = path_coordinate_y (y);
 	
-		added = false;
+		return_val_if_fail (path_list.length () > 0, new PointSelection.empty ());
 
-		// FIXME: remove this feature
-		if (new_point_on_path != null) {
-			return_val_if_fail (active_paths.length () > 0, new EditPoint ());
+		if (path_list.last ().data.is_open ()) {
+			np = path_list.last().data;
+			np.add (xt, yt);
+		} else {
+			np = new Path ();
+			path_list.append (np);
+			np.add (xt, yt);
+		}	
 
-			Path p = new Path ();
-			EditPoint e = (!) new_point_on_path;
-
-			return_val_if_fail (e.prev != null, new EditPoint ());
-			
-			p.add_point (e);
-			e.type = PointType.CUBIC;
-			
-			e.right_handle.type = PointType.CUBIC;
-			e.left_handle.type = PointType.CUBIC;
-			
-			paths.append (p);
-			add_active_path (p);
-			flipping_point_on_path = new_point_on_path;
-			new_point_on_path = null;
-			added = true;
-			return e;
-		}
+		clear_active_paths ();
+		add_active_path (np);
 		
-		if (!added) {
-			if (paths.length () > 0 && paths.last ().data.is_open ()) {
-				paths.last().data.add (xt, yt);
-				add_active_path (paths.last().data);
-			} else {
-				np = new Path ();
-				paths.append (np);
-				np.add (xt, yt);
-				
-				clear_active_paths ();
-				add_active_path (np);
-			}	
-		}
-	
-		warn_if_fail (active_paths.length () > 0);
-		warn_if_fail (active_paths.last ().data.points.length () > 0);
+		inserted = np.points.last ().data;
 		
-		inserted = active_paths.last ().data.points.data;
-		
-		return inserted;
+		return new PointSelection (inserted, np);
 	}
 	
 	public void move_selected_edit_point_delta (EditPoint selected_point, double dx, double dy) {
