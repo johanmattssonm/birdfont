@@ -161,7 +161,6 @@ public class Glyph : FontDisplay {
 			
 			foreach (Path pi in active_paths) {
 				if (pi == p) {
-					print ("Exists\n");
 					return;
 				}
 			}

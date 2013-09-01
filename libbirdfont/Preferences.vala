@@ -19,7 +19,7 @@ using Gee;
 public class Preferences {
 		
 	static Gee.HashMap<string, string> data;
-	public static bool draw_boundries = true; 
+	public static bool draw_boundries = false;
 
 	public Preferences () {
 		data = new HashMap<string, string> ();

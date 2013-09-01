@@ -989,8 +989,6 @@ public class Path {
 			xmin = 0;
 			ymax = 0;
 			ymin = 0;
-			
-			warning ("No points in region.\n");	
 		}
 
 		foreach (EditPoint p in points) {

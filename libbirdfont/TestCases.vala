@@ -45,6 +45,7 @@ class TestCases {
 		add (test_freetype, "Freetype");
 		add (test_preview, "Preview");
 		add (test_kerning, "Kerning");
+		add (test_boundries, "Boundries");
 	}
 	
 	private void add (Callback callback, string name) {
@@ -1477,6 +1478,10 @@ class TestCases {
 			
 			kerning_display.set_kerning_pair (sa, sb, ref r, ref l, Random.int_range (0, 300));
 		}
+	}
+	
+	private static void test_boundries () {
+		Preferences.draw_boundries = true;
 	}
 }
 
