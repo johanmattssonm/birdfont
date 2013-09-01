@@ -274,6 +274,8 @@ class BirdFontFile {
 	 * C - Cubic Bézier path
 	 * 
 	 * T - Tie handles for previous curve
+	 * 
+	 * O - Keep open (do not close path)
 	 */
 	public static string get_point_data (Path pl) {
 		StringBuilder data = new StringBuilder ();
@@ -281,20 +283,39 @@ class BirdFontFile {
 		EditPoint m;
 		int i = 0;
 		
-		if (pl.points.length () < 2) {
-			return "";
+		if (pl.points.length () == 0) {
+			return data.str;
+		}
+		
+		if (pl.points.length () == 1) {
+			add_start_point (pl.points.first ().data, data);
+			data.append (" ");
+			add_next_point (pl.points.first ().data, pl.points.first ().data, data);
+
+			if (pl.is_open ()) {
+				data.append (" O");
+			}
+			return data.str;
+		}
+		
+		if (pl.points.length () == 2) {
+			add_start_point (pl.points.first ().data, data);
+			data.append (" ");
+			add_next_point (pl.points.first ().data, pl.points.last ().data, data);
+			data.append (" ");
+			add_next_point (pl.points.last ().data, pl.points.first ().data, data);
+			
+			if (pl.is_open ()) {
+				data.append (" O");
+			}
+			return data.str;
 		}
 		
 		pl.create_list ();
 			
 		foreach (EditPoint e in pl.points) {
 			if (i == 0) {
-				if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
-					add_cubic_start (e, data);
-				} else {
-					add_quadratic_start (e, data);
-				}
-				
+				add_start_point (e, data);
 				i++;
 				n = e;
 				continue;
@@ -303,26 +324,28 @@ class BirdFontFile {
 			m = (!) n;
 			data.append (" ");
 			add_next_point (m, e, data);
-			n = e;
-			
-			if (e.tie_handles) {
-				data.append (" ");
-				data.append (@"T");
-			}
-			
+
+			n = e;			
 			i++;
 		}
 
 		data.append (" ");
 		m = pl.points.first ().data;	
 		add_next_point ((!) n, m, data);
-
-		if (m.tie_handles) {
-			data.append (" ");
-			data.append (@"T");
+		
+		if (pl.is_open ()) {
+			data.append (" O");
 		}
 		
 		return data.str;
+	}
+	
+	private static void add_start_point (EditPoint e, StringBuilder data) {
+		if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
+			add_cubic_start (e, data);
+		} else {
+			add_quadratic_start (e, data);
+		}
 	}
 	
 	private static void add_quadratic_start (EditPoint p, StringBuilder data) {
@@ -378,7 +401,12 @@ class BirdFontFile {
 		} else {
 			warning (@"Unknown point type. \nStart handle: $(start.right_handle.type) \nStop handle: $(end.left_handle.type)");
 			add_cubic (start, end, data);
-		}		
+		}
+
+		if (end.tie_handles) {
+			data.append (" ");
+			data.append (@"T");
+		}	
 	}
 
 	private void write_glyph_collection (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
@@ -1024,6 +1052,8 @@ class BirdFontFile {
 		ep2.left_handle.angle = ep1.left_handle.angle;
 		ep2.left_handle.length = ep1.left_handle.length;
 		ep2.left_handle.type = ep1.left_handle.type;
+		
+		path.close ();
 	}
 	
 	public static Path parse_path_data (string data) {
@@ -1032,6 +1062,7 @@ class BirdFontFile {
 		int i = 0;
 		Path path = new Path ();
 		string instruction = "";
+		bool open = false;
 
 		if (data == "") {
 			return path;
@@ -1112,13 +1143,20 @@ class BirdFontFile {
 				cubic (path, p[0], p[1], p1[0], p1[1], p2[0], p2[1]);
 			} else if (instruction == "T") {
 				path.points.last ().data.tie_handles = true;
+			} else if (instruction == "O") {
+				open = true;
 			} else {
 				warning (@"invalid instruction $instruction");
 				return path;
 			}
 		}
 
-		close (path);
+		if (!open) {
+			close (path);
+		} else {
+			path.points.remove_link (path.points.last ());
+		}
+		
 		path.update_region_boundries ();
 		
 		return path;	

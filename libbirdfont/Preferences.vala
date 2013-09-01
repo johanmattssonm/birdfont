@@ -11,6 +11,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
     Lesser General Public License for more details.
 */
+
 namespace BirdFont {
 
 using Gee;
@@ -18,7 +19,7 @@ using Gee;
 public class Preferences {
 		
 	static Gee.HashMap<string, string> data;
-	public static bool draw_boundries = false; 
+	public static bool draw_boundries = true; 
 
 	public Preferences () {
 		data = new HashMap<string, string> ();

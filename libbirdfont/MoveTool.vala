@@ -123,6 +123,7 @@ class MoveTool : Tool {
 			}
 
 			if (!rotate_path) {
+				update_boundries_for_selection ();
 				get_selection_box_boundries (out selection_box_center_x,
 					out selection_box_center_y, out selection_box_width,
 					out selection_box_height);	
@@ -233,7 +234,7 @@ class MoveTool : Tool {
 		cr.restore ();				
 	}
 	
-	static void get_selection_box_boundries (out double x, out double y, out double w, out double h) {
+	public static void get_selection_box_boundries (out double x, out double y, out double w, out double h) {
 		double px, py, px2, py2;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
@@ -322,12 +323,19 @@ class MoveTool : Tool {
 		}		
 	}
 	
+	public static void update_boundries_for_selection () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		foreach (Path p in glyph.active_paths) {
+			p.update_region_boundries ();
+		}
+	}
+	
 	/** Move rotate handle to pixel x,y. */
 	void rotate (double x, double y) {
 		double cx, cy, xc, yc, xc2, yc2, a, b, w, h;		
 		Glyph glyph = MainWindow.get_current_glyph ();  
 		double dx, dy;
-
+		
 		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
 		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
 		xc = selection_box_center_x;
@@ -390,7 +398,7 @@ class MoveTool : Tool {
 		double xc, yc, xc2, yc2, w, h;		
 		double dx, dy;
 		Glyph glyph = MainWindow.get_current_glyph ();  
-
+		
 		xc = selection_box_center_x;
 		yc = selection_box_center_y;
 

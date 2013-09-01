@@ -123,21 +123,21 @@ public class DrawingTools : ToolCollection  {
 				}
 				
 				p.set_tie_handle (tie);
-				p.get_path ().update_region_boundries_for_point (p);
+				
+				PenTool.handle_selection.path.update_region_boundries ();
 			} else {
-				foreach (EditPoint ep in PenTool.selected_points) {
-					tie = !ep.tie_handles;
+				foreach (PointSelection ep in PenTool.selected_points) {
+					tie = !ep.point.tie_handles;
 					
 					if (tie) {
-						ep.process_tied_handle ();
-						ep.set_reflective_handles (false);
+						ep.point.process_tied_handle ();
+						ep.point.set_reflective_handles (false);
 					}
 				
-					ep.set_tie_handle (tie);
-					ep.get_path ().update_region_boundries_for_point (ep);
+					ep.point.set_tie_handle (tie);
+					ep.path.update_region_boundries ();
 				}
 			}
-			
 			
 			MainWindow.get_current_glyph ().update_view ();
 		});
@@ -147,20 +147,20 @@ public class DrawingTools : ToolCollection  {
 		Tool reflect_handle = new Tool ("symmetric", _("Symmetrical handles"), 'r');
 		reflect_handle.select_action.connect ((self) => {
 			bool symmetrical;
-			EditPoint ep;
+			PointSelection ep;
 			if (PenTool.selected_points.length () > 0) {
 				ep = PenTool.selected_points.first ().data;
-				symmetrical = ep.reflective_handles;
-				foreach (EditPoint p in PenTool.selected_points) {
-					p.set_reflective_handles (!symmetrical);
-					p.process_symmetrical_handles ();
+				symmetrical = ep.point.reflective_handles;
+				foreach (PointSelection p in PenTool.selected_points) {
+					p.point.set_reflective_handles (!symmetrical);
+					p.point.process_symmetrical_handles ();
 					
 					if (symmetrical) {
-						ep.set_tie_handle (false);
+						ep.point.set_tie_handle (false);
 					}
+					
+					p.path.update_region_boundries ();
 				}
-				
-				ep.get_path ().update_region_boundries_for_point (ep);
 				MainWindow.get_current_glyph ().update_view ();
 			}
 		});

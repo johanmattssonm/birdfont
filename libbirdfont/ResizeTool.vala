@@ -102,42 +102,10 @@ class ResizeTool : Tool {
 	}
 
 	static void update_selection_boundries () {
-		get_selection_box_boundries (out selection_box_center_x,
+		MoveTool.update_boundries_for_selection ();
+		MoveTool.get_selection_box_boundries (out selection_box_center_x,
 			out selection_box_center_y, out selection_box_width,
 			out selection_box_height);	
-	}
-
-	static void get_selection_box_boundries (out double x, out double y, out double w, out double h) {
-		double px, py, px2, py2;
-		Glyph glyph = MainWindow.get_current_glyph ();
-		
-		px = 10000;
-		py = 10000;
-		px2 = -10000;
-		py2 = -10000;
-		
-		foreach (Path p in glyph.active_paths) {
-			if (px > p.xmin) {
-				px = p.xmin;
-			} 
-
-			if (py > p.ymin) {
-				py = p.ymin;
-			}
-
-			if (px2 < p.xmax) {
-				px2 = p.xmax;
-			}
-			
-			if (py2 < p.ymax) {
-				py2 = p.ymax;
-			}
-		}
-		
-		w = px2 - px;
-		h = py2 - py;
-		x = px + (w / 2);
-		y = py + (h / 2);
 	}
 	
 	void move_selected_paths (uint key) {

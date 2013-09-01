@@ -667,9 +667,11 @@ public class Path {
 	
 	public Path copy () {
 		Path new_path = new Path ();
+		EditPoint p;
 		
 		foreach (var ep in points) {
-			new_path.add_point (ep.copy ());
+			p = ep.copy ();
+			new_path.add_point (p);
 		}
 		
 		new_path.edit = edit;
@@ -886,8 +888,6 @@ public class Path {
 		
 		second_last_point = last_point;
 		last_point = p;
-
-		p.set_path (this);
 		
 		return np;
 	}
@@ -988,7 +988,9 @@ public class Path {
 			xmax = 0;
 			xmin = 0;
 			ymax = 0;
-			ymin = 0;		
+			ymin = 0;
+			
+			warning ("No points in region.\n");	
 		}
 
 		foreach (EditPoint p in points) {
@@ -1651,7 +1653,7 @@ public class Path {
 		stderr.printf (@"ymin $ymin \n");		
 	}
 	
-	public bool got_region_boundries () {
+	public bool has_region_boundries () {
 		return !(xmax == -10000 || xmin ==  10000 || ymax == -10000 || ymin ==  10000);
 	}
 	
@@ -1820,6 +1822,10 @@ public class Path {
 					ep.type = PenTool.to_curve (ep.get_right_handle ().type);
 				}
 			}
+		}
+		
+		foreach (Path path in path_list.paths) {
+			path.update_region_boundries ();
 		}
 		
 		return path_list;
@@ -2156,7 +2162,7 @@ public class Path {
 	}
 
 	public void append_path (Path path) {
-		if (points.length () == 0) {
+		if (points.length () == 0 || path.points.length () == 0) {
 			warning ("No points");
 			return;
 		}

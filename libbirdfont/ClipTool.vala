@@ -96,19 +96,73 @@ public class ClipTool : Tool {
 	static string export_selected_paths_to_birdfont_clipboard () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		StringBuilder s = new StringBuilder ();
+		Path new_path;
+		List<Path> paths = new List<Path> ();
 		
 		s.append ("\n");
 		s.append ("<!-- BirdFontClipboard\n");
 		
-		foreach (Path path in glyph.active_paths) {
-			s.append ("BF path: ");
-			s.append (BirdFontFile.get_point_data (path));
-			s.append ("\n");
+		if (glyph.path_list.length () > 0 && !glyph.path_list.first ().data.is_editable ()) {
+			foreach (Path path in glyph.active_paths) {
+				s.append ("BF path: ");
+				s.append (BirdFontFile.get_point_data (path));
+				s.append ("\n");
+			}
+		} else {
+			
+			new_path = new Path ();
+			foreach (Path path in glyph.path_list) {
+				if (path.points.length () > 0
+					&& path.points.first ().data.is_selected ()
+					&& path.points.last ().data.is_selected ()) {
+					
+					foreach (EditPoint ep in path.points) {
+						if (!ep.is_selected ()) {
+							path.set_new_start (ep);
+							break;
+						}	
+					}
+				}
+				
+				foreach (EditPoint ep in path.points) {
+					if (!ep.is_selected ()) {
+						if (path.points.length () > 0) {
+							paths.append (new_path);
+							new_path = new Path ();
+						}
+					} else {
+						new_path.add_point (ep);
+					}
+				}
+
+				if (all_points_selected (path)) {
+					new_path.close ();
+				}
+			}
+			
+			paths.append (new_path);
+			
+			foreach (Path path in paths) {
+				if (path.points.length () > 0) {
+					s.append ("BF path: ");
+					s.append (BirdFontFile.get_point_data (path));
+					s.append ("\n");
+				}
+			}
 		}
 		
 		s.append ("-->");
 		
 		return s.str;
+	}
+	
+	static bool all_points_selected (Path p) {
+		foreach (EditPoint ep in p.points) {
+			if (!ep.is_selected ()) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	static void import_birdfont_clipboard (string data) {
@@ -131,9 +185,24 @@ public class ClipTool : Tool {
 	static void import_birdfont_path (string data) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path path = BirdFontFile.parse_path_data (data);
-		path.close ();
-		glyph.add_path (path);
-		glyph.active_paths.append (path);
+
+		if (path.points.length () > 0) {
+			glyph.add_path (path);
+			glyph.active_paths.append (path);
+			path.update_region_boundries ();
+		}
+		
+		PenTool.remove_all_selected_points ();
+		
+		foreach (Path p in glyph.active_paths) {
+			if (p.is_open ()) {
+				foreach (EditPoint e in p.points) {
+					e.set_selected (true);
+				}
+			}
+		}
+		
+		PenTool.update_selection ();
 	}
 }
 
