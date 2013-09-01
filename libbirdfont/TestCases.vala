@@ -25,7 +25,6 @@ class TestCases {
 		add (test_argument, "Argument list");
 		add (test_glyph_ranges, "Glyph ranges");
 		add (test_glyph_table, "Glyph table");
-		add (test_active_edit_point, "Active edit point");
 		add (test_hex, "Unicode hex values");
 		add (test_reverse_path, "Reverse path");
 		add (test_reverse_random_triangles, "Reverse random paths");
@@ -869,38 +868,6 @@ class TestCases {
 		// close
 		test_click_action (pen_tool, 3, 0, 0);
 		Tool.yield ();
-	}
-	
-	public static void test_active_edit_point () {
-		Glyph g;
-		EditPoint epa, epb;
-		Tool pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
-		
-		// paint
-		Toolbox.select_tool_by_name ("pen_tool");
-		test_open_next_glyph ();
-
-		g = MainWindow.get_current_glyph ();
-
-		test_click_action (pen_tool, 3, 130, 130); // add point
-		epa = g.get_last_edit_point ();
-		
-		test_click_action (pen_tool, 3, 160, 130);
-		test_click_action (pen_tool, 3, 160, 160);
-		epb = g.get_last_edit_point ();
-		
-		test_click_action (pen_tool, 1, 130, 160);
-		
-		// validate active point
-		test_move_action (pen_tool, 130, 130);
-		warn_if_fail (PenTool.active_edit_point == epa);
-		
-		test_move_action (pen_tool, 161, 161);
-		warn_if_fail (PenTool.active_edit_point == epb);
-		
-		warn_if_fail (epa != epb);
-		
-		// TODO: Test move handle here.
 	}
 
 	/** Test path coordinates and reverse path coordinates. */

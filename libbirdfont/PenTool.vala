@@ -22,7 +22,6 @@ public class PenTool : Tool {
 	private static const double CONTACT_SURFACE = 20;
 
 	public static bool move_selected = false;
-	public static bool begin_new_point_on_path = false;
 	public static bool move_point_on_path = false;
 
 	public static bool edit_active_corner = false;
@@ -82,7 +81,6 @@ public class PenTool : Tool {
 			glyph.close_path ();
 			
 			move_point_on_path = false;
-			begin_new_point_on_path = false;
 		});
 		
 		press_action.connect ((self, b, x, y) => {
@@ -290,11 +288,6 @@ public class PenTool : Tool {
 		curve_active_corner_event (x, y);
 		set_default_handle_positions ();
 		
-		// show new point on path
-		if (glyph.new_point_on_path != null) {
-			move_current_point_on_path (x, y);
-		}
-		
 		// move control point handles
 		if (move_selected_handle) {
 			set_type_for_moving_handle ();
@@ -384,19 +377,6 @@ public class PenTool : Tool {
 			glyph.insert_new_point_on_path (x, y);
 			return;
 		}
-
-		if (is_new_point_from_path_selected ()) {
-			new_point_on_path_at (x, y);
-			return;	
-		}
-
-		// add new point on path 
-		if (is_new_point_from_path_selected ()) {
-			move_selected = true;
-			move_point_on_path = true;
-			glyph.new_point_on_path = null;
-			return;
-		}
 		
 		// add new point
 		if (button == 3 || (KeyBindings.modifier & LOGO) > 0) {
@@ -469,10 +449,6 @@ public class PenTool : Tool {
 		}
 		
 		return Path.is_clasped (pl, path);
-	}
-		
-	bool is_new_point_from_path_selected () {
-		return false;
 	}
 	
 	public void remove_from_selected (EditPoint ep) 
@@ -844,68 +820,6 @@ public class PenTool : Tool {
 		
 		return false;
 	}
-	
-	public void move_current_point_on_path (double x, double y) {
-		Glyph g = MainWindow.get_current_glyph ();
-
-		EditPoint e;
-		
-		double rax, ray;
-		double pax, pay;
-
-		double distance, min;
-		
-		return_if_fail (g.new_point_on_path != null);
-		
-		if (GridTool.is_visible ()) {
-			GridTool.tie (ref x, ref y);
-		}
-
-		min = double.MAX;
-
-		foreach (Path p in g.path_list) {
-			if (p.points.length () < 2) {
-				continue;
-			}
-			
-			e = new EditPoint ();
-			
-			pax = x * Glyph.ivz () + g.view_offset_x - Glyph.xc ();
-			pay = y * Glyph.ivz () + g.view_offset_y - Glyph.yc ();
-
-			pay *= -1;
-
-			p.get_closest_point_on_path (e, pax, pay);
-			
-			distance = Math.sqrt (Math.pow (Math.fabs (pax - e.x), 2) + Math.pow (Math.fabs (pay - e.y), 2));
-			
-			if (distance < min) {
-				min = distance;
-				
-				g.new_point_on_path = e;
-				
-				rax = (pax + g.view_offset_x - Glyph.xc ()) / Glyph.ivz ();
-				ray = (pax + g.view_offset_x - Glyph.xc ()) / Glyph.ivz ();
-				
-				g.redraw_area (rax - 5, ray - 5, 10, 10);					
-			}
-		}
-	}
-
-	public void set_new_point_on_path (Path ap, int x, int y) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		return_if_fail (ap.is_editable ());
-		
-		g.clear_active_paths ();
-		g.add_active_path (ap);
-
-		if (g.new_point_on_path == null) {
-			g.new_point_on_path = new EditPoint (0, 0, PointType.FLOATING);
-		}
-		
-		move_current_point_on_path (x, y);
-	}
 		
 	public static void set_active_edit_point (EditPoint? e, Path path) {
 		Glyph g = MainWindow.get_current_glyph ();
@@ -1061,54 +975,6 @@ public class PenTool : Tool {
 		foreach (EditPoint e in path.points) {
 			e.recalculate_linear_handles ();
 		}
-	}
-
-	bool new_point_on_path_at (int x, int y) {
-		EditPoint ep;
-		Glyph glyph = MainWindow.get_current_glyph ();
-		int px, py;
-
-		if (glyph.new_point_on_path != null) {
-			ep = (!)glyph.new_point_on_path; 
-			
-			begin_new_point_on_path = false;
-			
-			px = Glyph.reverse_path_coordinate_x (ep.x);
-			py = Glyph.reverse_path_coordinate_x (ep.y);
-			glyph.add_new_edit_point (px, py);
-			glyph.new_point_on_path = null;
-			
-			Toolbox.select_tool_by_name ("new_point");
-
-			return false;
-		}
-		
-		start_from_new_point_on_path (x, y);
-		begin_new_point_on_path = true;
-			
-		return true;
-	}
-
-	void start_from_new_point_on_path (double x, double y) {		
-		Glyph g = MainWindow.get_current_glyph ();
-		Path? p = null;
-		Path pn;
-		
-		p = g.get_closeset_path (x, y);
-
-		pn = (!)p;
-
-		if (pn.points.length () >= 2) {
-			pn.set_editable (true);
-			set_new_point_on_path (pn, 0, 0);
-			g.open_path ();
-		}
-		
-		begin_new_point_on_path = false;
-	}
-	
-	public void begin_from_new_point_on_path () {
-		begin_new_point_on_path = true;
 	}
 	
 	private bool is_over_handle (double event_x, double event_y) {		

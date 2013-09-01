@@ -33,11 +33,6 @@ public class Glyph : FontDisplay {
 	public List<Path> path_list;
 	public List<Path> active_paths = new List<Path> ();
 
-	// Control points
-	public EditPoint? new_point_on_path = null;
-	public EditPoint? flipping_point_on_path = null;
-	public EditPoint? last_added_edit_point = null;
-		
 	// The point where edit event begun 
 	double pointer_begin_x = 0;
 	double pointer_begin_y = 0;
@@ -715,11 +710,6 @@ public class Glyph : FontDisplay {
 		return insert_edit_point (x, y);
 	}
 
-	public EditPoint get_last_edit_point () {
-		return_val_if_fail (last_added_edit_point != null, new EditPoint ());
-		return (!) last_added_edit_point;
-	}
-
 	/** Move view port centrum to this coordinate. */
 	public void set_center (double x, double y) {
 		x -= allocation.width / 2.0;
@@ -981,13 +971,7 @@ public class Glyph : FontDisplay {
 			redraw_area (0, 0, allocation.width, allocation.height);
 		} else {
 			redraw_last_stroke (x, y);
-		}
-		
-		if (flipping_point_on_path != null) {
-			p = (!) flipping_point_on_path;
-			p.recalculate_handles (x, y);
-			redraw_area (0, 0, allocation.width, allocation.height);
-		}		
+		}	
 	}
 
 	public void move_selected_edit_point (EditPoint selected_point, double x, double y) {		
@@ -1061,8 +1045,6 @@ public class Glyph : FontDisplay {
 		}
 		
 		clear_active_paths ();
-		new_point_on_path = null;
-		flipping_point_on_path = null;
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
 		
@@ -1347,10 +1329,6 @@ public class Glyph : FontDisplay {
 					p.fill_path (cr, allocation, view_zoom);
 				}
 			}
-		}
-
-		if (new_point_on_path != null) {
-			Path.draw_edit_point_center ((!) new_point_on_path, cr);
 		}
 	}
 	
