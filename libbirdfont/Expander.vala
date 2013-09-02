@@ -21,13 +21,13 @@ public class Expander : GLib.Object {
 	
 	public double x = 7;
 	public double y = 5;
+	public double scroll = 0;
 
 	public double w = 6;
 	public double h = 5;
 	
 	public double margin = 0;
 	
-	protected double rotation = 0;
 	protected double opacity = 0.5;
 	
 	protected bool active = false;
@@ -38,7 +38,13 @@ public class Expander : GLib.Object {
 	bool persist = false;
 	bool unique = false;
 	
+	double content_height = 0;
+	
 	public Expander () {
+	}
+
+	public double get_content_height () {
+		return content_height;
 	}
 
 	/** Returns true if tools can be used with the current canvas after
@@ -65,19 +71,30 @@ public class Expander : GLib.Object {
 	
 	private void update_tool_position () {
 		double xt = x - 15;
-		double yt = y - 30;
-		
+		double yt = y + scroll - 30;
+
+		if (tool.length () > 0) {
+			content_height = tool.first ().data.h + 2;
+		} else {
+			content_height = 0;
+		}
+
 		foreach (Tool t in tool) {
 			t.x = xt;
 			t.y = yt;
 			
 			xt += t.w + 4;
-			
+
 			if (xt + t.w > 160 - 20) {
 				xt = x - 15;
 				yt += t.h + 2;
+				content_height += t.h + 2; 
 			}
 		}
+	}
+	
+	public void set_scroll (double scroll) {
+		this.scroll = scroll;
 	}
 	
 	public void set_offset (double ty) {
@@ -125,8 +142,9 @@ public class Expander : GLib.Object {
 			});
 	}
 	
-	public bool is_over (double xp, double yp) {	
-		return (x - 7/2.0 <= xp <= x + w  + 7/2.0 && y - 7/2.0<= yp <= y + w + 7/2.0);  
+	public bool is_over (double xp, double yp) {
+		double yt = y + scroll + 2;
+		return yt - 7 <= yp <= yt + 7 && xp < 17;
 	}
 	
 	public bool set_active (bool a) {
@@ -142,17 +160,14 @@ public class Expander : GLib.Object {
 	
 	public virtual bool set_open (bool o) {
 		bool r = (open != o);
-		rotation = (o) ? Math.PI_2 : 0;
 		
 		if (o) {
 			margin = 35 * (int)((tool.length () / 4.0) + 1) ;
-			rotation = Math.PI_2;			
 			if (tool.length () % 4 == 0) {
 				margin -= 35;
 			}
 		} else {
 			margin = 0;
-			rotation = 0; 
 		}
 		
 		open = o;
@@ -160,50 +175,44 @@ public class Expander : GLib.Object {
 	}
 	
 	public void draw (int wd, int hd, Context cr) {
-		double lx, ly;
+		double yt = y + scroll + 2;
 		double ih2 = 5.4 / 2;
 		double iw2 = 5.4 / 2;
-		
+				
+		cr.save ();
+		cr.set_line_width (0.5);
+		cr.set_source_rgba (0, 0, 0, 0.25);
+		cr.move_to (x + w + 7, yt);
+		cr.line_to (wd - w - x + 4, yt);	
+		cr.stroke ();
+		cr.restore ();
+
 		// box
 		cr.save ();
 		cr.set_line_join (LineJoin.ROUND);
-		cr.set_line_width(7);
-		cr.set_source_rgba (176/255.0, 211/255.0, 230/255.0, opacity);
-		cr.rectangle (x, y, w, h);
+		cr.set_line_width (7);
+		cr.set_source_rgba (0.75, 0.75, 0.75, opacity);
+		cr.rectangle (x, yt - 3, w, h);
 		cr.stroke ();
 		cr.restore ();
 		
 		// arrow
 		cr.save ();
-		
-		cr.translate (x + w/2, y + h/2);
-		cr.rotate (rotation);
-
+		cr.new_path ();
 		cr.set_line_width (1);
 		cr.set_source_rgba (0, 0, 0, opacity);
-
-		cr.new_path ();
-		cr.move_to (-iw2, -ih2);
-		cr.line_to (iw2, 0);	
-		cr.line_to (-iw2, +ih2);
-
+		if (!open) {
+			cr.move_to (x - iw2 + 3, yt - ih2 - 0.7);
+			cr.line_to (x + iw2 + 3, yt);	
+			cr.line_to (x - iw2 + 3, ih2 + yt - 0.7);
+		} else {
+			cr.move_to (x - iw2 + 3, yt - ih2 - 0.7);
+			cr.line_to (x + iw2 + 3, yt - ih2 - 0.7);
+			cr.line_to (x + iw2, yt + 2);	
+		}
 		cr.close_path();
 		cr.stroke ();
 		cr.restore ();
-		
-		// separator
-		cr.save ();
-		lx = x + w + 7;
-		ly = y + ih2;
-		if (lx < wd) {
-			cr.set_line_width(1);
-			cr.set_source_rgba (0, 0, 0, 0.2);
-			cr.move_to (lx, ly);
-			cr.line_to (wd - w - x + 4, ly);	
-			cr.stroke ();
-		}
-		cr.restore ();
-
 	}
 	
 	public void draw_content (int w, int h, Context cr) {

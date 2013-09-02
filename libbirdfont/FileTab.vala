@@ -114,6 +114,11 @@ public class FileTab : FontDisplay {
 		int r = (int) rint ((ey - 17) / row_height) + scroll;
 		int i = 2; // heading
 
+		if (is_null (recent_fonts)) {
+			warning ("No recent fonts");
+			return;
+		}
+
 		foreach (Font font in recent_fonts) {
 			if (i == r) {
 				return_if_fail (font.font_file != null);
@@ -121,7 +126,12 @@ public class FileTab : FontDisplay {
 			}
 			i++;
 		}
-		
+
+		if (is_null (backups)) {
+			warning ("No backups");
+			return;
+		}
+				
 		i += 2; 
 		foreach (string backup in backups) {
 			if (i == r) {

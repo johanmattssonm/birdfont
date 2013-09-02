@@ -671,8 +671,9 @@ public class DrawingTools : ToolCollection  {
 		add_expander (style_tools);
 		
 		// Fixa: add_expander (trace);
-		
-		add_expander (test_tools);
+		if (BirdFont.has_argument ("--test")) {
+			add_expander (test_tools);
+		}
 		
 		draw_tools.set_persistent (true);
 		draw_tools.set_unique (true);

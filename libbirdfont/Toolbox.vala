@@ -84,7 +84,7 @@ public class Toolbox : GLib.Object  {
 			if (exp.is_over (x, y)) {
 				exp.set_open (! exp.is_open ());					
 				update_expanders ();			
-				redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
+				redraw_tool_box ();
 			}
 			
 			if (exp.is_open ()) {
@@ -104,6 +104,14 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public void scroll_up (double x, double y) {
+		current_set.scroll += 35;
+		
+		if (current_set.scroll > 0) {
+			current_set.scroll = 0;
+		}
+		
+		update_expanders ();
+		
 		foreach (Expander exp in current_set.get_expanders ()) {
 			foreach (Tool t in exp.tool) {
 				if (t.is_over (x, y)) {
@@ -112,9 +120,21 @@ public class Toolbox : GLib.Object  {
 				}
 			}
 		}
+		
+		redraw_tool_box ();
 	}
 
 	public void scroll_down (double x, double y) {
+		current_set.scroll -= 35;
+		
+		if (current_set.content_height < allocation_height) {
+			current_set.scroll = 0;
+		} else if (current_set.content_height + current_set.scroll < allocation_height) {
+			current_set.scroll = allocation_height - current_set.content_height;
+		}
+				
+		update_expanders ();
+		
 		foreach (Expander exp in current_set.get_expanders ()) {
 			foreach (Tool t in exp.tool) {
 				if (t.is_over (x, y)) {
@@ -123,6 +143,8 @@ public class Toolbox : GLib.Object  {
 				}
 			}
 		}
+		
+		redraw_tool_box ();
 	}
 	
 	public void move (double x, double y) {
@@ -242,14 +264,25 @@ public class Toolbox : GLib.Object  {
 	public void update_expanders () {
 		Expander? p = null; 
 		Expander pp;
+
+		foreach (Expander e in current_set.get_expanders ()) {
+			e.set_scroll (current_set.scroll);
+		}
+		
+		current_set.content_height = 0;
 		foreach (Expander e in current_set.get_expanders ()) {
 			if (p != null) {
 				pp = (!) p;
 				e.set_offset (pp.y + pp.margin + 9);
+				current_set.content_height += e.get_content_height () + 9;
+			} else {
+				e.set_offset (9);
 			}
 			
 			p = e;
 		}
+		
+		current_set.content_height += 40;
 	}
 	
 	private void draw_expanders (int w, int h, Context cr) {

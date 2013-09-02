@@ -18,6 +18,8 @@ using Math;
 namespace BirdFont {
 
 public abstract class ToolCollection : GLib.Object  {
+	public double scroll = 0;
+	public double content_height = 0;
 	public abstract unowned List<Expander> get_expanders ();
 }
 
