@@ -54,10 +54,18 @@ class GlyfData : GLib.Object {
 	private static double UNITS = HeadTable.UNITS;
 	
 	public GlyfData (Glyph g) {	
+		Path q;
+		
 		glyph = g;
 		
 		foreach (Path p in g.path_list) {
-			paths.append (p.get_quadratic_points ());
+			q = p.get_quadratic_points ();
+			
+			if (q.points.length () < 2) {
+				warning (@"A path in $(g.get_name ()) contains less than three points, it will not be exported.");
+			} else {
+				paths.append (q);
+			}
 		}
 		
 		process_end_points ();
@@ -88,6 +96,11 @@ class GlyfData : GLib.Object {
 		foreach (Path quadratic in paths) {
 			if (quadratic.points.length () == 0) {
 				warning (@"No points in path (before conversion $(quadratic.points.length ()))");
+				continue;
+			}
+			
+			if (quadratic.points.length () < 2) {
+				warning ("A path contains less than three points, it will not be exported.");
 				continue;
 			}
 			

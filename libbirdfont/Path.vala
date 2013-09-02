@@ -1094,6 +1094,7 @@ public class Path {
 		}
 
 		if (points.length () < 2) {
+			warning ("Less than 2 points in path.");
 			return quadratic_path;
 		}
 		

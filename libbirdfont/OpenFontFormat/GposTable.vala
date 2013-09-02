@@ -202,8 +202,6 @@ class GposTable : Table {
 				return;
 			}
 			
-			print (@"kerning: $left $right $kerning\n");
-			
 			pair_index = get_pair_index (gid1);
 			if (pair_index == -1) {
 				pair = new PairFormat1 ();
