@@ -70,7 +70,7 @@ public class ImportSvg {
 			
 			doc = Parser.parse_doc (xml_data);
 			root = doc->get_root_element ();
-			return_if_fail (root != null);
+			return_val_if_fail (root != null, path_list);
 			path_list = parse_svg_file (root);
 
 			delete doc;

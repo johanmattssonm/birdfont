@@ -18,15 +18,37 @@ from translations import compile_translations
 import configfile
 from run import run
 import version
+from optparse import OptionParser
 
-prefix = ""
-valac = "valac"
+parser = OptionParser()
+parser.add_option("-p", "--prefix", dest="prefix", help="install prefix", metavar="PREFIX")
+parser.add_option("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
+parser.add_option("-c", "--cc", dest="cc", help="select the C compiler", metavar="CC")
+parser.add_option("-f", "--cflags", dest="cflags", help="set compiler flags", metavar="CFLAGS")
+parser.add_option("-l", "--ldflags", dest="ldflags", help="set linker flags", metavar="LDFLAGS")
+parser.add_option("-v", "--valac", dest="valac", help="select vala compiler", metavar="VALAC")
+
+(options, args) = parser.parse_args()
+
+if not options.prefix:
+	options.prefix = "/usr"
+if not options.cc:
+	options.cc = "gcc"
+if not options.cflags:
+	options.cflags = ""
+if not options.ldflags:
+	options.ldflags = ""
+if not options.valac:
+	options.valac = "valac"
+
+prefix = options.prefix
+valac = options.valac
 valaflags = ""
-cc = "gcc"
-cflags = ""
-ldflags = ""
-library_cflags = ""
-library_ldflags= "";
+cc = options.cc
+cflags = options.cflags
+ldflags = options.ldflags
+library_cflags = options.cflags
+library_ldflags= options.ldflags
 library = "libbirdfont.so." + version.SO_VERSION
 
 configfile.write_config (prefix)

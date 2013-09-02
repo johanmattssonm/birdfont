@@ -54,7 +54,7 @@ public class CharDatabase {
 			show_loading_message ();
 		}
 		
-		return_if_fail (result.get_length () == 0);
+		return_val_if_fail (result.get_length () == 0, result);
 		
 		if (s.has_prefix ("U+") || s.has_prefix ("u+")) {
 			c = Font.to_unichar (s.down ());
