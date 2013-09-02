@@ -57,7 +57,7 @@ public class DropMenu : GLib.Object {
 	public MenuAction get_action_no2 () {
 		if (actions.length () < 2) {
 			warning ("No such action");
-			return new MenuAction ("NULL");
+			return new MenuAction ("None");
 		}
 		
 		return actions.nth (1).data;

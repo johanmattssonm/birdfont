@@ -85,6 +85,8 @@ public class VersionList : DropMenu {
 	
 	private void set_selected_item (MenuAction ma) {
 		int i = ma.index;
+		Glyph current_glyph = MainWindow.get_current_glyph ();
+		unowned List<Glyph> g;
 				
 		return_if_fail (0 <= i < glyphs.length ());
 
@@ -96,6 +98,15 @@ public class VersionList : DropMenu {
 		ma.set_selected (true);
 		
 		reload_all_open_glyphs ();
+		
+		g = glyphs.nth (current_version);
+		
+		if (unlikely (is_null (g.data))) {
+			warning ("No data in glyph collection.");
+		} else {
+			g.data.set_allocation (current_glyph.allocation);
+			g.data.default_zoom ();
+		}
 	}
 	
 	/** Reload a glyph when a new version is selected. Updates the path

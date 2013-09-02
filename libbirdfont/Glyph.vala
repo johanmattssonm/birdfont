@@ -731,7 +731,11 @@ public class Glyph : FontDisplay {
 
 		view_offset_x += x / view_zoom;
 		view_offset_y += y / view_zoom;
-			
+		
+		if (unlikely (allocation.width == 0 || allocation.height == 0)) {
+			warning (@"Allocation is not set in $(get_name ())");
+		}
+		
 		view_zoom_x = allocation.width * view_zoom / w;
 		view_zoom_y = allocation.height * view_zoom / h;
 				
@@ -785,37 +789,54 @@ public class Glyph : FontDisplay {
 		zoom_y2 = ny;
 	}
 
+	public static void validate_zoom () {
+		Glyph g = MainWindow.get_current_glyph ();
+		if (unlikely (g.view_zoom == 0)) {
+			warning ("Zoom is zero.");
+			g.reset_zoom ();
+			
+			if (g.view_zoom == 0) {
+				g.view_zoom = 1;
+				g.view_offset_x = 0;
+				g.view_offset_y = 0;
+			}
+		}	
+	}
+
 	public static double path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
-		return_val_if_fail (g.view_zoom != 0, 0);
+		validate_zoom ();
 		return x * ivz () - xc () + g.view_offset_x;
 	}
 
 	public static int reverse_path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
-		return_val_if_fail (g.view_zoom != 0, 0);
+		validate_zoom ();
 		return (int) Math.rint ((x - g.view_offset_x + xc ()) * g.view_zoom);
 	}
 
 	public static double precise_reverse_path_coordinate_x (double x) {
 		Glyph g = MainWindow.get_current_glyph ();
-		return_val_if_fail (g.view_zoom != 0, 0);
+		validate_zoom ();
 		return (x - g.view_offset_x + xc ()) * g.view_zoom;
 	}
 	
 	public static double path_coordinate_y (double y) {
 		Glyph g = MainWindow.get_current_glyph ();
+		validate_zoom ();
 		return yc () - y * ivz () - g.view_offset_y;
 	}
 
 	public static int reverse_path_coordinate_y (double y) {
 		Glyph g = MainWindow.get_current_glyph ();
+		validate_zoom ();
 		y =  Math.rint ((y + g.view_offset_y - yc ()) * g.view_zoom);	
 		return (int) (-y);
 	}
 
 	public static double precise_reverse_path_coordinate_y (double y) {
 		Glyph g = MainWindow.get_current_glyph ();
+		validate_zoom ();
 		y = (y + g.view_offset_y - yc ()) * g.view_zoom;	
 		return -y;
 	}
@@ -1359,9 +1380,13 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
+	public void set_allocation (WidgetAllocation a) {
+		allocation = a;
+	}
+	
 	public override void draw (WidgetAllocation allocation, Context cr) {
 		Tool tool;
-		
+			
 		this.allocation = allocation;
 
 		ImageSurface ps = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
