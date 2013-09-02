@@ -44,10 +44,17 @@ public class SpinButton : Tool {
 		
 		panel_press_action.connect ((selected, button, tx, ty) => {
 			double py = Math.fabs (y - ty);
-			int n;
+			int n = 0;
 
 			if (is_selected ()) {
-				n = (button == 3) ? 10 : 1;
+				if (button == 1) {
+					n = 1;
+				} else if (button == 2) {
+					n = 10;
+				} else if (button == 3) {
+					set_from_text ();
+					n = 0;
+				}
 					
 				for (int i = 0; i < n; i++) {
 					if (py < 51) increase ();
@@ -95,6 +102,27 @@ public class SpinButton : Tool {
 			decrease ();
 			return true;
 		});
+	}
+	
+	public void set_from_text () {
+		TextListener listener = new TextListener (_("Set"), get_display_value (), _("Close"));
+		
+		listener.signal_text_input.connect ((text) => {
+			int new_value = (int) Math.rint (double.parse (text) * 1000);
+			if (new_value < min) {
+				set_int_value (@"$min");
+			} else if (new_value > max) {
+				set_int_value (@"$max");
+			} else {
+				set_int_value (@"$new_value");
+			}
+		});
+		
+		listener.signal_submit.connect (() => {
+			MainWindow.native_window.hide_text_input ();
+		});
+		
+		MainWindow.native_window.set_text_listener (listener);
 	}
 	
 	public void set_max (double max) {
@@ -162,7 +190,7 @@ public class SpinButton : Tool {
 	public void set_value (string new_value, bool check_boundries = true, bool emit_signal = true) {
 		string v = new_value;
 
-		while (!(v.char_count () >= 5)) {
+		while (v.char_count () < 5) {
 			if (v.index_of (".") == -1) {
 				v += ".";
 			} else {
@@ -172,14 +200,14 @@ public class SpinButton : Tool {
 			return;
 		}
 
+		if (v.substring (v.index_of_nth_char (1), 1) != ".") {
+			warning (@"Expecting \".\" in $v");
+		}
+
 		deka = (int8) int.parse (v.substring (v.index_of_nth_char (0), 1));
 		deci = (int8) int.parse (v.substring (v.index_of_nth_char (2), 1));
 		centi = (int8) int.parse (v.substring (v.index_of_nth_char (3), 1));
 		milli = (int8) int.parse (v.substring (v.index_of_nth_char (4), 1));
-		
-		if (emit_signal) {
-			new_value_action (this);
-		}
 		
 		if (check_boundries && get_value () > max) {
 			set_value_round (max, false);
@@ -188,12 +216,14 @@ public class SpinButton : Tool {
 		if (check_boundries && get_value () < min) {
 			set_value_round (min, false);
 		}
+
+		if (emit_signal) {
+			new_value_action (this);
+		}
 	}
 
 	public void set_value_round (double v, bool check_boundries = true, bool emit_signal = true) {
-		v *= 1000;
-		v = Math.rint (v);
-		set_value (@"$v", check_boundries, emit_signal);
+		set_value (@"$v".replace (",", "."), check_boundries, emit_signal);
 	}
 	
 	public double get_value () {
