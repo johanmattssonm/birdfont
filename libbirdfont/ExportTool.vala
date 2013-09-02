@@ -155,9 +155,21 @@ public class ExportTool : GLib.Object {
 	}
 
 	public static void export_all () {
+		Font font = BirdFont.get_current_font ();
+		
+		if (font.font_file == null) {
+			if (MenuTab.save ()) {
+				do_export ();
+			}
+		} else {
+			do_export ();
+		}
+	}
+		
+	static void do_export () {
 		bool f;
 		Preview preview;
-
+				
 		f = export_ttf_font ();
 		if (!f) {
 			warning ("Failed to export ttf font");
@@ -167,10 +179,6 @@ public class ExportTool : GLib.Object {
 		if (!f) {
 			warning ("Failed to export svg font");
 		}
-		
-		// create html file
-		preview = new Preview ();
-		preview.get_html_file ();
 	}
 
 	public static void generate_html_document (string html_file, Font font) {
