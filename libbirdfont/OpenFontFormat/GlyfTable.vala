@@ -60,19 +60,6 @@ class GlyfTable : Table {
 		glyphs = new List<Glyph> ();
 	}	
 
-	public int get_gid_from_unicode (unichar c) {
-		int i = 0;
-		foreach (Glyph g in glyphs) {
-			if (g.unichar_code == c) {
-				return i;
-			}
-		
-			i++;
-		}
-		
-		return -1;
-	}
-
 	public int get_gid (string name) {
 		int i = 0;
 		
@@ -260,7 +247,9 @@ class GlyfTable : Table {
 		
 		// flags		
 		nflags = glyf_data.get_nflags ();
-		if (nflags != npoints) {
+		if (unlikely (nflags != npoints)) {
+			print ("glyf table data:\n");
+			fd.dump ();
 			warning (@"(nflags != npoints)  ($nflags != $npoints) in glyph $(g.name). ncontours: $ncontours");
 		}
 		assert (nflags == npoints);

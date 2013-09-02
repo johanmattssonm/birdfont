@@ -139,11 +139,6 @@ class GridTool : Tool {
 
 		}	
 	}
-		
-	/** Sets x and y the point closest on grid. */
-	public static void tie (ref double x, ref double y) {
-		tie_point (ref x, ref y, false);
-	}
 
 	public static void tie_coordinate (ref double x, ref double y) {
 		tie_point (ref x, ref y, true);

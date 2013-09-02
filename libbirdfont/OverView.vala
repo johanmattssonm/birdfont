@@ -852,6 +852,10 @@ public class OverView : FontDisplay {
 			x = (allocation.width - w) / 2.0;
 		}
 		
+		if (x < 0) {
+			x = 0;
+		}
+		
 		// background	
 		cr.save ();
 		cr.set_source_rgba (1, 1, 1, 0.98);

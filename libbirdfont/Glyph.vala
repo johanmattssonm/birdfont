@@ -975,7 +975,6 @@ public class Glyph : FontDisplay {
 	
 	public void move_selected_edit_point_coordinates (EditPoint selected_point, double xt, double yt) {	
 		double x, y;
-		EditPoint p;
 				
 		BirdFont.get_current_font ().touch ();
 

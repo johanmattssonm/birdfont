@@ -91,7 +91,6 @@ class BirdFontFile {
 			File file = File.new_for_path (path);
 			uint num_kerning_pairs;
 			uint progress;
-			uint num_glyphs;
 			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
 				warning (@"Can not save font. $path is a directory.");

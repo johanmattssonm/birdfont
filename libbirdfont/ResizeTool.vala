@@ -79,8 +79,6 @@ class ResizeTool : Tool {
 		});
 		
 		move_action.connect ((self, x, y)	 => {
-			Glyph glyph = MainWindow.get_current_glyph ();
-			
 			if (resize_path && can_resize (x, y)) {
 				resize (x, y);
 			}
@@ -106,37 +104,6 @@ class ResizeTool : Tool {
 		MoveTool.get_selection_box_boundries (out selection_box_center_x,
 			out selection_box_center_y, out selection_box_width,
 			out selection_box_height);	
-	}
-	
-	void move_selected_paths (uint key) {
-		Glyph glyph = MainWindow.get_current_glyph ();
-		double x, y;
-		
-		x = 0;
-		y = 0;
-		
-		switch (key) {
-			case Key.UP:
-				y = 1;
-				break;
-			case Key.DOWN:
-				y = -1;
-				break;
-			case Key.LEFT:
-				x = -1;
-				break;
-			case Key.RIGHT:
-				x = 1;
-				break;
-			default:
-				break;
-		}
-		
-		foreach (Path path in glyph.active_paths) {
-			path.move (x * Glyph.ivz (), y * Glyph.ivz ());
-		}
-		
-		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
 	}
 
 	double get_resize_ratio (double x, double y) {

@@ -168,7 +168,6 @@ public class ExportTool : GLib.Object {
 		
 	static void do_export () {
 		bool f;
-		Preview preview;
 				
 		f = export_ttf_font ();
 		if (!f) {

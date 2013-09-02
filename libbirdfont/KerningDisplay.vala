@@ -61,10 +61,6 @@ public class KerningDisplay : FontDisplay {
 		}
 	}
 	
-	private void draw_list (WidgetAllocation allocation, Context cr) {
-		kerning_list.draw (allocation, cr);
-	}
-	
 	public void draw_error_message (WidgetAllocation allocation, Context cr) {
 		string line1 = _("The current kerning class is malformed.");
 		string line2 = _("Add single characters separated by space and ranges on the form A-Z.");
