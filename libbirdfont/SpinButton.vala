@@ -1,3 +1,4 @@
+
 /*
     Copyright (C) 2012 Johan Mattsson
 
@@ -87,10 +88,12 @@ public class SpinButton : Tool {
 		
 		scroll_wheel_up_action.connect ((selected) => {
 			increase ();
+			return true;
 		});
 
 		scroll_wheel_down_action.connect ((selected) => {
 			decrease ();
+			return true;
 		});
 	}
 	

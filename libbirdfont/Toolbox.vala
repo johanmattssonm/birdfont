@@ -34,6 +34,8 @@ public class Toolbox : GLib.Object  {
 	
 	ImageSurface? toolbox_background = null;
 	
+	bool scrolling_toolbox = false;
+	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		drawing_tools = new DrawingTools (glyph_canvas);
 		kerning_tools = new KerningTools ();
@@ -104,47 +106,70 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public void scroll_up (double x, double y) {
-		current_set.scroll += 35;
+		bool action = false;
 		
-		if (current_set.scroll > 0) {
-			current_set.scroll = 0;
-		}
-		
-		update_expanders ();
-		
-		foreach (Expander exp in current_set.get_expanders ()) {
-			foreach (Tool t in exp.tool) {
-				if (t.is_over (x, y)) {
-					t.scroll_wheel_up_action (t);
-					press_tool = t;
+		if (!scrolling_toolbox) {	
+			foreach (Expander exp in current_set.get_expanders ()) {
+				foreach (Tool t in exp.tool) {
+					if (t.is_over (x, y)) {
+						action = t.scroll_wheel_up_action (t);
+						press_tool = t;
+					}
 				}
 			}
+		}
+		
+		if (!action) {
+			current_set.scroll += 35;
+			
+			if (current_set.scroll > 0) {
+				current_set.scroll = 0;
+			}
+			
+			update_expanders ();
+			suppress_scroll ();	
 		}
 		
 		redraw_tool_box ();
 	}
 
 	public void scroll_down (double x, double y) {
-		current_set.scroll -= 35;
-		
-		if (current_set.content_height < allocation_height) {
-			current_set.scroll = 0;
-		} else if (current_set.content_height + current_set.scroll < allocation_height) {
-			current_set.scroll = allocation_height - current_set.content_height;
-		}
-				
-		update_expanders ();
-		
-		foreach (Expander exp in current_set.get_expanders ()) {
-			foreach (Tool t in exp.tool) {
-				if (t.is_over (x, y)) {
-					t.scroll_wheel_down_action (t);
-					press_tool = t;
+		bool action = false;
+
+		if (!scrolling_toolbox) {	
+			foreach (Expander exp in current_set.get_expanders ()) {
+				foreach (Tool t in exp.tool) {
+					if (t.is_over (x, y)) {
+						action = t.scroll_wheel_down_action (t);
+						press_tool = t;
+					}
 				}
 			}
 		}
 		
+		if (!action) {
+			current_set.scroll -= 35;
+			
+			if (current_set.content_height < allocation_height) {
+				current_set.scroll = 0;
+			} else if (current_set.content_height + current_set.scroll < allocation_height) {
+				current_set.scroll = allocation_height - current_set.content_height;
+			}
+			
+			update_expanders ();
+			suppress_scroll ();
+		}
+
 		redraw_tool_box ();
+	}
+	
+	void suppress_scroll () {
+		scrolling_toolbox = true;
+		
+		Timeout.add (2000, () => {
+			scrolling_toolbox = false;
+			return false;
+		});
 	}
 	
 	public void move (double x, double y) {
