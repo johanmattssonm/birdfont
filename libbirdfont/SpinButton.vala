@@ -116,6 +116,8 @@ public class SpinButton : Tool {
 			} else {
 				set_int_value (@"$new_value");
 			}
+			
+			Toolbox.redraw_tool_box ();
 		});
 		
 		listener.signal_submit.connect (() => {

@@ -1141,6 +1141,9 @@ public class DescriptionForm : GLib.Object {
 	Entry postscript_name;
 	Entry font_name;
 	Entry style;
+	CheckButton bold;
+	CheckButton italic;
+	Entry weight;
 	Entry full_name;
 	Entry id;
 	Entry version;
@@ -1172,6 +1175,27 @@ public class DescriptionForm : GLib.Object {
 		style.changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.subfamily = style.text;
+		});
+		
+		bold = new CheckButton.with_label (_("Bold"));
+		bold.toggled.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.bold = bold.active;;
+		});
+		box.pack_start (bold, false, false, 0);
+		
+		italic = new CheckButton.with_label (_("Italic"));
+		italic.toggled.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.italic = italic.active;;
+		});
+		box.pack_start (italic, false, false, 0);
+
+		weight = new Entry ();
+		add_entry (weight, _("Weight"));
+		weight.changed.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.set_weight (weight.text);
 		});
 		
 		full_name = new Entry ();
@@ -1232,12 +1256,16 @@ public class DescriptionForm : GLib.Object {
 		postscript_name.set_text (font.postscript_name);
 		font_name.set_text (font.name);
 		style.set_text (font.subfamily);
+		bold.active = font.bold;
+		italic.active = font.italic;
+		weight.set_text (font.get_weight ());
 		full_name.set_text (font.full_name);
 		id.set_text (font.unique_identifier);
 		version.set_text (font.version);
 
 		description.get_buffer ().set_text (font.description.dup ());
 		copyright.get_buffer ().set_text (font.copyright.dup ());
+
 	}
 	
 	void add_entry (Entry e, string label) {

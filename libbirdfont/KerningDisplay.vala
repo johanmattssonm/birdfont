@@ -33,8 +33,6 @@ public class KerningDisplay : FontDisplay {
 
 	bool parse_error = false;
 	
-	KerningList kerning_list = new KerningList ();
-
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
 		row = new List <GlyphSequence> ();

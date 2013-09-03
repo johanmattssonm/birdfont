@@ -69,6 +69,10 @@ public class Font : GLib.Object {
 	public string description = "";
 	public string copyright = "";
 
+	public bool bold = false;
+	public bool italic = false;
+	public int weight = 400;
+
 	public bool initialised = true;
 
 	OpenFontFormatReader otf;
@@ -90,6 +94,18 @@ public class Font : GLib.Object {
 		base_line = 0;
 		bottom_position = 20;
 		bottom_limit = 27;
+	}
+
+	public void set_weight (string w) {
+		int wi = int.parse (w);
+		
+		if (wi > 0) {
+			weight = wi;
+		}
+	}
+
+	public string get_weight () {
+		return @"$weight";
 	}
 
 	public void touch () {

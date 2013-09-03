@@ -16,12 +16,22 @@ namespace BirdFont {
 
 class Os2Table : Table {
 	
+	public static const uint16 ITALIC = 1;
+	public static const uint16 UNDERSCORE = 1 << 1;
+	public static const uint16 NEGATIVE  = 1 << 2;
+	public static const uint16 OUTLINED  = 1 << 3;
+	public static const uint16 STRIKEOUT  = 1 << 4;
+	public static const uint16 BOLD  = 1 << 5;
+	public static const uint16 REGULAR  = 1 << 6;
+	public static const uint16 TYPO_METRICS  = 1 << 7;
+	public static const uint16 WWS  = 1 << 8;
+	public static const uint16 OBLIQUE = 1 << 9;
+	
 	public Os2Table () {
 		id = "OS/2";
 	}
 	
 	public override void parse (FontData dis) throws Error {
-		
 	}
 	
 	public void process (GlyfTable glyf_table) {
@@ -29,17 +39,13 @@ class Os2Table : Table {
 		Font font = OpenFontFormatWriter.get_current_font ();
 		int16 ascender;
 		int16 descender;
+		uint16 style = 0;
 		
 		fd.add_u16 (0x0002); // version
 
 		fd.add_16 (glyf_table.get_average_width ()); // xAvgCharWidth
-
-		// usWeightClass (400 is normal, 700 is bold)
-		if (font.subfamily.index_of ("Bold") == -1) {
-			fd.add_u16 (400); 
-		} else {
-			fd.add_u16 (700);
-		} 
+		
+		fd.add_u16 ((uint16) font.weight); // usWeightClass (400 is normal, 700 is bold)
 		
 		fd.add_u16 (5); // usWidthClass (5 is normal)
 		fd.add_u16 (0); // fsType
@@ -77,11 +83,20 @@ class Os2Table : Table {
 		fd.add_tag ("----"); // VendID
 		
 		 // fsSelection (1 for italic 0 for upright)
-		if (font.subfamily.index_of ("Italic") == -1) {
-			fd.add_u16 (0);
-		} else {
-			fd.add_u16 (1);
+
+		if (!font.bold && !font.italic) {
+			style |= REGULAR;
 		}
+
+		if (font.bold) {
+			style |= BOLD;
+		}
+				
+		if (font.italic) {
+			style |= ITALIC;
+		}
+		
+		fd.add_u16 (style);
 		
 		fd.add_u16 (glyf_table.get_first_char ()); // usFirstCharIndex
 		fd.add_u16 (glyf_table.get_last_char ()); // usLastCharIndex
@@ -96,7 +111,7 @@ class Os2Table : Table {
 		fd.add_u16 (ascender); // usWinAscent
 		fd.add_u16 (descender); // usWinDescent
 
-		// FIXA:
+		// FIXME:
 		fd.add_u32 (0); // ulCodePageRange1 Bits 0-31
 		fd.add_u32 (0); // ulCodePageRange2 Bits 32-63
 
