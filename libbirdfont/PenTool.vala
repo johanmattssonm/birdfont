@@ -157,7 +157,7 @@ public class PenTool : Tool {
 		});
 		
 		key_press_action.connect ((self, keyval) => {
-			if (keyval == Key.DEL) {
+			if (keyval == Key.DEL || keyval == Key.BACK_SPACE) {
 				delete_selected_points ();
 			}
 			

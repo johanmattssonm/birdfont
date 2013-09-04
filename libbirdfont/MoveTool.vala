@@ -139,7 +139,7 @@ class MoveTool : Tool {
 			Glyph g = MainWindow.get_current_glyph ();
 			
 			// delete selected paths
-			if (keyval == Key.DEL) {
+			if (keyval == Key.DEL || keyval == Key.BACK_SPACE) {
 				foreach (Path p in g.active_paths) {
 					g.path_list.remove (p);
 					g.update_view ();
