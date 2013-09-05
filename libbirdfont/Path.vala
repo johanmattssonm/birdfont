@@ -933,7 +933,7 @@ public class Path {
 		update_region_boundries ();
 	}
 
-	public void update_region_boundries_for_point (EditPoint p) {
+	private void update_region_boundries_for_point (EditPoint p) {
 		EditPointHandle left_handle;
 		EditPointHandle right_handle;
 		
@@ -960,7 +960,7 @@ public class Path {
 		update_region_boundries_for_handle (right_handle);
 	}
 
-	public void update_region_boundries_for_handle (EditPointHandle h) {
+	private void update_region_boundries_for_handle (EditPointHandle h) {
 		if (h.x () > xmax) {
 			xmax = h.x ();
 		}

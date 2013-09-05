@@ -334,7 +334,7 @@ public class PenTool : Tool {
 					glyph.move_selected_edit_point_delta (p, (x - last_point_x) * precision, (y - last_point_y) * precision);
 				}
 				p.recalculate_linear_handles ();
-				ps.path.update_region_boundries_for_point (p);
+				ps.path.update_region_boundries ();
 			}
 		}
 		
@@ -929,7 +929,7 @@ public class PenTool : Tool {
 		
 		new_point = glyph.add_new_edit_point (x, y);
 		new_point.point.set_selected (true);
-		new_point.path.update_region_boundries_for_point (new_point.point);
+		new_point.path.update_region_boundries ();
 
 		selected_point = new_point.point;
 		active_edit_point = new_point.point;	
