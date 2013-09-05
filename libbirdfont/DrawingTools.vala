@@ -641,9 +641,13 @@ public class DrawingTools : ToolCollection  {
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
 		});
 		style_tools.add_tool (fill_open_path);
-		
-		// FIXME transparency on windows
 
+		Tool ttf_units = new Tool ("ttf_units", _("Use TTF units."));
+		ttf_units.select_action.connect((self) => {
+			GridTool.ttf_units = !GridTool.ttf_units;
+		});
+		style_tools.add_tool (ttf_units);
+		
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
 		edit_point_modifiers.set_open (true);

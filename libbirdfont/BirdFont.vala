@@ -272,6 +272,7 @@ public class BirdFont {
 		DefaultCharacterSet.create_default_character_sets ();
 		DefaultCharacterSet.get_characters_for_prefered_language ();
 
+		HeadTable.init ();
 	}
 
 	public static void set_bundle_path (string path) {

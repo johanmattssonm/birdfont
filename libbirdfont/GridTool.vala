@@ -23,6 +23,7 @@ class GridTool : Tool {
 	static List<Line> vertical;
 	
 	static bool visible = false;
+	public static bool ttf_units = true;
 	
 	public static double size_x;
 	public static double size_y;
@@ -73,12 +74,34 @@ class GridTool : Tool {
 	}
 	
 	public static void set_grid_width (double w) {
+		double t = 0;
+		
+		if (ttf_units) {
+			ttf_grid_coordinate (ref w, ref t);	
+		}
+		
 		size_x = w;
 		size_y = w;
 		
 		update_lines ();
 	}
 	
+	public static void ttf_grid (ref int pixel_x, ref int pixel_y) {
+		double coordinate_x = Glyph.path_coordinate_x (pixel_x);
+		double coordinate_y = Glyph.path_coordinate_y (pixel_y);
+		
+		coordinate_x = GlyfData.tie_to_ttf_grid_x (MainWindow.get_current_glyph (), coordinate_x);
+		coordinate_y = GlyfData.tie_to_ttf_grid_y (BirdFont.get_current_font (), coordinate_y);
+		
+		pixel_x = Glyph.reverse_path_coordinate_x (coordinate_x);
+		pixel_y = Glyph.reverse_path_coordinate_y (coordinate_y);
+	}
+
+	public static void ttf_grid_coordinate (ref double x, ref double y) {
+		x = GlyfData.tie_to_ttf_grid_x (MainWindow.get_current_glyph (), x);
+		y = GlyfData.tie_to_ttf_grid_y (BirdFont.get_current_font (), y);
+	}
+		
 	private static void update_lines () {
 		Glyph g = MainWindow.get_current_glyph ();
 		double step = size_y;
@@ -241,6 +264,10 @@ class GridTool : Tool {
 		}
 		
 		return y;
+	}
+	
+	public static bool has_ttf_grid () {
+		return ttf_units;
 	}
 	
 	public static bool is_visible () {

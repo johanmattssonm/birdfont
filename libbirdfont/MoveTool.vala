@@ -95,7 +95,11 @@ class MoveTool : Tool {
 				foreach (Path p in glyph.active_paths) {
 					tie_path_to_grid (p, x, y);
 				}
-			}
+			} else if (GridTool.has_ttf_grid ()) {
+				foreach (Path p in glyph.active_paths) {
+					tie_path_to_ttf_grid (p, x, y);
+				}
+			} 
 			
 			if (group_selection) {
 				select_group ();
@@ -298,7 +302,11 @@ class MoveTool : Tool {
 		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
 	}
 
-	void tie_path_to_grid (Path p, double x, double y) {
+	void tie_path_to_ttf_grid (Path p, double x, double y) {
+		tie_path_to_grid (p, x, y, true);
+	} 
+
+	void tie_path_to_grid (Path p, double x, double y, bool ttf_grid = false) {
 		double sx, sy, qx, qy;	
 		
 		// tie to grid
@@ -307,8 +315,13 @@ class MoveTool : Tool {
 		qx = p.xmin;
 		qy = p.ymin;
 		
-		GridTool.tie_coordinate (ref sx, ref sy);
-		GridTool.tie_coordinate (ref qx, ref qy);
+		if (ttf_grid) {
+			GridTool.ttf_grid_coordinate (ref sx, ref sy);
+			GridTool.ttf_grid_coordinate (ref qx, ref qy);
+		} else {
+			GridTool.tie_coordinate (ref sx, ref sy);
+			GridTool.tie_coordinate (ref qx, ref qy);
+		}
 		
 		if (Math.fabs (qy - p.ymin) < Math.fabs (sy - p.ymax)) {
 			p.move (0, qy - p.ymin);

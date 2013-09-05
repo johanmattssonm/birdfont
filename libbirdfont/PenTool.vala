@@ -45,6 +45,8 @@ public class PenTool : Tool {
 	private static bool show_selection_box = false;
 	private static double selection_box_x = 0;
 	private static double selection_box_y = 0;
+	private static double selection_box_last_x = 0;
+	private static double selection_box_last_y = 0;
 
 	public static double precision = 1;
 	private static ImageSurface? tie_icon = null;
@@ -83,7 +85,7 @@ public class PenTool : Tool {
 			move_point_on_path = false;
 		});
 		
-		press_action.connect ((self, b, x, y) => {
+		press_action.connect ((self, b, x, y) => {			
 			// retain path direction
 			Glyph glyph = MainWindow.get_current_glyph ();
 			clockwise = new List<Path> ();
@@ -103,11 +105,13 @@ public class PenTool : Tool {
 			last_point_y = y;
 
 			press (b, x, y, false);
-			
+						
 			if (GridTool.is_visible ()) {
 				tie_pixels (ref x, ref y);
+			} else if (GridTool.has_ttf_grid ()) {
+				GridTool.ttf_grid (ref x, ref y);
 			}
-			
+						
 			last_point_x = x;
 			last_point_y = y;
 		});
@@ -120,8 +124,10 @@ public class PenTool : Tool {
 		});
 
 		release_action.connect ((self, b, ix, iy) => {
-			double x = ix;
-			double y = iy;
+			double x, y;
+			
+			x = ix;
+			y = iy;
 			
 			join_paths (x, y);
 
@@ -153,6 +159,9 @@ public class PenTool : Tool {
 		});
 
 		move_action.connect ((self, x, y) => {
+			selection_box_last_x = x;
+			selection_box_last_y = y;
+			
 			move (x, y);
 		});
 		
@@ -193,10 +202,10 @@ public class PenTool : Tool {
 		
 		g = MainWindow.get_current_glyph ();
 		
-		x1 = Glyph.path_coordinate_x (fmin (selection_box_x, last_point_x));
-		y1 = Glyph.path_coordinate_y (fmin (selection_box_y, last_point_y));
-		x2 = Glyph.path_coordinate_x (fmax (selection_box_x, last_point_x));
-		y2 = Glyph.path_coordinate_y (fmax (selection_box_y, last_point_y));
+		x1 = Glyph.path_coordinate_x (fmin (selection_box_x, selection_box_last_x));
+		y1 = Glyph.path_coordinate_y (fmin (selection_box_y, selection_box_last_y));
+		x2 = Glyph.path_coordinate_x (fmax (selection_box_x, selection_box_last_x));
+		y2 = Glyph.path_coordinate_y (fmax (selection_box_y, selection_box_last_y));
 		
 		remove_all_selected_points ();
 		
@@ -277,11 +286,11 @@ public class PenTool : Tool {
 		DrawingTools.precision.set_value_round (p, false, false);
 	}
 	
-	public void move (double x, double y) {
+	public void move (int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		double coordinate_x, coordinate_y;
-		double px = 0;
-		double py = 0;
+		int px = 0;
+		int py = 0;
 		EditPoint p;
 		
 		control_point_event (x, y);
@@ -295,9 +304,14 @@ public class PenTool : Tool {
 			if (GridTool.is_visible ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
-				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
+				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);	
 				px = Glyph.reverse_path_coordinate_x (coordinate_x);
 				py = Glyph.reverse_path_coordinate_y (coordinate_y);
+				selected_handle.move_delta ((px - last_point_x), (py - last_point_y));
+			} if (GridTool.has_ttf_grid ()) {
+				px = x;
+				py = y;
+				GridTool.ttf_grid (ref px, ref py);
 				selected_handle.move_delta ((px - last_point_x), (py - last_point_y));
 			} else {
 				selected_handle.move_delta ((x - last_point_x) * precision, (y - last_point_y) * precision);
@@ -311,9 +325,12 @@ public class PenTool : Tool {
 			if (GridTool.is_visible ()) {
 				last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_handle.x ());
 				last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_handle.y ());
+			} if (GridTool.has_ttf_grid ()) {
+				last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_handle.x ());
+				last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_handle.y ());
 			} else {
 				last_point_x = x;
-				last_point_y = y;				
+				last_point_y = y;
 			}
 			
 			return;
@@ -327,8 +344,13 @@ public class PenTool : Tool {
 					coordinate_x = Glyph.path_coordinate_x (x);
 					coordinate_y = Glyph.path_coordinate_y (y);
 					GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
-					px = Glyph.precise_reverse_path_coordinate_x (coordinate_x);
-					py = Glyph.precise_reverse_path_coordinate_y (coordinate_y);
+					px = Glyph.reverse_path_coordinate_x (coordinate_x);
+					py = Glyph.reverse_path_coordinate_y (coordinate_y);
+					glyph.move_selected_edit_point_delta (p, (px - last_point_x), (py - last_point_y));
+				} else if (GridTool.has_ttf_grid ()) {
+					px = x;
+					py = y;
+					GridTool.ttf_grid (ref px, ref py);
 					glyph.move_selected_edit_point_delta (p, (px - last_point_x), (py - last_point_y));
 				} else {
 					glyph.move_selected_edit_point_delta (p, (x - last_point_x) * precision, (y - last_point_y) * precision);
@@ -339,6 +361,9 @@ public class PenTool : Tool {
 		}
 		
 		if (GridTool.is_visible ()) {
+			last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_point.x);
+			last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_point.y);
+		} else if (GridTool.has_ttf_grid ()) {
 			last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_point.x);
 			last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_point.y);
 		} else {
@@ -393,10 +418,12 @@ public class PenTool : Tool {
 			select_active_point (x, y);
 		}
 
-		if (selected_points.length () == 0) {
+		if (selected_points.length () == 0 && !active_handle.active) {
 			show_selection_box = true;
 			selection_box_x = x;
 			selection_box_y = y;
+			selection_box_last_x = x;
+			selection_box_last_y = y;
 		}
 
 		glyph.store_undo_state ();
@@ -722,11 +749,11 @@ public class PenTool : Tool {
 	
 	void draw_selection_box (Context cr) {
 		double x, y, w, h;
-		
-		x = fmin (selection_box_x, last_point_x);
-		y = fmin (selection_box_y, last_point_y);
-		w = fmax (selection_box_x, last_point_x) - x;
-		h = fmax (selection_box_y, last_point_y) - y;
+
+		x = fmin (selection_box_x, selection_box_last_x);
+		y = fmin (selection_box_y, selection_box_last_y);
+		w = fmax (selection_box_x, selection_box_last_x) - x;
+		h = fmax (selection_box_y, selection_box_last_y) - y;
 		
 		cr.save ();
 		cr.set_source_rgba (0, 0, 0.3, 1);
@@ -891,7 +918,8 @@ public class PenTool : Tool {
 		double y = Glyph.path_coordinate_y (event_y);
 		double distance;
 		PointSelection e;
-		
+		int px, py;
+		double coordinate_x, coordinate_y;
 		set_active_edit_point (null, new Path ());
 		
 		if (ep == null) {
@@ -903,19 +931,32 @@ public class PenTool : Tool {
 
 		if (distance < CONTACT_SURFACE) {
 			set_active_edit_point (e.point, e.path);
-			
+		
 			if (first_move_action && GridTool.is_visible () && move_selected) {
-				double coordinate_x = e.point.x;
-				double coordinate_y = e.point.y;
+				coordinate_x = e.point.x;
+				coordinate_y = e.point.y;
 				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
-				int px = Glyph.reverse_path_coordinate_x (coordinate_x);
-				int py = Glyph.reverse_path_coordinate_y (coordinate_y);
+				px = Glyph.reverse_path_coordinate_x (coordinate_x);
+				py = Glyph.reverse_path_coordinate_y (coordinate_y);
 				
 				last_point_x += Glyph.reverse_path_coordinate_x (e.point.x) - px;
 				last_point_y += Glyph.reverse_path_coordinate_y (e.point.y) - py;
 				
 				first_move_action = false;
-			}
+			} else if (first_move_action && GridTool.has_ttf_grid () && move_selected) {
+				coordinate_x = e.point.x;
+				coordinate_y = e.point.y;
+				
+				GridTool.ttf_grid_coordinate (ref coordinate_x, ref coordinate_y);
+
+				px = Glyph.reverse_path_coordinate_x (coordinate_x);
+				py = Glyph.reverse_path_coordinate_y (coordinate_y);
+				
+				last_point_x += Glyph.reverse_path_coordinate_x (e.point.x) - px;
+				last_point_y += Glyph.reverse_path_coordinate_y (e.point.y) - py;
+				
+				first_move_action = false;
+			} 
 		}
 	}
 	

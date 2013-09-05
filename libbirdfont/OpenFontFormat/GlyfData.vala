@@ -51,8 +51,10 @@ class GlyfData : GLib.Object {
 	public int16 bounding_box_xmax = 0;
 	public int16 bounding_box_ymax = 0;
 	
-	private static double UNITS = HeadTable.UNITS;
-	
+	private static double UNITS {
+		get { return HeadTable.UNITS; }
+	}
+		
 	public GlyfData (Glyph g) {	
 		Path q;
 		
@@ -145,6 +147,18 @@ class GlyfData : GLib.Object {
 				nflags++;
 			}
 		}
+	}
+	
+	public static double tie_to_ttf_grid_x (Glyph glyph, double x) {
+		double ttf_x;
+		ttf_x = rint (x * UNITS - glyph.left_limit * UNITS);
+		return (ttf_x / UNITS) + glyph.left_limit;
+	}
+
+	public static double tie_to_ttf_grid_y (Font font, double y) {
+		double ttf_y;
+		ttf_y = rint (y * UNITS  + font.base_line * UNITS);
+		return (ttf_y / UNITS) - font.base_line;
 	}
 	
 	void process_x () {

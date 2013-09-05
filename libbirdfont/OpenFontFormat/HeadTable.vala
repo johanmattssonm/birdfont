@@ -41,8 +41,8 @@ class HeadTable : Table {
 	uint64 modified;
 		
 	// public static uint16 units_per_em = 4096; FIXME: windows testing
-	public static uint16 units_per_em = 1000;
-	public static double UNITS = 10 * (units_per_em / 1000);
+	public static uint16 units_per_em;
+	public static double UNITS;
 	
 	const uint8 BASELINE_AT_ZERO = 1 << 0;
 	const uint8 LSB_AT_ZERO = 1 << 1;
@@ -52,6 +52,13 @@ class HeadTable : Table {
 	public HeadTable (GlyfTable gt) {
 		glyf_table = gt;
 		id = "head";
+		init ();
+	}
+	
+	/** Set default value for unit. */
+	public static void init () {
+		units_per_em = 1000;
+		UNITS = 10 * (units_per_em / 1000);
 	}
 	
 	public uint32 get_adjusted_checksum () {
