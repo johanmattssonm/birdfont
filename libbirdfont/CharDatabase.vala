@@ -26,22 +26,33 @@ public class CharDatabase {
 	
 	static double lines_in_ucd = 38876;
 	
+	DataInputStream din;
+	FileInputStream fin;
+	
 	public CharDatabase () {
 		entries = new HashMap<string, string> ();
 		index = new HashMultiMap<string, string> ();
 	
 		full_unicode_range = new GlyphRange ();
-
+		
+		open_database ();
+		show_loading_message ();
+		
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
-			show_loading_message ();
-			parse_all_entries ();
-			database_is_loaded = true;
-			ProgressBar.set_progress (0);
-			return false;
+			bool m = parse_next_entry ();
+			
+			if (m) {
+				database_is_loaded = true;
+				ProgressBar.set_progress (0);
+				return false;
+			} 
+			
+			return true;
 		});
 		idle.attach (null);
 	}
+
 
 	public static GlyphRange search (string s) {
 		GlyphRange result = new GlyphRange ();
@@ -144,21 +155,36 @@ public class CharDatabase {
 		Tool.yield ();
 	}
 
-	private void parse_all_entries () {
-		FileInputStream fin;
-		DataInputStream din;
-		string? line;
-		string data;
-		string description = "";
-		File file;
-		int line_number = 0;
-
-		file = get_unicode_database ();
+	private void open_database () {
+		File file = get_unicode_database ();
 		
 		try {
 			fin = file.read ();
 			din = new DataInputStream (fin);
-			
+		} catch (GLib.Error e) {
+			warning (e.message);
+			warning ("In %s", (!) get_unicode_database ().get_path ());
+		}
+	}
+	
+	private void close_database () {
+		try {
+			fin.close ();
+			din.close ();
+		} catch (GLib.Error e) {
+			warning (e.message);
+			warning ("In %s", (!) get_unicode_database ().get_path ());
+		}
+	}
+
+	private bool parse_next_entry () {
+		string? line;
+		string data;
+		string description = "";
+		
+		int line_number = 0;
+
+		try {			
 			line = din.read_line (null);
 			while (true) {
 				data = (!) line;
@@ -172,12 +198,12 @@ public class CharDatabase {
 					} else {
 						if (description.index_of ("<not a character>") == -1) {
 							add_entry (description);
+							return true;
 						}
 						break;
 					}
 					
 					ProgressBar.set_progress (++line_number / lines_in_ucd);
-					
 					Tool.yield ();
 				}
 				
@@ -189,13 +215,12 @@ public class CharDatabase {
 			if (description == "") {
 				warning ("no description found");
 			}
-			
-			fin.close ();
-			din.close ();
 		} catch (GLib.Error e) {
 			warning (e.message);
 			warning ("In %s", (!) get_unicode_database ().get_path ());
 		}
+		
+		return false;
 	}
 
 	public static bool has_ascender (unichar c) {
