@@ -113,7 +113,7 @@ public class MainWindow {
 		}
 		
 		over_view = new OverView();
-		tabs.add_unique_tab (over_view, 100, false);
+		tabs.add_unique_tab (over_view);
 				
 		return over_view;
 	}

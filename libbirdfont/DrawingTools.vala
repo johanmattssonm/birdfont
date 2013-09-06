@@ -645,6 +645,7 @@ public class DrawingTools : ToolCollection  {
 		Tool ttf_units = new Tool ("ttf_units", _("Use TTF units."));
 		ttf_units.select_action.connect((self) => {
 			GridTool.ttf_units = !GridTool.ttf_units;
+			Preferences.set ("ttf_units", @"$(GridTool.ttf_units)");
 		});
 		style_tools.add_tool (ttf_units);
 		

@@ -23,7 +23,7 @@ class GridTool : Tool {
 	static List<Line> vertical;
 	
 	static bool visible = false;
-	public static bool ttf_units = true;
+	public static bool ttf_units = false;
 	
 	public static double size_x;
 	public static double size_y;
@@ -31,7 +31,13 @@ class GridTool : Tool {
 	public static List<SpinButton> sizes;
 	
 	public GridTool (string n) {
+		string units;
 		base (n, _("Show grid"), 'g', NONE);
+		
+		units = Preferences.get ("ttf_units");
+		if (units == "true") {
+			ttf_units = true;
+		}
 		
 		horizontal = new List <Line> ();
 		vertical = new List <Line> ();
@@ -56,7 +62,6 @@ class GridTool : Tool {
 			if (visible && !t.is_selected ()) {
 				MainWindow.get_toolbox ().select_tool (t);
 			}
-			
 		});
 		
 		press_action.connect((self, b, x, y) => {
