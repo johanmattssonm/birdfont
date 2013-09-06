@@ -83,6 +83,8 @@ class MoveTool : Tool {
 				selection_x = x;
 				selection_y = y;	
 			}
+			
+			update_boundries_for_selection ();
 		});
 
 		release_action.connect((self, b, x, y) => {

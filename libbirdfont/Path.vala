@@ -925,7 +925,7 @@ public class Path {
 	
 	/** Move path. */
 	public void move (double delta_x, double delta_y) {
-		foreach (var ep in points) {
+		foreach (EditPoint ep in points) {
 			ep.x += delta_x;
 			ep.y += delta_y;
 		}
