@@ -164,6 +164,15 @@ public class FileTab : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 
+		if (recent_fonts.length () == 0 && !has_backup ()) {
+			cr.save ();
+			cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+			cr.set_font_size (18);
+			cr.move_to (50, top - 9);
+			cr.show_text (_("No fonts created yet."));
+			cr.restore ();
+		}
+		
 		if (scroll == 0 && recent_fonts.length () > 0) {
 			cr.save ();
 			cr.set_source_rgba (0.3, 0.3, 0.3, 1);

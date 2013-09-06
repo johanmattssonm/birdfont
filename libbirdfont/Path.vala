@@ -1275,16 +1275,13 @@ public class Path {
 			ep.get_right_handle ().set_point_type (PointType.LINE_QUADRATIC);
 			ep.get_left_handle ().set_point_type (PointType.LINE_QUADRATIC);
 			ep.type = PointType.QUADRATIC;
-			ep.recalculate_linear_handles ();
 		} else if (right == PointType.LINE_CUBIC && left == PointType.LINE_CUBIC) {
 			ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
 			ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
 			ep.type = PointType.LINE_CUBIC;
-			ep.recalculate_linear_handles ();
 		} else if (right == PointType.LINE_DOUBLE_CURVE && left == PointType.LINE_DOUBLE_CURVE) {
 			ep.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
 			ep.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
-			ep.recalculate_linear_handles ();
 			ep.type = PointType.DOUBLE_CURVE;
 		} else if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 			double_bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
@@ -1326,7 +1323,6 @@ public class Path {
 		stop.get_left_handle ().length *= 1 - position;
 		start.get_right_handle ().length *= position;
 
-
 		if (right == PointType.QUADRATIC) { // update connected handle
 			if (ep.prev != null) {
 				ep.get_left_handle ().move_to_coordinate_internal (
@@ -1336,6 +1332,11 @@ public class Path {
 			} else {
 				warning ("ep.prev is null for quadratic point");
 			}
+		}
+		
+		create_list ();
+		foreach (EditPoint p in points) {
+			p.recalculate_linear_handles ();
 		}
 	}
 			
