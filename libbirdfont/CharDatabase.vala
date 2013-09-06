@@ -18,29 +18,19 @@ namespace BirdFont {
 
 public class CharDatabase {
 	
-	static HashMap<string, string> entries;
-	static HashMultiMap<string, string> index;
+	public static HashMap<string, string> entries;
+	public static HashMultiMap<string, string> index;
 
-	static GlyphRange full_unicode_range;
-	static bool database_is_loaded = false;
-	
-	static double lines_in_ucd = 38876;
-	
+	public static GlyphRange full_unicode_range;
+	public static bool database_is_loaded = false;
+
 	public CharDatabase () {
 		entries = new HashMap<string, string> ();
 		index = new HashMultiMap<string, string> ();
 	
 		full_unicode_range = new GlyphRange ();
-
-		IdleSource idle = new IdleSource ();
-		idle.set_callback (() => {
-			show_loading_message ();
-			parse_all_entries ();
-			database_is_loaded = true;
-			ProgressBar.set_progress (0);
-			return false;
-		});
-		idle.attach (null);
+		
+		CharDatabaseParser.run ();
 	}
 
 	public static GlyphRange search (string s) {
@@ -88,114 +78,6 @@ public class CharDatabase {
 		}
 		
 		return result;
-	}
-
-	private void add_entry (string data) {
-		string[] e;
-		string[] r;
-		string[] d;
-		string index_values;
-		unichar ch;
-		
-		string unicode_hex;
-		
-		if (data.has_prefix ("@")) { // ignore comments
-			return;
-		}
-		
-		index_values = data.down ();
-		index_values = index_values.replace ("\n\tx", "");
-		index_values = index_values.replace ("\n\t*", "");
-		index_values = index_values.replace ("\n\t=", "");
-		index_values = index_values.replace ("\n\t#", "");
-		index_values = index_values.replace (" - ", " ");
-		index_values = index_values.replace ("(", "");
-		index_values = index_values.replace (")", "");
-		index_values = index_values.replace ("<font>", "");
-		index_values = index_values.replace (" a ", " ");
-		index_values = index_values.replace (" is ", " ");
-		index_values = index_values.replace (" the ", " ");
-		
-		e = index_values.split ("\t");
-
-		return_if_fail (e.length > 0);
-		
-		unicode_hex = e[0].up ();
-		
-		ch = Font.to_unichar ("U+" + unicode_hex.down ());
-		full_unicode_range.add_single (ch);
-		Tool.yield ();
-
-		entries.set (unicode_hex, data);
-				
-		foreach (string s in e) {
-			r = s.split ("\n");
-			foreach (string t in r) {  
-				d = t.split (" ");
-				foreach (string token in d) {
-					if (token != "") {
-						index.set (token, unicode_hex);
-						Tool.yield ();
-					}
-				}
-			}
-		}
-		
-		Tool.yield ();
-	}
-
-	private void parse_all_entries () {
-		FileInputStream fin;
-		DataInputStream din;
-		string? line;
-		string data;
-		string description = "";
-		File file;
-		int line_number = 0;
-
-		file = get_unicode_database ();
-		
-		try {
-			fin = file.read ();
-			din = new DataInputStream (fin);
-			
-			line = din.read_line (null);
-			while (true) {
-				data = (!) line;
-				description = data;
-				
-				while ((line = din.read_line (null)) != null) {
-					data = (!) line;
-					if (data.has_prefix ("\t")) {
-						description += "\n";
-						description += data;
-					} else {
-						if (description.index_of ("<not a character>") == -1) {
-							add_entry (description);
-						}
-						break;
-					}
-					
-					ProgressBar.set_progress (++line_number / lines_in_ucd);
-					
-					Tool.yield ();
-				}
-				
-				if (line == null) {
-					break;
-				}
-			}
-			
-			if (description == "") {
-				warning ("no description found");
-			}
-			
-			fin.close ();
-			din.close ();
-		} catch (GLib.Error e) {
-			warning (e.message);
-			warning ("In %s", (!) get_unicode_database ().get_path ());
-		}
 	}
 
 	public static bool has_ascender (unichar c) {
@@ -256,7 +138,7 @@ public class CharDatabase {
 		return description;		
 	}
 	
-	static void show_loading_message () {
+	public static void show_loading_message () {
 		MainWindow.set_status (_("Loading the unicode character database") + " ...");
 	}
 	
@@ -270,10 +152,6 @@ public class CharDatabase {
 		} catch (MarkupError e) {
 			warning (e.message);
 		}
-	}
-	
-	static File get_unicode_database () {
-		return SearchPaths.get_char_database ();
 	}
 }
 
