@@ -119,6 +119,8 @@ class BirdFontFile {
 			os.put_string (@"<postscript_name>$(font.postscript_name)</postscript_name>\n");
 			os.put_string (@"<name>$(font.name)</name>\n");
 			os.put_string (@"<subfamily>$(font.subfamily)</subfamily>\n");
+			os.put_string (@"<bold>$(font.bold)</bold>\n");
+			os.put_string (@"<italic>$(font.italic)</italic>\n");			
 			os.put_string (@"<full_name>$(font.full_name)</full_name>\n");
 			os.put_string (@"<unique_identifier>$(font.unique_identifier)</unique_identifier>\n");
 			os.put_string (@"<version>$(font.version)</version>\n");
@@ -506,6 +508,14 @@ class BirdFontFile {
 				font.subfamily = iter->children->content;
 			}
 
+			if (iter->name == "bold" && iter->children != null) {
+				font.bold = bool.parse (iter->children->content);
+			}
+			
+			if (iter->name == "italic" && iter->children != null) {
+				font.italic = bool.parse (iter->children->content);
+			}
+			
 			if (iter->name == "full_name" && iter->children != null) {
 				font.full_name = iter->children->content;
 			}
