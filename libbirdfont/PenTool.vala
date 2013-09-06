@@ -304,11 +304,11 @@ public class PenTool : Tool {
 			if (GridTool.is_visible ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
-				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);	
+				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
 				px = Glyph.reverse_path_coordinate_x (coordinate_x);
 				py = Glyph.reverse_path_coordinate_y (coordinate_y);
 				selected_handle.move_delta ((px - last_point_x), (py - last_point_y));
-			} if (GridTool.has_ttf_grid ()) {
+			} else if (GridTool.has_ttf_grid ()) {
 				px = x;
 				py = y;
 				GridTool.ttf_grid (ref px, ref py);
@@ -325,7 +325,7 @@ public class PenTool : Tool {
 			if (GridTool.is_visible ()) {
 				last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_handle.x ());
 				last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_handle.y ());
-			} if (GridTool.has_ttf_grid ()) {
+			} else if (GridTool.has_ttf_grid ()) {
 				last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_handle.x ());
 				last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_handle.y ());
 			} else {
