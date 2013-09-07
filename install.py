@@ -65,10 +65,16 @@ install ('build/bin/birdfont-export', '/bin')
 if os.path.isfile ('build/bin/libbirdfont.so.' + version.SO_VERSION):
 	install ('build/bin/libbirdfont.so.' + version.SO_VERSION, '/lib')
 	install ('build/bin/libbirdfont.so', '/lib')
-else:
+elif os.path.isfile ('build/libbirdfont.so.' + version.SO_VERSION):
+	install ('build/libbirdfont.so.' + version.SO_VERSION, '/lib')
+	install ('build/libbirdfont.so', '/lib')
+elif os.path.isfile (('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib'):
 	install ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib', '/lib')
 	install ('build/bin/libbirdfont.dylib', '/lib')
-
+else:
+	print ("Can not find libbirdfont.")
+	exit (1)
+	
 #manpages
 if not bsd_manpages:
     install ('build/birdfont.1.gz', '/share/man/man1')
