@@ -568,7 +568,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			MainWindow.get_current_glyph ().select_all_paths ();
 		});
 
-		Gtk.MenuItem search_item = new Gtk.MenuItem.with_mnemonic (_("Search"));
+		Gtk.MenuItem search_item = new Gtk.MenuItem.with_mnemonic (_("_Search"));
 		edit_menu.append (search_item);
 		search_item.activate.connect (() => { OverView.search (); });	
 		search_item.add_accelerator ("activate", accel_group, 'F', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);

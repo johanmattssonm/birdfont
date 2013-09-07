@@ -29,8 +29,6 @@ public class CharDatabase {
 		index = new HashMultiMap<string, string> ();
 	
 		full_unicode_range = new GlyphRange ();
-		
-		CharDatabaseParser.run ();
 	}
 
 	public static GlyphRange search (string s) {

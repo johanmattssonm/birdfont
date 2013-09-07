@@ -16,35 +16,13 @@ using Gee;
 
 namespace BirdFont {
 
-class CharDatabaseParser : GLib.Object {
+public class CharDatabaseParser : GLib.Object {
+
+	signal void sync ();
 	
-	MainContext? context;
-	
-	public CharDatabaseParser (MainContext? c) {	
-		context = c;
-		
-		if (context == null) {
-			warning ("No main context set.");
-		}
+	public CharDatabaseParser () {	
 	}
 
-	public static void run () {
-		CharDatabaseParser thread_data;
-		thread_data = new CharDatabaseParser (MainContext.default ());
-		
-		if (!Thread.supported ()) {
-			warning ("Threads not supported, this might take a while.");
-			thread_data.load ();
-		} else {
-			try {
-				//new Thread<int> ("database parser", thread_data.load);
-				Thread<int>.create<int> (thread_data.load, false);
-			} catch (GLib.Error e) {
-				warning (e.message);
-			}
-		}
-	}
-	
 	private void add_entry (string data) {
 		string[] e;
 		string[] r;
@@ -52,8 +30,7 @@ class CharDatabaseParser : GLib.Object {
 		string index_values;
 		unichar ch;
 		string unicode_hex;
-		Mutex mutex = new Mutex (); // wait for callback to finish
-			
+
 		if (data.has_prefix ("@")) { // ignore comments
 			return;
 		}
@@ -79,26 +56,24 @@ class CharDatabaseParser : GLib.Object {
 		
 		ch = Font.to_unichar ("U+" + unicode_hex.down ());
 		
-		mutex.lock ();
 		Idle.add (() => {
 			CharDatabase.full_unicode_range.add_single (ch);
 			CharDatabase.entries.set (unicode_hex, data);
-			mutex.unlock ();
 			return false;
 		});
-
+		sync ();
+		
 		foreach (string s in e) {
 			r = s.split ("\n");
 			foreach (string t in r) {  
 				d = t.split (" ");
 				foreach (string token in d) {
 					if (token != "") {
-						mutex.lock ();
 						Idle.add (() => {
 							CharDatabase.index.set (token, unicode_hex);
-							mutex.unlock ();
 							return false;
 						});
+						sync ();
 					}
 				}
 			}
