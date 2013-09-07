@@ -33,7 +33,7 @@ class CharDatabaseParser : GLib.Object {
 		thread_data = new CharDatabaseParser (MainContext.default ());
 		
 		if (!Thread.supported ()) {
-			warning ("Threads not supperted, this might take a while.");
+			warning ("Threads not supported, this might take a while.");
 			thread_data.load ();
 		} else {
 			try {
