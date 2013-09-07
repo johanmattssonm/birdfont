@@ -37,7 +37,8 @@ class CharDatabaseParser : GLib.Object {
 			thread_data.load ();
 		} else {
 			try {
-				new Thread<int>.try ("database parser", thread_data.load);
+				//new Thread<int> ("database parser", thread_data.load);
+				Thread<int>.create<int> (thread_data.load, false);
 			} catch (GLib.Error e) {
 				warning (e.message);
 			}
