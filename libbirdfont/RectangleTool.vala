@@ -88,7 +88,7 @@ public class RectangleTool : Tool {
 		press_y = y;
 		resize = true;
 		
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 }
 

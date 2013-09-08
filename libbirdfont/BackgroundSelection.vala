@@ -165,7 +165,7 @@ class BackgroundSelection : FontDisplay {
 			BirdFont.get_current_font ().add_background_image ((!) file);
 		}
 		
-		MainWindow.get_glyph_canvas ().redraw ();				
+		GlyphCanvas.redraw ();				
 		
 		collect_background_images ();
 	}
@@ -277,7 +277,7 @@ class BackgroundSelection : FontDisplay {
 		active += (int) (y / 140) * (int) (allocation.width / 140.0); // row
 		
 		if (active != active_box) {
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 			active_box = active;
 		}
 	}

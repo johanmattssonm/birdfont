@@ -434,7 +434,7 @@ public class GlyphBackgroundImage {
 		}
 		
 		if (prev_handle != active_handle) {
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 		}
 	}
 	

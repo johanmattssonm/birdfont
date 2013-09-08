@@ -337,7 +337,7 @@ public class DrawingTools : ToolCollection  {
 			bool v = !g.get_xheight_lines_visible ();
 			g.set_xheight_lines_visible (v);
 			self.set_selected (v);
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 			
 			if (v && !help_lines.is_selected ()) {
 				MainWindow.get_toolbox ().select_tool (help_lines);
@@ -352,7 +352,7 @@ public class DrawingTools : ToolCollection  {
 			bool v = !g.get_margin_lines_visible ();
 			g.set_margin_lines_visible (v);
 			self.set_selected (v);
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 			
 			if (v && !help_lines.is_selected ()) {
 				MainWindow.get_toolbox ().select_tool (help_lines);
@@ -382,7 +382,7 @@ public class DrawingTools : ToolCollection  {
 		reset_zoom.select_action.connect ((self) => {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().reset_zoom ();
-				glyph_canvas.redraw_area(0, 0, glyph_canvas.allocation.width, glyph_canvas.allocation.height);
+				glyph_canvas.redraw_area(0, 0, GlyphCanvas.allocation.width, GlyphCanvas.allocation.height);
 			});
 		view_tools.add_tool (reset_zoom);
 
@@ -408,7 +408,7 @@ public class DrawingTools : ToolCollection  {
 				
 				zoom_tool.zoom_full_background_image ();
 				
-				glyph_canvas.redraw_area(0, 0, glyph_canvas.allocation.width, glyph_canvas.allocation.height);
+				glyph_canvas.redraw_area(0, 0, GlyphCanvas.allocation.width, GlyphCanvas.allocation.height);
 			}
 		});
 		view_tools.add_tool (zoom_bg);
@@ -450,7 +450,7 @@ public class DrawingTools : ToolCollection  {
 				((!)img).set_img_scale (s, s);
 			}
 			
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 		});
 		
 		background_tools.add_tool (background_scale);		
@@ -467,7 +467,7 @@ public class DrawingTools : ToolCollection  {
 		show_bg.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			g.set_background_visible (!g.get_background_visible ());
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 		});
 		background_tools.add_tool (show_bg);
 
@@ -812,7 +812,7 @@ public class DrawingTools : ToolCollection  {
 		grid_width.select_action.connect((self) => {
 			SpinButton sb = (SpinButton) self;
 			GridTool.set_grid_width (sb.get_value ());
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 		});
 				
 		grid_expander.add_tool (grid_width);

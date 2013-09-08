@@ -34,7 +34,7 @@ public static int run_export (string[] arg) {
 	bool write_ttf = false;
 	bool write_svg = false;	
 	File directory;
-
+	
 	stdout.printf ("birdfont-export version %s\n", VERSION);
 	stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 

@@ -52,7 +52,7 @@ class GridTool : Tool {
 		select_action.connect((self) => {
 			visible = !visible;
 			update_lines ();
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 			
 			self.set_selected (visible);
 			

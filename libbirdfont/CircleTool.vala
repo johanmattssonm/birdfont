@@ -86,7 +86,7 @@ public class CircleTool : Tool {
 		last_x = x;
 		last_y = y;
 
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 	
 	void press (int button, double x, double y) {
@@ -134,7 +134,7 @@ public class CircleTool : Tool {
 
 		circle = path;
 		
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 
 }

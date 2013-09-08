@@ -122,7 +122,7 @@ public class MainWindow {
 		TextListener listener = new TextListener (_("Glyph sequence"), Preferences.get ("glyph_sequence"), _("Close"));
 		listener.signal_text_input.connect ((text) => {
 			Preferences.set ("glyph_sequence", text);
-			get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 		});
 		listener.signal_submit.connect (() => {
 			MainWindow.native_window.hide_text_input ();
@@ -164,7 +164,7 @@ public class MainWindow {
 			}
 		}
 		
-		get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 		
 	public static void close_all_tabs () {

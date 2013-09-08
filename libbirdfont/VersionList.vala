@@ -18,6 +18,7 @@ using Math;
 namespace BirdFont {
 
 public class VersionList : DropMenu {
+
 	int versions = 1;
 	int current_version = 0;
 	public List<Glyph> glyphs = new List<Glyph> ();
@@ -150,7 +151,7 @@ public class VersionList : DropMenu {
 			if (ug == null) {
 				return;
 			}
-			
+
 			updated_glyph = (!) ug;
 			tab.set_display (updated_glyph);
 			updated_glyph.view_zoom = glyph.view_zoom;

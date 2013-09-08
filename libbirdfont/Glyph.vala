@@ -647,7 +647,7 @@ public class Glyph : FontDisplay {
 	}
 		
 	public void update_view () {
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 	
 	public override void double_click (uint button, double ex, double ey) {	
@@ -733,7 +733,7 @@ public class Glyph : FontDisplay {
 		view_offset_y += y / view_zoom;
 		
 		if (unlikely (allocation.width == 0 || allocation.height == 0)) {
-			warning (@"Allocation is not set in $(get_name ())");
+			return;
 		}
 		
 		view_zoom_x = allocation.width * view_zoom / w;

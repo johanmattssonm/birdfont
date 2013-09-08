@@ -115,7 +115,7 @@ class ZoomTool : Tool {
 	
 		MainWindow.select_tab (views.nth (view_index).data);
 		MainWindow.get_current_display ().next_view ();
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 	
 	/** Undo last zoom. */
@@ -128,7 +128,7 @@ class ZoomTool : Tool {
 	
 		MainWindow.select_tab (views.nth (view_index).data);
 		MainWindow.get_current_display ().restore_last_view ();
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 }
 	

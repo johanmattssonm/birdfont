@@ -138,7 +138,7 @@ class MoveTool : Tool {
 			last_x = x;
 			last_y = y;
 
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 		});
 		
 		key_press_action.connect ((self, keyval) => {

@@ -308,9 +308,7 @@ public class KerningClasses : GLib.Object {
 			classes_kerning.remove_link (classes_kerning.first ());
 		}
 		
-		if (!is_null (MainWindow.get_glyph_canvas ())) { // FIXME: reorganize
-			MainWindow.get_glyph_canvas ().redraw ();
-		}
+		GlyphCanvas.redraw ();
 		
 		if (!is_null (MainWindow.get_toolbox ())) { // FIXME: reorganize
 			Toolbox.redraw_tool_box ();

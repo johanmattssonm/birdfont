@@ -24,7 +24,7 @@ public class GlyphCanvas : GLib.Object {
 
 	public FontDisplay current_display;
 	public signal void signal_redraw_area (int x, int y, int w, int h);
-	public WidgetAllocation allocation = new WidgetAllocation ();
+	public static WidgetAllocation allocation = new WidgetAllocation ();
 	
 	public GlyphCanvas () {
 	}
@@ -78,8 +78,11 @@ public class GlyphCanvas : GLib.Object {
 		signal_redraw_area (x, y, w, h);
 	}
 	
-	public void redraw () {
-		signal_redraw_area (0, 0, allocation.width, allocation.height);
+	public static void redraw () {
+		GlyphCanvas c = MainWindow.get_glyph_canvas ();
+		if (!is_null (c)) {
+			c.signal_redraw_area (0, 0, allocation.width, allocation.height);
+		}
 	}
 }
 

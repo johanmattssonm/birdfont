@@ -83,7 +83,7 @@ class ResizeTool : Tool {
 				resize (x, y);
 			}
 
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 		});
 		
 		draw_action.connect ((self, cr, glyph) => {

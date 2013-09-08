@@ -80,7 +80,7 @@ class CutBackgroundTool : Tool {
 				x2 = x;
 				y2 = y;
 				
-				MainWindow.get_glyph_canvas ().redraw ();
+				GlyphCanvas.redraw ();
 			}
 		});
 		

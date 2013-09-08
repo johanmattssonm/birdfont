@@ -140,7 +140,7 @@ class BackgroundTool : Tool {
 			bg.set_img_offset (this.img_offset_x + dx, this.img_offset_y + dy);
 		}
 
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 
 }

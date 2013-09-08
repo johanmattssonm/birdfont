@@ -430,7 +430,7 @@ public class KerningDisplay : FontDisplay {
 		row.first ().data.glyph.append ((!) glyph);
 		row.first ().data.ranges.append (range);
 		
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 
 	void set_selected_handle (int handle) {
@@ -444,7 +444,7 @@ public class KerningDisplay : FontDisplay {
 			selected_handle = (int) row.first ().data.glyph.length () - 1;
 		}
 		
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 
 	public static void previous_pair () {
@@ -512,7 +512,7 @@ public class KerningDisplay : FontDisplay {
 			}
 		}
 		
-		MainWindow.get_glyph_canvas ().redraw ();
+		GlyphCanvas.redraw ();
 	}
 	
 	public override void motion_notify (double ex, double ey) {
@@ -529,7 +529,7 @@ public class KerningDisplay : FontDisplay {
 			
 			k = (ex - last_handle_x) / y; // y-axis is for variable precision
 			set_kerning (selected_handle, k);
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 		}
 		
 		last_handle_x = ex;
@@ -590,7 +590,7 @@ public class KerningDisplay : FontDisplay {
 					
 					if (active_handle != i - row_index) {
 						set_active_handle_index (i - row_index);
-						MainWindow.get_glyph_canvas ().redraw ();
+						GlyphCanvas.redraw ();
 					}
 					
 					if (col_index == word.glyph.length () || col_index == 0) {
