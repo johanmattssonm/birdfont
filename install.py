@@ -68,7 +68,7 @@ if os.path.isfile ('build/bin/libbirdfont.so.' + version.SO_VERSION):
 elif os.path.isfile ('build/libbirdfont.so.' + version.SO_VERSION):
 	install ('build/libbirdfont.so.' + version.SO_VERSION, '/lib')
 	install ('build/libbirdfont.so', '/lib')
-elif os.path.isfile (('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib'):
+elif os.path.isfile ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib'):
 	install ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib', '/lib')
 	install ('build/bin/libbirdfont.dylib', '/lib')
 else:
