@@ -141,8 +141,6 @@ public class CharDatabaseParser : GLib.Object {
 			CharDatabase.show_loading_message ();
 			CharDatabase.database_is_loaded = true;
 			ProgressBar.set_progress (0);
-			
-			print (utf8.get_all_ranges ());
 			return false;
 		});
 		idle.attach (null);
