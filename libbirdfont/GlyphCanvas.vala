@@ -29,6 +29,10 @@ public class GlyphCanvas : GLib.Object {
 	public GlyphCanvas () {
 	}
 
+	public static WidgetAllocation get_allocation () {
+		return allocation;
+	}
+
 	public void set_allocation (WidgetAllocation w) {
 		allocation = w.copy ();
 	}

@@ -58,7 +58,9 @@ for file in os.listdir('./icons'):
 install ('resources/linux/birdfont.desktop', '/share/applications')
 install ('resources/linux/birdfont.png', '/share/icons/hicolor/48x48/apps')
 
-install ('build/bin/birdfont', '/bin')
+if os.path.isfile ('build/bin/birdfont'):
+	install ('build/bin/birdfont', '/bin')
+
 install ('build/bin/birdfont-export', '/bin')
 
 #library

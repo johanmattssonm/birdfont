@@ -159,7 +159,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library):
 		$(pkg-config --cflags gdk-pixbuf-2.0) \
 		$(pkg-config --cflags webkit-1.0) \
 		-I ./build/libbirdfont/""")
-	run("mv ./*.o build/birdfont/")
+	run("mv ./*.o build/birdfont/")	
 
 	run(cc + " " + ldflags + """ \
 		build/birdfont/*.o \

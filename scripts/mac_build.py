@@ -27,6 +27,7 @@ parser.add_option("-c", "--cc", dest="cc", help="select the C compiler", metavar
 parser.add_option("-f", "--cflags", dest="cflags", help="set compiler flags", metavar="CFLAGS")
 parser.add_option("-l", "--ldflags", dest="ldflags", help="set linker flags", metavar="LDFLAGS")
 parser.add_option("-v", "--valac", dest="valac", help="select vala compiler", metavar="VALAC")
+parser.add_option("-n", "--nogtk", dest="nogtk", help="do not compile the gtk application", metavar="NOGTK", default=False, action="store_false")
 
 (options, args) = parser.parse_args()
 
@@ -56,6 +57,8 @@ configfile.write_config (prefix)
 compile_translations()
 build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, library)
 build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library)
-build.birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library)
+
+if not options.nogtk:
+	build.birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library)
 
 print ("Done")
