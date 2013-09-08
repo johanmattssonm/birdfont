@@ -18,7 +18,9 @@ namespace BirdFont {
 
 public class CharDatabaseParser : GLib.Object {
 
-	signal void sync ();
+	public signal void sync ();
+	
+	GlyphRange utf8 = new GlyphRange ();
 	
 	public CharDatabaseParser () {	
 	}
@@ -57,11 +59,12 @@ public class CharDatabaseParser : GLib.Object {
 		ch = Font.to_unichar ("U+" + unicode_hex.down ());
 		
 		Idle.add (() => {
-			CharDatabase.full_unicode_range.add_single (ch);
 			CharDatabase.entries.set (unicode_hex, data);
 			return false;
 		});
 		sync ();
+		
+		utf8.add_single (ch);
 		
 		foreach (string s in e) {
 			r = s.split ("\n");
@@ -134,9 +137,12 @@ public class CharDatabaseParser : GLib.Object {
 		
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
+			CharDatabase.full_unicode_range = utf8;
 			CharDatabase.show_loading_message ();
 			CharDatabase.database_is_loaded = true;
 			ProgressBar.set_progress (0);
+			
+			print (utf8.get_all_ranges ());
 			return false;
 		});
 		idle.attach (null);

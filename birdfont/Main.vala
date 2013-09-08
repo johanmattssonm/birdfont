@@ -29,6 +29,12 @@ public static int main (string[] arg) {
 	MainWindow window;
 	string file;
 	BirdFont.BirdFont birdfont = new BirdFont.BirdFont ();
+	CharDatabaseParser db = new CharDatabaseParser ();
+	unowned Thread<int> db_thread;
+	Mutex database_mutex = Mutex ();
+	Cond main_loop_idle = new Cond ();
+	bool in_idle = false;
+
 	birdfont.init (arg, null);
 
 	Gtk.init (ref arg);
@@ -44,6 +50,34 @@ public static int main (string[] arg) {
 	file = BirdFont.BirdFont.args.get_file ();
 	if (file != "") {
 		MainWindow.file_tab.load_font (file);
+	}
+	
+	try {
+		db_thread = Thread.create<int> (db.load, false);
+		
+		// wait until main loop is done
+		db.sync.connect (() => {
+			database_mutex.lock ();
+			IdleSource idle = new IdleSource ();
+			in_idle = false;
+			
+			idle.set_callback (() => {
+				database_mutex.lock ();
+				in_idle = true;
+				main_loop_idle.broadcast ();
+				database_mutex.unlock ();
+				return false;
+			});
+			idle.attach (null);
+			
+			while (!in_idle) {
+				main_loop_idle.wait (database_mutex);
+			}
+			
+			database_mutex.unlock ();
+		});
+	} catch (GLib.Error e) {
+		warning (e.message);
 	}
 	
 	Gtk.main ();

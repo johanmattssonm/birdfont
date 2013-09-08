@@ -79,7 +79,7 @@ public class RectangleTool : Tool {
 				e.recalculate_linear_handles ();
 			}
 			
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 		}
 	}
 	
