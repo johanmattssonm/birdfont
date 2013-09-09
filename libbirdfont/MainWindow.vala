@@ -54,6 +54,16 @@ public class MainWindow {
 		idle.attach (null);
 	}
 
+	public static void select_all_paths () {
+		Tool t = tools.get_current_tool ();
+		
+		if (! (t is MoveTool || t is ResizeTool)) {
+			Toolbox.select_tool_by_name ("move");
+		}
+		
+		get_current_glyph ().select_all_paths ();
+	}
+
 	public static DrawingTools get_drawing_tools () {
 		return tools.drawing_tools;
 	}
