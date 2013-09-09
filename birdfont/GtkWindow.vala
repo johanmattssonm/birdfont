@@ -53,7 +53,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	Button submit_text_button;
 	
 	public GtkWindow (string title) {
-		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));;
+		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		((Gtk.Window)this).set_title ("BirdFont");
 	}
 	

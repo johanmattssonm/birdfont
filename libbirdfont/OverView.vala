@@ -807,6 +807,8 @@ public class OverView : FontDisplay {
 			
 			scroll_size = rows / nrows;
 			MainWindow.set_scrollbar_size (scroll_size);
+			
+			nrows -= rows;
 			MainWindow.set_scrollbar_position ((first_visible / rows) / nrows);
 		}
 	}
