@@ -1160,7 +1160,7 @@ public class DescriptionForm : GLib.Object {
 		canvas.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 		
 		postscript_name = new Entry ();
-		add_entry (postscript_name, _("Postscript Name"));
+		add_entry (postscript_name, _("PostScript Name"));
 		postscript_name.changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.postscript_name = postscript_name.text;
