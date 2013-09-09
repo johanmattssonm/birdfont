@@ -371,7 +371,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	public void set_scrollbar_position (double position) {
 		scrollbar_supress_signal = true;
-		scrollbar.adjustment.value = position;
+		scrollbar.adjustment.value = (1 - scrollbar.adjustment.page_size) * position;
 		scrollbar_supress_signal = false;
 	}
 	

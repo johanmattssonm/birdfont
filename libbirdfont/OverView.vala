@@ -789,6 +789,8 @@ public class OverView : FontDisplay {
 	public void update_scrollbar () {
 		Font f;
 		double nrows = 0;
+		double pos = 0;
+		double size;
 		
 		if (rows == 0) {
 			MainWindow.set_scrollbar_size (0);
@@ -797,19 +799,20 @@ public class OverView : FontDisplay {
 			if (all_available) {
 				f = BirdFont.get_current_font ();
 				nrows = Math.floor ((f.length ()) / rows);
+				size = f.length ();
 			} else {
 				nrows = Math.floor ((glyph_range.length ()) / rows);
+				size = glyph_range.length ();
 			}
 			
 			if (nrows <= 0) {
 				nrows = 1;
 			}
 			
-			scroll_size = rows / nrows;
+			scroll_size = rows / (nrows - rows);
 			MainWindow.set_scrollbar_size (scroll_size);
-			
-			nrows -= rows;
-			MainWindow.set_scrollbar_position ((first_visible / rows) / nrows);
+			pos = first_visible / (nrows * items_per_row - rows * items_per_row);
+			MainWindow.set_scrollbar_position (pos);
 		}
 	}
 
