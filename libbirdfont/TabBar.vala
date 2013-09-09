@@ -186,13 +186,13 @@ public class TabBar : GLib.Object {
 	public bool close_tab (int index, bool background_tab = false) {	
 		unowned List<Tab?>? lt;
 		Tab t;
-		
-		if (tabs.length () <= 1) {
+
+		if (!(0 <= index < tabs.length ())) {
 			return false;
 		}
 		
-		if (!(0 <= index < tabs.length ())) {
-			return false;
+		if (tabs.length () == 1) {
+			MainWindow.get_glyph_canvas ().set_current_glyph (new EmptyTab ("", ""));
 		}
 		
 		lt = tabs.nth(index);
@@ -218,6 +218,7 @@ public class TabBar : GLib.Object {
 		}
 		
 		select_tab (index);
+		
 		return false;
 	}
 	
