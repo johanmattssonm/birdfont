@@ -63,9 +63,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
 		
 		scrollbar.value_changed.connect (() => {
+			double p;
+			
 			if (!scrollbar_supress_signal) {
+				p = scrollbar.get_value () / (1 - scrollbar.adjustment.page_size);
 				FontDisplay display = MainWindow.get_current_display ();
-				display.scroll_to (scrollbar.get_value ());
+				display.scroll_to (p);
 			}
 		});
 		

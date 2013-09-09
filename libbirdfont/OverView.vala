@@ -411,16 +411,6 @@ public class OverView : FontDisplay {
 	}
 	
 	void scroll_to_position (int64 r) {
-		int64 l;
-		Font f;
-		
-		if (all_available) {
-			f = BirdFont.get_current_font ();
-			l = f.length ();
-		} else {
-			l = glyph_range.length ();
-		}
-		
 		if (r < 0) {
 			scroll_top ();
 			return;
@@ -432,21 +422,22 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void scroll_to (double position) requires (items_per_row > 0) {
-		int64 r;
-		double nrows;
+		double r;
+		int nrows;
 		Font f;
-
-		position = position / (1 - scroll_size);
 		
 		if (all_available) {
 			f = BirdFont.get_current_font ();
-			nrows = Math.ceil (f.length () / items_per_row);
+			nrows = (int) (f.length () / items_per_row);
 		} else {
-			nrows = Math.ceil (glyph_range.length () / items_per_row);
+			nrows = (int) (glyph_range.length () / items_per_row);
 		}
 		
-		r = (int64) (Math.ceil (position * nrows) * items_per_row);
-		scroll_to_position (r);
+		view_offset_y = 0;
+		r = (int64) (position * (nrows - rows + 3)); // 3 invisible rows
+		r *= items_per_row;
+		
+		scroll_to_position ((int64) r);
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
