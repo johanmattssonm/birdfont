@@ -372,20 +372,27 @@ void init_logfile () {
 	DateTime t;
 	File settings;
 	string s;
+	File log;
 	
-	LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING | LogLevelFlags.LEVEL_DEBUG;
-	Log.set_handler (null, levels, log_warning);		
-		
 	try {
 		t = new DateTime.now_local ();
 		settings = BirdFont.get_settings_directory ();
-		s = t.to_string ();
-		File log = settings.get_child (@"birdfont_$s.log"); 
+		s = t.to_string ().replace (":", "_");
+		log = settings.get_child (@"birdfont_$s.log");
+		
 		BirdFont.logstream = new DataOutputStream (log.create (FileCreateFlags.REPLACE_DESTINATION));
+		((!)BirdFont.logstream).put_string ((!) log.get_path ());
+		((!)BirdFont.logstream).put_string ("\n");
+		
+		warning ("Logging to " + (!) log.get_path ());
 	} catch (GLib.Error e) {
 		warning (e.message);
+		warning ((!) log.get_path ());
 	}
-	
+
+	LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING | LogLevelFlags.LEVEL_DEBUG;
+	Log.set_handler (null, levels, log_warning);		
+		
 	BirdFont.logging = true;
 }
 

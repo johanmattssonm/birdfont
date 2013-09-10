@@ -57,19 +57,16 @@ public class GlyphTable : GLib.Object {
 	}
 
 	public new GlyphCollection? nth (uint index) {
-		Iterator<string>? iterator = map.ascending_keys.iterator_at (map.ascending_keys.first ());
-		Iterator<string> iter;
-		
-		if (iterator == null) {
-			return null;
-		}
-		
-		iter = (!) iterator;
-		for (uint i = 0; i != index; i++) {
-			iter.next ();
+		uint i = 0;
+
+		foreach (var k in map.keys) {
+			if (i == index) {
+				return map.get (k);
+			}
+			i++;
 		}
 
-		return map.get (iter.get ());
+		return null;
 	}
 
 	public bool insert (string key, GlyphCollection g) {
