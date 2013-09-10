@@ -23,7 +23,7 @@ class ZoomTool : Tool {
 	List<Tab> views = new List<Tab> ();
 	
 	public ZoomTool (string n) {
-		base (n, "Zoom");
+		base (n, "Zoom", 'z');
 
 		select_action.connect((self) => {
 		});

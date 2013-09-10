@@ -43,6 +43,8 @@ public static int run_export (string[] arg) {
 		return -1;
 	}
 	
+	init_logfile ();
+	
 	for (int i = 1; i < arg.length; i++) {
 
 		if (arg[i] == "-f" || arg[i] == "--fatal-warnings") {
@@ -182,6 +184,9 @@ public class BirdFont {
 	public static bool mac = false;
 	public static string exec_path = "";
 	public static string bundle_path = "";
+
+	public static bool logging = false;
+	public static DataOutputStream? logstream = null;
 
 	public static Font current_font;
 	public static Glyph current_glyph;
@@ -361,6 +366,60 @@ public class BirdFont {
 	internal static string? get_argument (string param) {
 		return args.get_argument (param);
 	}	
+}
+
+void init_logfile () {
+	DateTime t;
+	File settings;
+	string s;
+	File log;
+	
+	try {
+		t = new DateTime.now_local ();
+		settings = BirdFont.get_settings_directory ();
+		s = t.to_string ().replace (":", "_");
+		log = settings.get_child (@"birdfont_$s.log");
+		
+		BirdFont.logstream = new DataOutputStream (log.create (FileCreateFlags.REPLACE_DESTINATION));
+		((!)BirdFont.logstream).put_string ((!) log.get_path ());
+		((!)BirdFont.logstream).put_string ("\n");
+		
+		warning ("Logging to " + (!) log.get_path ());
+	} catch (GLib.Error e) {
+		warning (e.message);
+		warning ((!) log.get_path ());
+	}
+
+	LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING | LogLevelFlags.LEVEL_DEBUG;
+	Log.set_handler (null, levels, log_warning);		
+		
+	BirdFont.logging = true;
+}
+
+internal static void log_warning (string? log_domain, LogLevelFlags log_levels, string message) {
+	if (log_domain != null) {
+		printd ((!) log_domain);
+	}
+	
+	printd ("\n");
+	printd (message);
+	printd ("\n");
+	printd ("\n");
+}
+
+/** Write debug output to logfile. */
+void printd (string s) {
+	if (unlikely (BirdFont.logging)) {
+		try {
+			if (BirdFont.logstream != null) {
+				((!)BirdFont.logstream).put_string (s);
+			} else {
+				warning ("No logstream.");
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
 }
 
 }

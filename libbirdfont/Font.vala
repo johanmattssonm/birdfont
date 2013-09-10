@@ -333,6 +333,8 @@ public class Font : GLib.Object {
 		}
 		
 		glyph_cache.insert (glyph_collection.get_unicode (), glyph_collection);
+		
+		printd (@"Adding $(glyph_collection.get_current ().get_name ())\n");
 	}
 	
 	public string get_name_for_character (unichar c) {

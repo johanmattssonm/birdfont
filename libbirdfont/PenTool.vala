@@ -465,6 +465,8 @@ public class PenTool : Tool {
 				}				
 			}
 		}
+		
+		update_selected_points ();
 	}
 
 	public static bool is_counter_path (Path path) {

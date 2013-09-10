@@ -29,9 +29,14 @@ class ResizeTool : Tool {
 	static double selection_box_height = 0;
 	static double selection_box_center_x = 0;
 	static double selection_box_center_y = 0;
-	
+
+	static bool rotate_path = false;
+	static double last_rotate_y;
+	static double rotation = 0;
+	static double last_rotate = 0;
+		
 	public ResizeTool (string n) {
-		base (n, _("Resize paths"));
+		base (n, _("Resize and rotate paths"));
 		
 		resize_handle = Icons.get_icon ("resize_handle.png");
 	
@@ -39,8 +44,6 @@ class ResizeTool : Tool {
 		});
 
 		deselect_action.connect((self) => {
-			Glyph glyph = MainWindow.get_current_glyph ();
-			glyph.clear_active_paths ();
 		});
 				
 		press_action.connect((self, b, x, y) => {
@@ -64,18 +67,26 @@ class ResizeTool : Tool {
 					return;					
 				}
 			}
-			
-			if (!glyph.is_over_selected_path (x, y)) {
-				if (!glyph.select_path (x, y)) {
-					glyph.clear_active_paths ();
+
+			foreach (Path p in glyph.active_paths) {
+				if (is_over_rotate_handle (p, x, y)) {
+					rotate_path = true;
+					return;
 				}
 			}
+			
+			last_rotate = 0;
+			rotation = 0;
+			last_rotate_y = y;
 
-			update_selection_boundries ();
+
+			MoveTool.press (b, x, y);
 		});
 
 		release_action.connect((self, b, x, y) => {
 			resize_path = false;
+			rotate_path = false;
+			MoveTool.release (b, x, y);
 		});
 		
 		move_action.connect ((self, x, y)	 => {
@@ -83,7 +94,19 @@ class ResizeTool : Tool {
 				resize (x, y);
 			}
 
+			if (rotate_path) {
+				rotate (x, y);
+			}
+
+			if (!rotate_path) {
+				MoveTool.update_boundries_for_selection ();
+				MoveTool.get_selection_box_boundries (out selection_box_center_x,
+					out selection_box_center_y, out selection_box_width,
+					out selection_box_height);	
+			}
+		
 			GlyphCanvas.redraw ();
+			MoveTool.move (x, y);
 		});
 		
 		draw_action.connect ((self, cr, glyph) => {
@@ -95,15 +118,94 @@ class ResizeTool : Tool {
 				cr.paint ();
 			}
 			
-
+			if (g.active_paths.length () > 0) {
+				draw_rotate_handle (cr);
+			}
+		
+			MoveTool.draw_actions (cr);
 		});
 	}
 
-	static void update_selection_boundries () {
-		MoveTool.update_boundries_for_selection ();
-		MoveTool.get_selection_box_boundries (out selection_box_center_x,
-			out selection_box_center_y, out selection_box_width,
-			out selection_box_height);	
+	/** Move rotate handle to pixel x,y. */
+	static void rotate (double x, double y) {
+		double cx, cy, xc, yc, xc2, yc2, a, b, w, h;		
+		Glyph glyph = MainWindow.get_current_glyph ();  
+		double dx, dy;
+		
+		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
+		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
+		xc = selection_box_center_x;
+		yc = selection_box_center_y;
+		
+		a = x - cx;
+		b = y - cy;
+		
+		rotation = atan (b / a);
+		
+		if (a < 0) {
+			rotation += PI;
+		}
+		
+		foreach (Path p in glyph.active_paths) {
+			p.rotate (rotation - last_rotate, selection_box_center_x, selection_box_center_y);
+		}
+
+		MoveTool.get_selection_box_boundries (out xc2, out yc2, out w, out h); 
+
+		dx = -(xc2 - xc);
+		dy = -(yc2 - yc);
+		
+		foreach (Path p in glyph.active_paths) {
+			p.move (dx, dy);
+		}
+		
+		last_rotate = rotation;
+		
+		MoveTool.update_selection_boundries ();
+	}
+
+	static bool is_over_rotate_handle (Path p, double x, double y) {
+		double cx, cy, hx, hy;
+		double size = 10;
+		bool inx, iny;
+		
+		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
+		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
+
+		hx = cos (rotation) * 75;
+		hy = sin (rotation) * 75;
+
+		inx = x - size <= cx + hx - 2.5 <= x + size;
+		iny = y - size <= cy + hy - 2.5 <= y + size;
+		
+		return inx && iny;
+	}
+	
+	static void draw_rotate_handle (Context cr) {
+		double cx, cy, hx, hy;
+		
+		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
+		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
+		
+		cr.save ();
+		
+		cr.set_source_rgba (0, 0, 0.3, 1);
+		cr.rectangle (cx - 2.5, cy - 2.5, 5, 5);
+		cr.fill ();
+
+		hx = cos (rotation) * 75;
+		hy = sin (rotation) * 75;
+
+		cr.set_line_width (1);
+		cr.move_to (cx, cy);
+		cr.line_to (cx + hx, cy + hy);
+		cr.stroke ();
+
+		cr.set_source_rgba (0, 0, 0.3, 1);
+		cr.rectangle (cx + hx - 2.5, cy + hy - 2.5, 5, 5);
+		cr.fill ();
+					
+		cr.restore ();				
 	}
 
 	double get_resize_ratio (double x, double y) {

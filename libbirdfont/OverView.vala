@@ -791,6 +791,7 @@ public class OverView : FontDisplay {
 		double nrows = 0;
 		double pos = 0;
 		double size;
+		double visible_rows;
 		
 		if (rows == 0) {
 			MainWindow.set_scrollbar_size (0);
@@ -809,9 +810,11 @@ public class OverView : FontDisplay {
 				nrows = 1;
 			}
 			
-			scroll_size = rows / (nrows - rows);
+			// FIXME: this is not correct
+			visible_rows = allocation.height / OverViewItem.height;
+			scroll_size = visible_rows / nrows;
 			MainWindow.set_scrollbar_size (scroll_size);
-			pos = first_visible / (nrows * items_per_row - rows * items_per_row);
+			pos = first_visible / (nrows * items_per_row - visible_rows * items_per_row);
 			MainWindow.set_scrollbar_position (pos);
 		}
 	}

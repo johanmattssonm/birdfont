@@ -75,8 +75,4 @@ class OpenFontFormatWriter : Object  {
 	}
 }
 
-void printd (string s) {
-	//print (s);
-}
-
 }

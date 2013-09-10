@@ -259,21 +259,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				
 				MainWindow.glyph_canvas.key_press (event.keyval);
 				KeyBindings.add_modifier_from_keyval (event.keyval);
-				
-				if (KeyBindings.modifier == CTRL) {
-					switch (event.keyval) {
-						case 'a':
-							Toolbox.select_tool_by_name ("move");
-							MainWindow.get_current_glyph ().select_all_paths ();
-							break;
-						case 'c':
-							ClipTool.copy ();
-							break;
-						case 'v':
-							ClipTool.paste ();
-							break;
-					}
-				}
 			}
 			
 			return false;
@@ -371,7 +356,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	public void set_scrollbar_position (double position) {
 		scrollbar_supress_signal = true;
-		scrollbar.adjustment.value = (1 - scrollbar.adjustment.page_size) * position;
+		scrollbar.adjustment.value = position * (1 - scrollbar.adjustment.page_size);
 		scrollbar_supress_signal = false;
 	}
 	
@@ -567,10 +552,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem select_all_item = new Gtk.MenuItem.with_mnemonic (_("Select All Pa_ths"));
 		edit_menu.append (select_all_item);
 		select_all_item.activate.connect (() => {
-			Toolbox.select_tool_by_name ("move");
-			MainWindow.get_current_glyph ().select_all_paths ();
+			MainWindow.select_all_paths ();
 		});
-
+		select_all_item.add_accelerator ("activate", accel_group, 'A', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+		
 		Gtk.MenuItem search_item = new Gtk.MenuItem.with_mnemonic (_("_Search"));
 		edit_menu.append (search_item);
 		search_item.activate.connect (() => { OverView.search (); });	
