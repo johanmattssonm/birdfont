@@ -56,8 +56,7 @@ public class CharDatabase {
 			result.add_single (s.get_char ()); 
 		}
 		
-		var it = index.get (s).iterator ();
-		for (var has_next = it.first (); has_next; has_next = it.next ()) {
+		for (var it = index.get (s).iterator (); it.has_next (); it.next ()) {
 			iv = it.get ();
 			if (iv != null) {
 				i = (string) iv;

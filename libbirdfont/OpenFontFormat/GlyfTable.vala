@@ -116,6 +116,10 @@ class GlyfTable : Table {
 		
 		num_glyphs = glyphs.length ();
 		
+		if (glyphs.length () == 0) {
+			warning ("No glyphs in glyf table.");
+		}
+		
 		foreach (Glyph g in glyphs) {
 			// set values for loca table
 			assert (fd.length () % 4 == 0);
@@ -155,6 +159,10 @@ class GlyfTable : Table {
 		
 		unassigned_glyphs = new List<Glyph> ();
 		
+		if (font.get_glyph_indice (0) == null) {
+			warning ("No glyphs in font.");
+		}
+				
 		// add glyphs, first all assigned then the unassigned ones
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
 			g = (!) gl;
@@ -176,6 +184,7 @@ class GlyfTable : Table {
 			if (!g.is_unassigned ()) {
 				glyphs.append (g);
 			} else {
+				printd ("Adding unassigned glyph.");
 				unassigned_glyphs.append (g);
 			}
 		}
