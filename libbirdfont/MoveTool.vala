@@ -64,8 +64,6 @@ class MoveTool : Tool {
 	}
 
 	public static void draw_actions (Context cr) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
 		if (group_selection) {
 			draw_selection_box (cr);
 		}

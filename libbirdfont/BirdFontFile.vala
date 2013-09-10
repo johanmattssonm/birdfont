@@ -36,7 +36,9 @@ class BirdFontFile {
 		Xml.Node* root;
 		
 		Parser.init ();
-
+		
+		printd (@"Loading $path\n");
+		
 		font.font_file = path; // this will be updated if we are loading a backup file
 
 		doc = Parser.parse_file (path);
@@ -464,7 +466,10 @@ class BirdFontFile {
 		Xml.Node* node = root;
 		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-
+			
+			printd (iter->name); // FIXME: delete
+			printd ("\n");
+	
 			// this is a backup file set path to the original 
 			if (iter->name == "backup") {
 				font.font_file = iter->children->content;
@@ -498,6 +503,15 @@ class BirdFontFile {
 
 			if (iter->name == "postscript_name" && iter->children != null) {
 				font.postscript_name = iter->children->content;
+				
+				printd ("PostScript name:"); // FIXME: delete when debugging is done
+				printd (iter->children->content);
+				printd ("\n");
+			}
+			
+			// FIXME: delete when debugging is done
+			if (iter->name == "postscript_name" && iter->children == null) {
+				printd ("Found PostScipt name but content for this node is null in libxml.\n");
 			}
 			
 			if (iter->name == "name" && iter->children != null) {

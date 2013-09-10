@@ -207,13 +207,6 @@ class ResizeTool : Tool {
 					
 		cr.restore ();				
 	}
-	
-	static void update_selection_boundries () {
-		MoveTool.update_boundries_for_selection ();
-		MoveTool.get_selection_box_boundries (out selection_box_center_x,
-			out selection_box_center_y, out selection_box_width,
-			out selection_box_height);	
-	}
 
 	double get_resize_ratio (double x, double y) {
 		double ratio;
