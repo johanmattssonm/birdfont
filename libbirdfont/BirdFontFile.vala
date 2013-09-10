@@ -702,6 +702,10 @@ class BirdFontFile {
 				data = attr_content;
 			}
 		}
+
+		if (!font.get_backgrounds_folder ().query_exists ()) {
+			DirUtils.create ((!) font.get_backgrounds_folder ().get_path (), 0xFFFFFF);
+		}
 		
 		img_dir = font.get_backgrounds_folder ().get_child ("parts");
 

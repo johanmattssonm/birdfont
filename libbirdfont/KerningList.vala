@@ -104,6 +104,10 @@ public class KerningList : FontDisplay {
 			scroll = (int) (pairs - visible_rows);
 		}
 		
+		if (visible_rows > pairs) {
+			scroll = 0;
+		} 
+		
 		update_scrollbar ();
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
