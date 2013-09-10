@@ -1,3 +1,14 @@
+birdfont (0.29) stable;
+
+  * Groups of paths and control points
+  * Speed optimizations
+  * Bold and italic styles
+  * Bug fixes
+  * TTF units
+  * Paste in place and paste at cursor
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue Sep 10 12:51:33 CEST 2013
+
 birdfont (0.28) stable;
 
   * Kerning classes

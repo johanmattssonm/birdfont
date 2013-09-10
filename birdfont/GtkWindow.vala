@@ -829,7 +829,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}
 		
 		if (file_chooser.run () == ResponseType.ACCEPT) {	
-			MainWindow.get_glyph_canvas ().redraw ();
+			GlyphCanvas.redraw ();
 			fn = file_chooser.get_filename ();
 		}
 

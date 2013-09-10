@@ -55,9 +55,7 @@ Packages
 
 Windows binaries are avalilable at http://birdfont.org
 
-A Ubuntu package is avalilable at https://launchpad.net
-You can apt-get install birdfont form Olivier Bertens or
-Dariusz Dumas repository.
+A Ubuntu packages are avalilable at https://launchpad.net
 
 A Machintosh binary image is available at http://birdfont.org and
 a GTK version for Mac can be installed with MacPorts.
