@@ -60,7 +60,7 @@ class Os2Table : Table {
 		fd.add_16 (40); // ySuperscriptYOffset
 		fd.add_16 (40); // yStrikeoutSize
 		fd.add_16 (200); // yStrikeoutPosition
-		fd.add_16 (40); // sFamilyClass
+		fd.add_16 (0); // sFamilyClass
 
 		// FIXME: PANOSE
 		fd.add (0); 
