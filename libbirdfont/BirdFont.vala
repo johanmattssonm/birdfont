@@ -43,7 +43,8 @@ public static int run_export (string[] arg) {
 		return -1;
 	}
 	
-	init_logfile ();
+	// FIXME: create a option for this and structure the log messages
+	// init_logfile ();
 	
 	for (int i = 1; i < arg.length; i++) {
 

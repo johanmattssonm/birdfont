@@ -508,7 +508,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				
 		Gtk.MenuItem export_item = new Gtk.MenuItem.with_mnemonic (_("_Export"));
 		file_menu.append (export_item);
-		export_item.activate.connect (() => { ExportTool.export_all (); });
+		export_item.activate.connect (() => { MenuTab.export_font (); });
 		export_item.add_accelerator ("activate", accel_group, 'E', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		if (!BirdFont.mac) {
