@@ -1,3 +1,9 @@
+birdfont (0.30) stable;
+
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Sep 11 18:39:13 CEST 2013
+
 birdfont (0.29) stable;
 
   * Groups of paths and control points

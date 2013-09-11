@@ -21,9 +21,12 @@ cd build
 mkdir -p export
 cd export 
 
+version=$(cat ../../scripts/version.py | grep "VERSION = '" | grep -v "SO_VERSION" | sed -e "s:VERSION = '::" | sed "s:'.*::g")
+
+rm -rf birdfont-$version
+
 git clone --no-hardlinks --local $rep
 
-version=$(cat ../../scripts/version.py | grep "VERSION = '" | grep -v "SO_VERSION" | sed -e "s:VERSION = '::" | sed "s:'.*::g")
 
 mv birdfont birdfont-$version
 
@@ -34,7 +37,8 @@ tar -cf birdfont-$version.tar birdfont-$version
 
 gzip birdfont-$version.tar
 
-mv birdfont-$version.tar.gz ../
+rm -rf ../birdfont-$version.tar.gz
 
+mv birdfont-$version.tar.gz ../
 
 rm -rf ../export/birdfont-$version
