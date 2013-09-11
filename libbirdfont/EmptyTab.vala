@@ -33,6 +33,14 @@ public class EmptyTab : FontDisplay {
 	public override string get_label () {
 		return label;
 	}
+
+	public override void draw (WidgetAllocation allocation, Context cr) {
+		cr.save ();
+		cr.set_source_rgba (242/255.0, 241/255.0, 240/255.0, 1);
+		cr.rectangle (0, 0, allocation.width, allocation.height);
+		cr.fill ();
+		cr.restore ();
+	}	
 }
 
 }

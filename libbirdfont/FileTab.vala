@@ -222,7 +222,7 @@ public class FileTab : FontDisplay {
 		}
 
 		cr.restore ();
-	}	
+	}
 
 	private void draw_file_row (WidgetAllocation allocation, Context cr, Font font, bool color, double y) {
 		File thumbnail;
