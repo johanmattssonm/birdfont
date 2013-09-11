@@ -487,8 +487,13 @@ public class Font : GLib.Object {
 		temp_file = dir.get_child (@"$(name).bf");
 		backup_file = (!) ((!) temp_file).get_path ();
 		backup_file = backup_file.replace (" ", "_");
-		birdfont_file.write_font_file (backup_file, true);
 		
+		if (get_path () == backup_file) {
+			warning ("Refusing to write backup of a backup.");
+			return backup_file;
+		}
+		
+		birdfont_file.write_font_file (backup_file, true);
 		return backup_file;
 	}
 	

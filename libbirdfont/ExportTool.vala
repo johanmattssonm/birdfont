@@ -470,7 +470,13 @@ os.put_string (
 		try {
 			// create a copy of current font and use it in a separate 
 			// export thread
-			temp_file = current_font.save_backup ();
+			
+			if (async) {
+				temp_file = current_font.save_backup ();
+			} else {
+				temp_file = current_font.get_path (); 
+			}
+			
 			ttf_file = folder.get_child (current_font.get_full_name () + ".ttf");
 			eot_file = folder.get_child (current_font.get_full_name () + ".eot");
 
