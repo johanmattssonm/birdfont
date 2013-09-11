@@ -44,6 +44,10 @@ public class MainWindow {
 		character_database = new CharDatabase ();
 	}
 
+	public static FileTab get_recent_files_tab () {
+		return file_tab;
+	}
+	
 	public static void open_recent_files_tab () {
 		IdleSource idle = new IdleSource ();
 		tabs.add_unique_tab (file_tab);

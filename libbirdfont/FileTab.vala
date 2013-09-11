@@ -26,6 +26,8 @@ public class FileTab : FontDisplay {
 	List<Font> recent_fonts = new List<Font> ();
 	List<string> backups = new List<string> ();
 	
+	public signal void open_file ();
+	
 	public FileTab () {
 	}
 
@@ -123,6 +125,7 @@ public class FileTab : FontDisplay {
 			if (i == r) {
 				return_if_fail (font.font_file != null);
 				load_font ((!) font.font_file);
+				open_file ();
 			}
 			i++;
 		}
@@ -139,6 +142,7 @@ public class FileTab : FontDisplay {
 					delete_backup (backup);
 				} else {
 					load_backup (backup);
+					open_file ();
 				}
 			}
 			i++;
