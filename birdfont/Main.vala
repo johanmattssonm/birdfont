@@ -32,7 +32,7 @@ public static int main (string[] arg) {
 	CharDatabaseParser db = new CharDatabaseParser ();
 	unowned Thread<int> db_thread;
 	Mutex database_mutex = Mutex ();
-	Cond main_loop_idle = new Cond ();
+	Cond main_loop_idle = Cond ();
 	bool in_idle = false;
 
 	birdfont.init (arg, null);

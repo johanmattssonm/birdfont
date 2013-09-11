@@ -16,5 +16,5 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-VERSION = '0.29-beta1'
-SO_VERSION = '6'
+VERSION = '0.30'
+SO_VERSION = '7'

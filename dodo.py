@@ -45,7 +45,7 @@ LIBS = [
     'cairo',
     'gdk-pixbuf-2.0',
     'webkit-1.0',
-    'gee-0.8'
+    'gee-1.0'
     ]
 
 def task_build ():

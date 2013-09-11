@@ -658,6 +658,11 @@ public class OverView : FontDisplay {
 		
 		index = -1;
 		
+		if (items_per_row <= 0) {
+			warning ("No items.");
+			return;
+		}
+		
 		if (is_modifier_key (c)) {
 			return;
 		}
@@ -672,6 +677,12 @@ public class OverView : FontDisplay {
 				selected = i;
 				return;
 			}
+			
+			if (i > 1000) {
+				warning ("selected character not found");
+				return;
+			}
+			
 			i++;
 		}
 		

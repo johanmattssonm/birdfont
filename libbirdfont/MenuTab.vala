@@ -22,6 +22,17 @@ public class MenuTab : FontDisplay {
 	public MenuTab () {
 	}
 	
+	public static void export_font ()  {
+		Font font = BirdFont.get_current_font ();		
+		if (font.font_file == null) {
+			if (MenuTab.save ()) {
+				ExportTool.export_all ();
+			}
+		} else {
+			ExportTool.export_all ();
+		}
+	}
+	
 	public static void set_suppress_event (bool e) {
 		suppress_event = e;
 	}
@@ -232,7 +243,18 @@ public class MenuTab : FontDisplay {
 		MainWindow.get_tab_bar ().add_unique_tab (kd, 85, false);
 	}
 	
-	public static void preview () {
+	public static void preview ()  {
+		Font font = BirdFont.get_current_font ();		
+		if (font.font_file == null) {
+			if (MenuTab.save ()) {
+				show_preview_tab ();
+			}
+		} else {
+			show_preview_tab ();
+		}
+	}
+	
+	public static void show_preview_tab () {
 		OverWriteDialogListener dialog = new OverWriteDialogListener ();
 		TabBar tab_bar = MainWindow.get_tab_bar ();
 		FontFormat format = BirdFont.get_current_font ().format;

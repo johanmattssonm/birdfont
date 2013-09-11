@@ -43,7 +43,8 @@ public static int run_export (string[] arg) {
 		return -1;
 	}
 	
-	init_logfile ();
+	// FIXME: create a option for this and structure the log messages
+	// init_logfile ();
 	
 	for (int i = 1; i < arg.length; i++) {
 
@@ -104,10 +105,10 @@ public static int run_export (string[] arg) {
 	BirdFont.current_glyph = new Glyph ("");
 	
 	if (!BirdFont.get_current_font ().load (file_name, false)) {
-		stderr.printf (@"Failed to load font $file_name.\n");
+		warning (@"Failed to load font $file_name.\n");
 		
 		if (!file_name.has_suffix (".bf")) {
-			stderr.printf (@"Is it a .bf file?\n");
+			warning (@"Is it a .bf file?\n");
 		}
 		
 		return 1;

@@ -31,7 +31,7 @@ parser.add_option("-v", "--valac", dest="valac", help="select vala compiler", me
 (options, args) = parser.parse_args()
 
 if not options.prefix:
-	options.prefix = "/usr"
+	options.prefix = "/usr/local"
 if not options.cc:
 	options.cc = "gcc"
 if not options.cflags:
