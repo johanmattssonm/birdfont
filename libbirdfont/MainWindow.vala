@@ -178,14 +178,7 @@ public class MainWindow {
 	}
 		
 	public static void close_all_tabs () {
-		uint i = 0;
-		uint len = get_tab_bar ().get_length ();
-		
-		while (i < len) {
-			if (!get_tab_bar ().close_tab ((int) i)) {
-				i++;
-			}
-		}
+		get_tab_bar ().close_all_tabs ();
 	}
 
 	public static string translate (string s) {

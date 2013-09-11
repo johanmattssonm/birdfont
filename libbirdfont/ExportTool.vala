@@ -154,13 +154,12 @@ public class ExportTool : GLib.Object {
 		}
 	}
 
-	public static void export_all () {
+	/** Font must be saves before export. */
+	internal static void export_all () {
 		Font font = BirdFont.get_current_font ();
 		
 		if (font.font_file == null) {
-			if (MenuTab.save ()) {
-				do_export ();
-			}
+			warning ("Font is not saved.");
 		} else {
 			do_export ();
 		}
