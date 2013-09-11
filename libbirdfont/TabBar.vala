@@ -177,13 +177,13 @@ public class TabBar : GLib.Object {
 
 	public void close_all_tabs () {
 		for (int i = 0; i < get_length (); i++) {
-			if (close_tab (i)) {
+			if (close_tab (i, false, true)) {
 				close_all_tabs ();
 			}
 		}
 	}
 
-	public bool close_tab (int index, bool background_tab = false) {	
+	public bool close_tab (int index, bool background_tab = false, bool select_new_tab = true) {	
 		unowned List<Tab?>? lt;
 		Tab t;
 		EmptyTab empty_tab_canvas;
@@ -215,14 +215,16 @@ public class TabBar : GLib.Object {
 		if (t.has_close_button ()) {
 			tabs.delete_link (tabs.nth(index));
 			
-			if (!background_tab) {
+			if (!background_tab && select_new_tab) {
 				select_previous_tab ();
 			}
 			
 			return true;
 		}
 		
-		select_tab (index);
+		if (select_new_tab) {
+			select_tab (index);
+		}
 		
 		return false;
 	}
