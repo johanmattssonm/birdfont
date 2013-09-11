@@ -492,7 +492,7 @@ os.put_string (
 			assert (!is_null (ttf_file.get_path ()));
 			assert (!is_null (eot_file.get_path ()));
 
-			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path ());
+			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path (), async);
 
 			if (async) {
 				spawn_export (folder, temp_file);
@@ -562,11 +562,13 @@ os.put_string (
 		private static string ffi;
 		private static string ttf;
 		private static string eot;
+		private bool async = false;
 
-		public ExportThread (string nffi, string nttf, string neot) {
+		public ExportThread (string nffi, string nttf, string neot, bool async) {
 			ffi = nffi.dup ();
 			ttf = nttf.dup ();
 			eot = neot.dup ();
+			this.async = async;
 		}
 		
 		public void* run () {
@@ -582,18 +584,24 @@ os.put_string (
 		
 		void write_ttf () {
 			OpenFontFormatWriter fo = new OpenFontFormatWriter ();
-			Font f = new Font ();
+			Font f;
 			File file = (!) File.new_for_path (ttf);
 
 			return_if_fail (!is_null (ffi));			
 			return_if_fail (!is_null (ttf));
 			return_if_fail (!is_null (file));
-			return_if_fail (!is_null (f));
 			return_if_fail (!is_null (fo));
 			
 			try {
-				if (!f.load (ffi, false)) {
-					warning (@"Can't read $ffi");
+				if (async) {
+					printd ("Loading the intermediate file.\n");
+					f = new Font ();
+					if (!f.load (ffi, false)) {
+						warning (@"Can't read $ffi");
+					}
+				} else {
+					f = BirdFont.get_current_font ();
+					printd ("File is already loaded.\n");
 				}
 				
 				fo.open (file);
