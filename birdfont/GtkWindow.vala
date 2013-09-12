@@ -539,10 +539,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem copy_item = new Gtk.MenuItem.with_mnemonic (_("_Copy"));
 		edit_menu.append (copy_item);
 		copy_item.activate.connect (() => { ClipTool.copy (); });		
+		copy_item.add_accelerator ("activate", accel_group, 'C', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		Gtk.MenuItem paste_item = new Gtk.MenuItem.with_mnemonic (_("_Paste"));
 		edit_menu.append (paste_item);
 		paste_item.activate.connect (() => { ClipTool.paste (); });	
+		paste_item.add_accelerator ("activate", accel_group, 'V', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		Gtk.MenuItem paste_in_place_item = new Gtk.MenuItem.with_mnemonic (_("Paste _In Place"));
 		edit_menu.append (paste_in_place_item);
