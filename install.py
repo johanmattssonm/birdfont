@@ -2,6 +2,7 @@
 import os
 import subprocess
 import glob
+import platform
 from optparse import OptionParser
 from scripts import config
 from scripts import version
@@ -63,16 +64,22 @@ if os.path.isfile ('build/bin/birdfont'):
 
 install ('build/bin/birdfont-export', '/bin')
 
+libdir = '/lib'
 #library
+if platform.machine() == 'i386' or platform.machine() == 's390' or platform.machine() == 'ppc' or platform.machine() == 'armv7hl':
+   libdir = '/lib'
+if platform.machine() == 'x86_64' or platform.machine() == 's390x' or platform.machine() == 'ppc64':
+   libdir = '/lib64'
+
 if os.path.isfile ('build/bin/libbirdfont.so.' + version.SO_VERSION):
-	install ('build/bin/libbirdfont.so.' + version.SO_VERSION, '/lib')
-	install ('build/bin/libbirdfont.so', '/lib')
+	install ('build/bin/libbirdfont.so.' + version.SO_VERSION, libdir)
+	install ('build/bin/libbirdfont.so', libdir)
 elif os.path.isfile ('build/libbirdfont.so.' + version.SO_VERSION):
-	install ('build/libbirdfont.so.' + version.SO_VERSION, '/lib')
-	install ('build/libbirdfont.so', '/lib')
+	install ('build/libbirdfont.so.' + version.SO_VERSION, libdir)
+	install ('build/libbirdfont.so', libdir)
 elif os.path.isfile ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib'):
-	install ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib', '/lib')
-	install ('build/bin/libbirdfont.dylib', '/lib')
+	install ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib', libdir)
+	install ('build/bin/libbirdfont.dylib', libdir)
 else:
 	print ("Can not find libbirdfont.")
 	exit (1)
