@@ -35,8 +35,6 @@ public class CharDatabase {
 		GlyphRange result = new GlyphRange ();
 		GlyphRange ucd_result = new GlyphRange ();
 		unichar c;
-		string i;
-		string? iv;
 		
 		if (!database_is_loaded) {
 			show_loading_message ();
@@ -57,17 +55,9 @@ public class CharDatabase {
 			result.add_single (s.get_char ()); 
 		}
 		
-		return_val_if_fail (!is_null (index.get (s)), result);
-		
-		for (var it = index.get (s).iterator (); it.has_next (); it.next ()) {
-			return_val_if_fail (!is_null (it), result);
-			
-			iv = it.get ();
-			if (iv != null) {
-				i = (string) iv;
+		foreach (string i in index.get (s)) {
 				c = Font.to_unichar ("U+" + i.down ());
 				ucd_result.add_single (c);
-			}
 		}
 		
 		try {
