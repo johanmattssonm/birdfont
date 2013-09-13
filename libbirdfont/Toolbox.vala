@@ -43,7 +43,7 @@ public class Toolbox : GLib.Object  {
 		toolbox_background = Icons.get_icon ("toolbox_background.png");
 		
 		tab_bar.signal_tab_selected.connect ((tab) => {
-			if (tab.get_label () == "Kerning") {
+			if (tab.get_display ().get_name () == "Kerning") {
 				current_set = kerning_tools;
 			} else {
 				current_set = drawing_tools;
@@ -72,6 +72,12 @@ public class Toolbox : GLib.Object  {
 	
 	public void press (uint button, double x, double y) {
 		foreach (Expander exp in current_set.get_expanders ()) {
+			if (exp.is_over (x, y)) {
+				exp.set_open (! exp.is_open ());					
+				update_expanders ();			
+				redraw_tool_box ();
+			}
+			
 			foreach (Tool t in exp.tool) {
 				if (t.is_over (x, y)) {
 					t.panel_press_action (t, button, x, y);
@@ -82,13 +88,7 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void release (uint button, double x, double y) {
-		foreach (Expander exp in current_set.get_expanders ()) {
-			if (exp.is_over (x, y)) {
-				exp.set_open (! exp.is_open ());					
-				update_expanders ();			
-				redraw_tool_box ();
-			}
-			
+		foreach (Expander exp in current_set.get_expanders ()) {			
 			if (exp.is_open ()) {
 				foreach (Tool t in exp.tool) {
 					bool active = t.is_over (x, y);
@@ -324,14 +324,9 @@ public class Toolbox : GLib.Object  {
 		
 		cr.rectangle(0, 0, w, h);
 		cr.set_line_width(0);
-		cr.set_source_rgba(255/255.0, 255/255.0, 255/255.0, 1);
+		cr.set_source_rgba(242/255.0, 241/255.0, 240/255.0, 1);
 		cr.fill();
-
-		for (int i = 0; i < w; i++) {
-			cr.set_source_surface ((!) toolbox_background, i, 0);
-			cr.paint ();
-		}
-
+		
 		cr.rectangle(0, 0, 1, h);
 		cr.set_line_width(0);
 		cr.set_source_rgba(0/255.0, 0/255.0, 0/255.0, 1);

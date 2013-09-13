@@ -38,10 +38,6 @@ public class Tab : GLib.Object {
 		return display;
 	}
 	
-	public string get_label () {
-		return display.get_name ();
-	}
-	
 	public double get_width () {
 		return width;
 	}

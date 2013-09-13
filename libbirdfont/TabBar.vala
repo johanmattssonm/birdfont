@@ -124,7 +124,7 @@ public class TabBar : GLib.Object {
 	public bool select_char (string s) {
 		int i = 0;
 		foreach (Tab t in tabs) {
-			if (t.get_label () == s) {
+			if (t.get_display ().get_name () == s) {
 				select_tab (i);
 				return true;
 			}
@@ -233,7 +233,7 @@ public class TabBar : GLib.Object {
 		int i = 0;
 		
 		foreach (var t in tabs) {
-			if (t.get_label () == name) {
+			if (t.get_display ().get_name () == name) {
 				return close_tab (i, background_tab);
 			}
 			
@@ -272,7 +272,7 @@ public class TabBar : GLib.Object {
 
 	public Tab? get_tab (string name) {
 		foreach (var n in tabs) {
-			if (n.get_label () == name) {
+			if (n.get_display ().get_name () == name) {
 				return n;
 			}
 		}
@@ -283,7 +283,7 @@ public class TabBar : GLib.Object {
 	public bool selected_open_tab_by_name (string t) {
 		int i = 0;
 		foreach (var n in tabs) {
-			if (n.get_label () == t) {
+			if (n.get_display ().get_name () == t) {
 				select_tab (i);
 				return true;
 			}
@@ -562,7 +562,7 @@ public class TabBar : GLib.Object {
 			cr.set_source_rgba (0, 0, 0, 1);
 			cr.set_font_size (14);
 			cr.move_to (8, height - 6);
-			cr.show_text (t.get_label ());
+			cr.show_text (t.get_display ().get_label ());
 			cr.stroke ();
 			
 			// edges

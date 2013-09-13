@@ -241,7 +241,7 @@ public class Tool : GLib.Object {
 			ImageSurface i = (!) icon;
 			
 			if (likely (i.status () == Cairo.Status.SUCCESS)) {
-				cr.set_source_surface (i, xt + (15 - i.get_width () / 2) - 5.7, yt + (15 - i.get_height ()) / 2.0);
+				cr.set_source_surface (i, xt + (15.5 - i.get_width () / 2.0) - 5.7, yt + (15 - i.get_height ()) / 2.0);
 				cr.paint ();
 			} else {
 				warning (@"Falied to load icon for $name");
@@ -254,8 +254,10 @@ public class Tool : GLib.Object {
 	/** Run pending events in main loop before continuing. */
 	public static void @yield () {
 		int t = 0;
-		var time = new TimeoutSource (500);
+		TimeoutSource time = new TimeoutSource (500);
 		bool timeout;
+		unowned MainContext context;
+		bool acquired;
 
 		if (TestBirdFont.is_slow_test ()) {
 			timeout = false;
@@ -270,29 +272,24 @@ public class Tool : GLib.Object {
 			timeout = true;
 		}
     
-		unowned MainContext c = MainContext.default ();
-		bool a = c.acquire ();
+		context = MainContext.default ();
+		acquired = context.acquire ();
 		
-		while (unlikely (!a)) {
+		while (unlikely (!acquired)) {
 			warning ("Failed to acquire main loop.\n");
 			return;
 		}
 
-		while (c.pending () || TestBirdFont.is_slow_test ()) {
-			c.iteration (true);
+		while (context.pending () || TestBirdFont.is_slow_test ()) {
+			context.iteration (true);
 			t++;
 
-			if (!c.pending () && TestBirdFont.is_slow_test ()) {
+			if (!context.pending () && TestBirdFont.is_slow_test ()) {
 				if (timeout) break;
-			}
-						
-			if (unlikely (t > 100000)) {
-				assert (false);
-				break;
 			}
 		}
 		
-		c.release ();
+		context.release ();
 	}
 	
 	public void set_persistent (bool p) {

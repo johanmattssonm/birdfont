@@ -41,7 +41,8 @@ public class CharDatabase {
 		if (!database_is_loaded) {
 			show_loading_message ();
 		}
-		
+
+		return_val_if_fail (!is_null (index), result);		
 		return_val_if_fail (result.get_length () == 0, result);
 		
 		if (s.has_prefix ("U+") || s.has_prefix ("u+")) {
@@ -56,7 +57,11 @@ public class CharDatabase {
 			result.add_single (s.get_char ()); 
 		}
 		
+		return_val_if_fail (!is_null (index.get (s)), result);
+		
 		for (var it = index.get (s).iterator (); it.has_next (); it.next ()) {
+			return_val_if_fail (!is_null (it), result);
+			
 			iv = it.get ();
 			if (iv != null) {
 				i = (string) iv;
