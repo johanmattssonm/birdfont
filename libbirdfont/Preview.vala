@@ -23,6 +23,10 @@ public class Preview : FontDisplay {
 		return "Preview";
 	}
 
+	public override string get_label () {
+		return _("Preview");
+	}
+	
 	public override void selected_canvas () {
 	}
 
@@ -43,11 +47,11 @@ public class Preview : FontDisplay {
 		return file;
 	}
 
-	public new File get_html_file () {
+	public static File get_html_file () {
 		return get_file ();	
 	}
 
-	public override string get_uri () {
+	public static string get_uri () {
 		return path_to_uri ((!) get_html_file ().get_path ());
 	}
 	

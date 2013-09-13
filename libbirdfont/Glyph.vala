@@ -543,7 +543,11 @@ public class Glyph : FontDisplay {
 	public override string get_name () {
 		return name;
 	}
-			
+
+	public override string get_label () {
+		return name;
+	}
+				
 	private void help_line_event (double x, double y) {
 		bool m = false;
 		

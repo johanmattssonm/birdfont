@@ -45,10 +45,6 @@ public class MenuTab : FontDisplay {
 		return "Menu";
 	}
 
-	public override string get_html () {
-		return "".dup ();
-	}
-
 	public static void select_overview () {
 		if (suppress_event) {
 			return;

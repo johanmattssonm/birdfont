@@ -22,10 +22,12 @@ public abstract class FontDisplay : GLib.Object {
 	public signal void redraw_area (double x, double y, double w, double h);
 	
 	public virtual string get_name () {
+		warning ("No name.");
 		return "";
 	}
 
 	public virtual string get_label () {
+		warning ("No label.");
 		return "";
 	}
 	
@@ -60,18 +62,6 @@ public abstract class FontDisplay : GLib.Object {
 		}
 		
 		return uri;
-	}
-
-	public virtual string get_uri () {
-		return "";
-	}
-	
-	public virtual string get_html_file () {
-		return "index.html";
-	}
-	
-	public virtual string get_html () {
-		return "";
 	}
 	
 	public virtual void draw (WidgetAllocation allocation, Context cr) {
@@ -114,15 +104,12 @@ public abstract class FontDisplay : GLib.Object {
 	}
 	
 	public virtual void store_current_view () {
-		warning ("store_current_view not implemented for this class.");
 	}
 	
 	public virtual void restore_last_view () {
-		warning ("restore_last_view not implemented for this class.");
 	}
 
 	public virtual void next_view () {
-		warning ("next_view not implemented for this class.");
 	}
 	
 	public virtual void scroll_wheel_up (double x, double y) {
@@ -132,11 +119,6 @@ public abstract class FontDisplay : GLib.Object {
 	}
 
 	public virtual void undo () {
-	}
-
-	public static File find_layout_dir () {
-		File f = find_file (null, "layout");
-		return f;		
 	}
 
 	public static File find_file (string? dir, string name) {

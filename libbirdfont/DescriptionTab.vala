@@ -28,10 +28,6 @@ public class DescriptionTab : FontDisplay {
 	public override string get_label () {
 		return _("Description");
 	}
-
-	public override string get_html () {
-		return "".dup ();
-	}
 }
 
 }

@@ -56,8 +56,8 @@ public class CharDatabase {
 		}
 		
 		foreach (string i in index.get (s)) {
-				c = Font.to_unichar ("U+" + i.down ());
-				ucd_result.add_single (c);
+			c = Font.to_unichar ("U+" + i.down ());
+			ucd_result.add_single (c);
 		}
 		
 		try {

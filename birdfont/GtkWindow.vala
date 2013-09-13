@@ -91,11 +91,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		html_canvas.set_editable (true);
 		
 		MainWindow.get_tab_bar ().signal_tab_selected.connect ((f, tab) => {
-			File layout_dir;
-			File layout_uri;
 			string uri = "";
 			FontDisplay fd = tab.get_display ();
-			bool html = fd.get_name () == "Preview";
 			MainWindow.glyph_canvas.set_current_glyph (fd);
 			
 			scrollbar.set_visible (fd.has_scrollbar ());
@@ -105,86 +102,66 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				description.canvas.set_visible (true);
 				html_box.set_visible (false);
 				glyph_canvas_area.set_visible (false);
-			} else if (html) {
-				layout_dir = FontDisplay.find_layout_dir ();
-				uri = fd.get_uri ();
-				
-				if (uri == "") {
-					layout_uri = layout_dir.get_child (fd.get_html_file ());
-					uri = FontDisplay.path_to_uri ((!) layout_uri.get_path ());
-				}
-		
-				if (fd.get_html () == "") {
+			} else if (fd.get_name () == "Preview") {
+				uri = Preview.get_uri ();
+
+				// hack: force webkit to ignore cache in preview
+				html_box.set_visible (false);
+				glyph_canvas_area.set_visible (true);
+										
+				try {
+					DataInputStream dis = new DataInputStream (Preview.get_html_file ().read ());
+					string? line;
+					StringBuilder sb = new StringBuilder ();
+					uint rid = Random.next_int ();
+					Font font = BirdFont.get_current_font ();
 					
-					if (fd.get_name () == "Preview") {
-						// hack: force webkit to ignore cache in preview					
-
-						html_box.set_visible (false);
-						glyph_canvas_area.set_visible (true);
-												
-						try {
-							Preview preview = (Preview) fd;
-							DataInputStream dis = new DataInputStream (preview.get_html_file ().read ());
-							string? line;
-							StringBuilder sb = new StringBuilder ();
-							uint rid = Random.next_int ();
-							Font font = BirdFont.get_current_font ();
-							
-							File preview_directory = BirdFont.get_preview_directory ();
-							
-							File f_ttf = font.get_folder ().get_child (@"$(font.get_full_name ()).ttf");
-							File f_eot = font.get_folder ().get_child (@"$(font.get_full_name ()).eot");
-							File f_svg = font.get_folder ().get_child (@"$(font.get_full_name ()).svg");
-
-							if (f_ttf.query_exists ()) {
-								f_ttf.delete ();
-							}
-								
-							if (f_eot.query_exists ()) {
-								f_eot.delete ();
-							}
-							
-							if (f_svg.query_exists ()) {
-								f_svg.delete ();
-							}
-							
-							ExportTool.export_ttf_font ();							
-							ExportTool.export_svg_font ();
-							
-							File r_ttf = preview_directory.get_child (@"$(font.get_full_name ())$rid.ttf");
-							File r_svg = preview_directory.get_child (@"$(font.get_full_name ())$rid.svg");
-							
-							if (BirdFont.win32) {
-								f_ttf.copy (r_ttf, FileCopyFlags.NONE);
-							}
-							
-							f_svg.copy (r_svg, FileCopyFlags.NONE);
-
-							while ((line = dis.read_line (null)) != null) {
-								line = ((!) line).replace (@"$(font.get_full_name ()).ttf", @"$(FontDisplay.path_to_uri ((!) f_ttf.get_path ()))?$rid");
-								line = ((!) line).replace (@"$(font.get_full_name ()).eot", @"$(FontDisplay.path_to_uri ((!) f_eot.get_path ()))?$rid");
-								line = ((!) line).replace (@"$(font.get_full_name ()).svg", @"$(FontDisplay.path_to_uri ((!) f_svg.get_path ()))?$rid");
-								sb.append ((!) line);
-							}
+					File preview_directory = BirdFont.get_preview_directory ();
 					
-							html_canvas.load_html_string (sb.str, uri);
-												
-						} catch (Error e) {
-							warning (e.message);
-							warning ("Failed to load html into canvas.");
-						}
-					} else {
-						// normal way to load a uri for all other pages
-						html_canvas.load_uri (uri);
-						html_canvas.reload_bypass_cache ();			
+					File f_ttf = font.get_folder ().get_child (@"$(font.get_full_name ()).ttf");
+					File f_eot = font.get_folder ().get_child (@"$(font.get_full_name ()).eot");
+					File f_svg = font.get_folder ().get_child (@"$(font.get_full_name ()).svg");
+
+					if (f_ttf.query_exists ()) {
+						f_ttf.delete ();
 					}
 						
-				} else {
-					html_canvas.load_html_string (fd.get_html (), uri);
+					if (f_eot.query_exists ()) {
+						f_eot.delete ();
+					}
+					
+					if (f_svg.query_exists ()) {
+						f_svg.delete ();
+					}
+					
+					ExportTool.export_ttf_font ();							
+					ExportTool.export_svg_font ();
+					
+					File r_ttf = preview_directory.get_child (@"$(font.get_full_name ())$rid.ttf");
+					File r_svg = preview_directory.get_child (@"$(font.get_full_name ())$rid.svg");
+					
+					if (BirdFont.win32) {
+						f_ttf.copy (r_ttf, FileCopyFlags.NONE);
+					}
+					
+					f_svg.copy (r_svg, FileCopyFlags.NONE);
+
+					while ((line = dis.read_line (null)) != null) {
+						line = ((!) line).replace (@"$(font.get_full_name ()).ttf", @"$(FontDisplay.path_to_uri ((!) f_ttf.get_path ()))?$rid");
+						line = ((!) line).replace (@"$(font.get_full_name ()).eot", @"$(FontDisplay.path_to_uri ((!) f_eot.get_path ()))?$rid");
+						line = ((!) line).replace (@"$(font.get_full_name ()).svg", @"$(FontDisplay.path_to_uri ((!) f_svg.get_path ()))?$rid");
+						sb.append ((!) line);
+					}
+			
+					html_canvas.load_html_string (sb.str, uri);
+										
+				} catch (Error e) {
+					warning (e.message);
+					warning ("Failed to load html into canvas.");
 				}
 				
-				html_box.set_visible (html);
-				glyph_canvas_area.set_visible (!html);
+				html_box.set_visible (true);
+				glyph_canvas_area.set_visible (false);
 				description.canvas.set_visible (false);
 			} else {
 				html_box.set_visible (false);
