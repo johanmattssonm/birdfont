@@ -41,7 +41,6 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 		--pkg libxml-2.0 \
 		--pkg gio-2.0 \
 		--pkg cairo \
-		--pkg libsoup-2.4 \
 		--pkg gdk-pixbuf-2.0""")
 
 	#copy c sources 

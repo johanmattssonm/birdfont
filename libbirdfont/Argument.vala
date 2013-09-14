@@ -236,7 +236,7 @@ public class Argument : GLib.Object {
 		stdout.printf (" [" + _("FILE") + "] [" + _("OPTION") + " ...]\n");
 
 		print_padded ("-c, --show-coordinates", _("show coordinate in glyph view"));
-		print_padded ("-e, --exit", _("exit if a test case failes"));
+		print_padded ("-e, --exit", _("exit if a test case fails"));
 		print_padded ("-f, --fatal-warning", _("treat warnings as fatal"));
 		print_padded ("-h, --help", _("show this message"));
 		print_padded ("-m, --mac", _("enable Machintosh customizations"));
