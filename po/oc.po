@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-11 18:34+0200\n"
+"POT-Creation-Date: 2013-09-14 17:27+0200\n"
 "PO-Revision-Date: 2013-05-06 12:45+0000\n"
 "Last-Translator: Cédric <cvalmary@yahoo.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,8 @@ msgid "show coordinate in glyph view"
 msgstr "afichar las coordenadas dins l'imatge del glyph"
 
 #: libbirdfont/Argument.vala:239
-msgid "exit if a test case failes"
+#, fuzzy
+msgid "exit if a test case fails"
 msgstr "quitar en cas de fracàs del tèst d'una casa"
 
 #: libbirdfont/Argument.vala:240
@@ -94,7 +95,7 @@ msgstr "enregistrar al format ttf e eot.\n"
 msgid "Can't find output directory"
 msgstr "Impossible de trobar lo dorsièr de sortida"
 
-#: libbirdfont/CharDatabase.vala:139
+#: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
 msgstr ""
 
@@ -152,7 +153,7 @@ msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
-#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1211
+#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1190
 msgid "Description"
 msgstr ""
 
@@ -328,19 +329,19 @@ msgstr ""
 msgid "Writing SVG file."
 msgstr ""
 
-#: libbirdfont/FileTab.vala:172
+#: libbirdfont/FileTab.vala:176
 msgid "No fonts created yet."
 msgstr ""
 
-#: libbirdfont/FileTab.vala:181
+#: libbirdfont/FileTab.vala:185
 msgid "Recent files"
 msgstr "Fichièrs recents"
 
-#: libbirdfont/FileTab.vala:205
+#: libbirdfont/FileTab.vala:209
 msgid "Backup"
 msgstr ""
 
-#: libbirdfont/FileTab.vala:271
+#: libbirdfont/FileTab.vala:275
 msgid "Files"
 msgstr ""
 
@@ -397,11 +398,11 @@ msgstr ""
 msgid "Character Set"
 msgstr ""
 
-#: libbirdfont/MainWindow.vala:132
+#: libbirdfont/MainWindow.vala:136
 msgid "Glyph sequence"
 msgstr "Sequéncia del glyph"
 
-#: libbirdfont/MainWindow.vala:132 libbirdfont/SpinButton.vala:108
+#: libbirdfont/MainWindow.vala:136 libbirdfont/SpinButton.vala:108
 msgid "Close"
 msgstr ""
 
@@ -409,11 +410,11 @@ msgstr ""
 msgid "Menu"
 msgstr "Menú"
 
-#: libbirdfont/MenuTab.vala:74 libbirdfont/SaveDialogListener.vala:28
+#: libbirdfont/MenuTab.vala:70 libbirdfont/SaveDialogListener.vala:28
 msgid "Save"
 msgstr "Enregistrar"
 
-#: libbirdfont/MenuTab.vala:194
+#: libbirdfont/MenuTab.vala:190
 msgid "Open"
 msgstr "Dobrir"
 
@@ -469,6 +470,10 @@ msgstr "Clic drech per apondre de punts, clic esquèrra per los suprimir"
 msgid "and double click to add new point on path."
 msgstr "e clic doble per apondre de punts sul fuèlh."
 
+#: libbirdfont/Preview.vala:27
+msgid "Preview"
+msgstr "Apercebut"
+
 #: libbirdfont/RectangleTool.vala:30
 msgid "Rectangle"
 msgstr ""
@@ -489,251 +494,251 @@ msgstr "Abandonar"
 msgid "New version"
 msgstr "Version novèla"
 
-#: libbirdfont/VersionList.vala:170 birdfont/GtkWindow.vala:1204
+#: libbirdfont/VersionList.vala:170 birdfont/GtkWindow.vala:1183
 msgid "Version"
 msgstr "Version"
 
-#: birdfont/GtkWindow.vala:486
+#: birdfont/GtkWindow.vala:463
 msgid "_New"
 msgstr "_Novèl"
 
-#: birdfont/GtkWindow.vala:491
+#: birdfont/GtkWindow.vala:468
 msgid "_Open"
 msgstr "_Dobrir"
 
-#: birdfont/GtkWindow.vala:496
+#: birdfont/GtkWindow.vala:473
 msgid "_Recent Files"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:500
+#: birdfont/GtkWindow.vala:477
 msgid "_Save"
 msgstr "_Enregistrar"
 
-#: birdfont/GtkWindow.vala:505
+#: birdfont/GtkWindow.vala:482
 msgid "Save _as"
 msgstr "Enregistrar _jos"
 
-#: birdfont/GtkWindow.vala:509
+#: birdfont/GtkWindow.vala:486
 msgid "_Export"
 msgstr "_Exportar"
 
-#: birdfont/GtkWindow.vala:515
+#: birdfont/GtkWindow.vala:492
 msgid "_Preview"
 msgstr "_Previsualizacion"
 
-#: birdfont/GtkWindow.vala:521
+#: birdfont/GtkWindow.vala:498
 msgid "Name and _Description"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:525
+#: birdfont/GtkWindow.vala:502
 msgid "Select _Character Set"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:529
+#: birdfont/GtkWindow.vala:506
 msgid "_Quit"
 msgstr "_Sortir"
 
-#: birdfont/GtkWindow.vala:534
+#: birdfont/GtkWindow.vala:511
 msgid "_Undo"
 msgstr "_Anullar"
 
-#: birdfont/GtkWindow.vala:539
+#: birdfont/GtkWindow.vala:516
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: birdfont/GtkWindow.vala:543
+#: birdfont/GtkWindow.vala:521
 msgid "_Paste"
 msgstr "_Pegar"
 
-#: birdfont/GtkWindow.vala:547
+#: birdfont/GtkWindow.vala:526
 msgid "Paste _In Place"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:552
+#: birdfont/GtkWindow.vala:531
 msgid "Select All Pa_ths"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:559
+#: birdfont/GtkWindow.vala:538
 msgid "_Search"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:564
+#: birdfont/GtkWindow.vala:543
 msgid "_Export Glyph as SVG"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:568
+#: birdfont/GtkWindow.vala:547
 msgid "_Import SVG"
 msgstr "_Importar SVG"
 
-#: birdfont/GtkWindow.vala:573
+#: birdfont/GtkWindow.vala:552
 msgid "Close _Path"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:578
+#: birdfont/GtkWindow.vala:557
 msgid "_Glyph Sequence"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:583
+#: birdfont/GtkWindow.vala:562
 msgid "Set Glyph _Background"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:587
+#: birdfont/GtkWindow.vala:566
 msgid "_Remove Glyph Background"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:593
+#: birdfont/GtkWindow.vala:572
 msgid "_Select Point Above"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:597
+#: birdfont/GtkWindow.vala:576
 msgid "Select _Next Point"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:601
+#: birdfont/GtkWindow.vala:580
 msgid "Select _Previous Point"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:605
+#: birdfont/GtkWindow.vala:584
 msgid "Select Point _Below"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:610
+#: birdfont/GtkWindow.vala:589
 msgid "_Next Tab"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:623
+#: birdfont/GtkWindow.vala:602
 msgid "_Previous Tab"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:636
+#: birdfont/GtkWindow.vala:615
 msgid "_Close tab"
 msgstr "_Tampar l'onglet"
 
-#: birdfont/GtkWindow.vala:650
+#: birdfont/GtkWindow.vala:629
 msgid "Close _All Tabs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:658
+#: birdfont/GtkWindow.vala:637
 msgid "_Create Path"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:665
+#: birdfont/GtkWindow.vala:644
 msgid "_Zoom"
 msgstr "_Zoom"
 
-#: birdfont/GtkWindow.vala:671
+#: birdfont/GtkWindow.vala:650
 msgid "_Create Counter Path"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:678
+#: birdfont/GtkWindow.vala:657
 msgid "_Move"
 msgstr "_Desplaçar"
 
-#: birdfont/GtkWindow.vala:685
+#: birdfont/GtkWindow.vala:664
 msgid "Show _full unicode characters set"
 msgstr "Afichar _tota la lista dels caractèrs unicode"
 
-#: birdfont/GtkWindow.vala:692
+#: birdfont/GtkWindow.vala:671
 msgid "Show De_fault Characters Set"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:699
+#: birdfont/GtkWindow.vala:678
 msgid "Show Characters in Font"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:706
+#: birdfont/GtkWindow.vala:685
 msgid "Add New _Grid Item"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:712
+#: birdfont/GtkWindow.vala:691
 msgid "Remove Gr_id Item"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:718
+#: birdfont/GtkWindow.vala:697
 msgid "_Zoom In"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:725
+#: birdfont/GtkWindow.vala:704
 msgid "Zoom _Out"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:732
+#: birdfont/GtkWindow.vala:711
 msgid "Zoom to _Scale 1:1"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:740
+#: birdfont/GtkWindow.vala:719
 msgid "Show Kerning _Tab"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:747
+#: birdfont/GtkWindow.vala:726
 msgid "_List Kerning Pairs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:753
+#: birdfont/GtkWindow.vala:732
 msgid "_Remove All Kerning Pairs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:761
+#: birdfont/GtkWindow.vala:740
 msgid "Select _Next Kerning Pair"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:765
+#: birdfont/GtkWindow.vala:744
 msgid "Select _Previous Kerning Pair"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:770
+#: birdfont/GtkWindow.vala:749
 msgid "_File"
 msgstr "_Fichièr"
 
-#: birdfont/GtkWindow.vala:773
+#: birdfont/GtkWindow.vala:752
 msgid "_Edit"
 msgstr "_Edicion"
 
-#: birdfont/GtkWindow.vala:776
+#: birdfont/GtkWindow.vala:755
 msgid "_Tab"
 msgstr "_Onglet"
 
-#: birdfont/GtkWindow.vala:779
+#: birdfont/GtkWindow.vala:758
 msgid "T_ool"
 msgstr "_Aisina"
 
-#: birdfont/GtkWindow.vala:782
+#: birdfont/GtkWindow.vala:761
 msgid "_Kerning"
 msgstr "_Interletratge"
 
-#: birdfont/GtkWindow.vala:1148
+#: birdfont/GtkWindow.vala:1127
 msgid "PostScript Name"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1155
+#: birdfont/GtkWindow.vala:1134
 msgid "Name"
 msgstr "Nom"
 
-#: birdfont/GtkWindow.vala:1162
+#: birdfont/GtkWindow.vala:1141
 msgid "Style"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1168
+#: birdfont/GtkWindow.vala:1147
 msgid "Bold"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1175
+#: birdfont/GtkWindow.vala:1154
 msgid "Italic"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1183
+#: birdfont/GtkWindow.vala:1162
 msgid "Weight"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1190
+#: birdfont/GtkWindow.vala:1169
 msgid "Full name (name and style)"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1197
+#: birdfont/GtkWindow.vala:1176
 msgid "Unique identifier"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1219
+#: birdfont/GtkWindow.vala:1198
 msgid "Copyright"
 msgstr ""
 
@@ -745,9 +750,6 @@ msgstr ""
 
 #~ msgid "Export"
 #~ msgstr "Exportar"
-
-#~ msgid "Preview"
-#~ msgstr "Apercebut"
 
 #~ msgid "Preferences"
 #~ msgstr "Preferéncias"
