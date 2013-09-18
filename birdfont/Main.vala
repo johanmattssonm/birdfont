@@ -31,8 +31,8 @@ public static int main (string[] arg) {
 	BirdFont.BirdFont birdfont = new BirdFont.BirdFont ();
 	CharDatabaseParser db = new CharDatabaseParser ();
 	unowned Thread<int> db_thread;
-	Mutex database_mutex = Mutex ();
-	Cond main_loop_idle = Cond ();
+	Mutex database_mutex = new Mutex ();
+	Cond main_loop_idle = new Cond ();
 	bool in_idle = false;
 
 	birdfont.init (arg, null);

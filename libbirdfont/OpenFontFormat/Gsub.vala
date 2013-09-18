@@ -68,7 +68,7 @@ class GsubTable : Table {
 		
 		// MarkFilteringSet 
 
-		fd.append (get_pair_pos_format1 ());
+		//fd.append (get_clig_data ());
 		
 		fd.pad ();	
 		this.font_data = fd;

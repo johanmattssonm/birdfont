@@ -75,7 +75,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tools.add_tool (resize_tool);
 		
 		// quadratic Bézier points
-		Tool quadratic_points = new Tool ("quadratic_points", _("Create quadratic Bézier curves"));
+		Tool quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
 			point_type = PointType.QUADRATIC;
 			Preferences.set ("point_type", "quadratic_points");
@@ -83,7 +83,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tool_modifiers.add_tool (quadratic_points);		
 
 		// cubic Bézier points
-		Tool cubic_points = new Tool ("cubic_points", _("Create cubic Bézier curves"));
+		Tool cubic_points = new Tool ("cubic_points", t_("Create cubic Bézier curves"));
 		cubic_points.select_action.connect ((self) => {
 			point_type = PointType.CUBIC;
 			Preferences.set ("point_type", "cubic_points");
@@ -91,7 +91,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tool_modifiers.add_tool (cubic_points);
 
 		// two quadratic points off curve points for each quadratic control point
-		Tool double_points = new Tool ("double_points", _("Quadratic path with two line handles"));
+		Tool double_points = new Tool ("double_points", t_("Quadratic path with two line handles"));
 		double_points.select_action.connect ((self) => {
 			point_type = PointType.DOUBLE_CURVE;
 			Preferences.set ("point_type", "double_points");
@@ -99,7 +99,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tool_modifiers.add_tool (double_points);
 
 		// convert point
-		Tool convert_points = new Tool ("convert_point", _("Convert selected points"));
+		Tool convert_points = new Tool ("convert_point", t_("Convert selected points"));
 		convert_points.select_action.connect ((self) => {
 			PenTool.convert_point_types ();
 			MainWindow.get_current_glyph ().update_view ();
@@ -108,7 +108,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tool_modifiers.add_tool (convert_points);
 
 		// tie edit point handles
-		Tool tie_handles = new Tool ("tie_point", _("Tie curve handles for the selected edit point"), 'w');
+		Tool tie_handles = new Tool ("tie_point", t_("Tie curve handles for the selected edit point"), 'w');
 		tie_handles.select_action.connect ((self) => {
 			bool tie;
 			EditPoint p;
@@ -144,7 +144,7 @@ public class DrawingTools : ToolCollection  {
 		edit_point_modifiers.add_tool (tie_handles);
 		
 		// symmetrical handles
-		Tool reflect_handle = new Tool ("symmetric", _("Symmetrical handles"), 'r');
+		Tool reflect_handle = new Tool ("symmetric", t_("Symmetrical handles"), 'r');
 		reflect_handle.select_action.connect ((self) => {
 			bool symmetrical;
 			PointSelection ep;
@@ -166,7 +166,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		edit_point_modifiers.add_tool (reflect_handle);
 
-		Tool create_line = new Tool ("create_line", _("Convert segment to line."), 'r');
+		Tool create_line = new Tool ("create_line", t_("Convert segment to line."), 'r');
 		create_line.select_action.connect ((self) => {
 			PenTool.convert_segment_to_line ();
 			MainWindow.get_current_glyph ().update_view ();
@@ -174,14 +174,14 @@ public class DrawingTools : ToolCollection  {
 		edit_point_modifiers.add_tool (create_line);
 	
 		// path tools
-		Tool union_paths_tool = new Tool ("union_paths", _("Merge paths"));
+		Tool union_paths_tool = new Tool ("union_paths", t_("Merge paths"));
 		union_paths_tool.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			g.merge_all ();
 		});
 		path_tool_modifiers.add_tool (union_paths_tool);
 		
-		Tool reverse_path_tool = new Tool ("reverse_path", _("Create counter from outline"));
+		Tool reverse_path_tool = new Tool ("reverse_path", t_("Create counter from outline"));
 		reverse_path_tool.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			
@@ -193,7 +193,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		path_tool_modifiers.add_tool (reverse_path_tool);
 
-		Tool move_layer = new Tool ("move_layer", _("Move to path to the bottom layer"), 'd');
+		Tool move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"), 'd');
 		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 
@@ -204,14 +204,14 @@ public class DrawingTools : ToolCollection  {
 		});
 		path_tool_modifiers.add_tool (move_layer);
 
-		Tool flip_vertical = new Tool ("flip_vertical", _("Flip path vertically"));
+		Tool flip_vertical = new Tool ("flip_vertical", t_("Flip path vertically"));
 		flip_vertical.select_action.connect ((self) => {
 			MoveTool.flip_vertical ();
 			MainWindow.get_current_glyph ().update_view ();
 		});
 		path_tool_modifiers.add_tool (flip_vertical);
 
-		Tool flip_horizontal = new Tool ("flip_horizontal", _("Flip path horizontally"));
+		Tool flip_horizontal = new Tool ("flip_horizontal", t_("Flip path horizontally"));
 		flip_horizontal.select_action.connect ((self) => {
 			MoveTool.flip_horizontal ();
 			MainWindow.get_current_glyph ().update_view ();
@@ -219,7 +219,7 @@ public class DrawingTools : ToolCollection  {
 		path_tool_modifiers.add_tool (flip_horizontal);
 		
 		// Character set tools
-		Tool full_unicode = new Tool ("utf_8", _("Show full unicode characters set"), 'f', CTRL);
+		Tool full_unicode = new Tool ("utf_8", t_("Show full unicode characters set"), 'f', CTRL);
 		full_unicode.select_action.connect ((self) => {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);	
 				OverView o = MainWindow.get_overview ();
@@ -235,7 +235,7 @@ public class DrawingTools : ToolCollection  {
 			});
 		characterset_tools.add_tool (full_unicode);
 
-		Tool custom_character_set = new Tool ("custom_character_set", _("Show default characters set"), 'r', CTRL);
+		Tool custom_character_set = new Tool ("custom_character_set", t_("Show default characters set"), 'r', CTRL);
 		custom_character_set.select_action.connect ((self) => {
 			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
@@ -251,7 +251,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		characterset_tools.add_tool (custom_character_set);
 
-		Tool avalilable_characters = new Tool ("available_characters", _("Show all characters in the font"), 'd', CTRL);
+		Tool avalilable_characters = new Tool ("available_characters", t_("Show all characters in the font"), 'd', CTRL);
 		avalilable_characters.select_action.connect ((self) => {
 			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
 			OverView o = MainWindow.get_overview ();
@@ -265,7 +265,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		characterset_tools.add_tool (avalilable_characters);
 
-		Tool delete_glyph = new Tool ("delete_selected_glyph", _("Delete selected glyph"));
+		Tool delete_glyph = new Tool ("delete_selected_glyph", t_("Delete selected glyph"));
 		delete_glyph.select_action.connect ((self) => {
 			OverView o = MainWindow.get_overview ();
 			
@@ -320,7 +320,7 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		// guide lines, grid and other guidlines
-		Tool help_lines = new Tool ("help_lines", _("Show guidelines"), 'l');
+		Tool help_lines = new Tool ("help_lines", t_("Show guidelines"), 'l');
 		help_lines.select_action.connect ((self) => {
 				bool h;
 				h = GlyphCanvas.get_current_glyph ().get_show_help_lines ();
@@ -331,7 +331,7 @@ public class DrawingTools : ToolCollection  {
 
 		guideline_tools.add_tool (help_lines);
 
-		Tool xheight_help_lines = new Tool ("show_xheight_helplines", _("Show guidelines for x-height and baseline"), 'x');
+		Tool xheight_help_lines = new Tool ("show_xheight_helplines", t_("Show guidelines for x-height and baseline"), 'x');
 		xheight_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_xheight_lines_visible ();
@@ -346,7 +346,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		guideline_tools.add_tool (xheight_help_lines);
 
-		Tool background_help_lines = new Tool ("background_help_lines", _("Show guidelines at top and bottom margin"), 't');
+		Tool background_help_lines = new Tool ("background_help_lines", t_("Show guidelines at top and bottom margin"), 't');
 		background_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_margin_lines_visible ();
@@ -364,21 +364,21 @@ public class DrawingTools : ToolCollection  {
 		guideline_tools.add_tool (new_grid);
 
 		// Zoom tools 
-		Tool zoom_in = new Tool ("zoom_in", _("Zoom in"), '+', CTRL);
+		Tool zoom_in = new Tool ("zoom_in", t_("Zoom in"), '+', CTRL);
 		zoom_in.select_action.connect ((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_in ();
 		});
 		view_tools.add_tool (zoom_in);
 
-		Tool zoom_out = new Tool ("zoom_out", _("Zoom out"), '-', CTRL);
+		Tool zoom_out = new Tool ("zoom_out", t_("Zoom out"), '-', CTRL);
 		zoom_out.select_action.connect ((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_out ();
 		});
 		view_tools.add_tool (zoom_out);
 
-		Tool reset_zoom = new Tool ("zoom_1_1", _("Zoom to scale 1:1"), '0', CTRL);
+		Tool reset_zoom = new Tool ("zoom_1_1", t_("Zoom to scale 1:1"), '0', CTRL);
 		reset_zoom.select_action.connect ((self) => {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().reset_zoom ();
@@ -386,21 +386,21 @@ public class DrawingTools : ToolCollection  {
 			});
 		view_tools.add_tool (reset_zoom);
 
-		Tool full_glyph = new Tool ("full_glyph", _("Show full glyph"));
+		Tool full_glyph = new Tool ("full_glyph", t_("Show full glyph"));
 		full_glyph.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			zoom_tool.zoom_full_glyph ();
 		});
 		view_tools.add_tool (full_glyph);
 
-		Tool zoom_boundries = new Tool ("zoom_boundries", _("Zoom in at region boundries"), 'v');
+		Tool zoom_boundries = new Tool ("zoom_boundries", t_("Zoom in at region boundries"), 'v');
 		zoom_boundries.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_max ();
 		});
 		view_tools.add_tool (zoom_boundries);
 
-		Tool zoom_bg = new Tool ("zoom_background_image", _("Zoom in background image"));
+		Tool zoom_bg = new Tool ("zoom_background_image", t_("Zoom in background image"));
 		zoom_bg.select_action.connect((self) => {
 			if (MainWindow.get_current_glyph ().get_background_image () != null) {
 				zoom_tool.store_current_view ();					
@@ -413,13 +413,13 @@ public class DrawingTools : ToolCollection  {
 		});
 		view_tools.add_tool (zoom_bg);
 
-		Tool zoom_prev = new Tool ("prev", _("Previous view"), 'j', CTRL);
+		Tool zoom_prev = new Tool ("prev", t_("Previous view"), 'j', CTRL);
 		zoom_prev.select_action.connect((self) => {
 			zoom_tool.previous_view ();
 		});
 		view_tools.add_tool (zoom_prev);
 
-		Tool zoom_next = new Tool ("next", _("Next view"), 'l', CTRL);
+		Tool zoom_next = new Tool ("next", t_("Next view"), 'l', CTRL);
 		zoom_next.select_action.connect((self) => {
 			zoom_tool.next_view ();
 		});
@@ -433,7 +433,7 @@ public class DrawingTools : ToolCollection  {
 		shape_tools.add_tool (rectangle);
 								
 		// background tools
-		background_scale = new SpinButton ("scale_background", _("Set size for background image"));
+		background_scale = new SpinButton ("scale_background", t_("Set size for background image"));
 		background_scale.set_int_value ("1.000");
 		
 		background_scale.new_value_action.connect((self) => {
@@ -463,7 +463,7 @@ public class DrawingTools : ToolCollection  {
 		background_tools.add_tool (cut_background);
 		this.cut_background = cut_background;
 		
-		Tool show_bg = new Tool ("show_background", _("Show/hide background image"));
+		Tool show_bg = new Tool ("show_background", t_("Show/hide background image"));
 		show_bg.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			g.set_background_visible (!g.get_background_visible ());
@@ -471,12 +471,12 @@ public class DrawingTools : ToolCollection  {
 		});
 		background_tools.add_tool (show_bg);
 
-		Tool bg_selection = new Tool ("insert_background", _("Insert a new background image"));
+		Tool bg_selection = new Tool ("insert_background", t_("Insert a new background image"));
 		bg_selection.select_action.connect((self) => {
 			Glyph? g = null;
 			FontDisplay fd = MainWindow.get_current_display ();
 			TooltipArea tp = MainWindow.get_tool_tip ();
-			tp.show_text (_("Creating thumbnails"));
+			tp.show_text (t_("Creating thumbnails"));
 			
 			Tool.yield ();
 		
@@ -495,7 +495,7 @@ public class DrawingTools : ToolCollection  {
 		bg_selection.set_show_background (true);
 		background_tools.add_tool (bg_selection);
 		
-		SpinButton background_contrast = new SpinButton ("background_contrast", _("Set contrast for background image"));
+		SpinButton background_contrast = new SpinButton ("background_contrast", t_("Set contrast for background image"));
 		background_contrast.set_value_round (1);
 
 		background_contrast.new_value_action.connect ((self) => {
@@ -514,7 +514,7 @@ public class DrawingTools : ToolCollection  {
 		});
 
 		// color and style
-		ColorTool stroke_color = new ColorTool (_("Stroke color"));
+		ColorTool stroke_color = new ColorTool (t_("Stroke color"));
 		stroke_color.color_updated.connect (() => {
 			Path.line_color_r = stroke_color.color_r;
 			Path.line_color_g = stroke_color.color_g;
@@ -536,7 +536,7 @@ public class DrawingTools : ToolCollection  {
 		style_tools.add_tool (stroke_color);
 		
 		SpinButton stroke_width;
-		stroke_width = new SpinButton ("stroke_width", _("Stroke width"));
+		stroke_width = new SpinButton ("stroke_width", t_("Stroke width"));
 		
 		if (Preferences.get ("stroke_width") == "") {
 			stroke_width.set_value_round (1);
@@ -556,7 +556,7 @@ public class DrawingTools : ToolCollection  {
 		stroke_width.set_max (4);
 		stroke_width.set_min (0.2);
 
-		ColorTool handle_color = new ColorTool (_("Handle color"));
+		ColorTool handle_color = new ColorTool (t_("Handle color"));
 		handle_color.color_updated.connect (() => {
 			Path.handle_color_r = handle_color.color_r;
 			Path.handle_color_g = handle_color.color_g;
@@ -580,7 +580,7 @@ public class DrawingTools : ToolCollection  {
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
 		
-		precision = new SpinButton ("precision", _("Set precision"));
+		precision = new SpinButton ("precision", t_("Set precision"));
 		
 		if (precision_value != "") {
 			precision.set_value (precision_value);
@@ -604,7 +604,7 @@ public class DrawingTools : ToolCollection  {
 		
 		style_tools.add_tool (precision);
 
-		Tool show_all_line_handles = new Tool ("show_all_line_handles", _("Show all control point handles or only handles for the selected points."));
+		Tool show_all_line_handles = new Tool ("show_all_line_handles", t_("Show all control point handles or only handles for the selected points."));
 		show_all_line_handles.select_action.connect((self) => {
 			Path.show_all_line_handles = !Path.show_all_line_handles;
 			Glyph g = MainWindow.get_current_glyph ();
@@ -613,7 +613,7 @@ public class DrawingTools : ToolCollection  {
 		style_tools.add_tool (show_all_line_handles);
 
 		// fill color
-		ColorTool fill_color = new ColorTool (_("Object color"));
+		ColorTool fill_color = new ColorTool (t_("Object color"));
 		fill_color.color_updated.connect (() => {
 			Path.fill_color_r = fill_color.color_r;
 			Path.fill_color_g = fill_color.color_g;
@@ -634,7 +634,7 @@ public class DrawingTools : ToolCollection  {
 		fill_color.set_a (double.parse (Preferences.get ("fill_color_a")));
 		style_tools.add_tool (fill_color);
 
-		Tool fill_open_path = new Tool ("fill_open_path", _("Set fill color for open paths."));
+		Tool fill_open_path = new Tool ("fill_open_path", t_("Set fill color for open paths."));
 		fill_open_path.select_action.connect((self) => {
 			Path.fill_open_path = !Path.fill_open_path;
 			Glyph g = MainWindow.get_current_glyph ();
@@ -642,7 +642,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		style_tools.add_tool (fill_open_path);
 
-		Tool ttf_units = new Tool ("ttf_units", _("Use TTF units."));
+		Tool ttf_units = new Tool ("ttf_units", t_("Use TTF units."));
 		ttf_units.select_action.connect((self) => {
 			GridTool.ttf_units = !GridTool.ttf_units;
 			Preferences.set ("ttf_units", @"$(GridTool.ttf_units)");
@@ -802,7 +802,7 @@ public class DrawingTools : ToolCollection  {
 	}
 
 	public SpinButton add_new_grid () {
-		SpinButton grid_width = new SpinButton ("grid_width", _("Set size for grid"));
+		SpinButton grid_width = new SpinButton ("grid_width", t_("Set size for grid"));
 		Toolbox tb = MainWindow.get_toolbox ();
 		
 		grid_width.new_value_action.connect((self) => {

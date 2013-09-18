@@ -19,6 +19,9 @@ using Cairo;
 public class Icons {
 	
 	public static ImageSurface? get_icon (string? name) {
+#if ANDROID // FIXME:
+		return null;
+#else
 		ImageSurface? img = null;
 		File f;
 		
@@ -37,6 +40,7 @@ public class Icons {
 		img = new ImageSurface.from_png ((!)f.get_path ());
 		
 		return img;
+#endif
 	}
 
 	public static File find_icon (string name) {

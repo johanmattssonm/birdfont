@@ -17,13 +17,15 @@ using Math;
 namespace BirdFont {
 
 class IntersectionList {
-	public List<Intersection> points = new List<Intersection> ();
+	public List<Intersection> points;
 	
 	public void add (Intersection i) {
 		double d;
 		Intersection l;
 		bool close = false;
-			
+		
+		points = new List<Intersection> ();
+		
 		if (points.length () == 0) {
 			points.append (i);
 			return;

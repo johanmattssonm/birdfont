@@ -106,7 +106,7 @@ public class OverView : FontDisplay {
 	
 	public static void search () {
 		OverView ow = MainWindow.get_overview ();
-		TextListener listener = new TextListener (_("Search"), ow.search_query, _("Filter"));
+		TextListener listener = new TextListener (t_("Search"), ow.search_query, t_("Filter"));
 		
 		listener.signal_text_input.connect ((text) => {
 			OverView o = MainWindow.get_overview ();
@@ -181,7 +181,7 @@ public class OverView : FontDisplay {
 	
 	public override void selected_canvas () {
 		redraw_area (0, 0, allocation.width, allocation.height);
-		KeyBindings.singleton.set_require_modifier (true);
+		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
 	}
 	
@@ -231,7 +231,7 @@ public class OverView : FontDisplay {
 	}
 
 	public override string get_label () {
-		return _("Overview");
+		return t_("Overview");
 	}
 	
 	public override string get_name () {
@@ -369,7 +369,7 @@ public class OverView : FontDisplay {
 		cr.set_source_rgba (156/255.0, 156/255.0, 156/255.0, 1);
 		cr.move_to (30, 40);
 		cr.set_font_size (18);
-		cr.show_text (_("No glyphs in this view."));
+		cr.show_text (t_("No glyphs in this view."));
 		cr.restore ();
 	}
 	
@@ -902,7 +902,7 @@ public class OverView : FontDisplay {
 				} else if (line.has_prefix ("\tx (")) {
 					if (!see_also) {
 						i++;
-						draw_info_line (_("See also:"), cr, x, y, i);
+						draw_info_line (t_("See also:"), cr, x, y, i);
 						i++;
 						see_also = true;
 					}

@@ -20,10 +20,12 @@ class ZoomTool : Tool {
 	int zoom_area_begin_y = -1;
 	
 	int view_index = 0;
-	List<Tab> views = new List<Tab> ();
+	List<Tab> views;
 	
 	public ZoomTool (string n) {
 		base (n, "Zoom", 'z');
+
+		views = new List<Tab> ();
 
 		select_action.connect((self) => {
 		});

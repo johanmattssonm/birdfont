@@ -21,13 +21,15 @@ public class VersionList : DropMenu {
 
 	int versions = 1;
 	int current_version = 0;
-	public List<Glyph> glyphs = new List<Glyph> ();
+	public List<Glyph> glyphs;
 
 	public VersionList (Glyph? g = null) {
 		base ("version");
+		glyphs = new List<Glyph> ();
+		
 		set_direction (MenuDirection.POP_UP);
 		
-		MenuAction ma = add_item (_("New version"));
+		MenuAction ma = add_item (t_("New version"));
 		ma.has_delete_button = false;
 		ma.action = (self) => {
 			return_if_fail (self.parent != null);
@@ -167,7 +169,7 @@ public class VersionList : DropMenu {
 		versions++;
 		glyphs.append (new_version);
 
-		ma = add_item (_("Version") + @" $(versions - 1)");
+		ma = add_item (t_("Version") + @" $(versions - 1)");
 		ma.index = (int) glyphs.length () - 1;
 		
 		ma.action = (self) => {

@@ -822,31 +822,6 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	return bf;
 }
 
-int validate_font (FT_Face face) {
-	// these tables can be validated
-	const FT_Byte* BASE_table = NULL; 
-	const FT_Byte* GDEF_table = NULL;
-	const FT_Byte* GPOS_table = NULL;
-	const FT_Byte* GSUB_table = NULL;
-	const FT_Byte* JSTF_table = NULL;
-	int error;
-
-	error = FT_OpenType_Validate (face, FT_VALIDATE_BASE | FT_VALIDATE_GDEF | FT_VALIDATE_GPOS | FT_VALIDATE_GSUB | FT_VALIDATE_JSTF, &BASE_table, &GDEF_table, &GPOS_table, &GSUB_table, &JSTF_table);
-
-	if (error) {
-		g_warning ("Freetype validation error %d\n", error);
-		return error;
-	} 
-	
-	FT_OpenType_Free (face, BASE_table);
-	FT_OpenType_Free (face, GDEF_table);
-	FT_OpenType_Free (face, GPOS_table);
-	FT_OpenType_Free (face, GSUB_table);
-	FT_OpenType_Free (face, JSTF_table);
-	
-	return error;
-}
-
 /** Load typeface with freetype2 and return the result as a bf font. 
  *  Parameter err will be set to non zero vaule if an error occurs.
  */
@@ -894,32 +869,3 @@ GString* load_freetype_font (char* file, int* err) {
 	return bf;
 }
 
-/** Validate font a font with FreeType */
-guint validate_freetype_font (char* file) {
-	FT_Library library;
-	FT_Face face;
-	int error;
-	
-	error = FT_Init_FreeType (&library);
-	if (error != OK) {
-		g_warning ("Freetype init error %d\n", error);
-		return FALSE;
-	}
-
-	error = FT_New_Face (library, file, 0, &face);
-	if (error) {
-		g_warning ("Freetype font face error %d\n", error);
-		return FALSE;
-	}
-		
-	error = validate_font (face);
-	if (error) {
-		g_warning ("Validation failed.\n", error);
-		return FALSE;
-	}
-
-	FT_Done_Face ( face );
-	FT_Done_FreeType( library );
-	
-	return TRUE;
-}

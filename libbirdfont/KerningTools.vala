@@ -30,7 +30,7 @@ public class KerningTools : ToolCollection  {
 		Expander class_tools = new Expander ();
 		classes = new Expander ();
 		
-		Tool new_kerning_class = new Tool ("kerning_class", _("Create new kerning class"));
+		Tool new_kerning_class = new Tool ("kerning_class", t_("Create new kerning class"));
 		new_kerning_class.select_action.connect ((self) => {
 			classes.add_tool (new KerningRange (@"Kerning class $(++next_class)"));
 			Toolbox.redraw_tool_box ();

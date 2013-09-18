@@ -15,9 +15,10 @@
 namespace BirdFont {
 
 public class PathList : GLib.Object {
-	public List<Path> paths = new List<Path> ();
+	public List<Path> paths;
 	
 	public PathList () {
+		 paths = new List<Path> ();
 	}
 	
 	public void append (PathList pl) {

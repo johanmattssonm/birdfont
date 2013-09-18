@@ -26,13 +26,13 @@ public enum FontFormat {
 public class Font : GLib.Object {
 	
 	/** Table with glyphs sorted by their unicode value. */
-	public GlyphTable glyph_cache = new GlyphTable ();
+	public GlyphTable glyph_cache;
 	
 	/** Table with glyphs sorted by their name. */
-	public GlyphTable glyph_name = new GlyphTable ();
+	public GlyphTable glyph_name;
 
 	/** Table with ligatures. */
-	public GlyphTable ligature = new GlyphTable ();
+	public GlyphTable ligature;
 	
 	public List <string> background_images = new List <string> ();
 	public string background_scale = "1";
@@ -60,14 +60,14 @@ public class Font : GLib.Object {
 	bool modified = false;
 	
 	// name table descriptions
-	public string postscript_name = "Typeface";
-	public string name = "Typeface";
-	public string subfamily = "Regular";
-	public string full_name = "Typeface";
-	public string unique_identifier = "Typeface";
-	public string version = "Version 1.0";
-	public string description = "";
-	public string copyright = "";
+	public string postscript_name;
+	public string name;
+	public string subfamily;
+	public string full_name;
+	public string unique_identifier;
+	public string version;
+	public string description;
+	public string copyright;
 
 	public bool bold = false;
 	public bool italic = false;
@@ -78,14 +78,31 @@ public class Font : GLib.Object {
 	OpenFontFormatReader otf;
 	bool otf_font = false;
 	
-	public List<string> grid_width = new List<string> ();
+	public List<string> grid_width;
 	
 	/** File format. */
 	public FontFormat format = FontFormat.BIRDFONT;
 	
-	KerningClasses kerning_classes = new KerningClasses ();
+	KerningClasses kerning_classes;
 	
 	public Font () {
+		postscript_name = "Typeface";
+		name = "Typeface";
+		subfamily = "Regular";
+		full_name = "Typeface";
+		unique_identifier = "Typeface";
+		version = "Version 1.0";
+		description = "";
+		copyright = "";
+	
+		glyph_cache = new GlyphTable ();
+		glyph_name = new GlyphTable ();
+		ligature = new GlyphTable ();
+	
+		grid_width = new List<string> ();
+	
+		kerning_classes = new KerningClasses ();
+		
 		// positions in pixels at first zoom level
 		// default x-height should be 60 in 1:1
 		top_limit = -84 ;
@@ -516,7 +533,7 @@ public class Font : GLib.Object {
 		}
 		
 		modified = false;
-		add_thumbnail ();
+
 		Preferences.add_recent_files (get_path ());
 		
 		return file_written;
@@ -614,7 +631,6 @@ public class Font : GLib.Object {
 		}*/
 		
 		if (recent) {
-			add_thumbnail ();
 			Preferences.add_recent_files (get_path ());
 		}
 					
@@ -661,49 +677,6 @@ public class Font : GLib.Object {
 		SvgFont svg_font = new SvgFont (this);
 		svg_font.load (path);
 		return true;
-	}
-
-	private void add_thumbnail () {
-		File f = BirdFont.get_thumbnail_directory ().get_child (@"$((!) get_file_name ()).png");
-		Glyph? gl = get_glyph ("a");
-		Glyph g;
-		ImageSurface img;
-		ImageSurface img_scale;
-		Context cr;
-		double scale;
-		
-		if (gl == null) {
-			gl = get_glyph_indice (4);
-		}		
-		
-		if (gl == null) {
-			gl = get_not_def_character ();
-		}
-		
-		g = (!) gl;
-
-		img = g.get_thumbnail ();
-		scale = 70.0 / img.get_width ();
-		
-		if (scale > 70.0 / img.get_height ()) {
-			scale = 70.0 / img.get_height ();
-		}
-		
-		if (scale > 1) {
-			scale = 1;
-		}
-
-		img_scale = new ImageSurface (Format.ARGB32, (int) (scale * img.get_width ()), (int) (scale * img.get_height ()));
-		cr = new Context (img_scale);
-		
-		cr.scale (scale, scale);
-
-		cr.save ();
-		cr.set_source_surface (img, 0, 0);
-		cr.paint ();
-		cr.restore ();
-		
-		img_scale.write_to_png ((!) f.get_path ());
 	}
 
 	/** Callback function for loading glyph in a separate thread. */

@@ -21,9 +21,10 @@ public class KerningList : FontDisplay {
 	
 	int scroll = 0;
 	int visible_rows = 0;
-	WidgetAllocation allocation = new WidgetAllocation ();
+	WidgetAllocation allocation;
 	
 	public KerningList () {
+		allocation = new WidgetAllocation ();
 	}
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
@@ -85,7 +86,7 @@ public class KerningList : FontDisplay {
 	}
 
 	public override string get_label () {
-		return _("Kerning Pairs");
+		return t_("Kerning Pairs");
 	}
 
 	public override string get_name () {

@@ -328,7 +328,7 @@ public class Glyph : FontDisplay {
 	
 	public override void selected_canvas () {
 		add_help_lines ();
-		KeyBindings.singleton.set_require_modifier (false);
+		KeyBindings.set_require_modifier (false);
 		glyph_sequence = Preferences.get ("glyph_sequence");
 		MainWindow.native_window.set_scrollbar_size (0);
 	}

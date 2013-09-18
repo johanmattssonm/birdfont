@@ -173,7 +173,7 @@ public class FileTab : FontDisplay {
 			cr.set_source_rgba (0.3, 0.3, 0.3, 1);
 			cr.set_font_size (18);
 			cr.move_to (50, top - 9);
-			cr.show_text (_("No fonts created yet."));
+			cr.show_text (t_("No fonts created yet."));
 			cr.restore ();
 		}
 		
@@ -182,7 +182,7 @@ public class FileTab : FontDisplay {
 			cr.set_source_rgba (0.3, 0.3, 0.3, 1);
 			cr.set_font_size (18);
 			cr.move_to (50, top - 9);
-			cr.show_text (_("Recent files"));
+			cr.show_text (t_("Recent files"));
 			cr.restore ();
 		}
 		
@@ -206,7 +206,7 @@ public class FileTab : FontDisplay {
 				cr.set_source_rgba (0.3, 0.3, 0.3, 1);
 				cr.set_font_size (18);
 				cr.move_to (50, y + 2 * row_height - 9);
-				cr.show_text (_("Backup"));
+				cr.show_text (t_("Backup"));
 				cr.restore ();
 				s += 2;
 				y += 2 * row_height;
@@ -272,7 +272,7 @@ public class FileTab : FontDisplay {
 	}
 
 	public override string get_label () {
-		return _("Files");
+		return t_("Files");
 	}
 	
 	public override string get_name () {

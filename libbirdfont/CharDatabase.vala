@@ -131,7 +131,7 @@ public class CharDatabase {
 	}
 	
 	public static void show_loading_message () {
-		MainWindow.set_status (_("Loading the unicode character database") + " ...");
+		MainWindow.set_status (t_("Loading the unicode character database") + " ...");
 	}
 	
 	public static void get_full_unicode (GlyphRange glyph_range) {

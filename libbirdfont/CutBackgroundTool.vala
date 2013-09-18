@@ -31,7 +31,7 @@ class CutBackgroundTool : Tool {
 	public signal void new_image (GlyphBackgroundImage file);
 	
 	public CutBackgroundTool (string name) {
-		base (name, _("Crop background image"));
+		base (name, t_("Crop background image"));
 
 		select_action.connect((self) => {
 		});
@@ -191,6 +191,9 @@ class CutBackgroundTool : Tool {
 	}
 
 	void save_img (Surface sr, Glyph g) {
+#if ANDROID
+	return; // FIXME: android
+#else
 		GlyphBackgroundImage newbg;
 		Font f = BirdFont.get_current_font ();
 		File img_dir;
@@ -237,6 +240,7 @@ class CutBackgroundTool : Tool {
 		newbg.img_y = Glyph.path_coordinate_y (fmin (y1, y2)) + hc + 0.5;
 
 		new_image (newbg);
+#endif
 	}
 }
 

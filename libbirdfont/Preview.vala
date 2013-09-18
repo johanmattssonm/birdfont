@@ -24,7 +24,7 @@ public class Preview : FontDisplay {
 	}
 
 	public override string get_label () {
-		return _("Preview");
+		return t_("Preview");
 	}
 	
 	public override void selected_canvas () {

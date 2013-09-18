@@ -24,9 +24,9 @@ public class SaveDialogListener : GLib.Object {
 	public string save_message;
 	
 	public SaveDialogListener () {
-		this.message = _("Save?");
-		this.save_message = _("Save");
-		this.discard_message = _("Discard");
+		this.message = t_("Save?");
+		this.save_message = t_("Save");
+		this.discard_message = t_("Discard");
 	}
 	
 	public void save () {

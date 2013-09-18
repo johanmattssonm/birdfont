@@ -22,7 +22,7 @@ public class Preferences {
 	public static bool draw_boundries = false;
 
 	public Preferences () {
-		data = new HashMap<string, string> ();
+		data = new Gee.HashMap<string, string> ();
 	}
 
 	public static void set_last_file (string fn) {
@@ -80,27 +80,46 @@ public class Preferences {
 	}
 	
 	public static void load () {
-		File app_dir = BirdFont.get_settings_directory ();
-		File settings = app_dir.get_child ("settings");
-
-		data = new HashMap<string, string> ();
-
-		if (!settings.query_exists ()) {
+		File app_dir;
+		File settings;
+		FileStream? settings_file;
+		unowned FileStream b;
+		string? l;
+		
+		printd ("get app");
+		app_dir = BirdFont.get_settings_directory ();
+		
+		if (is_null (app_dir)) {
+			warning ("No app directory.");
 			return;
 		}
 
-		FileStream? settings_file = FileStream.open ((!) settings.get_path (), "r");
+		printd ("get settings file");
+		settings = app_dir.get_child ("settings");
+
+		if (is_null (settings)) {
+			warning ("No setting directory.");
+			return;
+		}
+
+		printd ("create map");
+		data = new HashMap<string, string> ();
+
+		printd ("look at settings");
+		if (!settings.query_exists ()) {
+			return;
+		}
+		
+		printd ("open settings file");
+		settings_file = FileStream.open ((!) settings.get_path (), "r");
 		
 		if (settings_file == null) {
 			stderr.printf ("Failed to load settings from file %s.\n", (!) settings.get_path ());
 			return;
 		}
 		
-		return_if_fail (settings_file != null);
-		
-		unowned FileStream b = (!) settings_file;
-		
-		string? l;
+		printd ("parse settings file");
+		b = (!) settings_file;
 		l = b.read_line ();
 		while ((l = b.read_line ())!= null) {
 			string line;

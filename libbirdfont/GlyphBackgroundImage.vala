@@ -110,8 +110,10 @@ public class GlyphBackgroundImage {
 		}
 		
 		if (background_image == null) {
+#if !ANDROID // FIXME
 			background_image = new ImageSurface.from_png (path);
 			original_image = new ImageSurface.from_png (path);
+#endif
 		}
 		
 		return (!) background_image;
@@ -205,6 +207,7 @@ public class GlyphBackgroundImage {
 	}
 	
 	private void create_png () {
+#if !ANDROID
 		string fn = @"$path.png";
 		
 		Font font = BirdFont.get_current_font ();
@@ -226,6 +229,9 @@ public class GlyphBackgroundImage {
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
+#endif
+
+		// FIXME: android
 	}
 	
 	public void set_img_rotation_from_coordinate (double x, double y) {

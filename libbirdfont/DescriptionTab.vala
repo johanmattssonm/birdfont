@@ -26,7 +26,7 @@ public class DescriptionTab : FontDisplay {
 	}
 
 	public override string get_label () {
-		return _("Description");
+		return t_("Description");
 	}
 }
 

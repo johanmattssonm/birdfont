@@ -21,7 +21,7 @@ public class TabBar : GLib.Object {
 	int width = 0;
 	int height = 0;
 	
-	public List<Tab> tabs = new List<Tab> ();
+	public List<Tab> tabs;
 
 	static const int NO_TAB = -1;
 	static const int NEXT_TAB = -2;
@@ -51,6 +51,8 @@ public class TabBar : GLib.Object {
 	ImageSurface to_previous_tab;
 			
 	public TabBar () {
+		// tabs = new List<Tab> ();
+		
 		tab1_left = Icons.get_icon ("tab1_left.png");
 		tab1_right = Icons.get_icon ("tab1_right.png");
 

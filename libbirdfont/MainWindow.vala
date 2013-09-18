@@ -19,7 +19,6 @@ public class MainWindow {
 	public static Toolbox tools;
 	public static GlyphCanvas glyph_canvas;
 	public static MainWindow singleton;
-	public static KeyBindings key_bindings;
 	public static MenuTab menu_tab;
 	public static FileTab file_tab;
 	public static TooltipArea tool_tip;
@@ -32,7 +31,6 @@ public class MainWindow {
 	public MainWindow () {
 		singleton = this;
 		
-		key_bindings = new KeyBindings ();
 		glyph_canvas = new GlyphCanvas ();
 		tabs = new TabBar ();
 		tools = new Toolbox (glyph_canvas, tabs);
@@ -133,7 +131,7 @@ public class MainWindow {
 	}
 	
 	public static void update_glyph_sequence () {
-		TextListener listener = new TextListener (_("Glyph sequence"), Preferences.get ("glyph_sequence"), _("Close"));
+		TextListener listener = new TextListener (t_("Glyph sequence"), Preferences.get ("glyph_sequence"), t_("Close"));
 		listener.signal_text_input.connect ((text) => {
 			Preferences.set ("glyph_sequence", text);
 			GlyphCanvas.redraw ();
@@ -186,7 +184,7 @@ public class MainWindow {
 	}
 
 	public static string translate (string s) {
-		return _(s);
+		return t_(s);
 	}
 	
 	public static void set_status (string s) {

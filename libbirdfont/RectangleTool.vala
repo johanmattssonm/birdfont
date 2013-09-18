@@ -27,7 +27,7 @@ public class RectangleTool : Tool {
 	bool resize = false;
 	
 	public RectangleTool (string n) {
-		base (n, _("Rectangle"));
+		base (n, t_("Rectangle"));
 
 		press_action.connect((self, b, x, y) => {
 			press (b, x, y);

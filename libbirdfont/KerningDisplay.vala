@@ -40,7 +40,7 @@ public class KerningDisplay : FontDisplay {
 	}
 
 	public override string get_label () {
-		return _("Kerning");
+		return t_("Kerning");
 	}
 	
 	public override string get_name () {
@@ -60,9 +60,9 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public void draw_error_message (WidgetAllocation allocation, Context cr) {
-		string line1 = _("The current kerning class is malformed.");
-		string line2 = _("Add single characters separated by space and ranges on the form A-Z.");
-		string line3 = _("Type “space” to kern the space character and “divis” to kern -.");
+		string line1 = t_("The current kerning class is malformed.");
+		string line2 = t_("Add single characters separated by space and ranges on the form A-Z.");
+		string line3 = t_("Type “space” to kern the space character and “divis” to kern -.");
 		
 		cr.save ();
 		cr.set_source_rgba (1, 1, 1, 1);
@@ -201,7 +201,7 @@ public class KerningDisplay : FontDisplay {
 	}
 
 	private void display_kerning_value (double k) {
-		string kerning_label = _("Kerning:");
+		string kerning_label = t_("Kerning:");
 		MainWindow.get_tool_tip ().show_text (@"$kerning_label $(k)");
 	}
 	
@@ -397,7 +397,7 @@ public class KerningDisplay : FontDisplay {
 		bool append_char = false;
 		Font font = BirdFont.get_current_font ();
 		
-		KeyBindings.singleton.set_require_modifier (true);
+		KeyBindings.set_require_modifier (true);
 		
 		g = MainWindow.get_current_glyph ();
 		s.append_unichar (g.get_unichar ());

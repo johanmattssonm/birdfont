@@ -21,12 +21,16 @@ public class OverWriteDialogListener : GLib.Object {
 	
 	public static bool dont_ask_again = false;
 	
-	public string message = _("Overwrite TTF file?");
-	public string overwrite_message = _("Overwrite");
-	public string cancel_message = _("Cancel");
-	public string dont_ask_again_message = _("Yes, don't ask again.");
+	public string message;
+	public string overwrite_message;
+	public string cancel_message;
+	public string dont_ask_again_message;
 	
 	public OverWriteDialogListener () {
+		message = t_("Overwrite TTF file?");
+		overwrite_message = t_("Overwrite");
+		cancel_message = t_("Cancel");
+		dont_ask_again_message = t_("Yes, don't ask again.");
 	}
 	
 	public void overwrite () {

@@ -32,7 +32,7 @@ class GridTool : Tool {
 	
 	public GridTool (string n) {
 		string units;
-		base (n, _("Show grid"), 'g', NONE);
+		base (n, t_("Show grid"), 'g', NONE);
 		
 		units = Preferences.get ("ttf_units");
 		if (units == "true") {

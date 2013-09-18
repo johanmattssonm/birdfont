@@ -17,13 +17,13 @@ const string GETTEXT_PACKAGE = "birdfont";
 namespace BirdFont {
 	
 static void print_export_help (string[] arg) {
-	stdout.printf (_("Usage:"));
+	stdout.printf (t_("Usage:"));
 	stdout.printf (arg[0]);
 	stdout.printf (" [OPTION ...] FILE\n");
-	stdout.printf ("-h, --help                      " + _("print this message\n"));
-	stdout.printf ("-o, --output [DIRECTORY]        " + _("write files to this directory\n"));
-	stdout.printf ("-s, --svg                       " + _("write svg file\n"));
-	stdout.printf ("-t, --ttf                       " + _("write ttf and eot files\n"));
+	stdout.printf ("-h, --help                      " + t_("print this message\n"));
+	stdout.printf ("-o, --output [DIRECTORY]        " + t_("write files to this directory\n"));
+	stdout.printf ("-s, --svg                       " + t_("write svg file\n"));
+	stdout.printf ("-t, --ttf                       " + t_("write ttf and eot files\n"));
 	stdout.printf ("\n");
 }
 
@@ -117,7 +117,7 @@ public static int run_export (string[] arg) {
 	directory = File.new_for_path (output_directory);
 	
 	if (!directory.query_exists ()) {
-		stderr.printf (_("Can't find output directory") + @"$((!)directory.get_path ())\n");
+		stderr.printf (t_("Can't find output directory") + @"$((!)directory.get_path ())\n");
 		return 1;
 	}
 
@@ -192,6 +192,9 @@ public class BirdFont {
 	public static Font current_font;
 	public static Glyph current_glyph;
 	
+	public BirdFont () {	
+	}
+	
 	/**
 	 * @param arg command line arguments
 	 * @param program path
@@ -202,20 +205,33 @@ public class BirdFont {
 		File font_file;
 		string exec_path;
 
+#if ANDROID
+		BirdFont.logging = true;
+		init_logfile ();
+
+		__android_log_print (ANDROID_LOG_WARN, "BirdFont", @"libbirdfont version $VERSION");
+		LogLevelFlags log_levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
+		Log.set_handler (null, log_levels, android_warning);
+#else
 		stdout.printf ("birdfont version %s\n", VERSION);
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
+#endif
 
+		printd ("Args");
 		args = new Argument.command_line (arg);
-
+		
+		printd ("gettext");
 		if (!args.has_argument ("--no-translation")) {
 			init_gettext ();
 		}
 
+		printd ("help");
 		if (args.has_argument ("--help")) {
 			args.print_help ();
 			Process.exit (0);
 		}
 
+		printd ("validate");
 		err_arg = args.validate ();
 		if (err_arg != 0) {
 			stdout.printf (@"Unknown parameter $(arg [err_arg])\n\n");
@@ -223,13 +239,16 @@ public class BirdFont {
 			Process.exit (0);
 		}
 
+		printd ("preferences");
 		Preferences.load ();
 		
+		printd ("new font");
 		current_font = new Font ();
 		current_font.set_name ("");
 		current_font.initialised = false;
 		current_glyph = new Glyph ("");
-
+		
+		printd ("settings");
 		experimental = args.has_argument ("--test");
 		show_coordinates = args.has_argument ("--show-coordinates");
 		fatal_wanings = args.has_argument ("--fatal-warning");
@@ -240,7 +259,8 @@ public class BirdFont {
 #else
 		mac = args.has_argument ("--mac");
 #endif
-		
+
+		printd ("path");		
 		if (program_path == null) {
 			exec_path = "";
 
@@ -269,16 +289,22 @@ public class BirdFont {
 			}
 		}
 
+		printd ("fatal");
 		if (fatal_wanings) {
 			LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
 			Log.set_handler (null, levels, fatal_warning);
 		}
 		
+		printd ("last file");
 		Preferences.set_last_file (get_current_font ().get_path ());
+		
+		printd ("default set");
 		DefaultCharacterSet.create_default_character_sets ();
 		DefaultCharacterSet.get_characters_for_prefered_language ();
 
 		HeadTable.init ();
+		
+		printd ("Done");
 	}
 
 	public static void set_bundle_path (string path) {
@@ -286,10 +312,13 @@ public class BirdFont {
 	}
 
 	static void init_gettext () {
+		// FIXME: android this should be OK now
+#if !ANDROID
 		string locale_directory = SearchPaths.get_locale_directory ();
 		Intl.setlocale (LocaleCategory.MESSAGES, "");
 		Intl.bind_textdomain_codeset (GETTEXT_PACKAGE, "utf-8");
 		Intl.bindtextdomain (GETTEXT_PACKAGE, locale_directory);
+#endif
 	}
 	
 	public static Font get_current_font () {
@@ -306,6 +335,12 @@ public class BirdFont {
 		stderr.printf ("\n%s\n\n", message);
 		assert (!fatal);
 	}
+
+#if ANDROID
+	internal static void android_warning (string? log_domain, LogLevelFlags log_levels, string message) {
+		__android_log_print (ANDROID_LOG_WARN, "BirdFont", message);
+	}
+#endif
 	
 	internal static Font new_font () {
 		current_font = new Font ();
@@ -334,9 +369,30 @@ public class BirdFont {
 	}
 		
 	internal static File get_settings_directory () {
-		File home = File.new_for_path (Environment.get_home_dir ());
-		File settings = home.get_child (".birdfont");
+		string home_path;
+		File home;
+		File settings;
+
+#if ANDROID
+		home_path = "/data/data/org.birdfont.sefyr/files";
+		home = File.new_for_path (home_path);
+
+		if (!home.query_exists ()) {
+			printd ("Create settings directory.");
+			DirUtils.create ((!) home.get_path (), 0xFFFFFF);
+		}
+#else
+		home_path = Environment.get_home_dir ();
+	
+		if (is_null (home_path)) {
+			warning ("No home directory set.");
+			home_path = ".";
+		}
 		
+		home = File.new_for_path (home_path);
+#endif
+		settings = home.get_child (".birdfont");
+				
 		if (!settings.query_exists ()) {
 			DirUtils.create ((!) settings.get_path (), 0xFFFFFF);
 		}
@@ -410,6 +466,9 @@ internal static void log_warning (string? log_domain, LogLevelFlags log_levels, 
 
 /** Write debug output to logfile. */
 void printd (string s) {
+#if ANDROID
+	__android_log_print (ANDROID_LOG_WARN, "BirdFont", s);
+#else
 	if (unlikely (BirdFont.logging)) {
 		try {
 			if (BirdFont.logstream != null) {
@@ -421,6 +480,17 @@ void printd (string s) {
 			warning (e.message);
 		}
 	}
+#endif
 }
+
+#if ANDROID
+string t_ (string t) {
+	return t;
+}
+#else
+string t_ (string t) {
+	return _(t);
+}
+#endif
 
 }

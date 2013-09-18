@@ -37,6 +37,10 @@ public class Argument : GLib.Object {
 		int i = 0;
 		foreach (string a in args) {
 			
+			if (a == "") {
+				continue;
+			}
+			
 			// program name
 			if (i == 0) {
 				prev = a;
@@ -231,18 +235,18 @@ public class Argument : GLib.Object {
 	public void print_help () 
 		requires (args.length () > 0)
 	{
-		stdout.printf (_("Usage") + ": ");
+		stdout.printf (t_("Usage") + ": ");
 		stdout.printf (args.nth (0).data);
-		stdout.printf (" [" + _("FILE") + "] [" + _("OPTION") + " ...]\n");
+		stdout.printf (" [" + t_("FILE") + "] [" + t_("OPTION") + " ...]\n");
 
-		print_padded ("-c, --show-coordinates", _("show coordinate in glyph view"));
-		print_padded ("-e, --exit", _("exit if a test case fails"));
-		print_padded ("-f, --fatal-warning", _("treat warnings as fatal"));
-		print_padded ("-h, --help", _("show this message"));
-		print_padded ("-m, --mac", _("enable Machintosh customizations"));
-		print_padded ("-n, --no-translation", _("don't translate"));
-		print_padded ("-s, --slow", _("sleep between each command in test suite"));
-		print_padded ("-t --test [TEST]", _("run test case"));
+		print_padded ("-c, --show-coordinates", t_("show coordinate in glyph view"));
+		print_padded ("-e, --exit", t_("exit if a test case fails"));
+		print_padded ("-f, --fatal-warning", t_("treat warnings as fatal"));
+		print_padded ("-h, --help", t_("show this message"));
+		print_padded ("-m, --mac", t_("enable Machintosh customizations"));
+		print_padded ("-n, --no-translation", t_("don't translate"));
+		print_padded ("-s, --slow", t_("sleep between each command in test suite"));
+		print_padded ("-t --test [TEST]", t_("run test case"));
 		
 		stdout.printf ("\n");
 	}

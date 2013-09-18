@@ -33,7 +33,7 @@ public class CircleTool : Tool {
 	bool resize_circle = false;
 	
 	public CircleTool (string n) {
-		base (n, _("Circle"));
+		base (n, t_("Circle"));
 				
 		press_action.connect((self, b, x, y) => {
 			press (b, x, y);

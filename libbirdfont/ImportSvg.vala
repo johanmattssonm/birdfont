@@ -24,7 +24,7 @@ public class ImportSvg {
 		string? p;
 		string path;
 		
-		p = MainWindow.file_chooser_open (_("Import"));
+		p = MainWindow.file_chooser_open (t_("Import"));
 
 		if (p == null) {
 			return;

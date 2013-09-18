@@ -23,9 +23,9 @@ public class Toolbox : GLib.Object  {
 	public DrawingTools drawing_tools;
 	public KerningTools kerning_tools;
 	
-	Tool current_tool = new Tool ("no_icon");
+	Tool current_tool;
 	
-	public Tool press_tool = new Tool (null);
+	public Tool press_tool;
 	
 	public signal void redraw (int x, int y, int w, int h);
 	
@@ -37,6 +37,10 @@ public class Toolbox : GLib.Object  {
 	bool scrolling_toolbox = false;
 	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
+		current_tool = new Tool ("no_icon");
+
+		press_tool = new Tool (null);
+		
 		drawing_tools = new DrawingTools (glyph_canvas);
 		kerning_tools = new KerningTools ();
 		current_set = drawing_tools;

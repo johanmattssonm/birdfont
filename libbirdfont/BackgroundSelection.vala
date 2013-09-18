@@ -38,7 +38,7 @@ class BackgroundSelection : FontDisplay {
 	}
 
 	public override string get_label () {
-		return _("Backgrounds");
+		return t_("Backgrounds");
 	}
 	
 	public override string get_name () {
@@ -87,6 +87,7 @@ class BackgroundSelection : FontDisplay {
 	}
 	
 	private ImageSurface create_thumbnail (string file) throws GLib.Error {
+#if !ANDROID
 		Pixbuf pixbuf;
 		
 		Font font = BirdFont.get_current_font ();
@@ -108,6 +109,9 @@ class BackgroundSelection : FontDisplay {
 		}
 		
 		return new ImageSurface.from_png ((!) png_image.get_path ());
+#else
+		return new ImageSurface (Format.ARGB32, 10, 10); // FIXME: android
+#endif
 	}
 	
 	private bool draw_thumbnail (string file, double x, double y, Context cr, int box_index) {

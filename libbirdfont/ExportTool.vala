@@ -347,9 +347,9 @@ os.put_string (
 </div>
 
 <div>
-	<h4 class="smaller">""" +  _("Alphabet") + """</h4>
-	<p class="smaller">""" + _("a b c d e f g h i j k l m n o p q r s t u v w x y z") + """</p>
-	<p class="smaller">""" + _("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z") + """</p>
+	<h4 class="smaller">""" +  t_("Alphabet") + """</h4>
+	<p class="smaller">""" + t_("a b c d e f g h i j k l m n o p q r s t u v w x y z") + """</p>
+	<p class="smaller">""" + t_("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z") + """</p>
 	<p class="smaller">0 1 2 3 4 5 6 7 8 9</p>
 </div>
 
@@ -513,7 +513,7 @@ os.put_string (
 		string[] spawn_args = get_birdfont_export (folder, temp_file);
 		string c = "";
 
-		MainWindow.set_status (_("Writing TTF and EOT files."));
+		MainWindow.set_status (t_("Writing TTF and EOT files."));
 
 		foreach (string s in spawn_args) {
 			c += s + " ";
@@ -527,7 +527,7 @@ os.put_string (
 	
 	public static bool export_svg_font () {
 		Font font = BirdFont.get_current_font ();
-		MainWindow.set_status (_("Writing SVG file."));
+		MainWindow.set_status (t_("Writing SVG file."));
 		return export_svg_font_path (font.get_folder ());
 	}
 		

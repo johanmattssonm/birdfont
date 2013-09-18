@@ -20,9 +20,10 @@ public class LanguageSelectionTab : FontDisplay {
 	
 	int scroll = 0;
 	int visible_rows = 0;
-	WidgetAllocation allocation = new WidgetAllocation ();
+	WidgetAllocation allocation;
 	
 	public LanguageSelectionTab () {
+		allocation = new WidgetAllocation ();
 	}
 
 	void select_language (int row) {
@@ -88,7 +89,7 @@ public class LanguageSelectionTab : FontDisplay {
 	}
 
 	public override string get_label () {
-		return _("Character Set");
+		return t_("Character Set");
 	}
 	
 	public override string get_name () {

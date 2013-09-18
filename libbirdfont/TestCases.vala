@@ -78,11 +78,6 @@ class TestCases {
 			warning ("File does not exist.");
 		}
 		
-		valid = validate_freetype_font ((!) f.get_path ());
-		if (!valid) {
-			warning ("The font does not pass freetype validation.");
-		}
-		
 		data = load_freetype_font ((!) f.get_path (), out error);
 		if (error != 0) {
 			warning ("Failed to load font.");

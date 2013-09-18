@@ -24,7 +24,7 @@ public enum Direction {
 
 public class Path {
 	
-	public List<EditPoint> points = new List<EditPoint> ();
+	public List<EditPoint> points;
 
 	EditPoint? last_point = null;
 	EditPoint? second_last_point = null;
@@ -84,6 +84,7 @@ public class Path {
 		
 	public Path () {
 		string width;
+		points = new List<EditPoint> ();
 		new_quadratic_points = new List<EditPoint> ();
 		
 		if (edit_point_image == null) {

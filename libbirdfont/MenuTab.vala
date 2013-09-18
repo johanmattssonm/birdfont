@@ -38,7 +38,7 @@ public class MenuTab : FontDisplay {
 	}
 
 	public override string get_label () {
-		return _("Menu");
+		return t_("Menu");
 	}
 		
 	public override string get_name () {
@@ -67,7 +67,7 @@ public class MenuTab : FontDisplay {
 			return false;
 		}
 		
-		fn = MainWindow.file_chooser_save (_("Save"));
+		fn = MainWindow.file_chooser_save (t_("Save"));
 		
 		if (fn != null) {
 			f = (!) fn;
@@ -187,7 +187,7 @@ public class MenuTab : FontDisplay {
 		}
 		
 		f = BirdFont.get_current_font ();
-		fn = MainWindow.file_chooser_open (_("Open"));
+		fn = MainWindow.file_chooser_open (t_("Open"));
 		
 		if (fn != null) {
 			f.delete_backup ();

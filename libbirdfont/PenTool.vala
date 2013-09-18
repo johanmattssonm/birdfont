@@ -26,16 +26,16 @@ public class PenTool : Tool {
 
 	public static bool edit_active_corner = false;
 	
-	public static List<PointSelection> selected_points = new List<PointSelection> (); 
+	public static List<PointSelection> selected_points; 
 
-	public static EditPointHandle active_handle = new EditPointHandle.empty ();
-	public static EditPointHandle selected_handle = new EditPointHandle.empty ();
-	public static PointSelection handle_selection = new PointSelection.empty ();
+	public static EditPointHandle active_handle;
+	public static EditPointHandle selected_handle;
+	public static PointSelection handle_selection;
 	
-	public static EditPoint? active_edit_point = new EditPoint ();
-	public static Path active_path = new Path ();
+	public static EditPoint? active_edit_point;
+	public static Path active_path;
 	
-	public static EditPoint selected_point = new EditPoint ();
+	public static EditPoint selected_point;
 
 	public static bool move_selected_handle = false;
 
@@ -57,19 +57,32 @@ public class PenTool : Tool {
 	/** Move curve handle instead of control point. */
 	private bool last_selected_is_handle = false;
 
-	static List<Path> clockwise = new List<Path> ();
-	static List<Path> counter_clockwise = new List<Path> ();
+	static List<Path> clockwise;
+	static List<Path> counter_clockwise;
 			
 	public PenTool (string name) {
 		string click_to_add_points;
+
+		selected_points = new List<PointSelection> (); 
+
+		active_handle = new EditPointHandle.empty ();
+		selected_handle = new EditPointHandle.empty ();
+		handle_selection = new PointSelection.empty ();
 		
+		active_edit_point = new EditPoint ();
+		active_path = new Path ();
+		
+		selected_point = new EditPoint ();
+		clockwise = new List<Path> ();
+		counter_clockwise = new List<Path> ();
+						
 		if (BirdFont.mac) {
-			click_to_add_points = _("Right click or use left command key and click to add new points");
+			click_to_add_points = t_("Right click or use left command key and click to add new points");
 		} else {
-			click_to_add_points = _("Right click to add new points, left click to move points");
+			click_to_add_points = t_("Right click to add new points, left click to move points");
 		}		
 		
-		base (name, click_to_add_points + " " + _("and double click to add new point on path."), ',', CTRL);
+		base (name, click_to_add_points + " " + t_("and double click to add new point on path."), ',', CTRL);
 		
 		tie_icon = Icons.get_icon ("tie_is_active.png");
 		

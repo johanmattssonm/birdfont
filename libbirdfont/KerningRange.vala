@@ -20,11 +20,12 @@ namespace BirdFont {
 public class KerningRange : Tool {
 	
 	public string ranges = "";
-	public GlyphRange glyph_range = new GlyphRange (); 
+	public GlyphRange glyph_range; 
 	bool malformed = false;
 	
 	public KerningRange (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		base (null , tip, key, modifier_flag);
+		glyph_range = new GlyphRange (); 
 		
 		if (name != null) {
 			base.name = (!) name;
@@ -46,7 +47,7 @@ public class KerningRange : Tool {
 			active = is_over (tx, ty);
 			
 			if (active) {
-				MainWindow.get_tool_tip ().show_text (_("Right click to edit the class and left click to kern glyphs in the class."));
+				MainWindow.get_tool_tip ().show_text (t_("Right click to edit the class and left click to kern glyphs in the class."));
 			}
 		});
 
@@ -76,7 +77,7 @@ public class KerningRange : Tool {
 	
 	public void update_kerning_classes () {
 		KerningDisplay kerning_display = MainWindow.get_kerning_display ();
-		TextListener listener = new TextListener (_("Kerning class"), ranges, _("Set"));
+		TextListener listener = new TextListener (t_("Kerning class"), ranges, t_("Set"));
 		listener.signal_text_input.connect ((text) => {
 			set_ranges (text);
 			Toolbox.redraw_tool_box ();

@@ -24,9 +24,10 @@ public class GlyphCanvas : GLib.Object {
 
 	public FontDisplay current_display;
 	public signal void signal_redraw_area (int x, int y, int w, int h);
-	public static WidgetAllocation allocation = new WidgetAllocation ();
+	public static WidgetAllocation allocation;
 	
 	public GlyphCanvas () {
+		allocation = new WidgetAllocation ();
 	}
 
 	public static WidgetAllocation get_allocation () {

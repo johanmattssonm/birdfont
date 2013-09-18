@@ -80,252 +80,25 @@ public static const uint ALT   = 1 << 2;
 public static const uint SHIFT = 1 << 3;
 public static const uint LOGO  = 1 << 4;
 
-/** A list of all valid key bindings. */
-public class BindingList {
-	static ShortCut[]? nc = null;
-	
-	public static ShortCut[] get_default_bindings () {	
-		
-		if (nc == null) {
-		
-			// add all bindings to this list
-			ShortCut[] default_bindings = { };
-
-			nc = default_bindings;
-		}
-		
-		return nc;
-	}
-}
-
-
-/** Function to be executed for each global key binding. */
-public abstract class ShortCut : GLib.Object {
-	uint modifier = 0;
-	uint key = 0;
-	
-	public abstract void run ();
-	
-	public void set_modifier (uint m) {
-		modifier = m;
-	}
-
-	public void set_key (uint k) {
-		key = k;
-	}
-	
-	public uint get_modifier () {
-		return modifier;
-	}
-	
-	public uint get_key () {
-		return key;
-	}
-	
-	public abstract uint get_default_modifier ();
-	public abstract uint get_default_key ();
-	
-	public abstract unowned string get_description ();
-	
-	public static EqualFunc<ShortCut> equal = (a, b) => {
-		if (a.get_key () != b.get_key ()) return false;
-		if (a.get_modifier () != b.get_modifier ()) return false;
-		if (a.get_description () != b.get_description ()) return false;
-		return true;
-	};
-	
-}
-
 public class KeyBindings {
 	
-	bool modifier_ctrl = false;
-	bool modifier_alt = false;
-	bool modifier_shift = false;
+	static bool modifier_ctrl = false;
+	static bool modifier_alt = false;
+	static bool modifier_shift = false;
 		
 	public static uint modifier = 0;
-	
-	bool require_modifier = false;
-	
-	/** First uint is modifer flag, second uint is keyval */
-	HashTable<uint, HashTable<uint, ShortCut>> short_cuts = new HashTable<uint, HashTable<uint, ShortCut>> (null, null);
-	
-	public static KeyBindings singleton;
-	
-	public KeyBindings () {
-		
-		HashFunc<uint> hash = (v) => {
-			return v;
-		};
-	
-		HashTable<uint, ShortCut> alt_ctrl_shift = new HashTable<uint, ShortCut> (hash, ShortCut.equal);
-		HashTable<uint, ShortCut> alt_shift      = new HashTable<uint, ShortCut> (hash, ShortCut.equal);
-		HashTable<uint, ShortCut> ctrl_shift     = new HashTable<uint, ShortCut> (hash, ShortCut.equal);
-		HashTable<uint, ShortCut> alt            = new HashTable<uint, ShortCut> (hash, ShortCut.equal);
-		HashTable<uint, ShortCut> ctrl           = new HashTable<uint, ShortCut> (hash, ShortCut.equal);
-		
-		// Possible modifiers
-		short_cuts.insert (ALT|CTRL|SHIFT, alt_ctrl_shift);
-		short_cuts.insert (ALT|SHIFT,      alt_shift);
-		short_cuts.insert (CTRL|SHIFT,     ctrl_shift);
-		short_cuts.insert (ALT,            alt);
-		short_cuts.insert (CTRL,           ctrl);
-		
-		// Add default bindings
-		foreach (var b in BindingList.get_default_bindings ()) {
-			add_binding (b);
-		}
-		
-		save ();
-		load ();
-		
-		singleton = this;
-	}
-	
-	public void reset () {
+
+	public static bool require_modifier;
+
+	public static void reset () {
 		modifier = NONE;
 		modifier_ctrl = false;
 		modifier_alt = false;
 		modifier_shift = false;
 	}
-	
-	public void set_require_modifier (bool m) {
-		require_modifier = m;
-	}
-	
-	void load () {
-		File home = File.new_for_path (Environment.get_home_dir ());
-		File settings = home.get_child (".birdfont");
-		File bindings = settings.get_child ("keybindings");
 
-		if (!bindings.query_exists ()) {
-			return;
-		}
-
-		FileStream? bindings_file = FileStream.open ((!) bindings.get_path (), "r");
-		
-		if (bindings_file == null) {
-			stderr.printf ("Failed to load keybindings from file %s.\n", (!) bindings.get_path ());
-			return;
-		}
-		
-		return_if_fail (bindings_file != null);
-		
-		unowned FileStream b = (!) bindings_file;
-		
-		string? l;
-		l = b.read_line ();
-		while ((l = b.read_line ())!= null) {
-			string line;
-			
-			line = (!) l;
-			
-			if (line.get_char (0) == '#') {
-				continue;
-			}
-			
-			int i = 0;
-			int s = 0;
-			
-			i = line.index_of_char(' ', s);
-			string mod = line.substring (s, i - s);
-			
-			s = i + 1;
-			i = line.index_of_char(' ', s);
-			string key = line.substring (s, i - s);
-			
-			s = i + 1;
-			i = line.index_of_char('\n', s);
-			string description = line.substring (s, i - s);
-
-			update_short_cut (mod, key, description);
-		}
-		
-	}
-	
-	void save () {
-		try {
-			File settings = BirdFont.get_settings_directory ();
-			File bindings = settings.get_child ("keybindings");
-			
-			if (bindings.query_exists ()) {
-				bindings.delete ();
-			}
-
-			DataOutputStream os = new DataOutputStream(bindings.create(FileCreateFlags.REPLACE_DESTINATION));
-			uint8[] data;
-			long written = 0;
-			
-			StringBuilder sb = new StringBuilder ();
-			
-			sb.append_printf ("# BirdFont keybindings\n");
-			sb.append_printf ("# Version: 1.0\n");
-			
-			short_cuts.foreach ( (k, v) => {
-				v.foreach ( (k, s) => {
-					sb.append_printf ("%u %u %s\n", s.get_modifier (), s.get_key (), s.get_description ());
-				});
-			});
-			
-			data = sb.str.data;
-			
-			while (written < data.length) { 
-				written += os.write (data[written:data.length]);
-			}
-			
-		} catch (Error e) {
-			stderr.printf ("Can not save key bindings. (%s)", e.message);	
-		}
-		
-	}
-	
-	void update_short_cut (string mod, string key, string description) {
-		ShortCut? sc = null;
-		ShortCut binding;
-		short_cuts.foreach ( (k, ht) => {
-			ht.foreach ((ki, s) => {
-				if (s.get_description () == description) {
-					sc = s;
-				}
-				
-				// ht.remove (ki); // FIXME! why does it remove all items?
-				
-			});
-		});
-		
-		if (unlikely (sc == null)) {
-			stderr.printf ("Can not set bindings for \"%s-%s-%s-\"\n", mod, key, description);
-			return;
-		}
-		
-		binding = (!) sc;
-
-		binding.set_modifier ((uint) uint64.parse (mod));
-		binding.set_key ((uint) uint64.parse (key));
-		
-		add_binding (binding);
-	}
-	
-	void add_binding (ShortCut binding) {
-		uint m = binding.get_modifier ();
-		
-		if (m == 0) {
-			m = binding.get_default_modifier ();
-			binding.set_modifier (m);
-		}
-
-		if (binding.get_key () == 0) {
-			binding.set_key (binding.get_default_key ());
-		}
-		
-		HashTable<uint, ShortCut>? e = short_cuts.lookup (m);
-		
-		if (e == null) {
-			stderr.printf ("Invalid modifier in key binding: expecting ctrl, alt or shift. Flag: (%u) \n", modifier);
-			return;
-		}
-		
-		var events = (!) e;
-		events.insert (binding.get_key (), binding);
+	public static void set_require_modifier (bool t) {
+		require_modifier = t;
 	}
 
 	private static uint get_mod_from_key (uint keyval) {
@@ -349,27 +122,21 @@ public class KeyBindings {
 	public static void set_modifier (uint mod) {
 		modifier = mod;
 
-		singleton.modifier_ctrl = ((modifier & CTRL) > 0);
-		singleton.modifier_alt = ((modifier & ALT) > 0);
-		singleton.modifier_shift = ((modifier & SHIFT) > 0);
+		modifier_ctrl = ((modifier & CTRL) > 0);
+		modifier_alt = ((modifier & ALT) > 0);
+		modifier_shift = ((modifier & SHIFT) > 0);
 	}
 
 	public static bool has_alt () {
-		return singleton.modifier_alt;
+		return modifier_alt;
 	}
 	
 	public static bool has_shift () {
-		return singleton.modifier_shift;
+		return modifier_shift;
 	}
 		
 	public static bool has_ctrl () {
-		return singleton.modifier_ctrl;
-	}
-	
-	public void key_release (uint keyval) {
-	}
-	
-	public void key_press (uint keyval) {
+		return modifier_ctrl;
 	}
 }
 

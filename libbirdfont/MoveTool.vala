@@ -34,7 +34,7 @@ class MoveTool : Tool {
 	static double selection_box_center_y = 0;
 	
 	public MoveTool (string n) {
-		base (n, _("Move paths"), 'm', CTRL);
+		base (n, t_("Move paths"), 'm', CTRL);
 
 		select_action.connect((self) => {
 		});

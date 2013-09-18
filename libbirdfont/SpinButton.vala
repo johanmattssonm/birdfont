@@ -105,7 +105,7 @@ public class SpinButton : Tool {
 	}
 	
 	public void set_from_text () {
-		TextListener listener = new TextListener (_("Set"), get_display_value (), _("Close"));
+		TextListener listener = new TextListener (t_("Set"), get_display_value (), t_("Close"));
 		
 		listener.signal_text_input.connect ((text) => {
 			int new_value = (int) Math.rint (double.parse (text) * 1000);

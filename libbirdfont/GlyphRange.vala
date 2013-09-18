@@ -18,13 +18,14 @@ public class GlyphRange {
 	
 	List<UniRange> ranges;
 	
-	public unowned List<string> unassigned = new List<string> ();
+	public List<string> unassigned;
 	
 	uint32 len = 0;
 	
 	bool range_is_class = false;
 	
 	public GlyphRange () {
+		unassigned = new List<string> ();
 	}
 	
 	public bool is_class () {

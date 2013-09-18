@@ -35,6 +35,8 @@ class BirdFontFile {
 		Xml.Doc* doc;
 		Xml.Node* root;
 		
+		printd (@"Init xml parser.\n");
+		
 		Parser.init ();
 		
 		printd (@"Loading $path\n");

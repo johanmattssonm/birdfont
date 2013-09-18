@@ -36,7 +36,7 @@ class ResizeTool : Tool {
 	static double last_rotate = 0;
 		
 	public ResizeTool (string n) {
-		base (n, _("Resize and rotate paths"));
+		base (n, t_("Resize and rotate paths"));
 		
 		resize_handle = Icons.get_icon ("resize_handle.png");
 	
