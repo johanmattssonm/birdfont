@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-14 17:27+0200\n"
+"POT-Creation-Date: 2013-09-20 23:31+0200\n"
 "PO-Revision-Date: 2013-09-11 10:34+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,488 +17,6 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
 "X-POOTLE-MTIME: 1378895682.0\n"
-
-#: libbirdfont/Argument.vala:234
-msgid "Usage"
-msgstr "用法"
-
-#: libbirdfont/Argument.vala:236
-msgid "FILE"
-msgstr "FILE"
-
-#: libbirdfont/Argument.vala:236
-msgid "OPTION"
-msgstr "OPTION"
-
-#: libbirdfont/Argument.vala:238
-msgid "show coordinate in glyph view"
-msgstr "在字形视图中显示坐标"
-
-#: libbirdfont/Argument.vala:239
-#, fuzzy
-msgid "exit if a test case fails"
-msgstr "当测试案例失败后退出"
-
-#: libbirdfont/Argument.vala:240
-msgid "treat warnings as fatal"
-msgstr "将警告当作错误"
-
-#: libbirdfont/Argument.vala:241
-msgid "show this message"
-msgstr "显示这条消息"
-
-#: libbirdfont/Argument.vala:242
-msgid "enable Machintosh customizations"
-msgstr "启用Mac电脑自定义"
-
-#: libbirdfont/Argument.vala:243
-msgid "don't translate"
-msgstr ""
-
-#: libbirdfont/Argument.vala:244
-msgid "sleep between each command in test suite"
-msgstr "在测试程序的每条命令间休眠"
-
-#: libbirdfont/Argument.vala:245
-msgid "run test case"
-msgstr "执行测试案例"
-
-#: libbirdfont/BackgroundSelection.vala:41
-msgid "Backgrounds"
-msgstr "背景"
-
-#: libbirdfont/BackgroundTool.vala:36
-msgid "Move, resize and rotate background image"
-msgstr "移动，旋转背景图像并调整其大小"
-
-#: libbirdfont/BirdFont.vala:20
-msgid "Usage:"
-msgstr "用法："
-
-#: libbirdfont/BirdFont.vala:23
-msgid "print this message\n"
-msgstr "打印该信息\n"
-
-#: libbirdfont/BirdFont.vala:24
-msgid "write files to this directory\n"
-msgstr "将文件写入此目录\n"
-
-#: libbirdfont/BirdFont.vala:25
-msgid "write svg file\n"
-msgstr "对选定编辑点连接成曲线\n"
-
-#: libbirdfont/BirdFont.vala:26
-msgid "write ttf and eot files\n"
-msgstr "写入TTF及EOT文件\n"
-
-#: libbirdfont/BirdFont.vala:120
-msgid "Can't find output directory"
-msgstr "无法找到输出目录"
-
-#: libbirdfont/CharDatabase.vala:134
-msgid "Loading the unicode character database"
-msgstr ""
-
-#: libbirdfont/CircleTool.vala:36
-msgid "Circle"
-msgstr ""
-
-#: libbirdfont/CutBackgroundTool.vala:34
-msgid "Crop background image"
-msgstr "剪裁背景图像"
-
-#: libbirdfont/DefaultCharactersSet.vala:25
-msgid "Default language"
-msgstr "默认语言"
-
-#: libbirdfont/DefaultCharactersSet.vala:26
-msgid "Private use area"
-msgstr "私用空间"
-
-#: libbirdfont/DefaultCharactersSet.vala:28
-msgid "Chinese"
-msgstr "中文"
-
-#: libbirdfont/DefaultCharactersSet.vala:29
-msgid "English"
-msgstr "英语"
-
-#: libbirdfont/DefaultCharactersSet.vala:30
-msgid "Greek"
-msgstr ""
-
-#: libbirdfont/DefaultCharactersSet.vala:31
-msgid "Japanese"
-msgstr "日语"
-
-#: libbirdfont/DefaultCharactersSet.vala:32
-msgid "Javanese"
-msgstr "爪哇语"
-
-#: libbirdfont/DefaultCharactersSet.vala:33
-msgid "Russian"
-msgstr "俄语"
-
-#: libbirdfont/DefaultCharactersSet.vala:34
-msgid "Swedish"
-msgstr "瑞典语"
-
-#. / All lower case letters in alphabetic order separated by space
-#: libbirdfont/DefaultCharactersSet.vala:112
-msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-
-#. / All upper case letters in alphabetic order separated by space
-#: libbirdfont/DefaultCharactersSet.vala:115
-msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-
-#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1190
-msgid "Description"
-msgstr "描述"
-
-#: libbirdfont/DrawingTools.vala:78
-msgid "Create quadratic Bézier curves"
-msgstr "创建二次贝塞尔曲线"
-
-#: libbirdfont/DrawingTools.vala:86
-msgid "Create cubic Bézier curves"
-msgstr "创建三次贝塞尔曲线"
-
-#: libbirdfont/DrawingTools.vala:94
-msgid "Quadratic path with two line handles"
-msgstr "双柄二次路径"
-
-#: libbirdfont/DrawingTools.vala:102
-msgid "Convert selected points"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:111
-msgid "Tie curve handles for the selected edit point"
-msgstr "对选定编辑点连接曲柄"
-
-#: libbirdfont/DrawingTools.vala:147
-msgid "Symmetrical handles"
-msgstr "对称控制柄"
-
-#: libbirdfont/DrawingTools.vala:169
-msgid "Convert segment to line."
-msgstr "将此分段转换为直线"
-
-#: libbirdfont/DrawingTools.vala:177
-msgid "Merge paths"
-msgstr "合并路径"
-
-#: libbirdfont/DrawingTools.vala:184
-msgid "Create counter from outline"
-msgstr "从轮廓创建孔"
-
-#: libbirdfont/DrawingTools.vala:196
-msgid "Move to path to the bottom layer"
-msgstr "将路径移动到底层"
-
-#: libbirdfont/DrawingTools.vala:207
-msgid "Flip path vertically"
-msgstr "垂直翻转路径"
-
-#: libbirdfont/DrawingTools.vala:214
-msgid "Flip path horizontally"
-msgstr "水平翻转路径"
-
-#: libbirdfont/DrawingTools.vala:222
-msgid "Show full unicode characters set"
-msgstr "显示完整的Unicode字符集"
-
-#: libbirdfont/DrawingTools.vala:238
-msgid "Show default characters set"
-msgstr "显示默认字符集"
-
-#: libbirdfont/DrawingTools.vala:254
-msgid "Show all characters in the font"
-msgstr "显示字体中的全部字符"
-
-#: libbirdfont/DrawingTools.vala:268
-msgid "Delete selected glyph"
-msgstr "删除选定的字形"
-
-#: libbirdfont/DrawingTools.vala:323
-msgid "Show guidelines"
-msgstr "显示准则"
-
-#: libbirdfont/DrawingTools.vala:334
-msgid "Show guidelines for x-height and baseline"
-msgstr "显示x-高度线及底线"
-
-#: libbirdfont/DrawingTools.vala:349
-msgid "Show guidelines at top and bottom margin"
-msgstr "显示顶线及底部边缘线"
-
-#: libbirdfont/DrawingTools.vala:367
-msgid "Zoom in"
-msgstr "放大"
-
-#: libbirdfont/DrawingTools.vala:374
-msgid "Zoom out"
-msgstr "缩小"
-
-#: libbirdfont/DrawingTools.vala:381
-msgid "Zoom to scale 1:1"
-msgstr "缩放至1：1"
-
-#: libbirdfont/DrawingTools.vala:389
-msgid "Show full glyph"
-msgstr "显示完整字形"
-
-#: libbirdfont/DrawingTools.vala:396
-msgid "Zoom in at region boundries"
-msgstr "在区域范围内缩放"
-
-#: libbirdfont/DrawingTools.vala:403
-msgid "Zoom in background image"
-msgstr "缩放背景图像"
-
-#: libbirdfont/DrawingTools.vala:416
-msgid "Previous view"
-msgstr "上一个视图"
-
-#: libbirdfont/DrawingTools.vala:422
-msgid "Next view"
-msgstr "下一个视图"
-
-#: libbirdfont/DrawingTools.vala:436
-msgid "Set size for background image"
-msgstr "设置背景图像的大小"
-
-#: libbirdfont/DrawingTools.vala:466
-msgid "Show/hide background image"
-msgstr "显示或隐藏背景图像"
-
-#: libbirdfont/DrawingTools.vala:474
-msgid "Insert a new background image"
-msgstr "插入新的背景图像"
-
-#: libbirdfont/DrawingTools.vala:479
-msgid "Creating thumbnails"
-msgstr "创建缩略图"
-
-#: libbirdfont/DrawingTools.vala:498
-msgid "Set contrast for background image"
-msgstr "设置背景图像的对比度"
-
-#: libbirdfont/DrawingTools.vala:517
-msgid "Stroke color"
-msgstr "笔划颜色"
-
-#: libbirdfont/DrawingTools.vala:539
-msgid "Stroke width"
-msgstr "笔划宽度"
-
-#: libbirdfont/DrawingTools.vala:559
-msgid "Handle color"
-msgstr "柄颜色"
-
-#: libbirdfont/DrawingTools.vala:583
-msgid "Set precision"
-msgstr "设置精度"
-
-#: libbirdfont/DrawingTools.vala:607
-msgid "Show all control point handles or only handles for the selected points."
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:616
-msgid "Object color"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:637
-msgid "Set fill color for open paths."
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:645
-msgid "Use TTF units."
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:805
-msgid "Set size for grid"
-msgstr "设置网格大小"
-
-#: libbirdfont/ExportTool.vala:516
-msgid "Writing TTF and EOT files."
-msgstr ""
-
-#: libbirdfont/ExportTool.vala:530
-msgid "Writing SVG file."
-msgstr "正在写入SVG文件."
-
-#: libbirdfont/FileTab.vala:176
-msgid "No fonts created yet."
-msgstr ""
-
-#: libbirdfont/FileTab.vala:185
-msgid "Recent files"
-msgstr "最近打开的文件"
-
-#: libbirdfont/FileTab.vala:209
-msgid "Backup"
-msgstr ""
-
-#: libbirdfont/FileTab.vala:275
-msgid "Files"
-msgstr "文件"
-
-#: libbirdfont/GridTool.vala:35
-msgid "Show grid"
-msgstr "显示网格"
-
-#: libbirdfont/ImportSvg.vala:27
-msgid "Import"
-msgstr "导入"
-
-#: libbirdfont/KerningDisplay.vala:43
-msgid "Kerning"
-msgstr "字距"
-
-#: libbirdfont/KerningDisplay.vala:63
-msgid "The current kerning class is malformed."
-msgstr ""
-
-#: libbirdfont/KerningDisplay.vala:64
-msgid "Add single characters separated by space and ranges on the form A-Z."
-msgstr ""
-
-#: libbirdfont/KerningDisplay.vala:65
-msgid "Type “space” to kern the space character and “divis” to kern -."
-msgstr ""
-
-#: libbirdfont/KerningDisplay.vala:204
-#, fuzzy
-msgid "Kerning:"
-msgstr "字距"
-
-#: libbirdfont/KerningList.vala:88
-msgid "Kerning Pairs"
-msgstr ""
-
-#: libbirdfont/KerningRange.vala:49
-msgid ""
-"Right click to edit the class and left click to kern glyphs in the class."
-msgstr ""
-
-#: libbirdfont/KerningRange.vala:79
-msgid "Kerning class"
-msgstr ""
-
-#: libbirdfont/KerningRange.vala:79 libbirdfont/SpinButton.vala:108
-msgid "Set"
-msgstr ""
-
-#: libbirdfont/KerningTools.vala:33
-msgid "Create new kerning class"
-msgstr ""
-
-#: libbirdfont/LanguageSelectionTab.vala:91
-#, fuzzy
-msgid "Character Set"
-msgstr "字符集"
-
-#: libbirdfont/MainWindow.vala:136
-msgid "Glyph sequence"
-msgstr "字形序列"
-
-#: libbirdfont/MainWindow.vala:136 libbirdfont/SpinButton.vala:108
-msgid "Close"
-msgstr "关闭"
-
-#: libbirdfont/MenuTab.vala:41
-msgid "Menu"
-msgstr "菜单"
-
-#: libbirdfont/MenuTab.vala:70 libbirdfont/SaveDialogListener.vala:28
-msgid "Save"
-msgstr "保存"
-
-#: libbirdfont/MenuTab.vala:190
-msgid "Open"
-msgstr "打开"
-
-#: libbirdfont/MoveTool.vala:37
-msgid "Move paths"
-msgstr "移动路径"
-
-#: libbirdfont/OverView.vala:109
-msgid "Search"
-msgstr ""
-
-#: libbirdfont/OverView.vala:109
-msgid "Filter"
-msgstr ""
-
-#: libbirdfont/OverView.vala:234
-msgid "Overview"
-msgstr "概览"
-
-#: libbirdfont/OverView.vala:372
-msgid "No glyphs in this view."
-msgstr "在此视图中没有字形。"
-
-#: libbirdfont/OverView.vala:905
-msgid "See also:"
-msgstr "另见："
-
-#: libbirdfont/OverWriteDialogListener.vala:24
-msgid "Overwrite TTF file?"
-msgstr "覆盖 TTF 文件？"
-
-#: libbirdfont/OverWriteDialogListener.vala:25
-msgid "Overwrite"
-msgstr "覆盖"
-
-#: libbirdfont/OverWriteDialogListener.vala:26
-msgid "Cancel"
-msgstr "取消"
-
-#: libbirdfont/OverWriteDialogListener.vala:27
-msgid "Yes, don't ask again."
-msgstr "是的，不再询问"
-
-#: libbirdfont/PenTool.vala:67
-msgid "Right click or use left command key and click to add new points"
-msgstr "右键单击或使用左侧 command 键加单击以增加新点"
-
-#: libbirdfont/PenTool.vala:69
-msgid "Right click to add new points, left click to move points"
-msgstr "右键单击以增加新点，左键单击以移动点"
-
-#: libbirdfont/PenTool.vala:72
-msgid "and double click to add new point on path."
-msgstr "双击可以在已有路径上增加新点。"
-
-#: libbirdfont/Preview.vala:27
-msgid "Preview"
-msgstr "预览"
-
-#: libbirdfont/RectangleTool.vala:30
-msgid "Rectangle"
-msgstr ""
-
-#: libbirdfont/ResizeTool.vala:39
-msgid "Resize and rotate paths"
-msgstr ""
-
-#: libbirdfont/SaveDialogListener.vala:27
-msgid "Save?"
-msgstr "保存？"
-
-#: libbirdfont/SaveDialogListener.vala:29
-msgid "Discard"
-msgstr "放弃"
-
-#: libbirdfont/VersionList.vala:30
-msgid "New version"
-msgstr "新版本"
-
-#: libbirdfont/VersionList.vala:170 birdfont/GtkWindow.vala:1183
-msgid "Version"
-msgstr "版本"
 
 #: birdfont/GtkWindow.vala:463
 msgid "_New"
@@ -718,9 +236,8 @@ msgid "_Kerning"
 msgstr "字距（_K）"
 
 #: birdfont/GtkWindow.vala:1127
-#, fuzzy
 msgid "PostScript Name"
-msgstr "Postscript 名称"
+msgstr ""
 
 #: birdfont/GtkWindow.vala:1134
 msgid "Name"
@@ -750,9 +267,302 @@ msgstr "全名（名称和样式）"
 msgid "Unique identifier"
 msgstr "唯一标识符"
 
+#: birdfont/GtkWindow.vala:1183
+msgid "Version"
+msgstr "版本"
+
+#: birdfont/GtkWindow.vala:1190
+msgid "Description"
+msgstr "描述"
+
 #: birdfont/GtkWindow.vala:1198
 msgid "Copyright"
 msgstr "版权"
+
+#~ msgid "Usage"
+#~ msgstr "用法"
+
+#~ msgid "FILE"
+#~ msgstr "FILE"
+
+#~ msgid "OPTION"
+#~ msgstr "OPTION"
+
+#~ msgid "show coordinate in glyph view"
+#~ msgstr "在字形视图中显示坐标"
+
+#~ msgid "treat warnings as fatal"
+#~ msgstr "将警告当作错误"
+
+#~ msgid "show this message"
+#~ msgstr "显示这条消息"
+
+#~ msgid "enable Machintosh customizations"
+#~ msgstr "启用Mac电脑自定义"
+
+#~ msgid "sleep between each command in test suite"
+#~ msgstr "在测试程序的每条命令间休眠"
+
+#~ msgid "run test case"
+#~ msgstr "执行测试案例"
+
+#~ msgid "Backgrounds"
+#~ msgstr "背景"
+
+#~ msgid "Move, resize and rotate background image"
+#~ msgstr "移动，旋转背景图像并调整其大小"
+
+#~ msgid "Usage:"
+#~ msgstr "用法："
+
+#~ msgid "print this message\n"
+#~ msgstr "打印该信息\n"
+
+#~ msgid "write files to this directory\n"
+#~ msgstr "将文件写入此目录\n"
+
+#~ msgid "write svg file\n"
+#~ msgstr "对选定编辑点连接成曲线\n"
+
+#~ msgid "write ttf and eot files\n"
+#~ msgstr "写入TTF及EOT文件\n"
+
+#~ msgid "Can't find output directory"
+#~ msgstr "无法找到输出目录"
+
+#~ msgid "Crop background image"
+#~ msgstr "剪裁背景图像"
+
+#~ msgid "Default language"
+#~ msgstr "默认语言"
+
+#~ msgid "Private use area"
+#~ msgstr "私用空间"
+
+#~ msgid "Chinese"
+#~ msgstr "中文"
+
+#~ msgid "English"
+#~ msgstr "英语"
+
+#~ msgid "Japanese"
+#~ msgstr "日语"
+
+#~ msgid "Javanese"
+#~ msgstr "爪哇语"
+
+#~ msgid "Russian"
+#~ msgstr "俄语"
+
+#~ msgid "Swedish"
+#~ msgstr "瑞典语"
+
+#~ msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+#~ msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+
+#~ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+#~ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+
+#~ msgid "Create quadratic Bézier curves"
+#~ msgstr "创建二次贝塞尔曲线"
+
+#~ msgid "Create cubic Bézier curves"
+#~ msgstr "创建三次贝塞尔曲线"
+
+#~ msgid "Quadratic path with two line handles"
+#~ msgstr "双柄二次路径"
+
+#~ msgid "Tie curve handles for the selected edit point"
+#~ msgstr "对选定编辑点连接曲柄"
+
+#~ msgid "Symmetrical handles"
+#~ msgstr "对称控制柄"
+
+#~ msgid "Convert segment to line."
+#~ msgstr "将此分段转换为直线"
+
+#~ msgid "Merge paths"
+#~ msgstr "合并路径"
+
+#~ msgid "Create counter from outline"
+#~ msgstr "从轮廓创建孔"
+
+#~ msgid "Move to path to the bottom layer"
+#~ msgstr "将路径移动到底层"
+
+#~ msgid "Flip path vertically"
+#~ msgstr "垂直翻转路径"
+
+#~ msgid "Flip path horizontally"
+#~ msgstr "水平翻转路径"
+
+#~ msgid "Show full unicode characters set"
+#~ msgstr "显示完整的Unicode字符集"
+
+#~ msgid "Show default characters set"
+#~ msgstr "显示默认字符集"
+
+#~ msgid "Show all characters in the font"
+#~ msgstr "显示字体中的全部字符"
+
+#~ msgid "Delete selected glyph"
+#~ msgstr "删除选定的字形"
+
+#~ msgid "Show guidelines"
+#~ msgstr "显示准则"
+
+#~ msgid "Show guidelines for x-height and baseline"
+#~ msgstr "显示x-高度线及底线"
+
+#~ msgid "Show guidelines at top and bottom margin"
+#~ msgstr "显示顶线及底部边缘线"
+
+#~ msgid "Zoom in"
+#~ msgstr "放大"
+
+#~ msgid "Zoom out"
+#~ msgstr "缩小"
+
+#~ msgid "Zoom to scale 1:1"
+#~ msgstr "缩放至1：1"
+
+#~ msgid "Show full glyph"
+#~ msgstr "显示完整字形"
+
+#~ msgid "Zoom in at region boundries"
+#~ msgstr "在区域范围内缩放"
+
+#~ msgid "Zoom in background image"
+#~ msgstr "缩放背景图像"
+
+#~ msgid "Previous view"
+#~ msgstr "上一个视图"
+
+#~ msgid "Next view"
+#~ msgstr "下一个视图"
+
+#~ msgid "Set size for background image"
+#~ msgstr "设置背景图像的大小"
+
+#~ msgid "Show/hide background image"
+#~ msgstr "显示或隐藏背景图像"
+
+#~ msgid "Insert a new background image"
+#~ msgstr "插入新的背景图像"
+
+#~ msgid "Creating thumbnails"
+#~ msgstr "创建缩略图"
+
+#~ msgid "Set contrast for background image"
+#~ msgstr "设置背景图像的对比度"
+
+#~ msgid "Stroke color"
+#~ msgstr "笔划颜色"
+
+#~ msgid "Stroke width"
+#~ msgstr "笔划宽度"
+
+#~ msgid "Handle color"
+#~ msgstr "柄颜色"
+
+#~ msgid "Set precision"
+#~ msgstr "设置精度"
+
+#~ msgid "Set size for grid"
+#~ msgstr "设置网格大小"
+
+#~ msgid "Writing SVG file."
+#~ msgstr "正在写入SVG文件."
+
+#~ msgid "Recent files"
+#~ msgstr "最近打开的文件"
+
+#~ msgid "Files"
+#~ msgstr "文件"
+
+#~ msgid "Show grid"
+#~ msgstr "显示网格"
+
+#~ msgid "Import"
+#~ msgstr "导入"
+
+#~ msgid "Kerning"
+#~ msgstr "字距"
+
+#, fuzzy
+#~ msgid "Kerning:"
+#~ msgstr "字距"
+
+#, fuzzy
+#~ msgid "Character Set"
+#~ msgstr "字符集"
+
+#~ msgid "Glyph sequence"
+#~ msgstr "字形序列"
+
+#~ msgid "Close"
+#~ msgstr "关闭"
+
+#~ msgid "Menu"
+#~ msgstr "菜单"
+
+#~ msgid "Save"
+#~ msgstr "保存"
+
+#~ msgid "Open"
+#~ msgstr "打开"
+
+#~ msgid "Move paths"
+#~ msgstr "移动路径"
+
+#~ msgid "Overview"
+#~ msgstr "概览"
+
+#~ msgid "No glyphs in this view."
+#~ msgstr "在此视图中没有字形。"
+
+#~ msgid "See also:"
+#~ msgstr "另见："
+
+#~ msgid "Overwrite TTF file?"
+#~ msgstr "覆盖 TTF 文件？"
+
+#~ msgid "Overwrite"
+#~ msgstr "覆盖"
+
+#~ msgid "Cancel"
+#~ msgstr "取消"
+
+#~ msgid "Yes, don't ask again."
+#~ msgstr "是的，不再询问"
+
+#~ msgid "Right click or use left command key and click to add new points"
+#~ msgstr "右键单击或使用左侧 command 键加单击以增加新点"
+
+#~ msgid "Right click to add new points, left click to move points"
+#~ msgstr "右键单击以增加新点，左键单击以移动点"
+
+#~ msgid "and double click to add new point on path."
+#~ msgstr "双击可以在已有路径上增加新点。"
+
+#~ msgid "Preview"
+#~ msgstr "预览"
+
+#~ msgid "Save?"
+#~ msgstr "保存？"
+
+#~ msgid "Discard"
+#~ msgstr "放弃"
+
+#~ msgid "New version"
+#~ msgstr "新版本"
+
+#~ msgid "exit if a test case failes"
+#~ msgstr "当测试案例失败后退出"
+
+#, fuzzy
+#~ msgid "Postscript Name"
+#~ msgstr "Postscript 名称"
 
 #~ msgid "Writing"
 #~ msgstr "正在写入"

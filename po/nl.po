@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-14 17:27+0200\n"
+"POT-Creation-Date: 2013-09-20 23:31+0200\n"
 "PO-Revision-Date: 2013-03-24 20:07+0000\n"
 "Last-Translator: Sven <sven@santegoeds.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,490 +17,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
 "X-POOTLE-MTIME: 1364155678.0\n"
-
-#: libbirdfont/Argument.vala:234
-msgid "Usage"
-msgstr "Gebruik"
-
-#: libbirdfont/Argument.vala:236
-msgid "FILE"
-msgstr "BESTAND"
-
-#: libbirdfont/Argument.vala:236
-msgid "OPTION"
-msgstr "OPTIE"
-
-#: libbirdfont/Argument.vala:238
-msgid "show coordinate in glyph view"
-msgstr "toon coördinaten in glief zicht"
-
-#: libbirdfont/Argument.vala:239
-#, fuzzy
-msgid "exit if a test case fails"
-msgstr "afsluiten als een test case faalt"
-
-#: libbirdfont/Argument.vala:240
-msgid "treat warnings as fatal"
-msgstr "behandel waarschuwing als fataal"
-
-#: libbirdfont/Argument.vala:241
-msgid "show this message"
-msgstr "toon dit bericht"
-
-#: libbirdfont/Argument.vala:242
-msgid "enable Machintosh customizations"
-msgstr "Macintosh aanpassingen aanzetten"
-
-#: libbirdfont/Argument.vala:243
-msgid "don't translate"
-msgstr ""
-
-#: libbirdfont/Argument.vala:244
-msgid "sleep between each command in test suite"
-msgstr "sluimer tussen elke opdracht in test suite"
-
-#: libbirdfont/Argument.vala:245
-msgid "run test case"
-msgstr "test case uitvoeren"
-
-#: libbirdfont/BackgroundSelection.vala:41
-msgid "Backgrounds"
-msgstr ""
-
-#: libbirdfont/BackgroundTool.vala:36
-msgid "Move, resize and rotate background image"
-msgstr "Verplaats, vergroot of verklein en draai achtergrond afbeelding"
-
-#: libbirdfont/BirdFont.vala:20
-msgid "Usage:"
-msgstr "Gebruik:"
-
-#: libbirdfont/BirdFont.vala:23
-msgid "print this message\n"
-msgstr "druk dit bericht af\n"
-
-#: libbirdfont/BirdFont.vala:24
-msgid "write files to this directory\n"
-msgstr "schrijf bestanden naar deze locatie\n"
-
-#: libbirdfont/BirdFont.vala:25
-msgid "write svg file\n"
-msgstr "schrijf svg bestand\n"
-
-#: libbirdfont/BirdFont.vala:26
-msgid "write ttf and eot files\n"
-msgstr "schrijf ttf en oet bestanden\n"
-
-#: libbirdfont/BirdFont.vala:120
-msgid "Can't find output directory"
-msgstr "Kan output locatie niet vinden"
-
-#: libbirdfont/CharDatabase.vala:134
-msgid "Loading the unicode character database"
-msgstr ""
-
-#: libbirdfont/CircleTool.vala:36
-msgid "Circle"
-msgstr ""
-
-#: libbirdfont/CutBackgroundTool.vala:34
-msgid "Crop background image"
-msgstr "Knip achtergrond afbeelding"
-
-#: libbirdfont/DefaultCharactersSet.vala:25
-msgid "Default language"
-msgstr ""
-
-#: libbirdfont/DefaultCharactersSet.vala:26
-msgid "Private use area"
-msgstr ""
-
-#: libbirdfont/DefaultCharactersSet.vala:28
-msgid "Chinese"
-msgstr ""
-
-#: libbirdfont/DefaultCharactersSet.vala:29
-msgid "English"
-msgstr ""
-
-#: libbirdfont/DefaultCharactersSet.vala:30
-msgid "Greek"
-msgstr ""
-
-#: libbirdfont/DefaultCharactersSet.vala:31
-msgid "Japanese"
-msgstr ""
-
-#: libbirdfont/DefaultCharactersSet.vala:32
-msgid "Javanese"
-msgstr ""
-
-#: libbirdfont/DefaultCharactersSet.vala:33
-msgid "Russian"
-msgstr ""
-
-#: libbirdfont/DefaultCharactersSet.vala:34
-msgid "Swedish"
-msgstr ""
-
-#. / All lower case letters in alphabetic order separated by space
-#: libbirdfont/DefaultCharactersSet.vala:112
-msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-
-#. / All upper case letters in alphabetic order separated by space
-#: libbirdfont/DefaultCharactersSet.vala:115
-msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-
-#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1190
-msgid "Description"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:78
-msgid "Create quadratic Bézier curves"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:86
-msgid "Create cubic Bézier curves"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:94
-msgid "Quadratic path with two line handles"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:102
-msgid "Convert selected points"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:111
-msgid "Tie curve handles for the selected edit point"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:147
-msgid "Symmetrical handles"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:169
-msgid "Convert segment to line."
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:177
-msgid "Merge paths"
-msgstr "Paden samenvoegen"
-
-#: libbirdfont/DrawingTools.vala:184
-msgid "Create counter from outline"
-msgstr "Creëer tegenstelling van omlijning"
-
-#: libbirdfont/DrawingTools.vala:196
-msgid "Move to path to the bottom layer"
-msgstr "Verplaats naar pad naar de onderste laag"
-
-#: libbirdfont/DrawingTools.vala:207
-msgid "Flip path vertically"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:214
-msgid "Flip path horizontally"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:222
-msgid "Show full unicode characters set"
-msgstr "Toon volledig unicode karater set"
-
-#: libbirdfont/DrawingTools.vala:238
-msgid "Show default characters set"
-msgstr "Toon standaard karakter set"
-
-#: libbirdfont/DrawingTools.vala:254
-msgid "Show all characters in the font"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:268
-msgid "Delete selected glyph"
-msgstr "Verwijder geselecteerde glief"
-
-#: libbirdfont/DrawingTools.vala:323
-msgid "Show guidelines"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:334
-#, fuzzy
-msgid "Show guidelines for x-height and baseline"
-msgstr "Toon hulplijnen voor x-hoogte en basislijn"
-
-#: libbirdfont/DrawingTools.vala:349
-#, fuzzy
-msgid "Show guidelines at top and bottom margin"
-msgstr "Toon hulplijnen aan boven- en ondermarge"
-
-#: libbirdfont/DrawingTools.vala:367
-msgid "Zoom in"
-msgstr "Inzoomen"
-
-#: libbirdfont/DrawingTools.vala:374
-msgid "Zoom out"
-msgstr "Uitzoomen"
-
-#: libbirdfont/DrawingTools.vala:381
-msgid "Zoom to scale 1:1"
-msgstr "Zoom naar schaal 1:1"
-
-#: libbirdfont/DrawingTools.vala:389
-msgid "Show full glyph"
-msgstr "Toon volledig glief"
-
-#: libbirdfont/DrawingTools.vala:396
-msgid "Zoom in at region boundries"
-msgstr "Zoom in op regio grenzen"
-
-#: libbirdfont/DrawingTools.vala:403
-msgid "Zoom in background image"
-msgstr "Zoom in op achtergrond afbeelding"
-
-#: libbirdfont/DrawingTools.vala:416
-msgid "Previous view"
-msgstr "Vorige weergave"
-
-#: libbirdfont/DrawingTools.vala:422
-msgid "Next view"
-msgstr "Volgende weergave"
-
-#: libbirdfont/DrawingTools.vala:436
-msgid "Set size for background image"
-msgstr "Stel grootte in voor achtergrond afbeelding"
-
-#: libbirdfont/DrawingTools.vala:466
-msgid "Show/hide background image"
-msgstr "Toon/verberg achtergrond afbeelding"
-
-#: libbirdfont/DrawingTools.vala:474
-msgid "Insert a new background image"
-msgstr "Voeg een nieuwe achtergrond afbeelding toe"
-
-#: libbirdfont/DrawingTools.vala:479
-msgid "Creating thumbnails"
-msgstr "Creëer miniaturen"
-
-#: libbirdfont/DrawingTools.vala:498
-msgid "Set contrast for background image"
-msgstr "Stel contrast voor achtergrond afbeelding in"
-
-#: libbirdfont/DrawingTools.vala:517
-msgid "Stroke color"
-msgstr "Lijnkleur"
-
-#: libbirdfont/DrawingTools.vala:539
-msgid "Stroke width"
-msgstr "Lijnbreedte"
-
-#: libbirdfont/DrawingTools.vala:559
-msgid "Handle color"
-msgstr "Kleur greep"
-
-#: libbirdfont/DrawingTools.vala:583
-msgid "Set precision"
-msgstr "Stel precisie in"
-
-#: libbirdfont/DrawingTools.vala:607
-msgid "Show all control point handles or only handles for the selected points."
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:616
-msgid "Object color"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:637
-msgid "Set fill color for open paths."
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:645
-msgid "Use TTF units."
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:805
-msgid "Set size for grid"
-msgstr "Stel grootte voor rooster in"
-
-#: libbirdfont/ExportTool.vala:516
-msgid "Writing TTF and EOT files."
-msgstr ""
-
-#: libbirdfont/ExportTool.vala:530
-msgid "Writing SVG file."
-msgstr ""
-
-#: libbirdfont/FileTab.vala:176
-msgid "No fonts created yet."
-msgstr ""
-
-#: libbirdfont/FileTab.vala:185
-msgid "Recent files"
-msgstr "Recente bestanden"
-
-#: libbirdfont/FileTab.vala:209
-msgid "Backup"
-msgstr ""
-
-#: libbirdfont/FileTab.vala:275
-msgid "Files"
-msgstr ""
-
-#: libbirdfont/GridTool.vala:35
-msgid "Show grid"
-msgstr "Toon rooster"
-
-#: libbirdfont/ImportSvg.vala:27
-msgid "Import"
-msgstr "Importeren"
-
-#: libbirdfont/KerningDisplay.vala:43
-msgid "Kerning"
-msgstr "Overhang"
-
-#: libbirdfont/KerningDisplay.vala:63
-msgid "The current kerning class is malformed."
-msgstr ""
-
-#: libbirdfont/KerningDisplay.vala:64
-msgid "Add single characters separated by space and ranges on the form A-Z."
-msgstr ""
-
-#: libbirdfont/KerningDisplay.vala:65
-msgid "Type “space” to kern the space character and “divis” to kern -."
-msgstr ""
-
-#: libbirdfont/KerningDisplay.vala:204
-msgid "Kerning:"
-msgstr ""
-
-#: libbirdfont/KerningList.vala:88
-msgid "Kerning Pairs"
-msgstr ""
-
-#: libbirdfont/KerningRange.vala:49
-msgid ""
-"Right click to edit the class and left click to kern glyphs in the class."
-msgstr ""
-
-#: libbirdfont/KerningRange.vala:79
-msgid "Kerning class"
-msgstr ""
-
-#: libbirdfont/KerningRange.vala:79 libbirdfont/SpinButton.vala:108
-msgid "Set"
-msgstr ""
-
-#: libbirdfont/KerningTools.vala:33
-msgid "Create new kerning class"
-msgstr ""
-
-#: libbirdfont/LanguageSelectionTab.vala:91
-msgid "Character Set"
-msgstr ""
-
-#: libbirdfont/MainWindow.vala:136
-msgid "Glyph sequence"
-msgstr "Glief volgorde"
-
-#: libbirdfont/MainWindow.vala:136 libbirdfont/SpinButton.vala:108
-msgid "Close"
-msgstr ""
-
-#: libbirdfont/MenuTab.vala:41
-msgid "Menu"
-msgstr "Menu"
-
-#: libbirdfont/MenuTab.vala:70 libbirdfont/SaveDialogListener.vala:28
-msgid "Save"
-msgstr "Opslaan"
-
-#: libbirdfont/MenuTab.vala:190
-msgid "Open"
-msgstr "_Openen"
-
-#: libbirdfont/MoveTool.vala:37
-msgid "Move paths"
-msgstr "Paden verplaatsen"
-
-#: libbirdfont/OverView.vala:109
-msgid "Search"
-msgstr ""
-
-#: libbirdfont/OverView.vala:109
-msgid "Filter"
-msgstr ""
-
-#: libbirdfont/OverView.vala:234
-msgid "Overview"
-msgstr "Overzicht"
-
-#: libbirdfont/OverView.vala:372
-msgid "No glyphs in this view."
-msgstr ""
-
-#: libbirdfont/OverView.vala:905
-msgid "See also:"
-msgstr ""
-
-#: libbirdfont/OverWriteDialogListener.vala:24
-msgid "Overwrite TTF file?"
-msgstr ""
-
-#: libbirdfont/OverWriteDialogListener.vala:25
-msgid "Overwrite"
-msgstr ""
-
-#: libbirdfont/OverWriteDialogListener.vala:26
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: libbirdfont/OverWriteDialogListener.vala:27
-msgid "Yes, don't ask again."
-msgstr ""
-
-#: libbirdfont/PenTool.vala:67
-msgid "Right click or use left command key and click to add new points"
-msgstr ""
-
-#: libbirdfont/PenTool.vala:69
-msgid "Right click to add new points, left click to move points"
-msgstr ""
-"Rechts klik om nieuwe punten toe te voegen, links klik om punten te "
-"verplaatsen"
-
-#: libbirdfont/PenTool.vala:72
-msgid "and double click to add new point on path."
-msgstr "en dubbel klik om nieuwe punten op het pad te plaatsen"
-
-#: libbirdfont/Preview.vala:27
-msgid "Preview"
-msgstr "Voorbeeld"
-
-#: libbirdfont/RectangleTool.vala:30
-msgid "Rectangle"
-msgstr ""
-
-#: libbirdfont/ResizeTool.vala:39
-msgid "Resize and rotate paths"
-msgstr ""
-
-#: libbirdfont/SaveDialogListener.vala:27
-msgid "Save?"
-msgstr "Opslaan?"
-
-#: libbirdfont/SaveDialogListener.vala:29
-msgid "Discard"
-msgstr "Verwerpen"
-
-#: libbirdfont/VersionList.vala:30
-msgid "New version"
-msgstr "Nieuwe versie"
-
-#: libbirdfont/VersionList.vala:170 birdfont/GtkWindow.vala:1183
-msgid "Version"
-msgstr "Versie"
 
 #: birdfont/GtkWindow.vala:463
 msgid "_New"
@@ -742,9 +258,210 @@ msgstr ""
 msgid "Unique identifier"
 msgstr ""
 
+#: birdfont/GtkWindow.vala:1183
+msgid "Version"
+msgstr "Versie"
+
+#: birdfont/GtkWindow.vala:1190
+msgid "Description"
+msgstr ""
+
 #: birdfont/GtkWindow.vala:1198
 msgid "Copyright"
 msgstr ""
+
+#~ msgid "Usage"
+#~ msgstr "Gebruik"
+
+#~ msgid "FILE"
+#~ msgstr "BESTAND"
+
+#~ msgid "OPTION"
+#~ msgstr "OPTIE"
+
+#~ msgid "show coordinate in glyph view"
+#~ msgstr "toon coördinaten in glief zicht"
+
+#~ msgid "treat warnings as fatal"
+#~ msgstr "behandel waarschuwing als fataal"
+
+#~ msgid "show this message"
+#~ msgstr "toon dit bericht"
+
+#~ msgid "enable Machintosh customizations"
+#~ msgstr "Macintosh aanpassingen aanzetten"
+
+#~ msgid "sleep between each command in test suite"
+#~ msgstr "sluimer tussen elke opdracht in test suite"
+
+#~ msgid "run test case"
+#~ msgstr "test case uitvoeren"
+
+#~ msgid "Move, resize and rotate background image"
+#~ msgstr "Verplaats, vergroot of verklein en draai achtergrond afbeelding"
+
+#~ msgid "Usage:"
+#~ msgstr "Gebruik:"
+
+#~ msgid "print this message\n"
+#~ msgstr "druk dit bericht af\n"
+
+#~ msgid "write files to this directory\n"
+#~ msgstr "schrijf bestanden naar deze locatie\n"
+
+#~ msgid "write svg file\n"
+#~ msgstr "schrijf svg bestand\n"
+
+#~ msgid "write ttf and eot files\n"
+#~ msgstr "schrijf ttf en oet bestanden\n"
+
+#~ msgid "Can't find output directory"
+#~ msgstr "Kan output locatie niet vinden"
+
+#~ msgid "Crop background image"
+#~ msgstr "Knip achtergrond afbeelding"
+
+#~ msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+#~ msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+
+#~ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+#~ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+
+#~ msgid "Merge paths"
+#~ msgstr "Paden samenvoegen"
+
+#~ msgid "Create counter from outline"
+#~ msgstr "Creëer tegenstelling van omlijning"
+
+#~ msgid "Move to path to the bottom layer"
+#~ msgstr "Verplaats naar pad naar de onderste laag"
+
+#~ msgid "Show full unicode characters set"
+#~ msgstr "Toon volledig unicode karater set"
+
+#~ msgid "Show default characters set"
+#~ msgstr "Toon standaard karakter set"
+
+#~ msgid "Delete selected glyph"
+#~ msgstr "Verwijder geselecteerde glief"
+
+#, fuzzy
+#~ msgid "Show guidelines for x-height and baseline"
+#~ msgstr "Toon hulplijnen voor x-hoogte en basislijn"
+
+#, fuzzy
+#~ msgid "Show guidelines at top and bottom margin"
+#~ msgstr "Toon hulplijnen aan boven- en ondermarge"
+
+#~ msgid "Zoom in"
+#~ msgstr "Inzoomen"
+
+#~ msgid "Zoom out"
+#~ msgstr "Uitzoomen"
+
+#~ msgid "Zoom to scale 1:1"
+#~ msgstr "Zoom naar schaal 1:1"
+
+#~ msgid "Show full glyph"
+#~ msgstr "Toon volledig glief"
+
+#~ msgid "Zoom in at region boundries"
+#~ msgstr "Zoom in op regio grenzen"
+
+#~ msgid "Zoom in background image"
+#~ msgstr "Zoom in op achtergrond afbeelding"
+
+#~ msgid "Previous view"
+#~ msgstr "Vorige weergave"
+
+#~ msgid "Next view"
+#~ msgstr "Volgende weergave"
+
+#~ msgid "Set size for background image"
+#~ msgstr "Stel grootte in voor achtergrond afbeelding"
+
+#~ msgid "Show/hide background image"
+#~ msgstr "Toon/verberg achtergrond afbeelding"
+
+#~ msgid "Insert a new background image"
+#~ msgstr "Voeg een nieuwe achtergrond afbeelding toe"
+
+#~ msgid "Creating thumbnails"
+#~ msgstr "Creëer miniaturen"
+
+#~ msgid "Set contrast for background image"
+#~ msgstr "Stel contrast voor achtergrond afbeelding in"
+
+#~ msgid "Stroke color"
+#~ msgstr "Lijnkleur"
+
+#~ msgid "Stroke width"
+#~ msgstr "Lijnbreedte"
+
+#~ msgid "Handle color"
+#~ msgstr "Kleur greep"
+
+#~ msgid "Set precision"
+#~ msgstr "Stel precisie in"
+
+#~ msgid "Set size for grid"
+#~ msgstr "Stel grootte voor rooster in"
+
+#~ msgid "Recent files"
+#~ msgstr "Recente bestanden"
+
+#~ msgid "Show grid"
+#~ msgstr "Toon rooster"
+
+#~ msgid "Import"
+#~ msgstr "Importeren"
+
+#~ msgid "Kerning"
+#~ msgstr "Overhang"
+
+#~ msgid "Glyph sequence"
+#~ msgstr "Glief volgorde"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Save"
+#~ msgstr "Opslaan"
+
+#~ msgid "Open"
+#~ msgstr "_Openen"
+
+#~ msgid "Move paths"
+#~ msgstr "Paden verplaatsen"
+
+#~ msgid "Overview"
+#~ msgstr "Overzicht"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuleren"
+
+#~ msgid "Right click to add new points, left click to move points"
+#~ msgstr ""
+#~ "Rechts klik om nieuwe punten toe te voegen, links klik om punten te "
+#~ "verplaatsen"
+
+#~ msgid "and double click to add new point on path."
+#~ msgstr "en dubbel klik om nieuwe punten op het pad te plaatsen"
+
+#~ msgid "Preview"
+#~ msgstr "Voorbeeld"
+
+#~ msgid "Save?"
+#~ msgstr "Opslaan?"
+
+#~ msgid "Discard"
+#~ msgstr "Verwerpen"
+
+#~ msgid "New version"
+#~ msgstr "Nieuwe versie"
+
+#~ msgid "exit if a test case failes"
+#~ msgstr "afsluiten als een test case faalt"
 
 #~ msgid "Writing"
 #~ msgstr "Schrijven"
