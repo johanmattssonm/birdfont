@@ -8,7 +8,7 @@ from scripts import config
 from scripts import version
 from scripts.run import run
 
-def install (file, dir):
+def install (file, dir, mode):
 	f = dest + prefix + dir + '/'
 	s = file.rfind ('/')
 	if s > -1:
@@ -17,7 +17,7 @@ def install (file, dir):
 		f += file
 	print ("install: " + f)
 	run ('install -d ' + dest + prefix + dir)
-	run ('install ' + file + ' ' + dest + prefix + dir + '/')
+	run ('install -m ' + mode + ' '   + file + ' ' + dest + prefix + dir + '/')
 	installed.write (f + "\n")
 
 if not os.path.exists ("build/configured"):
@@ -51,18 +51,18 @@ installed.write ('build/installed\n')
 
 # install it:
 for file in os.listdir('./layout'):
-	install ('layout/' + file, '/share/birdfont/layout')
+	install ('layout/' + file, '/share/birdfont/layout', 644)
 
 for file in os.listdir('./icons'):
-	install ('icons/' + file, '/share/birdfont/icons')
+	install ('icons/' + file, '/share/birdfont/icons', 644)
 
-install ('resources/linux/birdfont.desktop', '/share/applications')
-install ('resources/linux/birdfont.png', '/share/icons/hicolor/48x48/apps')
+install ('resources/linux/birdfont.desktop', '/share/applications', 644)
+install ('resources/linux/birdfont.png', '/share/icons/hicolor/48x48/apps', 644)
 
 if os.path.isfile ('build/bin/birdfont'):
-	install ('build/bin/birdfont', '/bin')
+	install ('build/bin/birdfont', '/bin', 755)
 
-install ('build/bin/birdfont-export', '/bin')
+install ('build/bin/birdfont-export', '/bin', 755)
 
 libdir = '/lib'
 #library
@@ -72,29 +72,29 @@ if platform.machine() == 'x86_64' or platform.machine() == 's390x' or platform.m
    libdir = '/lib64'
 
 if os.path.isfile ('build/bin/libbirdfont.so.' + version.SO_VERSION):
-	install ('build/bin/libbirdfont.so.' + version.SO_VERSION, libdir)
-	install ('build/bin/libbirdfont.so', libdir)
+	install ('build/bin/libbirdfont.so.' + version.SO_VERSION, libdir, 644)
+	install ('build/bin/libbirdfont.so', libdir, 644)
 elif os.path.isfile ('build/libbirdfont.so.' + version.SO_VERSION):
-	install ('build/libbirdfont.so.' + version.SO_VERSION, libdir)
-	install ('build/libbirdfont.so', libdir)
+	install ('build/libbirdfont.so.' + version.SO_VERSION, libdir, 644)
+	install ('build/libbirdfont.so', libdir, 644)
 elif os.path.isfile ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib'):
-	install ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib', libdir)
-	install ('build/bin/libbirdfont.dylib', libdir)
+	install ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib', libdir, 644)
+	install ('build/bin/libbirdfont.dylib', libdir, 644)
 else:
 	print ("Can not find libbirdfont.")
 	exit (1)
 	
 #manpages
 if not bsd_manpages:
-    install ('build/birdfont.1.gz', '/share/man/man1')
-    install ('build/birdfont-export.1.gz', '/share/man/man1')
+    install ('build/birdfont.1.gz', '/share/man/man1', 644)
+    install ('build/birdfont-export.1.gz', '/share/man/man1', 644)
 else:
-    install ('resources/linux/birdfont.1', '/man/man1')
-    install ('resources/linux/birdfont-export.1', '/man/man1')
+    install ('resources/linux/birdfont.1', '/man/man1', 644)
+    install ('resources/linux/birdfont-export.1', '/man/man1', 644)
 
 # translations
 for lang_dir in glob.glob('build/locale/*'):
 	lc = lang_dir.replace ('build/locale/', "")
-	install ('build/locale/' + lc + '/LC_MESSAGES/birdfont.mo', '/share/locale/' + lc + '/LC_MESSAGES' );
+	install ('build/locale/' + lc + '/LC_MESSAGES/birdfont.mo', '/share/locale/' + lc + '/LC_MESSAGES' , 644);
 
 installed.close ()
