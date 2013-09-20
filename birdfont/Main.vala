@@ -17,8 +17,6 @@
 
 using BirdFont;
 
-const string GETTEXT_PACKAGE = "birdfont"; 
-
 void parse_gtk_rc () {
 	File f = FontDisplay.find_file ("layout", "birdfont.rc");
 	Gtk.rc_parse ((!) f.get_path ());
@@ -84,4 +82,5 @@ public static int main (string[] arg) {
 
 	return 0;
 }
+
 

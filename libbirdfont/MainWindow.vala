@@ -47,6 +47,7 @@ public class MainWindow {
 	}
 	
 	public static void open_recent_files_tab () {
+		// FIXME: do not idle 
 		IdleSource idle = new IdleSource ();
 		tabs.add_unique_tab (file_tab);
 		idle.set_callback (() => {			

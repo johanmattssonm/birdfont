@@ -17,9 +17,20 @@ namespace BirdFont {
 /** Look for files in default folders on different operating systems. */
 public class SearchPaths {
 	
+	private static string resources_folder = "";
+	
 	public static File find_file (string? dir, string name) {
 		File f;
 		string d = (dir == null) ? "" : (!) dir;
+
+		printd ("Looking for: ");
+		printd (resources_folder + "/" + d + "/" + name);
+
+		f = get_file (resources_folder + "/" + d + "/", name);
+		if (likely (f.query_exists ())) return f;
+		
+		f = get_file (resources_folder + "/", name + "/");
+		if (likely (f.query_exists ())) return f;
 
 		f = get_file (BirdFont.exec_path + "/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
@@ -58,9 +69,6 @@ public class SearchPaths {
 		if (likely (f.query_exists ())) return f;
 
 		f = get_file (@"$PREFIX/share/birdfont/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
-
-		f = get_file ("/usr/share/birdfont/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
 				
 		warning (@"Did not find file $name in $d");
@@ -152,6 +160,10 @@ public class SearchPaths {
 	static bool exists (string file) {
 		File f = File.new_for_path (file);
 		return f.query_exists ();
+	}
+
+	public static void set_resources_folder (string res) {
+		resources_folder = res;
 	}
 }
 

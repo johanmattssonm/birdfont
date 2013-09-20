@@ -12,7 +12,7 @@
     Lesser General Public License for more details.
 */
 using BirdFont;
-const string GETTEXT_PACKAGE = "birdfont"; 
+public const string GETTEXT_PACKAGE = "birdfont"; 
 
 namespace BirdFont {
 	
@@ -289,7 +289,7 @@ public class BirdFont {
 			}
 		}
 
-		printd ("fatal");
+		printd ("init fatal warnings");
 		if (fatal_wanings) {
 			LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
 			Log.set_handler (null, levels, fatal_warning);
@@ -483,14 +483,9 @@ void printd (string s) {
 #endif
 }
 
-#if ANDROID
-string t_ (string t) {
-	return t;
-}
-#else
+/** Translate string */
 string t_ (string t) {
 	return _(t);
 }
-#endif
 
 }

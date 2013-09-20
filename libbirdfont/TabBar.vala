@@ -51,7 +51,7 @@ public class TabBar : GLib.Object {
 	ImageSurface to_previous_tab;
 			
 	public TabBar () {
-		// tabs = new List<Tab> ();
+		tabs = new List<Tab> ();
 		
 		tab1_left = Icons.get_icon ("tab1_left.png");
 		tab1_right = Icons.get_icon ("tab1_right.png");
@@ -68,7 +68,7 @@ public class TabBar : GLib.Object {
 		to_previous_tab = (!) Icons.get_icon ("previous_tab.png");
 		
 		if (is_null (next_tab)) {
-			warning ("Next tab is null");
+			warning ("Tab icon is null");
 		}
 	}
 	

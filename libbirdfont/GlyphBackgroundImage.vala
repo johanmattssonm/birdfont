@@ -110,10 +110,8 @@ public class GlyphBackgroundImage {
 		}
 		
 		if (background_image == null) {
-#if !ANDROID // FIXME
 			background_image = new ImageSurface.from_png (path);
 			original_image = new ImageSurface.from_png (path);
-#endif
 		}
 		
 		return (!) background_image;
