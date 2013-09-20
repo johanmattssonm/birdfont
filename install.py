@@ -17,7 +17,7 @@ def install (file, dir, mode):
 		f += file
 	print ("install: " + f)
 	run ('install -d ' + dest + prefix + dir)
-	run ('install -m ' + mode + ' '   + file + ' ' + dest + prefix + dir + '/')
+	run ('install -m ' + `mode` + ' '   + file + ' ' + dest + prefix + dir + '/')
 	installed.write (f + "\n")
 
 if not os.path.exists ("build/configured"):
@@ -30,7 +30,8 @@ if not os.path.exists ("build/installed"):
 
 parser = OptionParser()
 parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
-parser.add_option ("-m", "--bsd-manpages", dest="nogzip", help="don't gzip manpages")
+parser.add_option ("-m", "--unzip-manpages", dest="nogzip", help="don't gzip manpages", action="store_false")
+parser.add_option ("-n", "--manpages-directory", dest="mandir", help="put man pages in this directory under prefix")
 
 (options, args) = parser.parse_args()
 
@@ -38,10 +39,15 @@ if not options.dest:
 	options.dest = ""
 
 if not options.nogzip:
-    bsd_manpages = True
+	zip_manpages = False
 else:
-    bsd_manpages = False
-	
+	zip_manpages = true
+
+if not options.mandir:
+	mandir = "/man/man1"
+else: 
+	mandir = options.mandir
+
 prefix = config.PREFIX
 dest = options.dest
 
@@ -85,12 +91,12 @@ else:
 	exit (1)
 	
 #manpages
-if not bsd_manpages:
-    install ('build/birdfont.1.gz', '/share/man/man1', 644)
-    install ('build/birdfont-export.1.gz', '/share/man/man1', 644)
+if zip_manpages:
+    install ('build/birdfont.1.gz', mandir, 644)
+    install ('build/birdfont-export.1.gz', mandir, 644)
 else:
-    install ('resources/linux/birdfont.1', '/man/man1', 644)
-    install ('resources/linux/birdfont-export.1', '/man/man1', 644)
+    install ('resources/linux/birdfont.1', mandir, 644)
+    install ('resources/linux/birdfont-export.1', mandir, 644)
 
 # translations
 for lang_dir in glob.glob('build/locale/*'):
