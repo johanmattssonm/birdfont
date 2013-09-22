@@ -88,7 +88,7 @@ class HheaTable : Table {
 		fd.add_fixed (version); // table version
 		
 		ascender = glyf_table.ymax;
-		descender = glyf_table.ymin; // FIXME: look up, should it be -descender?
+		descender = glyf_table.ymin; // FIXME: look up, should it be -descender or descender?
 		
 		fd.add_16 (ascender); // Ascender
 		fd.add_16 (descender); // Descender

@@ -102,14 +102,14 @@ class Os2Table : Table {
 		fd.add_u16 (glyf_table.get_last_char ()); // usLastCharIndex
 
 		ascender = glyf_table.ymax;
-		descender = -glyf_table.ymin;
+		descender = glyf_table.ymin;
 		
 		fd.add_16 (ascender); // sTypoAscender
 		fd.add_16 (descender); // sTypoDescender
 		fd.add_16 (3); // sTypoLineGap
 
 		fd.add_u16 (ascender); // usWinAscent
-		fd.add_u16 (descender); // usWinDescent
+		fd.add_u16 (-descender); // usWinDescent (unassigned, not like sTypoDescender)
 
 		// FIXME:
 		fd.add_u32 (0); // ulCodePageRange1 Bits 0-31
@@ -122,7 +122,7 @@ class Os2Table : Table {
 		fd.add_16 (0x0020); // usBreakChar also known as space
 		
 		// FIXME: calculate these values
-		fd.add_16 (1); // usMaxContext
+		fd.add_16 (2); // usMaxContext
 
 		// padding
 		fd.pad ();

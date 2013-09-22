@@ -63,7 +63,7 @@ public class MainWindow {
 		if (! (t is MoveTool || t is ResizeTool)) {
 			Toolbox.select_tool_by_name ("move");
 		}
-		
+
 		get_current_glyph ().select_all_paths ();
 	}
 

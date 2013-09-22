@@ -237,7 +237,7 @@ public class DrawingTools : ToolCollection  {
 
 		Tool custom_character_set = new Tool ("custom_character_set", t_("Show default characters set"), 'r', CTRL);
 		custom_character_set.select_action.connect ((self) => {
-			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
+			MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
 			OverView o = MainWindow.get_overview ();
 			GlyphRange gr = new GlyphRange ();
 
@@ -253,7 +253,7 @@ public class DrawingTools : ToolCollection  {
 
 		Tool avalilable_characters = new Tool ("available_characters", t_("Show all characters in the font"), 'd', CTRL);
 		avalilable_characters.select_action.connect ((self) => {
-			MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);
+			MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
 			OverView o = MainWindow.get_overview ();
 			
 			if (!BirdFont.get_current_font ().initialised) {
