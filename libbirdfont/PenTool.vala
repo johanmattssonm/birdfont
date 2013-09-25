@@ -17,6 +17,7 @@ using Cairo;
 
 namespace BirdFont {
 
+/** Create new points. */
 public class PenTool : Tool {
 
 	private static const double CONTACT_SURFACE = 20;
@@ -400,6 +401,16 @@ public class PenTool : Tool {
 		
 		return_if_fail (g != null);
 
+		if (double_click) {
+			glyph.insert_new_point_on_path (x, y);
+			return;
+		}
+		
+		if (button == 1) {
+			add_point_event (x, y);
+			return;
+		}
+
 		if (button == 2) {
 			if (glyph.is_open ()) {
 				force_direction ();
@@ -407,23 +418,32 @@ public class PenTool : Tool {
 			} else {
 				glyph.open_path ();
 			}
-			
-			return;
-		}
-
-		if (double_click) {
-			glyph.insert_new_point_on_path (x, y);
 			return;
 		}
 		
-		// add new point
-		if (button == 3 || (KeyBindings.modifier & LOGO) > 0) {
-			remove_all_selected_points ();
-			new_point_action (x, y);
-			glyph.store_undo_state ();
+		if (button == 3) {
+			move_point_event (x, y);
 			return;
 		}
-				
+	}
+
+	public void add_point_event (int x, int y) {
+		Glyph? g = MainWindow.get_current_glyph ();
+		Glyph glyph = (!) g;
+		
+		return_if_fail (g != null);
+		
+		remove_all_selected_points ();
+		new_point_action (x, y);
+		glyph.store_undo_state ();
+	}
+		
+	public void move_point_event (int x, int y) {
+		Glyph? g = MainWindow.get_current_glyph ();
+		Glyph glyph = (!) g;
+		
+		return_if_fail (g != null);
+		
 		control_point_event (x, y);
 		curve_corner_event (x, y);
 		

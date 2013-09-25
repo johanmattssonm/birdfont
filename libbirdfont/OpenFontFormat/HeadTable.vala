@@ -57,7 +57,7 @@ class HeadTable : Table {
 	
 	/** Set default value for unit. */
 	public static void init () {
-		units_per_em = 1000;
+		units_per_em = 1024; // FIXME:
 		UNITS = 10 * (units_per_em / 1000);
 	}
 	

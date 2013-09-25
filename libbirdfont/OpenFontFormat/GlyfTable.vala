@@ -44,7 +44,7 @@ class GlyfTable : Table {
 	// a list of glyphs sorted in the order we expect to find them in a
 	// ttf font. notdef is the firs glyph followed by null and nonmarkingreturn.
 	// after that will all assigned glyphs appear in sorted (unicode) order, all 
-	// remaining unassigned glyphs will be added in the last part of the file.	
+	// remaining unassigned glyphs will be added in the last section of the file.	
 	public List<Glyph> glyphs;
 	
 	uint16 max_points = 0;

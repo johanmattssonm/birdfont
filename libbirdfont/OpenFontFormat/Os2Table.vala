@@ -80,7 +80,7 @@ class Os2Table : Table {
 		fd.add_u32 (0); // ulUnicodeRange3 Bits 64-95
 		fd.add_u32 (0); // ulUnicodeRange4 Bits 96-127
 
-		fd.add_tag ("----"); // VendID
+		fd.add_tag ("Vend"); // VendID
 		
 		 // fsSelection (1 for italic 0 for upright)
 
@@ -106,7 +106,7 @@ class Os2Table : Table {
 		
 		fd.add_16 (ascender); // sTypoAscender
 		fd.add_16 (descender); // sTypoDescender
-		fd.add_16 (3); // sTypoLineGap
+		fd.add_16 (10); // sTypoLineGap
 
 		fd.add_u16 (ascender); // usWinAscent
 		fd.add_u16 (-descender); // usWinDescent (unassigned, not like sTypoDescender)
@@ -122,7 +122,7 @@ class Os2Table : Table {
 		fd.add_16 (0x0020); // usBreakChar also known as space
 		
 		// FIXME: calculate these values
-		fd.add_16 (2); // usMaxContext
+		fd.add_16 (2); // usMaxContext (two becase it has kernings but not ligatures).
 
 		// padding
 		fd.pad ();

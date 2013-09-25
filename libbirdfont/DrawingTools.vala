@@ -64,7 +64,10 @@ public class DrawingTools : ToolCollection  {
 		// Draw tools
 		PenTool pen_tool = new PenTool ("pen_tool");
 		draw_tools.add_tool (pen_tool);
-	
+
+		PointTool point_tool = new PointTool ("point_tool");
+		draw_tools.add_tool (point_tool);
+
 		ZoomTool zoom_tool = new ZoomTool ("zoom_tool");
 		draw_tools.add_tool (zoom_tool);
 
