@@ -152,7 +152,7 @@ public class Tool : GLib.Object {
 	}
 
 	public bool is_over (double xp, double yp) {
-		return (x <= xp - 28 <= x + w  && y <= yp - 37 <= y + h);  
+		return (x <= xp <= x + w  && y <= yp <= y + h);  
 	}
 	
 	public bool set_selected (bool a) {
@@ -204,17 +204,34 @@ public class Tool : GLib.Object {
 		active = ac;
 		return ret;
 	}
+	
+	public static double button_width_320dpi () {
+		return 111.0;
+	}
+
+	public static double button_width_72dpi () {
+		return 26.0;
+	}
 		
 	public virtual void draw (Context cr) {
-		double xt = x + 3 + w;
-		double yt = y + h + 17;
-
-		double bgx, bgy;
+		double xt = x;
+		double yt = y;
 		
-		bgx = xt - 6;
-		bgy = yt - 7;
+		double bgx, bgy;
+		double iconx, icony;
+		
+		double scale;
 
 		cr.save ();
+		if (Icons.get_dpi () == 72) {
+			scale = w / button_width_72dpi ();
+		} else {
+			scale = w / button_width_320dpi ();
+		}
+		cr.scale (scale, scale);
+		
+		bgx = xt / scale;
+		bgy = yt / scale;
 
 		// Button in four states
 		if (selected && selected_button != null) {
@@ -241,13 +258,24 @@ public class Tool : GLib.Object {
 			ImageSurface i = (!) icon;
 			
 			if (likely (i.status () == Cairo.Status.SUCCESS)) {
-				cr.set_source_surface (i, xt + (15.5 - i.get_width () / 2.0) - 5.7, yt + (15 - i.get_height ()) / 2.0);
+				iconx = bgx + w / scale / 2 - i.get_width () / 2;
+				icony = bgy + h / scale / 2 - i.get_height () / 2;
+
+				cr.set_source_surface (i, iconx, icony);
 				cr.paint ();
 			} else {
 				warning (@"Falied to load icon for $name");
 			}
 		}
 		
+		cr.restore ();
+		
+		// FIXME: DELETE
+		cr.save ();
+		cr.set_line_width (2);
+		cr.set_source_rgba (0/255.0, 100/255.0, 0/255.0, 1);
+		cr.rectangle (x, y, w, h);
+		cr.stroke ();
 		cr.restore ();
 	}
 

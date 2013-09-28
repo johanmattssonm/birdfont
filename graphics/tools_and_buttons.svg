@@ -15,7 +15,10 @@
    id="svg3786"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="tools_and_buttons.svg">
+   sodipodi:docname="tools_and_buttons.svg"
+   inkscape:export-filename="/home/johan/birdfont/icons/tool_button_selected.png"
+   inkscape:export-xdpi="319.88824"
+   inkscape:export-ydpi="319.88824">
   <defs
      id="defs3788">
     <linearGradient
@@ -204,6 +207,68 @@
          offset="1"
          id="stop3765-1-1-5" />
     </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3761-1-3-8"
+       id="linearGradient4027-7"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-656.63464,-283.00582)"
+       x1="608.99573"
+       y1="316.79437"
+       x2="608.64221"
+       y2="290.27783" />
+    <linearGradient
+       id="linearGradient3761-1-3-8">
+      <stop
+         style="stop-color:#eeeded;stop-opacity:1"
+         offset="0"
+         id="stop3763-4-4-8" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop3765-1-1-7" />
+    </linearGradient>
+    <linearGradient
+       y2="290.27783"
+       x2="608.64221"
+       y1="316.79437"
+       x1="608.99573"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-528.54692,-268.2316)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3045"
+       xlink:href="#linearGradient3761-1-3-8"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="290.27783"
+       x2="608.64221"
+       y1="316.79437"
+       x1="608.99573"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-528.54692,-268.2316)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3045-9"
+       xlink:href="#linearGradient3761-1-3-8-4"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient3761-1-3-8-4">
+      <stop
+         style="stop-color:#eeeded;stop-opacity:1"
+         offset="0"
+         id="stop3763-4-4-8-7" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop3765-1-1-7-7" />
+    </linearGradient>
+    <linearGradient
+       y2="290.27783"
+       x2="608.64221"
+       y1="316.79437"
+       x1="608.99573"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-496.01771,-267.59223)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3103"
+       xlink:href="#linearGradient3761-1-3-8-4"
+       inkscape:collect="always" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -212,9 +277,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.99769441"
-     inkscape:cx="-199.11977"
-     inkscape:cy="661.41669"
+     inkscape:zoom="3.5178562"
+     inkscape:cx="112.19786"
+     inkscape:cy="723.20775"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -233,7 +298,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -248,8 +313,8 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccccc"
        inkscape:export-filename="/home/johan/birdfont/icons/tool_button_selected.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
+       inkscape:export-xdpi="319.35016"
+       inkscape:export-ydpi="319.35016" />
     <path
        style="fill:url(#linearGradient4027);fill-opacity:1;stroke:#afafaf;stroke-width:1.08162749;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
        d="m 9.6030937,6.2198164 18.8860903,0.13751 c 3.96902,0.0969 5.3426,1.35943 5.77448,4.7863096 l 0.0259,17.0893 c -0.12039,3.50816 -1.85708,4.92123 -4.96983,4.90512 l -20.9419904,0 c -2.02353,-0.10763 -3.9111499,-0.89537 -4.0065499,-3.65731 l 0,-17.73466 c 0.003,-3.9020296 1.4913299,-5.4224596 5.23184,-5.5262696 z"
@@ -257,8 +322,8 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccccc"
        inkscape:export-filename="/home/johan/birdfont/icons/tool_button_deselected.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
+       inkscape:export-xdpi="321.42578"
+       inkscape:export-ydpi="321.42578" />
     <path
        style="fill:#e6e6e6;fill-opacity:1;stroke:#000000;stroke-width:0.80317229px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.7716895"
        d="m 12.400148,47.659952 12.215588,10.46124 -4.417338,0.534243 -1.382916,4.210594 z"
@@ -266,8 +331,8 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccc"
        inkscape:export-filename="/home/johan/birdfont/icons/point_tool.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
+       inkscape:export-xdpi="318.79926"
+       inkscape:export-ydpi="318.79926" />
     <rect
        style="fill:#1f1e1f;fill-opacity:1;stroke:none"
        id="rect3030"
@@ -291,5 +356,36 @@
        inkscape:export-filename="/home/johan/birdfont/icons/point_tool.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:14.66269112px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TESTB;-inkscape-font-specification:TESTB"
+       x="-0.14558615"
+       y="-11.092395"
+       id="text3026"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3028"
+         x="-0.14558615"
+         y="-11.092395"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:URW Palladio L;-inkscape-font-specification:URW Palladio L Medium">Export at 320dpi and later to 72dpi, do not mogrify -resize 23.125% </tspan></text>
+    <g
+       id="g3163"
+       transform="translate(-2.5268478,-4.5571)"
+       inkscape:export-filename="/home/johan/birdfont/icons/spin_button.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320">
+      <path
+         sodipodi:nodetypes="cccccccccc"
+         inkscape:connector-curvature="0"
+         id="path3075-4"
+         d="m 48.168082,51.733479 0,1.610914 3.89807,0 0,-0.636395 12.22578,0 0,0.724988 3.72089,0 -0.0886,-1.433729 -9.74519,-2.569185 z"
+         style="fill:#afafaf;fill-opacity:1;stroke:none" />
+      <path
+         style="fill:#afafaf;fill-opacity:1;stroke:none"
+         d="m 48.168082,67.985113 0,-1.610914 3.89807,0 0,0.636395 12.22578,0 0,-0.724988 3.72089,0 -0.0886,1.433729 -9.74519,2.569185 z"
+         id="path3140"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccccccccc" />
+    </g>
   </g>
 </svg>

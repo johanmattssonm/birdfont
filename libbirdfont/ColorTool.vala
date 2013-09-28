@@ -38,14 +38,15 @@ public class ColorTool : Tool {
 	}
 	
 	public override void draw (Context cr) {
-		double xt = x + 4 + w;
-		double yt = y + h + 16;
+		double scale = Toolbox.get_scale ();
+		double xt = x + w / 2 - 8 * scale;
+		double yt = y + h / 2 - 8 * scale;
 		
 		base.draw (cr);
 		
 		cr.save ();
 		cr.set_source_rgba (color_r, color_g, color_b, 1);
-		cr.rectangle (xt, yt, 16, 16);
+		cr.rectangle (xt, yt, 16 * scale, 16 * scale);
 		cr.fill ();
 		cr.restore ();
 	}

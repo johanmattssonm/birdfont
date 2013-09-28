@@ -399,7 +399,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void set_inkscape_clipboard (string inkscape_clipboard_data) {
-		// FIXME: clipboard seems to be rather broken on Mac 
 		if (BirdFont.mac) {
 			clipboard.set_text (inkscape_clipboard_data, -1);
 		} else {

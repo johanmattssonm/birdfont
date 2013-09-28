@@ -26,12 +26,17 @@ public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;
 	string file;
-	BirdFont.BirdFont birdfont = new BirdFont.BirdFont ();
-	CharDatabaseParser db = new CharDatabaseParser ();
+	BirdFont.BirdFont birdfont;
+	CharDatabaseParser db;
 	unowned Thread<int> db_thread;
 	Mutex database_mutex = new Mutex ();
 	Cond main_loop_idle = new Cond ();
 	bool in_idle = false;
+
+	Icons.use_high_resolution (true); // TODO: enable for high resolution screens
+
+	birdfont = new BirdFont.BirdFont ();
+	db = new CharDatabaseParser ();
 
 	birdfont.init (arg, null);
 

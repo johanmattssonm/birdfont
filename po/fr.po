@@ -7,68 +7,68 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-09-26 17:12+0200\n"
-"PO-Revision-Date: 2013-09-22 15:40+0000\n"
-"Last-Translator: Wei <contact@huwei.name>\n"
+"PO-Revision-Date: 2013-09-26 11:59+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: zh_CN\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1379864417.0\n"
+"X-POOTLE-MTIME: 1380196767.0\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
-msgstr "新建（_N）"
+msgstr "_Nouveau"
 
 #: birdfont/GtkWindow.vala:467
 msgid "_Open"
-msgstr "打开（_O）"
+msgstr "_Ouvrir"
 
 #: birdfont/GtkWindow.vala:472
 msgid "_Recent Files"
-msgstr "最近打开的文件 (_R)"
+msgstr "Fichiers _récents"
 
 #: birdfont/GtkWindow.vala:476
 msgid "_Save"
-msgstr "保存（_S）"
+msgstr "_Enregistrer"
 
 #: birdfont/GtkWindow.vala:481
 msgid "Save _as"
-msgstr "另存为（_A）"
+msgstr "Enregistrer _sous"
 
 #: birdfont/GtkWindow.vala:485
 msgid "_Export"
-msgstr "导出（_E）"
+msgstr "_Exporter"
 
 #: birdfont/GtkWindow.vala:491
 msgid "_Preview"
-msgstr "预览（_P）"
+msgstr "_Aperçu"
 
 #: birdfont/GtkWindow.vala:497
 msgid "Name and _Description"
-msgstr "名称和描述（_D）"
+msgstr "Nom et _Description"
 
 #: birdfont/GtkWindow.vala:501
 msgid "Select _Character Set"
-msgstr "选择字符集（_C）"
+msgstr ""
 
 #: birdfont/GtkWindow.vala:505
 msgid "_Quit"
-msgstr "退出（_Q）"
+msgstr "_Quitter"
 
 #: birdfont/GtkWindow.vala:510
 msgid "_Undo"
-msgstr "撤销（_U）"
+msgstr "_Défaire"
 
 #: birdfont/GtkWindow.vala:515
 msgid "_Copy"
-msgstr "复制（_C）"
+msgstr "_Copier"
 
 #: birdfont/GtkWindow.vala:520
 msgid "_Paste"
-msgstr "粘贴（_P）"
+msgstr "_Coller"
 
 #: birdfont/GtkWindow.vala:525
 msgid "Paste _In Place"
@@ -76,124 +76,119 @@ msgstr ""
 
 #: birdfont/GtkWindow.vala:530
 msgid "Select All Pa_ths"
-msgstr "选择所有路径（_T）"
+msgstr "Sélectionner _Tous les Chemins"
 
 #: birdfont/GtkWindow.vala:537
+#, fuzzy
 msgid "_Search"
-msgstr ""
+msgstr "Rechercher"
 
 #: birdfont/GtkWindow.vala:542
 msgid "_Export Glyph as SVG"
-msgstr "导出字形为SVG文件（_E）"
+msgstr "_Exporter le glyphe au format SVG"
 
 #: birdfont/GtkWindow.vala:546
 msgid "_Import SVG"
-msgstr "导入SVG文件（_I）"
+msgstr "_Importer SVG"
 
 #: birdfont/GtkWindow.vala:551
 msgid "Close _Path"
-msgstr "关闭路径（_P）"
+msgstr "_Fermer le chemin"
 
 #: birdfont/GtkWindow.vala:556
 msgid "_Glyph Sequence"
-msgstr "字形序列（_G）"
+msgstr "_Séquence du glyphe"
 
 #: birdfont/GtkWindow.vala:561
 msgid "Set Glyph _Background"
-msgstr ""
+msgstr "Définir l'_arrière-plan du glyphe"
 
 #: birdfont/GtkWindow.vala:565
 msgid "_Remove Glyph Background"
-msgstr ""
+msgstr "_Supprimer l'arrière-plan du glyphe"
 
 #: birdfont/GtkWindow.vala:571
 msgid "_Select Point Above"
-msgstr "选择上层点（_S）"
+msgstr "_Sélectionner le point au dessus"
 
 #: birdfont/GtkWindow.vala:575
-#, fuzzy
 msgid "Select _Next Point"
-msgstr "选择下个点（_N）"
+msgstr "Sélectionner _le point suivant"
 
 #: birdfont/GtkWindow.vala:579
 msgid "Select _Previous Point"
-msgstr "选择上个点（_P）"
+msgstr "Sélectionner _le point précédent"
 
 #: birdfont/GtkWindow.vala:583
+#, fuzzy
 msgid "Select Point _Below"
-msgstr "选择下层点 (_B)"
+msgstr "Sélectionner un point _proche"
 
 #: birdfont/GtkWindow.vala:588
 #, fuzzy
 msgid "_Next Tab"
-msgstr "下个标签（_N）"
+msgstr "Onglet _suivant"
 
 #: birdfont/GtkWindow.vala:601
-#, fuzzy
 msgid "_Previous Tab"
-msgstr "上个标签（_P）"
+msgstr "Onglet _précédent"
 
 #: birdfont/GtkWindow.vala:614
 msgid "_Close tab"
-msgstr "关闭标签（_C）"
+msgstr "_Fermer l'onglet"
 
 #: birdfont/GtkWindow.vala:628
-#, fuzzy
 msgid "Close _All Tabs"
-msgstr "关闭所有标签（_A）"
+msgstr "_Fermer tous les onglets"
 
 #: birdfont/GtkWindow.vala:636
 msgid "_Create Path"
-msgstr "创建路径（_C）"
+msgstr "_Créer un chemin"
 
 #: birdfont/GtkWindow.vala:643
 msgid "_Zoom"
-msgstr "创建孔路径（_C）"
+msgstr "_Zoom"
 
 #: birdfont/GtkWindow.vala:649
+#, fuzzy
 msgid "_Create Counter Path"
-msgstr "创建孔路径（_C）"
+msgstr "_Créer un compteur de tracé"
 
 #: birdfont/GtkWindow.vala:656
 msgid "_Move"
-msgstr "移动（_M）"
+msgstr "_Déplacer"
 
 #: birdfont/GtkWindow.vala:663
 msgid "Show _full unicode characters set"
-msgstr "显示完整Unicode字符集（_F）"
+msgstr "Afficher _toute la liste des caractères unicode"
 
 #: birdfont/GtkWindow.vala:670
 msgid "Show De_fault Characters Set"
-msgstr "显示默认字符集（_F）"
+msgstr "Afficher les caractères par dé_faut"
 
 #: birdfont/GtkWindow.vala:677
-#, fuzzy
 msgid "Show Characters in Font"
-msgstr "显示字体中所有字符"
+msgstr "Afficher les caractères de la police"
 
 #: birdfont/GtkWindow.vala:684
-#, fuzzy
 msgid "Add New _Grid Item"
-msgstr "添加新网格（_G）"
+msgstr "Ajouter un nouvel élément sur la _grille"
 
 #: birdfont/GtkWindow.vala:690
-#, fuzzy
 msgid "Remove Gr_id Item"
-msgstr "删除此网格（_I）"
+msgstr "Supprimer un élément de la g_rille"
 
 #: birdfont/GtkWindow.vala:696
-#, fuzzy
 msgid "_Zoom In"
-msgstr "放大（_Z）"
+msgstr "_Zoom avant"
 
 #: birdfont/GtkWindow.vala:703
-#, fuzzy
 msgid "Zoom _Out"
-msgstr "缩小（_O）"
+msgstr "Zoom _arrière"
 
 #: birdfont/GtkWindow.vala:710
 msgid "Zoom to _Scale 1:1"
-msgstr "缩放至 1:1（_S）"
+msgstr "Zoom à l'_échelle 1:1"
 
 #: birdfont/GtkWindow.vala:718
 msgid "Show Kerning _Tab"
@@ -217,159 +212,162 @@ msgstr ""
 
 #: birdfont/GtkWindow.vala:748
 msgid "_File"
-msgstr "文件（_F）"
+msgstr "_Fichier"
 
 #: birdfont/GtkWindow.vala:751
 msgid "_Edit"
-msgstr "编辑（_E）"
+msgstr "_Éditer"
 
 #: birdfont/GtkWindow.vala:754
 msgid "_Tab"
-msgstr "标签（_T）"
+msgstr "_Onglets"
 
 #: birdfont/GtkWindow.vala:757
 msgid "T_ool"
-msgstr "工具（_T）"
+msgstr "_Outils"
 
 #: birdfont/GtkWindow.vala:760
 msgid "_Kerning"
-msgstr "字距（_K）"
+msgstr "_Crénage"
 
 #: birdfont/GtkWindow.vala:1127
 #, fuzzy
 msgid "PostScript Name"
-msgstr "Postscript 名称"
+msgstr "Nom PostScript"
 
 #: birdfont/GtkWindow.vala:1134
 msgid "Name"
-msgstr "名称"
+msgstr "Nom"
 
 #: birdfont/GtkWindow.vala:1141
 msgid "Style"
-msgstr "样式"
+msgstr "Style"
 
 #: birdfont/GtkWindow.vala:1147
 msgid "Bold"
-msgstr ""
+msgstr "Gras"
 
 #: birdfont/GtkWindow.vala:1154
 msgid "Italic"
-msgstr ""
+msgstr "Italique"
 
 #: birdfont/GtkWindow.vala:1162
 msgid "Weight"
-msgstr ""
+msgstr "Graisse"
 
 #: birdfont/GtkWindow.vala:1169
 msgid "Full name (name and style)"
-msgstr "全名（名称和样式）"
+msgstr "Nom complet (nom et style)"
 
 #: birdfont/GtkWindow.vala:1176
 msgid "Unique identifier"
-msgstr "唯一标识符"
+msgstr "Identifiant unique"
 
 #: birdfont/GtkWindow.vala:1183
 msgid "Version"
-msgstr "版本"
+msgstr "Version"
 
 #: birdfont/GtkWindow.vala:1190
 msgid "Description"
-msgstr "描述"
+msgstr "Description"
 
 #: birdfont/GtkWindow.vala:1198
 msgid "Copyright"
-msgstr "版权"
+msgstr "Droits d'auteur"
 
 #~ msgid "Usage"
-#~ msgstr "用法"
+#~ msgstr "Utilisation"
 
 #~ msgid "FILE"
-#~ msgstr "FILE"
+#~ msgstr "FICHIER"
 
 #~ msgid "OPTION"
 #~ msgstr "OPTION"
 
 #~ msgid "show coordinate in glyph view"
-#~ msgstr "在字形视图中显示坐标"
+#~ msgstr "afficher les coordonnées sur la vue du glyphe"
 
 #, fuzzy
 #~ msgid "exit if a test case fails"
-#~ msgstr "当测试案例失败后退出"
+#~ msgstr "quitter en cas d'échec du cas de test"
 
 #~ msgid "treat warnings as fatal"
-#~ msgstr "将警告当作错误"
+#~ msgstr "traiter les avertissements comme des erreurs"
 
 #~ msgid "show this message"
-#~ msgstr "显示这条消息"
+#~ msgstr "afficher ce message"
 
 #~ msgid "enable Machintosh customizations"
-#~ msgstr "启用Mac电脑自定义"
+#~ msgstr "activer l'apparence Macintosh"
 
 #~ msgid "don't translate"
-#~ msgstr "不翻译"
+#~ msgstr "ne pas traduire"
 
 #~ msgid "sleep between each command in test suite"
-#~ msgstr "在测试程序的每条命令间休眠"
+#~ msgstr "introduire des pauses entre chaque commande du test"
 
 #~ msgid "run test case"
-#~ msgstr "执行测试案例"
+#~ msgstr "lancer le cas de test"
 
 #~ msgid "Backgrounds"
-#~ msgstr "背景"
+#~ msgstr "Arrière-plans"
 
 #~ msgid "Move, resize and rotate background image"
-#~ msgstr "移动，旋转背景图像并调整其大小"
+#~ msgstr "Déplacer, redimensionner et tourner l'image de fond"
 
 #~ msgid "Usage:"
-#~ msgstr "用法："
+#~ msgstr "Utilisation :"
 
 #~ msgid "print this message\n"
-#~ msgstr "打印该信息\n"
+#~ msgstr "imprimer ce message\n"
 
 #~ msgid "write files to this directory\n"
-#~ msgstr "将文件写入此目录\n"
+#~ msgstr "enregistrer les fichiers dans ce dossier\n"
 
 #~ msgid "write svg file\n"
-#~ msgstr "对选定编辑点连接成曲线\n"
+#~ msgstr "enregistrer au format SVG\n"
 
 #~ msgid "write ttf and eot files\n"
-#~ msgstr "写入TTF及EOT文件\n"
+#~ msgstr "enregistrer au format TTF et EOT\n"
 
 #~ msgid "Can't find output directory"
-#~ msgstr "无法找到输出目录"
+#~ msgstr "Impossible de trouver le répertoire cible"
 
 #~ msgid "Loading the unicode character database"
-#~ msgstr "正在载入 Unicode 字符数据库"
+#~ msgstr "Chargement des caractères Unicode"
 
 #~ msgid "Circle"
-#~ msgstr "圆"
+#~ msgstr "Cercle"
 
 #~ msgid "Crop background image"
-#~ msgstr "剪裁背景图像"
+#~ msgstr "Rogner l'image de fond"
 
 #~ msgid "Default language"
-#~ msgstr "默认语言"
+#~ msgstr "Langue par défaut"
 
 #~ msgid "Private use area"
-#~ msgstr "私用空间"
+#~ msgstr "Zone à usage privé"
 
 #~ msgid "Chinese"
-#~ msgstr "中文"
+#~ msgstr "Chinois"
 
 #~ msgid "English"
-#~ msgstr "英语"
+#~ msgstr "Anglais"
+
+#~ msgid "Greek"
+#~ msgstr "Grec"
 
 #~ msgid "Japanese"
-#~ msgstr "日语"
+#~ msgstr "Japonais"
 
 #~ msgid "Javanese"
-#~ msgstr "爪哇语"
+#~ msgstr "Javanais"
 
 #~ msgid "Russian"
-#~ msgstr "俄语"
+#~ msgstr "Russe"
 
 #~ msgid "Swedish"
-#~ msgstr "瑞典语"
+#~ msgstr "Suédois"
 
 #~ msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 #~ msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
@@ -378,367 +376,368 @@ msgstr "版权"
 #~ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
 #~ msgid "Create quadratic Bézier curves"
-#~ msgstr "创建二次贝塞尔曲线"
+#~ msgstr "Créer des courbes de Bézier quadratiques"
 
 #~ msgid "Create cubic Bézier curves"
-#~ msgstr "创建三次贝塞尔曲线"
+#~ msgstr "Créer des courbes de Bézier cubiques"
 
 #~ msgid "Quadratic path with two line handles"
-#~ msgstr "双柄二次路径"
+#~ msgstr "Chemin quadratique avec deux poignées de contrôle"
 
+#~ msgid "Convert selected points"
+#~ msgstr "Convertir les points sélectionnés"
+
+#, fuzzy
 #~ msgid "Tie curve handles for the selected edit point"
-#~ msgstr "对选定编辑点连接曲柄"
+#~ msgstr "Nouer les poignées de courbe pour le point sélectionné"
 
 #~ msgid "Symmetrical handles"
-#~ msgstr "对称控制柄"
+#~ msgstr "Poignées symétriques"
 
 #~ msgid "Convert segment to line."
-#~ msgstr "将此分段转换为直线"
+#~ msgstr "Convertir le segment en ligne."
 
 #~ msgid "Merge paths"
-#~ msgstr "合并路径"
+#~ msgstr "Fusionner les chemins"
 
 #~ msgid "Create counter from outline"
-#~ msgstr "从轮廓创建孔"
+#~ msgstr "Créer un compteur depuis la ligne extérieure"
 
 #~ msgid "Move to path to the bottom layer"
-#~ msgstr "将路径移动到底层"
+#~ msgstr "Déplacer la feuille vers le calque"
 
 #~ msgid "Flip path vertically"
-#~ msgstr "垂直翻转路径"
+#~ msgstr "Retourner verticalement le chemin"
 
 #~ msgid "Flip path horizontally"
-#~ msgstr "水平翻转路径"
+#~ msgstr "Retourner horizontalement le chemin"
 
 #~ msgid "Show full unicode characters set"
-#~ msgstr "显示完整的Unicode字符集"
+#~ msgstr "Afficher la liste de tout les caractères unicode"
 
 #~ msgid "Show default characters set"
-#~ msgstr "显示默认字符集"
+#~ msgstr "Afficher le jeu de caractères par défaut"
 
 #~ msgid "Show all characters in the font"
-#~ msgstr "显示字体中的全部字符"
+#~ msgstr "Afficher tous les caractères de la police"
 
 #~ msgid "Delete selected glyph"
-#~ msgstr "删除选定的字形"
+#~ msgstr "Supprimer le glyphe sélectionné"
 
 #~ msgid "Show guidelines"
-#~ msgstr "显示准则"
+#~ msgstr "Afficher le guide"
 
 #~ msgid "Show guidelines for x-height and baseline"
-#~ msgstr "显示x-高度线及底线"
+#~ msgstr "Afficher les tracés des lignes de base et de hauteur d'x"
 
 #~ msgid "Show guidelines at top and bottom margin"
-#~ msgstr "显示顶线及底部边缘线"
+#~ msgstr "Afficher le guide aux marges du haut et du bas"
 
 #~ msgid "Zoom in"
-#~ msgstr "放大"
+#~ msgstr "Zoom avant"
 
 #~ msgid "Zoom out"
-#~ msgstr "缩小"
+#~ msgstr "Zoom arrière"
 
 #~ msgid "Zoom to scale 1:1"
-#~ msgstr "缩放至1：1"
+#~ msgstr "Zoom à l'échelle 1:1"
 
 #~ msgid "Show full glyph"
-#~ msgstr "显示完整字形"
+#~ msgstr "Afficher le glyph complet"
 
 #~ msgid "Zoom in at region boundries"
-#~ msgstr "在区域范围内缩放"
+#~ msgstr "Zoom sur les frontières"
 
 #~ msgid "Zoom in background image"
-#~ msgstr "缩放背景图像"
+#~ msgstr "Zoom sur l'image de fond"
 
 #~ msgid "Previous view"
-#~ msgstr "上一个视图"
+#~ msgstr "Vue précédente"
 
 #~ msgid "Next view"
-#~ msgstr "下一个视图"
+#~ msgstr "Vue suivante"
 
 #~ msgid "Set size for background image"
-#~ msgstr "设置背景图像的大小"
+#~ msgstr "Définir la taille de l'image de fond"
 
 #~ msgid "Show/hide background image"
-#~ msgstr "显示或隐藏背景图像"
+#~ msgstr "Afficher/cacher l'image de fond"
 
 #~ msgid "Insert a new background image"
-#~ msgstr "插入新的背景图像"
+#~ msgstr "Insérer une nouvelle image de fond"
 
 #~ msgid "Creating thumbnails"
-#~ msgstr "创建缩略图"
+#~ msgstr "Création des miniatures"
 
 #~ msgid "Set contrast for background image"
-#~ msgstr "设置背景图像的对比度"
+#~ msgstr "Définir le contraste des images de fond"
 
 #~ msgid "Stroke color"
-#~ msgstr "笔划颜色"
+#~ msgstr "Couleur du contour"
 
 #~ msgid "Stroke width"
-#~ msgstr "笔划宽度"
+#~ msgstr "Épaisseur de trait"
 
 #~ msgid "Handle color"
-#~ msgstr "柄颜色"
+#~ msgstr "Couleur de l'identificateur"
 
 #~ msgid "Set precision"
-#~ msgstr "设置精度"
+#~ msgstr "Définir la précision"
+
+#~ msgid ""
+#~ "Show all control point handles or only handles for the selected points."
+#~ msgstr ""
+#~ "Montrer les poignées de contrôle pour tout les points ou seulement ceux "
+#~ "sélectionné."
+
+#~ msgid "Object color"
+#~ msgstr "Couleur de l'objet"
 
 #~ msgid "Set size for grid"
-#~ msgstr "设置网格大小"
+#~ msgstr "Définir les dimensions de la grille"
+
+#~ msgid "Writing TTF and EOT files."
+#~ msgstr "Écriture des fichiers TTF et EOT."
 
 #~ msgid "Writing SVG file."
-#~ msgstr "正在写入SVG文件."
+#~ msgstr "Écriture de fichier SVG."
+
+#~ msgid "No fonts created yet."
+#~ msgstr "Aucune police créée pour l'instant."
 
 #~ msgid "Recent files"
-#~ msgstr "最近打开的文件"
+#~ msgstr "Fichiers récents"
+
+#~ msgid "Backup"
+#~ msgstr "Sauvegarde"
 
 #~ msgid "Files"
-#~ msgstr "文件"
+#~ msgstr "Fichiers"
 
 #~ msgid "Show grid"
-#~ msgstr "显示网格"
+#~ msgstr "Afficher le quadrillage"
 
 #~ msgid "Import"
-#~ msgstr "导入"
+#~ msgstr "Importer"
 
 #~ msgid "Kerning"
-#~ msgstr "字距"
+#~ msgstr "Crénage"
 
-#, fuzzy
+#~ msgid "Add single characters separated by space and ranges on the form A-Z."
+#~ msgstr ""
+#~ "Ajouter des caractères unique séparé par des espaces et des plages de "
+#~ "caractères sous la forme A-Z."
+
 #~ msgid "Kerning:"
-#~ msgstr "字距"
+#~ msgstr "Approche (Crénage) :"
 
-#, fuzzy
+#~ msgid "Kerning Pairs"
+#~ msgstr "Approche de paires"
+
+#~ msgid "Kerning class"
+#~ msgstr "Type d'approche"
+
+#~ msgid "Set"
+#~ msgstr "Attribuer"
+
+#~ msgid "Create new kerning class"
+#~ msgstr "Créer un nouveau type d'approche"
+
 #~ msgid "Character Set"
-#~ msgstr "字符集"
+#~ msgstr "Jeu de caractères"
 
 #~ msgid "Glyph sequence"
-#~ msgstr "字形序列"
+#~ msgstr "Séquence du glyphe"
 
 #~ msgid "Close"
-#~ msgstr "关闭"
+#~ msgstr "Fermer"
 
 #~ msgid "Menu"
-#~ msgstr "菜单"
+#~ msgstr "Menu"
 
 #~ msgid "Save"
-#~ msgstr "保存"
+#~ msgstr "Enregistrer"
 
 #~ msgid "Open"
-#~ msgstr "打开"
+#~ msgstr "Ouvrir"
 
 #~ msgid "Move paths"
-#~ msgstr "移动路径"
+#~ msgstr "Changer les chemins"
+
+#~ msgid "Search"
+#~ msgstr "Rechercher"
+
+#~ msgid "Filter"
+#~ msgstr "Filtrer"
 
 #~ msgid "Overview"
-#~ msgstr "概览"
+#~ msgstr "Vue d'ensemble"
 
 #~ msgid "No glyphs in this view."
-#~ msgstr "在此视图中没有字形。"
+#~ msgstr "Pas de glyphe dans cet aperçu."
 
 #~ msgid "See also:"
-#~ msgstr "另见："
+#~ msgstr "Voir également :"
 
 #~ msgid "Overwrite TTF file?"
-#~ msgstr "覆盖 TTF 文件？"
+#~ msgstr "Écraser le fichier TTF ?"
 
 #~ msgid "Overwrite"
-#~ msgstr "覆盖"
+#~ msgstr "Écraser"
 
 #~ msgid "Cancel"
-#~ msgstr "取消"
+#~ msgstr "Annuler"
 
 #~ msgid "Yes, don't ask again."
-#~ msgstr "是的，不再询问"
-
-#~ msgid "Right click or use left command key and click to add new points"
-#~ msgstr "右键单击或使用左侧 command 键加单击以增加新点"
+#~ msgstr "Oui, ne plus poser la question."
 
 #~ msgid "Right click to add new points, left click to move points"
-#~ msgstr "右键单击以增加新点，左键单击以移动点"
+#~ msgstr "Clic droit pour ajouter des points, clic gauche pour les bouger"
 
 #~ msgid "and double click to add new point on path."
-#~ msgstr "双击可以在已有路径上增加新点。"
+#~ msgstr "et double-clic pour ajouter des points sur le chemin."
 
 #~ msgid "Preview"
-#~ msgstr "预览"
+#~ msgstr "Aperçu"
+
+#~ msgid "Rectangle"
+#~ msgstr "Rectangle"
+
+#~ msgid "Resize and rotate paths"
+#~ msgstr "Taille et rotation"
 
 #~ msgid "Save?"
-#~ msgstr "保存？"
+#~ msgstr "Enregistrer ?"
 
 #~ msgid "Discard"
-#~ msgstr "放弃"
+#~ msgstr "Abandonner"
 
 #~ msgid "New version"
-#~ msgstr "新版本"
+#~ msgstr "Nouvelle version"
 
 #~ msgid "exit if a test case failes"
-#~ msgstr "当测试案例失败后退出"
+#~ msgstr "quitter en cas d'échec du cas de test"
+
+#~ msgid "Resize paths"
+#~ msgstr "Redimensionner les chemins"
 
 #, fuzzy
 #~ msgid "Postscript Name"
-#~ msgstr "Postscript 名称"
+#~ msgstr "Nom PostScript"
 
 #~ msgid "Writing"
-#~ msgstr "正在写入"
+#~ msgstr "Écriture"
 
 #~ msgid "Postscript name"
-#~ msgstr "Postscript 名称"
+#~ msgstr "Nom PostScript"
 
 #~ msgid "Character set"
-#~ msgstr "字符集"
+#~ msgstr "Jeu de caractères"
 
 #~ msgid "Select default character set"
-#~ msgstr "选择默认字符集"
+#~ msgstr "Sélectionner le jeu de caractères par défaut"
 
 #~ msgid "Recover"
-#~ msgstr "恢复"
+#~ msgstr "Récupérer"
 
 #~ msgid "Delete all"
-#~ msgstr "全部删除"
-
-#~ msgid "Full name (name & style)"
-#~ msgstr "全名(名字和样式)"
-
-#~ msgid "New font"
-#~ msgstr "新字体"
+#~ msgstr "Tout supprimer"
 
 #~ msgid "Export"
-#~ msgstr "导出"
-
-#~ msgid "Update name & description"
-#~ msgstr "更新名称和描述"
-
-#~ msgid "Create a new font"
-#~ msgstr "创建一个新字体"
-
-#~ msgid "Add name and description to this font."
-#~ msgstr "添加此字体的名称和描述。"
+#~ msgstr "Exporter"
 
 #~ msgid "Preferences"
-#~ msgstr "偏好"
+#~ msgstr "Préférences"
 
 #~ msgid "Export SVG, TTF & EOT fonts"
-#~ msgstr "导出为SVG、TTF和EOT字体"
+#~ msgstr "Exporter la police aux formats SVG, TTF et EOT"
 
 #~ msgid "Export SVG font and view the result"
-#~ msgstr "导出为SVG字体并查看结果"
-
-#~ msgid ""
-#~ "The loaded font can be overwritten if you choose to continue with preview."
-#~ msgstr "如果您选择继续预览，加载的字体可能被覆盖。"
+#~ msgstr "Exporter la police au format SVG et afficher le résultat"
 
 #~ msgid "Continue"
-#~ msgstr "继续"
+#~ msgstr "Continuer"
 
 #~ msgid "Continue and don't ask me again."
-#~ msgstr "继续并不再询问。"
+#~ msgstr "Continuer et ne plus me poser la question."
 
 #~ msgid "Use left command key (⌘) + click to add new points"
-#~ msgstr "在按下左命令键（⌘）时单击以增加新点"
+#~ msgstr "Pour ajouter des points, cliquer en maintenant la touche (⌘)"
 
 #~ msgid "Save as"
-#~ msgstr "另存为"
+#~ msgstr "Enregistrer sous"
 
 #~ msgid "Show all characters in font"
-#~ msgstr "显示字体中的全部字符"
-
-#~ msgid "_Description"
-#~ msgstr "描述(_D)"
+#~ msgstr "Afficher tous les caractères de la police."
 
 #~ msgid "_Select all paths"
-#~ msgstr "选择所有路径（_S）"
+#~ msgstr "_Sélectionner tous les chemins. "
 
 #~ msgid "_Export glyph as SVG"
-#~ msgstr "导出字形为SVG文件（_E）"
+#~ msgstr "_Exporter le glyph au format SVG"
 
 #~ msgid "Close _path"
-#~ msgstr "关闭路径（_P）"
+#~ msgstr "Fermer _le chemin."
 
 #~ msgid "_Select point above"
-#~ msgstr "选择上层点（_S）"
+#~ msgstr "_Sélectionner le point le plus proche"
 
 #~ msgid "Select _next point"
-#~ msgstr "选择下个点（_N）"
+#~ msgstr "Sélectionner _le point suivant"
 
 #~ msgid "Select _previous point"
-#~ msgstr "选择上个点（_P）"
+#~ msgstr "Sélectionner _un point précédent."
 
 #~ msgid "Select point _below"
-#~ msgstr "选择下层点"
+#~ msgstr "Sélectionner un point _proche"
 
 #~ msgid "_Next tab"
-#~ msgstr "下个标签（_N）"
+#~ msgstr "Onglet _suivant"
 
 #~ msgid "_Previous tab"
-#~ msgstr "上个标签（_P）"
+#~ msgstr "Onglet _précédent"
 
 #~ msgid "Close _all tabs"
-#~ msgstr "关闭所有标签（_A）"
+#~ msgstr "_Fermer tous les onglets"
 
 #~ msgid "_Create path"
-#~ msgstr "创建路径（_C）"
+#~ msgstr "_Créer un chemin"
 
 #~ msgid "_Create counter path"
-#~ msgstr "创建孔路径（_C）"
+#~ msgstr "_Créer un compteur de tracé."
 
 #~ msgid "Show de_fault characters set"
-#~ msgstr "显示默认字符集（_F）"
+#~ msgstr "Afficher l'ensemble des caractères par dé_faut"
 
 #~ msgid "Show characters in font"
-#~ msgstr "显示字体中所有字符"
+#~ msgstr "Afficher les caractères de la police"
 
 #~ msgid "Add new _grid item"
-#~ msgstr "添加新网格（_G）"
+#~ msgstr "Ajouter un nouvel élément sur la _grille."
 
 #~ msgid "Remove gr_id item"
-#~ msgstr "删除此网格（_I）"
+#~ msgstr "Supprimer cet élément de la g_rille"
 
 #~ msgid "_Zoom in"
-#~ msgstr "放大（_Z）"
+#~ msgstr "_Zoom avant"
 
 #~ msgid "Zoom _out"
-#~ msgstr "缩小（_O）"
+#~ msgstr "Zoom _arrière"
 
 #~ msgid "Zoom to _scale 1:1"
-#~ msgstr "缩放至1：1（_S）"
+#~ msgstr "Zoom à l'_échelle 1:1"
 
+#, fuzzy
 #~ msgid ""
 #~ "The loaded font will be overwritten if you choose to continue with "
 #~ "preview."
-#~ msgstr "如果你选择继续预览则载入的字体将会被覆盖"
+#~ msgstr ""
+#~ "La police de caractère importée sera remplacée si vous choisissez de "
+#~ "continuer l'aperçu."
 
 #~ msgid "Export glyph to svg file"
-#~ msgstr "将字形输出为SVG文件"
+#~ msgstr "Exporter le glyphe au format SVG"
 
+#, fuzzy
 #~ msgid "Wrote font files"
-#~ msgstr "已写入字体文件"
-
-#~ msgid "Use left command key + click to add new points"
-#~ msgstr "在按下左命令键时单机增加新点"
-
-#~ msgid "Show help lines for x-height and baseline"
-#~ msgstr "显示x-高度线及底线"
-
-#~ msgid "Show help lines at top and bottom margin"
-#~ msgstr "显示顶线及底部边缘线"
-
-#~ msgid "Right click to add new point, left click to move points"
-#~ msgstr "右键单击以增加新点，左键单击以移动点"
-
-#~ msgid "and double click to add new point on path"
-#~ msgstr "双击以在已有路径上增加新点"
-
-#~ msgid "Add new point on path"
-#~ msgstr "在已有路径上增加新点"
-
-#~ msgid "Begin new line from point on path"
-#~ msgstr "以已有路径上的点为起点画一条新线"
-
-#~ msgid "Tie curve handles for selected edit point"
-#~ msgstr "将选定编辑点以曲线连接"
-
-#~ msgid "Tie coordinates to previous edit point"
-#~ msgstr "将上个编辑点与坐标相连"
-
-#~ msgid "Delete edit points"
-#~ msgstr "删除编辑点"
+#~ msgstr "Écrire les fichiers de la police"

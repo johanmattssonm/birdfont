@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=Birdfont
 Name[ru]=Birdfont
-Comment=SVG Fonts editor
-Comment[ru]=Редактор шрифтов SVG
+Comment=Font editor
+Comment[ru]=Редактор шрифтов
 Exec=birdfont %U
 Icon=birdfont
 StartupWMClass=birdfont

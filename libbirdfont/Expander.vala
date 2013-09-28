@@ -70,26 +70,37 @@ public class Expander : GLib.Object {
 	}
 	
 	private void update_tool_position () {
-		double xt = x - 15;
-		double yt = y + scroll - 30;
+		double scale = Toolbox.get_scale ();
+		double margin_small = 4 * scale;
+		double xt = x;
+		double yt = y + scroll + margin_small;
+		bool new_row = false;
 
+		foreach (Tool t in tool) {
+			t.w = 33 * scale;
+			t.h = (33 / 1.11) * scale;
+		}
+				
 		if (tool.length () > 0) {
-			content_height = tool.first ().data.h + 2;
+			content_height = tool.first ().data.h + margin_small;
 		} else {
+			warning ("No tools in box.");
 			content_height = 0;
 		}
 
 		foreach (Tool t in tool) {
+			if (new_row) {
+				content_height += t.h + margin_small; 
+				xt = x;
+				yt += t.h + margin_small;
+			}
+			
 			t.x = xt;
 			t.y = yt;
 			
-			xt += t.w + 4;
+			xt += t.w + margin_small;
 
-			if (xt + t.w > 160 - 20) {
-				xt = x - 15;
-				yt += t.h + 2;
-				content_height += t.h + 2; 
-			}
+			new_row = xt + t.w > Toolbox.allocation_width - margin_small;
 		}
 	}
 	
@@ -162,10 +173,12 @@ public class Expander : GLib.Object {
 		bool r = (open != o);
 		
 		if (o) {
+			/* // FIXME: DELETE
 			margin = 35 * (int)((tool.length () / 4.0) + 1) ;
 			if (tool.length () % 4 == 0) {
-				margin -= 35;
+				margin -= 35;  
 			}
+			*/
 		} else {
 			margin = 0;
 		}

@@ -241,19 +241,21 @@ public class SpinButton : Tool {
 	}
 
 	public override void draw (Context cr) {
-		double xt = x + 3 + w;
-		double yt = y + h + 17;
+		double scale = Toolbox.get_scale ();
+		
+		double xt = x + w / 2;
+		double yt = y + h / 2;
 
-		double text_x = -4.5;
-		double text_y = 11;
-
+		double text_x = -15 * scale;
+		double text_y = 3 * scale;
+		
 		base.draw (cr);
 	
 		cr.save ();
 	
 		cr.set_source_rgba (99/255.0, 99/255.0, 99/255.0, 1);
 		
-		cr.set_font_size (10);
+		cr.set_font_size (10 * scale);
 		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
 		
 		if (BirdFont.mac)  {

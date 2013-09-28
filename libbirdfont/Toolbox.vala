@@ -29,8 +29,8 @@ public class Toolbox : GLib.Object  {
 	
 	public signal void redraw (int x, int y, int w, int h);
 	
-	public int allocation_width = 0;
-	public int allocation_height = 0;
+	public static int allocation_width = 0;
+	public static int allocation_height = 0;
 	
 	ImageSurface? toolbox_background = null;
 	
@@ -58,6 +58,11 @@ public class Toolbox : GLib.Object  {
 		});
 		
 		update_expanders ();
+	}
+
+	public static void set_allocation (int w, int h) {
+		allocation_width = w;
+		allocation_height = h;
 	}
 
 	public void key_press (uint keyval) {
@@ -289,29 +294,26 @@ public class Toolbox : GLib.Object  {
 				
 		b.select_tool (b.get_tool (name));
 	}
-		
+	
+	public static double get_scale () {
+		return Toolbox.allocation_width / 160.0;
+	}
+	
 	public void update_expanders () {
 		Expander? p = null; 
 		Expander pp;
+		double pos;
 
 		foreach (Expander e in current_set.get_expanders ()) {
 			e.set_scroll (current_set.scroll);
 		}
 		
-		current_set.content_height = 0;
+		pos = 4 * get_scale ();
 		foreach (Expander e in current_set.get_expanders ()) {
-			if (p != null) {
-				pp = (!) p;
-				e.set_offset (pp.y + pp.margin + 9);
-				current_set.content_height += e.get_content_height () + 9;
-			} else {
-				e.set_offset (9);
-			}
-			
-			p = e;
+			e.set_offset (pos);
+			pos += e.get_content_height () + 4 * get_scale ();
+			current_set.content_height = pos;
 		}
-		
-		current_set.content_height += 40;
 	}
 	
 	private void draw_expanders (int w, int h, Context cr) {
@@ -326,15 +328,15 @@ public class Toolbox : GLib.Object  {
 	public void draw (int w, int h, Context cr) { 
 		cr.save ();
 		
-		cr.rectangle(0, 0, w, h);
-		cr.set_line_width(0);
-		cr.set_source_rgba(242/255.0, 241/255.0, 240/255.0, 1);
-		cr.fill();
+		cr.rectangle (0, 0, w, h);
+		cr.set_line_width (0);
+		cr.set_source_rgba (242/255.0, 241/255.0, 240/255.0, 1);
+		cr.fill ();
 		
-		cr.rectangle(0, 0, 1, h);
-		cr.set_line_width(0);
-		cr.set_source_rgba(0/255.0, 0/255.0, 0/255.0, 1);
-		cr.fill();
+		cr.rectangle (0, 0, 1, h);
+		cr.set_line_width (0);
+		cr.set_source_rgba (0/255.0, 0/255.0, 0/255.0, 1);
+		cr.fill ();
 		
 		draw_expanders (w, h, cr);
 		

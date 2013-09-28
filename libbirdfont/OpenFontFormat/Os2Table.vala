@@ -109,7 +109,7 @@ class Os2Table : Table {
 		fd.add_16 (10); // sTypoLineGap
 
 		fd.add_u16 (ascender); // usWinAscent
-		fd.add_u16 (-descender); // usWinDescent (unassigned, not like sTypoDescender)
+		fd.add_u16 (-descender); // usWinDescent (not like sTypoDescender)
 
 		// FIXME:
 		fd.add_u32 (0); // ulCodePageRange1 Bits 0-31
@@ -121,7 +121,6 @@ class Os2Table : Table {
 		fd.add_16 (0); // usDefaultChar
 		fd.add_16 (0x0020); // usBreakChar also known as space
 		
-		// FIXME: calculate these values
 		fd.add_16 (2); // usMaxContext (two becase it has kernings but not ligatures).
 
 		// padding
