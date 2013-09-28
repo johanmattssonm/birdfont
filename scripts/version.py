@@ -17,4 +17,6 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 VERSION = '0.31'
-SO_VERSION = '7'
+SO_VERSION_MAJOR = '7'
+SO_VERSION_MINOR = '0'
+SO_VERSION = SO_VERSION_MAJOR + '.' + SO_VERSION_MINOR

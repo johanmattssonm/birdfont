@@ -28,7 +28,7 @@ public static int main (string[] arg) {
 	string file;
 	BirdFont.BirdFont birdfont;
 	CharDatabaseParser db;
-	unowned Thread<int> db_thread;
+	unowned Thread<CharDatabaseParser> db_thread;
 	Mutex database_mutex = new Mutex ();
 	Cond main_loop_idle = new Cond ();
 	bool in_idle = false;
@@ -56,7 +56,7 @@ public static int main (string[] arg) {
 	}
 	
 	try {
-		db_thread = Thread.create<int> (db.load, false);
+		db_thread = Thread.create<CharDatabaseParser> (db.load, false);
 		
 		// wait until main loop is done
 		db.sync.connect (() => {

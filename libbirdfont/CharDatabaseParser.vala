@@ -132,7 +132,7 @@ public class CharDatabaseParser : GLib.Object {
 		}
 	}
 	
-	public int load () {
+	public CharDatabaseParser load () {
 		parse_all_entries ();
 		
 		IdleSource idle = new IdleSource ();
@@ -145,7 +145,7 @@ public class CharDatabaseParser : GLib.Object {
 		});
 		idle.attach (null);
 		
-		return 0;
+		return this;
 	}
 
 	static File get_unicode_database () {

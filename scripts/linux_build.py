@@ -48,7 +48,7 @@ cc = options.cc
 cflags = options.cflags
 ldflags = options.ldflags
 library_cflags = options.cflags
-library_ldflags= options.ldflags
+library_ldflags= options.ldflags + " -Wl,-soname," + "libbirdfont.so." + version.SO_VERSION
 library = "libbirdfont.so." + version.SO_VERSION
 
 configfile.write_config (prefix)

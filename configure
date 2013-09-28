@@ -18,6 +18,8 @@ WARNING = '\033[93m'
 FAIL = '\033[91m'
 ENDC = '\033[0m'
 
+gee = "";
+
 def test_program_version (program, a, b, c):
 	print ("Checking for %s version >= %s.%s.%s" % (program, a, b, c))
 	process = subprocess.Popen (program + ' --version', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -42,19 +44,18 @@ def test_library_version (lib):
 	print ("Looking for library: " + lib + "\t\t")
 	process = subprocess.Popen ('pkg-config --modversion ' + lib, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 	process.communicate()[0]
-	if not process.returncode == 0:
-		print (FAIL + "Can't find " + lib + ENDC)
-		exit (1) 
+	return process.returncode == 0
 
 def configure ():
-	if not test_program_version ("valac", 0, 17, 3):
+	global gee
+	
+	if not test_program_version ("valac", 0, 16, 0):
 		print (FAIL + "valac is too old." + ENDC)
 		exit (1)
 
 	libs = [
 			'cairo', 
-			'gdk-pixbuf-2.0', 
-			'gee-0.8',
+			'gdk-pixbuf-2.0',
 			'gio-2.0', 
 			'glib-2.0', 
 			'gtk+-2.0',
@@ -64,7 +65,17 @@ def configure ():
 			]
 
 	for lib in libs:
-		test_library_version (lib)
+		if not test_library_version (lib):
+			print (FAIL + "Can not find " + lib + ENDC)
+			exit (1)
+
+	if test_library_version ('gee-0.8'):
+		gee = "gee-0.8"
+	elif test_library_version ('gee-1.0'):
+		gee = "gee-1.0"
+	else:
+		print (FAIL + "Can not find libgee (version 0.8 or version 1.0)." + ENDC)
+		exit (1)
 
 	run ('mkdir -p build')
 	run ('touch build/configured')
@@ -89,4 +100,4 @@ if not options.cc:
 	
 configure ()
 configfile.write_config (options.prefix)
-configfile.write_compile_parameters (options.prefix, options.dest, options.cc)
+configfile.write_compile_parameters (options.prefix, options.dest, options.cc, gee)

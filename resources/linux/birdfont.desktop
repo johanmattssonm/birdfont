@@ -8,5 +8,6 @@ Icon=birdfont
 StartupWMClass=birdfont
 Terminal=false
 Type=Application
-Categories=Graphics;
+GenericName=Font Editor
+Categories=Graphics;VectorGraphics;
 

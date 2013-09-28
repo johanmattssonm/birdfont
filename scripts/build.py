@@ -17,10 +17,11 @@ import os
 import shutil
 import subprocess
 import sys
+import version
 from optparse import OptionParser
 from run import run
 
-import configfile
+import config
 
 def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	#libbirdfont
@@ -37,7 +38,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 		-H build/libbirdfont/birdfont.h \
 		libbirdfont/*.vala \
 		libbirdfont/OpenFontFormat/*.vala \
-		--pkg gee-0.8 \
+		--pkg """ + config.GEE + """ \
 		--pkg libxml-2.0 \
 		--pkg gio-2.0 \
 		--pkg cairo \
@@ -53,7 +54,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 			-c build/libbirdfont/*.c \
 			-fPIC \
 			-D 'GETTEXT_PACKAGE="birdfont"' \
-			$(pkg-config --cflags gee-0.8) \
+			$(pkg-config --cflags """ + config.GEE + """) \
 			$(pkg-config --cflags libxml-2.0) \
 			$(pkg-config --cflags gio-2.0) \
 			$(pkg-config --cflags cairo) \
@@ -66,7 +67,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 			-shared \
 			build/libbirdfont/*.o \
 			$(freetype-config --libs) \
-			$(pkg-config --libs gee-0.8) \
+			$(pkg-config --libs """ + config.GEE + """) \
 			$(pkg-config --libs libxml-2.0) \
 			$(pkg-config --libs gio-2.0) \
 			$(pkg-config --libs cairo) \
@@ -80,10 +81,18 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 
 		# create link to the versioned library
 		if library.find ('.so') > -1:
-			run ("""cd build/bin && ln -s """ + library + " libbirdfont.so")
+			run ("""cd build/bin && ln -sf """ + library + " libbirdfont.so")
 		elif library.find ('.dylib') > -1:
-			run ("""cd build/bin && ln -s """ + library + " libbirdfont.dylib")
-			
+			run ("""cd build/bin && ln -sf """ + library + " libbirdfont.dylib")
+
+		run("rm -f build/birdfont.1.gz")
+		run("cp resources/linux/birdfont.1 build/")
+		run("gzip build/birdfont.1")	
+
+		run("rm -f build/birdfont-export.1.gz")	
+		run("cp resources/linux/birdfont-export.1 build/")
+		run("gzip build/birdfont-export.1")
+ 				
 	
 def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	# birdfont-export
@@ -95,7 +104,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 		--enable-experimental \
 		--define=MAC birdfont-export/* \
 		--vapidir=./ \
-		--pkg gee-0.8 \
+		--pkg """ + config.GEE + """ \
 		--pkg libxml-2.0 \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -107,7 +116,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	run(cc + " " + cflags + """ \
 		-c ./build/libbirdfont/birdfont.h build/birdfont-export/*.c \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
-		$(pkg-config --cflags gee-0.8) \
+		$(pkg-config --cflags """ + config.GEE + """) \
 		$(pkg-config --cflags libxml-2.0) \
 		$(pkg-config --cflags gio-2.0) \
 		$(pkg-config --cflags cairo) \
@@ -119,7 +128,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	run(cc + " " + ldflags + " \
 		build/birdfont-export/*.o \
 		-Lbuild/bin/ -lbirdfont \
-		$(pkg-config --libs gee-0.8) \
+		$(pkg-config --libs """ + config.GEE + """) \
 		$(pkg-config --libs libxml-2.0) \
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
@@ -127,6 +136,14 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 		$(pkg-config --libs gdk-pixbuf-2.0) \
 		-o ./build/bin/birdfont-export""")
 
+	run("rm -f build/birdfont.1.gz")
+	run("cp resources/linux/birdfont.1 build/")
+	run("gzip -9 build/birdfont.1")
+
+	run("rm -f build/birdfont-export.1.gz")	
+	run("cp resources/linux/birdfont-export.1 build/")
+	run("gzip -9 build/birdfont-export.1")
+	
 	run("touch build/installed")
 	run("touch build/configured")
 	
@@ -140,7 +157,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library):
 		--enable-experimental-non-null \
 		--enable-experimental \
 		--vapidir=./ \
-		--pkg gee-0.8 \
+		--pkg """ + config.GEE + """ \
 		--pkg libxml-2.0 \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -154,7 +171,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	run(cc + " " + cflags + """\
 		-c ./build/libbirdfont/birdfont.h build/birdfont/*.c \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
-		$(pkg-config --cflags gee-0.8) \
+		$(pkg-config --cflags """ + config.GEE + """) \
 		$(pkg-config --cflags libxml-2.0) \
 		$(pkg-config --cflags gio-2.0) \
 		$(pkg-config --cflags cairo) \
@@ -167,7 +184,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	run(cc + " " + ldflags + """ \
 		build/birdfont/*.o \
 		-Lbuild/bin/ -lbirdfont \
-		$(pkg-config --libs gee-0.8) \
+		$(pkg-config --libs """ + config.GEE + """) \
 		$(pkg-config --libs libxml-2.0) \
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \

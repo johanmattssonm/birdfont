@@ -271,12 +271,14 @@ public class Tool : GLib.Object {
 		cr.restore ();
 		
 		// FIXME: DELETE
+		/*
 		cr.save ();
 		cr.set_line_width (2);
 		cr.set_source_rgba (0/255.0, 100/255.0, 0/255.0, 1);
 		cr.rectangle (x, y, w, h);
 		cr.stroke ();
 		cr.restore ();
+		*/
 	}
 
 	/** Run pending events in main loop before continuing. */

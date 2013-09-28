@@ -18,13 +18,14 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import glob
 import subprocess
-import scripts.version
+
 from optparse import OptionParser
 from doit.tools import run_once
 from doit.action import CmdAction
 from scripts.bavala import Vala
 from scripts import version
 from scripts.translations import compile_translations
+from scripts import config
 
 DOIT_CONFIG = {
     'default_tasks': [
@@ -45,7 +46,7 @@ LIBS = [
     'cairo',
     'gdk-pixbuf-2.0',
     'webkit-1.0',
-    'gee-0.8'
+    config.GEE
     ]
 
 def task_build ():

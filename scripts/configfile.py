@@ -15,6 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+
 import version
 import time;
 
@@ -38,9 +39,10 @@ def write_config (prefix):
 
 	f.write("}")
 
-def write_compile_parameters (prefix, dest, cc):
+def write_compile_parameters (prefix, dest, cc, gee):
 	f = open('./scripts/config.py', 'w+')
 	f.write("#!/usr/bin/python\n")
 	f.write("PREFIX =  \"" + prefix + "\"\n")
 	f.write("DEST = \"" + dest + "\"\n")
 	f.write("CC = \"" + cc + "\"\n")
+	f.write("GEE = \"" + gee + "\"\n")
