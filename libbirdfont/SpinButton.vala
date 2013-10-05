@@ -87,6 +87,8 @@ public class SpinButton : Tool {
 					set_int_value (@"$new_value");
 				}
 			}
+			
+			return value_from_motion;
 		});
 
 		panel_release_action.connect ((selected, button, tx, ty) => {

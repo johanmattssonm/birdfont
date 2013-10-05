@@ -34,7 +34,12 @@ public class Toolbox : GLib.Object  {
 	
 	ImageSurface? toolbox_background = null;
 	
+	/** Scrolling with scroll wheel */
 	bool scrolling_toolbox = false;
+	
+	/** Scroll with touch pad. */
+	bool scrolling_touch = false;
+	double scroll_y = 0;
 	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		current_tool = new Tool ("no_icon");
@@ -94,6 +99,9 @@ public class Toolbox : GLib.Object  {
 				}
 			}
 		}
+		
+		scrolling_touch = true;
+		scroll_y = y;
 	}
 	
 	public void release (uint button, double x, double y) {
@@ -112,6 +120,8 @@ public class Toolbox : GLib.Object  {
 				}
 			}
 		}
+		
+		scrolling_touch = false;
 	}
 
 	public void scroll_up (double x, double y) {
@@ -129,17 +139,27 @@ public class Toolbox : GLib.Object  {
 		}
 		
 		if (!action) {
-			current_set.scroll += 35;
-			
-			if (current_set.scroll > 0) {
-				current_set.scroll = 0;
-			}
-			
-			update_expanders ();
-			suppress_scroll ();	
+			scroll_current_set (35);
 		}
 		
 		redraw_tool_box ();
+	}
+
+	void scroll_current_set (double d) {
+		current_set.scroll += d;
+		
+		if (current_set.scroll > 0) {
+			current_set.scroll = 0;
+		}
+
+		if (current_set.content_height < allocation_height) {
+			current_set.scroll = 0;
+		} else if (current_set.content_height + current_set.scroll < allocation_height) {
+			current_set.scroll = allocation_height - current_set.content_height;
+		}
+					
+		update_expanders ();
+		suppress_scroll ();	
 	}
 
 	public void scroll_down (double x, double y) {
@@ -155,18 +175,9 @@ public class Toolbox : GLib.Object  {
 				}
 			}
 		}
-		
+
 		if (!action) {
-			current_set.scroll -= 35;
-			
-			if (current_set.content_height < allocation_height) {
-				current_set.scroll = 0;
-			} else if (current_set.content_height + current_set.scroll < allocation_height) {
-				current_set.scroll = allocation_height - current_set.content_height;
-			}
-			
-			update_expanders ();
-			suppress_scroll ();
+			scroll_current_set (-35);
 		}
 
 		redraw_tool_box ();
@@ -184,6 +195,8 @@ public class Toolbox : GLib.Object  {
 	public void move (double x, double y) {
 		bool update;
 		bool a;
+		bool consumed = false;
+		
 		foreach (Expander exp in current_set.get_expanders ()) {
 			a = exp.is_over (x, y);
 			update = exp.set_active (a);
@@ -208,15 +221,23 @@ public class Toolbox : GLib.Object  {
 						redraw (0, 0, allocation_width, allocation_height);
 					}
 					
-					t.panel_move_action (t, x, y);
+					if (t.panel_move_action (t, x, y)) {
+						consumed = true;
+					}
 				}
 			}
+		}
+		
+		if (scrolling_touch && !consumed && BirdFont.android) {
+			scroll_current_set (y - scroll_y);
+			scroll_y = y;
+			redraw_tool_box ();
 		}
 	}
 
 	public static void redraw_tool_box () {
 		Toolbox t = MainWindow.get_toolbox ();
-		t.redraw (0, 0, t.allocation_width, t.allocation_height);
+		t.redraw (0, 0, allocation_width, allocation_height);
 	}
 	
 	public void reset_active_tool () {

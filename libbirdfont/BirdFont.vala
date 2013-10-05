@@ -183,6 +183,7 @@ public class BirdFont {
 	public static bool fatal_wanings = false;
 	public static bool win32 = false;
 	public static bool mac = false;
+	public static bool android = false;
 	public static string exec_path = "";
 	public static string bundle_path = "";
 
@@ -205,6 +206,8 @@ public class BirdFont {
 		File font_file;
 		string exec_path;
 
+		args = new Argument.command_line (arg);
+
 #if ANDROID
 		BirdFont.logging = true;
 		init_logfile ();
@@ -212,26 +215,24 @@ public class BirdFont {
 		__android_log_print (ANDROID_LOG_WARN, "BirdFont", @"libbirdfont version $VERSION");
 		LogLevelFlags log_levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
 		Log.set_handler (null, log_levels, android_warning);
+		
+		android = true;
 #else
 		stdout.printf ("birdfont version %s\n", VERSION);
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
-#endif
-
-		printd ("Args");
-		args = new Argument.command_line (arg);
 		
-		printd ("gettext");
+		android = args.has_argument ("--android");
+#endif
+		
 		if (!args.has_argument ("--no-translation")) {
 			init_gettext ();
 		}
 
-		printd ("help");
 		if (args.has_argument ("--help")) {
 			args.print_help ();
 			Process.exit (0);
 		}
 
-		printd ("validate");
 		err_arg = args.validate ();
 		if (err_arg != 0) {
 			stdout.printf (@"Unknown parameter $(arg [err_arg])\n\n");
@@ -239,16 +240,13 @@ public class BirdFont {
 			Process.exit (0);
 		}
 
-		printd ("preferences");
 		Preferences.load ();
 		
-		printd ("new font");
 		current_font = new Font ();
 		current_font.set_name ("");
 		current_font.initialised = false;
 		current_glyph = new Glyph ("");
 		
-		printd ("settings");
 		experimental = args.has_argument ("--test");
 		show_coordinates = args.has_argument ("--show-coordinates");
 		fatal_wanings = args.has_argument ("--fatal-warning");
@@ -259,8 +257,7 @@ public class BirdFont {
 #else
 		mac = args.has_argument ("--mac");
 #endif
-
-		printd ("path");		
+	
 		if (program_path == null) {
 			exec_path = "";
 
@@ -289,16 +286,13 @@ public class BirdFont {
 			}
 		}
 
-		printd ("init fatal warnings");
 		if (fatal_wanings) {
 			LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
 			Log.set_handler (null, levels, fatal_warning);
 		}
 		
-		printd ("last file");
 		Preferences.set_last_file (get_current_font ().get_path ());
 		
-		printd ("default set");
 		DefaultCharacterSet.create_default_character_sets ();
 		DefaultCharacterSet.get_characters_for_prefered_language ();
 

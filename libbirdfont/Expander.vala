@@ -171,18 +171,7 @@ public class Expander : GLib.Object {
 	
 	public virtual bool set_open (bool o) {
 		bool r = (open != o);
-		
-		if (o) {
-			/* // FIXME: DELETE
-			margin = 35 * (int)((tool.length () / 4.0) + 1) ;
-			if (tool.length () % 4 == 0) {
-				margin -= 35;  
-			}
-			*/
-		} else {
-			margin = 0;
-		}
-		
+		margin = 0;
 		open = o;
 		return r;
 	}

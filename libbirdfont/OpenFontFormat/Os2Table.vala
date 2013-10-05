@@ -109,8 +109,14 @@ class Os2Table : Table {
 		fd.add_16 (10); // sTypoLineGap
 
 		fd.add_u16 (ascender); // usWinAscent
-		fd.add_u16 (-descender); // usWinDescent (not like sTypoDescender)
-
+		
+		if (descender > 0) {
+			warning ("usWinDescent is unsigned.");
+			fd.add_u16 (0);
+		} else {
+			fd.add_u16 (-descender); // usWinDescent (not like sTypoDescender)
+		}
+		
 		// FIXME:
 		fd.add_u32 (0); // ulCodePageRange1 Bits 0-31
 		fd.add_u32 (0); // ulCodePageRange2 Bits 32-63

@@ -60,7 +60,9 @@ public class Tool : GLib.Object {
 	
 	public signal void panel_press_action (Tool selected, uint button, double x, double y);
 	public signal void panel_release_action (Tool selected, uint button, double x, double y);
-	public signal void panel_move_action (Tool selected, double x, double y);
+
+	/** @return true is event is consumed. */
+	public signal bool panel_move_action (Tool selected, double x, double y);
 	
 	public signal void draw_action (Tool selected, Context cr, Glyph glyph);
 	
@@ -222,6 +224,10 @@ public class Tool : GLib.Object {
 		
 		double scale;
 
+		if (unlikely (w == 0)) {
+			warning ("No width for tool.");
+		}
+
 		cr.save ();
 		if (Icons.get_dpi () == 72) {
 			scale = w / button_width_72dpi ();
@@ -269,16 +275,6 @@ public class Tool : GLib.Object {
 		}
 		
 		cr.restore ();
-		
-		// FIXME: DELETE
-		/*
-		cr.save ();
-		cr.set_line_width (2);
-		cr.set_source_rgba (0/255.0, 100/255.0, 0/255.0, 1);
-		cr.rectangle (x, y, w, h);
-		cr.stroke ();
-		cr.restore ();
-		*/
 	}
 
 	/** Run pending events in main loop before continuing. */

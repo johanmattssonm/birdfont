@@ -49,6 +49,8 @@ public class KerningRange : Tool {
 			if (active) {
 				MainWindow.get_tool_tip ().show_text (t_("Right click to edit the class and left click to kern glyphs in the class."));
 			}
+			
+			return false;
 		});
 
 		panel_release_action.connect ((selected, button, tx, ty) => {

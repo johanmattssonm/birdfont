@@ -32,9 +32,6 @@ public class DrawingTools : ToolCollection  {
 	public SpinButton background_scale = new SpinButton ();
 	public static SpinButton precision;
 	
-	public int allocation_width = 0;
-	public int allocation_height = 0;
-	
 	ImageSurface? toolbox_background = null;
 	
 	public static PointType point_type = PointType.DOUBLE_CURVE;
@@ -795,7 +792,7 @@ public class DrawingTools : ToolCollection  {
 		
 		grid_expander.set_open (true);
 		MainWindow.get_toolbox ().update_expanders ();
-		MainWindow.get_toolbox ().redraw (0, 0, allocation_width, allocation_height);		
+		MainWindow.get_toolbox ().redraw (0, 0, Toolbox.allocation_width, Toolbox.allocation_height);		
 	}
 	
 	public void parse_grid (string spin_button_value) {
@@ -825,7 +822,7 @@ public class DrawingTools : ToolCollection  {
 		grid_expander.set_open (true);
 		tb.update_expanders ();
 		
-		tb.redraw (0, 0, allocation_width, allocation_height);
+		tb.redraw (0, 0, Toolbox.allocation_width, Toolbox.allocation_height);
 		
 		tb.select_tool (grid_width);
 		grid_width.set_active (false);
@@ -852,7 +849,7 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		MainWindow.get_toolbox ().update_expanders ();
-		tb.redraw (0, 0, allocation_width, allocation_height);
+		tb.redraw (0, 0, Toolbox.allocation_width, Toolbox.allocation_height);
 	}
 	
 	private void add_expander (Expander e) {

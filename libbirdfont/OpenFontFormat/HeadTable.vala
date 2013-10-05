@@ -193,7 +193,7 @@ class HeadTable : Table {
 		font_data.add_short (ymax);
 	
 		font_data.add_u16 (0); // mac style
-		font_data.add_u16 (2); // smallest recommended size in pixels, ppem
+		font_data.add_u16 (8); // smallest recommended size in pixels, ppem
 		font_data.add_16 (2); // deprecated direction hint
 		font_data.add_16 (loca_offset_size);  // long offset
 		font_data.add_16 (0);  // Use current glyph data format

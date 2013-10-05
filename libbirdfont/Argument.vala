@@ -69,6 +69,7 @@ public class Argument : GLib.Object {
 				a == "--show-coordinates" || 
 				a == "--no-translation" ||
 				a == "--mac" ||
+				a == "--android" ||
 				a == "--donated") {
 				prev = a;
 				i++;
@@ -203,6 +204,8 @@ public class Argument : GLib.Object {
 				return "--slow";
 			case 't': 
 				return "--test";
+			case 'a': 
+				return "--android";
 		}
 		
 		return "";
@@ -239,6 +242,7 @@ public class Argument : GLib.Object {
 		stdout.printf (args.nth (0).data);
 		stdout.printf (" [" + t_("FILE") + "] [" + t_("OPTION") + " ...]\n");
 
+		print_padded ("-a, --android", t_("enable Android customizations"));
 		print_padded ("-c, --show-coordinates", t_("show coordinate in glyph view"));
 		print_padded ("-e, --exit", t_("exit if a test case fails"));
 		print_padded ("-f, --fatal-warning", t_("treat warnings as fatal"));

@@ -128,6 +128,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	run(cc + " " + ldflags + " \
 		build/birdfont-export/*.o \
 		-Lbuild/bin/ -lbirdfont \
+		-lm \
 		$(pkg-config --libs """ + config.GEE + """) \
 		$(pkg-config --libs libxml-2.0) \
 		$(pkg-config --libs gio-2.0) \
