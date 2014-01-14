@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 17:12+0200\n"
-"PO-Revision-Date: 2013-04-17 12:43+0000\n"
+"POT-Creation-Date: 2014-01-14 10:10+0100\n"
+"PO-Revision-Date: 2013-11-14 16:37+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fa\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1366202639.0\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"X-POOTLE-MTIME: 1384447027.000000\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
@@ -226,47 +226,47 @@ msgstr ""
 msgid "_Kerning"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1127
+#: birdfont/GtkWindow.vala:1126
 msgid "PostScript Name"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1134
+#: birdfont/GtkWindow.vala:1133
 msgid "Name"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1141
+#: birdfont/GtkWindow.vala:1140
 msgid "Style"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1147
+#: birdfont/GtkWindow.vala:1146
 msgid "Bold"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1154
+#: birdfont/GtkWindow.vala:1153
 msgid "Italic"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1162
+#: birdfont/GtkWindow.vala:1161
 msgid "Weight"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1169
+#: birdfont/GtkWindow.vala:1168
 msgid "Full name (name and style)"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1176
+#: birdfont/GtkWindow.vala:1175
 msgid "Unique identifier"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1183
+#: birdfont/GtkWindow.vala:1182
 msgid "Version"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1190
+#: birdfont/GtkWindow.vala:1189
 msgid "Description"
-msgstr ""
+msgstr "شرح"
 
-#: birdfont/GtkWindow.vala:1198
+#: birdfont/GtkWindow.vala:1197
 msgid "Copyright"
 msgstr ""
 
@@ -281,3 +281,63 @@ msgstr ""
 
 #~ msgid "show coordinate in glyph view"
 #~ msgstr "نمایش هماهنگ در منوی glyph"
+
+#~ msgid "Backgrounds"
+#~ msgstr "پس‌زمینه‌ها"
+
+#~ msgid "Move, resize and rotate background image"
+#~ msgstr "نقل مکان، تغییر اندازه و چرخش تصویر پس‌زمینه"
+
+#~ msgid "Usage:"
+#~ msgstr "روش استفاده:"
+
+#~ msgid "print this message\n"
+#~ msgstr "چاپ این پیغام"
+
+#~ msgid "write files to this directory\n"
+#~ msgstr "نوشتن فایلها در این شاخه"
+
+#~ msgid "write svg file\n"
+#~ msgstr "نوشتن فایل svg"
+
+#~ msgid "write ttf and eot files\n"
+#~ msgstr "نوشتن ttf و eot"
+
+#~ msgid "Can't find output directory"
+#~ msgstr "نمی توان شاخه خروجی را پیدا کرد"
+
+#~ msgid "Loading the unicode character database"
+#~ msgstr "بارگذارینویسه های یونیکد از دیتابیس"
+
+#~ msgid "Circle"
+#~ msgstr "IRC"
+
+#~ msgid "Crop background image"
+#~ msgstr "چیدن تصویر پس‌زمینه"
+
+#~ msgid "Default language"
+#~ msgstr "زبان پیش‌گزیده"
+
+#~ msgid "Private use area"
+#~ msgstr "ناحیه‌ی خصوصی"
+
+#~ msgid "Javanese"
+#~ msgstr "جاوانیز"
+
+#~ msgid "Russian"
+#~ msgstr "روسی"
+
+#~ msgid "Swedish"
+#~ msgstr "سوئدی"
+
+#~ msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+#~ msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+
+#~ msgid "Flip path horizontally"
+#~ msgstr "قرینه‌سازی افقی مسیر"
+
+#~ msgid "Show full unicode characters set"
+#~ msgstr "نمایش کامل نویسه های یونیکد"
+
+#~ msgid "Show default characters set"
+#~ msgstr "مجموعه نویسه‌گان پیش‌فرض:"

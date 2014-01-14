@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 17:12+0200\n"
+"POT-Creation-Date: 2014-01-14 10:10+0100\n"
 "PO-Revision-Date: 2013-09-10 22:45+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -248,47 +248,47 @@ msgstr "_Инструменты"
 msgid "_Kerning"
 msgstr "_Кернинг"
 
-#: birdfont/GtkWindow.vala:1127
+#: birdfont/GtkWindow.vala:1126
 msgid "PostScript Name"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1134
+#: birdfont/GtkWindow.vala:1133
 msgid "Name"
 msgstr "Название"
 
-#: birdfont/GtkWindow.vala:1141
+#: birdfont/GtkWindow.vala:1140
 msgid "Style"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1147
+#: birdfont/GtkWindow.vala:1146
 msgid "Bold"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1154
+#: birdfont/GtkWindow.vala:1153
 msgid "Italic"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1162
+#: birdfont/GtkWindow.vala:1161
 msgid "Weight"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1169
+#: birdfont/GtkWindow.vala:1168
 msgid "Full name (name and style)"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1176
+#: birdfont/GtkWindow.vala:1175
 msgid "Unique identifier"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1183
+#: birdfont/GtkWindow.vala:1182
 msgid "Version"
 msgstr "Версия"
 
-#: birdfont/GtkWindow.vala:1190
+#: birdfont/GtkWindow.vala:1189
 msgid "Description"
 msgstr "Описание"
 
-#: birdfont/GtkWindow.vala:1198
+#: birdfont/GtkWindow.vala:1197
 msgid "Copyright"
 msgstr ""
 

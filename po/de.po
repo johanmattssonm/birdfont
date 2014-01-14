@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 17:12+0200\n"
-"PO-Revision-Date: 2013-09-03 14:27+0000\n"
+"POT-Creation-Date: 2014-01-14 10:10+0100\n"
+"PO-Revision-Date: 2013-11-20 13:09+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1378218447.0\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"X-POOTLE-MTIME: 1384952940.000000\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
@@ -27,8 +27,9 @@ msgid "_Open"
 msgstr "_Öffnen"
 
 #: birdfont/GtkWindow.vala:472
+#, fuzzy
 msgid "_Recent Files"
-msgstr ""
+msgstr "Letzte Dateien"
 
 #: birdfont/GtkWindow.vala:476
 msgid "_Save"
@@ -75,9 +76,8 @@ msgid "Paste _In Place"
 msgstr ""
 
 #: birdfont/GtkWindow.vala:530
-#, fuzzy
 msgid "Select All Pa_ths"
-msgstr "_Wähle alle Pfade aus"
+msgstr "Wähle alle Pfade aus"
 
 #: birdfont/GtkWindow.vala:537
 msgid "_Search"
@@ -104,41 +104,40 @@ msgstr "Glyphen-Abfolge"
 
 #: birdfont/GtkWindow.vala:561
 msgid "Set Glyph _Background"
-msgstr ""
+msgstr "Glyph Hintergrund einstellen."
 
 #: birdfont/GtkWindow.vala:565
 msgid "_Remove Glyph Background"
-msgstr ""
+msgstr "Glyph Hintergrund entfernen."
 
 #: birdfont/GtkWindow.vala:571
 #, fuzzy
 msgid "_Select Point Above"
-msgstr "_Übergeordneten Punkt anwählen"
+msgstr "Übergeordneten Punkt anwählen"
 
 #: birdfont/GtkWindow.vala:575
 #, fuzzy
 msgid "Select _Next Point"
-msgstr "Wähle _nächsten Punkt"
+msgstr "Wähle nächsten Punkt"
 
 #: birdfont/GtkWindow.vala:579
 #, fuzzy
 msgid "Select _Previous Point"
-msgstr "_Vorherigen Punkt auswählen"
+msgstr "Vorherigen Punkt auswählen"
 
 #: birdfont/GtkWindow.vala:583
-#, fuzzy
 msgid "Select Point _Below"
-msgstr "_Untergeordneten Punkt auswählen"
+msgstr "Untergeordneten Punkt auswählen"
 
 #: birdfont/GtkWindow.vala:588
 #, fuzzy
 msgid "_Next Tab"
-msgstr "_Nächster Reiter"
+msgstr "Nächster Reiter."
 
 #: birdfont/GtkWindow.vala:601
 #, fuzzy
 msgid "_Previous Tab"
-msgstr "_Vorheriger Reiter"
+msgstr "Vorheriger Reiter"
 
 #: birdfont/GtkWindow.vala:614
 msgid "_Close tab"
@@ -147,7 +146,7 @@ msgstr "_Reiter schließen"
 #: birdfont/GtkWindow.vala:628
 #, fuzzy
 msgid "Close _All Tabs"
-msgstr "_Alle Reiter schließen"
+msgstr "Alle Reiter schließen"
 
 #: birdfont/GtkWindow.vala:636
 #, fuzzy
@@ -172,34 +171,33 @@ msgid "Show _full unicode characters set"
 msgstr "Zeige _alle Unicode-Zeichen"
 
 #: birdfont/GtkWindow.vala:670
-#, fuzzy
 msgid "Show De_fault Characters Set"
-msgstr "Zeige Standardzeichen"
+msgstr "Zeige Standardzeichen."
 
 #: birdfont/GtkWindow.vala:677
 #, fuzzy
 msgid "Show Characters in Font"
-msgstr "Zeige in Schriftart enthaltene Zeichen"
+msgstr "Zeige in Schriftart enthaltene Zeichen."
 
 #: birdfont/GtkWindow.vala:684
 #, fuzzy
 msgid "Add New _Grid Item"
-msgstr "Neues _Gitterelement hinzufügen"
+msgstr "Neues Gitterelement hinzufügen."
 
 #: birdfont/GtkWindow.vala:690
 #, fuzzy
 msgid "Remove Gr_id Item"
-msgstr "Gitterelement _entfernen"
+msgstr "Gitterelement entfernen"
 
 #: birdfont/GtkWindow.vala:696
 #, fuzzy
 msgid "_Zoom In"
-msgstr "_Vergrößern"
+msgstr "Vergrößern"
 
 #: birdfont/GtkWindow.vala:703
 #, fuzzy
 msgid "Zoom _Out"
-msgstr "_Verkleinern"
+msgstr "Verkleinern"
 
 #: birdfont/GtkWindow.vala:710
 #, fuzzy
@@ -246,48 +244,49 @@ msgstr "Werkzeug"
 msgid "_Kerning"
 msgstr "_Unterschneidung"
 
-#: birdfont/GtkWindow.vala:1127
+#: birdfont/GtkWindow.vala:1126
+#, fuzzy
 msgid "PostScript Name"
-msgstr ""
+msgstr "Postscript Name"
 
-#: birdfont/GtkWindow.vala:1134
+#: birdfont/GtkWindow.vala:1133
 msgid "Name"
 msgstr "Name"
 
-#: birdfont/GtkWindow.vala:1141
+#: birdfont/GtkWindow.vala:1140
 msgid "Style"
 msgstr "Stil"
 
-#: birdfont/GtkWindow.vala:1147
+#: birdfont/GtkWindow.vala:1146
 msgid "Bold"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1154
+#: birdfont/GtkWindow.vala:1153
 msgid "Italic"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1162
+#: birdfont/GtkWindow.vala:1161
 msgid "Weight"
-msgstr ""
+msgstr "Gewichtung"
 
-#: birdfont/GtkWindow.vala:1169
+#: birdfont/GtkWindow.vala:1168
 #, fuzzy
 msgid "Full name (name and style)"
 msgstr "Vollständiger Name (Name und Schriftstil)"
 
-#: birdfont/GtkWindow.vala:1176
+#: birdfont/GtkWindow.vala:1175
 msgid "Unique identifier"
 msgstr "Eindeutiger Bezeichner"
 
-#: birdfont/GtkWindow.vala:1183
+#: birdfont/GtkWindow.vala:1182
 msgid "Version"
 msgstr "Version"
 
-#: birdfont/GtkWindow.vala:1190
+#: birdfont/GtkWindow.vala:1189
 msgid "Description"
 msgstr "Beschreibung"
 
-#: birdfont/GtkWindow.vala:1198
+#: birdfont/GtkWindow.vala:1197
 msgid "Copyright"
 msgstr "Urheberrecht"
 
@@ -302,6 +301,9 @@ msgstr "Urheberrecht"
 
 #~ msgid "show coordinate in glyph view"
 #~ msgstr "Zeige Koordinaten in Strukturanzeige"
+
+#~ msgid "exit if a test case fails"
+#~ msgstr "Beenden wenn Test fehlschlägt"
 
 # betrachten oder behandeln?
 #~ msgid "treat warnings as fatal"
@@ -346,6 +348,9 @@ msgstr "Urheberrecht"
 #~ msgid "Can't find output directory"
 #~ msgstr "Ausgabeverzeichnis nicht auffindbar"
 
+#~ msgid "Loading the unicode character database"
+#~ msgstr "Unicode-Zeichensatz Datenbank laden"
+
 #~ msgid "Circle"
 #~ msgstr "Kreis"
 
@@ -363,6 +368,9 @@ msgstr "Urheberrecht"
 
 #~ msgid "English"
 #~ msgstr "Englisch"
+
+#~ msgid "Greek"
+#~ msgstr "Griechisch"
 
 #~ msgid "Japanese"
 #~ msgstr "Japanisch"
@@ -393,6 +401,15 @@ msgstr "Urheberrecht"
 
 #~ msgid "Convert selected points"
 #~ msgstr "Ausgewählte Punkte umwandeln"
+
+#~ msgid "Tie curve handles for the selected edit point"
+#~ msgstr "Kurvenverknüpfungseigenschaften für ausgewählten Bearbeitungspunkt"
+
+#~ msgid "Symmetrical handles"
+#~ msgstr "Symmetrisches Verhalten"
+
+#~ msgid "Convert segment to line."
+#~ msgstr "Segment zur Linie konvertieren"
 
 #~ msgid "Merge paths"
 #~ msgstr "Pfade verbinden"
@@ -481,11 +498,36 @@ msgstr "Urheberrecht"
 #~ msgid "Set precision"
 #~ msgstr "Präzision festlegen"
 
+#~ msgid ""
+#~ "Show all control point handles or only handles for the selected points."
+#~ msgstr "Zeigt alle Kontrollpunkte oder nur die für den ausgewählten Punkt"
+
+#~ msgid "Object color"
+#~ msgstr "Objektfarbe"
+
+#~ msgid "Set fill color for open paths."
+#~ msgstr "Füllfarbe für offene Pfade setzen."
+
+#~ msgid "Use TTF units."
+#~ msgstr "Benutze TTF-Objekte"
+
 #~ msgid "Set size for grid"
 #~ msgstr "Größe für Raster festlegen"
 
+#~ msgid "Writing TTF and EOT files."
+#~ msgstr "Schreibe TTF und EOT-Dateien"
+
+#~ msgid "Writing SVG file."
+#~ msgstr "Schreibe SVG Datei."
+
+#~ msgid "No fonts created yet."
+#~ msgstr "Es wurde kein Zeichensatz erstellt."
+
 #~ msgid "Recent files"
 #~ msgstr "Letzte Dateien"
+
+#~ msgid "Backup"
+#~ msgstr "Datensicherung"
 
 #~ msgid "Files"
 #~ msgstr "Dateien"
@@ -502,6 +544,10 @@ msgstr "Urheberrecht"
 #, fuzzy
 #~ msgid "Kerning:"
 #~ msgstr "Unterschneidung"
+
+#, fuzzy
+#~ msgid "Character Set"
+#~ msgstr "Zeichensatz"
 
 #~ msgid "Glyph sequence"
 #~ msgstr "Glyphen-Abfolge"
@@ -521,6 +567,9 @@ msgstr "Urheberrecht"
 #~ msgid "Move paths"
 #~ msgstr "Pfade verschieben"
 
+#~ msgid "Search"
+#~ msgstr "Suche"
+
 #~ msgid "Overview"
 #~ msgstr "Übersicht"
 
@@ -538,6 +587,9 @@ msgstr "Urheberrecht"
 
 #~ msgid "Cancel"
 #~ msgstr "Abbrechen"
+
+#~ msgid "Yes, don't ask again."
+#~ msgstr "Ja ,diese Nachfrage nicht mehr anzeigen"
 
 #~ msgid "Right click to add new points, left click to move points"
 #~ msgstr ""

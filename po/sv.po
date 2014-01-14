@@ -6,17 +6,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 17:12+0200\n"
-"PO-Revision-Date: 2013-09-17 09:57+0000\n"
-"Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
+"POT-Creation-Date: 2014-01-14 10:10+0100\n"
+"PO-Revision-Date: 2013-09-27 10:32+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1379411874.0\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"X-POOTLE-MTIME: 1380277938.000000\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
@@ -226,48 +226,47 @@ msgstr "_Verktyg"
 msgid "_Kerning"
 msgstr "_Kerning"
 
-#: birdfont/GtkWindow.vala:1127
-#, fuzzy
+#: birdfont/GtkWindow.vala:1126
 msgid "PostScript Name"
 msgstr "PostScript namn"
 
-#: birdfont/GtkWindow.vala:1134
+#: birdfont/GtkWindow.vala:1133
 msgid "Name"
 msgstr "Namn"
 
-#: birdfont/GtkWindow.vala:1141
+#: birdfont/GtkWindow.vala:1140
 msgid "Style"
 msgstr "Stil"
 
-#: birdfont/GtkWindow.vala:1147
+#: birdfont/GtkWindow.vala:1146
 msgid "Bold"
 msgstr "Fet"
 
-#: birdfont/GtkWindow.vala:1154
+#: birdfont/GtkWindow.vala:1153
 msgid "Italic"
 msgstr "Kursiv"
 
-#: birdfont/GtkWindow.vala:1162
+#: birdfont/GtkWindow.vala:1161
 msgid "Weight"
 msgstr "Linjebredd"
 
-#: birdfont/GtkWindow.vala:1169
+#: birdfont/GtkWindow.vala:1168
 msgid "Full name (name and style)"
 msgstr "Hela namnet (namn och stil)"
 
-#: birdfont/GtkWindow.vala:1176
+#: birdfont/GtkWindow.vala:1175
 msgid "Unique identifier"
 msgstr "Unik identifierare"
 
-#: birdfont/GtkWindow.vala:1183
+#: birdfont/GtkWindow.vala:1182
 msgid "Version"
 msgstr "Version"
 
-#: birdfont/GtkWindow.vala:1190
+#: birdfont/GtkWindow.vala:1189
 msgid "Description"
 msgstr "Beskrivning"
 
-#: birdfont/GtkWindow.vala:1198
+#: birdfont/GtkWindow.vala:1197
 msgid "Copyright"
 msgstr "Upphovsrätt"
 

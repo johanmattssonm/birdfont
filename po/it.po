@@ -6,17 +6,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 17:12+0200\n"
-"PO-Revision-Date: 2013-09-13 20:27+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"POT-Creation-Date: 2014-01-14 10:10+0100\n"
+"PO-Revision-Date: 2014-01-09 00:26+0000\n"
+"Last-Translator: Zaldor <ludolab@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1379104051.0\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"X-POOTLE-MTIME: 1389227189.000000\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
@@ -28,7 +28,7 @@ msgstr "_Apri"
 
 #: birdfont/GtkWindow.vala:472
 msgid "_Recent Files"
-msgstr "File _recenti"
+msgstr "File _Recenti"
 
 #: birdfont/GtkWindow.vala:476
 msgid "_Save"
@@ -48,11 +48,11 @@ msgstr "_Anteprima"
 
 #: birdfont/GtkWindow.vala:497
 msgid "Name and _Description"
-msgstr ""
+msgstr "Nome e _Descrizione"
 
 #: birdfont/GtkWindow.vala:501
 msgid "Select _Character Set"
-msgstr ""
+msgstr "Seleziona _Collezione Caratteri"
 
 #: birdfont/GtkWindow.vala:505
 msgid "_Quit"
@@ -72,19 +72,17 @@ msgstr "_Incolla"
 
 #: birdfont/GtkWindow.vala:525
 msgid "Paste _In Place"
-msgstr ""
+msgstr "Incolla _Nel Posto"
 
 #: birdfont/GtkWindow.vala:530
-#, fuzzy
 msgid "Select All Pa_ths"
-msgstr "_Seleziona tutti i percorsi"
+msgstr "Seleziona tutti i _Tracciati"
 
 #: birdfont/GtkWindow.vala:537
 msgid "_Search"
-msgstr ""
+msgstr "_Cerca"
 
 #: birdfont/GtkWindow.vala:542
-#, fuzzy
 msgid "_Export Glyph as SVG"
 msgstr "_Esporta glifo in SVG"
 
@@ -93,75 +91,64 @@ msgid "_Import SVG"
 msgstr "_Importa SVG"
 
 #: birdfont/GtkWindow.vala:551
-#, fuzzy
 msgid "Close _Path"
-msgstr "Chiudi _percorso"
+msgstr "Chiudi _Tracciato"
 
 #: birdfont/GtkWindow.vala:556
-#, fuzzy
 msgid "_Glyph Sequence"
-msgstr "Sequenza glyph"
+msgstr "Sequenza _Glifo"
 
 #: birdfont/GtkWindow.vala:561
 msgid "Set Glyph _Background"
-msgstr ""
+msgstr "Imposta Sfondo _Glifo"
 
 #: birdfont/GtkWindow.vala:565
 msgid "_Remove Glyph Background"
-msgstr ""
+msgstr "_Rimuovi Sfondo Glifo"
 
 #: birdfont/GtkWindow.vala:571
-#, fuzzy
 msgid "_Select Point Above"
-msgstr "_Seleziona punto superiore"
+msgstr "_Seleziona Punto Superiore"
 
 #: birdfont/GtkWindow.vala:575
-#, fuzzy
 msgid "Select _Next Point"
-msgstr "Seleziona _ il prossimo punto"
+msgstr "Seleziona Il Pu_nto Successivo"
 
 #: birdfont/GtkWindow.vala:579
-#, fuzzy
 msgid "Select _Previous Point"
-msgstr "Seleziona il punto _precedente"
+msgstr "Seleziona Il Punto _Precedente"
 
 #: birdfont/GtkWindow.vala:583
-#, fuzzy
 msgid "Select Point _Below"
-msgstr "Seleziona il punto _sotto"
+msgstr "Seleziona Il Punto _Sotto"
 
 #: birdfont/GtkWindow.vala:588
-#, fuzzy
 msgid "_Next Tab"
-msgstr "_Scheda successiva"
+msgstr "_Scheda Successiva"
 
 #: birdfont/GtkWindow.vala:601
-#, fuzzy
 msgid "_Previous Tab"
-msgstr "_Scheda precedente"
+msgstr "Scheda _Precedente"
 
 #: birdfont/GtkWindow.vala:614
 msgid "_Close tab"
 msgstr "_Chiudi scheda"
 
 #: birdfont/GtkWindow.vala:628
-#, fuzzy
 msgid "Close _All Tabs"
-msgstr "_Chiudi tutte le schede"
+msgstr "_Chiudi Tutte le Schede"
 
 #: birdfont/GtkWindow.vala:636
-#, fuzzy
 msgid "_Create Path"
-msgstr "_Crea percorso"
+msgstr "_Crea Tracciato"
 
 #: birdfont/GtkWindow.vala:643
 msgid "_Zoom"
 msgstr "In_grandimento"
 
 #: birdfont/GtkWindow.vala:649
-#, fuzzy
 msgid "_Create Counter Path"
-msgstr "_Crea contatore percorso"
+msgstr "_Crea Contatore Tracciato"
 
 #: birdfont/GtkWindow.vala:656
 msgid "_Move"
@@ -172,59 +159,52 @@ msgid "Show _full unicode characters set"
 msgstr "Mostra set _caratteri unicode"
 
 #: birdfont/GtkWindow.vala:670
-#, fuzzy
 msgid "Show De_fault Characters Set"
-msgstr "Mostra set _caratteri default"
+msgstr "Mostra Set di Caratteri Prede_finito"
 
 #: birdfont/GtkWindow.vala:677
-#, fuzzy
 msgid "Show Characters in Font"
-msgstr "Mostra caratteri nel font"
+msgstr "Mostra Caratteri nel Font"
 
 #: birdfont/GtkWindow.vala:684
-#, fuzzy
 msgid "Add New _Grid Item"
-msgstr "Aggiungi nuovo oggetto alla _griglia"
+msgstr "Aggiungi Nuovo Oggetto _Griglia"
 
 #: birdfont/GtkWindow.vala:690
-#, fuzzy
 msgid "Remove Gr_id Item"
-msgstr "Rimuovere oggetto _griglia"
+msgstr "Rimuovi Oggetto Gr_iglia"
 
 #: birdfont/GtkWindow.vala:696
-#, fuzzy
 msgid "_Zoom In"
-msgstr "_Ingrandisci"
+msgstr "_Zoom Avanti"
 
 #: birdfont/GtkWindow.vala:703
-#, fuzzy
 msgid "Zoom _Out"
-msgstr "_Diminuisci"
+msgstr "Zoom _Indietro"
 
 #: birdfont/GtkWindow.vala:710
-#, fuzzy
 msgid "Zoom to _Scale 1:1"
-msgstr "_Ingrandisci in scala 1:1"
+msgstr "Zoom _Scala 1:1"
 
 #: birdfont/GtkWindow.vala:718
 msgid "Show Kerning _Tab"
-msgstr ""
+msgstr "Mostra _Tab Crenatura"
 
 #: birdfont/GtkWindow.vala:725
 msgid "_List Kerning Pairs"
-msgstr ""
+msgstr "_Lista Coppie Crenatura"
 
 #: birdfont/GtkWindow.vala:731
 msgid "_Remove All Kerning Pairs"
-msgstr ""
+msgstr "_Rimuovi Tutte Le Coppie Crenatura"
 
 #: birdfont/GtkWindow.vala:739
 msgid "Select _Next Kerning Pair"
-msgstr ""
+msgstr "Selezio_na La Prossima Coppua Crenatura"
 
 #: birdfont/GtkWindow.vala:743
 msgid "Select _Previous Kerning Pair"
-msgstr ""
+msgstr "Seleziona La _Precedente Coppia Crenatura"
 
 #: birdfont/GtkWindow.vala:748
 msgid "_File"
@@ -246,49 +226,49 @@ msgstr "_Strumenti"
 msgid "_Kerning"
 msgstr "_Crenatura"
 
-#: birdfont/GtkWindow.vala:1127
+#: birdfont/GtkWindow.vala:1126
 msgid "PostScript Name"
-msgstr ""
+msgstr "Nome PostScript"
 
-#: birdfont/GtkWindow.vala:1134
+#: birdfont/GtkWindow.vala:1133
 msgid "Name"
 msgstr "Nome"
 
-#: birdfont/GtkWindow.vala:1141
+#: birdfont/GtkWindow.vala:1140
 msgid "Style"
-msgstr ""
+msgstr "Stile"
 
-#: birdfont/GtkWindow.vala:1147
+#: birdfont/GtkWindow.vala:1146
 msgid "Bold"
-msgstr ""
+msgstr "Grassetto"
 
-#: birdfont/GtkWindow.vala:1154
+#: birdfont/GtkWindow.vala:1153
 msgid "Italic"
-msgstr ""
+msgstr "Corsivo"
 
-#: birdfont/GtkWindow.vala:1162
+#: birdfont/GtkWindow.vala:1161
 msgid "Weight"
-msgstr ""
+msgstr "Peso"
 
-#: birdfont/GtkWindow.vala:1169
+#: birdfont/GtkWindow.vala:1168
 msgid "Full name (name and style)"
-msgstr ""
+msgstr "Nome completo (nome e stile)"
 
-#: birdfont/GtkWindow.vala:1176
+#: birdfont/GtkWindow.vala:1175
 msgid "Unique identifier"
-msgstr ""
+msgstr "Identificativo univoco"
 
-#: birdfont/GtkWindow.vala:1183
+#: birdfont/GtkWindow.vala:1182
 msgid "Version"
 msgstr "Versione"
 
-#: birdfont/GtkWindow.vala:1190
+#: birdfont/GtkWindow.vala:1189
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
-#: birdfont/GtkWindow.vala:1198
+#: birdfont/GtkWindow.vala:1197
 msgid "Copyright"
-msgstr ""
+msgstr "Copyright"
 
 #~ msgid "Usage"
 #~ msgstr "Utilizzo"
@@ -300,49 +280,61 @@ msgstr ""
 #~ msgstr "OPZIONE"
 
 #~ msgid "show coordinate in glyph view"
-#~ msgstr "Mostra coordinate in vista Glyph"
+#~ msgstr "mostra coordinate in vista glifo"
+
+#~ msgid "exit if a test case fails"
+#~ msgstr "esci se un test fallisce"
 
 #~ msgid "treat warnings as fatal"
-#~ msgstr "Considera gli avvertimenti come errori"
+#~ msgstr "considera gli avvertimenti come errori fatali"
 
 #~ msgid "show this message"
-#~ msgstr "Mostra questo messaggio"
+#~ msgstr "mostra questo messaggio"
 
 #~ msgid "enable Machintosh customizations"
-#~ msgstr "Abilita modifiche Machintosh"
+#~ msgstr "abilita personalizazioni Machintosh"
+
+#~ msgid "don't translate"
+#~ msgstr "non tradurre"
 
 #~ msgid "sleep between each command in test suite"
-#~ msgstr "Pausa prima di ogni commando in modalità test"
+#~ msgstr "pausa prima di ogni commando in modalità test"
 
 #~ msgid "run test case"
-#~ msgstr "Esegui test"
+#~ msgstr "esegui test"
 
 #~ msgid "Backgrounds"
 #~ msgstr "Sfondi"
 
 #~ msgid "Move, resize and rotate background image"
-#~ msgstr "Muovi, ridimensiona e ruota sfondo"
+#~ msgstr "Muovi, ridimensiona e ruota immagine di sfondo"
 
 #~ msgid "Usage:"
 #~ msgstr "Utilizzo:"
 
 #~ msgid "print this message\n"
-#~ msgstr "Stampa questo messaggio\n"
+#~ msgstr "stampa questo messaggio\n"
 
 #~ msgid "write files to this directory\n"
-#~ msgstr "Scrivi files in questa directory\n"
+#~ msgstr "scrivi i file in questa cartella\n"
 
 #~ msgid "write svg file\n"
-#~ msgstr "Scrivi file svg\n"
+#~ msgstr "scrivi file svg\n"
 
 #~ msgid "write ttf and eot files\n"
-#~ msgstr "Scrivi files TTF e EOT\n"
+#~ msgstr "scrivi i files ttf e eot\n"
 
 #~ msgid "Can't find output directory"
-#~ msgstr "Impossibile trovare la directory di output"
+#~ msgstr "Impossibile trovare la cartella di output"
+
+#~ msgid "Loading the unicode character database"
+#~ msgstr "Caricare il database dei caratteri Unicode"
+
+#~ msgid "Circle"
+#~ msgstr "Cerchio"
 
 #~ msgid "Crop background image"
-#~ msgstr "Mostra immagine di sfondo"
+#~ msgstr "Ritaglia immagine di sfondo"
 
 #~ msgid "Default language"
 #~ msgstr "Lingua predefinita"
@@ -355,6 +347,9 @@ msgstr ""
 
 #~ msgid "English"
 #~ msgstr "Inglese"
+
+#~ msgid "Greek"
+#~ msgstr "Greco"
 
 #~ msgid "Japanese"
 #~ msgstr "Giapponese"
@@ -374,54 +369,80 @@ msgstr ""
 #~ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 #~ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
+#~ msgid "Create quadratic Bézier curves"
+#~ msgstr "Crea curve quadratiche di Bézier"
+
+#~ msgid "Create cubic Bézier curves"
+#~ msgstr "Crea curve cubiche di Bézier"
+
+#~ msgid "Quadratic path with two line handles"
+#~ msgstr "Tracciato quadratico con due linee maniglia"
+
+#~ msgid "Convert selected points"
+#~ msgstr "Converti i punti selezionati"
+
 #~ msgid "Tie curve handles for the selected edit point"
-#~ msgstr "Unisci punti di curvatura per il punto di modifica selezionato"
+#~ msgstr "Lega le maniglie della curva per il punto di modifica selezionato"
+
+#~ msgid "Symmetrical handles"
+#~ msgstr "Maniglie simmetriche"
+
+#~ msgid "Convert segment to line."
+#~ msgstr "Converti il segmento in linea."
 
 #~ msgid "Merge paths"
-#~ msgstr "Unisci destinazioni"
+#~ msgstr "Unisci tracciati"
 
 #~ msgid "Create counter from outline"
-#~ msgstr "Crea contatore da contorno"
+#~ msgstr "Crea ritaglio da sagoma"
 
 #~ msgid "Move to path to the bottom layer"
 #~ msgstr "Muovi dal percorso al livello sotto"
 
+#~ msgid "Flip path vertically"
+#~ msgstr "Ribalta tracciato verticalmente"
+
+#~ msgid "Flip path horizontally"
+#~ msgstr "Ribalta tracciato orizzontalmente"
+
 #~ msgid "Show full unicode characters set"
-#~ msgstr "Mostra tutte set caratteri Unicode"
+#~ msgstr "Mostra set caratteri unicode completo"
 
 #~ msgid "Show default characters set"
 #~ msgstr "Mostra set caratteri predefinito"
 
-#, fuzzy
 #~ msgid "Show all characters in the font"
 #~ msgstr "Mostra tutti i caratteri nel font"
 
 #~ msgid "Delete selected glyph"
-#~ msgstr "Cancella il glyph selezionato"
+#~ msgstr "Cancella il glifo selezionato"
+
+#~ msgid "Show guidelines"
+#~ msgstr "Mostra linee guida"
 
 #~ msgid "Show guidelines for x-height and baseline"
-#~ msgstr "Mostra linee guida per l'altezza X e di base"
+#~ msgstr "Mostra linee guida per altezza-x e linea di base"
 
 #~ msgid "Show guidelines at top and bottom margin"
-#~ msgstr "Mostra linee guida ai margini superiore e inferiore"
+#~ msgstr "Mostra linee guida al margine superiore e inferiore"
 
 #~ msgid "Zoom in"
-#~ msgstr "Ingrandisci"
+#~ msgstr "Zoom avanti"
 
 #~ msgid "Zoom out"
-#~ msgstr "Riduci"
+#~ msgstr "Zoom indietro"
 
 #~ msgid "Zoom to scale 1:1"
-#~ msgstr "Ingrandimento scala 1:1"
+#~ msgstr "Zoom scala 1:1"
 
 #~ msgid "Show full glyph"
-#~ msgstr "Mostra tutti i glyph"
+#~ msgstr "Mostra glifo completo"
 
 #~ msgid "Zoom in at region boundries"
-#~ msgstr "Ingrandisci i limiti regione"
+#~ msgstr "Zoom avanti fino ai limiti regione"
 
 #~ msgid "Zoom in background image"
-#~ msgstr "Ingrandisci sfondo"
+#~ msgstr "Zoom avanti sfondo"
 
 #~ msgid "Previous view"
 #~ msgstr "Vista precedente"
@@ -430,19 +451,19 @@ msgstr ""
 #~ msgstr "Vista successiva"
 
 #~ msgid "Set size for background image"
-#~ msgstr "Imposta dimensioni sfondo"
+#~ msgstr "Imposta dimensioni immagine di sfondo"
 
 #~ msgid "Show/hide background image"
-#~ msgstr "Mostra/nascondi sfondo"
+#~ msgstr "Mostra/nascondi immagine di sfondo"
 
 #~ msgid "Insert a new background image"
-#~ msgstr "Inserisci nuovo sfondo"
+#~ msgstr "Inserisci nuova immagine di sfondo"
 
 #~ msgid "Creating thumbnails"
-#~ msgstr "Crea miniature"
+#~ msgstr "Creazione miniature in corso"
 
 #~ msgid "Set contrast for background image"
-#~ msgstr "Imposta contrasto per lo sfondo"
+#~ msgstr "Imposta il contrasto dell'immagine di sfondo"
 
 #~ msgid "Stroke color"
 #~ msgstr "Colore tratto"
@@ -451,16 +472,46 @@ msgstr ""
 #~ msgstr "Spessore tratto"
 
 #~ msgid "Handle color"
-#~ msgstr "Gestisci colore"
+#~ msgstr "Colore maniglia"
 
 #~ msgid "Set precision"
 #~ msgstr "Imposta precisione"
 
+#~ msgid ""
+#~ "Show all control point handles or only handles for the selected points."
+#~ msgstr ""
+#~ "Mostra tutte le maniglie dei punti di controllo, oppure solo le maniglie "
+#~ "dei punti selezionati."
+
+#~ msgid "Object color"
+#~ msgstr "Colore oggetto"
+
+#~ msgid "Set fill color for open paths."
+#~ msgstr "Imposta il colore di riempimento per i tracciati aperti."
+
+#~ msgid "Use TTF units."
+#~ msgstr "Usa unità TTF"
+
 #~ msgid "Set size for grid"
-#~ msgstr "Imposta la dimensione per la griglia"
+#~ msgstr "Imposta la dimensione della griglia"
+
+#~ msgid "Writing TTF and EOT files."
+#~ msgstr "Scrittura dei file TTF e EOT in corso."
+
+#~ msgid "Writing SVG file."
+#~ msgstr "Scrittura file SVG in corso."
+
+#~ msgid "No fonts created yet."
+#~ msgstr "Nessun font ancora creato."
 
 #~ msgid "Recent files"
 #~ msgstr "File recenti"
+
+#~ msgid "Backup"
+#~ msgstr "Backup"
+
+#~ msgid "Files"
+#~ msgstr "File"
 
 #~ msgid "Show grid"
 #~ msgstr "Mostra griglia"
@@ -471,12 +522,48 @@ msgstr ""
 #~ msgid "Kerning"
 #~ msgstr "Crenatura"
 
-#, fuzzy
+#~ msgid "The current kerning class is malformed."
+#~ msgstr "La classe di crenatura corrente è malforme."
+
+#~ msgid "Add single characters separated by space and ranges on the form A-Z."
+#~ msgstr ""
+#~ "Aggiungi caratteri singoli separati da spazio e intervalli nella forma A-"
+#~ "Z."
+
+#~ msgid "Type “space” to kern the space character and “divis” to kern -."
+#~ msgstr ""
+#~ "Digita \"space\" per la crenatura del carattere spazio e \"divis\" per la "
+#~ "crenatura del carattere -."
+
 #~ msgid "Kerning:"
-#~ msgstr "Crenatura"
+#~ msgstr "Crenatura:"
+
+#~ msgid "Kerning Pairs"
+#~ msgstr "Coppie Crenatura"
+
+#~ msgid ""
+#~ "Right click to edit the class and left click to kern glyphs in the class."
+#~ msgstr ""
+#~ "Clicca il tasto destro per modificare la classe, clicca il sinistro per "
+#~ "la crenatura dei glifi nella classe."
+
+#~ msgid "Kerning class"
+#~ msgstr "Classe di crenatura"
+
+#~ msgid "Set"
+#~ msgstr "Imposta"
+
+#~ msgid "Create new kerning class"
+#~ msgstr "Crea una nuova classe di crenatura"
+
+#~ msgid "Character Set"
+#~ msgstr "Set caratteri"
 
 #~ msgid "Glyph sequence"
-#~ msgstr "Sequenza glyph"
+#~ msgstr "Sequenza glifi"
+
+#~ msgid "Close"
+#~ msgstr "Chiudi"
 
 #~ msgid "Menu"
 #~ msgstr "Menù"
@@ -488,33 +575,63 @@ msgstr ""
 #~ msgstr "Apri"
 
 #~ msgid "Move paths"
-#~ msgstr "Sposta percorso"
+#~ msgstr "Sposta tracciati"
+
+#~ msgid "Search"
+#~ msgstr "Cerca"
+
+#~ msgid "Filter"
+#~ msgstr "Filtro"
 
 #~ msgid "Overview"
 #~ msgstr "Panoramica"
 
+# May be better to use vista or schermata
 #~ msgid "No glyphs in this view."
-#~ msgstr "Nessun Glyph in questa modalità"
+#~ msgstr "Nessun glifo in questa vista."
+
+#~ msgid "See also:"
+#~ msgstr "Vedi anche:"
+
+#~ msgid "Overwrite TTF file?"
+#~ msgstr "Sovrascrivere File TTF?"
+
+#~ msgid "Overwrite"
+#~ msgstr "Sovrascrivi"
 
 #~ msgid "Cancel"
 #~ msgstr "Annulla"
 
+#~ msgid "Yes, don't ask again."
+#~ msgstr "Si, non chiederlo più."
+
+#~ msgid "Right click or use left command key and click to add new points"
+#~ msgstr ""
+#~ "Clicca con il tasto destro o usa il tasto command e clicca per aggiungere "
+#~ "nuovi punti"
+
 #~ msgid "Right click to add new points, left click to move points"
 #~ msgstr ""
-#~ "Tasto destro del mouse per aggiungere nuovi punti, click sinistro per "
-#~ "spostare i punti"
+#~ "Clicca con il tasto destro per aggiungere nuovi punti, clicca con il "
+#~ "sinistro per spostarli"
 
 #~ msgid "and double click to add new point on path."
-#~ msgstr "e doppio clic per aggiungere un nuovo punto al percorso."
+#~ msgstr "e doppio clic per aggiungere un nuovo punto al tracciato."
 
 #~ msgid "Preview"
 #~ msgstr "Anteprima"
+
+#~ msgid "Rectangle"
+#~ msgstr "Rettangolo"
+
+#~ msgid "Resize and rotate paths"
+#~ msgstr "Ridimensiona e ruota tracciati"
 
 #~ msgid "Save?"
 #~ msgstr "Salvare?"
 
 #~ msgid "Discard"
-#~ msgstr "Ignora"
+#~ msgstr "Scarta"
 
 #~ msgid "New version"
 #~ msgstr "Nuova versione"

@@ -6,17 +6,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 17:12+0200\n"
-"PO-Revision-Date: 2013-05-06 12:45+0000\n"
-"Last-Translator: Cédric <cvalmary@yahoo.fr>\n"
+"POT-Creation-Date: 2014-01-14 10:10+0100\n"
+"PO-Revision-Date: 2013-10-21 14:31+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: oc\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1367844308.0\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"X-POOTLE-MTIME: 1382365888.000000\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
@@ -28,7 +28,7 @@ msgstr "_Dobrir"
 
 #: birdfont/GtkWindow.vala:472
 msgid "_Recent Files"
-msgstr ""
+msgstr "Fichièrs _recents"
 
 #: birdfont/GtkWindow.vala:476
 msgid "_Save"
@@ -48,7 +48,7 @@ msgstr "_Previsualizacion"
 
 #: birdfont/GtkWindow.vala:497
 msgid "Name and _Description"
-msgstr ""
+msgstr "Nom e _Descripcion"
 
 #: birdfont/GtkWindow.vala:501
 msgid "Select _Character Set"
@@ -76,15 +76,15 @@ msgstr ""
 
 #: birdfont/GtkWindow.vala:530
 msgid "Select All Pa_ths"
-msgstr ""
+msgstr "Seleccionar _Totes los Camins"
 
 #: birdfont/GtkWindow.vala:537
 msgid "_Search"
-msgstr ""
+msgstr "_Recercar"
 
 #: birdfont/GtkWindow.vala:542
 msgid "_Export Glyph as SVG"
-msgstr ""
+msgstr "_Exportar lo glyph al format SVG"
 
 #: birdfont/GtkWindow.vala:546
 msgid "_Import SVG"
@@ -92,11 +92,11 @@ msgstr "_Importar SVG"
 
 #: birdfont/GtkWindow.vala:551
 msgid "Close _Path"
-msgstr ""
+msgstr "_Tampar lo camin."
 
 #: birdfont/GtkWindow.vala:556
 msgid "_Glyph Sequence"
-msgstr ""
+msgstr "_Sequéncia del glyph"
 
 #: birdfont/GtkWindow.vala:561
 msgid "Set Glyph _Background"
@@ -108,27 +108,27 @@ msgstr ""
 
 #: birdfont/GtkWindow.vala:571
 msgid "_Select Point Above"
-msgstr ""
+msgstr "_Seleccionar lo punt en dessús"
 
 #: birdfont/GtkWindow.vala:575
 msgid "Select _Next Point"
-msgstr ""
+msgstr "Seleccionar _lo punt seguent"
 
 #: birdfont/GtkWindow.vala:579
 msgid "Select _Previous Point"
-msgstr ""
+msgstr "Seleccionar _un punt precedent."
 
 #: birdfont/GtkWindow.vala:583
 msgid "Select Point _Below"
-msgstr ""
+msgstr "Seleccionar un punt en de_jós"
 
 #: birdfont/GtkWindow.vala:588
 msgid "_Next Tab"
-msgstr ""
+msgstr "Onglet _seguent"
 
 #: birdfont/GtkWindow.vala:601
 msgid "_Previous Tab"
-msgstr ""
+msgstr "Onglet _precedent"
 
 #: birdfont/GtkWindow.vala:614
 msgid "_Close tab"
@@ -136,11 +136,11 @@ msgstr "_Tampar l'onglet"
 
 #: birdfont/GtkWindow.vala:628
 msgid "Close _All Tabs"
-msgstr ""
+msgstr "_Tampar totes los onglets"
 
 #: birdfont/GtkWindow.vala:636
 msgid "_Create Path"
-msgstr ""
+msgstr "_Crear un camin"
 
 #: birdfont/GtkWindow.vala:643
 msgid "_Zoom"
@@ -148,7 +148,7 @@ msgstr "_Zoom"
 
 #: birdfont/GtkWindow.vala:649
 msgid "_Create Counter Path"
-msgstr ""
+msgstr "_Crear un comptador de traçat"
 
 #: birdfont/GtkWindow.vala:656
 msgid "_Move"
@@ -160,31 +160,31 @@ msgstr "Afichar _tota la lista dels caractèrs unicode"
 
 #: birdfont/GtkWindow.vala:670
 msgid "Show De_fault Characters Set"
-msgstr ""
+msgstr "Afichar los caractèrs per de_faut"
 
 #: birdfont/GtkWindow.vala:677
 msgid "Show Characters in Font"
-msgstr ""
+msgstr "Afichar los caractèrs de la poliça"
 
 #: birdfont/GtkWindow.vala:684
 msgid "Add New _Grid Item"
-msgstr ""
+msgstr "Apondre un novèl element sus la _grasilha"
 
 #: birdfont/GtkWindow.vala:690
 msgid "Remove Gr_id Item"
-msgstr ""
+msgstr "Suprimir aqueste element de la g_rasilha"
 
 #: birdfont/GtkWindow.vala:696
 msgid "_Zoom In"
-msgstr ""
+msgstr "_Zoom avant"
 
 #: birdfont/GtkWindow.vala:703
 msgid "Zoom _Out"
-msgstr ""
+msgstr "Zoom _arrièr"
 
 #: birdfont/GtkWindow.vala:710
 msgid "Zoom to _Scale 1:1"
-msgstr ""
+msgstr "Zoom a l'_escala 1:1"
 
 #: birdfont/GtkWindow.vala:718
 msgid "Show Kerning _Tab"
@@ -226,49 +226,49 @@ msgstr "_Aisina"
 msgid "_Kerning"
 msgstr "_Interletratge"
 
-#: birdfont/GtkWindow.vala:1127
+#: birdfont/GtkWindow.vala:1126
 msgid "PostScript Name"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1134
+#: birdfont/GtkWindow.vala:1133
 msgid "Name"
 msgstr "Nom"
 
-#: birdfont/GtkWindow.vala:1141
+#: birdfont/GtkWindow.vala:1140
 msgid "Style"
-msgstr ""
+msgstr "Estil"
 
-#: birdfont/GtkWindow.vala:1147
+#: birdfont/GtkWindow.vala:1146
 msgid "Bold"
-msgstr ""
+msgstr "Gras"
 
-#: birdfont/GtkWindow.vala:1154
+#: birdfont/GtkWindow.vala:1153
 msgid "Italic"
-msgstr ""
+msgstr "Italica"
 
-#: birdfont/GtkWindow.vala:1162
+#: birdfont/GtkWindow.vala:1161
 msgid "Weight"
-msgstr ""
+msgstr "Grais"
 
-#: birdfont/GtkWindow.vala:1169
+#: birdfont/GtkWindow.vala:1168
 msgid "Full name (name and style)"
-msgstr ""
+msgstr "Nom complet (nom e estil)"
 
-#: birdfont/GtkWindow.vala:1176
+#: birdfont/GtkWindow.vala:1175
 msgid "Unique identifier"
-msgstr ""
+msgstr "Identificant unic"
 
-#: birdfont/GtkWindow.vala:1183
+#: birdfont/GtkWindow.vala:1182
 msgid "Version"
 msgstr "Version"
 
-#: birdfont/GtkWindow.vala:1190
+#: birdfont/GtkWindow.vala:1189
 msgid "Description"
-msgstr ""
+msgstr "Descripcion"
 
-#: birdfont/GtkWindow.vala:1198
+#: birdfont/GtkWindow.vala:1197
 msgid "Copyright"
-msgstr ""
+msgstr "Dreches d'autor"
 
 #~ msgid "Usage"
 #~ msgstr "Utilizacion"
@@ -282,6 +282,9 @@ msgstr ""
 #~ msgid "show coordinate in glyph view"
 #~ msgstr "afichar las coordenadas dins l'imatge del glyph"
 
+#~ msgid "exit if a test case fails"
+#~ msgstr "quitar en cas de fracàs del tèst d'una casa"
+
 #~ msgid "treat warnings as fatal"
 #~ msgstr "Tractar los avertiments coma d'errors"
 
@@ -291,8 +294,17 @@ msgstr ""
 #~ msgid "enable Machintosh customizations"
 #~ msgstr "autorizar las personalizacions de Mac"
 
+#~ msgid "don't translate"
+#~ msgstr "tradusir pas"
+
+#~ msgid "sleep between each command in test suite"
+#~ msgstr "introdusir de pausas entre cada comanda del tèst"
+
 #~ msgid "run test case"
 #~ msgstr "aviar lo tèst de casa"
+
+#~ msgid "Backgrounds"
+#~ msgstr "Rèire plans"
 
 #~ msgid "Move, resize and rotate background image"
 #~ msgstr "Desplaçar, redimensionar e virar l'imatge de fons."
@@ -301,10 +313,10 @@ msgstr ""
 #~ msgstr "Utilizacion :"
 
 #~ msgid "print this message\n"
-#~ msgstr "Estampar lo messatge\n"
+#~ msgstr "Imprimir lo messatge\n"
 
 #~ msgid "write files to this directory\n"
-#~ msgstr "enregistrar los fichièrs dins aquete dorsièr.\n"
+#~ msgstr "enregistrar los fichièrs dins aqueste dorsièr.\n"
 
 #~ msgid "write svg file\n"
 #~ msgstr "enregistrar al format SVG.\n"
@@ -315,8 +327,41 @@ msgstr ""
 #~ msgid "Can't find output directory"
 #~ msgstr "Impossible de trobar lo dorsièr de sortida"
 
+#~ msgid "Loading the unicode character database"
+#~ msgstr "Cargament dels caractèrs Unicode"
+
+#~ msgid "Circle"
+#~ msgstr "Cercle"
+
 #~ msgid "Crop background image"
 #~ msgstr "Rosegar l'imatge de rèire plan."
+
+#~ msgid "Default language"
+#~ msgstr "Lenga per defaut"
+
+#~ msgid "Private use area"
+#~ msgstr "Zòna d'usatge privat"
+
+#~ msgid "Chinese"
+#~ msgstr "Chinés"
+
+#~ msgid "English"
+#~ msgstr "Anglés"
+
+#~ msgid "Greek"
+#~ msgstr "Grèc"
+
+#~ msgid "Japanese"
+#~ msgstr "Japonés"
+
+#~ msgid "Javanese"
+#~ msgstr "Javanés"
+
+#~ msgid "Russian"
+#~ msgstr "Rus"
+
+#~ msgid "Swedish"
+#~ msgstr "Suedés"
 
 #~ msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 #~ msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
@@ -324,14 +369,41 @@ msgstr ""
 #~ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 #~ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
+#~ msgid "Create quadratic Bézier curves"
+#~ msgstr "Crear de corbas de Bézier qüadraticas"
+
+#~ msgid "Create cubic Bézier curves"
+#~ msgstr "Crear de corbas de Bézier cubicas"
+
+#~ msgid "Quadratic path with two line handles"
+#~ msgstr "Camin qüadratic amb doas punhadas de contraròtle"
+
+#~ msgid "Convert selected points"
+#~ msgstr "Convertir los punts seleccionats"
+
 #~ msgid "Tie curve handles for the selected edit point"
 #~ msgstr "Crear un punt de corba per la linha seleccionada."
+
+#~ msgid "Symmetrical handles"
+#~ msgstr "Punhadas simetricas"
+
+#~ msgid "Convert segment to line."
+#~ msgstr "Convertir lo segment en linha."
 
 #~ msgid "Merge paths"
 #~ msgstr "Fusionar los camins"
 
+#~ msgid "Create counter from outline"
+#~ msgstr "Crear un comptador dempuèi la linha exteriora"
+
 #~ msgid "Move to path to the bottom layer"
 #~ msgstr "Desplaçar lo fuèlh cap al calc"
+
+#~ msgid "Flip path vertically"
+#~ msgstr "Revirar verticalament lo camin"
+
+#~ msgid "Flip path horizontally"
+#~ msgstr "Revirar orizontalament lo camin"
 
 #~ msgid "Show full unicode characters set"
 #~ msgstr "Afichar tota la lista dels caractèrs unicode."
@@ -339,8 +411,20 @@ msgstr ""
 #~ msgid "Show default characters set"
 #~ msgstr "Afichar lo jòc de caractèrs per defaut."
 
+#~ msgid "Show all characters in the font"
+#~ msgstr "Afichar totes los caractèrs de la poliça"
+
 #~ msgid "Delete selected glyph"
 #~ msgstr "Escafar lo glyph seleccionat."
+
+#~ msgid "Show guidelines"
+#~ msgstr "Afichar lo guida"
+
+#~ msgid "Show guidelines for x-height and baseline"
+#~ msgstr "Afichar los traçats de las linhas de basa e de nautor d'x"
+
+#~ msgid "Show guidelines at top and bottom margin"
+#~ msgstr "Afichar lo guida als marges d'amont e d'aval"
 
 #~ msgid "Zoom in"
 #~ msgstr "Zoom avant"
@@ -353,6 +437,9 @@ msgstr ""
 
 #~ msgid "Show full glyph"
 #~ msgstr "Afichar lo glyph complet"
+
+#~ msgid "Zoom in at region boundries"
+#~ msgstr "Zoom sus las frontièras"
 
 #~ msgid "Zoom in background image"
 #~ msgstr "Zoom sus l'imatge de rèire plan."
@@ -369,6 +456,9 @@ msgstr ""
 #~ msgid "Show/hide background image"
 #~ msgstr "Afichar / amagar l'imatge de rèire plan."
 
+#~ msgid "Insert a new background image"
+#~ msgstr "Inserir un novèl imatge de fons"
+
 #~ msgid "Creating thumbnails"
 #~ msgstr "Creacion de miniaturas"
 
@@ -378,14 +468,47 @@ msgstr ""
 #~ msgid "Stroke color"
 #~ msgstr "Color del contorn"
 
+#~ msgid "Stroke width"
+#~ msgstr "Espessor de trach"
+
+#~ msgid "Handle color"
+#~ msgstr "Color de l'identificador"
+
 #~ msgid "Set precision"
 #~ msgstr "Definir la precision"
+
+#~ msgid ""
+#~ "Show all control point handles or only handles for the selected points."
+#~ msgstr ""
+#~ "Mostrar las punhadas de contraròtle per totes los punts o solament los "
+#~ "que son seleccionats."
+
+#~ msgid "Object color"
+#~ msgstr "Color de l'objècte"
+
+#~ msgid "Set fill color for open paths."
+#~ msgstr "Definir la color d'emplenatge dels camins dobèrts"
 
 #~ msgid "Set size for grid"
 #~ msgstr "Definir las dimensions de la grasilha."
 
+#~ msgid "Writing TTF and EOT files."
+#~ msgstr "Escritura dels fichièrs TTF e EOT."
+
+#~ msgid "Writing SVG file."
+#~ msgstr "Escritura de fichièr SVG."
+
+#~ msgid "No fonts created yet."
+#~ msgstr "Cap de poliça pas creada pel moment."
+
 #~ msgid "Recent files"
 #~ msgstr "Fichièrs recents"
+
+#~ msgid "Backup"
+#~ msgstr "Salvament"
+
+#~ msgid "Files"
+#~ msgstr "Fichièrs"
 
 #~ msgid "Show grid"
 #~ msgstr "Afichar la grasilha"
@@ -396,8 +519,32 @@ msgstr ""
 #~ msgid "Kerning"
 #~ msgstr "Interletratge"
 
+#~ msgid "The current kerning class is malformed."
+#~ msgstr "La classa de crenatge actuala es malformada"
+
+#~ msgid "Kerning:"
+#~ msgstr "Apròchi (Crenatge) :"
+
+#~ msgid "Kerning Pairs"
+#~ msgstr "Apròchi de paras"
+
+#~ msgid "Kerning class"
+#~ msgstr "Tipe d'apròchi"
+
+#~ msgid "Set"
+#~ msgstr "Atribuir"
+
+#~ msgid "Create new kerning class"
+#~ msgstr "Crear un novèl tipe d'apròchi"
+
+#~ msgid "Character Set"
+#~ msgstr "Jòc de caractèrs"
+
 #~ msgid "Glyph sequence"
 #~ msgstr "Sequéncia del glyph"
+
+#~ msgid "Close"
+#~ msgstr "Tampar"
 
 #~ msgid "Menu"
 #~ msgstr "Menú"
@@ -411,11 +558,26 @@ msgstr ""
 #~ msgid "Move paths"
 #~ msgstr "Cambiar los camins"
 
+#~ msgid "Search"
+#~ msgstr "Recercar"
+
+#~ msgid "Filter"
+#~ msgstr "Filtrar"
+
 #~ msgid "Overview"
 #~ msgstr "Resumit"
 
 #~ msgid "No glyphs in this view."
 #~ msgstr "Pas cap de glyph dins aqueste apercebut."
+
+#~ msgid "See also:"
+#~ msgstr "Vejatz tanben :"
+
+#~ msgid "Overwrite TTF file?"
+#~ msgstr "Espotir lo fichièr TTF ?"
+
+#~ msgid "Overwrite"
+#~ msgstr "Espotir"
 
 #~ msgid "Cancel"
 #~ msgstr "Anullar"
@@ -428,6 +590,12 @@ msgstr ""
 
 #~ msgid "Preview"
 #~ msgstr "Apercebut"
+
+#~ msgid "Rectangle"
+#~ msgstr "Rectangle"
+
+#~ msgid "Resize and rotate paths"
+#~ msgstr "Talha e rotacion"
 
 #~ msgid "Save?"
 #~ msgstr "Enregistrar ?"

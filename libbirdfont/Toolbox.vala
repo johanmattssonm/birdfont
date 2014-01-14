@@ -237,6 +237,7 @@ public class Toolbox : GLib.Object  {
 
 	public static void redraw_tool_box () {
 		Toolbox t = MainWindow.get_toolbox ();
+		warning ("redraw_tool_box");
 		t.redraw (0, 0, allocation_width, allocation_height);
 	}
 	

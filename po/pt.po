@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 17:12+0200\n"
-"PO-Revision-Date: 2013-09-15 13:44+0000\n"
+"POT-Creation-Date: 2014-01-14 10:10+0100\n"
+"PO-Revision-Date: 2013-10-14 13:39+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pt\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1379252683.0\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"X-POOTLE-MTIME: 1381757964.000000\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
@@ -246,47 +246,47 @@ msgstr "_Ferramenta"
 msgid "_Kerning"
 msgstr "_Espaçamento"
 
-#: birdfont/GtkWindow.vala:1127
+#: birdfont/GtkWindow.vala:1126
 msgid "PostScript Name"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1134
+#: birdfont/GtkWindow.vala:1133
 msgid "Name"
 msgstr "Nome"
 
-#: birdfont/GtkWindow.vala:1141
+#: birdfont/GtkWindow.vala:1140
 msgid "Style"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1147
+#: birdfont/GtkWindow.vala:1146
 msgid "Bold"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1154
+#: birdfont/GtkWindow.vala:1153
 msgid "Italic"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1162
+#: birdfont/GtkWindow.vala:1161
 msgid "Weight"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1169
+#: birdfont/GtkWindow.vala:1168
 msgid "Full name (name and style)"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1176
+#: birdfont/GtkWindow.vala:1175
 msgid "Unique identifier"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1183
+#: birdfont/GtkWindow.vala:1182
 msgid "Version"
 msgstr "Versão"
 
-#: birdfont/GtkWindow.vala:1190
+#: birdfont/GtkWindow.vala:1189
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
-#: birdfont/GtkWindow.vala:1198
+#: birdfont/GtkWindow.vala:1197
 msgid "Copyright"
 msgstr ""
 
@@ -299,14 +299,32 @@ msgstr ""
 #~ msgid "OPTION"
 #~ msgstr "OPÇÃO"
 
+#~ msgid "show coordinate in glyph view"
+#~ msgstr "Mostrar coordenadas com o glifo"
+
 #~ msgid "exit if a test case fails"
 #~ msgstr "sair do teste em caso de falha"
+
+#~ msgid "treat warnings as fatal"
+#~ msgstr "Considerar os avisos como erros"
 
 #~ msgid "show this message"
 #~ msgstr "mostrar esta mensagem"
 
 #~ msgid "enable Machintosh customizations"
 #~ msgstr "ativar personalizações do Machintosh"
+
+#~ msgid "don't translate"
+#~ msgstr "Não traduzir"
+
+#~ msgid "sleep between each command in test suite"
+#~ msgstr "Fazer pausas entre cada comando no conjunto de testes"
+
+#~ msgid "run test case"
+#~ msgstr "correr o teste de casos"
+
+#~ msgid "Backgrounds"
+#~ msgstr "Fundos"
 
 #~ msgid "Move, resize and rotate background image"
 #~ msgstr "Mover, redimensionar e rodar a imagem de fundo"
@@ -329,12 +347,41 @@ msgstr ""
 #~ msgid "Can't find output directory"
 #~ msgstr "Não é possível encontrar a diretoria de destino"
 
-#, fuzzy
 #~ msgid "Loading the unicode character database"
-#~ msgstr "Carregar os caracteres \"unicode\" da base de dados"
+#~ msgstr "Carregar a base de dados de caracteres unicode"
+
+#~ msgid "Circle"
+#~ msgstr "Círculo"
 
 #~ msgid "Crop background image"
 #~ msgstr "Cortar imagem de fundo"
+
+#~ msgid "Default language"
+#~ msgstr "Idioma pré-definido"
+
+#~ msgid "Private use area"
+#~ msgstr "Área de utilização privada"
+
+#~ msgid "Chinese"
+#~ msgstr "Chinês"
+
+#~ msgid "English"
+#~ msgstr "Inglês"
+
+#~ msgid "Greek"
+#~ msgstr "Grego"
+
+#~ msgid "Japanese"
+#~ msgstr "Japonês"
+
+#~ msgid "Javanese"
+#~ msgstr "Javanês"
+
+#~ msgid "Russian"
+#~ msgstr "Russo"
+
+#~ msgid "Swedish"
+#~ msgstr "Sueco"
 
 #~ msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 #~ msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
@@ -342,12 +389,17 @@ msgstr ""
 #~ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 #~ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
+#~ msgid "Create quadratic Bézier curves"
+#~ msgstr "Criar curvas de bezier quadráticas"
+
+#~ msgid "Create cubic Bézier curves"
+#~ msgstr "Criar curvas de bezier cúbicas"
+
 #~ msgid "Merge paths"
 #~ msgstr "Unir Caminhos"
 
-#, fuzzy
 #~ msgid "Show full unicode characters set"
-#~ msgstr "Mostrar Conjunto de _Carateres Completo Unicode"
+#~ msgstr "Mostrar o conjunto completo de carateres unicode"
 
 #, fuzzy
 #~ msgid "Show default characters set"

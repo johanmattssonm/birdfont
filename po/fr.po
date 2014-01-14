@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 17:12+0200\n"
-"PO-Revision-Date: 2013-09-26 11:59+0000\n"
+"POT-Creation-Date: 2014-01-14 10:10+0100\n"
+"PO-Revision-Date: 2014-01-12 17:37+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1380196767.0\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"X-POOTLE-MTIME: 1389548225.000000\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
@@ -52,7 +52,7 @@ msgstr "Nom et _Description"
 
 #: birdfont/GtkWindow.vala:501
 msgid "Select _Character Set"
-msgstr ""
+msgstr "Choisir un jeu de caractères"
 
 #: birdfont/GtkWindow.vala:505
 msgid "_Quit"
@@ -72,7 +72,7 @@ msgstr "_Coller"
 
 #: birdfont/GtkWindow.vala:525
 msgid "Paste _In Place"
-msgstr ""
+msgstr "Coller en place"
 
 #: birdfont/GtkWindow.vala:530
 msgid "Select All Pa_ths"
@@ -230,48 +230,48 @@ msgstr "_Outils"
 msgid "_Kerning"
 msgstr "_Crénage"
 
-#: birdfont/GtkWindow.vala:1127
+#: birdfont/GtkWindow.vala:1126
 #, fuzzy
 msgid "PostScript Name"
 msgstr "Nom PostScript"
 
-#: birdfont/GtkWindow.vala:1134
+#: birdfont/GtkWindow.vala:1133
 msgid "Name"
 msgstr "Nom"
 
-#: birdfont/GtkWindow.vala:1141
+#: birdfont/GtkWindow.vala:1140
 msgid "Style"
 msgstr "Style"
 
-#: birdfont/GtkWindow.vala:1147
+#: birdfont/GtkWindow.vala:1146
 msgid "Bold"
 msgstr "Gras"
 
-#: birdfont/GtkWindow.vala:1154
+#: birdfont/GtkWindow.vala:1153
 msgid "Italic"
 msgstr "Italique"
 
-#: birdfont/GtkWindow.vala:1162
+#: birdfont/GtkWindow.vala:1161
 msgid "Weight"
 msgstr "Graisse"
 
-#: birdfont/GtkWindow.vala:1169
+#: birdfont/GtkWindow.vala:1168
 msgid "Full name (name and style)"
 msgstr "Nom complet (nom et style)"
 
-#: birdfont/GtkWindow.vala:1176
+#: birdfont/GtkWindow.vala:1175
 msgid "Unique identifier"
 msgstr "Identifiant unique"
 
-#: birdfont/GtkWindow.vala:1183
+#: birdfont/GtkWindow.vala:1182
 msgid "Version"
 msgstr "Version"
 
-#: birdfont/GtkWindow.vala:1190
+#: birdfont/GtkWindow.vala:1189
 msgid "Description"
 msgstr "Description"
 
-#: birdfont/GtkWindow.vala:1198
+#: birdfont/GtkWindow.vala:1197
 msgid "Copyright"
 msgstr "Droits d'auteur"
 
@@ -287,9 +287,8 @@ msgstr "Droits d'auteur"
 #~ msgid "show coordinate in glyph view"
 #~ msgstr "afficher les coordonnées sur la vue du glyphe"
 
-#, fuzzy
 #~ msgid "exit if a test case fails"
-#~ msgstr "quitter en cas d'échec du cas de test"
+#~ msgstr "quitter en cas d'échec du test"
 
 #~ msgid "treat warnings as fatal"
 #~ msgstr "traiter les avertissements comme des erreurs"
@@ -387,9 +386,8 @@ msgstr "Droits d'auteur"
 #~ msgid "Convert selected points"
 #~ msgstr "Convertir les points sélectionnés"
 
-#, fuzzy
 #~ msgid "Tie curve handles for the selected edit point"
-#~ msgstr "Nouer les poignées de courbe pour le point sélectionné"
+#~ msgstr "Lier les points de la courbe pour le point sélectionné"
 
 #~ msgid "Symmetrical handles"
 #~ msgstr "Poignées symétriques"
@@ -493,6 +491,12 @@ msgstr "Droits d'auteur"
 #~ msgid "Object color"
 #~ msgstr "Couleur de l'objet"
 
+#~ msgid "Set fill color for open paths."
+#~ msgstr "Définir la couleur de remplissage des chemins ouverts"
+
+#~ msgid "Use TTF units."
+#~ msgstr "Utiliser les unités TTF"
+
 #~ msgid "Set size for grid"
 #~ msgstr "Définir les dimensions de la grille"
 
@@ -523,16 +527,30 @@ msgstr "Droits d'auteur"
 #~ msgid "Kerning"
 #~ msgstr "Crénage"
 
+#~ msgid "The current kerning class is malformed."
+#~ msgstr "La classe de crénage actuelle est malformée"
+
 #~ msgid "Add single characters separated by space and ranges on the form A-Z."
 #~ msgstr ""
 #~ "Ajouter des caractères unique séparé par des espaces et des plages de "
 #~ "caractères sous la forme A-Z."
+
+#~ msgid "Type “space” to kern the space character and “divis” to kern -."
+#~ msgstr ""
+#~ "Tapez [Espace] pour créner l'espace entre les caractères et [Divis] pour "
+#~ "décréner"
 
 #~ msgid "Kerning:"
 #~ msgstr "Approche (Crénage) :"
 
 #~ msgid "Kerning Pairs"
 #~ msgstr "Approche de paires"
+
+#~ msgid ""
+#~ "Right click to edit the class and left click to kern glyphs in the class."
+#~ msgstr ""
+#~ "Clic droit pour éditer la classe et clic gauche pour créner les glyphes "
+#~ "dans la classe"
 
 #~ msgid "Kerning class"
 #~ msgstr "Type d'approche"
@@ -590,6 +608,11 @@ msgstr "Droits d'auteur"
 
 #~ msgid "Yes, don't ask again."
 #~ msgstr "Oui, ne plus poser la question."
+
+#~ msgid "Right click or use left command key and click to add new points"
+#~ msgstr ""
+#~ "Clic droit ou utiliser la touche de commande gauche et cliquer pour "
+#~ "ajouter de nouveaux points"
 
 #~ msgid "Right click to add new points, left click to move points"
 #~ msgstr "Clic droit pour ajouter des points, clic gauche pour les bouger"
