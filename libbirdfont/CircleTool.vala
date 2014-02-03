@@ -98,8 +98,8 @@ public class CircleTool : Tool {
 		press_x = x;
 		press_y = y;
 		
-		move_circle = (button == 1);
-		resize_circle = (button == 3);
+		move_circle = (button == 3);
+		resize_circle = (button == 1);
 		
 		if (!move_circle && !resize_circle) {
 			return;
