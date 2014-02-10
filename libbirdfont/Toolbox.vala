@@ -322,7 +322,7 @@ public class Toolbox : GLib.Object  {
 	
 	public void update_expanders () {
 		double pos;
-
+		
 		foreach (Expander e in current_set.get_expanders ()) {
 			e.set_scroll (current_set.scroll);
 		}
@@ -330,8 +330,18 @@ public class Toolbox : GLib.Object  {
 		pos = 4 * get_scale ();
 		foreach (Expander e in current_set.get_expanders ()) {
 			e.set_offset (pos);
-			pos += e.get_content_height () + 4 * get_scale ();
+			
+			if (e.is_open ()) {
+				pos += e.get_content_height () + 4 * get_scale ();
+			} else {
+				pos += 10 * get_scale ();
+			}
+			
 			current_set.content_height = pos;
+		}
+
+		foreach (Expander e in current_set.get_expanders ()) {
+			e.set_active (false);
 		}
 	}
 	

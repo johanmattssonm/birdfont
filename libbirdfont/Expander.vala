@@ -28,7 +28,7 @@ public class Expander : GLib.Object {
 	
 	public double margin = 0;
 	
-	protected double opacity = 0.5;
+	protected double opacity = 0;
 	
 	protected bool active = false;
 	protected bool open = false;
@@ -71,7 +71,7 @@ public class Expander : GLib.Object {
 	
 	private void update_tool_position () {
 		double scale = Toolbox.get_scale ();
-		double margin_small = 4 * scale;
+		double margin_small = 5 * scale;
 		double xt = x;
 		double yt = y + scroll + margin_small;
 		bool new_row = false;
@@ -189,17 +189,8 @@ public class Expander : GLib.Object {
 		cr.save ();
 		cr.set_line_width (0.5);
 		cr.set_source_rgba (0, 0, 0, 0.25);
-		cr.move_to (x + w + 7, yt);
+		cr.move_to (x, yt);
 		cr.line_to (wd - w - x + 4, yt);	
-		cr.stroke ();
-		cr.restore ();
-
-		// box
-		cr.save ();
-		cr.set_line_join (LineJoin.ROUND);
-		cr.set_line_width (7);
-		cr.set_source_rgba (0.75, 0.75, 0.75, opacity);
-		cr.rectangle (x, yt - 3, w, h);
 		cr.stroke ();
 		cr.restore ();
 		
@@ -213,9 +204,9 @@ public class Expander : GLib.Object {
 			cr.line_to (x + iw2 + 3, yt);	
 			cr.line_to (x - iw2 + 3, ih2 + yt - 0.7);
 		} else {
-			cr.move_to (x - iw2 + 3, yt - ih2 - 0.7);
-			cr.line_to (x + iw2 + 3, yt - ih2 - 0.7);
-			cr.line_to (x + iw2, yt + 2);	
+			cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
+			cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
+			cr.line_to (x + iw2, yt + 2 + 1);	
 		}
 		cr.close_path();
 		cr.stroke ();

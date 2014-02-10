@@ -101,7 +101,7 @@ public class KerningRange : Tool {
 	public override void draw (Context cr) {
 		double xt, yt;
 
-		xt = x + 10;
+		xt = x + 5;
 		yt = y + 10;
 		
 		cr.save ();
