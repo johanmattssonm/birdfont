@@ -224,10 +224,6 @@ public class Tool : GLib.Object {
 		
 		double scale;
 
-		if (unlikely (w == 0)) {
-			warning ("No width for tool.");
-		}
-
 		cr.save ();
 		if (Icons.get_dpi () == 72) {
 			scale = w / button_width_72dpi ();

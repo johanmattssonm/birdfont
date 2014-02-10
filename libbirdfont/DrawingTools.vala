@@ -32,14 +32,10 @@ public class DrawingTools : ToolCollection  {
 	public SpinButton background_scale = new SpinButton ();
 	public static SpinButton precision;
 	
-	ImageSurface? toolbox_background = null;
-	
 	public static PointType point_type = PointType.DOUBLE_CURVE;
 	
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
-
-		toolbox_background = Icons.get_icon ("toolbox_background.png");
 		
 		draw_tools = new Expander ();
 		shape_tools = new Expander ();

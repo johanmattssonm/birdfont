@@ -32,8 +32,6 @@ public class Toolbox : GLib.Object  {
 	public static int allocation_width = 0;
 	public static int allocation_height = 0;
 	
-	ImageSurface? toolbox_background = null;
-	
 	/** Scrolling with scroll wheel */
 	bool scrolling_toolbox = false;
 	
@@ -49,7 +47,6 @@ public class Toolbox : GLib.Object  {
 		drawing_tools = new DrawingTools (glyph_canvas);
 		kerning_tools = new KerningTools ();
 		current_set = drawing_tools;
-		toolbox_background = Icons.get_icon ("toolbox_background.png");
 		
 		tab_bar.signal_tab_selected.connect ((tab) => {
 			if (tab.get_display ().get_name () == "Kerning") {

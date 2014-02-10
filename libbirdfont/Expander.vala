@@ -89,7 +89,6 @@ public class Expander : GLib.Object {
 		if (tool.length () > 0) {
 			content_height = tool.first ().data.h + margin_small;
 		} else {
-			warning ("No tools in box.");
 			content_height = 0;
 		}
 

@@ -22,14 +22,17 @@ public class SearchPaths {
 	public static File find_file (string? dir, string name) {
 		File f;
 		string d = (dir == null) ? "" : (!) dir;
+		string resources;
 
+		resources = (is_null (resources_folder)) ? "" : resources_folder; 
+			
 		printd ("Looking for: ");
-		printd (resources_folder + "/" + d + "/" + name);
+		printd (resources + "/" + d + "/" + name);
 
-		f = get_file (resources_folder + "/" + d + "/", name);
+		f = get_file (resources + "/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
 		
-		f = get_file (resources_folder + "/", name + "/");
+		f = get_file (resources + "/", name + "/");
 		if (likely (f.query_exists ())) return f;
 
 		f = get_file (BirdFont.exec_path + "/" + d + "/", name);
