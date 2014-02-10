@@ -12,12 +12,6 @@ WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
 Lesser General Public License for more details.
 """
-
-import build
-from translations import compile_translations
-import configfile
-from run import run
-
 prefix = ""
 valac = "valac"
 valaflags = ""
@@ -28,7 +22,15 @@ library_cflags = "-Wl,-subsystem,windows "
 library_ldflags= "";
 library = "libbirdfont.dll"
 
+import configfile
 configfile.write_config (prefix)
+configfile.write_compile_parameters (".\\\\", "build", "gcc", "gee-1.0")
+
+import build
+from translations import compile_translations
+
+from run import run
+
 compile_translations()
 run("windres ./resources/win32/icon.rc -O coff -o ./build/icon.res")
 build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
