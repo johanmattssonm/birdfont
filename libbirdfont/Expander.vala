@@ -189,7 +189,7 @@ public class Expander : GLib.Object {
 		cr.set_line_width (0.5);
 		cr.set_source_rgba (0, 0, 0, 0.25);
 		cr.move_to (x, yt);
-		cr.line_to (wd - w - x + 4, yt);	
+		cr.line_to (wd - w - x + 6, yt);	
 		cr.stroke ();
 		cr.restore ();
 		
