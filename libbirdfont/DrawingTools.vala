@@ -533,25 +533,24 @@ public class DrawingTools : ToolCollection  {
 		
 		SpinButton stroke_width;
 		stroke_width = new SpinButton ("stroke_width", t_("Stroke width"));
-		
-		if (Preferences.get ("stroke_width") == "") {
-			stroke_width.set_value_round (1);
-		} else {
-			stroke_width.set_value (Preferences.get ("stroke_width"));
-		}
-		
-		stroke_width.new_value_action.connect((self) => {
+
+		stroke_width.new_value_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			Path.stroke_width = stroke_width.get_value ();
-			Path.stroke_width = Math.sqrt (Path.stroke_width);
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-			Preferences.set ("stroke_width", @"$(Path.stroke_width)");
+			Preferences.set ("stroke_width", stroke_width.get_display_value ());
 			MainWindow.get_toolbox ().redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
 		});
 		style_tools.add_tool (stroke_width);
+		
 		stroke_width.set_max (4);
 		stroke_width.set_min (0.2);
-
+		stroke_width.set_value_round (1);
+		
+		if (Preferences.get ("stroke_width") != "") {
+			stroke_width.set_value (Preferences.get ("stroke_width"));
+		}
+		
 		ColorTool handle_color = new ColorTool (t_("Handle color"));
 		handle_color.color_updated.connect (() => {
 			Path.handle_color_r = handle_color.color_r;
@@ -575,7 +574,6 @@ public class DrawingTools : ToolCollection  {
 
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
-		
 		precision = new SpinButton ("precision", t_("Set precision"));
 		
 		if (precision_value != "") {
@@ -586,7 +584,6 @@ public class DrawingTools : ToolCollection  {
 		
 		precision.new_value_action.connect ((self) => {
 			MainWindow.get_toolbox ().select_tool (precision);
-			
 			Preferences.set ("precision", self.get_display_value ());
 			MainWindow.get_toolbox ().redraw ((int) precision.x, (int) precision.y, 70, 70);
 		});

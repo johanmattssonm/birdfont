@@ -37,6 +37,10 @@ public class ColorTool : Tool {
 		});
 	}
 	
+	public void signal_color_updated () {
+		color_updated ();
+	}
+	
 	public override void draw (Context cr) {
 		double scale = Toolbox.get_scale ();
 		double xt = x + w / 2 - 8 * scale;

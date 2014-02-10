@@ -28,7 +28,7 @@ public class SearchPaths {
 			
 		printd ("Looking for: ");
 		printd (resources + "/" + d + "/" + name);
-
+		
 		f = get_file (resources + "/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
 		
@@ -61,7 +61,7 @@ public class SearchPaths {
 
 		f = get_file ("../" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
-
+		
 		f = get_file (".\\" + d + "\\", name);
 		if (likely (f.query_exists ())) return f;
 

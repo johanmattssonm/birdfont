@@ -18,7 +18,6 @@ using Cairo;
 
 public class Icons {
 	
-	public static string directory = "icons";
 	public static bool high_res = true;
 
 	public static int get_dpi () {
@@ -26,7 +25,6 @@ public class Icons {
 	}
 
 	public static void use_high_resolution (bool high_res) {
-		directory = (high_res) ? "icons" : "icons-72dpi";
 		Icons.high_res = high_res;
 	}
 	
@@ -52,7 +50,7 @@ public class Icons {
 	}
 
 	public static File find_icon (string name) {
-		return FontDisplay.find_file (directory, name);
+		return SearchPaths.find_file ("icons", name);
 	}
 }
 	

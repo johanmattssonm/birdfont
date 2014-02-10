@@ -194,7 +194,7 @@ public class SpinButton : Tool {
 	}
 
 	public void set_value (string new_value, bool check_boundries = true, bool emit_signal = true) {
-		string v = new_value;
+		string v = new_value.replace (",", ".");
 
 		while (v.char_count () < 5) {
 			if (v.index_of (".") == -1) {
