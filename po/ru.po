@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-19 16:59+0100\n"
-"PO-Revision-Date: 2013-09-10 22:45+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"POT-Creation-Date: 2014-02-10 12:52+0100\n"
+"PO-Revision-Date: 2014-01-29 07:22+0000\n"
+"Last-Translator: Garab <voron-tengu@mail.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Pootle 2.5.0-beta1\n"
-"X-POOTLE-MTIME: 1378853143.0\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"X-POOTLE-MTIME: 1390980147.000000\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
@@ -304,6 +304,10 @@ msgstr ""
 #~ msgid "show coordinate in glyph view"
 #~ msgstr "показывать координаты в окне редактора"
 
+#, fuzzy
+#~ msgid "exit if a test case fails"
+#~ msgstr "выйти, если тест неудачен"
+
 #~ msgid "treat warnings as fatal"
 #~ msgstr "рассматривать предупреждение как критическую ошибку"
 
@@ -367,6 +371,9 @@ msgstr ""
 #~ msgid "English"
 #~ msgstr "Английский"
 
+#~ msgid "Greek"
+#~ msgstr "Греческий"
+
 #~ msgid "Japanese"
 #~ msgstr "Японский"
 
@@ -415,6 +422,12 @@ msgstr ""
 #~ msgid "Move to path to the bottom layer"
 #~ msgstr "Переместить контур на слой ниже"
 
+#~ msgid "Flip path vertically"
+#~ msgstr "Отразить путь по вертикали"
+
+#~ msgid "Flip path horizontally"
+#~ msgstr "Отразить путь по горизонтали"
+
 #~ msgid "Show full unicode characters set"
 #~ msgstr "Показать полный набор символов Unicode"
 
@@ -427,6 +440,9 @@ msgstr ""
 
 #~ msgid "Delete selected glyph"
 #~ msgstr "Удалить выбранный глиф"
+
+#~ msgid "Show guidelines"
+#~ msgstr "Показать направляющие"
 
 #~ msgid "Show guidelines for x-height and baseline"
 #~ msgstr "Показать ограничители для строчных литер"
@@ -485,8 +501,26 @@ msgstr ""
 #~ msgid "Set precision"
 #~ msgstr "Чуствительность рычагов"
 
+#~ msgid "Object color"
+#~ msgstr "Цвет объекта"
+
+#~ msgid "Set fill color for open paths."
+#~ msgstr "Задать цвет заливки для открытых контуров"
+
+#~ msgid "Use TTF units."
+#~ msgstr "Использовать единицы TTF"
+
 #~ msgid "Set size for grid"
 #~ msgstr "Установить размер сетки"
+
+#~ msgid "Writing TTF and EOT files."
+#~ msgstr "Запись TTF и EOT файлов"
+
+#~ msgid "Writing SVG file."
+#~ msgstr "Запись SVG файлов"
+
+#~ msgid "No fonts created yet."
+#~ msgstr "Шрифт еще не создан"
 
 #~ msgid "Recent files"
 #~ msgstr "Последние файлы"
@@ -505,6 +539,9 @@ msgstr ""
 
 #~ msgid "Kerning"
 #~ msgstr "Кернинг"
+
+#~ msgid "The current kerning class is malformed."
+#~ msgstr "Неверный формат текущего класса кернинга"
 
 #, fuzzy
 #~ msgid "Kerning:"
@@ -529,7 +566,7 @@ msgstr ""
 #~ msgstr "Обзор"
 
 #~ msgid "No glyphs in this view."
-#~ msgstr "Не показывать глифы"
+#~ msgstr "Не показывать глиф"
 
 #~ msgid "Cancel"
 #~ msgstr "Отмена"

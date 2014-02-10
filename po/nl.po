@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-19 16:59+0100\n"
-"PO-Revision-Date: 2014-01-13 21:02+0000\n"
+"POT-Creation-Date: 2014-02-10 12:52+0100\n"
+"PO-Revision-Date: 2014-01-26 09:26+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1389646971.000000\n"
+"X-POOTLE-MTIME: 1390728383.000000\n"
 
 #: birdfont/GtkWindow.vala:462
 msgid "_New"
@@ -111,7 +111,6 @@ msgid "_Select Point Above"
 msgstr "_Bovenstaande punt selecteren"
 
 #: birdfont/GtkWindow.vala:575
-#, fuzzy
 msgid "Select _Next Point"
 msgstr "_Volgende punt selecteren"
 
@@ -128,9 +127,8 @@ msgid "_Next Tab"
 msgstr "_Volgende tabblad"
 
 #: birdfont/GtkWindow.vala:601
-#, fuzzy
 msgid "_Previous Tab"
-msgstr "_Vorige tabblad"
+msgstr "Vo_rige tabblad"
 
 #: birdfont/GtkWindow.vala:614
 msgid "_Close tab"
@@ -527,35 +525,29 @@ msgstr "Auteursrecht"
 #~ msgid "The current kerning class is malformed."
 #~ msgstr "De huidige afspatieerklasse is onjuist gevormd."
 
-#, fuzzy
 #~ msgid "Add single characters separated by space and ranges on the form A-Z."
 #~ msgstr ""
 #~ "Voeg enkele tekens toe, gescheiden door spaties en bereik in de vorm A-Z."
 
-#, fuzzy
 #~ msgid "Type “space” to kern the space character and “divis” to kern -."
 #~ msgstr ""
 #~ "Typ “spatie” voor afspatiëren van het spatieteken en “divis” voor -."
 
-#, fuzzy
 #~ msgid "Kerning:"
 #~ msgstr "Afspatiëring:"
 
 #~ msgid "Kerning Pairs"
 #~ msgstr "Afspatieercombinaties"
 
-#, fuzzy
 #~ msgid ""
 #~ "Right click to edit the class and left click to kern glyphs in the class."
 #~ msgstr ""
 #~ "Klik met rechts om de klasse te bewerken en klik met links om symbolen in "
 #~ "de klasse af te spatiëren."
 
-#, fuzzy
 #~ msgid "Kerning class"
 #~ msgstr "Afspatieerklasse"
 
-#, fuzzy
 #~ msgid "Set"
 #~ msgstr "Instellen"
 
@@ -629,7 +621,6 @@ msgstr "Auteursrecht"
 #~ msgid "Rectangle"
 #~ msgstr "Rechthoek"
 
-#, fuzzy
 #~ msgid "Resize and rotate paths"
 #~ msgstr "Afmetingen wijzigen en paden draaien"
 
