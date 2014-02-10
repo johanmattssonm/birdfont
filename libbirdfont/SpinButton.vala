@@ -57,8 +57,8 @@ public class SpinButton : Tool {
 				}
 					
 				for (int i = 0; i < n; i++) {
-					if (py < 51) increase ();
-					if (py > 60) decrease ();
+					if (py < 9) increase ();
+					if (py > 25) decrease ();
 				}
 			}
 			
@@ -86,6 +86,8 @@ public class SpinButton : Tool {
 				} else {
 					set_int_value (@"$new_value");
 				}
+				
+				Toolbox.redraw_tool_box ();
 			}
 			
 			return value_from_motion;
