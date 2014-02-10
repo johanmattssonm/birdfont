@@ -237,7 +237,6 @@ public class Toolbox : GLib.Object  {
 
 	public static void redraw_tool_box () {
 		Toolbox t = MainWindow.get_toolbox ();
-		warning ("redraw_tool_box");
 		t.redraw (0, 0, allocation_width, allocation_height);
 	}
 	
@@ -322,8 +321,6 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void update_expanders () {
-		Expander? p = null; 
-		Expander pp;
 		double pos;
 
 		foreach (Expander e in current_set.get_expanders ()) {

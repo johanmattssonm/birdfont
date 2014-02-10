@@ -77,10 +77,15 @@ public class Expander : GLib.Object {
 		bool new_row = false;
 
 		foreach (Tool t in tool) {
-			t.w = 33 * scale;
-			t.h = (33 / 1.11) * scale;
+			if (t is KerningRange) {
+				t.w = Toolbox.allocation_width * scale;
+				t.h = 17 * scale;				
+			} else {
+				t.w = 33 * scale;
+				t.h = (33 / 1.11) * scale;
+			}
 		}
-				
+		
 		if (tool.length () > 0) {
 			content_height = tool.first ().data.h + margin_small;
 		} else {

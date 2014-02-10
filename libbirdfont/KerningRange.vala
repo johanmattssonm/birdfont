@@ -55,9 +55,6 @@ public class KerningRange : Tool {
 
 		panel_release_action.connect ((selected, button, tx, ty) => {
 		});
-		
-		w = 200;
-		h = 17;
 	}
 	
 	public void set_ranges (string r) {
@@ -104,8 +101,8 @@ public class KerningRange : Tool {
 	public override void draw (Context cr) {
 		double xt, yt;
 
-		xt = x + 27;
-		yt = y + 53;
+		xt = x + 10;
+		yt = y + 10;
 		
 		cr.save ();
 	

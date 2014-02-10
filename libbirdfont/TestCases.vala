@@ -59,7 +59,6 @@ class TestCases {
 		int error;
 		File f = BirdFont.get_settings_directory ();
 		Font font = BirdFont.get_current_font ();
-		bool valid;
 		
 		font.set_name ("TEST_FONT");
 				
