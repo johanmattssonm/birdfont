@@ -23,6 +23,18 @@
      id="defs3788">
     <linearGradient
        inkscape:collect="always"
+       id="linearGradient4635">
+      <stop
+         style="stop-color:#e7e6e6;stop-opacity:1;"
+         offset="0"
+         id="stop4637" />
+      <stop
+         style="stop-color:#e7e6e6;stop-opacity:0;"
+         offset="1"
+         id="stop4639" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
        xlink:href="#linearGradient3761"
        id="linearGradient3767"
        x1="608.99573"
@@ -360,6 +372,16 @@
        r="15.5"
        gradientTransform="matrix(-2.4024893,-2.0173576,1.0887244,-1.2965707,411.16147,304.42059)"
        gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4635"
+       id="linearGradient4641"
+       x1="217"
+       y1="6.0278215"
+       x2="217"
+       y2="743"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.2890276,0,0,1,-73.718994,-5)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -368,9 +390,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="-17.888006"
-     inkscape:cy="463.26099"
+     inkscape:zoom="1"
+     inkscape:cx="204.06067"
+     inkscape:cy="568.36736"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
