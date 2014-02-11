@@ -1,3 +1,13 @@
+birdfont (0.32) stable;
+
+  * Touch screen friendly interface
+  * New tools for adding and moving control points
+  * Icons in 320 dpi
+  * French translation
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue Feb 11 08:53:15 CET 2014
+
 birdfont (0.31) stable;
 
   * Bug fixes
@@ -126,7 +136,7 @@ birdfont (0.15) stable;
 
 birdfont (0.14) stable;
 
-  * Bugfixes
+  * Bug fixes
 
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Feb 24 17:43:00 CET 2013
 
@@ -146,19 +156,19 @@ birdfont (0.13) stable;
 
 birdfont (0.12) stable;
 
-  * Bugfixes and updated test suit
+  * Bug fixes and updated test suit
 
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Jan 31 19:01:04 CET 2013
 
 birdfont (0.11) stable;
 
-  * Bugfixes
+  * Bug fixes
 
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Jan 30 09:25:10 CET 2013
 
 birdfont (0.10) stable;
 
-  * Bugfixes
+  * Bug fixes
   * Move paths with keyboard
   * Backup and crash recovery
 
@@ -195,7 +205,7 @@ birdfont (0.8) stable;
 birdfont (0.7) stable;
 
   * New icons
-  * Bugfixes
+  * Bug fixes
   * Menu
   * Internationalization
 
@@ -205,7 +215,7 @@ birdfont (0.6) stable;
 
   * Improved TrueType outlines
   * Resize paths
-  * Bugfixes
+  * Bug fixes
 
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Oct 28 18:38:35 CET 2012
 
@@ -221,7 +231,7 @@ birdfont (0.5) stable;
 birdfont (0.4.1) stable;
 
   * Edit filled paths
-  * Bugfixes
+  * Bug fixes
 
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Sep 19 15:37:40 CEST 2012
 
