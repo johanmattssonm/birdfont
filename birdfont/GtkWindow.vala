@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ using Gtk;
 using Gdk;
 using BirdFont;
 using WebKit;
-using Pixbuf;
+using Gdk;
 
 namespace BirdFont {
 

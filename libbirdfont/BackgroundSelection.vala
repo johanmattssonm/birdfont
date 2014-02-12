@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -98,7 +98,7 @@ class BackgroundSelection : FontDisplay {
 		string fn = Checksum.compute_for_string (ChecksumType.SHA1, file);
 		File original = File.new_for_path (file);
 		File thumbnail_folder = folder.get_child (@"thumbnail");
-		File thumbnail_image = thumbnail_path.get_child (@"$(fn).png");
+		File thumbnail_image = thumbnail_folder.get_child (@"$(fn).png");
 				
 		if (!thumbnail_folder.query_exists ()) {
 			DirUtils.create ((!) thumbnail_folder.get_path (), 0xFFFFFF);
@@ -123,7 +123,7 @@ class BackgroundSelection : FontDisplay {
 			}
 		}
 		
-		return new ImageSurface.from_png ((!) png_image.get_path ());
+		return new ImageSurface.from_png ((!) thumbnail_image.get_path ());
 	}
 	
 	private bool draw_thumbnail (string file, double x, double y, Context cr, int box_index) {
