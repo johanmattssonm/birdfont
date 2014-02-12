@@ -187,7 +187,7 @@ class BackgroundSelection : FontDisplay {
 			return;
 		}
 		
-		file = background_images.nth (active_box - 1).data; // Fixa: check bounds
+		file = background_images.nth (active_box - 1).data;
 		bg = new GlyphBackgroundImage (file);
 		tb = MainWindow.get_tab_bar ();
 		

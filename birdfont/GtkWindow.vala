@@ -20,6 +20,7 @@ using Gtk;
 using Gdk;
 using BirdFont;
 using WebKit;
+using Pixbuf;
 
 namespace BirdFont {
 
@@ -834,6 +835,20 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		text_entry.grab_focus ();
 		text_input_is_active = true;
+	}
+	
+	public bool convert_to_png (string from, string to) {
+		Pixbuf pixbuf;
+		
+		try {
+			pixbuf = new Pixbuf.from_file (from);
+			pixbuf.save (to, "png");
+		} catch (GLib.Error e) {
+			warning (e.message);
+			return false;
+		}
+		
+		return true;
 	}
 }
 

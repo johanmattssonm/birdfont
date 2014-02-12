@@ -98,6 +98,7 @@ elif os.path.isfile ('build/libbirdfont.so.' + version.SO_VERSION):
 elif os.path.isfile ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib'):
 	install ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib', libdir, 644)
 	link (libdir, 'libbirdfont.' + version.SO_VERSION + '.dylib', ' libbirdfont.dylib.' + version.SO_VERSION_MAJOR)
+	link (libdir, 'libbirdfont.' + version.SO_VERSION + '.dylib', ' libbirdfont.dylib')
 else:
 	print ("Can not find libbirdfont.")
 	exit (1)

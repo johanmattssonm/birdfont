@@ -57,7 +57,8 @@ public class GlyphBackgroundImage {
 	public int size_margin {
 		get {
 			if (unlikely (size == -1)) {
-				size = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) + Math.pow (get_img ().get_width (), 2)) + 0.5);
+				size = (int) (Math.sqrt (Math.pow (get_img ().get_height (), 2) 
+					+ Math.pow (get_img ().get_width (), 2)) + 0.5);
 			}
 			
 			return size;
@@ -206,27 +207,31 @@ public class GlyphBackgroundImage {
 	
 	private void create_png () {
 #if !ANDROID
-		string fn = @"$path.png";
-		
+		string file_name = @"$path.png";
 		Font font = BirdFont.get_current_font ();
 		File folder = font.get_backgrounds_folder ();
-		File original = File.new_for_path (fn);
+		File original = File.new_for_path (file_name);
 		File png_image = folder.get_child (@"full_$((!)original.get_basename ())");
-
 		Pixbuf pixbuf;
+		bool converted;
 		
 		if (png_image.query_exists ()) {
 			path = (!) png_image.get_path ();
 			return;
 		}
 		
-		try {
-			pixbuf = new Pixbuf.from_file (path);
-			pixbuf.save ((!) png_image.get_path (), "png");
-			path = (!) png_image.get_path ();
-		} catch (GLib.Error e) {
-			warning (e.message);
+		if (is_null (path)) {
+			warning ("Background image path is null.");
+			return;
 		}
+		
+		converted = MainWindow.native_window.convert_to_png (path, (!) png_image.get_path ());
+		
+		if (!converted) {
+			warning ("Failed to convert image: $(path)");
+		}
+		
+		path = (!) png_image.get_path ();
 #endif
 
 		// FIXME: android
