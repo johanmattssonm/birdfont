@@ -1,3 +1,9 @@
+birdfont (0.33) stable;
+
+  * Background images on new versions of Mac OS X and other bug fixes.
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Feb 12 21:22:18 CET 2014
+
 birdfont (0.32) stable;
 
   * Touch screen friendly interface
