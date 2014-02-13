@@ -53,12 +53,14 @@ public class PenTool : Tool {
 	
 	public static double response_delay = 0;
 	public static bool do_respond = false;
-
+	private static const double RESPONSE_PIXELS = 20;
+	
 	// The pixel where the user pressed the mouse button
 	public static int begin_action_x = 0; 
 	public static int begin_action_y = 0;
 	
 	private static ImageSurface? tie_icon = null;
+	private static ImageSurface? delay_circle = null;
 	
 	/** First move action must move the current point in to the grid. */
 	bool first_move_action = false;
@@ -94,6 +96,7 @@ public class PenTool : Tool {
 		base (name, click_to_add_points + " " + t_("and double click to add new point on path."), ',', CTRL);
 		
 		tie_icon = Icons.get_icon ("tie_is_active.png");
+		delay_circle = Icons.get_icon ("delay_circle.png");
 		
 		select_action.connect ((self) => {
 		});
@@ -240,7 +243,7 @@ public class PenTool : Tool {
 		
 		if (!do_respond) {
 			d = Math.sqrt (Math.pow (px - begin_action_x, 2) + Math.pow (py - begin_action_y, 2));
-			do_respond = d > 20 * response_delay;
+			do_respond = d > RESPONSE_PIXELS * response_delay;
 		}
 		
 		return do_respond;
@@ -819,7 +822,32 @@ public class PenTool : Tool {
 			draw_selection_box (cr);
 		}
 		
+		if (!do_respond) {
+			draw_delay_circle (cr);
+		}
+		
 		draw_merge_icon (cr);
+	}
+	
+	void draw_delay_circle (Context cr) {
+		ImageSurface img;
+		double x, y;
+		double ratio;
+		
+		return_if_fail (delay_circle != null);
+		
+		img = (!) delay_circle;	
+			
+		cr.save ();
+		ratio = 2 * RESPONSE_PIXELS * response_delay / img.get_width ();
+		cr.scale (ratio, ratio);
+		x = begin_action_x - ratio * img.get_width () / 2;
+		x /= ratio;
+		y = begin_action_y - ratio * img.get_height () / 2;
+		y /= ratio;
+		cr.set_source_surface (img, x, y);
+		cr.paint ();
+		cr.restore ();
 	}
 	
 	void draw_selection_box (Context cr) {

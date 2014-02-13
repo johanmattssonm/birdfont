@@ -23,6 +23,18 @@
      id="defs3788">
     <linearGradient
        inkscape:collect="always"
+       id="linearGradient3575">
+      <stop
+         style="stop-color:#d5e5ff;stop-opacity:1;"
+         offset="0"
+         id="stop3577" />
+      <stop
+         style="stop-color:#d5e5ff;stop-opacity:0;"
+         offset="1"
+         id="stop3579" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
        id="linearGradient4635">
       <stop
          style="stop-color:#e7e6e6;stop-opacity:1;"
@@ -382,6 +394,17 @@
        y2="743"
        gradientUnits="userSpaceOnUse"
        gradientTransform="matrix(1.2890276,0,0,1,-73.718994,-5)" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3575"
+       id="radialGradient3581"
+       cx="199.80905"
+       cy="24.502512"
+       fx="199.80905"
+       fy="24.502512"
+       r="30.703518"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.696811,-0.06964229,0.06038833,1.4713414,-140.70881,2.3661124)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -391,8 +414,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="204.06067"
-     inkscape:cy="568.36736"
+     inkscape:cx="-152"
+     inkscape:cy="796.5"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -1811,5 +1834,18 @@
          id="tspan4601"
          x="11.868663"
          y="389.10025">AV</tspan></text>
+    <path
+       sodipodi:type="arc"
+       style="opacity:0.72016458000000005;fill:url(#radialGradient3581);fill-opacity:1"
+       id="path3573"
+       sodipodi:cx="200.75377"
+       sodipodi:cy="25.919598"
+       sodipodi:rx="30.703518"
+       sodipodi:ry="30.703518"
+       d="m 231.45729,25.919598 a 30.703518,30.703518 0 1 1 -61.40704,0 30.703518,30.703518 0 1 1 61.40704,0 z"
+       transform="translate(13.934673,8.0301508)"
+       inkscape:export-filename="/home/johan/birdfont/icons/delay_circle.png"
+       inkscape:export-xdpi="319.88824"
+       inkscape:export-ydpi="319.88824" />
   </g>
 </svg>
