@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -92,9 +92,11 @@ class GposTable : Table {
 	FontData get_pair_pos_format1 () throws GLib.Error {
 		FontData fd = new FontData ();
 		uint16 pair_set_count;
-		uint coverage_offset = 10 + pairs_offset_length () + pairs_set_length ();
+		uint coverage_offset;
 		
 		create_kerning_pairs ();
+		
+		coverage_offset = 10 + pairs_offset_length () + pairs_set_length ();
 		
 		// FIXME: add more then current maximum of pairs
 		
@@ -135,6 +137,11 @@ class GposTable : Table {
 		}
 		
 		ProgressBar.set_progress (0); // reset progress bar
+		
+		if (fd.length () != coverage_offset) {
+			warning (@"Bad coverage offset, coverage_offset: $coverage_offset, length: $(fd.length ())");
+			warning (@"pairs_offset_length: $(pairs_offset_length ()) pairs_set_length: $(pairs_set_length ())");
+		}
 		
 		// coverage
 		fd.add_ushort (1); // format
