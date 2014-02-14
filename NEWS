@@ -1,3 +1,9 @@
+birdfont (0.34) stable;
+
+  * Solves kerning issues and other bugs.
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Feb 14 14:20:12 CET 2014
+
 birdfont (0.33) stable;
 
   * Background images on new versions of Mac OS X and other bug fixes.
