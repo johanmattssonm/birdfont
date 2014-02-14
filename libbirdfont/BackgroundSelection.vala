@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -87,31 +87,43 @@ class BackgroundSelection : FontDisplay {
 	}
 	
 	private ImageSurface create_thumbnail (string file) throws GLib.Error {
-#if !ANDROID
-		Pixbuf pixbuf;
-		
+		ImageSurface img_surface;
+		ImageSurface thumbnail_surface;
+		Cairo.Status status;
+		GlyphBackgroundImage background_image;
+		Context cr;
+		double ratio;
 		Font font = BirdFont.get_current_font ();
 		File folder = font.get_backgrounds_folder ();
 		string fn = Checksum.compute_for_string (ChecksumType.SHA1, file);
 		File original = File.new_for_path (file);
-		File thumbnail_path = folder.get_child (@"thumbnail");
-		File png_image = thumbnail_path.get_child (@"$(fn).png");
-		
-		if (!thumbnail_path.query_exists ()) {
-			DirUtils.create ((!) thumbnail_path.get_path (), 0xFFFFFF);
+		File thumbnail_folder = folder.get_child (@"thumbnail");
+		File thumbnail_image = thumbnail_folder.get_child (@"$(fn).png");
+				
+		if (!thumbnail_folder.query_exists ()) {
+			DirUtils.create ((!) thumbnail_folder.get_path (), 0xFFFFFF);
 		}
 		
-		if (!png_image.query_exists ()) {
-			pixbuf = new Pixbuf.from_file_at_scale ((!) original.get_path (), 100, 100, true);
-			if (!pixbuf.save ((!) png_image.get_path (), "png")) {
-				warning (@"can't save $((!) png_image.get_path ())");
+		if (!thumbnail_image.query_exists ()) {
+			background_image = new GlyphBackgroundImage ((!) original.get_path ());
+			img_surface = background_image.get_img ();
+			thumbnail_surface = new ImageSurface (Format.ARGB32, 100, 100);
+			ratio = Math.fmin (100.0 / img_surface.get_width (), 100.0 / img_surface.get_height ());
+			cr = new Context (thumbnail_surface);
+			
+			cr.save ();
+			cr.scale (ratio, ratio);
+			cr.set_source_surface (img_surface, 0, 0);
+			cr.paint ();
+			cr.restore ();
+			
+			status = thumbnail_surface.write_to_png ((!) thumbnail_image.get_path ());
+			if (status != Cairo.Status.SUCCESS) {
+				warning (@"Can't save $((!) thumbnail_image.get_path ())");
 			}
 		}
 		
-		return new ImageSurface.from_png ((!) png_image.get_path ());
-#else
-		return new ImageSurface (Format.ARGB32, 10, 10); // FIXME: android
-#endif
+		return new ImageSurface.from_png ((!) thumbnail_image.get_path ());
 	}
 	
 	private bool draw_thumbnail (string file, double x, double y, Context cr, int box_index) {
@@ -187,7 +199,7 @@ class BackgroundSelection : FontDisplay {
 			return;
 		}
 		
-		file = background_images.nth (active_box - 1).data; // Fixa: check bounds
+		file = background_images.nth (active_box - 1).data;
 		bg = new GlyphBackgroundImage (file);
 		tb = MainWindow.get_tab_bar ();
 		

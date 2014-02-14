@@ -108,6 +108,7 @@ public class KerningDisplay : FontDisplay {
 		x = 20;
 		w = 0;
 		prev = null;
+		kern = 0;
 		
 		foreach (GlyphSequence word in row) {
 			wi = 0;
@@ -180,7 +181,7 @@ public class KerningDisplay : FontDisplay {
 					cr.set_source_rgba (153/255.0, 153/255.0, 153/255.0, alpha);
 					cr.move_to (x - w / 2.0 - 5, y + 20);
 					cr.set_font_size (10);
-					cr.show_text ("?"); // ?
+					cr.show_text ("?");
 					cr.restore ();
 				}
 							
@@ -188,6 +189,17 @@ public class KerningDisplay : FontDisplay {
 				
 				wi++;
 				i++;
+			}
+			
+			// draw caret
+			if (first_row) {
+				x2 = x + kern / 2.0;
+				cr.save ();
+				cr.set_source_rgba (0, 0, 0, 0.5);
+				cr.move_to (x2, 20);
+				cr.line_to (x2, 120);
+				cr.stroke ();
+				cr.restore ();
 			}
 			
 			if (y > allocation.height && i > 10) {

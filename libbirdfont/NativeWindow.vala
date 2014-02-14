@@ -48,6 +48,9 @@ public interface NativeWindow : GLib.Object {
 
 	/** Exit the application. */
 	public abstract void quit ();
+
+	/** Convert an image to PNG format. */
+	public abstract bool convert_to_png (string from, string to);
 }
 
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -641,7 +641,37 @@ public class DrawingTools : ToolCollection  {
 			Preferences.set ("ttf_units", @"$(GridTool.ttf_units)");
 		});
 		style_tools.add_tool (ttf_units);
+
+		// drawing tool delayed response in order to avoid having the 
+		// moving point untder the finger
+#if ANDROID
+		string delayed_response_value = Preferences.get ("response_delay");
+		SpinButton delayed_response = new SpinButton ("response_delay", t_("Delay response for editing tools"));
+
+		delayed_response.set_min (0);
+		delayed_response.set_max (9);
+				
+		if (delayed_response_value != "") {
+			delayed_response.set_value (delayed_response_value);
+		} else {
+			delayed_response.set_value_round (4);
+		}
 		
+		delayed_response.new_value_action.connect ((self) => {
+			MainWindow.get_toolbox ().select_tool (delayed_response);
+			Preferences.set ("response_delay", self.get_display_value ());
+			MainWindow.get_toolbox ().redraw ((int) delayed_response.x, (int) delayed_response.y, 70, 70);
+		});
+
+		delayed_response.select_action.connect((self) => {
+			pen_tool.set_response_delay (((SpinButton)self).get_value ());
+		});
+		
+		pen_tool.set_response_delay (delayed_response.get_value ());
+		style_tools.add_tool (delayed_response);
+#endif
+
+		// selection policy
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
 		edit_point_modifiers.set_open (true);
