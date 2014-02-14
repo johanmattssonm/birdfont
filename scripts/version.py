@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Copyright (C) 2013 Johan Mattsson
+Copyright (C) 2013, 2014 Johan Mattsson
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-VERSION = '0.33'
+VERSION = '0.34'
 SO_VERSION_MAJOR = '8'
 SO_VERSION_MINOR = '0'
 SO_VERSION = SO_VERSION_MAJOR + '.' + SO_VERSION_MINOR
