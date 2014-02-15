@@ -579,7 +579,11 @@ public class DrawingTools : ToolCollection  {
 		if (precision_value != "") {
 			precision.set_value (precision_value);
 		} else {
+#if ANDROID
+			precision.set_value_round (0.5);
+#else
 			precision.set_value_round (1);
+#endif
 		}
 		
 		precision.new_value_action.connect ((self) => {
