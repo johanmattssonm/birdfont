@@ -413,16 +413,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="-152"
-     inkscape:cy="796.5"
+     inkscape:zoom="10.181818"
+     inkscape:cx="53.5"
+     inkscape:cy="367.54911"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:window-width="1215"
-     inkscape:window-height="776"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
+     inkscape:window-width="1280"
+     inkscape:window-height="969"
+     inkscape:window-x="-2"
+     inkscape:window-y="-3"
      inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -1847,5 +1847,44 @@
        inkscape:export-filename="/home/johan/birdfont/icons/delay_circle.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
+    <text
+       inkscape:export-ydpi="319.88824"
+       inkscape:export-xdpi="319.88824"
+       inkscape:export-filename="/home/johan/birdfont/icons/kerning_text_input.png"
+       sodipodi:linespacing="125%"
+       id="text3532"
+       y="389.10025"
+       x="50.371204"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;font-family:KacstDigital;-inkscape-font-specification:KacstDigital Medium"
+       xml:space="preserve"><tspan
+         y="389.10025"
+         x="50.371204"
+         id="tspan3534"
+         sodipodi:role="line">T</tspan></text>
+    <rect
+       style="fill:#e6e6e6;fill-opacity:1;stroke:#858585;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect4322"
+       width="11.70859"
+       height="11.229433"
+       x="126.64785"
+       y="319.47968"
+       inkscape:export-filename="/home/johan/birdfont/icons/insert_background.png"
+       inkscape:export-xdpi="319.88824"
+       inkscape:export-ydpi="319.88824" />
+    <text
+       inkscape:export-ydpi="319.88824"
+       inkscape:export-xdpi="319.88824"
+       inkscape:export-filename="/home/johan/birdfont/icons/insert_background.png"
+       inkscape:transform-center-y="2.5075108"
+       sodipodi:linespacing="125%"
+       id="text4324"
+       y="328.78897"
+       x="128.93886"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#858585;fill-opacity:1;stroke:none;font-family:KacstDigital;-inkscape-font-specification:KacstDigital Medium"
+       xml:space="preserve"><tspan
+         id="tspan4326"
+         y="328.78897"
+         x="128.93886"
+         sodipodi:role="line">B</tspan></text>
   </g>
 </svg>

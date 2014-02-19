@@ -27,25 +27,32 @@ public class KerningTools : ToolCollection  {
 	}
 	
 	public static void init () {
-		Expander class_tools = new Expander ();
+		Expander kerning_tools = new Expander ();
 		classes = new Expander ();
 		
-		Tool new_kerning_class = new Tool ("kerning_class", t_("Create new kerning class"));
+		Tool new_kerning_class = new Tool ("kerning_class", t_("Create new kerning class."));
 		new_kerning_class.select_action.connect ((self) => {
 			classes.add_tool (new KerningRange (@"Kerning class $(++next_class)"));
 			Toolbox.redraw_tool_box ();
 		});
-		class_tools.add_tool (new_kerning_class);
+		kerning_tools.add_tool (new_kerning_class);
 
-		class_tools.set_persistent (false);
-		class_tools.set_unique (false);
-		class_tools.set_open (true);
+		Tool text_kerning = new Tool ("kerning_text_input", t_("Use text input to enter kerning values."));
+		text_kerning.select_action.connect ((self) => {
+			KerningDisplay d = MainWindow.get_kerning_display ();
+			d.set_kerning_by_text ();
+		});
+		kerning_tools.add_tool (text_kerning);
+		
+		kerning_tools.set_persistent (false);
+		kerning_tools.set_unique (false);
+		kerning_tools.set_open (true);
 
 		classes.set_persistent (true);
 		classes.set_unique (true);
 		classes.set_open (true);
 		
-		expanders.append (class_tools);
+		expanders.append (kerning_tools);
 		expanders.append (classes);
 	}
 	

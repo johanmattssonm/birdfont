@@ -640,11 +640,15 @@ public class KerningDisplay : FontDisplay {
 		}
 	}
 	
-	private void set_kerning_by_text () {
+	public void set_kerning_by_text () {
 		TextListener listener;
 		string kerning = @"$(get_kerning_for_handle (selected_handle))";
 		
-		listener = new TextListener (t_("Kerning"), kerning, t_("Apply"));
+		if (selected_handle == -1) {
+			selected_handle = 0;
+		}
+		
+		listener = new TextListener (t_("Kerning"), kerning, t_("Close"));
 		
 		listener.signal_text_input.connect ((text) => {
 			string submitted_value = text.replace (",", ".");
@@ -661,7 +665,9 @@ public class KerningDisplay : FontDisplay {
 		
 		suppress_input = true;
 		text_input = true;
-		MainWindow.native_window.set_text_listener (listener);		
+		MainWindow.native_window.set_text_listener (listener);
+		
+		GlyphCanvas.redraw ();		
 	}
 	
 	public override void button_press (uint button, double ex, double ey) {
