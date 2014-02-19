@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-10 12:52+0100\n"
+"POT-Creation-Date: 2014-02-19 17:10+0100\n"
 "PO-Revision-Date: 2014-01-29 07:22+0000\n"
 "Last-Translator: Garab <voron-tengu@mail.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,577 +19,761 @@ msgstr ""
 "X-Generator: Pootle 2.5.1-rc1\n"
 "X-POOTLE-MTIME: 1390980147.000000\n"
 
-#: birdfont/GtkWindow.vala:462
+#: libbirdfont/Argument.vala:241
+msgid "Usage"
+msgstr "Применить"
+
+#: libbirdfont/Argument.vala:243
+msgid "FILE"
+msgstr "ФАЙЛ"
+
+#: libbirdfont/Argument.vala:243
+msgid "OPTION"
+msgstr "ПАРАМЕТРЫ"
+
+#: libbirdfont/Argument.vala:245
+msgid "enable Android customizations"
+msgstr ""
+
+#: libbirdfont/Argument.vala:246
+msgid "show coordinate in glyph view"
+msgstr "показывать координаты в окне редактора"
+
+#: libbirdfont/Argument.vala:247
+#, fuzzy
+msgid "exit if a test case fails"
+msgstr "выйти, если тест неудачен"
+
+#: libbirdfont/Argument.vala:248
+msgid "treat warnings as fatal"
+msgstr "рассматривать предупреждение как критическую ошибку"
+
+#: libbirdfont/Argument.vala:249
+msgid "show this message"
+msgstr "показать это сообщение"
+
+#: libbirdfont/Argument.vala:250
+msgid "enable Machintosh customizations"
+msgstr "включить настройки Machintosh"
+
+#: libbirdfont/Argument.vala:251
+msgid "don't translate"
+msgstr "Не переводить"
+
+#: libbirdfont/Argument.vala:252
+msgid "sleep between each command in test suite"
+msgstr "пауза между действиями в тестовом режиме"
+
+#: libbirdfont/Argument.vala:253
+msgid "run test case"
+msgstr "запустить тест"
+
+#: libbirdfont/BackgroundSelection.vala:41
+msgid "Backgrounds"
+msgstr "Фоны"
+
+#: libbirdfont/BackgroundTool.vala:36
+msgid "Move, resize and rotate background image"
+msgstr "Перемещение, изменение размера и поворот фонового изображения"
+
+#: libbirdfont/BirdFont.vala:20
+msgid "Usage:"
+msgstr "Использование:"
+
+#: libbirdfont/BirdFont.vala:23
+msgid "print this message\n"
+msgstr "распечатать это сообщение\n"
+
+#: libbirdfont/BirdFont.vala:24
+msgid "write files to this directory\n"
+msgstr "записать файлы в директорию\n"
+
+#: libbirdfont/BirdFont.vala:25
+msgid "write svg file\n"
+msgstr "записать svg файл\n"
+
+#: libbirdfont/BirdFont.vala:26
+msgid "write ttf and eot files\n"
+msgstr "записать ttf и eot файлы\n"
+
+#: libbirdfont/BirdFont.vala:120
+msgid "Can't find output directory"
+msgstr "Выходной каталог не найден"
+
+#: libbirdfont/CharDatabase.vala:134
+msgid "Loading the unicode character database"
+msgstr "Загружается база данных символов юникода"
+
+#: libbirdfont/CircleTool.vala:36
+msgid "Circle"
+msgstr "Круг"
+
+#: libbirdfont/CutBackgroundTool.vala:34
+msgid "Crop background image"
+msgstr "Обрезать фоновое изображение"
+
+#: libbirdfont/DefaultCharactersSet.vala:25
+msgid "Default language"
+msgstr "Язык по умолчанию"
+
+#: libbirdfont/DefaultCharactersSet.vala:26
+msgid "Private use area"
+msgstr "Область пользователя"
+
+#: libbirdfont/DefaultCharactersSet.vala:28
+msgid "Chinese"
+msgstr "Китайский"
+
+#: libbirdfont/DefaultCharactersSet.vala:29
+msgid "English"
+msgstr "Английский"
+
+#: libbirdfont/DefaultCharactersSet.vala:30
+msgid "Greek"
+msgstr "Греческий"
+
+#: libbirdfont/DefaultCharactersSet.vala:31
+msgid "Japanese"
+msgstr "Японский"
+
+#: libbirdfont/DefaultCharactersSet.vala:32
+msgid "Javanese"
+msgstr "Яванский"
+
+#: libbirdfont/DefaultCharactersSet.vala:33
+msgid "Russian"
+msgstr "Русский"
+
+#: libbirdfont/DefaultCharactersSet.vala:34
+msgid "Swedish"
+msgstr "Шведский"
+
+#. / All lower case letters in alphabetic order separated by space
+#: libbirdfont/DefaultCharactersSet.vala:112
+msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+msgstr "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я"
+
+#. / All upper case letters in alphabetic order separated by space
+#: libbirdfont/DefaultCharactersSet.vala:115
+msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+msgstr "А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я"
+
+#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1204
+msgid "Description"
+msgstr "Описание"
+
+#: libbirdfont/DrawingTools.vala:74
+msgid "Create quadratic Bézier curves"
+msgstr "Создать квадратную кривую Безье"
+
+#: libbirdfont/DrawingTools.vala:82
+msgid "Create cubic Bézier curves"
+msgstr "Создать кубическую кривую Безье"
+
+#: libbirdfont/DrawingTools.vala:90
+msgid "Quadratic path with two line handles"
+msgstr "Путь с двумя управляющими рычагами"
+
+#: libbirdfont/DrawingTools.vala:98
+msgid "Convert selected points"
+msgstr "Преобразовать выбранные точки"
+
+#: libbirdfont/DrawingTools.vala:107
+msgid "Tie curve handles for the selected edit point"
+msgstr "Рычаги управления узла"
+
+#: libbirdfont/DrawingTools.vala:143
+msgid "Symmetrical handles"
+msgstr "Симметричные рычаги"
+
+#: libbirdfont/DrawingTools.vala:165
+msgid "Convert segment to line."
+msgstr "Конвертировать сегмент в линию"
+
+#: libbirdfont/DrawingTools.vala:173
+msgid "Merge paths"
+msgstr "Объединить контуры"
+
+#: libbirdfont/DrawingTools.vala:180
+msgid "Create counter from outline"
+msgstr "Создать контур из линии"
+
+#: libbirdfont/DrawingTools.vala:192
+msgid "Move to path to the bottom layer"
+msgstr "Переместить контур на слой ниже"
+
+#: libbirdfont/DrawingTools.vala:203
+msgid "Flip path vertically"
+msgstr "Отразить путь по вертикали"
+
+#: libbirdfont/DrawingTools.vala:210
+msgid "Flip path horizontally"
+msgstr "Отразить путь по горизонтали"
+
+#: libbirdfont/DrawingTools.vala:218
+msgid "Show full unicode characters set"
+msgstr "Показать полный набор символов Unicode"
+
+#: libbirdfont/DrawingTools.vala:234
+msgid "Show default characters set"
+msgstr "Показать набор символов по умолчанию"
+
+#: libbirdfont/DrawingTools.vala:250
+#, fuzzy
+msgid "Show all characters in the font"
+msgstr "Показать все символы шрифта"
+
+#: libbirdfont/DrawingTools.vala:264
+msgid "Delete selected glyph"
+msgstr "Удалить выбранный глиф"
+
+#: libbirdfont/DrawingTools.vala:319
+msgid "Show guidelines"
+msgstr "Показать направляющие"
+
+#: libbirdfont/DrawingTools.vala:330
+msgid "Show guidelines for x-height and baseline"
+msgstr "Показать ограничители для строчных литер"
+
+#: libbirdfont/DrawingTools.vala:345
+msgid "Show guidelines at top and bottom margin"
+msgstr "Показать ограничители верхних и нижних полей"
+
+#: libbirdfont/DrawingTools.vala:363
+msgid "Zoom in"
+msgstr "Увеличить"
+
+#: libbirdfont/DrawingTools.vala:370
+msgid "Zoom out"
+msgstr "Уменьшить"
+
+#: libbirdfont/DrawingTools.vala:377
+msgid "Zoom to scale 1:1"
+msgstr "Масштабировать 1:1"
+
+#: libbirdfont/DrawingTools.vala:385
+msgid "Show full glyph"
+msgstr "Показать глиф полностью"
+
+#: libbirdfont/DrawingTools.vala:392
+msgid "Zoom in at region boundries"
+msgstr "Увеличить границы области"
+
+#: libbirdfont/DrawingTools.vala:399
+msgid "Zoom in background image"
+msgstr "Увеличить фоновое изображение"
+
+#: libbirdfont/DrawingTools.vala:412
+msgid "Previous view"
+msgstr "Предыдущая вкладка"
+
+#: libbirdfont/DrawingTools.vala:418
+msgid "Next view"
+msgstr "Следующая вкладка"
+
+#: libbirdfont/DrawingTools.vala:432
+msgid "Set size for background image"
+msgstr "Установить размер фонового изображения"
+
+#: libbirdfont/DrawingTools.vala:462
+msgid "Show/hide background image"
+msgstr "Показать/Спрятать фоновое изображение"
+
+#: libbirdfont/DrawingTools.vala:470
+msgid "Insert a new background image"
+msgstr "Вставить новое фоновое изображение"
+
+#: libbirdfont/DrawingTools.vala:475
+msgid "Creating thumbnails"
+msgstr "Создание эскизов"
+
+#: libbirdfont/DrawingTools.vala:494
+msgid "Set contrast for background image"
+msgstr "Установите контраст для фонового изображения"
+
+#: libbirdfont/DrawingTools.vala:513
+msgid "Stroke color"
+msgstr "Цвет контура"
+
+#: libbirdfont/DrawingTools.vala:535
+msgid "Stroke width"
+msgstr "Толщина контура"
+
+#: libbirdfont/DrawingTools.vala:554
+msgid "Handle color"
+msgstr "Цвет рычага"
+
+#: libbirdfont/DrawingTools.vala:577
+msgid "Set precision"
+msgstr "Чуствительность рычагов"
+
+#: libbirdfont/DrawingTools.vala:604
+msgid "Show all control point handles or only handles for the selected points."
+msgstr ""
+
+#: libbirdfont/DrawingTools.vala:613
+msgid "Object color"
+msgstr "Цвет объекта"
+
+#: libbirdfont/DrawingTools.vala:634
+msgid "Set fill color for open paths."
+msgstr "Задать цвет заливки для открытых контуров"
+
+#: libbirdfont/DrawingTools.vala:642
+msgid "Use TTF units."
+msgstr "Использовать единицы TTF"
+
+#: libbirdfont/DrawingTools.vala:653
+msgid "Delay response for editing tools"
+msgstr ""
+
+#: libbirdfont/DrawingTools.vala:832
+msgid "Set size for grid"
+msgstr "Установить размер сетки"
+
+#: libbirdfont/ExportTool.vala:516
+msgid "Writing TTF and EOT files."
+msgstr "Запись TTF и EOT файлов"
+
+#: libbirdfont/ExportTool.vala:530
+msgid "Writing SVG file."
+msgstr "Запись SVG файлов"
+
+#: libbirdfont/FileTab.vala:176
+msgid "No fonts created yet."
+msgstr "Шрифт еще не создан"
+
+#: libbirdfont/FileTab.vala:185
+msgid "Recent files"
+msgstr "Последние файлы"
+
+#: libbirdfont/FileTab.vala:209
+msgid "Backup"
+msgstr "Резервная копия"
+
+#: libbirdfont/FileTab.vala:275
+msgid "Files"
+msgstr "Файлы"
+
+#: libbirdfont/GridTool.vala:35
+msgid "Show grid"
+msgstr "Показать сетку"
+
+#: libbirdfont/ImportSvg.vala:27
+msgid "Import"
+msgstr "Импортировать"
+
+#: libbirdfont/KerningDisplay.vala:43
+msgid "Kerning"
+msgstr "Кернинг"
+
+#: libbirdfont/KerningDisplay.vala:63
+msgid "The current kerning class is malformed."
+msgstr "Неверный формат текущего класса кернинга"
+
+#: libbirdfont/KerningDisplay.vala:64
+msgid "Add single characters separated by space and ranges on the form A-Z."
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:65
+msgid "Type “space” to kern the space character and “divis” to kern -."
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:216
+#, fuzzy
+msgid "Kerning:"
+msgstr "Кернинг"
+
+#: libbirdfont/KerningList.vala:89
+msgid "Kerning Pairs"
+msgstr ""
+
+#: libbirdfont/KerningRange.vala:50
+msgid ""
+"Right click to edit the class and left click to kern glyphs in the class."
+msgstr ""
+
+#: libbirdfont/KerningRange.vala:79
+msgid "Kerning class"
+msgstr ""
+
+#: libbirdfont/KerningRange.vala:79 libbirdfont/SpinButton.vala:112
+msgid "Set"
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:33
+msgid "Create new kerning class"
+msgstr ""
+
+#: libbirdfont/LanguageSelectionTab.vala:92
+msgid "Character Set"
+msgstr ""
+
+#: libbirdfont/MainWindow.vala:135
+msgid "Glyph sequence"
+msgstr "Последовательность глифов"
+
+#: libbirdfont/MainWindow.vala:135 libbirdfont/SpinButton.vala:112
+msgid "Close"
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:41
+msgid "Menu"
+msgstr "Меню"
+
+#: libbirdfont/MenuTab.vala:70 libbirdfont/SaveDialogListener.vala:28
+msgid "Save"
+msgstr "Сохранить"
+
+#: libbirdfont/MenuTab.vala:190
+msgid "Open"
+msgstr "Открыть"
+
+#: libbirdfont/MoveTool.vala:37
+msgid "Move paths"
+msgstr "Перемещение контура"
+
+#: libbirdfont/OverView.vala:109
+msgid "Search"
+msgstr ""
+
+#: libbirdfont/OverView.vala:109
+msgid "Filter"
+msgstr ""
+
+#: libbirdfont/OverView.vala:234
+msgid "Overview"
+msgstr "Обзор"
+
+#: libbirdfont/OverView.vala:372
+msgid "No glyphs in this view."
+msgstr "Не показывать глиф"
+
+#: libbirdfont/OverView.vala:905
+msgid "See also:"
+msgstr ""
+
+#: libbirdfont/OverWriteDialogListener.vala:30
+msgid "Overwrite TTF file?"
+msgstr ""
+
+#: libbirdfont/OverWriteDialogListener.vala:31
+msgid "Overwrite"
+msgstr ""
+
+#: libbirdfont/OverWriteDialogListener.vala:32
+msgid "Cancel"
+msgstr "Отмена"
+
+#: libbirdfont/OverWriteDialogListener.vala:33
+msgid "Yes, don't ask again."
+msgstr ""
+
+#: libbirdfont/PenTool.vala:91
+msgid "Right click or use left command key and click to add new points"
+msgstr ""
+
+#: libbirdfont/PenTool.vala:93
+msgid "Right click to add new points, left click to move points"
+msgstr ""
+"Кликните правой кнопкой мыши, чтобы добавить новые узлы, зажмите левую "
+"кнопку мыши, чтобы перемещать узлы"
+
+#: libbirdfont/PenTool.vala:96
+msgid "and double click to add new point on path."
+msgstr "и двойной клик чтобы добавить новый узел на контур."
+
+#: libbirdfont/PointTool.vala:24
+msgid "Move control points"
+msgstr ""
+
+#: libbirdfont/Preview.vala:27
+msgid "Preview"
+msgstr "Предпросмотр"
+
+#: libbirdfont/RectangleTool.vala:30
+msgid "Rectangle"
+msgstr ""
+
+#: libbirdfont/ResizeTool.vala:39
+msgid "Resize and rotate paths"
+msgstr ""
+
+#: libbirdfont/SaveDialogListener.vala:27
+msgid "Save?"
+msgstr "Сохранить?"
+
+#: libbirdfont/SaveDialogListener.vala:29
+msgid "Discard"
+msgstr "Не сохранять"
+
+#: libbirdfont/VersionList.vala:32
+msgid "New version"
+msgstr "Новая версия"
+
+#: libbirdfont/VersionList.vala:172 birdfont/GtkWindow.vala:1197
+msgid "Version"
+msgstr "Версия"
+
+#: birdfont/GtkWindow.vala:463
 msgid "_New"
 msgstr "_Новый"
 
-#: birdfont/GtkWindow.vala:467
+#: birdfont/GtkWindow.vala:468
 msgid "_Open"
 msgstr "_Открыть"
 
-#: birdfont/GtkWindow.vala:472
+#: birdfont/GtkWindow.vala:473
 #, fuzzy
 msgid "_Recent Files"
 msgstr "Последние файлы"
 
-#: birdfont/GtkWindow.vala:476
-msgid "_Save"
-msgstr "_Сохранить"
-
-#: birdfont/GtkWindow.vala:481
+#: birdfont/GtkWindow.vala:482
 msgid "Save _as"
 msgstr "Сохранить _как"
 
-#: birdfont/GtkWindow.vala:485
+#: birdfont/GtkWindow.vala:486
 msgid "_Export"
 msgstr "_Экспортировать"
 
-#: birdfont/GtkWindow.vala:491
+#: birdfont/GtkWindow.vala:492
 msgid "_Preview"
 msgstr "_Предпросмотр"
 
-#: birdfont/GtkWindow.vala:497
+#: birdfont/GtkWindow.vala:498
 msgid "Name and _Description"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:501
+#: birdfont/GtkWindow.vala:502
 msgid "Select _Character Set"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:505
+#: birdfont/GtkWindow.vala:506
 msgid "_Quit"
 msgstr "_Выйти"
 
-#: birdfont/GtkWindow.vala:510
+#: birdfont/GtkWindow.vala:511
 msgid "_Undo"
 msgstr "_Отменить"
 
-#: birdfont/GtkWindow.vala:515
+#: birdfont/GtkWindow.vala:516
 msgid "_Copy"
 msgstr "_Копировать"
 
-#: birdfont/GtkWindow.vala:520
+#: birdfont/GtkWindow.vala:521
 msgid "_Paste"
 msgstr "_Вставить"
 
-#: birdfont/GtkWindow.vala:525
+#: birdfont/GtkWindow.vala:526
 msgid "Paste _In Place"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:530
+#: birdfont/GtkWindow.vala:531
 #, fuzzy
 msgid "Select All Pa_ths"
 msgstr "_Выделить все контуры"
 
-#: birdfont/GtkWindow.vala:537
+#: birdfont/GtkWindow.vala:538
 msgid "_Search"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:542
+#: birdfont/GtkWindow.vala:543
 #, fuzzy
 msgid "_Export Glyph as SVG"
 msgstr "_Экспортировать глиф как SVG"
 
-#: birdfont/GtkWindow.vala:546
+#: birdfont/GtkWindow.vala:547
 msgid "_Import SVG"
 msgstr "_Импортировать SVG"
 
-#: birdfont/GtkWindow.vala:551
+#: birdfont/GtkWindow.vala:552
 #, fuzzy
 msgid "Close _Path"
 msgstr "_Замкнуть контур"
 
-#: birdfont/GtkWindow.vala:556
+#: birdfont/GtkWindow.vala:557
 #, fuzzy
 msgid "_Glyph Sequence"
 msgstr "Последовательность глифов"
 
-#: birdfont/GtkWindow.vala:561
+#: birdfont/GtkWindow.vala:562
 msgid "Set Glyph _Background"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:565
+#: birdfont/GtkWindow.vala:566
 msgid "_Remove Glyph Background"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:571
+#: birdfont/GtkWindow.vala:572
 #, fuzzy
 msgid "_Select Point Above"
 msgstr "_Выбрать узел выше"
 
-#: birdfont/GtkWindow.vala:575
+#: birdfont/GtkWindow.vala:576
 #, fuzzy
 msgid "Select _Next Point"
 msgstr "_Выбрать следующий узел"
 
-#: birdfont/GtkWindow.vala:579
+#: birdfont/GtkWindow.vala:580
 #, fuzzy
 msgid "Select _Previous Point"
 msgstr "_Выбрать предыдущий узел"
 
-#: birdfont/GtkWindow.vala:583
+#: birdfont/GtkWindow.vala:584
 #, fuzzy
 msgid "Select Point _Below"
 msgstr "_Выбрать узел ниже"
 
-#: birdfont/GtkWindow.vala:588
+#: birdfont/GtkWindow.vala:589
 #, fuzzy
 msgid "_Next Tab"
 msgstr "_Следующая вкладка"
 
-#: birdfont/GtkWindow.vala:601
+#: birdfont/GtkWindow.vala:602
 #, fuzzy
 msgid "_Previous Tab"
 msgstr "_Предыдущая вкладка"
 
-#: birdfont/GtkWindow.vala:614
+#: birdfont/GtkWindow.vala:615
 msgid "_Close tab"
 msgstr "_Закрыть вкладку"
 
-#: birdfont/GtkWindow.vala:628
+#: birdfont/GtkWindow.vala:629
 #, fuzzy
 msgid "Close _All Tabs"
 msgstr "_Закрыть все вкладки"
 
-#: birdfont/GtkWindow.vala:636
+#: birdfont/GtkWindow.vala:637
 #, fuzzy
 msgid "_Create Path"
 msgstr "_Создать контур"
 
-#: birdfont/GtkWindow.vala:643
+#: birdfont/GtkWindow.vala:644
 msgid "_Zoom"
 msgstr "_Масштабирование"
 
-#: birdfont/GtkWindow.vala:649
+#: birdfont/GtkWindow.vala:650
 #, fuzzy
 msgid "_Create Counter Path"
 msgstr "_Объединить контуры"
 
-#: birdfont/GtkWindow.vala:656
+#: birdfont/GtkWindow.vala:657
 msgid "_Move"
 msgstr "_Переместить"
 
-#: birdfont/GtkWindow.vala:663
+#: birdfont/GtkWindow.vala:664
 msgid "Show _full unicode characters set"
 msgstr "_Показать полный набор символов Unicode"
 
-#: birdfont/GtkWindow.vala:670
+#: birdfont/GtkWindow.vala:671
 #, fuzzy
 msgid "Show De_fault Characters Set"
 msgstr "_Показать набор символов по умолчанию"
 
-#: birdfont/GtkWindow.vala:677
+#: birdfont/GtkWindow.vala:678
 #, fuzzy
 msgid "Show Characters in Font"
 msgstr "_Показать символы шрифта"
 
-#: birdfont/GtkWindow.vala:684
+#: birdfont/GtkWindow.vala:685
 #, fuzzy
 msgid "Add New _Grid Item"
 msgstr "_Добавить новый элемент сетки"
 
-#: birdfont/GtkWindow.vala:690
+#: birdfont/GtkWindow.vala:691
 #, fuzzy
 msgid "Remove Gr_id Item"
 msgstr "_Удалить элемент сетки"
 
-#: birdfont/GtkWindow.vala:696
+#: birdfont/GtkWindow.vala:697
 #, fuzzy
 msgid "_Zoom In"
 msgstr "_Увеличить"
 
-#: birdfont/GtkWindow.vala:703
+#: birdfont/GtkWindow.vala:704
 #, fuzzy
 msgid "Zoom _Out"
 msgstr "_Уменьшить"
 
-#: birdfont/GtkWindow.vala:710
+#: birdfont/GtkWindow.vala:711
 #, fuzzy
 msgid "Zoom to _Scale 1:1"
 msgstr "_Масштабировать 1:1"
 
-#: birdfont/GtkWindow.vala:718
+#: birdfont/GtkWindow.vala:719
 msgid "Show Kerning _Tab"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:725
+#: birdfont/GtkWindow.vala:726
 msgid "_List Kerning Pairs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:731
+#: birdfont/GtkWindow.vala:732
 msgid "_Remove All Kerning Pairs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:739
+#: birdfont/GtkWindow.vala:740
 msgid "Select _Next Kerning Pair"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:743
+#: birdfont/GtkWindow.vala:744
 msgid "Select _Previous Kerning Pair"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:748
+#: birdfont/GtkWindow.vala:749
 msgid "_File"
 msgstr "_Файл"
 
-#: birdfont/GtkWindow.vala:751
+#: birdfont/GtkWindow.vala:752
 msgid "_Edit"
 msgstr "_Правка"
 
-#: birdfont/GtkWindow.vala:754
+#: birdfont/GtkWindow.vala:755
 msgid "_Tab"
 msgstr "_Вкладки"
 
-#: birdfont/GtkWindow.vala:757
+#: birdfont/GtkWindow.vala:758
 msgid "T_ool"
 msgstr "_Инструменты"
 
-#: birdfont/GtkWindow.vala:760
+#: birdfont/GtkWindow.vala:761
 msgid "_Kerning"
 msgstr "_Кернинг"
 
-#: birdfont/GtkWindow.vala:1126
+#: birdfont/GtkWindow.vala:1141
 msgid "PostScript Name"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1133
+#: birdfont/GtkWindow.vala:1148
 msgid "Name"
 msgstr "Название"
 
-#: birdfont/GtkWindow.vala:1140
+#: birdfont/GtkWindow.vala:1155
 msgid "Style"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1146
+#: birdfont/GtkWindow.vala:1161
 msgid "Bold"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1153
-msgid "Italic"
-msgstr ""
-
-#: birdfont/GtkWindow.vala:1161
+#: birdfont/GtkWindow.vala:1176
 msgid "Weight"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1168
+#: birdfont/GtkWindow.vala:1183
 msgid "Full name (name and style)"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1175
+#: birdfont/GtkWindow.vala:1190
 msgid "Unique identifier"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1182
-msgid "Version"
-msgstr "Версия"
-
-#: birdfont/GtkWindow.vala:1189
-msgid "Description"
-msgstr "Описание"
-
-#: birdfont/GtkWindow.vala:1197
+#: birdfont/GtkWindow.vala:1212
 msgid "Copyright"
 msgstr ""
 
-#~ msgid "Usage"
-#~ msgstr "Применить"
-
-#~ msgid "FILE"
-#~ msgstr "ФАЙЛ"
-
-#~ msgid "OPTION"
-#~ msgstr "ПАРАМЕТРЫ"
-
-#~ msgid "show coordinate in glyph view"
-#~ msgstr "показывать координаты в окне редактора"
-
-#, fuzzy
-#~ msgid "exit if a test case fails"
-#~ msgstr "выйти, если тест неудачен"
-
-#~ msgid "treat warnings as fatal"
-#~ msgstr "рассматривать предупреждение как критическую ошибку"
-
-#~ msgid "show this message"
-#~ msgstr "показать это сообщение"
-
-#~ msgid "enable Machintosh customizations"
-#~ msgstr "включить настройки Machintosh"
-
-#~ msgid "don't translate"
-#~ msgstr "Не переводить"
-
-#~ msgid "sleep between each command in test suite"
-#~ msgstr "пауза между действиями в тестовом режиме"
-
-#~ msgid "run test case"
-#~ msgstr "запустить тест"
-
-#~ msgid "Backgrounds"
-#~ msgstr "Фоны"
-
-#~ msgid "Move, resize and rotate background image"
-#~ msgstr "Перемещение, изменение размера и поворот фонового изображения"
-
-#~ msgid "Usage:"
-#~ msgstr "Использование:"
-
-#~ msgid "print this message\n"
-#~ msgstr "распечатать это сообщение\n"
-
-#~ msgid "write files to this directory\n"
-#~ msgstr "записать файлы в директорию\n"
-
-#~ msgid "write svg file\n"
-#~ msgstr "записать svg файл\n"
-
-#~ msgid "write ttf and eot files\n"
-#~ msgstr "записать ttf и eot файлы\n"
-
-#~ msgid "Can't find output directory"
-#~ msgstr "Выходной каталог не найден"
-
-#~ msgid "Loading the unicode character database"
-#~ msgstr "Загружается база данных символов юникода"
-
-#~ msgid "Circle"
-#~ msgstr "Круг"
-
-#~ msgid "Crop background image"
-#~ msgstr "Обрезать фоновое изображение"
-
-#~ msgid "Default language"
-#~ msgstr "Язык по умолчанию"
-
-#~ msgid "Private use area"
-#~ msgstr "Область пользователя"
-
-#~ msgid "Chinese"
-#~ msgstr "Китайский"
-
-#~ msgid "English"
-#~ msgstr "Английский"
-
-#~ msgid "Greek"
-#~ msgstr "Греческий"
-
-#~ msgid "Japanese"
-#~ msgstr "Японский"
-
-#~ msgid "Javanese"
-#~ msgstr "Яванский"
-
-#~ msgid "Russian"
-#~ msgstr "Русский"
-
-#~ msgid "Swedish"
-#~ msgstr "Шведский"
-
-#~ msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-#~ msgstr "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я"
-
-#~ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-#~ msgstr "А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я"
-
-#~ msgid "Create quadratic Bézier curves"
-#~ msgstr "Создать квадратную кривую Безье"
-
-#~ msgid "Create cubic Bézier curves"
-#~ msgstr "Создать кубическую кривую Безье"
-
-#~ msgid "Quadratic path with two line handles"
-#~ msgstr "Путь с двумя управляющими рычагами"
-
-#~ msgid "Convert selected points"
-#~ msgstr "Преобразовать выбранные точки"
-
-#~ msgid "Tie curve handles for the selected edit point"
-#~ msgstr "Рычаги управления узла"
-
-#~ msgid "Symmetrical handles"
-#~ msgstr "Симметричные рычаги"
-
-#~ msgid "Convert segment to line."
-#~ msgstr "Конвертировать сегмент в линию"
-
-#~ msgid "Merge paths"
-#~ msgstr "Объединить контуры"
-
-#~ msgid "Create counter from outline"
-#~ msgstr "Создать контур из линии"
-
-#~ msgid "Move to path to the bottom layer"
-#~ msgstr "Переместить контур на слой ниже"
-
-#~ msgid "Flip path vertically"
-#~ msgstr "Отразить путь по вертикали"
-
-#~ msgid "Flip path horizontally"
-#~ msgstr "Отразить путь по горизонтали"
-
-#~ msgid "Show full unicode characters set"
-#~ msgstr "Показать полный набор символов Unicode"
-
-#~ msgid "Show default characters set"
-#~ msgstr "Показать набор символов по умолчанию"
-
-#, fuzzy
-#~ msgid "Show all characters in the font"
-#~ msgstr "Показать все символы шрифта"
-
-#~ msgid "Delete selected glyph"
-#~ msgstr "Удалить выбранный глиф"
-
-#~ msgid "Show guidelines"
-#~ msgstr "Показать направляющие"
-
-#~ msgid "Show guidelines for x-height and baseline"
-#~ msgstr "Показать ограничители для строчных литер"
-
-#~ msgid "Show guidelines at top and bottom margin"
-#~ msgstr "Показать ограничители верхних и нижних полей"
-
-#~ msgid "Zoom in"
-#~ msgstr "Увеличить"
-
-#~ msgid "Zoom out"
-#~ msgstr "Уменьшить"
-
-#~ msgid "Zoom to scale 1:1"
-#~ msgstr "Масштабировать 1:1"
-
-#~ msgid "Show full glyph"
-#~ msgstr "Показать глиф полностью"
-
-#~ msgid "Zoom in at region boundries"
-#~ msgstr "Увеличить границы области"
-
-#~ msgid "Zoom in background image"
-#~ msgstr "Увеличить фоновое изображение"
-
-#~ msgid "Previous view"
-#~ msgstr "Предыдущая вкладка"
-
-#~ msgid "Next view"
-#~ msgstr "Следующая вкладка"
-
-#~ msgid "Set size for background image"
-#~ msgstr "Установить размер фонового изображения"
-
-#~ msgid "Show/hide background image"
-#~ msgstr "Показать/Спрятать фоновое изображение"
-
-#~ msgid "Insert a new background image"
-#~ msgstr "Вставить новое фоновое изображение"
-
-#~ msgid "Creating thumbnails"
-#~ msgstr "Создание эскизов"
-
-#~ msgid "Set contrast for background image"
-#~ msgstr "Установите контраст для фонового изображения"
-
-#~ msgid "Stroke color"
-#~ msgstr "Цвет контура"
-
-#~ msgid "Stroke width"
-#~ msgstr "Толщина контура"
-
-#~ msgid "Handle color"
-#~ msgstr "Цвет рычага"
-
-#~ msgid "Set precision"
-#~ msgstr "Чуствительность рычагов"
-
-#~ msgid "Object color"
-#~ msgstr "Цвет объекта"
-
-#~ msgid "Set fill color for open paths."
-#~ msgstr "Задать цвет заливки для открытых контуров"
-
-#~ msgid "Use TTF units."
-#~ msgstr "Использовать единицы TTF"
-
-#~ msgid "Set size for grid"
-#~ msgstr "Установить размер сетки"
-
-#~ msgid "Writing TTF and EOT files."
-#~ msgstr "Запись TTF и EOT файлов"
-
-#~ msgid "Writing SVG file."
-#~ msgstr "Запись SVG файлов"
-
-#~ msgid "No fonts created yet."
-#~ msgstr "Шрифт еще не создан"
-
-#~ msgid "Recent files"
-#~ msgstr "Последние файлы"
-
-#~ msgid "Backup"
-#~ msgstr "Резервная копия"
-
-#~ msgid "Files"
-#~ msgstr "Файлы"
-
-#~ msgid "Show grid"
-#~ msgstr "Показать сетку"
-
-#~ msgid "Import"
-#~ msgstr "Импортировать"
-
-#~ msgid "Kerning"
-#~ msgstr "Кернинг"
-
-#~ msgid "The current kerning class is malformed."
-#~ msgstr "Неверный формат текущего класса кернинга"
-
-#, fuzzy
-#~ msgid "Kerning:"
-#~ msgstr "Кернинг"
-
-#~ msgid "Glyph sequence"
-#~ msgstr "Последовательность глифов"
-
-#~ msgid "Menu"
-#~ msgstr "Меню"
-
-#~ msgid "Save"
-#~ msgstr "Сохранить"
-
-#~ msgid "Open"
-#~ msgstr "Открыть"
-
-#~ msgid "Move paths"
-#~ msgstr "Перемещение контура"
-
-#~ msgid "Overview"
-#~ msgstr "Обзор"
-
-#~ msgid "No glyphs in this view."
-#~ msgstr "Не показывать глиф"
-
-#~ msgid "Cancel"
-#~ msgstr "Отмена"
-
-#~ msgid "Right click to add new points, left click to move points"
-#~ msgstr ""
-#~ "Кликните правой кнопкой мыши, чтобы добавить новые узлы, зажмите левую "
-#~ "кнопку мыши, чтобы перемещать узлы"
-
-#~ msgid "and double click to add new point on path."
-#~ msgstr "и двойной клик чтобы добавить новый узел на контур."
-
-#~ msgid "Preview"
-#~ msgstr "Предпросмотр"
-
-#~ msgid "Save?"
-#~ msgstr "Сохранить?"
-
-#~ msgid "Discard"
-#~ msgstr "Не сохранять"
-
-#~ msgid "New version"
-#~ msgstr "Новая версия"
+#~ msgid "_Save"
+#~ msgstr "_Сохранить"
 
 #~ msgid "exit if a test case failes"
 #~ msgstr "выйти, если тест неудачен"

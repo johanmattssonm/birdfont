@@ -460,133 +460,133 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		add_accel_group (accel_group);
 		
 		// File
-		Gtk.MenuItem new_item = new Gtk.MenuItem.with_mnemonic (_("_New"));
+		Gtk.MenuItem new_item = new Gtk.MenuItem.with_mnemonic (t_("_New"));
 		file_menu.append (new_item);
 		new_item.activate.connect (() => { MenuTab.new_file (); });
 		new_item.add_accelerator ("activate", accel_group, 'N', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem load_item = new Gtk.MenuItem.with_mnemonic (_("_Open"));
+		Gtk.MenuItem load_item = new Gtk.MenuItem.with_mnemonic (t_("_Open"));
 		file_menu.append (load_item);
 		load_item.activate.connect (() => { MenuTab.load (); });
 		load_item.add_accelerator ("activate", accel_group, 'O', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem recent_files_item = new Gtk.MenuItem.with_mnemonic (_("_Recent Files"));
+		Gtk.MenuItem recent_files_item = new Gtk.MenuItem.with_mnemonic (t_("_Recent Files"));
 		file_menu.append (recent_files_item);
 		recent_files_item.activate.connect (() => { MainWindow.open_recent_files_tab (); });
 
-		Gtk.MenuItem save_item = new Gtk.MenuItem.with_mnemonic (_("_Save"));
+		Gtk.MenuItem save_item = new Gtk.MenuItem.with_mnemonic (_("t_Save"));
 		file_menu.append (save_item);
 		save_item.activate.connect (() => { MenuTab.save (); });
 		save_item.add_accelerator ("activate", accel_group, 'S', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem save_as_item = new Gtk.MenuItem.with_mnemonic (_("Save _as"));
+		Gtk.MenuItem save_as_item = new Gtk.MenuItem.with_mnemonic (t_("Save _as"));
 		file_menu.append (save_as_item);
 		save_as_item.activate.connect (() => { MenuTab.save_as (); });
 				
-		Gtk.MenuItem export_item = new Gtk.MenuItem.with_mnemonic (_("_Export"));
+		Gtk.MenuItem export_item = new Gtk.MenuItem.with_mnemonic (t_("_Export"));
 		file_menu.append (export_item);
 		export_item.activate.connect (() => { MenuTab.export_font (); });
 		export_item.add_accelerator ("activate", accel_group, 'E', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		if (!BirdFont.mac) {
-			Gtk.MenuItem preview_item = new Gtk.MenuItem.with_mnemonic(_("_Preview"));
+			Gtk.MenuItem preview_item = new Gtk.MenuItem.with_mnemonic(t_("_Preview"));
 			file_menu.append (preview_item);
 			preview_item.activate.connect (() => { MenuTab.preview (); });
 			preview_item.add_accelerator ("activate", accel_group, 'P', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 		}
 		
-		Gtk.MenuItem description_item = new Gtk.MenuItem.with_mnemonic(_("Name and _Description"));
+		Gtk.MenuItem description_item = new Gtk.MenuItem.with_mnemonic(t_("Name and _Description"));
 		file_menu.append (description_item);
 		description_item.activate.connect (() => { MenuTab.show_description (); });
 
-		Gtk.MenuItem select_language_item = new Gtk.MenuItem.with_mnemonic (_("Select _Character Set"));
+		Gtk.MenuItem select_language_item = new Gtk.MenuItem.with_mnemonic (t_("Select _Character Set"));
 		file_menu.append (select_language_item);
 		select_language_item.activate.connect (() => { MenuTab.select_language (); });
 		
-		Gtk.MenuItem quit_item = new Gtk.MenuItem.with_mnemonic (_("_Quit"));
+		Gtk.MenuItem quit_item = new Gtk.MenuItem.with_mnemonic (t_("_Quit"));
 		file_menu.append (quit_item);
 		quit_item.activate.connect (() => { MenuTab.quit (); });
 
 		// Edit
-		Gtk.MenuItem undo_item = new Gtk.MenuItem.with_mnemonic (_("_Undo"));
+		Gtk.MenuItem undo_item = new Gtk.MenuItem.with_mnemonic (t_("_Undo"));
 		edit_menu.append (undo_item);
 		undo_item.activate.connect (() => { MainWindow.get_current_display ().undo (); });	
 		undo_item.add_accelerator ("activate", accel_group, 'Z', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 		
-		Gtk.MenuItem copy_item = new Gtk.MenuItem.with_mnemonic (_("_Copy"));
+		Gtk.MenuItem copy_item = new Gtk.MenuItem.with_mnemonic (t_("_Copy"));
 		edit_menu.append (copy_item);
 		copy_item.activate.connect (() => { ClipTool.copy (); });		
 		copy_item.add_accelerator ("activate", accel_group, 'C', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem paste_item = new Gtk.MenuItem.with_mnemonic (_("_Paste"));
+		Gtk.MenuItem paste_item = new Gtk.MenuItem.with_mnemonic (t_("_Paste"));
 		edit_menu.append (paste_item);
 		paste_item.activate.connect (() => { ClipTool.paste (); });	
 		paste_item.add_accelerator ("activate", accel_group, 'V', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem paste_in_place_item = new Gtk.MenuItem.with_mnemonic (_("Paste _In Place"));
+		Gtk.MenuItem paste_in_place_item = new Gtk.MenuItem.with_mnemonic (t_("Paste _In Place"));
 		edit_menu.append (paste_in_place_item);
 		paste_in_place_item.activate.connect (() => { ClipTool.paste_in_place (); });	
 		paste_in_place_item.add_accelerator ("activate", accel_group, 'V', Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem select_all_item = new Gtk.MenuItem.with_mnemonic (_("Select All Pa_ths"));
+		Gtk.MenuItem select_all_item = new Gtk.MenuItem.with_mnemonic (t_("Select All Pa_ths"));
 		edit_menu.append (select_all_item);
 		select_all_item.activate.connect (() => {
 			MainWindow.select_all_paths ();
 		});
 		select_all_item.add_accelerator ("activate", accel_group, 'A', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 		
-		Gtk.MenuItem search_item = new Gtk.MenuItem.with_mnemonic (_("_Search"));
+		Gtk.MenuItem search_item = new Gtk.MenuItem.with_mnemonic (t_("_Search"));
 		edit_menu.append (search_item);
 		search_item.activate.connect (() => { OverView.search (); });	
 		search_item.add_accelerator ("activate", accel_group, 'F', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 	
-		Gtk.MenuItem export_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Export Glyph as SVG"));
+		Gtk.MenuItem export_svg_item = new Gtk.MenuItem.with_mnemonic (t_("_Export Glyph as SVG"));
 		edit_menu.append (export_svg_item);
 		export_svg_item.activate.connect (() => { ExportTool.export_current_glyph (); });	
 	
-		Gtk.MenuItem import_svg_item = new Gtk.MenuItem.with_mnemonic (_("_Import SVG"));
+		Gtk.MenuItem import_svg_item = new Gtk.MenuItem.with_mnemonic (t_("_Import SVG"));
 		edit_menu.append (import_svg_item);
 		import_svg_item.activate.connect (() => { ImportSvg.import (); });	
 		import_svg_item.add_accelerator ("activate", accel_group, 'I', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem close_path_item = new Gtk.MenuItem.with_mnemonic (_("Close _Path"));
+		Gtk.MenuItem close_path_item = new Gtk.MenuItem.with_mnemonic (t_("Close _Path"));
 		edit_menu.append (close_path_item);
 		close_path_item.activate.connect (() => { PenTool.close_all_paths (); });
 		close_path_item.add_accelerator ("activate", accel_group, 'B', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem glyph_sequence_item = new Gtk.MenuItem.with_mnemonic (_("_Glyph Sequence"));
+		Gtk.MenuItem glyph_sequence_item = new Gtk.MenuItem.with_mnemonic (t_("_Glyph Sequence"));
 		edit_menu.append (glyph_sequence_item);
 		glyph_sequence_item.activate.connect (() => { MainWindow.update_glyph_sequence (); });
 		glyph_sequence_item.add_accelerator ("activate", accel_group, 'Q', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem background_glyph_item = new Gtk.MenuItem.with_mnemonic (_("Set Glyph _Background"));
+		Gtk.MenuItem background_glyph_item = new Gtk.MenuItem.with_mnemonic (t_("Set Glyph _Background"));
 		edit_menu.append (background_glyph_item);
 		background_glyph_item.activate.connect (() => { MenuTab.use_current_glyph_as_background (); });
 
-		Gtk.MenuItem reset_background_glyph_item = new Gtk.MenuItem.with_mnemonic (_("_Remove Glyph Background"));
+		Gtk.MenuItem reset_background_glyph_item = new Gtk.MenuItem.with_mnemonic (t_("_Remove Glyph Background"));
 		edit_menu.append (reset_background_glyph_item);
 		reset_background_glyph_item.activate.connect (() => { MenuTab.reset_glyph_background (); });
 
 		edit_menu.append (new SeparatorMenuItem ());
 
-		Gtk.MenuItem select_point_above = new Gtk.MenuItem.with_mnemonic (" Ctrl+↑  " + _("_Select Point Above"));
+		Gtk.MenuItem select_point_above = new Gtk.MenuItem.with_mnemonic (" Ctrl+↑  " + t_("_Select Point Above"));
 		edit_menu.append (select_point_above);
 		select_point_above.activate.connect (() => { PenTool.select_point_up (); });
 
-		Gtk.MenuItem select_next_point = new Gtk.MenuItem.with_mnemonic (" Ctrl+→  " + _("Select _Next Point"));
+		Gtk.MenuItem select_next_point = new Gtk.MenuItem.with_mnemonic (" Ctrl+→  " + t_("Select _Next Point"));
 		edit_menu.append (select_next_point);
 		select_next_point.activate.connect (() => { PenTool.select_point_right (); });
 
-		Gtk.MenuItem select_previous_point = new Gtk.MenuItem.with_mnemonic (" Ctrl+←  " + _("Select _Previous Point"));
+		Gtk.MenuItem select_previous_point = new Gtk.MenuItem.with_mnemonic (" Ctrl+←  " + t_("Select _Previous Point"));
 		edit_menu.append (select_previous_point);
 		select_previous_point.activate.connect (() => { PenTool.select_point_left (); });
 
-		Gtk.MenuItem select_point_below = new Gtk.MenuItem.with_mnemonic (" Ctrl+↓  " + _("Select Point _Below"));
+		Gtk.MenuItem select_point_below = new Gtk.MenuItem.with_mnemonic (" Ctrl+↓  " + t_("Select Point _Below"));
 		edit_menu.append (select_point_below);
 		select_point_below.activate.connect (() => { PenTool.select_point_down (); });
 				
 		// Tab
-		Gtk.MenuItem next_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Next Tab"));
+		Gtk.MenuItem next_tab_item = new Gtk.MenuItem.with_mnemonic (t_("_Next Tab"));
 		tab_menu.append (next_tab_item);
 		next_tab_item.activate.connect (() => { 
 			TabBar tb = MainWindow.get_tab_bar ();
@@ -599,7 +599,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			tb.select_tab (n);
 		});	
 
-		Gtk.MenuItem prevoius_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Previous Tab"));
+		Gtk.MenuItem prevoius_tab_item = new Gtk.MenuItem.with_mnemonic (t_("_Previous Tab"));
 		tab_menu.append (prevoius_tab_item);
 		prevoius_tab_item.activate.connect (() => { 
 			TabBar tb = MainWindow.get_tab_bar ();
@@ -612,7 +612,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			tb.select_tab (n);
 		});					
 
-		Gtk.MenuItem close_tab_item = new Gtk.MenuItem.with_mnemonic (_("_Close tab"));
+		Gtk.MenuItem close_tab_item = new Gtk.MenuItem.with_mnemonic (t_("_Close tab"));
 		tab_menu.append (close_tab_item);
 		close_tab_item.activate.connect (() => { 
 			TabBar tb = MainWindow.get_tab_bar ();
@@ -626,7 +626,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});	
 		close_tab_item.add_accelerator ("activate", accel_group, 'W', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem close_all_tabs_item = new Gtk.MenuItem.with_mnemonic (_("Close _All Tabs"));
+		Gtk.MenuItem close_all_tabs_item = new Gtk.MenuItem.with_mnemonic (t_("Close _All Tabs"));
 		tab_menu.append (close_all_tabs_item);
 		close_all_tabs_item.activate.connect (() => { 
 			TabBar tb = MainWindow.get_tab_bar ();
@@ -634,81 +634,81 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});	
 
 		// Tool
-		Gtk.MenuItem pen_item = new Gtk.MenuItem.with_mnemonic (_("_Create Path"));
+		Gtk.MenuItem pen_item = new Gtk.MenuItem.with_mnemonic (t_("_Create Path"));
 		tool_menu.append (pen_item);
 		pen_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("pen_tool");
 		});
 		pen_item.add_accelerator ("activate", accel_group, ',', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem zoom_item = new Gtk.MenuItem.with_mnemonic (_("_Zoom"));
+		Gtk.MenuItem zoom_item = new Gtk.MenuItem.with_mnemonic (t_("_Zoom"));
 		tool_menu.append (zoom_item);
 		zoom_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("zoom_tool");
 		});
 
-		Gtk.MenuItem counter_item = new Gtk.MenuItem.with_mnemonic (_("_Create Counter Path"));
+		Gtk.MenuItem counter_item = new Gtk.MenuItem.with_mnemonic (t_("_Create Counter Path"));
 		tool_menu.append (counter_item);
 		counter_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("cut");
 		});
 		counter_item.add_accelerator ("activate", accel_group, 'U', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem move_item = new Gtk.MenuItem.with_mnemonic (_("_Move"));
+		Gtk.MenuItem move_item = new Gtk.MenuItem.with_mnemonic (t_("_Move"));
 		tool_menu.append (move_item);
 		move_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("move");
 		});
 		move_item.add_accelerator ("activate", accel_group, 'M', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem full_unicode_item = new Gtk.MenuItem.with_mnemonic (_("Show _full unicode characters set"));
+		Gtk.MenuItem full_unicode_item = new Gtk.MenuItem.with_mnemonic (t_("Show _full unicode characters set"));
 		tool_menu.append (full_unicode_item);
 		full_unicode_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("utf_8");
 		});
 		full_unicode_item.add_accelerator ("activate", accel_group, 'F', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem default_charset_item = new Gtk.MenuItem.with_mnemonic (_("Show De_fault Characters Set"));
+		Gtk.MenuItem default_charset_item = new Gtk.MenuItem.with_mnemonic (t_("Show De_fault Characters Set"));
 		tool_menu.append (default_charset_item);
 		default_charset_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("custom_character_set");
 		});
 		default_charset_item.add_accelerator ("activate", accel_group, 'R', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem avalilable_characters_item = new Gtk.MenuItem.with_mnemonic (_("Show Characters in Font"));
+		Gtk.MenuItem avalilable_characters_item = new Gtk.MenuItem.with_mnemonic (t_("Show Characters in Font"));
 		tool_menu.append (avalilable_characters_item);
 		avalilable_characters_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("available_characters");
 		});
 		avalilable_characters_item.add_accelerator ("activate", accel_group, 'D', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem add_grid_item = new Gtk.MenuItem.with_mnemonic (_("Add New _Grid Item"));
+		Gtk.MenuItem add_grid_item = new Gtk.MenuItem.with_mnemonic (t_("Add New _Grid Item"));
 		tool_menu.append (add_grid_item);
 		add_grid_item.activate.connect (() => { 
 			MainWindow.get_drawing_tools ().add_new_grid ();
 		});
 
-		Gtk.MenuItem remove_grid_item = new Gtk.MenuItem.with_mnemonic (_("Remove Gr_id Item"));
+		Gtk.MenuItem remove_grid_item = new Gtk.MenuItem.with_mnemonic (t_("Remove Gr_id Item"));
 		tool_menu.append (remove_grid_item);
 		remove_grid_item.activate.connect (() => { 
 			MainWindow.get_drawing_tools().remove_current_grid ();
 		});
 		
-		Gtk.MenuItem zoom_in_item = new Gtk.MenuItem.with_mnemonic (_("_Zoom In"));
+		Gtk.MenuItem zoom_in_item = new Gtk.MenuItem.with_mnemonic (t_("_Zoom In"));
 		tool_menu.append (zoom_in_item);
 		zoom_in_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("zoom_in");
 		});
 		zoom_in_item.add_accelerator ("activate", accel_group, '+', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem zoom_out_item = new Gtk.MenuItem.with_mnemonic (_("Zoom _Out"));
+		Gtk.MenuItem zoom_out_item = new Gtk.MenuItem.with_mnemonic (t_("Zoom _Out"));
 		tool_menu.append (zoom_out_item);
 		zoom_out_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("zoom_out");
 		});
 		zoom_out_item.add_accelerator ("activate", accel_group, '-', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem zoom_1_1_item = new Gtk.MenuItem.with_mnemonic (_("Zoom to _Scale 1:1"));
+		Gtk.MenuItem zoom_1_1_item = new Gtk.MenuItem.with_mnemonic (t_("Zoom to _Scale 1:1"));
 		tool_menu.append (zoom_1_1_item);
 		zoom_1_1_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("zoom_1_1");
@@ -716,20 +716,20 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		zoom_1_1_item.add_accelerator ("activate", accel_group, '0', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		// Kerning
-		Gtk.MenuItem show_kerning_tab = new Gtk.MenuItem.with_mnemonic (_("Show Kerning _Tab"));
+		Gtk.MenuItem show_kerning_tab = new Gtk.MenuItem.with_mnemonic (t_("Show Kerning _Tab"));
 		kerning_menu.append (show_kerning_tab);
 		show_kerning_tab.activate.connect (() => { 
 			 MenuTab.show_kerning_context ();
 		});
 		show_kerning_tab.add_accelerator ("activate", accel_group, 'k', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem list_all_kerning_pairs = new Gtk.MenuItem.with_mnemonic (_("_List Kerning Pairs"));
+		Gtk.MenuItem list_all_kerning_pairs = new Gtk.MenuItem.with_mnemonic (t_("_List Kerning Pairs"));
 		kerning_menu.append (list_all_kerning_pairs);
 		list_all_kerning_pairs.activate.connect (() => { 
 			 MenuTab.list_all_kerning_pairs ();
 		});
 		
-		Gtk.MenuItem remove_all_kerning_pairs = new Gtk.MenuItem.with_mnemonic (_("_Remove All Kerning Pairs"));
+		Gtk.MenuItem remove_all_kerning_pairs = new Gtk.MenuItem.with_mnemonic (t_("_Remove All Kerning Pairs"));
 		kerning_menu.append (remove_all_kerning_pairs);
 		remove_all_kerning_pairs.activate.connect (() => { 
 			 MenuTab.remove_all_kerning_pairs ();
@@ -737,28 +737,28 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		kerning_menu.append (new SeparatorMenuItem ());
 
-		Gtk.MenuItem select_next_kerning_pair = new Gtk.MenuItem.with_mnemonic (" Ctrl+→  " + _("Select _Next Kerning Pair"));
+		Gtk.MenuItem select_next_kerning_pair = new Gtk.MenuItem.with_mnemonic (" Ctrl+→  " + t_("Select _Next Kerning Pair"));
 		kerning_menu.append (select_next_kerning_pair);
 		select_next_kerning_pair.activate.connect (() => { KerningDisplay.next_pair (); });
 		
-		Gtk.MenuItem select_previous_kerning_pair = new Gtk.MenuItem.with_mnemonic (" Ctrl+←  " + _("Select _Previous Kerning Pair"));
+		Gtk.MenuItem select_previous_kerning_pair = new Gtk.MenuItem.with_mnemonic (" Ctrl+←  " + t_("Select _Previous Kerning Pair"));
 		kerning_menu.append (select_previous_kerning_pair);
 		select_previous_kerning_pair.activate.connect (() => { KerningDisplay.previous_pair (); });
 		
 		// Add menus
-		Gtk.MenuItem file_launcher = new Gtk.MenuItem.with_mnemonic (_("_File"));
+		Gtk.MenuItem file_launcher = new Gtk.MenuItem.with_mnemonic (t_("_File"));
 		file_launcher.set_submenu (file_menu);
 
-		Gtk.MenuItem edit_launcher = new Gtk.MenuItem.with_mnemonic (_("_Edit"));
+		Gtk.MenuItem edit_launcher = new Gtk.MenuItem.with_mnemonic (t_("_Edit"));
 		edit_launcher.set_submenu (edit_menu);
 
-		Gtk.MenuItem tab_launcher = new Gtk.MenuItem.with_mnemonic (_("_Tab"));
+		Gtk.MenuItem tab_launcher = new Gtk.MenuItem.with_mnemonic (t_("_Tab"));
 		tab_launcher.set_submenu (tab_menu);
 
-		Gtk.MenuItem tool_launcher = new Gtk.MenuItem.with_mnemonic (_("T_ool"));
+		Gtk.MenuItem tool_launcher = new Gtk.MenuItem.with_mnemonic (t_("T_ool"));
 		tool_launcher.set_submenu (tool_menu);
 
-		Gtk.MenuItem kerning_launcher = new Gtk.MenuItem.with_mnemonic (_("_Kerning"));
+		Gtk.MenuItem kerning_launcher = new Gtk.MenuItem.with_mnemonic (t_("_Kerning"));
 		kerning_launcher.set_submenu (kerning_menu);
 						
 		menubar.append (file_launcher);
@@ -1138,27 +1138,27 @@ public class DescriptionForm : GLib.Object {
 		canvas.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 		
 		postscript_name = new Entry ();
-		add_entry (postscript_name, _("PostScript Name"));
+		add_entry (postscript_name, t_("PostScript Name"));
 		postscript_name.changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.postscript_name = postscript_name.text;
 		});
 		
 		font_name = new Entry ();
-		add_entry (font_name, _("Name"));
+		add_entry (font_name, t_("Name"));
 		font_name.changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.name = font_name.text;
 		});
 		
 		style = new Entry ();
-		add_entry (style, _("Style"));
+		add_entry (style, t_("Style"));
 		style.changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.subfamily = style.text;
 		});
 		
-		bold = new CheckButton.with_label (_("Bold"));
+		bold = new CheckButton.with_label (t_("Bold"));
 		bold.toggled.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.bold = bold.active;;
@@ -1173,35 +1173,35 @@ public class DescriptionForm : GLib.Object {
 		box.pack_start (italic, false, false, 0);
 
 		weight = new Entry ();
-		add_entry (weight, _("Weight"));
+		add_entry (weight, t_("Weight"));
 		weight.changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.set_weight (weight.text);
 		});
 		
 		full_name = new Entry ();
-		add_entry (full_name, _("Full name (name and style)"));
+		add_entry (full_name, t_("Full name (name and style)"));
 		full_name.changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.full_name = full_name.text;
 		});
 		
 		id = new Entry ();
-		add_entry (id, _("Unique identifier"));
+		add_entry (id, t_("Unique identifier"));
 		id.changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.unique_identifier = id.text;
 		});
 		
 		version = new Entry ();
-		add_entry (version, _("Version"));
+		add_entry (version, t_("Version"));
 		version.changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.version = version.text;
 		});
 		
 		description = new TextView ();
-		add_textview (description, _("Description"));
+		add_textview (description, t_("Description"));
 		description.get_buffer ().changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.description = description.get_buffer ().text;
@@ -1209,7 +1209,7 @@ public class DescriptionForm : GLib.Object {
 		description.set_wrap_mode (Gtk.WrapMode.WORD);
 
 		copyright = new TextView ();
-		add_textview (copyright, _("Copyright"));
+		add_textview (copyright, t_("Copyright"));
 		copyright.get_buffer ().changed.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.copyright = copyright.get_buffer ().text;
