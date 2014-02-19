@@ -32,6 +32,7 @@ public class KerningDisplay : FontDisplay {
 	double last_handle_x = 0;
 
 	bool parse_error = false;
+	bool text_input = false;
 	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
@@ -313,6 +314,11 @@ public class KerningDisplay : FontDisplay {
 		}
 		
 		return false;	
+	}
+
+	private void set_absolute_kerning (int handle, double val) {
+		double kern = get_kerning_for_handle (handle);
+		set_kerning (handle, val - kern);
 	}
 
 	private void set_kerning (int handle, double val) {
@@ -628,6 +634,34 @@ public class KerningDisplay : FontDisplay {
 		parse_error = false;
 		set_active_handle (ex, ey);
 		moving = false;
+		
+		if (button == 3 || text_input) {
+			set_kerning_by_text ();
+		}
+	}
+	
+	private void set_kerning_by_text () {
+		TextListener listener;
+		string kerning = @"$(get_kerning_for_handle (selected_handle))";
+		
+		listener = new TextListener (t_("Kerning"), kerning, t_("Apply"));
+		
+		listener.signal_text_input.connect ((text) => {
+			string submitted_value = text.replace (",", ".");
+			double parsed_value = double.parse (submitted_value);
+			set_absolute_kerning (selected_handle, parsed_value);
+			GlyphCanvas.redraw ();
+		});
+		
+		listener.signal_submit.connect (() => {
+			MainWindow.native_window.hide_text_input ();
+			text_input = false;
+			suppress_input = false;
+		});
+		
+		suppress_input = true;
+		text_input = true;
+		MainWindow.native_window.set_text_listener (listener);		
 	}
 	
 	public override void button_press (uint button, double ex, double ey) {
