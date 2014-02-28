@@ -92,9 +92,11 @@ else:
 if os.path.isfile ('build/bin/libbirdfont.so.' + version.SO_VERSION):
 	install ('build/bin/libbirdfont.so.' + version.SO_VERSION, libdir, 644)
 	link (libdir, 'libbirdfont.so.' + version.SO_VERSION, ' libbirdfont.so.' + version.SO_VERSION_MAJOR)
+	link (libdir, 'libbirdfont.so.' + version.SO_VERSION, ' libbirdfont.so')
 elif os.path.isfile ('build/libbirdfont.so.' + version.SO_VERSION):
 	install ('build/libbirdfont.so.' + version.SO_VERSION, libdir, 644)
 	link (libdir, 'libbirdfont.so.' + version.SO_VERSION, ' libbirdfont.so.' + version.SO_VERSION_MAJOR)
+	link (libdir, 'libbirdfont.so.' + version.SO_VERSION, ' libbirdfont.so')
 elif os.path.isfile ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib'):
 	install ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib', libdir, 644)
 	link (libdir, 'libbirdfont.' + version.SO_VERSION + '.dylib', ' libbirdfont.dylib.' + version.SO_VERSION_MAJOR)
