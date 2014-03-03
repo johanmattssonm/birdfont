@@ -64,7 +64,7 @@ class GlyfData : GLib.Object {
 			q = p.get_quadratic_points ();
 			
 			if (q.points.length () < 2) {
-				warning (@"A path in $(g.get_name ()) contains less than three points, it will not be exported.");
+				warning (@"A path in $(g.get_name ()) has less than three points, it will not be exported.");
 			} else {
 				paths.append (q);
 			}
@@ -113,7 +113,7 @@ class GlyfData : GLib.Object {
 				// off curve
 				end_point++;
 				
-				if (end_point == 0xFFFF) {
+				if (end_point >= 0xFFFF) {
 					warning ("Too many points");
 				}
 			}

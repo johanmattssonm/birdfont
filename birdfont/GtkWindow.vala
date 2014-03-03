@@ -474,7 +474,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		file_menu.append (recent_files_item);
 		recent_files_item.activate.connect (() => { MainWindow.open_recent_files_tab (); });
 
-		Gtk.MenuItem save_item = new Gtk.MenuItem.with_mnemonic (_("t_Save"));
+		Gtk.MenuItem save_item = new Gtk.MenuItem.with_mnemonic (_("_Save"));
 		file_menu.append (save_item);
 		save_item.activate.connect (() => { MenuTab.save (); });
 		save_item.add_accelerator ("activate", accel_group, 'S', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);

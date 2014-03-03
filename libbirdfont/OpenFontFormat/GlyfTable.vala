@@ -214,7 +214,7 @@ class GlyfTable : Table {
 		
 		g.remove_empty_paths ();
 		glyf_data = new GlyfData (g);
-		if (g.path_list.length () == 0 || glyf_data.paths.length ()) {
+		if (g.path_list.length () == 0 || glyf_data.paths.length () == 0) {
 			// location_offsets will be equal to location_offset + 1 to tell the parser that this glyf is empty
 			return;
 		}

@@ -1083,7 +1083,7 @@ public class Path {
 	}
 
 	/** Convert quadratic bezier points to cubic representation of the glyph
-	 * suitable for ttf-export.
+	 * for ttf-export.
 	 */ 
 	public Path get_quadratic_points () {
 		unowned List<EditPoint> i, next;
@@ -1151,6 +1151,10 @@ public class Path {
 		}
 
 		steps = (int) (0.8 * get_length_from (start, stop));
+		
+		if (steps == 0) {
+			steps = 1;
+		}
 		
 		// create quadratic paths
 		all_of (start, stop, (x, y, step) => {

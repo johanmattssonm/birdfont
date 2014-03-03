@@ -478,7 +478,7 @@ void printd (string s) {
 }
 
 /** Translate string */
-string t_ (string t) {
+public string t_ (string t) {
 	return _(t);
 }
 

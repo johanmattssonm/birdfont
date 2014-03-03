@@ -80,19 +80,19 @@ msgstr "روش استفاده:"
 
 #: libbirdfont/BirdFont.vala:23
 msgid "print this message\n"
-msgstr "چاپ این پیغام"
+msgstr "چاپ این پیغام\n"
 
 #: libbirdfont/BirdFont.vala:24
 msgid "write files to this directory\n"
-msgstr "نوشتن فایلها در این شاخه"
+msgstr "نوشتن فایلها در این شاخه\n"
 
 #: libbirdfont/BirdFont.vala:25
 msgid "write svg file\n"
-msgstr "نوشتن فایل svg"
+msgstr "نوشتن فایل svg\n"
 
 #: libbirdfont/BirdFont.vala:26
 msgid "write ttf and eot files\n"
-msgstr "نوشتن ttf و eot"
+msgstr "نوشتن ttf و eot\n"
 
 #: libbirdfont/BirdFont.vala:120
 msgid "Can't find output directory"
