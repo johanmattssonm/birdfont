@@ -1120,7 +1120,12 @@ public class Path {
 		} else {
 			quadratic_path.add_point (points.last ().data.copy ());
 		}
-		
+
+		if (quadratic_path.points.length () < 2) {
+			warning ("Less than 2 points in quadratic path.");
+			return new Path ();
+		}
+
 		quadratic_path.add_hidden_double_points ();
 
 		quadratic_path.close ();

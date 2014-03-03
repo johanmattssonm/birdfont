@@ -126,7 +126,9 @@ class GlyfData : GLib.Object {
 			last_end_point = end_point - 1;
 		}
 		
-		assert (end_point > 0);			
+		if (end_point == 0) {
+			warning ("End point is zero");
+		}			
 	}
 
 	void process_flags () {

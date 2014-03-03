@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -204,7 +204,8 @@ class GlyfTable : Table {
 		int glyph_offset;
 		uint len; 
 		uint coordinate_length;
-
+		GlyfData glyf_data;
+		
 		fd.seek_end (); // append glyph
 		
 		glyph_offset = (int) fd.length ();
@@ -212,18 +213,17 @@ class GlyfTable : Table {
 		printd (@"glyph_offset: $(glyph_offset)\n");
 		
 		g.remove_empty_paths ();
-		if (g.path_list.length () == 0) {
-			// location_offsets will be equal to location_offset + 1 to tell parser that this glyf does not have a body
+		glyf_data = new GlyfData (g);
+		if (g.path_list.length () == 0 || glyf_data.paths.length ()) {
+			// location_offsets will be equal to location_offset + 1 to tell the parser that this glyf is empty
 			return;
 		}
 		
 		non_zero_glyphs++;
 		
-		ncontours = (int16) g.path_list.length ();
+		ncontours = (int16) glyf_data.paths.length ();
 		fd.add_short (ncontours);
-		
-		GlyfData glyf_data = new GlyfData (g);
-				
+
 		// bounding box
 		fd.add_16 (glyf_data.bounding_box_xmin);
 		fd.add_16 (glyf_data.bounding_box_ymin);
@@ -509,7 +509,7 @@ class GlyfTable : Table {
 		return_val_if_fail (start < end, new Glyph (""));
 
 		if (ncontours == 0) {
-			warning (@"Got zero contours in glyph $(name.str).");
+			warning (@"Zero contours in glyph $(name.str).");
 
 			// should skip body
 		}
@@ -521,7 +521,7 @@ class GlyfTable : Table {
 		return_val_if_fail (ncontours < len, new Glyph (""));
 						
 		if (ncontours < -1) {
-			warning (@"Got $ncontours contours in glyf table.");
+			warning (@"$ncontours contours in glyf table.");
 			error = new BadFormat.PARSE ("Invalid glyf");
 			throw error;
 		}
