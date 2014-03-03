@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-19 17:10+0100\n"
-"PO-Revision-Date: 2014-01-26 09:26+0000\n"
+"POT-Creation-Date: 2014-03-03 22:29+0100\n"
+"PO-Revision-Date: 2014-02-28 22:09+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1390728383.000000\n"
+"X-POOTLE-MTIME: 1393625389.000000\n"
 
 #: libbirdfont/Argument.vala:241
 msgid "Usage"
@@ -32,7 +32,7 @@ msgstr "OPTIE"
 
 #: libbirdfont/Argument.vala:245
 msgid "enable Android customizations"
-msgstr ""
+msgstr "Android-aanpassingen inschakelen"
 
 #: libbirdfont/Argument.vala:246
 msgid "show coordinate in glyph view"
@@ -323,7 +323,7 @@ msgstr "Gebruik TTF-eenheden."
 
 #: libbirdfont/DrawingTools.vala:653
 msgid "Delay response for editing tools"
-msgstr ""
+msgstr "Vertragingsreactie voor bewerkingshulpmiddelen"
 
 #: libbirdfont/DrawingTools.vala:832
 msgid "Set size for grid"
@@ -361,26 +361,31 @@ msgstr "Raster weergeven"
 msgid "Import"
 msgstr "Importeren"
 
-#: libbirdfont/KerningDisplay.vala:43
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:651
 msgid "Kerning"
 msgstr "Afspatiëring"
 
-#: libbirdfont/KerningDisplay.vala:63
+#: libbirdfont/KerningDisplay.vala:64
 msgid "The current kerning class is malformed."
 msgstr "De huidige afspatieerklasse is onjuist gevormd."
 
-#: libbirdfont/KerningDisplay.vala:64
+#: libbirdfont/KerningDisplay.vala:65
 msgid "Add single characters separated by space and ranges on the form A-Z."
 msgstr ""
 "Voeg enkele tekens toe, gescheiden door spaties en bereik in de vorm A-Z."
 
-#: libbirdfont/KerningDisplay.vala:65
+#: libbirdfont/KerningDisplay.vala:66
 msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr "Typ “spatie” voor afspatiëren van het spatieteken en “divis” voor -."
 
-#: libbirdfont/KerningDisplay.vala:216
+#: libbirdfont/KerningDisplay.vala:217
 msgid "Kerning:"
 msgstr "Afspatiëring:"
+
+#: libbirdfont/KerningDisplay.vala:651 libbirdfont/MainWindow.vala:135
+#: libbirdfont/SpinButton.vala:112
+msgid "Close"
+msgstr "Sluiten"
 
 #: libbirdfont/KerningList.vala:89
 msgid "Kerning Pairs"
@@ -402,8 +407,13 @@ msgid "Set"
 msgstr "Instellen"
 
 #: libbirdfont/KerningTools.vala:33
-msgid "Create new kerning class"
+#, fuzzy
+msgid "Create new kerning class."
 msgstr "Nieuwe afspatieerklasse aanmaken"
+
+#: libbirdfont/KerningTools.vala:40
+msgid "Use text input to enter kerning values."
+msgstr ""
 
 #: libbirdfont/LanguageSelectionTab.vala:92
 msgid "Character Set"
@@ -412,10 +422,6 @@ msgstr "Tekenset"
 #: libbirdfont/MainWindow.vala:135
 msgid "Glyph sequence"
 msgstr "Glief volgorde"
-
-#: libbirdfont/MainWindow.vala:135 libbirdfont/SpinButton.vala:112
-msgid "Close"
-msgstr "Sluiten"
 
 #: libbirdfont/MenuTab.vala:41
 msgid "Menu"
@@ -487,7 +493,7 @@ msgstr "en dubbelklik om nieuwe punten op het pad te plaatsen."
 
 #: libbirdfont/PointTool.vala:24
 msgid "Move control points"
-msgstr ""
+msgstr "Controlepunten verplaatsen"
 
 #: libbirdfont/Preview.vala:27
 msgid "Preview"

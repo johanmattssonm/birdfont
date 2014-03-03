@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-19 17:10+0100\n"
+"POT-Creation-Date: 2014-03-03 22:29+0100\n"
 "PO-Revision-Date: 2014-02-11 21:26+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -371,29 +371,35 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:43
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:651
 #, fuzzy
 msgid "Kerning"
 msgstr "Unterschneidung"
 
-#: libbirdfont/KerningDisplay.vala:63
+#: libbirdfont/KerningDisplay.vala:64
 msgid "The current kerning class is malformed."
 msgstr "Die aktuelle Unterschneidungsklasse ist fehlerhaft."
 
-#: libbirdfont/KerningDisplay.vala:64
+#: libbirdfont/KerningDisplay.vala:65
 msgid "Add single characters separated by space and ranges on the form A-Z."
 msgstr ""
 "Einzelne Zeichen im Bereich von A-Z, getrennt durch Leerzeichen hinzufügen."
 
-#: libbirdfont/KerningDisplay.vala:65
+#: libbirdfont/KerningDisplay.vala:66
 msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr ""
 "Zum unterschneiden des Leerzeichens die „Leertaste“ drücken, für den "
 "Bindestrich die „-“ Taste."
 
-#: libbirdfont/KerningDisplay.vala:216
+#: libbirdfont/KerningDisplay.vala:217
 msgid "Kerning:"
 msgstr "Unterschneidung"
+
+#: libbirdfont/KerningDisplay.vala:651 libbirdfont/MainWindow.vala:135
+#: libbirdfont/SpinButton.vala:112
+#, fuzzy
+msgid "Close"
+msgstr "Pfad _Schließen"
 
 #: libbirdfont/KerningList.vala:89
 msgid "Kerning Pairs"
@@ -415,8 +421,13 @@ msgid "Set"
 msgstr "Übernehmen"
 
 #: libbirdfont/KerningTools.vala:33
-msgid "Create new kerning class"
+#, fuzzy
+msgid "Create new kerning class."
 msgstr "Neue Unterschneidungsklasse erstellen"
+
+#: libbirdfont/KerningTools.vala:40
+msgid "Use text input to enter kerning values."
+msgstr ""
 
 #: libbirdfont/LanguageSelectionTab.vala:92
 msgid "Character Set"
@@ -426,11 +437,6 @@ msgstr "Zeichensatz"
 #, fuzzy
 msgid "Glyph sequence"
 msgstr "_Glyphen-Abfolge"
-
-#: libbirdfont/MainWindow.vala:135 libbirdfont/SpinButton.vala:112
-#, fuzzy
-msgid "Close"
-msgstr "Pfad _Schließen"
 
 #: libbirdfont/MenuTab.vala:41
 msgid "Menu"

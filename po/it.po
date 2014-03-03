@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-19 17:10+0100\n"
+"POT-Creation-Date: 2014-03-03 22:29+0100\n"
 "PO-Revision-Date: 2014-01-09 00:26+0000\n"
 "Last-Translator: Zaldor <ludolab@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -362,28 +362,33 @@ msgstr "Mostra griglia"
 msgid "Import"
 msgstr "Importa"
 
-#: libbirdfont/KerningDisplay.vala:43
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:651
 msgid "Kerning"
 msgstr "Crenatura"
 
-#: libbirdfont/KerningDisplay.vala:63
+#: libbirdfont/KerningDisplay.vala:64
 msgid "The current kerning class is malformed."
 msgstr "La classe di crenatura corrente è malforme."
 
-#: libbirdfont/KerningDisplay.vala:64
+#: libbirdfont/KerningDisplay.vala:65
 msgid "Add single characters separated by space and ranges on the form A-Z."
 msgstr ""
 "Aggiungi caratteri singoli separati da spazio e intervalli nella forma A-Z."
 
-#: libbirdfont/KerningDisplay.vala:65
+#: libbirdfont/KerningDisplay.vala:66
 msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr ""
 "Digita \"space\" per la crenatura del carattere spazio e \"divis\" per la "
 "crenatura del carattere -."
 
-#: libbirdfont/KerningDisplay.vala:216
+#: libbirdfont/KerningDisplay.vala:217
 msgid "Kerning:"
 msgstr "Crenatura:"
+
+#: libbirdfont/KerningDisplay.vala:651 libbirdfont/MainWindow.vala:135
+#: libbirdfont/SpinButton.vala:112
+msgid "Close"
+msgstr "Chiudi"
 
 #: libbirdfont/KerningList.vala:89
 msgid "Kerning Pairs"
@@ -405,8 +410,13 @@ msgid "Set"
 msgstr "Imposta"
 
 #: libbirdfont/KerningTools.vala:33
-msgid "Create new kerning class"
+#, fuzzy
+msgid "Create new kerning class."
 msgstr "Crea una nuova classe di crenatura"
+
+#: libbirdfont/KerningTools.vala:40
+msgid "Use text input to enter kerning values."
+msgstr ""
 
 #: libbirdfont/LanguageSelectionTab.vala:92
 msgid "Character Set"
@@ -415,10 +425,6 @@ msgstr "Set caratteri"
 #: libbirdfont/MainWindow.vala:135
 msgid "Glyph sequence"
 msgstr "Sequenza glifi"
-
-#: libbirdfont/MainWindow.vala:135 libbirdfont/SpinButton.vala:112
-msgid "Close"
-msgstr "Chiudi"
 
 #: libbirdfont/MenuTab.vala:41
 msgid "Menu"

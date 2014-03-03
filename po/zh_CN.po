@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-19 17:10+0100\n"
-"PO-Revision-Date: 2014-02-19 16:09+0000\n"
+"POT-Creation-Date: 2014-03-03 22:29+0100\n"
+"PO-Revision-Date: 2014-02-22 14:19+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: zh_CN\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1392826198.000000\n"
+"X-POOTLE-MTIME: 1393078799.000000\n"
 
 #: libbirdfont/Argument.vala:241
 msgid "Usage"
@@ -149,7 +149,7 @@ msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:34
 msgid "Swedish"
-msgstr ""
+msgstr "瑞典语"
 
 #. / All lower case letters in alphabetic order separated by space
 #: libbirdfont/DefaultCharactersSet.vala:112
@@ -377,26 +377,32 @@ msgstr "显示网格"
 msgid "Import"
 msgstr "导入"
 
-#: libbirdfont/KerningDisplay.vala:43
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:651
 #, fuzzy
 msgid "Kerning"
 msgstr "字距："
 
-#: libbirdfont/KerningDisplay.vala:63
+#: libbirdfont/KerningDisplay.vala:64
 msgid "The current kerning class is malformed."
 msgstr "现字距类型异常。"
 
-#: libbirdfont/KerningDisplay.vala:64
+#: libbirdfont/KerningDisplay.vala:65
 msgid "Add single characters separated by space and ranges on the form A-Z."
 msgstr "添加以空格隔开的并在 A - Z 范围内的单字。"
 
-#: libbirdfont/KerningDisplay.vala:65
+#: libbirdfont/KerningDisplay.vala:66
 msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr "输入“space”以调整空格字符距离，输入“divis”以调整 - 字符的距离。"
 
-#: libbirdfont/KerningDisplay.vala:216
+#: libbirdfont/KerningDisplay.vala:217
 msgid "Kerning:"
 msgstr "字距："
+
+#: libbirdfont/KerningDisplay.vala:651 libbirdfont/MainWindow.vala:135
+#: libbirdfont/SpinButton.vala:112
+#, fuzzy
+msgid "Close"
+msgstr "关闭标签（_C）"
 
 #: libbirdfont/KerningList.vala:89
 msgid "Kerning Pairs"
@@ -416,7 +422,12 @@ msgid "Set"
 msgstr ""
 
 #: libbirdfont/KerningTools.vala:33
-msgid "Create new kerning class"
+#, fuzzy
+msgid "Create new kerning class."
+msgstr "字距类"
+
+#: libbirdfont/KerningTools.vala:40
+msgid "Use text input to enter kerning values."
 msgstr ""
 
 #: libbirdfont/LanguageSelectionTab.vala:92
@@ -428,11 +439,6 @@ msgstr "字符集"
 #, fuzzy
 msgid "Glyph sequence"
 msgstr "字形序列（_G）"
-
-#: libbirdfont/MainWindow.vala:135 libbirdfont/SpinButton.vala:112
-#, fuzzy
-msgid "Close"
-msgstr "关闭标签（_C）"
 
 #: libbirdfont/MenuTab.vala:41
 msgid "Menu"

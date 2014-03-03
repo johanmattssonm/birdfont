@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-19 17:10+0100\n"
-"PO-Revision-Date: 2014-02-19 04:33+0000\n"
+"POT-Creation-Date: 2014-03-03 22:29+0100\n"
+"PO-Revision-Date: 2014-02-22 08:37+0000\n"
 "Last-Translator: QA <quantumanomaly@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ja\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1392784421.000000\n"
+"X-POOTLE-MTIME: 1393058221.000000\n"
 
 #: libbirdfont/Argument.vala:241
 msgid "Usage"
@@ -32,7 +32,7 @@ msgstr "オプション"
 
 #: libbirdfont/Argument.vala:245
 msgid "enable Android customizations"
-msgstr ""
+msgstr "Androidのカスタム化を有効にする"
 
 #: libbirdfont/Argument.vala:246
 msgid "show coordinate in glyph view"
@@ -192,7 +192,7 @@ msgstr "対称ハンドル"
 
 #: libbirdfont/DrawingTools.vala:165
 msgid "Convert segment to line."
-msgstr ""
+msgstr "セグメントをラインに変換"
 
 #: libbirdfont/DrawingTools.vala:173
 msgid "Merge paths"
@@ -208,11 +208,11 @@ msgstr "最下層へのパスに移動します"
 
 #: libbirdfont/DrawingTools.vala:203
 msgid "Flip path vertically"
-msgstr ""
+msgstr "パスを上下反転"
 
 #: libbirdfont/DrawingTools.vala:210
 msgid "Flip path horizontally"
-msgstr ""
+msgstr "パスを左右反転"
 
 #: libbirdfont/DrawingTools.vala:218
 msgid "Show full unicode characters set"
@@ -233,7 +233,7 @@ msgstr "選択したグリフを削除"
 
 #: libbirdfont/DrawingTools.vala:319
 msgid "Show guidelines"
-msgstr ""
+msgstr "ガイド線を表示"
 
 #: libbirdfont/DrawingTools.vala:330
 msgid "Show guidelines for x-height and baseline"
@@ -317,15 +317,15 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:613
 msgid "Object color"
-msgstr ""
+msgstr "オブジェクトの色"
 
 #: libbirdfont/DrawingTools.vala:634
 msgid "Set fill color for open paths."
-msgstr ""
+msgstr "開いているパスのフィル色を指定"
 
 #: libbirdfont/DrawingTools.vala:642
 msgid "Use TTF units."
-msgstr ""
+msgstr "TTF単位を使用"
 
 #: libbirdfont/DrawingTools.vala:653
 msgid "Delay response for editing tools"
@@ -337,11 +337,11 @@ msgstr "サイズをグリッドに合わせる"
 
 #: libbirdfont/ExportTool.vala:516
 msgid "Writing TTF and EOT files."
-msgstr ""
+msgstr "TTFとEOTファイルの書き出し中"
 
 #: libbirdfont/ExportTool.vala:530
 msgid "Writing SVG file."
-msgstr ""
+msgstr "TTFとEOTファイルの書き出し中"
 
 #: libbirdfont/FileTab.vala:176
 msgid "No fonts created yet."
@@ -357,7 +357,7 @@ msgstr ""
 
 #: libbirdfont/FileTab.vala:275
 msgid "Files"
-msgstr ""
+msgstr "ファイル"
 
 #: libbirdfont/GridTool.vala:35
 msgid "Show grid"
@@ -367,26 +367,31 @@ msgstr "グリッドを表示"
 msgid "Import"
 msgstr "インポート"
 
-#: libbirdfont/KerningDisplay.vala:43
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:651
 msgid "Kerning"
 msgstr "カーニング"
 
-#: libbirdfont/KerningDisplay.vala:63
-msgid "The current kerning class is malformed."
-msgstr ""
-
 #: libbirdfont/KerningDisplay.vala:64
+msgid "The current kerning class is malformed."
+msgstr "現在のカーニングクラスに異常があります。"
+
+#: libbirdfont/KerningDisplay.vala:65
 msgid "Add single characters separated by space and ranges on the form A-Z."
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:65
+#: libbirdfont/KerningDisplay.vala:66
 msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:216
+#: libbirdfont/KerningDisplay.vala:217
 #, fuzzy
 msgid "Kerning:"
 msgstr "カーニング"
+
+#: libbirdfont/KerningDisplay.vala:651 libbirdfont/MainWindow.vala:135
+#: libbirdfont/SpinButton.vala:112
+msgid "Close"
+msgstr ""
 
 #: libbirdfont/KerningList.vala:89
 msgid "Kerning Pairs"
@@ -406,7 +411,11 @@ msgid "Set"
 msgstr ""
 
 #: libbirdfont/KerningTools.vala:33
-msgid "Create new kerning class"
+msgid "Create new kerning class."
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:40
+msgid "Use text input to enter kerning values."
 msgstr ""
 
 #: libbirdfont/LanguageSelectionTab.vala:92
@@ -416,10 +425,6 @@ msgstr ""
 #: libbirdfont/MainWindow.vala:135
 msgid "Glyph sequence"
 msgstr "グリフシーケンス"
-
-#: libbirdfont/MainWindow.vala:135 libbirdfont/SpinButton.vala:112
-msgid "Close"
-msgstr ""
 
 #: libbirdfont/MenuTab.vala:41
 msgid "Menu"
@@ -443,7 +448,7 @@ msgstr ""
 
 #: libbirdfont/OverView.vala:109
 msgid "Filter"
-msgstr ""
+msgstr "フィルター"
 
 #: libbirdfont/OverView.vala:234
 msgid "Overview"
