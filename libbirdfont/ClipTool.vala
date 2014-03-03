@@ -66,6 +66,8 @@ public class ClipTool : Tool {
 		if (fd is Glyph) {
 			paste_to_glyph (is_bf_clipboard);
 		}
+		
+		BirdFont.get_current_font ().touch ();
 	}
 	
 	static void paste_to_glyph (bool bf_clipboard_data) {

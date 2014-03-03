@@ -106,6 +106,8 @@ class MoveTool : Tool {
 		last_y = y;
 
 		GlyphCanvas.redraw ();
+		
+		BirdFont.get_current_font ().touch ();
 	}
 	
 	public static void release (int b, int x, int y) {
@@ -340,7 +342,9 @@ class MoveTool : Tool {
 			p.move (dx, dy);
 		}
 		
-		update_selection_boundries ();	
+		update_selection_boundries ();
+		
+		BirdFont.get_current_font ().touch ();
 	}
 }
 
