@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class CmapSubtable : Table {
+public class CmapSubtable : Table {
 
 	// Override these methods in subtables for each format.
 	
@@ -43,7 +43,7 @@ class CmapSubtable : Table {
 }
 
 /** Format 4 cmap subtable */
-class CmapSubtableWindowsUnicode : CmapSubtable {
+public class CmapSubtableWindowsUnicode : CmapSubtable {
 	uint16 format = 0;
 	HashTable <uint64?, unichar> table = new HashTable <uint64?, unichar> (int64_hash, int_equal);
 	
@@ -303,7 +303,7 @@ class CmapSubtableWindowsUnicode : CmapSubtable {
 	}
 }
 
-class CmapTable : Table { 
+public class CmapTable : Table { 
 	
 	GlyfTable glyf_table;	
 	List<CmapSubtable> subtables;

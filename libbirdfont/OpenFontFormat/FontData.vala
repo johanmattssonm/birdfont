@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class FontData : Object {
+public class FontData : Object {
 
 	// Read pointer
 	uint rp = 0;

@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class OpenFontFormatWriter : Object  {
+public class OpenFontFormatWriter : Object  {
 
 	DataOutputStream os;
 	DirectoryTable directory_table;

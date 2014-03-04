@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class MaxpTable : Table {
+public class MaxpTable : Table {
 	
 	GlyfTable glyf_table;
 	

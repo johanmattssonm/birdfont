@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class HmtxTable : Table {
+public class HmtxTable : Table {
 	
 	uint32 nmetrics;
 	uint32 nmonospaced;

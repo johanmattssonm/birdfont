@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class HeadTable : Table {
+public class HeadTable : Table {
 
 	public int16 xmin = int16.MIN;
 	public int16 ymin = int16.MIN;
@@ -39,8 +39,7 @@ class HeadTable : Table {
 	
 	uint64 created;
 	uint64 modified;
-		
-	// public static uint16 units_per_em = 4096; FIXME: windows testing
+
 	public static uint16 units_per_em;
 	public static double UNITS;
 	
@@ -57,14 +56,17 @@ class HeadTable : Table {
 	
 	/** Set default value for unit. */
 	public static void init () {
-		units_per_em = 1024; // FIXME:
-		UNITS = 10 * (units_per_em / 1000);
+		units_per_em = 1024;
+		UNITS = 10 * (units_per_em / 1000.0);
 	}
 	
 	public uint32 get_adjusted_checksum () {
 		return adjusted_checksum;
 	}
 	
+	/** Get the units per em for generated fonts, not for fonts parsed 
+	 * with this library.
+	 */
 	public double get_units_per_em () {
 		return units_per_em * 10;
 	}
@@ -87,7 +89,7 @@ class HeadTable : Table {
 		magic_number = dis.read_ulong ();
 		
 		if (magic_number != 0x5F0F3CF5) {
-			warning (@"Magic number is invalid. Got $(magic_number).");
+			warning (@"Magic number is invalid ($(magic_number)).");
 			return;
 		}
 		

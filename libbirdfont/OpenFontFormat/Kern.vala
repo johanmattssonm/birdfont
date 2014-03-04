@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class Kern : GLib.Object {
+public class Kern : GLib.Object {
 	public uint16 left;
 	public uint16 right;
 	public int16 kerning;
@@ -26,15 +26,7 @@ class Kern : GLib.Object {
 	}
 }
 
-class KernList : GLib.Object {
-	public List<Kern> kernings;
-	
-	public KernList () {
-		kernings = new List<Kern> ();
-	}
-}
-
-class KernTable : Table {
+public class KernTable : Table {
 	
 	public static const uint16 HORIZONTAL = 1;
 	public static const uint16 MINIMUM = 1 << 1;
@@ -44,7 +36,7 @@ class KernTable : Table {
 	
 	GlyfTable glyf_table;
 	
-	public List<Kern> kernings = new List<Kern> ();
+	public List<Kern> kerning = new List<Kern> ();
 	public int kerning_pairs = 0;
 	
 	public KernTable (GlyfTable gt) {
@@ -92,14 +84,14 @@ class KernTable : Table {
 	public void parse_pairs (FontData dis, uint16 n_pairs) throws Error {
 		uint16 left;
 		uint16 right;
-		int16 kerning;
+		int16 k;
 		
 		for (int i = 0; i < n_pairs; i++) {
 			left = dis.read_ushort ();
 			right = dis.read_ushort ();
-			kerning = dis.read_short ();
+			k = dis.read_short ();
 						
-			kernings.append (new Kern (left, right, kerning));
+			kerning.append (new Kern (left, right, k));
 		}		
 	}
 	

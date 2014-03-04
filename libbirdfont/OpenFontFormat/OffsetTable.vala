@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class OffsetTable : Table {
+public class OffsetTable : Table {
 	DirectoryTable directory_table;
 		
 	public uint16 num_tables = 0;

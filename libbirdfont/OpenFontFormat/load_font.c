@@ -573,53 +573,6 @@ FT_ULong get_charcode (FT_Face face, FT_UInt gid) {
 	return 0;
 }
 
-/** Obtain kerning data in .bf format for one glyph.
- * @param gid glyph id
- */
-// FIXME:
-GString* get_kerning_data (FT_Face face, FT_Long gid, double units) {
-	FT_Error error;
-	FT_Vector kerning;
-	GString* bf = g_string_new ("");
-	FT_ULong char_left;
-	FT_ULong char_right;
-	FT_Long right;
-	gchar kern[80];
-	
-	char_left = get_charcode (face, gid);
-	
-	if (char_left <= 31) {
-		g_warning ("Ignoring kerning for control character.\n");
-		return bf;
-	}
-	
-	if (char_left == 0) {
-		g_warning ("No character code could be found for left kerning value.\n");
-		return bf;
-	}
-	
-	for (right = 0; right < face->num_glyphs; right++) {
-		error = FT_Get_Kerning (face, gid, right, FT_KERNING_UNSCALED, &kerning);
-		if (error) {
-			g_warning ("Failed to obtain kerning value.\n");
-			break;
-		}
-		
-		char_right = get_charcode (face, right);
-		if (char_left == 0) {
-			g_warning ("No character code could be found for right kerning value.\n");
-			return bf;
-		}
-
-		if (kerning.x != 0 && char_left > 31 && char_right > 31) {
-			g_ascii_formatd (&kern, 80, "%f", kerning.x * units);
-			g_string_append_printf (bf, "<kerning left=\"U+%x\" right=\"U+%x\" hadjustment=\"%s\"/>\n", char_left, char_right, kern);
-		}
-	}
-	
-	return bf;
-}
-
 /** Height of letter. */
 int get_height (FT_Face face, guint unichar) {
 	int error;
@@ -703,7 +656,7 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 GString* get_bf_font (FT_Face face, char* file, int* err) {
 	GString* bf = g_string_new ("");
 	GString* bf_data;
-	GString* hkern;
+	GString* kerning;
 	GString* glyph;
 	FT_Error error;
 	FT_Long i;
@@ -803,20 +756,13 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		}
 
 		g_string_append (bf, glyph->str);
-		g_string_free (glyph, 0);		
+		g_string_free (glyph, 0);	
 		bird_font_progress_bar_set_progress ((double)i / face->num_glyphs);
 	}
-
-	// kerning
-	// FIXME
-	/*
-	for (i = 0; i < face->num_glyphs; i++) {
-		hkern = get_kerning_data (face, i, units);
-		g_string_append (bf, hkern->str);
-		g_string_free (hkern, 0);
-		bird_font_progress_bar_set_progress ((double)(face->num_glyphs - i) / face->num_glyphs);
-	}
-	*/
+	
+	kerning = bird_font_open_font_format_reader_parse_kerning (file); 
+	g_string_append (bf, kerning->str);
+	g_string_free (kerning, 0);	
 
 	g_string_append (bf, "</font>\n");
 	

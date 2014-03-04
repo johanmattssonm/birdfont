@@ -16,7 +16,7 @@ using Math;
 
 namespace BirdFont {
 
-class Coordinate {
+public class Coordinate {
 	/** TTF coordinate flags. */
 
 	public static const uint8 NONE           = 0;

@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class HheaTable : Table {
+public class HheaTable : Table {
 
 	Fixed version;
 	int16 ascender;

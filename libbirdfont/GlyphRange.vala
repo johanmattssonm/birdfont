@@ -172,7 +172,7 @@ public class GlyphRange {
 		return s.str;
 	}
 	
-	private string get_serialized_char (unichar c) {
+	public static string get_serialized_char (unichar c) {
 		StringBuilder s = new StringBuilder ();
 		
 		if (c == ' ') {
@@ -191,7 +191,7 @@ public class GlyphRange {
 		return s.str;	
 	}
 	
-	private string unserialize (string c) {
+	public static  string unserialize (string c) {
 		if (c == "space") {
 			return " ";
 		}

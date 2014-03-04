@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -15,7 +15,7 @@
 namespace BirdFont {
 
 /** Table with list of tables sorted by table tag. */
-class DirectoryTable : Table {
+public class DirectoryTable : Table {
 	
 	public CmapTable cmap_table;
 	public CvtTable  cvt_table;
@@ -118,7 +118,7 @@ class DirectoryTable : Table {
 		offset_table = ot;
 	}
 	
-	public new void parse (FontData dis, File file, OpenFontFormatReader reader_callback) throws Error {
+	public new void parse (FontData dis, OpenFontFormatReader reader_callback) throws Error {
 		StringBuilder tag = new StringBuilder ();
 		uint32 checksum;
 		uint32 offset;
@@ -217,12 +217,10 @@ class DirectoryTable : Table {
 				gpos_table.length = length;
 			}
 		}
-
+	}
+	
+	public void parse_all_tables (FontData dis, OpenFontFormatReader reader_callback) {
 		head_table.parse (dis);
-		
-		if (!validate_tables (dis, file)) {
-			warning ("Missing required table or bad checksum.");
-		}
 		
 		hhea_table.parse (dis);
 		reader_callback.set_limits ();
@@ -251,6 +249,30 @@ class DirectoryTable : Table {
 		}
 	}
 	
+	public void parse_kern_table (FontData dis) {
+		if (kern_table.has_data ()) {
+			kern_table.parse (dis);
+		} else {
+			warning ("Kern table is empty.");
+		}
+	}
+
+	public void parse_cmap_table (FontData dis) {
+		if (cmap_table.has_data ()) {
+			cmap_table.parse (dis);
+		} else {
+			warning ("Cmap table is empty.");
+		}
+	}
+
+	public void parse_head_table (FontData dis) {
+		if (head_table.has_data ()) {
+			head_table.parse (dis);
+		} else {
+			warning ("Head table is empty.");
+		}
+	}
+		
 	public bool validate_tables (FontData dis, File file) {
 		bool valid = true;
 		

@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class Os2Table : Table {
+public class Os2Table : Table {
 	
 	public static const uint16 ITALIC = 1;
 	public static const uint16 UNDERSCORE = 1 << 1;

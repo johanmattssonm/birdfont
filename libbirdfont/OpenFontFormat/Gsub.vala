@@ -15,7 +15,7 @@ using Math;
 
 namespace BirdFont {
 
-class GsubTable : Table {
+public class GsubTable : Table {
 	
 	public GsubTable () {
 		id = "GPOS";

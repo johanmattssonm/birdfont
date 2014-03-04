@@ -15,12 +15,12 @@ using Math;
 
 namespace BirdFont {
 
-class PairFormat1 : GLib.Object {
+public class PairFormat1 : GLib.Object {
 	public uint16 left = -1;
 	public List<Kern> pairs = new List<Kern> ();
 }
 
-class GposTable : Table {
+public class GposTable : Table {
 	
 	GlyfTable glyf_table;
 	List<Kern> kerning_pairs = new List<Kern> ();

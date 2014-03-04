@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class GaspTable : Table {
+public class GaspTable : Table {
 	
 	public GaspTable () {
 		id = "gasp";

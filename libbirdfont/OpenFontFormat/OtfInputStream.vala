@@ -15,7 +15,7 @@
 namespace BirdFont {
 
 /** Reader for otf data types. */
-class OtfInputStream : Object  {
+public class OtfInputStream : Object  {
 	
 	public FileInputStream fin;
 	public DataInputStream din;

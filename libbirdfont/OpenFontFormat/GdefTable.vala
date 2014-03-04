@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class GdefTable : Table {
+public class GdefTable : Table {
 	
 	public GdefTable () {
 		id = "GDEF";

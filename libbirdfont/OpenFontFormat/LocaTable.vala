@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class LocaTable : Table {
+public class LocaTable : Table {
 	
 	uint32* glyph_offsets = null;
 	public uint32 size = 0;
@@ -126,7 +126,6 @@ class LocaTable : Table {
 				
 				last = o;
 			}
-			
 		} else if (head_table.loca_offset_size == 1) {
 			foreach (uint32 o in glyf_table.location_offsets) {
 				fd.add_u32 (o);
@@ -137,7 +136,6 @@ class LocaTable : Table {
 				
 				last = o;
 			}
-			
 		} else {
 			warn_if_reached ();
 		}

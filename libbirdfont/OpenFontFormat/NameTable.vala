@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class NameTable : Table {
+public class NameTable : Table {
 
 	public static const uint16 COPYRIGHT_NOTICE = 0;
 	public static const uint16 FONT_NAME = 1;

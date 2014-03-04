@@ -36,6 +36,7 @@ class BirdFontFile {
 		
 		Parser.init ();
 		
+		font.font_file = path;
 		tr = new TextReader.filename (path);
 		ok = load_xml (tr);
 		
@@ -52,6 +53,8 @@ class BirdFontFile {
 		bool ok;
 		
 		Parser.init ();
+		
+		font.font_file = "typeface.bf";
 		
 		printd ("Load data:\n");
 		printd (xml_data);
@@ -71,9 +74,7 @@ class BirdFontFile {
 		
 		tr.read ();
 		root = tr.expand ();
-		
-		font.font_file = "typeface.bf";
-		
+
 		if (is_null (root)) {
 			warning ("No root element");
 			tr.close ();
@@ -88,41 +89,12 @@ class BirdFontFile {
 		return ok;
 	}
 
-	private string get_attribute (TextReader tr, string attribute_name) {
-		string? c = tr.get_attribute (attribute_name);
-		
-		if (c == null) {
-			return "";
-		}
-		
-		return (!) c;
-	}
-	
-	private string get_value (TextReader tr) {
-		string? v = tr.value ();
-		
-		if (v == null) {
-			return "";
-		}
-		
-		return (!) v;
-	}
-
-	private string get_name (TextReader tr) {
-		string? n = tr.name ();
-		
-		if (n == null) {
-			return "";
-		}
-		
-		return (!) n;
-	}
-
 	public bool write_font_file (string path, bool backup = false) {
 		try {
 			File file = File.new_for_path (path);
 			uint num_kerning_pairs;
 			uint progress;
+			string range;
 			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
 				warning (@"Can not save font. $path is a directory.");
@@ -239,13 +211,20 @@ class BirdFontFile {
 			progress = num_kerning_pairs;
 			ProgressBar.set_progress (1);
 			for (uint i = 0; i < num_kerning_pairs; i++) {
+				
+				range = KerningClasses.get_instance ().classes_first.nth (i).data.get_all_ranges ();
+				range = serialize (range);
+				
 				os.put_string ("<kerning ");
 				os.put_string ("left=\"");
-				os.put_string (KerningClasses.get_instance ().classes_first.nth (i).data.get_all_ranges ().replace ("\"", "quote"));
+				os.put_string (range);
 				os.put_string ("\" ");
 				
+				range = KerningClasses.get_instance ().classes_last.nth (i).data.get_all_ranges ();
+				range = serialize (range);
+				
 				os.put_string ("right=\"");
-				os.put_string (KerningClasses.get_instance ().classes_last.nth (i).data.get_all_ranges ().replace ("\"", "quote"));
+				os.put_string (range);
 				os.put_string ("\" ");
 				
 				os.put_string ("hadjustment=\"");
@@ -600,10 +579,11 @@ class BirdFontFile {
 		}
 	}
 
-	private string unserialize (string s) {
+	public static string unserialize (string s) {
 		StringBuilder b;
 		string r;
 		r = s.replace ("quote", "\"");
+		r = r.replace ("ampersand", "&");
 		
 		if (s.has_prefix ("U+")) {
 			b = new StringBuilder ();
@@ -612,6 +592,17 @@ class BirdFontFile {
 		}
 		
 		return r;
+	}
+
+	public static string serialize (string s) {
+		string r = s;
+		r = r.replace ("\"", "quote");
+		r = r.replace ("&", "ampersand");
+		return r;
+	}
+	
+	public static string serialize_unichar (unichar c) {
+		return serialize (GlyphRange.get_serialized_char (c));
 	}
 	
 	private void parse_kerning (Xml.Node* node) {

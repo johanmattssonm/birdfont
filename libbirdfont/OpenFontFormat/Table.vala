@@ -15,7 +15,7 @@
 
 namespace BirdFont {
 
-class Table : Object {
+public class Table : Object {
 
 	public string id = "NO_ID";
 
