@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-03 22:29+0100\n"
+"POT-Creation-Date: 2014-03-04 22:21+0100\n"
 "PO-Revision-Date: 2014-02-28 22:09+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,51 +18,56 @@ msgstr ""
 "X-Generator: Pootle 2.5.1-rc1\n"
 "X-POOTLE-MTIME: 1393625389.000000\n"
 
-#: libbirdfont/Argument.vala:241
+#: libbirdfont/Argument.vala:244
 msgid "Usage"
 msgstr "Gebruik"
 
-#: libbirdfont/Argument.vala:243
+#: libbirdfont/Argument.vala:246
 msgid "FILE"
 msgstr "BESTAND"
 
-#: libbirdfont/Argument.vala:243
+#: libbirdfont/Argument.vala:246
 msgid "OPTION"
 msgstr "OPTIE"
 
-#: libbirdfont/Argument.vala:245
+#: libbirdfont/Argument.vala:248
 msgid "enable Android customizations"
 msgstr "Android-aanpassingen inschakelen"
 
-#: libbirdfont/Argument.vala:246
+#: libbirdfont/Argument.vala:249
 msgid "show coordinate in glyph view"
 msgstr "coördinaat tonen in symboolweergave"
 
-#: libbirdfont/Argument.vala:247
+#: libbirdfont/Argument.vala:250
 msgid "exit if a test case fails"
 msgstr "afsluiten als een testcase mislukt"
 
-#: libbirdfont/Argument.vala:248
+#: libbirdfont/Argument.vala:251
 msgid "treat warnings as fatal"
 msgstr "waarschuwingen als onherstelbaar behandelen"
 
-#: libbirdfont/Argument.vala:249
+#: libbirdfont/Argument.vala:252
 msgid "show this message"
 msgstr "dit bericht tonen"
 
-#: libbirdfont/Argument.vala:250
+#: libbirdfont/Argument.vala:253
+#, fuzzy
+msgid "write a log file"
+msgstr "svg-bestand schrijven\n"
+
+#: libbirdfont/Argument.vala:254
 msgid "enable Machintosh customizations"
 msgstr "Macintosh-aanpassingen inschakelen"
 
-#: libbirdfont/Argument.vala:251
+#: libbirdfont/Argument.vala:255
 msgid "don't translate"
 msgstr "niet vertalen"
 
-#: libbirdfont/Argument.vala:252
+#: libbirdfont/Argument.vala:256
 msgid "sleep between each command in test suite"
 msgstr "sluimeren tussen elke opdracht in testsuite"
 
-#: libbirdfont/Argument.vala:253
+#: libbirdfont/Argument.vala:257
 msgid "run test case"
 msgstr "testcase uitvoeren"
 

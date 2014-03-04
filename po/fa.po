@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-03 22:29+0100\n"
+"POT-Creation-Date: 2014-03-04 22:21+0100\n"
 "PO-Revision-Date: 2014-03-03 21:28+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,51 +18,57 @@ msgstr ""
 "X-Generator: Pootle 2.5.1-rc1\n"
 "X-POOTLE-MTIME: 1393882127.000000\n"
 
-#: libbirdfont/Argument.vala:241
+#: libbirdfont/Argument.vala:244
 msgid "Usage"
 msgstr "کاربرد"
 
-#: libbirdfont/Argument.vala:243
+#: libbirdfont/Argument.vala:246
 msgid "FILE"
 msgstr "فایل"
 
-#: libbirdfont/Argument.vala:243
+#: libbirdfont/Argument.vala:246
 msgid "OPTION"
 msgstr "انتخاب"
 
-#: libbirdfont/Argument.vala:245
+#: libbirdfont/Argument.vala:248
 msgid "enable Android customizations"
 msgstr ""
 
-#: libbirdfont/Argument.vala:246
+#: libbirdfont/Argument.vala:249
 msgid "show coordinate in glyph view"
 msgstr "نمایش هماهنگ در منوی glyph"
 
-#: libbirdfont/Argument.vala:247
+#: libbirdfont/Argument.vala:250
 msgid "exit if a test case fails"
 msgstr ""
 
-#: libbirdfont/Argument.vala:248
+#: libbirdfont/Argument.vala:251
 msgid "treat warnings as fatal"
 msgstr ""
 
-#: libbirdfont/Argument.vala:249
+#: libbirdfont/Argument.vala:252
 msgid "show this message"
 msgstr ""
 
-#: libbirdfont/Argument.vala:250
+# don't forget the \n
+#: libbirdfont/Argument.vala:253
+#, fuzzy
+msgid "write a log file"
+msgstr "نوشتن فایل svg \n"
+
+#: libbirdfont/Argument.vala:254
 msgid "enable Machintosh customizations"
 msgstr ""
 
-#: libbirdfont/Argument.vala:251
+#: libbirdfont/Argument.vala:255
 msgid "don't translate"
 msgstr ""
 
-#: libbirdfont/Argument.vala:252
+#: libbirdfont/Argument.vala:256
 msgid "sleep between each command in test suite"
 msgstr ""
 
-#: libbirdfont/Argument.vala:253
+#: libbirdfont/Argument.vala:257
 msgid "run test case"
 msgstr ""
 

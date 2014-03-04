@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-03 22:29+0100\n"
+"POT-Creation-Date: 2014-03-04 22:21+0100\n"
 "PO-Revision-Date: 2014-02-22 08:37+0000\n"
 "Last-Translator: QA <quantumanomaly@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,54 +18,59 @@ msgstr ""
 "X-Generator: Pootle 2.5.1-rc1\n"
 "X-POOTLE-MTIME: 1393058221.000000\n"
 
-#: libbirdfont/Argument.vala:241
+#: libbirdfont/Argument.vala:244
 msgid "Usage"
 msgstr "使い方"
 
-#: libbirdfont/Argument.vala:243
+#: libbirdfont/Argument.vala:246
 msgid "FILE"
 msgstr "ファイル"
 
-#: libbirdfont/Argument.vala:243
+#: libbirdfont/Argument.vala:246
 msgid "OPTION"
 msgstr "オプション"
 
-#: libbirdfont/Argument.vala:245
+#: libbirdfont/Argument.vala:248
 msgid "enable Android customizations"
 msgstr "Androidのカスタム化を有効にする"
 
-#: libbirdfont/Argument.vala:246
+#: libbirdfont/Argument.vala:249
 msgid "show coordinate in glyph view"
 msgstr "グリフ表示時に調整を表示する"
 
-#: libbirdfont/Argument.vala:247
+#: libbirdfont/Argument.vala:250
 #, fuzzy
 msgid "exit if a test case fails"
 msgstr "テストケースが失敗したら終了する"
 
-#: libbirdfont/Argument.vala:248
+#: libbirdfont/Argument.vala:251
 msgid "treat warnings as fatal"
 msgstr "警告を致命的なものとして扱う"
 
-#: libbirdfont/Argument.vala:249
+#: libbirdfont/Argument.vala:252
 msgid "show this message"
 msgstr "このメッセージを表示する"
 
-#: libbirdfont/Argument.vala:250
+#: libbirdfont/Argument.vala:253
+#, fuzzy
+msgid "write a log file"
+msgstr "svgファイルへ書き出す\n"
+
+#: libbirdfont/Argument.vala:254
 msgid "enable Machintosh customizations"
 msgstr "Machintosh 用カスタマイズを有効にする"
 
 # [translate]という言葉はほとんど「翻訳」という意味で使われるが、3Dソフトやデザインソフトで例えば"translate along the X-axis"と言って「Ｘ軸方向に移動する」という意味になる場合がある。あと"Translation"を「平行移動」という日本語に訳しているページを見つけたのでとりあえずそう訳すけど、文脈が分からないからこれで合っているとは言えない。BirdFontの中で"don't translate"はどう使われているでしょう？
-#: libbirdfont/Argument.vala:251
+#: libbirdfont/Argument.vala:255
 #, fuzzy
 msgid "don't translate"
 msgstr "平行移動をしない"
 
-#: libbirdfont/Argument.vala:252
+#: libbirdfont/Argument.vala:256
 msgid "sleep between each command in test suite"
 msgstr "テストスイート内の各コマンド間にスリープする"
 
-#: libbirdfont/Argument.vala:253
+#: libbirdfont/Argument.vala:257
 msgid "run test case"
 msgstr "テストケースを実行する"
 
