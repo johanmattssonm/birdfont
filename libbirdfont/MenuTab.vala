@@ -260,7 +260,7 @@ public class MenuTab : FontDisplay {
 		}	
 			
 		dialog.overwrite_signal.connect (() => {
-			tab_bar.add_unique_tab (new Preview (), 80);
+			tab_bar.add_unique_tab (new Preview ());
 		});
 			
 		if ((format == FontFormat.SVG || format == FontFormat.FREETYPE) && !OverWriteDialogListener.dont_ask_again) {
