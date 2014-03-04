@@ -31,33 +31,16 @@ class BirdFontFile {
 	 * @param path path to a valid .bf file
 	 */
 	public bool load (string path) {
-		bool ok = true;
-		Xml.Doc* doc;
-		Xml.Node* root;
-		
-		printd (@"Init xml parser.\n");
+		TextReader tr;
+		bool ok;
 		
 		Parser.init ();
 		
-		printd (@"Loading $path\n");
+		tr = new TextReader.filename (path);
+		ok = load_xml (tr);
 		
-		font.font_file = path; // this will be updated if we are loading a backup file
-
-		doc = Parser.parse_file (path);
-		root = doc->get_root_element ();
-		
-		if (root == null) {
-			warning ("no root element");
-			delete doc;
-			return false;
-		}
-
-		create_background_files (root);
-		ok = parse_file (root);
-
-		delete doc;
 		Parser.cleanup ();
-		
+				
 		return ok;
 	}
 
@@ -65,29 +48,74 @@ class BirdFontFile {
 	 * @param xml_data data for a valid .bf file
 	 */
 	public bool load_data (string xml_data) {
-		bool ok = true;
-		Xml.Doc* doc;
-		Xml.Node* root;
+		TextReader tr;
+		bool ok;
 		
 		Parser.init ();
 		
-		font.font_file = "typeface.bf"; // FIXME
-		doc = Parser.parse_doc (xml_data);
-		root = doc->get_root_element ();
+		printd ("Load data:\n");
+		printd (xml_data);
 		
-		if (root == null) {
-			warning ("no root element");
-			delete doc;
+		tr = new TextReader.for_doc (xml_data, "");
+		ok = load_xml (tr);
+		
+		Parser.cleanup ();
+				
+		return ok;
+	}
+
+	private bool load_xml (TextReader tr) {
+		bool ok = true;
+		int parsed;
+		Xml.Node* root;
+		
+		tr.read ();
+		root = tr.expand ();
+		
+		font.font_file = "typeface.bf";
+		
+		if (is_null (root)) {
+			warning ("No root element");
+			tr.close ();
 			return false;
 		}
 
 		create_background_files (root);
 		ok = parse_file (root);
-
-		delete doc;
-		Parser.cleanup ();
 		
+		tr.close ();
+			
 		return ok;
+	}
+
+	private string get_attribute (TextReader tr, string attribute_name) {
+		string? c = tr.get_attribute (attribute_name);
+		
+		if (c == null) {
+			return "";
+		}
+		
+		return (!) c;
+	}
+	
+	private string get_value (TextReader tr) {
+		string? v = tr.value ();
+		
+		if (v == null) {
+			return "";
+		}
+		
+		return (!) v;
+	}
+
+	private string get_name (TextReader tr) {
+		string? n = tr.name ();
+		
+		if (n == null) {
+			return "";
+		}
+		
+		return (!) n;
 	}
 
 	public bool write_font_file (string path, bool backup = false) {
@@ -505,15 +533,6 @@ class BirdFontFile {
 
 			if (iter->name == "postscript_name" && iter->children != null) {
 				font.postscript_name = iter->children->content;
-				
-				printd ("PostScript name:"); // FIXME: delete when debugging is done
-				printd (iter->children->content);
-				printd ("\n");
-			}
-			
-			// FIXME: delete when debugging is done
-			if (iter->name == "postscript_name" && iter->children == null) {
-				printd ("Found PostScipt name but content for this node is null in libxml.\n");
 			}
 			
 			if (iter->name == "name" && iter->children != null) {

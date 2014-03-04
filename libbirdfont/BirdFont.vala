@@ -210,8 +210,7 @@ public class BirdFont {
 
 #if ANDROID
 		BirdFont.logging = true;
-		init_logfile ();
-
+		
 		__android_log_print (ANDROID_LOG_WARN, "BirdFont", @"libbirdfont version $VERSION");
 		LogLevelFlags log_levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
 		Log.set_handler (null, log_levels, android_warning);
@@ -222,7 +221,12 @@ public class BirdFont {
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 		
 		android = args.has_argument ("--android");
+		BirdFont.logging = args.has_argument ("--log");
 #endif
+
+		if (BirdFont.logging) {
+			init_logfile ();
+		}
 		
 		if (!args.has_argument ("--no-translation")) {
 			init_gettext ();

@@ -576,6 +576,7 @@ FT_ULong get_charcode (FT_Face face, FT_UInt gid) {
 /** Obtain kerning data in .bf format for one glyph.
  * @param gid glyph id
  */
+// FIXME:
 GString* get_kerning_data (FT_Face face, FT_Long gid, double units) {
 	FT_Error error;
 	FT_Vector kerning;
@@ -667,18 +668,19 @@ int get_descender (FT_Face face) {
 void append_description (GString* str, FT_SfntName* name_table_data) {
 	gchar* utf8_str;
 	gsize read, written;
-	GError* error = NULL;
+	GError* error = NULL;	
 	
-	if (name_table_data->encoding_id == 0) {
-		g_string_append_len (str, name_table_data->string, name_table_data->string_len);
-	} else if (name_table_data->encoding_id == 1) {
-		
-		// Unicode BMP (UCS-2) is the right encoding
-		// utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2", &read, &written, &error);
-		
-		g_warning ("CONVERT");
-		
-		// DELETE utf-16be
+	if (name_table_data->encoding_id == 0 && name_table_data->platform_id == 1) { // mac roman
+		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "macintosh", &read, &written, &error);
+
+		if (error == NULL) {
+			g_string_append (str, utf8_str);
+			g_free (utf8_str);
+		} else {
+			g_warning ("Error in append_description: %s\n", error->message);
+			g_error_free (error);
+		}
+	} else if (name_table_data->encoding_id == 1 && name_table_data->platform_id == 3) { // windows unicode
 		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2be", &read, &written, &error);
 
 		if (error == NULL) {
@@ -691,8 +693,6 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 	} else {
 		g_warning ("Encoding %u is not supported.\n", name_table_data->encoding_id);
 	}
-	
-	g_warning ("name_table_data->encoding_id: %d, plat: %d str: %s \n", name_table_data->encoding_id, name_table_data->platform_id, str->str);	
 }
 
 /** Convert font to bf format.
@@ -808,12 +808,15 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	}
 
 	// kerning
+	// FIXME
+	/*
 	for (i = 0; i < face->num_glyphs; i++) {
 		hkern = get_kerning_data (face, i, units);
 		g_string_append (bf, hkern->str);
 		g_string_free (hkern, 0);
 		bird_font_progress_bar_set_progress ((double)(face->num_glyphs - i) / face->num_glyphs);
 	}
+	*/
 
 	g_string_append (bf, "</font>\n");
 	

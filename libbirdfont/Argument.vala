@@ -70,6 +70,7 @@ public class Argument : GLib.Object {
 				a == "--no-translation" ||
 				a == "--mac" ||
 				a == "--android" ||
+				a == "--log" ||
 				a == "--donated") {
 				prev = a;
 				i++;
@@ -206,6 +207,8 @@ public class Argument : GLib.Object {
 				return "--test";
 			case 'a': 
 				return "--android";
+			case 'l': 
+				return "--log";
 		}
 		
 		return "";
@@ -247,6 +250,7 @@ public class Argument : GLib.Object {
 		print_padded ("-e, --exit", t_("exit if a test case fails"));
 		print_padded ("-f, --fatal-warning", t_("treat warnings as fatal"));
 		print_padded ("-h, --help", t_("show this message"));
+		print_padded ("-l, --log", t_("write a log file"));
 		print_padded ("-m, --mac", t_("enable Machintosh customizations"));
 		print_padded ("-n, --no-translation", t_("don't translate"));
 		print_padded ("-s, --slow", t_("sleep between each command in test suite"));
