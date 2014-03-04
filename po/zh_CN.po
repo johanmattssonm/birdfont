@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-04 22:21+0100\n"
+"POT-Creation-Date: 2014-03-03 22:29+0100\n"
 "PO-Revision-Date: 2014-02-22 14:19+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,56 +18,51 @@ msgstr ""
 "X-Generator: Pootle 2.5.1-rc1\n"
 "X-POOTLE-MTIME: 1393078799.000000\n"
 
-#: libbirdfont/Argument.vala:244
+#: libbirdfont/Argument.vala:241
 msgid "Usage"
 msgstr "用法"
 
-#: libbirdfont/Argument.vala:246
+#: libbirdfont/Argument.vala:243
 msgid "FILE"
 msgstr "FILE"
 
-#: libbirdfont/Argument.vala:246
+#: libbirdfont/Argument.vala:243
 msgid "OPTION"
 msgstr "OPTION"
 
-#: libbirdfont/Argument.vala:248
+#: libbirdfont/Argument.vala:245
 msgid "enable Android customizations"
 msgstr ""
 
-#: libbirdfont/Argument.vala:249
+#: libbirdfont/Argument.vala:246
 msgid "show coordinate in glyph view"
 msgstr ""
 
-#: libbirdfont/Argument.vala:250
+#: libbirdfont/Argument.vala:247
 msgid "exit if a test case fails"
 msgstr "当测试用例失败后退出"
 
-#: libbirdfont/Argument.vala:251
+#: libbirdfont/Argument.vala:248
 msgid "treat warnings as fatal"
 msgstr ""
 
-#: libbirdfont/Argument.vala:252
+#: libbirdfont/Argument.vala:249
 msgid "show this message"
 msgstr "显示这条消息"
 
-#: libbirdfont/Argument.vala:253
-#, fuzzy
-msgid "write a log file"
-msgstr "覆盖 TTF 文件？"
-
-#: libbirdfont/Argument.vala:254
+#: libbirdfont/Argument.vala:250
 msgid "enable Machintosh customizations"
 msgstr "启用Mac电脑自定义"
 
-#: libbirdfont/Argument.vala:255
+#: libbirdfont/Argument.vala:251
 msgid "don't translate"
 msgstr ""
 
-#: libbirdfont/Argument.vala:256
+#: libbirdfont/Argument.vala:252
 msgid "sleep between each command in test suite"
 msgstr ""
 
-#: libbirdfont/Argument.vala:257
+#: libbirdfont/Argument.vala:253
 msgid "run test case"
 msgstr ""
 
