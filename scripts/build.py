@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Copyright (C) 2013 Johan Mattsson
+Copyright (C) 2013, 2014 Johan Mattsson
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as 
@@ -65,6 +65,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 
 		run(cc + " " + ldflags + """ \
 			-shared \
+			-Wl,-soname,""" + library + """ \
 			build/libbirdfont/*.o \
 			$(freetype-config --libs) \
 			$(pkg-config --libs """ + config.GEE + """) \

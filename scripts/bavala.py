@@ -1,5 +1,5 @@
 """
-Copyright (C) 2012, 2013 Eduardo Naufel Schettino and Johan Mattsson
+Copyright (C) 2012, 2013, 2014 Eduardo Naufel Schettino and Johan Mattsson
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -85,6 +85,7 @@ class Vala(object):
             self.so_link = join(build, src) + '.so'
             self.so_link_name = src + '.so'
             self.so_version = so_version
+            self.so_name = 'lib' + library + '.so.' + so_version;
 
     def gen_c(self, opts):
         """translate code from vala to C and create .vapi"""
@@ -147,8 +148,10 @@ class Vala(object):
         """generate ".so" lib file"""
         def compile_cmd(conf, libs):
             obj_glob = join(self.build, self.src, '*.o')
-            opts = ['-shared ' + obj_glob,
-                    '-o ' + self.so ]
+            opts = ['-shared ' 
+                    + '-Wl,-soname,' + self.so_name 
+			        + ' ' + obj_glob
+                    + ' -o ' + self.so ]
             flags = [conf[l].strip() for l in libs]
             return cmd(config.CC, opts, flags)
 
