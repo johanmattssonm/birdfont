@@ -33,8 +33,8 @@ public static int main (string[] arg) {
 	Cond main_loop_idle = new Cond ();
 	bool in_idle = false;
 
-	Icons.use_high_resolution (true); // TODO: enable for high resolution screens
-
+	Icons.use_high_resolution (true);
+	
 	birdfont = new BirdFont.BirdFont ();
 	db = new CharDatabaseParser ();
 

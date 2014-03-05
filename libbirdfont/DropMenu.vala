@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -28,6 +28,9 @@ public class DropMenu : GLib.Object {
 	
 	double x = -1;
 	double y = -1;
+	
+	double menu_x = -1;
+	
 	bool menu_visible = false;
 
 	List <MenuAction> actions = new List <MenuAction> ();
@@ -107,7 +110,9 @@ public class DropMenu : GLib.Object {
 			
 			if (action != null) {
 				a = (!) action;
-				if (a.has_delete_button && x - 5 < px < x + 13 && actions.length () > 2) { // over delete button
+
+				// action for the delete button
+				if (a.has_delete_button && menu_x + 88 - 7 < px < menu_x + 88 + 13 && actions.length () > 2) { 
 					
 					index = 0;
 					ma = actions.first ();
@@ -149,7 +154,7 @@ public class DropMenu : GLib.Object {
 		double ix, iy;
 		
 		foreach (MenuAction item in actions) {
-			ix = x - 100 + 12;
+			ix = menu_x - 6;
 			
 			if (direction == MenuDirection.DROP_DOWN) {
 				iy = y + 12 + n * item_height;
@@ -170,6 +175,12 @@ public class DropMenu : GLib.Object {
 	public void set_position (double px, double py) {
 		x = px;
 		y = py;
+		
+		if (x - 100 + 19 < 0) {
+			menu_x = 10;
+		} else {
+			menu_x = x - 100 + 19;
+		}
 	}
 	
 	public void draw_menu (Context cr) {
@@ -186,9 +197,9 @@ public class DropMenu : GLib.Object {
 		cr.set_line_width (12);
 			
 		if (direction == MenuDirection.DROP_DOWN) {
-			cr.rectangle (x - 100 + 18, y + 18, 88, actions.length () * item_height - 12);
+			cr.rectangle (menu_x, y + 18, 88, actions.length () * item_height - 12);
 		} else {
-			cr.rectangle (x - 100 + 19, y + 6 - actions.length () * item_height, 88, actions.length () * item_height - 12);
+			cr.rectangle (menu_x, y + 6 - actions.length () * item_height, 88, actions.length () * item_height - 12);
 		}
 		
 		cr.fill_preserve ();
@@ -201,7 +212,7 @@ public class DropMenu : GLib.Object {
 			cr.set_source_rgba (122/255.0, 150/255.0, 169/255.0, 1);
 			cr.set_line_width (0);		
 			
-			cr.rectangle (x, y - 7, 13, 7);
+			cr.rectangle (menu_x, y - 7, 13, 7);
 
 			cr.fill_preserve ();
 			cr.stroke ();
@@ -218,7 +229,7 @@ public class DropMenu : GLib.Object {
 			else 
 				iy = y - 8 - n * item_height;
 			
-			ix = x - 100 + 21;
+			ix = menu_x + 2;
 			
 			item.draw (ix, iy, cr);
 			n++;
