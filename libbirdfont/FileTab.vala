@@ -114,7 +114,17 @@ public class FileTab : FontDisplay {
 	
 	public override void button_release (int button, double ex, double ey) {
 		int r = (int) rint ((ey - 17) / row_height) + scroll;
-		int i = 2; // heading
+		int i = scroll; 
+
+		if (scroll == 0) {
+			i += 2; // heading
+		} else {
+			i -= scroll; // no headline
+		}
+
+		if (button != 1) {
+			return;
+		}
 
 		if (is_null (recent_fonts)) {
 			warning ("No recent fonts");
@@ -134,8 +144,8 @@ public class FileTab : FontDisplay {
 			warning ("No backups");
 			return;
 		}
-				
-		i += 2; 
+
+		i += 2;
 		foreach (string backup in backups) {
 			if (i == r) {
 				if (ex < 35) {
@@ -228,9 +238,7 @@ public class FileTab : FontDisplay {
 		File thumbnail;
 		string fn = (!) font.font_file;
 		
-		fn = fn.substring (fn.replace ("\\", "/").last_index_of ("/") + 1);	
-		thumbnail = BirdFont.get_thumbnail_directory ().get_child (fn);
-			
+		fn = fn.substring (fn.replace ("\\", "/").last_index_of ("/") + 1);
 		draw_background (cr, allocation, y, color);
 		
 		cr.move_to (50, y + row_height / 2 + 5);
