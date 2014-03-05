@@ -263,6 +263,7 @@ public class KerningClasses : GLib.Object {
 	}
 	
 	public void all_pairs (KerningIterator kerningIterator) {
+		// FIXME: THIS CODE IS TOO SLOW
 		Font f = BirdFont.get_current_font ();
 		Glyph? g1, g2;
 		Glyph glyph1, glyph2;

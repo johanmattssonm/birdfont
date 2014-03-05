@@ -299,7 +299,7 @@ public class CmapSubtableWindowsUnicode : CmapSubtable {
 		}
 		fd.add_ushort (0);
 		
-		// Fixa: implement rest of type 4 (mind gid_length in length field)
+		// FIXME: implement the rest of type 4 (mind gid_length in length field)
 	}
 }
 

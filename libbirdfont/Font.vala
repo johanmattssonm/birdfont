@@ -355,12 +355,14 @@ public class Font : GLib.Object {
 	}
 	
 	public string get_name_for_character (unichar c) {
-		// if some glyph is already mapped to unichar, return it's name
+		// if a glyph already is mapped to a unichar, return it's name
 		uint i = 0;
 		Glyph? gl;
 		Glyph g;
 		StringBuilder sb;
 		
+		// FIXME: this is too slow
+		/*
 		while ((gl = get_glyph_indice (i++)) != null) {
 			g = (!) gl;
 			
@@ -368,6 +370,7 @@ public class Font : GLib.Object {
 				return g.name;
 			}
 		}
+		*/
 						
 		// otherwise return some default name, possibly from unicode database
 		if (c == 0) {

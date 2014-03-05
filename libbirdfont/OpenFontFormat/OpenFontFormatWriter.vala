@@ -55,7 +55,7 @@ public class OpenFontFormatWriter : Object  {
 		dl = directory_table.get_font_file_size ();
 		
 		if (dl == 0) {
-			warning ("font is of zero size.");
+			warning ("font size is zero");
 			return;
 		}
 		

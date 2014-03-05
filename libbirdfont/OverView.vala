@@ -688,21 +688,28 @@ public class OverView : FontDisplay {
 		
 		// scroll to char
 		if (all_available) {
-			for (r = 0; r < font.length (); r += items_per_row) {
-				for (i = 0; i < items_per_row; i++) {
-					glyphs = font.get_glyph_collection_indice ((uint32) r + i);
-					return_if_fail (glyphs != null);
-					glyph = ((!) glyphs).get_current ();
+			
+			// don't search for glyphs in huge CJK fonts 
+			if (font.length () > 300) {
+				r = 0;
+			} else {
+				// FIXME: too slow
+				for (r = 0; r < font.length (); r += items_per_row) {
+					for (i = 0; i < items_per_row; i++) {
+						glyphs = font.get_glyph_collection_indice ((uint32) r + i);
+						return_if_fail (glyphs != null);
+						glyph = ((!) glyphs).get_current ();
+						
+						if (glyph.name == ch) {
+							index = i;
+						}
+					}
 					
-					if (glyph.name == ch) {
-						index = i;
+					if (index > -1) {
+						break;
 					}
 				}
-				
-				if (index > -1) {
-					break;
-				}
-			}			
+			}
 		} else {
 			for (r = 0; r < gr.length (); r += items_per_row) {
 				for (i = 0; i < items_per_row; i++) {
