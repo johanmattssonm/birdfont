@@ -355,7 +355,6 @@ public class Font : GLib.Object {
 	}
 	
 	public string get_name_for_character (unichar c) {
-		// if a glyph already is mapped to a unichar, return it's name
 		uint i = 0;
 		Glyph? gl;
 		Glyph g;
@@ -371,8 +370,7 @@ public class Font : GLib.Object {
 			}
 		}
 		*/
-						
-		// otherwise return some default name, possibly from unicode database
+		
 		if (c == 0) {
 			return ".null".dup ();
 		}
