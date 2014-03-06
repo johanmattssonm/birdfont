@@ -708,7 +708,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		zoom_out_item.add_accelerator ("activate", accel_group, '-', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem zoom_1_1_item = new Gtk.MenuItem.with_mnemonic (t_("Zoom to _Scale 1:1"));
+		Gtk.MenuItem zoom_1_1_item = new Gtk.MenuItem.with_mnemonic (t_("U_se One Pixel Per Unit"));
 		tool_menu.append (zoom_1_1_item);
 		zoom_1_1_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("zoom_1_1");

@@ -374,7 +374,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		view_tools.add_tool (zoom_out);
 
-		Tool reset_zoom = new Tool ("zoom_1_1", t_("Zoom to scale 1:1"), '0', CTRL);
+		Tool reset_zoom = new Tool ("zoom_1_1", t_("Use one pixel per unit"), '0', CTRL);
 		reset_zoom.select_action.connect ((self) => {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().reset_zoom ();
@@ -389,14 +389,14 @@ public class DrawingTools : ToolCollection  {
 		});
 		view_tools.add_tool (full_glyph);
 
-		Tool zoom_boundries = new Tool ("zoom_boundries", t_("Zoom in at region boundries"), 'v');
+		Tool zoom_boundries = new Tool ("zoom_boundries", t_("Zoom in on region boundries"), 'v');
 		zoom_boundries.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_max ();
 		});
 		view_tools.add_tool (zoom_boundries);
 
-		Tool zoom_bg = new Tool ("zoom_background_image", t_("Zoom in background image"));
+		Tool zoom_bg = new Tool ("zoom_background_image", t_("Zoom in on background image"));
 		zoom_bg.select_action.connect((self) => {
 			if (MainWindow.get_current_glyph ().get_background_image () != null) {
 				zoom_tool.store_current_view ();					
