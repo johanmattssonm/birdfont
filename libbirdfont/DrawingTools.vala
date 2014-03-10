@@ -34,6 +34,8 @@ public class DrawingTools : ToolCollection  {
 	
 	public static PointType point_type = PointType.DOUBLE_CURVE;
 	
+	public static SpinButton object_stroke;
+	
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
 		
@@ -71,7 +73,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tools.add_tool (resize_tool);
 
 		Tool stroke_tool = new StrokeTool ("stroke");
-		draw_tools.add_tool (stroke_tool);	
+		draw_tools.add_tool (stroke_tool);
 		
 		// quadratic Bézier points
 		Tool quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
@@ -105,6 +107,16 @@ public class DrawingTools : ToolCollection  {
 		});
 		convert_points.set_persistent (false);
 		draw_tool_modifiers.add_tool (convert_points);
+
+		// edit stroke width
+		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
+		object_stroke.set_int_value ("0.000");
+				
+		object_stroke.new_value_action.connect((self) => {
+			StrokeTool.set_stroke_for_selected_paths (object_stroke.get_value ());
+		});
+		
+		draw_tool_modifiers.add_tool (object_stroke);	
 
 		// tie edit point handles
 		Tool tie_handles = new Tool ("tie_point", t_("Tie curve handles for the selected edit point"), 'w');
@@ -537,6 +549,17 @@ public class DrawingTools : ToolCollection  {
 		SpinButton stroke_width;
 		stroke_width = new SpinButton ("stroke_width", t_("Stroke width"));
 
+		style_tools.add_tool (stroke_width);
+		
+		stroke_width.set_max (4);
+		stroke_width.set_min (0.002);
+		stroke_width.set_value_round (1);
+
+		if (Preferences.get ("stroke_width") != "") {
+			print ("PREF\n"); // DELETE
+			stroke_width.set_value (Preferences.get ("stroke_width"));
+		}
+
 		stroke_width.new_value_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			Path.stroke_width = stroke_width.get_value ();
@@ -544,15 +567,8 @@ public class DrawingTools : ToolCollection  {
 			Preferences.set ("stroke_width", stroke_width.get_display_value ());
 			MainWindow.get_toolbox ().redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
 		});
-		style_tools.add_tool (stroke_width);
 		
-		stroke_width.set_max (4);
-		stroke_width.set_min (0.2);
-		stroke_width.set_value_round (1);
-		
-		if (Preferences.get ("stroke_width") != "") {
-			stroke_width.set_value (Preferences.get ("stroke_width"));
-		}
+		Path.stroke_width = stroke_width.get_value ();
 		
 		ColorTool handle_color = new ColorTool (t_("Handle color"));
 		handle_color.color_updated.connect (() => {

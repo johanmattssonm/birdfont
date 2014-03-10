@@ -1,4 +1,3 @@
-
 /*
     Copyright (C) 2012 Johan Mattsson
 
@@ -30,8 +29,8 @@ public class SpinButton : Tool {
 	double begin_y = 0;
 	int begin_value = 0;
 	
-	int max = 9999;
-	int min = 0;
+	public int max = 9999;
+	public int min = 0;
 	
 	public SpinButton (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		base (null , tip, key, modifier_flag);
@@ -202,8 +201,6 @@ public class SpinButton : Tool {
 			} else {
 				v += "0";
 			}
-			
-			return;
 		}
 
 		if (v.substring (v.index_of_nth_char (1), 1) != ".") {
@@ -215,11 +212,13 @@ public class SpinButton : Tool {
 		centi = (int8) int.parse (v.substring (v.index_of_nth_char (3), 1));
 		milli = (int8) int.parse (v.substring (v.index_of_nth_char (4), 1));
 		
-		if (check_boundries && get_value () > max) {
+		if (check_boundries && get_value () > max / 1000.0) {
+			warning (@"Out of bounds ($new_value > $max).");
 			set_value_round (max, false);
 		}
 
-		if (check_boundries && get_value () < min) {
+		if (check_boundries && get_value () < min / 1000.0) {
+			warning (@"Out of bounds ($new_value < $min).");
 			set_value_round (min, false);
 		}
 

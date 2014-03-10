@@ -219,7 +219,7 @@ public class DirectoryTable : Table {
 		}
 	}
 	
-	public void parse_all_tables (FontData dis, OpenFontFormatReader reader_callback) {
+	public void parse_all_tables (FontData dis, OpenFontFormatReader reader_callback) throws Error {
 		head_table.parse (dis);
 		
 		hhea_table.parse (dis);
@@ -249,7 +249,7 @@ public class DirectoryTable : Table {
 		}
 	}
 	
-	public void parse_kern_table (FontData dis) {
+	public void parse_kern_table (FontData dis) throws Error {
 		if (kern_table.has_data ()) {
 			kern_table.parse (dis);
 		} else {
@@ -257,7 +257,7 @@ public class DirectoryTable : Table {
 		}
 	}
 
-	public void parse_cmap_table (FontData dis) {
+	public void parse_cmap_table (FontData dis) throws Error {
 		if (cmap_table.has_data ()) {
 			cmap_table.parse (dis);
 		} else {
@@ -265,7 +265,7 @@ public class DirectoryTable : Table {
 		}
 	}
 
-	public void parse_head_table (FontData dis) {
+	public void parse_head_table (FontData dis) throws Error {
 		if (head_table.has_data ()) {
 			head_table.parse (dis);
 		} else {

@@ -140,7 +140,7 @@ public class Glyph : FontDisplay {
 		
 		foreach (Path p in path_list) {
 			if (p.points.length () > 0) {
-				active_paths.append (p);
+				add_active_path (p);
 			}
 		}
 	}
@@ -152,7 +152,11 @@ public class Glyph : FontDisplay {
 	}
 	
 	public void add_active_path (Path? p) {
+		Path path;
 		if (p != null) {
+			path = (!) p;
+			
+			Toolbox.set_object_stroke (path.stroke);
 			
 			foreach (Path pi in active_paths) {
 				if (pi == p) {
@@ -160,7 +164,7 @@ public class Glyph : FontDisplay {
 				}
 			}
 			
-			active_paths.append ((!) p);
+			active_paths.append (path);
 		}
 	}
 	
@@ -1069,7 +1073,8 @@ public class Glyph : FontDisplay {
 			}
 		}
 		
-		clear_active_paths ();
+		// FIXME: delete
+		// clear_active_paths ();
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
 		
@@ -1359,9 +1364,11 @@ public class Glyph : FontDisplay {
 		
 		// draw stroke
 		foreach (unowned Path p in path_list) {
-			stroke = StrokeTool.get_stroke (p, 3);
-			stroke.close ();
-			stroke.draw_outline (cr, allocation, view_zoom);
+			if (p.stroke > 0) {			
+				stroke = StrokeTool.get_stroke (p, p.stroke);
+				stroke.close ();
+				stroke.draw_outline (cr, allocation, view_zoom);
+			}
 		}
 	}
 	

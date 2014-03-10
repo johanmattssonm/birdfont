@@ -35,6 +35,9 @@ public class Path {
 	public double ymax = double.MIN;
 	public double ymin = double.MAX;
 
+	/** The width of a stroked outline. */
+	public double stroke = 0;
+
 	bool edit = true;
 	bool open = true;
 	bool direction_is_set = false;
@@ -86,7 +89,8 @@ public class Path {
 	public static double fill_color_g = 0;
 	public static double fill_color_b = 0;
 	public static double fill_color_a = 1;
-				
+	
+	/** The stroke of an outline when the path is not filled. */
 	public static double stroke_width = 1;
 	public static bool show_all_line_handles = true;
 	public static bool fill_open_path = false;
@@ -137,6 +141,10 @@ public class Path {
 
 	public bool empty () {
 		return points.length () == 0;
+	}
+
+	public void set_stroke (double width) {
+		stroke = width;
 	}
 
 	public void draw_boundries  (Context cr, WidgetAllocation allocation, double view_zoom) {
@@ -1601,11 +1609,9 @@ public class Path {
 				handle_y0 = 0;
 				handle_y1 = 0;
 		
-				//FIXME:
+				//FIXME: all beziér paths
 				//double_bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
 				//double_bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);
-
-				print (@"s: $s\n");
 
 				bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
 				bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);

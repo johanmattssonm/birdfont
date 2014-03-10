@@ -62,6 +62,11 @@ public class Toolbox : GLib.Object  {
 		update_expanders ();
 	}
 
+	public static void set_object_stroke (double width) {
+		DrawingTools.object_stroke.set_value_round (width);
+		redraw_tool_box ();
+	}
+
 	public static void set_allocation (int w, int h) {
 		allocation_width = w;
 		allocation_height = h;

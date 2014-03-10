@@ -24,14 +24,25 @@ public class StrokeTool : Tool {
 			stroke_selected_paths ();
 		});
 	}
+	
+	public static void set_stroke_for_selected_paths (double width) {
+		Glyph g = MainWindow.get_current_glyph ();
+			
+		foreach (Path p in g.active_paths) {
+			p.set_stroke (width);
+		}
+		
+		GlyphCanvas.redraw ();
+	}
 
+	// convert stroke to outline
 	void stroke_selected_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
 		List<Path> paths = new List<Path> ();
 		
-		foreach (Path p in g.path_list) {
-			paths.append (get_stroke (p, 4));
-			paths.append (get_stroke (p, -4));
+		foreach (Path p in g.active_paths) {
+			paths.append (get_stroke (p, p.stroke));
+			paths.append (get_stroke (p, -1 * p.stroke));
 		}
 		
 		foreach (Path np in paths) {
@@ -254,6 +265,9 @@ public class StrokeTool : Tool {
 			double avg_angle;
 			double angle;
 			
+			double m, n, o, p;
+			double ldnx, ldny;
+						
 			e.recalculate_linear_handles ();
 			
 			ra = e.get_right_handle ().angle;
@@ -272,11 +286,6 @@ public class StrokeTool : Tool {
 									
 			angle = avg_angle - PI / 2;
 			
-			ldnx = 0;
-			ldny = 0;
-			
-			double m, n, o, p;
-
 			m = cos (ra + PI / 2) * thickness;
 			n = sin (ra + PI / 2) * thickness;
 			

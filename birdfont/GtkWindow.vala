@@ -930,8 +930,8 @@ class ToolboxCanvas : DrawingArea {
 			get_allocation (out allocation);
 			
 			Context cw = cairo_create(get_window());
-			tb.allocation_width = allocation.width;
-			tb.allocation_height = allocation.height;
+			Toolbox.allocation_width = allocation.width;
+			Toolbox.allocation_height = allocation.height;
 			tb.draw (allocation.width, allocation.height, cw);
 			
 			return true;
