@@ -93,7 +93,7 @@ public class EditPointHandle  {
 		return sin (angle) * length + parent.y;
 	}
 		
-	void print_position () {
+	internal void print_position () {
 			warning (@"\nEdit point handle at position $(px ()),$(py ()) is not valid.\n"
 				+ @"Type: $(parent.type), "
 				+ @"Index: $(parent.get_index ()) of $(parent.get_list ().length ())\n"

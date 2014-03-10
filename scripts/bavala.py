@@ -85,11 +85,8 @@ class Vala(object):
             self.so_link = join(build, src) + '.so'
             self.so_link_name = src + '.so'
             self.so_version = so_version
-<<<<<<< HEAD
-            self.so_name = 'lib' + library + '.so.' + so_version;
-=======
-            self.so_name = library + '.so.' + so_version;
->>>>>>> e8a3b18d3b7fd2193801a61a9d8b1d1c306dfd0c
+            self.so_name = 'lib' + library + '.so.' + so_version
+
 
     def gen_c(self, opts):
         """translate code from vala to C and create .vapi"""

@@ -69,7 +69,6 @@ class BirdFontFile {
 
 	private bool load_xml (TextReader tr) {
 		bool ok = true;
-		int parsed;
 		Xml.Node* root;
 		
 		tr.read ();

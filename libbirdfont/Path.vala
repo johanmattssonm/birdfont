@@ -42,7 +42,16 @@ public class Path {
 	bool no_derived_direction = false;
 	bool clockwise_direction = true;
 
-	public delegate bool RasterIterator (double x, double y, double step); // iterate over each pixel at a given zoom level
+	// Iterate over each pixel in a path
+	public delegate bool RasterIterator (double x, double y, double step);
+	
+	// Iterate over all points in a rasterized path and compute a vector 
+	// for each point
+	public delegate bool VectorIterator (EditPoint start, EditPoint stop, 
+		double x, double y, double hx0, double hx1, double dy0, double dy1, 
+		double step);
+	
+	public delegate bool SegmentIterator (EditPoint start, EditPoint stop);
 	
 	private static ImageSurface? edit_point_image = null;
 	private static ImageSurface? active_edit_point_image = null;
@@ -531,13 +540,12 @@ public class Path {
 	}
 	
 	private double clockwise_sum () {
+		double sum = 0;
+		
 		return_val_if_fail (points.length () >= 3, 0);
 		
-		double sum = 0;
-		EditPoint prev = points.last ().data;
 		foreach (EditPoint e in points) {
-			sum += (e.x - prev.x) * (e.y + prev.y);
-			prev = e;
+			sum += e.get_direction ();
 		}
 		
 		return sum;
@@ -1471,6 +1479,12 @@ public class Path {
 		}
 	}
 
+	public static void get_point_for_step (EditPoint start, EditPoint stop, double step, out double x, out double y) {
+		// FIXME: Types
+		x = bezier_path (step, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x);
+		y = bezier_path (step, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);	
+	}
+
 	private static void all_of_double (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
 		double px = x1;
 		double py = y1;
@@ -1549,7 +1563,7 @@ public class Path {
 		}	
 	}
 
-	private void all_of_path (RasterIterator iter) {
+	private void all_segments (SegmentIterator iter) {
 		unowned List<EditPoint> i, next;
 		
 		if (points.length () < 2) {
@@ -1560,16 +1574,49 @@ public class Path {
 		next = i.next;
 
 		while (i != points.last ()) {
-			all_of (i.data, next.data, iter);
+			iter (i.data, next.data);
 			i = i.next;
 			next = i.next;
 		}
 		
 		if (!is_open ()) {
-			all_of (points.last ().data, points.first ().data, iter);
-		}
+			iter (points.last ().data, points.first ().data);
+		}		
 	}
 
+	private void all_of_path (RasterIterator iter, int steps = -1) {
+		all_segments ((start, stop) => {
+			all_of (start, stop, iter, steps);
+			return true;
+		});
+	}
+
+	public void all_vectors (VectorIterator iter, int steps = -1) {
+		all_segments ((start, stop) => {
+			all_of (start, stop, (x, y, s) => {
+				double handle_x0, handle_x1, handle_y0, handle_y1;
+		
+				handle_x0 = 0;
+				handle_x1 = 0;
+				handle_y0 = 0;
+				handle_y1 = 0;
+		
+				//FIXME:
+				//double_bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
+				//double_bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);
+
+				print (@"s: $s\n");
+
+				bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
+				bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);
+				
+				iter (start, stop, x, y, handle_x0, handle_x1, handle_y0, handle_y1, s);
+				return true;
+			}, steps);
+			return true;
+		}); 
+	}
+	
 	public static double bezier_path (double step, double p0, double p1, double p2, double p3) {
 		double q0, q1, q2;
 		double r0, r1;
@@ -1616,7 +1663,7 @@ public class Path {
 		return quadratic_bezier_path (2 * (step - 0.5), middle, p2, p3);
 	}
 	
-	private void double_bezier_vector (double step, double p0, double p1, double p2, double p3, out double a0, out double a1) {
+	public static void double_bezier_vector (double step, double p0, double p1, double p2, double p3, out double a0, out double a1) {
 		double b0, b1, c0, c1, d0, d1;
 	
 		// set angle
@@ -1633,7 +1680,7 @@ public class Path {
 		a0 = d0;
 		a1 = d1;
 	}
-		
+	
 	public void plot (Context cr, WidgetAllocation allocation, double view_zoom) {
 			double px = 0, py = 0;
 			double xc = allocation.width / 2.0;

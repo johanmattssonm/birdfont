@@ -71,6 +71,41 @@ public class EditPoint {
 		}
 	}
 
+	public double get_corner_angle () {
+		double l, r, a;
+		
+		l = get_left_handle ().angle;
+		r = get_right_handle ().angle;
+		a = fabs (l - r);
+
+		if (l > r) {
+			return 2 * PI - a;
+		}
+		
+		return a;
+	}
+
+	public double get_angle () {
+		double a = fabs ((right_handle.angle - PI) - left_handle.angle);
+		while (a >= 2 * PI - 0.01) {
+			a -= 2 * PI;
+		}
+		
+		return fabs (a);
+	}
+
+	public bool is_corner () {
+		return !(get_angle ()  <= 0.01);
+	}
+		
+	public bool is_narrow () {
+		return !(get_angle () < PI / 2 - 0.01);
+	}
+
+	public bool is_wide () {
+		return !(get_angle () > PI / 2 - 0.01);
+	}
+		
 	public bool equals (EditPoint e) {
 		return e.x == x 
 			&& e.y == y 
@@ -214,6 +249,18 @@ public class EditPoint {
 				h.move_to_coordinate (nx, ny);
 			}
 		}
+	}
+	
+	public bool is_clockwise () {
+		return get_direction () >= 0;
+	}
+	
+	public double get_direction () {
+		if (is_null (prev)) {
+			return 0;
+		}
+		
+		return (x - ((!) prev).data.x) * (y + ((!) prev).data.y);
 	}
 	
 	public void set_tie_handle (bool t) {

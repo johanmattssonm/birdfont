@@ -69,6 +69,9 @@ public class DrawingTools : ToolCollection  {
 		
 		Tool resize_tool = new ResizeTool ("resize");
 		draw_tools.add_tool (resize_tool);
+
+		Tool stroke_tool = new StrokeTool ("stroke");
+		draw_tools.add_tool (stroke_tool);	
 		
 		// quadratic Bézier points
 		Tool quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));

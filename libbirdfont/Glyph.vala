@@ -1321,6 +1321,7 @@ public class Glyph : FontDisplay {
 	
 	public void draw_path (Context cr) {
 		double left, baseline;
+		Path stroke;
 		
 		baseline = get_line ("baseline").pos;
 		left = get_line ("left").pos;
@@ -1354,6 +1355,13 @@ public class Glyph : FontDisplay {
 					p.fill_path (cr, allocation, view_zoom);
 				}
 			}
+		}
+		
+		// draw stroke
+		foreach (unowned Path p in path_list) {
+			stroke = StrokeTool.get_stroke (p, 3);
+			stroke.close ();
+			stroke.draw_outline (cr, allocation, view_zoom);
 		}
 	}
 	

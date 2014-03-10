@@ -235,7 +235,6 @@ public class FileTab : FontDisplay {
 	}
 
 	private void draw_file_row (WidgetAllocation allocation, Context cr, Font font, bool color, double y) {
-		File thumbnail;
 		string fn = (!) font.font_file;
 		
 		fn = fn.substring (fn.replace ("\\", "/").last_index_of ("/") + 1);
