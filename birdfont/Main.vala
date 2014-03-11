@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,26 +17,15 @@
 
 using BirdFont;
 
-void parse_gtk_rc () {
-	File f = FontDisplay.find_file ("layout", "birdfont.rc");
-	Gtk.rc_parse ((!) f.get_path ());
-}
-
 public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;
 	string file;
 	BirdFont.BirdFont birdfont;
-	CharDatabaseParser db;
-	unowned Thread<CharDatabaseParser> db_thread;
-	Mutex database_mutex = new Mutex ();
-	Cond main_loop_idle = new Cond ();
-	bool in_idle = false;
 
 	Icons.use_high_resolution (true);
 	
 	birdfont = new BirdFont.BirdFont ();
-	db = new CharDatabaseParser ();
 
 	birdfont.init (arg, null);
 
@@ -54,8 +43,31 @@ public static int main (string[] arg) {
 	if (file != "") {
 		MainWindow.file_tab.load_font (file);
 	}
+
+	load_ucd ();
+	
+	Gtk.main ();
+
+	return 0;
+}
+
+void parse_gtk_rc () {
+	File f = FontDisplay.find_file ("layout", "birdfont.rc");
+	Gtk.rc_parse ((!) f.get_path ());
+}
+
+/** Load descriptions from the unicode character database in a 
+ * background thread.
+ */
+void load_ucd () {	
+	CharDatabaseParser db;
+	unowned Thread<CharDatabaseParser> db_thread;
+	Mutex database_mutex = new Mutex ();
+	Cond main_loop_idle = new Cond ();
+	bool in_idle = false;
 	
 	try {
+		db = new CharDatabaseParser ();
 		db_thread = Thread.create<CharDatabaseParser> (db.load, false);
 		
 		// wait until main loop is done
@@ -82,10 +94,6 @@ public static int main (string[] arg) {
 	} catch (GLib.Error e) {
 		warning (e.message);
 	}
-	
-	Gtk.main ();
-
-	return 0;
 }
 
 

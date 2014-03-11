@@ -111,7 +111,8 @@ public class DrawingTools : ToolCollection  {
 		// edit stroke width
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
 		object_stroke.set_int_value ("0.000");
-				
+		object_stroke.set_int_step (0.015);
+		
 		object_stroke.new_value_action.connect((self) => {
 			StrokeTool.set_stroke_for_selected_paths (object_stroke.get_value ());
 		});

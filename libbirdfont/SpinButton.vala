@@ -29,8 +29,9 @@ public class SpinButton : Tool {
 	double begin_y = 0;
 	int begin_value = 0;
 	
-	public int max = 9999;
-	public int min = 0;
+	int max = 9999;
+	int min = 0;
+	int step = 1;
 	
 	public SpinButton (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		base (null , tip, key, modifier_flag);
@@ -138,11 +139,15 @@ public class SpinButton : Tool {
 		this.min = (int) Math.rint (min * 1000);
 	}
 	
+	public void set_int_step (double step) {
+		this.step = (int) Math.rint (step * 1000);
+	}
+	
 	public void increase () {	
 		int v;
 		
 		v = get_int_value ();
-		v++;
+		v += step;
 		
 		if (v > max) {
 			set_int_value (@"$max");
@@ -157,7 +162,7 @@ public class SpinButton : Tool {
 		int v;
 		
 		v = get_int_value ();
-		v--;
+		v -= step;
 
 		if (v <= min) {
 			set_int_value (@"$min");
