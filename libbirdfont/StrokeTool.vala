@@ -35,7 +35,7 @@ public class StrokeTool : Tool {
 		GlyphCanvas.redraw ();
 	}
 
-	// convert stroke to outline
+	/** Create strokes for the selected outlines. */
 	void stroke_selected_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
 		List<Path> paths = new List<Path> ();
@@ -51,10 +51,19 @@ public class StrokeTool : Tool {
 	}
 	
 	public static Path get_stroke (Path p, double thickness) {
-		Path new_path = new Path ();
-		Path stroked = new Path ();
+		Path new_path;
+		Path stroked;
+
+		new_path = add_tangent_points (p);
+		stroked = change_stroke_width (new_path, thickness);
 		
-		bool clockwise = p.is_clockwise ();
+		stroked.reverse ();
+		return stroked;
+	}
+
+	static Path add_tangent_points (Path p) {
+		Path new_path = new Path ();
+		int steps = 3;
 		
 		p.create_list ();
 		p.all_vectors ((start, stop, px, py, handle_x0, handle_x1, handle_y0, handle_y1, position) => {
@@ -142,31 +151,44 @@ public class StrokeTool : Tool {
 			new_path.add_point (ep);
 			
 			return true;
-		}, 3);
+		}, steps);
 		
 		new_path.create_list ();
-
+		
 		foreach (EditPoint e in new_path.points) {			
 			e.get_left_handle ().length /= 2;	
 			e.get_right_handle ().length /= 2;
 		}
 		
+		return new_path;
+	}
+
+	/** Shrink or expand the outline. */
+	static Path change_stroke_width (Path new_path, double thickness) {
+		double nx, ny;	
+		double stroke_thickness;
+		double space_left, space_right;
+		Path stroked = new Path ();		
+		EditPoint ep, corner1, corner2, corner3, swap_corner;
+		bool clockwise;
 		bool end_point; // first and last point
 		uint k;
 		uint npoints;
+
+		double middle_x, middle_y;
+		double corner_thickness_left, corner_thickness_right;
+		double middle_point_position;
+								
+		clockwise = new_path.is_clockwise ();
 		
 		end_point = true;
 		k = 0;
 		npoints = new_path.points.length ();
-		new_path.create_list ();
-		foreach (EditPoint e in new_path.points) {	
-			double nx, ny;	
-			double stroke_thickness;
-			double space_left, space_right;
-							
-			get_new_position (e, clockwise, thickness, out nx, out ny);
 		
-			EditPoint ep = e.copy ();
+		foreach (EditPoint e in new_path.points) {	
+			ep = e.copy ();
+			
+			get_new_position (e, clockwise, thickness, out nx, out ny);
 
 			end_point = (k == 0 || k == npoints - 1);
 			k++;
@@ -175,8 +197,6 @@ public class StrokeTool : Tool {
 			ep.y = ny;
 
 			if (e.is_corner ()) {
-				EditPoint corner1, corner2, corner3, swap_corner;
-				
 				// add new points in order to preserve the stroke
 				corner1 = e.copy ();
 				stroked.add_point (corner1);
@@ -204,8 +224,7 @@ public class StrokeTool : Tool {
 				corner2.y += sin (e.get_left_handle ().angle - PI / 2) * 2 * thickness;
 
 				// fill the gap
-				double middle_x, middle_y;
-				double corner_thickness_left, corner_thickness_right;
+
 				corner3 = e.copy ();
 				middle_x = corner1.x + (corner2.x - corner1.x) / 2;
 				middle_y = corner1.y + (corner2.y - corner1.y) / 2;
@@ -214,23 +233,21 @@ public class StrokeTool : Tool {
 				
 				corner_thickness_right = thickness * ((e.get_right_handle ().angle - PI) / (2 * PI));
 				corner_thickness_left = thickness * ((e.get_left_handle ().angle) / (2 * PI));
-								
-				double ncf;
 
-				ncf = 2 * thickness;
-				ncf *= 1 / sin (e.get_corner_angle ());
+				middle_point_position = 2 * thickness;
+				middle_point_position *= 1 / sin (e.get_corner_angle ());
 				
 				corner3.x = e.x;
 				corner3.y = e.y;
 				
-				corner3.x += ncf * cos (e.get_right_handle ().angle - PI);
-				corner3.y += ncf * sin (e.get_right_handle ().angle - PI);
+				corner3.x += middle_point_position * cos (e.get_right_handle ().angle - PI);
+				corner3.y += middle_point_position * sin (e.get_right_handle ().angle - PI);
 
-				corner3.x += ncf * cos (e.get_left_handle ().angle - PI);
-				corner3.y += ncf * sin (e.get_left_handle ().angle - PI);
+				corner3.x += middle_point_position * cos (e.get_left_handle ().angle - PI);
+				corner3.y += middle_point_position * sin (e.get_left_handle ().angle - PI);
 			
 			} else {
-				stroke_thickness = fabs (thickness) * 0.04;
+				stroke_thickness = fabs (thickness) * 0.04; // FIXME: 0.04
 
 				space_left = get_space_difference (e, e.get_prev ().data, thickness, clockwise);
 				space_right = get_space_difference (e, e.get_next ().data, thickness, clockwise);
@@ -242,11 +259,10 @@ public class StrokeTool : Tool {
 			}
 		}
 	
-		foreach (EditPoint ep in stroked.points) {
-			ep.recalculate_linear_handles ();
+		foreach (EditPoint e in stroked.points) {
+			e.recalculate_linear_handles ();
 		}
-		
-		stroked.reverse ();
+	
 		return stroked;
 	}
 

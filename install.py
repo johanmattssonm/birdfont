@@ -94,9 +94,10 @@ install ('build/bin/birdfont-export', '/bin', 755)
 
 #library
 if not options.libdir:
- 	if platform.machine() == 'i386' or platform.machine() == 's390' or platform.machine() == 'ppc' or platform.machine() == 'armv7hl':
+	p = platform.machine()
+ 	if p == 'i386' or p == 's390' or p == 'ppc' or p == 'armv7hl':
  		libdir = '/lib'
- 	elif platform.machine() == 'x86_64' or platform.machine() == 's390x' or platform.machine() == 'ppc64':
+ 	elif p == 'x86_64' or p == 's390x' or p == 'ppc64':
  		libdir = '/lib64'
  	else:
 		libdir = '/lib'
