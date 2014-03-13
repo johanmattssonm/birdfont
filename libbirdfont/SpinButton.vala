@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -266,7 +266,7 @@ public class SpinButton : Tool {
 		cr.set_font_size (10 * scale);
 		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
 		
-		if (BirdFont.mac)  {
+		if (BirdFont.mac || BirdFont.win32)  {
 			cr.move_to (xt + text_x + 2, yt + text_y);
 		} else {
 			cr.move_to (xt + text_x, yt + text_y);
