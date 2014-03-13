@@ -557,7 +557,6 @@ public class DrawingTools : ToolCollection  {
 		stroke_width.set_value_round (1);
 
 		if (Preferences.get ("stroke_width") != "") {
-			print ("PREF\n"); // DELETE
 			stroke_width.set_value (Preferences.get ("stroke_width"));
 		}
 
