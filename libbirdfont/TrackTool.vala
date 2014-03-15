@@ -42,7 +42,7 @@ public class TrackTool : Tool {
 	public TrackTool (string name) {
 		string sw;
 		
-		base (name, t_("Draw paths on free hand"));
+		base (name, t_("Free hand drawing"));
 		
 		sw = Preferences.get ("free_hand_stroke_width");
 		if (sw != "") {

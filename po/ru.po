@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-13 18:19+0100\n"
+"POT-Creation-Date: 2014-03-15 22:06+0100\n"
 "PO-Revision-Date: 2014-01-29 07:22+0000\n"
 "Last-Translator: Garab <voron-tengu@mail.ru>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,172 +166,173 @@ msgstr "А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц 
 msgid "Description"
 msgstr "Описание"
 
-#: libbirdfont/DrawingTools.vala:79
+#: libbirdfont/DrawingTools.vala:84
 msgid "Create quadratic Bézier curves"
 msgstr "Создать квадратную кривую Безье"
 
-#: libbirdfont/DrawingTools.vala:87
+#: libbirdfont/DrawingTools.vala:92
 msgid "Create cubic Bézier curves"
 msgstr "Создать кубическую кривую Безье"
 
-#: libbirdfont/DrawingTools.vala:95
+#: libbirdfont/DrawingTools.vala:100
 msgid "Quadratic path with two line handles"
 msgstr "Путь с двумя управляющими рычагами"
 
-#: libbirdfont/DrawingTools.vala:103
+#: libbirdfont/DrawingTools.vala:108
 msgid "Convert selected points"
 msgstr "Преобразовать выбранные точки"
 
-#: libbirdfont/DrawingTools.vala:112 libbirdfont/DrawingTools.vala:551
+#: libbirdfont/DrawingTools.vala:117 libbirdfont/DrawingTools.vala:562
 msgid "Stroke width"
 msgstr "Толщина контура"
 
-#: libbirdfont/DrawingTools.vala:123
+#: libbirdfont/DrawingTools.vala:134
 msgid "Tie curve handles for the selected edit point"
 msgstr "Рычаги управления узла"
 
-#: libbirdfont/DrawingTools.vala:159
+#: libbirdfont/DrawingTools.vala:170
 msgid "Symmetrical handles"
 msgstr "Симметричные рычаги"
 
-#: libbirdfont/DrawingTools.vala:181
+#: libbirdfont/DrawingTools.vala:192
 msgid "Convert segment to line."
 msgstr "Конвертировать сегмент в линию"
 
-#: libbirdfont/DrawingTools.vala:189
+#: libbirdfont/DrawingTools.vala:200
 msgid "Merge paths"
 msgstr "Объединить контуры"
 
-#: libbirdfont/DrawingTools.vala:196
+#: libbirdfont/DrawingTools.vala:207
 msgid "Create counter from outline"
 msgstr "Создать контур из линии"
 
-#: libbirdfont/DrawingTools.vala:208
+#: libbirdfont/DrawingTools.vala:219
 msgid "Move to path to the bottom layer"
 msgstr "Переместить контур на слой ниже"
 
-#: libbirdfont/DrawingTools.vala:219
+#: libbirdfont/DrawingTools.vala:230
 msgid "Flip path vertically"
 msgstr "Отразить путь по вертикали"
 
-#: libbirdfont/DrawingTools.vala:226
+#: libbirdfont/DrawingTools.vala:237
 msgid "Flip path horizontally"
 msgstr "Отразить путь по горизонтали"
 
-#: libbirdfont/DrawingTools.vala:234
+#: libbirdfont/DrawingTools.vala:245
 msgid "Show full unicode characters set"
 msgstr "Показать полный набор символов Unicode"
 
-#: libbirdfont/DrawingTools.vala:250
+#: libbirdfont/DrawingTools.vala:261
 msgid "Show default characters set"
 msgstr "Показать набор символов по умолчанию"
 
-#: libbirdfont/DrawingTools.vala:266
+#: libbirdfont/DrawingTools.vala:277
 #, fuzzy
 msgid "Show all characters in the font"
 msgstr "Показать все символы шрифта"
 
-#: libbirdfont/DrawingTools.vala:280
+#: libbirdfont/DrawingTools.vala:291
 msgid "Delete selected glyph"
 msgstr "Удалить выбранный глиф"
 
-#: libbirdfont/DrawingTools.vala:335
+#: libbirdfont/DrawingTools.vala:346
 msgid "Show guidelines"
 msgstr "Показать направляющие"
 
-#: libbirdfont/DrawingTools.vala:346
+#: libbirdfont/DrawingTools.vala:357
 msgid "Show guidelines for x-height and baseline"
 msgstr "Показать ограничители для строчных литер"
 
-#: libbirdfont/DrawingTools.vala:361
+#: libbirdfont/DrawingTools.vala:372
 msgid "Show guidelines at top and bottom margin"
 msgstr "Показать ограничители верхних и нижних полей"
 
-#: libbirdfont/DrawingTools.vala:379
+#: libbirdfont/DrawingTools.vala:390
 msgid "Zoom in"
 msgstr "Увеличить"
 
-#: libbirdfont/DrawingTools.vala:386
+#: libbirdfont/DrawingTools.vala:397
 msgid "Zoom out"
 msgstr "Уменьшить"
 
-#: libbirdfont/DrawingTools.vala:393
+#: libbirdfont/DrawingTools.vala:404
 msgid "Use one pixel per unit"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:401
+#: libbirdfont/DrawingTools.vala:412
 msgid "Show full glyph"
 msgstr "Показать глиф полностью"
 
-#: libbirdfont/DrawingTools.vala:408
-msgid "Zoom in on region boundries"
-msgstr ""
+#: libbirdfont/DrawingTools.vala:419
+#, fuzzy
+msgid "Zoom in on region boundaries"
+msgstr "Увеличить границы области"
 
-#: libbirdfont/DrawingTools.vala:415
+#: libbirdfont/DrawingTools.vala:426
 msgid "Zoom in on background image"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:428
+#: libbirdfont/DrawingTools.vala:439
 msgid "Previous view"
 msgstr "Предыдущая вкладка"
 
-#: libbirdfont/DrawingTools.vala:434
+#: libbirdfont/DrawingTools.vala:445
 msgid "Next view"
 msgstr "Следующая вкладка"
 
-#: libbirdfont/DrawingTools.vala:448
+#: libbirdfont/DrawingTools.vala:459
 msgid "Set size for background image"
 msgstr "Установить размер фонового изображения"
 
-#: libbirdfont/DrawingTools.vala:478
+#: libbirdfont/DrawingTools.vala:489
 msgid "Show/hide background image"
 msgstr "Показать/Спрятать фоновое изображение"
 
-#: libbirdfont/DrawingTools.vala:486
+#: libbirdfont/DrawingTools.vala:497
 msgid "Insert a new background image"
 msgstr "Вставить новое фоновое изображение"
 
-#: libbirdfont/DrawingTools.vala:491
+#: libbirdfont/DrawingTools.vala:502
 msgid "Creating thumbnails"
 msgstr "Создание эскизов"
 
-#: libbirdfont/DrawingTools.vala:510
+#: libbirdfont/DrawingTools.vala:521
 msgid "Set contrast for background image"
 msgstr "Установите контраст для фонового изображения"
 
-#: libbirdfont/DrawingTools.vala:529
+#: libbirdfont/DrawingTools.vala:540
 msgid "Stroke color"
 msgstr "Цвет контура"
 
-#: libbirdfont/DrawingTools.vala:573
+#: libbirdfont/DrawingTools.vala:584
 msgid "Handle color"
 msgstr "Цвет рычага"
 
-#: libbirdfont/DrawingTools.vala:596
+#: libbirdfont/DrawingTools.vala:607
 msgid "Set precision"
 msgstr "Чуствительность рычагов"
 
-#: libbirdfont/DrawingTools.vala:623
+#: libbirdfont/DrawingTools.vala:634
 msgid "Show all control point handles or only handles for the selected points."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:632
+#: libbirdfont/DrawingTools.vala:643
 msgid "Object color"
 msgstr "Цвет объекта"
 
-#: libbirdfont/DrawingTools.vala:653
+#: libbirdfont/DrawingTools.vala:664
 msgid "Set fill color for open paths."
 msgstr "Задать цвет заливки для открытых контуров"
 
-#: libbirdfont/DrawingTools.vala:661
+#: libbirdfont/DrawingTools.vala:672
 msgid "Use TTF units."
 msgstr "Использовать единицы TTF"
 
-#: libbirdfont/DrawingTools.vala:672
+#: libbirdfont/DrawingTools.vala:683
 msgid "Delay response for editing tools"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:851
+#: libbirdfont/DrawingTools.vala:862
 msgid "Set size for grid"
 msgstr "Установить размер сетки"
 
@@ -343,19 +344,19 @@ msgstr "Запись TTF и EOT файлов"
 msgid "Writing SVG file."
 msgstr "Запись SVG файлов"
 
-#: libbirdfont/FileTab.vala:186
+#: libbirdfont/FileTab.vala:190
 msgid "No fonts created yet."
 msgstr "Шрифт еще не создан"
 
-#: libbirdfont/FileTab.vala:195
+#: libbirdfont/FileTab.vala:199
 msgid "Recent files"
 msgstr "Последние файлы"
 
-#: libbirdfont/FileTab.vala:219
+#: libbirdfont/FileTab.vala:223
 msgid "Backup"
 msgstr "Резервная копия"
 
-#: libbirdfont/FileTab.vala:282
+#: libbirdfont/FileTab.vala:286
 msgid "Files"
 msgstr "Файлы"
 
@@ -389,7 +390,7 @@ msgid "Kerning:"
 msgstr "Кернинг"
 
 #: libbirdfont/KerningDisplay.vala:651 libbirdfont/MainWindow.vala:135
-#: libbirdfont/SpinButton.vala:112
+#: libbirdfont/SpinButton.vala:132
 msgid "Close"
 msgstr ""
 
@@ -406,7 +407,7 @@ msgstr ""
 msgid "Kerning class"
 msgstr ""
 
-#: libbirdfont/KerningRange.vala:79 libbirdfont/SpinButton.vala:112
+#: libbirdfont/KerningRange.vala:79 libbirdfont/SpinButton.vala:132
 msgid "Set"
 msgstr ""
 
@@ -515,6 +516,10 @@ msgstr "Сохранить?"
 #: libbirdfont/SaveDialogListener.vala:29
 msgid "Discard"
 msgstr "Не сохранять"
+
+#: libbirdfont/TrackTool.vala:45
+msgid "Free hand drawing"
+msgstr ""
 
 #: libbirdfont/VersionList.vala:32
 msgid "New version"
@@ -782,9 +787,6 @@ msgstr ""
 
 #~ msgid "Zoom to scale 1:1"
 #~ msgstr "Масштабировать 1:1"
-
-#~ msgid "Zoom in at region boundries"
-#~ msgstr "Увеличить границы области"
 
 #~ msgid "Zoom in background image"
 #~ msgstr "Увеличить фоновое изображение"
