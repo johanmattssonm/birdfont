@@ -242,7 +242,7 @@ public class DrawingTools : ToolCollection  {
 		path_tool_modifiers.add_tool (flip_horizontal);
 		
 		// Character set tools
-		Tool full_unicode = new Tool ("utf_8", t_("Show full unicode characters set"), 'f', CTRL);
+		Tool full_unicode = new Tool ("utf_8", t_("Show full unicode characters set"));
 		full_unicode.select_action.connect ((self) => {
 				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);	
 				OverView o = MainWindow.get_overview ();
