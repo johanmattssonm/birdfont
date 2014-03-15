@@ -114,7 +114,7 @@ public class HeadTable : Table {
 		xmax = dis.read_short ();
 		ymax = dis.read_short ();
 
-		printd (@"font boundries:\n");
+		printd (@"font boundaries:\n");
 		printd (@"xmin: $xmin\n");
 		printd (@"ymin: $ymin\n");
 		printd (@"xmax: $xmax\n");
@@ -183,7 +183,7 @@ public class HeadTable : Table {
 		xmax = glyf_table.xmax;
 		ymax = glyf_table.ymax;
 
-		printd (@"font boundries:\n");
+		printd (@"font boundaries:\n");
 		printd (@"xmin: $xmin\n");
 		printd (@"ymin: $ymin\n");
 		printd (@"xmax: $xmax\n");

@@ -17,6 +17,7 @@ using Cairo;
 
 namespace BirdFont {
 
+/** One selected point and its path. */
 public class PointSelection : GLib.Object {
 
 	public EditPointHandle handle;
@@ -39,6 +40,12 @@ public class PointSelection : GLib.Object {
 		path = new Path ();
 		point = new EditPoint ();
 		handle = new EditPointHandle.empty ();
+	}
+	
+	/** @return true if this point is the first point in the path. */
+	public bool is_first () {
+		return_val_if_fail (path.points.length () > 0, false);
+		return path.points.first ().data == point;
 	}
 }
 

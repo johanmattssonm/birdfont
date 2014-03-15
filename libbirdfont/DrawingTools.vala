@@ -72,8 +72,11 @@ public class DrawingTools : ToolCollection  {
 		Tool resize_tool = new ResizeTool ("resize");
 		draw_tools.add_tool (resize_tool);
 
-		Tool stroke_tool = new StrokeTool ("stroke");
+		Tool stroke_tool = new StrokeTool ("stroke"); // create outline from path
 		draw_tools.add_tool (stroke_tool);
+
+		Tool track_tool = new TrackTool ("track"); // create outline from path
+		draw_tools.add_tool (track_tool);
 		
 		// quadratic Bézier points
 		Tool quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
@@ -136,7 +139,7 @@ public class DrawingTools : ToolCollection  {
 				
 				p.set_tie_handle (tie);
 				
-				PenTool.handle_selection.path.update_region_boundries ();
+				PenTool.handle_selection.path.update_region_boundaries ();
 			} else {
 				foreach (PointSelection ep in PenTool.selected_points) {
 					tie = !ep.point.tie_handles;
@@ -147,7 +150,7 @@ public class DrawingTools : ToolCollection  {
 					}
 				
 					ep.point.set_tie_handle (tie);
-					ep.path.update_region_boundries ();
+					ep.path.update_region_boundaries ();
 				}
 			}
 			
@@ -171,7 +174,7 @@ public class DrawingTools : ToolCollection  {
 						ep.point.set_tie_handle (false);
 					}
 					
-					p.path.update_region_boundries ();
+					p.path.update_region_boundaries ();
 				}
 				MainWindow.get_current_glyph ().update_view ();
 			}
@@ -405,12 +408,12 @@ public class DrawingTools : ToolCollection  {
 		});
 		view_tools.add_tool (full_glyph);
 
-		Tool zoom_boundries = new Tool ("zoom_boundries", t_("Zoom in on region boundries"), 'v');
-		zoom_boundries.select_action.connect((self) => {
+		Tool zoom_boundaries = new Tool ("zoom_boundaries", t_("Zoom in on region boundaries"), 'v');
+		zoom_boundaries.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_max ();
 		});
-		view_tools.add_tool (zoom_boundries);
+		view_tools.add_tool (zoom_boundaries);
 
 		Tool zoom_bg = new Tool ("zoom_background_image", t_("Zoom in on background image"));
 		zoom_bg.select_action.connect((self) => {

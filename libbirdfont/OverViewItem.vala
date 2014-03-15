@@ -121,7 +121,7 @@ public class OverViewItem : GLib.Object {
 		}
 		
 		g = ((!) gl).get_current ();
-		g.boundries (out x1, out y1, out x2, out y2);
+		g.boundaries (out x1, out y1, out x2, out y2);
 
 		gx = (width - (x2 - x1)) / 2*scale;
 		

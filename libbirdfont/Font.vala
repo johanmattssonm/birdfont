@@ -358,6 +358,7 @@ public class Font : GLib.Object {
 		uint i = 0;
 		Glyph? gl;
 		Glyph g;
+		
 		StringBuilder sb;
 		
 		// FIXME: this is too slow

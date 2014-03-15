@@ -43,7 +43,7 @@ public class ClipTool : Tool {
 		
 		paste_paths ();
 		
-		g.selection_boundries (out x, out y, out w, out h);
+		g.selection_boundaries (out x, out y, out w, out h);
 		
 		dx = g.motion_x - x - w / 2.0;
 		dy = g.motion_y - y + h / 2.0;
@@ -191,7 +191,7 @@ public class ClipTool : Tool {
 		if (path.points.length () > 0) {
 			glyph.add_path (path);
 			glyph.active_paths.append (path);
-			path.update_region_boundries ();
+			path.update_region_boundaries ();
 		}
 		
 		PenTool.remove_all_selected_points ();

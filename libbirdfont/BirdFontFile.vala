@@ -494,7 +494,7 @@ class BirdFontFile {
 			}
 
 			if (iter->name == "lines") {
-				parse_font_boundries (iter);
+				parse_font_boundaries (iter);
 			}
 
 			if (iter->name == "grid") {
@@ -807,7 +807,7 @@ class BirdFontFile {
 		}		
 	}
 	
-	private void parse_font_boundries (Xml.Node* node) {
+	private void parse_font_boundaries (Xml.Node* node) {
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "top_limit" && "" != iter->children->content) {
 				font.top_limit = parse_double_from_node (iter);
@@ -1195,7 +1195,7 @@ class BirdFontFile {
 			path.points.remove_link (path.points.last ());
 		}
 		
-		path.update_region_boundries ();
+		path.update_region_boundaries ();
 		
 		return path;	
 	}

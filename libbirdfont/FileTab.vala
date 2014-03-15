@@ -113,8 +113,12 @@ public class FileTab : FontDisplay {
 	}
 	
 	public override void button_release (int button, double ex, double ey) {
-		int r = (int) rint ((ey - 17) / row_height) + scroll;
-		int i = scroll; 
+		int r, i;
+		
+		return_if_fail (!is_null(this));
+		
+		r = (int) rint ((ey - 17) / row_height) + scroll;
+		i = scroll; 
 
 		if (scroll == 0) {
 			i += 2; // heading

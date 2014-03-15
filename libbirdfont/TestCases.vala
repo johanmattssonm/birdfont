@@ -43,7 +43,7 @@ class TestCases {
 		add (test_freetype, "Freetype");
 		add (test_preview, "Preview");
 		add (test_kerning, "Kerning");
-		add (test_boundries, "Boundries");
+		add (test_boundaries, "Boundaries");
 	}
 	
 	private void add (Callback callback, string name) {
@@ -449,7 +449,7 @@ class TestCases {
 		p.add (10, 10);
 		p.add (10, -10);
 		p.add (-10, -10);
-		p.update_region_boundries ();
+		p.update_region_boundaries();
 		g.add_path (p);
 		g.close_path ();
 
@@ -1367,8 +1367,8 @@ class TestCases {
 		}
 	}
 	
-	private static void test_boundries () {
-		Preferences.draw_boundries = true;
+	private static void test_boundaries () {
+		Preferences.draw_boundaries = true;
 	}
 }
 

@@ -476,7 +476,7 @@ public class GlyfTable : Table {
 		int npoints = 0;
 		
 		int16 ncontours;
-		int16 ixmin; // set boundries
+		int16 ixmin; // set boundaries
 		int16 iymin;
 		int16 ixmax;
 		int16 iymax;
@@ -778,12 +778,12 @@ public class GlyfTable : Table {
 				
 				Path ps = ((!) glyph.path_list.first ()).data;
 				
-				ps.update_region_boundries ();
+				ps.update_region_boundaries ();
 				xmin = ps.xmin;
 				xmax = ps.xmax;
 
 				foreach (Path p in glyph.path_list) {
-					p.update_region_boundries ();
+					p.update_region_boundaries ();
 					
 					if (p.xmin < xmin) {
 						xmin = p.xmin;

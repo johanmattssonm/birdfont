@@ -57,6 +57,22 @@ public class EditPointHandle  {
 		return n;
 	}
 
+	public void convert_to_line () {
+		switch (type) {
+			case PointType.QUADRATIC:
+				type = PointType.LINE_QUADRATIC;
+				break;
+			case PointType.DOUBLE_CURVE:
+				type = PointType.LINE_DOUBLE_CURVE;
+				break;
+			case PointType.CUBIC:
+				type = PointType.LINE_CUBIC;
+				break;
+			default:
+				break;
+		}
+	}
+
 	public void set_point_type (PointType point_type) {
 		type = point_type;
 	}

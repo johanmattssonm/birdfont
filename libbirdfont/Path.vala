@@ -29,7 +29,7 @@ public class Path {
 	EditPoint? last_point = null;
 	EditPoint? second_last_point = null;
 
-	/** Region boundries */
+	/** Region boundaries */
 	public double xmax = double.MIN;
 	public double xmin = double.MAX;
 	public double ymax = double.MIN;
@@ -135,6 +135,15 @@ public class Path {
 		}
 	}
 
+	public EditPoint get_last_point () {
+		if (points.length () == 0) {
+			warning ("No point");
+			return new EditPoint ();
+		}
+		
+		return points.last ().data;
+	}
+
 	public bool has_direction () {
 		return direction_is_set;
 	}
@@ -147,7 +156,7 @@ public class Path {
 		stroke = width;
 	}
 
-	public void draw_boundries  (Context cr, WidgetAllocation allocation, double view_zoom) {
+	public void draw_boundaries  (Context cr, WidgetAllocation allocation, double view_zoom) {
 		double x = Glyph.reverse_path_coordinate_x (xmin); 
 		double y = Glyph.reverse_path_coordinate_y (ymin);
 		double x2 = Glyph.reverse_path_coordinate_x (xmax);
@@ -601,7 +610,7 @@ public class Path {
 	public void thinner (double ratio) 
 		requires (points.length () > 2)
 	{		
-		update_region_boundries ();
+		update_region_boundaries ();
 		
 		double w = Math.fabs(xmax - xmin);
 		double h = Math.fabs(ymax - ymin);
@@ -838,7 +847,7 @@ public class Path {
 	
 	public bool is_over_boundry_precision (double x, double y, double p) {
 		if (unlikely (ymin == double.MAX || ymin == 10000)) {
-			update_region_boundries ();
+			update_region_boundaries ();
 		}
 		
 		return (ymin - p <= y <= ymax + p) && (xmin - p <= x <= xmax + p);
@@ -846,7 +855,7 @@ public class Path {
 	
 	public bool is_over_boundry (double x, double y) {
 		if (unlikely (ymin == double.MAX)) {
-			warning ("bounding box is not calculated, run update_region_boundries first.");
+			warning ("bounding box is not calculated, run update_region_boundaries first.");
 		}
 
 		return (ymin <= y <= ymax) && (xmin <= x <= xmax);
@@ -856,12 +865,38 @@ public class Path {
 		return !(xmax <= p.xmin || ymax <= p.ymin) || (xmin >= p.xmax || ymin >= p.ymax);
 	}
 	
-	public void add (double x, double y) {
-		add_after (x, y, points.last ());
+	public EditPoint delete_last_point () {
+		unowned List<EditPoint> p;
+		EditPoint r;
+		uint len;
+		
+		len = points.length ();
+		if (unlikely (len == 0)) {
+			warning ("No points in path.");
+			return new EditPoint ();
+		}
+		
+		p = points.last ();
+		r = p.data;
+		points.remove_link (p);
+		
+		if (len > 1) {
+			r.get_prev ().data.next = null;
+			
+			if (r.next != null) {
+				r.get_next ().data.prev = null;
+			}
+		}
+		
+		return r;
+	}
+	
+	public EditPoint add (double x, double y) {
+		return add_after (x, y, points.last ()).data;
 	}
 
-	public void add_point (EditPoint p) {
-		add_point_after (p, points.last ());
+	public EditPoint add_point (EditPoint p) {
+		return add_point_after (p, points.last ()).data;
 	}
 
 	/** Insert a new point after @param previous_point and return a reference 
@@ -872,6 +907,7 @@ public class Path {
 		return add_point_after (p, previous_point);
 	}
 	
+	/** @return a list item pointing to the new point */
 	public unowned List<EditPoint> add_point_after (EditPoint p, List<EditPoint>? previous_point) {
 		unowned List<EditPoint> np;
 		int prev_index;
@@ -931,11 +967,8 @@ public class Path {
 		open = true;
 		edit = true;
 	}
-	
-	public EditPoint? get_last_point () {
-		return last_point;
-	}
 
+	// FIXME: delete this:
 	public EditPoint? get_second_last_point () {
 		return second_last_point;
 	}
@@ -947,10 +980,10 @@ public class Path {
 			ep.y += delta_y;
 		}
 		
-		update_region_boundries ();
+		update_region_boundaries ();
 	}
 
-	private void update_region_boundries_for_point (EditPoint p) {
+	private void update_region_boundaries_for_point (EditPoint p) {
 		EditPointHandle left_handle;
 		EditPointHandle right_handle;
 		
@@ -973,11 +1006,11 @@ public class Path {
 			ymin = p.y;
 		}
 		
-		update_region_boundries_for_handle (left_handle);
-		update_region_boundries_for_handle (right_handle);
+		update_region_boundaries_for_handle (left_handle);
+		update_region_boundaries_for_handle (right_handle);
 	}
 
-	private void update_region_boundries_for_handle (EditPointHandle h) {
+	private void update_region_boundaries_for_handle (EditPointHandle h) {
 		if (h.x () > xmax) {
 			xmax = h.x ();
 		}
@@ -995,7 +1028,7 @@ public class Path {
 		}
 	}
 
-	public void update_region_boundries () {
+	public void update_region_boundaries () {
 		xmax = -10000;
 		xmin = 10000;
 		ymax = -10000;
@@ -1009,7 +1042,7 @@ public class Path {
 		}
 
 		foreach (EditPoint p in points) {
-			update_region_boundries_for_point (p);
+			update_region_boundaries_for_point (p);
 		}
 	}
 		
@@ -1709,14 +1742,14 @@ public class Path {
 			cr.restore ();
 	}
 	
-	public void print_boundries () {
+	public void print_boundaries () {
 		stderr.printf (@"xmax $xmax \n");
 		stderr.printf (@"xmin $xmin \n");
 		stderr.printf (@"ymax $ymax \n");
 		stderr.printf (@"ymin $ymin \n");		
 	}
 	
-	public bool has_region_boundries () {
+	public bool has_region_boundaries () {
 		return !(xmax == -10000 || xmin ==  10000 || ymax == -10000 || ymin ==  10000);
 	}
 	
@@ -1888,7 +1921,7 @@ public class Path {
 		}
 		
 		foreach (Path path in path_list.paths) {
-			path.update_region_boundries ();
+			path.update_region_boundaries ();
 		}
 		
 		return path_list;
@@ -1971,8 +2004,8 @@ public class Path {
 		}
 		
 		// add editpoints on intersections 
-		p0.update_region_boundries ();
-		p1.update_region_boundries ();
+		p0.update_region_boundaries ();
+		p1.update_region_boundaries ();
 		foreach (Intersection inter in il.points) {
 			e = new EditPoint ();
 			p0.get_closest_point_on_path (e, inter.x, inter.y);
@@ -2014,7 +2047,7 @@ public class Path {
 		}
 		
 		foreach (Path pp in path_list.paths) {
-			pp.update_region_boundries ();
+			pp.update_region_boundaries ();
 		}
 
 		// remove duplicate paths
@@ -2241,7 +2274,7 @@ public class Path {
 		path.points.first ().data.recalculate_linear_handles ();
 		points.last ().data.recalculate_linear_handles ();
 		
-		path.points.remove_link (path.points.first ());
+		// FIXME: path.points.remove_link (path.points.first ());
 		
 		// copy remaining points
 		foreach (EditPoint p in path.points) {
@@ -2253,7 +2286,7 @@ public class Path {
 			path.points.remove_link (path.points.first ());
 		}
 		
-		close ();
+		//close ();
 	}
 
 	/** Roatate around coordinate xc, xc. */
@@ -2284,7 +2317,7 @@ public class Path {
 			}
 		}
 
-		update_region_boundries ();
+		update_region_boundaries ();
 	}
 	
 	public void flip_vertical () {
@@ -2305,7 +2338,7 @@ public class Path {
 			hl.move_to_coordinate_internal (lx, -1 * ly);
 		}
 		
-		update_region_boundries ();
+		update_region_boundaries ();
 	}
 
 	public void flip_horizontal () {
@@ -2326,7 +2359,7 @@ public class Path {
 			hl.move_to_coordinate_internal (-1 * lx, ly);
 		}
 		
-		update_region_boundries ();
+		update_region_boundaries ();
 	}
 
 	public void init_point_type () {

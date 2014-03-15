@@ -197,7 +197,7 @@ public class SpinButton : Tool {
 		return (int8) v;
 	}
 
-	public void set_value (string new_value, bool check_boundries = true, bool emit_signal = true) {
+	public void set_value (string new_value, bool check_boundaries = true, bool emit_signal = true) {
 		string v = new_value.replace (",", ".");
 
 		while (v.char_count () < 5) {
@@ -217,12 +217,12 @@ public class SpinButton : Tool {
 		centi = (int8) int.parse (v.substring (v.index_of_nth_char (3), 1));
 		milli = (int8) int.parse (v.substring (v.index_of_nth_char (4), 1));
 		
-		if (check_boundries && get_value () > max / 1000.0) {
+		if (check_boundaries && get_value () > max / 1000.0) {
 			warning (@"Out of bounds ($new_value > $max).");
 			set_value_round (max, false);
 		}
 
-		if (check_boundries && get_value () < min / 1000.0) {
+		if (check_boundaries && get_value () < min / 1000.0) {
 			warning (@"Out of bounds ($new_value < $min).");
 			set_value_round (min, false);
 		}
@@ -232,8 +232,8 @@ public class SpinButton : Tool {
 		}
 	}
 
-	public void set_value_round (double v, bool check_boundries = true, bool emit_signal = true) {
-		set_value (@"$v".replace (",", "."), check_boundries, emit_signal);
+	public void set_value_round (double v, bool check_boundaries = true, bool emit_signal = true) {
+		set_value (@"$v".replace (",", "."), check_boundaries, emit_signal);
 	}
 	
 	public double get_value () {

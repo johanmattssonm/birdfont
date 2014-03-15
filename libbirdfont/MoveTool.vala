@@ -147,7 +147,7 @@ class MoveTool : Tool {
 		
 		move_path = true;
 
-		update_selection_boundries ();
+		update_selection_boundaries ();
 					
 		last_x = x;
 		last_y = y;
@@ -158,7 +158,7 @@ class MoveTool : Tool {
 			selection_y = y;	
 		}
 		
-		update_boundries_for_selection ();	
+		update_boundaries_for_selection ();	
 	}
 	
 	static void select_group () {
@@ -179,8 +179,8 @@ class MoveTool : Tool {
 		}
 	}
 	
-	public static void update_selection_boundries () {
-		get_selection_box_boundries (out selection_box_center_x,
+	public static void update_selection_boundaries () {
+		get_selection_box_boundaries (out selection_box_center_x,
 			out selection_box_center_y, out selection_box_width,
 			out selection_box_height);	
 	}
@@ -202,7 +202,7 @@ class MoveTool : Tool {
 		cr.restore ();
 	}
 	
-	public static void get_selection_box_boundries (out double x, out double y, out double w, out double h) {
+	public static void get_selection_box_boundaries (out double x, out double y, out double w, out double h) {
 		double px, py, px2, py2;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
@@ -300,10 +300,10 @@ class MoveTool : Tool {
 		}		
 	}
 	
-	public static void update_boundries_for_selection () {
+	public static void update_boundaries_for_selection () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		foreach (Path p in glyph.active_paths) {
-			p.update_region_boundries ();
+			p.update_region_boundaries ();
 		}
 	}
 	
@@ -333,7 +333,7 @@ class MoveTool : Tool {
 			p.reverse ();
 		}
 
-		get_selection_box_boundries (out xc2, out yc2, out w, out h); 
+		get_selection_box_boundaries (out xc2, out yc2, out w, out h); 
 
 		dx = -(xc2 - xc);
 		dy = -(yc2 - yc);
@@ -342,7 +342,7 @@ class MoveTool : Tool {
 			p.move (dx, dy);
 		}
 		
-		update_selection_boundries ();
+		update_selection_boundaries ();
 		
 		BirdFont.get_current_font ().touch ();
 	}

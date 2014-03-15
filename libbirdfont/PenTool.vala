@@ -374,7 +374,7 @@ public class PenTool : Tool {
 				selected_handle.move_delta ((x - last_point_x) * precision, (y - last_point_y) * precision);
 			}
 			
-			handle_selection.path.update_region_boundries ();
+			handle_selection.path.update_region_boundaries ();
 			
 			// FIXME: redraw line only
 			glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
@@ -413,7 +413,7 @@ public class PenTool : Tool {
 					glyph.move_selected_edit_point_delta (p, (x - last_point_x) * precision, (y - last_point_y) * precision);
 				}
 				p.recalculate_linear_handles ();
-				ps.path.update_region_boundries ();
+				ps.path.update_region_boundaries ();
 			}
 		}
 		
@@ -747,7 +747,7 @@ public class PenTool : Tool {
 		}
 				
 		foreach (Path merge in glyph.path_list) {
-			// don't join path with it self here
+			// don't join path with itself here
 			if (path == merge) {
 				continue;
 			}
@@ -805,7 +805,7 @@ public class PenTool : Tool {
 	}
 	
 	/** Merge paths if ends are close. */
-	private static bool is_close_to_point (EditPoint ep, double x, double y) {
+	public static bool is_close_to_point (EditPoint ep, double x, double y) {
 		double px, py, distance;
 		
 		px = Glyph.reverse_path_coordinate_x (ep.x);
@@ -866,19 +866,22 @@ public class PenTool : Tool {
 		cr.restore ();
 	}
 	
-	void draw_merge_icon (Context cr) {
+	public static void draw_join_icon (Context cr, double x, double y) {
 		ImageSurface img;
-		double x, y;
-	
 		return_if_fail (tie_icon != null);
 		
 		img = (!) tie_icon;	
 			
 		cr.save ();
-		get_tie_position (out x, out y);
 		cr.set_source_surface (img, x - img.get_width () / 2, y - img.get_height () / 2);
 		cr.paint ();
 		cr.restore ();		
+	}
+
+	void draw_merge_icon (Context cr) {
+		double x, y;
+		get_tie_position (out x, out y);
+		draw_join_icon (cr, x, y);
 	}
 	
 	/** Obtain the position where to ends meet. */
@@ -1071,21 +1074,34 @@ public class PenTool : Tool {
 		
 		remove_all_selected_points ();
 		
-		new_point = glyph.add_new_edit_point (x, y);
+		new_point = add_new_edit_point (x, y);
 		new_point.point.set_selected (true);
-		new_point.path.update_region_boundries ();
 
 		selected_point = new_point.point;
 		active_edit_point = new_point.point;	
 		add_selected_point (selected_point, glyph.active_paths.last ().data);
 
 		move_selected = true;
+	}
+	
+	public static PointSelection add_new_edit_point (int x, int y) {
+		Glyph glyph;
+		PointSelection new_point;
+		glyph = MainWindow.get_current_glyph ();
 		
+		new_point = glyph.add_new_edit_point (x, y);
+		new_point.path.update_region_boundaries ();
+
+		selected_point = new_point.point;
+		active_edit_point = new_point.point;	
+
 		set_point_type (selected_point);
 		set_default_handle_positions ();
+		
+		return new_point;
 	}
 
-	void set_point_type (EditPoint p) {
+	static void set_point_type (EditPoint p) {
 		if (p.prev != null && p.get_prev ().data.right_handle.type == PointType.QUADRATIC) {
 			p.left_handle.type = PointType.QUADRATIC;
 			p.right_handle.type = PointType.LINE_QUADRATIC;
@@ -1151,10 +1167,10 @@ public class PenTool : Tool {
 		double x = Glyph.path_coordinate_x (event_x);
 		double y = Glyph.path_coordinate_y (event_y);
 		
-		if (unlikely (!p.has_region_boundries ())) {
+		if (unlikely (!p.has_region_boundaries ())) {
 			if (p.points.length () > 0) {
 				warning (@"No bounding box. $(p.points.length ())");
-				p.update_region_boundries ();
+				p.update_region_boundaries ();
 			}
 		}
 		
@@ -1457,7 +1473,8 @@ public class PenTool : Tool {
 		ep.set_reflective_handles (false);
 		
 		if (ep.next == null) {
-			warning ("Next is null.");
+			// FIXME: add a new function for this case
+			// warning ("Next is null.");
 		}
 
 		if (ep.prev == null) {

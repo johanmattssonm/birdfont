@@ -344,11 +344,10 @@ public class EditPoint {
 		}
 				
 		right_handle.angle = angle;
-		left_handle.angle = angle;
+		left_handle.angle = angle - PI;
 
 		set_tie_handle (true);
 		eh.move_to_coordinate (right_handle.x (), right_handle.y ());
-		
 	}
 
 	public EditPoint copy () {

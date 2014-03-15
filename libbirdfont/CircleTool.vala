@@ -61,7 +61,7 @@ public class CircleTool : Tool {
 		}
 		
 		if (resize_circle) {
-			circle.update_region_boundries ();
+			circle.update_region_boundaries ();
 			diameter = circle.xmax - circle.xmin;
 			cx = circle.xmin + diameter / 2;
 			cy = circle.ymin + diameter / 2;
@@ -77,7 +77,7 @@ public class CircleTool : Tool {
 			nx = circle.xmin + diameter / 2;
 			ny = circle.ymin + diameter / 2;
 			
-			circle.update_region_boundries ();
+			circle.update_region_boundaries ();
 			circle.move (cx - nx, cy - ny);
 			
 			last_radius = radius;

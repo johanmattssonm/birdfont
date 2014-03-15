@@ -65,7 +65,7 @@ public class Glyph : FontDisplay {
 	List<Line> all_lines = new List<Line> (); 	// vertical, horzontal and grid lines
 	bool show_help_lines = true;
 	bool xheight_lines_visible = false;
-	bool margin_boundries_visible = false;
+	bool margin_boundaries_visible = false;
 	
 	bool unassigned = false;
 	public unichar unichar_code = 0;
@@ -188,7 +188,7 @@ public class Glyph : FontDisplay {
 		return unassigned;
 	}
 
-	public void boundries (out double x1, out double y1, out double x2, out double y2) {
+	public void boundaries (out double x1, out double y1, out double x2, out double y2) {
 		if (path_list.length () == 0) {
 			x1 = 0;
 			y1 = 0;
@@ -203,7 +203,7 @@ public class Glyph : FontDisplay {
 		y2 = path_list.first ().data.ymax;
 				
 		foreach (Path p in path_list) {
-			p.update_region_boundries ();
+			p.update_region_boundaries ();
 						
 			if (p.xmin < x1) x1 = p.xmin;
 			if (p.xmax > x2) x2 = p.xmax;
@@ -212,7 +212,7 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
-	public void selection_boundries (out double x, out double y, out double w, out double h) {
+	public void selection_boundaries (out double x, out double y, out double w, out double h) {
 		double px, py, px2, py2;
 		
 		px = 10000;
@@ -417,7 +417,7 @@ public class Glyph : FontDisplay {
 
 		// top to bottom
 		add_line (top_margin_line);
-		top_margin_line.set_visible (margin_boundries_visible);
+		top_margin_line.set_visible (margin_boundaries_visible);
 		
 		add_line (top_line);
 		top_line.set_visible (glyph_has_top || xheight_lines_visible);
@@ -431,7 +431,7 @@ public class Glyph : FontDisplay {
 		bottom_line.set_visible (CharDatabase.has_descender (unichar_code) || xheight_lines_visible);
 		
 		add_line (bottom_margin_line);
-		bottom_margin_line.set_visible (margin_boundries_visible);
+		bottom_margin_line.set_visible (margin_boundaries_visible);
 	}
 	
 	bool has_top_line () {
@@ -450,12 +450,12 @@ public class Glyph : FontDisplay {
 	}
 		
 	public void set_margin_lines_visible (bool m) {
-		margin_boundries_visible = m;
+		margin_boundaries_visible = m;
 		add_help_lines ();
 	}
 	
 	public bool get_margin_lines_visible () {
-		return margin_boundries_visible;
+		return margin_boundaries_visible;
 	}
 	
 	public void remove_empty_paths () {
@@ -1009,6 +1009,16 @@ public class Glyph : FontDisplay {
 		move_selected_edit_point_coordinates (selected_point, xt, yt);
 	}
 	
+	public void redraw_segment (EditPoint a, EditPoint b) {
+		double margin = 10;
+		double x = Math.fmin (reverse_path_coordinate_x (a.x), reverse_path_coordinate_x (b.x)) - margin;
+		double y = Math.fmin (reverse_path_coordinate_y (a.y), reverse_path_coordinate_y(b.y)) - margin;
+		double w = Math.fabs (reverse_path_coordinate_x (a.x) - reverse_path_coordinate_x(b.x)) + 2 * margin;
+		double h = Math.fabs (reverse_path_coordinate_y (a.y) - reverse_path_coordinate_y (b.y)) + 2 * margin;
+				
+		redraw_area ((int)x, (int)y, (int)w, (int)h);
+	}
+	
 	private void redraw_last_stroke (double x, double y) {
 		// redraw line, if we have more than one new point on path
 		double px = 0;
@@ -1096,7 +1106,7 @@ public class Glyph : FontDisplay {
 	public void redraw_path_region (Path p) {
 		int x, y, w, h;
 			
-		p.update_region_boundries ();
+		p.update_region_boundaries ();
 		
 		x = reverse_path_coordinate_x (p.xmin);
 		y = reverse_path_coordinate_x (p.xmin);
@@ -1152,7 +1162,7 @@ public class Glyph : FontDisplay {
 		reset_zoom ();
 
 		foreach (var p in path_list) {
-			p.update_region_boundries ();
+			p.update_region_boundaries ();
 			
 			if (p.points.length () > 2) {
 				if (p.xmin < ax) ax = p.xmin;
@@ -1419,9 +1429,9 @@ public class Glyph : FontDisplay {
 			((!)background_image).draw (cr, allocation, view_offset_x, view_offset_y, view_zoom);
 		}
 
-		if (unlikely (Preferences.draw_boundries)) {
+		if (unlikely (Preferences.draw_boundaries)) {
 			foreach (unowned Path p in path_list) {
-				p.draw_boundries (cr, allocation, view_zoom);
+				p.draw_boundaries (cr, allocation, view_zoom);
 			}
 		}
 		
@@ -1565,7 +1575,7 @@ public class Glyph : FontDisplay {
 		
 		foreach (Path p in g.path_list) {
 			add_path (p);
-			p.update_region_boundries ();
+			p.update_region_boundaries ();
 		}
 
 		remove_lines ();
@@ -1595,7 +1605,7 @@ public class Glyph : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 
 		remove_empty_paths ();
-		boundries (out x1, out y1, out x2, out y2);
+		boundaries (out x1, out y1, out x2, out y2);
 
 		if (x2 - x1 < 1 || y2 - y1 < 1) { // create an empty thumbnail 
 			img = new ImageSurface (Format.ARGB32, 100, 100);
@@ -1667,7 +1677,7 @@ public class Glyph : FontDisplay {
 		close_path ();
 
 		foreach (Path p in path_list) {
-			p.update_region_boundries ();
+			p.update_region_boundaries ();
 		}		
 		
 		redraw_area (0, 0, allocation.width, allocation.height);

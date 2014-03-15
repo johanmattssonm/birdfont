@@ -99,8 +99,8 @@ class ResizeTool : Tool {
 			}
 
 			if (!rotate_path) {
-				MoveTool.update_boundries_for_selection ();
-				MoveTool.get_selection_box_boundries (out selection_box_center_x,
+				MoveTool.update_boundaries_for_selection ();
+				MoveTool.get_selection_box_boundaries (out selection_box_center_x,
 					out selection_box_center_y, out selection_box_width,
 					out selection_box_height);	
 			}
@@ -150,7 +150,7 @@ class ResizeTool : Tool {
 			p.rotate (rotation - last_rotate, selection_box_center_x, selection_box_center_y);
 		}
 
-		MoveTool.get_selection_box_boundries (out xc2, out yc2, out w, out h); 
+		MoveTool.get_selection_box_boundaries (out xc2, out yc2, out w, out h); 
 
 		dx = -(xc2 - xc);
 		dy = -(yc2 - yc);
@@ -161,7 +161,7 @@ class ResizeTool : Tool {
 		
 		last_rotate = rotation;
 		
-		MoveTool.update_selection_boundries ();
+		MoveTool.update_selection_boundaries ();
 	}
 
 	static bool is_over_rotate_handle (Path p, double x, double y) {

@@ -101,7 +101,7 @@ public class OpenFontFormatReader : Object {
 		directory_table.parse (font_data, this);		
 	}
 
-	public void parse_all_tables () {
+	public void parse_all_tables () throws Error {
 		directory_table.parse_all_tables (font_data, this);
 		
 		if (!directory_table.validate_tables (font_data, file)) {
@@ -109,15 +109,15 @@ public class OpenFontFormatReader : Object {
 		}
 	}
 
-	public void parse_kern_table () {
+	public void parse_kern_table () throws Error {
 		directory_table.parse_kern_table (font_data);
 	}
 
-	public void parse_cmap_table () {
+	public void parse_cmap_table () throws Error {
 		directory_table.parse_cmap_table (font_data);
 	}
 
-	public void parse_head_table () {
+	public void parse_head_table () throws Error {
 		directory_table.parse_head_table (font_data);
 	}
 			

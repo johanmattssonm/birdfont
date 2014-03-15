@@ -1194,7 +1194,7 @@ public class PostTable : Table {
 
 		fd.add_ulong (0); // non zero for monospaced font
 		
-		// mem boundries may be omitted
+		// mem boundaries may be omitted
 		fd.add_ulong (0); // min mem for type 42
 		fd.add_ulong (0); // max mem for type 42
 		
