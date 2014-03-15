@@ -36,6 +36,8 @@ public class DrawingTools : ToolCollection  {
 	
 	public static SpinButton object_stroke;
 	
+	public static Tool move_tool;
+	
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
 		
@@ -66,7 +68,7 @@ public class DrawingTools : ToolCollection  {
 		ZoomTool zoom_tool = new ZoomTool ("zoom_tool");
 		draw_tools.add_tool (zoom_tool);
 
-		Tool move_tool = new MoveTool ("move");
+		move_tool = new MoveTool ("move");
 		draw_tools.add_tool (move_tool);
 		
 		Tool resize_tool = new ResizeTool ("resize");
@@ -75,7 +77,7 @@ public class DrawingTools : ToolCollection  {
 		Tool stroke_tool = new StrokeTool ("stroke"); // create outline from path
 		draw_tools.add_tool (stroke_tool);
 
-		Tool track_tool = new TrackTool ("track"); // draw outline on free hand
+		TrackTool track_tool = new TrackTool ("track"); // draw outline on free hand
 		draw_tools.add_tool (track_tool);
 		
 		// quadratic Bézier points
@@ -117,7 +119,13 @@ public class DrawingTools : ToolCollection  {
 		object_stroke.set_int_step (0.015);
 		
 		object_stroke.new_value_action.connect((self) => {
-			StrokeTool.set_stroke_for_selected_paths (object_stroke.get_value ());
+			if (move_tool.is_selected () && object_stroke.is_selected ()) {
+				StrokeTool.set_stroke_for_selected_paths (object_stroke.get_value ());
+			}
+			
+			if (track_tool.is_selected ()) {
+				track_tool.set_stroke_width (object_stroke.get_value ());
+			}
 		});
 		
 		draw_tool_modifiers.add_tool (object_stroke);	

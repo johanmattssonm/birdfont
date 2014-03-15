@@ -156,7 +156,9 @@ public class Glyph : FontDisplay {
 		if (p != null) {
 			path = (!) p;
 			
-			Toolbox.set_object_stroke (path.stroke);
+			if (Toolbox.get_move_tool ().is_selected ()) {
+				Toolbox.set_object_stroke (path.stroke);
+			}
 			
 			foreach (Path pi in active_paths) {
 				if (pi == p) {

@@ -66,6 +66,10 @@ public class SpinButton : Tool {
 			begin_y = ty;
 			
 			begin_value = get_int_value ();
+			
+			if (button == 1) {
+				set_selected (true);
+			}
 		});
 
 		panel_move_action.connect ((selected, button, tx, ty) => {
@@ -95,6 +99,10 @@ public class SpinButton : Tool {
 
 		panel_release_action.connect ((selected, button, tx, ty) => {
 			value_from_motion = false;
+			
+			if (button == 1) {
+				set_selected (false);
+			}
 		});
 		
 		scroll_wheel_up_action.connect ((selected) => {
@@ -107,7 +115,19 @@ public class SpinButton : Tool {
 			return true;
 		});
 	}
-	
+
+	public static string convert_to_string (double val) {
+		SpinButton sb = new SpinButton ();
+		sb.set_value_round (val);
+		return sb.get_display_value ();
+	}
+
+	public static double convert_to_double (string val) {
+		SpinButton sb = new SpinButton ();
+		sb.set_int_value (val);
+		return sb.get_value ();
+	}
+		
 	public void set_from_text () {
 		TextListener listener = new TextListener (t_("Set"), get_display_value (), t_("Close"));
 		

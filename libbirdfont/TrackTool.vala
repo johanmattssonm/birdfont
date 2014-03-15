@@ -37,8 +37,21 @@ public class TrackTool : Tool {
 	int join_y = -1;
 	bool join_paths = false;
 
+	double stroke_width = 0; 
+
 	public TrackTool (string name) {
+		string sw;
+		
 		base (name, t_("Draw paths on free hand"));
+		
+		sw = Preferences.get ("free_hand_stroke_width");
+		if (sw != "") {
+			stroke_width = SpinButton.convert_to_double (sw);
+		}
+		
+		select_action.connect((self) => {
+			Toolbox.set_object_stroke (stroke_width);
+		});
 		
 		press_action.connect ((self, b, x, y) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
@@ -69,6 +82,7 @@ public class TrackTool : Tool {
 					glyph.open_path ();
 					PenTool.add_new_edit_point (x, y).point;
 					record_new_position (x, y);
+					p.set_stroke (stroke_width);
 				}
 
 				glyph.update_view ();				
@@ -81,9 +95,9 @@ public class TrackTool : Tool {
 		double_click_action.connect ((self, b, x, y) => {
 		});
 
-		release_action.connect ((self, b, ix, iy) => {
-			if (b == 1) {
-				add_endpoint_and_merge (ix, iy);
+		release_action.connect ((self, button, x, y) => {
+			if (button == 1) {
+				add_endpoint_and_merge (x, y);
 			}
 		});
 
@@ -120,6 +134,12 @@ public class TrackTool : Tool {
 				PenTool.draw_join_icon (cairo_context, join_x, join_y);
 			}
 		});
+	}
+
+	public void set_stroke_width (double width) {
+		string w = SpinButton.convert_to_string (width);
+		Preferences.set ("free_hand_stroke_width", w);
+		stroke_width = width;
 	}
 
 	void add_endpoint_and_merge (int x, int y) {

@@ -1473,8 +1473,7 @@ public class PenTool : Tool {
 		ep.set_reflective_handles (false);
 		
 		if (ep.next == null) {
-			// FIXME: add a new function for this case
-			// warning ("Next is null.");
+			warning ("Next is null.");
 		}
 
 		if (ep.prev == null) {
