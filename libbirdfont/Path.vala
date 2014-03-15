@@ -135,8 +135,17 @@ public class Path {
 		}
 	}
 
+	public EditPoint get_first_point () {
+		if (unlikely (points.length () == 0)) {
+			warning ("No point");
+			return new EditPoint ();
+		}
+		
+		return points.first ().data;
+	}
+
 	public EditPoint get_last_point () {
-		if (points.length () == 0) {
+		if (unlikely (points.length () == 0)) {
 			warning ("No point");
 			return new EditPoint ();
 		}

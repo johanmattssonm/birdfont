@@ -37,7 +37,9 @@ public class TrackTool : Tool {
 	int join_y = -1;
 	bool join_paths = false;
 
-	public TrackTool (string tool_tip) {
+	public TrackTool (string name) {
+		base (name, t_("Draw paths on free hand"));
+		
 		press_action.connect ((self, b, x, y) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			Path p;
@@ -178,7 +180,17 @@ public class TrackTool : Tool {
 	public static void merge_paths (Path a, PointSelection b) {
 		Glyph g;
 		Path merged = a.copy ();
-		
+
+		if (a.points.length () < 2) {
+			warning ("Less than two points in path.");
+			return;
+		}
+
+		if (b.path.points.length () < 2) {
+			warning ("Less than two points in path.");
+			return;
+		}
+				
 		if (!b.is_first ()) {
 			b.path.close ();
 			b.path.reverse ();
@@ -191,6 +203,10 @@ public class TrackTool : Tool {
 		
 		g.add_path (merged);
 		
+		a.delete_last_point ();
+		
+		update_corner_handle (a.get_last_point (), b.path.get_first_point ());
+		
 		g.delete_path (a);
 		g.delete_path (b.path);
 		
@@ -199,11 +215,23 @@ public class TrackTool : Tool {
 		merged.recalculate_linear_handles ();
 		merged.reopen ();
 		
+		merged.delete_last_point ();
+		
 		if (PenTool.is_counter_path (merged)) {
 			merged.force_direction (Direction.COUNTER_CLOCKWISE);
 		} else {
 			merged.force_direction (Direction.CLOCKWISE);
 		}
+	}
+
+	static void update_corner_handle (EditPoint end, EditPoint new_start) {
+		EditPointHandle h1, h2;
+		
+		h1 = end.get_right_handle ();
+		h2 = new_start.get_left_handle ();
+		
+		h1.convert_to_line ();
+		h2.convert_to_line ();
 	}
 
 	PointSelection? get_path_with_end_point (int x, int y) {
@@ -296,7 +324,7 @@ public class TrackTool : Tool {
 			update_cycles = 0;
 		}
 		
-		if (update_cycles > 10) {
+		if (update_cycles > 5) { // cycles of 100 ms
 			convert_points_to_line ();
 			last_update  = get_current_time ();
 			add_corner (last_x, last_y);

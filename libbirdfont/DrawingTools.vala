@@ -75,7 +75,7 @@ public class DrawingTools : ToolCollection  {
 		Tool stroke_tool = new StrokeTool ("stroke"); // create outline from path
 		draw_tools.add_tool (stroke_tool);
 
-		Tool track_tool = new TrackTool ("track"); // create outline from path
+		Tool track_tool = new TrackTool ("track"); // draw outline on free hand
 		draw_tools.add_tool (track_tool);
 		
 		// quadratic Bézier points
