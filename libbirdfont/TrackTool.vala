@@ -144,7 +144,7 @@ public class TrackTool : Tool {
 
 	void add_endpoint_and_merge (int x, int y) {
 			Glyph glyph;
-			Path p, m;
+			Path p;
 			PointSelection? open_path = get_path_with_end_point (x, y);
 			PointSelection joined_path;
 			EditPoint ep;
@@ -313,6 +313,7 @@ public class TrackTool : Tool {
 		added_points++;
 
 		PenTool.convert_point_to_line (new_point, false);
+		new_point.set_point_type (PointType.HIDDEN);
 		
 		if (p.points.length () > 1) {
 			glyph.redraw_segment (new_point, new_point.get_prev ().data);

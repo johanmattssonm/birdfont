@@ -1370,7 +1370,6 @@ public class Glyph : FontDisplay {
 		foreach (unowned Path p in path_list) {
 			if (p.stroke > 0) {			
 				stroke = StrokeTool.get_stroke (p, p.stroke);
-				stroke.close ();
 				stroke.draw_outline (cr, allocation, view_zoom);
 			}
 		}

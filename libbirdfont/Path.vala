@@ -395,30 +395,32 @@ public class Path {
 
 		cr.stroke ();
 		
-		if (e.get_right_handle ().selected) {
-			img_right = (!) selected_edit_point_handle_image;
-		} else if (e.get_right_handle ().active) {
-			img_right = (!) active_edit_point_handle_image;
-		} else {
-			img_right = (!) edit_point_handle_image;
-		}
-		
-		if (e.get_left_handle ().selected) {
-			img_left = (!) selected_edit_point_handle_image;
-		} else if (e.get_left_handle ().active) {
-			img_left = (!) active_edit_point_handle_image;
-		} else {
-			img_left = (!) edit_point_handle_image;
-		}
+		if (e.type != PointType.HIDDEN) {
+			if (e.get_right_handle ().selected) {
+				img_right = (!) selected_edit_point_handle_image;
+			} else if (e.get_right_handle ().active) {
+				img_right = (!) active_edit_point_handle_image;
+			} else {
+				img_right = (!) edit_point_handle_image;
+			}
+			
+			if (e.get_left_handle ().selected) {
+				img_left = (!) selected_edit_point_handle_image;
+			} else if (e.get_left_handle ().active) {
+				img_left = (!) active_edit_point_handle_image;
+			} else {
+				img_left = (!) edit_point_handle_image;
+			}
 
-		if (!(is_open () && e == points.last ().data)) {
-			draw_line (handle_right, e, cr, 0.15);
-			draw_image (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
-		}
-		
-		if (!(is_open () && e == points.first ().data)) {
-			draw_line (handle_left, e, cr, 0.15);
-			draw_image (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
+			if (!(is_open () && e == points.last ().data)) {
+				draw_line (handle_right, e, cr, 0.15);
+				draw_image (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
+			}
+			
+			if (!(is_open () && e == points.first ().data)) {
+				draw_line (handle_left, e, cr, 0.15);
+				draw_image (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
+			}
 		}
 	}
 
@@ -427,21 +429,22 @@ public class Path {
 	{	
 		ImageSurface img;
 		
-		if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
-			if (e.is_selected ()) {
-				img = (e.active) ? (!) cubic_active_selected_edit_point_image : (!) cubic_selected_edit_point_image;
+		if (e.type != PointType.HIDDEN) {
+			if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
+				if (e.is_selected ()) {
+					img = (e.active) ? (!) cubic_active_selected_edit_point_image : (!) cubic_selected_edit_point_image;
+				} else {
+					img = (e.active) ? (!) cubic_active_edit_point_image : (!) cubic_edit_point_image;
+				}
 			} else {
-				img = (e.active) ? (!) cubic_active_edit_point_image : (!) cubic_edit_point_image;
+				if (e.is_selected ()) {
+					img = (e.active) ? (!) active_selected_edit_point_image : (!) selected_edit_point_image;
+				} else {
+					img = (e.active) ? (!) active_edit_point_image : (!) edit_point_image;
+				}
 			}
-		} else {
-			if (e.is_selected ()) {
-				img = (e.active) ? (!) active_selected_edit_point_image : (!) selected_edit_point_image;
-			} else {
-				img = (e.active) ? (!) active_edit_point_image : (!) edit_point_image;
-			}			
-		}
-		
-		draw_image (cr, img, e.x, e.y);
+			draw_image (cr, img, e.x, e.y);
+		} 
 	}
 	
 	public static void draw_image (Context cr, ImageSurface img, double x, double y) {
@@ -1634,7 +1637,7 @@ public class Path {
 		}		
 	}
 
-	private void all_of_path (RasterIterator iter, int steps = -1) {
+	public void all_of_path (RasterIterator iter, int steps = -1) {
 		all_segments ((start, stop) => {
 			all_of (start, stop, iter, steps);
 			return true;
@@ -1645,18 +1648,33 @@ public class Path {
 		all_segments ((start, stop) => {
 			all_of (start, stop, (x, y, s) => {
 				double handle_x0, handle_x1, handle_y0, handle_y1;
+				PointType pt;
 		
 				handle_x0 = 0;
 				handle_x1 = 0;
 				handle_y0 = 0;
 				handle_y1 = 0;
 		
-				//FIXME: all beziér paths
-				//double_bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
-				//double_bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);
-
-				bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
-				bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);
+				pt = PenTool.to_curve (start.type);
+				
+				if (unlikely (PenTool.is_line (pt))) {
+					warning (@"Wrong type: $(start.type) ($pt)");
+				}
+				
+				switch (pt) {
+					case PointType.QUADRATIC: 
+						handle_x0 = quadratic_bezier_vector (s, start.x, start.get_right_handle ().x (), stop.x);
+						handle_y0 = quadratic_bezier_vector (s, start.y, start.get_right_handle ().y (), stop.y);
+						break;
+					case PointType.DOUBLE_CURVE:				
+						double_bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
+						double_bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);
+						break;
+					default:
+						bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
+						bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);
+						break;
+				}
 				
 				iter (start, stop, x, y, handle_x0, handle_x1, handle_y0, handle_y1, s);
 				return true;

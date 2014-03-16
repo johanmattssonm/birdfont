@@ -25,7 +25,8 @@ public enum PointType {
 	DOUBLE_CURVE,        // two quadratic points with a hidden point half way between the two line handles
 	QUADRATIC,
 	END,
-	FLOATING
+	FLOATING,
+	HIDDEN
 }
 
 public class EditPoint {
@@ -69,6 +70,10 @@ public class EditPoint {
 			x = 0;
 			y = 0;
 		}
+	}
+
+	public void set_point_type (PointType t) {
+		type = t;
 	}
 
 	public double get_corner_angle () {

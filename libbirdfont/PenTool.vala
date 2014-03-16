@@ -1581,7 +1581,7 @@ public class PenTool : Tool {
 	}
 
 	public static PointType to_curve (PointType t) {
-		switch (DrawingTools.point_type) {
+		switch (t) {
 			case PointType.LINE_QUADRATIC:
 				return PointType.QUADRATIC;
 			case PointType.LINE_DOUBLE_CURVE:

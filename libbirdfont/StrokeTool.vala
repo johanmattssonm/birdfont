@@ -56,110 +56,43 @@ public class StrokeTool : Tool {
 
 		new_path = add_tangent_points (p);
 		stroked = change_stroke_width (new_path, thickness);
-		
+				
 		stroked.reverse ();
+		
+		if (p.is_open ()) {
+			remove_end_corner (stroked);
+		} else {
+			stroked.close ();
+		}
+		
 		return stroked;
 	}
 
-	static Path add_tangent_points (Path p) {
-		Path new_path = new Path ();
-		int steps = 3;
-		
-		p.create_list ();
-		p.all_vectors ((start, stop, px, py, handle_x0, handle_x1, handle_y0, handle_y1, position) => {
-			EditPoint ep;
-			PointType right, left;
-			
-			ep = new EditPoint (px, py);
-			
-			right = start.get_right_handle ().type;
-			left = stop.get_right_handle ().type;
-			
-			if (right == PointType.LINE_QUADRATIC && left == PointType.LINE_QUADRATIC) {
-				ep.get_right_handle ().set_point_type (PointType.LINE_QUADRATIC);
-				ep.get_left_handle ().set_point_type (PointType.LINE_QUADRATIC);
-				ep.type = PointType.QUADRATIC;
-			} else if (right == PointType.LINE_CUBIC && left == PointType.LINE_CUBIC) {
-				ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
-				ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
-				ep.type = PointType.LINE_CUBIC;
-			} else if (right == PointType.LINE_DOUBLE_CURVE && left == PointType.LINE_DOUBLE_CURVE) {
-				ep.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
-				ep.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
-				ep.type = PointType.DOUBLE_CURVE;
-				
-				if (position == 0) {
-					ep.left_handle = start.left_handle.copy ();
-					ep.right_handle = start.right_handle.copy ();
-				
-					ep.get_left_handle ().length *= 0.833;
-					ep.get_right_handle ().length *= 0.833;
-
-				} else {
-					ep.get_left_handle ().set_point_type (PointType.CUBIC);
-					ep.get_right_handle ().set_point_type (PointType.CUBIC);
-						
-					ep.get_left_handle ().parent = ep;
-					ep.get_right_handle ().parent = ep;
-					
-					ep.get_left_handle ().move_to_coordinate (handle_x0, handle_y0);
-					ep.get_right_handle ().move_to_coordinate (handle_x1, handle_y1);
-				}
-				
-			} else if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
-				ep.get_left_handle ().move_to_coordinate (handle_x1, handle_y1);
-				ep.get_right_handle ().move_to_coordinate (handle_x0, handle_y0);
-
-				ep.get_left_handle ().set_point_type (PointType.DOUBLE_CURVE);	
-				ep.get_right_handle ().set_point_type (PointType.DOUBLE_CURVE);
-				
-				ep.type = PointType.DOUBLE_CURVE;
-			} else if (right == PointType.QUADRATIC) {		
-				ep.get_right_handle ().move_to_coordinate (handle_x0, handle_y0);
-				
-				ep.get_left_handle ().set_point_type (PointType.QUADRATIC);	
-				ep.get_right_handle ().set_point_type (PointType.QUADRATIC);
-				
-				ep.get_left_handle ().move_to_coordinate_internal (0, 0);
-				
-				ep.type = PointType.QUADRATIC;				
-			} else {
-				
-				if (position == 0) {
-					ep.left_handle = start.left_handle.copy ();
-					ep.right_handle = start.right_handle.copy ();
-				
-					ep.get_left_handle ().length *= 0.833;
-					ep.get_right_handle ().length *= 0.833;
-
-				} else {
-					ep.get_left_handle ().set_point_type (PointType.CUBIC);
-					ep.get_right_handle ().set_point_type (PointType.CUBIC);
-						
-					ep.get_left_handle ().parent = ep;
-					ep.get_right_handle ().parent = ep;
-					
-					ep.get_left_handle ().move_to_coordinate (handle_x0, handle_y0);
-					ep.get_right_handle ().move_to_coordinate (handle_x1, handle_y1);
-				}
-
-				ep.type = PointType.LINE_CUBIC;
-			}
-			ep.get_left_handle ().parent = ep;
-			ep.get_right_handle ().parent = ep;
-			
-			new_path.add_point (ep);
-			
-			return true;
-		}, steps);
-		
-		new_path.create_list ();
-		
-		foreach (EditPoint e in new_path.points) {			
-			e.get_left_handle ().length /= 2;	
-			e.get_right_handle ().length /= 2;
+	static void remove_end_corner (Path stroked) {
+		if (stroked.points.length () < 2) {
+			warning ("points < 2");
+			return;
 		}
 		
+		stroked.points.remove_link (stroked.points.last ());
+		stroked.points.remove_link (stroked.points.last ());
+	}
+
+	static Path add_tangent_points (Path p) {
+		Path new_path = p.copy ();
+		int steps = 4;
+				
+		p.all_of_path ((x, y, step) => {
+				EditPoint ep = new EditPoint ();
+				
+				if (step != 0 && step != 1) {
+					new_path.get_closest_point_on_path (ep, x, y);
+					new_path.insert_new_point_on_path (ep);
+				}
+				
+				return true;
+			}, steps);
+			
 		return new_path;
 	}
 
@@ -193,9 +126,13 @@ public class StrokeTool : Tool {
 			end_point = (k == 0 || k == npoints - 1);
 			k++;
 
-			ep.x = nx;
-			ep.y = ny;
-
+			if (k == 0) {
+				
+			} else {
+				ep.x = nx;
+				ep.y = ny;
+			}
+			
 			if (e.is_corner ()) {
 				// add new points in order to preserve the stroke
 				corner1 = e.copy ();
@@ -216,7 +153,6 @@ public class StrokeTool : Tool {
 					stroked.insert_new_point_on_path (corner2);
 				}
 				
-			
 				corner1.x += cos (e.get_right_handle ().angle + PI / 2) * 2 * thickness;
 				corner1.y += sin (e.get_right_handle ().angle + PI / 2) * 2 * thickness;
 
@@ -275,9 +211,6 @@ public class StrokeTool : Tool {
 
 	public static void get_new_position_delta (EditPoint e, bool clockwise, double thickness, out double strokex, out double strokey) {
 			double ra, la;
-			double len_tot;
-			double len_r, len_l;
-			
 			double avg_angle;
 			double angle;
 			
@@ -288,11 +221,6 @@ public class StrokeTool : Tool {
 			
 			ra = e.get_right_handle ().angle;
 			la = e.get_left_handle ().angle;
-			
-			len_r = e.get_right_handle ().length;
-			len_l = e.get_left_handle ().length;
-			
-			len_tot = len_r + len_l;
 			
 			avg_angle = (la + ra + PI) / 2.0;
 
