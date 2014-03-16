@@ -354,7 +354,7 @@ public class Path {
 		yd =  - en.y;		
 	}
 		
-	/** Line points relative to center. */
+	/** Line points relative to centrum. */
 	public static void get_line_points (EditPoint e, EditPoint en, out double xa, out double ya, out double xb, out double yb) {
 		double xc = Glyph.xc ();
 		double yc = Glyph.yc ();

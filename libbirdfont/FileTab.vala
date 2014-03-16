@@ -135,9 +135,24 @@ public class FileTab : FontDisplay {
 			return;
 		}
 
+		if (is_null (recent_fonts.data)) {
+			warning ("Recent font 1 has no data");
+			return;
+		}
+		
 		foreach (Font font in recent_fonts) {
+			
+			if (is_null (font)) {
+				warning ("Can't find font in list.");
+				break;
+			}
+
+			if (is_null (font.font_file)) {
+				warning ("File is not set for font.");
+				break;
+			}
+						
 			if (i == r) {
-				return_if_fail (font.font_file != null);
 				load_font ((!) font.font_file);
 				open_file ();
 			}

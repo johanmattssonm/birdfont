@@ -189,8 +189,9 @@ public class TrackTool : Tool {
 
 			if (DrawingTools.get_selected_point_type () == PointType.QUADRATIC) {
 				foreach (EditPoint e in p.points) {
-						e.set_tie_handle (true);
+					if (e.tie_handles) {
 						e.process_tied_handle ();							
+					}
 				}
 			}
 					

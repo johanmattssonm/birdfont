@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -118,17 +118,17 @@ public class Line : GLib.Object {
 			p = Glyph.reverse_path_coordinate_x (pos);
 			queue_draw_area ((int)p - 100, 0, 200, g.allocation.height);
 		} else {
-			p = Glyph.reverse_path_coordinate_y (-pos);
+			p = Glyph.reverse_path_coordinate_y (pos);
 			queue_draw_area (0, (int)p - 100, g.allocation.width, 300);
 		}
 	}	
 	
-	public void move_line_to (double x, double y, WidgetAllocation allocation) {
+	public void move_line_to (int x, int y, WidgetAllocation allocation) {
 		set_move (true);
 		event_move_to (x, y, allocation);
 	}
 	
-	public bool event_move_to (double x, double y, WidgetAllocation allocation) {
+	public bool event_move_to (int x, int y, WidgetAllocation allocation) {
 		double p, c;
 		bool a = false;
 		Glyph g = MainWindow.get_current_glyph ();
@@ -143,10 +143,8 @@ public class Line : GLib.Object {
 
 		if (is_vertical ()) { // over line handle (y)
 			if (y > g.allocation.height - 10) {
-				
-				p = get_coordinate ();
-
-				c = x * ivz + g.view_offset_x;
+				p = pos;
+				c = Glyph.path_coordinate_x (x);
 				a = (p - margin * ivz <= c <= p + margin * ivz);
 			}
 					
@@ -156,10 +154,10 @@ public class Line : GLib.Object {
 
 			set_active (a);
 			
-		} else { // over line handle (x
+		} else { // over line handle (x)
 			if (x > g.allocation.width - 10) {
-				p = get_coordinate ();
-				c = y * ivz + g.view_offset_y;
+				p = pos;
+				c = Glyph.path_coordinate_y (y);
 				a = (p - margin * ivz <= c <= p + margin * ivz);
 			}
 			
@@ -181,16 +179,12 @@ public class Line : GLib.Object {
 				if (GridTool.is_visible ()) {
 					GridTool.tie_coordinate (ref pos, ref none);
 				}
-				
 				redraw_line (); // draw at new position
 			} else {
-				// FIXME: flip the y axis for lines
+				pos = Glyph.path_coordinate_y (y);
+				
 				if (GridTool.is_visible ()) {
-					tpy = Glyph.path_coordinate_y (y);
-					GridTool.tie_coordinate (ref none, ref tpy);
-					pos = -tpy;
-				} else {
-					pos = -Glyph.path_coordinate_y (y);
+					GridTool.tie_coordinate (ref none, ref pos);
 				}
 				redraw_line ();
 			}
@@ -223,20 +217,16 @@ public class Line : GLib.Object {
 		return vertical;
 	}
 
-	public double get_coordinate () {
-		Glyph g = MainWindow.get_current_glyph ();
-		double t = (is_vertical ()) ? (g.allocation.width / 2.0) : (g.allocation.height / 2.0);
-		return pos + t;
+	public int get_position_pixel () {
+		if (is_vertical ()) {
+			return Glyph.reverse_path_coordinate_x (pos);
+		}
+		
+		return Glyph.reverse_path_coordinate_y (pos) ;
 	}
 	
 	public double get_pos () {
 		return pos;
-	}
-	
-	private double get_handle_size () {
-		Glyph g = MainWindow.get_current_glyph ();
-		double ivz = 1/g.view_zoom;
-		return (get_active ()) ? (10 * ivz) : (5 * ivz);
 	}
 	
 	public void draw (Context cr, WidgetAllocation allocation) {
@@ -245,23 +235,22 @@ public class Line : GLib.Object {
 		double p, h, w;
 		double ivz = 1/g.view_zoom;
 
-		double size = get_handle_size ();
+		double size = (active) ? 8 : 5;
 		
 		if (!visible) return;
 		
 		cr.save ();
-		cr.set_line_width (ivz);
+		cr.set_line_width (1);
 		
 		if (active) cr.set_source_rgba (0, 0, 0.3, 1);
 		else cr.set_source_rgba (r, this.g, b, a);
 		
 		// Line
 		if (is_vertical ()) {
-			p = get_coordinate ();
+			p = Glyph.reverse_path_coordinate_x (pos);
+			h = g.allocation.height;
 			
-			h = g.allocation.height * ivz + g.view_offset_y;
-			
-			cr.move_to (p, g.view_offset_y);
+			cr.move_to (p, 0);
 			cr.line_to (p, h);
 			cr.stroke ();
 
@@ -277,11 +266,10 @@ public class Line : GLib.Object {
 			}
 			
 		} else {
-			p = get_coordinate ();
+			p = Glyph.reverse_path_coordinate_y (pos);
+			w = g.allocation.width;
 			
-			w = g.allocation.width * ivz  + g.view_offset_x;
-			
-			cr.move_to (g.view_offset_x, p);
+			cr.move_to (0, p);
 			cr.line_to (w, p);	
 			cr.stroke ();
 			
@@ -298,11 +286,11 @@ public class Line : GLib.Object {
 		// Label
 		if (get_active ()) {				 
 			if (is_vertical ()) {
-				h = g.allocation.height * ivz + g.view_offset_y;
-				cr.move_to (p + 8*ivz, h - 30*ivz);
+				h = g.allocation.height;
+				cr.move_to (p + 8 * ivz, h - 30 * ivz);
 			} else {
-				w = g.allocation.width * ivz + g.view_offset_x;
-				cr.move_to (w - 70*ivz, p + 15*ivz);
+				w = g.allocation.width;
+				cr.move_to (w - 70 * ivz, p + 15 * ivz);
 			}
 
 			cr.set_font_size (12 * ivz);

@@ -131,16 +131,14 @@ class BirdFontFile {
 			os.put_string (@"<copyright>$(font.copyright)</copyright>\n");
 			
 			os.put_string ("\n");
-			os.put_string ("<lines>\n");
-			
+			os.put_string ("<horizontal>\n");
 			os.put_string (@"\t<top_limit>$(font.top_limit)</top_limit>\n");
 			os.put_string (@"\t<top_position>$(font.top_position)</top_position>\n");
 			os.put_string (@"\t<x-height>$(font.xheight_position)</x-height>\n");
 			os.put_string (@"\t<base_line>$(font.base_line)</base_line>\n");
 			os.put_string (@"\t<bottom_position>$(font.bottom_position)</bottom_position>\n");
 			os.put_string (@"\t<bottom_limit>$(font.bottom_limit)</bottom_limit>\n");
-			
-			os.put_string ("</lines>\n\n");
+			os.put_string ("</horizontal>\n\n");
 
 			foreach (string gv in font.grid_width) {
 				os.put_string (@"<grid width=\"$(gv)\"/>\n");
@@ -493,9 +491,14 @@ class BirdFontFile {
 				parse_glyph_collection (iter);
 			}
 
+			// horizontal lines in the old format
 			if (iter->name == "lines") {
 				parse_font_boundaries (iter);
 			}
+			
+			if (iter->name == "horizontal") {
+				parse_horizontal_lines (iter);
+			}			
 
 			if (iter->name == "grid") {
 				parse_grid (iter);
@@ -807,7 +810,7 @@ class BirdFontFile {
 		}		
 	}
 	
-	private void parse_font_boundaries (Xml.Node* node) {
+	private void parse_horizontal_lines (Xml.Node* node) {
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "top_limit" && "" != iter->children->content) {
 				font.top_limit = parse_double_from_node (iter);
@@ -831,6 +834,35 @@ class BirdFontFile {
 			
 			if (iter->name == "bottom_limit" && "" != iter->children->content) {
 				font.bottom_limit = parse_double_from_node (iter);
+			}
+		}	
+	}
+	
+	/** @deprecated horizontal in older .bf files */
+	private void parse_font_boundaries (Xml.Node* node) {
+		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
+			if (iter->name == "top_limit" && "" != iter->children->content) {
+				font.top_limit = -parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "top_position" && "" != iter->children->content) {
+				font.top_position = -parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "x-height" && "" != iter->children->content) {
+				font.xheight_position = -parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "base_line" && "" != iter->children->content) {
+				font.base_line = -parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "bottom_position" && "" != iter->children->content) {
+				font.bottom_position = -parse_double_from_node (iter);
+			}
+			
+			if (iter->name == "bottom_limit" && "" != iter->children->content) {
+				font.bottom_limit = -parse_double_from_node (iter);
 			}
 		}			
 	}

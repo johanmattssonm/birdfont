@@ -554,7 +554,7 @@ public class Glyph : FontDisplay {
 		return name;
 	}
 				
-	private void help_line_event (double x, double y) {
+	private void help_line_event (int x, int y) {
 		bool m = false;
 		
 		foreach (Line line in vertical_help_lines) {
@@ -615,8 +615,7 @@ public class Glyph : FontDisplay {
 			return;
 		}
 		
-		help_line_event (x, y);
-		
+		help_line_event ((int) x, (int) y);
 		t.move_action (t, (int) x, (int) y);
 
 		motion_x = x * ivz () - xc () + view_offset_x;
@@ -1257,24 +1256,22 @@ public class Glyph : FontDisplay {
 	public Line get_lower_line () 
 		requires (horizontal_help_lines.length () > 2)
 	{
-		return horizontal_help_lines.last ().prev.data;
+		return get_line ("baseline");
 	}
 		
 	/** Set default zoom. See default_zoom. */
 	public void set_default_zoom () {
-		int l, t, b, r;
-		
-		double bottom = 0;
-		double top = 0;
-		double left = 0;
-		double right = 0;
+		int bottom = 0;
+		int top = 0;
+		int left = 0;
+		int right = 0;
 	
 		unowned List<Line>? n = horizontal_help_lines;
 		unowned List<Line>? v = vertical_help_lines;
 		
 		if (unlikely (n == null)) {
 				warning ("n == null");
-				warning (@"Can not set default zoom for $name, help lines are not available.");
+				warning (@"Can not set default zoom for $name, lines are not available.");
 		}
 		
 		return_if_fail (v != null);
@@ -1283,18 +1280,13 @@ public class Glyph : FontDisplay {
 
 		reset_zoom ();
 		
-		bottom = -get_lower_line ().get_pos ();
-		top = -get_upper_line ().get_pos ();
+		bottom = get_lower_line ().get_position_pixel ();
+		top = get_upper_line ().get_position_pixel ();
 
-		left = vertical_help_lines.last ().data.get_pos ();
-		right = vertical_help_lines.first ().data.get_pos ();
+		left = vertical_help_lines.last ().data.get_position_pixel ();
+		right = vertical_help_lines.first ().data.get_position_pixel ();
 		
-		l = reverse_path_coordinate_x (left);
-		t = reverse_path_coordinate_y (top);
-		r = reverse_path_coordinate_x (right); 
-		b = reverse_path_coordinate_y (bottom);
-		
-		set_zoom_area (l + 10, t - 10, r - 10, b + 10);
+		set_zoom_area (left + 10, top - 10, right - 10, bottom + 10);
 		set_zoom_from_area ();
 	}
 	
@@ -1446,8 +1438,6 @@ public class Glyph : FontDisplay {
 
 		if (show_help_lines) {
 			cmp.save ();
-			cmp.scale (view_zoom, view_zoom);
-			cmp.translate (-view_offset_x, -view_offset_y);
 			draw_help_lines (cmp);
 			cmp.restore ();
 		}
