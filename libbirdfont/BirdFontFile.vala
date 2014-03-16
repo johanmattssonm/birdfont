@@ -1109,8 +1109,13 @@ class BirdFontFile {
 		ep1.recalculate_linear_handles ();
 	}
 	
-	private static void close (Path path) {
+	public static void close (Path path) {
 		EditPoint ep1, ep2;
+		
+		if (path.points.length () < 2) {
+			warning ("Less  than two points in path.");
+			return;
+		}
 		
 		// last point is first
 		ep1 = path.points.last ().data;

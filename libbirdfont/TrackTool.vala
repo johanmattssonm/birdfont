@@ -80,8 +80,8 @@ public class TrackTool : Tool {
 					p = new Path ();
 					glyph.add_path (p);
 					glyph.open_path ();
+					
 					PenTool.add_new_edit_point (x, y).point;
-					record_new_position (x, y);
 					p.set_stroke (stroke_width);
 				}
 
@@ -144,9 +144,10 @@ public class TrackTool : Tool {
 
 	void add_endpoint_and_merge (int x, int y) {
 			Glyph glyph;
-			Path p;
+			Path p, m;
 			PointSelection? open_path = get_path_with_end_point (x, y);
 			PointSelection joined_path;
+			EditPoint ep;
 			glyph = MainWindow.get_current_glyph ();
 			
 			if (glyph.path_list.length () == 0) {
@@ -163,9 +164,14 @@ public class TrackTool : Tool {
 				joined_path = (!) open_path;
 				 
 				if (joined_path.path == p) {
-					p.close (); 
+					delete_last_points_at (x, y);
+					p.points.remove_link (p.points.first ());
+					glyph.close_path ();
 				} else {
-					merge_paths (p, joined_path);
+					p = merge_paths (p, joined_path);
+					if (!p.is_open ()) {
+						glyph.close_path ();
+					}
 				}
 			} else {
 				add_corner (x, y);
@@ -177,13 +183,17 @@ public class TrackTool : Tool {
 				return;
 			}
 			
-			p.points.first ().data.set_tie_handle (false);
-			p.points.last ().data.set_tie_handle (false);
+			ep = p.get_first_point ();
+			ep.process_tied_handle ();	
+			ep.set_tie_handle (false);
+			ep.recalculate_linear_handles ();
+			
+			//p.delete_last_point ();
 			
 			p.create_list ();
 			
 			if (glyph.path_list.length () < 2) {
-				warning ("Points have been deleted");
+				warning ("Less than two points");
 				return;
 			}
 
@@ -194,22 +204,28 @@ public class TrackTool : Tool {
 					}
 				}
 			}
-					
+
+			if (PenTool.is_counter_path (p)) {
+				p.force_direction (Direction.COUNTER_CLOCKWISE);
+			} else {
+				p.force_direction (Direction.CLOCKWISE);
+			}
+							
 			glyph.update_view ();
 	}
 
-	public static void merge_paths (Path a, PointSelection b) {
+	public static Path merge_paths (Path a, PointSelection b) {
 		Glyph g;
 		Path merged = a.copy ();
 
 		if (a.points.length () < 2) {
 			warning ("Less than two points in path.");
-			return;
+			return merged;
 		}
 
 		if (b.path.points.length () < 2) {
 			warning ("Less than two points in path.");
-			return;
+			return merged;
 		}
 				
 		if (!b.is_first ()) {
@@ -236,13 +252,7 @@ public class TrackTool : Tool {
 		merged.recalculate_linear_handles ();
 		merged.reopen ();
 		
-		merged.delete_last_point ();
-		
-		if (PenTool.is_counter_path (merged)) {
-			merged.force_direction (Direction.COUNTER_CLOCKWISE);
-		} else {
-			merged.force_direction (Direction.CLOCKWISE);
-		}
+		return merged;
 	}
 
 	static void update_corner_handle (EditPoint end, EditPoint new_start) {
@@ -410,7 +420,7 @@ public class TrackTool : Tool {
 	/** @return the last removed point. */
 	EditPoint convert_points_to_line () {
 		EditPoint ep, last_point;
-		double sum_x, sum_y, sum_angle, nx, ny;
+		double sum_x, sum_y, nx, ny;
 		int px, py;
 		EditPoint average;
 		Path p;
@@ -437,7 +447,6 @@ public class TrackTool : Tool {
 
 		sum_x = 0;
 		sum_y = 0;
-		sum_angle = 0;
 		
 		List<EditPoint> points = new List<EditPoint> ();
 		

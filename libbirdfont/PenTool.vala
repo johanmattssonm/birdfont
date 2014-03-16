@@ -1117,7 +1117,7 @@ public class PenTool : Tool {
 		} else {
 			p.left_handle.type = PointType.LINE_CUBIC;
 			p.right_handle.type = PointType.LINE_CUBIC;
-			p.type = PointType.CUBIC;				
+			p.type = PointType.CUBIC;		
 		}
 	}
 
