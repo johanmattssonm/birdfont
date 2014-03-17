@@ -389,6 +389,23 @@ public class EditPoint {
 		return (!) next;
 	}
 	
+	public unowned List<EditPoint>? get_link_item () {
+		
+		if (unlikely (prev == null && next == null)) {
+			warning ("Need prev or next, create a list first.");
+		}
+		
+		if (prev != null) {
+			return ((!) prev).data.get_next ();
+		}
+		
+		if (next != null) {
+			return ((!) next).data.get_prev ();
+		}
+		
+		return null;	
+	}
+	
 	public unowned List<EditPoint> get_list () {
 		return get_next ().first ();
 	}

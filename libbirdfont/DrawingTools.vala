@@ -126,6 +126,10 @@ public class DrawingTools : ToolCollection  {
 			if (track_tool.is_selected ()) {
 				track_tool.set_stroke_width (object_stroke.get_value ());
 			}
+			
+			if (pen_tool.is_selected ()) {
+				pen_tool.set_stroke_width (object_stroke.get_value ());
+			}
 		});
 		
 		draw_tool_modifiers.add_tool (object_stroke);	

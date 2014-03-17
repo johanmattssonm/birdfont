@@ -69,7 +69,9 @@ public class TrackTool : Tool {
 				
 				if (join_paths) {
 					ps = get_path_with_end_point (x, y);
-					return_if_fail (ps != null);
+					if (unlikely (ps == null)) {
+						warning ("No end point.");
+					}
 					end_point = (!) ps;
 					if (end_point.is_first ()) {
 						end_point.path.reverse ();
@@ -214,7 +216,7 @@ public class TrackTool : Tool {
 			glyph.update_view ();
 	}
 
-	public static Path merge_paths (Path a, PointSelection b) {
+	private static Path merge_paths (Path a, PointSelection b) {
 		Glyph g;
 		Path merged = a.copy ();
 

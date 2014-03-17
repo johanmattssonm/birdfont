@@ -24,7 +24,7 @@ public class FileTab : FontDisplay {
 	double top = 60;
 	WidgetAllocation allocation = new WidgetAllocation ();
 	List<Font> recent_fonts = new List<Font> ();
-	List<string> backups = new List<string> ();
+	List<string> backups = new List<string> (); // FIXME: use ref counted object
 	
 	public signal void open_file ();
 	
@@ -160,7 +160,8 @@ public class FileTab : FontDisplay {
 		}
 
 		if (is_null (backups)) {
-			warning ("No backups");
+			// FIXME:
+			// warning ("No backups");
 			return;
 		}
 

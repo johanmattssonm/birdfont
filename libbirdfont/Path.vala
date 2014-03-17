@@ -1341,7 +1341,6 @@ public class Path {
 			return true;
 		});
 
-		// this is a point on a line		
 		if (right == PointType.LINE_QUADRATIC && left == PointType.LINE_QUADRATIC) {
 			ep.get_right_handle ().set_point_type (PointType.LINE_QUADRATIC);
 			ep.get_left_handle ().set_point_type (PointType.LINE_QUADRATIC);
@@ -1438,6 +1437,11 @@ public class Path {
 		EditPoint next;
 		double step = 0;
 
+		if (points.length () == 0) {
+			warning ("Empty path.");
+			return;
+		}
+
 		if (points.length () == 1) {
 			edit_point.x = i.data.x;
 			edit_point.y = i.data.y;
@@ -1446,7 +1450,6 @@ public class Path {
 			edit_point.next = i;
 			
 			exit = true;
-			
 			return;
 		}
 		
@@ -1493,6 +1496,10 @@ public class Path {
 			});
 		}
 
+		if (previous_point == null && is_open ()) {
+			previous_point = points.last ();
+		}
+		
 		if (previous_point == null) {
 			warning (@"previous_point == null, points.length (): $(points.length ())");
 			return;
@@ -1616,7 +1623,7 @@ public class Path {
 		}	
 	}
 
-	private void all_segments (SegmentIterator iter) {
+	public void all_segments (SegmentIterator iter) {
 		unowned List<EditPoint> i, next;
 		
 		if (points.length () < 2) {
@@ -1644,6 +1651,7 @@ public class Path {
 		});
 	}
 
+	// FIXME: DELETE
 	public void all_vectors (VectorIterator iter, int steps = -1) {
 		all_segments ((start, stop) => {
 			all_of (start, stop, (x, y, s) => {

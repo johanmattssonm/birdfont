@@ -51,49 +51,163 @@ public class StrokeTool : Tool {
 	}
 	
 	public static Path get_stroke (Path p, double thickness) {
+		Path counter, outline, merged;
+		
+		if (!p.is_open ()) {
+			merged = create_stroke (p, thickness);
+		} else {
+			outline = create_stroke (p, thickness);
+			counter = create_stroke (p, -1 * thickness);
+			merged = merge_strokes (outline, counter);
+		}
+		
+		return merged;
+	}
+	
+	/** Create one stroke from the outline and counter stroke and close the 
+	 * open endings.
+	 */
+	static Path merge_strokes (Path stroke, Path counter) {
+		Glyph g;
+		Path merged = stroke.copy ();
+
+		if (stroke.points.length () < 3) {
+			warning ("Missing points.");
+			return merged;
+		}
+
+		if (counter.points.length () < 3) {
+			warning ("Missing points.");
+			return merged;
+		}
+						
+		counter.reverse ();
+		
+		counter.get_last_point ().get_right_handle ().convert_to_line ();
+		counter.get_first_point ().get_left_handle ().convert_to_line ();
+
+		merged.get_last_point ().get_right_handle ().convert_to_line ();
+		merged.get_first_point ().get_left_handle ().convert_to_line ();
+				
+		merged.append_path (counter);
+		merged.close ();
+		merged.recalculate_linear_handles ();
+		
+		return merged;
+	}
+	
+	static Path create_stroke (Path p, double thickness) {
 		Path new_path;
 		Path stroked;
 
 		new_path = add_tangent_points (p);
-		stroked = change_stroke_width (new_path, thickness);
-				
-		stroked.reverse ();
 		
-		if (p.is_open ()) {
-			remove_end_corner (stroked);
+		if (new_path.points.length () >= 2) {
+			stroked = change_stroke_width (new_path, thickness);
+
+			if (p.is_open ()) {
+				remove_end_corner (stroked);
+			} else {
+				stroked.reverse ();
+				stroked.close ();
+			}
 		} else {
-			stroked.close ();
+			// TODO: create stroke for path with one point
+			stroked = new Path ();
 		}
 		
 		return stroked;
 	}
 
 	static void remove_end_corner (Path stroked) {
-		if (stroked.points.length () < 2) {
-			warning ("points < 2");
+		if (stroked.points.length () < 4) {
+			warning ("points < 4");
 			return;
 		}
 		
 		stroked.points.remove_link (stroked.points.last ());
 		stroked.points.remove_link (stroked.points.last ());
+		
+		//stroked.points.remove_link (stroked.points.first ());
+		stroked.points.remove_link (stroked.points.first ());
 	}
 
 	static Path add_tangent_points (Path p) {
-		Path new_path = p.copy ();
+		Path path = p.copy ();
 		int steps = 4;
-				
-		p.all_of_path ((x, y, step) => {
-				EditPoint ep = new EditPoint ();
-				
-				if (step != 0 && step != 1) {
-					new_path.get_closest_point_on_path (ep, x, y);
-					new_path.insert_new_point_on_path (ep);
-				}
+		List<EditPoint> new_points = new List<EditPoint> ();
+		
+		EditPoint nep;
+		EditPoint? previous = null;
+		
+		path.all_segments ((start, stop) => {
+			EditPoint? prev = null;
+			Path.all_of (start, stop, (x, y, step) => {
+					EditPoint ep = new EditPoint ();
+
+					if (0 < step < 1) {
+						//new_path.get_closest_point_on_path (ep, x, y);
+						ep.set_position (x, y);
+						
+						// Stop processing when the first hidden point is found.
+						if (start.type == PointType.HIDDEN || stop.type == PointType.HIDDEN) {
+							return false;
+						}
+						
+						return_val_if_fail (prev != null, false);
+
+						ep.prev = ((!) prev).get_link_item ();
+						ep.next = start.get_next ();
+						
+						if (unlikely (ep.next == null || ep.prev == null)) {
+							warning ("No points on segment.");
+							return false;
+						}
+
+						new_points.append (ep);
+					}
+					
+					if (step <= 0) {
+						prev = start;
+						new_points.append (start);
+					} else if (step >= 1) {
+						prev = stop;
+						new_points.append (stop);
+					} else {
+						prev = ep;
+					}
+					
+					return true;
+				}, steps);
 				
 				return true;
-			}, steps);
+			});
+
+		while (new_points.length () > 0) {
+			nep = new_points.first ().data;
 			
-		return new_path;
+			if (previous != null) {
+				nep.prev = ((!) previous).get_link_item ();
+			}
+			
+			if (!path.has_point (nep)) {
+				path.insert_new_point_on_path (nep);
+				return_if_fail (nep.prev != null);
+			}
+			
+			previous = nep;
+
+			new_points.remove_link (new_points.first ());
+			path.create_list ();
+		}
+		
+		while (path.points.length () > 0 && path.points.last ().data.type == PointType.HIDDEN) {
+			path.delete_last_point ();
+		}
+		
+		path.create_list ();
+		
+		return path;
 	}
 
 	/** Shrink or expand the outline. */
@@ -118,19 +232,24 @@ public class StrokeTool : Tool {
 		k = 0;
 		npoints = new_path.points.length ();
 		
-		foreach (EditPoint e in new_path.points) {	
+		if (npoints < 2) {
+			warning ("npoints < 2");
+			return new_path;
+		}
+		
+		foreach (EditPoint e in new_path.points) {
 			ep = e.copy ();
 			
 			get_new_position (e, clockwise, thickness, out nx, out ny);
 
 			end_point = (k == 0 || k == npoints - 1);
 			k++;
-
-			if (k == 0) {
-				
-			} else {
+			
+			if (ep.type != PointType.HIDDEN) {
 				ep.x = nx;
 				ep.y = ny;
+			} else {
+				break;
 			}
 			
 			if (e.is_corner ()) {
@@ -139,7 +258,7 @@ public class StrokeTool : Tool {
 				stroked.add_point (corner1);
 				
 				corner2 = e.copy ();
-				stroked.get_closest_point_on_path (corner2, nx, ny);
+				stroked.get_closest_point_on_path (corner2, nx, ny); // FIXME: optimize
 
 				if (end_point) {
 					swap_corner = corner1;

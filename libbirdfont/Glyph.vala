@@ -962,7 +962,7 @@ public class Glyph : FontDisplay {
 		} else {
 			np = new Path ();
 			path_list.append (np);
-			np.add (xt, yt);
+			np.add (xt, yt);			
 		}	
 
 		clear_active_paths ();
@@ -1083,14 +1083,11 @@ public class Glyph : FontDisplay {
 				p.close ();
 			}
 		}
-		
-		// FIXME: delete
-		// clear_active_paths ();
+
+		print ("CLOSE\n"); // FIXME: DELETE
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
-		
 		open = false;
-		
 		return r;
 	}
 
@@ -1616,7 +1613,9 @@ public class Glyph : FontDisplay {
 		return img;
 	}
 
-	/** Split curve in two parts and add a new point in between. */
+	/** Split curve in two parts and add a new point in between.
+	 * @return the new point
+	 */
 	public void insert_new_point_on_path (double x, double y) {
 		double min, distance;
 		Path? p = null;

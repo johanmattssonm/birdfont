@@ -70,6 +70,8 @@ public class PenTool : Tool {
 
 	static List<Path> clockwise;
 	static List<Path> counter_clockwise;
+	
+	static double path_stroke_width = 0;
 			
 	public PenTool (string name) {
 		string click_to_add_points;
@@ -233,6 +235,12 @@ public class PenTool : Tool {
 		});
 	}
 
+	public void set_stroke_width (double width) {
+		string w = SpinButton.convert_to_string (width);
+		Preferences.set ("pen_tool_stroke_width", w);
+		path_stroke_width = width;
+	}
+	
 	/** @return true after the initial delay.*/
 	public static bool isResponding (int px, int py) {
 		double d;
@@ -1087,6 +1095,7 @@ public class PenTool : Tool {
 	public static PointSelection add_new_edit_point (int x, int y) {
 		Glyph glyph;
 		PointSelection new_point;
+		
 		glyph = MainWindow.get_current_glyph ();
 		
 		new_point = glyph.add_new_edit_point (x, y);
@@ -1097,6 +1106,8 @@ public class PenTool : Tool {
 
 		set_point_type (selected_point);
 		set_default_handle_positions ();
+		
+		new_point.path.set_stroke (path_stroke_width);
 		
 		return new_point;
 	}
