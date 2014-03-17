@@ -37,6 +37,7 @@ public class DrawingTools : ToolCollection  {
 	public static SpinButton object_stroke;
 	
 	public static Tool move_tool;
+	public static PenTool pen_tool;
 	
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
@@ -59,7 +60,7 @@ public class DrawingTools : ToolCollection  {
 		grid_expander = grid;
 
 		// Draw tools
-		PenTool pen_tool = new PenTool ("pen_tool");
+		pen_tool = new PenTool ("pen_tool");
 		draw_tools.add_tool (pen_tool);
 
 		PointTool point_tool = new PointTool ("point_tool");

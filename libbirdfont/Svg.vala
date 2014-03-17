@@ -21,9 +21,15 @@ class Svg {
 	/** Export to svg glyph data. */
 	public static string to_svg_glyph (Glyph g) {	
 		StringBuilder svg = new StringBuilder ();
-
+		PathList stroke_list;
+		
 		foreach (Path pl in g.path_list) {
-			write_path_as_glyph (pl, svg, g);
+			if (pl.stroke == 0) {
+				write_path_as_glyph (pl, svg, g);
+			} else {
+				stroke_list = StrokeTool.get_stroke (pl, pl.stroke);
+				write_paths_as_glyph (stroke_list, svg, g);
+			}
 		}
 		
 		return svg.str;
@@ -37,22 +43,28 @@ class Svg {
 		return svg.str;
 	}
 
+	private static void write_paths_as_glyph (PathList pl, StringBuilder svg, Glyph g) {
+		foreach (Path p in pl.paths) {
+			write_path_as_glyph (p, svg, g);
+		}
+	}
+
 	private static void write_path_as_glyph (Path pl, StringBuilder svg, Glyph g) {
 		write_path (pl, svg, g, true);
 	}
 
-	private static void write_path (Path pl, StringBuilder svg, Glyph g, bool do_glyph) {
+	private static void write_path (Path p, StringBuilder svg, Glyph g, bool do_glyph) {
 		int i = 0;
 		EditPoint? n = null;
 		EditPoint m;
 		
-		if (pl.points.length () < 2) {
+		if (p.points.length () < 2) {
 			return;
 		}
-		
-		pl.create_list ();
+
+		p.create_list ();
 			
-		foreach (var e in pl.points) {
+		foreach (var e in p.points) {
 			if (i == 0) {
 				add_abs_start (e, svg, g, do_glyph);
 				i++;
@@ -68,7 +80,7 @@ class Svg {
 			i++;
 		}
 
-		m = pl.points.first ().data;	
+		m = p.points.first ().data;	
 		add_abs_next ((!) n, m, svg, g, do_glyph);
 		
 		close_path (svg);

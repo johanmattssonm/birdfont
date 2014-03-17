@@ -66,7 +66,6 @@ public class OverView : FontDisplay {
 				tabs.add_tab (g);
 				canvas.set_current_glyph (g);
 				set_initial_zoom ();
-				g.close_path ();
 			}
 		});
 
@@ -96,7 +95,6 @@ public class OverView : FontDisplay {
 				canvas = MainWindow.get_glyph_canvas ();
 				canvas.set_current_glyph (glyph);
 				
-				glyph.close_path ();
 				set_initial_zoom ();
 			}
 		});

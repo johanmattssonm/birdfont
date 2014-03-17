@@ -962,8 +962,12 @@ public class Glyph : FontDisplay {
 		} else {
 			np = new Path ();
 			path_list.append (np);
-			np.add (xt, yt);			
-		}	
+			np.add (xt, yt);
+			
+			if (DrawingTools.pen_tool.is_selected ()) {
+				np.set_stroke (PenTool.path_stroke_width);
+			}
+		}
 
 		clear_active_paths ();
 		add_active_path (np);
@@ -1034,9 +1038,11 @@ public class Glyph : FontDisplay {
 		}
 		
 		foreach (Path path in active_paths) {
-			EditPoint? pt = path.get_second_last_point ();
-			if (pt != null) {
-				EditPoint p = (!) pt;
+			EditPoint p;
+			EditPoint pl = path.get_last_point ();
+			
+			if (pl.prev != null) {
+				p = pl.get_prev ().data;
 				
 				px = p.x + xc;
 				py = p.y - xc;
@@ -1076,15 +1082,13 @@ public class Glyph : FontDisplay {
 	/** Close all editable paths and return false if no path have been closed. */
 	public bool close_path () {
 		bool r = false;
-		
+
 		foreach (var p in path_list) {
 			if (p.is_editable ()) {
 				r = true;
-				p.close ();
+				p.set_editable (false);
 			}
 		}
-
-		print ("CLOSE\n"); // FIXME: DELETE
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
 		open = false;
@@ -1327,7 +1331,6 @@ public class Glyph : FontDisplay {
 	
 	public void draw_path (Context cr) {
 		double left, baseline;
-		Path stroke;
 		
 		baseline = get_line ("baseline").pos;
 		left = get_line ("left").pos;
@@ -1335,7 +1338,9 @@ public class Glyph : FontDisplay {
 		if (!is_open ()) {
 			cr.save ();
 			cr.set_source_rgba (0, 0, 0, 1);
+			
 			Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () + baseline);
+			
 			cr.restore ();
 		}
 
@@ -1351,26 +1356,36 @@ public class Glyph : FontDisplay {
 		if (is_open ()) {
 			foreach (unowned Path p in path_list) {
 				p.draw_outline (cr, allocation, view_zoom);
-				p.draw_edit_points (cr, allocation, view_zoom);
+				p.draw_edit_points (cr, allocation, view_zoom);	
+
+				if (p.stroke > 0) {			
+					draw_outline_for_paths (StrokeTool.get_stroke (p, p.stroke), cr);
+				}
 			}
 		}
 
 		if (!is_open ()) {
 			foreach (unowned Path p in active_paths) {
-				if (!p.is_editable ()) {
+				if (p.stroke == 0) {
 					p.fill_path (cr, allocation, view_zoom);
+				} else {
+					fill_paths (StrokeTool.get_stroke (p, p.stroke), cr);
 				}
 			}
 		}
-		
-		// draw stroke
-		foreach (unowned Path p in path_list) {
-			if (p.stroke > 0) {			
-				stroke = StrokeTool.get_stroke (p, p.stroke);
-				stroke.draw_outline (cr, allocation, view_zoom);
-			}
-		}
 	}
+	
+	private void draw_outline_for_paths (PathList pl, Context cr) {
+		foreach (Path p in pl.paths) {
+			p.draw_outline (cr, allocation, view_zoom);
+		}
+	} 
+	
+	private void fill_paths (PathList pl, Context cr) {
+		foreach (Path p in pl.paths) {
+			p.fill_path (cr, allocation, view_zoom);
+		}
+	} 
 	
 	private void draw_zoom_area(Context cr) {
 		cr.save ();
@@ -1663,7 +1678,6 @@ public class Glyph : FontDisplay {
 			merge_path (p0);
 		}
 		
-		//open_path ();
 		close_path ();
 
 		foreach (Path p in path_list) {

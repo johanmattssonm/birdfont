@@ -71,7 +71,7 @@ public class PenTool : Tool {
 	static List<Path> clockwise;
 	static List<Path> counter_clockwise;
 	
-	static double path_stroke_width = 0;
+	public static double path_stroke_width = 0;
 			
 	public PenTool (string name) {
 		string click_to_add_points;
@@ -104,11 +104,7 @@ public class PenTool : Tool {
 		});
 
 		deselect_action.connect ((self) => {
-			Glyph glyph = MainWindow.get_current_glyph ();
-			
-			force_direction ();
-			glyph.close_path ();
-			
+			force_direction ();		
 			move_point_on_path = false;
 		});
 		
@@ -1106,8 +1102,6 @@ public class PenTool : Tool {
 
 		set_point_type (selected_point);
 		set_default_handle_positions ();
-		
-		new_point.path.set_stroke (path_stroke_width);
 		
 		return new_point;
 	}

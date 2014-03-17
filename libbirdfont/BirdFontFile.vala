@@ -56,9 +56,6 @@ class BirdFontFile {
 		
 		font.font_file = "typeface.bf";
 		
-		printd ("Load data:\n");
-		printd (xml_data);
-		
 		tr = new TextReader.for_doc (xml_data, "");
 		ok = load_xml (tr);
 		
@@ -304,6 +301,7 @@ class BirdFontFile {
 			if (pl.is_open ()) {
 				data.append (" O");
 			}
+			
 			return data.str;
 		}
 		
@@ -317,6 +315,7 @@ class BirdFontFile {
 			if (pl.is_open ()) {
 				data.append (" O");
 			}
+			
 			return data.str;
 		}
 		
@@ -435,7 +434,7 @@ class BirdFontFile {
 		foreach (Path p in g.path_list) {
 			data = get_point_data (p);
 			if (data != "") {
-				os.put_string (@"\t\t<path data=\"$(data)\" />\n");
+				os.put_string (@"\t\t<path stroke=\"$(p.stroke)\" data=\"$(data)\" />\n");
 			}
 		}
 		
@@ -955,18 +954,30 @@ class BirdFontFile {
 	private Path parse_path (Xml.Node* node) {	
 		string attr_name;
 		string attr_content;
+		Path path = new Path ();
 		
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
 			
 			if (attr_name == "data") {
-				return parse_path_data (attr_content);
+				path = parse_path_data (attr_content);
 			}
 		}
+
+		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+			attr_name = prop->name;
+			attr_content = prop->children->content;
+
+			if (attr_name == "stroke") {
+				path.set_stroke (double.parse (attr_content));
+			}
+		}		
+		if (path.points.length () == 0) {
+			warning ("Empty path");
+		}
 		
-		warning ("No path");
-		return new Path ();	
+		return path;	
 	}
 	
 	private static void line (Path path, string px, string py) {
@@ -1230,6 +1241,10 @@ class BirdFontFile {
 			close (path);
 		} else {
 			path.points.remove_link (path.points.last ());
+			
+			if (!path.is_open ()) {
+				warning ("Closed path.");
+			}
 		}
 		
 		path.update_region_boundaries ();
@@ -1308,7 +1323,9 @@ class BirdFontFile {
 		}
 	}
 	
-	/** Parse visual objects and paths */
+	/** Parse visual objects and paths 
+	 * @deprecated ffi format use bf
+	 */
 	private void parse_content (Glyph g, Xml.Node* node) {
 		Xml.Node* i;
 		return_if_fail (node != null);

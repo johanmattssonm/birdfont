@@ -37,6 +37,8 @@ class MoveTool : Tool {
 		base (n, t_("Move paths"), 'm', CTRL);
 
 		select_action.connect((self) => {
+			Glyph glyph = MainWindow.get_current_glyph ();
+			glyph.close_path ();
 		});
 
 		deselect_action.connect((self) => {

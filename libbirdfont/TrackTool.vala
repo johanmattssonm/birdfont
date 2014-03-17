@@ -53,13 +53,21 @@ public class TrackTool : Tool {
 			Toolbox.set_object_stroke (stroke_width);
 		});
 		
-		press_action.connect ((self, b, x, y) => {
+		press_action.connect ((self, button, x, y) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			Path p;
 			PointSelection? ps;
 			PointSelection end_point;
+
+			if (button == 3) {
+				glyph.clear_active_paths ();
+			}
+						
+			if (button == 2) {
+				glyph.close_path ();
+			}
 			
-			if (b == 1) {
+			if (button == 1) {
 				draw_free_hand = true;
 				
 				last_x = x;
@@ -71,6 +79,7 @@ public class TrackTool : Tool {
 					ps = get_path_with_end_point (x, y);
 					if (unlikely (ps == null)) {
 						warning ("No end point.");
+						return;
 					}
 					end_point = (!) ps;
 					if (end_point.is_first ()) {
@@ -78,6 +87,8 @@ public class TrackTool : Tool {
 					}
 					glyph.set_active_path (end_point.path);
 					add_corner (x, y);
+					
+					set_stroke_width (end_point.path.stroke);
 				} else {
 					p = new Path ();
 					glyph.add_path (p);
@@ -98,7 +109,7 @@ public class TrackTool : Tool {
 		});
 
 		release_action.connect ((self, button, x, y) => {
-			if (button == 1) {
+			if (button == 1 && draw_free_hand) {
 				add_endpoint_and_merge (x, y);
 			}
 		});
@@ -142,6 +153,7 @@ public class TrackTool : Tool {
 		string w = SpinButton.convert_to_string (width);
 		Preferences.set ("free_hand_stroke_width", w);
 		stroke_width = width;
+		warning (@"W: $width\n");
 	}
 
 	void add_endpoint_and_merge (int x, int y) {
@@ -167,8 +179,8 @@ public class TrackTool : Tool {
 				 
 				if (joined_path.path == p) {
 					delete_last_points_at (x, y);
-					p.points.remove_link (p.points.first ());
 					glyph.close_path ();
+					p.close ();
 				} else {
 					p = merge_paths (p, joined_path);
 					if (!p.is_open ()) {
@@ -189,8 +201,6 @@ public class TrackTool : Tool {
 			ep.process_tied_handle ();	
 			ep.set_tie_handle (false);
 			ep.recalculate_linear_handles ();
-			
-			//p.delete_last_point ();
 			
 			p.create_list ();
 			
@@ -358,7 +368,7 @@ public class TrackTool : Tool {
 			update_cycles = 0;
 		}
 		
-		if (update_cycles > 5) { // cycles of 100 ms
+		if (update_cycles > 4) { // cycles of 100 ms
 			convert_points_to_line ();
 			last_update  = get_current_time ();
 			add_corner (last_x, last_y);

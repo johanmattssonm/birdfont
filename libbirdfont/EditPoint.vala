@@ -89,27 +89,6 @@ public class EditPoint {
 		
 		return a;
 	}
-
-	public double get_angle () {
-		double a = fabs ((right_handle.angle - PI) - left_handle.angle);
-		while (a >= 2 * PI - 0.01) {
-			a -= 2 * PI;
-		}
-		
-		return fabs (a);
-	}
-
-	public bool is_corner () {
-		return !(get_angle ()  <= 0.01);
-	}
-		
-	public bool is_narrow () {
-		return !(get_angle () < PI / 2 - 0.01);
-	}
-
-	public bool is_wide () {
-		return !(get_angle () > PI / 2 - 0.01);
-	}
 		
 	public bool equals (EditPoint e) {
 		return e.x == x 

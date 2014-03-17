@@ -21,6 +21,10 @@ public class PathList : GLib.Object {
 		 paths = new List<Path> ();
 	}
 	
+	public void add (Path p) {
+		paths.append (p);
+	}
+	
 	public void append (PathList pl) {
 		foreach (Path p in pl.paths) {
 			paths.append (p);

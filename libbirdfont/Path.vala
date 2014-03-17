@@ -35,8 +35,11 @@ public class Path {
 	public double ymax = double.MIN;
 	public double ymin = double.MAX;
 
-	/** The width of a stroked outline. */
+	/** Stroke width */
 	public double stroke = 0;
+	
+	/** Fill property for closed paths with stroke. */
+	public bool fill = false;
 
 	bool edit = true;
 	bool open = true;
@@ -94,7 +97,7 @@ public class Path {
 	public static double stroke_width = 1;
 	public static bool show_all_line_handles = true;
 	public static bool fill_open_path = false;
-		
+	
 	public Path () {
 		string width;
 		points = new List<EditPoint> ();
@@ -135,6 +138,14 @@ public class Path {
 		}
 	}
 
+	public bool is_filled () {
+		return fill;
+	}
+
+	public void set_fill (bool f) {
+		fill = f;
+	}
+
 	public EditPoint get_first_point () {
 		if (unlikely (points.length () == 0)) {
 			warning ("No point");
@@ -162,7 +173,7 @@ public class Path {
 	}
 
 	public void set_stroke (double width) {
-		stroke = width;
+		stroke = width;	
 	}
 
 	public void draw_boundaries  (Context cr, WidgetAllocation allocation, double view_zoom) {
@@ -714,6 +725,8 @@ public class Path {
 		
 		new_path.edit = edit;
 		new_path.open = open;
+		new_path.stroke = stroke;
+		new_path.fill = fill;
 		new_path.direction_is_set = direction_is_set;
 		new_path.create_list ();
 		
@@ -978,11 +991,6 @@ public class Path {
 	public void reopen () {
 		open = true;
 		edit = true;
-	}
-
-	// FIXME: delete this:
-	public EditPoint? get_second_last_point () {
-		return second_last_point;
 	}
 	
 	/** Move path. */
@@ -1513,6 +1521,7 @@ public class Path {
 		previous = ((!) previous_point).data;
 		next = ((!) next_point).data;
 
+		// FIXME: delete
 		bezier_vector (step, previous.x, previous.get_right_handle ().x (), next.get_left_handle ().x (), next.x, out handle_x0, out handle_x1);
 		bezier_vector (step, previous.y, previous.get_right_handle ().y (), next.get_left_handle ().y (), next.y, out handle_y0, out handle_y1);
 
@@ -1649,46 +1658,6 @@ public class Path {
 			all_of (start, stop, iter, steps);
 			return true;
 		});
-	}
-
-	// FIXME: DELETE
-	public void all_vectors (VectorIterator iter, int steps = -1) {
-		all_segments ((start, stop) => {
-			all_of (start, stop, (x, y, s) => {
-				double handle_x0, handle_x1, handle_y0, handle_y1;
-				PointType pt;
-		
-				handle_x0 = 0;
-				handle_x1 = 0;
-				handle_y0 = 0;
-				handle_y1 = 0;
-		
-				pt = PenTool.to_curve (start.type);
-				
-				if (unlikely (PenTool.is_line (pt))) {
-					warning (@"Wrong type: $(start.type) ($pt)");
-				}
-				
-				switch (pt) {
-					case PointType.QUADRATIC: 
-						handle_x0 = quadratic_bezier_vector (s, start.x, start.get_right_handle ().x (), stop.x);
-						handle_y0 = quadratic_bezier_vector (s, start.y, start.get_right_handle ().y (), stop.y);
-						break;
-					case PointType.DOUBLE_CURVE:				
-						double_bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
-						double_bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);
-						break;
-					default:
-						bezier_vector (s, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out handle_x0, out handle_x1);
-						bezier_vector (s, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out handle_y0, out handle_y1);
-						break;
-				}
-				
-				iter (start, stop, x, y, handle_x0, handle_x1, handle_y0, handle_y1, s);
-				return true;
-			}, steps);
-			return true;
-		}); 
 	}
 	
 	public static double bezier_path (double step, double p0, double p1, double p2, double p3) {
