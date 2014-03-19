@@ -28,7 +28,6 @@ public class StrokeTool : Tool {
 	public static void set_stroke_for_selected_paths (double width) {
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		warning ("set_stroke_for_selected_paths");
 		foreach (Path p in g.active_paths) {
 			p.set_stroke (width);
 		}
@@ -79,7 +78,7 @@ public class StrokeTool : Tool {
 		} else if (p.is_open ()) {
 			outline = create_stroke (p, thickness);
 			counter = create_stroke (p, -1 * thickness);
-			merged = merge_strokes (outline, counter);
+			merged = merge_strokes (p, outline, counter, thickness);
 			
 			if (p.is_clockwise ()) {
 				merged.force_direction (Direction.CLOCKWISE);
@@ -98,37 +97,72 @@ public class StrokeTool : Tool {
 	
 	/** Create one stroke from the outline and counter stroke and close the 
 	 * open endings.
+	 * 
+	 * @param path the path to create stroke for
+	 * @param stroke for the outline of path
+	 * @param stroke for the counter path
 	 */
-	static Path merge_strokes (Path stroke, Path counter) {
+	static Path merge_strokes (Path path, Path stroke, Path counter, double thickness) {
 		Path merged;
-
-		if (stroke.points.length () < 3) {
+		EditPoint corner1, corner2;
+		EditPoint corner3, corner4;
+		EditPoint new_corner1, new_corner2;
+		EditPoint end;
+		double angle;
+		
+		if (path.points.length () < 2) {
+			warning ("Missing points.");
+			return stroke;
+		}
+		
+		if (stroke.points.length () < 4) {
 			warning ("Missing points.");
 			return stroke;
 		}
 
-		if (counter.points.length () < 3) {
+		if (counter.points.length () < 4) {
 			warning ("Missing points.");
 			return stroke;
 		}
-						
+		
+		// end of stroke
+		end = path.get_last_point ();
+		corner1 = stroke.get_last_point ();
+		angle = end.get_left_handle ().angle;
+		corner1.x = end.x + cos (angle - PI / 2) * 2 * thickness;
+		corner1.y = end.y + sin (angle - PI / 2) * 2 * thickness;		
+
+		corner2 = counter.get_last_point ();
+		corner2.x = end.x + cos (angle + PI / 2) * 2 * thickness;
+		corner2.y = end.y + sin (angle + PI / 2) * 2 * thickness;
+
+		// the other end
+		end = path.get_first_point ();
+		corner3 = stroke.get_first_point ();
+		angle = end.get_right_handle ().angle;
+		corner3.x = end.x + cos (angle + PI / 2) * 2 * thickness;
+		corner3.y = end.y + sin (angle + PI / 2) * 2 * thickness;		
+
+		corner4 = counter.get_first_point ();
+		corner4.x = end.x + cos (angle - PI / 2) * 2 * thickness;
+		corner4.y = end.y + sin (angle - PI / 2) * 2 * thickness;
+		
+		corner1.get_right_handle ().convert_to_line ();
+		corner2.get_left_handle ().convert_to_line ();
+		corner3.get_right_handle ().convert_to_line ();
+		corner4.get_left_handle ().convert_to_line ();
+				
 		counter.reverse ();
-		
-		counter.points.remove_link (counter.points.first ());
-		counter.points.remove_link (counter.points.last ());
 
+		// Append the other part of the stroke
 		merged = stroke.copy ();
-
-		counter.get_last_point ().get_right_handle ().convert_to_line ();
-		counter.get_first_point ().get_left_handle ().convert_to_line ();
-
-		merged.get_last_point ().get_right_handle ().convert_to_line ();
-		merged.get_first_point ().get_left_handle ().convert_to_line ();
-		
 		merged.append_path (counter);
+		corner2 = merged.points.last ().data;
+		
+		merged.create_list ();
 		merged.close ();
 		merged.recalculate_linear_handles ();
-		
+								
 		return merged;
 	}
 	
@@ -141,9 +175,7 @@ public class StrokeTool : Tool {
 		if (new_path.points.length () >= 2) {
 			stroked = change_stroke_width (new_path, thickness);
 
-			if (p.is_open ()) {
-				remove_end_corner (stroked);
-			} else {
+			if (!p.is_open ()) {
 				stroked.reverse ();
 				stroked.close ();
 			}
@@ -154,19 +186,6 @@ public class StrokeTool : Tool {
 		}
 		
 		return stroked;
-	}
-
-	static void remove_end_corner (Path stroked) {
-		if (stroked.points.length () < 4) {
-			warning ("points < 4");
-			return;
-		}
-		
-		stroked.points.remove_link (stroked.points.last ());
-		stroked.points.remove_link (stroked.points.last ());
-		
-		stroked.points.remove_link (stroked.points.first ());
-		stroked.points.remove_link (stroked.points.first ());
 	}
 
 	static Path tangents (Path p) {
@@ -255,10 +274,6 @@ public class StrokeTool : Tool {
 			path.create_list ();
 		}
 		
-		while (path.points.length () > 0 && path.points.last ().data.type == PointType.HIDDEN) {
-			path.delete_last_point ();
-		}
-		
 		path.create_list ();
 		
 		return path;
@@ -275,7 +290,8 @@ public class StrokeTool : Tool {
 		uint k;
 		uint npoints;
 		double distance_to_counter, distance_to_path;
-								
+		PointSelection ps;
+						
 		clockwise = new_path.is_clockwise ();
 		
 		end_point = true;
@@ -290,9 +306,9 @@ public class StrokeTool : Tool {
 		foreach (EditPoint e in new_path.points) {
 			ep = e.copy ();
 			
-			//get_new_position (e, clockwise, thickness, out nx, out ny);
-			get_new_position_delta (e, clockwise, thickness, out dnx, out dny);
-			get_new_position_delta (e, clockwise, thickness, out counter_dnx, out counter_dny);
+			ps = new PointSelection (e, new_path);
+			get_new_position_delta (ps, clockwise, thickness, out dnx, out dny);
+			get_new_position_delta (ps, clockwise, thickness, out counter_dnx, out counter_dny);
 				
 			end_point = (k == 0 || k == npoints - 1);
 			k++;
@@ -300,38 +316,47 @@ public class StrokeTool : Tool {
 			px = ep.x;
 			py = ep.y;
 			
-			if (ep.type != PointType.HIDDEN) {
+			if (!end_point) {
 				ep.x += dnx;
 				ep.y += dny;
-			} else {
+			}
+			
+			if (ep.type == PointType.HIDDEN) {
 				break;
 			}
 			
 			nx = ep.x;
 			ny = ep.y;
 			
-			space_left = get_space_difference (e, e.get_prev ().data, thickness, clockwise);
-			space_right = get_space_difference (e, e.get_next ().data, thickness, clockwise);
+			space_left = get_space_difference (new_path, e, e.get_prev ().data, thickness, clockwise);
+			space_right = get_space_difference (new_path, e, e.get_next ().data, thickness, clockwise);
 		
 			distance_to_counter = Path.distance (nx, px + counter_dnx, ny, py + counter_dny);
 			distance_to_path = Path.distance (px, nx, py, ny);
 			
-			//print (@"$k:  $distance_to_path < $thickness\n");
-			//print (@"$k  space_left + space_right  $(space_left + space_right)  $space_left + $space_right\n");
-			
-			if (distance_to_path >= fabs (2 * thickness) - 0.1) {
-				ep.get_left_handle ().length += space_left / 3; 
-				ep.get_right_handle ().length += space_right / 3;
-				stroked.add_point (ep);
-			} else if (distance_to_path < fabs (2 * thickness) && (space_left + space_right) > 0) {
-				add_corner_nodes (stroked, e, clockwise, thickness, end_point, nx, ny);
-			} else if (distance_to_path < fabs (2 * thickness) && (space_left + space_right) < 0) {
-				corner_position (e, clockwise, thickness, stroked);
+			if (new_path.is_open () && end_point) {
+				// open end point
+				stroked.add (e.x, e.y); 
 			} else {
-				ep.get_left_handle ().length += space_left / 3; 
-				ep.get_right_handle ().length += space_right / 3;
-				stroked.add_point (ep);
-				warning ("Stroke might become distorted");
+				if (distance_to_path >= fabs (2 * thickness) - 0.1) {
+					// smooth curve
+					ep.get_left_handle ().length += space_left / 3; 
+					ep.get_right_handle ().length += space_right / 3;
+					stroked.add_point (ep);
+				} else if (distance_to_path < fabs (2 * thickness) && (space_left + space_right) > 0) {
+					// sharp corner
+					add_corner_nodes (new_path, stroked, e, clockwise, thickness, end_point, nx, ny);
+				} else if (distance_to_path < fabs (2 * thickness) && (space_left + space_right) < 0) {
+					if (!new_path.is_open () || (new_path.is_open () && !ps.is_endpoint ())) {
+						// wide corner
+						corner_position (e, clockwise, thickness, stroked);
+					}
+				} else {
+					ep.get_left_handle ().length += space_left / 3; 
+					ep.get_right_handle ().length += space_right / 3;
+					stroked.add_point (ep);
+					warning ("Stroke might become distorted");
+				}
 			}
 		}
 	
@@ -405,11 +430,12 @@ public class StrokeTool : Tool {
 	}
 
 	/** Sharp corner that need two extra points to be built. */
-	public static void add_corner_nodes (Path stroked, EditPoint e, bool clockwise, double thickness, bool end_point, double nx, double ny) {
+	public static void add_corner_nodes (Path path, Path stroked, EditPoint e, bool clockwise, double thickness, bool end_point, double nx, double ny) {
 		double middle_x, middle_y;
 		double corner_thickness_left, corner_thickness_right;
 		double middle_point_position;
 		EditPoint corner1, corner2, corner3, swap_corner;
+		PointSelection ps;
 		
 		// add new points in order to preserve the stroke
 		corner1 = e.copy ();
@@ -438,25 +464,32 @@ public class StrokeTool : Tool {
 
 		// fill the gap
 		// FIXME: this should move the point not create a new point
-		corner_position (e, clockwise, thickness, stroked);
+		if (!path.is_open () || (path.is_open () && !end_point)) {
+			corner_position (e, clockwise, thickness, stroked);
+		} 
 	}
 
-	public static void get_new_position (EditPoint e, bool clockwise, double thickness, out double strokex, out double strokey) {
+	public static void get_new_position (PointSelection ps, bool clockwise, double thickness, out double strokex, out double strokey) {
 		double sx, sy;
-		get_new_position_delta (e, clockwise, thickness, out sx, out sy);
-		strokex = sx + e.x;
-		strokey = sy + e.y;	
+		get_new_position_delta (ps, clockwise, thickness, out sx, out sy);
+		strokex = sx + ps.point.x;
+		strokey = sy + ps.point.y;	
 	}
 
-	static void get_new_position_delta (EditPoint e, bool clockwise, double thickness, out double strokex, out double strokey) {
+	static void get_new_position_delta (PointSelection ps, bool clockwise, double thickness, out double strokex, out double strokey) {
 			double ra, la;
 			double avg_angle;
 			double angle;
 			
 			double m, n, o, p;
 			double ldnx, ldny;
-						
-			e.recalculate_linear_handles ();
+			
+			bool end_node = ps.is_first () || ps.is_last ();
+			EditPoint e = ps.point;
+			
+			if (!end_node) {
+				e.recalculate_linear_handles ();
+			}
 			
 			ra = e.get_right_handle ().angle;
 			la = e.get_left_handle ().angle;
@@ -477,17 +510,22 @@ public class StrokeTool : Tool {
 
 			ldnx = m + o;
 			ldny = n + p;
-			
-			strokex = ldnx;
-			strokey = ldny;
+
+			if (end_node) {
+				strokex = 0;
+				strokey = 0;
+			} else {
+				strokex = ldnx;
+				strokey = ldny;
+			}
 	}
 	
-	static double get_space_difference (EditPoint ep0, EditPoint ep1, double stroke, bool clockwise) {
+	static double get_space_difference (Path p, EditPoint ep0, EditPoint ep1, double stroke, bool clockwise) {
 		double p0x, p0y, p1x, p1y;
 		double d1, d2;
 		
-		get_new_position (ep0, clockwise, stroke, out p0x, out p0y);
-		get_new_position (ep1, clockwise, stroke, out p1x, out p1y);
+		get_new_position (new PointSelection (ep0, p), clockwise, stroke, out p0x, out p0y);
+		get_new_position (new PointSelection (ep1, p), clockwise, stroke, out p1x, out p1y);
 		
 		d1 = Path.distance (ep0.x, ep1.x, ep0.y, ep1.y);
 		d2 = Path.distance (p0x, p1x, p0y, p1y);

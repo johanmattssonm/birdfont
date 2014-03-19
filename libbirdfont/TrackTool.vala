@@ -153,7 +153,6 @@ public class TrackTool : Tool {
 		string w = SpinButton.convert_to_string (width);
 		Preferences.set ("free_hand_stroke_width", w);
 		stroke_width = width;
-		warning (@"W: $width\n");
 	}
 
 	void add_endpoint_and_merge (int x, int y) {
@@ -162,6 +161,7 @@ public class TrackTool : Tool {
 			PointSelection? open_path = get_path_with_end_point (x, y);
 			PointSelection joined_path;
 			EditPoint ep;
+			
 			glyph = MainWindow.get_current_glyph ();
 			
 			if (glyph.path_list.length () == 0) {
@@ -191,17 +191,11 @@ public class TrackTool : Tool {
 				add_corner (x, y);
 			}
 
-			
 			if (p.points.length () == 0) {
 				warning ("No point.");
 				return;
 			}
-			
-			ep = p.get_first_point ();
-			ep.process_tied_handle ();	
-			ep.set_tie_handle (false);
-			ep.recalculate_linear_handles ();
-			
+
 			p.create_list ();
 			
 			if (glyph.path_list.length () < 2) {
@@ -222,7 +216,7 @@ public class TrackTool : Tool {
 			} else {
 				p.force_direction (Direction.CLOCKWISE);
 			}
-							
+					
 			glyph.update_view ();
 	}
 
@@ -478,7 +472,9 @@ public class TrackTool : Tool {
 		px = Glyph.reverse_path_coordinate_x (nx);
 		py = Glyph.reverse_path_coordinate_y (ny);
 		average = PenTool.add_new_edit_point (px, py).point;
-		average.set_tie_handle (true);
+		
+		// tie handles for all points except for the end points
+		average.set_tie_handle (p.points.length () > 1); 
 		
 		if (unlikely (p.points.length () == 0)) {
 			warning ("No points.");
@@ -486,8 +482,10 @@ public class TrackTool : Tool {
 		}
 		
 		if (average.prev != null && average.get_prev ().data.tie_handles) {
-			PenTool.convert_point_to_line (average.get_prev ().data, true);
-			average.get_prev ().data.process_tied_handle ();
+			if (p.points.length () > 2) {
+				PenTool.convert_point_to_line (average.get_prev ().data, true);
+				average.get_prev ().data.process_tied_handle ();
+			}
 		}
 
 		added_points = 0;

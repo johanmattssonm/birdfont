@@ -76,8 +76,11 @@ public class DrawingTools : ToolCollection  {
 		draw_tools.add_tool (resize_tool);
 
 		Tool stroke_tool = new StrokeTool ("stroke"); // create outline from path
-		draw_tools.add_tool (stroke_tool);
 
+		if (BirdFont.has_argument ("--test")) {
+			draw_tools.add_tool (stroke_tool);
+		}
+		
 		TrackTool track_tool = new TrackTool ("track"); // draw outline on free hand
 		draw_tools.add_tool (track_tool);
 		
@@ -133,7 +136,9 @@ public class DrawingTools : ToolCollection  {
 			}
 		});
 		
-		draw_tool_modifiers.add_tool (object_stroke);	
+		if (BirdFont.has_argument ("--test")) {
+			draw_tool_modifiers.add_tool (object_stroke);
+		}
 
 		// tie edit point handles
 		Tool tie_handles = new Tool ("tie_point", t_("Tie curve handles for the selected edit point"), 'w');

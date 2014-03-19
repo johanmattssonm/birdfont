@@ -47,6 +47,16 @@ public class PointSelection : GLib.Object {
 		return_val_if_fail (path.points.length () > 0, false);
 		return path.points.first ().data == point;
 	}
+
+	/** @return true if this point is the last point in the path. */
+	public bool is_last () {
+		return_val_if_fail (path.points.length () > 0, false);
+		return path.points.last ().data == point;
+	}
+	
+	public bool is_endpoint () {
+		return is_first () || is_last ();
+	}
 }
 
 }
