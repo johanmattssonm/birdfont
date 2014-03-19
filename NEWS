@@ -1,3 +1,11 @@
+birdfont (0.35) stable;
+
+  * A new tool for drawing shapes with the mouse on free hand
+  * Bug fixes related to conversion from SVG to TTF
+  * Fixes crash bug in SVG import code  
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Mar 19 20:24:14 CET 2014
+
 birdfont (0.34) stable;
 
   * Solves kerning issues and other bugs.
