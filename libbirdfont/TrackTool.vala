@@ -21,23 +21,39 @@ namespace BirdFont {
   * instead of adding bezér points one by one.
   */
 public class TrackTool : Tool {
-	bool draw_free_hand = false;
+	
+	bool draw_freehand = false;
 
+	/** Number of points to take the average from in order to create a smooth shape. */
 	int added_points = 0;
+	
+	/** The time in milliseconds when a point was added to the path.
+	 * after a few milliseconds will this tool add a sharp corner instead of  
+	 * a smooth curve if the user does not move the pointer.
+	 */
 	double last_update = 0;
 
+	/** The position of mouse pointer. at lat update. */
 	int last_x = 0;
 	int last_y = 0;
 
+	/** The position of the mouse pointer when this tool is checking if
+	 * the pointer has moved.
+	 */
 	int last_timer_x = 0;
 	int last_timer_y = 0;
 	int update_cycles = 0;
 
+	/** Join the stroke with the path at the end point in this coordinate. */
 	int join_x = -1;
 	int join_y = -1;
 	bool join_paths = false;
 
+	/** Create a stroked path instead of filling the shape. */
 	double stroke_width = 0; 
+
+	/** Adjust the number of samples per point by this factor. */
+	double samples_per_point = 1;
 
 	public TrackTool (string name) {
 		string sw;
@@ -68,7 +84,7 @@ public class TrackTool : Tool {
 			}
 			
 			if (button == 1) {
-				draw_free_hand = true;
+				draw_freehand = true;
 				
 				last_x = x;
 				last_y = y;
@@ -109,7 +125,7 @@ public class TrackTool : Tool {
 		});
 
 		release_action.connect ((self, button, x, y) => {
-			if (button == 1 && draw_free_hand) {
+			if (button == 1 && draw_freehand) {
 				add_endpoint_and_merge (x, y);
 			}
 			BirdFont.get_current_font ().touch ();
@@ -135,7 +151,7 @@ public class TrackTool : Tool {
 				join_y = Glyph.reverse_path_coordinate_y (p.point.y);
 			}
 			
-			if (draw_free_hand) {
+			if (draw_freehand) {
 				record_new_position (x, y);
 				convert_on_timeout ();
 				last_x = x;
@@ -150,9 +166,13 @@ public class TrackTool : Tool {
 		});
 	}
 
+	public void set_samples_per_point (double s) {
+		samples_per_point = s;
+	}
+
 	public void set_stroke_width (double width) {
 		string w = SpinButton.convert_to_string (width);
-		Preferences.set ("free_hand_stroke_width", w);
+		Preferences.set ("freehand_stroke_width", w);
 		stroke_width = width;
 	}
 
@@ -171,7 +191,7 @@ public class TrackTool : Tool {
 			}
 			
 			p = glyph.path_list.last ().data;
-			draw_free_hand = false;
+			draw_freehand = false;
 			
 			convert_points_to_line ();
 
@@ -280,7 +300,7 @@ public class TrackTool : Tool {
 		EditPoint current_end = new EditPoint ();
 
 		// exclude the end point on the path we are adding points to
-		if (draw_free_hand) {
+		if (draw_freehand) {
 			current_end = get_active_path ().get_last_point ();
 		}
 
@@ -339,12 +359,12 @@ public class TrackTool : Tool {
 
 		timer.set_callback (() => {
 			
-			if (draw_free_hand) {
+			if (draw_freehand) {
 				record_new_position (last_x, last_y);
 				convert_on_timeout ();
 			}
 			
-			return draw_free_hand;
+			return draw_freehand;
 		});
 
 		timer.attach (null);
@@ -373,12 +393,13 @@ public class TrackTool : Tool {
 			update_cycles = 0;
 		}
 			
-		if (added_points > 40) {
+		if (added_points > 40 / samples_per_point) {
 			last_update  = get_current_time ();
 			convert_points_to_line ();
 		}
 	}
 	
+	/** Add a sharp corner instead of a smooth curve. */
 	void add_corner (int px, int py) {
 		PointSelection p;
 		delete_last_points_at (px, py);
@@ -402,6 +423,7 @@ public class TrackTool : Tool {
 		return glyph.path_list.last ().data;		
 	}
 	
+	/** Delete all points close to the pixel at x,y. */
 	void delete_last_points_at (int x, int y) {
 		double px, py;
 		Path p;
@@ -421,13 +443,15 @@ public class TrackTool : Tool {
 		}
 	}
 	
-	/** @return true if the new point point is closer than a few pixels EditPoint. */
+	/** @return true if the new point point is closer than a few pixels from p. */
 	bool is_close (EditPoint p, double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		return glyph.view_zoom * Path.distance (p.x, x, p.y, y) < 5;
 	}
 	
-	/** @return the last removed point. */
+	/** Take the average of tracked points and create a smooth line.
+	 * @return the last removed point.
+	 */
 	EditPoint convert_points_to_line () {
 		EditPoint ep, last_point;
 		double sum_x, sum_y, nx, ny;

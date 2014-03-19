@@ -568,8 +568,7 @@ public class DrawingTools : ToolCollection  {
 		stroke_color.set_a (double.parse (Preferences.get ("line_color_a")));
 		style_tools.add_tool (stroke_color);
 		
-		SpinButton stroke_width;
-		stroke_width = new SpinButton ("stroke_width", t_("Stroke width"));
+		SpinButton stroke_width = new SpinButton ("stroke_width", t_("Stroke width"));
 
 		style_tools.add_tool (stroke_width);
 		
@@ -686,8 +685,24 @@ public class DrawingTools : ToolCollection  {
 		});
 		style_tools.add_tool (ttf_units);
 
-		// drawing tool delayed response in order to avoid having the 
-		// moving point untder the finger
+		SpinButton free_hand_samples = new SpinButton ("free_hand_samples_per_point", t_("Adjust the number of samples per point in the free hand tool."));
+
+		style_tools.add_tool (free_hand_samples);
+		
+		free_hand_samples.set_max (9);
+		free_hand_samples.set_min (0.002);
+		free_hand_samples.set_value_round (1);
+
+		if (Preferences.get ("stroke_width") != "") {
+			free_hand_samples.set_value (Preferences.get ("stroke_width"));
+			track_tool.set_samples_per_point (free_hand_samples.get_value ());
+		}
+
+		free_hand_samples.new_value_action.connect ((self) => {
+			track_tool.set_samples_per_point (free_hand_samples.get_value ());
+		});
+
+		
 #if ANDROID
 		string delayed_response_value = Preferences.get ("response_delay");
 		SpinButton delayed_response = new SpinButton ("response_delay", t_("Delay response for editing tools"));

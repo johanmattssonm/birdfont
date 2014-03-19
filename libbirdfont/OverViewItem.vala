@@ -85,6 +85,7 @@ public class OverViewItem : GLib.Object {
 			overview.open_new_glyph_signal (character);
 		} else {
 			overview.open_glyph_signal ((!) glyphs);
+			((!) glyphs).get_current ().close_path ();
 		}		
 	}
 	

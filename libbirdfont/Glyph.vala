@@ -143,6 +143,8 @@ public class Glyph : FontDisplay {
 				add_active_path (p);
 			}
 		}
+		
+		update_view ();
 	}
 	
 	public void clear_active_paths () {
