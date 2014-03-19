@@ -465,7 +465,7 @@ os.put_string (
 		if (BirdFont.win32) {
 			async = false;
 		}
-		
+				
 		try {
 			// create a copy of current font and use it in a separate 
 			// export thread
