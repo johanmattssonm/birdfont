@@ -63,9 +63,14 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 			-I ./build/mac/birdfont""")
 		run("mv ./*.o build/libbirdfont/ ")
 
+		if library.endswith (".dylib"):
+			sonameparam = "" # gcc on mac os does not have the soname parameter
+		else:
+			sonameparam = "-Wl,-soname," + library
+		
 		run(cc + " " + ldflags + """ \
 			-shared \
-			-Wl,-soname,""" + library + """ \
+			""" + sonameparam + """ \
 			build/libbirdfont/*.o \
 			$(freetype-config --libs) \
 			$(pkg-config --libs """ + config.GEE + """) \
