@@ -40,6 +40,7 @@ public class PathList : GLib.Object {
 	public Path get_first_path () {
 		if (unlikely (paths.length () == 0)) {
 			warning ("No path");
+			return new Path ();
 		}
 		
 		return paths.first ().data;

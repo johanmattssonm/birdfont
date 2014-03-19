@@ -733,6 +733,7 @@ public class PenTool : Tool {
 			path.points.remove_link (path.points.last ());
 			
 			path.close ();
+			glyph.close_path ();
 			
 			force_direction ();
 

@@ -112,6 +112,7 @@ public class TrackTool : Tool {
 			if (button == 1 && draw_free_hand) {
 				add_endpoint_and_merge (x, y);
 			}
+			BirdFont.get_current_font ().touch ();
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -187,6 +188,8 @@ public class TrackTool : Tool {
 						glyph.close_path ();
 					}
 				}
+				
+				glyph.clear_active_paths ();
 			} else {
 				add_corner (x, y);
 			}
