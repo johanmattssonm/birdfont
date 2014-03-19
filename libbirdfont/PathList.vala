@@ -36,6 +36,14 @@ public class PathList : GLib.Object {
 			paths.remove_link (paths.first ());
 		}
 	}
+	
+	public Path get_first_path () {
+		if (unlikely (paths.length () == 0)) {
+			warning ("No path");
+		}
+		
+		return paths.first ().data;
+	}
 }
 
 }

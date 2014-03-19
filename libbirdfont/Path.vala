@@ -779,22 +779,31 @@ public class Path {
 		double last = 0;
 		bool on_edge = false;
 		double last_x = 0;
-
+		Path path;
+		PathList pathlist;
+		
 		if (points.length () < 2) {
 			return false;
 		}
 		
-		if (!is_over_boundry_precision (x, y, tolerance)) {
+		if (stroke > 0) {
+			pathlist = StrokeTool.get_stroke (this, stroke);
+			path = pathlist.get_first_path ();
+		} else {
+			path = this;
+		}
+		
+		if (!path.is_over_boundry_precision (x, y, tolerance)) {
 			return false;
 		}
 
-		foreach (EditPoint e in points) {
+		foreach (EditPoint e in path.points) {
 			if (distance (e.x, x, e.y, y) < tolerance) {
 				return true;
 			}
 		}
 
-		all_of_path ((cx, cy, ct) => {
+		path.all_of_path ((cx, cy, ct) => {
 			double distance = Math.fabs (Math.sqrt (Math.pow (cx - x, 2) + Math.pow (cy - y, 2)));
 			
 			if (distance < tolerance) {
