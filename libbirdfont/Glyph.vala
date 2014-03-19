@@ -741,41 +741,45 @@ public class Glyph : FontDisplay {
 		double view_zoom_x, view_zoom_y;
 		double ivz, off;
 
-		view_offset_x += x / view_zoom;
-		view_offset_y += y / view_zoom;
-		
-		if (unlikely (allocation.width == 0 || allocation.height == 0)) {
-			return;
-		}
-		
-		view_zoom_x = allocation.width * view_zoom / w;
-		view_zoom_y = allocation.height * view_zoom / h;
-				
-		// TODO: there is a max zoom level
-		
-		if (view_zoom_x * allocation.width < view_zoom_y * allocation.height) {
-			view_zoom = view_zoom_x;
-			ivz = 1 / view_zoom;
-
-			off = (view_zoom / view_zoom_y) * allocation.height / view_zoom;	
-			off = allocation.height/view_zoom - off;
-			off /= 2;
-			
-			view_offset_y -= off;
-
+		if (Path.distance (x, x + w, y, y + h) < 7) {
+			zoom_in ();
 		} else {
-			view_zoom = view_zoom_y;
-			ivz = 1 / view_zoom;
+			view_offset_x += x / view_zoom;
+			view_offset_y += y / view_zoom;
+			
+			if (unlikely (allocation.width == 0 || allocation.height == 0)) {
+				return;
+			}
+			
+			view_zoom_x = allocation.width * view_zoom / w;
+			view_zoom_y = allocation.height * view_zoom / h;
+					
+			// TODO: there is a max zoom level
+			
+			if (view_zoom_x * allocation.width < view_zoom_y * allocation.height) {
+				view_zoom = view_zoom_x;
+				ivz = 1 / view_zoom;
 
-			off = (view_zoom / view_zoom_x) * allocation.width / view_zoom;	
-			off = allocation.width / view_zoom - off;
-			off /= 2;			
+				off = (view_zoom / view_zoom_y) * allocation.height / view_zoom;	
+				off = allocation.height/view_zoom - off;
+				off /= 2;
+				
+				view_offset_y -= off;
 
-			view_offset_x -= off;
+			} else {
+				view_zoom = view_zoom_y;
+				ivz = 1 / view_zoom;
+
+				off = (view_zoom / view_zoom_x) * allocation.width / view_zoom;	
+				off = allocation.width / view_zoom - off;
+				off /= 2;			
+
+				view_offset_x -= off;
+			}
+			
+			zoom_area_is_visible = false;
+			store_current_view ();
 		}
-		
-		zoom_area_is_visible = false;
-		store_current_view ();
 	}
 	
 	public void show_zoom_area (int sx, int sy, int nx, int ny) {
@@ -1090,6 +1094,10 @@ public class Glyph : FontDisplay {
 				r = true;
 				p.set_editable (false);
 			}
+			
+			if (p.is_open ()) {
+				p.convert_path_ending_to_line ();
+			}
 		}
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
@@ -1098,7 +1106,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public void open_path () {	
-		foreach (var p in path_list) {
+		foreach (Path p in path_list) {
 			p.set_editable (true);
 			p.recalculate_linear_handles ();
 		}

@@ -240,7 +240,7 @@ public class EditPoint {
 	}
 	
 	public double get_direction () {
-		if (is_null (prev)) {
+		if (is_null (prev) || is_null (((!) prev).data)) {
 			return 0;
 		}
 		

@@ -81,7 +81,7 @@ public class DrawingTools : ToolCollection  {
 			draw_tools.add_tool (stroke_tool);
 		}
 		
-		TrackTool track_tool = new TrackTool ("track"); // draw outline on free hand
+		TrackTool track_tool = new TrackTool ("track"); // draw outline on freehand
 		draw_tools.add_tool (track_tool);
 		
 		// quadratic Bézier points
@@ -554,6 +554,10 @@ public class DrawingTools : ToolCollection  {
 			Path.line_color_b = stroke_color.color_b;
 			Path.line_color_a = stroke_color.color_a;
 
+			if (Path.line_color_a == 0) {
+				Path.line_color_a = 1;
+			}
+
 			Preferences.set ("line_color_r", @"$(Path.line_color_r)");
 			Preferences.set ("line_color_g", @"$(Path.line_color_g)");
 			Preferences.set ("line_color_b", @"$(Path.line_color_b)");
@@ -685,21 +689,21 @@ public class DrawingTools : ToolCollection  {
 		});
 		style_tools.add_tool (ttf_units);
 
-		SpinButton free_hand_samples = new SpinButton ("free_hand_samples_per_point", t_("Adjust the number of samples per point in the free hand tool."));
+		SpinButton freehand_samples = new SpinButton ("freehand_samples_per_point", t_("Adjust the number of samples per point in the freehand tool."));
 
-		style_tools.add_tool (free_hand_samples);
+		style_tools.add_tool (freehand_samples);
 		
-		free_hand_samples.set_max (9);
-		free_hand_samples.set_min (0.002);
-		free_hand_samples.set_value_round (1);
+		freehand_samples.set_max (9);
+		freehand_samples.set_min (0.002);
+		freehand_samples.set_value_round (1);
 
 		if (Preferences.get ("stroke_width") != "") {
-			free_hand_samples.set_value (Preferences.get ("stroke_width"));
-			track_tool.set_samples_per_point (free_hand_samples.get_value ());
+			freehand_samples.set_value (Preferences.get ("stroke_width"));
+			track_tool.set_samples_per_point (freehand_samples.get_value ());
 		}
 
-		free_hand_samples.new_value_action.connect ((self) => {
-			track_tool.set_samples_per_point (free_hand_samples.get_value ());
+		freehand_samples.new_value_action.connect ((self) => {
+			track_tool.set_samples_per_point (freehand_samples.get_value ());
 		});
 
 		

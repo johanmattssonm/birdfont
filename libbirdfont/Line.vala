@@ -287,13 +287,13 @@ public class Line : GLib.Object {
 		if (get_active ()) {				 
 			if (is_vertical ()) {
 				h = g.allocation.height;
-				cr.move_to (p + 8 * ivz, h - 30 * ivz);
+				cr.move_to (p + 8 , h - 30);
 			} else {
 				w = g.allocation.width;
-				cr.move_to (w - 70 * ivz, p + 15 * ivz);
+				cr.move_to (w - 70, p + 15);
 			}
 
-			cr.set_font_size (12 * ivz);
+			cr.set_font_size (12);
 			cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.BOLD);
 	
 			cr.show_text (get_label ());

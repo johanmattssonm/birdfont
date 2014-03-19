@@ -29,7 +29,7 @@ public class Path {
 	EditPoint? last_point = null;
 	EditPoint? second_last_point = null;
 
-	/** Region boundaries */
+	/** Path boundaries */
 	public double xmax = double.MIN;
 	public double xmin = double.MAX;
 	public double ymax = double.MIN;
@@ -43,19 +43,13 @@ public class Path {
 
 	bool edit = true;
 	bool open = true;
+	
 	bool direction_is_set = false;
-
 	bool no_derived_direction = false;
 	bool clockwise_direction = true;
 
 	// Iterate over each pixel in a path
 	public delegate bool RasterIterator (double x, double y, double step);
-	
-	// Iterate over all points in a rasterized path and compute a vector 
-	// for each point
-	public delegate bool VectorIterator (EditPoint start, EditPoint stop, 
-		double x, double y, double hx0, double hx1, double dy0, double dy1, 
-		double step);
 	
 	public delegate bool SegmentIterator (EditPoint start, EditPoint stop);
 	
@@ -2399,6 +2393,15 @@ public class Path {
 			ep.get_right_handle ().type = type;
 			ep.get_left_handle ().type = type;
 		}		
+	}
+	
+	public void convert_path_ending_to_line () {
+		if (points.length () < 2) {
+			return;
+		}
+		
+		get_first_point ().get_left_handle ().convert_to_line ();
+		get_last_point ().get_right_handle ().convert_to_line ();		
 	}
 }
 
