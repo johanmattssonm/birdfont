@@ -367,7 +367,13 @@ os.put_string (
 		File file = font.get_folder ();
 		return export_ttf_font_path (file);
 	}
-	
+
+	public static bool export_ttf_font_sync () {
+		Font font = BirdFont.get_current_font ();
+		File file = font.get_folder ();
+		return export_ttf_font_path (file, false);
+	}
+		
 	// FIXME: move to search path class
 	private static string[] get_birdfont_export (File folder, string temp_file) {
 		File f;

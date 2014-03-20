@@ -135,9 +135,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 						f_svg.delete ();
 					}
 					
-					ExportTool.export_ttf_font ();							
 					ExportTool.export_svg_font ();
-					
+					ExportTool.export_ttf_font_sync ();							
+						
 					File r_ttf = preview_directory.get_child (@"$(font.get_full_name ())$rid.ttf");
 					File r_svg = preview_directory.get_child (@"$(font.get_full_name ())$rid.svg");
 					
