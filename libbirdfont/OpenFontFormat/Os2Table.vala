@@ -111,7 +111,7 @@ public class Os2Table : Table {
 		fd.add_u16 (ascender); // usWinAscent
 		
 		if (descender > 0) {
-			warning ("usWinDescent is unsigned.");
+			warning (@"usWinDescent is unsigned, can not write $(-descender) to the field.");
 			fd.add_u16 (0);
 		} else {
 			fd.add_u16 (-descender); // usWinDescent (not like sTypoDescender)

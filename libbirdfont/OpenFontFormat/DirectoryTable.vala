@@ -103,7 +103,7 @@ public class DirectoryTable : Table {
 			// since the most browsers uses the GPOS table
 			// but Windows does not accept fonts without a kern table.
 			
-			// FIXME tables.append (kern_table);
+			tables.append (kern_table);
 							
 			tables.append (loca_table);
 			tables.append (maxp_table);

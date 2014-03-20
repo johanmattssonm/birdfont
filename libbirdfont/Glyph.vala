@@ -1341,15 +1341,16 @@ public class Glyph : FontDisplay {
 	
 	public void draw_path (Context cr) {
 		double left, baseline;
+		Font font = BirdFont.get_current_font ();
 		
-		baseline = get_line ("baseline").pos;
+		baseline = font.base_line;
 		left = get_line ("left").pos;
 		
 		if (!is_open ()) {
 			cr.save ();
 			cr.set_source_rgba (0, 0, 0, 1);
 			
-			Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () + baseline);
+			Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
 			
 			cr.restore ();
 		}
@@ -1358,7 +1359,7 @@ public class Glyph : FontDisplay {
 			foreach (unowned Path p in path_list) {
 				cr.save ();
 				cr.set_source_rgba (Path.fill_color_r, Path.fill_color_g, Path.fill_color_b, Path.fill_color_a);
-				Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () + baseline);
+				Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
 				cr.restore ();
 			}
 		}
@@ -1770,7 +1771,7 @@ public class Glyph : FontDisplay {
 		current.append_unichar (glyph.unichar_code);
 		pos = glyph_sequence.index_of (current.str);
 		
-		baseline = glyph.get_line ("baseline").pos;
+		baseline = font.base_line;;
 		left = glyph.get_line ("left").pos;
 
 		x = glyph.get_width ();
@@ -1791,7 +1792,7 @@ public class Glyph : FontDisplay {
 				|| in_range (left + x + kern + juxtaposed.get_width (), box_x1, box_x2))) {
 
 				marker_x = Glyph.xc () + left + x + kern - glyph.view_offset_x;
-				marker_y = Glyph.yc () + baseline - glyph.view_offset_y;
+				marker_y = Glyph.yc () - baseline - glyph.view_offset_y;
 				
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
@@ -1823,7 +1824,7 @@ public class Glyph : FontDisplay {
 			x -= kern;
 			
 			marker_x = Glyph.xc () + left + x;
-			marker_y = Glyph.yc () + baseline;
+			marker_y = Glyph.yc () - baseline;
 			if (!juxtaposed.is_empty () 
 				&&(in_range (left + x, box_x1, box_x2)
 				|| in_range (left + x + juxtaposed.get_width (), box_x1, box_x2))) {
@@ -1840,15 +1841,15 @@ public class Glyph : FontDisplay {
 	}
 	
 	void draw_background_glyph (WidgetAllocation allocation, Context cr) {
-		double left, baseline, current_baseline, current_left;
+		double left, baseline, current_left;
 		Glyph g;
+		Font font = BirdFont.get_current_font ();
 		
-		current_baseline = get_line ("baseline").pos;
 		current_left = get_line ("left").pos;
 		
 		if (background_glyph != null) {
 			g = (!) background_glyph;
-			baseline = get_line ("baseline").pos;
+			baseline = font.base_line;
 			left = g.get_line ("left").pos;
 			cr.save ();
 			cr.scale (view_zoom, view_zoom);
@@ -1856,10 +1857,14 @@ public class Glyph : FontDisplay {
 			cr.set_source_rgba (0.2, 0.2, 0.2, 0.5);
 			Svg.draw_svg_path (cr, g.get_svg_data (), 
 				Glyph.xc () + left - (left - current_left) , 
-				Glyph.yc () + baseline - (current_baseline - baseline));
+				Glyph.yc () - baseline);
 			cr.restore ();
 		}
 		
+	}
+	
+	public string get_hex () {
+		return Font.to_hex_code (unichar_code);
 	}
 }
 

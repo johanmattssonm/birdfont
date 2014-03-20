@@ -195,7 +195,7 @@ public class Font : GLib.Object {
 	}
 	
 	public double get_height () {
-		double r = base_line - top_position;
+		double r = top_position - base_line;
 		return (r > 0) ? r : -r;
 	}
 		
@@ -304,16 +304,16 @@ public class Font : GLib.Object {
 		g.left_limit = -33;
 		g.right_limit = 33;
 		
-		p.add (-20, -top_position - 5);
-		p.add (20, -top_position - 5);
-		p.add (20, -base_line + 5);
-		p.add (-20, -base_line + 5);
+		p.add (-20, top_position - 5);
+		p.add (20, top_position - 5);
+		p.add (20, base_line + 5);
+		p.add (-20, base_line + 5);
 		p.close ();
 		
-		i.add (-15, -top_position - 10);
-		i.add (15, -top_position - 10);
-		i.add (15, -base_line + 10);
-		i.add (-15, -base_line + 10);
+		i.add (-15, top_position - 10);
+		i.add (15, top_position - 10);
+		i.add (15, base_line + 10);
+		i.add (-15, base_line + 10);
 		i.reverse ();
 		i.close ();
 

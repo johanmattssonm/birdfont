@@ -214,6 +214,11 @@ public class GlyfTable : Table {
 		
 		g.remove_empty_paths ();
 		glyf_data = new GlyfData (g);
+		
+		if (glyf_data.get_ncontours () == 0) {
+			warning (@"No paths in $(g.get_name ()) ($(g.get_hex ())) can be exported.");
+		}
+		
 		if (g.path_list.length () == 0 || glyf_data.paths.length () == 0) {
 			// location_offsets will be equal to location_offset + 1 for
 			// all empty glyphs

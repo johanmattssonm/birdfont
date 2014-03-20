@@ -132,23 +132,28 @@ public class NameTable : Table {
 			printd (@"Name id: $(name_id.nth (i).data) platform:  $(platform.nth (i).data) enc: $(encoding_id.nth (i).data) lang: $(lang.nth (i).data) len: $(strlen.nth (i).data) str: \"$(str.str)\"\n");		
 		}
 	}
-	
+
 	/** Create a valid PostScript name. */
 	public string validate_ps_name (string s) {
+		return name_validation (s, false);
+	}
+
+	public string validate_name (string s) {
+		return name_validation (s, true);
+	}
+		
+	public string name_validation (string s, bool allow_space) {
 		string n;
 		int ccount;
 		unichar c;
 		StringBuilder name = new StringBuilder ();
 		
 		n = s;
-		if (n.char_count () >= 28) {
-			n = truncate (n, 28);
-		}
-		
 		ccount = n.char_count ();
-		for (int i = 0; i < ccount; i++) {
+		// truncate strings longer than 28 characters
+		for (int i = 0; i < ccount && i < 27; i++) {
 			c = n.get_char (n.index_of_nth_char (i));
-			if (is_valid_ps_name_char (c)) {
+			if (is_valid_ps_name_char (c) || (allow_space && c == ' ')) {
 				name.append_unichar (c);
 			} else {
 				name.append_unichar ('_');
@@ -156,7 +161,7 @@ public class NameTable : Table {
 		}
 		
 		return name.str;	
-	}
+	}		
 	
 	bool is_valid_ps_name_char (unichar c) {
 		switch (c) {
@@ -192,15 +197,6 @@ public class NameTable : Table {
 		return false;
 	}
 	
-	string truncate (string s, int size) {
-		StringBuilder str = new StringBuilder ();
-		int cc = s.char_count ();
-		for (int i = 0; i < size && i < cc; i++) {
-			str.append_unichar (s.get_char (s.index_of_nth_char (i)));
-		}
-		return str.str;
-	}
-	
 	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 		Font font = OpenFontFormatWriter.get_current_font ();
@@ -216,22 +212,22 @@ public class NameTable : Table {
 		text.append (font.copyright);
 		type.append (COPYRIGHT_NOTICE);
 		
-		text.append (validate_ps_name (font.name));
+		text.append (validate_name (font.name));
 		type.append (FONT_NAME);
 
-		text.append (font.subfamily);
+		text.append (validate_name (font.subfamily));
 		type.append (SUBFAMILY_NAME);
 
-		text.append (font.unique_identifier);
+		text.append (validate_name (font.unique_identifier));
 		type.append (UNIQUE_IDENTIFIER);
 
-		text.append (validate_ps_name (font.full_name));
+		text.append (validate_name (font.full_name));
 		type.append (FULL_FONT_NAME);
 		
 		text.append (font.version);
 		type.append (VERSION);
 		
-		text.append (validate_ps_name (font.postscript_name));
+		text.append (validate_name (font.postscript_name));
 		type.append (POSTSCRIPT_NAME);
 
 		text.append (font.description);
@@ -240,7 +236,7 @@ public class NameTable : Table {
 		text.append (validate_ps_name (font.name));
 		type.append (PREFERED_FAMILY);
 		
-		text.append (font.subfamily);
+		text.append (validate_name (font.subfamily));
 		type.append (PREFERED_SUB_FAMILY);
 		
 		num_records = (uint16) text.length ();

@@ -730,12 +730,12 @@ public class ImportSvg {
 			// move only y 
 			for (int i = 0; i < pi; i += 2) {
 				p[i] += glyph.left_limit;
-				p[i+1] -= font.base_line;
+				p[i+1] += font.base_line;
 			}
 		} else {
 			for (int i = 0; i < pi; i += 2) {
 				p[i] += glyph.left_limit;
-				p[i+1] -= font.top_position;
+				p[i+1] += font.top_position;
 			}
 		}
 		

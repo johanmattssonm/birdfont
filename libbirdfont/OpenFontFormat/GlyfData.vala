@@ -63,9 +63,7 @@ class GlyfData : GLib.Object {
 		foreach (Path p in g.path_list) {
 			q = p.get_quadratic_points ();
 			
-			if (q.points.length () < 2) {
-				warning (@"A path in $(g.get_name ()) has less than three points, it will not be exported.");
-			} else {
+			if (!is_empty (q)) {
 				paths.append (q);
 			}
 		}
@@ -75,6 +73,25 @@ class GlyfData : GLib.Object {
 		process_x ();
 		process_y ();
 		process_bounding_box ();			
+	}
+
+	bool is_empty (Path p) {
+		EditPoint? last = null;
+		
+		if (unlikely (p.points.length () < 2)) {
+			warning (@"A path in $(glyph.get_name ()) has less than three points, it will not be exported.");
+			return true;
+		}
+		
+		foreach (EditPoint ep in p.points) {
+			if (last != null && !ep.equals ((!) last)) {
+				return false;
+			}
+			last = ep;
+		}
+		
+		warning (@"A path in $(glyph.get_name ()) ($(glyph.get_hex ())) has no area but $(p.points.length ()) points at $(p.get_first_point ().x),$(p.get_first_point ().y).");
+		return true;
 	}
 
 	public uint16 get_end_point () {
@@ -96,12 +113,12 @@ class GlyfData : GLib.Object {
 		end_point = 0;
 		
 		foreach (Path quadratic in paths) {
-			if (quadratic.points.length () == 0) {
+			if (unlikely (quadratic.points.length () == 0)) {
 				warning (@"No points in path (before conversion $(quadratic.points.length ()))");
 				continue;
 			}
 			
-			if (quadratic.points.length () < 2) {
+			if (unlikely (quadratic.points.length () < 2)) {
 				warning ("A path contains less than three points, it will not be exported.");
 				continue;
 			}
@@ -119,15 +136,15 @@ class GlyfData : GLib.Object {
 			}
 			end_points.append (end_point - 1);
 			
-			if (end_point - 1 < last_end_point) {
+			if (unlikely (end_point - 1 < last_end_point)) {
 				warning (@"Next endpoint has bad value. (end_point - 1 < last_end_point)  ($(end_point - 1) < $last_end_point)");
 			}
 			
 			last_end_point = end_point - 1;
 		}
 		
-		if (end_point == 0) {
-			warning ("End point is zero");
+		if (unlikely (end_point == 0)) {
+			warning (@"End point is zero for glyph $(glyph.get_name ())");
 		}			
 	}
 
@@ -159,8 +176,8 @@ class GlyfData : GLib.Object {
 
 	public static double tie_to_ttf_grid_y (Font font, double y) {
 		double ttf_y;
-		ttf_y = rint (y * UNITS  + font.base_line * UNITS);
-		return (ttf_y / UNITS) - font.base_line;
+		ttf_y = rint (y * UNITS - font.base_line * UNITS);
+		return (ttf_y / UNITS) + font.base_line;
 	}
 	
 	void process_x () {
@@ -194,18 +211,18 @@ class GlyfData : GLib.Object {
 		
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
-				y = rint (e.y * UNITS - prev + font.base_line  * UNITS);
+				y = rint (e.y * UNITS - prev - font.base_line  * UNITS);
 				coordinate_y.append ((int16) y);
 				
-				prev = rint (e.y * UNITS + font.base_line * UNITS);
+				prev = rint (e.y * UNITS - font.base_line * UNITS);
 				
 				type = e.get_right_handle ().type;
 				
 				// off curve
-				y = rint (e.get_right_handle ().y () * UNITS - prev + font.base_line * UNITS);
+				y = rint (e.get_right_handle ().y () * UNITS - prev - font.base_line * UNITS);
 				coordinate_y.append ((int16) y);
 			
-				prev = rint (e.get_right_handle ().y () * UNITS + font.base_line  * UNITS);
+				prev = rint (e.get_right_handle ().y () * UNITS - font.base_line  * UNITS);
 			}
 		}
 	}
@@ -246,8 +263,13 @@ class GlyfData : GLib.Object {
 			c += last;
 			
 			if ((flags.nth (i).data & Coordinate.ON_PATH) > 0) {
-				if (c < bounding_box_ymin) bounding_box_ymin = c;
-				if (c > bounding_box_ymax) bounding_box_ymax = c;			
+				if (c < bounding_box_ymin) {
+					bounding_box_ymin = c;
+				}
+				
+				if (c > bounding_box_ymax) {
+					bounding_box_ymax = c;
+				}
 			}
 			
 			last = c;

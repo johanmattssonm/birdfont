@@ -102,7 +102,7 @@ class Svg {
 
 	private static void add_abs_start (EditPoint ep, StringBuilder svg, Glyph g, bool to_glyph) {		
 		double left = g.left_limit;
-		double baseline = BirdFont.get_current_font ().base_line;
+		double baseline = -BirdFont.get_current_font ().base_line;
 		double height = BirdFont.get_current_font ().get_height ();
 		
 		svg.append_printf ("M");
@@ -121,7 +121,7 @@ class Svg {
 	}	
 	
 	private static void add_abs_line_to (EditPoint start, EditPoint stop, StringBuilder svg, Glyph g, bool to_glyph) {
-		double baseline = BirdFont.get_current_font ().base_line;
+		double baseline = -BirdFont.get_current_font ().base_line;
 		double left = g.left_limit;
 		
 		double xa, ya, xb, yb;
@@ -160,7 +160,7 @@ class Svg {
 		
 	private static void add_quadratic_abs_path (EditPoint start, EditPoint end, StringBuilder svg, Glyph g,  bool to_glyph) {
 		double left = g.left_limit;
-		double baseline = BirdFont.get_current_font ().base_line;
+		double baseline = -BirdFont.get_current_font ().base_line;
 		double height = BirdFont.get_current_font ().get_height (); // no probably not
 		
 		double xa, ya, xb, yb, xc, yc, xd, yd;
@@ -193,7 +193,7 @@ class Svg {
 			
 	private static void add_cubic_abs_path (EditPoint start, EditPoint end, StringBuilder svg, Glyph g,  bool to_glyph) {
 		double left = g.left_limit;
-		double baseline = BirdFont.get_current_font ().base_line;
+		double baseline = -BirdFont.get_current_font ().base_line;
 		double height = BirdFont.get_current_font ().get_height (); // no probably not
 		
 		double xa, ya, xb, yb, xc, yc, xd, yd;

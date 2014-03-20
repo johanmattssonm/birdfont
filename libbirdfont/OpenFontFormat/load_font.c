@@ -585,7 +585,7 @@ int get_height (FT_Face face, guint unichar) {
 		return 0;
 	}
 		
-	return (int) -face->glyph->metrics.height;	
+	return (int) face->glyph->metrics.height;	
 }
 
 /** Height of lower case letters. */
@@ -614,7 +614,7 @@ int get_descender (FT_Face face) {
 	FT_Get_Glyph (face->glyph, &glyph); 
 	FT_Glyph_Get_CBox (glyph, FT_GLYPH_BBOX_UNSCALED, &bbox);
 	
-	return (int) -bbox.yMin;	
+	return (int) bbox.yMin;	
 }
 
 /** Append name table data to a gstring. */
@@ -717,12 +717,12 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	g_string_append_printf (bf, "<backup>%s</backup>\n", file);
 
 	g_string_append_printf (bf, "<lines>\n");
-	g_string_append_printf (bf, "\t<top_limit>%f</top_limit>\n", -face->ascender * units);
+	g_string_append_printf (bf, "\t<top_limit>%f</top_limit>\n", face->ascender * units);
 	g_string_append_printf (bf, "\t<top_position>%f</top_position>\n", get_top (face) * units);
 	g_string_append_printf (bf, "\t<x-height>%f</x-height>\n", get_xheight (face) * units);
 	g_string_append_printf (bf, "\t<base_line>0</base_line>\n");
 	g_string_append_printf (bf, "\t<bottom_position>%f</bottom_position>\n", get_descender (face) * units);
-	g_string_append_printf (bf, "\t<bottom_limit>%f</bottom_limit>\n", -face->descender * units);		
+	g_string_append_printf (bf, "\t<bottom_limit>%f</bottom_limit>\n", face->descender * units);		
 	g_string_append_printf (bf, "</lines>\n");
 
 	// glyph outlines

@@ -231,10 +231,7 @@ public class Line : GLib.Object {
 	
 	public void draw (Context cr, WidgetAllocation allocation) {
 		Glyph g = MainWindow.get_current_glyph ();
-		
 		double p, h, w;
-		double ivz = 1/g.view_zoom;
-
 		double size = (active) ? 8 : 5;
 		
 		if (!visible) return;

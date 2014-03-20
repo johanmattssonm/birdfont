@@ -128,11 +128,11 @@ public class OpenFontFormatReader : Object {
 			f = BirdFont.get_current_font ();
 		}
 		
-		f.top_position = -get_ascender ();
-		f.top_limit = f.top_position - 5;
-		f.xheight_position = f.top_position - 5;
-		f.bottom_position = -get_descender ();
-		f.bottom_limit = f.bottom_position + 5;	
+		f.top_position = get_ascender ();
+		f.top_limit = f.top_position + 5;
+		f.xheight_position = f.top_position + 5;
+		f.bottom_position = get_descender ();
+		f.bottom_limit = f.bottom_position - 5;	
 	}
 
 	public double get_ascender () {
