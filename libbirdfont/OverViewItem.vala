@@ -13,6 +13,7 @@
 */
 
 using Cairo;
+using Math;
 
 namespace BirdFont {
 	
@@ -109,41 +110,46 @@ public class OverViewItem : GLib.Object {
 
 	private bool draw_thumbnail (Context cr, GlyphCollection? gl, double x, double y) {
 		Glyph g;
+		Font font;
 		double gx, gy;
 		double x1, x2, y1, y2;
-		double scale = width / DEFAULT_WIDTH;
+		double scale;
+		double scale_box;
 		double w, h;
+		double glyph_width, glyph_height;
 
-		w = width;
-		h = height;
+		if (gl != null) {	
+			font = BirdFont.get_current_font ();
+			w = width;
+			h = height;
+
+			scale_box = (width / DEFAULT_WIDTH);
 		
-		if (gl == null) {
-			return false;
+			g = ((!) gl).get_current ();
+			g.boundaries (out x1, out y1, out x2, out y2);
+			
+			glyph_width = x2 - x1;
+			glyph_height = y2 - y1;
+			
+			// caption height is 20
+			scale = (h - 20) / (font.top_limit - font.bottom_limit);
+			
+			gx = ((w / scale) - glyph_width) / 2;
+			gy = (h / scale) - 25 / scale;
+			
+			Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
+			Context c = new Context (s);
+			
+			c.scale (scale, scale);				
+			Svg.draw_svg_path (c, g.get_svg_data (), gx, gy);
+			
+			cr.save ();
+			cr.set_source_surface (s, x, y - h);
+			cr.paint ();
+			cr.restore ();
 		}
 		
-		g = ((!) gl).get_current ();
-		g.boundaries (out x1, out y1, out x2, out y2);
-
-		gx = (width - (x2 - x1)) / 2*scale;
-		
-		if (gx < 0) {
-			gx = 0;
-		}
-		
-		gy = (h / scale) - 25 / scale;
-		
-		Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
-		Context c = new Context (s);
-		
-		c.scale (scale, scale);				
-		Svg.draw_svg_path (c, g.get_svg_data (), gx, gy);
-		
-		cr.save ();
-		cr.set_source_surface (s, x, y - h);
-		cr.paint ();
-		cr.restore ();
-
-		return true;
+		return (gl != null);
 	}
 
 	public bool has_icons () {

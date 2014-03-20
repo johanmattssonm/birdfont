@@ -741,7 +741,6 @@ public class OverView : FontDisplay {
 	}
 
 	public override void button_press (uint button, double x, double y) {
-		// DELETE selection_click (button, x, y);
 		int index = 0;
 		
 		if (character_info != null) {
