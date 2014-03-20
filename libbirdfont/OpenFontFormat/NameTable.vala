@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -133,6 +133,74 @@ public class NameTable : Table {
 		}
 	}
 	
+	/** Create a valid PostScript name. */
+	public string validate_ps_name (string s) {
+		string n;
+		int ccount;
+		unichar c;
+		StringBuilder name = new StringBuilder ();
+		
+		n = s;
+		if (n.char_count () >= 28) {
+			n = truncate (n, 28);
+		}
+		
+		ccount = n.char_count ();
+		for (int i = 0; i < ccount; i++) {
+			c = n.get_char (n.index_of_nth_char (i));
+			if (is_valid_ps_name_char (c)) {
+				name.append_unichar (c);
+			} else {
+				name.append_unichar ('_');
+			}
+		}
+		
+		return name.str;	
+	}
+	
+	bool is_valid_ps_name_char (unichar c) {
+		switch (c) {
+			case '[':
+				return false;
+			case ']':
+				return false;
+			case '(':
+				return false;
+			case ')':
+				return false;
+			case '{':
+				return false;
+			case '}':
+				return false;
+			case '<':
+				return false;
+			case '>':
+				return false;
+			case '/':
+				return false;
+			case '%':
+				return false;
+							
+			default:
+				break;
+		}
+
+		if (33 <= c <= 126) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	string truncate (string s, int size) {
+		StringBuilder str = new StringBuilder ();
+		int cc = s.char_count ();
+		for (int i = 0; i < size && i < cc; i++) {
+			str.append_unichar (s.get_char (s.index_of_nth_char (i)));
+		}
+		return str.str;
+	}
+	
 	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 		Font font = OpenFontFormatWriter.get_current_font ();
@@ -148,7 +216,7 @@ public class NameTable : Table {
 		text.append (font.copyright);
 		type.append (COPYRIGHT_NOTICE);
 		
-		text.append (font.name);
+		text.append (validate_ps_name (font.name));
 		type.append (FONT_NAME);
 
 		text.append (font.subfamily);
@@ -157,19 +225,19 @@ public class NameTable : Table {
 		text.append (font.unique_identifier);
 		type.append (UNIQUE_IDENTIFIER);
 
-		text.append (font.full_name);
+		text.append (validate_ps_name (font.full_name));
 		type.append (FULL_FONT_NAME);
 		
 		text.append (font.version);
 		type.append (VERSION);
 		
-		text.append (font.postscript_name);
+		text.append (validate_ps_name (font.postscript_name));
 		type.append (POSTSCRIPT_NAME);
 
 		text.append (font.description);
 		type.append (DESCRIPTION);
 		
-		text.append (font.name);
+		text.append (validate_ps_name (font.name));
 		type.append (PREFERED_FAMILY);
 		
 		text.append (font.subfamily);
