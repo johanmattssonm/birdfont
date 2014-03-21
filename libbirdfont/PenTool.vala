@@ -73,9 +73,9 @@ public class PenTool : Tool {
 	
 	public static double path_stroke_width = 0;
 			
-	public PenTool (string name) {
-		string click_to_add_points;
-
+	public PenTool (string name) {	
+		base (name, t_("Add new points"));
+		
 		selected_points = new List<PointSelection> (); 
 
 		active_handle = new EditPointHandle.empty ();
@@ -88,8 +88,6 @@ public class PenTool : Tool {
 		selected_point = new EditPoint ();
 		clockwise = new List<Path> ();
 		counter_clockwise = new List<Path> ();
-						
-		click_to_add_points = t_("Add new points");
 		
 		tie_icon = Icons.get_icon ("tie_is_active.png");
 		delay_circle = Icons.get_icon ("delay_circle.png");
