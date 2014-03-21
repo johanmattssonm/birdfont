@@ -28,7 +28,7 @@ public class ClipTool : Tool {
 			data = svg_data + bf_data;
 			MainWindow.native_window.set_clipboard (data);
 			MainWindow.native_window.set_inkscape_clipboard (data);
-		}
+		}		
 	}
 
 	public static void paste_in_place () {
@@ -37,19 +37,26 @@ public class ClipTool : Tool {
 	
 	/** Paste at cursor. */
 	public static void paste () {
+		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph g = MainWindow.get_current_glyph ();
 		double x, y, w, h;
 		double dx, dy;
 		
-		paste_paths ();
+		if (fd is Glyph) {
+			paste_paths ();
+			
+			g.selection_boundaries (out x, out y, out w, out h);
+			
+			dx = g.motion_x - x - w / 2.0;
+			dy = g.motion_y - y + h / 2.0;
+			
+			foreach (Path path in g.active_paths) {
+				path.move (dx, dy);
+			}
+		}
 		
-		g.selection_boundaries (out x, out y, out w, out h);
-		
-		dx = g.motion_x - x - w / 2.0;
-		dy = g.motion_y - y + h / 2.0;
-		
-		foreach (Path path in g.active_paths) {
-			path.move (dx, dy);
+		if (fd is KerningDisplay) {
+			paste_letters_to_kerning_tab ();
 		}
 	}
 	
@@ -205,6 +212,15 @@ public class ClipTool : Tool {
 		}
 		
 		PenTool.update_selection ();
+	}
+	
+	static void paste_letters_to_kerning_tab () {
+		string clipboard_data = MainWindow.native_window.get_clipboard_data ();
+		KerningDisplay kerning_display = MainWindow.get_kerning_display ();
+		
+		if (!clipboard_data.has_prefix ("<?xml")) {
+			kerning_display.add_text (clipboard_data);
+		}
 	}
 }
 

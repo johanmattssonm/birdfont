@@ -380,23 +380,23 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public string get_clipboard_data () {
-		if (BirdFont.mac) {
-			string? t;
-			t = clipboard.wait_for_text ();
-			return (t == null) ? "" : (!) t;
-		} else {
-			SelectionData? selection_data;
-			Atom target;
-
-			target = Atom.intern_static_string ("image/x-inkscape-svg");
-			selection_data = clipboard.wait_for_contents (target);
-			
-			if (is_null (selection_data) || is_null (((!) selection_data).data)) {
-				return "";
-			}
-			
+		SelectionData? selection_data;
+		Atom target;
+		string? t;
+		
+		target = Atom.intern_static_string ("image/x-inkscape-svg");
+		selection_data = clipboard.wait_for_contents (target);
+		
+		if (!is_null (selection_data) && !is_null (((!) selection_data).data)) {
 			return (string) ((!) selection_data).data;
 		}
+		
+		t = clipboard.wait_for_text ();
+		if (t != null) {
+			return (!) t;
+		}
+		
+		return "";
 	}
 	
 	public void set_inkscape_clipboard (string inkscape_clipboard_data) {
@@ -851,6 +851,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		return true;
 	}
 	
+	// TODO: add tooltip
 	public void tooltip (string tooltip, int x, int y) {
 		
 	}

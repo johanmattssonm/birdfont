@@ -495,9 +495,6 @@ public class KerningDisplay : FontDisplay {
 	
 	public override void key_press (uint keyval) {
 		unichar c = (unichar) keyval;
-		Glyph? g;
-		Font f = BirdFont.get_current_font ();
-		string name;
 		
 		parse_error = false;
 		
@@ -535,20 +532,28 @@ public class KerningDisplay : FontDisplay {
 				row.prepend (new GlyphSequence ());
 			}
 			
-			if (!is_modifier_key (c) && c.validate ()) {
-				name = f.get_name_for_character (c);
-				g = f.get_glyph_by_name (name);
-				if (g != null) {
-					row.first ().data.glyph.append (g);
-					row.first ().data.ranges.append (null);
-					
-					selected_handle = (int) row.first ().data.glyph.length () - 1;
-					set_active_handle_index (selected_handle);
-				}
-			}
+			add_character (c);
 		}
 		
 		GlyphCanvas.redraw ();
+	}
+	
+	void add_character (unichar c) {
+		Glyph? g;
+		string name;
+		Font f = BirdFont.get_current_font ();
+		
+		if (!is_modifier_key (c) && c.validate ()) {
+			name = f.get_name_for_character (c);
+			g = f.get_glyph_by_name (name);
+			if (g != null) {
+				row.first ().data.glyph.append (g);
+				row.first ().data.ranges.append (null);
+				
+				selected_handle = (int) row.first ().data.glyph.length () - 1;
+				set_active_handle_index (selected_handle);
+			}
+		}
 	}
 	
 	public override void motion_notify (double ex, double ey) {
@@ -695,6 +700,15 @@ public class KerningDisplay : FontDisplay {
 		begin_handle_y = ey;
 		last_handle_x = ex;
 		moving = true;
+	}
+	
+	/** Insert text form clipboard. */
+	public void add_text (string t) {
+		int c = t.char_count ();
+		for (int i = 0; i < c; i++) {
+			add_character (t.get_char (i));
+		}
+		GlyphCanvas.redraw ();
 	}
 }
 
