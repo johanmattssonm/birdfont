@@ -81,20 +81,29 @@ public class KerningDisplay : FontDisplay {
 
 		cr.set_font_size (14);
 		cr.move_to (30, 80);
-		cr.show_text (line3);
-							
+		cr.show_text (line3);				
 		cr.restore ();
+	}
+	
+	double get_row_height () {
+		Font font = BirdFont.get_current_font ();
+		return font.top_limit - font.bottom_limit;
 	}
 	
 	public void draw_kerning_pairs (WidgetAllocation allocation, Context cr) {
 		Glyph glyph;
 		double x, y, w, kern, alpha;
 		double x2;
+		double caret_y;
 		int i, wi;
 		Glyph? prev;
 		GlyphSequence word_with_ligatures;
 		GlyphRange? gr_left, gr_right;
 		bool first_row = true;
+		double row_height;
+		Font font;
+		
+		font = BirdFont.get_current_font ();
 		i = 0;
 		
 		// bg color
@@ -103,9 +112,13 @@ public class KerningDisplay : FontDisplay {
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();
+		
+		glyph = MainWindow.get_current_glyph ();
+		
+		row_height = get_row_height ();
 	
 		alpha = 1;
-		y = 100;
+		y = get_row_height () + font.base_line + 20;
 		x = 20;
 		w = 0;
 		prev = null;
@@ -140,7 +153,11 @@ public class KerningDisplay : FontDisplay {
 				} else {
 					alpha = 0;
 					glyph = (!) g;
+					
+					// TODO: set font size
+					// cr.scale (KerningTools.font_size, KerningTools.font_size);
 					Svg.draw_svg_path (cr, glyph.get_svg_data (), x + kern, y);
+					
 					w = glyph.get_width ();
 				}
 
@@ -194,11 +211,12 @@ public class KerningDisplay : FontDisplay {
 			
 			// draw caret
 			if (first_row) {
-				x2 = x + kern / 2.0;
+				x2 = x;
+				caret_y = get_row_height () + font.base_line + 20;
 				cr.save ();
 				cr.set_source_rgba (0, 0, 0, 0.5);
-				cr.move_to (x2, 20);
-				cr.line_to (x2, 120);
+				cr.move_to (x2, caret_y + 20);
+				cr.line_to (x2, 20);
 				cr.stroke ();
 				cr.restore ();
 			}
@@ -207,7 +225,7 @@ public class KerningDisplay : FontDisplay {
 				row.remove (word);
 			}
 						
-			y += MainWindow.get_current_glyph ().get_height () + 20;
+			y += row_height + 20;
 			x = 20;
 			first_row = false;	
 		}

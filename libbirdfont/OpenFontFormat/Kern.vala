@@ -145,7 +145,7 @@ public class KernTable : Table {
 			
 			try {
 				// n_pairs is used to truncate this table to prevent buffer overflow
-				if (n_pairs > i++) {
+				if (i++ < n_pairs) {
 					gid1 = (uint16) glyf_table.get_gid (left);
 					gid2 = (uint16) glyf_table.get_gid (right);
 					

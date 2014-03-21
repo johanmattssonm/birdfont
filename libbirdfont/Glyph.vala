@@ -493,13 +493,9 @@ public class Glyph : FontDisplay {
 		return Svg.to_svg_glyph (this);
 	}
 	
-	public int get_height () 
-		requires (vertical_help_lines.length () >= 2)
-	{
-		unowned List<Line> a = horizontal_help_lines.first ();
-		unowned List<Line> b = horizontal_help_lines.last ();
-		
-		return (int) Math.fabs (a.data.pos - b.data.pos); 
+	public int get_height () {
+		Font f = BirdFont.get_current_font ();
+		return (int) Math.fabs (f.top_limit - f.bottom_limit); 
 	}
 	
 	public double get_width () {

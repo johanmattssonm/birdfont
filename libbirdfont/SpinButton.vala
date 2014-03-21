@@ -45,16 +45,18 @@ public class SpinButton : Tool {
 		panel_press_action.connect ((selected, button, tx, ty) => {
 			double py = Math.fabs (y - ty);
 			int n = 0;
-
+			
+			if (button == 3) {
+				set_from_text ();
+				n = 0;
+			}
+				
 			if (is_selected ()) {
 				if (button == 1) {
 					n = 1;
 				} else if (button == 2) {
 					n = 10;
-				} else if (button == 3) {
-					set_from_text ();
-					n = 0;
-				}
+				} 
 					
 				for (int i = 0; i < n; i++) {
 					if (py < 9) increase ();
@@ -70,6 +72,8 @@ public class SpinButton : Tool {
 			if (button == 1) {
 				set_selected (true);
 			}
+			
+			redraw ();
 		});
 
 		panel_move_action.connect ((selected, button, tx, ty) => {
@@ -91,7 +95,7 @@ public class SpinButton : Tool {
 					set_int_value (@"$new_value");
 				}
 				
-				Toolbox.redraw_tool_box ();
+				redraw ();
 			}
 			
 			return value_from_motion;
@@ -103,6 +107,8 @@ public class SpinButton : Tool {
 			if (button == 1) {
 				set_selected (false);
 			}
+			
+			redraw ();
 		});
 		
 		scroll_wheel_up_action.connect ((selected) => {
@@ -141,13 +147,14 @@ public class SpinButton : Tool {
 				set_int_value (@"$new_value");
 			}
 			
-			Toolbox.redraw_tool_box ();
+			redraw ();
 		});
 		
 		listener.signal_submit.connect (() => {
 			MainWindow.native_window.hide_text_input ();
+			redraw ();
 		});
-		
+
 		MainWindow.native_window.set_text_listener (listener);
 	}
 	
@@ -176,6 +183,7 @@ public class SpinButton : Tool {
 		}
 
 		new_value_action (this);
+		redraw ();
 	}
 
 	public void decrease () {
@@ -191,6 +199,7 @@ public class SpinButton : Tool {
 		}
 				
 		new_value_action (this);
+		redraw ();
 	}
 
 	public void set_int_value (string new_value) {
@@ -206,6 +215,7 @@ public class SpinButton : Tool {
 		milli = parse (v.substring (v.index_of_nth_char (3), 1));
 		
 		new_value_action (this);
+		redraw ();
 	}
 
 	int8 parse (string s) {
@@ -250,6 +260,8 @@ public class SpinButton : Tool {
 		if (emit_signal) {
 			new_value_action (this);
 		}
+		
+		redraw ();
 	}
 
 	public void set_value_round (double v, bool check_boundaries = true, bool emit_signal = true) {
@@ -295,6 +307,10 @@ public class SpinButton : Tool {
 		cr.show_text (get_display_value ());
 		
 		cr.restore ();
+	}
+	
+	public void redraw () {
+		 MainWindow.get_toolbox ().redraw ((int) x, (int) y, 70, 70);
 	}
 }
 

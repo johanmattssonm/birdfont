@@ -580,15 +580,15 @@ public class DrawingTools : ToolCollection  {
 		stroke_width.set_min (0.002);
 		stroke_width.set_value_round (1);
 
-		if (Preferences.get ("stroke_width") != "") {
-			stroke_width.set_value (Preferences.get ("stroke_width"));
+		if (Preferences.get ("stroke_width_for_open_paths") != "") {
+			stroke_width.set_value (Preferences.get ("stroke_width_for_open_paths"));
 		}
 
 		stroke_width.new_value_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			Path.stroke_width = stroke_width.get_value ();
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-			Preferences.set ("stroke_width", stroke_width.get_display_value ());
+			Preferences.set ("stroke_width_for_open_paths", stroke_width.get_display_value ());
 			MainWindow.get_toolbox ().redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
 		});
 		

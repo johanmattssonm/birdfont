@@ -22,6 +22,8 @@ public class KerningTools : ToolCollection  {
 	public static int next_class = 0;
 	public static Expander classes;
 	
+	public static double font_size = 1;
+	
 	public KerningTools () {
 		init ();
 	}
@@ -43,6 +45,26 @@ public class KerningTools : ToolCollection  {
 			d.set_kerning_by_text ();
 		});
 		kerning_tools.add_tool (text_kerning);
+
+		SpinButton font_size = new SpinButton ("kerning_font_size", t_("Font size "));
+
+		font_size.set_max (9);
+		font_size.set_min (0.002);
+		font_size.set_value_round (1);
+
+		if (Preferences.get ("kerning_font_size_settings") != "") {
+			font_size.set_value (Preferences.get ("kerning_font_size_settings"));
+		}
+
+		font_size.new_value_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			KerningTools.font_size = font_size.get_value ();
+			g.update_view ();
+			Preferences.set ("kerning_font_size_settings", font_size.get_display_value ());
+		});
+		
+		// TODO: add font size
+		// kerning_tools.add_tool (font_size);
 		
 		kerning_tools.set_persistent (false);
 		kerning_tools.set_unique (false);

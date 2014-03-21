@@ -1,6 +1,6 @@
 birdfont (0.35) stable;
 
-  * A new tool for drawing shapes with the mouse on free hand
+  * A new tool for drawing freehand shapes with the mouse
   * Bug fixes related to conversion from SVG to TTF
   * Fixes crash bug in SVG import code  
 
