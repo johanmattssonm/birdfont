@@ -122,7 +122,13 @@ public class GlyphRange {
 	 * @return true if the range could be fully parsed
 	 */
 	public void parse_ranges (string ranges) throws MarkupError {
-		string[] r = ranges.split (" ");
+		string[] r;
+				
+		if (ranges == " ") {
+			add_single (' ');
+		}
+		
+		r = ranges.split (" ");
 		
 		foreach (string w in r) {
 			w = w.replace (" ", "");

@@ -50,7 +50,9 @@ public class KerningClasses : GLib.Object {
 	} 
 
 	public void set_kerning_for_single_glyphs (string l, string r, double k) {
-		single_kerning.set (@"$l - $r", k);
+		string left = GlyphRange.serialize (l);
+		string right = GlyphRange.serialize (r);
+		single_kerning.set (@"$left - $right", k);
 	} 
 
 	public void set_kerning (GlyphRange left_range, GlyphRange right_range, double k) {
