@@ -523,7 +523,7 @@ public class TrackTool : Tool {
 	}
 	
 	/** @return current time in milli seconds. */
-	static double get_current_time () {
+	public static double get_current_time () {
 		return GLib.get_real_time () / 1000.0;
 	}
 }

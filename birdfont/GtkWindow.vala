@@ -53,6 +53,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	HBox text_box;
 	Button submit_text_button;
 	
+	Gtk.Window tooltip_window = new Gtk.Window ();
+	
+	ToolboxCanvas toolbox;
+		
 	public GtkWindow (string title) {
 		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		((Gtk.Window)this).set_title ("BirdFont");
@@ -210,9 +214,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		tab_box.pack_start (new TooltipCanvas (MainWindow.tool_tip), false, false, 0);
 		
+		toolbox = new ToolboxCanvas (MainWindow.tools); 
 		list_box = new HBox (false, 0);
 		list_box.pack_start (tab_box, true, true, 0);
-		list_box.pack_start (new ToolboxCanvas (MainWindow.tools), false, false, 0);
+		list_box.pack_start (toolbox, false, false, 0);
 
 		VBox vbox = new VBox (false, 0);
 		
@@ -851,13 +856,40 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		return true;
 	}
 	
-	// TODO: add tooltip
+	// TODO: add the default tooltip style to the label
 	public void show_tooltip (string tooltip, int x, int y) {
+		Label tooltip_label;
+		int parent_x, parent_y;
+		int tool_box_x, tool_box_y;
+		int posx, posy;
+
+		Screen screen = Screen.get_default ();
+
+		get_position (out parent_x, out parent_y);
+		toolbox.translate_coordinates (toolbox.get_toplevel (), 0, 0, out tool_box_x, out tool_box_y);
 		
+		tooltip_window.hide ();
+		
+		tooltip_window = new Gtk.Window (Gtk.WindowType.POPUP);
+		tooltip_label = new Label(tooltip);
+		tooltip_window.add (tooltip_label);
+		tooltip_label.show();
+		tooltip_label.set_type_hint (Gdk.WindowTypeHint.TOOLTIP);
+		
+		posx = parent_x + tool_box_x + x;
+		posy = parent_y + tool_box_y + y - 7;
+		tooltip_window.move (posx, posy);
+
+		tooltip_window.show();
+
+		// move label to the left if it is off screen
+		if (posx + tooltip_label.allocation.width > screen.get_width () - 20) {
+			tooltip_window.move (screen.get_width () - tooltip_label.allocation.width - 20, posy);
+		}
 	}
 
 	public void hide_tooltip () {
-		
+		tooltip_window.hide ();
 	}
 }
 

@@ -89,13 +89,7 @@ public class PenTool : Tool {
 		clockwise = new List<Path> ();
 		counter_clockwise = new List<Path> ();
 						
-		if (BirdFont.mac) {
-			click_to_add_points = t_("Right click or use left command key and click to add new points");
-		} else {
-			click_to_add_points = t_("Right click to add new points, left click to move points");
-		}		
-		
-		base (name, click_to_add_points + " " + t_("and double click to add new point on path."), ',', CTRL);
+		click_to_add_points = t_("Add new points");
 		
 		tie_icon = Icons.get_icon ("tie_is_active.png");
 		delay_circle = Icons.get_icon ("delay_circle.png");

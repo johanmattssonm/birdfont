@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -25,21 +25,6 @@ public class Tool : GLib.Object {
 
 	protected bool active = false;
 	protected bool selected = false;
-	
-	double r_default_selected = 131/255.0;
-	double g_default_selected = 179/255.0;
-	double b_default_selected = 231/255.0;
-	double a_default_selected = 1;
-	
-	double r_default = 185/255.0;
-	double g_default = 207/255.0;
-	double b_default = 231/255.0;
-	double a_default = 1;
-	
-	double r;
-	double g;
-	double b;
-	double a;
 	
 	ImageSurface? icon = null;
 		
@@ -90,8 +75,9 @@ public class Tool : GLib.Object {
 	public bool persistent = false;
 	public bool editor_events = false;
 	
-	bool showing_tooltip = false;
 	bool waiting_for_tooltip = false;
+	bool showing_this_tooltip = false;
+	static Tool active_tooltip = new Tool ();
 	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
@@ -118,49 +104,56 @@ public class Tool : GLib.Object {
 		panel_press_action.connect ((self, button, x, y) => {
 			MainWindow.get_tool_tip ().set_text_from_tool ();
 		});
+	}
+
+	void wait_for_tooltip () {
+		TimeoutSource timer_show;
+		int timeout_interval = 1000;
 		
-		panel_move_action.connect ((self, x, y) => {
-			bool show_tooltip = false;
-			int tooltip_cycles = 0;
-			TimeoutSource timer;
-			
-			if (show_tooltip) {
-				MainWindow.native_window.show_tooltip (tip, (int)x, (int)y);
+		if (active_tooltip != this) {
+			if (active_tooltip.showing_this_tooltip) {
+				timeout_interval = 1;
 			}
-		
+			
+			active_tooltip.showing_this_tooltip = false;
+			showing_this_tooltip = false;
+			active_tooltip = this;
+
 			if (!waiting_for_tooltip) {
 				waiting_for_tooltip = true;
-				timer = new TimeoutSource (600);
-				timer.set_callback (() => {
-					if (is_active () && !showing_tooltip) {
-						MainWindow.native_window.show_tooltip (tip, (int)x, (int)y);
-						showing_tooltip = true;
-						return true;
+				timer_show = new TimeoutSource (timeout_interval);
+				timer_show.set_callback (() => {
+					if (active_tooltip.is_active () && !active_tooltip.showing_this_tooltip) {
+						show_tooltip ();
 					}
-					
-					if (!is_active () && showing_tooltip) {	
-						MainWindow.native_window.hide_tooltip ();
-						showing_tooltip = false;
-						waiting_for_tooltip = false;
-						return false;
-					}
-					
-					if (!is_active () && !showing_tooltip) {
-						waiting_for_tooltip = false;
-						return false;
-					}
-					
-					return true;
+					waiting_for_tooltip = false;
+					return waiting_for_tooltip;
 				});
-				timer.attach (null);
+				timer_show.attach (null);
 			}
-			return false;
-		});
+		}
+	}
+	
+	static void show_tooltip () {
+		TimeoutSource timer_hide;
 		
-		r = r_default;
-		g = g_default;
-		b = b_default;
-		a = a_default;
+		// hide tooltip label later
+		if (!active_tooltip.showing_this_tooltip) {
+			timer_hide = new TimeoutSource (1500);
+			timer_hide.set_callback (() => {
+				if (!active_tooltip.is_active ()) {
+					MainWindow.native_window.hide_tooltip ();
+					active_tooltip.showing_this_tooltip = false;
+					active_tooltip = new Tool ();
+				}				
+				return active_tooltip.showing_this_tooltip;
+			});
+			timer_hide.attach (null);
+		}
+		
+		active_tooltip.showing_this_tooltip = true;
+		MainWindow.native_window.hide_tooltip ();
+		MainWindow.native_window.show_tooltip (active_tooltip.tip, (int)active_tooltip.x, (int)active_tooltip.y);
 	}
 	
 	public void set_icon (string name) {
@@ -215,47 +208,18 @@ public class Tool : GLib.Object {
 		return true;
 	}
 	
+	/** @return true if this tool changes state, */
 	public bool set_active (bool ac) {
 		bool ret = (active != ac);
-
-		if (selected) {
-			if (ac) {
-				r = r_default_selected;
-				g = g_default_selected;
-				b = b_default_selected;
-				a = a_default_selected * 0.5;
-			} else {
-				r = r_default_selected;
-				g = g_default_selected;
-				b = b_default_selected;
-				a = a_default_selected;
-			}			
-		} else {
-			if (ac) {
-				r = r_default;
-				g = g_default;
-				b = b_default;
-				a = a_default * 0.2;
-			} else {
-				r = r_default;
-				g = g_default;
-				b = b_default;
-				a = a_default;
-			}
-		}
-
 		active = ac;
+		
+		if (active) {
+			wait_for_tooltip ();
+		}
+		
 		return ret;
 	}
 	
-	public static double button_width_320dpi () {
-		return 111.0;
-	}
-
-	public static double button_width_72dpi () {
-		return 26.0;
-	}
-		
 	public virtual void draw (Context cr) {
 		double xt = x;
 		double yt = y;
@@ -266,11 +230,8 @@ public class Tool : GLib.Object {
 		double scale;
 
 		cr.save ();
-		if (Icons.get_dpi () == 72) {
-			scale = w / button_width_72dpi ();
-		} else {
-			scale = w / button_width_320dpi ();
-		}
+		
+		scale = w / 111.0; // scale to 320 dpi
 		cr.scale (scale, scale);
 		
 		bgx = xt / scale;
