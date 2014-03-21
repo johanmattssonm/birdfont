@@ -55,11 +55,11 @@ public class KerningClasses : GLib.Object {
 		int index;
 		
 		if (left_range.get_length () == 0 || right_range.get_length () == 0) {
-			warning ("range has no glyphs");
+			warning ("no glyphs");
 			return;
 		}
 		
-		if (left_range.get_length () == 1 && right_range.get_length () == 1) {
+		if (!left_range.is_class () && !right_range.is_class ()) {
 			set_kerning_for_single_glyphs (left_range.get_all_ranges (), right_range.get_all_ranges (), k);
 			return;
 		}
@@ -87,7 +87,7 @@ public class KerningClasses : GLib.Object {
 		return_val_if_fail (len == classes_kerning.length (), 0);
 
 		if (!(range_first.is_class () || range_last.is_class ())) {
-			warning ("Expecting a class");
+			get_kerning_for_single_glyphs (range_first.get_all_ranges (), range_last.get_all_ranges ());
 			return 0;
 		}
 		
