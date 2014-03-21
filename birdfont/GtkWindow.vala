@@ -852,7 +852,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	// TODO: add tooltip
-	public void tooltip (string tooltip, int x, int y) {
+	public void show_tooltip (string tooltip, int x, int y) {
+		
+	}
+
+	public void hide_tooltip () {
 		
 	}
 }

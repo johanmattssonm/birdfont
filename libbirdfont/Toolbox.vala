@@ -72,8 +72,11 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public static void set_allocation (int w, int h) {
-		allocation_width = w;
-		allocation_height = h;
+		if (w != allocation_width || allocation_height != h) {
+			allocation_width = w;
+			allocation_height = h;
+			Toolbox.redraw_tool_box ();
+		}
 	}
 
 	public void key_press (uint keyval) {

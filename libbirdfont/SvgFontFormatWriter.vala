@@ -34,7 +34,7 @@ class SvgFontFormatWriter : Object  {
 	}
 	
 	public void write_font_file (Font font) throws Error {
-		string font_name = font.get_name ();
+		string font_name = font.get_full_name ();
 		
 		int units_per_em = 100;
 		

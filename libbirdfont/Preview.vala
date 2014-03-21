@@ -57,7 +57,7 @@ public class Preview : FontDisplay {
 	
 	public static string get_windows_uri () {
 		Font font = BirdFont.get_current_font ();
-		string html = @"$(font.get_name ()).html";
+		string html = @"$(font.get_full_name ()).html";
 		File dir = font.get_folder ();
 		File file = dir.get_child (html);
 		return "file:///" + (!)	file.get_path ();
@@ -76,15 +76,18 @@ public class Preview : FontDisplay {
 		File f_ttf;
 		File f_eot;
 		File f_svg;
-		
+		File r_ttf;
+		File r_svg;
+			
+			
 		try {
 			dis = new DataInputStream (get_file ().read ());
 			
 			preview_directory = BirdFont.get_preview_directory ();
 			
-			f_ttf = font.get_folder ().get_child (@"$(font.get_name ()).ttf");
-			f_eot = font.get_folder ().get_child (@"$(font.get_name ()).eot");
-			f_svg = font.get_folder ().get_child (@"$(font.get_name ()).svg");
+			f_ttf = font.get_folder ().get_child (@"$(font.get_full_name ()).ttf");
+			f_eot = font.get_folder ().get_child (@"$(font.get_full_name ()).eot");
+			f_svg = font.get_folder ().get_child (@"$(font.get_full_name ()).svg");
 
 			if (!f_ttf.query_exists ()) {
 				warning ("TTF file does not exist.");
@@ -94,26 +97,34 @@ public class Preview : FontDisplay {
 				warning ("SVG file does not exist.");
 			}
 			
-			File r_ttf = preview_directory.get_child (@"$(font.get_name ())$rid.ttf");
-			File r_svg = preview_directory.get_child (@"$(font.get_name ())$rid.svg");
+			r_ttf = preview_directory.get_child (@"$(font.get_full_name ())$rid.ttf");
+			r_svg = preview_directory.get_child (@"$(font.get_full_name ())$rid.svg");
 			
-			if (BirdFont.win32) {
-				f_ttf.copy (r_ttf, FileCopyFlags.NONE);
+			try {
+				if (BirdFont.win32) {
+					f_ttf.copy (r_ttf, FileCopyFlags.NONE);
+				}
+			} catch (Error e) {
+				warning (e.message);
+				warning ("Failed to copy ttf file.");
 			}
-			
-			f_svg.copy (r_svg, FileCopyFlags.NONE);
 
+			try {
+				f_svg.copy (r_svg, FileCopyFlags.NONE);
+			} catch (Error e) {
+				warning (e.message);
+				warning ("Failed to copy svg file.");
+			}
 			while ((line = dis.read_line (null)) != null) {
-				line = ((!) line).replace (@"$(font.get_name ()).ttf", @"$(FontDisplay.path_to_uri ((!) f_ttf.get_path ()))?$rid");
-				line = ((!) line).replace (@"$(font.get_name ()).eot", @"$(FontDisplay.path_to_uri ((!) f_eot.get_path ()))?$rid");
-				line = ((!) line).replace (@"$(font.get_name ()).svg", @"$(FontDisplay.path_to_uri ((!) f_svg.get_path ()))?$rid");
+				line = ((!) line).replace (@"$(font.get_full_name ()).ttf", @"$(FontDisplay.path_to_uri ((!) f_ttf.get_path ()))?$rid");
+				line = ((!) line).replace (@"$(font.get_full_name ()).eot", @"$(FontDisplay.path_to_uri ((!) f_eot.get_path ()))?$rid");
+				line = ((!) line).replace (@"$(font.get_full_name ()).svg", @"$(FontDisplay.path_to_uri ((!) f_svg.get_path ()))?$rid");
 				sb.append ((!) line);
 			}
 		} catch (Error e) {
 			warning (e.message);
 			warning ("Failed to load html into canvas.");
 		}
-
 		return sb.str;
 	}
 }

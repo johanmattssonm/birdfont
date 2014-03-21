@@ -53,7 +53,10 @@ public interface NativeWindow : GLib.Object {
 	public abstract bool convert_to_png (string from, string to);
 
 	/** Show help text. */
-	public abstract void tooltip (string tooltip, int x, int y);
+	public abstract void show_tooltip (string tooltip, int x, int y);
+	
+	/** Hide help text. */
+	public abstract void hide_tooltip ();
 }
 
 }

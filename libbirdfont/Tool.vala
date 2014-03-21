@@ -90,6 +90,9 @@ public class Tool : GLib.Object {
 	public bool persistent = false;
 	public bool editor_events = false;
 	
+	bool showing_tooltip = false;
+	bool waiting_for_tooltip = false;
+	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		this.tip = tip;
@@ -114,6 +117,44 @@ public class Tool : GLib.Object {
 		
 		panel_press_action.connect ((self, button, x, y) => {
 			MainWindow.get_tool_tip ().set_text_from_tool ();
+		});
+		
+		panel_move_action.connect ((self, x, y) => {
+			bool show_tooltip = false;
+			int tooltip_cycles = 0;
+			TimeoutSource timer;
+			
+			if (show_tooltip) {
+				MainWindow.native_window.show_tooltip (tip, (int)x, (int)y);
+			}
+		
+			if (!waiting_for_tooltip) {
+				waiting_for_tooltip = true;
+				timer = new TimeoutSource (600);
+				timer.set_callback (() => {
+					if (is_active () && !showing_tooltip) {
+						MainWindow.native_window.show_tooltip (tip, (int)x, (int)y);
+						showing_tooltip = true;
+						return true;
+					}
+					
+					if (!is_active () && showing_tooltip) {	
+						MainWindow.native_window.hide_tooltip ();
+						showing_tooltip = false;
+						waiting_for_tooltip = false;
+						return false;
+					}
+					
+					if (!is_active () && !showing_tooltip) {
+						waiting_for_tooltip = false;
+						return false;
+					}
+					
+					return true;
+				});
+				timer.attach (null);
+			}
+			return false;
 		});
 		
 		r = r_default;

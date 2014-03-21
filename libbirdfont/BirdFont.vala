@@ -131,6 +131,7 @@ public static int run_export (string[] arg) {
 		ExportTool.export_ttf_font_path (File.new_for_path (output_directory), false);
 	}
 	
+	Toolbox.redraw_tool_box ();
 	return 0;
 }
 

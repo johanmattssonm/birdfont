@@ -58,7 +58,7 @@ public class TrackTool : Tool {
 	public TrackTool (string name) {
 		string sw;
 		
-		base (name, t_("Free hand drawing"));
+		base (name, t_("Freehand drawing"));
 		
 		sw = Preferences.get ("free_hand_stroke_width");
 		if (sw != "") {
