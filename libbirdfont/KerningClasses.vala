@@ -44,7 +44,9 @@ public class KerningClasses : GLib.Object {
 	}
 	
 	public double? get_kerning_for_single_glyphs (string l, string r) {
-		return single_kerning.get (@"$l - $r");
+		string left = GlyphRange.serialize (l);
+		string right = GlyphRange.serialize (r);
+		return single_kerning.get (@"$left - $right");
 	} 
 
 	public void set_kerning_for_single_glyphs (string l, string r, double k) {
@@ -58,7 +60,7 @@ public class KerningClasses : GLib.Object {
 			warning ("no glyphs");
 			return;
 		}
-		
+
 		if (!left_range.is_class () && !right_range.is_class ()) {
 			set_kerning_for_single_glyphs (left_range.get_all_ranges (), right_range.get_all_ranges (), k);
 			return;

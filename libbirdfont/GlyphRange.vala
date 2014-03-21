@@ -141,6 +141,10 @@ public class GlyphRange {
 				add_single ('\0');
 			} else if (w.index_of ("-") > -1) {
 				parse_range (w);
+			} else if (w == "quote") {
+				add_single ('"');
+			} else if (w == "ampersand") {
+				add_single ('&');
 			} else {
 				throw new MarkupError.PARSE (@"$w is not a single letter or a unicode range.");
 			}
@@ -172,6 +176,15 @@ public class GlyphRange {
 		return s.str;
 	}
 	
+	public static string serialize (string s) {
+		if (s.char_count () > 1) {
+			warning ("Expecting a single glyph");
+			return s;
+		}
+		
+		return get_serialized_char (s.get_char (0));
+	}
+	
 	public static string get_serialized_char (unichar c) {
 		StringBuilder s = new StringBuilder ();
 		
@@ -186,12 +199,20 @@ public class GlyphRange {
 		if (c == '\0') {
 			return "null";
 		}
+
+		if (c == '"') {
+			return "quote";
+		}
+
+		if (c == '&') {
+			return "ampersand";
+		}
 				
 		s.append_unichar (c);	
 		return s.str;	
 	}
 	
-	public static  string unserialize (string c) {
+	public static string unserialize (string c) {
 		if (c == "space") {
 			return " ";
 		}
@@ -203,14 +224,22 @@ public class GlyphRange {
 		if (c == "null") {
 			return "\0";
 		}
-		
+
+		if (c == "quote") {
+			return "\"";
+		}
+
+		if (c == "ampersand") {
+			return "&";
+		}
+				
 		return c;
 	}
 	
 	private void parse_range (string s) throws MarkupError {
 		string[] r = s.split ("-");
 		bool null_range = false;
-		
+	
 		if (r.length == 2 && r[0] == "null" && r[1] == "null") {
 			null_range = true;
 		} else if (r.length == 2 && r[0] == "null" &&  unserialize (r[1]).char_count () == 1) {
@@ -305,10 +334,13 @@ public class GlyphRange {
 
 	public bool has_character (string c) {
 		unichar s;
-		if (c.char_count () != 1) {
+		string uns = unserialize (c);
+		
+		if (uns.char_count () != 1) {
 			warning (@"Expecting a single character got $c");
 		}
-		s = c.get_char ();
+		
+		s = uns.get_char ();
 		return !unique (s, s);
 	}
 

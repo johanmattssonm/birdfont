@@ -850,6 +850,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		return true;
 	}
+	
+	public void tooltip (string tooltip, int x, int y) {
+		
+	}
 }
 
 class TabbarCanvas : DrawingArea {

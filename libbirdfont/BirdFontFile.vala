@@ -207,7 +207,6 @@ class BirdFontFile {
 			for (uint i = 0; i < num_kerning_pairs; i++) {
 				
 				range = KerningClasses.get_instance ().classes_first.nth (i).data.get_all_ranges ();
-				range = serialize (range);
 				
 				os.put_string ("<kerning ");
 				os.put_string ("left=\"");
@@ -215,7 +214,6 @@ class BirdFontFile {
 				os.put_string ("\" ");
 				
 				range = KerningClasses.get_instance ().classes_last.nth (i).data.get_all_ranges ();
-				range = serialize (range);
 				
 				os.put_string ("right=\"");
 				os.put_string (range);
@@ -594,16 +592,9 @@ class BirdFontFile {
 		
 		return r;
 	}
-
-	public static string serialize (string s) {
-		string r = s;
-		r = r.replace ("\"", "quote");
-		r = r.replace ("&", "ampersand");
-		return r;
-	}
 	
 	public static string serialize_unichar (unichar c) {
-		return serialize (GlyphRange.get_serialized_char (c));
+		return GlyphRange.get_serialized_char (c);
 	}
 	
 	private void parse_kerning (Xml.Node* node) {
