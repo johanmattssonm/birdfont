@@ -874,7 +874,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		tooltip_label = new Label(tooltip);
 		tooltip_window.add (tooltip_label);
 		tooltip_label.show();
-		tooltip_label.set_type_hint (Gdk.WindowTypeHint.TOOLTIP);
 		
 		posx = parent_x + tool_box_x + x;
 		posy = parent_y + tool_box_y + y - 7;

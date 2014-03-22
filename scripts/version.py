@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-VERSION = '0.35'
-SO_VERSION_MAJOR = '9'
+VERSION = '0.36'
+SO_VERSION_MAJOR = '10'
 SO_VERSION_MINOR = '0'
 SO_VERSION = SO_VERSION_MAJOR + '.' + SO_VERSION_MINOR
