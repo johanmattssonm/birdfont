@@ -1,3 +1,11 @@
+birdfont (0.36) stable;
+
+  * Paste letters in the kerning tab
+  * Settings for the freehand tool
+  * Bug fixes  
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Mar 22 16:47:45 CET 2014
+
 birdfont (0.35) stable;
 
   * A new tool for drawing freehand shapes with the mouse
