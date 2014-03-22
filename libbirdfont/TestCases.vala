@@ -44,6 +44,12 @@ class TestCases {
 		add (test_preview, "Preview");
 		add (test_kerning, "Kerning");
 		add (test_boundaries, "Boundaries");
+		
+		add_bechmark (benchmark_stroke, "Stroke");
+	}
+	
+	private void add_bechmark (Callback callback, string name) {
+		test_cases.append (new Test (callback, name, true));
 	}
 	
 	private void add (Callback callback, string name) {
@@ -52,6 +58,21 @@ class TestCases {
 	
 	public unowned List<Test> get_test_functions () {
 		return test_cases;
+	}
+
+	public static void benchmark_stroke () {
+		Glyph glyph;
+		test_open_next_glyph ();
+		test_illustrator_import ();
+		
+		glyph = MainWindow.get_current_glyph ();
+		for (int i = 0; i < 5; i++) {
+			foreach (Path p in glyph.path_list) {
+				p.set_stroke (i / 100.0);
+				glyph.update_view ();
+				Tool.yield ();
+			}
+		}
 	}
 	
 	public static void test_freetype () {

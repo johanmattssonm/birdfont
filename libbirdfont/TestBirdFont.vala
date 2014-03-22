@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -13,16 +13,6 @@
 */
 
 namespace BirdFont {
-
-class Test : Object {
-	public Callback callback;
-	public string name;
-	
-	public Test (Callback callback, string name) {
-		this.callback = callback;
-		this.name = name;
-	}
-}
 
 /** Class for executing tests cases. */
 class TestBirdFont : GLib.Object {
@@ -42,6 +32,8 @@ class TestBirdFont : GLib.Object {
 	unowned List<Test> passed;
 	unowned List<Test> failed;
 	unowned List<Test> skipped;
+
+	unowned List<Test> bechmarks;
 
 	static TestBirdFont? singleton = null;
 
@@ -161,14 +153,16 @@ class TestBirdFont : GLib.Object {
 	}
 
 	private static void pad (int t) {
-		for (int i = 0; i < t; i++) stdout.printf (" ");
+		for (int i = 0; i < t; i++) {
+			stdout.printf (" ");
+		}
 	}
 
 	public void print_result () {
 		stdout.printf ("\n");
 		stdout.printf ("Test case results:\n");
 
-		foreach (var t in skipped) {
+		foreach (Test t in skipped) {
 			stdout.printf ("%s", t.name);
 			pad (40 - t.name.char_count());
 			stdout.printf ("Skipped\n");
@@ -178,18 +172,24 @@ class TestBirdFont : GLib.Object {
 			stdout.printf ("\n");
 		}
 		
-		foreach (var t in passed) {
+		foreach (Test t in passed) {
 			stdout.printf ("%s", t.name);
 			pad (40 - t.name.char_count());
 			stdout.printf ("Passed\n");
 		}
 		
-		foreach (var t in failed) {
+		foreach (Test t in failed) {
 			stdout.printf ("%s", t.name);
 			pad (40 - t.name.char_count());
 			stdout.printf ("Failed\n");
 		}
-		
+
+		foreach (Test t in bechmarks) {
+			stdout.printf ("%s", t.name);
+			pad (40 - t.name.char_count());
+			stdout.printf (@"$(t.get_time ())s\n");
+		}		
+
 		stdout.printf ("\n");
 		
 		stdout.printf ("Total %u test cases executed, %u passed and %u failed.\n", (passed.length () + failed.length ()), passed.length (), failed.length ());
@@ -215,10 +215,18 @@ class TestBirdFont : GLib.Object {
 			if (test_cases_to_run != "All" && test_cases_to_run != test.name) {
 				has_skipped = true;
 			} else {
-				test.callback ();
+				if (test.is_benchmark ()) {
+					test.timer_start ();
+					test.callback ();
+					test.timer_stop ();
+				} else {
+					test.callback ();
+				}
 			}
 			
-			if (has_failed) {
+			if (test.is_benchmark ()) {
+				bechmarks.append ((!) test);
+			} else if (has_failed) {
 				failed.append ((!) test);
 				
 				if (BirdFont.has_argument ("--exit")) {

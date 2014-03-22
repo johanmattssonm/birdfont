@@ -27,8 +27,7 @@ public class Path {
 	public List<EditPoint> points;
 
 	EditPoint? last_point = null;
-	EditPoint? second_last_point = null;
-
+	
 	/** Path boundaries */
 	public double xmax = double.MIN;
 	public double xmin = double.MAX;
@@ -967,7 +966,6 @@ public class Path {
 			}
 		}
 		
-		second_last_point = last_point;
 		last_point = p;
 		
 		return np;
