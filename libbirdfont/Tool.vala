@@ -104,11 +104,18 @@ public class Tool : GLib.Object {
 		panel_press_action.connect ((self, button, x, y) => {
 			MainWindow.get_tool_tip ().set_text_from_tool ();
 		});
+		
+		panel_move_action.connect ((self, x, y) => {
+			if (is_active ()) {
+				wait_for_tooltip ();
+			}
+			return false;
+		});
 	}
 
 	void wait_for_tooltip () {
 		TimeoutSource timer_show;
-		int timeout_interval = 1000;
+		int timeout_interval = 1500;
 		
 		if (active_tooltip != this) {
 			if (active_tooltip.showing_this_tooltip) {
@@ -211,12 +218,7 @@ public class Tool : GLib.Object {
 	/** @return true if this tool changes state, */
 	public bool set_active (bool ac) {
 		bool ret = (active != ac);
-		active = ac;
-		
-		if (active) {
-			wait_for_tooltip ();
-		}
-		
+		active = ac;	
 		return ret;
 	}
 	
