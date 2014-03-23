@@ -97,6 +97,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		MainWindow.get_tab_bar ().signal_tab_selected.connect ((f, tab) => {
 			string uri = "";
+			string html = "";
 			FontDisplay fd = tab.get_display ();
 			MainWindow.glyph_canvas.set_current_glyph (fd);
 			
@@ -109,57 +110,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				glyph_canvas_area.set_visible (false);
 			} else if (fd.get_name () == "Preview") {
 				uri = Preview.get_uri ();
-
-				// hack: force webkit to ignore cache in preview
-				html_box.set_visible (false);
-				glyph_canvas_area.set_visible (true);
+				html = Preview.get_html_with_absolute_paths ();
 										
-				try {
-					DataInputStream dis = new DataInputStream (Preview.get_html_file ().read ());
-					string? line;
-					StringBuilder sb = new StringBuilder ();
-					uint rid = Random.next_int ();
-					Font font = BirdFont.get_current_font ();
-					
-					File preview_directory = BirdFont.get_preview_directory ();
-					
-					File f_ttf = font.get_folder ().get_child (@"$(font.get_full_name ()).ttf");
-					File f_eot = font.get_folder ().get_child (@"$(font.get_full_name ()).eot");
-					File f_svg = font.get_folder ().get_child (@"$(font.get_full_name ()).svg");
-
-					if (f_ttf.query_exists ()) {
-						f_ttf.delete ();
-					}
-						
-					if (f_eot.query_exists ()) {
-						f_eot.delete ();
-					}
-					
-					if (f_svg.query_exists ()) {
-						f_svg.delete ();
-					}
-					
-					ExportTool.export_svg_font ();
-					ExportTool.export_ttf_font_sync ();							
-						
-					File r_ttf = preview_directory.get_child (@"$(font.get_full_name ())$rid.ttf");
-					File r_svg = preview_directory.get_child (@"$(font.get_full_name ())$rid.svg");
-					
-					if (BirdFont.win32) {
-						f_ttf.copy (r_ttf, FileCopyFlags.NONE);
-					}
-					
-					f_svg.copy (r_svg, FileCopyFlags.NONE);
-
-					while ((line = dis.read_line (null)) != null) {
-						line = ((!) line).replace (@"$(font.get_full_name ()).ttf", @"$(FontDisplay.path_to_uri ((!) f_ttf.get_path ()))?$rid");
-						line = ((!) line).replace (@"$(font.get_full_name ()).eot", @"$(FontDisplay.path_to_uri ((!) f_eot.get_path ()))?$rid");
-						line = ((!) line).replace (@"$(font.get_full_name ()).svg", @"$(FontDisplay.path_to_uri ((!) f_svg.get_path ()))?$rid");
-						sb.append ((!) line);
-					}
-			
-					html_canvas.load_html_string (sb.str, uri);
-										
+				try {	
+					html_canvas.load_html_string (html, uri);
 				} catch (Error e) {
 					warning (e.message);
 					warning ("Failed to load html into canvas.");

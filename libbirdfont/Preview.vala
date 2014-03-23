@@ -36,7 +36,7 @@ public class Preview : FontDisplay {
 
 	public static File get_file () {
 		Font font = BirdFont.get_current_font ();
-		string path = @"$(font.get_full_name ()).html";
+		string path = get_html_file_name ();
 		File dir = font.get_folder ();
 		File file = dir.get_child (path);
 		
@@ -45,6 +45,39 @@ public class Preview : FontDisplay {
 		}
 		
 		return file;
+	}
+	
+	public static bool has_html_document () {
+		Font font = BirdFont.get_current_font ();
+		string path = get_html_file_name ();
+		File dir = font.get_folder ();
+		File file = dir.get_child (path);
+		return file.query_exists ();
+	}
+	
+	public static void generate_html_document () {
+		Font font = BirdFont.get_current_font ();
+		string path = get_html_file_name ();
+		File dir = font.get_folder ();
+		File file = dir.get_child (path);
+		ExportTool.generate_html_document ((!)file.get_path (), font);
+	}
+
+	public static void delete_html_document () {
+		Font font = BirdFont.get_current_font ();
+		string path = get_html_file_name ();
+		File dir = font.get_folder ();
+		File file = dir.get_child (path);
+		try {
+			file.delete ();
+		} catch (Error e) {
+			warning (e.message);
+		}
+	}
+	
+	static string get_html_file_name () {
+		Font font = BirdFont.get_current_font ();
+		return  @"$(font.get_full_name ()).html";
 	}
 
 	public static File get_html_file () {
@@ -57,7 +90,7 @@ public class Preview : FontDisplay {
 	
 	public static string get_windows_uri () {
 		Font font = BirdFont.get_current_font ();
-		string html = @"$(font.get_full_name ()).html";
+		string html = get_html_file_name ();
 		File dir = font.get_folder ();
 		File file = dir.get_child (html);
 		return "file:///" + (!)	file.get_path ();
@@ -78,8 +111,7 @@ public class Preview : FontDisplay {
 		File f_svg;
 		File r_ttf;
 		File r_svg;
-			
-			
+
 		try {
 			dis = new DataInputStream (get_file ().read ());
 			
@@ -106,6 +138,7 @@ public class Preview : FontDisplay {
 				}
 			} catch (Error e) {
 				warning (e.message);
+				sb.append (@"Error: $(e.message)<br>\n");
 				warning ("Failed to copy ttf file.");
 			}
 
@@ -124,6 +157,7 @@ public class Preview : FontDisplay {
 		} catch (Error e) {
 			warning (e.message);
 			warning ("Failed to load html into canvas.");
+			sb.append (@"Error: $(e.message)<br>\n");
 		}
 		return sb.str;
 	}

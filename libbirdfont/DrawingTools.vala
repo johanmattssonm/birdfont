@@ -254,7 +254,7 @@ public class DrawingTools : ToolCollection  {
 		// Character set tools
 		Tool full_unicode = new Tool ("utf_8", t_("Show full unicode characters set"));
 		full_unicode.select_action.connect ((self) => {
-				MainWindow.get_tab_bar ().add_unique_tab (new OverView (), 100, false);	
+				MainWindow.get_tab_bar ().add_unique_tab (new OverView ());	
 				OverView o = MainWindow.get_overview ();
 				GlyphRange gr = new GlyphRange ();
 				
@@ -520,7 +520,7 @@ public class DrawingTools : ToolCollection  {
 			}
 			
 			BackgroundSelection bgs = new BackgroundSelection ();
-			MainWindow.get_tab_bar ().add_unique_tab (bgs , 120, false);
+			MainWindow.get_tab_bar ().add_unique_tab (bgs);
 			
 			tp.show_text ("");
 		});

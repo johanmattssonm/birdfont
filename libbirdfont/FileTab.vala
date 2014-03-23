@@ -155,6 +155,11 @@ public class FileTab : FontDisplay {
 			if (i == r) {
 				load_font ((!) font.font_file);
 				open_file ();
+
+				// open_file will close this tab and the list of files 
+				// will be deleted here.
+
+				return;
 			}
 			i++;
 		}
@@ -173,6 +178,7 @@ public class FileTab : FontDisplay {
 				} else {
 					load_backup (backup);
 					open_file ();
+					return;
 				}
 			}
 			i++;

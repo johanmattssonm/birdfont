@@ -231,12 +231,12 @@ public class MenuTab : FontDisplay {
 	} 
 		
 	public static void show_description () {
-		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionTab (), 110, false);
+		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionTab ());
 	}
 	
 	public static void show_kerning_context () {
 		KerningDisplay kd = MainWindow.get_kerning_display ();
-		MainWindow.get_tab_bar ().add_unique_tab (kd, 85, false);
+		MainWindow.get_tab_bar ().add_unique_tab (kd);
 	}
 	
 	public static void preview ()  {
@@ -260,7 +260,8 @@ public class MenuTab : FontDisplay {
 		}	
 			
 		dialog.overwrite_signal.connect (() => {
-			tab_bar.add_unique_tab (new Preview ());
+			tab_bar.add_unique_tab (new Preview (), true);
+			PreviewTools.update_preview ();
 		});
 			
 		if ((format == FontFormat.SVG || format == FontFormat.FREETYPE) && !OverWriteDialogListener.dont_ask_again) {
@@ -293,7 +294,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void list_all_kerning_pairs () {
-		MainWindow.get_tab_bar ().add_unique_tab (new KerningList (), 130);
+		MainWindow.get_tab_bar ().add_unique_tab (new KerningList ());
 	}
 }
 }

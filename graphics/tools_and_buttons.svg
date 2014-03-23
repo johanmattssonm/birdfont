@@ -16,7 +16,7 @@
    version="1.1"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="tools_and_buttons.svg"
-   inkscape:export-filename="/home/johan/birdfont/icons/flip_horizontal.png"
+   inkscape:export-filename="/home/johan/birdfont/icons/generate_html_document.png"
    inkscape:export-xdpi="319.88824"
    inkscape:export-ydpi="319.88824">
   <defs
@@ -405,6 +405,109 @@
        r="30.703518"
        gradientUnits="userSpaceOnUse"
        gradientTransform="matrix(1.696811,-0.06964229,0.06038833,1.4713414,-140.70881,2.3661124)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3761-1-3-33"
+       id="linearGradient4027-3"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-656.63464,-283.00582)"
+       x1="608.99573"
+       y1="316.79437"
+       x2="608.64221"
+       y2="290.27783" />
+    <linearGradient
+       id="linearGradient3761-1-3-33">
+      <stop
+         style="stop-color:#eeeded;stop-opacity:1"
+         offset="0"
+         id="stop3763-4-4-81" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop3765-1-1-3" />
+    </linearGradient>
+    <linearGradient
+       y2="290.27783"
+       x2="608.64221"
+       y1="316.79437"
+       x1="608.99573"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-655.33353,116.22305)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3264"
+       xlink:href="#linearGradient3761-1-3-33"
+       inkscape:collect="always" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3761-1-3-4"
+       id="linearGradient4027-4"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-656.63464,-283.00582)"
+       x1="608.99573"
+       y1="316.79437"
+       x2="608.64221"
+       y2="290.27783" />
+    <linearGradient
+       id="linearGradient3761-1-3-4">
+      <stop
+         style="stop-color:#eeeded;stop-opacity:1"
+         offset="0"
+         id="stop3763-4-4-9" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop3765-1-1-38" />
+    </linearGradient>
+    <linearGradient
+       y2="290.27783"
+       x2="608.64221"
+       y1="316.79437"
+       x1="608.99573"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-660.46502,-288.68482)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient4095"
+       xlink:href="#linearGradient3761-1-3-4"
+       inkscape:collect="always" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3761-1-3-4"
+       id="linearGradient4131"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-622.38631,114.60033)"
+       x1="608.99573"
+       y1="316.79437"
+       x2="608.64221"
+       y2="290.27783" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3761-1-3-0"
+       id="linearGradient4027-37"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-656.63464,-283.00582)"
+       x1="608.99573"
+       y1="316.79437"
+       x2="608.64221"
+       y2="290.27783" />
+    <linearGradient
+       id="linearGradient3761-1-3-0">
+      <stop
+         style="stop-color:#eeeded;stop-opacity:1"
+         offset="0"
+         id="stop3763-4-4-4" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop3765-1-1-58" />
+    </linearGradient>
+    <linearGradient
+       y2="290.27783"
+       x2="608.64221"
+       y1="316.79437"
+       x1="608.99573"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-581.1328,116.90405)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient4175"
+       xlink:href="#linearGradient3761-1-3-0"
+       inkscape:collect="always" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -413,9 +516,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.4770642"
-     inkscape:cx="199"
-     inkscape:cy="703.5"
+     inkscape:zoom="1"
+     inkscape:cx="104.43834"
+     inkscape:cy="468.78196"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -1910,5 +2013,97 @@
        inkscape:export-filename="/home/johan/birdfont/icons/track.png"
        inkscape:export-xdpi="319.89001"
        inkscape:export-ydpi="319.89001" />
+    <g
+       id="g4075"
+       inkscape:export-filename="/home/johan/birdfont/icons/update_webview.png"
+       inkscape:export-xdpi="319"
+       inkscape:export-ydpi="319">
+      <rect
+         inkscape:export-ydpi="319"
+         inkscape:export-xdpi="319"
+         inkscape:export-filename="/home/johan/birdfont/icons/update_webview.png"
+         y="412.64969"
+         x="9.7045212"
+         height="14.306025"
+         width="17.010134"
+         id="rect4069"
+         style="fill:none;" />
+      <path
+         sodipodi:nodetypes="csssc"
+         inkscape:connector-curvature="0"
+         id="path3285"
+         d="m 13.302974,417.23111 c -0.103718,-3.07049 2.410096,-3.2344 4.43523,-3.24588 2.477269,-0.014 4.861048,0.23803 4.894968,5.42429 0.02793,4.27128 -1.032833,6.09448 -4.442348,6.09448 -2.667991,0 -5.382393,-0.32164 -4.784799,-5.55719"
+         style="fill:none;stroke:#858585;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="path3289"
+         d="m 10.941276,422.08208 2.336134,-2.69315 2.432232,2.7018"
+         style="fill:none;stroke:#858585;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g4154"
+       style="stroke:#858585;stroke-opacity:1"
+       transform="translate(0.19863014,2.3835618)"
+       inkscape:export-filename="/home/johan/birdfont/icons/export_fonts.png"
+       inkscape:export-xdpi="319"
+       inkscape:export-ydpi="319">
+      <g
+         transform="translate(-3.690616,1.451615)"
+         id="g4145"
+         style="stroke:#858585;stroke-opacity:1">
+        <path
+           sodipodi:nodetypes="cc"
+           style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 51.12501,416.09675 12.128285,0"
+           id="path4133"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 60.897902,412.86775 2.992578,3.56045"
+           id="path4139"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m 63.958333,415.90522 -3.078034,3.64394"
+           id="path4143"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="cc" />
+      </g>
+    </g>
+    <g
+       id="g4240"
+       inkscape:export-filename="/home/johan/birdfont/icons/generate_html_document.png"
+       inkscape:export-xdpi="319"
+       inkscape:export-ydpi="319">
+      <path
+         sodipodi:nodetypes="cccccc"
+         inkscape:connector-curvature="0"
+         id="path4194"
+         d="m 89.176159,415.85065 0,10.85224 10.270161,0 0,-14.47262 -7.237895,0 z"
+         style="fill:#ffffff;stroke:#858585;stroke-width:0.78642100000000004px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4233"
+         d="m 89.570109,416.4873 3.852514,0"
+         style="fill:none;stroke:#e6e6e6;stroke-width:1.10593903px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <g
+         transform="translate(0.14089431,-0.25163226)"
+         id="text4226"
+         style="font-size:8.32909298px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#858585;fill-opacity:1;stroke:none;font-family:Big_Bottom_Cartoon_Hungarian;-inkscape-font-specification:Big_Bottom_Cartoon_Hungarian">
+        <path
+           inkscape:connector-curvature="0"
+           id="path4231"
+           style="fill:#858585;fill-opacity:1;font-family:BetecknaBirdfont;-inkscape-font-specification:BetecknaBirdfont"
+           d="m 92.262767,417.02452 0.821522,0 0,2.48897 2.985134,0 0,-2.48897 0.821522,0 0,6.07195 -0.821522,0 0,-2.8916 -2.985134,0 0,2.8916 -0.821522,0 0,-6.07195" />
+      </g>
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4238"
+         d="m 92.92596,416.18009 0.01336,-3.554"
+         style="fill:none;stroke:#e6e6e6;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
   </g>
 </svg>

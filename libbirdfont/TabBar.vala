@@ -308,7 +308,7 @@ public class TabBar : GLib.Object {
 		return selected;
 	}
 	
-	public void select_tab (int index) {
+	public void select_tab (int index, bool signal_selected = true) {
 		Tab t;
 	
 		// always close any pending text input if the user switches tab
@@ -349,7 +349,7 @@ public class TabBar : GLib.Object {
 		previous_tab = current_tab;
 		current_tab = t;
 
-		scroll_to_tab (selected);
+		scroll_to_tab (selected, signal_selected);
 	}
 	
 	private bool has_scroll () {
@@ -388,13 +388,16 @@ public class TabBar : GLib.Object {
 		signal_tab_selected (t);		
 	}
 	
-	private void scroll_to_tab (int index) {
+	private void scroll_to_tab (int index, bool send_signal_selected = true) {
 		double offset = 19;
 		int i = 0;
 		
 		if (index < first_tab) {
 			first_tab = index;
-			signal_selected (index);
+			
+			if (send_signal_selected) {
+				signal_selected (index);
+			}
 			return;
 		}
 		
@@ -414,7 +417,11 @@ public class TabBar : GLib.Object {
 
 			// in view
 			if (i == index) {
-				signal_selected (index);
+				
+				if (send_signal_selected) {				
+					signal_selected (index);
+				}
+				
 				return;
 			}
 
@@ -444,7 +451,9 @@ public class TabBar : GLib.Object {
 		}
 	}
 	
-	public void add_tab (FontDisplay display_item, double tab_width = -1, bool always_open = false) {
+	public void add_tab (FontDisplay display_item, bool signal_selected = true) {
+		double tab_width = -1;
+		bool always_open = false;
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 		
 		if (tab_width < 0) {
@@ -453,15 +462,15 @@ public class TabBar : GLib.Object {
 		}
 				
 		tabs.insert (new Tab (display_item, tab_width, always_open), s);
-		select_tab (s);
+		select_tab (s, signal_selected);
 	}
 	
 	/** Returns true if the new item was added to the bar. */
-	public bool add_unique_tab (FontDisplay display_item, double tab_width = -1, bool always_open = false) {
+	public bool add_unique_tab (FontDisplay display_item, bool signal_selected = true) {
 		bool i = select_tab_name (display_item.get_name ());
 
 		if (!i) {
-			add_tab (display_item, tab_width, always_open);
+			add_tab (display_item, signal_selected);
 			return true;
 		}
 		

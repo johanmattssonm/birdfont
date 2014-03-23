@@ -22,6 +22,7 @@ public class Toolbox : GLib.Object  {
 	
 	public DrawingTools drawing_tools;
 	public KerningTools kerning_tools;
+	public PreviewTools preview_tools;
 	
 	Tool current_tool;
 	
@@ -46,11 +47,16 @@ public class Toolbox : GLib.Object  {
 		
 		drawing_tools = new DrawingTools (glyph_canvas);
 		kerning_tools = new KerningTools ();
+		preview_tools = new PreviewTools ();
+		
 		current_set = drawing_tools;
 		
 		tab_bar.signal_tab_selected.connect ((tab) => {
-			if (tab.get_display ().get_name () == "Kerning") {
+			string tab_name = tab.get_display ().get_name ();
+			if (tab_name == "Kerning") {
 				current_set = kerning_tools;
+			} else if (tab_name == "Preview") {
+				current_set = preview_tools;
 			} else {
 				current_set = drawing_tools;
 			}
