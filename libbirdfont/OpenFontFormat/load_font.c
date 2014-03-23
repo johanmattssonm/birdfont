@@ -664,6 +664,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	FT_SfntName name_table_data;
 	double units_per_em;
 	double units;
+	gchar line_position[80];
 	
 	*err = OK;
 
@@ -716,14 +717,27 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		
 	g_string_append_printf (bf, "<backup>%s</backup>\n", file);
 
-	g_string_append_printf (bf, "<lines>\n");
-	g_string_append_printf (bf, "\t<top_limit>%f</top_limit>\n", face->ascender * units);
-	g_string_append_printf (bf, "\t<top_position>%f</top_position>\n", get_top (face) * units);
-	g_string_append_printf (bf, "\t<x-height>%f</x-height>\n", get_xheight (face) * units);
+
+	g_string_append_printf (bf, "<horizontal>\n");
+	
+	g_ascii_formatd (&line_position, 80, "%f", face->ascender * units);
+	g_string_append_printf (bf, "\t<top_limit>%s</top_limit>\n", &line_position);
+	
+	g_ascii_formatd (&line_position, 80, "%f", get_top (face) * units);
+	g_string_append_printf (bf, "\t<top_position>%s</top_position>\n", &line_position);
+	
+	g_ascii_formatd (&line_position, 80, "%f", get_xheight (face) * units);
+	g_string_append_printf (bf, "\t<x-height>%s</x-height>\n", &line_position);
+	
 	g_string_append_printf (bf, "\t<base_line>0</base_line>\n");
-	g_string_append_printf (bf, "\t<bottom_position>%f</bottom_position>\n", get_descender (face) * units);
-	g_string_append_printf (bf, "\t<bottom_limit>%f</bottom_limit>\n", face->descender * units);		
-	g_string_append_printf (bf, "</lines>\n");
+	
+	g_ascii_formatd (&line_position, 80, "%f", get_descender (face) * units);
+	g_string_append_printf (bf, "\t<bottom_position>%s</bottom_position>\n", &line_position);
+	
+	g_ascii_formatd (&line_position, 80, "%f", face->descender * units);
+	g_string_append_printf (bf, "\t<bottom_limit>%s</bottom_limit>\n", line_position);		
+	
+	g_string_append_printf (bf, "</horizontal>\n");
 
 	// glyph outlines
 	for (i = 0; i < face->num_glyphs; i++) {
@@ -731,7 +745,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		if (error) {
 			g_warning ("Freetype failed to load glyph %d.\n", (int)i);
 			g_warning ("FT_Load_Glyph error %d\n", error);
-			*err = error;
+			*err = 1;
 			return bf;
 		}
 

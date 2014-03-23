@@ -53,14 +53,12 @@ class BirdFontFile {
 		bool ok;
 		
 		Parser.init ();
-		
 		font.font_file = "typeface.bf";
-		
 		tr = new TextReader.for_doc (xml_data, "");
 		ok = load_xml (tr);
 		
 		Parser.cleanup ();
-				
+		
 		return ok;
 	}
 
@@ -863,8 +861,11 @@ class BirdFontFile {
 		
 		if (unlikely (!r)) {
 			string? s = iter->content;
-			if (s == null) warning (@"Content is null for node $(iter->name)\n");
-			else warning (@"Failed to parse double for \"$(iter->content)\"\n");
+			if (s == null) {
+				warning (@"Content is null for node $(iter->name)\n");
+			} else {
+				warning (@"Failed to parse double for \"$(iter->content)\"\n");
+			}
 		}
 		
 		return (r) ? d : 0.0;
