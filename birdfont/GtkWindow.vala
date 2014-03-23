@@ -352,7 +352,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		public ColorWindow (ColorTool color_tool) {			
 			color_selection.color_changed.connect (() => {
-				Color c;
+				Gdk.Color c;
 				color_selection.get_current_color (out c);
 				color_tool.color_r = (double) c.red / uint16.MAX;
 				color_tool.color_g = (double) c.green / uint16.MAX;

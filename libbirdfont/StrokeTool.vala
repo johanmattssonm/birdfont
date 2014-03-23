@@ -58,8 +58,10 @@ public class StrokeTool : Tool {
 			outline.close ();
 			paths.add (outline);
 		} else if (!p.is_open () && !p.is_filled ()) {
+			
 			outline = create_stroke (p, thickness);
 			counter = create_stroke (p, -1 * thickness);
+			
 			paths.add (outline);
 			paths.add (counter);
 			
@@ -91,7 +93,7 @@ public class StrokeTool : Tool {
 			warning ("Can not create stroke.");
 			paths.add (p);
 		}
-		
+
 		return paths;
 	}
 	
@@ -170,11 +172,11 @@ public class StrokeTool : Tool {
 		Path new_path;
 		Path stroked;
 		
-		new_path = tangents (p);
+		new_path = add_tangent_points (p);
 		
 		if (new_path.points.length () >= 2) {
 			stroked = change_stroke_width (new_path, thickness);
-
+			
 			if (!p.is_open ()) {
 				stroked.reverse ();
 				stroked.close ();
@@ -188,14 +190,6 @@ public class StrokeTool : Tool {
 		return stroked;
 	}
 
-	static Path tangents (Path p) {
-		Path pn = p;
-		for (int i = 0; i < 3; i++) {
-			pn = add_tangent_points (pn);
-		}
-		return pn;
-	}
-
 	static Path add_tangent_points (Path p) {
 		Path path = p.copy ();
 		int steps = 2;
@@ -206,14 +200,14 @@ public class StrokeTool : Tool {
 		
 		path.all_segments ((start, stop) => {
 			EditPoint? prev = null;
+			double length = Path.get_length_from (start, stop);
 			
-			if (start.type == PointType.DOUBLE_CURVE) {
-				steps = 1;
-			} else {
-				steps = 2;
-			}
-			
-			Path.all_of (start, stop, (x, y, step) => {
+			steps = (start.type == PointType.DOUBLE_CURVE) ?
+				(int) (length / 10) : 
+				(int) (length / 5);
+
+			if (steps > 1) {
+				Path.all_of (start, stop, (x, y, step) => {
 					EditPoint ep = new EditPoint ();
 
 					if (0 < step < 1) {
@@ -251,10 +245,12 @@ public class StrokeTool : Tool {
 					}
 					
 					return true;
-				}, steps);
-				
-				return true;
-			});
+				}, steps);				
+			}
+			
+			return true;
+		});
+	
 
 		while (new_points.length () > 0) {
 			nep = new_points.first ().data;

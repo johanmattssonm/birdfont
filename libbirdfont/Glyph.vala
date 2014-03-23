@@ -1336,64 +1336,78 @@ public class Glyph : FontDisplay {
 	}
 	
 	public void draw_path (Context cr) {
-		double left, baseline;
-		Font font = BirdFont.get_current_font ();
-		
-		baseline = font.base_line;
-		left = get_line ("left").pos;
-		
-		if (!is_open ()) {
-			cr.save ();
-			cr.set_source_rgba (0, 0, 0, 1);
-			
-			Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
-			
-			cr.restore ();
-		}
-
 		if (is_open () && Path.fill_open_path) {
+			cr.save ();
+			cr.new_path ();
 			foreach (unowned Path p in path_list) {
-				cr.save ();
-				cr.set_source_rgba (Path.fill_color_r, Path.fill_color_g, Path.fill_color_b, Path.fill_color_a);
-				Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
-				cr.restore ();
+				if (p.stroke > 0) {
+					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr, get_path_fill_color ());
+				}
+
+				p.draw_path (cr, get_path_fill_color ());
 			}
+			cr.fill ();
+			cr.restore ();
 		}
 						
 		if (is_open ()) {
+			cr.save ();
 			foreach (unowned Path p in path_list) {
-				p.draw_outline (cr, allocation, view_zoom);
-				p.draw_edit_points (cr, allocation, view_zoom);	
-
 				if (p.stroke > 0) {			
 					draw_outline_for_paths (StrokeTool.get_stroke (p, p.stroke), cr);
 				}
+
+				p.draw_outline (cr);
+				p.draw_edit_points (cr);	
 			}
+			cr.restore ();
 		}
 
 		if (!is_open ()) {
-			foreach (unowned Path p in active_paths) {
+			// This was good for testing but it is way too slow:
+			// Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
+			
+			cr.save ();
+			cr.new_path ();
+			foreach (unowned Path p in path_list) {
 				if (p.stroke == 0) {
-					p.fill_path (cr, allocation, view_zoom);
+					p.draw_path (cr, Color.black ());
 				} else {
-					fill_paths (StrokeTool.get_stroke (p, p.stroke), cr);
+					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr, Color.black ());
 				}
+			}
+			cr.fill ();
+			cr.restore ();
+			
+			foreach (unowned Path p in active_paths) {
+				cr.save ();
+				if (p.stroke == 0) {
+					p.draw_path (cr);
+				} else {
+					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr);
+				}
+				cr.fill ();
+				cr.restore ();
 			}
 		}
 	}
 	
+	private Color get_path_fill_color () {
+		return new Color (Path.fill_color_r, Path.fill_color_g, Path.fill_color_b, Path.fill_color_a);
+	}
+	
 	private void draw_outline_for_paths (PathList pl, Context cr) {
-		foreach (Path p in pl.paths) {
-			p.draw_outline (cr, allocation, view_zoom);
+		foreach (Path p in pl.paths) {			
+			p.draw_outline (cr);
 		}
 	} 
 	
-	private void fill_paths (PathList pl, Context cr) {
+	private void draw_path_list (PathList pl, Context cr, Color? c = null) {
 		foreach (Path p in pl.paths) {
-			p.fill_path (cr, allocation, view_zoom);
+			p.draw_path (cr, c);
 		}
-	} 
-	
+	}
+		
 	private void draw_zoom_area(Context cr) {
 		cr.save ();
 		cr.set_line_width (2.0);
@@ -1443,7 +1457,7 @@ public class Glyph : FontDisplay {
 
 		if (unlikely (Preferences.draw_boundaries)) {
 			foreach (unowned Path p in path_list) {
-				p.draw_boundaries (cr, allocation, view_zoom);
+				p.draw_boundaries (cr);
 			}
 		}
 		

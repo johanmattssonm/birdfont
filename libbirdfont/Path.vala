@@ -169,7 +169,7 @@ public class Path {
 		stroke = width;	
 	}
 
-	public void draw_boundaries  (Context cr, WidgetAllocation allocation, double view_zoom) {
+	public void draw_boundaries  (Context cr) {
 		double x = Glyph.reverse_path_coordinate_x (xmin); 
 		double y = Glyph.reverse_path_coordinate_y (ymin);
 		double x2 = Glyph.reverse_path_coordinate_x (xmax);
@@ -185,7 +185,7 @@ public class Path {
 		cr.restore ();
 	}
 
-	public void draw_outline (Context cr, WidgetAllocation allocation, double view_zoom) {
+	public void draw_outline (Context cr) {
 		unowned List<EditPoint> ep = points;
 		
 		unowned EditPoint? n = null;
@@ -218,7 +218,7 @@ public class Path {
 		cr.stroke ();
 	}
 	
-	public void draw_edit_points (Context cr, WidgetAllocation allocation, double view_zoom) {
+	public void draw_edit_points (Context cr) {
 		unowned List<EditPoint> ep = points;
 		
 		if (is_editable ()) {
@@ -236,14 +236,17 @@ public class Path {
 		}
 	}
 
-	public void fill_path (Context cr, WidgetAllocation allocation, double view_zoom) {
+	/** Add all control points for a path to the cairo context.
+	 * Call Context.new_path (); before this method and Context.fill ()
+	 * to show the path.
+	 */
+	public void draw_path (Context cr, Color? color = null) {
 		unowned List<EditPoint> ep = points;
-		
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
 		unowned EditPoint em;
-		cr.new_path ();
-					
+		Color c;
+		
 		// draw lines
 		foreach (EditPoint e in ep) {
 			if (n != null) {
@@ -263,14 +266,17 @@ public class Path {
 
 		// fill path
 		cr.close_path ();
-			
-		if (is_clockwise ()) {
-			cr.set_source_rgba (80/255.0, 95/255.0, 137/255.0, 0.5);
-		} else {
-			cr.set_source_rgba (144/255.0, 145/255.0, 236/255.0, 0.5);
-		}
 		
-		cr.fill ();
+		if (color != null) {
+			c = (!) color;
+			cr.set_source_rgba (c.r, c.g, c.b, c.a);
+		} else {
+			if (is_clockwise ()) {
+				cr.set_source_rgba (80/255.0, 95/255.0, 137/255.0, 0.5);
+			} else {
+				cr.set_source_rgba (144/255.0, 145/255.0, 236/255.0, 0.5);
+			}
+		}
 	}
 
 	private void draw_next (EditPoint e, EditPoint en, Context cr) {
@@ -752,7 +758,7 @@ public class Path {
 			Glyph.path_coordinate_x (y2));
 	}
 	
-	private static double get_length_from (EditPoint a, EditPoint b) {
+	public static double get_length_from (EditPoint a, EditPoint b) {
 		double x, y;
 		
 		x = Math.fabs (a.x - a.get_right_handle ().x ());

@@ -42,6 +42,11 @@ class Test : Object {
 	public bool is_benchmark () {
 		return benchmark;
 	}
+	
+	public static void print_time (string mess, double start_time) {
+		double stop_time = GLib.get_real_time ();
+		print (@"$mess $((stop_time - start_time) / 1000000.0)\n");
+	}
 }
 
 }

@@ -183,8 +183,29 @@ public class GlyphRange {
 	}
 	
 	public static string serialize (string s) {
+		
+		if (s == "space") {
+			return s;
+		}
+
+		if (s == "divis") {
+			return s;
+		}
+
+		if (s == "null") {
+			return s;
+		}
+
+		if (s == "quote") {
+			return s;
+		}
+
+		if (s == "ampersand") {
+			return s;
+		}
+		
 		if (s.char_count () > 1) {
-			warning ("Expecting a single glyph");
+			warning (@"Expecting a single glyph ($s)");
 			return s;
 		}
 		
