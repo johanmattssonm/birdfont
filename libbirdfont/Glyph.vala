@@ -1335,6 +1335,24 @@ public class Glyph : FontDisplay {
 		cr.stroke ();		
 	}
 	
+	/** Draw filled paths. */
+	public void draw_paths (Context cr) {
+		PathList stroke;
+		
+		cr.save ();
+		cr.new_path ();
+		foreach (unowned Path p in path_list) {
+			if (p.stroke > 0) {
+				stroke = StrokeTool.get_stroke (p, p.stroke);
+				draw_path_list (stroke, cr, Color.black ());
+			} else {
+				p.draw_path (cr, Color.black ());
+			}
+		}
+		cr.fill ();
+		cr.restore ();
+	}
+	
 	public void draw_path (Context cr) {
 		if (is_open () && Path.fill_open_path) {
 			cr.save ();
@@ -1848,6 +1866,17 @@ public class Glyph : FontDisplay {
 			
 			last_name = name;
 		}
+	}
+	
+	/** @return left side bearing */
+	public double get_lsb () {
+		return get_line ("left").pos;
+	}
+
+	/** @return bottom line */
+	public double get_baseline () {
+		Font font = BirdFont.get_current_font ();
+		return font.base_line;
 	}
 	
 	void draw_background_glyph (WidgetAllocation allocation, Context cr) {

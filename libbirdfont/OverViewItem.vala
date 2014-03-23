@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -140,8 +140,13 @@ public class OverViewItem : GLib.Object {
 			Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
 			Context c = new Context (s);
 			
-			c.scale (scale, scale);				
-			Svg.draw_svg_path (c, g.get_svg_data (), gx, gy);
+			c.save ();
+			c.scale (scale, scale);	
+			
+			g.add_help_lines ();
+			c.translate (gx - g.get_lsb () - Glyph.xc (), g.get_baseline () + gy - Glyph.yc ());
+			g.draw_paths (c);
+			c.restore ();
 			
 			cr.save ();
 			cr.set_source_surface (s, x, y - h);

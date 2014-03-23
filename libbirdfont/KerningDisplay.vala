@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -156,7 +156,11 @@ public class KerningDisplay : FontDisplay {
 					
 					// TODO: set font size
 					// cr.scale (KerningTools.font_size, KerningTools.font_size);
-					Svg.draw_svg_path (cr, glyph.get_svg_data (), x + kern, y);
+					cr.save ();
+					glyph.add_help_lines ();
+					cr.translate (kern + x - glyph.get_lsb () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
+					glyph.draw_paths (cr);
+					cr.restore ();
 					
 					w = glyph.get_width ();
 				}

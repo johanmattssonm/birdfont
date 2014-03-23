@@ -159,7 +159,6 @@ public class EditPointHandle  {
 		if (unlikely(c == 0)) {
 			angle = 0; // FIXME: this should be a different point type without line handles
 			length = 0;
-			warning ("Too short handle.");
 			return;
 		}
 		

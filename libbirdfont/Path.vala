@@ -318,7 +318,7 @@ public class Path {
 		cr.set_source_rgba (line_color_r, line_color_g, line_color_b, line_color_a);
 		cr.set_line_width (stroke_width / g.view_zoom);
 		
-		cr.line_to (xa, ya); // this point makes sense only if it is the first or last position, the other points are meaningless don't export them
+		cr.line_to (xa, ya); // this point makes sense only if it is in the first or last position
 
 		if (t == PointType.QUADRATIC || t == PointType.LINE_QUADRATIC || t == PointType.DOUBLE_CURVE || u == PointType.QUADRATIC || u == PointType.LINE_QUADRATIC || u == PointType.DOUBLE_CURVE) {
 			cr.curve_to ((xa + 2 * xb) / 3, (ya + 2 * yb) / 3, (xd + 2 * xb) / 3, (yd + 2 * yb) / 3, xd, yd);		
