@@ -1127,7 +1127,7 @@ public class Path {
 	}
 
 	/** Add the extra point between line handles for double curve. */
-	void add_hidden_double_points () requires (points.length () > 1) {
+	public void add_hidden_double_points () requires (points.length () > 1) {
 		EditPoint hidden;
 		unowned List<EditPoint> first = points.last ();
 		PointType left;
@@ -1145,12 +1145,17 @@ public class Path {
 				y = first.data.get_right_handle ().y () + (next.data.get_left_handle ().y () - first.data.get_right_handle ().y ()) / 2;
 				
 				hidden = new EditPoint (x, y, PointType.QUADRATIC);
-				hidden.right_handle = next.data.get_left_handle ().copy ();
+				hidden.right_handle.move_to_coordinate_internal (next.data.get_left_handle ().x(), next.data.get_left_handle ().y());
 				hidden.get_right_handle ().type = PointType.QUADRATIC;
+				
+				hidden.get_left_handle ().type = PointType.QUADRATIC;
 				hidden.type = PointType.QUADRATIC;
 				
 				first.data.get_right_handle ().type = PointType.QUADRATIC;
 				first.data.type = PointType.QUADRATIC;
+				
+				next.data.get_left_handle ().type = PointType.QUADRATIC;
+				next.data.type = PointType.QUADRATIC;
 				
 				add_point_after (hidden, first);
 			}
@@ -1213,7 +1218,13 @@ public class Path {
 		process_cubic_handles ();
 		
 		quadratic_path.close ();
-		
+
+		foreach (EditPoint ep in quadratic_path.points) {
+			if (ep.type == PointType.QUADRATIC) {
+				ep.get_left_handle ().move_to_coordinate (ep.get_prev ().data.get_right_handle ().x (), ep.get_prev ().data.get_right_handle ().y ());
+			}
+		}
+						
 		return quadratic_path;
 	}
 	
@@ -1300,6 +1311,7 @@ public class Path {
 			ep.y - (ep.y - prev.y) / 2);		
 	}
 	
+	/** Adjust position for the _new_ quadratic points. */
 	void process_quadratic_handles () {	
 		for (int t = 0; t < 2; t++) {
 			foreach (EditPoint ep in new_quadratic_points) {	
@@ -1356,27 +1368,16 @@ public class Path {
 			return true;
 		});
 
-		if (right == PointType.LINE_QUADRATIC && left == PointType.LINE_QUADRATIC) {
-			ep.get_right_handle ().set_point_type (PointType.LINE_QUADRATIC);
-			ep.get_left_handle ().set_point_type (PointType.LINE_QUADRATIC);
-			ep.type = PointType.QUADRATIC;
-		} else if (right == PointType.LINE_CUBIC && left == PointType.LINE_CUBIC) {
-			ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
-			ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
-			ep.type = PointType.LINE_CUBIC;
-		} else if (right == PointType.LINE_DOUBLE_CURVE && left == PointType.LINE_DOUBLE_CURVE) {
-			ep.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
-			ep.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
-			ep.type = PointType.DOUBLE_CURVE;
-		} else if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
+		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 			double_bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
 			double_bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
-			
-			ep.get_left_handle ().move_to_coordinate (x1, y1);
-			ep.get_right_handle ().move_to_coordinate (x0, y0);
 
 			ep.get_left_handle ().set_point_type (PointType.DOUBLE_CURVE);	
 			ep.get_right_handle ().set_point_type (PointType.DOUBLE_CURVE);
+						
+			ep.get_left_handle ().move_to_coordinate (x0, y0);  // FIXME: SWAPPED?
+			ep.get_right_handle ().move_to_coordinate (x1, y1);
+
 			ep.type = PointType.DOUBLE_CURVE;
 		} else if (right == PointType.QUADRATIC) {		
 			x0 = quadratic_bezier_vector (1 - position, stop.x, start.get_right_handle ().x (), start.x);
@@ -1389,7 +1390,7 @@ public class Path {
 			ep.get_left_handle ().move_to_coordinate_internal (0, 0);
 			
 			ep.type = PointType.QUADRATIC;				
-		} else {
+		} else if (right == PointType.CUBIC || left == PointType.CUBIC) {
 			bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
 			bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
 
@@ -1400,7 +1401,19 @@ public class Path {
 			ep.get_right_handle ().move_to_coordinate (x1, y1);
 			
 			ep.type = PointType.LINE_CUBIC;
-		}
+		} else if (right == PointType.LINE_QUADRATIC && left == PointType.LINE_QUADRATIC) {
+			ep.get_right_handle ().set_point_type (PointType.LINE_QUADRATIC);
+			ep.get_left_handle ().set_point_type (PointType.LINE_QUADRATIC);
+			ep.type = PointType.QUADRATIC;
+		} else if (right == PointType.LINE_CUBIC && left == PointType.LINE_CUBIC) {
+			ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
+			ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
+			ep.type = PointType.LINE_CUBIC;
+		} else if (right == PointType.LINE_DOUBLE_CURVE && left == PointType.LINE_DOUBLE_CURVE) {
+			ep.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
+			ep.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
+			ep.type = PointType.DOUBLE_CURVE;
+		} else 
 
 		ep.get_left_handle ().parent = ep;
 		ep.get_right_handle ().parent = ep;
@@ -1706,6 +1719,11 @@ public class Path {
 	public static double double_bezier_path (double step, double p0, double p1, double p2, double p3) {
 		double middle = p1 + (p2 - p1) / 2;
 		
+		if (step == 0.5) {
+			// FIXME: return the middle point
+			warning ("Middle");
+		}
+		
 		if (step < 0.5) {
 			return quadratic_bezier_path (2 * step, p0, p1, middle);
 		}
@@ -1716,6 +1734,24 @@ public class Path {
 	public static void double_bezier_vector (double step, double p0, double p1, double p2, double p3, out double a0, out double a1) {
 		double b0, b1, c0, c1, d0, d1;
 	
+		if (unlikely (step <= 0 || step >= 1)) {
+			warning (@"Bad step: $step");
+			step += 0.00004;
+		}
+
+		// set angle
+		b0 = double_bezier_path (step + 0.00001, p0, p1, p2, p3);
+		c0 = double_bezier_path (step + 0.00002, p0, p1, p2, p3);
+
+		b1 = double_bezier_path (step - 0.00001, p0, p1, p2, p3);
+		c1 = double_bezier_path (step - 0.00002, p0, p1, p2, p3);
+		
+		// adjust length
+		d0 = b0 + (b0 - c0) * 25000 * (step);
+		d1 = b1 + (b1 - c1) * 25000 * (1 - step);
+	
+	// FIXME: DELETE		
+	/*
 		// set angle
 		b0 = double_bezier_path (step - 0.00001, p0, p1, p2, p3);
 		c0 = double_bezier_path (step - 0.00002, p0, p1, p2, p3);
@@ -1726,7 +1762,8 @@ public class Path {
 		// adjust length
 		d0 = b0 + (b0 - c0) * 25000 * (1 - step);
 		d1 = b1 + (b1 - c1) * 25000 * step;
-		
+	*/	
+	
 		a0 = d0;
 		a1 = d1;
 	}
@@ -2406,6 +2443,24 @@ public class Path {
 		
 		get_first_point ().get_left_handle ().convert_to_line ();
 		get_last_point ().get_right_handle ().convert_to_line ();		
+	}
+	
+	public void print_all_types () {
+		print (@"Control points:\n");
+		foreach (EditPoint ep in points) {
+			print (@"$(ep.type) L: $(ep.get_left_handle ().type) R: L: $(ep.get_right_handle ().type)\n");
+		}
+	}
+	
+	/** Find the point where two lines intersect. */
+	public static void find_intersection (double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4,
+		out double point_x, out double point_y) {
+		point_x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+		point_y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
+	}
+
+	public static void find_intersection_handle (EditPointHandle h1, EditPointHandle h2, out double point_x, out double point_y) {
+		find_intersection (h1.parent.x, h1.parent.y, h1.x (), h1.y (), h2.parent.x, h2.parent.y, h2.x (), h2.y (), out point_x, out point_y);
 	}
 }
 

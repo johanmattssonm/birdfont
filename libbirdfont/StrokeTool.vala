@@ -42,6 +42,7 @@ public class StrokeTool : Tool {
 		
 		foreach (Path p in g.active_paths) {
 			paths.append (get_stroke (p, p.stroke));
+			paths.add (add_tangent_points (p));
 		}
 		
 		foreach (Path np in paths.paths) {
@@ -161,8 +162,8 @@ public class StrokeTool : Tool {
 		merged.append_path (counter);
 		corner2 = merged.points.last ().data;
 		
-		merged.create_list ();
 		merged.close ();
+		merged.create_list ();
 		merged.recalculate_linear_handles ();
 								
 		return merged;
@@ -190,22 +191,36 @@ public class StrokeTool : Tool {
 		return stroked;
 	}
 
+	static bool has_double_points (Path p) {
+		foreach (EditPoint ep in p.points) {
+			if (ep.type == PointType.DOUBLE_CURVE) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	static Path add_tangent_points (Path p) {
-		Path path = p.copy ();
+		Path path;
 		int steps = 2;
 		List<EditPoint> new_points = new List<EditPoint> ();
 		
 		EditPoint nep;
 		EditPoint? previous = null;
 		
+		path = (has_double_points (p)) ? 
+			p.get_quadratic_points () : p.copy ();
+		
 		path.all_segments ((start, stop) => {
 			EditPoint? prev = null;
 			double length = Path.get_length_from (start, stop);
 			
-			steps = (start.type == PointType.DOUBLE_CURVE) ?
-				(int) (length / 10) : 
-				(int) (length / 5);
+			steps = (int) (length / 10);
 
+			if (start.type == PointType.DOUBLE_CURVE || stop.type == PointType.DOUBLE_CURVE) {
+				warning ("Invalid point type.");
+			}
+			
 			if (steps > 1) {
 				Path.all_of (start, stop, (x, y, step) => {
 					EditPoint ep = new EditPoint ();
@@ -214,10 +229,11 @@ public class StrokeTool : Tool {
 						ep.set_position (x, y);
 						
 						// Stop processing when the first hidden point is found.
-						if (start.type == PointType.HIDDEN || stop.type == PointType.HIDDEN) {
-							// FIXME: Rename tracker points
+					/*	if (start.type == PointType.HIDDEN || stop.type == PointType.HIDDEN) {
+							// FIXME: Rename tracker points 
 							return true;
 						}
+					*/
 						
 						return_val_if_fail (prev != null, false);
 
@@ -251,7 +267,6 @@ public class StrokeTool : Tool {
 			return true;
 		});
 	
-
 		while (new_points.length () > 0) {
 			nep = new_points.first ().data;
 			
@@ -259,9 +274,9 @@ public class StrokeTool : Tool {
 				nep.prev = ((!) previous).get_link_item ();
 			}
 			
-			if (!path.has_point (nep)) {				
+			if (!path.has_point (nep)) {
+				return_if_fail (nep.prev != null);				
 				path.insert_new_point_on_path (nep);
-				return_if_fail (nep.prev != null);
 			}
 			
 			previous = nep;
@@ -287,7 +302,9 @@ public class StrokeTool : Tool {
 		uint npoints;
 		double distance_to_counter, distance_to_path;
 		PointSelection ps;
-						
+		double handle_x, handle_y;
+		EditPointHandle h1, h2;
+				
 		clockwise = new_path.is_clockwise ();
 		
 		end_point = true;
@@ -332,7 +349,7 @@ public class StrokeTool : Tool {
 			
 			if (new_path.is_open () && end_point) {
 				// open end point
-				stroked.add (e.x, e.y); 
+				stroked.add (e.x, e.y);
 			} else {
 				if (distance_to_path >= fabs (2 * thickness) - 0.1) {
 					// smooth curve
@@ -351,23 +368,33 @@ public class StrokeTool : Tool {
 					ep.get_left_handle ().length += space_left / 3; 
 					ep.get_right_handle ().length += space_right / 3;
 					stroked.add_point (ep);
+
 					warning ("Stroke might become distorted");
 				}
 			}
 		}
-	
+		
+		// FIXME. remove?
+		stroked.get_first_point ().set_point_type (stroked.get_first_point ().get_next ().data.type);
+		stroked.get_last_point ().set_point_type (stroked.get_last_point ().get_prev ().data.type);
+		
+		stroked.create_list ();
 		foreach (EditPoint e in stroked.points) {
 			e.recalculate_linear_handles ();
 		}
-	
+		
+		foreach (EditPoint e in stroked.points) {
+			if (e.type == PointType.QUADRATIC && e.next != null) {
+				h1 = e.get_right_handle ();
+				h2 = e.get_next ().data.get_left_handle ();
+				Path.find_intersection_handle (h1, h2, out handle_x, out handle_y);
+				// FIXME:
+				//h1.move_to_coordinate_internal (handle_x, handle_y);						
+				//h2.move_to_coordinate_internal (handle_x, handle_y);
+			}
+		}
+			
 		return stroked;
-	}
-
-	/** Find the point where two lines intersect. */
-	public static void find_intersection (double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4,
-		out double point_x, out double point_y) {
-		point_x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
-		point_y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4));
 	}
 		
 	/** Add a corner node for sharp corners. */
@@ -406,7 +433,7 @@ public class StrokeTool : Tool {
 		lx4 = 100 + x3;
 		ly4 = k2 * 100 + n2;
 
-		find_intersection (lx1, ly1, lx2, ly2, lx3, ly3, lx4, ly4, out posx, out posy);
+		Path.find_intersection (lx1, ly1, lx2, ly2, lx3, ly3, lx4, ly4, out posx, out posy);
 		
 		corner.x = posx;
 		corner.y = posy;
@@ -420,9 +447,14 @@ public class StrokeTool : Tool {
 
 	// TODO: elaborated stroke endings
 	static void add_corner_end (EditPoint e, Path path, double next_x, double next_y) {
+		EditPoint ep;
 		double px = e.x + (e.x - next_x) / 2;
 		double py = e.y + (e.y - next_y) / 2;
-		path.add (px, py);
+		ep = path.add (px, py);
+		ep.set_point_type (ep.get_prev ().data.type);
+		ep.get_right_handle ().convert_to_line ();
+		ep.get_left_handle ().convert_to_line ();
+		ep.recalculate_linear_handles ();
 	}
 
 	/** Sharp corner that need two extra points to be built. */

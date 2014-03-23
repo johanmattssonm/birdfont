@@ -156,9 +156,10 @@ public class EditPointHandle  {
 		b = parent.y - y;
 		c = a * a + b * b;
 		
-		if (c == 0) {
+		if (unlikely(c == 0)) {
 			angle = 0; // FIXME: this should be a different point type without line handles
 			length = 0;
+			warning ("Too short handle.");
 			return;
 		}
 		
@@ -175,6 +176,10 @@ public class EditPointHandle  {
 	
 	public void process_connected_handle () {
 		EditPointHandle h;
+		
+		if (unlikely (type == PointType.NONE)) {
+			warning ("Invalit type.");
+		}
 		
 		if (type == PointType.QUADRATIC) {
 			if (!is_left_handle ()) {

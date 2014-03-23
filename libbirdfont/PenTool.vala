@@ -1589,6 +1589,11 @@ public class PenTool : Tool {
 			default:
 				break;
 		}
+		
+		if (unlikely (t == PointType.NONE)) {
+			warning ("Type is not set.");
+		}
+		
 		return t;
 	}
 	
