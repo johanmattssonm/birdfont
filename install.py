@@ -132,9 +132,12 @@ else:
     install ('resources/linux/birdfont.1', mandir, 644)
     install ('resources/linux/birdfont-export.1', mandir, 644)
 
-# translations
+#translations
 for lang_dir in glob.glob('build/locale/*'):
 	lc = lang_dir.replace ('build/locale/', "")
 	install ('build/locale/' + lc + '/LC_MESSAGES/birdfont.mo', '/share/locale/' + lc + '/LC_MESSAGES' , 644);
+
+#file type 
+install ('resources/linux/birdfont.xml', '/share/mime/packages', 644)
 
 installed.close ()
