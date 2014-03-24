@@ -30,7 +30,6 @@ public class KernList : GLib.Object {
 	
 	/** @return number of pairs. */
 	public uint fetch_all_pairs () {
-		double time = GLib.get_real_time ();
 		PairFormat1 current_pairs = new PairFormat1 ();
 		
 		if (pairs.length () > 0 || num_pairs > 0) {
@@ -73,8 +72,6 @@ public class KernList : GLib.Object {
 				kerning = kerning.next;
 			}
 		});
-		
-		Test.print_time (@"Feching $(num_pairs) pairs in ", time);
 		
 		return num_pairs;
 	}

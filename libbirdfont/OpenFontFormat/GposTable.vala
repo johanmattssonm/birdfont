@@ -129,7 +129,7 @@ public class GposTable : Table {
 		// offset to coverage table from beginning of kern pair table
 		fd.add_ushort ((uint16) coverage_offset);  
 		fd.add_ushort (0x0004); // ValueFormat1 (0x0004 is x advance)
-		fd.add_ushort (0); // ValueFormat2 (0 is null)
+		fd.add_ushort (0x0000); // ValueFormat2 (null, no value)
 		fd.add_ushort (pair_set_count); // n pairs
 		
 		// pair offsets orderd by coverage index
@@ -144,14 +144,14 @@ public class GposTable : Table {
 					return;
 				}
 				
-				fd.add_ushort ((uint16) pair_set_offset);
-				written += 2;
-				
-				pair_set_offset += 2;
-				
-				foreach (Kern pk in k.pairs) {
-					pair_set_offset += 4;
+				if (k.pairs.length () == 0) {
+					warning ("No pairs.");
 				}
+				
+				fd.add_ushort ((uint16) pair_set_offset);
+				pair_set_offset += 2;
+				pair_set_offset += 4 * k.pairs.length ();
+				written += 2;
 			} catch (Error e) {
 				warning (e.message);
 			}
@@ -187,10 +187,15 @@ public class GposTable : Table {
 				last_gid_right = 0;
 				written_pairs = 0;
 				foreach (Kern k in p.pairs) {
+					
+					if (k.right == 0) {
+						warning (@"GID $(p.left) is kerned zero units to $(k.right).");
+					}
+					
 					// pair value record	
-					fd.add_ushort (k.right); // gid to second glyph
-					fd.add_short (k.kerning); // value of ValueFormat1, horizontal adjustment for advance
-					// value of ValueFormat2 is null
+					fd.add_ushort (k.right);     // gid of the second glyph
+					fd.add_short (k.kerning);    // value of ValueFormat1, horizontal adjustment for advance of the first glyph
+					                             // value of ValueFormat2 (null)
 					
 					if (unlikely (k.right < last_gid_right)) {
 						warning (@"Kerning table is not sorted $(k.right) < $last_gid_right).");
