@@ -49,8 +49,6 @@ public class PreviewTools : ToolCollection  {
 	
 	/** Export fonts and update html canvas. */
 	public static void update_preview () {
-		Font font = BirdFont.get_current_font ();
-
 		export_fonts ();
 
 		if (!Preview.has_html_document ()) {

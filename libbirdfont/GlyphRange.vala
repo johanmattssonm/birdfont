@@ -16,8 +16,9 @@ namespace BirdFont {
 
 public class GlyphRange {
 	
-	List<UniRange> ranges;
+	public List<UniRange> ranges;
 	
+	/** Glyphs without a corresponding unicode value (ligatures). */
 	public List<string> unassigned;
 	
 	uint32 len = 0;
@@ -371,6 +372,10 @@ public class GlyphRange {
 		return !unique (s, s);
 	}
 
+	public bool has_unichar (unichar c) {
+		return !unique (c, c);
+	}
+	
 	private bool unique (unichar start, unichar stop) {
 		foreach (UniRange u in ranges) {
 			if (inside (start, u.start, u.stop)) return false;

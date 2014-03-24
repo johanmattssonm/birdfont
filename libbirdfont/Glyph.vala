@@ -506,6 +506,17 @@ public class Glyph : FontDisplay {
 		return unichar_code;
 	}
 
+	public string get_unichar_string () {
+		string? s = (!)get_unichar ().to_string ();
+		
+		if (unlikely (s == null)) {
+			warning ("Invalid character.");
+			return "".dup ();
+		}
+		
+		return (!) s;
+	}
+
 	public bool get_show_help_lines () {
 		return show_help_lines;
 	}

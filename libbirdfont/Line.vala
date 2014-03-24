@@ -135,7 +135,6 @@ public class Line : GLib.Object {
 		double ivz = 1/g.view_zoom;
 		double margin = 10;
 		double none = 0;
-		double tpy;
 		
 		if (!moveable) {
 			return false;

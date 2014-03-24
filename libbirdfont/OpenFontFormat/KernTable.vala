@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -14,18 +14,6 @@
 
 namespace BirdFont {
 
-public class Kern : GLib.Object {
-	public uint16 left;
-	public uint16 right;
-	public int16 kerning;
-	
-	public Kern (uint16 l, uint16 r, int16 k) {
-		left = l;
-		right = r;
-		kerning = k;
-	}
-}
-
 public class KernTable : Table {
 	
 	public static const uint16 HORIZONTAL = 1;
@@ -36,12 +24,16 @@ public class KernTable : Table {
 	
 	GlyfTable glyf_table;
 	
-	public List<Kern> kerning = new List<Kern> ();
-	public int kerning_pairs = 0;
+	KernList pairs;
+	
+	// Only used for loading pairs
+	public List<Kern> kerning = new List<Kern> (); // TODO: replace with the KernList
+	public uint kerning_pairs = 0;
 	
 	public KernTable (GlyfTable gt) {
 		glyf_table = gt;
 		id = "kern";
+		pairs = new KernList (gt);
 	}
 	
 	public override void parse (FontData dis) throws GLib.Error {
@@ -107,22 +99,27 @@ public class KernTable : Table {
 		
 		int i;
 		
+		uint last_gid_left;
+		uint last_gid_right;
+		
+		if (pairs.get_length () == 0) {
+			pairs.fetch_all_pairs ();
+		}
+		
 		fd.add_ushort (0); // version 
 		fd.add_ushort (1); // n subtables
 
 		fd.add_ushort (0); // subtable version 
-
-		KerningClasses.get_instance ().all_pairs ((left, right, k) => {
-			n_pairs++;
-		});
 		
-		if (n_pairs > (uint16.MAX - 14) / 6.0) {
+		if (pairs.get_length () > (uint16.MAX - 14) / 6.0) {
 			warning ("Too many kerning pairs!"); 
  			n_pairs = (uint16) ((uint16.MAX - 14) / 6.0);
+		} else {
+			n_pairs = (uint16) pairs.get_length ();
 		}
-		
+
 		this.kerning_pairs = n_pairs;
-		
+
 		fd.add_ushort (6 * n_pairs + 14); // subtable length
 		fd.add_ushort (HORIZONTAL); // subtable flags
 
@@ -137,31 +134,47 @@ public class KernTable : Table {
 		fd.add_ushort (range_shift);
 
 		gid_left = 0;
-		
-		i = 0;
-		
-		KerningClasses.get_instance ().all_pairs ((left, right, k) => {
-			uint16 gid1, gid2;
+		i = 0;		
+		last_gid_left  = 0;
+		last_gid_right  = 0;
+
+		pairs.all_kern ((kr) => {
+			Kern k = kr;
 			
 			try {
-				// n_pairs is used to truncate this table to prevent buffer overflow
-				if (i++ < n_pairs) {
-					gid1 = (uint16) glyf_table.get_gid (left);
-					gid2 = (uint16) glyf_table.get_gid (right);
-					
-					fd.add_ushort (gid1);
-					fd.add_ushort (gid2);
-					fd.add_short ((int16) (k * HeadTable.UNITS));
+				if (k.left != last_gid_left) {
+					last_gid_right = 0;
 				}
+				
+				if (unlikely (k.right < last_gid_right)) {
+					warning (@"Kerning table is not sorted $(k.right) < $last_gid_right");
+				}
+				
+				if (k.left < last_gid_left || k.right < last_gid_right) {
+					warning (@"Kerning table is not sorted. $(k.left) < $last_gid_left");
+				}
+								
+				last_gid_left = k.left;			
+				last_gid_right = k.right;
+				
+				fd.add_ushort (k.left);
+				fd.add_ushort (k.right);
+				fd.add_short (k.kerning);
 			} catch (GLib.Error e) {
 				warning (e.message);
 			}
-		});
-		
+		}, n_pairs);
+
 		fd.pad ();
 		this.font_data = fd;
 	}
 
+	void print_all () {
+		print ("All pairs in kern table:\n");
+		foreach (Kern k in kerning) {
+			print (@"$(k.left)  $(k.right)  $(k.kerning)\n");
+		}
+	}
 }
 
 

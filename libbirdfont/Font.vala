@@ -355,10 +355,6 @@ public class Font : GLib.Object {
 	}
 	
 	public string get_name_for_character (unichar c) {
-		uint i = 0;
-		Glyph? gl;
-		Glyph g;
-		
 		StringBuilder sb;
 		
 		// FIXME: this is too slow

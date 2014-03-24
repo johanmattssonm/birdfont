@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -11,34 +11,16 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
     Lesser General Public License for more details.
 */
-
-using Cairo;
-using Xml;
+using Math;
 
 namespace BirdFont {
-
-public class Kerning : GLib.Object {
-	public double val;
-	public Glyph? glyph;
 	
-	public Kerning (double v) {
-		val = v;
-		glyph = null;
-	}
-	
-	public Kerning.for_glyph (Glyph? g, double v) {
-		val = v;
-		glyph = g;
-	}
-	
-	public Glyph get_glyph () {
-		if (unlikely (glyph == null)) {
-			warning ("No glyph");
-			return new Glyph ("");
-		}
-		
-		return (!) glyph;
-	}
+/** GSUB pairwise positioning format 1. 
+ * A class that stores kerning information for one letter. 
+ */
+public class PairFormat1 : GLib.Object {
+	public uint16 left = -1;
+	public List<Kern> pairs = new List<Kern> ();
 }
 
 }

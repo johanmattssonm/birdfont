@@ -15,16 +15,10 @@ using Math;
 
 namespace BirdFont {
 
-public class PairFormat1 : GLib.Object {
-	public uint16 left = -1;
-	public List<Kern> pairs = new List<Kern> ();
-}
-
 public class GposTable : Table {
 	
 	GlyfTable glyf_table;
-	List<Kern> kerning_pairs = new List<Kern> ();
-	List<PairFormat1> pairs = new List<PairFormat1> ();
+	KernList pairs;
 	
 	public GposTable () {
 		id = "GPOS";
@@ -38,6 +32,8 @@ public class GposTable : Table {
 		FontData fd = new FontData ();
 		
 		this.glyf_table = glyf_table;
+		this.pairs = new KernList (glyf_table);
+
 
 		printd ("Process GPOS\n");
 
@@ -88,24 +84,46 @@ public class GposTable : Table {
 		this.font_data = fd;
 	}
 
+	uint16 get_max_pairs () {
+		return (uint16) ((uint16.MAX - 10) / 3.0);
+	}
+
 	// PairPosFormat1 subtable
 	FontData get_pair_pos_format1 () throws GLib.Error {
 		FontData fd = new FontData ();
-		uint16 pair_set_count;
 		uint coverage_offset;
+		uint16 max_pairs_per_table = get_max_pairs ();
+		uint16 num_pairs;
+		int i;
+		uint pair_set_offset;
+		uint written;
+		uint written_pairs;
+		uint last_gid_left;
+		uint last_gid_right;
+		uint16 pair_set_count;
 		
-		create_kerning_pairs ();
+		if (pairs.get_length () == 0) {
+			pairs.fetch_all_pairs ();
+		}
+
+		// FIXME: add another table instead of truncating it
+		if (pairs.get_length () > max_pairs_per_table) {
+			warning (@"Too many kerning pairs. $(pairs.get_length ())");
+			num_pairs = max_pairs_per_table;
+		}
+
+		num_pairs = (pairs.get_length () < max_pairs_per_table) ? 
+			 (uint16) pairs.get_length () : max_pairs_per_table;
+		
+		pair_set_count = (uint16) pairs.get_length_left (); // FIXME: boundaries
 		
 		coverage_offset = 10 + pairs_offset_length () + pairs_set_length ();
 		
-		// FIXME: add more then current maximum of pairs
-		
-		if (pairs.length () > uint16.MAX || coverage_offset > uint16.MAX) {
-			print_pairs ();
-			warning (@"Too many kerning pairs. $(pairs.length ())");
+		if (coverage_offset > uint16.MAX) {
+			warning (@"Invalid coverage offset. Number of pairs: $(pairs.get_length ())");
+			num_pairs = 0;
+			coverage_offset = 10;
 		}
-		
-		pair_set_count = (uint16) pairs.length ();
 			
 		fd.add_ushort (1); // position format
 		// offset to coverage table from beginning of kern pair table
@@ -115,65 +133,133 @@ public class GposTable : Table {
 		fd.add_ushort (pair_set_count); // n pairs
 		
 		// pair offsets orderd by coverage index
-		uint pair_set_offset = 10 + pairs_offset_length ();
-		foreach (PairFormat1 k in pairs) {
-			fd.add_ushort ((uint16) pair_set_offset);
-			pair_set_offset += 2;
-			
-			foreach (Kern pk in k.pairs) {
-				pair_set_offset += 4;
+		pair_set_offset = 10 + pairs_offset_length ();
+		
+		written = 0;
+		written_pairs = 0;
+		pairs.all_pairs_format1 ((k) => {
+			try {
+				if (pair_set_offset > uint16.MAX) {
+					warning ("Invalid offset.");
+					return;
+				}
+				
+				fd.add_ushort ((uint16) pair_set_offset);
+				written += 2;
+				
+				pair_set_offset += 2;
+				
+				foreach (Kern pk in k.pairs) {
+					pair_set_offset += 4;
+				}
+			} catch (Error e) {
+				warning (e.message);
 			}
+		}, num_pairs);
+		
+		if (unlikely (written != pairs_offset_length ())) {
+			warning (@"Bad pairs_offset_length () calculated: $(pairs_offset_length ()), real length $written");
 		}
 		
 		// pair table 
-		foreach (PairFormat1 p in pairs) {
-			fd.add_ushort ((uint16) p.pairs.length ()); 
-			foreach (Kern k in p.pairs) {
-				// pair value record	
-				fd.add_ushort (k.right); // gid to second glyph
-				fd.add_short (k.kerning); // value of ValueFormat1, horizontal adjustment for advance			
-				// value of ValueFormat2 is null
+		i = 0;
+		written = 0;
+		last_gid_left = 0;
+		last_gid_right = 0;
+		pairs.all_pairs_format1 ((pn) => {
+			try {
+				PairFormat1 p = pn;
+				uint pairset_length = p.pairs.length ();
+				
+				if (pairset_length > uint16.MAX) {
+					warning ("Too many pairs");
+					pairset_length = uint16.MAX;
+				}
+				
+				if (unlikely (p.left < last_gid_left)) {
+					warning (@"Kerning table is not sorted $(p.left) < $last_gid_left.");
+				}
+
+				last_gid_left = p.left;
+				
+				fd.add_ushort ((uint16) pairset_length); 
+				written += 2;
+				last_gid_right = 0;
+				written_pairs = 0;
+				foreach (Kern k in p.pairs) {
+					// pair value record	
+					fd.add_ushort (k.right); // gid to second glyph
+					fd.add_short (k.kerning); // value of ValueFormat1, horizontal adjustment for advance
+					// value of ValueFormat2 is null
+					
+					if (unlikely (k.right < last_gid_right)) {
+						warning (@"Kerning table is not sorted $(k.right) < $last_gid_right).");
+					}
+				
+					last_gid_right = k.right;
+
+					written += 4;
+					written_pairs++;
+				}		
+				
+				if (unlikely (written_pairs != p.pairs.length ())) {
+					warning (@"written_pairs != p.pairs.length () $(written_pairs) != $(pairs.get_length ())   pairset_length: $pairset_length");
+				}
+				
+				i++;
+			} catch (Error e) {
+				warning (e.message);
 			}
+		}, num_pairs);
+		
+		if (unlikely (pairs_set_length () != written)) {
+			warning (@"Bad pair set length: $(pairs_set_length ()), real length: $written");
 		}
 		
 		ProgressBar.set_progress (0); // reset progress bar
 		
-		if (fd.length () != coverage_offset) {
-			warning (@"Bad coverage offset, coverage_offset: $coverage_offset, length: $(fd.length ())");
+		if (unlikely (fd.length () != coverage_offset)) {
+			warning (@"Bad coverage offset, coverage_offset: $coverage_offset, real length: $(fd.length ())");
 			warning (@"pairs_offset_length: $(pairs_offset_length ()) pairs_set_length: $(pairs_set_length ())");
 		}
 		
 		// coverage
 		fd.add_ushort (1); // format
-		fd.add_ushort ((uint16) pairs.length ());
-		foreach (PairFormat1 p in pairs) {
-			fd.add_ushort (p.left); // gid
+		fd.add_ushort (pair_set_count);
+		
+		written = 0;
+		pairs.all_pairs_format1 ((p) => {
+			try {
+				fd.add_ushort (p.left); // gid
+				written += 2;
+			} catch (Error e) {
+				warning (e.message);
+			}
+		}, num_pairs);
+		
+		if (unlikely (written != 2 * pair_set_count)) {
+			warning ("written != 2 * pair_set_count");
 		}
 		
 		return fd;
 	}
 	
-	public void print_pairs () {
-		foreach (PairFormat1 p in pairs) {
-			print (@"\nGid: $(p.left)\n");
-			foreach (Kern k in p.pairs) {
-				print (@"\tKern $(k.right)\t$(k.kerning)\n");
-			}
-		}
-	}
-	
 	public uint pairs_set_length () {
 		uint len = 0;
-		foreach (PairFormat1 p in pairs) {
+		
+		pairs.all_pairs_format1 ((p) => {
 			len += 2 + 4 * p.pairs.length ();
-		}
+		});
+		
 		return len;
 	}
 	
 	public uint pairs_offset_length () {
-		return 2 * pairs.length ();
+		return 2 * pairs.pairs.length ();
 	}
 
+/*
+// FIXME: DELETE
 	public int get_pair_index (int gid) {
 		int i = 0;
 		foreach (PairFormat1 p in pairs) {
@@ -184,43 +270,7 @@ public class GposTable : Table {
 		}
 		return -1;
 	}
-	
-	/** Create kerning pairs from classes. */
-	public void create_kerning_pairs () {
-		while (kerning_pairs.length () > 0) {
-			kerning_pairs.remove_link (kerning_pairs.first ());
-		}
-		
-		KerningClasses.get_instance ().all_pairs ((left, right, kerning) => {
-			uint16 gid1, gid2;
-			PairFormat1 pair;
-			int pair_index;
-			
-			gid1 = (uint16) glyf_table.get_gid (left);
-			gid2 = (uint16) glyf_table.get_gid (right);
-			
-			if (gid1 == -1) {
-				warning (@"gid is -1 for \"$left\"");
-				return;
-			}
-			
-			if (gid2 == -1) {
-				warning (@"gid is -1 for \"$right\"");
-				return;
-			}
-			
-			pair_index = get_pair_index (gid1);
-			if (pair_index == -1) {
-				pair = new PairFormat1 ();
-				pair.left = gid1; 
-				pairs.append (pair);
-			} else {
-				pair = pairs.nth (pair_index).data;
-			}
-			
-			pair.pairs.append (new Kern (gid1, gid2, (int16)(kerning * HeadTable.UNITS)));
-		});
-	}
+*/
 }
 
 }

@@ -70,6 +70,7 @@ public class GlyfTable : Table {
 			i++;
 		}
 		
+		warning (@"Glyph $name not found in font.");
 		return -1;
 	}
 

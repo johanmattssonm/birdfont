@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -28,8 +28,11 @@ public class KerningClasses : GLib.Object {
 
 	// kerning for single glyphs
 	Gee.HashMap<string, double?> single_kerning;
+	public GLib.List<string> single_kerning_letters_left; // FIXME: this needs to be fast and sorted
+	public GLib.List<string> single_kerning_letters_right; 
 	
-	public delegate void KerningIterator (string left, string right, double kerning);
+	public delegate void KerningIterator (KerningPair list);
+	public delegate void KerningClassIterator (string left, string right, double kerning);
 
 	public KerningClasses () {
 		classes_first = new GLib.List<GlyphRange> ();
@@ -52,6 +55,17 @@ public class KerningClasses : GLib.Object {
 	public void set_kerning_for_single_glyphs (string l, string r, double k) {
 		string left = GlyphRange.serialize (l);
 		string right = GlyphRange.serialize (r);
+		string cleft = (!)GlyphRange.unserialize (left).get_char ().to_string ();
+		string cright = (!)GlyphRange.unserialize (right).get_char ().to_string ();
+		
+		if (single_kerning_letters_left.index (cleft) < 0) {
+			single_kerning_letters_left.append (cleft);
+		}
+
+		if (single_kerning_letters_right.index (cright) < 0) {
+			single_kerning_letters_right.append (cright);
+		}
+				
 		single_kerning.set (@"$left - $right", k);
 	} 
 
@@ -140,12 +154,15 @@ public class KerningClasses : GLib.Object {
 		unowned GLib.List<GlyphRange> l;
 		int len = (int) classes_first.length ();
 		double? d;
+		double time;
 		
 		d = get_kerning_for_single_glyphs (left_glyph, right_glyph);
 		if (d != null) {
 			return (!)d;
 		}
 
+		time = GLib.get_real_time ();
+		
 		len = (int)classes_first.length ();
 		return_val_if_fail (len == classes_last.length (), 0);
 		return_val_if_fail (len == classes_kerning.length (), 0);
@@ -156,10 +173,11 @@ public class KerningClasses : GLib.Object {
 			
 			if (l.data.has_character (left_glyph)
 				&& r.data.has_character (right_glyph)) {
+
 				return classes_kerning.nth (i).data.val;
 			}
 		}
-		
+	
 		return 0;
 	}
 
@@ -243,7 +261,7 @@ public class KerningClasses : GLib.Object {
 		}
 	}
 
-	public void get_classes (KerningIterator kerningIterator) {
+	public void get_classes (KerningClassIterator kerningIterator) {
 		for (int i = 0; i < classes_first.length (); i++) {
 			kerningIterator (classes_first.nth (i).data.get_all_ranges (),
 				classes_last.nth (i).data.get_all_ranges (),
@@ -251,7 +269,7 @@ public class KerningClasses : GLib.Object {
 		}
 	}
 	
-	public void get_single_position_pairs (KerningIterator kerningIterator) {
+	public void get_single_position_pairs (KerningClassIterator kerningIterator) {
 		double k = 0;
 		
 		foreach (string key in single_kerning.keys) {
@@ -266,35 +284,92 @@ public class KerningClasses : GLib.Object {
 		}
 	}
 	
-	public void all_pairs (KerningIterator kerningIterator) {
-		// FIXME: THIS CODE IS TOO SLOW
-		Font f = BirdFont.get_current_font ();
-		Glyph? g1, g2;
-		Glyph glyph1, glyph2;
-		double k;
-		int i, j;
-		
-		i = 0;
-		g1 = f.get_glyph_indice (i);
-		while (g1 != null) {
-			glyph1 = (!) g1;
+	public void each_pair (KerningClassIterator iter) {
+		all_pairs ((kl) => {
+			Glyph g2;
+			KerningPair kerning_list = kl;
+			string g1 = kerning_list.character.get_name ();
+			unowned GLib.List<Kerning> kerning = kerning_list.kerning.first ();
 			
-			j = 0;
-			g2 = f.get_glyph_indice (j);
-			while (g2 != null) {
-				glyph2 = (!) g2;
-				
-				k = KerningClasses.get_instance ().get_kerning (glyph1.get_name (), glyph2.get_name ());
-				if (k != 0) {
-					kerningIterator (glyph1.get_name (), glyph2.get_name (), k);
-				}
-				
-				j++;
-				g2 = f.get_glyph_indice (j);
+			if (unlikely (is_null (kerning))) {
+				warning ("No kerning values.");
 			}
 			
-			i++;
-			g1 = f.get_glyph_indice (i);
+			foreach (Kerning k in kerning_list.kerning) {
+				g2 = k.get_glyph ();
+				iter (g1, g2.get_name (), kerning.data.val);
+				kerning = kerning.next;
+			}
+		});
+	}
+	
+	public void all_pairs (KerningIterator kerningIterator) {
+		Font font = BirdFont.get_current_font ();
+		GLib.List<Glyph> left_glyphs = new GLib.List<Glyph> ();
+		GLib.List<KerningPair> pairs = new GLib.List<KerningPair> ();
+		double kerning;
+		string right;
+		
+		// Create a list of first glyph in all pairs
+		foreach (GlyphRange r in classes_first) {
+			foreach (UniRange u in r.ranges) {
+				for (unichar c = u.start; c <= u.stop; c++) {
+					string name = (!)c.to_string ();
+					Glyph? g = font.get_glyph (name);
+					if (g != null && left_glyphs.index ((!) g) < 0) {
+						left_glyphs.append ((!) g);
+					}
+				}
+			}
+				
+			// TODO: GlyphRange.unassigned
+		}
+		
+		foreach (string name in single_kerning_letters_left) {
+			Glyph? g = font.get_glyph (name);
+			if (g != null && left_glyphs.index ((!) g) < 0) {
+				left_glyphs.append ((!) g);
+			}
+		}
+		
+		left_glyphs.sort ((a, b) => {
+			return strcmp (a.get_name (), b.get_name ());
+		});
+
+		// add the right hand glyph and the kerning value
+		foreach (Glyph character in left_glyphs) {
+			KerningPair kl = new KerningPair (character);
+			pairs.append (kl);
+
+			foreach (GlyphRange r in classes_last) {
+				foreach (UniRange u in r.ranges) {
+					for (unichar c = u.start; c <= u.stop; c++) {
+						right = (!)c.to_string ();
+						
+						if (font.has_glyph (right)) {
+							kerning = get_kerning (character.get_name (), right);
+							kl.add_unique ((!) font.get_glyph (right), kerning);
+						}
+					}
+				}
+				// TODO: GlyphRange.unassigned
+			}
+
+			// TODO: The get_kerning () function is still rather slow. Optimize it.
+			foreach (string right_glyph_name in single_kerning_letters_right) {
+				Glyph? gl = font.get_glyph (right_glyph_name);
+				if (gl != null) {
+					kerning = get_kerning (character.get_name (), right_glyph_name);
+					kl.add_unique ((!) gl , kerning);
+				}
+			}
+			
+			kl.sort ();
+		}
+		
+		// obtain the kerning value
+		foreach (KerningPair p in pairs) {
+			kerningIterator (p);
 		}
 	}
 
@@ -312,7 +387,16 @@ public class KerningClasses : GLib.Object {
 		while (classes_kerning.length () > 0) {
 			classes_kerning.remove_link (classes_kerning.first ());
 		}
+
+		while (single_kerning_letters_left.length () > 0) {
+			single_kerning_letters_left.remove_link (single_kerning_letters_left.first ());
+		}		
+
+		while (single_kerning_letters_right.length () > 0) {
+			single_kerning_letters_right.remove_link (single_kerning_letters_right.first ());
+		}		
 		
+				
 		GlyphCanvas.redraw ();
 		
 		if (!is_null (MainWindow.get_toolbox ())) { // FIXME: reorganize
