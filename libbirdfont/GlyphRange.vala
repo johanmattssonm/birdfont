@@ -204,7 +204,23 @@ public class GlyphRange {
 		if (s == "ampersand") {
 			return s;
 		}
-		
+
+		if (s == "&quot;") {
+			return s;
+		}
+
+		if (s == "&amp;") {
+			return s;
+		}
+
+		if (s == "&lt;") {
+			return s;
+		}
+
+		if (s == "&gt;") {
+			return s;
+		}
+									
 		if (s.char_count () > 1) {
 			warning (@"Expecting a single glyph ($s)");
 			return s;
@@ -215,6 +231,18 @@ public class GlyphRange {
 	
 	public static string get_serialized_char (unichar c) {
 		StringBuilder s = new StringBuilder ();
+
+		if (c == '&') {
+			return "&amp;";
+		}
+
+		if (c == '<') {
+			return "&lt;";
+		}
+
+		if (c == '>') {
+			return "&gt;";
+		}
 		
 		if (c == ' ') {
 			return "space";
@@ -235,12 +263,28 @@ public class GlyphRange {
 		if (c == '&') {
 			return "ampersand";
 		}
-				
+
 		s.append_unichar (c);	
 		return s.str;	
 	}
 	
 	public static string unserialize (string c) {
+		if (c == "&quot;") {
+			return "\"";
+		}
+
+		if (c == "&amp;") {
+			return "&";
+		}
+
+		if (c == "&lt;") {
+			return "<";
+		}
+
+		if (c == "&gt;") {
+			return ">";
+		}
+		
 		if (c == "space") {
 			return " ";
 		}

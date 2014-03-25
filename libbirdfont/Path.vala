@@ -1554,8 +1554,8 @@ public class Path {
 	}
 
 	public static void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = -1) {
-		PointType right = PenTool.to_line (start.get_right_handle ().type);
-		PointType left = PenTool.to_line (stop.get_left_handle ().type);
+		PointType right = PenTool.to_curve (start.get_right_handle ().type);
+		PointType left = PenTool.to_curve (stop.get_left_handle ().type);
 		
 		if (steps == -1) {
 			steps = (int) (10 * get_length_from (start, stop));
