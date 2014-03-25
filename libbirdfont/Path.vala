@@ -1232,7 +1232,7 @@ public class Path {
 		int steps;
 		EditPoint prev =  new EditPoint ();
 		int added_points = 0;
-
+		
 		if (points.length () < 2) {
 			return;
 		}
@@ -1245,25 +1245,27 @@ public class Path {
 		
 		// create quadratic paths
 		all_of (start, stop, (x, y, step) => {
-			double prev_step = 0;
-			EditPoint e =  new EditPoint ();
+			EditPoint e;
 			
 			if (step == 1) {
 				return true;
 			}
-			
+						
 			e = new EditPoint (x, y, PointType.QUADRATIC);
 			added_points++;
 
-			prev_step = step;
 			prev = e;
 
-			quadratic_path.add_point (e);
+			e = quadratic_path.add_point (e);
 			prev = quadratic_path.points.last ().data;
 			
+			// FIXME: DELETE
+			/*
 			prev.type = PointType.LINE_QUADRATIC;
 			prev.get_left_handle ().type = PointType.LINE_QUADRATIC;
 			prev.get_right_handle ().type = PointType.LINE_QUADRATIC;
+			*/
+			
 			prev.recalculate_linear_handles ();
 			
 			new_quadratic_points.append (prev);
@@ -1552,8 +1554,8 @@ public class Path {
 	}
 
 	public static void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = -1) {
-		PointType right = start.get_right_handle ().type;
-		PointType left = stop.get_left_handle ().type;
+		PointType right = PenTool.to_line (start.get_right_handle ().type);
+		PointType left = PenTool.to_line (stop.get_left_handle ().type);
 		
 		if (steps == -1) {
 			steps = (int) (10 * get_length_from (start, stop));
@@ -1561,10 +1563,13 @@ public class Path {
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 			all_of_double (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.get_left_handle ().x (), stop.get_left_handle ().y (), stop.x, stop.y, iter, steps);
-		} else if (right == PointType.QUADRATIC) {
+		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
 			all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.x, stop.y, iter, steps);
-		} else {
+		} else if (right == PointType.CUBIC && left == PointType.CUBIC) {
 			all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.get_left_handle ().x (), stop.get_left_handle ().y (), stop.x, stop.y, iter, steps);
+		} else {
+			warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y)");
+			all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.x, stop.y, iter, steps);
 		}
 	}
 
