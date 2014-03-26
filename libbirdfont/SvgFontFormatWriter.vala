@@ -83,6 +83,9 @@ class SvgFontFormatWriter : Object  {
 					put (@"<glyph unicode=\"$(b.str)\" horiz-adv-x=\"$(glyph.get_width ())\" d=\"$(glyph.get_svg_data ())\" />");
 				}
 			}
+			
+			ProgressBar.set_progress (0);
+			Tool.yield ();
 		}
 		
 		// FIXME: ligatures

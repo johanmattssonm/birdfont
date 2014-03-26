@@ -151,7 +151,8 @@ public class GlyfTable : Table {
 		Font font = OpenFontFormatWriter.get_current_font ();
 		uint32 indice;
 		List<Glyph> unassigned_glyphs;
-		
+		uint32 num_glyphs = font.length ();
+		uint32 i = 0;
 		// add notdef. character at index zero + other special chars first
 		glyphs.append (font.get_not_def_character ());
 		glyphs.append (font.get_null_character ());
@@ -188,6 +189,8 @@ public class GlyfTable : Table {
 				printd ("Adding unassigned glyph.");
 				unassigned_glyphs.append (g);
 			}
+			
+			OpenFontFormatWriter.show_progress (++i / num_glyphs);
 		}
 		
 		foreach (Glyph ug in unassigned_glyphs) {

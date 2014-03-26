@@ -18,9 +18,7 @@ namespace BirdFont {
 class ProgressBar {
 	
 	static double current_progress = 0;
-	
 	public signal void new_progress ();
-
 	static ProgressBar? singleton = null;
 
 	public ProgressBar () {

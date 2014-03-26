@@ -215,6 +215,8 @@ public class GposTable : Table {
 			} catch (Error e) {
 				warning (e.message);
 			}
+			
+			OpenFontFormatWriter.show_progress (i / num_pairs);
 		}, num_pairs);
 		
 		if (unlikely (pairs_set_length () != written)) {

@@ -70,6 +70,10 @@ public class OpenFontFormatWriter : Object  {
 		}
 	}
 	
+	public static void show_progress (double progress) {
+		ProgressBar.set_progress (progress);
+	}
+	
 	public void close () throws Error {
 		os.close ();
 	}

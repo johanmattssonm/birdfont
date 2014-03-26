@@ -70,11 +70,13 @@ class GlyfData : GLib.Object {
 			}
 		}
 		
-		process_end_points ();
-		process_flags ();
-		process_x ();
-		process_y ();
-		process_bounding_box ();			
+		if (paths.length () > 0) {
+			process_end_points ();
+			process_flags ();
+			process_x ();
+			process_y ();
+			process_bounding_box ();
+		}
 	}
 
 	bool is_empty (Path p) {

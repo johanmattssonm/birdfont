@@ -155,7 +155,8 @@ class BirdFontFile {
 				os.put_string (@"</images>\n");
 				os.put_string ("\n");
 			}
-			
+		
+			// FIXME: no need to iterate over all glyphs twise
 			font.glyph_cache.for_each ((gc) => {
 				if (is_null (gc)) {
 					warning ("No glyph collection");
@@ -166,6 +167,9 @@ class BirdFontFile {
 				} catch (GLib.Error e) {
 					warning (e.message);
 				}
+				
+				ProgressBar.set_progress (0);		
+				MainWindow.get_tool_tip ().show_text (t_("Saving"));
 			});
 		
 			font.glyph_cache.for_each ((gc) => {
@@ -173,9 +177,7 @@ class BirdFontFile {
 				
 				try {
 					string data;
-					
 					foreach (Glyph g in gc.get_version_list ().glyphs) {
-
 						if (g.get_background_image () != null) {
 							bg = (!) g.get_background_image ();
 							data = bg.get_png_base64 ();
@@ -196,13 +198,15 @@ class BirdFontFile {
 					warning (@"Failed to save $path \n");
 					warning (@"$(ef.message) \n");
 				}
+				
+				ProgressBar.set_progress (0);		
+				MainWindow.get_tool_tip ().show_text (t_("Saving"));
 			});
 			
 			num_kerning_pairs = KerningClasses.get_instance ().classes_first.length ();
 			progress = num_kerning_pairs;
 			ProgressBar.set_progress (1);
 			for (uint i = 0; i < num_kerning_pairs; i++) {
-				
 				range = KerningClasses.get_instance ().classes_first.nth (i).data.get_all_ranges ();
 				
 				os.put_string ("<kerning ");
@@ -244,6 +248,9 @@ class BirdFontFile {
 				} catch (GLib.Error e) {
 					warning (@"$(e.message) \n");
 				}
+				
+				ProgressBar.set_progress (0);
+				MainWindow.get_tool_tip ().show_text (t_("Saving"));
 			});
 			
 			os.put_string ("</font>");
@@ -464,7 +471,7 @@ class BirdFontFile {
 
 	private bool parse_file (Xml.Node* root) {
 		Xml.Node* node = root;
-		
+		int i = 0;
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 
 			// this is a backup file set path to the original 
@@ -487,10 +494,12 @@ class BirdFontFile {
 				parse_font_boundaries (iter);
 			}
 			
+			// horizontal lines in the new format
 			if (iter->name == "horizontal") {
 				parse_horizontal_lines (iter);
 			}			
-
+			
+			// grid buttons
 			if (iter->name == "grid") {
 				parse_grid (iter);
 			}
@@ -550,6 +559,14 @@ class BirdFontFile {
 			if (iter->name == "kerning") {
 				parse_kerning (iter);
 			}
+			
+			ProgressBar.set_progress (++i / 1024.0);
+			
+			if (i == 1024) {
+				i = 0;
+			}
+						
+			MainWindow.get_tool_tip ().show_text (t_("Loading BirdFont XML data."));
 		}
 
 		return true;

@@ -55,6 +55,7 @@ public class FontData : Object {
 	
 	public void write_table (OtfInputStream dis, uint32 offset, uint32 length) throws Error {
 		uint32 l = length + (length % 4);  // padding after end of table
+		uint32 added_bytes = 0;
 		uint8 b;
 		
 		if (length >= l) {
@@ -73,6 +74,11 @@ public class FontData : Object {
 		while (wp < l) {
 			b = dis.read_byte ();
 			add (b);
+			added_bytes++;
+			
+			if (added_bytes % 1024 == 0) {
+				OpenFontFormatWriter.show_progress (added_bytes / (double) l);
+			}
 		}
 		
 		rp = 0;
