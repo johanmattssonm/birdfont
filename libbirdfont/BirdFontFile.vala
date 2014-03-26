@@ -466,10 +466,7 @@ class BirdFontFile {
 		Xml.Node* node = root;
 		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			
-			printd (iter->name); // FIXME: delete
-			printd ("\n");
-	
+
 			// this is a backup file set path to the original 
 			if (iter->name == "backup") {
 				font.font_file = iter->children->content;

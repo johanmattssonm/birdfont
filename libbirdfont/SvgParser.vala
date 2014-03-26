@@ -21,11 +21,11 @@ public enum SvgFormat {
 	ILLUSTRATOR
 }
 
-public class ImportSvg {
+public class SvgParser {
 	
 	SvgFormat format = SvgFormat.INKSCAPE;
 	
-	public ImportSvg () {
+	public SvgParser () {
 	}
 	
 	public void set_format (SvgFormat f) {
@@ -55,7 +55,7 @@ public class ImportSvg {
 		string xml_document;
 		bool has_format = false;
 		StringBuilder sb = new StringBuilder ();
-		ImportSvg parser = new ImportSvg ();
+		SvgParser parser = new SvgParser ();
 		TextReader tr;
 
 		try {

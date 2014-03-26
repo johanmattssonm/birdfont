@@ -116,7 +116,7 @@ class TestCases {
 
 	public static void test_parse_quadratic_paths () {
 		Glyph g;
-		ImportSvg parser = new ImportSvg ();
+		SvgParser parser = new SvgParser ();
 		
 		test_open_next_glyph ();
 		
@@ -244,7 +244,7 @@ class TestCases {
 			d.close ();
 			
 			test_open_next_glyph ();
-			ImportSvg.import_svg ((!) temp_file.get_path ());
+			SvgParser.import_svg ((!) temp_file.get_path ());
 
 			temp_file.delete ();
 			
@@ -333,7 +333,7 @@ class TestCases {
 			d.close ();
 			
 			test_open_next_glyph ();
-			ImportSvg.import_svg ((!) temp_file.get_path ());
+			SvgParser.import_svg ((!) temp_file.get_path ());
 
 			temp_file.delete ();
 		} catch (GLib.Error e) {

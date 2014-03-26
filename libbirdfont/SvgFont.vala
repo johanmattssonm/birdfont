@@ -233,7 +233,7 @@ class SvgFont : GLib.Object {
 		Glyph glyph;
 		double advance = font_advance;
 		string ligature = "";
-		ImportSvg parser = new ImportSvg ();
+		SvgParser parser = new SvgParser ();
 
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;

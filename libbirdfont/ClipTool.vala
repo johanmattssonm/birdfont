@@ -81,7 +81,6 @@ public class ClipTool : Tool {
 		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph? destination = null;
 		string data;
-		PathList new_paths;
 		return_if_fail (fd is Glyph);
 		
 		destination = (Glyph) fd;
@@ -93,7 +92,7 @@ public class ClipTool : Tool {
 		if (bf_clipboard_data) {
 			import_birdfont_clipboard (data);
 		} else if (data != "") {
-			ImportSvg.import_svg_data (data);
+			SvgParser.import_svg_data (data);
 		}
 		
 		((!)destination).update_view ();			
