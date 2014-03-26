@@ -233,6 +233,7 @@ class SvgFont : GLib.Object {
 		Glyph glyph;
 		double advance = font_advance;
 		string ligature = "";
+		ImportSvg parser = new ImportSvg ();
 
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -265,7 +266,7 @@ class SvgFont : GLib.Object {
 		}
 
 		glyph = new Glyph (glyph_name, unicode_value);
-		ImportSvg.parse_svg_data (svg, glyph, true, units);			
+		parser.parse_svg_data (svg, glyph, true, units);			
 		glyph.right_limit = glyph.left_limit + advance * units;
 		
 		if (ligature != "") {

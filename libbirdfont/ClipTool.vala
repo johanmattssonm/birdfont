@@ -93,10 +93,7 @@ public class ClipTool : Tool {
 		if (bf_clipboard_data) {
 			import_birdfont_clipboard (data);
 		} else if (data != "") {
-			new_paths = ImportSvg.import_svg_data (data);
-			foreach (Path p in new_paths.paths) {
-				((!)destination).active_paths.append (p);
-			}
+			ImportSvg.import_svg_data (data);
 		}
 		
 		((!)destination).update_view ();			

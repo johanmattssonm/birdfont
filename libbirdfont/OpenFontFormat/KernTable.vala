@@ -168,13 +168,6 @@ public class KernTable : Table {
 		fd.pad ();
 		this.font_data = fd;
 	}
-
-	void print_all () {
-		print ("All pairs in kern table:\n");
-		foreach (Kern k in kerning) {
-			print (@"$(k.left)  $(k.right)  $(k.kerning)\n");
-		}
-	}
 }
 
 

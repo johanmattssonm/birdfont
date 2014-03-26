@@ -56,7 +56,6 @@ class BirdFontFile {
 		font.font_file = "typeface.bf";
 		tr = new TextReader.for_doc (xml_data, "");
 		ok = load_xml (tr);
-		
 		Parser.cleanup ();
 		
 		return ok;

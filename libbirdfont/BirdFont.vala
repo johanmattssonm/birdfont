@@ -253,7 +253,7 @@ public class BirdFont {
 		current_glyph = new Glyph ("");
 		
 		experimental = args.has_argument ("--test");
-		show_coordinates = args.has_argument ("--show-coordinates");
+		show_coordinates = args.has_argument ("--show-coordinates") || experimental;
 		fatal_wanings = args.has_argument ("--fatal-warning");
 		win32 = (arg[0].index_of (".exe") > -1) || arg[0] == "wine";
 

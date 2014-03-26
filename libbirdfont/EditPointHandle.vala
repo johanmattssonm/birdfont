@@ -177,7 +177,7 @@ public class EditPointHandle  {
 		EditPointHandle h;
 		
 		if (unlikely (type == PointType.NONE)) {
-			warning ("Invalit type.");
+			warning ("Invalid type.");
 		}
 		
 		if (type == PointType.QUADRATIC) {

@@ -116,15 +116,31 @@ class TestCases {
 
 	public static void test_parse_quadratic_paths () {
 		Glyph g;
+		ImportSvg parser = new ImportSvg ();
+		
 		test_open_next_glyph ();
 		
+		parser.set_format (SvgFormat.INKSCAPE);
+		
 		g = MainWindow.get_current_glyph ();
-		ImportSvg.parse_svg_data ("M20,300 Q400,50 600,300 T1000,300Q1200 50 1400 300Q1600 50 1800 600 L 1800 700 L 200 700 z", g);
+		parser.parse_svg_data ("M20,300 Q400,50 600,300 T1000,300Q1200 50 1400 300Q1600 50 1800 600 L 1800 700 L 200 700 z", g);
 		Toolbox.select_tool_by_name ("full_glyph");
 		
 		g = MainWindow.get_current_glyph ();
-		ImportSvg.parse_svg_data ("M300 400 h-200 l0 1000 h200z", g, true);
+		parser.parse_svg_data ("M300 400 h-200 l0 1000 h200z", g, true);
 		Toolbox.select_tool_by_name ("full_glyph");
+
+
+		parser.set_format (SvgFormat.ILLUSTRATOR);
+		
+		g = MainWindow.get_current_glyph ();
+		parser.parse_svg_data ("M20,300 Q400,50 600,300 T1000,300Q1200 50 1400 300Q1600 50 1800 600 L 1800 700 L 200 700 z", g);
+		Toolbox.select_tool_by_name ("full_glyph");
+		
+		g = MainWindow.get_current_glyph ();
+		parser.parse_svg_data ("M300 400 h-200 l0 1000 h200z", g, true);
+		Toolbox.select_tool_by_name ("full_glyph");
+		
 	}
 
 	public static void test_illustrator_import () {
