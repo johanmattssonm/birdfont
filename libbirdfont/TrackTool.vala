@@ -181,7 +181,6 @@ public class TrackTool : Tool {
 			Path p;
 			PointSelection? open_path = get_path_with_end_point (x, y);
 			PointSelection joined_path;
-			EditPoint ep;
 			
 			glyph = MainWindow.get_current_glyph ();
 			

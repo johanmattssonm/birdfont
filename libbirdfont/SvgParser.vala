@@ -58,30 +58,26 @@ public class SvgParser {
 		SvgParser parser = new SvgParser ();
 		TextReader tr;
 
-		try {
-			foreach (string l in lines) {
-				if (l.index_of ("<!--") > -1 && l.index_of ("Illustrator") > -1) {
-					parser.set_format (SvgFormat.ILLUSTRATOR);
-					has_format = true;
-				}
-				
-				if (l.index_of ("<!--") > -1 && l.index_of ("Inkscape") > -1) {
-					parser.set_format (SvgFormat.INKSCAPE);
-					has_format = true;
-				}	
-				
-				// FIXME: libxml2 (2.7.8) refuses to parse svg files created with Adobe Illustrator on 
-				// windows. This is a way around it.
-				if (l.index_of ("<!") == -1 && l.index_of ("]>") == -1) {
-					sb.append (l);
-					sb.append ("\n");
-				}
+		foreach (string l in lines) {
+			if (l.index_of ("<!--") > -1 && l.index_of ("Illustrator") > -1) {
+				parser.set_format (SvgFormat.ILLUSTRATOR);
+				has_format = true;
 			}
 			
-			xml_document = sb.str;
-		} catch (GLib.Error e) {
-			warning (e.message);
+			if (l.index_of ("<!--") > -1 && l.index_of ("Inkscape") > -1) {
+				parser.set_format (SvgFormat.INKSCAPE);
+				has_format = true;
+			}	
+			
+			// FIXME: libxml2 (2.7.8) refuses to parse svg files created with Adobe Illustrator on 
+			// windows. This is a way around it.
+			if (l.index_of ("<!") == -1 && l.index_of ("]>") == -1) {
+				sb.append (l);
+				sb.append ("\n");
+			}
 		}
+		
+		xml_document = sb.str;
 
 		if (!has_format) {
 			warning ("No format identifier found.");

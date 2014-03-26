@@ -109,7 +109,6 @@ public class StrokeTool : Tool {
 		Path merged;
 		EditPoint corner1, corner2;
 		EditPoint corner3, corner4;
-		EditPoint new_corner1, new_corner2;
 		EditPoint end;
 		double angle;
 		
@@ -459,11 +458,7 @@ public class StrokeTool : Tool {
 
 	/** Sharp corner that need two extra points to be built. */
 	public static void add_corner_nodes (Path path, Path stroked, EditPoint e, bool clockwise, double thickness, bool end_point, double nx, double ny) {
-		double middle_x, middle_y;
-		double corner_thickness_left, corner_thickness_right;
-		double middle_point_position;
-		EditPoint corner1, corner2, corner3, swap_corner;
-		PointSelection ps;
+		EditPoint corner1, corner2, swap_corner;
 		
 		// add new points in order to preserve the stroke
 		corner1 = e.copy ();
