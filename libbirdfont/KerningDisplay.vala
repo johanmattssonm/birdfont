@@ -338,7 +338,7 @@ public class KerningDisplay : FontDisplay {
 		return false;	
 	}
 
-	private void set_absolute_kerning (int handle, double val) {
+	public void set_absolute_kerning (int handle, double val) {
 		double kern = get_kerning_for_handle (handle);
 		set_kerning (handle, val - kern);
 	}
@@ -456,6 +456,10 @@ public class KerningDisplay : FontDisplay {
 		}		
 	}
 	
+	public void add_kerning_class (int index) {
+		add_range (KerningTools.get_kerning_class (index));
+	}
+	
 	public void add_range (GlyphRange range) {
 		Font font = BirdFont.get_current_font ();
 		Glyph? glyph;
@@ -533,13 +537,17 @@ public class KerningDisplay : FontDisplay {
 			}
 			
 			if (row.length () == 0 || c == Key.ENTER) {
-				row.prepend (new GlyphSequence ());
+				new_line ();
 			}
 			
 			add_character (c);
 		}
 		
 		GlyphCanvas.redraw ();
+	}
+	
+	public void new_line () {
+		row.prepend (new GlyphSequence ());
 	}
 	
 	void add_character (unichar c) {

@@ -100,6 +100,15 @@ public class KerningTools : ToolCollection  {
 		classes.add_tool (kerning_class);
 	}
 	
+	public static GlyphRange get_kerning_class (int index) {
+		if (likely (0 <= index < classes.tool.length ())) {
+			return ((KerningRange) classes.tool.nth (index).data).glyph_range;
+		} else {
+			warning ("Index out of bounds.");
+			return new GlyphRange ();
+		}
+	}
+	
 	public static void update_kerning_classes () {
 		KerningClasses k = KerningClasses.get_instance ();
 		KerningRange kr;

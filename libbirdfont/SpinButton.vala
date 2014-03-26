@@ -310,7 +310,9 @@ public class SpinButton : Tool {
 	}
 	
 	public void redraw () {
-		 MainWindow.get_toolbox ().redraw ((int) x, (int) y, 70, 70);
+		if (!is_null (MainWindow.get_toolbox ())) {
+			MainWindow.get_toolbox ().redraw ((int) x, (int) y, 70, 70);
+		}
 	}
 }
 

@@ -85,6 +85,8 @@ public class Font : GLib.Object {
 	
 	KerningClasses kerning_classes;
 	
+	bool read_only = false;
+	
 	public Font () {
 		postscript_name = "Typeface";
 		name = "Typeface";
@@ -351,6 +353,10 @@ public class Font : GLib.Object {
 		
 		glyph_cache.insert (glyph_collection.get_unicode (), glyph_collection);
 		
+		if (unlikely (is_empty ())) {
+			warning ("No glyph inserted");
+		}
+		
 		printd (@"Adding $(glyph_collection.get_current ().get_name ())\n");
 	}
 	
@@ -516,7 +522,12 @@ public class Font : GLib.Object {
 		Font font;
 		BirdFontFile birdfont_file = new BirdFontFile (this);
 		bool file_written = birdfont_file.write_font_file (path);
-		
+
+		if (read_only) {
+			warning (@"$path is write protected.");
+			return false;			
+		}
+				
 		if (!path.has_suffix (".bf")) {
 			warning ("Expecting .bf format.");
 			return false;
@@ -707,6 +718,10 @@ public class Font : GLib.Object {
 		otf_font = true;
 		otf.parse_index (path);
 		return true;
+	}
+
+	public void set_read_only (bool r) {
+		read_only = r;
 	}
 
 	public static unichar to_unichar (string unicode) {

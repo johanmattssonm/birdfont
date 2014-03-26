@@ -3,7 +3,7 @@
     <mime-type type="application/birdfont">
     <comment>BirdFont file</comment>
     <comment xml:lang="en">Font</comment>
-    <magic priority="70">
+    <magic priority="100">
         <match type="string" value="&lt;font" offset="1"/>
     </magic>
     <glob pattern="*.bf" />

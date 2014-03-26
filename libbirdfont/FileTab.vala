@@ -31,7 +31,7 @@ public class FileTab : FontDisplay {
 	public FileTab () {
 	}
 
-	public void load_font (string fn) {
+	public static void load_font (string fn) {
 		Font font;
 		SaveDialogListener dialog = new SaveDialogListener ();
 

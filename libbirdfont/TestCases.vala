@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -58,6 +58,63 @@ class TestCases {
 	
 	public unowned List<Test> get_test_functions () {
 		return test_cases;
+	}
+
+	public static void load_test_font () {
+		string fn = "./fonts/Decibel.bf";
+		Font f = BirdFont.new_font ();
+		
+		f.set_read_only (true);
+		
+		if (!f.load (fn)) {
+			warning (@"Failed to load fond $fn");
+			return;
+		}
+		
+		if (f.length () == 0) {
+			warning ("No glyphs in font.");
+		}
+	}
+
+	public static void test_kerning () {
+		KerningDisplay k;
+		Font font;
+		Glyph? g;
+
+		load_test_font ();
+		
+		k = MainWindow.get_kerning_display ();		
+		font = BirdFont.get_current_font ();
+		MenuTab.show_kerning_context ();
+		
+		if (font.length () == 0) {
+			warning ("No font loaded.");
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				g = font.get_glyph_indice (Random.int_range (0, (int) font.length () - 1));
+				return_if_fail (g != null);
+				if (Random.int_range (1, 9) % 3 == 0) {
+					k.add_kerning_class (Random.int_range (0, 9));
+				} else {
+					k.add_text (((!)g).get_unichar_string ());
+				}
+				
+				GlyphCanvas.redraw ();
+				Tool.yield ();
+			}
+			
+			for (int j = 0; j < 10; j++) {
+				k.set_absolute_kerning (Random.int_range (1, 9), Random.int_range (0, 30));
+				GlyphCanvas.redraw ();								
+				Tool.yield ();
+			}
+			
+			k.new_line ();
+			GlyphCanvas.redraw ();
+			Tool.yield ();
+		}
 	}
 
 	public static void benchmark_stroke () {
@@ -1374,34 +1431,6 @@ class TestCases {
 	
 	private static void add_point_on_path (Path p, int x, int y) {
 		p.add (Glyph.path_coordinate_x (x), Glyph.path_coordinate_y (y));
-	}
-	
-	private static void test_kerning () {
-		MenuTab.show_kerning_context ();
-		KerningDisplay kerning_display = MainWindow.get_kerning_display ();
-		unichar a, b;
-		StringBuilder sb1, sb2;
-		string sa, sb;
-		GlyphRange? r, l;
-		
-		for (int i = 0; i < 100; i++) {
-			l = null;
-			r = null;
-		
-			// kern single glyph
-			sb1 = new StringBuilder ();
-			sb2 = new StringBuilder ();
-			
-			a = (unichar)Random.int_range ((int)'a', (int)'ʙ');
-			b = (unichar)Random.int_range ((int)'a', (int)'ʙ');
-			
-			sb1.append_unichar (a);
-			sb2.append_unichar (b);
-			sa = (!)sb1.str;
-			sb = (!)sb2.str;
-			
-			kerning_display.set_kerning_pair (sa, sb, ref r, ref l, Random.int_range (0, 300));
-		}
 	}
 	
 	private static void test_boundaries () {

@@ -1056,6 +1056,8 @@ public class Path {
 	}
 
 	public void update_region_boundaries () {
+		PathList paths;
+		
 		xmax = -10000;
 		xmin = 10000;
 		ymax = -10000;
@@ -1068,8 +1070,17 @@ public class Path {
 			ymin = 0;
 		}
 
-		foreach (EditPoint p in points) {
-			update_region_boundaries_for_point (p);
+		if (stroke > 0) {
+			paths = StrokeTool.get_stroke (this, stroke);
+		} else {
+			paths = new PathList ();
+			paths.add (this);
+		}
+
+		foreach (Path path in paths.paths) {
+			foreach (EditPoint p in path.points) {
+				update_region_boundaries_for_point (p);
+			}
 		}
 	}
 		

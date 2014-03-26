@@ -375,7 +375,6 @@ public class DrawingTools : ToolCollection  {
 			if (v && !help_lines.is_selected ()) {
 				MainWindow.get_toolbox ().select_tool (help_lines);
 			}
-			
 		});
 		guideline_tools.add_tool (xheight_help_lines);
 
@@ -503,7 +502,7 @@ public class DrawingTools : ToolCollection  {
 			GlyphCanvas.redraw ();
 		});
 		background_tools.add_tool (show_bg);
-
+		
 		Tool bg_selection = new Tool ("insert_background", t_("Insert a new background image"));
 		bg_selection.select_action.connect((self) => {
 			Glyph? g = null;

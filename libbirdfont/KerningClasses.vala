@@ -41,11 +41,11 @@ public class KerningClasses : GLib.Object {
 		
 		single_kerning = new HashMap<string, double?> ();
 	}
-	
+
 	public static KerningClasses get_instance () {
 		return BirdFont.get_current_font ().get_kerning_classes ();
 	}
-	
+
 	public double? get_kerning_for_single_glyphs (string l, string r) {
 		string left = GlyphRange.serialize (l);
 		string right = GlyphRange.serialize (r);
@@ -190,8 +190,8 @@ public class KerningClasses : GLib.Object {
 		return_val_if_fail (len == classes_last.length (), 0);
 		return_val_if_fail (len == classes_kerning.length (), 0);
 		
-		if (!left_range.is_class ()) {
-			warning ("Expecting a class");
+		if (unlikely (!left_range.is_class ())) {
+			warning (@"Expecting a class, $(left_range.get_all_ranges ())");
 			return -1;
 		}
 		

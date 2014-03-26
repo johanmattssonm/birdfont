@@ -42,10 +42,9 @@ public class Toolbox : GLib.Object  {
 	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		current_tool = new Tool ("no_icon");
-
 		press_tool = new Tool (null);
-		
-		drawing_tools = new DrawingTools (glyph_canvas);
+
+		drawing_tools = new DrawingTools (glyph_canvas); 
 		kerning_tools = new KerningTools ();
 		preview_tools = new PreviewTools ();
 		

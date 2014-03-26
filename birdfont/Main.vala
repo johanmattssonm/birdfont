@@ -24,16 +24,12 @@ public static int main (string[] arg) {
 	BirdFont.BirdFont birdfont;
 
 	Icons.use_high_resolution (true);
-	
 	birdfont = new BirdFont.BirdFont ();
-
 	birdfont.init (arg, null);
-
 	Gtk.init (ref arg);
 	parse_gtk_rc ();
 	
 	window = new MainWindow ();
-	
 	native_window = new GtkWindow ("birdfont");	
 
 	window.set_native (native_window);
@@ -45,7 +41,6 @@ public static int main (string[] arg) {
 	}
 
 	load_ucd ();
-	
 	Gtk.main ();
 
 	return 0;

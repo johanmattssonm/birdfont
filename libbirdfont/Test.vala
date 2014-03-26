@@ -32,7 +32,9 @@ class Test : Object {
 	}
 
 	public void timer_stop () {
-		time = GLib.get_real_time () - time;
+		double stop_time = GLib.get_real_time ();
+		print_time ("Timer stop after", stop_time);
+		time = stop_time - time;
 	}
 	
 	public double get_time () {
@@ -45,7 +47,7 @@ class Test : Object {
 	
 	public static void print_time (string mess, double start_time) {
 		double stop_time = GLib.get_real_time ();
-		print (@"$mess $((stop_time - start_time) / 1000000.0)\n");
+		print (@"$mess $((stop_time - start_time) / 1000000.0)s\n");
 	}
 }
 

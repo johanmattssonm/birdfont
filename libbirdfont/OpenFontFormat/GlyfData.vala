@@ -61,10 +61,12 @@ class GlyfData : GLib.Object {
 		glyph = g;
 		
 		foreach (Path p in g.path_list) {
-			q = p.get_quadratic_points ();
-			
-			if (!is_empty (q)) {
-				paths.append (q);
+			if (p.points.length () > 0) {
+				q = p.get_quadratic_points ();
+
+				if (!is_empty (q)) {
+					paths.append (q);
+				}
 			}
 		}
 		
