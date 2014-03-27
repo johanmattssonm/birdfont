@@ -507,8 +507,8 @@ public class DrawingTools : ToolCollection  {
 		bg_selection.select_action.connect((self) => {
 			Glyph? g = null;
 			FontDisplay fd = MainWindow.get_current_display ();
-			TooltipArea tp = MainWindow.get_tool_tip ();
-			tp.show_text (t_("Creating thumbnails"));
+			TooltipArea tp = MainWindow.get_tooltip ();
+			TooltipArea.show_text (t_("Creating thumbnails"));
 			
 			Tool.yield ();
 		
@@ -521,7 +521,7 @@ public class DrawingTools : ToolCollection  {
 			BackgroundSelection bgs = new BackgroundSelection ();
 			MainWindow.get_tab_bar ().add_unique_tab (bgs);
 			
-			tp.show_text ("");
+			TooltipArea.show_text ("");
 		});
 		
 		bg_selection.set_show_background (true);

@@ -102,7 +102,7 @@ public class Tool : GLib.Object {
 		next_id++;
 		
 		panel_press_action.connect ((self, button, x, y) => {
-			MainWindow.get_tool_tip ().set_text_from_tool ();
+			MainWindow.get_tooltip ().set_text_from_tool ();
 		});
 		
 		panel_move_action.connect ((self, x, y) => {
@@ -130,7 +130,7 @@ public class Tool : GLib.Object {
 				waiting_for_tooltip = true;
 				timer_show = new TimeoutSource (timeout_interval);
 				timer_show.set_callback (() => {
-					if (active_tooltip.is_active () && !active_tooltip.showing_this_tooltip) {
+					if (tip != "" && active_tooltip.is_active () && !active_tooltip.showing_this_tooltip) {
 						show_tooltip ();
 					}
 					waiting_for_tooltip = false;
@@ -200,7 +200,7 @@ public class Tool : GLib.Object {
 	
 	public bool set_selected (bool a) {
 		TooltipArea? tpa = null;					
-		tpa = MainWindow.get_tool_tip ();
+		tpa = MainWindow.get_tooltip ();
 							
 		new_selection = true;
 		selected = a;

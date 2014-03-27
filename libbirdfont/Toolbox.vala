@@ -225,7 +225,7 @@ public class Toolbox : GLib.Object  {
 					TooltipArea? tpa = null;
 					
 					update = t.set_active (active);
-					tpa = MainWindow.get_tool_tip ();
+					tpa = MainWindow.get_tooltip ();
 					
 					if (active && tpa != null) {
 						((!)tpa).update_text ();

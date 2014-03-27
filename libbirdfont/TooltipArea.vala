@@ -19,7 +19,7 @@ namespace BirdFont {
 
 public class TooltipArea : GLib.Object {
 
-	string tool_tip;
+	string tooltip;
 	ProgressBar progress_bar;
 	
 	public signal void redraw ();
@@ -43,9 +43,13 @@ public class TooltipArea : GLib.Object {
 		redraw ();
 	}
 	
-	public void show_text (string text) {
-		tool_tip = text;
-		redraw ();
+	public static void show_text (string text) {
+		if (is_null (MainWindow.get_tooltip ())) {
+			return;
+		}
+		
+		MainWindow.get_tooltip ().tooltip = text;
+		MainWindow.get_tooltip ().redraw ();
 	}
 	
 	public void set_text_from_tool () {
@@ -132,7 +136,7 @@ public class TooltipArea : GLib.Object {
 		cr.save ();
 		cr.set_font_size (14);
 		cr.move_to (5, 15);
-		cr.show_text (tool_tip);
+		cr.show_text (tooltip);
 		cr.restore ();
 	}
 }

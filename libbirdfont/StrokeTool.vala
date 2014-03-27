@@ -19,7 +19,7 @@ namespace BirdFont {
 
 public class StrokeTool : Tool {
 	
-	public StrokeTool (string tool_tip) {
+	public StrokeTool (string tooltip) {
 		select_action.connect((self) => {
 			stroke_selected_paths ();
 		});
@@ -43,6 +43,7 @@ public class StrokeTool : Tool {
 		foreach (Path p in g.active_paths) {
 			paths.append (get_stroke (p, p.stroke));
 			paths.add (add_tangent_points (p));
+			paths.add (p.get_quadratic_points ());
 		}
 		
 		foreach (Path np in paths.paths) {
@@ -58,8 +59,8 @@ public class StrokeTool : Tool {
 			outline = create_stroke (p, thickness);
 			outline.close ();
 			paths.add (outline);
+			outline.update_region_boundaries ();
 		} else if (!p.is_open () && !p.is_filled ()) {
-			
 			outline = create_stroke (p, thickness);
 			counter = create_stroke (p, -1 * thickness);
 			
@@ -78,6 +79,8 @@ public class StrokeTool : Tool {
 				counter.force_direction (Direction.CLOCKWISE);
 			}
 			
+			outline.update_region_boundaries ();
+			counter.update_region_boundaries ();
 		} else if (p.is_open ()) {
 			outline = create_stroke (p, thickness);
 			counter = create_stroke (p, -1 * thickness);
@@ -89,6 +92,7 @@ public class StrokeTool : Tool {
 				merged.force_direction (Direction.COUNTER_CLOCKWISE);
 			}
 			
+			merged.update_region_boundaries ();
 			paths.add (merged);
 		} else {
 			warning ("Can not create stroke.");
@@ -228,11 +232,10 @@ public class StrokeTool : Tool {
 						ep.set_position (x, y);
 						
 						// Stop processing when the first hidden point is found.
-					/*	if (start.type == PointType.HIDDEN || stop.type == PointType.HIDDEN) {
+						if (start.type == PointType.HIDDEN || stop.type == PointType.HIDDEN) {
 							// FIXME: Rename tracker points 
 							return true;
 						}
-					*/
 						
 						return_val_if_fail (prev != null, false);
 

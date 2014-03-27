@@ -639,13 +639,13 @@ os.put_string (
 	}
 	
 	private static void status (string s) {
-		TooltipArea status = MainWindow.get_tool_tip ();
+		TooltipArea status = MainWindow.get_tooltip ();
 		
 		if (is_null (status)) {
 			return;
 		}
 		
-		status.show_text (s);
+		TooltipArea.show_text (s);
 	}
 }
 

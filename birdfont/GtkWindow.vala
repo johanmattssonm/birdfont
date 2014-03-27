@@ -162,13 +162,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		tab_box = new VBox (false, 0);
 		
-		tab_box.pack_start (new TabbarCanvas (MainWindow.tabs), false, false, 0);
+		tab_box.pack_start (new TabbarCanvas (MainWindow.get_tab_bar ()), false, false, 0);
 		tab_box.pack_start (text_box, false, false, 5);	
 		tab_box.pack_start (canvas_box, true, true, 0);
 
-		tab_box.pack_start (new TooltipCanvas (MainWindow.tool_tip), false, false, 0);
+		tab_box.pack_start (new TooltipCanvas (MainWindow.get_tooltip ()), false, false, 0);
 		
-		toolbox = new ToolboxCanvas (MainWindow.tools); 
+		toolbox = new ToolboxCanvas (MainWindow.get_toolbox ()); 
 		list_box = new HBox (false, 0);
 		list_box.pack_start (tab_box, true, true, 0);
 		list_box.pack_start (toolbox, false, false, 0);

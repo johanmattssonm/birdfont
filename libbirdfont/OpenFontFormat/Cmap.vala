@@ -201,9 +201,6 @@ public class CmapSubtableWindowsUnicode : CmapSubtable {
 		if (id_delta != null) delete id_delta;
 		if (id_range_offset != null) delete id_range_offset;
 		if (glyph_id_array != null) delete glyph_id_array;
-		
-		// it has a character for every glyph indice
-		// assert (validate_subtable ());
 	}
 	
 	public void process (FontData fd, GlyfTable glyf_table) throws GLib.Error {
@@ -427,6 +424,7 @@ internal static uint16 largest_pow2 (uint16 max) {
 	return l;
 }
 
+/** Largest exponent for a power of two less than max. */
 internal static uint16 largest_pow2_exponent (uint16 max) {
 	uint16 exp = 0;
 	uint16 l = 0;

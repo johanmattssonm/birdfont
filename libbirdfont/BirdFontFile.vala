@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -169,7 +169,7 @@ class BirdFontFile {
 				}
 				
 				ProgressBar.set_progress (0);		
-				MainWindow.get_tool_tip ().show_text (t_("Saving"));
+				TooltipArea.show_text (t_("Saving"));
 			});
 		
 			font.glyph_cache.for_each ((gc) => {
@@ -200,7 +200,7 @@ class BirdFontFile {
 				}
 				
 				ProgressBar.set_progress (0);		
-				MainWindow.get_tool_tip ().show_text (t_("Saving"));
+				TooltipArea.show_text (t_("Saving"));
 			});
 			
 			num_kerning_pairs = KerningClasses.get_instance ().classes_first.length ();
@@ -250,7 +250,7 @@ class BirdFontFile {
 				}
 				
 				ProgressBar.set_progress (0);
-				MainWindow.get_tool_tip ().show_text (t_("Saving"));
+				TooltipArea.show_text (t_("Saving"));
 			});
 			
 			os.put_string ("</font>");
@@ -261,6 +261,7 @@ class BirdFontFile {
 			return false;
 		}
 		
+		TooltipArea.show_text ("");
 		return true;
 	}
 
@@ -560,15 +561,16 @@ class BirdFontFile {
 				parse_kerning (iter);
 			}
 			
-			ProgressBar.set_progress (++i / 1024.0);
+			ProgressBar.set_progress (++i / 20480.0);
 			
-			if (i == 1024) {
+			if (i == 20480) {
 				i = 0;
 			}
 						
-			MainWindow.get_tool_tip ().show_text (t_("Loading BirdFont XML data."));
+			TooltipArea.show_text (t_("Loading XML data."));
 		}
 
+		TooltipArea.show_text ("");
 		return true;
 	}
 	

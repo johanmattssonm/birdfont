@@ -21,7 +21,7 @@ public class MainWindow {
 	public static MainWindow singleton;
 	public static MenuTab menu_tab;
 	public static FileTab file_tab;
-	public static TooltipArea tool_tip;
+	public static TooltipArea tooltip;
 	public static OverView over_view;	
 	public static TabBar tabs;
 	public static NativeWindow native_window;
@@ -36,7 +36,7 @@ public class MainWindow {
 		tools = new Toolbox (glyph_canvas, tabs);
 		menu_tab = new MenuTab ();
 		file_tab = new FileTab ();
-		tool_tip = new TooltipArea ();
+		tooltip = new TooltipArea ();
 		over_view = new OverView();
 		kerning_display = new KerningDisplay ();
 		character_database = new CharDatabase ();
@@ -108,8 +108,8 @@ public class MainWindow {
 		return tabs.get_selected_tab ();
 	}
 
-	public static TooltipArea get_tool_tip () {
-		return tool_tip;
+	public static TooltipArea get_tooltip () {
+		return tooltip;
 	}
 
 	public static bool select_tab (Tab t) {
@@ -189,8 +189,8 @@ public class MainWindow {
 	}
 	
 	public static void set_status (string s) {
-		if (!is_null (tool_tip)) {
-			tool_tip.show_text (s);
+		if (!is_null (tooltip)) {
+			TooltipArea.show_text (s);
 			Tool.yield ();
 		}  
 	}

@@ -75,7 +75,7 @@ public class GlyfTable : Table {
 	}
 
 	public int16 get_average_width () {
-		return (int16) (total_width / non_zero_glyphs);
+		return (int16) Math.rint (total_width / non_zero_glyphs);
 	}
 
 	public uint16 get_max_contours () {
@@ -573,7 +573,7 @@ public class GlyfTable : Table {
 		for (int i = 0; i < npoints; i++) {
 			flags[i] = dis.read_byte ();
 			
-			if ((flags[i] & Coordinate.REPEAT) > 0) {
+			if ((flags[i] & CoordinateFlags.REPEAT) > 0) {
 				repeat = dis.read_byte ();
 				
 				if (i + repeat >= npoints) {
@@ -607,14 +607,14 @@ public class GlyfTable : Table {
 		int16 last = 0;
 		xcoordinates = new int16[npoints + 1];
 		for (int i = 0; i < npoints; i++) {
-			if ((flags[i] & Coordinate.X_SHORT_VECTOR) > 0) {	
-				if ((flags[i] & Coordinate.X_SHORT_VECTOR_POSITIVE) > 0) {
+			if ((flags[i] & CoordinateFlags.X_SHORT_VECTOR) > 0) {	
+				if ((flags[i] & CoordinateFlags.X_SHORT_VECTOR_POSITIVE) > 0) {
 					xcoordinates[i] = last + dis.read_byte ();
 				} else {
 					xcoordinates[i] = last - dis.read_byte ();
 				}
 			} else {
-				if ((flags[i] & Coordinate.X_IS_SAME) > 0) {
+				if ((flags[i] & CoordinateFlags.X_IS_SAME) > 0) {
 					xcoordinates[i] = last;
 				} else {
 					xcoordinates[i] = last + dis.read_short ();
@@ -638,14 +638,14 @@ public class GlyfTable : Table {
 		last = 0;
 		ycoordinates = new int16[npoints + 1];
 		for (int i = 0; i < npoints; i++) {
-			if ((flags[i] & Coordinate.Y_SHORT_VECTOR) > 0) {	
-				if ((flags[i] & Coordinate.Y_SHORT_VECTOR_POSITIVE) > 0) {
+			if ((flags[i] & CoordinateFlags.Y_SHORT_VECTOR) > 0) {	
+				if ((flags[i] & CoordinateFlags.Y_SHORT_VECTOR_POSITIVE) > 0) {
 					ycoordinates[i] = last + dis.read_byte ();
 				} else {
 					ycoordinates[i] = last - dis.read_byte ();
 				}
 			} else {
-				if ((flags[i] & Coordinate.Y_IS_SAME) > 0) {
+				if ((flags[i] & CoordinateFlags.Y_IS_SAME) > 0) {
 					ycoordinates[i] = last;
 				} else {
 					ycoordinates[i] = last + dis.read_short ();
@@ -705,7 +705,7 @@ public class GlyfTable : Table {
 				x = xcoordinates[j] * 1000.0 / units_per_em; // in proportion to em width
 				y = ycoordinates[j] * 1000.0 / units_per_em;
 				
-				if ((flags[j] & Coordinate.ON_PATH) > 0) {
+				if ((flags[j] & CoordinateFlags.ON_PATH) > 0) {
 					// Point
 					edit_point = new EditPoint ();
 					edit_point.set_position (x, y);
@@ -806,14 +806,28 @@ public class GlyfTable : Table {
 			}
 		}
 						
-		if (end_points != null) delete end_points;
-		if (instructions != null) delete instructions;
-		if (flags != null) delete flags;
-		if (xcoordinates != null) delete xcoordinates;
-		if (ycoordinates != null) delete ycoordinates;
+		if (end_points != null) {
+			delete end_points;
+		}
+		
+		if (instructions != null) {
+			delete instructions;
+		}
+		
+		if (flags != null) {
+			delete flags;
+		}
+		
+		if (xcoordinates != null) {
+			delete xcoordinates;
+		}
+		
+		if (ycoordinates != null) {
+			delete ycoordinates;
+		}
 		
 		if (error != null) {
-			warning ("failed to parse glyph");
+			warning ("Failed to parse glyph");
 			throw (!) error;
 		}
 		

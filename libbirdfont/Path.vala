@@ -1145,7 +1145,7 @@ public class Path {
 		PointType right;
 		double x, y;
 
-		for (unowned List<EditPoint> next = points.first (); !is_null (next); next = next.next ) {
+		for (unowned List<EditPoint> next = points.first (); !is_null (next); next = next.next) {
 			left = first.data.get_right_handle ().type;
 			right = next.data.get_left_handle ().type;
 			if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
@@ -1206,8 +1206,8 @@ public class Path {
 			next = i.next;
 		}
 		
-		if (points.last ().data.get_right_handle ().type == PointType.CUBIC 
-			||  points.first ().data.get_left_handle ().type == PointType.CUBIC) {
+		if (is_open () && (points.last ().data.get_right_handle ().type == PointType.CUBIC 
+			||  points.first ().data.get_left_handle ().type == PointType.CUBIC)) {
 			add_quadratic_points (points.last ().data, points.first ().data);
 		} else {
 			quadratic_path.add_point (points.last ().data.copy ());
@@ -1220,22 +1220,24 @@ public class Path {
 
 		quadratic_path.add_hidden_double_points ();
 
-		quadratic_path.close ();
 		quadratic_path.create_list ();
 		process_quadratic_handles ();
 		
-		quadratic_path.close ();
 		quadratic_path.create_list ();
 		process_cubic_handles ();
-		
-		quadratic_path.close ();
 
 		foreach (EditPoint ep in quadratic_path.points) {
 			if (ep.type == PointType.QUADRATIC) {
 				ep.get_left_handle ().move_to_coordinate (ep.get_prev ().data.get_right_handle ().x (), ep.get_prev ().data.get_right_handle ().y ());
 			}
 		}
-						
+
+		if (!is_open ()) {
+			quadratic_path.close ();
+		} else {
+			quadratic_path.reopen ();
+		}
+								
 		return quadratic_path;
 	}
 	

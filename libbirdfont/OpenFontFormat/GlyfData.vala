@@ -16,7 +16,7 @@ using Math;
 
 namespace BirdFont {
 
-public class Coordinate {
+public class CoordinateFlags {
 	/** TTF coordinate flags. */
 
 	public static const uint8 NONE           = 0;
@@ -160,13 +160,13 @@ class GlyfData : GLib.Object {
 		
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
-				flags.append (Coordinate.ON_PATH);
+				flags.append (CoordinateFlags.ON_PATH);
 				nflags++;
 				
 				type = e.get_right_handle ().type;
 				
 				// off curve
-				flags.append (Coordinate.NONE);
+				flags.append (CoordinateFlags.NONE);
 				nflags++;
 			}
 		}
@@ -248,7 +248,7 @@ class GlyfData : GLib.Object {
 			c += last;
 			
 			// Only on curve points are good for calculating bounding box
-			if ((flags.nth (i).data & Coordinate.ON_PATH) > 0) { 
+			if ((flags.nth (i).data & CoordinateFlags.ON_PATH) > 0) { 
 				if (c < bounding_box_xmin) bounding_box_xmin = c;
 				if (c > bounding_box_xmax) bounding_box_xmax = c;
 			}
@@ -266,7 +266,7 @@ class GlyfData : GLib.Object {
 		foreach (int16 c in coordinate_y) {
 			c += last;
 			
-			if ((flags.nth (i).data & Coordinate.ON_PATH) > 0) {
+			if ((flags.nth (i).data & CoordinateFlags.ON_PATH) > 0) {
 				if (c < bounding_box_ymin) {
 					bounding_box_ymin = c;
 				}

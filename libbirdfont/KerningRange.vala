@@ -47,7 +47,7 @@ public class KerningRange : Tool {
 			active = is_over (tx, ty);
 			
 			if (active) {
-				MainWindow.get_tool_tip ().show_text (t_("Right click to edit the class and left click to kern glyphs in the class."));
+				TooltipArea.show_text (t_("Right click to edit the class and left click to kern glyphs in the class."));
 			}
 			
 			return false;

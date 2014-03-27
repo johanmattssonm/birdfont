@@ -237,7 +237,7 @@ public class KerningDisplay : FontDisplay {
 
 	private void display_kerning_value (double k) {
 		string kerning_label = t_("Kerning:");
-		MainWindow.get_tool_tip ().show_text (@"$kerning_label $(k)");
+		TooltipArea.show_text (@"$kerning_label $(k)");
 	}
 	
 	private void set_active_handle_index (int h) {

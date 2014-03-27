@@ -36,7 +36,9 @@ class ProgressBar {
 		current_progress = d;
 		p.new_progress ();
 		
-		MainWindow.get_tool_tip ().redraw ();
+		if (is_null (MainWindow.get_tooltip ())) {
+			MainWindow.get_tooltip ().redraw ();
+		}
 	}
 
 	public static double get_progress () {
