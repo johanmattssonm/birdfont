@@ -16,7 +16,16 @@ namespace BirdFont {
 
 public class MenuTab : FontDisplay {
 	
-	/** Ignore actions when export is in progress. */
+	/** Ignore new actions when export is in progress.
+	 * 
+	 * BirdFont runs in a single thread but the glib main loop will still
+	 * execute events with the idle priority in order to update the 
+	 * progress bar while export, save and possibly other actions are 
+	 * in progress. 
+	 * 
+	 * Do always check the return value of set_suppress_event when this
+	 * variable is updated.
+	 */
 	public static bool suppress_event = false;
 
 	public MenuTab () {
@@ -26,15 +35,28 @@ public class MenuTab : FontDisplay {
 		Font font = BirdFont.get_current_font ();		
 		if (font.font_file == null) {
 			if (MenuTab.save ()) {
-				ExportTool.export_all ();
+				export_all ();
 			}
 		} else {
-			ExportTool.export_all ();
+			export_all ();
 		}
 	}
 	
-	public static void set_suppress_event (bool e) {
+	public static void export_all () {
+		if (set_suppress_event (true)) {				
+			ExportTool.export_all ();
+		} else {
+			warning ("suppressed event");
+		}		
+	}
+	
+	public static bool set_suppress_event (bool e) {
+		if (suppress_event && e) {
+			warning ("suppress_event is already set");
+			return false;
+		}
 		suppress_event = e;
+		return true;
 	}
 
 	public override string get_label () {
@@ -62,7 +84,7 @@ public class MenuTab : FontDisplay {
 		string f;
 		bool saved = false;
 		Font font = BirdFont.get_current_font ();
-
+		
 		if (suppress_event) {
 			return false;
 		}
@@ -80,19 +102,23 @@ public class MenuTab : FontDisplay {
 			save ();
 			saved = true;
 		}
-
 		return saved;
 	}
 
 	public static bool save () {
-		Font f = BirdFont.get_current_font ();
+		Font f;
 		string fn;
 		bool saved = false;
 
 		if (suppress_event) {
 			return false;
+		}	
+		
+		if (!set_suppress_event (true)) {
+			return false;
 		}
 
+		f = BirdFont.get_current_font ();
 		f.delete_backup ();
 		
 		fn = f.get_path ();
@@ -110,7 +136,9 @@ public class MenuTab : FontDisplay {
 			
 			f.save (fn);
 			saved = true;
+			set_suppress_event (false);
 		} else {
+			set_suppress_event (false);
 			saved = save_as ();
 		}
 		
@@ -235,12 +263,21 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void show_kerning_context () {
+		if (suppress_event) {
+			return;
+		}
+		
 		KerningDisplay kd = MainWindow.get_kerning_display ();
 		MainWindow.get_tab_bar ().add_unique_tab (kd);
 	}
 	
 	public static void preview ()  {
-		Font font = BirdFont.get_current_font ();		
+		Font font = BirdFont.get_current_font ();
+		
+		if (suppress_event) {
+			return;
+		}
+		
 		if (font.font_file == null) {
 			if (MenuTab.save ()) {
 				show_preview_tab ();
@@ -273,10 +310,18 @@ public class MenuTab : FontDisplay {
 	
 	/** Display the language selection tab. */
 	public static void select_language () {
+		if (suppress_event) {
+			return;
+		}
+		
 		MainWindow.get_tab_bar ().add_unique_tab (new LanguageSelectionTab ());
 	}
 
 	public static void use_current_glyph_as_background () {
+		if (suppress_event) {
+			return;
+		}
+		
 		Glyph.background_glyph = MainWindow.get_current_glyph ();
 		
 		if (MainWindow.get_current_display () is OverView) {
@@ -289,11 +334,19 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void remove_all_kerning_pairs	() {
+		if (suppress_event) {
+			return;
+		}
+		
 		KerningClasses.get_instance ().remove_all_pairs ();
 		KerningTools.update_kerning_classes ();
 	}
 	
 	public static void list_all_kerning_pairs () {
+		if (suppress_event) {
+			return;
+		}
+		
 		MainWindow.get_tab_bar ().add_unique_tab (new KerningList ());
 	}
 }

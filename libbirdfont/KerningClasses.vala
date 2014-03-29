@@ -34,6 +34,9 @@ public class KerningClasses : GLib.Object {
 	public delegate void KerningIterator (KerningPair list);
 	public delegate void KerningClassIterator (string left, string right, double kerning);
 
+	/** Ensure that map iterator is not invalidated because of inserts. */
+	bool protect_map = false;
+
 	public KerningClasses () {
 		classes_first = new GLib.List<GlyphRange> ();
 		classes_last = new GLib.List<GlyphRange> ();
@@ -58,6 +61,11 @@ public class KerningClasses : GLib.Object {
 		string cleft = (!)GlyphRange.unserialize (left).get_char ().to_string ();
 		string cright = (!)GlyphRange.unserialize (right).get_char ().to_string ();
 		
+		if (protect_map) {
+			warning ("Map is protected.");
+			return;
+		}
+		
 		if (single_kerning_letters_left.index (cleft) < 0) {
 			single_kerning_letters_left.append (cleft);
 		}
@@ -74,6 +82,11 @@ public class KerningClasses : GLib.Object {
 		
 		if (left_range.get_length () == 0 || right_range.get_length () == 0) {
 			warning ("no glyphs");
+			return;
+		}
+
+		if (protect_map) {
+			warning ("Map is protected.");
 			return;
 		}
 
@@ -254,11 +267,16 @@ public class KerningClasses : GLib.Object {
 		
 		print ("\n");
 		print ("Kernings for pairs:\n");
+		if (!set_protect_map (true)) {
+			warning ("Map is protected.");
+			return;
+		}
 		foreach (string key in single_kerning.keys) {
 			print (key);
 			print ("\t\t");
 			print (@"$((!) single_kerning.get (key))\n");
 		}
+		set_protect_map (false);
 	}
 
 	public void get_classes (KerningClassIterator kerningIterator) {
@@ -272,6 +290,11 @@ public class KerningClasses : GLib.Object {
 	public void get_single_position_pairs (KerningClassIterator kerningIterator) {
 		double k = 0;
 		
+		if (!set_protect_map (true)) {
+			warning ("Map is protected.");
+			return;
+		}
+		
 		foreach (string key in single_kerning.keys) {
 			var chars = key.split (" - ");
 			
@@ -282,6 +305,7 @@ public class KerningClasses : GLib.Object {
 				kerningIterator (chars[0], chars[1], k);
 			}
 		}
+		set_protect_map (false);
 	}
 	
 	public void each_pair (KerningClassIterator iter) {
@@ -373,7 +397,22 @@ public class KerningClasses : GLib.Object {
 		}
 	}
 
+	private bool set_protect_map (bool p) {
+		if (unlikely (p && protect_map)) {
+			warning ("Map is already protected, this is a criticl error.");
+			return false;
+		}
+		
+		protect_map = p;
+		return true;
+	}
+
 	public void remove_all_pairs () {
+		if (protect_map) {
+			warning ("Map is protected.");
+			return;
+		}
+		
 		print ("Remove all kerning pairs\n");
 		
 		while (classes_first.length () > 0) {

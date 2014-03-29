@@ -102,6 +102,7 @@ public class KerningDisplay : FontDisplay {
 		bool first_row = true;
 		double row_height;
 		Font font;
+		double item_size = 1.0 / KerningTools.font_size;
 		
 		font = BirdFont.get_current_font ();
 		i = 0;
@@ -112,6 +113,9 @@ public class KerningDisplay : FontDisplay {
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();
+		
+		cr.save ();
+		cr.scale (KerningTools.font_size, KerningTools.font_size);
 		
 		glyph = MainWindow.get_current_glyph ();
 		
@@ -153,9 +157,7 @@ public class KerningDisplay : FontDisplay {
 				} else {
 					alpha = 0;
 					glyph = (!) g;
-					
-					// TODO: set font size
-					// cr.scale (KerningTools.font_size, KerningTools.font_size);
+
 					cr.save ();
 					glyph.add_help_lines ();
 					cr.translate (kern + x - glyph.get_lsb () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
@@ -177,9 +179,9 @@ public class KerningDisplay : FontDisplay {
 						cr.set_source_rgba (123/255.0, 123/255.0, 123/255.0, 1);
 					}
 					
-					cr.move_to (x2 - 5, y + 20);
-					cr.line_to (x2 + 0, y + 20 - 5);
-					cr.line_to (x2 + 5, y + 20);
+					cr.move_to (x2 - 5 * item_size, y + 20 * item_size);
+					cr.line_to (x2 + 0, y + 20 * item_size - 5 * item_size);
+					cr.line_to (x2 + 5 * item_size, y + 20* item_size);
 					cr.fill ();
 					
 					if (gr_left != null || gr_right != null) {
@@ -202,7 +204,7 @@ public class KerningDisplay : FontDisplay {
 					cr.save ();
 					cr.set_source_rgba (153/255.0, 153/255.0, 153/255.0, alpha);
 					cr.move_to (x - w / 2.0 - 5, y + 20);
-					cr.set_font_size (10);
+					cr.set_font_size (10 * item_size);
 					cr.show_text ("?");
 					cr.restore ();
 				}
@@ -218,6 +220,7 @@ public class KerningDisplay : FontDisplay {
 				x2 = x;
 				caret_y = get_row_height () + font.base_line + 20;
 				cr.save ();
+				cr.set_line_width (1.0 / KerningTools.font_size);
 				cr.set_source_rgba (0, 0, 0, 0.5);
 				cr.move_to (x2, caret_y + 20);
 				cr.line_to (x2, 20);
@@ -225,7 +228,7 @@ public class KerningDisplay : FontDisplay {
 				cr.restore ();
 			}
 			
-			if (y > allocation.height && i > 10) {
+			if (y * KerningTools.font_size > allocation.height && i > 10) {
 				row.remove (word);
 			}
 						
@@ -233,6 +236,8 @@ public class KerningDisplay : FontDisplay {
 			x = 20;
 			first_row = false;	
 		}
+		
+		cr.restore ();
 	}
 
 	private void display_kerning_value (double k) {
@@ -339,7 +344,13 @@ public class KerningDisplay : FontDisplay {
 	}
 
 	public void set_absolute_kerning (int handle, double val) {
-		double kern = get_kerning_for_handle (handle);
+		double kern;
+		
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		kern = get_kerning_for_handle (handle);
 		set_kerning (handle, val - kern);
 	}
 
@@ -502,8 +513,13 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public override void key_press (uint keyval) {
-		unichar c = (unichar) keyval;
+		unichar c;
 		
+		if (MenuTab.suppress_event) { // don't update kerning while saving font
+			return;
+		}
+		
+		c = (unichar) keyval;
 		parse_error = false;
 		
 		if (suppress_input) {
@@ -554,6 +570,10 @@ public class KerningDisplay : FontDisplay {
 		Glyph? g;
 		string name;
 		Font f = BirdFont.get_current_font ();
+
+		if (MenuTab.suppress_event) {
+			return;
+		}
 		
 		if (!is_modifier_key (c) && c.validate ()) {
 			name = f.get_name_for_character (c);
@@ -570,10 +590,14 @@ public class KerningDisplay : FontDisplay {
 	
 	public override void motion_notify (double ex, double ey) {
 		double k, y;
-		
+
+		if (MenuTab.suppress_event) {
+			return;
+		}
+				
 		if (!moving) {
 			set_active_handle (ex, ey);
-		} else {
+		} else {	
 			y = 1;
 			
 			if (Math.fabs (ey - begin_handle_y) > 20) {
@@ -581,6 +605,7 @@ public class KerningDisplay : FontDisplay {
 			}
 			
 			k = (ex - last_handle_x) / y; // y-axis is for variable precision
+			k /= KerningTools.font_size;
 			set_kerning (selected_handle, k);
 			GlyphCanvas.redraw ();
 		}
@@ -597,6 +622,7 @@ public class KerningDisplay : FontDisplay {
 		int i = 0;
 		int row_index = 0;
 		int col_index = 0;
+		double fs = KerningTools.font_size;
 		Glyph glyph = new Glyph.no_lines ("");
 		
 		GlyphRange? gr_left, gr_right;
@@ -636,7 +662,7 @@ public class KerningDisplay : FontDisplay {
 					kern = get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 				}
 								
-				d = Math.pow (x + kern - ex, 2) + Math.pow (y - ey, 2);
+				d = Math.pow (fs * (x + kern) - ex, 2) + Math.pow (y - ey, 2);
 				
 				if (d < min) {
 					min = d;
@@ -678,7 +704,11 @@ public class KerningDisplay : FontDisplay {
 	public void set_kerning_by_text () {
 		TextListener listener;
 		string kerning = @"$(get_kerning_for_handle (selected_handle))";
-		
+
+		if (MenuTab.suppress_event) {
+			return;
+		}
+				
 		if (selected_handle == -1) {
 			selected_handle = 0;
 		}
@@ -686,8 +716,15 @@ public class KerningDisplay : FontDisplay {
 		listener = new TextListener (t_("Kerning"), kerning, t_("Close"));
 		
 		listener.signal_text_input.connect ((text) => {
-			string submitted_value = text.replace (",", ".");
-			double parsed_value = double.parse (submitted_value);
+			string submitted_value;
+			double parsed_value;
+			
+			if (MenuTab.suppress_event) {
+				return;
+			}
+		
+			submitted_value = text.replace (",", ".");
+			parsed_value = double.parse (submitted_value);
 			set_absolute_kerning (selected_handle, parsed_value);
 			GlyphCanvas.redraw ();
 		});
@@ -706,6 +743,10 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public override void button_press (uint button, double ex, double ey) {
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
 		set_active_handle (ex, ey);
 		selected_handle = active_handle;
 		begin_handle_x = ex;
@@ -716,7 +757,13 @@ public class KerningDisplay : FontDisplay {
 	
 	/** Insert text form clipboard. */
 	public void add_text (string t) {
-		int c = t.char_count ();
+		int c;
+		
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		c = t.char_count ();
 		for (int i = 0; i < c; i++) {
 			add_character (t.get_char (i));
 		}

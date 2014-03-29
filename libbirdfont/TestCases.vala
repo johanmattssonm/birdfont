@@ -44,7 +44,7 @@ class TestCases {
 		add (test_preview, "Preview");
 		add (test_kerning, "Kerning");
 		add (test_boundaries, "Boundaries");
-		
+				
 		add_bechmark (benchmark_stroke, "Stroke");
 	}
 	

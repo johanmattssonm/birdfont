@@ -636,7 +636,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		Gtk.MenuItem avalilable_characters_item = new Gtk.MenuItem.with_mnemonic (t_("Show Characters in Font"));
 		tool_menu.append (avalilable_characters_item);
-		avalilable_characters_item.activate.connect (() => { 
+		avalilable_characters_item.activate.connect (() => {
 			Toolbox.select_tool_by_name ("available_characters");
 		});
 		avalilable_characters_item.add_accelerator ("activate", accel_group, 'D', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);

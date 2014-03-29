@@ -64,7 +64,7 @@ public class PreviewTools : ToolCollection  {
 			suppress_event = true;
 			ExportTool.export_ttf_font_sync ();
 			ExportTool.export_svg_font ();
-			TooltipArea.show_text (t_("Three font files has been created."));	
+			TooltipArea.show_text (t_("Three font files have been created."));	
 			suppress_event = false;
 		}
 	}

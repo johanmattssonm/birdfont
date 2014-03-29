@@ -54,7 +54,7 @@ public class FileTab : FontDisplay {
 			loaded = f.load (fn);
 			
 			if (!unlikely (loaded)) {
-				warning (@"Failed to load fond $fn");
+				warning (@"Failed to load font $fn");
 				return;
 			}
 				

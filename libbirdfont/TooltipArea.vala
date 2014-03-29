@@ -33,9 +33,7 @@ public class TooltipArea : GLib.Object {
 
 	void progress () {
 		redraw ();
-		MenuTab.set_suppress_event (true);
 		Tool.yield ();
-		MenuTab.set_suppress_event (false);
 	}
 
 	public void update_text () {

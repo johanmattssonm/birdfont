@@ -516,9 +516,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="17.798202"
-     inkscape:cx="198.57286"
-     inkscape:cy="713.71441"
+     inkscape:zoom="10.139082"
+     inkscape:cx="202.54523"
+     inkscape:cy="708.83752"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -538,7 +538,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1939,31 +1939,6 @@
          style=""
          id="path3763" />
     </g>
-    <path
-       style="fill:#e6e6e6;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 197.66197,52.57551 c 0.85553,2.191047 4.9245,9.369166 4.9245,9.369166 1.13323,-0.111314 2.02494,-0.38761 2.77792,-1.111168 0,0 -2.27634,-7.933034 -3.42269,-9.995514 -1.14635,-2.06248 -2.27205,-2.782916 -2.27205,-2.782916 0,0 -0.8337,-0.292969 -1.68551,0.06911 -0.72362,0.30759 -1.2313,1.042059 -1.2313,1.042059 0,0 0.0536,1.218217 0.90913,3.409263 z"
-       id="path3617"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="/home/johan/birdfont/icons/track.png"
-       inkscape:export-xdpi="319.89001"
-       inkscape:export-ydpi="319.89001"
-       sodipodi:nodetypes="zcczcscz" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:0.59260023px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 194.88239,63.475848 c 2.26624,-4.567729 6.53453,3.336107 9.74418,1.026228 0.72121,-0.519032 0.65487,-0.262366 0.47533,-0.94071"
-       id="path3623"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="/home/johan/birdfont/icons/track.png"
-       inkscape:export-xdpi="319.89001"
-       inkscape:export-ydpi="319.89001" />
-    <path
-       style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 203.99938,61.379513 1.22611,2.787498"
-       id="path3621"
-       inkscape:connector-curvature="0"
-       inkscape:export-filename="/home/johan/birdfont/icons/track.png"
-       inkscape:export-xdpi="319.89001"
-       inkscape:export-ydpi="319.89001" />
     <g
        id="g4075"
        inkscape:export-filename="/home/johan/birdfont/icons/update_webview.png"
@@ -2056,11 +2031,42 @@
          d="m 92.92596,416.18009 0.01336,-3.554"
          style="fill:none;stroke:#e6e6e6;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
-    <path
-       style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 200.78554,58.501116 c 1.85663,0.04157 2.59285,-0.471854 3.47686,-1.323342"
-       id="path3795"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+    <g
+       id="g3799"
+       inkscape:export-filename="/home/johan/birdfont/icons/track.png"
+       inkscape:export-xdpi="319"
+       inkscape:export-ydpi="319">
+      <path
+         sodipodi:nodetypes="zcczcscz"
+         inkscape:export-ydpi="319.89001"
+         inkscape:export-xdpi="319.89001"
+         inkscape:export-filename="/home/johan/birdfont/icons/track.png"
+         inkscape:connector-curvature="0"
+         id="path3617"
+         d="m 197.66197,52.57551 c 0.85553,2.191047 4.9245,9.369166 4.9245,9.369166 1.13323,-0.111314 2.02494,-0.38761 2.77792,-1.111168 0,0 -2.27634,-7.933034 -3.42269,-9.995514 -1.14635,-2.06248 -2.27205,-2.782916 -2.27205,-2.782916 0,0 -0.8337,-0.292969 -1.68551,0.06911 -0.72362,0.30759 -1.2313,1.042059 -1.2313,1.042059 0,0 0.0536,1.218217 0.90913,3.409263 z"
+         style="fill:#e6e6e6;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="319.89001"
+         inkscape:export-xdpi="319.89001"
+         inkscape:export-filename="/home/johan/birdfont/icons/track.png"
+         inkscape:connector-curvature="0"
+         id="path3623"
+         d="m 194.88239,63.475848 c 2.26624,-4.567729 6.53453,3.336107 9.74418,1.026228 0.72121,-0.519032 0.65487,-0.262366 0.47533,-0.94071"
+         style="fill:none;stroke:#000000;stroke-width:0.59260023px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:export-ydpi="319.89001"
+         inkscape:export-xdpi="319.89001"
+         inkscape:export-filename="/home/johan/birdfont/icons/track.png"
+         inkscape:connector-curvature="0"
+         id="path3621"
+         d="m 203.99938,61.379513 1.22611,2.787498"
+         style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path3795"
+         d="m 200.78554,58.501116 c 1.85663,0.04157 2.59285,-0.471854 3.47686,-1.323342"
+         style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
   </g>
 </svg>
