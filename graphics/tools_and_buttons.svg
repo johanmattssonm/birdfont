@@ -516,9 +516,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="104.43834"
-     inkscape:cy="468.78196"
+     inkscape:zoom="17.798202"
+     inkscape:cx="198.57286"
+     inkscape:cy="713.71441"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -538,7 +538,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -584,7 +584,7 @@
          id="tspan3028"
          x="-0.14558615"
          y="-11.092395"
-         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:URW Palladio L;-inkscape-font-specification:URW Palladio L Medium">Export at 320dpi and later to 72dpi, do not mogrify -resize 23.125% </tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:URW Palladio L;-inkscape-font-specification:URW Palladio L Medium">Export at 320dpi and not to 72dpi, do not mogrify -resize 23.125% </tspan></text>
     <g
        id="g3163"
        transform="translate(-2.5268478,-4.5571)"
@@ -773,20 +773,14 @@
        inkscape:export-filename="/home/johan/birdfont/icons/quadratic_points.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       xml:space="preserve"
+    <g
        style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans"
-       x="16.477163"
-       y="89.74601"
-       id="text4162"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/quadratic_points.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4164"
-         x="16.477163"
-         y="89.74601">2</tspan></text>
+       id="text4162">
+      <path
+         d="m 18.396109,88.915932 3.442382,0 0,0.830078 -4.628906,0 0,-0.830078 c 0.374348,-0.387369 0.883788,-0.906574 1.528321,-1.557617 0.647783,-0.654294 1.054684,-1.075843 1.220703,-1.264649 0.315751,-0.354814 0.535477,-0.654292 0.659179,-0.898437 0.126949,-0.247391 0.190426,-0.489904 0.19043,-0.727539 -4e-6,-0.387365 -0.136723,-0.70312 -0.410156,-0.947266 -0.270186,-0.244134 -0.623376,-0.366204 -1.059571,-0.366211 -0.309247,7e-6 -0.636395,0.05372 -0.981445,0.161133 -0.341798,0.107428 -0.708009,0.270188 -1.098633,0.488281 l 0,-0.996094 c 0.397135,-0.159498 0.768228,-0.27994 1.113282,-0.361328 0.345049,-0.08137 0.660804,-0.122063 0.947265,-0.12207 0.755205,7e-6 1.357418,0.188809 1.806641,0.566406 0.449213,0.377611 0.673823,0.882168 0.673828,1.513672 -5e-6,0.299484 -0.05697,0.584315 -0.170898,0.854492 -0.110683,0.266931 -0.314133,0.582686 -0.610352,0.947266 -0.08139,0.0944 -0.340174,0.367841 -0.776367,0.820312 -0.436201,0.449221 -1.051435,1.079103 -1.845703,1.889649"
+         style=""
+         id="path3793" />
+    </g>
     <path
        inkscape:export-ydpi="319.88824"
        inkscape:export-xdpi="319.88824"
@@ -800,20 +794,14 @@
        id="path4173"
        style="fill:#e6e6e6;fill-opacity:1;stroke:#858585;stroke-width:1.37405881;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        sodipodi:type="arc" />
-    <text
-       inkscape:export-ydpi="319.88824"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-filename="/home/johan/birdfont/icons/cubic_points.png"
-       sodipodi:linespacing="125%"
-       id="text4175"
-       y="90.030273"
-       x="52.010166"
+    <g
        style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"><tspan
-         y="90.030273"
-         x="52.010166"
-         id="tspan4177"
-         sodipodi:role="line">3</tspan></text>
+       id="text4175">
+      <path
+         d="m 56.067783,86.099609 c 0.472001,0.100916 0.839839,0.310876 1.103516,0.629883 0.266922,0.319014 0.400385,0.712893 0.400391,1.181641 -6e-6,0.719402 -0.247402,1.276042 -0.742188,1.669922 -0.494796,0.39388 -1.19792,0.59082 -2.109375,0.59082 -0.305992,0 -0.621747,-0.03092 -0.947266,-0.09277 -0.322267,-0.05859 -0.655925,-0.148112 -1.000976,-0.268555 l 0,-0.952149 c 0.273436,0.159507 0.572915,0.279949 0.898437,0.361329 0.325519,0.08138 0.665688,0.122071 1.020508,0.12207 0.618487,10e-7 1.088864,-0.12207 1.411133,-0.366211 0.325516,-0.244139 0.488277,-0.598957 0.488281,-1.064453 -4e-6,-0.429685 -0.151371,-0.764971 -0.454101,-1.00586 -0.299483,-0.244137 -0.717777,-0.366207 -1.254883,-0.366211 l -0.849609,0 0,-0.810546 0.888671,0 c 0.485023,4e-6 0.856116,-0.09602 1.113282,-0.288086 0.257157,-0.195308 0.385737,-0.475256 0.385742,-0.839844 -5e-6,-0.374343 -0.133468,-0.660801 -0.400391,-0.859375 -0.263675,-0.201816 -0.642907,-0.302728 -1.137695,-0.302734 -0.270185,6e-6 -0.559898,0.0293 -0.869141,0.08789 -0.309246,0.0586 -0.649415,0.149746 -1.020508,0.273438 l 0,-0.878907 c 0.374348,-0.104159 0.724283,-0.182284 1.049805,-0.234375 0.328774,-0.05208 0.638018,-0.07812 0.927735,-0.07813 0.748694,8e-6 1.341141,0.170906 1.777343,0.512696 0.436193,0.338548 0.654292,0.797532 0.654297,1.376953 -5e-6,0.403651 -0.115565,0.745447 -0.34668,1.02539 -0.231124,0.276697 -0.5599,0.468755 -0.986328,0.576172"
+         style=""
+         id="path3790" />
+    </g>
     <path
        sodipodi:type="arc"
        style="fill:#e6e6e6;fill-opacity:1;stroke:#858585;stroke-width:1.37405881;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
@@ -827,20 +815,22 @@
        inkscape:export-filename="/home/johan/birdfont/icons/double_points.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       xml:space="preserve"
-       style="font-size:6.97485256000000042px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans"
-       x="87.764725"
-       y="89.476189"
-       id="text4183"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/double_points.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4185"
-         x="87.764725"
-         y="89.476189">2x2</tspan></text>
+    <g
+       style="font-size:6.97485256px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans"
+       id="text4183">
+      <path
+         d="m 89.103161,88.897221 2.401011,0 0,0.578968 -3.228594,0 0,-0.578968 c 0.261102,-0.270183 0.616429,-0.632321 1.065981,-1.086415 0.45182,-0.45636 0.735627,-0.750384 0.851423,-0.882073 0.220231,-0.247478 0.373487,-0.45636 0.459768,-0.626647 0.08854,-0.172552 0.132818,-0.341701 0.132822,-0.507448 -4e-6,-0.270181 -0.09536,-0.490415 -0.286078,-0.660704 -0.188451,-0.17028 -0.434796,-0.255422 -0.739035,-0.255426 -0.215696,4e-6 -0.443877,0.03747 -0.684544,0.112387 -0.238399,0.07493 -0.493826,0.188453 -0.76628,0.340569 l 0,-0.69476 c 0.276995,-0.111248 0.535828,-0.195255 0.776497,-0.252021 0.240668,-0.05676 0.460902,-0.08514 0.660704,-0.08514 0.526744,5e-6 0.946779,0.131692 1.260105,0.39506 0.31332,0.263378 0.469982,0.615299 0.469986,1.055764 -4e-6,0.208886 -0.03974,0.407551 -0.1192,0.595996 -0.0772,0.18618 -0.219102,0.406415 -0.425711,0.660704 -0.05676,0.06584 -0.237266,0.256564 -0.541504,0.572155 -0.304244,0.313326 -0.733361,0.752659 -1.287351,1.318002"
+         style=""
+         id="path3783" />
+      <path
+         d="m 96.03374,85.661816 -1.379305,1.856101 1.450824,1.958272 -0.739035,0 -1.110255,-1.498504 -1.110254,1.498504 -0.739035,0 1.481475,-1.995735 -1.355465,-1.818638 0.739035,0 1.01149,1.35887 1.01149,-1.35887 0.739035,0"
+         style=""
+         id="path3785" />
+      <path
+         d="m 97.671877,88.897221 2.401013,0 0,0.578968 -3.228596,0 0,-0.578968 c 0.261102,-0.270183 0.616429,-0.632321 1.065981,-1.086415 0.45182,-0.45636 0.735627,-0.750384 0.851423,-0.882073 0.220232,-0.247478 0.373487,-0.45636 0.459768,-0.626647 0.08854,-0.172552 0.132819,-0.341701 0.132822,-0.507448 -3e-6,-0.270181 -0.09536,-0.490415 -0.286078,-0.660704 -0.188451,-0.17028 -0.434796,-0.255422 -0.739035,-0.255426 -0.215696,4e-6 -0.443876,0.03747 -0.684544,0.112387 -0.238399,0.07493 -0.493826,0.188453 -0.76628,0.340569 l 0,-0.69476 c 0.276995,-0.111248 0.535828,-0.195255 0.776497,-0.252021 0.240668,-0.05676 0.460902,-0.08514 0.660704,-0.08514 0.526744,5e-6 0.946779,0.131692 1.260105,0.39506 0.31332,0.263378 0.469983,0.615299 0.469983,1.055764 0,0.208886 -0.0397,0.407551 -0.119197,0.595996 -0.0772,0.18618 -0.219102,0.406415 -0.425711,0.660704 -0.05676,0.06584 -0.237266,0.256564 -0.541504,0.572155 -0.304244,0.313326 -0.733361,0.752659 -1.287351,1.318002"
+         style=""
+         id="path3787" />
+    </g>
     <path
        sodipodi:type="arc"
        style="fill:#e6e6e6;fill-opacity:1;stroke:#858585;stroke-width:1.37405881;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
@@ -854,20 +844,14 @@
        inkscape:export-filename="/home/johan/birdfont/icons/convert_point.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       xml:space="preserve"
+    <g
        style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans"
-       x="127.05587"
-       y="90.883064"
-       id="text4228"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/convert_point.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4230"
-         x="127.05587"
-         y="90.883064">C</tspan></text>
+       id="text4228">
+      <path
+         d="m 133.4963,84.154549 0,1.040039 c -0.33204,-0.309239 -0.68685,-0.540359 -1.06445,-0.69336 -0.37436,-0.152988 -0.77312,-0.229485 -1.19629,-0.229492 -0.83334,7e-6 -1.47136,0.25554 -1.91406,0.766602 -0.44272,0.507818 -0.66407,1.243494 -0.66407,2.207031 0,0.960289 0.22135,1.695965 0.66407,2.207031 0.4427,0.507814 1.08072,0.76172 1.91406,0.761719 0.42317,10e-7 0.82193,-0.0765 1.19629,-0.229492 0.3776,-0.152994 0.73241,-0.384114 1.06445,-0.69336 l 0,1.030274 c -0.34506,0.234375 -0.71127,0.410156 -1.09863,0.527344 -0.38412,0.117187 -0.79102,0.175781 -1.22071,0.175781 -1.10351,0 -1.97265,-0.336914 -2.60742,-1.010742 -0.63476,-0.677082 -0.95215,-1.599933 -0.95215,-2.768555 0,-1.17187 0.31739,-2.094721 0.95215,-2.768555 0.63477,-0.677076 1.50391,-1.015617 2.60742,-1.015625 0.4362,8e-6 0.84635,0.0586 1.23047,0.175782 0.38737,0.113939 0.75032,0.286465 1.08887,0.517578"
+         style=""
+         id="path3780" />
+    </g>
     <g
        id="g4279"
        transform="matrix(0.92095423,0,0,0.92095423,-4.7686532,-7.5277132)"
@@ -1139,20 +1123,22 @@
        inkscape:export-filename="/home/johan/birdfont/icons/utf_8.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans;opacity:0.72016461"
-       x="11.774489"
-       y="182.12901"
-       id="text4497"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/utf_8.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4499"
-         x="11.774489"
-         y="182.12901">UNI</tspan></text>
+    <g
+       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.72016458;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans"
+       id="text4497">
+      <path
+         d="m 12.64363,174.83897 0.991211,0 0,4.42871 c -2e-6,0.78126 0.1416,1.34441 0.424805,1.68946 0.2832,0.3418 0.742184,0.51269 1.376953,0.51269 0.631506,0 1.088862,-0.17089 1.37207,-0.51269 0.283198,-0.34505 0.424799,-0.9082 0.424805,-1.68946 l 0,-4.42871 0.991211,0 0,4.55079 c -7e-6,0.95052 -0.236009,1.66829 -0.708008,2.15332 -0.468755,0.48502 -1.162114,0.72753 -2.080078,0.72753 -0.921227,0 -1.617841,-0.24251 -2.089844,-0.72753 -0.468751,-0.48503 -0.703126,-1.2028 -0.703125,-2.15332 l 0,-4.55079"
+         style=""
+         id="path3743" />
+      <path
+         d="m 20.080153,174.83897 1.328125,0 3.232422,6.09864 0,-6.09864 0.957032,0 0,7.29004 -1.328125,0 -3.232422,-6.09863 0,6.09863 -0.957032,0 0,-7.29004"
+         style=""
+         id="path3745" />
+      <path
+         d="m 27.560622,174.83897 0.986328,0 0,7.29004 -0.986328,0 0,-7.29004"
+         style=""
+         id="path3747" />
+    </g>
     <rect
        style="fill:#e6e6e6;fill-opacity:1;stroke:#858585;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;opacity:0.72016461"
        id="rect4495-6"
@@ -1171,20 +1157,14 @@
        inkscape:export-filename="/home/johan/birdfont/icons/custom_character_set.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans;opacity:0.72016461"
-       x="47.853626"
-       y="181.99191"
-       id="text4555"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/custom_character_set.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4557"
-         x="47.853626"
-         y="181.99191">A</tspan></text>
+    <g
+       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.72016458;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans"
+       id="text4555">
+      <path
+         d="m 51.271595,175.67355 -1.337891,3.62793 2.680664,0 -1.342773,-3.62793 m -0.556641,-0.97168 1.118164,0 2.778321,7.29004 -1.025391,0 -0.664062,-1.87011 -3.286133,0 -0.664063,1.87011 -1.040039,0 2.783203,-7.29004"
+         style=""
+         id="path3750" />
+    </g>
     <rect
        style="fill:#e6e6e6;fill-opacity:1;stroke:#858585;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;opacity:0.72016461"
        id="rect4495-6-0"
@@ -1203,20 +1183,14 @@
        inkscape:export-filename="/home/johan/birdfont/icons/available_characters.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans;opacity:0.72016461"
-       x="85.601471"
-       y="182.03145"
-       id="text4555-5"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/available_characters.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4557-2"
-         x="85.601471"
-         y="182.03145">B</tspan></text>
+    <g
+       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;opacity:0.72016458;fill:#515151;fill-opacity:1;stroke:none;font-family:Sans"
+       id="text4555-5">
+      <path
+         d="m 87.569244,178.55 0,2.6709 1.582032,0 c 0.530595,0 0.922847,-0.10905 1.176757,-0.32715 0.257157,-0.22135 0.385738,-0.55826 0.385743,-1.01074 -5e-6,-0.45573 -0.128586,-0.79101 -0.385743,-1.00586 -0.25391,-0.21809 -0.646162,-0.32714 -1.176757,-0.32715 l -1.582032,0 m 0,-2.99804 0,2.19726 1.459961,0 c 0.481767,1e-5 0.83984,-0.0895 1.074219,-0.26855 0.237626,-0.18229 0.356441,-0.45898 0.356445,-0.83008 -4e-6,-0.36783 -0.118819,-0.6429 -0.356445,-0.8252 -0.234379,-0.18228 -0.592452,-0.27343 -1.074219,-0.27343 l -1.459961,0 m -0.986328,-0.81055 2.519532,0 c 0.751948,1e-5 1.331375,0.15626 1.738281,0.46875 0.406895,0.31251 0.610345,0.75684 0.610351,1.33301 -6e-6,0.44597 -0.104172,0.80078 -0.3125,1.06445 -0.208338,0.26368 -0.514328,0.42806 -0.917968,0.49316 0.485021,0.10417 0.860997,0.32227 1.127929,0.6543 0.270177,0.32878 0.405268,0.74056 0.405274,1.23535 -6e-6,0.65105 -0.22136,1.15397 -0.664063,1.50879 -0.442713,0.35482 -1.072595,0.53223 -1.889648,0.53223 l -2.617188,0 0,-7.29004"
+         style=""
+         id="path3753" />
+    </g>
     <rect
        style="fill:#e6e6e6;fill-opacity:1;stroke:#858585;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;opacity:0.72016461"
        id="rect4495-6-0-2"
@@ -1536,20 +1510,22 @@
        inkscape:export-filename="/home/johan/birdfont/icons/zoom_out.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       xml:space="preserve"
+    <g
        style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#858585;fill-opacity:1;stroke:none;font-family:Sans"
-       x="86.330093"
-       y="243.89"
-       id="text4900"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/zoom_1_1.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4902"
-         x="86.330093"
-         y="243.89">1:1</tspan></text>
+       id="text4900">
+      <path
+         d="m 87.570328,243.05992 1.611328,0 0,-5.56152 -1.75293,0.35156 0,-0.89844 1.743164,-0.35156 0.986328,0 0,6.45996 1.611329,0 0,0.83008 -4.199219,0 0,-0.83008"
+         style=""
+         id="path3756" />
+      <path
+         d="m 93.869156,242.64977 1.030273,0 0,1.24023 -1.030273,0 0,-1.24023 m 0,-3.93067 1.030273,0 0,1.24024 -1.030273,0 0,-1.24024"
+         style=""
+         id="path3758" />
+      <path
+         d="m 97.316422,243.05992 1.611328,0 0,-5.56152 -1.75293,0.35156 0,-0.89844 1.743164,-0.35156 0.986328,0 0,6.45996 1.611328,0 0,0.83008 -4.199218,0 0,-0.83008"
+         style=""
+         id="path3760" />
+    </g>
     <g
        id="g4953"
        inkscape:export-filename="/home/johan/birdfont/icons/zoom_boundries.png"
@@ -1577,20 +1553,14 @@
            inkscape:connector-curvature="0" />
       </g>
     </g>
-    <text
-       xml:space="preserve"
+    <g
        style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#858585;fill-opacity:1;stroke:none;font-family:Sans"
-       x="165.09047"
-       y="243.08427"
-       id="text4900-4"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/full_glyph.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4902-0"
-         x="165.09047"
-         y="243.08427">F</tspan></text>
+       id="text4900-4">
+      <path
+         d="m 166.07191,235.79424 4.18946,0 0,0.83007 -3.20313,0 0,2.14844 2.89063,0 0,0.83008 -2.89063,0 0,3.48144 -0.98633,0 0,-7.29003"
+         style=""
+         id="path3777" />
+    </g>
     <g
        id="g4983"
        inkscape:export-filename="/home/johan/birdfont/icons/zoom_background_image.png"
@@ -1909,34 +1879,26 @@
        inkscape:export-filename="/home/johan/birdfont/icons/ttf_units.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       xml:space="preserve"
+    <g
        style="font-size:8.88676739px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#858585;fill-opacity:1;stroke:none;font-family:KacstDigital;-inkscape-font-specification:KacstDigital Medium"
-       x="92.587555"
-       y="359.42633"
-       id="text4546"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/ttf_units.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4548"
-         x="92.587555"
-         y="359.42633">U</tspan></text>
-    <text
-       xml:space="preserve"
+       id="text4546">
+      <path
+         d="m 93.35994,352.94784 0.880866,0 0,3.93569 c -2e-6,0.69429 0.125836,1.19474 0.377514,1.50138 0.251674,0.30375 0.659562,0.45562 1.223666,0.45562 0.561205,0 0.967647,-0.15187 1.219327,-0.45562 0.251672,-0.30664 0.37751,-0.80709 0.377514,-1.50138 l 0,-3.93569 0.880866,0 0,4.04418 c -5e-6,0.8447 -0.209735,1.48257 -0.62919,1.9136 -0.416572,0.43103 -1.032743,0.64655 -1.848517,0.64655 -0.818672,0 -1.437737,-0.21552 -1.857195,-0.64655 -0.416568,-0.43103 -0.624852,-1.0689 -0.624851,-1.9136 l 0,-4.04418"
+         style=""
+         id="path3766" />
+    </g>
+    <g
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;font-family:KacstDigital;-inkscape-font-specification:KacstDigital Medium"
-       x="11.868663"
-       y="389.10025"
-       id="text4599"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/johan/birdfont/icons/kerning_class.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824"><tspan
-         sodipodi:role="line"
-         id="tspan4601"
-         x="11.868663"
-         y="389.10025">AV</tspan></text>
+       id="text4599">
+      <path
+         d="m 15.286632,382.78189 -1.337891,3.62793 2.680664,0 -1.342773,-3.62793 m -0.556641,-0.97168 1.118164,0 2.77832,7.29004 -1.02539,0 -0.664063,-1.87012 -3.286133,0 -0.664062,1.87012 -1.040039,0 2.783203,-7.29004"
+         style=""
+         id="path3769" />
+      <path
+         d="m 20.92628,389.10025 -2.783203,-7.29004 1.030273,0 2.309571,6.1377 2.314453,-6.1377 1.02539,0 -2.77832,7.29004 -1.118164,0"
+         style=""
+         id="path3771" />
+    </g>
     <path
        sodipodi:type="arc"
        style="opacity:0.72016458;fill:url(#radialGradient3581);fill-opacity:1"
@@ -1950,20 +1912,14 @@
        inkscape:export-filename="/home/johan/birdfont/icons/delay_circle.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       inkscape:export-ydpi="319.88824"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-filename="/home/johan/birdfont/icons/kerning_text_input.png"
-       sodipodi:linespacing="125%"
-       id="text3532"
-       y="389.10025"
-       x="50.371204"
+    <g
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;font-family:KacstDigital;-inkscape-font-specification:KacstDigital Medium"
-       xml:space="preserve"><tspan
-         y="389.10025"
-         x="50.371204"
-         id="tspan3534"
-         sodipodi:role="line">T</tspan></text>
+       id="text3532">
+      <path
+         d="m 50.341908,381.81021 6.166992,0 0,0.83008 -2.587891,0 0,6.45996 -0.991211,0 0,-6.45996 -2.58789,0 0,-0.83008"
+         style=""
+         id="path3774" />
+    </g>
     <rect
        style="fill:#e6e6e6;fill-opacity:1;stroke:#858585;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect4322"
@@ -1974,29 +1930,24 @@
        inkscape:export-filename="/home/johan/birdfont/icons/insert_background.png"
        inkscape:export-xdpi="319.88824"
        inkscape:export-ydpi="319.88824" />
-    <text
-       inkscape:export-ydpi="319.88824"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-filename="/home/johan/birdfont/icons/insert_background.png"
+    <g
        inkscape:transform-center-y="2.5075108"
-       sodipodi:linespacing="125%"
-       id="text4324"
-       y="328.78897"
-       x="128.93886"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#858585;fill-opacity:1;stroke:none;font-family:KacstDigital;-inkscape-font-specification:KacstDigital Medium"
-       xml:space="preserve"><tspan
-         id="tspan4326"
-         y="328.78897"
-         x="128.93886"
-         sodipodi:role="line">B</tspan></text>
+       id="text4324">
+      <path
+         d="m 130.90663,325.30753 0,2.67089 1.58203,0 c 0.5306,0 0.92285,-0.10904 1.17676,-0.32714 0.25716,-0.22136 0.38574,-0.55827 0.38574,-1.01075 0,-0.45572 -0.12858,-0.79101 -0.38574,-1.00586 -0.25391,-0.21809 -0.64616,-0.32714 -1.17676,-0.32714 l -1.58203,0 m 0,-2.99805 0,2.19726 1.45996,0 c 0.48177,1e-5 0.83984,-0.0895 1.07422,-0.26855 0.23763,-0.18229 0.35644,-0.45898 0.35645,-0.83008 -1e-5,-0.36783 -0.11882,-0.6429 -0.35645,-0.82519 -0.23438,-0.18229 -0.59245,-0.27343 -1.07422,-0.27344 l -1.45996,0 m -0.98633,-0.81055 2.51953,0 c 0.75195,1e-5 1.33138,0.15626 1.73829,0.46875 0.40689,0.31251 0.61034,0.75684 0.61035,1.33301 -1e-5,0.44597 -0.10418,0.80079 -0.3125,1.06445 -0.20834,0.26368 -0.51433,0.42807 -0.91797,0.49317 0.48502,0.10417 0.861,0.32227 1.12793,0.65429 0.27017,0.32878 0.40527,0.74057 0.40527,1.23536 0,0.65104 -0.22136,1.15397 -0.66406,1.50878 -0.44271,0.35482 -1.0726,0.53223 -1.88965,0.53223 l -2.61719,0 0,-7.29004"
+         style=""
+         id="path3763" />
+    </g>
     <path
        style="fill:#e6e6e6;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 198.28069,52.221957 4.30578,9.722719 2.77792,-1.111168 -5.69474,-12.77843 -2.91681,1.111168 z"
+       d="m 197.66197,52.57551 c 0.85553,2.191047 4.9245,9.369166 4.9245,9.369166 1.13323,-0.111314 2.02494,-0.38761 2.77792,-1.111168 0,0 -2.27634,-7.933034 -3.42269,-9.995514 -1.14635,-2.06248 -2.27205,-2.782916 -2.27205,-2.782916 0,0 -0.8337,-0.292969 -1.68551,0.06911 -0.72362,0.30759 -1.2313,1.042059 -1.2313,1.042059 0,0 0.0536,1.218217 0.90913,3.409263 z"
        id="path3617"
        inkscape:connector-curvature="0"
        inkscape:export-filename="/home/johan/birdfont/icons/track.png"
        inkscape:export-xdpi="319.89001"
-       inkscape:export-ydpi="319.89001" />
+       inkscape:export-ydpi="319.89001"
+       sodipodi:nodetypes="zcczcscz" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.59260023px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 194.88239,63.475848 c 2.26624,-4.567729 6.53453,3.336107 9.74418,1.026228 0.72121,-0.519032 0.65487,-0.262366 0.47533,-0.94071"
@@ -2105,5 +2056,11 @@
          d="m 92.92596,416.18009 0.01336,-3.554"
          style="fill:none;stroke:#e6e6e6;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
+    <path
+       style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 200.78554,58.501116 c 1.85663,0.04157 2.59285,-0.471854 3.47686,-1.323342"
+       id="path3795"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
   </g>
 </svg>
