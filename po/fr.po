@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-29 15:17+0100\n"
+"POT-Creation-Date: 2014-03-29 21:51+0100\n"
 "PO-Revision-Date: 2014-03-15 21:50+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -376,7 +376,7 @@ msgstr "Fichiers"
 msgid "Show grid"
 msgstr "Afficher le quadrillage"
 
-#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:686
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:716
 msgid "Kerning"
 msgstr "Crénage"
 
@@ -396,11 +396,11 @@ msgstr ""
 "Tapez [Espace] pour créner l'espace entre les caractères et [Divis] pour "
 "décréner"
 
-#: libbirdfont/KerningDisplay.vala:239
+#: libbirdfont/KerningDisplay.vala:244
 msgid "Kerning:"
 msgstr "Approche (Crénage) :"
 
-#: libbirdfont/KerningDisplay.vala:686 libbirdfont/MainWindow.vala:135
+#: libbirdfont/KerningDisplay.vala:716 libbirdfont/MainWindow.vala:135
 #: libbirdfont/SpinButton.vala:138
 msgid "Close"
 msgstr "Fermer"
@@ -433,7 +433,7 @@ msgstr "Créer un nouveau type d'approche"
 msgid "Use text input to enter kerning values."
 msgstr "Utilisez la saisie de texte pour saisir des valeurs de crénage."
 
-#: libbirdfont/KerningTools.vala:49
+#: libbirdfont/KerningTools.vala:49 libbirdfont/KerningTools.vala:74
 msgid "Font size "
 msgstr ""
 
@@ -445,15 +445,15 @@ msgstr "Jeu de caractères"
 msgid "Glyph sequence"
 msgstr "Séquence du glyphe"
 
-#: libbirdfont/MenuTab.vala:41
+#: libbirdfont/MenuTab.vala:63
 msgid "Menu"
 msgstr "Menu"
 
-#: libbirdfont/MenuTab.vala:70 libbirdfont/SaveDialogListener.vala:28
+#: libbirdfont/MenuTab.vala:92 libbirdfont/SaveDialogListener.vala:28
 msgid "Save"
 msgstr "Enregistrer"
 
-#: libbirdfont/MenuTab.vala:190
+#: libbirdfont/MenuTab.vala:218
 msgid "Open"
 msgstr "Ouvrir"
 
@@ -522,7 +522,7 @@ msgid "Generate html document"
 msgstr ""
 
 #: libbirdfont/PreviewTools.vala:67
-msgid "Three font files has been created."
+msgid "Three font files have been created."
 msgstr ""
 
 #: libbirdfont/RectangleTool.vala:30

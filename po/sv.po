@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-29 15:17+0100\n"
+"POT-Creation-Date: 2014-03-29 21:51+0100\n"
 "PO-Revision-Date: 2014-03-15 21:38+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -373,7 +373,7 @@ msgstr "Filer"
 msgid "Show grid"
 msgstr "Visa rutnät"
 
-#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:686
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:716
 msgid "Kerning"
 msgstr "Kerning"
 
@@ -393,11 +393,11 @@ msgstr ""
 "Skriv ”space” för att justera avståndet mot mellanslag och ”divis” för att "
 "justera avståndet mot -."
 
-#: libbirdfont/KerningDisplay.vala:239
+#: libbirdfont/KerningDisplay.vala:244
 msgid "Kerning:"
 msgstr "Kerning:"
 
-#: libbirdfont/KerningDisplay.vala:686 libbirdfont/MainWindow.vala:135
+#: libbirdfont/KerningDisplay.vala:716 libbirdfont/MainWindow.vala:135
 #: libbirdfont/SpinButton.vala:138
 msgid "Close"
 msgstr "Stäng"
@@ -429,7 +429,7 @@ msgstr "Skapa en ny kerning klass."
 msgid "Use text input to enter kerning values."
 msgstr "Använd täxtfältet för att lägga till kerning värden."
 
-#: libbirdfont/KerningTools.vala:49
+#: libbirdfont/KerningTools.vala:49 libbirdfont/KerningTools.vala:74
 msgid "Font size "
 msgstr ""
 
@@ -441,15 +441,15 @@ msgstr "Teckenuppsättning"
 msgid "Glyph sequence"
 msgstr "Teckensekvens"
 
-#: libbirdfont/MenuTab.vala:41
+#: libbirdfont/MenuTab.vala:63
 msgid "Menu"
 msgstr "Meny"
 
-#: libbirdfont/MenuTab.vala:70 libbirdfont/SaveDialogListener.vala:28
+#: libbirdfont/MenuTab.vala:92 libbirdfont/SaveDialogListener.vala:28
 msgid "Save"
 msgstr "Spara"
 
-#: libbirdfont/MenuTab.vala:190
+#: libbirdfont/MenuTab.vala:218
 msgid "Open"
 msgstr "Öppna"
 
@@ -518,7 +518,7 @@ msgid "Generate html document"
 msgstr ""
 
 #: libbirdfont/PreviewTools.vala:67
-msgid "Three font files has been created."
+msgid "Three font files have been created."
 msgstr ""
 
 #: libbirdfont/RectangleTool.vala:30

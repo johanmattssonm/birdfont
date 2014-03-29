@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-29 15:17+0100\n"
+"POT-Creation-Date: 2014-03-29 21:51+0100\n"
 "PO-Revision-Date: 2013-10-21 14:31+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -375,7 +375,7 @@ msgstr "Fichièrs"
 msgid "Show grid"
 msgstr "Afichar la grasilha"
 
-#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:686
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:716
 msgid "Kerning"
 msgstr "Interletratge"
 
@@ -391,11 +391,11 @@ msgstr ""
 msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:239
+#: libbirdfont/KerningDisplay.vala:244
 msgid "Kerning:"
 msgstr "Apròchi (Crenatge) :"
 
-#: libbirdfont/KerningDisplay.vala:686 libbirdfont/MainWindow.vala:135
+#: libbirdfont/KerningDisplay.vala:716 libbirdfont/MainWindow.vala:135
 #: libbirdfont/SpinButton.vala:138
 msgid "Close"
 msgstr "Tampar"
@@ -425,7 +425,7 @@ msgstr ""
 msgid "Use text input to enter kerning values."
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:49
+#: libbirdfont/KerningTools.vala:49 libbirdfont/KerningTools.vala:74
 msgid "Font size "
 msgstr ""
 
@@ -437,15 +437,15 @@ msgstr "Jòc de caractèrs"
 msgid "Glyph sequence"
 msgstr "Sequéncia del glyph"
 
-#: libbirdfont/MenuTab.vala:41
+#: libbirdfont/MenuTab.vala:63
 msgid "Menu"
 msgstr "Menú"
 
-#: libbirdfont/MenuTab.vala:70 libbirdfont/SaveDialogListener.vala:28
+#: libbirdfont/MenuTab.vala:92 libbirdfont/SaveDialogListener.vala:28
 msgid "Save"
 msgstr "Enregistrar"
 
-#: libbirdfont/MenuTab.vala:190
+#: libbirdfont/MenuTab.vala:218
 msgid "Open"
 msgstr "Dobrir"
 
@@ -514,7 +514,7 @@ msgid "Generate html document"
 msgstr ""
 
 #: libbirdfont/PreviewTools.vala:67
-msgid "Three font files has been created."
+msgid "Three font files have been created."
 msgstr ""
 
 #: libbirdfont/RectangleTool.vala:30
