@@ -353,10 +353,6 @@ public class Font : GLib.Object {
 		
 		glyph_cache.insert (glyph_collection.get_unicode (), glyph_collection);
 		
-		if (unlikely (is_empty ())) {
-			warning ("No glyph inserted");
-		}
-		
 		printd (@"Adding $(glyph_collection.get_current ().get_name ())\n");
 	}
 	

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -18,7 +18,7 @@ using Math;
 namespace BirdFont {
 
 public class VersionList : DropMenu {
-	int current_version = 0;
+	int current_version_id = -1;
 	public List<Glyph> glyphs;
 
 	public VersionList (Glyph? g = null) {
@@ -36,11 +36,13 @@ public class VersionList : DropMenu {
 			BirdFont.get_current_font ().touch ();
 			
 			add_new_version ();
-			current_version = (int) glyphs.length () - 1;
+			current_version_id = glyphs.last ().data.version_id;
 		};
 		
 		signal_delete_item.connect ((index) => {
 			unowned List<Glyph> gl;
+			int current_version;
+			
 			index--; // first item is the add new action
 			return_if_fail (0 <= index < glyphs.length ());
 			gl = glyphs.nth (index);
@@ -48,10 +50,12 @@ public class VersionList : DropMenu {
 			
 			recreate_index ();
 			
+			current_version = get_current_version_index ();
 			if (index == current_version) {
-				set_selected_item (get_action_no2 ());
+				set_selected_item (get_action_no2 ()); // select the first glyph if the current glyph is deleted
 			} else if (index < current_version) {
-				current_version--;
+				return_if_fail (0 <= current_version - 1 < glyphs.length ());
+				current_version_id = glyphs.nth (current_version - 1).data.version_id;
 			}
 		});
 		
@@ -59,23 +63,37 @@ public class VersionList : DropMenu {
 			add_glyph ((!) g);
 		}
 	}
+
+	private int get_current_version_index () {
+		int i = 0;
+		foreach (Glyph g in glyphs) {
+			if (g.version_id == current_version_id) {
+				return i;
+			}
+			i++;
+		}
+		return i;
+	}
+
+	public void set_selected_version (int version_id) {
+		current_version_id = version_id;
+	}
 	
 	public Glyph get_current () {
-		unowned List<Glyph> g;
-		
-		if (unlikely (!(0 <= current_version < glyphs.length ()))) {
-			warning (@"current_version >= glyphs.length ($current_version >= $(glyphs.length ()))");
-			return new Glyph ("");
+		foreach (Glyph g in glyphs) {
+			if (g.version_id == current_version_id) {
+				return g;
+			}
 		}
 		
-		g = glyphs.nth (current_version);
+		warning (@"Can not find current glyph for id $current_version_id");
 		
-		if (unlikely (is_null (g.data))) {
-			warning ("No data in glyph collection.");
-			return new Glyph ("");
+		if (glyphs.length () > 0) {
+			set_selected_version (glyphs.last ().data.version_id);
+			return glyphs.last ().data;
 		}
 		
-		return g.data;
+		return new Glyph ("");
 	}
 
 	public void add_new_version () {
@@ -96,8 +114,9 @@ public class VersionList : DropMenu {
 		unowned List<Glyph> g;
 				
 		return_if_fail (0 <= i < glyphs.length ());
-
-		current_version = i;
+		g = glyphs.nth (i);
+		
+		current_version_id = g.data.version_id;
 		
 		return_if_fail (ma.parent != null);
 		
@@ -105,9 +124,7 @@ public class VersionList : DropMenu {
 		ma.set_selected (true);
 		
 		reload_all_open_glyphs ();
-		
-		g = glyphs.nth (current_version);
-		
+
 		if (unlikely (is_null (g.data))) {
 			warning ("No data in glyph collection.");
 		} else {

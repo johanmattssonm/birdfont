@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -53,6 +53,10 @@ public class GlyphCollection : GLib.Object {
 	
 	public int get_selected_id () {
 		return versions.get_current ().version_id;	
+	}
+	
+	public void set_selected_version (int version_id) {
+		versions.set_selected_version (version_id);
 	}
 }
 	

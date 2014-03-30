@@ -888,7 +888,9 @@ class BirdFontFile {
 	/** Parse the new glyph format */
 	private void parse_glyph_collection (Xml.Node* node) {
 		unichar unicode = 0;
-		GlyphCollection gc = new GlyphCollection ();
+		GlyphCollection gc;
+		GlyphCollection? current_gc;
+		bool new_glyph_collection;
 		string attr_name;
 		string attr_content;
 		StringBuilder b;
@@ -911,9 +913,14 @@ class BirdFontFile {
 			}
 		}
 
+		current_gc = font.get_glyph_collection_by_name (name);
+		new_glyph_collection = (current_gc == null);
+		gc = (!new_glyph_collection) ? (!) current_gc : new GlyphCollection ();
+
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "selected") {
 				selected_id = parse_selected (iter);
+				gc.set_selected_version (selected_id);
 			}
 		}
 				
@@ -923,7 +930,9 @@ class BirdFontFile {
 			}
 		}
 		
-		font.add_glyph_collection (gc);
+		if (new_glyph_collection) {
+			font.add_glyph_collection (gc);
+		}
 	}
 
 	private int parse_selected (Xml.Node* node) {
@@ -957,7 +966,6 @@ class BirdFontFile {
 		Path path;
 		bool selected = false;
 		bool has_id = false;
-		
 		int id = 1;
 		
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
@@ -994,7 +1002,8 @@ class BirdFontFile {
 				parse_background_scale (glyph, iter);
 			}
 		}
-		glyph.version_id = (!has_id) ? id : (int) gc.length () + 1;		
+
+		glyph.version_id = (has_id) ? id : (int) gc.length () + 1;		
 		gc.insert_glyph (glyph, selected || selected_id == id);
 	}
 
