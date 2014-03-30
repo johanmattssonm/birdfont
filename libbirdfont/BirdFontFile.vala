@@ -422,6 +422,7 @@ class BirdFontFile {
 
 	private void write_glyph_collection (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
 		os.put_string (@"<collection unicode=\"$(Font.to_hex (gc.get_current ().unichar_code))\">\n");
+		os.put_string (@"\t<selected id=\"$(gc.get_selected_id ())\" />\n");
 		foreach (Glyph g in gc.get_version_list ().glyphs) {
 			write_glyph (g, gc, os);
 		}
@@ -432,7 +433,7 @@ class BirdFontFile {
 		bool selected = (gc.get_current () == g);
 		string data;
 		
-		os.put_string (@"\t<glyph left=\"$(g.left_limit)\" right=\"$(g.right_limit)\" selected=\"$selected\">\n");
+		os.put_string (@"\t<glyph left=\"$(g.left_limit)\" right=\"$(g.right_limit)\">\n");
 		
 		foreach (Path p in g.path_list) {
 			data = get_point_data (p);
@@ -894,6 +895,7 @@ class BirdFontFile {
 		string attr_content;
 		StringBuilder b;
 		string name = "";
+		int selected_id = 1;
 				
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -910,22 +912,46 @@ class BirdFontFile {
 				}
 			}
 		}
-		
+
+		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
+			if (iter->name == "selected") {
+				selected_id = parse_selected (iter);
+			}
+		}
+				
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "glyph") {
-				parse_glyph (iter, gc, name, unicode);
+				parse_glyph (iter, gc, name, unicode, selected_id);
 			}
 		}
 		
 		font.add_glyph_collection (gc);
 	}
 
-	private void parse_glyph (Xml.Node* node, GlyphCollection gc, string name, unichar unicode) {	
+	private int parse_selected (Xml.Node* node) {
+		string attr_name;
+		string attr_content;
+		int id = 1;
+				
+		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+			attr_name = prop->name;
+			attr_content = prop->children->content;
+			
+			if (attr_name == "id") {
+				id = int.parse (attr_content);
+			}
+		}
+		
+		return id;
+	}
+
+	private void parse_glyph (Xml.Node* node, GlyphCollection gc, string name, unichar unicode, int selected_id) {	
 		string attr_name;
 		string attr_content;
 		Glyph glyph = new Glyph (name, unicode);
 		Path path;
 		bool selected = false;
+		int id = 1;
 		
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -939,6 +965,11 @@ class BirdFontFile {
 				glyph.right_limit = double.parse (attr_content);
 			}
 			
+			if (attr_name == "id") {
+				id = int.parse (attr_content);
+			}
+
+			// old way of selecting a glyph in the version list
 			if (attr_name == "selected") {
 				selected = bool.parse (attr_content);
 			}
@@ -955,7 +986,8 @@ class BirdFontFile {
 			}
 		}
 		
-		gc.insert_glyph (glyph, selected);
+		glyph.version_id = id;
+		gc.insert_glyph (glyph, selected || selected_id == id);
 	}
 
 	private Path parse_path (Xml.Node* node) {	

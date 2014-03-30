@@ -80,6 +80,9 @@ public class Glyph : FontDisplay {
 	
 	public static Glyph? background_glyph = null;
 	
+	/** Id in the verison list. */
+	public int version_id = 1;
+	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
