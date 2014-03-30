@@ -50,6 +50,10 @@ public class GlyphCollection : GLib.Object {
 	public string get_name () {
 		return get_current ().get_name ();
 	}
+	
+	public int get_selected_id () {
+		return versions.get_current ().version_id;	
+	}
 }
 	
 }

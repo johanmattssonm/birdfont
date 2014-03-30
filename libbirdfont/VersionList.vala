@@ -18,8 +18,6 @@ using Math;
 namespace BirdFont {
 
 public class VersionList : DropMenu {
-
-	int versions = 1;
 	int current_version = 0;
 	public List<Glyph> glyphs;
 
@@ -83,7 +81,13 @@ public class VersionList : DropMenu {
 	public void add_new_version () {
 		Glyph g = get_current ();
 		Glyph new_version = g.copy ();
+		new_version.version_id = get_last_id () + 1;
 		add_glyph (new_version);
+	}
+	
+	private int get_last_id () {
+		return_val_if_fail (glyphs.length () > 0, 1);
+		return glyphs.last ().data.version_id;
 	}
 	
 	private void set_selected_item (MenuAction ma) {
@@ -165,11 +169,12 @@ public class VersionList : DropMenu {
 	
 	public void add_glyph (Glyph new_version, bool selected = true) {
 		MenuAction ma;
+		int v;
 		
-		versions++;
+		v = new_version.version_id;
 		glyphs.append (new_version);
 
-		ma = add_item (t_("Version") + @" $(versions - 1)");
+		ma = add_item (t_("Version") + @" $v");
 		ma.index = (int) glyphs.length () - 1;
 		
 		ma.action = (self) => {

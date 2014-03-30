@@ -46,7 +46,7 @@ public class KerningTools : ToolCollection  {
 		});
 		kerning_tools.add_tool (text_kerning);
 
-		SpinButton font_size1 = new SpinButton ("kerning_font_size_one", t_("Font size "));
+		SpinButton font_size1 = new SpinButton ("kerning_font_size_one", t_("Font size"));
 
 		font_size1.set_max (9);
 		font_size1.set_min (0.1);

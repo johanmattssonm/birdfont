@@ -37,7 +37,7 @@ public static int main (string[] arg) {
 
 	file = BirdFont.BirdFont.args.get_file ();
 	if (file != "") {
-		MainWindow.file_tab.load_font (file);
+		FileTab.load_font (file);
 	}
 
 	load_ucd ();
