@@ -433,7 +433,6 @@ class BirdFontFile {
 		string data;
 		
 		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(g.left_limit)\" right=\"$(g.right_limit)\">\n");
-		
 		foreach (Path p in g.path_list) {
 			data = get_point_data (p);
 			if (data != "") {
@@ -932,7 +931,7 @@ class BirdFontFile {
 		string attr_content;
 		int id = 1;
 		bool has_selected_tag = false;
-		
+
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
@@ -947,7 +946,7 @@ class BirdFontFile {
 		if (unlikely (!has_selected_tag)) {
 			warning ("No selected tag.");
 		}
-		
+
 		return id;
 	}
 
@@ -958,6 +957,7 @@ class BirdFontFile {
 		Path path;
 		bool selected = false;
 		bool has_id = false;
+		
 		int id = 1;
 		
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
@@ -971,7 +971,7 @@ class BirdFontFile {
 			if (attr_name == "right") {
 				glyph.right_limit = double.parse (attr_content);
 			}
-			
+
 			// id is unique within the glyph collection
 			if (attr_name == "id") {
 				id = int.parse (attr_content);
@@ -994,7 +994,6 @@ class BirdFontFile {
 				parse_background_scale (glyph, iter);
 			}
 		}
-
 		glyph.version_id = (!has_id) ? id : (int) gc.length () + 1;		
 		gc.insert_glyph (glyph, selected || selected_id == id);
 	}
