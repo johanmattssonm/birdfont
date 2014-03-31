@@ -64,8 +64,8 @@ public class GlyphBackgroundImage {
 		}
 	}
 		
-	public GlyphBackgroundImage (string fn) {
-		path = fn;
+	public GlyphBackgroundImage (string file_name) {
+		path = file_name;
 	}
 
 	public GlyphBackgroundImage copy () {
@@ -105,7 +105,7 @@ public class GlyphBackgroundImage {
 	}
 			
 	public ImageSurface get_img () {
-		if (path.index_of (".png") == -1) {
+		if (!path.has_suffix (".png")) {
 			create_png ();
 		}
 		
@@ -148,12 +148,12 @@ public class GlyphBackgroundImage {
 			DataInputStream png_stream;
 			
 			if (!file.query_exists ()) {
-				warning (@"Failed to save image $path, file does not exist.");
+				warning (@"Can't to save image $path, file does not exist.");
 				return "";
 			}
 			
 			if (is_null (buffer)) {
-				warning (@"Colud not allocate a buffer of $(file_info.get_size ()) bytes to store $path.");
+				warning (@"Can not allocate a buffer of $(file_info.get_size ()) bytes to store $path.");
 				return "";
 			}
 			
@@ -168,6 +168,65 @@ public class GlyphBackgroundImage {
 		}
 		
 		return "";
+
+	}
+
+	public void create_background_folders (Font font) {
+		File dir;
+		try {
+			dir = BirdFont.get_settings_directory ();
+			if (!dir.query_exists ()) {
+				DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+			}
+			
+			dir = font.get_backgrounds_folder ();
+			if (!dir.query_exists ()) {
+				DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+			}
+
+			dir = font.get_backgrounds_folder ().get_child ("parts");
+			if (!dir.query_exists ()) {
+				DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+
+	public void copy_if_new (File destination) {
+		if (!destination.query_exists ()) {
+			copy_file (destination);
+		}
+	}
+
+	public void copy_file (File destination) {
+		File source;
+		FileInfo info;
+		
+		try {
+			if (destination.query_exists ()) {
+				info = destination.query_info ("standard::*", FileQueryInfoFlags.NONE);
+				if (info.get_file_type () == FileType.DIRECTORY) {
+					warning (@"$((!) destination.get_path ()) is a directory.");
+					return;
+				}
+			}
+			
+			if (!((!)destination.get_parent ()).query_exists ()) {
+				warning (@"Directory for file $((!) destination.get_path ()) is not created.");
+				return;
+			}
+			
+			if (destination.query_exists ()) {
+				warning (@"Image $((!) destination.get_path ()) is already created.");
+				return;
+			}
+			
+			source = File.new_for_path (path);
+			source.copy (destination, FileCopyFlags.NONE);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 	}
 
 	public string get_sha1 () {
@@ -291,7 +350,7 @@ public class GlyphBackgroundImage {
 		double wc, hc;
 
 		if (unlikely (get_img ().status () != Cairo.Status.SUCCESS)) {
-			stderr.printf (@"Background image is invalid. (\"$path\")\n");
+			warning (@"Background image is invalid. (\"$path\")\n");
 			MainWindow.get_current_glyph ().set_background_visible (false);
 			return;
 		}
@@ -734,7 +793,7 @@ public class GlyphBackgroundImage {
 		h = img.get_height();
 
 		if (unlikely (img.status () != Cairo.Status.SUCCESS)) {
-			warning ("Err");
+			warning ("Error");
 			return p;
 		}
 		

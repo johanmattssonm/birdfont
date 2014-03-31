@@ -77,6 +77,7 @@ public class VersionList : DropMenu {
 
 	public void set_selected_version (int version_id) {
 		current_version_id = version_id;
+		update_selection ();
 	}
 	
 	public Glyph get_current () {
@@ -195,15 +196,30 @@ public class VersionList : DropMenu {
 		ma.index = (int) glyphs.length () - 1;
 		
 		ma.action = (self) => {
-			Font font;
-			
-			font = BirdFont.get_current_font ();
+			Font font = BirdFont.get_current_font ();
 			set_selected_item (self);
 			font.touch ();
 		};
 
 		if (selected) {
 			set_selected_item (ma);
+		}
+		
+		update_selection ();
+	}
+	
+	bool has_version (int id) {
+		foreach (Glyph g in glyphs) {
+			if (g.version_id == id) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	void update_selection () {
+		if (has_version (current_version_id)) {
+			set_selected_item (get_action_index (get_current_version_index () + 1)); // the first item is the "new version"
 		}
 	}
 

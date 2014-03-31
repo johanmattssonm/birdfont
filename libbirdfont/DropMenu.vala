@@ -49,6 +49,14 @@ public class DropMenu : GLib.Object {
 		}
 	}
 	
+	public MenuAction get_action_index (int index) {
+		if (!(0 <= index < actions.length ())) {
+			warning (@"No action for index $index.");
+			return new MenuAction ("None");
+		}
+		return actions.nth (index).data;
+	}
+	
 	public void recreate_index () {
 		int i = -1;
 		foreach (MenuAction a in actions) {

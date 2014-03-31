@@ -410,7 +410,7 @@ public class BirdFont {
 		return backup;
 	}
 
-	internal static bool has_argument (string param) {
+	public static bool has_argument (string param) {
 		if (is_null (args)) {
 			warning ("args is null");
 			return false;

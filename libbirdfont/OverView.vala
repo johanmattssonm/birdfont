@@ -244,6 +244,11 @@ public class OverView : FontDisplay {
 	}
 	
 	OverViewItem get_selected_item () {
+		if (visible_items.length () == 0) {
+			warning ("No items.");
+			return new OverViewItem (null, '\0', 0, 0);
+		}
+		
 		if (unlikely (!(0 <= selected < visible_items.length ()))) { 
 			warning (@"0 <= $selected < $(visible_items.length ())");
 			new OverViewItem (null, '\0', 0, 0);

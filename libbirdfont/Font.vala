@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -18,6 +18,7 @@ namespace BirdFont {
 
 public enum FontFormat {
 	BIRDFONT,
+	BIRDFONT_PART,
 	FFI,
 	SVG,
 	FREETYPE
@@ -87,6 +88,10 @@ public class Font : GLib.Object {
 	
 	bool read_only = false;
 	
+	/** Save font as many .bfp files instead of one big .bf */
+	bool bfp = false;
+	BirdFontPart bfp_file;
+	
 	public Font () {
 		postscript_name = "Typeface";
 		name = "Typeface";
@@ -105,14 +110,14 @@ public class Font : GLib.Object {
 	
 		kerning_classes = new KerningClasses ();
 		
-		// positions in pixels at first zoom level
-		// default x-height should be 60 in 1:1
 		top_limit = 84 ;
 		top_position = 72;
 		xheight_position = 56;
 		base_line = 0;
 		bottom_position = -20;
 		bottom_limit = -27;
+		
+		bfp_file = new BirdFontPart (this);
 	}
 
 	public void set_weight (string w) {
@@ -324,25 +329,29 @@ public class Font : GLib.Object {
 
 		return g;
 	}
-		
+	
+	// FIXME: DELETE?
 	public void add_glyph (Glyph glyph) {
 		GlyphCollection? gc = get_glyph_collection (glyph.get_name ());
-
+		GlyphCollection c;
+		
 		if (gc == null) {
-			add_glyph_collection (new GlyphCollection (glyph));
+			c = new GlyphCollection (glyph.get_unichar (), glyph.get_name ());
+			c.insert_glyph (glyph, false);
+			add_glyph_collection (c);
 		}
 	}
 
 	public void add_glyph_collection (GlyphCollection glyph_collection) {
 		GlyphCollection? gc;
 		
-		if (glyph_collection.get_name () == "") {
-			warning ("Refusing to insert glyph with name \"\", null character should be named null.");
+		if (unlikely (glyph_collection.get_name () == "")) {
+			warning ("Refusing to add glyph with name \"\", null character should be named null.");
 			return;
 		}
 		
 		gc = glyph_name.get (glyph_collection.get_name ());
-		if (gc != null) {
+		if (unlikely (gc != null)) {
 			warning ("glyph has already been added");
 			return;
 		}
@@ -352,8 +361,6 @@ public class Font : GLib.Object {
 		}
 		
 		glyph_cache.insert (glyph_collection.get_unicode (), glyph_collection);
-		
-		printd (@"Adding $(glyph_collection.get_current ().get_name ())\n");
 	}
 	
 	public string get_name_for_character (unichar c) {
@@ -389,7 +396,7 @@ public class Font : GLib.Object {
 		ligature.remove (glyph.get_current ().get_ligature_string ());
 	}
 
-	// FIXME: order of ligature substitutions is important
+	// FIXME: the order of ligature substitutions
 	public GlyphCollection? get_ligature (uint indice) {
 		return ligature.nth (indice);
 	}
@@ -404,7 +411,6 @@ public class Font : GLib.Object {
 			g = otf.read_glyph (glyph);
 			
 			if (g != null) {
-				add_glyph_callback ((!) g);
 				return get_cached_glyph_collection (glyph);
 			}
 		}
@@ -514,6 +520,31 @@ public class Font : GLib.Object {
 		return backup_file;
 	}
 	
+	public void init_bfp (string directory) {
+		try {
+			bfp_file = new BirdFontPart (this);
+			bfp_file.create_directory (directory);
+			bfp_file.save ();
+			this.bfp = true;
+			Preferences.add_recent_files (bfp_file.get_path ());
+		} catch (GLib.Error e) {
+			warning (e.message);
+			// FIXME: notify user
+		}
+	}
+
+	public void set_bfp (bool bfp) {
+		this.bfp = bfp;
+	}
+
+	public bool is_bfp () {
+		return bfp;
+	}
+	
+	public bool save_bfp () {
+		return bfp_file.save ();
+	}
+	
 	public bool save (string path) {
 		Font font;
 		BirdFontFile birdfont_file = new BirdFontFile (this);
@@ -594,6 +625,12 @@ public class Font : GLib.Object {
 			loaded = parse_bf_file (path);
 			format = FontFormat.BIRDFONT;
 		}
+
+		if (path.has_suffix (".bfp")) {
+			font_file = path;
+			loaded = parse_bfp_file (path);
+			format = FontFormat.BIRDFONT_PART;
+		}		
 		
 		if (path.has_suffix (".ttf")) {
 			font_file = path;
@@ -626,20 +663,16 @@ public class Font : GLib.Object {
 			
 			format = FontFormat.FREETYPE;
 		}	
-					
-		/* // TODO: Remove the old way of loading ttfs when testing of the OTF writer is complete.
-		if (BirdFont.experimental) {
-			if (path.has_suffix (".ttf")) {
-				font_file = path;
-				loaded = parse_otf_file (path);
-			}
-		}*/
-		
+
 		if (recent) {
 			Preferences.add_recent_files (get_path ());
 		}
 					
 		return loaded;
+	}
+	
+	private bool parse_bfp_file (string path) {
+		return bfp_file.load (path);
 	}
 	
 	private bool parse_bf_file (string path) {
@@ -682,31 +715,6 @@ public class Font : GLib.Object {
 		SvgFont svg_font = new SvgFont (this);
 		svg_font.load (path);
 		return true;
-	}
-
-	/** Callback function for loading glyph in a separate thread. */
-	public void add_glyph_callback (Glyph g) {
-		GlyphCollection? gcl;
-		GlyphCollection gc;
-		string liga;
-							
-		gcl = get_cached_glyph_collection (g.get_name ());
-		
-		if (gcl != null) {
-			warning (@"glyph \"$(g.get_name ())\" does already exist");
-		}
-				
-		if (g.is_unassigned ()) {
-			gc = new GlyphCollection (g);
-		}
-
-		gc = new GlyphCollection (g);
-		add_glyph_collection (gc);
-
-		if (g.is_ligature ()) {
-			liga = g.get_ligature_string ();
-			ligature.insert (liga, gc);
-		}
 	}
 
 	public bool parse_otf_file (string path) throws GLib.Error {

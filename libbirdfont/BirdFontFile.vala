@@ -19,7 +19,7 @@ namespace BirdFont {
  * BirdFont file format. This class can parse both the old ffi format 
  * and the new bf format.
  */
-class BirdFontFile {
+class BirdFontFile : GLib.Object {
 	
 	Font font;
 	
@@ -36,10 +36,25 @@ class BirdFontFile {
 		
 		Parser.init ();
 		
+		while (font.background_images.length () > 0) {
+			font.background_images.remove_link (font.background_images.first ());
+		}
+		
 		font.font_file = path;
 		tr = new TextReader.filename (path);
 		ok = load_xml (tr);
 		
+		Parser.cleanup ();
+				
+		return ok;
+	}
+
+	public bool load_part (string bfp_file) {
+		TextReader tr;
+		bool ok;
+		Parser.init ();
+		tr = new TextReader.filename (bfp_file);
+		ok = load_xml (tr);
 		Parser.cleanup ();
 				
 		return ok;
@@ -76,7 +91,6 @@ class BirdFontFile {
 
 		create_background_files (root);
 		ok = parse_file (root);
-		
 		tr.close ();
 			
 		return ok;
@@ -85,12 +99,10 @@ class BirdFontFile {
 	public bool write_font_file (string path, bool backup = false) {
 		try {
 			File file = File.new_for_path (path);
-			uint num_kerning_pairs;
 			uint progress;
-			string range;
 			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
-				warning (@"Can not save font. $path is a directory.");
+				warning (@"Can't save font. $path is a directory.");
 				return false;
 			}
 			
@@ -98,12 +110,9 @@ class BirdFontFile {
 				file.delete ();
 			}
 			
-			DataOutputStream os = new DataOutputStream(file.create(FileCreateFlags.REPLACE_DESTINATION));
+			DataOutputStream os = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
 			
-			os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
-			os.put_string ("\n");
-				
-			os.put_string ("<font>\n");
+			write_root_tag (os);
 			
 			// this a backup of another font
 			if (backup) {
@@ -113,38 +122,17 @@ class BirdFontFile {
 			}
 		
 			os.put_string ("\n");
-			os.put_string (@"<postscript_name>$(font.postscript_name)</postscript_name>\n");
-			os.put_string (@"<name>$(font.name)</name>\n");
-			os.put_string (@"<subfamily>$(font.subfamily)</subfamily>\n");
-			os.put_string (@"<bold>$(font.bold)</bold>\n");
-			os.put_string (@"<italic>$(font.italic)</italic>\n");			
-			os.put_string (@"<full_name>$(font.full_name)</full_name>\n");
-			os.put_string (@"<unique_identifier>$(font.unique_identifier)</unique_identifier>\n");
-			os.put_string (@"<version>$(font.version)</version>\n");
-			os.put_string (@"<description>$(font.description)</description>\n");
-			os.put_string (@"<copyright>$(font.copyright)</copyright>\n");
+			write_description (os);
 			
 			os.put_string ("\n");
-			os.put_string ("<horizontal>\n");
-			os.put_string (@"\t<top_limit>$(font.top_limit)</top_limit>\n");
-			os.put_string (@"\t<top_position>$(font.top_position)</top_position>\n");
-			os.put_string (@"\t<x-height>$(font.xheight_position)</x-height>\n");
-			os.put_string (@"\t<base_line>$(font.base_line)</base_line>\n");
-			os.put_string (@"\t<bottom_position>$(font.bottom_position)</bottom_position>\n");
-			os.put_string (@"\t<bottom_limit>$(font.bottom_limit)</bottom_limit>\n");
-			os.put_string ("</horizontal>\n\n");
+			write_lines (os);
 
-			foreach (string gv in font.grid_width) {
-				os.put_string (@"<grid width=\"$(gv)\"/>\n");
-			}
+			os.put_string ("\n");
+			write_settings (os);
 			
-			if (GridTool.sizes.length () > 0) {
-				os.put_string ("\n");
-			}
-			
-			os.put_string (@"<background scale=\"$(font.background_scale)\" />\n");
 			os.put_string ("\n");
 			
+			// FIXME: add this to a font specific settings file
 			if (font.background_images.length () > 0) {
 				os.put_string (@"<images>\n");
 				
@@ -203,6 +191,35 @@ class BirdFontFile {
 				TooltipArea.show_text (t_("Saving"));
 			});
 			
+			write_kerning (os);
+			write_closing_root_tag (os);
+			
+			os.close ();
+		} catch (GLib.Error e) {
+			warning (@"Failed to save $path \n");
+			warning (@"$(e.message) \n");
+			return false;
+		}
+		
+		TooltipArea.show_text ("");
+		return true;
+	}
+	
+	public void write_root_tag (DataOutputStream os) throws GLib.Error {
+		os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
+		os.put_string ("\n");
+		os.put_string ("<font>\n");
+	}
+	
+	public void write_closing_root_tag (DataOutputStream os) throws GLib.Error {
+		os.put_string ("</font>\n");
+	}
+	
+	public void write_kerning (DataOutputStream os)  throws GLib.Error {
+			uint num_kerning_pairs;
+			uint progress;
+			string range;
+			
 			num_kerning_pairs = KerningClasses.get_instance ().classes_first.length ();
 			progress = num_kerning_pairs;
 			ProgressBar.set_progress (1);
@@ -252,20 +269,80 @@ class BirdFontFile {
 				ProgressBar.set_progress (0);
 				TooltipArea.show_text (t_("Saving"));
 			});
-			
-			os.put_string ("</font>");
-			
-		} catch (GLib.Error e) {
-			warning (@"Failed to save $path \n");
-			warning (@"$(e.message) \n");
-			return false;
+	}
+	
+	public void write_settings (DataOutputStream os) throws GLib.Error {
+		foreach (string gv in font.grid_width) {
+			os.put_string (@"<grid width=\"$(gv)\"/>\n");
 		}
 		
-		TooltipArea.show_text ("");
-		return true;
+		if (GridTool.sizes.length () > 0) {
+			os.put_string ("\n");
+		}
+		
+		os.put_string (@"<background scale=\"$(font.background_scale)\" />\n");	
 	}
 
-	private string float_point (double d) {
+	public void write_description (DataOutputStream os) throws GLib.Error {
+		os.put_string (@"<postscript_name>$(font.postscript_name)</postscript_name>\n");
+		os.put_string (@"<name>$(font.name)</name>\n");
+		os.put_string (@"<subfamily>$(font.subfamily)</subfamily>\n");
+		os.put_string (@"<bold>$(font.bold)</bold>\n");
+		os.put_string (@"<italic>$(font.italic)</italic>\n");			
+		os.put_string (@"<full_name>$(font.full_name)</full_name>\n");
+		os.put_string (@"<unique_identifier>$(font.unique_identifier)</unique_identifier>\n");
+		os.put_string (@"<version>$(font.version)</version>\n");
+		os.put_string (@"<description>$(font.description)</description>\n");
+		os.put_string (@"<copyright>$(font.copyright)</copyright>\n");
+	}
+
+	public void write_lines (DataOutputStream os) throws GLib.Error {
+		os.put_string ("<horizontal>\n");
+		os.put_string (@"\t<top_limit>$(font.top_limit)</top_limit>\n");
+		os.put_string (@"\t<top_position>$(font.top_position)</top_position>\n");
+		os.put_string (@"\t<x-height>$(font.xheight_position)</x-height>\n");
+		os.put_string (@"\t<base_line>$(font.base_line)</base_line>\n");
+		os.put_string (@"\t<bottom_position>$(font.bottom_position)</bottom_position>\n");
+		os.put_string (@"\t<bottom_limit>$(font.bottom_limit)</bottom_limit>\n");
+		os.put_string ("</horizontal>\n");
+	}
+
+	public void write_glyph_collection_start (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
+		os.put_string (@"<collection unicode=\"$(Font.to_hex (gc.get_current ().unichar_code))\">\n");		
+	}
+
+	public void write_glyph_collection_end (DataOutputStream os)  throws GLib.Error {
+		os.put_string ("</collection>\n");
+	}
+
+	public void write_selected (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
+		os.put_string (@"\t<selected id=\"$(gc.get_selected_id ())\"/>\n");
+	}
+
+	public void write_glyph_collection (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
+		write_glyph_collection_start (gc, os);
+		write_selected (gc, os);
+		foreach (Glyph g in gc.get_version_list ().glyphs) {
+			write_glyph (g, gc, os);
+		}
+		write_glyph_collection_end (os);
+	} 
+
+	public void write_glyph (Glyph g, GlyphCollection gc, DataOutputStream os) throws GLib.Error {
+		string data;
+		
+		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(g.left_limit)\" right=\"$(g.right_limit)\">\n");
+		foreach (Path p in g.path_list) {
+			data = get_point_data (p);
+			if (data != "") {
+				os.put_string (@"\t\t<path stroke=\"$(p.stroke)\" data=\"$(data)\" />\n");
+			}
+		}
+		write_glyph_background (g, os);
+		os.put_string ("\t</glyph>\n");
+	}
+			
+	public static string float_point (double d) {
 		string s = @"$d";
 		return s.replace (",", ".");
 	}
@@ -419,32 +496,7 @@ class BirdFontFile {
 			data.append (@"T");
 		}	
 	}
-
-	private void write_glyph_collection (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
-		os.put_string (@"<collection unicode=\"$(Font.to_hex (gc.get_current ().unichar_code))\">\n");
-		os.put_string (@"\t<selected id=\"$(gc.get_selected_id ())\"/>\n");
-		foreach (Glyph g in gc.get_version_list ().glyphs) {
-			write_glyph (g, gc, os);
-		}
-		os.put_string ("</collection>\n");
-	} 
-
-	private void write_glyph (Glyph g, GlyphCollection gc, DataOutputStream os) throws GLib.Error {
-		string data;
-		
-		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(g.left_limit)\" right=\"$(g.right_limit)\">\n");
-		foreach (Path p in g.path_list) {
-			data = get_point_data (p);
-			if (data != "") {
-				os.put_string (@"\t\t<path stroke=\"$(p.stroke)\" data=\"$(data)\" />\n");
-			}
-		}
-		
-		write_glyph_background (g, os);
-		
-		os.put_string ("\t</glyph>\n");
-	}
-
+	
 	private void write_glyph_background (Glyph g, DataOutputStream os) throws GLib.Error {
 		GlyphBackgroundImage? bg;
 		GlyphBackgroundImage background_image;
@@ -452,6 +504,7 @@ class BirdFontFile {
 		
 		bg = g.get_background_image ();
 		
+		// FIXME: use the coordinate system
 		if (bg != null) {
 			background_image = (!) bg;
 
@@ -574,12 +627,7 @@ class BirdFontFile {
 	}
 	
 	private void create_background_files (Xml.Node* root) requires (root != null) {
-		while (font.background_images.length () > 0) {
-			font.background_images.remove_link (font.background_images.first ());
-		}
-	
-		for (Xml.Node* iter = root->children; iter != null; iter = iter->next) {
-			
+		for (Xml.Node* iter = root->children; iter != null; iter = iter->next) {			
 			if (iter->name == "name" && iter->children != null) {
 				font.set_name (iter->children->content);
 			}
@@ -895,7 +943,7 @@ class BirdFontFile {
 		string attr_content;
 		StringBuilder b;
 		string name = "";
-		int selected_id = 1;
+		int selected_id = -1;
 				
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -915,7 +963,7 @@ class BirdFontFile {
 
 		current_gc = font.get_glyph_collection_by_name (name);
 		new_glyph_collection = (current_gc == null);
-		gc = (!new_glyph_collection) ? (!) current_gc : new GlyphCollection ();
+		gc = (!new_glyph_collection) ? (!) current_gc : new GlyphCollection (unicode, name);
 
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "selected") {
@@ -1372,7 +1420,8 @@ class BirdFontFile {
 		}
 				
 		if (gc == null) {
-			gc = new GlyphCollection (g);
+			gc = new GlyphCollection (uni, name);
+			((!) gc).insert_glyph (g, selected);
 			font.add_glyph_collection ((!) gc);
 		} else {
 			((!)gc).insert_glyph (g, selected);
@@ -1463,7 +1512,7 @@ class BirdFontFile {
 			}
 		}
 		
-		img.set_position(img.img_x, img.img_y);	
+		img.set_position (img.img_x, img.img_y);	
 	}
 	
 	private void parse_point (Path p, Xml.Node* iter) {

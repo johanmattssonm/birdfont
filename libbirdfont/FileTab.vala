@@ -44,7 +44,11 @@ public class FileTab : FontDisplay {
 		dialog.signal_discard.connect (() => {
 			Font f;
 			bool loaded;
-			
+
+			if (MenuTab.suppress_event) {
+				return;
+			}
+					
 			f = BirdFont.new_font ();
 			f.delete_backup ();
 			
@@ -69,6 +73,10 @@ public class FileTab : FontDisplay {
 		});
 
 		dialog.signal_save.connect (() => {
+			if (MenuTab.suppress_event) {
+				return;
+			}
+			
 			MenuTab.save ();
 			dialog.signal_discard ();
 		});
@@ -114,6 +122,10 @@ public class FileTab : FontDisplay {
 	
 	public override void button_release (int button, double ex, double ey) {
 		int r, i;
+		
+		if (MenuTab.suppress_event) {
+			return;
+		}
 		
 		return_if_fail (!is_null(this));
 		

@@ -53,7 +53,9 @@ public class Glyph : FontDisplay {
 	public double move_offset_y = 0;
 
 	public WidgetAllocation allocation = new WidgetAllocation ();
-	
+
+	bool unassigned = false;
+	public unichar unichar_code = 0; // FIXME: name and unichar should be moved to to glyph collection 
 	public string name;
 
 	public double left_limit;
@@ -66,9 +68,6 @@ public class Glyph : FontDisplay {
 	bool show_help_lines = true;
 	bool xheight_lines_visible = false;
 	bool margin_boundaries_visible = false;
-	
-	bool unassigned = false;
-	public unichar unichar_code = 0;
 	
 	List<Glyph> undo_list = new List<Glyph> ();
 	
@@ -296,11 +295,10 @@ public class Glyph : FontDisplay {
 		
 		if (b == null) {
 			background_image = null;
+		} else {		
+			bg = (!) b;
+			background_image = bg;
 		}
-		
-		bg = (!) b;
-		
-		background_image = bg;
 		
 		BirdFont.get_current_font ().touch ();
 	}

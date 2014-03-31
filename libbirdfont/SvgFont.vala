@@ -273,7 +273,7 @@ class SvgFont : GLib.Object {
 			glyph.set_ligature_substitution (ligature);
 		}
 		
-		font.add_glyph_callback (glyph);
+		font.add_glyph (glyph);
 	}
 }
 

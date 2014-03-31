@@ -414,6 +414,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.Menu tab_menu = new Gtk.Menu ();
 		Gtk.Menu tool_menu = new Gtk.Menu ();
 		Gtk.Menu kerning_menu = new Gtk.Menu ();
+		Gtk.Menu git_menu = new Gtk.Menu ();
 
 		AccelGroup accel_group = new Gtk.AccelGroup();
 		add_accel_group (accel_group);
@@ -704,6 +705,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		kerning_menu.append (select_previous_kerning_pair);
 		select_previous_kerning_pair.activate.connect (() => { KerningDisplay.previous_pair (); });
 		
+		// Git
+		Gtk.MenuItem save_as_bfp = new Gtk.MenuItem.with_mnemonic (t_("_Save as .bfp"));
+		git_menu.append (save_as_bfp);
+		save_as_bfp.activate.connect (() => { 
+			 MenuTab.save_as_bfp ();
+		});
+		
 		// Add menus
 		Gtk.MenuItem file_launcher = new Gtk.MenuItem.with_mnemonic (t_("_File"));
 		file_launcher.set_submenu (file_menu);
@@ -719,12 +727,19 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		Gtk.MenuItem kerning_launcher = new Gtk.MenuItem.with_mnemonic (t_("_Kerning"));
 		kerning_launcher.set_submenu (kerning_menu);
-						
+
+		Gtk.MenuItem git_launcher = new Gtk.MenuItem.with_mnemonic ("_Git");
+		git_launcher.set_submenu (git_menu);
+	
 		menubar.append (file_launcher);
 		menubar.append (edit_launcher);
 		menubar.append (tab_launcher);
 		menubar.append (tool_launcher);
 		menubar.append (kerning_launcher);
+		
+		if (BirdFont.has_argument ("--test")) {
+			menubar.append (git_launcher);
+		}
 		
 		return menubar;	
 	}

@@ -19,9 +19,13 @@ namespace BirdFont {
 
 public class GlyphCollection : GLib.Object {
 	VersionList versions;
+	unichar unicode_character;
+	string name;
 
-	public GlyphCollection (Glyph? current = null) {
-		versions = new VersionList (current);
+	public GlyphCollection (unichar unicode_character, string name) {
+		this.unicode_character = unicode_character;
+		this.name = name;
+		versions = new VersionList (null);
 	}
 
 	public VersionList get_version_list () {
@@ -43,12 +47,12 @@ public class GlyphCollection : GLib.Object {
 	
 	public string get_unicode () {
 		StringBuilder unicode = new StringBuilder ();
-		unicode.append_unichar (get_current ().unichar_code);
+		unicode.append_unichar (unicode_character);
 		return unicode.str;
 	}
 	
 	public string get_name () {
-		return get_current ().get_name ();
+		return name;
 	}
 	
 	public int get_selected_id () {

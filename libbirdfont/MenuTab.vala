@@ -102,6 +102,7 @@ public class MenuTab : FontDisplay {
 			save ();
 			saved = true;
 		}
+		
 		return saved;
 	}
 
@@ -112,37 +113,66 @@ public class MenuTab : FontDisplay {
 
 		if (suppress_event) {
 			return false;
-		}	
+		}
 		
 		if (!set_suppress_event (true)) {
 			return false;
 		}
 
 		f = BirdFont.get_current_font ();
-		f.delete_backup ();
-		
-		fn = f.get_path ();
-		
-		if (f.font_file != null && fn.has_suffix (".bf")) {
-			f.background_scale = MainWindow.get_drawing_tools ().background_scale.get_display_value ();
-			
-			while (f.grid_width.length () > 0) {
-				f.grid_width.remove_link (f.grid_width.first ());
-			}
-			
-			foreach (SpinButton s in GridTool.sizes) {
-				f.grid_width.append (s.get_display_value ());
-			}
-			
-			f.save (fn);
-			saved = true;
+
+		if (f.is_bfp ()) {
+			saved = f.save_bfp ();
 			set_suppress_event (false);
 		} else {
-			set_suppress_event (false);
-			saved = save_as ();
+			f.delete_backup ();
+			fn = f.get_path ();
+			
+			if (f.font_file != null && fn.has_suffix (".bf")) {
+				set_font_setting_from_tools (f); 
+				saved = f.save (fn);
+				set_suppress_event (false);
+			} else {
+				set_suppress_event (false);
+				saved = save_as ();
+			}
 		}
 		
 		return saved;
+	}
+	
+	public static void set_font_setting_from_tools (Font f) {	
+		f.background_scale = MainWindow.get_drawing_tools ().background_scale.get_display_value ();
+		
+		while (f.grid_width.length () > 0) {
+			f.grid_width.remove_link (f.grid_width.first ());
+		}
+		
+		foreach (SpinButton s in GridTool.sizes) {
+			f.grid_width.append (s.get_display_value ());
+		}
+	}
+	
+	public static void save_as_bfp () {
+		Font f;
+		string? fn;
+		
+		if (suppress_event) {
+			return;
+		}	
+		
+		if (!set_suppress_event (true)) {
+			return;
+		}
+		
+		f = BirdFont.get_current_font ();	
+		fn = MainWindow.file_chooser_save (t_("Save"));
+		
+		if (fn != null) {
+			f.init_bfp ((!) fn);
+		}
+		
+		set_suppress_event (false);
 	}
 	
 	public static void new_file () {
