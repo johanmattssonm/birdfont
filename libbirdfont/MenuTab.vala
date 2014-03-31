@@ -82,8 +82,11 @@ public class MenuTab : FontDisplay {
 	public static bool save_as ()  {
 		string? fn = null;
 		string f;
+		string file_name;
+		File file;
 		bool saved = false;
 		Font font = BirdFont.get_current_font ();
+		int i;
 		
 		if (suppress_event) {
 			return false;
@@ -94,11 +97,20 @@ public class MenuTab : FontDisplay {
 		if (fn != null) {
 			f = (!) fn;
 			
-			if (!f.has_suffix (".bf")) {
-				f += ".bf";
+			if (f.has_suffix (".bf")) {
+				f = f.replace (".bf", "");
 			}
 			
-			font.font_file = f;
+			file_name = @"$(f).bf";
+			file = File.new_for_path (file_name);
+			i = 2;
+			while (file.query_exists ()) {
+				file_name = @"$(f)_$i.bf";
+				file = File.new_for_path (file_name);
+				i++;
+			}
+			
+			font.font_file = file_name;
 			save ();
 			saved = true;
 		}
@@ -183,12 +195,18 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 		
+		MainWindow.close_all_tabs ();
+		
+		if (!set_suppress_event (true)) {
+			warning ("Can't lock UI.");
+			return;
+		}
+		
 		font = BirdFont.get_current_font ();
 		
 		dialog.signal_discard.connect (() => {
 			BirdFont.new_font ();
-			MainWindow.close_all_tabs ();
-			
+		
 			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
 			MainWindow.get_drawing_tools ().add_new_grid ();
 			MainWindow.get_drawing_tools ().add_new_grid ();
@@ -208,7 +226,9 @@ public class MenuTab : FontDisplay {
 		} else {
 			MainWindow.native_window.set_save_dialog (dialog);
 		}
-		
+
+		set_suppress_event (false);
+				
 		return;
 	}
 	
@@ -220,13 +240,15 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 		
+		MainWindow.close_all_tabs ();
+		
 		dialog.signal_discard.connect (() => {
 			load_new_font ();
 		});
 
 		dialog.signal_save.connect (() => {
 			MenuTab.save ();
-			dialog.signal_discard ();
+			load_new_font ();
 		});
 		
 		if (!font.is_modified ()) {
@@ -253,7 +275,6 @@ public class MenuTab : FontDisplay {
 			f = BirdFont.new_font ();
 			
 			MainWindow.clear_glyph_cache ();
-			MainWindow.close_all_tabs ();
 			f.load ((!)fn);
 			
 			KerningTools.update_kerning_classes ();

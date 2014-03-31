@@ -301,7 +301,7 @@ public class Tool : GLib.Object {
 		context = MainContext.default ();
 		acquired = context.acquire ();
 		
-		while (unlikely (!acquired)) {
+		if (unlikely (!acquired)) {
 			warning ("Failed to acquire main loop.\n");
 			return;
 		}
