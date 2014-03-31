@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -273,11 +273,13 @@ public class MenuTab : FontDisplay {
 		}
 		
 		dialog.signal_discard.connect (() => {
+			ensure_main_loop_is_empty ();
 			MainWindow.native_window.quit ();
 		});
 
 		dialog.signal_save.connect (() => {
 			MenuTab.save ();
+			ensure_main_loop_is_empty ();
 			MainWindow.native_window.quit ();
 		});
 		
@@ -287,7 +289,7 @@ public class MenuTab : FontDisplay {
 			MainWindow.native_window.set_save_dialog (dialog);
 		}
 	} 
-		
+	
 	public static void show_description () {
 		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionTab ());
 	}
@@ -378,6 +380,24 @@ public class MenuTab : FontDisplay {
 		}
 		
 		MainWindow.get_tab_bar ().add_unique_tab (new KerningList ());
+	}
+	
+	private static void ensure_main_loop_is_empty () {
+		unowned MainContext context;
+		bool acquired;
+
+		context = MainContext.default ();
+		acquired = context.acquire ();
+		
+		if (unlikely (!acquired)) {
+			warning ("Failed to acquire main loop.\n");
+			return;
+		}
+
+		while (context.pending ()) {
+			context.iteration (true);
+		}
+		context.release ();
 	}
 }
 }
