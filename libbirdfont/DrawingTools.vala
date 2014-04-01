@@ -26,10 +26,6 @@ public class DrawingTools : ToolCollection  {
 	Expander grid_expander;
 	Expander shape_tools;
 	
-	BackgroundTool move_background;
-	CutBackgroundTool cut_background;
-	
-	public SpinButton background_scale = new SpinButton ();
 	public static SpinButton precision;
 	
 	public static PointType point_type = PointType.DOUBLE_CURVE;
@@ -38,7 +34,32 @@ public class DrawingTools : ToolCollection  {
 	
 	public static Tool move_tool;
 	public static PenTool pen_tool;
+
+	PointTool point_tool;
+	ZoomTool zoom_tool;
+	Tool resize_tool;
+	Tool stroke_tool;
+	TrackTool track_tool;
 	
+	Tool quadratic_points;
+	Tool cubic_points;
+	Tool double_points;
+	Tool convert_points;
+
+	BackgroundTool move_background;
+	CutBackgroundTool cut_background;
+	Tool show_bg;
+	Tool bg_selection;
+	SpinButton background_contrast;
+	public SpinButton background_scale = new SpinButton ();
+
+	Tool rectangle;
+	Tool circle;
+
+	Tool help_lines;
+	Tool xheight_help_lines;
+	Tool background_help_lines;
+		
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
 		
@@ -61,58 +82,83 @@ public class DrawingTools : ToolCollection  {
 
 		// Draw tools
 		pen_tool = new PenTool ("pen_tool");
+		pen_tool.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
 		draw_tools.add_tool (pen_tool);
 
-		PointTool point_tool = new PointTool ("point_tool");
+		point_tool = new PointTool ("point_tool");
+		point_tool.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
 		draw_tools.add_tool (point_tool);
 
-		ZoomTool zoom_tool = new ZoomTool ("zoom_tool");
+		zoom_tool = new ZoomTool ("zoom_tool");
+		zoom_tool.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
 		draw_tools.add_tool (zoom_tool);
 
 		move_tool = new MoveTool ("move");
+		move_tool.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
 		draw_tools.add_tool (move_tool);
 		
-		Tool resize_tool = new ResizeTool ("resize");
+		resize_tool = new ResizeTool ("resize");
+		resize_tool.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
 		draw_tools.add_tool (resize_tool);
 
-		Tool stroke_tool = new StrokeTool ("stroke"); // create outline from path
-
+		stroke_tool = new StrokeTool ("stroke"); // create outline from path
+		stroke_tool.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
+		
 		if (BirdFont.has_argument ("--test")) {
 			draw_tools.add_tool (stroke_tool);
 		}
 		
-		TrackTool track_tool = new TrackTool ("track"); // draw outline on freehand
+		track_tool = new TrackTool ("track"); // draw outline on freehand
+		track_tool.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
 		draw_tools.add_tool (track_tool);
 		
 		// quadratic Bézier points
-		Tool quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
+		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
 			point_type = PointType.QUADRATIC;
 			Preferences.set ("point_type", "quadratic_points");
+			update_type_selection ();
 		});
 		draw_tool_modifiers.add_tool (quadratic_points);		
 
 		// cubic Bézier points
-		Tool cubic_points = new Tool ("cubic_points", t_("Create cubic Bézier curves"));
+		cubic_points = new Tool ("cubic_points", t_("Create cubic Bézier curves"));
 		cubic_points.select_action.connect ((self) => {
 			point_type = PointType.CUBIC;
 			Preferences.set ("point_type", "cubic_points");
+			update_type_selection ();
 		});
 		draw_tool_modifiers.add_tool (cubic_points);
 
 		// two quadratic points off curve points for each quadratic control point
-		Tool double_points = new Tool ("double_points", t_("Quadratic path with two line handles"));
+		double_points = new Tool ("double_points", t_("Quadratic path with two line handles"));
 		double_points.select_action.connect ((self) => {
 			point_type = PointType.DOUBLE_CURVE;
 			Preferences.set ("point_type", "double_points");
+			update_type_selection ();
 		});
 		draw_tool_modifiers.add_tool (double_points);
 
 		// convert point
-		Tool convert_points = new Tool ("convert_point", t_("Convert selected points"));
+		convert_points = new Tool ("convert_point", t_("Convert selected points"));
 		convert_points.select_action.connect ((self) => {
 			PenTool.convert_point_types ();
 			MainWindow.get_current_glyph ().update_view ();
+			update_type_selection ();
 		});
 		convert_points.set_persistent (false);
 		draw_tool_modifiers.add_tool (convert_points);
@@ -353,7 +399,7 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		// guide lines, grid and other guidlines
-		Tool help_lines = new Tool ("help_lines", t_("Show guidelines"), 'l');
+		help_lines = new Tool ("help_lines", t_("Show guidelines"), 'l');
 		help_lines.select_action.connect ((self) => {
 				bool h;
 				h = GlyphCanvas.get_current_glyph ().get_show_help_lines ();
@@ -364,7 +410,7 @@ public class DrawingTools : ToolCollection  {
 
 		guideline_tools.add_tool (help_lines);
 
-		Tool xheight_help_lines = new Tool ("show_xheight_helplines", t_("Show guidelines for x-height and baseline"), 'x');
+		xheight_help_lines = new Tool ("show_xheight_helplines", t_("Show guidelines for x-height and baseline"), 'x');
 		xheight_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_xheight_lines_visible ();
@@ -378,7 +424,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		guideline_tools.add_tool (xheight_help_lines);
 
-		Tool background_help_lines = new Tool ("background_help_lines", t_("Show guidelines at top and bottom margin"), 't');
+		background_help_lines = new Tool ("background_help_lines", t_("Show guidelines at top and bottom margin"), 't');
 		background_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_margin_lines_visible ();
@@ -458,14 +504,23 @@ public class DrawingTools : ToolCollection  {
 		view_tools.add_tool (zoom_next);
 		
 		// shape tools 
-		Tool circle = new CircleTool ("circle");
+		circle = new CircleTool ("circle");
+		circle.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
 		shape_tools.add_tool (circle);
 		
-		Tool rectangle = new RectangleTool ("rectangle");
+		rectangle = new RectangleTool ("rectangle");
+		rectangle.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
 		shape_tools.add_tool (rectangle);
 								
 		// background tools
 		background_scale = new SpinButton ("scale_background", t_("Set size for background image"));
+		background_scale.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
 		background_scale.set_int_value ("1.000");
 		
 		background_scale.new_value_action.connect((self) => {
@@ -487,15 +542,22 @@ public class DrawingTools : ToolCollection  {
 		
 		background_tools.add_tool (background_scale);		
 
-		BackgroundTool move_background = new BackgroundTool ("move_background");			
+		move_background = new BackgroundTool ("move_background");
+		move_background.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
 		background_tools.add_tool (move_background);
-		this.move_background = move_background;
 		
-		CutBackgroundTool cut_background = new CutBackgroundTool ("cut_background");
+		cut_background = new CutBackgroundTool ("cut_background");
+		cut_background.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
 		background_tools.add_tool (cut_background);
-		this.cut_background = cut_background;
 		
-		Tool show_bg = new Tool ("show_background", t_("Show/hide background image"));
+		show_bg = new Tool ("show_background", t_("Show/hide background image"));
+		show_bg.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
 		show_bg.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			g.set_background_visible (!g.get_background_visible ());
@@ -503,11 +565,14 @@ public class DrawingTools : ToolCollection  {
 		});
 		background_tools.add_tool (show_bg);
 		
-		Tool bg_selection = new Tool ("insert_background", t_("Insert a new background image"));
+		bg_selection = new Tool ("insert_background", t_("Insert a new background image"));
+		bg_selection.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
+		
 		bg_selection.select_action.connect((self) => {
 			Glyph? g = null;
 			FontDisplay fd = MainWindow.get_current_display ();
-			TooltipArea tp = MainWindow.get_tooltip ();
 			TooltipArea.show_text (t_("Creating thumbnails"));
 			
 			Tool.yield ();
@@ -527,7 +592,10 @@ public class DrawingTools : ToolCollection  {
 		bg_selection.set_show_background (true);
 		background_tools.add_tool (bg_selection);
 		
-		SpinButton background_contrast = new SpinButton ("background_contrast", t_("Set contrast for background image"));
+		background_contrast = new SpinButton ("background_contrast", t_("Set contrast for background image"));
+		background_contrast.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
 		background_contrast.set_value_round (1);
 
 		background_contrast.new_value_action.connect ((self) => {
@@ -545,7 +613,7 @@ public class DrawingTools : ToolCollection  {
 			}
 		});
 
-		// color and style
+		// settings
 		ColorTool stroke_color = new ColorTool (t_("Stroke color"));
 		stroke_color.color_updated.connect (() => {
 			Path.line_color_r = stroke_color.color_r;
@@ -766,10 +834,10 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		draw_tools.set_persistent (true);
-		draw_tools.set_unique (true);
+		draw_tools.set_unique (false);
 		
 		draw_tool_modifiers.set_persistent (true);
-		draw_tool_modifiers.set_unique (true);
+		draw_tool_modifiers.set_unique (false);
 
 		edit_point_modifiers.set_persistent (false);
 		edit_point_modifiers.set_unique (false);
@@ -793,7 +861,7 @@ public class DrawingTools : ToolCollection  {
 		shape_tools.set_unique (true);
 		
 		background_tools.set_persistent (true);
-		background_tools.set_unique (true);
+		background_tools.set_unique (false);
 	
 		style_tools.set_persistent (true);
 		style_tools.set_unique (true);
@@ -840,6 +908,23 @@ public class DrawingTools : ToolCollection  {
 			return false;
 		});
 		idle.attach (null);
+		
+		// update selelction when the user switches tab
+		MainWindow.get_tab_bar ().signal_tab_selected.connect((tab) => {
+			Glyph glyph;
+			
+			if (tab.get_display () is Glyph) {
+				glyph = (Glyph) tab.get_display ();
+				show_bg.set_selected (glyph.get_background_visible ());
+				update_line_selection (glyph);
+			}
+		});
+	}
+
+	void update_line_selection (Glyph glyph) {
+		help_lines.set_selected (glyph.get_show_help_lines ());
+		xheight_help_lines.set_selected (glyph.get_xheight_lines_visible ());
+		background_help_lines.set_selected (glyph.get_margin_lines_visible ());
 	}
 
 	public static void set_point_type_from_preferences () {
@@ -851,6 +936,70 @@ public class DrawingTools : ToolCollection  {
 		} if (type == "cubic_points") {
 			Toolbox.select_tool_by_name ("cubic_points");
 		}
+	}
+	
+	void update_drawing_and_background_tools (Tool current_tool) {
+		IdleSource idle = new IdleSource ();
+		
+		idle.set_callback (() => {
+			Glyph g = MainWindow.get_current_glyph ();
+
+			move_background.set_selected (false);
+			cut_background.set_selected (false);
+			
+			pen_tool.set_selected (false);
+			point_tool.set_selected (false);
+			zoom_tool.set_selected (false);
+			move_tool.set_selected (false);
+			resize_tool.set_selected (false);
+			stroke_tool.set_selected (false);
+			track_tool.set_selected (false);
+			
+			show_bg.set_selected (g.get_background_visible ());
+			show_bg.set_active (false);
+			bg_selection.set_selected (false);
+			background_scale.set_active (false);
+
+			rectangle.set_selected (false);
+			circle.set_selected (false);
+		
+			current_tool.set_selected (true);
+			Toolbox.redraw_tool_box ();
+			
+			return false;
+		});
+		
+		idle.attach (null);
+	}
+	
+	void update_type_selection () {
+		IdleSource idle = new IdleSource ();
+
+		// Do this in idle, after the animation
+		idle.set_callback (() => {			
+			quadratic_points.set_selected (false);
+			cubic_points.set_selected (false);
+			double_points.set_selected (false);
+
+			switch (point_type) {
+				case PointType.QUADRATIC:
+					quadratic_points.set_selected (true);
+					break;
+				case PointType.CUBIC:
+					cubic_points.set_selected (true);
+					break;
+				case PointType.DOUBLE_CURVE:
+					double_points.set_selected (true);
+					break;			
+			}
+
+			convert_points.set_selected (false);
+			
+			Toolbox.redraw_tool_box ();
+			return false;
+		});
+		
+		idle.attach (null);
 	}
 	
 	public override unowned List<Expander> get_expanders () {

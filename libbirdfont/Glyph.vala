@@ -442,7 +442,11 @@ public class Glyph : FontDisplay {
 	bool has_top_line () {
 		return !unichar_code.islower () || CharDatabase.has_ascender (unichar_code);
 	}
-	
+
+	public bool get_show_help_lines () {
+		return show_help_lines;
+	}
+		
 	/** Show both x-height and top lines. */
 	public bool get_xheight_lines_visible () {
 		return xheight_lines_visible;
@@ -516,10 +520,6 @@ public class Glyph : FontDisplay {
 		}
 		
 		return (!) s;
-	}
-
-	public bool get_show_help_lines () {
-		return show_help_lines;
 	}
 	
 	public void redraw_help_lines () {
