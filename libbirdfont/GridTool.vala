@@ -107,7 +107,7 @@ class GridTool : Tool {
 		y = GlyfData.tie_to_ttf_grid_y (BirdFont.get_current_font (), y);
 	}
 		
-	private static void update_lines () {
+	public static void update_lines () {
 		Glyph g = MainWindow.get_current_glyph ();
 		double step = size_y;
 		double i;

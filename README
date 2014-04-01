@@ -60,7 +60,10 @@ Packages
 
 Windows binaries are avalilable at http://birdfont.org
 
-A Ubuntu packages are avalilable at https://launchpad.net
+Ubuntu packages are avalilable at https://launchpad.net
+
+A Fedora package can be installed from the rpm-sphere and a version for 
+OpenSuSE is available at http://software.opensuse.org 
 
 A Machintosh binary image is available at http://birdfont.org and
 a GTK version for Mac can be installed with MacPorts.

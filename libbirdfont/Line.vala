@@ -197,6 +197,10 @@ public class Line : GLib.Object {
 			BirdFont.get_current_font ().touch ();
 		}
 
+		if (GridTool.is_visible ()) {
+			GridTool.update_lines ();
+		}
+	
 		return move;
 	}
 	
