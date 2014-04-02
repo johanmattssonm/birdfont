@@ -92,7 +92,7 @@ public class DirectoryTable : Table {
 			tables.append (os_2_table);
 			tables.append (cmap_table);
 			// tables.append (cvt_table);
-			// tables.append (gasp_table);
+			tables.append (gasp_table);
 			tables.append (glyf_table);
 			tables.append (head_table);
 			tables.append (hhea_table);

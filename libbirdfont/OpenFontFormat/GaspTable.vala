@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012 - 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -15,6 +15,12 @@
 namespace BirdFont {
 
 public class GaspTable : Table {
+
+	public const uint16 NONE = 0;
+	public const uint16 GASP_GRIDFIT = 1 << 0;
+	public const uint16 GASP_DOGRAY = 1 << 1;
+	public const uint16 GASP_SYMMETRIC_GRIDFIT = 1 << 2;
+	public const uint16 GASP_SYMMETRIC_SMOOTHING = 1 << 3;
 	
 	public GaspTable () {
 		id = "gasp";
@@ -26,8 +32,11 @@ public class GaspTable : Table {
 	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 
-		fd.add_ushort (0);
-		fd.add_ushort (0);
+		fd.add_ushort (0); // version
+		fd.add_ushort (1); // number of entries
+
+		fd.add_ushort (0xFFFF); // range upper limit
+		fd.add_ushort (GASP_SYMMETRIC_GRIDFIT); // hinting flags
 
 		fd.pad ();
 	
