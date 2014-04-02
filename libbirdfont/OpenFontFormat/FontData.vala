@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -335,12 +335,12 @@ public class FontData : Object {
 		add_u16 ((uint16) s);
 		add_u16 ((uint16) (i - (s << 16)));
 	}
-
-	public void add_64(int64 i) {
-		int64 s = (int32) (i >> 32);
+	
+	public void add_u64(uint64 i) {
+		uint64 s = (uint32) (i >> 32);
 		
-		add_u32 ((int32) s);
-		add_u32 ((int32)(i - (s << 32)));		
+		add_u32 ((uint32) s);
+		add_u32 ((uint32)(i - (s << 32)));
 	}
 	
 	public void add_str_littleendian_utf16 (string s) {

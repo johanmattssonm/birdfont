@@ -160,6 +160,8 @@ public class HeadTable : Table {
 		FontData font_data = new FontData ();
 		Fixed version = 1 << 16;
 		Fixed font_revision = 1 << 16;
+		uint64 time = (uint64) Math.rint (GLib.get_real_time () / 1000000.0);
+		const uint64 time_diff = 60 * 60 * 24 * (365 * (1970 - 1904) + 17); // FIXME: add leap seconds
 
 		font_data.add_fixed (version);
 		font_data.add_fixed (font_revision);
@@ -175,8 +177,8 @@ public class HeadTable : Table {
 		
 		font_data.add_u16 (units_per_em); // units per em (should be a power of two for ttf fonts)
 		
-		font_data.add_64 (0); // creation time since 1904-01-01
-		font_data.add_64 (0); // modified time since 1904-01-01
+		font_data.add_u64 (time + time_diff); // creation time since 1901-01-01
+		font_data.add_u64 (time + time_diff); // modified time since 1901-01-01
 
 		xmin = glyf_table.xmin;
 		ymin = glyf_table.ymin;
