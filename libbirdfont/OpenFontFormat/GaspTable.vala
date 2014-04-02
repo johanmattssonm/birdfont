@@ -17,10 +17,10 @@ namespace BirdFont {
 public class GaspTable : Table {
 
 	public const uint16 NONE = 0;
-	public const uint16 GASP_GRIDFIT = 1 << 0;
-	public const uint16 GASP_DOGRAY = 1 << 1;
-	public const uint16 GASP_SYMMETRIC_GRIDFIT = 1 << 2;
-	public const uint16 GASP_SYMMETRIC_SMOOTHING = 1 << 3;
+	public const uint16 GASP_GRIDFIT = 1;
+	public const uint16 GASP_DOGRAY = 2;
+	public const uint16 GASP_SYMMETRIC_GRIDFIT = 4;
+	public const uint16 GASP_SYMMETRIC_SMOOTHING = 8;
 	
 	public GaspTable () {
 		id = "gasp";

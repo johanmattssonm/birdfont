@@ -49,10 +49,7 @@ public class GlyfTable : Table {
 	
 	uint16 max_points = 0;
 	uint16 max_contours = 0;
-	
-	double total_width = 0;
-	int non_zero_glyphs = 0;
-	
+
 	public GlyfTable (LocaTable l) {
 		id = "glyf";
 		loca_table = l;
@@ -72,10 +69,6 @@ public class GlyfTable : Table {
 		
 		warning (@"Glyph $name not found in font.");
 		return -1;
-	}
-
-	public int16 get_average_width () {
-		return (int16) Math.rint (total_width / non_zero_glyphs);
 	}
 
 	public uint16 get_max_contours () {
@@ -219,17 +212,18 @@ public class GlyfTable : Table {
 		g.remove_empty_paths ();
 		glyf_data = new GlyfData (g);
 		
-		if (glyf_data.get_ncontours () == 0) {
-			warning (@"No paths in $(g.get_name ()) ($(g.get_hex ())) can be exported.");
-		}
-		
-		if (g.path_list.length () == 0 || glyf_data.paths.length () == 0) {
+		if (g.path_list.length () == 0 || glyf_data.paths.length () == 0 || glyf_data.get_ncontours () == 0) {
 			// location_offsets will be equal to location_offset + 1 for
 			// all empty glyphs
+			g.set_empty_ttf (true);
 			return;
 		}
 		
-		non_zero_glyphs++;
+		g.set_empty_ttf (false);
+
+		if (glyf_data.get_ncontours () == 0) {
+			warning (@"No paths in $(g.get_name ()) ($(g.get_hex ())) can be exported.");
+		}
 		
 		ncontours = (int16) glyf_data.paths.length ();
 		fd.add_short (ncontours);
@@ -314,9 +308,6 @@ public class GlyfTable : Table {
 		if (glyf_data.bounding_box_ymax > this.ymax) {
 			this.ymax = glyf_data.bounding_box_ymax;
 		}
-				
-		// part of average width calculation for OS/2 table
-		total_width += xmax - xmin;
 		
 		printd (@"length before padding: $(fd.length ())\n");
 		

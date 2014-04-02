@@ -246,11 +246,13 @@ class GlyfData : GLib.Object {
 		
 		foreach (int16 c in coordinate_x) {
 			c += last;
+	
+			if (c < bounding_box_xmin) {
+				bounding_box_xmin = c;
+			}
 			
-			// Only on curve points are good for calculating bounding box
-			if ((flags.nth (i).data & CoordinateFlags.ON_PATH) > 0) { 
-				if (c < bounding_box_xmin) bounding_box_xmin = c;
-				if (c > bounding_box_xmax) bounding_box_xmax = c;
+			if (c > bounding_box_xmax) {
+				bounding_box_xmax = c;
 			}
 				
 			last = c;
@@ -265,17 +267,15 @@ class GlyfData : GLib.Object {
 		i = 0;
 		foreach (int16 c in coordinate_y) {
 			c += last;
-			
-			if ((flags.nth (i).data & CoordinateFlags.ON_PATH) > 0) {
-				if (c < bounding_box_ymin) {
-					bounding_box_ymin = c;
-				}
-				
-				if (c > bounding_box_ymax) {
-					bounding_box_ymax = c;
-				}
+					
+			if (c < bounding_box_ymin) {
+				bounding_box_ymin = c;
 			}
 			
+			if (c > bounding_box_ymax) {
+				bounding_box_ymax = c;
+			}
+				
 			last = c;
 			i++;
 		}

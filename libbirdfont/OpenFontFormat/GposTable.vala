@@ -264,20 +264,6 @@ public class GposTable : Table {
 	public uint pairs_offset_length () {
 		return 2 * pairs.pairs.length ();
 	}
-
-/*
-// FIXME: DELETE
-	public int get_pair_index (int gid) {
-		int i = 0;
-		foreach (PairFormat1 p in pairs) {
-			if (p.left == gid) {
-				return i;
-			}
-			i++;
-		}
-		return -1;
-	}
-*/
 }
 
 }

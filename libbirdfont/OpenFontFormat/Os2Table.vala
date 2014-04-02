@@ -34,7 +34,7 @@ public class Os2Table : Table {
 	public override void parse (FontData dis) throws Error {
 	}
 	
-	public void process (GlyfTable glyf_table) {
+	public void process (GlyfTable glyf_table, HmtxTable hmtx_table) {
 		FontData fd = new FontData ();
 		Font font = OpenFontFormatWriter.get_current_font ();
 		int16 ascender;
@@ -43,7 +43,7 @@ public class Os2Table : Table {
 		
 		fd.add_u16 (0x0002); // version
 
-		fd.add_16 (glyf_table.get_average_width ()); // xAvgCharWidth
+		fd.add_16 (hmtx_table.get_average_width ()); // xAvgCharWidth
 		
 		fd.add_u16 ((uint16) font.weight); // usWeightClass (400 is normal, 700 is bold)
 		

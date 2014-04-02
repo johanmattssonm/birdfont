@@ -173,23 +173,20 @@ public class GlyphBackgroundImage {
 
 	public void create_background_folders (Font font) {
 		File dir;
-		try {
-			dir = BirdFont.get_settings_directory ();
-			if (!dir.query_exists ()) {
-				DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
-			}
-			
-			dir = font.get_backgrounds_folder ();
-			if (!dir.query_exists ()) {
-				DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
-			}
+		
+		dir = BirdFont.get_settings_directory ();
+		if (!dir.query_exists ()) {
+			DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+		}
+		
+		dir = font.get_backgrounds_folder ();
+		if (!dir.query_exists ()) {
+			DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+		}
 
-			dir = font.get_backgrounds_folder ().get_child ("parts");
-			if (!dir.query_exists ()) {
-				DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
-			}
-		} catch (GLib.Error e) {
-			warning (e.message);
+		dir = font.get_backgrounds_folder ().get_child ("parts");
+		if (!dir.query_exists ()) {
+			DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
 		}
 	}
 

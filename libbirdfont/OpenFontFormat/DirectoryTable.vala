@@ -70,7 +70,7 @@ public class DirectoryTable : Table {
 		hhea_table.process ();
 		maxp_table.process ();
 		name_table.process ();
-		os_2_table.process (glyf_table);
+		os_2_table.process (glyf_table, hmtx_table);
 		head_table.process ();
 		loca_table.process (glyf_table, head_table);
 		post_table.process ();

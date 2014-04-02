@@ -79,6 +79,8 @@ public class Glyph : FontDisplay {
 	
 	public static Glyph? background_glyph = null;
 	
+	bool empty = false;
+	
 	/** Id in the verison list. */
 	public int version_id = 1;
 	
@@ -128,6 +130,14 @@ public class Glyph : FontDisplay {
 		return gs;		
 	}
 	
+	public void set_empty_ttf (bool e) {
+		empty = e;
+	}
+
+	public bool is_empty_ttf () {
+		return empty;
+	}
+		
 	public void set_ligature_substitution (string glyph_sequence) {
 		ligature = true;
 		substitution = glyph_sequence;
@@ -203,6 +213,7 @@ public class Glyph : FontDisplay {
 			return;
 		}
 
+		path_list.first ().data.update_region_boundaries ();
 		x1 = path_list.first ().data.xmin;
 		y1 = path_list.first ().data.ymin;
 		x2 = path_list.first ().data.xmax;
@@ -1591,6 +1602,7 @@ public class Glyph : FontDisplay {
 
 		g.ligature = ligature;
 		g.substitution = substitution;
+		g.empty = empty;
 		
 		g.open = open;
 		

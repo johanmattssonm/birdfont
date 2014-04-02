@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -25,8 +25,8 @@ public class HmtxTable : Table {
 	
 	public int16 max_advance = 0;
 	public int16 max_extent = 0;
-	public int16 min_lsb = 0; 
-	public int16 min_rsb = 0;
+	public int16 min_lsb = int16.MAX; 
+	public int16 min_rsb = int16.MAX;
 			
 	HeadTable head_table;
 	GlyfTable glyf_table;
@@ -38,8 +38,13 @@ public class HmtxTable : Table {
 	}
 	
 	~HmtxTable () {
-		if (advance_width != null) delete advance_width;
-		if (left_side_bearing != null) delete left_side_bearing; 
+		if (advance_width != null) {
+			delete advance_width;
+		}
+		
+		if (left_side_bearing != null) {
+			delete left_side_bearing;
+		}
 	}
 
 	public double get_advance (uint32 i) {
@@ -96,38 +101,66 @@ public class HmtxTable : Table {
 		int16 extent;
 		int16 rsb;
 		int16 lsb;
+
+		int16 left_marker;		
+		int16 right_marker;
 		
 		double xmin;
 		double ymin;
 		double xmax;
 		double ymax;
 		
+		if (advance_width != null) {
+			warning ("advance_width is set");
+			delete advance_width;
+		}
+		advance_width = new uint16 [glyf_table.glyphs.length ()];
+		
 		// advance and lsb
+		nmetrics = 0;
 		foreach (Glyph g in glyf_table.glyphs) {
+			// FIXME: integer round off error
 			g.boundaries (out xmin, out ymin, out xmax, out ymax);
-			lsb = (int16) (-1 * (g.left_limit - xmin) * HeadTable.UNITS);
-			advance = (int16) ((g.right_limit - g.left_limit) * HeadTable.UNITS);
-			extent = (int16) (lsb + (xmax - xmin) * HeadTable.UNITS);
-			rsb = (int16) (advance - extent);
+
+			xmax = Math.rint (xmax * HeadTable.UNITS);
+			xmin = Math.rint (xmin * HeadTable.UNITS);
+			
+			left_marker = (int16) Math.rint (g.left_limit * HeadTable.UNITS);
+			right_marker = (int16) Math.rint (g.right_limit * HeadTable.UNITS);
+			
+			lsb = (int16) xmin - left_marker;
+			advance = right_marker - left_marker;
+			
+			extent = (int16) (lsb + xmax - xmin);
+			rsb = (int16) Math.rint (advance - extent);
 						
 			fd.add_u16 (advance);
 			fd.add_16 (lsb);
-	
-			if (advance > max_advance) {
-				max_advance = advance;
-			}
 			
-			if (extent > max_extent) {
-				max_extent = extent;
-			}
-			
-			if (rsb < min_rsb) {
-				min_rsb = rsb;
-			}
+			if (!g.is_empty_ttf ()) {
+				if (advance > max_advance) {
+					max_advance = advance;
+				}
+				
+				if (extent > max_extent) {
+					max_extent = extent;
+				}
+				
+				if (rsb < min_rsb) {
+					min_rsb = rsb;
+				}
 
-			if (lsb < min_lsb) {
-				min_lsb = lsb;
+				if (lsb < min_lsb) {
+					min_lsb = lsb;
+				}
 			}
+			
+			if (extent < 0) {
+				warning ("Negative extent.");
+			}
+			
+			advance_width[nmetrics] = (uint16) extent;
+			nmetrics++;
 		}
 		
 		// monospaced lsb ...
@@ -135,6 +168,19 @@ public class HmtxTable : Table {
 		font_data = fd;
 		
 		warn_if_fail (max_advance != 0);
+	}
+	
+	public int16 get_average_width () {
+		double total_width = 0;
+		uint non_zero_glyphs = 0;
+		for (int i = 0; i < nmetrics; i++) {
+			if (advance_width[i] != 0) {
+				total_width += advance_width[i];
+				non_zero_glyphs++;
+			}
+		}
+		print (@"$total_width / $non_zero_glyphs\n");
+		return (int16) Math.rint (total_width / non_zero_glyphs);
 	}
 }
 
