@@ -160,7 +160,7 @@ public class GlyfTable : Table {
 				
 		// add glyphs, first all assigned then the unassigned ones
 		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
-			g = (!) gl;
+			g = ((!) gl).copy ();
 			
 			if (g.unichar_code <= 27) { // skip control characters
 				continue;

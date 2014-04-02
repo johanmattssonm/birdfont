@@ -239,6 +239,13 @@ public class SvgParser {
 		return data;
 	}
 	
+	public void add_path_to_glyph (string d, Glyph g) {
+		PathList p = parse_svg_data (d, g);
+		foreach (Path path in p.paths) {
+			g.add_path (path);
+		}
+	}
+	
 	/** 
 	 * @param d svg data
 	 * @param glyph add paths to this glyph

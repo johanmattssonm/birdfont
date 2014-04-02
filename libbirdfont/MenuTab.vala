@@ -212,8 +212,6 @@ public class MenuTab : FontDisplay {
 			MainWindow.get_drawing_tools ().add_new_grid ();
 			
 			KerningTools.update_kerning_classes ();
-			
-			select_overview ();
 		});
 
 		dialog.signal_save.connect (() => {
@@ -228,7 +226,8 @@ public class MenuTab : FontDisplay {
 		}
 
 		set_suppress_event (false);
-				
+		select_overview ();
+		
 		return;
 	}
 	

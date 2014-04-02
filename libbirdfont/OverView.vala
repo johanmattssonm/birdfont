@@ -76,6 +76,7 @@ public class OverView : FontDisplay {
 			bool selected;
 			GlyphCollection? fg;
 			Glyph glyph;
+			GlyphCollection glyph_collection;
 			GlyphCanvas canvas;
 				
 			name.append_unichar (character);
@@ -87,13 +88,21 @@ public class OverView : FontDisplay {
 				} else {
 					fg = font.get_glyph_collection (name.str);
 				}
+
+				if (fg != null) {
+					glyph_collection = (!) fg;
+					glyph = glyph_collection.get_current ();
+				} else {
+					glyph_collection = new GlyphCollection (character, name.str);
+					glyph = new Glyph (name.str, character);
+					glyph_collection.insert_glyph (glyph, true);
+					font.add_glyph_collection (glyph_collection);
+				}
 				
-				glyph = (fg == null) ? new Glyph (name.str, character) : ((!) fg).get_current ();
-				font.add_glyph (glyph);
 				tabs.add_tab (glyph);
 				
 				canvas = MainWindow.get_glyph_canvas ();
-				canvas.set_current_glyph (glyph);
+				canvas.set_current_glyph (glyph_collection.get_current ());
 				
 				set_initial_zoom ();
 			}

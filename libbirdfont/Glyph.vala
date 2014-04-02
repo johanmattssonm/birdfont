@@ -1697,6 +1697,7 @@ public class Glyph : FontDisplay {
 	public void insert_new_point_on_path (double x, double y) {
 		double min, distance;
 		Path? p = null;
+		Path path;
 		EditPoint? np = null;
 		EditPoint lep;
 		
@@ -1723,10 +1724,12 @@ public class Glyph : FontDisplay {
 		if (p == null) {
 			return;
 		}
+		
+		path = (!) p;
 
 		lep = new EditPoint ();
-		((!)p).get_closest_point_on_path (lep, xt, yt);
-		((!)p).insert_new_point_on_path (lep);
+		path.get_closest_point_on_path (lep, xt, yt);
+		path.insert_new_point_on_path (lep);
 	}
 	
 	/** Merge selected paths. */

@@ -344,7 +344,14 @@ public class TabBar : GLib.Object {
 	}
 	
 	public Tab get_selected_tab () {
-		return tabs.nth (get_selected ()).data;
+		int s = get_selected ();
+		if (0 <= s < tabs.length ()) {
+			return tabs.nth (get_selected ()).data;
+		}
+		
+		warning ("No tab selected.");
+		
+		return new Tab (new EmptyTab ("Error", "Error"), 30, false);
 	}
 	
 	public uint get_length () {

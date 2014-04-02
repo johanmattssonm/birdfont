@@ -329,18 +329,6 @@ public class Font : GLib.Object {
 
 		return g;
 	}
-	
-	// FIXME: DELETE?
-	public void add_glyph (Glyph glyph) {
-		GlyphCollection? gc = get_glyph_collection (glyph.get_name ());
-		GlyphCollection c;
-		
-		if (gc == null) {
-			c = new GlyphCollection (glyph.get_unichar (), glyph.get_name ());
-			c.insert_glyph (glyph, false);
-			add_glyph_collection (c);
-		}
-	}
 
 	public void add_glyph_collection (GlyphCollection glyph_collection) {
 		GlyphCollection? gc;
@@ -448,7 +436,7 @@ public class Font : GLib.Object {
 		GlyphCollection? gc = null;
 		gc = glyph_cache.get (unicode);
 
-		if (gc == null) {
+		if (gc == null || ((!)gc).length () == 0) {
 			return null;
 		}
 		

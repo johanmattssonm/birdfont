@@ -231,6 +231,7 @@ class SvgFont : GLib.Object {
 		string glyph_name = "";
 		string svg = "";
 		Glyph glyph;
+		GlyphCollection glyph_collection;
 		double advance = font_advance;
 		string ligature = "";
 		SvgParser parser = new SvgParser ();
@@ -273,7 +274,10 @@ class SvgFont : GLib.Object {
 			glyph.set_ligature_substitution (ligature);
 		}
 		
-		font.add_glyph (glyph);
+		glyph_collection = new GlyphCollection (unicode_value, glyph_name);
+		glyph_collection.insert_glyph (glyph, true);
+		
+		font.add_glyph_collection (glyph_collection);
 	}
 }
 
