@@ -99,7 +99,6 @@ class BirdFontFile : GLib.Object {
 	public bool write_font_file (string path, bool backup = false) {
 		try {
 			File file = File.new_for_path (path);
-			uint progress;
 			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
 				warning (@"Can't save font. $path is a directory.");

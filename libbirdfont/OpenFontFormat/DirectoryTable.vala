@@ -87,14 +87,16 @@ public class DirectoryTable : Table {
 			tables.append (this);
 			
 			tables.append (gpos_table);
+			tables.append (os_2_table);
 
 			// tables.append (gdef_table); // invalid table
-			tables.append (os_2_table);
+			
 			tables.append (cmap_table);
 			// tables.append (cvt_table);
 			tables.append (gasp_table);
 			tables.append (glyf_table);
 			tables.append (head_table);
+			
 			tables.append (hhea_table);
 			tables.append (hmtx_table);
 
@@ -108,6 +110,7 @@ public class DirectoryTable : Table {
 			tables.append (loca_table);
 			tables.append (maxp_table);
 			tables.append (name_table);
+			
 			tables.append (post_table);
 		}
 

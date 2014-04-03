@@ -773,6 +773,12 @@ public class Font : GLib.Object {
 			case 'd': return 13;
 			case 'e': return 14;
 			case 'f': return 15;
+			case 'A': return 10;
+			case 'B': return 11;
+			case 'C': return 12;
+			case 'D': return 13;
+			case 'E': return 14;
+			case 'F': return 15;
 		}
 		
 		if (!('0' <= o <= '9')) {

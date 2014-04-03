@@ -45,6 +45,8 @@ public class HeadTable : Table {
 	
 	const uint8 BASELINE_AT_ZERO = 1 << 0;
 	const uint8 LSB_AT_ZERO = 1 << 1;
+	const uint8 SIZE_SPECIFIC_INSTRUCTIONS = 1 << 2;
+	const uint8 FORCE_PPEM_INTEGER_VALUES = 1 <<  3;
 	
 	GlyfTable glyf_table;
 	
@@ -172,9 +174,11 @@ public class HeadTable : Table {
 		
 		font_data.add_u32 (0x5F0F3CF5); // magic number
 		
-		//font_data.add_u16 (BASELINE_AT_ZERO | LSB_AT_ZERO);
-		font_data.add_u16 (0); // flags
+		// FIXME: delete LSB_AT_ZERO?
 		
+		// flags
+		font_data.add_u16 (BASELINE_AT_ZERO | LSB_AT_ZERO | FORCE_PPEM_INTEGER_VALUES); 
+				
 		font_data.add_u16 (units_per_em); // units per em (should be a power of two for ttf fonts)
 		
 		font_data.add_u64 (time + time_diff); // creation time since 1901-01-01

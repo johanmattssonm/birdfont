@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -26,6 +26,10 @@ public class UniRange : GLib.Object {
 	
 	public unichar length () {
 		return stop - start + 1;
+	}
+
+	public bool has_character (unichar c) {
+		return (start <= c <= stop);
 	}
 
 	public unichar get_char (unichar index) {

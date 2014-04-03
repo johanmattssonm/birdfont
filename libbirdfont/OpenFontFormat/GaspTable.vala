@@ -36,7 +36,7 @@ public class GaspTable : Table {
 		fd.add_ushort (1); // number of entries
 
 		fd.add_ushort (0xFFFF); // range upper limit
-		fd.add_ushort (GASP_SYMMETRIC_GRIDFIT); // hinting flags
+		fd.add_ushort (GASP_DOGRAY); // hinting flags
 
 		fd.pad ();
 	

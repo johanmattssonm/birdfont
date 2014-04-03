@@ -571,6 +571,7 @@ FT_ULong get_charcode (FT_Face face, FT_UInt gid) {
 		}
 	}
 	
+	g_warning ("Can not find unicode value.");
 	return 0;
 }
 
@@ -760,7 +761,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		charcode = get_charcode (face, i);
 		glyph = g_string_new ("");
 						
-		if (charcode > 31) { // if not control character
+		if (charcode > 31) { // not control character
 			g_string_append_printf (glyph, "<collection unicode=\"U+%x\">\n", (guint)charcode);
 			g_string_append_printf (glyph, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 0.0, face->glyph->metrics.horiAdvance * units);
 
@@ -769,6 +770,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 			
 			g_string_append (glyph, "\t</glyph>\n");
 			g_string_append_printf (glyph, "</collection>\n");
+		} else {
+			g_warning ("Ignoring control character, %d.", (uint)charcode);
 		}
 
 		g_string_append (bf, glyph->str);

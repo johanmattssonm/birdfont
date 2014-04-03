@@ -1236,8 +1236,8 @@ public class PostTable : Table {
 			if (n.length > 0xFF) {
 				warning (@"too long name for glyph $n");
 			}
-						
-			fd.add ((uint8) n.length); // length of string
+			
+			fd.add ((uint8) n.length);
 			fd.add_str (n);
 		}		
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -40,8 +40,12 @@ public class Os2Table : Table {
 		int16 ascender;
 		int16 descender;
 		uint16 style = 0;
+		UnicodeRangeBits ranges = new UnicodeRangeBits ();
+		CodePageBits pages = new CodePageBits ();
+		uint32 unicodeRange1, unicodeRange2, unicodeRange3, unicodeRange4;
+		uint32 codepage1, codepage2;
 		
-		fd.add_u16 (0x0002); // version
+		fd.add_u16 (0x0004); // version
 
 		fd.add_16 (hmtx_table.get_average_width ()); // xAvgCharWidth
 		
@@ -50,6 +54,7 @@ public class Os2Table : Table {
 		fd.add_u16 (5); // usWidthClass (5 is normal)
 		fd.add_u16 (0); // fsType
 
+		//FIXME: 
 		fd.add_16 (40); // ySubscriptXSize
 		fd.add_16 (40); // ySubscriptYSize
 		fd.add_16 (40); // ySubscriptXOffset
@@ -62,7 +67,8 @@ public class Os2Table : Table {
 		fd.add_16 (200); // yStrikeoutPosition
 		fd.add_16 (0); // sFamilyClass
 
-		// FIXME: PANOSE
+		// FIXME: PANOSE 
+		// Panose, zero means anything will fit.
 		fd.add (0); 
 		fd.add (0); 
 		fd.add (0); 
@@ -74,13 +80,14 @@ public class Os2Table : Table {
 		fd.add (0); 
 		fd.add (0); 
 
-		// FIXME:
-		fd.add_u32 (0); // ulUnicodeRange1 Bits 0-31
-		fd.add_u32 (0); // ulUnicodeRange2 Bits 32-63
-		fd.add_u32 (0); // ulUnicodeRange3 Bits 64-95
-		fd.add_u32 (0); // ulUnicodeRange4 Bits 96-127
+		ranges.get_ranges (font, out unicodeRange1, out unicodeRange2, out unicodeRange3, out unicodeRange4);
 
-		fd.add_tag ("Vend"); // VendID
+		fd.add_u32 (unicodeRange1); // ulUnicodeRange1 Bits 0-31
+		fd.add_u32 (unicodeRange2); // ulUnicodeRange2 Bits 32-63
+		fd.add_u32 (unicodeRange3); // ulUnicodeRange3 Bits 64-95
+		fd.add_u32 (unicodeRange4); // ulUnicodeRange4 Bits 96-127
+
+		fd.add_tag ("Bird"); // VendID
 		
 		 // fsSelection (1 for italic 0 for upright)
 
@@ -106,7 +113,7 @@ public class Os2Table : Table {
 		
 		fd.add_16 (ascender); // sTypoAscender
 		fd.add_16 (descender); // sTypoDescender
-		fd.add_16 (10); // sTypoLineGap
+		fd.add_16 (100); // sTypoLineGap
 
 		fd.add_u16 (ascender); // usWinAscent
 		
@@ -117,17 +124,17 @@ public class Os2Table : Table {
 			fd.add_u16 (-descender); // usWinDescent (not like sTypoDescender)
 		}
 		
-		// FIXME:
-		fd.add_u32 (0); // ulCodePageRange1 Bits 0-31
-		fd.add_u32 (0); // ulCodePageRange2 Bits 32-63
+		pages.get_pages (font, out codepage1, out codepage2);
+		fd.add_u32 (codepage1); // ulCodePageRange1 Bits 0-31
+		fd.add_u32 (codepage2); // ulCodePageRange2 Bits 32-63
 
 		fd.add_16 (ascender); // sHeight
 		fd.add_16 (ascender); // sCapHeight
 
 		fd.add_16 (0); // usDefaultChar
-		fd.add_16 (0x0020); // usBreakChar also known as space
+		fd.add_16 (0x0020); // usBreakChar, also known as space
 		
-		fd.add_16 (2); // usMaxContext (two becase it has kernings but not ligatures).
+		fd.add_16 (2); // usMaxContext (two, becase the font has kerning but not ligatures).
 
 		// padding
 		fd.pad ();

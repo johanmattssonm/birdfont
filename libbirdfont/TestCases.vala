@@ -45,6 +45,7 @@ class TestCases {
 		add (test_kerning, "Kerning");
 		add (test_boundaries, "Boundaries");
 		add (test_extrema, "Extrema");
+		add (test_codepages, "Codepages");
 			
 		add_bechmark (benchmark_stroke, "Stroke");
 	}
@@ -60,7 +61,27 @@ class TestCases {
 	public unowned List<Test> get_test_functions () {
 		return test_cases;
 	}
+	
+	public static void test_codepages () {
+		CodePageBits pages = new CodePageBits ();
+		
+		if (pages.get_bits ('ó').length () == 0) {
+			warning ("Codepage for Hungarian is not set.");
+		}
+		
+		if (pages.get_bits ('ö').length () == 0) {
+			warning ("Codepage for Swedish is not set.");
+		}
 
+		if (pages.get_bits ('ﾂ').length () == 0) {
+			warning ("Codepage for Japanese is not set.");
+		}
+
+		if (pages.get_bits ('马').length () == 0) {
+			warning ("Codepage for Chinese is not set.");
+		}
+	}
+	
 	public static void load_test_font () {
 		string fn = "./fonts/Decibel.bf";
 		Font f = BirdFont.new_font ();
@@ -842,6 +863,25 @@ class TestCases {
 		
 		if (gr_az.has_character ("å")) {
 			warning ("Range a-z has å");
+		}
+		
+		// codepage test for Latin 2
+		try {
+			gr = new GlyphRange ();
+			gr.parse_ranges ("- Ç ü-ý é á-â ä Ů-ű ç Ł-ń ë Ő-ő í-î Ä É Ĺ-ĺ ó-ô ö-÷ Ľ-ľ Ö-× Ü-Ý ú Ź-ž Ę-ě «-­ » ░-▓ │ ┤ Á-Â ╣ ═-║ ╗ ╝ ┐ └ ┴ ┬ ├ ─ ┼ Ă-ć ╚ ╔ ╩ ╦ ╠ ╬ ¤ Č-đ Ë Ň-ň Í-Î ┘ ┌ █ ▄ Ş-ť ▀ Ó-Ô ß Ŕ-ŕ Ú ´ ˝ ˛ ˇ ˘-˙ §-¨ ¸ ° Ř-ś ■  ");
+			if (!gr.has_character ("Ă")) {
+				warning ("Latin 2 range does not have Ă");
+			}
+			
+			if (!gr.has_unichar ('Ă')) {
+				warning ("Latin 2 range  does not have Ă");
+			}
+		
+			if (!gr.has_unichar ('ó')) {
+				warning ("Latin 2 range  does not have ó");
+			}
+		} catch (MarkupError e) {
+			warning (e.message);
 		}
 	}
 

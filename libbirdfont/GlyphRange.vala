@@ -71,7 +71,7 @@ public class GlyphRange {
 	}
 	
 	public uint32 get_length () {
-		unichar l = len;
+		uint32 l = len;
 		l += unassigned.length ();
 		return l;
 	}
@@ -331,12 +331,6 @@ public class GlyphRange {
 	
 	private void append_range (unichar start, unichar stop) {
 		UniRange r;
-		StringBuilder s = new StringBuilder ();
-		StringBuilder e = new StringBuilder ();
-		
-		s.append_unichar (start);
-		e.append_unichar (stop);
-		
 		r = insert_range (start, stop); // insert a unique range
 		merge_range (r); // join connecting ranges
 	}
@@ -422,16 +416,27 @@ public class GlyphRange {
 	
 	private bool unique (unichar start, unichar stop) {
 		foreach (UniRange u in ranges) {
-			if (inside (start, u.start, u.stop)) return false;
-			if (inside (stop, u.start, u.stop)) return false;
-			if (inside (u.start, start, stop)) return false;
-			if (inside (u.stop, start, stop)) return false;
+			if (inside (start, u.start, u.stop)) {
+				return false;
+			}
+			
+			if (inside (stop, u.start, u.stop)) {
+				return false;
+			}
+			
+			if (inside (u.start, start, stop)) {
+				return false;
+			}
+			
+			if (inside (u.stop, start, stop)) {
+				return false;
+			}
 		}
 
 		return true;
 	}
 
-	private bool inside (unichar start, unichar u_start, unichar u_stop) {
+	private static bool inside (unichar start, unichar u_start, unichar u_stop) {
 		return (u_start <= start <= u_stop);
 	}
 	
@@ -451,6 +456,7 @@ public class GlyphRange {
 	public void print_all () {
 		stdout.printf ("Ranges:\n");
 		stdout.printf (get_all_ranges ());
+		stdout.printf ("\n");
 	}
 }
 

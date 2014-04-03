@@ -119,7 +119,6 @@ public class HmtxTable : Table {
 		// advance and lsb
 		nmetrics = 0;
 		foreach (Glyph g in glyf_table.glyphs) {
-			// FIXME: integer round off error
 			g.boundaries (out xmin, out ymin, out xmax, out ymax);
 
 			xmax = Math.rint (xmax * HeadTable.UNITS);
@@ -179,7 +178,6 @@ public class HmtxTable : Table {
 				non_zero_glyphs++;
 			}
 		}
-		print (@"$total_width / $non_zero_glyphs\n");
 		return (int16) Math.rint (total_width / non_zero_glyphs);
 	}
 }
