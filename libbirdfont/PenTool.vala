@@ -677,7 +677,9 @@ public class PenTool : Tool {
 		Path? p;
 		Path path;
 		bool direction_changed = false;
-		Path union;
+		Path union, second_path;
+		EditPoint last_point, first_point;
+		EditPointHandle last_rh, fist_rh;
 		
 		if (glyph.path_list.length () < 1) {
 			return;
@@ -775,11 +777,21 @@ public class PenTool : Tool {
 				path.points.first ().data.set_tie_handle (false);
 				path.points.first ().data.set_reflective_handles (false);
 				
-				union.append_path (merge.copy ());
+				second_path = merge.copy ();
+				
+				last_point = union.delete_last_point ();
+				first_point = second_path.get_first_point ();
+				
+				last_rh = last_point.get_right_handle ();
+				fist_rh = first_point.get_right_handle ();
+				last_rh.move_to_coordinate_internal (last_rh. x (), last_rh.y ());
+				
+				union.append_path (second_path);
 				glyph.add_path (union);
 				
 				glyph.delete_path (path);
 				glyph.delete_path (merge);
+				glyph.clear_active_paths ();
 				
 				union.reopen ();
 				union.create_list ();
@@ -790,6 +802,8 @@ public class PenTool : Tool {
 					path.reverse ();
 					update_selection ();
 				}
+				
+				union.update_region_boundaries ();
 				
 				return;
 			}

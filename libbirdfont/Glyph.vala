@@ -1127,7 +1127,9 @@ public class Glyph : FontDisplay {
 		return r;
 	}
 
-	public void open_path () {	
+	public void open_path () {
+		clear_active_paths ();
+		
 		foreach (Path p in path_list) {
 			p.set_editable (true);
 			p.recalculate_linear_handles ();
@@ -1403,6 +1405,7 @@ public class Glyph : FontDisplay {
 						
 		if (is_open ()) {
 			cr.save ();
+			cr.new_path ();
 			foreach (unowned Path p in path_list) {
 				if (p.stroke > 0) {			
 					draw_outline_for_paths (StrokeTool.get_stroke (p, p.stroke), cr);
@@ -1427,16 +1430,19 @@ public class Glyph : FontDisplay {
 					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr, Color.black ());
 				}
 			}
+			cr.close_path ();
 			cr.fill ();
 			cr.restore ();
 			
 			foreach (unowned Path p in active_paths) {
 				cr.save ();
+				cr.new_path ();
 				if (p.stroke == 0) {
 					p.draw_path (cr);
 				} else {
 					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr);
 				}
+				cr.close_path ();
 				cr.fill ();
 				cr.restore ();
 			}

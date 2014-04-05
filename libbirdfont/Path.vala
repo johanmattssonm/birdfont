@@ -246,6 +246,23 @@ public class Path {
 		unowned EditPoint en;
 		unowned EditPoint em;
 		Color c;
+		Glyph g;
+		double center_x, center_y;
+		double ex, ey;
+
+		if (points.length () == 0){
+			return;
+		}
+
+		g = MainWindow.get_current_glyph ();
+		
+		center_x = g.allocation.width / 2.0;
+		center_y = g.allocation.height / 2.0;
+
+		ex = center_x + points.first ().data.x;
+		ey = center_y - points.first ().data.y;
+		
+		cr.move_to (ex, ey);
 		
 		// draw lines
 		foreach (EditPoint e in ep) {
@@ -2329,6 +2346,8 @@ public class Path {
 			return;
 		}
 
+		// FIXME: DELETE
+		/*
 		points.last ().data.right_handle.type = path.points.first ().data.type;
 		points.last ().data.right_handle.move_to_coordinate (
 			path.points.first ().data.right_handle.x (),
@@ -2336,11 +2355,9 @@ public class Path {
 			
 		path.points.first ().data.right_handle.type = 
 			points.last ().data.right_handle.type;
-
+		*/
 		path.points.first ().data.recalculate_linear_handles ();
 		points.last ().data.recalculate_linear_handles ();
-		
-		// FIXME: path.points.remove_link (path.points.first ());
 		
 		// copy remaining points
 		foreach (EditPoint p in path.points) {
