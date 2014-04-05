@@ -91,6 +91,11 @@ public class CharDatabaseParser : GLib.Object {
 		string description = "";
 		File file;
 
+		if (BirdFont.has_argument ("--no-ucd")) {
+			warning ("Not loading UCD.");
+			return;
+		}
+
 		file = get_unicode_database ();
 		
 		try {

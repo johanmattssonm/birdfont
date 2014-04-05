@@ -117,17 +117,19 @@ public class OverViewItem : GLib.Object {
 		double scale_box;
 		double w, h;
 		double glyph_width, glyph_height;
-
-		if (gl != null) {	
+		Surface s;
+		Context c;
+		
+		if (gl != null) {
 			font = BirdFont.get_current_font ();
 			w = width;
 			h = height;
-
+			
 			scale_box = (width / DEFAULT_WIDTH);
-		
+					
 			g = ((!) gl).get_current ();
 			g.boundaries (out x1, out y1, out x2, out y2);
-			
+		
 			glyph_width = x2 - x1;
 			glyph_height = y2 - y1;
 			
@@ -137,17 +139,19 @@ public class OverViewItem : GLib.Object {
 			gx = ((w / scale) - glyph_width) / 2;
 			gy = (h / scale) - 25 / scale;
 			
-			Surface s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
-			Context c = new Context (s);
+			s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
+			c = new Context (s);
 			
 			c.save ();
 			c.scale (scale, scale);	
-			
+
 			g.add_help_lines ();
+			
 			c.translate (gx - g.get_lsb () - Glyph.xc (), g.get_baseline () + gy - Glyph.yc ());
+			
 			g.draw_paths (c);
 			c.restore ();
-			
+
 			cr.save ();
 			cr.set_source_surface (s, x, y - h);
 			cr.paint ();

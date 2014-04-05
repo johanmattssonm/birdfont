@@ -354,12 +354,17 @@ public class Glyph : FontDisplay {
 	}
 	
 	private void remove_lines () {
+		unowned List<Line> li;
 		while (vertical_help_lines.length () != 0) {
-			vertical_help_lines.remove_link (vertical_help_lines.first ());
+			li = vertical_help_lines.first ();
+			li.data.unref ();
+			vertical_help_lines.delete_link (li);
 		}
 
 		while (horizontal_help_lines.length () != 0) {
-			horizontal_help_lines.remove_link (horizontal_help_lines.first ());
+			li = horizontal_help_lines.first ();
+			li.data.unref ();
+			horizontal_help_lines.delete_link (li);
 		}		
 	}
 	
@@ -422,8 +427,8 @@ public class Glyph : FontDisplay {
 				right_limit = pos;
 			});
 		
-		// lists of help lines are sorted and lines are added only if 
-		// they are important for a particular glyph.
+		// lists of lines are sorted and lines are added only if 
+		// they are relevant for a particular glyph.
 		
 		// left to right
 		add_line (left_line);
@@ -544,10 +549,8 @@ public class Glyph : FontDisplay {
 	private void add_line (Line line) {
 		if (line.is_vertical ()) {
 			vertical_help_lines.append (line);
-			line.list_item = vertical_help_lines.last ();
 		} else {
 			horizontal_help_lines.append (line);
-			line.list_item = horizontal_help_lines.last ();
 		}
 
 		sort_help_lines ();
@@ -1219,14 +1222,21 @@ public class Glyph : FontDisplay {
 	}
 
 	public override void store_current_view () {
+		unowned List<ZoomView> n;
+		
 		if (zoom_list_index + 1 < zoom_list.length ()) {
-			unowned List<ZoomView> n = zoom_list.nth (zoom_list_index);
-			while (n != zoom_list.last ()) zoom_list.delete_link (zoom_list.last ());
+			n = zoom_list.nth (zoom_list_index);
+			while (n != zoom_list.last ()) {
+				zoom_list.delete_link (zoom_list.last ());
+			}
 		}
 		
 		zoom_list.append (new ZoomView (view_offset_x, view_offset_y, view_zoom, allocation));
 		zoom_list_index = (int) zoom_list.length () - 1;
-		if (zoom_list.length () > 50) zoom_list.delete_link (zoom_list.first ());
+		
+		if (zoom_list.length () > 50) {
+			zoom_list.delete_link (zoom_list.first ());
+		}
 	}
 	
 	public override void restore_last_view () 
@@ -1364,7 +1374,7 @@ public class Glyph : FontDisplay {
 		
 		cr.save ();
 		cr.new_path ();
-		foreach (unowned Path p in path_list) {
+		foreach (Path p in path_list) {
 			if (p.stroke > 0) {
 				stroke = StrokeTool.get_stroke (p, p.stroke);
 				draw_path_list (stroke, cr, Color.black ());

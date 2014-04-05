@@ -29,11 +29,11 @@ class TestBirdFont : GLib.Object {
 	unowned List<Test> test_cases;
 	unowned List<Test?>? current_case = null;
 
-	unowned List<Test> passed;
-	unowned List<Test> failed;
-	unowned List<Test> skipped;
+	List<Test> passed;
+	List<Test> failed;
+	List<Test> skipped;
 
-	unowned List<Test> bechmarks;
+	List<Test> bechmarks;
 
 	static TestBirdFont? singleton = null;
 

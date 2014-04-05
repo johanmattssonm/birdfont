@@ -71,7 +71,7 @@ public class Argument : GLib.Object {
 				a == "--mac" ||
 				a == "--android" ||
 				a == "--log" ||
-				a == "--donated") {
+				a == "--no-ucd") {
 				prev = a;
 				i++;
 				continue;

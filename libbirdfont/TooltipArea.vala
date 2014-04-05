@@ -86,8 +86,6 @@ public class TooltipArea : GLib.Object {
 	}
 	
 	public void draw (Context cr, WidgetAllocation alloc) {
-		int w;
-		
 		cr.save ();
 		cr.rectangle (0, 0, alloc.width, alloc.height);
 		cr.set_line_width (0);

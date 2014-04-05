@@ -31,9 +31,7 @@ public class Line : GLib.Object {
 	
 	public signal void queue_draw_area (int x, int y, int w, int h);
 	public signal void position_updated (double pos);
-	
-	public unowned List<Line>? list_item = null;
-	
+		
 	double r;
 	double g;
 	double b;

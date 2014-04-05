@@ -103,7 +103,6 @@ public class GlyfTable : Table {
 	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
 		uint last_len = 0;
-		uint i = 0;
 		uint num_glyphs;
 		
 		create_glyph_table ();
@@ -142,8 +141,7 @@ public class GlyfTable : Table {
 		Font font = OpenFontFormatWriter.get_current_font ();
 		uint32 indice;
 		List<Glyph> unassigned_glyphs;
-		uint32 num_glyphs = font.length ();
-		uint32 i = 0;
+		
 		// add notdef. character at index zero + other special chars first
 		glyphs.append (font.get_not_def_character ());
 		glyphs.append (font.get_null_character ());
