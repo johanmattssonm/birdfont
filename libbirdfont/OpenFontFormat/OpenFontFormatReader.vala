@@ -156,7 +156,6 @@ public class OpenFontFormatReader : Object {
 		unichar left, right;
 		double kerning, units_per_em;
 		uint npairs = 0;
-		uint i = 0;
 		
 		try {
 			reader.parse_index (file_name);
@@ -190,9 +189,7 @@ public class OpenFontFormatReader : Object {
 					bf_kerning.append (@"$kerning".replace (",", "."));
 					bf_kerning.append ("\" />\n");
 				}
-				
-				++i;
-				ProgressBar.set_progress ((npairs - i) / (double) npairs);
+			
 				Tool.yield ();
 			}
 		} catch (GLib.Error e) {

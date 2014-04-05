@@ -260,9 +260,9 @@ public class OverView : FontDisplay {
 		
 		if (unlikely (!(0 <= selected < visible_items.length ()))) { 
 			warning (@"0 <= $selected < $(visible_items.length ())");
-			new OverViewItem (null, '\0', 0, 0);
+			return new OverViewItem (null, '\0', 0, 0);
 		}	
-			
+		
  		return visible_items.nth (selected).data;
 	}
 	

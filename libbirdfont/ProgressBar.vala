@@ -14,43 +14,9 @@
 
 namespace BirdFont {
 
-/** Progress bar */
+// FIXME: Delete this class
 class ProgressBar {
-	
-	static double current_progress = 0;
-	public signal void new_progress ();
-	static ProgressBar? singleton = null;
-
-	public ProgressBar () {
-		singleton = this;
-	}
-
 	public static void set_progress (double d) {
-		ProgressBar p;
-		
-		if (singleton == null) {
-			return;
-		}
-		
-		p = (!) singleton;
-		current_progress = d;
-		p.new_progress ();
-		
-		if (is_null (MainWindow.get_tooltip ())) {
-			MainWindow.get_tooltip ().redraw ();
-		}
-	}
-
-	public static double get_progress () {
-		ProgressBar p;
-		
-		if (singleton == null) {
-			return 0;
-		}
-		
-		p = (!) singleton;
-		
-		return ProgressBar.current_progress;
 	}
 }
 

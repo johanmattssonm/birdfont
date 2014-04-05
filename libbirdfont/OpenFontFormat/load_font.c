@@ -571,7 +571,7 @@ FT_ULong get_charcode (FT_Face face, FT_UInt gid) {
 		}
 	}
 	
-	g_warning ("Can not find unicode value.");
+	g_warning ("Can not find unicode value for gid %d.", gid);
 	return 0;
 }
 
@@ -775,8 +775,9 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		}
 
 		g_string_append (bf, glyph->str);
-		g_string_free (glyph, 0);	
-		bird_font_progress_bar_set_progress ((double)i / face->num_glyphs);
+		g_string_free (glyph, 0);
+		
+		bird_font_tool_yield ();
 	}
 	
 	kerning = (GString*) bird_font_open_font_format_reader_parse_kerning (file); 
@@ -785,7 +786,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 
 	g_string_append (bf, "</font>\n");
 	
-	bird_font_progress_bar_set_progress (0);
+	bird_font_tool_yield ();
 	
 	return bf;
 }
@@ -801,6 +802,8 @@ GString* load_freetype_font (char* file, int* err) {
 	int error;
 	FT_Glyph glyph;
 	FT_UInt glyph_index;
+
+	bird_font_tab_bar_start_wheel ();
 
 	error = FT_Init_FreeType (&library);
 	if (error != OK) {
@@ -832,6 +835,8 @@ GString* load_freetype_font (char* file, int* err) {
 
 	FT_Done_Face ( face );
 	FT_Done_FreeType( library );
+	
+	bird_font_tab_bar_stop_wheel ();
 	
 	*err = OK;
 	return bf;

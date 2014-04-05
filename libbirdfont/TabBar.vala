@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -26,13 +26,15 @@ public class TabBar : GLib.Object {
 	static const int NO_TAB = -1;
 	static const int NEXT_TAB = -2;
 	static const int PREVIOUS_TAB = -3;
+	static const int PROGRESS_WHEEL = -3;
 
 	int first_tab = 0;
 	int selected = 0;
 	int over = NO_TAB;
-	int over_close = NO_TAB;
+	int over_close_tab = NO_TAB;
 	
 	public signal void signal_tab_selected (Tab selected_tab);
+	public signal void redraw (int x, int y, int w, int h);
 
 	Tab? previous_tab = null;
 	Tab? current_tab = null;
@@ -46,10 +48,18 @@ public class TabBar : GLib.Object {
 	ImageSurface? tab3_left = null;
 	ImageSurface? tab3_right = null;
 	
-	ImageSurface? bar_background = null;
-	ImageSurface next_tab;
-	ImageSurface to_previous_tab;
-			
+	ImageSurface? progress = null;
+
+	ImageSurface? next_tab;
+	ImageSurface? to_previous_tab;
+	
+	ImageSurface? tab_bar_background = null;
+	
+	double scale = 1; // scale images in 320 dpi
+	
+	bool processing = false;
+	double wheel_rotation = 0;
+	
 	public TabBar () {
 		tabs = new List<Tab> ();
 		
@@ -62,60 +72,75 @@ public class TabBar : GLib.Object {
 		tab3_left = Icons.get_icon ("tab3_left.png");
 		tab3_right = Icons.get_icon ("tab3_right.png");
 		
-		bar_background = Icons.get_icon ("tabbar_background.png");
+		next_tab = Icons.get_icon ("next_tab.png");
+		to_previous_tab = Icons.get_icon ("previous_tab.png");
 		
-		next_tab = (!) Icons.get_icon ("next_tab.png");
-		to_previous_tab = (!) Icons.get_icon ("previous_tab.png");
-		
-		if (is_null (next_tab)) {
-			warning ("Tab icon is null");
-		}
+		progress = Icons.get_icon ("progress_wheel.png");
+		tab_bar_background = Icons.get_icon ("tab_bar_background.png");
 	}
 	
 	public void motion (double x, double y) {
-		is_over_close (x, y, out over, out over_close);
+		over_close (x, y, out over, out over_close_tab);
 	}
 
-	private void is_over_close (double x, double y, out int over, out int over_close) {
+	private void over_close (double x, double y, out int over, out int over_close_tab) {
 		int i = 0;
 		double offset = 19;
+		double edge;
+		
+		return_if_fail (tab3_right != null);
+		
+		edge = ((!)tab3_right).get_width () * scale;
 		
 		if (x < 19 && has_scroll ()) {
-			over_close = NO_TAB;
+			over_close_tab = NO_TAB;
 			over = PREVIOUS_TAB;
 			return;
 		}
+
+		if (has_scroll () && has_progress_wheel ()) {
+			if (x > width - 19) {
+				over_close_tab = NO_TAB;
+				over = PROGRESS_WHEEL;
+			} else if (x > width - 2 * 19) {
+				over_close_tab = NO_TAB;
+				over = NEXT_TAB;
+			}
+		} else if (!has_scroll () && has_progress_wheel ()) {
+			if (x > width - 19) {
+				over_close_tab = NO_TAB;
+				over = PROGRESS_WHEEL;
+			}
+		} else if (has_scroll () && !has_progress_wheel ()) {
+			if (x > width - 19) {
+				over_close_tab = NO_TAB;
+				over = NEXT_TAB;
+			}
+		}
 		
 		foreach (Tab t in tabs) {
-			
 			if (i < first_tab) {
 				i++;
 				continue;
 			}
-			
-			if (offset + t.get_width () + 3 > width && has_scroll ()) {
-				over_close = NO_TAB;
-				over = NEXT_TAB;
-				return;
-			}
-				
-			if (offset < x < offset + t.get_width ()) {
+
+			if (offset < x < offset + t.get_width () + edge) {
 				over = i;
 				
-				if (height - 18 < y < height - 5 && x > offset + t.get_width () - 16) {
-					over_close =  i;
+				if (height - 18 < y < height - 5 && x > offset + t.get_width () - 19) {
+					over_close_tab =  i;
 				} else {
-					over_close =  NO_TAB;
+					over_close_tab =  NO_TAB;
 				}
 				
 				return;
 			}
 			
-			offset += t.get_width () + 3;
+			offset += t.get_width () + ((!)tab1_right).get_width () * scale;
 			i++;
 		}
 
-		over_close = NO_TAB;		
+		over_close_tab = NO_TAB;		
 		over = NO_TAB;
 	}	
 	
@@ -127,6 +152,7 @@ public class TabBar : GLib.Object {
 		int i = 0;
 		
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return false;
 		}
 		
@@ -143,6 +169,7 @@ public class TabBar : GLib.Object {
 
 	public bool select_tab_name (string s) {
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return false;
 		}
 		
@@ -151,6 +178,7 @@ public class TabBar : GLib.Object {
 
 	public void select_overview () {
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -162,6 +190,7 @@ public class TabBar : GLib.Object {
 		bool open;
 		
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -181,6 +210,7 @@ public class TabBar : GLib.Object {
 		int i = -1;
 		
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -200,6 +230,7 @@ public class TabBar : GLib.Object {
 
 	public void close_all_tabs () {
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -217,6 +248,7 @@ public class TabBar : GLib.Object {
 		Tab empty_tab;
 	
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return false;
 		}
 				
@@ -264,6 +296,7 @@ public class TabBar : GLib.Object {
 		int i = 0;
 
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return false;
 		}
 				
@@ -280,6 +313,7 @@ public class TabBar : GLib.Object {
 	
 	public void close_background_tab_by_name (string name) {
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -291,6 +325,7 @@ public class TabBar : GLib.Object {
 		int i = 0;
 
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return false;
 		}
 		
@@ -328,6 +363,7 @@ public class TabBar : GLib.Object {
 		int i = 0;
 	
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return false;
 		}
 		
@@ -350,7 +386,6 @@ public class TabBar : GLib.Object {
 		}
 		
 		warning ("No tab selected.");
-		
 		return new Tab (new EmptyTab ("Error", "Error"), 30, false);
 	}
 	
@@ -366,6 +401,7 @@ public class TabBar : GLib.Object {
 		Tab t;
 
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 			
@@ -413,6 +449,9 @@ public class TabBar : GLib.Object {
 	private bool has_scroll () {
 		int i = 0;
 		double offset = 19;
+		double end = (has_progress_wheel ()) ? width - 28 : width - 19;
+		
+		return_if_fail (tab1_right != null);
 		
 		if (first_tab > 0) {
 			return true;
@@ -424,11 +463,11 @@ public class TabBar : GLib.Object {
 				continue;
 			}
 			
-			if (offset + t.get_width () + 3 > width - 19) {
+			if (offset + t.get_width () + 3 > end) {
 				return true;
 			}
 
-			offset += t.get_width () + 3;
+			offset += t.get_width () + ((!)tab1_right).get_width () * scale;
 			i++;
 		}
 		
@@ -439,8 +478,8 @@ public class TabBar : GLib.Object {
 		unowned List<Tab?>? lt;
 		Tab t;
 		
-		lt = tabs.nth(index);
-		return_if_fail(lt != null);		
+		lt = tabs.nth (index);
+		return_if_fail (lt != null);		
 		t = (!) ((!) lt).data;
 		
 		signal_tab_selected (t);		
@@ -449,6 +488,9 @@ public class TabBar : GLib.Object {
 	private void scroll_to_tab (int index, bool send_signal_selected = true) {
 		double offset = 19;
 		int i = 0;
+		double end = (has_progress_wheel ()) ? width - 28 : width - 19;
+		
+		return_if_fail (tab1_right != null);
 		
 		if (index < first_tab) {
 			first_tab = index;
@@ -467,7 +509,7 @@ public class TabBar : GLib.Object {
 			}
 			
 			// out of view
-			if (offset + t.get_width () + 3 > width - 19) {
+			if (offset + t.get_width () + 3 > end) {
 				first_tab++;
 				scroll_to_tab (index);
 				return;
@@ -483,7 +525,7 @@ public class TabBar : GLib.Object {
 				return;
 			}
 
-			offset += t.get_width () + 3;
+			offset += t.get_width () + ((!)tab1_right).get_width () * scale;
 			i++;
 		}
 		
@@ -494,16 +536,18 @@ public class TabBar : GLib.Object {
 		int over, close;
 		
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
 		this.width = width;
 		this.height = height;
+		this.scale = height / 117.0;
 		
-		is_over_close (x, y, out over, out close);
+		over_close (x, y, out over, out close);
 
-		if (over_close >= 0 && over == selected) {
-			close_tab (over_close);
+		if (over_close_tab >= 0 && over == selected) {
+			close_tab (over_close_tab);
 		} else {
 			select_tab (over);
 		}
@@ -515,6 +559,7 @@ public class TabBar : GLib.Object {
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 				
@@ -532,6 +577,7 @@ public class TabBar : GLib.Object {
 		bool i;
 		
 		if (MenuTab.suppress_event) {
+			warn_if_test ("Event supressed");
 			return false;
 		}
 				
@@ -546,40 +592,97 @@ public class TabBar : GLib.Object {
 	}
 	
 	public void draw (Context cr, int width, int height) {
+		double next_tab_x;
+		double w, h;
+		double progress_y;
+		
 		this.width = width;
 		this.height = height;
+		this.scale = height / 117.0;
+				
+		return_if_fail (to_previous_tab != null);
+		return_if_fail (next_tab != null);
+		return_if_fail (progress != null);
+		return_if_fail (tab_bar_background != null);
 		
 		cr.save ();
 		cr.rectangle (0, 0, width, height);
 		cr.set_line_width (0);
 		cr.set_source_rgba (230/255.0, 229/255.0, 228/255.0, 1);
 		cr.fill_preserve ();
-		cr.stroke ();
 		cr.restore ();
 
-		for (int j = 0; j < width; j++) {
-			cr.set_source_surface ((!) bar_background, j, height - ((!) bar_background).get_height ());
+		cr.save ();
+		cr.scale (scale, scale);
+		
+		w = width / scale;
+		h = height / scale;
+
+		for (double i = 0; i < w; i += ((!)tab_bar_background).get_width ()) {
+			cr.set_source_surface ((!) tab_bar_background, i, h - ((!) tab_bar_background).get_height ());
 			cr.paint ();
 		}
 
 		if (has_scroll ()) {
 			// left arrow
-			cr.set_source_surface (to_previous_tab, 3, height - to_previous_tab.get_height () - 5);
+			cr.set_source_surface ((!) to_previous_tab, 2 / scale, h - ((!) to_previous_tab).get_height () - 5 / scale);
 			cr.paint ();
 
 			// right arrow
-			cr.set_source_surface (next_tab, width - 19, height - next_tab.get_height () - 5);
+			next_tab_x = (has_progress_wheel ()) ? w - (2 * 19 + 3) / scale : w - 19 / scale;
+			cr.set_source_surface ((!) next_tab, next_tab_x, h - ((!) next_tab).get_height () - 5 / scale);
 			cr.paint ();
 		}
 		
-		draw_tabs (cr);
+		// progress wheel
+		if (has_progress_wheel ()) {
+			ImageSurface p = (!) progress;
+			Surface s = new Surface.similar (p, p.get_content (), p.get_width (), p.get_height ());
+			Context c = new Context (s);
+			
+			c.save ();
+			c.rectangle (0, 0, p.get_width (), p.get_height ());
+			c.set_line_width (0);
+			c.set_source_rgba (230/255.0, 229/255.0, 228/255.0, 1);
+			c.fill_preserve ();	
+			
+			c.translate (p.get_width () / 2.0, p.get_height () / 2.0);
+			c.rotate (wheel_rotation);
+			c.translate (-p.get_width () / 2.0, -p.get_height () / 2.0);
+			
+			c.set_source_surface ((!) progress, 0 ,0);
+			
+			c.translate (p.get_width () / 2.0, p.get_height () / 2.0);
+			c.paint ();
+			c.restore ();
+
+			progress_y = (has_scroll ()) ? h - ((!) progress).get_height () - 5 / scale : (h - ((!) progress).get_height ()) / 2;
+			cr.set_source_surface (c.get_target (), w - 19 / scale, progress_y);
+			cr.paint ();
+			
+		}
 		
+		draw_tabs (cr);
+		cr.restore ();
 	}
 	
 	private void draw_tabs (Context cr) {
 		double close_opacity;
-		double offset = 19;
+		double offset = 19 / scale;
+		double tab_width;
 		int i = 0;
+		double tabs_end = width / scale;
+		double h = height / scale;
+		double tab_height;
+		double tab_y;
+		
+		if (has_progress_wheel ()) {
+			tabs_end -= 19 / scale;
+		}
+		
+		if (has_scroll ()) {
+			tabs_end -= 19 / scale;
+		}		
 		
 		return_if_fail (tab3_right != null);
 		return_if_fail (tab2_right != null);
@@ -589,6 +692,10 @@ public class TabBar : GLib.Object {
 		return_if_fail (tab2_left != null);
 		return_if_fail (tab1_left != null);
 		return_if_fail (tab1_right != null);
+		return_if_fail (next_tab != null);
+		
+		tab_height = ((!)tab3_right).get_height ();
+		tab_y = h - tab_height;
 		
 		foreach (Tab t in tabs) {
 			
@@ -599,83 +706,130 @@ public class TabBar : GLib.Object {
 
 			cr.save ();
 			cr.translate (offset, 0);
-						
-			if (offset + t.get_width () + next_tab.get_width () + 3 > width) {
+			
+			tab_width = t.get_width () / scale;
+			
+			if (offset + tab_width + ((!)next_tab).get_width () + 3 / scale > tabs_end) {
+				cr.restore ();
 				break;
 			}
 		
 			// background
 			if (i == selected) {
-				for (int j = 0; j < t.get_width (); j++) {
-					cr.set_source_surface ((!) tab3_right, j, (height - ((!)tab1_left).get_height ()) + 1);
+				for (int j = ((!)tab3_left).get_width (); j < tab_width; j++) {
+					cr.set_source_surface ((!) tab3_right, j, tab_y);
 					cr.paint ();
 				}							
 			} else if (i == over) {
-				for (int j = 0; j < t.get_width (); j++) {
-					cr.set_source_surface ((!) tab2_right, j, (height - ((!)tab1_left).get_height ()) + 1);
+				for (int j = ((!)tab2_left).get_width (); j < tab_width; j++) {
+					cr.set_source_surface ((!) tab2_right, j, tab_y);
 					cr.paint ();
 				}				
 			} else {
-				for (int j = 0; j < t.get_width (); j++) {
-					cr.set_source_surface ((!) tab1_right, j, (height - ((!)tab1_left).get_height ()) + 1);
+				for (int j = ((!)tab1_left).get_width (); j < tab_width; j++) {
+					cr.set_source_surface ((!) tab1_right, j, tab_y);
 					cr.paint ();
 				}
 			}
 			
 			// close (x)
 			if (t.has_close_button ()) {
-				cr.set_line_width (1);
+				cr.save ();
+				cr.new_path ();
+				cr.set_line_width (1 / scale);
 				
-				close_opacity = (over_close == i) ? 1 : 0.2; 
+				close_opacity = (over_close_tab == i) ? 1 : 0.2; 
 				cr.set_source_rgba (0, 0, 0, close_opacity);
 				
-				cr.move_to (t.get_width () - 5, height - 14);
-				cr.line_to (t.get_width () - 10, height - 9);
+				cr.move_to (tab_width - 5 / scale, h - 14 / scale);
+				cr.line_to (tab_width - 10 / scale, h - 9 / scale);
 
-				cr.move_to (t.get_width () - 10, height - 14);
-				cr.line_to (t.get_width () - 5, height - 9);
+				cr.move_to (tab_width - 10 / scale, h - 14 / scale);
+				cr.line_to (tab_width - 5 / scale, h - 9 / scale);
 				
 				cr.stroke ();
+				cr.restore ();
 			}
 
 			cr.set_source_rgba (0, 0, 0, 1);
-			cr.set_font_size (14);
-			cr.move_to (8, height - 6);
+			cr.set_font_size (14 / scale);
+			cr.move_to (8 / scale, h - 6 / scale);
 			cr.show_text (t.get_display ().get_label ());
 			cr.stroke ();
 			
 			// edges
-			if (tab1_left != null  && tab1_right != null && tab2_left != null  && tab2_right != null && tab3_left != null  && tab3_right != null) {
-				if (i == selected) {
-					cr.set_source_surface ((!) tab3_left, 0, (height - ((!)tab1_left).get_height ()) + 1);
-					cr.paint ();
-					
-					cr.set_source_surface ((!) tab3_right, t.get_width () - 2, (height - ((!)tab1_left).get_height ()) + 1);
-					cr.paint ();
-				} else if (i == over) {
-					cr.set_source_surface ((!) tab2_left, 0, (height - ((!)tab1_left).get_height ()) + 1);
-					cr.paint ();
+			if (i == selected) {
+				cr.set_source_surface ((!) tab3_left, 0, tab_y);
+				cr.paint ();
+				
+				cr.set_source_surface ((!) tab3_right, tab_width, tab_y);
+				cr.paint ();
+			} else if (i == over) {
+				cr.set_source_surface ((!) tab2_left, 0, tab_y);
+				cr.paint ();
 
-					cr.set_source_surface ((!) tab2_right, t.get_width () - 2, (height - ((!)tab1_left).get_height ()) + 1);
-					cr.paint ();
-				} else {
-					cr.set_source_surface ((!) tab1_left, 0, (height - ((!)tab1_left).get_height ()) + 1);
-					cr.paint ();
+				cr.set_source_surface ((!) tab2_right, tab_width, tab_y);
+				cr.paint ();
+			} else {
+				cr.set_source_surface ((!) tab1_left, 0, tab_y);
+				cr.paint ();
 
-					cr.set_source_surface ((!) tab1_right, t.get_width () - 2, (height - ((!)tab1_left).get_height ()) + 1);
-					cr.paint ();
-				}
+				cr.set_source_surface ((!) tab1_right, tab_width, tab_y);
+				cr.paint ();
 			}
 
 			cr.restore ();
 			
-			offset += t.get_width () + 3;
+			offset += tab_width + ((!)tab1_right).get_width ();
 			i++;
 		}
 	}
 	
 	public void add_empty_tab (string name, string label) {
 		add_tab (new EmptyTab (name, label));
+	}
+	
+	bool has_progress_wheel () {
+		return processing;
+	}
+
+	public void set_progress (bool running) {
+		TimeoutSource timer;
+		
+		if (unlikely (processing == running)) {
+			warning (@"Progress is already set to $running");
+			return;
+		}
+		
+		processing = running;
+		
+		if (processing) {
+			timer = new TimeoutSource (50);
+			timer.set_callback (() => {
+				wheel_rotation += 0.008 * 2 * Math.PI;
+				
+				if (wheel_rotation > 2 * Math.PI) {
+					wheel_rotation -= 2 * Math.PI;
+				}
+				redraw (width - 19, 0, 19, height);
+				return processing;
+			});
+			timer.attach (null);
+		}
+	}
+	
+	public static void start_wheel () {
+		if (!is_null (MainWindow.get_tab_bar ())) {
+			MainWindow.get_tab_bar ().set_progress (true);
+			Tool.yield ();
+		}
+	}
+
+	public static void stop_wheel () {
+		if (!is_null (MainWindow.get_tab_bar ())) {
+			MainWindow.get_tab_bar ().set_progress (false);
+			Tool.yield ();
+		}
 	}
 }
 

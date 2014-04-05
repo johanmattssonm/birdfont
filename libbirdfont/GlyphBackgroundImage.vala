@@ -405,7 +405,7 @@ public class GlyphBackgroundImage {
 		ct.rectangle (0, 0, allocation.width, allocation.height);
 		ct.fill ();
 
-		// scale both canvas and image at the same time; rather tricky.
+		// scale both canvas and image at the same time
 		scale_x = view_zoom * img_scale_x;
 		scale_y = view_zoom * img_scale_y;
 		
@@ -417,7 +417,7 @@ public class GlyphBackgroundImage {
 		ct.paint ();
 		ct.restore ();
 		
-		// append it
+		// add it
 		cr.save ();
 		cr.set_source_surface (st, 0, 0);
 		cr.paint ();

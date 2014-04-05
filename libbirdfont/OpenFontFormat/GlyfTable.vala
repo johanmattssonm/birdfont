@@ -125,8 +125,6 @@ public class GlyfTable : Table {
 			printd (@"loca fd.length (): $(fd.length ())\n");
 
 			last_len = fd.length ();
-			
-			ProgressBar.set_progress ((double) (++i) / num_glyphs);
 		}
 
 		location_offsets.append (fd.length ()); // last entry in loca table is special
@@ -182,8 +180,6 @@ public class GlyfTable : Table {
 				printd ("Adding unassigned glyph.");
 				unassigned_glyphs.append (g);
 			}
-			
-			OpenFontFormatWriter.show_progress (++i / num_glyphs);
 		}
 		
 		foreach (Glyph ug in unassigned_glyphs) {

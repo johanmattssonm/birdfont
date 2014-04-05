@@ -77,7 +77,7 @@ public class FontData : Object {
 			added_bytes++;
 			
 			if (added_bytes % 1024 == 0) {
-				OpenFontFormatWriter.show_progress (added_bytes / (double) l);
+				Tool.yield ();
 			}
 		}
 		

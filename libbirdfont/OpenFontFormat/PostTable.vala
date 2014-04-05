@@ -89,7 +89,7 @@ public class PostTable : Table {
 		uint16 nnames  = dis.read_ushort ();
 		
 		if (format != 0x00020000) {
-			warning ("Only post tables of version 2 will parset got $(format.get_string ())");
+			warning ("Only post tables of version 2 will be parsed found version $(format.get_string ())");
 			return;
 		}
 		
@@ -1185,7 +1185,9 @@ public class PostTable : Table {
 	public void process () throws Error {
 		FontData fd = new FontData ();
 		string n;
-		
+		int name_index;
+		Glyph g;
+				
 		fd.add_fixed (0x00020000); // Version
 		fd.add_fixed (0x00000000); // italicAngle
 		
@@ -1211,23 +1213,21 @@ public class PostTable : Table {
 		assert (names.length () == 0);
 		add_standard_names ();
 
-		int index;
-		Glyph g;
 		for (int i = 1; i < glyf_table.glyphs.length (); i++) {
 			g = (!) glyf_table.glyphs.nth (i).data;
-			index = get_standard_index (g.unichar_code);
+			name_index = get_standard_index (g.unichar_code);
 			
-			if (index != 0) {
-				fd.add_ushort ((uint16) index);  // use standard name
+			if (name_index != 0) {
+				fd.add_ushort ((uint16) name_index);  // use standard name
 			} else {
 				printd (@"Adding non standard postscript name $(g.get_name ())\n");
 				
-				index = (int) names.length (); // use font specific name
-				fd.add_ushort ((uint16) index);
+				name_index = (int) names.length (); // use font specific name
+				fd.add_ushort ((uint16) name_index);
 				names.append (g.get_name ());
 			}
 			
-			this.index.append ((uint16) index);
+			this.index.append ((uint16) name_index);
 		}
 
 		for (int i = 258; i < names.length (); i++) {

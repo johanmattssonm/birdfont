@@ -487,4 +487,11 @@ public string t_ (string t) {
 	return _(t);
 }
 
+/** Print a warning if Birdfont was started with the --test argument. */
+public static void warn_if_test (string message) {
+	if (BirdFont.has_argument ("--test")) {
+		warning (message);
+	}
+}
+
 }

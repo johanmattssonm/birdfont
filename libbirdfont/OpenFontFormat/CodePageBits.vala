@@ -42,6 +42,8 @@ public class CodePageBits : GLib.Object {
 			} else {
 				set_bits_for_glyph (g, ref p0, ref p1);
 			}
+			
+			Tool.yield ();
 		}
 	}
 
@@ -161,7 +163,7 @@ public class CodePageBits : GLib.Object {
 			ranges = new GlyphRange ();
 			
 			try {
-				ranges.parse_ranges (unicode_ranges);
+				ranges.parse_ranges_async (unicode_ranges);
 			} catch (GLib.Error e) {
 				warning (e.message);
 			}

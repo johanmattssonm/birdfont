@@ -80,25 +80,31 @@ class BirdFontFile : GLib.Object {
 		bool ok = true;
 		Xml.Node* root;
 		
+		TabBar.start_wheel ();
 		tr.read ();
 		root = tr.expand ();
 
-		if (is_null (root)) {
+		if (!is_null (root)) {
+			create_background_files (root);
+			ok = parse_file (root);
+		} else {
 			warning ("No root element");
-			tr.close ();
-			return false;
 		}
-
-		create_background_files (root);
-		ok = parse_file (root);
+		
 		tr.close ();
-			
+		TabBar.stop_wheel ();
+		
 		return ok;
 	}
 
 	public bool write_font_file (string path, bool backup = false) {
+		TabBar.start_wheel ();
+
 		try {
-			File file = File.new_for_path (path);
+			DataOutputStream os;
+			File file;
+			
+			file = File.new_for_path (path);
 			
 			if (file.query_file_type (0) == FileType.DIRECTORY) {
 				warning (@"Can't save font. $path is a directory.");
@@ -108,9 +114,8 @@ class BirdFontFile : GLib.Object {
 			if (file.query_exists ()) {
 				file.delete ();
 			}
-			
-			DataOutputStream os = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
-			
+
+			os = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
 			write_root_tag (os);
 			
 			// this a backup of another font
@@ -154,8 +159,7 @@ class BirdFontFile : GLib.Object {
 				} catch (GLib.Error e) {
 					warning (e.message);
 				}
-				
-				ProgressBar.set_progress (0);		
+					
 				TooltipArea.show_text (t_("Saving"));
 			});
 		
@@ -185,8 +189,7 @@ class BirdFontFile : GLib.Object {
 					warning (@"Failed to save $path \n");
 					warning (@"$(ef.message) \n");
 				}
-				
-				ProgressBar.set_progress (0);		
+					
 				TooltipArea.show_text (t_("Saving"));
 			});
 			
@@ -200,7 +203,7 @@ class BirdFontFile : GLib.Object {
 			return false;
 		}
 		
-		TooltipArea.show_text ("");
+		TabBar.stop_wheel ();		
 		return true;
 	}
 	
@@ -216,12 +219,10 @@ class BirdFontFile : GLib.Object {
 	
 	public void write_kerning (DataOutputStream os)  throws GLib.Error {
 			uint num_kerning_pairs;
-			uint progress;
 			string range;
 			
 			num_kerning_pairs = KerningClasses.get_instance ().classes_first.length ();
-			progress = num_kerning_pairs;
-			ProgressBar.set_progress (1);
+
 			for (uint i = 0; i < num_kerning_pairs; i++) {
 				range = KerningClasses.get_instance ().classes_first.nth (i).data.get_all_ranges ();
 				
@@ -239,8 +240,7 @@ class BirdFontFile : GLib.Object {
 				os.put_string ("hadjustment=\"");
 				os.put_string (float_point (KerningClasses.get_instance ().classes_kerning.nth (i).data.val));
 				os.put_string ("\" />\n");
-				
-				ProgressBar.set_progress (--progress / (double) num_kerning_pairs);
+
 				Tool.yield ();
 			}
 			
@@ -259,13 +259,11 @@ class BirdFontFile : GLib.Object {
 					os.put_string (float_point (k));
 					os.put_string ("\" />\n");
 					
-					ProgressBar.set_progress (++progress / (double) num_kerning_pairs);
 					Tool.yield ();
 				} catch (GLib.Error e) {
 					warning (@"$(e.message) \n");
 				}
 				
-				ProgressBar.set_progress (0);
 				TooltipArea.show_text (t_("Saving"));
 			});
 	}
@@ -523,7 +521,6 @@ class BirdFontFile : GLib.Object {
 
 	private bool parse_file (Xml.Node* root) {
 		Xml.Node* node = root;
-		int i = 0;
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 
 			// this is a backup file set path to the original 
@@ -611,14 +608,9 @@ class BirdFontFile : GLib.Object {
 			if (iter->name == "kerning") {
 				parse_kerning (iter);
 			}
-			
-			ProgressBar.set_progress (++i / 20480.0);
-			
-			if (i == 20480) {
-				i = 0;
-			}
 						
 			TooltipArea.show_text (t_("Loading XML data."));
+			Tool.yield ();
 		}
 
 		TooltipArea.show_text ("");
@@ -683,7 +675,7 @@ class BirdFontFile : GLib.Object {
 					hadjustment = double.parse (attr_content);
 				}
 				
-				ProgressBar.set_progress (0);
+				Tool.yield ();
 			}
 			
 			if (range_left.get_length () > 1) {

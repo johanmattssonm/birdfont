@@ -2486,7 +2486,7 @@ public class Path {
 		double minx, maxx, miny, maxy;
 		
 		if (unlikely (points.length () < 2)) {
-			warning ("Missing points");
+			warning (@"Missing points, $(points.length ()) points in path.");
 			return;
 		}
 		

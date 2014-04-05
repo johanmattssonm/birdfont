@@ -18,22 +18,12 @@ using Gdk;
 namespace BirdFont {
 
 public class TooltipArea : GLib.Object {
-
 	string tooltip;
-	ProgressBar progress_bar;
 	
 	public signal void redraw ();
 
 	public TooltipArea () {
-		progress_bar = new ProgressBar ();
-		progress_bar.new_progress.connect (progress);
-		
 		set_text_from_tool ();
-	}
-
-	void progress () {
-		redraw ();
-		Tool.yield ();
 	}
 
 	public void update_text () {
@@ -116,15 +106,6 @@ public class TooltipArea : GLib.Object {
 		
 		cr.save ();
 		cr.rectangle (0, 1, alloc.width, 1);
-		cr.set_line_width (0);
-		cr.set_source_rgba (170/255.0, 170/255.0, 170/255.0, 1);
-		cr.fill_preserve ();
-		cr.stroke ();
-		cr.restore ();
-		
-		cr.save ();
-		w = (int) (alloc.width * ProgressBar.get_progress ());
-		cr.rectangle (0, 2, w, alloc.height - 2);
 		cr.set_line_width (0);
 		cr.set_source_rgba (170/255.0, 170/255.0, 170/255.0, 1);
 		cr.fill_preserve ();

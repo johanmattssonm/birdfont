@@ -116,13 +116,19 @@ public class GlyphRange {
 	}
 	
 	/** Parse ranges on the form a-z. Single characters can be added as well as 
-	 * multiple ranges and characters can be added separated by space. The 
-	 * word "space" is used to kern against the space character and divis to
-	 * kern against "-".
+	 * multiple ranges separated by space. The word "space" is used to kern against 
+	 * the space character and the word "divis" is used to kern against "-".
 	 * @param ranges unicode ranges
-	 * @return true if the range could be fully parsed
 	 */
 	public void parse_ranges (string ranges) throws MarkupError {
+		parse_range_string (ranges, true);
+	}
+	
+	public void parse_ranges_async (string ranges) throws MarkupError {
+		parse_range_string (ranges, false);
+	}	
+	
+	private void parse_range_string (string ranges, bool sync) throws MarkupError {
 		string[] r;
 				
 		if (ranges == " ") {
@@ -154,6 +160,10 @@ public class GlyphRange {
 				add_single ('&');
 			} else {
 				throw new MarkupError.PARSE (@"$w is not a single letter or a unicode range.");
+			}
+
+			if (!sync) {
+				Tool.yield ();
 			}
 		}
 	}

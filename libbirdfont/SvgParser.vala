@@ -741,9 +741,9 @@ public class SvgParser {
 		move_and_resize (bezier_points, bi, svg_glyph, units, glyph);
 
 		if (format == SvgFormat.ILLUSTRATOR) {
-			path_list = create_paths_inkscape (bezier_points, bi);
-		} else {
 			path_list = create_paths_illustrator (bezier_points, bi);
+		} else {
+			path_list = create_paths_inkscape (bezier_points, bi);
 		}
 
 		// TODO: Find out if it is possible to tie handles.
@@ -762,7 +762,7 @@ public class SvgParser {
 			b[i].x2 *= units;
 			b[i].y2 *= units;
 
-			// move and resize
+			// move all points
 			if (svg_glyph) {
 				// move only y 
 				b[i].x0 += glyph.left_limit;
@@ -788,6 +788,9 @@ public class SvgParser {
 		left_x = 0;
 		left_y = 0;
 		last_type = PointType.NONE;
+		
+		return_if_fail (b.length != 0);
+		return_if_fail (b[0].type != 'z');
 		
 		for (int i = start_index; i < num_b; i++) {
 			switch (b[i].type) {
@@ -1048,6 +1051,11 @@ public class SvgParser {
 		Path path = new Path ();
 		
 		for (int i = 0; i < c.length - 1; i += 2) {	
+			if (i + 1 == c.length) {
+				warning ("No y value.");
+				break;
+			}
+			
 			path.add (parse_double (c[i]), -parse_double (c[i + 1]));
 		}
 		

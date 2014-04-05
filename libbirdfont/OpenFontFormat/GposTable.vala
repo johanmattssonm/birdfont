@@ -215,15 +215,11 @@ public class GposTable : Table {
 			} catch (Error e) {
 				warning (e.message);
 			}
-			
-			OpenFontFormatWriter.show_progress (i / num_pairs);
 		}, num_pairs);
 		
 		if (unlikely (pairs_set_length () != written)) {
 			warning (@"Bad pair set length: $(pairs_set_length ()), real length: $written");
 		}
-		
-		ProgressBar.set_progress (0); // reset progress bar
 		
 		if (unlikely (fd.length () != coverage_offset)) {
 			warning (@"Bad coverage offset, coverage_offset: $coverage_offset, real length: $(fd.length ())");

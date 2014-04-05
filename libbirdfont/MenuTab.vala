@@ -43,11 +43,13 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void export_all () {
-		if (set_suppress_event (true)) {				
-			ExportTool.export_all ();
-		} else {
+		if (!set_suppress_event (true)) {
 			warning ("suppressed event");
-		}		
+			return;
+		}
+				
+		ExportTool.export_all ();
+		set_suppress_event (false);	
 	}
 	
 	public static bool set_suppress_event (bool e) {
@@ -69,6 +71,7 @@ public class MenuTab : FontDisplay {
 
 	public static void select_overview () {
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -89,6 +92,7 @@ public class MenuTab : FontDisplay {
 		int i;
 		
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return false;
 		}
 		
@@ -124,6 +128,7 @@ public class MenuTab : FontDisplay {
 		bool saved = false;
 
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return false;
 		}
 		
@@ -170,6 +175,7 @@ public class MenuTab : FontDisplay {
 		string? fn;
 		
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}	
 		
@@ -192,6 +198,7 @@ public class MenuTab : FontDisplay {
 		SaveDialogListener dialog = new SaveDialogListener ();
 
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -236,6 +243,7 @@ public class MenuTab : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 		
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -262,6 +270,7 @@ public class MenuTab : FontDisplay {
 		Font f;
 
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -289,6 +298,7 @@ public class MenuTab : FontDisplay {
 		Preferences.save ();
 		
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -316,6 +326,7 @@ public class MenuTab : FontDisplay {
 	
 	public static void show_kerning_context () {
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -327,6 +338,7 @@ public class MenuTab : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 		
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -345,6 +357,7 @@ public class MenuTab : FontDisplay {
 		FontFormat format = BirdFont.get_current_font ().format;
 		
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}	
 			
@@ -363,6 +376,7 @@ public class MenuTab : FontDisplay {
 	/** Display the language selection tab. */
 	public static void select_language () {
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -371,6 +385,7 @@ public class MenuTab : FontDisplay {
 
 	public static void use_current_glyph_as_background () {
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -387,6 +402,7 @@ public class MenuTab : FontDisplay {
 	
 	public static void remove_all_kerning_pairs	() {
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		
@@ -396,6 +412,7 @@ public class MenuTab : FontDisplay {
 	
 	public static void list_all_kerning_pairs () {
 		if (suppress_event) {
+			warn_if_test ("Event supressed");
 			return;
 		}
 		

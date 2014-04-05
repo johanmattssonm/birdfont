@@ -163,8 +163,6 @@ public class KernTable : Table {
 			} catch (GLib.Error e) {
 				warning (e.message);
 			}
-			
-			OpenFontFormatWriter.show_progress (i / n_pairs);
 		}, n_pairs);
 
 		fd.pad ();

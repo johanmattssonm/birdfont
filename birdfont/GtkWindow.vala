@@ -901,7 +901,11 @@ class TabbarCanvas : DrawingArea {
 			get_allocation (out alloc);
 			queue_draw_area (0, 0, alloc.width, alloc.height);	
 		});
-		
+
+		tabbar.redraw.connect ((x, y, w, h) => {
+			queue_draw_area (x, y, w, h);
+		});
+				
 		set_size_request (20, 33);
 	}
 	

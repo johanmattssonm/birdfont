@@ -47,6 +47,8 @@ public class OpenFontFormatWriter : Object  {
 		FontData fd;
 		uint l;
 
+		TabBar.start_wheel ();
+		
 		font = nfont;
 				
 		directory_table.process ();	
@@ -68,10 +70,8 @@ public class OpenFontFormatWriter : Object  {
 				os.put_byte (data[j]);
 			}
 		}
-	}
-	
-	public static void show_progress (double progress) {
-		ProgressBar.set_progress (progress);
+		
+		TabBar.stop_wheel ();
 	}
 	
 	public void close () throws Error {

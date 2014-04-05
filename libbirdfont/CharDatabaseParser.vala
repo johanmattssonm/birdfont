@@ -140,7 +140,6 @@ public class CharDatabaseParser : GLib.Object {
 			CharDatabase.full_unicode_range = utf8;
 			CharDatabase.show_loading_message ();
 			CharDatabase.database_is_loaded = true;
-			ProgressBar.set_progress (0);
 			return false;
 		});
 		idle.attach (null);
