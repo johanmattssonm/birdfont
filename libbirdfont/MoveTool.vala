@@ -322,6 +322,8 @@ class MoveTool : Tool {
 		double dx, dy;
 		Glyph glyph = MainWindow.get_current_glyph ();  
 		
+		update_selection_boundaries ();
+		
 		xc = selection_box_center_x;
 		yc = selection_box_center_y;
 

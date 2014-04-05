@@ -1206,7 +1206,7 @@ public class Path {
 			next = i.next;
 		}
 		
-		if (is_open () && (points.last ().data.get_right_handle ().type == PointType.CUBIC 
+		if (!is_open () && (points.last ().data.get_right_handle ().type == PointType.CUBIC 
 			||  points.first ().data.get_left_handle ().type == PointType.CUBIC)) {
 			add_quadratic_points (points.last ().data, points.first ().data);
 		} else {
@@ -2389,6 +2389,7 @@ public class Path {
 	public void flip_vertical () {
 		EditPointHandle hl, hr;
 		double lx, ly, rx, ry;
+
 		foreach (EditPoint e in points) {
 			hl = e.get_left_handle ();
 			hr = e.get_right_handle ();
