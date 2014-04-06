@@ -782,7 +782,7 @@ public class Font : GLib.Object {
 		}
 		
 		if (!('0' <= o <= '9')) {
-			throw new ConvertError.FAILED (@"Excpecting a number ($(s.str)).");
+			throw new ConvertError.FAILED (@"Expecting a number ($(s.str)).");
 		}
 		
 		return (uint8) (o - '0');
