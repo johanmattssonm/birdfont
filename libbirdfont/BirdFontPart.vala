@@ -130,8 +130,8 @@ class BirdFontPart : GLib.Object{
 			
 					foreach (Glyph g in gc.get_version_list ().glyphs) {
 						try {
-							write_glyph (bf, gc, g, os);
-							write_glyph_background_image (bf, gc, g, os);
+							write_glyph (bf, gc, g);
+							write_glyph_background_image (bf, gc, g);
 						} catch (GLib.Error e) {
 							warning (e.message);
 						}
@@ -210,10 +210,11 @@ class BirdFontPart : GLib.Object{
 		return s;
 	}
 
-	void write_glyph (BirdFontFile bf, GlyphCollection gc, Glyph g, DataOutputStream os) throws GLib.Error {
+	void write_glyph (BirdFontFile bf, GlyphCollection gc, Glyph g) throws GLib.Error {
 		string file_name;
 		string dir_name;
-	
+		DataOutputStream os;
+	 
 		file_name = get_glyph_base_file_name (g);
 		dir_name = (!)file_name.get_char ().to_string ();
 					
@@ -226,7 +227,7 @@ class BirdFontPart : GLib.Object{
 		os.close ();
 	}
 
-	void write_glyph_background_image (BirdFontFile bf, GlyphCollection gc, Glyph g, DataOutputStream os) throws GLib.Error {
+	void write_glyph_background_image (BirdFontFile bf, GlyphCollection gc, Glyph g) throws GLib.Error {
 		string file_name;
 		string dir_name;
 		GlyphBackgroundImage bg;

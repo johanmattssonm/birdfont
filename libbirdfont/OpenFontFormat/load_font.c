@@ -771,7 +771,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 			g_string_append (glyph, "\t</glyph>\n");
 			g_string_append_printf (glyph, "</collection>\n");
 		} else {
-			g_warning ("Ignoring control character, %d.", (uint)charcode);
+			g_warning ("Ignoring control character, %d.", (guint)charcode);
 		}
 
 		g_string_append (bf, glyph->str);
