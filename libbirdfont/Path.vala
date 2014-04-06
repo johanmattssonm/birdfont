@@ -1289,13 +1289,6 @@ public class Path {
 			e = quadratic_path.add_point (e);
 			prev = quadratic_path.points.last ().data;
 			
-			// FIXME: DELETE
-			/*
-			prev.type = PointType.LINE_QUADRATIC;
-			prev.get_left_handle ().type = PointType.LINE_QUADRATIC;
-			prev.get_right_handle ().type = PointType.LINE_QUADRATIC;
-			*/
-			
 			prev.recalculate_linear_handles ();
 			
 			new_quadratic_points.append (prev);
