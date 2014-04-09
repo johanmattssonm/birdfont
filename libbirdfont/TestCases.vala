@@ -240,6 +240,8 @@ class TestCases {
 	}
 
 	public static void test_illustrator_import () {
+		Glyph g;
+		SvgParser parser = new SvgParser ();
 		string illustrator_data = """<?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 15.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -343,6 +345,11 @@ class TestCases {
 			SvgParser.import_svg ((!) temp_file.get_path ());
 
 			temp_file.delete ();
+			
+			g = MainWindow.get_current_glyph ();
+			
+			parser.set_format (SvgFormat.ILLUSTRATOR);
+			parser.add_path_to_glyph ("M67.4,43.5c0,1.1-0.9,2-2,2c-1.1,0-2-0.9-2-2c0-1.1,0.9-2,2-2C66.5,41.5,67.4,42.4,67.4,43.5z", g);
 			
 			Toolbox.select_tool_by_name ("full_glyph");
 		} catch (GLib.Error e) {

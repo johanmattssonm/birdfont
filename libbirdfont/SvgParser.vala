@@ -944,12 +944,11 @@ public class SvgParser {
 	}
 
 	PathList create_paths_illustrator (BezierPoints[] b, int num_b) {
-		double first_x = 0;
-		double first_y = 0; 
 		Path path;
 		PathList path_list = new PathList ();
 		EditPoint ep;
 		bool first_point = true;
+		double first_left_x, first_left_y;
 		
 		path = new Path ();
 		
@@ -957,6 +956,14 @@ public class SvgParser {
 			warning ("No SVG data");
 			return path_list;
 		}
+		
+		if (b[num_b - 1].type != 'z') {
+			warning ("Path is open.");
+			return path_list;
+		}
+		
+		first_left_x = 0;
+		first_left_y = 0;
 		
 		for (int i = 0; i < num_b; i++) {
 			if (b[i].type == '\0') {
@@ -970,9 +977,7 @@ public class SvgParser {
 				path = new Path ();
 				first_point = true;
 			} else if (b[i].type == 'M') {
-				first_x = b[i].x0;
-				first_y = b[i].y0;
-			}  else if (b[i].type == 'L') {
+			} else if (b[i].type == 'L') {
 				ep = path.add (b[i].x0, b[i].y0);
 				ep.set_point_type (PointType.LINE_CUBIC); // TODO: quadratic
 				ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
@@ -982,6 +987,7 @@ public class SvgParser {
 				}
 				
 				if (b[i + 1].type == 'C') {
+					return_val_if_fail (i + i < num_b, path_list);
 					ep.get_right_handle ().set_point_type (PointType.CUBIC);
 					ep.get_right_handle ().move_to_coordinate (b[i + 1].x0, b[i + 1].y0);
 				}
@@ -991,11 +997,12 @@ public class SvgParser {
 				warning ("Illustrator does not support quadratic control points.");
 				print (@"$(b[i])\n");
 			} else if (b[i].type == 'C') {
+				
 				if (first_point) {
-					first_x = b[i].x0;
-					first_y = b[i].y0;
+					first_left_x = b[i].x0;
+					first_left_y = b[i].y0;
 				}
-		
+				
 				ep = path.add (b[i].x2, b[i].y2);
 				ep.set_point_type (PointType.CUBIC);
 
@@ -1003,7 +1010,12 @@ public class SvgParser {
 				ep.get_left_handle ().set_point_type (PointType.CUBIC);
 				
 				ep.get_left_handle ().move_to_coordinate (b[i].x1, b[i].y1);
-				ep.get_right_handle ().move_to_coordinate (b[i + 1].x0, b[i + 1].y0);
+				
+				if (b[i + 1].type != 'z') {
+					ep.get_right_handle ().move_to_coordinate (b[i + 1].x0, b[i + 1].y0);
+				} else {
+					ep.get_right_handle ().move_to_coordinate (first_left_x, first_left_y);
+				}
 				
 				first_point = false;
 			} else {
@@ -1020,7 +1032,7 @@ public class SvgParser {
 		return path_list;
 	}
 	
-	// TODO: implement a standard svg parser
+	// TODO: implement a default svg parser
 	
 	static double parse_double (string? s) {
 		if (is_null (s)) {
