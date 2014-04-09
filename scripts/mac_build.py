@@ -55,10 +55,10 @@ library_cflags = "-fno-common -fPIC " + cflags
 
 configfile.write_config (prefix)
 compile_translations()
-build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, library)
-build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library)
+build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, library, False)
+build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
 
 if not options.nogtk:
-	build.birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library)
+	build.birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
 
 print ("Done")
