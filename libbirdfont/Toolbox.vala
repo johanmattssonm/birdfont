@@ -95,7 +95,7 @@ public class Toolbox : GLib.Object  {
 			foreach (Tool t in exp.tool) {
 				t.set_active (false);
 				
-				if (t.is_visible () && t.key == keyval 
+				if (t.tool_is_visible () && t.key == keyval 
 					&& t.modifier_flag == NONE 
 					&& KeyBindings.modifier == NONE) {
 					select_tool (t);
@@ -113,7 +113,7 @@ public class Toolbox : GLib.Object  {
 			}
 			
 			foreach (Tool t in exp.tool) {
-				if (t.is_visible () && t.is_over (x, y)) {
+				if (t.tool_is_visible () && t.is_over (x, y)) {
 					t.panel_press_action (t, button, x, y);
 					press_tool = t;
 				}
@@ -130,7 +130,7 @@ public class Toolbox : GLib.Object  {
 		foreach (Expander exp in current_set.get_expanders ()) {			
 			if (exp.is_open ()) {
 				foreach (Tool t in exp.tool) {
-					if (t.is_visible ()) {
+					if (t.tool_is_visible ()) {
 						active = t.is_over (x, y);
 						
 						if (active) {
@@ -154,7 +154,7 @@ public class Toolbox : GLib.Object  {
 		if (!scrolling_toolbox) {	
 			foreach (Expander exp in current_set.get_expanders ()) {
 				foreach (Tool t in exp.tool) {
-					if (t.is_visible () && t.is_over (x, y)) {
+					if (t.tool_is_visible () && t.is_over (x, y)) {
 						action = t.scroll_wheel_up_action (t);
 						press_tool = t;
 					}
@@ -192,7 +192,7 @@ public class Toolbox : GLib.Object  {
 		if (!scrolling_toolbox) {	
 			foreach (Expander exp in current_set.get_expanders ()) {
 				foreach (Tool t in exp.tool) {
-					if (t.is_visible () && t.is_over (x, y)) {
+					if (t.tool_is_visible () && t.is_over (x, y)) {
 						action = t.scroll_wheel_down_action (t);
 						press_tool = t;
 					}
@@ -233,9 +233,9 @@ public class Toolbox : GLib.Object  {
 			
 			if (exp.is_open ()) {
 				foreach (Tool t in exp.tool) {
-					if (t.is_visible ()) {
-						bool active = t.is_over (x, y);
-						TooltipArea? tpa = null;
+					if (t.tool_is_visible ()) {
+						active = t.is_over (x, y);
+						tpa = null;
 						
 						update = t.set_active (active);
 						tpa = MainWindow.get_tooltip ();
@@ -298,7 +298,7 @@ public class Toolbox : GLib.Object  {
 		foreach (Expander exp in current_set.get_expanders ()) {
 			foreach (Tool t in exp.tool) {
 				if (tool.get_id () == t.get_id ()) {
-					if (!t.is_visible ()) {
+					if (!t.tool_is_visible ()) {
 						warning ("Tool is hidden");
 					} else {
 						exp.set_open (true);
@@ -328,7 +328,7 @@ public class Toolbox : GLib.Object  {
 	
 	public Tool get_tool (string name) {
 		foreach (ToolCollection tc in tool_sets) {
-			foreach (Expander e in tc_set.get_expanders ()) {
+			foreach (Expander e in tc.get_expanders ()) {
 				foreach (Tool t in e.tool) {
 					if (t.get_name () == name) {
 						return t;
@@ -342,10 +342,10 @@ public class Toolbox : GLib.Object  {
 		return new Tool ("no_icon");
 	}
 	
-	public static set_tool_visible (string name, bool visible) {
+	public static void set_tool_visible (string name, bool visible) {
 		Toolbox tb = MainWindow.get_toolbox ();
-		Tool t = tb.get_tool (string name) 
-		t.set_visible (false);
+		Tool t = tb.get_tool (name); 
+		t.set_tool_visibility (visible);
 		tb.update_expanders ();
 		Toolbox.redraw_tool_box ();
 	}

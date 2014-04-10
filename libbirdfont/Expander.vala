@@ -93,18 +93,20 @@ public class Expander : GLib.Object {
 		}
 
 		foreach (Tool t in tool) {
-			if (new_row) {
-				content_height += t.h + margin_small; 
-				xt = x;
-				yt += t.h + margin_small;
-			}
+			if (t.tool_is_visible ()) {
+				if (new_row) {
+					content_height += t.h + margin_small; 
+					xt = x;
+					yt += t.h + margin_small;
+				}
 			
-			t.x = xt;
-			t.y = yt;
+				t.x = xt;
+				t.y = yt;
 			
-			xt += t.w + margin_small;
+				xt += t.w + margin_small;
 
-			new_row = xt + t.w > Toolbox.allocation_width - margin_small;
+				new_row = xt + t.w > Toolbox.allocation_width - margin_small;
+			}
 		}
 	}
 	
@@ -216,7 +218,9 @@ public class Expander : GLib.Object {
 		if (open) {
 			cr.save ();
 			foreach (var t in tool) {
-				t.draw (cr);
+				if (t.tool_is_visible ()) {
+					t.draw (cr);
+				}
 			}
 			cr.restore ();
 		}

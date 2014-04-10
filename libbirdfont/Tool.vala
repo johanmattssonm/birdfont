@@ -115,11 +115,11 @@ public class Tool : GLib.Object {
 		});
 	}
 
-	public void set_visible (bool v) {
+	public void set_tool_visibility (bool v) {
 		visible = v;
 	}
 
-	public bool is_visible () {
+	public bool tool_is_visible () {
 		return visible;
 	}
 
