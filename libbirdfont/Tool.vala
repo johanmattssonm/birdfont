@@ -79,6 +79,8 @@ public class Tool : GLib.Object {
 	bool showing_this_tooltip = false;
 	static Tool active_tooltip = new Tool ();
 	
+	bool visible = true;
+	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		this.tip = tip;
@@ -111,6 +113,14 @@ public class Tool : GLib.Object {
 			}
 			return false;
 		});
+	}
+
+	public void set_visible (bool v) {
+		visible = v;
+	}
+
+	public bool is_visible () {
+		return visible;
 	}
 
 	void wait_for_tooltip () {

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -39,7 +39,9 @@ public class Toolbox : GLib.Object  {
 	/** Scroll with touch pad. */
 	bool scrolling_touch = false;
 	double scroll_y = 0;
-	
+
+	private List<ToolCollection> tool_sets = new List<ToolCollection> ();
+		
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		current_tool = new Tool ("no_icon");
 		press_tool = new Tool (null);
@@ -47,6 +49,10 @@ public class Toolbox : GLib.Object  {
 		drawing_tools = new DrawingTools (glyph_canvas); 
 		kerning_tools = new KerningTools ();
 		preview_tools = new PreviewTools ();
+		
+		tool_sets.append (drawing_tools);
+		tool_sets.append (kerning_tools);
+		tool_sets.append (preview_tools);
 		
 		current_set = drawing_tools;
 		
@@ -89,7 +95,7 @@ public class Toolbox : GLib.Object  {
 			foreach (Tool t in exp.tool) {
 				t.set_active (false);
 				
-				if (t.key == keyval 
+				if (t.is_visible () && t.key == keyval 
 					&& t.modifier_flag == NONE 
 					&& KeyBindings.modifier == NONE) {
 					select_tool (t);
@@ -107,7 +113,7 @@ public class Toolbox : GLib.Object  {
 			}
 			
 			foreach (Tool t in exp.tool) {
-				if (t.is_over (x, y)) {
+				if (t.is_visible () && t.is_over (x, y)) {
 					t.panel_press_action (t, button, x, y);
 					press_tool = t;
 				}
@@ -119,18 +125,22 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void release (uint button, double x, double y) {
+		bool active;
+		
 		foreach (Expander exp in current_set.get_expanders ()) {			
 			if (exp.is_open ()) {
 				foreach (Tool t in exp.tool) {
-					bool active = t.is_over (x, y);
-					
-					if (active) {
-						if (press_tool == t) {
-							select_tool (t);
+					if (t.is_visible ()) {
+						active = t.is_over (x, y);
+						
+						if (active) {
+							if (press_tool == t) {
+								select_tool (t);
+							}
 						}
+						
+						t.panel_release_action (t, button, x, y);
 					}
-					
-					t.panel_release_action (t, button, x, y);
 				}
 			}
 		}
@@ -144,7 +154,7 @@ public class Toolbox : GLib.Object  {
 		if (!scrolling_toolbox) {	
 			foreach (Expander exp in current_set.get_expanders ()) {
 				foreach (Tool t in exp.tool) {
-					if (t.is_over (x, y)) {
+					if (t.is_visible () && t.is_over (x, y)) {
 						action = t.scroll_wheel_up_action (t);
 						press_tool = t;
 					}
@@ -182,7 +192,7 @@ public class Toolbox : GLib.Object  {
 		if (!scrolling_toolbox) {	
 			foreach (Expander exp in current_set.get_expanders ()) {
 				foreach (Tool t in exp.tool) {
-					if (t.is_over (x, y)) {
+					if (t.is_visible () && t.is_over (x, y)) {
 						action = t.scroll_wheel_down_action (t);
 						press_tool = t;
 					}
@@ -210,7 +220,9 @@ public class Toolbox : GLib.Object  {
 		bool update;
 		bool a;
 		bool consumed = false;
-		
+		bool active;
+		TooltipArea? tpa = null;
+					
 		foreach (Expander exp in current_set.get_expanders ()) {
 			a = exp.is_over (x, y);
 			update = exp.set_active (a);
@@ -221,22 +233,24 @@ public class Toolbox : GLib.Object  {
 			
 			if (exp.is_open ()) {
 				foreach (Tool t in exp.tool) {
-					bool active = t.is_over (x, y);
-					TooltipArea? tpa = null;
-					
-					update = t.set_active (active);
-					tpa = MainWindow.get_tooltip ();
-					
-					if (active && tpa != null) {
-						((!)tpa).update_text ();
-					}
-					
-					if (update) {
-						redraw (0, 0, allocation_width, allocation_height);
-					}
-					
-					if (t.panel_move_action (t, x, y)) {
-						consumed = true;
+					if (t.is_visible ()) {
+						bool active = t.is_over (x, y);
+						TooltipArea? tpa = null;
+						
+						update = t.set_active (active);
+						tpa = MainWindow.get_tooltip ();
+						
+						if (active && tpa != null) {
+							((!)tpa).update_text ();
+						}
+						
+						if (update) {
+							redraw (0, 0, allocation_width, allocation_height);
+						}
+						
+						if (t.panel_move_action (t, x, y)) {
+							consumed = true;
+						}
 					}
 				}
 			}
@@ -279,26 +293,32 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void select_tool (Tool tool) {
+		bool update;
+		
 		foreach (Expander exp in current_set.get_expanders ()) {
 			foreach (Tool t in exp.tool) {
 				if (tool.get_id () == t.get_id ()) {
-					exp.set_open (true);
-					
-					bool update = false;
-					
-					update = tool.set_selected (true);
-					if (tool.persistent) {
-						update = tool.set_active (true);
-					}
-					
-					tool.select_action (tool);
-					
-					if (update) {							
-						redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
-					}
-					
-					if (tool.editor_events) {
-						current_tool = tool;
+					if (!t.is_visible ()) {
+						warning ("Tool is hidden");
+					} else {
+						exp.set_open (true);
+						
+						update = false;
+						
+						update = tool.set_selected (true);
+						if (tool.persistent) {
+							update = tool.set_active (true);
+						}
+						
+						tool.select_action (tool);
+						
+						if (update) {							
+							redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
+						}
+						
+						if (tool.editor_events) {
+							current_tool = tool;
+						}
 					}
 				}
 			}
@@ -307,10 +327,12 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public Tool get_tool (string name) {
-		foreach (Expander e in current_set.get_expanders ()) {
-			foreach (var t in e.tool) {
-				if (t.get_name () == name) {
-					return t;
+		foreach (ToolCollection tc in tool_sets) {
+			foreach (Expander e in tc_set.get_expanders ()) {
+				foreach (Tool t in e.tool) {
+					if (t.get_name () == name) {
+						return t;
+					}
 				}
 			}
 		}
@@ -318,6 +340,14 @@ public class Toolbox : GLib.Object  {
 		warning ("No tool found for name \"%s\".\n", name);
 		
 		return new Tool ("no_icon");
+	}
+	
+	public static set_tool_visible (string name, bool visible) {
+		Toolbox tb = MainWindow.get_toolbox ();
+		Tool t = tb.get_tool (string name) 
+		t.set_visible (false);
+		tb.update_expanders ();
+		Toolbox.redraw_tool_box ();
 	}
 	
 	public static void select_tool_by_name (string name) {
