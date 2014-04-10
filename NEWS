@@ -1,3 +1,12 @@
+birdfont (0.37) stable;
+
+  * Font size settings in the kerning tab
+  * A new SVG parser
+  * Compability with many Microsoft Windows applications
+  * Bug fixes  
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Apr 10 16:09:59 CEST 2014
+
 birdfont (0.36) stable;
 
   * Paste letters in the kerning tab
