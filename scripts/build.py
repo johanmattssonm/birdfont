@@ -23,16 +23,20 @@ from run import run
 
 import config
 
-def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
+def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
 	#libbirdfont
 	run("mkdir -p build/libbirdfont")
 	run("mkdir -p build/bin")
+
+	experimentalNonNull = ""
+	if nonNull:
+		experimentalNonNull = "--enable-experimental-non-null"
 
 	run(valac + """\
 		-C \
 		""" + valaflags + """ \
 		--basedir build/libbirdfont/ \
-		--enable-experimental-non-null \
+		""" + experimentalNonNull + """ \
 		--enable-experimental \
 		--library libbirdfont \
 		-H build/libbirdfont/birdfont.h \
@@ -100,13 +104,17 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library):
 		run("gzip build/birdfont-export.1")
  				
 	
-def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
+def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
 	# birdfont-export
 	run("mkdir -p build/birdfont-export")
-	
+
+	experimentalNonNull = ""
+	if nonNull:
+		experimentalNonNull = "--enable-experimental-non-null"
+			
 	run(valac + """ \
 		-C \
-		--enable-experimental-non-null \
+		""" + experimentalNonNull + """ \
 		--enable-experimental \
 		--define=MAC birdfont-export/* \
 		--vapidir=./ \
@@ -154,14 +162,18 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library):
 	run("touch build/installed")
 	run("touch build/configured")
 	
-def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library):
+def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
 	# birdfont
 	run("mkdir -p build/birdfont")
-	
+
+	experimentalNonNull = ""
+	if nonNull:
+		experimentalNonNull = "--enable-experimental-non-null"
+			
 	run(valac + " " + valaflags  + """\
 		-C \
 		birdfont/* \
-		--enable-experimental-non-null \
+		""" + experimentalNonNull + """ \
 		--enable-experimental \
 		--vapidir=./ \
 		--pkg """ + config.GEE + """ \
