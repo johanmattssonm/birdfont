@@ -30,8 +30,8 @@ public class Glyph : FontDisplay {
 	int zoom_list_index = 0;
 	
 	// Paths
-	public List<Path> path_list;
-	public List<Path> active_paths = new List<Path> ();
+	public Gee.ArrayList<Path> path_list = new Gee.ArrayList<Path> ();
+	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
 
 	// The point where edit event begun 
 	double pointer_begin_x = 0;
@@ -86,8 +86,8 @@ public class Glyph : FontDisplay {
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
-		
-		path_list.append (new Path ());
+
+		path_list.add (new Path ());
 		
 		add_help_lines ();
 
@@ -95,17 +95,17 @@ public class Glyph : FontDisplay {
 		right_limit = 28;
 	}
 	
-	public override void close () {
-		undo_list.clear ();
-	}
-	
 	public Glyph.no_lines (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
 
-		path_list.append (new Path ());
+		path_list.add (new Path ());
 	}
-	
+
+	public override void close () {
+		undo_list.clear ();
+	}
+		
 	public string get_ligature_string () {
 		return substitution;
 	}
@@ -163,9 +163,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	public void clear_active_paths () {
-		while (active_paths.length () > 0) {
-			active_paths.remove_link (active_paths.first ());
-		}
+		active_paths.clear ();
 	}
 	
 	public void add_active_path (Path? p) {
@@ -177,24 +175,15 @@ public class Glyph : FontDisplay {
 				Toolbox.set_object_stroke (path.stroke);
 			}
 			
-			foreach (Path pi in active_paths) {
-				if (pi == p) {
-					return;
-				}
+			if (!active_paths.contains (path)) {
+				active_paths.add (path);
 			}
-			
-			active_paths.append (path);
 		}
 	}
 	
 	public Path? get_active_path () {
-		return_val_if_fail (!is_null(active_paths), null);
-		
-		if (!is_null(active_paths.last ())) {
-			return null;
-		}
-		
-		return active_paths.last ().data;
+		return_val_if_fail (active_paths.size > 0, null);
+		return active_paths.get (active_paths.size - 1);
 	}
 	
 	// It looks like this can be remove but firefox refuses to load
@@ -208,19 +197,13 @@ public class Glyph : FontDisplay {
 	}
 
 	public void boundaries (out double x1, out double y1, out double x2, out double y2) {
-		if (path_list.length () == 0) {
+		if (path_list.size == 0) {
 			x1 = 0;
 			y1 = 0;
 			x2 = 0;
 			y2 = 0;
 			return;
 		}
-
-		path_list.first ().data.update_region_boundaries ();
-		x1 = path_list.first ().data.xmin;
-		y1 = path_list.first ().data.ymin;
-		x2 = path_list.first ().data.xmax;
-		y2 = path_list.first ().data.ymax;
 				
 		foreach (Path p in path_list) {
 			p.update_region_boundaries ();
@@ -259,7 +242,7 @@ public class Glyph : FontDisplay {
 		}
 		
 		if (px2 == -10000 || px == 10000) {
-			warning (@"No box for selected paths. ($(active_paths.length ()))");
+			warning (@"No box for selected paths. ($(active_paths.size))");
 			px = 0;
 			py = 0;
 			px2 = 0;
@@ -346,7 +329,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	public void add_path (Path p) {
-		path_list.append (p);
+		path_list.add (p);
 	}
 	
 	public override void selected_canvas () {
@@ -490,17 +473,8 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
-	public void delete_path (Path p) requires (path_list.length () > 0) {
-		for (unowned List<Path> pl = path_list.first ();  pl != path_list.last (); pl = pl.next) {
-			if (pl.data == p) {
-				path_list.remove_link (pl);
-				return;
-			}
-		}
-		
-		if (path_list.last ().data == p) {
-			path_list.remove_link (path_list.last ());
-		}
+	public void delete_path (Path p) requires (path_list.size > 0) {
+		path_list.remove (p);
 	}
 	
 	public string get_svg_data () {
@@ -613,7 +587,7 @@ public class Glyph : FontDisplay {
 					MainWindow.get_current_glyph ().add_active_path (path);
 				}
 				
-				if (remaining_points.paths.length () > 0) {
+				if (remaining_points.paths.size > 0) {
 					delete_path (p);
 					return true;
 				}
@@ -723,19 +697,9 @@ public class Glyph : FontDisplay {
 
 	/** Add new points to this path. */
 	public void set_active_path (Path p) {
-		unowned List<Path> pl;
-		for (int i = 0; i < path_list.length (); i++) {
-			pl = path_list.nth (i);
-			if (pl.data == p) {
-				path_list.remove_link (pl);
-				break;
-			}
-		}
-		
-		path_list.append (p);
+		path_list.remove (p);
+		path_list.add (p);
 		p.reopen ();
-		
-		warn_if_fail (path_list.last ().data == p);
 	}
 
 	/** Insert new edit point for current path on the appropriate zoom
@@ -955,16 +919,12 @@ public class Glyph : FontDisplay {
 		}
 		
 		// a path without any editpoints
-		if (path_list.length () > 0) {
-			return path_list.first ().data;
+		if (path_list.size > 0) {
+			return path_list.get (0);
 		}
 
 		if (unlikely (min_distance == double.MAX)) {
-			warning (@"No path found in path_list. Length: $(path_list.length ())");
-			
-			if (path_list.length () > 0) {
-				stderr.printf (@"p.points.length () $(path_list.first ().data.points.length ()) \n");
-			}
+			warning (@"No path found in path_list. Length: $(path_list.size)");
 		}
 		
 		return min_point;
@@ -975,22 +935,22 @@ public class Glyph : FontDisplay {
 		Path np;
 		EditPoint inserted;
 		
-		if (path_list.length () == 0) {
+		if (path_list.size == 0) {
 			np = new Path ();
-			path_list.append (np);
+			path_list.add (np);
 		}
 			
 		xt = path_coordinate_x (x);
 		yt = path_coordinate_y (y);
 	
-		return_val_if_fail (path_list.length () > 0, new PointSelection.empty ());
+		return_val_if_fail (path_list.size > 0, new PointSelection.empty ());
 
-		if (path_list.last ().data.is_open ()) {
-			np = path_list.last().data;
+		if (path_list.get (path_list.size - 1).is_open ()) {
+			np = path_list.get (path_list.size - 1);
 			np.add (xt, yt);
 		} else {
 			np = new Path ();
-			path_list.append (np);
+			path_list.add (np);
 			np.add (xt, yt);
 			
 			if (DrawingTools.pen_tool.is_selected ()) {
@@ -1062,7 +1022,7 @@ public class Glyph : FontDisplay {
 
 		double xc = (allocation.width / 2.0);
 
-		if (active_paths.length () == 0) {
+		if (active_paths.size == 0) {
 			return;
 		}
 		
@@ -1096,12 +1056,12 @@ public class Glyph : FontDisplay {
 	public Path? get_last_path () 
 		ensures (result != null)
 	{
-		return_val_if_fail (path_list.length () > 0, null);
-		return path_list.last ().data;
+		return_val_if_fail (path_list.size > 0, null);
+		return path_list.get (path_list.size - 1);
 	}
 	
 	public bool has_active_path () {
-		return active_paths.length () > 0;
+		return active_paths.size > 0;
 	}
 	
 	public bool is_open () {
@@ -1379,7 +1339,7 @@ public class Glyph : FontDisplay {
 		if (is_open () && Path.fill_open_path) {
 			cr.save ();
 			cr.new_path ();
-			foreach (unowned Path p in path_list) {
+			foreach (Path p in path_list) {
 				if (p.stroke > 0) {
 					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr, get_path_fill_color ());
 				}
@@ -1393,7 +1353,7 @@ public class Glyph : FontDisplay {
 		if (is_open ()) {
 			cr.save ();
 			cr.new_path ();
-			foreach (unowned Path p in path_list) {
+			foreach (Path p in path_list) {
 				if (p.stroke > 0) {			
 					draw_outline_for_paths (StrokeTool.get_stroke (p, p.stroke), cr);
 				}
@@ -1410,7 +1370,7 @@ public class Glyph : FontDisplay {
 			
 			cr.save ();
 			cr.new_path ();
-			foreach (unowned Path p in path_list) {
+			foreach (Path p in path_list) {
 				if (p.stroke == 0) {
 					p.draw_path (cr, Color.black ());
 				} else {
@@ -1421,7 +1381,7 @@ public class Glyph : FontDisplay {
 			cr.fill ();
 			cr.restore ();
 			
-			foreach (unowned Path p in active_paths) {
+			foreach (Path p in active_paths) {
 				cr.save ();
 				cr.new_path ();
 				if (p.stroke == 0) {
@@ -1500,7 +1460,7 @@ public class Glyph : FontDisplay {
 		}
 
 		if (unlikely (Preferences.draw_boundaries)) {
-			foreach (unowned Path p in path_list) {
+			foreach (Path p in path_list) {
 				p.draw_boundaries (cr);
 			}
 		}
@@ -1596,7 +1556,7 @@ public class Glyph : FontDisplay {
 		}
 		
 		foreach (Path p in active_paths) {
-			g.active_paths.append (p);
+			g.active_paths.add (p);
 		}
 
 		if (background_image != null) {
@@ -1638,9 +1598,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	void set_glyph_data (Glyph g) {
-		while (path_list.length () > 0) {
-			path_list.remove_link (path_list.last ());
-		}
+		path_list.clear ();
 		
 		foreach (Path p in g.path_list) {
 			add_path (p);
@@ -1739,7 +1697,7 @@ public class Glyph : FontDisplay {
 	public void merge_all () {
 		store_undo_state ();
 		
-		if (active_paths.length () < 2) {
+		if (active_paths.size < 2) {
 			return;
 		}
 		
@@ -1768,17 +1726,17 @@ public class Glyph : FontDisplay {
 			
 			path_list = Path.merge (p1, p0);
 
-			if (path_list.paths.length () == 0) {
+			if (path_list.paths.size == 0) {
 				p0 = p1;
 				continue;
 			}
 			
-			mp = path_list.paths.first ().data;
+			mp = path_list.get_first_path ();
 
 			delete_path (p0);
 			delete_path (p1);
 			
-			// add new path + it's counter paths
+			// add new path + its counter paths
 			foreach (Path p in path_list.paths) {
 				p.close ();			
 				add_path (p.copy ());
@@ -1786,8 +1744,8 @@ public class Glyph : FontDisplay {
 			
 			add_active_path (mp);
 			
-			active_paths.remove_all (p0);
-			active_paths.remove_all (p1);
+			active_paths.remove (p0);
+			active_paths.remove (p1);
 
 			p0 = mp;
 			

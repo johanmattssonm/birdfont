@@ -118,7 +118,7 @@ class ResizeTool : Tool {
 				cr.paint ();
 			}
 			
-			if (g.active_paths.length () > 0) {
+			if (g.active_paths.size > 0) {
 				draw_rotate_handle (cr);
 			}
 		

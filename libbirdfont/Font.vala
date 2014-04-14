@@ -248,7 +248,7 @@ public class Font : GLib.Object {
 		ret.right_limit = 0;
 		ret.remove_empty_paths ();
 		
-		assert (ret.path_list.length () == 0);
+		assert (ret.path_list.size == 0);
 		
 		return ret;
 	}
@@ -266,7 +266,7 @@ public class Font : GLib.Object {
 		n.right_limit = 0;
 		n.remove_empty_paths ();
 		
-		assert (n.path_list.length () == 0);
+		assert (n.path_list.size == 0);
 		
 		return n;
 	}
@@ -288,7 +288,7 @@ public class Font : GLib.Object {
 		n.right_limit = 27;
 		n.remove_empty_paths ();
 		
-		assert (n.path_list.length () == 0);
+		assert (n.path_list.size == 0);
 		
 		return n;		
 	}

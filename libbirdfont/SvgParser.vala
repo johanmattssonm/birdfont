@@ -176,7 +176,7 @@ public class SvgParser {
 			
 			if (attr_name == "points") {
 				p = parse_polygon_data (attr_content, glyph);
-				pl.paths.append (p);
+				pl.add (p);
 			}
 		}		
 	}

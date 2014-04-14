@@ -81,9 +81,7 @@ class MoveTool : Tool {
 				g.update_view ();
 			}
 
-			while (g.active_paths.length () > 0) {
-				g.active_paths.remove_link (g.active_paths.first ());
-			}
+			g.active_paths.clear ();
 		}
 		
 		if (is_arrow_key (keyval)) {
@@ -154,7 +152,7 @@ class MoveTool : Tool {
 		last_x = x;
 		last_y = y;
 		
-		if (glyph.active_paths.length () == 0) {
+		if (glyph.active_paths.size == 0) {
 			group_selection = true;
 			selection_x = x;
 			selection_y = y;	

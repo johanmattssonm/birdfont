@@ -184,12 +184,12 @@ public class TrackTool : Tool {
 			
 			glyph = MainWindow.get_current_glyph ();
 			
-			if (glyph.path_list.length () == 0) {
+			if (glyph.path_list.size == 0) {
 				warning ("No path.");
 				return;
 			}
 			
-			p = glyph.path_list.last ().data;
+			p = glyph.path_list.get (glyph.path_list.size - 1);
 			draw_freehand = false;
 			
 			convert_points_to_line ();
@@ -220,7 +220,7 @@ public class TrackTool : Tool {
 
 			p.create_list ();
 			
-			if (glyph.path_list.length () < 2) {
+			if (glyph.path_list.size < 2) {
 				warning ("Less than two points");
 				return;
 			}
@@ -328,12 +328,12 @@ public class TrackTool : Tool {
 	
 		glyph = MainWindow.get_current_glyph ();
 		
-		if (glyph.path_list.length () == 0) {
+		if (glyph.path_list.size == 0) {
 			warning ("No path.");
 			return;
 		}
 		
-		p = glyph.path_list.last ().data;
+		p = glyph.path_list.get (glyph.path_list.size - 1);
 		p.reopen ();
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);
@@ -414,12 +414,12 @@ public class TrackTool : Tool {
 	Path get_active_path () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
-		if (glyph.path_list.length () == 0) {
+		if (glyph.path_list.size == 0) {
 			warning ("No path.");
 			return new Path ();
 		}
 			
-		return glyph.path_list.last ().data;		
+		return glyph.path_list.get (glyph.path_list.size - 1);		
 	}
 	
 	/** Delete all points close to the pixel at x,y. */
@@ -466,12 +466,12 @@ public class TrackTool : Tool {
 		
 		glyph = MainWindow.get_current_glyph ();
 		
-		if (glyph.path_list.length () == 0) {
+		if (glyph.path_list.size == 0) {
 			warning ("No path.");
 			return new EditPoint ();
 		}
 			
-		p = glyph.path_list.last ().data;
+		p = glyph.path_list.get (glyph.path_list.size - 1);
 
 		if (unlikely (p.points.length () < added_points)) {
 			warning ("Missing point.");

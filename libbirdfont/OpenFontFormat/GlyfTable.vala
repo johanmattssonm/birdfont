@@ -206,7 +206,7 @@ public class GlyfTable : Table {
 		g.remove_empty_paths ();
 		glyf_data = new GlyfData (g);
 		
-		if (g.path_list.length () == 0 || glyf_data.paths.length () == 0 || glyf_data.get_ncontours () == 0) {
+		if (g.path_list.size == 0 || glyf_data.paths.length () == 0 || glyf_data.get_ncontours () == 0) {
 			// location_offsets will be equal to location_offset + 1 for
 			// all empty glyphs
 			g.set_empty_ttf (true);
@@ -768,9 +768,9 @@ public class GlyfTable : Table {
 		if (ixmax <= ixmin) {
 			warning (@"Bounding box is bad. (xmax == xmin) ($xmax == $xmin)");
 			
-			if (glyph.path_list.length () > 0) {
+			if (glyph.path_list.size > 0) {
 				
-				Path ps = ((!) glyph.path_list.first ()).data;
+				Path ps = glyph.path_list.get (0);
 				
 				ps.update_region_boundaries ();
 				xmin = ps.xmin;

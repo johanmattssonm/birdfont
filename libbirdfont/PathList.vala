@@ -15,35 +15,33 @@
 namespace BirdFont {
 
 public class PathList : GLib.Object {
-	public List<Path> paths;
+	public Gee.ArrayList<Path> paths;
 	
 	public PathList () {
-		 paths = new List<Path> ();
+		 paths = new Gee.ArrayList<Path> ();
 	}
 	
 	public void add (Path p) {
-		paths.append (p);
+		paths.add (p);
 	}
 	
 	public void append (PathList pl) {
 		foreach (Path p in pl.paths) {
-			paths.append (p);
+			paths.add (p);
 		}
 	}
 	
 	public void clear () {
-		while (paths.length () > 0) {
-			paths.remove_link (paths.first ());
-		}
+		paths.clear ();
 	}
 	
 	public Path get_first_path () {
-		if (unlikely (paths.length () == 0)) {
+		if (unlikely (paths.size == 0)) {
 			warning ("No path");
 			return new Path ();
 		}
 		
-		return paths.first ().data;
+		return paths.get (0);
 	}
 }
 

@@ -107,7 +107,7 @@ public class ClipTool : Tool {
 		s.append ("\n");
 		s.append ("<!-- BirdFontClipboard\n");
 		
-		if (glyph.path_list.length () > 0 && !glyph.path_list.first ().data.is_editable ()) {
+		if (glyph.path_list.size > 0) {
 			foreach (Path path in glyph.active_paths) {
 				s.append ("BF path: ");
 				s.append (BirdFontFile.get_point_data (path));
@@ -193,7 +193,7 @@ public class ClipTool : Tool {
 
 		if (path.points.length () > 0) {
 			glyph.add_path (path);
-			glyph.active_paths.append (path);
+			glyph.active_paths.add (path);
 			path.update_region_boundaries ();
 		}
 		

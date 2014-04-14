@@ -1956,7 +1956,7 @@ public class Path {
 				ep.set_reflective_handles (false);
 				ep.get_left_handle ().type = PenTool.to_line (ep.type);
 				ep.type = PenTool.to_curve (ep.type);
-				path_list.paths.append (current_path);
+				path_list.add (current_path);
 				
 				if (!is_null (current_path.points.last ())) {
 					ep = current_path.points.last ().data;
@@ -1972,7 +1972,7 @@ public class Path {
 				ep.get_left_handle ().type = PenTool.to_line (ep.type);
 				ep.type = PenTool.to_curve (ep.type);
 				set_new_start (current_path.points.first ().data);
-				path_list.paths.append (current_path);
+				path_list.add (current_path);
 				
 				if (!is_null (current_path.points.last ())) {
 					ep = current_path.points.last ().data;
@@ -1986,7 +1986,7 @@ public class Path {
 				remaining_points.points.first ().data.set_reflective_handles (false);
 				remaining_points.points.first ().data.type = remaining_points.points.first ().data.type;
 				set_new_start (remaining_points.points.first ().data);
-				path_list.paths.append (remaining_points);
+				path_list.add (remaining_points);
 				
 				if (!is_null (current_path.points.last ())) {
 					ep = current_path.points.last ().data;
@@ -2068,8 +2068,7 @@ public class Path {
 		IntersectionList il;
 		int i;
 		Path np;
-		
-		unowned List<Path> pi;
+		Path pi;
 		
 		il = IntersectionList.create_intersection_list (p0, p1);
 		
@@ -2119,7 +2118,7 @@ public class Path {
 		foreach (Intersection inter in il.points) {
 			p0.set_new_start (inter.editpoint_a);
 			get_merge_part (il, p0, p1, out np);
-			path_list.paths.append (np);
+			path_list.add (np);
 		}
 		
 		foreach (Path pp in path_list.paths) {
@@ -2127,21 +2126,21 @@ public class Path {
 		}
 
 		// remove duplicate paths
-		for (i = 0; i < path_list.paths.length (); i++) {
-			pi = path_list.paths.nth (i);
+		for (i = 0; i < path_list.paths.size; i++) {
+			pi = path_list.paths.get (i);
 
-			if (is_duplicated (path_list, pi.data)) {
-				path_list.paths.remove_link (pi);
+			if (is_duplicated (path_list, pi)) {
+				path_list.paths.remove (pi);
 				--i;			
 			}
 		}
 		
 		// remove paths contained in other paths
-		for (i = 0; i < path_list.paths.length (); i++) {
-			pi = path_list.paths.nth (i);
+		for (i = 0; i < path_list.paths.size; i++) {
+			pi = path_list.paths.get (i);
 			
-			if (pi.data.is_clockwise () && is_clasped (path_list, pi.data)) {
-				path_list.paths.remove_link (pi);
+			if (pi.is_clockwise () && is_clasped (path_list, pi)) {
+				path_list.paths.remove (pi);
 				i--;
 			}
 		}

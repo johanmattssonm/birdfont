@@ -278,7 +278,7 @@ public class DrawingTools : ToolCollection  {
 
 			foreach (Path p in g.active_paths) {
 				g.path_list.remove (p);
-				g.path_list.prepend (p);
+				g.path_list.insert (0, p);
 			}
 		});
 		path_tool_modifiers.add_tool (move_layer);

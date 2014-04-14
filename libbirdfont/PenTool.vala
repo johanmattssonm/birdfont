@@ -546,7 +546,7 @@ public class PenTool : Tool {
 		PathList pl = new PathList ();
 		
 		foreach (Path p in g.path_list) {
-			pl.paths.append (p);
+			pl.add (p);
 		}
 		
 		return Path.is_clasped (pl, path);
@@ -681,7 +681,7 @@ public class PenTool : Tool {
 		EditPoint last_point, first_point;
 		EditPointHandle last_rh, fist_rh;
 		
-		if (glyph.path_list.length () < 1) {
+		if (glyph.path_list.size < 1) {
 			return;
 		}
 
@@ -1089,8 +1089,10 @@ public class PenTool : Tool {
 		new_point.point.set_selected (true);
 
 		selected_point = new_point.point;
-		active_edit_point = new_point.point;	
-		add_selected_point (selected_point, glyph.active_paths.last ().data);
+		active_edit_point = new_point.point;
+		
+		return_if_fail (glyph.active_paths.size > 0);		
+		add_selected_point (selected_point, glyph.active_paths.get (glyph.active_paths.size - 1));
 
 		move_selected = true;
 	}

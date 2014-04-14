@@ -579,11 +579,11 @@ class TestCases {
 
 		g.close_path ();
 
-		warn_if_fail (g.active_paths.length () == 0);
+		warn_if_fail (g.active_paths.size == 0);
 
 		g.select_path (50, 50);
 
-		warn_if_fail (g.active_paths.length () == 1);
+		warn_if_fail (g.active_paths.size == 1);
 		
 		p.add (-10, 10);
 		p.add (10, 10);
@@ -656,9 +656,9 @@ class TestCases {
 		g = MainWindow.get_current_glyph ();
 		foreach (Path p in n.path_list) {
 			pn = p.copy ().get_quadratic_points ();
-			g.path_list.append (pn);
+			g.path_list.add (pn);
 			pn.move (50, 0);
-			g.path_list.append (p.copy ());
+			g.path_list.add (p.copy ());
 		}
 	}
 
