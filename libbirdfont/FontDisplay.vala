@@ -30,6 +30,9 @@ public abstract class FontDisplay : GLib.Object {
 		warning ("No label.");
 		return "";
 	}
+		
+	public virtual void close () {
+	}
 	
 	public virtual bool has_scrollbar () {
 		return false;

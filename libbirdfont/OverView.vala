@@ -34,7 +34,7 @@ public class OverView : FontDisplay {
 	GlyphRange glyph_range;
 	string search_query = "";
 	
-	List<OverViewItem> visible_items = new List<OverViewItem> ();
+	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
 	List<GlyphCollection> deleted_glyphs = new List<GlyphCollection> ();
 		
 	bool all_available = true;
@@ -132,8 +132,8 @@ public class OverView : FontDisplay {
 	}
 	
 	public Glyph? get_current_glyph () 
-	requires (selected > 0 && selected < visible_items.length ()) {
-		OverViewItem oi = visible_items.nth (selected).data;
+	requires (selected > 0 && selected < visible_items.size) {
+		OverViewItem oi = visible_items.get (selected);
 		if (oi.glyphs != null) {
 			return ((!) oi.glyphs).get_current ();
 		}
@@ -253,17 +253,17 @@ public class OverView : FontDisplay {
 	}
 	
 	OverViewItem get_selected_item () {
-		if (visible_items.length () == 0) {
+		if (visible_items.size == 0) {
 			warning ("No items.");
 			return new OverViewItem (null, '\0', 0, 0);
 		}
 		
-		if (unlikely (!(0 <= selected < visible_items.length ()))) { 
-			warning (@"0 <= $selected < $(visible_items.length ())");
+		if (unlikely (!(0 <= selected < visible_items.size))) { 
+			warning (@"0 <= $selected < $(visible_items.size)");
 			return new OverViewItem (null, '\0', 0, 0);
 		}	
 		
- 		return visible_items.nth (selected).data;
+ 		return visible_items.get (selected);
 	}
 	
 	int get_items_per_row () {
@@ -290,11 +290,9 @@ public class OverView : FontDisplay {
 		items_per_row = get_items_per_row ();
 		rows = (int) (allocation.height /  OverViewItem.full_height ()) + 2;
 		
-		while (visible_items.length () > 0) {
-			visible_items.remove_link (visible_items.first ());
-		}
+		visible_items.clear ();
 		
-		visible_items = new List<OverViewItem> ();
+		visible_items = new Gee.ArrayList<OverViewItem> ();
 		
 		// update item list
 		index = (uint32) first_visible;
@@ -332,7 +330,7 @@ public class OverView : FontDisplay {
 			
 			item.selected = (i == selected);
 			
-			visible_items.append (item);
+			visible_items.add (item);
 			index++;
 		}
 		
@@ -369,7 +367,7 @@ public class OverView : FontDisplay {
 			i.draw (cr);
 		}
 		
-		if (visible_items.length () == 0) {
+		if (visible_items.size == 0) {
 			draw_empty_canvas (allocation, cr);
 		}
 		
@@ -485,7 +483,7 @@ public class OverView : FontDisplay {
 
 	/** Returns true if the selected glyph is at the last row. */
 	private bool last_row () {
-		return visible_items.length () - selected <= items_per_row;
+		return visible_items.size - selected <= items_per_row;
 	}
 
 	public void key_down () {
@@ -512,8 +510,8 @@ public class OverView : FontDisplay {
 			}
 		}
 		
-		if (selected >= visible_items.length ()) { 
-			selected = (int) (visible_items.length () - 1); 
+		if (selected >= visible_items.size) { 
+			selected = (int) (visible_items.size - 1); 
 		} 
 	}
 
@@ -522,7 +520,7 @@ public class OverView : FontDisplay {
 		int64 len = (all_available) ? f.length () : glyph_range.length ();
 
 		if (at_bottom () && first_visible + selected + 1 >= len) {
-			selected = (int) (visible_items.length () - 1);
+			selected = (int) (visible_items.size - 1);
 			return;
 		}
 		
@@ -812,8 +810,8 @@ public class OverView : FontDisplay {
 	}
 	
 	public void open_current_glyph () 
-	requires (0 <= selected < visible_items.length ())  {
-		OverViewItem o = visible_items.nth (selected).data;
+	requires (0 <= selected < visible_items.size)  {
+		OverViewItem o = visible_items.get (selected);
 		o.edit_glyph ();
 	}
 

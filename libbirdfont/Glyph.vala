@@ -26,7 +26,7 @@ public class Glyph : FontDisplay {
 	public double view_zoom = 0.01;
 	public double view_offset_x = 0;
 	public double view_offset_y = 0;
-	List<ZoomView> zoom_list = new List<ZoomView> ();
+	Gee.ArrayList<ZoomView> zoom_list = new Gee.ArrayList<ZoomView> ();
 	int zoom_list_index = 0;
 	
 	// Paths
@@ -62,14 +62,13 @@ public class Glyph : FontDisplay {
 	public double right_limit;
 	
 	// x-height, lsb, etc.
-	public List<Line> vertical_help_lines = new List<Line> ();
-	public List<Line> horizontal_help_lines = new List<Line> ();
-	List<Line> all_lines = new List<Line> (); 	// vertical, horzontal and grid lines
+	public Gee.ArrayList<Line> vertical_help_lines = new Gee.ArrayList<Line> ();
+	public Gee.ArrayList<Line> horizontal_help_lines = new Gee.ArrayList<Line> ();
 	bool show_help_lines = true;
 	bool xheight_lines_visible = false;
 	bool margin_boundaries_visible = false;
 	
-	List<Glyph> undo_list = new List<Glyph> ();
+	Gee.ArrayList<Glyph> undo_list = new Gee.ArrayList<Glyph> ();
 	
 	string glyph_sequence = "";
 	bool open = true;
@@ -95,7 +94,11 @@ public class Glyph : FontDisplay {
 		left_limit = -28;
 		right_limit = 28;
 	}
-
+	
+	public override void close () {
+		undo_list.clear ();
+	}
+	
 	public Glyph.no_lines (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -354,18 +357,8 @@ public class Glyph : FontDisplay {
 	}
 	
 	private void remove_lines () {
-		unowned List<Line> li;
-		while (vertical_help_lines.length () != 0) {
-			li = vertical_help_lines.first ();
-			li.data.unref ();
-			vertical_help_lines.delete_link (li);
-		}
-
-		while (horizontal_help_lines.length () != 0) {
-			li = horizontal_help_lines.first ();
-			li.data.unref ();
-			horizontal_help_lines.delete_link (li);
-		}		
+		vertical_help_lines.clear ();
+		horizontal_help_lines.clear ();	
 	}
 	
 	public void add_help_lines () {
@@ -548,9 +541,9 @@ public class Glyph : FontDisplay {
 	
 	private void add_line (Line line) {
 		if (line.is_vertical ()) {
-			vertical_help_lines.append (line);
+			vertical_help_lines.add (line);
 		} else {
-			horizontal_help_lines.append (line);
+			horizontal_help_lines.add (line);
 		}
 
 		sort_help_lines ();
@@ -664,17 +657,25 @@ public class Glyph : FontDisplay {
 		update_view ();
 	}
 
-	private unowned List<Line> get_all_help_lines () {
-		while (all_lines.length () > 0) {
-			all_lines.delete_link (all_lines.first ());
+	private Gee.ArrayList<Line> get_all_help_lines () {
+		Gee.ArrayList<Line> all_lines = new Gee.ArrayList<Line> ();
+		
+		foreach (Line l in vertical_help_lines) {
+			all_lines.add (l);
 		}
-		
-		all_lines.concat (vertical_help_lines.copy ());
-		all_lines.concat (horizontal_help_lines.copy ());
-		
+
+		foreach (Line l in horizontal_help_lines) {
+			all_lines.add (l);
+		}
+				
 		if (GridTool.is_visible ()) {
-			all_lines.concat (GridTool.get_vertical_lines ().copy ());
-			all_lines.concat (GridTool.get_horizontal_lines ().copy ());
+			foreach (Line l in GridTool.get_vertical_lines ()) {
+				all_lines.add (l);
+			}
+			
+			foreach (Line l in GridTool.get_horizontal_lines ()) {
+				all_lines.add (l);
+			}
 		}
 		
 		return all_lines;
@@ -1224,32 +1225,31 @@ public class Glyph : FontDisplay {
 	}
 
 	public override void store_current_view () {
-		unowned List<ZoomView> n;
+		ZoomView n;
 		
-		if (zoom_list_index + 1 < zoom_list.length ()) {
-			n = zoom_list.nth (zoom_list_index);
-			while (n != zoom_list.last ()) {
-				zoom_list.delete_link (zoom_list.last ());
+		if (zoom_list_index + 1 < zoom_list.size) {
+			n = zoom_list.get (zoom_list_index);
+			while (n != zoom_list.get (zoom_list.size - 1)) {
+				zoom_list.remove_at (zoom_list.size - 1);
 			}
 		}
 		
-		zoom_list.append (new ZoomView (view_offset_x, view_offset_y, view_zoom, allocation));
-		zoom_list_index = (int) zoom_list.length () - 1;
+		zoom_list.add (new ZoomView (view_offset_x, view_offset_y, view_zoom, allocation));
+		zoom_list_index = (int) zoom_list.size - 1;
 		
-		if (zoom_list.length () > 50) {
-			zoom_list.delete_link (zoom_list.first ());
+		if (zoom_list.size > 50) {
+			zoom_list.remove_at (0);
 		}
 	}
 	
-	public override void restore_last_view () 
-		requires (zoom_list.length () > 0)
-	{		
-		if (zoom_list_index - 1 < 0 || zoom_list.length () == 0)
+	public override void restore_last_view () {
+		if (zoom_list.size == 0 || zoom_list_index - 1 < 0 || zoom_list.size == 0) {
 			return;
+		}
 		
 		zoom_list_index--;
 			
-		ZoomView z = zoom_list.nth (zoom_list_index).data;
+		ZoomView z = zoom_list.get (zoom_list_index);
 			
 		view_offset_x = z.x;
 		view_offset_y = z.y;
@@ -1257,15 +1257,16 @@ public class Glyph : FontDisplay {
 		allocation = z.allocation;
 	}
 
-	public override void next_view () 
-		requires (zoom_list.length () > 0)
-	{
-		if (zoom_list_index + 1 >= zoom_list.length ())
+	public override void next_view () {
+		ZoomView z;
+		
+		if (zoom_list.size == 0 || zoom_list_index + 1 >= zoom_list.size) {
 			return;
+		}
 		
 		zoom_list_index++;
 		
-		ZoomView z = zoom_list.nth (zoom_list_index).data;
+		z = zoom_list.get (zoom_list_index);
 			
 		view_offset_x = z.x;
 		view_offset_y = z.y;
@@ -1283,10 +1284,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	/** Get x-height or top line. */
-	public Line get_upper_line () 
-		requires (horizontal_help_lines.length () > 2)
-	{
-		
+	public Line get_upper_line () {
 		if (has_top_line () || xheight_lines_visible) {
 			return get_line ("top");
 		}
@@ -1295,9 +1293,7 @@ public class Glyph : FontDisplay {
 	}
 
 	/** Get base line. */
-	public Line get_lower_line () 
-		requires (horizontal_help_lines.length () > 2)
-	{
+	public Line get_lower_line () {
 		return get_line ("baseline");
 	}
 		
@@ -1308,25 +1304,16 @@ public class Glyph : FontDisplay {
 		int left = 0;
 		int right = 0;
 	
-		unowned List<Line>? n = horizontal_help_lines;
-		unowned List<Line>? v = vertical_help_lines;
-		
-		if (unlikely (n == null)) {
-				warning ("n == null");
-				warning (@"Can not set default zoom for $name, lines are not available.");
-		}
-		
-		return_if_fail (v != null);
-		return_if_fail (vertical_help_lines.length () != 0);
-		return_if_fail (horizontal_help_lines.length () != 0);
+		return_if_fail (vertical_help_lines.size != 0);
+		return_if_fail (horizontal_help_lines.size != 0);
 
 		reset_zoom ();
 		
 		bottom = get_lower_line ().get_position_pixel ();
 		top = get_upper_line ().get_position_pixel ();
 
-		left = vertical_help_lines.last ().data.get_position_pixel ();
-		right = vertical_help_lines.first ().data.get_position_pixel ();
+		left = vertical_help_lines.get (vertical_help_lines.size - 1).get_position_pixel ();
+		right = vertical_help_lines.get (0).get_position_pixel ();
 		
 		set_zoom_area (left + 10, top - 10, right - 10, bottom + 10);
 		set_zoom_from_area ();
@@ -1589,7 +1576,7 @@ public class Glyph : FontDisplay {
 
 	public void store_undo_state () {
 		Glyph g = copy ();
-		undo_list.append (g);		
+		undo_list.add (g);		
 	}
 
 	public Glyph copy () {
@@ -1636,14 +1623,14 @@ public class Glyph : FontDisplay {
 	public override void undo () {
 		Glyph g;
 		
-		if (undo_list.length () == 0) {
+		if (undo_list.size == 0) {
 			return;
 		}
 		
-		g = undo_list.last ().data;	
+		g = undo_list.get (undo_list.size - 1);	
 		set_glyph_data (g);
 		
-		undo_list.remove_link (undo_list.last ());
+		undo_list.remove_at (undo_list.size - 1);
 
 		PenTool.update_selected_points ();
 		

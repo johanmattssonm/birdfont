@@ -276,6 +276,8 @@ public class TabBar : GLib.Object {
 		t = (!) ((!) lt).data;
 
 		if (t.has_close_button ()) {
+			t.get_display ().close ();
+			
 			tabs.delete_link (tabs.nth(index));
 			
 			if (!background_tab && select_new_tab) {
