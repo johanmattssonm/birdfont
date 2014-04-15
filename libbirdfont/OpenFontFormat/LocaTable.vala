@@ -108,7 +108,7 @@ public class LocaTable : Table {
 			}
 			
 			if (o % 4 != 0) {
-				warning ("glyph is not on a four byte boundry");
+				warning ("glyph is not on a four byte boundary");
 				assert_not_reached ();
 			}
 			

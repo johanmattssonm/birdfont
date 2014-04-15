@@ -255,7 +255,7 @@ public class NameTable : Table {
 			fd.add_ushort (0); // language
 			fd.add_ushort (p); // name id 
 			fd.add_ushort (l); // strlen
-			fd.add_ushort (len); // offset from begining of string storage
+			fd.add_ushort (len); // offset from beginning of string storage
 			len += l;				
 		}	
 
@@ -269,7 +269,7 @@ public class NameTable : Table {
 			fd.add_ushort (0x0409); // language
 			fd.add_ushort (p); // name id 
 			fd.add_ushort (l); // strlen
-			fd.add_ushort (len); // offset from begining of string storage
+			fd.add_ushort (len); // offset from beginning of string storage
 			len += l;
 		}
 

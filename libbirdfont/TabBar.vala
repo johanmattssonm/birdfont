@@ -152,7 +152,7 @@ public class TabBar : GLib.Object {
 		int i = 0;
 		
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return false;
 		}
 		
@@ -169,7 +169,7 @@ public class TabBar : GLib.Object {
 
 	public bool select_tab_name (string s) {
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return false;
 		}
 		
@@ -178,7 +178,7 @@ public class TabBar : GLib.Object {
 
 	public void select_overview () {
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return;
 		}
 		
@@ -190,7 +190,7 @@ public class TabBar : GLib.Object {
 		bool open;
 		
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return;
 		}
 		
@@ -210,7 +210,7 @@ public class TabBar : GLib.Object {
 		int i = -1;
 		
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return;
 		}
 		
@@ -230,7 +230,7 @@ public class TabBar : GLib.Object {
 
 	public void close_all_tabs () {
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return;
 		}
 		
@@ -248,7 +248,7 @@ public class TabBar : GLib.Object {
 		Tab empty_tab;
 	
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return false;
 		}
 				
@@ -298,7 +298,7 @@ public class TabBar : GLib.Object {
 		int i = 0;
 
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return false;
 		}
 				
@@ -315,7 +315,7 @@ public class TabBar : GLib.Object {
 	
 	public void close_background_tab_by_name (string name) {
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return;
 		}
 		
@@ -327,7 +327,7 @@ public class TabBar : GLib.Object {
 		int i = 0;
 
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return false;
 		}
 		
@@ -365,7 +365,7 @@ public class TabBar : GLib.Object {
 		int i = 0;
 	
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return false;
 		}
 		
@@ -403,7 +403,7 @@ public class TabBar : GLib.Object {
 		Tab t;
 
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return;
 		}
 			
@@ -538,7 +538,7 @@ public class TabBar : GLib.Object {
 		int over, close;
 		
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return;
 		}
 		
@@ -561,7 +561,7 @@ public class TabBar : GLib.Object {
 		int s = (tabs.length () == 0) ? 0 : selected + 1;
 
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return;
 		}
 				
@@ -579,7 +579,7 @@ public class TabBar : GLib.Object {
 		bool i;
 		
 		if (MenuTab.suppress_event) {
-			warn_if_test ("Event supressed");
+			warn_if_test ("Event suppressed");
 			return false;
 		}
 				

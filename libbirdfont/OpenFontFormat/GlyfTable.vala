@@ -652,7 +652,7 @@ public class GlyfTable : Table {
 		}
 		
 		if (rymin != iymin || rxmin != ixmin || rxmax != ixmax || rymax != iymax) {
-			warning (@"Warning real boundry for glyph does not match boundry set in glyph header for glyph $(name.str).");
+			warning (@"Warning real boundary for glyph does not match boundary set in glyph header for glyph $(name.str).");
 			stderr.printf (@"ymin: $rymin header: $iymin\n");
 			stderr.printf (@"xmin: $rxmin header: $ixmin\n");
 			stderr.printf (@"ymax: $rymax header: $iymax\n");

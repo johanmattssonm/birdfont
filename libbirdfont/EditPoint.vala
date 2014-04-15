@@ -99,7 +99,7 @@ public class EditPoint {
 			&& get_left_handle ().y () == e.get_left_handle ().y ();
 	}
 
-	/** Make handles symetrical. */
+	/** Make handles symmetrical. */
 	public void set_reflective_handles (bool symmetrical) {
 		reflective_handles = symmetrical;
 	}

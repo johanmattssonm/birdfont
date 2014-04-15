@@ -67,7 +67,7 @@ public class PreviewTools : ToolCollection  {
 			TooltipArea.show_text (t_("Three font files have been created."));	
 			suppress_event = false;
 		} else {
-			warn_if_test ("Export event supressed");
+			warn_if_test ("Export event suppressed");
 		}
 	}
 

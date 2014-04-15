@@ -80,7 +80,7 @@ public class Glyph : FontDisplay {
 	
 	bool empty = false;
 	
-	/** Id in the verison list. */
+	/** Id in the version list. */
 	public int version_id = 1;
 	
 	public Glyph (string name, unichar unichar_code = 0) {
