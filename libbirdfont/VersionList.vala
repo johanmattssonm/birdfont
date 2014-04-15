@@ -19,11 +19,11 @@ namespace BirdFont {
 
 public class VersionList : DropMenu {
 	int current_version_id = -1;
-	public List<Glyph> glyphs;
+	public Gee.ArrayList<Glyph> glyphs;
 
 	public VersionList (Glyph? g = null) {
 		base ("version");
-		glyphs = new List<Glyph> ();
+		glyphs = new  Gee.ArrayList<Glyph> ();
 		
 		set_direction (MenuDirection.POP_UP);
 		
@@ -31,22 +31,20 @@ public class VersionList : DropMenu {
 		ma.has_delete_button = false;
 		ma.action = (self) => {
 			return_if_fail (self.parent != null);
-			return_if_fail (glyphs.length () > 0);
+			return_if_fail (glyphs.size > 0);
 			
 			BirdFont.get_current_font ().touch ();
 			
 			add_new_version ();
-			current_version_id = glyphs.last ().data.version_id;
+			current_version_id = glyphs.get (glyphs.size - 1).version_id;
 		};
 		
 		signal_delete_item.connect ((index) => {
-			unowned List<Glyph> gl;
 			int current_version;
 			
 			index--; // first item is the add new action
-			return_if_fail (0 <= index < glyphs.length ());
-			gl = glyphs.nth (index);
-			glyphs.remove_link (gl);
+			return_if_fail (0 <= index < glyphs.size);
+			glyphs.remove_at (index);
 			
 			recreate_index ();
 			
@@ -54,8 +52,8 @@ public class VersionList : DropMenu {
 			if (index == current_version) {
 				set_selected_item (get_action_no2 ()); // select the first glyph if the current glyph is deleted
 			} else if (index < current_version) {
-				return_if_fail (0 <= current_version - 1 < glyphs.length ());
-				current_version_id = glyphs.nth (current_version - 1).data.version_id;
+				return_if_fail (0 <= current_version - 1 < glyphs.size);
+				current_version_id = glyphs.get (current_version - 1).version_id;
 			}
 		});
 		
@@ -81,6 +79,8 @@ public class VersionList : DropMenu {
 	}
 	
 	public Glyph get_current () {
+		Glyph gl;
+		
 		foreach (Glyph g in glyphs) {
 			if (g.version_id == current_version_id) {
 				return g;
@@ -89,9 +89,10 @@ public class VersionList : DropMenu {
 		
 		warning (@"Can not find current glyph for id $current_version_id");
 		
-		if (glyphs.length () > 0) {
-			set_selected_version (glyphs.last ().data.version_id);
-			return glyphs.last ().data;
+		if (glyphs.size > 0) {
+			gl = glyphs.get (glyphs.size - 1);
+			set_selected_version (gl.version_id);
+			return gl;
 		}
 		
 		return new Glyph ("");
@@ -105,19 +106,19 @@ public class VersionList : DropMenu {
 	}
 	
 	private int get_last_id () {
-		return_val_if_fail (glyphs.length () > 0, 1);
-		return glyphs.last ().data.version_id;
+		return_val_if_fail (glyphs.size > 0, 1);
+		return glyphs.get (glyphs.size - 1).version_id;
 	}
 	
 	private void set_selected_item (MenuAction ma) {
 		int i = ma.index;
 		Glyph current_glyph = MainWindow.get_current_glyph ();
-		unowned List<Glyph> g;
+		Glyph g;
 				
-		return_if_fail (0 <= i < glyphs.length ());
-		g = glyphs.nth (i);
+		return_if_fail (0 <= i < glyphs.size);
+		g = glyphs.get (i);
 		
-		current_version_id = g.data.version_id;
+		current_version_id = g.version_id;
 		
 		return_if_fail (ma.parent != null);
 		
@@ -126,12 +127,8 @@ public class VersionList : DropMenu {
 		
 		reload_all_open_glyphs ();
 
-		if (unlikely (is_null (g.data))) {
-			warning ("No data in glyph collection.");
-		} else {
-			g.data.set_allocation (current_glyph.allocation);
-			g.data.default_zoom ();
-		}
+		g.set_allocation (current_glyph.allocation);
+		g.default_zoom ();
 	}
 	
 	/** Reload a glyph when a new version is selected. Updates the path
@@ -190,10 +187,10 @@ public class VersionList : DropMenu {
 		int v;
 		
 		v = new_version.version_id;
-		glyphs.append (new_version);
+		glyphs.add (new_version);
 
 		ma = add_item (t_("Version") + @" $v");
-		ma.index = (int) glyphs.length () - 1;
+		ma.index = (int) glyphs.size - 1;
 		
 		ma.action = (self) => {
 			Font font = BirdFont.get_current_font ();

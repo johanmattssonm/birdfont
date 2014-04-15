@@ -38,11 +38,11 @@ public class GlyphCollection : GLib.Object {
 	
 	public void insert_glyph (Glyph g, bool selected) {
 		versions.add_glyph (g, selected);		
-		assert (versions.glyphs.length () > 0);
+		assert (versions.glyphs.size > 0);
 	}
 	
 	public uint length () {
-		return versions.glyphs.length ();
+		return versions.glyphs.size;
 	}
 	
 	public string get_unicode () {

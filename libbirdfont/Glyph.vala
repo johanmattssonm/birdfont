@@ -576,25 +576,40 @@ public class Glyph : FontDisplay {
 	 * @return false if no points was deleted 
 	 */
 	public bool process_deleted () {
-		PathList remaining_points;
+		Gee.ArrayList<Path> deleted_paths = new Gee.ArrayList<Path> ();
 		foreach (Path p in path_list) {
 			if (p.points.length () > 0) {
-				remaining_points = p.process_deleted_points ();
-				foreach (Path path in remaining_points.paths) {
-					add_path (path);
-					path.reopen ();
-					path.create_list ();
-					MainWindow.get_current_glyph ().add_active_path (path);
-				}
-				
-				if (remaining_points.paths.size > 0) {
-					delete_path (p);
+				if (process_deleted_points_in_path (p)) {
 					return true;
 				}
 			} else {
-				delete_path (p);
+				deleted_paths.add (p);
 			}
 		}
+		
+		foreach (Path p in deleted_paths) {
+			delete_path (p);
+		}
+		
+		return false;
+	}
+	
+	private bool process_deleted_points_in_path (Path p) {
+		PathList remaining_points;
+		remaining_points = p.process_deleted_points ();
+		foreach (Path path in remaining_points.paths) {
+			add_path (path);
+			path.reopen ();
+			path.create_list ();
+			
+			add_active_path (path);
+		}
+		
+		if (remaining_points.paths.size > 0) {
+			delete_path (p);
+			return true;
+		}
+		
 		return false;
 	}
 	

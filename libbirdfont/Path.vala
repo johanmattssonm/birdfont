@@ -791,12 +791,13 @@ public class Path {
 	
 	/** Variable precision */
 	public bool is_over_coordinate_var (double x, double y, double tolerance) {
-		List<EditPoint> ycoordinates = new List<EditPoint> ();
+		Gee.ArrayList<EditPoint> ycoordinates = new Gee.ArrayList<EditPoint> ();
 		double last = 0;
 		bool on_edge = false;
 		double last_x = 0;
 		Path path;
 		PathList pathlist;
+		EditPoint next_e, last_e;
 		
 		if (points.length () < 2) {
 			return false;
@@ -827,8 +828,8 @@ public class Path {
 				return false;
 			}
 			
-			if (Math.fabs (cx - x) < tolerance && Math.fabs (last - cy) > 2 * tolerance) {
-				ycoordinates.append (new EditPoint (cx, cy));
+			if (Math.fabs (cx - x) < tolerance && Math.fabs (last - cy) > 10 * tolerance) {
+				ycoordinates.add (new EditPoint (cx, cy));
 				last = cy;
 			}
 			
@@ -840,7 +841,7 @@ public class Path {
 			return true;
 		}
 
-		if (ycoordinates.length () == 0) {
+		if (ycoordinates.size == 0) {
 			warning ("No ycoordinates is empty");
 			return true;
 		}
@@ -849,14 +850,14 @@ public class Path {
 			return (a.y < b.y) ? 1 : -1;
 		});
 		
-		for (int i = 0; i < ycoordinates.length () - 1; i++) {
-			if (Math.fabs (ycoordinates.nth (i).data.y - ycoordinates.nth (i + 1).data.y) < 4 * tolerance) {
-				ycoordinates.remove_link (ycoordinates.nth (i));
+		for (int i = 0; i < ycoordinates.size - 1; i++) {
+			if (Math.fabs (ycoordinates.get (i).y - ycoordinates.get (i + 1).y) < 4 * tolerance) {
+				ycoordinates.remove_at (i);
 			}
 		}
 		
-		if (unlikely (ycoordinates.length () % 2 != 0)) {
-			warning (@"not an even number of coordinates ($(ycoordinates.length ()))");
+		if (unlikely (ycoordinates.size % 2 != 0)) {
+			warning (@"not an even number of coordinates ($(ycoordinates.size))");
 			stderr.printf (@"(ymin <= y <= ymax) && (xmin <= x <= xmax);\n");
 			stderr.printf (@"($ymin <= $y <= $ymax) && ($xmin <= $x <= $xmax);\n");
 		
@@ -867,31 +868,23 @@ public class Path {
 				stderr.printf (@"$(e.y)\n");
 			}
 
-			if (ycoordinates.length () != 0) {
-				ycoordinates.append (ycoordinates.last ().data.copy ());
+			if (ycoordinates.size != 0) {
+				ycoordinates.add (ycoordinates.get (ycoordinates.size - 1).copy ());
+			} else {
+				return true;
 			}
-			
-			return true;
 		}
 		
-		for (unowned List<EditPoint> e = ycoordinates.first (); true; e = e.next) {
-			return_val_if_fail (!is_null (e) || !is_null (e.data), true);
-			
-			if (y <= e.data.y + tolerance) {
-				return_val_if_fail (!is_null (e.next) || !is_null (e.data), true);
-				
-				e = e.next;
-
-				if (y >= e.data.y - tolerance) {
+		for (int i = 0; i < ycoordinates.size; i += 2) {
+			last_e = ycoordinates.get (i);
+			next_e = ycoordinates.get (i + 1);
+			if (y <= last_e.y + tolerance) {
+				if (y >= next_e.y - tolerance) {
 					return true;
 				}
 			}
-			
-			if (e == ycoordinates.last ()) {
-				break;
-			}
 		}
-
+		
 		return false;
 	}
 	
