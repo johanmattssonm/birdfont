@@ -221,24 +221,24 @@ class BirdFontFile : GLib.Object {
 			uint num_kerning_pairs;
 			string range;
 			
-			num_kerning_pairs = KerningClasses.get_instance ().classes_first.length ();
+			num_kerning_pairs = KerningClasses.get_instance ().classes_first.size;
 
-			for (uint i = 0; i < num_kerning_pairs; i++) {
-				range = KerningClasses.get_instance ().classes_first.nth (i).data.get_all_ranges ();
+			for (int i = 0; i < num_kerning_pairs; i++) {
+				range = KerningClasses.get_instance ().classes_first.get (i).get_all_ranges ();
 				
 				os.put_string ("<kerning ");
 				os.put_string ("left=\"");
 				os.put_string (range);
 				os.put_string ("\" ");
 				
-				range = KerningClasses.get_instance ().classes_last.nth (i).data.get_all_ranges ();
+				range = KerningClasses.get_instance ().classes_last.get (i).get_all_ranges ();
 				
 				os.put_string ("right=\"");
 				os.put_string (range);
 				os.put_string ("\" ");
 				
 				os.put_string ("hadjustment=\"");
-				os.put_string (float_point (KerningClasses.get_instance ().classes_kerning.nth (i).data.val));
+				os.put_string (float_point (KerningClasses.get_instance ().classes_kerning.get (i).val));
 				os.put_string ("\" />\n");
 
 				Tool.yield ();

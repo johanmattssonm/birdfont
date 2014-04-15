@@ -458,6 +458,7 @@ public class TrackTool : Tool {
 		EditPoint average;
 		Path p;
 		Glyph glyph;
+		Gee.ArrayList<EditPoint> points = new Gee.ArrayList<EditPoint> ();
 		
 		if (added_points == 0) {
 			warning ("No points to add.");
@@ -481,15 +482,13 @@ public class TrackTool : Tool {
 		sum_x = 0;
 		sum_y = 0;
 		
-		List<EditPoint> points = new List<EditPoint> ();
-		
 		last_point = p.points.last ().data;
 		
 		for (int i = 0; i < added_points; i++) {
 			ep = p.delete_last_point ();
 			sum_x += ep.x;
 			sum_y += ep.y;			
-			points.append (ep);
+			points.add (ep);
 		}
 		
 		nx = sum_x / added_points;

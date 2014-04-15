@@ -20,20 +20,20 @@ namespace BirdFont {
 /** A list of all kerning pairs for one glyph. */
 public class KerningPair : GLib.Object {
 	public Glyph character;
-	public GLib.List<Kerning> kerning;
+	public Gee.ArrayList<Kerning> kerning;
 
-	GLib.List<Glyph> right; // FIXME: should be fast and sorted
+	Gee.ArrayList<Glyph> right; // FIXME: should be fast and sorted
 	
 	public KerningPair (Glyph left) {
 		character = left;
-		right = new GLib.List<Glyph> ();
-		kerning = new GLib.List<Kerning> ();
+		right = new Gee.ArrayList<Glyph> ();
+		kerning = new Gee.ArrayList<Kerning> ();
 	}
 	
 	public void add_unique (Glyph g, double k) {
-		if (right.index ((!) g) < 0) {
-			right.append ((!) g);
-			kerning.append (new Kerning.for_glyph (g, k));
+		if (right.contains ((!) g)) {
+			right.add ((!) g);
+			kerning.add (new Kerning.for_glyph (g, k));
 		}
 	}
 	

@@ -43,8 +43,9 @@ public class KernList : GLib.Object {
 		
 		KerningClasses.get_instance ().all_pairs ((kp) => {
 			uint16 gid_left, gid_right;
-			unowned List<Kerning> kerning;
+			Kerning kerning;
 			KerningPair kerning_pair = kp;
+			int i;
 			
 			if (unlikely (kerning_pair.character.get_name () == "")) {
 				warning ("No name for glyph");
@@ -55,21 +56,16 @@ public class KernList : GLib.Object {
 			current_pairs.left = gid_left;
 			pairs.append (current_pairs);
 			
-			kerning = kerning_pair.kerning.first ();
-			
-			if (unlikely (is_null (kerning))) {
-				warning ("No kerning");
-			}
-			
-			if (unlikely (kerning_pair.kerning.length () == 0)) {
+			if (unlikely (kerning_pair.kerning.size == 0)) {
 				warning ("No pairs.");
 			}
 			
-			num_pairs += kerning_pair.kerning.length ();
+			i = 0;
+			num_pairs += kerning_pair.kerning.size;
 			foreach (Kerning k in kerning_pair.kerning) {
+				kerning = kerning_pair.kerning.get (i);
 				gid_right = (uint16) glyf_table.get_gid (k.get_glyph ().get_name ());
-				current_pairs.pairs.append (new Kern (gid_left, gid_right, (int16) (kerning.data.val * HeadTable.UNITS)));
-				kerning = kerning.next;
+				current_pairs.pairs.append (new Kern (gid_left, gid_right, (int16) (kerning.val * HeadTable.UNITS)));
 			}
 		});
 		

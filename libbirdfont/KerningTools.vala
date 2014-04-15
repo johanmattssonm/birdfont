@@ -147,15 +147,15 @@ public class KerningTools : ToolCollection  {
 		
 		remove_all_kerning_classes ();
 		
-		for (i = 0; i < k.classes_first.length (); i++) {
-			r = k.classes_first.nth (i).data;
+		for (i = 0; i < k.classes_first.size; i++) {
+			r = k.classes_first.get (i);
 			if (r.is_class ()) {
 				kr = new KerningRange ();
 				kr.set_ranges (r.get_all_ranges ());
 				add_unique_class (kr);
 			}
 			
-			r = k.classes_last.nth (i).data;
+			r = k.classes_last.get (i);
 			if (r.is_class ()) {
 				kr = new KerningRange ();
 				kr.set_ranges (r.get_all_ranges ());
