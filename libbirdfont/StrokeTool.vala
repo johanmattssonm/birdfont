@@ -206,7 +206,7 @@ public class StrokeTool : Tool {
 	static Path add_tangent_points (Path p) {
 		Path path;
 		int steps = 2;
-		List<EditPoint> new_points = new List<EditPoint> ();
+		Gee.ArrayList<EditPoint> new_points = new Gee.ArrayList<EditPoint> ();
 		
 		EditPoint nep;
 		EditPoint? previous = null;
@@ -249,15 +249,15 @@ public class StrokeTool : Tool {
 							return false;
 						}
 
-						new_points.append (ep);
+						new_points.add (ep);
 					}
 					
 					if (step <= 0) {
 						prev = start;
-						new_points.append (start);
+						new_points.add (start);
 					} else if (step >= 1) {
 						prev = stop;
-						new_points.append (stop);
+						new_points.add (stop);
 					} else {
 						prev = ep;
 					}
@@ -269,8 +269,8 @@ public class StrokeTool : Tool {
 			return true;
 		});
 	
-		while (new_points.length () > 0) {
-			nep = new_points.first ().data;
+		while (new_points.size > 0) {
+			nep = new_points.get (0);
 			
 			if (previous != null) {
 				nep.prev = ((!) previous).get_link_item ();
@@ -283,7 +283,7 @@ public class StrokeTool : Tool {
 			
 			previous = nep;
 
-			new_points.remove_link (new_points.first ());
+			new_points.remove_at (0);
 			path.create_list ();
 		}
 		

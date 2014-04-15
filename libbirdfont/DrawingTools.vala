@@ -1020,9 +1020,7 @@ public class DrawingTools : ToolCollection  {
 			grid_expander.tool.remove_link (grid_expander.tool.last ());
 		}
 		
-		while (GridTool.sizes.length () > 0) {
-			GridTool.sizes.remove_link (GridTool.sizes.first ());
-		}
+		GridTool.sizes.clear ();
 		
 		grid_expander.set_open (true);
 		MainWindow.get_toolbox ().update_expanders ();
@@ -1051,7 +1049,7 @@ public class DrawingTools : ToolCollection  {
 				
 		grid_expander.add_tool (grid_width);
 
-		GridTool.sizes.append (grid_width);
+		GridTool.sizes.add (grid_width);
 
 		grid_expander.set_open (true);
 		tb.update_expanders ();

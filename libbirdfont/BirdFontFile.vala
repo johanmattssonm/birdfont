@@ -273,7 +273,7 @@ class BirdFontFile : GLib.Object {
 			os.put_string (@"<grid width=\"$(gv)\"/>\n");
 		}
 		
-		if (GridTool.sizes.length () > 0) {
+		if (GridTool.sizes.size > 0) {
 			os.put_string ("\n");
 		}
 		

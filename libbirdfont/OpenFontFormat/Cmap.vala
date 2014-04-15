@@ -205,7 +205,7 @@ public class CmapSubtableWindowsUnicode : CmapSubtable {
 	
 	public void process (FontData fd, GlyfTable glyf_table) throws GLib.Error {
 		GlyphRange glyph_range = new GlyphRange ();
-		unowned List<UniRange> ranges;
+		Gee.ArrayList<UniRange> ranges;
 
 		uint16 seg_count_2;
 		uint16 seg_count;
@@ -224,10 +224,8 @@ public class CmapSubtableWindowsUnicode : CmapSubtable {
 			}
 		}
 		
-		// glyph_range.print_all ();
-		
 		ranges = glyph_range.get_ranges ();
-		seg_count = (uint16) ranges.length () + 1;
+		seg_count = (uint16) ranges.size + 1;
 		seg_count_2 =  seg_count * 2;
 		search_range = 2 * largest_pow2 (seg_count);
 		entry_selector = largest_pow2_exponent (seg_count);

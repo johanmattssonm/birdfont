@@ -836,10 +836,12 @@ class TestCases {
 		gr.add_range ('a', 'd');
 		gr.add_range ('f', 'z');
 		gr.add_range ('b', 'd');
-			
+		
+		gr.print_all ();
+		
 		return_if_fail (gr.length () == 'z' - 'a' + 1);
-		return_if_fail (gr.get_ranges ().length () == 1);
-		return_if_fail (gr.get_ranges ().first ().data.length () == 'z' - 'a' + 1);
+		return_if_fail (gr.get_ranges ().size == 1);
+		return_if_fail (gr.get_ranges ().get (0).length () == 'z' - 'a' + 1);
 		
 		for (unichar i = 'a'; i <= 'z'; i++) {
 			uint index = i - 'a';

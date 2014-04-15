@@ -16,17 +16,18 @@ namespace BirdFont {
 
 public class GlyphRange {
 	
-	public List<UniRange> ranges;
+	public Gee.ArrayList<UniRange> ranges;
 	
 	/** Glyphs without a corresponding unicode value (ligatures). */
-	public List<string> unassigned;
+	public Gee.ArrayList<string> unassigned;
 	
 	uint32 len = 0;
 	
 	bool range_is_class = false;
 	
 	public GlyphRange () {
-		unassigned = new List<string> ();
+		ranges = new Gee.ArrayList<UniRange> ();
+		unassigned = new Gee.ArrayList<string> ();
 	}
 	
 	public bool is_class () {
@@ -42,18 +43,12 @@ public class GlyphRange {
 	}
 	
 	public void empty () {
-		while (unassigned.length () > 0) {
-			unassigned.remove_link (unassigned.first ());
-		}
-
-		while (ranges.length () > 0) {
-			ranges.remove_link (ranges.first ());
-		}
-		
+		unassigned.clear ();
+		ranges.clear ();
 		len = 0;
 	}
 	
-	public unowned List<UniRange> get_ranges () {
+	public unowned Gee.ArrayList<UniRange> get_ranges () {
 		return ranges;
 	}
 		
@@ -72,7 +67,7 @@ public class GlyphRange {
 	
 	public uint32 get_length () {
 		uint32 l = len;
-		l += unassigned.length ();
+		l += unassigned.size;
 		return l;
 	}
 	
@@ -346,22 +341,42 @@ public class GlyphRange {
 	}
 	
 	private void merge_range (UniRange r) {
+		Gee.ArrayList<UniRange> deleted = new Gee.ArrayList<UniRange>  ();
+		Gee.ArrayList<UniRange> merged = new Gee.ArrayList<UniRange>  ();
+		bool updated = false;
+		
 		foreach (UniRange u in ranges) {
 			if (u == r) {
 				continue;
-			}			
+			}
 			
 			if (u.start == r.stop + 1) {
 				u.start = r.start;
-				ranges.remove_all (r);
-				merge_range (u);
+				deleted.add (r);
+				merged.add (u);
+				break;
 			}
 			
 			if (u.stop == r.start - 1) {
 				u.stop = r.stop;
-				ranges.remove_all (r);
-				merge_range (u);
+				deleted.add (r);
+				merged.add (u);
+				break;
 			}
+		}
+
+		updated = merged.size > 0;
+
+		foreach (UniRange m in deleted) {
+			while (ranges.remove (m));
+		}
+				
+		foreach (UniRange m in merged) {
+			merge_range (m);
+		}
+		
+		if (updated) {
+			merge_range (r);
 		}
 	}
 
@@ -372,20 +387,20 @@ public class GlyphRange {
 		StringBuilder sb;
 		unichar c;
 		
-		if (index > len + unassigned.length ()) {
+		if (index > len + unassigned.size) {
 			return "\0".dup();
 		}
 		
 		if (index >= len) {
-			if (index - len >= unassigned.length ()) {
+			if (index - len >= unassigned.size) {
 				return "\0".dup();
 			} 
 			
-			chr = ((!) unassigned.nth (index - len)).data;
+			chr = unassigned.get ((int) (index - len));
 			return chr;
 		}
 
-		r = ranges.first ().data;
+		r = ranges.get (0);
 		ti = index;
 
 		foreach (UniRange u in ranges) {
@@ -458,7 +473,7 @@ public class GlyphRange {
 		
 		UniRange ur = new UniRange (start, stop);
 		len += ur.length ();
-		ranges.append (ur);
+		ranges.add (ur);
 		
 		return ur;
 	}

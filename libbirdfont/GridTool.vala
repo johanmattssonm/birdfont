@@ -19,8 +19,8 @@ namespace BirdFont {
 
 class GridTool : Tool {
 	
-	static List<Line> horizontal;
-	static List<Line> vertical;
+	static Gee.ArrayList<Line> horizontal;
+	static Gee.ArrayList<Line> vertical;
 	
 	static bool visible = false;
 	public static bool ttf_units = false;
@@ -28,7 +28,7 @@ class GridTool : Tool {
 	public static double size_x;
 	public static double size_y;
 	
-	public static List<SpinButton> sizes;
+	public static Gee.ArrayList<SpinButton> sizes;
 	
 	public GridTool (string n) {
 		string units;
@@ -39,10 +39,10 @@ class GridTool : Tool {
 			ttf_units = true;
 		}
 		
-		horizontal = new List <Line> ();
-		vertical = new List <Line> ();
+		horizontal = new Gee.ArrayList <Line> ();
+		vertical = new Gee.ArrayList <Line> ();
 		
-		sizes = new List <SpinButton> ();
+		sizes = new Gee.ArrayList <SpinButton> ();
 		
 		size_x = 2;
 		size_y = 2;
@@ -122,20 +122,15 @@ class GridTool : Tool {
 		Line left = g.get_line ("left");
 		Line right = g.get_line ("right");
 
-		while (vertical.length () > 0) {
-			vertical.delete_link (vertical.first ());
-		}
-		
-		while (horizontal.length () > 0) {
-			horizontal.delete_link (horizontal.first ());
-		}
+		vertical.clear ();
+		horizontal.clear ();
 	
 		n = 0;
 		for (i = left.get_pos () - 7 * step; i <= right.get_pos () + 7 * step; i += step) {	
 			l = new Line ("grid", i, Line.VERTICAL);
 			l.set_moveable (false);
 			l.set_color (0.2, 0.6, 0.2, 0.2);
-			vertical.append (l);
+			vertical.add (l);
 			
 			if (++n >= max_lines) {
 				break;
@@ -147,7 +142,7 @@ class GridTool : Tool {
 			t = new Line ("grid", i, Line.HORIZONTAL);
 			t.set_moveable (false);
 			t.set_color (0.2, 0.6, 0.2, 0.2);
-			horizontal.prepend (t);	
+			horizontal.insert (0, t);	
 
 			if (++n >= max_lines) {
 				break;
@@ -159,7 +154,7 @@ class GridTool : Tool {
 			u = new Line ("grid", i, Line.HORIZONTAL);
 			u.set_moveable (false);
 			u.set_color (0.2, 0.6, 0.2, 0.2);
-			horizontal.append (u);	
+			horizontal.add (u);	
 
 			if (++n >= max_lines) {
 				break;
@@ -178,13 +173,13 @@ class GridTool : Tool {
 	}
 
 	public static double tie_point_x (double x, bool coordinate)
-		requires (vertical.length () >= 2)
+		requires (vertical.size >= 2)
 	{
 		double d, m;
-		Line xmin = vertical.first ().data;
+		Line xmin = vertical.get (0);
 		Line xpos;
-		Line startx = vertical.first ().data;
-		Line stopx = vertical.last ().data;
+		Line startx = vertical.get (0);
+		Line stopx = vertical.get (vertical.size - 1);
 
 		// outside of the grid
 		if (!coordinate) {
@@ -225,13 +220,13 @@ class GridTool : Tool {
 	}
 
 	public static double tie_point_y (double y, bool coordinate)
-		requires (horizontal.length () >= 2)
+		requires (horizontal.size >= 2)
 	{
 		double d, m;
-		Line ymin = horizontal.first ().data;
+		Line ymin = horizontal.get (0);
 		Line ypos;
-		Line starty = horizontal.first ().data;
-		Line stopy = horizontal.last ().data;
+		Line starty = horizontal.get (0);
+		Line stopy = horizontal.get (horizontal.size - 1);
 		
 		// outside of the grid
 		if (!coordinate) {
@@ -279,11 +274,11 @@ class GridTool : Tool {
 		return visible;
 	}
 	
-	public static unowned List<Line> get_horizontal_lines () {
+	public static Gee.ArrayList<Line> get_horizontal_lines () {
 		return horizontal;
 	}
 	
-	public static unowned List<Line> get_vertical_lines () {
+	public static Gee.ArrayList<Line> get_vertical_lines () {
 		return vertical;
 	}
 
