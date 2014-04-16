@@ -35,8 +35,8 @@ public class EditPoint {
 	public double y;
 	public PointType type;
 	
-	public unowned List<EditPoint>? prev = null;
-	public unowned List<EditPoint>? next = null;
+	public unowned EditPoint? prev = null;
+	public unowned EditPoint? next = null;
 
 	public bool active = false;
 	public bool selected = false;
@@ -111,12 +111,12 @@ public class EditPoint {
 		double dr, dl;
 		EditPointHandle t;
 		
-		if (next == null || ((!)next).length () < 2) {
+		if (next == null || get_next ().next != null) {
 				return;
 		}
 		
-		px = get_next ().nth (1).data.x;
-		py = get_next ().nth (1).data.y;
+		px = get_next ().get_next ().x;
+		py = get_next ().get_next ().y;
 		
 		dr = Math.sqrt (Math.pow (px - right_handle.x (), 2) + Math.pow (py - right_handle.y (), 2));
 		dl = Math.sqrt (Math.pow (px - left_handle.x (), 2) + Math.pow (py - left_handle.y (), 2));
@@ -136,12 +136,12 @@ public class EditPoint {
 		double nx, ny;
 
 		if (prev == null && next != null) {
-			prev = get_next ().last ();
+			// FIXME: prev = get_next ().last ();
 		}
 
 		// left handle
 		if (prev != null) {
-			n = get_prev ().data;
+			n = get_prev ();
 			h = get_left_handle ();
 			
 			if (h.type == PointType.LINE_CUBIC) {
@@ -186,7 +186,7 @@ public class EditPoint {
 
 		// right handle
 		if (next != null) {
-			n = get_next ().data;
+			n = get_next ();
 			h = get_right_handle ();
 			
 			if (h.type == PointType.LINE_CUBIC) {
@@ -240,11 +240,12 @@ public class EditPoint {
 	}
 	
 	public double get_direction () {
-		if (is_null (prev) || is_null (((!) prev).data)) {
+		if (prev == null) {
 			return 0;
 		}
 		
-		return (x - ((!) prev).data.x) * (y + ((!) prev).data.y);
+		// FIXME:
+		return (x - get_prev ().x) * (y + get_prev ().y);
 	}
 	
 	public void set_tie_handle (bool tie) {
@@ -298,8 +299,8 @@ public class EditPoint {
 			angle = -acos (a / length) + PI;
 		}
 		
-		prev_rh = get_prev ().data.get_right_handle ();
-		next_lh = get_next ().data.get_left_handle ();	
+		prev_rh = get_prev ().get_right_handle ();
+		next_lh = get_next ().get_left_handle ();	
 		
 		convert_from_line_to_curve (next_lh);
 		convert_from_line_to_curve (prev_rh);
@@ -348,11 +349,7 @@ public class EditPoint {
 		return right_handle;
 	}
 	
-	public unowned List<EditPoint> get_prev () {
-		if (prev == null && next != null && get_next ().prev == get_next ().first ()) {
-			prev = get_next ().last ();
-		}
-		
+	public unowned EditPoint get_prev () {
 		if (unlikely (prev == null)) {
 			warning ("EditPoint.prev is null");
 		}
@@ -360,7 +357,7 @@ public class EditPoint {
 		return (!) prev;
 	}
 
-	public unowned List<EditPoint> get_next () {
+	public unowned EditPoint get_next () {
 		if (unlikely (next == null)) {
 			warning ("EditPoint.next is null");
 		}
@@ -368,28 +365,13 @@ public class EditPoint {
 		return (!) next;
 	}
 	
-	public unowned List<EditPoint>? get_link_item () {
-		
-		if (unlikely (prev == null && next == null)) {
-			warning ("Need prev or next, create a list first.");
-		}
-		
-		if (prev != null) {
-			return ((!) prev).data.get_next ();
-		}
-		
-		if (next != null) {
-			return ((!) next).data.get_prev ();
-		}
-		
-		return null;	
-	}
-	
-	public unowned List<EditPoint> get_list () {
-		return get_next ().first ();
+	public unowned EditPoint get_link_item () {
+		return this;
 	}
 		
 	public void set_position (double tx, double ty) {
+		EditPoint p, n;
+		
 		x = tx;
 		y = ty;
 		
@@ -402,17 +384,19 @@ public class EditPoint {
 		// move connected quadratic handle
 		if (right_handle.type == PointType.QUADRATIC) {
 			if (next != null) {
-				((!)next).data.set_tie_handle (false);
-				((!)next).data.set_reflective_handles (false);
-				((!)next).data.left_handle.move_to_coordinate_internal (right_handle.x (), right_handle.y ());
+				n = get_next ();
+				n.set_tie_handle (false);
+				n.set_reflective_handles (false);
+				n.left_handle.move_to_coordinate_internal (right_handle.x (), right_handle.y ());
 			}
 		}
 		
 		if (left_handle.type == PointType.QUADRATIC) {
-			if (prev != null && !((!)prev).data.is_selected ()) {
-				((!)prev).data.set_tie_handle (false);
-				((!)prev).data.set_reflective_handles (false);
-				((!)prev).data.right_handle.move_to_coordinate (left_handle.x (), left_handle.y ());
+			if (prev != null && !get_prev ().is_selected ()) {
+				p = get_prev ();
+				p.set_tie_handle (false);
+				p.set_reflective_handles (false);
+				p.right_handle.move_to_coordinate (left_handle.x (), left_handle.y ());
 			}
 		}
 	}
@@ -454,6 +438,8 @@ public class EditPoint {
 		return update;
 	}
 	
+	/*
+	// FIXME: DELETE
 	public int get_index () {
 		int i = -1;
 		
@@ -469,6 +455,7 @@ public class EditPoint {
 		
 		return i;
 	}
+	*/
 }
 
 }

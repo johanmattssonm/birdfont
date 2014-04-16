@@ -213,7 +213,7 @@ public class TrackTool : Tool {
 				add_corner (x, y);
 			}
 
-			if (p.points.length () == 0) {
+			if (p.points.size == 0) {
 				warning ("No point.");
 				return;
 			}
@@ -246,12 +246,12 @@ public class TrackTool : Tool {
 		Glyph g;
 		Path merged = a.copy ();
 
-		if (a.points.length () < 2) {
+		if (a.points.size < 2) {
 			warning ("Less than two points in path.");
 			return merged;
 		}
 
-		if (b.path.points.length () < 2) {
+		if (b.path.points.size < 2) {
 			warning ("Less than two points in path.");
 			return merged;
 		}
@@ -304,13 +304,13 @@ public class TrackTool : Tool {
 		}
 
 		foreach (Path p in glyph.path_list) {
-			if (p.is_open () && p.points.length () > 2) {
-				e = p.points.first ().data;
+			if (p.is_open () && p.points.size > 2) {
+				e = p.points.get (0);
 				if (PenTool.is_close_to_point (e, x, y)) {
 					return new PointSelection (e, p);
 				}
 
-				e = p.points.last ().data;
+				e = p.points.get (p.points.size - 1);
 				if (current_end != e && PenTool.is_close_to_point (e, x, y)) {
 					return new PointSelection (e, p);				
 				}
@@ -343,8 +343,8 @@ public class TrackTool : Tool {
 		PenTool.convert_point_to_line (new_point, false);
 		new_point.set_point_type (PointType.HIDDEN);
 		
-		if (p.points.length () > 1) {
-			glyph.redraw_segment (new_point, new_point.get_prev ().data);
+		if (p.points.size > 1) {
+			glyph.redraw_segment (new_point, new_point.get_prev ());
 		}
 		
 		glyph.update_view ();
@@ -429,7 +429,7 @@ public class TrackTool : Tool {
 					
 		p = get_active_path ();
 
-		if (unlikely (p.points.length () == 0)) {
+		if (unlikely (p.points.size == 0)) {
 			warning ("Missing point.");
 			return;
 		}
@@ -437,7 +437,7 @@ public class TrackTool : Tool {
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);
 
-		while (p.points.length () > 0 && is_close (p.points.last ().data, px, py)) {
+		while (p.points.size > 0 && is_close (p.points.get (p.points.size - 1), px, py)) {
 			p.delete_last_point ();
 		}
 	}
@@ -474,7 +474,7 @@ public class TrackTool : Tool {
 			
 		p = glyph.path_list.get (glyph.path_list.size - 1);
 
-		if (unlikely (p.points.length () < added_points)) {
+		if (unlikely (p.points.size < added_points)) {
 			warning ("Missing point.");
 			return new EditPoint ();
 		}
@@ -482,7 +482,7 @@ public class TrackTool : Tool {
 		sum_x = 0;
 		sum_y = 0;
 		
-		last_point = p.points.last ().data;
+		last_point = p.points.get (p.points.size - 1);
 		
 		for (int i = 0; i < added_points; i++) {
 			ep = p.delete_last_point ();
@@ -499,17 +499,17 @@ public class TrackTool : Tool {
 		average = PenTool.add_new_edit_point (px, py).point;
 		
 		// tie handles for all points except for the end points
-		average.set_tie_handle (p.points.length () > 1); 
+		average.set_tie_handle (p.points.size > 1); 
 		
-		if (unlikely (p.points.length () == 0)) {
+		if (unlikely (p.points.size == 0)) {
 			warning ("No points.");
 			return new EditPoint ();
 		}
 		
-		if (average.prev != null && average.get_prev ().data.tie_handles) {
-			if (p.points.length () > 2) {
-				PenTool.convert_point_to_line (average.get_prev ().data, true);
-				average.get_prev ().data.process_tied_handle ();
+		if (average.prev != null && average.get_prev ().tie_handles) {
+			if (p.points.size > 2) {
+				PenTool.convert_point_to_line (average.get_prev (), true);
+				average.get_prev ().process_tied_handle ();
 			}
 		}
 

@@ -58,7 +58,7 @@ class Svg {
 		EditPoint? n = null;
 		EditPoint m;
 		
-		if (p.points.length () < 2) {
+		if (p.points.size < 2) {
 			return;
 		}
 
@@ -80,7 +80,7 @@ class Svg {
 			i++;
 		}
 
-		m = p.points.first ().data;	
+		m = p.points.get (0);	
 		add_abs_next ((!) n, m, svg, g, do_glyph);
 		
 		close_path (svg);

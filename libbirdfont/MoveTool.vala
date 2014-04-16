@@ -172,7 +172,7 @@ class MoveTool : Tool {
 		
 		foreach (Path p in glyph.path_list) {
 			if (p.xmin > x1 && p.xmax < x2 && p.ymin < y1 && p.ymax > y2) {
-				if (p.points.length () > 0) {
+				if (p.points.size > 0) {
 					glyph.add_active_path (p);
 				}
 			}

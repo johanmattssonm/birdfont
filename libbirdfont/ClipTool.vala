@@ -117,9 +117,9 @@ public class ClipTool : Tool {
 			
 			new_path = new Path ();
 			foreach (Path path in glyph.path_list) {
-				if (path.points.length () > 0
-					&& path.points.first ().data.is_selected ()
-					&& path.points.last ().data.is_selected ()) {
+				if (path.points.size > 0
+					&& path.points.get (0).is_selected ()
+					&& path.points.get (path.points.size - 1).is_selected ()) {
 					
 					foreach (EditPoint ep in path.points) {
 						if (!ep.is_selected ()) {
@@ -131,7 +131,7 @@ public class ClipTool : Tool {
 				
 				foreach (EditPoint ep in path.points) {
 					if (!ep.is_selected ()) {
-						if (path.points.length () > 0) {
+						if (path.points.size > 0) {
 							paths.append (new_path);
 							new_path = new Path ();
 						}
@@ -148,7 +148,7 @@ public class ClipTool : Tool {
 			paths.append (new_path);
 			
 			foreach (Path path in paths) {
-				if (path.points.length () > 0) {
+				if (path.points.size > 0) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
 					s.append ("\n");
@@ -191,7 +191,7 @@ public class ClipTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path path = BirdFontFile.parse_path_data (data);
 
-		if (path.points.length () > 0) {
+		if (path.points.size > 0) {
 			glyph.add_path (path);
 			glyph.active_paths.add (path);
 			path.update_region_boundaries ();

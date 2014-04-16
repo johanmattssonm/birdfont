@@ -61,7 +61,7 @@ class GlyfData : GLib.Object {
 		glyph = g;
 						
 		foreach (Path p in g.path_list) {
-			if (p.points.length () > 0) {
+			if (p.points.size > 0) {
 				q = p.get_quadratic_points ();
 
 				if (!is_empty (q)) {
@@ -84,7 +84,7 @@ class GlyfData : GLib.Object {
 	bool is_empty (Path p) {
 		EditPoint? last = null;
 		
-		if (unlikely (p.points.length () < 2)) {
+		if (unlikely (p.points.size < 2)) {
 			warning (@"A path in $(glyph.get_name ()) has less than three points, it will not be exported.");
 			return true;
 		}
@@ -96,7 +96,7 @@ class GlyfData : GLib.Object {
 			last = ep;
 		}
 		
-		warning (@"A path in $(glyph.get_name ()) ($(glyph.get_hex ())) has no area but $(p.points.length ()) points at $(p.get_first_point ().x),$(p.get_first_point ().y).");
+		warning (@"A path in $(glyph.get_name ()) ($(glyph.get_hex ())) has no area but $(p.points.size) points at $(p.get_first_point ().x),$(p.get_first_point ().y).");
 		return true;
 	}
 
@@ -119,12 +119,12 @@ class GlyfData : GLib.Object {
 		end_point = 0;
 		
 		foreach (Path quadratic in paths) {
-			if (unlikely (quadratic.points.length () == 0)) {
-				warning (@"No points in path (before conversion $(quadratic.points.length ()))");
+			if (unlikely (quadratic.points.size == 0)) {
+				warning (@"No points in path (before conversion $(quadratic.points.size))");
 				continue;
 			}
 			
-			if (unlikely (quadratic.points.length () < 2)) {
+			if (unlikely (quadratic.points.size < 2)) {
 				warning ("A path contains less than three points, it will not be exported.");
 				continue;
 			}

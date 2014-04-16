@@ -366,14 +366,14 @@ class BirdFontFile : GLib.Object {
 		EditPoint m;
 		int i = 0;
 		
-		if (pl.points.length () == 0) {
+		if (pl.points.size == 0) {
 			return data.str;
 		}
 		
-		if (pl.points.length () == 1) {
-			add_start_point (pl.points.first ().data, data);
+		if (pl.points.size == 1) {
+			add_start_point (pl.points.get (0), data);
 			data.append (" ");
-			add_next_point (pl.points.first ().data, pl.points.first ().data, data);
+			add_next_point (pl.points.get (0), pl.points.get (0), data);
 
 			if (pl.is_open ()) {
 				data.append (" O");
@@ -382,12 +382,12 @@ class BirdFontFile : GLib.Object {
 			return data.str;
 		}
 		
-		if (pl.points.length () == 2) {
-			add_start_point (pl.points.first ().data, data);
+		if (pl.points.size == 2) {
+			add_start_point (pl.points.get (0), data);
 			data.append (" ");
-			add_next_point (pl.points.first ().data, pl.points.last ().data, data);
+			add_next_point (pl.points.get (0), pl.points.get (pl.points.size - 1), data);
 			data.append (" ");
-			add_next_point (pl.points.last ().data, pl.points.first ().data, data);
+			add_next_point (pl.points.get (pl.points.size - 1), pl.points.get (0), data);
 			
 			if (pl.is_open ()) {
 				data.append (" O");
@@ -415,7 +415,7 @@ class BirdFontFile : GLib.Object {
 		}
 
 		data.append (" ");
-		m = pl.points.first ().data;	
+		m = pl.points.get (0);	
 		add_next_point ((!) n, m, data);
 		
 		if (pl.is_open ()) {
@@ -1068,7 +1068,7 @@ class BirdFontFile : GLib.Object {
 				path.set_stroke (double.parse (attr_content));
 			}
 		}		
-		if (path.points.length () == 0) {
+		if (path.points.size == 0) {
 			warning ("Empty path");
 		}
 		
@@ -1079,7 +1079,7 @@ class BirdFontFile : GLib.Object {
 		EditPoint ep;
 		
 		path.add (parse_double (px), parse_double (py));
-		ep = path.points.last ().data;
+		ep = path.points.get (path.points.size - 1);
 		ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		ep.type = PointType.LINE_DOUBLE_CURVE;
@@ -1090,7 +1090,7 @@ class BirdFontFile : GLib.Object {
 		EditPoint ep;
 
 		path.add (parse_double (px), parse_double (py));
-		ep = path.points.last ().data;
+		ep = path.points.get (path.points.size - 1);
 		ep.get_right_handle ().type = PointType.LINE_CUBIC;
 		ep.type = PointType.LINE_CUBIC;
 		ep.recalculate_linear_handles ();
@@ -1104,12 +1104,12 @@ class BirdFontFile : GLib.Object {
 		double x1 = parse_double (px1);
 		double y1 = parse_double (py1);
 
-		if (is_null (path.points.last ().data)) {
+		if (path.points.size == 0) {
 			warning ("No point.");
 			return;
 		}
 		
-		ep1 = path.points.last ().data;
+		ep1 = path.points.get (path.points.size - 1);
 		ep1.recalculate_linear_handles ();
 		ep1.get_right_handle ().type = PointType.QUADRATIC;
 		ep1.get_right_handle ().move_to_coordinate (x0, y0);	
@@ -1117,7 +1117,7 @@ class BirdFontFile : GLib.Object {
 
 		path.add (x1, y1);
 
-		ep2 = path.points.last ().data;
+		ep2 = path.points.get (path.points.size - 1);
 		ep2.recalculate_linear_handles ();
 		ep2.get_left_handle ().type = PointType.QUADRATIC;
 		ep2.get_left_handle ().move_to_coordinate (x0, y0);
@@ -1136,13 +1136,13 @@ class BirdFontFile : GLib.Object {
 		
 		double lx, ly;
 				
-		if (is_null (path.points.last ().data)) {
+		if (path.points.size == 0) {
 			warning ("No point");
 			return;
 		}
 
 		// start with line handles
-		ep1 = path.points.last ().data;
+		ep1 = path.points.get (path.points.size - 1);
 		ep1.get_right_handle ().type = PointType.LINE_CUBIC;
 		
 		lx = ep1.x + ((x2 - ep1.x) / 3);
@@ -1152,7 +1152,7 @@ class BirdFontFile : GLib.Object {
 		ep1.recalculate_linear_handles ();
 		
 		// set curve handles
-		ep1 = path.points.last ().data;
+		ep1 = path.points.get (path.points.size - 1);
 		ep1.recalculate_linear_handles ();
 		ep1.get_right_handle ().type = PointType.CUBIC;
 		ep1.get_right_handle ().move_to_coordinate (x0, y0);				
@@ -1160,7 +1160,7 @@ class BirdFontFile : GLib.Object {
 	
 		path.add (x2, y2);
 						
-		ep2 = path.points.last ().data;
+		ep2 = path.points.get (path.points.size - 1);
 		ep2.recalculate_linear_handles ();
 		ep2.get_left_handle ().type = PointType.CUBIC;
 		ep2.get_left_handle ().move_to_coordinate (x1, y1);
@@ -1182,13 +1182,13 @@ class BirdFontFile : GLib.Object {
 		
 		double lx, ly;
 				
-		if (is_null (path.points.last ().data)) {
+		if (path.points.size == 0) {
 			warning ("No point");
 			return;
 		}
 
 		// start with line handles
-		ep1 = path.points.last ().data;
+		ep1 = path.points.get (path.points.size - 1);
 		ep1.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		
 		lx = ep1.x + ((x2 - ep1.x) / 4);
@@ -1198,7 +1198,7 @@ class BirdFontFile : GLib.Object {
 		ep1.recalculate_linear_handles ();
 		
 		// set curve handles
-		ep1 = path.points.last ().data;
+		ep1 = path.points.get (path.points.size - 1);
 		ep1.recalculate_linear_handles ();
 		ep1.get_right_handle ().type = PointType.DOUBLE_CURVE;
 		ep1.get_right_handle ().move_to_coordinate (x0, y0);				
@@ -1206,7 +1206,7 @@ class BirdFontFile : GLib.Object {
 		
 		path.add (x2, y2);
 						
-		ep2 = path.points.last ().data;
+		ep2 = path.points.get (path.points.size - 1);
 		ep2.recalculate_linear_handles ();
 		ep2.get_left_handle ().type = PointType.DOUBLE_CURVE;
 		ep2.get_left_handle ().move_to_coordinate (x1, y1);
@@ -1218,16 +1218,16 @@ class BirdFontFile : GLib.Object {
 	public static void close (Path path) {
 		EditPoint ep1, ep2;
 		
-		if (path.points.length () < 2) {
+		if (path.points.size < 2) {
 			warning ("Less  than two points in path.");
 			return;
 		}
 		
 		// last point is first
-		ep1 = path.points.last ().data;
-		ep2 = path.points.first ().data;
+		ep1 = path.points.get (path.points.size - 1);
+		ep2 = path.points.get (0);
 		
-		path.points.remove_link (path.points.last ());
+		path.points.remove_at (path.points.size - 1);
 		
 		ep2.tie_handles = ep1.tie_handles;
 		ep2.left_handle.angle = ep1.left_handle.angle;
@@ -1323,7 +1323,7 @@ class BirdFontFile : GLib.Object {
 				
 				cubic (path, p[0], p[1], p1[0], p1[1], p2[0], p2[1]);
 			} else if (instruction == "T") {
-				path.points.last ().data.tie_handles = true;
+				path.points.get (path.points.size - 1).tie_handles = true;
 			} else if (instruction == "O") {
 				open = true;
 			} else {
@@ -1335,7 +1335,7 @@ class BirdFontFile : GLib.Object {
 		if (!open) {
 			close (path);
 		} else {
-			path.points.remove_link (path.points.last ());
+			path.points.remove_at (path.points.size - 1);
 			
 			if (!path.is_open ()) {
 				warning ("Closed path.");

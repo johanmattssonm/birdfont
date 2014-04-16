@@ -24,7 +24,7 @@ public enum Direction {
 
 public class Path {
 	
-	public List<EditPoint> points;
+	public Gee.ArrayList<EditPoint> points;
 
 	EditPoint? last_point = null;
 	
@@ -69,7 +69,7 @@ public class Path {
 	private static ImageSurface? cubic_active_selected_edit_point_image = null;
 	
 	Path quadratic_path; // quadratic points for TrueType export
-	List<EditPoint> new_quadratic_points;
+	Gee.ArrayList<EditPoint> new_quadratic_points;
 	
 	public static double line_color_r = 0;
 	public static double line_color_g = 0;
@@ -93,8 +93,8 @@ public class Path {
 	
 	public Path () {
 		string width;
-		points = new List<EditPoint> ();
-		new_quadratic_points = new List<EditPoint> ();
+		points = new Gee.ArrayList<EditPoint> ();
+		new_quadratic_points = new Gee.ArrayList<EditPoint> ();
 		
 		if (edit_point_image == null) {
 			edit_point_image = Icons.get_icon ("edit_point.png");
@@ -140,21 +140,21 @@ public class Path {
 	}
 
 	public EditPoint get_first_point () {
-		if (unlikely (points.length () == 0)) {
+		if (unlikely (points.size == 0)) {
 			warning ("No point");
 			return new EditPoint ();
 		}
 		
-		return points.first ().data;
+		return points.get (0);
 	}
 
 	public EditPoint get_last_point () {
-		if (unlikely (points.length () == 0)) {
+		if (unlikely (points.size == 0)) {
 			warning ("No point");
 			return new EditPoint ();
 		}
 		
-		return points.last ().data;
+		return points.get (points.size - 1);
 	}
 
 	public bool has_direction () {
@@ -162,7 +162,7 @@ public class Path {
 	}
 
 	public bool empty () {
-		return points.length () == 0;
+		return points.size == 0;
 	}
 
 	public void set_stroke (double width) {
@@ -186,20 +186,18 @@ public class Path {
 	}
 
 	public void draw_outline (Context cr) {
-		unowned List<EditPoint> ep = points;
-		
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
 		unowned EditPoint em;
 		
-		if (ep.length () < 2) {
+		if (points.size < 2) {
 			return;
 		}
 		
 		cr.new_path ();
 		
 		// draw lines
-		foreach (EditPoint e in ep) {
+		foreach (EditPoint e in points) {
 			if (n != null) {
 				en = (!) n;
 				draw_next (en, e, cr);
@@ -211,26 +209,24 @@ public class Path {
 		// close path
 		if (!is_open () && n != null) {
 			en = (!) n;
-			em = ep.first ().data;
+			em = points.get (0).get_link_item ();
 			draw_next (en, em, cr);
 		}
 
 		cr.stroke ();
 	}
 	
-	public void draw_edit_points (Context cr) {
-		unowned List<EditPoint> ep = points;
-		
+	public void draw_edit_points (Context cr) {		
 		if (is_editable ()) {
 			// control points for curvature
-			foreach (EditPoint e in ep) {
+			foreach (EditPoint e in points) {
 				if (show_all_line_handles || e.selected || e.selected_handle > 0) {
 					draw_edit_point_handles (e, cr);
 				}
 			}
 						
 			// control points
-			foreach (EditPoint e in ep) {
+			foreach (EditPoint e in points) {
 				draw_edit_point (e, cr);
 			}
 		}
@@ -241,7 +237,6 @@ public class Path {
 	 * to show the path.
 	 */
 	public void draw_path (Context cr, Color? color = null) {
-		unowned List<EditPoint> ep = points;
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
 		unowned EditPoint em;
@@ -250,7 +245,7 @@ public class Path {
 		double center_x, center_y;
 		double ex, ey;
 
-		if (points.length () == 0){
+		if (points.size == 0){
 			return;
 		}
 
@@ -259,13 +254,13 @@ public class Path {
 		center_x = g.allocation.width / 2.0;
 		center_y = g.allocation.height / 2.0;
 
-		ex = center_x + points.first ().data.x;
-		ey = center_y - points.first ().data.y;
+		ex = center_x + points.get (0).x;
+		ey = center_y - points.get (0).y;
 		
 		cr.move_to (ex, ey);
 		
 		// draw lines
-		foreach (EditPoint e in ep) {
+		foreach (EditPoint e in points) {
 			if (n != null) {
 				en = (!) n;
 				draw_next (en, e, cr);
@@ -275,9 +270,9 @@ public class Path {
 		}
 		
 		// close path
-		if (!is_open () && ep.length () >= 2 && n != null) {
+		if (!is_open () && points.size >= 2 && n != null) {
 			en = (!) n;
-			em = ep.first ().data;
+			em = points.get (0).get_link_item ();
 			draw_next (en, em, cr);
 		}
 
@@ -439,12 +434,12 @@ public class Path {
 				img_left = (!) edit_point_handle_image;
 			}
 
-			if (!(is_open () && e == points.last ().data)) {
+			if (!(is_open () && e == points.get (points.size - 1))) {
 				draw_line (handle_right, e, cr, 0.15);
 				draw_image (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
 			}
 			
-			if (!(is_open () && e == points.first ().data)) {
+			if (!(is_open () && e == points.get (0))) {
 				draw_line (handle_left, e, cr, 0.15);
 				draw_image (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
 			}
@@ -507,19 +502,6 @@ public class Path {
 		return false;
 	}
 	
-	/** Replace edit points in this path with @param new_path.points. */
-	public void replace_path (Path new_path) {
-		while (points.length () > 0) {
-			points.remove_link (points.first ());
-		}
-		
-		foreach (var np in new_path.points) {
-			add (np.x, np.y);
-		}
-		
-		close ();
-	}
-	
 	/** Set direction for this path to clockwise for outline and 
 	 * counter clockwise for inline paths.
 	 */
@@ -551,44 +533,37 @@ public class Path {
 		
 		if (unlikely (direction == is_clockwise ())) {
 			stderr.printf ("Error: Direction did not change after reversing path.\n");
-			stderr.printf (@"Length: $(points.length ())\n");
+			stderr.printf (@"Length: $(points.size)\n");
 			stderr.printf (@"No particular direction can be derived: $no_derived_direction \n");
 			warning ("Path.reverse () failed.\n");
 		}
 	}
 
-	private void reverse_points () {
+	private void reverse_points () requires (points.size > 0) {
 		EditPointHandle t;
 		Path p = copy ();
-		unowned List<EditPoint> e;
+		EditPoint e;
 		
 		create_list ();	
 		
-		while (points.length () > 0) {
-			points.remove_link (points.first ());
+		points.clear ();
+		
+		for (int i = p.points.size - 1; i >= 0 ; i--) {
+			e = p.points.get (i);
+			
+			t = e.right_handle;
+			e.right_handle = e.left_handle;
+			e.left_handle = t;
+			
+			add_point (e);
 		}
 		
-		e = p.points.last ();
-		while (!is_null (e) && !is_null (e.data)) {
-			t = e.data.right_handle;
-			e.data.right_handle = e.data.left_handle;
-			e.data.left_handle = t;
-			
-			add_point (e.data);
-			
-			if (is_null (e.prev)) {
-				break;
-			} else {
-				e = e.prev;
-			}
-		}
-
 		create_list ();
 	}
 
 	public void print_all_points () {
 		int i = 0;
-		foreach (var p in points) {
+		foreach (EditPoint p in points) {
 			++i;
 			string t = (p.type == PointType.END) ? " endpoint" : "";
 			stdout.printf (@"Point $i at ($(p.x), $(p.y)) $t \n");
@@ -598,7 +573,7 @@ public class Path {
 	private double clockwise_sum () {
 		double sum = 0;
 		
-		return_val_if_fail (points.length () >= 3, 0);
+		return_val_if_fail (points.size >= 3, 0);
 		
 		foreach (EditPoint e in points) {
 			sum += e.get_direction ();
@@ -610,7 +585,7 @@ public class Path {
 	public bool is_clockwise () {
 		double s;
 		
-		if (unlikely (points.length () <= 2)) {
+		if (unlikely (points.size <= 2)) {
 			no_derived_direction = true;
 			return clockwise_direction;
 		}
@@ -637,7 +612,9 @@ public class Path {
 	public bool is_open () {
 		return open;
 	}
-	
+
+	/*
+	// FIXME:DELETE		
 	private bool direction_x (EditPoint start, EditPoint stop) {
 		return (start.x < stop.x);
 	}
@@ -714,10 +691,11 @@ public class Path {
 			i = i.next;
 		}
 	}
+	*/
 
 	/** Resize path relative to bottom left coordinates. */
 	public void resize (double ratio) {	
-		foreach (var p in points) {
+		foreach (EditPoint p in points) {
 			p.x *= ratio;
 			p.y *= ratio;
 			p.right_handle.length *= ratio;
@@ -734,7 +712,7 @@ public class Path {
 		Path new_path = new Path ();
 		EditPoint p;
 		
-		foreach (var ep in points) {
+		foreach (EditPoint ep in points) {
 			p = ep.copy ();
 			new_path.add_point (p);
 		}
@@ -799,7 +777,7 @@ public class Path {
 		PathList pathlist;
 		EditPoint next_e, last_e;
 		
-		if (points.length () < 2) {
+		if (points.size < 2) {
 			return false;
 		}
 		
@@ -909,25 +887,23 @@ public class Path {
 	}
 	
 	public EditPoint delete_last_point () {
-		unowned List<EditPoint> p;
 		EditPoint r;
-		uint len;
+		int len;
 		
-		len = points.length ();
+		len = points.size;
 		if (unlikely (len == 0)) {
 			warning ("No points in path.");
 			return new EditPoint ();
 		}
 		
-		p = points.last ();
-		r = p.data;
-		points.remove_link (p);
+		r = points.get (len - 1);
+		points.remove_at (len - 1);
 		
 		if (len > 1) {
-			r.get_prev ().data.next = null;
+			r.get_prev ().next = null;
 			
 			if (r.next != null) {
-				r.get_next ().data.prev = null;
+				r.get_next ().prev = null;
 			}
 		}
 		
@@ -935,56 +911,58 @@ public class Path {
 	}
 	
 	public EditPoint add (double x, double y) {
-		return add_after (x, y, points.last ()).data;
+		if (points.size > 0) {
+			return add_after (x, y, points.get (points.size - 1));
+		}
+		
+		return add_after (x, y, null);
 	}
 
 	public EditPoint add_point (EditPoint p) {
-		return add_point_after (p, points.last ()).data;
+		if (points.size > 0) {
+			return add_point_after (p, points.get (points.size - 1));
+		}
+		
+		return add_point_after (p, null);
 	}
 
 	/** Insert a new point after @param previous_point and return a reference 
 	 * to the new item in list.
 	 */
-	public unowned List<EditPoint> add_after (double x, double y, List<EditPoint>? previous_point) {
+	public EditPoint add_after (double x, double y, EditPoint? previous_point) {
 		EditPoint p = new EditPoint (x, y, PointType.NONE);	
 		return add_point_after (p, previous_point);
 	}
 	
 	/** @return a list item pointing to the new point */
-	public unowned List<EditPoint> add_point_after (EditPoint p, List<EditPoint>? previous_point) {
-		unowned List<EditPoint> np;
+	public EditPoint add_point_after (EditPoint p, EditPoint? previous_point) {
 		int prev_index;
 
-		if (points.length () > 0 && previous_point != null && ((!)previous_point).data.type == PointType.END) {
-			points.delete_link ((!) previous_point);
-		}
-
-		if (unlikely (previous_point == null && points.length () != 0)) {
+		if (unlikely (previous_point == null && points.size != 0)) {
 			warning ("previous_point == null");
+			previous_point = points.get (points.size - 1).get_link_item ();
 		}
 
-		if (points.length () == 0) {
-			points.append (p);
-			np = points.last ();
-			p.prev = points.last ();
-			p.next = points.last ();
+		if (points.size == 0) {
+			points.add (p);
+			p.prev = points.get (0).get_link_item ();
+			p.next = points.get (0).get_link_item ();
 		} else {
 			p.prev = (!) previous_point;
 			p.next = ((!) previous_point).next;
-
-			points.insert_before (((!) previous_point).next, p);
 			
-			prev_index = points.position ((!) previous_point);
-			np = points.nth (prev_index + 1);
+			prev_index = points.index_of ((!) previous_point);
 			
-			if (unlikely (p.prev == null)) {
-				warning ("Prev point is null");
+			if (unlikely (!(0 <= prev_index < points.size))) {
+				warning ("no previous point");
 			}
+			
+			points.insert (prev_index + 1, p);			
 		}
 		
 		last_point = p;
 		
-		return np;
+		return p;
 	}
 
 	public void recalculate_linear_handles () {
@@ -999,9 +977,9 @@ public class Path {
 
 		create_list ();
 		
-		if (points.length () > 2) {
-			points.first ().data.recalculate_linear_handles ();
-			points.last ().data.recalculate_linear_handles ();
+		if (points.size > 2) {
+			points.get (0).recalculate_linear_handles ();
+			points.get (points.size - 1).recalculate_linear_handles ();
 		}
 	}
 	
@@ -1073,7 +1051,7 @@ public class Path {
 		ymax = -10000;
 		ymin = 10000;
 		
-		if (points.length () == 0) {
+		if (points.size == 0) {
 			xmax = 0;
 			xmin = 0;
 			ymax = 0;
@@ -1101,11 +1079,11 @@ public class Path {
 	}
 	
 	private bool test_is_outline_of_path (Path outline)
-		requires (outline.points.length () >= 2 || points.length () >= 2)
+		requires (outline.points.size >= 2 || points.size >= 2)
 	{	
 		// rather slow use it for testing, only
-		unowned List<EditPoint> i = outline.points.first ();
-		unowned List<EditPoint> prev = i.last ();
+		unowned EditPoint i = outline.points.get (0).get_link_item ();
+		unowned EditPoint prev = outline.points.get (outline.points.size - 1).get_link_item ();
 
 		double tolerance = 1;
 		bool g = false;
@@ -1116,7 +1094,7 @@ public class Path {
 		while (true) {
 			min = 10000;
 			 
-			all_of (prev.data, i.data, (cx, cy) => {
+			all_of (prev, i, (cx, cy) => {
 					get_closest_point_on_path (ep, cx, cy);
 
 					double n = pow (ep.x - cx, 2) + pow (cy - ep.y, 2);
@@ -1137,46 +1115,49 @@ public class Path {
 			
 			g = false;
 			
-			if (i == i.last ()) {
+			if (i == outline.points.get (outline.points.size - 1)) {
 				break;
 			}
 				
-			i = i.next;
+			i = i.get_next ();
 		}
 		
 		return true;
 	}
 
 	/** Add the extra point between line handles for double curve. */
-	public void add_hidden_double_points () requires (points.length () > 1) {
+	public void add_hidden_double_points () requires (points.size > 1) {
 		EditPoint hidden;
-		unowned List<EditPoint> first = points.last ();
+		EditPoint first = points.get (points.size - 1);
 		PointType left;
 		PointType right;
 		double x, y;
-
-		for (unowned List<EditPoint> next = points.first (); !is_null (next); next = next.next) {
-			left = first.data.get_right_handle ().type;
-			right = next.data.get_left_handle ().type;
+		unowned EditPoint next = points.get (0).get_link_item ();
+		unowned EditPoint? next_item;
+		
+		for (next_item = points.get (0).get_link_item (); next_item != null; next_item = next.next) {
+			next = (!) next_item;
+			left = first.get_right_handle ().type;
+			right = next.get_left_handle ().type;
 			if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
-				first.data.get_right_handle ().type = PointType.QUADRATIC;
+				first.get_right_handle ().type = PointType.QUADRATIC;
 
 				// half the way between handles
-				x = first.data.get_right_handle ().x () + (next.data.get_left_handle ().x () - first.data.get_right_handle ().x ()) / 2;
-				y = first.data.get_right_handle ().y () + (next.data.get_left_handle ().y () - first.data.get_right_handle ().y ()) / 2;
+				x = first.get_right_handle ().x () + (next.get_left_handle ().x () - first.get_right_handle ().x ()) / 2;
+				y = first.get_right_handle ().y () + (next.get_left_handle ().y () - first.get_right_handle ().y ()) / 2;
 				
 				hidden = new EditPoint (x, y, PointType.QUADRATIC);
-				hidden.right_handle.move_to_coordinate_internal (next.data.get_left_handle ().x(), next.data.get_left_handle ().y());
+				hidden.right_handle.move_to_coordinate_internal (next.get_left_handle ().x(), next.get_left_handle ().y());
 				hidden.get_right_handle ().type = PointType.QUADRATIC;
 				
 				hidden.get_left_handle ().type = PointType.QUADRATIC;
 				hidden.type = PointType.QUADRATIC;
 				
-				first.data.get_right_handle ().type = PointType.QUADRATIC;
-				first.data.type = PointType.QUADRATIC;
+				first.get_right_handle ().type = PointType.QUADRATIC;
+				first.type = PointType.QUADRATIC;
 				
-				next.data.get_left_handle ().type = PointType.QUADRATIC;
-				next.data.type = PointType.QUADRATIC;
+				next.get_left_handle ().type = PointType.QUADRATIC;
+				next.type = PointType.QUADRATIC;
 				
 				add_point_after (hidden, first);
 			}
@@ -1188,42 +1169,40 @@ public class Path {
 	 * for ttf-export.
 	 */ 
 	public Path get_quadratic_points () {
-		unowned List<EditPoint> i, next;
+		EditPoint i, next;
 		
 		quadratic_path = new Path ();
 		
-		while (new_quadratic_points.length () > 0) {
-			new_quadratic_points.remove_link (new_quadratic_points.first ());
-		}
-
-		if (points.length () < 2) {
+		new_quadratic_points.clear ();
+		
+		if (points.size < 2) {
 			warning ("Less than 2 points in path.");
 			return quadratic_path;
 		}
 		
-		i = points.first ();
-		next = i.next;
+		i = points.get (0);
+		next = i.get_next ();
 
-		while (i != points.last ()) {
-			if (i.data.get_right_handle ().type == PointType.CUBIC 
-				|| next.data.get_left_handle ().type == PointType.CUBIC) {
-				add_quadratic_points (i.data, next.data);
+		while (i != points.get (points.size - 1)) {
+			if (i.get_right_handle ().type == PointType.CUBIC 
+				|| next.get_left_handle ().type == PointType.CUBIC) {
+				add_quadratic_points (i, next);
 			} else {
-				quadratic_path.add_point (i.data.copy ());
+				quadratic_path.add_point (i.copy ());
 			}
 			
-			i = i.next;
-			next = i.next;
+			i = i.get_next ();
+			next = i.get_next ();
 		}
 		
-		if (!is_open () && (points.last ().data.get_right_handle ().type == PointType.CUBIC 
-			||  points.first ().data.get_left_handle ().type == PointType.CUBIC)) {
-			add_quadratic_points (points.last ().data, points.first ().data);
+		if (!is_open () && (points.get (points.size - 1).get_right_handle ().type == PointType.CUBIC 
+			||  points.get (0).get_left_handle ().type == PointType.CUBIC)) {
+			add_quadratic_points (points.get (points.size - 1), points.get (0));
 		} else {
-			quadratic_path.add_point (points.last ().data.copy ());
+			quadratic_path.add_point (points.get (points.size - 1).copy ());
 		}
 
-		if (quadratic_path.points.length () < 2) {
+		if (quadratic_path.points.size < 2) {
 			warning ("Less than 2 points in quadratic path.");
 			return new Path ();
 		}
@@ -1238,7 +1217,7 @@ public class Path {
 
 		foreach (EditPoint ep in quadratic_path.points) {
 			if (ep.type == PointType.QUADRATIC) {
-				ep.get_left_handle ().move_to_coordinate (ep.get_prev ().data.get_right_handle ().x (), ep.get_prev ().data.get_right_handle ().y ());
+				ep.get_left_handle ().move_to_coordinate (ep.get_prev ().get_right_handle ().x (), ep.get_prev ().get_right_handle ().y ());
 			}
 		}
 
@@ -1256,7 +1235,7 @@ public class Path {
 		EditPoint prev =  new EditPoint ();
 		int added_points = 0;
 		
-		if (points.length () < 2) {
+		if (points.size < 2) {
 			return;
 		}
 
@@ -1280,11 +1259,11 @@ public class Path {
 			prev = e;
 
 			e = quadratic_path.add_point (e);
-			prev = quadratic_path.points.last ().data;
+			prev = quadratic_path.points.get (quadratic_path.points.size - 1);
 			
 			prev.recalculate_linear_handles ();
 			
-			new_quadratic_points.append (prev);
+			new_quadratic_points.add (prev);
 			return true;
 		}, steps);
 		
@@ -1292,9 +1271,9 @@ public class Path {
 	}
 
 	void process_cubic_handles () 
-		requires (quadratic_path.points.length () > 0) {	
+		requires (quadratic_path.points.size > 0) {	
 		
-		EditPoint prev = quadratic_path.points.last ().data;
+		EditPoint prev = quadratic_path.points.get (quadratic_path.points.size - 1);
 		quadratic_path.close ();
 		foreach (EditPoint ep in quadratic_path.points) {
 			if (ep.type == PointType.CUBIC) {
@@ -1315,7 +1294,7 @@ public class Path {
 		ep.set_tie_handle (true);
 		
 		if (ep.next != null) {
-			((!) ep.next).data.set_tie_handle (false);
+			((!) ep.next).set_tie_handle (false);
 		}
 
 		prev.get_left_handle ().type = PointType.QUADRATIC;
@@ -1333,12 +1312,12 @@ public class Path {
 	void process_quadratic_handles () {	
 		for (int t = 0; t < 2; t++) {
 			foreach (EditPoint ep in new_quadratic_points) {	
-				if (!is_null (ep.next) && !is_null (ep.next) 
-					&& ((!)ep.next).data.type != PointType.CUBIC
-					&& ((!)ep.next).data.type != PointType.LINE_CUBIC
-					&& !is_null (ep.prev) 
-					&& ((!)ep.prev).data.type != PointType.CUBIC
-					&& ((!)ep.prev).data.type != PointType.LINE_CUBIC) {
+				if (ep.next != null
+					&& ((!)ep.next).type != PointType.CUBIC
+					&& ((!)ep.next).type != PointType.LINE_CUBIC
+					&& ep.prev != null 
+					&& ((!)ep.prev).type != PointType.CUBIC
+					&& ((!)ep.prev).type != PointType.LINE_CUBIC) {
 						
 					ep.set_tie_handle (true);
 					ep.process_tied_handle ();
@@ -1358,8 +1337,8 @@ public class Path {
 			return;
 		}
 
-		start = ep.get_prev ().data;
-		stop = ep.get_next ().data;
+		start = ep.get_prev ();
+		stop = ep.get_next ();
 
 		right = start.get_right_handle ().type;
 		left = stop.get_left_handle ().type;
@@ -1442,8 +1421,8 @@ public class Path {
 		if (right == PointType.QUADRATIC) { // update connected handle
 			if (ep.prev != null) {
 				ep.get_left_handle ().move_to_coordinate_internal (
-					ep.get_prev ().data.right_handle.x (), 
-					ep.get_prev ().data.right_handle.y ());
+					ep.get_prev ().right_handle.x (), 
+					ep.get_prev ().right_handle.y ());
 
 			} else {
 				warning ("ep.prev is null for quadratic point");
@@ -1458,7 +1437,7 @@ public class Path {
 			
 	/** Get a point on the this path closest to x and y coordinates. */
 	public void get_closest_point_on_path (EditPoint edit_point, double x, double y) {
-		return_if_fail (points.length () != 0);
+		return_if_fail (points.size != 0);
 		
 		double min = double.MAX;
 		double n = 0;
@@ -1470,27 +1449,27 @@ public class Path {
 		double handle_x0, handle_x1;
 		double handle_y0, handle_y1;
 		
-		unowned List<EditPoint> i = points.first ();
-		unowned List<EditPoint> prev = i.next;
+		unowned EditPoint prev = points.get (0).get_link_item ();
+		unowned EditPoint i = prev.get_next ();
 
 		bool done = false;
 		bool exit = false;
 		
-		unowned List<EditPoint>? previous_point = null;
-		unowned List<EditPoint>? next_point = null;
+		unowned EditPoint? previous_point = null;
+		unowned EditPoint? next_point = null;
 
 		EditPoint previous;
 		EditPoint next;
 		double step = 0;
 
-		if (points.length () == 0) {
+		if (points.size == 0) {
 			warning ("Empty path.");
 			return;
 		}
 
-		if (points.length () == 1) {
-			edit_point.x = i.data.x;
-			edit_point.y = i.data.y;
+		if (points.size == 1) {
+			edit_point.x = i.x;
+			edit_point.y = i.y;
 			
 			edit_point.prev = i;
 			edit_point.next = i;
@@ -1499,29 +1478,29 @@ public class Path {
 			return;
 		}
 		
-		if (points.length () != 1) {
-			edit_point.x = i.data.x;
-			edit_point.y = i.data.y;
+		if (points.size != 1) {
+			edit_point.x = i.x;
+			edit_point.y = i.y;
 		}
 		
 		while (!exit) {
 			
-			if (i == points.last ()) {
+			if (i == points.get (points.size - 1)) {
 				done = true;
 			}
 			
 			if (!done) {
-				i = i.next;
-				prev = i.prev;
+				i = i.get_next ();
+				prev = i.get_prev ();
 			}	else if (done && !is_open ()) {
-				i = points.first ();
-				prev = points.last ();
+				i = points.get (0).get_link_item ();
+				prev = points.get (points.size - 1).get_link_item ();
 				exit = true;
 			} else {
 				break;
 			}
 			
-			all_of (prev.data, i.data, (cx, cy, t) => {
+			all_of (prev, i, (cx, cy, t) => {
 				n = pow (x - cx, 2) + pow (y - cy, 2);
 				
 				if (n < min) {
@@ -1530,7 +1509,7 @@ public class Path {
 					ox = cx;
 					oy = cy;
 				
-					previous_point = prev;
+					previous_point = i.prev;
 					next_point = i;
 					
 					step = t;
@@ -1543,11 +1522,11 @@ public class Path {
 		}
 
 		if (previous_point == null && is_open ()) {
-			previous_point = points.last ();
+			previous_point = points.get (points.size - 1).get_link_item ();
 		}
 		
 		if (previous_point == null) {
-			warning (@"previous_point == null, points.length (): $(points.length ())");
+			warning (@"previous_point == null, points.size: $(points.size)");
 			return;
 		}
 		
@@ -1556,8 +1535,8 @@ public class Path {
 			return;
 		}
 
-		previous = ((!) previous_point).data;
-		next = ((!) next_point).data;
+		previous = (!) previous_point;
+		next = (!) next_point;
 
 		// FIXME: delete
 		bezier_vector (step, previous.x, previous.get_right_handle ().x (), next.get_left_handle ().x (), next.x, out handle_x0, out handle_x1);
@@ -1674,23 +1653,20 @@ public class Path {
 	}
 
 	public void all_segments (SegmentIterator iter) {
-		unowned List<EditPoint> i, next;
+		unowned EditPoint i, next;
 		
-		if (points.length () < 2) {
+		if (points.size < 2) {
 			return;
 		}
 
-		i = points.first ();
-		next = i.next;
-
-		while (i != points.last ()) {
-			iter (i.data, next.data);
-			i = i.next;
-			next = i.next;
+		for (int j = 0; j < points.size - 1; j++) {
+			i = points.get (j).get_link_item ();
+			next = i.get_next ();
+			iter (i, next);
 		}
 		
 		if (!is_open ()) {
-			iter (points.last ().data, points.first ().data);
+			iter (points.get (points.size - 1), points.get (0));
 		}		
 	}
 
@@ -1771,20 +1747,6 @@ public class Path {
 		d0 = b0 + (b0 - c0) * 25000 * (step);
 		d1 = b1 + (b1 - c1) * 25000 * (1 - step);
 	
-	// FIXME: DELETE		
-	/*
-		// set angle
-		b0 = double_bezier_path (step - 0.00001, p0, p1, p2, p3);
-		c0 = double_bezier_path (step - 0.00002, p0, p1, p2, p3);
-
-		b1 = double_bezier_path (step + 0.00001, p0, p1, p2, p3);
-		c1 = double_bezier_path (step + 0.00002, p0, p1, p2, p3);
-		
-		// adjust length
-		d0 = b0 + (b0 - c0) * 25000 * (1 - step);
-		d1 = b1 + (b1 - c1) * 25000 * step;
-	*/	
-	
 		a0 = d0;
 		a1 = d1;
 	}
@@ -1823,51 +1785,36 @@ public class Path {
 	}
 	
 	public void create_list () {
-		unowned List<EditPoint> prev = points.last ();
-		unowned List<EditPoint> ep = points.first ();
+		EditPoint ep;
 		
-		if (points.length () == 0) {
+		if (points.size == 0) {
 			return;
 		}
 		
-		if (points.length () == 1) {
-			ep.data.next = null;
-			ep.data.prev = null;
+		if (points.size == 1) {
+			ep = points.get (0);
+			ep.next = null;
+			ep.prev = null;
 			return;
 		}
 		
-		ep.data.next = ep.next;
-		ep.data.prev = points.last ();
-		prev = ep;
-		
-		assert (ep.data.next != null);
-		assert (ep.data.prev != null);
-		
-		while (ep != ep.last ()) {
-			ep.data.next = ep.next;
-			ep.data.prev = prev;
-			prev = ep;
-			
-			assert (ep.data.next != null);
-			assert (ep.data.prev != null);
-		
-			ep = ep.next;
-		}
-		
-		ep.data.next = points.first ();
-		ep.data.prev = prev;
-		assert (ep.data.prev != null);
+		ep = points.get (0);
+		ep.next = points.get (1).get_link_item ();
+		ep.prev = points.get (points.size - 1).get_link_item ();
 
-		points.first ().data.prev = points.last ();
+		for (int i = 1; i < points.size - 1; i++) {
+			ep = points.get (i);
+			ep.prev = points.get (i - 1).get_link_item ();
+			ep.next = points.get (i + 1).get_link_item ();
+		}
+		
+		ep = points.get (points.size - 1);
+		ep.next = points.get (0).get_link_item ();
+		ep.prev = points.get (points.size - 2).get_link_item ();
 	}
 
 	public bool has_point (EditPoint ep) {
-		foreach (EditPoint p in points) {
-			if (p == ep) {
-				return true;
-			}
-		}
-		return false;
+		return points.contains (ep);
 	}
 	
 	public bool has_deleted_point () {
@@ -1881,32 +1828,31 @@ public class Path {
 	
 	/** @return the remaining parts as a new path. */
 	public PathList process_deleted_points () 
-		requires (points.length () > 0)
+		requires (points.size > 0)
 	{
-		unowned List<EditPoint>? pl = null;
 		EditPoint p;
-		EditPoint ep = new EditPoint ();
+		EditPoint ep;
 		Path current_path = new Path ();
 		Path remaining_points = new Path ();
 		PathList path_list = new PathList ();
-		uint i;
+		int i;
+		int index = 0;
 		
 		if (!has_deleted_point ()) { 
 			return path_list;
 		}
 		
-		if (points.length () == 1) {
-			points.delete_link (points.first ());
+		if (points.size == 1) {
+			points.remove_at (0);
 			return path_list;
 		}
 		
 		// set start position to the point that will be removed	
-		for (i = 0; i < points.length (); i++) {
-			pl = points.nth (i);
-			return_val_if_fail (pl != null, remaining_points);
-			p = ((!)pl).data;
-			
+		for (i = 0; i < points.size; i++) {
+			p = points.get (i);
+						
 			if (p.deleted) {
+				index = i;
 				i++;
 				ep = p;
 				break;
@@ -1914,27 +1860,16 @@ public class Path {
 		}
 
 		// copy points after the deleted point
-		while (i < points.length ()) {
-			pl = points.nth (i);
-			return_val_if_fail (pl != null, remaining_points);
-			p = ((!)pl).data;
+		while (i < points.size) {
+			p = points.get (i);
 			current_path.add_point (p);
 			i++;
 		}
 
 		// copy points before the deleted point
-		i = 0;
-		while (i < points.length ()) {
-			pl = points.nth (i);
-			return_val_if_fail (pl != null, remaining_points);
-			p = ((!)pl).data;
-			if (p == ep) {
-				break;
-			} else {
-				remaining_points.add_point (p);
-			}
-			
-			i++;
+		for (i = 0; i < index; i++) {
+			p = points.get (i);
+			remaining_points.add_point (p);
 		}
 		
 		// merge if we still only have one path
@@ -1943,46 +1878,42 @@ public class Path {
 				current_path.add_point (point.copy ());
 			}
 			
-			if (current_path.points.length () > 0) {
-				ep = current_path.points.first ().data;
+			if (current_path.points.size > 0) {
+				ep = current_path.points.get (0);
 				ep.set_tie_handle (false);
 				ep.set_reflective_handles (false);
 				ep.get_left_handle ().type = PenTool.to_line (ep.type);
 				ep.type = PenTool.to_curve (ep.type);
 				path_list.add (current_path);
-				
-				if (!is_null (current_path.points.last ())) {
-					ep = current_path.points.last ().data;
-					ep.get_right_handle ().type = PenTool.to_line (ep.type);
-					ep.type = PenTool.to_curve (ep.get_right_handle ().type);
-				}
+			
+				ep = current_path.points.get (current_path.points.size - 1);
+				ep.get_right_handle ().type = PenTool.to_line (ep.type);
+				ep.type = PenTool.to_curve (ep.get_right_handle ().type);
 			}
 		} else {
-			if (current_path.points.length () > 0) {
-				ep = current_path.points.first ().data;
+			if (current_path.points.size > 0) {
+				ep = current_path.points.get (0);
 				ep.set_tie_handle (false);
 				ep.set_reflective_handles (false);
 				ep.get_left_handle ().type = PenTool.to_line (ep.type);
 				ep.type = PenTool.to_curve (ep.type);
-				set_new_start (current_path.points.first ().data);
+				set_new_start (current_path.points.get (0));
 				path_list.add (current_path);
 				
-				if (!is_null (current_path.points.last ())) {
-					ep = current_path.points.last ().data;
-					ep.get_right_handle ().type = PenTool.to_line (ep.type);
-					ep.type = PenTool.to_curve (ep.get_right_handle ().type);
-				}
+				ep = current_path.points.get (current_path.points.size - 1);
+				ep.get_right_handle ().type = PenTool.to_line (ep.type);
+				ep.type = PenTool.to_curve (ep.get_right_handle ().type);
 			}
 			
-			if (remaining_points.points.length () > 0) {
-				remaining_points.points.first ().data.set_tie_handle (false);
-				remaining_points.points.first ().data.set_reflective_handles (false);
-				remaining_points.points.first ().data.type = remaining_points.points.first ().data.type;
-				set_new_start (remaining_points.points.first ().data);
+			if (remaining_points.points.size > 0) {
+				remaining_points.points.get (0).set_tie_handle (false);
+				remaining_points.points.get (0).set_reflective_handles (false);
+				remaining_points.points.get (0).type = remaining_points.points.get (0).type;
+				set_new_start (remaining_points.points.get (0));
 				path_list.add (remaining_points);
 				
-				if (!is_null (current_path.points.last ())) {
-					ep = current_path.points.last ().data;
+				if (current_path.points.size > 0) {
+					ep = current_path.points.get (current_path.points.size - 1);
 					ep.get_right_handle ().type = PenTool.to_line (ep.type);
 					ep.type = PenTool.to_curve (ep.get_right_handle ().type);
 				}
@@ -1997,10 +1928,10 @@ public class Path {
 	}
 		
 	public void set_new_start (EditPoint ep) {
-		List<EditPoint> list = new List<EditPoint> ();
-		uint len = points.length ();
-		unowned List<EditPoint> iter = points.first ();
-		unowned List<EditPoint>? ni = null;
+		Gee.ArrayList<EditPoint> list = new Gee.ArrayList<EditPoint> ();
+		uint len = points.size;
+		EditPoint iter = points.get (0);
+		EditPoint? ni = null;
 		bool found = false;
 
 		foreach (EditPoint it in points) {
@@ -2009,7 +1940,7 @@ public class Path {
 				break;
 			}
 			
-			iter = iter.next;
+			iter = iter.get_next ();
 			ni = (!) iter;
 		}
 		
@@ -2024,21 +1955,19 @@ public class Path {
 		iter = (!) ni;
 		
 		for (uint i = 0; i < len; i++) {
-			list.append (iter.data);
+			list.add (iter);
 			
-			if (iter == iter.last ())
-				iter = iter.first ();
-			else
-				iter = iter.next;
-		
+			if (iter == points.get (points.size - 1)) {
+				iter = points.get (0).get_link_item ();
+			} else {
+				iter = iter.get_next ();
+			}		
 		}
 		
-		while (points.length () > 0) {
-			points.remove_link (points.first ());
-		}
+		points.clear ();
 		
 		foreach (EditPoint p in list) {
-			points.append (p);
+			points.add (p);
 		}
 		
 	}
@@ -2219,14 +2148,14 @@ public class Path {
 		Path np = new Path ();
 		Intersection s = new Intersection (0, 0, 1);
 		
-		ex = p0.points.last ().data;
-		ix = p0.points.last ().data;
-		len_i = p0.points.length ();
+		ex = p0.points.get (p0.points.size - 1);
+		ix = p0.points.get (p0.points.size - 1);
+		len_i = p0.points.size;
 		
-		for (i = 0; i < p0.points.length (); i++) {
-			ex = p0.points.nth ((i + offset_i) % len_i).data;
+		for (i = 0; i < p0.points.size; i++) {
+			ex = p0.points.get ((int) ((i + offset_i) % len_i));
 
-			if (ex == p0.points.first ().data && i != 0) {	
+			if (ex == p0.points.get (0) && i != 0) {	
 				s = (!) il.get_intersection (ex);	
 				break;
 			}
@@ -2255,8 +2184,8 @@ public class Path {
 				en.right_handle.length = s.editpoint_b.right_handle.length;
 							
 				// read until we find ex
-				for (j = 0; j < p1.points.length (); j++) {
-					ix = p1.points.nth (j).data;
+				for (j = 0; j < p1.points.size; j++) {
+					ix = p1.points.get (j);
 					
 					if (ix == s.editpoint_b) {
 						break;
@@ -2264,10 +2193,10 @@ public class Path {
 				}
 				
 				offset_j = j + 1;
-				len_j = p1.points.length ();
-				for (j = 0; j < p1.points.length (); j++) {
+				len_j = p1.points.size;
+				for (j = 0; j < p1.points.size; j++) {
 					
-					ix = p1.points.nth ((j + offset_j) % len_j).data;
+					ix = p1.points.get ((int) ((j + offset_j) % len_j));
 					
 					// add
 					if (np.has_edit_point (ix)) {
@@ -2294,7 +2223,7 @@ public class Path {
 				en.right_handle.angle  = s.editpoint_a.right_handle.angle;
 				en.right_handle.length = s.editpoint_a.right_handle.length;
 								
-				if (j == p0.points.length ()) {
+				if (j == p0.points.size) {
 					np.close ();
 					new_path = np;
 					return true;
@@ -2302,15 +2231,15 @@ public class Path {
 
 				// skip to next intersection
 				int k;
-				for (k = 0; k < p0.points.length (); k++) {
-					ix = p0.points.nth (k).data; 
+				for (k = 0; k < p0.points.size; k++) {
+					ix = p0.points.get (k); 
 
 					if (ix == s.editpoint_a) {
 						break;
 					}
 				}
 				
-				if (k == p0.points.length ()) {
+				if (k == p0.points.size) {
 					new_path = np;
 					return true;
 				}
@@ -2326,35 +2255,20 @@ public class Path {
 	}
 
 	public void append_path (Path path) {
-		if (points.length () == 0 || path.points.length () == 0) {
+		if (points.size == 0 || path.points.size == 0) {
 			warning ("No points");
 			return;
 		}
 
-		// FIXME: DELETE
-		/*
-		points.last ().data.right_handle.type = path.points.first ().data.type;
-		points.last ().data.right_handle.move_to_coordinate (
-			path.points.first ().data.right_handle.x (),
-			path.points.first ().data.right_handle.y ());
-			
-		path.points.first ().data.right_handle.type = 
-			points.last ().data.right_handle.type;
-		*/
-		path.points.first ().data.recalculate_linear_handles ();
-		points.last ().data.recalculate_linear_handles ();
+		path.points.get (0).recalculate_linear_handles ();
+		points.get (points.size - 1).recalculate_linear_handles ();
 		
 		// copy remaining points
 		foreach (EditPoint p in path.points) {
 			add_point (p.copy ());
 		}
 		
-		// close path
-		while (path.points.length () > 0) {
-			path.points.remove_link (path.points.first ());
-		}
-		
-		//close ();
+		path.points.clear ();
 	}
 
 	/** Roatate around coordinate xc, xc. */
@@ -2458,7 +2372,7 @@ public class Path {
 	}
 	
 	public void convert_path_ending_to_line () {
-		if (points.length () < 2) {
+		if (points.size < 2) {
 			return;
 		}
 		
@@ -2488,8 +2402,8 @@ public class Path {
 		double x0, y0, x1, y1, x2, y2, x3, y3;
 		double minx, maxx, miny, maxy;
 		
-		if (unlikely (points.length () < 2)) {
-			warning (@"Missing points, $(points.length ()) points in path.");
+		if (unlikely (points.size < 2)) {
+			warning (@"Missing points, $(points.size) points in path.");
 			return;
 		}
 		
@@ -2547,8 +2461,8 @@ public class Path {
 		
 		get_closest_point_on_path (ep, x, y);
 
-		exists = ep.get_prev ().data.x == ep.x && ep.get_prev ().data.y == ep.y;
-		exists |= ep.get_next ().data.x == ep.x && ep.get_next ().data.y == ep.y;
+		exists = ep.get_prev ().x == ep.x && ep.get_prev ().y == ep.y;
+		exists |= ep.get_next ().x == ep.x && ep.get_next ().y == ep.y;
 		
 		if (!exists) {
 			insert_new_point_on_path (ep);

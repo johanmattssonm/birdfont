@@ -806,7 +806,7 @@ public class GlyphBackgroundImage {
 				
 				p.add (x, y);
 				
-				if (p.points.length () > 10) {
+				if (p.points.size > 10) {
 					return p;
 				}
 			}

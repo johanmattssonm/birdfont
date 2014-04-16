@@ -935,7 +935,7 @@ public class SvgParser {
 			}
 		}
 		
-		if (path.points.length () > 0) {
+		if (path.points.size > 0) {
 			warning ("Open path.");
 			path_list.add (path);
 		}
@@ -1024,7 +1024,7 @@ public class SvgParser {
 			}
 		}
 		
-		if (path.points.length () > 0) {
+		if (path.points.size > 0) {
 			warning ("Open path.");
 			path_list.add (path);
 		}

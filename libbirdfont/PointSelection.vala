@@ -44,14 +44,14 @@ public class PointSelection : GLib.Object {
 	
 	/** @return true if this point is the first point in the path. */
 	public bool is_first () {
-		return_val_if_fail (path.points.length () > 0, false);
-		return path.points.first ().data == point;
+		return_val_if_fail (path.points.size > 0, false);
+		return path.points.get (0) == point;
 	}
 
 	/** @return true if this point is the last point in the path. */
 	public bool is_last () {
-		return_val_if_fail (path.points.length () > 0, false);
-		return path.points.last ().data == point;
+		return_val_if_fail (path.points.size > 0, false);
+		return path.points.get (path.points.size - 1) == point;
 	}
 	
 	public bool is_endpoint () {

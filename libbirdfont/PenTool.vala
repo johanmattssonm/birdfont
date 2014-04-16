@@ -575,9 +575,9 @@ public class PenTool : Tool {
 
 		foreach (Path p in glyph.path_list) {
 			
-			if (p.is_open () && p.points.length () >= 1 
-				&& (active_edit_point == p.points.first ().data 
-				|| active_edit_point == p.points.last ().data)) {
+			if (p.is_open () && p.points.size >= 1 
+				&& (active_edit_point == p.points.get (0) 
+				|| active_edit_point == p.points.get (p.points.size - 1))) {
 				active_path = p;
 				glyph.set_active_path (p);
 				
@@ -589,7 +589,7 @@ public class PenTool : Tool {
 		}
 			
 		foreach (Path p in glyph.path_list) {
-			if (p.is_open () && p.points.length () > 1 && active_edit_point == p.points.first ().data) {
+			if (p.is_open () && p.points.size > 1 && active_edit_point == p.points.get (0)) {
 				p.reverse ();
 				update_selection ();
 				reverse = true;
@@ -651,12 +651,12 @@ public class PenTool : Tool {
 		EditPoint ep_last, ep_first;
 
 		foreach (Path path in glyph.path_list) {
-			if (path.points.length () == 0) {
+			if (path.points.size == 0) {
 				continue;
 			}
 
-			ep_last = path.points.last ().data;
-			ep_first = path.points.first ().data;	
+			ep_last = path.points.get (path.points.size - 1);
+			ep_first = path.points.get (0);	
 			
 			if (active_edit_point == ep_last) {
 				m = path;
@@ -695,36 +695,36 @@ public class PenTool : Tool {
 			return;
 		}
 		
-		if (active_edit_point == path.points.first ().data) {
+		if (active_edit_point == path.points.get (0)) {
 			path.reverse ();
 			update_selection ();
 			path.recalculate_linear_handles ();
 			direction_changed = true;
-			active_edit_point = path.points.last ().data;
+			active_edit_point = path.points.get (path.points.size - 1);
 			active_path = path;
 		}
 		
 		// join path with it self
-		if (path.points.first ().data != active_edit_point
+		if (path.points.get (0) != active_edit_point
 			&& is_endpoint ((!) active_edit_point)
-			&& is_close_to_point (path.points.first ().data, x, y)) {
+			&& is_close_to_point (path.points.get (0), x, y)) {
 				
 			// TODO: set point type
-			path.points.first ().data.left_handle.move_to_coordinate (
-				path.points.last ().data.left_handle.x (),
-				path.points.last ().data.left_handle.y ());
+			path.points.get (0).left_handle.move_to_coordinate (
+				path.points.get (path.points.size - 1).left_handle.x (),
+				path.points.get (path.points.size - 1).left_handle.y ());
 				
-			path.points.first ().data.left_handle.type = 
-				path.points.last ().data.left_handle.type;
+			path.points.get (0).left_handle.type = 
+				path.points.get (path.points.size - 1).left_handle.type;
 
-			path.points.first ().data.recalculate_linear_handles ();
-			path.points.last ().data.recalculate_linear_handles ();
+			path.points.get (0).recalculate_linear_handles ();
+			path.points.get (path.points.size - 1).recalculate_linear_handles ();
 			
 			// force the connected handle to move
-			path.points.first ().data.set_position (
-				path.points.first ().data.x, path.points.first ().data.y);
+			path.points.get (0).set_position (
+				path.points.get (0).x, path.points.get (0).y);
 		
-			path.points.remove_link (path.points.last ());
+			path.points.remove_at (path.points.size - 1);
 			
 			path.close ();
 			glyph.close_path ();
@@ -752,30 +752,30 @@ public class PenTool : Tool {
 			}
 
 			// we need both start and end points
-			if (merge.points.length () < 1 || path.points.length () < 1) {
+			if (merge.points.size < 1 || path.points.size < 1) {
 				continue;
 			}
 			
-			if (is_close_to_point (merge.points.last ().data, x, y)) {
+			if (is_close_to_point (merge.points.get (merge.points.size - 1), x, y)) {
 				merge.reverse ();
 				update_selection ();
 				direction_changed = !direction_changed;
 			}
 
-			return_if_fail (merge.points.length () > 0);
+			return_if_fail (merge.points.size > 0);
 
-			if (is_close_to_point (merge.points.first ().data, x, y)) {
-				merge.points.first ().data.set_tie_handle (false);
-				merge.points.first ().data.set_reflective_handles (false);
+			if (is_close_to_point (merge.points.get (0), x, y)) {
+				merge.points.get (0).set_tie_handle (false);
+				merge.points.get (0).set_reflective_handles (false);
 				
-				merge.points.last ().data.set_tie_handle (false);
-				merge.points.last ().data.set_reflective_handles (false);
+				merge.points.get (merge.points.size - 1).set_tie_handle (false);
+				merge.points.get (merge.points.size - 1).set_reflective_handles (false);
 								
-				path.points.last ().data.set_tie_handle (false);
-				path.points.last ().data.set_reflective_handles (false);
+				path.points.get (path.points.size - 1).set_tie_handle (false);
+				path.points.get (path.points.size - 1).set_reflective_handles (false);
 
-				path.points.first ().data.set_tie_handle (false);
-				path.points.first ().data.set_reflective_handles (false);
+				path.points.get (0).set_tie_handle (false);
+				path.points.get (0).set_reflective_handles (false);
 				
 				second_path = merge.copy ();
 				
@@ -926,7 +926,7 @@ public class PenTool : Tool {
 				continue;
 			}
 			
-			if (path.points.length () == 0) {
+			if (path.points.size == 0) {
 				continue;
 			}
 			
@@ -950,12 +950,12 @@ public class PenTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
 		foreach (Path path in glyph.path_list) {
-			if (path.points.length () < 1) {
+			if (path.points.size < 1) {
 				continue;
 			}
 			
-			start = path.points.first ().data;
-			end = path.points.last ().data;
+			start = path.points.get (0);
+			end = path.points.get (path.points.size - 1);
 			
 			if (ep == start || ep == end) {
 				return true;
@@ -1116,7 +1116,7 @@ public class PenTool : Tool {
 	}
 
 	static void set_point_type (EditPoint p) {
-		if (p.prev != null && p.get_prev ().data.right_handle.type == PointType.QUADRATIC) {
+		if (p.prev != null && p.get_prev ().right_handle.type == PointType.QUADRATIC) {
 			p.left_handle.type = PointType.QUADRATIC;
 			p.right_handle.type = PointType.LINE_QUADRATIC;
 			p.type = PointType.QUADRATIC;
@@ -1182,8 +1182,8 @@ public class PenTool : Tool {
 		double y = Glyph.path_coordinate_y (event_y);
 		
 		if (unlikely (!p.has_region_boundaries ())) {
-			if (p.points.length () > 0) {
-				warning (@"No bounding box. $(p.points.length ())");
+			if (p.points.size > 0) {
+				warning (@"No bounding box. $(p.points.size)");
 				p.update_region_boundaries ();
 			}
 		}
@@ -1373,10 +1373,10 @@ public class PenTool : Tool {
 		}
 		
 		if (min_right < min_left) {
-			return new PointSelection (e.point.get_next ().data, e.path);
+			return new PointSelection (e.point.get_next (), e.path);
 		}
 		
-		return new PointSelection (e.point.get_prev ().data, e.path);
+		return new PointSelection (e.point.get_prev (), e.path);
 	}
 	
 	private static PointSelection get_next_point_up () {
@@ -1503,11 +1503,11 @@ public class PenTool : Tool {
 				ep.get_right_handle ().type = PointType.LINE_CUBIC;
 			}
 			
-			if (ep.next != null && ep.get_next ().data.is_selected ()) {
+			if (ep.next != null && ep.get_next ().is_selected ()) {
 				ep.get_right_handle ().type = PointType.LINE_CUBIC;
 			}
 
-			if (ep.prev != null && ep.get_prev ().data.is_selected ()) {
+			if (ep.prev != null && ep.get_prev ().is_selected ()) {
 				ep.get_left_handle ().type = PointType.LINE_CUBIC;
 			}
 						
@@ -1520,11 +1520,11 @@ public class PenTool : Tool {
 				ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
 			}
 
-			if (ep.next != null && ep.get_next ().data.is_selected ()) {
+			if (ep.next != null && ep.get_next ().is_selected ()) {
 				ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
 			}
 
-			if (ep.prev != null && ep.get_prev ().data.is_selected ()) {
+			if (ep.prev != null && ep.get_prev ().is_selected ()) {
 				ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
 			}
 		}
@@ -1537,22 +1537,22 @@ public class PenTool : Tool {
 				ep.get_right_handle ().type = PointType.LINE_QUADRATIC;
 				
 				if (ep.next != null) {
-					ep.get_next ().data.get_left_handle ().type = PointType.LINE_QUADRATIC;		
+					ep.get_next ().get_left_handle ().type = PointType.LINE_QUADRATIC;		
 				}
 				
 				if (ep.prev != null) {
-					ep.get_prev ().data.get_right_handle ().type = PointType.LINE_QUADRATIC;		
+					ep.get_prev ().get_right_handle ().type = PointType.LINE_QUADRATIC;		
 				}
 			}
 			
-			if (ep.next != null && ep.get_next ().data.is_selected ()) {
+			if (ep.next != null && ep.get_next ().is_selected ()) {
 				ep.get_right_handle ().type = PointType.LINE_QUADRATIC;
-				ep.get_next ().data.get_left_handle ().type = PointType.LINE_QUADRATIC;
+				ep.get_next ().get_left_handle ().type = PointType.LINE_QUADRATIC;
 			}
 
-			if (ep.prev != null && ep.get_prev ().data.is_selected ()) {
+			if (ep.prev != null && ep.get_prev ().is_selected ()) {
 				ep.get_left_handle ().type = PointType.LINE_QUADRATIC;
-				ep.get_prev ().data.get_right_handle ().type = PointType.LINE_QUADRATIC;
+				ep.get_prev ().get_right_handle ().type = PointType.LINE_QUADRATIC;
 			}		
 			
 		}
@@ -1655,13 +1655,13 @@ public class PenTool : Tool {
 		if (selected_points.length () == 1) {
 			selected = selected_points.first ().data;
 			if (selected.point.next != null) {
-				selected_points.append (new PointSelection (selected.point.get_next ().data, selected.path));
-				selected.point.get_next ().data.set_selected (true);
+				selected_points.append (new PointSelection (selected.point.get_next (), selected.path));
+				selected.point.get_next ().set_selected (true);
 			}
 			
 			if (selected.point.prev != null) {
-				selected_points.append (new PointSelection (selected.point.get_prev ().data, selected.path));
-				selected.point.get_next ().data.set_selected (true);
+				selected_points.append (new PointSelection (selected.point.get_prev (), selected.path));
+				selected.point.get_next ().set_selected (true);
 			}
 			
 			reset_selected = true;
@@ -1670,12 +1670,12 @@ public class PenTool : Tool {
 		foreach (PointSelection ps in selected_points) {
 			e = ps.point;
 			// convert segments not control points
-			if (e.next == null || !e.get_next ().data.is_selected ()) {
+			if (e.next == null || !e.get_next ().is_selected ()) {
 				continue;
 			}
 
 			set_converted_handle_length (e.get_right_handle ());
-			set_converted_handle_length (e.get_next ().data.get_left_handle ());
+			set_converted_handle_length (e.get_next ().get_left_handle ());
 														
 			if (!is_line (e.type)) {
 				e.type = DrawingTools.point_type;
@@ -1690,9 +1690,9 @@ public class PenTool : Tool {
 			}
 
 			if (!is_line (e.type)) {
-				e.get_next ().data.get_left_handle ().type = DrawingTools.point_type;
+				e.get_next ().get_left_handle ().type = DrawingTools.point_type;
 			} else {
-				e.get_next ().data.get_left_handle ().type = to_line (DrawingTools.point_type);
+				e.get_next ().get_left_handle ().type = to_line (DrawingTools.point_type);
 			}
 				
 			// process connected handle

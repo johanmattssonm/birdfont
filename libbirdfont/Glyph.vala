@@ -154,7 +154,7 @@ public class Glyph : FontDisplay {
 		clear_active_paths ();
 		
 		foreach (Path p in path_list) {
-			if (p.points.length () > 0) {
+			if (p.points.size > 0) {
 				add_active_path (p);
 			}
 		}
@@ -204,14 +204,30 @@ public class Glyph : FontDisplay {
 			y2 = 0;
 			return;
 		}
-				
+
+		x1 = double.MAX;
+		x2 = double.MIN;
+		y1 = double.MAX;
+		y2 = double.MIN;
+	
 		foreach (Path p in path_list) {
 			p.update_region_boundaries ();
 						
-			if (p.xmin < x1) x1 = p.xmin;
-			if (p.xmax > x2) x2 = p.xmax;
-			if (p.ymin < y1) y1 = p.ymin;
-			if (p.ymax > y2) y2 = p.ymax;
+			if (p.xmin < x1) {
+				x1 = p.xmin;
+			}
+			
+			if (p.xmax > x2) {
+				x2 = p.xmax;
+			}
+			
+			if (p.ymin < y1) {
+				y1 = p.ymin;
+			}
+			
+			if (p.ymax > y2) {
+				y2 = p.ymax;
+			}
 		}
 	}
 	
@@ -461,15 +477,11 @@ public class Glyph : FontDisplay {
 	
 	public void remove_empty_paths () {
 		foreach (Path p in path_list) {
-			if (p.points.length () < 2) {
+			if (p.points.size < 2) {
 				delete_path (p);
 				remove_empty_paths ();
 				return;
 			}
-		}
-
-		foreach (Path p in path_list) {
-			assert (p.points.length () > 0);
 		}
 	}
 	
@@ -578,7 +590,7 @@ public class Glyph : FontDisplay {
 	public bool process_deleted () {
 		Gee.ArrayList<Path> deleted_paths = new Gee.ArrayList<Path> ();
 		foreach (Path p in path_list) {
-			if (p.points.length () > 0) {
+			if (p.points.size > 0) {
 				if (process_deleted_points_in_path (p)) {
 					return true;
 				}
@@ -921,7 +933,7 @@ public class Glyph : FontDisplay {
 		}
 
 		foreach (Path p in path_list) {
-			if (p.points.length () == 0) continue;
+			if (p.points.size == 0) continue;
 			
 			p.get_closest_point_on_path (ep, xt, yt);
 			d = Math.pow (ep.x - xt, 2) + Math.pow (ep.y - yt, 2);
@@ -976,7 +988,7 @@ public class Glyph : FontDisplay {
 		clear_active_paths ();
 		add_active_path (np);
 		
-		inserted = np.points.last ().data;
+		inserted = np.points.get (np.points.size - 1);
 		
 		return new PointSelection (inserted, np);
 	}
@@ -1046,7 +1058,7 @@ public class Glyph : FontDisplay {
 			EditPoint pl = path.get_last_point ();
 			
 			if (pl.prev != null) {
-				p = pl.get_prev ().data;
+				p = pl.get_prev ();
 				
 				px = p.x + xc;
 				py = p.y - xc;
@@ -1176,7 +1188,7 @@ public class Glyph : FontDisplay {
 		foreach (var p in path_list) {
 			p.update_region_boundaries ();
 			
-			if (p.points.length () > 2) {
+			if (p.points.size > 2) {
 				if (p.xmin < ax) ax = p.xmin;
 				if (p.ymin < ay) ay = p.ymin;			
 				if (p.xmax > bx) bx = p.xmax;
@@ -1302,7 +1314,7 @@ public class Glyph : FontDisplay {
 	
 	public bool is_empty () {
 		foreach (Path p in path_list) {
-			if (p.points.length () > 0) {
+			if (p.points.size > 0) {
 				return false;
 			}
 		}

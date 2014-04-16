@@ -1020,7 +1020,7 @@ class TestCases {
 		
 		if (direction == p.is_clockwise ()) {
 			critical (@"Direction did not change after reverseing path \"$name\"\n");
-			stderr.printf (@"Path length: $(p.points.length ()) \n");
+			stderr.printf (@"Path length: $(p.points.size) \n");
 			return false;
 		}
 

@@ -103,33 +103,33 @@ class IntersectionList {
 	public static IntersectionList create_intersection_list (Path p1, Path p2) {
 		IntersectionList il = new IntersectionList ();
 		
-		unowned List<EditPoint> a_start, a_stop;
-		unowned List<EditPoint> b_start, b_stop;
+		unowned EditPoint a_start, a_stop;
+		unowned EditPoint b_start, b_stop;
 		
 		if (p1 == p2) {
 			return il;
 		}
 		
 		// find crossing paths
-		a_start = p1.points.first ();
-		for (int i = 0; i < p1.points.length (); i++) {
+		a_start = p1.points.get (0).get_link_item ();
+		for (int i = 0; i < p1.points.size; i++) {
 			
-			if (a_start.data.next == null) {
-				a_stop = p1.points.first ();
+			if (a_start.next == null) {
+				a_stop = p1.points.get (0).get_link_item ();
 			} else {
-				a_stop = a_start.data.get_next ();
+				a_stop = a_start.get_next ();
 			}
 			
-			b_start = p2.points.first ();
-			for (int j = 0; j < p2.points.length (); j++) {
+			b_start = p2.points.get (0).get_link_item ();
+			for (int j = 0; j < p2.points.size; j++) {
 				
-				if (b_start.data.next == null) {
-					b_stop = p2.points.first ();
+				if (b_start.next == null) {
+					b_stop = p2.points.get (0).get_link_item ();
 				} else {
-					b_stop = b_start.data.get_next ();
+					b_stop = b_start.get_next ();
 				}
 
-				il.append (find_intersections (a_start.data, a_stop.data, b_start.data, b_stop.data));
+				il.append (find_intersections (a_start, a_stop, b_start, b_stop));
 
 				b_start = b_stop;
 			}
