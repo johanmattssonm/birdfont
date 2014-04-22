@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -58,7 +58,7 @@ class SvgFontFormatWriter : Object  {
 		put ("<defs>");
 
 		put (@"<font id=\"$font_name\" horiz-adv-x=\"250\" >");
-		put (@"<font-face units-per-em=\"$units_per_em\" ascent=\"$ascent\" descent=\"$descent\" />");
+		put (@"<font-face units-per-em=\"$(to_float (units_per_em))\" ascent=\"$(to_float (ascent))\" descent=\"$(to_float (descent))\" />");
 
 		// (missing-glyph goes here)
 
@@ -78,47 +78,43 @@ class SvgFontFormatWriter : Object  {
 			if (glyph.get_unichar () >= ' ' && b.str.validate ()) {
 				if (b.str == "\"" || b.str == "&" || b.str == "<" || b.str == ">") {
 					uni = Font.to_hex_code (glyph.get_unichar ());
-					put (@"<glyph unicode=\"&#x$(uni);\" horiz-adv-x=\"$(glyph.get_width ())\" d=\"$(glyph.get_svg_data ())\" />");			
+					put (@"<glyph unicode=\"&#x$(uni);\" horiz-adv-x=\"$(to_float (glyph.get_width ()))\" d=\"$(glyph.get_svg_data ())\" />");			
 				} else {
-					put (@"<glyph unicode=\"$(b.str)\" horiz-adv-x=\"$(glyph.get_width ())\" d=\"$(glyph.get_svg_data ())\" />");
+					put (@"<glyph unicode=\"$(b.str)\" horiz-adv-x=\"$(to_float (glyph.get_width ()))\" d=\"$(glyph.get_svg_data ())\" />");
 				}
 			}
-
-			Tool.yield ();
 		}
 		
 		// FIXME: ligatures
-		KerningClasses.get_instance ().each_pair ((left, right, k) => {
+		KerningClasses.get_instance ().all_pairs ((kerning) => {
 			string l, r;
-			Font f = BirdFont.get_current_font ();
-			Glyph? gr = f.get_glyph (right);
-			Glyph? gl = f.get_glyph (left);
-			Glyph glyph_right;
-			Glyph glyph_left;
 			
-			if (gr == null || gl == null) {
-				warning ("kerning glyph that does not exist.");
-				return;
+			foreach (Kerning k in kerning.kerning) {
+				try {
+					if (k.glyph != null) {
+						l = Font.to_hex_code (kerning.character.unichar_code);
+						r = Font.to_hex_code (((!)k.glyph).unichar_code);	
+						os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(to_float (-k.val))\"/>\n");
+					} else {
+						warning ("No glyph.");
+					}
+				} catch (GLib.Error e) {
+					warning (e.message);
+				}
 			}
-			
-			glyph_right = (!) gr;
-			glyph_left = (!) gl;
-			
-			l = Font.to_hex_code (glyph_left.unichar_code);
-			r = Font.to_hex_code (glyph_right.unichar_code);
-			
-			try {			
-				os.put_string (@"<hkern u1=\"&#x$l;\" u2=\"&#x$r;\" k=\"$(-k)\"/>\n");
-			} catch (GLib.Error e) {
-				warning (e.message);
-			}
-			
-			Tool.yield ();
 		});	
 
 		put ("</font>");
 		put ("</defs>");
 		put ("</svg>");
+	}
+
+	string to_float (double d) {
+		string s = @"$d";
+		if (s.index_of ("e") != -1) {
+			return "0".dup ();
+		}
+		return s.replace (",", ".");
 	}
 
 	/** Write a new line */
