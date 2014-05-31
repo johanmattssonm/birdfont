@@ -227,14 +227,14 @@ public class KerningDisplay : FontDisplay {
 				cr.stroke ();
 				cr.restore ();
 			}
-			
-			if (y * KerningTools.font_size > allocation.height && i > 10) {
-				row.remove (word);
-			}
 						
 			y += row_height + 20;
 			x = 20;
 			first_row = false;	
+		}
+		
+		for (int j = row.size - 1; j > 30; j--) {
+			row.remove_at (j);
 		}
 		
 		cr.restore ();
