@@ -36,6 +36,10 @@ public class CharDatabaseParser : GLib.Object {
 		if (data.has_prefix ("@")) { // ignore comments
 			return;
 		}
+
+		if (data.has_prefix (";")) {
+			return;
+		}
 		
 		index_values = data.down ();
 		index_values = index_values.replace ("\n\tx", "");

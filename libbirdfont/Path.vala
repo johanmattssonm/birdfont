@@ -1132,11 +1132,8 @@ public class Path {
 		PointType left;
 		PointType right;
 		double x, y;
-		unowned EditPoint next = points.get (0).get_link_item ();
-		unowned EditPoint? next_item;
 		
-		for (next_item = points.get (0).get_link_item (); next_item != null; next_item = next.next) {
-			next = (!) next_item;
+		foreach (EditPoint next in points) {
 			left = first.get_right_handle ().type;
 			right = next.get_left_handle ().type;
 			if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
