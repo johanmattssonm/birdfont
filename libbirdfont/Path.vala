@@ -1400,8 +1400,9 @@ public class Path {
 			edit_point.y = i.y;
 		}
 		
+		create_list ();
+		
 		while (!exit) {
-			
 			if (i == points.get (points.size - 1)) {
 				done = true;
 			}

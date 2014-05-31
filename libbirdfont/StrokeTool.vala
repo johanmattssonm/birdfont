@@ -468,6 +468,7 @@ public class StrokeTool : Tool {
 		stroked.add_point (corner1);
 	
 		corner2 = e.copy ();
+		
 		stroked.get_closest_point_on_path (corner2, nx, ny); // FIXME: optimize
 
 		if (end_point) {
