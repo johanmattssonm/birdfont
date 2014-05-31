@@ -1729,7 +1729,10 @@ public class Glyph : FontDisplay {
 		}
 		
 		foreach (Path p0 in active_paths) {
-			merge_path (p0);
+			if (merge_path (p0)) {
+				merge_all (); // stop iterating if the list is updated
+				break;
+			}
 		}
 		
 		close_path ();
