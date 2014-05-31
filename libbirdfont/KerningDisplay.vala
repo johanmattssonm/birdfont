@@ -21,7 +21,7 @@ public class KerningDisplay : FontDisplay {
 
 	public bool suppress_input = false;
 	
-	List <GlyphSequence> row;
+	Gee.ArrayList <GlyphSequence> row;
 	int active_handle = -1;
 	int selected_handle = -1;
 	bool moving = false;
@@ -36,8 +36,8 @@ public class KerningDisplay : FontDisplay {
 	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
-		row = new List <GlyphSequence> ();
-		row.append (w);
+		row = new Gee.ArrayList <GlyphSequence> ();
+		row.add (w);
 	}
 
 	public override string get_label () {
@@ -141,11 +141,11 @@ public class KerningDisplay : FontDisplay {
 				if (prev == null || wi == 0) {
 					kern = 0;
 				} else {
-					return_if_fail (wi < word_with_ligatures.ranges.length ());
+					return_if_fail (wi < word_with_ligatures.ranges.size);
 					return_if_fail (wi - 1 >= 0);
 					
-					gr_left = word_with_ligatures.ranges.nth (wi - 1).data;
-					gr_right = word_with_ligatures.ranges.nth (wi).data;
+					gr_left = word_with_ligatures.ranges.get (wi - 1);
+					gr_right = word_with_ligatures.ranges.get (wi);
 
 					kern = get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 				}
@@ -249,7 +249,7 @@ public class KerningDisplay : FontDisplay {
 		double kern = get_kerning_for_handle (h);
 		active_handle = h;
 		
-		if (1 <= active_handle < row.first ().data.glyph.length ()) {
+		if (1 <= active_handle < row.get (0).glyph.size) {
 			display_kerning_value (kern);
 		}
 	}
@@ -310,19 +310,19 @@ public class KerningDisplay : FontDisplay {
 				b = ((!) g).get_name ();
 				
 				if (handle == wi && row_index == 0) {
-					if (wi >= word_with_ligatures.ranges.length ()) {
-						warning (@"$wi > $(word_with_ligatures.ranges.length ()) Number of glyphs: $(word_with_ligatures.glyph.length ())");
+					if (wi >= word_with_ligatures.ranges.size) {
+						warning (@"$wi > $(word_with_ligatures.ranges.size) Number of glyphs: $(word_with_ligatures.glyph.size)");
 						return false;
 					}
 					return_val_if_fail (wi - 1 >= 0, false);
 					
-					if (word_with_ligatures.ranges.length () != word_with_ligatures.glyph.length ()) {
-						warning (@"ranges and glyphs does not match. $(word_with_ligatures.ranges.length ()) != $(word_with_ligatures.glyph.length ())");
+					if (word_with_ligatures.ranges.size != word_with_ligatures.glyph.size) {
+						warning (@"ranges and glyphs does not match. $(word_with_ligatures.ranges.size) != $(word_with_ligatures.glyph.size)");
 						return false;
 					}
 					
-					gr_left = word_with_ligatures.ranges.nth (wi - 1).data;
-					gr_right = word_with_ligatures.ranges.nth (wi).data;
+					gr_left = word_with_ligatures.ranges.get (wi - 1);
+					gr_right = word_with_ligatures.ranges.get (wi);
 					
 					left = a;
 					right = b;
@@ -453,17 +453,14 @@ public class KerningDisplay : FontDisplay {
 		g = MainWindow.get_current_glyph ();
 		s.append_unichar (g.get_unichar ());
 
-		r = row;
-		return_if_fail (r != null);
-
-		if (row.length () == 0) {
+		if (row.size == 0) {
 			append_char = true;
 		}
 		
 		if (append_char) {
 			w = new GlyphSequence ();
-			row.append (w);
-			w.glyph.prepend (font.get_glyph (s.str));
+			row.add (w);
+			w.glyph.insert (0, font.get_glyph (s.str));
 		}		
 	}
 	
@@ -482,8 +479,8 @@ public class KerningDisplay : FontDisplay {
 			return;
 		}
 		
-		row.first ().data.glyph.append ((!) glyph);
-		row.first ().data.ranges.append (range);
+		row.get (0).glyph.add ((!) glyph);
+		row.get (0).ranges.add (range);
 		
 		GlyphCanvas.redraw ();
 	}
@@ -495,8 +492,8 @@ public class KerningDisplay : FontDisplay {
 			selected_handle = 1;
 		}
 		
-		if (selected_handle >= row.first ().data.glyph.length ()) {
-			selected_handle = (int) row.first ().data.glyph.length () - 1;
+		if (selected_handle >= row.get (0).glyph.size) {
+			selected_handle = (int) row.get (0).glyph.size - 1;
 		}
 		
 		GlyphCanvas.redraw ();
@@ -547,12 +544,12 @@ public class KerningDisplay : FontDisplay {
 		}
 		
 		if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {		
-			if (keyval == Key.BACK_SPACE && row.length () > 0) {	
-				row.first ().data.glyph.remove_link (row.first ().data.glyph.last ());
-				row.first ().data.ranges.remove_link (row.first ().data.ranges.last ());
+			if (keyval == Key.BACK_SPACE && row.size > 0 && row.get (0).glyph.size > 0) {
+				row.get (0).glyph.remove_at (row.get (0).glyph.size - 1);
+				row.get (0).ranges.remove_at (row.get (0).ranges.size - 1);
 			}
 			
-			if (row.length () == 0 || c == Key.ENTER) {
+			if (row.size == 0 || c == Key.ENTER) {
 				new_line ();
 			}
 			
@@ -563,7 +560,7 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public void new_line () {
-		row.prepend (new GlyphSequence ());
+		row.insert (0, new GlyphSequence ());
 	}
 	
 	void add_character (unichar c) {
@@ -579,10 +576,10 @@ public class KerningDisplay : FontDisplay {
 			name = f.get_name_for_character (c);
 			g = f.get_glyph_by_name (name);
 			if (g != null) {
-				row.first ().data.glyph.append (g);
-				row.first ().data.ranges.append (null);
+				row.get (0).glyph.add (g);
+				row.get (0).ranges.add (null);
 				
-				selected_handle = (int) row.first ().data.glyph.length () - 1;
+				selected_handle = (int) row.get (0).glyph.size - 1;
 				set_active_handle_index (selected_handle);
 			}
 		}
@@ -653,11 +650,11 @@ public class KerningDisplay : FontDisplay {
 				if (prev == null || col_index == 0) {
 					kern = 0;
 				} else {
-					return_if_fail (col_index < word_with_ligatures.ranges.length ());
+					return_if_fail (col_index < word_with_ligatures.ranges.size);
 					return_if_fail (col_index - 1 >= 0);
 					
-					gr_left = word_with_ligatures.ranges.nth (col_index - 1).data;
-					gr_right = word_with_ligatures.ranges.nth (col_index).data;
+					gr_left = word_with_ligatures.ranges.get (col_index - 1);
+					gr_right = word_with_ligatures.ranges.get (col_index);
 
 					kern = get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 				}
@@ -672,7 +669,7 @@ public class KerningDisplay : FontDisplay {
 						GlyphCanvas.redraw ();
 					}
 					
-					if (col_index == word.glyph.length () || col_index == 0) {
+					if (col_index == word.glyph.size || col_index == 0) {
 						set_active_handle_index (-1);
 					} else {
 						set_active_handle_index (active_handle + row_index);

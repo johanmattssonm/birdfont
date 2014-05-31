@@ -42,9 +42,9 @@ public class DefaultCharacterSet {
 	 * See the functions for chinese and japanese.
 	 */
 	public static void add_language (string language, string language_code, string characters) {
-		DefaultLanguages.names.append (language);
-		DefaultLanguages.codes.append (language_code);
-		DefaultLanguages.characters.append (characters);
+		DefaultLanguages.names.add (language);
+		DefaultLanguages.codes.add (language_code);
+		DefaultLanguages.characters.add (characters);
 	}
 	
 	/** Add all glyphs for the current locale settings to this glyph range. */
@@ -84,9 +84,9 @@ public class DefaultCharacterSet {
 		int i = 0;
 		string characters = "";
 		
-		foreach (unowned string code in DefaultLanguages.codes) {
+		foreach (string code in DefaultLanguages.codes) {
 			if (lang.has_prefix (code)) {
-				characters = DefaultLanguages.characters.nth (i).data;
+				characters = DefaultLanguages.characters.get (i);
 			}
 			i++;
 		}
@@ -277,27 +277,27 @@ public class DefaultCharacterSet {
 }
 
 public class DefaultLanguages {
-	public static List<string> names;
-	public static List<string> codes;
-	public static List<string> characters;
+	public static Gee.ArrayList<string> names;
+	public static Gee.ArrayList<string> codes;
+	public static Gee.ArrayList<string> characters;
 	
 	public DefaultLanguages () {
-		names = new List<string> ();
-		codes = new List<string> ();
-		characters = new List<string> ();		
+		names = new Gee.ArrayList<string> ();
+		codes = new Gee.ArrayList<string> ();
+		characters = new Gee.ArrayList<string> ();		
 	}
 
 	public string? get_name (int index) {
-		if (0 <= index < names.length ()) {
-			return names.nth (index).data;
+		if (0 <= index < names.size) {
+			return names.get (index);
 		}
 		
 		return null;
 	}
 
 	public string? get_code (int index) {
-		if (0 <= index < codes.length ()) {
-			return codes.nth (index).data;
+		if (0 <= index < codes.size) {
+			return codes.get (index);
 		}
 		
 		return null;

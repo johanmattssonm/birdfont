@@ -30,9 +30,9 @@ public class LanguageSelectionTab : FontDisplay {
 		string iso_code;
 		TabBar tb = MainWindow.get_tab_bar ();
 		
-		return_if_fail (0 <= row < DefaultLanguages.codes.length ());
+		return_if_fail (0 <= row < DefaultLanguages.codes.size);
 		
-		iso_code = DefaultLanguages.codes.nth (row).data;
+		iso_code = DefaultLanguages.codes.get (row);
 		Preferences.set ("language", iso_code);
 		tb.close_display (this);
 		Toolbox.select_tool_by_name ("custom_character_set");
@@ -40,7 +40,7 @@ public class LanguageSelectionTab : FontDisplay {
 
 	public override void button_release (int button, double ex, double ey) {
 		int r = (int) rint ((ey - 17) / 18.0);
-		if (button == 1 && 0 <= r < DefaultLanguages.codes.length ()) {
+		if (button == 1 && 0 <= r < DefaultLanguages.codes.size) {
 			select_language (r + scroll);
 		}
 	}
@@ -101,7 +101,7 @@ public class LanguageSelectionTab : FontDisplay {
 	}
 	
 	public override void scroll_wheel_down (double x, double y) {
-		uint rows = DefaultLanguages.names.length ();
+		uint rows = DefaultLanguages.names.size;
 		scroll += 3;
 
 		if (scroll + visible_rows > rows) {
@@ -133,7 +133,7 @@ public class LanguageSelectionTab : FontDisplay {
 	}
 	
 	public void update_scrollbar () {
-		uint rows = DefaultLanguages.names.length ();
+		uint rows = DefaultLanguages.names.size;
 
 		if (rows == 0 || visible_rows == 0) {
 			MainWindow.set_scrollbar_size (0);
@@ -145,7 +145,7 @@ public class LanguageSelectionTab : FontDisplay {
 	}
 
 	public override void scroll_to (double percent) {
-		uint rows = DefaultLanguages.names.length ();
+		uint rows = DefaultLanguages.names.size;
 		scroll = (int) (percent * rows);
 		
 		if (scroll > rows - visible_rows) {

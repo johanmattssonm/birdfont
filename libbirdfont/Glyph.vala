@@ -126,7 +126,7 @@ public class Glyph : FontDisplay {
 			if (g == null) {
 				warning ("Glyph for $(s.str) does not exsist.");
 			} else {
-				gs.glyph.append (g);
+				gs.glyph.add (g);
 			}
 		}
 

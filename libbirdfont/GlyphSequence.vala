@@ -16,14 +16,14 @@ namespace BirdFont {
 public class GlyphSequence {
 	
 	/** A list of all glyphs */
-	public List <Glyph?> glyph;
+	public Gee.ArrayList<Glyph?> glyph;
 
 	/** A list of corresponding glyph ranges if applicable. */ 
-	public List <GlyphRange?> ranges;
+	public Gee.ArrayList<GlyphRange?> ranges;
 
 	public GlyphSequence () {
-		glyph = new List <Glyph?> ();
-		ranges = new List <GlyphRange?> ();
+		glyph = new Gee.ArrayList<Glyph?> ();
+		ranges = new Gee.ArrayList<GlyphRange?> ();
 	}
 	
 	/** Do ligature substitution.
@@ -38,11 +38,11 @@ public class GlyphSequence {
 		bool has_range = false;
 		
 		foreach (Glyph? g in glyph) {
-			ligatures.glyph.append (g);
+			ligatures.glyph.add (g);
 		}
 				
 		foreach (GlyphRange? r in ranges) { 
-			ligatures.ranges.append (r);
+			ligatures.ranges.add (r);
 			if (r != null) {
 				has_range = true;
 			}
@@ -75,9 +75,9 @@ public class GlyphSequence {
 	
 	void replace (GlyphSequence old, Glyph replacement) {
 		int i = 0;
-		while (i < glyph.length ()) {
+		while (i < glyph.size) {
 			if (starts_with (old, i)) {
-				substitute (i, old.glyph.length (), replacement);
+				substitute (i, old.glyph.size, replacement);
 				i = 0;
 			} else {
 				i++;
@@ -86,16 +86,16 @@ public class GlyphSequence {
 	}
 	
 	bool starts_with (GlyphSequence old, uint index) {
-		unowned List<Glyph?>? gl;
-		
+		Glyph? gl;
+
 		foreach (Glyph? g in old.glyph) {
-			gl = glyph.nth (index);
-			
-			if (gl == null) {
+			if (index >= glyph.size) {
 				return false;
 			}
 			
-			if (g != ((!) gl).data) {
+			gl = glyph.get ((int) index);
+		
+			if (g != gl) {
 				return false;
 			}
 			
@@ -106,32 +106,22 @@ public class GlyphSequence {
 	}
 	
 	void substitute (uint index, uint length, Glyph substitute) {
-		List<Glyph?> new_list = new List<Glyph?> ();
+		Gee.ArrayList<Glyph?> new_list = new Gee.ArrayList<Glyph?> ();
 		int i = 0;
 		
 		foreach (Glyph? g in glyph) {
 			if (i == index) {
-				new_list.append (substitute);
+				new_list.add (substitute);
 			}
 
 			if (!(i >= index && i < index + length)) {
-				new_list.append (g);
+				new_list.add (g);
 			}
 
 			i++;
 		}
 		
-		// remove all links in order to prevent the g_list to delete all items
-		// when the list is deleted.
-		while (glyph.length () > 0) { 
-			glyph.remove_link (glyph.first ());
-		}
-		
-		glyph = new_list.copy ();
-		
-		while (new_list.length () > 0) {
-			new_list.remove_link (new_list.first ());
-		}
+		glyph = new_list;
 				
 	}
 }

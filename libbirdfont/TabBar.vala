@@ -21,7 +21,7 @@ public class TabBar : GLib.Object {
 	int width = 0;
 	int height = 0;
 	
-	public List<Tab> tabs;
+	public Gee.ArrayList<Tab> tabs;
 
 	static const int NO_TAB = -1;
 	static const int NEXT_TAB = -2;
@@ -61,7 +61,7 @@ public class TabBar : GLib.Object {
 	double wheel_rotation = 0;
 	
 	public TabBar () {
-		tabs = new List<Tab> ();
+		tabs = new Gee.ArrayList<Tab> ();
 		
 		tab1_left = Icons.get_icon ("tab1_left.png");
 		tab1_right = Icons.get_icon ("tab1_right.png");
@@ -202,7 +202,7 @@ public class TabBar : GLib.Object {
 		open = selected_open_tab (t);
 		
 		if (!open) {
-			select_tab ((int) tabs.length () - 1);
+			select_tab ((int) tabs.size - 1);
 		}
 	}
 		
@@ -214,7 +214,7 @@ public class TabBar : GLib.Object {
 			return;
 		}
 		
-		if (tabs.length () > 1) {
+		if (tabs.size > 1) {
 			foreach (var t in tabs) {
 				++i;
 				
@@ -241,8 +241,7 @@ public class TabBar : GLib.Object {
 		}
 	}
 
-	public bool close_tab (int index, bool background_tab = false, bool select_new_tab = true) {	
-		unowned List<Tab?>? lt;
+	public bool close_tab (int index, bool background_tab = false, bool select_new_tab = true) {
 		Tab t;
 		EmptyTab empty_tab_canvas;
 		Tab empty_tab;
@@ -252,33 +251,27 @@ public class TabBar : GLib.Object {
 			return false;
 		}
 				
-		if (!(0 <= index < tabs.length ())) {
+		if (!(0 <= index < tabs.size)) {
 			return false;
 		}
 		
-		if (tabs.length () == 1) {
+		if (tabs.size == 1) {
 			empty_tab_canvas = new EmptyTab ("", "");
 			MainWindow.get_glyph_canvas ().set_current_glyph (empty_tab_canvas);
 			empty_tab = new Tab (empty_tab_canvas, 0, false);
 			signal_tab_selected (empty_tab);
 		}
 		
-		lt = tabs.nth(index);
-		
-		if (lt == null || ((!) lt).data == null) {
-			return false;
-		}
+		t = tabs.get (index);
 
 		if (first_tab > 0) {
 			first_tab--;
 		}
 
-		t = (!) ((!) lt).data;
-
 		if (t.has_close_button ()) {
 			t.get_display ().close ();
 			
-			tabs.delete_link (tabs.nth(index));
+			tabs.remove_at (index);
 			
 			if (!background_tab && select_new_tab) {
 				select_previous_tab ();
@@ -348,7 +341,7 @@ public class TabBar : GLib.Object {
 			return null;
 		}
 		
-		return tabs.nth (i).data;
+		return tabs.get (i);
 	}
 
 	public Tab? get_tab (string name) {
@@ -383,8 +376,8 @@ public class TabBar : GLib.Object {
 	
 	public Tab get_selected_tab () {
 		int s = get_selected ();
-		if (0 <= s < tabs.length ()) {
-			return tabs.nth (get_selected ()).data;
+		if (0 <= s < tabs.size) {
+			return tabs.get (get_selected ());
 		}
 		
 		warning ("No tab selected.");
@@ -392,7 +385,7 @@ public class TabBar : GLib.Object {
 	}
 	
 	public uint get_length () {
-		return tabs.length ();
+		return tabs.size;
 	}
 
 	public int get_selected () {
@@ -413,8 +406,8 @@ public class TabBar : GLib.Object {
 		if (index == NEXT_TAB) {
 			selected++;
 			
-			if (selected >=  tabs.length ()) {
-				selected = (int) tabs.length () - 1;
+			if (selected >=  tabs.size) {
+				selected = (int) tabs.size - 1;
 			}
 			
 			scroll_to_tab (selected);
@@ -431,16 +424,13 @@ public class TabBar : GLib.Object {
 			return;
 		}
 		
-		if (!(0 <= index < tabs.length ())) {
+		if (!(0 <= index < tabs.size)) {
 			return;
 		}
 
 		selected = index;
 		
-		unowned List<Tab?>? lt = tabs.nth(index);
-		
-		return_if_fail(lt != null);
-		t = (!) ((!) lt).data;
+		t = tabs.get (index);
 		
 		previous_tab = current_tab;
 		current_tab = t;
@@ -477,13 +467,9 @@ public class TabBar : GLib.Object {
 	}
 	
 	private void signal_selected (int index) {
-		unowned List<Tab?>? lt;
 		Tab t;
 		
-		lt = tabs.nth (index);
-		return_if_fail (lt != null);		
-		t = (!) ((!) lt).data;
-		
+		t = tabs.get (index);
 		signal_tab_selected (t);		
 	}
 	
@@ -558,7 +544,7 @@ public class TabBar : GLib.Object {
 	public void add_tab (FontDisplay display_item, bool signal_selected = true) {
 		double tab_width = -1;
 		bool always_open = false;
-		int s = (tabs.length () == 0) ? 0 : selected + 1;
+		int s = (tabs.size == 0) ? 0 : selected + 1;
 
 		if (MenuTab.suppress_event) {
 			warn_if_test ("Event suppressed");
@@ -570,7 +556,7 @@ public class TabBar : GLib.Object {
 			tab_width += 36;
 		}
 				
-		tabs.insert (new Tab (display_item, tab_width, always_open), s);
+		tabs.insert (s, new Tab (display_item, tab_width, always_open));
 		select_tab (s, signal_selected);
 	}
 	
