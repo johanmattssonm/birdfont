@@ -239,8 +239,8 @@ public class SvgParser {
 		return data;
 	}
 	
-	public void add_path_to_glyph (string d, Glyph g) {
-		PathList p = parse_svg_data (d, g);
+	public void add_path_to_glyph (string d, Glyph g, bool svg_glyph = false, double units = 1) {
+		PathList p = parse_svg_data (d, g, svg_glyph, units);
 		foreach (Path path in p.paths) {
 			g.add_path (path);
 		}
@@ -248,7 +248,7 @@ public class SvgParser {
 	
 	/** 
 	 * @param d svg data
-	 * @param glyph add paths to this glyph
+	 * @param glyph use lines from this glyph but don't add the generated paths
 	 * @param svg_glyph parse svg glyph with origo in lower left corner
 	 * 
 	 * @return the new paths
@@ -801,7 +801,6 @@ public class SvgParser {
 				case 'z':
 					if (b[i - 1].type == 'Q') {
 						return_if_fail (i >= 1);
-						warning ("Unexpected qubic points in Inkscape SVG");
 						left_x = b[i - 1].x0;
 						left_y = b[i - 1].y0;
 						last_type = PointType.QUADRATIC;
@@ -915,7 +914,19 @@ public class SvgParser {
 			}
 			
 			if (b[i].type == 'Q') {
-				warning ("Inkscape does not support quadratic control points.");
+				return_val_if_fail (i != 0, path_list);
+
+				ep.set_point_type (PointType.QUADRATIC);
+				
+				ep.get_right_handle ().set_point_type (PointType.QUADRATIC);
+				ep.get_right_handle ().move_to_coordinate (b[i].x0, b[i].y0);
+				
+				if (b[i + 1].type != 'z') {
+					ep = path.add (b[i].x1, b[i].y1);
+
+					ep.get_left_handle ().set_point_type (PointType.QUADRATIC);
+					ep.get_left_handle ().move_to_coordinate (b[i].x0, b[i].y0);
+				}
 			}
 	
 			if (b[i].type == 'C') {
@@ -936,7 +947,6 @@ public class SvgParser {
 		}
 		
 		if (path.points.size > 0) {
-			warning ("Open path.");
 			path_list.add (path);
 		}
 		

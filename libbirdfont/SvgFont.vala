@@ -151,11 +151,11 @@ class SvgFont : GLib.Object {
 			attr_content = prop->children->content;
 					
 			if (attr_name == "ascent") {
-				top_limit = -double.parse (attr_content);
+				top_limit = double.parse (attr_content);
 			}
 			
 			if (attr_name == "descent") {
-				bottom_limit = -double.parse (attr_content);
+				bottom_limit = double.parse (attr_content);
 			}		
 		}
 		
@@ -267,7 +267,7 @@ class SvgFont : GLib.Object {
 		}
 
 		glyph = new Glyph (glyph_name, unicode_value);
-		parser.parse_svg_data (svg, glyph, true, units);			
+		parser.add_path_to_glyph (svg, glyph, true, units);			
 		glyph.right_limit = glyph.left_limit + advance * units;
 		
 		if (ligature != "") {
