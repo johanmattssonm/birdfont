@@ -658,7 +658,7 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 GString* get_bf_font (FT_Face face, char* file, int* err) {
 	GString* bf = g_string_new ("");
 	GString* bf_data;
-	GString* kerning;
+	gchar* kerning;
 	GString* glyph;
 	FT_Error error;
 	FT_Long i;
@@ -673,6 +673,10 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 
 	units_per_em = face->units_per_EM;
 	units = get_units (units_per_em);
+	
+	if (face == NULL) {
+		return  bf;
+	}
 	
 	g_string_append (bf, "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n");
 	
@@ -717,7 +721,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</copyright>\n");
 	}
-		
+	
 	g_string_append_printf (bf, "<backup>%s</backup>\n", file);
 
 
@@ -780,12 +784,15 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		bird_font_tool_yield ();
 	}
 	
-	kerning = (GString*) bird_font_open_font_format_reader_parse_kerning (file); 
-	g_string_append (bf, kerning->str);
-	g_string_free (kerning, 0);	
+	kerning = bird_font_open_font_format_reader_parse_kerning (file); 
+	
+	if (kerning != NULL) {
+		printf (kerning);
+		g_string_append (bf, kerning);
+		g_free (kerning);	
+	}
 
 	g_string_append (bf, "</font>\n");
-	
 	bird_font_tool_yield ();
 	
 	return bf;

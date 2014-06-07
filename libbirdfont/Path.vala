@@ -1361,7 +1361,7 @@ public class Path {
 			
 	/** Get a point on the this path closest to x and y coordinates. */
 	public void get_closest_point_on_path (EditPoint edit_point, double x, double y) {
-		return_if_fail (points.size != 0);
+		return_if_fail (points.size >= 1);
 		
 		double min = double.MAX;
 		double n = 0;
@@ -1373,14 +1373,15 @@ public class Path {
 		double handle_x0, handle_x1;
 		double handle_y0, handle_y1;
 		
-		unowned EditPoint prev = points.get (0).get_link_item ();
-		unowned EditPoint i = prev.get_next ();
+		EditPoint prev = points.get (points.size - 1).get_link_item ();
+		EditPoint i = points.get (0).get_link_item ();
 
 		bool done = false;
 		bool exit = false;
+		bool first = true;
 		
-		unowned EditPoint? previous_point = null;
-		unowned EditPoint? next_point = null;
+		EditPoint? previous_point = null;
+		EditPoint? next_point = null;
 
 		EditPoint previous;
 		EditPoint next;
@@ -1397,20 +1398,16 @@ public class Path {
 			
 			edit_point.prev = i;
 			edit_point.next = i;
-			
-			exit = true;
 			return;
 		}
 		
-		if (points.size != 1) {
-			edit_point.x = i.x;
-			edit_point.y = i.y;
-		}
+		edit_point.x = i.x;
+		edit_point.y = i.y;
 		
 		create_list ();
 		
 		while (!exit) {
-			if (i == points.get (points.size - 1)) {
+			if (!first && i == points.get (points.size - 1)) {
 				done = true;
 			}
 			
@@ -1444,6 +1441,8 @@ public class Path {
 				
 				return true;
 			});
+			
+			first = false;
 		}
 
 		if (previous_point == null && is_open ()) {
@@ -1463,7 +1462,7 @@ public class Path {
 		previous = (!) previous_point;
 		next = (!) next_point;
 
-		// FIXME: delete
+// 		// FIXME: delete
 		bezier_vector (step, previous.x, previous.get_right_handle ().x (), next.get_left_handle ().x (), next.x, out handle_x0, out handle_x1);
 		bezier_vector (step, previous.y, previous.get_right_handle ().y (), next.get_left_handle ().y (), next.y, out handle_y0, out handle_y1);
 
@@ -2374,30 +2373,29 @@ public class Path {
 			return true;
 		});
 		
-		insert_new_point_on_path_at (x0 - 1, y0);
-		insert_new_point_on_path_at (x1 + 1, y1);
-		insert_new_point_on_path_at (x2, y2 - 1);
-		insert_new_point_on_path_at (x3, y3 + 1);
+		insert_new_point_on_path_at (x0 - 0.001, y0);
+		insert_new_point_on_path_at (x1 + 0.001, y1);
+		insert_new_point_on_path_at (x2, y2 - 0.001);
+		insert_new_point_on_path_at (x3, y3 + 0.001);
 	}
 	
 	void insert_new_point_on_path_at (double x, double y) {
 		EditPoint ep = new EditPoint ();
+		EditPoint prev, next;
 		bool exists;
+		
+		if (points.size < 2) {
+			warning ("Can't add extrema to jut one point.");
+			return;
+		}
 		
 		get_closest_point_on_path (ep, x, y);
 
-		if (unlikely (ep.next == null)) {
-			warning ("No next point");
-			return;
-		}
+		next = (ep.next == null) ? points.get (0) : ep.get_next ();
+		prev = (ep.prev == null) ? points.get (points.size - 1) : ep.get_prev ();
 		
-		if (unlikely (ep.prev == null)) {
-			warning ("No previous point");
-			return;
-		}
-		
-		exists = ep.get_prev ().x == ep.x && ep.get_prev ().y == ep.y;
-		exists |= ep.get_next ().x == ep.x && ep.get_next ().y == ep.y;
+		exists = prev.x == ep.x && prev.y == ep.y;
+		exists |= next.x == ep.x && next.y == ep.y;
 		
 		if (!exists) {
 			insert_new_point_on_path (ep);

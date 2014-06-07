@@ -147,7 +147,7 @@ public class OpenFontFormatReader : Object {
 		return directory_table.head_table.get_adjusted_checksum ();
 	}
 	
-	public static StringBuilder parse_kerning (string file_name) {
+	public static string parse_kerning (string file_name) {
 		KernTable kern_table;
 		CmapTable cmap_table;
 		HeadTable head_table;
@@ -195,8 +195,8 @@ public class OpenFontFormatReader : Object {
 		} catch (GLib.Error e) {
 			warning (@"Failed to parse font. $(e.message)");
 		}
-		
-		return bf_kerning;
+				
+		return bf_kerning.str;
 	}
 }
 }
