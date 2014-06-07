@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -1052,6 +1052,8 @@ public class Path {
 		PointType left;
 		PointType right;
 		double x, y;
+		Gee.ArrayList<EditPoint> middle_points = new Gee.ArrayList<EditPoint> ();
+		Gee.ArrayList<EditPoint> first_points = new Gee.ArrayList<EditPoint> ();
 		
 		foreach (EditPoint next in points) {
 			left = first.get_right_handle ().type;
@@ -1076,9 +1078,14 @@ public class Path {
 				next.get_left_handle ().type = PointType.QUADRATIC;
 				next.type = PointType.QUADRATIC;
 				
-				add_point_after (hidden, first);
+				middle_points.add (hidden);
+				first_points.add (first);
 			}
 			first = next;
+		}
+		
+		for (int i = 0; i < middle_points.size; i++) {
+			add_point_after (middle_points.get (i), first_points.get (i));
 		}
 	}
 

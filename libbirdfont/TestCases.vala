@@ -46,6 +46,7 @@ class TestCases {
 		add (test_boundaries, "Boundaries");
 		add (test_extrema, "Extrema");
 		add (test_codepages, "Codepages");
+		add (test_double_quadratic, "Double quadratic");
 			
 		add_bechmark (benchmark_stroke, "Stroke");
 	}
@@ -60,6 +61,22 @@ class TestCases {
 	
 	public unowned List<Test> get_test_functions () {
 		return test_cases;
+	}
+	
+	public static void test_double_quadratic () {
+		Glyph g = MainWindow.get_current_glyph ();
+		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
+		Path pn;
+		
+		foreach (Path p in g.path_list) {
+			pn = p.copy ();
+			pn.add_hidden_double_points ();
+			paths.add (pn);
+		}
+		
+		foreach (Path p in paths) {
+			g.add_path (p);
+		}
 	}
 	
 	public static void test_codepages () {

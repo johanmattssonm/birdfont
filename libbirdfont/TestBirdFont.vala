@@ -198,7 +198,9 @@ class TestBirdFont : GLib.Object {
 	/** Run tests in main loop. */
 	public void run_all_tests () {
 		TimeoutSource idle = new TimeoutSource (20);
-		MenuTab.new_file ();
+		
+		// FIXME: DELETE
+		// MenuTab.new_file ();
 		
 		idle.set_callback(() => {
 			int s = AtomicInt.get (ref state);
