@@ -251,16 +251,17 @@ public class DrawingTools : ToolCollection  {
 			MainWindow.get_current_glyph ().update_view ();
 		});
 		edit_point_modifiers.add_tool (create_line);
-	
-	/* // FIXME: DELETE
+
+		// FIXME: DELETE
 		// path tools
+		/* 
 		Tool union_paths_tool = new Tool ("union_paths", t_("Merge paths"));
 		union_paths_tool.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			g.merge_all ();
 		});
 		path_tool_modifiers.add_tool (union_paths_tool);
-	*/
+		*/
 	
 		Tool reverse_path_tool = new Tool ("reverse_path", t_("Create counter from outline"));
 		reverse_path_tool.select_action.connect ((self) => {

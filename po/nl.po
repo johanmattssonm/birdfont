@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-11 11:55+0200\n"
-"PO-Revision-Date: 2014-02-28 22:09+0000\n"
+"POT-Creation-Date: 2014-06-07 17:09+0200\n"
+"PO-Revision-Date: 2014-05-25 16:24+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1393625389.000000\n"
+"X-POOTLE-MTIME: 1401035067.000000\n"
 
 #: libbirdfont/Argument.vala:244
 msgid "Usage"
@@ -52,7 +52,7 @@ msgstr "dit bericht tonen"
 
 #: libbirdfont/Argument.vala:253
 msgid "write a log file"
-msgstr ""
+msgstr "een logbestand schrijven"
 
 #: libbirdfont/Argument.vala:254
 msgid "enable Machintosh customizations"
@@ -78,6 +78,15 @@ msgstr "Achtergronden"
 msgid "Move, resize and rotate background image"
 msgstr "Achtergrondafbeelding verplaatsen, vergroten/verkleinen en draaien"
 
+#: libbirdfont/BirdFontFile.vala:163 libbirdfont/BirdFontFile.vala:193
+#: libbirdfont/BirdFontFile.vala:267
+msgid "Saving"
+msgstr "Opslaan"
+
+#: libbirdfont/BirdFontFile.vala:612
+msgid "Loading XML data."
+msgstr "XML-gegevens worden geladen."
+
 #: libbirdfont/BirdFont.vala:20
 msgid "Usage:"
 msgstr "Gebruik:"
@@ -101,15 +110,6 @@ msgstr "ttf- en eot-bestanden schrijven\n"
 #: libbirdfont/BirdFont.vala:120
 msgid "Can't find output directory"
 msgstr "Kan uitvoermap niet vinden"
-
-#: libbirdfont/BirdFontFile.vala:163 libbirdfont/BirdFontFile.vala:193
-#: libbirdfont/BirdFontFile.vala:267
-msgid "Saving"
-msgstr ""
-
-#: libbirdfont/BirdFontFile.vala:612
-msgid "Loading XML data."
-msgstr ""
 
 #: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
@@ -189,7 +189,7 @@ msgstr "Kwadratisch pad met twee lijngrepen"
 msgid "Convert selected points"
 msgstr "Geselecteerde punten converteren"
 
-#: libbirdfont/DrawingTools.vala:167 libbirdfont/DrawingTools.vala:642
+#: libbirdfont/DrawingTools.vala:167 libbirdfont/DrawingTools.vala:645
 msgid "Stroke width"
 msgstr "Lijndikte"
 
@@ -205,144 +205,140 @@ msgstr "Symmetrische grepen"
 msgid "Convert segment to line."
 msgstr "Segment converteren naar lijn"
 
-#: libbirdfont/DrawingTools.vala:256
-msgid "Merge paths"
-msgstr "Paden samenvoegen"
-
-#: libbirdfont/DrawingTools.vala:263
+#: libbirdfont/DrawingTools.vala:266
 msgid "Create counter from outline"
 msgstr "Tegenstelling van omlijning aanmaken"
 
-#: libbirdfont/DrawingTools.vala:275
+#: libbirdfont/DrawingTools.vala:278
 msgid "Move to path to the bottom layer"
 msgstr "Pad naar de onderste laag verplaatsen"
 
-#: libbirdfont/DrawingTools.vala:286
+#: libbirdfont/DrawingTools.vala:289
 msgid "Flip path vertically"
 msgstr "Pad verticaal spiegelen"
 
-#: libbirdfont/DrawingTools.vala:293
+#: libbirdfont/DrawingTools.vala:296
 msgid "Flip path horizontally"
 msgstr "Pad horizontaal spiegelen"
 
-#: libbirdfont/DrawingTools.vala:301
+#: libbirdfont/DrawingTools.vala:304
 msgid "Show full unicode characters set"
 msgstr "Volledige unicode-tekenset tonen"
 
-#: libbirdfont/DrawingTools.vala:317
+#: libbirdfont/DrawingTools.vala:320
 msgid "Show default characters set"
 msgstr "Standaard tekenset tonen"
 
-#: libbirdfont/DrawingTools.vala:333
+#: libbirdfont/DrawingTools.vala:336
 msgid "Show all characters in the font"
 msgstr "Alle tekens in het lettertype tonen"
 
-#: libbirdfont/DrawingTools.vala:347
+#: libbirdfont/DrawingTools.vala:350
 msgid "Delete selected glyph"
 msgstr "Geselecteerde symbool verwijderen"
 
-#: libbirdfont/DrawingTools.vala:402
+#: libbirdfont/DrawingTools.vala:405
 msgid "Show guidelines"
 msgstr "Hulplijnen tonen"
 
-#: libbirdfont/DrawingTools.vala:413
+#: libbirdfont/DrawingTools.vala:416
 msgid "Show guidelines for x-height and baseline"
 msgstr "Hulplijnen voor x-hoogte en basislijn tonen"
 
-#: libbirdfont/DrawingTools.vala:427
+#: libbirdfont/DrawingTools.vala:430
 msgid "Show guidelines at top and bottom margin"
 msgstr "Hulplijnen voor boven- en ondermarge tonen"
 
-#: libbirdfont/DrawingTools.vala:445
+#: libbirdfont/DrawingTools.vala:448
 msgid "Zoom in"
 msgstr "Inzoomen"
 
-#: libbirdfont/DrawingTools.vala:452
+#: libbirdfont/DrawingTools.vala:455
 msgid "Zoom out"
 msgstr "Uitzoomen"
 
-#: libbirdfont/DrawingTools.vala:459
+#: libbirdfont/DrawingTools.vala:462
 msgid "Use one pixel per unit"
-msgstr ""
+msgstr "1 pixel per eenheid gebruiken"
 
-#: libbirdfont/DrawingTools.vala:467
+#: libbirdfont/DrawingTools.vala:470
 msgid "Show full glyph"
 msgstr "Volledig symbool tonen"
 
-#: libbirdfont/DrawingTools.vala:474
+#: libbirdfont/DrawingTools.vala:477
 msgid "Zoom in on region boundaries"
-msgstr ""
+msgstr "Inzoomen op gebiedsgrenzen"
 
-#: libbirdfont/DrawingTools.vala:481
+#: libbirdfont/DrawingTools.vala:484
 msgid "Zoom in on background image"
-msgstr ""
+msgstr "Inzoomen op achtergrondafbeelding"
 
-#: libbirdfont/DrawingTools.vala:494
+#: libbirdfont/DrawingTools.vala:497
 msgid "Previous view"
 msgstr "Vorige weergave"
 
-#: libbirdfont/DrawingTools.vala:500
+#: libbirdfont/DrawingTools.vala:503
 msgid "Next view"
 msgstr "Volgende weergave"
 
-#: libbirdfont/DrawingTools.vala:520
+#: libbirdfont/DrawingTools.vala:523
 msgid "Set size for background image"
 msgstr "Grootte voor achtergrondafbeelding instellen"
 
-#: libbirdfont/DrawingTools.vala:557
+#: libbirdfont/DrawingTools.vala:560
 msgid "Show/hide background image"
 msgstr "Achtergrondafbeelding tonen/verbergen"
 
-#: libbirdfont/DrawingTools.vala:568
+#: libbirdfont/DrawingTools.vala:571
 msgid "Insert a new background image"
 msgstr "Een nieuwe achtergrondafbeelding invoegen"
 
-#: libbirdfont/DrawingTools.vala:576
+#: libbirdfont/DrawingTools.vala:579
 msgid "Creating thumbnails"
 msgstr "Miniaturen aanmaken"
 
-#: libbirdfont/DrawingTools.vala:595
+#: libbirdfont/DrawingTools.vala:598
 msgid "Set contrast for background image"
 msgstr "Contrast voor achtergrondafbeelding instellen"
 
-#: libbirdfont/DrawingTools.vala:617
+#: libbirdfont/DrawingTools.vala:620
 msgid "Stroke color"
 msgstr "Streekkleur"
 
-#: libbirdfont/DrawingTools.vala:664
+#: libbirdfont/DrawingTools.vala:667
 msgid "Handle color"
 msgstr "Kleur greep"
 
-#: libbirdfont/DrawingTools.vala:687
+#: libbirdfont/DrawingTools.vala:690
 msgid "Set precision"
 msgstr "Precisie instellen"
 
-#: libbirdfont/DrawingTools.vala:714
+#: libbirdfont/DrawingTools.vala:717
 msgid "Show all control point handles or only handles for the selected points."
 msgstr ""
 "Alle controlepuntgrepen tonen, of alleen grepen voor de geselecteerde punten."
 
-#: libbirdfont/DrawingTools.vala:723
+#: libbirdfont/DrawingTools.vala:726
 msgid "Object color"
 msgstr "Objectkleur"
 
-#: libbirdfont/DrawingTools.vala:744
+#: libbirdfont/DrawingTools.vala:747
 msgid "Set fill color for open paths."
 msgstr "Stel de vulkleur in voor open paden."
 
-#: libbirdfont/DrawingTools.vala:752
+#: libbirdfont/DrawingTools.vala:755
 msgid "Use TTF units."
 msgstr "Gebruik TTF-eenheden."
 
-#: libbirdfont/DrawingTools.vala:759
+#: libbirdfont/DrawingTools.vala:762
 msgid "Adjust the number of samples per point in the freehand tool."
-msgstr ""
+msgstr "Pas het aantal samples per punt aan in het vrijehandhulpmiddel."
 
-#: libbirdfont/DrawingTools.vala:779
+#: libbirdfont/DrawingTools.vala:782
 msgid "Delay response for editing tools"
 msgstr "Vertragingsreactie voor bewerkingshulpmiddelen"
 
-#: libbirdfont/DrawingTools.vala:1039
+#: libbirdfont/DrawingTools.vala:1040
 msgid "Set size for grid"
 msgstr "Grootte voor raster instellen"
 
@@ -374,7 +370,7 @@ msgstr "Bestanden"
 msgid "Show grid"
 msgstr "Raster weergeven"
 
-#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:716
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:713
 msgid "Kerning"
 msgstr "Afspatiëring"
 
@@ -395,7 +391,7 @@ msgstr "Typ “spatie” voor afspatiëren van het spatieteken en “divis” vo
 msgid "Kerning:"
 msgstr "Afspatiëring:"
 
-#: libbirdfont/KerningDisplay.vala:716 libbirdfont/MainWindow.vala:135
+#: libbirdfont/KerningDisplay.vala:713 libbirdfont/MainWindow.vala:135
 #: libbirdfont/SpinButton.vala:138
 msgid "Close"
 msgstr "Sluiten"
@@ -421,19 +417,20 @@ msgstr "Instellen"
 
 #: libbirdfont/KerningTools.vala:35
 msgid "Create new kerning class."
-msgstr ""
+msgstr "Nieuwe afspatieerklasse aanmaken"
 
 #: libbirdfont/KerningTools.vala:42
 msgid "Use text input to enter kerning values."
-msgstr ""
+msgstr "Gebruik tekstinvoer om afspatieerwaarden in te voeren."
 
 #: libbirdfont/KerningTools.vala:49
+#, fuzzy
 msgid "Font size"
-msgstr ""
+msgstr "Lettergrootte "
 
 #: libbirdfont/KerningTools.vala:74
 msgid "Font size "
-msgstr ""
+msgstr "Lettergrootte "
 
 #: libbirdfont/LanguageSelectionTab.vala:92
 msgid "Character Set"
@@ -472,11 +469,11 @@ msgstr "Filter"
 msgid "Overview"
 msgstr "Overzicht"
 
-#: libbirdfont/OverView.vala:386
+#: libbirdfont/OverView.vala:384
 msgid "No glyphs in this view."
 msgstr "Geen symbolen in deze weergave."
 
-#: libbirdfont/OverView.vala:925
+#: libbirdfont/OverView.vala:923
 msgid "See also:"
 msgstr "Zie ook:"
 
@@ -498,31 +495,31 @@ msgstr "Ja, niet meer vragen."
 
 #: libbirdfont/PenTool.vala:77
 msgid "Add new points"
-msgstr ""
+msgstr "Nieuwe punten toevoegen"
 
 #: libbirdfont/PointTool.vala:24
 msgid "Move control points"
 msgstr "Controlepunten verplaatsen"
 
-#: libbirdfont/Preview.vala:27
-msgid "Preview"
-msgstr "Voorbeeld"
-
 #: libbirdfont/PreviewTools.vala:26
 msgid "Reload webview"
-msgstr ""
+msgstr "Webweergave herladen"
 
 #: libbirdfont/PreviewTools.vala:32
 msgid "Export fonts"
-msgstr ""
+msgstr "Lettertypen exporteren"
 
 #: libbirdfont/PreviewTools.vala:38
 msgid "Generate html document"
-msgstr ""
+msgstr "Html-document genereren"
 
 #: libbirdfont/PreviewTools.vala:67
 msgid "Three font files have been created."
-msgstr ""
+msgstr "Er zijn drie lettertypebestanden aangemaakt."
+
+#: libbirdfont/Preview.vala:27
+msgid "Preview"
+msgstr "Voorbeeld"
 
 #: libbirdfont/RectangleTool.vala:30
 msgid "Rectangle"
@@ -546,13 +543,13 @@ msgstr "Importeren"
 
 #: libbirdfont/TrackTool.vala:61
 msgid "Freehand drawing"
-msgstr ""
+msgstr "Tekenen uit de vrije hand"
 
 #: libbirdfont/VersionList.vala:30
 msgid "New version"
 msgstr "Nieuwe versie"
 
-#: libbirdfont/VersionList.vala:195 birdfont/GtkWindow.vala:1208
+#: libbirdfont/VersionList.vala:192 birdfont/GtkWindow.vala:1208
 msgid "Version"
 msgstr "Versie"
 
@@ -718,7 +715,7 @@ msgstr "_Uitzoomen"
 
 #: birdfont/GtkWindow.vala:669
 msgid "U_se One Pixel Per Unit"
-msgstr ""
+msgstr "Slecht_s één pixel per eenheid gebruiken"
 
 #: birdfont/GtkWindow.vala:677
 msgid "Show Kerning _Tab"
@@ -796,6 +793,9 @@ msgstr "Unieke id"
 #: birdfont/GtkWindow.vala:1223
 msgid "Copyright"
 msgstr "Auteursrecht"
+
+#~ msgid "Merge paths"
+#~ msgstr "Paden samenvoegen"
 
 #~ msgid "Right click or use left command key and click to add new points"
 #~ msgstr ""

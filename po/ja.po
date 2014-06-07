@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-11 11:55+0200\n"
+"POT-Creation-Date: 2014-06-07 17:09+0200\n"
 "PO-Revision-Date: 2014-04-10 04:20+0000\n"
 "Last-Translator: masatoshi <baikuken@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,6 +83,15 @@ msgstr "背景"
 msgid "Move, resize and rotate background image"
 msgstr "背景画像を移動、リサイズ、回転する"
 
+#: libbirdfont/BirdFontFile.vala:163 libbirdfont/BirdFontFile.vala:193
+#: libbirdfont/BirdFontFile.vala:267
+msgid "Saving"
+msgstr ""
+
+#: libbirdfont/BirdFontFile.vala:612
+msgid "Loading XML data."
+msgstr "XMLデータをロード中"
+
 #: libbirdfont/BirdFont.vala:20
 msgid "Usage:"
 msgstr "使い方:"
@@ -106,15 +115,6 @@ msgstr "ttfおよびeotファイルへ書き出す\n"
 #: libbirdfont/BirdFont.vala:120
 msgid "Can't find output directory"
 msgstr "出力先ディレクトリが見つかりません"
-
-#: libbirdfont/BirdFontFile.vala:163 libbirdfont/BirdFontFile.vala:193
-#: libbirdfont/BirdFontFile.vala:267
-msgid "Saving"
-msgstr ""
-
-#: libbirdfont/BirdFontFile.vala:612
-msgid "Loading XML data."
-msgstr "XMLデータをロード中"
 
 #: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
@@ -195,7 +195,7 @@ msgstr "二本のラインハンドルで二次曲線パスを作成"
 msgid "Convert selected points"
 msgstr "選択済みのポイントを変換"
 
-#: libbirdfont/DrawingTools.vala:167 libbirdfont/DrawingTools.vala:642
+#: libbirdfont/DrawingTools.vala:167 libbirdfont/DrawingTools.vala:645
 msgid "Stroke width"
 msgstr "ストローク幅"
 
@@ -211,146 +211,142 @@ msgstr "対称ハンドル"
 msgid "Convert segment to line."
 msgstr "セグメントをラインに変換"
 
-#: libbirdfont/DrawingTools.vala:256
-msgid "Merge paths"
-msgstr "パスを結合する"
-
-#: libbirdfont/DrawingTools.vala:263
+#: libbirdfont/DrawingTools.vala:266
 msgid "Create counter from outline"
 msgstr "アウトラインからカウンタを生成する"
 
-#: libbirdfont/DrawingTools.vala:275
+#: libbirdfont/DrawingTools.vala:278
 msgid "Move to path to the bottom layer"
 msgstr "最下層へのパスに移動します"
 
-#: libbirdfont/DrawingTools.vala:286
+#: libbirdfont/DrawingTools.vala:289
 msgid "Flip path vertically"
 msgstr "パスを上下反転"
 
-#: libbirdfont/DrawingTools.vala:293
+#: libbirdfont/DrawingTools.vala:296
 msgid "Flip path horizontally"
 msgstr "パスを左右反転"
 
-#: libbirdfont/DrawingTools.vala:301
+#: libbirdfont/DrawingTools.vala:304
 msgid "Show full unicode characters set"
 msgstr "全てのUnicode文字セットを表示する"
 
-#: libbirdfont/DrawingTools.vala:317
+#: libbirdfont/DrawingTools.vala:320
 msgid "Show default characters set"
 msgstr "デフォルトの文字セットを表示する"
 
-#: libbirdfont/DrawingTools.vala:333
+#: libbirdfont/DrawingTools.vala:336
 #, fuzzy
 msgid "Show all characters in the font"
 msgstr "フォントにある全ての文字を表示"
 
-#: libbirdfont/DrawingTools.vala:347
+#: libbirdfont/DrawingTools.vala:350
 msgid "Delete selected glyph"
 msgstr "選択したグリフを削除"
 
-#: libbirdfont/DrawingTools.vala:402
+#: libbirdfont/DrawingTools.vala:405
 msgid "Show guidelines"
 msgstr "ガイド線を表示"
 
-#: libbirdfont/DrawingTools.vala:413
+#: libbirdfont/DrawingTools.vala:416
 msgid "Show guidelines for x-height and baseline"
 msgstr "x-height とベースラインの基準線を表示"
 
-#: libbirdfont/DrawingTools.vala:427
+#: libbirdfont/DrawingTools.vala:430
 msgid "Show guidelines at top and bottom margin"
 msgstr "上下マージンの基準線を表示"
 
-#: libbirdfont/DrawingTools.vala:445
+#: libbirdfont/DrawingTools.vala:448
 msgid "Zoom in"
 msgstr "拡大"
 
-#: libbirdfont/DrawingTools.vala:452
+#: libbirdfont/DrawingTools.vala:455
 msgid "Zoom out"
 msgstr "縮小"
 
-#: libbirdfont/DrawingTools.vala:459
+#: libbirdfont/DrawingTools.vala:462
 msgid "Use one pixel per unit"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:467
+#: libbirdfont/DrawingTools.vala:470
 msgid "Show full glyph"
 msgstr "グリフ全体を表示"
 
-#: libbirdfont/DrawingTools.vala:474
+#: libbirdfont/DrawingTools.vala:477
 #, fuzzy
 msgid "Zoom in on region boundaries"
 msgstr "境界線に対して拡大"
 
-#: libbirdfont/DrawingTools.vala:481
+#: libbirdfont/DrawingTools.vala:484
 #, fuzzy
 msgid "Zoom in on background image"
 msgstr "背景画像を拡大"
 
-#: libbirdfont/DrawingTools.vala:494
+#: libbirdfont/DrawingTools.vala:497
 msgid "Previous view"
 msgstr "一つ前の表示"
 
-#: libbirdfont/DrawingTools.vala:500
+#: libbirdfont/DrawingTools.vala:503
 msgid "Next view"
 msgstr "次の表示"
 
-#: libbirdfont/DrawingTools.vala:520
+#: libbirdfont/DrawingTools.vala:523
 msgid "Set size for background image"
 msgstr "背景画像のサイズを設定"
 
-#: libbirdfont/DrawingTools.vala:557
+#: libbirdfont/DrawingTools.vala:560
 msgid "Show/hide background image"
 msgstr "背景画像を表示／非表示"
 
-#: libbirdfont/DrawingTools.vala:568
+#: libbirdfont/DrawingTools.vala:571
 msgid "Insert a new background image"
 msgstr "新しい背景画像を挿入"
 
-#: libbirdfont/DrawingTools.vala:576
+#: libbirdfont/DrawingTools.vala:579
 msgid "Creating thumbnails"
 msgstr "サムネイルを作成"
 
-#: libbirdfont/DrawingTools.vala:595
+#: libbirdfont/DrawingTools.vala:598
 msgid "Set contrast for background image"
 msgstr "背景画像のコントラストを設定"
 
-#: libbirdfont/DrawingTools.vala:617
+#: libbirdfont/DrawingTools.vala:620
 msgid "Stroke color"
 msgstr "ストローク色"
 
-#: libbirdfont/DrawingTools.vala:664
+#: libbirdfont/DrawingTools.vala:667
 msgid "Handle color"
 msgstr "色調整"
 
-#: libbirdfont/DrawingTools.vala:687
+#: libbirdfont/DrawingTools.vala:690
 msgid "Set precision"
 msgstr "精度を設定"
 
-#: libbirdfont/DrawingTools.vala:714
+#: libbirdfont/DrawingTools.vala:717
 msgid "Show all control point handles or only handles for the selected points."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:723
+#: libbirdfont/DrawingTools.vala:726
 msgid "Object color"
 msgstr "オブジェクトの色"
 
-#: libbirdfont/DrawingTools.vala:744
+#: libbirdfont/DrawingTools.vala:747
 msgid "Set fill color for open paths."
 msgstr "開いているパスのフィル色を指定"
 
-#: libbirdfont/DrawingTools.vala:752
+#: libbirdfont/DrawingTools.vala:755
 msgid "Use TTF units."
 msgstr "TTF単位を使用"
 
-#: libbirdfont/DrawingTools.vala:759
+#: libbirdfont/DrawingTools.vala:762
 msgid "Adjust the number of samples per point in the freehand tool."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:779
+#: libbirdfont/DrawingTools.vala:782
 msgid "Delay response for editing tools"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1039
+#: libbirdfont/DrawingTools.vala:1040
 msgid "Set size for grid"
 msgstr "サイズをグリッドに合わせる"
 
@@ -382,7 +378,7 @@ msgstr "ファイル"
 msgid "Show grid"
 msgstr "グリッドを表示"
 
-#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:716
+#: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:713
 msgid "Kerning"
 msgstr "カーニング"
 
@@ -403,7 +399,7 @@ msgstr ""
 msgid "Kerning:"
 msgstr "カーニング"
 
-#: libbirdfont/KerningDisplay.vala:716 libbirdfont/MainWindow.vala:135
+#: libbirdfont/KerningDisplay.vala:713 libbirdfont/MainWindow.vala:135
 #: libbirdfont/SpinButton.vala:138
 msgid "Close"
 msgstr ""
@@ -479,11 +475,11 @@ msgstr "フィルター"
 msgid "Overview"
 msgstr "グリフ一覧"
 
-#: libbirdfont/OverView.vala:386
+#: libbirdfont/OverView.vala:384
 msgid "No glyphs in this view."
 msgstr "この表示内にはグリフがありません。"
 
-#: libbirdfont/OverView.vala:925
+#: libbirdfont/OverView.vala:923
 msgid "See also:"
 msgstr ""
 
@@ -511,10 +507,6 @@ msgstr ""
 msgid "Move control points"
 msgstr ""
 
-#: libbirdfont/Preview.vala:27
-msgid "Preview"
-msgstr "プレビュー"
-
 #: libbirdfont/PreviewTools.vala:26
 msgid "Reload webview"
 msgstr "Webviewをリロードする"
@@ -530,6 +522,10 @@ msgstr ""
 #: libbirdfont/PreviewTools.vala:67
 msgid "Three font files have been created."
 msgstr ""
+
+#: libbirdfont/Preview.vala:27
+msgid "Preview"
+msgstr "プレビュー"
 
 #: libbirdfont/RectangleTool.vala:30
 msgid "Rectangle"
@@ -559,7 +555,7 @@ msgstr ""
 msgid "New version"
 msgstr "新しいバージョン"
 
-#: libbirdfont/VersionList.vala:195 birdfont/GtkWindow.vala:1208
+#: libbirdfont/VersionList.vala:192 birdfont/GtkWindow.vala:1208
 msgid "Version"
 msgstr "バージョン"
 
@@ -823,6 +819,9 @@ msgstr "一意の識別子"
 #: birdfont/GtkWindow.vala:1223
 msgid "Copyright"
 msgstr ""
+
+#~ msgid "Merge paths"
+#~ msgstr "パスを結合する"
 
 #~ msgid "Right click to add new points, left click to move points"
 #~ msgstr "新しい点を追加するには右クリック、点を移動するには左クリックを、"
