@@ -2379,6 +2379,16 @@ public class Path {
 		
 		get_closest_point_on_path (ep, x, y);
 
+		if (unlikely (ep.next == null)) {
+			warning ("No next point");
+			return;
+		}
+		
+		if (unlikely (ep.prev == null)) {
+			warning ("No previous point");
+			return;
+		}
+		
 		exists = ep.get_prev ().x == ep.x && ep.get_prev ().y == ep.y;
 		exists |= ep.get_next ().x == ep.x && ep.get_next ().y == ep.y;
 		
