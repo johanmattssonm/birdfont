@@ -39,7 +39,10 @@ public class KerningPair : GLib.Object {
 	
 	public void sort () {
 		kerning.sort ((a, b) => {
-			return strcmp (((!)a.glyph).get_unichar_string (), ((!)b.glyph).get_unichar_string ());
+			Kerning first, next;
+			first = (Kerning) a;
+			next = (Kerning) b;
+			return strcmp (((!)first.glyph).get_unichar_string (), ((!)next.glyph).get_unichar_string ());
 		});		
 	}
 }

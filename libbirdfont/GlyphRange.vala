@@ -55,8 +55,15 @@ public class GlyphRange {
 	// TODO: complete localized alphabetical sort åäö is not the right order for example.
 	public void sort () {
 		ranges.sort ((a, b) => {
-			bool r = a.start > b.start;
-			return_val_if_fail (a.start != b.start, 0);
+			UniRange first, next;
+			bool r;
+			
+			first = (UniRange) a;
+			next = (UniRange) b;
+			
+			r = first.start > next.start;
+			return_val_if_fail (first.start != next.start, 0);
+			
 			return (r) ? 1 : -1;
 		});
 	}

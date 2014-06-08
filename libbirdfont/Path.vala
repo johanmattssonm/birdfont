@@ -745,7 +745,10 @@ public class Path {
 		}
 
 		ycoordinates.sort ((a, b) => {
-			return (a.y < b.y) ? 1 : -1;
+			EditPoint first, next;
+			first = (EditPoint) a;
+			next = (EditPoint) b;
+			return (first.y < next.y) ? 1 : -1;
 		});
 		
 		for (int i = 0; i < ycoordinates.size - 1; i++) {

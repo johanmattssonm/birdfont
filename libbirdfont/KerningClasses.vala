@@ -359,7 +359,10 @@ public class KerningClasses : GLib.Object {
 		}
 		
 		left_glyphs.sort ((a, b) => {
-			return strcmp (a.get_name (), b.get_name ());
+			Glyph first, next;
+			first = (Glyph) a;
+			next = (Glyph) b;
+			return strcmp (first.get_name (), next.get_name ());
 		});
 
 		// add the right hand glyph and the kerning value

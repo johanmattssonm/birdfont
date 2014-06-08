@@ -541,11 +541,17 @@ public class Glyph : FontDisplay {
 	
 	public void sort_help_lines () {
 		vertical_help_lines.sort ((a, b) => {
-			return (int) (a.get_pos () - b.get_pos ());
+			Line first, next;
+			first = (Line) a;
+			next = (Line) b;
+			return (int) (first.get_pos () - next.get_pos ());
 		});
 		
 		horizontal_help_lines.sort ((a, b) => {
-			return (int) (a.get_pos () - b.get_pos ());
+			Line first, next;
+			first = (Line) a;
+			next = (Line) b;
+			return (int) (first.get_pos () - next.get_pos ());
 		});
 	}
 	
