@@ -1,3 +1,9 @@
+birdfont (0.38) stable;
+
+  * Many bugs and memory leaks have been fixed in this version
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Jun  8 16:12:17 CEST 2014
+
 birdfont (0.37) stable;
 
   * Font size settings in the kerning tab
