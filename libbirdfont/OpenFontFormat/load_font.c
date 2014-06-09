@@ -784,7 +784,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		bird_font_tool_yield ();
 	}
 	
-	kerning = bird_font_open_font_format_reader_parse_kerning (file); 
+	kerning = (gchar*) bird_font_open_font_format_reader_parse_kerning (file); 
 	
 	if (kerning != NULL) {
 		printf (kerning);
