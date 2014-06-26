@@ -1,3 +1,9 @@
+birdfont (0.39) stable;
+
+  * Bug fixes in the kerning code
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Jun 26 22:04:19 CEST 2014
+
 birdfont (0.38) stable;
 
   * Many bugs and memory leaks have been fixed in this version
