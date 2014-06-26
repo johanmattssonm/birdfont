@@ -443,7 +443,6 @@ public class KerningDisplay : FontDisplay {
 	public override void selected_canvas () {
 		Glyph g;
 		GlyphSequence w;
-		unowned List<GlyphSequence>? r;
 		StringBuilder s = new StringBuilder ();
 		bool append_char = false;
 		Font font = BirdFont.get_current_font ();

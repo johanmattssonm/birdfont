@@ -258,7 +258,7 @@ public class GposTable : Table {
 	}
 	
 	public uint pairs_offset_length () {
-		return 2 * pairs.pairs.length ();
+		return 2 * pairs.pairs.size;
 	}
 }
 

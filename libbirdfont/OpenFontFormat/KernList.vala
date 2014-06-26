@@ -15,7 +15,7 @@
 namespace BirdFont {
 
 public class KernList : GLib.Object {
-	public List<PairFormat1> pairs;
+	public Gee.ArrayList<PairFormat1> pairs;
 
 	public delegate void KernIterator (Kern k);
 	public delegate void PairFormat1Iterator (PairFormat1 k);
@@ -26,20 +26,19 @@ public class KernList : GLib.Object {
 	public KernList (GlyfTable glyf_table) {
 		this.glyf_table = glyf_table;
 		num_pairs = 0;
+		pairs = new Gee.ArrayList<PairFormat1> (); 
 	}
 	
 	/** @return number of pairs. */
 	public uint fetch_all_pairs () {
 		PairFormat1 current_pairs = new PairFormat1 ();
 		
-		if (pairs.length () > 0 || num_pairs > 0) {
+		if (pairs.size > 0 || num_pairs > 0) {
 			warning ("Pairs already loaded.");
 		}
 		
 		num_pairs = 0;
-		while (pairs.length () > 0) {
-			pairs.remove_link (pairs.first ());
-		}
+		pairs.clear ();
 		
 		KerningClasses.get_instance ().all_pairs ((kp) => {
 			uint16 gid_left, gid_right;
@@ -54,7 +53,7 @@ public class KernList : GLib.Object {
 			current_pairs = new PairFormat1 ();
 			gid_left = (uint16) glyf_table.get_gid (kerning_pair.character.get_name ());
 			current_pairs.left = gid_left;
-			pairs.append (current_pairs);
+			pairs.add (current_pairs);
 			
 			if (unlikely (kerning_pair.kerning.size == 0)) {
 				warning ("No pairs.");
@@ -76,7 +75,7 @@ public class KernList : GLib.Object {
 	 * pair pos format 1.
 	 */
 	public uint get_length_left () {
-		return pairs.length ();
+		return pairs.size;
 	}
 		
 	/** @return the total number of pairs. */

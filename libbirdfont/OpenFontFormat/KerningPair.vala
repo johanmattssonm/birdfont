@@ -22,7 +22,7 @@ public class KerningPair : GLib.Object {
 	public Glyph character;
 	public Gee.ArrayList<Kerning> kerning;
 
-	Gee.ArrayList<Glyph> right; // FIXME: should be fast and sorted
+	Gee.ArrayList<Glyph> right;
 	
 	public KerningPair (Glyph left) {
 		character = left;
@@ -31,7 +31,7 @@ public class KerningPair : GLib.Object {
 	}
 	
 	public void add_unique (Glyph g, double k) {
-		if (right.contains ((!) g)) {
+		if (!right.contains ((!) g)) {
 			right.add ((!) g);
 			kerning.add (new Kerning.for_glyph (g, k));
 		}

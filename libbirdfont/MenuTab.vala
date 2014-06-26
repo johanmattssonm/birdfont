@@ -333,6 +333,16 @@ public class MenuTab : FontDisplay {
 		KerningDisplay kd = MainWindow.get_kerning_display ();
 		MainWindow.get_tab_bar ().add_unique_tab (kd);
 	}
+
+	public static void show_ligature_tab () {
+		if (suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
+		LigatureList d = MainWindow.get_ligature_display ();
+		MainWindow.get_tab_bar ().add_unique_tab (d);
+	}
 	
 	public static void preview ()  {
 		Font font = BirdFont.get_current_font ();

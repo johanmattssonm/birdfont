@@ -415,6 +415,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.Menu tool_menu = new Gtk.Menu ();
 		Gtk.Menu kerning_menu = new Gtk.Menu ();
 		Gtk.Menu git_menu = new Gtk.Menu ();
+		Gtk.Menu ligature_menu = new Gtk.Menu ();
 
 		AccelGroup accel_group = new Gtk.AccelGroup();
 		add_accel_group (accel_group);
@@ -709,6 +710,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		save_as_bfp.activate.connect (() => { 
 			 MenuTab.save_as_bfp ();
 		});
+
+		// Ligatures
+		Gtk.MenuItem show_ligatures = new Gtk.MenuItem.with_mnemonic (t_("_Show Ligatures"));
+		ligature_menu.append (show_ligatures);
+		show_ligatures.activate.connect (() => { 
+			 MenuTab.show_ligature_tab ();
+		});
 		
 		// Add menus
 		Gtk.MenuItem file_launcher = new Gtk.MenuItem.with_mnemonic (t_("_File"));
@@ -728,7 +736,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		Gtk.MenuItem git_launcher = new Gtk.MenuItem.with_mnemonic ("_Git");
 		git_launcher.set_submenu (git_menu);
-	
+
+		Gtk.MenuItem ligature_launcher = new Gtk.MenuItem.with_mnemonic ("_Ligatures");
+		ligature_launcher.set_submenu (ligature_menu);
+
 		menubar.append (file_launcher);
 		menubar.append (edit_launcher);
 		menubar.append (tab_launcher);
@@ -737,6 +748,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		if (BirdFont.has_argument ("--test")) {
 			menubar.append (git_launcher);
+			menubar.append (ligature_launcher);
 		}
 		
 		return menubar;	

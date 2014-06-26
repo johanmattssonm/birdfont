@@ -27,6 +27,7 @@ public class MainWindow {
 	public static NativeWindow native_window;
 	public static KerningDisplay kerning_display;
 	public static CharDatabase character_database;
+	public static LigatureList ligature_display;
 
 	public MainWindow () {
 		singleton = this;
@@ -40,6 +41,7 @@ public class MainWindow {
 		over_view = new OverView();
 		kerning_display = new KerningDisplay ();
 		character_database = new CharDatabase ();
+		ligature_display = new LigatureList ();
 	}
 
 	public static FileTab get_recent_files_tab () {
@@ -197,6 +199,10 @@ public class MainWindow {
 	
 	public static KerningDisplay get_kerning_display () {
 		return kerning_display;
+	}
+	
+	public static LigatureList get_ligature_display () {
+		return ligature_display;
 	}
 }
 

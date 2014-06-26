@@ -23,6 +23,7 @@ public class DirectoryTable : Table {
 	public GdefTable gdef_table;
 	public GlyfTable glyf_table;
 	public GposTable gpos_table;
+	public GsubTable gsub_table;
 	public HeadTable head_table;
 	public HheaTable hhea_table;
 	public HmtxTable hmtx_table;
@@ -44,6 +45,7 @@ public class DirectoryTable : Table {
 		gasp_table = new GaspTable ();
 		gdef_table = new GdefTable ();
 		glyf_table = new GlyfTable (loca_table);
+		gsub_table = new GsubTable (glyf_table);
 		cmap_table = new CmapTable (glyf_table);
 		cvt_table  = new CvtTable ();
 		head_table = new HeadTable (glyf_table);
@@ -64,6 +66,7 @@ public class DirectoryTable : Table {
 		glyf_table.process ();
 		gasp_table.process ();
 		gdef_table.process ();
+		gsub_table.process ();
 		cmap_table.process (glyf_table);
 		cvt_table.process ();
 		hmtx_table.process ();
@@ -87,6 +90,10 @@ public class DirectoryTable : Table {
 			tables.append (this);
 			
 			tables.append (gpos_table);
+			
+			// FIXME: implement it
+			// tables.append (gsub_table);
+			
 			tables.append (os_2_table);
 
 			// tables.append (gdef_table); // invalid table

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -17,8 +17,10 @@ namespace BirdFont {
 
 public class GsubTable : Table {
 	
-	public GsubTable () {
-		id = "GPOS";
+	GlyfTable glyf_table;
+	
+	public GsubTable (GlyfTable glyf_table) {
+		this.glyf_table = glyf_table;
 	}
 	
 	public override void parse (FontData dis) throws Error {
@@ -35,7 +37,7 @@ public class GsubTable : Table {
 		// script list
 		fd.add_ushort (1);   // number of items in script list
 		fd.add_tag ("DFLT"); // default script
-		fd.add_ushort (8);	 // offset to script table from script list
+		fd.add_ushort (8); // offset to script table from script list
 		
 		// script table
 		fd.add_ushort (4); // offset to default language system
@@ -61,14 +63,27 @@ public class GsubTable : Table {
 		fd.add_ushort (1); // number of lookups
 		fd.add_ushort (4); // offset to lookup 1
 		
-		fd.add_ushort (2); // lookup type // FIXME	
-		fd.add_ushort (0); // lookup flags
-		fd.add_ushort (1); // number of subtables
-		fd.add_ushort (8); // array of offsets to subtables
+		// ligature substitution
+		fd.add_ushort (1); // lookup type, format identifier
+		fd.add_ushort (20); // offset to coverage
+		fd.add_ushort (1); // number of ligature set tables
+		fd.add_ushort (10); // array of offsets to ligature sets
 		
-		// MarkFilteringSet 
-
-		//fd.append (get_clig_data ());
+		// ligature sets
+		fd.add_ushort (1); // number of offsets
+		fd.add_ushort (4); // offset to ligature table
+		
+		// ligatures
+		fd.add_ushort ((uint16) glyf_table.get_gid ("fi")); // gid of ligature
+		fd.add_ushort (2); // number of components
+		fd.add_ushort ((uint16) glyf_table.get_gid ("f")); // gid to component 
+		fd.add_ushort ((uint16) glyf_table.get_gid ("i")); // gid to component 
+		
+		// coverage
+		fd.add_ushort (1); // format
+		fd.add_ushort (1); // num glyphs
+		fd.add_ushort ((uint16) glyf_table.get_gid ("f")); // gid
+		
 		
 		fd.pad ();	
 		this.font_data = fd;
