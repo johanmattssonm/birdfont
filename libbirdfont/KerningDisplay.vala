@@ -185,10 +185,10 @@ public class KerningDisplay : FontDisplay {
 					cr.fill ();
 					
 					if (gr_left != null || gr_right != null) {
-						cr.move_to (x2 - 5, y + 22 - 2);
-						cr.line_to (x2 + 5, y + 22 - 2);
-						cr.line_to (x2 + 5, y + 22 + 2);
-						cr.line_to (x2 - 5, y + 22 + 2);
+						cr.move_to (x2 - 5 * item_size, y + 20  * item_size);
+						cr.line_to (x2 + 5 * item_size, y + 20  * item_size);
+						cr.line_to (x2 + 5 * item_size, y + 24  * item_size);
+						cr.line_to (x2 - 5 * item_size, y + 24  * item_size);
 						cr.fill ();
 					}
 					
@@ -610,7 +610,8 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public void set_active_handle (double ex, double ey) {
-		double y = 100;
+		double item_size = 1.0 / KerningTools.font_size;
+		double y = 100 * item_size;
 		double x = 20;
 		double w = 0;
 		double d, kern;
