@@ -151,7 +151,9 @@ public class PenTool : Tool {
 			
 			do_respond = true;
 			
-			join_paths (x, y);
+			if (has_join_icon ()) {
+				join_paths (x, y);
+			}
 
 			active_handle = new EditPointHandle.empty ();
 			
@@ -227,6 +229,12 @@ public class PenTool : Tool {
 		string w = SpinButton.convert_to_string (width);
 		Preferences.set ("pen_tool_stroke_width", w);
 		path_stroke_width = width;
+	}
+	
+	private bool has_join_icon () {
+		double mx, my;
+		get_tie_position (out mx, out my);
+		return (mx > -10 && my > - 10);
 	}
 	
 	/** @return true after the initial delay.*/
