@@ -57,6 +57,10 @@ public class EditPointHandle  {
 		return n;
 	}
 
+	public EditPoint get_parent () {
+		return parent;
+	}
+
 	public void convert_to_line () {
 		switch (type) {
 			case PointType.QUADRATIC:

@@ -353,6 +353,7 @@ public class PenTool : Tool {
 		int px = 0;
 		int py = 0;
 		EditPoint p;
+		double angle = 0;
 		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
@@ -361,6 +362,11 @@ public class PenTool : Tool {
 		// move control point handles
 		if (move_selected_handle) {
 			set_type_for_moving_handle ();
+
+			// don't update angle if the user is pressing shift
+			if (KeyBindings.modifier == SHIFT) {
+				angle = selected_handle.angle;
+			}
 
 			if (GridTool.is_visible ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
@@ -376,6 +382,10 @@ public class PenTool : Tool {
 				selected_handle.move_delta ((px - last_point_x), (py - last_point_y));
 			} else {
 				selected_handle.move_delta ((x - last_point_x) * precision, (y - last_point_y) * precision);
+			}
+
+			if (KeyBindings.modifier == SHIFT) {
+				selected_handle.angle = angle;
 			}
 			
 			handle_selection.path.update_region_boundaries ();
@@ -644,7 +654,7 @@ public class PenTool : Tool {
 		
 		if (reverse) {
 			while (clockwise.length () > 0) {
-				clockwise.remove_link (clockwise.first ());
+				clockwise.remove_link (clockwise.first ()); // FIXME: use gee container here
 			}
 
 			while (counter_clockwise.length () > 0) {
@@ -1229,6 +1239,9 @@ public class PenTool : Tool {
 		double d = double.MAX;
 		double dn;
 		Path path = new Path ();
+		bool left_handle = false;
+		EditPoint parent_point;
+		EditPoint tied_point;
 		
 		foreach (Path p in g.path_list) {
 			if (is_close_to_path (p, event_x, event_y) || p == active_path) {
@@ -1243,6 +1256,7 @@ public class PenTool : Tool {
 							eh = left;
 							d = dn;
 							path = p;
+							left_handle = true;
 						}
 
 						dn = right.get_point ().get_distance (x, y);
@@ -1251,7 +1265,30 @@ public class PenTool : Tool {
 							eh = right;
 							d = dn;
 							path = p;
+							left_handle = false;
 						}
+					}
+				}
+			}
+		}
+		
+		// Make sure the selected handle belongs to the selected point if
+		// the current segment is quadratic.
+		if (eh.type == PointType.QUADRATIC) {
+			parent_point = eh.get_parent ();
+			
+			if (left_handle) {
+				if (parent_point.prev !=  null) {
+					tied_point = parent_point.get_prev ();
+					if (tied_point.selected) {
+						eh = tied_point.get_right_handle ();
+					}
+				}
+			} else {
+				if (parent_point.next !=  null) {
+					tied_point = parent_point.get_next ();
+					if (tied_point.selected) {
+						eh = tied_point.get_left_handle ();
 					}
 				}
 			}
