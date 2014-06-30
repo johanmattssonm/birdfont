@@ -506,6 +506,7 @@ public class PenTool : Tool {
 		
 		if (!move_selected_handle) {
 			select_active_point (x, y);
+			last_selected_is_handle = false;
 		}
 
 		if (selected_points.length () == 0 && !active_handle.active) {
@@ -845,7 +846,7 @@ public class PenTool : Tool {
 		return (distance < 8);
 	}
 
-	/** Show the user that curves will be tied on release. */
+	/** Show the user that curves will be merged on release. */
 	public void draw_on_canvas (Context cr, Glyph glyph) {
 		if (show_selection_box) {
 			draw_selection_box (cr);
