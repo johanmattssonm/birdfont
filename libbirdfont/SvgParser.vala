@@ -71,7 +71,9 @@ public class SvgParser {
 			
 			// FIXME: libxml2 (2.7.8) refuses to parse svg files created with Adobe Illustrator on 
 			// windows. This is a way around it.
-			if (l.index_of ("<!") == -1 && l.index_of ("]>") == -1) {
+			if (l.index_of ("<!") == -1 
+				&& l.index_of ("]>") == -1
+				&& l.index_of ("http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd") == -1) {
 				sb.append (l);
 				sb.append ("\n");
 			}
