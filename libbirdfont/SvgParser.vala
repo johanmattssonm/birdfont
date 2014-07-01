@@ -869,9 +869,9 @@ public class SvgParser {
 					find_last_handle (i + 1, b, num_b, out last_x, out last_y, out last_type);
 				}
 			}
-	
+			
 			return_val_if_fail (i + 1 < num_b, path_list);
-	
+			
 			if (b[i].type == 'M') {
 				ep = path.add (b[i].x0, b[i].y0);
 				ep.set_point_type (PointType.CUBIC);
@@ -961,7 +961,7 @@ public class SvgParser {
 		double first_left_x, first_left_y;
 		
 		path = new Path ();
-		
+				
 		if (num_b == 0) {
 			warning ("No SVG data");
 			return path_list;
@@ -988,6 +988,12 @@ public class SvgParser {
 				first_point = true;
 			} else if (b[i].type == 'M') {
 			} else if (b[i].type == 'L') {
+
+				if (first_point) {
+					first_left_x = b[i].x0;
+					first_left_y = b[i].y0;
+				}
+				
 				ep = path.add (b[i].x0, b[i].y0);
 				ep.set_point_type (PointType.LINE_CUBIC); // TODO: quadratic
 				ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
@@ -997,7 +1003,7 @@ public class SvgParser {
 				}
 				
 				if (b[i + 1].type == 'C') {
-					return_val_if_fail (i + i < num_b, path_list);
+					return_val_if_fail (i + 1 < num_b, path_list);
 					ep.get_right_handle ().set_point_type (PointType.CUBIC);
 					ep.get_right_handle ().move_to_coordinate (b[i + 1].x0, b[i + 1].y0);
 				}
