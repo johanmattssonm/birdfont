@@ -207,6 +207,8 @@ public class SvgParser {
 		string data = d;
 		
 		data = data.replace (",", " ");
+		data = data.replace ("a", " a ");
+		data = data.replace ("A", " A ");
 		data = data.replace ("m", " m ");
 		data = data.replace ("M", " M ");
 		data = data.replace ("h", " h ");
@@ -267,6 +269,11 @@ public class SvgParser {
 		PathList path_list = new PathList ();
 		BezierPoints[] bezier_points;
 		string[] c;
+		double arc_rx, arc_ry;
+		double arc_rotation;
+		int large_arc;
+		int arc_sweep;
+		double arc_dest_x, arc_dest_y;
 		
 		if (d.index_of ("z") == -1) { // ignore all open paths
 			return path_list;
@@ -276,7 +283,7 @@ public class SvgParser {
 		
 		data = add_separators (d);
 		c = data.split (" ");
-		bezier_points = new BezierPoints[2 * c.length + 1];
+		bezier_points = new BezierPoints[8 * c.length + 1]; // the arc instruction can use up to eight points
 		
 		for (int i = 0; i < 2 * c.length + 1; i++) {
 			bezier_points[i] = new BezierPoints ();
@@ -351,7 +358,7 @@ public class SvgParser {
 					if (svg_glyph) {
 						py = py + parse_double (c[++i]);
 					} else {
-						py = py + -parse_double (c[++i]);
+						py = py - parse_double (c[++i]);
 					}
 					
 					bezier_points[bi].x0 = px;
@@ -383,7 +390,7 @@ public class SvgParser {
 					if (svg_glyph) {
 						cy = py + parse_double (c[++i]);
 					} else {
-						cy = py + -parse_double (c[++i]);
+						cy = py - parse_double (c[++i]);
 					}
 					
 					px = cx;
@@ -423,7 +430,7 @@ public class SvgParser {
 					if (svg_glyph) {
 						cy = py + parse_double (c[++i]);
 					} else {
-						cy = py + -parse_double (c[++i]);
+						cy = py - parse_double (c[++i]);
 					}
 					
 					bezier_points[bi].x0 = cx;
@@ -434,7 +441,7 @@ public class SvgParser {
 					if (svg_glyph) {
 						cy = py + parse_double (c[++i]);
 					} else {
-						cy = py + -parse_double (c[++i]);
+						cy = py - parse_double (c[++i]);
 					}
 					
 					px2 = cx;
@@ -515,7 +522,7 @@ public class SvgParser {
 					if (svg_glyph) {
 						cy = py + parse_double (c[++i]);
 					} else {
-						cy = py + -parse_double (c[++i]);
+						cy = py - parse_double (c[++i]);
 					}
 					
 					bezier_points[bi].x0 = cx;
@@ -529,7 +536,7 @@ public class SvgParser {
 					if (svg_glyph) {
 						cy = py + parse_double (c[++i]);
 					} else {
-						cy = py + -parse_double (c[++i]);
+						cy = py - parse_double (c[++i]);
 					}
 					
 					bezier_points[bi].x1 = cx;
@@ -596,7 +603,7 @@ public class SvgParser {
 					if (svg_glyph) {
 						cy = py + parse_double (c[++i]);
 					} else {
-						cy = py + -parse_double (c[++i]);
+						cy = py - parse_double (c[++i]);
 					}
 					
 					px = cx;
@@ -655,7 +662,7 @@ public class SvgParser {
 					if (svg_glyph) {
 						cy = py + parse_double (c[++i]);
 					} else {
-						cy = py + -parse_double (c[++i]);
+						cy = py - parse_double (c[++i]);
 					}
 					
 					px2 = cx;
@@ -669,7 +676,7 @@ public class SvgParser {
 					if (svg_glyph) {
 						cy = py + parse_double (c[++i]);
 					} else {
-						cy = py + -parse_double (c[++i]);
+						cy = py - parse_double (c[++i]);
 					}
 					
 					bezier_points[bi].x2 = cx;
@@ -722,6 +729,60 @@ public class SvgParser {
 					py = cy;	
 					
 					bi++;				
+				}
+			} else if (c[i] == "a") {
+				while (is_point (c[i + 1])) {					
+					arc_rx = parse_double (c[++i]);
+					arc_ry = parse_double (c[++i]);
+					
+					arc_rotation = parse_double (c[++i]);
+					large_arc = parse_int (c[++i]);
+					arc_sweep = parse_int (c[++i]);
+							
+					cx = px + parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = py + parse_double (c[++i]);
+					} else {
+						cy = py - parse_double (c[++i]);
+					}
+					
+					arc_dest_x = cx;
+					arc_dest_y = cy;
+					
+					add_arc_points (bezier_points, ref bi, px, py, arc_rx, arc_ry, arc_rotation, large_arc == 1, arc_sweep == 1, cx, cy);
+					
+					px = cx;
+					py = cy;
+					
+					
+				}
+			} else if (c[i] == "A") {
+				while (is_point (c[i + 1])) {					
+					arc_rx = parse_double (c[++i]);
+					arc_ry = parse_double (c[++i]);
+					
+					arc_rotation = parse_double (c[++i]);
+					large_arc = parse_int (c[++i]);
+					arc_sweep = parse_int (c[++i]);
+							
+					cx = parse_double (c[++i]);
+					
+					if (svg_glyph) {
+						cy = parse_double (c[++i]);
+					} else {
+						cy = -parse_double (c[++i]);
+					}
+					
+					arc_dest_x = cx;
+					arc_dest_y = cy;
+					
+					add_arc_points (bezier_points, ref bi, px, py, arc_rx, arc_ry, arc_rotation, large_arc == 1, arc_sweep == 1, cx, cy);
+
+					px = cx;
+					py = cy;
+					
+					
 				}
 			} else if (c[i] == "z") {
 				bezier_points[bi].type = 'z';
@@ -811,7 +872,12 @@ public class SvgParser {
 						left_x = b[i - 1].x1;
 						left_y = b[i - 1].y1;
 						last_type = PointType.CUBIC;
-					} else if (b[i - 1].type == 'L' || last.type == 'M') {
+					} else if (b[i - 1].type == 'S') {
+						return_if_fail (i >= 1);
+						left_x = b[i - 1].x1;
+						left_y = b[i - 1].y1;
+						last_type = PointType.CUBIC;
+					}else if (b[i - 1].type == 'L' || last.type == 'M') {
 						return_if_fail (i >= 2); // FIXME: -2 can be C or L
 						left_x = b[i - 2].x0 + (b[i - 1].x0 - b[i - 2].x0) / 3.0;
 						left_y = b[i - 2].y0 + (b[i - 1].y0 - b[i - 2].y0) / 3.0;
@@ -837,7 +903,9 @@ public class SvgParser {
 		Path path;
 		PathList path_list = new PathList ();
 		EditPoint ep = new EditPoint ();
-		
+		Gee.ArrayList<EditPoint> smooth_points = new Gee.ArrayList<EditPoint> ();
+		EditPoint next, prev;
+				
 		path = new Path ();
 		
 		if (num_b == 0) {
@@ -884,12 +952,12 @@ public class SvgParser {
 					ep.get_left_handle ().set_point_type (last_type);
 					ep.get_left_handle ().move_to_coordinate (last_x, last_y);
 				} else {
-					if (b[i - 1].type == 'C') {
+					if (b[i - 1].type == 'C' || b[i - 1].type == 'S') {
 						ep.get_left_handle ().set_point_type (PointType.CUBIC);
 						ep.get_left_handle ().move_to_coordinate (b[i + 1].x1, b[i + 1].y1);
 					} 
 					
-					if (b[i + 1].type == 'C') {
+					if (b[i + 1].type == 'C' || b[i - 1].type == 'S') {
 						ep.get_right_handle ().set_point_type (PointType.CUBIC);
 						ep.get_right_handle ().move_to_coordinate (b[i + 1].x0, b[i + 1].y0);
 					} else if (b[i + 1].type == 'L' || b[i + 1].type == 'M') {
@@ -931,7 +999,7 @@ public class SvgParser {
 				}
 			}
 	
-			if (b[i].type == 'C') {
+			if (b[i].type == 'C' || b[i].type == 'S') {
 				return_val_if_fail (i != 0, path_list);
 
 				ep.set_point_type (PointType.CUBIC);
@@ -939,12 +1007,35 @@ public class SvgParser {
 				ep.get_right_handle ().set_point_type (PointType.CUBIC);
 				ep.get_right_handle ().move_to_coordinate (b[i].x0, b[i].y0);
 				
+				if (b[i].type == 'S') {
+					smooth_points.add (ep);
+				}
+				
 				if (b[i + 1].type != 'z') {
 					ep = path.add (b[i].x2, b[i].y2);
 
 					ep.get_left_handle ().set_point_type (PointType.CUBIC);
 					ep.get_left_handle ().move_to_coordinate (b[i].x1, b[i].y1);
 				}
+			}
+		}
+
+		foreach (EditPoint e in smooth_points) {
+			e.set_tie_handle (true);
+			e.process_tied_handle ();
+			
+			e.set_point_type (PointType.CUBIC);
+			e.get_right_handle ().set_point_type (PointType.CUBIC);
+			e.get_left_handle ().set_point_type (PointType.CUBIC);
+			
+			if (e.next != null) {
+				next = e.get_next ();
+				next.get_left_handle ().angle = next.get_right_handle ().angle - PI;
+			}
+
+			if (e.prev != null) {
+				prev = e.get_prev ();
+				prev.get_right_handle ().angle = prev.get_left_handle ().angle - PI;
 			}
 		}
 		
@@ -961,7 +1052,9 @@ public class SvgParser {
 		EditPoint ep;
 		bool first_point = true;
 		double first_left_x, first_left_y;
-		
+		Gee.ArrayList<EditPoint> smooth_points = new Gee.ArrayList<EditPoint> ();
+		EditPoint next, prev;
+				
 		path = new Path ();
 				
 		if (num_b == 0) {
@@ -1004,7 +1097,7 @@ public class SvgParser {
 					ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
 				}
 				
-				if (b[i + 1].type == 'C') {
+				if (b[i + 1].type == 'C' || b[i + 1].type == 'S') {
 					return_val_if_fail (i + 1 < num_b, path_list);
 					ep.get_right_handle ().set_point_type (PointType.CUBIC);
 					ep.get_right_handle ().move_to_coordinate (b[i + 1].x0, b[i + 1].y0);
@@ -1014,7 +1107,7 @@ public class SvgParser {
 			} else if (b[i].type == 'Q') {
 				warning ("Illustrator does not support quadratic control points.");
 				print (@"$(b[i])\n");
-			} else if (b[i].type == 'C') {
+			} else if (b[i].type == 'C' || b[i].type == 'S') {
 				
 				if (first_point) {
 					first_left_x = b[i].x0;
@@ -1028,6 +1121,10 @@ public class SvgParser {
 				ep.get_left_handle ().set_point_type (PointType.CUBIC);
 				
 				ep.get_left_handle ().move_to_coordinate (b[i].x1, b[i].y1);
+
+				if (b[i].type == 'S') {
+					smooth_points.add (ep);
+				}				
 				
 				if (b[i + 1].type != 'z') {
 					ep.get_right_handle ().move_to_coordinate (b[i + 1].x0, b[i + 1].y0);
@@ -1042,6 +1139,25 @@ public class SvgParser {
 			}
 		}
 		
+		foreach (EditPoint e in smooth_points) {
+			e.set_tie_handle (true);
+			e.process_tied_handle ();
+
+			e.set_point_type (PointType.CUBIC);
+			e.get_right_handle ().set_point_type (PointType.CUBIC);
+			e.get_left_handle ().set_point_type (PointType.CUBIC);
+
+			if (e.next != null) {
+				next = e.get_next ();
+				next.get_left_handle ().angle = next.get_right_handle ().angle - PI;
+			}
+			
+			if (e.prev != null) {
+				prev = e.get_prev ();
+				prev.get_right_handle ().angle = prev.get_left_handle ().angle - PI;
+			}
+		}
+				
 		if (path.points.size > 0) {
 			warning ("Open path.");
 			path_list.add (path);
@@ -1051,6 +1167,20 @@ public class SvgParser {
 	}
 	
 	// TODO: implement a default svg parser
+
+	static int parse_int (string? s) {
+		if (is_null (s)) {
+			warning ("null instead of string");
+			return 0;
+		}
+		
+		if (!is_point ((!) s)) {
+			warning (@"Expecting an integer got: $((!) s)");
+			return 0;
+		}
+		
+		return int.parse ((!) s);
+	}
 	
 	static double parse_double (string? s) {
 		if (is_null (s)) {
@@ -1095,21 +1225,6 @@ public class SvgParser {
 		glyph.close_path ();
 		
 		return path;
-	}
-
-	private class BezierPoints {
-		public unichar type = '\0';
-		public unichar svg_type = '\0';
-		public double x0  = 0;
-		public double y0 = 0;
-		public double x1 = 0;
-		public double y1 = 0;
-		public double x2 = 0;
-		public double y2 = 0;
-		
-		public string to_string () {
-			return @"$((!)type.to_string ()) $x0,$y0 $x1,$y1 $x2,$y2 SVG:$((!)svg_type.to_string ())";
-		}
 	}
 }
 
