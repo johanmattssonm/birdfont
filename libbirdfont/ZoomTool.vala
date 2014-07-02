@@ -34,7 +34,7 @@ class ZoomTool : Tool {
 		});
 			
 		press_action.connect((self, b, x, y) => {
-			if (b == 1) {
+			if (b == 1 && KeyBindings.modifier != CTRL) {
 				zoom_area_begin_x = x;
 				zoom_area_begin_y = y;
 			}
@@ -52,7 +52,7 @@ class ZoomTool : Tool {
 		release_action.connect((self, b, x, y) => {
 			Glyph g;
 						
-			if (b == 1) {
+			if (b == 1 && KeyBindings.modifier != CTRL) {
 				store_current_view ();
 				
 				g =	MainWindow.get_current_glyph ();
