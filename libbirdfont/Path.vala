@@ -659,7 +659,7 @@ public class Path {
 	}
 	
 	public bool is_over_coordinate (double x, double y) {
-		return is_over_coordinate_var (x, y, 0.1);
+		return is_over_coordinate_var (x, y);
 	}
 	
 	public static double distance (double ax, double bx, double ay, double by) {
@@ -688,7 +688,7 @@ public class Path {
 	} 
 	
 	/** Variable precision */
-	public bool is_over_coordinate_var (double x, double y, double tolerance) {
+	public bool is_over_coordinate_var (double x, double y) {
 		Gee.ArrayList<EditPoint> ycoordinates = new Gee.ArrayList<EditPoint> ();
 		double last = 0;
 		bool on_edge = false;
@@ -697,6 +697,10 @@ public class Path {
 		PathList pathlist;
 		EditPoint next_e, last_e;
 		bool result = false;
+		int width;
+		char[,] click_map;
+		int px, py;
+		int click_x, click_y;
 		
 		if (points.size < 2) {
 			return false;
@@ -709,30 +713,26 @@ public class Path {
 			path = this;
 		}
 		
-		if (!path.is_over_boundry_precision (x, y, tolerance)) {
+		if (!path.is_over_boundry (x, y)) {
 			return false;
-		}
-
-		foreach (EditPoint e in path.points) {
-			if (distance (e.x, x, e.y, y) < tolerance) {
-				return true;
-			}
 		}
 		
 		// generate a rasterized image of the object
-		int width = 512;
-		char[,] click_map = new char[width + 1, width + 1];
+		width = 512;
+		click_map = new char[width + 1, width + 1];
+		px = 0;
+		py = 0;
 		path.all_of_path ((cx, cy, ct) => {
-			int px = (int) (width * ((cx - xmin) / (xmax - xmin)));
-			int py = (int) (width * ((cy - ymin) / (ymax - ymin)));
+			px = (int) (width * ((cx - xmin) / (xmax - xmin)));
+			py = (int) (width * ((cy - ymin) / (ymax - ymin)));
 			click_map[px, py] = '#';
 			return true;
 		}, 2 * width);
 		
 		// first to last point in case the path is open
 		all_of (get_last_point (), get_first_point (), (cx, cy, ct) => {
-			int px = (int) (width * ((cx - xmin) / (xmax - xmin)));
-			int py = (int) (width * ((cy - ymin) / (ymax - ymin)));
+			px = (int) (width * ((cx - xmin) / (xmax - xmin)));
+			py = (int) (width * ((cy - ymin) / (ymax - ymin)));
 			click_map[px, py] = '#';
 			return true;
 		}, 2 * width);
@@ -799,8 +799,8 @@ public class Path {
 			}
 		}
 
-		int click_x = (int) (width * ((x - xmin) / (xmax - xmin)));
-		int click_y = (int) (width * ((y - ymin) / (ymax - ymin)));
+		click_x = (int) (width * ((x - xmin) / (xmax - xmin)));
+		click_y = (int) (width * ((y - ymin) / (ymax - ymin)));
 
 		result = (click_map[click_x, click_y] != '\0');
 
@@ -809,17 +809,10 @@ public class Path {
 		return result;
 	}
 	
-	public bool is_over_boundry_precision (double x, double y, double p) {
-		if (unlikely (ymin == double.MAX || ymin == 10000)) {
-			update_region_boundaries ();
-		}
-		
-		return (ymin - p <= y <= ymax + p) && (xmin - p <= x <= xmax + p);
-	}
-	
 	public bool is_over_boundry (double x, double y) {
-		if (unlikely (ymin == double.MAX)) {
+		if (unlikely (ymin == double.MAX || ymin == 10000)) {
 			warning ("bounding box is not calculated, run update_region_boundaries first.");
+			update_region_boundaries ();
 		}
 
 		return (ymin <= y <= ymax) && (xmin <= x <= xmax);
@@ -2075,7 +2068,7 @@ public class Path {
 	private static bool is_clasped_path (Path outside, Path inside) {
 		bool i = true;
 		foreach (EditPoint e in inside.points) {
-			if (!outside.is_over_coordinate_var (e.x, e.y, 0.5)) { // point may be off curve in both paths
+			if (!outside.is_over_coordinate_var (e.x, e.y)) { // point may be off curve in both paths
 				i = false;
 				break;
 			}

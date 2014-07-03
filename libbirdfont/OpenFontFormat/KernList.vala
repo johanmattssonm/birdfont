@@ -42,7 +42,6 @@ public class KernList : GLib.Object {
 		
 		KerningClasses.get_instance ().all_pairs ((kp) => {
 			uint16 gid_left, gid_right;
-			Kerning kerning;
 			KerningPair kerning_pair = kp;
 			int i;
 			
