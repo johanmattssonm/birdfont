@@ -696,6 +696,7 @@ public class Path {
 		Path path;
 		PathList pathlist;
 		EditPoint next_e, last_e;
+		bool result = false;
 		
 		if (points.size < 2) {
 			return false;
@@ -717,76 +718,95 @@ public class Path {
 				return true;
 			}
 		}
-
+		
+		// generate a rasterized image of the object
+		int width = 512;
+		char[,] click_map = new char[width + 1, width + 1];
 		path.all_of_path ((cx, cy, ct) => {
-			double distance = Math.fabs (Math.sqrt (Math.pow (cx - x, 2) + Math.pow (cy - y, 2)));
-			
-			if (distance < tolerance) {
-				on_edge = true;
-				return false;
-			}
-			
-			if (Math.fabs (cx - x) < tolerance && Math.fabs (last - cy) > 10 * tolerance) {
-				ycoordinates.add (new EditPoint (cx, cy));
-				last = cy;
-			}
-			
-			last_x = cx;
+			int px = (int) (width * ((cx - xmin) / (xmax - xmin)));
+			int py = (int) (width * ((cy - ymin) / (ymax - ymin)));
+			click_map[px, py] = '#';
 			return true;
-		});
-
-		if (on_edge) {
+		}, 2 * width);
+		
+		// first to last point in case the path is open
+		all_of (get_last_point (), get_first_point (), (cx, cy, ct) => {
+			int px = (int) (width * ((cx - xmin) / (xmax - xmin)));
+			int py = (int) (width * ((cy - ymin) / (ymax - ymin)));
+			click_map[px, py] = '#';
 			return true;
-		}
+		}, 2 * width);
+	
+		// Fill the map
+		for (int j = 0; j < width; j++) {
+			for (int k = 0; k < width; k++) {
+				if (click_map[k, j] == '#') {
+					
+					k++;
+					while (k < width && click_map[k, j] == '#') {
+						k++;
+					}
 
-		if (ycoordinates.size == 0) {
-			warning ("No ycoordinates is empty");
-			return true;
-		}
+					while (k < width && click_map[k, j] == '\0') {
+						click_map[k, j] = 'o';
+						k++;
+					}
 
-		ycoordinates.sort ((a, b) => {
-			EditPoint first, next;
-			first = (EditPoint) a;
-			next = (EditPoint) b;
-			return (first.y < next.y) ? 1 : -1;
-		});
-		
-		for (int i = 0; i < ycoordinates.size - 1; i++) {
-			if (Math.fabs (ycoordinates.get (i).y - ycoordinates.get (i + 1).y) < 4 * tolerance) {
-				ycoordinates.remove_at (i);
-			}
-		}
-		
-		if (unlikely (ycoordinates.size % 2 != 0)) {
-			warning (@"not an even number of coordinates ($(ycoordinates.size))");
-			stderr.printf (@"(ymin <= y <= ymax) && (xmin <= x <= xmax);\n");
-			stderr.printf (@"($ymin <= $y <= $ymax) && ($xmin <= $x <= $xmax);\n");
-		
-			stderr.printf (@"tolerance: $(tolerance)\n");
-			
-			stderr.printf ("ycoordinates:\n");
-			foreach (EditPoint e in ycoordinates) {
-				stderr.printf (@"$(e.y)\n");
-			}
-
-			if (ycoordinates.size != 0) {
-				ycoordinates.add (ycoordinates.get (ycoordinates.size - 1).copy ());
-			} else {
-				return true;
-			}
-		}
-		
-		for (int i = 0; i < ycoordinates.size; i += 2) {
-			last_e = ycoordinates.get (i);
-			next_e = ycoordinates.get (i + 1);
-			if (y <= last_e.y + tolerance) {
-				if (y >= next_e.y - tolerance) {
-					return true;
+					k++;
+					while (k < width && click_map[k, j] == '#') {
+						k++;
+					}
 				}
 			}
 		}
-		
-		return false;
+
+		// remove fill from the out side
+		for (int k = 0; k < width; k++) {
+			
+			if (click_map[k, 0] == 'o') {
+				click_map[k, 0] = '\0'; 
+			}
+			
+			for (int l = width - 1; l >= 0; l--) {
+				if (click_map[k, l] != '#') {
+					if (click_map[k, l + 1] == '\0') {
+						click_map[k, l] = '\0';	
+					}
+					
+					if (click_map[k, l + 1] == 'o') {
+						click_map[k, l] = 'o';	
+					}
+				}
+			}
+		} 
+
+		for (int k = 0; k < width; k++) {
+			
+			if (click_map[0, k] == 'o') {
+				click_map[0, k] = '\0'; 
+			}
+			
+			for (int l = width - 1; l >= 0; l--) {
+				if (click_map[l, k] != '#') {
+					if (click_map[l + 1, k] == '\0') {
+						click_map[l, k] = '\0';	
+					}
+					
+					if (click_map[l + 1, k] == 'o') {
+						click_map[l, k] = 'o';	
+					}
+				}
+			}
+		}
+
+		int click_x = (int) (width * ((x - xmin) / (xmax - xmin)));
+		int click_y = (int) (width * ((y - ymin) / (ymax - ymin)));
+
+		result = (click_map[click_x, click_y] != '\0');
+
+		click_map[click_x, click_y] = 'X';
+			
+		return result;
 	}
 	
 	public bool is_over_boundry_precision (double x, double y, double p) {
