@@ -689,11 +689,9 @@ public class Path {
 	
 	/** Variable precision */
 	public bool is_over_coordinate_var (double x, double y) {
-		Gee.ArrayList<EditPoint> ycoordinates = new Gee.ArrayList<EditPoint> ();
 		double last = 0;
 		bool on_edge = false;
 		double last_x = 0;
-		Path path;
 		PathList pathlist;
 		EditPoint next_e, last_e;
 		bool result = false;
@@ -708,12 +706,17 @@ public class Path {
 		
 		if (stroke > 0) {
 			pathlist = StrokeTool.get_stroke (this, stroke);
-			path = pathlist.get_first_path ();
-		} else {
-			path = this;
-		}
+			
+			if (pathlist.paths.size > 1) {
+				if (pathlist.paths.get (1).is_over_coordinate_var (x, y)) {
+					return false;
+				}
+			}
+			
+			return pathlist.get_first_path ().is_over_coordinate_var (x, y);
+		}	
 		
-		if (!path.is_over_boundry (x, y)) {
+		if (!is_over_boundry (x, y)) {
 			return false;
 		}
 		
@@ -722,7 +725,7 @@ public class Path {
 		click_map = new char[width + 1, width + 1];
 		px = 0;
 		py = 0;
-		path.all_of_path ((cx, cy, ct) => {
+		all_of_path ((cx, cy, ct) => {
 			px = (int) (width * ((cx - xmin) / (xmax - xmin)));
 			py = (int) (width * ((cy - ymin) / (ymax - ymin)));
 			click_map[px, py] = '#';
@@ -805,7 +808,7 @@ public class Path {
 		result = (click_map[click_x, click_y] != '\0');
 
 		click_map[click_x, click_y] = 'X';
-			
+		
 		return result;
 	}
 	
