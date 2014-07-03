@@ -629,7 +629,7 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "macintosh", &read, &written, &error);
 
 		if (error == NULL) {
-			g_string_append (str, utf8_str);
+			g_string_append (str, g_markup_escape_text (utf8_str, -1));
 			g_free (utf8_str);
 		} else {
 			g_warning ("Error in append_description: %s\n", error->message);
@@ -639,7 +639,7 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2be", &read, &written, &error);
 
 		if (error == NULL) {
-			g_string_append (str, utf8_str);
+			g_string_append (str, g_markup_escape_text (utf8_str, -1));
 			g_free (utf8_str);
 		} else {
 			g_warning ("Error in append_description: %s\n", error->message);
@@ -684,11 +684,11 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	
 	g_string_append (bf, "<font>\n");
 
-	g_string_append_printf (bf, "<postscript_name>%s</postscript_name>\n", FT_Get_Postscript_Name(face));
-	g_string_append_printf (bf, "<name>%s</name>\n", face->family_name);
+	g_string_append_printf (bf, "<postscript_name>%s</postscript_name>\n", g_markup_escape_text (FT_Get_Postscript_Name(face), -1));
+	g_string_append_printf (bf, "<name>%s</name>\n", g_markup_escape_text (face->family_name, -1));
 	
 	if (face->style_name != NULL) {
-		g_string_append_printf (bf, "<subfamily>%s</subfamily>\n", face->style_name);
+		g_string_append_printf (bf, "<subfamily>%s</subfamily>\n", g_markup_escape_text (face->style_name, -1));
 	}
 	
 	if (FT_Get_Sfnt_Name (face, 4, &name_table_data) == 0) { // full name
@@ -722,7 +722,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "</copyright>\n");
 	}
 	
-	g_string_append_printf (bf, "<backup>%s</backup>\n", file);
+	g_string_append_printf (bf, "<backup>%s</backup>\n", g_markup_escape_text (file, -1));
 
 
 	g_string_append_printf (bf, "<horizontal>\n");
