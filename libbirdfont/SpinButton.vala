@@ -46,7 +46,7 @@ public class SpinButton : Tool {
 			double py = Math.fabs (y - ty);
 			int n = 0;
 			
-			if (button == 3) {
+			if (button == 3 || KeyBindings.modifier == LOGO) {
 				set_from_text ();
 				n = 0;
 			}
