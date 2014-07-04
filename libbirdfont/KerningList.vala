@@ -77,12 +77,70 @@ public class KerningList : FontDisplay {
 			cr.restore ();
 		}
 		
-		cr.move_to (30, y);
+		// remove kerning icon
+		cr.save ();
+		cr.set_line_width (1);
+		cr.move_to (10, y - 8);
+		cr.line_to (15, y - 3);
+		cr.move_to (10, y - 3);
+		cr.line_to (15, y - 8);		
+		cr.stroke ();
+		cr.restore ();
+		
+		cr.move_to (60, y);
 		cr.show_text (left);
 		cr.move_to (230, y);
 		cr.show_text (right);
 		cr.move_to (430, y);
 		cr.show_text (kerning);
+	}
+
+	public override void button_release (int button, double ex, double ey) {
+		KerningClasses classes = KerningClasses.get_instance ();
+		string l, r;
+		int s = 0;
+		int y = 0;
+		Font font = BirdFont.get_current_font ();
+	
+		l = "";
+		r = "";
+		
+		if (ex < 20) {
+			classes.get_classes ((left, right, kerning) => {
+				if (s++ >= scroll) {
+					y += 18;
+					
+					if (y - 10 <= ey <= y + 5) {
+						l = left;
+						r = right;
+					}				
+				}
+			});
+			
+			if (l != "" && r != "") {
+				classes.delete_kerning_for_class (l, r);
+				font.touch ();
+			}
+			
+			classes.get_single_position_pairs ((left, right, kerning) => {
+				if (s++ >= scroll) {
+					y += 18;
+					
+					if (y - 10 <= ey <= y + 5) {
+						l = left;
+						r = right;
+					}				
+				}
+			});
+			
+			if (l != "" && r != "") {
+				classes.delete_kerning_for_pair (l, r);
+				font.touch ();
+			}
+			
+			update_scrollbar ();
+			redraw_area (0, 0, allocation.width, allocation.height);
+		}
 	}
 
 	public override string get_label () {

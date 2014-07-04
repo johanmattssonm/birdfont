@@ -412,6 +412,31 @@ public class KerningClasses : GLib.Object {
 		return true;
 	}
 
+	public void delete_kerning_for_class (string left, string right) {
+		int i = 0;
+		int index = -1;
+		
+		get_classes ((l, r, kerning) => {
+			if (left == l && r == right) {
+				index = i;
+			}
+			i++;
+		});
+		
+		if (unlikely (index < 0)) {
+			warning (@"Kerning class not found for $left to $right");
+			return;
+		}
+		
+		classes_first.remove_at (index);
+		classes_last.remove_at (index);
+		classes_kerning.remove_at (index);
+	}
+
+	public void delete_kerning_for_pair (string left, string right) {
+		single_kerning.unset (@"$left - $right");
+	}
+
 	public void remove_all_pairs () {
 		if (protect_map) {
 			warning ("Map is protected.");

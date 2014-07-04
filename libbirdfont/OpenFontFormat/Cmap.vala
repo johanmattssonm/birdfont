@@ -175,7 +175,7 @@ public class CmapSubtableWindowsUnicode : CmapSubtable {
 				if (id_range_offset[i] == 0) {
 					table.insert (indice, character);
 				} else {
-					// the awkward indexing trick:
+					// the indexing trick:
 					id = id_range_offset[i] / 2 + j + i - seg_count;
 					
 					if (!(0 <= id < gid_len)) {
@@ -243,17 +243,17 @@ public class CmapSubtableWindowsUnicode : CmapSubtable {
 		fd.add_ushort (seg_count_2);
 		fd.add_ushort (search_range);
 		fd.add_ushort (entry_selector);
-		fd.add_ushort (range_shift);
+		fd.add_ushort (range_shift);										
 		
 		// end codes
 		indice = first_assigned;
 		foreach (UniRange u in ranges) {
 			if (u.stop >= 0xFFFF) {
 				warning ("Not implemented yet.");
+			} else {
+				fd.add_ushort ((uint16) u.stop);
+				indice += u.length ();
 			}
-			
-			fd.add_ushort ((uint16) u.stop);
-			indice += u.length ();
 		}
 		fd.add_ushort (0xFFFF);
 		
@@ -264,23 +264,22 @@ public class CmapSubtableWindowsUnicode : CmapSubtable {
 		foreach (UniRange u in ranges) {
 			if (u.start >= 0xFFFF) {
 				warning ("Not implemented yet.");
+			} else {
+				fd.add_ushort ((uint16) u.start);
+				indice += u.length ();
 			}
-			
-			fd.add_ushort ((uint16) u.start);
-			indice += u.length ();
 		}
 		fd.add_ushort (0xFFFF);
 
 		// delta
 		indice = first_assigned;
 		foreach (UniRange u in ranges) {
-			
 			if ((u.start - indice) > 0xFFFF && u.start > indice) {
 				warning ("Need range offset.");
+			} else {
+				fd.add_ushort ((uint16) (indice - u.start));
+				indice += u.length ();
 			}
-			
-			fd.add_ushort ((uint16) (indice - u.start));
-			indice += u.length ();
 		}
 		fd.add_ushort (1);
 		
