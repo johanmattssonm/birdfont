@@ -663,6 +663,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	FT_Error error;
 	FT_Long i;
 	FT_ULong charcode;
+	FT_UInt gid;
 	FT_SfntName name_table_data;
 	double units_per_em;
 	double units;
@@ -746,6 +747,16 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	
 	g_string_append_printf (bf, "</horizontal>\n");
 
+	// space character
+	gid = FT_Get_Char_Index (face, ' ');
+	if (gid != 0) {
+		FT_Load_Glyph(face, gid, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
+		g_string_append_printf (bf, "<collection unicode=\"U+20\">\n");
+		g_string_append_printf (bf, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 0.0, face->glyph->metrics.horiAdvance * units);
+		g_string_append (bf, "\t</glyph>\n");
+		g_string_append_printf (bf, "</collection>\n");
+	}
+
 	// glyph outlines
 	for (i = 0; i < face->num_glyphs; i++) {
 		error = FT_Load_Glyph (face, i, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
@@ -765,7 +776,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		charcode = get_charcode (face, i);
 		glyph = g_string_new ("");
 						
-		if (charcode > 31) { // not control character
+		if (charcode > 32) { // not control character
 			g_string_append_printf (glyph, "<collection unicode=\"U+%x\">\n", (guint)charcode);
 			g_string_append_printf (glyph, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 0.0, face->glyph->metrics.horiAdvance * units);
 
@@ -787,7 +798,6 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	kerning = (gchar*) bird_font_open_font_format_reader_parse_kerning (file); 
 	
 	if (kerning != NULL) {
-		printf (kerning);
 		g_string_append (bf, kerning);
 		g_free (kerning);	
 	}
@@ -822,6 +832,13 @@ GString* load_freetype_font (char* file, int* err) {
 	error = FT_New_Face (library, file, 0, &face);
 	if (error) {
 		g_warning ("Freetype font face error %d\n", error);
+		*err = error;
+		return bf;
+	}
+
+	error = FT_Select_Charmap (face , FT_ENCODING_UNICODE);
+	if (error) {
+		g_warning ("Freetype can not use unicode, error: %d\n", error);
 		*err = error;
 		return bf;
 	}
