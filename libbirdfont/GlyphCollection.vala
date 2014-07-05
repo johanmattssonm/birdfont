@@ -62,6 +62,22 @@ public class GlyphCollection : GLib.Object {
 	public void set_selected_version (int version_id) {
 		versions.set_selected_version (version_id);
 	}
+	
+	/** Create a copy of this list. This method will copy the list data but 
+	 * keep pointers to the original glyphs.
+	 * @return a new list with copies of pointers to the glyphs
+	 */
+	public GlyphCollection copy () {
+		GlyphCollection n = new GlyphCollection (unicode_character, name);
+		
+		foreach (Glyph g in versions.glyphs) {
+			n.insert_glyph (g, false);
+		}
+		
+		n.versions.set_selected_version (versions.current_version_id);
+		
+		return n;
+	}
 }
 	
 }

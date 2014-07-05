@@ -18,7 +18,7 @@ using Math;
 namespace BirdFont {
 
 public class VersionList : DropMenu {
-	int current_version_id = -1;
+	public int current_version_id = -1;
 	GlyphCollection glyph_collection;
 	
 	public Gee.ArrayList<Glyph> glyphs;
@@ -46,16 +46,20 @@ public class VersionList : DropMenu {
 		signal_delete_item.connect ((index) => {
 			int current_version;
 			Font font = BirdFont.get_current_font ();
+			OverView over_view = MainWindow.get_overview ();
 			
 			index--; // first item is the add new action
 			
 			// delete the entire glyph if the last remaining version is removed
 			if (glyphs.size == 1) {
+				over_view.store_undo_state (glyph_collection.copy ());
 				font.delete_glyph (glyph_collection);
 				return;
 			}
 			
 			return_if_fail (0 <= index < glyphs.size);
+			
+			over_view.store_undo_state (glyph_collection.copy ());
 			glyphs.remove_at (index);
 			
 			recreate_index ();

@@ -1227,16 +1227,6 @@ class TestCases {
 		t.move_action (t, x, y);
 	}
 
-	public static void test_press_action (Tool t, int b, int x, int y) {
-		Tool.yield ();
-		t.press_action (t, b, x, y);
-	}
-
-	public static void test_release_action (Tool t, int b, int x, int y) {
-		Tool.yield ();
-		t.release_action (t, b, x, y);
-	}
-
 	public static void test_open_next_glyph () {
 		OverView o = MainWindow.get_overview ();
 		
@@ -1248,10 +1238,6 @@ class TestCases {
 		
 		o.open_current_glyph ();
 		Tool.yield ();
-	}
-	
-	private static void add_point_on_path (Path p, int x, int y) {
-		p.add (Glyph.path_coordinate_x (x), Glyph.path_coordinate_y (y));
 	}
 	
 	private static void test_boundaries () {

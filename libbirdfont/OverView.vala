@@ -35,8 +35,11 @@ public class OverView : FontDisplay {
 	string search_query = "";
 	
 	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
-	List<GlyphCollection> deleted_glyphs = new List<GlyphCollection> ();
-		
+	
+	/** List for undo commands. */
+	Gee.ArrayList<GlyphCollection> deleted_glyphs = new Gee.ArrayList<GlyphCollection> ();
+	
+	/** Show all characters that has been drawn. */
 	bool all_available = true;
 	
 	/** Show unicode database info. */
@@ -624,14 +627,24 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void undo () {
-		Font f = BirdFont.get_current_font ();
+		Font font = BirdFont.get_current_font ();
+		GlyphCollection previous_collection;
 		
-		if (deleted_glyphs.length () == 0) {
+		if (deleted_glyphs.size == 0) {
 			return;
 		}
-			
-		f.add_glyph_collection (deleted_glyphs.last ().data);
-		deleted_glyphs.remove_link (deleted_glyphs.last ());
+		
+		previous_collection = deleted_glyphs.get (deleted_glyphs.size - 1);
+		
+		// remove the old glyph and add the new one
+		font.delete_glyph (previous_collection);
+		font.add_glyph_collection (previous_collection);
+		
+		deleted_glyphs.remove_at (deleted_glyphs.size - 1);
+	}
+	
+	public void store_undo_state (GlyphCollection gc) {
+		deleted_glyphs.add (gc);
 	}
 	
 	public void scroll_to_char (unichar c) {
