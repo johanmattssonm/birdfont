@@ -618,34 +618,9 @@ public class OverView : FontDisplay {
 					key_down ();
 				}
 				return;
-				
-			case Key.DEL:
-				delete_selected_glyph ();
-				return;
 		}
 
 		scroll_to_char (keyval);
-	}
-
-	public void delete_selected_glyph () {
-		Font font = BirdFont.get_current_font ();
-		string glyph_name;
-		GlyphCollection? glyphs;
-
-		if (all_available) {
-			glyphs = font.get_glyph_collection_indice (selected);
-		} else {
-			glyph_name = glyph_range.get_char (selected);
-			glyphs = font.get_glyph_collection (glyph_name);
-		}
-		
-		if (glyphs != null) {
-			deleted_glyphs.append ((!) glyphs);
-			font.delete_glyph ((!) glyphs);
-			MainWindow.get_tab_bar ().close_by_name (((!)glyphs).get_name ());
-		}
-		
-		font.touch ();
 	}
 	
 	public override void undo () {

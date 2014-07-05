@@ -492,16 +492,6 @@ public class Path {
 		cr.restore ();
 	}
 	
-	/** Returns true if there is an edit point at (p.x, p.y). */
-	private bool has_edit_point (EditPoint p) {
-		foreach (var t in points) {
-			if (p.x == t.x && p.y == t.y) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	/** Set direction for this path to clockwise for outline and 
 	 * counter clockwise for inline paths.
 	 */
@@ -689,11 +679,7 @@ public class Path {
 	
 	/** Variable precision */
 	public bool is_over_coordinate_var (double x, double y) {
-		double last = 0;
-		bool on_edge = false;
-		double last_x = 0;
 		PathList pathlist;
-		EditPoint next_e, last_e;
 		bool result = false;
 		int width;
 		char[,] click_map;
@@ -1912,291 +1898,8 @@ public class Path {
 		foreach (EditPoint p in list) {
 			points.add (p);
 		}
-		
 	}
 	
-	public static PathList merge (Path p0, Path p1) {
-		bool done;
-		PathList path_list;
-		
-		done = try_merge (p0.copy(), p1.copy(), out path_list);
-		
-		if (!done) {
-			warning ("failed to merge paths");
-		}
-		
-		return path_list;
-	}
-	
-	private static bool try_merge (Path p0, Path p1, out PathList path_list) {
-		EditPoint e;
-		IntersectionList il;
-		int i;
-		Path np;
-		Path pi;
-		
-		il = IntersectionList.create_intersection_list (p0, p1);
-		
-		path_list = new PathList ();
-		
-		if (p0 == p1) {
-			return false;
-		}
-		
-		// add editpoints on intersections 
-		p0.update_region_boundaries ();
-		p1.update_region_boundaries ();
-		foreach (Intersection inter in il.points) {
-			e = new EditPoint ();
-			p0.get_closest_point_on_path (e, inter.x, inter.y);
-			inter.editpoint_a = e;
-			
-			e = inter.editpoint_a;
-			if (!p0.has_edit_point (e)) {
-				p0.insert_new_point_on_path (e);
-			}
-
-			e = new EditPoint ();
-			p1.get_closest_point_on_path (e, inter.x, inter.y);
-			inter.editpoint_b = e;
-			inter.editpoint_b.x = inter.editpoint_a.x;
-			inter.editpoint_b.y = inter.editpoint_a.y;
-			
-			e = inter.editpoint_b;
-			if (!p1.has_edit_point (e)) {
-				p1.insert_new_point_on_path (e);
-			}
-			
-			inter.editpoint_a.type = PenTool.to_curve (inter.editpoint_a.get_right_handle ().type);
-			inter.editpoint_b.type = PenTool.to_curve (inter.editpoint_b.get_right_handle ().type);
-		}
-			
-		if (il.points.length () < 2) {
-			return false;
-		}
-		
-		//path_list.paths.append (p0);
-		//path_list.paths.append (p1);
-		//return false;
-		
-		// get all parts
-		foreach (Intersection inter in il.points) {
-			p0.set_new_start (inter.editpoint_a);
-			get_merge_part (il, p0, p1, out np);
-			path_list.add (np);
-		}
-		
-		foreach (Path pp in path_list.paths) {
-			pp.update_region_boundaries ();
-		}
-
-		// remove duplicate paths
-		for (i = 0; i < path_list.paths.size; i++) {
-			pi = path_list.paths.get (i);
-
-			if (is_duplicated (path_list, pi)) {
-				path_list.paths.remove (pi);
-				--i;			
-			}
-		}
-		
-		// remove paths contained in other paths
-		for (i = 0; i < path_list.paths.size; i++) {
-			pi = path_list.paths.get (i);
-			
-			if (pi.is_clockwise () && is_clasped (path_list, pi)) {
-				path_list.paths.remove (pi);
-				i--;
-			}
-		}
-	
-		return true;
-	}
-	
-	private static bool is_duplicated (PathList pl, Path p) {
-		bool duplicate = false;
-		foreach (Path pd in pl.paths) {
-			if (pd == p) {
-				continue;
-			}
-			
-			if (is_duplicated_path (p, pd)) {
-				duplicate = true;
-			}
-		}
-		
-		return duplicate;
-	}
-	
-	private static bool is_duplicated_path (Path p0, Path p1) {
-		bool eq;
-		
-		assert (p1 != p0);	
-		
-		foreach (EditPoint ep in p0.points) {
-			eq = false;
-			
-			foreach (EditPoint e in p1.points) {
-				eq = (Math.fabs (ep.x - e.x) < 0.04 && Math.fabs (ep.y - e.y) < 0.04);
-				
-				if (eq) {
-					break;
-				}
-			}
-			
-			if (eq) {
-				continue;
-			} else {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	public static bool is_clasped (PathList pl, Path p) {
-		foreach (Path o in pl.paths) {
-			if (o == p) {
-				continue;
-			}
-			
-			if (is_clasped_path (o, p)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-	private static bool is_clasped_path (Path outside, Path inside) {
-		bool i = true;
-		foreach (EditPoint e in inside.points) {
-			if (!outside.is_over_coordinate_var (e.x, e.y)) { // point may be off curve in both paths
-				i = false;
-				break;
-			}
-		}
-		return i;
-	}
-	
-	private static bool get_merge_part (IntersectionList il, Path p0, Path p1, out Path new_path) {
-		EditPoint ex;
-		EditPoint ix;
-		EditPoint en;
-		uint offset_i = 0;
-		uint offset_j;
-		uint len_i;
-		int i, j;
-		uint len_j;
-		Path np = new Path ();
-		Intersection s = new Intersection (0, 0, 1);
-		
-		ex = p0.points.get (p0.points.size - 1);
-		ix = p0.points.get (p0.points.size - 1);
-		len_i = p0.points.size;
-		
-		for (i = 0; i < p0.points.size; i++) {
-			ex = p0.points.get ((int) ((i + offset_i) % len_i));
-
-			if (ex == p0.points.get (0) && i != 0) {	
-				s = (!) il.get_intersection (ex);	
-				break;
-			}
-
-			// add new point for path a
-			if (np.has_edit_point (ex)) {
-				// SPLIT
-				warning ("Merged path need split");
-				np.close ();
-				new_path = np;
-				
-				return false;
-			} else {
-				en = ex.copy ();
-				np.add_point (en);
-				en.recalculate_linear_handles ();
-			}
-			
-			// swap paths
-			if (il.has_edit_point (ex)) {
-				s = (!) il.get_intersection (ex);
-			
-				en.type = PointType.CUBIC;
-				en.right_handle.type = PointType.CUBIC;
-				en.right_handle.angle  = s.editpoint_b.right_handle.angle;
-				en.right_handle.length = s.editpoint_b.right_handle.length;
-							
-				// read until we find ex
-				for (j = 0; j < p1.points.size; j++) {
-					ix = p1.points.get (j);
-					
-					if (ix == s.editpoint_b) {
-						break;
-					}
-				}
-				
-				offset_j = j + 1;
-				len_j = p1.points.size;
-				for (j = 0; j < p1.points.size; j++) {
-					
-					ix = p1.points.get ((int) ((j + offset_j) % len_j));
-					
-					// add
-					if (np.has_edit_point (ix)) {
-						// SPLIT
-						warning ("Merged path need split");
-						np.close ();
-						new_path = np;
-						
-						break;
-					} else {
-						en = ix.copy ();
-						np.add_point (en);
-						ix.recalculate_linear_handles ();
-					}
-					
-					if (il.has_edit_point (ix)) {
-						s = (!) il.get_intersection (ix);
-						break;
-					}
-				}
-
-				en.type = PointType.CUBIC;
-				en.right_handle.type = PointType.CUBIC;
-				en.right_handle.angle  = s.editpoint_a.right_handle.angle;
-				en.right_handle.length = s.editpoint_a.right_handle.length;
-								
-				if (j == p0.points.size) {
-					np.close ();
-					new_path = np;
-					return true;
-				}
-
-				// skip to next intersection
-				int k;
-				for (k = 0; k < p0.points.size; k++) {
-					ix = p0.points.get (k); 
-
-					if (ix == s.editpoint_a) {
-						break;
-					}
-				}
-				
-				if (k == p0.points.size) {
-					new_path = np;
-					return true;
-				}
-				
-				offset_i = 0;
-				i = k;
-			}
-		}
-
-		new_path = np;
-		
-		return true;	
-	}
-
 	public void append_path (Path path) {
 		if (points.size == 0 || path.points.size == 0) {
 			warning ("No points");
@@ -2419,6 +2122,31 @@ public class Path {
 		if (!exists) {
 			insert_new_point_on_path (ep);
 		}
+	}
+	
+	public static bool is_clasped (PathList pl, Path p) {
+		foreach (Path o in pl.paths) {
+			if (o == p) {
+				continue;
+			}
+			
+			if (is_clasped_path (o, p)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	private static bool is_clasped_path (Path outside, Path inside) {
+		bool i = true;
+		foreach (EditPoint e in inside.points) {
+			if (!outside.is_over_coordinate_var (e.x, e.y)) { // point may be off curve in both paths
+				i = false;
+				break;
+			}
+		}
+		return i;
 	}
 }
 
