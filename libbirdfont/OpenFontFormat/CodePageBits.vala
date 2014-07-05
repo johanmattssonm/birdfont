@@ -163,7 +163,7 @@ public class CodePageBits : GLib.Object {
 			ranges = new GlyphRange ();
 			
 			try {
-				ranges.parse_ranges_async (unicode_ranges);
+				ranges.parse_ranges (unicode_ranges);
 			} catch (GLib.Error e) {
 				warning (e.message);
 			}

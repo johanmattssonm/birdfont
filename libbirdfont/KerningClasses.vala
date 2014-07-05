@@ -80,7 +80,7 @@ public class KerningClasses : GLib.Object {
 		single_kerning.set (@"$left - $right", k);
 	} 
 
-	public void set_kerning (GlyphRange left_range, GlyphRange right_range, double k) {
+	public void set_kerning (GlyphRange left_range, GlyphRange right_range, double k, int class_index = -1) {
 		int index;
 		
 		if (left_range.get_length () == 0 || right_range.get_length () == 0) {
@@ -102,11 +102,17 @@ public class KerningClasses : GLib.Object {
 		
 		// keep the list sorted (classes first then single glyphs)
 		if (index == -1) {
-			classes_first.add (left_range);
-			classes_last.add (right_range);
-			classes_kerning.add (new Kerning (k));
+			if (class_index < 0) {
+				classes_first.add (left_range);
+				classes_last.add (right_range);
+				classes_kerning.add (new Kerning (k));
+			} else {
+				classes_first.insert (class_index, left_range);
+				classes_last.insert (class_index, right_range);
+				classes_kerning.insert (class_index, new Kerning (k));
+			}
 		} else {
-			return_if_fail (0 <= index <= classes_first.size);
+			return_if_fail (0 <= index < classes_first.size);
 			classes_kerning.get (index).val = k;
 		}
 	}

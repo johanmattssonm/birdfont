@@ -22,9 +22,25 @@ public class KerningList : FontDisplay {
 	int scroll = 0;
 	int visible_rows = 0;
 	WidgetAllocation allocation;
+	Gee.ArrayList<UndoItem> undo_items;
+	Gee.ArrayList<string> single_pairs;
 	
 	public KerningList () {
 		allocation = new WidgetAllocation ();
+		undo_items = new Gee.ArrayList<UndoItem> ();
+		single_pairs = new Gee.ArrayList<string> ();
+	}
+
+	private void update_single_pair_list () {
+		KerningClasses classes = KerningClasses.get_instance ();
+		
+		single_pairs.clear ();
+		
+		classes.get_single_position_pairs ((left, right, kerning) => {
+			single_pairs.add (@"$left - $right");
+		});
+		
+		single_pairs.sort ();
 	}
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
@@ -32,6 +48,9 @@ public class KerningList : FontDisplay {
 		int y = 20;
 		int s = 0;
 		bool color = (scroll % 2) == 0;
+		string l, r;
+		string[] p;
+		double k;
 		
 		this.allocation = allocation;
 		
@@ -54,14 +73,21 @@ public class KerningList : FontDisplay {
 				color = !color;
 			}
 		});
-		
-		classes.get_single_position_pairs ((left, right, kerning) => {
+	
+		foreach (string pair in single_pairs) {
 			if (s++ >= scroll) {
-				draw_row (allocation, cr, left, right, @"$kerning", y, color);
+				p = pair.split (" - ");
+				return_if_fail (p.length == 2);
+								
+				l = p[0];
+				r = p[1];
+				k = classes.get_kerning (l, r);
+				
+				draw_row (allocation, cr, l, r, @"$k", y, color);
 				y += 18;
 				color = !color;
 			}
-		});
+		}
 		
 		cr.restore ();
 	}	
@@ -97,11 +123,12 @@ public class KerningList : FontDisplay {
 
 	public override void button_release (int button, double ex, double ey) {
 		KerningClasses classes = KerningClasses.get_instance ();
-		string l, r;
 		int s = 0;
 		int y = 0;
-		Font font = BirdFont.get_current_font ();
-	
+		string l, r;
+		string[] p;
+		double k;
+		
 		l = "";
 		r = "";
 		
@@ -116,30 +143,62 @@ public class KerningList : FontDisplay {
 					}				
 				}
 			});
-			
-			if (l != "" && r != "") {
-				classes.delete_kerning_for_class (l, r);
-				font.touch ();
-			}
-			
-			classes.get_single_position_pairs ((left, right, kerning) => {
+
+			foreach (string pair in single_pairs) {
 				if (s++ >= scroll) {
 					y += 18;
+					p = pair.split (" - ");
+					return_if_fail (p.length == 2);
 					
-					if (y - 10 <= ey <= y + 5) {
-						l = left;
-						r = right;
-					}				
+					if (y - 10 <= ey <= y + 5) {			
+						l = p[0];
+						r = p[1];
+					}
 				}
-			});
+			}	
+			delete_kerning (l, r);
 			
-			if (l != "" && r != "") {
-				classes.delete_kerning_for_pair (l, r);
-				font.touch ();
-			}
-			
+			update_single_pair_list ();
 			update_scrollbar ();
 			redraw_area (0, 0, allocation.width, allocation.height);
+		}
+	}
+
+	private void delete_kerning (string left, string right) {
+		double kerning = 0;
+		GlyphRange glyph_range_first, glyph_range_next;
+		KerningClasses classes = KerningClasses.get_instance ();
+		Font font = BirdFont.get_current_font ();
+		string l, r;
+		int class_index = -1;
+		
+		l = GlyphRange.unserialize (left);
+		r = GlyphRange.unserialize (right);
+		
+		try {
+			if (left != "" && right != "") {
+				
+				if (l.char_count () > 1 || r.char_count () > 1) {
+					glyph_range_first = new GlyphRange ();
+					glyph_range_next = new GlyphRange ();
+					
+					glyph_range_first.parse_ranges (left);
+					glyph_range_next.parse_ranges (right);
+					
+					kerning = classes.get_kerning_for_range (glyph_range_first, glyph_range_next);
+					class_index = classes.get_kerning_item_index (glyph_range_first, glyph_range_next);
+					
+					classes.delete_kerning_for_class (left, right);
+				} else {
+					kerning = classes.get_kerning (left, right);
+					classes.delete_kerning_for_pair (left, right);
+				}
+				
+				undo_items.add (new UndoItem (left, right, kerning, class_index));
+				font.touch ();
+			}
+		} catch (MarkupError e) {
+			warning (e.message);
 		}
 	}
 
@@ -183,6 +242,7 @@ public class KerningList : FontDisplay {
 	}
 
 	public override void selected_canvas () {
+		update_single_pair_list ();
 		update_scrollbar ();
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
@@ -208,6 +268,54 @@ public class KerningList : FontDisplay {
 		}
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
+	}
+	
+	public override void undo () {
+		UndoItem ui;
+		KerningClasses classes = KerningClasses.get_instance ();
+		GlyphRange glyph_range_first, glyph_range_next;
+		
+		try {
+			if (undo_items.size == 0) {
+				return;
+			}
+			
+			ui = undo_items.get (undo_items.size - 1);
+			
+			if (ui.first.char_count () > 1 || ui.next.char_count () > 1) {
+				glyph_range_first = new GlyphRange ();
+				glyph_range_next = new GlyphRange ();
+				
+				glyph_range_first.parse_ranges (ui.first);
+				glyph_range_next.parse_ranges (ui.next);
+				
+				classes.set_kerning (glyph_range_first, glyph_range_next, ui.kerning, ui.class_priority);
+			} else {
+				classes.set_kerning_for_single_glyphs (ui.first, ui.next, ui.kerning);
+			}
+			
+			undo_items.remove_at (undo_items.size - 1);
+		} catch (MarkupError e) {
+			warning (e.message);
+		}
+		
+		update_single_pair_list ();
+		update_scrollbar ();
+		redraw_area (0, 0, allocation.width, allocation.height);
+	}
+	
+	private class UndoItem : GLib.Object {
+		public string first;
+		public string next;
+		public double kerning;
+		public int class_priority;
+		
+		public UndoItem (string first, string next, double kerning, int class_priority = -1) {
+			this.first = first;
+			this.next = next;
+			this.kerning = kerning;
+			this.class_priority = class_priority;
+		}
 	}
 }
 

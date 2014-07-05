@@ -126,10 +126,6 @@ public class GlyphRange {
 		parse_range_string (ranges, true);
 	}
 	
-	public void parse_ranges_async (string ranges) throws MarkupError {
-		parse_range_string (ranges, false);
-	}	
-	
 	private void parse_range_string (string ranges, bool sync) throws MarkupError {
 		string[] r;
 				
