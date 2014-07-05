@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-04 20:05+0200\n"
+"POT-Creation-Date: 2014-07-05 13:03+0200\n"
 "PO-Revision-Date: 2014-04-13 10:04+0000\n"
 "Last-Translator: Cédric <cvalmary@yahoo.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -396,7 +396,7 @@ msgstr "Apròchi (Crenatge) :"
 msgid "Close"
 msgstr "Tampar"
 
-#: libbirdfont/KerningList.vala:89
+#: libbirdfont/KerningList.vala:147
 msgid "Kerning Pairs"
 msgstr "Apròchi de paras"
 

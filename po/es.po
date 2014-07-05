@@ -7,438 +7,441 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-05 13:03+0200\n"
-"PO-Revision-Date: 2014-03-29 23:06+0000\n"
-"Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
+"PO-Revision-Date: 2014-05-02 23:19+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: sv\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1396134404.000000\n"
+"X-POOTLE-MTIME: 1399072776.000000\n"
 
 #: libbirdfont/Argument.vala:244
 msgid "Usage"
-msgstr "Användning"
+msgstr "Uso"
 
 #: libbirdfont/Argument.vala:246
 msgid "FILE"
-msgstr "FIL"
+msgstr "ARCHIVO"
 
 #: libbirdfont/Argument.vala:246
 msgid "OPTION"
-msgstr "FLAGGOR"
+msgstr "OPCIÓN"
 
 #: libbirdfont/Argument.vala:248
 msgid "enable Android customizations"
-msgstr "använd inställningar för Android"
+msgstr "Habilitar customización de Android"
 
 #: libbirdfont/Argument.vala:249
 msgid "show coordinate in glyph view"
-msgstr "visa koordinater i redigeringsfönstret"
+msgstr "mostrar coordenada en vista de glifo"
 
 #: libbirdfont/Argument.vala:250
 msgid "exit if a test case fails"
-msgstr "avsluta om ett test misslyckas"
+msgstr "salir si un caso de prueba falla"
 
 #: libbirdfont/Argument.vala:251
 msgid "treat warnings as fatal"
-msgstr "behandla varningar som fel"
+msgstr "tratar avisos como errores fatales"
 
 #: libbirdfont/Argument.vala:252
 msgid "show this message"
-msgstr "visa detta meddelande"
+msgstr "mostrar este mensaje"
 
 #: libbirdfont/Argument.vala:253
 msgid "write a log file"
-msgstr "skriv en loggfil"
+msgstr "escribir en un archivo de registro"
 
 #: libbirdfont/Argument.vala:254
 msgid "enable Machintosh customizations"
-msgstr "använd Machintosh inställningar"
+msgstr "activar personalizaciones de Macintosh"
 
 #: libbirdfont/Argument.vala:255
 msgid "don't translate"
-msgstr "översätt inte"
+msgstr "no traducir"
 
 #: libbirdfont/Argument.vala:256
 msgid "sleep between each command in test suite"
-msgstr "vänta mellan varje test"
+msgstr "pausar entre cada orden en el conjunto de pruebas"
 
 #: libbirdfont/Argument.vala:257
 msgid "run test case"
-msgstr "utför automatisk testning"
+msgstr "ejecutar caso de prueba"
 
 #: libbirdfont/BackgroundSelection.vala:41
 msgid "Backgrounds"
-msgstr "Bakgrunder"
+msgstr "Fondos"
 
 #: libbirdfont/BackgroundTool.vala:36
 msgid "Move, resize and rotate background image"
-msgstr "Flytta, ändra storlek på och rotera bakgrundsbilden"
+msgstr "Mover, redimensionar y girar la imagen de fondo"
 
 #: libbirdfont/BirdFont.vala:20
 msgid "Usage:"
-msgstr "Användning:"
+msgstr "Uso:"
 
 #: libbirdfont/BirdFont.vala:23
 msgid "print this message\n"
-msgstr "skriv ut detta meddelande\n"
+msgstr "imprimir este mensaje\n"
 
 #: libbirdfont/BirdFont.vala:24
 msgid "write files to this directory\n"
-msgstr "skriv filer till denna katalog\n"
+msgstr "escribir los archivos en este directorio\n"
 
 #: libbirdfont/BirdFont.vala:25
 msgid "write svg file\n"
-msgstr "skriv svg-fil\n"
+msgstr "escribir archivo svg\n"
 
 #: libbirdfont/BirdFont.vala:26
 msgid "write ttf and eot files\n"
-msgstr "skriv ttf- och eot-filer\n"
+msgstr "escribir archivos ttf y eot\n"
 
 #: libbirdfont/BirdFont.vala:120
 msgid "Can't find output directory"
-msgstr "Kan inte hitta mappen som filerna ska skrivas till"
+msgstr "No se puede encontrar el directorio de salida"
 
 #: libbirdfont/BirdFontFile.vala:163 libbirdfont/BirdFontFile.vala:193
 #: libbirdfont/BirdFontFile.vala:267
 msgid "Saving"
-msgstr "Sparar"
+msgstr "Guardando"
 
 #: libbirdfont/BirdFontFile.vala:612
 msgid "Loading XML data."
-msgstr "Laddar XML data."
+msgstr "Cargando datos XML"
 
 #: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
-msgstr "Laddar unicode databasen"
+msgstr "Cargando el base de datos de carácteres Unicode"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
-msgstr "Cirkel"
+msgstr "Círculo"
 
 #: libbirdfont/CutBackgroundTool.vala:34
 msgid "Crop background image"
-msgstr "Beskär bakgrundsbild"
+msgstr "Recortar la imagen de fondo"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
 msgid "Default language"
-msgstr "Förvalt språk"
+msgstr "Idioma predeterminado"
 
 #: libbirdfont/DefaultCharactersSet.vala:26
 msgid "Private use area"
-msgstr "Private use area"
+msgstr "Área privada"
 
 #: libbirdfont/DefaultCharactersSet.vala:28
 msgid "Chinese"
-msgstr "Kinesiska"
+msgstr "Chino"
 
 #: libbirdfont/DefaultCharactersSet.vala:29
 msgid "English"
-msgstr "Engelska"
+msgstr "Inglés"
 
 #: libbirdfont/DefaultCharactersSet.vala:30
 msgid "Greek"
-msgstr "Grekiska"
+msgstr "Griego"
 
 #: libbirdfont/DefaultCharactersSet.vala:31
 msgid "Japanese"
-msgstr "Japanska"
+msgstr "Japonés"
 
 #: libbirdfont/DefaultCharactersSet.vala:32
 msgid "Javanese"
-msgstr "Javanesiska"
+msgstr "Javanés"
 
 #: libbirdfont/DefaultCharactersSet.vala:33
 msgid "Russian"
-msgstr "Ryska"
+msgstr "Ruso"
 
 #: libbirdfont/DefaultCharactersSet.vala:34
 msgid "Swedish"
-msgstr "Svenska"
+msgstr "Sueco"
 
 #. / All lower case letters in alphabetic order separated by space
 #: libbirdfont/DefaultCharactersSet.vala:112
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö"
+msgstr "a b c d e f g h i j k l m n ñ o p q r s t u v w x y z"
 
 #. / All upper case letters in alphabetic order separated by space
 #: libbirdfont/DefaultCharactersSet.vala:115
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö"
+msgstr "A B C D E F G H I J K L M N Ñ O P Q R S T U V W X Y Z"
 
 #: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1216
 msgid "Description"
-msgstr "Beskrivning"
+msgstr "Descripción"
 
 #: libbirdfont/DrawingTools.vala:130
 msgid "Create quadratic Bézier curves"
-msgstr "Skapa kvadratiska Bézier slingor"
+msgstr "Crear curvas cuadráticas de Bézier"
 
 #: libbirdfont/DrawingTools.vala:139
 msgid "Create cubic Bézier curves"
-msgstr "Skapa kubiska Bézier slingor"
+msgstr "Crear curvas cúbicas de Bézier"
 
 #: libbirdfont/DrawingTools.vala:148
 msgid "Quadratic path with two line handles"
-msgstr "Kvadratisk slinga med två linjehandtag"
+msgstr "Ruta cuadrática con dos asas de línea"
 
 #: libbirdfont/DrawingTools.vala:157
 msgid "Convert selected points"
-msgstr "Konvertera markerade punkter"
+msgstr "Convertir los puntos seleccionados"
 
 #: libbirdfont/DrawingTools.vala:167 libbirdfont/DrawingTools.vala:645
 msgid "Stroke width"
-msgstr "Linjebredd"
+msgstr "Anchura del trazo"
 
 #: libbirdfont/DrawingTools.vala:190
 msgid "Tie curve handles for the selected edit point"
-msgstr "Knyt handtagen för den markerade kontrollpunkten"
+msgstr "Ligar asas de curva para el punto de edición seleccionado"
 
 #: libbirdfont/DrawingTools.vala:226
 msgid "Symmetrical handles"
-msgstr "Symmetriska handtag"
+msgstr "Manivela simétrica"
 
 #: libbirdfont/DrawingTools.vala:248
 msgid "Convert segment to line."
-msgstr "Konvertera segmentet till linje."
+msgstr "Convertir segmento en línea"
 
 #: libbirdfont/DrawingTools.vala:266
 msgid "Create counter from outline"
-msgstr "Skapa insida från kontur"
+msgstr "Crear un mostrador del contorno. "
 
 #: libbirdfont/DrawingTools.vala:278
 msgid "Move to path to the bottom layer"
-msgstr "Flytta slingan till bottenlagret"
+msgstr "Mover al trayecto de la capa inferior"
 
 #: libbirdfont/DrawingTools.vala:289
 msgid "Flip path vertically"
-msgstr "Vänd slingan vertikalt"
+msgstr "Voltear la imagen verticalmente"
 
 #: libbirdfont/DrawingTools.vala:296
 msgid "Flip path horizontally"
-msgstr "Vänd slingan horisontellt"
+msgstr "Voltear la imagen horizontalmente"
 
 #: libbirdfont/DrawingTools.vala:304
 msgid "Show full unicode characters set"
-msgstr "Visa alla unicodetecken"
+msgstr "Mostrar conjunto de caracteres Unicode completo"
 
 #: libbirdfont/DrawingTools.vala:320
 msgid "Show default characters set"
-msgstr "Visa förvald teckenkodning"
+msgstr "Mostrar conjunto de caracteres predeterminado"
 
 #: libbirdfont/DrawingTools.vala:336
 msgid "Show all characters in the font"
-msgstr "Visa alla typsnittets tecken"
+msgstr "Mostrar todos los caracteres en la tipografía"
 
 #: libbirdfont/DrawingTools.vala:350
 msgid "Delete selected glyph"
-msgstr "Radera markerade tecken"
+msgstr "Eliminar el glifo seleccionado"
 
 #: libbirdfont/DrawingTools.vala:405
 msgid "Show guidelines"
-msgstr "Visa stödlinjer"
+msgstr "Mostrar líneas de guía"
 
 #: libbirdfont/DrawingTools.vala:416
 msgid "Show guidelines for x-height and baseline"
-msgstr "Visa stödlinjer för x-höjd och baslinje"
+msgstr "Mostrar líneas guía para altura x y línea de base"
 
 #: libbirdfont/DrawingTools.vala:430
 msgid "Show guidelines at top and bottom margin"
-msgstr "Visa stödlinjer för botten- och toppmarginaler"
+msgstr "Mostrar líneas guía en los márgenes sup. e inf."
 
 #: libbirdfont/DrawingTools.vala:448
 msgid "Zoom in"
-msgstr "Zooma in"
+msgstr "Ampliar"
 
 #: libbirdfont/DrawingTools.vala:455
 msgid "Zoom out"
-msgstr "Zooma ut"
+msgstr "Reducir"
 
 #: libbirdfont/DrawingTools.vala:462
 msgid "Use one pixel per unit"
-msgstr "Använd en pixel per enhet"
+msgstr "Usar un pixel por unidad."
 
 #: libbirdfont/DrawingTools.vala:470
 msgid "Show full glyph"
-msgstr "Visa hela"
+msgstr "Mostrar el glifo completo"
 
 #: libbirdfont/DrawingTools.vala:477
+#, fuzzy
 msgid "Zoom in on region boundaries"
-msgstr "Anpassa visningen till stödlinjerna"
+msgstr "Ampliar a los límites de la región"
 
 #: libbirdfont/DrawingTools.vala:484
+#, fuzzy
 msgid "Zoom in on background image"
-msgstr "Visa hela bakgrundsbilden"
+msgstr "Ampliar la imagen de fondo"
 
 #: libbirdfont/DrawingTools.vala:497
 msgid "Previous view"
-msgstr "Föregående vy"
+msgstr "Vista anterior"
 
 #: libbirdfont/DrawingTools.vala:503
 msgid "Next view"
-msgstr "Nästa vy"
+msgstr "Siguiente vista"
 
 #: libbirdfont/DrawingTools.vala:523
 msgid "Set size for background image"
-msgstr "Ställ in storleken på bakgrundsbilden"
+msgstr "Establecer el tamaño de la imagen de fondo"
 
 #: libbirdfont/DrawingTools.vala:560
 msgid "Show/hide background image"
-msgstr "Visa/dölj bakgrundsbilden"
+msgstr "Mostrar/ocultar imagen de fondo"
 
 #: libbirdfont/DrawingTools.vala:571
 msgid "Insert a new background image"
-msgstr "Lägg till en ny bakgrundsbild"
+msgstr "Insertar una imagen de fondo nueva"
 
 #: libbirdfont/DrawingTools.vala:579
 msgid "Creating thumbnails"
-msgstr "Skapar miniatyrbilder"
+msgstr "Creando las miniaturas"
 
 #: libbirdfont/DrawingTools.vala:598
 msgid "Set contrast for background image"
-msgstr "Ställ in bakgrundsbildens kontrast"
+msgstr "Establecer el contraste para la imagen de fondo"
 
 #: libbirdfont/DrawingTools.vala:620
 msgid "Stroke color"
-msgstr "Linjefärg"
+msgstr "Color del trazo"
 
 #: libbirdfont/DrawingTools.vala:667
 msgid "Handle color"
-msgstr "Handtagsfärg"
+msgstr "Color del asa"
 
 #: libbirdfont/DrawingTools.vala:690
 msgid "Set precision"
-msgstr "Ställ in precision"
+msgstr "Establecer la precisión"
 
 #: libbirdfont/DrawingTools.vala:717
 msgid "Show all control point handles or only handles for the selected points."
-msgstr "Visa handtag för alla punkter eller endast för de markerade punkterna."
+msgstr ""
+"Mostrar todos los puntos de control de las asas o solo las asas para los "
+"puntos seleccionados."
 
 #: libbirdfont/DrawingTools.vala:726
 msgid "Object color"
-msgstr "Objektfärg"
+msgstr "Color del objeto"
 
 #: libbirdfont/DrawingTools.vala:747
 msgid "Set fill color for open paths."
-msgstr "Välj fyllnadsfärg för öppna slingor."
+msgstr "Establecer color de relleno para rutas abiertas."
 
 #: libbirdfont/DrawingTools.vala:755
 msgid "Use TTF units."
-msgstr "Använd TTF enheter."
+msgstr "Usar unidades TTF."
 
 #: libbirdfont/DrawingTools.vala:762
 msgid "Adjust the number of samples per point in the freehand tool."
 msgstr ""
-"Ställ in antal punkter som ska läggas till för en slinga som ritas på fri "
-"hand."
+"Ajustar el numero de ejemplos por punto en la herramienta de mano alzada."
 
 #: libbirdfont/DrawingTools.vala:782
 msgid "Delay response for editing tools"
-msgstr "Lägg till fördröjning på redigeringsverktygen"
+msgstr "Retrasar la respuesta para las herramientas de edición"
 
 #: libbirdfont/DrawingTools.vala:1040
 msgid "Set size for grid"
-msgstr "Ställ in storleken på rutmönstret"
+msgstr "Establecer el tamaño de la cuadrícula"
 
 #: libbirdfont/ExportTool.vala:522
 msgid "Writing TTF and EOT files."
-msgstr "Skriver TTF och EOT filer."
+msgstr "Escribiendo archivos TTF y EOT."
 
 #: libbirdfont/ExportTool.vala:536
 msgid "Writing SVG file."
-msgstr "Skriver SVG fil."
+msgstr "Escribiendo archivo SVG."
 
 #: libbirdfont/FileTab.vala:224
 msgid "No fonts created yet."
-msgstr "Ingen font är skapad än."
+msgstr "No se han creado fuentes aún."
 
 #: libbirdfont/FileTab.vala:233
 msgid "Recent files"
-msgstr "Senast använda filer"
+msgstr "Archivos recientes"
 
 #: libbirdfont/FileTab.vala:257
 msgid "Backup"
-msgstr "Säkerhetskopior"
+msgstr "Copia de seguridad"
 
 #: libbirdfont/FileTab.vala:320
 msgid "Files"
-msgstr "Filer"
+msgstr "Archivos"
 
 #: libbirdfont/GridTool.vala:35
 msgid "Show grid"
-msgstr "Visa rutnät"
+msgstr "Mostrar cuadrícula"
 
 #: libbirdfont/KerningDisplay.vala:44 libbirdfont/KerningDisplay.vala:713
 msgid "Kerning"
-msgstr "Kerning"
+msgstr "Acoplamiento"
 
 #: libbirdfont/KerningDisplay.vala:64
 msgid "The current kerning class is malformed."
-msgstr "Klassen är inte i rätt format."
+msgstr "La clase de acoplamiento actual tiene un formato incorrecto."
 
 #: libbirdfont/KerningDisplay.vala:65
 msgid "Add single characters separated by space and ranges on the form A-Z."
 msgstr ""
-"Lägg till enstaka tecken separerade av mellanslag och sekvenser av tecken på "
-"formen A-Z."
+"Añada carácteres separados por espacios y que oscilan entre la A y la Z."
 
 #: libbirdfont/KerningDisplay.vala:66
 msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr ""
-"Skriv ”space” för att justera avståndet mot mellanslag och ”divis” för att "
-"justera avståndet mot -."
+"Mecanografiar \"espacio\" para crear carácter espacio y \"divis\" para crear "
+"-.  "
 
 #: libbirdfont/KerningDisplay.vala:244
 msgid "Kerning:"
-msgstr "Kerning:"
+msgstr "Acoplamiento:"
 
 #: libbirdfont/KerningDisplay.vala:713 libbirdfont/MainWindow.vala:137
 #: libbirdfont/SpinButton.vala:138
 msgid "Close"
-msgstr "Stäng"
+msgstr "Cerrar"
 
 #: libbirdfont/KerningList.vala:147
 msgid "Kerning Pairs"
-msgstr "Kerning par"
+msgstr "Pares de acoplamiento"
 
 #: libbirdfont/KerningRange.vala:50
 msgid ""
 "Right click to edit the class and left click to kern glyphs in the class."
 msgstr ""
-"Högerklicka för att redigera klassen och vänsterklicka för att justera "
-"avståndet för de tecken som ingår i klassen."
+"Clic derecho para editar la clase y clic izquierdo para el kern de los "
+"glifos en la clase"
 
 #: libbirdfont/KerningRange.vala:79
 msgid "Kerning class"
-msgstr "Kerning klass"
+msgstr "Clase de acoplamiento"
 
 #: libbirdfont/KerningRange.vala:79 libbirdfont/SpinButton.vala:138
 msgid "Set"
-msgstr "Lägg till"
+msgstr "Definir"
 
 #: libbirdfont/KerningTools.vala:35
+#, fuzzy
 msgid "Create new kerning class."
-msgstr "Skapa en ny kerning klass."
+msgstr "Crear clase de acoplamiento nueva"
 
 #: libbirdfont/KerningTools.vala:42
 msgid "Use text input to enter kerning values."
-msgstr "Använd täxtfältet för att lägga till kerning värden."
+msgstr ""
 
 #: libbirdfont/KerningTools.vala:49
 #, fuzzy
 msgid "Font size"
-msgstr "Teckenstorlek"
+msgstr "Tamaño de fuente"
 
 #: libbirdfont/KerningTools.vala:74
 msgid "Font size "
-msgstr "Teckenstorlek"
+msgstr "Tamaño de fuente"
 
 #: libbirdfont/LanguageSelectionTab.vala:92
 msgid "Character Set"
-msgstr "Teckenuppsättning"
+msgstr "Conjunto de caracteres"
 
 #: libbirdfont/LigatureList.vala:81
 msgid "Ligatures"
@@ -446,621 +449,532 @@ msgstr ""
 
 #: libbirdfont/MainWindow.vala:137
 msgid "Glyph sequence"
-msgstr "Teckensekvens"
+msgstr "Secuencia de glifos"
 
 #: libbirdfont/MenuTab.vala:65
 msgid "Menu"
-msgstr "Meny"
+msgstr "Menú"
 
 #: libbirdfont/MenuTab.vala:99 libbirdfont/MenuTab.vala:187
 #: libbirdfont/SaveDialogListener.vala:28
 msgid "Save"
-msgstr "Spara"
+msgstr "Guardar"
 
 #: libbirdfont/MenuTab.vala:278
 msgid "Open"
-msgstr "Öppna"
+msgstr "Abrir"
 
 #: libbirdfont/MoveTool.vala:37
 msgid "Move paths"
-msgstr "Flytta objekt"
+msgstr "Mover los trayectos"
 
 #: libbirdfont/OverView.vala:116
 msgid "Search"
-msgstr "Sök"
+msgstr "Buscar (verbo) / Búsqueda (nombre)"
 
 #: libbirdfont/OverView.vala:116
 msgid "Filter"
-msgstr "Filtrera"
+msgstr "Filtro"
 
 #: libbirdfont/OverView.vala:241
 msgid "Overview"
-msgstr "Översikt"
+msgstr "Vista general"
 
 #: libbirdfont/OverView.vala:384
 msgid "No glyphs in this view."
-msgstr "Inga tecken att visa."
+msgstr "No hay glifos en esta vista."
 
 #: libbirdfont/OverView.vala:923
 msgid "See also:"
-msgstr "Se även:"
+msgstr "Ver también:"
 
 #: libbirdfont/OverWriteDialogListener.vala:30
 msgid "Overwrite TTF file?"
-msgstr "Skriv över TTF filen?"
+msgstr "Sobreescribir archivo TTF"
 
 #: libbirdfont/OverWriteDialogListener.vala:31
 msgid "Overwrite"
-msgstr "Skriv över"
+msgstr "Sobreescribir"
 
 #: libbirdfont/OverWriteDialogListener.vala:32
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Cancelar"
 
 #: libbirdfont/OverWriteDialogListener.vala:33
 msgid "Yes, don't ask again."
-msgstr "Ja, fråga inte igen."
+msgstr "Si, no preguntar de nuevo"
 
 #: libbirdfont/PenTool.vala:77
 msgid "Add new points"
-msgstr "Lägg till nya punkter"
+msgstr "Añadir nuevos puntos."
 
 #: libbirdfont/PointTool.vala:24
 msgid "Move control points"
-msgstr "Flytta kontrollpunkter"
+msgstr "Mover los puntos de control"
 
 #: libbirdfont/Preview.vala:27
 msgid "Preview"
-msgstr "Förhandsgranska"
+msgstr "Previsualizar"
 
 #: libbirdfont/PreviewTools.vala:26
 msgid "Reload webview"
-msgstr "Uppdatera webbvyn"
+msgstr "Volver a cargar vista Web"
 
 #: libbirdfont/PreviewTools.vala:32
 msgid "Export fonts"
-msgstr "Exportera fonter"
+msgstr "Exportar fuentes."
 
 #: libbirdfont/PreviewTools.vala:38
 msgid "Generate html document"
-msgstr "Skapa html dokument"
+msgstr "Generar documento html"
 
 #: libbirdfont/PreviewTools.vala:67
 msgid "Three font files have been created."
-msgstr "Tre fonter har skapats."
+msgstr "Tres archivos de fuentes fueron creados"
 
 #: libbirdfont/RectangleTool.vala:30
 msgid "Rectangle"
-msgstr "Rektangel"
+msgstr "Rectángulo"
 
 #: libbirdfont/ResizeTool.vala:39
 msgid "Resize and rotate paths"
-msgstr "Ändra storlek på och rotera slingor"
+msgstr "Redimensionar y rotar las imágenes"
 
 #: libbirdfont/SaveDialogListener.vala:27
 msgid "Save?"
-msgstr "Spara?"
+msgstr "¿Guardar?"
 
 #: libbirdfont/SaveDialogListener.vala:29
 msgid "Discard"
-msgstr "Spara inte"
+msgstr "Descartar"
 
 #: libbirdfont/SvgParser.vala:39
 msgid "Import"
-msgstr "Importera"
+msgstr "Importar"
 
 #: libbirdfont/TrackTool.vala:61
 msgid "Freehand drawing"
-msgstr "Rita på fri hand"
+msgstr "Dibujo a mano alzada"
 
 #: libbirdfont/VersionList.vala:30
 msgid "New version"
-msgstr "Ny version"
+msgstr "Versión nueva"
 
 #: libbirdfont/VersionList.vala:192 birdfont/GtkWindow.vala:1209
 msgid "Version"
-msgstr "Version"
+msgstr "Versión"
 
 #: birdfont/GtkWindow.vala:424
 msgid "_New"
-msgstr "_Ny"
+msgstr "_Nuevo"
 
 #: birdfont/GtkWindow.vala:429
 msgid "_Open"
-msgstr "_Öppna"
+msgstr "_Abrir"
 
 #: birdfont/GtkWindow.vala:434
 msgid "_Recent Files"
-msgstr "S_enast använda filer"
+msgstr "_Archivos Recientes"
 
 #: birdfont/GtkWindow.vala:443
 msgid "Save _as"
-msgstr "Spara so_m"
+msgstr "Guardar _como"
 
 #: birdfont/GtkWindow.vala:447
 msgid "_Export"
-msgstr "_Exportera"
+msgstr "_Exportar"
 
 #: birdfont/GtkWindow.vala:452
 msgid "_Preview"
-msgstr "_Förhandsgranska"
+msgstr "_Previsualizar"
 
 #: birdfont/GtkWindow.vala:457
 msgid "Name and _Description"
-msgstr "Namn och _beskrivning"
+msgstr "Nombre y _Descripción"
 
 #: birdfont/GtkWindow.vala:461
 msgid "Select _Character Set"
-msgstr "Välj _teckentabell"
+msgstr "Seleccionar_Kit de Carácteres"
 
 #: birdfont/GtkWindow.vala:465
 msgid "_Quit"
-msgstr "_Avsluta"
+msgstr "_Salir"
 
 #: birdfont/GtkWindow.vala:470
 msgid "_Undo"
-msgstr "_Ångra"
+msgstr "_Deshacer"
 
 #: birdfont/GtkWindow.vala:475
 msgid "_Copy"
-msgstr "_Kopiera"
+msgstr "_Copiar"
 
 #: birdfont/GtkWindow.vala:480
 msgid "_Paste"
-msgstr "Klistra _in"
+msgstr "_Pegar"
 
 #: birdfont/GtkWindow.vala:485
 msgid "Paste _In Place"
-msgstr "Klistra in på _plats"
+msgstr "Pegar _en el sitio"
 
 #: birdfont/GtkWindow.vala:490
 msgid "Select All Pa_ths"
-msgstr "_Markera alla slingor"
+msgstr "Seleccionar todos los trayectos"
 
 #: birdfont/GtkWindow.vala:497
 msgid "_Search"
-msgstr "_Sök"
+msgstr "_Buscar"
 
 #: birdfont/GtkWindow.vala:502
+#, fuzzy
 msgid "_Export Glyph as SVG"
-msgstr "_Exportera tecken som SVG"
+msgstr "_Exportar glifo como SVG"
 
 #: birdfont/GtkWindow.vala:506
 msgid "_Import SVG"
-msgstr "_Importera SVG"
+msgstr "_Importar SVG"
 
 #: birdfont/GtkWindow.vala:511
 msgid "Close _Path"
-msgstr "Stäng _slinga"
+msgstr "Cerrar _Trazo"
 
 #: birdfont/GtkWindow.vala:516
 msgid "_Glyph Sequence"
-msgstr "_Teckensekvens"
+msgstr "_Secuencia de glifos"
 
 #: birdfont/GtkWindow.vala:521
 msgid "Set Glyph _Background"
-msgstr "Använd tecken som _bakgrund"
+msgstr "Establecer glifo_fondo"
 
 #: birdfont/GtkWindow.vala:525
 msgid "_Remove Glyph Background"
-msgstr "_Ta bort bakgrundstecknet"
+msgstr "_Quitar fondo del glifo"
 
 #: birdfont/GtkWindow.vala:531
+#, fuzzy
 msgid "_Select Point Above"
-msgstr "Välj punkten _ovanför"
+msgstr "_Seleccionar el punto arriba"
 
 #: birdfont/GtkWindow.vala:535
+#, fuzzy
 msgid "Select _Next Point"
-msgstr "Välj punkten till _höger"
+msgstr "Seleccionar _el siguiente punto"
 
 #: birdfont/GtkWindow.vala:539
 msgid "Select _Previous Point"
-msgstr "Välj punkten till _vänster"
+msgstr "Seleccionar _el punto anterior"
 
 #: birdfont/GtkWindow.vala:543
 msgid "Select Point _Below"
-msgstr "Välj punkten _nedanför"
+msgstr "Seleccionar el punto _abajo"
 
 #: birdfont/GtkWindow.vala:548
 msgid "_Next Tab"
-msgstr "_Nästa flik"
+msgstr "_Siguiente pestaña"
 
 #: birdfont/GtkWindow.vala:561
+#, fuzzy
 msgid "_Previous Tab"
-msgstr "_Föregående flik"
+msgstr "_Pestaña anterior"
 
 #: birdfont/GtkWindow.vala:574
 msgid "_Close tab"
-msgstr "_Stäng flik"
+msgstr "_Cerrar pestaña"
 
 #: birdfont/GtkWindow.vala:588
 msgid "Close _All Tabs"
-msgstr "Stäng _alla flikar"
+msgstr "Cerrar _todas las pestañas"
 
 #: birdfont/GtkWindow.vala:596
 msgid "_Create Path"
-msgstr "Skapa _kontur"
+msgstr "_Crear un trayecto"
 
 #: birdfont/GtkWindow.vala:603
 msgid "_Zoom"
-msgstr "_Zoom"
+msgstr "_Ampliación"
 
 #: birdfont/GtkWindow.vala:609
 msgid "_Create Counter Path"
-msgstr "Skapa _insida"
+msgstr "_Crear trayecto inverso"
 
 #: birdfont/GtkWindow.vala:616
 msgid "_Move"
-msgstr "_Flytta"
+msgstr "_Mover"
 
 #: birdfont/GtkWindow.vala:623
+#, fuzzy
 msgid "Show _full unicode characters set"
-msgstr "Visa alla _unicode tecken"
+msgstr "Mostrar _conjunto completo de caracteres de unicode "
 
 #: birdfont/GtkWindow.vala:630
+#, fuzzy
 msgid "Show De_fault Characters Set"
-msgstr "Visa _svenska tecken"
+msgstr "Mostrar el juego de caracteres por defecto"
 
 #: birdfont/GtkWindow.vala:637
+#, fuzzy
 msgid "Show Characters in Font"
-msgstr "Visa alla typsnittets tecken"
+msgstr "Mostrar todos los caracteres en la tipografía"
 
 #: birdfont/GtkWindow.vala:644
 msgid "Add New _Grid Item"
-msgstr "Lägg till storlek för nytt _rutnät"
+msgstr "Añadir nuevo item Grid"
 
 #: birdfont/GtkWindow.vala:650
 msgid "Remove Gr_id Item"
-msgstr "Ta bort storlek för rut_nätet"
+msgstr "Quitar item Grid"
 
 #: birdfont/GtkWindow.vala:656
 msgid "_Zoom In"
-msgstr "_Zooma in"
+msgstr "_Ampliar zoom"
 
 #: birdfont/GtkWindow.vala:663
 msgid "Zoom _Out"
-msgstr "Zooma _ut"
+msgstr "_Reducir"
 
 #: birdfont/GtkWindow.vala:670
 msgid "U_se One Pixel Per Unit"
-msgstr "_Använd en pixel per enhet"
+msgstr "U_sar un pixel por unidad"
 
 #: birdfont/GtkWindow.vala:678
+#, fuzzy
 msgid "Show Kerning _Tab"
-msgstr "Visa kerning _flik"
+msgstr "Mostrar_ pestaña de kerning"
 
 #: birdfont/GtkWindow.vala:685
 msgid "_List Kerning Pairs"
-msgstr "_Lista alla kerning par"
+msgstr "_Enumerar los pares de kerning"
 
 #: birdfont/GtkWindow.vala:691
 msgid "_Remove All Kerning Pairs"
-msgstr "_Ta bort alla kerning par"
+msgstr "_Eliminar todos los pares de kerning"
 
 #: birdfont/GtkWindow.vala:699
+#, fuzzy
 msgid "Select _Next Kerning Pair"
-msgstr "Välj _nästa kerning par"
+msgstr "Seleccionar _el siguiente par de \"kerning\""
 
 #: birdfont/GtkWindow.vala:703
 msgid "Select _Previous Kerning Pair"
-msgstr "Välj _föregående kerning par"
+msgstr "Seleccionar _el anterior par de \"kerning\""
 
 #: birdfont/GtkWindow.vala:708
 #, fuzzy
 msgid "_Save as .bfp"
-msgstr "Spara som"
+msgstr "Guardar como"
 
 #: birdfont/GtkWindow.vala:715
 #, fuzzy
 msgid "_Show Ligatures"
-msgstr "Visa stödlinjer"
+msgstr "Mostrar líneas de guía"
 
 #: birdfont/GtkWindow.vala:722
 msgid "_File"
-msgstr "_Arkiv"
+msgstr "_Archivo"
 
 #: birdfont/GtkWindow.vala:725
 msgid "_Edit"
-msgstr "_Redigera"
+msgstr "_Editar"
 
 #: birdfont/GtkWindow.vala:728
 msgid "_Tab"
-msgstr "_Flik"
+msgstr "_Pestaña"
 
 #: birdfont/GtkWindow.vala:731
 msgid "T_ool"
-msgstr "_Verktyg"
+msgstr "_Herramienta"
 
 #: birdfont/GtkWindow.vala:734
 msgid "_Kerning"
-msgstr "_Kerning"
+msgstr "_Interletraje"
 
 #: birdfont/GtkWindow.vala:1153
 msgid "PostScript Name"
-msgstr "PostScript namn"
+msgstr "Nombre de PostScript"
 
 #: birdfont/GtkWindow.vala:1160
 msgid "Name"
-msgstr "Namn"
+msgstr "Nombre"
 
 #: birdfont/GtkWindow.vala:1167
 msgid "Style"
-msgstr "Stil"
+msgstr "Estilo"
 
 #: birdfont/GtkWindow.vala:1173
 msgid "Bold"
-msgstr "Fet"
+msgstr "Negrita"
 
 #: birdfont/GtkWindow.vala:1188
 msgid "Weight"
-msgstr "Linjebredd"
+msgstr "Peso"
 
 #: birdfont/GtkWindow.vala:1195
 msgid "Full name (name and style)"
-msgstr "Hela namnet (namn och stil)"
+msgstr "Nombre completo (nombre y estilo)"
 
 #: birdfont/GtkWindow.vala:1202
 msgid "Unique identifier"
-msgstr "Unik identifierare"
+msgstr "Identificador único"
 
 #: birdfont/GtkWindow.vala:1224
 msgid "Copyright"
-msgstr "Upphovsrätt"
+msgstr "Copyright"
 
 #~ msgid "Merge paths"
-#~ msgstr "Sammanfoga slingor"
-
-#~ msgid "Zoom in on region boundries"
-#~ msgstr "Visa avgränsningar"
+#~ msgstr "Unir los trayectos"
 
 #~ msgid "Right click or use left command key and click to add new points"
 #~ msgstr ""
-#~ "Högerklicka eller använd vänster kommandotangent för att lägga till nya "
-#~ "punkter"
+#~ "Clic derecho o use la tecla de comando izquierda y haga clic para añadir "
+#~ "puntos"
 
 #~ msgid "Right click to add new points, left click to move points"
 #~ msgstr ""
-#~ "Högerklicka för att lägga till nya punkter, vänsterklicka för att flytta "
-#~ "punkter"
+#~ "Haga clic derecho para añadir puntos nuevos, y clic izquierdo para mover "
+#~ "los puntos"
 
 #~ msgid "and double click to add new point on path."
-#~ msgstr "och dubbelklicka för att lägga till ny punkt på slingan."
+#~ msgstr "y haga doble clic para añadir un punto o trayecto nuevos."
 
 #~ msgid "Zoom to scale 1:1"
-#~ msgstr "Visa i skala 1:1"
+#~ msgstr "Restablecer a escala 1:1"
 
 #~ msgid "Zoom in at region boundries"
-#~ msgstr "Visa avgränsningar"
+#~ msgstr "Ampliar a los límites de la región"
 
 #~ msgid "Zoom in background image"
-#~ msgstr "Visa hela bakgrundsbilden"
+#~ msgstr "Ampliar la imagen de fondo"
 
 #~ msgid "Create new kerning class"
-#~ msgstr "Skapa en ny kerning klass"
+#~ msgstr "Crear clase de acoplamiento nueva"
 
+#, fuzzy
 #~ msgid "Zoom to _Scale 1:1"
-#~ msgstr "Visa i skala _1:1"
+#~ msgstr "Seleccionar zoon en escala 1:1"
 
 #~ msgid "_Save"
-#~ msgstr "_Spara"
+#~ msgstr "_Guardar"
 
 #~ msgid "Italic"
-#~ msgstr "Kursiv"
+#~ msgstr "Cursiva"
 
 #~ msgid "exit if a test case failes"
-#~ msgstr "avsluta om ett test misslyckas"
-
-#~ msgid "Resize paths"
-#~ msgstr "Ändra storlek på slingor"
-
-#~ msgid "Postscript Name"
-#~ msgstr "PostScript namn"
+#~ msgstr "salir si un caso de prueba falla"
 
 #~ msgid "Writing"
-#~ msgstr "Skriver"
+#~ msgstr "Escribiendo"
 
 #~ msgid "Postscript name"
-#~ msgstr "Postscript namn"
+#~ msgstr "Nombre de Postscript"
 
 #~ msgid "Character set"
-#~ msgstr "Teckenuppsättning"
+#~ msgstr "Juego de caracteres"
 
 #~ msgid "Select default character set"
-#~ msgstr "Visa standard tecken"
+#~ msgstr "Seleccionar conjunto de caracteres predeterminado"
 
 #~ msgid "Recover"
-#~ msgstr "Återställ"
+#~ msgstr "Recuperar"
 
 #~ msgid "Delete all"
-#~ msgstr "Radera alla"
+#~ msgstr "Borrar todo"
 
 #~ msgid "Full name (name & style)"
-#~ msgstr "Hela namnet (namn & stil)"
-
-#~ msgid "New font"
-#~ msgstr "Nytt typsnitt"
+#~ msgstr "Nombre completo (nombre y estilo)"
 
 #~ msgid "Export"
-#~ msgstr "Exportera"
+#~ msgstr "Exportar"
 
 #~ msgid "Update name & description"
-#~ msgstr "Uppdatera namn & beskrivning"
-
-#~ msgid "Create a new font"
-#~ msgstr "Skapa ett nytt typsnitt"
-
-#~ msgid "Add name and description to this font."
-#~ msgstr "Lägg till namn och beskrivning för det här typsnittet."
+#~ msgstr "Actualizar nombre y descripción"
 
 #~ msgid "Preferences"
-#~ msgstr "Inställningar"
+#~ msgstr "Preferencias"
 
 #~ msgid "Export SVG, TTF & EOT fonts"
-#~ msgstr "Exportera SVG, TTF & EOT filer"
+#~ msgstr "Exportar tipografías SVG, TTF y EOT"
 
 #~ msgid "Export SVG font and view the result"
-#~ msgstr "Exportera SVG-typsnitt och visa resultatet"
-
-#~ msgid ""
-#~ "The loaded font can be overwritten if you choose to continue with preview."
-#~ msgstr ""
-#~ "Den öppna fonten kan komma att skrivas över om du fortsätter till "
-#~ "förhandsgranskningen."
+#~ msgstr "Exportar tipografía SVG y ver el resultado"
 
 #~ msgid "Continue"
-#~ msgstr "Fortsätt"
+#~ msgstr "Continuar"
 
 #~ msgid "Continue and don't ask me again."
-#~ msgstr "Fortsätt och fråga inte igen."
+#~ msgstr "Continuar y no preguntarme de nuevo."
 
 #~ msgid "Use left command key (⌘) + click to add new points"
-#~ msgstr ""
-#~ "Använd vänster Command tangent (⌘) + klicka för att lägga till punkter"
+#~ msgstr "Use la tecla Comando (⌘) + clic para añadir puntos nuevos"
 
 #~ msgid "Show all characters in font"
-#~ msgstr "Visa alla typsnittets tecken"
+#~ msgstr "Mostrar todos los caracteres en la tipografía"
 
 #~ msgid "_Description"
-#~ msgstr "_Beskrivning"
+#~ msgstr "_Descripción"
 
 #~ msgid "_Select all paths"
-#~ msgstr "_Markera alla slingor"
+#~ msgstr "_Seleccionar todos los trayectos"
 
 #~ msgid "_Export glyph as SVG"
-#~ msgstr "_Exportera tecken som SVG"
+#~ msgstr "_Exportar glifo como SVG"
 
 #~ msgid "Close _path"
-#~ msgstr "Stäng _slinga"
+#~ msgstr "Cerrar el _trayecto"
 
 #~ msgid "_Select point above"
-#~ msgstr "Markera punkten _ovanför"
+#~ msgstr "_Seleccionar el punto encima"
 
 #~ msgid "Select _next point"
-#~ msgstr "Markera punkten till _höger"
+#~ msgstr "Seleccionar el _siguiente punto"
 
 #~ msgid "Select _previous point"
-#~ msgstr "Markera punkten till _vänster"
+#~ msgstr "Seleccionar el punto _anterior"
 
 #~ msgid "Select point _below"
-#~ msgstr "Markera punkten _nedanför"
+#~ msgstr "Seleccionar el punto _debajo"
 
 #~ msgid "_Next tab"
-#~ msgstr "_Nästa flik"
+#~ msgstr "_Siguiente pestaña"
 
 #~ msgid "_Previous tab"
-#~ msgstr "_Föregående flik"
+#~ msgstr "_Pestaña anterior"
 
 #~ msgid "Close _all tabs"
-#~ msgstr "Stäng _alla flikar"
+#~ msgstr "Cerrar _todas las pestañas"
 
 #~ msgid "_Create path"
-#~ msgstr "Skapa _kontur"
+#~ msgstr "_Crear un trayecto"
 
 #~ msgid "_Create counter path"
-#~ msgstr "Skapa _insida"
+#~ msgstr "_Crear trayecto inverso"
 
 #~ msgid "Show de_fault characters set"
-#~ msgstr "Visa _svenska tecken"
+#~ msgstr "Mostrar el juego de caracteres por defecto"
 
+#, fuzzy
 #~ msgid "Show characters in font"
-#~ msgstr "Visa alla typsnittets tecken"
-
-#~ msgid "Add new _grid item"
-#~ msgstr "Lägg till storlek för nytt _rutnät"
-
-#~ msgid "Remove gr_id item"
-#~ msgstr "Ta bort storlek för rut_nätet"
+#~ msgstr "Mostrar todos los caracteres en la tipografía"
 
 #~ msgid "_Zoom in"
-#~ msgstr "_Zooma in"
+#~ msgstr "_Ampliar"
 
 #~ msgid "Zoom _out"
-#~ msgstr "Zooma _ut"
+#~ msgstr "_Reducir"
 
 #~ msgid "Zoom to _scale 1:1"
-#~ msgstr "Visa i skala _1:1"
-
-#~ msgid "Subfamily name"
-#~ msgstr "Kategori"
-
-#~ msgid "Full name (name & subfamily)"
-#~ msgstr "Hela namnet (namn & stil)"
+#~ msgstr "Restablecer a e_scala 1:1"
 
 #~ msgid ""
 #~ "The loaded font will be overwritten if you choose to continue with "
 #~ "preview."
 #~ msgstr ""
-#~ "Den öppna fonten kommer att skrivas över om du väljer att fortsätta till "
-#~ "förhandsgranskningen."
+#~ "La fuente cargada se sobreescribirá si elige continuar con la "
+#~ "previsualización."
 
 #~ msgid "Export glyph to svg file"
-#~ msgstr "Exportera tecken till svg-fil"
+#~ msgstr "Exportar glifo a archivo svg"
 
 #~ msgid "Wrote font files"
-#~ msgstr "Har skrivit typsnittsfiler"
+#~ msgstr "Se escribieron los archivos de tipografía"
 
 #~ msgid "Use left command key + click to add new points"
-#~ msgstr "Använd vänster Command tangent + klicka för att lägga till punkter"
-
-#~ msgid "Show help lines for x-height and baseline"
-#~ msgstr "Visa stödlinjer för x-höjd och baslinje"
-
-#~ msgid "Show help lines at top and bottom margin"
-#~ msgstr "Visa stödlinjer för botten- och toppmarginaler"
-
-#~ msgid "Use left command key + click to add new point "
-#~ msgstr ""
-#~ "Använd vänster Command tangenten + klicka för att lägga till en ny punkt"
-
-#~ msgid "Right click to add new point, left click to move points"
-#~ msgstr ""
-#~ "Högerklicka för att lägga till nya punkter, vänsterklicka för att flytta "
-#~ "punkter"
-
-#~ msgid "and double click to add new point on path"
-#~ msgstr "och dubbelklicka för att lägga till en ny punkt på slingan"
-
-#~ msgid "Add new point on path"
-#~ msgstr "Lägg till en ny punkt på slingan"
-
-#~ msgid "Begin new line from point on path"
-#~ msgstr "Börja ny linje från en punkt på slingan"
-
-#~ msgid "Tie curve handles for selected edit point"
-#~ msgstr "Knyt handtagen på den valda kontrollpunkten"
-
-#~ msgid "Tie coordinates to previous edit point"
-#~ msgstr "Knyt handtag till föregående kontrollpunkt"
-
-#~ msgid "Delete edit points"
-#~ msgstr "Radera kontrollpunkter"
-
-#~ msgid "Alphabet"
-#~ msgstr "Alfabetet"
-
-#~ msgid "Can't export"
-#~ msgstr "Kan inte exportera"
-
-#~ msgid "Wrote"
-#~ msgstr "Har skrivit"
-
-#~ msgid "Set threshold"
-#~ msgstr "Ställ in gränsvärde"
-
-#~ msgid "exit if a testcase failes"
-#~ msgstr "avsluta om ett test misslyckas"
-
-#~ msgid "Export SVG, TTF & EOF fonts"
-#~ msgstr "Exportera SVG, TTF & EOT filer"
-
-#~ msgid "Begin new path from point on path"
-#~ msgstr "Börja ny linje från en punkt på figuren"
-
-#~ msgid "Move to path to bottom layer"
-#~ msgstr "Flytta objekt till bottenlagret"
-
-#~ msgid "Insert new background image"
-#~ msgstr "Lägg till en ny bakgrundsbild"
-
-#~ msgid "Set background contrast"
-#~ msgstr "Ställ in kontrast för bakgrundsbilden"
+#~ msgstr "Use la tecla comando izq. + clic para añadir puntos nuevos"

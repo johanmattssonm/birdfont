@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-04 20:05+0200\n"
+"POT-Creation-Date: 2014-07-05 13:03+0200\n"
 "PO-Revision-Date: 2014-06-02 20:29+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -412,7 +412,7 @@ msgstr "Crenatura:"
 msgid "Close"
 msgstr "Chiudi"
 
-#: libbirdfont/KerningList.vala:89
+#: libbirdfont/KerningList.vala:147
 msgid "Kerning Pairs"
 msgstr "Coppie Crenatura"
 

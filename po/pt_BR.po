@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-04 20:05+0200\n"
+"POT-Creation-Date: 2014-07-05 13:03+0200\n"
 "PO-Revision-Date: 2014-06-12 05:48+0000\n"
 "Last-Translator: Fabio Y. <fabio.goto@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -398,7 +398,7 @@ msgstr "Espaçamento:"
 msgid "Close"
 msgstr "Fechar"
 
-#: libbirdfont/KerningList.vala:89
+#: libbirdfont/KerningList.vala:147
 msgid "Kerning Pairs"
 msgstr "Pares de Espaçamento"
 
