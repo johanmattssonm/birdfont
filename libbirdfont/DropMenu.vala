@@ -193,50 +193,32 @@ public class DropMenu : GLib.Object {
 	public void draw_menu (Context cr) {
 		double ix, iy;
 		int n;
+		Pattern gradient;
 		
 		if (likely (!menu_visible)) {
 			return;
 		}
 		
 		cr.save ();
-		cr.set_source_rgba (122/255.0, 150/255.0, 169/255.0, 1);
-		cr.set_line_join (LineJoin.ROUND);
-		cr.set_line_width (12);
-			
-		if (direction == MenuDirection.DROP_DOWN) {
-			cr.rectangle (menu_x, y + 18, 88, actions.size * item_height - 12);
-		} else {
-			cr.rectangle (menu_x, y + 6 - actions.size * item_height, 88, actions.size * item_height - 12);
-		}
+		cr.set_source_rgba (177/255.0, 177/255.0, 177/255.0, 1);
+		cr.set_line_width (0);
+		
+		gradient = new Pattern.linear (menu_x, y - 3 * item_height, menu_x, y);
+		gradient.add_color_stop_rgb (0, 177/255.0, 177/255.0, 177/255.0);
+		gradient.add_color_stop_rgb (1, 234/255.0, 234/255.0, 234/255.0);
+		
+		cr.set_source (gradient);
+		cr.rectangle (menu_x, y - actions.size * item_height, 94, actions.size * item_height);
 		
 		cr.fill_preserve ();
 		cr.stroke ();
 		cr.restore ();
 		
-		// fill the lower right corner
-		if (direction != MenuDirection.DROP_DOWN) {
-			cr.save ();
-			cr.set_source_rgba (122/255.0, 150/255.0, 169/255.0, 1);
-			cr.set_line_width (0);		
-			
-			cr.rectangle (menu_x, y - 7, 13, 7);
-
-			cr.fill_preserve ();
-			cr.stroke ();
-			cr.restore ();
-		}
-		
 		cr.save ();
 		
 		n = 0;
 		foreach (MenuAction item in actions) {
-			
-			if (direction == MenuDirection.DROP_DOWN) {
-				iy = y + 33 + n * item_height - 5;
-			} else {
-				iy = y - 8 - n * item_height;
-			}
-			
+			iy = y - 8 - n * item_height;
 			ix = menu_x + 2;
 			
 			item.draw (ix, iy, cr);
@@ -256,7 +238,7 @@ public class DropMenu : GLib.Object {
 		
 		cr.save ();
 		
-		cr.set_source_rgba (122/255.0, 150/255.0, 169/255.0, alpha);
+		cr.set_source_rgba (234/255.0, 234/255.0, 234/255.0, alpha);
 		
 		cr.rectangle (x, y, 12, 12);
 		cr.fill_preserve ();

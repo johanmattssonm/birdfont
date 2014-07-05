@@ -43,10 +43,8 @@ public class MenuAction : GLib.Object {
 		
 		if (selected) {
 			cr.save ();
-			cr.set_line_join (LineJoin.ROUND);
-			cr.set_line_width (12);
-			cr.set_source_rgba (102/255.0, 120/255.0, 149/255.0, 1);
-			cr.rectangle (x - 2, y - 9, 88, 8);
+			cr.set_source_rgba (234/255.0, 234/255.0, 234/255.0, 1);
+			cr.rectangle (x - 2, y - 12, 93, 15);
 			cr.fill_preserve ();
 			cr.stroke ();
 			cr.restore ();			
@@ -61,7 +59,7 @@ public class MenuAction : GLib.Object {
 		}
 		
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
+		cr.set_source_rgba (0, 0, 0, 1);
 		
 		cr.set_font_size (12);
 		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
