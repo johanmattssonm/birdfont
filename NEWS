@@ -1,3 +1,14 @@
+birdfont (0.40) stable;
+
+  * Retain the angle of a control point handle while adjusting the length
+  * Parse round corners and stroke endings in SVG files
+  * Fixes bugs in the SVG import code and elsewhere in order to improve 
+    compability with potrace and Illustrator
+  * Delete and undo for kerning pairs
+  * Complete Ukrainian and Spanish translations
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Jul  5 21:36:04 CEST 2014
+
 birdfont (0.39) stable;
 
   * Bug fixes
