@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-05 13:03+0200\n"
+"POT-Creation-Date: 2014-07-05 14:02+0200\n"
 "PO-Revision-Date: 2014-06-30 01:43+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -200,7 +200,7 @@ msgstr "Квадратичний шлях з двома лінійними де�
 msgid "Convert selected points"
 msgstr "Перетворити вибрані точки"
 
-#: libbirdfont/DrawingTools.vala:167 libbirdfont/DrawingTools.vala:645
+#: libbirdfont/DrawingTools.vala:167 libbirdfont/DrawingTools.vala:647
 msgid "Stroke width"
 msgstr "Товщина штриха"
 
@@ -244,114 +244,110 @@ msgstr "Показати типовий набір символів"
 msgid "Show all characters in the font"
 msgstr "Показати всі символи шрифту"
 
-#: libbirdfont/DrawingTools.vala:350
-msgid "Delete selected glyph"
-msgstr "Видалити виділений гліф"
-
-#: libbirdfont/DrawingTools.vala:405
+#: libbirdfont/DrawingTools.vala:407
 msgid "Show guidelines"
 msgstr "Показати орієнтири"
 
-#: libbirdfont/DrawingTools.vala:416
+#: libbirdfont/DrawingTools.vala:418
 msgid "Show guidelines for x-height and baseline"
 msgstr "Показати орієнтири для Х-висоти та базової лінії"
 
-#: libbirdfont/DrawingTools.vala:430
+#: libbirdfont/DrawingTools.vala:432
 msgid "Show guidelines at top and bottom margin"
 msgstr "Показати орієнтири для верхньої і нижньої меж"
 
-#: libbirdfont/DrawingTools.vala:448
+#: libbirdfont/DrawingTools.vala:450
 #, fuzzy
 msgid "Zoom in"
 msgstr "Наблизити"
 
-#: libbirdfont/DrawingTools.vala:455
+#: libbirdfont/DrawingTools.vala:457
 #, fuzzy
 msgid "Zoom out"
 msgstr "Віддалити"
 
-#: libbirdfont/DrawingTools.vala:462
+#: libbirdfont/DrawingTools.vala:464
 msgid "Use one pixel per unit"
 msgstr "Один піксель на одиницю"
 
-#: libbirdfont/DrawingTools.vala:470
+#: libbirdfont/DrawingTools.vala:472
 msgid "Show full glyph"
 msgstr "Показати гліф повністю"
 
-#: libbirdfont/DrawingTools.vala:477
+#: libbirdfont/DrawingTools.vala:479
 msgid "Zoom in on region boundaries"
 msgstr "Наблизити у межах регіону"
 
-#: libbirdfont/DrawingTools.vala:484
+#: libbirdfont/DrawingTools.vala:486
 msgid "Zoom in on background image"
 msgstr "Наблизити у межах фонового зображення"
 
-#: libbirdfont/DrawingTools.vala:497
+#: libbirdfont/DrawingTools.vala:499
 msgid "Previous view"
 msgstr "Попередній вигляд"
 
-#: libbirdfont/DrawingTools.vala:503
+#: libbirdfont/DrawingTools.vala:505
 msgid "Next view"
 msgstr "Наступний вигляд"
 
-#: libbirdfont/DrawingTools.vala:523
+#: libbirdfont/DrawingTools.vala:525
 msgid "Set size for background image"
 msgstr "Встановити розмір фонового зображення"
 
-#: libbirdfont/DrawingTools.vala:560
+#: libbirdfont/DrawingTools.vala:562
 msgid "Show/hide background image"
 msgstr "Показати/сховати зображення тла"
 
-#: libbirdfont/DrawingTools.vala:571
+#: libbirdfont/DrawingTools.vala:573
 msgid "Insert a new background image"
 msgstr "Встановити нове зображення тла"
 
-#: libbirdfont/DrawingTools.vala:579
+#: libbirdfont/DrawingTools.vala:581
 msgid "Creating thumbnails"
 msgstr "Створення мініатюр"
 
-#: libbirdfont/DrawingTools.vala:598
+#: libbirdfont/DrawingTools.vala:600
 msgid "Set contrast for background image"
 msgstr "Встановити контраст для фонового зображення"
 
-#: libbirdfont/DrawingTools.vala:620
+#: libbirdfont/DrawingTools.vala:622
 msgid "Stroke color"
 msgstr "Колір штриха"
 
-#: libbirdfont/DrawingTools.vala:667
+#: libbirdfont/DrawingTools.vala:669
 msgid "Handle color"
 msgstr "Колір держака"
 
-#: libbirdfont/DrawingTools.vala:690
+#: libbirdfont/DrawingTools.vala:692
 msgid "Set precision"
 msgstr "Визначити точність"
 
-#: libbirdfont/DrawingTools.vala:717
+#: libbirdfont/DrawingTools.vala:719
 msgid "Show all control point handles or only handles for the selected points."
 msgstr ""
 "Показати усі держаки керуючих точок або тільки держаки для виділених точок."
 
-#: libbirdfont/DrawingTools.vala:726
+#: libbirdfont/DrawingTools.vala:728
 msgid "Object color"
 msgstr "Колір об'єкта"
 
-#: libbirdfont/DrawingTools.vala:747
+#: libbirdfont/DrawingTools.vala:749
 msgid "Set fill color for open paths."
 msgstr "Задати колір заливки для відкритих контурів."
 
-#: libbirdfont/DrawingTools.vala:755
+#: libbirdfont/DrawingTools.vala:757
 msgid "Use TTF units."
 msgstr "Використати одиниці TTF."
 
-#: libbirdfont/DrawingTools.vala:762
+#: libbirdfont/DrawingTools.vala:764
 msgid "Adjust the number of samples per point in the freehand tool."
 msgstr "Коригувати кількість вибірок на точку для ручного інструмента."
 
-#: libbirdfont/DrawingTools.vala:782
+#: libbirdfont/DrawingTools.vala:784
 msgid "Delay response for editing tools"
 msgstr "Затримка відповіді для інструментів редагування."
 
-#: libbirdfont/DrawingTools.vala:1040
+#: libbirdfont/DrawingTools.vala:1042
 msgid "Set size for grid"
 msgstr "Установити розмір для сітки"
 
@@ -561,11 +557,11 @@ msgstr "Імпорт"
 msgid "Freehand drawing"
 msgstr "Вільне рисування"
 
-#: libbirdfont/VersionList.vala:30
+#: libbirdfont/VersionList.vala:33
 msgid "New version"
 msgstr "Нова версія"
 
-#: libbirdfont/VersionList.vala:192 birdfont/GtkWindow.vala:1209
+#: libbirdfont/VersionList.vala:203 birdfont/GtkWindow.vala:1209
 msgid "Version"
 msgstr "Версія"
 
@@ -820,6 +816,9 @@ msgstr "Telif Hakkı"
 
 #~ msgid "Merge paths"
 #~ msgstr "Об'єднати контури"
+
+#~ msgid "Delete selected glyph"
+#~ msgstr "Видалити виділений гліф"
 
 #~ msgid "Zoom to scale 1:1"
 #~ msgstr "Масштаб 1:1"

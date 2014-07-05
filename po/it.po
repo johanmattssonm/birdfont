@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-05 13:03+0200\n"
+"POT-Creation-Date: 2014-07-05 14:02+0200\n"
 "PO-Revision-Date: 2014-06-02 20:29+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -189,7 +189,7 @@ msgstr "Tracciato quadratico con due linee maniglia"
 msgid "Convert selected points"
 msgstr "Converti i punti selezionati"
 
-#: libbirdfont/DrawingTools.vala:167 libbirdfont/DrawingTools.vala:645
+#: libbirdfont/DrawingTools.vala:167 libbirdfont/DrawingTools.vala:647
 msgid "Stroke width"
 msgstr "Larghezza contorno"
 
@@ -233,123 +233,119 @@ msgstr "Mostra set caratteri predefinito"
 msgid "Show all characters in the font"
 msgstr "Mostra tutti i caratteri nel font"
 
-#: libbirdfont/DrawingTools.vala:350
-msgid "Delete selected glyph"
-msgstr "Cancella il glifo selezionato"
-
-#: libbirdfont/DrawingTools.vala:405
+#: libbirdfont/DrawingTools.vala:407
 msgid "Show guidelines"
 msgstr "Mostra linee guida"
 
-#: libbirdfont/DrawingTools.vala:416
+#: libbirdfont/DrawingTools.vala:418
 msgid "Show guidelines for x-height and baseline"
 msgstr "Mostra linee guida per altezza-x e linea di base"
 
-#: libbirdfont/DrawingTools.vala:430
+#: libbirdfont/DrawingTools.vala:432
 msgid "Show guidelines at top and bottom margin"
 msgstr "Mostra linee guida al margine superiore e inferiore"
 
-#: libbirdfont/DrawingTools.vala:448
+#: libbirdfont/DrawingTools.vala:450
 msgid "Zoom in"
 msgstr "Aumenta ingrandimento"
 
-#: libbirdfont/DrawingTools.vala:455
+#: libbirdfont/DrawingTools.vala:457
 msgid "Zoom out"
 msgstr "Riduci ingrandimento"
 
-#: libbirdfont/DrawingTools.vala:462
+#: libbirdfont/DrawingTools.vala:464
 msgid "Use one pixel per unit"
 msgstr "Utilizza un pixel per unità"
 
-#: libbirdfont/DrawingTools.vala:470
+#: libbirdfont/DrawingTools.vala:472
 msgid "Show full glyph"
 msgstr "Mostra glifo completo"
 
-#: libbirdfont/DrawingTools.vala:477
+#: libbirdfont/DrawingTools.vala:479
 msgid "Zoom in on region boundaries"
 msgstr "Ingrandisci fino ai limiti regione"
 
-#: libbirdfont/DrawingTools.vala:484
+#: libbirdfont/DrawingTools.vala:486
 msgid "Zoom in on background image"
 msgstr "Ingrandisci su immagine dello sfondo"
 
-#: libbirdfont/DrawingTools.vala:497
+#: libbirdfont/DrawingTools.vala:499
 #, fuzzy
 msgid "Previous view"
 msgstr "Vista precedente"
 
-#: libbirdfont/DrawingTools.vala:503
+#: libbirdfont/DrawingTools.vala:505
 #, fuzzy
 msgid "Next view"
 msgstr "Vista successiva"
 
-#: libbirdfont/DrawingTools.vala:523
+#: libbirdfont/DrawingTools.vala:525
 #, fuzzy
 msgid "Set size for background image"
 msgstr "Imposta dimensioni immagine di sfondo"
 
-#: libbirdfont/DrawingTools.vala:560
+#: libbirdfont/DrawingTools.vala:562
 #, fuzzy
 msgid "Show/hide background image"
 msgstr "Mostra/nascondi immagine di sfondo"
 
-#: libbirdfont/DrawingTools.vala:571
+#: libbirdfont/DrawingTools.vala:573
 #, fuzzy
 msgid "Insert a new background image"
 msgstr "Inserisci nuova immagine di sfondo"
 
-#: libbirdfont/DrawingTools.vala:579
+#: libbirdfont/DrawingTools.vala:581
 #, fuzzy
 msgid "Creating thumbnails"
 msgstr "Creazione miniature in corso"
 
-#: libbirdfont/DrawingTools.vala:598
+#: libbirdfont/DrawingTools.vala:600
 #, fuzzy
 msgid "Set contrast for background image"
 msgstr "Imposta il contrasto dell'immagine di sfondo"
 
-#: libbirdfont/DrawingTools.vala:620
+#: libbirdfont/DrawingTools.vala:622
 #, fuzzy
 msgid "Stroke color"
 msgstr "Colore tratto"
 
-#: libbirdfont/DrawingTools.vala:667
+#: libbirdfont/DrawingTools.vala:669
 #, fuzzy
 msgid "Handle color"
 msgstr "Colore maniglia"
 
-#: libbirdfont/DrawingTools.vala:690
+#: libbirdfont/DrawingTools.vala:692
 #, fuzzy
 msgid "Set precision"
 msgstr "Imposta precisione"
 
-#: libbirdfont/DrawingTools.vala:717
+#: libbirdfont/DrawingTools.vala:719
 msgid "Show all control point handles or only handles for the selected points."
 msgstr ""
 "Mostra tutte le maniglie dei punti di controllo, oppure solo le maniglie dei "
 "punti selezionati."
 
-#: libbirdfont/DrawingTools.vala:726
+#: libbirdfont/DrawingTools.vala:728
 msgid "Object color"
 msgstr "Colore oggetto"
 
-#: libbirdfont/DrawingTools.vala:747
+#: libbirdfont/DrawingTools.vala:749
 msgid "Set fill color for open paths."
 msgstr "Imposta il colore di riempimento per i tracciati aperti."
 
-#: libbirdfont/DrawingTools.vala:755
+#: libbirdfont/DrawingTools.vala:757
 msgid "Use TTF units."
 msgstr "Usa unità TTF"
 
-#: libbirdfont/DrawingTools.vala:762
+#: libbirdfont/DrawingTools.vala:764
 msgid "Adjust the number of samples per point in the freehand tool."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:782
+#: libbirdfont/DrawingTools.vala:784
 msgid "Delay response for editing tools"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1040
+#: libbirdfont/DrawingTools.vala:1042
 msgid "Set size for grid"
 msgstr "Imposta la dimensione della griglia"
 
@@ -579,12 +575,12 @@ msgstr "Importa"
 msgid "Freehand drawing"
 msgstr ""
 
-#: libbirdfont/VersionList.vala:30
+#: libbirdfont/VersionList.vala:33
 #, fuzzy
 msgid "New version"
 msgstr "Nuova versione"
 
-#: libbirdfont/VersionList.vala:192 birdfont/GtkWindow.vala:1209
+#: libbirdfont/VersionList.vala:203 birdfont/GtkWindow.vala:1209
 #, fuzzy
 msgid "Version"
 msgstr "Versione"
@@ -859,6 +855,9 @@ msgstr "Copyright"
 
 #~ msgid "Merge paths"
 #~ msgstr "Unisci tracciati sto cazzo"
+
+#~ msgid "Delete selected glyph"
+#~ msgstr "Cancella il glifo selezionato"
 
 #, fuzzy
 #~ msgid "Zoom in on region boundries"

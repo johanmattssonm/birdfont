@@ -33,7 +33,7 @@ public class DropMenu : GLib.Object {
 	
 	bool menu_visible = false;
 
-	List <MenuAction> actions = new List <MenuAction> ();
+	Gee.ArrayList <MenuAction> actions = new Gee.ArrayList <MenuAction> ();
 
 	const int item_height = 25;
 	
@@ -50,11 +50,11 @@ public class DropMenu : GLib.Object {
 	}
 	
 	public MenuAction get_action_index (int index) {
-		if (!(0 <= index < actions.length ())) {
+		if (!(0 <= index < actions.size)) {
 			warning (@"No action for index $index.");
 			return new MenuAction ("None");
 		}
-		return actions.nth (index).data;
+		return actions.get (index);
 	}
 	
 	public void recreate_index () {
@@ -66,12 +66,12 @@ public class DropMenu : GLib.Object {
 	}
 	
 	public MenuAction get_action_no2 () {
-		if (actions.length () < 2) {
+		if (actions.size < 2) {
 			warning ("No such action");
 			return new MenuAction ("None");
 		}
 		
-		return actions.nth (1).data;
+		return actions.get (1);
 	}
 	
 	public void deselect_all () {
@@ -96,7 +96,7 @@ public class DropMenu : GLib.Object {
 	
 	public void add_menu_item (MenuAction m) {
 		m.parent = this;
-		actions.append (m);
+		actions.add (m);
 	}
 		
 	public bool is_over_icon (double px, double py) {
@@ -110,7 +110,7 @@ public class DropMenu : GLib.Object {
 	public bool menu_item_action (double px, double py) {
 		MenuAction? action;
 		MenuAction a;
-		unowned List <MenuAction> ma;
+		MenuAction ma;
 		int index;
 		
 		if (menu_visible) {
@@ -120,21 +120,20 @@ public class DropMenu : GLib.Object {
 				a = (!) action;
 
 				// action for the delete button
-				if (a.has_delete_button && menu_x + 88 - 7 < px < menu_x + 88 + 13 && actions.length () > 2) { 
-					
+				if (a.has_delete_button && menu_x + 88 - 7 < px < menu_x + 88 + 13) { 
 					index = 0;
-					ma = actions.first ();
+					ma = actions.get (0);
 					while (true) {
-						if (a == ma.data) {
-							actions.remove_link (ma);
+						if (a == ma) {
+							actions.remove_at (index);
 							signal_delete_item (index);
 							break;
 						}
 						
-						if (ma == actions.last ()) {
+						if (ma == actions.get (actions.size - 1)) {
 							break;
 						} else {
-							ma = ma.next;
+							ma = actions.get (index + 1);
 							index++;
 						}
 					}
@@ -205,9 +204,9 @@ public class DropMenu : GLib.Object {
 		cr.set_line_width (12);
 			
 		if (direction == MenuDirection.DROP_DOWN) {
-			cr.rectangle (menu_x, y + 18, 88, actions.length () * item_height - 12);
+			cr.rectangle (menu_x, y + 18, 88, actions.size * item_height - 12);
 		} else {
-			cr.rectangle (menu_x, y + 6 - actions.length () * item_height, 88, actions.length () * item_height - 12);
+			cr.rectangle (menu_x, y + 6 - actions.size * item_height, 88, actions.size * item_height - 12);
 		}
 		
 		cr.fill_preserve ();
@@ -232,10 +231,11 @@ public class DropMenu : GLib.Object {
 		n = 0;
 		foreach (MenuAction item in actions) {
 			
-			if (direction == MenuDirection.DROP_DOWN)
+			if (direction == MenuDirection.DROP_DOWN) {
 				iy = y + 33 + n * item_height - 5;
-			else 
+			} else {
 				iy = y - 8 - n * item_height;
+			}
 			
 			ix = menu_x + 2;
 			

@@ -25,7 +25,7 @@ public class GlyphCollection : GLib.Object {
 	public GlyphCollection (unichar unicode_character, string name) {
 		this.unicode_character = unicode_character;
 		this.name = name;
-		versions = new VersionList (null);
+		versions = new VersionList (null, this);
 	}
 
 	public VersionList get_version_list () {

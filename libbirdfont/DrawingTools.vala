@@ -347,6 +347,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		characterset_tools.add_tool (avalilable_characters);
 
+		/* // FIXME: DELETE
 		Tool delete_glyph = new Tool ("delete_selected_glyph", t_("Delete selected glyph"));
 		delete_glyph.select_action.connect ((self) => {
 			OverView o = MainWindow.get_overview ();
@@ -358,6 +359,7 @@ public class DrawingTools : ToolCollection  {
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		});
 		characterset_tools.add_tool (delete_glyph);
+		*/
 
 		if (BirdFont.has_argument ("--test")) {
 			Tool test_case = new Tool ("test_case");

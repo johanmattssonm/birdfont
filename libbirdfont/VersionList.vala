@@ -19,12 +19,15 @@ namespace BirdFont {
 
 public class VersionList : DropMenu {
 	int current_version_id = -1;
+	GlyphCollection glyph_collection;
+	
 	public Gee.ArrayList<Glyph> glyphs;
-
-	public VersionList (Glyph? g = null) {
+	
+	public VersionList (Glyph? g = null, GlyphCollection glyph_collection) {
 		base ("version");
-		glyphs = new  Gee.ArrayList<Glyph> ();
 		
+		this.glyph_collection = glyph_collection;
+		glyphs = new  Gee.ArrayList<Glyph> ();
 		set_direction (MenuDirection.POP_UP);
 		
 		MenuAction ma = add_item (t_("New version"));
@@ -39,10 +42,19 @@ public class VersionList : DropMenu {
 			current_version_id = glyphs.get (glyphs.size - 1).version_id;
 		};
 		
+		// delete one version
 		signal_delete_item.connect ((index) => {
 			int current_version;
+			Font font = BirdFont.get_current_font ();
 			
 			index--; // first item is the add new action
+			
+			// delete the entire glyph if the last remaining version is removed
+			if (glyphs.size == 1) {
+				font.delete_glyph (glyph_collection);
+				return;
+			}
+			
 			return_if_fail (0 <= index < glyphs.size);
 			glyphs.remove_at (index);
 			
