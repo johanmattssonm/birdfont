@@ -28,7 +28,7 @@ public class KerningClasses : GLib.Object {
 
 	// kerning for single glyphs
 	Gee.HashMap<string, double?> single_kerning;
-	public Gee.ArrayList<string> single_kerning_letters_left; // FIXME: this needs to be fast and sorted
+	public Gee.ArrayList<string> single_kerning_letters_left; // FIXME: needs to be in delete function
 	public Gee.ArrayList<string> single_kerning_letters_right; 
 	
 	public delegate void KerningIterator (KerningPair list);
@@ -76,7 +76,7 @@ public class KerningClasses : GLib.Object {
 		if (!single_kerning_letters_right.contains (cright)) {
 			single_kerning_letters_right.add (cright);
 		}
-				
+			
 		single_kerning.set (@"$left - $right", k);
 	} 
 
@@ -115,6 +115,24 @@ public class KerningClasses : GLib.Object {
 			return_if_fail (0 <= index < classes_first.size);
 			classes_kerning.get (index).val = k;
 		}
+	}
+
+	public bool has_kerning (string first, string next) {
+		string f = GlyphRange.serialize (first);
+		string n = GlyphRange.serialize (next);		
+		GlyphRange gf, gn;
+
+		if (single_kerning.has_key (@"$f - $n")) {
+			return true;
+		}
+
+		gf = new GlyphRange ();
+		gn = new GlyphRange ();
+		
+		gf.parse_ranges (f);
+		gn.parse_ranges (n);
+		
+		return get_kerning_item_index (gf, gn) != -1;
 	}
 
 	public double get_kerning_for_range (GlyphRange range_first, GlyphRange range_last) {

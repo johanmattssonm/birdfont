@@ -34,9 +34,13 @@ public class KerningDisplay : FontDisplay {
 	bool parse_error = false;
 	bool text_input = false;
 	
+	Gee.ArrayList<UndoItem> undo_items;
+	bool first_update = true;
+	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
 		row = new Gee.ArrayList <GlyphSequence> ();
+		undo_items = new Gee.ArrayList <UndoItem> ();
 		row.add (w);
 	}
 
@@ -358,7 +362,7 @@ public class KerningDisplay : FontDisplay {
 		string a, b;
 		Font font;
 		GlyphRange? gr_left, gr_right;
-		
+
 		font = BirdFont.get_current_font ();
 		font.touch ();
 
@@ -370,6 +374,9 @@ public class KerningDisplay : FontDisplay {
 	public void set_kerning_pair (string a, string b, ref GlyphRange? gr_left, ref GlyphRange? gr_right, double val) {
 		double kern;
 		GlyphRange grl, grr;
+		KerningClasses classes = KerningClasses.get_instance ();
+		string n, f;
+		bool has_kerning;
 		
 		kern = get_kerning_for_pair (a, b, gr_left, gr_right);
 		
@@ -390,7 +397,15 @@ public class KerningDisplay : FontDisplay {
 				grr = (!) gr_right;
 			}
 			
-			KerningClasses.get_instance ().set_kerning (grl, grr, kern + val);
+			if (first_update) {
+				f = grl.get_all_ranges ();
+				n = grr.get_all_ranges ();
+				has_kerning = classes.has_kerning (f, n);
+				undo_items.add (new UndoItem (f, n, kern, has_kerning));
+				first_update = false;
+			}
+			
+			classes.set_kerning (grl, grr, kern + val);
 			display_kerning_value (kern + val);
 		} catch (MarkupError e) {
 			// FIXME: unassigned glyphs and ligatures
@@ -523,10 +538,12 @@ public class KerningDisplay : FontDisplay {
 		}
 		
 		if (keyval == Key.LEFT && KeyBindings.modifier == NONE) {
+			first_update = true;
 			set_kerning (selected_handle, -1);
 		}
 		
 		if (keyval == Key.RIGHT && KeyBindings.modifier == NONE) {
+			first_update = true;
 			set_kerning (selected_handle, 1);
 		}
 
@@ -692,6 +709,7 @@ public class KerningDisplay : FontDisplay {
 		parse_error = false;
 		set_active_handle (ex, ey);
 		moving = false;
+		first_update = true;
 		
 		if (button == 3 || text_input) {
 			set_kerning_by_text ();
@@ -764,7 +782,72 @@ public class KerningDisplay : FontDisplay {
 		for (int i = 0; i < c; i++) {
 			add_character (t.get_char (i));
 		}
+		
 		GlyphCanvas.redraw ();
+	}
+
+	public override void undo () {
+		UndoItem ui;
+		KerningClasses classes = KerningClasses.get_instance ();
+		GlyphRange glyph_range_first, glyph_range_next;
+		Font font = BirdFont.get_current_font ();
+		string l, r;
+
+		if (undo_items.size == 0) {
+			return;
+		}
+		
+		ui = undo_items.get (undo_items.size - 1);
+			
+		l = GlyphRange.unserialize (ui.first);
+		r = GlyphRange.unserialize (ui.next);
+				
+		try {
+			if (!ui.has_kerning) {
+				if (l.char_count () > 1 || r.char_count () > 1) {
+					glyph_range_first = new GlyphRange ();
+					glyph_range_next = new GlyphRange ();
+					
+					glyph_range_first.parse_ranges (ui.first);
+					glyph_range_next.parse_ranges (ui.next);
+
+					classes.delete_kerning_for_class (ui.first, ui.next);
+				} else {
+					classes.delete_kerning_for_pair (ui.first, ui.next);
+				}
+			} else if (ui.first.char_count () > 1 || ui.next.char_count () > 1) {
+				glyph_range_first = new GlyphRange ();
+				glyph_range_next = new GlyphRange ();
+				
+				glyph_range_first.parse_ranges (ui.first);
+				glyph_range_next.parse_ranges (ui.next);
+				
+				classes.set_kerning (glyph_range_first, glyph_range_next, ui.kerning);
+			} else {
+				classes.set_kerning_for_single_glyphs (ui.first, ui.next, ui.kerning);
+			}
+			
+			undo_items.remove_at (undo_items.size - 1);
+		} catch (MarkupError e) {
+			warning (e.message);
+		}
+		
+		font.touch ();
+		GlyphCanvas.redraw ();
+	}
+	
+	class UndoItem : GLib.Object {
+		public string first;
+		public string next;
+		public double kerning;
+		public bool has_kerning;
+		
+		public UndoItem (string first, string next, double kerning, bool has_kerning) {
+			this.first = first;
+			this.next = next;
+			this.kerning = kerning;
+			this.has_kerning = has_kerning;
+		}
 	}
 }
 

@@ -164,7 +164,7 @@ public class KerningList : FontDisplay {
 		}
 	}
 
-	private void delete_kerning (string left, string right) {
+	 void delete_kerning (string left, string right) {
 		double kerning = 0;
 		GlyphRange glyph_range_first, glyph_range_next;
 		KerningClasses classes = KerningClasses.get_instance ();
