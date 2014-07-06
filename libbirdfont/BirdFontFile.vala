@@ -238,7 +238,7 @@ class BirdFontFile : GLib.Object {
 				os.put_string ("\" ");
 				
 				os.put_string ("hadjustment=\"");
-				os.put_string (float_point (KerningClasses.get_instance ().classes_kerning.get (i).val));
+				os.put_string (round (KerningClasses.get_instance ().classes_kerning.get (i).val));
 				os.put_string ("\" />\n");
 
 				Tool.yield ();
@@ -256,7 +256,7 @@ class BirdFontFile : GLib.Object {
 					os.put_string ("\" ");
 					
 					os.put_string ("hadjustment=\"");
-					os.put_string (float_point (k));
+					os.put_string (round (k));
 					os.put_string ("\" />\n");
 					
 					Tool.yield ();
@@ -295,12 +295,12 @@ class BirdFontFile : GLib.Object {
 
 	public void write_lines (DataOutputStream os) throws GLib.Error {
 		os.put_string ("<horizontal>\n");
-		os.put_string (@"\t<top_limit>$(font.top_limit)</top_limit>\n");
-		os.put_string (@"\t<top_position>$(font.top_position)</top_position>\n");
-		os.put_string (@"\t<x-height>$(font.xheight_position)</x-height>\n");
-		os.put_string (@"\t<base_line>$(font.base_line)</base_line>\n");
-		os.put_string (@"\t<bottom_position>$(font.bottom_position)</bottom_position>\n");
-		os.put_string (@"\t<bottom_limit>$(font.bottom_limit)</bottom_limit>\n");
+		os.put_string (@"\t<top_limit>$(round (font.top_limit))</top_limit>\n");
+		os.put_string (@"\t<top_position>$(round (font.top_position))</top_position>\n");
+		os.put_string (@"\t<x-height>$(round (font.xheight_position))</x-height>\n");
+		os.put_string (@"\t<base_line>$(round (font.base_line))</base_line>\n");
+		os.put_string (@"\t<bottom_position>$(round (font.bottom_position))</bottom_position>\n");
+		os.put_string (@"\t<bottom_limit>$(round (font.bottom_limit))</bottom_limit>\n");
 		os.put_string ("</horizontal>\n");
 	}
 
@@ -337,11 +337,6 @@ class BirdFontFile : GLib.Object {
 		}
 		write_glyph_background (g, os);
 		os.put_string ("\t</glyph>\n");
-	}
-			
-	public static string float_point (double d) {
-		string s = @"$d";
-		return s.replace (",", ".");
 	}
 
 	/** Get control points in BirdFont format. This function is uses a
@@ -432,38 +427,97 @@ class BirdFontFile : GLib.Object {
 			add_quadratic_start (e, data);
 		}
 	}
-	
+
+	private static string round (double d) {
+		char[] b = new char [22];
+		unowned string s = d.format (b, "%.10f");
+		string n = s.dup ();
+
+		n = n.replace (",", ".");
+
+		if (n == "-0.0000000000") {
+			n = "0.0000000000";
+		}
+		
+		return n;
+	}
+		
 	private static void add_quadratic_start (EditPoint p, StringBuilder data) {
-		data.append (@"S $(p.x),$(p.y)");
+		string x, y;
+		
+		x = round (p.x);
+		y = round (p.y);
+		
+		data.append (@"S $(x),$(y)");
 	}
 
 	private static void add_cubic_start (EditPoint p, StringBuilder data) {
-		data.append (@"B $(p.x),$(p.y)");
+		string x, y;
+		
+		x = round (p.x);
+		y = round (p.y);
+		
+		data.append (@"B $(x),$(y)");
 	}
 
 	private static void add_line_to (EditPoint p, StringBuilder data) {
-		data.append (@"L $(p.x),$(p.y)");
+		string x, y;
+		
+		x = round (p.x);
+		y = round (p.y);
+		
+		data.append (@"L $(x),$(y)");
 	}
 
 	private static void add_cubic_line_to (EditPoint p, StringBuilder data) {
-		data.append (@"M $(p.x),$(p.y)");
+		string x, y;
+		
+		x = round (p.x);
+		y = round (p.y);
+		
+		data.append (@"M $(x),$(y)");
 	}
 
 	private static void add_quadratic (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h = start.get_right_handle ();
-		data.append (@"Q $(h.x ()),$(h.y ()) $(end.x),$(end.y)");
+		string x0, y0, x1, y1;
+		
+		x0 = round (h.x ());
+		y0 = round (h.y ());
+		x1 = round (end.x);
+		y1 = round (end.y);
+	
+		data.append (@"Q $(x0),$(y0) $(x1),$(y1)");
 	}
 
 	private static void add_double (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h1 = start.get_right_handle ();
 		EditPointHandle h2 = end.get_left_handle ();
-		data.append (@"D $(h1.x ()),$(h1.y ()) $(h2.x ()),$(h2.y ()) $(end.x),$(end.y)");
+		string x0, y0, x1, y1, x2, y2;
+
+		x0 = round (h1.x ());
+		y0 = round (h1.y ());
+		x1 = round (h2.x ());
+		y1 = round (h2.y ());
+		x2 = round (end.x);
+		y2 = round (end.y);
+
+		data.append (@"D $(x0),$(y0) $(x1),$(y1) $(x2),$(y2)");
 	}
 
 	private static void add_cubic (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h1 = start.get_right_handle ();
 		EditPointHandle h2 = end.get_left_handle ();
-		data.append (@"C $(h1.x ()),$(h1.y ()) $(h2.x ()),$(h2.y ()) $(end.x),$(end.y)");
+		string x0, y0, x1, y1, x2, y2;
+
+		x0 = round (h1.x ());
+		y0 = round (h1.y ());
+		x1 = round (h2.x ());
+		y1 = round (h2.y ());
+		x2 = round (end.x);
+		y2 = round (end.y);
+
+		data.append (@"C $(x0),$(y0) $(x1),$(y1) $(x2),$(y2)");
 	}
 
 	private static void add_next_point (EditPoint start, EditPoint end, StringBuilder data) {
