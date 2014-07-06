@@ -28,7 +28,7 @@ public class KerningClasses : GLib.Object {
 
 	// kerning for single glyphs
 	Gee.HashMap<string, double?> single_kerning;
-	public Gee.ArrayList<string> single_kerning_letters_left; // FIXME: needs to be in delete function
+	public Gee.ArrayList<string> single_kerning_letters_left;
 	public Gee.ArrayList<string> single_kerning_letters_right; 
 	
 	public delegate void KerningIterator (KerningPair list);
@@ -129,8 +129,12 @@ public class KerningClasses : GLib.Object {
 		gf = new GlyphRange ();
 		gn = new GlyphRange ();
 		
-		gf.parse_ranges (f);
-		gn.parse_ranges (n);
+		try {
+			gf.parse_ranges (f);
+			gn.parse_ranges (n);
+		} catch (MarkupError e) {
+			warning (e.message);
+		}
 		
 		return get_kerning_item_index (gf, gn) != -1;
 	}
@@ -458,7 +462,34 @@ public class KerningClasses : GLib.Object {
 	}
 
 	public void delete_kerning_for_pair (string left, string right) {
+		bool has_left, has_right;
+		string[] p;
+		
 		single_kerning.unset (@"$left - $right");
+		
+		has_left = false;
+		has_right = false;
+		
+		foreach (string k in single_kerning.keys) {
+			p = k.split (" - ");
+			return_if_fail (p.length == 2);
+						
+			if (p[0] == left) {
+				has_left = true;
+			}
+			
+			if (p[1] == right) {
+				has_right = true;
+			}
+		}
+
+		if (!has_left) {
+			single_kerning_letters_left.remove (left);
+		}
+				
+		if (!has_right) {
+			single_kerning_letters_right.remove (left);
+		}
 	}
 
 	public void remove_all_pairs () {
