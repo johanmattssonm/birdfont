@@ -154,7 +154,9 @@ public class ExportTool : GLib.Object {
 		}
 	}
 
-	/** Font must be saves before export. */
+	/* Font must be saved before export in order to know where the
+	 * generated files should be stored.
+	 */
 	internal static void export_all () {
 		Font font = BirdFont.get_current_font ();
 		
@@ -519,7 +521,7 @@ os.put_string (
 		string[] spawn_args = get_birdfont_export (folder, temp_file);
 		string c = "";
 
-		MainWindow.set_status (t_("Writing TTF and EOT files."));
+		TooltipArea.show_text (t_("Writing TTF and EOT files."));
 
 		foreach (string s in spawn_args) {
 			c += s + " ";
@@ -533,7 +535,7 @@ os.put_string (
 	
 	public static bool export_svg_font () {
 		Font font = BirdFont.get_current_font ();
-		MainWindow.set_status (t_("Writing SVG file."));
+		TooltipArea.show_text (t_("Writing SVG file."));
 		return export_svg_font_path (font.get_folder ());
 	}
 		
@@ -601,7 +603,8 @@ os.put_string (
 				if (async) {
 					printd ("Loading the intermediate file.\n");
 					f = new Font ();
-					if (!f.load (ffi, false)) {
+					f.set_file (ffi);
+					if (!f.load ()) {
 						warning (@"Can't read $ffi");
 					}
 				} else {

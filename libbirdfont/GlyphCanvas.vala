@@ -18,7 +18,9 @@ namespace BirdFont {
 
 public class GlyphCanvas : GLib.Object {
 
-	public FontDisplay current_display;
+	/** Tab content. */
+	internal static FontDisplay current_display;
+	
 	public signal void signal_redraw_area (int x, int y, int w, int h);
 	public static WidgetAllocation allocation;
 	

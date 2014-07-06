@@ -32,12 +32,13 @@ public class TooltipArea : GLib.Object {
 	}
 	
 	public static void show_text (string text) {
-		if (is_null (MainWindow.get_tooltip ())) {
-			return;
-		}
-		
-		MainWindow.get_tooltip ().tooltip = text;
-		MainWindow.get_tooltip ().redraw ();
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {
+			MainWindow.get_tooltip ().tooltip = text;
+			MainWindow.get_tooltip ().redraw ();
+			return false;
+		});
+		idle.attach (null);
 	}
 	
 	public void set_text_from_tool () {

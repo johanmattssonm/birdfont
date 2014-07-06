@@ -57,6 +57,16 @@ public interface NativeWindow : GLib.Object {
 	
 	/** Hide help text. */
 	public abstract void hide_tooltip ();
+	
+	/** Export fonts in a background thread. */
+	public abstract void export ();
+
+	/** Load font in a background thread. */
+	public abstract void load ();
+	
+	/** Save font in a background thread. */
+	public abstract void save ();
+	
 }
 
 }

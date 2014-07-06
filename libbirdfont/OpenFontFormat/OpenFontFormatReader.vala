@@ -189,8 +189,6 @@ public class OpenFontFormatReader : Object {
 					bf_kerning.append (@"$kerning".replace (",", "."));
 					bf_kerning.append ("\" />\n");
 				}
-			
-				Tool.yield ();
 			}
 		} catch (GLib.Error e) {
 			warning (@"Failed to parse font. $(e.message)");

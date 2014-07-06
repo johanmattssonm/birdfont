@@ -36,9 +36,7 @@ class BirdFontFile : GLib.Object {
 		
 		Parser.init ();
 		
-		while (font.background_images.length () > 0) {
-			font.background_images.remove_link (font.background_images.first ());
-		}
+		font.background_images.clear ();
 		
 		font.font_file = path;
 		tr = new TextReader.filename (path);
@@ -98,8 +96,6 @@ class BirdFontFile : GLib.Object {
 	}
 
 	public bool write_font_file (string path, bool backup = false) {
-		TabBar.start_wheel ();
-
 		try {
 			DataOutputStream os;
 			File file;
@@ -137,7 +133,7 @@ class BirdFontFile : GLib.Object {
 			os.put_string ("\n");
 			
 			// FIXME: add this to a font specific settings file
-			if (font.background_images.length () > 0) {
+			if (font.background_images.size > 0) {
 				os.put_string (@"<images>\n");
 				
 				foreach (string f in font.background_images) {
@@ -202,8 +198,7 @@ class BirdFontFile : GLib.Object {
 			warning (@"$(e.message) \n");
 			return false;
 		}
-		
-		TabBar.stop_wheel ();		
+	
 		return true;
 	}
 	
@@ -240,8 +235,6 @@ class BirdFontFile : GLib.Object {
 				os.put_string ("hadjustment=\"");
 				os.put_string (round (KerningClasses.get_instance ().classes_kerning.get (i).val));
 				os.put_string ("\" />\n");
-
-				Tool.yield ();
 			}
 			
 			KerningClasses.get_instance ().get_single_position_pairs ((l, r, k) => {
@@ -664,7 +657,6 @@ class BirdFontFile : GLib.Object {
 			}
 						
 			TooltipArea.show_text (t_("Loading XML data."));
-			Tool.yield ();
 		}
 
 		TooltipArea.show_text ("");
@@ -727,9 +719,7 @@ class BirdFontFile : GLib.Object {
 
 				if (attr_name == "hadjustment") {
 					hadjustment = double.parse (attr_content);
-				}
-				
-				Tool.yield ();
+				}				
 			}
 			
 			if (range_left.get_length () > 1) {
@@ -887,7 +877,7 @@ class BirdFontFile : GLib.Object {
 					attr_content = prop->children->content;
 					
 					if (attr_name == "src") {
-						font.background_images.append (attr_content);
+						font.background_images.add (attr_content);
 					}
 				}
 			}
@@ -900,7 +890,7 @@ class BirdFontFile : GLib.Object {
 			string attr_content = prop->children->content;
 			
 			if (attr_name == "width") {
-				font.grid_width.append (attr_content);
+				font.grid_width.add (attr_content);
 			}
 		}		
 	}

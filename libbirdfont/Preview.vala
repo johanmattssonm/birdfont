@@ -85,7 +85,7 @@ public class Preview : FontDisplay {
 	}
 
 	public static string get_uri () {
-		return path_to_uri ((!) get_html_file ().get_path ());
+		return TabContent.path_to_uri ((!) get_html_file ().get_path ());
 	}
 	
 	public static string get_windows_uri () {
@@ -149,9 +149,9 @@ public class Preview : FontDisplay {
 				warning ("Failed to copy svg file.");
 			}
 			while ((line = dis.read_line (null)) != null) {
-				line = ((!) line).replace (@"$(font.get_full_name ()).ttf", @"$(FontDisplay.path_to_uri ((!) f_ttf.get_path ()))?$rid");
-				line = ((!) line).replace (@"$(font.get_full_name ()).eot", @"$(FontDisplay.path_to_uri ((!) f_eot.get_path ()))?$rid");
-				line = ((!) line).replace (@"$(font.get_full_name ()).svg", @"$(FontDisplay.path_to_uri ((!) f_svg.get_path ()))?$rid");
+				line = ((!) line).replace (@"$(font.get_full_name ()).ttf", @"$(TabContent.path_to_uri ((!) f_ttf.get_path ()))?$rid");
+				line = ((!) line).replace (@"$(font.get_full_name ()).eot", @"$(TabContent.path_to_uri ((!) f_eot.get_path ()))?$rid");
+				line = ((!) line).replace (@"$(font.get_full_name ()).svg", @"$(TabContent.path_to_uri ((!) f_svg.get_path ()))?$rid");
 				sb.append ((!) line);
 			}
 		} catch (Error e) {

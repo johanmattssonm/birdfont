@@ -21,7 +21,7 @@ class BackgroundSelection : FontDisplay {
 
 	int active_box = -1;
 	ImageSurface add_icon;
-	List <string> background_images = new List <string> ();
+	Gee.ArrayList <string> background_images = new Gee.ArrayList<string> ();
 	WidgetAllocation allocation;
 	Glyph glyph;
 	
@@ -195,11 +195,11 @@ class BackgroundSelection : FontDisplay {
 
 		font = BirdFont.get_current_font ();
 				
-		if (!(0 <= active_box - 1 < background_images.length ())) {
+		if (!(0 <= active_box - 1 < background_images.size)) {
 			return;
 		}
 		
-		file = background_images.nth (active_box - 1).data;
+		file = background_images.get (active_box - 1);
 		bg = new GlyphBackgroundImage (file);
 		tb = MainWindow.get_tab_bar ();
 		
@@ -223,7 +223,7 @@ class BackgroundSelection : FontDisplay {
 			}
 		}
 		
-		background_images.prepend (file);
+		background_images.insert (0, file);
 	}
 
 	public override void selected_canvas () {
@@ -251,9 +251,7 @@ class BackgroundSelection : FontDisplay {
 		FileInfo fi;
 		File img_file;
 
-		while (background_images.length () > 0) {
-			background_images.delete_link (background_images.first ());
-		}
+		background_images.clear ();
 		
 		foreach (string file in font.background_images) {
 			add_unique_background (file);

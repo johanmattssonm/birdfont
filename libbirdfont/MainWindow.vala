@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class MainWindow {
+public class MainWindow : GLib.Object {
 	
 	public static Toolbox tools;
 	public static GlyphCanvas glyph_canvas;
@@ -188,13 +188,6 @@ public class MainWindow {
 
 	public static string translate (string s) {
 		return t_(s);
-	}
-	
-	public static void set_status (string s) {
-		if (!is_null (tooltip)) {
-			TooltipArea.show_text (s);
-			Tool.yield ();
-		}  
 	}
 	
 	public static KerningDisplay get_kerning_display () {

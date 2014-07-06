@@ -34,6 +34,7 @@ public static int run_export (string[] arg) {
 	bool write_ttf = false;
 	bool write_svg = false;	
 	File directory;
+	Font font;
 	
 	stdout.printf ("birdfont-export version %s\n", VERSION);
 	stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
@@ -104,7 +105,9 @@ public static int run_export (string[] arg) {
 	BirdFont.current_font = new Font ();
 	BirdFont.current_glyph = new Glyph ("");
 	
-	if (!BirdFont.get_current_font ().load (file_name, false)) {
+	font = BirdFont.get_current_font ();
+	font.set_file (file_name);
+	if (!font.load ()) {
 		warning (@"Failed to load font $file_name.\n");
 		
 		if (!file_name.has_suffix (".bf")) {

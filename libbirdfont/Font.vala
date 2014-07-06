@@ -35,7 +35,7 @@ public class Font : GLib.Object {
 	/** Table with ligatures. */
 	public GlyphTable ligature;
 	
-	public List <string> background_images = new List <string> ();
+	public Gee.ArrayList<string> background_images = new Gee.ArrayList<string> ();
 	public string background_scale = "1";
 		
 	/** Top margin */
@@ -79,7 +79,7 @@ public class Font : GLib.Object {
 	OpenFontFormatReader otf;
 	bool otf_font = false;
 	
-	public List<string> grid_width;
+	public Gee.ArrayList<string> grid_width;
 	
 	/** File format. */
 	public FontFormat format = FontFormat.BIRDFONT;
@@ -106,7 +106,7 @@ public class Font : GLib.Object {
 		glyph_name = new GlyphTable ();
 		ligature = new GlyphTable ();
 	
-		grid_width = new List<string> ();
+		grid_width = new Gee.ArrayList<string> ();
 	
 		kerning_classes = new KerningClasses ();
 		
@@ -464,7 +464,7 @@ public class Font : GLib.Object {
 	}
 	
 	public void add_background_image (string file) {
-		background_images.append (file);
+		background_images.add (file);
 	}
 	
 	/** Delete temporary rescue files. */
@@ -529,38 +529,51 @@ public class Font : GLib.Object {
 		return bfp;
 	}
 	
+	public void save () {
+		if (is_bfp ()) {
+			save_bfp ();
+		} else {
+			save_bf ();
+		}
+	}
+	
 	public bool save_bfp () {
 		return bfp_file.save ();
 	}
 	
-	public bool save (string path) {
+	public void save_bf () {
 		Font font;
 		BirdFontFile birdfont_file = new BirdFontFile (this);
-		bool file_written = birdfont_file.write_font_file (path);
+		string path;
+		bool file_written;
+		
+		if (font_file == null) {
+			warning ("File name not set.");
+			return;
+		}
+		
+		path = (!) font_file;
+		file_written = birdfont_file.write_font_file (path);
 
 		if (read_only) {
 			warning (@"$path is write protected.");
-			return false;			
+			TooltipArea.show_text (t_("The file is write protected."));
+			return;			
 		}
 				
 		if (!path.has_suffix (".bf")) {
 			warning ("Expecting .bf format.");
-			return false;
+			return;
 		}
 		
 		if (file_written) {
-			font_file = path;
-			
-			// delete backup when font is saved
+			// delete the backup when the font is saved
 			font = BirdFont.get_current_font ();
 			font.delete_backup ();
 		}
 		
 		modified = false;
-
 		Preferences.add_recent_files (get_path ());
-		
-		return file_written;
 	}
 
 	public void set_font_file (string path) {
@@ -576,14 +589,25 @@ public class Font : GLib.Object {
 		return (glyph_name.length () == 0);
 	}
 
-	public bool load (string path, bool recent = true) {
+	public void set_file (string path, bool recent = true) {
+		font_file = path;
+	}
+
+	public bool load () {
+		string path;
 		bool loaded = false;
+		
 		initialised = true;
 		otf_font = false;
 
-		while (grid_width.length () > 0) {
-			grid_width.remove_link (grid_width.first ());
+		if (font_file == null) {
+			warning ("No file name.");
+			return false;
 		}
+
+		path = (!) font_file;
+
+		grid_width.clear ();
 	
 		// empty cache and fill it with new glyphs from disk
 		glyph_cache.remove_all ();
@@ -592,7 +616,6 @@ public class Font : GLib.Object {
 		
 		if (path.has_suffix (".svg")) {
 			Toolbox.select_tool_by_name ("cubic_points");
-			font_file = path;
 			loaded = parse_svg_file (path);
 					
 			if (!loaded) {
@@ -603,25 +626,21 @@ public class Font : GLib.Object {
 		}
 		
 		if (path.has_suffix (".ffi")) {
-			font_file = path;
 			loaded = parse_bf_file (path);
 			format = FontFormat.FFI;
 		}
 
 		if (path.has_suffix (".bf")) {
-			font_file = path;
 			loaded = parse_bf_file (path);
 			format = FontFormat.BIRDFONT;
 		}
 
 		if (path.has_suffix (".bfp")) {
-			font_file = path;
 			loaded = parse_bfp_file (path);
 			format = FontFormat.BIRDFONT_PART;
 		}		
 		
 		if (path.has_suffix (".ttf")) {
-			font_file = path;
 			loaded = parse_freetype_file (path);
 			
 			if (!loaded) {
@@ -639,10 +658,11 @@ public class Font : GLib.Object {
 					warning (e.message);
 				}
 			}
+			
+			font_file = null; // make sure BirdFont asks where to save the file
 		}			
 
 		if (path.has_suffix (".otf")) {
-			font_file = path;
 			loaded = parse_freetype_file (path);
 						
 			if (!loaded) {
@@ -650,12 +670,12 @@ public class Font : GLib.Object {
 			}
 			
 			format = FontFormat.FREETYPE;
+			
+			font_file = null;
 		}	
 
-		if (recent) {
-			Preferences.add_recent_files (get_path ());
-		}
-					
+		Preferences.add_recent_files (get_path ());
+		
 		return loaded;
 	}
 	

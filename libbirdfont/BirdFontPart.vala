@@ -43,10 +43,8 @@ class BirdFontPart : GLib.Object{
 			find_all_parts (bfp_file);
 			font.set_bfp (true);
 			
-			while (font.background_images.length () > 0) {
-				font.background_images.remove_link (font.background_images.first ());
-			}
-			
+			font.background_images.clear ();
+
 			bfp_dir = File.new_for_path (root_directory);
 			image_dir = bfp_dir.get_child ("images");
 			copy_backgrounds ((!) image_dir.get_path ());

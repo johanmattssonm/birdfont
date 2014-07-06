@@ -18,8 +18,6 @@ public class PreviewTools : ToolCollection  {
 	public List<Expander> expanders;
 	public Expander classes;
 	
-	private static bool suppress_event = false;
-	
 	public PreviewTools () {
 		Expander webview_tools = new Expander ();
 		
@@ -31,7 +29,7 @@ public class PreviewTools : ToolCollection  {
 		
 		Tool export_fonts_button = new Tool ("export_fonts", t_("Export fonts"));
 		export_fonts_button.select_action.connect ((self) => {
-			export_fonts ();
+			MenuTab.export_fonts_in_background ();
 		});
 		webview_tools.add_tool (export_fonts_button);
 
@@ -46,29 +44,26 @@ public class PreviewTools : ToolCollection  {
 		expanders.append (webview_tools);
 	}
 
-	
 	/** Export fonts and update html canvas. */
 	public static void update_preview () {
-		export_fonts ();
-
-		if (!Preview.has_html_document ()) {
-			Preview.generate_html_document ();
-		}
-		
-		MainWindow.tabs.select_tab_name ("Preview");
+		MenuTab.export_callback = new ExportCallback ();
+		MenuTab.export_callback.file_exported.connect (signal_preview_updated);
+		MenuTab.export_callback.export_fonts_in_background ();
 	}
+
+	private static void signal_preview_updated () {
+		IdleSource idle = new IdleSource ();
+
+		idle.set_callback (() => {
+			if (!Preview.has_html_document ()) {
+				Preview.generate_html_document ();
+			}
+			
+			MainWindow.tabs.select_tab_name ("Preview");
+			return false;
+		});
 		
-	/** Export TTF, EOT and SVG fonts. */
-	public static void export_fonts () {
-		if (!suppress_event) {
-			suppress_event = true;
-			ExportTool.export_ttf_font_sync ();
-			ExportTool.export_svg_font ();
-			TooltipArea.show_text (t_("Three font files have been created."));	
-			suppress_event = false;
-		} else {
-			warn_if_test ("Export event suppressed");
-		}
+		idle.attach (null);	
 	}
 
 	/** Generate the preview document. */

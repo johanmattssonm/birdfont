@@ -104,7 +104,8 @@ class TestCases {
 		
 		f.set_read_only (true);
 		
-		if (!f.load (fn)) {
+		f.set_file (fn);
+		if (!f.load ()) {
 			warning (@"Failed to load fond $fn");
 			return;
 		}
@@ -222,8 +223,7 @@ class TestCases {
 		}
 		
 		Tool.yield ();
-		
-		font.load ((!) f.get_path ());
+		font.load ();
 	}
 
 	public static void test_parse_quadratic_paths () {

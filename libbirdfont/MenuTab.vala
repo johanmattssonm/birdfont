@@ -16,40 +16,52 @@ namespace BirdFont {
 
 public class MenuTab : FontDisplay {
 	
-	/** Ignore new actions when export is in progress.
-	 * 
-	 * BirdFont runs in a single thread but the glib main loop will still
-	 * execute events with the idle priority in order to update the 
-	 * progress bar while export, save and possibly other actions are 
-	 * in progress. 
+	/** Ignore input events when the background thread is running.
 	 * 
 	 * Do always check the return value of set_suppress_event when this
 	 * variable is updated.
 	 */
-	public static bool suppress_event = false;
+	public static bool suppress_event;
+
+	/** A notification sent when the file has been saved. */
+	public static SaveCallback save_callback;
+
+	/** A notification sent when the file has been loaded. */
+	public static LoadCallback load_callback;
+
+	/** A notification sent when the file has been loaded. */
+	public static ExportCallback export_callback;
 
 	public MenuTab () {
+		save_callback = new SaveCallback ();
+		load_callback = new LoadCallback ();
+		export_callback = new ExportCallback ();
+		
+		suppress_event = false;
 	}
-	
-	public static void export_font ()  {
-		Font font = BirdFont.get_current_font ();		
-		if (font.font_file == null) {
-			if (MenuTab.save ()) {
-				export_all ();
-			}
-		} else {
-			export_all ();
-		}
-	}
-	
-	public static void export_all () {
+
+	public static void start_background_thread () {
 		if (!set_suppress_event (true)) {
 			warning ("suppressed event");
 			return;
 		}
-				
-		ExportTool.export_all ();
-		set_suppress_event (false);	
+		
+		TabBar.start_wheel ();
+	}
+
+	public static void stop_background_thread () {
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {
+			set_suppress_event (false);
+			TabBar.stop_wheel ();
+			return false;
+		});
+		idle.attach (null);
+	}
+	
+	public static void export_fonts_in_background () {
+		MenuTab.export_callback = new ExportCallback ();
+		MenuTab.export_callback.export_fonts_in_background ();
 	}
 	
 	public static bool set_suppress_event (bool e) {
@@ -81,92 +93,26 @@ public class MenuTab : FontDisplay {
 			Toolbox.select_tool_by_name ("available_characters");	
 		}
 	}
-
-	public static bool save_as ()  {
-		string? fn = null;
-		string f;
-		string file_name;
-		File file;
-		bool saved = false;
-		Font font = BirdFont.get_current_font ();
-		int i;
-		
-		if (suppress_event) {
-			warn_if_test ("Event suppressed");
-			return false;
-		}
-		
-		fn = MainWindow.file_chooser_save (t_("Save"));
-		
-		if (fn != null) {
-			f = (!) fn;
-			
-			if (f.has_suffix (".bf")) {
-				f = f.replace (".bf", "");
-			}
-			
-			file_name = @"$(f).bf";
-			file = File.new_for_path (file_name);
-			i = 2;
-			while (file.query_exists ()) {
-				file_name = @"$(f)_$i.bf";
-				file = File.new_for_path (file_name);
-				i++;
-			}
-			
-			font.font_file = file_name;
-			save ();
-			saved = true;
-		}
-		
-		return saved;
-	}
-
-	public static bool save () {
-		Font f;
-		string fn;
-		bool saved = false;
-
-		if (suppress_event) {
-			warn_if_test ("Event suppressed");
-			return false;
-		}
-		
-		if (!set_suppress_event (true)) {
-			return false;
-		}
-
-		f = BirdFont.get_current_font ();
-
-		if (f.is_bfp ()) {
-			saved = f.save_bfp ();
-			set_suppress_event (false);
-		} else {
-			f.delete_backup ();
-			fn = f.get_path ();
-			
-			if (f.font_file != null && fn.has_suffix (".bf")) {
-				set_font_setting_from_tools (f); 
-				saved = f.save (fn);
-				set_suppress_event (false);
-			} else {
-				set_suppress_event (false);
-				saved = save_as ();
-			}
-		}
-		
-		return saved;
+	
+	public static void signal_file_exported () {
+		export_callback.file_exported ();
 	}
 	
+	public static void signal_file_saved () {
+		save_callback.file_saved ();
+	}
+
+	public static void signal_file_loaded () {
+		load_callback.file_loaded ();
+	}
+		
 	public static void set_font_setting_from_tools (Font f) {	
 		f.background_scale = MainWindow.get_drawing_tools ().background_scale.get_display_value ();
 		
-		while (f.grid_width.length () > 0) {
-			f.grid_width.remove_link (f.grid_width.first ());
-		}
+		f.grid_width.clear ();
 		
 		foreach (SpinButton s in GridTool.sizes) {
-			f.grid_width.append (s.get_display_value ());
+			f.grid_width.add (s.get_display_value ());
 		}
 	}
 	
@@ -237,59 +183,6 @@ public class MenuTab : FontDisplay {
 		
 		return;
 	}
-	
-	public static void load () {
-		SaveDialogListener dialog = new SaveDialogListener ();
-		Font font = BirdFont.get_current_font ();
-		
-		if (suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
-		
-		MainWindow.close_all_tabs ();
-		
-		dialog.signal_discard.connect (() => {
-			load_new_font ();
-		});
-
-		dialog.signal_save.connect (() => {
-			MenuTab.save ();
-			load_new_font ();
-		});
-		
-		if (!font.is_modified ()) {
-			dialog.signal_discard ();
-		} else {
-			MainWindow.native_window.set_save_dialog (dialog);
-		}
-	}
-
-	private static void load_new_font () {
-		string? fn;
-		Font f;
-
-		if (suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
-		
-		f = BirdFont.get_current_font ();
-		fn = MainWindow.file_chooser_open (t_("Open"));
-		
-		if (fn != null) {
-			f.delete_backup ();
-			
-			f = BirdFont.new_font ();
-			
-			MainWindow.clear_glyph_cache ();
-			f.load ((!)fn);
-			
-			KerningTools.update_kerning_classes ();
-			
-			select_overview ();		
-		}
-	}
 
 	public static void quit () {
 		SaveDialogListener dialog = new SaveDialogListener ();
@@ -353,9 +246,11 @@ public class MenuTab : FontDisplay {
 		}
 		
 		if (font.font_file == null) {
-			if (MenuTab.save ()) {
+			save_callback = new SaveCallback ();
+			save_callback.file_saved.connect (() => {
 				show_preview_tab ();
-			}
+			});
+			save_callback.save ();
 		} else {
 			show_preview_tab ();
 		}
@@ -446,5 +341,22 @@ public class MenuTab : FontDisplay {
 		}
 		context.release ();
 	}
+	
+	public static void save_as ()  {
+		MenuTab.save_callback = new SaveCallback ();
+		MenuTab.save_callback.save_as();
+	}
+
+	public static void save ()  {
+		MenuTab.save_callback = new SaveCallback ();
+		MenuTab.save_callback.save ();
+	}
+	
+	public static void load () {
+		load_callback = new LoadCallback ();
+		load_callback.load ();
+	}
+	
 }
+
 }

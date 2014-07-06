@@ -110,7 +110,9 @@ public class KeyBindings {
 	}
 
 	public static void remove_modifier_from_keyval (uint keyval) {
-		uint mod = get_mod_from_key (keyval);
+		uint mod;
+				
+		mod = get_mod_from_key (keyval);
 		set_modifier (modifier ^ mod);		
 	}
 

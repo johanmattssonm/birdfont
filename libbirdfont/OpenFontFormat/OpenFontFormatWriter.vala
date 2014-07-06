@@ -46,8 +46,6 @@ public class OpenFontFormatWriter : Object  {
 		unowned List<Table> tables;
 		FontData fd;
 		uint l;
-
-		TabBar.start_wheel ();
 		
 		font = nfont;
 				
@@ -70,8 +68,6 @@ public class OpenFontFormatWriter : Object  {
 				os.put_byte (data[j]);
 			}
 		}
-		
-		TabBar.stop_wheel ();
 	}
 	
 	public void close () throws Error {

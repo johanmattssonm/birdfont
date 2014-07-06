@@ -127,7 +127,6 @@ public class KerningList : FontDisplay {
 		int y = 0;
 		string l, r;
 		string[] p;
-		double k;
 		
 		l = "";
 		r = "";

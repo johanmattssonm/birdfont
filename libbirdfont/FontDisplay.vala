@@ -40,32 +40,6 @@ public abstract class FontDisplay : GLib.Object {
 	
 	public virtual void scroll_to (double percent) {
 	}
-
-	public static string path_to_uri (string path) {
-		string uri = path;
-		string wp;
-		
-		// wine uri hack
-		if (BirdFont.win32) {
-			wp = wine_to_unix_path (uri);
-			
-			if (find_file (wp, "").query_exists ()) {
-				uri = wp;
-			}
-
-			if (uri.index_of ("\\") > -1) {
-				uri = uri.replace ("\\", "/");
-			}
-		}
-
-		if (uri.index_of ("/") == 0) {
-			uri = @"file://$uri";
-		} else {
-			uri = @"file:///$uri";
-		}
-		
-		return uri;
-	}
 	
 	public virtual void draw (WidgetAllocation allocation, Context cr) {
 	}

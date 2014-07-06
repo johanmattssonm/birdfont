@@ -55,7 +55,8 @@ public class FileTab : FontDisplay {
 			MainWindow.clear_glyph_cache ();
 			MainWindow.close_all_tabs ();
 			
-			loaded = f.load (fn);
+			f.set_file (fn);
+			loaded = f.load (); // FIXME: background thread
 			
 			if (!unlikely (loaded)) {
 				warning (@"Failed to load font $fn");

@@ -66,7 +66,7 @@ public class DirectoryTable : Table {
 		glyf_table.process ();
 		gasp_table.process ();
 		gdef_table.process ();
-		gsub_table.process ();
+		// FIXME: implement gsub_table.process ();
 		cmap_table.process (glyf_table);
 		cvt_table.process ();
 		hmtx_table.process ();

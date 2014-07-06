@@ -119,9 +119,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 					warning ("Failed to load html into canvas.");
 				}
 				
+				// show the webview when loading has finished
 				html_box.set_visible (true);
 				glyph_canvas_area.set_visible (false);
 				description.canvas.set_visible (false);
+				
 			} else {
 				html_box.set_visible (false);
 				glyph_canvas_area.set_visible (true);
@@ -188,14 +190,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		key_press_event.connect ((t, event) => {
 			if (!GtkWindow.text_input_is_active) {
-				FontDisplay fd = MainWindow.glyph_canvas.current_display;
-				
-				if (fd is Glyph) {
-					MainWindow.tools.key_press (event.keyval);
-				}
-				
-				MainWindow.glyph_canvas.key_press (event.keyval);
-				KeyBindings.add_modifier_from_keyval (event.keyval);
+				TabContent.key_press (event.keyval);
 			}
 			
 			return false;
@@ -203,13 +198,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		key_release_event.connect ((t, event) => {
 			if (!GtkWindow.text_input_is_active) {
-				FontDisplay fd = MainWindow.glyph_canvas.current_display;
-				
-				if (fd is Glyph) {
-					MainWindow.glyph_canvas.key_release (event.keyval);
-				}
-				
-				KeyBindings.remove_modifier_from_keyval (event.keyval);
+				TabContent.key_release (event.keyval);
 			}
 			
 			return false;
@@ -446,7 +435,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				
 		Gtk.MenuItem export_item = new Gtk.MenuItem.with_mnemonic (t_("_Export"));
 		file_menu.append (export_item);
-		export_item.activate.connect (() => { MenuTab.export_font (); });
+		export_item.activate.connect (() => { MenuTab.export_fonts_in_background (); });
 		export_item.add_accelerator ("activate", accel_group, 'E', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		Gtk.MenuItem preview_item = new Gtk.MenuItem.with_mnemonic(t_("_Preview"));
@@ -869,6 +858,48 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public void hide_tooltip () {
 		tooltip_window.hide ();
 	}
+	
+	/** Run export in a background thread. */
+	public void export () {
+		unowned Thread<void*> export_thread;
+		MenuTab.start_background_thread ();
+		export_thread = Thread.create<void*> (this.export_thread, true);
+	}
+	
+	public void* export_thread () {
+		ExportCallback.export_fonts ();
+		MenuTab.stop_background_thread ();
+		MenuTab.signal_file_exported ();
+		return null;
+	}
+	
+	/** Load font in a background thread. */
+	public void load () {
+		unowned Thread<void*> thread;
+		MenuTab.start_background_thread ();
+		thread = Thread.create<void*> (this.loading_thread, true);
+	}
+	
+	public void* loading_thread () {
+		BirdFont.get_current_font ().load ();
+		MenuTab.stop_background_thread ();
+		MenuTab.signal_file_loaded ();
+		return null;
+	}
+
+	/** Save font in a background thread. */
+	public void save () {
+		unowned Thread<void*> thread;
+		MenuTab.start_background_thread ();
+		thread = Thread.create<void*> (this.saving_thread, true);
+	}
+	
+	public void* saving_thread () {
+		BirdFont.get_current_font ().save ();
+		MenuTab.stop_background_thread ();
+		MenuTab.signal_file_saved ();
+		return null;
+	}
 }
 
 class TabbarCanvas : DrawingArea {
@@ -1028,7 +1059,7 @@ public class GlyphCanvasArea : DrawingArea  {
 			Surface s = new Surface.similar (cw.get_target (), Cairo.Content.COLOR_ALPHA, alloc.width, alloc.height);
 			Context c = new Context (s); 
 
-			glyph_canvas.current_display.draw (alloc, c);
+			TabContent.draw (alloc, c);
 
 			cw.save ();
 			cw.set_source_surface (c.get_target (), 0, 0);
@@ -1042,9 +1073,9 @@ public class GlyphCanvasArea : DrawingArea  {
 			set_modifier ((int) e.state);
 			
 			if (e.type == EventType.BUTTON_PRESS) {
-				glyph_canvas.current_display.button_press (e.button, e.x, e.y);	
+				TabContent.button_press (e.button, e.x, e.y);	
 			} else if (e.type == EventType.2BUTTON_PRESS) {
-				glyph_canvas.current_display.double_click (e.button, e.x, e.y);
+				TabContent.double_click (e.button, e.x, e.y);
 			}
 				
 			return true;
@@ -1052,12 +1083,12 @@ public class GlyphCanvasArea : DrawingArea  {
 		
 		button_release_event.connect ((t, e)=> {
 			set_modifier ((int) e.state);
-			glyph_canvas.current_display.button_release ((int) e.button, e.x, e.y);
+			TabContent.button_release ((int) e.button, e.x, e.y);
 			return true;
 		});
 		
 		motion_notify_event.connect ((t, e)=> {
-			glyph_canvas.current_display.motion_notify (e.x, e.y);		
+			TabContent.motion_notify (e.x, e.y);		
 			return true;
 		});
 		
@@ -1065,12 +1096,12 @@ public class GlyphCanvasArea : DrawingArea  {
 			set_modifier ((int) e.state);
 			
 			if (e.direction == Gdk.ScrollDirection.UP) {
-				glyph_canvas.current_display.scroll_wheel_up (e.x, e.y);
+				TabContent.scroll_wheel_up (e.x, e.y);
 			} else if (e.direction == Gdk.ScrollDirection.DOWN) {
-				glyph_canvas.current_display.scroll_wheel_down (e.x, e.y)		;
+				TabContent.scroll_wheel_down (e.x, e.y)		;
 			}
 			
-			glyph_canvas.current_display.button_release (2, e.x, e.y);
+			TabContent.button_release (2, e.x, e.y);
 			return true;
 		});
 		

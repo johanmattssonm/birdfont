@@ -42,8 +42,6 @@ public class CodePageBits : GLib.Object {
 			} else {
 				set_bits_for_glyph (g, ref p0, ref p1);
 			}
-			
-			Tool.yield ();
 		}
 	}
 

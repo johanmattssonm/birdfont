@@ -554,8 +554,6 @@ public class DrawingTools : ToolCollection  {
 			Glyph? g = null;
 			FontDisplay fd = MainWindow.get_current_display ();
 			TooltipArea.show_text (t_("Creating thumbnails"));
-			
-			Tool.yield ();
 		
 			if (fd is Glyph) {
 				g = (Glyph) fd;
