@@ -19,11 +19,17 @@ public class CodePageBits : GLib.Object {
 	/** The first characters in all code pages. */
 	PageBit default_range;
 	
-	List<PageBit> codepages = new List<PageBit> (); 
+	static bool has_codepages = false;
+	static Gee.ArrayList<PageBit> codepages; 
 	
 	public CodePageBits () {
 		default_range = new PageBit (-1, "null-");
-		create_codepage_list ();
+		
+		if (!has_codepages) {
+			codepages = new Gee.ArrayList<PageBit> ();
+			create_codepage_list ();
+			has_codepages = true;
+		}
 	}
 	
 	public void get_pages (Font font, out uint32 p0, out uint32 p1) {
@@ -149,7 +155,7 @@ public class CodePageBits : GLib.Object {
 
 	void create_codepage (int bit, string ranges) {
 		PageBit b = new PageBit (bit, ranges);
-		codepages.append (b);
+		codepages.add (b);
 	}
 
 	private class PageBit : GLib.Object {
