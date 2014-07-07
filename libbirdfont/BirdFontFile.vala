@@ -78,7 +78,6 @@ class BirdFontFile : GLib.Object {
 		bool ok = true;
 		Xml.Node* root;
 		
-		TabBar.start_wheel ();
 		tr.read ();
 		root = tr.expand ();
 
@@ -90,7 +89,6 @@ class BirdFontFile : GLib.Object {
 		}
 		
 		tr.close ();
-		TabBar.stop_wheel ();
 		
 		return ok;
 	}
@@ -251,8 +249,6 @@ class BirdFontFile : GLib.Object {
 					os.put_string ("hadjustment=\"");
 					os.put_string (round (k));
 					os.put_string ("\" />\n");
-					
-					Tool.yield ();
 				} catch (GLib.Error e) {
 					warning (@"$(e.message) \n");
 				}
@@ -274,16 +270,16 @@ class BirdFontFile : GLib.Object {
 	}
 
 	public void write_description (DataOutputStream os) throws GLib.Error {
-		os.put_string (@"<postscript_name>$(font.postscript_name)</postscript_name>\n");
-		os.put_string (@"<name>$(font.name)</name>\n");
-		os.put_string (@"<subfamily>$(font.subfamily)</subfamily>\n");
+		os.put_string (@"<postscript_name>$(Markup.escape_text (font.postscript_name))</postscript_name>\n");
+		os.put_string (@"<name>$(Markup.escape_text (font.name))</name>\n");
+		os.put_string (@"<subfamily>$(Markup.escape_text (font.subfamily))</subfamily>\n");
 		os.put_string (@"<bold>$(font.bold)</bold>\n");
 		os.put_string (@"<italic>$(font.italic)</italic>\n");			
-		os.put_string (@"<full_name>$(font.full_name)</full_name>\n");
-		os.put_string (@"<unique_identifier>$(font.unique_identifier)</unique_identifier>\n");
-		os.put_string (@"<version>$(font.version)</version>\n");
-		os.put_string (@"<description>$(font.description)</description>\n");
-		os.put_string (@"<copyright>$(font.copyright)</copyright>\n");
+		os.put_string (@"<full_name>$(Markup.escape_text (font.full_name))</full_name>\n");
+		os.put_string (@"<unique_identifier>$(Markup.escape_text (font.unique_identifier))</unique_identifier>\n");
+		os.put_string (@"<version>$(Markup.escape_text (font.version))</version>\n");
+		os.put_string (@"<description>$(Markup.escape_text (font.description))</description>\n");
+		os.put_string (@"<copyright>$(Markup.escape_text (font.copyright))</copyright>\n");
 	}
 
 	public void write_lines (DataOutputStream os) throws GLib.Error {

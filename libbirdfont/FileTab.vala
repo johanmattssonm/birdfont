@@ -41,9 +41,9 @@ public class FileTab : FontDisplay {
 		
 		font = BirdFont.get_current_font ();
 		
+		// FIXME: clean up this nested lamda function
 		dialog.signal_discard.connect (() => {
 			Font f;
-			bool loaded;
 
 			if (MenuTab.suppress_event) {
 				return;
@@ -55,22 +55,21 @@ public class FileTab : FontDisplay {
 			MainWindow.clear_glyph_cache ();
 			MainWindow.close_all_tabs ();
 			
+			MenuTab.load_callback = new LoadCallback ();
+			
 			f.set_file (fn);
-			loaded = f.load (); // FIXME: background thread
+			MainWindow.native_window.load (); // background thread
 			
-			if (!unlikely (loaded)) {
-				warning (@"Failed to load font $fn");
-				return;
-			}
+			MenuTab.load_callback.file_loaded.connect (() => {
+				MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
+				foreach (string v in f.grid_width) {
+					MainWindow.get_drawing_tools ().parse_grid (v);
+				}
 				
-			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
-			foreach (string v in f.grid_width) {
-				MainWindow.get_drawing_tools ().parse_grid (v);
-			}
-			
-			MainWindow.get_drawing_tools ().background_scale.set_value (f.background_scale);
-			KerningTools.update_kerning_classes ();
-			MenuTab.select_overview ();
+				MainWindow.get_drawing_tools ().background_scale.set_value (f.background_scale);
+				KerningTools.update_kerning_classes ();
+				MenuTab.select_overview ();
+			});
 		});
 
 		dialog.signal_save.connect (() => {

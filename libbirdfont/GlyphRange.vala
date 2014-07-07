@@ -123,10 +123,10 @@ public class GlyphRange {
 	 * @param ranges unicode ranges
 	 */
 	public void parse_ranges (string ranges) throws MarkupError {
-		parse_range_string (ranges, true);
+		parse_range_string (ranges);
 	}
 	
-	private void parse_range_string (string ranges, bool sync) throws MarkupError {
+	private void parse_range_string (string ranges) throws MarkupError {
 		string[] r;
 				
 		if (ranges == " ") {
@@ -158,10 +158,6 @@ public class GlyphRange {
 				add_single ('&');
 			} else {
 				throw new MarkupError.PARSE (@"$w is not a single letter or a unicode range.");
-			}
-
-			if (!sync) {
-				Tool.yield ();
 			}
 		}
 	}

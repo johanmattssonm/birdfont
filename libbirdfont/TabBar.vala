@@ -809,14 +809,12 @@ public class TabBar : GLib.Object {
 	public static void start_wheel () {
 		if (!is_null (MainWindow.get_tab_bar ())) {
 			MainWindow.get_tab_bar ().set_progress (true);
-			Tool.yield ();
 		}
 	}
 
 	public static void stop_wheel () {
 		if (!is_null (MainWindow.get_tab_bar ())) {
 			MainWindow.get_tab_bar ().set_progress (false);
-			Tool.yield ();
 		}
 	}
 }

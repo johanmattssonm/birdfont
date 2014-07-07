@@ -116,6 +116,7 @@ public class MenuTab : FontDisplay {
 		}
 	}
 	
+	// FIXME: background thread
 	public static void save_as_bfp () {
 		Font f;
 		string? fn;
