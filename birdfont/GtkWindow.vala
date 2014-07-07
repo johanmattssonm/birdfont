@@ -56,7 +56,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	Gtk.Window tooltip_window = new Gtk.Window ();
 	
 	ToolboxCanvas toolbox;
-		
+	
+	/** Last folder for file chooser. */
+	string last_folder = "";
+	
 	public GtkWindow (string title) {
 		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		((Gtk.Window)this).set_title ("BirdFont");
@@ -773,9 +776,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		string? fn = null;
 		FileChooserDialog file_chooser = new FileChooserDialog (title, this, action, Stock.CANCEL, ResponseType.CANCEL, label, ResponseType.ACCEPT);
 		Font font = BirdFont.get_current_font ();
+		int i;
 		
 		try {
-			file_chooser.set_current_folder_file (font.get_folder ());
+			if (last_folder == "") {
+				file_chooser.set_current_folder_file (font.get_folder ());
+			} else {
+				file_chooser.set_current_folder_file (File.new_for_path (last_folder));
+			}
 		} catch (GLib.Error e) {
 			stderr.printf (e.message);
 		}
@@ -786,6 +794,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}
 
 		file_chooser.destroy ();
+		
+		if (fn != null) {
+			i = ((!) fn).last_index_of ("/");
+			if (i > -1) {
+				last_folder = ((!) fn).substring (0, i);
+			}
+		}
 		
 		return fn;
 	}
