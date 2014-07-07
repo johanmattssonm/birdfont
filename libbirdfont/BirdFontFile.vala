@@ -42,7 +42,8 @@ class BirdFontFile : GLib.Object {
 		tr = new TextReader.filename (path);
 		ok = load_xml (tr);
 		
-		Parser.cleanup ();
+		// This causes a crash on windows
+		// Parser.cleanup ();
 				
 		return ok;
 	}
