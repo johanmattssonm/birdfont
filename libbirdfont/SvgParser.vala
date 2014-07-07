@@ -275,7 +275,7 @@ public class SvgParser {
 		int arc_sweep;
 		double arc_dest_x, arc_dest_y;
 		
-		if (d.index_of ("z") == -1) { // ignore all open paths
+		if (d.index_of ("z") == -1 && d.index_of ("Z") == -1) { // ignore all open paths
 			return path_list;
 		}
 
