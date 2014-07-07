@@ -23,7 +23,7 @@ public enum SvgFormat {
 
 public class SvgParser {
 	
-	SvgFormat format = SvgFormat.INKSCAPE;
+	SvgFormat format = SvgFormat.ILLUSTRATOR;
 	
 	public SvgParser () {
 	}

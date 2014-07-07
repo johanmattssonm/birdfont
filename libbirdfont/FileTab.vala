@@ -81,17 +81,16 @@ public class FileTab : FontDisplay {
 			
 			save_callback = new SaveCallback ();
 			save_callback.file_saved.connect (() => {
-				show_preview_tab ();
+				dialog.signal_discard ();
 			});
 			save_callback.save ();
-			
-			dialog.signal_discard ();
 		});
 		
 		if (!font.is_modified ()) {
 			dialog.signal_discard ();
 		} else {
 			MainWindow.native_window.set_save_dialog (dialog);
+			dialog.signal_discard ();
 		}
 	}
 	
