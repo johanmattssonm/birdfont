@@ -95,15 +95,30 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void signal_file_exported () {
-		export_callback.file_exported ();
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {
+			export_callback.file_exported ();
+			return false;
+		});
+		idle.attach (null);
 	}
 	
 	public static void signal_file_saved () {
-		save_callback.file_saved ();
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {
+			save_callback.file_saved ();
+			return false;
+		});
+		idle.attach (null);
 	}
 
 	public static void signal_file_loaded () {
-		load_callback.file_loaded ();
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {
+			load_callback.file_loaded ();
+			return false;
+		});
+		idle.attach (null);
 	}
 		
 	public static void set_font_setting_from_tools (Font f) {	

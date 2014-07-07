@@ -73,11 +73,18 @@ public class FileTab : FontDisplay {
 		});
 
 		dialog.signal_save.connect (() => {
+			SaveCallback save_callback;
+			
 			if (MenuTab.suppress_event) {
 				return;
 			}
 			
-			MenuTab.save ();
+			save_callback = new SaveCallback ();
+			save_callback.file_saved.connect (() => {
+				show_preview_tab ();
+			});
+			save_callback.save ();
+			
 			dialog.signal_discard ();
 		});
 		
