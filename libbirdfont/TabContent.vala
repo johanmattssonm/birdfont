@@ -121,6 +121,14 @@ public class TabContent : GLib.Object {
 		GlyphCanvas.current_display.scroll_wheel_down (x, y);
 	}
 
+	public static void undo () {
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		GlyphCanvas.current_display.undo (x, y);
+	}
+	
 	public static string path_to_uri (string path) {
 		string uri = path;
 		string wp;

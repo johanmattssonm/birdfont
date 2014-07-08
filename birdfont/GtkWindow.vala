@@ -461,7 +461,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		// Edit
 		Gtk.MenuItem undo_item = new Gtk.MenuItem.with_mnemonic (t_("_Undo"));
 		edit_menu.append (undo_item);
-		undo_item.activate.connect (() => { MainWindow.get_current_display ().undo (); });	
+		undo_item.activate.connect (() => { TabConten.undo (); });	
 		undo_item.add_accelerator ("activate", accel_group, 'Z', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 		
 		Gtk.MenuItem copy_item = new Gtk.MenuItem.with_mnemonic (t_("_Copy"));
