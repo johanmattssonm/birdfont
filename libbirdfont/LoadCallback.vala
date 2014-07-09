@@ -32,14 +32,15 @@ public class LoadCallback : GLib.Object {
 
 		dialog = new SaveDialogListener ();
 		font = BirdFont.get_current_font ();
-				
-		MainWindow.close_all_tabs ();
 		
 		dialog.signal_discard.connect (() => {
+			print ("Discard and oad_new_font\n");
+			MainWindow.close_all_tabs ();
 			load_new_font ();
 		});
 
 		dialog.signal_save.connect (() => {
+			MainWindow.close_all_tabs ();
 			MenuTab.save ();
 			load_new_font ();
 		});

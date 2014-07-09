@@ -98,7 +98,6 @@ public class MenuTab : FontDisplay {
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
 			export_callback.file_exported ();
-			MainWindow.native_window.font_loaded ();
 			return false;
 		});
 		idle.attach (null);
@@ -117,6 +116,7 @@ public class MenuTab : FontDisplay {
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
 			load_callback.file_loaded ();
+			MainWindow.native_window.font_loaded ();
 			return false;
 		});
 		idle.attach (null);
@@ -165,8 +165,6 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 		
-		MainWindow.close_all_tabs ();
-		
 		if (!set_suppress_event (true)) {
 			warning ("Can't lock UI.");
 			return;
@@ -175,8 +173,10 @@ public class MenuTab : FontDisplay {
 		font = BirdFont.get_current_font ();
 		
 		dialog.signal_discard.connect (() => {
+			MainWindow.close_all_tabs ();
+			
 			BirdFont.new_font ();
-		
+			
 			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
 			MainWindow.get_drawing_tools ().add_new_grid ();
 			MainWindow.get_drawing_tools ().add_new_grid ();
@@ -187,8 +187,11 @@ public class MenuTab : FontDisplay {
 		});
 
 		dialog.signal_save.connect (() => {
-			MenuTab.save ();
-			dialog.signal_discard ();
+			// FIXME: clean up background nested lambda
+			MainWindow.native_window.save (); // background thread
+			MenuTab.save_callback.file_saved.connect (() => {
+				dialog.signal_discard ();
+			});
 		});
 		
 		if (!font.is_modified ()) {
