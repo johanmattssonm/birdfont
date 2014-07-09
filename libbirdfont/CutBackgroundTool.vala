@@ -147,7 +147,8 @@ class CutBackgroundTool : Tool {
 		Surface sr;
 		Context cr;
 		
-		double tx, ty, vx, vy;	
+		double tx, ty, vx, vy;
+			
 		if (b == null) {
 			return;
 		}
@@ -185,24 +186,22 @@ class CutBackgroundTool : Tool {
 		w = (int) (get_width () / g.view_zoom);
 		h = (int) (get_height () / g.view_zoom);
 
-		sr = new Surface.similar (sg, img.get_content (), w, h);
+		sr = new Surface.similar (sg, img.get_content (), (int) (w / bg.img_scale_x + 2), (int) (h / bg.img_scale_y  + 2));
 		cr = new Context (sr);
 
 		cr.set_source_rgba (1, 1, 1, 1);
 		cr.rectangle (0, 0, w, h);
 		cr.fill ();
-			
-		cr.scale (bg.img_scale_x, bg.img_scale_y);
-		
+
 		cr.set_source_surface (sg, x, y);
 		cr.paint ();
 		
-		save_img (sr, g);
+		save_img (sr, g, bg);
 		
 		cr.restore ();
 	}
 
-	void save_img (Surface sr, Glyph g) {
+	void save_img (Surface sr, Glyph g, GlyphBackgroundImage original_bg) {
 #if ANDROID
 	return; // FIXME: android
 #else
@@ -245,11 +244,17 @@ class CutBackgroundTool : Tool {
 		newbg = new GlyphBackgroundImage ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
 			
 		// set position for the new background
-		wc = newbg.get_margin_width ();
-		hc = newbg.get_margin_height ();
+		wc = Glyph.path_coordinate_x (0) - Glyph.path_coordinate_x (newbg.get_margin_width ());	
+		hc = Glyph.path_coordinate_y (0) - Glyph.path_coordinate_y (newbg.get_margin_height ());
 		
-		newbg.img_x = Glyph.path_coordinate_x (fmin (x1, x2)) - wc - 0.5;
-		newbg.img_y = Glyph.path_coordinate_y (fmin (y1, y2)) + hc + 0.5;
+		wc *= g.view_zoom;
+		hc *= g.view_zoom;
+
+		newbg.img_x = Glyph.path_coordinate_x (fmin (x1, x2)) + wc;
+		newbg.img_y = Glyph.path_coordinate_y (fmin (y1, y2)) + hc;
+
+		newbg.img_scale_x = original_bg.img_scale_x;
+		newbg.img_scale_y = original_bg.img_scale_y;
 
 		new_image (newbg);
 #endif
