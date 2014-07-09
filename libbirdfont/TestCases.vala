@@ -81,19 +81,19 @@ class TestCases {
 	public static void test_codepages () {
 		CodePageBits pages = new CodePageBits ();
 		
-		if (pages.get_bits ('ó').length () == 0) {
+		if (pages.get_bits ('ó').size == 0) {
 			warning ("Codepage for Hungarian is not set.");
 		}
 		
-		if (pages.get_bits ('ö').length () == 0) {
+		if (pages.get_bits ('ö').size == 0) {
 			warning ("Codepage for Swedish is not set.");
 		}
 
-		if (pages.get_bits ('ﾂ').length () == 0) {
+		if (pages.get_bits ('ﾂ').size == 0) {
 			warning ("Codepage for Japanese is not set.");
 		}
 
-		if (pages.get_bits ('马').length () == 0) {
+		if (pages.get_bits ('马').size == 0) {
 			warning ("Codepage for Chinese is not set.");
 		}
 	}

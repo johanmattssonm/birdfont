@@ -19,11 +19,13 @@ public class Tab : GLib.Object {
 	bool always_open;
 	double width; 
 	FontDisplay display;
+	string label;
 
 	public Tab (FontDisplay glyph, double tab_width, bool always_open) {
 		width = tab_width;
-		this.display = glyph;
+		display = glyph;
 		this.always_open = always_open;
+		label = display.get_label ();
 	}
 
 	public bool has_close_button () {
@@ -40,6 +42,10 @@ public class Tab : GLib.Object {
 	
 	public double get_width () {
 		return width;
+	}
+	
+	public string get_label () {
+		return label;
 	}
 }
 

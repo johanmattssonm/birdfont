@@ -52,12 +52,12 @@ public class CodePageBits : GLib.Object {
 	}
 
 	void set_bits_for_glyph (Glyph g, ref uint32 p0, ref uint32 p1) {
-		List<int> bits;
+		Gee.ArrayList<int> bits;
 		
 		if (!g.is_unassigned ()) {
 			bits = get_bits (g.get_unichar ());
 			
-			if (unlikely (bits.length () == 0)) {
+			if (unlikely (bits.size == 0)) {
 				warning (@"Unknown codepage for glyph $(g.get_name ()) ($(Font.to_hex (g.get_unichar ())))");
 			}
 			
@@ -67,11 +67,11 @@ public class CodePageBits : GLib.Object {
 		}
 	}
 	
-	public List<int> get_bits (unichar c) {
-		List<int> bits = new List<int> ();
+	public Gee.ArrayList<int> get_bits (unichar c) {
+		Gee.ArrayList<int> bits = new Gee.ArrayList<int> ();
 		foreach (PageBit pb in codepages) {
 			if (pb.has_char (c)) {
-				bits.append (pb.bit); 
+				bits.add (pb.bit); 
 			}
 		}
 		return bits;

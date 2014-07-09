@@ -126,7 +126,7 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.undo (x, y);
+		GlyphCanvas.current_display.undo ();
 	}
 	
 	public static string path_to_uri (string path) {
