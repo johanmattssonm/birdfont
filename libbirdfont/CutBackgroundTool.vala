@@ -86,11 +86,23 @@ class CutBackgroundTool : Tool {
 		
 		draw_action.connect ((self, cr, glyph) => {
 			if (is_visible) {
+				// draw a border around the selection
 				cr.save ();
 				cr.set_line_width (2.0);
-				cr.set_source_rgba (0, 0, 1, 0.3);
+				cr.set_source_rgba (0, 0, 0, 0.3);
 				cr.rectangle (fmin (x1, x2), fmin (y1, y2), fabs (x1 - x2), fabs (y1 - y2));
 				cr.stroke ();
+				cr.restore ();
+
+				// make the area outside of the selection grey
+				cr.save ();
+				cr.set_line_width (0);
+				cr.set_source_rgba (0, 0, 0, 0.075);
+				cr.rectangle (0, 0, glyph.allocation.width, fmin (y1, y2));
+				cr.rectangle (0, fmin (y1, y2), fmin (x1, x2), fabs (y1 - y2));
+				cr.rectangle (0, fmin (y1, y2) + fabs (y1 - y2), glyph.allocation.width, glyph.allocation.height - fabs (y1 - y2));
+				cr.rectangle (fmin (x1, x2) + fabs (x1 - x2), fmin (y1, y2), glyph.allocation.width - fmin (x1, x2) - fabs (x1 - x2), glyph.allocation.height);
+				cr.fill ();
 				cr.restore ();
 			}
 		});

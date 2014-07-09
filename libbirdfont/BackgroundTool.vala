@@ -118,8 +118,8 @@ class BackgroundTool : Tool {
 		dx = x - begin_x;
 		dy = y - begin_y;
 		
-		dx *= 1/g.view_zoom;
-		dy *= 1/g.view_zoom;
+		dx *= 1 / g.view_zoom;
+		dy *= 1 / g.view_zoom;
 	
 		dx *= PenTool.precision;
 		dy *= PenTool.precision;
