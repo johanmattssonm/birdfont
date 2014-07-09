@@ -98,6 +98,7 @@ public class MenuTab : FontDisplay {
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
 			export_callback.file_exported ();
+			MainWindow.native_window.font_loaded ();
 			return false;
 		});
 		idle.attach (null);
@@ -181,6 +182,8 @@ public class MenuTab : FontDisplay {
 			MainWindow.get_drawing_tools ().add_new_grid ();
 			
 			KerningTools.update_kerning_classes ();
+			
+			MainWindow.native_window.font_loaded ();
 		});
 
 		dialog.signal_save.connect (() => {
