@@ -163,6 +163,10 @@ class CutBackgroundTool : Tool {
 		cg.set_source_rgba (1, 1, 1, 1);
 		cg.rectangle (0, 0, bg.size_margin, bg.size_margin);
 		cg.fill ();
+
+   		cg.translate (bg.size_margin * 0.5, bg.size_margin * 0.5);
+		cg.rotate (bg.img_rotation);
+		cg.translate (-bg.size_margin * 0.5, -bg.size_margin * 0.5);
 		
 		cg.set_source_surface (bg.get_img (), wc, hc);
 		cg.paint ();
@@ -186,7 +190,7 @@ class CutBackgroundTool : Tool {
 		w = (int) (get_width () / g.view_zoom);
 		h = (int) (get_height () / g.view_zoom);
 
-		sr = new Surface.similar (sg, img.get_content (), (int) (w / bg.img_scale_x + 2), (int) (h / bg.img_scale_y  + 2));
+		sr = new Surface.similar (sg, img.get_content (), (int) (w / bg.img_scale_x), (int) (h / bg.img_scale_y));
 		cr = new Context (sr);
 
 		cr.set_source_rgba (1, 1, 1, 1);
