@@ -1091,10 +1091,7 @@ public class Path {
 		}
 		
 		for (int i = 0; i < middle_points.size; i++) {
-			
 			hidden = middle_points.get (i);
-			print (@"middle $(hidden.x)  $(hidden.y)\n");
-			
 			add_point_after (middle_points.get (i), first_points.get (i));
 		}
 	}

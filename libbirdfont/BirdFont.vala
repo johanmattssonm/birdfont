@@ -37,9 +37,6 @@ public static int run_import (string[] arg) {
 	BirdFont.current_glyph = new Glyph ("");
 	MainWindow.init ();
 
-	LogLevelFlags levels = LogLevelFlags.LEVEL_ERROR | LogLevelFlags.LEVEL_CRITICAL | LogLevelFlags.LEVEL_WARNING;
-	Log.set_handler (null, levels, BirdFont.fatal_warning);		
-	
 	if (arg.length < 3) {
 		print_import_help (arg);
 		return -1;
@@ -120,7 +117,8 @@ static bool import_svg_file (Font font, File svg_file) {
 		if (glyph_name.has_prefix ("U+")) {
 			n = new StringBuilder ();
 			n.append_unichar (Font.to_unichar (glyph_name));
-			gc = font.get_glyph_collection (n.str);
+			glyph_name = n.str;
+			gc = font.get_glyph_collection (glyph_name);
 		} else {
 			gc = font.get_glyph_collection_by_name (glyph_name);
 			
