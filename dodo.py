@@ -117,7 +117,8 @@ def task_compile_translations ():
 
 def task_man():
     """gzip linux man pages"""
-    for name in ("birdfont.1", "birdfont-export.1"):
+    for name in ("birdfont.1", "birdfont-export.1", 
+"birdfont-import.1"):
         yield {
             'name': name,
             'file_dep': ['resources/linux/%s' % name],

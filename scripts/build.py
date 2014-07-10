@@ -102,6 +102,10 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		run("rm -f build/birdfont-export.1.gz")	
 		run("cp resources/linux/birdfont-export.1 build/")
 		run("gzip build/birdfont-export.1")
+
+		run("rm -f build/birdfont-import.1.gz")	
+		run("cp resources/linux/birdfont-import.1 build/")
+		run("gzip build/birdfont-import.1")
  				
 	
 def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
@@ -198,7 +202,7 @@ def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, library, nonN
 	run("mv ./*.o build/birdfont-import/")
 
 	run(cc + " " + ldflags + " \
-		build/birdfont-export/*.o \
+		build/birdfont-import/*.o \
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
 		$(pkg-config --libs """ + config.GEE + """) \

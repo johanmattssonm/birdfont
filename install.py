@@ -95,6 +95,7 @@ if os.path.isfile ('build/bin/birdfont'):
 	install ('build/bin/birdfont', '/bin', 755)
 
 install ('build/bin/birdfont-export', '/bin', 755)
+install ('build/bin/birdfont-import', '/bin', 755)
 
 #library
 if not options.libdir:
@@ -128,9 +129,11 @@ else:
 if not nogzip:
     install ('build/birdfont.1.gz', mandir, 644)
     install ('build/birdfont-export.1.gz', mandir, 644)
+    install ('build/birdfont-import.1.gz', mandir, 644)
 else:
     install ('resources/linux/birdfont.1', mandir, 644)
     install ('resources/linux/birdfont-export.1', mandir, 644)
+    install ('resources/linux/birdfont-import.1', mandir, 644)
 
 #translations
 for lang_dir in glob.glob('build/locale/*'):
