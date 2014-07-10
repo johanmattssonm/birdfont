@@ -253,7 +253,10 @@ class CutBackgroundTool : Tool {
 		
 		wc *= g.view_zoom;
 		hc *= g.view_zoom;
-
+		
+		wc *= original_bg.img_scale_x;
+		hc *= original_bg.img_scale_y;
+		
 		newbg.img_x = Glyph.path_coordinate_x (fmin (x1, x2)) + wc;
 		newbg.img_y = Glyph.path_coordinate_y (fmin (y1, y2)) + hc;
 
