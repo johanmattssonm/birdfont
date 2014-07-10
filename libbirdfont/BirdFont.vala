@@ -259,6 +259,8 @@ public static int run_export (string[] arg) {
 	BirdFont.current_font = new Font ();
 	BirdFont.current_glyph = new Glyph ("");
 	
+	file_name = build_absoulute_path (file_name);
+	
 	font = BirdFont.get_current_font ();
 	font.set_file (file_name);
 	if (!font.load ()) {
