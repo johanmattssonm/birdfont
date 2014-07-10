@@ -57,9 +57,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	ToolboxCanvas toolbox;
 	
-	/** Last folder for file chooser. */
-	string last_folder = "";
-	
 	public GtkWindow (string title) {
 		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		((Gtk.Window)this).set_title ("BirdFont");
@@ -777,6 +774,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		FileChooserDialog file_chooser = new FileChooserDialog (title, this, action, Stock.CANCEL, ResponseType.CANCEL, label, ResponseType.ACCEPT);
 		Font font = BirdFont.get_current_font ();
 		int i;
+		string last_folder;
+		
+		last_folder = Preferences.get ("last_folder");
 		
 		try {
 			if (last_folder == "") {
@@ -799,6 +799,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			i = ((!) fn).last_index_of ("/");
 			if (i > -1) {
 				last_folder = ((!) fn).substring (0, i);
+				Preferences.set ("last_folder", @"$last_folder");
 			}
 		}
 		
@@ -877,8 +878,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	/** Run export in a background thread. */
 	public void export () {
 		unowned Thread<void*> export_thread;
+		
 		MenuTab.start_background_thread ();
-		export_thread = Thread.create<void*> (this.export_thread, true);
+		
+		try {
+			export_thread = Thread.create<void*> (this.export_thread, true);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 	}
 	
 	public void* export_thread () {
@@ -891,8 +898,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	/** Load font in a background thread. */
 	public void load () {
 		unowned Thread<void*> thread;
+		
 		MenuTab.start_background_thread ();
-		thread = Thread.create<void*> (this.loading_thread, true);
+		
+		try {
+			thread = Thread.create<void*> (this.loading_thread, true);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 	}
 	
 	public void* loading_thread () {
@@ -905,8 +918,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	/** Save font in a background thread. */
 	public void save () {
 		unowned Thread<void*> thread;
+		
 		MenuTab.start_background_thread ();
-		thread = Thread.create<void*> (this.saving_thread, true);
+		
+		try {
+			thread = Thread.create<void*> (this.saving_thread, true);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 	}
 	
 	public void* saving_thread () {

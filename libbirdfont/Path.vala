@@ -1193,16 +1193,6 @@ public class Path {
 			added_points++;
 			
 			e = quadratic_path.add_point (e);
-/*
-			prev = e;
-
-			e = quadratic_path.add_point (e);
-			prev = quadratic_path.points.get (quadratic_path.points.size - 1);
-			
-			prev.recalculate_linear_handles ();
-			
-			new_quadratic_points.add (prev);
-*/
 			return true;
 		}, steps);
 		
