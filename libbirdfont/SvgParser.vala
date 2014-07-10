@@ -904,7 +904,6 @@ public class SvgParser {
 		PathList path_list = new PathList ();
 		EditPoint ep = new EditPoint ();
 		Gee.ArrayList<EditPoint> smooth_points = new Gee.ArrayList<EditPoint> ();
-		EditPoint next, prev;
 				
 		path = new Path ();
 		
@@ -1021,28 +1020,31 @@ public class SvgParser {
 		}
 
 		foreach (EditPoint e in smooth_points) {
-			e.set_tie_handle (true);
-			e.process_tied_handle ();
-			
-			e.set_point_type (PointType.CUBIC);
-			e.get_right_handle ().set_point_type (PointType.CUBIC);
-			e.get_left_handle ().set_point_type (PointType.CUBIC);
-			
-			if (e.next != null) {
-				next = e.get_next ();
-				next.get_left_handle ().angle = next.get_right_handle ().angle - PI;
-			}
+			e.set_point_type (PointType.LINE_DOUBLE_CURVE);
+			e.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
+			e.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
+		}
 
-			if (e.prev != null) {
-				prev = e.get_prev ();
-				prev.get_right_handle ().angle = prev.get_left_handle ().angle - PI;
+		foreach (EditPoint e in smooth_points) {
+			e.recalculate_linear_handles ();
+		}
+		
+
+		for (int i = 0; i < 3; i++) {
+			foreach (EditPoint e in smooth_points) {
+				e.set_tie_handle (true);
+				e.process_tied_handle ();
 			}
 		}
 		
 		if (path.points.size > 0) {
 			path_list.add (path);
 		}
-		
+
+		foreach (Path p in path_list.paths) {
+			p.remove_points_on_points ();
+		}
+				
 		return path_list;
 	}
 
@@ -1053,7 +1055,6 @@ public class SvgParser {
 		bool first_point = true;
 		double first_left_x, first_left_y;
 		Gee.ArrayList<EditPoint> smooth_points = new Gee.ArrayList<EditPoint> ();
-		EditPoint next, prev;
 				
 		path = new Path ();
 				
@@ -1140,27 +1141,30 @@ public class SvgParser {
 		}
 		
 		foreach (EditPoint e in smooth_points) {
-			e.set_tie_handle (true);
-			e.process_tied_handle ();
+			e.set_point_type (PointType.LINE_DOUBLE_CURVE);
+			e.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
+			e.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
+		}
 
-			e.set_point_type (PointType.CUBIC);
-			e.get_right_handle ().set_point_type (PointType.CUBIC);
-			e.get_left_handle ().set_point_type (PointType.CUBIC);
+		foreach (EditPoint e in smooth_points) {
+			e.recalculate_linear_handles ();
+		}
+		
 
-			if (e.next != null) {
-				next = e.get_next ();
-				next.get_left_handle ().angle = next.get_right_handle ().angle - PI;
-			}
-			
-			if (e.prev != null) {
-				prev = e.get_prev ();
-				prev.get_right_handle ().angle = prev.get_left_handle ().angle - PI;
+		for (int i = 0; i < 3; i++) {
+			foreach (EditPoint e in smooth_points) {
+				e.set_tie_handle (true);
+				e.process_tied_handle ();
 			}
 		}
 				
 		if (path.points.size > 0) {
 			warning ("Open path.");
 			path_list.add (path);
+		}
+		
+		foreach (Path p in path_list.paths) {
+			p.remove_points_on_points ();
 		}
 		
 		return path_list;

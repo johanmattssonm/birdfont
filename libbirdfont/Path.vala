@@ -1063,10 +1063,11 @@ public class Path {
 		foreach (EditPoint next in points) {
 			left = first.get_right_handle ().type;
 			right = next.get_left_handle ().type;
+						
 			if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 				first.get_right_handle ().type = PointType.QUADRATIC;
 
-				// half the way between handles
+				// half way between handles
 				x = first.get_right_handle ().x () + (next.get_left_handle ().x () - first.get_right_handle ().x ()) / 2;
 				y = first.get_right_handle ().y () + (next.get_left_handle ().y () - first.get_right_handle ().y ()) / 2;
 				
@@ -1090,6 +1091,10 @@ public class Path {
 		}
 		
 		for (int i = 0; i < middle_points.size; i++) {
+			
+			hidden = middle_points.get (i);
+			print (@"middle $(hidden.x)  $(hidden.y)\n");
+			
 			add_point_after (middle_points.get (i), first_points.get (i));
 		}
 	}
@@ -1108,7 +1113,7 @@ public class Path {
 			warning ("Less than 2 points in path.");
 			return quadratic_path;
 		}
-		
+	
 		i = points.get (0);
 		next = i.get_next ();
 
@@ -1155,7 +1160,9 @@ public class Path {
 		} else {
 			quadratic_path.reopen ();
 		}
-								
+		
+		quadratic_path.remove_points_on_points ();
+						
 		return quadratic_path;
 	}
 	
@@ -1184,7 +1191,9 @@ public class Path {
 						
 			e = new EditPoint (x, y, PointType.QUADRATIC);
 			added_points++;
-
+			
+			e = quadratic_path.add_point (e);
+/*
 			prev = e;
 
 			e = quadratic_path.add_point (e);
@@ -1193,8 +1202,13 @@ public class Path {
 			prev.recalculate_linear_handles ();
 			
 			new_quadratic_points.add (prev);
+*/
 			return true;
 		}, steps);
+		
+		foreach (EditPoint e in quadratic_path.points) {
+			e.recalculate_linear_handles ();
+		}
 		
 		quadratic_path.close ();
 	}
@@ -2147,6 +2161,52 @@ public class Path {
 			}
 		}
 		return i;
+	}
+	
+	public void remove_points_on_points () 
+	requires (points.size > 0) {
+		Gee.ArrayList<EditPoint> remove = new Gee.ArrayList<EditPoint> ();
+		EditPoint n;
+		EditPointHandle hr, h;
+		
+		create_list ();
+		
+		foreach (EditPoint ep in points) {
+			if (ep.next != null) {
+				n = ep.get_next ();
+			} else {
+				warning ("NEXT IS NULL");
+				n = points.get (0);
+			}
+				
+			if (fabs (n.x - ep.x) < 0.00001 && fabs (n.y - ep.y) < 0.00001) {
+				remove.add (ep);
+			}
+		}
+
+		foreach (EditPoint r in remove) {
+			if (r.next != null) {
+				n = r.get_next ();
+			} else {
+				n = points.get (0);
+			}
+			
+			points.remove (r);
+			h = n.get_left_handle ();
+			hr = r.get_left_handle ();
+			h.length = hr.length;
+			h.angle = hr.angle;
+			h.type = hr.type;
+			
+			if (h.length < 0.00001) {
+				h.length = 0.00001;
+				h.angle = n.get_right_handle ().angle - PI;
+			}
+			
+			create_list ();
+		}
+		
+		recalculate_linear_handles ();
 	}
 }
 

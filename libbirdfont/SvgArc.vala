@@ -79,9 +79,11 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 	Pry = ry * ry;
 	Px1 = x1 * x1;
 	Py1 = y1 * y1;
+
 	
 	// Check that radii are large enough
 	radiiCheck = Px1 / Prx + Py1 / Pry;
+	
 	if (radiiCheck > 1) {
 		rx = sqrt (radiiCheck) * rx;
 		ry = sqrt (radiiCheck) * ry;
@@ -93,7 +95,7 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 	// Step 2 : Compute (cx1, cy1)
 	//
 	sign = (largeArcFlag == sweepFlag) ? -1 : 1;
-	sq = ((Prx*Pry)-(Prx*Py1)-(Pry*Px1)) / ((Prx*Py1)+(Pry*Px1));
+	sq = ((Prx * Pry) - (Prx * Py1) - (Pry * Px1)) / ((Prx * Py1) + (Pry * Px1));
 	sq = (sq < 0) ? 0 : sq;
 	coef = (sign * Math.sqrt(sq));
 	cx1 = coef * ((rx * y1) / ry);
@@ -142,7 +144,7 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 	
 	// Approximate the path with Beziér points
 	s = (angleExtent > 0) ? 1 : -1;
-	step = fabs (angleExtent) / (3 * fabs (angleExtent));
+	step = fabs (angleExtent) / (2 * fabs (angleExtent));
 
 	theta = PI - angleStart - angleExtent;
 	
@@ -163,11 +165,11 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 		bezier_points[bi].x0 = cx + rx * cos (theta);
 		bezier_points[bi].y0 = cy + ry * sin (theta);
 
-		bezier_points[bi].x1 = cx + rx * cos (theta + 1 * step / 3);
-		bezier_points[bi].y1 = cy + ry * sin (theta + 1 * step / 3);
+		bezier_points[bi].x1 = cx + rx * cos (theta + 1 * step / 4);
+		bezier_points[bi].y1 = cy + ry * sin (theta + 1 * step / 4);
 		
-		bezier_points[bi].x2 = cx + rx * cos (theta + 2 * step / 3);
-		bezier_points[bi].y2 = cy + ry * sin (theta + 2 * step / 3);
+		bezier_points[bi].x2 = cx + rx * cos (theta + 2 * step / 4);
+		bezier_points[bi].y2 = cy + ry * sin (theta + 2 * step / 4);
 						
 		bi++;
 	}
