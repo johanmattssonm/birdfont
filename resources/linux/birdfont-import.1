@@ -1,7 +1,7 @@
 .TH BIRDFONT-IMPORT 1 LOCAL
 
 .SH NAME
-birdfont-import - Add several SVG files to a font file
+birdfont-import - Create a font from SVG files
 .SH SYNOPSIS
 .B birdfont-import birdfont-file svg-files ...
 .SH DESCRIPTION
@@ -11,9 +11,14 @@ The command assumes that the file name denotes either a single character
 or a Unicode value on the form U+XX where XX is the Unicode number in
 hexadecimal format.
 
+A drawing saved as "a.svg" will be added to the glyph "a" when you run:
+birdfont-export typeface.bf a.svg
+
+A drawing saved as "U+62.svg" will be added to "b" when you run: 
+birdfont-export typeface.bf U+62.svg
+
 See also birdfont-export for creating SVG, EOT and TTF fonts from the
 birdfont file.
 
-See http://birdfont.org for use cases.
 .SH AUTHOR
 Johan Mattsson
