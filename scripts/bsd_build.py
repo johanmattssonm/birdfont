@@ -33,6 +33,7 @@ configfile.write_config (prefix)
 compile_translations()
 build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
 build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library)
+build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, library)
 build.birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library)
 
 print ("Done")

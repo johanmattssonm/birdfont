@@ -121,7 +121,7 @@ public class VersionList : DropMenu {
 		add_glyph (new_version);
 	}
 	
-	private int get_last_id () {
+	public int get_last_id () {
 		return_val_if_fail (glyphs.size > 0, 1);
 		return glyphs.get (glyphs.size - 1).version_id;
 	}

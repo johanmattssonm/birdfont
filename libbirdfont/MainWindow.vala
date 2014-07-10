@@ -44,6 +44,10 @@ public class MainWindow : GLib.Object {
 		ligature_display = new LigatureList ();
 	}
 
+	public static void init () {
+		singleton = new MainWindow ();
+	}
+
 	public static FileTab get_recent_files_tab () {
 		return file_tab;
 	}

@@ -50,13 +50,21 @@ public class GlyphCollection : GLib.Object {
 		unicode.append_unichar (unicode_character);
 		return unicode.str;
 	}
-	
+
+	public unichar get_unicode_character () {
+		return unicode_character;
+	}
+		
 	public string get_name () {
 		return name;
 	}
 	
 	public int get_selected_id () {
 		return versions.get_current ().version_id;	
+	}
+	
+	public int get_last_id () {
+		return versions.get_last_id ();
 	}
 	
 	public void set_selected_version (int version_id) {

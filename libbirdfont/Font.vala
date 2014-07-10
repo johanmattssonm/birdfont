@@ -154,16 +154,24 @@ public class Font : GLib.Object {
 	/** Full path to this font file. */
 	public string get_path () {
 		int i = 0;
+		string fn;
+		File f;
 		
 		if (font_file != null) {
-			return (!) font_file;
+			fn = (!) font_file;
+			
+			if (fn.index_of ("/") == -1 && fn.index_of ("\\") == -1) {
+				warning ("Relative path.");
+			}
+			
+			return fn;
 		}
 		
 		StringBuilder sb = new StringBuilder ();
 		sb.append (Environment.get_home_dir ());
 		sb.append (@"/$(get_name ()).bf");
 		
-		File f = File.new_for_path (sb.str);
+		f = File.new_for_path (sb.str);
 
 		while (f.query_exists ()) {
 			sb.erase ();
@@ -194,6 +202,10 @@ public class Font : GLib.Object {
 		
 		if (i == -1) {
 			i = p.last_index_of ("\\");
+		}
+		
+		if (i == -1) {
+			warning (@"Can not find folder in $p.");
 		}
 		
 		p = p.substring (0, i);

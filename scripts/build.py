@@ -161,7 +161,54 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, nonN
 	
 	run("touch build/installed")
 	run("touch build/configured")
-	
+
+def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
+	# birdfont-import
+	run("mkdir -p build/birdfont-import")
+
+	experimentalNonNull = ""
+	if nonNull:
+		experimentalNonNull = "--enable-experimental-non-null"
+			
+	run(valac + """ \
+		-C \
+		""" + experimentalNonNull + """ \
+		--enable-experimental \
+		--define=MAC birdfont-import/* \
+		--vapidir=./ \
+		--pkg """ + config.GEE + """ \
+		--pkg libxml-2.0 \
+		--pkg gio-2.0  \
+		--pkg cairo \
+		--pkg gdk-pixbuf-2.0 \
+		--pkg gtk+-2.0 \
+		--pkg libbirdfont""")
+	run("mv birdfont-import/*.c build/birdfont-import/")
+
+	run(cc + " " + cflags + """ \
+		-c ./build/libbirdfont/birdfont.h build/birdfont-import/*.c \
+		-D 'GETTEXT_PACKAGE="birdfont"' \
+		$(pkg-config --cflags """ + config.GEE + """) \
+		$(pkg-config --cflags libxml-2.0) \
+		$(pkg-config --cflags gio-2.0) \
+		$(pkg-config --cflags cairo) \
+		$(pkg-config --cflags glib-2.0) \
+		$(pkg-config --cflags gdk-pixbuf-2.0) \
+		-I ./build/libbirdfont/""")
+	run("mv ./*.o build/birdfont-import/")
+
+	run(cc + " " + ldflags + " \
+		build/birdfont-export/*.o \
+		-Lbuild/bin/ -lbirdfont \
+		-lm \
+		$(pkg-config --libs """ + config.GEE + """) \
+		$(pkg-config --libs libxml-2.0) \
+		$(pkg-config --libs gio-2.0) \
+		$(pkg-config --libs cairo) \
+		$(pkg-config --libs glib-2.0) \
+		$(pkg-config --libs gdk-pixbuf-2.0) \
+		-o ./build/bin/birdfont-import""")
+
 def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
 	# birdfont
 	run("mkdir -p build/birdfont")

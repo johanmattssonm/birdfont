@@ -158,6 +158,7 @@ public class Preview : FontDisplay {
 			warning (e.message);
 			warning ("Failed to load html into canvas.");
 			sb.append (@"Error: $(e.message)<br>\n");
+			sb.append (@"($((!) get_file ().get_path ()))<br>\n");
 		}
 		return sb.str;
 	}

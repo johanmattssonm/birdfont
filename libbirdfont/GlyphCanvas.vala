@@ -57,10 +57,6 @@ public class GlyphCanvas : GLib.Object {
 			
 			BirdFont.current_glyph = g;
 			BirdFont.current_glyph.resized (allocation);
-			
-			if (g.allocation.width == 0 || g.allocation.height == 0) {
-				warning ("area is zero in glyph canvas");
-			}
 		}
 
 		current_display = fd;
@@ -72,8 +68,10 @@ public class GlyphCanvas : GLib.Object {
 		});
 
 		redraw ();
-
-		MainWindow.native_window.update_window_size ();
+		
+		if (!is_null (MainWindow.native_window)) {
+			MainWindow.native_window.update_window_size ();
+		}
 	}
 	
 	public static Glyph get_current_glyph ()  {

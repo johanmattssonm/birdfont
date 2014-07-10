@@ -1168,7 +1168,6 @@ public class Path {
 	
 	private void add_quadratic_points (EditPoint start, EditPoint stop) {
 		int steps;
-		EditPoint prev =  new EditPoint ();
 		int added_points = 0;
 		
 		if (points.size < 2) {

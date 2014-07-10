@@ -1,5 +1,5 @@
 """
-Copyright (C) 2012, 2013 Eduardo Naufel Schettino and Johan Mattsson
+Copyright (C) 2012, 2013, 2014 Eduardo Naufel Schettino and Johan Mattsson
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ DOIT_CONFIG = {
         'libbirdfont',
         'birdfont',
         'birdfont_export',
+        'birdfont_import',
         'compile_translations',
         'man'
         ],
@@ -87,16 +88,23 @@ def task_libbirdfont():
     yield libbird.gen_ln()
 
 
-def task_birdfont ():
+def task_birdfont():
     bird = Vala(src='birdfont', build='build', pkg_libs=LIBS, vala_deps=[libbird])
     yield bird.gen_c(valac_options)
     yield bird.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
 
-def task_birdfont_export ():
+def task_birdfont_export():
      exp = Vala(src='birdfont-export', build='build', pkg_libs=LIBS, vala_deps=[libbird])
      yield exp.gen_c(valac_options)
      yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
+
+
+def task_birdfont_import():
+     exp = Vala(src='birdfont-import', build='build', pkg_libs=LIBS, vala_deps=[libbird])
+     yield exp.gen_c(valac_options)
+     yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
+
 
 
 

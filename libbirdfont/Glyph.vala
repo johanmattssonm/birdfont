@@ -352,7 +352,10 @@ public class Glyph : FontDisplay {
 		add_help_lines ();
 		KeyBindings.set_require_modifier (false);
 		glyph_sequence = Preferences.get ("glyph_sequence");
-		MainWindow.native_window.set_scrollbar_size (0);
+		
+		if (!is_null (MainWindow.native_window)) {
+			MainWindow.native_window.set_scrollbar_size (0);
+		}
 	}
 	
 	private void remove_lines () {
