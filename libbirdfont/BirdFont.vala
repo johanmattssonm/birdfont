@@ -123,7 +123,7 @@ static bool import_svg_file (Font font, File svg_file) {
 			gc = font.get_glyph_collection_by_name (glyph_name);
 			
 			if (gc == null) {
-				stdout.printf (file_name + " " + t_("is not the name of a glyph or a unicode value.") + "\n");
+				stdout.printf (file_name + " " + t_("is not the name of a glyph or a Unicode value.") + "\n");
 				stdout.printf (t_("Unicode values must start with U+.") + "\n");
 				return false;
 			}
