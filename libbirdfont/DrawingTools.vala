@@ -510,7 +510,7 @@ public class DrawingTools : ToolCollection  {
 		background_scale.select_action.connect((self) => {
 			SpinButton sb = (SpinButton) self;
 			Glyph g = MainWindow.get_current_glyph ();
-			GlyphBackgroundImage? img = g.get_background_image ();
+			BackgroundImage? img = g.get_background_image ();
 			double s = sb.get_value ();
 			
 			if (img != null) {
@@ -571,8 +571,8 @@ public class DrawingTools : ToolCollection  {
 		
 		background_contrast.select_action.connect ((self) => {		
 			Glyph g = MainWindow.get_current_glyph ();
-			GlyphBackgroundImage? bg = g.get_background_image ();
-			GlyphBackgroundImage b;
+			BackgroundImage? bg = g.get_background_image ();
+			BackgroundImage b;
 			
 			if (bg != null) {
 				b = (!) bg;

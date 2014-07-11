@@ -162,7 +162,7 @@ class BirdFontPart : GLib.Object{
 		FileEnumerator e;
 		string name;
 		File image_dir;
-		GlyphBackgroundImage bg;
+		BackgroundImage bg;
 		File found;
 		File dest;
 		
@@ -188,7 +188,7 @@ class BirdFontPart : GLib.Object{
 				if (name.has_suffix (".png")) {
 					found = image_dir.get_child (name);
 					dest = font.get_backgrounds_folder ().get_child ("parts").get_child (name);
-					bg = new GlyphBackgroundImage ((!) found.get_path ());
+					bg = new BackgroundImage ((!) found.get_path ());
 					bg.create_background_folders (font);
 					bg.copy_if_new (dest);
 				}
@@ -228,7 +228,7 @@ class BirdFontPart : GLib.Object{
 	void write_glyph_background_image (BirdFontFile bf, GlyphCollection gc, Glyph g) throws GLib.Error {
 		string file_name;
 		string dir_name;
-		GlyphBackgroundImage bg;
+		BackgroundImage bg;
 		File file;
 		
 		if (g.get_background_image () != null) {

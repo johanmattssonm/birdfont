@@ -17,7 +17,7 @@ using Math;
 
 namespace BirdFont {
 	
-public class GlyphBackgroundImage {
+public class BackgroundImage {
 		
 	public double img_x = 0;
 	public double img_y = 0;
@@ -64,12 +64,12 @@ public class GlyphBackgroundImage {
 		}
 	}
 		
-	public GlyphBackgroundImage (string file_name) {
+	public BackgroundImage (string file_name) {
 		path = file_name;
 	}
 
-	public GlyphBackgroundImage copy () {
-		GlyphBackgroundImage bg = new GlyphBackgroundImage (path);
+	public BackgroundImage copy () {
+		BackgroundImage bg = new BackgroundImage (path);
 			
 		bg.img_x = img_x;
 		bg.img_y = img_y;

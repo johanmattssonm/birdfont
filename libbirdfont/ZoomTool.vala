@@ -70,7 +70,7 @@ class ZoomTool : Tool {
 	}
 
 	public void zoom_full_background_image () {
-		GlyphBackgroundImage bg;
+		BackgroundImage bg;
 		Glyph g = MainWindow.get_current_glyph ();
 		int x, y;
 		

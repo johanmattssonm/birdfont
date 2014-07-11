@@ -19,7 +19,7 @@ namespace BirdFont {
 
 public class Glyph : FontDisplay {
 	// Background image
-	GlyphBackgroundImage? background_image = null;
+	BackgroundImage? background_image = null;
 	bool background_image_visible = true;
 	
 	// Glyph zoom level
@@ -303,8 +303,8 @@ public class Glyph : FontDisplay {
 		view_offset_y -= b - d;
 	}
 
-	public void set_background_image (GlyphBackgroundImage? b) {
-		GlyphBackgroundImage bg;
+	public void set_background_image (BackgroundImage? b) {
+		BackgroundImage bg;
 		
 		if (b == null) {
 			background_image = null;
@@ -316,7 +316,7 @@ public class Glyph : FontDisplay {
 		BirdFont.get_current_font ().touch ();
 	}
 	
-	public GlyphBackgroundImage? get_background_image () {
+	public BackgroundImage? get_background_image () {
 		return (!) background_image;
 	}
 		

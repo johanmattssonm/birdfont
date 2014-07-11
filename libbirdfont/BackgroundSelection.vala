@@ -90,7 +90,7 @@ class BackgroundSelection : FontDisplay {
 		ImageSurface img_surface;
 		ImageSurface thumbnail_surface;
 		Cairo.Status status;
-		GlyphBackgroundImage background_image;
+		BackgroundImage background_image;
 		Context cr;
 		double ratio;
 		Font font = BirdFont.get_current_font ();
@@ -105,7 +105,7 @@ class BackgroundSelection : FontDisplay {
 		}
 		
 		if (!thumbnail_image.query_exists ()) {
-			background_image = new GlyphBackgroundImage ((!) original.get_path ());
+			background_image = new BackgroundImage ((!) original.get_path ());
 			img_surface = background_image.get_img ();
 			thumbnail_surface = new ImageSurface (Format.ARGB32, 100, 100);
 			ratio = Math.fmin (100.0 / img_surface.get_width (), 100.0 / img_surface.get_height ());
@@ -189,7 +189,7 @@ class BackgroundSelection : FontDisplay {
 	private void select_image () {
 		Font font;
 		string file;
-		GlyphBackgroundImage bg;
+		BackgroundImage bg;
 		TabBar tb;
 		Tool zoom_background;
 
@@ -200,7 +200,7 @@ class BackgroundSelection : FontDisplay {
 		}
 		
 		file = background_images.get (active_box - 1);
-		bg = new GlyphBackgroundImage (file);
+		bg = new BackgroundImage (file);
 		tb = MainWindow.get_tab_bar ();
 		
 		bg.reset_scale (glyph);

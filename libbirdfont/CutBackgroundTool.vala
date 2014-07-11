@@ -28,7 +28,7 @@ class CutBackgroundTool : Tool {
 	bool is_set = false;
 	bool is_done = false;
 		
-	public signal void new_image (GlyphBackgroundImage file);
+	public signal void new_image (BackgroundImage file);
 	
 	public CutBackgroundTool (string name) {
 		base (name, t_("Crop background image"));
@@ -139,8 +139,8 @@ class CutBackgroundTool : Tool {
 		double wc, hc;
 		
 		Glyph g = MainWindow.get_current_glyph ();
-		GlyphBackgroundImage? b = g.get_background_image ();
-		GlyphBackgroundImage bg = (!) b;
+		BackgroundImage? b = g.get_background_image ();
+		BackgroundImage bg = (!) b;
 		
 		ImageSurface img;
 		
@@ -205,11 +205,11 @@ class CutBackgroundTool : Tool {
 		cr.restore ();
 	}
 
-	void save_img (Surface sr, Glyph g, GlyphBackgroundImage original_bg) {
+	void save_img (Surface sr, Glyph g, BackgroundImage original_bg) {
 #if ANDROID
 	return; // FIXME: android
 #else
-		GlyphBackgroundImage newbg;
+		BackgroundImage newbg;
 		Font f = BirdFont.get_current_font ();
 		File img_dir;
 		File img_file;
@@ -228,7 +228,7 @@ class CutBackgroundTool : Tool {
 		
 		sr.write_to_png (fn);
 		
-		newbg = new GlyphBackgroundImage (fn);
+		newbg = new BackgroundImage (fn);
 		
 		fn = newbg.get_sha1 () + ".png";
 
@@ -245,7 +245,7 @@ class CutBackgroundTool : Tool {
 			return;
 		}
 		
-		newbg = new GlyphBackgroundImage ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
+		newbg = new BackgroundImage ((!) f.get_backgrounds_folder ().get_child ("parts").get_child (fn).get_path ());
 			
 		// set position for the new background
 		wc = Glyph.path_coordinate_x (0) - Glyph.path_coordinate_x (newbg.get_margin_width ());	

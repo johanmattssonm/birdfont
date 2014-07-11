@@ -159,7 +159,7 @@ class BirdFontFile : GLib.Object {
 			});
 		
 			font.glyph_cache.for_each ((gc) => {
-				GlyphBackgroundImage bg;
+				BackgroundImage bg;
 				
 				try {
 					string data;
@@ -539,8 +539,8 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	private void write_glyph_background (Glyph g, DataOutputStream os) throws GLib.Error {
-		GlyphBackgroundImage? bg;
-		GlyphBackgroundImage background_image;
+		BackgroundImage? bg;
+		BackgroundImage background_image;
 		double pos_x, pos_y, scale_x, scale_y, rotation;
 		
 		bg = g.get_background_image ();
@@ -1488,8 +1488,8 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	private void parse_background_scale (Glyph g, Xml.Node* node) {
-		GlyphBackgroundImage img;
-		GlyphBackgroundImage? new_img = null;
+		BackgroundImage img;
+		BackgroundImage? new_img = null;
 		
 		string attr_name = "";
 		string attr_content;
@@ -1507,7 +1507,7 @@ class BirdFontFile : GLib.Object {
 					warning (@"Background file has not been created yet. $((!) img_file.get_path ())");
 				}
 				
-				new_img = new GlyphBackgroundImage ((!) img_file.get_path ());
+				new_img = new BackgroundImage ((!) img_file.get_path ());
 				g.set_background_image ((!) new_img);
 			}
 		}

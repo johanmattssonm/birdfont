@@ -32,7 +32,7 @@ public class BackgroundTool : Tool {
 		
 	bool move_bg;
 	
-	static GlyphBackgroundImage imported_background;
+	static BackgroundImage imported_background;
 	
 	public BackgroundTool (string name) {
 		base (name, t_("Move, resize and rotate background image"));
@@ -40,7 +40,7 @@ public class BackgroundTool : Tool {
 		top_limit = 0;
 		bottom_limit = 0;
 
-		imported_background = new GlyphBackgroundImage ("");
+		imported_background = new BackgroundImage ("");
 
 		select_action.connect((self) => {
 		});
@@ -50,8 +50,8 @@ public class BackgroundTool : Tool {
 		
 		press_action.connect((self, b, x, y) => {
 			Glyph g = MainWindow.get_current_glyph ();
-			GlyphBackgroundImage? bg = g.get_background_image ();
-			GlyphBackgroundImage background;
+			BackgroundImage? bg = g.get_background_image ();
+			BackgroundImage background;
 			
 			if (bg == null) {
 				return;
@@ -79,7 +79,7 @@ public class BackgroundTool : Tool {
 
 		release_action.connect((self, b, x, y) => {
 			Glyph g = MainWindow.get_current_glyph ();
-			GlyphBackgroundImage? bg = g.get_background_image ();
+			BackgroundImage? bg = g.get_background_image ();
 			
 			if (bg == null) {
 				return;
@@ -99,7 +99,7 @@ public class BackgroundTool : Tool {
 		
 		draw_action.connect ((self, cairo_context, glyph) => {
 			Glyph g = MainWindow.get_current_glyph ();
-			GlyphBackgroundImage? background_image = g.get_background_image ();
+			BackgroundImage? background_image = g.get_background_image ();
 			if (background_image == null) return;
 			
 			((!) background_image).draw_handle (cairo_context, glyph);
@@ -108,8 +108,8 @@ public class BackgroundTool : Tool {
 		
 	void move (double x, double y) {
 		Glyph g = MainWindow.get_current_glyph ();
-		GlyphBackgroundImage? background_image = g.get_background_image ();
-		GlyphBackgroundImage bg = (!) background_image;
+		BackgroundImage? background_image = g.get_background_image ();
+		BackgroundImage bg = (!) background_image;
 		
 		double xscale, yscale, dx, dy;
 
@@ -169,7 +169,7 @@ public class BackgroundTool : Tool {
 	}
 
 	internal static void import_background_image () {
-		GlyphBackgroundImage bg;
+		BackgroundImage bg;
 		string? fn;
 		string path;
 		
@@ -177,7 +177,7 @@ public class BackgroundTool : Tool {
 		
 		if (fn != null) {
 			path = (!) fn;
-			bg = new GlyphBackgroundImage (path);
+			bg = new BackgroundImage (path);
 			imported_background = bg;
 			MainWindow.native_window.load_background_image ();
 		}

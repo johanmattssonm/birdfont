@@ -514,7 +514,7 @@ class TestCases {
 	}
 
 	public static void test_background_coordinates () {
-		GlyphBackgroundImage bg = new GlyphBackgroundImage ("");
+		BackgroundImage bg = new BackgroundImage ("");
 		
 		bg.set_position (100, 100);
 		bg.set_img_offset (bg.img_offset_x, bg.img_offset_y);
