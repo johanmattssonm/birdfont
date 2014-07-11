@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -15,8 +15,7 @@
 namespace BirdFont {
 
 public class ExportTool : GLib.Object {
-	private static ExportThread export_thread;
-
+	
 	public ExportTool (string n) {
 	}
 
@@ -338,8 +337,8 @@ os.put_string (
 </div>
 
 <div>
-	<h3 class="small">Handgloves & Mittoms</h3>
-	<p class="small">Wind blows in Hauges poetry.</p>
+	<h3 class="big">Handgloves & Mittoms</h3>
+	<p class="big">Bibliography</p>
 </p>
 </div>
 
@@ -370,120 +369,15 @@ os.put_string (
 		return export_ttf_font_path (file);
 	}
 
-	public static bool export_ttf_font_sync () {
-		Font font = BirdFont.get_current_font ();
-		File file = font.get_folder ();
-		return export_ttf_font_path (file, false);
-	}
-		
-	// FIXME: move to search path class
-	private static string[] get_birdfont_export (File folder, string temp_file) {
-		File f;
-		string dest = @"\"$((!) folder.get_path ())\" \"$temp_file\"";
-		
-		f = File.new_for_path ("birdfont-export.sh");
-		if (f.query_exists ()) {
-			return { 
-				"sh", 
-				"birdfont-export.sh",
-				"--ttf",
-				"-o",
-				dest
-			};
-		}
-
-		f = File.new_for_path ("../birdfont-export.sh");	
-		if (f.query_exists ()) {
-			return { 
-				"sh", 
-				"../birdfont-export.sh",
-				"--ttf",
-				"-o",
-				dest
-			};
-		}
-
-		f = File.new_for_path (@"$(BirdFont.bundle_path)/Contents/MacOS/birdfont-export");
-		if (f.query_exists ()) {
-			return { 
-				@"$(BirdFont.bundle_path)/Contents/MacOS/birdfont-export",
-				"--ttf",
-				"-o",
-				dest
-			};
-		}
-		
-		f = File.new_for_path ("birdfont-export.exe");	
-		if (f.query_exists ()) {
-			return { 
-				(!) f.get_path (),
-				"--ttf",
-				"-o",
-				dest
-			};
-		}
-
-		f = File.new_for_path (@"$PREFIX/bin/birdfont-export");
-		if (f.query_exists ()) {
-			return { 
-				@"$PREFIX/bin/birdfont-export",
-				"--ttf",
-				"-o",
-				dest
-			};
-		}
-
-		f = File.new_for_path ("birdfont-export");	
-		if (f.query_exists ()) {
-			return { 
-				(!) f.get_path (),
-				"--ttf",
-				"-o",
-				dest
-			};
-		}
-
-		f = File.new_for_path (BirdFont.exec_path + "/Contents/MacOS/birdfont-export");	
-		if (f.query_exists ()) {
-			return { 
-				(!) f.get_path (),
-				"--ttf",
-				"-o",
-				dest
-			};
-		}
-		
-		warning ("Can't find birdfont-export.");
-		
-		return { 
-				"birdfont-export",
-				"--ttf",
-				"-o",
-				dest
-			};
-	}
-	
-	public static bool export_ttf_font_path (File folder, bool async = true) {
+	public static bool export_ttf_font_path (File folder) {
 		Font current_font = BirdFont.get_current_font ();
 		File ttf_file;
 		File eot_file;
-		string temp_file;
 		bool done = true;
-		
-		if (BirdFont.win32) {
-			async = false;
-		}
 				
 		try {
-			// create a copy of current font and use it in a separate 
-			// export thread
-			
-			if (async) {
-				temp_file = current_font.save_backup ();
-			} else {
-				temp_file = current_font.get_path (); 
-			}
-			
+			current_font.save_backup ();
+
 			ttf_file = folder.get_child (current_font.get_full_name () + ".ttf");
 			eot_file = folder.get_child (current_font.get_full_name () + ".eot");
 
@@ -495,20 +389,10 @@ os.put_string (
 				eot_file.delete ();
 			}
 			
-			assert (!is_null (temp_file));
-			assert (!is_null (ttf_file.get_path ()));
-			assert (!is_null (eot_file.get_path ()));
-
-			export_thread = new ExportThread (temp_file, (!) ttf_file.get_path (), (!) eot_file.get_path (), async);
-
-			if (async) {
-				spawn_export (folder, temp_file);
-			}
+			TooltipArea.show_text (t_("Writing TTF and EOT files."));
 			
-			if (!async) {
-				export_thread.run ();
-			}
-			
+			write_ttf ((!) ttf_file.get_path ());
+			write_eot ((!) ttf_file.get_path (), (!) eot_file.get_path ());
 		} catch (Error e) {
 			critical (@"$(e.message)");
 			done = false;
@@ -517,22 +401,6 @@ os.put_string (
 		return done;		
 	}
 
-	public static int spawn_export (File folder, string temp_file) {
-		string[] spawn_args = get_birdfont_export (folder, temp_file);
-		string c = "";
-
-		TooltipArea.show_text (t_("Writing TTF and EOT files."));
-
-		foreach (string s in spawn_args) {
-			c += s + " ";
-		}
-		
-		debug (@"Running: $(c)\n");
-		MainWindow.native_window.spawn (c);
-		
-		return 0;
-	}
-	
 	public static bool export_svg_font () {
 		Font font = BirdFont.get_current_font ();
 		TooltipArea.show_text (t_("Writing SVG file."));
@@ -558,97 +426,37 @@ os.put_string (
 			fo.close ();
 		} catch (Error e) {
 			critical (@"$(e.message)");
-			status (e.message);
+			TooltipArea.show_text (e.message);
 			return false;
 		}
 		
 		return true;
 	}
 
-	public class ExportThread : GLib.Object {
-		private static string ffi;
-		private static string ttf;
-		private static string eot;
-		private bool async = false;
-
-		public ExportThread (string nffi, string nttf, string neot, bool async) {
-			ffi = nffi.dup ();
-			ttf = nttf.dup ();
-			eot = neot.dup ();
-			this.async = async;
-		}
+	static void write_ttf (string ttf) {
+		OpenFontFormatWriter fo = new OpenFontFormatWriter ();
+		Font f = BirdFont.get_current_font ();
+		File file = (!) File.new_for_path (ttf);
 		
-		public void* run () {
-			assert (!is_null (ffi));
-			assert (!is_null (ttf));
-			assert (!is_null (eot));
-			
-			write_ttf ();
-			write_eof ();
-
-			return null;
+		try {
+			fo.open (file);
+			fo.write_ttf_font (f);
+			fo.close ();
+		} catch (Error e) {
+			warning ("Can't write TTF font.");
+			critical (@"$(e.message)");
 		}
-		
-		void write_ttf () {
-			OpenFontFormatWriter fo = new OpenFontFormatWriter ();
-			Font f;
-			File file = (!) File.new_for_path (ttf);
-
-			return_if_fail (!is_null (ffi));			
-			return_if_fail (!is_null (ttf));
-			return_if_fail (!is_null (file));
-			return_if_fail (!is_null (fo));
-			
-			try {
-				if (async) {
-					printd ("Loading the intermediate file.\n");
-					f = new Font ();
-					f.set_file (ffi);
-					if (!f.load ()) {
-						warning (@"Can't read $ffi");
-					}
-				} else {
-					f = BirdFont.get_current_font ();
-					printd ("File is already loaded.\n");
-				}
-				
-				fo.open (file);
-				fo.write_ttf_font (f);
-				fo.close ();
-			} catch (Error e) {
-				critical (@"$(e.message)");
-			}
-		}
-		
-		void write_eof () {
-			EotWriter fo;
-
-			return_if_fail (!is_null (this));
-			return_if_fail (!is_null (ttf));
-			return_if_fail (!is_null (eot));
-			
-			fo = new EotWriter (ttf, eot);
-
-			return_if_fail (!is_null (fo));
-
-			try {
-				fo.write ();
-			} catch (Error e) {
-				warning ("EOF conversion falied.");
-				critical (@"$(e.message)");
-			}
-		}
-
 	}
 	
-	private static void status (string s) {
-		TooltipArea status = MainWindow.get_tooltip ();
-		
-		if (is_null (status)) {
-			return;
+	static void write_eot (string ttf, string eot) {
+		EotWriter fo = new EotWriter (ttf, eot);
+
+		try {
+			fo.write ();
+		} catch (Error e) {
+			warning ("EOF conversion falied.");
+			critical (@"$(e.message)");
 		}
-		
-		TooltipArea.show_text (s);
 	}
 }
 

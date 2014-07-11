@@ -34,8 +34,10 @@ public class TooltipArea : GLib.Object {
 	public static void show_text (string text) {
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
-			MainWindow.get_tooltip ().tooltip = text;
-			MainWindow.get_tooltip ().redraw ();
+			if (!is_null (MainWindow.get_tooltip ())) {
+				MainWindow.get_tooltip ().tooltip = text;
+				MainWindow.get_tooltip ().redraw ();
+			}
 			return false;
 		});
 		idle.attach (null);

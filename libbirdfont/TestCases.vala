@@ -203,7 +203,7 @@ class TestCases {
 		
 		Tool.yield ();
 		
-		if (!ExportTool.export_ttf_font_path (f, false)) {
+		if (!ExportTool.export_ttf_font_path (f)) {
 			warning ("TTF export failed.");
 		}
 		

@@ -26,17 +26,17 @@ public class ExportCallback : GLib.Object {
 		if (font.font_file == null) {
 			MenuTab.save_callback = new SaveCallback ();
 			MenuTab.save_callback.file_saved.connect (() => {
-				MainWindow.native_window.export ();
+				MainWindow.native_window.export_font ();
 			});
 			MenuTab.save_callback.save ();
 		} else {
-			MainWindow.native_window.export ();
+			MainWindow.native_window.export_font ();
 		}
 	}
 	
 	/** Export TTF, EOT and SVG fonts. */
 	public static void export_fonts () {
-		ExportTool.export_ttf_font_sync ();
+		ExportTool.export_ttf_font ();
 		ExportTool.export_svg_font ();
 		TooltipArea.show_text (t_("Three font files have been created."));	
 	}

@@ -265,17 +265,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		dialog.show_all ();
 	}
 
-	public void spawn (string command) {
-		try {
-			print (command);
-			print ("\n");
-			Process.spawn_command_line_async (command);
-		} catch (GLib.Error e) {
-			warning (@"Command failed: $command");
-			warning (e.message);
-		}
-	}
-
 	public void set_scrollbar_size (double size) {
 		scrollbar.adjustment.page_size = size;
 	}
@@ -876,7 +865,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	/** Run export in a background thread. */
-	public void export () {
+	public void export_font () {
 		unowned Thread<void*> export_thread;
 		
 		MenuTab.start_background_thread ();

@@ -29,8 +29,6 @@ public interface NativeWindow : GLib.Object {
 	public abstract void set_scrollbar_size (double size);
 	public abstract void set_scrollbar_position (double position);
 	
-	public abstract void spawn (string command);
-	
 	/** Request text input from the UI. */
 	public abstract void set_text_listener (TextListener listener);
 	
@@ -59,7 +57,7 @@ public interface NativeWindow : GLib.Object {
 	public abstract void hide_tooltip ();
 	
 	/** Export fonts in a background thread. */
-	public abstract void export ();
+	public abstract void export_font ();
 
 	/** Load font in a background thread. */
 	public abstract void load ();
