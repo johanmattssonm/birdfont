@@ -314,7 +314,6 @@ class BackgroundSelection : FontDisplay {
 
 	public override void scroll_wheel_down (double x, double y) {
 	}
-
 }
 
 }

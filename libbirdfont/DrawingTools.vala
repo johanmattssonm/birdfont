@@ -551,20 +551,9 @@ public class DrawingTools : ToolCollection  {
 		});	
 		
 		bg_selection.select_action.connect((self) => {
-			Glyph? g = null;
-			FontDisplay fd = MainWindow.get_current_display ();
-			TooltipArea.show_text (t_("Creating thumbnails"));
-		
-			if (fd is Glyph) {
-				g = (Glyph) fd;
-			} else {
-				return;
+			if (MainWindow.get_current_display () is Glyph) {
+				BackgroundTool.import_background_image ();
 			}
-			
-			BackgroundSelection bgs = new BackgroundSelection ();
-			MainWindow.get_tab_bar ().add_unique_tab (bgs);
-			
-			TooltipArea.show_text ("");
 		});
 		
 		bg_selection.set_show_background (true);

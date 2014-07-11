@@ -65,6 +65,8 @@ public interface NativeWindow : GLib.Object {
 	/** Save font in a background thread. */
 	public abstract void save ();
 	
+	/** Load images in a background thread. */
+	public abstract void load_background_image ();
 }
 
 }

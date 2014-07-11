@@ -923,6 +923,24 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MenuTab.signal_file_saved ();
 		return null;
 	}
+
+	public void load_background_image () {
+		unowned Thread<void*> thread;
+		
+		MenuTab.start_background_thread ();
+		
+		try {
+			thread = Thread.create<void*> (this.background_image_thread, true);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+
+	public void* background_image_thread () {
+		BackgroundTool.load_background_image ();
+		MenuTab.stop_background_thread ();
+		return null;
+	}
 }
 
 class TabbarCanvas : DrawingArea {

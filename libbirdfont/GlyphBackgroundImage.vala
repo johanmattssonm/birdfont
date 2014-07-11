@@ -103,6 +103,10 @@ public class GlyphBackgroundImage {
 		img_x = coordinate_x;
 		img_y = coordinate_y;
 	}
+	
+	public void load () {
+		get_img ();
+	}
 			
 	public ImageSurface get_img () {
 		if (!path.has_suffix (".png")) {
@@ -833,6 +837,10 @@ public class GlyphBackgroundImage {
 		background_image_is_processing = true;
 		
 		update_background (contrast, get_desaturate_background ());
+	}
+	
+	public void center_in_glyph () {
+		Glyph g = MainWindow.get_current_glyph ();
 	}
 }
 	

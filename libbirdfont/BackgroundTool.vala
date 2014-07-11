@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class BackgroundTool : Tool {
+public class BackgroundTool : Tool {
 
 	double begin_x = 0;
 	double begin_y = 0;
@@ -32,11 +32,15 @@ class BackgroundTool : Tool {
 		
 	bool move_bg;
 	
+	static GlyphBackgroundImage imported_background;
+	
 	public BackgroundTool (string name) {
 		base (name, t_("Move, resize and rotate background image"));
 		
 		top_limit = 0;
 		bottom_limit = 0;
+
+		imported_background = new GlyphBackgroundImage ("");
 
 		select_action.connect((self) => {
 		});
@@ -143,6 +147,41 @@ class BackgroundTool : Tool {
 		GlyphCanvas.redraw ();
 	}
 
+	public static void load_background_image () {
+		// generate png file if needed and load the image with cairo
+		imported_background.load ();
+		
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {
+			TabBar tb = MainWindow.get_tab_bar ();
+			Glyph g = MainWindow.get_current_glyph ();
+			g.set_background_image (imported_background);
+			imported_background.center_in_glyph ();			
+			tb.select_tab_name (g.get_name ());
+
+			Toolbox.select_tool_by_name ("zoom_background_image");
+			Toolbox.select_tool_by_name ("cut_background");
+			
+			GlyphCanvas.redraw ();
+			return false;
+		});
+		idle.attach (null);
+	}
+
+	internal static void import_background_image () {
+		GlyphBackgroundImage bg;
+		string? fn;
+		string path;
+		
+		fn = MainWindow.file_chooser_open (_("Select background image"));
+		
+		if (fn != null) {
+			path = (!) fn;
+			bg = new GlyphBackgroundImage (path);
+			imported_background = bg;
+			MainWindow.native_window.load_background_image ();
+		}
+	}
 }
 
 }
