@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -129,7 +129,7 @@ double remove_hidden_points (FT_Vector* points, char* flags, guint length, guint
 /** Add extra point where two ore more off curve points follow each other. */
 void create_contour (guint unicode, FT_Vector* points, char* flags, int* length, FT_Vector** new_points, char** new_flags, int* err) {
 	// This function has been tested with many fonts. ElsieSwashCaps-Regular
-	// is one of the more interesting fonts.
+	// is one of the more interesting fonts I have seen.
 	int i;
 	int j;
 	guint prev_is_curve;
@@ -828,7 +828,7 @@ GString* load_freetype_font (char* file, int* err) {
 
 	error = FT_Select_Charmap (face , FT_ENCODING_UNICODE);
 	if (error) {
-		g_warning ("Freetype can not use unicode, error: %d\n", error);
+		g_warning ("Freetype can not use Unicode, error: %d\n", error);
 		*err = error;
 		return bf;
 	}

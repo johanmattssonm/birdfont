@@ -236,6 +236,8 @@ class SvgFont : GLib.Object {
 		string ligature = "";
 		SvgParser parser = new SvgParser ();
 
+		parser.set_format (SvgFormat.INKSCAPE);
+
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
 			attr_content = prop->children->content;
