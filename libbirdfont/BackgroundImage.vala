@@ -70,8 +70,8 @@ public class BackgroundImage {
 	}
 	
 	public double img_middle_y {
-		get { return img_y + (size_margin * img_scale_y) / 2; }
-		set { img_y = value - img_y + (size_margin * img_scale_y) / 2; }
+		get { return img_y - (size_margin * img_scale_y) / 2; }
+		set { img_y = value + (size_margin * img_scale_y) / 2; }
 	}
 				
 	public BackgroundImage (string file_name) {
@@ -114,10 +114,6 @@ public class BackgroundImage {
 		img_y = coordinate_y;
 	}
 	
-	public void load () {
-		get_img ();
-	}
-			
 	public ImageSurface get_img () {
 		if (!path.has_suffix (".png")) {
 			create_png ();
@@ -477,21 +473,20 @@ public class BackgroundImage {
 	}
 
 	bool is_over_resize (double nx, double ny) {
-		Glyph g = MainWindow.get_current_glyph ();
 		double x, y, size;
 		bool inx, iny;
+	
+		size = 12;
 
-		size = 12 * g.view_zoom;
-
-		x = img_offset_x - g.view_offset_x;
-		y = img_offset_y - g.view_offset_y + (size_margin) * img_scale_y;
-				
-		y *= g.view_zoom;
-		x *= g.view_zoom;
-				
+		x = img_middle_x - (img_scale_x * get_img ().get_width () / 2);
+		y = img_middle_y - (img_scale_y * get_img ().get_height () / 2);
+		
+		x = Glyph.reverse_path_coordinate_x (x);
+		y = Glyph.reverse_path_coordinate_y (y);
+		
 		inx = x - size <= nx <= x + size;
 		iny = y - size <= ny <= y + size;
-		
+	
 		return inx && iny;
 	}
 
@@ -522,12 +517,12 @@ public class BackgroundImage {
 		
 		cr.set_source_rgba (1, 0, 0.3, 1);
 
-		x = img_offset_x - g.view_offset_x;
-		y = img_offset_y - g.view_offset_y + (size_margin) * img_scale_y;
-				
-		y *= g.view_zoom;
-		x *= g.view_zoom;
-				
+		x = img_middle_x - (img_scale_x * get_img ().get_width () / 2);
+		y = img_middle_y - (img_scale_y * get_img ().get_height () / 2);
+
+		x = Glyph.reverse_path_coordinate_x (x);
+		y = Glyph.reverse_path_coordinate_y (y);
+			
 		draw_handle_triangle (x, y, cr, g, 6);
 		
 		cr.restore ();

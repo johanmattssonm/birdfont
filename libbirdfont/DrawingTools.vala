@@ -512,9 +512,18 @@ public class DrawingTools : ToolCollection  {
 			Glyph g = MainWindow.get_current_glyph ();
 			BackgroundImage? img = g.get_background_image ();
 			double s = sb.get_value ();
+			BackgroundImage i;
+			double xc, yc;
 			
 			if (img != null) {
-				((!)img).set_img_scale (s, s);
+				i = (!) img;
+				xc = i.img_middle_x;
+				yc = i.img_middle_y;
+
+				i.set_img_scale (s, s);
+				
+				i.img_middle_x = xc;
+				i.img_middle_y = yc;
 			}
 			
 			GlyphCanvas.redraw ();

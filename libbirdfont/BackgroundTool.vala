@@ -12,6 +12,8 @@
     Lesser General Public License for more details.
 */
 
+using Cairo;
+
 namespace BirdFont {
 
 public class BackgroundTool : Tool {
@@ -33,6 +35,7 @@ public class BackgroundTool : Tool {
 	bool move_bg;
 	
 	static BackgroundImage imported_background;
+	static ImageSurface imported_surface;
 	
 	public BackgroundTool (string name) {
 		base (name, t_("Move, resize and rotate background image"));
@@ -110,8 +113,7 @@ public class BackgroundTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		BackgroundImage? background_image = g.get_background_image ();
 		BackgroundImage bg = (!) background_image;
-		
-		double xscale, yscale, dx, dy;
+		double xscale, yscale, dx, dy, xc, yc;
 
 		if (background_image == null) {
 			return;
@@ -135,9 +137,14 @@ public class BackgroundTool : Tool {
 		if (bg.selected_handle == 1) {
 			xscale = img_scale_x * ((img_width - dx) / img_width);	
 			yscale = xscale;
+			
+			xc = bg.img_middle_x;
+			yc = bg.img_middle_y;
 
 			bg.set_img_scale (xscale, yscale);
-			bg.set_img_offset (this.img_offset_x + dx, this.img_offset_y);
+			
+			bg.img_middle_x = xc;
+			bg.img_middle_y = yc;
 		} 
 		
 		if (move_bg && bg.selected_handle <= 0) {
@@ -149,7 +156,7 @@ public class BackgroundTool : Tool {
 
 	public static void load_background_image () {
 		// generate png file if needed and load the image with cairo
-		imported_background.load ();
+		imported_surface = imported_background.get_img ();
 		
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
@@ -159,9 +166,8 @@ public class BackgroundTool : Tool {
 			g.set_background_image (imported_background);
 			imported_background.center_in_glyph ();			
 			
-			tb.select_tab_name (g.get_name ());
-
 			Toolbox.select_tool_by_name ("zoom_background_image");
+			tb.select_tab_name (g.get_name ());
 			Toolbox.select_tool_by_name ("cut_background");
 			
 			GlyphCanvas.redraw ();
