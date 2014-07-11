@@ -155,8 +155,10 @@ public class BackgroundTool : Tool {
 		idle.set_callback (() => {
 			TabBar tb = MainWindow.get_tab_bar ();
 			Glyph g = MainWindow.get_current_glyph ();
+			
 			g.set_background_image (imported_background);
 			imported_background.center_in_glyph ();			
+			
 			tb.select_tab_name (g.get_name ());
 
 			Toolbox.select_tool_by_name ("zoom_background_image");

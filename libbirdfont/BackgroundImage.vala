@@ -63,7 +63,17 @@ public class BackgroundImage {
 			return size;
 		}
 	}
-		
+
+	public double img_middle_x {
+		get { return img_x + (size_margin * img_scale_x) / 2; }
+		set { img_x = value - (size_margin * img_scale_x) / 2; }
+	}
+	
+	public double img_middle_y {
+		get { return img_y + (size_margin * img_scale_y) / 2; }
+		set { img_y = value - img_y + (size_margin * img_scale_y) / 2; }
+	}
+				
 	public BackgroundImage (string file_name) {
 		path = file_name;
 	}
@@ -841,6 +851,10 @@ public class BackgroundImage {
 	
 	public void center_in_glyph () {
 		Glyph g = MainWindow.get_current_glyph ();
+		Font f = BirdFont.get_current_font ();
+		
+		img_middle_x = g.left_limit + (g.right_limit - g.left_limit) / 2;
+		img_middle_y = f.bottom_position + (f.top_position - f.bottom_position) / 2;
 	}
 }
 	
