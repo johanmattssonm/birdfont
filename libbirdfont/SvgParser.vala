@@ -59,12 +59,12 @@ public class SvgParser {
 		TextReader tr;
 
 		foreach (string l in lines) {
-			if (l.index_of ("<!--") > -1 && l.index_of ("Illustrator") > -1) {
+			if (l.index_of ("Illustrator") > -1 || l.index_of ("illustrator") > -1) {
 				parser.set_format (SvgFormat.ILLUSTRATOR);
 				has_format = true;
 			}
 			
-			if (l.index_of ("<!--") > -1 && l.index_of ("Inkscape") > -1) {
+			if (l.index_of ("Inkscape") > -1 || l.index_of ("inkscape") > -1) {
 				parser.set_format (SvgFormat.INKSCAPE);
 				has_format = true;
 			}	
@@ -82,7 +82,7 @@ public class SvgParser {
 		xml_document = sb.str;
 
 		if (!has_format) {
-			warning ("No format identifier found.");
+			stderr.printf ("No format identifier found.\n");
 		}
 
 		Parser.init ();
@@ -149,23 +149,189 @@ public class SvgParser {
 	}
 	
 	private void parse_layer (Xml.Node* node, PathList pl) {
+		string attr_name = "";
+		string attr_content;
+		PathList layer = new PathList ();
+		
 		return_if_fail (node != null);
-				
+					
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "path") {
-				parse_path (iter, pl);
+				parse_path (iter, layer);
 			}
 			
 			if (iter->name == "g") {
-				parse_layer (iter, pl);
+				parse_layer (iter, layer);
 			}
 			
 			if (iter->name == "polygon") {
-				parse_polygon (iter, pl);
+				parse_polygon (iter, layer);
 			}
 		}
+
+		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+			attr_name = prop->name;
+			attr_content = prop->children->content;
+			
+			if (attr_name == "transform") {
+				transform (attr_content, layer);
+			}
+		}
+		
+		pl.append (layer);
 	}
 	
+	private void transform (string transform_functions, PathList pl) {
+		string data = transform_functions.dup ();
+		string[] functions;
+		
+		// use only a single space as separator
+		while (data.index_of ("  ") > -1) {
+			data = data.replace ("  ", " ");
+		}
+		
+		return_if_fail (data.index_of (")") > -1);
+		
+		 // add separator
+		data = data.replace (") ", "|");
+		data = data.replace (")", "|"); 
+		functions = data.split ("|");
+		
+		for (int i = 0; i < functions.length; i++) {
+			if (functions[i].has_prefix ("translate")) {
+				translate (functions[i], pl);
+			}
+			
+			if (functions[i].has_prefix ("scale")) {
+				scale (functions[i], pl);
+			}
+
+			if (functions[i].has_prefix ("matrix")) {
+				matrix (functions[i], pl);
+			}
+			// TODO: rotate etc.
+		}
+	}
+
+	public void apply_matrix (Path path, double a, double b, double c, 
+		double d, double e, double f){
+		
+		double dx, dy;
+		Font font = BirdFont.get_current_font ();
+		Glyph glyph = MainWindow.get_current_glyph ();
+		
+		foreach (EditPoint ep in path.points) {
+			apply_matrix_on_handle (ep.get_right_handle (), a, b, c, d, e, f);
+			apply_matrix_on_handle (ep.get_left_handle (), a, b, c, d, e, f);
+
+			ep.independent_y = font.top_position - ep.independent_y;
+			ep.independent_x -= glyph.left_limit;
+			
+			dx = a * ep.independent_x + c * ep.independent_y + e;
+			dy = b * ep.independent_x + d * ep.independent_y + f;
+			
+			ep.independent_x = dx;
+			ep.independent_y = dy;
+			
+			ep.independent_y = font.top_position - ep.independent_y;
+			ep.independent_x += glyph.left_limit;
+		}
+	}
+
+	public void apply_matrix_on_handle (EditPointHandle h, 
+		double a, double b, double c, 
+		double d, double e, double f){
+		
+		double dx, dy;
+		Font font = BirdFont.get_current_font ();
+		Glyph glyph = MainWindow.get_current_glyph ();
+
+		h.y = font.top_position - h.y;
+		h.x -= glyph.left_limit;
+		
+		dx = a * h.x + c * h.y + e;
+		dy = b * h.x + d * h.y + f;
+		
+		h.x = dx;
+		h.y = dy;
+		
+		h.y = font.top_position - h.y;
+		h.x += glyph.left_limit;
+	}
+
+
+	private void matrix (string function, PathList pl) {
+		string parameters = get_transform_parameters (function);
+		string[] p = parameters.split (" ");
+
+		if (p.length != 6) {
+			warning ("Expecting six parameters for matrix transformation.");
+			return;
+		}
+
+		foreach (Path path in pl.paths) {
+			apply_matrix (path, parse_double (p[0]), parse_double (p[1]), 
+				parse_double (p[2]), parse_double (p[3]), 
+				parse_double (p[4]), parse_double (p[5]));
+		}
+	}
+		
+	private void scale (string function, PathList pl) {
+		string parameters = get_transform_parameters (function);
+		string[] p = parameters.split (" ");
+		double x, y;
+		
+		x = 1;
+		y = 1;
+		
+		if (p.length > 0) {
+			x = parse_double (p[0]);
+		}
+		
+		if (p.length > 1) {
+			y = parse_double (p[1]);
+		}
+		
+		foreach (Path path in pl.paths) {
+			path.scale (-x, y);
+		}
+	}
+		
+	private void translate (string function, PathList pl) {
+		string parameters = get_transform_parameters (function);
+		string[] p = parameters.split (" ");
+		double x, y;
+		
+		x = 0;
+		y = 0;
+		
+		if (p.length > 0) {
+			x = parse_double (p[0]);
+		}
+		
+		if (p.length > 1) {
+			y = parse_double (p[1]);
+		}
+		
+		foreach (Path path in pl.paths) {
+			path.move (-x, y);
+		}
+	}
+
+	private string get_transform_parameters (string function) {
+		int i;
+		string param = "";
+		
+		i = function.index_of ("(");
+		return_val_if_fail (i != -1, param);
+		param = function.substring (i);
+
+		param = param.replace ("(", "");
+		param = param.replace (",", " ");
+				
+		return param;			
+	}
+		
 	private void parse_polygon (Xml.Node* node, PathList pl) {
 		string attr_name = "";
 		string attr_content;
@@ -827,7 +993,6 @@ public class SvgParser {
 
 			// move all points
 			if (svg_glyph) {
-				// move only y 
 				b[i].x0 += glyph.left_limit;
 				b[i].y0 += font.base_line;
 				b[i].x1 += glyph.left_limit;

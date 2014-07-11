@@ -49,7 +49,34 @@ public class EditPoint {
 	
 	public bool tie_handles = false;
 	public bool reflective_handles = false;
-	
+
+	/** Set new position for control point without moving handles. */
+	public double independent_x {
+		get { 
+			return x;
+		}
+		
+		set { 
+			double d = value - x;
+			x = value;
+			right_handle.x -= d;
+			left_handle.x -= d;
+		}
+	}
+
+	public double independent_y {
+		get {
+			return y;	
+		}
+		
+		set { 
+			double d = value - y;
+			y = value;
+			right_handle.y -= d;
+			left_handle.y -= d;
+		}
+	}
+		
 	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {
 		x = nx;
 		y = ny;
@@ -93,10 +120,10 @@ public class EditPoint {
 	public bool equals (EditPoint e) {
 		return e.x == x 
 			&& e.y == y 
-			&& get_right_handle ().x () == e.get_right_handle ().x ()
-			&& get_right_handle ().y () == e.get_right_handle ().y ()
-			&& get_left_handle ().x () == e.get_left_handle ().x ()
-			&& get_left_handle ().y () == e.get_left_handle ().y ();
+			&& get_right_handle ().x == e.get_right_handle ().x
+			&& get_right_handle ().y == e.get_right_handle ().y
+			&& get_left_handle ().x == e.get_left_handle ().x
+			&& get_left_handle ().y == e.get_left_handle ().y;
 	}
 
 	/** Make handles symmetrical. */
@@ -118,8 +145,8 @@ public class EditPoint {
 		px = get_next ().get_next ().x;
 		py = get_next ().get_next ().y;
 		
-		dr = Math.sqrt (Math.pow (px - right_handle.x (), 2) + Math.pow (py - right_handle.y (), 2));
-		dl = Math.sqrt (Math.pow (px - left_handle.x (), 2) + Math.pow (py - left_handle.y (), 2));
+		dr = Math.sqrt (Math.pow (px - right_handle.x, 2) + Math.pow (py - right_handle.y, 2));
+		dl = Math.sqrt (Math.pow (px - left_handle.x, 2) + Math.pow (py - left_handle.y, 2));
 
 		// flip handles
 		if (dl < dr) {
@@ -283,8 +310,8 @@ public class EditPoint {
 		
 		eh = right_handle;
 		
-		a = left_handle.x () - right_handle.x ();
-		b = left_handle.y () - right_handle.y ();
+		a = left_handle.x - right_handle.x;
+		b = left_handle.y - right_handle.y;
 		c = a * a + b * b;
 		
 		if (c == 0) {
@@ -293,7 +320,7 @@ public class EditPoint {
 		
 		length = sqrt (fabs (c));
 		
-		if (right_handle.y () < left_handle.y ()) {
+		if (right_handle.y < left_handle.y) {
 			angle = acos (a / length) + PI;
 		} else {
 			angle = -acos (a / length) + PI;
@@ -311,7 +338,7 @@ public class EditPoint {
 		left_handle.angle = angle - PI;
 
 		set_tie_handle (true);
-		eh.move_to_coordinate (right_handle.x (), right_handle.y ());
+		eh.move_to_coordinate (right_handle.x, right_handle.y);
 	}
 
 	public EditPoint copy () {
@@ -387,7 +414,7 @@ public class EditPoint {
 				n = get_next ();
 				n.set_tie_handle (false);
 				n.set_reflective_handles (false);
-				n.left_handle.move_to_coordinate_internal (right_handle.x (), right_handle.y ());
+				n.left_handle.move_to_coordinate_internal (right_handle.x, right_handle.y);
 			}
 		}
 		
@@ -396,7 +423,7 @@ public class EditPoint {
 				p = get_prev ();
 				p.set_tie_handle (false);
 				p.set_reflective_handles (false);
-				p.right_handle.move_to_coordinate (left_handle.x (), left_handle.y ());
+				p.right_handle.move_to_coordinate (left_handle.x, left_handle.y);
 			}
 		}
 	}

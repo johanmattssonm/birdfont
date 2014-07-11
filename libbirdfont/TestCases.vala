@@ -46,7 +46,8 @@ class TestCases {
 		add (test_extrema, "Extrema");
 		add (test_codepages, "Codepages");
 		add (test_double_quadratic, "Double quadratic");
-			
+		add (test_raster_path, "Raster path");
+		
 		add_bechmark (benchmark_stroke, "Stroke");
 	}
 	
@@ -1242,6 +1243,30 @@ class TestCases {
 	
 	private static void test_boundaries () {
 		Preferences.draw_boundaries = true;
+	}
+	
+	private static void test_raster_path () {
+		Glyph g = MainWindow.get_current_glyph ();
+		PathList pl = new PathList ();
+		Path path;
+		
+		test_open_next_glyph ();
+		test_inkscape_import (); // draw somee thing
+		
+		foreach (Path p in g.path_list) {
+			path = new Path ();
+			p.all_of_path ((cx, cy, ct) => {
+				path.add (cx, cy);
+				return true;
+			});
+			pl.add (path);
+		}
+		
+		test_open_next_glyph ();
+		
+		foreach (Path p in pl.paths) {
+			g.add_path (p);
+		}
 	}
 }
 

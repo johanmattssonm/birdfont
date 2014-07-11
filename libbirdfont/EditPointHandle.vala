@@ -28,6 +28,36 @@ public class EditPointHandle  {
 
 	public double angle;
 
+	public double x {
+		get { 
+			double r = px ();	
+			
+			if (unlikely (r <= -100000)) {
+				print_position ();
+				move_to (0, 0);
+			}
+		
+			return r;
+		}
+		
+		set { move_to_coordinate_internal (value, py ()); }
+	}
+
+	public double y {
+		get {
+			double r = py ();
+		
+			if (unlikely (r <= -100000)) {
+				print_position ();
+				move_to (0, 0);
+			}
+			
+			return r;	
+		}
+		
+		set { move_to_coordinate_internal (px (), value); }
+	}
+	
 	public EditPointHandle.empty() {
 		this.parent = none;
 		this.angle = 0;
@@ -80,28 +110,6 @@ public class EditPointHandle  {
 	public void set_point_type (PointType point_type) {
 		type = point_type;
 	}
-
-	public double x () {
-		double r = px ();
-		
-		if (unlikely (r <= -100000)) {
-			print_position ();
-			move_to (0, 0);
-		}
-	
-		return r;
-	}
-	
-	public double y () {
-		double r = py ();
-		
-		if (unlikely (r <= -100000)) {
-			print_position ();
-			move_to (0, 0);
-		}
-		
-		return r;
-	}
 	
 	double px () {
 		assert ((EditPoint?) parent != null);
@@ -127,8 +135,8 @@ public class EditPointHandle  {
 		}
 	
 		p = (!) visual_handle;
-		p.x = x ();
-		p.y = y ();
+		p.x = x;
+		p.y = y;
 		
 		return p;
 	}

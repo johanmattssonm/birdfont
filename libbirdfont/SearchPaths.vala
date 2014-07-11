@@ -146,6 +146,10 @@ public class SearchPaths {
 		}
 		
 		f = (!) File.new_for_path ("/usr/share/unicode/ucd/NamesList.txt");
+		if (f.query_exists ()) {
+			return f;
+		}
+		
 		warning ("ucd not found");
 		
 		return f;

@@ -80,10 +80,10 @@ public class FastPath : GLib.Object {
 	public void set_editpoint (int index, EditPoint ep) {
 		points[NUMBERS_PER_POINT * index + POS_X] = ep.x;
 		points[NUMBERS_PER_POINT * index + POS_Y] = ep.y;
-		points[NUMBERS_PER_POINT * index + LEFT_HANDLE_POS_X] = ep.get_left_handle ().x ();
-		points[NUMBERS_PER_POINT * index + LEFT_HANDLE_POS_Y] = ep.get_left_handle ().y ();
-		points[NUMBERS_PER_POINT * index + RIGHT_HANDLE_POS_X] = ep.get_right_handle ().x ();
-		points[NUMBERS_PER_POINT * index + RIGHT_HANDLE_POS_Y] = ep.get_right_handle ().y ();
+		points[NUMBERS_PER_POINT * index + LEFT_HANDLE_POS_X] = ep.get_left_handle ().x;
+		points[NUMBERS_PER_POINT * index + LEFT_HANDLE_POS_Y] = ep.get_left_handle ().y;
+		points[NUMBERS_PER_POINT * index + RIGHT_HANDLE_POS_X] = ep.get_right_handle ().x;
+		points[NUMBERS_PER_POINT * index + RIGHT_HANDLE_POS_Y] = ep.get_right_handle ().y;
 	}
 
 	public double get_x (int index) {

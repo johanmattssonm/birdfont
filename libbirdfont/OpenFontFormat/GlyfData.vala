@@ -201,10 +201,10 @@ class GlyfData : GLib.Object {
 				type = e.get_right_handle ().type;
 				
 				// off curve
-				x = rint (e.get_right_handle ().x () * UNITS - prev - glyph.left_limit * UNITS);
+				x = rint (e.get_right_handle ().x * UNITS - prev - glyph.left_limit * UNITS);
 				coordinate_x.append ((int16) x);
 				
-				prev = rint (e.get_right_handle ().x () * UNITS - glyph.left_limit * UNITS);
+				prev = rint (e.get_right_handle ().x * UNITS - glyph.left_limit * UNITS);
 			}
 		}
 	}
@@ -225,10 +225,10 @@ class GlyfData : GLib.Object {
 				type = e.get_right_handle ().type;
 				
 				// off curve
-				y = rint (e.get_right_handle ().y () * UNITS - prev - font.base_line * UNITS);
+				y = rint (e.get_right_handle ().y * UNITS - prev - font.base_line * UNITS);
 				coordinate_y.append ((int16) y);
 			
-				prev = rint (e.get_right_handle ().y () * UNITS - font.base_line  * UNITS);
+				prev = rint (e.get_right_handle ().y * UNITS - font.base_line  * UNITS);
 			}
 		}
 	}

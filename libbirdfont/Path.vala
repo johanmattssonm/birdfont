@@ -306,8 +306,8 @@ public class Path {
 		EditPoint middle;
 		double x, y;
 		
-		x = e.get_right_handle ().x () + (en.get_left_handle ().x () - e.get_right_handle ().x ()) / 2;
-		y = e.get_right_handle ().y () + (en.get_left_handle ().y () - e.get_right_handle ().y ()) / 2;
+		x = e.get_right_handle ().x + (en.get_left_handle ().x - e.get_right_handle ().x) / 2;
+		y = e.get_right_handle ().y + (en.get_left_handle ().y - e.get_right_handle ().y) / 2;
 		
 		middle = new EditPoint (x, y, PointType.DOUBLE_CURVE);
 		middle.right_handle = en.get_left_handle ().copy ();
@@ -351,11 +351,11 @@ public class Path {
 		xa = center_x + e.x;
 		ya = center_y - e.y;
 
-		xb = center_x + e.get_right_handle ().x ();
-		yb = center_y - e.get_right_handle ().y ();
+		xb = center_x + e.get_right_handle ().x;
+		yb = center_y - e.get_right_handle ().y;
 		
-		xc = center_x + en.get_left_handle ().x ();
-		yc = center_y - en.get_left_handle ().y ();
+		xc = center_x + en.get_left_handle ().x;
+		yc = center_y - en.get_left_handle ().y;
 		
 		xd = center_x + en.x;
 		yd = center_y - en.y;		
@@ -366,11 +366,11 @@ public class Path {
 		xa =  + e.x;
 		ya =  - e.y;
 
-		xb =  + e.get_right_handle ().x ();
-		yb =  - e.get_right_handle ().y ();
+		xb =  + e.get_right_handle ().x;
+		yb =  - e.get_right_handle ().y;
 		
-		xc =  + en.get_left_handle ().x ();
-		yc =  - en.get_left_handle ().y ();
+		xc =  + en.get_left_handle ().x;
+		yc =  - en.get_left_handle ().y;
 		
 		xd =  + en.x;
 		yd =  - en.y;		
@@ -436,12 +436,12 @@ public class Path {
 
 			if (!(is_open () && e == points.get (points.size - 1))) {
 				draw_line (handle_right, e, cr, 0.15);
-				draw_image (cr, img_right, e.get_right_handle ().x (), e.get_right_handle ().y ());
+				draw_image (cr, img_right, e.get_right_handle ().x, e.get_right_handle ().y);
 			}
 			
 			if (!(is_open () && e == points.get (0))) {
 				draw_line (handle_left, e, cr, 0.15);
-				draw_image (cr, img_left, e.get_left_handle ().x (), e.get_left_handle ().y ());
+				draw_image (cr, img_left, e.get_left_handle ().x, e.get_left_handle ().y);
 			}
 		}
 	}
@@ -617,6 +617,23 @@ public class Path {
 		ymin *= ratio;
 		ymax *= ratio;
 	}
+
+	public void scale (double scale_x, double scale_y) {		
+		foreach (EditPoint p in points) {
+			p.right_handle.length *= scale_x * scale_y;
+			p.left_handle.length *= scale_x * scale_y;
+		}
+		
+		foreach (EditPoint p in points) {
+			p.x *= scale_x;
+			p.y *= scale_y;
+		}
+		
+		xmin *= scale_x;	
+		xmax *= scale_x;
+		ymin *= scale_y;
+		ymax *= scale_y;
+	}
 	
 	public Path copy () {
 		Path new_path = new Path ();
@@ -666,30 +683,30 @@ public class Path {
 	public static double get_length_from (EditPoint a, EditPoint b) {
 		double x, y;
 		
-		x = Math.fabs (a.x - a.get_right_handle ().x ());
-		x += Math.fabs (a.get_right_handle ().x () - b.get_left_handle ().x ());
-		x += Math.fabs (b.get_left_handle ().x () - b.x);
+		x = Math.fabs (a.x - a.get_right_handle ().x);
+		x += Math.fabs (a.get_right_handle ().x - b.get_left_handle ().x );
+		x += Math.fabs (b.get_left_handle ().x - b.x);
 
-		y = Math.fabs (a.y - a.get_right_handle ().y ());
-		y += Math.fabs (a.get_right_handle ().y () - b.get_left_handle ().y ());
-		y += Math.fabs (b.get_left_handle ().y () - b.y);
+		y = Math.fabs (a.y - a.get_right_handle ().y);
+		y += Math.fabs (a.get_right_handle ().y - b.get_left_handle ().y);
+		y += Math.fabs (b.get_left_handle ().y - b.y);
 		
 		return Math.fabs (Math.sqrt (x * x + y * y));
 	} 
-	
+
 	/** Variable precision */
 	public bool is_over_coordinate_var (double x, double y) {
 		PathList pathlist;
-		bool result = false;
+		bool in_path = false;
 		int width;
-		char[,] click_map;
+		ClickMap click_map;
 		int px, py;
 		int click_x, click_y;
 		
 		if (points.size < 2) {
 			return false;
 		}
-		
+
 		if (stroke > 0) {
 			pathlist = StrokeTool.get_stroke (this, stroke);
 			
@@ -706,96 +723,25 @@ public class Path {
 			return false;
 		}
 		
+		
 		// generate a rasterized image of the object
-		width = 512;
-		click_map = new char[width + 1, width + 1];
+		width = 80;
+		click_map = new ClickMap (width);
 		px = 0;
 		py = 0;
-		all_of_path ((cx, cy, ct) => {
-			px = (int) (width * ((cx - xmin) / (xmax - xmin)));
-			py = (int) (width * ((cy - ymin) / (ymax - ymin)));
-			click_map[px, py] = '#';
-			return true;
-		}, 2 * width);
 		
-		// first to last point in case the path is open
-		all_of (get_last_point (), get_first_point (), (cx, cy, ct) => {
-			px = (int) (width * ((cx - xmin) / (xmax - xmin)));
-			py = (int) (width * ((cy - ymin) / (ymax - ymin)));
-			click_map[px, py] = '#';
-			return true;
-		}, 2 * width);
-	
-		// Fill the map
-		for (int j = 0; j < width; j++) {
-			for (int k = 0; k < width; k++) {
-				if (click_map[k, j] == '#') {
-					
-					k++;
-					while (k < width && click_map[k, j] == '#') {
-						k++;
-					}
-
-					while (k < width && click_map[k, j] == '\0') {
-						click_map[k, j] = 'o';
-						k++;
-					}
-
-					k++;
-					while (k < width && click_map[k, j] == '#') {
-						k++;
-					}
-				}
-			}
-		}
-
-		// remove fill from the out side
-		for (int k = 0; k < width; k++) {
-			
-			if (click_map[k, 0] == 'o') {
-				click_map[k, 0] = '\0'; 
-			}
-			
-			for (int l = width - 1; l >= 0; l--) {
-				if (click_map[k, l] != '#') {
-					if (click_map[k, l + 1] == '\0') {
-						click_map[k, l] = '\0';	
-					}
-					
-					if (click_map[k, l + 1] == 'o') {
-						click_map[k, l] = 'o';	
-					}
-				}
-			}
-		} 
-
-		for (int k = 0; k < width; k++) {
-			
-			if (click_map[0, k] == 'o') {
-				click_map[0, k] = '\0'; 
-			}
-			
-			for (int l = width - 1; l >= 0; l--) {
-				if (click_map[l, k] != '#') {
-					if (click_map[l + 1, k] == '\0') {
-						click_map[l, k] = '\0';	
-					}
-					
-					if (click_map[l + 1, k] == 'o') {
-						click_map[l, k] = 'o';	
-					}
-				}
-			}
-		}
+		click_map.create_click_map (this);
 
 		click_x = (int) (width * ((x - xmin) / (xmax - xmin)));
 		click_y = (int) (width * ((y - ymin) / (ymax - ymin)));
 
-		result = (click_map[click_x, click_y] != '\0');
+		in_path = click_map.get_value (click_x, click_y) != '\0';
 
-		click_map[click_x, click_y] = 'X';
+		click_map.set_value (click_x, click_y, 'X');
 		
-		return result;
+		click_map.print ();
+		
+		return in_path;
 	}
 	
 	public bool is_over_boundry (double x, double y) {
@@ -951,20 +897,20 @@ public class Path {
 	}
 
 	private void update_region_boundaries_for_handle (EditPointHandle h) {
-		if (h.x () > xmax) {
-			xmax = h.x ();
+		if (h.x > xmax) {
+			xmax = h.x;
 		}
 
-		if (h.x () < xmin) {
-			xmin = h.x ();
+		if (h.x < xmin) {
+			xmin = h.x;
 		}
 
-		if (h.y () > ymax) {
-			ymax = h.y ();
+		if (h.y > ymax) {
+			ymax = h.y;
 		}
 
-		if (h.y () < ymin) {
-			ymin = h.y ();
+		if (h.y < ymin) {
+			ymin = h.y;
 		}
 	}
 
@@ -1068,11 +1014,11 @@ public class Path {
 				first.get_right_handle ().type = PointType.QUADRATIC;
 
 				// half way between handles
-				x = first.get_right_handle ().x () + (next.get_left_handle ().x () - first.get_right_handle ().x ()) / 2;
-				y = first.get_right_handle ().y () + (next.get_left_handle ().y () - first.get_right_handle ().y ()) / 2;
+				x = first.get_right_handle ().x + (next.get_left_handle ().x - first.get_right_handle ().x) / 2;
+				y = first.get_right_handle ().y + (next.get_left_handle ().y - first.get_right_handle ().y) / 2;
 				
 				hidden = new EditPoint (x, y, PointType.QUADRATIC);
-				hidden.right_handle.move_to_coordinate_internal (next.get_left_handle ().x(), next.get_left_handle ().y());
+				hidden.right_handle.move_to_coordinate_internal (next.get_left_handle ().x, next.get_left_handle ().y);
 				hidden.get_right_handle ().type = PointType.QUADRATIC;
 				
 				hidden.get_left_handle ().type = PointType.QUADRATIC;
@@ -1148,7 +1094,7 @@ public class Path {
 
 		foreach (EditPoint ep in quadratic_path.points) {
 			if (ep.type == PointType.QUADRATIC) {
-				ep.get_left_handle ().move_to_coordinate (ep.get_prev ().get_right_handle ().x (), ep.get_prev ().get_right_handle ().y ());
+				ep.get_left_handle ().move_to_coordinate (ep.get_prev ().get_right_handle ().x, ep.get_prev ().get_right_handle ().y);
 			}
 		}
 
@@ -1230,8 +1176,8 @@ public class Path {
 		prev.get_right_handle ().type = PointType.QUADRATIC;
 		prev.get_right_handle ().move_delta (0.000001, 0.000001);
 		
-		x = prev.get_right_handle ().x ();
-		y = prev.get_right_handle ().y ();
+		x = prev.get_right_handle ().x;
+		y = prev.get_right_handle ().y;
 		
 		ep.get_left_handle ().move_to_coordinate (ep.x - (ep.x - prev.x) / 2, 
 			ep.y - (ep.y - prev.y) / 2);		
@@ -1295,8 +1241,8 @@ public class Path {
 		});
 
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
-			double_bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
-			double_bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
+			double_bezier_vector (position, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x0, out x1);
+			double_bezier_vector (position, start.y, start.get_right_handle ().x, stop.get_left_handle ().y, stop.y, out y0, out y1);
 
 			ep.get_left_handle ().set_point_type (PointType.DOUBLE_CURVE);	
 			ep.get_right_handle ().set_point_type (PointType.DOUBLE_CURVE);
@@ -1306,8 +1252,8 @@ public class Path {
 
 			ep.type = PointType.DOUBLE_CURVE;
 		} else if (right == PointType.QUADRATIC) {		
-			x0 = quadratic_bezier_vector (1 - position, stop.x, start.get_right_handle ().x (), start.x);
-			y0 = quadratic_bezier_vector (1 - position, stop.y, start.get_right_handle ().y (), start.y);
+			x0 = quadratic_bezier_vector (1 - position, stop.x, start.get_right_handle ().x, start.x);
+			y0 = quadratic_bezier_vector (1 - position, stop.y, start.get_right_handle ().x, start.y);
 			ep.get_right_handle ().move_to_coordinate (x0, y0);
 			
 			ep.get_left_handle ().set_point_type (PointType.QUADRATIC);	
@@ -1317,8 +1263,8 @@ public class Path {
 			
 			ep.type = PointType.QUADRATIC;				
 		} else if (right == PointType.CUBIC || left == PointType.CUBIC) {
-			bezier_vector (position, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x, out x0, out x1);
-			bezier_vector (position, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y, out y0, out y1);
+			bezier_vector (position, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x0, out x1);
+			bezier_vector (position, start.y, start.get_right_handle ().x, stop.get_left_handle ().y, stop.y, out y0, out y1);
 
 			ep.get_left_handle ().set_point_type (PointType.CUBIC);
 			ep.get_left_handle ().move_to_coordinate (x0, y0);
@@ -1350,8 +1296,8 @@ public class Path {
 		if (right == PointType.QUADRATIC) { // update connected handle
 			if (ep.prev != null) {
 				ep.get_left_handle ().move_to_coordinate_internal (
-					ep.get_prev ().right_handle.x (), 
-					ep.get_prev ().right_handle.y ());
+					ep.get_prev ().right_handle.x, 
+					ep.get_prev ().right_handle.y);
 
 			} else {
 				warning ("ep.prev is null for quadratic point");
@@ -1468,8 +1414,8 @@ public class Path {
 		next = (!) next_point;
 
 // 		// FIXME: delete
-		bezier_vector (step, previous.x, previous.get_right_handle ().x (), next.get_left_handle ().x (), next.x, out handle_x0, out handle_x1);
-		bezier_vector (step, previous.y, previous.get_right_handle ().y (), next.get_left_handle ().y (), next.y, out handle_y0, out handle_y1);
+		bezier_vector (step, previous.x, previous.get_right_handle ().x, next.get_left_handle ().x, next.x, out handle_x0, out handle_x1);
+		bezier_vector (step, previous.y, previous.get_right_handle ().y, next.get_left_handle ().y, next.y, out handle_y0, out handle_y1);
 
 		edit_point.prev = previous_point;
 		edit_point.next = next_point;
@@ -1486,21 +1432,21 @@ public class Path {
 		}
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
-			all_of_double (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.get_left_handle ().x (), stop.get_left_handle ().y (), stop.x, stop.y, iter, steps);
+			all_of_double (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps);
 		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
-			all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.x, stop.y, iter, steps);
+			all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.x, stop.y, iter, steps);
 		} else if (right == PointType.CUBIC && left == PointType.CUBIC) {
-			all_of_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.get_left_handle ().x (), stop.get_left_handle ().y (), stop.x, stop.y, iter, steps);
+			all_of_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps);
 		} else {
 			warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y)");
-			all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x (), start.get_right_handle ().y (), stop.x, stop.y, iter, steps);
+			all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().x, stop.x, stop.y, iter, steps);
 		}
 	}
 
 	public static void get_point_for_step (EditPoint start, EditPoint stop, double step, out double x, out double y) {
 		// FIXME: Types
-		x = bezier_path (step, start.x, start.get_right_handle ().x (), stop.get_left_handle ().x (), stop.x);
-		y = bezier_path (step, start.y, start.get_right_handle ().y (), stop.get_left_handle ().y (), stop.y);	
+		x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
+		y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
 	}
 
 	private static void all_of_double (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
@@ -1956,10 +1902,10 @@ public class Path {
 			hl = e.get_left_handle ();
 			hr = e.get_right_handle ();
 			
-			lx = hl.x ();
-			ly = hl.y ();
-			rx = hr.x ();
-			ry = hr.y ();
+			lx = hl.x;
+			ly = hl.y;
+			rx = hr.x;
+			ry = hr.y;
 						
 			e.y *= -1;
 			
@@ -1977,10 +1923,10 @@ public class Path {
 			hl = e.get_left_handle ();
 			hr = e.get_right_handle ();
 			
-			lx = hl.x ();
-			ly = hl.y ();
-			rx = hr.x ();
-			ry = hr.y ();
+			lx = hl.x;
+			ly = hl.y;
+			rx = hr.x;
+			ry = hr.y;
 						
 			e.x *= -1;
 			
@@ -2041,7 +1987,7 @@ public class Path {
 	}
 
 	public static void find_intersection_handle (EditPointHandle h1, EditPointHandle h2, out double point_x, out double point_y) {
-		find_intersection (h1.parent.x, h1.parent.y, h1.x (), h1.y (), h2.parent.x, h2.parent.y, h2.x (), h2.y (), out point_x, out point_y);
+		find_intersection (h1.parent.x, h1.parent.y, h1.x, h1.y, h2.parent.x, h2.parent.y, h2.x, h2.y, out point_x, out point_y);
 	}
 	
 	public void add_extrema () {

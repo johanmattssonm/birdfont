@@ -472,8 +472,8 @@ class BirdFontFile : GLib.Object {
 		EditPointHandle h = start.get_right_handle ();
 		string x0, y0, x1, y1;
 		
-		x0 = round (h.x ());
-		y0 = round (h.y ());
+		x0 = round (h.x);
+		y0 = round (h.y);
 		x1 = round (end.x);
 		y1 = round (end.y);
 	
@@ -485,10 +485,10 @@ class BirdFontFile : GLib.Object {
 		EditPointHandle h2 = end.get_left_handle ();
 		string x0, y0, x1, y1, x2, y2;
 
-		x0 = round (h1.x ());
-		y0 = round (h1.y ());
-		x1 = round (h2.x ());
-		y1 = round (h2.y ());
+		x0 = round (h1.x);
+		y0 = round (h1.y);
+		x1 = round (h2.x);
+		y1 = round (h2.y);
 		x2 = round (end.x);
 		y2 = round (end.y);
 
@@ -500,10 +500,10 @@ class BirdFontFile : GLib.Object {
 		EditPointHandle h2 = end.get_left_handle ();
 		string x0, y0, x1, y1, x2, y2;
 
-		x0 = round (h1.x ());
-		y0 = round (h1.y ());
-		x1 = round (h2.x ());
-		y1 = round (h2.y ());
+		x0 = round (h1.x);
+		y0 = round (h1.y);
+		x1 = round (h2.x);
+		y1 = round (h2.y);
 		x2 = round (end.x);
 		y2 = round (end.y);
 

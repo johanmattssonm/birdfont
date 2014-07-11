@@ -707,8 +707,8 @@ public class GlyfTable : Table {
 				} else {
 									
 					if (prev_is_curve) {
-						x = x - (x - edit_point.right_handle.x ()) / 2;
-						y = y - (y - edit_point.right_handle.y ()) / 2;
+						x = x - (x - edit_point.right_handle.x) / 2;
+						y = y - (y - edit_point.right_handle.y) / 2;
 
 						edit_point = new EditPoint ();
 						edit_point.set_position (x, y);
@@ -734,8 +734,8 @@ public class GlyfTable : Table {
 				x = xcoordinates[first_point] * 1000.0 / units_per_em; // in proportion to em width
 				y = ycoordinates[first_point] * 1000.0 / units_per_em;
 				
-				x = x - (x - edit_point.right_handle.x ()) / 2;
-				y = y - (y - edit_point.right_handle.y ()) / 2;
+				x = x - (x - edit_point.right_handle.x) / 2;
+				y = y - (y - edit_point.right_handle.y) / 2;
 				
 				edit_point = new EditPoint ();
 				edit_point.set_position (x, y);

@@ -394,11 +394,11 @@ public class PenTool : Tool {
 			glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
 			
 			if (GridTool.is_visible ()) {
-				last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_handle.x ());
-				last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_handle.y ());
+				last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_handle.x);
+				last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_handle.y);
 			} else if (GridTool.has_ttf_grid ()) {
-				last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_handle.x ());
-				last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_handle.y ());
+				last_point_x = Glyph.precise_reverse_path_coordinate_x (selected_handle.x);
+				last_point_y = Glyph.precise_reverse_path_coordinate_y (selected_handle.y);
 			} else {
 				last_point_x = x;
 				last_point_y = y;
@@ -730,8 +730,8 @@ public class PenTool : Tool {
 				
 			// TODO: set point type
 			path.points.get (0).left_handle.move_to_coordinate (
-				path.points.get (path.points.size - 1).left_handle.x (),
-				path.points.get (path.points.size - 1).left_handle.y ());
+				path.points.get (path.points.size - 1).left_handle.x,
+				path.points.get (path.points.size - 1).left_handle.y);
 				
 			path.points.get (0).left_handle.type = 
 				path.points.get (path.points.size - 1).left_handle.type;
@@ -803,7 +803,7 @@ public class PenTool : Tool {
 				
 				last_rh = last_point.get_right_handle ();
 				fist_rh = first_point.get_right_handle ();
-				last_rh.move_to_coordinate_internal (last_rh. x (), last_rh.y ());
+				last_rh.move_to_coordinate_internal (last_rh. x, last_rh.y);
 				
 				union.append_path (second_path);
 				glyph.add_path (union);
