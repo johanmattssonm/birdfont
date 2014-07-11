@@ -165,11 +165,6 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 		
-		if (!set_suppress_event (true)) {
-			warning ("Can't lock UI.");
-			return;
-		}
-		
 		font = BirdFont.get_current_font ();
 		
 		dialog.signal_discard.connect (() => {
@@ -184,14 +179,16 @@ public class MenuTab : FontDisplay {
 			KerningTools.update_kerning_classes ();
 			
 			MainWindow.native_window.font_loaded ();
+			
+			select_overview ();
 		});
 
 		dialog.signal_save.connect (() => {
-			// FIXME: clean up background nested lambda
-			MainWindow.native_window.save (); // background thread
+			MenuTab.save_callback = new SaveCallback ();
 			MenuTab.save_callback.file_saved.connect (() => {
 				dialog.signal_discard ();
 			});
+			save_callback.save ();
 		});
 		
 		if (!font.is_modified ()) {
@@ -199,9 +196,6 @@ public class MenuTab : FontDisplay {
 		} else {
 			MainWindow.native_window.set_save_dialog (dialog);
 		}
-
-		set_suppress_event (false);
-		select_overview ();
 		
 		return;
 	}
@@ -223,9 +217,12 @@ public class MenuTab : FontDisplay {
 		});
 
 		dialog.signal_save.connect (() => {
-			MenuTab.save ();
-			ensure_main_loop_is_empty ();
-			MainWindow.native_window.quit ();
+			MenuTab.save_callback = new SaveCallback ();
+			MenuTab.save_callback.file_saved.connect (() => {
+				ensure_main_loop_is_empty ();
+				MainWindow.native_window.quit ();
+			});
+			save_callback.save ();
 		});
 		
 		if (!font.is_modified ()) {
@@ -375,8 +372,8 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void load () {
-		load_callback = new LoadCallback ();
-		load_callback.load ();
+		MenuTab.load_callback = new LoadCallback ();
+		MenuTab.load_callback.load ();
 	}
 	
 }

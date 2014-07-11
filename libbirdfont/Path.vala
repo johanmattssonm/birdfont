@@ -725,7 +725,7 @@ public class Path {
 		
 		
 		// generate a rasterized image of the object
-		width = 80;
+		width = 160;
 		click_map = new ClickMap (width);
 		px = 0;
 		py = 0;
@@ -736,10 +736,8 @@ public class Path {
 		click_y = (int) (width * ((y - ymin) / (ymax - ymin)));
 
 		in_path = click_map.get_value (click_x, click_y) != '\0';
-
-		click_map.set_value (click_x, click_y, 'X');
 		
-		click_map.print ();
+		click_map.set_value (click_x, click_y, 'X');
 		
 		return in_path;
 	}

@@ -147,7 +147,12 @@ public class OpenFontFormatReader : Object {
 		return directory_table.head_table.get_adjusted_checksum ();
 	}
 	
-	public static string? parse_kerning (string file_name) {
+	public static void append_kerning (StringBuilder bf_data, string file_name) {
+		string s = parse_kerning (file_name);
+		bf_data.append (s);
+	}
+	
+	public static string parse_kerning (string file_name) {
 		KernTable kern_table;
 		CmapTable cmap_table;
 		HeadTable head_table;
@@ -156,7 +161,6 @@ public class OpenFontFormatReader : Object {
 		unichar left, right;
 		double kerning, units_per_em;
 		uint npairs = 0;
-		string result = "";
 		
 		try {
 			reader.parse_index (file_name);
@@ -194,14 +198,8 @@ public class OpenFontFormatReader : Object {
 		} catch (GLib.Error e) {
 			warning (@"Failed to parse font. $(e.message)");
 		}
-				
-		result = bf_kerning.str;
 		
-		if (result == "") {
-			return null;
-		}
-		
-		return result.dup ();				
+		return bf_kerning.str;				
 	}
 }
 }

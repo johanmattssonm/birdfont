@@ -34,15 +34,17 @@ public class LoadCallback : GLib.Object {
 		font = BirdFont.get_current_font ();
 		
 		dialog.signal_discard.connect (() => {
-			print ("Discard and oad_new_font\n");
 			MainWindow.close_all_tabs ();
 			load_new_font ();
 		});
 
 		dialog.signal_save.connect (() => {
 			MainWindow.close_all_tabs ();
-			MenuTab.save ();
-			load_new_font ();
+			MenuTab.save_callback = new SaveCallback ();
+			MenuTab.save_callback.file_saved.connect (() => {
+				load_new_font ();
+			});
+			MenuTab.save_callback.save (); // background thread
 		});
 		
 		if (!font.is_modified ()) {

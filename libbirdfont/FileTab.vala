@@ -40,8 +40,27 @@ public class FileTab : FontDisplay {
 		}
 		
 		font = BirdFont.get_current_font ();
+
+		MenuTab.load_callback = new LoadCallback ();
+		MenuTab.load_callback.file_loaded.connect (() => {
+			Font f;
+
+			if (MenuTab.suppress_event) {
+				return;
+			}
+				
+			f = BirdFont.get_current_font ();
+			
+			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
+			foreach (string v in f.grid_width) {
+				MainWindow.get_drawing_tools ().parse_grid (v);
+			}
+			
+			MainWindow.get_drawing_tools ().background_scale.set_value (f.background_scale);
+			KerningTools.update_kerning_classes ();
+			MenuTab.select_overview ();
+		});
 		
-		// FIXME: clean up this nested lamda function
 		dialog.signal_discard.connect (() => {
 			Font f;
 
@@ -50,47 +69,32 @@ public class FileTab : FontDisplay {
 			}
 					
 			f = BirdFont.new_font ();
-			f.delete_backup ();
 			
 			MainWindow.clear_glyph_cache ();
 			MainWindow.close_all_tabs ();
 			
-			MenuTab.load_callback = new LoadCallback ();
-			
 			f.set_file (fn);
 			MainWindow.native_window.load (); // background thread
-			
-			MenuTab.load_callback.file_loaded.connect (() => {
-				MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
-				foreach (string v in f.grid_width) {
-					MainWindow.get_drawing_tools ().parse_grid (v);
-				}
-				
-				MainWindow.get_drawing_tools ().background_scale.set_value (f.background_scale);
-				KerningTools.update_kerning_classes ();
-				MenuTab.select_overview ();
-			});
 		});
 
 		dialog.signal_save.connect (() => {
-			SaveCallback save_callback;
-			
 			if (MenuTab.suppress_event) {
+				warn_if_test ("Event suppressed.");
 				return;
 			}
 			
-			save_callback = new SaveCallback ();
-			save_callback.file_saved.connect (() => {
+			MenuTab.save_callback = new SaveCallback ();
+			MenuTab.save_callback.file_saved.connect (() => {
+				print ("DISC:..\n");
 				dialog.signal_discard ();
 			});
-			save_callback.save ();
+			MenuTab.save_callback.save (); // background thread
 		});
 		
 		if (!font.is_modified ()) {
 			dialog.signal_discard ();
 		} else {
 			MainWindow.native_window.set_save_dialog (dialog);
-			dialog.signal_discard ();
 		}
 	}
 	

@@ -757,7 +757,6 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append_printf (bf, "</collection>\n");
 	}
 
-
 	// glyph outlines
 	for (i = 0; i < face->num_glyphs; i++) {
 		error = FT_Load_Glyph (face, i, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
@@ -794,12 +793,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_free (glyph, 0);
 	}
 
-	kerning = (gchar*) bird_font_open_font_format_reader_parse_kerning (file); 
-
-	if (kerning != NULL) {
-		g_string_append (bf, kerning);
-		g_free (kerning);	
-	}
+	bird_font_open_font_format_reader_append_kerning (bf, file);
 
 	g_string_append (bf, "</font>\n");
 	
