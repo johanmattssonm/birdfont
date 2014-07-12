@@ -941,6 +941,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MenuTab.stop_background_thread ();
 		return null;
 	}
+
+	public void hide_tool_box () {	
+		toolbox.hide ();
+	}	
+
+	public void show_tool_box () {
+		toolbox.show ();
+	}	
 }
 
 class TabbarCanvas : DrawingArea {

@@ -648,9 +648,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="4.7795181"
-     inkscape:cx="165.77656"
-     inkscape:cy="765.14379"
+     inkscape:zoom="1.1948795"
+     inkscape:cx="442.58637"
+     inkscape:cy="605.78832"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -2373,5 +2373,23 @@
          style="fill:#b6b6b6;stroke-width:0px"
          inkscape:connector-curvature="0" />
     </g>
+    <path
+       style="fill:#f2f1f0;fill-opacity:1;stroke:#858585;stroke-width:0.68529391;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 410.45108,13.973977 c -8.31509,0 -15.05505,6.73996 -15.05505,15.05505 0,8.3151 6.73996,15.05506 15.05505,15.05506 0.28852,0 0.57211,-0.005 0.85662,-0.0214 l 0,-30.06728 c -0.28462,-0.016 -0.56799,-0.0214 -0.85662,-0.0214 z"
+       id="path3007"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="csscccc"
+       inkscape:export-filename="/home/johan/birdfont/icons/show_tool_box.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#858585;stroke-width:0.73220468px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 409.77124,26.808417 -4.11674,-0.0204 0.14258,-2.26087 -5.92715,4.05327 5.92715,4.25695 -0.16295,-2.42381 4.13711,0.0204 z"
+       id="path3811-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccc"
+       inkscape:export-filename="/home/johan/birdfont/icons/show_tool_box.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320" />
   </g>
 </svg>

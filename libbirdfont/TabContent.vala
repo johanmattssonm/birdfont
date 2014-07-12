@@ -13,11 +13,17 @@
 */
 
 using Cairo;
+using Math;
 
 namespace BirdFont {
 
 /** Interface for events from native window to the current tab. */
 public class TabContent : GLib.Object {
+	
+	private static ImageSurface? tool_box_button = null;
+	private static bool tool_box_button_active = false;
+	private static bool tool_box_button_pressed = false;
+	private static WidgetAllocation allocation = new WidgetAllocation ();
 	
 	public static bool has_scrollbar () {
 		if (MenuTab.suppress_event) {
@@ -43,7 +49,41 @@ public class TabContent : GLib.Object {
 			cr.fill ();
 			cr.restore ();
 		} else {
+			TabContent.allocation = allocation;
+			
 			GlyphCanvas.current_display.draw (allocation, cr);
+			
+			if (!MainWindow.get_toolbox ().is_visible ()) {
+				draw_tool_box_button (allocation, cr);
+			}
+		}
+	}
+	
+	static double distance_from_tool_box_button (double x , double y) {
+		return sqrt (pow (fabs (allocation.width - x), 2) + pow (fabs (allocation.height / 2.0 - y), 2));
+	}
+	
+	static void draw_tool_box_button (WidgetAllocation allocation, Context cr) {
+		ImageSurface b;
+		double x, y;
+		double scale = Toolbox.get_icon_scale ();
+
+		if (unlikely (tool_box_button == null)) {	
+			tool_box_button = Icons.get_icon ("show_tool_box.png");
+		}
+		
+		if (tool_box_button != null) {
+			b = (!) tool_box_button;
+			
+			x = allocation.width / scale - b.get_width ();			
+			y = (allocation.height / scale) / 2.0;
+			y -= b.get_height () / 2.0;
+				
+			cr.save ();
+			cr.scale (scale, scale);
+			cr.set_source_surface (b, x, y);
+			cr.paint ();
+			cr.restore ();
 		}
 	}
 	
@@ -74,8 +114,17 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void motion_notify (double x, double y) {
+		bool b;
+		
 		if (MenuTab.suppress_event) {
 			return;
+		}
+		
+		b = tool_box_button_active;
+		tool_box_button_active = distance_from_tool_box_button (x, y) <= get_tool_box_button_width ();
+
+		if (b != tool_box_button_active) {
+			GlyphCanvas.redraw ();
 		}
 		
 		GlyphCanvas.current_display.motion_notify (x, y);
@@ -86,15 +135,25 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.button_release (button, x, y);
+		if (tool_box_button_active && tool_box_button_pressed) {
+			MainWindow.native_window.show_tool_box ();
+			MainWindow.get_toolbox ().set_visibility (true);
+		} else {
+			GlyphCanvas.current_display.button_release (button, x, y);
+		}
 	}
 	
 	public static void button_press (uint button, double x, double y) {
 		if (MenuTab.suppress_event) {
 			return;
 		}
-		
-		GlyphCanvas.current_display.button_press (button, x, y);
+
+		if (tool_box_button_active) {
+			tool_box_button_pressed = true;
+		} else {
+			tool_box_button_pressed = false;
+			GlyphCanvas.current_display.button_press (button, x, y);
+		}
 	}
 
 	public static void double_click (uint button, double ex, double ey) {
@@ -153,6 +212,18 @@ public class TabContent : GLib.Object {
 		}
 		
 		return uri;
+	}
+
+	private static double get_tool_box_button_width () {
+		double w;
+		
+		if (tool_box_button != null) {
+			w = ((!) tool_box_button).get_width ();
+			w *= Toolbox.get_icon_scale ();
+			return w;
+		}
+			
+		return 0;
 	}
 }
 
