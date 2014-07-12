@@ -301,7 +301,8 @@ public class BackgroundImage {
 		double bcx, bcy;
 		double a, b, c, length;
 
-		img_center (out bcx, out bcy);
+		bcx = img_middle_x;
+		bcy = img_middle_y;
 
 		a = bcx - x;
 		b = bcy - y;
@@ -449,20 +450,11 @@ public class BackgroundImage {
 		}	
 	}
 
-	void img_center (out double x, out double y) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		x = img_offset_x - g.view_offset_x + (size_margin / 2) * img_scale_x;
-		y = img_offset_y - g.view_offset_y + (size_margin / 2) * img_scale_y;
-
-		y *= g.view_zoom;
-		x *= g.view_zoom;
-	}
-
 	bool is_over_rotate (double nx, double ny) {
 		double x, y, d;
 
-		img_center (out x, out y);
+		x = img_middle_x;
+		y = img_middle_y;
 
 		x += cos (img_rotation) * 75;
 		y += sin (img_rotation) * 75;

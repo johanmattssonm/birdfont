@@ -471,13 +471,13 @@ public class DrawingTools : ToolCollection  {
 		});
 		view_tools.add_tool (zoom_bg);
 
-		Tool zoom_prev = new Tool ("prev", t_("Previous view"), 'j', CTRL);
+		Tool zoom_prev = new Tool ("prev", t_("Previous view"));
 		zoom_prev.select_action.connect((self) => {
 			zoom_tool.previous_view ();
 		});
 		view_tools.add_tool (zoom_prev);
 
-		Tool zoom_next = new Tool ("next", t_("Next view"), 'l', CTRL);
+		Tool zoom_next = new Tool ("next", t_("Next view"));
 		zoom_next.select_action.connect((self) => {
 			zoom_tool.next_view ();
 		});
