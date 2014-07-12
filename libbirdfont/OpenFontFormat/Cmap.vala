@@ -72,7 +72,7 @@ public class CmapSubtableWindowsUnicode : CmapSubtable {
 				}
 			} 
 			
-			warning (@"There is no char for glyph number $indice in cmap table. table.size: $(table.size ()))");
+			warning (@"There is no character for glyph number $indice in cmap table. table.size: $(table.size ()))");
 			return 0;
 		}
 		
