@@ -34,12 +34,12 @@ public class TabContent : GLib.Object {
 		GlyphCanvas.current_display.zoom_out ();
 	}
 	
-	public static void center_at (double x, double y) {
+	public static void move_view (double x, double y) {
 		if (MenuTab.suppress_event) {
 			return;
 		}
 		
-		GlyphCanvas.current_display.center_at (x, y);
+		GlyphCanvas.current_display.move_view (x, y);
 	}
 	
 	public static bool has_scrollbar () {

@@ -48,7 +48,7 @@ public class Glyph : FontDisplay {
 	double zoom_y2 = 0;
 	bool zoom_area_is_visible = false;
 	
-	bool move_view = false;
+	bool view_is_moving = false;
 	public double move_offset_x = 0;
 	public double move_offset_y = 0;
 
@@ -637,7 +637,7 @@ public class Glyph : FontDisplay {
 	public override void motion_notify (double x, double y) {
 		Tool t = MainWindow.get_toolbox ().get_current_tool ();
 		
-		if (move_view && KeyBindings.has_ctrl ()) {
+		if (view_is_moving && KeyBindings.has_ctrl ()) {
 			move_view_offset  (x, y);
 			return;
 		}
@@ -651,7 +651,7 @@ public class Glyph : FontDisplay {
 	
 	public override void button_release (int button, double ex, double ey) {
 		bool line_moving = false;
-		move_view = false;
+		view_is_moving = false;
 		
 		foreach (Line line in get_all_help_lines ()) {
 			if (!line.set_move (false)) {
@@ -722,7 +722,7 @@ public class Glyph : FontDisplay {
 		}
 			
 		if (KeyBindings.has_ctrl ()) {
-			move_view = true;
+			view_is_moving = true;
 			move_offset_x = view_offset_x;
 			move_offset_y = view_offset_y;
 		} else {
@@ -1866,9 +1866,9 @@ public class Glyph : FontDisplay {
 		return Font.to_hex_code (unichar_code);
 	}
 	
-	public override void center_at (double x, double y) {
-		view_offset_x = view_offset_x + (x - (allocation.width / 2.0) / view_zoom); 
-		view_offset_y = view_offset_y + (y - (allocation.height / 2.0) / view_zoom);
+	public override void move_view (double x, double y) {
+		view_offset_x += x / view_zoom; 
+		view_offset_y += y / view_zoom;
 	}
 }
 
