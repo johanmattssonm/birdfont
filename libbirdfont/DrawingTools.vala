@@ -67,6 +67,7 @@ public class DrawingTools : ToolCollection  {
 		shape_tools = new Expander ();
 			
 		Expander path_tool_modifiers = new Expander ();
+		Expander key_tools = new Expander ();
 		Expander draw_tool_modifiers = new Expander ();
 		Expander edit_point_modifiers = new Expander ();
 		Expander characterset_tools = new Expander ();
@@ -126,6 +127,14 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tools.add_tool (track_tool);
 		
+		// Keyboard commands on android
+		// Delete key
+		Tool delete_button = new Tool ("delete_button", t_("Delete"), 'r');
+		delete_button.select_action.connect ((self) => {
+			TabContent.key_press (Key.DEL);
+		});
+		key_tools.add_tool (delete_button);		
+
 		// quadratic Bézier points
 		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
@@ -779,6 +788,7 @@ public class DrawingTools : ToolCollection  {
 
 		// selection policy
 		draw_tools.set_open (true);
+		key_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
 		edit_point_modifiers.set_open (true);
 		path_tool_modifiers.set_open (true);
@@ -792,6 +802,11 @@ public class DrawingTools : ToolCollection  {
 		style_tools.set_open (true);
 		
 		add_expander (draw_tools);
+		
+		if (BirdFont.android) {
+			add_expander (key_tools);
+		}
+		
 		add_expander (draw_tool_modifiers);
 		add_expander (edit_point_modifiers);
 		add_expander (path_tool_modifiers);	
@@ -811,6 +826,9 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tools.set_persistent (true);
 		draw_tools.set_unique (false);
+		
+		key_tools.set_persistent (false);
+		key_tools.set_unique (false);
 		
 		draw_tool_modifiers.set_persistent (true);
 		draw_tool_modifiers.set_unique (false);
