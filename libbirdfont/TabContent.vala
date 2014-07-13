@@ -34,6 +34,14 @@ public class TabContent : GLib.Object {
 		GlyphCanvas.current_display.zoom_out ();
 	}
 	
+	public static void center_at (double x, double y) {
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		GlyphCanvas.current_display.center_at (x, y);
+	}
+	
 	public static bool has_scrollbar () {
 		if (MenuTab.suppress_event) {
 			return false;

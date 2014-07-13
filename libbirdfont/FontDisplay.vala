@@ -77,6 +77,9 @@ public abstract class FontDisplay : GLib.Object {
 	public virtual void zoom_min () {
 	}
 	
+	public virtual void center_at (double x, double y) {
+	}
+	
 	public virtual void reset_zoom () {
 	}
 	

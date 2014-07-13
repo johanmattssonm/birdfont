@@ -1865,6 +1865,20 @@ public class Glyph : FontDisplay {
 	public string get_hex () {
 		return Font.to_hex_code (unichar_code);
 	}
+	
+	public override void center_at (double x, double y) {
+		double px, py;
+		double cx, cy;
+		
+		px = Glyph.path_coordinate_x (x);
+		py = Glyph.path_coordinate_y (y);
+		
+		cx = Glyph.path_coordinate_x (allocation.width / 2.0);
+		cy = Glyph.path_coordinate_y (allocation.height / 2.0);		
+		
+		view_offset_x += px - cx;
+		view_offset_y += py - cy;
+	}
 }
 
 }
