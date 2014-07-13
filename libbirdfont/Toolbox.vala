@@ -382,6 +382,10 @@ public class Toolbox : GLib.Object  {
 			}
 			
 			current_set.content_height = pos;
+			
+			if (BirdFont.android) {
+				current_set.content_height *= 1.15;
+			}
 		}
 
 		foreach (Expander e in current_set.get_expanders ()) {
