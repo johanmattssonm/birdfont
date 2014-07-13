@@ -754,6 +754,68 @@
        id="linearGradient4369"
        xlink:href="#linearGradient3761-1-3-75-4-3"
        inkscape:collect="always" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3761-1-3-35"
+       id="linearGradient4027-40"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-656.63464,-283.00582)"
+       x1="608.99573"
+       y1="316.79437"
+       x2="608.64221"
+       y2="290.27783" />
+    <linearGradient
+       id="linearGradient3761-1-3-35">
+      <stop
+         style="stop-color:#eeeded;stop-opacity:1"
+         offset="0"
+         id="stop3763-4-4-6" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop3765-1-1-1" />
+    </linearGradient>
+    <linearGradient
+       y2="290.27783"
+       x2="608.64221"
+       y1="316.79437"
+       x1="608.99573"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-699.12277,-245.32714)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3383"
+       xlink:href="#linearGradient3761-1-3-35"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="290.27783"
+       x2="608.64221"
+       y1="316.79437"
+       x1="608.99573"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-699.12277,-245.32714)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3383-3"
+       xlink:href="#linearGradient3761-1-3-35-6"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient3761-1-3-35-6">
+      <stop
+         style="stop-color:#eeeded;stop-opacity:1"
+         offset="0"
+         id="stop3763-4-4-6-3" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop3765-1-1-1-4" />
+    </linearGradient>
+    <linearGradient
+       y2="290.27783"
+       x2="608.64221"
+       y1="316.79437"
+       x1="608.99573"
+       gradientTransform="matrix(1.1095097,0,0,0.99800197,-698.69199,-195.48214)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient4196"
+       xlink:href="#linearGradient3761-1-3-35-6"
+       inkscape:collect="always" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -762,9 +824,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6568542"
-     inkscape:cx="43.153308"
-     inkscape:cy="678.92897"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="-60.589675"
+     inkscape:cy="628.87241"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -2585,6 +2647,32 @@
            inkscape:export-xdpi="321.42578"
            inkscape:export-ydpi="321.42578" />
       </g>
+    </g>
+    <g
+       id="g4221"
+       transform="matrix(0.60218908,0,0,0.60218908,107.66526,21.851676)"
+       style="stroke-width:1.66060793;stroke-miterlimit:4;stroke-dasharray:none"
+       inkscape:export-filename="/home/johan/birdfont/icons/undo_tool.png"
+       inkscape:export-xdpi="319"
+       inkscape:export-ydpi="319">
+      <path
+         sodipodi:nodetypes="csc"
+         inkscape:connector-curvature="0"
+         id="path3402-0"
+         d="m -32.626463,102.60649 c 0,0 8.781985,0.0175 16.093745,0 5.361462,-0.0129 4.944939,4.75572 4.944939,4.75572"
+         style="fill:#000000;fill-opacity:0;stroke:#9b9b9b;stroke-width:1.66060793;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         sodipodi:nodetypes="cccc"
+         inkscape:connector-curvature="0"
+         id="path3406-5"
+         d="m -11.583691,107.0242 c -0.0086,3.4038 -0.937638,5.56458 -6.016753,5.48178 l -8.838835,0 3.132487,-3.11127"
+         style="fill:#000000;fill-opacity:0;stroke:#9b9b9b;stroke-width:1.66060793;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="path3408-1"
+         d="m -24.494735,112.50598 -1.944544,0 3.238548,3.23148"
+         style="fill:#000000;fill-opacity:0;stroke:#9b9b9b;stroke-width:1.66060793;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     </g>
   </g>
 </svg>

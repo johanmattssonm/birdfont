@@ -148,7 +148,14 @@ public class DrawingTools : ToolCollection  {
 			}
 		});
 		key_tools.add_tool (select_all_button);			
-		
+
+		// Undo
+		Tool undo_tool = new Tool ("undo_tool", t_("Undo"));
+		undo_tool.select_action.connect ((self) => {
+			TabContent.undo ();
+		});
+		key_tools.add_tool (undo_tool);
+				
 		// quadratic Bézier points
 		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
