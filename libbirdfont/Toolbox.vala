@@ -41,9 +41,7 @@ public class Toolbox : GLib.Object  {
 	double scroll_y = 0;
 
 	private List<ToolCollection> tool_sets = new List<ToolCollection> ();
-	
-	bool visible = true;
-	
+		
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		current_tool = new Tool ("no_icon");
 		press_tool = new Tool (null);
@@ -73,14 +71,6 @@ public class Toolbox : GLib.Object  {
 		});
 		
 		update_expanders ();
-	}
-
-	public void set_visibility (bool v) {
-		visible = v;
-	}
-
-	public bool is_visible () {
-		return visible;
 	}
 
 	public static Tool get_move_tool () {
@@ -372,11 +362,6 @@ public class Toolbox : GLib.Object  {
 	
 	public static double get_scale () {
 		return Toolbox.allocation_width / 160.0;
-	}
-	
-	/** Scale icons to 320  */
-	public static double get_icon_scale () {
-		return 30 / 111.0;
 	}
 	
 	public void update_expanders () {

@@ -35,8 +35,6 @@ public class DrawingTools : ToolCollection  {
 	public static Tool move_tool;
 	public static PenTool pen_tool;
 
-	Tool hide_tool_box;
-
 	PointTool point_tool;
 	ZoomTool zoom_tool;
 	Tool resize_tool;
@@ -67,8 +65,7 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tools = new Expander ();
 		shape_tools = new Expander ();
-		
-		Expander file_tools = new Expander ();
+			
 		Expander path_tool_modifiers = new Expander ();
 		Expander draw_tool_modifiers = new Expander ();
 		Expander edit_point_modifiers = new Expander ();
@@ -82,15 +79,6 @@ public class DrawingTools : ToolCollection  {
 		Expander style_tools = new Expander ();
 		
 		grid_expander = grid;
-
-		// Hide tool box
-		hide_tool_box = new Tool ("hide_toolbox", t_("Hide tool box"));
-		hide_tool_box.select_action.connect ((self) => {
-			MainWindow.get_toolbox ().set_visibility (false);
-			MainWindow.native_window.hide_tool_box ();
-			update_drawing_and_background_tools (self);
-		});
-		file_tools.add_tool (hide_tool_box);	
 
 		// Draw tools
 		pen_tool = new PenTool ("pen_tool");
@@ -790,7 +778,6 @@ public class DrawingTools : ToolCollection  {
 #endif
 
 		// selection policy
-		file_tools.set_open (true);
 		draw_tools.set_open (true);
 		draw_tool_modifiers.set_open (true);
 		edit_point_modifiers.set_open (true);
@@ -804,7 +791,6 @@ public class DrawingTools : ToolCollection  {
 		background_tools.set_open (true);
 		style_tools.set_open (true);
 		
-		add_expander (file_tools);
 		add_expander (draw_tools);
 		add_expander (draw_tool_modifiers);
 		add_expander (edit_point_modifiers);
@@ -822,10 +808,7 @@ public class DrawingTools : ToolCollection  {
 		if (BirdFont.has_argument ("--test")) {
 			add_expander (test_tools);
 		}
-
-		draw_tools.set_persistent (false);
-		draw_tools.set_unique (false);
-				
+		
 		draw_tools.set_persistent (true);
 		draw_tools.set_unique (false);
 		

@@ -67,13 +67,6 @@ public interface NativeWindow : GLib.Object {
 	
 	/** Load images in a background thread. */
 	public abstract void load_background_image ();
-
-	/** Hide tool box widget */
-	public abstract void hide_tool_box ();	
-
-	/** Show tool box widget */
-	public abstract void show_tool_box ();	
-
 }
 
 }
