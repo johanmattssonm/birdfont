@@ -1870,13 +1870,13 @@ public class Glyph : FontDisplay {
 		double px, py;
 		double cx, cy;
 		
-		px = Glyph.path_coordinate_x (x);
-		py = Glyph.path_coordinate_y (y);
+		px = x / view_zoom;
+		py = y / view_zoom;
 		
-		cx = Glyph.path_coordinate_x (allocation.width / 2.0);
-		cy = Glyph.path_coordinate_y (allocation.height / 2.0);		
+		cx = (allocation.width / 2.0) / view_zoom;
+		cy = (allocation.height / 2.0) / view_zoom;		
 		
-		view_offset_x += px - cx;
+		view_offset_x += px - cy;
 		view_offset_y += py - cy;
 	}
 }

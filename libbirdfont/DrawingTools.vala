@@ -129,12 +129,26 @@ public class DrawingTools : ToolCollection  {
 		
 		// Keyboard commands on android
 		// Delete key
-		Tool delete_button = new Tool ("delete_button", t_("Delete"), 'r');
+		Tool delete_button = new Tool ("delete_button", t_("Delete"));
 		delete_button.select_action.connect ((self) => {
 			TabContent.key_press (Key.DEL);
 		});
 		key_tools.add_tool (delete_button);		
 
+		// Select all points or paths
+		Tool select_all_button = new Tool ("select_all", t_("Select all points or paths"));
+		select_all_button.select_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			
+			if (point_tool.is_selected () || pen_tool.is_selected ()) {
+				pen_tool.select_all_points ();
+				g.open_path ();
+			} else {
+				g.select_all_paths ();
+			}
+		});
+		key_tools.add_tool (select_all_button);			
+		
 		// quadratic Bézier points
 		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
@@ -236,8 +250,8 @@ public class DrawingTools : ToolCollection  {
 		reflect_handle.select_action.connect ((self) => {
 			bool symmetrical;
 			PointSelection ep;
-			if (PenTool.selected_points.length () > 0) {
-				ep = PenTool.selected_points.first ().data;
+			if (PenTool.selected_points.size > 0) {
+				ep = PenTool.selected_points.get (0);
 				symmetrical = ep.point.reflective_handles;
 				foreach (PointSelection p in PenTool.selected_points) {
 					p.point.set_reflective_handles (!symmetrical);
