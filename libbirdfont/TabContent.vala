@@ -18,6 +18,21 @@ namespace BirdFont {
 
 /** Interface for events from native window to the current tab. */
 public class TabContent : GLib.Object {
+
+	public static void zoom_in () {
+		if (MenuTab.suppress_event) {
+		}
+		
+		GlyphCanvas.current_display.zoom_in ();
+	}
+	
+	public static void zoom_out () {
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		GlyphCanvas.current_display.zoom_out ();
+	}
 	
 	public static bool has_scrollbar () {
 		if (MenuTab.suppress_event) {
