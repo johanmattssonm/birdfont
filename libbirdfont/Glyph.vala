@@ -1867,17 +1867,8 @@ public class Glyph : FontDisplay {
 	}
 	
 	public override void center_at (double x, double y) {
-		double px, py;
-		double cx, cy;
-		
-		px = x / view_zoom;
-		py = y / view_zoom;
-		
-		cx = (allocation.width / 2.0) / view_zoom;
-		cy = (allocation.height / 2.0) / view_zoom;		
-		
-		view_offset_x += px - cy;
-		view_offset_y += py - cy;
+		view_offset_x = view_offset_x + (x - (allocation.width / 2.0) / view_zoom); 
+		view_offset_y = view_offset_y + (y - (allocation.height / 2.0) / view_zoom);
 	}
 }
 
