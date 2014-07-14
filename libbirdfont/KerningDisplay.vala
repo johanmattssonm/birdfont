@@ -246,7 +246,8 @@ public class KerningDisplay : FontDisplay {
 
 	private void display_kerning_value (double k) {
 		string kerning_label = t_("Kerning:");
-		TooltipArea.show_text (@"$kerning_label $(k)");
+		string kerning = round (k);
+		TooltipArea.show_text (@"$kerning_label $(kerning)");
 	}
 	
 	private void set_active_handle_index (int h) {
@@ -522,7 +523,21 @@ public class KerningDisplay : FontDisplay {
 		KerningDisplay d = MainWindow.get_kerning_display ();
 		d.set_selected_handle (d.selected_handle + 1);
 	}
-	
+
+	private static string round (double d) {
+		char[] b = new char [22];
+		unowned string s = d.format (b, "%.2f");
+		string n = s.dup ();
+
+		n = n.replace (",", ".");
+
+		if (n == "-0.00") {
+			n = "0.00";
+		}
+		
+		return n;
+	}
+		
 	public override void key_press (uint keyval) {
 		unichar c;
 		
@@ -539,12 +554,12 @@ public class KerningDisplay : FontDisplay {
 		
 		if (keyval == Key.LEFT && KeyBindings.modifier == NONE) {
 			first_update = true;
-			set_kerning (selected_handle, -1);
+			set_kerning (selected_handle, -1 / KerningTools.font_size);
 		}
 		
 		if (keyval == Key.RIGHT && KeyBindings.modifier == NONE) {
 			first_update = true;
-			set_kerning (selected_handle, 1);
+			set_kerning (selected_handle, 1 / KerningTools.font_size);
 		}
 
 		if (KeyBindings.modifier == CTRL && (keyval == Key.LEFT || keyval == Key.RIGHT)) {
