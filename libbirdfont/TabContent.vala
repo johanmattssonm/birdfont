@@ -144,6 +144,39 @@ public class TabContent : GLib.Object {
 		GlyphCanvas.current_display.scroll_wheel_down (x, y);
 	}
 
+	public static void tap_down (int finger, int x, int y) {
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		GlyphCanvas.current_display.tap_down (finger, x, y);
+	}
+	
+	public static void tap_up (int finger, int x, int y) {
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		GlyphCanvas.current_display.tap_up (finger, x, y);
+	}
+	
+	public static void tap_move (int x, int y) {
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		GlyphCanvas.current_display.tap_move (x, y);
+	}
+	
+	/** Both fingers are moving. */
+	public static void tap_move_delta (int x0, int y0, int x1, int y1) {
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		GlyphCanvas.current_display.tap_move_delta (x0, y0, x1, y1);
+	}
+		
 	public static void undo () {
 		if (MenuTab.suppress_event) {
 			return;

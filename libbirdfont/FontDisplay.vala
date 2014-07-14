@@ -13,11 +13,15 @@
 */
 
 using Cairo;
+using Math;
 
 namespace BirdFont {
 
 public abstract class FontDisplay : GLib.Object {
 	
+	private static double last_tap_y = -1;
+	private static double last_tap_time = 0;
+
 	/** Queue redraw area */
 	public signal void redraw_area (double x, double y, double w, double h);
 	
@@ -64,6 +68,49 @@ public abstract class FontDisplay : GLib.Object {
 
 	public virtual void double_click (uint button, double ex, double ey) {
 	}	
+
+	public virtual void tap_down (int finger, int x, int y) {
+		if (finger == 0) {
+			if ((GLib.get_real_time () - last_tap_time) / 1000000.0 < 0.4) {
+				double_click (1, x, y);
+			} else {
+				button_press (1, x, y);
+			}
+			
+			last_tap_time = GLib.get_real_time ();	
+		}
+		
+		last_tap_y = -1;
+	}
+	
+	public virtual void tap_up (int finger, int x, int y) {
+		if (finger == 0) {
+			button_release (1, x, y);
+		}
+		
+		last_tap_y = -1;
+	}
+	
+	public virtual void tap_move (int x, int y) {
+		double d;
+		
+		motion_notify (x, y);
+
+		d = y - last_tap_y;		
+		if (last_tap_y > -1 && fabs (d) > 15) { // FIXME: pixels, other units are better
+			if (d > 0) {
+				scroll_wheel_up (x, y);
+			} else {
+				scroll_wheel_down (x, y);
+			}
+		}
+		
+		last_tap_y = y;
+	}
+	
+	/** Both fingers are moving. */
+	public virtual void tap_move_delta (int x0, int y0, int x1, int y1) {
+	}
 
 	public virtual void zoom_in () {
 	}
