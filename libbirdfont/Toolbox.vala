@@ -407,7 +407,7 @@ public class Toolbox : GLib.Object  {
 		
 		cr.rectangle (0, 0, w, h);
 		cr.set_line_width (0);
-		cr.set_source_rgba (242/255.0, 241/255.0, 240/255.0, 1);
+		cr.set_source_rgba (240/255.0, 240/255.0, 240/255.0, 1);
 		cr.fill ();
 		
 		cr.rectangle (0, 0, 1, h);
