@@ -20,6 +20,7 @@ namespace BirdFont {
 public class OverView : FontDisplay {
 	public WidgetAllocation allocation = new WidgetAllocation ();
 	
+	OverViewItem selected_item = new OverViewItem (null, '\0', 0, 0);
 	int selected = 0;
 	int first_visible = 0;
 	int rows = 0;
@@ -134,9 +135,8 @@ public class OverView : FontDisplay {
 		MainWindow.native_window.set_text_listener (listener);
 	}
 	
-	public Glyph? get_current_glyph () 
-	requires (selected > 0 && selected < visible_items.size) {
-		OverViewItem oi = visible_items.get (selected);
+	public Glyph? get_current_glyph () {
+		OverViewItem oi = selected_item;
 		if (oi.glyphs != null) {
 			return ((!) oi.glyphs).get_current ();
 		}
@@ -253,6 +253,10 @@ public class OverView : FontDisplay {
 
 		first_visible = 0;
 		selected = 0;
+		
+		if (selected > visible_items.size) {
+			selected_item = get_selected_item ();
+		}
 	}
 	
 	OverViewItem get_selected_item () {
@@ -482,6 +486,10 @@ public class OverView : FontDisplay {
 	public void scroll_top () {
 		selected = 0;
 		first_visible = 0;
+		
+		if (visible_items.size != 0) {
+			selected_item = get_selected_item ();
+		}
 	}
 
 	/** Returns true if the selected glyph is at the last row. */
@@ -515,7 +523,9 @@ public class OverView : FontDisplay {
 		
 		if (selected >= visible_items.size) { 
 			selected = (int) (visible_items.size - 1); 
-		} 
+		}
+		
+		selected_item = get_selected_item ();
 	}
 
 	public void key_right () {
@@ -524,6 +534,7 @@ public class OverView : FontDisplay {
 
 		if (at_bottom () && first_visible + selected + 1 >= len) {
 			selected = (int) (visible_items.size - 1);
+			selected_item = get_selected_item ();
 			return;
 		}
 		
@@ -538,6 +549,7 @@ public class OverView : FontDisplay {
 		if (first_visible + selected > len) {
 			first_visible -= items_per_row;
 			selected = (int) (len - first_visible - 1);
+			selected_item = get_selected_item ();
 		}
 	}
 	
@@ -675,6 +687,7 @@ public class OverView : FontDisplay {
 		foreach (OverViewItem o in visible_items) {
 			if (o.character == c) {
 				selected = i;
+				selected_item = get_selected_item ();
 				return;
 			}
 			
@@ -727,6 +740,7 @@ public class OverView : FontDisplay {
 		if (index > -1) {
 			first_visible = r;
 			selected = index;
+			selected_item = get_selected_item ();
 		}
 	}
 	
@@ -754,6 +768,7 @@ public class OverView : FontDisplay {
 		foreach (OverViewItem i in visible_items) {
 			if (i.click (button, x, y)) {
 				selected = index;
+				selected_item = get_selected_item ();
 			}
 			
 			index++;
@@ -797,10 +812,8 @@ public class OverView : FontDisplay {
 		key_right ();
 	}
 	
-	public void open_current_glyph () 
-	requires (0 <= selected < visible_items.size)  {
-		OverViewItem o = visible_items.get (selected);
-		o.edit_glyph ();
+	public void open_current_glyph () {
+		selected_item.edit_glyph ();
 	}
 
 	public void update_scrollbar () {

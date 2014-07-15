@@ -1688,6 +1688,43 @@ public class PenTool : Tool {
 		}		
 	}
 	
+	public static void convert_point_segment_type (EditPoint first, EditPoint next, PointType point_type) {
+		bool line;
+		
+		set_converted_handle_length (first.get_right_handle ());
+		set_converted_handle_length (next.get_left_handle ());
+		
+		line = is_line (first.type) 
+			&& is_line (first.get_right_handle ().type) 
+			&& is_line (next.get_left_handle ().type);
+									
+		if (!line) {
+			first.type = point_type;
+		} else {
+			first.type = to_line (point_type);
+		}
+		
+		if (!line) {
+			first.get_right_handle ().type = point_type;
+		} else {
+			first.get_right_handle ().type = to_line (point_type);
+		}
+
+		if (!line) {
+			next.get_left_handle ().type = point_type;
+		} else {
+			next.get_left_handle ().type = to_line (point_type);
+		}
+			
+		// process connected handle
+		first.set_position (first.x, first.y);
+		first.recalculate_linear_handles ();
+	}
+	
+	public static void convert_point_type (EditPoint first, PointType point_type) {
+		convert_point_segment_type (first, first.get_next (), point_type);
+	}
+	
 	public static void convert_point_types () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		glyph.store_undo_state ();
@@ -1717,30 +1754,7 @@ public class PenTool : Tool {
 				continue;
 			}
 
-			set_converted_handle_length (e.get_right_handle ());
-			set_converted_handle_length (e.get_next ().get_left_handle ());
-														
-			if (!is_line (e.type)) {
-				e.type = DrawingTools.point_type;
-			} else {
-				e.type = to_line (DrawingTools.point_type);
-			}
-			
-			if (!is_line (e.get_right_handle ().type)) {
-				e.get_right_handle ().type = DrawingTools.point_type;
-			} else {
-				e.get_right_handle ().type = to_line (DrawingTools.point_type);
-			}
-
-			if (!is_line (e.type)) {
-				e.get_next ().get_left_handle ().type = DrawingTools.point_type;
-			} else {
-				e.get_next ().get_left_handle ().type = to_line (DrawingTools.point_type);
-			}
-				
-			// process connected handle
-			e.set_position (e.x, e.y);
-			e.recalculate_linear_handles ();
+			convert_point_type (e, DrawingTools.point_type);
 		}
 		
 		if (reset_selected) {

@@ -1233,6 +1233,7 @@ class TestCases {
 		
 		MainWindow.get_tab_bar ().select_overview ();
 		Toolbox.select_tool_by_name ("utf_8");
+		Tool.yield ();
 		
 		o.select_next_glyph ();
 		Tool.yield ();

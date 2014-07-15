@@ -244,6 +244,10 @@ public class EditPointHandle  {
 		EditPoint.to_coordinate (ref x, ref y);
 		move_to_coordinate (x, y);
 	}
+	
+	public bool is_line () {
+		return PenTool.is_line (type);
+	}
 }
 
 }

@@ -28,6 +28,9 @@ public class MainWindow : GLib.Object {
 	public static KerningDisplay kerning_display;
 	public static CharDatabase character_database;
 	public static LigatureList ligature_display;
+	
+	/** Number of pixels per mm */
+	public static double units = 1;
 
 	public MainWindow () {
 		singleton = this;
@@ -42,6 +45,11 @@ public class MainWindow : GLib.Object {
 		kerning_display = new KerningDisplay ();
 		character_database = new CharDatabase ();
 		ligature_display = new LigatureList ();
+	}
+
+	/** Set the number of picels per millimeter for the current screen. */
+	public static void set_units_per_pixel (double u) {
+		MainWindow.units = u;
 	}
 
 	public static void init () {

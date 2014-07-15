@@ -1044,103 +1044,8 @@ public class Path {
 	 * for ttf-export.
 	 */ 
 	public Path get_quadratic_points () {
-		EditPoint i, next;
-		
-		quadratic_path = new Path ();
-		
-		new_quadratic_points.clear ();
-		
-		if (points.size < 2) {
-			warning ("Less than 2 points in path.");
-			return quadratic_path;
-		}
-	
-		i = points.get (0);
-		next = i.get_next ();
-
-		while (i != points.get (points.size - 1)) {
-			if (i.get_right_handle ().type == PointType.CUBIC 
-				|| next.get_left_handle ().type == PointType.CUBIC) {
-				add_quadratic_points (i, next);
-			} else {
-				quadratic_path.add_point (i.copy ());
-			}
-			
-			i = i.get_next ();
-			next = i.get_next ();
-		}
-		
-		if (!is_open () && (points.get (points.size - 1).get_right_handle ().type == PointType.CUBIC 
-			||  points.get (0).get_left_handle ().type == PointType.CUBIC)) {
-			add_quadratic_points (points.get (points.size - 1), points.get (0));
-		} else {
-			quadratic_path.add_point (points.get (points.size - 1).copy ());
-		}
-
-		if (quadratic_path.points.size < 2) {
-			warning ("Less than 2 points in quadratic path.");
-			return new Path ();
-		}
-
-		quadratic_path.add_hidden_double_points ();
-
-		quadratic_path.create_list ();
-		process_quadratic_handles ();
-		
-		quadratic_path.create_list ();
-		process_cubic_handles ();
-
-		foreach (EditPoint ep in quadratic_path.points) {
-			if (ep.type == PointType.QUADRATIC) {
-				ep.get_left_handle ().move_to_coordinate (ep.get_prev ().get_right_handle ().x, ep.get_prev ().get_right_handle ().y);
-			}
-		}
-
-		if (!is_open ()) {
-			quadratic_path.close ();
-		} else {
-			quadratic_path.reopen ();
-		}
-		
-		quadratic_path.remove_points_on_points ();
-						
-		return quadratic_path;
-	}
-	
-	private void add_quadratic_points (EditPoint start, EditPoint stop) {
-		int steps;
-		int added_points = 0;
-		
-		if (points.size < 2) {
-			return;
-		}
-
-		steps = (int) (0.8 * get_length_from (start, stop));
-		
-		if (steps == 0) {
-			steps = 1;
-		}
-		
-		// create quadratic paths
-		all_of (start, stop, (x, y, step) => {
-			EditPoint e;
-			
-			if (step == 1) {
-				return true;
-			}
-						
-			e = new EditPoint (x, y, PointType.QUADRATIC);
-			added_points++;
-			
-			e = quadratic_path.add_point (e);
-			return true;
-		}, steps);
-		
-		foreach (EditPoint e in quadratic_path.points) {
-			e.recalculate_linear_handles ();
-		}
-		
-		quadratic_path.close ();
+		PointConverter converter = new PointConverter (this);
+		return converter.get_quadratic_path ();
 	}
 
 	void process_cubic_handles () 
@@ -1237,7 +1142,7 @@ public class Path {
 			
 			return true;
 		});
-
+		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 			double_bezier_vector (position, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x0, out x1);
 			double_bezier_vector (position, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y0, out y1);
@@ -2045,13 +1950,13 @@ public class Path {
 		insert_new_point_on_path_at (x3, y3 + 0.001);
 	}
 	
-	void insert_new_point_on_path_at (double x, double y) {
+	public void insert_new_point_on_path_at (double x, double y) {
 		EditPoint ep = new EditPoint ();
 		EditPoint prev, next;
 		bool exists;
 		
 		if (points.size < 2) {
-			warning ("Can't add extrema to jut one point.");
+			warning ("Can't add extrema to just one point.");
 			return;
 		}
 		
@@ -2093,11 +1998,14 @@ public class Path {
 		return i;
 	}
 	
-	public void remove_points_on_points () 
-	requires (points.size > 0) {
+	public void remove_points_on_points () {
 		Gee.ArrayList<EditPoint> remove = new Gee.ArrayList<EditPoint> ();
 		EditPoint n;
 		EditPointHandle hr, h;
+		
+		if (points.size == 0) {
+			return;
+		}
 		
 		create_list ();
 		
