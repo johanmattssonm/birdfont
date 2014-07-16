@@ -464,25 +464,6 @@ public class EditPoint : GLib.Object {
 		
 		return update;
 	}
-	
-	/*
-	// FIXME: DELETE
-	public int get_index () {
-		int i = -1;
-		
-		if (next == null) return i;
-	
-		foreach (var d in get_next ().first ()) {
-			i++;
-			
-			if (this == d) {
-				return i;
-			}
-		}
-		
-		return i;
-	}
-	*/
 }
 
 }

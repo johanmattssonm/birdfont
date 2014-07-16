@@ -1047,24 +1047,6 @@ public class Path {
 		PointConverter converter = new PointConverter (this);
 		return converter.get_quadratic_path ();
 	}
-
-	void process_cubic_handles () 
-		requires (quadratic_path.points.size > 0) {	
-		
-		EditPoint prev = quadratic_path.points.get (quadratic_path.points.size - 1);
-		quadratic_path.close ();
-		foreach (EditPoint ep in quadratic_path.points) {
-			if (ep.type == PointType.CUBIC) {
-				convert_remaining_cubic (ep, prev);
-			} 
-
-			if (ep.type == PointType.LINE_CUBIC) {
-				convert_remaining_cubic (ep, prev);
-			}
-			
-			prev = ep;
-		}
-	}
 	
 	void convert_remaining_cubic (EditPoint ep, EditPoint prev) {
 		double x, y;
@@ -1084,24 +1066,6 @@ public class Path {
 		
 		ep.get_left_handle ().move_to_coordinate (ep.x - (ep.x - prev.x) / 2, 
 			ep.y - (ep.y - prev.y) / 2);		
-	}
-	
-	/** Adjust position for the _new_ quadratic points. */
-	void process_quadratic_handles () {	
-		for (int t = 0; t < 2; t++) {
-			foreach (EditPoint ep in new_quadratic_points) {	
-				if (ep.next != null
-					&& ((!)ep.next).type != PointType.CUBIC
-					&& ((!)ep.next).type != PointType.LINE_CUBIC
-					&& ep.prev != null 
-					&& ((!)ep.prev).type != PointType.CUBIC
-					&& ((!)ep.prev).type != PointType.LINE_CUBIC) {
-						
-					ep.set_tie_handle (true);
-					ep.process_tied_handle ();
-				}
-			}
-		}
 	}
 
 	public void insert_new_point_on_path (EditPoint ep) {
@@ -1223,9 +1187,6 @@ public class Path {
 		
 		double ox = 0;
 		double oy = 0;
-		
-		double handle_x0, handle_x1;
-		double handle_y0, handle_y1;
 		
 		EditPoint prev = points.get (points.size - 1).get_link_item ();
 		EditPoint i = points.get (0).get_link_item ();

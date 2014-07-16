@@ -67,7 +67,7 @@ public class PointConverter {
 		EditPoint stop;
 		EditPoint new_start;
 		EditPoint e;
-		double step, distance, px, py;
+		double distance, px, py;
 		
 		if (quadratic_path.points.size <= 1) {
 			return quadratic_path;
