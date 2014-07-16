@@ -1316,10 +1316,6 @@ public class Path {
 		previous = (!) previous_point;
 		next = (!) next_point;
 
-// 		// FIXME: delete
-		bezier_vector (step, previous.x, previous.get_right_handle ().x, next.get_left_handle ().x, next.x, out handle_x0, out handle_x1);
-		bezier_vector (step, previous.y, previous.get_right_handle ().y, next.get_left_handle ().y, next.y, out handle_y0, out handle_y1);
-
 		edit_point.prev = previous_point;
 		edit_point.next = next_point;
 		
@@ -2013,7 +2009,7 @@ public class Path {
 			if (ep.next != null) {
 				n = ep.get_next ();
 			} else {
-				warning ("NEXT IS NULL");
+				warning ("next is null");
 				n = points.get (0);
 			}
 				

@@ -817,8 +817,16 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	public bool convert_to_png (string from, string to) {
 		Pixbuf pixbuf;
+		string folder;
+		int i;
 		
 		try {
+			i = to.last_index_of ("/");
+			if (i != -1) {
+				folder = to.substring (0, i);
+				DirUtils.create (folder, 0xFFFFFF);
+			}
+			
 			pixbuf = new Pixbuf.from_file (from);
 			pixbuf.save (to, "png");
 		} catch (GLib.Error e) {

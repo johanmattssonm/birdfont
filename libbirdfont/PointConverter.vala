@@ -22,10 +22,10 @@ public class PointConverter {
 
 	Path original_path;
 	Path quadratic_path;
+	int points_on_segment = 0;
 
 	public PointConverter (Path path) {	
 		original_path = path;
-		quadratic_path = original_path.copy ();
 	}
 
 	public Path get_quadratic_path () {
@@ -33,6 +33,7 @@ public class PointConverter {
 		EditPoint prev;
 		double x, y;
 		
+		quadratic_path = original_path.copy ();
 		p = get_estimated_cubic_path ();
 		p.remove_points_on_points ();
 
@@ -40,13 +41,12 @@ public class PointConverter {
 			return new Path ();
 		}
 
-		p.add_hidden_double_points ();
 
 		foreach (EditPoint e in p.points) {
-			if (e.type == PointType.CUBIC || e.get_right_handle ().type == PointType.CUBIC) {
-				PenTool.convert_point_type (e, PointType.DOUBLE_CURVE);
-			}
+			PenTool.convert_point_type (e, PointType.DOUBLE_CURVE);
 		}
+	
+		p.add_hidden_double_points ();
 
 		p.create_list ();
 		prev = p.get_last_point ();
@@ -66,6 +66,7 @@ public class PointConverter {
 		EditPoint start;
 		EditPoint stop;
 		EditPoint new_start;
+		EditPoint e;
 		double step, distance, px, py;
 		
 		if (quadratic_path.points.size <= 1) {
@@ -75,16 +76,30 @@ public class PointConverter {
 		start = quadratic_path.get_first_point ();
 		stop = start.get_next ();
 
+		if (points_on_segment > 5) {
+			warning ("Too many point on segment.");
+			return quadratic_path;
+		}
+
 		for (int i = 0; i < quadratic_path.points.size; i++) {
 			
-			if (!(start.get_right_handle ().is_line () && stop.get_left_handle ().is_line ())) {
+			if (start.get_right_handle ().type == PointType.CUBIC || stop.get_left_handle ().type == PointType.CUBIC) {
 				find_largest_distance (start, stop, start.copy (), stop.copy (), out distance, out px, out py);
-				if (distance > 0.05) {
-					quadratic_path.insert_new_point_on_path_at (px, py);
-					quadratic_path.create_list ();								
-					return get_quadratic_path ();
+				
+				if (distance > 0.11) { // range 0.1 - 0.3, default 0.11
+					e = new EditPoint ();
+					quadratic_path.get_closest_point_on_path (e, px, py);
+					e.type = PointType.CUBIC;
+					e.get_left_handle ().type = PointType.CUBIC;
+					e.get_right_handle ().type = PointType.CUBIC;
+					quadratic_path.insert_new_point_on_path (e);
+					
+					quadratic_path.create_list ();
+					points_on_segment++;													
+					return get_estimated_cubic_path ();
 				}
 			}
+			points_on_segment = 0;
 			
 			if (i == quadratic_path.points.size - 2) {
 				start = stop;
@@ -100,7 +115,7 @@ public class PointConverter {
 	}
 
 	// TODO: Optimize
-	private void find_largest_distance (EditPoint a0, EditPoint a1, EditPoint b0, EditPoint b1, out double distance, out double px, out double py) {
+	public static void find_largest_distance (EditPoint a0, EditPoint a1, EditPoint b0, EditPoint b1, out double distance, out double px, out double py) {
 		double max_d;
 		double min_d;
 		int steps = (int) (1.6 * Path.get_length_from (a0, a1));
