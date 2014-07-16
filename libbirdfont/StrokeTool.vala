@@ -54,7 +54,7 @@ public class StrokeTool : Tool {
 	public static PathList get_stroke (Path p, double thickness) {
 		Path counter, outline, merged;
 		PathList paths = new PathList ();
-		
+				
 		if (!p.is_open () && p.is_filled ()) {
 			outline = create_stroke (p, thickness);
 			outline.close ();

@@ -91,7 +91,7 @@ public class Path {
 	public static bool show_all_line_handles = true;
 	public static bool fill_open_path = false;
 	
-	public Path () {
+	public Path () {	
 		string width;
 		points = new Gee.ArrayList<EditPoint> ();
 		new_quadratic_points = new Gee.ArrayList<EditPoint> ();

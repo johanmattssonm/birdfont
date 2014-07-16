@@ -29,7 +29,7 @@ public enum PointType {
 	HIDDEN
 }
 
-public class EditPoint {
+public class EditPoint : GLib.Object {
 	
 	public double x;
 	public double y;
@@ -76,8 +76,8 @@ public class EditPoint {
 			left_handle.y -= d;
 		}
 	}
-		
-	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {
+	
+	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {	
 		x = nx;
 		y = ny;
 		type = nt;

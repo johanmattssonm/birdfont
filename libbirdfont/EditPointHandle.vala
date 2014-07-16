@@ -16,10 +16,10 @@ using Math;
 
 namespace BirdFont {
 		
-public class EditPointHandle  {
+public class EditPointHandle : GLib.Object {
 		
 	public double length;
-	public EditPoint parent;
+	public unowned EditPoint parent;
 	public PointType type;
 	EditPoint? visual_handle = null;
 	static EditPoint none = new EditPoint ();
@@ -57,7 +57,7 @@ public class EditPointHandle  {
 		
 		set { move_to_coordinate_internal (px (), value); }
 	}
-	
+		
 	public EditPointHandle.empty() {
 		this.parent = none;
 		this.angle = 0;
@@ -87,7 +87,7 @@ public class EditPointHandle  {
 		return n;
 	}
 
-	public EditPoint get_parent () {
+	public unowned EditPoint get_parent () {
 		return parent;
 	}
 
