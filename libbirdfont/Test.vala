@@ -17,28 +17,33 @@ namespace BirdFont {
 class Test : Object {
 	public Callback callback;
 	public string name;
-	double time;
+	double time_stamp;
 	bool benchmark = false;
+	
+	public Test.time (string name) {
+		this.name = name;
+		benchmark = true;
+	}
 	
 	public Test (Callback callback, string name, bool benchmark = false) {
 		this.callback = callback;
 		this.name = name;
-		this.time = 0;
+		this.time_stamp = 0;
 		this.benchmark = benchmark;
 	}
 	
 	public void timer_start () {
-		time = GLib.get_real_time ();
+		time_stamp = GLib.get_real_time ();
 	}
 
 	public void timer_stop () {
 		double stop_time = GLib.get_real_time ();
 		print_time ("Timer stop after", stop_time);
-		time = stop_time - time;
+		time_stamp = stop_time - time_stamp;
 	}
 	
 	public double get_time () {
-		return time / 1000000.0;
+		return time_stamp / 1000000.0;
 	}
 	
 	public bool is_benchmark () {
@@ -47,7 +52,11 @@ class Test : Object {
 	
 	public static void print_time (string mess, double start_time) {
 		double stop_time = GLib.get_real_time ();
-		print (@"$mess $((stop_time - start_time) / 1000000.0)s\n");
+		stdout.printf (@"$mess $((stop_time - start_time) / 1000000.0)s\n");
+	}
+	
+	public void print () {
+		print_time (name, time_stamp);
 	}
 }
 

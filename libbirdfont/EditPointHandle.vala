@@ -145,6 +145,10 @@ public class EditPointHandle : GLib.Object {
 		return parent.get_left_handle () == this;
 	}
 
+	public void move_to_coordinate_delta (double dx, double dy) {
+		move_to_coordinate_internal (px () + dx, py () + dy);
+	}
+	
 	public void move_to_coordinate (double x, double y) {
 		move_to_coordinate_internal (x, y);
 		

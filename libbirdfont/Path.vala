@@ -755,20 +755,41 @@ public class Path {
 		return !(xmax <= p.xmin || ymax <= p.ymin) || (xmin >= p.xmax || ymin >= p.ymax);
 	}
 	
-	public EditPoint delete_last_point () {
+	// FIXME: DELETE?
+	public EditPoint delete_first_point () {
 		EditPoint r;
-		int len;
+		int size;
 		
-		len = points.size;
-		if (unlikely (len == 0)) {
+		size = points.size;
+		if (unlikely (size == 0)) {
 			warning ("No points in path.");
 			return new EditPoint ();
 		}
 		
-		r = points.get (len - 1);
-		points.remove_at (len - 1);
+		r = points.get (0);
+		points.remove_at (0);
 		
-		if (len > 1) {
+		if (size > 1) {
+			r.get_next ().prev = null;
+		}
+		
+		return r;
+	}
+		
+	public EditPoint delete_last_point () {
+		EditPoint r;
+		int size;
+		
+		size = points.size;
+		if (unlikely (size == 0)) {
+			warning ("No points in path.");
+			return new EditPoint ();
+		}
+		
+		r = points.get (size - 1);
+		points.remove_at (size - 1);
+		
+		if (size > 1) {
 			r.get_prev ().next = null;
 			
 			if (r.next != null) {
@@ -927,17 +948,15 @@ public class Path {
 			ymin = 0;
 		}
 
-		if (stroke > 0) {
-			paths = StrokeTool.get_stroke (this, stroke);
-		} else {
-			paths = new PathList ();
-			paths.add (this);
+		foreach (EditPoint p in points) {
+			update_region_boundaries_for_point (p);
 		}
-
-		foreach (Path path in paths.paths) {
-			foreach (EditPoint p in path.points) {
-				update_region_boundaries_for_point (p);
-			}
+		
+		if (stroke > 0) {
+			xmax += stroke;
+			ymax += stroke;
+			xmin -= stroke;
+			ymin -= stroke;
 		}
 	}
 		
@@ -1068,7 +1087,7 @@ public class Path {
 			ep.y - (ep.y - prev.y) / 2);		
 	}
 
-	public void insert_new_point_on_path (EditPoint ep) {
+	public void insert_new_point_on_path (EditPoint ep, double t = -1) {
 		EditPoint start, stop;
 		double x0, x1, y0, y1;
 		double position, min;
@@ -1095,17 +1114,21 @@ public class Path {
 		min = double.MAX;
 
 		position = 0.5;
-
-		all_of (start, stop, (cx, cy, t) => {
-			double n = pow (ep.x - cx, 2) + pow (ep.y - cy, 2);
-			
-			if (n < min) {
-				min = n;
-				position = t;
-			}
-			
-			return true;
-		});
+		
+		if (t < 0) {
+			all_of (start, stop, (cx, cy, t) => {
+				double n = pow (ep.x - cx, 2) + pow (ep.y - cy, 2);
+				
+				if (n < min) {
+					min = n;
+					position = t;
+				}
+				
+				return true;
+			});
+		} else {
+			position = t;
+		}
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 			double_bezier_vector (position, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x0, out x1);
@@ -1283,7 +1306,7 @@ public class Path {
 		edit_point.set_position (ox, oy);
 	}
 
-	public static void all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = -1) {
+	public static bool all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = -1) {
 		PointType right = PenTool.to_curve (start.get_right_handle ().type);
 		PointType left = PenTool.to_curve (stop.get_left_handle ().type);
 		
@@ -1292,15 +1315,15 @@ public class Path {
 		}
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
-			all_of_double (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps);
+			return all_of_double (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps);
 		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
-			all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.x, stop.y, iter, steps);
+			return all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.x, stop.y, iter, steps);
 		} else if (right == PointType.CUBIC && left == PointType.CUBIC) {
-			all_of_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps);
-		} else {
-			warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y)");
-			all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().x, stop.x, stop.y, iter, steps);
+			return all_of_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps);
 		}
+		
+		warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y)");
+		return all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().x, stop.x, stop.y, iter, steps);
 	}
 
 	public static void get_point_for_step (EditPoint start, EditPoint stop, double step, out double x, out double y) {
@@ -1309,7 +1332,7 @@ public class Path {
 		y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
 	}
 
-	private static void all_of_double (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
+	private static bool all_of_double (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
 		double px = x1;
 		double py = y1;
 		
@@ -1329,7 +1352,7 @@ public class Path {
 			double_step = t / 2;
 			
 			if (!iter (px, py, double_step)) {
-				return;
+				return false;
 			}
 			
 		}
@@ -1343,13 +1366,14 @@ public class Path {
 			double_step = 0.5 + t / 2;
 			
 			if (!iter (px, py, double_step)) {
-				return;
+				return false;
 			}
-			
-		}		
+		}	
+		
+		return true;	
 	}
 		
-	private static void all_of_quadratic_curve (double x0, double y0, double x1, double y1, double x2, double y2, RasterIterator iter, double steps = 400) {
+	private static bool all_of_quadratic_curve (double x0, double y0, double x1, double y1, double x2, double y2, RasterIterator iter, double steps = 400) {
 		double px = x1;
 		double py = y1;
 		
@@ -1362,13 +1386,14 @@ public class Path {
 			py = quadratic_bezier_path (t, y0, y1, y2);
 			
 			if (!iter (px, py, t)) {
-				return;
+				return false;
 			}
-			
-		}			
+		}
+		
+		return true;
 	}
 
-	private static void all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
+	private static bool all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
 		double px = x1;
 		double py = y1;
 		
@@ -1381,34 +1406,38 @@ public class Path {
 			py = bezier_path (t, y0, y1, y2, y3);
 			
 			if (!iter (px, py, t)) {
-				return;
+				return false;
 			}
-			
-		}	
+		}
+		
+		return true;
 	}
 
-	public void all_segments (SegmentIterator iter) {
+	public bool all_segments (SegmentIterator iter) {
 		unowned EditPoint i, next;
 		
 		if (points.size < 2) {
-			return;
+			return false;
 		}
 
 		for (int j = 0; j < points.size - 1; j++) {
 			i = points.get (j).get_link_item ();
 			next = i.get_next ();
-			iter (i, next);
+			if (!iter (i, next)) {
+				return false;
+			}
 		}
 		
 		if (!is_open ()) {
-			iter (points.get (points.size - 1), points.get (0));
-		}		
+			return iter (points.get (points.size - 1), points.get (0));
+		}
+		
+		return true;
 	}
 
 	public void all_of_path (RasterIterator iter, int steps = -1) {
 		all_segments ((start, stop) => {
-			all_of (start, stop, iter, steps);
-			return true;
+			return all_of (start, stop, iter, steps);
 		});
 	}
 	
