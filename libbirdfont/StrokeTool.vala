@@ -176,9 +176,7 @@ public class StrokeTool : Tool {
 		merged.close ();
 		merged.create_list ();
 		merged.recalculate_linear_handles ();
-		
-		// DELETE merged.get_first_point ().get_right_handle ().move_to_coordinate (0, 0);
-							
+						
 		return merged;
 	}
 	
@@ -201,33 +199,33 @@ public class StrokeTool : Tool {
 		return stroked;
 	}
 
-	static bool has_double_points (Path p) {
-		foreach (EditPoint ep in p.points) {
-			if (ep.type == PointType.DOUBLE_CURVE) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	static Path change_stroke_width (Path original, double thickness) {
-		double px, py, nx, ny, dnx, dny, counter_dnx, counter_dny;	
-		double space_left, space_right;
 		Path stroked = new Path ();		
 		EditPoint ep;
-		bool clockwise;
 		uint k;
 		uint npoints;
-		double distance_to_counter, distance_to_path;
-		PointSelection ps;
-		double handle_x, handle_y;
-		EditPointHandle h1, h2;
 		Path new_path = original.copy ();
-		
+
+		EditPoint np, sp, nprev, sprev;
+		double n_distance, s_distance, nsratio;
+			
+		int i = 0;
+			
+		double la, qx, qy;
+
+		EditPoint split_point = new EditPoint ();
+		EditPoint start, stop, new_start;
+		EditPoint stroke_start, stroke_stop, middle;
+		EditPoint segment_start, segment_stop;
+		EditPointHandle r, l;
+		double left_x, left_y;
+		bool new_point = false;
+		double m, n;
+		bool bad_segment;
+		int size;
+				
 		new_path.remove_points_on_points ();
 		new_path.update_region_boundaries ();
-		
-		clockwise = new_path.is_clockwise ();
 
 		k = 0;
 		npoints = new_path.points.size;
@@ -237,30 +235,20 @@ public class StrokeTool : Tool {
 			return new_path;
 		}
 		
-		Test test = new Test.time ("change_stroke_width");
-		test.timer_start ();
-		
-		EditPoint split_point = new EditPoint ();
-		EditPoint start, stop, new_start;
-		EditPoint stroke_start, stroke_stop, middle;
-		EditPoint segment_start, segment_stop;
-		EditPointHandle r, l;
-		double left_x, left_y;
-		bool new_point = false;
-		
 		left_x = 0;
 		left_y = 0;
 		start = new_path.get_first_point ();
 		int it = 0;
 
-//---
+		// double points are not good for this purpose, convert them to the quadratic form
+		new_path.add_hidden_double_points (); 
 		
-		new_path.add_hidden_double_points ();
-		
+		// add tangent points to the path
 		segment_start = new_path.get_first_point ();
-		int size = new_path.points.size;
 		
-		for (int i = 0; i < size; i++) {
+		size = new_path.points.size;
+		
+		for (int j = 0; j < size; j++) {
 			segment_stop = segment_start.get_next ();
 			Path.all_of (segment_start, segment_stop, (x, y, t) => {
 				if (t == 0) {
@@ -283,12 +271,8 @@ public class StrokeTool : Tool {
 			segment_start = segment_stop;
 		}
 		
-		//return new_path;
-		
-//----
-		
-		bool bad_segment = false;
-		bool parallel = false;
+		// calculate offset
+		bad_segment = false;
 		for (int points_to_process = new_path.points.size - 1; points_to_process >= 0; points_to_process--) {
 
 			if (++it > 1000) { // FIXME: delete
@@ -312,17 +296,15 @@ public class StrokeTool : Tool {
 			
 			start.set_tie_handle (false);
 			stop.set_tie_handle (false);
-						
-			// from last segment
-			//if (!new_point) {
-				stroke_start.get_left_handle ().move_to_coordinate_delta (left_x, left_y);
-			//}
+			
+			// FIXME: first point?
+			stroke_start.get_left_handle ().move_to_coordinate_delta (left_x, left_y);
 			
 			r = stroke_start.get_right_handle ();
 			l = stroke_stop.get_left_handle ();
 			
-			double m = cos (r.angle + PI / 2) * thickness;
-			double n = sin (r.angle + PI / 2) * thickness;
+			m = cos (r.angle + PI / 2) * thickness;
+			n = sin (r.angle + PI / 2) * thickness;
 			
 			stroke_start.independent_x += m;
 			stroke_start.independent_y += n;
@@ -332,19 +314,12 @@ public class StrokeTool : Tool {
 			middle.y = r.y;
 			middle.get_right_handle ().move_to_coordinate (l.x, l.y);
 			
-			double o = cos (middle.get_right_handle ().angle - PI / 2) * thickness;
-			double p = sin (middle.get_right_handle ().angle - PI / 2) * thickness;
-			
-			// DELETE print (@"M $m n $n o $o p $p\n");			
 			stroke_start.get_right_handle ().move_to_coordinate_delta (m , n);
-			//stroke_start.get_right_handle ().move_to_coordinate_delta (o, p);
 
-			double la = l.angle;
-			double qx = cos (la - PI / 2) * thickness;
-			double qy = sin (la - PI / 2) * thickness;
-			
-			// DELETE  print (@"o $o p $p qx $qx qy $qy\n");
-			
+			la = l.angle;
+			qx = cos (la - PI / 2) * thickness;
+			qy = sin (la - PI / 2) * thickness;
+
 			left_x = qx;
 			left_y = qy;
 			stroke_stop.get_left_handle ().move_to_coordinate_delta (left_x, left_y);
@@ -352,7 +327,7 @@ public class StrokeTool : Tool {
 			stroke_stop.independent_x += qx;
 			stroke_stop.independent_y += qy;
 
-			// add points if the stroke is at wring distance from path
+			// Create a segment of the stroked path
 			Gee.ArrayList<EditPoint> on_stroke = new Gee.ArrayList<EditPoint> ();
 			int n_samples = 0;
 			Path.all_of (stroke_start, stroke_stop, (x, y, t) => {
@@ -374,10 +349,10 @@ public class StrokeTool : Tool {
 				return stroked;
 			}
 			
-			int i = 0;
-			
+			// compare the outline of the stroke to the original path and 
+			// add new points if offset differs from stroke width
+			i = 0;
 			new_point = false;
-			
 			Path.all_of (start, stop, (x, y, t) => {
 				double d;
 				EditPoint point_on_stroke;
@@ -393,16 +368,11 @@ public class StrokeTool : Tool {
 				}
 				
 				point_on_stroke = on_stroke.get (i++); 
-				
 				d = fabs (Path.distance (point_on_stroke.x, x, point_on_stroke.y, y) - stroke_width);
-
-				//print (@"CUT angle $angle      d $d   x $x on_stroke.x $(point_on_stroke.x) y $y   on_stroke.y $(point_on_stroke.y) thick $thickness\n");
-				
-				//print (@"d $d \n");
 				split_point = new EditPoint (x, y);
 				
 				if (d > 1) {
-					print (@"err... t $t\n");
+					warning ("Many points in outline.");
 					
 					if (!bad_segment) {
 						Path.all_of (start, stop, (x, y, t) => {
@@ -423,7 +393,7 @@ public class StrokeTool : Tool {
 					stop.prev = split_point;
 					
 					if (start.x == split_point.x && start.y == split_point.y) {
-						warning (@"Back again?  $d");
+						warning (@"Point already added.  Error: $d");
 						return false;
 					} else {
 						new_path.insert_new_point_on_path (split_point, t);
@@ -443,9 +413,8 @@ public class StrokeTool : Tool {
 				stroked.add_point (ep);											
 				new_start = stop;
 			} else if (bad_segment) {
-				// TODO: handle length
 				stroked.add_point (stroke_start.copy ());
-				points_to_process += 10; // redo the current one plus the new point
+				points_to_process += 10; // process all new points
 				new_start = start;
 			} else {
 				
@@ -455,19 +424,16 @@ public class StrokeTool : Tool {
 				left_x = qx;
 				left_y = qy;
 			
-				points_to_process += 2; // redo the current one plus the new point
+				points_to_process += 2; // process the current point and the new point
 				new_start = start;
 			}
-			
-			// DELETE print (@"next $(start.x), $(start.y)\n");
 			
 			start = new_start;
 		}
 		
 		return_val_if_fail (stroked.points.size == new_path.points.size && new_path.points.size > 1, stroked);
 		
-		EditPoint np, sp, nprev, sprev;
-		double n_distance, s_distance, nsratio;
+		// adjust length of control point handles
 		nprev = new_path.points.get (new_path.points.size - 1);
 		sprev = stroked.points.get (stroked.points.size - 1);
 		for (int index = 0; index < stroked.points.size; index++) {
@@ -499,18 +465,8 @@ public class StrokeTool : Tool {
 			stroked.get_last_point ().get_right_handle ().convert_to_line ();
 			stroked.get_first_point ().get_left_handle ().convert_to_line ();
 		}
-		
-		
-		
-		
-		test.print ();
-		
+
 		return stroked;
-	}
-	
-	public static double length_adjustment (double lx, double ldx, double ly, double ldy, double l) {
-		double a = sqrt (pow (ldx, 2) + pow (ldy, 2)) / fabs (l);	
-		return a;
 	}
 }
 
