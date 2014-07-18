@@ -1016,6 +1016,7 @@ public class Path {
 	/** Add the extra point between line handles for double curve. */
 	public void add_hidden_double_points () requires (points.size > 1) {
 		EditPoint hidden;
+		EditPoint prev;
 		EditPoint first = points.get (points.size - 1);
 		PointType left;
 		PointType right;
@@ -1056,6 +1057,18 @@ public class Path {
 		for (int i = 0; i < middle_points.size; i++) {
 			hidden = middle_points.get (i);
 			add_point_after (middle_points.get (i), first_points.get (i));
+		}
+		
+		create_list ();
+
+		prev= get_last_point ();
+		foreach (EditPoint ep in points) {
+			if (ep.type == PointType.QUADRATIC) {
+				x = prev.get_right_handle ().x;
+				y = prev.get_right_handle ().y;
+				ep.get_left_handle ().move_to_coordinate (x, y);
+			}
+			prev = ep;
 		}
 	}
 

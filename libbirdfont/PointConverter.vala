@@ -48,16 +48,7 @@ public class PointConverter {
 	
 		p.add_hidden_double_points ();
 
-		p.create_list ();
-		prev = p.get_last_point ();
-		foreach (EditPoint ep in p.points) {
-			if (ep.type == PointType.QUADRATIC) {
-				x = prev.get_right_handle ().x;
-				y = prev.get_right_handle ().y;
-				ep.get_left_handle ().move_to_coordinate (x, y);
-			}
-			prev = ep;
-		}
+
 						
 		return p;
 	}

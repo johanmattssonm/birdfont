@@ -210,7 +210,7 @@ public class StrokeTool : Tool {
 		return false;
 	}
 
-	static Path change_stroke_width (Path new_path, double thickness) {
+	static Path change_stroke_width (Path original, double thickness) {
 		double px, py, nx, ny, dnx, dny, counter_dnx, counter_dny;	
 		double space_left, space_right;
 		Path stroked = new Path ();		
@@ -222,8 +222,10 @@ public class StrokeTool : Tool {
 		PointSelection ps;
 		double handle_x, handle_y;
 		EditPointHandle h1, h2;
+		Path new_path = original.copy ();
 		
 		new_path.remove_points_on_points ();
+		new_path.update_region_boundaries ();
 		
 		clockwise = new_path.is_clockwise ();
 
@@ -238,8 +240,10 @@ public class StrokeTool : Tool {
 		Test test = new Test.time ("change_stroke_width");
 		test.timer_start ();
 		
+		EditPoint split_point = new EditPoint ();
 		EditPoint start, stop, new_start;
 		EditPoint stroke_start, stroke_stop, middle;
+		EditPoint segment_start, segment_stop;
 		EditPointHandle r, l;
 		double left_x, left_y;
 		bool new_point = false;
@@ -248,12 +252,46 @@ public class StrokeTool : Tool {
 		left_y = 0;
 		start = new_path.get_first_point ();
 		int it = 0;
+
+//---
 		
+		new_path.add_hidden_double_points ();
+		
+		segment_start = new_path.get_first_point ();
+		int size = new_path.points.size;
+		
+		for (int i = 0; i < size; i++) {
+			segment_stop = segment_start.get_next ();
+			Path.all_of (segment_start, segment_stop, (x, y, t) => {
+				if (t == 0) {
+					return true;
+				}
+				
+				split_point = new EditPoint (x, y);
+				
+				split_point.prev = segment_start;
+				split_point.next = segment_stop;
+				
+				segment_start.next = split_point;
+				segment_stop.prev = split_point;
+				
+				new_path.insert_new_point_on_path (split_point, t);
+				
+				return false;
+			}, 2);
+			
+			segment_start = segment_stop;
+		}
+		
+		//return new_path;
+		
+//----
 		
 		bool bad_segment = false;
+		bool parallel = false;
 		for (int points_to_process = new_path.points.size - 1; points_to_process >= 0; points_to_process--) {
 
-			if (++it > 100) { // FIXME: delete
+			if (++it > 1000) { // FIXME: delete
 				warning ("Skipping the rest of the path.");
 				break;
 			}
@@ -339,10 +377,9 @@ public class StrokeTool : Tool {
 			int i = 0;
 			
 			new_point = false;
-			EditPoint split_point = new EditPoint ();
+			
 			Path.all_of (start, stop, (x, y, t) => {
 				double d;
-				double dx, dy;
 				EditPoint point_on_stroke;
 				double stroke_width = fabs (thickness);
 				
@@ -351,22 +388,21 @@ public class StrokeTool : Tool {
 				}
 				
 				if (i >= on_stroke.size) {
-					warning ("Out of bounds.");
+					warning (@"Out of bounds. ($i >= $(on_stroke.size)) t: $t");
 					return false;
 				}
 				
 				point_on_stroke = on_stroke.get (i++); 
 				
 				d = fabs (Path.distance (point_on_stroke.x, x, point_on_stroke.y, y) - stroke_width);
-				dx = fabs (point_on_stroke.x - x);
-				dy = fabs (point_on_stroke.y - y);
+
+				//print (@"CUT angle $angle      d $d   x $x on_stroke.x $(point_on_stroke.x) y $y   on_stroke.y $(point_on_stroke.y) thick $thickness\n");
 				
-				print (@"CUT d $d   x $x on_stroke.x $(point_on_stroke.x) y $y   on_stroke.y $(point_on_stroke.y) thick $thickness\n");
-				
-				print (@"d $d \n");
+				//print (@"d $d \n");
+				split_point = new EditPoint (x, y);
 				
 				if (d > 1) {
-					print ("err...");
+					print (@"err... t $t\n");
 					
 					if (!bad_segment) {
 						Path.all_of (start, stop, (x, y, t) => {
@@ -374,12 +410,12 @@ public class StrokeTool : Tool {
 							return true;
 						}, 10);
 						
+						new_path.create_list ();
 						bad_segment = true;
 					}
 					
-				} else if (d > 0.1) {
-					split_point = new EditPoint (x, y);
-					
+				} else if (d > 0.2) {
+
 					split_point.prev = start;
 					split_point.next = stop;
 					
@@ -390,7 +426,7 @@ public class StrokeTool : Tool {
 						warning (@"Back again?  $d");
 						return false;
 					} else {
-						new_path.insert_new_point_on_path (split_point);
+						new_path.insert_new_point_on_path (split_point, t);
 						new_point = true;
 					}
 					
@@ -403,20 +439,19 @@ public class StrokeTool : Tool {
 			}, 3);
 			
 			if (!new_point) {
-				stroked.add_point (stroke_start.copy ());
-				new_start = stop; // or inserted point
+				ep = stroke_start.copy ();
+				stroked.add_point (ep);											
+				new_start = stop;
 			} else if (bad_segment) {
+				// TODO: handle length
 				stroked.add_point (stroke_start.copy ());
 				points_to_process += 10; // redo the current one plus the new point
-				new_start = stop;
+				new_start = start;
 			} else {
 				
 				la = split_point.get_left_handle ().angle;
 				qx = cos (la - PI / 2) * thickness;
 				qy = sin (la - PI / 2) * thickness;
-				
-				// DELETE print (@"o $o p $p qx $qx qy $qy\n");
-				
 				left_x = qx;
 				left_y = qy;
 			
@@ -429,10 +464,31 @@ public class StrokeTool : Tool {
 			start = new_start;
 		}
 		
+		return_val_if_fail (stroked.points.size == new_path.points.size && new_path.points.size > 1, stroked);
+		
+		EditPoint np, sp, nprev, sprev;
+		double n_distance, s_distance, nsratio;
+		nprev = new_path.points.get (new_path.points.size - 1);
+		sprev = stroked.points.get (stroked.points.size - 1);
+		for (int index = 0; index < stroked.points.size; index++) {
+			np = new_path.points.get (index);
+			sp = stroked.points.get (index);
+			n_distance = Path.distance (np.x, nprev.x, np.y, nprev.y);
+			s_distance = Path.distance (sp.x, sprev.x, sp.y, sprev.y);
+			
+			nsratio = s_distance / n_distance;
+			sprev.get_right_handle ().length *= nsratio;
+			sprev.get_left_handle ().length *= nsratio;
+			
+			nprev = np;
+			sprev = sp;
+		}
+		
+		
 		stroked.set_stroke (0);
 		
 		if (new_path.points.size > 2 && stroked.points.size > 2) {
-			//stroked.delete_last_point ();
+			stroked.delete_last_point ();
 
 			l = new_path.get_last_point ().get_left_handle ();
 
@@ -444,7 +500,8 @@ public class StrokeTool : Tool {
 			stroked.get_first_point ().get_left_handle ().convert_to_line ();
 		}
 		
-		// adjust last angle here.
+		
+		
 		
 		test.print ();
 		
