@@ -24,9 +24,9 @@ public enum PointType {
 	CUBIC,
 	DOUBLE_CURVE,        // two quadratic points with a hidden point half way between the two line handles
 	QUADRATIC,
-	END,
+	HIDDEN,
 	FLOATING,
-	HIDDEN
+	END
 }
 
 public class EditPoint : GLib.Object {
@@ -101,20 +101,6 @@ public class EditPoint : GLib.Object {
 
 	public void set_point_type (PointType t) {
 		type = t;
-	}
-
-	public double get_corner_angle () {
-		double l, r, a;
-		
-		l = get_left_handle ().angle;
-		r = get_right_handle ().angle;
-		a = fabs (l - r);
-
-		if (l > r) {
-			return 2 * PI - a;
-		}
-		
-		return a;
 	}
 		
 	public bool equals (EditPoint e) {
@@ -360,7 +346,7 @@ public class EditPoint : GLib.Object {
 		new_point.left_handle.angle = left_handle.angle;
 		new_point.left_handle.length = left_handle.length;		
 		new_point.left_handle.type = left_handle.type;
-		
+				
 		return new_point;
 	}
 
@@ -463,6 +449,11 @@ public class EditPoint : GLib.Object {
 		}
 		
 		return update;
+	}
+
+	public void convert_to_line () {
+		left_handle.convert_to_line ();
+		right_handle.convert_to_line ();
 	}
 }
 

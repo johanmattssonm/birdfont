@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class Test : Object {
+public class Test : Object {
 	public Callback callback;
 	public string name;
 	double time_stamp;

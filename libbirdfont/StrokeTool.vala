@@ -182,10 +182,13 @@ public class StrokeTool : Tool {
 	
 	static Path create_stroke (Path p, double thickness) {
 		Path stroked;
+		Path path;
 		
 		if (p.points.size >= 2) {
-			stroked = change_stroke_width (p, thickness);
-			
+			stroked = p.copy ();
+			add_corners (stroked);
+			stroked = change_stroke_width (stroked, thickness);
+
 			if (!p.is_open ()) {
 				stroked.reverse ();
 				stroked.close ();
@@ -197,6 +200,14 @@ public class StrokeTool : Tool {
 		}
 		
 		return stroked;
+	}
+	
+	static bool in_range (double x, double y,EditPoint a, EditPoint b) {
+		return fmin (a.x, b.x) < x < fmax (a.x, b.x) && fmin (a.y, b.y) < y < fmax (a.y, b.y);
+	}
+
+	static void add_corners (Path p) {
+		// TODO:
 	}
 
 	static Path change_stroke_width (Path original, double thickness) {
@@ -215,7 +226,7 @@ public class StrokeTool : Tool {
 
 		EditPoint split_point = new EditPoint ();
 		EditPoint start, stop, new_start;
-		EditPoint stroke_start, stroke_stop, middle;
+		EditPoint stroke_start, stroke_stop;
 		EditPoint segment_start, segment_stop;
 		EditPointHandle r, l;
 		double left_x, left_y;
@@ -245,13 +256,12 @@ public class StrokeTool : Tool {
 		
 		// add tangent points to the path
 		segment_start = new_path.get_first_point ();
-		
 		size = new_path.points.size;
 		
 		for (int j = 0; j < size; j++) {
 			segment_stop = segment_start.get_next ();
 			Path.all_of (segment_start, segment_stop, (x, y, t) => {
-				if (t == 0) {
+				if (t == 0 && t != 1) {
 					return true;
 				}
 				
@@ -270,9 +280,11 @@ public class StrokeTool : Tool {
 			
 			segment_start = segment_stop;
 		}
+		new_path.remove_points_on_points ();
 		
 		// calculate offset
 		bad_segment = false;
+		EditPoint previous_start = new EditPoint ();
 		for (int points_to_process = new_path.points.size - 1; points_to_process >= 0; points_to_process--) {
 
 			if (++it > 1000) { // FIXME: delete
@@ -290,7 +302,7 @@ public class StrokeTool : Tool {
 			// move point
 			stroke_start = start.copy ();
 			stroke_stop = stop.copy ();
-		
+			
 			stroke_start.set_tie_handle (false);
 			stroke_stop.set_tie_handle (false);
 			
@@ -309,13 +321,8 @@ public class StrokeTool : Tool {
 			stroke_start.independent_x += m;
 			stroke_start.independent_y += n;
 			
-			middle = new EditPoint ();
-			middle.x = r.x;
-			middle.y = r.y;
-			middle.get_right_handle ().move_to_coordinate (l.x, l.y);
+			stroke_start.get_right_handle ().move_to_coordinate_delta (m, n);
 			
-			stroke_start.get_right_handle ().move_to_coordinate_delta (m , n);
-
 			la = l.angle;
 			qx = cos (la - PI / 2) * thickness;
 			qy = sin (la - PI / 2) * thickness;
@@ -327,11 +334,24 @@ public class StrokeTool : Tool {
 			stroke_stop.independent_x += qx;
 			stroke_stop.independent_y += qy;
 
+			// avoid jagged edges
+			double da = stroke_stop.get_right_handle () .angle + stroke_stop.get_left_handle () .angle;;
+			da /= stop.get_right_handle ().angle + stop.get_left_handle ().angle;
+			da = da;
+			
+			print (@"stroke_start: $(stroke_start.x), $(stroke_start.y)\n");
+
+			if (fabs (da) > 1.2) {
+				stroke_start.get_left_handle ().angle = start.get_left_handle () .angle;
+				stroke_start.get_right_handle ().angle = start.get_right_handle () .angle;
+				stroke_start.set_tie_handle (true);
+			}
+
 			// Create a segment of the stroked path
 			Gee.ArrayList<EditPoint> on_stroke = new Gee.ArrayList<EditPoint> ();
 			int n_samples = 0;
 			Path.all_of (stroke_start, stroke_stop, (x, y, t) => {
-				if (t == 0) {
+				if (t == 0 || t == 1) {
 					return true;
 				}
 				
@@ -358,7 +378,7 @@ public class StrokeTool : Tool {
 				EditPoint point_on_stroke;
 				double stroke_width = fabs (thickness);
 				
-				if (t == 0) {
+				if (t == 0 || t == 1) {
 					return true;
 				}
 				
@@ -373,17 +393,17 @@ public class StrokeTool : Tool {
 				
 				if (d > 1) {
 					warning ("Many points in outline.");
+					bad_segment = true;
 					
-					if (!bad_segment) {
-						Path.all_of (start, stop, (x, y, t) => {
-							new_path.insert_new_point_on_path_at (x, y);
-							return true;
-						}, 10);
-						
-						new_path.create_list ();
-						bad_segment = true;
-					}
+					Path.all_of (start, stop, (x, y, t) => {
+						if (t != 0 || t == 1) {
+							split_point = new_path.insert_new_point_on_path_at (x, y);
+						}
+						return true;
+					}, 4);
 					
+					new_path.create_list ();
+					return false;
 				} else if (d > 0.2) {
 
 					split_point.prev = start;
@@ -399,10 +419,6 @@ public class StrokeTool : Tool {
 						new_path.insert_new_point_on_path (split_point, t);
 						new_point = true;
 					}
-					
-					bad_segment = false;
-				} else {
-					bad_segment = false;
 				}
 
 				return !new_point;
@@ -410,14 +426,13 @@ public class StrokeTool : Tool {
 			
 			if (!new_point) {
 				ep = stroke_start.copy ();
-				stroked.add_point (ep);											
+				stroked.add_point (ep);
+				previous_start = stroke_start;
 				new_start = stop;
 			} else if (bad_segment) {
-				stroked.add_point (stroke_start.copy ());
-				points_to_process += 10; // process all new points
-				new_start = start;
+				Path updated_path = change_stroke_width (new_path, thickness);
+				return updated_path;
 			} else {
-				
 				la = split_point.get_left_handle ().angle;
 				qx = cos (la - PI / 2) * thickness;
 				qy = sin (la - PI / 2) * thickness;
@@ -431,7 +446,11 @@ public class StrokeTool : Tool {
 			start = new_start;
 		}
 		
-		return_val_if_fail (stroked.points.size == new_path.points.size && new_path.points.size > 1, stroked);
+		new_path.remove_deleted_points ();
+		if (!(stroked.points.size == new_path.points.size && new_path.points.size > 1)) {
+			warning (@"stroked.points.size == new_path.points.size: $(stroked.points.size) != $(new_path.points.size)");
+			return stroked;
+		}
 		
 		// adjust length of control point handles
 		nprev = new_path.points.get (new_path.points.size - 1);
@@ -443,8 +462,13 @@ public class StrokeTool : Tool {
 			s_distance = Path.distance (sp.x, sprev.x, sp.y, sprev.y);
 			
 			nsratio = s_distance / n_distance;
-			sprev.get_right_handle ().length *= nsratio;
-			sprev.get_left_handle ().length *= nsratio;
+
+			if (nsratio > fabs (thickness) || nsratio < 0) {
+				warning (@"nsratio $nsratio");
+			} else {
+				sprev.get_right_handle ().length *= nsratio;
+				sprev.get_left_handle ().length *= nsratio;
+			}
 			
 			nprev = np;
 			sprev = sp;

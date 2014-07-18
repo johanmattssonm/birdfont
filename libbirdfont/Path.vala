@@ -68,9 +68,6 @@ public class Path {
 	private static ImageSurface? cubic_selected_edit_point_image = null;
 	private static ImageSurface? cubic_active_selected_edit_point_image = null;
 	
-	Path quadratic_path; // quadratic points for TrueType export
-	Gee.ArrayList<EditPoint> new_quadratic_points;
-	
 	public static double line_color_r = 0;
 	public static double line_color_g = 0;
 	public static double line_color_b = 0;
@@ -94,7 +91,6 @@ public class Path {
 	public Path () {	
 		string width;
 		points = new Gee.ArrayList<EditPoint> ();
-		new_quadratic_points = new Gee.ArrayList<EditPoint> ();
 		
 		if (edit_point_image == null) {
 			edit_point_image = Icons.get_icon ("edit_point.png");
@@ -1891,7 +1887,11 @@ public class Path {
 	public static void find_intersection_handle (EditPointHandle h1, EditPointHandle h2, out double point_x, out double point_y) {
 		find_intersection (h1.parent.x, h1.parent.y, h1.x, h1.y, h2.parent.x, h2.parent.y, h2.x, h2.y, out point_x, out point_y);
 	}
-	
+
+	public static void find_intersection_point (EditPoint p1, EditPoint p2, EditPoint q1, EditPoint q2, out double point_x, out double point_y) {
+		find_intersection (p1.x, p1.y, p2.x, p2.y, q1.x, q1.y, q2.x, q2.y, out point_x, out point_y);
+	}
+		
 	public void add_extrema () {
 		double x0, y0, x1, y1, x2, y2, x3, y3;
 		double minx, maxx, miny, maxy;
@@ -1949,14 +1949,14 @@ public class Path {
 		insert_new_point_on_path_at (x3, y3 + 0.001);
 	}
 	
-	public void insert_new_point_on_path_at (double x, double y) {
+	public EditPoint insert_new_point_on_path_at (double x, double y) {
 		EditPoint ep = new EditPoint ();
 		EditPoint prev, next;
 		bool exists;
 		
 		if (points.size < 2) {
 			warning ("Can't add extrema to just one point.");
-			return;
+			return ep;
 		}
 		
 		get_closest_point_on_path (ep, x, y);
@@ -1970,6 +1970,8 @@ public class Path {
 		if (!exists) {
 			insert_new_point_on_path (ep);
 		}
+		
+		return ep;
 	}
 	
 	public static bool is_clasped (PathList pl, Path p) {
@@ -2044,6 +2046,22 @@ public class Path {
 		}
 		
 		recalculate_linear_handles ();
+	}
+	
+	public void remove_deleted_points () {
+		Gee.ArrayList<EditPoint> p = new Gee.ArrayList<EditPoint> ();
+		
+		foreach (EditPoint ep in points) {
+			if (ep.deleted) {
+				p.add (ep);
+			}
+		}
+		
+		foreach (EditPoint e in p) {
+			points.remove (e);
+		}
+		
+		create_list ();
 	}
 }
 

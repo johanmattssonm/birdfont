@@ -43,6 +43,16 @@ public class PathList : GLib.Object {
 		
 		return paths.get (0);
 	}
+	
+	public Path merge_all () {
+		Path p = get_first_path ();
+		
+		for (int i = 1; i < paths.size; i++) {
+			p.append_path (paths.get (i));
+		}
+		
+		return p;	
+	}
 }
 
 }
