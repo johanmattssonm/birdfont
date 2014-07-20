@@ -127,7 +127,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tools.add_tool (track_tool);
 		
-		// Keyboard commands on android
+		// Tools on android
 		// Delete key
 		Tool delete_button = new Tool ("delete_button", t_("Delete"));
 		delete_button.select_action.connect ((self) => {
@@ -155,7 +155,13 @@ public class DrawingTools : ToolCollection  {
 			TabContent.undo ();
 		});
 		key_tools.add_tool (undo_tool);
-				
+		
+		Tool inser_point_on_path_tool = new Tool ("new_point_on_path", t_("Insert new points in path"));
+		inser_point_on_path_tool.set_persistent (true);
+		key_tools.add_tool (undo_tool);
+		
+		key_tools.add_tool (inser_point_on_path_tool);		
+			
 		// quadratic Bézier points
 		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {

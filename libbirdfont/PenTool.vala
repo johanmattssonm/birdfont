@@ -53,6 +53,8 @@ public class PenTool : Tool {
 	private static double selection_box_last_x = 0;
 	private static double selection_box_last_y = 0;
 
+	private static bool point_selection_image = false;
+
 	public static double precision = 1;
 	
 	// The pixel where the user pressed the mouse button
@@ -127,7 +129,11 @@ public class PenTool : Tool {
 			} else if (GridTool.has_ttf_grid ()) {
 				GridTool.ttf_grid (ref x, ref y);
 			}
-						
+			
+			if (BirdFont.android) {
+				point_selection_image = true;
+			}
+					
 			last_point_x = x;
 			last_point_y = y;
 		});
@@ -179,6 +185,10 @@ public class PenTool : Tool {
 		move_action.connect ((self, x, y) => {
 			selection_box_last_x = x;
 			selection_box_last_y = y;
+			
+			if (Path.distance (begin_action_x, x, begin_action_y, y) > 2 * MainWindow.units) {
+				point_selection_image = false;
+			}
 			
 			move (x, y);
 		});
@@ -423,9 +433,11 @@ public class PenTool : Tool {
 		
 		return_if_fail (g != null);
 
-		if (double_click) {
-			glyph.insert_new_point_on_path (x, y);
-			return;
+		if (!BirdFont.android || Toolbox.get_tool ("new_point_on_path").is_selected ()) {
+			if (double_click) {
+				glyph.insert_new_point_on_path (x, y);
+				return;
+			}
 		}
 		
 		if (button == 1) {
@@ -822,29 +834,46 @@ public class PenTool : Tool {
 			draw_selection_box (cr);
 		}
 		
+		if (point_selection_image) {
+			draw_point_selection_circle (cr);
+		}
+		
 		draw_merge_icon (cr);
 	}
 	
 	/** Higlight the selected point on Android. */
-	void draw_point_select_circle (Context cr) {
+	void draw_point_selection_circle (Context cr) {
 		ImageSurface img;
+		ImageSurface? i = null;
 		double x, y;
 		double ratio;
+		PointSelection ps;
 		
-		return_if_fail (Path.edit_point_image != null);
+		if (move_selected_handle && selected_points.size > 0) {
+			i = Path.edit_point_handle_image;
+		} else if (move_selected) {
+			if (selected_points.size > 0) {
+				ps = selected_points.get (selected_points.size - 1);
+				
+				i = (ps.point.type == PointType.CUBIC) 
+					? Path.cubic_edit_point_image : Path.edit_point_image;
+			}
+		}
 		
-		img = (!) Path.edit_point_image;	
-		
-		cr.save ();
-		ratio = 40 * MainWindow.units / img.get_width ();
-		cr.scale (ratio, ratio);
-		x = begin_action_x - ratio * img.get_width () / 2;
-		x /= ratio;
-		y = begin_action_y - ratio * img.get_height () / 2;
-		y /= ratio;
-		cr.set_source_surface (img, x, y);
-		cr.paint ();
-		cr.restore ();
+		if (i != null) {
+			img = (!) i;	
+			
+			cr.save ();
+			ratio = 40 * MainWindow.units / img.get_width ();
+			cr.scale (ratio, ratio);
+			x = begin_action_x - ratio * img.get_width () / 2;
+			x /= ratio;
+			y = begin_action_y - ratio * img.get_height () / 2;
+			y /= ratio;
+			cr.set_source_surface (img, x, y);
+			cr.paint ();
+			cr.restore ();
+		}
 	}
 	
 	void draw_selection_box (Context cr) {
@@ -864,10 +893,11 @@ public class PenTool : Tool {
 	}
 	
 	public static void draw_join_icon (Context cr, double x, double y) {
-		draw_icon (tie_icon, cr, x, y);
+		double scale = (BirdFont.android) ? 5 : 1;
+		draw_icon (tie_icon, cr, x, y, scale);
 	}
 
-	public static void draw_icon (ImageSurface? i, Context cr, double x, double y) {
+	public static void draw_icon (ImageSurface? i, Context cr, double x, double y, double scale = 1) {
 		ImageSurface img;
 		double px, py, ratio;
 		
@@ -876,7 +906,8 @@ public class PenTool : Tool {
 					
 			cr.save ();
 			
-			ratio = 0.23; // 72 to 320 dpi
+			ratio = scale;
+			ratio *= 0.23; // 72 to 320 dpi
 			ratio *=  MainWindow.units;
 			cr.scale (ratio, ratio);
 			
