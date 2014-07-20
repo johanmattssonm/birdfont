@@ -136,6 +136,8 @@ public class PenTool : Tool {
 					
 			last_point_x = x;
 			last_point_y = y;
+			
+			move_action (this, x, y);
 		});
 		
 		double_click_action.connect ((self, b, x, y) => {
@@ -430,14 +432,13 @@ public class PenTool : Tool {
 	public void press (int button, int x, int y, bool double_click) {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
+		Toolbox tb = MainWindow.get_toolbox ();
 		
 		return_if_fail (g != null);
 
-		if (!BirdFont.android || Toolbox.get_tool ("new_point_on_path").is_selected ()) {
-			if (double_click) {
-				glyph.insert_new_point_on_path (x, y);
-				return;
-			}
+		if ((double_click && !BirdFont.android) || tb.get_tool ("new_point_on_path").is_selected ()) {
+			glyph.insert_new_point_on_path (x, y);
+			return;
 		}
 		
 		if (button == 1) {

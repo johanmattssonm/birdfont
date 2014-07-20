@@ -156,10 +156,13 @@ public class DrawingTools : ToolCollection  {
 		});
 		key_tools.add_tool (undo_tool);
 		
-		Tool inser_point_on_path_tool = new Tool ("new_point_on_path", t_("Insert new points in path"));
+		bool insert_points = false;
+		Tool inser_point_on_path_tool = new Tool ("new_point_on_path", t_("Insert new points on path"));
+		inser_point_on_path_tool.select_action.connect ((self) => {
+			insert_points = !insert_points;
+			inser_point_on_path_tool.set_selected (insert_points);
+		});
 		inser_point_on_path_tool.set_persistent (true);
-		key_tools.add_tool (undo_tool);
-		
 		key_tools.add_tool (inser_point_on_path_tool);		
 			
 		// quadratic Bézier points

@@ -42,7 +42,10 @@ public class PointTool : Tool {
 		
 		double_click_action.connect ((self, b, x, y) => {
 			Tool p = pen ();
-			p.double_click_action (p, b, x, y);
+			
+			if (!BirdFont.android) {
+				p.double_click_action (p, b, x, y);
+			}
 		});
 
 		release_action.connect ((self, b, x, y) => {

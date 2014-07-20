@@ -151,7 +151,7 @@ public class Tool : GLib.Object {
 		}
 	}
 	
-	static void show_tooltip () {
+	public static void show_tooltip () {
 		TimeoutSource timer_hide;
 		
 		// hide tooltip label later
