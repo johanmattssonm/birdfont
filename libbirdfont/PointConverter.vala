@@ -47,9 +47,7 @@ public class PointConverter {
 		}
 	
 		p.add_hidden_double_points ();
-
-
-						
+					
 		return p;
 	}
 

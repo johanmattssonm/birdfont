@@ -180,8 +180,8 @@ class ResizeTool : Tool {
 		hx = cos (rotation) * 75;
 		hy = sin (rotation) * 75;
 
-		inx = x - size <= cx + hx - 2.5 <= x + size;
-		iny = y - size <= cy + hy - 2.5 <= y + size;
+		inx = x - size * MainWindow.units <= cx + hx - 2.5 <= x + size * MainWindow.units;
+		iny = y - size * MainWindow.units <= cy + hy - 2.5 <= y + size * MainWindow.units;
 		
 		return inx && iny;
 	}
@@ -287,7 +287,7 @@ class ResizeTool : Tool {
 			h = selected_path.ymax - selected_path.ymin;
 			w = selected_path.xmax - selected_path.xmin;
 			
-			if (selected_path.points.size == 0) {
+			if (selected_path.points.size <= 1) {
 				continue;
 			}
 			
@@ -302,7 +302,7 @@ class ResizeTool : Tool {
 	bool is_over_resize_handle (Path p, double x, double y) {
 		double handle_x = Math.fabs (Glyph.reverse_path_coordinate_x (p.xmax)); 
 		double handle_y = Math.fabs (Glyph.reverse_path_coordinate_y (p.ymax));
-		return fabs (handle_x - x + 10) < 20 && fabs (handle_y - y + 10) < 20;
+		return fabs (handle_x - x + 10) < 20 * MainWindow.units && fabs (handle_y - y + 10) < 20 * MainWindow.units;
 	}
 }
 

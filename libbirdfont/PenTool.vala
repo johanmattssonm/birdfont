@@ -122,6 +122,8 @@ public class PenTool : Tool {
 			last_point_x = x;
 			last_point_y = y;
 
+			move_action (this, x, y);
+
 			press (b, x, y, false);
 						
 			if (GridTool.is_visible ()) {
@@ -136,8 +138,6 @@ public class PenTool : Tool {
 					
 			last_point_x = x;
 			last_point_y = y;
-			
-			move_action (this, x, y);
 		});
 		
 		double_click_action.connect ((self, b, x, y) => {
