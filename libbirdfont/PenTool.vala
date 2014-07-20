@@ -182,6 +182,8 @@ public class PenTool : Tool {
 					update_selection ();
 				}
 			}
+			
+			point_selection_image = false;
 		});
 
 		move_action.connect ((self, x, y) => {

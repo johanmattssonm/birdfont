@@ -299,7 +299,7 @@ public class SpinButton : Tool {
 		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
 		
 		if (BirdFont.android) {
-			cr.move_to (xt + text_x + 6, yt + text_y);
+			cr.move_to (xt + text_x + 0.6 * MainWindow.units, yt + text_y);
 		} else if (BirdFont.mac || BirdFont.win32)  {
 			cr.move_to (xt + text_x + 2, yt + text_y);
 		} else {
