@@ -232,7 +232,7 @@ public class StrokeTool : Tool {
 		double left_x, left_y;
 		bool new_point = false;
 		double m, n;
-		bool bad_segment;
+		bool bad_segment = false;
 		int size;
 				
 		new_path.remove_points_on_points ();
@@ -335,16 +335,16 @@ public class StrokeTool : Tool {
 			stroke_stop.independent_y += qy;
 
 			// avoid jagged edges
-			double da = stroke_stop.get_right_handle () .angle + stroke_stop.get_left_handle () .angle;;
-			da /= stop.get_right_handle ().angle + stop.get_left_handle ().angle;
-			da = da;
-			
-			print (@"stroke_start: $(stroke_start.x), $(stroke_start.y)\n");
+			double dar = stroke_start.get_right_handle ().angle - start.get_right_handle ().angle;
+			double dal = stroke_stop.get_left_handle ().angle - stop.get_left_handle ().angle;
 
-			if (fabs (da) > 1.2) {
-				stroke_start.get_left_handle ().angle = start.get_left_handle () .angle;
+			if (fabs (dal) > 1) {
+				stroke_stop.get_left_handle ().angle = stop.get_left_handle () .angle;
+			}
+				
+			if (fabs (dar) > 1) {
+				print ("FIX:");
 				stroke_start.get_right_handle ().angle = start.get_right_handle () .angle;
-				stroke_start.set_tie_handle (true);
 			}
 
 			// Create a segment of the stroked path
@@ -373,38 +373,29 @@ public class StrokeTool : Tool {
 			// add new points if offset differs from stroke width
 			i = 0;
 			new_point = false;
-			Path.all_of (start, stop, (x, y, t) => {
-				double d;
-				EditPoint point_on_stroke;
-				double stroke_width = fabs (thickness);
-				
-				if (t == 0 || t == 1) {
-					return true;
-				}
-				
-				if (i >= on_stroke.size) {
-					warning (@"Out of bounds. ($i >= $(on_stroke.size)) t: $t");
-					return false;
-				}
-				
-				point_on_stroke = on_stroke.get (i++); 
-				d = fabs (Path.distance (point_on_stroke.x, x, point_on_stroke.y, y) - stroke_width);
-				split_point = new EditPoint (x, y);
-				
-				if (d > 1) {
-					warning ("Many points in outline.");
-					bad_segment = true;
+			if (!bad_segment) {
+				Path.all_of (start, stop, (x, y, t) => {
+					double d;
+					EditPoint point_on_stroke;
+					double stroke_width = fabs (thickness);
 					
-					Path.all_of (start, stop, (x, y, t) => {
-						if (t != 0 || t == 1) {
-							split_point = new_path.insert_new_point_on_path_at (x, y);
-						}
+					if (t == 0 || t == 1) {
 						return true;
-					}, 4);
+					}
 					
-					new_path.create_list ();
-					return false;
-				} else if (d > 0.2) {
+					if (i >= on_stroke.size) {
+						warning (@"Out of bounds. ($i >= $(on_stroke.size)) t: $t");
+						return false;
+					}
+					
+					point_on_stroke = on_stroke.get (i++); 
+					d = fabs (Path.distance (point_on_stroke.x, x, point_on_stroke.y, y) - stroke_width);
+					split_point = new EditPoint (x, y);
+					
+					if (d > 1) {
+						bad_segment = true; // add more points
+						return false;
+					}
 
 					split_point.prev = start;
 					split_point.next = stop;
@@ -414,24 +405,68 @@ public class StrokeTool : Tool {
 					
 					if (start.x == split_point.x && start.y == split_point.y) {
 						warning (@"Point already added.  Error: $d");
+						bad_segment = true;
 						return false;
 					} else {
 						new_path.insert_new_point_on_path (split_point, t);
 						new_point = true;
 					}
-				}
+						
+					return !new_point;
+				}, 3);
+				/*
+				// FIXME: add many points
+				// bad segment
+				if (bad_segment) {
+					EditPoint first_split_point = new EditPoint ();
+					bool first = true;
+					Path.all_of (start, stop, (x, y, t) => {
+						
+						if (t == 0 || t == 1) {
+							return true;
+						}
+						
+						print ("add ... \n");
+						split_point = new EditPoint (x, y);
+						
+						if (first) {
+							first_split_point = split_point;
+							first = false;
+						}
 
-				return !new_point;
-			}, 3);
+						split_point.prev = start;
+						split_point.next = stop;
+						
+						start.next = split_point;
+						stop.prev = split_point;
+						
+						if (start.x == split_point.x && start.y == split_point.y) {
+							warning (@"Point already added.");
+							return false;
+						} else {
+							new_path.insert_new_point_on_path (split_point, t);
+							new_point = true;
+						}
+							
+						return !new_point;
+					}, 6);
+					
+					la = first_split_point.get_left_handle ().angle;
+					left_x = cos (la - PI / 2) * thickness;
+					left_y = sin (la - PI / 2) * thickness;
+				
+					points_to_process += 5; // FIXME
+					new_start = start;
+				}
+				*/
+			}
 			
+				
 			if (!new_point) {
 				ep = stroke_start.copy ();
 				stroked.add_point (ep);
 				previous_start = stroke_start;
-				new_start = stop;
-			} else if (bad_segment) {
-				Path updated_path = change_stroke_width (new_path, thickness);
-				return updated_path;
+				new_start = stop; 
 			} else {
 				la = split_point.get_left_handle ().angle;
 				qx = cos (la - PI / 2) * thickness;
@@ -451,35 +486,12 @@ public class StrokeTool : Tool {
 			warning (@"stroked.points.size == new_path.points.size: $(stroked.points.size) != $(new_path.points.size)");
 			return stroked;
 		}
-		
-		// adjust length of control point handles
-		nprev = new_path.points.get (new_path.points.size - 1);
-		sprev = stroked.points.get (stroked.points.size - 1);
-		for (int index = 0; index < stroked.points.size; index++) {
-			np = new_path.points.get (index);
-			sp = stroked.points.get (index);
-			n_distance = Path.distance (np.x, nprev.x, np.y, nprev.y);
-			s_distance = Path.distance (sp.x, sprev.x, sp.y, sprev.y);
-			
-			nsratio = s_distance / n_distance;
 
-			if (nsratio > fabs (thickness) || nsratio < 0) {
-				warning (@"nsratio $nsratio");
-			} else {
-				sprev.get_right_handle ().length *= nsratio;
-				sprev.get_left_handle ().length *= nsratio;
-			}
-			
-			nprev = np;
-			sprev = sp;
-		}
-		
-		
-		stroked.set_stroke (0);
-		
+		// delete end point
 		if (new_path.points.size > 2 && stroked.points.size > 2) {
 			stroked.delete_last_point ();
-
+			new_path.delete_last_point ();
+			
 			l = new_path.get_last_point ().get_left_handle ();
 
 			stroked.get_last_point ().get_left_handle ().angle = l.angle;
@@ -489,8 +501,199 @@ public class StrokeTool : Tool {
 			stroked.get_last_point ().get_right_handle ().convert_to_line ();
 			stroked.get_first_point ().get_left_handle ().convert_to_line ();
 		}
+		
+		// remove self intersection
+		EditPoint snext, nnext;
+		double back_ratio = 0;	
+		double next_ratio = 0;
+		
+		snext = new EditPoint ();
+		nnext = new EditPoint ();
+		
+		double merge_angle = 0;
+		
+		print (@"\n");
+		for (int index = 1;index < stroked.points.size; index++) {
+			np = new_path.points.get (index);
+			sp = stroked.points.get (index);
+
+			if (index < stroked.points.size - 1) {
+				nnext = new_path.points.get (index + 1);
+				snext = stroked.points.get (index + 1);
+			}
+			
+			double inter_x, inter_y;
+			double first_inter_x, first_inter_y;
+			if (segment_intersects (stroked, sp, snext, out first_inter_x, out first_inter_y) && !sp.deleted) {
+				print (@"n----- $index    $(sp.x), $(sp.y)\n");
+					
+				//NO np.deleted = true;
+				//NO sp.deleted = true;
+			
+				if (has_end_of_intersection (stroked, index + 1, first_inter_x, first_inter_y)) {
+					for (int j = index + 1; j < stroked.points.size; j++) {
+						np = new_path.points.get (j);
+						sp = stroked.points.get (j);
+
+						print (@"del ---- $j    $(sp.x), $(sp.y)\n");
+
+						if (j < stroked.points.size - 1) {
+							nnext = new_path.points.get (j + 1);
+							snext = stroked.points.get (j + 1);
+						}
+						
+						if (segment_intersects (stroked, sp, snext, out inter_x, out inter_y)
+							&& Path.distance (first_inter_x, inter_x, first_inter_y, inter_y) < 0.1) {
+								print (@"done\n");
+								index = j +1;
+								break;
+						} else {
+							np.deleted = true;
+							sp.deleted = true;
+						}
+					}
+				} else {
+					warning ("Failed to remove self intersection.");
+				}
+			}
+		}
+		
+		stroked.remove_deleted_points ();
+		new_path.remove_deleted_points ();
+		
+		return_val_if_fail (stroked.points.size == new_path.points.size, stroked);
+				
+		// adjust angle and length of control point handles
+		double last_ratio = 0; // FIXME: FIRST POINT
+		
+		double last_prev_ratio = 0;
+
+		double pn_distance = 0;
+		double ps_distance = 0;
+
+		double ratio = 0;
+		
+		nprev = new_path.points.get (new_path.points.size - 1);
+		sprev = stroked.points.get (stroked.points.size - 1);
+		for (int index = 0; index < stroked.points.size; index++) {
+			np = new_path.points.get (index);
+			sp = stroked.points.get (index);
+			
+			if (index < stroked.points.size - 1) {
+				nnext = new_path.points.get (index + 1);
+				snext = stroked.points.get (index + 1);
+			}
+			
+			// angle
+			double dar = sp.get_right_handle ().angle - np.get_right_handle ().angle;
+			double dal = sp.get_left_handle ().angle - np.get_left_handle ().angle;
+
+			if (fabs (dal) > 1) { // FIXME 0.1? PI?
+				sp.get_left_handle ().angle = np.get_left_handle () .angle;
+			}
+				
+			if (fabs (dar) > 1) {
+				print (@"FIX:  $(sp) $(np)");
+				sp.get_right_handle ().angle = np.get_right_handle () .angle;
+			}
+
+			sp.get_left_handle ().angle = np.get_left_handle () .angle;
+			sp.get_right_handle ().angle = np.get_right_handle () .angle;
+			
+			// length
+			next_ratio = Path.distance (snext.x, sp.x, snext.y, sp.y);
+			next_ratio /=  Path.distance (nnext.x, np.x, nnext.y, np.y);
+
+			back_ratio = Path.distance (sprev.x, sp.x, sprev.y, sp.y);
+			back_ratio /=  Path.distance (nprev.x, np.x, nprev.y, np.y);
+				
+			// DELETE nsratio = (next_ratio + last_ratio + nsratio) / 3;
+				
+			//FIXME: false ...
+			if (!(0.0002 < next_ratio < fabs (thickness)
+				&& 0.0002 < back_ratio < fabs (thickness))) {
+				print (@"BAD next_ratio $next_ratio\n");
+				print (@"BAD back_ratio $back_ratio\n");
+
+				ratio = last_ratio;
+				sp.get_right_handle ().length = Path.distance (snext.x, sp.x, snext.y, sp.y); // HANDLE TYPE
+				
+				ratio = last_ratio;
+				sp.get_left_handle ().length = Path.distance (snext.x, sp.x, snext.y, sp.y);
+			} else {
+				ratio = next_ratio;
+				sp.get_right_handle ().length *= ratio;
+				
+				ratio = back_ratio;
+				sp.get_left_handle ().length *= ratio;
+
+				last_ratio = next_ratio; 
+				last_prev_ratio = back_ratio;					
+			}
+
+			nprev = np;
+			sprev = sp;
+		}
+		
+		stroked.set_stroke (0);
 
 		return stroked;
+	}
+	
+	static bool segment_intersects (Path path, EditPoint ep, EditPoint next,
+		out double ix, out double iy) {
+		EditPoint p1, p2;
+		double cross_x, cross_y;
+		
+		if (path.points.size == 0) {
+			return false;
+		}
+		
+		ix = 0;
+		iy = 0;
+		
+		for (int i = 1; i < path.points.size - 2; i++) {
+			p1 = path.points.get (i - 1);
+			p2 = path.points.get (i);
+			
+			Path.find_intersection_point (ep, next, p1, p2, out cross_x, out cross_y);
+	
+			if ((p1.x < cross_x < p2.x || p1.x > cross_x > p2.x)
+				&& (p1.y < cross_y < p2.y || p1.y > cross_y > p2.y)
+				&& (ep.x < cross_x < next.x || ep.x > cross_x > next.x)
+				&& (ep.y < cross_y < next.y || ep.y > cross_y > next.y)) {
+					
+					// iterate to find cross.
+					
+					ix = cross_x;
+					iy = cross_y;
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+
+	static bool has_end_of_intersection (Path p, int start, double x, double y) {
+		double inter_x, inter_y;
+		EditPoint ep, next;
+		
+		next = new EditPoint ();
+		for (int j = start; j < p.points.size - 1; j++) {
+			ep = p.points.get (j);
+
+			if (j < p.points.size - 1) {
+				next = p.points.get (j + 1);
+			}
+			
+			if (segment_intersects (p, ep, next, out inter_x, out inter_y)
+				&& Path.distance (x, inter_x, y, inter_y) < 0.1) {
+					return true;
+			}
+		}
+		
+		return false;
 	}
 }
 

@@ -124,6 +124,11 @@ class ResizeTool : Tool {
 		
 			MoveTool.draw_actions (cr);
 		});
+		
+		key_press_action.connect ((self, keyval) => {
+			MoveTool.key_press (keyval);
+		});
+		
 	}
 
 	/** Move rotate handle to pixel x,y. */

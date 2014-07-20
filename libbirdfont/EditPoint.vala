@@ -455,6 +455,14 @@ public class EditPoint : GLib.Object {
 		left_handle.convert_to_line ();
 		right_handle.convert_to_line ();
 	}
+	
+	public string to_string () {
+		StringBuilder s = new StringBuilder ();
+		s.append (@"Position: $x, $y\n");
+		s.append (@"Left handle: angle: $(left_handle.angle) l: $(left_handle.length)\n");
+		s.append (@"Right handle: angle: $(right_handle.angle) l: $(right_handle.length)\n");
+		return s.str;
+	}
 }
 
 }

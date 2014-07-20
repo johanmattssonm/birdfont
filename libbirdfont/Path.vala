@@ -929,9 +929,7 @@ public class Path {
 		}
 	}
 
-	public void update_region_boundaries () {
-		PathList paths;
-		
+	public void update_region_boundaries () {	
 		xmax = -10000;
 		xmin = 10000;
 		ymax = -10000;
@@ -1074,26 +1072,6 @@ public class Path {
 	public Path get_quadratic_points () {
 		PointConverter converter = new PointConverter (this);
 		return converter.get_quadratic_path ();
-	}
-	
-	void convert_remaining_cubic (EditPoint ep, EditPoint prev) {
-		double x, y;
-		
-		ep.set_tie_handle (true);
-		
-		if (ep.next != null) {
-			((!) ep.next).set_tie_handle (false);
-		}
-
-		prev.get_left_handle ().type = PointType.QUADRATIC;
-		prev.get_right_handle ().type = PointType.QUADRATIC;
-		prev.get_right_handle ().move_delta (0.000001, 0.000001);
-		
-		x = prev.get_right_handle ().x;
-		y = prev.get_right_handle ().y;
-		
-		ep.get_left_handle ().move_to_coordinate (ep.x - (ep.x - prev.x) / 2, 
-			ep.y - (ep.y - prev.y) / 2);		
 	}
 
 	public void insert_new_point_on_path (EditPoint ep, double t = -1) {
