@@ -813,7 +813,7 @@ public class PenTool : Tool {
 
 		distance = sqrt (fabs (pow (px - x, 2)) + fabs (pow (py - y, 2)));
 		
-		return (distance < 8);
+		return (distance < 8 * MainWindow.units);
 	}
 
 	/** Show the user that curves will be merged on release. */
@@ -834,7 +834,7 @@ public class PenTool : Tool {
 		return_if_fail (Path.edit_point_image != null);
 		
 		img = (!) Path.edit_point_image;	
-			
+		
 		cr.save ();
 		ratio = 40 * MainWindow.units / img.get_width ();
 		cr.scale (ratio, ratio);
@@ -864,16 +864,35 @@ public class PenTool : Tool {
 	}
 	
 	public static void draw_join_icon (Context cr, double x, double y) {
-		ImageSurface img;
-		return_if_fail (tie_icon != null);
-		
-		img = (!) tie_icon;	
-			
-		cr.save ();
-		cr.set_source_surface (img, x - img.get_width () / 2, y - img.get_height () / 2);
-		cr.paint ();
-		cr.restore ();		
+		draw_icon (tie_icon, cr, x, y);
 	}
+
+	public static void draw_icon (ImageSurface? i, Context cr, double x, double y) {
+		ImageSurface img;
+		double px, py, ratio;
+		
+		if (i != null) {
+			img = (!) tie_icon;	
+					
+			cr.save ();
+			
+			ratio = 0.23; // 72 to 320 dpi
+			ratio *=  MainWindow.units;
+			cr.scale (ratio, ratio);
+			
+			px = x - ratio * img.get_width () / 2;
+			py = y - ratio * img.get_height () / 2;
+			px /= ratio;
+			py /= ratio;
+			
+			cr.set_source_surface (img, px, py);
+			cr.paint ();
+			cr.restore ();
+		} else {
+			warning ("No image.");
+		}
+	}
+		
 
 	void draw_merge_icon (Context cr) {
 		double x, y;

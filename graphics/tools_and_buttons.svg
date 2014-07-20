@@ -844,13 +844,13 @@
        x2="274.33334"
        y2="133.01048"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(1.6239221,0.13258256)" />
+       gradientTransform="translate(1.6239221,-75.867417)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3761-1-3-35-6"
        id="linearGradient4211"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(1.6239221,-33.617417)"
+       gradientTransform="translate(1.6239221,-109.61742)"
        x1="274.298"
        y1="137.51216"
        x2="274.34119"
@@ -860,7 +860,7 @@
        xlink:href="#linearGradient3761-1-3-35-6"
        id="linearGradient4232"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(-1,0,0,1,567.21503,-33.617417)"
+       gradientTransform="matrix(-1,0,0,1,567.21503,-109.61742)"
        x1="274.298"
        y1="137.51216"
        x2="274.34119"
@@ -870,7 +870,7 @@
        xlink:href="#linearGradient3761-1-3-35-6"
        id="linearGradient4253"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(-1,0,0,1,567.21503,0.13258256)"
+       gradientTransform="matrix(-1,0,0,1,567.21503,-75.867417)"
        x1="274.298"
        y1="137.51216"
        x2="274.33334"
@@ -905,7 +905,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2282,19 +2282,6 @@
          id="path3771"
          inkscape:connector-curvature="0" />
     </g>
-    <path
-       sodipodi:type="arc"
-       style="opacity:0.72016458;fill:url(#radialGradient3581);fill-opacity:1"
-       id="path3573"
-       sodipodi:cx="200.75377"
-       sodipodi:cy="25.919598"
-       sodipodi:rx="30.703518"
-       sodipodi:ry="30.703518"
-       d="m 231.45729,25.919598 a 30.703518,30.703518 0 1 1 -61.40704,0 30.703518,30.703518 0 1 1 61.40704,0 z"
-       transform="translate(88.105125,10.391382)"
-       inkscape:export-filename="/home/johan/birdfont/icons/delay_circle.png"
-       inkscape:export-xdpi="319.88824"
-       inkscape:export-ydpi="319.88824" />
     <g
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#515151;font-family:KacstDigital;-inkscape-font-specification:KacstDigital Medium"
        id="text3532"
@@ -2419,15 +2406,15 @@
          style="fill:none;stroke:#e6e6e6;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     </g>
     <g
-       transform="matrix(0.81212303,-0.01830868,0.01830868,0.81212303,317.88007,47.377159)"
+       transform="matrix(0.81212303,-0.01830868,0.01830868,0.81212303,317.88007,-28.622841)"
        id="A-7"
-       style="fill:#b6b6b6;fill-opacity:0.9041096"
+       style="fill:#b6b6b6;fill-opacity:0.90410958"
        inkscape:export-filename="/home/johan/birdfont/icons/progress_wheel.png"
        inkscape:export-xdpi="319"
        inkscape:export-ydpi="319">
       <path
          inkscape:connector-curvature="0"
-         style="fill:#b6b6b6;fill-opacity:0.9041096;stroke-width:0px"
+         style="fill:#b6b6b6;fill-opacity:0.90410958;stroke-width:0px"
          d="m 0.07210424,58.273402 q 0.60800818,-1.715764 2.18775636,-3.153686 1.5797481,-1.437921 3.3680684,-2.125791 1.7883203,-0.68787 3.8495525,-0.635299 2.0612325,0.05257 3.8121625,0.830706 1.750931,0.778137 3.171269,2.272821 1.420339,1.494684 2.108209,3.283004 0.687869,1.788321 0.635299,3.849553 -0.05257,2.061232 -0.830707,3.812163 -0.778136,1.75093 -2.27282,3.171269 -1.494684,1.420338 -3.283005,2.108208 -1.78832,0.687869 -3.8495521,0.635299 -2.0612322,-0.05257 -3.8121629,-0.830707 -1.7509307,-0.778136 -3.1712691,-2.27282 -1.42033829,-1.494684 -2.10820798,-3.283004 0.92852503,-0.445359 0.4571553,-0.261095 -0.47136973,0.184264 -0.47610788,0.158654 0.94747761,-0.342918 1.89495526,-0.685835 0.9474776,-0.342917 1.8949552,-0.685835 0.4165903,0.945444 1.2639562,1.902098 0.8473658,0.956654 1.8950433,1.422256 1.0476775,0.465601 2.2810253,0.497057 1.2333474,0.03146 2.3033974,-0.380134 1.07005,-0.41159 1.964401,-1.261456 0.894351,-0.849866 1.359953,-1.897544 0.465601,-1.047677 0.497057,-2.281025 0.03145,-1.233348 -0.380135,-2.303398 -0.41159,-1.070049 -1.261456,-1.964401 -0.849866,-0.894351 -1.897543,-1.359952 -1.047678,-0.465602 -2.2810254,-0.497057 -1.2333478,-0.03146 -2.3033975,0.380134 -1.0700497,0.41159 -1.9644009,1.261456 -0.8943512,0.849866 -1.3599525,1.897543 C 2.8414593,59.475789 0.99522259,58.674198 0.07210424,58.273402 z"
          id="path_A-5" />
     </g>
@@ -2435,7 +2422,7 @@
        sodipodi:nodetypes="ccccccc"
        inkscape:connector-curvature="0"
        id="path4560"
-       d="m 298.50556,176.99054 c -0.47451,-0.0133 -0.17678,-0.37966 -0.17678,-0.62868 -2.19013,0 -1.5206,-2.82661 -1.5206,-4.39749 l 0,-12.48559 c 0,-2.87773 -1.62382,-5.02988 -4.51543,-5.02988 l 0.17678,22.51955 z"
+       d="m 298.50556,100.99054 c -0.47451,-0.0133 -0.17678,-0.37966 -0.17678,-0.62868 -2.19013,0 -1.5206,-2.82661 -1.5206,-4.39749 l 0,-12.48559 c 0,-2.87773 -1.62382,-5.02988 -4.51543,-5.02988 l 0.17678,22.51955 z"
        style="fill:#ffffff;fill-opacity:1;stroke:none"
        inkscape:export-filename="/home/johan/birdfont/icons/tab3_right.png"
        inkscape:export-xdpi="319"
@@ -2444,14 +2431,14 @@
        sodipodi:nodetypes="cccsc"
        inkscape:connector-curvature="0"
        id="path4558"
-       d="m 292.29449,154.6709 c 2.89161,0 4.33991,2.40805 4.33991,5.28578 l 0.0857,15.42017 c 0,0.40233 0.33562,0.79574 0.43631,0.86682 0.34536,0.24381 0.57069,0.25557 1.14385,0.25961"
+       d="m 292.29449,78.6709 c 2.89161,0 4.33991,2.40805 4.33991,5.28578 l 0.0857,15.42017 c 0,0.40233 0.33562,0.79574 0.43631,0.86682 0.34536,0.24381 0.57069,0.25557 1.14385,0.25961"
        style="fill:none;stroke:#afafaf;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        inkscape:export-filename="/home/johan/birdfont/icons/tab3_right.png"
        inkscape:export-xdpi="319"
        inkscape:export-ydpi="319" />
     <path
        style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 292.29275,154.4489 c 2.89161,0 4.51543,2.15215 4.51543,5.02988 l 0,15.58238 c 0,1.03097 0.61149,1.41999 1.5206,1.44552"
+       d="m 292.29275,78.4489 c 2.89161,0 4.51543,2.15215 4.51543,5.02988 l 0,15.58238 c 0,1.03097 0.61149,1.41999 1.5206,1.44552"
        id="path4556"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc"
@@ -2462,7 +2449,7 @@
        sodipodi:nodetypes="ccccccc"
        inkscape:connector-curvature="0"
        id="path4560-1"
-       d="m 270.27386,176.85169 c 0.47451,-0.0133 0.17678,-0.37966 0.17678,-0.62868 2.19013,0 1.5206,-2.82661 1.5206,-4.39749 l 0,-12.48559 c 0,-2.87773 1.62382,-5.02988 4.51543,-5.02988 l -0.17678,22.51955 z"
+       d="m 270.27386,100.85169 c 0.47451,-0.0133 0.17678,-0.37966 0.17678,-0.62868 2.19013,0 1.5206,-2.82661 1.5206,-4.39749 l 0,-12.48559 c 0,-2.87773 1.62382,-5.02988 4.51543,-5.02988 l -0.17678,22.51955 z"
        style="fill:#ffffff;fill-opacity:1;stroke:none"
        inkscape:export-filename="/home/johan/birdfont/icons/tab3_left.png"
        inkscape:export-xdpi="318.48999"
@@ -2471,14 +2458,14 @@
        sodipodi:nodetypes="cccsc"
        inkscape:connector-curvature="0"
        id="path4558-3"
-       d="m 276.48493,154.53205 c -2.89161,0 -4.33991,2.40805 -4.33991,5.28578 l -0.0857,15.42017 c 0,0.40233 -0.33562,0.79574 -0.43631,0.86682 -0.34536,0.24381 -0.57069,0.25557 -1.14385,0.25961"
+       d="m 276.48493,78.53205 c -2.89161,0 -4.33991,2.40805 -4.33991,5.28578 l -0.0857,15.42017 c 0,0.40233 -0.33562,0.79574 -0.43631,0.86682 -0.34536,0.24381 -0.57069,0.25557 -1.14385,0.25961"
        style="fill:none;stroke:#afafaf;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        inkscape:export-filename="/home/johan/birdfont/icons/tab3_left.png"
        inkscape:export-xdpi="318.48999"
        inkscape:export-ydpi="318.48999" />
     <path
        style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 276.48667,154.31005 c -2.89161,0 -4.51543,2.15215 -4.51543,5.02988 l 0,15.58238 c 0,1.03097 -0.61149,1.41999 -1.5206,1.44552"
+       d="m 276.48667,78.31005 c -2.89161,0 -4.51543,2.15215 -4.51543,5.02988 l 0,15.58238 c 0,1.03097 -0.61149,1.41999 -1.5206,1.44552"
        id="path4556-9"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc"
@@ -2486,8 +2473,8 @@
        inkscape:export-xdpi="318.48999"
        inkscape:export-ydpi="318.48999" />
     <path
-       style="fill:url(#linearGradient4190);fill-opacity:1.0;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 276.06113,119.91439 c -2.89161,0 -4.51543,2.15215 -4.51543,5.02988 l 0,15.58237 c 0,1.03097 -0.61149,1.41999 -1.5206,1.44552 l 5.86287,0"
+       style="fill:url(#linearGradient4190);fill-opacity:1;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 276.06113,43.91439 c -2.89161,0 -4.51543,2.15215 -4.51543,5.02988 l 0,15.58237 c 0,1.03097 -0.61149,1.41999 -1.5206,1.44552 l 5.86287,0"
        id="path4556-2-4-0"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc"
@@ -2496,7 +2483,7 @@
        inkscape:export-ydpi="319" />
     <path
        style="fill:none;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 269.07873,187.76549 28.1407,0"
+       d="m 269.07873,111.76549 28.1407,0"
        id="path4880"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc"
@@ -2505,7 +2492,7 @@
        inkscape:export-ydpi="319" />
     <g
        id="B-6"
-       transform="matrix(0.81155097,0,0,0.81155097,348.0384,80.629261)"
+       transform="matrix(0.81155097,0,0,0.81155097,348.0384,4.629261)"
        style="fill:#b6b6b6"
        inkscape:export-filename="/home/johan/birdfont/icons/next_tab.png"
        inkscape:export-xdpi="319"
@@ -2518,7 +2505,7 @@
     </g>
     <g
        id="B-6-4"
-       transform="matrix(-0.81155097,0,0,0.81155097,335.72858,80.573302)"
+       transform="matrix(-0.81155097,0,0,0.81155097,335.72858,4.573302)"
        style="fill:#b6b6b6"
        inkscape:export-filename="/home/johan/birdfont/icons/previous_tab.png"
        inkscape:export-xdpi="319"
@@ -2641,11 +2628,11 @@
        sodipodi:nodetypes="cccc"
        inkscape:connector-curvature="0"
        id="path4209"
-       d="m 276.06113,86.16439 c -2.89161,0 -4.51543,2.15215 -4.51543,5.02988 l 0,15.58237 c 0,1.03097 -0.61149,1.41999 -1.5206,1.44552 l 5.86287,0"
+       d="m 276.06113,10.16439 c -2.89161,0 -4.51543,2.15215 -4.51543,5.02988 l 0,15.58237 c 0,1.03097 -0.61149,1.41999 -1.5206,1.44552 l 5.86287,0"
        style="fill:url(#linearGradient4211);fill-opacity:1;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
        style="fill:url(#linearGradient4232);fill-opacity:1;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 292.77782,86.16439 c 2.89161,0 4.51543,2.15215 4.51543,5.02988 l 0,15.58237 c 0,1.03097 0.61149,1.41999 1.5206,1.44552 l -5.86287,0"
+       d="m 292.77782,10.16439 c 2.89161,0 4.51543,2.15215 4.51543,5.02988 l 0,15.58237 c 0,1.03097 0.61149,1.41999 1.5206,1.44552 l -5.86287,0"
        id="path4230"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc"
@@ -2659,7 +2646,7 @@
        sodipodi:nodetypes="cccc"
        inkscape:connector-curvature="0"
        id="path4251"
-       d="m 292.77782,119.91439 c 2.89161,0 4.51543,2.15215 4.51543,5.02988 l 0,15.58237 c 0,1.03097 0.61149,1.41999 1.5206,1.44552 l -5.86287,0"
+       d="m 292.77782,43.91439 c 2.89161,0 4.51543,2.15215 4.51543,5.02988 l 0,15.58237 c 0,1.03097 0.61149,1.41999 1.5206,1.44552 l -5.86287,0"
        style="fill:url(#linearGradient4253);fill-opacity:1;stroke:#858585;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
 </svg>
