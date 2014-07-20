@@ -298,7 +298,9 @@ public class SpinButton : Tool {
 		cr.set_font_size (10 * scale);
 		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
 		
-		if (BirdFont.mac || BirdFont.win32)  {
+		if (BirdFont.android) {
+			cr.move_to (xt + text_x + 6, yt + text_y);
+		} else if (BirdFont.mac || BirdFont.win32)  {
 			cr.move_to (xt + text_x + 2, yt + text_y);
 		} else {
 			cr.move_to (xt + text_x, yt + text_y);

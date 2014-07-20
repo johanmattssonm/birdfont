@@ -20,7 +20,11 @@ namespace BirdFont {
 /** Create new points. */
 public class PenTool : Tool {
 
-	private static const double CONTACT_SURFACE = 20;
+	private static double contact_surface {
+		get {
+			return MainWindow.units * 20;
+		}
+	}
 
 	public static bool move_selected = false;
 	public static bool move_selected_handle = false;
@@ -1066,7 +1070,7 @@ public class PenTool : Tool {
 		e = (!) ep;
 		distance = e.point.get_distance (x, y) * g.view_zoom;
 
-		if (distance < CONTACT_SURFACE) {
+		if (distance < contact_surface) {
 			set_active_edit_point (e.point, e.path);
 		
 			if (first_move_action && GridTool.is_visible () && move_selected) {
@@ -1197,7 +1201,7 @@ public class PenTool : Tool {
 	}
 
 	bool is_close_to_path (Path p, double event_x, double event_y) {
-		double c = CONTACT_SURFACE * Glyph.ivz ();
+		double c = contact_surface * Glyph.ivz ();
 		double x = Glyph.path_coordinate_x (event_x);
 		double y = Glyph.path_coordinate_y (event_y);
 		
@@ -1221,11 +1225,11 @@ public class PenTool : Tool {
 		dl = g.view_zoom * selected_corner.get_left_handle ().get_point ().get_distance (x, y);
 		dr = g.view_zoom * selected_corner.get_right_handle ().get_point ().get_distance (x, y);
 		
-		if (dl < CONTACT_SURFACE && dl < d_point) {
+		if (dl < contact_surface && dl < d_point) {
 			return true;
 		}
 
-		if (dr < CONTACT_SURFACE && dr < d_point) {
+		if (dr < contact_surface && dr < d_point) {
 			return true;
 		}
 		
