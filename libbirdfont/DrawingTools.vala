@@ -779,34 +779,6 @@ public class DrawingTools : ToolCollection  {
 			track_tool.set_samples_per_point (freehand_samples.get_value ());
 		});
 
-		
-#if ANDROID
-		string delayed_response_value = Preferences.get ("response_delay");
-		SpinButton delayed_response = new SpinButton ("response_delay", t_("Delay response for editing tools"));
-
-		delayed_response.set_min (0);
-		delayed_response.set_max (9);
-				
-		if (delayed_response_value != "") {
-			delayed_response.set_value (delayed_response_value);
-		} else {
-			delayed_response.set_value_round (4);
-		}
-		
-		delayed_response.new_value_action.connect ((self) => {
-			MainWindow.get_toolbox ().select_tool (delayed_response);
-			Preferences.set ("response_delay", self.get_display_value ());
-			MainWindow.get_toolbox ().redraw ((int) delayed_response.x, (int) delayed_response.y, 70, 70);
-		});
-
-		delayed_response.select_action.connect((self) => {
-			pen_tool.set_response_delay (((SpinButton)self).get_value ());
-		});
-		
-		pen_tool.set_response_delay (delayed_response.get_value ());
-		style_tools.add_tool (delayed_response);
-#endif
-
 		// selection policy
 		draw_tools.set_open (true);
 		key_tools.set_open (true);

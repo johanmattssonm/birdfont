@@ -52,21 +52,21 @@ public class Path {
 	
 	public delegate bool SegmentIterator (EditPoint start, EditPoint stop);
 	
-	private static ImageSurface? edit_point_image = null;
-	private static ImageSurface? active_edit_point_image = null;
+	public static ImageSurface? edit_point_image = null;
+	public static ImageSurface? active_edit_point_image = null;
 	
-	private static ImageSurface? edit_point_handle_image = null;
-	private static ImageSurface? active_edit_point_handle_image = null;
-	private static ImageSurface? selected_edit_point_handle_image = null;
+	public static ImageSurface? edit_point_handle_image = null;
+	public static ImageSurface? active_edit_point_handle_image = null;
+	public static ImageSurface? selected_edit_point_handle_image = null;
 
-	private static ImageSurface? selected_edit_point_image = null;
-	private static ImageSurface? active_selected_edit_point_image = null;
+	public static ImageSurface? selected_edit_point_image = null;
+	public static ImageSurface? active_selected_edit_point_image = null;
 
-	private static ImageSurface? cubic_edit_point_image = null;
-	private static ImageSurface? cubic_active_edit_point_image = null;
+	public static ImageSurface? cubic_edit_point_image = null;
+	public static ImageSurface? cubic_active_edit_point_image = null;
 
-	private static ImageSurface? cubic_selected_edit_point_image = null;
-	private static ImageSurface? cubic_active_selected_edit_point_image = null;
+	public static ImageSurface? cubic_selected_edit_point_image = null;
+	public static ImageSurface? cubic_active_selected_edit_point_image = null;
 	
 	public static double line_color_r = 0;
 	public static double line_color_g = 0;

@@ -55,16 +55,11 @@ public class PenTool : Tool {
 
 	public static double precision = 1;
 	
-	public static double response_delay = 0;
-	public static bool do_respond = false;
-	private static const double RESPONSE_PIXELS = 20;
-	
 	// The pixel where the user pressed the mouse button
 	public static int begin_action_x = 0; 
 	public static int begin_action_y = 0;
 	
 	private static ImageSurface? tie_icon = null;
-	private static ImageSurface? delay_circle = null;
 	
 	/** First move action must move the current point in to the grid. */
 	bool first_move_action = false;
@@ -94,7 +89,6 @@ public class PenTool : Tool {
 		counter_clockwise = new List<Path> ();
 		
 		tie_icon = Icons.get_icon ("tie_is_active.png");
-		delay_circle = Icons.get_icon ("delay_circle.png");
 		
 		select_action.connect ((self) => {
 		});
@@ -112,8 +106,6 @@ public class PenTool : Tool {
 
 			begin_action_x = x;
 			begin_action_y = y;
-
-			do_respond = false; // if the response is delayed
 
 			foreach (Path p in glyph.path_list) {
 				if (p.is_clockwise ()) {
@@ -152,9 +144,7 @@ public class PenTool : Tool {
 			
 			x = ix;
 			y = iy;
-			
-			do_respond = true;
-			
+						
 			if (has_join_icon ()) {
 				join_paths (x, y);
 			}
@@ -190,12 +180,7 @@ public class PenTool : Tool {
 			selection_box_last_x = x;
 			selection_box_last_y = y;
 			
-			if (isResponding (x, y)) {
-				move (x, y);
-			} else {
-				last_point_x = x;
-				last_point_y = y;
-			}
+			move (x, y);
 		});
 		
 		key_press_action.connect ((self, keyval) => {
@@ -238,23 +223,7 @@ public class PenTool : Tool {
 	private bool has_join_icon () {
 		double mx, my;
 		get_tie_position (out mx, out my);
-		return (mx > -10 && my > - 10);
-	}
-	
-	/** @return true after the initial delay.*/
-	public static bool isResponding (int px, int py) {
-		double d;
-		
-		if (!move_selected && !move_selected_handle) {
-			do_respond = true;
-		}
-		
-		if (!do_respond) {
-			d = Math.sqrt (Math.pow (px - begin_action_x, 2) + Math.pow (py - begin_action_y, 2));
-			do_respond = d > RESPONSE_PIXELS * response_delay;
-		}
-		
-		return do_respond;
+		return (mx > -10 * MainWindow.units && my > -10 * MainWindow.units);
 	}
 
 	public static void select_points_in_box () {
@@ -336,10 +305,6 @@ public class PenTool : Tool {
 		}
 		g.close_path ();
 		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-	}
-	
-	public void set_response_delay (double d) {
-		response_delay = d;
 	}
 	
 	public void set_precision (double p) {
@@ -857,24 +822,21 @@ public class PenTool : Tool {
 			draw_selection_box (cr);
 		}
 		
-		if (!do_respond) {
-			draw_delay_circle (cr);
-		}
-		
 		draw_merge_icon (cr);
 	}
 	
-	void draw_delay_circle (Context cr) {
+	/** Higlight the selected point on Android. */
+	void draw_point_select_circle (Context cr) {
 		ImageSurface img;
 		double x, y;
 		double ratio;
 		
-		return_if_fail (delay_circle != null);
+		return_if_fail (Path.edit_point_image != null);
 		
-		img = (!) delay_circle;	
+		img = (!) Path.edit_point_image;	
 			
 		cr.save ();
-		ratio = 2 * RESPONSE_PIXELS * response_delay / img.get_width ();
+		ratio = 40 * MainWindow.units / img.get_width ();
 		cr.scale (ratio, ratio);
 		x = begin_action_x - ratio * img.get_width () / 2;
 		x /= ratio;
