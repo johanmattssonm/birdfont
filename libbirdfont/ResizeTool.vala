@@ -223,7 +223,7 @@ class ResizeTool : Tool {
 		h = rp.xmax - rp.xmin;
 
 		ratio = 1;
-		ratio -= 0.7 * PenTool.precision * (Glyph.path_coordinate_y (last_resize_y) - Glyph.path_coordinate_y (y)) / h;		
+		ratio -= 0.5 * PenTool.precision * (Glyph.path_coordinate_y (last_resize_y) - Glyph.path_coordinate_y (y)) / h;		
 
 		return ratio;
 	}

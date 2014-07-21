@@ -653,6 +653,8 @@ public class OverView : FontDisplay {
 		font.add_glyph_collection (previous_collection);
 		
 		deleted_glyphs.remove_at (deleted_glyphs.size - 1);
+		
+		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
 	public void store_undo_state (GlyphCollection gc) {

@@ -91,25 +91,22 @@ public abstract class FontDisplay : GLib.Object {
 		last_tap_y = -1;
 	}
 	
-	public virtual void tap_move (int x, int y) {
+	public virtual void tap_move (int finger, int x, int y) {
 		double d;
-		
-		motion_notify (x, y);
-
-		d = y - last_tap_y;		
-		if (last_tap_y > -1 && fabs (d) > 15) { // FIXME: pixels, other units are better
-			if (d > 0) {
-				scroll_wheel_up (x, y);
-			} else {
-				scroll_wheel_down (x, y);
+		if (finger == 0) {
+			motion_notify (x, y);
+			
+			d = y - last_tap_y;		
+			if (last_tap_y > -1 && fabs (d) > 15) { // FIXME: pixels, other units are better
+				if (d > 0) {
+					scroll_wheel_up (x, y);
+				} else {
+					scroll_wheel_down (x, y);
+				}
 			}
+			
+			last_tap_y = y;
 		}
-		
-		last_tap_y = y;
-	}
-	
-	/** Both fingers are moving. */
-	public virtual void tap_move_delta (int x0, int y0, int x1, int y1) {
 	}
 
 	public virtual void zoom_in () {

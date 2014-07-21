@@ -131,11 +131,11 @@ public class PenTool : Tool {
 			} else if (GridTool.has_ttf_grid ()) {
 				GridTool.ttf_grid (ref x, ref y);
 			}
-			
+
 			if (BirdFont.android) {
 				point_selection_image = true;
 			}
-					
+				
 			last_point_x = x;
 			last_point_y = y;
 		});
@@ -852,15 +852,13 @@ public class PenTool : Tool {
 		double ratio;
 		PointSelection ps;
 		
-		if (move_selected_handle) {
+		if (active_handle.active) {
 			i = Path.edit_point_handle_image;
-		} else if (move_selected) {
-			if (selected_points.size > 0) {
-				ps = selected_points.get (selected_points.size - 1);
-				
-				i = (ps.point.type == PointType.CUBIC) 
-					? Path.cubic_edit_point_image : Path.edit_point_image;
-			}
+		} else if (selected_points.size > 0) {
+			ps = selected_points.get (selected_points.size - 1);
+			
+			i = (ps.point.type == PointType.CUBIC) 
+				? Path.cubic_edit_point_image : Path.edit_point_image;
 		}
 		
 		if (i != null) {
@@ -1150,6 +1148,9 @@ public class PenTool : Tool {
 
 		set_point_type (selected_point);
 		set_default_handle_positions ();
+		
+		selected_points.clear ();
+		add_selected_point (new_point.point, new_point.path);
 		
 		return new_point;
 	}

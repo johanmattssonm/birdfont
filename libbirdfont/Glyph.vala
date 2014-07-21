@@ -37,6 +37,17 @@ public class Glyph : FontDisplay {
 	double pointer_begin_x = 0;
 	double pointer_begin_y = 0;
 
+	// Tap last tap event position in pixels
+	int last_tap0_y = 0;
+	int last_tap0_x = 0;
+	int last_tap1_y = 0;
+	int last_tap1_x = 0;
+	double zoom_distance = 0;
+	bool change_view; 
+
+	
+	bool ignore_input = false;
+	
 	// Current pointer position
 	public double motion_x = 0;
 	public double motion_y = 0;
@@ -349,6 +360,17 @@ public class Glyph : FontDisplay {
 	}
 	
 	public override void selected_canvas () {
+		TimeoutSource input_delay;
+		
+		ignore_input = true; // make sure that tripple clicks in overview are ignored
+
+		input_delay = new TimeoutSource (250);
+		input_delay.set_callback(() => {
+			ignore_input = false;
+			return false;
+		});
+		input_delay.attach (null);
+		
 		add_help_lines ();
 		KeyBindings.set_require_modifier (false);
 		glyph_sequence = Preferences.get ("glyph_sequence");
@@ -702,6 +724,7 @@ public class Glyph : FontDisplay {
 	
 	public override void button_press (uint button, double ex, double ey) {				
 		bool moving_lines = false;
+			
 		pointer_begin_x = ex;
 		pointer_begin_y = ey;
 		
@@ -1869,6 +1892,115 @@ public class Glyph : FontDisplay {
 	public override void move_view (double x, double y) {
 		view_offset_x += x / view_zoom; 
 		view_offset_y += y / view_zoom;
+		GlyphCanvas.redraw ();
+	}
+
+	/** Scroll or zoom from tap events. */
+	public void change_view_event (int finger, int x, int y) {
+		double tap_direction;
+		double dx, dy;
+		double last_distance, new_distance;
+
+		dx = 0;
+		dy = 0;
+
+		new_distance = 0;
+		
+		if (finger == 0) {
+			dx = last_tap0_x - x;
+			dy = last_tap0_y - y;
+			new_distance = Path.distance (last_tap1_x, x, last_tap1_y, y);
+			
+			// FIXME: DELETE
+			warning (@"last_tap0_y $last_tap0_y last_tap0_x $last_tap0_x");
+		}
+		
+		if (finger == 1) {
+			dx = last_tap1_x - x;
+			dy = last_tap1_y - y;
+			new_distance = Path.distance (last_tap0_x, x, last_tap0_y, y);
+			warning (@"last_tap0_y $last_tap0_y last_tap0_x $last_tap0_x"); // FIXME: DELETE
+		}
+		
+		last_distance = Path.distance (last_tap0_x, last_tap1_x, last_tap0_y, last_tap1_y);
+		
+		warning (@"last_distance $last_distance  zoom_distance $zoom_distance  new_distance $new_distance");
+		
+		if (fabs (new_distance - last_distance) < 10 * MainWindow.units) {
+			move_view (dx / 2, dy / 2); 
+			// divide by 2 because change_view_event will be called for both fingers
+		} else {
+			if (fabs (zoom_distance - new_distance) > 5 * MainWindow.units) { 
+				if (new_distance > last_distance) {
+					zoom_in ();
+				} else  {
+					zoom_out ();
+				}
+				
+				zoom_distance = new_distance;
+			}
+		}
+	}
+
+	public override void tap_down (int finger, int x, int y) {
+		TimeoutSource delay;
+		
+		if (finger == 0) {
+			delay = new TimeoutSource (70);
+			delay.set_callback(() => {
+				if (!change_view && !ignore_input) {
+					button_press (1, x, y);
+				}
+				return false;
+			});
+			delay.attach (null);
+			
+			last_tap0_x = x;
+			last_tap0_y = y;
+		}
+		
+		if (finger == 1) {
+			change_view = true;
+			last_tap1_x = x;
+			last_tap1_y = y;
+		}
+	}
+	
+	public override void tap_up (int finger, int x, int y) {
+		if (finger == 0) {
+			button_release (1, x, y);
+			
+			last_tap0_x = -1;
+			last_tap0_y = -1;
+		}
+		
+		if (finger == 1) {
+			last_tap1_x = -1;
+			last_tap1_y = -1;
+			
+			change_view = false;
+			zoom_distance = 0;
+		}
+	}
+		
+	public override void tap_move (int finger, int x, int y) {
+		double d;
+
+		if (!change_view) {
+			motion_notify (x, y);
+		} else {
+			change_view_event (finger, x, y);
+		}
+						
+		if (finger == 0) {
+			last_tap0_x = x;
+			last_tap0_y = y;
+		}
+		
+		if (finger == 1) {
+			last_tap1_x = x;
+			last_tap1_y = y;
+		}
 	}
 }
 

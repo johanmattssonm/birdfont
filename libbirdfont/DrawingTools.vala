@@ -221,7 +221,7 @@ public class DrawingTools : ToolCollection  {
 			}
 		});
 		
-		if (BirdFont.has_argument ("--test")) {
+		if (BirdFont.has_argument ("--test") || BirdFont.android) {
 			draw_tool_modifiers.add_tool (object_stroke);
 		}
 
