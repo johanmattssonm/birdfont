@@ -750,15 +750,21 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.main_quit ();	
 	}
 	
-	public string? file_chooser_save (string title) {
-		return file_chooser (title, FileChooserAction.SAVE, Stock.SAVE);
-	}
-
-	public string? file_chooser_open (string title) {
-		return file_chooser (title, FileChooserAction.OPEN, Stock.OPEN);
+	public void file_chooser (string title, FileChooser fc, uint flags) {
+		string? fn = null;
+		
+		if ((flags & FileChooser.LOAD) > 0) {
+			fn = show_file_chooser (title, FileChooserAction.OPEN, Stock.OPEN);
+		} else if ((flags & FileChooser.SAVE) > 0) {
+			fn = show_file_chooser (title, FileChooserAction.SAVE, Stock.SAVE);
+		} else {
+			warning ("Unknown type");
+		}
+		
+		fc.selected (fn);
 	}
 	
-	public string? file_chooser (string title, FileChooserAction action, string label) {
+	public string? show_file_chooser (string title, FileChooserAction action, string label) {
 		string? fn = null;
 		FileChooserDialog file_chooser = new FileChooserDialog (title, this, action, Stock.CANCEL, ResponseType.CANCEL, label, ResponseType.ACCEPT);
 		Font font = BirdFont.get_current_font ();

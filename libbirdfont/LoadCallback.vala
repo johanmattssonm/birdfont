@@ -55,32 +55,34 @@ public class LoadCallback : GLib.Object {
 	}
 
 	private void load_new_font () {
-		string? fn;
-		Font f;
-
+		FileChooser fc = new FileChooser ();
+		
 		if (MenuTab.suppress_event) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
 		
-		f = BirdFont.get_current_font ();
-		fn = MainWindow.file_chooser_open (t_("Open"));
+		fc.file_selected.connect((fn) => {
+			Font f = BirdFont.get_current_font ();
+			
+			if (fn != null) {
+				f.delete_backup ();
+				
+				f = BirdFont.new_font ();
+				
+				MainWindow.clear_glyph_cache ();
+				
+				f.set_file ((!) fn);
+				MainWindow.native_window.load ();
+				
+				file_loaded.connect (() => {
+					KerningTools.update_kerning_classes ();
+					MenuTab.select_overview ();
+				});
+			}
+		});
 		
-		if (fn != null) {
-			f.delete_backup ();
-			
-			f = BirdFont.new_font ();
-			
-			MainWindow.clear_glyph_cache ();
-			
-			f.set_file ((!) fn);
-			MainWindow.native_window.load ();
-			
-			file_loaded.connect (() => {
-				KerningTools.update_kerning_classes ();
-				MenuTab.select_overview ();
-			});
-		}
+		MainWindow.file_chooser (t_("Open"), fc, FileChooser.LOAD);
 	}
 }
 	

@@ -31,7 +31,6 @@ public class Expander : GLib.Object {
 	protected double opacity = 0;
 	
 	protected bool active = false;
-	protected bool open = false;
 
 	public List<Tool> tool;
 
@@ -116,10 +115,7 @@ public class Expander : GLib.Object {
 	
 	public void set_offset (double ty) {
 		y = ty;
-		
-		if (open) {
-			update_tool_position ();
-		}
+		update_tool_position ();
 	}
 	
 	public void add_tool (Tool t) {
@@ -171,17 +167,6 @@ public class Expander : GLib.Object {
 		return r;
 	}
 	
-	public bool is_open () {
-		return open;
-	}
-	
-	public virtual bool set_open (bool o) {
-		bool r = (open != o);
-		margin = 0;
-		open = o;
-		return r;
-	}
-	
 	public void draw (int wd, int hd, Context cr) {
 		double yt = y + scroll + 2;
 		double ih2 = 5.4 / 2;
@@ -200,30 +185,24 @@ public class Expander : GLib.Object {
 		cr.new_path ();
 		cr.set_line_width (1);
 		cr.set_source_rgba (0, 0, 0, opacity);
-		if (!open) {
-			cr.move_to (x - iw2 + 3, yt - ih2 - 0.7);
-			cr.line_to (x + iw2 + 3, yt);	
-			cr.line_to (x - iw2 + 3, ih2 + yt - 0.7);
-		} else {
-			cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
-			cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
-			cr.line_to (x + iw2, yt + 2 + 1);	
-		}
+		
+		cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
+		cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
+		cr.line_to (x + iw2, yt + 2 + 1);	
+
 		cr.close_path();
 		cr.stroke ();
 		cr.restore ();
 	}
 	
 	public void draw_content (int w, int h, Context cr) {
-		if (open) {
-			cr.save ();
-			foreach (var t in tool) {
-				if (t.tool_is_visible ()) {
-					t.draw (cr);
-				}
+		cr.save ();
+		foreach (var t in tool) {
+			if (t.tool_is_visible ()) {
+				t.draw (cr);
 			}
-			cr.restore ();
 		}
+		cr.restore ();
 	}
 	
 }

@@ -190,7 +190,7 @@ public class PenTool : Tool {
 			selection_box_last_x = x;
 			selection_box_last_y = y;
 			
-			if (Path.distance (begin_action_x, x, begin_action_y, y) > 2 * MainWindow.units) {
+			if (Path.distance (begin_action_x, x, begin_action_y, y) > 10 * MainWindow.units) {
 				point_selection_image = false;
 			}
 			
@@ -852,7 +852,7 @@ public class PenTool : Tool {
 		double ratio;
 		PointSelection ps;
 		
-		if (move_selected_handle && selected_points.size > 0) {
+		if (move_selected_handle) {
 			i = Path.edit_point_handle_image;
 		} else if (move_selected) {
 			if (selected_points.size > 0) {
@@ -867,7 +867,7 @@ public class PenTool : Tool {
 			img = (!) i;	
 			
 			cr.save ();
-			ratio = 40 * MainWindow.units / img.get_width ();
+			ratio = 60 * MainWindow.units / img.get_width ();
 			cr.scale (ratio, ratio);
 			x = begin_action_x - ratio * img.get_width () / 2;
 			x /= ratio;

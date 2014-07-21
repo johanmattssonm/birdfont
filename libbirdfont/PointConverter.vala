@@ -30,9 +30,7 @@ public class PointConverter {
 
 	public Path get_quadratic_path () {
 		Path p;
-		EditPoint prev;
-		double x, y;
-		
+
 		quadratic_path = original_path.copy ();
 		p = get_estimated_cubic_path ();
 		p.remove_points_on_points ();

@@ -33,17 +33,19 @@ public class SvgParser {
 	}
 	
 	public static void import () {
-		string? p;
-		string path;
+		FileChooser fc = new FileChooser ();
+		fc.file_selected.connect ((p) => {
+			string path;
+				
+			if (p == null) {
+				return;
+			}
+			
+			path = (!) p;
+			import_svg (path);
+		});
 		
-		p = MainWindow.file_chooser_open (t_("Import"));
-
-		if (p == null) {
-			return;
-		}
-		
-		path = (!) p;
-		import_svg (path);
+		MainWindow.file_chooser (t_("Import"), fc, FileChooser.LOAD);
 	}
 	
 	public static void import_svg_data (string xml_data) {

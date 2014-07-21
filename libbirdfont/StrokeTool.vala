@@ -182,7 +182,6 @@ public class StrokeTool : Tool {
 	
 	static Path create_stroke (Path p, double thickness) {
 		Path stroked;
-		Path path;
 		
 		if (p.points.size >= 2) {
 			stroked = p.copy ();
@@ -202,10 +201,6 @@ public class StrokeTool : Tool {
 		return stroked;
 	}
 	
-	static bool in_range (double x, double y,EditPoint a, EditPoint b) {
-		return fmin (a.x, b.x) < x < fmax (a.x, b.x) && fmin (a.y, b.y) < y < fmax (a.y, b.y);
-	}
-
 	static void add_corners (Path p) {
 		// TODO:
 	}
@@ -218,7 +213,6 @@ public class StrokeTool : Tool {
 		Path new_path = original.copy ();
 
 		EditPoint np, sp, nprev, sprev;
-		double n_distance, s_distance, nsratio;
 			
 		int i = 0;
 			
@@ -510,8 +504,6 @@ public class StrokeTool : Tool {
 		snext = new EditPoint ();
 		nnext = new EditPoint ();
 		
-		double merge_angle = 0;
-		
 		print (@"\n");
 		for (int index = 1;index < stroked.points.size; index++) {
 			np = new_path.points.get (index);
@@ -567,9 +559,6 @@ public class StrokeTool : Tool {
 		double last_ratio = 0; // FIXME: FIRST POINT
 		
 		double last_prev_ratio = 0;
-
-		double pn_distance = 0;
-		double ps_distance = 0;
 
 		double ratio = 0;
 		

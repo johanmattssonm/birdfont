@@ -788,21 +788,7 @@ public class DrawingTools : ToolCollection  {
 			track_tool.set_samples_per_point (freehand_samples.get_value ());
 		});
 
-		// selection policy
-		draw_tools.set_open (true);
-		key_tools.set_open (true);
-		draw_tool_modifiers.set_open (true);
-		edit_point_modifiers.set_open (true);
-		path_tool_modifiers.set_open (true);
-		view_tools.set_open (true);
-		grid.set_open (true);
-		characterset_tools.set_open (true);
-		test_tools.set_open (true);
-		guideline_tools.set_open (true);
-		shape_tools.set_open (true);
-		background_tools.set_open (true);
-		style_tools.set_open (true);
-		
+		// selection policy	
 		add_expander (draw_tools);
 		
 		if (BirdFont.android) {
@@ -851,8 +837,7 @@ public class DrawingTools : ToolCollection  {
 		
 		grid.set_persistent (true);
 		grid.set_unique (true);
-		grid.set_open (false);
-		
+
 		shape_tools.set_persistent (true);
 		shape_tools.set_unique (true);
 		
@@ -1018,7 +1003,6 @@ public class DrawingTools : ToolCollection  {
 		
 		GridTool.sizes.clear ();
 		
-		grid_expander.set_open (true);
 		MainWindow.get_toolbox ().update_expanders ();
 		MainWindow.get_toolbox ().redraw (0, 0, Toolbox.allocation_width, Toolbox.allocation_height);		
 	}
@@ -1047,7 +1031,6 @@ public class DrawingTools : ToolCollection  {
 
 		GridTool.sizes.add (grid_width);
 
-		grid_expander.set_open (true);
 		tb.update_expanders ();
 		
 		tb.redraw (0, 0, Toolbox.allocation_width, Toolbox.allocation_height);

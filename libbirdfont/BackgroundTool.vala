@@ -177,18 +177,21 @@ public class BackgroundTool : Tool {
 	}
 
 	internal static void import_background_image () {
-		BackgroundImage bg;
-		string? fn;
-		string path;
+		FileChooser fc = new FileChooser ();
 		
-		fn = MainWindow.file_chooser_open (_("Select background image"));
+		fc.file_selected.connect ((fn) => {
+			BackgroundImage bg;
+			string path;
+			
+			if (fn != null) {
+				path = (!) fn;
+				bg = new BackgroundImage (path);
+				imported_background = bg;
+				MainWindow.native_window.load_background_image ();
+			}
+		});
 		
-		if (fn != null) {
-			path = (!) fn;
-			bg = new BackgroundImage (path);
-			imported_background = bg;
-			MainWindow.native_window.load_background_image ();
-		}
+		MainWindow.file_chooser (_("Select background image"), fc, FileChooser.LOAD);
 	}
 }
 

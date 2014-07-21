@@ -134,8 +134,7 @@ public class MenuTab : FontDisplay {
 	
 	// FIXME: background thread
 	public static void save_as_bfp () {
-		Font f;
-		string? fn;
+		FileChooser fc = new FileChooser ();
 		
 		if (suppress_event) {
 			warn_if_test ("Event suppressed");
@@ -146,14 +145,17 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 		
-		f = BirdFont.get_current_font ();	
-		fn = MainWindow.file_chooser_save (t_("Save"));
+		fc.file_selected.connect((fn) => {
+			Font f = BirdFont.get_current_font ();	
+			
+			if (fn != null) {
+				f.init_bfp ((!) fn);
+			}
+			
+			set_suppress_event (false);
+		});
 		
-		if (fn != null) {
-			f.init_bfp ((!) fn);
-		}
-		
-		set_suppress_event (false);
+		MainWindow.file_chooser (t_("Save"), fc, FileChooser.SAVE);
 	}
 	
 	public static void new_file () {

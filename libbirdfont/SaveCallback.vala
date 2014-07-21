@@ -21,44 +21,44 @@ public class SaveCallback : GLib.Object {
 	public SaveCallback () {	
 	}
 	
-	public bool save_as ()  {
-		string? fn = null;
-		string f;
-		string file_name;
-		File file;
-		bool saved = false;
-		Font font = BirdFont.get_current_font ();
-		int i;
-		
+	public void save_as ()  {
 		if (MenuTab.suppress_event) {
 			warn_if_test ("Event suppressed");
-			return false;
+			return;
 		}
-		
-		fn = MainWindow.file_chooser_save (t_("Save"));
-		
-		if (fn != null) {
-			f = (!) fn;
+
+		FileChooser fc = new FileChooser ();
+		fc.file_selected.connect ((fn) => {
+			string f;
+			string file_name;
+			File file;
+			bool saved = false;
+			Font font = BirdFont.get_current_font ();
+			int i;	
 			
-			if (f.has_suffix (".bf")) {
-				f = f.replace (".bf", "");
-			}
-			
-			file_name = @"$(f).bf";
-			file = File.new_for_path (file_name);
-			i = 2;
-			while (file.query_exists ()) {
-				file_name = @"$(f)_$i.bf";
+			if (fn != null) {
+				f = (!) fn;
+				
+				if (f.has_suffix (".bf")) {
+					f = f.replace (".bf", "");
+				}
+				
+				file_name = @"$(f).bf";
 				file = File.new_for_path (file_name);
-				i++;
+				i = 2;
+				while (file.query_exists ()) {
+					file_name = @"$(f)_$i.bf";
+					file = File.new_for_path (file_name);
+					i++;
+				}
+				
+				font.font_file = file_name;
+				save ();
+				saved = true;
 			}
-			
-			font.font_file = file_name;
-			save ();
-			saved = true;
-		}
+		});
 		
-		return saved;
+		MainWindow.file_chooser (t_("Save"), fc, FileChooser.SAVE);
 	}
 
 	public void save () {

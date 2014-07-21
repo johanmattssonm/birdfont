@@ -39,8 +39,6 @@ public class PreviewTools : ToolCollection  {
 		});
 		webview_tools.add_tool (generate_html_button);
 		
-		webview_tools.set_open (true);
-		
 		expanders.append (webview_tools);
 	}
 

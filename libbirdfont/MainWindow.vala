@@ -161,14 +161,10 @@ public class MainWindow : GLib.Object {
 		return singleton;
 	}
 	
-	public static string? file_chooser_save (string title) {
-		return MainWindow.native_window.file_chooser_save (title);
+	public static void file_chooser (string title, FileChooser fc, uint flags) {
+		MainWindow.native_window.file_chooser (title, fc, flags);
 	}
-
-	public static string? file_chooser_open (string title) {
-		return MainWindow.native_window.file_chooser_open (title);
-	}
-
+	
 	public static void set_scrollbar_size (double size) {
 		if (!is_null (MainWindow.native_window)) {
 			MainWindow.native_window.set_scrollbar_size (size);

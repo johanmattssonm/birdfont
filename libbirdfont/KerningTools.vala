@@ -98,11 +98,9 @@ public class KerningTools : ToolCollection  {
 		
 		kerning_tools.set_persistent (false);
 		kerning_tools.set_unique (false);
-		kerning_tools.set_open (true);
 
 		classes.set_persistent (true);
 		classes.set_unique (true);
-		classes.set_open (true);
 		
 		expanders.append (kerning_tools);
 		expanders.append (classes);

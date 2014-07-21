@@ -114,43 +114,46 @@ public class ExportTool : GLib.Object {
 	}
 	
 	public static void export_current_glyph () {
-		Glyph glyph = MainWindow.get_current_glyph ();
-		FontDisplay fd = MainWindow.get_current_display ();
-		string glyph_svg;
-		string? f;
-		string svg_file;
-		File file;
-		DataOutputStream os;
-		string name;
-
-		name = glyph.get_name ();
-				
-		f = MainWindow.file_chooser_save ("Save");
-		if (f == null) {
-			return;
-		}
-		
-		svg_file = (!) f;	
-		file = File.new_for_path (svg_file);
-		
-		if (!(fd is Glyph)) {
-			return;
-		}
-		
-		try {
+		FileChooser fc = new FileChooser ();
+		fc.file_selected.connect ((f) => {
+			Glyph glyph = MainWindow.get_current_glyph ();
+			FontDisplay fd = MainWindow.get_current_display ();
+			string glyph_svg;
+			string svg_file;
+			File file;
+			DataOutputStream os;
+			string name;
 			
-			if (file.query_exists ()) {
-				file.delete ();
+			name = glyph.get_name ();
+			
+			if (f == null) {
+				return;
 			}
 			
-			glyph_svg = export_current_glyph_to_string ();
-			os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
-			os.put_string (glyph_svg);
-	
-		} catch (Error e) {
-			stderr.printf (@"Export \"$svg_file\" \n");
-			critical (@"$(e.message)");
-		}
+			svg_file = (!) f;	
+			file = File.new_for_path (svg_file);
+			
+			if (!(fd is Glyph)) {
+				return;
+			}
+			
+			try {
+				
+				if (file.query_exists ()) {
+					file.delete ();
+				}
+				
+				glyph_svg = export_current_glyph_to_string ();
+				os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
+				os.put_string (glyph_svg);
+		
+			} catch (Error e) {
+				stderr.printf (@"Export \"$svg_file\" \n");
+				critical (@"$(e.message)");
+			}
+		});
+		
+		MainWindow.file_chooser (t_("Save"), fc, FileChooser.SAVE);
 	}
 
 	/* Font must be saved before export in order to know where the

@@ -105,13 +105,7 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void press (uint button, double x, double y) {
-		foreach (Expander exp in current_set.get_expanders ()) {
-			if (exp.is_over (x, y)) {
-				exp.set_open (! exp.is_open ());					
-				update_expanders ();			
-				redraw_tool_box ();
-			}
-			
+		foreach (Expander exp in current_set.get_expanders ()) {	
 			foreach (Tool t in exp.tool) {
 				if (t.tool_is_visible () && t.is_over (x, y)) {
 					t.panel_press_action (t, button, x, y);
@@ -128,19 +122,17 @@ public class Toolbox : GLib.Object  {
 		bool active;
 		
 		foreach (Expander exp in current_set.get_expanders ()) {			
-			if (exp.is_open ()) {
-				foreach (Tool t in exp.tool) {
-					if (t.tool_is_visible ()) {
-						active = t.is_over (x, y);
-						
-						if (active) {
-							if (press_tool == t) {
-								select_tool (t);
-							}
+			foreach (Tool t in exp.tool) {
+				if (t.tool_is_visible ()) {
+					active = t.is_over (x, y);
+					
+					if (active) {
+						if (press_tool == t) {
+							select_tool (t);
 						}
-						
-						t.panel_release_action (t, button, x, y);
 					}
+					
+					t.panel_release_action (t, button, x, y);
 				}
 			}
 		}
@@ -231,26 +223,25 @@ public class Toolbox : GLib.Object  {
 				redraw ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 10), (int) (exp.y + exp.h + 10));
 			}
 			
-			if (exp.is_open ()) {
-				foreach (Tool t in exp.tool) {
-					if (t.tool_is_visible ()) {
-						active = t.is_over (x, y);
-						tpa = null;
-						
-						update = t.set_active (active);
-						tpa = MainWindow.get_tooltip ();
-						
-						if (active && tpa != null) {
-							((!)tpa).update_text ();
-						}
-						
-						if (update) {
-							redraw (0, 0, allocation_width, allocation_height);
-						}
-						
-						if (t.panel_move_action (t, x, y)) {
-							consumed = true;
-						}
+
+			foreach (Tool t in exp.tool) {
+				if (t.tool_is_visible ()) {
+					active = t.is_over (x, y);
+					tpa = null;
+					
+					update = t.set_active (active);
+					tpa = MainWindow.get_tooltip ();
+					
+					if (active && tpa != null) {
+						((!)tpa).update_text ();
+					}
+					
+					if (update) {
+						redraw (0, 0, allocation_width, allocation_height);
+					}
+					
+					if (t.panel_move_action (t, x, y)) {
+						consumed = true;
 					}
 				}
 			}
@@ -300,9 +291,7 @@ public class Toolbox : GLib.Object  {
 				if (tool.get_id () == t.get_id ()) {
 					if (!t.tool_is_visible ()) {
 						warning ("Tool is hidden");
-					} else {
-						exp.set_open (true);
-						
+					} else {						
 						update = false;
 						
 						update = tool.set_selected (true);
@@ -374,13 +363,9 @@ public class Toolbox : GLib.Object  {
 		pos = 4 * get_scale ();
 		foreach (Expander e in current_set.get_expanders ()) {
 			e.set_offset (pos);
-			
-			if (e.is_open ()) {
-				pos += e.get_content_height () + 4 * get_scale ();
-			} else {
-				pos += 10 * get_scale ();
-			}
-			
+
+			pos += e.get_content_height () + 4 * get_scale ();
+					
 			current_set.content_height = pos;
 			
 			if (BirdFont.android) {
@@ -396,9 +381,7 @@ public class Toolbox : GLib.Object  {
 	private void draw_expanders (int w, int h, Context cr) {
 		foreach (Expander e in current_set.get_expanders ()) {
 			e.draw (w, h, cr);
-			if (e.is_open ()) {
-				e.draw_content (w, h, cr);
-			}
+			e.draw_content (w, h, cr);
 		}
 	}
 	
@@ -407,12 +390,7 @@ public class Toolbox : GLib.Object  {
 		
 		cr.rectangle (0, 0, w, h);
 		cr.set_line_width (0);
-		
-		if (BirdFont.android) {
-			cr.set_source_rgba (224/255.0, 224/255.0, 224/255.0, 1);
-		} else {
-			cr.set_source_rgba (240/255.0, 240/255.0, 240/255.0, 1);
-		}
+		cr.set_source_rgba (240/255.0, 240/255.0, 240/255.0, 1);
 		cr.fill ();
 		
 		cr.rectangle (0, 0, 1, h);
