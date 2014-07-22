@@ -227,6 +227,7 @@ public class StrokeTool : Tool {
 		bool new_point = false;
 		double m, n;
 		bool bad_segment = false;
+		bool failed = false;
 		int size;
 				
 		new_path.remove_points_on_points ();
@@ -292,6 +293,10 @@ public class StrokeTool : Tool {
 			}
 			
 			stop = start.get_next ();
+
+			if (stop.type == PointType.NONE) {
+				break;
+			}
 
 			// move point
 			stroke_start = start.copy ();
@@ -390,22 +395,24 @@ public class StrokeTool : Tool {
 						bad_segment = true; // add more points
 						return false;
 					}
-
-					split_point.prev = start;
-					split_point.next = stop;
 					
-					start.next = split_point;
-					stop.prev = split_point;
-					
-					if (start.x == split_point.x && start.y == split_point.y) {
-						warning (@"Point already added.  Error: $d");
-						bad_segment = true;
-						return false;
-					} else {
-						new_path.insert_new_point_on_path (split_point, t);
-						new_point = true;
-					}
+					if (d > 0.2) {
+						split_point.prev = start;
+						split_point.next = stop;
 						
+						start.next = split_point;
+						stop.prev = split_point;
+						
+						if (start.x == split_point.x && start.y == split_point.y) {
+							warning (@"Point already added.  Error: $d");
+							bad_segment = true;
+							failed = true;
+							return false;
+						} else {
+							new_path.insert_new_point_on_path (split_point, t);
+							new_point = true;
+						}
+					}
 					return !new_point;
 				}, 3);
 				/*
@@ -455,7 +462,10 @@ public class StrokeTool : Tool {
 				*/
 			}
 			
-				
+			if (failed) {
+				return stroked;
+			}
+			
 			if (!new_point) {
 				ep = stroke_start.copy ();
 				stroked.add_point (ep);
@@ -505,9 +515,13 @@ public class StrokeTool : Tool {
 		nnext = new EditPoint ();
 		
 		print (@"\n");
-		for (int index = 1;index < stroked.points.size; index++) {
+		for (int index = 1; index < stroked.points.size; index++) {
 			np = new_path.points.get (index);
 			sp = stroked.points.get (index);
+
+			if (np.type == PointType.NONE) {
+				break;
+			}
 
 			if (index < stroked.points.size - 1) {
 				nnext = new_path.points.get (index + 1);
@@ -518,9 +532,6 @@ public class StrokeTool : Tool {
 			double first_inter_x, first_inter_y;
 			if (segment_intersects (stroked, sp, snext, out first_inter_x, out first_inter_y) && !sp.deleted) {
 				print (@"n----- $index    $(sp.x), $(sp.y)\n");
-					
-				//NO np.deleted = true;
-				//NO sp.deleted = true;
 			
 				if (has_end_of_intersection (stroked, index + 1, first_inter_x, first_inter_y)) {
 					for (int j = index + 1; j < stroked.points.size; j++) {
@@ -573,6 +584,10 @@ public class StrokeTool : Tool {
 				snext = stroked.points.get (index + 1);
 			}
 			
+			if (np.type == PointType.NONE || nnext.type == PointType.NONE) {
+				break;
+			}
+						
 			// angle
 			double dar = sp.get_right_handle ().angle - np.get_right_handle ().angle;
 			double dal = sp.get_left_handle ().angle - np.get_left_handle ().angle;

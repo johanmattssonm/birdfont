@@ -183,6 +183,8 @@ public class MenuTab : FontDisplay {
 			MainWindow.native_window.font_loaded ();
 			
 			select_overview ();
+			
+			GlyphCanvas.redraw ();
 		});
 
 		dialog.signal_save.connect (() => {

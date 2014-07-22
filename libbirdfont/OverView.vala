@@ -193,6 +193,7 @@ public class OverView : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
+		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
 	public override void zoom_min () {

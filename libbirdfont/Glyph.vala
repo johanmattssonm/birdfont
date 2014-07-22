@@ -1572,6 +1572,14 @@ public class Glyph : FontDisplay {
 		zoom_at_point (x, y, n);
 	}
 	
+	public void zoom_tap (double distance) {
+		int w = (int) (distance);
+		if (distance != 0) {
+			show_zoom_area (-w , -w, allocation.width + w, allocation.height + w);
+			set_zoom_from_area ();
+		}
+	}
+	
 	/** Zoom in @param n pixels. */
 	private void zoom_at_point (double x, double y, int n) {
 		double w = allocation.width;
@@ -1900,6 +1908,7 @@ public class Glyph : FontDisplay {
 		double tap_direction;
 		double dx, dy;
 		double last_distance, new_distance;
+		double z, i;
 
 		dx = 0;
 		dy = 0;
@@ -1910,43 +1919,32 @@ public class Glyph : FontDisplay {
 			dx = last_tap0_x - x;
 			dy = last_tap0_y - y;
 			new_distance = Path.distance (last_tap1_x, x, last_tap1_y, y);
-			
-			// FIXME: DELETE
-			warning (@"last_tap0_y $last_tap0_y last_tap0_x $last_tap0_x");
 		}
 		
 		if (finger == 1) {
 			dx = last_tap1_x - x;
 			dy = last_tap1_y - y;
 			new_distance = Path.distance (last_tap0_x, x, last_tap0_y, y);
-			warning (@"last_tap0_y $last_tap0_y last_tap0_x $last_tap0_x"); // FIXME: DELETE
 		}
 		
 		last_distance = Path.distance (last_tap0_x, last_tap1_x, last_tap0_y, last_tap1_y);
 		
-		warning (@"last_distance $last_distance  zoom_distance $zoom_distance  new_distance $new_distance");
+		if (fabs (new_distance - last_distance) < 5 * MainWindow.units) {
+			move_view (dx, dy); 
+		} 
 		
-		if (fabs (new_distance - last_distance) < 10 * MainWindow.units) {
-			move_view (dx / 2, dy / 2); 
-			// divide by 2 because change_view_event will be called for both fingers
-		} else {
-			if (fabs (zoom_distance - new_distance) > 5 * MainWindow.units) { 
-				if (new_distance > last_distance) {
-					zoom_in ();
-				} else  {
-					zoom_out ();
-				}
-				
-				zoom_distance = new_distance;
-			}
-		}
+		if (zoom_distance != 0) {
+			zoom_tap (zoom_distance - new_distance);	
+		}			
+		
+		zoom_distance = new_distance;
 	}
 
 	public override void tap_down (int finger, int x, int y) {
 		TimeoutSource delay;
 		
 		if (finger == 0) {
-			delay = new TimeoutSource (70);
+			delay = new TimeoutSource (140);
 			delay.set_callback(() => {
 				if (!change_view && !ignore_input) {
 					button_press (1, x, y);
@@ -1985,7 +1983,7 @@ public class Glyph : FontDisplay {
 		
 	public override void tap_move (int finger, int x, int y) {
 		double d;
-
+		
 		if (!change_view) {
 			motion_notify (x, y);
 		} else {

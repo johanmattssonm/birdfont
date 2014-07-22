@@ -1309,7 +1309,12 @@ public class Path {
 			return all_of_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps);
 		}
 		
-		warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y)");
+		if (start.x == stop.x && start.y == stop.y) {
+			warning ("Zero length.");
+			return true;
+		}
+		
+		warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
 		return all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().x, stop.x, stop.y, iter, steps);
 	}
 
