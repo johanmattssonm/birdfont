@@ -41,7 +41,9 @@ public class PointConverter {
 
 
 		foreach (EditPoint e in p.points) {
-			PenTool.convert_point_type (e, PointType.DOUBLE_CURVE);
+			if (e.type == PointType.CUBIC) {
+				PenTool.convert_point_type (e, PointType.DOUBLE_CURVE);
+			}
 		}
 	
 		p.add_hidden_double_points ();
