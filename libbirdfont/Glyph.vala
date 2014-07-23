@@ -1915,6 +1915,10 @@ public class Glyph : FontDisplay {
 
 		new_distance = 0;
 		
+		if (last_tap0_y == -1 || last_tap0_x == -1 || last_tap1_y == -1 || last_tap1_x == -1) {
+			return;
+		}
+		
 		if (finger == 0) {
 			dx = last_tap0_x - x;
 			dy = last_tap0_y - y;
@@ -1928,15 +1932,15 @@ public class Glyph : FontDisplay {
 		}
 		
 		last_distance = Path.distance (last_tap0_x, last_tap1_x, last_tap0_y, last_tap1_y);
-		
-		if (fabs (new_distance - last_distance) < 5 * MainWindow.units) {
-			move_view (dx, dy); 
-		} 
-		
+
 		if (zoom_distance != 0) {
 			zoom_tap (zoom_distance - new_distance);	
-		}			
-		
+		}	
+				
+		if (finger == 1) {
+			move_view (dx, dy); 
+		} 
+
 		zoom_distance = new_distance;
 	}
 
