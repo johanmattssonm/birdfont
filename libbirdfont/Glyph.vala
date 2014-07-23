@@ -1938,6 +1938,7 @@ public class Glyph : FontDisplay {
 		}	
 				
 		if (finger == 1) {
+			warning (@"dx $dx dy $dy last_tap1_x $last_tap1_x  last_tap1_y $last_tap1_y   x $x  y $y");
 			move_view (dx, dy); 
 		} 
 

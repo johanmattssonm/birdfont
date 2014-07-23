@@ -144,7 +144,7 @@ public class VersionList : DropMenu {
 		reload_all_open_glyphs ();
 
 		g.set_allocation (current_glyph.allocation);
-		g.default_zoom ();
+		g.set_default_zoom ();
 	}
 	
 	/** Reload a glyph when a new version is selected. Updates the path

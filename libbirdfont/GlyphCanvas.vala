@@ -83,13 +83,17 @@ public class GlyphCanvas : GLib.Object {
 	}
 
 	public void redraw_area (int x, int y, int w, int h) {
-		signal_redraw_area (x, y, w, h);
+		if (MenuTab.suppress_event) {
+			warning ("Do not call redraw from background thread.");
+		} else {
+			signal_redraw_area (x, y, w, h);;
+		}
 	}
 	
 	public static void redraw () {
 		GlyphCanvas c = MainWindow.get_glyph_canvas ();
 		if (!is_null (c)) {
-			c.signal_redraw_area (0, 0, allocation.width, allocation.height);
+			c.redraw_area (0, 0, allocation.width, allocation.height);
 		}
 	}
 }
