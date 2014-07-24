@@ -204,7 +204,7 @@ public class DrawingTools : ToolCollection  {
 
 		// edit stroke width
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
-		object_stroke.set_int_value ("0.000");
+		object_stroke.set_int_value ("2.000");
 		object_stroke.set_int_step (0.015);
 		
 		object_stroke.new_value_action.connect((self) => {
@@ -777,7 +777,12 @@ public class DrawingTools : ToolCollection  {
 		
 		freehand_samples.set_max (9);
 		freehand_samples.set_min (0.002);
-		freehand_samples.set_value_round (1);
+		
+		if (BirdFont.android) {
+			freehand_samples.set_value_round (2);
+		} else {
+			freehand_samples.set_value_round (1);
+		}
 
 		if (Preferences.get ("stroke_width") != "") {
 			freehand_samples.set_value (Preferences.get ("stroke_width"));
