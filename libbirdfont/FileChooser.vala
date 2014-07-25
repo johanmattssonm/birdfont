@@ -16,9 +16,9 @@ namespace BirdFont {
 
 public class FileChooser : GLib.Object {
 	
-	public static uint NONE = 0;
-	public static uint SAVE = 1;
-	public static uint LOAD = 1 << 1;
+	public static const uint NONE = 0;
+	public static const uint SAVE = 1;
+	public static const uint LOAD = 1 << 1;
 	
 	public signal void file_selected  (string? path);
 	
