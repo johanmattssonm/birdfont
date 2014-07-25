@@ -22,36 +22,45 @@ public class PointConverter {
 
 	Path original_path;
 	Path quadratic_path;
-	int points_on_segment = 0;
 
 	public PointConverter (Path path) {	
 		original_path = path;
 	}
 
 	public Path get_quadratic_path () {
-		Path p;
-
+		int i;
+		bool add_more_points;
 		quadratic_path = original_path.copy ();
-		p = get_estimated_cubic_path ();
-		p.remove_points_on_points ();
+		
+		for (i = 0; i < 5; i++) {
+			add_more_points = get_estimated_cubic_path ();
+			if (!add_more_points) {
+				break;
+			}
+		}
+		
+		if (add_more_points) {
+			warning ("Too many points in segment.");
+		}
+	
+		quadratic_path.remove_points_on_points ();
 
-		if (p.points.size < 2) {
+		if (quadratic_path.points.size < 2) {
 			return new Path ();
 		}
 
-
-		foreach (EditPoint e in p.points) {
+		foreach (EditPoint e in quadratic_path.points) {
 			if (e.type == PointType.CUBIC) {
 				PenTool.convert_point_type (e, PointType.DOUBLE_CURVE);
 			}
 		}
 	
-		p.add_hidden_double_points ();
+		quadratic_path.add_hidden_double_points ();
 					
-		return p;
+		return quadratic_path;
 	}
 
-	public Path get_estimated_cubic_path () {
+	public bool get_estimated_cubic_path () {
 		EditPoint start;
 		EditPoint stop;
 		EditPoint new_start;
@@ -59,16 +68,11 @@ public class PointConverter {
 		double distance, px, py;
 		
 		if (quadratic_path.points.size <= 1) {
-			return quadratic_path;
+			return false;
 		}
 
 		start = quadratic_path.get_first_point ();
 		stop = start.get_next ();
-
-		if (points_on_segment > 5) {
-			warning ("Too many point on segment.");
-			return quadratic_path;
-		}
 
 		for (int i = 0; i < quadratic_path.points.size; i++) {
 			
@@ -84,8 +88,8 @@ public class PointConverter {
 					quadratic_path.insert_new_point_on_path (e);
 					
 					quadratic_path.create_list ();
-					points_on_segment++;													
-					return get_estimated_cubic_path ();
+					points_on_segment += 1;													
+					return true;
 				}
 			}
 			points_on_segment = 0;
@@ -100,7 +104,7 @@ public class PointConverter {
 			}
 		}
 				
-		return quadratic_path;
+		return false;
 	}
 
 	// TODO: Optimize
