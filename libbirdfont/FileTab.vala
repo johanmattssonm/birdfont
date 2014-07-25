@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -20,15 +20,17 @@ public class FileTab : FontDisplay {
 	
 	int scroll = 0;
 	int visible_rows = 0;
-	double row_height = 30;
-	double top = 60;
+	double row_height;
+	double top;
 	WidgetAllocation allocation = new WidgetAllocation ();
-	List<Font> recent_fonts = new List<Font> ();
-	List<string> backups = new List<string> (); // FIXME: use ref counted object
+	Gee.ArrayList<Font> recent_fonts = new Gee.ArrayList<Font> ();
+	Gee.ArrayList<string> backups = new Gee.ArrayList<string> (); // FIXME: use ref counted object
 	
 	public signal void open_file ();
 	
 	public FileTab () {
+		row_height = 30 * MainWindow.units;
+		top = 2 * row_height;
 	}
 
 	public static void load_font (string fn) {
@@ -85,7 +87,6 @@ public class FileTab : FontDisplay {
 			
 			MenuTab.save_callback = new SaveCallback ();
 			MenuTab.save_callback.file_saved.connect (() => {
-				print ("DISC:..\n");
 				dialog.signal_discard ();
 			});
 			MenuTab.save_callback.save (); // background thread
@@ -156,12 +157,7 @@ public class FileTab : FontDisplay {
 			warning ("No recent fonts");
 			return;
 		}
-
-		if (is_null (recent_fonts.data)) {
-			warning ("Recent font 1 has no data");
-			return;
-		}
-		
+				
 		foreach (Font font in recent_fonts) {
 			
 			if (is_null (font)) {
@@ -226,27 +222,27 @@ public class FileTab : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 
-		if (recent_fonts.length () == 0 && !has_backup ()) {
+		if (recent_fonts.size == 0 && !has_backup ()) {
 			cr.save ();
 			cr.set_source_rgba (0.3, 0.3, 0.3, 1);
-			cr.set_font_size (18);
-			cr.move_to (50, top - 9);
+			cr.set_font_size (18 * MainWindow.units);
+			cr.move_to (50 * MainWindow.units, top - 9 * MainWindow.units);
 			cr.show_text (t_("No fonts created yet."));
 			cr.restore ();
 		}
 		
-		if (scroll == 0 && recent_fonts.length () > 0) {
+		if (scroll == 0 && recent_fonts.size > 0) {
 			cr.save ();
 			cr.set_source_rgba (0.3, 0.3, 0.3, 1);
-			cr.set_font_size (18);
-			cr.move_to (50, top - 9);
+			cr.set_font_size (18 * MainWindow.units);
+			cr.move_to (50 * MainWindow.units, top - 9 * MainWindow.units);
 			cr.show_text (t_("Recent files"));
 			cr.restore ();
 		}
 		
 		cr.save ();
 		cr.set_source_rgba (0.3, 0.3, 0.3, 1);
-		cr.set_font_size (12);
+		cr.set_font_size (12 * MainWindow.units);
 
 		foreach (Font font in recent_fonts) {
 			if (s++ >= scroll) {
@@ -262,8 +258,8 @@ public class FileTab : FontDisplay {
 			if (s >= scroll) {
 				cr.save ();
 				cr.set_source_rgba (0.3, 0.3, 0.3, 1);
-				cr.set_font_size (18);
-				cr.move_to (50, y + 2 * row_height - 9);
+				cr.set_font_size (18 * MainWindow.units);
+				cr.move_to (50 * MainWindow.units, y + 2 * row_height - 9 * MainWindow.units);
 				cr.show_text (t_("Backup"));
 				cr.restore ();
 				s += 2;
@@ -288,24 +284,27 @@ public class FileTab : FontDisplay {
 		fn = fn.substring (fn.replace ("\\", "/").last_index_of ("/") + 1);
 		draw_background (cr, allocation, y, color);
 		
-		cr.move_to (50, y + row_height / 2 + 5);
+		cr.move_to (50 * MainWindow.units, y + row_height / 2 + 5 * MainWindow.units);
 		cr.show_text (fn);
 	}
 
 	private void draw_backup_row (WidgetAllocation allocation, Context cr, string backup, bool color, double y) {
 		File thumbnail;
+		double u = MainWindow.units;
+		
 		thumbnail = BirdFont.get_thumbnail_directory ().get_child (backup);
 			
 		draw_background (cr, allocation, y, color);
 		
-		cr.move_to (50, y + row_height / 2 + 5);
+		cr.move_to (50 * u, y + row_height / 2 + 5 * u);
 		cr.show_text (backup);
 		
-		cr.move_to (35 - 5, y + row_height / 2 + 12 - 14);
-		cr.line_to (35 - 10, y + row_height / 2 + 12 - 9);
+		// draw x
+		cr.move_to ((35 - 5) * u, y + row_height / 2 + (12 - 14) * u);
+		cr.line_to ((35 - 10) * u, y + row_height / 2 + (12 - 9) * u);
 
-		cr.move_to (35 - 10, y + row_height / 2 + 12 - 14);
-		cr.line_to (35 - 5, y + row_height / 2 + 12 - 9);
+		cr.move_to ((35 - 10) * u, y + row_height / 2 + (12 - 14) * u);
+		cr.line_to ((35 - 5) * u, y + row_height / 2 + (12 - 9) * u);
 		
 		cr.stroke ();
 	}
@@ -372,9 +371,7 @@ public class FileTab : FontDisplay {
 		update_recent_files ();
 		update_scrollbar ();
 		
-		while (backups.length () != 0) {
-			backups.delete_link (backups.first ());
-		}
+		backups.clear ();
 		
 		backups = get_backups ();
 		redraw_area (0, 0, allocation.width, allocation.height);
@@ -404,7 +401,7 @@ public class FileTab : FontDisplay {
 	}
 
 	int rows () {
-		int l = (int) (recent_fonts.length () + backups.length ());
+		int l = (int) (recent_fonts.size + backups.size);
 		
 		if (has_backup ()) {
 			l += 2;
@@ -417,9 +414,7 @@ public class FileTab : FontDisplay {
 	public void update_recent_files () {
 		Font font;
 
-		while (recent_fonts.length () != 0) {
-			recent_fonts.delete_link (recent_fonts.first ());
-		}
+		recent_fonts.clear ();
 		
 		foreach (var f in Preferences.get_recent_files ()) {
 			if (f == "") continue;
@@ -431,15 +426,13 @@ public class FileTab : FontDisplay {
 			font.set_font_file (f);
 			
 			if (file.query_exists ()) { 
-				recent_fonts.append (font);
+				recent_fonts.insert (0, font);
 			}
-		}
-		
-		recent_fonts.reverse ();
+		}		
 	}
 	
 	bool has_backup () {
-		return backups.length () > 0;
+		return backups.size > 0;
 	}
 
 	public static void delete_backups () {
@@ -461,11 +454,11 @@ public class FileTab : FontDisplay {
 		}
 	}
 
-	public List<string> get_backups () {
+	public Gee.ArrayList<string> get_backups () {
 		FileEnumerator enumerator;
 		string file_name;
 		FileInfo? file_info;
-		List<string> backups = new List<string> ();
+		Gee.ArrayList<string> backups = new Gee.ArrayList<string> ();
 		File dir = BirdFont.get_backup_directory ();
 		Font font = BirdFont.get_current_font ();
 
@@ -484,7 +477,7 @@ public class FileTab : FontDisplay {
 					continue;
 				}
 				
-				backups.append (file_name);
+				backups.insert (0, file_name);
 			}
 		} catch (Error e) {
 			warning (e.message);

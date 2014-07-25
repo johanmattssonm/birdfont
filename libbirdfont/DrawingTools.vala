@@ -779,7 +779,7 @@ public class DrawingTools : ToolCollection  {
 		freehand_samples.set_min (0.002);
 		
 		if (BirdFont.android) {
-			freehand_samples.set_value_round (2);
+			freehand_samples.set_value_round (2.5);
 		} else {
 			freehand_samples.set_value_round (1);
 		}

@@ -29,10 +29,10 @@ public class PointConverter {
 
 	public Path get_quadratic_path () {
 		int i;
-		bool add_more_points;
+		bool add_more_points = false;
 		quadratic_path = original_path.copy ();
 		
-		for (i = 0; i < 5; i++) {
+		for (i = 0; i < 20; i++) {
 			add_more_points = get_estimated_cubic_path ();
 			if (!add_more_points) {
 				break;
@@ -66,6 +66,7 @@ public class PointConverter {
 		EditPoint new_start;
 		EditPoint e;
 		double distance, px, py;
+		Gee.ArrayList<EditPoint> points_to_add = new Gee.ArrayList<EditPoint> ();
 		
 		if (quadratic_path.points.size <= 1) {
 			return false;
@@ -79,20 +80,15 @@ public class PointConverter {
 			if (start.get_right_handle ().type == PointType.CUBIC || stop.get_left_handle ().type == PointType.CUBIC) {
 				find_largest_distance (start, stop, start.copy (), stop.copy (), out distance, out px, out py);
 				
-				if (distance > 0.11) { // range 0.1 - 0.3, default 0.11
+				if (distance > 0.14) { // range 0.1 - 0.3, default 0.11
 					e = new EditPoint ();
 					quadratic_path.get_closest_point_on_path (e, px, py);
 					e.type = PointType.CUBIC;
 					e.get_left_handle ().type = PointType.CUBIC;
 					e.get_right_handle ().type = PointType.CUBIC;
-					quadratic_path.insert_new_point_on_path (e);
-					
-					quadratic_path.create_list ();
-					points_on_segment += 1;													
-					return true;
+					points_to_add.add (e);
 				}
 			}
-			points_on_segment = 0;
 			
 			if (i == quadratic_path.points.size - 2) {
 				start = stop;
@@ -103,8 +99,14 @@ public class PointConverter {
 				start = new_start;
 			}
 		}
+		
+		foreach (EditPoint ep in points_to_add) {
+			quadratic_path.insert_new_point_on_path (ep);
+		}
+		
+		quadratic_path.create_list ();
 				
-		return false;
+		return points_to_add.size > 0;
 	}
 
 	// TODO: Optimize
