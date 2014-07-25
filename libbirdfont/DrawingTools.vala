@@ -111,15 +111,6 @@ public class DrawingTools : ToolCollection  {
 			update_drawing_and_background_tools (self);
 		});
 		draw_tools.add_tool (resize_tool);
-
-		stroke_tool = new StrokeTool ("stroke"); // create outline from path
-		stroke_tool.select_action.connect ((self) => {
-			update_drawing_and_background_tools (self);
-		});
-		
-		if (BirdFont.has_argument ("--test")) {
-			draw_tools.add_tool (stroke_tool);
-		}
 		
 		track_tool = new TrackTool ("track"); // draw outline on freehand
 		track_tool.select_action.connect ((self) => {
@@ -223,6 +214,15 @@ public class DrawingTools : ToolCollection  {
 		
 		if (BirdFont.has_argument ("--test") || BirdFont.android) {
 			draw_tool_modifiers.add_tool (object_stroke);
+		}
+
+		stroke_tool = new StrokeTool ("stroke"); // create outline from path
+		stroke_tool.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
+		
+		if (BirdFont.has_argument ("--test") || BirdFont.android) {
+			draw_tools.add_tool (stroke_tool);
 		}
 
 		// tie edit point handles
