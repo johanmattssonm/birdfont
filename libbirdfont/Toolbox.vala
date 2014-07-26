@@ -390,7 +390,11 @@ public class Toolbox : GLib.Object  {
 		
 		cr.rectangle (0, 0, w, h);
 		cr.set_line_width (0);
-		cr.set_source_rgba (240/255.0, 240/255.0, 240/255.0, 1);
+		if (BirdFont.android) {
+			cr.set_source_rgba (222/255.0, 221/255.0, 222/255.0, 1);
+		} else {
+			cr.set_source_rgba (240/255.0, 240/255.0, 240/255.0, 1);
+		}
 		cr.fill ();
 		
 		cr.rectangle (0, 0, 1, h);

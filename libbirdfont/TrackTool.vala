@@ -164,6 +164,11 @@ public class TrackTool : Tool {
 				PenTool.draw_join_icon (cairo_context, join_x, join_y);
 			}
 		});
+		
+		key_press_action.connect ((self, keyval) => {
+			Tool p = MainWindow.get_toolbox ().get_tool ("pen_tool");
+			p.key_press_action (p, keyval);
+		});
 	}
 
 	public void set_samples_per_point (double s) {
@@ -283,7 +288,7 @@ public class TrackTool : Tool {
 		return merged;
 	}
 
-	static void update_corner_handle (EditPoint end, EditPoint new_start) {
+	public static void update_corner_handle (EditPoint end, EditPoint new_start) {
 		EditPointHandle h1, h2;
 		
 		h1 = end.get_right_handle ();
@@ -451,7 +456,7 @@ public class TrackTool : Tool {
 	/** Take the average of tracked points and create a smooth line.
 	 * @return the last removed point.
 	 */
-	EditPoint convert_points_to_line () {
+	public void convert_points_to_line () {
 		EditPoint ep, last_point;
 		double sum_x, sum_y, nx, ny;
 		int px, py;
@@ -462,21 +467,21 @@ public class TrackTool : Tool {
 		
 		if (added_points == 0) {
 			warning ("No points to add.");
-			return new EditPoint ();
+			return;
 		}
 		
 		glyph = MainWindow.get_current_glyph ();
 		
 		if (glyph.path_list.size == 0) {
 			warning ("No path.");
-			return new EditPoint ();
+			return;
 		}
 			
 		p = glyph.path_list.get (glyph.path_list.size - 1);
 
 		if (unlikely (p.points.size < added_points)) {
 			warning ("Missing point.");
-			return new EditPoint ();
+			return;
 		}
 
 		sum_x = 0;
@@ -486,6 +491,7 @@ public class TrackTool : Tool {
 		
 		for (int i = 0; i < added_points; i++) {
 			ep = p.delete_last_point ();
+			print (@"$(ep.type)\n");
 			sum_x += ep.x;
 			sum_y += ep.y;			
 			points.add (ep);
@@ -503,7 +509,7 @@ public class TrackTool : Tool {
 		
 		if (unlikely (p.points.size == 0)) {
 			warning ("No points.");
-			return new EditPoint ();
+			return;
 		}
 		
 		if (average.prev != null && average.get_prev ().tie_handles) {
@@ -516,8 +522,6 @@ public class TrackTool : Tool {
 		added_points = 0;
 		last_update = get_current_time ();
 		glyph.update_view ();
-		
-		return last_point;
 	}
 	
 	/** @return current time in milli seconds. */

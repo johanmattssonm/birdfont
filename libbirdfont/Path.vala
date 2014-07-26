@@ -144,6 +144,25 @@ public class Path {
 		return points.get (0);
 	}
 
+	public EditPoint get_last_visible_point () {
+		EditPoint e;
+		
+		if (unlikely (points.size == 0)) {
+			warning ("No point");
+			return new EditPoint ();
+		}
+		
+		for (int i = points.size - 1; i >= 0; i--) {
+			e = points.get (i);
+			if (e.type != PointType.HIDDEN) {
+				return e;
+			}
+		}
+		
+		warning ("Only hidden points");
+		return new EditPoint ();
+	}
+
 	public EditPoint get_last_point () {
 		if (unlikely (points.size == 0)) {
 			warning ("No point");

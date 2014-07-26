@@ -139,7 +139,7 @@ public class StrokeTool : Tool {
 		}
 				
 		// end of stroke
-		end = path.get_last_point ();
+		end = path.get_last_visible_point ();
 		corner1 = stroke.get_last_point ();
 		angle = end.get_left_handle ().angle;
 		corner1.x = end.x + cos (angle - PI / 2) * thickness;
@@ -248,7 +248,7 @@ public class StrokeTool : Tool {
 
 		// double points are not good for this purpose, convert them to the quadratic form
 		new_path.add_hidden_double_points (); 
-		
+				
 		// add tangent points to the path
 		segment_start = new_path.get_first_point ();
 		size = new_path.points.size;
@@ -502,8 +502,8 @@ public class StrokeTool : Tool {
 			stroked.get_last_point ().get_left_handle ().length = l.length;
 			stroked.get_last_point ().get_left_handle ().type = l.type;
 			
-			stroked.get_last_point ().get_right_handle ().convert_to_line ();
-			stroked.get_first_point ().get_left_handle ().convert_to_line ();
+			//stroked.get_last_point ().get_right_handle ().convert_to_line ();
+			//stroked.get_first_point ().get_left_handle ().convert_to_line ();
 		}
 		
 		// remove self intersection

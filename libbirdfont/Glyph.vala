@@ -1949,7 +1949,7 @@ public class Glyph : FontDisplay {
 		TimeoutSource delay;
 		
 		if (finger == 0) {
-			delay = new TimeoutSource (140);
+			delay = new TimeoutSource (400); // wait for second finger
 			delay.set_callback(() => {
 				if (!change_view && !ignore_input) {
 					button_press (1, x, y);

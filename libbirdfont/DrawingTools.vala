@@ -131,7 +131,9 @@ public class DrawingTools : ToolCollection  {
 		select_all_button.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			
-			if (point_tool.is_selected () || pen_tool.is_selected ()) {
+			if (point_tool.is_selected () 
+					|| pen_tool.is_selected ()
+					|| track_tool.is_selected ()) {
 				pen_tool.select_all_points ();
 				g.open_path ();
 			} else {
