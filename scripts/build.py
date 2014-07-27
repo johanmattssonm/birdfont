@@ -235,6 +235,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull
 		--pkg gdk-pixbuf-2.0 \
 		--pkg webkit-1.0 \
 		--pkg gtk+-2.0\
+		--pkg libnotify\
 		--pkg libbirdfont""")
 	run("mv birdfont/*.c build/birdfont/")
 
@@ -248,6 +249,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull
 		$(pkg-config --cflags glib-2.0) \
 		$(pkg-config --cflags gdk-pixbuf-2.0) \
 		$(pkg-config --cflags webkit-1.0) \
+		$(pkg-config --cflags libnotify) \
 		-I ./build/libbirdfont/""")
 	run("mv ./*.o build/birdfont/")	
 
@@ -262,5 +264,6 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull
 		$(pkg-config --libs gdk-pixbuf-2.0) \
 		$(pkg-config --libs webkit-1.0) \
 		$(pkg-config --libs gtk+-2.0) \
+		$(pkg-config --libs libnotify) \
 		-o ./build/bin/birdfont""")
 

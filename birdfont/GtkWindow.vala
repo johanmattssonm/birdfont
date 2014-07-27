@@ -21,6 +21,7 @@ using Gdk;
 using BirdFont;
 using WebKit;
 using Gdk;
+using Notify;
 
 namespace BirdFont {
 
@@ -63,6 +64,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void init () {
+		Notify.init ("Fonts have been exported.");
+		
 		description = new DescriptionForm ();
 		
 		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
@@ -892,9 +895,20 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void* export_thread () {
+		IdleSource idle = new IdleSource ();
+
 		ExportCallback.export_fonts ();
 		MenuTab.stop_background_thread ();
 		MenuTab.signal_file_exported ();
+
+		idle.set_callback (() => {
+			Notify.Notification export_notification;
+			export_notification = new Notify.Notification ("BirdFont", t_("Your fonts have been exported."), null);
+			export_notification.show ();
+			return false;
+		});
+		idle.attach (null);
+
 		return null;
 	}
 	

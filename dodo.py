@@ -47,7 +47,8 @@ LIBS = [
     'cairo',
     'gdk-pixbuf-2.0',
     'webkit-1.0',
-    config.GEE
+    config.GEE,
+    'libnotify'
     ]
 
 def task_build ():

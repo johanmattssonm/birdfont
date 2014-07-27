@@ -69,8 +69,8 @@ public class PenTool : Tool {
 	/** Move curve handle instead of control point. */
 	private bool last_selected_is_handle = false;
 
-	static List<Path> clockwise;
-	static List<Path> counter_clockwise;
+	static Gee.ArrayList<Path> clockwise;
+	static Gee.ArrayList<Path> counter_clockwise;
 	
 	public static double path_stroke_width = 0;
 			
@@ -87,8 +87,8 @@ public class PenTool : Tool {
 		active_path = new Path ();
 		
 		selected_point = new EditPoint ();
-		clockwise = new List<Path> ();
-		counter_clockwise = new List<Path> ();
+		clockwise = new Gee.ArrayList<Path> ();
+		counter_clockwise = new Gee.ArrayList<Path> ();
 		
 		tie_icon = Icons.get_icon ("tie_is_active.png");
 		
@@ -103,17 +103,17 @@ public class PenTool : Tool {
 		press_action.connect ((self, b, x, y) => {			
 			// retain path direction
 			Glyph glyph = MainWindow.get_current_glyph ();
-			clockwise = new List<Path> ();
-			counter_clockwise = new List<Path> ();
+			clockwise = new Gee.ArrayList<Path> ();
+			counter_clockwise = new Gee.ArrayList<Path> ();
 
 			begin_action_x = x;
 			begin_action_y = y;
 
 			foreach (Path p in glyph.path_list) {
 				if (p.is_clockwise ()) {
-					clockwise.append (p);
+					clockwise.add (p);
 				} else {
-					counter_clockwise.append (p);
+					counter_clockwise.add (p);
 				}
 			}
 			
@@ -519,13 +519,8 @@ public class PenTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		// don't retain direction
-		while (clockwise.length () > 0) {
-			clockwise.remove_link (clockwise.first ());
-		}
-		
-		while (counter_clockwise.length () > 0) {
-			counter_clockwise.remove_link (counter_clockwise.first ());
-		}
+		clockwise.clear ();
+		counter_clockwise.clear ();
 
 		foreach (Path p in g.active_paths) {
 			if (p.is_open () && !p.has_direction ()) {
@@ -639,13 +634,8 @@ public class PenTool : Tool {
 		}
 		
 		if (reverse) {
-			while (clockwise.length () > 0) {
-				clockwise.remove_link (clockwise.first ()); // FIXME: use gee container here
-			}
-
-			while (counter_clockwise.length () > 0) {
-				counter_clockwise.remove_link (counter_clockwise.first ());
-			}
+			clockwise.clear ();
+			counter_clockwise.clear ();
 		}
 	}
 	

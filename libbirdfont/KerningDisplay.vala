@@ -542,6 +542,7 @@ public class KerningDisplay : FontDisplay {
 		unichar c;
 		
 		if (MenuTab.suppress_event) { // don't update kerning while saving font
+			warning ("A background thread uses the current font.");
 			return;
 		}
 		

@@ -61,7 +61,8 @@ def configure ():
 			'gtk+-2.0',
 			'libxml-2.0', 
 			'webkit-1.0', 
-			'libsoup-2.4'
+			'libsoup-2.4',
+			'libnotify'
 			]
 
 	for lib in libs:
