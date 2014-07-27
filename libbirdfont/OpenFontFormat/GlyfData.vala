@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -34,12 +34,12 @@ public class CoordinateFlags {
 }
 
 /** Data for one entry in the glyf table. */
-class GlyfData : GLib.Object {		
-	public List<Path> paths = new List<Path> ();
-	public List<uint16> end_points = new List<uint16> ();
-	public List<uint8> flags = new List<uint8> ();
-	public List<int16> coordinate_x = new List<int16> ();
-	public List<int16> coordinate_y = new List<int16> ();
+public class GlyfData : GLib.Object {		
+	public Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
+	public Gee.ArrayList<uint16> end_points = new Gee.ArrayList<uint16> ();
+	public Gee.ArrayList<uint8> flags = new Gee.ArrayList<uint8> ();
+	public Gee.ArrayList<int16> coordinate_x = new Gee.ArrayList<int16> ();
+	public Gee.ArrayList<int16> coordinate_y = new Gee.ArrayList<int16> ();
 	
 	uint16 end_point = 0;
 	int16 nflags = 0;
@@ -56,23 +56,19 @@ class GlyfData : GLib.Object {
 	}
 		
 	public GlyfData (Glyph g) {	
-		Path q;
-		
 		glyph = g;
 						
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_quadratic_paths ().paths) {
 			if (p.points.size > 0) {
-				q = p.get_quadratic_points ();
-
-				if (!is_empty (q)) {
-					// Add point at extrema
-					q.add_extrema ();
-					paths.append (q);
+				if (!is_empty (p)) {
+					// Add points at extrema
+					p.add_extrema ();
+					paths.add (p);
 				}
 			}
 		}
 		
-		if (paths.length () > 0) {
+		if (paths.size > 0) {
 			process_end_points ();
 			process_flags ();
 			process_x ();
@@ -105,7 +101,7 @@ class GlyfData : GLib.Object {
 	}
 			
 	public int16 get_ncontours () {
-		return (int16) paths.length ();
+		return (int16) paths.size;
 	}
 
 	public int16 get_nflags () {
@@ -140,7 +136,7 @@ class GlyfData : GLib.Object {
 					warning ("Too many points");
 				}
 			}
-			end_points.append (end_point - 1);
+			end_points.add (end_point - 1);
 			
 			if (unlikely (end_point - 1 < last_end_point)) {
 				warning (@"Next endpoint has bad value. (end_point - 1 < last_end_point)  ($(end_point - 1) < $last_end_point)");
@@ -157,18 +153,18 @@ class GlyfData : GLib.Object {
 	void process_flags () {
 		PointType type;
 		
-		flags = new List<uint8> ();
+		flags = new Gee.ArrayList<uint8> ();
 		nflags = 0;
 		
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
-				flags.append (CoordinateFlags.ON_PATH);
+				flags.add (CoordinateFlags.ON_PATH);
 				nflags++;
 				
 				type = e.get_right_handle ().type;
 				
 				// off curve
-				flags.append (CoordinateFlags.NONE);
+				flags.add (CoordinateFlags.NONE);
 				nflags++;
 			}
 		}
@@ -194,7 +190,7 @@ class GlyfData : GLib.Object {
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
 				x = rint (e.x * UNITS - prev - glyph.left_limit * UNITS);
-				coordinate_x.append ((int16) x);
+				coordinate_x.add ((int16) x);
 				
 				prev = rint (e.x * UNITS - glyph.left_limit * UNITS);
 				
@@ -202,7 +198,7 @@ class GlyfData : GLib.Object {
 				
 				// off curve
 				x = rint (e.get_right_handle ().x * UNITS - prev - glyph.left_limit * UNITS);
-				coordinate_x.append ((int16) x);
+				coordinate_x.add ((int16) x);
 				
 				prev = rint (e.get_right_handle ().x * UNITS - glyph.left_limit * UNITS);
 			}
@@ -218,7 +214,7 @@ class GlyfData : GLib.Object {
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
 				y = rint (e.y * UNITS - prev - font.base_line  * UNITS);
-				coordinate_y.append ((int16) y);
+				coordinate_y.add ((int16) y);
 				
 				prev = rint (e.y * UNITS - font.base_line * UNITS);
 				
@@ -226,7 +222,7 @@ class GlyfData : GLib.Object {
 				
 				// off curve
 				y = rint (e.get_right_handle ().y * UNITS - prev - font.base_line * UNITS);
-				coordinate_y.append ((int16) y);
+				coordinate_y.add ((int16) y);
 			
 				prev = rint (e.get_right_handle ().y * UNITS - font.base_line  * UNITS);
 			}
@@ -242,7 +238,7 @@ class GlyfData : GLib.Object {
 		bounding_box_xmax = int16.MIN;
 		bounding_box_ymax = int16.MIN;
 				
-		if (coordinate_x.length () == 0) {
+		if (coordinate_x.size == 0) {
 			warning ("no points in coordinate_y");
 		}
 		
@@ -261,7 +257,7 @@ class GlyfData : GLib.Object {
 			i++;
 		}
 
-		if (coordinate_y.length () == 0) {
+		if (coordinate_y.size == 0) {
 			warning ("no points in coordinate_y");
 		}
 		

@@ -234,7 +234,11 @@ public class KerningDisplay : FontDisplay {
 						
 			y += row_height + 20;
 			x = 20;
-			first_row = false;	
+			first_row = false;
+			
+			if (y > allocation.height) {
+				break;
+			}
 		}
 		
 		for (int j = row.size - 1; j > 30; j--) {

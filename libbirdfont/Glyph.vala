@@ -94,6 +94,9 @@ public class Glyph : FontDisplay {
 	/** Id in the version list. */
 	public int version_id = 1;
 	
+	/** Cache quadratic form on export. */
+	GlyfData? ttf_data = null;
+	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -111,6 +114,27 @@ public class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 
 		path_list.add (new Path ());
+	}
+
+	public GlyfData get_ttf_data () {
+		if (ttf_data == null) {
+			ttf_data =  new GlyfData (this);
+		}
+		
+		return (!) ttf_data;
+	}
+
+	public PathList get_quadratic_paths () {
+		PointConverter pc;
+		PathList pl;
+
+		pl = new PathList ();
+		foreach (Path p in path_list) {
+			pc = new PointConverter (p);
+			pl.add (pc.get_quadratic_path ());
+		}
+
+		return pl;
 	}
 
 	public override void close () {
@@ -361,6 +385,8 @@ public class Glyph : FontDisplay {
 	
 	public override void selected_canvas () {
 		TimeoutSource input_delay;
+		
+		ttf_data = null; // recreate quatradic path on export
 		
 		ignore_input = true; // make sure that tripple clicks in overview are ignored
 

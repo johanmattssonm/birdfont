@@ -204,9 +204,9 @@ public class GlyfTable : Table {
 		printd (@"glyph_offset: $(glyph_offset)\n");
 		
 		g.remove_empty_paths ();
-		glyf_data = new GlyfData (g);
+		glyf_data = g.get_ttf_data ();
 		
-		if (g.path_list.size == 0 || glyf_data.paths.length () == 0 || glyf_data.get_ncontours () == 0) {
+		if (g.path_list.size == 0 || glyf_data.paths.size == 0 || glyf_data.get_ncontours () == 0) {
 			// location_offsets will be equal to location_offset + 1 for
 			// all empty glyphs
 			g.set_empty_ttf (true);
@@ -219,7 +219,7 @@ public class GlyfTable : Table {
 			warning (@"No paths in $(g.get_name ()) ($(g.get_hex ())) can be exported.");
 		}
 		
-		ncontours = (int16) glyf_data.paths.length ();
+		ncontours = (int16) glyf_data.paths.size;
 		fd.add_short (ncontours);
 
 		// bounding box
