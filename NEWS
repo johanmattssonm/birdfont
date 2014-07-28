@@ -1,3 +1,16 @@
+birdfont (0.42) stable;
+
+  * Parse transform directive in SVG import.
+  * A new command line utility that makes it possible to import a set of SVG
+    files to a bf font file (birdfont-import).
+  * Crop rotaded and resized images.
+  * Better conversion from SVG files to TTF fonts.
+  * Important bug fixes.
+  * Load, save and export fonts in background threads.
+  * Faster TTF export
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Mon Jul 28 16:04:20 CEST 2014
+
 birdfont (0.41) stable;
 
   * Retain the angle of a control point handle while adjusting the length
