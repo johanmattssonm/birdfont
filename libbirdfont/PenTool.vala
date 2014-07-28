@@ -1479,6 +1479,7 @@ public class PenTool : Tool {
 	 */
 	void move_selected_points (uint keyval) {
 		Glyph g = MainWindow.get_current_glyph();
+		Path? last_path = null;
 		
 		if (!last_selected_is_handle) {
 			if (keyval == Key.UP) {
@@ -1506,6 +1507,14 @@ public class PenTool : Tool {
 				foreach (PointSelection e in selected_points) {
 					e.point.set_position (e.point.x + Glyph.ivz (), e.point.y);
 					e.point.recalculate_linear_handles ();
+				}
+			}
+			
+			last_path = null;
+			foreach (PointSelection e in selected_points) {
+				if (e.path != last_path) {
+					e.path.update_region_boundaries ();
+					last_path = e.path;
 				}
 			}
 			
