@@ -318,7 +318,7 @@ public class BackgroundImage {
 			length = -length;
 		}
 	
-		img_rotation =  (y < bcy) ? acos (a / length) + PI : -acos (a / length) + PI;
+		img_rotation =  (y > bcy) ? acos (a / length) + PI : -acos (a / length) + PI;
 	}
 	
 	public void set_img_scale (double xs, double ys) {
@@ -453,22 +453,22 @@ public class BackgroundImage {
 	bool is_over_rotate (double nx, double ny) {
 		double x, y, d;
 
-		x = img_middle_x;
-		y = img_middle_y;
+		x = Glyph.reverse_path_coordinate_x (img_middle_x);
+		y = Glyph.reverse_path_coordinate_y (img_middle_y);
 
 		x += cos (img_rotation) * 75;
 		y += sin (img_rotation) * 75;
 
-		d = sqrt (pow (x - nx, 2) + pow (y - ny, 2));
+		d = Path.distance (x, nx, y, ny);
 		
-		return d < 10;
+		return d < 15 * MainWindow.units;
 	}
 
 	bool is_over_resize (double nx, double ny) {
 		double x, y, size;
 		bool inx, iny;
 	
-		size = 12;
+		size = 12 * MainWindow.units;
 
 		x = img_middle_x - (img_scale_x * get_img ().get_width () / 2);
 		y = img_middle_y - (img_scale_y * get_img ().get_height () / 2);

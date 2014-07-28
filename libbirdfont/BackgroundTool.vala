@@ -114,6 +114,7 @@ public class BackgroundTool : Tool {
 		BackgroundImage? background_image = g.get_background_image ();
 		BackgroundImage bg = (!) background_image;
 		double xscale, yscale, dx, dy, xc, yc;
+		double coordinate_x, coordinate_y;
 
 		if (background_image == null) {
 			return;
@@ -131,7 +132,9 @@ public class BackgroundTool : Tool {
 		dy *= PenTool.precision;
 		
 		if (bg.selected_handle == 2) {
-			bg.set_img_rotation_from_coordinate (x, y);
+			coordinate_x = Glyph.path_coordinate_x (x);
+			coordinate_y = Glyph.path_coordinate_y (y);
+			bg.set_img_rotation_from_coordinate (coordinate_x, coordinate_y);
 		}
 		
 		if (bg.selected_handle == 1) {

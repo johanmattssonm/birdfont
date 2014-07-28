@@ -54,6 +54,7 @@ public class MenuTab : FontDisplay {
 		idle.set_callback (() => {
 			set_suppress_event (false);
 			TabBar.stop_wheel ();
+			GlyphCanvas.redraw ();			
 			return false;
 		});
 		idle.attach (null);
