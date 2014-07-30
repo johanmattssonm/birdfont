@@ -32,12 +32,7 @@ public class PointConverter {
 		bool add_more_points = false;
 		quadratic_path = original_path.copy ();
 		
-		for (i = 0; i < 20; i++) {
-			add_more_points = get_estimated_cubic_path ();
-			if (!add_more_points) {
-				break;
-			}
-		}
+		estimated_cubic_path ();
 		
 		if (add_more_points) {
 			warning ("Too many points in segment.");
@@ -50,7 +45,7 @@ public class PointConverter {
 		}
 
 		foreach (EditPoint e in quadratic_path.points) {
-			if (e.type == PointType.CUBIC) {
+			if (e.get_right_handle ().type == PointType.CUBIC) {
 				PenTool.convert_point_type (e, PointType.DOUBLE_CURVE);
 			}
 		}
@@ -60,53 +55,63 @@ public class PointConverter {
 		return quadratic_path;
 	}
 
-	public bool get_estimated_cubic_path () {
-		EditPoint start;
-		EditPoint stop;
+	public void estimated_cubic_path () {
+		EditPoint segment_start;
+		EditPoint segment_stop;
+		EditPoint quadratic_segment_start;
+		EditPoint quadratic_segment_stop;
 		EditPoint new_start;
 		EditPoint e;
 		double distance, px, py;
 		Gee.ArrayList<EditPoint> points_to_add = new Gee.ArrayList<EditPoint> ();
+		int points_in_segment = 0;
+		int size;
 		
 		if (quadratic_path.points.size <= 1) {
-			return false;
 		}
 
-		start = quadratic_path.get_first_point ();
-		stop = start.get_next ();
+		foreach (EditPoint ep in quadratic_path.points) {
+			ep.set_tie_handle (false);
+			ep.set_reflective_handles (false);
+		}
 
-		for (int i = 0; i < quadratic_path.points.size; i++) {
+		size = quadratic_path.points.size;
+		segment_start = quadratic_path.get_first_point ();
+		for (int i = 0; i < size; i++) {
+			segment_stop = (i == size -1) 
+				? quadratic_path.get_first_point () 
+				: segment_start.get_next ();
+
+			quadratic_segment_start = segment_start.copy ();
+			quadratic_segment_stop = segment_stop.copy ();
 			
-			if (start.get_right_handle ().type == PointType.CUBIC || stop.get_left_handle ().type == PointType.CUBIC) {
-				find_largest_distance (start, stop, start.copy (), stop.copy (), out distance, out px, out py);
-				
-				if (distance > 0.14) { // range 0.1 - 0.3, default 0.11
-					e = new EditPoint ();
-					quadratic_path.get_closest_point_on_path (e, px, py);
-					e.type = PointType.CUBIC;
-					e.get_left_handle ().type = PointType.CUBIC;
-					e.get_right_handle ().type = PointType.CUBIC;
-					points_to_add.add (e);
-				}
+			PenTool.convert_point_segment_type (quadratic_segment_start, quadratic_segment_stop, PointType.DOUBLE_CURVE);
+			
+			find_largest_distance (segment_start, segment_stop, quadratic_segment_start, quadratic_segment_stop, out distance, out px, out py);
+
+			if (points_in_segment >= 10) {
+				warning ("Too many points.");
+				break;
 			}
-			
-			if (i == quadratic_path.points.size - 2) {
-				start = stop;
-				stop = quadratic_path.get_first_point ();
+
+			print (@"distance: $distance  $px   $py\n");
+			if (distance > 0.15) { // range 0.1 - 0.3, default 0.11
+				e = new EditPoint ();
+				quadratic_path.get_closest_point_on_path (e, px, py);
+				
+				e.type = PointType.CUBIC;
+				e.get_left_handle ().type = PointType.CUBIC;
+				e.get_right_handle ().type = PointType.CUBIC;
+				
+				quadratic_path.insert_new_point_on_path (e);
+				
+				points_in_segment++;
+				size += 2; // the new point + segment start
 			} else {
-				new_start = stop;
-				stop = new_start.get_next ();
-				start = new_start;
+				points_in_segment = 0;
+				segment_start = segment_stop;
 			}
-		}
-		
-		foreach (EditPoint ep in points_to_add) {
-			quadratic_path.insert_new_point_on_path (ep);
-		}
-		
-		quadratic_path.create_list ();
-				
-		return points_to_add.size > 0;
+		}				
 	}
 
 	// TODO: Optimize
@@ -116,8 +121,6 @@ public class PointConverter {
 		int steps = (int) (1.6 * Path.get_length_from (a0, a1));
 		double x, y;
 		double x_out, y_out;
-		
-		PenTool.convert_point_segment_type (b0, b1, PointType.DOUBLE_CURVE);
 		
 		x = 0;
 		y = 0;
