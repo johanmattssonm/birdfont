@@ -99,7 +99,7 @@ public class Preview : FontDisplay {
 	public static string get_html_with_absolute_paths () {				
 		// hack: force webkit to ignore cache in preview	
 		StringBuilder sb = new StringBuilder ();
-		DataInputStream dis ;
+		DataInputStream dis;
 		string? line;
 			
 		uint rid = Random.next_int ();
@@ -109,8 +109,6 @@ public class Preview : FontDisplay {
 		File f_ttf;
 		File f_eot;
 		File f_svg;
-		File r_ttf;
-		File r_svg;
 
 		try {
 			dis = new DataInputStream (get_file ().read ());
@@ -129,36 +127,16 @@ public class Preview : FontDisplay {
 				warning ("SVG file does not exist.");
 			}
 			
-			r_ttf = preview_directory.get_child (@"$(font.get_full_name ())$rid.ttf");
-			r_svg = preview_directory.get_child (@"$(font.get_full_name ())$rid.svg");
-			
-			try {
-				if (BirdFont.win32) {
-					f_ttf.copy (r_ttf, FileCopyFlags.NONE);
-				}
-			} catch (Error e) {
-				warning (e.message);
-				sb.append (@"Error: $(e.message)<br>\n");
-				warning ("Failed to copy ttf file.");
-			}
-
-			try {
-				f_svg.copy (r_svg, FileCopyFlags.NONE);
-			} catch (Error e) {
-				warning (e.message);
-				warning ("Failed to copy svg file.");
-			}
 			while ((line = dis.read_line (null)) != null) {
 				line = ((!) line).replace (@"$(font.get_full_name ()).ttf", @"$(TabContent.path_to_uri ((!) f_ttf.get_path ()))?$rid");
 				line = ((!) line).replace (@"$(font.get_full_name ()).eot", @"$(TabContent.path_to_uri ((!) f_eot.get_path ()))?$rid");
 				line = ((!) line).replace (@"$(font.get_full_name ()).svg", @"$(TabContent.path_to_uri ((!) f_svg.get_path ()))?$rid");
 				sb.append ((!) line);
 			}
+
 		} catch (Error e) {
 			warning (e.message);
 			warning ("Failed to load html into canvas.");
-			sb.append (@"Error: $(e.message)<br>\n");
-			sb.append (@"($((!) get_file ().get_path ()))<br>\n");
 		}
 		return sb.str;
 	}
