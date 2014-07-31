@@ -61,10 +61,10 @@ public class PointConverter {
 		EditPoint quadratic_segment_start;
 		EditPoint quadratic_segment_stop;
 		EditPoint e;
-		double distance, px, py;
+		double distance, step;
 		int points_in_segment = 0;
 		int size;
-		
+
 		if (quadratic_path.points.size <= 1) {
 		}
 
@@ -85,28 +85,21 @@ public class PointConverter {
 			
 			PenTool.convert_point_segment_type (quadratic_segment_start, quadratic_segment_stop, PointType.DOUBLE_CURVE);
 			
+			distance = 0;
+			e = new EditPoint ();
 			if (segment_start.get_right_handle ().is_line () 
 					&& segment_stop.get_left_handle ().is_line ()) {
-				continue;
+				// skipping line
+			} else if (points_in_segment >= 10) {
+				warning ("Too many points.");
+			} else {
+				find_largest_distance (segment_start, segment_stop, 
+						quadratic_segment_start, quadratic_segment_stop, 
+						out distance, out e, out step);
 			}
 			
-			if (points_in_segment >= 10) {
-				warning ("Too many points.");
-				continue;
-			}
-						
-			find_largest_distance (segment_start, segment_stop, quadratic_segment_start, quadratic_segment_stop, out distance, out px, out py);
-
-			if (distance > 0.2) { // range 0.1 - 0.4,
-				e = new EditPoint ();
-				quadratic_path.get_closest_point_on_path (e, px, py);
-				
-				e.type = PointType.CUBIC;
-				e.get_left_handle ().type = PointType.CUBIC;
-				e.get_right_handle ().type = PointType.CUBIC;
-				
+			if (distance > 0.2) { //  range 0.1 - 0.4,
 				quadratic_path.insert_new_point_on_path (e);
-				
 				points_in_segment++;
 				size += 2; // the new point + segment start
 			} else {
@@ -117,18 +110,27 @@ public class PointConverter {
 	}
 
 	// TODO: Optimize
-	public static void find_largest_distance (EditPoint a0, EditPoint a1, EditPoint b0, EditPoint b1, out double distance, out double px, out double py) {
+	public static void find_largest_distance (EditPoint a0, EditPoint a1, EditPoint b0, EditPoint b1, 
+			out double distance, out EditPoint new_point, out double step) {
 		double max_d;
 		double min_d;
 		int steps = (int) (1.6 * Path.get_length_from (a0, a1));
-		double x, y;
 		double x_out, y_out;
-		
-		x = 0;
-		y = 0;
+		double step_out;
+		double step_min;
+
 		x_out = 0;
 		y_out = 0;
+		step_out = 0;
+		
+		distance = 0;
 
+		new_point = new EditPoint ();
+		new_point.prev = a0;
+		new_point.next = a1;
+		new_point.get_right_handle ().type = PointType.CUBIC;
+		new_point.get_left_handle ().type = PointType.CUBIC;
+		
 		steps = 20; // FIXME: adjust to length
 		
 		if (a0.get_right_handle ().type == PointType.QUADRATIC 
@@ -148,8 +150,6 @@ public class PointConverter {
 				
 				if (d < min_d) {
 					min_d = d;
-					x = xa;
-					y = ya;					
 				}
 				
 				return true;
@@ -157,16 +157,18 @@ public class PointConverter {
 					
 			if (min_d > max_d) {
 				max_d = min_d;
-				x_out = x;
-				y_out = y;
+				x_out = xa;
+				y_out = ya;
+				step_out = ta;
 			}
 			
 			return true;
 		}, steps);
 
 		distance = max_d;
-		px = x_out;
-		py = y_out;
+		new_point.x = x_out;
+		new_point.y = y_out;
+		step = step_out;
 	}
 }
 
