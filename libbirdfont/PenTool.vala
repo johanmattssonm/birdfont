@@ -1736,8 +1736,10 @@ public class PenTool : Tool {
 		}
 			
 		// process connected handle
-		first.set_position (first.x, first.y);
-		first.recalculate_linear_handles ();
+		if (point_type == PointType.QUADRATIC) {
+			first.set_position (first.x, first.y);
+			first.recalculate_linear_handles ();
+		}
 	}
 	
 	public static void convert_point_type (EditPoint first, PointType point_type) {

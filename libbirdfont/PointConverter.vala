@@ -60,10 +60,8 @@ public class PointConverter {
 		EditPoint segment_stop;
 		EditPoint quadratic_segment_start;
 		EditPoint quadratic_segment_stop;
-		EditPoint new_start;
 		EditPoint e;
 		double distance, px, py;
-		Gee.ArrayList<EditPoint> points_to_add = new Gee.ArrayList<EditPoint> ();
 		int points_in_segment = 0;
 		int size;
 		
@@ -87,15 +85,19 @@ public class PointConverter {
 			
 			PenTool.convert_point_segment_type (quadratic_segment_start, quadratic_segment_stop, PointType.DOUBLE_CURVE);
 			
-			find_largest_distance (segment_start, segment_stop, quadratic_segment_start, quadratic_segment_stop, out distance, out px, out py);
-
+			if (segment_start.get_right_handle ().is_line () 
+					&& segment_stop.get_left_handle ().is_line ()) {
+				continue;
+			}
+			
 			if (points_in_segment >= 10) {
 				warning ("Too many points.");
-				break;
+				continue;
 			}
+						
+			find_largest_distance (segment_start, segment_stop, quadratic_segment_start, quadratic_segment_stop, out distance, out px, out py);
 
-			print (@"distance: $distance  $px   $py\n");
-			if (distance > 0.15) { // range 0.1 - 0.3, default 0.11
+			if (distance > 0.2) { // range 0.1 - 0.4,
 				e = new EditPoint ();
 				quadratic_path.get_closest_point_on_path (e, px, py);
 				
@@ -128,6 +130,11 @@ public class PointConverter {
 		y_out = 0;
 
 		steps = 20; // FIXME: adjust to length
+		
+		if (a0.get_right_handle ().type == PointType.QUADRATIC 
+				|| a1.get_left_handle ().type == PointType.QUADRATIC) {
+			return;		
+		} 
 		
 		max_d = double.MIN;
 		min_d = double.MAX;
