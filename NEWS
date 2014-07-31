@@ -1,3 +1,9 @@
+birdfont (0.43) stable;
+
+  * Fixes TTF export bug
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Jul 31 18:52:14 CEST 2014
+
 birdfont (0.42) stable;
 
   * Parse transform directive in SVG import.

@@ -132,7 +132,9 @@ public class PointConverter {
 		steps = 20; // FIXME: adjust to length
 		
 		if (a0.get_right_handle ().type == PointType.QUADRATIC 
-				|| a1.get_left_handle ().type == PointType.QUADRATIC) {
+				|| a1.get_left_handle ().type == PointType.QUADRATIC
+				|| a0.get_right_handle ().type == PointType.LINE_QUADRATIC 
+				|| a1.get_left_handle ().type == PointType.LINE_QUADRATIC) {
 			return;		
 		} 
 		
