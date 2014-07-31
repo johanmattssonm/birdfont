@@ -47,7 +47,7 @@ public class OffsetTable : Table {
 		Fixed version = 0x00010000; // sfnt version 1.0 for TTF CFF else use OTTO
 
 		
-		num_tables = (uint16) directory_table.get_tables ().length () - 2; // number of tables, skip DirectoryTable and OffsetTable
+		num_tables = (uint16) directory_table.get_tables ().size - 2; // number of tables, skip DirectoryTable and OffsetTable
 		
 		search_range = max_pow_2_less_than_i (num_tables) * 16;
 		entry_selector = max_log_2_less_than_i (num_tables);

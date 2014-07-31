@@ -16,7 +16,7 @@ namespace BirdFont {
 
 public class UnicodeRangeBits : GLib.Object {
 
-	List<RangeBit> bits = new List<RangeBit> ();
+	Gee.ArrayList<RangeBit> bits = new Gee.ArrayList<RangeBit> ();
 
 	public UnicodeRangeBits () {
 		add_ranges ();
@@ -73,7 +73,7 @@ public class UnicodeRangeBits : GLib.Object {
 	}
 	
 	void add_range (int bit, unichar start, unichar stop) {
-		bits.append (new RangeBit (bit, start, stop));
+		bits.add (new RangeBit (bit, start, stop));
 	}
 	
 	void add_ranges () {

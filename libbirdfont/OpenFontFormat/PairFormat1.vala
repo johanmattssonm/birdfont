@@ -20,7 +20,7 @@ namespace BirdFont {
  */
 public class PairFormat1 : GLib.Object {
 	public uint16 left = -1;
-	public List<Kern> pairs = new List<Kern> ();
+	public Gee.ArrayList<Kern> pairs = new Gee.ArrayList<Kern> ();
 }
 
 }

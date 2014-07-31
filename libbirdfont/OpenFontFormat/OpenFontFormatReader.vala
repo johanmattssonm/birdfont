@@ -172,7 +172,7 @@ public class OpenFontFormatReader : Object {
 			cmap_table = reader.directory_table.cmap_table;
 			head_table = reader.directory_table.head_table;
 			
-			npairs = kern_table.kerning.length ();
+			npairs = kern_table.kerning.size;
 			
 			units_per_em = HeadTable.units_per_em;
 			

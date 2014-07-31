@@ -144,13 +144,13 @@ public class GposTable : Table {
 					return;
 				}
 				
-				if (k.pairs.length () == 0) {
+				if (k.pairs.size == 0) {
 					warning ("No pairs.");
 				}
 				
 				fd.add_ushort ((uint16) pair_set_offset);
 				pair_set_offset += 2;
-				pair_set_offset += 4 * k.pairs.length ();
+				pair_set_offset += 4 * k.pairs.size;
 				written += 2;
 			} catch (Error e) {
 				warning (e.message);
@@ -169,7 +169,7 @@ public class GposTable : Table {
 		pairs.all_pairs_format1 ((pn) => {
 			try {
 				PairFormat1 p = pn;
-				uint pairset_length = p.pairs.length ();
+				uint pairset_length = p.pairs.size;
 				
 				if (pairset_length > uint16.MAX) {
 					warning ("Too many pairs");
@@ -207,7 +207,7 @@ public class GposTable : Table {
 					written_pairs++;
 				}		
 				
-				if (unlikely (written_pairs != p.pairs.length ())) {
+				if (unlikely (written_pairs != p.pairs.size)) {
 					warning (@"written_pairs != p.pairs.length () $(written_pairs) != $(pairs.get_length ())   pairset_length: $pairset_length");
 				}
 				
@@ -251,7 +251,7 @@ public class GposTable : Table {
 		uint len = 0;
 		
 		pairs.all_pairs_format1 ((p) => {
-			len += 2 + 4 * p.pairs.length ();
+			len += 2 + 4 * p.pairs.size;
 		});
 		
 		return len;

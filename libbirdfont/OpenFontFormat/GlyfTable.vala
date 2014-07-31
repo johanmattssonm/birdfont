@@ -39,13 +39,13 @@ public class GlyfTable : Table {
 	public PostTable post_table;
 	public KernTable kern_table;
 	
-	public List<uint32> location_offsets; 
+	public Gee.ArrayList<uint32> location_offsets; 
 
 	// a list of glyphs sorted in the order we expect to find them in a
 	// ttf font. notdef is the firs glyph followed by null and nonmarkingreturn.
 	// after that will all assigned glyphs appear in sorted (unicode) order, all 
 	// remaining unassigned glyphs will be added in the last section of the file.	
-	public List<Glyph> glyphs;
+	public Gee.ArrayList<Glyph> glyphs;
 	
 	uint16 max_points = 0;
 	uint16 max_contours = 0;
@@ -53,8 +53,8 @@ public class GlyfTable : Table {
 	public GlyfTable (LocaTable l) {
 		id = "glyf";
 		loca_table = l;
-		location_offsets = new List<uint32> ();
-		glyphs = new List<Glyph> ();
+		location_offsets = new Gee.ArrayList<uint32> ();
+		glyphs = new Gee.ArrayList<Glyph> ();
 	}	
 
 	public int get_gid (string name) {
@@ -83,21 +83,19 @@ public class GlyfTable : Table {
 		return 32; // space
 	}
 	
-	public uint16 get_last_char () {
-		unowned List<Glyph> gl = glyphs.last ();
-		Glyph g = (!) gl.data;
+	public uint16 get_last_char () 
+	requires (glyphs.size > 0) {
+		Glyph g = glyphs.get (glyphs.size - 1);
 		
-		while (gl != glyphs.first ()) {
-			g = (!) gl.data;
-			
+		for (int i = glyphs.size - 1; i >= 0; i--) {
+			g  = glyphs.get (i);
+
 			if (!g.is_unassigned ()) {
 				break;
 			}
-			
-			gl = gl.prev;
 		}
-		
-		return (uint16)g.unichar_code; 
+
+		return (uint16) g.unichar_code; 
 	}
 
 	public void process () throws GLib.Error {
@@ -107,16 +105,16 @@ public class GlyfTable : Table {
 		
 		create_glyph_table ();
 		
-		num_glyphs = glyphs.length ();
+		num_glyphs = glyphs.size;
 		
-		if (glyphs.length () == 0) {
+		if (glyphs.size == 0) {
 			warning ("No glyphs in glyf table.");
 		}
 		
 		foreach (Glyph g in glyphs) {
 			// set values for loca table
 			assert (fd.length () % 4 == 0);
-			location_offsets.append (fd.length ());
+			location_offsets.add (fd.length ());
 			process_glyph (g, fd);
 
 			printd (@"adding glyph: $(g.name)\n");
@@ -126,7 +124,7 @@ public class GlyfTable : Table {
 			last_len = fd.length ();
 		}
 
-		location_offsets.append (fd.length ()); // last entry in loca table is special
+		location_offsets.add (fd.length ()); // last entry in loca table is special
 		
 		// every glyph is padded, no padding to be done here
 		assert (fd.length () % 4 == 0);
@@ -140,15 +138,15 @@ public class GlyfTable : Table {
 		Glyph g;
 		Font font = OpenFontFormatWriter.get_current_font ();
 		uint32 indice;
-		List<Glyph> unassigned_glyphs;
+		Gee.ArrayList<Glyph> unassigned_glyphs;
 		
 		// add notdef. character at index zero + other special chars first
-		glyphs.append (font.get_not_def_character ());
-		glyphs.append (font.get_null_character ());
-		glyphs.append (font.get_nonmarking_return ());
-		glyphs.append (font.get_space ());
+		glyphs.add (font.get_not_def_character ());
+		glyphs.add (font.get_null_character ());
+		glyphs.add (font.get_nonmarking_return ());
+		glyphs.add (font.get_space ());
 		
-		unassigned_glyphs = new List<Glyph> ();
+		unassigned_glyphs = new Gee.ArrayList<Glyph> ();
 		
 		if (font.get_glyph_indice (0) == null) {
 			warning ("No glyphs in font.");
@@ -173,10 +171,10 @@ public class GlyfTable : Table {
 			g.remove_empty_paths ();
 
 			if (!g.is_unassigned ()) {
-				glyphs.append (g);
+				glyphs.add (g);
 			} else {
 				printd ("Adding unassigned glyph.");
-				unassigned_glyphs.append (g);
+				unassigned_glyphs.add (g);
 			}
 		}
 		
@@ -398,9 +396,9 @@ public class GlyfTable : Table {
 		F2Dot14 scale10;
 
 		Glyph glyph, linked_glyph;
-		List<int> x = new List<int> ();
-		List<int> y = new List<int> ();
-		List<int> gid = new List<int> ();
+		Gee.ArrayList<int> x = new Gee.ArrayList<int> ();
+		Gee.ArrayList<int> y = new Gee.ArrayList<int> ();
+		Gee.ArrayList<int> gid = new Gee.ArrayList<int> ();
 		
 		double xmin, xmax;
 		double units_per_em = head_table.get_units_per_em ();
@@ -424,9 +422,9 @@ public class GlyfTable : Table {
 				arg2 = dis.read_byte ();
 			}
 			
-			gid.append (glyph_index);
-			x.append (arg1);
-			y.append (arg2);
+			gid.add (glyph_index);
+			x.add (arg1);
+			y.add (arg2);
 
 			// if ((component_flags & RESERVED) > 0)
 			
@@ -445,9 +443,9 @@ public class GlyfTable : Table {
 		} while ((component_flags & MORE_COMPONENTS) > 0);
 	
 		
-		for (int i = 0; i < gid.length (); i++) {
+		for (int i = 0; i < gid.size; i++) {
 			// compensate xmax ymax with coordinate
-			glid = gid.nth (i).data;
+			glid = gid.get (i);
 
 			if (glid == pgid) {
 				warning ("Cannot link a glyph to it self.");

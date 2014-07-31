@@ -18,10 +18,10 @@ public class PostTable : Table {
 	
 	GlyfTable glyf_table;
 	
-	List<uint16> index = new List<uint16> ();
-	List<string> names = new List<string> ();
+	Gee.ArrayList<uint16> index = new Gee.ArrayList<uint16> ();
+	Gee.ArrayList<string> names = new Gee.ArrayList<string> ();
 
-	List<string> available_names = new List<string> ();
+	Gee.ArrayList<string> available_names = new Gee.ArrayList<string> ();
 	
 	public PostTable (GlyfTable g) {
 		id = "post";
@@ -51,24 +51,24 @@ public class PostTable : Table {
 	public string get_name (int gid) {
 		int k;
 		
-		if (!(0 <= gid < index.length ())) {
+		if (!(0 <= gid < index.size)) {
 			warning ("gid is out of range.");
 			return "";
 		}
 				
-		k = (!) index.nth (gid).data;
+		k = index.get (gid);
 		
 		if (gid != 0 && k == 0) {
 			warning (@"Glyph $gid is assigned to name .notdef, only gid 0 can be .notdef character.");
 			return "";
 		}
 		
-		if (!(0 <= k < names.length ())) {
+		if (!(0 <= k < names.size)) {
 			warning ("k is out of range.");
 			return "";
 		}
 				
-		return (!) names.nth (k).data;
+		return names.get (k);
 	}
 	
 	public override void parse (FontData dis) throws Error {
@@ -110,7 +110,7 @@ public class PostTable : Table {
 		int non_standard_names = 0;
 		for (uint16 i = 0; i < nnames; i++) {
 			k = dis.read_ushort ();
-			index.append (k);
+			index.add (k);
 			
 			if (k >= 258) {
 				non_standard_names++;
@@ -128,278 +128,278 @@ public class PostTable : Table {
 				name.append_c (dis.read_char ());
 			}
 
-			names.append (name.str);
+			names.add (name.str);
 		}
 
 		populate_available ();
 	}
 
 	void populate_available () {
-		for (int i = 0; i < index.length (); i++) {
-			available_names.append (get_name (i));
+		for (int i = 0; i < index.size; i++) {
+			available_names.add (get_name (i));
 		}
 	}
 	
 	// the Macintosh standard order
 	private void add_standard_names () {
-		names.append (".notdef");
-		names.append (".null");
-		names.append ("nonmarkingreturn");
-		names.append ("space");
-		names.append ("exclam");
-		names.append ("quotedbl");
-		names.append ("numbersign");
-		names.append ("dollar");
-		names.append ("percent");
-		names.append ("ampersand");
-		names.append ("quotesingle");
-		names.append ("parenleft");
-		names.append ("parenright");
-		names.append ("asterisk");
-		names.append ("plus");
-		names.append ("comma");
-		names.append ("hyphen");
-		names.append ("period");
-		names.append ("slash");
-		names.append ("zero");
-		names.append ("one");
-		names.append ("two");
-		names.append ("three");
-		names.append ("four");
-		names.append ("five");
-		names.append ("six");
-		names.append ("seven");
-		names.append ("eight");
-		names.append ("nine");
-		names.append ("colon");
-		names.append ("semicolon");
-		names.append ("less");
-		names.append ("equal");
-		names.append ("greater");
-		names.append ("question");
-		names.append ("at");
-		names.append ("A");
-		names.append ("B");
-		names.append ("C");
-		names.append ("D");
-		names.append ("E");
-		names.append ("F");
-		names.append ("G");
-		names.append ("H");
-		names.append ("I");
-		names.append ("J");
-		names.append ("K");
-		names.append ("L");
-		names.append ("M");
-		names.append ("N");
-		names.append ("O");
-		names.append ("P");
-		names.append ("Q");
-		names.append ("R");
-		names.append ("S");
-		names.append ("T");
-		names.append ("U");
-		names.append ("V");
-		names.append ("W");
-		names.append ("X");
-		names.append ("Y");
-		names.append ("Z");
-		names.append ("bracketleft");
-		names.append ("backslash");
-		names.append ("bracketright");
-		names.append ("asciicircum");
-		names.append ("underscore");
-		names.append ("grave");
-		names.append ("a");
-		names.append ("b");
-		names.append ("c");
-		names.append ("d");
-		names.append ("e");
-		names.append ("f");
-		names.append ("g");
-		names.append ("h");
-		names.append ("i");
-		names.append ("j");
-		names.append ("k");
-		names.append ("l");
-		names.append ("m");
-		names.append ("n");
-		names.append ("o");
-		names.append ("p");
-		names.append ("q");
-		names.append ("r");
-		names.append ("s");
-		names.append ("t");
-		names.append ("u");
-		names.append ("v");
-		names.append ("w");
-		names.append ("x");
-		names.append ("y");
-		names.append ("z");
-		names.append ("braceleft");
-		names.append ("bar");
-		names.append ("braceright");
-		names.append ("asciitilde");
-		names.append ("Adieresis");
-		names.append ("Aring");
-		names.append ("Ccedilla");
-		names.append ("Eacute");
-		names.append ("Ntilde");
-		names.append ("Odieresis");
-		names.append ("Udieresis");
-		names.append ("aacute");
-		names.append ("agrave");
-		names.append ("acircumflex");
-		names.append ("adieresis");
-		names.append ("atilde");
-		names.append ("aring");
-		names.append ("ccedilla");
-		names.append ("eacute");
-		names.append ("egrave");
-		names.append ("ecircumflex");
-		names.append ("edieresis");
-		names.append ("iacute");
-		names.append ("igrave");
-		names.append ("icircumflex");
-		names.append ("idieresis");
-		names.append ("ntilde");
-		names.append ("oacute");
-		names.append ("ograve");
-		names.append ("ocircumflex");
-		names.append ("odieresis");
-		names.append ("otilde");
-		names.append ("uacute");
-		names.append ("ugrave");
-		names.append ("ucircumflex");
-		names.append ("udieresis");
-		names.append ("dagger");
-		names.append ("degree");
-		names.append ("cent");
-		names.append ("sterling");
-		names.append ("section");
-		names.append ("bullet");
-		names.append ("paragraph");
-		names.append ("germandbls");
-		names.append ("registered");
-		names.append ("copyright");
-		names.append ("trademark");
-		names.append ("acute");
-		names.append ("dieresis");
-		names.append ("notequal");
-		names.append ("AE");
-		names.append ("Oslash");
-		names.append ("infinity");
-		names.append ("plusminus");
-		names.append ("lessequal");
-		names.append ("greaterequal");
-		names.append ("yen");
-		names.append ("mu");
-		names.append ("partialdiff");
-		names.append ("summation");
-		names.append ("product");
-		names.append ("pi");
-		names.append ("integral");
-		names.append ("ordfeminine");
-		names.append ("ordmasculine");
-		names.append ("Omega");
-		names.append ("ae");
-		names.append ("oslash");
-		names.append ("questiondown");
-		names.append ("exclamdown");
-		names.append ("logicalnot");
-		names.append ("radical");
-		names.append ("florin");
-		names.append ("approxequal");
-		names.append ("Delta");
-		names.append ("guillemotleft");
-		names.append ("guillemotright");
-		names.append ("ellipsis");
-		names.append ("nonbreakingspace");
-		names.append ("Agrave");
-		names.append ("Atilde");
-		names.append ("Otilde");
-		names.append ("OE");
-		names.append ("oe");
-		names.append ("endash");
-		names.append ("emdash");
-		names.append ("quotedblleft");
-		names.append ("quotedblright");
-		names.append ("quoteleft");
-		names.append ("quoteright");
-		names.append ("divide");
-		names.append ("lozenge");
-		names.append ("ydieresis");
-		names.append ("Ydieresis");
-		names.append ("fraction");
-		names.append ("currency");
-		names.append ("guilsinglleft");
-		names.append ("guilsinglright");
-		names.append ("fi");
-		names.append ("fl");
-		names.append ("daggerdbl");
-		names.append ("periodcentered");
-		names.append ("quotesinglbase");
-		names.append ("quotedblbase");
-		names.append ("perthousand");
-		names.append ("Acircumflex");
-		names.append ("Ecircumflex");
-		names.append ("Aacute");
-		names.append ("Edieresis");
-		names.append ("Egrave");
-		names.append ("Iacute");
-		names.append ("Icircumflex");
-		names.append ("Idieresis");
-		names.append ("Igrave");
-		names.append ("Oacute");
-		names.append ("Ocircumflex");
-		names.append ("apple");
-		names.append ("Ograve");
-		names.append ("Uacute");
-		names.append ("Ucircumflex");
-		names.append ("Ugrave");
-		names.append ("dotlessi");
-		names.append ("circumflex");
-		names.append ("tilde");
-		names.append ("macron");
-		names.append ("breve");
-		names.append ("dotaccent");
-		names.append ("ring");
-		names.append ("cedilla");
-		names.append ("hungarumlaut");
-		names.append ("ogonek");
-		names.append ("caron");
-		names.append ("Lslash");
-		names.append ("lslash");
-		names.append ("Scaron");
-		names.append ("scaron");
-		names.append ("Zcaron");
-		names.append ("zcaron");
-		names.append ("brokenbar");
-		names.append ("Eth");
-		names.append ("eth");
-		names.append ("Yacute");
-		names.append ("yacute");
-		names.append ("Thorn");
-		names.append ("thorn");
-		names.append ("minus");
-		names.append ("multiply");
-		names.append ("onesuperior");
-		names.append ("twosuperior");
-		names.append ("threesuperior");
-		names.append ("onehalf");
-		names.append ("onequarter");
-		names.append ("threequarters");
-		names.append ("franc");
-		names.append ("Gbreve");
-		names.append ("gbreve");
-		names.append ("Idotaccent");
-		names.append ("Scedilla");
-		names.append ("scedilla");
-		names.append ("Cacute");
-		names.append ("cacute");
-		names.append ("Ccaron");
-		names.append ("ccaron");
-		names.append ("dcroat");
+		names.add (".notdef");
+		names.add (".null");
+		names.add ("nonmarkingreturn");
+		names.add ("space");
+		names.add ("exclam");
+		names.add ("quotedbl");
+		names.add ("numbersign");
+		names.add ("dollar");
+		names.add ("percent");
+		names.add ("ampersand");
+		names.add ("quotesingle");
+		names.add ("parenleft");
+		names.add ("parenright");
+		names.add ("asterisk");
+		names.add ("plus");
+		names.add ("comma");
+		names.add ("hyphen");
+		names.add ("period");
+		names.add ("slash");
+		names.add ("zero");
+		names.add ("one");
+		names.add ("two");
+		names.add ("three");
+		names.add ("four");
+		names.add ("five");
+		names.add ("six");
+		names.add ("seven");
+		names.add ("eight");
+		names.add ("nine");
+		names.add ("colon");
+		names.add ("semicolon");
+		names.add ("less");
+		names.add ("equal");
+		names.add ("greater");
+		names.add ("question");
+		names.add ("at");
+		names.add ("A");
+		names.add ("B");
+		names.add ("C");
+		names.add ("D");
+		names.add ("E");
+		names.add ("F");
+		names.add ("G");
+		names.add ("H");
+		names.add ("I");
+		names.add ("J");
+		names.add ("K");
+		names.add ("L");
+		names.add ("M");
+		names.add ("N");
+		names.add ("O");
+		names.add ("P");
+		names.add ("Q");
+		names.add ("R");
+		names.add ("S");
+		names.add ("T");
+		names.add ("U");
+		names.add ("V");
+		names.add ("W");
+		names.add ("X");
+		names.add ("Y");
+		names.add ("Z");
+		names.add ("bracketleft");
+		names.add ("backslash");
+		names.add ("bracketright");
+		names.add ("asciicircum");
+		names.add ("underscore");
+		names.add ("grave");
+		names.add ("a");
+		names.add ("b");
+		names.add ("c");
+		names.add ("d");
+		names.add ("e");
+		names.add ("f");
+		names.add ("g");
+		names.add ("h");
+		names.add ("i");
+		names.add ("j");
+		names.add ("k");
+		names.add ("l");
+		names.add ("m");
+		names.add ("n");
+		names.add ("o");
+		names.add ("p");
+		names.add ("q");
+		names.add ("r");
+		names.add ("s");
+		names.add ("t");
+		names.add ("u");
+		names.add ("v");
+		names.add ("w");
+		names.add ("x");
+		names.add ("y");
+		names.add ("z");
+		names.add ("braceleft");
+		names.add ("bar");
+		names.add ("braceright");
+		names.add ("asciitilde");
+		names.add ("Adieresis");
+		names.add ("Aring");
+		names.add ("Ccedilla");
+		names.add ("Eacute");
+		names.add ("Ntilde");
+		names.add ("Odieresis");
+		names.add ("Udieresis");
+		names.add ("aacute");
+		names.add ("agrave");
+		names.add ("acircumflex");
+		names.add ("adieresis");
+		names.add ("atilde");
+		names.add ("aring");
+		names.add ("ccedilla");
+		names.add ("eacute");
+		names.add ("egrave");
+		names.add ("ecircumflex");
+		names.add ("edieresis");
+		names.add ("iacute");
+		names.add ("igrave");
+		names.add ("icircumflex");
+		names.add ("idieresis");
+		names.add ("ntilde");
+		names.add ("oacute");
+		names.add ("ograve");
+		names.add ("ocircumflex");
+		names.add ("odieresis");
+		names.add ("otilde");
+		names.add ("uacute");
+		names.add ("ugrave");
+		names.add ("ucircumflex");
+		names.add ("udieresis");
+		names.add ("dagger");
+		names.add ("degree");
+		names.add ("cent");
+		names.add ("sterling");
+		names.add ("section");
+		names.add ("bullet");
+		names.add ("paragraph");
+		names.add ("germandbls");
+		names.add ("registered");
+		names.add ("copyright");
+		names.add ("trademark");
+		names.add ("acute");
+		names.add ("dieresis");
+		names.add ("notequal");
+		names.add ("AE");
+		names.add ("Oslash");
+		names.add ("infinity");
+		names.add ("plusminus");
+		names.add ("lessequal");
+		names.add ("greaterequal");
+		names.add ("yen");
+		names.add ("mu");
+		names.add ("partialdiff");
+		names.add ("summation");
+		names.add ("product");
+		names.add ("pi");
+		names.add ("integral");
+		names.add ("ordfeminine");
+		names.add ("ordmasculine");
+		names.add ("Omega");
+		names.add ("ae");
+		names.add ("oslash");
+		names.add ("questiondown");
+		names.add ("exclamdown");
+		names.add ("logicalnot");
+		names.add ("radical");
+		names.add ("florin");
+		names.add ("approxequal");
+		names.add ("Delta");
+		names.add ("guillemotleft");
+		names.add ("guillemotright");
+		names.add ("ellipsis");
+		names.add ("nonbreakingspace");
+		names.add ("Agrave");
+		names.add ("Atilde");
+		names.add ("Otilde");
+		names.add ("OE");
+		names.add ("oe");
+		names.add ("endash");
+		names.add ("emdash");
+		names.add ("quotedblleft");
+		names.add ("quotedblright");
+		names.add ("quoteleft");
+		names.add ("quoteright");
+		names.add ("divide");
+		names.add ("lozenge");
+		names.add ("ydieresis");
+		names.add ("Ydieresis");
+		names.add ("fraction");
+		names.add ("currency");
+		names.add ("guilsinglleft");
+		names.add ("guilsinglright");
+		names.add ("fi");
+		names.add ("fl");
+		names.add ("daggerdbl");
+		names.add ("periodcentered");
+		names.add ("quotesinglbase");
+		names.add ("quotedblbase");
+		names.add ("perthousand");
+		names.add ("Acircumflex");
+		names.add ("Ecircumflex");
+		names.add ("Aacute");
+		names.add ("Edieresis");
+		names.add ("Egrave");
+		names.add ("Iacute");
+		names.add ("Icircumflex");
+		names.add ("Idieresis");
+		names.add ("Igrave");
+		names.add ("Oacute");
+		names.add ("Ocircumflex");
+		names.add ("apple");
+		names.add ("Ograve");
+		names.add ("Uacute");
+		names.add ("Ucircumflex");
+		names.add ("Ugrave");
+		names.add ("dotlessi");
+		names.add ("circumflex");
+		names.add ("tilde");
+		names.add ("macron");
+		names.add ("breve");
+		names.add ("dotaccent");
+		names.add ("ring");
+		names.add ("cedilla");
+		names.add ("hungarumlaut");
+		names.add ("ogonek");
+		names.add ("caron");
+		names.add ("Lslash");
+		names.add ("lslash");
+		names.add ("Scaron");
+		names.add ("scaron");
+		names.add ("Zcaron");
+		names.add ("zcaron");
+		names.add ("brokenbar");
+		names.add ("Eth");
+		names.add ("eth");
+		names.add ("Yacute");
+		names.add ("yacute");
+		names.add ("Thorn");
+		names.add ("thorn");
+		names.add ("minus");
+		names.add ("multiply");
+		names.add ("onesuperior");
+		names.add ("twosuperior");
+		names.add ("threesuperior");
+		names.add ("onehalf");
+		names.add ("onequarter");
+		names.add ("threequarters");
+		names.add ("franc");
+		names.add ("Gbreve");
+		names.add ("gbreve");
+		names.add ("Idotaccent");
+		names.add ("Scedilla");
+		names.add ("scedilla");
+		names.add ("Cacute");
+		names.add ("cacute");
+		names.add ("Ccaron");
+		names.add ("ccaron");
+		names.add ("dcroat");
 	}
 	
 	// mapping with char code to standard order
@@ -1203,18 +1203,18 @@ public class PostTable : Table {
 		fd.add_ulong (0); // min mem for Type1
 		fd.add_ulong (0); // max mem for Type1
 
-		fd.add_ushort ((uint16) glyf_table.glyphs.length ());
+		fd.add_ushort ((uint16) glyf_table.glyphs.size);
 
 		// this part of the spec is so weird
 		
 		fd.add_ushort ((uint16) 0); // first index is .notdef
-		index.append (0);
+		index.add (0);
 		
-		assert (names.length () == 0);
+		assert (names.size == 0);
 		add_standard_names ();
 
-		for (int i = 1; i < glyf_table.glyphs.length (); i++) {
-			g = (!) glyf_table.glyphs.nth (i).data;
+		for (int i = 1; i < glyf_table.glyphs.size; i++) {
+			g = glyf_table.glyphs.get (i);
 			name_index = get_standard_index (g.unichar_code);
 			
 			if (name_index != 0) {
@@ -1222,16 +1222,16 @@ public class PostTable : Table {
 			} else {
 				printd (@"Adding non standard postscript name $(g.get_name ())\n");
 				
-				name_index = (int) names.length (); // use font specific name
+				name_index = (int) names.size; // use font specific name
 				fd.add_ushort ((uint16) name_index);
-				names.append (g.get_name ());
+				names.add (g.get_name ());
 			}
 			
-			this.index.append ((uint16) name_index);
+			this.index.add ((uint16) name_index);
 		}
 
-		for (int i = 258; i < names.length (); i++) {
-			n = (!) names.nth (i).data;
+		for (int i = 258; i < names.size; i++) {
+			n = (!) names.get (i);
 			
 			if (n.length > 0xFF) {
 				warning (@"too long name for glyph $n");

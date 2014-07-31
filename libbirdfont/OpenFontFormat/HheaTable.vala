@@ -112,7 +112,7 @@ public class HheaTable : Table {
 		
 		fd.add_16 (0); // metricDataFormat 0 for current format.
 		
-		fd.add_u16 ((uint16) glyf_table.glyphs.length()); // numberOfHMetrics Number of hMetric entries in 'hmtx' table
+		fd.add_u16 ((uint16) glyf_table.glyphs.size); // numberOfHMetrics Number of hMetric entries in 'hmtx' table
 
 		// padding
 		fd.pad ();

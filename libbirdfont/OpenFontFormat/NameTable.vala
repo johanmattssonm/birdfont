@@ -27,13 +27,13 @@ public class NameTable : Table {
 	public static const uint16 PREFERED_FAMILY = 16;
 	public static const uint16 PREFERED_SUB_FAMILY = 17;
 	
-	List<uint16> identifiers;
-	List<string> text;
+	Gee.ArrayList<uint16> identifiers;
+	Gee.ArrayList<string> text;
 			
 	public NameTable () {
 		id = "name";
-		text = new List<string> ();
-		identifiers = new List<uint16> ();
+		text = new Gee.ArrayList<string> ();
+		identifiers = new Gee.ArrayList<uint16> ();
 	}
 	
 	public string get_name (uint16 identifier) {
@@ -41,7 +41,7 @@ public class NameTable : Table {
 		
 		foreach (uint16 n in identifiers) {
 			if (n == identifier) {
-				return text.nth (i).data;
+				return text.get (i);
 			}
 			i++;
 		}
@@ -75,44 +75,44 @@ public class NameTable : Table {
 		uint16 count;
 		uint16 storage_offset;
 		
-		List<uint16> strlen = new List<uint16> ();
-		List<uint16> off = new List<uint16> ();
-		List<uint16> name_id = new List<uint16> ();
-		List<uint16> encoding_id = new List<uint16> ();
-		List<uint16> platform = new List<uint16> ();
-		List<uint16> lang = new List<uint16> ();
+		Gee.ArrayList<uint16> strlen = new Gee.ArrayList<uint16> ();
+		Gee.ArrayList<uint16> off = new Gee.ArrayList<uint16> ();
+		Gee.ArrayList<uint16> name_id = new Gee.ArrayList<uint16> ();
+		Gee.ArrayList<uint16> encoding_id = new Gee.ArrayList<uint16> ();
+		Gee.ArrayList<uint16> platform = new Gee.ArrayList<uint16> ();
+		Gee.ArrayList<uint16> lang = new Gee.ArrayList<uint16> ();
 				
 		count = dis.read_ushort ();
 		storage_offset = dis.read_ushort ();
 		
 		for (int i = 0; i < count; i++) {
-			platform.append (dis.read_ushort ());
-			encoding_id.append (dis.read_ushort ());
-			lang.append (dis.read_ushort ());
-			name_id.append (dis.read_ushort ());
-			strlen.append (dis.read_ushort ());
-			off.append (dis.read_ushort ());
+			platform.add (dis.read_ushort ());
+			encoding_id.add (dis.read_ushort ());
+			lang.add (dis.read_ushort ());
+			name_id.add (dis.read_ushort ());
+			strlen.add (dis.read_ushort ());
+			off.add (dis.read_ushort ());
 			
-			identifiers.append (name_id.last ().data);	
+			identifiers.add (name_id.get (name_id.size - 1));	
 		}
 
 		int plat;
 		StringBuilder str;
 		for (int i = 0; i < count; i++) {
-			plat = platform.nth (i).data;
-			dis.seek (offset + storage_offset + off.nth (i).data);
+			plat = platform.get (i);
+			dis.seek (offset + storage_offset + off.get (i));
 			str = new StringBuilder ();
 			
 			switch (plat) {
 				case 1:
-					for (int j = 0; j < strlen.nth (i).data; j++) {
+					for (int j = 0; j < strlen.get (i); j++) {
 						char c = dis.read_char ();
 						str.append_c (c);
 					}
 					break;
 					
 				case 3:
-					for (int j = 0; j < strlen.nth (i).data; j += 2) {
+					for (int j = 0; j < strlen.get (i); j += 2) {
 						unichar c;
 						char c0 = dis.read_char ();
 						char c1 = dis.read_char ();
@@ -128,8 +128,7 @@ public class NameTable : Table {
 					break;
 			} 
 			
-			text.append (str.str);
-			printd (@"Name id: $(name_id.nth (i).data) platform:  $(platform.nth (i).data) enc: $(encoding_id.nth (i).data) lang: $(lang.nth (i).data) len: $(strlen.nth (i).data) str: \"$(str.str)\"\n");		
+			text.add (str.str);
 		}
 	}
 
@@ -206,48 +205,48 @@ public class NameTable : Table {
 		uint16 l;
 		uint16 num_records;
 
-		List<uint16> type = new List<uint16> ();
-		List<string> text = new List<string> ();
+		Gee.ArrayList<uint16> type = new Gee.ArrayList<uint16> ();
+		Gee.ArrayList<string> text = new Gee.ArrayList<string> ();
 
-		text.append (font.copyright);
-		type.append (COPYRIGHT_NOTICE);
+		text.add (font.copyright);
+		type.add (COPYRIGHT_NOTICE);
 		
-		text.append (validate_name (font.name));
-		type.append (FONT_NAME);
+		text.add (validate_name (font.name));
+		type.add (FONT_NAME);
 
-		text.append (validate_name (font.subfamily));
-		type.append (SUBFAMILY_NAME);
+		text.add (validate_name (font.subfamily));
+		type.add (SUBFAMILY_NAME);
 
-		text.append (validate_name (font.unique_identifier));
-		type.append (UNIQUE_IDENTIFIER);
+		text.add (validate_name (font.unique_identifier));
+		type.add (UNIQUE_IDENTIFIER);
 
-		text.append (validate_name (font.full_name));
-		type.append (FULL_FONT_NAME);
+		text.add (validate_name (font.full_name));
+		type.add (FULL_FONT_NAME);
 		
-		text.append (font.version);
-		type.append (VERSION);
+		text.add (font.version);
+		type.add (VERSION);
 		
-		text.append (validate_name (font.postscript_name));
-		type.append (POSTSCRIPT_NAME);
+		text.add (validate_name (font.postscript_name));
+		type.add (POSTSCRIPT_NAME);
 
-		text.append (font.description);
-		type.append (DESCRIPTION);
+		text.add (font.description);
+		type.add (DESCRIPTION);
 		
-		text.append (validate_ps_name (font.name));
-		type.append (PREFERED_FAMILY);
+		text.add (validate_ps_name (font.name));
+		type.add (PREFERED_FAMILY);
 		
-		text.append (validate_name (font.subfamily));
-		type.append (PREFERED_SUB_FAMILY);
+		text.add (validate_name (font.subfamily));
+		type.add (PREFERED_SUB_FAMILY);
 		
-		num_records = (uint16) text.length ();
+		num_records = (uint16) text.size;
 		
 		fd.add_ushort (0); // format 1
 		fd.add_ushort (2 * num_records); // nplatforms * nrecords 
 		fd.add_ushort (6 + 12 * 2 * num_records); // string storage offset
 
 		for (int i = 0; i < num_records; i++) {
-			t = (!) text.nth (i).data;
-			p = (!) type.nth (i).data;
+			t = (!) text.get (i);
+			p = (!) type.get (i);
 			l = (uint16) t.length;
 			
 			fd.add_ushort (1); // platform
@@ -260,8 +259,8 @@ public class NameTable : Table {
 		}	
 
 		for (int i = 0; i < num_records; i++) {
-			t = (!) text.nth (i).data;
-			p = (!) type.nth (i).data;
+			t = (!) text.get (i);
+			p = (!) type.get (i);
 			l = (uint16) (2 * t.char_count ()); // FIXME: handle UTF-16 in a better way, gconvert it.
 
 			fd.add_ushort (3); // platform

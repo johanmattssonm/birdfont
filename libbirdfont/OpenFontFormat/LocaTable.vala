@@ -140,8 +140,8 @@ public class LocaTable : Table {
 			warn_if_reached ();
 		}
 
-		if (!(glyf_table.location_offsets.length () == glyf_table.glyphs.length () + 1)) {
-			warning (@"(glyf_table.location_offsets.length () == glyf_table.glyphs.length () + 1) ($(glyf_table.location_offsets.length ()) == $(glyf_table.glyphs.length () + 1))");
+		if (!(glyf_table.location_offsets.size == glyf_table.glyphs.size + 1)) {
+			warning ("Bad location offset.");
 		}
 
 		fd.pad ();		

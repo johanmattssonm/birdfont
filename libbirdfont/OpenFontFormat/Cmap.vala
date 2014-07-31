@@ -300,11 +300,11 @@ public class CmapSubtableWindowsUnicode : CmapSubtable {
 public class CmapTable : Table { 
 	
 	GlyfTable glyf_table;	
-	List<CmapSubtable> subtables;
+	Gee.ArrayList<CmapSubtable> subtables;
 
 	public CmapTable(GlyfTable gt) {
 		glyf_table = gt;
-		subtables = new List<CmapSubtable> ();
+		subtables = new Gee.ArrayList<CmapSubtable> ();
 		id = "cmap";
 	}
 	
@@ -313,12 +313,12 @@ public class CmapTable : Table {
 	}
 	
 	CmapSubtable get_prefered_table () {
-		if (subtables.length () == 0) {
+		if (subtables.size == 0) {
 			warning ("No cmap table has been parsed.");
 			return new CmapSubtable ();
 		}
 		
-		return subtables.first ().data;
+		return subtables.get (0);
 	}
 	
 	public override string get_id () {
@@ -359,7 +359,7 @@ public class CmapTable : Table {
 				printd (@"Parsing Unicode BMP (UCS-2) Platform: $platform Encoding: $encoding\n");
 				subtable = new CmapSubtableWindowsUnicode ();
 				subtable.offset = offset + sub_offset;
-				subtables.append (subtable);
+				subtables.add (subtable);
 			} else {
 				stderr.printf (@"Unknown cmap format. Platform: $platform Encoding: $encoding.\n");
 			}
@@ -369,7 +369,7 @@ public class CmapTable : Table {
 			}
 		}
 		
-		if (subtables.length () == 0) {
+		if (subtables.size == 0) {
 			warning ("No suitable cmap subtable found.");
 		}
 		

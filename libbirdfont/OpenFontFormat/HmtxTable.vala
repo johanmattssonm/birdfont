@@ -114,7 +114,7 @@ public class HmtxTable : Table {
 			warning ("advance_width is set");
 			delete advance_width;
 		}
-		advance_width = new uint16 [glyf_table.glyphs.length ()];
+		advance_width = new uint16 [glyf_table.glyphs.size];
 		
 		// advance and lsb
 		nmetrics = 0;

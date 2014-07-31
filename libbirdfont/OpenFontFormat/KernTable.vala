@@ -27,7 +27,7 @@ public class KernTable : Table {
 	KernList pairs;
 	
 	// Only used for loading pairs
-	public List<Kern> kerning = new List<Kern> (); // TODO: replace with the KernList
+	public Gee.ArrayList<Kern> kerning = new Gee.ArrayList<Kern> (); // TODO: replace with the KernList
 	public uint kerning_pairs = 0;
 	
 	public KernTable (GlyfTable gt) {
@@ -83,7 +83,7 @@ public class KernTable : Table {
 			right = dis.read_ushort ();
 			k = dis.read_short ();
 						
-			kerning.append (new Kern (left, right, k));
+			kerning.add (new Kern (left, right, k));
 		}		
 	}
 	

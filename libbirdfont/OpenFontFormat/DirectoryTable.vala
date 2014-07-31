@@ -36,7 +36,7 @@ public class DirectoryTable : Table {
 	
 	public OffsetTable offset_table;
 	
-	List<Table> tables;
+	Gee.ArrayList<Table> tables;
 	
 	public DirectoryTable () {
 		offset_table = new OffsetTable (this);
@@ -59,6 +59,8 @@ public class DirectoryTable : Table {
 		post_table = new PostTable (glyf_table);
 		
 		id = "Directory table";
+		
+		tables = new Gee.ArrayList<Table> ();
 	}
 
 	public void process () throws GLib.Error {
@@ -84,41 +86,41 @@ public class DirectoryTable : Table {
 		process_directory (); // this table
 	}
 
-	public unowned List<Table> get_tables () {
-		if (tables.length () == 0) {
-			tables.append (offset_table);
-			tables.append (this);
+	public Gee.ArrayList<Table> get_tables () {
+		if (tables.size == 0) {
+			tables.add (offset_table);
+			tables.add (this);
 			
-			tables.append (gpos_table);
+			tables.add (gpos_table);
 			
 			// FIXME: implement it
 			// tables.append (gsub_table);
 			
-			tables.append (os_2_table);
+			tables.add (os_2_table);
 
 			// tables.append (gdef_table); // invalid table
 			
-			tables.append (cmap_table);
+			tables.add (cmap_table);
 			// tables.append (cvt_table);
-			tables.append (gasp_table);
-			tables.append (glyf_table);
-			tables.append (head_table);
+			tables.add (gasp_table);
+			tables.add (glyf_table);
+			tables.add (head_table);
 			
-			tables.append (hhea_table);
-			tables.append (hmtx_table);
+			tables.add (hhea_table);
+			tables.add (hmtx_table);
 
 			// FIXME: Remove the kern table.
 			// It looks like the old kerning table is no longer needed
 			// since the most browsers uses the GPOS table
 			// but Windows does not accept fonts without a kern table.
 			
-			tables.append (kern_table);
+			tables.add (kern_table);
 							
-			tables.append (loca_table);
-			tables.append (maxp_table);
-			tables.append (name_table);
+			tables.add (loca_table);
+			tables.add (maxp_table);
+			tables.add (name_table);
 			
-			tables.append (post_table);
+			tables.add (post_table);
 		}
 
 		return tables;

@@ -49,11 +49,11 @@ public class MaxpTable : Table {
 		// Version 0.5 for fonts with cff data and 1.0 for ttf
 		fd.add_u32 (0x00010000);
 		
-		if (glyf_table.glyphs.length () == 0) {
+		if (glyf_table.glyphs.size == 0) {
 			warning ("Zero glyphs in maxp table.");
 		}
 		
-		fd.add_u16 ((uint16) glyf_table.glyphs.length ()); // numGlyphs in the font
+		fd.add_u16 ((uint16) glyf_table.glyphs.size); // numGlyphs in the font
 
 		fd.add_u16 (glyf_table.get_max_points ()); // max points
 		fd.add_u16 (glyf_table.get_max_contours ()); // max contours

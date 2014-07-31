@@ -59,10 +59,10 @@ public class CffTable : Table {
 		return 0;
 	}
 
-	List<uint32> read_index () throws Error {
+	Gee.ArrayList<uint32> read_index () throws Error {
 		uint32 offset_size, off;
 		int entries;
-		List<uint32> offsets = new List<uint32> ();
+		Gee.ArrayList<uint32> offsets = new Gee.ArrayList<uint32> ();
 		
 		entries = dis.read_ushort ();
 		printd (@"number of entries $(entries)\n");
@@ -79,7 +79,7 @@ public class CffTable : Table {
 		for (int i = 0; i <= entries; i++) {
 			off = read_offset (offset_size);
 			printd (@"offset $(off)\n");
-			offsets.append (off);
+			offsets.add (off);
 		}
 		
 		return offsets;
@@ -88,7 +88,7 @@ public class CffTable : Table {
 	public override void parse (FontData dis) throws Error {
 		uint v1, v2, offset_size, header_size, len;
 		string data;
-		List<uint32> offsets, dict_index;
+		Gee.ArrayList<uint32> offsets, dict_index;
 		int id, val;
 		int off; // offset relative to table position
 		
@@ -108,9 +108,9 @@ public class CffTable : Table {
 		offsets = read_index ();
 		
 		// name data
-		for (int i = 0; i < offsets.length () - 1; i++) {
-			off = (int) offsets.nth (i).data;
-			len = offsets.nth (i + 1).data - off;
+		for (int i = 0; i < offsets.size - 1; i++) {
+			off = (int) offsets.get (i);
+			len = offsets.get (i + 1) - off;
 			//dis.seek (offset + off + header_size);
 			data = dis.read_string (len);
 			print (@"Found name $data\n");		
@@ -123,9 +123,9 @@ public class CffTable : Table {
 		// dict data
 		id = 0;
 		val = 0;
-		for (int i = 0; i < dict_index.length () - 1; i++) {
-			off = (int) offsets.nth (i).data;
-			len = dict_index.nth (i + 1).data - dict_index.nth (i).data;
+		for (int i = 0; i < dict_index.size - 1; i++) {
+			off = (int) offsets.get (i);
+			len = dict_index.get (i + 1) - dict_index.get (i);
 			//dis.seek (offset + off + header_size);
 			
 			//for (int j = 0; j < len; j++) {

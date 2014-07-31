@@ -43,7 +43,7 @@ public class OpenFontFormatWriter : Object  {
 	public void write_ttf_font (Font nfont) throws Error {
 		long dl;
 		uint8* data;
-		unowned List<Table> tables;
+		Gee.ArrayList<Table> tables;
 		FontData fd;
 		uint l;
 		
