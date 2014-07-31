@@ -1643,7 +1643,7 @@ public class PenTool : Tool {
 	}
 
 	public static PointType to_line (PointType t) {
-		switch (DrawingTools.point_type) {
+		switch (t) {
 			case PointType.QUADRATIC:
 				return PointType.LINE_QUADRATIC;
 			case PointType.DOUBLE_CURVE:
@@ -1675,33 +1675,34 @@ public class PenTool : Tool {
 		return t;
 	}
 	
-	public static void set_converted_handle_length (EditPointHandle e) {
-		if (e.type == PointType.QUADRATIC  && DrawingTools.point_type == PointType.DOUBLE_CURVE) {
+	public static void set_converted_handle_length (EditPointHandle e, PointType pt) {
+		
+		if (e.type == PointType.QUADRATIC  && pt == PointType.DOUBLE_CURVE) {
 			e.length *= 2;
 			e.length /= 4;
 		}
 
-		if (e.type == PointType.QUADRATIC  && DrawingTools.point_type == PointType.CUBIC) {
+		if (e.type == PointType.QUADRATIC  && pt  == PointType.CUBIC) {
 			e.length *= 2;
 			e.length /= 3;
 		}
 
-		if (e.type == PointType.DOUBLE_CURVE  && DrawingTools.point_type == PointType.QUADRATIC) {
+		if (e.type == PointType.DOUBLE_CURVE  && pt  == PointType.QUADRATIC) {
 			e.length *= 4;
 			e.length /= 2;			
 		}
 
-		if (e.type == PointType.DOUBLE_CURVE  && DrawingTools.point_type == PointType.CUBIC) {
+		if (e.type == PointType.DOUBLE_CURVE  && pt == PointType.CUBIC) {
 			e.length *= 4;
 			e.length /= 3;		
 		}
 
-		if (e.type == PointType.CUBIC  && DrawingTools.point_type == PointType.QUADRATIC) {
+		if (e.type == PointType.CUBIC  && pt == PointType.QUADRATIC) {
 			e.length *= 3;
 			e.length /= 2;		
 		}
 
-		if (e.type == PointType.CUBIC  && DrawingTools.point_type == PointType.DOUBLE_CURVE) {
+		if (e.type == PointType.CUBIC  && pt == PointType.DOUBLE_CURVE) {
 			e.length *= 3;
 			e.length /= 4;			
 		}		
@@ -1710,8 +1711,8 @@ public class PenTool : Tool {
 	public static void convert_point_segment_type (EditPoint first, EditPoint next, PointType point_type) {
 		bool line;
 		
-		set_converted_handle_length (first.get_right_handle ());
-		set_converted_handle_length (next.get_left_handle ());
+		set_converted_handle_length (first.get_right_handle (), point_type);
+		set_converted_handle_length (next.get_left_handle (), point_type);
 		
 		line = is_line (first.type) 
 			&& is_line (first.get_right_handle ().type) 
