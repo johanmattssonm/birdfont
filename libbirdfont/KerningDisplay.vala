@@ -515,6 +515,8 @@ public class KerningDisplay : FontDisplay {
 			selected_handle = (int) row.get (0).glyph.size - 1;
 		}
 		
+		set_active_handle_index (handle);
+		
 		GlyphCanvas.redraw ();
 	}
 
