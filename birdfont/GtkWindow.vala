@@ -668,12 +668,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		list_all_kerning_pairs.activate.connect (() => { 
 			 MenuTab.list_all_kerning_pairs ();
 		});
-		
-		Gtk.MenuItem remove_all_kerning_pairs = new Gtk.MenuItem.with_mnemonic (t_("_Remove All Kerning Pairs"));
-		kerning_menu.append (remove_all_kerning_pairs);
-		remove_all_kerning_pairs.activate.connect (() => { 
-			 MenuTab.remove_all_kerning_pairs ();
-		});
 
 		kerning_menu.append (new SeparatorMenuItem ());
 

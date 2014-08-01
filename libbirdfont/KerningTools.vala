@@ -93,9 +93,16 @@ public class KerningTools : ToolCollection  {
 			KerningTools.font_size = font_size2.get_value ();
 			g.update_view ();
 		});
-		
 		kerning_tools.add_tool (font_size2);
-		
+
+		Tool insert_last = new Tool ("insert_last_glyph", t_("Insert last edited glyph"));
+		insert_last.select_action.connect ((self) => {
+			KerningDisplay d = MainWindow.get_kerning_display ();
+			d.inser_glyph (MainWindow.get_current_glyph ());
+			GlyphCanvas.redraw ();
+		});
+		kerning_tools.add_tool (insert_last);
+
 		kerning_tools.set_persistent (false);
 		kerning_tools.set_unique (false);
 

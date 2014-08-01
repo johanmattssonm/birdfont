@@ -604,22 +604,28 @@ public class KerningDisplay : FontDisplay {
 	void add_character (unichar c) {
 		Glyph? g;
 		string name;
-		Font f = BirdFont.get_current_font ();
+		Font f;
 
 		if (MenuTab.suppress_event) {
 			return;
 		}
 		
+		f = BirdFont.get_current_font ();
+		
 		if (!is_modifier_key (c) && c.validate ()) {
 			name = f.get_name_for_character (c);
 			g = f.get_glyph_by_name (name);
-			if (g != null) {
-				row.get (0).glyph.add (g);
-				row.get (0).ranges.add (null);
-				
-				selected_handle = (int) row.get (0).glyph.size - 1;
-				set_active_handle_index (selected_handle);
-			}
+			inser_glyph (g);
+		}
+	}
+	
+	public void inser_glyph (Glyph? g) {
+		if (g != null) {
+			row.get (0).glyph.add (g);
+			row.get (0).ranges.add (null);
+			
+			selected_handle = (int) row.get (0).glyph.size - 1;
+			set_active_handle_index (selected_handle);
 		}
 	}
 	
