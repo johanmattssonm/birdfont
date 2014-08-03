@@ -156,15 +156,12 @@ public class Font : GLib.Object {
 		int i = 0;
 		string fn;
 		File f;
+		File file;
 		
 		if (font_file != null) {
 			fn = (!) font_file;
-			
-			if (fn.index_of ("/") == -1 && fn.index_of ("\\") == -1) {
-				warning ("Relative path.");
-			}
-			
-			return fn;
+			file = File.new_for_path (fn);
+			return (!) file.resolve_relative_path (fn).get_path ();
 		}
 		
 		StringBuilder sb = new StringBuilder ();
