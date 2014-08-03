@@ -181,6 +181,14 @@ static void print_export_help (string[] arg) {
 	stdout.printf ("\n");
 }
 
+public static string get_version () {
+	return VERSION;
+}
+
+public static string get_build_stamp () {
+	return BUILD_TIMESTAMP;
+}
+
 public static int run_export (string[] arg) {
 	string output_directory = ".";
 	string file_name = "";
