@@ -807,7 +807,7 @@ public class KerningDisplay : FontDisplay {
 		}
 		
 		c = t.char_count ();
-		for (int i = 0; i < c; i++) {
+		for (int i = 0; i <= c; i++) {
 			add_character (t.get_char (i));
 		}
 		

@@ -117,9 +117,6 @@ public class Glyph : FontDisplay {
 	}
 
 	public GlyfData get_ttf_data () {
-		print (name);
-		print ("\n");
-		
 		if (ttf_data == null) {
 			ttf_data =  new GlyfData (this);
 		}

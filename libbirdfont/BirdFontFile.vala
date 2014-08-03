@@ -40,6 +40,11 @@ class BirdFontFile : GLib.Object {
 		
 		font.font_file = path;
 		tr = new TextReader.filename (path);
+		
+		if (is_null (tr)) {
+			warning (@"Failed to create TextReader for path: $path");
+		}
+		
 		ok = load_xml (tr);
 		
 		// This causes a crash on windows

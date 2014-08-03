@@ -379,8 +379,6 @@ os.put_string (
 		bool done = true;
 				
 		try {
-			current_font.save_backup ();
-
 			ttf_file = folder.get_child (current_font.get_full_name () + ".ttf");
 			eot_file = folder.get_child (current_font.get_full_name () + ".eot");
 

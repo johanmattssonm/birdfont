@@ -56,11 +56,7 @@ public class CodePageBits : GLib.Object {
 		
 		if (!g.is_unassigned ()) {
 			bits = get_bits (g.get_unichar ());
-			
-			if (unlikely (bits.size == 0)) {
-				warning (@"Unknown codepage for glyph $(g.get_name ()) ($(Font.to_hex (g.get_unichar ())))");
-			}
-			
+						
 			foreach (int bit in bits) {
 				set_bit (bit, ref p0, ref p1);
 			}
