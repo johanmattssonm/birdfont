@@ -161,7 +161,7 @@ public class Font : GLib.Object {
 		if (font_file != null) {
 			fn = (!) font_file;
 			file = File.new_for_path (fn);
-			return (!) file.resolve_relative_path (fn).get_path ();
+			return (!) file.resolve_relative_path ("").get_path ();
 		}
 		
 		StringBuilder sb = new StringBuilder ();
