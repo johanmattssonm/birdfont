@@ -30,6 +30,7 @@ public class PointConverter {
 	public Path get_quadratic_path () {
 		int i;
 		bool add_more_points = false;
+		
 		quadratic_path = original_path.copy ();
 		
 		estimated_cubic_path ();
@@ -46,9 +47,13 @@ public class PointConverter {
 
 		foreach (EditPoint e in quadratic_path.points) {
 			if (e.get_right_handle ().type == PointType.CUBIC) {
-				PenTool.convert_point_type (e, PointType.DOUBLE_CURVE);
+				PenTool.convert_point_segment_type (e, e.get_next (), PointType.DOUBLE_CURVE);
 			}
 		}
+	
+		PenTool.convert_point_segment_type (quadratic_path.get_first_point (),
+			quadratic_path.get_last_point (),
+			PointType.DOUBLE_CURVE);
 	
 		quadratic_path.add_hidden_double_points ();
 					
