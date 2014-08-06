@@ -1,3 +1,9 @@
+birdfont (0.44) stable;
+
+  * Better conversion from SVG to TTF
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Aug  6 21:45:44 CEST 2014
+
 birdfont (0.43) stable;
 
   * Fixes TTF export bug
