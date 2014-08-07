@@ -51,9 +51,11 @@ public class PointConverter {
 			}
 		}
 	
-		PenTool.convert_point_segment_type (quadratic_path.get_first_point (),
-			quadratic_path.get_last_point (),
-			PointType.DOUBLE_CURVE);
+		if (quadratic_path.get_last_point ().get_right_handle ().type == PointType.CUBIC) {
+			PenTool.convert_point_segment_type (quadratic_path.get_last_point (),
+				quadratic_path.get_first_point (),
+				PointType.DOUBLE_CURVE);
+		}
 	
 		quadratic_path.add_hidden_double_points ();
 					
