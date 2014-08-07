@@ -1,3 +1,9 @@
+birdfont (0.45) stable;
+
+  * A bug fix for quadratic control points in TTF files
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Aug  7 20:08:40 CEST 2014
+
 birdfont (0.44) stable;
 
   * Better conversion from SVG to TTF
