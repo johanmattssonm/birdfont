@@ -36,9 +36,9 @@ public class Preview : FontDisplay {
 
 	public static File get_file () {
 		Font font = BirdFont.get_current_font ();
-		string path = get_html_file_name ();
+		string fn = get_html_file_name ();
 		File dir = font.get_folder ();
-		File file = dir.get_child (path);
+		File file = dir.get_child (fn);
 		
 		if (!file.query_exists ()) {
 			ExportTool.generate_html_document ((!)file.get_path (), font);				

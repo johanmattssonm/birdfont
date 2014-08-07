@@ -444,7 +444,7 @@ os.put_string (
 			fo.write_ttf_font (f);
 			fo.close ();
 		} catch (Error e) {
-			warning ("Can't write TTF font.");
+			warning (@"Can't write TTF font to $ttf");
 			critical (@"$(e.message)");
 		}
 	}
@@ -455,7 +455,7 @@ os.put_string (
 		try {
 			fo.write ();
 		} catch (Error e) {
-			warning ("EOF conversion falied.");
+			warning (@"EOF conversion falied, $ttf -> $eot");
 			critical (@"$(e.message)");
 		}
 	}

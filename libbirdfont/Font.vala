@@ -160,8 +160,13 @@ public class Font : GLib.Object {
 		
 		if (font_file != null) {
 			fn = (!) font_file;
-			file = File.new_for_path (fn);
-			return (!) file.resolve_relative_path ("").get_path ();
+			
+			if (fn.index_of ("\\") != -1) { // assume only absolute paths are used on windows
+				return fn;
+			} else {
+				file = File.new_for_path (fn);
+				return (!) file.resolve_relative_path ("").get_path ();
+			}
 		}
 		
 		StringBuilder sb = new StringBuilder ();
@@ -194,6 +199,7 @@ public class Font : GLib.Object {
 	}
 		
 	public File get_folder () {
+		File file;
 		string p = get_path ();
 		int i = p.last_index_of ("/");
 		
@@ -206,6 +212,11 @@ public class Font : GLib.Object {
 		}
 		
 		p = p.substring (0, i);
+		
+		if (p.index_of ("\\") == -1) { // not on windows
+			file = File.new_for_path (p);
+			p = (!) file.resolve_relative_path ("").get_path ();
+		}
 		
 		return File.new_for_path (p);
 	}

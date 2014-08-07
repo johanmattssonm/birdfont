@@ -47,7 +47,7 @@ class TestCases {
 		add (test_codepages, "Codepages");
 		add (test_double_quadratic, "Double quadratic");
 		add (test_raster_path, "Raster path");
-		
+
 		add_bechmark (benchmark_stroke, "Stroke");
 	}
 	
