@@ -221,11 +221,10 @@ public class Font : GLib.Object {
 		
 		if (i == -1) {
 			warning (@"Can not find folder in $p.");
+			p = ".";
 		} else {
 			p = p.substring (0, i);
 		}
-		
-		p = p.substring (0, i);
 	
 		return p;
 	}
