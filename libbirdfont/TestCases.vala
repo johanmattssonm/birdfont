@@ -47,6 +47,7 @@ class TestCases {
 		add (test_codepages, "Codepages");
 		add (test_double_quadratic, "Double quadratic");
 		add (test_raster_path, "Raster path");
+		add (test_file_path, "File path");
 
 		add_bechmark (benchmark_stroke, "Stroke");
 	}
@@ -1268,6 +1269,38 @@ class TestCases {
 		foreach (Path p in pl.paths) {
 			g.add_path (p);
 		}
+	}
+	
+	private static void test_file_path () {
+		Font f = new Font ();
+		File file;
+		string folder;
+		string path;
+		
+		f.font_file = "E:\\Typeface.bf";
+		folder = f.get_folder_path ();
+		if (folder != "E:") {
+			warning (@"Wrong folder, $folder");
+		}
+
+		f.font_file = "/home/user/Typeface.bf";
+		folder = f.get_folder_path ();
+		if (folder != "/home/user") {
+			warning (@"Wrong folder, $folder");
+		}
+		
+		f.font_file = "./Typeface.bf";
+		file = File.new_for_path (".");
+		folder = f.get_folder_path ();
+		if (((!)file.get_path ()) != folder) {
+			warning (@"Wrong folder, $folder");
+		}
+
+		f.font_file = "./Typeface.bf";
+		folder = f.get_folder_path ();
+		if (!folder.has_prefix ("/")) {
+			warning (@"Wrong folder, $folder");
+		}	
 	}
 }
 

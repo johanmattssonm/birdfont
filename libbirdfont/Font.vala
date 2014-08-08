@@ -197,9 +197,21 @@ public class Font : GLib.Object {
 		
 		return p;
 	}
-		
+	
+	/** @return an absolute path to the font folder. */
 	public File get_folder () {
-		File file;
+		string p = get_folder_path ();
+		File file = File.new_for_path (p);
+		
+		if (p.index_of ("\\") == -1 && !p.has_prefix ("/")) {
+			p = (!) file.resolve_relative_path ("").get_path ();
+		}
+			
+		return File.new_for_path (p);
+	}
+	
+	/** @return a path to the font folder, it can be relative. */
+	public string get_folder_path () {
 		string p = get_path ();
 		int i = p.last_index_of ("/");
 		
@@ -209,16 +221,13 @@ public class Font : GLib.Object {
 		
 		if (i == -1) {
 			warning (@"Can not find folder in $p.");
+		} else {
+			p = p.substring (0, i);
 		}
 		
 		p = p.substring (0, i);
-		
-		if (p.index_of ("\\") == -1) { // not on windows
-			file = File.new_for_path (p);
-			p = (!) file.resolve_relative_path ("").get_path ();
-		}
-		
-		return File.new_for_path (p);
+	
+		return p;
 	}
 	
 	public double get_height () {
