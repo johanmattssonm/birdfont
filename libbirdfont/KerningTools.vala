@@ -21,6 +21,7 @@ public class KerningTools : ToolCollection  {
 	public static List<Expander> expanders;
 	public static int next_class = 0;
 	public static Expander classes;
+	public static bool adjust_side_bearings = false;
 	
 	public static double font_size = 1;
 	
@@ -46,6 +47,26 @@ public class KerningTools : ToolCollection  {
 		});
 		kerning_tools.add_tool (text_kerning);
 
+		Tool side_bearings = new Tool ("side_bearings", t_("Adjust right side bearing."));
+		side_bearings.select_action.connect ((self) => {
+			KerningTools.adjust_side_bearings = true;
+		});
+		
+		side_bearings.deselect_action.connect ((self) => {
+			KerningTools.adjust_side_bearings = false;
+		});
+		
+		side_bearings.set_persistent (true);
+		kerning_tools.add_tool (side_bearings);
+
+		Tool insert_last = new Tool ("insert_last_glyph", t_("Insert last edited glyph"));
+		insert_last.select_action.connect ((self) => {
+			KerningDisplay d = MainWindow.get_kerning_display ();
+			d.inser_glyph (MainWindow.get_current_glyph ());
+			GlyphCanvas.redraw ();
+		});
+		kerning_tools.add_tool (insert_last);
+				
 		SpinButton font_size1 = new SpinButton ("kerning_font_size_one", t_("Font size"));
 
 		font_size1.set_max (9);
@@ -94,14 +115,6 @@ public class KerningTools : ToolCollection  {
 			g.update_view ();
 		});
 		kerning_tools.add_tool (font_size2);
-
-		Tool insert_last = new Tool ("insert_last_glyph", t_("Insert last edited glyph"));
-		insert_last.select_action.connect ((self) => {
-			KerningDisplay d = MainWindow.get_kerning_display ();
-			d.inser_glyph (MainWindow.get_current_glyph ());
-			GlyphCanvas.redraw ();
-		});
-		kerning_tools.add_tool (insert_last);
 
 		kerning_tools.set_persistent (false);
 		kerning_tools.set_unique (false);

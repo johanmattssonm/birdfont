@@ -32,7 +32,7 @@ public class ClipTool : Tool {
 	}
 
 	public static void paste_in_place () {
-		paste_paths ();
+		paste_paths (true);
 	}
 	
 	/** Paste at cursor. */
@@ -43,7 +43,7 @@ public class ClipTool : Tool {
 		double dx, dy;
 		
 		if (fd is Glyph) {
-			paste_paths ();
+			paste_paths (false);
 			
 			g.selection_boundaries (out x, out y, out w, out h);
 			
@@ -60,7 +60,7 @@ public class ClipTool : Tool {
 		}
 	}
 	
-	static void paste_paths () {
+	static void paste_paths (bool paste_guide_lines) {
 		bool is_bf_clipboard;
 		FontDisplay fd;
 		string clipboard_data = MainWindow.native_window.get_clipboard_data ();
@@ -71,13 +71,13 @@ public class ClipTool : Tool {
 		is_bf_clipboard = clipboard_data.index_of ("BirdFontClipboard") > -1; 
 
 		if (fd is Glyph) {
-			paste_to_glyph (is_bf_clipboard);
+			paste_to_glyph (is_bf_clipboard, paste_guide_lines);
 		}
 		
 		BirdFont.get_current_font ().touch ();
 	}
 	
-	static void paste_to_glyph (bool bf_clipboard_data) {
+	static void paste_to_glyph (bool bf_clipboard_data, bool paste_guide_lines) {
 		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph? destination = null;
 		string data;
@@ -90,7 +90,7 @@ public class ClipTool : Tool {
 		data = MainWindow.native_window.get_clipboard_data ();
 
 		if (bf_clipboard_data) {
-			import_birdfont_clipboard (data);
+			import_birdfont_clipboard (data, paste_guide_lines);
 		} else if (data != "") {
 			SvgParser.import_svg_data (data);
 		}
@@ -106,7 +106,15 @@ public class ClipTool : Tool {
 		
 		s.append ("\n");
 		s.append ("<!-- BirdFontClipboard\n");
+
+		s.append ("BF left: ");
+		s.append (@"$(glyph.left_limit)");
+		s.append ("\n");
 		
+		s.append ("BF right: ");
+		s.append (@"$(glyph.right_limit)");
+		s.append ("\n");
+								
 		if (glyph.path_list.size > 0) {
 			foreach (Path path in glyph.active_paths) {
 				s.append ("BF path: ");
@@ -170,12 +178,13 @@ public class ClipTool : Tool {
 		return true;
 	}
 	
-	static void import_birdfont_clipboard (string data) {
-		string[] paths = data.split ("\nBF ");
+	static void import_birdfont_clipboard (string data, bool paste_guide_lines) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		string[] items = data.split ("\nBF ");
 		string d;
 		int i;
 		
-		foreach (string p in paths) {
+		foreach (string p in items) {
 			if (p.has_prefix ("path:")) {
 				i = p.index_of ("\n");
 				if (i > -1) {
@@ -183,6 +192,18 @@ public class ClipTool : Tool {
 				}
 				d = p.replace ("path: ", "");
 				import_birdfont_path (d);
+			}
+			
+			if (paste_guide_lines && p.has_prefix ("left:")) {
+				glyph.left_limit = double.parse (p.replace ("left: ", ""));
+				glyph.remove_lines ();
+				glyph.add_help_lines ();			
+			}
+			
+			if (paste_guide_lines && p.has_prefix ("right:")) {
+				glyph.right_limit = double.parse (p.replace ("right: ", ""));
+				glyph.remove_lines ();
+				glyph.add_help_lines ();	
 			}
 		}	
 	}

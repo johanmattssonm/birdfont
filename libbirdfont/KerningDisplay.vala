@@ -25,6 +25,7 @@ public class KerningDisplay : FontDisplay {
 	int active_handle = -1;
 	int selected_handle = -1;
 	bool moving = false;
+	Glyph left_active_glyph = new Glyph ("null", '\0');
 	
 	double begin_handle_x = 0;
 	double begin_handle_y = 0;
@@ -359,11 +360,15 @@ public class KerningDisplay : FontDisplay {
 			return;
 		}
 		
-		kern = get_kerning_for_handle (handle);
-		set_kerning (handle, val - kern);
+		if (!KerningTools.adjust_side_bearings) {
+			kern = get_kerning_for_handle (handle);
+			set_space (handle, val - kern);	
+		}
 	}
 
-	private void set_kerning (int handle, double val) {
+
+	/** Adjust kerning or right side bearing. */
+	private void set_space (int handle, double val) {
 		string a, b;
 		Font font;
 		GlyphRange? gr_left, gr_right;
@@ -371,8 +376,14 @@ public class KerningDisplay : FontDisplay {
 		font = BirdFont.get_current_font ();
 		font.touch ();
 
-		get_kerning_pair (handle, out a, out b, out gr_left, out gr_right);
-		set_kerning_pair (a, b, ref gr_left, ref gr_right, val);
+		if (!KerningTools.adjust_side_bearings) {
+			get_kerning_pair (handle, out a, out b, out gr_left, out gr_right);
+			set_kerning_pair (a, b, ref gr_left, ref gr_right, val);
+		} else {
+			left_active_glyph.right_limit += val;
+			left_active_glyph.remove_lines ();
+			left_active_glyph.add_help_lines ();
+		}
 	}
 
 	/** Class based gpos kerning. */
@@ -505,6 +516,7 @@ public class KerningDisplay : FontDisplay {
 	}
 
 	void set_selected_handle (int handle) {
+		Glyph? g;
 		selected_handle = handle;
 		
 		if (selected_handle <= 0) {
@@ -516,6 +528,13 @@ public class KerningDisplay : FontDisplay {
 		}
 		
 		set_active_handle_index (handle);
+		
+		if (0 <= selected_handle - 1 < row.get (0).glyph.size) {
+			g = row.get (0).glyph.get (selected_handle - 1);
+			if (g != null) {
+				left_active_glyph = (!) g;
+			}
+		}
 		
 		GlyphCanvas.redraw ();
 	}
@@ -561,12 +580,12 @@ public class KerningDisplay : FontDisplay {
 		
 		if (keyval == Key.LEFT && KeyBindings.modifier == NONE) {
 			first_update = true;
-			set_kerning (selected_handle, -1 / KerningTools.font_size);
+			set_space (selected_handle, -1 / KerningTools.font_size);
 		}
 		
 		if (keyval == Key.RIGHT && KeyBindings.modifier == NONE) {
 			first_update = true;
-			set_kerning (selected_handle, 1 / KerningTools.font_size);
+			set_space (selected_handle, 1 / KerningTools.font_size);
 		}
 
 		if (KeyBindings.modifier == CTRL && (keyval == Key.LEFT || keyval == Key.RIGHT)) {
@@ -624,7 +643,7 @@ public class KerningDisplay : FontDisplay {
 			row.get (0).glyph.add (g);
 			row.get (0).ranges.add (null);
 			
-			selected_handle = (int) row.get (0).glyph.size - 1;
+			set_selected_handle ((int) row.get (0).glyph.size - 1);
 			set_active_handle_index (selected_handle);
 		}
 	}
@@ -647,7 +666,7 @@ public class KerningDisplay : FontDisplay {
 			
 			k = (ex - last_handle_x) / y; // y-axis is for variable precision
 			k /= KerningTools.font_size;
-			set_kerning (selected_handle, k);
+			set_space (selected_handle, k);
 			GlyphCanvas.redraw ();
 		}
 		
@@ -753,7 +772,7 @@ public class KerningDisplay : FontDisplay {
 		}
 				
 		if (selected_handle == -1) {
-			selected_handle = 0;
+			set_selected_handle (0);
 		}
 		
 		listener = new TextListener (t_("Kerning"), kerning, t_("Close"));
@@ -791,7 +810,7 @@ public class KerningDisplay : FontDisplay {
 		}
 		
 		set_active_handle (ex, ey);
-		selected_handle = active_handle;
+		set_selected_handle (active_handle);
 		begin_handle_x = ex;
 		begin_handle_y = ey;
 		last_handle_x = ex;

@@ -406,7 +406,7 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
-	private void remove_lines () {
+	public void remove_lines () {
 		vertical_help_lines.clear ();
 		horizontal_help_lines.clear ();	
 	}
