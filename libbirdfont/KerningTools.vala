@@ -49,13 +49,9 @@ public class KerningTools : ToolCollection  {
 
 		Tool side_bearings = new Tool ("side_bearings", t_("Adjust right side bearing."));
 		side_bearings.select_action.connect ((self) => {
-			KerningTools.adjust_side_bearings = true;
+			KerningTools.adjust_side_bearings = !KerningTools.adjust_side_bearings;
+			side_bearings.set_selected (KerningTools.adjust_side_bearings);
 		});
-		
-		side_bearings.deselect_action.connect ((self) => {
-			KerningTools.adjust_side_bearings = false;
-		});
-		
 		side_bearings.set_persistent (true);
 		kerning_tools.add_tool (side_bearings);
 
