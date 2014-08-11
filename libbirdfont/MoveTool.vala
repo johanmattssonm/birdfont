@@ -17,7 +17,7 @@ using Cairo;
 
 namespace BirdFont {
 
-class MoveTool : Tool {
+private class MoveTool : Tool {
 
 	static bool move_path = false;
 	static bool moved = false;
@@ -64,7 +64,7 @@ class MoveTool : Tool {
 			draw_actions (cr);
 		});
 	}
-
+	
 	public static void draw_actions (Context cr) {
 		if (group_selection) {
 			draw_selection_box (cr);
@@ -183,6 +183,20 @@ class MoveTool : Tool {
 		get_selection_box_boundaries (out selection_box_center_x,
 			out selection_box_center_y, out selection_box_width,
 			out selection_box_height);	
+	}
+
+	public static void move_to_baseline () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		Font font = BirdFont.get_current_font ();
+		double x, y, w, h;
+		
+		get_selection_box_boundaries (out x, out y, out w, out h);
+		
+		foreach (Path path in glyph.active_paths) {
+			path.move (glyph.left_limit - x + w / 2, font.base_line - y + h / 2);
+		}
+		
+		GlyphCanvas.redraw ();
 	}
 
 	static void draw_selection_box (Context cr) {

@@ -474,7 +474,15 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			MainWindow.select_all_paths ();
 		});
 		select_all_item.add_accelerator ("activate", accel_group, 'A', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem move_to_baseline_item = new Gtk.MenuItem.with_mnemonic (t_("Move _To Baseline"));
+		edit_menu.append (move_to_baseline_item);
+		move_to_baseline_item.activate.connect (() => {
+			MenuTab.move_to_baseline ();
+		});
+		move_to_baseline_item.add_accelerator ("activate", accel_group, 'T', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 		
+				
 		Gtk.MenuItem search_item = new Gtk.MenuItem.with_mnemonic (t_("_Search"));
 		edit_menu.append (search_item);
 		search_item.activate.connect (() => { OverView.search (); });	
