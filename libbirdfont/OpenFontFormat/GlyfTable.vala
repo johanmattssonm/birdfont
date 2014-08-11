@@ -178,10 +178,12 @@ public class GlyfTable : Table {
 			}
 		}
 		
+		// FIXME: ligatures
+		/*
 		foreach (Glyph ug in unassigned_glyphs) {
-			// FIXME: ligatures
-			// glyphs.append (ug);
+			glyphs.append (ug);
 		}
+		*/
 		
 	}
 

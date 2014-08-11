@@ -18,7 +18,6 @@ public class CmapTable : Table {
 	
 	GlyfTable glyf_table;	
 	CmapSubtableFormat4 cmap_format4 = new CmapSubtableFormat4 ();
-	CmapSubtableFormat12 cmap_format12 = new CmapSubtableFormat12 ();
 
 	public CmapTable(GlyfTable gt) {
 		glyf_table = gt;

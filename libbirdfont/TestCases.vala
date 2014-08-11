@@ -1275,7 +1275,6 @@ class TestCases {
 		Font f = new Font ();
 		File file;
 		string folder;
-		string path;
 		
 		f.font_file = "E:\\Typeface.bf";
 		folder = f.get_folder_path ();

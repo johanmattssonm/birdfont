@@ -1931,10 +1931,8 @@ public class Glyph : FontDisplay {
 
 	/** Scroll or zoom from tap events. */
 	public void change_view_event (int finger, int x, int y) {
-		double tap_direction;
 		double dx, dy;
 		double last_distance, new_distance;
-		double z, i;
 
 		dx = 0;
 		dy = 0;
@@ -2013,8 +2011,6 @@ public class Glyph : FontDisplay {
 	}
 		
 	public override void tap_move (int finger, int x, int y) {
-		double d;
-		
 		if (!change_view) {
 			motion_notify (x, y);
 		} else {

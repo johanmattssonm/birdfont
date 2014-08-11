@@ -27,13 +27,13 @@ namespace BirdFont {
 
 public class GtkWindow : Gtk.Window, NativeWindow {
 
-	HBox list_box;
-	HBox canvas_box;
+	Box list_box;
+	Box canvas_box;
 	
 	WebView html_canvas;
 	ScrolledWindow html_box;
 
-	VBox tab_box;
+	Box tab_box;
 	
 	GlyphCanvasArea glyph_canvas_area;
 	
@@ -41,7 +41,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	string clipboard_svg = "";
 	string inkscape_clipboard = "";
 	
-	VScrollbar scrollbar;
+	Scrollbar scrollbar;
 	bool scrollbar_supress_signal = false;
 	
 	DescriptionForm description;
@@ -51,7 +51,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	TextListener text_listener = new TextListener ("", "", "");
 	Label text_input_label;
 	Entry text_entry;
-	HBox text_box;
+	Box text_box;
 	Button submit_text_button;
 	
 	Gtk.Window tooltip_window = new Gtk.Window ();
@@ -59,7 +59,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	ToolboxCanvas toolbox;
 	
 	public GtkWindow (string title) {
-		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));
+		scrollbar = new Scrollbar (Orientation.VERTICAL, new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		((Gtk.Window)this).set_title ("BirdFont");
 	}
 	
@@ -141,7 +141,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			return false;
 		});
 
-		canvas_box = new HBox (false, 0);
+		canvas_box = new Box (Orientation.HORIZONTAL, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
 		canvas_box.pack_start (description.canvas, true, true, 0);
@@ -151,7 +151,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		submit_text_button.set_label ("Submit");
 		text_input_label = new Label ("   " + "Text");
 		text_entry = new Entry ();
-		text_box = new HBox (false, 6);
+		text_box = new Box (Orientation.HORIZONTAL, 6);
 		text_box.pack_start (text_input_label, false, false, 0);
 		text_box.pack_start (text_entry, true, true, 0);
 		text_box.pack_start (submit_text_button, false, false, 0);
@@ -165,7 +165,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			text_input_is_active = false;
 		});
 		
-		tab_box = new VBox (false, 0);
+		tab_box = new Box (Orientation.VERTICAL, 0);
 		
 		tab_box.pack_start (new TabbarCanvas (MainWindow.get_tab_bar ()), false, false, 0);
 		tab_box.pack_start (text_box, false, false, 5);	
@@ -174,11 +174,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		tab_box.pack_start (new TooltipCanvas (MainWindow.get_tooltip ()), false, false, 0);
 		
 		toolbox = new ToolboxCanvas (MainWindow.get_toolbox ()); 
-		list_box = new HBox (false, 0);
+		list_box = new Box (Orientation.HORIZONTAL, 0);
 		list_box.pack_start (tab_box, true, true, 0);
 		list_box.pack_start (toolbox, false, false, 0);
 
-		VBox vbox = new VBox (false, 0);
+		Box vbox = new Box (Orientation.VERTICAL, 0);
 		
 		vbox.pack_start(create_menu (), false, false, 0);
 		vbox.pack_start(list_box, true, true, 0);
@@ -287,12 +287,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		public ColorWindow (ColorTool color_tool) {			
 			color_selection.color_changed.connect (() => {
-				Gdk.Color c;
-				color_selection.get_current_color (out c);
-				color_tool.color_r = (double) c.red / uint16.MAX;
-				color_tool.color_g = (double) c.green / uint16.MAX;
-				color_tool.color_b = (double) c.blue / uint16.MAX;
-				color_tool.color_a = (double) color_selection.get_current_alpha () / uint16.MAX; 
+				Gdk.RGBA c = new Gdk.RGBA ();
+				color_selection.get_current_rgba (c);
+				color_tool.color_r = c.red;
+				color_tool.color_g = c.green;
+				color_tool.color_b = c.blue;
+				color_tool.color_a = c.alpha; 
 				color_tool.color_updated ();
 			});
 			
@@ -1247,7 +1247,7 @@ public class TooltipCanvas : DrawingArea {
 public class DescriptionForm : GLib.Object {
 	
 	public ScrolledWindow canvas;
-	public VBox box;
+	public Box box;
 	
 	Entry postscript_name;
 	Entry font_name;
@@ -1263,7 +1263,7 @@ public class DescriptionForm : GLib.Object {
 	TextView copyright;
 		
 	public DescriptionForm () {
-		box = new VBox (false, 6);
+		box = new Box (Orientation.VERTICAL, 6);
 		canvas = new ScrolledWindow (null, null);
 		canvas.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 		
@@ -1380,15 +1380,15 @@ public class DescriptionForm : GLib.Object {
 	}
 	
 	void add_entry (Entry e, string label) {
-		VBox vb;
-		HBox hb;
+		Box vb;
+		Box hb;
 		Label l;
-		HBox margin;
+		Box margin;
 		
-		margin = new HBox (false, 6);
+		margin = new Box (Orientation.HORIZONTAL, 6);
 		l = new Label (label);
-		vb = new VBox (false, 2);
-		hb = new HBox (false, 2);
+		vb = new Box (Orientation.VERTICAL, 2);
+		hb = new Box (Orientation.HORIZONTAL, 2);
 		hb.pack_start (l, false, false, 0);
 		vb.pack_start (hb, true, true, 5);
 		vb.pack_start (e, true, true, 0);
@@ -1397,15 +1397,15 @@ public class DescriptionForm : GLib.Object {
 	}
 
 	void add_textview (TextView t, string label) {
-		VBox vb;
-		HBox hb;
+		Box vb;
+		Box hb;
 		Label l;
-		HBox margin;
+		Box margin;
 		
-		margin = new HBox (false, 6);
+		margin = new Box (Orientation.HORIZONTAL, 6);
 		l = new Label (label);
-		vb = new VBox (false, 2);
-		hb = new HBox (false, 2);
+		vb = new Box (Orientation.VERTICAL, 2);
+		hb = new Box (Orientation.HORIZONTAL, 2);
 		hb.pack_start (l, false, false, 0);
 		vb.pack_start (hb, true, true, 5);
 		vb.pack_start (t, true, true, 0);
