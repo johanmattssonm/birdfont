@@ -46,7 +46,7 @@ LIBS = [
     'gio-2.0',
     'cairo',
     'gdk-pixbuf-2.0',
-    'webkit-1.0',
+    'webkitgtk-3.0',
     config.GEE,
     'libnotify'
     ]

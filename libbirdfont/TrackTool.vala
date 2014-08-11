@@ -491,7 +491,6 @@ public class TrackTool : Tool {
 		
 		for (int i = 0; i < added_points; i++) {
 			ep = p.delete_last_point ();
-			print (@"$(ep.type)\n");
 			sum_x += ep.x;
 			sum_y += ep.y;			
 			points.add (ep);

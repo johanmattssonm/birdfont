@@ -1277,7 +1277,7 @@ public class SvgParser {
 				first_point = false;
 			} else if (b[i].type == 'Q') {
 				warning ("Illustrator does not support quadratic control points.");
-				print (@"$(b[i])\n");
+				warning (@"$(b[i])\n");
 			} else if (b[i].type == 'C' || b[i].type == 'S') {
 				
 				if (first_point) {
@@ -1306,7 +1306,7 @@ public class SvgParser {
 				first_point = false;
 			} else {
 				warning ("Unknown control point type.");
-				print (@"$(b[i])\n");
+				warning (@"$(b[i])\n");
 			}
 		}
 		

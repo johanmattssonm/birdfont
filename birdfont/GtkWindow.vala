@@ -136,7 +136,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		// Hide this canvas when window is realized and flip canvas 
 		// visibility in tab selection signal.
-		html_canvas.expose_event.connect ((t, e) => {
+		html_canvas.draw.connect ((t, e) => {
 			glyph_canvas_area.set_visible (false);
 			return false;
 		});
@@ -304,7 +304,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public void dump_clipboard_content (Clipboard clipboard, SelectionData selection_data) {
 		string d;
 		return_if_fail (!is_null (selection_data));
-		d = (string) ((!) selection_data).data;
+		d = (string) ((!) selection_data);
 		stdout.printf (d);
 	}
 
@@ -327,8 +327,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		target = Atom.intern_static_string ("image/x-inkscape-svg");
 		selection_data = clipboard.wait_for_contents (target);
 		
-		if (!is_null (selection_data) && !is_null (((!) selection_data).data)) {
-			return (string) ((!) selection_data).data;
+		if (!is_null (selection_data)) {
+			return (string) (((!) selection_data).get_data ());
 		}
 		
 		t = clipboard.wait_for_text ();
@@ -846,7 +846,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		int parent_x, parent_y;
 		int tool_box_x, tool_box_y;
 		int posx, posy;
-
+		Gtk.Allocation label_allocation;
+		Gtk.Box box;
+		
+		box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+		
 		Screen screen = Screen.get_default ();
 
 		get_position (out parent_x, out parent_y);
@@ -856,8 +860,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		tooltip_window = new Gtk.Window (Gtk.WindowType.POPUP);
 		tooltip_label = new Label(tooltip);
-		tooltip_window.add (tooltip_label);
+		tooltip_label.margin = 0;
+		
+		box.pack_start (tooltip_label, true, true, 0);
+		
+		tooltip_window.add (box);
 		tooltip_label.show();
+		box.show ();
 		
 		posx = parent_x + tool_box_x + x;
 		posy = parent_y + tool_box_y + y - 7;
@@ -865,10 +874,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		tooltip_window.show();
 
+		label_allocation = new Gtk.Allocation ();
+		tooltip_label.size_allocate (label_allocation);
+
 		// move label to the left if it is off screen
-		if (posx + tooltip_label.allocation.width > screen.get_width () - 20) {
-			tooltip_window.move (screen.get_width () - tooltip_label.allocation.width - 20, posy);
+		if (posx + label_allocation.width > screen.get_width () - 20) {
+			tooltip_window.move (screen.get_width () - label_allocation.width - 20, posy);
 		}
+
 	}
 
 	public void hide_tooltip () {
@@ -971,9 +984,9 @@ class TabbarCanvas : DrawingArea {
 	public TabbarCanvas (TabBar tb) {		
 		tabbar = tb;
 
-		set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
+		// FIXME: DELETE set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
 		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
-	  
+			  
 		motion_notify_event.connect ((t, e)=> {
 			Gtk.Allocation alloc;
 			tabbar.motion (e.x, e.y);
@@ -990,12 +1003,23 @@ class TabbarCanvas : DrawingArea {
 			return true;
 		});
 
-		expose_event.connect ((t, e)=> {
-			Context cr = cairo_create (get_window ());
-
+		draw.connect ((t, e)=> {
 			Gtk.Allocation alloc;
+			Context cr;
+			StyleContext context;
+			Gdk.RGBA color;
+						
+			cr = cairo_create (get_window ());
 			get_allocation (out alloc);
 
+			context = get_style_context ();
+			context.add_class (STYLE_CLASS_BUTTON);
+			color = context.get_background_color (Gtk.StateFlags.NORMAL);
+			
+			if (color.alpha > 0) {
+				tabbar.set_background_color (color.red, color.green, color.blue);
+			}
+						
 			tabbar.draw (cr, alloc.width, alloc.height);
 			return true;
 		});
@@ -1042,7 +1066,7 @@ class ToolboxCanvas : DrawingArea {
 			return true;
 		});
 		
-		expose_event.connect ((t, e)=> {
+		draw.connect ((t, e)=> {
 			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
@@ -1097,7 +1121,7 @@ public class GlyphCanvasArea : DrawingArea  {
 			queue_draw_area ((int)x, (int)y, (int)w, (int)h);
 		});
 
-		expose_event.connect ((t, e)=> {		
+		draw.connect ((t, e)=> {		
 			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
@@ -1192,7 +1216,7 @@ public class TooltipCanvas : DrawingArea {
 	public TooltipCanvas (TooltipArea ta) {
 		tooltip_area = ta;
 
-		expose_event.connect ((t, e)=> {
+		draw.connect ((t, e)=> {
 				WidgetAllocation allocation = new WidgetAllocation ();
 				Gtk.Allocation alloc;
 				
