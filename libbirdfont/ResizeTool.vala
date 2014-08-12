@@ -86,7 +86,7 @@ class ResizeTool : Tool {
 		release_action.connect((self, b, x, y) => {
 			resize_path = false;
 			rotate_path = false;
-			MoveTool.release (b, x, y);
+			DrawingTools.move_tool.release (b, x, y);
 		});
 		
 		move_action.connect ((self, x, y)	 => {
@@ -106,7 +106,7 @@ class ResizeTool : Tool {
 			}
 		
 			GlyphCanvas.redraw ();
-			MoveTool.move (x, y);
+			DrawingTools.move_tool.move (x, y);
 		});
 		
 		draw_action.connect ((self, cr, glyph) => {
@@ -126,7 +126,7 @@ class ResizeTool : Tool {
 		});
 		
 		key_press_action.connect ((self, keyval) => {
-			MoveTool.key_press (keyval);
+			DrawingTools.move_tool.key_press (keyval);
 		});
 		
 	}

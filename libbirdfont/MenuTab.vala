@@ -387,7 +387,7 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 		
-		MoveTool.move_to_baseline ();
+		DrawingTools.move_tool.move_to_baseline ();
 	}
 }
 

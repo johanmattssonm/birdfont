@@ -733,7 +733,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			menubar.append (git_launcher);
 			menubar.append (ligature_launcher);
 		}
-		
+				
 		return menubar;	
 	}
 
@@ -1053,6 +1053,14 @@ class ToolboxCanvas : DrawingArea {
 	public ToolboxCanvas (Toolbox toolbox) {
 		tb = toolbox;
 		
+		realize.connect (() => {
+			Gtk.Allocation allocation;
+			get_allocation (out allocation);
+			Toolbox.allocation_width = allocation.width;
+			Toolbox.allocation_height = allocation.height;
+			Toolbox.redraw_tool_box ();
+		});
+		
 		tb.redraw.connect ((x, y, w, h) => {
 			queue_draw_area (x, y, w, h);
 		});
@@ -1116,7 +1124,7 @@ public class GlyphCanvasArea : DrawingArea  {
 		int event_flags;
 		
 		glyph_canvas = gc;
-		
+
 		event_flags = EventMask.BUTTON_PRESS_MASK;
 		event_flags |= EventMask.BUTTON_RELEASE_MASK;
 		event_flags |= EventMask.POINTER_MOTION_MASK;

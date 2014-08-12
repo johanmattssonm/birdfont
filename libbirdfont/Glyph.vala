@@ -185,18 +185,6 @@ public class Glyph : FontDisplay {
 		return ligature;
 	}
 
-	public void select_all_paths () {
-		clear_active_paths ();
-		
-		foreach (Path p in path_list) {
-			if (p.points.size > 0) {
-				add_active_path (p);
-			}
-		}
-		
-		update_view ();
-	}
-	
 	public void clear_active_paths () {
 		active_paths.clear ();
 	}

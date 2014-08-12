@@ -198,14 +198,11 @@ public class KerningClasses : GLib.Object {
 		GlyphRange l;
 		int len = (int) classes_first.size;
 		double? d;
-		double time;
 		
 		d = get_kerning_for_single_glyphs (left_glyph, right_glyph);
 		if (d != null) {
 			return (!)d;
 		}
-
-		time = GLib.get_real_time ();
 		
 		len = (int)classes_first.size;
 		return_val_if_fail (len == classes_last.size, 0);

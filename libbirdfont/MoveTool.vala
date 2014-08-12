@@ -17,7 +17,7 @@ using Cairo;
 
 namespace BirdFont {
 
-private class MoveTool : Tool {
+public class MoveTool : Tool {
 
 	static bool move_path = false;
 	static bool moved = false;
@@ -28,10 +28,13 @@ private class MoveTool : Tool {
 	static double selection_y = 0;	
 	static bool group_selection= false;
 	
-	static double selection_box_width = 0;
-	static double selection_box_height = 0;
-	static double selection_box_center_x = 0;
-	static double selection_box_center_y = 0;
+	public static static double selection_box_width = 0;
+	public static static double selection_box_height = 0;
+	public static static double selection_box_center_x = 0;
+	public static static double selection_box_center_y = 0;
+	
+	public signal void selection_changed ();
+	public signal void objects_moved ();
 	
 	public MoveTool (string n) {
 		base (n, t_("Move paths"), 'm', CTRL);
@@ -71,7 +74,7 @@ private class MoveTool : Tool {
 		}
 	}
 	
-	public static void key_press (uint32 keyval) {
+	public void key_press (uint32 keyval) {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		// delete selected paths
@@ -89,7 +92,7 @@ private class MoveTool : Tool {
 		}
 	}
 	
-	public static void move (int x, int y) {
+	public void move (int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		double dx = last_x - x;
 		double dy = last_y - y; 
@@ -107,10 +110,16 @@ private class MoveTool : Tool {
 
 		GlyphCanvas.redraw ();
 		
+		update_selection_boundaries ();
+		
+		if (moved) {
+			objects_moved ();
+		}
+		
 		BirdFont.get_current_font ().touch ();
 	}
 	
-	public static void release (int b, int x, int y) {
+	public void release (int b, int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
 		move_path = false;
@@ -130,7 +139,11 @@ private class MoveTool : Tool {
 		}
 		
 		group_selection = false;
-		moved = false;	
+		moved = false;
+		
+		if (glyph.active_paths.size > 0) {
+			objects_moved ();
+		}
 	}
 		
 	public static void press (int b, int x, int y) {
@@ -161,7 +174,8 @@ private class MoveTool : Tool {
 		update_boundaries_for_selection ();	
 	}
 	
-	static void select_group () {
+	
+	void select_group () {
 		double x1 = Glyph.path_coordinate_x (Math.fmin (selection_x, last_x));
 		double y1 = Glyph.path_coordinate_y (Math.fmin (selection_y, last_y));
 		double x2 = Glyph.path_coordinate_x (Math.fmax (selection_x, last_x));
@@ -177,6 +191,8 @@ private class MoveTool : Tool {
 				}
 			}
 		}
+		
+		selection_changed ();
 	}
 	
 	public static void update_selection_boundaries () {
@@ -185,7 +201,7 @@ private class MoveTool : Tool {
 			out selection_box_height);	
 	}
 
-	public static void move_to_baseline () {
+	public void move_to_baseline () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Font font = BirdFont.get_current_font ();
 		double x, y, w, h;
@@ -196,6 +212,8 @@ private class MoveTool : Tool {
 			path.move (glyph.left_limit - x + w / 2, font.base_line - y + h / 2);
 		}
 		
+		update_selection_boundaries ();
+		objects_moved ();
 		GlyphCanvas.redraw ();
 	}
 
@@ -249,7 +267,7 @@ private class MoveTool : Tool {
 		y = py + (h / 2);
 	}
 	
-	static void move_selected_paths (uint key) {
+	void move_selected_paths (uint key) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		double x, y;
 		
@@ -277,6 +295,8 @@ private class MoveTool : Tool {
 			path.move (x * Glyph.ivz (), y * Glyph.ivz ());
 		}
 		
+		update_selection_boundaries ();
+		objects_moved ();
 		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
 	}
 
@@ -361,6 +381,23 @@ private class MoveTool : Tool {
 		update_selection_boundaries ();
 		
 		BirdFont.get_current_font ().touch ();
+	}
+	
+	public void select_all_paths () {
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		g.clear_active_paths ();
+		
+		foreach (Path p in g.path_list) {
+			if (p.points.size > 0) {
+				g.add_active_path (p);
+			}
+		}
+		
+		g.update_view ();
+		
+		update_selection_boundaries ();
+		objects_moved ();
 	}
 }
 

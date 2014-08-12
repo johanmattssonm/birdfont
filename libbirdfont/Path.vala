@@ -902,7 +902,7 @@ public class Path {
 		
 		update_region_boundaries ();
 	}
-
+	
 	private void update_region_boundaries_for_point (EditPoint p) {
 		EditPointHandle left_handle;
 		EditPointHandle right_handle;
