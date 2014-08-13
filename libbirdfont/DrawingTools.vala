@@ -37,8 +37,8 @@ public class DrawingTools : ToolCollection  {
 
 	PointTool point_tool;
 	ZoomTool zoom_tool;
-	Tool resize_tool;
-	Tool stroke_tool;
+	public static ResizeTool resize_tool;
+	StrokeTool stroke_tool;
 	TrackTool track_tool;
 	
 	Tool quadratic_points;
@@ -199,11 +199,11 @@ public class DrawingTools : ToolCollection  {
 		SpinButton x_coordinate = new SpinButton ("x_coordinate", t_("X coordinate"));
 		x_coordinate.set_big_number (true);
 		x_coordinate.set_int_value ("0.000");
-		x_coordinate.set_int_step (0.001);
-		x_coordinate.set_wait_for_submit (true);
+		x_coordinate.set_int_step (0.1);
 		x_coordinate.set_min (-999.99);
 		x_coordinate.set_max (999.99);
 		x_coordinate.show_icon (true);
+		x_coordinate.set_persistent (false);
 		x_coordinate.new_value_action.connect((self) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			double x, y, w, h;
@@ -217,7 +217,7 @@ public class DrawingTools : ToolCollection  {
 			}
 			
 			GlyphCanvas.redraw ();
-		});
+		});	
 		draw_tool_modifiers.add_tool (x_coordinate);
 
 		move_tool.objects_moved.connect (() => {
@@ -234,15 +234,19 @@ public class DrawingTools : ToolCollection  {
 				- glyph.left_limit, true, false);
 		});
 
+		move_tool.objects_deselected.connect (() => {
+			x_coordinate.set_value_round (0, true, false);
+			x_coordinate.hide_value ();
+		});
 		// y coordinate
 		SpinButton y_coordinate = new SpinButton ("y_coordinate", t_("Y coordinate"));
 		y_coordinate.set_big_number (true);
 		y_coordinate.set_int_value ("0.000");
-		y_coordinate.set_int_step (0.001);
-		y_coordinate.set_wait_for_submit (true);
+		y_coordinate.set_int_step (0.1);
 		y_coordinate.set_min (-999.99);
 		y_coordinate.set_max (999.99);
 		y_coordinate.show_icon (true);
+		y_coordinate.set_persistent (false);
 		y_coordinate.new_value_action.connect((self) => {
 			double x, y, w, h;
 			Glyph glyph = MainWindow.get_current_glyph ();
@@ -271,7 +275,50 @@ public class DrawingTools : ToolCollection  {
 				- (MoveTool.selection_box_height / 2)
 				+ font.base_line, true, false);
 		});
-	
+
+		move_tool.objects_deselected.connect (() => {
+			y_coordinate.set_value_round (0, true, false);
+			y_coordinate.hide_value ();
+		});
+
+		// rotation
+		SpinButton rotation = new SpinButton ("rotation", t_("Rotation"));
+		rotation.set_big_number (true);
+		rotation.set_int_value ("0.000");
+		rotation.set_int_step (0.1);
+		rotation.set_min (-360);
+		rotation.set_max (360);
+		rotation.show_icon (true);
+		rotation.set_persistent (false);
+		rotation.new_value_action.connect ((self) => {
+			double x, y, w, h;
+			Glyph glyph = MainWindow.get_current_glyph ();
+			double angle = (self.get_value () / 360) * 2 * PI;
+			Path last_path;
+			glyph.selection_boundaries (out x, out y, out w, out h);
+			
+			x += w / 2;
+			y -= h / 2;
+			
+			if (glyph.active_paths.size > 0) {
+				last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
+				resize_tool.rotate_selected_paths (angle - last_path.rotation, x, y);		
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		
+		resize_tool.objects_rotated.connect ((angle) => {
+			rotation.set_value_round (angle, true, false);
+		});
+		
+		move_tool.objects_deselected.connect (() => {
+			rotation.set_value_round (0, true, false);
+			rotation.hide_value ();
+		});
+		
+		draw_tool_modifiers.add_tool (rotation);
+			
 		// edit stroke width
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
 		object_stroke.set_int_value ("2.000");

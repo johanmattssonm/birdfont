@@ -35,6 +35,7 @@ public class MoveTool : Tool {
 	
 	public signal void selection_changed ();
 	public signal void objects_moved ();
+	public signal void objects_deselected ();
 	
 	public MoveTool (string n) {
 		base (n, t_("Move paths"), 'm', CTRL);
@@ -112,7 +113,7 @@ public class MoveTool : Tool {
 		
 		update_selection_boundaries ();
 		
-		if (moved) {
+		if (glyph.active_paths.size > 0) {
 			objects_moved ();
 		}
 		
@@ -143,6 +144,9 @@ public class MoveTool : Tool {
 		
 		if (glyph.active_paths.size > 0) {
 			objects_moved ();
+			DrawingTools.resize_tool.signal_objects_rotated ();
+		} else {
+			objects_deselected ();
 		}
 	}
 		

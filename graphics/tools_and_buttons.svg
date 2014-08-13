@@ -905,17 +905,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6568542"
-     inkscape:cx="42.799888"
-     inkscape:cy="630.94131"
+     inkscape:zoom="4"
+     inkscape:cx="102.84323"
+     inkscape:cy="622.80931"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:window-width="707"
-     inkscape:window-height="399"
-     inkscape:window-x="344"
-     inkscape:window-y="96"
-     inkscape:window-maximized="0"
+     inkscape:window-width="1215"
+     inkscape:window-height="776"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:object-paths="true" />
@@ -2819,6 +2819,34 @@
            id="path3445"
            d="m 55.480122,118.24792 c -0.304691,0.78125 -0.601566,1.29102 -0.890625,1.5293 -0.289066,0.23828 -0.675784,0.35742 -1.160157,0.35742 l -0.861328,0 0,-0.90234 0.632813,0 c 0.296873,0 0.527341,-0.0703 0.691406,-0.21094 0.16406,-0.14062 0.3457,-0.47265 0.544922,-0.99609 l 0.193359,-0.49219 -2.654297,-6.45703 1.142578,0 2.050782,5.13281 2.050781,-5.13281 1.142578,0 -2.882812,7.17187" />
       </g>
+    </g>
+    <g
+       id="g4192"
+       inkscape:export-filename="/home/johan/birdfont/icons/rotation.png"
+       inkscape:export-xdpi="319"
+       inkscape:export-ydpi="319">
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="path3401"
+         d="m 89.290787,110.036 9.854719,7.23734 -11.261263,0"
+         style="fill:none;stroke:#929292;stroke-width:1.03757298" />
+      <path
+         transform="matrix(0.65036638,0,0,0.63938053,48.565454,38.30076)"
+         d="m 81.140504,110.56747 a 3.005204,3.005204 0 1 1 -6.010408,0 3.005204,3.005204 0 1 1 6.010408,0 z"
+         sodipodi:ry="3.005204"
+         sodipodi:rx="3.005204"
+         sodipodi:cy="110.56747"
+         sodipodi:cx="78.1353"
+         id="path3407"
+         style="color:#000000;fill:none;stroke:#929292;stroke-width:1.55074811;stroke-miterlimit:4;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         sodipodi:type="arc" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4182"
+         d="m 93.495716,117.27334 c -0.157363,-1.32965 0.176971,-2.44858 1.185615,-3.27851"
+         style="fill-opacity:1;stroke:#929292" />
     </g>
   </g>
 </svg>

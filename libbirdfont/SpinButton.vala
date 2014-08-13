@@ -35,10 +35,6 @@ public class SpinButton : Tool {
 	int max = 99999;
 	int min = 0;
 	int step = 1;
-
-	/** Wait until button is pressed when the user sets value from text. */
-	bool wait_for_submit = false;
-	string text_input = "";
 	
 	bool big_number = false;
 	
@@ -149,6 +145,12 @@ public class SpinButton : Tool {
 		}
 	}
 	
+	public void hide_value () {
+		set_icon (base.name);
+		waiting_for_icon_switch = false;
+		redraw ();
+	}
+	
 	void show_adjustmet_icon () {
 		TimeoutSource timer;
 		
@@ -191,29 +193,14 @@ public class SpinButton : Tool {
 		return sb.get_value ();
 	}
 	
-	public void set_wait_for_submit (bool w) {
-		wait_for_submit = w;
-	}
-	
 	public void set_from_text () {
 		TextListener listener = new TextListener (t_("Set"), get_display_value (), t_("Close"));
 		
-		if (!wait_for_submit) {
-			listener.signal_text_input.connect ((text) => {
-				set_value (text);
-				redraw ();
-			});
-		} else {
-			listener.signal_text_input.connect ((text) => {
-				text_input = text;
-			});
-			
-			listener.signal_submit.connect ((text) => {
-				set_value (text_input);
-				redraw ();
-			});
-		}
-		
+		listener.signal_text_input.connect ((text) => {
+			set_value (text);
+			redraw ();
+		});
+
 		listener.signal_submit.connect (() => {
 			MainWindow.native_window.hide_text_input ();
 			redraw ();
@@ -329,6 +316,11 @@ public class SpinButton : Tool {
 		}
 		
 		if (big_number) {
+			
+			while (v.has_prefix ("0") && !v.has_prefix ("0.")) {
+				v = v.substring (v.index_of_nth_char (1));
+			}
+			
 			fv = int.parse (v);
 			fv = (fv < 0) ? -fv : fv;
 			if (fv < 10) {

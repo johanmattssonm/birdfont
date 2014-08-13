@@ -17,7 +17,7 @@ using Cairo;
 
 namespace BirdFont {
 
-class ResizeTool : Tool {
+public class ResizeTool : Tool {
 	
 	bool resize_path = false;
 	Path? resized_path = null;
@@ -34,7 +34,9 @@ class ResizeTool : Tool {
 	static double last_rotate_y;
 	static double rotation = 0;
 	static double last_rotate = 0;
-		
+	
+	public signal void objects_rotated (double angle);
+	
 	public ResizeTool (string n) {
 		base (n, t_("Resize and rotate paths"));
 		
@@ -47,8 +49,10 @@ class ResizeTool : Tool {
 		});
 				
 		press_action.connect((self, b, x, y) => {
-			Glyph glyph = MainWindow.get_current_glyph ();
-						
+			Path last_path;
+			Glyph glyph;
+			
+			glyph = MainWindow.get_current_glyph ();
 			glyph.store_undo_state ();
 			
 			foreach (Path p in glyph.active_paths) {
@@ -74,9 +78,13 @@ class ResizeTool : Tool {
 					return;
 				}
 			}
-			
-			last_rotate = 0;
-			rotation = 0;
+
+			if (glyph.active_paths.size > 0) {
+				last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
+				last_rotate = last_path.rotation ;
+			}
+					
+			rotation = last_rotate;
 			last_rotate_y = y;
 
 
@@ -131,11 +139,47 @@ class ResizeTool : Tool {
 		
 	}
 
-	/** Move rotate handle to pixel x,y. */
-	static void rotate (double x, double y) {
-		double cx, cy, xc, yc, xc2, yc2, a, b, w, h;		
+	public void signal_objects_rotated () {
+		objects_rotated (rotation * (180 / PI));
+	}
+
+	public void rotate_selected_paths (double angle, double cx, double cy) {
 		Glyph glyph = MainWindow.get_current_glyph ();  
-		double dx, dy;
+		double dx, dy, xc2, yc2, w, h;
+		Path last_path;
+		foreach (Path p in glyph.active_paths) {
+			p.rotate (angle, cx, cy);
+		}
+
+		MoveTool.get_selection_box_boundaries (out xc2, out yc2, out w, out h); 
+
+		dx = -(xc2 - cx);
+		dy = -(yc2 - cy);
+		
+		foreach (Path p in glyph.active_paths) {
+			p.move (dx, dy);
+		}
+		
+		last_rotate = rotation;
+		
+		MoveTool.update_selection_boundaries ();
+		
+		if (glyph.active_paths.size > 0) {
+			last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
+			rotation = last_path.rotation;
+			
+			if (rotation > PI) {
+				rotation -= 2 * PI;
+			}
+			
+			last_rotate = rotation;
+			signal_objects_rotated ();
+		}
+	}
+	
+	/** Move rotate handle to pixel x,y. */
+	void rotate (double x, double y) {
+		double cx, cy, xc, yc, a, b;		
 		
 		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
 		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
@@ -151,22 +195,7 @@ class ResizeTool : Tool {
 			rotation += PI;
 		}
 		
-		foreach (Path p in glyph.active_paths) {
-			p.rotate (rotation - last_rotate, selection_box_center_x, selection_box_center_y);
-		}
-
-		MoveTool.get_selection_box_boundaries (out xc2, out yc2, out w, out h); 
-
-		dx = -(xc2 - xc);
-		dy = -(yc2 - yc);
-		
-		foreach (Path p in glyph.active_paths) {
-			p.move (dx, dy);
-		}
-		
-		last_rotate = rotation;
-		
-		MoveTool.update_selection_boundaries ();
+		rotate_selected_paths (rotation - last_rotate, selection_box_center_x, selection_box_center_y);
 	}
 
 	static bool is_over_rotate_handle (Path p, double x, double y) {
