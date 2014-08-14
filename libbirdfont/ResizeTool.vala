@@ -22,6 +22,7 @@ public class ResizeTool : Tool {
 	bool resize_path = false;
 	Path? resized_path = null;
 	double last_resize_y;
+	double last_resize_x;
 
 	ImageSurface? resize_handle;
 
@@ -60,6 +61,7 @@ public class ResizeTool : Tool {
 				if (is_over_resize_handle (p, x, y)) {
 					resize_path = true;
 					resized_path = p;
+					last_resize_x = x;
 					last_resize_y = y;
 					return;
 				}
@@ -68,6 +70,7 @@ public class ResizeTool : Tool {
 			if (resized_path != null) {
 				if (is_over_resize_handle ((!) resized_path, x, y)) {
 					resize_path = true;
+					last_resize_x = x;
 					last_resize_y = y;
 					return;					
 				}
@@ -86,8 +89,9 @@ public class ResizeTool : Tool {
 			}
 					
 			rotation = last_rotate;
+			last_resize_x = x;
 			last_rotate_y = y;
-
+			
 
 			MoveTool.press (b, x, y);
 		});
@@ -230,7 +234,7 @@ public class ResizeTool : Tool {
 
 		hx = cos (rotation) * 75;
 		hy = sin (rotation) * 75;
-
+	
 		cr.set_line_width (1);
 		cr.move_to (cx, cy);
 		cr.line_to (cx + hx, cy + hy);
@@ -242,19 +246,23 @@ public class ResizeTool : Tool {
 					
 		cr.restore ();				
 	}
-
-	double get_resize_ratio (double x, double y) {
-		double ratio;
-		double h;
-		Path rp;
+	
+	double get_resize_ratio (double px, double py) {
+		double ratio, x, y, w, h;
 		
-		return_val_if_fail (!is_null (resized_path), 0);
-		rp = (!) resized_path;
-		h = rp.xmax - rp.xmin;
-
+		Glyph glyph = MainWindow.get_current_glyph ();
+		glyph.selection_boundaries (out x, out y, out w, out h);
+		
 		ratio = 1;
-		ratio -= 0.5 * PenTool.precision * (Glyph.path_coordinate_y (last_resize_y) - Glyph.path_coordinate_y (y)) / h;		
-
+		
+		if (Math.fabs (last_resize_y - py) > Math.fabs (last_resize_x - px)) {
+			ratio = 1 + (Glyph.path_coordinate_y (py) 
+				- Glyph.path_coordinate_y (last_resize_y)) / h;
+		} else {
+			ratio = 1 + (Glyph.path_coordinate_x (px) 
+				- Glyph.path_coordinate_x (last_resize_x)) / w;
+		}
+		
 		return ratio;
 	}
 
@@ -279,8 +287,6 @@ public class ResizeTool : Tool {
 			selected_path.move (dx, dy);
 		}
 		
-		last_resize_y = y;
-		
 		if (glyph.active_paths.size > 0) {
 			MoveTool.get_selection_box_boundaries (out selection_box_center_x,
 					out selection_box_center_y, out selection_box_width,
@@ -290,11 +296,16 @@ public class ResizeTool : Tool {
 	}
 
 	/** Move resize handle to pixel x,y. */
-	void resize (double x, double y) {
+	void resize (double px, double py) {
 		double ratio;
 		
-		ratio = get_resize_ratio (x, y);
-		resize_selected_paths (ratio);
+		ratio = get_resize_ratio (px, py);
+		
+		if (ratio != 1) {
+			resize_selected_paths (ratio);
+			last_resize_x = px;
+			last_resize_y = py;
+		}
 	}
 
 	void get_selection_min (out double x, out double y) {

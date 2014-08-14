@@ -346,12 +346,10 @@ public class DrawingTools : ToolCollection  {
 			glyph = MainWindow.get_current_glyph ();
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			
-			if (glyph.active_paths.size > 0) {
-				new_size = self.get_value () / w;
-				
-				if (new_size > 0 && new_size != 1) {
-					resize_tool.resize_selected_paths (new_size);
-				}
+			new_size = self.get_value () / w;
+			
+			if (self.get_value () > 0 && new_size != 1) {
+				resize_tool.resize_selected_paths (new_size);
 			}
 			
 			GlyphCanvas.redraw ();
@@ -373,14 +371,12 @@ public class DrawingTools : ToolCollection  {
 			glyph = MainWindow.get_current_glyph ();
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			
-			if (glyph.active_paths.size > 0) {
-				new_size = self.get_value () / h;
-				
-				if (new_size > 0 && new_size != 1) {
-					resize_tool.resize_selected_paths (new_size);
-				}
-			}
+			new_size = self.get_value () / h;
 			
+			if (self.get_value () > 0 && new_size != 1) {
+				resize_tool.resize_selected_paths (new_size);
+			}
+						
 			GlyphCanvas.redraw ();
 		});
 		draw_tool_modifiers.add_tool (height);

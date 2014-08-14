@@ -209,17 +209,6 @@ public class SpinButton : Tool {
 		MainWindow.native_window.set_text_listener (listener);
 	}
 	
-	void set_value_check_boundaries (string text) {
-		int new_value = (int) Math.rint (double.parse (text) * 1000);
-		if (new_value < min) {
-			set_int_value (@"$min");
-		} else if (new_value > max) {
-			set_int_value (@"$max");
-		} else {
-			set_int_value (@"$new_value");
-		}			
-	}
-	
 	public void set_max (double max) {
 		if (big_number) {
 			max /= 100;
