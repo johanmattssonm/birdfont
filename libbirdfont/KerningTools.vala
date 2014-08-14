@@ -145,8 +145,8 @@ public class KerningTools : ToolCollection  {
 	}
 	
 	public static GlyphRange get_kerning_class (int index) {
-		if (likely (0 <= index < classes.tool.length ())) {
-			return ((KerningRange) classes.tool.nth (index).data).glyph_range;
+		if (likely (0 <= index < classes.tool.size)) {
+			return ((KerningRange) classes.tool.get (index)).glyph_range;
 		} else {
 			warning ("Index out of bounds.");
 			return new GlyphRange ();
@@ -179,9 +179,7 @@ public class KerningTools : ToolCollection  {
 	}
 
 	private static void remove_all_kerning_classes () {
-		while (classes.tool.length () > 0) {
-			classes.tool.remove_link (classes.tool.first ());
-		}
+		classes.tool.clear ();
 		
 		if (!is_null (MainWindow.get_toolbox ())) {
 			MainWindow.get_toolbox ().update_expanders ();
@@ -189,29 +187,26 @@ public class KerningTools : ToolCollection  {
 	}
 		
 	public static void remove_empty_classes () {
-		unowned List<Tool> t = classes.tool.first ();
 		KerningRange kr;
+		int i;
 		
-		if (classes.tool.length () == 0) {
+		if (classes.tool.size == 0) {
 			return;
 		}
 		
-		while (true) {
-			return_if_fail (!is_null (t) && t.data is KerningRange);
+		i = 0;
+		foreach (Tool t in classes.tool) {
+			return_if_fail (t is KerningRange);
 			
-			kr = (KerningRange) t.data;
+			kr = (KerningRange) t;
 			if (kr.glyph_range.is_empty ()) {
-				classes.tool.remove_link (t);
+				classes.tool.remove_at (i);
 				remove_empty_classes ();
 				Toolbox.redraw_tool_box ();
 				return;
 			}
 			
-			if (is_null (t.next)) {
-				break;
-			} else {
-				t = t.next;
-			}
+			i++;
 		}
 	}
 	

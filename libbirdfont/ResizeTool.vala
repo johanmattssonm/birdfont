@@ -259,7 +259,6 @@ public class ResizeTool : Tool {
 	}
 
 	public void resize_selected_paths (double ratio) {
-		Path rp;
 		double resize_pos_x = 0;
 		double resize_pos_y = 0;
 		Glyph glyph = MainWindow.get_current_glyph ();

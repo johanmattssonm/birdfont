@@ -51,7 +51,7 @@ public class DrawingTools : ToolCollection  {
 	Tool show_bg;
 	Tool bg_selection;
 	SpinButton background_contrast;
-	public SpinButton background_scale = new SpinButton ();
+	public SpinButton background_scale;
 
 	Tool rectangle;
 	Tool circle;
@@ -59,9 +59,21 @@ public class DrawingTools : ToolCollection  {
 	Tool help_lines;
 	Tool xheight_help_lines;
 	Tool background_help_lines;
-		
+
+	SpinButton x_coordinate;
+	SpinButton y_coordinate;
+	SpinButton rotation;
+	SpinButton width;
+	SpinButton height;
+
+	Tool tie_handles;
+	Tool reflect_handle;
+	Tool create_line;
+					
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
+		
+		background_scale = new SpinButton ();
 		
 		draw_tools = new Expander ();
 		shape_tools = new Expander ();
@@ -69,7 +81,6 @@ public class DrawingTools : ToolCollection  {
 		Expander path_tool_modifiers = new Expander ();
 		Expander key_tools = new Expander ();
 		Expander draw_tool_modifiers = new Expander ();
-		Expander edit_point_modifiers = new Expander ();
 		Expander characterset_tools = new Expander ();
 		Expander test_tools = new Expander ();
 		Expander guideline_tools = new Expander ();
@@ -196,7 +207,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tool_modifiers.add_tool (convert_points);
 
 		// x coordinate
-		SpinButton x_coordinate = new SpinButton ("x_coordinate", t_("X coordinate"));
+		x_coordinate = new SpinButton ("x_coordinate", t_("X coordinate"));
 		x_coordinate.set_big_number (true);
 		x_coordinate.set_int_value ("0.000");
 		x_coordinate.set_int_step (0.1);
@@ -238,8 +249,9 @@ public class DrawingTools : ToolCollection  {
 			x_coordinate.set_value_round (0, true, false);
 			x_coordinate.hide_value ();
 		});
+		
 		// y coordinate
-		SpinButton y_coordinate = new SpinButton ("y_coordinate", t_("Y coordinate"));
+		y_coordinate = new SpinButton ("y_coordinate", t_("Y coordinate"));
 		y_coordinate.set_big_number (true);
 		y_coordinate.set_int_value ("0.000");
 		y_coordinate.set_int_step (0.1);
@@ -282,7 +294,7 @@ public class DrawingTools : ToolCollection  {
 		});
 
 		// rotation
-		SpinButton rotation = new SpinButton ("rotation", t_("Rotation"));
+		rotation = new SpinButton ("rotation", t_("Rotation"));
 		rotation.set_big_number (true);
 		rotation.set_int_value ("0.000");
 		rotation.set_int_step (0.1);
@@ -320,7 +332,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tool_modifiers.add_tool (rotation);
 
 		// size
-		SpinButton width = new SpinButton ("width", t_("Width"));
+		width = new SpinButton ("width", t_("Width"));
 		width.set_big_number (true);
 		width.set_int_value ("0.0000");
 		width.set_int_step (0.01);
@@ -347,7 +359,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tool_modifiers.add_tool (width);
 
 		// size
-		SpinButton height = new SpinButton ("height", t_("Height"));
+		height = new SpinButton ("height", t_("Height"));
 		height.set_big_number (true);
 		height.set_int_value ("0.0000");
 		height.set_int_step (0.01);
@@ -424,7 +436,7 @@ public class DrawingTools : ToolCollection  {
 		}
 
 		// tie edit point handles
-		Tool tie_handles = new Tool ("tie_point", t_("Tie curve handles for the selected edit point"), 'w');
+		tie_handles = new Tool ("tie_point", t_("Tie curve handles for the selected edit point"), 'w');
 		tie_handles.select_action.connect ((self) => {
 			bool tie;
 			EditPoint p;
@@ -457,10 +469,10 @@ public class DrawingTools : ToolCollection  {
 			
 			MainWindow.get_current_glyph ().update_view ();
 		});
-		edit_point_modifiers.add_tool (tie_handles);
+		draw_tool_modifiers.add_tool (tie_handles);
 		
 		// symmetrical handles
-		Tool reflect_handle = new Tool ("symmetric", t_("Symmetrical handles"), 'r');
+		reflect_handle = new Tool ("symmetric", t_("Symmetrical handles"), 'r');
 		reflect_handle.select_action.connect ((self) => {
 			bool symmetrical;
 			PointSelection ep;
@@ -480,14 +492,14 @@ public class DrawingTools : ToolCollection  {
 				MainWindow.get_current_glyph ().update_view ();
 			}
 		});
-		edit_point_modifiers.add_tool (reflect_handle);
+		draw_tool_modifiers.add_tool (reflect_handle);
 
-		Tool create_line = new Tool ("create_line", t_("Convert segment to line."), 'r');
+		create_line = new Tool ("create_line", t_("Convert segment to line."), 'r');
 		create_line.select_action.connect ((self) => {
 			PenTool.convert_segment_to_line ();
 			MainWindow.get_current_glyph ().update_view ();
 		});
-		edit_point_modifiers.add_tool (create_line);
+		draw_tool_modifiers.add_tool (create_line);
 	
 		Tool reverse_path_tool = new Tool ("reverse_path", t_("Create counter from outline"));
 		reverse_path_tool.select_action.connect ((self) => {
@@ -999,7 +1011,6 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		add_expander (draw_tool_modifiers);
-		add_expander (edit_point_modifiers);
 		add_expander (path_tool_modifiers);	
 		
 		add_expander (characterset_tools);
@@ -1023,9 +1034,6 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tool_modifiers.set_persistent (true);
 		draw_tool_modifiers.set_unique (false);
-
-		edit_point_modifiers.set_persistent (false);
-		edit_point_modifiers.set_unique (false);
 		
 		path_tool_modifiers.set_persistent (false);
 		path_tool_modifiers.set_unique (false);
@@ -1121,12 +1129,50 @@ public class DrawingTools : ToolCollection  {
 			Toolbox.select_tool_by_name ("cubic_points");
 		}
 	}
+
+	void hide_all_modifiers () {
+		x_coordinate.set_tool_visibility (false);
+		y_coordinate.set_tool_visibility (false);
+		rotation.set_tool_visibility (false);
+		width.set_tool_visibility (false);
+		height.set_tool_visibility (false);
+
+		tie_handles.set_tool_visibility (false);
+		reflect_handle.set_tool_visibility (false);
+		create_line.set_tool_visibility (false);
+
+		quadratic_points.set_tool_visibility (false);
+		cubic_points.set_tool_visibility (false);
+		double_points.set_tool_visibility (false);
+		convert_points.set_tool_visibility (false);
+	}
+	
+	void show_point_tool_modifiers () {
+		tie_handles.set_tool_visibility (true);
+		reflect_handle.set_tool_visibility (true);
+		create_line.set_tool_visibility (true);
+		
+		quadratic_points.set_tool_visibility (true);
+		cubic_points.set_tool_visibility (true);
+		double_points.set_tool_visibility (true);
+		convert_points.set_tool_visibility (true);
+	}
+	
+	void show_object_tool_modifiers () {
+		x_coordinate.set_tool_visibility (true);
+		y_coordinate.set_tool_visibility (true);
+		rotation.set_tool_visibility (true);
+		width.set_tool_visibility (true);
+		height.set_tool_visibility (true);
+	}
 	
 	void update_drawing_and_background_tools (Tool current_tool) {
 		IdleSource idle = new IdleSource ();
 		
 		idle.set_callback (() => {
 			Glyph g = MainWindow.get_current_glyph ();
+
+			hide_all_modifiers ();
 
 			move_background.set_selected (false);
 			cut_background.set_selected (false);
@@ -1148,6 +1194,14 @@ public class DrawingTools : ToolCollection  {
 			circle.set_selected (false);
 		
 			current_tool.set_selected (true);
+			
+			if (resize_tool.is_selected () || move_tool.is_selected ()) {
+				show_object_tool_modifiers ();
+			} else if (pen_tool.is_selected () || point_tool.is_selected ()) {
+				show_point_tool_modifiers ();
+			}
+			
+			MainWindow.get_toolbox ().update_expanders ();
 			Toolbox.redraw_tool_box ();
 			
 			return false;
@@ -1200,9 +1254,7 @@ public class DrawingTools : ToolCollection  {
 	}
 	
 	public void remove_all_grid_buttons () {
-		while (grid_expander.tool.length () > 0) {
-			grid_expander.tool.remove_link (grid_expander.tool.last ());
-		}
+		grid_expander.tool.clear ();
 		
 		GridTool.sizes.clear ();
 		
@@ -1256,8 +1308,8 @@ public class DrawingTools : ToolCollection  {
 			}
 		}
 		
-		if (grid_expander.tool.length () > 0) {
-			grid_width = grid_expander.tool.last ().data;
+		if (grid_expander.tool.size > 0) {
+			grid_width = grid_expander.tool.get (grid_expander.tool.size - 1);
 			tb.select_tool (grid_width);
 			grid_width.set_active (false);
 		}

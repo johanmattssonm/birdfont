@@ -32,7 +32,7 @@ public class Expander : GLib.Object {
 	
 	protected bool active = false;
 
-	public List<Tool> tool;
+	public Gee.ArrayList<Tool> tool;
 
 	bool persist = false;
 	bool unique = false;
@@ -40,6 +40,7 @@ public class Expander : GLib.Object {
 	double content_height = 0;
 	
 	public Expander () {
+		tool = new Gee.ArrayList<Tool> ();	
 	}
 
 	public double get_content_height () {
@@ -74,6 +75,19 @@ public class Expander : GLib.Object {
 		double xt = x;
 		double yt = y + scroll + margin_small;
 		bool new_row = false;
+		bool has_visible_tools = false;
+
+		foreach (Tool t in tool) {
+			if (t.tool_is_visible ()) {
+				has_visible_tools = true;
+				break;
+			}
+		}
+
+		if (!has_visible_tools) {
+			content_height = 0;
+			return;
+		}
 
 		foreach (Tool t in tool) {
 			if (t is KerningRange) {
@@ -85,8 +99,8 @@ public class Expander : GLib.Object {
 			}
 		}
 		
-		if (tool.length () > 0) {
-			content_height = tool.first ().data.h + margin_small;
+		if (tool.size > 0) {
+			content_height = tool.get (0).h + margin_small;
 		} else {
 			content_height = 0;
 		}
@@ -119,7 +133,7 @@ public class Expander : GLib.Object {
 	}
 	
 	public void add_tool (Tool t) {
-		tool.append (t);
+		tool.add (t);
 		update_tool_position ();
 		
 		t.select_action.connect ((selected) => {
