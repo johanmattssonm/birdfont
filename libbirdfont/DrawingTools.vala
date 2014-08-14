@@ -318,7 +318,79 @@ public class DrawingTools : ToolCollection  {
 		});
 		
 		draw_tool_modifiers.add_tool (rotation);
+
+		// size
+		SpinButton width = new SpinButton ("width", t_("Width"));
+		width.set_big_number (true);
+		width.set_int_value ("0.0000");
+		width.set_int_step (0.01);
+		width.show_icon (true);
+		width.set_persistent (false);
+		width.new_value_action.connect ((self) => {
+			double x, y, w, h;
+			Glyph glyph;
+			double new_size;
 			
+			glyph = MainWindow.get_current_glyph ();
+			glyph.selection_boundaries (out x, out y, out w, out h);
+			
+			if (glyph.active_paths.size > 0) {
+				new_size = self.get_value () / w;
+				
+				if (new_size > 0 && new_size != 1) {
+					resize_tool.resize_selected_paths (new_size);
+				}
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		draw_tool_modifiers.add_tool (width);
+
+		// size
+		SpinButton height = new SpinButton ("height", t_("Height"));
+		height.set_big_number (true);
+		height.set_int_value ("0.0000");
+		height.set_int_step (0.01);
+		height.show_icon (true);
+		height.set_persistent (false);
+		height.new_value_action.connect ((self) => {
+			double x, y, w, h;
+			Glyph glyph;
+			double new_size;
+			
+			glyph = MainWindow.get_current_glyph ();
+			glyph.selection_boundaries (out x, out y, out w, out h);
+			
+			if (glyph.active_paths.size > 0) {
+				new_size = self.get_value () / h;
+				
+				if (new_size > 0 && new_size != 1) {
+					resize_tool.resize_selected_paths (new_size);
+				}
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		draw_tool_modifiers.add_tool (height);
+				
+		resize_tool.objects_resized.connect ((w, h) => {
+			height.set_value_round (h, true, false);
+			width.set_value_round (w, true, false);
+		});
+		
+		move_tool.objects_deselected.connect (() => {
+			width.set_value_round (0, true, false);
+			width.hide_value ();
+
+			height.set_value_round (0, true, false);
+			height.hide_value ();			
+		});
+
+		move_tool.objects_moved.connect (() => {
+			width.set_value_round (MoveTool.selection_box_width, true, false);
+			height.set_value_round (MoveTool.selection_box_height, true, false);
+		});
+					
 		// edit stroke width
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
 		object_stroke.set_int_value ("2.000");

@@ -316,6 +316,10 @@ public class SpinButton : Tool {
 		}
 		
 		if (big_number) {
+
+			if (v == "") {
+				v = "0.0000";
+			}
 			
 			while (v.has_prefix ("0") && !v.has_prefix ("0.")) {
 				v = v.substring (v.index_of_nth_char (1));

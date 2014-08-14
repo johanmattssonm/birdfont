@@ -36,6 +36,7 @@ public class ResizeTool : Tool {
 	static double last_rotate = 0;
 	
 	public signal void objects_rotated (double angle);
+	public signal void objects_resized (double width, double height);
 	
 	public ResizeTool (string n) {
 		base (n, t_("Resize and rotate paths"));
@@ -257,24 +258,14 @@ public class ResizeTool : Tool {
 		return ratio;
 	}
 
-	/** Move resize handle to pixel x,y. */
-	void resize (double x, double y) {
+	public void resize_selected_paths (double ratio) {
 		Path rp;
-		double ratio;
 		double resize_pos_x = 0;
 		double resize_pos_y = 0;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		double selection_minx, selection_miny, dx, dy;
 		
-		ratio = get_resize_ratio (x, y);
-
-		return_if_fail (!is_null (resized_path));
-		rp = (!) resized_path;
 		get_selection_min (out resize_pos_x, out resize_pos_y);
-		
-		foreach (Path selected_path in glyph.active_paths) {
-			selected_path.resize (ratio);
-		}
 		
 		// resize paths
 		foreach (Path selected_path in glyph.active_paths) {
@@ -290,6 +281,21 @@ public class ResizeTool : Tool {
 		}
 		
 		last_resize_y = y;
+		
+		if (glyph.active_paths.size > 0) {
+			MoveTool.get_selection_box_boundaries (out selection_box_center_x,
+					out selection_box_center_y, out selection_box_width,
+					out selection_box_height);	
+			objects_resized (selection_box_width, selection_box_height);
+		}
+	}
+
+	/** Move resize handle to pixel x,y. */
+	void resize (double x, double y) {
+		double ratio;
+		
+		ratio = get_resize_ratio (x, y);
+		resize_selected_paths (ratio);
 	}
 
 	void get_selection_min (out double x, out double y) {
