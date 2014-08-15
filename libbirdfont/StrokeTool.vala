@@ -649,12 +649,12 @@ public class StrokeTool : Tool {
 		EditPoint p1, p2;
 		double cross_x, cross_y;
 		
+		ix = 0;
+		iy = 0;
+				
 		if (path.points.size == 0) {
 			return false;
 		}
-		
-		ix = 0;
-		iy = 0;
 		
 		for (int i = 1; i < path.points.size - 2; i++) {
 			p1 = path.points.get (i - 1);

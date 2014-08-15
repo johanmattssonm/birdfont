@@ -78,7 +78,7 @@ public class MainWindow : GLib.Object {
 			Toolbox.select_tool_by_name ("move");
 		}
 
-		get_current_glyph ().select_all_paths ();
+		DrawingTools.move_tool.select_all_paths ();
 	}
 
 	public static DrawingTools get_drawing_tools () {

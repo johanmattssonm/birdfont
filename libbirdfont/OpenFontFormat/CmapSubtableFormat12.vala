@@ -38,9 +38,6 @@ public class CmapSubtableFormat12 : GLib.Object {
 		fd.add_u16 (12); // Format
 		fd.add_u16 (0); // Reserved
 		
-		print (@"HEADER LENGTH: $(16 + ranges.size * 12)\n");
-		print (@"ranges.size: $(ranges.size)\n");
-		
 		fd.add_u32 (16 + ranges.size * 12); // length
 		
 		fd.add_u32 (0); // Language

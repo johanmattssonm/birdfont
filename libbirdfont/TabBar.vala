@@ -59,6 +59,10 @@ public class TabBar : GLib.Object {
 	
 	bool processing = false;
 	double wheel_rotation = 0;
+
+	double background_r = 230 /255.0;
+	double background_g = 229 /255.0;
+	double background_b = 228 /255.0;
 	
 	public TabBar () {
 		tabs = new Gee.ArrayList<Tab> ();
@@ -77,6 +81,12 @@ public class TabBar : GLib.Object {
 		
 		progress = Icons.get_icon ("progress_wheel.png");
 		tab_bar_background = Icons.get_icon ("tab_bar_background.png");
+	}
+	
+	public void set_background_color (double r, double g, double b) {
+		background_r = r;
+		background_g = g;
+		background_b = r;
 	}
 	
 	public void motion (double x, double y) {
@@ -596,7 +606,7 @@ public class TabBar : GLib.Object {
 		cr.save ();
 		cr.rectangle (0, 0, width, height);
 		cr.set_line_width (0);
-		cr.set_source_rgba (230/255.0, 229/255.0, 228/255.0, 1);
+		cr.set_source_rgba (background_r, background_g, background_b, 1);
 		cr.fill_preserve ();
 		cr.restore ();
 
@@ -631,7 +641,7 @@ public class TabBar : GLib.Object {
 			c.save ();
 			c.rectangle (0, 0, p.get_width (), p.get_height ());
 			c.set_line_width (0);
-			c.set_source_rgba (230/255.0, 229/255.0, 228/255.0, 1);
+			c.set_source_rgba (background_r, background_g, background_b, 1);
 			c.fill_preserve ();	
 			
 			c.translate (p.get_width () / 2.0, p.get_height () / 2.0);

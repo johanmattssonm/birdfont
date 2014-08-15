@@ -175,7 +175,7 @@ public class Tool : GLib.Object {
 	
 	public void set_icon (string name) {
 		StringBuilder n = new StringBuilder ();
-		n.append ((!) name);
+		n.append (name);
 		n.append (".png");
 		icon = Icons.get_icon (n.str);
 	}

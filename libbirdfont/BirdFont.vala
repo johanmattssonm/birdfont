@@ -468,8 +468,6 @@ public class BirdFont {
 		DefaultCharacterSet.get_characters_for_prefered_language ();
 
 		HeadTable.init ();
-		
-		printd ("Done");
 	}
 
 	public static void set_bundle_path (string path) {

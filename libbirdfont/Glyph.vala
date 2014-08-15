@@ -185,18 +185,6 @@ public class Glyph : FontDisplay {
 		return ligature;
 	}
 
-	public void select_all_paths () {
-		clear_active_paths ();
-		
-		foreach (Path p in path_list) {
-			if (p.points.size > 0) {
-				add_active_path (p);
-			}
-		}
-		
-		update_view ();
-	}
-	
 	public void clear_active_paths () {
 		active_paths.clear ();
 	}
@@ -1931,10 +1919,8 @@ public class Glyph : FontDisplay {
 
 	/** Scroll or zoom from tap events. */
 	public void change_view_event (int finger, int x, int y) {
-		double tap_direction;
 		double dx, dy;
 		double last_distance, new_distance;
-		double z, i;
 
 		dx = 0;
 		dy = 0;
@@ -2013,8 +1999,6 @@ public class Glyph : FontDisplay {
 	}
 		
 	public override void tap_move (int finger, int x, int y) {
-		double d;
-		
 		if (!change_view) {
 			motion_notify (x, y);
 		} else {

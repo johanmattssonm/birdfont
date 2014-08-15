@@ -390,7 +390,15 @@ public class MenuTab : FontDisplay {
 		MenuTab.load_callback = new LoadCallback ();
 		MenuTab.load_callback.load ();
 	}
-	
+
+	public static void move_to_baseline () {
+		if (suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
+		DrawingTools.move_tool.move_to_baseline ();
+	}
 }
 
 }

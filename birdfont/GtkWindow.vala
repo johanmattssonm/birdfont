@@ -27,13 +27,13 @@ namespace BirdFont {
 
 public class GtkWindow : Gtk.Window, NativeWindow {
 
-	HBox list_box;
-	HBox canvas_box;
+	Box list_box;
+	Box canvas_box;
 	
 	WebView html_canvas;
 	ScrolledWindow html_box;
 
-	VBox tab_box;
+	Box tab_box;
 	
 	GlyphCanvasArea glyph_canvas_area;
 	
@@ -41,7 +41,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	string clipboard_svg = "";
 	string inkscape_clipboard = "";
 	
-	VScrollbar scrollbar;
+	Scrollbar scrollbar;
 	bool scrollbar_supress_signal = false;
 	
 	DescriptionForm description;
@@ -51,7 +51,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	TextListener text_listener = new TextListener ("", "", "");
 	Label text_input_label;
 	Entry text_entry;
-	HBox text_box;
+	Box text_box;
 	Button submit_text_button;
 	
 	Gtk.Window tooltip_window = new Gtk.Window ();
@@ -59,7 +59,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	ToolboxCanvas toolbox;
 	
 	public GtkWindow (string title) {
-		scrollbar = new VScrollbar (new Adjustment (0, 0, 1, 1, 0.01, 0.1));
+		scrollbar = new Scrollbar (Orientation.VERTICAL, new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		((Gtk.Window)this).set_title ("BirdFont");
 	}
 	
@@ -136,12 +136,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		// Hide this canvas when window is realized and flip canvas 
 		// visibility in tab selection signal.
-		html_canvas.expose_event.connect ((t, e) => {
+		html_canvas.draw.connect ((t, e) => {
 			glyph_canvas_area.set_visible (false);
 			return false;
 		});
 
-		canvas_box = new HBox (false, 0);
+		canvas_box = new Box (Orientation.HORIZONTAL, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
 		canvas_box.pack_start (description.canvas, true, true, 0);
@@ -151,7 +151,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		submit_text_button.set_label ("Submit");
 		text_input_label = new Label ("   " + "Text");
 		text_entry = new Entry ();
-		text_box = new HBox (false, 6);
+		text_box = new Box (Orientation.HORIZONTAL, 6);
 		text_box.pack_start (text_input_label, false, false, 0);
 		text_box.pack_start (text_entry, true, true, 0);
 		text_box.pack_start (submit_text_button, false, false, 0);
@@ -165,7 +165,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			text_input_is_active = false;
 		});
 		
-		tab_box = new VBox (false, 0);
+		tab_box = new Box (Orientation.VERTICAL, 0);
 		
 		tab_box.pack_start (new TabbarCanvas (MainWindow.get_tab_bar ()), false, false, 0);
 		tab_box.pack_start (text_box, false, false, 5);	
@@ -174,11 +174,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		tab_box.pack_start (new TooltipCanvas (MainWindow.get_tooltip ()), false, false, 0);
 		
 		toolbox = new ToolboxCanvas (MainWindow.get_toolbox ()); 
-		list_box = new HBox (false, 0);
+		list_box = new Box (Orientation.HORIZONTAL, 0);
 		list_box.pack_start (tab_box, true, true, 0);
 		list_box.pack_start (toolbox, false, false, 0);
 
-		VBox vbox = new VBox (false, 0);
+		Box vbox = new Box (Orientation.VERTICAL, 0);
 		
 		vbox.pack_start(create_menu (), false, false, 0);
 		vbox.pack_start(list_box, true, true, 0);
@@ -287,12 +287,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		public ColorWindow (ColorTool color_tool) {			
 			color_selection.color_changed.connect (() => {
-				Gdk.Color c;
-				color_selection.get_current_color (out c);
-				color_tool.color_r = (double) c.red / uint16.MAX;
-				color_tool.color_g = (double) c.green / uint16.MAX;
-				color_tool.color_b = (double) c.blue / uint16.MAX;
-				color_tool.color_a = (double) color_selection.get_current_alpha () / uint16.MAX; 
+				Gdk.RGBA c = new Gdk.RGBA ();
+				color_selection.get_current_rgba (c);
+				color_tool.color_r = c.red;
+				color_tool.color_g = c.green;
+				color_tool.color_b = c.blue;
+				color_tool.color_a = c.alpha; 
 				color_tool.color_updated ();
 			});
 			
@@ -304,7 +304,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public void dump_clipboard_content (Clipboard clipboard, SelectionData selection_data) {
 		string d;
 		return_if_fail (!is_null (selection_data));
-		d = (string) ((!) selection_data).data;
+		d = (string) ((!) selection_data);
 		stdout.printf (d);
 	}
 
@@ -327,8 +327,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		target = Atom.intern_static_string ("image/x-inkscape-svg");
 		selection_data = clipboard.wait_for_contents (target);
 		
-		if (!is_null (selection_data) && !is_null (((!) selection_data).data)) {
-			return (string) ((!) selection_data).data;
+		if (!is_null (selection_data)) {
+			return (string) (((!) selection_data).get_data ());
 		}
 		
 		t = clipboard.wait_for_text ();
@@ -474,7 +474,15 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			MainWindow.select_all_paths ();
 		});
 		select_all_item.add_accelerator ("activate", accel_group, 'A', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+		Gtk.MenuItem move_to_baseline_item = new Gtk.MenuItem.with_mnemonic (t_("Move _To Baseline"));
+		edit_menu.append (move_to_baseline_item);
+		move_to_baseline_item.activate.connect (() => {
+			MenuTab.move_to_baseline ();
+		});
+		move_to_baseline_item.add_accelerator ("activate", accel_group, 'T', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 		
+				
 		Gtk.MenuItem search_item = new Gtk.MenuItem.with_mnemonic (t_("_Search"));
 		edit_menu.append (search_item);
 		search_item.activate.connect (() => { OverView.search (); });	
@@ -725,7 +733,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			menubar.append (git_launcher);
 			menubar.append (ligature_launcher);
 		}
-		
+				
 		return menubar;	
 	}
 
@@ -846,7 +854,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		int parent_x, parent_y;
 		int tool_box_x, tool_box_y;
 		int posx, posy;
-
+		Gtk.Allocation label_allocation;
+		Gtk.Box box;
+		
+		box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+		
 		Screen screen = Screen.get_default ();
 
 		get_position (out parent_x, out parent_y);
@@ -856,8 +868,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		tooltip_window = new Gtk.Window (Gtk.WindowType.POPUP);
 		tooltip_label = new Label(tooltip);
-		tooltip_window.add (tooltip_label);
+		tooltip_label.margin = 0;
+		
+		box.pack_start (tooltip_label, true, true, 0);
+		
+		tooltip_window.add (box);
 		tooltip_label.show();
+		box.show ();
 		
 		posx = parent_x + tool_box_x + x;
 		posy = parent_y + tool_box_y + y - 7;
@@ -865,10 +882,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		tooltip_window.show();
 
+		label_allocation = new Gtk.Allocation ();
+		tooltip_label.size_allocate (label_allocation);
+
 		// move label to the left if it is off screen
-		if (posx + tooltip_label.allocation.width > screen.get_width () - 20) {
-			tooltip_window.move (screen.get_width () - tooltip_label.allocation.width - 20, posy);
+		if (posx + label_allocation.width > screen.get_width () - 20) {
+			tooltip_window.move (screen.get_width () - label_allocation.width - 20, posy);
 		}
+
 	}
 
 	public void hide_tooltip () {
@@ -971,9 +992,9 @@ class TabbarCanvas : DrawingArea {
 	public TabbarCanvas (TabBar tb) {		
 		tabbar = tb;
 
-		set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
+		// FIXME: DELETE set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
 		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
-	  
+			  
 		motion_notify_event.connect ((t, e)=> {
 			Gtk.Allocation alloc;
 			tabbar.motion (e.x, e.y);
@@ -990,12 +1011,23 @@ class TabbarCanvas : DrawingArea {
 			return true;
 		});
 
-		expose_event.connect ((t, e)=> {
-			Context cr = cairo_create (get_window ());
-
+		draw.connect ((t, e)=> {
 			Gtk.Allocation alloc;
+			Context cr;
+			StyleContext context;
+			Gdk.RGBA color;
+						
+			cr = cairo_create (get_window ());
 			get_allocation (out alloc);
 
+			context = get_style_context ();
+			context.add_class (STYLE_CLASS_BUTTON);
+			color = context.get_background_color (Gtk.StateFlags.NORMAL);
+			
+			if (color.alpha > 0) {
+				tabbar.set_background_color (color.red, color.green, color.blue);
+			}
+						
 			tabbar.draw (cr, alloc.width, alloc.height);
 			return true;
 		});
@@ -1021,6 +1053,14 @@ class ToolboxCanvas : DrawingArea {
 	public ToolboxCanvas (Toolbox toolbox) {
 		tb = toolbox;
 		
+		realize.connect (() => {
+			Gtk.Allocation allocation;
+			get_allocation (out allocation);
+			Toolbox.allocation_width = allocation.width;
+			Toolbox.allocation_height = allocation.height;
+			Toolbox.redraw_tool_box ();
+		});
+		
 		tb.redraw.connect ((x, y, w, h) => {
 			queue_draw_area (x, y, w, h);
 		});
@@ -1042,7 +1082,7 @@ class ToolboxCanvas : DrawingArea {
 			return true;
 		});
 		
-		expose_event.connect ((t, e)=> {
+		draw.connect ((t, e)=> {
 			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
@@ -1084,7 +1124,7 @@ public class GlyphCanvasArea : DrawingArea  {
 		int event_flags;
 		
 		glyph_canvas = gc;
-		
+
 		event_flags = EventMask.BUTTON_PRESS_MASK;
 		event_flags |= EventMask.BUTTON_RELEASE_MASK;
 		event_flags |= EventMask.POINTER_MOTION_MASK;
@@ -1097,7 +1137,7 @@ public class GlyphCanvasArea : DrawingArea  {
 			queue_draw_area ((int)x, (int)y, (int)w, (int)h);
 		});
 
-		expose_event.connect ((t, e)=> {		
+		draw.connect ((t, e)=> {		
 			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
@@ -1192,7 +1232,7 @@ public class TooltipCanvas : DrawingArea {
 	public TooltipCanvas (TooltipArea ta) {
 		tooltip_area = ta;
 
-		expose_event.connect ((t, e)=> {
+		draw.connect ((t, e)=> {
 				WidgetAllocation allocation = new WidgetAllocation ();
 				Gtk.Allocation alloc;
 				
@@ -1223,7 +1263,7 @@ public class TooltipCanvas : DrawingArea {
 public class DescriptionForm : GLib.Object {
 	
 	public ScrolledWindow canvas;
-	public VBox box;
+	public Box box;
 	
 	Entry postscript_name;
 	Entry font_name;
@@ -1239,7 +1279,7 @@ public class DescriptionForm : GLib.Object {
 	TextView copyright;
 		
 	public DescriptionForm () {
-		box = new VBox (false, 6);
+		box = new Box (Orientation.VERTICAL, 6);
 		canvas = new ScrolledWindow (null, null);
 		canvas.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 		
@@ -1356,15 +1396,15 @@ public class DescriptionForm : GLib.Object {
 	}
 	
 	void add_entry (Entry e, string label) {
-		VBox vb;
-		HBox hb;
+		Box vb;
+		Box hb;
 		Label l;
-		HBox margin;
+		Box margin;
 		
-		margin = new HBox (false, 6);
+		margin = new Box (Orientation.HORIZONTAL, 6);
 		l = new Label (label);
-		vb = new VBox (false, 2);
-		hb = new HBox (false, 2);
+		vb = new Box (Orientation.VERTICAL, 2);
+		hb = new Box (Orientation.HORIZONTAL, 2);
 		hb.pack_start (l, false, false, 0);
 		vb.pack_start (hb, true, true, 5);
 		vb.pack_start (e, true, true, 0);
@@ -1373,15 +1413,15 @@ public class DescriptionForm : GLib.Object {
 	}
 
 	void add_textview (TextView t, string label) {
-		VBox vb;
-		HBox hb;
+		Box vb;
+		Box hb;
 		Label l;
-		HBox margin;
+		Box margin;
 		
-		margin = new HBox (false, 6);
+		margin = new Box (Orientation.HORIZONTAL, 6);
 		l = new Label (label);
-		vb = new VBox (false, 2);
-		hb = new HBox (false, 2);
+		vb = new Box (Orientation.VERTICAL, 2);
+		hb = new Box (Orientation.HORIZONTAL, 2);
 		hb.pack_start (l, false, false, 0);
 		vb.pack_start (hb, true, true, 5);
 		vb.pack_start (t, true, true, 0);

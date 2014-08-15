@@ -88,6 +88,8 @@ public class Path {
 	public static bool show_all_line_handles = true;
 	public static bool fill_open_path = false;
 	
+	public double rotation = 0;
+	
 	public Path () {	
 		string width;
 		points = new Gee.ArrayList<EditPoint> ();
@@ -902,7 +904,7 @@ public class Path {
 		
 		update_region_boundaries ();
 	}
-
+	
 	private void update_region_boundaries_for_point (EditPoint p) {
 		EditPointHandle left_handle;
 		EditPointHandle right_handle;
@@ -1790,7 +1792,10 @@ public class Path {
 				ep.get_left_handle ().angle += 2 * PI;
 			}
 		}
-
+	
+		rotation += theta;
+		rotation %= 2 * PI;
+		
 		update_region_boundaries ();
 	}
 	

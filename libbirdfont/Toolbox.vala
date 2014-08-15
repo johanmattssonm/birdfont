@@ -363,7 +363,7 @@ public class Toolbox : GLib.Object  {
 		pos = 4 * get_scale ();
 		foreach (Expander e in current_set.get_expanders ()) {
 			e.set_offset (pos);
-
+			
 			pos += e.get_content_height () + 4 * get_scale ();
 					
 			current_set.content_height = pos;

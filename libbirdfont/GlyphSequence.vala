@@ -61,10 +61,7 @@ public class GlyphSequence {
 			if (gc == null) {
 				break;
 			}
-			
-			// FIXME: DELETE
-			print (@"LIGA: $(((!) gc).get_current ().get_ligature_string ())\n");
-			
+
 			liga = ((!) gc).get_current ();		
 			ligatures.replace (liga.get_ligature (), liga);
 			i++;

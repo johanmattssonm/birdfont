@@ -28,7 +28,6 @@ public class PointConverter {
 	}
 
 	public Path get_quadratic_path () {
-		int i;
 		bool add_more_points = false;
 		
 		quadratic_path = original_path.copy ();
@@ -124,12 +123,11 @@ public class PointConverter {
 		int steps = (int) (1.6 * Path.get_length_from (a0, a1));
 		double x_out, y_out;
 		double step_out;
-		double step_min;
 
 		x_out = 0;
 		y_out = 0;
 		step_out = 0;
-		
+		step = 0;
 		distance = 0;
 
 		new_point = new EditPoint ();
