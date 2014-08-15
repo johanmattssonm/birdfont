@@ -1,3 +1,15 @@
+birdfont (0.46) stable;
+
+  * Copy and paste side bearings
+  * Support for many more languages including Japanese with CMAP format 12. 
+  * Tools for adjusting side bearings in the kerning tab
+  * A tool for moving objects to the baseline
+  * A spin buttons for moving objects to a specific coordinate, rotating 
+    objects and resizing paths.
+  * Bug fixes  
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Aug 15 16:52:50 CEST 2014
+
 birdfont (0.45) stable;
 
   * A bug fix for quadratic control points in TTF files
