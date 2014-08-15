@@ -85,7 +85,7 @@ public class FileTab : FontDisplay {
 				return;
 			}
 			
-			MenuTab.save_callback = new SaveCallback ();
+			MenuTab.set_save_callback (new SaveCallback ());
 			MenuTab.save_callback.file_saved.connect (() => {
 				dialog.signal_discard ();
 			});

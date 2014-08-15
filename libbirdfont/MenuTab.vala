@@ -34,12 +34,22 @@ public class MenuTab : FontDisplay {
 
 	public MenuTab () {
 		save_callback = new SaveCallback ();
+		save_callback.is_done = true;
+		
 		load_callback = new LoadCallback ();
 		export_callback = new ExportCallback ();
 		
 		suppress_event = false;
 	}
 
+	public static void set_save_callback (SaveCallback c) {
+		if (!save_callback.is_done) {
+			warning ("Prevoius save command has not finished");
+		}
+		
+		save_callback = c;
+	}
+	
 	public static void start_background_thread () {
 		if (!set_suppress_event (true)) {
 			warning ("suppressed event");
@@ -206,23 +216,23 @@ public class MenuTab : FontDisplay {
 	}
 
 	public static void quit () {
-		SaveDialogListener dialog = new SaveDialogListener ();
-		Font font = BirdFont.get_current_font ();
-		
-		Preferences.save ();
-		
 		if (suppress_event) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
+
+		SaveDialogListener dialog = new SaveDialogListener ();
+		Font font = BirdFont.get_current_font ();
 		
+		Preferences.save ();
+				
 		dialog.signal_discard.connect (() => {
 			ensure_main_loop_is_empty ();
 			MainWindow.native_window.quit ();
 		});
 
 		dialog.signal_save.connect (() => {
-			MenuTab.save_callback = new SaveCallback ();
+			MenuTab.set_save_callback (new SaveCallback ());
 			MenuTab.save_callback.file_saved.connect (() => {
 				ensure_main_loop_is_empty ();
 				MainWindow.native_window.quit ();
@@ -348,7 +358,7 @@ public class MenuTab : FontDisplay {
 		MainWindow.get_tab_bar ().add_unique_tab (new KerningList ());
 	}
 	
-	private static void ensure_main_loop_is_empty () {
+	public static void ensure_main_loop_is_empty () {
 		unowned MainContext context;
 		bool acquired;
 
@@ -367,12 +377,12 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void save_as ()  {
-		MenuTab.save_callback = new SaveCallback ();
+		MenuTab.set_save_callback (new SaveCallback ());
 		MenuTab.save_callback.save_as();
 	}
 
 	public static void save ()  {
-		MenuTab.save_callback = new SaveCallback ();
+		MenuTab.set_save_callback (new SaveCallback ());
 		MenuTab.save_callback.save ();
 	}
 	

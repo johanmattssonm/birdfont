@@ -17,8 +17,12 @@ namespace BirdFont {
 public class SaveCallback : GLib.Object {
 	
 	public signal void file_saved ();
+	public bool is_done = false;
 	
 	public SaveCallback () {	
+		file_saved.connect (() => {
+			is_done = true;
+		});
 	}
 	
 	public void save_as ()  {

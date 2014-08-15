@@ -40,7 +40,7 @@ public class LoadCallback : GLib.Object {
 
 		dialog.signal_save.connect (() => {
 			MainWindow.close_all_tabs ();
-			MenuTab.save_callback = new SaveCallback ();
+			MenuTab.set_save_callback (new SaveCallback ());
 			MenuTab.save_callback.file_saved.connect (() => {
 				load_new_font ();
 			});

@@ -24,7 +24,7 @@ public class ExportCallback : GLib.Object {
 	public void export_fonts_in_background () {
 		Font font = BirdFont.get_current_font ();		
 		if (font.font_file == null) {
-			MenuTab.save_callback = new SaveCallback ();
+			MenuTab.set_save_callback (new SaveCallback ());
 			MenuTab.save_callback.file_saved.connect (() => {
 				MainWindow.native_window.export_font ();
 			});
