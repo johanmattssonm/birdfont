@@ -370,7 +370,6 @@ public class OverView : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 		
-		// FIXME: cr.translate (view_offset_x, view_offset_y);
 		foreach (OverViewItem i in visible_items) {
 			i.draw (cr);
 		}
@@ -661,7 +660,28 @@ public class OverView : FontDisplay {
 	public void store_undo_state (GlyphCollection gc) {
 		deleted_glyphs.add (gc);
 	}
-	
+
+	bool select_visible_character (unichar c) {
+		int i = 0;
+		
+		foreach (OverViewItem o in visible_items) {
+			if (o.character == c) {
+				selected = i;
+				selected_item = get_selected_item ();
+				return true;
+			}
+			
+			if (i > 1000) {
+				warning ("selected character not found");
+				return true;
+			}
+			
+			i++;
+		}
+		
+		return false;
+	}
+			
 	public void scroll_to_char (unichar c) {
 		GlyphRange gr = glyph_range;
 		int i, r, index;
@@ -686,20 +706,8 @@ public class OverView : FontDisplay {
 		ch = s.str;
 
 		// selected char is visible
-		i = 0;
-		foreach (OverViewItem o in visible_items) {
-			if (o.character == c) {
-				selected = i;
-				selected_item = get_selected_item ();
-				return;
-			}
-			
-			if (i > 1000) {
-				warning ("selected character not found");
-				return;
-			}
-			
-			i++;
+		if (select_visible_character (c)) {
+			return;
 		}
 		
 		// scroll to char
@@ -742,8 +750,8 @@ public class OverView : FontDisplay {
 		
 		if (index > -1) {
 			first_visible = r;
-			selected = index;
-			selected_item = get_selected_item ();
+			update_item_list ();
+			select_visible_character (c);
 		}
 	}
 	

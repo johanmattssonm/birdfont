@@ -1217,7 +1217,9 @@ public class DrawingTools : ToolCollection  {
 			
 			if (resize_tool.is_selected () || move_tool.is_selected ()) {
 				show_object_tool_modifiers ();
-			} else if (pen_tool.is_selected () || point_tool.is_selected ()) {
+			} else if (pen_tool.is_selected () 
+					|| point_tool.is_selected ()
+					|| track_tool.is_selected ()) {
 				show_point_tool_modifiers ();
 			}
 			
