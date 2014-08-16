@@ -65,6 +65,7 @@ public class DrawingTools : ToolCollection  {
 	SpinButton rotation;
 	SpinButton width;
 	SpinButton height;
+	SpinButton skew;
 
 	Tool tie_handles;
 	Tool reflect_handle;
@@ -331,7 +332,28 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tool_modifiers.add_tool (rotation);
 
-		// size
+		// skew
+		skew = new SpinButton ("skew", t_("Skew"));
+		skew.set_big_number (true);
+		skew.set_int_value ("0.000");
+		skew.set_int_step (1);
+		skew.set_min (-100);
+		skew.set_max (100);
+		skew.show_icon (true);
+		skew.set_persistent (false);
+		skew.new_value_action.connect ((self) => {
+			resize_tool.skew (skew.get_value ());
+			GlyphCanvas.redraw ();
+		});
+		
+		move_tool.objects_deselected.connect (() => {
+			skew.set_value_round (0, true, false);
+			skew.hide_value ();
+		});
+		
+		draw_tool_modifiers.add_tool (skew);
+
+		// width
 		width = new SpinButton ("width", t_("Width"));
 		width.set_big_number (true);
 		width.set_int_value ("0.0000");
@@ -356,7 +378,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tool_modifiers.add_tool (width);
 
-		// size
+		// height
 		height = new SpinButton ("height", t_("Height"));
 		height.set_big_number (true);
 		height.set_int_value ("0.0000");
@@ -398,7 +420,7 @@ public class DrawingTools : ToolCollection  {
 			width.set_value_round (MoveTool.selection_box_width, true, false);
 			height.set_value_round (MoveTool.selection_box_height, true, false);
 		});
-					
+							
 		// edit stroke width
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
 		object_stroke.set_int_value ("2.000");
@@ -1132,6 +1154,7 @@ public class DrawingTools : ToolCollection  {
 		rotation.set_tool_visibility (false);
 		width.set_tool_visibility (false);
 		height.set_tool_visibility (false);
+		skew.set_tool_visibility (false);
 
 		tie_handles.set_tool_visibility (false);
 		reflect_handle.set_tool_visibility (false);
@@ -1160,6 +1183,7 @@ public class DrawingTools : ToolCollection  {
 		rotation.set_tool_visibility (true);
 		width.set_tool_visibility (true);
 		height.set_tool_visibility (true);
+		skew.set_tool_visibility (true);
 	}
 	
 	void update_drawing_and_background_tools (Tool current_tool) {

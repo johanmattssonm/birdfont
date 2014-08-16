@@ -89,6 +89,7 @@ public class Path {
 	public static bool fill_open_path = false;
 	
 	public double rotation = 0;
+	public double skew = 0;
 	
 	public Path () {	
 		string width;

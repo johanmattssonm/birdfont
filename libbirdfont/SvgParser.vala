@@ -218,7 +218,7 @@ public class SvgParser {
 	/** @param path a path in the cartesian coordinate system
 	 * The other parameters are in the SVG coordinate system.
 	 */
-	public void apply_matrix (Path path, double a, double b, double c, 
+	public static void apply_matrix (Path path, double a, double b, double c, 
 		double d, double e, double f){
 		
 		double dx, dy;
@@ -243,7 +243,7 @@ public class SvgParser {
 		}
 	}
 
-	public void apply_matrix_on_handle (EditPointHandle h, 
+	public static void apply_matrix_on_handle (EditPointHandle h, 
 		double a, double b, double c, 
 		double d, double e, double f){
 		

@@ -349,6 +349,28 @@ public class ResizeTool : Tool {
 		double handle_y = Math.fabs (Glyph.reverse_path_coordinate_y (p.ymax));
 		return fabs (handle_x - x + 10) < 20 * MainWindow.units && fabs (handle_y - y + 10) < 20 * MainWindow.units;
 	}
+	
+	public void skew (double percent) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		double dx, nx, x, y, w, h;
+		double s = -percent / 100.0;
+		
+		glyph.selection_boundaries (out x, out y, out w, out h);
+		
+		foreach (Path path in glyph.active_paths) {
+			SvgParser.apply_matrix (path, 1, 0, s - path.skew, 1, 0, 0);
+			path.skew = s;
+			path.update_region_boundaries ();
+		}
+		
+		glyph.selection_boundaries (out nx, out y, out w, out h);
+
+		dx = -(nx - x);
+		
+		foreach (Path p in glyph.active_paths) {
+			p.move (dx, 0);
+		}
+	}
 }
 
 }
