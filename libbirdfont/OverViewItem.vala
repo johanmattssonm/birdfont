@@ -167,35 +167,34 @@ public class OverViewItem : GLib.Object {
 
 	public void draw_caption (Context cr) {
 		StringBuilder name = new StringBuilder ();
+		Cairo.Pattern p;
+		
 		name.append_unichar (character);
 		
 		cr.save ();
 		
+		p = new Cairo.Pattern.linear (0.0, y + height - 20, 0.0, y + height);
+
 		if (selected) {
-			cr.set_source_rgba (50/255.0, 50/255.0, 50/255.0, 1);
+			p.add_color_stop_rgba (1, 208 / 255.0, 208 / 255.0, 208 / 255.0, 1);
+			p.add_color_stop_rgba (0, 229 / 255.0, 229 / 255.0, 229 / 255.0, 1);
 		} else {
-			cr.set_source_rgba (100/255.0, 100/255.0, 100/255.0, 1);			
+			p.add_color_stop_rgba (1, 236 / 255.0, 236 / 255.0, 236 / 255.0, 1);
+			p.add_color_stop_rgba (0, 246 / 255.0, 246 / 255.0, 246 / 255.0, 1);
 		}
-		
+
 		cr.rectangle (x + 1, y + height - 20, width - 2, 20 - 1);
+		cr.set_source (p);
 		cr.fill ();
 		
 		if (has_icons ()) {
 			draw_menu (cr);
 			draw_character_info_icon (cr);
 		}
-		
-		cr.restore ();
-		
+
 		cr.save ();
 		cr.set_font_size (14);
-		
-		if (selected) {
-			cr.set_source_rgba (1, 1, 1, 1);
-		} else {
-			cr.set_source_rgba (0, 0, 0, 1);
-		}
-		
+		cr.set_source_rgba (0, 0, 0, 1);
 		cr.move_to (x + 0.08 * width, y + height - 6);
 		
 		if (glyphs == null) {

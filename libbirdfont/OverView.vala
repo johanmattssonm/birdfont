@@ -595,6 +595,8 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void key_press (uint keyval) {
+		GlyphCollection? gc;
+		
 		redraw_area (0, 0, allocation.width, allocation.height);
 
 		if (KeyBindings.modifier == CTRL) {
@@ -633,9 +635,27 @@ public class OverView : FontDisplay {
 					key_down ();
 				}
 				return;
+				
+			case Key.DEL:
+				delete_selected_glyph ();
+				return;
+				
+			case Key.BACK_SPACE:
+				delete_selected_glyph ();
+				return;
 		}
 
 		scroll_to_char (keyval);
+	}
+	
+	public void delete_selected_glyph () {
+		GlyphCollection? gc = get_selected_item ().glyphs;
+		Font font = BirdFont.get_current_font ();
+				
+		if (gc != null) {
+			store_undo_state ((!) gc);
+			font.delete_glyph ((!) gc);
+		}
 	}
 	
 	public override void undo () {
