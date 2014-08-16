@@ -352,7 +352,7 @@ public class ResizeTool : Tool {
 	
 	public void skew (double percent) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		double dx, nx, x, y, w, h;
+		double dx, nx, nw, dw, x, y, w, h;
 		double s = -percent / 100.0;
 		
 		glyph.selection_boundaries (out x, out y, out w, out h);
@@ -363,13 +363,18 @@ public class ResizeTool : Tool {
 			path.update_region_boundaries ();
 		}
 		
-		glyph.selection_boundaries (out nx, out y, out w, out h);
+		glyph.selection_boundaries (out nx, out y, out nw, out h);
 
 		dx = -(nx - x);
 		
 		foreach (Path p in glyph.active_paths) {
 			p.move (dx, 0);
 		}
+		
+		dw = (nw - w);
+		glyph.right_limit += dw;
+		glyph.remove_lines ();
+		glyph.add_help_lines ();
 	}
 }
 
