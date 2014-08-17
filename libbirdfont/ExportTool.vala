@@ -37,18 +37,18 @@ public class ExportTool : GLib.Object {
 		name = glyph.get_name ();
 		s = new StringBuilder ();
 		
-		s.append ("""<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
-<svg """);
+		s.append ("""<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" 
+	id="glyph_""" + name + """" 
+	mlns="http://www.w3.org/2000/svg" 
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px"
+	y="0px"
+	width="""" + @"$(glyph.get_width ())" + """px" 
+	height="""" + @"$(glyph.get_height ())" + """px">
+""");
 
-		s.append ("xmlns=\"http://www.w3.org/2000/svg\"\n");
-		s.append ("\txmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\"\n");
-		s.append (@"\twidth=\"$(glyph.get_width ())\"\n");
-		s.append (@"\theight=\"$(glyph.get_height ())\"\n");
-		s.append (@"\tid=\"glyph_$(name)\"\n");
-		s.append (@"\tversion=\"1.1\">\n");
-		s.append (@"\n");
-		
 		baseline = glyph.get_height () - font.get_height (); // guides uses a different coordinate system
 		s.append ("<sodipodi:namedview>\n");
 		s.append (@"\t<sodipodi:guide orientation=\"0,1\" position=\"0,$baseline\" id=\"baseline\" />\n");
@@ -130,7 +130,12 @@ public class ExportTool : GLib.Object {
 				return;
 			}
 			
-			svg_file = (!) f;	
+			svg_file = (!) f;
+			
+			if (svg_file.index_of (".svg") == -1) {
+				svg_file += ".svg";
+			}
+			
 			file = File.new_for_path (svg_file);
 			
 			if (!(fd is Glyph)) {
