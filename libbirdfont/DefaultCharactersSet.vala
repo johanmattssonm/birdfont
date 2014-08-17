@@ -30,6 +30,7 @@ public class DefaultCharacterSet {
 		add_language (t_("Greek"), "el", "Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ ς τ υ φ χ ψ ω");
 		add_language (t_("Japanese"), "ja", "");
 		add_language (t_("Javanese"), "jv", "ꦀ ꦁ ꦂ ꦃ ꦄ ꦅ ꦆ ꦇ ꦈ ꦉ ꦊ ꦋ ꦌ ꦍ ꦎ ꦏ ꦐ ꦑ ꦒ ꦓ ꦔ ꦕ ꦖ ꦗ ꦘ ꦙ ꦚ ꦛ ꦜ ꦝ ꦞ ꦟ ꦠ ꦡ ꦢ ꦣ ꦤ ꦥ ꦦ ꦧ ꦨ ꦩ ꦪ ꦫ ꦬ ꦭ ꦮ ꦯ ꦰ ꦱ ꦲ ꦳ ꦴ ꦵ ꦶ ꦷ ꦸ ꦹ ꦺ ꦻ ꦼ ꦽ ꦾ ꦿ ꧀ ꧁ ꧂ ꧃ ꧄ ꧅ ꧆ ꧇ ꧈ ꧉ ꧊ ꧋ ꧌ ꧍ ꧏ ꧐ ꧑ ꧒ ꧓ ꧔ ꧕ ꧖ ꧗ ꧘ ꧙ ꧞ ꧟ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z");
+		add_language (t_("Latin"), "la", ""); 
 		add_language (t_("Russian"), "ro", "А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я");
 		add_language (t_("Swedish"), "sv", "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö");
 	}
@@ -53,8 +54,10 @@ public class DefaultCharacterSet {
 		
 		if (language == "PRIVATE_USE") {
 			use_private_area (gr);
-		} else if (language.has_prefix ("ja")) {
+		} else if (language.has_prefix ("la")) {
 			use_default_range_japanese (gr);
+		} else if (language.has_prefix ("latin")) {
+			use_default_range_latin (gr);
 		} else if (language.has_prefix ("zh")) { // TODO: not just simplified chinese
 			use_default_range_chinese (gr);
 		} else {
@@ -108,10 +111,10 @@ public class DefaultCharacterSet {
 				gr.add_single (c.get_char ());
 			}
 		} else {			
-			/// All lower case letters in alphabetic order separated by space
+			/// All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
 			lower_case = t_("a b c d e f g h i j k l m n o p q r s t u v w x y z");
 			
-			/// All upper case letters in alphabetic order separated by space
+			/// All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
 			upper_case = t_("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
 
 			foreach (string c in lower_case.split (" ")) {
@@ -258,6 +261,11 @@ public class DefaultCharacterSet {
 		gr.add_single ('﨩');
 	}
 	
+	public static void use_default_range_latin (GlyphRange gr) {
+		gr.add_range ('!', '~');
+		gr.add_range ('¡', 'ʯ');
+	}
+		
 	public static void use_full_unicode_range (GlyphRange gr) {
 		CharDatabase.get_full_unicode (gr);
 		
