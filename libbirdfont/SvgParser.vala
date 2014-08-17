@@ -497,9 +497,9 @@ public class SvgParser {
 		
 		// parse path
 		int i = -1;
-		while (++i < c.length) {	
+		while (++i < c.length && bi < bezier_points.length) {	
 			if (c[i] == "m") {
-				while (is_point (c[i + 1])) { // FIXME: check array bounds
+				while (i + 2 < c.length && is_point (c[i + 1])) { // FIXME: check array bounds
 					bezier_points[bi].type = 'M';
 					bezier_points[bi].svg_type = 'm';
 					
@@ -516,7 +516,7 @@ public class SvgParser {
 					bi++;
 				}
 			} else if (c[i] == "M") {
-				while (is_point (c[i + 1])) {
+				while (i + 2 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'M';
 					bezier_points[bi].svg_type = 'M';
 					
@@ -533,7 +533,7 @@ public class SvgParser {
 					bi++;
 				}
 			} else if (c[i] == "h") {
-				while (is_point (c[i + 1])) {
+				while (i + 1 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'L';
 					bezier_points[bi].svg_type = 'h';
 					
@@ -543,7 +543,7 @@ public class SvgParser {
 					bezier_points[bi].y0 = py;
 					bi++;
 				}
-			} else if (c[i] == "H") {
+			} else if (i + 1 < c.length && c[i] == "H") {
 				while (is_point (c[i + 1])) {
 					bezier_points[bi].type = 'L';
 					bezier_points[bi].svg_type = 'H';
@@ -555,7 +555,7 @@ public class SvgParser {
 					bi++;
 				}
 			} else if (c[i] == "v") {
-				while (is_point (c[i + 1])) {
+				while (i + 1 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'L';
 					bezier_points[bi].svg_type = 'v';
 										
@@ -569,7 +569,7 @@ public class SvgParser {
 					bezier_points[bi].y0 = py;
 					bi++;
 				}				
-			} else if (c[i] == "V") {
+			} else if (i + 1 < c.length && c[i] == "V") {
 				while (is_point (c[i + 1])) {
 					bezier_points[bi].type = 'L';
 					bezier_points[bi].svg_type = 'V';
@@ -585,7 +585,7 @@ public class SvgParser {
 					bi++;
 				}
 			} else if (c[i] == "l") {
-				while (is_point (c[i + 1])) {
+				while (i + 2 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'L';
 					bezier_points[bi].svg_type = 'l';
 										
@@ -605,7 +605,7 @@ public class SvgParser {
 					bi++;
 				}
 			} else if (c[i] == "L") {
-				while (is_point (c[i + 1])) {
+				while (i + 2 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'L';
 					bezier_points[bi].svg_type = 'L';
 										
@@ -625,7 +625,7 @@ public class SvgParser {
 					bi++;				
 				}	
 			} else if (c[i] == "c") {
-				while (is_point (c[i + 1])) {
+				while (i + 6 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'C';
 					bezier_points[bi].svg_type = 'C';
 										
@@ -671,7 +671,7 @@ public class SvgParser {
 					bi++;
 				}
 			} else if (c[i] == "C") {
-				while (is_point (c[i + 1])) {
+				while (i + 6 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'C';
 					bezier_points[bi].svg_type = 'C';
 										
@@ -717,7 +717,7 @@ public class SvgParser {
 					bi++;				
 				}	
 			} else if (c[i] == "q") {
-				while (is_point (c[i + 1])) {
+				while (i + 4 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'Q';
 					bezier_points[bi].svg_type = 'q';
 										
@@ -753,7 +753,7 @@ public class SvgParser {
 				}
 			} else if (c[i] == "Q") {
 
-				while (is_point (c[i + 1])) {
+				while (i + 4 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'Q';
 					bezier_points[bi].svg_type = 'Q';
 										
@@ -788,7 +788,7 @@ public class SvgParser {
 					bi++;					
 				}	
 			} else if (c[i] == "t") {
-				while (is_point (c[i + 1])) {
+				while (i + 2 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'Q';
 					bezier_points[bi].svg_type = 't';
 										
@@ -819,7 +819,7 @@ public class SvgParser {
 					bi++;
 				}
 			} else if (c[i] == "T") {
-				while (is_point (c[i + 1])) {
+				while (i + 2 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'Q';
 					bezier_points[bi].svg_type = 'T';
 										
@@ -850,7 +850,7 @@ public class SvgParser {
 					bi++;				
 				}
 			} else if (c[i] == "s") {
-				while (is_point (c[i + 1])) {
+				while (i + 4 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'C';
 					bezier_points[bi].svg_type = 's';
 										
@@ -892,7 +892,7 @@ public class SvgParser {
 					bi++;
 				}
 			} else if (c[i] == "S") {
-				while (is_point (c[i + 1])) {
+				while (i + 4 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'C';
 					bezier_points[bi].svg_type = 'S';
 										
@@ -935,7 +935,7 @@ public class SvgParser {
 					bi++;				
 				}
 			} else if (c[i] == "a") {
-				while (is_point (c[i + 1])) {					
+				while (i + 7 < c.length && is_point (c[i + 1])) {					
 					arc_rx = parse_double (c[++i]);
 					arc_ry = parse_double (c[++i]);
 					
@@ -961,7 +961,7 @@ public class SvgParser {
 					
 					
 				}
-			} else if (c[i] == "A") {
+			} else if (i + 7 < c.length && c[i] == "A") {
 				while (is_point (c[i + 1])) {					
 					arc_rx = parse_double (c[++i]);
 					arc_ry = parse_double (c[++i]);

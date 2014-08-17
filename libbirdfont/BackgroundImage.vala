@@ -288,10 +288,11 @@ public class BackgroundImage {
 			return;
 		}
 		
-		converted = MainWindow.native_window.convert_to_png (path, (!) png_image.get_path ());
+		converted = MainWindow.native_window.convert_to_png (path.dup (), ((!) png_image.get_path ()).dup ());
 		
 		if (!converted) {
 			warning ("Failed to convert image: $(path)");
+			return;
 		}
 		
 		path = (!) png_image.get_path ();
