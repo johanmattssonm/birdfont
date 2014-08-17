@@ -59,6 +59,7 @@ public class SvgParser {
 		StringBuilder sb = new StringBuilder ();
 		SvgParser parser = new SvgParser ();
 		TextReader tr;
+		int i_tag, end_tag;
 
 		foreach (string l in lines) {
 			if (l.index_of ("Illustrator") > -1 || l.index_of ("illustrator") > -1) {
@@ -82,7 +83,17 @@ public class SvgParser {
 		}
 		
 		xml_document = sb.str;
-
+			
+		// CS6 compability
+		xml_document = replace (xml_document, "<svg", ">", "<svg>");
+		xml_document = replace (xml_document, "<foreignObject", "</foreignObject>", "");
+		xml_document = replace (xml_document, "<i:pgf", "</i:pgf>", "");
+		xml_document = replace (xml_document, "<g", ">", "<g>");
+		xml_document = xml_document.replace ("sodipodi:", "");
+		
+		print (xml_document);
+		
+		// parse the file
 		if (!has_format) {
 			stderr.printf ("No format identifier found.\n");
 		}
@@ -90,7 +101,9 @@ public class SvgParser {
 		Parser.init ();
 		
 		tr = new TextReader.for_doc (xml_document, "");
+		
 		tr.read ();
+		tr.lookup_namespace ("pgfRef");
 		root = tr.expand ();
 				
 		if (root == null) {
@@ -117,6 +130,22 @@ public class SvgParser {
 		glyph.close_path ();	
 	}
 	
+	public static string replace (string content, string start, string stop, string replacement) {
+		int i_tag = content.index_of (start);
+		int end_tag = content.index_of (stop, i_tag);
+		string c = "";
+		
+		if (i_tag > -1) {
+			c = content.substring (0, i_tag) 
+				+ replacement
+				+ content.substring (end_tag + stop.length);
+		} else {
+			c = content;
+		}
+		
+		return c;
+	}
+	
 	public static void import_svg (string path) {
 		string svg_data;
 		try {
@@ -137,7 +166,11 @@ public class SvgParser {
 			if (iter->name == "g") {
 				parse_layer (iter, pl);
 			}
-			
+
+			if (iter->name == "switch") {
+				parse_layer (iter, pl);
+			}
+						
 			if (iter->name == "path") {
 				parse_path (iter, pl);
 			}
