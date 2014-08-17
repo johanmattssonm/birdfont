@@ -1,5 +1,13 @@
 birdfont (0.46) stable;
 
+  * Oblique and italic transformation
+  * Improved overview tab
+  * Compability with CS6
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Aug 17 16:43:24 CEST 2014
+
+birdfont (0.46) stable;
+
   * Copy and paste side bearings
   * Support for many more languages including Japanese with CMAP format 12. 
   * Tools for adjusting side bearings in the kerning tab
