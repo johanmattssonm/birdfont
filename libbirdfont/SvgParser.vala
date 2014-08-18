@@ -91,8 +91,6 @@ public class SvgParser {
 		xml_document = replace (xml_document, "<g", ">", "<g>");
 		xml_document = xml_document.replace ("sodipodi:", "");
 		
-		print (xml_document);
-		
 		// parse the file
 		if (!has_format) {
 			stderr.printf ("No format identifier found.\n");
@@ -1057,6 +1055,7 @@ public class SvgParser {
 		
 		return_if_fail (b.length != 0);
 		return_if_fail (b[0].type != 'z');
+		return_if_fail (num_b < b.length);
 		
 		for (int i = start_index; i < num_b; i++) {
 			switch (b[i].type) {
@@ -1258,7 +1257,12 @@ public class SvgParser {
 		bool first_point = true;
 		double first_left_x, first_left_y;
 		Gee.ArrayList<EditPoint> smooth_points = new Gee.ArrayList<EditPoint> ();
-				
+		
+		if (num_b > b.length) {
+			warning ("num_b > b.length: $num_b > $(b.length)");
+			return path_list;
+		}
+		
 		path = new Path ();
 				
 		if (num_b == 0) {

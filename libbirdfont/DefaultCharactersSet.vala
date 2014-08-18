@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -54,9 +54,9 @@ public class DefaultCharacterSet {
 		
 		if (language == "PRIVATE_USE") {
 			use_private_area (gr);
-		} else if (language.has_prefix ("la")) {
+		} else if (language.has_prefix ("ja")) {
 			use_default_range_japanese (gr);
-		} else if (language.has_prefix ("latin")) {
+		} else if (language.has_prefix ("la")) {
 			use_default_range_latin (gr);
 		} else if (language.has_prefix ("zh")) { // TODO: not just simplified chinese
 			use_default_range_chinese (gr);

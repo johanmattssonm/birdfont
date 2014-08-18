@@ -32,7 +32,6 @@ public class ExportTool : GLib.Object {
 		Font font = BirdFont.get_current_font ();
 		string name;
 		StringBuilder s;
-		double baseline;
 
 		name = glyph.get_name ();
 		s = new StringBuilder ();
@@ -48,12 +47,6 @@ public class ExportTool : GLib.Object {
 	width="""" + @"$(glyph.get_width ())" + """px" 
 	height="""" + @"$(glyph.get_height ())" + """px">
 """);
-
-		baseline = glyph.get_height () - font.get_height (); // guides uses a different coordinate system
-		s.append ("<sodipodi:namedview>\n");
-		s.append (@"\t<sodipodi:guide orientation=\"0,1\" position=\"0,$baseline\" id=\"baseline\" />\n");
-		s.append ("</sodipodi:namedview>\n");
-		s.append (@"\n");
 		
 		s.append (@"<g id=\"$(name)\">\n");
 
