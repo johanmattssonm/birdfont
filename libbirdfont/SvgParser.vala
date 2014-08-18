@@ -51,7 +51,6 @@ public class SvgParser {
 	public static void import_svg_data (string xml_data) {
 		PathList path_list = new PathList ();
 		Glyph glyph; 
-		Xml.Doc* doc;
 		Xml.Node* root = null;
 		string[] lines = xml_data.split ("\n");
 		string xml_document;
@@ -99,21 +98,15 @@ public class SvgParser {
 		Parser.init ();
 		
 		tr = new TextReader.for_doc (xml_document, "");
-		
 		tr.read ();
-		tr.lookup_namespace ("pgfRef");
 		root = tr.expand ();
 				
 		if (root == null) {
 			warning ("Failed to load SVG file");
-			delete doc;
 			return;
 		}
 
 		path_list = parser.parse_svg_file (root);
-
-		delete doc;
-		Parser.cleanup ();
 	
 		glyph = MainWindow.get_current_glyph ();
 		foreach (Path p in path_list.paths) {
@@ -183,11 +176,12 @@ public class SvgParser {
 	
 	private void parse_layer (Xml.Node* node, PathList pl) {
 		string attr_name = "";
-		string attr_content;
+		string attr_content = "";
 		PathList layer = new PathList ();
 		
 		return_if_fail (node != null);
-					
+		return_if_fail (node->children != null);
+		
 		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
 			if (iter->name == "path") {
 				parse_path (iter, layer);
@@ -201,13 +195,15 @@ public class SvgParser {
 				parse_polygon (iter, layer);
 			}
 		}
-
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "transform") {
-				transform (attr_content, layer);
+		
+		if (!is_null (node) && !is_null (node->properties)) {
+			for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+				attr_name = prop->name;
+				attr_content = prop->children->content;
+				
+				if (attr_name == "transform") {
+					transform (attr_content, layer);
+				}
 			}
 		}
 		
