@@ -92,6 +92,8 @@ public class Font : GLib.Object {
 	bool bfp = false;
 	BirdFontPart bfp_file;
 	
+	public Gee.ArrayList<Glyph> deleted_glyphs;
+	
 	public Font () {
 		postscript_name = "Typeface";
 		name = "Typeface";
@@ -118,6 +120,8 @@ public class Font : GLib.Object {
 		bottom_limit = -27;
 		
 		bfp_file = new BirdFontPart (this);
+		
+		deleted_glyphs = new Gee.ArrayList<Glyph> ();
 	}
 
 	public void set_weight (string w) {
@@ -410,6 +414,10 @@ public class Font : GLib.Object {
 		glyph_cache.remove (glyph.get_unicode ());
 		glyph_name.remove (glyph.get_name ());
 		ligature.remove (glyph.get_current ().get_ligature_string ());
+		
+		foreach (Glyph g in glyph.get_version_list ().glyphs) {
+			deleted_glyphs.add (g);
+		}
 	}
 
 	// FIXME: the order of ligature substitutions

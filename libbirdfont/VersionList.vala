@@ -59,6 +59,9 @@ public class VersionList : DropMenu {
 			
 			return_if_fail (0 <= index < glyphs.size);
 			
+			font.deleted_glyphs.add (glyph_collection.get_current ());
+			font.touch ();
+			
 			over_view.store_undo_state (glyph_collection.copy ());
 			glyphs.remove_at (index);
 			
