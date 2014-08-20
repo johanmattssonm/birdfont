@@ -76,6 +76,9 @@ class BirdFontPart : GLib.Object{
 		DataOutputStream os;
 		BirdFontFile bf = new BirdFontFile (font);
 		bool error = false;
+		string file_name;
+		string glyph_dir_name;
+		File glyph_file;
 		
 		if (root_directory == "") {
 			warning ("No directory is created for this birdfont part.");
@@ -83,6 +86,19 @@ class BirdFontPart : GLib.Object{
 		}
 		
 		try {
+			// remove deleted glyphs
+			foreach (Glyph g in font.deleted_glyphs) {
+				file_name = get_glyph_base_file_name (g) + ".bfp";
+				glyph_dir_name = get_subdir_name (file_name);
+				glyph_file = get_destination_file (file_name, "glyphs", glyph_dir_name);
+				
+				if (glyph_file.query_exists ()) {
+					glyph_file.delete ();
+				}
+				
+				print (@"$((!)glyph_file.get_path ())\n");
+			}
+			
 			os = create_file (@"$(font.full_name).bfp");
 			bf.write_root_tag (os);
 			bf.write_closing_root_tag (os);
@@ -108,17 +124,17 @@ class BirdFontPart : GLib.Object{
 
 			font.glyph_cache.for_each ((gc) => {
 				try {
-					string file_name;
+					string selected_file_name;
 					string dir_name;
 			
 					if (is_null (gc)) {
 						warning ("No glyph collection");
 					}
 
-					file_name = get_first_number_in_unicode (((!)gc).get_current ());
-					dir_name = (!)file_name.get_char ().to_string ();
+					selected_file_name = get_first_number_in_unicode (((!)gc).get_current ());
+					dir_name = get_subdir_name (selected_file_name);
 								
-					os = create_file (@"selected_$(file_name).bfp", "glyphs", dir_name);
+					os = create_file (@"selected_$(selected_file_name).bfp", "glyphs", dir_name);
 					bf.write_root_tag (os);
 					bf.write_glyph_collection_start (gc, os);
 					bf.write_selected ((!) gc, os);
@@ -204,8 +220,18 @@ class BirdFontPart : GLib.Object{
 	
 	string get_glyph_base_file_name (Glyph g) throws GLib.Error {
 		string s = get_first_number_in_unicode (g);
-		s = @"$(s)_$(g.version_id)";
+		s = @"U+$(s)_$(g.version_id)";
 		return s;
+	}
+
+	public string get_subdir_name (string file_name) {
+		string d = file_name;
+		
+		if (file_name.has_prefix ("U+")) {
+			d = file_name.replace ("U+", "");
+		} 
+		
+		return (!) d.get_char ().to_string ();
 	}
 
 	void write_glyph (BirdFontFile bf, GlyphCollection gc, Glyph g) throws GLib.Error {
@@ -214,7 +240,7 @@ class BirdFontPart : GLib.Object{
 		DataOutputStream os;
 	 
 		file_name = get_glyph_base_file_name (g);
-		dir_name = (!)file_name.get_char ().to_string ();
+		dir_name = get_subdir_name (file_name);
 					
 		os = create_file (@"$(file_name).bfp", "glyphs", dir_name);
 		bf.write_root_tag (os);
@@ -236,7 +262,7 @@ class BirdFontPart : GLib.Object{
 
 			if (bg.is_valid ()) {
 				file_name = @"$(bg.get_sha1 ()).png";
-				dir_name = (!)file_name.get_char ().to_string ();
+				dir_name = get_subdir_name (file_name);
 				file = get_destination_file (file_name, "images", dir_name);
 				bg.copy_if_new (file);				
 				
