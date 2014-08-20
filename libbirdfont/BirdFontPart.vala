@@ -12,6 +12,8 @@
     Lesser General Public License for more details.
 */
 
+using Git;
+
 namespace BirdFont {
 
 /** BirdFontPart is a class for parsing .bfp files. The file format is 
@@ -25,6 +27,8 @@ class BirdFontPart : GLib.Object{
 	Font font;
 	List<string> parts;
 	string root_directory;
+	Index git_index;
+	Repository? git_repository;
 
 	static string FILE_ATTRIBUTES = "standard::*";
 
@@ -72,6 +76,28 @@ class BirdFontPart : GLib.Object{
 		return path;
 	}
 	
+	bool create_git_repository () {
+		File root = File.new_for_path (root_directory);
+		File git = root.get_child (".git");
+		Repository repo;
+		
+		if (!git.query_exists ()) {
+			if (Repository.init (out repo, root_directory, false) != Git.Error.OK) {
+				warning ("Can not create git repository.");
+				return false;
+			}
+		}
+
+		if (Repository.open (out git_repository, root_directory) != Git.Error.OK) {
+			warning ("Can not open git repository.");
+			return false;
+		}
+					
+		((!) git_repository).get_index (out git_index);
+
+		return true;;
+	}
+	
 	public bool save () {
 		DataOutputStream os;
 		BirdFontFile bf = new BirdFontFile (font);
@@ -79,12 +105,36 @@ class BirdFontPart : GLib.Object{
 		string file_name;
 		string glyph_dir_name;
 		File glyph_file;
+		Signature? sig;
+		object_id id;
+		Git.Tree tree;
+		int nparents;
 		
 		if (root_directory == "") {
 			warning ("No directory is created for this birdfont part.");
 			return false;
 		}
 		
+		Git.Threads.init ();
+		
+		if (!create_git_repository ()) {
+			return false;
+		}
+		
+		return_val_if_fail (!is_null (git_repository), false);
+		
+		if (git_index.write_tree (out id) != Git.Error.OK) {
+			warning ("write_tree failed");
+			error = true;
+		}
+			
+		Signature.create_now (out sig, "Test Namn", "test@test.com");
+		
+		if (((!) git_repository).lookup_tree(out tree, id) != Git.Error.OK) {
+			warning ("Can't find tree.");
+			error = true;
+		}
+            
 		try {
 			// remove deleted glyphs
 			foreach (Glyph g in font.deleted_glyphs) {
@@ -166,10 +216,24 @@ class BirdFontPart : GLib.Object{
 		} catch (GLib.Error e) {
 			warning (@"Failed to save bfp files to $root_directory\n");
 			warning (@"$(e.message) \n");
-			return false;
+			error = true;
+		}
+
+		if (((!) git_repository).is_empty) {
+			nparents = 0;
+		} else {
+			nparents = 0;
 		}
 		
-		return error;
+		if (((!) git_repository).create_commit_v (id, "HEAD", (!) sig, (!) sig, 
+				"utf-8", "Improved typeface", tree, nparents) != Git.Error.OK) {
+			warning ("Can't commit");
+			error = true;
+		}
+		
+		Git.Threads.shutdown ();
+		
+		return !error;
 	}
 
 	void copy_backgrounds (string folder) throws GLib.Error {
@@ -411,16 +475,25 @@ class BirdFontPart : GLib.Object{
 	private DataOutputStream create_file (string name, string subdir1 = "", string subdir2 = "") throws GLib.Error {
 		DataOutputStream os;
 		File file;
+		string git_path;
 		
 		file = get_destination_file (name, subdir1, subdir2);
-		
+
 		if (file.query_exists ()) {
 			file.delete ();
 		}
 		
 		os = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
 		
-		// FIXME: GIT ADD
+		if (subdir2 != "") {
+			git_path = subdir1 + "/" + subdir2 + "/" + name;
+		} else if (subdir1 != "") {
+			git_path = subdir1 + "/" + name;
+		} else {
+			git_path = name;
+		}
+		
+		git_index.add_path (git_path);
 		
 		return os;
 	}
