@@ -452,7 +452,7 @@ public class BirdFont {
 			font_file = File.new_for_path (args.get_file ());
 			
 			if (!font_file.query_exists ()) {
-				stderr.printf (@"File $(args.get_file ()) not found.");
+				stderr.printf (@"The file \"$(args.get_file ())\" was not found.\n");
 				Process.exit (-1);
 			}
 		}

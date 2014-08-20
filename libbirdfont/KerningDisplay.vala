@@ -269,9 +269,6 @@ public class KerningDisplay : FontDisplay {
 		Font font;
 		GlyphRange? gr_left, gr_right;
 		bool got_pair;
-		
-		font = BirdFont.get_current_font ();
-		font.touch ();
 
 		got_pair = get_kerning_pair (handle, out a, out b, out gr_left, out gr_right);
 		
@@ -393,7 +390,11 @@ public class KerningDisplay : FontDisplay {
 		KerningClasses classes = KerningClasses.get_instance ();
 		string n, f;
 		bool has_kerning;
+		Font font;
 		
+		font = BirdFont.get_current_font ();
+		font.touch ();
+				
 		kern = get_kerning_for_pair (a, b, gr_left, gr_right);
 		
 		try {

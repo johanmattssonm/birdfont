@@ -48,7 +48,8 @@ LIBS = [
     'gdk-pixbuf-2.0',
     'webkitgtk-3.0',
     config.GEE,
-    'libnotify'
+    'libnotify',
+    'libgit2'
     ]
 
 def task_build ():

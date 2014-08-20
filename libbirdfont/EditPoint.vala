@@ -453,9 +453,9 @@ public class EditPoint : GLib.Object {
 
 	public void convert_to_line () {
 		left_handle.convert_to_line ();
-		right_handle.convert_to_line ();
+		right_handle.convert_to_line ();		
 	}
-	
+		
 	public string to_string () {
 		StringBuilder s = new StringBuilder ();
 		s.append (@"Position: $x, $y\n");

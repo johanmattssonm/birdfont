@@ -199,7 +199,11 @@ public class PenTool : Tool {
 		
 		key_press_action.connect ((self, keyval) => {
 			if (keyval == Key.DEL || keyval == Key.BACK_SPACE) {
-				delete_selected_points ();
+				if (KeyBindings.has_shift ()) {
+					delete_selected_points ();
+				} else {
+					delete_simplify ();
+				}
 			}
 			
 			if (is_arrow_key (keyval)) {
@@ -282,12 +286,205 @@ public class PenTool : Tool {
 		g.update_view ();
 
 		selected_points.clear ();
-
 		selected_handle.selected = false;
 		
 		active_handle = new EditPointHandle.empty ();
 		selected_handle = new EditPointHandle.empty ();
+		
+		active_edit_point = null;
+		selected_point = new EditPoint ();
+	}
+
+	static void get_closes_point_in_segment (EditPoint ep0, EditPoint ep1, EditPoint ep2,
+			double px, double py,
+			out double nx, out double ny) {
+								
+		double min_distance = double.MAX;
+		double npx, npy;
+		
+		npx = 0;
+		npy = 0;
+		
+		Path.all_of (ep0, ep1, (xa, ya, ta) => {
+			double d = Path.distance (px, xa, py, ya);
+			if (d < min_distance) {
+				min_distance = d;
+				npx = xa;
+				npy = ya;
+			}
+			return true;
+		}, 10);
+
+		Path.all_of (ep1, ep2, (xa, ya, ta) => {
+			double d = Path.distance (px, xa, py, ya);
+			if (d < min_distance) {
+				min_distance = d;
+				npx = xa;
+				npy = ya;
+			}
+			return true;
+		}, 10);	
+
+		nx = npx;
+		ny = npy;
+	}
+
+	static void get_path_distortion (EditPoint oe0, EditPoint oe1, EditPoint oe2,
+			EditPoint ep1, EditPoint ep2,
+			out double distortion_first, out double distortion_next) {
+		double nx, ny;
+		double df, dn;
+		
+		df = 0;
+		dn = 0;
+		nx = 0;
+		ny = 0;
+
+		Path.all_of (ep1, ep2, (xa, ya, ta) => {
+			double f, n;
+			
+			get_closes_point_in_segment (oe0, oe1, oe2, xa, ya, out nx, out ny);
+			
+			if (ta < 0.5) {
+				f = Path.distance (nx, xa, ny, ya);
+				if (f > df) {
+					df = f;
+				}
+			} else {
+				n = Path.distance (nx, xa, ny, ya);
+				if (n > dn) {
+					dn = n;
+				}
+			}
+			
+			return true;
+		}, 10);	
+
+		distortion_first = df;
+		distortion_next = dn;
+	}
+
+	public static void delete_simplify () {
+		double start_length, stop_length;
+		double start_distortion, start_min_distortion, start_new_length;
+		double stop_distortion, stop_min_distortion, stop_new_length;
+		double prev_length_adjustment, next_length_adjustment;
+		double prev_length_adjustment_reverse, next_length_adjustment_reverse;
+		EditPoint ep1, ep2;
+
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		foreach (PointSelection p in selected_points) {
+			p.point.deleted = true;
+			
+			if (p.point.next != null && p.point.prev != null) {
+				p.point.get_next ().get_left_handle ().convert_to_curve ();
+				p.point.get_prev ().get_right_handle ().convert_to_curve ();
+				
+				ep1 = p.point.get_prev ().copy ();
+				ep2 = p.point.get_next ().copy ();
+
+				stop_new_length = 1;
+				start_new_length = 1;
+				start_length = ep1.get_right_handle ().length;
+				stop_length = ep2.get_left_handle ().length;
+
+				stop_min_distortion = double.MAX;
+				ep1.get_right_handle ().length = start_length * start_new_length;
+				
+				start_min_distortion = double.MAX;
+				ep2.get_left_handle ().length = stop_length * stop_new_length;
 	
+				for (double a = 1; a < 10; a += 0.05) {
+					ep1.get_right_handle ().length = start_length * a;
+					ep2.get_left_handle ().length = stop_length * a;
+						
+					get_path_distortion (p.point.get_prev (), p.point, p.point.get_next (), 
+						ep1, ep2, 
+						out start_distortion, out stop_distortion);
+					
+					if (start_distortion + stop_distortion < start_min_distortion + stop_min_distortion) {
+						stop_min_distortion = stop_distortion;
+						stop_new_length = a;
+						
+						start_min_distortion = start_distortion;
+						start_new_length = a;
+					} 
+				}
+				
+				for (double a = 1; a < 10; a += 0.05) {
+					ep1.get_right_handle ().length = start_length * a;
+
+					get_path_distortion (p.point.get_prev (), p.point, p.point.get_next (), 
+						ep1, ep2, 
+						out start_distortion, out stop_distortion);
+						
+					if (start_distortion < start_min_distortion) {
+						start_min_distortion = start_distortion;
+						start_new_length = a;
+					}
+				}
+
+				prev_length_adjustment = 0;
+				next_length_adjustment = 0;
+				prev_length_adjustment_reverse = 0;
+				next_length_adjustment_reverse = 0;
+				
+				for (double a = 0.01; a < 30; a += 0.5) {
+					ep1.get_right_handle ().length = (start_length * start_new_length) - a;
+					ep2.get_left_handle ().length = (stop_length * stop_new_length) + a;
+
+					get_path_distortion (p.point.get_prev (), p.point, p.point.get_next (), 
+						ep1, ep2, 
+						out start_distortion, out stop_distortion);
+
+					if (start_distortion + stop_distortion <= start_min_distortion + stop_min_distortion) {
+						start_min_distortion = start_distortion;
+						prev_length_adjustment = a;
+						
+						stop_min_distortion = stop_distortion;
+						next_length_adjustment = a;
+					}
+				}
+				
+				for (double a = 0.01; a < 30; a += 0.5) {	
+					ep1.get_right_handle ().length = (start_length * start_new_length) - prev_length_adjustment+ a;
+					ep2.get_left_handle ().length = (stop_length * stop_new_length) - next_length_adjustment - a;
+					
+					get_path_distortion (p.point.get_prev (), p.point, p.point.get_next (), 
+						ep1, ep2, 
+						out start_distortion, out stop_distortion);
+
+					if (start_distortion + stop_distortion <= start_min_distortion + stop_min_distortion) {
+						start_min_distortion = start_distortion;
+						prev_length_adjustment_reverse = a;
+						
+						stop_min_distortion = stop_distortion;
+						next_length_adjustment_reverse = a;
+					} 
+				}
+																		
+				p.point.get_prev ().get_right_handle ().length = (start_length * start_new_length) - prev_length_adjustment + prev_length_adjustment_reverse;	
+				p.point.get_next ().get_left_handle ().length = (stop_length * stop_new_length) + next_length_adjustment - next_length_adjustment_reverse;
+			}
+		}
+		
+		foreach (PointSelection p in selected_points) {
+			p.point.deleted = true;
+		}
+
+		foreach (Path p in g.path_list) {
+			p.remove_deleted_points ();
+		}
+				
+		g.update_view ();
+
+		selected_points.clear ();
+		selected_handle.selected = false;
+		
+		active_handle = new EditPointHandle.empty ();
+		selected_handle = new EditPointHandle.empty ();
+		
 		active_edit_point = null;
 		selected_point = new EditPoint ();
 	}
