@@ -313,7 +313,7 @@ public class PenTool : Tool {
 				npy = ya;
 			}
 			return true;
-		}, 10);
+		}, 200);
 
 		Path.all_of (ep1, ep2, (xa, ya, ta) => {
 			double d = Path.distance (px, xa, py, ya);
@@ -323,7 +323,7 @@ public class PenTool : Tool {
 				npy = ya;
 			}
 			return true;
-		}, 10);	
+		}, 200);	
 
 		nx = npx;
 		ny = npy;
@@ -348,17 +348,17 @@ public class PenTool : Tool {
 			if (ta < 0.5) {
 				f = Path.distance (nx, xa, ny, ya);
 				if (f > df) {
-					df = f;
+					df += f;
 				}
 			} else {
 				n = Path.distance (nx, xa, ny, ya);
 				if (n > dn) {
-					dn = n;
+					dn += n;
 				}
 			}
 			
 			return true;
-		}, 20);	
+		}, 4);	
 
 		distortion_first = df;
 		distortion_next = dn;
@@ -387,6 +387,7 @@ public class PenTool : Tool {
 		double start_length, stop_length;
 		double start_distortion, start_min_distortion, start_new_length;
 		double stop_distortion, stop_min_distortion, stop_new_length;
+		double distortion; 
 		double prev_length_adjustment, next_length_adjustment;
 		double prev_length_adjustment_reverse, next_length_adjustment_reverse;
 		EditPoint ep1, ep2;
@@ -430,93 +431,96 @@ public class PenTool : Tool {
 		
 		start_min_distortion = double.MAX;
 		ep2.get_left_handle ().length = stop_length * stop_new_length;
-
-		for (double a = 1; a < 10; a += 0.05) {
-			ep1.get_right_handle ().length = start_length * a;
-			ep2.get_left_handle ().length = stop_length * a;
-				
-			get_path_distortion (prev, p.point, next, 
-				ep1, ep2, 
-				out start_distortion, out stop_distortion);
-			
-			if (start_distortion + stop_distortion < start_min_distortion + stop_min_distortion) {
-				stop_min_distortion = stop_distortion;
-				stop_new_length = a;
-				
-				start_min_distortion = start_distortion;
-				start_new_length = a;
-			} 
-		}
-
-		for (double a = 1; a < 10; a += 0.05) {
-			ep1.get_right_handle ().length = start_length * a;
-
-			get_path_distortion (prev, p.point, next, 
-				ep1, ep2, 
-				out start_distortion, out stop_distortion);
-				
-			if (start_distortion < start_min_distortion) {
-				start_min_distortion = start_distortion;
-				start_new_length = a;
-			}
-		}
-
-		ep1.get_right_handle ().length = start_length * start_new_length;
-		for (double a = 1; a < 10; a += 0.05) {
-			ep2.get_left_handle ().length = stop_length * a;
-
-			get_path_distortion (prev, p.point, next, 
-				ep1, ep2, 
-				out start_distortion, out stop_distortion);
-				
-			if (stop_distortion < stop_min_distortion) {
-				stop_min_distortion = stop_distortion;
-				stop_new_length = a;
-			}
-		}
 				
 		prev_length_adjustment = 0;
 		next_length_adjustment = 0;
 		prev_length_adjustment_reverse = 0;
 		next_length_adjustment_reverse = 0;
 		
-		for (double a = 0.01; a < 50; a += 0.5) {
-			ep1.get_right_handle ().length = (start_length * start_new_length) - a;
-			ep2.get_left_handle ().length = (stop_length * stop_new_length) + a;
-
-			get_path_distortion (prev, p.point, next, 
-				ep1, ep2, 
-				out start_distortion, out stop_distortion);
-
-			if (start_distortion + stop_distortion <= start_min_distortion + stop_min_distortion) {
-				start_min_distortion = start_distortion;
-				prev_length_adjustment = a;
+		
+		// FOR 10s
+		double min_distortion = double.MAX;
+		
+		for (double a = 0; a < 50; a += 10) {
+			for (double b = 0; b < 50; b += 10) {
+				ep1.get_right_handle ().length = start_length + a;
+				ep2.get_left_handle ().length = stop_length + b;
 				
-				stop_min_distortion = stop_distortion;
-				next_length_adjustment = a;
+				get_path_distortion (prev, p.point, next, 
+					ep1, ep2, 
+					out start_distortion, out stop_distortion);
+				
+				distortion = Math.fmax (start_distortion, stop_distortion);
+				
+				if (distortion < min_distortion) {
+					min_distortion = distortion;
+					
+					prev_length_adjustment_reverse = a;
+					next_length_adjustment = b;
+				}
 			}
 		}
 		
-		for (double a = 0.01; a < 50; a += 0.5) {	
-			ep1.get_right_handle ().length = (start_length * start_new_length) - prev_length_adjustment + a;
-			ep2.get_left_handle ().length = (stop_length * stop_new_length) + next_length_adjustment - a;
-			
-			get_path_distortion (prev, p.point, next, 
-				ep1, ep2, 
-				out start_distortion, out stop_distortion);
+		start_length += prev_length_adjustment_reverse;
+		stop_length += next_length_adjustment;
 
-			if (start_distortion + stop_distortion <= start_min_distortion + stop_min_distortion) {
-				start_min_distortion = start_distortion;
-				prev_length_adjustment_reverse = a;
+		min_distortion = double.MAX;
+		for (double a = -10; a < 10; a += 1) {
+			for (double b = -10; b < 10; b += 1) {
+				ep1.get_right_handle ().length = start_length + a;
+				ep2.get_left_handle ().length = stop_length + b;
 				
-				stop_min_distortion = stop_distortion;
-				next_length_adjustment_reverse = a;
+				get_path_distortion (prev, p.point, next, 
+					ep1, ep2, 
+					out start_distortion, out stop_distortion);
+				
+				distortion = Math.fmax (start_distortion, stop_distortion);
+
+				if (distortion < min_distortion) {
+					min_distortion = distortion;
+					
+					prev_length_adjustment_reverse = a;
+					next_length_adjustment = b;
+				}
+			}
+		}		
+
+		start_length += prev_length_adjustment_reverse;
+		stop_length += next_length_adjustment;
+
+		min_distortion = double.MAX;
+		for (double a = -1; a < 1; a += 0.1) {
+			for (double b = -1; b < 1; b += 0.1) {
+				ep1.get_right_handle ().length = start_length + a;
+				ep2.get_left_handle ().length = stop_length + b;
+				
+				get_path_distortion (prev, p.point, next, 
+					ep1, ep2, 
+					out start_distortion, out stop_distortion);
+				
+				distortion = Math.fmax (start_distortion, stop_distortion);
+
+				if (distortion < min_distortion) {
+					min_distortion = distortion;
+					
+					prev_length_adjustment_reverse = a;
+					next_length_adjustment = b;
+				}
 			}
 		}
-																
-		prev.get_right_handle ().length = (start_length * start_new_length) - prev_length_adjustment + prev_length_adjustment_reverse;	
-		next.get_left_handle ().length = (stop_length * stop_new_length) + next_length_adjustment - next_length_adjustment_reverse;
 		
+		start_length += prev_length_adjustment_reverse;
+		stop_length += next_length_adjustment;
+				
+		prev.get_right_handle ().length = start_length;
+		
+		if (prev.get_right_handle ().type != PointType.QUADRATIC) {
+			next.get_left_handle ().length = stop_length;
+		} else {
+			next.get_left_handle ().move_to_coordinate (
+				prev.get_right_handle ().x, prev.get_right_handle ().y);
+		}
+
 		p.point.deleted = true;
 		p.path.remove_deleted_points ();
 		p.path.update_region_boundaries ();

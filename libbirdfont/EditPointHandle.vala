@@ -112,8 +112,8 @@ public class EditPointHandle : GLib.Object {
 			case PointType.LINE_QUADRATIC:
 				type = PointType.LINE_QUADRATIC;
 				break;
-			case PointType.DOUBLE_CURVE:
-				type = PointType.LINE_DOUBLE_CURVE;
+			case PointType.LINE_DOUBLE_CURVE:
+				type = PointType.DOUBLE_CURVE;
 				break;
 			case PointType.LINE_CUBIC:
 				type = PointType.CUBIC;
