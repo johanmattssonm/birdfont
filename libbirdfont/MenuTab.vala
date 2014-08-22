@@ -399,6 +399,10 @@ public class MenuTab : FontDisplay {
 		
 		DrawingTools.move_tool.move_to_baseline ();
 	}
+
+	public static void show_file_dialog_tab (string title, FileChooser action) {
+		MainWindow.get_tab_bar ().add_tab (new FileDialogTab (title, action));
+	}
 }
 
 }

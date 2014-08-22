@@ -756,6 +756,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void file_chooser (string title, FileChooser fc, uint flags) {
+		MenuTab.show_file_dialog_tab (title, fc);
+		return;
+
 		string? fn = null;
 		
 		if ((flags & FileChooser.LOAD) > 0) {

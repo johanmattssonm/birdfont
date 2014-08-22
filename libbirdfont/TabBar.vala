@@ -219,13 +219,8 @@ public class TabBar : GLib.Object {
 	public void close_display (FontDisplay f) {
 		int i = -1;
 		
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
-		
-		if (tabs.size > 1) {
-			foreach (var t in tabs) {
+		if (tabs.size >= 1) {
+			foreach (Tab t in tabs) {
 				++i;
 				
 				if (t.get_display () == f) {
@@ -239,11 +234,6 @@ public class TabBar : GLib.Object {
 	} 
 
 	public void close_all_tabs () {
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
-		
 		for (int i = 0; i < get_length (); i++) {
 			if (close_tab (i, false, true)) {
 				close_all_tabs ();
@@ -255,11 +245,6 @@ public class TabBar : GLib.Object {
 		Tab t;
 		EmptyTab empty_tab_canvas;
 		Tab empty_tab;
-	
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return false;
-		}
 				
 		if (!(0 <= index < tabs.size)) {
 			return false;
@@ -299,11 +284,6 @@ public class TabBar : GLib.Object {
 	
 	public bool close_by_name (string name, bool background_tab = false) {
 		int i = 0;
-
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return false;
-		}
 				
 		foreach (var t in tabs) {
 			if (t.get_display ().get_name () == name) {
@@ -317,22 +297,12 @@ public class TabBar : GLib.Object {
 	}
 	
 	public void close_background_tab_by_name (string name) {
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
-		
 		close_by_name (name, true);
 	}
 	
 	/** Select a tab and return true if it is open. */
 	public bool selected_open_tab (Tab t) {
 		int i = 0;
-
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return false;
-		}
 		
 		foreach (var n in tabs) {
 			if (n == t) {
@@ -367,11 +337,6 @@ public class TabBar : GLib.Object {
 	public bool selected_open_tab_by_name (string t) {
 		int i = 0;
 	
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return false;
-		}
-		
 		foreach (var n in tabs) {
 			if (n.get_display ().get_name () == t) {
 				select_tab (i);
@@ -404,11 +369,6 @@ public class TabBar : GLib.Object {
 	
 	public void select_tab (int index, bool signal_selected = true) {
 		Tab t;
-
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
 			
 		// always close any pending text input if the user switches tab
 		MainWindow.native_window.hide_text_input ();
@@ -532,11 +492,6 @@ public class TabBar : GLib.Object {
 	
 	public void select_tab_click (double x, double y, int width, int height) {
 		int over, close;
-		
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
 		
 		this.width = width;
 		this.height = height;
