@@ -266,7 +266,6 @@ public class KerningDisplay : FontDisplay {
 	
 	private double get_kerning_for_handle (int handle) {
 		string a, b;
-		Font font;
 		GlyphRange? gr_left, gr_right;
 		bool got_pair;
 

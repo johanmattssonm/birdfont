@@ -125,9 +125,6 @@ public class FileDialogTab : FontDisplay {
 		double y = 20 * MainWindow.units;
 		int s = 0;
 		bool color = (scroll % 2) == 0;
-		string l, r;
-		string[] p;
-		double k;
 		
 		this.allocation = allocation;
 		

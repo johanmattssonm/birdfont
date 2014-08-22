@@ -403,6 +403,53 @@ public class MenuTab : FontDisplay {
 	public static void show_file_dialog_tab (string title, FileChooser action) {
 		MainWindow.get_tab_bar ().add_tab (new FileDialogTab (title, action));
 	}
+	
+	public static void simplify_path () {
+		Task t;
+		
+		t = new Task ();
+		t.task.connect (simplify);
+		MainWindow.native_window.run_background_thread (t);
+	}
+	
+	private static void simplify () {
+		Glyph g = MainWindow.get_current_glyph ();
+		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
+		
+		// selected objects
+		foreach (Path p in g.active_paths) {
+			paths.add (PenTool.simplify (p, false));
+		}
+		
+		// selected segments
+		if (paths.size == 0) {
+			foreach (Path p in g.path_list) {
+				g.add_active_path (p);
+			}
+			
+			foreach (Path p in g.active_paths) {
+				paths.add (PenTool.simplify (p, true));
+			}
+		}
+		
+		g.store_undo_state ();
+		
+		foreach (Path p in g.active_paths) {
+			g.path_list.remove (p);
+		}
+
+		foreach (Path p in g.active_paths) {
+			g.path_list.remove (p);
+		}
+				
+		foreach (Path p in paths) {
+			g.add_path (p);
+			g.add_active_path (p);
+		}
+
+		g.active_paths.clear ();
+		g.update_view ();
+	}
 }
 
 }
