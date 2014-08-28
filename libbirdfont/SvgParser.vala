@@ -91,7 +91,7 @@ public class SvgParser {
 		
 		// parse the file
 		if (!has_format) {
-			stderr.printf ("No format identifier found.\n");
+			warn_if_test ("No format identifier found in SVG parser.\n");
 		}
 
 		Parser.init ();

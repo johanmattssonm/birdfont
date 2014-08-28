@@ -405,9 +405,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void simplify_path () {
-		Task t;
-		
-		t = new Task ();
+		Task t = new Task ();
 		t.task.connect (simplify);
 		MainWindow.native_window.run_background_thread (t);
 	}

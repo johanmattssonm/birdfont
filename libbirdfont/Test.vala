@@ -23,6 +23,7 @@ public class Test : Object {
 	public Test.time (string name) {
 		this.name = name;
 		benchmark = true;
+		timer_start ();
 	}
 	
 	public Test (Callback callback, string name, bool benchmark = false) {

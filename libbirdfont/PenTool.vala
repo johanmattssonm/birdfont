@@ -301,8 +301,8 @@ public class PenTool : Tool {
 		double npx0, npy0;
 		double npx1, npy1;
 		
-		Path.find_closes_point_in_segment (ep0, ep1, px, py, out npx0, out npy0);
-		Path.find_closes_point_in_segment (ep1, ep2, px, py, out npx1, out npy1);
+		Path.find_closes_point_in_segment (ep0, ep1, px, py, out npx0, out npy0, 50);
+		Path.find_closes_point_in_segment (ep1, ep2, px, py, out npx1, out npy1, 50);
 
 		if (Path.distance (px, npx0, py, npy0) < Path.distance (px, npx1, py, npy1)) {
 			nx = npx0;
@@ -318,15 +318,18 @@ public class PenTool : Tool {
 			out double distortion_first, out double distortion_next) {
 		double nx, ny;
 		double df, dn;
+		int step;
 		
 		df = 0;
 		dn = 0;
 		nx = 0;
 		ny = 0;
 
+		step = 4;
+		
 		Path.all_of (ep1, ep2, (xa, ya, ta) => {
 			double f, n;
-			
+	
 			get_closes_point_in_segment (oe0, oe1, oe2, xa, ya, out nx, out ny);
 			
 			if (ta < 0.5) {
@@ -342,7 +345,7 @@ public class PenTool : Tool {
 			}
 			
 			return true;
-		}, 4);	
+		}, step);	
 
 		distortion_first = df;
 		distortion_next = dn;
@@ -370,14 +373,15 @@ public class PenTool : Tool {
 	/** @return path distortion. */
 	public static double remove_point_simplify (PointSelection p) {
 		double start_length, stop_length;
-		double start_distortion, start_min_distortion, start_new_length;
-		double stop_distortion, stop_min_distortion, stop_new_length;
+		double start_distortion, start_min_distortion, start_previous_length;
+		double stop_distortion, stop_min_distortion, stop_previous_length;
 		double distortion, min_distortion; 
 		double prev_length_adjustment, next_length_adjustment;
 		double prev_length_adjustment_reverse, next_length_adjustment_reverse;
 		EditPoint ep1, ep2;
 		EditPoint next, prev;
-		
+		double step, distance;
+				
 		return_if_fail (p.path.points.size > 0);
 		
 		if (p.path.points.size <= 2) {
@@ -406,16 +410,17 @@ public class PenTool : Tool {
 		ep1 = prev.copy ();
 		ep2 = next.copy ();
 
-		stop_new_length = 1;
-		start_new_length = 1;
 		start_length = ep1.get_right_handle ().length;
 		stop_length = ep2.get_left_handle ().length;
+		
+		stop_previous_length = start_length;
+		start_previous_length = stop_length;
 
 		stop_min_distortion = double.MAX;
-		ep1.get_right_handle ().length = start_length * start_new_length;
+		ep1.get_right_handle ().length = start_length;
 		
 		start_min_distortion = double.MAX;
-		ep2.get_left_handle ().length = stop_length * stop_new_length;
+		ep2.get_left_handle ().length = stop_length;
 				
 		prev_length_adjustment = 0;
 		next_length_adjustment = 0;
@@ -423,78 +428,44 @@ public class PenTool : Tool {
 		next_length_adjustment_reverse = 0;
 
 		min_distortion = double.MAX;
-		
-		for (double a = 0; a < 50; a += 5) {
-			for (double b = 0; b < 50; b += 5) {
-				ep1.get_right_handle ().length = start_length + a;
-				ep2.get_left_handle ().length = stop_length + b;
-				
-				get_path_distortion (prev, p.point, next, 
-					ep1, ep2, 
-					out start_distortion, out stop_distortion);
-				
-				distortion = Math.fmax (start_distortion, stop_distortion);
-				
-				if (distortion < min_distortion) {
-					min_distortion = distortion;
+		distance = Path.distance (ep1.x, ep2.x, ep1.y, ep2.y);
+
+		for (double m = 50.0; m >= 0.05; m /= 10.0) {
+			step = m / 10.0;
+			min_distortion = double.MAX;
+			
+			double first = (m == 50.0) ? 0 : -m;
+			for (double a = first; a < m; a += step) {
+				for (double b = first; b < m; b += step) {
 					
-					prev_length_adjustment_reverse = a;
-					next_length_adjustment = b;
+					if (start_length + a + stop_length + b > distance) {
+						break;
+					}
+							
+					ep1.get_right_handle ().length = start_length + a;
+					ep2.get_left_handle ().length = stop_length + b;
+					
+					get_path_distortion (prev, p.point, next, 
+						ep1, ep2, 
+						out start_distortion, out stop_distortion);
+					
+					distortion = Math.fmax (start_distortion, stop_distortion);
+					
+					if (distortion < min_distortion
+							&& start_length + a > 0
+							&& stop_length + b > 0) {
+						min_distortion = distortion;
+						
+						prev_length_adjustment_reverse = a;
+						next_length_adjustment = b;
+					}
 				}
 			}
+			
+			start_length += prev_length_adjustment_reverse;
+			stop_length += next_length_adjustment;
 		}
 		
-		start_length += prev_length_adjustment_reverse;
-		stop_length += next_length_adjustment;
-
-		min_distortion = double.MAX;
-		for (double a = -5; a < 5; a += 1) {
-			for (double b = -5; b < 5; b += 1) {
-				ep1.get_right_handle ().length = start_length + a;
-				ep2.get_left_handle ().length = stop_length + b;
-				
-				get_path_distortion (prev, p.point, next, 
-					ep1, ep2, 
-					out start_distortion, out stop_distortion);
-				
-				distortion = Math.fmax (start_distortion, stop_distortion);
-
-				if (distortion < min_distortion) {
-					min_distortion = distortion;
-					
-					prev_length_adjustment_reverse = a;
-					next_length_adjustment = b;
-				}
-			}
-		}		
-
-		start_length += prev_length_adjustment_reverse;
-		stop_length += next_length_adjustment;
-
-		min_distortion = double.MAX;
-		for (double a = -1; a < 1; a += 0.1) {
-			for (double b = -1; b < 1; b += 0.1) {
-				ep1.get_right_handle ().length = start_length + a;
-				ep2.get_left_handle ().length = stop_length + b;
-				
-				get_path_distortion (prev, p.point, next, 
-					ep1, ep2, 
-					out start_distortion, out stop_distortion);
-				
-				distortion = Math.fmax (start_distortion, stop_distortion);
-
-				if (distortion < min_distortion) {
-					min_distortion = distortion;
-					
-					prev_length_adjustment_reverse = a;
-					next_length_adjustment = b;
-				}
-			}
-		}
-		
-		start_length += prev_length_adjustment_reverse;
-		stop_length += next_length_adjustment;
-				
 		prev.get_right_handle ().length = start_length;
 		
 		if (prev.get_right_handle ().type != PointType.QUADRATIC) {
@@ -503,7 +474,7 @@ public class PenTool : Tool {
 			next.get_left_handle ().move_to_coordinate (
 				prev.get_right_handle ().x, prev.get_right_handle ().y);
 		}
-
+		
 		p.point.deleted = true;
 		p.path.remove_deleted_points ();
 		p.path.update_region_boundaries ();
@@ -762,7 +733,7 @@ public class PenTool : Tool {
 			pl.add (p);
 		}
 		
-		return Path.is_clasped (pl, path);
+		return Path.is_counter (pl, path);
 	}
 	
 	public void remove_from_selected (EditPoint ep) 
@@ -2029,87 +2000,31 @@ public class PenTool : Tool {
 		}
 	}
 	
-	public static Path simplify (Path path, bool selected_segments) {
+	public static Path simplify (Path path, bool selected_segments = false, double threshold = 0.3) {
 		PointSelection ps;
 		EditPoint ep;
 		Path p1, p2, new_path;
-		Gee.ArrayList<double?> distortion = new Gee.ArrayList<double?> (); 
-		double d;
-		double min_distortion;
-		bool update_distortion;
-		double threshold, distortion_sum;
-		int pi;
-		
+		double d, sumd;
+		int i;
+
 		p1 = path.copy ();
-		p2 = path.copy ();
-		
-		for (int i = 0; i < p1.points.size - 1; i++) {
-			ep = p2.points.get (i); // even points
+		new_path = p1.copy ();
+		i = 0;
+		sumd = 0;
+		while (i < new_path.points.size) {
+			ep = new_path.points.get (i);
+			ps = new PointSelection (ep, new_path); 
+			d = PenTool.remove_point_simplify (ps);
+			sumd += d;
 			
-			if (!selected_segments || ep.selected) {
-				ps = new PointSelection (ep, p2); 
-				d = PenTool.remove_point_simplify (ps);
-				distortion.add (d);
+			if (sumd < threshold) {
+				p1 = new_path.copy ();
 			} else {
-				distortion.add (double.MAX);
-			}
-
-			ep = p1.points.get (i + 1); // odd points
-			
-			if (!selected_segments || ep.selected) {
-				ps = new PointSelection (ep, p1); 
-				d = PenTool.remove_point_simplify (ps);
-				distortion.add (d);
-			} else {
-				distortion.add (double.MAX);
+				new_path = p1.copy ();
+				sumd = 0;
+				i++;
 			}
 		}
-
-		min_distortion = double.MAX;
-		foreach (double? ds in distortion) {
-			if ((double) ds < min_distortion) {
-				min_distortion = (double) ds;
-			}
-		}
-
-		if (min_distortion < 0.1) {
-			threshold = 0.1;
-		} else if (min_distortion < 1) {
-			threshold = 0.1;
-		} else if (min_distortion < 5) {
-			threshold = 5;
-		} else {
-			threshold = 10;
-		}
-		
-		update_distortion = false;
-		new_path = new Path ();
-		distortion_sum = 0;
-		do {
-			new_path = path.copy ();
-			update_distortion = false;
-			distortion_sum = 0;
-			
-			pi = 0;
-			for (int i = 0; i < distortion.size; i++) {
-				d = (double) distortion.get (i);
-				distortion_sum += d;
-				if (distortion_sum < threshold) {
-					ep = new_path.points.get (pi);
-					ps = new PointSelection (ep, new_path); 
-					d = PenTool.remove_point_simplify (ps);
-					
-					if (d > threshold) {
-						distortion.set (i, d);
-						update_distortion = true;
-						break;
-					}
-				} else {
-					distortion_sum = 0;
-					pi++;
-				}
-			}
-		} while (update_distortion);
 		
 		return new_path;
 	}

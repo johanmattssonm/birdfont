@@ -1370,7 +1370,7 @@ public class Path {
 			
 			double_step = t /  2;
 
-			if (t > max_t) {
+			if (double_step > max_t) {
 				return false;
 			}
 						
@@ -1387,7 +1387,7 @@ public class Path {
 			
 			double_step = 0.5 + t / 2;
 
-			if (t > max_t) {
+			if (double_step > max_t) {
 				return false;
 			}
 						
@@ -2004,13 +2004,13 @@ public class Path {
 		return ep;
 	}
 	
-	public static bool is_clasped (PathList pl, Path p) {
+	public static bool is_counter (PathList pl, Path p) {
 		foreach (Path o in pl.paths) {
 			if (o == p) {
 				continue;
 			}
 			
-			if (is_clasped_path (o, p)) {
+			if (is_counte_to_path (o, p)) {
 				return true;
 			}
 		}
@@ -2018,10 +2018,10 @@ public class Path {
 		return false;
 	}
 
-	private static bool is_clasped_path (Path outside, Path inside) {
+	private static bool is_counte_to_path (Path outside, Path inside) {
 		bool i = true;
 		foreach (EditPoint e in inside.points) {
-			if (!outside.is_over_coordinate_var (e.x, e.y)) { // point may be off curve in both paths
+			if (!outside.is_over_coordinate_var (e.x, e.y)) {
 				i = false;
 				break;
 			}
@@ -2104,6 +2104,7 @@ public class Path {
 		double min_t, max_t;
 		double rmin_t, rmax_t;
 		bool found;
+		int step;
 		
 		npx = 0;
 		npy = 0;
@@ -2113,8 +2114,8 @@ public class Path {
 		
 		rmin_t = 0;
 		rmax_t = 1;
-		
-		for (int step = 3; step <= max_step; step *= 2) {
+
+		for (step = 3; step <= max_step; step *= 2) {
 			found = false;
 			min_distance = double.MAX;
 			Path.all_of (ep0, ep1, (xa, ya, ta) => {
@@ -2140,7 +2141,7 @@ public class Path {
 			min_t = (rmin_t > 0) ? rmin_t : 0;
 			max_t = (rmax_t < 1) ? rmax_t : 1;
 		}
-		
+
 		nx = npx;
 		ny = npy;
 	}

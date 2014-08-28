@@ -936,9 +936,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="197.49784"
-     inkscape:cy="599.4547"
+     inkscape:zoom="16"
+     inkscape:cx="185.17278"
+     inkscape:cy="366.19714"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -2924,5 +2924,192 @@
            d="m 199.85352,130.30469 c -0.85938,1e-5 -1.54298,0.32032 -2.05079,0.96093 -0.5039,0.64064 -0.75586,1.51368 -0.75586,2.61915 0,1.10156 0.25196,1.97265 0.75586,2.61328 0.50781,0.64062 1.19141,0.96094 2.05079,0.96093 0.85937,1e-5 1.53905,-0.32031 2.03906,-0.96093 0.5039,-0.64063 0.75585,-1.51172 0.75586,-2.61328 -1e-5,-1.10547 -0.25196,-1.97851 -0.75586,-2.61915 -0.50001,-0.64061 -1.17969,-0.96092 -2.03906,-0.96093 m 0,-0.96094 c 1.22655,1e-5 2.20702,0.41212 2.9414,1.23633 0.73437,0.82032 1.10156,1.92188 1.10156,3.30469 0,1.3789 -0.36719,2.48047 -1.10156,3.30468 -0.73438,0.82032 -1.71485,1.23047 -2.9414,1.23047 -1.23048,0 -2.21485,-0.41015 -2.95313,-1.23047 -0.73438,-0.82031 -1.10156,-1.92187 -1.10156,-3.30468 0,-1.38281 0.36718,-2.48437 1.10156,-3.30469 0.73828,-0.82421 1.72265,-1.23632 2.95313,-1.23633" />
       </g>
     </g>
+    <path
+       style="fill:#e6e6e6;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       d="m 167.78125,389.30013 0,15.77732 5.06746,-0.71001 1.95748,-3.44963 2.01693,-4.39139 -1.6422,-4.06454 -2.69163,-2.21996 z"
+       id="path3534"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccc"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <path
+       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#858585;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.37405884;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+       d="m 167.78125,388.5625 0,0.5 0,0.59375 c 0.40782,-0.0191 0.84198,0 1.1875,0 3.84887,0.35843 6.875,3.52513 6.875,7.46875 0,3.94348 -3.02633,7.07888 -6.875,7.4375 -0.27885,0.0247 -0.85148,0.0625 -1.1875,0.0625 l 0,0.5625 0,0.5 0.5,0 c 4.72621,0 8.5625,-3.83629 8.5625,-8.5625 0,-4.72621 -3.83629,-8.5625 -8.5625,-8.5625 z"
+       id="path4173-3"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccsccccsssc"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-8"
+       width="1.6320534"
+       height="1.6896552"
+       x="164.87148"
+       y="388.53018"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-3"
+       width="1.6320534"
+       height="1.6896552"
+       x="162.24648"
+       y="389.71768"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-1"
+       width="1.6320534"
+       height="1.6896552"
+       x="159.517"
+       y="391.77039"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-6"
+       width="1.6320534"
+       height="1.6896552"
+       x="158.87997"
+       y="394.4664"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-7"
+       width="1.6320534"
+       height="1.6896552"
+       x="158.91656"
+       y="397.34991"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-72"
+       width="1.6320534"
+       height="1.6896552"
+       x="162.0612"
+       y="402.76001"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-82"
+       width="1.6320534"
+       height="1.6896552"
+       x="164.96523"
+       y="403.68643"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-72-9"
+       width="1.6320534"
+       height="1.6896552"
+       x="159.56464"
+       y="400.29935"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586000000000;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-72-5"
+       width="1.6320534"
+       height="1.6896552"
+       x="164.95964"
+       y="391.49008"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       style="color:#000000;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3434-6-72-5-1"
+       width="1.6320534"
+       height="1.6896552"
+       x="164.95964"
+       y="394.52957"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       inkscape:export-ydpi="323.47827"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       y="397.24048"
+       x="164.95964"
+       height="1.6896552"
+       width="1.6320534"
+       id="rect4474"
+       style="color:#000000;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <rect
+       style="color:#000000;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4476"
+       width="1.6320534"
+       height="1.6896552"
+       x="164.95964"
+       y="400.52643"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       inkscape:export-ydpi="323.47827"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       y="398.90271"
+       x="162.17284"
+       height="1.6896552"
+       width="1.6320534"
+       id="rect4478"
+       style="color:#000000;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <rect
+       style="color:#000000;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect4480"
+       width="1.6320534"
+       height="1.6896552"
+       x="162.18532"
+       y="396.00827"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-ydpi="323.47827" />
+    <rect
+       inkscape:export-ydpi="323.47827"
+       inkscape:export-xdpi="323.47827"
+       inkscape:export-filename="/home/johan/birdfont/icons/autotrace.png"
+       y="393.11435"
+       x="162.13489"
+       height="1.6896552"
+       width="1.6320534"
+       id="rect4482"
+       style="color:#000000;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.04827586;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <rect
+       style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#858585;stroke-width:1.34000000000000008;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3433"
+       width="14.986238"
+       height="14.986238"
+       x="183.13188"
+       y="389.00687"
+       inkscape:export-filename="/home/johan/birdfont/icons/high_contrast_background.png"
+       inkscape:export-xdpi="319"
+       inkscape:export-ydpi="319" />
+    <path
+       style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.34000003;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 183.81938,389.69437 13.48624,0 -13.48624,13.48623 z"
+       id="rect3435"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/home/johan/birdfont/icons/high_contrast_background.png"
+       inkscape:export-xdpi="319"
+       inkscape:export-ydpi="319" />
   </g>
 </svg>

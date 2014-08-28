@@ -50,7 +50,7 @@ public class DrawingTools : ToolCollection  {
 	CutBackgroundTool cut_background;
 	Tool show_bg;
 	Tool bg_selection;
-	SpinButton background_contrast;
+	SpinButton background_threshold;
 	public SpinButton background_scale;
 
 	Tool rectangle;
@@ -835,26 +835,71 @@ public class DrawingTools : ToolCollection  {
 		bg_selection.set_show_background (true);
 		background_tools.add_tool (bg_selection);
 		
-		background_contrast = new SpinButton ("background_contrast", t_("Set contrast for background image"));
-		background_contrast.select_action.connect ((self) => {
+		background_threshold = new SpinButton ("background_threshold", t_("Set background threshold"));
+		background_threshold.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);
 		});	
-		background_contrast.set_value_round (1);
+		background_threshold.set_value_round (1);
 
-		background_contrast.new_value_action.connect ((self) => {
-			background_contrast.select_action (self);
-		});
-		
-		background_contrast.select_action.connect ((self) => {		
+		background_threshold.new_value_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			BackgroundImage? bg = g.get_background_image ();
 			BackgroundImage b;
 			
 			if (bg != null) {
 				b = (!) bg;
-				b.set_contrast (background_contrast.get_value ());
+				b.set_threshold (background_threshold.get_value ());
+				b.update_background ();
 			}
 		});
+		
+		if (BirdFont.has_argument ("--test")) {
+			background_tools.add_tool (background_threshold);
+		}
+
+		Tool high_contrast_background = new Tool ("high_contrast_background", t_("High contrast"));
+		high_contrast_background.select_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			BackgroundImage? bg = g.get_background_image ();
+			BackgroundImage b;
+			
+			if (bg != null) {
+				b = (!) bg;
+				b.set_high_contrast (!b.high_contrast);
+				b.update_background ();
+			}
+		});
+		background_tools.add_tool (high_contrast_background);
+
+		SpinButton auto_trace_resolution = new SpinButton ("auto_trace_resolution", t_("Auto trace resolution"));
+		auto_trace_resolution.set_value_round (1);
+
+		auto_trace_resolution.new_value_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			BackgroundImage? bg = g.get_background_image ();
+			BackgroundImage b;
+			
+			if (bg != null) {
+				b = (!) bg;
+				b.set_trace_resolution (auto_trace_resolution.get_value ());
+			}
+		});
+		
+		if (BirdFont.has_argument ("--test")) {
+			background_tools.add_tool (auto_trace_resolution);
+		}
+				
+		Tool auto_trace = new Tool ("autotrace", t_("Trace background image"));
+		auto_trace.select_action.connect ((self) => {
+			Task t = new Task ();
+			t.task.connect (auto_trace_background);
+			MainWindow.native_window.run_background_thread (t);
+		});			
+
+		if (BirdFont.has_argument ("--test")) {
+			background_tools.add_tool (auto_trace);
+		}
+				
 
 		// settings
 		ColorTool stroke_color = new ColorTool (t_("Stroke color"));
@@ -1131,6 +1176,21 @@ public class DrawingTools : ToolCollection  {
 		});
 	}
 
+	void auto_trace_background () {
+		Glyph g = MainWindow.get_current_glyph ();
+		BackgroundImage? bg = g.get_background_image ();
+		BackgroundImage b;
+		PathList pl;
+		
+		if (bg != null) {
+			b = (!) bg;
+			pl =  b.auto_trace ();
+			foreach (Path p in pl.paths) {
+				g.add_path (p);
+			}
+		}
+	}
+	
 	void update_line_selection (Glyph glyph) {
 		help_lines.set_selected (glyph.get_show_help_lines ());
 		xheight_help_lines.set_selected (glyph.get_xheight_lines_visible ());
