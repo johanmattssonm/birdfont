@@ -806,27 +806,21 @@ public class BackgroundImage {
 		
 		scale = 1;
 		i = 0;
-		Test t_all = new Test.time ("trace all");
 		while ((i = find_start_point (outline_img, len, s, i)) != -1) {
 			pp = 0;
-			Test t_one = new Test.time ("trace one");
 			
 			while (4 + s <= i < len - 4 - s) {	
 				pp++;
 				if (is_traced (i)) {
-					Test t = new Test.time ("generate_path");
 					Path np = generate_path (outline_img, s, w, h, len);
-					t.print ();
-					
-					Test dt = new Test.time ("path direction");
-					if (Path.is_counter (pl, np)) {
-						np.force_direction (Direction.COUNTER_CLOCKWISE);
-					} else {
-						np.force_direction (Direction.CLOCKWISE);
-					}
-					dt.print ();
 					
 					if (np.points.size > 3) {
+						if (Path.is_counter (pl, np)) {
+							np.force_direction (Direction.COUNTER_CLOCKWISE);
+						} else {
+							np.force_direction (Direction.CLOCKWISE);
+						}
+
 						pl.add (np);
 					}
 					
@@ -1025,11 +1019,7 @@ public class BackgroundImage {
 					i += 4;
 				}
 			}
-			
-			t_one.print ();
 		}
-
-		t_all.print ();
 
 		start_points.clear ();
 		points.clear ();
@@ -1158,6 +1148,7 @@ public class BackgroundImage {
 		double image_scale_x;
 		double image_scale_y;
 		TracedPoint average_point;
+		int pi;
 
 		return_val_if_fail (background_image != null && contrast_image != null, new Path ());
 		
@@ -1175,18 +1166,6 @@ public class BackgroundImage {
 		points_per_unit = 9;
 		corner = PI / 3.5;
 		
-/* // FIXME: DELETE
-		scale = sqrt (img_scale_x * img_scale_y);
-		points_per_unit = 2 / scale;
-		corner = PI / 3.5;
-		
-		if (scale >= 1) {
-			points_per_unit = 6;
-			corner = PI / 3;
-		}	
-*/
-
-		Test ca = new Test.time ("convert points");
 		i = 0;
 		foreach (TracedPoint p in points) {
 			index = p.index;
@@ -1231,9 +1210,6 @@ public class BackgroundImage {
 			sp.add (i);
 		}
 		
-		ca.print ();
-		
-		Test addp = new Test.time ("add points");
 		foreach (TracedPoint avgp in traced) {
 			ep = new EditPoint (avgp.x, avgp.y);
 			
@@ -1249,14 +1225,13 @@ public class BackgroundImage {
 				ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
 			}
 		}
-		addp.print ();
-		
+
 		path.close ();
 		path.create_list ();
 		path.recalculate_linear_handles ();
 		
 		// Find corners
-		int pi = 0;
+		pi = 0;
 		for (i = 1; i < sp.size; i += 2) {
 			return_val_if_fail (0 <= i < path.points.size, path);
 			ep = path.points.get (i);
@@ -1298,58 +1273,13 @@ public class BackgroundImage {
 		
 		path.recalculate_linear_handles ();
 		path.remove_points_on_points ();
-		
-		/*
-		int pi = 0;
-		for (i = 0; i < sp.size; i++) {
-			return_val_if_fail (0 <= i < path.points.size, path);
-			ep = path.points.get (i);
-
-			pi = i + 1;
-			pi %= path.points.size;
-			return_val_if_fail (0 <= pi < path.points.size, path);
-			l = path.points.get (pi).get_left_handle ();
-
-			pi = i - 1;
-			if (pi < 0) {
-				pi += path.points.size;
-			}
-			return_val_if_fail (0 <= pi < path.points.size, path);
-			r = path.points.get (pi).get_right_handle ();
-
-			la = l.angle - PI;
-
-			while (la < 0) {
-				la += 2 * PI;
-			}
-			
-			if (r.angle > (2.0 / 3.0) * PI && la < PI / 2) {
-				la += 2 * PI;
-			} else if (la > (2.0 / 3.0) * PI && r.angle < PI / 2) {
-				la -= 2 * PI;
-			}
-			
-			a = r.angle - la;
-
-			if (fabs (a) > corner) { // corner
-				ep.type = PointType.CUBIC;				
-				ep.set_tie_handle (false);
-				
-				find_corner (path, i, (!) sp.get (i), points_per_unit, ref ep.x, ref ep.y);
-				corners.add (ep);
-			} else {
-				ep.set_tie_handle (true);
-			}
-		}
-		*/
 		path.create_list ();
 		foreach (EditPoint e in path.points) {
 			if (e.tie_handles) {
 				e.process_tied_handle ();
 			}
 		}
-		
-		Test t_delete = new Test.time ("Delete points");
+
 		for (i = 0; i < path.points.size; i++) {
 			ep = path.points.get (i);
 			ps = new PointSelection (ep, path);
@@ -1357,7 +1287,6 @@ public class BackgroundImage {
 				PenTool.remove_point_simplify (ps);
 			} 
 		}
-		t_delete.print ();
 		
 		for (i = 0; i < path.points.size; i++) {
 			ep = path.points.get (i);
@@ -1367,12 +1296,8 @@ public class BackgroundImage {
 			}
 		}
 		
-		Test t_simlify = new Test.time ("simplify");
 		path = PenTool.simplify (path, true, 0.2);
-		t_simlify.print ();
-		
 		points.clear ();
-		
 		path.update_region_boundaries ();
 		
 		return path;
