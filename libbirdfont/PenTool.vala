@@ -430,7 +430,7 @@ public class PenTool : Tool {
 		min_distortion = double.MAX;
 		distance = Path.distance (ep1.x, ep2.x, ep1.y, ep2.y);
 
-		for (double m = 50.0; m >= 0.05; m /= 10.0) {
+		for (double m = 50.0; m >= 0.6; m /= 10.0) {
 			step = m / 10.0;
 			min_distortion = double.MAX;
 			
@@ -461,7 +461,7 @@ public class PenTool : Tool {
 					}
 				}
 			}
-			
+						
 			start_length += prev_length_adjustment_reverse;
 			stop_length += next_length_adjustment;
 		}
