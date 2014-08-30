@@ -371,7 +371,7 @@ public class PenTool : Tool {
 	}
 	
 	/** @return path distortion. */
-	public static double remove_point_simplify (PointSelection p) {
+	public static double remove_point_simplify (PointSelection p, double tolerance = 0.6) {
 		double start_length, stop_length;
 		double start_distortion, start_min_distortion, start_previous_length;
 		double stop_distortion, stop_min_distortion, stop_previous_length;
@@ -430,7 +430,7 @@ public class PenTool : Tool {
 		min_distortion = double.MAX;
 		distance = Path.distance (ep1.x, ep2.x, ep1.y, ep2.y);
 
-		for (double m = 50.0; m >= 0.6; m /= 10.0) {
+		for (double m = 50.0; m >= tolerance / 2.0; m /= 10.0) {
 			step = m / 10.0;
 			min_distortion = double.MAX;
 			

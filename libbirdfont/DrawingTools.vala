@@ -888,6 +888,23 @@ public class DrawingTools : ToolCollection  {
 		});
 		
 		background_tools.add_tool (auto_trace_resolution);
+
+		SpinButton auto_trace_simplify = new SpinButton ("auto_trace_simplify", t_("Autotrace simplification"));
+		auto_trace_simplify.set_value_round (0.5);
+		auto_trace_simplify.show_icon (true);
+
+		auto_trace_simplify.new_value_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			BackgroundImage? bg = g.get_background_image ();
+			BackgroundImage b;
+			
+			if (bg != null) {
+				b = (!) bg;
+				b.set_trace_simplification (auto_trace_simplify.get_value ());
+			}
+		});
+		
+		background_tools.add_tool (auto_trace_simplify);
 				
 		Tool auto_trace = new Tool ("autotrace", t_("Autotrace background image"));
 		auto_trace.select_action.connect ((self) => {
