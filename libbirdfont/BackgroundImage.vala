@@ -102,6 +102,8 @@ public class BackgroundImage {
 		bg.img_rotation = img_rotation;
 
 		bg.threshold = threshold;
+		bg.high_contrast = high_contrast;
+		bg.trace_resolution = trace_resolution;
 
 		return bg;		
 	}
@@ -814,7 +816,7 @@ public class BackgroundImage {
 				if (is_traced (i)) {
 					Path np = generate_path (outline_img, s, w, h, len);
 					
-					if (np.points.size > 3) {
+					if (np.points.size >= 3) {
 						if (Path.is_counter (pl, np)) {
 							np.force_direction (Direction.COUNTER_CLOCKWISE);
 						} else {

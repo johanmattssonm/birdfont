@@ -883,6 +883,7 @@ public class DrawingTools : ToolCollection  {
 			if (bg != null) {
 				b = (!) bg;
 				b.set_trace_resolution (auto_trace_resolution.get_value ());
+				b.update_background ();
 			}
 		});
 		
