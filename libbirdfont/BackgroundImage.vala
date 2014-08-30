@@ -30,17 +30,18 @@ public class BackgroundImage {
 	public int active_handle = -1;
 	public int selected_handle = -1;
 	
+	private ImageSurface? contrast_image = null;
 	private ImageSurface? background_image = null;
 	private ImageSurface? original_image = null;
 	
 	private string path;
 
-	private double contrast = 1.0;
-	private bool desaturate = false;
+	public bool high_contrast = false;
+	private double trace_resolution = 1.0;
 	private double threshold = 1.0;
+	private Gee.ArrayList<TracedPoint> points = new Gee.ArrayList<TracedPoint> ();
+	private Gee.ArrayList<TracedPoint> start_points = new Gee.ArrayList<TracedPoint> ();
 	
-	private bool background_image_is_processing = false;
-
 	public signal void updated ();
 
 	public double img_offset_x {
@@ -64,6 +65,18 @@ public class BackgroundImage {
 		}
 	}
 
+	public int margin_left {
+		get {
+			return size_margin - get_img ().get_width ();
+		}
+	}
+
+	public int margin_top {
+		get {
+			return size_margin - get_img ().get_height ();
+		}
+	}
+	
 	public double img_middle_x {
 		get { return img_x + (size_margin * img_scale_x) / 2; }
 		set { img_x = value - (size_margin * img_scale_x) / 2; }
@@ -88,12 +101,17 @@ public class BackgroundImage {
 		bg.img_scale_y = img_scale_y;
 		bg.img_rotation = img_rotation;
 
-		bg.contrast = contrast;
-		bg.desaturate = desaturate;
 		bg.threshold = threshold;
 
-		return bg;
-		
+		return bg;		
+	}
+
+	public void set_high_contrast (bool t) {
+		high_contrast = t;
+	}
+
+	public void set_trace_resolution (double t) {
+		trace_resolution = t;
 	}
 
 	public double get_margin_width () {
@@ -127,6 +145,19 @@ public class BackgroundImage {
 		return (!) background_image;
 	}
 
+	public ImageSurface get_original () {
+		if (!path.has_suffix (".png")) {
+			create_png ();
+		}
+		
+		if (background_image == null) {
+			background_image = new ImageSurface.from_png (path);
+			original_image = new ImageSurface.from_png (path);
+		}
+		
+		return (!) original_image;
+	}
+	
 	public bool is_valid () {
 		FileInfo file_info;
 		File file = File.new_for_path (path);
@@ -320,6 +351,8 @@ public class BackgroundImage {
 		}
 	
 		img_rotation =  (y > bcy) ? acos (a / length) + PI : -acos (a / length) + PI;
+		
+		background_image = null;
 	}
 	
 	public void set_img_scale (double xs, double ys) {
@@ -341,11 +374,69 @@ public class BackgroundImage {
 	}
 
 	public void draw (Context cr, WidgetAllocation allocation, double view_offset_x, double view_offset_y, double view_zoom) {
+		double scale_x, scale_y;
+		double image_scale_x, image_scale_y;
+		ImageSurface s;
+		Surface st;
+		Context ct;
+		ImageSurface rotated_image;
+
+		if (high_contrast && contrast_image == null) {
+			contrast_image = get_contrast_image ();
+		}
+		
+		if (unlikely (get_img ().status () != Cairo.Status.SUCCESS)) {
+			warning (@"Background image is invalid. (\"$path\")\n");
+			MainWindow.get_current_glyph ().set_background_visible (false);
+			return;
+		}
+		
+		rotated_image = (ImageSurface) get_rotated_image ();
+		
+		if (contrast_image == null) {
+			s = rotated_image;
+			image_scale_x = img_scale_x;
+			image_scale_y = img_scale_y;
+		} else {
+			s = (!) contrast_image;
+			image_scale_x = img_scale_x * ((double) rotated_image.get_width () / s.get_width ());
+			image_scale_y = img_scale_y * ((double) rotated_image.get_height () / s.get_height ());			
+		}
+		
+		st = new Surface.similar (s, s.get_content (), allocation.width, allocation.height);
+		ct = new Context (st);
+		ct.save ();
+
+		ct.set_source_rgba (1, 1, 1, 1);
+		ct.rectangle (0, 0, allocation.width, allocation.height);
+		ct.fill ();
+
+		// scale both canvas and image at the same time
+		scale_x = view_zoom * image_scale_x;
+		scale_y = view_zoom * image_scale_y;
+		
+		ct.scale (scale_x, scale_y);
+		ct.translate (-view_offset_x / image_scale_x, -view_offset_y / image_scale_y);
+		
+		ct.set_source_surface (s, img_offset_x / image_scale_x, img_offset_y / image_scale_y);
+
+		ct.paint ();
+		ct.restore ();
+		
+		// add it
+		cr.save ();
+		cr.set_source_surface (st, 0, 0);
+		cr.paint ();
+		cr.restore ();
+	}
+	
+	public Surface get_rotated_image () {
 		double x, y;
 		double iw, ih;
 		int h, w;
-		double scale_x, scale_y;
 		double oy, ox;
+		
+		Surface o;
 				
 		Surface s;
 		Context c;
@@ -353,19 +444,12 @@ public class BackgroundImage {
 		Surface sg;
 		Context cg;
 
-		Surface st;
-		Context ct;
-
 		double wc, hc;
-
-		if (unlikely (get_img ().status () != Cairo.Status.SUCCESS)) {
-			warning (@"Background image is invalid. (\"$path\")\n");
-			MainWindow.get_current_glyph ().set_background_visible (false);
-			return;
-		}
+		
+		o = get_original ();
 		
 		// add margin
-		sg = new Surface.similar (get_img (), get_img ().get_content (), size_margin, size_margin);
+		sg = new Surface.similar (o, o.get_content (), size_margin, size_margin);
 		cg = new Context (sg);
 		
 		wc = get_margin_width ();
@@ -403,37 +487,12 @@ public class BackgroundImage {
    		c.translate (size_margin * 0.5, size_margin * 0.5);
 		c.rotate (img_rotation);
 		c.translate (-size_margin * 0.5, -size_margin * 0.5);
-
+		
 		c.set_source_surface (cg.get_target (), 0, 0);
 		c.paint ();	
 		c.restore ();
 
-		// mask
-		st = new Surface.similar (s, s.get_content (), allocation.width, allocation.height);
-		ct = new Context (st);
-		ct.save ();
-
-		ct.set_source_rgba (1, 1, 1, 1);
-		ct.rectangle (0, 0, allocation.width, allocation.height);
-		ct.fill ();
-
-		// scale both canvas and image at the same time
-		scale_x = view_zoom * img_scale_x;
-		scale_y = view_zoom * img_scale_y;
-		
-		ct.scale (scale_x, scale_y);
-		ct.translate (-view_offset_x / img_scale_x, -view_offset_y / img_scale_y);
-		
-		ct.set_source_surface (s, img_offset_x / img_scale_x, img_offset_y / img_scale_y);
-
-		ct.paint ();
-		ct.restore ();
-		
-		// add it
-		cr.save ();
-		cr.set_source_surface (st, 0, 0);
-		cr.paint ();
-		cr.restore ();
+		return s;
 	}
 	
 	public void handler_release (double nx, double ny) {		
@@ -595,246 +654,671 @@ public class BackgroundImage {
 		
 	}
 
-	private static uchar ftu (double c) {
-		if (c < 0) return 0;
-		if (c > 255) return 255;
-		return (uchar) c;
+	public void update_background () {
+		background_image = null;
+		contrast_image = null;
+		
+		GlyphCanvas.redraw ();
+		updated ();
 	}
 
-	private static ImageSurface? process_background_colors (ImageSurface img, double contrast, bool desaturate, double threshold) {
-		int i;
-		unowned uchar[]? pix_buff_t;
-		unowned uchar[] pix_buff;
-		int len;
-		uchar[] contrast_img;
-		ImageSurface contrast_surface;
-		double c, thres;
-		uchar nc;
-
-		int w = img.get_width();
-		int h = img.get_height();
-
-		if (unlikely (img.status () != Cairo.Status.SUCCESS)) {
-			warning ("Err");
-			return null;
-		}
-		
-		len = 4 * w * h;
-		
-		pix_buff_t = img.get_data ();
-		return_val_if_fail (pix_buff_t != null, null);
-		pix_buff = pix_buff_t;
-		
-		contrast_img = new uchar[len];
-
-		pix_buff_t = contrast_img;
-		return_val_if_fail (pix_buff_t != null, null);
-		
-		contrast += 70;
-		contrast /= 71;
-		
-		if (desaturate) {
-			i = 0;
-			
-			while (i < len) {
-				c = (pix_buff[i] + pix_buff[i+1] + pix_buff[i+2]) / 3.0;
-				nc = ftu (Math.pow (c, contrast));
-
-				contrast_img[i]   = nc;
-				contrast_img[i+1] = nc; 
-				contrast_img[i+2] = nc;
-				contrast_img[i+3] = 255;
-				
-				i += 4;
-			}
-		} else {
-			i = 0;
-			while (i < len) {
-				contrast_img[i] = ftu (Math.pow (pix_buff[i], contrast) - Math.pow (100, contrast) + 100);
-				contrast_img[i+1] = ftu (Math.pow (pix_buff[i+1], contrast) - Math.pow (100, contrast) + 100);
-				contrast_img[i+2] = ftu (Math.pow (pix_buff[i+2], contrast) - Math.pow (100, contrast) + 100);
-				contrast_img[i+3] = 255;
-				
-				i += 4;
-			}
-		}
-
-		if (true) {
-			thres = (threshold - 0.5) * 255;
-			
-			i = 0;
-			while (i < len) {
-				c = (pix_buff[i] + pix_buff[i+1] + pix_buff[i+2]) / 3.0;
-				nc = (c > thres) ? 255 : 0;
-
-				contrast_img[i]   = nc;
-				contrast_img[i+1] = nc; 
-				contrast_img[i+2] = nc;
-				contrast_img[i+3] = 255;
-				
-				i += 4;
-			}
-		}
-
-		contrast_surface = new ImageSurface.for_data (contrast_img, img.get_format(), w, h, img.get_stride());
-
-		if (unlikely (contrast_surface.status () != Cairo.Status.SUCCESS)) {
-			warning ("Err");
-			return null;
-		}
-		
-		contrast_surface.mark_dirty	();
-			
-		return contrast_surface;	
-	}
-
-	async ImageSurface? do_process_background_colors () {
-		SourceFunc callback = do_process_background_colors.callback;
-		ImageSurface? output = null;
-		double contrast = get_contrast ();
-		bool desaturate = get_desaturate_background ();
-		double threshold = this.threshold;
-
-		if (original_image == null) {
-			return null;
-		}
-		
-		// TODO: Add multi threading
-		output = process_background_colors ((!)original_image, contrast, desaturate, threshold);
-		Idle.add ((owned) callback);
-
-		return output;
-	}
-
-	public void update_background (double contrast, bool desaturate) {
-		background_image_is_processing = true;
-		
-		do_process_background_colors.begin ((obj, res) => {
-			ImageSurface? img;
-
-			img = do_process_background_colors.end (res);
-			
-			if (img != null) {
-				background_image = (!) img;
-				updated ();
-			} else {
-				stderr.printf ("Error: No background image");	
-			}
-			
-			// update image if new value was set while background task was running 
-			if (get_contrast () != contrast || get_desaturate_background () != desaturate) {
-
-				do_process_background_colors.begin ((obj, res) => {
-					img = do_process_background_colors.end (res);
-					if (likely (img != null)) {
-						background_image = (!) img;
-						updated ();
-					} else {
-						stderr.printf ("Error: No background image");	
-					}
-				});
-			}
-
-			background_image_is_processing = false;
-			updated ();
-			
-		});
-	}
-
-	public double get_contrast () {
-		double bc;
-		lock (contrast) {
-			bc = contrast;
-		}
-		return bc;
-	}
-		
-	public bool get_desaturate_background () {
-		bool bw;
-		lock (desaturate) {
-			bw = desaturate;
-		}
-		return bw;
-	}
-	
-	public void set_desaturate_background (bool bw) {
-		lock (desaturate) {
-			desaturate = bw;
-		}
-	
-		if (background_image_is_processing) {
-			return;
-		}
-		
-		background_image_is_processing = true;
-		
-		update_background (get_contrast (), bw);
-	}
-	
 	public void set_threshold (double t) {
 		threshold = t;
 	}
-	
-	public Path auto_trace () {
-		ImageSurface img;
-		int len, w, h, i;
-		unowned uchar[] pix_buff;
-		Path p = new Path ();
-		double x, y;
 
-		if (background_image == null) {
-			return p;
+	ImageSurface get_contrast_image () {
+		ImageSurface s;
+		Context c;
+
+		ImageSurface sg;		
+		int scaled_width;
+		
+		unowned uchar[] pix_buff;
+		int i, len;
+		double thres;
+		int stride;
+		
+		ImageSurface img;
+		ImageSurface ns;
+		
+		thres = (threshold - 0.5) * 255;
+		
+		scaled_width = (int) (600 * trace_resolution);
+
+		s = new ImageSurface (Format.RGB24, scaled_width, scaled_width);
+		sg = (ImageSurface) get_rotated_image ();	
+		c = new Context (s);
+	
+		c.save ();
+		c.set_source_rgba (1, 1, 1, 1);
+		c.rectangle (0, 0, scaled_width, scaled_width);
+		c.fill ();
+
+   		c.translate (scaled_width * 0.5, scaled_width * 0.5);
+		c.rotate (img_rotation);
+		c.translate (-scaled_width * 0.5, -scaled_width * 0.5);
+
+		c.scale ((double) scaled_width / sg.get_width (), (double) scaled_width / sg.get_height ());
+
+		c.set_source_surface (sg, 0, 0);
+		c.paint ();	
+		c.restore ();
+
+		img = (ImageSurface) s;
+		pix_buff = img.get_data ();
+
+		len = s.get_height () * s.get_stride ();
+
+		uint8* outline_img = new uint8[len];
+
+		for (i = 0; i < len - 4; i += 4) {
+			uint8 o = (uint8) ((pix_buff[i] + pix_buff[i + 1] + pix_buff[i + 2]) / 3.0);
+			uint8 bw = (o < thres) ? 0 : 255;
+			outline_img[i] = bw;
+			outline_img[i + 1] = bw;
+			outline_img[i + 2] = bw;
+			outline_img[i + 3] = bw;
 		}
 
-		img = (!) background_image;
+		// fill blur with black
+		stride = s.get_stride ();
+		for (int m = 0; m < 2; m++) {
+			i = stride + 4;
+			while (i < len - 4 - stride) {
+				if ((outline_img[i] == 255 && outline_img[i + 4] == 0
+						&& outline_img[i + stride] == 0 && outline_img[i + stride + 4] == 255)
+						|| (outline_img[i] == 0 && outline_img[i + 4] == 255
+						&& outline_img[i + stride] == 255 && outline_img[i + stride + 4] == 0)) {
+					outline_img[i] = 0;
+					outline_img[i + 4] = 0;
+					outline_img[i + stride] = 0;
+					outline_img[i + stride + 4] = 0;
+				}
+				
+				if (outline_img[i] == 255 && outline_img[i + 4] == 0 && outline_img[i + 8] == 255
+						|| outline_img[i] == 0 && outline_img[i + 4] == 255 && outline_img[i + 8] == 0) {
+					outline_img[i] = 0;
+					outline_img[i + 4] = 0;
+					outline_img[i + stride] = 0;
+					outline_img[i + stride + 4] = 0;
+				}
+				i += 4;
+			}
+		}
+
+		ns = new ImageSurface.for_data ((uchar[])outline_img, s.get_format (), s.get_width (), s.get_height (), s.get_stride ());		
+		background_image = null;
+		original_image = null;
+		contrast_image = ns;
+
+		return (ImageSurface) ns;
+	}
+	
+	public PathList auto_trace () {
+		ImageSurface img;
+		int len, w, h, i, s;
+		Path p;
+		PathList pl;
+		uint8* outline_img;
+		
+		ImageSurface scaled_image;
+		double scale;
+		
+		p = new Path ();
+		pl = new PathList ();
+
+		if (background_image == null) {
+			return pl;
+		}
+
+		img = (contrast_image == null) ? get_contrast_image () : (!) contrast_image;
 
 		w = img.get_width();
 		h = img.get_height();
 
 		if (unlikely (img.status () != Cairo.Status.SUCCESS)) {
 			warning ("Error");
-			return p;
+			return pl;
 		}
 		
-		len = 4 * w * h;
+		if (img.get_format () != Format.RGB24) {
+			warning ("Wrong format");
+			return pl;
+		}
+		
+		scaled_image = img;
 
-		pix_buff = img.get_data ();
+		img = (ImageSurface) scaled_image;
+		w = img.get_width ();
+		h = img.get_height ();
+		s = img.get_stride ();
+		len = s * h;
 
+		outline_img = (uint8*) img.get_data ();
+
+		start_points = new Gee.ArrayList<TracedPoint> ();
+		points = new Gee.ArrayList<TracedPoint> ();
+
+		int direction_vertical = 4;
+		int direction_horizontal = s; // FIXME: SET AT FIND START
+		int last_move = 0;		
+		int pp = 0;
+		
+		scale = 1;
 		i = 0;
-		while (i < len - 4) {
-			if (is_edge (pix_buff[i], pix_buff[i + 4])) {
-				y = i / w;
-				x = i - y;
+		while ((i = find_start_point (outline_img, len, s, i)) != -1) {
+			pp = 0;
+			
+			while (4 + s <= i < len - 4 - s) {	
+				pp++;
+				if (is_traced (i)) {
+					Path np = generate_path (outline_img, s, w, h, len);
+					
+					if (np.points.size > 3) {
+						if (Path.is_counter (pl, np)) {
+							np.force_direction (Direction.COUNTER_CLOCKWISE);
+						} else {
+							np.force_direction (Direction.CLOCKWISE);
+						}
+
+						pl.add (np);
+					}
+					
+					break;
+				}
+
+				if (outline_img[i] == 255 && outline_img[i + 4] == 255
+						&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 255) {
+					warning ("Lost path");
+					Path np = generate_path (outline_img, s, w, h, len);
+					pl.add (np);
+					break;
+				}
+
+				if (outline_img[i] == 0 && outline_img[i + 4] == 0
+						&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 0) {
+					warning ("Lost path");
+					Path np = generate_path (outline_img, s, w, h, len);
+					pl.add (np);
+					break;
+				}
+							
+				if (outline_img[i] == 0 && outline_img[i + 4] == 255
+						&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 255) {
+					points.add (new TracedPoint (i));
+					
+					if (last_move == direction_horizontal) {
+						direction_vertical = -s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = -4;
+						i += direction_horizontal;
+						last_move = direction_horizontal;
+					}				
+					
+				} else if (outline_img[i] == 0 && outline_img[i + 4] == 255
+						&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 255) {
+					points.add (new TracedPoint (i));
 				
-				p.add (x, y);
+					if (last_move == direction_horizontal) {
+						direction_vertical = -s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = -4;
+						i += direction_horizontal;	
+						last_move = direction_horizontal;
+					}
+
+				} else if (outline_img[i] == 255 && outline_img[i + 4] == 0
+						&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 255) {
+					points.add (new TracedPoint (i));
 				
-				if (p.points.size > 10) {
-					return p;
+					if (last_move == direction_horizontal) {
+						direction_vertical = -s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = 4;
+						i += direction_horizontal;	
+						last_move = direction_horizontal;
+					}
+
+				} else if (outline_img[i] == 0 && outline_img[i + 4] == 0
+						&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 0) {
+					points.add (new TracedPoint (i));
+				
+					if (last_move == direction_horizontal) {
+						direction_vertical = s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = -4;
+						i += direction_horizontal;	
+						last_move = direction_horizontal;
+					}
+
+				} else if (outline_img[i] == 255 && outline_img[i + 4] == 255
+						&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 0) {
+					points.add (new TracedPoint (i));
+				
+					if (last_move == direction_horizontal) {
+						direction_vertical = s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = 4;
+						i += direction_horizontal;	
+						last_move = direction_horizontal;
+					}
+
+				} else if (outline_img[i] == 255 && outline_img[i + 4] == 255
+						&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 255) {
+					points.add (new TracedPoint (i));
+					
+					if (last_move == direction_horizontal) {
+						direction_vertical = s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = -4;
+						i += direction_horizontal;	
+						last_move = direction_horizontal;
+					}
+					
+				} else if (outline_img[i] == 255 && outline_img[i + 4] == 0
+						&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 0) {
+					points.add (new TracedPoint (i));
+					
+					if (last_move == direction_horizontal) {
+						direction_vertical = -s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = -4;
+						i += direction_horizontal;	
+						last_move = direction_horizontal;
+					}
+				} else if (outline_img[i] == 0 && outline_img[i + 4] == 255
+						&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 0) {
+					points.add (new TracedPoint (i));
+				
+					if (last_move == direction_horizontal) {
+						direction_vertical = -s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = 4;
+						i += direction_horizontal;	
+						last_move = direction_horizontal;
+					}
+				} else if (outline_img[i] == 0 && outline_img[i + 4] == 0
+						&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 255) {
+					points.add (new TracedPoint (i));
+				
+					if (last_move == direction_horizontal) {
+						direction_vertical = s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = 4;
+						i += direction_horizontal;	
+						last_move = direction_horizontal;
+					}
+				} else if (outline_img[i] == 255 && outline_img[i + 4] == 255
+						&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 255) {
+					points.add (new TracedPoint (i));
+				
+					if (last_move == direction_horizontal) {
+						direction_vertical = s;
+						i += direction_vertical;	
+						last_move = direction_vertical;
+					} else {
+						direction_horizontal = -4;
+						i += direction_horizontal;	
+						last_move = direction_horizontal;
+					}
+				} else if (outline_img[i] == 255 && outline_img[i + 4] == 255
+						&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 0) {
+					points.add (new TracedPoint (i));
+				
+					i += direction_horizontal;
+					last_move = direction_horizontal;
+					
+				} else if (outline_img[i] == 0 && outline_img[i + 4] == 0
+						&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 255) {
+					points.add (new TracedPoint (i));
+				
+					i += direction_horizontal;
+					last_move = direction_horizontal;
+				} else if (outline_img[i] == 255 && outline_img[i + 4] == 0
+						&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 0) {
+					points.add (new TracedPoint (i));
+				
+					i += direction_vertical;
+					last_move = direction_vertical;
+				} else if (outline_img[i] == 0 && outline_img[i + 4] == 255
+						&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 255) {
+					points.add (new TracedPoint (i));
+				
+					i += direction_vertical;
+					last_move = direction_vertical;
+				} else if ((outline_img[i] == 255 && outline_img[i + 4] == 0
+							&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 255)
+						|| (outline_img[i] == 0 && outline_img[i + 4] == 255
+							&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 0)) {
+					points.add (new TracedPoint (i));
+					
+					warning ("Bad edge");
+					i += last_move;
+						
+				} else {
+					points.add (new TracedPoint (i));
+					warning (@"No direction\n $(outline_img[i]) $(outline_img[i + 4])\n $(outline_img[i + s]) $(outline_img[i + s + 4])");
+					i += 4;
 				}
 			}
+		}
+
+		start_points.clear ();
+		points.clear ();
+		
+		return pl;
+	}
+
+	int find_start_point (uint8* outline_img, int len, int s, int start_index) {
+		// find start point
+		int i = start_index;
+		
+		if (i < s + 4) {
+			i = s + 4;
+		}
+		
+		while (i < len - 4 - s) {
+			if (outline_img[i] == 0 && outline_img[i + 4] == 255
+					&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 255
+					&& !has_start_point (i)) {
+				return i;
+			} else if (outline_img[i] == 255 && outline_img[i + 4] == 0
+					&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 255
+					&& !has_start_point (i)) {
+				return i;
+			} else if (outline_img[i] == 255 && outline_img[i + 4] == 255
+					&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 255
+					&& !has_start_point (i)) {
+				return i;
+			} else if (outline_img[i] == 255 && outline_img[i + 4] == 255
+					&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 0
+					&& !has_start_point (i)) {
+				return i;
+			} else if (outline_img[i] == 255 && outline_img[i + 4] == 0 
+					&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 0
+					&& !has_start_point (i)) {
+				return i;
+			} else if (outline_img[i] == 0 && outline_img[i + 4] == 255
+					&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 0
+					&& !has_start_point (i)) {
+				return i;
+			} else if (outline_img[i] == 0 && outline_img[i + 4] == 0
+					&& outline_img[i + s] == 255 && outline_img[i + s + 4] == 0
+					&& !has_start_point (i)) {
+				return i;
+			} else if (outline_img[i] == 0 && outline_img[i + 4] == 0
+					&& outline_img[i + s] == 0 && outline_img[i + s + 4] == 255
+					&& !has_start_point (i)) {
+				return i;
+			}
 			
-			i += 4;
+			i +=4;
 		}
 		
-		return p;
+		return -1;
 	}
 	
-	private bool is_edge (uchar a, uchar b) {
-		return (a == 255 && b == 0);
+	void find_corner (Path path, int point_index, int end, double points_per_unit, ref double x, ref double y) {
+		TracedPoint tp0;
+		double sx = 0;
+		double sy = 0;
+		double d = 0;
+		double mind = double.MAX;
+		int index = 0;
+		int pi;
+		EditPoint ep0, ep1;
+		double dx, dy;
+		
+		pi = point_index - 1;
+		if (pi < 0) {
+			pi += path.points.size;
+		}
+		ep0 = path.points.get (pi);
+		
+		pi = point_index + 1;
+		pi %= path.points.size;
+		ep1 = path.points.get (pi);
+		
+		Path.find_intersection_handle (ep0.get_left_handle (), ep1.get_right_handle (), out sx, out sy);
+
+		dx = x - ep0.x;
+		dy = y - ep0.y;
+
+		sx += 3 * dx;
+		sy += 3 * dy;
+
+		dx = x - ep1.x;
+		dy = y - ep1.y;
+
+		sx += 3 * dx;
+		sy += 3 * dy;
+		
+		end += (int) (points_per_unit / 2.0);
+		for (int i = 0; i < 2 * points_per_unit; i++) {
+			index = end - i;
+						
+			if (index < 0) {
+				index += points.size;
+			} else {
+				index %= points.size;
+			}
+			
+			tp0 = points.get (index);
+			
+			d = Path.distance (tp0.x, sx, tp0.y, sy);
+			if (d < mind) {
+				mind = d;
+				x = tp0.x;
+				y = tp0.y;
+			}
+		}		
 	}
 	
-	public void set_contrast (double contrast) {
-		lock (this.contrast) {
-			this.contrast = contrast;
+	Path generate_path (uint8* outline_img, int stride, int w, int h, int length) {
+		double x, y, np;
+		int i, index;
+		double sumx, sumy, points_per_unit;
+		Path path = new Path ();
+		Gee.ArrayList<int?> sp = new Gee.ArrayList<int?> ();
+		double corner;
+		Gee.ArrayList<TracedPoint> traced = new Gee.ArrayList<TracedPoint> ();
+		Gee.ArrayList<EditPoint> corners = new Gee.ArrayList<EditPoint> ();
+		EditPoint ep;
+		EditPointHandle r, l;
+		double la, a;
+		PointSelection ps;
+		double image_scale_x;
+		double image_scale_y;
+		TracedPoint average_point;
+		int pi;
+
+		return_val_if_fail (background_image != null && contrast_image != null, new Path ());
+		
+		image_scale_x = ((double) size_margin / ((!) contrast_image).get_width ());
+		image_scale_y = ((double) size_margin / ((!) contrast_image).get_height ());
+				
+		foreach (TracedPoint p in points) {
+			start_points.add (p);
+		}
+
+		sumx = 0;
+		sumy = 0;
+		np = 0;
+
+		points_per_unit = 9;
+		corner = PI / 3.5;
+		
+		i = 0;
+		foreach (TracedPoint p in points) {
+			index = p.index;
+			x = -w * img_scale_x / 2 + (((index + 4) % stride) / 4) * img_scale_x;
+			y = h * img_scale_y / 2 +  -((index - x * 4) / stride) * img_scale_y;
+
+			x *= image_scale_x;
+			y *= image_scale_y;
+			
+			x += img_middle_x;
+			y += img_middle_y;
+			
+			p.x = x;
+			p.y = y;
+
+			np++;
+						
+			sumx += x;
+			sumy += y;
+			
+			if (np >= points_per_unit) {
+				average_point = new TracedPoint (-1);
+				average_point.x = sumx / np;
+				average_point.y = sumy / np;
+				traced.add (average_point);
+				
+				sp.add (i);
+				
+				np = 0;
+				sumx = 0;
+				sumy = 0;
+			}
+			
+			i++;
 		}
 		
-		if (background_image_is_processing) {
-			return;
+		if (np != 0) {
+			average_point = new TracedPoint (-1);
+			average_point.x = sumx / np;
+			average_point.y = sumy / np;
+			traced.add (average_point);
+			sp.add (i);
 		}
 		
-		background_image_is_processing = true;
+		foreach (TracedPoint avgp in traced) {
+			ep = new EditPoint (avgp.x, avgp.y);
+			
+			path.points.add (ep);
+			
+			if (DrawingTools.point_type == PointType.CUBIC) {
+				ep.type = PointType.CUBIC;
+				ep.get_right_handle ().type = PointType.LINE_CUBIC;
+				ep.get_left_handle ().type = PointType.LINE_CUBIC;
+			} else {
+				ep.type = PointType.DOUBLE_CURVE;
+				ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
+				ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
+			}
+		}
+
+		path.close ();
+		path.create_list ();
+		path.recalculate_linear_handles ();
 		
-		update_background (contrast, get_desaturate_background ());
+		// Find corners
+		pi = 0;
+		for (i = 1; i < sp.size; i += 2) {
+			return_val_if_fail (0 <= i < path.points.size, path);
+			ep = path.points.get (i);
+
+			pi = i + 2;
+			pi %= path.points.size;
+			return_val_if_fail (0 <= pi < path.points.size, path);
+			l = path.points.get (pi).get_left_handle ();
+
+			pi = i - 2;
+			if (pi < 0) {
+				pi += path.points.size;
+			}
+			return_val_if_fail (0 <= pi < path.points.size, path);
+			r = path.points.get (pi).get_right_handle ();
+
+			la = l.angle - PI;
+
+			while (la < 0) {
+				la += 2 * PI;
+			}
+			
+			if (r.angle > (2.0 / 3.0) * PI && la < PI / 2) {
+				la += 2 * PI;
+			} else if (la > (2.0 / 3.0) * PI && r.angle < PI / 2) {
+				la -= 2 * PI;
+			}
+			
+			a = r.angle - la;
+
+			if (fabs (a) > corner) { // corner			
+				ep.set_tie_handle (false);
+				find_corner (path, i, (!) sp.get (i), points_per_unit, ref ep.x, ref ep.y);
+				corners.add (ep);
+			} else {
+				ep.set_tie_handle (true);
+			}
+		}
+		
+		path.recalculate_linear_handles ();
+		path.remove_points_on_points ();
+		path.create_list ();
+		foreach (EditPoint e in path.points) {
+			if (e.tie_handles) {
+				e.process_tied_handle ();
+			}
+		}
+
+		for (i = 0; i < path.points.size; i++) {
+			ep = path.points.get (i);
+			ps = new PointSelection (ep, path);
+			if (corners.index_of (ep) == -1) {
+				PenTool.remove_point_simplify (ps);
+			} 
+		}
+		
+		for (i = 0; i < path.points.size; i++) {
+			ep = path.points.get (i);
+			ps = new PointSelection (ep, path);
+			if (corners.index_of (ep) == -1) {
+				ep.set_selected (true);
+			}
+		}
+		
+		path = PenTool.simplify (path, true, 0.2);
+		points.clear ();
+		path.update_region_boundaries ();
+		
+		return path;
+	}
+	
+	bool has_start_point (int i) {
+		foreach (TracedPoint p in start_points) {
+			if (p.index == i) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	bool is_traced (int i) {
+		foreach (TracedPoint p in points) {
+			if (p.index == i) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void center_in_glyph () {
@@ -843,6 +1327,17 @@ public class BackgroundImage {
 		
 		img_middle_x = g.left_limit + (g.right_limit - g.left_limit) / 2;
 		img_middle_y = f.bottom_position + (f.top_position - f.bottom_position) / 2;
+	}
+	
+	class TracedPoint {
+		public int index;
+		
+		public double x = 0;
+		public double y = 0;
+		
+		public TracedPoint (int index) {
+			this.index = index;
+		}
 	}
 }
 	

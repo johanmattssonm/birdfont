@@ -29,7 +29,6 @@ public class ExportTool : GLib.Object {
 
 	public static string export_current_glyph_to_string (bool only_selected_paths = false) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		Font font = BirdFont.get_current_font ();
 		string name;
 		StringBuilder s;
 

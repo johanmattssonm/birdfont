@@ -340,7 +340,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	public BackgroundImage? get_background_image () {
-		return (!) background_image;
+		return background_image;
 	}
 		
 	public override void scroll_wheel_up (double x, double y) {

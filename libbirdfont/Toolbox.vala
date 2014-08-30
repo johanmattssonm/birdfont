@@ -91,6 +91,11 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public void key_press (uint keyval) {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
 		foreach (Expander exp in current_set.get_expanders ()) {
 			foreach (Tool t in exp.tool) {
 				t.set_active (false);
@@ -105,6 +110,11 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void press (uint button, double x, double y) {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
 		foreach (Expander exp in current_set.get_expanders ()) {	
 			foreach (Tool t in exp.tool) {
 				if (t.tool_is_visible () && t.is_over (x, y)) {
@@ -121,6 +131,11 @@ public class Toolbox : GLib.Object  {
 	public void release (uint button, double x, double y) {
 		bool active;
 		
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+				
 		foreach (Expander exp in current_set.get_expanders ()) {			
 			foreach (Tool t in exp.tool) {
 				if (t.tool_is_visible ()) {
@@ -143,6 +158,11 @@ public class Toolbox : GLib.Object  {
 	public void scroll_up (double x, double y) {
 		bool action = false;
 		
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+				
 		if (!scrolling_toolbox) {	
 			foreach (Expander exp in current_set.get_expanders ()) {
 				foreach (Tool t in exp.tool) {

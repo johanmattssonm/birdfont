@@ -1315,7 +1315,10 @@ public class Path {
 		edit_point.set_position (ox, oy);
 	}
 
-	public static bool all_of (EditPoint start, EditPoint stop, RasterIterator iter, int steps = -1) {
+	public static bool all_of (EditPoint start, EditPoint stop,
+			RasterIterator iter, int steps = -1,
+			double min_t = 0, double max_t = 1) {
+				
 		PointType right = PenTool.to_curve (start.get_right_handle ().type);
 		PointType left = PenTool.to_curve (stop.get_left_handle ().type);
 		
@@ -1324,11 +1327,11 @@ public class Path {
 		}
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
-			return all_of_double (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps);
+			return all_of_double (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps, min_t, max_t);
 		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
-			return all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.x, stop.y, iter, steps);
+			return all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.x, stop.y, iter, steps,  min_t, max_t);
 		} else if (right == PointType.CUBIC && left == PointType.CUBIC) {
-			return all_of_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps);
+			return all_of_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps,  min_t, max_t);
 		}
 		
 		if (start.x == stop.x && start.y == stop.y) {
@@ -1346,7 +1349,9 @@ public class Path {
 		y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
 	}
 
-	private static bool all_of_double (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
+	private static bool all_of_double (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, 
+			RasterIterator iter, double steps = 400, double min_t = 0, double max_t = 1) {
+				
 		double px = x1;
 		double py = y1;
 		
@@ -1358,27 +1363,34 @@ public class Path {
 		middle_y = y1 + (y2 - y1) / 2;
 		
 		for (int i = 0; i < steps; i++) {
-			t = i / steps;
+			t = i / steps + min_t;
 			
 			px = quadratic_bezier_path (t, x0, x1, middle_x);
 			py = quadratic_bezier_path (t, y0, y1, middle_y);
 			
-			double_step = t / 2;
-			
-			if (!iter (px, py, double_step)) {
+			double_step = t /  2;
+
+			if (double_step > max_t) {
 				return false;
 			}
-			
+						
+			if (!iter (px, py, double_step)) {
+				return false;
+			}	
 		}
 		
 		for (int i = 0; i < steps; i++) {
-			t = i / steps;
+			t = i / steps + min_t;
 			
 			px = quadratic_bezier_path (t, middle_x, x2, x3);
 			py = quadratic_bezier_path (t, middle_y, y2, y3);
 			
 			double_step = 0.5 + t / 2;
-			
+
+			if (double_step > max_t) {
+				return false;
+			}
+						
 			if (!iter (px, py, double_step)) {
 				return false;
 			}
@@ -1387,17 +1399,22 @@ public class Path {
 		return true;	
 	}
 		
-	private static bool all_of_quadratic_curve (double x0, double y0, double x1, double y1, double x2, double y2, RasterIterator iter, double steps = 400) {
+	private static bool all_of_quadratic_curve (double x0, double y0, double x1, double y1, double x2, double y2,
+			RasterIterator iter, double steps = 400, double min_t = 0, double max_t = 1) {
 		double px = x1;
 		double py = y1;
 		
 		double t;
 		
 		for (int i = 0; i < steps; i++) {
-			t = i / steps;
+			t = i / steps + min_t;
 			
 			px = quadratic_bezier_path (t, x0, x1, x2);
 			py = quadratic_bezier_path (t, y0, y1, y2);
+			
+			if (t > max_t) {
+				return false;
+			}
 			
 			if (!iter (px, py, t)) {
 				return false;
@@ -1407,18 +1424,23 @@ public class Path {
 		return true;
 	}
 
-	private static bool all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, RasterIterator iter, double steps = 400) {
+	private static bool all_of_curve (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3,
+			RasterIterator iter, double steps = 400, double min_t = 0, double max_t = 1) {
 		double px = x1;
 		double py = y1;
 		
 		double t;
 		
 		for (int i = 0; i < steps; i++) {
-			t = i / steps;
+			t = i / steps + min_t;
 			
 			px = bezier_path (t, x0, x1, x2, x3);
 			py = bezier_path (t, y0, y1, y2, y3);
-			
+
+			if (t > max_t) {
+				return false;
+			}
+						
 			if (!iter (px, py, t)) {
 				return false;
 			}
@@ -1982,13 +2004,13 @@ public class Path {
 		return ep;
 	}
 	
-	public static bool is_clasped (PathList pl, Path p) {
+	public static bool is_counter (PathList pl, Path p) {
 		foreach (Path o in pl.paths) {
 			if (o == p) {
 				continue;
 			}
 			
-			if (is_clasped_path (o, p)) {
+			if (is_counte_to_path (o, p)) {
 				return true;
 			}
 		}
@@ -1996,10 +2018,10 @@ public class Path {
 		return false;
 	}
 
-	private static bool is_clasped_path (Path outside, Path inside) {
+	private static bool is_counte_to_path (Path outside, Path inside) {
 		bool i = true;
 		foreach (EditPoint e in inside.points) {
-			if (!outside.is_over_coordinate_var (e.x, e.y)) { // point may be off curve in both paths
+			if (!outside.is_over_coordinate_var (e.x, e.y)) {
 				i = false;
 				break;
 			}
@@ -2070,6 +2092,58 @@ public class Path {
 		}
 		
 		create_list ();
+	}
+
+	public static void find_closes_point_in_segment (EditPoint ep0, EditPoint ep1,
+			double px, double py,
+			out double nx, out double ny,
+			double max_step = 200) {
+								
+		double min_distance = double.MAX;
+		double npx, npy;
+		double min_t, max_t;
+		double rmin_t, rmax_t;
+		bool found;
+		int step;
+		
+		npx = 0;
+		npy = 0;
+		
+		min_t = 0;
+		max_t = 1;
+		
+		rmin_t = 0;
+		rmax_t = 1;
+
+		for (step = 3; step <= max_step; step *= 2) {
+			found = false;
+			min_distance = double.MAX;
+			Path.all_of (ep0, ep1, (xa, ya, ta) => {
+				double d = Path.distance (px, xa, py, ya);
+				
+				if (d < min_distance) {
+					min_distance = d;
+					npx = xa;
+					npy = ya;
+					rmin_t = ta - 1.0 / step;
+					rmax_t = ta + 1.0 / step;
+					found = true;
+				}
+				
+				return true;
+			}, step, min_t, max_t);
+
+			if (!found) {
+				rmin_t = 1 - (1.0 / step);
+				rmax_t = 1;
+			}
+
+			min_t = (rmin_t > 0) ? rmin_t : 0;
+			max_t = (rmax_t < 1) ? rmax_t : 1;
+		}
+
+		nx = npx;
+		ny = npy;
 	}
 }
 

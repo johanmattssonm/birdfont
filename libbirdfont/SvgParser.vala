@@ -58,7 +58,6 @@ public class SvgParser {
 		StringBuilder sb = new StringBuilder ();
 		SvgParser parser = new SvgParser ();
 		TextReader tr;
-		int i_tag, end_tag;
 
 		foreach (string l in lines) {
 			if (l.index_of ("Illustrator") > -1 || l.index_of ("illustrator") > -1) {
@@ -92,7 +91,7 @@ public class SvgParser {
 		
 		// parse the file
 		if (!has_format) {
-			stderr.printf ("No format identifier found.\n");
+			warn_if_test ("No format identifier found in SVG parser.\n");
 		}
 
 		Parser.init ();

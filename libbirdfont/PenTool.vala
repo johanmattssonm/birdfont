@@ -298,51 +298,38 @@ public class PenTool : Tool {
 	static void get_closes_point_in_segment (EditPoint ep0, EditPoint ep1, EditPoint ep2,
 			double px, double py,
 			out double nx, out double ny) {
-								
-		double min_distance = double.MAX;
-		double npx, npy;
+		double npx0, npy0;
+		double npx1, npy1;
 		
-		npx = 0;
-		npy = 0;
-		
-		Path.all_of (ep0, ep1, (xa, ya, ta) => {
-			double d = Path.distance (px, xa, py, ya);
-			if (d < min_distance) {
-				min_distance = d;
-				npx = xa;
-				npy = ya;
-			}
-			return true;
-		}, 200);
+		Path.find_closes_point_in_segment (ep0, ep1, px, py, out npx0, out npy0, 50);
+		Path.find_closes_point_in_segment (ep1, ep2, px, py, out npx1, out npy1, 50);
 
-		Path.all_of (ep1, ep2, (xa, ya, ta) => {
-			double d = Path.distance (px, xa, py, ya);
-			if (d < min_distance) {
-				min_distance = d;
-				npx = xa;
-				npy = ya;
-			}
-			return true;
-		}, 200);	
-
-		nx = npx;
-		ny = npy;
+		if (Path.distance (px, npx0, py, npy0) < Path.distance (px, npx1, py, npy1)) {
+			nx = npx0;
+			ny = npy0;
+		} else {
+			nx = npx1;
+			ny = npy1;
+		}
 	}
 
-	static void get_path_distortion (EditPoint oe0, EditPoint oe1, EditPoint oe2,
+	public static void get_path_distortion (EditPoint oe0, EditPoint oe1, EditPoint oe2,
 			EditPoint ep1, EditPoint ep2,
 			out double distortion_first, out double distortion_next) {
 		double nx, ny;
 		double df, dn;
+		int step;
 		
 		df = 0;
 		dn = 0;
 		nx = 0;
 		ny = 0;
 
+		step = 4;
+		
 		Path.all_of (ep1, ep2, (xa, ya, ta) => {
 			double f, n;
-			
+	
 			get_closes_point_in_segment (oe0, oe1, oe2, xa, ya, out nx, out ny);
 			
 			if (ta < 0.5) {
@@ -358,7 +345,7 @@ public class PenTool : Tool {
 			}
 			
 			return true;
-		}, 4);	
+		}, step);	
 
 		distortion_first = df;
 		distortion_next = dn;
@@ -383,22 +370,24 @@ public class PenTool : Tool {
 		selected_point = new EditPoint ();
 	}
 	
-	static void remove_point_simplify (PointSelection p) {
+	/** @return path distortion. */
+	public static double remove_point_simplify (PointSelection p) {
 		double start_length, stop_length;
-		double start_distortion, start_min_distortion, start_new_length;
-		double stop_distortion, stop_min_distortion, stop_new_length;
-		double distortion; 
+		double start_distortion, start_min_distortion, start_previous_length;
+		double stop_distortion, stop_min_distortion, stop_previous_length;
+		double distortion, min_distortion; 
 		double prev_length_adjustment, next_length_adjustment;
 		double prev_length_adjustment_reverse, next_length_adjustment_reverse;
 		EditPoint ep1, ep2;
 		EditPoint next, prev;
+		double step, distance;
 				
 		return_if_fail (p.path.points.size > 0);
 		
 		if (p.path.points.size <= 2) {
 			p.point.deleted = true;
 			p.path.remove_deleted_points ();
-			return;
+			return 0;
 		}
 		
 		p.point.deleted = true;
@@ -421,97 +410,62 @@ public class PenTool : Tool {
 		ep1 = prev.copy ();
 		ep2 = next.copy ();
 
-		stop_new_length = 1;
-		start_new_length = 1;
 		start_length = ep1.get_right_handle ().length;
 		stop_length = ep2.get_left_handle ().length;
+		
+		stop_previous_length = start_length;
+		start_previous_length = stop_length;
 
 		stop_min_distortion = double.MAX;
-		ep1.get_right_handle ().length = start_length * start_new_length;
+		ep1.get_right_handle ().length = start_length;
 		
 		start_min_distortion = double.MAX;
-		ep2.get_left_handle ().length = stop_length * stop_new_length;
+		ep2.get_left_handle ().length = stop_length;
 				
 		prev_length_adjustment = 0;
 		next_length_adjustment = 0;
 		prev_length_adjustment_reverse = 0;
 		next_length_adjustment_reverse = 0;
-		
-		
-		// FOR 10s
-		double min_distortion = double.MAX;
-		
-		for (double a = 0; a < 50; a += 10) {
-			for (double b = 0; b < 50; b += 10) {
-				ep1.get_right_handle ().length = start_length + a;
-				ep2.get_left_handle ().length = stop_length + b;
-				
-				get_path_distortion (prev, p.point, next, 
-					ep1, ep2, 
-					out start_distortion, out stop_distortion);
-				
-				distortion = Math.fmax (start_distortion, stop_distortion);
-				
-				if (distortion < min_distortion) {
-					min_distortion = distortion;
-					
-					prev_length_adjustment_reverse = a;
-					next_length_adjustment = b;
-				}
-			}
-		}
-		
-		start_length += prev_length_adjustment_reverse;
-		stop_length += next_length_adjustment;
 
 		min_distortion = double.MAX;
-		for (double a = -10; a < 10; a += 1) {
-			for (double b = -10; b < 10; b += 1) {
-				ep1.get_right_handle ().length = start_length + a;
-				ep2.get_left_handle ().length = stop_length + b;
-				
-				get_path_distortion (prev, p.point, next, 
-					ep1, ep2, 
-					out start_distortion, out stop_distortion);
-				
-				distortion = Math.fmax (start_distortion, stop_distortion);
+		distance = Path.distance (ep1.x, ep2.x, ep1.y, ep2.y);
 
-				if (distortion < min_distortion) {
-					min_distortion = distortion;
+		for (double m = 50.0; m >= 0.6; m /= 10.0) {
+			step = m / 10.0;
+			min_distortion = double.MAX;
+			
+			double first = (m == 50.0) ? 0 : -m;
+			for (double a = first; a < m; a += step) {
+				for (double b = first; b < m; b += step) {
 					
-					prev_length_adjustment_reverse = a;
-					next_length_adjustment = b;
+					if (start_length + a + stop_length + b > distance) {
+						break;
+					}
+							
+					ep1.get_right_handle ().length = start_length + a;
+					ep2.get_left_handle ().length = stop_length + b;
+					
+					get_path_distortion (prev, p.point, next, 
+						ep1, ep2, 
+						out start_distortion, out stop_distortion);
+					
+					distortion = Math.fmax (start_distortion, stop_distortion);
+					
+					if (distortion < min_distortion
+							&& start_length + a > 0
+							&& stop_length + b > 0) {
+						min_distortion = distortion;
+						
+						prev_length_adjustment_reverse = a;
+						next_length_adjustment = b;
+					}
 				}
 			}
-		}		
-
-		start_length += prev_length_adjustment_reverse;
-		stop_length += next_length_adjustment;
-
-		min_distortion = double.MAX;
-		for (double a = -1; a < 1; a += 0.1) {
-			for (double b = -1; b < 1; b += 0.1) {
-				ep1.get_right_handle ().length = start_length + a;
-				ep2.get_left_handle ().length = stop_length + b;
-				
-				get_path_distortion (prev, p.point, next, 
-					ep1, ep2, 
-					out start_distortion, out stop_distortion);
-				
-				distortion = Math.fmax (start_distortion, stop_distortion);
-
-				if (distortion < min_distortion) {
-					min_distortion = distortion;
-					
-					prev_length_adjustment_reverse = a;
-					next_length_adjustment = b;
-				}
-			}
+						
+			start_length += prev_length_adjustment_reverse;
+			stop_length += next_length_adjustment;
 		}
 		
-		start_length += prev_length_adjustment_reverse;
-		stop_length += next_length_adjustment;
-				
 		prev.get_right_handle ().length = start_length;
 		
 		if (prev.get_right_handle ().type != PointType.QUADRATIC) {
@@ -520,10 +474,12 @@ public class PenTool : Tool {
 			next.get_left_handle ().move_to_coordinate (
 				prev.get_right_handle ().x, prev.get_right_handle ().y);
 		}
-
+		
 		p.point.deleted = true;
 		p.path.remove_deleted_points ();
 		p.path.update_region_boundaries ();
+		
+		return min_distortion;
 	}
 	
 	/** Retain selected points even if path is copied after running reverse. */
@@ -777,7 +733,7 @@ public class PenTool : Tool {
 			pl.add (p);
 		}
 		
-		return Path.is_clasped (pl, path);
+		return Path.is_counter (pl, path);
 	}
 	
 	public void remove_from_selected (EditPoint ep) 
@@ -2042,6 +1998,35 @@ public class PenTool : Tool {
 				add_selected_point (ep, p);
 			}
 		}
+	}
+	
+	public static Path simplify (Path path, bool selected_segments = false, double threshold = 0.3) {
+		PointSelection ps;
+		EditPoint ep;
+		Path p1, p2, new_path;
+		double d, sumd;
+		int i;
+
+		p1 = path.copy ();
+		new_path = p1.copy ();
+		i = 0;
+		sumd = 0;
+		while (i < new_path.points.size) {
+			ep = new_path.points.get (i);
+			ps = new PointSelection (ep, new_path); 
+			d = PenTool.remove_point_simplify (ps);
+			sumd += d;
+			
+			if (sumd < threshold) {
+				p1 = new_path.copy ();
+			} else {
+				new_path = p1.copy ();
+				sumd = 0;
+				i++;
+			}
+		}
+		
+		return new_path;
 	}
 }
 

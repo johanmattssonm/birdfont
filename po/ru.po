@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-17 16:48+0200\n"
+"POT-Creation-Date: 2014-08-29 23:33+0200\n"
 "PO-Revision-Date: 2014-07-22 16:22+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,8 +124,8 @@ msgstr ""
 msgid "Glyph"
 msgstr ""
 
-#: libbirdfont/BirdFont.vala:163 libbirdfont/VersionList.vala:208
-#: birdfont/GtkWindow.vala:1343
+#: libbirdfont/BirdFont.vala:163 libbirdfont/VersionList.vala:211
+#: birdfont/GtkWindow.vala:1369
 msgid "Version"
 msgstr "Версия"
 
@@ -220,7 +220,7 @@ msgstr "а б в г д е ё ж з и й к л м н о п р с т у ф х ц 
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я"
 
-#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1350
+#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1376
 msgid "Description"
 msgstr "Описание"
 
@@ -280,7 +280,7 @@ msgstr ""
 msgid "Height"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:425 libbirdfont/DrawingTools.vala:885
+#: libbirdfont/DrawingTools.vala:425 libbirdfont/DrawingTools.vala:926
 msgid "Stroke width"
 msgstr "Толщина контура"
 
@@ -375,51 +375,63 @@ msgstr "Следующая вкладка"
 msgid "Set size for background image"
 msgstr "Установить размер фонового изображения"
 
-#: libbirdfont/DrawingTools.vala:813
+#: libbirdfont/DrawingTools.vala:814
 msgid "Show/hide background image"
 msgstr "Показать/Спрятать фоновое изображение"
 
-#: libbirdfont/DrawingTools.vala:824
+#: libbirdfont/DrawingTools.vala:825
 msgid "Insert a new background image"
 msgstr "Вставить новое фоновое изображение"
 
-#: libbirdfont/DrawingTools.vala:838
-msgid "Set contrast for background image"
-msgstr "Установите контраст для фонового изображения"
+#: libbirdfont/DrawingTools.vala:839
+msgid "High contrast"
+msgstr ""
 
-#: libbirdfont/DrawingTools.vala:860
+#: libbirdfont/DrawingTools.vala:853
+msgid "Set background threshold"
+msgstr ""
+
+#: libbirdfont/DrawingTools.vala:874
+msgid "Amount of autotrace details"
+msgstr ""
+
+#: libbirdfont/DrawingTools.vala:891
+msgid "Autotrace background image"
+msgstr ""
+
+#: libbirdfont/DrawingTools.vala:901
 msgid "Stroke color"
 msgstr "Цвет контура"
 
-#: libbirdfont/DrawingTools.vala:907
+#: libbirdfont/DrawingTools.vala:948
 msgid "Handle color"
 msgstr "Цвет рычага"
 
-#: libbirdfont/DrawingTools.vala:930
+#: libbirdfont/DrawingTools.vala:971
 msgid "Set precision"
 msgstr "Чуствительность рычагов"
 
-#: libbirdfont/DrawingTools.vala:957
+#: libbirdfont/DrawingTools.vala:998
 msgid "Show all control point handles or only handles for the selected points."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:966
+#: libbirdfont/DrawingTools.vala:1007
 msgid "Object color"
 msgstr "Цвет объекта"
 
-#: libbirdfont/DrawingTools.vala:987
+#: libbirdfont/DrawingTools.vala:1028
 msgid "Set fill color for open paths."
 msgstr "Задать цвет заливки для открытых контуров"
 
-#: libbirdfont/DrawingTools.vala:995
+#: libbirdfont/DrawingTools.vala:1036
 msgid "Use TTF units."
 msgstr "Использовать единицы TTF"
 
-#: libbirdfont/DrawingTools.vala:1002
+#: libbirdfont/DrawingTools.vala:1043
 msgid "Adjust the number of samples per point in the freehand tool."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1294
+#: libbirdfont/DrawingTools.vala:1350
 msgid "Set size for grid"
 msgstr "Установить размер сетки"
 
@@ -427,16 +439,16 @@ msgstr "Установить размер сетки"
 msgid "Three font files have been created."
 msgstr ""
 
-#: libbirdfont/ExportTool.vala:156 libbirdfont/MenuTab.vala:169
+#: libbirdfont/ExportTool.vala:153 libbirdfont/MenuTab.vala:169
 #: libbirdfont/SaveCallback.vala:65 libbirdfont/SaveDialogListener.vala:28
 msgid "Save"
 msgstr "Сохранить"
 
-#: libbirdfont/ExportTool.vala:393
+#: libbirdfont/ExportTool.vala:390
 msgid "Writing TTF and EOT files."
 msgstr "Запись TTF и EOT файлов"
 
-#: libbirdfont/ExportTool.vala:407
+#: libbirdfont/ExportTool.vala:404
 msgid "Writing SVG file."
 msgstr "Запись SVG файлов"
 
@@ -456,7 +468,7 @@ msgstr "Резервная копия"
 msgid "Files"
 msgstr "Файлы"
 
-#: libbirdfont/Font.vala:588
+#: libbirdfont/Font.vala:596
 msgid "The file is write protected."
 msgstr ""
 
@@ -643,273 +655,280 @@ msgstr ""
 msgid "New version"
 msgstr "Новая версия"
 
-#: birdfont/GtkWindow.vala:405
+#: birdfont/GtkWindow.vala:407
 msgid "_New"
 msgstr "_Новый"
 
-#: birdfont/GtkWindow.vala:410
+#: birdfont/GtkWindow.vala:412
 msgid "_Open"
 msgstr "_Открыть"
 
-#: birdfont/GtkWindow.vala:415
+#: birdfont/GtkWindow.vala:417
 #, fuzzy
 msgid "_Recent Files"
 msgstr "Последние файлы"
 
-#: birdfont/GtkWindow.vala:424
+#: birdfont/GtkWindow.vala:426
 msgid "Save _as"
 msgstr "Сохранить _как"
 
-#: birdfont/GtkWindow.vala:428
+#: birdfont/GtkWindow.vala:430
 msgid "_Export"
 msgstr "_Экспортировать"
 
-#: birdfont/GtkWindow.vala:433
+#: birdfont/GtkWindow.vala:435
 msgid "_Preview"
 msgstr "_Предпросмотр"
 
-#: birdfont/GtkWindow.vala:438
+#: birdfont/GtkWindow.vala:440
 msgid "Name and _Description"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:442
+#: birdfont/GtkWindow.vala:444
 msgid "Select _Character Set"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:446
+#: birdfont/GtkWindow.vala:448
 msgid "_Quit"
 msgstr "_Выйти"
 
-#: birdfont/GtkWindow.vala:451
+#: birdfont/GtkWindow.vala:453
 msgid "_Undo"
 msgstr "_Отменить"
 
-#: birdfont/GtkWindow.vala:456
+#: birdfont/GtkWindow.vala:458
 msgid "_Copy"
 msgstr "_Копировать"
 
-#: birdfont/GtkWindow.vala:461
+#: birdfont/GtkWindow.vala:463
 msgid "_Paste"
 msgstr "_Вставить"
 
-#: birdfont/GtkWindow.vala:466
+#: birdfont/GtkWindow.vala:468
 msgid "Paste _In Place"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:471
+#: birdfont/GtkWindow.vala:473
 #, fuzzy
 msgid "Select All Pa_ths"
 msgstr "_Выделить все контуры"
 
-#: birdfont/GtkWindow.vala:478
+#: birdfont/GtkWindow.vala:480
 msgid "Move _To Baseline"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:486
+#: birdfont/GtkWindow.vala:488
 msgid "_Search"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:491
+#: birdfont/GtkWindow.vala:493
 #, fuzzy
 msgid "_Export Glyph as SVG"
 msgstr "_Экспортировать глиф как SVG"
 
-#: birdfont/GtkWindow.vala:495
+#: birdfont/GtkWindow.vala:497
 msgid "_Import SVG"
 msgstr "_Импортировать SVG"
 
-#: birdfont/GtkWindow.vala:500
+#: birdfont/GtkWindow.vala:502
+msgid "Simpl_ify Path"
+msgstr ""
+
+#: birdfont/GtkWindow.vala:507
 #, fuzzy
 msgid "Close _Path"
 msgstr "_Замкнуть контур"
 
-#: birdfont/GtkWindow.vala:505
+#: birdfont/GtkWindow.vala:512
 #, fuzzy
 msgid "_Glyph Sequence"
 msgstr "Последовательность глифов"
 
-#: birdfont/GtkWindow.vala:510
+#: birdfont/GtkWindow.vala:517
 msgid "Set Glyph _Background"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:514
+#: birdfont/GtkWindow.vala:521
 msgid "_Remove Glyph Background"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:520
+#: birdfont/GtkWindow.vala:527
 #, fuzzy
 msgid "_Select Point Above"
 msgstr "_Выбрать узел выше"
 
-#: birdfont/GtkWindow.vala:524
+#: birdfont/GtkWindow.vala:531
 #, fuzzy
 msgid "Select _Next Point"
 msgstr "_Выбрать следующий узел"
 
-#: birdfont/GtkWindow.vala:528
+#: birdfont/GtkWindow.vala:535
 #, fuzzy
 msgid "Select _Previous Point"
 msgstr "_Выбрать предыдущий узел"
 
-#: birdfont/GtkWindow.vala:532
+#: birdfont/GtkWindow.vala:539
 #, fuzzy
 msgid "Select Point _Below"
 msgstr "_Выбрать узел ниже"
 
-#: birdfont/GtkWindow.vala:537
+#: birdfont/GtkWindow.vala:544
 #, fuzzy
 msgid "_Next Tab"
 msgstr "_Следующая вкладка"
 
-#: birdfont/GtkWindow.vala:550
+#: birdfont/GtkWindow.vala:557
 #, fuzzy
 msgid "_Previous Tab"
 msgstr "_Предыдущая вкладка"
 
-#: birdfont/GtkWindow.vala:563
+#: birdfont/GtkWindow.vala:570
 msgid "_Close tab"
 msgstr "_Закрыть вкладку"
 
-#: birdfont/GtkWindow.vala:577
+#: birdfont/GtkWindow.vala:584
 #, fuzzy
 msgid "Close _All Tabs"
 msgstr "_Закрыть все вкладки"
 
-#: birdfont/GtkWindow.vala:585
+#: birdfont/GtkWindow.vala:592
 #, fuzzy
 msgid "_Create Path"
 msgstr "_Создать контур"
 
-#: birdfont/GtkWindow.vala:592
+#: birdfont/GtkWindow.vala:599
 msgid "_Zoom"
 msgstr "_Масштабирование"
 
-#: birdfont/GtkWindow.vala:598
+#: birdfont/GtkWindow.vala:605
 #, fuzzy
 msgid "_Create Counter Path"
 msgstr "_Объединить контуры"
 
-#: birdfont/GtkWindow.vala:605
+#: birdfont/GtkWindow.vala:612
 msgid "_Move"
 msgstr "_Переместить"
 
-#: birdfont/GtkWindow.vala:612
+#: birdfont/GtkWindow.vala:619
 msgid "Show _full unicode characters set"
 msgstr "_Показать полный набор символов Unicode"
 
-#: birdfont/GtkWindow.vala:619
+#: birdfont/GtkWindow.vala:626
 #, fuzzy
 msgid "Show De_fault Characters Set"
 msgstr "_Показать набор символов по умолчанию"
 
-#: birdfont/GtkWindow.vala:626
+#: birdfont/GtkWindow.vala:633
 #, fuzzy
 msgid "Show Characters in Font"
 msgstr "_Показать символы шрифта"
 
-#: birdfont/GtkWindow.vala:633
+#: birdfont/GtkWindow.vala:640
 #, fuzzy
 msgid "Add New _Grid Item"
 msgstr "_Добавить новый элемент сетки"
 
-#: birdfont/GtkWindow.vala:639
+#: birdfont/GtkWindow.vala:646
 #, fuzzy
 msgid "Remove Gr_id Item"
 msgstr "_Удалить элемент сетки"
 
-#: birdfont/GtkWindow.vala:645
+#: birdfont/GtkWindow.vala:652
 #, fuzzy
 msgid "_Zoom In"
 msgstr "_Увеличить"
 
-#: birdfont/GtkWindow.vala:652
+#: birdfont/GtkWindow.vala:659
 #, fuzzy
 msgid "Zoom _Out"
 msgstr "_Уменьшить"
 
-#: birdfont/GtkWindow.vala:659
+#: birdfont/GtkWindow.vala:666
 msgid "U_se One Pixel Per Unit"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:667
+#: birdfont/GtkWindow.vala:674
 msgid "Show Kerning _Tab"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:674
+#: birdfont/GtkWindow.vala:681
 msgid "_List Kerning Pairs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:682
+#: birdfont/GtkWindow.vala:689
 msgid "Select _Next Kerning Pair"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:686
+#: birdfont/GtkWindow.vala:693
 msgid "Select _Previous Kerning Pair"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:691
+#: birdfont/GtkWindow.vala:698
 msgid "_Save as .bfp"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:698
+#: birdfont/GtkWindow.vala:705
 msgid "_Show Ligatures"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:705
+#: birdfont/GtkWindow.vala:712
 msgid "_File"
 msgstr "_Файл"
 
-#: birdfont/GtkWindow.vala:708
+#: birdfont/GtkWindow.vala:715
 msgid "_Edit"
 msgstr "_Правка"
 
-#: birdfont/GtkWindow.vala:711
+#: birdfont/GtkWindow.vala:718
 msgid "_Tab"
 msgstr "_Вкладки"
 
-#: birdfont/GtkWindow.vala:714
+#: birdfont/GtkWindow.vala:721
 msgid "T_ool"
 msgstr "_Инструменты"
 
-#: birdfont/GtkWindow.vala:717
+#: birdfont/GtkWindow.vala:724
 msgid "_Kerning"
 msgstr "_Кернинг"
 
-#: birdfont/GtkWindow.vala:921
+#: birdfont/GtkWindow.vala:947
 msgid "Your fonts have been exported."
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1287
+#: birdfont/GtkWindow.vala:1313
 msgid "PostScript Name"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1294
+#: birdfont/GtkWindow.vala:1320
 msgid "Name"
 msgstr "Название"
 
-#: birdfont/GtkWindow.vala:1301
+#: birdfont/GtkWindow.vala:1327
 msgid "Style"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1307
+#: birdfont/GtkWindow.vala:1333
 msgid "Bold"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1322
+#: birdfont/GtkWindow.vala:1348
 msgid "Weight"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1329
+#: birdfont/GtkWindow.vala:1355
 msgid "Full name (name and style)"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1336
+#: birdfont/GtkWindow.vala:1362
 msgid "Unique identifier"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1358
+#: birdfont/GtkWindow.vala:1384
 msgid "Copyright"
 msgstr ""
+
+#~ msgid "Set contrast for background image"
+#~ msgstr "Установите контраст для фонового изображения"
 
 #~ msgid "Backgrounds"
 #~ msgstr "Фоны"

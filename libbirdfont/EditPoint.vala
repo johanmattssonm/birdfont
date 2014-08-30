@@ -99,6 +99,12 @@ public class EditPoint : GLib.Object {
 		}
 	}
 
+	public static bool is_valid (double x, double y) {
+		return likely (x.is_finite () && y.is_finite () 
+			&& x > -100000 && x < 100000
+			&& y > -100000 && y < 100000);
+	}
+
 	public void set_point_type (PointType t) {
 		type = t;
 	}

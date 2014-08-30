@@ -110,7 +110,7 @@ public class EditPointHandle : GLib.Object {
 	public void convert_to_curve () {
 		switch (type) {
 			case PointType.LINE_QUADRATIC:
-				type = PointType.LINE_QUADRATIC;
+				type = PointType.QUADRATIC;
 				break;
 			case PointType.LINE_DOUBLE_CURVE:
 				type = PointType.DOUBLE_CURVE;
@@ -118,7 +118,14 @@ public class EditPointHandle : GLib.Object {
 			case PointType.LINE_CUBIC:
 				type = PointType.CUBIC;
 				break;
+			case PointType.QUADRATIC:
+				break;
+			case PointType.DOUBLE_CURVE:
+				break;
+			case PointType.CUBIC:
+				break;
 			default:
+				warning (@"Type $type");
 				break;
 		}
 	}

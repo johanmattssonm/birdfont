@@ -58,6 +58,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	ToolboxCanvas toolbox;
 	
+	Task background_task = new Task ();
+	
 	public GtkWindow (string title) {
 		scrollbar = new Scrollbar (Orientation.VERTICAL, new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		((Gtk.Window)this).set_title ("BirdFont");
@@ -497,6 +499,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		import_svg_item.activate.connect (() => { SvgParser.import (); });	
 		import_svg_item.add_accelerator ("activate", accel_group, 'I', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		Gtk.MenuItem simplify_item = new Gtk.MenuItem.with_mnemonic (t_("Simpl_ify Path"));
+		edit_menu.append (simplify_item);
+		simplify_item.activate.connect (() => { MenuTab.simplify_path (); });	
+		simplify_item.add_accelerator ("activate", accel_group, 'S', Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.SHIFT_MASK, Gtk.AccelFlags.VISIBLE);
+
 		Gtk.MenuItem close_path_item = new Gtk.MenuItem.with_mnemonic (t_("Close _Path"));
 		edit_menu.append (close_path_item);
 		close_path_item.activate.connect (() => { PenTool.close_all_paths (); });
@@ -756,9 +763,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void file_chooser (string title, FileChooser fc, uint flags) {
-		MenuTab.show_file_dialog_tab (title, fc);
-		return;
-
 		string? fn = null;
 		
 		if ((flags & FileChooser.LOAD) > 0) {
@@ -897,6 +901,25 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 	public void hide_tooltip () {
 		tooltip_window.hide ();
+	}
+
+	public void run_background_thread (Task t) {
+		unowned Thread<void*> bg;
+		
+		MenuTab.start_background_thread ();
+		background_task = t;
+		
+		try {
+			bg = Thread.create<void*> (this.background_thread, true);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+
+	public void* background_thread () {	
+		background_task.run ();
+		MenuTab.stop_background_thread ();
+		return null;
 	}
 	
 	/** Run export in a background thread. */

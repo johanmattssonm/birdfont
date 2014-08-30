@@ -595,8 +595,6 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void key_press (uint keyval) {
-		GlyphCollection? gc;
-		
 		redraw_area (0, 0, allocation.width, allocation.height);
 
 		if (KeyBindings.modifier == CTRL) {
@@ -775,7 +773,9 @@ public class OverView : FontDisplay {
 		}
 	}
 	
-	public override void double_click (uint button, double ex, double ey) {
+	public override void double_click (uint button, double ex, double ey) 
+	requires (!is_null (visible_items)) {
+		
 		foreach (OverViewItem i in visible_items) {
 			i.double_click (button, ex, ey);
 		}
