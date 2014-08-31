@@ -285,20 +285,53 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	class ColorWindow : Gtk.Window {
-		ColorSelection color_selection = new ColorSelection ();
+		
+		ColorChooserWidget color_selection;
+		
+		public ColorWindow (ColorTool color_tool) {
+			Button set_button;
+			
+			title = t_("Select color");
+			window_position = Gtk.WindowPosition.CENTER;
 
-		public ColorWindow (ColorTool color_tool) {			
-			color_selection.color_changed.connect (() => {
-				Gdk.RGBA c = new Gdk.RGBA ();
-				color_selection.get_current_rgba (c);
+			Box box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+			add (box);
+
+			color_selection = new Gtk.ColorChooserWidget ();
+			box.add (color_selection);
+			
+			color_selection.show_editor = true;
+
+			color_selection.color_activated.connect ((color) => {
+				Gdk.RGBA c = color_selection.rgba;
 				color_tool.color_r = c.red;
 				color_tool.color_g = c.green;
 				color_tool.color_b = c.blue;
-				color_tool.color_a = c.alpha; 
+				color_tool.color_a = c.alpha;
 				color_tool.color_updated ();
 			});
-			
-			add (color_selection);
+
+			color_selection.color_activated.connect (() => {
+				Gdk.RGBA c = new Gdk.RGBA ();
+				c.red = color_tool.color_r;
+				c.green = color_tool.color_g;
+				c.blue = color_tool.color_b;
+				c.alpha = color_tool.color_a;
+				color_selection.rgba = c;
+			});
+
+			set_button = new Button.with_label (_("Set"));
+			box.add (set_button);
+
+			set_button.clicked.connect (() => {
+				Gdk.RGBA c = color_selection.rgba;
+				color_tool.color_r = c.red;
+				color_tool.color_g = c.green;
+				color_tool.color_b = c.blue;
+				color_tool.color_a = c.alpha;
+				color_tool.color_updated ();
+			});
+
 			show_all ();
 		}	
 	}
