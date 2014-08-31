@@ -93,10 +93,39 @@ public class Line : GLib.Object {
 		return (r == moving);
 	}
 	
-	public bool button_press () {
+	public bool button_press (uint button) {
 		Glyph g;
+		TextListener listener;
+		string position;
+		
 		if (get_active ()) {
-			move = true;
+			if (button == 3 || KeyBindings.has_shift ()) {
+				move = false;			
+				position = @"$pos";
+
+				listener = new TextListener (t_("Position"), position, t_("Move"));
+				
+				listener.signal_text_input.connect ((text) => {
+					string submitted_value;
+					double parsed_value;
+					
+					submitted_value = text.replace (",", ".");
+					parsed_value = double.parse (submitted_value);
+					
+					pos = parsed_value;
+					
+					position_updated (parsed_value);
+					GlyphCanvas.redraw ();
+				});
+				
+				listener.signal_submit.connect (() => {
+					MainWindow.native_window.hide_text_input ();
+				});
+				
+				MainWindow.native_window.set_text_listener (listener);
+			} else {
+				move = true;
+			}
 			
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();

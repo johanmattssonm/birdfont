@@ -743,13 +743,13 @@ public class Glyph : FontDisplay {
 		pointer_begin_y = ey;
 		
 		foreach (Line line in horizontal_help_lines) {
-			if (!moving_lines && line.is_visible () && line.button_press ()) {
+			if (!moving_lines && line.is_visible () && line.button_press (button)) {
 				moving_lines = true;
 			}
 		}
 
 		foreach (Line line in vertical_help_lines) {
-			if (!moving_lines && line.is_visible () && line.button_press ()) {
+			if (!moving_lines && line.is_visible () && line.button_press (button)) {
 				moving_lines = true;
 			}
 		}
