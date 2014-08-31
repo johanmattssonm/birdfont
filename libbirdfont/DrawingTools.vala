@@ -40,18 +40,22 @@ public class DrawingTools : ToolCollection  {
 	public static ResizeTool resize_tool;
 	StrokeTool stroke_tool;
 	TrackTool track_tool;
+	BackgroundTool move_background;
 	
 	Tool quadratic_points;
 	Tool cubic_points;
 	Tool double_points;
 	Tool convert_points;
 
-	BackgroundTool move_background;
 	CutBackgroundTool cut_background;
 	Tool show_bg;
 	Tool bg_selection;
 	SpinButton background_threshold;
 	public SpinButton background_scale;
+	Tool high_contrast_background;
+	SpinButton auto_trace_resolution;
+	Tool auto_trace;
+	SpinButton auto_trace_simplify;
 
 	Tool rectangle;
 	Tool circle;
@@ -129,7 +133,13 @@ public class DrawingTools : ToolCollection  {
 			update_drawing_and_background_tools (self);
 		});
 		draw_tools.add_tool (track_tool);
-		
+
+		move_background = new BackgroundTool ("move_background");
+		move_background.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
+		draw_tools.add_tool (move_background);
+				
 		// Tools on android
 		// Delete key
 		Tool delete_button = new Tool ("delete_button", t_("Delete"));
@@ -555,6 +565,146 @@ public class DrawingTools : ToolCollection  {
 			MainWindow.get_current_glyph ().update_view ();
 		});
 		path_tool_modifiers.add_tool (flip_horizontal);
+
+		// background tools
+		background_scale = new SpinButton ("scale_background", t_("Set size for background image"));
+		background_scale.show_icon (true);
+		background_scale.set_int_value ("1.000");
+		
+		background_scale.new_value_action.connect((self) => {
+			background_scale.select_action (self);
+		});
+		
+		background_scale.select_action.connect((self) => {
+			SpinButton sb = (SpinButton) self;
+			Glyph g = MainWindow.get_current_glyph ();
+			BackgroundImage? img = g.get_background_image ();
+			double s = sb.get_value ();
+			BackgroundImage i;
+			double xc, yc;
+			
+			if (img != null) {
+				i = (!) img;
+				xc = i.img_middle_x;
+				yc = i.img_middle_y;
+
+				i.set_img_scale (s, s);
+				
+				i.img_middle_x = xc;
+				i.img_middle_y = yc;
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		
+		draw_tool_modifiers.add_tool (background_scale);		
+		
+		cut_background = new CutBackgroundTool ("cut_background");
+		cut_background.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
+		draw_tool_modifiers.add_tool (cut_background);
+		
+		show_bg = new Tool ("show_background", t_("Show/hide background image"));
+		show_bg.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
+		show_bg.select_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			g.set_background_visible (!g.get_background_visible ());
+			GlyphCanvas.redraw ();
+		});
+		draw_tool_modifiers.add_tool (show_bg);
+		
+		bg_selection = new Tool ("insert_background", t_("Insert a new background image"));
+		bg_selection.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
+		
+		bg_selection.select_action.connect((self) => {
+			if (MainWindow.get_current_display () is Glyph) {
+				BackgroundTool.import_background_image ();
+			}
+		});
+		
+		bg_selection.set_show_background (true);
+		draw_tool_modifiers.add_tool (bg_selection);
+
+		high_contrast_background = new Tool ("high_contrast_background", t_("High contrast"));
+		high_contrast_background.select_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			BackgroundImage? bg = g.get_background_image ();
+			BackgroundImage b;
+			
+			if (bg != null) {
+				b = (!) bg;
+				b.set_high_contrast (!b.high_contrast);
+				b.update_background ();
+			}
+		});
+		draw_tool_modifiers.add_tool (high_contrast_background);
+				
+		background_threshold = new SpinButton ("contrast_threshold", t_("Set background threshold"));
+		background_threshold.show_icon (true);
+		background_threshold.set_value_round (1);
+
+		background_threshold.new_value_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			BackgroundImage? bg = g.get_background_image ();
+			BackgroundImage b;
+			
+			if (bg != null) {
+				b = (!) bg;
+				b.set_threshold (background_threshold.get_value ());
+				b.update_background ();
+			}
+		});
+		
+		draw_tool_modifiers.add_tool (background_threshold);
+
+		auto_trace_resolution = new SpinButton ("auto_trace_resolution", t_("Amount of autotrace details"));
+		auto_trace_resolution.set_value_round (1);
+		auto_trace_resolution.show_icon (true);
+
+		auto_trace_resolution.new_value_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			BackgroundImage? bg = g.get_background_image ();
+			BackgroundImage b;
+			
+			if (bg != null) {
+				b = (!) bg;
+				b.set_trace_resolution (auto_trace_resolution.get_value ());
+				b.update_background ();
+			}
+		});
+		
+		draw_tool_modifiers.add_tool (auto_trace_resolution);
+
+		auto_trace_simplify = new SpinButton ("auto_trace_simplify", t_("Autotrace simplification"));
+		auto_trace_simplify.set_value_round (0.5);
+		auto_trace_simplify.show_icon (true);
+
+		auto_trace_simplify.new_value_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			BackgroundImage? bg = g.get_background_image ();
+			BackgroundImage b;
+			
+			if (bg != null) {
+				b = (!) bg;
+				b.set_trace_simplification (auto_trace_simplify.get_value ());
+			}
+		});
+		
+		draw_tool_modifiers.add_tool (auto_trace_simplify);
+				
+		auto_trace = new Tool ("autotrace", t_("Autotrace background image"));
+		auto_trace.select_action.connect ((self) => {
+			Task t = new Task ();
+			t.task.connect (auto_trace_background);
+			MainWindow.native_window.run_background_thread (t);
+		});			
+			
+		draw_tool_modifiers.add_tool (auto_trace);		
 		
 		// Character set tools
 		Tool full_unicode = new Tool ("utf_8", t_("Show full unicode characters set"));
@@ -763,158 +913,6 @@ public class DrawingTools : ToolCollection  {
 		});
 		shape_tools.add_tool (rectangle);
 								
-		// background tools
-		background_scale = new SpinButton ("scale_background", t_("Set size for background image"));
-		background_scale.show_icon (true);
-		background_scale.select_action.connect ((self) => {
-			update_drawing_and_background_tools (self);
-		});
-		background_scale.set_int_value ("1.000");
-		
-		background_scale.new_value_action.connect((self) => {
-			background_scale.select_action (self);
-		});
-		
-		background_scale.select_action.connect((self) => {
-			SpinButton sb = (SpinButton) self;
-			Glyph g = MainWindow.get_current_glyph ();
-			BackgroundImage? img = g.get_background_image ();
-			double s = sb.get_value ();
-			BackgroundImage i;
-			double xc, yc;
-			
-			if (img != null) {
-				i = (!) img;
-				xc = i.img_middle_x;
-				yc = i.img_middle_y;
-
-				i.set_img_scale (s, s);
-				
-				i.img_middle_x = xc;
-				i.img_middle_y = yc;
-			}
-			
-			GlyphCanvas.redraw ();
-		});
-		
-		background_tools.add_tool (background_scale);		
-
-		move_background = new BackgroundTool ("move_background");
-		move_background.select_action.connect ((self) => {
-			update_drawing_and_background_tools (self);
-		});	
-		background_tools.add_tool (move_background);
-		
-		cut_background = new CutBackgroundTool ("cut_background");
-		cut_background.select_action.connect ((self) => {
-			update_drawing_and_background_tools (self);
-		});	
-		background_tools.add_tool (cut_background);
-		
-		show_bg = new Tool ("show_background", t_("Show/hide background image"));
-		show_bg.select_action.connect ((self) => {
-			update_drawing_and_background_tools (self);
-		});	
-		show_bg.select_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			g.set_background_visible (!g.get_background_visible ());
-			GlyphCanvas.redraw ();
-		});
-		background_tools.add_tool (show_bg);
-		
-		bg_selection = new Tool ("insert_background", t_("Insert a new background image"));
-		bg_selection.select_action.connect ((self) => {
-			update_drawing_and_background_tools (self);
-		});	
-		
-		bg_selection.select_action.connect((self) => {
-			if (MainWindow.get_current_display () is Glyph) {
-				BackgroundTool.import_background_image ();
-			}
-		});
-		
-		bg_selection.set_show_background (true);
-		background_tools.add_tool (bg_selection);
-
-		Tool high_contrast_background = new Tool ("high_contrast_background", t_("High contrast"));
-		high_contrast_background.select_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			BackgroundImage? bg = g.get_background_image ();
-			BackgroundImage b;
-			
-			if (bg != null) {
-				b = (!) bg;
-				b.set_high_contrast (!b.high_contrast);
-				b.update_background ();
-			}
-		});
-		background_tools.add_tool (high_contrast_background);
-				
-		background_threshold = new SpinButton ("contrast_threshold", t_("Set background threshold"));
-		background_threshold.show_icon (true);
-		background_threshold.select_action.connect ((self) => {
-			update_drawing_and_background_tools (self);
-		});	
-		background_threshold.set_value_round (1);
-
-		background_threshold.new_value_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			BackgroundImage? bg = g.get_background_image ();
-			BackgroundImage b;
-			
-			if (bg != null) {
-				b = (!) bg;
-				b.set_threshold (background_threshold.get_value ());
-				b.update_background ();
-			}
-		});
-		
-		background_tools.add_tool (background_threshold);
-
-		SpinButton auto_trace_resolution = new SpinButton ("auto_trace_resolution", t_("Amount of autotrace details"));
-		auto_trace_resolution.set_value_round (1);
-		auto_trace_resolution.show_icon (true);
-
-		auto_trace_resolution.new_value_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			BackgroundImage? bg = g.get_background_image ();
-			BackgroundImage b;
-			
-			if (bg != null) {
-				b = (!) bg;
-				b.set_trace_resolution (auto_trace_resolution.get_value ());
-				b.update_background ();
-			}
-		});
-		
-		background_tools.add_tool (auto_trace_resolution);
-
-		SpinButton auto_trace_simplify = new SpinButton ("auto_trace_simplify", t_("Autotrace simplification"));
-		auto_trace_simplify.set_value_round (0.5);
-		auto_trace_simplify.show_icon (true);
-
-		auto_trace_simplify.new_value_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			BackgroundImage? bg = g.get_background_image ();
-			BackgroundImage b;
-			
-			if (bg != null) {
-				b = (!) bg;
-				b.set_trace_simplification (auto_trace_simplify.get_value ());
-			}
-		});
-		
-		background_tools.add_tool (auto_trace_simplify);
-				
-		Tool auto_trace = new Tool ("autotrace", t_("Autotrace background image"));
-		auto_trace.select_action.connect ((self) => {
-			Task t = new Task ();
-			t.task.connect (auto_trace_background);
-			MainWindow.native_window.run_background_thread (t);
-		});			
-			
-		background_tools.add_tool (auto_trace);		
-
 		// settings
 		ColorTool stroke_color = new ColorTool (t_("Stroke color"));
 		stroke_color.color_updated.connect (() => {
@@ -1095,7 +1093,6 @@ public class DrawingTools : ToolCollection  {
 		add_expander (grid);
 		add_expander (view_tools);
 		add_expander (shape_tools);
-		add_expander (background_tools);
 		add_expander (style_tools);
 		
 		// Fixa: add_expander (trace);
@@ -1129,9 +1126,6 @@ public class DrawingTools : ToolCollection  {
 		shape_tools.set_persistent (true);
 		shape_tools.set_unique (true);
 		
-		background_tools.set_persistent (true);
-		background_tools.set_unique (false);
-	
 		style_tools.set_persistent (true);
 		style_tools.set_unique (true);
 		
@@ -1238,8 +1232,30 @@ public class DrawingTools : ToolCollection  {
 		cubic_points.set_tool_visibility (false);
 		double_points.set_tool_visibility (false);
 		convert_points.set_tool_visibility (false);
+
+		cut_background.set_tool_visibility (false);
+		show_bg.set_tool_visibility (false);
+		bg_selection.set_tool_visibility (false);
+		background_threshold.set_tool_visibility (false);
+		background_scale.set_tool_visibility (false);
+		high_contrast_background.set_tool_visibility (false);
+		auto_trace_resolution.set_tool_visibility (false);
+		auto_trace.set_tool_visibility (false);
+		auto_trace_simplify.set_tool_visibility (false);
 	}
-	
+
+	void show_background_tool_modifiers () {
+		cut_background.set_tool_visibility (true);
+		show_bg.set_tool_visibility (true);
+		bg_selection.set_tool_visibility (true);
+		background_threshold.set_tool_visibility (true);
+		background_scale.set_tool_visibility (true);
+		high_contrast_background.set_tool_visibility (true);
+		auto_trace_resolution.set_tool_visibility (true);
+		auto_trace.set_tool_visibility (true);
+		auto_trace_simplify.set_tool_visibility (true);
+	}
+			
 	void show_point_tool_modifiers () {
 		tie_handles.set_tool_visibility (true);
 		reflect_handle.set_tool_visibility (true);
@@ -1295,6 +1311,8 @@ public class DrawingTools : ToolCollection  {
 					|| point_tool.is_selected ()
 					|| track_tool.is_selected ()) {
 				show_point_tool_modifiers ();
+			} else if (move_background.is_selected ()) {
+				show_background_tool_modifiers ();
 			}
 			
 			MainWindow.get_toolbox ().update_expanders ();

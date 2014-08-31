@@ -2026,6 +2026,8 @@ public class PenTool : Tool {
 			}
 		}
 		
+		new_path.update_region_boundaries ();
+		
 		return new_path;
 	}
 }
