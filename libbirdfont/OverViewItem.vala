@@ -18,7 +18,7 @@ using Math;
 namespace BirdFont {
 	
 public class OverViewItem : GLib.Object {
-	public unichar character = 'A'; // FIXME: 
+	public unichar character = 'A';
 	public GlyphCollection? glyphs;
 	public double x;
 	public double y;
@@ -41,6 +41,10 @@ public class OverViewItem : GLib.Object {
 		this.info = new CharacterInfo (character);
 	}
 	
+	public void set_selected (bool s) {
+		selected = s;
+	}
+	
 	public static double full_width () {
 		return width + margin;
 	}
@@ -52,13 +56,13 @@ public class OverViewItem : GLib.Object {
 	public bool click (uint button, double px, double py) {
 		bool a;
 		GlyphCollection g;
-		selected = (x <= px <= x + width) && (y <= py <= y + height);
+		bool s = (x <= px <= x + width) && (y <= py <= y + height);
 		
 		if (has_icons () && glyphs != null) {
 			g = (!) glyphs;
 			a = g.get_version_list ().menu_item_action (px, py); // select one item on the menu
 			if (a) {
-				return selected;
+				return s;
 			}
 			
 			g.get_version_list ().menu_icon_action (px, py); // click in the open menu
@@ -68,7 +72,7 @@ public class OverViewItem : GLib.Object {
 			MainWindow.get_overview ().set_character_info (info);
 		}
 				
-		return selected;
+		return s;
 	}
 
 	public void double_click (uint button, double px, double py) {

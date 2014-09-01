@@ -28,7 +28,25 @@ public class ClipTool : Tool {
 			data = svg_data + bf_data;
 			MainWindow.native_window.set_clipboard (data);
 			MainWindow.native_window.set_inkscape_clipboard (data);
-		}		
+		}
+		
+		if (fd is OverView) {
+			MainWindow.get_overview ().copy ();
+		}			
+	}
+
+	/** Copy entire glyph. */
+	public static void copy_glyph (Glyph glyph) {
+		string svg_data;
+		string bf_data;
+		string data;
+			
+		svg_data = ExportTool.export_to_inkscape_clipboard (glyph, false);
+		bf_data = export_paths_to_birdfont_clipboard (glyph, false);
+		
+		data = svg_data + bf_data;
+		MainWindow.native_window.set_clipboard (data);
+		MainWindow.native_window.set_inkscape_clipboard (data);	
 	}
 
 	public static void paste_in_place () {
@@ -58,6 +76,10 @@ public class ClipTool : Tool {
 		if (fd is KerningDisplay) {
 			paste_letters_to_kerning_tab ();
 		}
+		
+		if (fd is OverView) {
+			MainWindow.get_overview ().paste ();
+		}	
 	}
 	
 	static void paste_paths (bool paste_guide_lines) {
@@ -95,11 +117,14 @@ public class ClipTool : Tool {
 			SvgParser.import_svg_data (data);
 		}
 		
-		((!)destination).update_view ();			
+		((!)destination).update_view ();	
 	}
 
 	static string export_selected_paths_to_birdfont_clipboard () {
-		Glyph glyph = MainWindow.get_current_glyph ();
+		return export_paths_to_birdfont_clipboard (MainWindow.get_current_glyph (), true);
+	}
+	
+	static string export_paths_to_birdfont_clipboard (Glyph glyph, bool selected = false) {
 		StringBuilder s = new StringBuilder ();
 		Path new_path;
 		List<Path> paths = new List<Path> ();
@@ -115,7 +140,13 @@ public class ClipTool : Tool {
 		s.append (@"$(glyph.right_limit)");
 		s.append ("\n");
 								
-		if (glyph.path_list.size > 0) {
+		if (!selected) {
+			foreach (Path path in glyph.path_list) {
+				s.append ("BF path: ");
+				s.append (BirdFontFile.get_point_data (path));
+				s.append ("\n");
+			}
+		} else if (glyph.path_list.size > 0) {
 			foreach (Path path in glyph.active_paths) {
 				s.append ("BF path: ");
 				s.append (BirdFontFile.get_point_data (path));

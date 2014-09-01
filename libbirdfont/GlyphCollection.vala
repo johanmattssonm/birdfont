@@ -51,6 +51,10 @@ public class GlyphCollection : GLib.Object {
 		return unicode.str;
 	}
 
+	public void set_unicode_character (unichar c) {
+		unicode_character = c;
+	}
+
 	public unichar get_unicode_character () {
 		return unicode_character;
 	}

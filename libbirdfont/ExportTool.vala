@@ -28,7 +28,10 @@ public class ExportTool : GLib.Object {
 	}
 
 	public static string export_current_glyph_to_string (bool only_selected_paths = false) {
-		Glyph glyph = MainWindow.get_current_glyph ();
+		return export_to_string (MainWindow.get_current_glyph (), only_selected_paths);
+	}
+
+	public static string export_to_string (Glyph glyph, bool only_selected_paths) {
 		string name;
 		StringBuilder s;
 
@@ -49,7 +52,7 @@ public class ExportTool : GLib.Object {
 		
 		s.append (@"<g id=\"$(name)\">\n");
 
-		s.append (get_svg_path_elements (only_selected_paths));
+		s.append (get_svg_path_elements (glyph, only_selected_paths));
 	
 		s.append ("</g>\n");
 		s.append ("</svg>");
@@ -58,6 +61,10 @@ public class ExportTool : GLib.Object {
 	}
 	
 	public static string export_current_glyph_to_inkscape_clipboard (bool only_selected_paths = false) {
+		return export_to_inkscape_clipboard (MainWindow.get_current_glyph (), only_selected_paths);
+	}
+	
+	public static string export_to_inkscape_clipboard (Glyph glyph, bool only_selected_paths = false) {
 		StringBuilder s;
 		
 		s = new StringBuilder ();
@@ -72,14 +79,13 @@ public class ExportTool : GLib.Object {
 			max="0,0" />
      """);
 
-		s.append (get_svg_path_elements (only_selected_paths));
+		s.append (get_svg_path_elements (glyph, only_selected_paths));
 		s.append ("</svg>");
 		
 		return s.str;
 	}
 
-	private static string get_svg_path_elements (bool only_selected_paths) {
-		Glyph glyph = MainWindow.get_current_glyph ();
+	private static string get_svg_path_elements (Glyph glyph, bool only_selected_paths) {
 		string glyph_svg;
 		StringBuilder s;
 		string name;
