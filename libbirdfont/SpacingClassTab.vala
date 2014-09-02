@@ -99,6 +99,8 @@ public class SpacingClassTab : FontDisplay {
 				gc.get_current ().update_spacing_class ();
 			}
 		}
+		
+		KerningTools.update_spacing_classes ();
 	}
 
 	public void selected_row (Row row, int column, bool delete_button) {

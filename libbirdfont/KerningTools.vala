@@ -185,7 +185,7 @@ public class KerningTools : ToolCollection  {
 			MainWindow.get_toolbox ().update_expanders ();
 		}
 	}
-		
+	
 	public static void remove_empty_classes () {
 		KerningRange kr;
 		int i;
@@ -212,6 +212,21 @@ public class KerningTools : ToolCollection  {
 	
 	public override Gee.ArrayList<Expander> get_expanders () {
 		return expanders;
+	}
+	
+	public static void update_spacing_classes () {	
+		KerningRange kr;
+		
+		if (classes.tool.size == 0) {
+			return;
+		}
+
+		foreach (Tool t in classes.tool) {
+			return_if_fail (t is KerningRange);
+			
+			kr = (KerningRange) t;
+			kr.update_spacing_class ();
+		}
 	}
 }
 

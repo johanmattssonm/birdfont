@@ -57,6 +57,10 @@ public class KerningRange : Tool {
 		});
 	}
 	
+	public void update_spacing_class () {
+		set_ranges (ranges);
+	}
+	
 	public void set_ranges (string r) {
 		GlyphRange glyph_range = new GlyphRange ();
 		string new_range;
@@ -69,7 +73,9 @@ public class KerningRange : Tool {
 				ch = glyph_range.get_char (i);
 				
 				foreach (string c in MainWindow.get_spacing_class_tab ().get_all_connections (ch)) {
-					new_range += " " + GlyphRange.serialize (c);
+					if (!glyph_range.has_character (c) && c != "" && c != "?") {
+						new_range += " " + GlyphRange.serialize (c);
+					}
 				}
 			}
 			
