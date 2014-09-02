@@ -74,6 +74,11 @@ public class DrawingTools : ToolCollection  {
 	Tool tie_handles;
 	Tool reflect_handle;
 	Tool create_line;
+
+	Tool delete_button 
+	public Tool inser_point_on_path_tool;
+	Tool undo_tool
+	Tool select_all_button
 					
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
@@ -145,10 +150,10 @@ public class DrawingTools : ToolCollection  {
 		delete_button.select_action.connect ((self) => {
 			TabContent.key_press (Key.DEL);
 		});
-		key_tools.add_tool (delete_button);		
-
+		key_tools.add_tool (delete_buton);
+		
 		// Select all points or paths
-		Tool select_all_button = new Tool ("select_all", t_("Select all points or paths"));
+		select_all_button = new Tool ("select_all", t_("Select all points or paths"));
 		select_all_button.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			
@@ -164,14 +169,14 @@ public class DrawingTools : ToolCollection  {
 		key_tools.add_tool (select_all_button);			
 
 		// Undo
-		Tool undo_tool = new Tool ("undo_tool", t_("Undo"));
+		undo_tool = new Tool ("undo_tool", t_("Undo"));
 		undo_tool.select_action.connect ((self) => {
 			TabContent.undo ();
 		});
 		key_tools.add_tool (undo_tool);
 		
 		bool insert_points = false;
-		Tool inser_point_on_path_tool = new Tool ("new_point_on_path", t_("Insert new points on path"));
+		inser_point_on_path_tool = new Tool ("new_point_on_path", t_("Insert new points on path"));
 		inser_point_on_path_tool.select_action.connect ((self) => {
 			insert_points = !insert_points;
 			inser_point_on_path_tool.set_selected (insert_points);
