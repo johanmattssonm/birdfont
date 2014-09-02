@@ -680,12 +680,16 @@ public class OverView : FontDisplay {
 	}
 	
 	public void delete_selected_glyph () {
-		GlyphCollection? gc = get_selected_item ().glyphs;
 		Font font = BirdFont.get_current_font ();
-				
-		if (gc != null) {
-			store_undo_state ((!) gc);
-			font.delete_glyph ((!) gc);
+		OverViewUndoItem undo_item = new OverViewUndoItem ();
+		
+		foreach (GlyphCollection g in selected_items) {
+			undo_item.glyphs.add (g.copy ());
+		}
+		store_undo_items (undo_item);
+
+		foreach (GlyphCollection gc in selected_items) {
+			font.delete_glyph (gc);
 		}
 	}
 	
