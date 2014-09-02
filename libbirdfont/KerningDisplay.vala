@@ -379,6 +379,7 @@ public class KerningDisplay : FontDisplay {
 			left_active_glyph.right_limit += val;
 			left_active_glyph.remove_lines ();
 			left_active_glyph.add_help_lines ();
+			left_active_glyph.update_other_spacing_classes ();
 		}
 	}
 

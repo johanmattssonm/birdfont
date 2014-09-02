@@ -717,6 +717,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			 MenuTab.list_all_kerning_pairs ();
 		});
 
+		Gtk.MenuItem spacing_kerning_tab = new Gtk.MenuItem.with_mnemonic (t_("Show _Spacing Tab"));
+		kerning_menu.append (spacing_kerning_tab);
+		spacing_kerning_tab.activate.connect (() => { 
+			 MenuTab.show_spacing_tab ();
+		});
+		spacing_kerning_tab.add_accelerator ("activate", accel_group, 'k', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+
 		kerning_menu.append (new SeparatorMenuItem ());
 
 		Gtk.MenuItem select_next_kerning_pair = new Gtk.MenuItem.with_mnemonic (" Ctrl+→  " + t_("Select _Next Kerning Pair"));

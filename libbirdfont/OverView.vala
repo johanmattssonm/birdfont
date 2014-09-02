@@ -80,9 +80,7 @@ public class OverView : FontDisplay {
 		this.open_new_glyph_signal.connect ((character) => {
 			StringBuilder name = new StringBuilder ();
 			TabBar tabs = MainWindow.get_tab_bar ();
-			Font font = BirdFont.get_current_font ();
 			bool selected;
-			GlyphCollection? fg;
 			Glyph glyph;
 			GlyphCollection glyph_collection;
 			GlyphCanvas canvas;
@@ -114,13 +112,11 @@ public class OverView : FontDisplay {
 	
 	public GlyphCollection add_character_to_font (unichar character, bool empty = false) {
 		StringBuilder name = new StringBuilder ();
-		TabBar tabs = MainWindow.get_tab_bar ();
 		Font font = BirdFont.get_current_font ();
 		GlyphCollection? fg;
 		Glyph glyph;
 		GlyphCollection glyph_collection;
-		GlyphCanvas canvas;
-			
+
 		name.append_unichar (character);
 
 		if (all_available) {

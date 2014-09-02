@@ -20,7 +20,7 @@ namespace BirdFont {
 public class DrawingTools : ToolCollection  {
 	GlyphCanvas glyph_canvas;
 	
-	public List<Expander> expanders;
+	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
 	Expander draw_tools;
 	Expander grid_expander;
@@ -92,7 +92,6 @@ public class DrawingTools : ToolCollection  {
 		Expander view_tools = new Expander ();
 		Expander grid = new Expander ();
 		
-		Expander background_tools = new Expander ();
 		Expander style_tools = new Expander ();
 		
 		grid_expander = grid;
@@ -1354,7 +1353,7 @@ public class DrawingTools : ToolCollection  {
 		idle.attach (null);
 	}
 	
-	public override unowned List<Expander> get_expanders () {
+	public override Gee.ArrayList<Expander> get_expanders () {
 		return expanders;
 	}
 	
@@ -1433,7 +1432,7 @@ public class DrawingTools : ToolCollection  {
 	}
 	
 	private void add_expander (Expander e) {
-		expanders.append (e);
+		expanders.add (e);
 	}
 }
 

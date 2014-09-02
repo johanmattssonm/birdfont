@@ -450,13 +450,15 @@ public class Glyph : FontDisplay {
 							
 		Line left_line = new Line ("left", left_limit, true);
 		left_line.position_updated.connect ((pos) => {
-				left_limit = pos;
-			});
+			left_limit = pos;
+			update_other_spacing_classes ();
+		});
 		
 		Line right_line = new Line ("right", right_limit, true);
 		right_line.position_updated.connect ((pos) => {
-				right_limit = pos;
-			});
+			right_limit = pos;
+			update_other_spacing_classes ();
+		});
 		
 		// lists of lines are sorted and lines are added only if 
 		// they are relevant for a particular glyph.
@@ -2014,6 +2016,50 @@ public class Glyph : FontDisplay {
 			last_tap1_x = x;
 			last_tap1_y = y;
 		}
+	}
+	
+	public void update_spacing_class () {
+		Font font = BirdFont.get_current_font ();
+		GlyphCollection? g;
+		GlyphCollection gc;
+		Glyph glyph;
+		
+		foreach (string l in MainWindow.get_spacing_class_tab ()
+				.get_all_connections ((!) unichar_code.to_string ())) {
+			if (l != (!) unichar_code.to_string ()) {
+				g = font.get_glyph_collection (l);
+				if (g != null) {
+					gc = (!) g;
+					glyph = gc.get_current ();
+					left_limit = glyph.left_limit;
+					right_limit = glyph.right_limit;
+					break;
+				}
+			}
+		}
+		
+		add_help_lines ();
+	}
+
+	public void update_other_spacing_classes () {
+		Font font = BirdFont.get_current_font ();
+		GlyphCollection? g;
+		GlyphCollection gc;
+		Glyph glyph;
+		
+		foreach (string l in MainWindow.get_spacing_class_tab ()
+				.get_all_connections ((!) unichar_code.to_string ())) {
+			if (l != (!) unichar_code.to_string ()) {
+				g = font.get_glyph_collection (l);
+				if (g != null) {
+					gc = (!) g;
+					glyph = gc.get_current ();
+					glyph.left_limit = left_limit;
+					glyph.right_limit = right_limit;
+					glyph.add_help_lines ();
+				}
+			}
+		}	
 	}
 }
 

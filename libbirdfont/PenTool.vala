@@ -2003,7 +2003,7 @@ public class PenTool : Tool {
 	public static Path simplify (Path path, bool selected_segments = false, double threshold = 0.3) {
 		PointSelection ps;
 		EditPoint ep;
-		Path p1, p2, new_path;
+		Path p1, new_path;
 		double d, sumd;
 		int i;
 
