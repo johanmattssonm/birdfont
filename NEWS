@@ -1,3 +1,15 @@
+birdfont (1.0) stable;
+
+  * Autotrace – convert raster images to vector fonts
+  * Simplify paths. Deleteing points reduces the number of control points while
+    still keeping the same approximate path. Use Ctrl+Del to break the paths.
+  * Spacing classes that copies side bearings and kerning pairs from one glyph 
+    to another. This feature makes it easier to create fonts with only upper
+    case characters as well as mono spaced fonts.
+  * Copy and paste multiple glyphs in the overview tab.
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue Sep  2 14:57:52 CEST 2014
+
 birdfont (0.46) stable;
 
   * Oblique and italic transformation
