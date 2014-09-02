@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -138,7 +138,7 @@ public class ClipTool : Tool {
 		if (bf_clipboard_data) {
 			import_birdfont_clipboard (data, paste_guide_lines, false);
 		} else if (data != "") {
-			SvgParser.import_svg_data (data);
+			SvgParser.import_svg_data (data, SvgFormat.INKSCAPE);
 		}
 		
 		((!)destination).update_view ();	
@@ -253,7 +253,7 @@ public class ClipTool : Tool {
 				}
 			}
 			
-			s.append ("-->");
+			s.append ("BF end -->");
 		}
 		
 		return s.str;
@@ -311,22 +311,22 @@ public class ClipTool : Tool {
 			return_if_fail (glyphs.size > 0);
 			destination = MainWindow.get_current_glyph ();
 			glyph = glyphs.get (0);
+			
 			foreach (Path p in glyph.path_list) {
 				destination.add_path (p);
+				destination.add_active_path (p);
 			}
 			
 			if (paste_guide_lines) {
 				destination.left_limit = glyph.left_limit;
 				destination.right_limit = glyph.right_limit;
+				destination.add_help_lines ();
 				destination.update_other_spacing_classes ();
 			}
 		} else {
 			o = MainWindow.get_overview ();
 			o.copied_glyphs.clear ();
-			foreach (Glyph g in glyphs) {
-				
-				print (@"g.unichar_code, g.name  $((!) g.unichar_code.to_string ()) $(g.name)\n");	
-						
+			foreach (Glyph g in glyphs) {	
 				gc = new GlyphCollection (g.unichar_code, g.name);
 				gc.add_glyph (g);
 				o.copied_glyphs.add (gc);
