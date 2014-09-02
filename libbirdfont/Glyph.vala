@@ -45,7 +45,6 @@ public class Glyph : FontDisplay {
 	double zoom_distance = 0;
 	bool change_view; 
 
-	
 	bool ignore_input = false;
 	
 	// Current pointer position

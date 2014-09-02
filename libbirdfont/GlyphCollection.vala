@@ -28,6 +28,10 @@ public class GlyphCollection : GLib.Object {
 		versions = new VersionList (null, this);
 	}
 
+	public void add_glyph (Glyph g) {
+		get_version_list ().add_glyph (g);
+	}
+
 	public VersionList get_version_list () {
 		return versions;
 	}

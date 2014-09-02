@@ -75,10 +75,10 @@ public class DrawingTools : ToolCollection  {
 	Tool reflect_handle;
 	Tool create_line;
 
-	Tool delete_button 
+	Tool delete_button;
 	public Tool inser_point_on_path_tool;
-	Tool undo_tool
-	Tool select_all_button
+	Tool undo_tool;
+	Tool select_all_button;
 					
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
@@ -146,11 +146,11 @@ public class DrawingTools : ToolCollection  {
 				
 		// Tools on android
 		// Delete key
-		Tool delete_button = new Tool ("delete_button", t_("Delete"));
+		delete_button = new Tool ("delete_button", t_("Delete"));
 		delete_button.select_action.connect ((self) => {
 			TabContent.key_press (Key.DEL);
 		});
-		key_tools.add_tool (delete_buton);
+		key_tools.add_tool (delete_button);
 		
 		// Select all points or paths
 		select_all_button = new Tool ("select_all", t_("Select all points or paths"));

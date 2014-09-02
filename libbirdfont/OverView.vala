@@ -22,8 +22,8 @@ public class OverView : FontDisplay {
 	
 	OverViewItem selected_item = new OverViewItem (null, '\0', 0, 0);
 
-	Gee.ArrayList<GlyphCollection> copied_glyphs = new Gee.ArrayList<GlyphCollection> ();
-	Gee.ArrayList<GlyphCollection> selected_items = new Gee.ArrayList<GlyphCollection> ();	
+	public Gee.ArrayList<GlyphCollection> copied_glyphs = new Gee.ArrayList<GlyphCollection> ();
+	public Gee.ArrayList<GlyphCollection> selected_items = new Gee.ArrayList<GlyphCollection> ();	
 	
 	int selected = 0;
 	int first_visible = 0;
@@ -1064,18 +1064,6 @@ public class OverView : FontDisplay {
 		cr.restore ();		
 	}
 	
-	public void copy () {
-		copied_glyphs.clear ();
-		
-		foreach (GlyphCollection gc in selected_items) {
-			copied_glyphs.add (gc.copy ());
-		}
-		
-		if (copied_glyphs.size != 0) {
-			ClipTool.copy_glyph (selected_items.get (copied_glyphs.size - 1).get_current ());
-		}
-	}
-	
 	public void paste () {
 		GlyphCollection gc = new GlyphCollection ('\0', "");
 		GlyphCollection? c;
@@ -1083,6 +1071,7 @@ public class OverView : FontDisplay {
 		uint32 index;
 		int i;
 		int skip = 0;
+		int s;
 		string character_string;
 		Gee.ArrayList<GlyphCollection> glyps = new Gee.ArrayList<GlyphCollection> ();
 		Font f = BirdFont.get_current_font ();
@@ -1116,9 +1105,10 @@ public class OverView : FontDisplay {
 				gc = (!) c; 
 			} else {				
 				if (i != 0) {
-					skip = (int) copied_glyphs.get (i).get_unicode_character ();
-					skip -= (int) copied_glyphs.get (i - 1).get_unicode_character ();
-					skip -= 1;
+					s = (int) copied_glyphs.get (i).get_unicode_character ();
+					s -= (int) copied_glyphs.get (i - 1).get_unicode_character ();
+					s -= 1;
+					skip += s;
 				}
 				
 				character_string = glyph_range.get_char ((uint32) (index + skip));

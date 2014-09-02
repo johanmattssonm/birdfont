@@ -31,7 +31,7 @@ public class ClipTool : Tool {
 		}
 		
 		if (fd is OverView) {
-			MainWindow.get_overview ().copy ();
+			copy_overview_glyphs ();
 		}			
 	}
 
@@ -42,13 +42,31 @@ public class ClipTool : Tool {
 		string data;
 			
 		svg_data = ExportTool.export_to_inkscape_clipboard (glyph, false);
-		bf_data = export_paths_to_birdfont_clipboard (glyph, false);
+		bf_data = export_paths_to_birdfont_clipboard (false, false);
 		
 		data = svg_data + bf_data;
 		MainWindow.native_window.set_clipboard (data);
 		MainWindow.native_window.set_inkscape_clipboard (data);	
 	}
 
+	public static void copy_overview_glyphs () {
+		string svg_data = "";
+		string bf_data = "";
+		string data;
+		OverView o = MainWindow.get_overview ();
+		
+		if (o.selected_items.size > 0) {
+			svg_data = ExportTool.export_to_inkscape_clipboard (
+				o.selected_items.get (0).get_current (), false);
+
+			bf_data = export_paths_to_birdfont_clipboard (true, false);
+			
+			data = svg_data + bf_data;
+			MainWindow.native_window.set_clipboard (data);
+			MainWindow.native_window.set_inkscape_clipboard (data);	
+		}
+	}
+	
 	public static void paste_in_place () {
 		paste_paths (true);
 	}
@@ -78,7 +96,7 @@ public class ClipTool : Tool {
 		}
 		
 		if (fd is OverView) {
-			MainWindow.get_overview ().paste ();
+			paste_to_overview ();
 		}	
 	}
 	
@@ -99,6 +117,12 @@ public class ClipTool : Tool {
 		BirdFont.get_current_font ().touch ();
 	}
 	
+	static void paste_to_overview () {
+		string data = MainWindow.native_window.get_clipboard_data ();
+		import_birdfont_clipboard (data, true, true);
+		GlyphCanvas.redraw ();
+	}
+	
 	static void paste_to_glyph (bool bf_clipboard_data, bool paste_guide_lines) {
 		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph? destination = null;
@@ -112,7 +136,7 @@ public class ClipTool : Tool {
 		data = MainWindow.native_window.get_clipboard_data ();
 
 		if (bf_clipboard_data) {
-			import_birdfont_clipboard (data, paste_guide_lines);
+			import_birdfont_clipboard (data, paste_guide_lines, false);
 		} else if (data != "") {
 			SvgParser.import_svg_data (data);
 		}
@@ -121,81 +145,116 @@ public class ClipTool : Tool {
 	}
 
 	static string export_selected_paths_to_birdfont_clipboard () {
-		return export_paths_to_birdfont_clipboard (MainWindow.get_current_glyph (), true);
+		return export_paths_to_birdfont_clipboard (false, true);
 	}
 	
-	static string export_paths_to_birdfont_clipboard (Glyph glyph, bool selected = false) {
+	static string export_paths_to_birdfont_clipboard (bool overview, bool selected = false) {
 		StringBuilder s = new StringBuilder ();
+		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
 		Path new_path;
-		List<Path> paths = new List<Path> ();
+		Glyph glyph;
+		OverView o;
 		
-		s.append ("\n");
-		s.append ("<!-- BirdFontClipboard\n");
+		if (overview) {
+			o = MainWindow.get_overview ();
+			foreach (GlyphCollection gc in o.selected_items) {
+				s.append ("\n");
+				s.append ("<!-- BirdFontClipboard\n");
 
-		s.append ("BF left: ");
-		s.append (@"$(glyph.left_limit)");
-		s.append ("\n");
-		
-		s.append ("BF right: ");
-		s.append (@"$(glyph.right_limit)");
-		s.append ("\n");
-								
-		if (!selected) {
-			foreach (Path path in glyph.path_list) {
-				s.append ("BF path: ");
-				s.append (BirdFontFile.get_point_data (path));
+				s.append ("BF glyph: ");
+				s.append (@"$(Font.to_hex (gc.get_unicode_character ()))");
 				s.append ("\n");
-			}
-		} else if (glyph.path_list.size > 0) {
-			foreach (Path path in glyph.active_paths) {
-				s.append ("BF path: ");
-				s.append (BirdFontFile.get_point_data (path));
-				s.append ("\n");
-			}
-		} else {
-			
-			new_path = new Path ();
-			foreach (Path path in glyph.path_list) {
-				if (path.points.size > 0
-					&& path.points.get (0).is_selected ()
-					&& path.points.get (path.points.size - 1).is_selected ()) {
-					
-					foreach (EditPoint ep in path.points) {
-						if (!ep.is_selected ()) {
-							path.set_new_start (ep);
-							break;
-						}	
-					}
-				}
 				
-				foreach (EditPoint ep in path.points) {
-					if (!ep.is_selected ()) {
-						if (path.points.size > 0) {
-							paths.append (new_path);
-							new_path = new Path ();
-						}
-					} else {
-						new_path.add_point (ep);
-					}
-				}
+				s.append ("BF left: ");
+				s.append (@"$(gc.get_current ().left_limit)");
+				s.append ("\n");
+				
+				s.append ("BF right: ");
+				s.append (@"$(gc.get_current ().right_limit)");
+				s.append ("\n");
 
-				if (all_points_selected (path)) {
-					new_path.close ();
-				}
-			}
-			
-			paths.append (new_path);
-			
-			foreach (Path path in paths) {
-				if (path.points.size > 0) {
+				foreach (Path path in gc.get_current ().path_list) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
 					s.append ("\n");
 				}
+				
+				s.append ("BF end -->");
 			}
+		} else {
+			glyph = MainWindow.get_current_glyph ();
+			
+			s.append ("\n");
+			s.append ("<!-- BirdFontClipboard\n");
+
+			s.append ("BF glyph: ");
+			s.append (@"$(Font.to_hex (glyph.unichar_code))");
+			s.append ("\n");
+			
+			s.append ("BF left: ");
+			s.append (@"$(glyph.left_limit)");
+			s.append ("\n");
+			
+			s.append ("BF right: ");
+			s.append (@"$(glyph.right_limit)");
+			s.append ("\n");
+									
+			if (!selected) {
+				foreach (Path path in glyph.path_list) {
+					s.append ("BF path: ");
+					s.append (BirdFontFile.get_point_data (path));
+					s.append ("\n");
+				}
+			} else if (glyph.path_list.size > 0) {
+				foreach (Path path in glyph.active_paths) {
+					s.append ("BF path: ");
+					s.append (BirdFontFile.get_point_data (path));
+					s.append ("\n");
+				}
+			} else {
+				new_path = new Path ();
+				foreach (Path path in glyph.path_list) {
+					if (path.points.size > 0
+						&& path.points.get (0).is_selected ()
+						&& path.points.get (path.points.size - 1).is_selected ()) {
+						
+						foreach (EditPoint ep in path.points) {
+							if (!ep.is_selected ()) {
+								path.set_new_start (ep);
+								break;
+							}	
+						}
+					}
+					
+					foreach (EditPoint ep in path.points) {
+						if (!ep.is_selected ()) {
+							if (path.points.size > 0) {
+								paths.add (new_path);
+								new_path = new Path ();
+							}
+						} else {
+							new_path.add_point (ep);
+						}
+					}
+
+					if (all_points_selected (path)) {
+						new_path.close ();
+					}
+				}
+				
+				paths.add (new_path);
+				
+				foreach (Path path in paths) {
+					if (path.points.size > 0) {
+						s.append ("BF path: ");
+						s.append (BirdFontFile.get_point_data (path));
+						s.append ("\n");
+					}
+				}
+			}
+			
+			s.append ("-->");
 		}
-		
-		s.append ("-->");
 		
 		return s.str;
 	}
@@ -209,38 +268,74 @@ public class ClipTool : Tool {
 		return true;
 	}
 	
-	static void import_birdfont_clipboard (string data, bool paste_guide_lines) {
-		Glyph glyph = MainWindow.get_current_glyph ();
+	static void import_birdfont_clipboard (string data, bool paste_guide_lines, bool overview) {
+		Gee.ArrayList<Glyph> glyphs = new Gee.ArrayList<Glyph> ();
+		Glyph glyph = new Glyph ("null", '\0');
 		string[] items = data.split ("\nBF ");
 		string d;
 		int i;
+		unichar c;
+		Glyph destination;
+		GlyphCollection gc;
+		OverView o;
 		
 		foreach (string p in items) {
-			if (p.has_prefix ("path:")) {
-				i = p.index_of ("\n");
-				if (i > -1) {
-					p = p.substring (0, i);
-				}
-				d = p.replace ("path: ", "");
-				import_birdfont_path (d);
+			if (p.has_prefix ("glyph:")) {
+				p = p.replace ("glyph: ", "");
+				p = p.replace ("\n", "");
+				c = Font.to_unichar (p);
+				glyph = new Glyph ((!) c.to_string (), c);
+				glyphs.add (glyph);
 			}
 			
-			if (paste_guide_lines && p.has_prefix ("left:")) {
+			if (p.has_prefix ("path:")) {
+				p = p.replace ("path: ", "");
+				p = p.replace ("\n", "");
+				import_birdfont_path (glyph, p);
+			}
+			
+			if (p.has_prefix ("left:")) {
 				glyph.left_limit = double.parse (p.replace ("left: ", ""));
 				glyph.remove_lines ();
 				glyph.add_help_lines ();			
 			}
 			
-			if (paste_guide_lines && p.has_prefix ("right:")) {
+			if (p.has_prefix ("right:")) {
 				glyph.right_limit = double.parse (p.replace ("right: ", ""));
 				glyph.remove_lines ();
 				glyph.add_help_lines ();	
 			}
-		}	
+		}
+		
+		if (!overview) {
+			return_if_fail (glyphs.size > 0);
+			destination = MainWindow.get_current_glyph ();
+			glyph = glyphs.get (0);
+			foreach (Path p in glyph.path_list) {
+				destination.add_path (p);
+			}
+			
+			if (paste_guide_lines) {
+				destination.left_limit = glyph.left_limit;
+				destination.right_limit = glyph.right_limit;
+				destination.update_other_spacing_classes ();
+			}
+		} else {
+			o = MainWindow.get_overview ();
+			o.copied_glyphs.clear ();
+			foreach (Glyph g in glyphs) {
+				
+				print (@"g.unichar_code, g.name  $((!) g.unichar_code.to_string ()) $(g.name)\n");	
+						
+				gc = new GlyphCollection (g.unichar_code, g.name);
+				gc.add_glyph (g);
+				o.copied_glyphs.add (gc);
+			}
+			o.paste ();
+		}
 	}
 	
-	static void import_birdfont_path (string data) {
-		Glyph glyph = MainWindow.get_current_glyph ();
+	static void import_birdfont_path (Glyph glyph, string data) {
 		Path path = BirdFontFile.parse_path_data (data);
 
 		if (path.points.size > 0) {
