@@ -23,7 +23,7 @@ namespace BirdFont {
  * of a .bfp tree must have a file with the name "description.bfp", this file 
  * tells the parser that bfp files in parent directories should be excluded.
  */
-class BirdFontPart : GLib.Object{
+public class BirdFontPart : GLib.Object{
 	Font font;
 	List<string> parts;
 	string root_directory;
@@ -32,12 +32,30 @@ class BirdFontPart : GLib.Object{
 
 	static string FILE_ATTRIBUTES = "standard::*";
 
+	static bool running_git = false;
+
 	public BirdFontPart (Font font) {	
 		this.font = font;
 		parts = new List<string> ();
 		root_directory = "";
 	}
 
+	public static void git_init () {
+		if (!running_git) {
+			Git.Threads.init ();
+		}
+		
+		running_git = true;
+	}
+
+	public static void git_shutdown () {
+		if (running_git) {
+			Git.Threads.shutdown ();
+		}
+		
+		running_git = false;
+	}
+	
 	public bool load (string bfp_file) {
 		BirdFontFile bf = new BirdFontFile (font);
 		File bfp_dir;
@@ -109,13 +127,14 @@ class BirdFontPart : GLib.Object{
 		object_id id;
 		Git.Tree tree;
 		int nparents;
+		Git.Commit[] parents;
 		
 		if (root_directory == "") {
 			warning ("No directory is created for this birdfont part.");
 			return false;
 		}
 		
-		Git.Threads.init ();
+		git_init ();
 		
 		if (!create_git_repository ()) {
 			return false;
@@ -225,13 +244,14 @@ class BirdFontPart : GLib.Object{
 			nparents = 0;
 		}
 		
-		if (((!) git_repository).create_commit_v (id, "HEAD", (!) sig, (!) sig, 
-				"utf-8", "Improved typeface", tree, nparents) != Git.Error.OK) {
+		parents = new Git.Commit[0];
+		if (((!) git_repository).create_commit (id, "HEAD", (!) sig, (!) sig, 
+				"utf-8", "Improved typeface", tree, parents) != Git.Error.OK) {
 			warning ("Can't commit");
 			error = true;
 		}
 		
-		Git.Threads.shutdown ();
+		git_shutdown ();
 		
 		return !error;
 	}

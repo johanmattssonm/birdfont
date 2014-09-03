@@ -194,7 +194,7 @@ public class BackgroundTool : Tool {
 			}
 		});
 		
-		MainWindow.file_chooser (_("Select background image"), fc, FileChooser.LOAD);
+		MainWindow.file_chooser (t_("Select background image"), fc, FileChooser.LOAD);
 	}
 }
 
