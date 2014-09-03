@@ -12,7 +12,7 @@
     Lesser General Public License for more details.
 */
 
-using Git;
+// FIXME: using Git;
 
 namespace BirdFont {
 
@@ -25,10 +25,10 @@ namespace BirdFont {
  */
 public class BirdFontPart : GLib.Object{
 	Font font;
-	List<string> parts;
+	Gee.ArrayList<string> parts;
 	string root_directory;
-	Index git_index;
-	Repository? git_repository;
+	// Index git_index;
+	// Repository? git_repository;
 
 	static string FILE_ATTRIBUTES = "standard::*";
 
@@ -36,13 +36,13 @@ public class BirdFontPart : GLib.Object{
 
 	public BirdFontPart (Font font) {	
 		this.font = font;
-		parts = new List<string> ();
+		parts = new Gee.ArrayList<string> ();
 		root_directory = "";
 	}
 
 	public static void git_init () {
 		if (!running_git) {
-			Git.Threads.init ();
+// FIXME: 			Git.Threads.init ();
 		}
 		
 		running_git = true;
@@ -50,7 +50,7 @@ public class BirdFontPart : GLib.Object{
 
 	public static void git_shutdown () {
 		if (running_git) {
-			Git.Threads.shutdown ();
+// FIXME: 			Git.Threads.shutdown ();
 		}
 		
 		running_git = false;
@@ -95,6 +95,8 @@ public class BirdFontPart : GLib.Object{
 	}
 	
 	bool create_git_repository () {
+		// FIXME: 
+		/*
 		File root = File.new_for_path (root_directory);
 		File git = root.get_child (".git");
 		Repository repo;
@@ -111,9 +113,9 @@ public class BirdFontPart : GLib.Object{
 			return false;
 		}
 					
-		((!) git_repository).get_index (out git_index);
-
-		return true;;
+		// FIXME: ((!) git_repository).get_index (out git_index);
+*/
+		return true;
 	}
 	
 	public bool save () {
@@ -123,11 +125,11 @@ public class BirdFontPart : GLib.Object{
 		string file_name;
 		string glyph_dir_name;
 		File glyph_file;
-		Signature? sig;
-		object_id id;
-		Git.Tree tree;
+// FIXME: 		Signature? sig;
+// FIXME: 		object_id id;
+// FIXME: 		Git.Tree tree;
 		int nparents;
-		Git.Commit[] parents;
+// FIXME: 		Git.Commit[] parents;
 		
 		if (root_directory == "") {
 			warning ("No directory is created for this birdfont part.");
@@ -140,8 +142,8 @@ public class BirdFontPart : GLib.Object{
 			return false;
 		}
 		
-		return_val_if_fail (!is_null (git_repository), false);
-		
+		// FIXME: return_val_if_fail (!is_null (git_repository), false);
+		/*
 		if (git_index.write_tree (out id) != Git.Error.OK) {
 			warning ("write_tree failed");
 			error = true;
@@ -258,7 +260,7 @@ public class BirdFontPart : GLib.Object{
 		}
 		
 		git_shutdown ();
-		
+		*/
 		return !error;
 	}
 
@@ -424,7 +426,7 @@ public class BirdFontPart : GLib.Object{
 				find_parts ((!) ((!) start.get_child (name)).get_path ());
 			} else if (name.has_suffix (".bfp")) {
 				found = start.get_child (name);
-				parts.append ((!) found.get_path ());
+				parts.add ((!) found.get_path ());
 			}
 		}
 	}
@@ -519,7 +521,7 @@ public class BirdFontPart : GLib.Object{
 			git_path = name;
 		}
 		
-		git_index.add_path (git_path);
+		// FIXME: git_index.add_path (git_path);
 		
 		return os;
 	}

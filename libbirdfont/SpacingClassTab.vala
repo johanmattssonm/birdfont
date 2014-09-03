@@ -65,7 +65,7 @@ public class SpacingClassTab : FontDisplay {
 		}
 		
 		connections.sort ((a, b) => {
-			return strcmp (a, b);
+			return strcmp ((string) a, (string) b);
 		});
 	}
 

@@ -81,6 +81,14 @@ public class SearchPaths {
 		
 	public static string get_locale_directory () {
 		string f = "";
+		string resources;
+
+		resources = (is_null (resources_folder)) ? "" : resources_folder; 
+
+		f = resources + "\\locale\\sv\\LC_MESSAGES\\birdfont.mo";
+		if (exists (f)) {
+			return resources + "\\Contents\\Resources\\locale";
+		}
 		
 		f = BirdFont.exec_path + "/Contents/Resources/locale/sv/LC_MESSAGES/birdfont.mo";
 		if (exists (f)) {
@@ -115,7 +123,6 @@ public class SearchPaths {
 		warning ("translations not found");
 		return "/usr/share/locale";
 	}
-
 
 	public static File get_char_database () {
 		File f;
