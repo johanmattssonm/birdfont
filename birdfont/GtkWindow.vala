@@ -1190,7 +1190,6 @@ class ToolboxCanvas : DrawingArea {
 public class GlyphCanvasArea : DrawingArea  {
 	GlyphCanvas glyph_canvas;
 	WidgetAllocation alloc = new WidgetAllocation ();
-	WidgetAllocation prev_alloc = new WidgetAllocation ();
 	
 	public GlyphCanvasArea (GlyphCanvas gc) {
 		int event_flags;
@@ -1214,20 +1213,11 @@ public class GlyphCanvasArea : DrawingArea  {
 			get_allocation (out allocation);
 			
 			alloc = new WidgetAllocation ();
-
+			
 			alloc.width = allocation.width;
 			alloc.height = allocation.height;
 			alloc.x = allocation.x;
 			alloc.y = allocation.y;
-			
-			glyph_canvas.set_allocation (alloc);
-			BirdFont.current_glyph.resized (alloc);
-				
-			prev_alloc = new WidgetAllocation ();
-			prev_alloc.width = allocation.width;
-			prev_alloc.height = allocation.height;
-			prev_alloc.x = allocation.x;
-			prev_alloc.y = allocation.y;
 			
 			Context cw = cairo_create (get_window());
 			

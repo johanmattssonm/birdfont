@@ -32,7 +32,7 @@ public class GlyphCanvas : GLib.Object {
 		return allocation;
 	}
 
-	public void set_allocation (WidgetAllocation w) {
+	public static void set_allocation (WidgetAllocation w) {
 		allocation = w.copy ();
 	}
 
