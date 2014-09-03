@@ -32,6 +32,9 @@ public class FileDialogTab : FontDisplay {
 	string selected_filename;
 	TextListener listener;
 	
+	private static bool has_drive_letters = false;
+	private static Gee.ArrayList<string> drive_letters;
+
 	public FileDialogTab (string title, FileChooser action) {
 		this.title = title;
 		this.action = action;
@@ -40,6 +43,15 @@ public class FileDialogTab : FontDisplay {
 		directories = new Gee.ArrayList<string> ();
 		
 		selected_canvas ();
+	}
+
+	public static void add_drive_letter (char c) {
+		if (!has_drive_letters) {
+			drive_letters = new Gee.ArrayList<string> ();
+			has_drive_letters = true;
+		}
+		
+		drive_letters.add (@"$((!) c.to_string ()):\\");
 	}
 
 	public override void selected_canvas () {
@@ -73,7 +85,7 @@ public class FileDialogTab : FontDisplay {
 		if (current_dir.get_parent () != null) {
 			directories.add ("..");
 		}
-		
+
 		try {
 			enumerator = current_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_TYPE, 0);
 			
@@ -92,6 +104,13 @@ public class FileDialogTab : FontDisplay {
 		}
 		
 		directories.sort ();
+
+		if (has_drive_letters) {
+			for (int i = drive_letters.size - 1; i >= 0; i--) {
+				directories.insert (0, drive_letters.get (i));
+			}
+		}
+
 		files.sort ();
 			
 		scroll = 0;
