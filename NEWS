@@ -7,8 +7,9 @@ birdfont (1.0) stable;
     to another. This feature makes it easier to create fonts with only upper
     case characters as well as mono spaced fonts.
   * Copy and paste multiple glyphs in the overview tab.
+  * Redo command
 
- -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue Sep  2 14:57:52 CEST 2014
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Sep  3 13:36:00 CEST 2014
 
 birdfont (0.46) stable;
 

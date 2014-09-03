@@ -41,8 +41,9 @@ public class OverView : FontDisplay {
 	
 	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
 	
-	/** List for undo commands. */
+	/** List of undo commands. */
 	Gee.ArrayList<OverViewUndoItem> undo_items = new Gee.ArrayList<OverViewUndoItem> ();
+	Gee.ArrayList<OverViewUndoItem> redo_items = new Gee.ArrayList<OverViewUndoItem> ();
 	
 	/** Show all characters that has been drawn. */
 	bool all_available = true;
@@ -702,16 +703,62 @@ public class OverView : FontDisplay {
 		}
 		
 		previous_collection = undo_items.get (undo_items.size - 1);
+
+		redo_items.add (get_current_state (previous_collection));
 		
+		// remove the old glyph and add the new one
+		foreach (GlyphCollection g in previous_collection.glyphs) {
+			font.delete_glyph (g);
+			
+			if (g.length () > 0) {
+				font.add_glyph_collection (g);
+			}
+		}
+		
+		undo_items.remove_at (undo_items.size - 1);
+		
+		redraw_area (0, 0, allocation.width, allocation.height);
+	}
+	
+	public override void redo () {
+		Font font = BirdFont.get_current_font ();
+		OverViewUndoItem previous_collection;
+
+		if (redo_items.size == 0) {
+			return;
+		}
+		
+		previous_collection = redo_items.get (redo_items.size - 1);
+	
+		undo_items.add (get_current_state (previous_collection));
+
 		// remove the old glyph and add the new one
 		foreach (GlyphCollection g in previous_collection.glyphs) {
 			font.delete_glyph (g);
 			font.add_glyph_collection (g);
 		}
 		
-		undo_items.remove_at (undo_items.size - 1);
+		redo_items.remove_at (redo_items.size - 1);
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
+	}	
+	
+	public OverViewUndoItem get_current_state (OverViewUndoItem previous_collection) {
+		GlyphCollection? gc;
+		OverViewUndoItem ui = new OverViewUndoItem ();
+		Font font = BirdFont.get_current_font ();
+		
+		foreach (GlyphCollection g in previous_collection.glyphs) {
+			gc = font.get_glyph_collection (g.get_name ());
+			
+			if (gc != null) {
+				ui.glyphs.add (((!) gc).copy ());
+			} else {
+				ui.glyphs.add (new GlyphCollection (g.get_unicode_character (), g.get_name ()));
+			}
+		}
+		
+		return ui;		
 	}
 	
 	public void store_undo_state (GlyphCollection gc) {
@@ -722,6 +769,7 @@ public class OverView : FontDisplay {
 
 	public void store_undo_items (OverViewUndoItem i) {
 		undo_items.add (i);
+		redo_items.clear ();
 	}
 	
 	bool select_visible_character (unichar c) {

@@ -79,7 +79,8 @@ public class Glyph : FontDisplay {
 	bool margin_boundaries_visible = false;
 	
 	Gee.ArrayList<Glyph> undo_list = new Gee.ArrayList<Glyph> ();
-	
+	Gee.ArrayList<Glyph> redo_list = new Gee.ArrayList<Glyph> ();
+
 	string glyph_sequence = "";
 	bool open = true;
 
@@ -138,6 +139,7 @@ public class Glyph : FontDisplay {
 
 	public override void close () {
 		undo_list.clear ();
+		redo_list.clear ();
 	}
 		
 	public string get_ligature_string () {
@@ -1616,9 +1618,18 @@ public class Glyph : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 
-	public void store_undo_state () {
+	public void store_undo_state (bool clear_redo = false) {
 		Glyph g = copy ();
-		undo_list.add (g);		
+		undo_list.add (g);
+		
+		if (clear_redo) {
+			redo_list.clear ();
+		}
+	}
+
+	public void store_redo_state () {
+		Glyph g = copy ();
+		redo_list.add (g);	
 	}
 
 	public Glyph copy () {
@@ -1670,9 +1681,30 @@ public class Glyph : FontDisplay {
 		}
 		
 		g = undo_list.get (undo_list.size - 1);	
+		
+		store_redo_state ();
 		set_glyph_data (g);
 		
 		undo_list.remove_at (undo_list.size - 1);
+
+		PenTool.update_selected_points ();
+		
+		clear_active_paths ();
+	}
+
+	public override void redo () {
+		Glyph g;
+		
+		if (redo_list.size == 0) {
+			return;
+		}
+		
+		g = redo_list.get (redo_list.size - 1);	
+		
+		store_undo_state (false);
+		set_glyph_data (g);
+		
+		redo_list.remove_at (redo_list.size - 1);
 
 		PenTool.update_selected_points ();
 		

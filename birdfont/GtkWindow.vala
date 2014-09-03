@@ -487,7 +487,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		edit_menu.append (undo_item);
 		undo_item.activate.connect (() => { TabContent.undo (); });	
 		undo_item.add_accelerator ("activate", accel_group, 'Z', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-		
+
+		Gtk.MenuItem redo_item = new Gtk.MenuItem.with_mnemonic (t_("_Redo"));
+		edit_menu.append (redo_item);
+		redo_item.activate.connect (() => { TabContent.redo (); });	
+		redo_item.add_accelerator ("activate", accel_group, 'Y', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
 		Gtk.MenuItem copy_item = new Gtk.MenuItem.with_mnemonic (t_("_Copy"));
 		edit_menu.append (copy_item);
 		copy_item.activate.connect (() => { ClipTool.copy (); });		

@@ -413,7 +413,10 @@ public class Font : GLib.Object {
 	public void delete_glyph (GlyphCollection glyph) {
 		glyph_cache.remove (glyph.get_unicode ());
 		glyph_name.remove (glyph.get_name ());
-		ligature.remove (glyph.get_current ().get_ligature_string ());
+		
+		if (glyph.length () > 0) {
+			ligature.remove (glyph.get_current ().get_ligature_string ());
+		}
 		
 		foreach (Glyph g in glyph.get_version_list ().glyphs) {
 			deleted_glyphs.add (g);
