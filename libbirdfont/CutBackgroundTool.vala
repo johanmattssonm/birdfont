@@ -220,7 +220,9 @@ class CutBackgroundTool : Tool {
 		img_dir =  f.get_backgrounds_folder ().get_child ("parts");
 
 		if (!img_dir.query_exists ()) {
-			DirUtils.create ((!) img_dir.get_path (), 0xFFFFFF);
+			if (DirUtils.create_with_parents ((!) img_dir.get_path (), 0xFFFFFF) != 0) {
+				warning (@"Can not create directory $((!) img_dir.get_path ())");
+			}
 		}
 	
 		img_file = img_dir.get_child (@"NEW_BACKGROUND.png");
