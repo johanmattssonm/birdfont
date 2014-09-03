@@ -73,6 +73,7 @@ public class PenTool : Tool {
 	static Gee.ArrayList<Path> counter_clockwise;
 	
 	public static double path_stroke_width = 0;
+	public static double simplification_threshold = 0.5;
 			
 	public PenTool (string name) {	
 		base (name, t_("Add new points"));
@@ -371,7 +372,7 @@ public class PenTool : Tool {
 	}
 	
 	/** @return path distortion. */
-	public static double remove_point_simplify (PointSelection p) {
+	public static double remove_point_simplify (PointSelection p, double tolerance = 0.6) {
 		double start_length, stop_length;
 		double start_distortion, start_min_distortion, start_previous_length;
 		double stop_distortion, stop_min_distortion, stop_previous_length;
@@ -406,7 +407,17 @@ public class PenTool : Tool {
 		
 		prev.get_right_handle ().convert_to_curve ();
 		next.get_left_handle ().convert_to_curve ();
-		
+
+		if (prev.get_right_handle ().type == PointType.QUADRATIC
+				&& next.get_left_handle ().type != PointType.QUADRATIC) {
+			convert_point_type (prev, next.get_left_handle ().type);
+		}
+
+		if (prev.get_right_handle ().type != PointType.QUADRATIC
+				&& next.get_left_handle ().type == PointType.QUADRATIC) {
+			convert_point_type (next, prev.get_right_handle ().type);
+		}
+				
 		ep1 = prev.copy ();
 		ep2 = next.copy ();
 
@@ -430,7 +441,7 @@ public class PenTool : Tool {
 		min_distortion = double.MAX;
 		distance = Path.distance (ep1.x, ep2.x, ep1.y, ep2.y);
 
-		for (double m = 50.0; m >= 0.6; m /= 10.0) {
+		for (double m = 50.0; m >= tolerance / 2.0; m /= 10.0) {
 			step = m / 10.0;
 			min_distortion = double.MAX;
 			
@@ -628,7 +639,8 @@ public class PenTool : Tool {
 		
 		return_if_fail (g != null);
 
-		if ((double_click && !BirdFont.android) || tb.get_tool ("new_point_on_path").is_selected ()) {
+		if ((double_click && !BirdFont.android)
+				|| tb.drawing_tools.inser_point_on_path_tool.is_selected ()) {
 			glyph.insert_new_point_on_path (x, y);
 			return;
 		}
@@ -2003,7 +2015,7 @@ public class PenTool : Tool {
 	public static Path simplify (Path path, bool selected_segments = false, double threshold = 0.3) {
 		PointSelection ps;
 		EditPoint ep;
-		Path p1, p2, new_path;
+		Path p1, new_path;
 		double d, sumd;
 		int i;
 
@@ -2026,7 +2038,13 @@ public class PenTool : Tool {
 			}
 		}
 		
+		new_path.update_region_boundaries ();
+		
 		return new_path;
+	}
+	
+	public void set_simplification_threshold (double t) {
+		simplification_threshold = t;
 	}
 }
 

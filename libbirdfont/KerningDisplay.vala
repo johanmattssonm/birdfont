@@ -34,14 +34,16 @@ public class KerningDisplay : FontDisplay {
 
 	bool parse_error = false;
 	bool text_input = false;
-	
+
 	Gee.ArrayList<UndoItem> undo_items;
+	Gee.ArrayList<UndoItem> redo_items;
 	bool first_update = true;
 	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
 		row = new Gee.ArrayList <GlyphSequence> ();
 		undo_items = new Gee.ArrayList <UndoItem> ();
+		redo_items = new Gee.ArrayList <UndoItem> ();
 		row.add (w);
 	}
 
@@ -379,11 +381,14 @@ public class KerningDisplay : FontDisplay {
 			left_active_glyph.right_limit += val;
 			left_active_glyph.remove_lines ();
 			left_active_glyph.add_help_lines ();
+			left_active_glyph.update_other_spacing_classes ();
 		}
 	}
 
 	/** Class based gpos kerning. */
-	public void set_kerning_pair (string a, string b, ref GlyphRange? gr_left, ref GlyphRange? gr_right, double val) {
+	public void set_kerning_pair (string a, string b,
+			ref GlyphRange? gr_left, ref GlyphRange? gr_right,
+			double val) {
 		double kern;
 		GlyphRange grl, grr;
 		KerningClasses classes = KerningClasses.get_instance ();
@@ -418,6 +423,8 @@ public class KerningDisplay : FontDisplay {
 				n = grr.get_all_ranges ();
 				has_kerning = classes.has_kerning (f, n);
 				undo_items.add (new UndoItem (f, n, kern, has_kerning));
+
+				redo_items.clear ();
 				first_update = false;
 			}
 			
@@ -835,17 +842,49 @@ public class KerningDisplay : FontDisplay {
 
 	public override void undo () {
 		UndoItem ui;
-		KerningClasses classes = KerningClasses.get_instance ();
-		GlyphRange glyph_range_first, glyph_range_next;
-		Font font = BirdFont.get_current_font ();
-		string l, r;
-
+		UndoItem redo_state;
+		
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
 		if (undo_items.size == 0) {
 			return;
 		}
 		
 		ui = undo_items.get (undo_items.size - 1);
-			
+		
+		redo_state = apply_undo (ui);
+		redo_items.add (redo_state);
+		
+		undo_items.remove_at (undo_items.size - 1);
+	}
+
+	public override void redo () {
+		UndoItem ui;
+		
+		if (MenuTab.suppress_event) {
+			return;
+		}
+		
+		if (redo_items.size == 0) {
+			return;
+		}
+		
+		ui = redo_items.get (redo_items.size - 1);
+		apply_undo (ui);
+		redo_items.remove_at (redo_items.size - 1);
+	}
+	
+	/** @return redo state. */
+	public UndoItem apply_undo (UndoItem ui) {
+		KerningClasses classes = KerningClasses.get_instance ();
+		GlyphRange glyph_range_first, glyph_range_next;
+		Font font = BirdFont.get_current_font ();
+		string l, r;
+		UndoItem redo_state = new UndoItem ("", "", 0, false);
+		double? k;
+		
 		l = GlyphRange.unserialize (ui.first);
 		r = GlyphRange.unserialize (ui.next);
 				
@@ -857,9 +896,26 @@ public class KerningDisplay : FontDisplay {
 					
 					glyph_range_first.parse_ranges (ui.first);
 					glyph_range_next.parse_ranges (ui.next);
-
+					
+					redo_state.first = glyph_range_first.get_all_ranges ();
+					redo_state.next = glyph_range_next.get_all_ranges ();
+					redo_state.has_kerning = true;
+					redo_state.kerning = classes.get_kerning_for_range (glyph_range_first, glyph_range_next);
+					
 					classes.delete_kerning_for_class (ui.first, ui.next);
 				} else {
+					
+					redo_state.first = ui.first;
+					redo_state.next = ui.next;
+					redo_state.has_kerning = true;
+					k = classes.get_kerning_for_single_glyphs (ui.first, ui.next);
+					
+					if (k != null) {
+						redo_state.kerning = (!) k;
+					} else {
+						warning ("No kerning");
+					}
+					
 					classes.delete_kerning_for_pair (ui.first, ui.next);
 				}
 			} else if (ui.first.char_count () > 1 || ui.next.char_count () > 1) {
@@ -868,22 +924,46 @@ public class KerningDisplay : FontDisplay {
 				
 				glyph_range_first.parse_ranges (ui.first);
 				glyph_range_next.parse_ranges (ui.next);
+
+				redo_state.first = glyph_range_first.get_all_ranges ();
+				redo_state.next = glyph_range_next.get_all_ranges ();
+				k = classes.get_kerning_for_range (glyph_range_first, glyph_range_next);
 				
+				if (k != null) {
+					redo_state.kerning = (!) k;
+					redo_state.has_kerning = true;
+				} else {
+					redo_state.has_kerning = false;
+				}
+									
 				classes.set_kerning (glyph_range_first, glyph_range_next, ui.kerning);
 			} else {
+				
+				redo_state.first = ui.first;
+				redo_state.next = ui.next;
+				redo_state.has_kerning = true;
+				k = classes.get_kerning_for_single_glyphs (ui.first, ui.next);
+				
+				if (k != null) {
+					redo_state.kerning = (!) k;
+					redo_state.has_kerning = true;
+				} else {
+					redo_state.has_kerning = false;
+				}
+					
 				classes.set_kerning_for_single_glyphs (ui.first, ui.next, ui.kerning);
 			}
-			
-			undo_items.remove_at (undo_items.size - 1);
 		} catch (MarkupError e) {
 			warning (e.message);
 		}
 		
 		font.touch ();
 		GlyphCanvas.redraw ();
+		
+		return redo_state;
 	}
 	
-	class UndoItem : GLib.Object {
+	public class UndoItem : GLib.Object {
 		public string first;
 		public string next;
 		public double kerning;

@@ -39,6 +39,7 @@ public class BackgroundImage {
 	public bool high_contrast = false;
 	private double trace_resolution = 1.0;
 	private double threshold = 1.0;
+	private double simplification = 0.5;
 	private Gee.ArrayList<TracedPoint> points = new Gee.ArrayList<TracedPoint> ();
 	private Gee.ArrayList<TracedPoint> start_points = new Gee.ArrayList<TracedPoint> ();
 	
@@ -101,9 +102,16 @@ public class BackgroundImage {
 		bg.img_scale_y = img_scale_y;
 		bg.img_rotation = img_rotation;
 
+		bg.simplification = simplification;
 		bg.threshold = threshold;
+		bg.high_contrast = high_contrast;
+		bg.trace_resolution = trace_resolution;
 
 		return bg;		
+	}
+
+	public void set_trace_simplification (double s) {
+		simplification = s;
 	}
 
 	public void set_high_contrast (bool t) {
@@ -814,7 +822,7 @@ public class BackgroundImage {
 				if (is_traced (i)) {
 					Path np = generate_path (outline_img, s, w, h, len);
 					
-					if (np.points.size > 3) {
+					if (np.points.size >= 3) {
 						if (Path.is_counter (pl, np)) {
 							np.force_direction (Direction.COUNTER_CLOCKWISE);
 						} else {
@@ -1280,12 +1288,14 @@ public class BackgroundImage {
 			}
 		}
 
-		for (i = 0; i < path.points.size; i++) {
-			ep = path.points.get (i);
-			ps = new PointSelection (ep, path);
-			if (corners.index_of (ep) == -1) {
-				PenTool.remove_point_simplify (ps);
-			} 
+		if (simplification > 0.01) {
+			for (i = 0; i < path.points.size; i++) {
+				ep = path.points.get (i);
+				ps = new PointSelection (ep, path);
+				if (corners.index_of (ep) == -1) {
+					PenTool.remove_point_simplify (ps, simplification);
+				} 
+			}
 		}
 		
 		for (i = 0; i < path.points.size; i++) {
@@ -1296,7 +1306,7 @@ public class BackgroundImage {
 			}
 		}
 		
-		path = PenTool.simplify (path, true, 0.2);
+		path = PenTool.simplify (path, true, simplification);
 		points.clear ();
 		path.update_region_boundaries ();
 		

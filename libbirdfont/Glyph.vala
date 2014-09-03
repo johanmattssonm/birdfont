@@ -45,7 +45,6 @@ public class Glyph : FontDisplay {
 	double zoom_distance = 0;
 	bool change_view; 
 
-	
 	bool ignore_input = false;
 	
 	// Current pointer position
@@ -80,7 +79,8 @@ public class Glyph : FontDisplay {
 	bool margin_boundaries_visible = false;
 	
 	Gee.ArrayList<Glyph> undo_list = new Gee.ArrayList<Glyph> ();
-	
+	Gee.ArrayList<Glyph> redo_list = new Gee.ArrayList<Glyph> ();
+
 	string glyph_sequence = "";
 	bool open = true;
 
@@ -139,6 +139,7 @@ public class Glyph : FontDisplay {
 
 	public override void close () {
 		undo_list.clear ();
+		redo_list.clear ();
 	}
 		
 	public string get_ligature_string () {
@@ -450,13 +451,15 @@ public class Glyph : FontDisplay {
 							
 		Line left_line = new Line ("left", left_limit, true);
 		left_line.position_updated.connect ((pos) => {
-				left_limit = pos;
-			});
+			left_limit = pos;
+			update_other_spacing_classes ();
+		});
 		
 		Line right_line = new Line ("right", right_limit, true);
 		right_line.position_updated.connect ((pos) => {
-				right_limit = pos;
-			});
+			right_limit = pos;
+			update_other_spacing_classes ();
+		});
 		
 		// lists of lines are sorted and lines are added only if 
 		// they are relevant for a particular glyph.
@@ -743,13 +746,13 @@ public class Glyph : FontDisplay {
 		pointer_begin_y = ey;
 		
 		foreach (Line line in horizontal_help_lines) {
-			if (!moving_lines && line.is_visible () && line.button_press ()) {
+			if (!moving_lines && line.is_visible () && line.button_press (button)) {
 				moving_lines = true;
 			}
 		}
 
 		foreach (Line line in vertical_help_lines) {
-			if (!moving_lines && line.is_visible () && line.button_press ()) {
+			if (!moving_lines && line.is_visible () && line.button_press (button)) {
 				moving_lines = true;
 			}
 		}
@@ -1615,9 +1618,18 @@ public class Glyph : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 
-	public void store_undo_state () {
+	public void store_undo_state (bool clear_redo = false) {
 		Glyph g = copy ();
-		undo_list.add (g);		
+		undo_list.add (g);
+		
+		if (clear_redo) {
+			redo_list.clear ();
+		}
+	}
+
+	public void store_redo_state () {
+		Glyph g = copy ();
+		redo_list.add (g);	
 	}
 
 	public Glyph copy () {
@@ -1669,9 +1681,30 @@ public class Glyph : FontDisplay {
 		}
 		
 		g = undo_list.get (undo_list.size - 1);	
+		
+		store_redo_state ();
 		set_glyph_data (g);
 		
 		undo_list.remove_at (undo_list.size - 1);
+
+		PenTool.update_selected_points ();
+		
+		clear_active_paths ();
+	}
+
+	public override void redo () {
+		Glyph g;
+		
+		if (redo_list.size == 0) {
+			return;
+		}
+		
+		g = redo_list.get (redo_list.size - 1);	
+		
+		store_undo_state (false);
+		set_glyph_data (g);
+		
+		redo_list.remove_at (redo_list.size - 1);
 
 		PenTool.update_selected_points ();
 		
@@ -2014,6 +2047,50 @@ public class Glyph : FontDisplay {
 			last_tap1_x = x;
 			last_tap1_y = y;
 		}
+	}
+	
+	public void update_spacing_class () {
+		Font font = BirdFont.get_current_font ();
+		GlyphCollection? g;
+		GlyphCollection gc;
+		Glyph glyph;
+		
+		foreach (string l in MainWindow.get_spacing_class_tab ()
+				.get_all_connections ((!) unichar_code.to_string ())) {
+			if (l != (!) unichar_code.to_string ()) {
+				g = font.get_glyph_collection (l);
+				if (g != null) {
+					gc = (!) g;
+					glyph = gc.get_current ();
+					left_limit = glyph.left_limit;
+					right_limit = glyph.right_limit;
+					break;
+				}
+			}
+		}
+		
+		add_help_lines ();
+	}
+
+	public void update_other_spacing_classes () {
+		Font font = BirdFont.get_current_font ();
+		GlyphCollection? g;
+		GlyphCollection gc;
+		Glyph glyph;
+		
+		foreach (string l in MainWindow.get_spacing_class_tab ()
+				.get_all_connections ((!) unichar_code.to_string ())) {
+			if (l != (!) unichar_code.to_string ()) {
+				g = font.get_glyph_collection (l);
+				if (g != null) {
+					gc = (!) g;
+					glyph = gc.get_current ();
+					glyph.left_limit = left_limit;
+					glyph.right_limit = right_limit;
+					glyph.add_help_lines ();
+				}
+			}
+		}	
 	}
 }
 

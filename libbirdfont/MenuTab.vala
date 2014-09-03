@@ -221,6 +221,8 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 
+		MainWindow.native_window.hide_text_input ();
+
 		SaveDialogListener dialog = new SaveDialogListener ();
 		Font font = BirdFont.get_current_font ();
 		
@@ -416,7 +418,7 @@ public class MenuTab : FontDisplay {
 		
 		// selected objects
 		foreach (Path p in g.active_paths) {
-			paths.add (PenTool.simplify (p, false));
+			paths.add (PenTool.simplify (p, false, PenTool.simplification_threshold));
 		}
 		
 		// selected segments
@@ -426,7 +428,7 @@ public class MenuTab : FontDisplay {
 			}
 			
 			foreach (Path p in g.active_paths) {
-				paths.add (PenTool.simplify (p, true));
+				paths.add (PenTool.simplify (p, true, PenTool.simplification_threshold));
 			}
 		}
 		
@@ -447,6 +449,11 @@ public class MenuTab : FontDisplay {
 
 		g.active_paths.clear ();
 		g.update_view ();
+	}
+	
+	public static void show_spacing_tab () {
+		SpacingClassTab t = MainWindow.get_spacing_class_tab ();
+		MainWindow.get_tab_bar ().add_unique_tab (t);
 	}
 }
 

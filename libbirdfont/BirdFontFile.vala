@@ -162,7 +162,7 @@ class BirdFontFile : GLib.Object {
 					
 				TooltipArea.show_text (t_("Saving"));
 			});
-		
+			
 			font.glyph_cache.for_each ((gc) => {
 				BackgroundImage bg;
 				
@@ -193,6 +193,7 @@ class BirdFontFile : GLib.Object {
 				TooltipArea.show_text (t_("Saving"));
 			});
 			
+			write_spacing_classes (os);
 			write_kerning (os);
 			write_closing_root_tag (os);
 			
@@ -216,6 +217,23 @@ class BirdFontFile : GLib.Object {
 		os.put_string ("</font>\n");
 	}
 	
+	public void write_spacing_classes (DataOutputStream os)  throws GLib.Error {
+		SpacingClassTab s = MainWindow.get_spacing_class_tab ();
+		
+		foreach (SpacingClass sc in s.classes) {
+				os.put_string ("<spacing ");
+				os.put_string ("first=\"");
+				os.put_string (Font.to_hex (sc.first.get_char ()));
+				os.put_string ("\" ");
+				
+				os.put_string ("next=\"");
+				os.put_string (Font.to_hex (sc.next.get_char ()));
+				os.put_string ("\" ");
+				
+				os.put_string (" />\n");
+		}
+	}
+		
 	public void write_kerning (DataOutputStream os)  throws GLib.Error {
 			uint num_kerning_pairs;
 			string range;
@@ -657,7 +675,11 @@ class BirdFontFile : GLib.Object {
 			if (iter->name == "kerning") {
 				parse_kerning (iter);
 			}
-						
+
+			if (iter->name == "spacing") {
+				parse_spacing_class (iter);
+			}
+									
 			TooltipArea.show_text (t_("Loading XML data."));
 		}
 
@@ -694,6 +716,31 @@ class BirdFontFile : GLib.Object {
 	
 	public static string serialize_unichar (unichar c) {
 		return GlyphRange.get_serialized_char (c);
+	}
+	
+	private void parse_spacing_class (Xml.Node* node) {
+		string attr_name;
+		string attr_content;
+		string first, next;
+		SpacingClassTab spacing_class_tab = MainWindow.get_spacing_class_tab ();
+		
+		first = "";
+		next = "";
+		
+		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+			attr_name = prop->name;
+			attr_content = prop->children->content;
+			
+			if (attr_name == "first") {
+				first = (!) Font.to_unichar (attr_content).to_string ();
+			}
+
+			if (attr_name == "next") {
+				next = (!) Font.to_unichar (attr_content).to_string ();
+			}		
+		}
+		
+		spacing_class_tab.add_class (first, next);
 	}
 	
 	private void parse_kerning (Xml.Node* node) {
@@ -742,7 +789,7 @@ class BirdFontFile : GLib.Object {
 			warning (e.message);
 		}
 	}
-		
+	
 	private void parse_old_kerning (Xml.Node* node) {
 		string attr_name;
 		string attr_content;

@@ -15,7 +15,7 @@
 namespace BirdFont {
 
 public class PreviewTools : ToolCollection  {
-	public List<Expander> expanders;
+	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	public Expander classes;
 	
 	public PreviewTools () {
@@ -39,7 +39,7 @@ public class PreviewTools : ToolCollection  {
 		});
 		webview_tools.add_tool (generate_html_button);
 		
-		expanders.append (webview_tools);
+		expanders.add (webview_tools);
 	}
 
 	/** Export fonts and update html canvas. */
@@ -70,7 +70,7 @@ public class PreviewTools : ToolCollection  {
 		Preview.generate_html_document ();
 	}
 		
-	public override unowned List<Expander> get_expanders () {
+	public override Gee.ArrayList<Expander> get_expanders () {
 		return expanders;
 	}
 }

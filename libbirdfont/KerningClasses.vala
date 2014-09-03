@@ -52,15 +52,43 @@ public class KerningClasses : GLib.Object {
 		return BirdFont.get_current_font ().get_kerning_classes ();
 	}
 
-	public double? get_kerning_for_single_glyphs (string l, string r) {
-		string left = GlyphRange.serialize (l);
-		string right = GlyphRange.serialize (r);
-		return single_kerning.get (@"$left - $right");
+	public void update_space_class (string c) {
+		double? k;
+		
+		foreach (string l in single_kerning_letters_left) {	
+			k = get_kerning_for_single_glyphs (l, c);
+			
+			if (k != null) {
+				set_kerning_for_single_glyphs (l, c, (!) k);
+			}
+		}
+
+		foreach (string r in single_kerning_letters_right) {	
+			k = get_kerning_for_single_glyphs (c, r);
+			
+			if (k != null) {
+				set_kerning_for_single_glyphs (c, r, (!) k);
+			}
+		}		
+	}
+
+	public double? get_kerning_for_single_glyphs (string first, string next) {
+		double? k = null;
+		string left = GlyphRange.unserialize (first);
+		string right = GlyphRange.unserialize (next);
+
+		foreach (string l in get_spacing_class (left)) {
+			foreach (string r in get_spacing_class (right)) {
+				k = single_kerning.get (@"$l - $r");
+			}
+		}
+		
+		return k;
 	} 
 
-	public void set_kerning_for_single_glyphs (string l, string r, double k) {
-		string left = GlyphRange.serialize (l);
-		string right = GlyphRange.serialize (r);
+	public void set_kerning_for_single_glyphs (string le, string ri, double k) {
+		string left = GlyphRange.serialize (le);
+		string right = GlyphRange.serialize (ri);
 		string cleft = (!)GlyphRange.unserialize (left).get_char ().to_string ();
 		string cright = (!)GlyphRange.unserialize (right).get_char ().to_string ();
 		
@@ -68,16 +96,22 @@ public class KerningClasses : GLib.Object {
 			warning ("Map is protected.");
 			return;
 		}
-		
-		if (!single_kerning_letters_left.contains (cleft)) {
-			single_kerning_letters_left.add (cleft);
-		}
 
-		if (!single_kerning_letters_right.contains (cright)) {
-			single_kerning_letters_right.add (cright);
+		foreach (string l in get_spacing_class (cleft)) {
+			foreach (string r in get_spacing_class (cright)) {
+				if (!single_kerning_letters_left.contains (cleft)) {
+					single_kerning_letters_left.add (cleft);
+				}
+
+				if (!single_kerning_letters_right.contains (cright)) {
+					single_kerning_letters_right.add (cright);
+				}
+
+				left = GlyphRange.serialize (l);
+				right = GlyphRange.serialize (r);
+				single_kerning.set (@"$left - $right", k);
+			}
 		}
-			
-		single_kerning.set (@"$left - $right", k);
 	} 
 
 	public void set_kerning (GlyphRange left_range, GlyphRange right_range, double k, int class_index = -1) {
@@ -118,14 +152,20 @@ public class KerningClasses : GLib.Object {
 	}
 
 	public bool has_kerning (string first, string next) {
-		string f = GlyphRange.serialize (first);
-		string n = GlyphRange.serialize (next);		
+		string f = "";
+		string n = "";		
 		GlyphRange gf, gn;
 
-		if (single_kerning.has_key (@"$f - $n")) {
-			return true;
+		foreach (string l in get_spacing_class (first)) {
+			foreach (string r in get_spacing_class (next)) {
+				f = GlyphRange.serialize (l);
+				n = GlyphRange.serialize (r);	
+				if (single_kerning.has_key (@"$f - $n")) {
+					return true;
+				}
+			}
 		}
-
+			
 		gf = new GlyphRange ();
 		gn = new GlyphRange ();
 		
@@ -171,7 +211,7 @@ public class KerningClasses : GLib.Object {
 		GlyphRange l;
 		int len = (int) classes_first.size;
 		
-		len = (int)classes_first.size;
+		len = (int) classes_first.size;
 		return_val_if_fail (len == classes_last.size, 0);
 		return_val_if_fail (len == classes_kerning.size, 0);
 
@@ -236,18 +276,22 @@ public class KerningClasses : GLib.Object {
 			return -1;
 		}
 		
-		for (int i = len - 1; i >= 0; i--) {
-			l = classes_first.get (i);
-			r = classes_last.get (i);
-			
-			if (l.get_all_ranges () == left_range.get_all_ranges ()
-				&& r.has_character (right_char)) {
-				return classes_kerning.get (i).val;
+		foreach (string right in get_spacing_class (right_char)) {
+			for (int i = len - 1; i >= 0; i--) {
+				l = classes_first.get (i);
+				r = classes_last.get (i);
+				
+				if (l.get_all_ranges () == left_range.get_all_ranges ()
+					&& r.has_character (right)) {
+					return classes_kerning.get (i).val;
+				}
 			}
 		}
 		
 		return 0;
 	}
+
+
 
 	public double get_kern_for_char_to_range (string left_char, GlyphRange right_range) {
 		GlyphRange r;
@@ -263,13 +307,15 @@ public class KerningClasses : GLib.Object {
 			return 0;
 		}
 		
-		for (int i = len - 1; i >= 0; i--) {
-			l = classes_first.get (i);
-			r = classes_last.get (i);
-			
-			if (l.has_character (left_char)
-				&& r.get_all_ranges () == right_range.get_all_ranges ()) {
-				return classes_kerning.get (i).val;
+		foreach (string left in get_spacing_class (left_char)) {
+			for (int i = len - 1; i >= 0; i--) {
+				l = classes_first.get (i);
+				r = classes_last.get (i);
+				
+				if (l.has_character (left)
+					&& r.get_all_ranges () == right_range.get_all_ranges ()) {
+					return classes_kerning.get (i).val;
+				}
 			}
 		}
 		
@@ -333,6 +379,7 @@ public class KerningClasses : GLib.Object {
 				kerningIterator (chars[0], chars[1], k);
 			}
 		}
+		
 		set_protect_map (false);
 	}
 	
@@ -457,8 +504,20 @@ public class KerningClasses : GLib.Object {
 		classes_last.remove_at (index);
 		classes_kerning.remove_at (index);
 	}
-
+	
+	private Gee.ArrayList<string> get_spacing_class (string c) {
+		return MainWindow.get_spacing_class_tab ().get_all_connections (c);
+	}
+	
 	public void delete_kerning_for_pair (string left, string right) {
+		foreach (string l in get_spacing_class (left)) {
+			foreach (string r in get_spacing_class (right)) {
+				delete_kerning_for_one_pair (l, r);
+			}
+		}
+	}
+
+	private void delete_kerning_for_one_pair (string left, string right) {
 		bool has_left, has_right;
 		string[] p;
 		

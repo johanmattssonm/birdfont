@@ -145,6 +145,9 @@ public abstract class FontDisplay : GLib.Object {
 	public virtual void undo () {
 	}
 
+	public virtual void redo () {
+	}
+	
 	public static File find_file (string? dir, string name) {
 		return SearchPaths.find_file (dir, name);	
 	}

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -21,6 +21,10 @@ public class OverView : FontDisplay {
 	public WidgetAllocation allocation = new WidgetAllocation ();
 	
 	OverViewItem selected_item = new OverViewItem (null, '\0', 0, 0);
+
+	public Gee.ArrayList<GlyphCollection> copied_glyphs = new Gee.ArrayList<GlyphCollection> ();
+	public Gee.ArrayList<GlyphCollection> selected_items = new Gee.ArrayList<GlyphCollection> ();	
+	
 	int selected = 0;
 	int first_visible = 0;
 	int rows = 0;
@@ -37,8 +41,9 @@ public class OverView : FontDisplay {
 	
 	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
 	
-	/** List for undo commands. */
-	Gee.ArrayList<GlyphCollection> deleted_glyphs = new Gee.ArrayList<GlyphCollection> ();
+	/** List of undo commands. */
+	Gee.ArrayList<OverViewUndoItem> undo_items = new Gee.ArrayList<OverViewUndoItem> ();
+	Gee.ArrayList<OverViewUndoItem> redo_items = new Gee.ArrayList<OverViewUndoItem> ();
 	
 	/** Show all characters that has been drawn. */
 	bool all_available = true;
@@ -76,9 +81,7 @@ public class OverView : FontDisplay {
 		this.open_new_glyph_signal.connect ((character) => {
 			StringBuilder name = new StringBuilder ();
 			TabBar tabs = MainWindow.get_tab_bar ();
-			Font font = BirdFont.get_current_font ();
 			bool selected;
-			GlyphCollection? fg;
 			Glyph glyph;
 			GlyphCollection glyph_collection;
 			GlyphCanvas canvas;
@@ -87,23 +90,12 @@ public class OverView : FontDisplay {
 			selected = tabs.select_char (name.str);
 					
 			if (!selected) {
-				if (all_available) {
-					fg = font.get_glyph_collection_by_name (name.str);
-				} else {
-					fg = font.get_glyph_collection (name.str);
-				}
-
-				if (fg != null) {
-					glyph_collection = (!) fg;
-					glyph = glyph_collection.get_current ();
-				} else {
-					glyph_collection = new GlyphCollection (character, name.str);
-					glyph = new Glyph (name.str, character);
-					glyph_collection.insert_glyph (glyph, true);
-					font.add_glyph_collection (glyph_collection);
-				}
+				glyph_collection = add_character_to_font (character);
 				
+				glyph = glyph_collection.get_current ();
 				tabs.add_tab (glyph);
+				
+				selected_items.add (glyph_collection);
 				
 				canvas = MainWindow.get_glyph_canvas ();
 				canvas.set_current_glyph (glyph_collection.get_current ());
@@ -113,6 +105,41 @@ public class OverView : FontDisplay {
 		});
 		
 		update_scrollbar ();
+	}
+	
+	public GlyphCollection add_empty_character_to_font (unichar character) {
+		return add_character_to_font (character, true);
+	}
+	
+	public GlyphCollection add_character_to_font (unichar character, bool empty = false) {
+		StringBuilder name = new StringBuilder ();
+		Font font = BirdFont.get_current_font ();
+		GlyphCollection? fg;
+		Glyph glyph;
+		GlyphCollection glyph_collection;
+
+		name.append_unichar (character);
+
+		if (all_available) {
+			fg = font.get_glyph_collection_by_name (name.str);
+		} else {
+			fg = font.get_glyph_collection (name.str);
+		}
+
+		if (fg != null) {
+			glyph_collection = (!) fg;
+		} else {
+			glyph_collection = new GlyphCollection (character, name.str);
+			
+			if (!empty) {
+				glyph = new Glyph (name.str, character);
+				glyph_collection.insert_glyph (glyph, true);
+			}
+			
+			font.add_glyph_collection (glyph_collection);
+		}
+		
+		return glyph_collection;
 	}
 	
 	public static void search () {
@@ -284,7 +311,7 @@ public class OverView : FontDisplay {
 		return i - 1;
 	}
 		
-	void update_item_list () {
+	void update_item_list (int item_list_length = -1) {
 		string character_string;
 		Font f = BirdFont.get_current_font ();
 		GlyphCollection? glyphs = null;
@@ -298,15 +325,18 @@ public class OverView : FontDisplay {
 		items_per_row = get_items_per_row ();
 		rows = (int) (allocation.height /  OverViewItem.full_height ()) + 2;
 		
-		visible_items.clear ();
+		if (item_list_length == -1) {
+			item_list_length = items_per_row * rows;
+		}
 		
+		visible_items.clear ();
 		visible_items = new Gee.ArrayList<OverViewItem> ();
 		
 		// update item list
 		index = (uint32) first_visible;
 		x = OverViewItem.margin;
 		y = OverViewItem.margin;
-		for (int i = 0; i < items_per_row * rows; i++) {
+		for (int i = 0; i < item_list_length; i++) {
 			if (all_available) {
 				if (! (0 <= index < f.length ())) {
 					break;
@@ -337,6 +367,10 @@ public class OverView : FontDisplay {
 			}
 			
 			item.selected = (i == selected);
+			
+			if (glyphs != null) {
+				item.selected |= selected_items.index_of ((!) glyphs) != -1;
+			}
 			
 			visible_items.add (item);
 			index++;
@@ -647,38 +681,93 @@ public class OverView : FontDisplay {
 	}
 	
 	public void delete_selected_glyph () {
-		GlyphCollection? gc = get_selected_item ().glyphs;
 		Font font = BirdFont.get_current_font ();
-				
-		if (gc != null) {
-			store_undo_state ((!) gc);
-			font.delete_glyph ((!) gc);
+		OverViewUndoItem undo_item = new OverViewUndoItem ();
+		
+		foreach (GlyphCollection g in selected_items) {
+			undo_item.glyphs.add (g.copy ());
+		}
+		store_undo_items (undo_item);
+
+		foreach (GlyphCollection gc in selected_items) {
+			font.delete_glyph (gc);
 		}
 	}
 	
 	public override void undo () {
 		Font font = BirdFont.get_current_font ();
-		GlyphCollection previous_collection;
+		OverViewUndoItem previous_collection;
 		
-		if (deleted_glyphs.size == 0) {
+		if (undo_items.size == 0) {
 			return;
 		}
 		
-		previous_collection = deleted_glyphs.get (deleted_glyphs.size - 1);
+		previous_collection = undo_items.get (undo_items.size - 1);
+		redo_items.add (get_current_state (previous_collection));
 		
 		// remove the old glyph and add the new one
-		font.delete_glyph (previous_collection);
-		font.add_glyph_collection (previous_collection);
+		foreach (GlyphCollection g in previous_collection.glyphs) {
+			font.delete_glyph (g);
+			
+			if (g.length () > 0) {
+				font.add_glyph_collection (g);
+			}
+		}
 		
-		deleted_glyphs.remove_at (deleted_glyphs.size - 1);
-		
+		undo_items.remove_at (undo_items.size - 1);
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
+	public override void redo () {
+		Font font = BirdFont.get_current_font ();
+		OverViewUndoItem previous_collection;
+
+		if (redo_items.size == 0) {
+			return;
+		}
+		
+		previous_collection = redo_items.get (redo_items.size - 1);
+		undo_items.add (get_current_state (previous_collection));
+
+		// remove the old glyph and add the new one
+		foreach (GlyphCollection g in previous_collection.glyphs) {
+			font.delete_glyph (g);
+			font.add_glyph_collection (g);
+		}
+		
+		redo_items.remove_at (redo_items.size - 1);
+		redraw_area (0, 0, allocation.width, allocation.height);
+	}	
+	
+	public OverViewUndoItem get_current_state (OverViewUndoItem previous_collection) {
+		GlyphCollection? gc;
+		OverViewUndoItem ui = new OverViewUndoItem ();
+		Font font = BirdFont.get_current_font ();
+		
+		foreach (GlyphCollection g in previous_collection.glyphs) {
+			gc = font.get_glyph_collection (g.get_name ());
+			
+			if (gc != null) {
+				ui.glyphs.add (((!) gc).copy ());
+			} else {
+				ui.glyphs.add (new GlyphCollection (g.get_unicode_character (), g.get_name ()));
+			}
+		}
+		
+		return ui;		
+	}
+	
 	public void store_undo_state (GlyphCollection gc) {
-		deleted_glyphs.add (gc);
+		OverViewUndoItem i = new OverViewUndoItem ();
+		i.glyphs.add (gc);
+		store_undo_items (i);
 	}
 
+	public void store_undo_items (OverViewUndoItem i) {
+		undo_items.add (i);
+		redo_items.clear ();
+	}
+	
 	bool select_visible_character (unichar c) {
 		int i = 0;
 		
@@ -787,8 +876,31 @@ public class OverView : FontDisplay {
 		character_info = i;
 	}
 
+	public int get_selected_index () {
+		GlyphCollection gc;
+		int index = 0;
+		
+		if (selected_items.size == 0) {
+			return 0;
+		}
+		
+		gc = selected_items.get (0);
+		
+		foreach (OverViewItem i in visible_items) {
+			
+			if (i.glyphs != null && gc == ((!) i.glyphs)) {
+				break;
+			}
+			
+			index++;
+		}
+		
+		return index;
+	}
+
 	public override void button_press (uint button, double x, double y) {
 		int index = 0;
+		int selected_index = -1;
 		
 		if (character_info != null) {
 			character_info = null;
@@ -800,11 +912,31 @@ public class OverView : FontDisplay {
 			if (i.click (button, x, y)) {
 				selected = index;
 				selected_item = get_selected_item ();
+				
+				if (KeyBindings.has_shift ()) {
+					if (selected_item.glyphs != null) {
+						
+						selected_index = selected_items.index_of ((!) selected_item.glyphs);
+						if (selected_index == -1) {
+							selected_items.add ((!) selected_item.glyphs);
+						} else {
+							return_if_fail (0 <= selected_index < selected_items.size);
+							selected_items.remove_at (selected_index);
+							selected = get_selected_index ();
+							selected_item = get_selected_item ();
+						}
+					}
+				} else {
+					selected_items.clear ();
+					if (selected_item.glyphs != null) {
+						selected_items.add ((!) selected_item.glyphs);
+					}
+				}
 			}
-			
 			index++;
 		}
 	
+		update_item_list ();
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 
@@ -974,6 +1106,90 @@ public class OverView : FontDisplay {
 		cr.move_to (x + 10, y + 28 + row * 18 * 1.2);
 		cr.show_text (line);
 		cr.restore ();		
+	}
+	
+	public void paste () {
+		GlyphCollection gc = new GlyphCollection ('\0', "");
+		GlyphCollection? c;
+		Glyph glyph;
+		uint32 index;
+		int i;
+		int skip = 0;
+		int s;
+		string character_string;
+		Gee.ArrayList<GlyphCollection> glyps = new Gee.ArrayList<GlyphCollection> ();
+		Font f = BirdFont.get_current_font ();
+		OverViewUndoItem undo_item;
+		
+		copied_glyphs.sort ((a, b) => {
+			return (int) ((GlyphCollection) a).get_unicode_character () 
+				- (int) ((GlyphCollection) b).get_unicode_character ();
+		});
+		
+		// FIXME: copy and paste to unicode character + 1 
+		
+		index = (uint32) first_visible + selected;
+		for (i = 0; i < copied_glyphs.size; i++) {
+			if (all_available) {
+				if (f.length () == 0) {
+					c = add_empty_character_to_font (
+						glyps.get (i).get_unicode_character ());					
+				} else if (index >= f.length ()) {
+					c = add_empty_character_to_font (
+						((!)f.get_glyph_collection_indice (f.length () - 1)).get_unicode_character () + i);
+				} else {
+					c = f.get_glyph_collection_indice ((uint32) index);
+				}
+				
+				if (c == null) {
+					c = add_empty_character_to_font (copied_glyphs.get (i).get_unicode_character ());
+				}
+				
+				return_if_fail (c != null);
+				gc = (!) c; 
+			} else {				
+				if (i != 0) {
+					s = (int) copied_glyphs.get (i).get_unicode_character ();
+					s -= (int) copied_glyphs.get (i - 1).get_unicode_character ();
+					s -= 1;
+					skip += s;
+				}
+				
+				character_string = glyph_range.get_char ((uint32) (index + skip));
+				c = f.get_glyph_collection_by_name (character_string);
+				
+				if (c == null) {
+					gc = add_empty_character_to_font (character_string.get_char ());
+				} else {
+					gc = (!) c;
+				}
+			}
+			
+			glyps.add (gc);
+			index++;
+		}
+
+		undo_item = new OverViewUndoItem ();
+		foreach (GlyphCollection g in glyps) {
+			undo_item.glyphs.add (g.copy ());
+		}
+		store_undo_items (undo_item);
+		
+		i = 0;
+		foreach (GlyphCollection g in glyps) {
+			glyph = copied_glyphs.get (i).get_current ().copy ();
+			glyph.version_id = (glyph.version_id == -1 || g.length () == 0) ? 1 : g.get_last_id () + 1;
+			glyph.unichar_code =  g.get_unicode_character ();
+			glyph.name = (!) glyph.unichar_code.to_string ();
+			g.insert_glyph (glyph, true);
+			i++;
+		}
+		
+		f.touch ();
+	}
+	
+	public class OverViewUndoItem {
+		public Gee.ArrayList<GlyphCollection> glyphs = new Gee.ArrayList<GlyphCollection> ();
 	}
 }
 

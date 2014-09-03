@@ -191,6 +191,12 @@ public class BirdFontPart : GLib.Object{
 			bf.write_closing_root_tag (os);
 			os.close ();
 
+			os = create_file ("spacing.bfp");
+			bf.write_root_tag (os);
+			bf.write_spacing_classes (os);
+			bf.write_closing_root_tag (os);
+			os.close ();
+
 			font.glyph_cache.for_each ((gc) => {
 				try {
 					string selected_file_name;

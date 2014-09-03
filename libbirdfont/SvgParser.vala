@@ -17,6 +17,7 @@ using Math;
 namespace BirdFont {
 
 public enum SvgFormat {
+	NONE,
 	INKSCAPE,
 	ILLUSTRATOR
 }
@@ -48,7 +49,7 @@ public class SvgParser {
 		MainWindow.file_chooser (t_("Import"), fc, FileChooser.LOAD);
 	}
 	
-	public static void import_svg_data (string xml_data) {
+	public static void import_svg_data (string xml_data, SvgFormat format = SvgFormat.NONE) {
 		PathList path_list = new PathList ();
 		Glyph glyph; 
 		Xml.Node* root = null;
@@ -58,7 +59,7 @@ public class SvgParser {
 		StringBuilder sb = new StringBuilder ();
 		SvgParser parser = new SvgParser ();
 		TextReader tr;
-
+		
 		foreach (string l in lines) {
 			if (l.index_of ("Illustrator") > -1 || l.index_of ("illustrator") > -1) {
 				parser.set_format (SvgFormat.ILLUSTRATOR);
@@ -78,6 +79,10 @@ public class SvgParser {
 				sb.append (l);
 				sb.append ("\n");
 			}
+		}
+		
+		if (format != SvgFormat.NONE) {
+			parser.set_format (format);
 		}
 		
 		xml_document = sb.str;

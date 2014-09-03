@@ -28,6 +28,7 @@ public class MainWindow : GLib.Object {
 	public static KerningDisplay kerning_display;
 	public static CharDatabase character_database;
 	public static LigatureList ligature_display;
+	public static SpacingClassTab spacing_class_tab;
 	
 	/** Number of pixels per mm */
 	public static double units = 1;
@@ -45,6 +46,7 @@ public class MainWindow : GLib.Object {
 		kerning_display = new KerningDisplay ();
 		character_database = new CharDatabase ();
 		ligature_display = new LigatureList ();
+		spacing_class_tab = new SpacingClassTab ();
 	}
 
 	/** Set the number of picels per millimeter for the current screen. */
@@ -143,6 +145,10 @@ public class MainWindow : GLib.Object {
 		tabs.add_unique_tab (over_view);
 				
 		return over_view;
+	}
+	
+	public static SpacingClassTab get_spacing_class_tab () {
+		return spacing_class_tab;
 	}
 	
 	public static void update_glyph_sequence () {
