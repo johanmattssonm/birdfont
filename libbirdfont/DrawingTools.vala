@@ -1324,14 +1324,18 @@ public class DrawingTools : ToolCollection  {
 			circle.set_selected (false);
 		
 			current_tool.set_selected (true);
-			
+		
 			if (resize_tool.is_selected () || move_tool.is_selected ()) {
 				show_object_tool_modifiers ();
 			} else if (pen_tool.is_selected () 
 					|| point_tool.is_selected ()
 					|| track_tool.is_selected ()) {
 				show_point_tool_modifiers ();
-			} else if (move_background.is_selected ()) {
+			} else if (move_background.is_selected ()
+					|| cut_background.is_selected ()
+					|| show_bg.is_selected ()
+					|| high_contrast_background.is_selected ()
+					|| auto_trace.is_selected ()) {
 				show_background_tool_modifiers ();
 			}
 			
