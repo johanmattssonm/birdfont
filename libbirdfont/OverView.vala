@@ -703,7 +703,6 @@ public class OverView : FontDisplay {
 		}
 		
 		previous_collection = undo_items.get (undo_items.size - 1);
-
 		redo_items.add (get_current_state (previous_collection));
 		
 		// remove the old glyph and add the new one
@@ -716,7 +715,6 @@ public class OverView : FontDisplay {
 		}
 		
 		undo_items.remove_at (undo_items.size - 1);
-		
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
@@ -729,7 +727,6 @@ public class OverView : FontDisplay {
 		}
 		
 		previous_collection = redo_items.get (redo_items.size - 1);
-	
 		undo_items.add (get_current_state (previous_collection));
 
 		// remove the old glyph and add the new one
@@ -739,7 +736,6 @@ public class OverView : FontDisplay {
 		}
 		
 		redo_items.remove_at (redo_items.size - 1);
-		
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}	
 	

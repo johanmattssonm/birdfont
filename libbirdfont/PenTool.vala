@@ -73,6 +73,7 @@ public class PenTool : Tool {
 	static Gee.ArrayList<Path> counter_clockwise;
 	
 	public static double path_stroke_width = 0;
+	public static double simplification_threshold = 0.5;
 			
 	public PenTool (string name) {	
 		base (name, t_("Add new points"));
@@ -406,7 +407,17 @@ public class PenTool : Tool {
 		
 		prev.get_right_handle ().convert_to_curve ();
 		next.get_left_handle ().convert_to_curve ();
-		
+
+		if (prev.get_right_handle ().type == PointType.QUADRATIC
+				&& next.get_left_handle ().type != PointType.QUADRATIC) {
+			convert_point_type (prev, next.get_left_handle ().type);
+		}
+
+		if (prev.get_right_handle ().type != PointType.QUADRATIC
+				&& next.get_left_handle ().type == PointType.QUADRATIC) {
+			convert_point_type (next, prev.get_right_handle ().type);
+		}
+				
 		ep1 = prev.copy ();
 		ep2 = next.copy ();
 
@@ -2030,6 +2041,10 @@ public class PenTool : Tool {
 		new_path.update_region_boundaries ();
 		
 		return new_path;
+	}
+	
+	public void set_simplification_threshold (double t) {
+		simplification_threshold = t;
 	}
 }
 

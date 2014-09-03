@@ -1073,13 +1073,29 @@ public class DrawingTools : ToolCollection  {
 			freehand_samples.set_value_round (1);
 		}
 
-		if (Preferences.get ("stroke_width") != "") {
-			freehand_samples.set_value (Preferences.get ("stroke_width"));
+		if (Preferences.get ("freehand_samples") != "") {
+			freehand_samples.set_value (Preferences.get ("freehand_samples"));
 			track_tool.set_samples_per_point (freehand_samples.get_value ());
 		}
 
 		freehand_samples.new_value_action.connect ((self) => {
 			track_tool.set_samples_per_point (freehand_samples.get_value ());
+		});
+
+		SpinButton simplification_threshold = new SpinButton ("simplification_threshold", t_("Simplification threshold"));
+		simplification_threshold.set_value_round (0.5);
+		style_tools.add_tool (simplification_threshold);
+		
+		simplification_threshold.set_max (5);
+		freehand_samples.set_min (0.002);
+
+		if (Preferences.get ("simplification_threshold") != "") {
+			freehand_samples.set_value (Preferences.get ("simplification_threshold"));
+			pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
+		}
+
+		freehand_samples.new_value_action.connect ((self) => {
+			pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
 		});
 
 		// selection policy	

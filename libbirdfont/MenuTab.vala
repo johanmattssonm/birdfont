@@ -418,7 +418,7 @@ public class MenuTab : FontDisplay {
 		
 		// selected objects
 		foreach (Path p in g.active_paths) {
-			paths.add (PenTool.simplify (p, false));
+			paths.add (PenTool.simplify (p, false, PenTool.simplification_threshold));
 		}
 		
 		// selected segments
@@ -428,7 +428,7 @@ public class MenuTab : FontDisplay {
 			}
 			
 			foreach (Path p in g.active_paths) {
-				paths.add (PenTool.simplify (p, true));
+				paths.add (PenTool.simplify (p, true, PenTool.simplification_threshold));
 			}
 		}
 		
