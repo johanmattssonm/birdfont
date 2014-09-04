@@ -31,6 +31,9 @@ public class SearchPaths {
 		
 		f = get_file (resources + "/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
+
+		f = get_file (resources + "/", name);
+		if (likely (f.query_exists ())) return f;
 		
 		f = get_file (resources + "/", name + "/");
 		if (likely (f.query_exists ())) return f;
@@ -74,7 +77,7 @@ public class SearchPaths {
 		f = get_file (@"$PREFIX/share/birdfont/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
 				
-		warning (@"Did not find file $name in $d");
+		warning (@"Did not find file $name in $d (resources: $resources)");
 			
 		return f;		
 	}
@@ -87,7 +90,7 @@ public class SearchPaths {
 
 		f = resources + "\\locale\\sv\\LC_MESSAGES\\birdfont.mo";
 		if (exists (f)) {
-			return resources + "\\Contents\\Resources\\locale";
+			return resources + "\\locale";
 		}
 		
 		f = BirdFont.exec_path + "/Contents/Resources/locale/sv/LC_MESSAGES/birdfont.mo";
