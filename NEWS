@@ -11,7 +11,7 @@ birdfont (1.0) stable;
 
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Sep  3 13:36:00 CEST 2014
 
-birdfont (0.46) stable;
+birdfont (0.47) stable;
 
   * Oblique and italic transformation
   * Improved overview tab
