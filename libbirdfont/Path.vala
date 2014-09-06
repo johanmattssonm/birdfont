@@ -2003,27 +2003,16 @@ public class Path {
 	
 	public static bool is_counter (PathList pl, Path p) {
 		foreach (Path o in pl.paths) {
-			if (o == p) {
-				continue;
-			}
-			
-			if (is_counte_to_path (o, p)) {
-				return true;
+			if (o != p) {
+				if (p.points.size > 0) {
+					if (o.is_over_coordinate (p.points.get (0).x, p.points.get (0).y)) {
+						return true;
+					}
+				}
 			}
 		}
 		
 		return false;
-	}
-
-	private static bool is_counte_to_path (Path outside, Path inside) {
-		bool i = true;
-		foreach (EditPoint e in inside.points) {
-			if (!outside.is_over_coordinate_var (e.x, e.y)) {
-				i = false;
-				break;
-			}
-		}
-		return i;
 	}
 	
 	public void remove_points_on_points () {

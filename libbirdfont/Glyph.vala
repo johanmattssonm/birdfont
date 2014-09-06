@@ -1010,6 +1010,7 @@ public class Glyph : FontDisplay {
 		double xt, yt;
 		Path np;
 		EditPoint inserted;
+		PathList pl;
 		
 		if (path_list.size == 0) {
 			np = new Path ();

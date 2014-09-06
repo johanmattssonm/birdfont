@@ -745,8 +745,8 @@ public class PenTool : Tool {
 		clockwise.clear ();
 		counter_clockwise.clear ();
 
-		foreach (Path p in g.active_paths) {
-			if (p.is_open () && !p.has_direction ()) {
+		foreach (Path p in g.path_list) {
+			if (!p.has_direction ()) {
 				if (is_counter_path (p)) {
 					p.force_direction (Direction.COUNTER_CLOCKWISE);
 				} else {
@@ -768,7 +768,7 @@ public class PenTool : Tool {
 		
 		return Path.is_counter (pl, path);
 	}
-	
+
 	public void remove_from_selected (EditPoint ep) 
 		requires (selected_points.size > 0) {
 		
@@ -899,8 +899,6 @@ public class PenTool : Tool {
 		EditPointHandle last_rh, fist_lh;
 		int px, py;
 		
-		print (@"Join.\n");
-		
 		if (glyph.path_list.size == 0) {
 			return;
 		}
@@ -956,7 +954,7 @@ public class PenTool : Tool {
 			path.close ();
 			glyph.close_path ();
 			
-			force_direction ();
+ 			force_direction ();
 
 			if (direction_changed) {
 				path.reverse ();
@@ -1028,7 +1026,7 @@ public class PenTool : Tool {
 				union.reopen ();
 				union.create_list ();
 				
-				force_direction ();
+ 				force_direction ();
 				
 				if (direction_changed) {
 					path.reverse ();
