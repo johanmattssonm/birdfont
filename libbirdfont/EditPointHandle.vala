@@ -261,9 +261,9 @@ public class EditPointHandle : GLib.Object {
 		process_connected_handle ();
 	}
 	
-	public void move_delta (double dx, double dy) {
-		double px = px () + dx * Glyph.ivz ();
-		double py = py () - dy * Glyph.ivz ();
+	public void move_delta_coordinate (double dx, double dy) {
+		double px = px () + dx;
+		double py = py () + dy;
 		move_to_coordinate (px, py);
 	}
 	

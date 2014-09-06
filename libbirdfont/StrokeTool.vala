@@ -667,7 +667,7 @@ public class StrokeTool : Tool {
 				&& (ep.x < cross_x < next.x || ep.x > cross_x > next.x)
 				&& (ep.y < cross_y < next.y || ep.y > cross_y > next.y)) {
 					
-					// iterate to find cross.
+					// iterate to find intersection.
 					
 					ix = cross_x;
 					iy = cross_y;

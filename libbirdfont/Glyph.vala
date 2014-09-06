@@ -1042,16 +1042,6 @@ public class Glyph : FontDisplay {
 		return new PointSelection (inserted, np);
 	}
 	
-	public void move_selected_edit_point_delta (EditPoint selected_point, double dx, double dy) {
-		double px = selected_point.x + xc () - view_offset_x;
-		double py = -1 * (selected_point.y - yc () + view_offset_y);
-		
-		px *= view_zoom;
-		py *= view_zoom;
-		
-		move_selected_edit_point (selected_point, dx + px, dy + py);
-	}
-	
 	public void move_selected_edit_point_coordinates (EditPoint selected_point, double xt, double yt) {	
 		double x, y;
 				
