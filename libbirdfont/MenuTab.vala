@@ -183,14 +183,7 @@ public class MenuTab : FontDisplay {
 		dialog.signal_discard.connect (() => {
 			MainWindow.close_all_tabs ();
 			
-			BirdFont.new_font ();
-			
-			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
-			MainWindow.get_drawing_tools ().add_new_grid ();
-			MainWindow.get_drawing_tools ().add_new_grid ();
-			
-			KerningTools.update_kerning_classes ();
-			
+			BirdFont.new_font ();			
 			MainWindow.native_window.font_loaded ();
 			
 			select_overview ();

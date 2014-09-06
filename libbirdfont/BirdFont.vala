@@ -507,6 +507,13 @@ public class BirdFont {
 	
 	internal static Font new_font () {
 		current_font = new Font ();
+		
+		MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
+		MainWindow.get_drawing_tools ().add_new_grid ();
+		MainWindow.get_drawing_tools ().add_new_grid ();			
+		SpacingClassTab.remove_all_spaving_classes ();
+		KerningTools.update_kerning_classes ();
+		
 		return current_font;
 	}
 
