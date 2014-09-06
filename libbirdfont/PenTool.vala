@@ -126,12 +126,6 @@ public class PenTool : Tool {
 			move_action (this, x, y);
 
 			press (b, x, y, false);
-						
-			if (GridTool.is_visible ()) {
-				tie_pixels (ref x, ref y);
-			} else if (GridTool.has_ttf_grid ()) {
-				GridTool.ttf_grid (ref x, ref y);
-			}
 
 			if (BirdFont.android) {
 				point_selection_image = true;

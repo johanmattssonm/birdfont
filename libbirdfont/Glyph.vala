@@ -629,7 +629,16 @@ public class Glyph : FontDisplay {
 
 	public override void key_press (uint keyval) {	
 		Tool t = MainWindow.get_toolbox ().get_current_tool ();
-		t.key_press_action (t, keyval);	
+		t.key_press_action (t, keyval);
+		
+		switch (keyval) {
+			case Key.NUM_PLUS:
+				zoom_in ();
+				break;
+			case Key.NUM_MINUS:
+				zoom_out ();
+				break;
+		}
 	}
 
 	/** Delete edit point from path.

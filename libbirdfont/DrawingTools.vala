@@ -872,7 +872,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		view_tools.add_tool (full_glyph);
 
-		Tool zoom_boundaries = new Tool ("zoom_boundaries", t_("Zoom in on region boundaries"), 'v');
+		Tool zoom_boundaries = new Tool ("zoom_boundaries", t_("Fit in view"), 'v');
 		zoom_boundaries.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_max ();

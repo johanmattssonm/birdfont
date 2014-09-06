@@ -40,7 +40,9 @@ public enum Key {
 	LOGO_RIGHT = 65516,
 	CONTEXT_MENU = 65383,
 	TAB = 65289,
-	DEL = 65535
+	DEL = 65535,
+	NUM_PLUS = 65451,
+	NUM_MINUS = 65453
 }
 
 bool is_arrow_key (uint keyval) {
