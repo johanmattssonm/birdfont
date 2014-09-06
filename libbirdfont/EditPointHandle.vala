@@ -235,16 +235,16 @@ public class EditPointHandle : GLib.Object {
 			if (!is_left_handle ()) {
 				if (parent.next != null) {
 					h = parent.get_next ().get_left_handle ();
+					h.parent.set_tie_handle (false);
 					h.type = PointType.QUADRATIC;
 					h.move_to_coordinate_internal (px (), py ());
-					h.parent.set_tie_handle (false);
 				}
 			} else {
 				if (parent.prev != null) {
 					h = parent.get_prev ().get_right_handle ();
+					h.parent.set_tie_handle (false);
 					h.type = PointType.QUADRATIC;
 					h.move_to_coordinate_internal (px (), py ());
-					h.parent.set_tie_handle (false);
 				}
 			}
 		}

@@ -570,6 +570,7 @@ public class PenTool : Tool {
 
 			if (KeyBindings.modifier == SHIFT) {
 				selected_handle.angle = angle;
+				selected_handle.process_connected_handle ();
 			}
 			
 			handle_selection.path.update_region_boundaries ();
@@ -601,8 +602,10 @@ public class PenTool : Tool {
 				delta_coordinate_y = coordinate_y - last_point_y;
 				
 				foreach (PointSelection selected in selected_points) {
-					selected.point.x += delta_coordinate_x;
-					selected.point.y += delta_coordinate_y;
+					selected.point.set_position (selected.point.x + delta_coordinate_x,
+						selected.point.y + delta_coordinate_y);
+					selected.point.recalculate_linear_handles ();
+					selected.path.update_region_boundaries ();
 				}
 			} else if (GridTool.has_ttf_grid ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
@@ -612,8 +615,10 @@ public class PenTool : Tool {
 				delta_coordinate_y = coordinate_y - last_point_y;
 				
 				foreach (PointSelection selected in selected_points) {
-					selected.point.x += delta_coordinate_x;
-					selected.point.y += delta_coordinate_y;
+					selected.point.set_position (selected.point.x + delta_coordinate_x,
+						selected.point.y + delta_coordinate_y);
+					selected.point.recalculate_linear_handles ();
+					selected.path.update_region_boundaries ();
 				}
 			} else {
 				coordinate_x = Glyph.path_coordinate_x (x);
@@ -622,8 +627,8 @@ public class PenTool : Tool {
 				delta_coordinate_y = coordinate_y - last_point_y;
 
 				foreach (PointSelection selected in selected_points) {
-					selected.point.x += delta_coordinate_x;
-					selected.point.y += delta_coordinate_y;
+					selected.point.set_position (selected.point.x + delta_coordinate_x,
+						selected.point.y + delta_coordinate_y);
 					
 					selected.point.recalculate_linear_handles ();
 					selected.path.update_region_boundaries ();
@@ -1748,11 +1753,11 @@ public class PenTool : Tool {
 			active_handle = new EditPointHandle.empty ();
 			
 			if (keyval == Key.UP) {
-				selected_handle.move_delta_coordinate (0, -1 * Glyph.ivz ());
+				selected_handle.move_delta_coordinate (0, 1 * Glyph.ivz ());
 			}
 			
 			if (keyval == Key.DOWN) {
-				selected_handle.move_delta_coordinate (0, 1 * Glyph.ivz ());
+				selected_handle.move_delta_coordinate (0, -1 * Glyph.ivz ());
 			}
 
 			if (keyval == Key.LEFT) {

@@ -32,6 +32,10 @@ public class SpacingClassTab : FontDisplay {
 	public SpacingClassTab () {
 	}
 
+	public static void remove_all_spaving_classes () {
+		MainWindow.spacing_class_tab.classes.clear ();
+	}
+
 	public Gee.ArrayList<string> get_all_connections (string glyph) {
 		Gee.ArrayList<string> c = new Gee.ArrayList<string> ();
 		
