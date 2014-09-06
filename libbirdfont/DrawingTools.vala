@@ -41,6 +41,7 @@ public class DrawingTools : ToolCollection  {
 	StrokeTool stroke_tool;
 	TrackTool track_tool;
 	BackgroundTool move_background;
+	public static Tool move_canvas;
 	
 	Tool quadratic_points;
 	Tool cubic_points;
@@ -79,7 +80,7 @@ public class DrawingTools : ToolCollection  {
 	public Tool inser_point_on_path_tool;
 	Tool undo_tool;
 	Tool select_all_button;
-					
+				
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
 		
@@ -143,7 +144,13 @@ public class DrawingTools : ToolCollection  {
 			update_drawing_and_background_tools (self);
 		});	
 		draw_tools.add_tool (move_background);
-				
+
+		move_canvas = new Tool ("move_canvas", t_("Move canvas"), 'h');
+		move_canvas.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});	
+		draw_tools.add_tool (move_canvas);
+						
 		// Tools on android
 		// Delete key
 		delete_button = new Tool ("delete_button", t_("Delete"));
@@ -1314,6 +1321,7 @@ public class DrawingTools : ToolCollection  {
 			resize_tool.set_selected (false);
 			stroke_tool.set_selected (false);
 			track_tool.set_selected (false);
+			move_canvas.set_selected (false);
 			
 			show_bg.set_selected (g.get_background_visible ());
 			show_bg.set_active (false);

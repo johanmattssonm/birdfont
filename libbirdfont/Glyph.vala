@@ -685,7 +685,7 @@ public class Glyph : FontDisplay {
 	public override void motion_notify (double x, double y) {
 		Tool t = MainWindow.get_toolbox ().get_current_tool ();
 		
-		if (view_is_moving && KeyBindings.has_ctrl ()) {
+		if (view_is_moving) {
 			move_view_offset  (x, y);
 			return;
 		}
@@ -770,7 +770,7 @@ public class Glyph : FontDisplay {
 			return;
 		}
 			
-		if (KeyBindings.has_ctrl ()) {
+		if (KeyBindings.has_ctrl () || DrawingTools.move_canvas.is_selected ()) {
 			view_is_moving = true;
 			move_offset_x = view_offset_x;
 			move_offset_y = view_offset_y;
