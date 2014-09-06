@@ -896,19 +896,24 @@ public class PenTool : Tool {
 		bool direction_changed = false;
 		Path union, second_path;
 		EditPoint last_point, first_point;
-		EditPointHandle last_rh, fist_rh;
+		EditPointHandle last_rh, fist_lh;
+		int px, py;
 		
-		if (glyph.path_list.size < 1) {
+		print (@"Join.\n");
+		
+		if (glyph.path_list.size == 0) {
 			return;
 		}
 
 		p = find_path_to_join ();
 		if (p == null) {
+			warning ("No path to join.");
 			return;
 		}
 		path = (!) p;
 		
 		if (!path.is_open ()) {
+			warning ("Path is closed.");
 			return;
 		}
 		
@@ -921,11 +926,16 @@ public class PenTool : Tool {
 			active_path = path;
 		}
 		
+		if (path.points.get (0) == active_edit_point) {
+			warning ("Wrong direction.");
+			return;
+		}
+		
 		// join path with it self
-		if (path.points.get (0) != active_edit_point
-			&& is_endpoint ((!) active_edit_point)
-			&& is_close_to_point (path.points.get (0), x, y)) {
-				
+		px = Glyph.reverse_path_coordinate_x (((!) active_edit_point).x);
+		py = Glyph.reverse_path_coordinate_y (((!) active_edit_point).y);
+		if (is_endpoint ((!) active_edit_point)
+			&& is_close_to_point (path.points.get (0), px, py)) {
 			// TODO: set point type
 			path.points.get (0).left_handle.move_to_coordinate (
 				path.points.get (path.points.size - 1).left_handle.x,
@@ -973,7 +983,7 @@ public class PenTool : Tool {
 				continue;
 			}
 			
-			if (is_close_to_point (merge.points.get (merge.points.size - 1), x, y)) {
+			if (is_close_to_point (merge.points.get (merge.points.size - 1), px, py)) {
 				merge.reverse ();
 				update_selection ();
 				direction_changed = !direction_changed;
@@ -981,7 +991,7 @@ public class PenTool : Tool {
 
 			return_if_fail (merge.points.size > 0);
 
-			if (is_close_to_point (merge.points.get (0), x, y)) {
+			if (is_close_to_point (merge.points.get (0), px, py)) {
 				merge.points.get (0).set_tie_handle (false);
 				merge.points.get (0).set_reflective_handles (false);
 				
@@ -996,12 +1006,17 @@ public class PenTool : Tool {
 				
 				second_path = merge.copy ();
 				
-				last_point = union.delete_last_point ();
 				first_point = second_path.get_first_point ();
 				
-				last_rh = last_point.get_right_handle ();
-				fist_rh = first_point.get_right_handle ();
-				last_rh.move_to_coordinate_internal (last_rh. x, last_rh.y);
+				if (union.get_last_point ().get_left_handle ().is_curve ()) {
+					first_point.get_left_handle ().convert_to_curve ();
+				} else {
+					first_point.get_left_handle ().convert_to_line ();
+				}
+				
+				first_point.get_left_handle ().move_to_coordinate_internal (union.get_last_point ().get_left_handle ().x, union.get_last_point ().get_left_handle ().y);
+
+				union.delete_last_point ();
 				
 				union.append_path (second_path);
 				glyph.add_path (union);

@@ -1777,9 +1777,6 @@ public class Path {
 			return;
 		}
 
-		path.points.get (0).recalculate_linear_handles ();
-		points.get (points.size - 1).recalculate_linear_handles ();
-		
 		// copy remaining points
 		foreach (EditPoint p in path.points) {
 			add_point (p.copy ());

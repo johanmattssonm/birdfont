@@ -107,6 +107,19 @@ public class EditPointHandle : GLib.Object {
 		}
 	}
 
+	public bool is_curve () {
+		switch (type) {
+			case PointType.LINE_QUADRATIC:
+				return false;
+			case PointType.LINE_DOUBLE_CURVE:
+				return false;
+			case PointType.LINE_CUBIC:
+				return false;
+		}
+		
+		return true;
+	}
+
 	public void convert_to_curve () {
 		switch (type) {
 			case PointType.LINE_QUADRATIC:
