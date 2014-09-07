@@ -519,7 +519,7 @@ public class BirdFont {
 		return current_font;
 	}
 
-	public void set_settings_directory (string directory) {
+	public static void set_settings_directory (string directory) {
 		settings_directory = directory;
 	}
 	
