@@ -1,3 +1,10 @@
+birdfont (1.1) stable;
+
+  * Bug fixes
+  * A tool for moving the canvas
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Sep  7 09:44:48 CEST 2014
+
 birdfont (1.0) stable;
 
   * Autotrace – convert raster images to vector fonts
