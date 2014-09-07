@@ -238,7 +238,7 @@ public class Path {
 		if (is_editable ()) {
 			// control points for curvature
 			foreach (EditPoint e in points) {
-				if (show_all_line_handles || e.selected || e.selected_handle > 0) {
+				if (show_all_line_handles || e.selected_point || e.selected_handle > 0) {
 					draw_edit_point_handles (e, cr);
 				}
 			}
@@ -472,15 +472,15 @@ public class Path {
 		if (e.type != PointType.HIDDEN) {
 			if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
 				if (e.is_selected ()) {
-					img = (e.active) ? (!) cubic_active_selected_edit_point_image : (!) cubic_selected_edit_point_image;
+					img = (e.active_point) ? (!) cubic_active_selected_edit_point_image : (!) cubic_selected_edit_point_image;
 				} else {
-					img = (e.active) ? (!) cubic_active_edit_point_image : (!) cubic_edit_point_image;
+					img = (e.active_point) ? (!) cubic_active_edit_point_image : (!) cubic_edit_point_image;
 				}
 			} else {
 				if (e.is_selected ()) {
-					img = (e.active) ? (!) active_selected_edit_point_image : (!) selected_edit_point_image;
+					img = (e.active_point) ? (!) active_selected_edit_point_image : (!) selected_edit_point_image;
 				} else {
-					img = (e.active) ? (!) active_edit_point_image : (!) edit_point_image;
+					img = (e.active_point) ? (!) active_edit_point_image : (!) edit_point_image;
 				}
 			}
 			draw_image (cr, img, e.x, e.y);
@@ -1096,11 +1096,13 @@ public class Path {
 		return converter.get_quadratic_path ();
 	}
 
-	public void insert_new_point_on_path (EditPoint ep, double t = -1) {
+	public void insert_new_point_on_path (EditPoint ep, double t = -1, bool move_point_to_path = false) {
 		EditPoint start, stop;
 		double x0, x1, y0, y1;
 		double position, min;
 		PointType left, right;
+		double closest_x = 0;
+		double closest_y = 0;
 		
 		if (ep.next == null || ep.prev == null) {
 			warning ("missing point");
@@ -1131,10 +1133,17 @@ public class Path {
 				if (n < min) {
 					min = n;
 					position = t;
+					closest_x = cx;
+					closest_y = cy;
 				}
 				
 				return true;
 			});
+			
+			if (move_point_to_path) {
+				ep.x = closest_x;
+				ep.y = closest_y;
+			}
 		} else {
 			position = t;
 		}

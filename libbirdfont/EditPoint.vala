@@ -38,17 +38,90 @@ public class EditPoint : GLib.Object {
 	public unowned EditPoint? prev = null;
 	public unowned EditPoint? next = null;
 
-	public bool active = false;
-	public bool selected = false;
-	public bool deleted = false;
+	public static uint NONE = 0;
+	public static uint ACTIVE = 1;
+	public static uint SELECTED = 1 << 1;
+	public static uint DELETED = 1 << 2;
+	public static uint TIE = 1 << 3;
+	public static uint REFLECTIVE = 1 << 4;
+	public static uint CORNER = 1 << 5;
 	
+	public uint flags = NONE;
+	
+	public bool active_point {
+		get {
+			return (flags & ACTIVE) > 0;
+		}
+		
+		set {
+			if (value) {
+				flags |= ACTIVE;
+			} else {
+				flags &= uint.MAX ^ ACTIVE;
+			}
+		}	
+	}
+	
+	public bool selected_point {
+		get {
+			return (flags & SELECTED) > 0;
+		}
+		
+		set {
+			if (value) {
+				flags |= SELECTED;
+			} else {
+				flags &= uint.MAX ^ SELECTED;
+			}
+		}	
+	}
+	
+	public bool deleted {
+		get {
+			return (flags & DELETED) > 0;
+		}
+		
+		set {
+			if (value) {
+				flags |= DELETED;
+			} else {
+				flags &= uint.MAX ^ DELETED;
+			}
+		}	
+	}
+
+	public bool tie_handles {
+		get {
+			return (flags & TIE) > 0;
+		}
+		
+		set {
+			if (value) {
+				flags |= TIE;
+			} else {
+				flags &= uint.MAX ^ TIE;
+			}
+		}	
+	}
+
+	public bool reflective_point {
+		get {
+			return (flags & REFLECTIVE) > 0;
+		}
+		
+		set {
+			if (value) {
+				flags |= REFLECTIVE;
+			} else {
+				flags &= uint.MAX ^ REFLECTIVE;
+			}
+		}	
+	}
+			
 	public int selected_handle = 0;
 	
 	public EditPointHandle right_handle;
 	public EditPointHandle left_handle;
-	
-	public bool tie_handles = false;
-	public bool reflective_handles = false;
 
 	/** Set new position for control point without moving handles. */
 	public double independent_x {
@@ -81,12 +154,12 @@ public class EditPoint : GLib.Object {
 		x = nx;
 		y = ny;
 		type = nt;
-		active = false;
+		active_point = false;
 		
 		set_active (true);
 		
 		if (nt == PointType.FLOATING) {
-			active = false;
+			active_point = false;
 		}
 	
 		right_handle = new EditPointHandle (this, 0, 7);
@@ -120,7 +193,7 @@ public class EditPoint : GLib.Object {
 
 	/** Make handles symmetrical. */
 	public void set_reflective_handles (bool symmetrical) {
-		reflective_handles = symmetrical;
+		reflective_point = symmetrical;
 	}
 
 	/** Flip handles if next point on path is in the other direction. 
@@ -340,11 +413,8 @@ public class EditPoint : GLib.Object {
 		new_point.y = y;
 		
 		new_point.type = type;
-		new_point.deleted = deleted;
-		new_point.selected = selected;
-		
-		new_point.tie_handles = tie_handles;
-		
+		new_point.flags = flags;
+
 		new_point.right_handle.angle = right_handle.angle;
 		new_point.right_handle.length = right_handle.length;
 		new_point.right_handle.type = right_handle.type;
@@ -440,18 +510,18 @@ public class EditPoint : GLib.Object {
 	}
 	
 	public bool is_selected () {
-		return selected;
+		return selected_point;
 	}
 	
 	public void set_selected (bool s) {
-		selected = s;
+		selected_point = s;
 	}
 	
 	public bool set_active (bool active) {
-		bool update = (this.active != active);
+		bool update = (this.active_point != active);
 		
 		if (update) {
-			this.active = active;
+			this.active_point = active;
 		}
 		
 		return update;

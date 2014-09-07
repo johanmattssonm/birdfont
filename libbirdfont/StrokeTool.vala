@@ -229,7 +229,9 @@ public class StrokeTool : Tool {
 		bool bad_segment = false;
 		bool failed = false;
 		int size;
-				
+		
+		//FIXME: DELETE. add_self_intersection_points (new_path);
+		
 		new_path.remove_points_on_points ();
 		new_path.update_region_boundaries ();
 
@@ -246,9 +248,13 @@ public class StrokeTool : Tool {
 		start = new_path.get_first_point ();
 		int it = 0;
 
+		foreach (EditPoint e in new_path.points) {
+			e.flags |= EditPoint.CORNER;
+		}
+		
 		// double points are not good for this purpose, convert them to the quadratic form
 		new_path.add_hidden_double_points (); 
-				
+
 		// add tangent points to the path
 		segment_start = new_path.get_first_point ();
 		size = new_path.points.size;
@@ -269,7 +275,7 @@ public class StrokeTool : Tool {
 				segment_stop.prev = split_point;
 				
 				new_path.insert_new_point_on_path (split_point, t);
-				
+
 				return false;
 			}, 2);
 			
@@ -415,6 +421,7 @@ public class StrokeTool : Tool {
 					}
 					return !new_point;
 				}, 3);
+				
 				/*
 				// FIXME: add many points
 				// bad segment
@@ -507,6 +514,7 @@ public class StrokeTool : Tool {
 		}
 		
 		// remove self intersection
+
 		EditPoint snext, nnext;
 		double back_ratio = 0;	
 		double next_ratio = 0;
@@ -515,6 +523,7 @@ public class StrokeTool : Tool {
 		nnext = new EditPoint ();
 		
 		print (@"\n");
+		/*
 		for (int index = 1; index < stroked.points.size; index++) {
 			np = new_path.points.get (index);
 			sp = stroked.points.get (index);
@@ -545,8 +554,9 @@ public class StrokeTool : Tool {
 							snext = stroked.points.get (j + 1);
 						}
 						
-						if (segment_intersects (stroked, sp, snext, out inter_x, out inter_y)
-							&& Path.distance (first_inter_x, inter_x, first_inter_y, inter_y) < 0.1) {
+						if ((nnext.flags & EditPoint.INTERSECTION) > 0
+							|| (segment_intersects (stroked, sp, snext, out inter_x, out inter_y)
+									&& Path.distance (first_inter_x, inter_x, first_inter_y, inter_y) < 0.1)) {
 								print (@"done\n");
 								index = j +1;
 								break;
@@ -558,6 +568,20 @@ public class StrokeTool : Tool {
 				} else {
 					warning ("Failed to remove self intersection.");
 				}
+			}
+		}
+		*/
+
+
+		foreach (EditPoint e in new_path.points) {
+			if ((e.flags & EditPoint.CORNER) > 0) {
+				//e.flags |= EditPoint.DELETED;
+			}
+		}
+
+		foreach (EditPoint e in stroked.points) {
+			if ((e.flags & EditPoint.CORNER) > 0) {
+				//e.flags |= EditPoint.DELETED;
 			}
 		}
 		
@@ -643,7 +667,38 @@ public class StrokeTool : Tool {
 
 		return stroked;
 	}
-	
+
+/*	
+	static void add_self_intersection_points (Path path) {
+		Gee.ArrayList<EditPoint> n = new Gee.ArrayList<EditPoint> ();
+		
+		path.all_segments ((ep1, ep2) => {
+			double ix, iy;
+			EditPoint nep;
+			
+			if (segment_intersects (path, ep1, ep2, out ix, out iy)) {
+				nep = new EditPoint ();
+				nep.prev = ep1;
+				nep.next = ep2;
+				
+				nep.x = ix;
+				nep.y = iy;
+				
+				n.add (nep);
+			}
+			
+			return true;
+		});
+		
+		foreach (EditPoint np in n) {
+			path.insert_new_point_on_path (np, -1, true);
+			np.type = PointType.QUADRATIC;
+			np.flags |= EditPoint.INTERSECTION;
+		}
+	}
+*/
+
+/*
 	static bool segment_intersects (Path path, EditPoint ep, EditPoint next,
 		out double ix, out double iy) {
 		EditPoint p1, p2;
@@ -699,6 +754,7 @@ public class StrokeTool : Tool {
 		
 		return false;
 	}
+	*/
 }
 
 }

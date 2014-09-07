@@ -517,7 +517,7 @@ public class DrawingTools : ToolCollection  {
 			PointSelection ep;
 			if (PenTool.selected_points.size > 0) {
 				ep = PenTool.selected_points.get (0);
-				symmetrical = ep.point.reflective_handles;
+				symmetrical = ep.point.reflective_point;
 				foreach (PointSelection p in PenTool.selected_points) {
 					p.point.set_reflective_handles (!symmetrical);
 					p.point.process_symmetrical_handles ();

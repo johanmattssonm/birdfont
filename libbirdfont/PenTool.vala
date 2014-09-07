@@ -1521,14 +1521,14 @@ public class PenTool : Tool {
 			if (left_handle) {
 				if (parent_point.prev !=  null) {
 					tied_point = parent_point.get_prev ();
-					if (tied_point.selected) {
+					if (tied_point.selected_point) {
 						eh = tied_point.get_right_handle ();
 					}
 				}
 			} else {
 				if (parent_point.next !=  null) {
 					tied_point = parent_point.get_next ();
-					if (tied_point.selected) {
+					if (tied_point.selected_point) {
 						eh = tied_point.get_left_handle ();
 					}
 				}

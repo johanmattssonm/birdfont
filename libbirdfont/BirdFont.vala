@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -15,6 +15,8 @@ using BirdFont;
 public const string GETTEXT_PACKAGE = "birdfont"; 
 
 namespace BirdFont {
+
+public static string? settings_directory = null;
 
 static void print_import_help (string[] arg) {
 	stdout.printf (t_("Usage:"));
@@ -517,6 +519,10 @@ public class BirdFont {
 		return current_font;
 	}
 
+	public void set_settings_directory (string directory) {
+		settings_directory = directory;
+	}
+	
 	public static File get_preview_directory () {
 		File settings = get_settings_directory ();
 		File backup = settings.get_child ("preview");
@@ -537,7 +543,7 @@ public class BirdFont {
 		
 		return thumbnails;
 	}
-		
+
 	internal static File get_settings_directory () {
 		string home_path;
 		File home;
@@ -551,9 +557,10 @@ public class BirdFont {
 			printd ("Create settings directory.");
 			DirUtils.create ((!) home.get_path (), 0xFFFFFF);
 		}
-#else
-		home_path = Environment.get_home_dir ();
-	
+#else	
+		home_path = (settings_directory != null) 
+			? (!) settings_directory : Environment.get_home_dir ();
+			
 		if (is_null (home_path)) {
 			warning ("No home directory set.");
 			home_path = ".";

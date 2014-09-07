@@ -192,7 +192,7 @@ public class EditPointHandle : GLib.Object {
 			tie_handle ();
 		}
 		
-		if (parent.reflective_handles) {
+		if (parent.reflective_point) {
 			tie_handle ();
 			process_symmetrical_handle ();
 		}
