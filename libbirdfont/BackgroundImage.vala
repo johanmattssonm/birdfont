@@ -1159,9 +1159,12 @@ public class BackgroundImage {
 		double image_scale_y;
 		TracedPoint average_point;
 		int pi;
+		ImageSurface img;
 
-		image_scale_x = ((double) size_margin / get_img ().get_width ());
-		image_scale_y = ((double) size_margin / get_img ().get_height ());
+		img = (contrast_image == null) ? get_contrast_image () : (!) contrast_image;
+
+		image_scale_x = ((double) size_margin / img.get_width ());
+		image_scale_y = ((double) size_margin / img.get_height ());
 				
 		foreach (TracedPoint p in points) {
 			start_points.add (p);
