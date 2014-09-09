@@ -103,13 +103,13 @@ class Svg {
 	private static void add_abs_start (EditPoint ep, StringBuilder svg, Glyph g, bool to_glyph) {		
 		double left = g.left_limit;
 		double baseline = -BirdFont.get_current_font ().base_line;
-		double height = BirdFont.get_current_font ().get_height ();
+		double height = g.get_height ();
 		
 		svg.append_printf ("M");
-
+		
 		if (!to_glyph) {
 			svg.append_printf ("%s ",  round (ep.x - left));
-			svg.append_printf ("%s ",  round (-ep.y - baseline + height));
+			svg.append_printf ("%s ",  round (-ep.y + height / 2));
 		} else {
 			svg.append_printf ("%s ",  round (ep.x - left));
 			svg.append_printf ("%s ",  round (ep.y + baseline));
@@ -123,12 +123,11 @@ class Svg {
 	private static void add_abs_line_to (EditPoint start, EditPoint stop, StringBuilder svg, Glyph g, bool to_glyph) {
 		double baseline = -BirdFont.get_current_font ().base_line;
 		double left = g.left_limit;
+		double height = g.get_height ();
 		
 		double xa, ya, xb, yb;
 		
 		Path.get_line_points (start, stop, out xa, out ya, out xb, out yb);
-
-		double height = BirdFont.get_current_font ().get_height (); // no probably not
 
 		double center_x = Glyph.xc ();
 		double center_y = Glyph.yc ();
@@ -137,7 +136,7 @@ class Svg {
 	
 		if (!to_glyph) {
 			svg.append_printf ("%s ", round (xb - center_x - left));
-			svg.append_printf ("%s ", round (yb - center_y - baseline + height));	
+			svg.append_printf ("%s ", round (yb - center_y + height / 2));	
 		} else {
 			svg.append_printf ("%s ", round (xb - center_x - left));
 			svg.append_printf ("%s ", round (-yb + center_y + baseline));
@@ -161,7 +160,7 @@ class Svg {
 	private static void add_quadratic_abs_path (EditPoint start, EditPoint end, StringBuilder svg, Glyph g,  bool to_glyph) {
 		double left = g.left_limit;
 		double baseline = -BirdFont.get_current_font ().base_line;
-		double height = BirdFont.get_current_font ().get_height (); // no probably not
+		double height = g.get_height ();
 		
 		double xa, ya, xb, yb, xc, yc, xd, yd;
 		
@@ -175,10 +174,10 @@ class Svg {
 			svg.append_printf ("Q");
 
 			svg.append_printf ("%s ", round (xb - center_x - left));
-			svg.append_printf ("%s ", round (yb - center_y - baseline + height));
+			svg.append_printf ("%s ", round (yb - center_y + height / 2));
 			
 			svg.append_printf ("%s ", round (xd - center_x - left));
-			svg.append_printf ("%s ", round (yd - center_y - baseline + height));
+			svg.append_printf ("%s ", round (yd - center_y + height / 2));
 
 		} else {		
 			svg.append_printf ("Q");
@@ -194,7 +193,7 @@ class Svg {
 	private static void add_cubic_abs_path (EditPoint start, EditPoint end, StringBuilder svg, Glyph g,  bool to_glyph) {
 		double left = g.left_limit;
 		double baseline = -BirdFont.get_current_font ().base_line;
-		double height = BirdFont.get_current_font ().get_height (); // no probably not
+		double height = g.get_height ();
 		
 		double xa, ya, xb, yb, xc, yc, xd, yd;
 		
@@ -208,13 +207,13 @@ class Svg {
 			svg.append_printf ("C");
 
 			svg.append_printf ("%s ", round (xb - center_x - left));
-			svg.append_printf ("%s ", round (yb - center_y - baseline + height));
+			svg.append_printf ("%s ", round (yb - center_y + height / 2));
 			
 			svg.append_printf ("%s ", round (xc - center_x - left));
-			svg.append_printf ("%s ", round (yc - center_y - baseline + height));
+			svg.append_printf ("%s ", round (yc - center_y + height / 2));
 			
 			svg.append_printf ("%s ", round (xd - center_x - left));
-			svg.append_printf ("%s ", round (yd - center_y - baseline + height));	
+			svg.append_printf ("%s ", round (yd - center_y + height / 2));	
 
 		} else {		
 			svg.append_printf ("C");

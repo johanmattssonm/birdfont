@@ -476,8 +476,8 @@ public class BirdFont {
 		bundle_path = path;	
 	}
 
-	static void init_gettext () {
-		// FIXME: android this should be OK now
+	public static void init_gettext () {
+		// FIXME: android, this should be OK now
 #if !ANDROID
 		string locale_directory = SearchPaths.get_locale_directory ();
 		Intl.setlocale (LocaleCategory.MESSAGES, "");
@@ -507,13 +507,16 @@ public class BirdFont {
 	}
 #endif
 	
-	internal static Font new_font () {
+	public static Font new_font () {
 		current_font = new Font ();
 		
-		MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
-		MainWindow.get_drawing_tools ().add_new_grid ();
-		MainWindow.get_drawing_tools ().add_new_grid ();			
-		SpacingClassTab.remove_all_spaving_classes ();
+		if (!is_null (MainWindow.tools)) {
+			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
+			MainWindow.get_drawing_tools ().add_new_grid ();
+			MainWindow.get_drawing_tools ().add_new_grid ();
+		}
+		
+		SpacingClassTab.remove_all_spacing_classes ();
 		KerningTools.update_kerning_classes ();
 		
 		return current_font;

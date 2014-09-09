@@ -32,6 +32,7 @@ DOIT_CONFIG = {
         'build',
         'libbirdfont',
         'birdfont',
+        'birdfont_autotrace',
         'birdfont_export',
         'birdfont_import',
         'compile_translations',
@@ -94,6 +95,12 @@ def task_birdfont():
     bird = Vala(src='birdfont', build='build', pkg_libs=LIBS, vala_deps=[libbird])
     yield bird.gen_c(valac_options)
     yield bird.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
+
+
+def task_birdfont_autotrace():
+     exp = Vala(src='birdfont-autotrace', build='build', pkg_libs=LIBS, vala_deps=[libbird])
+     yield exp.gen_c(valac_options)
+     yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
 
 def task_birdfont_export():

@@ -762,7 +762,7 @@ public class BackgroundImage {
 		return (ImageSurface) ns;
 	}
 	
-	public PathList auto_trace () {
+	public PathList autotrace () {
 		ImageSurface img;
 		int len, w, h, i, s;
 		Path p;
@@ -774,6 +774,8 @@ public class BackgroundImage {
 		
 		p = new Path ();
 		pl = new PathList ();
+
+		get_img ();
 
 		if (background_image == null) {
 			return pl;
@@ -1158,10 +1160,8 @@ public class BackgroundImage {
 		TracedPoint average_point;
 		int pi;
 
-		return_val_if_fail (background_image != null && contrast_image != null, new Path ());
-		
-		image_scale_x = ((double) size_margin / ((!) contrast_image).get_width ());
-		image_scale_y = ((double) size_margin / ((!) contrast_image).get_height ());
+		image_scale_x = ((double) size_margin / get_img ().get_width ());
+		image_scale_y = ((double) size_margin / get_img ().get_height ());
 				
 		foreach (TracedPoint p in points) {
 			start_points.add (p);

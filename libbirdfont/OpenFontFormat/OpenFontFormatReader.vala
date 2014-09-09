@@ -184,15 +184,17 @@ public class OpenFontFormatReader : Object {
 				if (left <= 0x1F || right <= 0x1F) {
 					warning ("Ignoring kerning of control character.");
 				} else {
-					bf_kerning.append ("<kerning left=\"");
-					bf_kerning.append (BirdFontFile.serialize_unichar (left));
-					bf_kerning.append ("\" ");
-					bf_kerning.append ("right=\"");
-					bf_kerning.append (BirdFontFile.serialize_unichar (right));
-					bf_kerning.append ("\" ");
-					bf_kerning.append ("hadjustment=\"");
-					bf_kerning.append (@"$kerning".replace (",", "."));
-					bf_kerning.append ("\" />\n");
+					if (@"$kerning" != "0") {
+						bf_kerning.append ("<kerning left=\"");
+						bf_kerning.append (BirdFontFile.serialize_unichar (left));
+						bf_kerning.append ("\" ");
+						bf_kerning.append ("right=\"");
+						bf_kerning.append (BirdFontFile.serialize_unichar (right));
+						bf_kerning.append ("\" ");
+						bf_kerning.append ("hadjustment=\"");
+						bf_kerning.append (@"$kerning".replace (",", "."));
+						bf_kerning.append ("\" />\n");
+					}
 				}
 			}
 		} catch (GLib.Error e) {
