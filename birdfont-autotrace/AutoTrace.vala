@@ -136,7 +136,9 @@ class AutoTrace {
 			w = bg.get_img ().get_width ();
 			g.left_limit = -w / 2.0;
 			g.right_limit = w / 2.0;
-									
+			
+			bg.center_in_glyph ();
+						
 			pl = bg.autotrace ();
 			
 			foreach (Path p in pl.paths) {
