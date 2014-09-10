@@ -161,6 +161,10 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, nonN
 	run("cp resources/linux/birdfont.1 build/")
 	run("gzip -9 build/birdfont.1")
 
+	run("rm -f build/birdfont-autotrace.1.gz")	
+	run("cp resources/linux/birdfont-autotrace.1 build/")
+	run("gzip -9 build/birdfont-autotrace.1")
+
 	run("rm -f build/birdfont-export.1.gz")	
 	run("cp resources/linux/birdfont-export.1 build/")
 	run("gzip -9 build/birdfont-export.1")
@@ -214,6 +218,54 @@ def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, library, nonN
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs gdk-pixbuf-2.0) \
 		-o ./build/bin/birdfont-import""")
+
+def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
+	# birdfont-autotrace
+	run("mkdir -p build/birdfont-autotrace")
+
+	experimentalNonNull = ""
+	if nonNull:
+		experimentalNonNull = "--enable-experimental-non-null"
+			
+	run(valac + """ \
+		-C \
+		""" + experimentalNonNull + """ \
+		--enable-experimental \
+		--define=MAC birdfont-autotrace/* \
+		--vapidir=./ \
+		--pkg """ + config.GEE + """ \
+		--pkg libxml-2.0 \
+		--pkg gio-2.0  \
+		--pkg cairo \
+		--pkg gdk-pixbuf-2.0 \
+		--pkg gtk+-2.0 \
+		--pkg libbirdfont""")
+	run("mv birdfont-autotrace/*.c build/birdfont-autotrace/")
+
+	run(cc + " " + cflags + """ \
+		-c ./build/libbirdfont/birdfont.h build/birdfont-autotrace/*.c \
+		-D 'GETTEXT_PACKAGE="birdfont"' \
+		$(pkg-config --cflags """ + config.GEE + """) \
+		$(pkg-config --cflags libxml-2.0) \
+		$(pkg-config --cflags gio-2.0) \
+		$(pkg-config --cflags cairo) \
+		$(pkg-config --cflags glib-2.0) \
+		$(pkg-config --cflags gdk-pixbuf-2.0) \
+		-I ./build/libbirdfont/""")
+	run("mv ./*.o build/birdfont-autotrace/")
+
+	run(cc + " " + ldflags + " \
+		build/birdfont-autotrace/*.o \
+		-Lbuild/bin/ -lbirdfont \
+		-lm \
+		$(pkg-config --libs """ + config.GEE + """) \
+		$(pkg-config --libs libxml-2.0) \
+		$(pkg-config --libs gio-2.0) \
+		$(pkg-config --libs cairo) \
+		$(pkg-config --libs glib-2.0) \
+		$(pkg-config --libs gdk-pixbuf-2.0) \
+		-o ./build/bin/birdfont-autotrace""")
+
 
 def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
 	# birdfont
