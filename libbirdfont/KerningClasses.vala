@@ -74,8 +74,8 @@ public class KerningClasses : GLib.Object {
 
 	public double? get_kerning_for_single_glyphs (string first, string next) {
 		double? k = null;
-		string left = GlyphRange.unserialize (first);
-		string right = GlyphRange.unserialize (next);
+		string left = GlyphRange.serialize (first);
+		string right = GlyphRange.serialize (next);
 
 		foreach (string l in get_spacing_class (left)) {
 			foreach (string r in get_spacing_class (right)) {
@@ -290,9 +290,7 @@ public class KerningClasses : GLib.Object {
 		
 		return 0;
 	}
-
-
-
+	
 	public double get_kern_for_char_to_range (string left_char, GlyphRange right_range) {
 		GlyphRange r;
 		GlyphRange l;
