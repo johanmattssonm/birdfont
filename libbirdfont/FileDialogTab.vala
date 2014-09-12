@@ -87,7 +87,7 @@ public class FileDialogTab : FontDisplay {
 		}
 
 		try {
-			enumerator = current_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FILE_ATTRIBUTE_STANDARD_TYPE, 0);
+			enumerator = current_dir.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE, 0);
 			
 			while ((file_info = enumerator.next_file ()) != null) {
 				fn = ((!)file_info).get_name ();
