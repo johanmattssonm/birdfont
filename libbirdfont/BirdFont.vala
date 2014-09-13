@@ -199,7 +199,8 @@ public static int run_export (string[] arg) {
 	bool write_svg = false;	
 	File directory;
 	Font font;
-	
+	MainWindow main_window;
+
 	stdout.printf ("birdfont-export version %s\n", VERSION);
 	stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 
@@ -207,6 +208,10 @@ public static int run_export (string[] arg) {
 		print_export_help (arg);
 		return -1;
 	}
+
+	BirdFont.current_font = BirdFont.new_font ();
+	BirdFont.current_glyph = new Glyph ("null", '\0');
+	main_window = new MainWindow ();
 	
 	// FIXME: create a option for this and structure the log messages
 	// init_logfile ();
@@ -266,7 +271,6 @@ public static int run_export (string[] arg) {
 	Preferences.load ();
 			
 	BirdFont.args = new Argument ("");
-	BirdFont.current_font = new Font ();
 	BirdFont.current_glyph = new Glyph ("");
 	
 	file_name = build_absoulute_path (file_name);
@@ -476,8 +480,8 @@ public class BirdFont {
 		bundle_path = path;	
 	}
 
-	static void init_gettext () {
-		// FIXME: android this should be OK now
+	public static void init_gettext () {
+		// FIXME: android, this should be OK now
 #if !ANDROID
 		string locale_directory = SearchPaths.get_locale_directory ();
 		Intl.setlocale (LocaleCategory.MESSAGES, "");
@@ -507,13 +511,16 @@ public class BirdFont {
 	}
 #endif
 	
-	internal static Font new_font () {
+	public static Font new_font () {
 		current_font = new Font ();
 		
-		MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
-		MainWindow.get_drawing_tools ().add_new_grid ();
-		MainWindow.get_drawing_tools ().add_new_grid ();			
-		SpacingClassTab.remove_all_spaving_classes ();
+		if (!is_null (MainWindow.tools)) {
+			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
+			MainWindow.get_drawing_tools ().add_new_grid ();
+			MainWindow.get_drawing_tools ().add_new_grid ();
+		}
+		
+		SpacingClassTab.remove_all_spacing_classes ();
 		KerningTools.update_kerning_classes ();
 		
 		return current_font;
@@ -590,7 +597,6 @@ public class BirdFont {
 
 	public static bool has_argument (string param) {
 		if (is_null (args)) {
-			warning ("args is null");
 			return false;
 		}
 		

@@ -31,12 +31,21 @@ public class Preferences {
 
 	public static string @get (string k) {
 		string? s;
+
+		if (is_null (data)) {
+			data = new Gee.HashMap<string, string> ();
+		}
+		
 		s = data.get (k);
 		
 		return (s != null) ? (!) s : "";
 	}
 
 	public static void @set (string k, string v) {
+		if (is_null (data)) {
+			data = new Gee.HashMap<string, string> ();
+		}
+		
 		data.set (k, v);
 		save ();
 	}

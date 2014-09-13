@@ -1219,7 +1219,7 @@ public class DrawingTools : ToolCollection  {
 		
 		if (bg != null) {
 			b = (!) bg;
-			pl =  b.auto_trace ();
+			pl =  b.autotrace ();
 			foreach (Path p in pl.paths) {
 				g.add_path (p);
 			}

@@ -403,7 +403,7 @@ public class Glyph : FontDisplay {
 	public void add_help_lines () {
 		remove_lines ();
 
-		assert (!is_null (BirdFont.get_current_font ()));
+		return_if_fail (!is_null (BirdFont.get_current_font ()));
 
 		double bgt = BirdFont.get_current_font ().top_limit;
 		Line top_margin_line = new Line ("top margin", bgt, false);

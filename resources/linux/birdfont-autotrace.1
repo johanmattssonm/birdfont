@@ -1,0 +1,32 @@
+.TH BIRDFONT-AUTOTRACE 1 LOCAL
+
+.SH NAME
+birdfont-autotrace - Convert raster image to vecotr graphics
+.SH SYNOPSIS
+.B birdfont-import birdfont-file svg-files ...
+.SH DESCRIPTION
+birdfont-autotrace 
+birdfont-autotrace will generate SVG files from raster images. For an 
+image with the name example.png will a file with the name example.svg be
+generated.
+
+.SH OPTIONS
+.TP 5
+\-c, \--cutoff
+brighness cutoff, from 0.001 to 2, the default value is 1
+.TP
+\-d, \--details
+details, from 0.001 to 9.999, the default value is 1
+.TP
+\-h, \--help
+print help message
+.TP 
+\-q, \--quadratic
+use quadratic control points instead of cubic control points.
+.TP 
+\-s, \--simplification
+path simplification, from 0.001 to 1, the default value is 0.5
+
+.SH AUTHOR
+Johan Mattsson
+

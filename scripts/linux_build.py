@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Copyright (C) 2013 Johan Mattsson
+Copyright (C) 2013 2014 Johan Mattsson
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as 
@@ -54,6 +54,7 @@ library = "libbirdfont.so." + version.SO_VERSION
 configfile.write_config (prefix)
 compile_translations()
 build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, library, False)
+build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
 build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
 build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
 build.birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, False)

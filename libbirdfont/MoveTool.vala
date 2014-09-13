@@ -126,12 +126,10 @@ public class MoveTool : Tool {
 		move_path = false;
 		
 		if (GridTool.is_visible () && moved) {
-			foreach (Path p in glyph.active_paths) {
-				tie_path_to_grid (p, x, y);
-			}
+			tie_paths_to_grid (glyph);
 		} else if (GridTool.has_ttf_grid ()) {
 			foreach (Path p in glyph.active_paths) {
-				tie_path_to_ttf_grid (p, x, y);
+				tie_path_to_ttf_grid (p);
 			}
 		} 
 		
@@ -304,27 +302,17 @@ public class MoveTool : Tool {
 		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
 	}
 
-	static void tie_path_to_ttf_grid (Path p, double x, double y) {
-		tie_path_to_grid (p, x, y, true);
-	} 
-
-	static void tie_path_to_grid (Path p, double x, double y, bool ttf_grid = false) {
+	static void tie_path_to_ttf_grid (Path p) {
 		double sx, sy, qx, qy;	
-		
-		// tie to grid
+
 		sx = p.xmax;
 		sy = p.ymax;
 		qx = p.xmin;
 		qy = p.ymin;
 		
-		if (ttf_grid) {
-			GridTool.ttf_grid_coordinate (ref sx, ref sy);
-			GridTool.ttf_grid_coordinate (ref qx, ref qy);
-		} else {
-			GridTool.tie_coordinate (ref sx, ref sy);
-			GridTool.tie_coordinate (ref qx, ref qy);
-		}
-		
+		GridTool.ttf_grid_coordinate (ref sx, ref sy);
+		GridTool.ttf_grid_coordinate (ref qx, ref qy);
+	
 		if (Math.fabs (qy - p.ymin) < Math.fabs (sy - p.ymax)) {
 			p.move (0, qy - p.ymin);
 		} else {
@@ -336,6 +324,49 @@ public class MoveTool : Tool {
 		} else {
 			p.move (sx - p.xmax, 0);
 		}		
+	} 
+
+	static void tie_paths_to_grid (Glyph g) {
+		double sx, sy, qx, qy;	
+		double dx_min, dx_max, dy_min, dy_max;;
+		double maxx, maxy, minx, miny;
+		
+		update_selection_boundaries ();	
+		
+		// tie to grid
+		maxx = selection_box_center_x + selection_box_width / 2;
+		maxy = selection_box_center_y + selection_box_height / 2;
+		minx = selection_box_center_x - selection_box_width / 2;
+		miny = selection_box_center_y - selection_box_height / 2;
+		
+		sx = maxx;
+		sy = maxy;
+		qx = minx;
+		qy = miny;
+		
+		GridTool.tie_coordinate (ref sx, ref sy);
+		GridTool.tie_coordinate (ref qx, ref qy);
+		
+		dy_min = Math.fabs (qy - miny);
+		dy_max = Math.fabs (sy - maxy);
+		dx_min = Math.fabs (qx - minx);
+		dx_max = Math.fabs (sx - maxx);
+		
+		foreach (Path p in g.active_paths) {
+			if (dy_min < dy_max) {
+				p.move (0, qy - miny);
+			} else {
+				p.move (0, sy - maxy);
+			}
+
+			if (dx_min < dx_max) {
+				p.move (qx - minx, 0);
+			} else {
+				p.move (sx - maxx, 0);
+			}
+		}
+		
+		update_selection_boundaries ();		
 	}
 	
 	public static void update_boundaries_for_selection () {

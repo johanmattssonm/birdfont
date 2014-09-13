@@ -25,9 +25,6 @@ public class SearchPaths {
 		string resources;
 
 		resources = (is_null (resources_folder)) ? "" : resources_folder; 
-			
-		printd ("Looking for: ");
-		printd (resources + "/" + d + "/" + name);
 		
 		f = get_file (resources + "/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
@@ -76,7 +73,13 @@ public class SearchPaths {
 
 		f = get_file (@"$PREFIX/share/birdfont/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
-				
+
+		f = get_file (@"/usr/local/share/birdfont/" + d + "/", name);
+		if (likely (f.query_exists ())) return f;
+
+		f = get_file (@"/usr/share/birdfont/" + d + "/", name);
+		if (likely (f.query_exists ())) return f;
+								
 		warning (@"Did not find file $name in $d (resources: $resources)");
 			
 		return f;		
@@ -93,9 +96,11 @@ public class SearchPaths {
 			return resources + "\\locale";
 		}
 		
-		f = BirdFont.exec_path + "/Contents/Resources/locale/sv/LC_MESSAGES/birdfont.mo";
-		if (exists (f)) {
-			return BirdFont.exec_path + "/Contents/Resources/locale";
+		if (!is_null (BirdFont.exec_path)) {
+			f = BirdFont.exec_path + "/Contents/Resources/locale/sv/LC_MESSAGES/birdfont.mo";
+			if (exists (f)) {
+				return BirdFont.exec_path + "/Contents/Resources/locale";
+			}
 		}
 		
 		f = "./build/locale/sv/LC_MESSAGES/birdfont.mo";

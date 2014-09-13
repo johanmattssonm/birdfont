@@ -18,7 +18,7 @@ using Math;
 namespace BirdFont {
 
 public class KerningTools : ToolCollection  {
-	public static Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
+	public static Gee.ArrayList<Expander> expanders;
 	public static int next_class = 0;
 	public static Expander classes;
 	public static bool adjust_side_bearings = false;
@@ -32,6 +32,7 @@ public class KerningTools : ToolCollection  {
 	public static void init () {
 		Expander kerning_tools = new Expander ();
 		classes = new Expander ();
+		expanders = new Gee.ArrayList<Expander> ();
 		
 		Tool new_kerning_class = new Tool ("kerning_class", t_("Create new kerning class."));
 		new_kerning_class.select_action.connect ((self) => {
@@ -179,6 +180,10 @@ public class KerningTools : ToolCollection  {
 	}
 
 	private static void remove_all_kerning_classes () {
+		if (is_null (classes)) { // FIXME: export without tools
+			init ();
+		}
+		
 		classes.tool.clear ();
 		
 		if (!is_null (MainWindow.get_toolbox ())) {

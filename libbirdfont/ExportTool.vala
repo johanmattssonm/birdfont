@@ -35,7 +35,7 @@ public class ExportTool : GLib.Object {
 		string name;
 		StringBuilder s;
 
-		name = glyph.get_name ();
+		name = glyph.get_name (); // FIXME: xml encode
 		s = new StringBuilder ();
 		
 		s.append ("""<?xml version="1.0" encoding="utf-8"?>

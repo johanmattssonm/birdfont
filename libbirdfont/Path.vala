@@ -2039,7 +2039,6 @@ public class Path {
 			if (ep.next != null) {
 				n = ep.get_next ();
 			} else {
-				warning ("next is null");
 				n = points.get (0);
 			}
 				
