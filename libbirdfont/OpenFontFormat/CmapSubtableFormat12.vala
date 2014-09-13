@@ -46,8 +46,8 @@ public class CmapSubtableFormat12 : GLib.Object {
 		indice = first_assigned;
 		foreach (UniRange u in ranges) {
 			
-			if (u.start >= 0xFFFFFFFF) {
-				warning ("Glytph range not supported by CmapSubtableFormat12.");
+			if (u.start >= 0xFFFFFFFF || u.stop >= 0xFFFFFFFF) {
+				warning ("Glyph range not supported by CmapSubtableFormat12.");
 			} else {
 				fd.add_u32 (u.start);
 				fd.add_u32 (u.stop);
