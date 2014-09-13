@@ -199,7 +199,8 @@ public static int run_export (string[] arg) {
 	bool write_svg = false;	
 	File directory;
 	Font font;
-	
+	MainWindow main_window;
+
 	stdout.printf ("birdfont-export version %s\n", VERSION);
 	stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 
@@ -207,6 +208,10 @@ public static int run_export (string[] arg) {
 		print_export_help (arg);
 		return -1;
 	}
+
+	BirdFont.current_font = BirdFont.new_font ();
+	BirdFont.current_glyph = new Glyph ("null", '\0');
+	main_window = new MainWindow ();
 	
 	// FIXME: create a option for this and structure the log messages
 	// init_logfile ();
@@ -266,7 +271,6 @@ public static int run_export (string[] arg) {
 	Preferences.load ();
 			
 	BirdFont.args = new Argument ("");
-	BirdFont.current_font = new Font ();
 	BirdFont.current_glyph = new Glyph ("");
 	
 	file_name = build_absoulute_path (file_name);
@@ -593,7 +597,6 @@ public class BirdFont {
 
 	public static bool has_argument (string param) {
 		if (is_null (args)) {
-			warning ("args is null");
 			return false;
 		}
 		
