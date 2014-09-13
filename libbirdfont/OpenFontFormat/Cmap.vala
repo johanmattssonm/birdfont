@@ -102,22 +102,22 @@ public class CmapTable : Table {
 		
 		fd.add_u16 (0); // table version
 		fd.add_u16 (n_encoding_tables);
+	
+		fd.add_u16 (1); // platform 
+		fd.add_u16 (0); // encoding
+		fd.add_ulong (28); // subtable offseet
 		
 		fd.add_u16 (3); // platform 
 		fd.add_u16 (1); // encoding (Format Unicode UCS-4)
-		fd.add_ulong (28); // subtable offseet
+		fd.add_ulong (28 + cmap0_data.length ()); // subtable offseet
 
 		fd.add_u16 (3); // platform 
 		fd.add_u16 (10); // encoding
-		fd.add_ulong (28 + cmap4_data.length ()); // subtable offseet
+		fd.add_ulong (28 + cmap0_data.length () + cmap4_data.length ()); // subtable offseet
 
-		fd.add_u16 (1); // platform 
-		fd.add_u16 (0); // encoding
-		fd.add_ulong (28 + cmap4_data.length () + cmap12_data.length ()); // subtable offseet
-				
+		fd.append (cmap0_data);
 		fd.append (cmap4_data);
 		fd.append (cmap12_data);
-		fd.append (cmap0_data);
 
 		// padding
 		fd.pad ();

@@ -94,6 +94,7 @@ install ('resources/linux/48x48/birdfont.png', '/share/icons/hicolor/48x48/apps'
 if os.path.isfile ('build/bin/birdfont'):
 	install ('build/bin/birdfont', '/bin', 755)
 
+install ('build/bin/birdfont-autotrace', '/bin', 755)
 install ('build/bin/birdfont-export', '/bin', 755)
 install ('build/bin/birdfont-import', '/bin', 755)
 
@@ -128,10 +129,12 @@ else:
 #manpages
 if not nogzip:
     install ('build/birdfont.1.gz', mandir, 644)
+    install ('build/birdfont-autotrace.1.gz', mandir, 644)
     install ('build/birdfont-export.1.gz', mandir, 644)
     install ('build/birdfont-import.1.gz', mandir, 644)
 else:
     install ('resources/linux/birdfont.1', mandir, 644)
+    install ('resources/linux/birdfont-autotrace.1', mandir, 644)
     install ('resources/linux/birdfont-export.1', mandir, 644)
     install ('resources/linux/birdfont-import.1', mandir, 644)
 
