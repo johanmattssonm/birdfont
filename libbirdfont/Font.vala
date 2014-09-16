@@ -154,7 +154,7 @@ public class Font : GLib.Object {
 	public bool is_modified () {
 		return modified;
 	}
-
+	
 	/** Full path to this font file. */
 	public string get_path () {
 		int i = 0;
