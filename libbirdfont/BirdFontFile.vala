@@ -343,15 +343,20 @@ class BirdFontFile : GLib.Object {
 	public void write_glyph (Glyph g, GlyphCollection gc, DataOutputStream os) throws GLib.Error {
 		string data;
 		
-		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(g.left_limit)\" right=\"$(g.right_limit)\">\n");
+		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(double_to_string (g.left_limit))\" right=\"$(double_to_string (g.right_limit))\">\n");
 		foreach (Path p in g.path_list) {
 			data = get_point_data (p);
 			if (data != "") {
-				os.put_string (@"\t\t<path stroke=\"$(p.stroke)\" data=\"$(data)\" />\n");
+				os.put_string (@"\t\t<path stroke=\"$(double_to_string (p.stroke))\" skew=\"$(double_to_string (p.skew))\" data=\"$(data)\" />\n");
 			}
 		}
 		write_glyph_background (g, os);
 		os.put_string ("\t</glyph>\n");
+	}
+
+	public static string double_to_string (double n) {
+		string d = @"$n";
+		return d.replace (",", ".");
 	}
 
 	/** Get control points in BirdFont format. This function is uses a
@@ -1162,6 +1167,11 @@ class BirdFontFile : GLib.Object {
 			if (attr_name == "stroke") {
 				path.set_stroke (double.parse (attr_content));
 			}
+
+			if (attr_name == "skew") {
+				path.skew = (double.parse (attr_content));
+			}			
+			
 		}		
 		if (path.points.size == 0) {
 			warning ("Empty path");

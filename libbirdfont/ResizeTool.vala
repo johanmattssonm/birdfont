@@ -36,6 +36,8 @@ public class ResizeTool : Tool {
 	static double rotation = 0;
 	static double last_rotate = 0;
 	
+	public double last_skew = 0;
+	
 	public signal void objects_rotated (double angle);
 	public signal void objects_resized (double width, double height);
 	
@@ -350,16 +352,16 @@ public class ResizeTool : Tool {
 		return fabs (handle_x - x + 10) < 20 * MainWindow.units && fabs (handle_y - y + 10) < 20 * MainWindow.units;
 	}
 	
-	public void skew (double percent) {
+	public void skew (double skew) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		double dx, nx, nw, dw, x, y, w, h;
-		double s = -percent / 100.0;
+		double s = (skew - last_skew) / 100.0;
 		
 		glyph.selection_boundaries (out x, out y, out w, out h);
 		
 		foreach (Path path in glyph.active_paths) {
-			SvgParser.apply_matrix (path, 1, 0, s - path.skew, 1, 0, 0);
-			path.skew = s;
+			SvgParser.apply_matrix (path, 1, 0, s, 1, 0, 0);
+			path.skew = skew;
 			path.update_region_boundaries ();
 		}
 		
@@ -370,6 +372,8 @@ public class ResizeTool : Tool {
 		foreach (Path p in glyph.active_paths) {
 			p.move (dx, 0);
 		}
+		
+		last_skew = skew;
 		
 		dw = (nw - w);
 		glyph.right_limit += dw;

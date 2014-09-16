@@ -363,8 +363,19 @@ public class DrawingTools : ToolCollection  {
 		skew.show_icon (true);
 		skew.set_persistent (false);
 		skew.new_value_action.connect ((self) => {
-			resize_tool.skew (skew.get_value ());
+			resize_tool.skew (-skew.get_value ());
 			GlyphCanvas.redraw ();
+		});
+		
+		move_tool.objects_moved.connect (() => {
+			Glyph glyph = MainWindow.get_current_glyph ();
+			double d;
+			
+			if (glyph.active_paths.size > 0) {
+				d = glyph.active_paths.get (0).skew;
+				resize_tool.last_skew = d;
+				skew.set_value_round (-d, true, false);
+			}
 		});
 		
 		move_tool.objects_deselected.connect (() => {
