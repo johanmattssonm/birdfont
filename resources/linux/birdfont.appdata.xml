@@ -1,0 +1,17 @@
+<application>
+	<id type="desktop">birdfont.desktop</id>
+	<metadata_license>GPL-3.0+</metadata_license>
+	<project_license>GPL-3.0+</project_license>
+	<summary>Font editor</summary>
+	<description>
+		<p>
+			BirdFont is a font editor which can generate fonts in TTF, 
+			EOT and SVG format.
+		</p>
+	</description>
+	<url type="homepage">http://birdfont.org/</url>
+	<screenshots>
+		<screenshot type="default">http://birdfont.org/images/birdfont_font_editor.png</screenshot>
+	</screenshots>
+	<updatecontact>johan.mattsson.m@gmail.com</updatecontact>
+</application>

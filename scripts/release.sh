@@ -42,9 +42,10 @@ rm -rf ../birdfont-$version.tar.gz
 mv birdfont-$version.tar.gz ../
 
 # build it to make sure that everything was checked in
-cd birdfont-$version
-./configure
-./scripts//linux_build.py
+cd birdfont-$version && \
+./configure && \
+./scripts/linux_build.py && \
+gpg --output birdfont-$version.tar.gz.sig --detach-sig birdfont-$version.tar.gz && \
 cd ..
 
 rm -rf ../export/birdfont-$version

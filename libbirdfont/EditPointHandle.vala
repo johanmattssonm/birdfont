@@ -177,7 +177,7 @@ public class EditPointHandle : GLib.Object {
 		return p;
 	}
 
-	bool is_left_handle () {
+	public bool is_left_handle () {
 		return parent.get_left_handle () == this;
 	}
 

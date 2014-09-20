@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-13 18:27+0200\n"
+"POT-Creation-Date: 2014-09-19 19:04+0200\n"
 "PO-Revision-Date: 2014-08-12 02:25+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -161,7 +161,7 @@ msgstr ""
 msgid "Saving"
 msgstr "保存"
 
-#: libbirdfont/BirdFontFile.vala:685
+#: libbirdfont/BirdFontFile.vala:690
 msgid "Loading XML data."
 msgstr "加载xml数据"
 
@@ -284,174 +284,174 @@ msgstr ""
 msgid "Skew"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:378
+#: libbirdfont/DrawingTools.vala:389
 msgid "Width"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:403
+#: libbirdfont/DrawingTools.vala:414
 msgid "Height"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:446 libbirdfont/DrawingTools.vala:953
+#: libbirdfont/DrawingTools.vala:457 libbirdfont/DrawingTools.vala:964
 msgid "Stroke width"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:478
+#: libbirdfont/DrawingTools.vala:489
 msgid "Tie curve handles for the selected edit point"
 msgstr "对选定编辑点连接曲柄"
 
-#: libbirdfont/DrawingTools.vala:514
+#: libbirdfont/DrawingTools.vala:525
 msgid "Symmetrical handles"
 msgstr "对称控制柄"
 
-#: libbirdfont/DrawingTools.vala:536
+#: libbirdfont/DrawingTools.vala:547
 msgid "Convert segment to line."
 msgstr "将此分段转换为直线"
 
-#: libbirdfont/DrawingTools.vala:543
+#: libbirdfont/DrawingTools.vala:554
 msgid "Create counter from outline"
 msgstr "从轮廓创建孔"
 
-#: libbirdfont/DrawingTools.vala:555
+#: libbirdfont/DrawingTools.vala:566
 msgid "Move to path to the bottom layer"
 msgstr "将路径移动到底层"
 
-#: libbirdfont/DrawingTools.vala:566
+#: libbirdfont/DrawingTools.vala:577
 msgid "Flip path vertically"
 msgstr "垂直翻转路径"
 
-#: libbirdfont/DrawingTools.vala:573
+#: libbirdfont/DrawingTools.vala:584
 msgid "Flip path horizontally"
 msgstr "水平翻转路径"
 
-#: libbirdfont/DrawingTools.vala:581
+#: libbirdfont/DrawingTools.vala:592
 msgid "Set size for background image"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:619
+#: libbirdfont/DrawingTools.vala:630
 msgid "Show/hide background image"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:630
+#: libbirdfont/DrawingTools.vala:641
 msgid "Insert a new background image"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:644
+#: libbirdfont/DrawingTools.vala:655
 msgid "High contrast"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:658
+#: libbirdfont/DrawingTools.vala:669
 msgid "Set background threshold"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:676
+#: libbirdfont/DrawingTools.vala:687
 msgid "Amount of autotrace details"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:694
+#: libbirdfont/DrawingTools.vala:705
 msgid "Autotrace simplification"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:711
+#: libbirdfont/DrawingTools.vala:722
 msgid "Autotrace background image"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:721
+#: libbirdfont/DrawingTools.vala:732
 msgid "Show full unicode characters set"
 msgstr "显示完整的Unicode字符集"
 
-#: libbirdfont/DrawingTools.vala:737
+#: libbirdfont/DrawingTools.vala:748
 #, fuzzy
 msgid "Show default characters set"
 msgstr "显示默认字符集（_F）"
 
-#: libbirdfont/DrawingTools.vala:753
+#: libbirdfont/DrawingTools.vala:764
 #, fuzzy
 msgid "Show all characters in the font"
 msgstr "显示字体中的全部字符"
 
-#: libbirdfont/DrawingTools.vala:810
+#: libbirdfont/DrawingTools.vala:821
 msgid "Show guidelines"
 msgstr "显示准则"
 
-#: libbirdfont/DrawingTools.vala:821
+#: libbirdfont/DrawingTools.vala:832
 msgid "Show guidelines for x-height and baseline"
 msgstr "显示x-高度线及底线"
 
-#: libbirdfont/DrawingTools.vala:835
+#: libbirdfont/DrawingTools.vala:846
 msgid "Show guidelines at top and bottom margin"
 msgstr "显示顶线及底部边缘线"
 
-#: libbirdfont/DrawingTools.vala:853
+#: libbirdfont/DrawingTools.vala:864
 msgid "Zoom in"
 msgstr "放大"
 
-#: libbirdfont/DrawingTools.vala:860
+#: libbirdfont/DrawingTools.vala:871
 msgid "Zoom out"
 msgstr "缩小"
 
-#: libbirdfont/DrawingTools.vala:867
+#: libbirdfont/DrawingTools.vala:878
 msgid "Use one pixel per unit"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:875
+#: libbirdfont/DrawingTools.vala:886
 msgid "Show full glyph"
 msgstr "显示完整字形"
 
-#: libbirdfont/DrawingTools.vala:882
+#: libbirdfont/DrawingTools.vala:893
 msgid "Fit in view"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:889
+#: libbirdfont/DrawingTools.vala:900
 #, fuzzy
 msgid "Zoom in on background image"
 msgstr "缩放背景图像"
 
-#: libbirdfont/DrawingTools.vala:902
+#: libbirdfont/DrawingTools.vala:913
 msgid "Previous view"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:908
+#: libbirdfont/DrawingTools.vala:919
 msgid "Next view"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:928
+#: libbirdfont/DrawingTools.vala:939
 msgid "Stroke color"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:975
+#: libbirdfont/DrawingTools.vala:986
 msgid "Handle color"
 msgstr "柄颜色"
 
-#: libbirdfont/DrawingTools.vala:998
+#: libbirdfont/DrawingTools.vala:1009
 msgid "Set precision"
 msgstr "设置精度"
 
-#: libbirdfont/DrawingTools.vala:1025
+#: libbirdfont/DrawingTools.vala:1036
 msgid "Show all control point handles or only handles for the selected points."
 msgstr "显示所有控制点柄或只显示已选点的控制柄"
 
-#: libbirdfont/DrawingTools.vala:1034
+#: libbirdfont/DrawingTools.vala:1045
 msgid "Object color"
 msgstr "对象颜色"
 
-#: libbirdfont/DrawingTools.vala:1055
+#: libbirdfont/DrawingTools.vala:1066
 msgid "Set fill color for open paths."
 msgstr "设置开放路径的填充颜色"
 
-#: libbirdfont/DrawingTools.vala:1063
+#: libbirdfont/DrawingTools.vala:1074
 msgid "Use TTF units."
 msgstr "使用 TTF 单位。"
 
-#: libbirdfont/DrawingTools.vala:1070
+#: libbirdfont/DrawingTools.vala:1081
 msgid "Adjust the number of samples per point in the freehand tool."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1092
+#: libbirdfont/DrawingTools.vala:1103
 msgid "Simplification threshold"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1418
+#: libbirdfont/DrawingTools.vala:1429
 msgid "Set size for grid"
 msgstr "设置网格大小"
 
@@ -670,7 +670,7 @@ msgstr ""
 msgid "Rectangle"
 msgstr ""
 
-#: libbirdfont/ResizeTool.vala:43
+#: libbirdfont/ResizeTool.vala:45
 msgid "Resize and rotate paths"
 msgstr "调整、旋转路径"
 

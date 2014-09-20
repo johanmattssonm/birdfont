@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-13 18:27+0200\n"
+"POT-Creation-Date: 2014-09-19 19:04+0200\n"
 "PO-Revision-Date: 2014-08-28 18:37+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,7 +160,7 @@ msgstr "Δεν μπορεί να βρεθεί ο κατάλογος εξόδου
 msgid "Saving"
 msgstr "Αποθήκευση"
 
-#: libbirdfont/BirdFontFile.vala:685
+#: libbirdfont/BirdFontFile.vala:690
 msgid "Loading XML data."
 msgstr "Φόρτωση δεδομένων XML"
 
@@ -286,174 +286,174 @@ msgstr ""
 msgid "Skew"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:378
+#: libbirdfont/DrawingTools.vala:389
 msgid "Width"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:403
+#: libbirdfont/DrawingTools.vala:414
 #, fuzzy
 msgid "Height"
 msgstr "Βάρος"
 
-#: libbirdfont/DrawingTools.vala:446 libbirdfont/DrawingTools.vala:953
+#: libbirdfont/DrawingTools.vala:457 libbirdfont/DrawingTools.vala:964
 msgid "Stroke width"
 msgstr "Πάχος πινελιάς"
 
-#: libbirdfont/DrawingTools.vala:478
+#: libbirdfont/DrawingTools.vala:489
 msgid "Tie curve handles for the selected edit point"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:514
+#: libbirdfont/DrawingTools.vala:525
 msgid "Symmetrical handles"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:536
+#: libbirdfont/DrawingTools.vala:547
 msgid "Convert segment to line."
 msgstr "Μετατροπή τμήματος σε γραμμή."
 
-#: libbirdfont/DrawingTools.vala:543
+#: libbirdfont/DrawingTools.vala:554
 msgid "Create counter from outline"
 msgstr "Δημιουργία κοίλου από περίγραμμα"
 
-#: libbirdfont/DrawingTools.vala:555
+#: libbirdfont/DrawingTools.vala:566
 #, fuzzy
 msgid "Move to path to the bottom layer"
 msgstr "Μετακίνηση μονοπατιού στο κατώτατο στρώμα [επίπεδο]"
 
-#: libbirdfont/DrawingTools.vala:566
+#: libbirdfont/DrawingTools.vala:577
 msgid "Flip path vertically"
 msgstr "Κατακόρυφη αναστροφή μονοπατιού"
 
-#: libbirdfont/DrawingTools.vala:573
+#: libbirdfont/DrawingTools.vala:584
 msgid "Flip path horizontally"
 msgstr "Οριζόντια αναστροφή μονοπατιού"
 
-#: libbirdfont/DrawingTools.vala:581
+#: libbirdfont/DrawingTools.vala:592
 msgid "Set size for background image"
 msgstr "Επιλογή μεγέθους εικόνας φόντου"
 
-#: libbirdfont/DrawingTools.vala:619
+#: libbirdfont/DrawingTools.vala:630
 msgid "Show/hide background image"
 msgstr "Εμφάνιση/απόκρυψη εικόνας φόντου"
 
-#: libbirdfont/DrawingTools.vala:630
+#: libbirdfont/DrawingTools.vala:641
 msgid "Insert a new background image"
 msgstr "Εισαγωγή νέας εικόνας φόντου"
 
-#: libbirdfont/DrawingTools.vala:644
+#: libbirdfont/DrawingTools.vala:655
 msgid "High contrast"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:658
+#: libbirdfont/DrawingTools.vala:669
 msgid "Set background threshold"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:676
+#: libbirdfont/DrawingTools.vala:687
 msgid "Amount of autotrace details"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:694
+#: libbirdfont/DrawingTools.vala:705
 msgid "Autotrace simplification"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:711
+#: libbirdfont/DrawingTools.vala:722
 msgid "Autotrace background image"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:721
+#: libbirdfont/DrawingTools.vala:732
 msgid "Show full unicode characters set"
 msgstr "Εμφάνιση πλήρους σετ unicode χαρακτήρων"
 
-#: libbirdfont/DrawingTools.vala:737
+#: libbirdfont/DrawingTools.vala:748
 msgid "Show default characters set"
 msgstr "Εμφάνιση προκαθορισμένου συνόλου χαρακτήρων"
 
-#: libbirdfont/DrawingTools.vala:753
+#: libbirdfont/DrawingTools.vala:764
 msgid "Show all characters in the font"
 msgstr "Εμφάνιση όλων των χαρακτήρων της γραμματοσειράς"
 
-#: libbirdfont/DrawingTools.vala:810
+#: libbirdfont/DrawingTools.vala:821
 msgid "Show guidelines"
 msgstr "Εμφάνιση οδηγών"
 
-#: libbirdfont/DrawingTools.vala:821
+#: libbirdfont/DrawingTools.vala:832
 msgid "Show guidelines for x-height and baseline"
 msgstr "Εμφάνιση οδηγών του ύψους χαρακτήρα και της γραμμής βάσης"
 
-#: libbirdfont/DrawingTools.vala:835
+#: libbirdfont/DrawingTools.vala:846
 msgid "Show guidelines at top and bottom margin"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:853
+#: libbirdfont/DrawingTools.vala:864
 msgid "Zoom in"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:860
+#: libbirdfont/DrawingTools.vala:871
 msgid "Zoom out"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:867
+#: libbirdfont/DrawingTools.vala:878
 msgid "Use one pixel per unit"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:875
+#: libbirdfont/DrawingTools.vala:886
 msgid "Show full glyph"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:882
+#: libbirdfont/DrawingTools.vala:893
 msgid "Fit in view"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:889
+#: libbirdfont/DrawingTools.vala:900
 #, fuzzy
 msgid "Zoom in on background image"
 msgstr "Ξάκρισμα εικόνας φόντου"
 
-#: libbirdfont/DrawingTools.vala:902
+#: libbirdfont/DrawingTools.vala:913
 msgid "Previous view"
 msgstr "Προηγούμενη προβολή"
 
-#: libbirdfont/DrawingTools.vala:908
+#: libbirdfont/DrawingTools.vala:919
 msgid "Next view"
 msgstr "Επόμενη προβολή"
 
-#: libbirdfont/DrawingTools.vala:928
+#: libbirdfont/DrawingTools.vala:939
 msgid "Stroke color"
 msgstr "Χρώμα πινελιάς"
 
-#: libbirdfont/DrawingTools.vala:975
+#: libbirdfont/DrawingTools.vala:986
 msgid "Handle color"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:998
+#: libbirdfont/DrawingTools.vala:1009
 msgid "Set precision"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1025
+#: libbirdfont/DrawingTools.vala:1036
 msgid "Show all control point handles or only handles for the selected points."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1034
+#: libbirdfont/DrawingTools.vala:1045
 msgid "Object color"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1055
+#: libbirdfont/DrawingTools.vala:1066
 msgid "Set fill color for open paths."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1063
+#: libbirdfont/DrawingTools.vala:1074
 msgid "Use TTF units."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1070
+#: libbirdfont/DrawingTools.vala:1081
 msgid "Adjust the number of samples per point in the freehand tool."
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1092
+#: libbirdfont/DrawingTools.vala:1103
 msgid "Simplification threshold"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1418
+#: libbirdfont/DrawingTools.vala:1429
 msgid "Set size for grid"
 msgstr ""
 
@@ -664,7 +664,7 @@ msgstr ""
 msgid "Rectangle"
 msgstr "Ορθογώνιο"
 
-#: libbirdfont/ResizeTool.vala:43
+#: libbirdfont/ResizeTool.vala:45
 msgid "Resize and rotate paths"
 msgstr ""
 

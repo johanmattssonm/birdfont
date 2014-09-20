@@ -370,6 +370,10 @@ public class SpinButton : Tool {
 	}
 
 	public void set_value_round (double v, bool check_boundaries = true, bool emit_signal = true) {
+		if (v == -0) {
+			v = 0;
+		}
+			
 		set_value (@"$v".replace (",", "."), check_boundaries, emit_signal);
 	}
 	

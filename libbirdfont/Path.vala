@@ -665,6 +665,7 @@ public class Path {
 		new_path.edit = edit;
 		new_path.open = open;
 		new_path.stroke = stroke;
+		new_path.skew = skew;
 		new_path.fill = fill;
 		new_path.direction_is_set = direction_is_set;
 		new_path.create_list ();

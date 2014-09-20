@@ -571,6 +571,14 @@ public class PenTool : Tool {
 			if (KeyBindings.modifier == SHIFT) {
 				selected_handle.angle = angle;
 				selected_handle.process_connected_handle ();
+				
+				if (selected_handle.parent.tie_handles) {
+					if (selected_handle.is_left_handle ()) {
+						selected_handle.parent.get_right_handle ().angle = angle - PI;
+					} else {
+						selected_handle.parent.get_left_handle ().angle = angle + PI;
+					}
+				}
 			}
 			
 			handle_selection.path.update_region_boundaries ();
