@@ -93,8 +93,6 @@ install ('resources/linux/48x48/birdfont.png', '/share/icons/hicolor/48x48/apps'
 
 install ('resources/linux/birdfont.appdata.xml', '/share/appdata/', 644)
 
-resources/linux/birdfont.appdata.xmlresources/linux/birdfont.appdata.xml
-
 if os.path.isfile ('build/bin/birdfont'):
 	install ('build/bin/birdfont', '/bin', 755)
 
