@@ -115,7 +115,7 @@ public class SearchPaths {
 
 		f = PREFIX + "/share/locale/sv/LC_MESSAGES/birdfont.mo";
 		if (exists (f)) {
-			return f;
+			return PREFIX + "/share/locale/";
 		}
 
 		f = "/usr/share/locale/sv/LC_MESSAGES/birdfont.mo";
@@ -127,7 +127,12 @@ public class SearchPaths {
 		if (exists (f)) {
 			return BirdFont.exec_path + "/Contents/Resources/locale";
 		}
-		
+
+		f = BirdFont.bundle_path + "/Contents/Resources/locale";
+		if (exists (f)) {
+			return BirdFont.bundle_path + "/Contents/Resources/locale";
+		}
+				
 		warning ("translations not found");
 		return "/usr/share/locale";
 	}

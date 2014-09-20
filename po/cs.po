@@ -965,7 +965,7 @@ msgstr "Podrobnosti, od 0.001 do 9.999, výchozí hodnota je 1"
 
 #: birdfont-autotrace/AutoTrace.vala:71
 msgid "print this message"
-msgstr "Vytisknout tuto zprávu\n"
+msgstr "Vytisknout tuto zprávu"
 
 #: birdfont-autotrace/AutoTrace.vala:72
 msgid "use quadratic control points"

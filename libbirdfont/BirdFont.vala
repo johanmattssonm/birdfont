@@ -671,6 +671,12 @@ public string t_ (string t) {
 	return _(t);
 }
 
+/** Translate mac menu items */
+public static string translate_mac (string t) {
+	string s = t_(t);
+	return s.replace ("_", "");
+}
+
 /** Print a warning if Birdfont was started with the --test argument. */
 public static void warn_if_test (string message) {
 	if (BirdFont.has_argument ("--test")) {
