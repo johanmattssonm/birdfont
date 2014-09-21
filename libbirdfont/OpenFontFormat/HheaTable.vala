@@ -12,6 +12,8 @@
     Lesser General Public License for more details.
 */
 
+using Math;
+
 namespace BirdFont {
 
 public class HheaTable : Table {
@@ -84,11 +86,12 @@ public class HheaTable : Table {
 		int16 ascender, descender;
 		FontData fd = new FontData ();
 		Fixed version = 1 << 16;
+		Font font = BirdFont.get_current_font ();
 		
 		fd.add_fixed (version); // table version
 		
-		ascender = glyf_table.ymax;
-		descender = glyf_table.ymin; // FIXME: look up, should it be -descender or descender?
+		ascender = (int16) rint (font.top_limit * HeadTable.UNITS);
+		descender = (int16) rint (font.bottom_limit * HeadTable.UNITS);
 		
 		fd.add_16 (ascender); // Ascender
 		fd.add_16 (descender); // Descender
