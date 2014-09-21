@@ -1351,7 +1351,7 @@ public class DescriptionForm : GLib.Object {
 		});
 		box.pack_start (bold, false, false, 0);
 		
-		italic = new CheckButton.with_label (_("Italic"));
+		italic = new CheckButton.with_label (t_("Italic"));
 		italic.toggled.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.italic = italic.active;;
