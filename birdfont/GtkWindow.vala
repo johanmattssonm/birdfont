@@ -582,48 +582,26 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem next_tab_item = new Gtk.MenuItem.with_mnemonic (t_("_Next Tab"));
 		tab_menu.append (next_tab_item);
 		next_tab_item.activate.connect (() => { 
-			TabBar tb = MainWindow.get_tab_bar ();
-			int n = tb.get_selected () + 1;
-			
-			if (!(0 <= n < tb.get_length ())) {
-				return;
-			}
-			
-			tb.select_tab (n);
+			MainWindow.next_tab ();
 		});	
 
 		Gtk.MenuItem prevoius_tab_item = new Gtk.MenuItem.with_mnemonic (t_("_Previous Tab"));
 		tab_menu.append (prevoius_tab_item);
-		prevoius_tab_item.activate.connect (() => { 
-			TabBar tb = MainWindow.get_tab_bar ();
-			int n = tb.get_selected () - 1;
-
-			if (!(0 <= n < tb.get_length ())) {
-				return;
-			}
-			
-			tb.select_tab (n);
+		prevoius_tab_item.activate.connect (() => {
+			MainWindow.previous_tab ();
 		});					
 
-		Gtk.MenuItem close_tab_item = new Gtk.MenuItem.with_mnemonic (t_("_Close tab"));
+		Gtk.MenuItem close_tab_item = new Gtk.MenuItem.with_mnemonic (t_("_Close Tab"));
 		tab_menu.append (close_tab_item);
 		close_tab_item.activate.connect (() => { 
-			TabBar tb = MainWindow.get_tab_bar ();
-			int n = tb.get_selected ();
-
-			if (!(0 <= n < tb.get_length ())) {
-				return;
-			}
-			
-			tb.close_tab (n);
+			MainWindow.close_tab ();
 		});	
 		close_tab_item.add_accelerator ("activate", accel_group, 'W', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 		Gtk.MenuItem close_all_tabs_item = new Gtk.MenuItem.with_mnemonic (t_("Close _All Tabs"));
 		tab_menu.append (close_all_tabs_item);
 		close_all_tabs_item.activate.connect (() => { 
-			TabBar tb = MainWindow.get_tab_bar ();
-			tb.close_all_tabs ();			
+			MainWindow.close_all_tabs ();		
 		});	
 
 		// Tool
@@ -654,7 +632,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		move_item.add_accelerator ("activate", accel_group, 'M', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-		Gtk.MenuItem full_unicode_item = new Gtk.MenuItem.with_mnemonic (t_("Show _full unicode characters set"));
+		Gtk.MenuItem full_unicode_item = new Gtk.MenuItem.with_mnemonic (t_("Show _Full Unicode Characters Set"));
 		tool_menu.append (full_unicode_item);
 		full_unicode_item.activate.connect (() => { 
 			Toolbox.select_tool_by_name ("utf_8");
@@ -1373,7 +1351,7 @@ public class DescriptionForm : GLib.Object {
 		});
 		box.pack_start (bold, false, false, 0);
 		
-		italic = new CheckButton.with_label (_("Italic"));
+		italic = new CheckButton.with_label (t_("Italic"));
 		italic.toggled.connect (() => {
 			Font f = BirdFont.get_current_font ();
 			f.italic = italic.active;;
