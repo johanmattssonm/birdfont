@@ -211,6 +211,39 @@ public class MainWindow : GLib.Object {
 	public static LigatureList get_ligature_display () {
 		return ligature_display;
 	}
+
+	public static void next_tab () {
+		TabBar tb = MainWindow.get_tab_bar ();
+		int n = tb.get_selected () + 1;
+			
+		if (!(0 <= n < tb.get_length ())) {
+			return;
+		}
+			
+		tb.select_tab (n);
+	}
+
+	public static void previous_tab () {
+		TabBar tb = MainWindow.get_tab_bar ();
+		int n = tb.get_selected () - 1;
+
+		if (!(0 <= n < tb.get_length ())) {
+			return;
+		}
+			
+		tb.select_tab (n);
+	}
+
+	public static void close_tab () {
+		TabBar tb = MainWindow.get_tab_bar ();
+		int n = tb.get_selected ();
+
+		if (!(0 <= n < tb.get_length ())) {
+			return;
+		}
+		
+		tb.close_tab (n);
+	}
 }
 
 }
