@@ -45,7 +45,6 @@ mv birdfont-$version.tar.gz ../
 cd birdfont-$version && \
 ./configure && \
 ./scripts/linux_build.py && \
-gpg --output birdfont-$version.tar.gz.sig --detach-sig birdfont-$version.tar.gz && \
-cd ..
-
+gpg --output ../../birdfont-$version.tar.gz.sig --detach-sig ../../birdfont-$version.tar.gz && \
+cd .. && \
 rm -rf ../export/birdfont-$version
