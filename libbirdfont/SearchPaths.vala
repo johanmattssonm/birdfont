@@ -101,6 +101,11 @@ public class SearchPaths {
 			if (exists (f)) {
 				return BirdFont.exec_path + "/Contents/Resources/locale";
 			}
+			
+			f = BirdFont.exec_path + "\\locale\\sv\\LC_MESSAGES\\birdfont.mo";
+			if (exists (f)) {
+				return BirdFont.exec_path + "\\locale";
+			}			
 		}
 		
 		f = "./build/locale/sv/LC_MESSAGES/birdfont.mo";
