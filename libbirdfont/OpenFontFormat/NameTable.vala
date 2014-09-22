@@ -152,7 +152,10 @@ public class NameTable : Table {
 		// truncate strings longer than 28 characters
 		for (int i = 0; i < ccount && i < 27; i++) {
 			c = n.get_char (n.index_of_nth_char (i));
-			if (is_valid_ps_name_char (c) || (allow_space && c == ' ')) {
+			
+			if (allow_space && c == ' ') {
+				name.append_unichar (' ');
+			} else if (is_valid_ps_name_char (c)) {
 				name.append_unichar (c);
 			} else {
 				name.append_unichar ('_');
@@ -226,13 +229,13 @@ public class NameTable : Table {
 		text.add (font.version);
 		type.add (VERSION);
 		
-		text.add (validate_name (font.postscript_name));
+		text.add (validate_ps_name (font.postscript_name));
 		type.add (POSTSCRIPT_NAME);
 
 		text.add (font.description);
 		type.add (DESCRIPTION);
 		
-		text.add (validate_ps_name (font.name));
+		text.add (validate_name (font.name));
 		type.add (PREFERED_FAMILY);
 		
 		text.add (validate_name (font.subfamily));
