@@ -86,12 +86,17 @@ public class SvgParser {
 		}
 		
 		xml_document = sb.str;
-			
+		
+		// Remove Inkscape specific namespaces
+		xml_document = replace (xml_document, "<metadata", "</metadata>", "");
+		xml_document = replace (xml_document, "<sodipodi:namedview", "</sodipodi:namedview>", "");
+		xml_document = xml_document.replace ("inkscape:", "");
+		
 		// CS6 compability
 		xml_document = replace (xml_document, "<svg", ">", "<svg>");
 		xml_document = replace (xml_document, "<foreignObject", "</foreignObject>", "");
 		xml_document = replace (xml_document, "<i:pgf", "</i:pgf>", "");
-		xml_document = replace (xml_document, "<g", ">", "<g>");
+		xml_document = xml_document.replace ("i:", "");
 		xml_document = xml_document.replace ("sodipodi:", "");
 		
 		// parse the file
@@ -242,6 +247,7 @@ public class SvgParser {
 			if (functions[i].has_prefix ("matrix")) {
 				matrix (functions[i], pl);
 			}
+			
 			// TODO: rotate etc.
 		}
 	}
@@ -389,7 +395,7 @@ public class SvgParser {
 		string attr_name = "";
 		string attr_content;
 		Glyph glyph = MainWindow.get_current_glyph ();
-		PathList path_list;
+		PathList path_list = new PathList ();
 			
 		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
 			attr_name = prop->name;
@@ -398,6 +404,15 @@ public class SvgParser {
 			if (attr_name == "d") {
 				path_list = parse_svg_data (attr_content, glyph);
 				pl.append (path_list);
+			}
+		}
+		
+		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
+			attr_name = prop->name;
+			attr_content = prop->children->content;
+			
+			if (attr_name == "transform") {
+				transform (attr_content, path_list);
 			}
 		}
 	}
