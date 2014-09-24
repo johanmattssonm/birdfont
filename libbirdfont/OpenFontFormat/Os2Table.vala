@@ -107,9 +107,10 @@ public class Os2Table : Table {
 		
 		fd.add_u16 (glyf_table.get_first_char ()); // usFirstCharIndex
 		fd.add_u16 (glyf_table.get_last_char ()); // usLastCharIndex
+		
+		ascender = (int16) rint (font.top_limit * HeadTable.UNITS);
+		descender = (int16) rint (font.bottom_limit * HeadTable.UNITS);
 
-		ascender = glyf_table.ymax;
-		descender = glyf_table.ymin;
 		
 		fd.add_16 (ascender); // sTypoAscender
 		fd.add_16 (descender); // sTypoDescender
