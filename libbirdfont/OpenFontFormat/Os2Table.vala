@@ -12,6 +12,8 @@
     Lesser General Public License for more details.
 */
 
+using Math;
+
 namespace BirdFont {
 
 public class Os2Table : Table {
