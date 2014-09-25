@@ -102,13 +102,19 @@ install ('build/bin/birdfont-import', '/bin', 755)
 
 #library
 if not options.libdir:
-	p = platform.machine()
- 	if p == 'i386' or p == 's390' or p == 'ppc' or p == 'armv7hl':
- 		libdir = '/lib'
- 	elif p == 'x86_64' or p == 's390x' or p == 'ppc64':
- 		libdir = '/lib64'
- 	else:
-		libdir = '/lib'
+	
+	if platform.dist()[0] == 'Ubuntu':
+		process = subprocess.Popen(['dpkg-architecture', '-qDEB_HOST_MULTIARCH'], stdout=subprocess.PIPE)
+		out, err = process.communicate()
+		libdir = '/lib/' + out.rstrip ('\n')
+	else:
+		p = platform.machine()
+		if p == 'i386' or p == 's390' or p == 'ppc' or p == 'armv7hl':
+			libdir = '/lib'
+		elif p == 'x86_64' or p == 's390x' or p == 'ppc64':
+			libdir = '/lib64'
+		else:
+			libdir = '/lib'
 else:
 	libdir = options.libdir
 
