@@ -65,7 +65,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			$(pkg-config --cflags cairo) \
 			$(pkg-config --cflags glib-2.0) \
 			$(pkg-config --cflags gdk-pixbuf-2.0) \
-			-I ./build/mac/birdfont""")
+			-I ./build/libbirdxml""")
 		run("mv ./*.o build/libbirdfont/ ")
 
 		if library.endswith (".dylib"):
@@ -83,6 +83,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			$(pkg-config --libs cairo) \
 			$(pkg-config --libs glib-2.0) \
 			$(pkg-config --libs gdk-pixbuf-2.0) \
+			-L./build/bin -l birdxml \
 			-o """ + library)
 		run("mv " + library + " build/bin/")
 		
@@ -136,6 +137,7 @@ def libbirdxml(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull =
 			-c build/libbirdxml/*.c \
 			-fPIC \
 			$(pkg-config --cflags glib-2.0) \
+			$(pkg-config --cflags gobject-2.0) \
 			""")
 			
 		run("mv ./*.o build/libbirdxml/ ")
@@ -150,6 +152,7 @@ def libbirdxml(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull =
 			""" + sonameparam + """ \
 			build/libbirdxml/*.o \
 			$(pkg-config --libs glib-2.0) \
+			$(pkg-config --libs gobject-2.0) \
 			-o """ + library)
 		run("mv " + library + " build/bin/")
 		
