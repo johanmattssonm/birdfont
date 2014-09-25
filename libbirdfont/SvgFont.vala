@@ -12,7 +12,7 @@
     Lesser General Public License for more details.
 */
 
-using Xml;
+using Bird;
 
 namespace BirdFont {
 
@@ -27,44 +27,48 @@ class SvgFont : GLib.Object {
 	
 	/** Load svg font from file. */
 	public void load (string path) {
-		Xml.Doc* doc;
-		Xml.Node* root = null;
-		
-		Parser.init ();
-		doc = Parser.parse_file (path);
-		root = doc->get_root_element ();
-		return_if_fail (root != null);
-		parse_svg_font (root);
-		delete doc;
-		Parser.cleanup ();	
+		string data;
+		XmlParser xml_parser;
+		try {
+			FileUtils.get_contents (path, out data);
+			xml_parser = new XmlParser (data);
+			parse_svg_font (xml_parser.get_next_tag ());
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 	}
 	
-	void parse_svg_font (Xml.Node* node) {
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "defs") {
-				parse_svg_font (iter);
+	void parse_svg_font (Tag tag) {
+		Tag t;
+		
+		tag.reparse ();
+		while (tag.has_more_tags ()) {
+			t = tag.get_next_tag ();
+			
+			if (t.get_name () == "defs") {
+				parse_svg_font (t);
 			}
 			
-			if (iter->name == "font") {
-				parse_font_tag (iter);
-				parse_svg_font (iter);
+			if (t.get_name () == "font") {
+				parse_font_tag (t);
+				parse_svg_font (t);
 			}
 
-			if (iter->name == "font-face") {
-				parse_font_limits (iter);
+			if (t.get_name () == "font-face") {
+				parse_font_limits (t);
 			}
 
-			if (iter->name == "hkern") {
-				parse_hkern (iter);
+			if (t.get_name () == "hkern") {
+				parse_hkern (t);
 			}
 									
-			if (iter->name == "glyph") {
-				parse_glyph (iter);
+			if (t.get_name () == "glyph") {
+				parse_glyph (t);
 			}
 		}		
 	}
 
-	void parse_hkern (Xml.Node* node) {
+	void parse_hkern (Tag tag) {
 		string left = "";
 		string right = "";
 		string left_name = "";
@@ -72,35 +76,34 @@ class SvgFont : GLib.Object {
 		double kerning = 0;
 		unichar l, r;
 		StringBuilder sl, sr;
-		string attr_name = "";
-		string attr_content;
 		GlyphRange grr, grl;
+		Attribute attr;
 		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
 			// left
-			if (attr_name == "u1") {
-				left = attr_content;
+			if (attr.get_name () == "u1") {
+				left = attr.get_content ();
 			}	
 					
 			// right	
-			if (attr_name == "u2") {
-				right = attr_content;
+			if (attr.get_name () == "u2") {
+				right = attr.get_content ();
 			}
 
-			if (attr_name == "g1") {
-				left_name = attr_content;
+			if (attr.get_name () == "g1") {
+				left_name = attr.get_content ();
 			}
 			
-			if (attr_name == "g2") {
-				right_name = attr_content;
+			if (attr.get_name () == "g2") {
+				right_name = attr.get_content ();
 			}
 				
 			// kerning
-			if (attr_name == "k") {
-				kerning = double.parse (attr_content) * units;
+			if (attr.get_name () == "k") {
+				kerning = double.parse (attr.get_content ()) * units;
 			}
 		}
 				
@@ -131,31 +134,30 @@ class SvgFont : GLib.Object {
 		}
 	}
 
-	void parse_font_limits (Xml.Node* node) {
-		string attr_name = "";
-		string attr_content;
+	void parse_font_limits (Tag tag) {
 		double top_limit = 0;
 		double bottom_limit = 0;
+		Attribute attr;
 		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-			if (attr_name == "units-per-em") {
-				units = 100.0 / double.parse (attr_content);
+			if (attr.get_name () == "units-per-em") {
+				units = 100.0 / double.parse (attr.get_content ());
 			}	
 		}
 
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 					
-			if (attr_name == "ascent") {
-				top_limit = double.parse (attr_content);
+			if (attr.get_name () == "ascent") {
+				top_limit = double.parse (attr.get_content ());
 			}
 			
-			if (attr_name == "descent") {
-				bottom_limit = double.parse (attr_content);
+			if (attr.get_name () == "descent") {
+				bottom_limit = double.parse (attr.get_content ());
 			}		
 		}
 		
@@ -166,20 +168,19 @@ class SvgFont : GLib.Object {
 		font.top_limit = top_limit;
 	}
 	
-	void parse_font_tag (Xml.Node* node) {
-		string attr_name = "";
-		string attr_content;
+	void parse_font_tag (Tag tag) {
+		Attribute attr;
 		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-			if (attr_name == "horiz-adv-x") {
-				font_advance = double.parse (attr_content);
+			if (attr.get_name () == "horiz-adv-x") {
+				font_advance = double.parse (attr.get_content ());
 			}
 						
-			if (attr_name == "id") {
-				font.set_name (attr_content);
+			if (attr.get_name () == "id") {
+				font.set_name (attr.get_content ());
 			}
 		}
 	}
@@ -224,9 +225,7 @@ class SvgFont : GLib.Object {
 		return v.char_count () > 1;
 	}
 	
-	void parse_glyph (Xml.Node* node) {
-		string attr_name = "";
-		string attr_content;
+	void parse_glyph (Tag tag) {
 		unichar unicode_value = 0;
 		string glyph_name = "";
 		string svg = "";
@@ -235,36 +234,37 @@ class SvgFont : GLib.Object {
 		double advance = font_advance;
 		string ligature = "";
 		SvgParser parser = new SvgParser ();
+		Attribute attr;
 
 		parser.set_format (SvgFormat.INKSCAPE);
 
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 
-			if (attr_name == "unicode") {
-				unicode_value = get_unichar (attr_content);
+			if (attr.get_name () == "unicode") {
+				unicode_value = get_unichar (attr.get_content ());
 				
 				if (glyph_name == "") {
-					glyph_name = attr_content;
+					glyph_name = attr.get_content ();
 				}
 				
-				if (is_ligature (attr_content)) {
-					ligature = attr_content;
+				if (is_ligature (attr.get_content ())) {
+					ligature = attr.get_content ();
 				}
 			}
 			
 			// svg data
-			if (attr_name == "d") {
-				svg = attr_content;
+			if (attr.get_name () == "d") {
+				svg = attr.get_content ();
 			}
 			
-			if (attr_name == "glyph-name") {
-				glyph_name = attr_content;
+			if (attr.get_name () == "glyph-name") {
+				glyph_name = attr.get_content ();
 			}
 
-			if (attr_name == "horiz-adv-x") {
-				advance = double.parse (attr_content);
+			if (attr.get_name () == "horiz-adv-x") {
+				advance = double.parse (attr.get_content ());
 			}
 		}
 

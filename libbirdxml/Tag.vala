@@ -33,10 +33,7 @@ public class Tag : GLib.Object {
 		this.name = name;
 		this.data = content;
 		this.attributes = attributes;
-		tag_index = 0;
-		attribute_index = 0;
-		next_tag = obtain_next_tag ();
-		next_attribute = obtain_next_attribute ();
+		reparse ();
 	}
 	
 	internal Tag.empty () {
@@ -58,6 +55,11 @@ public class Tag : GLib.Object {
 		return name;
 	}
 
+	/** @return data between the starty and end tag. */
+	public string get_content () {
+		return data;
+	}
+
 	/** @return true if there is one more tags left */
 	public bool has_more_tags () {
 		return has_tags;
@@ -65,17 +67,19 @@ public class Tag : GLib.Object {
 	
 	/** @return the next tag. **/
 	public Tag get_next_tag () {
-		Tag r = (!) next_tag;
+		Tag r = next_tag == null ? new Tag.empty () : (!) next_tag;
 		next_tag = obtain_next_tag ();
 		return r;
 	}
 
+	/** @return true is there is one or more attributes to obtain with get_next_attribute */
 	public bool has_more_attributes () {
 		return has_attributes;
 	}
 	
+	/** @return next attribute. */
 	public Attribute get_next_attribute () {
-		Attribute r = (!) next_attribute;
+		Attribute r = next_attribute == null ? new Attribute.empty () : (!) next_attribute;
 		next_attribute = obtain_next_attribute ();
 		return r;
 	}
@@ -120,6 +124,10 @@ public class Tag : GLib.Object {
 				
 				name = data.substring (index, separator - index);
 				
+				if (name.has_prefix ("!")) {
+					continue;
+				}
+				
 				end = data.index_of (">", start);
 				attributes = data.substring (separator, end - separator);
 				
@@ -135,7 +143,6 @@ public class Tag : GLib.Object {
 					data.get_next_char (ref end_tag_index, out c);
 				}
 				
-				print (@"$(this.name)    New tag end_tag_index $end_tag_index, $name, $attributes, $content\n");
 				return new Tag (name, attributes, content);	
 			}
 		}

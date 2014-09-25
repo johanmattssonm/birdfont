@@ -11,7 +11,7 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
     Lesser General Public License for more details.
 */
-using Xml;
+using Bird;
 
 namespace BirdFont {
 
@@ -31,38 +31,30 @@ class BirdFontFile : GLib.Object {
 	 * @param path path to a valid .bf file
 	 */
 	public bool load (string path) {
-		TextReader tr;
+		string xml_data;
+		XmlParser parser;
 		bool ok;
-		
-		Parser.init ();
+	
+		FileUtils.get_contents(path, out xml_data);
 		
 		font.background_images.clear ();
-		
 		font.font_file = path;
-		tr = new TextReader.filename (path);
 		
-		if (is_null (tr)) {
-			warning (@"Failed to create TextReader for path: $path");
-		}
-		
-		ok = load_xml (tr);
-		
-		// This causes a crash on windows
-		// Parser.cleanup ();
+		parser = new XmlParser (xml_data);
+		ok = load_xml (parser);
 				
 		return ok;
 	}
 
 	public bool load_part (string bfp_file) {
-		TextReader tr;
+		string xml_data;
+		XmlParser parser;
 		bool ok;
-		Parser.init ();
-		tr = new TextReader.filename (bfp_file);
-		ok = load_xml (tr);
+	
+		FileUtils.get_contents(bfp_file, out xml_data);
+		parser = new XmlParser (xml_data);
+		ok = load_xml (parser);
 		
-		// This causes a crash on windows
-		// Parser.cleanup ();
-				
 		return ok;
 	}
 
@@ -70,33 +62,23 @@ class BirdFontFile : GLib.Object {
 	 * @param xml_data data for a valid .bf file
 	 */
 	public bool load_data (string xml_data) {
-		TextReader tr;
 		bool ok;
+		XmlParser parser;
 		
-		Parser.init ();
 		font.font_file = "typeface.bf";
-		tr = new TextReader.for_doc (xml_data, "");
-		ok = load_xml (tr);
-		Parser.cleanup ();
+		parser = new XmlParser (xml_data);
+		ok = load_xml (parser);
 		
 		return ok;
 	}
 
-	private bool load_xml (TextReader tr) {
+	private bool load_xml (XmlParser parser) {
 		bool ok = true;
-		Xml.Node* root;
 		
-		tr.read ();
-		root = tr.expand ();
-
-		if (!is_null (root)) {
-			create_background_files (root);
-			ok = parse_file (root);
-		} else {
-			warning ("No root element");
-		}
+		create_background_files (parser.get_next_tag ());
 		
-		tr.close ();
+		parser.reparse ();
+		ok = parse_file (parser.get_next_tag ());
 		
 		return ok;
 	}
@@ -593,98 +575,83 @@ class BirdFontFile : GLib.Object {
 		}			
 	}
 
-	private bool parse_file (Xml.Node* root) {
-		Xml.Node* node = root;
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
+	private bool parse_file (Tag tag) {
+		Tag t;
+		
+		tag.reparse ();
+		while (tag.has_more_tags ()) {
+			t = tag.get_next_tag ();
 
-			// this is a backup file set path to the original 
-			if (iter->name == "backup") {
-				font.font_file = iter->children->content;
-			}
-				
-			// old glyph format
-			if (iter->name == "glyph") {
-				parse_ffi_glyph (iter);
+			// this is a backup file, but path pointing to the original file
+			if (t.get_name () == "backup") {
+				font.font_file = t.get_content ();
 			}
 			
-			// new glyph format
-			if (iter->name == "collection") {
-				parse_glyph_collection (iter);
-			}
-
-			// horizontal lines in the old format
-			if (iter->name == "lines") {
-				parse_font_boundaries (iter);
+			// glyph format
+			if (t.get_name () == "collection") {
+				parse_glyph_collection (t);
 			}
 			
 			// horizontal lines in the new format
-			if (iter->name == "horizontal") {
-				parse_horizontal_lines (iter);
+			if (t.get_name () == "horizontal") {
+				parse_horizontal_lines (t);
 			}			
 			
 			// grid buttons
-			if (iter->name == "grid") {
-				parse_grid (iter);
+			if (t.get_name () == "grid") {
+				parse_grid (t);
 			}
 
-			if (iter->name == "background") {
-				parse_background (iter);
+			if (t.get_name () == "background") {
+				parse_background (t);
+			}
+
+			if (t.get_name () == "postscript_name") {
+				font.postscript_name = t.get_content ();
 			}
 			
-			if (iter->name == "images") {
-				parse_background_selection (iter);
+			if (t.get_name () == "name") {
+				font.name = t.get_content ();
 			}
 
-			if (iter->name == "postscript_name" && iter->children != null) {
-				font.postscript_name = iter->children->content;
+			if (t.get_name () == "subfamily") {
+				font.subfamily = t.get_content ();
+			}
+
+			if (t.get_name () == "bold") {
+				font.bold = bool.parse (t.get_content ());
 			}
 			
-			if (iter->name == "name" && iter->children != null) {
-				font.name = iter->children->content;
-			}
-
-			if (iter->name == "subfamily" && iter->children != null) {
-				font.subfamily = iter->children->content;
-			}
-
-			if (iter->name == "bold" && iter->children != null) {
-				font.bold = bool.parse (iter->children->content);
+			if (t.get_name () == "italic") {
+				font.italic = bool.parse (t.get_content ());
 			}
 			
-			if (iter->name == "italic" && iter->children != null) {
-				font.italic = bool.parse (iter->children->content);
+			if (t.get_name () == "full_name") {
+				font.full_name = t.get_content ();
 			}
 			
-			if (iter->name == "full_name" && iter->children != null) {
-				font.full_name = iter->children->content;
+			if (t.get_name () == "unique_identifier") {
+				font.unique_identifier = t.get_content ();
+			}
+
+			if (t.get_name () == "version") {
+				font.version = t.get_content ();
+			}
+
+			if (t.get_name () == "description") {
+				font.description = t.get_content ();
 			}
 			
-			if (iter->name == "unique_identifier" && iter->children != null) {
-				font.unique_identifier = iter->children->content;
+			if (t.get_name () == "copyright") {
+				font.copyright = t.get_content ();
 			}
 
-			if (iter->name == "version" && iter->children != null) {
-				font.version = iter->children->content;
+			if (t.get_name () == "kerning") {
+				parse_kerning (t);
 			}
 
-			if (iter->name == "description" && iter->children != null) {
-				font.description = iter->children->content;
-			}
-			
-			if (iter->name == "copyright" && iter->children != null) {
-				font.copyright = iter->children->content;
-			}
-						
-			if (iter->name == "hkern") {
-				parse_old_kerning (iter);
-			}
-
-			if (iter->name == "kerning") {
-				parse_kerning (iter);
-			}
-
-			if (iter->name == "spacing") {
-				parse_spacing_class (iter);
+			if (t.get_name () == "spacing") {
+				parse_spacing_class (t);
 			}
 									
 			TooltipArea.show_text (t_("Loading XML data."));
@@ -694,15 +661,18 @@ class BirdFontFile : GLib.Object {
 		return true;
 	}
 	
-	private void create_background_files (Xml.Node* root) requires (root != null) {
-		for (Xml.Node* iter = root->children; iter != null; iter = iter->next) {			
-			if (iter->name == "name" && iter->children != null) {
-				font.set_name (iter->children->content);
-			}
+	private void create_background_files (Tag root) {
+		Tag child;
+		while (root.has_more_tags ()) {
+			child = root.get_next_tag ();
 			
-			if (iter->name == "background-image") {
-				parse_background_image (iter);
+			if (child.get_name () == "name") {
+				font.set_name (child.get_content ());
 			}
+
+			if (child.get_name () == "background-image") {
+				parse_background_image (child);
+			}			
 		}
 	}
 
@@ -725,56 +695,54 @@ class BirdFontFile : GLib.Object {
 		return GlyphRange.get_serialized_char (c);
 	}
 	
-	private void parse_spacing_class (Xml.Node* node) {
-		string attr_name;
-		string attr_content;
+	private void parse_spacing_class (Tag tag) {
 		string first, next;
 		SpacingClassTab spacing_class_tab = MainWindow.get_spacing_class_tab ();
+		Attribute attr;
 		
 		first = "";
 		next = "";
 		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-			if (attr_name == "first") {
-				first = (!) Font.to_unichar (attr_content).to_string ();
+			if (attr.get_name () == "first") {
+				first = (!) Font.to_unichar (attr.get_content ()).to_string ();
 			}
 
-			if (attr_name == "next") {
-				next = (!) Font.to_unichar (attr_content).to_string ();
+			if (attr.get_name () == "next") {
+				next = (!) Font.to_unichar (attr.get_content ()).to_string ();
 			}		
 		}
 		
 		spacing_class_tab.add_class (first, next);
 	}
 	
-	private void parse_kerning (Xml.Node* node) {
-		string attr_name;
-		string attr_content;
+	private void parse_kerning (Tag tag) {
 		GlyphRange range_left, range_right;
 		double hadjustment = 0;
 		KerningRange kerning_range;
+		Attribute attr;
 		
 		try {
 			range_left = new GlyphRange ();
 			range_right = new GlyphRange ();
-				
-			for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-				attr_name = prop->name;
-				attr_content = prop->children->content;
-				
-				if (attr_name == "left") {
-					range_left.parse_ranges (unserialize (attr_content));
+			
+			tag.reparse ();
+			while (tag.has_more_attributes ()) {
+				attr = tag.get_next_attribute ();
+
+				if (attr.get_name () == "left") {
+					range_left.parse_ranges (unserialize (attr.get_content ()));
 				}
 
-				if (attr_name == "right") {
-					range_right.parse_ranges (unserialize (attr_content));
+				if (attr.get_name () == "right") {
+					range_right.parse_ranges (unserialize (attr.get_content ()));
 				}
 
-				if (attr_name == "hadjustment") {
-					hadjustment = double.parse (attr_content);
+				if (attr.get_name () == "hadjustment") {
+					hadjustment = double.parse (attr.get_content ());
 				}				
 			}
 			
@@ -797,55 +765,8 @@ class BirdFontFile : GLib.Object {
 		}
 	}
 	
-	private void parse_old_kerning (Xml.Node* node) {
-		string attr_name;
-		string attr_content;
-		string left = "";
-		string right = "";
-		string kern = "";
-		GlyphRange grr, grl;
-
-		StringBuilder b;
-		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "left") {
-				b = new StringBuilder ();
-				b.append_unichar (Font.to_unichar (attr_content));
-				left = @"$(b.str)";
-			}
-
-			if (attr_name == "right") {
-				b = new StringBuilder ();
-				b.append_unichar (Font.to_unichar (attr_content));
-				right = @"$(b.str)";
-			}
-			
-			if (attr_name == "kerning") {
-				kern = attr_content;
-			}
-		}
-
-		try {
-			grl = new GlyphRange ();
-			grl.parse_ranges (left);
-
-			grr = new GlyphRange ();
-			grr.parse_ranges (right);
-			
-			KerningClasses.get_instance ().set_kerning (grl, grr, double.parse (kern));	
-		} catch (MarkupError e) {
-			warning (e.message);
-		}
-	}
-	
-	private void parse_background_image (Xml.Node* node) 
-		requires (node != null)
-	{
-		string attr_name;
-		string attr_content;
+	private void parse_background_image (Tag tag) {
+		Attribute attr;
 		
 		string file = "";
 		string data = "";
@@ -855,20 +776,16 @@ class BirdFontFile : GLib.Object {
 		FileOutputStream file_stream;
 		DataOutputStream png_stream;
 		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			return_if_fail (!is_null (prop->name));
-			return_if_fail (!is_null (prop->children));
-			return_if_fail (!is_null (prop->children->content));
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "sha1") {
-				file = attr_content;
+			if (attr.get_name () == "sha1") {
+				file = attr.get_content ();
 			}
-			
-			if (attr_name == "data") {
-				data = attr_content;
+
+			if (attr.get_name () == "data") {
+				data = attr.get_content ();
 			}
 		}
 
@@ -899,125 +816,75 @@ class BirdFontFile : GLib.Object {
 		}
 	}
 	
-	private void parse_background (Xml.Node* node) 
-		requires (node != null)
-	{
-		string attr_name;
-		string attr_content;
-				
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			
-			return_if_fail (!is_null (prop->name));
-			return_if_fail (!is_null (prop->children));
-			return_if_fail (!is_null (prop->children->content));
-			
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "scale") {
-				font.background_scale = attr_content;
-			}
-		}
-	}
-	
-	private void parse_background_selection (Xml.Node* node) {
-		string attr_name = "";
-		string attr_content;
+	private void parse_background (Tag tag) {
+		Attribute attr;
 		
-		return_if_fail (node != null);
-				
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "img") {
-				for (Xml.Attr* prop = iter->properties; prop != null; prop = prop->next) {
-					attr_name = prop->name;
-					attr_content = prop->children->content;
-					
-					if (attr_name == "src") {
-						font.background_images.add (attr_content);
-					}
-				}
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
+			
+			if (attr.get_name () == "scale") {
+				font.background_scale = attr.get_content ();
 			}
 		}
 	}
 	
-	private void parse_grid (Xml.Node* node) {
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			string attr_name = prop->name;
-			string attr_content = prop->children->content;
+	private void parse_grid (Tag tag) {
+		Attribute attr;
+		
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-			if (attr_name == "width") {
-				font.grid_width.add (attr_content);
+			if (attr.get_name () == "width") {
+				font.grid_width.add (attr.get_content ());
 			}
 		}		
 	}
 	
-	private void parse_horizontal_lines (Xml.Node* node) {
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "top_limit" && "" != iter->children->content) {
-				font.top_limit = parse_double_from_node (iter);
+	private void parse_horizontal_lines (Tag tag) {
+		Tag t;
+		
+		tag.reparse ();
+		while (tag.has_more_tags ()) {
+			t = tag.get_next_tag ();
+			if (t.get_name () == "top_limit" && t.get_content () != "") {
+				font.top_limit = parse_double_from_node (t);
 			}
 			
-			if (iter->name == "top_position" && "" != iter->children->content) {
-				font.top_position = parse_double_from_node (iter);
+			if (t.get_name () == "top_position" && t.get_content () != "") {
+				font.top_position = parse_double_from_node (t);
 			}
 			
-			if (iter->name == "x-height" && "" != iter->children->content) {
-				font.xheight_position = parse_double_from_node (iter);
+			if (t.get_name () == "x-height" && t.get_content () != "") {
+				font.xheight_position = parse_double_from_node (t);
 			}
 			
-			if (iter->name == "base_line" && "" != iter->children->content) {
-				font.base_line = parse_double_from_node (iter);
+			if (t.get_name () == "base_line" && t.get_content () != "") {
+				font.base_line = parse_double_from_node (t);
 			}
 			
-			if (iter->name == "bottom_position" && "" != iter->children->content) {
-				font.bottom_position = parse_double_from_node (iter);
+			if (t.get_name () == "bottom_position" && t.get_content () != "") {
+				font.bottom_position = parse_double_from_node (t);
 			}
 			
-			if (iter->name == "bottom_limit" && "" != iter->children->content) {
-				font.bottom_limit = parse_double_from_node (iter);
+			if (t.get_name () == "bottom_limit" && t.get_content () != "") {
+				font.bottom_limit = parse_double_from_node (t);
 			}
 		}	
 	}
 	
-	/** @deprecated horizontal in older .bf files */
-	private void parse_font_boundaries (Xml.Node* node) {
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "top_limit" && "" != iter->children->content) {
-				font.top_limit = -parse_double_from_node (iter);
-			}
-			
-			if (iter->name == "top_position" && "" != iter->children->content) {
-				font.top_position = -parse_double_from_node (iter);
-			}
-			
-			if (iter->name == "x-height" && "" != iter->children->content) {
-				font.xheight_position = -parse_double_from_node (iter);
-			}
-			
-			if (iter->name == "base_line" && "" != iter->children->content) {
-				font.base_line = -parse_double_from_node (iter);
-			}
-			
-			if (iter->name == "bottom_position" && "" != iter->children->content) {
-				font.bottom_position = -parse_double_from_node (iter);
-			}
-			
-			if (iter->name == "bottom_limit" && "" != iter->children->content) {
-				font.bottom_limit = -parse_double_from_node (iter);
-			}
-		}			
-	}
-	
-	private double parse_double_from_node (Xml.Node* iter) {
+	private double parse_double_from_node (Tag tag) {
 		double d;
-		bool r = double.try_parse (iter->children->content, out d);
+		bool r = double.try_parse (tag.get_content (), out d);
+		string s;
 		
 		if (unlikely (!r)) {
-			string? s = iter->content;
-			if (s == null) {
-				warning (@"Content is null for node $(iter->name)\n");
+			s = tag.get_content ();
+			if (s == "") {
+				warning (@"No content for node\n");
 			} else {
-				warning (@"Failed to parse double for \"$(iter->content)\"\n");
+				warning (@"Failed to parse double for \"$(tag.get_content ())\"\n");
 			}
 		}
 		
@@ -1025,23 +892,22 @@ class BirdFontFile : GLib.Object {
 	}
 
 	/** Parse the new glyph format */
-	private void parse_glyph_collection (Xml.Node* node) {
+	private void parse_glyph_collection (Tag tag) {
 		unichar unicode = 0;
 		GlyphCollection gc;
 		GlyphCollection? current_gc;
 		bool new_glyph_collection;
-		string attr_name;
-		string attr_content;
 		StringBuilder b;
 		string name = "";
 		int selected_id = -1;
-				
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "unicode") {
-				unicode = Font.to_unichar (attr_content);
+		Attribute attribute;
+		Tag t;
+		
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attribute = tag.get_next_attribute ();
+			if (attribute.get_name () == "unicode") {
+				unicode = Font.to_unichar (attribute.get_content ());
 				b = new StringBuilder ();
 				b.append_unichar (unicode);
 				name = b.str;
@@ -1056,16 +922,22 @@ class BirdFontFile : GLib.Object {
 		new_glyph_collection = (current_gc == null);
 		gc = (!new_glyph_collection) ? (!) current_gc : new GlyphCollection (unicode, name);
 
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "selected") {
-				selected_id = parse_selected (iter);
+		tag.reparse ();
+		while (tag.has_more_tags ()) {
+			t = tag.get_next_tag ();
+			
+			if (t.get_name () == "selected") {
+				selected_id = parse_selected (t);
 				gc.set_selected_version (selected_id);
 			}
 		}
-				
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "glyph") {
-				parse_glyph (iter, gc, name, unicode, selected_id);
+		
+		tag.reparse ();			
+		while (tag.has_more_tags ()) {
+			t = tag.get_next_tag ();
+			
+			if (t.get_name () == "glyph") {
+				parse_glyph (t, gc, name, unicode, selected_id);
 			}
 		}
 		
@@ -1074,18 +946,17 @@ class BirdFontFile : GLib.Object {
 		}
 	}
 
-	private int parse_selected (Xml.Node* node) {
-		string attr_name;
-		string attr_content;
+	private int parse_selected (Tag tag) {
 		int id = 1;
 		bool has_selected_tag = false;
+		Attribute attribute;
 
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "id") {
-				id = int.parse (attr_content);
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attribute = tag.get_next_attribute ();
+
+			if (attribute.get_name () == "id") {
+				id = int.parse (attribute.get_content ());
 				has_selected_tag = true;
 				break;
 			}
@@ -1098,47 +969,49 @@ class BirdFontFile : GLib.Object {
 		return id;
 	}
 
-	private void parse_glyph (Xml.Node* node, GlyphCollection gc, string name, unichar unicode, int selected_id) {	
-		string attr_name;
-		string attr_content;
+	private void parse_glyph (Tag tag, GlyphCollection gc, string name, unichar unicode, int selected_id) {	
 		Glyph glyph = new Glyph (name, unicode);
 		Path path;
 		bool selected = false;
 		bool has_id = false;
 		int id = 1;
+		Attribute attr;
+		Tag t;
 		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-			if (attr_name == "left") {
-				glyph.left_limit = double.parse (attr_content);
+			if (attr.get_name () == "left") {
+				glyph.left_limit = double.parse (attr.get_content ());
 			}
 			
-			if (attr_name == "right") {
-				glyph.right_limit = double.parse (attr_content);
+			if (attr.get_name () == "right") {
+				glyph.right_limit = double.parse (attr.get_content ());
 			}
 
 			// id is unique within the glyph collection
-			if (attr_name == "id") {
-				id = int.parse (attr_content);
+			if (attr.get_name () == "id") {
+				id = int.parse (attr.get_content ());
 				has_id = true;
 			}
 
 			// old way of selecting a glyph in the version list
-			if (attr_name == "selected") {
-				selected = bool.parse (attr_content);
+			if (attr.get_name () == "selected") {
+				selected = bool.parse (attr.get_content ());
 			}
 		}
 		
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "path") {
-				path = parse_path (iter);
+		tag.reparse ();
+		while (tag.has_more_tags ()) {
+			t = tag.get_next_tag ();
+			if (t.get_name () == "path") {
+				path = parse_path (t);
 				glyph.add_path (path);
 			}
 			
-			if (iter->name == "background") {
-				parse_background_scale (glyph, iter);
+			if (t.get_name () == "background") {
+				parse_background_scale (glyph, t);
 			}
 		}
 
@@ -1146,33 +1019,32 @@ class BirdFontFile : GLib.Object {
 		gc.insert_glyph (glyph, selected || selected_id == id);
 	}
 
-	private Path parse_path (Xml.Node* node) {	
-		string attr_name;
-		string attr_content;
+	private Path parse_path (Tag tag) {	
 		Path path = new Path ();
+		Attribute attr;
 		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-			if (attr_name == "data") {
-				path = parse_path_data (attr_content);
+			if (attr.get_name () == "data") {
+				path = parse_path_data (attr.get_content ());
 			}
 		}
 
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 
-			if (attr_name == "stroke") {
-				path.set_stroke (double.parse (attr_content));
+			if (attr.get_name () == "stroke") {
+				path.set_stroke (double.parse (attr.get_content ()));
 			}
 
-			if (attr_name == "skew") {
-				path.skew = (double.parse (attr_content));
-			}			
+			if (attr.get_name () == "skew") {
+				path.skew = double.parse (attr.get_content ());
+			}	
+		}
 			
-		}		
 		if (path.points.size == 0) {
 			warning ("Empty path");
 		}
@@ -1462,110 +1334,19 @@ class BirdFontFile : GLib.Object {
 		return 0;
 	}
 	
-	/** Parse one glyph in the old ffi format. */
-	private void parse_ffi_glyph (Xml.Node* node) {
-		string name = "";
-		int left = 0;
-		int right = 0;
-		unichar uni = 0;
-		int version = 0;
-		bool selected = false;
-		Glyph g;
-		GlyphCollection? gc;
-		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			string attr_name = prop->name;
-			string attr_content = prop->children->content;
-			StringBuilder b;
-			
-			if (attr_name == "unicode") {
-				uni = Font.to_unichar (attr_content);
-				b = new StringBuilder ();
-				b.append_unichar (uni);
-				name = b.str;
-			}
-
-			if (attr_name == "left") {
-				left = int.parse (attr_content);
-			}
-			
-			if (attr_name == "right") {
-				right = int.parse (attr_content);
-			}
-			
-			if (attr_name == "version") {
-				version = int.parse (attr_content);
-			}
-			
-			if (attr_name == "selected") {
-				selected = bool.parse (attr_content);
-			}
-		}
-
-		g = new Glyph (name, uni);
-		
-		g.left_limit = left;
-		g.right_limit = right;
-
-		parse_content (g, node);
-		
-		gc = font.get_glyph_collection (g.get_name ());
-		
-		if (g.get_name () == "") {
-			warning ("No name set for glyph.");
-		}
-				
-		if (gc == null) {
-			gc = new GlyphCollection (uni, name);
-			((!) gc).insert_glyph (g, selected);
-			font.add_glyph_collection ((!) gc);
-		} else {
-			((!)gc).insert_glyph (g, selected);
-		}
-	}
-	
-	/** Parse visual objects and paths 
-	 * @deprecated ffi format use bf
-	 */
-	private void parse_content (Glyph g, Xml.Node* node) {
-		Xml.Node* i;
-		return_if_fail (node != null);
-		
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "object") {
-				Path p = new Path ();
-				
-				for (i = iter->children; i != null; i = i->next) {
-					if (i->name == "point") {
-						parse_point (p, i);
-					}					
-				}
-
-				p.close ();
-				g.add_path (p);
-			}
-			
-			if (iter->name == "background") {
-				parse_background_scale (g, iter);
-			}
-		}
-	}
-	
-	private void parse_background_scale (Glyph g, Xml.Node* node) {
+	private void parse_background_scale (Glyph g, Tag tag) {
 		BackgroundImage img;
 		BackgroundImage? new_img = null;
-		
-		string attr_name = "";
-		string attr_content;
+		Attribute attr;
 		
 		File img_file = font.get_backgrounds_folder ().get_child ("parts");
 		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-			if (attr_name == "sha1") {
-				img_file = img_file.get_child (attr_content + ".png");
+			if (attr.get_name () == "sha1") {
+				img_file = img_file.get_child (attr.get_content () + ".png");
 
 				if (!img_file.query_exists ()) {
 					warning (@"Background file has not been created yet. $((!) img_file.get_path ())");
@@ -1577,120 +1358,38 @@ class BirdFontFile : GLib.Object {
 		}
 		
 		if (unlikely (new_img == null)) {
-			warning (@"No source for image found for $attr_name in $(g.name)");
+			warning ("No source for image found.");
 			return;
 		}
 	
 		img = (!) new_img;
 	
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();	
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 							
-			if (attr_name == "x") {
-				img.img_x = double.parse (attr_content);
+			if (attr.get_name () == "x") {
+				img.img_x = double.parse (attr.get_content ());
 			}
 			
-			if (attr_name == "y") {
-				img.img_y = double.parse (attr_content);
+			if (attr.get_name () == "y") {
+				img.img_y = double.parse (attr.get_content ());
 			}	
 
-			if (attr_name == "scale_x") {
-				img.img_scale_x = double.parse (attr_content);
+			if (attr.get_name () == "scale_x") {
+				img.img_scale_x = double.parse (attr.get_content ());
 			}
 
-			if (attr_name == "scale_y") {
-				img.img_scale_y = double.parse (attr_content);
+			if (attr.get_name () == "scale_y") {
+				img.img_scale_y = double.parse (attr.get_content ());
 			}
 						
-			if (attr_name == "rotation") {
-				img.img_rotation = double.parse (attr_content);
+			if (attr.get_name () == "rotation") {
+				img.img_rotation = double.parse (attr.get_content ());
 			}
 		}
 		
 		img.set_position (img.img_x, img.img_y);	
-	}
-	
-	private void parse_point (Path p, Xml.Node* iter) {
-		double x = 0;
-		double y = 0;
-		
-		double angle_right = 0;
-		double angle_left = 0;
-		
-		double length_right = 0;
-		double length_left = 0;
-		
-		PointType type_right = PointType.LINE_CUBIC;
-		PointType type_left = PointType.LINE_CUBIC;
-		
-		bool tie_handles = false;
-		
-		EditPoint ep;
-		
-		for (Xml.Attr* prop = iter->properties; prop != null; prop = prop->next) {
-			string attr_name = prop->name;
-			string attr_content = prop->children->content;
-						
-			if (attr_name == "x") x = double.parse (attr_content);
-			if (attr_name == "y") y = double.parse (attr_content);
-
-			if (attr_name == "right_type" && attr_content == "linear") {
-				type_right = PointType.LINE_CUBIC;
-			}	
-
-			if (attr_name == "left_type" && attr_content == "linear") {
-				type_left = PointType.LINE_CUBIC;
-			}	
-
-			if (attr_name == "right_type" && attr_content == "quadratic") {
-				type_right = PointType.QUADRATIC;
-			}	
-
-			if (attr_name == "left_type" && attr_content == "quadratic") {
-				type_left = PointType.QUADRATIC;
-			}
-
-			if (attr_name == "right_type" && attr_content == "cubic") {
-				type_right = PointType.CUBIC;
-			}	
-
-			if (attr_name == "left_type" && attr_content == "cubic") {
-				type_left = PointType.CUBIC;
-			}
-			
-			if (attr_name == "right_angle") angle_right = double.parse (attr_content);
-			if (attr_name == "right_length") length_right = double.parse (attr_content);
-			if (attr_name == "left_angle") angle_left = double.parse (attr_content);
-			if (attr_name == "left_length") length_left = double.parse (attr_content);
-			
-			if (attr_name == "tie_handles") tie_handles = bool.parse (attr_content);
-		}
-	
-		// backward compabtility
-		if (type_right == PointType.LINE_CUBIC && length_right != 0) {
-			type_right = PointType.CUBIC;
-		}
-
-		if (type_left == PointType.LINE_CUBIC && length_left != 0) {
-			type_left = PointType.CUBIC;
-		}
-		
-		ep = new EditPoint (x, y);
-					
-		ep.right_handle.angle = angle_right;
-		ep.right_handle.length = length_right;
-		ep.right_handle.type = type_right;
-		
-		ep.left_handle.angle = angle_left;
-		ep.left_handle.length = length_left;
-		ep.left_handle.type = type_left;
-		
-		ep.tie_handles = tie_handles;
-		
-		ep.type = type_right;
-		
-		p.add_point (ep);
 	}
 }
 

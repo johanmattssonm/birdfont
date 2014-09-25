@@ -14,12 +14,12 @@
 namespace Bird {
 
 /** A small xml parser originally written for the BirdFont project. */
-public class Xml : GLib.Object {
+public class XmlParser : GLib.Object {
 	
 	Tag root;
 	string data;
 
-	public Xml (string data) {
+	public XmlParser (string data) {
 		this.data = data;
 		reparse ();
 	}
@@ -31,12 +31,13 @@ public class Xml : GLib.Object {
 		root_index = find_root_tag ();
 		if (root_index == -1) {
 			warning ("No root tag found.");
+			root = new Tag.empty ();
+		} else {
+			root = new Tag ("", "", data.substring (root_index));
 		}
-		
-		root = new Tag ("", "", data.substring (root_index));
 	}
 	
-	/** @return the next tag. **/
+	/** @return the root tag. **/
 	public Tag get_next_tag () {
 		return root.get_next_tag ();
 	}
@@ -61,7 +62,7 @@ public class Xml : GLib.Object {
 			if (c == '<') {
 				modifier = index;
 				data.get_next_char (ref modifier, out c);
-				if (c != '?' && c != '[') {
+				if (c != '?' && c != '[' && c != '!') {
 					return prev_index;
 				} 
 			}

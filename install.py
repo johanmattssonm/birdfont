@@ -103,7 +103,7 @@ install ('build/bin/birdfont-import', '/bin', 755)
 #library
 if not options.libdir:
 	
-	if platform.dist()[0] == 'Ubuntu':
+	if platform.dist()[0] == 'Ubuntu' or platform.dist()[0] == 'Debian':
 		process = subprocess.Popen(['dpkg-architecture', '-qDEB_HOST_MULTIARCH'], stdout=subprocess.PIPE)
 		out, err = process.communicate()
 		libdir = '/lib/' + out.rstrip ('\n')

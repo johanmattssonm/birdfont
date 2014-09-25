@@ -13,7 +13,7 @@
 */
 
 using Cairo;
-using Xml;
+using Bird;
 
 namespace BirdFont {
 

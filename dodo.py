@@ -44,7 +44,6 @@ DOIT_CONFIG = {
 # external Vala libs
 LIBS = [
     'glib-2.0',
-    'libxml-2.0',
     'gio-2.0',
     'cairo',
     'gdk-pixbuf-2.0',
@@ -100,7 +99,7 @@ def task_libbirdxml():
 libbird = Vala(src='libbirdfont', build='build', library='birdfont', so_version=version.SO_VERSION, pkg_libs=LIBS, vala_deps=[libbirdxml])
 def task_libbirdfont():
     yield libbird.gen_c(valac_options)
-    yield libbird.gen_o(['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
+    yield libbird.gen_o(['-fPIC -I./build/', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
     yield libbird.gen_so()
     yield libbird.gen_ln()
 
