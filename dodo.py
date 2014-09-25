@@ -30,6 +30,7 @@ from scripts import config
 DOIT_CONFIG = {
     'default_tasks': [
         'build',
+        'libbirdxml',
         'libbirdfont',
         'birdfont',
         'birdfont_autotrace',
@@ -43,7 +44,6 @@ DOIT_CONFIG = {
 # external Vala libs
 LIBS = [
     'glib-2.0',
-    'libxml-2.0',
     'gio-2.0',
     'cairo',
     'gdk-pixbuf-2.0',
@@ -51,6 +51,10 @@ LIBS = [
     config.GEE,
     'libnotify',
     'libgit2'
+    ]
+
+LIBBIRD_XML_LIBS = [
+    'glib-2.0'
     ]
 
 def task_build ():
@@ -83,34 +87,43 @@ valac_options = [
 	'--target-glib=2.34', # see bug 0000004
 	'--define=LINUX'
 	]
-libbird = Vala(src='libbirdfont', build='build', library='birdfont', so_version=version.SO_VERSION, pkg_libs=LIBS)
+
+libbirdxml = Vala(src='libbirdxml', build='build', library='birdxml', so_version=version.LIBBIRDXML_SO_VERSION, pkg_libs=LIBBIRD_XML_LIBS)
+def task_libbirdxml():
+    yield libbirdxml.gen_c(valac_options)
+    yield libbirdxml.gen_o(['-fPIC'])
+    yield libbirdxml.gen_so()
+    yield libbirdxml.gen_ln()
+    
+
+libbird = Vala(src='libbirdfont', build='build', library='birdfont', so_version=version.SO_VERSION, pkg_libs=LIBS, vala_deps=[libbirdxml])
 def task_libbirdfont():
     yield libbird.gen_c(valac_options)
-    yield libbird.gen_o(['-fPIC', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
+    yield libbird.gen_o(['-fPIC -I./build/', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
     yield libbird.gen_so()
     yield libbird.gen_ln()
 
 
 def task_birdfont():
-    bird = Vala(src='birdfont', build='build', pkg_libs=LIBS, vala_deps=[libbird])
+    bird = Vala(src='birdfont', build='build', pkg_libs=LIBS, vala_deps=[libbird, libbirdxml])
     yield bird.gen_c(valac_options)
     yield bird.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
 
 def task_birdfont_autotrace():
-     exp = Vala(src='birdfont-autotrace', build='build', pkg_libs=LIBS, vala_deps=[libbird])
+     exp = Vala(src='birdfont-autotrace', build='build', pkg_libs=LIBS, vala_deps=[libbird, libbirdxml])
      yield exp.gen_c(valac_options)
      yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
 
 def task_birdfont_export():
-     exp = Vala(src='birdfont-export', build='build', pkg_libs=LIBS, vala_deps=[libbird])
+     exp = Vala(src='birdfont-export', build='build', pkg_libs=LIBS, vala_deps=[libbird, libbirdxml])
      yield exp.gen_c(valac_options)
      yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 
 
 def task_birdfont_import():
-     exp = Vala(src='birdfont-import', build='build', pkg_libs=LIBS, vala_deps=[libbird])
+     exp = Vala(src='birdfont-import', build='build', pkg_libs=LIBS, vala_deps=[libbird, libbirdxml])
      yield exp.gen_c(valac_options)
      yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
 

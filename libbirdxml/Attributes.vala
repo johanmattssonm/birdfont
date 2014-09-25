@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -11,33 +11,36 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
     Lesser General Public License for more details.
 */
+namespace Bird {
 
-using Cairo;
-using Bird;
-
-namespace BirdFont {
-
-public class Kerning : GLib.Object {
-	public double val;
-	public Glyph? glyph;
+public class Attribute : GLib.Object {
 	
-	public Kerning (double v) {
-		val = v;
-		glyph = null;
+	public string ns;
+	public string name;
+	public string content;
+	
+	internal Attribute (string ns, string name, string content) {
+		this.ns = ns;
+		this.name = name;
+		this.content = content;
+	}
+
+	internal Attribute.empty () {
+		this.ns = "";
+		this.name = "";
+		this.content = "";
 	}
 	
-	public Kerning.for_glyph (Glyph? g, double v) {
-		val = v;
-		glyph = g;
+	public string get_namespace () {
+		return ns;
 	}
 	
-	public Glyph get_glyph () {
-		if (unlikely (glyph == null)) {
-			warning ("No glyph");
-			return new Glyph ("");
-		}
-		
-		return (!) glyph;
+	public string get_name () {
+		return name;
+	}
+
+	public string get_content () {
+		return content;
 	}
 }
 

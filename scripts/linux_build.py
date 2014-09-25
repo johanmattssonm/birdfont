@@ -48,15 +48,18 @@ cc = options.cc
 cflags = options.cflags
 ldflags = options.ldflags
 library_cflags = options.cflags
-library_ldflags= options.ldflags + " -Wl,-soname," + "libbirdfont.so." + version.SO_VERSION
-library = "libbirdfont.so." + version.SO_VERSION
+library_ldflags= options.ldflags + " -Wl,-soname," + "libbirdfont.so." + version.LIBBIRDXML_SO_VERSION
+
+xmllibrary_cflags = options.cflags
+xmllibrary_ldflags= options.ldflags + " -Wl,-soname," + "libbirdxml.so." + version.SO_VERSION
 
 configfile.write_config (prefix)
 compile_translations()
-build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, library, False)
-build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
-build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
-build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
-build.birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
+build.libbirdxml(prefix, cc, xmllibrary_cflags, xmllibrary_ldflags, valac, valaflags, "libbirdxml.so." + version.LIBBIRDXML_SO_VERSION, False)
+build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, "libbirdfont.so." + version.SO_VERSION, False)
+build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, False)
+build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, False)
+build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, False)
+build.birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, False)
 
 print ("Done")

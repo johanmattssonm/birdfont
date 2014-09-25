@@ -20,7 +20,6 @@ cflags = "-g ./build/icon.res -Wl,-subsystem,windows "
 ldflags = ""
 library_cflags = "-Wl,-subsystem,windows "
 library_ldflags= "";
-library = "libbirdfont.dll"
 
 import configfile
 configfile.write_config (prefix)
@@ -33,7 +32,8 @@ from run import run
 
 compile_translations()
 run("windres ./resources/win32/icon.rc -O coff -o ./build/icon.res")
-build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
+build.libbirdxml(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdxml.dll")
+build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdfont.dll")
 build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library)
 
 print ("Done")

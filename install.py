@@ -1,6 +1,6 @@
 #!/usr/bin/python 
 """
-Copyright (C) 2013 Johan Mattsson
+Copyright (C) 2013 2014 Johan Mattsson
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -102,13 +102,19 @@ install ('build/bin/birdfont-import', '/bin', 755)
 
 #library
 if not options.libdir:
-	p = platform.machine()
- 	if p == 'i386' or p == 's390' or p == 'ppc' or p == 'armv7hl':
- 		libdir = '/lib'
- 	elif p == 'x86_64' or p == 's390x' or p == 'ppc64':
- 		libdir = '/lib64'
- 	else:
-		libdir = '/lib'
+	
+	if platform.dist()[0] == 'Ubuntu' or platform.dist()[0] == 'Debian':
+		process = subprocess.Popen(['dpkg-architecture', '-qDEB_HOST_MULTIARCH'], stdout=subprocess.PIPE)
+		out, err = process.communicate()
+		libdir = '/lib/' + out.rstrip ('\n')
+	else:
+		p = platform.machine()
+		if p == 'i386' or p == 's390' or p == 'ppc' or p == 'armv7hl':
+			libdir = '/lib'
+		elif p == 'x86_64' or p == 's390x' or p == 'ppc64':
+			libdir = '/lib64'
+		else:
+			libdir = '/lib'
 else:
 	libdir = options.libdir
 
@@ -125,8 +131,25 @@ elif os.path.isfile ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib'):
 	link (libdir, 'libbirdfont.' + version.SO_VERSION + '.dylib', ' libbirdfont.dylib.' + version.SO_VERSION_MAJOR)
 	link (libdir, 'libbirdfont.' + version.SO_VERSION + '.dylib', ' libbirdfont.dylib')
 else:
-	print ("Can not find libbirdfont.")
+	print ("Can't find libbirdfont.")
 	exit (1)
+
+
+if os.path.isfile ('build/bin/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION):
+        install ('build/bin/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, libdir, 644)
+        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
+        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so')
+elif os.path.isfile ('build/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION):
+        install ('build/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, libdir, 644)
+        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
+        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so')
+elif os.path.isfile ('build/bin/libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib'):
+        install ('build/bin/libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib', libdir, 644)
+        link (libdir, 'libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib', ' libbirdxml.dylib.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
+        link (libdir, 'libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib', ' libbirdxml.dylib')
+else:
+        print ("Can't find libbirdxml.")
+
 	
 #manpages
 if not nogzip:

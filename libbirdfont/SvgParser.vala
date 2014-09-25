@@ -11,7 +11,8 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
     Lesser General Public License for more details.
 */
-using Xml;
+
+using Bird;
 using Math;
 
 namespace BirdFont {
@@ -52,13 +53,12 @@ public class SvgParser {
 	public static void import_svg_data (string xml_data, SvgFormat format = SvgFormat.NONE) {
 		PathList path_list = new PathList ();
 		Glyph glyph; 
-		Xml.Node* root = null;
 		string[] lines = xml_data.split ("\n");
-		string xml_document;
 		bool has_format = false;
 		StringBuilder sb = new StringBuilder ();
 		SvgParser parser = new SvgParser ();
-		TextReader tr;
+		XmlParser xmlparser;
+		Tag root;
 		
 		foreach (string l in lines) {
 			if (l.index_of ("Illustrator") > -1 || l.index_of ("illustrator") > -1) {
@@ -69,51 +69,22 @@ public class SvgParser {
 			if (l.index_of ("Inkscape") > -1 || l.index_of ("inkscape") > -1) {
 				parser.set_format (SvgFormat.INKSCAPE);
 				has_format = true;
-			}	
-			
-			// FIXME: libxml2 (2.7.8) refuses to parse svg files created with Adobe Illustrator on 
-			// windows. This is a way around it.
-			if (l.index_of ("<!") == -1 
-				&& l.index_of ("]>") == -1
-				&& l.index_of ("http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd") == -1) {
-				sb.append (l);
-				sb.append ("\n");
 			}
 		}
 		
 		if (format != SvgFormat.NONE) {
 			parser.set_format (format);
 		}
-		
-		xml_document = sb.str;
-		
-		// Remove Inkscape specific namespaces
-		xml_document = replace (xml_document, "<metadata", "</metadata>", "");
-		xml_document = replace (xml_document, "<sodipodi:namedview", "</sodipodi:namedview>", "");
-		xml_document = xml_document.replace ("inkscape:", "");
-		
-		// CS6 compability
-		xml_document = replace (xml_document, "<svg", ">", "<svg>");
-		xml_document = replace (xml_document, "<foreignObject", "</foreignObject>", "");
-		xml_document = replace (xml_document, "<i:pgf", "</i:pgf>", "");
-		xml_document = xml_document.replace ("i:", "");
-		xml_document = xml_document.replace ("sodipodi:", "");
-		
+
 		// parse the file
 		if (!has_format) {
 			warn_if_test ("No format identifier found in SVG parser.\n");
 		}
 
-		Parser.init ();
+		xmlparser = new XmlParser (xml_data);
 		
-		tr = new TextReader.for_doc (xml_document, "");
-		tr.read ();
-		root = tr.expand ();
-				
-		if (root == null) {
-			warning ("Failed to load SVG file");
-			return;
-		}
+		xmlparser.reparse ();
+		root = xmlparser.get_next_tag ();
 
 		path_list = parser.parse_svg_file (root);
 	
@@ -156,66 +127,65 @@ public class SvgParser {
 		import_svg_data (svg_data);
 	}
 	
-	private PathList parse_svg_file (Xml.Node* root) {
-		Xml.Node* node;
+	private PathList parse_svg_file (Tag tag) {
+		Tag t;
 		PathList pl = new PathList ();
 		
-		node = root;
-		
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "g") {
-				parse_layer (iter, pl);
+		tag.reparse ();
+		while (tag.has_more_tags ()) {
+			t = tag.get_next_tag ();
+			
+			if (t.get_name () == "g") {
+				parse_layer (t, pl);
 			}
 
-			if (iter->name == "switch") {
-				parse_layer (iter, pl);
+			if (t.get_name () == "switch") {
+				parse_layer (t, pl);
 			}
 						
-			if (iter->name == "path") {
-				parse_path (iter, pl);
+			if (t.get_name () == "path") {
+				parse_path (t, pl);
 			}
 			
-			if (iter->name == "polygon") {
-				parse_polygon (iter, pl);
+			if (t.get_name () == "polygon") {
+				parse_polygon (t, pl);
 			}
 		}
 		
 		return pl;
 	}
 	
-	private void parse_layer (Xml.Node* node, PathList pl) {
-		string attr_name = "";
-		string attr_content = "";
+	private void parse_layer (Tag tag, PathList pl) {
 		PathList layer = new PathList ();
+		Tag t;
+		Attribute attr;
 		
-		return_if_fail (node != null);
-		return_if_fail (node->children != null);
-		
-		for (Xml.Node* iter = node->children; iter != null; iter = iter->next) {
-			if (iter->name == "path") {
-				parse_path (iter, layer);
+		tag.reparse ();
+		while (tag.has_more_tags ()) {
+			t = tag.get_next_tag ();
+			
+			if (t.get_name () == "path") {
+				parse_path (t, layer);
 			}
 			
-			if (iter->name == "g") {
-				parse_layer (iter, layer);
+			if (t.get_name () == "g") {
+				parse_layer (t, layer);
 			}
 			
-			if (iter->name == "polygon") {
-				parse_polygon (iter, layer);
+			if (t.get_name () == "polygon") {
+				parse_polygon (t, layer);
 			}
 		}
 		
-		if (!is_null (node) && !is_null (node->properties)) {
-			for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-				attr_name = prop->name;
-				attr_content = prop->children->content;
-				
-				if (attr_name == "transform") {
-					transform (attr_content, layer);
-				}
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
+			
+			if (attr.get_name () == "transform") {
+				transform (attr.get_content (), layer);
 			}
 		}
-		
+
 		pl.append (layer);
 	}
 	
@@ -374,45 +344,44 @@ public class SvgParser {
 		return param;			
 	}
 		
-	private void parse_polygon (Xml.Node* node, PathList pl) {
-		string attr_name = "";
-		string attr_content;
+	private void parse_polygon (Tag tag, PathList pl) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path p;
+		Attribute attr;
+		
+		tag.reparse ();
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "points") {
-				p = parse_polygon_data (attr_content, glyph);
+			if (attr.get_name () == "points") {
+				p = parse_polygon_data (attr.get_content (), glyph);
 				pl.add (p);
 			}
 		}		
 	}
 	
-	private void parse_path (Xml.Node* node, PathList pl) {
-		string attr_name = "";
-		string attr_content;
+	private void parse_path (Tag tag, PathList pl) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
+		Tag t;
+		Attribute attr;
+		
+		tag.reparse ();	
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
-			
-			if (attr_name == "d") {
-				path_list = parse_svg_data (attr_content, glyph);
+			if (attr.get_name () == "d") {
+				path_list = parse_svg_data (attr.get_content (), glyph);
 				pl.append (path_list);
 			}
 		}
 		
-		for (Xml.Attr* prop = node->properties; prop != null; prop = prop->next) {
-			attr_name = prop->name;
-			attr_content = prop->children->content;
+		tag.reparse ();	
+		while (tag.has_more_attributes ()) {
+			attr = tag.get_next_attribute ();
 			
-			if (attr_name == "transform") {
-				transform (attr_content, path_list);
+			if (attr.get_name () == "transform") {
+				transform (attr.get_content (), path_list);
 			}
 		}
 	}
