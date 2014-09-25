@@ -36,7 +36,6 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		-C \
 		""" + valaflags + """ \
 		--vapidir=./ \
-		--vapidir=./build \
 		--basedir build/libbirdfont/ \
 		""" + experimentalNonNull + """ \
 		--enable-experimental \
@@ -48,7 +47,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		--pkg gio-2.0 \
 		--pkg cairo \
 		--pkg gdk-pixbuf-2.0 \
-		--pkg birdxml \
+		--pkg libbirdxml \
 		""")
 
 	#copy c sources 
@@ -149,7 +148,7 @@ def libbirdxml(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull =
 		run(cc + " " + ldflags + """ \
 			-shared \
 			""" + sonameparam + """ \
-			build/libbirdfont/*.o \
+			build/libbirdxml/*.o \
 			$(pkg-config --libs glib-2.0) \
 			-o """ + library)
 		run("mv " + library + " build/bin/")
