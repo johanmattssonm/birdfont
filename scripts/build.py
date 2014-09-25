@@ -65,7 +65,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			$(pkg-config --cflags cairo) \
 			$(pkg-config --cflags glib-2.0) \
 			$(pkg-config --cflags gdk-pixbuf-2.0) \
-			-I ./build/mac/birdfont""")
+			-I ./build/libbirdxml""")
 		run("mv ./*.o build/libbirdfont/ ")
 
 		if library.endswith (".dylib"):
