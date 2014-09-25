@@ -1,6 +1,6 @@
 #!/usr/bin/python 
 """
-Copyright (C) 2013 Johan Mattsson
+Copyright (C) 2013 2014 Johan Mattsson
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -125,8 +125,25 @@ elif os.path.isfile ('build/bin/libbirdfont.' + version.SO_VERSION + '.dylib'):
 	link (libdir, 'libbirdfont.' + version.SO_VERSION + '.dylib', ' libbirdfont.dylib.' + version.SO_VERSION_MAJOR)
 	link (libdir, 'libbirdfont.' + version.SO_VERSION + '.dylib', ' libbirdfont.dylib')
 else:
-	print ("Can not find libbirdfont.")
+	print ("Can't find libbirdfont.")
 	exit (1)
+
+
+if os.path.isfile ('build/bin/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION):
+        install ('build/bin/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, libdir, 644)
+        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
+        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so')
+elif os.path.isfile ('build/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION):
+        install ('build/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, libdir, 644)
+        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
+        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so')
+elif os.path.isfile ('build/bin/libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib'):
+        install ('build/bin/libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib', libdir, 644)
+        link (libdir, 'libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib', ' libbirdxml.dylib.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
+        link (libdir, 'libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib', ' libbirdxml.dylib')
+else:
+        print ("Can't find libbirdxml.")
+
 	
 #manpages
 if not nogzip:

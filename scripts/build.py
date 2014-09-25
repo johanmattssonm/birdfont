@@ -109,8 +109,63 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		run("cp resources/linux/birdfont-import.1 build/")
 		run("gzip build/birdfont-import.1")
  				
+
+def libbirdxml(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
+	#libbirdfont
+	run("mkdir -p build/libbirdxml")
+	run("mkdir -p build/bin")
+
+	experimentalNonNull = ""
+	if nonNull:
+		experimentalNonNull = "--enable-experimental-non-null"
+
+	run(valac + """\
+		-C \
+		""" + valaflags + """ \
+		--vapidir=./ \
+		--basedir build/libbirdxml/ \
+		""" + experimentalNonNull + """ \
+		--enable-experimental \
+		--library libbirdxml \
+		-H build/libbirdxml/birdxml.h \
+		libbirdxml/*.vala \
+		""")
+		
+	if cc == "":
+		print ("Skipping compilation");
+	else:
+		run(cc + " " + cflags + """ \
+			-c build/libbirdxml/*.c \
+			-fPIC \
+			$(pkg-config --cflags glib-2.0) \
+			""")
+			
+		run("mv ./*.o build/libbirdxml/ ")
+
+		if library.endswith (".dylib"):
+			sonameparam = "" # gcc on mac os does not have the soname parameter
+		else:
+			sonameparam = "-Wl,-soname," + library
+		
+		run(cc + " " + ldflags + """ \
+			-shared \
+			""" + sonameparam + """ \
+			build/libbirdfont/*.o \
+			$(pkg-config --libs glib-2.0) \
+			-o """ + library)
+		run("mv " + library + " build/bin/")
+		
+		if os.path.exists("build/bin/libbirdxml.so"):
+			run ("cd build/bin && unlink libbirdxml.so")
+
+		# create link to the versioned library
+		if library.find ('.so') > -1:
+			run ("""cd build/bin && ln -sf """ + library + " libbirdxml.so")
+		elif library.find ('.dylib') > -1:
+			run ("""cd build/bin && ln -sf """ + library + " libbirdxml.dylib")
+ 		
 	
-def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
+def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
 	# birdfont-export
 	run("mkdir -p build/birdfont-export")
 
@@ -172,7 +227,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, nonN
 	run("touch build/installed")
 	run("touch build/configured")
 
-def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
+def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
 	# birdfont-import
 	run("mkdir -p build/birdfont-import")
 
@@ -219,7 +274,7 @@ def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, library, nonN
 		$(pkg-config --libs gdk-pixbuf-2.0) \
 		-o ./build/bin/birdfont-import""")
 
-def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
+def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
 	# birdfont-autotrace
 	run("mkdir -p build/birdfont-autotrace")
 
@@ -267,7 +322,7 @@ def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, library, n
 		-o ./build/bin/birdfont-autotrace""")
 
 
-def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
+def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
 	# birdfont
 	run("mkdir -p build/birdfont")
 

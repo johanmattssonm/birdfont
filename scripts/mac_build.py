@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Copyright (C) 2013 Johan Mattsson
+Copyright (C) 2013 2014 Johan Mattsson
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as 
@@ -48,14 +48,17 @@ valaflags = ""
 cc = options.cc
 cflags = options.cflags
 ldflags = options.ldflags
-library_cflags = options.cflags
-library_ldflags = options.ldflags + " " + """-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,""" + prefix + """/lib/libbirdfont.dylib""" 
-library = "libbirdfont." + version.SO_VERSION + ".dylib"
+
 library_cflags = "-fno-common -fPIC " + cflags 
+library_ldflags = options.ldflags + " " + """-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,""" + prefix + """/lib/libbirdfont.dylib""" 
+
+xml_library_cflags = "-fno-common -fPIC " + cflags 
+xml_library_ldflags = options.ldflags + " " + """-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,""" + prefix + """/lib/libbirdxml.dylib""" 
 
 configfile.write_config (prefix)
 compile_translations()
-build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, library, False)
+build.libbirdxml(prefix, cc, xml_library_cflags, xml_library_ldflags, valac, valaflags, "libbirdfont." + version.SO_VERSION + ".dylib", False)
+build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, "libbirdxml." + version.LIBBIRDXML_SO_VERSION + ".dylib", False)
 build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
 build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
 build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, library, False)
