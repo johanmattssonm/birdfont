@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-19 19:04+0200\n"
-"PO-Revision-Date: 2014-09-13 16:26+0000\n"
-"Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
+"POT-Creation-Date: 2014-09-26 21:13+0200\n"
+"PO-Revision-Date: 2014-09-21 13:39+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1410625619.000000\n"
+"X-POOTLE-MTIME: 1411306777.000000\n"
 
 #: libbirdfont/Argument.vala:244
 msgid "Usage"
@@ -130,7 +130,7 @@ msgid "Glyph"
 msgstr "Tecken"
 
 #: libbirdfont/BirdFont.vala:165 libbirdfont/VersionList.vala:211
-#: birdfont/GtkWindow.vala:1405
+#: birdfont/GtkWindow.vala:1383
 msgid "Version"
 msgstr "Version"
 
@@ -154,12 +154,12 @@ msgstr "skriv ttf- och eot-filer\n"
 msgid "Can't find output directory"
 msgstr "Kan inte hitta mappen som filerna ska skrivas till"
 
-#: libbirdfont/BirdFontFile.vala:165 libbirdfont/BirdFontFile.vala:195
-#: libbirdfont/BirdFontFile.vala:282
+#: libbirdfont/BirdFontFile.vala:147 libbirdfont/BirdFontFile.vala:177
+#: libbirdfont/BirdFontFile.vala:264
 msgid "Saving"
 msgstr "Sparar"
 
-#: libbirdfont/BirdFontFile.vala:690
+#: libbirdfont/BirdFontFile.vala:657
 msgid "Loading XML data."
 msgstr "Laddar XML data."
 
@@ -225,7 +225,7 @@ msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö"
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö"
 
-#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1412
+#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1390
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -685,7 +685,7 @@ msgstr "Ny mellanrumsklass"
 msgid "Spacing Classes"
 msgstr "Mellanrumsklasser"
 
-#: libbirdfont/SvgParser.vala:49
+#: libbirdfont/SvgParser.vala:50
 msgid "Import"
 msgstr "Importera"
 
@@ -817,147 +817,153 @@ msgstr "Välj punkten _nedanför"
 msgid "_Next Tab"
 msgstr "_Nästa flik"
 
-#: birdfont/GtkWindow.vala:595
+#: birdfont/GtkWindow.vala:588
 msgid "_Previous Tab"
 msgstr "_Föregående flik"
 
-#: birdfont/GtkWindow.vala:608
-msgid "_Close tab"
+#: birdfont/GtkWindow.vala:594
+#, fuzzy
+msgid "_Close Tab"
 msgstr "_Stäng flik"
 
-#: birdfont/GtkWindow.vala:622
+#: birdfont/GtkWindow.vala:601
 msgid "Close _All Tabs"
 msgstr "Stäng _alla flikar"
 
-#: birdfont/GtkWindow.vala:630
+#: birdfont/GtkWindow.vala:608
 msgid "_Create Path"
 msgstr "Skapa _kontur"
 
-#: birdfont/GtkWindow.vala:637
+#: birdfont/GtkWindow.vala:615
 msgid "_Zoom"
 msgstr "_Zoom"
 
-#: birdfont/GtkWindow.vala:643
+#: birdfont/GtkWindow.vala:621
 msgid "_Create Counter Path"
 msgstr "Skapa _insida"
 
-#: birdfont/GtkWindow.vala:650
+#: birdfont/GtkWindow.vala:628
 msgid "_Move"
 msgstr "_Flytta"
 
-#: birdfont/GtkWindow.vala:657
-msgid "Show _full unicode characters set"
+#: birdfont/GtkWindow.vala:635
+#, fuzzy
+msgid "Show _Full Unicode Characters Set"
 msgstr "Visa alla _unicode tecken"
 
-#: birdfont/GtkWindow.vala:664
+#: birdfont/GtkWindow.vala:642
 msgid "Show De_fault Characters Set"
 msgstr "Visa _svenska tecken"
 
-#: birdfont/GtkWindow.vala:671
+#: birdfont/GtkWindow.vala:649
 msgid "Show Characters in Font"
 msgstr "Visa alla typsnittets tecken"
 
-#: birdfont/GtkWindow.vala:678
+#: birdfont/GtkWindow.vala:656
 msgid "Add New _Grid Item"
 msgstr "Lägg till storlek för nytt _rutnät"
 
-#: birdfont/GtkWindow.vala:684
+#: birdfont/GtkWindow.vala:662
 msgid "Remove Gr_id Item"
 msgstr "Ta bort storlek för rut_nätet"
 
-#: birdfont/GtkWindow.vala:690
+#: birdfont/GtkWindow.vala:668
 msgid "_Zoom In"
 msgstr "_Zooma in"
 
-#: birdfont/GtkWindow.vala:697
+#: birdfont/GtkWindow.vala:675
 msgid "Zoom _Out"
 msgstr "Zooma _ut"
 
-#: birdfont/GtkWindow.vala:704
+#: birdfont/GtkWindow.vala:682
 msgid "U_se One Pixel Per Unit"
 msgstr "_Använd en pixel per enhet"
 
-#: birdfont/GtkWindow.vala:712
+#: birdfont/GtkWindow.vala:690
 msgid "Show Kerning _Tab"
 msgstr "Visa kerning _flik"
 
-#: birdfont/GtkWindow.vala:719
+#: birdfont/GtkWindow.vala:697
 msgid "_List Kerning Pairs"
 msgstr "_Lista alla kerning par"
 
-#: birdfont/GtkWindow.vala:725
+#: birdfont/GtkWindow.vala:703
 msgid "Show _Spacing Tab"
 msgstr "Visa mellanrumsfliken"
 
-#: birdfont/GtkWindow.vala:735
+#: birdfont/GtkWindow.vala:713
 msgid "Select _Next Kerning Pair"
 msgstr "Välj _nästa kerning par"
 
-#: birdfont/GtkWindow.vala:739
+#: birdfont/GtkWindow.vala:717
 msgid "Select _Previous Kerning Pair"
 msgstr "Välj _föregående kerning par"
 
-#: birdfont/GtkWindow.vala:744
+#: birdfont/GtkWindow.vala:722
 msgid "_Save as .bfp"
 msgstr "_Spara som .bfp"
 
-#: birdfont/GtkWindow.vala:751
+#: birdfont/GtkWindow.vala:729
 msgid "_Show Ligatures"
 msgstr "_Visa ligaturer"
 
-#: birdfont/GtkWindow.vala:758
+#: birdfont/GtkWindow.vala:736
 msgid "_File"
 msgstr "_Arkiv"
 
-#: birdfont/GtkWindow.vala:761
+#: birdfont/GtkWindow.vala:739
 msgid "_Edit"
 msgstr "_Redigera"
 
-#: birdfont/GtkWindow.vala:764
+#: birdfont/GtkWindow.vala:742
 msgid "_Tab"
 msgstr "_Flik"
 
-#: birdfont/GtkWindow.vala:767
+#: birdfont/GtkWindow.vala:745
 msgid "T_ool"
 msgstr "_Verktyg"
 
-#: birdfont/GtkWindow.vala:770
+#: birdfont/GtkWindow.vala:748
 msgid "_Kerning"
 msgstr "_Kerning"
 
-#: birdfont/GtkWindow.vala:993
+#: birdfont/GtkWindow.vala:971
 msgid "Your fonts have been exported."
 msgstr "Dina fonter har exporterats."
 
-#: birdfont/GtkWindow.vala:1349
+#: birdfont/GtkWindow.vala:1327
 msgid "PostScript Name"
 msgstr "PostScript namn"
 
-#: birdfont/GtkWindow.vala:1356
+#: birdfont/GtkWindow.vala:1334
 msgid "Name"
 msgstr "Namn"
 
-#: birdfont/GtkWindow.vala:1363
+#: birdfont/GtkWindow.vala:1341
 msgid "Style"
 msgstr "Stil"
 
-#: birdfont/GtkWindow.vala:1369
+#: birdfont/GtkWindow.vala:1347
 msgid "Bold"
 msgstr "Fet"
 
-#: birdfont/GtkWindow.vala:1384
+#: birdfont/GtkWindow.vala:1354
+msgid "Italic"
+msgstr "Kursiv"
+
+#: birdfont/GtkWindow.vala:1362
 msgid "Weight"
 msgstr "Linjebredd"
 
-#: birdfont/GtkWindow.vala:1391
+#: birdfont/GtkWindow.vala:1369
 msgid "Full name (name and style)"
 msgstr "Hela namnet (namn och stil)"
 
-#: birdfont/GtkWindow.vala:1398
+#: birdfont/GtkWindow.vala:1376
 msgid "Unique identifier"
-msgstr "Unik identifierare"
+msgstr "Unik identifikation"
 
-#: birdfont/GtkWindow.vala:1420
+#: birdfont/GtkWindow.vala:1398
 msgid "Copyright"
 msgstr "Upphovsrätt"
 
@@ -1056,9 +1062,6 @@ msgstr "Skriver"
 
 #~ msgid "_Save"
 #~ msgstr "_Spara"
-
-#~ msgid "Italic"
-#~ msgstr "Kursiv"
 
 #~ msgid "exit if a test case failes"
 #~ msgstr "avsluta om ett test misslyckas"

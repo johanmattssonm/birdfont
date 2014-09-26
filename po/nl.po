@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-19 19:04+0200\n"
-"PO-Revision-Date: 2014-09-18 19:47+0000\n"
+"POT-Creation-Date: 2014-09-26 21:13+0200\n"
+"PO-Revision-Date: 2014-09-24 23:56+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1411069646.000000\n"
+"X-POOTLE-MTIME: 1411602993.000000\n"
 
 #: libbirdfont/Argument.vala:244
 msgid "Usage"
@@ -130,7 +130,7 @@ msgid "Glyph"
 msgstr "Symbool"
 
 #: libbirdfont/BirdFont.vala:165 libbirdfont/VersionList.vala:211
-#: birdfont/GtkWindow.vala:1405
+#: birdfont/GtkWindow.vala:1383
 msgid "Version"
 msgstr "Versie"
 
@@ -154,12 +154,12 @@ msgstr "ttf- en eot-bestanden schrijven\n"
 msgid "Can't find output directory"
 msgstr "Kan uitvoermap niet vinden"
 
-#: libbirdfont/BirdFontFile.vala:165 libbirdfont/BirdFontFile.vala:195
-#: libbirdfont/BirdFontFile.vala:282
+#: libbirdfont/BirdFontFile.vala:147 libbirdfont/BirdFontFile.vala:177
+#: libbirdfont/BirdFontFile.vala:264
 msgid "Saving"
 msgstr "Opslaan"
 
-#: libbirdfont/BirdFontFile.vala:690
+#: libbirdfont/BirdFontFile.vala:657
 msgid "Loading XML data."
 msgstr "XML-gegevens worden geladen."
 
@@ -225,7 +225,7 @@ msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
-#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1412
+#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1390
 msgid "Description"
 msgstr "Beschrijving"
 
@@ -279,7 +279,7 @@ msgstr "Draaien"
 
 #: libbirdfont/DrawingTools.vala:357
 msgid "Skew"
-msgstr ""
+msgstr "Hellen"
 
 #: libbirdfont/DrawingTools.vala:389
 msgid "Width"
@@ -347,11 +347,11 @@ msgstr "Hoeveelheid autotrace-details"
 
 #: libbirdfont/DrawingTools.vala:705
 msgid "Autotrace simplification"
-msgstr ""
+msgstr "Autotrace-vereenvoudiging"
 
 #: libbirdfont/DrawingTools.vala:722
 msgid "Autotrace background image"
-msgstr ""
+msgstr "Autotrace-achtergrondafbeelding"
 
 #: libbirdfont/DrawingTools.vala:732
 msgid "Show full unicode characters set"
@@ -395,7 +395,7 @@ msgstr "Volledig symbool tonen"
 
 #: libbirdfont/DrawingTools.vala:893
 msgid "Fit in view"
-msgstr ""
+msgstr "Passend in weergave"
 
 #: libbirdfont/DrawingTools.vala:900
 msgid "Zoom in on background image"
@@ -444,7 +444,7 @@ msgstr "Pas het aantal samples per punt aan in het vrijehandhulpmiddel."
 
 #: libbirdfont/DrawingTools.vala:1103
 msgid "Simplification threshold"
-msgstr ""
+msgstr "Vereenvoudigingsdrempel"
 
 #: libbirdfont/DrawingTools.vala:1429
 msgid "Set size for grid"
@@ -551,7 +551,7 @@ msgstr ""
 
 #: libbirdfont/KerningTools.vala:59
 msgid "Insert last edited glyph"
-msgstr ""
+msgstr "Laatst bewerkte symbool invoegen"
 
 #: libbirdfont/KerningTools.vala:67
 msgid "Font size"
@@ -571,12 +571,11 @@ msgstr "Ligaturen"
 
 #: libbirdfont/Line.vala:106
 msgid "Position"
-msgstr ""
+msgstr "Positie"
 
 #: libbirdfont/Line.vala:106
-#, fuzzy
 msgid "Move"
-msgstr "_Verplaatsen"
+msgstr "Verplaatsen"
 
 #: libbirdfont/LoadCallback.vala:85
 msgid "Open"
@@ -672,17 +671,17 @@ msgstr "Verwerpen"
 
 #: libbirdfont/SpacingClass.vala:45
 msgid "Character"
-msgstr ""
+msgstr "Teken"
 
 #: libbirdfont/SpacingClassTab.vala:157
 msgid "New spacing class"
-msgstr ""
+msgstr "Nieuwe spatiëringsklasse"
 
 #: libbirdfont/SpacingClassTab.vala:271
 msgid "Spacing Classes"
-msgstr ""
+msgstr "Spatiëringsklassen"
 
-#: libbirdfont/SvgParser.vala:49
+#: libbirdfont/SvgParser.vala:50
 msgid "Import"
 msgstr "Importeren"
 
@@ -695,9 +694,8 @@ msgid "New version"
 msgstr "Nieuwe versie"
 
 #: birdfont/GtkWindow.vala:294
-#, fuzzy
 msgid "Select color"
-msgstr "Objectkleur"
+msgstr "Kleur selecteren"
 
 #: birdfont/GtkWindow.vala:440
 msgid "_New"
@@ -741,7 +739,7 @@ msgstr "_Ongedaan maken"
 
 #: birdfont/GtkWindow.vala:491
 msgid "_Redo"
-msgstr ""
+msgstr "Op_nieuw uitvoeren"
 
 #: birdfont/GtkWindow.vala:496
 msgid "_Copy"
@@ -761,7 +759,7 @@ msgstr "Alle paden selec_teren"
 
 #: birdfont/GtkWindow.vala:518
 msgid "Move _To Baseline"
-msgstr ""
+msgstr "_Verplaatsen naar basislijn"
 
 #: birdfont/GtkWindow.vala:526
 msgid "_Search"
@@ -777,7 +775,7 @@ msgstr "SVG _importeren"
 
 #: birdfont/GtkWindow.vala:540
 msgid "Simpl_ify Path"
-msgstr ""
+msgstr "Pad vereenvoudigen"
 
 #: birdfont/GtkWindow.vala:545
 msgid "Close _Path"
@@ -815,179 +813,183 @@ msgstr "_Onderstaande punt selecteren"
 msgid "_Next Tab"
 msgstr "_Volgende tabblad"
 
-#: birdfont/GtkWindow.vala:595
+#: birdfont/GtkWindow.vala:588
 msgid "_Previous Tab"
 msgstr "Vo_rige tabblad"
 
-#: birdfont/GtkWindow.vala:608
-msgid "_Close tab"
+#: birdfont/GtkWindow.vala:594
+#, fuzzy
+msgid "_Close Tab"
 msgstr "Tabblad _sluiten"
 
-#: birdfont/GtkWindow.vala:622
+#: birdfont/GtkWindow.vala:601
 msgid "Close _All Tabs"
 msgstr "_Alle tabbladen sluiten"
 
-#: birdfont/GtkWindow.vala:630
+#: birdfont/GtkWindow.vala:608
 msgid "_Create Path"
 msgstr "Pad aan_maken"
 
-#: birdfont/GtkWindow.vala:637
+#: birdfont/GtkWindow.vala:615
 msgid "_Zoom"
 msgstr "_Zoomen"
 
-#: birdfont/GtkWindow.vala:643
+#: birdfont/GtkWindow.vala:621
 msgid "_Create Counter Path"
 msgstr "Itempad aan_maken"
 
-#: birdfont/GtkWindow.vala:650
+#: birdfont/GtkWindow.vala:628
 msgid "_Move"
 msgstr "_Verplaatsen"
 
-#: birdfont/GtkWindow.vala:657
-msgid "Show _full unicode characters set"
+#: birdfont/GtkWindow.vala:635
+#, fuzzy
+msgid "Show _Full Unicode Characters Set"
 msgstr "_Volledige unicode-tekenset tonen"
 
-#: birdfont/GtkWindow.vala:664
+#: birdfont/GtkWindow.vala:642
 msgid "Show De_fault Characters Set"
 msgstr "Stan_daard tekenset tonen"
 
-#: birdfont/GtkWindow.vala:671
+#: birdfont/GtkWindow.vala:649
 msgid "Show Characters in Font"
 msgstr "Tekens in lettertype tonen"
 
-#: birdfont/GtkWindow.vala:678
+#: birdfont/GtkWindow.vala:656
 msgid "Add New _Grid Item"
 msgstr "Nieuw _rasteritem toevoegen"
 
-#: birdfont/GtkWindow.vala:684
+#: birdfont/GtkWindow.vala:662
 msgid "Remove Gr_id Item"
 msgstr "R_asteritem verwijderen"
 
-#: birdfont/GtkWindow.vala:690
+#: birdfont/GtkWindow.vala:668
 msgid "_Zoom In"
 msgstr "_Inzoomen"
 
-#: birdfont/GtkWindow.vala:697
+#: birdfont/GtkWindow.vala:675
 msgid "Zoom _Out"
 msgstr "_Uitzoomen"
 
-#: birdfont/GtkWindow.vala:704
+#: birdfont/GtkWindow.vala:682
 msgid "U_se One Pixel Per Unit"
 msgstr "Slecht_s één pixel per eenheid gebruiken"
 
-#: birdfont/GtkWindow.vala:712
+#: birdfont/GtkWindow.vala:690
 msgid "Show Kerning _Tab"
 msgstr "Afspatieer_tabblad tonen"
 
-#: birdfont/GtkWindow.vala:719
+#: birdfont/GtkWindow.vala:697
 msgid "_List Kerning Pairs"
 msgstr "Afspatieer_combinaties tonen"
 
-#: birdfont/GtkWindow.vala:725
+#: birdfont/GtkWindow.vala:703
 msgid "Show _Spacing Tab"
-msgstr ""
+msgstr "_Spatiëringstab tonen"
 
-#: birdfont/GtkWindow.vala:735
+#: birdfont/GtkWindow.vala:713
 msgid "Select _Next Kerning Pair"
 msgstr "Volge_nde afspatieercombinatie selecteren"
 
-#: birdfont/GtkWindow.vala:739
+#: birdfont/GtkWindow.vala:717
 msgid "Select _Previous Kerning Pair"
 msgstr "Vo_rige afspatieercombinatie selecteren"
 
-#: birdfont/GtkWindow.vala:744
+#: birdfont/GtkWindow.vala:722
 msgid "_Save as .bfp"
 msgstr "Op_slaan als .bfp"
 
-#: birdfont/GtkWindow.vala:751
+#: birdfont/GtkWindow.vala:729
 msgid "_Show Ligatures"
 msgstr "Liga_turen tonen"
 
-#: birdfont/GtkWindow.vala:758
+#: birdfont/GtkWindow.vala:736
 msgid "_File"
 msgstr "_Bestand"
 
-#: birdfont/GtkWindow.vala:761
+#: birdfont/GtkWindow.vala:739
 msgid "_Edit"
 msgstr "Be_werken"
 
-#: birdfont/GtkWindow.vala:764
+#: birdfont/GtkWindow.vala:742
 msgid "_Tab"
 msgstr "_Tabblad"
 
-#: birdfont/GtkWindow.vala:767
+#: birdfont/GtkWindow.vala:745
 msgid "T_ool"
 msgstr "H_ulpmiddel"
 
-#: birdfont/GtkWindow.vala:770
+#: birdfont/GtkWindow.vala:748
 msgid "_Kerning"
 msgstr "_Afspatiëring"
 
-#: birdfont/GtkWindow.vala:993
+#: birdfont/GtkWindow.vala:971
 msgid "Your fonts have been exported."
-msgstr ""
+msgstr "Uw lettertypen zijn geëxporteerd."
 
-#: birdfont/GtkWindow.vala:1349
+#: birdfont/GtkWindow.vala:1327
 msgid "PostScript Name"
 msgstr "PostScript-naam"
 
-#: birdfont/GtkWindow.vala:1356
+#: birdfont/GtkWindow.vala:1334
 msgid "Name"
 msgstr "Naam"
 
-#: birdfont/GtkWindow.vala:1363
+#: birdfont/GtkWindow.vala:1341
 msgid "Style"
 msgstr "Stijl"
 
-#: birdfont/GtkWindow.vala:1369
+#: birdfont/GtkWindow.vala:1347
 msgid "Bold"
 msgstr "Vet"
 
-#: birdfont/GtkWindow.vala:1384
+#: birdfont/GtkWindow.vala:1354
+msgid "Italic"
+msgstr "Cursief"
+
+#: birdfont/GtkWindow.vala:1362
 msgid "Weight"
 msgstr "Lijndikte"
 
-#: birdfont/GtkWindow.vala:1391
+#: birdfont/GtkWindow.vala:1369
 msgid "Full name (name and style)"
 msgstr "Volledige naam (naam en stijl)"
 
-#: birdfont/GtkWindow.vala:1398
+#: birdfont/GtkWindow.vala:1376
 msgid "Unique identifier"
 msgstr "Unieke id"
 
-#: birdfont/GtkWindow.vala:1420
+#: birdfont/GtkWindow.vala:1398
 msgid "Copyright"
 msgstr "Auteursrecht"
 
 #: birdfont-autotrace/AutoTrace.vala:69
 msgid "brighness cutoff, from 0.001 to 2, the default value is 1"
-msgstr ""
+msgstr "helderheidsgrens, van 0,001 tot 2, de standaardwaarde is 1"
 
 #: birdfont-autotrace/AutoTrace.vala:70
 msgid "details, from 0.001 to 9.999, the default value is 1"
-msgstr ""
+msgstr "details, van 0,001 tot 9,999, de standaardwaarde is 1"
 
 #: birdfont-autotrace/AutoTrace.vala:71
-#, fuzzy
 msgid "print this message"
-msgstr "dit bericht afdrukken\n"
+msgstr "dit bericht afdrukken"
 
 #: birdfont-autotrace/AutoTrace.vala:72
 msgid "use quadratic control points"
-msgstr ""
+msgstr "kwadratische controlepunten gebruiken"
 
 #: birdfont-autotrace/AutoTrace.vala:73
 msgid "simplification, from 0.001 to 1, the default value is 0.5"
-msgstr ""
+msgstr "vereenvoudiging, van 0,001 tot 1, de standaardwaarde is 0,5"
 
 #: birdfont-autotrace/AutoTrace.vala:92
-#, fuzzy
 msgid "File does not exist."
-msgstr "bestaat niet."
+msgstr "Bestand bestaat niet."
 
 #: birdfont-autotrace/AutoTrace.vala:98
 msgid "Unknown file format."
-msgstr ""
+msgstr "Onbekende bestandsindeling."
 
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
@@ -1047,9 +1049,6 @@ msgstr "Schrijven"
 
 #~ msgid "_Save"
 #~ msgstr "_Opslaan"
-
-#~ msgid "Italic"
-#~ msgstr "Cursief"
 
 #~ msgid "exit if a test case failes"
 #~ msgstr "afsluiten als een test case faalt"

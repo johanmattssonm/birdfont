@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-19 19:04+0200\n"
+"POT-Creation-Date: 2014-09-26 21:13+0200\n"
 "PO-Revision-Date: 2014-09-14 23:26+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -132,7 +132,7 @@ msgid "Glyph"
 msgstr "Глиф"
 
 #: libbirdfont/BirdFont.vala:165 libbirdfont/VersionList.vala:211
-#: birdfont/GtkWindow.vala:1405
+#: birdfont/GtkWindow.vala:1383
 msgid "Version"
 msgstr "Версия"
 
@@ -156,12 +156,12 @@ msgstr "записать ttf и eot файлы\n"
 msgid "Can't find output directory"
 msgstr "Выходной каталог не найден"
 
-#: libbirdfont/BirdFontFile.vala:165 libbirdfont/BirdFontFile.vala:195
-#: libbirdfont/BirdFontFile.vala:282
+#: libbirdfont/BirdFontFile.vala:147 libbirdfont/BirdFontFile.vala:177
+#: libbirdfont/BirdFontFile.vala:264
 msgid "Saving"
 msgstr "Сохранение"
 
-#: libbirdfont/BirdFontFile.vala:690
+#: libbirdfont/BirdFontFile.vala:657
 msgid "Loading XML data."
 msgstr ""
 
@@ -227,7 +227,7 @@ msgstr "а б в г д е ё ж з и й к л м н о п р с т у ф х ц 
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я"
 
-#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1412
+#: libbirdfont/DescriptionTab.vala:29 birdfont/GtkWindow.vala:1390
 msgid "Description"
 msgstr "Описание"
 
@@ -683,7 +683,7 @@ msgstr ""
 msgid "Spacing Classes"
 msgstr ""
 
-#: libbirdfont/SvgParser.vala:49
+#: libbirdfont/SvgParser.vala:50
 msgid "Import"
 msgstr "Импортировать"
 
@@ -826,157 +826,163 @@ msgstr "_Выбрать узел ниже"
 msgid "_Next Tab"
 msgstr "_Следующая вкладка"
 
-#: birdfont/GtkWindow.vala:595
+#: birdfont/GtkWindow.vala:588
 #, fuzzy
 msgid "_Previous Tab"
 msgstr "_Предыдущая вкладка"
 
-#: birdfont/GtkWindow.vala:608
-msgid "_Close tab"
+#: birdfont/GtkWindow.vala:594
+#, fuzzy
+msgid "_Close Tab"
 msgstr "_Закрыть вкладку"
 
-#: birdfont/GtkWindow.vala:622
+#: birdfont/GtkWindow.vala:601
 #, fuzzy
 msgid "Close _All Tabs"
 msgstr "_Закрыть все вкладки"
 
-#: birdfont/GtkWindow.vala:630
+#: birdfont/GtkWindow.vala:608
 #, fuzzy
 msgid "_Create Path"
 msgstr "_Создать контур"
 
-#: birdfont/GtkWindow.vala:637
+#: birdfont/GtkWindow.vala:615
 msgid "_Zoom"
 msgstr "_Масштабирование"
 
-#: birdfont/GtkWindow.vala:643
+#: birdfont/GtkWindow.vala:621
 #, fuzzy
 msgid "_Create Counter Path"
 msgstr "_Объединить контуры"
 
-#: birdfont/GtkWindow.vala:650
+#: birdfont/GtkWindow.vala:628
 msgid "_Move"
 msgstr "_Переместить"
 
-#: birdfont/GtkWindow.vala:657
-msgid "Show _full unicode characters set"
+#: birdfont/GtkWindow.vala:635
+#, fuzzy
+msgid "Show _Full Unicode Characters Set"
 msgstr "_Показать полный набор символов Unicode"
 
-#: birdfont/GtkWindow.vala:664
+#: birdfont/GtkWindow.vala:642
 #, fuzzy
 msgid "Show De_fault Characters Set"
 msgstr "_Показать набор символов по умолчанию"
 
-#: birdfont/GtkWindow.vala:671
+#: birdfont/GtkWindow.vala:649
 #, fuzzy
 msgid "Show Characters in Font"
 msgstr "_Показать символы шрифта"
 
-#: birdfont/GtkWindow.vala:678
+#: birdfont/GtkWindow.vala:656
 #, fuzzy
 msgid "Add New _Grid Item"
 msgstr "_Добавить новый элемент сетки"
 
-#: birdfont/GtkWindow.vala:684
+#: birdfont/GtkWindow.vala:662
 #, fuzzy
 msgid "Remove Gr_id Item"
 msgstr "_Удалить элемент сетки"
 
-#: birdfont/GtkWindow.vala:690
+#: birdfont/GtkWindow.vala:668
 #, fuzzy
 msgid "_Zoom In"
 msgstr "_Увеличить"
 
-#: birdfont/GtkWindow.vala:697
+#: birdfont/GtkWindow.vala:675
 #, fuzzy
 msgid "Zoom _Out"
 msgstr "_Уменьшить"
 
-#: birdfont/GtkWindow.vala:704
+#: birdfont/GtkWindow.vala:682
 msgid "U_se One Pixel Per Unit"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:712
+#: birdfont/GtkWindow.vala:690
 msgid "Show Kerning _Tab"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:719
+#: birdfont/GtkWindow.vala:697
 msgid "_List Kerning Pairs"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:725
+#: birdfont/GtkWindow.vala:703
 msgid "Show _Spacing Tab"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:735
+#: birdfont/GtkWindow.vala:713
 msgid "Select _Next Kerning Pair"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:739
+#: birdfont/GtkWindow.vala:717
 msgid "Select _Previous Kerning Pair"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:744
+#: birdfont/GtkWindow.vala:722
 msgid "_Save as .bfp"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:751
+#: birdfont/GtkWindow.vala:729
 msgid "_Show Ligatures"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:758
+#: birdfont/GtkWindow.vala:736
 msgid "_File"
 msgstr "_Файл"
 
-#: birdfont/GtkWindow.vala:761
+#: birdfont/GtkWindow.vala:739
 msgid "_Edit"
 msgstr "_Правка"
 
-#: birdfont/GtkWindow.vala:764
+#: birdfont/GtkWindow.vala:742
 msgid "_Tab"
 msgstr "_Вкладки"
 
-#: birdfont/GtkWindow.vala:767
+#: birdfont/GtkWindow.vala:745
 msgid "T_ool"
 msgstr "_Инструменты"
 
-#: birdfont/GtkWindow.vala:770
+#: birdfont/GtkWindow.vala:748
 msgid "_Kerning"
 msgstr "_Кернинг"
 
-#: birdfont/GtkWindow.vala:993
+#: birdfont/GtkWindow.vala:971
 msgid "Your fonts have been exported."
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1349
+#: birdfont/GtkWindow.vala:1327
 msgid "PostScript Name"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1356
+#: birdfont/GtkWindow.vala:1334
 msgid "Name"
 msgstr "Название"
 
-#: birdfont/GtkWindow.vala:1363
+#: birdfont/GtkWindow.vala:1341
 msgid "Style"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1369
+#: birdfont/GtkWindow.vala:1347
 msgid "Bold"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1384
+#: birdfont/GtkWindow.vala:1354
+msgid "Italic"
+msgstr ""
+
+#: birdfont/GtkWindow.vala:1362
 msgid "Weight"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1391
+#: birdfont/GtkWindow.vala:1369
 msgid "Full name (name and style)"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1398
+#: birdfont/GtkWindow.vala:1376
 msgid "Unique identifier"
 msgstr ""
 
-#: birdfont/GtkWindow.vala:1420
+#: birdfont/GtkWindow.vala:1398
 msgid "Copyright"
 msgstr ""
 
