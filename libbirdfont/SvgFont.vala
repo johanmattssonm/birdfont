@@ -235,6 +235,7 @@ class SvgFont : GLib.Object {
 		string ligature = "";
 		SvgParser parser = new SvgParser ();
 		Attribute attr;
+		StringBuilder unicode_name; 
 
 		parser.set_format (SvgFormat.INKSCAPE);
 
@@ -268,7 +269,10 @@ class SvgFont : GLib.Object {
 			}
 		}
 
-		glyph = new Glyph (glyph_name, unicode_value);
+		unicode_name = new StringBuilder ();
+		unicode_name.append_unichar (unicode_value);
+
+		glyph = new Glyph (unicode_name.str, unicode_value);
 		parser.add_path_to_glyph (svg, glyph, true, units);			
 		glyph.right_limit = glyph.left_limit + advance * units;
 		
