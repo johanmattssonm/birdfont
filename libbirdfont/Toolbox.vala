@@ -249,6 +249,10 @@ public class Toolbox : GLib.Object  {
 					active = t.is_over (x, y);
 					tpa = null;
 					
+					if (!active && t.is_active ()) {
+						t.move_out_action (t);
+					}
+					
 					update = t.set_active (active);
 					tpa = MainWindow.get_tooltip ();
 					

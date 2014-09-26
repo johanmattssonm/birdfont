@@ -34,6 +34,7 @@ public class Tool : GLib.Object {
 	public signal void press_action (Tool selected, int button, int x, int y);
 	public signal void double_click_action (Tool selected, int button, int x, int y);
 	public signal void move_action (Tool selected, int x, int y);
+	public signal void move_out_action (Tool selected);
 	public signal void release_action (Tool selected, int button, int x, int y);
 	
 	/** Returns true if tool is listening for scroll wheel actions. */
@@ -105,6 +106,11 @@ public class Tool : GLib.Object {
 		
 		panel_press_action.connect ((self, button, x, y) => {
 			MainWindow.get_tooltip ().set_text_from_tool ();
+		});
+		
+		move_out_action.connect ((self) => {
+			MainWindow.native_window.hide_tooltip ();
+			active_tooltip.showing_this_tooltip = false;
 		});
 		
 		panel_move_action.connect ((self, x, y) => {
