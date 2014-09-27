@@ -1,3 +1,10 @@
+birdfont (1.5) stable;
+
+  * Bug fixes
+  * A new XML parser
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Sep 27 19:08:27 CEST 2014
+
 birdfont (1.4) stable;
 
   * Bug fixes
