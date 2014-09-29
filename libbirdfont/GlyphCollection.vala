@@ -21,6 +21,7 @@ public class GlyphCollection : GLib.Object {
 	VersionList versions;
 	unichar unicode_character;
 	string name;
+	bool unassigned = false;
 
 	public GlyphCollection (unichar unicode_character, string name) {
 		this.unicode_character = unicode_character;
@@ -28,6 +29,14 @@ public class GlyphCollection : GLib.Object {
 		versions = new VersionList (null, this);
 	}
 
+	public void set_unassigned (bool a) {
+		unassigned = a;
+	}
+
+	public bool is_unassigned () {
+		return unassigned;
+	}
+	
 	public void add_glyph (Glyph g) {
 		get_version_list ().add_glyph (g);
 	}

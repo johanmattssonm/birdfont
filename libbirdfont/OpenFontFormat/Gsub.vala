@@ -63,7 +63,7 @@ public class GsubTable : Table {
 		fd.add_ushort (1); // number of lookups
 		fd.add_ushort (4); // offset to lookup 1
 		
-		// ligature substitution
+		// ligature substitution subtable
 		fd.add_ushort (1); // lookup type, format identifier
 		fd.add_ushort (20); // offset to coverage
 		fd.add_ushort (1); // number of ligature set tables

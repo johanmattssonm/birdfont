@@ -157,14 +157,29 @@ public class ClipTool : Tool {
 		
 		if (overview) {
 			o = MainWindow.get_overview ();
+			unichar last_assigned = '\0';
 			foreach (GlyphCollection gc in o.selected_items) {
 				s.append ("\n");
 				s.append ("<!-- BirdFontClipboard\n");
 
-				s.append ("BF glyph: ");
-				s.append (@"$(Font.to_hex (gc.get_unicode_character ()))");
+				if (!gc.is_unassigned ()) {
+					last_assigned = gc.get_unicode_character ();
+					
+					s.append ("BF glyph: ");
+					s.append (@"$(Font.to_hex (gc.get_unicode_character ()))");
+					s.append ("\n");
+				} else {
+					last_assigned++;
+					
+					s.append ("BF glyph: ");
+					s.append (@"$(Font.to_hex (last_assigned))");
+					s.append ("\n");
+				}
+
+				s.append ("BF unassigned: ");
+				s.append (@"$(gc.is_unassigned ())");
 				s.append ("\n");
-				
+							
 				s.append ("BF left: ");
 				s.append (@"$(gc.get_current ().left_limit)");
 				s.append ("\n");
@@ -191,6 +206,10 @@ public class ClipTool : Tool {
 			s.append (@"$(Font.to_hex (glyph.unichar_code))");
 			s.append ("\n");
 			
+			s.append ("BF unassigned: ");
+			s.append (@"$(glyph.is_unassigned ())");
+			s.append ("\n");
+						
 			s.append ("BF left: ");
 			s.append (@"$(glyph.left_limit)");
 			s.append ("\n");
@@ -272,8 +291,6 @@ public class ClipTool : Tool {
 		Gee.ArrayList<Glyph> glyphs = new Gee.ArrayList<Glyph> ();
 		Glyph glyph = new Glyph ("null", '\0');
 		string[] items = data.split ("\nBF ");
-		string d;
-		int i;
 		unichar c;
 		Glyph destination;
 		GlyphCollection gc;
@@ -287,7 +304,13 @@ public class ClipTool : Tool {
 				glyph = new Glyph ((!) c.to_string (), c);
 				glyphs.add (glyph);
 			}
-			
+
+			if (p.has_prefix ("unassigned:")) {
+				p = p.replace ("unassigned: ", "");
+				p = p.replace ("\n", "");
+				glyph.set_unassigned (bool.parse (p)); // FIXME: move to gc
+			}
+						
 			if (p.has_prefix ("path:")) {
 				p = p.replace ("path: ", "");
 				p = p.replace ("\n", "");

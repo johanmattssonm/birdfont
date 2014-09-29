@@ -448,6 +448,50 @@ public class MenuTab : FontDisplay {
 		SpacingClassTab t = MainWindow.get_spacing_class_tab ();
 		MainWindow.get_tab_bar ().add_unique_tab (t);
 	}
+
+	public static void add_ligature () {
+		TextListener listener;
+		string ligature_name = "";
+		
+		if (suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
+		listener = new TextListener (t_("Name"), "", t_("Add ligature"));
+		
+		listener.signal_text_input.connect ((text) => {
+			ligature_name = text;
+		});
+		
+		listener.signal_submit.connect (() => {
+			Font font = BirdFont.get_current_font ();
+			GlyphCollection? fg;
+			Glyph glyph;
+			GlyphCollection glyph_collection;
+			OverView o = MainWindow.get_overview ();
+
+			fg = font.get_glyph_collection_by_name (ligature_name);
+
+			if (fg == null) {
+				glyph_collection = new GlyphCollection ('\0', ligature_name);
+				
+				glyph = new Glyph (ligature_name, '\0');
+				glyph.set_unassigned (true);
+				glyph_collection.insert_glyph (glyph, true);
+
+				font.add_glyph_collection (glyph_collection);
+			}
+			
+			o.display_all_available_glyphs ();
+			o.scroll_to_glyph (ligature_name);
+			
+			MainWindow.native_window.hide_text_input ();
+			Toolbox.select_tool_by_name ("available_characters");
+		});
+		
+		MainWindow.native_window.set_text_listener (listener);
+	}
 }
 
 }

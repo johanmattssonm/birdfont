@@ -18,7 +18,7 @@ using Math;
 namespace BirdFont {
 	
 public class OverViewItem : GLib.Object {
-	public unichar character = 'A';
+	public unichar character = '\0';
 	public GlyphCollection? glyphs;
 	public double x;
 	public double y;
@@ -39,6 +39,19 @@ public class OverViewItem : GLib.Object {
 		this.character = character;
 		this.glyphs = glyphs;
 		this.info = new CharacterInfo (character);
+	}
+	
+	public string get_name () {
+		StringBuilder s;
+		
+		if (glyphs != null) {
+			return ((!) glyphs).get_name ();
+		}
+		
+		s = new StringBuilder ();
+		s.append_unichar (character);
+		
+		return s.str;
 	}
 	
 	public void set_selected (bool s) {

@@ -376,7 +376,8 @@ public class Font : GLib.Object {
 			return;
 		}
 		
-		if (glyph_collection.get_unicode () != "") {
+		// FIXME: move unassinged
+		if (glyph_collection.get_unicode () != "" || glyph_collection.get_current ().is_unassigned ()) {
 			glyph_name.insert (glyph_collection.get_name (), glyph_collection);			
 		}
 		

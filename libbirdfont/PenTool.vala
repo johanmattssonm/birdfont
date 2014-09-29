@@ -530,9 +530,6 @@ public class PenTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		double coordinate_x, coordinate_y;
 		double delta_coordinate_x, delta_coordinate_y;
-		int px = 0;
-		int py = 0;
-		EditPoint p;
 		double angle = 0;
 		
 		control_point_event (x, y);
@@ -656,16 +653,7 @@ public class PenTool : Tool {
 			}
 		}
 	}
-	
-	private static void tie_pixels (ref int x, ref int y) {
-		double coordinate_x, coordinate_y;
-		coordinate_x = Glyph.path_coordinate_x (x);
-		coordinate_y = Glyph.path_coordinate_y (y);
-		GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
-		x = Glyph.reverse_path_coordinate_x (coordinate_x);
-		y = Glyph.reverse_path_coordinate_y (coordinate_y);
-	}
-	
+
 	public void press (int button, int x, int y, bool double_click) {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
@@ -904,8 +892,7 @@ public class PenTool : Tool {
 		Path path;
 		bool direction_changed = false;
 		Path union, second_path;
-		EditPoint last_point, first_point;
-		EditPointHandle last_rh, fist_lh;
+		EditPoint first_point;
 		int px, py;
 		
 		if (glyph.path_list.size == 0) {

@@ -33,27 +33,35 @@ class BirdFontFile : GLib.Object {
 	public bool load (string path) {
 		string xml_data;
 		XmlParser parser;
-		bool ok;
+		bool ok = false;
 	
-		FileUtils.get_contents(path, out xml_data);
-		
-		font.background_images.clear ();
-		font.font_file = path;
-		
-		parser = new XmlParser (xml_data);
-		ok = load_xml (parser);
-				
+		try {
+			FileUtils.get_contents(path, out xml_data);
+			
+			font.background_images.clear ();
+			font.font_file = path;
+			
+			parser = new XmlParser (xml_data);
+			ok = load_xml (parser);
+		} catch (GLib.FileError e) {
+			warning (e.message);
+		}
+			
 		return ok;
 	}
 
 	public bool load_part (string bfp_file) {
 		string xml_data;
 		XmlParser parser;
-		bool ok;
+		bool ok = false;
 	
-		FileUtils.get_contents(bfp_file, out xml_data);
-		parser = new XmlParser (xml_data);
-		ok = load_xml (parser);
+		try {
+			FileUtils.get_contents(bfp_file, out xml_data);
+			parser = new XmlParser (xml_data);
+			ok = load_xml (parser);
+		} catch (GLib.FileError e) {
+			warning (e.message);
+		}
 		
 		return ok;
 	}
@@ -195,6 +203,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
 		os.put_string ("\n");
 		os.put_string ("<font>\n");
+		os.put_string ("<format>1.0</format>\n");
 	}
 	
 	public void write_closing_root_tag (DataOutputStream os) throws GLib.Error {
@@ -302,7 +311,15 @@ class BirdFontFile : GLib.Object {
 	}
 
 	public void write_glyph_collection_start (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
-		os.put_string (@"<collection unicode=\"$(Font.to_hex (gc.get_current ().unichar_code))\">\n");		
+		os.put_string ("<collection ");
+		
+		if (gc.get_current ().is_unassigned ()) {
+			os.put_string (@"name=\"$(gc.get_current ().get_name ())\"");
+		} else {
+			os.put_string (@"unicode=\"$(Font.to_hex (gc.get_current ().unichar_code))\"");
+		}
+		
+		os.put_string (">\n");
 	}
 
 	public void write_glyph_collection_end (DataOutputStream os)  throws GLib.Error {
@@ -902,10 +919,12 @@ class BirdFontFile : GLib.Object {
 		int selected_id = -1;
 		Attribute attribute;
 		Tag t;
+		bool unassigned = false;
 		
 		tag.reparse ();
 		while (tag.has_more_attributes ()) {
 			attribute = tag.get_next_attribute ();
+			
 			if (attribute.get_name () == "unicode") {
 				unicode = Font.to_unichar (attribute.get_content ());
 				b = new StringBuilder ();
@@ -915,6 +934,14 @@ class BirdFontFile : GLib.Object {
 				if (name == "") {
 					name = ".null";
 				}
+				
+				unassigned = false;
+			}
+
+			if (attribute.get_name () == "name") {
+				unicode = '\0';
+				name = attribute.get_content ();
+				unassigned = true;
 			}
 		}
 
@@ -937,7 +964,7 @@ class BirdFontFile : GLib.Object {
 			t = tag.get_next_tag ();
 			
 			if (t.get_name () == "glyph") {
-				parse_glyph (t, gc, name, unicode, selected_id);
+				parse_glyph (t, gc, name, unicode, selected_id, unassigned);
 			}
 		}
 		
@@ -969,7 +996,8 @@ class BirdFontFile : GLib.Object {
 		return id;
 	}
 
-	private void parse_glyph (Tag tag, GlyphCollection gc, string name, unichar unicode, int selected_id) {	
+	private void parse_glyph (Tag tag, GlyphCollection gc, string name, 
+			unichar unicode, int selected_id, bool unassigned) {	
 		Glyph glyph = new Glyph (name, unicode);
 		Path path;
 		bool selected = false;
@@ -1015,7 +1043,8 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 
-		glyph.version_id = (has_id) ? id : (int) gc.length () + 1;		
+		glyph.version_id = (has_id) ? id : (int) gc.length () + 1;
+		glyph.set_unassigned (unassigned);
 		gc.insert_glyph (glyph, selected || selected_id == id);
 	}
 

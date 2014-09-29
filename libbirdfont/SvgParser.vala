@@ -55,7 +55,6 @@ public class SvgParser {
 		Glyph glyph; 
 		string[] lines = xml_data.split ("\n");
 		bool has_format = false;
-		StringBuilder sb = new StringBuilder ();
 		SvgParser parser = new SvgParser ();
 		XmlParser xmlparser;
 		Tag root;
@@ -363,7 +362,6 @@ public class SvgParser {
 	private void parse_path (Tag tag, PathList pl) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
-		Tag t;
 		Attribute attr;
 		
 		tag.reparse ();	

@@ -107,19 +107,24 @@ public class OverView : FontDisplay {
 		update_scrollbar ();
 	}
 	
-	public GlyphCollection add_empty_character_to_font (unichar character) {
-		return add_character_to_font (character, true);
+	public GlyphCollection add_empty_character_to_font (unichar character, bool unassigned, string name) {
+		return add_character_to_font (character, true, unassigned);
 	}
 	
-	public GlyphCollection add_character_to_font (unichar character, bool empty = false) {
+	public GlyphCollection add_character_to_font (unichar character, bool empty = false,
+			bool unassigned = false, string glyph_name = "") {
 		StringBuilder name = new StringBuilder ();
 		Font font = BirdFont.get_current_font ();
 		GlyphCollection? fg;
 		Glyph glyph;
 		GlyphCollection glyph_collection;
 
-		name.append_unichar (character);
-
+		if (glyph_name == "") {
+			name.append_unichar (character);
+		} else {
+			name.append (glyph_name);
+		}
+		
 		if (all_available) {
 			fg = font.get_glyph_collection_by_name (name.str);
 		} else {
@@ -132,12 +137,14 @@ public class OverView : FontDisplay {
 			glyph_collection = new GlyphCollection (character, name.str);
 			
 			if (!empty) {
-				glyph = new Glyph (name.str, character);
+				glyph = new Glyph (name.str, (!unassigned) ? character : '\0');
 				glyph_collection.insert_glyph (glyph, true);
 			}
 			
 			font.add_glyph_collection (glyph_collection);
 		}
+		
+		glyph_collection.set_unassigned (unassigned);
 		
 		return glyph_collection;
 	}
@@ -768,11 +775,11 @@ public class OverView : FontDisplay {
 		redo_items.clear ();
 	}
 	
-	bool select_visible_character (unichar c) {
+	bool select_visible_glyph (string name) {
 		int i = 0;
 		
 		foreach (OverViewItem o in visible_items) {
-			if (o.character == c) {
+			if (o.get_name () == name) {
 				selected = i;
 				selected_item = get_selected_item ();
 				return true;
@@ -788,11 +795,27 @@ public class OverView : FontDisplay {
 		
 		return false;
 	}
-			
+	
+	bool select_visible_character (unichar c) {
+		StringBuilder s = new StringBuilder ();
+		s.append_unichar (c);
+		return select_visible_glyph (s.str);
+	}
+	
 	public void scroll_to_char (unichar c) {
+		StringBuilder s = new StringBuilder ();
+
+		if (is_modifier_key (c)) {
+			return;
+		}
+		
+		s.append_unichar (c);
+		scroll_to_glyph (s.str);
+	}
+		
+	public void scroll_to_glyph (string name) {
 		GlyphRange gr = glyph_range;
 		int i, r, index;
-		StringBuilder s = new StringBuilder ();
 		string ch;
 		Font font = BirdFont.get_current_font ();
 		GlyphCollection? glyphs = null;
@@ -804,16 +827,11 @@ public class OverView : FontDisplay {
 			warning ("No items.");
 			return;
 		}
-		
-		if (is_modifier_key (c)) {
-			return;
-		}
-		
-		s.append_unichar (c);
-		ch = s.str;
+
+		ch = name;
 
 		// selected char is visible
-		if (select_visible_character (c)) {
+		if (select_visible_glyph (ch)) {
 			return;
 		}
 		
@@ -842,6 +860,12 @@ public class OverView : FontDisplay {
 				}
 			}
 		} else {
+			
+			if (ch.char_count () > 1) {
+				warning ("Can't scroll to ligature in this view");
+				return;
+			}
+			
 			for (r = 0; r < gr.length (); r += items_per_row) {
 				for (i = 0; i < items_per_row; i++) {
 					if (gr.get_char (r + i) == ch) {
@@ -858,7 +882,7 @@ public class OverView : FontDisplay {
 		if (index > -1) {
 			first_visible = r;
 			update_item_list ();
-			select_visible_character (c);
+			select_visible_glyph (ch);
 		}
 	}
 	
@@ -1125,24 +1149,27 @@ public class OverView : FontDisplay {
 			return (int) ((GlyphCollection) a).get_unicode_character () 
 				- (int) ((GlyphCollection) b).get_unicode_character ();
 		});
-		
-		// FIXME: copy and paste to unicode character + 1 
-		
+
 		index = (uint32) first_visible + selected;
 		for (i = 0; i < copied_glyphs.size; i++) {
 			if (all_available) {
 				if (f.length () == 0) {
-					c = add_empty_character_to_font (
-						glyps.get (i).get_unicode_character ());					
+					c = add_empty_character_to_font (glyps.get (i).get_unicode_character (),
+						glyps.get (i).is_unassigned (), glyps.get (i).get_name ());
 				} else if (index >= f.length ()) {
 					c = add_empty_character_to_font (
-						((!)f.get_glyph_collection_indice (f.length () - 1)).get_unicode_character () + i);
+						((!)f.get_glyph_collection_indice (f.length () - 1))
+							.get_unicode_character () + i,
+						glyps.get (i).is_unassigned (),
+						glyps.get (i).get_name ());
 				} else {
 					c = f.get_glyph_collection_indice ((uint32) index);
 				}
 				
 				if (c == null) {
-					c = add_empty_character_to_font (copied_glyphs.get (i).get_unicode_character ());
+					c = add_empty_character_to_font (copied_glyphs.get (i).get_unicode_character (),
+						glyps.get (i).is_unassigned (),
+						glyps.get (i).get_name ());
 				}
 				
 				return_if_fail (c != null);
@@ -1159,7 +1186,9 @@ public class OverView : FontDisplay {
 				c = f.get_glyph_collection_by_name (character_string);
 				
 				if (c == null) {
-					gc = add_empty_character_to_font (character_string.get_char ());
+					gc = add_empty_character_to_font (character_string.get_char (), 
+						glyps.get (i).is_unassigned (),
+						glyps.get (i).get_name ());
 				} else {
 					gc = (!) c;
 				}

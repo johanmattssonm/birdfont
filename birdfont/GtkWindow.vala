@@ -731,6 +731,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		show_ligatures.activate.connect (() => { 
 			 MenuTab.show_ligature_tab ();
 		});
+
+		Gtk.MenuItem add_ligature = new Gtk.MenuItem.with_mnemonic (t_("_Add Ligature"));
+		ligature_menu.append (add_ligature);
+		add_ligature.activate.connect (() => { 
+			 MenuTab.add_ligature ();
+		});		
 		
 		// Add menus
 		Gtk.MenuItem file_launcher = new Gtk.MenuItem.with_mnemonic (t_("_File"));
