@@ -31,7 +31,6 @@ class TestCases {
 		add (test_drawing, "Pen tool");
 		add (test_delete_points, "Delete edit points");
 		add (test_convert_to_quadratic_bezier_path, "Convert to quadratic path");
-		add (test_notdef, "Notdef");
 		add (test_over_path, "Over path");
 		add (test_export, "Export");
 		add (test_background_coordinates, "Background coordinates");
@@ -627,22 +626,6 @@ class TestCases {
 			} 
 		} 
 		
-	}
-
-	public static void test_notdef () {
-		Font f = BirdFont.get_current_font ();
-		Glyph n = f.get_not_def_character ();
-		Glyph g;
-		Path pn;
-		
-		test_open_next_glyph ();
-		g = MainWindow.get_current_glyph ();
-		foreach (Path p in n.path_list) {
-			pn = p.copy ().get_quadratic_points ();
-			g.path_list.add (pn);
-			pn.move (50, 0);
-			g.path_list.add (p.copy ());
-		}
 	}
 
 	public static void test_convert_to_quadratic_bezier_path () {

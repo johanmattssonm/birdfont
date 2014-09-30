@@ -18,18 +18,28 @@ public class Tab : GLib.Object {
 
 	bool always_open;
 	double width; 
-	FontDisplay display;
 	string label;
+	FontDisplay display;
+	GlyphCollection glyph_collection;
 
 	public Tab (FontDisplay glyph, double tab_width, bool always_open) {
 		width = tab_width;
 		display = glyph;
 		this.always_open = always_open;
 		label = display.get_label ();
+		glyph_collection = new GlyphCollection.with_glyph ('\0', "");
 	}
 
 	public bool has_close_button () {
 		return !always_open;
+	}
+
+	public GlyphCollection get_glyph_collection () {
+		return glyph_collection;
+	}
+
+	public void set_glyph_collection (GlyphCollection gc) {
+		glyph_collection = gc;
 	}
 
 	public void set_display (FontDisplay fd) {

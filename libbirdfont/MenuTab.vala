@@ -477,7 +477,7 @@ public class MenuTab : FontDisplay {
 				glyph_collection = new GlyphCollection ('\0', ligature_name);
 				
 				glyph = new Glyph (ligature_name, '\0');
-				glyph.set_unassigned (true);
+				glyph_collection.set_unassigned (true);
 				glyph_collection.insert_glyph (glyph, true);
 
 				font.add_glyph_collection (glyph_collection);

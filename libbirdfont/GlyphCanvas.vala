@@ -51,19 +51,19 @@ public class GlyphCanvas : GLib.Object {
 		}
 	}
 	
-	public void set_current_glyph (FontDisplay fd) {
-		if (fd is Glyph) {
-			Glyph g = (Glyph) fd;
-			
-			BirdFont.current_glyph = g;
-			BirdFont.current_glyph.resized (allocation);
-		}
-
+	internal static void set_display (FontDisplay fd) {
 		current_display = fd;
+	}
+	
+	public void set_current_glyph_collection (GlyphCollection gc) {
+		Glyph g = gc.get_current ();
 		
-		fd.selected_canvas ();
+		BirdFont.current_glyph_collection = gc;
+		g.resized (allocation);
 		
-		fd.redraw_area.connect ((x, y, w, h) => {
+		current_display.selected_canvas ();
+		
+		current_display.redraw_area.connect ((x, y, w, h) => {
 			signal_redraw_area ((int)x, (int)y, (int)w, (int)h);
 		});
 
@@ -75,7 +75,7 @@ public class GlyphCanvas : GLib.Object {
 	}
 	
 	public static Glyph get_current_glyph ()  {
-		return BirdFont.current_glyph;
+		return MainWindow.get_current_glyph ();
 	}
 	
 	public FontDisplay get_current_display () {

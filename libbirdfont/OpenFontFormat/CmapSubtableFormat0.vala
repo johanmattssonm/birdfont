@@ -36,8 +36,8 @@ public class CmapSubtableFormat0 : GLib.Object {
 	
 	uint8 get_gid_for_unichar (unichar c, GlyfTable glyf_table) {
 		uint32 indice = 0;
-		foreach (Glyph g in glyf_table.glyphs) {
-			if (g.unichar_code == c) {
+		foreach (GlyphCollection g in glyf_table.glyphs) {
+			if (g.get_unicode_character () == c) {
 				return (indice <= uint8.MAX) ? (uint8) indice : 0;
 			}
 			indice++;

@@ -313,7 +313,7 @@ class BirdFontFile : GLib.Object {
 	public void write_glyph_collection_start (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
 		os.put_string ("<collection ");
 		
-		if (gc.get_current ().is_unassigned ()) {
+		if (gc.is_unassigned ()) {
 			os.put_string (@"name=\"$(gc.get_current ().get_name ())\"");
 		} else {
 			os.put_string (@"unicode=\"$(Font.to_hex (gc.get_current ().unichar_code))\"");
@@ -1044,7 +1044,7 @@ class BirdFontFile : GLib.Object {
 		}
 
 		glyph.version_id = (has_id) ? id : (int) gc.length () + 1;
-		glyph.set_unassigned (unassigned);
+		gc.set_unassigned (unassigned);
 		gc.insert_glyph (glyph, selected || selected_id == id);
 	}
 

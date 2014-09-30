@@ -110,6 +110,8 @@ public class HmtxTable : Table {
 		double xmax;
 		double ymax;
 		
+		Glyph g;
+		
 		if (advance_width != null) {
 			warning ("advance_width is set");
 			delete advance_width;
@@ -118,7 +120,8 @@ public class HmtxTable : Table {
 		
 		// advance and lsb
 		nmetrics = 0;
-		foreach (Glyph g in glyf_table.glyphs) {
+		foreach (GlyphCollection gc in glyf_table.glyphs) {
+			g = gc.get_current ();
 			g.boundaries (out xmin, out ymin, out xmax, out ymax);
 
 			xmax = Math.rint (xmax * HeadTable.UNITS);

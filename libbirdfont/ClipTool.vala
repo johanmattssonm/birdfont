@@ -153,6 +153,7 @@ public class ClipTool : Tool {
 		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
 		Path new_path;
 		Glyph glyph;
+		GlyphCollection glyph_collection;
 		OverView o;
 		
 		if (overview) {
@@ -176,6 +177,10 @@ public class ClipTool : Tool {
 					s.append ("\n");
 				}
 
+				s.append ("BF name: ");
+				s.append (@"$(gc.get_name ())");
+				s.append ("\n");				
+
 				s.append ("BF unassigned: ");
 				s.append (@"$(gc.is_unassigned ())");
 				s.append ("\n");
@@ -198,6 +203,7 @@ public class ClipTool : Tool {
 			}
 		} else {
 			glyph = MainWindow.get_current_glyph ();
+			glyph_collection = MainWindow.get_current_glyph_collection ();
 			
 			s.append ("\n");
 			s.append ("<!-- BirdFontClipboard\n");
@@ -205,9 +211,13 @@ public class ClipTool : Tool {
 			s.append ("BF glyph: ");
 			s.append (@"$(Font.to_hex (glyph.unichar_code))");
 			s.append ("\n");
+
+			s.append ("BF name: ");
+			s.append (@"$(glyph_collection.get_name ())");
+			s.append ("\n");
 			
 			s.append ("BF unassigned: ");
-			s.append (@"$(glyph.is_unassigned ())");
+			s.append (@"$(glyph_collection.is_unassigned ())");
 			s.append ("\n");
 						
 			s.append ("BF left: ");
@@ -288,12 +298,12 @@ public class ClipTool : Tool {
 	}
 	
 	static void import_birdfont_clipboard (string data, bool paste_guide_lines, bool overview) {
-		Gee.ArrayList<Glyph> glyphs = new Gee.ArrayList<Glyph> ();
+		Gee.ArrayList<GlyphCollection> glyphs = new Gee.ArrayList<GlyphCollection> ();
 		Glyph glyph = new Glyph ("null", '\0');
 		string[] items = data.split ("\nBF ");
 		unichar c;
 		Glyph destination;
-		GlyphCollection gc;
+		GlyphCollection glyph_collection = new GlyphCollection ('\0', "");
 		OverView o;
 		
 		foreach (string p in items) {
@@ -301,16 +311,26 @@ public class ClipTool : Tool {
 				p = p.replace ("glyph: ", "");
 				p = p.replace ("\n", "");
 				c = Font.to_unichar (p);
+				glyph_collection = new GlyphCollection (c, (!) c.to_string ());
+				glyphs.add (glyph_collection);
+				
 				glyph = new Glyph ((!) c.to_string (), c);
-				glyphs.add (glyph);
+				glyph_collection.add_glyph (glyph);		
 			}
 
 			if (p.has_prefix ("unassigned:")) {
 				p = p.replace ("unassigned: ", "");
 				p = p.replace ("\n", "");
-				glyph.set_unassigned (bool.parse (p)); // FIXME: move to gc
+				glyph_collection.set_unassigned (bool.parse (p));
 			}
-						
+
+			if (p.has_prefix ("name:")) {
+				p = p.replace ("name: ", "");
+				p = p.replace ("\n", "");
+				glyph_collection.set_name (p);
+				glyph.name = p;
+			}
+									
 			if (p.has_prefix ("path:")) {
 				p = p.replace ("path: ", "");
 				p = p.replace ("\n", "");
@@ -333,7 +353,7 @@ public class ClipTool : Tool {
 		if (!overview) {
 			return_if_fail (glyphs.size > 0);
 			destination = MainWindow.get_current_glyph ();
-			glyph = glyphs.get (0);
+			glyph = glyphs.get (0).get_current ();
 			
 			foreach (Path p in glyph.path_list) {
 				destination.add_path (p);
@@ -349,9 +369,7 @@ public class ClipTool : Tool {
 		} else {
 			o = MainWindow.get_overview ();
 			o.copied_glyphs.clear ();
-			foreach (Glyph g in glyphs) {	
-				gc = new GlyphCollection (g.unichar_code, g.name);
-				gc.add_glyph (g);
+			foreach (GlyphCollection gc in glyphs) {
 				o.copied_glyphs.add (gc);
 			}
 			o.paste ();

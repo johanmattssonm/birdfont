@@ -67,7 +67,7 @@ public class TabContent : GLib.Object {
 			cr.restore ();
 		} else {
 			GlyphCanvas.set_allocation (allocation);
-			BirdFont.current_glyph.resized (allocation);
+			MainWindow.get_current_glyph ().resized (allocation);
 			GlyphCanvas.current_display.draw (allocation, cr);
 		}
 	}

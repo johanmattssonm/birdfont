@@ -124,7 +124,7 @@ class AutoTrace {
 			g = new Glyph.no_lines ("");
 			
 			GlyphCanvas.current_display = g;
-			BirdFont.current_glyph = g;
+			BirdFont.current_glyph_collection = new GlyphCollection.with_glyph ('\0', "");
 
 			h = bg.get_img ().get_height ();
 			

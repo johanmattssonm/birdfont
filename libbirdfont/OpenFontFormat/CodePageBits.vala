@@ -34,16 +34,16 @@ public class CodePageBits : GLib.Object {
 	
 	public void get_pages (Font font, out uint32 p0, out uint32 p1) {
 		uint32 indice;
-		Glyph? gl;
-		Glyph g;
+		GlyphCollection? gl;
+		GlyphCollection g;
 		
 		p0 = 0;
 		p1 = 0;
 		
-		for (indice = 0; (gl = font.get_glyph_indice (indice)) != null; indice++) {		
+		for (indice = 0; (gl = font.get_glyph_collection_indice (indice)) != null; indice++) {		
 			g = (!) gl;
 			
-			if (default_range.has_char (g.get_unichar ())) {
+			if (default_range.has_char (g.get_unicode_character ())) {
 				set_bit (0, ref p0, ref p1);
 			} else {
 				set_bits_for_glyph (g, ref p0, ref p1);
@@ -51,11 +51,11 @@ public class CodePageBits : GLib.Object {
 		}
 	}
 
-	void set_bits_for_glyph (Glyph g, ref uint32 p0, ref uint32 p1) {
+	void set_bits_for_glyph (GlyphCollection g, ref uint32 p0, ref uint32 p1) {
 		Gee.ArrayList<int> bits;
 		
 		if (!g.is_unassigned ()) {
-			bits = get_bits (g.get_unichar ());
+			bits = get_bits (g.get_unicode_character ());
 						
 			foreach (int bit in bits) {
 				set_bit (bit, ref p0, ref p1);

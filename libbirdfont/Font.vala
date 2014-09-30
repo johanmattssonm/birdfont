@@ -267,79 +267,94 @@ public class Font : GLib.Object {
 		return get_glyph (n) != null;
 	}
 
-	public Glyph get_nonmarking_return () {
-		Glyph ret;
+	public GlyphCollection get_nonmarking_return () {
+		Glyph g;
+		GlyphCollection gc;
 		
 		if (has_glyph ("nonmarkingreturn")) {
-			return (!) get_glyph ("nonmarkingreturn");
+			return (!) get_glyph_collection ("nonmarkingreturn");
 		}
-				
-		ret = new Glyph ("nonmarkingreturn", '\r');
-		ret.set_unassigned (false);
-		ret.left_limit = 0;
-		ret.right_limit = 0;
-		ret.remove_empty_paths ();
 		
-		assert (ret.path_list.size == 0);
+		gc = new GlyphCollection ('\r', "nonmarkingreturn");
 		
-		return ret;
+		g = new Glyph ("nonmarkingreturn", '\r');
+		g.left_limit = 0;
+		g.right_limit = 0;
+		g.remove_empty_paths ();
+		
+		gc.set_unassigned (false);
+		gc.add_glyph (g);
+		
+		return gc;
 	}
 		
-	public Glyph get_null_character () {
+	public GlyphCollection get_null_character () {
 		Glyph n;
+		GlyphCollection gc;
 		
 		if (has_glyph ("null")) {
-			return (!) get_glyph ("null");
+			return (!) get_glyph_collection ("null");
 		}
 		
+		gc = new GlyphCollection ('\0', "null");
 		n = new Glyph ("null", '\0');
-		n.set_unassigned (false);
+		
+		gc.add_glyph (n);
+		gc.set_unassigned (false);
+		
 		n.left_limit = 0;
 		n.right_limit = 0;
 		n.remove_empty_paths ();
 		
 		assert (n.path_list.size == 0);
 		
-		return n;
+		return gc;
 	}
 	
-	public Glyph get_space () {
+	public GlyphCollection get_space () {
 		Glyph n;
+		GlyphCollection gc;
 		
 		if (has_glyph (" ")) {
-			return (!) get_glyph (" ");
+			return (!) get_glyph_collection (" ");
 		}
 
 		if (has_glyph ("space")) {
-			return (!) get_glyph ("space");
+			return (!) get_glyph_collection ("space");
 		}
-				
+		
+		gc = new GlyphCollection (' ', "space");
+			
 		n = new Glyph ("space", ' ');
-		n.set_unassigned (false);
 		n.left_limit = 0;
 		n.right_limit = 27;
 		n.remove_empty_paths ();
 		
-		assert (n.path_list.size == 0);
+		gc.add_glyph (n);
+		gc.set_unassigned (false);
 		
-		return n;		
+		return gc;		
 	}
 	
-	public Glyph get_not_def_character () {
+	public GlyphCollection get_not_def_character () {
 		Glyph g;
+		GlyphCollection gc;
 
 		Path p;
 		Path i;
 		
 		if (has_glyph (".notdef")) {
-			return (!) get_glyph (".notdef");
+			return (!) get_glyph_collection (".notdef");
 		}
 		
+		gc = new GlyphCollection ('\0', ".notdef");
 		g = new Glyph (".notdef", 0);
 		p = new Path ();
 		i = new Path ();
 		
-		g.set_unassigned (true);
+		gc.set_unassigned (true);
+		gc.add_glyph (g);
+		
 		g.left_limit = -33;
 		g.right_limit = 33;
 		
@@ -359,7 +374,7 @@ public class Font : GLib.Object {
 		g.add_path (i);
 		g.add_path (p);
 
-		return g;
+		return gc;
 	}
 
 	public void add_glyph_collection (GlyphCollection glyph_collection) {
@@ -377,7 +392,7 @@ public class Font : GLib.Object {
 		}
 		
 		// FIXME: move unassinged
-		if (glyph_collection.get_unicode () != "" || glyph_collection.get_current ().is_unassigned ()) {
+		if (glyph_collection.get_unicode () != "" || glyph_collection.is_unassigned ()) {
 			glyph_name.insert (glyph_collection.get_name (), glyph_collection);			
 		}
 		

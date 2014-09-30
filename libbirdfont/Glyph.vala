@@ -64,7 +64,6 @@ public class Glyph : FontDisplay {
 
 	public WidgetAllocation allocation = new WidgetAllocation ();
 
-	bool unassigned = false;
 	public unichar unichar_code = 0; // FIXME: name and unichar should be moved to to glyph collection 
 	public string name;
 
@@ -210,16 +209,6 @@ public class Glyph : FontDisplay {
 		return active_paths.get (active_paths.size - 1);
 	}
 	
-	// It looks like this can be remove but firefox refuses to load
-	// the generated font if it is removed. See the revert 6bbf and a76d.
-	public void set_unassigned (bool u) {
-		unassigned = u;
-	}
-	
-	public bool is_unassigned () {
-		return unassigned;
-	}
-
 	public void boundaries (out double x1, out double y1, out double x2, out double y2) {
 		if (path_list.size == 0) {
 			x1 = 0;
@@ -1845,7 +1834,7 @@ public class Glyph : FontDisplay {
 		for (int i = pos + 1; i < glyph_sequence.char_count (); i++) {
 			c = glyph_sequence.get_char (i);
 			name = font.get_name_for_character (c);			
-			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ();
+			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ().get_current ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
 				kern = KerningClasses.get_instance ().get_kerning (last_name, name);
@@ -1878,7 +1867,7 @@ public class Glyph : FontDisplay {
 		for (int i = pos - 1; i >= 0; i--) {
 			c = glyph_sequence.get_char (i);
 			name = font.get_name_for_character (c);			
-			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ();
+			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ().get_current ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
 				kern = KerningClasses.get_instance ().get_kerning (name, last_name);

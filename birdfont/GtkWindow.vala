@@ -104,7 +104,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			string uri = "";
 			string html = "";
 			FontDisplay fd = tab.get_display ();
-			MainWindow.glyph_canvas.set_current_glyph (fd);
 			
 			scrollbar.set_visible (fd.has_scrollbar ());
 			

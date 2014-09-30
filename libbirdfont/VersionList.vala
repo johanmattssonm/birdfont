@@ -98,7 +98,7 @@ public class VersionList : DropMenu {
 	}
 	
 	public Glyph get_current () {
-		Glyph gl;
+		Glyph? gl = null;
 		
 		foreach (Glyph g in glyphs) {
 			if (g.version_id == current_version_id) {
@@ -106,15 +106,19 @@ public class VersionList : DropMenu {
 			}
 		}
 		
-		warning (@"Can not find current glyph for id $current_version_id");
-		
-		if (glyphs.size > 0) {
+		if (unlikely (glyphs.size > 0)) {
+			warning (@"Can not find current glyph for id $current_version_id");
 			gl = glyphs.get (glyphs.size - 1);
-			set_selected_version (gl.version_id);
-			return gl;
+			set_selected_version (((!) gl).version_id);
+			return (!) gl;
 		}
 		
-		return new Glyph ("");
+		if (unlikely (glyphs.size == 0 && current_version_id == -1)) {
+			warning (@"No glyphs added to collection");
+			gl = new Glyph ("", '\0');
+		}
+		
+		return (!) gl;
 	}
 
 	public void add_new_version () {
@@ -131,7 +135,7 @@ public class VersionList : DropMenu {
 	
 	private void set_selected_item (MenuAction ma) {
 		int i = ma.index;
-		Glyph current_glyph = MainWindow.get_current_glyph ();
+		Glyph current_glyph;
 		Glyph g;
 				
 		return_if_fail (0 <= i < glyphs.size);
@@ -145,9 +149,12 @@ public class VersionList : DropMenu {
 		ma.set_selected (true);
 		
 		reload_all_open_glyphs ();
-
-		g.set_allocation (current_glyph.allocation);
-		g.set_default_zoom ();
+		
+		if (!is_null (BirdFont.current_glyph_collection)) {
+			current_glyph = MainWindow.get_current_glyph ();
+			g.set_allocation (current_glyph.allocation);
+			g.set_default_zoom ();
+		}
 	}
 	
 	/** Reload a glyph when a new version is selected. Updates the path

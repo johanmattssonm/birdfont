@@ -255,6 +255,7 @@ public class TabBar : GLib.Object {
 		Tab t;
 		EmptyTab empty_tab_canvas;
 		Tab empty_tab;
+		GlyphCollection gc;
 
 		if (MenuTab.suppress_event) {
 			warn_if_test ("Event suppressed");
@@ -267,7 +268,8 @@ public class TabBar : GLib.Object {
 		
 		if (tabs.size == 1) {
 			empty_tab_canvas = new EmptyTab ("", "");
-			MainWindow.get_glyph_canvas ().set_current_glyph (empty_tab_canvas);
+			gc = new GlyphCollection.with_glyph('\0', "");
+			MainWindow.get_glyph_canvas ().set_current_glyph_collection (gc);
 			empty_tab = new Tab (empty_tab_canvas, 0, false);
 			signal_tab_selected (empty_tab);
 		}
@@ -470,6 +472,12 @@ public class TabBar : GLib.Object {
 		Tab t;
 		
 		t = tabs.get (index);
+		
+		GlyphCanvas.set_display (t.get_display ());
+		
+		MainWindow.get_glyph_canvas ()
+			.set_current_glyph_collection (t.get_glyph_collection ());
+		
 		signal_tab_selected (t);		
 	}
 	
@@ -536,10 +544,11 @@ public class TabBar : GLib.Object {
 		}
 	}
 	
-	public void add_tab (FontDisplay display_item, bool signal_selected = true) {
+	public void add_tab (FontDisplay display_item, bool signal_selected = true, GlyphCollection? gc = null) {
 		double tab_width = -1;
 		bool always_open = false;
 		int s = (tabs.size == 0) ? 0 : selected + 1;
+		Tab t;
 
 		if (MenuTab.suppress_event) {
 			warn_if_test ("Event suppressed");
@@ -550,8 +559,19 @@ public class TabBar : GLib.Object {
 			tab_width = 9 * display_item.get_label ().char_count ();
 			tab_width += 36;
 		}
+		
+		t = new Tab (display_item, tab_width, always_open);
+		tabs.insert (s,t);
+		
+		if (gc != null) {
+			t.set_glyph_collection ((!) gc);
+		}
+
+		GlyphCanvas.set_display (t.get_display ());
+
+		MainWindow.get_glyph_canvas ()
+			.set_current_glyph_collection (t.get_glyph_collection ());
 				
-		tabs.insert (s, new Tab (display_item, tab_width, always_open));
 		select_tab (s, signal_selected);
 	}
 	

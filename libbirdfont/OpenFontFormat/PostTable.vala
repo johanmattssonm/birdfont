@@ -1186,6 +1186,7 @@ public class PostTable : Table {
 		FontData fd = new FontData ();
 		string n;
 		int name_index;
+		GlyphCollection gc;
 		Glyph g;
 				
 		fd.add_fixed (0x00020000); // Version
@@ -1214,7 +1215,8 @@ public class PostTable : Table {
 		add_standard_names ();
 
 		for (int i = 1; i < glyf_table.glyphs.size; i++) {
-			g = glyf_table.glyphs.get (i);
+			gc = glyf_table.glyphs.get (i);
+			g = gc.get_current ();
 			name_index = get_standard_index (g.unichar_code);
 			
 			if (name_index != 0) {

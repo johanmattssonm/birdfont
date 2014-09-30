@@ -36,7 +36,7 @@ public static int run_import (string[] arg) {
 	Preferences.load ();
 	BirdFont.args = new Argument ("");
 	BirdFont.current_font = new Font ();
-	BirdFont.current_glyph = new Glyph ("");
+	BirdFont.current_glyph_collection = new GlyphCollection.with_glyph ('\0', "");
 	MainWindow.init ();
 
 	if (arg.length < 3) {
@@ -150,7 +150,7 @@ static bool import_svg_file (Font font, File svg_file) {
 	}
 
 	canvas = MainWindow.get_glyph_canvas ();
-	canvas.set_current_glyph (glyph);
+	canvas.set_current_glyph_collection (glyph_collection);
 
 	stdout.printf (t_("Adding"));
 	stdout.printf (" ");
@@ -210,7 +210,7 @@ public static int run_export (string[] arg) {
 	}
 
 	BirdFont.current_font = BirdFont.new_font ();
-	BirdFont.current_glyph = new Glyph ("null", '\0');
+	BirdFont.current_glyph_collection = new GlyphCollection.with_glyph ( '\0', "null");
 	main_window = new MainWindow ();
 	
 	// FIXME: create a option for this and structure the log messages
@@ -271,7 +271,7 @@ public static int run_export (string[] arg) {
 	Preferences.load ();
 			
 	BirdFont.args = new Argument ("");
-	BirdFont.current_glyph = new Glyph ("");
+	BirdFont.current_glyph_collection = new GlyphCollection.with_glyph ('\0', "");
 	
 	file_name = build_absoulute_path (file_name);
 	
@@ -364,7 +364,7 @@ public class BirdFont {
 	public static DataOutputStream? logstream = null;
 
 	public static Font current_font;
-	public static Glyph current_glyph;
+	public static GlyphCollection current_glyph_collection;
 	
 	public BirdFont () {	
 	}
@@ -422,7 +422,7 @@ public class BirdFont {
 		current_font = new Font ();
 		current_font.set_name ("");
 		current_font.initialised = false;
-		current_glyph = new Glyph ("");
+		current_glyph_collection = new GlyphCollection.with_glyph ('\0', "");
 		
 		experimental = args.has_argument ("--test");
 		show_coordinates = args.has_argument ("--show-coordinates") || experimental;

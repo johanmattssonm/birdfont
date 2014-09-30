@@ -29,6 +29,16 @@ public class GlyphCollection : GLib.Object {
 		versions = new VersionList (null, this);
 	}
 
+	public GlyphCollection.with_glyph (unichar unicode_character, string name) {
+		Glyph g;
+		
+		this.unicode_character = unicode_character;
+		this.name = name;
+		
+		g = new Glyph (name, unicode_character);
+		versions = new VersionList (g, this);
+	}
+
 	public void set_unassigned (bool a) {
 		unassigned = a;
 	}
@@ -74,6 +84,10 @@ public class GlyphCollection : GLib.Object {
 		
 	public string get_name () {
 		return name;
+	}
+	
+	public void set_name (string n) {
+		name = n;
 	}
 	
 	public int get_selected_id () {

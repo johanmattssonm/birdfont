@@ -190,9 +190,9 @@ public class CmapSubtableFormat4 : GLib.Object {
 		uint32 indice;
 		uint32 first_assigned = 1;
 		
-		foreach (Glyph g in glyf_table.glyphs) {
-			if (!g.is_unassigned () && g.unichar_code < 0xFFFF) {
-				glyph_range.add_single (g.unichar_code);
+		foreach (GlyphCollection g in glyf_table.glyphs) {
+			if (!g.is_unassigned () && g.get_unicode_character () < 0xFFFF) {
+				glyph_range.add_single (g.get_unicode_character ());
 			}
 		}
 		

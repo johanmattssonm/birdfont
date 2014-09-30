@@ -72,8 +72,8 @@ public class OverView : FontDisplay {
 			
 			if (!selected) {
 				canvas = MainWindow.get_glyph_canvas ();
-				tabs.add_tab (g);
-				canvas.set_current_glyph (g);
+				tabs.add_tab (g, true, glyph_collection);
+				canvas.set_current_glyph_collection (glyph_collection);
 				set_initial_zoom ();
 			}
 		});
@@ -93,12 +93,12 @@ public class OverView : FontDisplay {
 				glyph_collection = add_character_to_font (character);
 				
 				glyph = glyph_collection.get_current ();
-				tabs.add_tab (glyph);
+				tabs.add_tab (glyph, true, glyph_collection);
 				
 				selected_items.add (glyph_collection);
 				
 				canvas = MainWindow.get_glyph_canvas ();
-				canvas.set_current_glyph (glyph_collection.get_current ());
+				canvas.set_current_glyph_collection (glyph_collection);
 				
 				set_initial_zoom ();
 			}

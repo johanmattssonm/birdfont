@@ -98,14 +98,23 @@ public class MainWindow : GLib.Object {
 	public static GlyphCanvas get_glyph_canvas () {
 		return glyph_canvas;
 	}
-	
-	public static Glyph get_current_glyph () {
-		if (unlikely (is_null (BirdFont.current_glyph))) {
+
+	public static GlyphCollection get_current_glyph_collection () {
+		if (unlikely (is_null (BirdFont.current_glyph_collection))) {
+			GlyphCollection gc;
+			
 			warning ("No default glyph have been set yet.\n");
-			return new Glyph ("no_glyph_created");
+			gc = new GlyphCollection ('\0', "");
+			gc.add_glyph (new Glyph ("", '\0'));
+			
+			return gc;
 		}
 		
-		return BirdFont.current_glyph;
+		return BirdFont.current_glyph_collection;
+	}
+		
+	public static Glyph get_current_glyph () {
+		return get_current_glyph_collection ().get_current ();
 	}
 	
 	public static Toolbox get_toolbox () {
