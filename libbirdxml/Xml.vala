@@ -19,31 +19,40 @@ public class XmlParser : GLib.Object {
 	Tag root;
 	string data;
 
+	/** Create a new xml parser. */
 	public XmlParser (string data) {
 		this.data = data;
 		reparse ();
 	}
 	
+	/** @return the root tag. */
+	public Tag get_root_tag () {
+		reparse ();
+		return root;
+	}
+	
 	/** Reset the parser and start from the beginning of the XML document. */
-	public void reparse () {
+	internal void reparse () {
 		int root_index;
+		Tag container;
 		
 		root_index = find_root_tag ();
 		if (root_index == -1) {
 			warning ("No root tag found.");
 			root = new Tag.empty ();
 		} else {
-			root = new Tag ("", "", data.substring (root_index));
+			container = new Tag ("", "", data.substring (root_index));
+			root = container.get_next_tag ();
 		}
 	}
 	
 	/** @return the root tag. **/
-	public Tag get_next_tag () {
+	internal Tag get_next_tag () {
 		return root.get_next_tag ();
 	}
 	
 	/** @return true if there is one more tags left */
-	public bool has_more_tags () {
+	internal bool has_more_tags () {
 		return root.has_more_tags ();
 	}
 		
@@ -69,7 +78,7 @@ public class XmlParser : GLib.Object {
 		}
 		
 		return -1;
-	}	
+	}
 }
 
 }

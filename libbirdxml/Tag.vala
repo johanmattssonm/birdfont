@@ -34,6 +34,7 @@ public class Tag : GLib.Object {
 		this.data = content;
 		this.attributes = attributes;
 		reparse ();
+		reparse_attributes ();
 	}
 	
 	internal Tag.empty () {
@@ -42,14 +43,27 @@ public class Tag : GLib.Object {
 		name = "";
 	}
 
+	/** Get tag attributes for this tag. */
+	public Attributes get_attributes () {
+		return new Attributes (this);
+	}
+
+	/** Iterate over all tags inside of this tag. */
+	public Iterator iterator () {
+		return new Iterator(this);
+	}
+
 	/** Reset the parser and start from the beginning XML tag. */
 	public void reparse () {
 		tag_index = 0;
-		attribute_index = 0;
 		next_tag = obtain_next_tag ();
-		next_attribute = obtain_next_attribute ();
 	}
 
+	internal void reparse_attributes () {
+		attribute_index = 0;
+		next_attribute = obtain_next_attribute ();
+	}
+	
 	/** @return the name of this tag. */
 	public string get_name () {
 		return name;
@@ -61,24 +75,24 @@ public class Tag : GLib.Object {
 	}
 
 	/** @return true if there is one more tags left */
-	public bool has_more_tags () {
+	internal bool has_more_tags () {
 		return has_tags;
 	}
 	
 	/** @return the next tag. **/
-	public Tag get_next_tag () {
+	internal Tag get_next_tag () {
 		Tag r = next_tag == null ? new Tag.empty () : (!) next_tag;
 		next_tag = obtain_next_tag ();
 		return r;
 	}
 
 	/** @return true is there is one or more attributes to obtain with get_next_attribute */
-	public bool has_more_attributes () {
+	internal bool has_more_attributes () {
 		return has_attributes;
 	}
 	
 	/** @return next attribute. */
-	public Attribute get_next_attribute () {
+	internal Attribute get_next_attribute () {
 		Attribute r = next_attribute == null ? new Attribute.empty () : (!) next_attribute;
 		next_attribute = obtain_next_attribute ();
 		return r;
@@ -228,7 +242,7 @@ public class Tag : GLib.Object {
 		return false;
 	}
 
-	Attribute obtain_next_attribute () {
+	internal Attribute obtain_next_attribute () {
 		int previous_index;
 		int index = attribute_index;
 		int name_start;
@@ -327,6 +341,34 @@ public class Tag : GLib.Object {
 		
 		attribute_index = content_stop + 1;
 		return new Attribute (ns, attribute_name, content);
+	}
+
+	public class Iterator {
+		Tag tag;
+		Tag? next_tag = null;
+		
+		internal Iterator (Tag t) {
+			tag = t;
+			tag.reparse ();
+		}
+
+		public bool next () {
+			if (tag.has_more_tags ()) {
+				next_tag = tag.get_next_tag ();
+			} else {
+				next_tag = null;
+			}
+									
+			return next_tag != null;
+		}
+
+		public Tag get () {
+			if (unlikely (next_tag == null)) {
+				warning ("No tag is parsed yet.");
+				return new Tag.empty ();
+			}
+			return (!) next_tag;
+		}
 	}
 }
 

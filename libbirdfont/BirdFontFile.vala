@@ -83,10 +83,8 @@ class BirdFontFile : GLib.Object {
 	private bool load_xml (XmlParser parser) {
 		bool ok = true;
 		
-		create_background_files (parser.get_next_tag ());
-		
-		parser.reparse ();
-		ok = parse_file (parser.get_next_tag ());
+		create_background_files (parser.get_root_tag ());
+		ok = parse_file (parser.get_root_tag ());
 		
 		return ok;
 	}
@@ -593,12 +591,7 @@ class BirdFontFile : GLib.Object {
 	}
 
 	private bool parse_file (Tag tag) {
-		Tag t;
-		
-		tag.reparse ();
-		while (tag.has_more_tags ()) {
-			t = tag.get_next_tag ();
-
+		foreach (Tag t in tag) {
 			// this is a backup file, but path pointing to the original file
 			if (t.get_name () == "backup") {
 				font.font_file = t.get_content ();
@@ -679,10 +672,7 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	private void create_background_files (Tag root) {
-		Tag child;
-		while (root.has_more_tags ()) {
-			child = root.get_next_tag ();
-			
+		foreach (Tag child in root) {
 			if (child.get_name () == "name") {
 				font.set_name (child.get_content ());
 			}
@@ -715,15 +705,11 @@ class BirdFontFile : GLib.Object {
 	private void parse_spacing_class (Tag tag) {
 		string first, next;
 		SpacingClassTab spacing_class_tab = MainWindow.get_spacing_class_tab ();
-		Attribute attr;
 		
 		first = "";
 		next = "";
 		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "first") {
 				first = (!) Font.to_unichar (attr.get_content ()).to_string ();
 			}
@@ -740,16 +726,12 @@ class BirdFontFile : GLib.Object {
 		GlyphRange range_left, range_right;
 		double hadjustment = 0;
 		KerningRange kerning_range;
-		Attribute attr;
 		
 		try {
 			range_left = new GlyphRange ();
 			range_right = new GlyphRange ();
 			
-			tag.reparse ();
-			while (tag.has_more_attributes ()) {
-				attr = tag.get_next_attribute ();
-
+			foreach (Attribute attr in tag.get_attributes ()) {
 				if (attr.get_name () == "left") {
 					range_left.parse_ranges (unserialize (attr.get_content ()));
 				}
@@ -783,8 +765,6 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	private void parse_background_image (Tag tag) {
-		Attribute attr;
-		
 		string file = "";
 		string data = "";
 		
@@ -794,9 +774,7 @@ class BirdFontFile : GLib.Object {
 		DataOutputStream png_stream;
 		
 		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "sha1") {
 				file = attr.get_content ();
 			}
@@ -834,12 +812,7 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	private void parse_background (Tag tag) {
-		Attribute attr;
-		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "scale") {
 				font.background_scale = attr.get_content ();
 			}
@@ -847,12 +820,7 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	private void parse_grid (Tag tag) {
-		Attribute attr;
-		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "width") {
 				font.grid_width.add (attr.get_content ());
 			}
@@ -860,11 +828,7 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	private void parse_horizontal_lines (Tag tag) {
-		Tag t;
-		
-		tag.reparse ();
-		while (tag.has_more_tags ()) {
-			t = tag.get_next_tag ();
+		foreach (Tag t in tag) {
 			if (t.get_name () == "top_limit" && t.get_content () != "") {
 				font.top_limit = parse_double_from_node (t);
 			}
@@ -917,14 +881,9 @@ class BirdFontFile : GLib.Object {
 		StringBuilder b;
 		string name = "";
 		int selected_id = -1;
-		Attribute attribute;
-		Tag t;
 		bool unassigned = false;
 		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attribute = tag.get_next_attribute ();
-			
+		foreach (Attribute attribute in tag.get_attributes ()) {			
 			if (attribute.get_name () == "unicode") {
 				unicode = Font.to_unichar (attribute.get_content ());
 				b = new StringBuilder ();
@@ -949,20 +908,14 @@ class BirdFontFile : GLib.Object {
 		new_glyph_collection = (current_gc == null);
 		gc = (!new_glyph_collection) ? (!) current_gc : new GlyphCollection (unicode, name);
 
-		tag.reparse ();
-		while (tag.has_more_tags ()) {
-			t = tag.get_next_tag ();
-			
+		foreach (Tag t in tag) {			
 			if (t.get_name () == "selected") {
 				selected_id = parse_selected (t);
 				gc.set_selected_version (selected_id);
 			}
 		}
-		
-		tag.reparse ();			
-		while (tag.has_more_tags ()) {
-			t = tag.get_next_tag ();
 			
+		foreach (Tag t in tag) {			
 			if (t.get_name () == "glyph") {
 				parse_glyph (t, gc, name, unicode, selected_id, unassigned);
 			}
@@ -976,12 +929,8 @@ class BirdFontFile : GLib.Object {
 	private int parse_selected (Tag tag) {
 		int id = 1;
 		bool has_selected_tag = false;
-		Attribute attribute;
-
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attribute = tag.get_next_attribute ();
-
+		
+		foreach (Attribute attribute in tag.get_attributes ()) {
 			if (attribute.get_name () == "id") {
 				id = int.parse (attribute.get_content ());
 				has_selected_tag = true;
@@ -1003,13 +952,8 @@ class BirdFontFile : GLib.Object {
 		bool selected = false;
 		bool has_id = false;
 		int id = 1;
-		Attribute attr;
-		Tag t;
 		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "left") {
 				glyph.left_limit = double.parse (attr.get_content ());
 			}
@@ -1030,9 +974,7 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 		
-		tag.reparse ();
-		while (tag.has_more_tags ()) {
-			t = tag.get_next_tag ();
+		foreach (Tag t in tag) {
 			if (t.get_name () == "path") {
 				path = parse_path (t);
 				glyph.add_path (path);
@@ -1050,21 +992,14 @@ class BirdFontFile : GLib.Object {
 
 	private Path parse_path (Tag tag) {	
 		Path path = new Path ();
-		Attribute attr;
 		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "data") {
 				path = parse_path_data (attr.get_content ());
 			}
 		}
 
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "stroke") {
 				path.set_stroke (double.parse (attr.get_content ()));
 			}
@@ -1366,14 +1301,10 @@ class BirdFontFile : GLib.Object {
 	private void parse_background_scale (Glyph g, Tag tag) {
 		BackgroundImage img;
 		BackgroundImage? new_img = null;
-		Attribute attr;
 		
 		File img_file = font.get_backgrounds_folder ().get_child ("parts");
 		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "sha1") {
 				img_file = img_file.get_child (attr.get_content () + ".png");
 
@@ -1393,10 +1324,7 @@ class BirdFontFile : GLib.Object {
 	
 		img = (!) new_img;
 	
-		tag.reparse ();	
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-							
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "x") {
 				img.img_x = double.parse (attr.get_content ());
 			}

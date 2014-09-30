@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -18,7 +18,7 @@ namespace BirdFont {
 
 class SvgFont : GLib.Object {
 	Font font;
-	double units = 1; // 1000 is default in svg spec.
+	double units = 1;
 	double font_advance = 0;
 	
 	public SvgFont (Font f) {
@@ -32,19 +32,14 @@ class SvgFont : GLib.Object {
 		try {
 			FileUtils.get_contents (path, out data);
 			xml_parser = new XmlParser (data);
-			parse_svg_font (xml_parser.get_next_tag ());
+			parse_svg_font (xml_parser.get_root_tag ());
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
 	}
 	
 	void parse_svg_font (Tag tag) {
-		Tag t;
-		
-		tag.reparse ();
-		while (tag.has_more_tags ()) {
-			t = tag.get_next_tag ();
-			
+		foreach (Tag t in tag) {
 			if (t.get_name () == "defs") {
 				parse_svg_font (t);
 			}
@@ -77,12 +72,8 @@ class SvgFont : GLib.Object {
 		unichar l, r;
 		StringBuilder sl, sr;
 		GlyphRange grr, grl;
-		Attribute attr;
 		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			// left
 			if (attr.get_name () == "u1") {
 				left = attr.get_content ();
@@ -137,21 +128,14 @@ class SvgFont : GLib.Object {
 	void parse_font_limits (Tag tag) {
 		double top_limit = 0;
 		double bottom_limit = 0;
-		Attribute attr;
 		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "units-per-em") {
 				units = 100.0 / double.parse (attr.get_content ());
 			}	
 		}
 
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-					
+		foreach (Attribute attr in tag.get_attributes ()) {	
 			if (attr.get_name () == "ascent") {
 				top_limit = double.parse (attr.get_content ());
 			}
@@ -169,12 +153,7 @@ class SvgFont : GLib.Object {
 	}
 	
 	void parse_font_tag (Tag tag) {
-		Attribute attr;
-		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "horiz-adv-x") {
 				font_advance = double.parse (attr.get_content ());
 			}
@@ -234,15 +213,11 @@ class SvgFont : GLib.Object {
 		double advance = font_advance;
 		string ligature = "";
 		SvgParser parser = new SvgParser ();
-		Attribute attr;
 		StringBuilder unicode_name; 
 
 		parser.set_format (SvgFormat.INKSCAPE);
 
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "unicode") {
 				unicode_value = get_unichar (attr.get_content ());
 				

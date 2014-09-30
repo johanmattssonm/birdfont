@@ -13,34 +13,47 @@
 */
 namespace Bird {
 
-public class Attribute : GLib.Object {
+/** Iterator for XML attributes. */
+public class Attributes : GLib.Object {
 	
-	public string ns;
-	public string name;
-	public string content;
-	
-	internal Attribute (string ns, string name, string content) {
-		this.ns = ns;
-		this.name = name;
-		this.content = content;
+	Tag tag;
+			
+	internal Attributes (Tag t) {
+		tag = t;
 	}
+	
+	public Iterator iterator () {
+		return new Iterator (tag);
+	}
+	
+	public class Iterator {
+		Tag tag;
+		Attribute? next_attribute;
+		
+		internal Iterator (Tag t) {
+			tag = t;
+			next_attribute = null;
+			tag.reparse_attributes ();
+		}
 
-	internal Attribute.empty () {
-		this.ns = "";
-		this.name = "";
-		this.content = "";
-	}
-	
-	public string get_namespace () {
-		return ns;
-	}
-	
-	public string get_name () {
-		return name;
-	}
+		public bool next () {
+			if (tag.has_more_attributes ()) {
+				next_attribute = tag.get_next_attribute ();
+			} else {
+				next_attribute = null;
+			}
+			
+			return next_attribute != null;
+		}
 
-	public string get_content () {
-		return content;
+		public Attribute get () {
+			if (unlikely (next_attribute == null)) {
+				warning ("No attribute is parsed yet.");
+				return new Attribute.empty ();
+			}
+			
+			return (!) next_attribute;
+		}
 	}
 }
 

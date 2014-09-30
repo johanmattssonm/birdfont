@@ -57,8 +57,7 @@ public class SvgParser {
 		bool has_format = false;
 		SvgParser parser = new SvgParser ();
 		XmlParser xmlparser;
-		Tag root;
-		
+
 		foreach (string l in lines) {
 			if (l.index_of ("Illustrator") > -1 || l.index_of ("illustrator") > -1) {
 				parser.set_format (SvgFormat.ILLUSTRATOR);
@@ -81,11 +80,8 @@ public class SvgParser {
 		}
 
 		xmlparser = new XmlParser (xml_data);
-		
-		xmlparser.reparse ();
-		root = xmlparser.get_next_tag ();
 
-		path_list = parser.parse_svg_file (root);
+		path_list = parser.parse_svg_file (xmlparser.get_root_tag ());
 	
 		glyph = MainWindow.get_current_glyph ();
 		foreach (Path p in path_list.paths) {
@@ -127,13 +123,9 @@ public class SvgParser {
 	}
 	
 	private PathList parse_svg_file (Tag tag) {
-		Tag t;
 		PathList pl = new PathList ();
-		
-		tag.reparse ();
-		while (tag.has_more_tags ()) {
-			t = tag.get_next_tag ();
-			
+	
+		foreach (Tag t in tag) {
 			if (t.get_name () == "g") {
 				parse_layer (t, pl);
 			}
@@ -156,13 +148,8 @@ public class SvgParser {
 	
 	private void parse_layer (Tag tag, PathList pl) {
 		PathList layer = new PathList ();
-		Tag t;
-		Attribute attr;
 		
-		tag.reparse ();
-		while (tag.has_more_tags ()) {
-			t = tag.get_next_tag ();
-			
+		foreach (Tag t in tag) {
 			if (t.get_name () == "path") {
 				parse_path (t, layer);
 			}
@@ -176,10 +163,7 @@ public class SvgParser {
 			}
 		}
 		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {	
 			if (attr.get_name () == "transform") {
 				transform (attr.get_content (), layer);
 			}
@@ -346,12 +330,8 @@ public class SvgParser {
 	private void parse_polygon (Tag tag, PathList pl) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path p;
-		Attribute attr;
 		
-		tag.reparse ();
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {			
 			if (attr.get_name () == "points") {
 				p = parse_polygon_data (attr.get_content (), glyph);
 				pl.add (p);
@@ -362,22 +342,15 @@ public class SvgParser {
 	private void parse_path (Tag tag, PathList pl) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
-		Attribute attr;
 		
-		tag.reparse ();	
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "d") {
 				path_list = parse_svg_data (attr.get_content (), glyph);
 				pl.append (path_list);
 			}
 		}
 		
-		tag.reparse ();	
-		while (tag.has_more_attributes ()) {
-			attr = tag.get_next_attribute ();
-			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "transform") {
 				transform (attr.get_content (), path_list);
 			}
