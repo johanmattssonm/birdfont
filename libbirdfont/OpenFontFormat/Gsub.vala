@@ -21,6 +21,7 @@ public class GsubTable : Table {
 	
 	public GsubTable (GlyfTable glyf_table) {
 		this.glyf_table = glyf_table;
+		id = "GSUB";
 	}
 	
 	public override void parse (FontData dis) throws Error {
@@ -83,7 +84,6 @@ public class GsubTable : Table {
 		fd.add_ushort (1); // format
 		fd.add_ushort (1); // num glyphs
 		fd.add_ushort ((uint16) glyf_table.get_gid ("f")); // gid
-		
 		
 		fd.pad ();	
 		this.font_data = fd;

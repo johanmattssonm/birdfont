@@ -114,6 +114,7 @@ public class GlyphCollection : GLib.Object {
 		}
 		
 		n.versions.set_selected_version (versions.current_version_id);
+		n.unassigned = unassigned;
 		
 		return n;
 	}

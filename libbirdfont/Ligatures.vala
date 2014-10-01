@@ -20,6 +20,7 @@ namespace BirdFont {
 public class Ligatures : GLib.Object {
 	
 	public delegate void LigatureIterator (string substitution, string ligature);
+	public delegate void SingleLigatureIterator (GlyphSequence substitution, GlyphCollection ligature);
 
 	public Ligatures () {
 	}
@@ -27,10 +28,43 @@ public class Ligatures : GLib.Object {
 	public void get_ligatures (LigatureIterator iter) {
 		iter ("f i", "fi");
 	}
-	
+
+	public void get_single_substitution_ligatures (SingleLigatureIterator iter) {
+		get_ligatures ((substitution, ligature) => {
+			Font font = BirdFont.get_current_font ();
+			GlyphCollection? gc;
+			GlyphCollection li;
+			GlyphSequence gs;
+			string[] subst_names = substitution.split (" ");
+			
+			gc = font.get_glyph_collection_by_name (ligature);
+			
+			if (gc == null) {
+				return;
+			}
+			
+			li = (!) gc;
+			
+			gs = new GlyphSequence ();
+			foreach (string s in subst_names) {
+				gc = font.get_glyph_collection_by_name (s);
+				
+				if (gc == null) {
+					return;
+				}
+				
+				gs.glyph.add (((!) gc).get_current ());
+			}
+			
+			iter (gs, li);
+		});
+	}
+		
 	public int count () {
 		return 1;
 	}
+	
+	
 }
 
 }

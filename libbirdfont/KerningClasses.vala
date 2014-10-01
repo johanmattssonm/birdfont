@@ -89,8 +89,8 @@ public class KerningClasses : GLib.Object {
 	public void set_kerning_for_single_glyphs (string le, string ri, double k) {
 		string left = GlyphRange.serialize (le);
 		string right = GlyphRange.serialize (ri);
-		string cleft = (!)GlyphRange.unserialize (left).get_char ().to_string ();
-		string cright = (!)GlyphRange.unserialize (right).get_char ().to_string ();
+		string cleft = (!)GlyphRange.unserialize (left);
+		string cright = (!)GlyphRange.unserialize (right); // FIXME: get_char? 
 		
 		if (protect_map) {
 			warning ("Map is protected.");
@@ -258,7 +258,7 @@ public class KerningClasses : GLib.Object {
 				return classes_kerning.get (i).val;
 			}
 		}
-	
+
 		return 0;
 	}
 

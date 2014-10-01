@@ -173,16 +173,16 @@ public class KerningList : FontDisplay {
 		
 		l = GlyphRange.unserialize (left);
 		r = GlyphRange.unserialize (right);
+					
+		glyph_range_first = new GlyphRange ();
+		glyph_range_next = new GlyphRange ();
 		
+		glyph_range_first.parse_ranges (left);
+		glyph_range_next.parse_ranges (right);
+							
 		try {
 			if (left != "" && right != "") {
-				
-				if (l.char_count () > 1 || r.char_count () > 1) {
-					glyph_range_first = new GlyphRange ();
-					glyph_range_next = new GlyphRange ();
-					
-					glyph_range_first.parse_ranges (left);
-					glyph_range_next.parse_ranges (right);
+				if (glyph_range_first.is_class () || glyph_range_next.is_class ()) {
 					
 					kerning = classes.get_kerning_for_range (glyph_range_first, glyph_range_next);
 					class_index = classes.get_kerning_item_index (glyph_range_first, glyph_range_next);
@@ -280,14 +280,14 @@ public class KerningList : FontDisplay {
 			}
 			
 			ui = undo_items.get (undo_items.size - 1);
+
+			glyph_range_first = new GlyphRange ();
+			glyph_range_next = new GlyphRange ();
 			
-			if (ui.first.char_count () > 1 || ui.next.char_count () > 1) {
-				glyph_range_first = new GlyphRange ();
-				glyph_range_next = new GlyphRange ();
-				
-				glyph_range_first.parse_ranges (ui.first);
-				glyph_range_next.parse_ranges (ui.next);
-				
+			glyph_range_first.parse_ranges (ui.first);
+			glyph_range_next.parse_ranges (ui.next);
+						
+			if (glyph_range_first.is_class () || glyph_range_next.is_class ()) {
 				classes.set_kerning (glyph_range_first, glyph_range_next, ui.kerning, ui.class_priority);
 			} else {
 				classes.set_kerning_for_single_glyphs (ui.first, ui.next, ui.kerning);

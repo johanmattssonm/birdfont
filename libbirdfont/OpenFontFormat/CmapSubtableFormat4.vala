@@ -188,7 +188,7 @@ public class CmapSubtableFormat4 : GLib.Object {
 		uint16 gid_length = 0;
 		
 		uint32 indice;
-		uint32 first_assigned = 1;
+		uint32 first_assigned = 1 + glyf_table.number_of_unassigned_glyphs;
 		
 		foreach (GlyphCollection g in glyf_table.glyphs) {
 			if (!g.is_unassigned () && g.get_unicode_character () < 0xFFFF) {

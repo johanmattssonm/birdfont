@@ -24,7 +24,9 @@ public class LocaTable : Table {
 	}	
 	
 	~LocaTable () {
-		if (glyph_offsets != null) delete glyph_offsets;
+		if (glyph_offsets != null) {
+			delete glyph_offsets;
+		}
 	}
 	
 	public uint32 get_offset (uint32 i) {

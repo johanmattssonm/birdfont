@@ -41,11 +41,9 @@ public class GlyfTable : Table {
 	
 	public Gee.ArrayList<uint32> location_offsets; 
 
-	// a list of glyphs sorted in the order we expect to find them in a
-	// ttf font. notdef is the firs glyph followed by null and nonmarkingreturn.
-	// after that will all assigned glyphs appear in sorted (unicode) order, all 
-	// remaining unassigned glyphs will be added in the last section of the file.	
+	// sorted array of glyphs
 	public Gee.ArrayList<GlyphCollection> glyphs;
+	public uint number_of_unassigned_glyphs = 0;
 	
 	uint16 max_points = 0;
 	uint16 max_contours = 0;
@@ -141,7 +139,8 @@ public class GlyfTable : Table {
 		GlyphCollection? gcn;
 		Font font = OpenFontFormatWriter.get_current_font ();
 		uint32 indice;
-		Gee.ArrayList<Glyph> unassigned_glyphs;
+		Gee.ArrayList<GlyphCollection> unassigned_glyphs;
+		bool unassigned;
 		
 		// add notdef character and other special chars first
 		glyphs.add (font.get_not_def_character ());
@@ -149,16 +148,25 @@ public class GlyfTable : Table {
 		glyphs.add (font.get_nonmarking_return ());
 		glyphs.add (font.get_space ());
 		
-		unassigned_glyphs = new Gee.ArrayList<Glyph> ();
+		unassigned_glyphs = new Gee.ArrayList<GlyphCollection> ();
 		
 		if (font.get_glyph_indice (0) == null) {
 			warning ("No glyphs in font.");
 		}
-				
+			
 		// add glyphs, first all assigned then the unassigned ones
 		for (indice = 0; (gcn = font.get_glyph_collection_indice (indice)) != null; indice++) {		
 			gc = (!) gcn;
 			g = gc.get_current ().copy ();
+			g.remove_empty_paths ();
+			unassigned = gc.is_unassigned ();
+			
+			gc = new GlyphCollection (gc.get_unicode_character (), gc.get_name ());
+			gc.add_glyph (g);
+
+			if (unassigned) {
+				unassigned_glyphs.add (gc);
+			}
 			
 			if (g.unichar_code <= 27) { // skip control characters
 				continue;
@@ -171,24 +179,16 @@ public class GlyfTable : Table {
 			if (g.name == ".notdef") {
 				continue;
 			}
-			
-			g.remove_empty_paths ();
 
 			if (!gc.is_unassigned ()) {
 				glyphs.add (gc);
-			} else {
-				printd ("Adding unassigned glyph.");
-				unassigned_glyphs.add (g);
 			}
 		}
 		
-		// FIXME: ligatures
-		/*
-		foreach (Glyph ug in unassigned_glyphs) {
-			glyphs.append (ug);
+		foreach (GlyphCollection ug in unassigned_glyphs) {
+			glyphs.insert (1, ug);
+			number_of_unassigned_glyphs++;
 		}
-		*/
-		
 	}
 
 	public void process_glyph (Glyph g, FontData fd) throws GLib.Error {
@@ -342,7 +342,7 @@ public class GlyfTable : Table {
 	
 	Glyph parse_index (int index, FontData dis, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
 
-// FIXME: DELETE done by freetype
+// FIXME: DELETE parse with freetype
 		Glyph glyph = new Glyph ("");
 /*
 		double xmin, xmax;

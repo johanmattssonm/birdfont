@@ -25,13 +25,11 @@ namespace Bird {
  * Example:
  * {{{
  * 
- * /* Print all tags and attributes in an XML document. 
- *  *
- *  * Expected output:
- *  * tag1
- *  * tag2
- *  * attribute1
- *  */
+ * // Print all tags and attributes in an XML document. 
+ * // Expected output:
+ * // tag1
+ * // tag2
+ * // attribute1
  * public static int main (string[] arg) {
  * 	Tag root;
  * 	XmlParser parser;
@@ -102,7 +100,7 @@ public class XmlParser : GLib.Object {
 		Attributes attributes = tag.get_attributes ();
 		
 		foreach (Attribute a in attributes) {
-			if (tag.has_failed ()) {
+			if (tag.has_failed () || a.get_name () == "") {
 				error = true;
 				return;
 			}

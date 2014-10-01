@@ -19,18 +19,16 @@ namespace BirdFont {
 
 public class LigatureList : FontDisplay {
 	
-	Ligatures ligatures;
-	
 	int scroll = 0;
 	int visible_rows = 0;
 	WidgetAllocation allocation;
 	
 	public LigatureList () {
 		allocation = new WidgetAllocation ();
-		ligatures = new Ligatures ();
 	}
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
+		Ligatures ligatures = BirdFont.get_current_font ().get_ligatures ();
 		int y = 20;
 		int s = 0;
 		bool color = (scroll % 2) == 0;
@@ -90,6 +88,7 @@ public class LigatureList : FontDisplay {
 	}
 	
 	public override void scroll_wheel_down (double x, double y) {
+		Ligatures ligatures = BirdFont.get_current_font ().get_ligatures ();
 		uint liga = ligatures.count ();
 		scroll += 3;
 
@@ -122,6 +121,7 @@ public class LigatureList : FontDisplay {
 	}
 	
 	public void update_scrollbar () {
+		Ligatures ligatures = BirdFont.get_current_font ().get_ligatures ();
 		uint rows = ligatures.count ();
 
 		if (rows == 0 || visible_rows == 0) {
@@ -134,6 +134,7 @@ public class LigatureList : FontDisplay {
 	}
 
 	public override void scroll_to (double percent) {
+		Ligatures ligatures = BirdFont.get_current_font ().get_ligatures ();
 		uint liga = ligatures.count ();
 		scroll = (int) (percent * liga);
 		

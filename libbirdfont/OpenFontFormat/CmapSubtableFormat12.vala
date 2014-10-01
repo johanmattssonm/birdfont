@@ -24,7 +24,7 @@ public class CmapSubtableFormat12 : GLib.Object {
 		GlyphRange glyph_range = new GlyphRange ();
 		Gee.ArrayList<UniRange> ranges;
 		FontData fd = new FontData ();
-		uint32 first_assigned = 1;
+		uint32 first_assigned = 1 + glyf_table.number_of_unassigned_glyphs;
 		uint32 indice;
 		
 		foreach (GlyphCollection g in glyf_table.glyphs) {

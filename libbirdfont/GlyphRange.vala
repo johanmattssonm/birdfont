@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -28,6 +28,11 @@ public class GlyphRange {
 	public GlyphRange () {
 		ranges = new Gee.ArrayList<UniRange> ();
 		unassigned = new Gee.ArrayList<string> ();
+	}
+	
+	public void add_unassigned (string glyph_name) {
+		unassigned.add (glyph_name);
+		len++;
 	}
 	
 	public bool is_class () {
@@ -157,7 +162,7 @@ public class GlyphRange {
 			} else if (w == "ampersand") {
 				add_single ('&');
 			} else {
-				throw new MarkupError.PARSE (@"$w is not a single letter or a unicode range.");
+				unassigned.add (w);
 			}
 		}
 	}
@@ -169,7 +174,6 @@ public class GlyphRange {
 		bool first = true;
 		StringBuilder s = new StringBuilder ();
 		foreach (UniRange u in ranges) {
-			
 			if (!first) {
 				s.append (" ");
 			}
@@ -181,6 +185,16 @@ public class GlyphRange {
 				s.append ("-");
 				s.append (get_serialized_char (u.stop));
 			}
+			
+			first = false;
+		}
+
+		foreach (string ur in unassigned) {
+			if (!first) {
+				s.append (" ");
+			}
+			
+			s.append (ur);
 			
 			first = false;
 		}
@@ -226,8 +240,7 @@ public class GlyphRange {
 		}
 									
 		if (s.char_count () > 1) {
-			warning (@"Expecting a single glyph ($s)");
-			return s;
+			return s; // ligature
 		}
 		
 		return get_serialized_char (s.get_char (0));
@@ -424,7 +437,13 @@ public class GlyphRange {
 
 	public bool has_character (string c) {
 		unichar s;
-		string uns = unserialize (c);
+		string uns;
+		
+		if (unassigned.index_of (c) != -1) {
+			return true;
+		}
+		
+		uns = unserialize (c);
 		
 		if (uns.char_count () != 1) {
 			warning (@"Expecting a single character got $c");

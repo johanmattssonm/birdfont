@@ -93,6 +93,8 @@ public class Font : GLib.Object {
 	BirdFontPart bfp_file;
 	
 	public Gee.ArrayList<Glyph> deleted_glyphs;
+
+	Ligatures ligatures_substitution;
 	
 	public Font () {
 		postscript_name = "Typeface";
@@ -122,6 +124,11 @@ public class Font : GLib.Object {
 		bfp_file = new BirdFontPart (this);
 		
 		deleted_glyphs = new Gee.ArrayList<Glyph> ();
+		ligatures_substitution = new Ligatures ();
+	}
+
+	public Ligatures get_ligatures () {
+		return ligatures_substitution;
 	}
 
 	public void set_weight (string w) {
@@ -391,9 +398,7 @@ public class Font : GLib.Object {
 			return;
 		}
 		
-		if (glyph_collection.get_name () != "") {
-			glyph_name.insert (glyph_collection.get_name (), glyph_collection);			
-		}
+		glyph_name.insert (glyph_collection.get_name (), glyph_collection);			
 		
 		if (glyph_collection.get_unicode () !=  "") {
 			glyph_cache.insert ((!) glyph_collection.get_unicode (), glyph_collection);
@@ -424,11 +429,9 @@ public class Font : GLib.Object {
 	
 	public void delete_glyph (GlyphCollection glyph) {
 		glyph_cache.remove (glyph.get_unicode ());
+		glyph_cache.remove (glyph.get_name ());
 		glyph_name.remove (glyph.get_name ());
-		
-		if (glyph.length () > 0) {
-			ligature.remove (glyph.get_current ().get_ligature_string ());
-		}
+		ligature.remove (glyph.get_current ().get_name ());
 		
 		foreach (Glyph g in glyph.get_version_list ().glyphs) {
 			deleted_glyphs.add (g);

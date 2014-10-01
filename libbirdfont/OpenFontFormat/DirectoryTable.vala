@@ -66,9 +66,9 @@ public class DirectoryTable : Table {
 	public void process () throws GLib.Error {
 		// generate font data
 		glyf_table.process ();
+		gsub_table.process ();
 		gasp_table.process ();
 		gdef_table.process ();
-		// FIXME: implement gsub_table.process ();
 		cmap_table.process (glyf_table);
 		cvt_table.process ();
 		hmtx_table.process ();
@@ -92,9 +92,7 @@ public class DirectoryTable : Table {
 			tables.add (this);
 			
 			tables.add (gpos_table);
-			
-			// FIXME: implement it
-			// tables.append (gsub_table);
+			//tables.add (gsub_table);
 			
 			tables.add (os_2_table);
 
@@ -109,7 +107,6 @@ public class DirectoryTable : Table {
 			tables.add (hhea_table);
 			tables.add (hmtx_table);
 
-			// FIXME: Remove the kern table.
 			// It looks like the old kerning table is no longer needed
 			// since the most browsers uses the GPOS table
 			// but Windows does not accept fonts without a kern table.

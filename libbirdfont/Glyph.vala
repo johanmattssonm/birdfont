@@ -82,9 +82,6 @@ public class Glyph : FontDisplay {
 
 	string glyph_sequence = "";
 	bool open = true;
-
-	bool ligature = false;
-	string substitution = "";
 	
 	public static Glyph? background_glyph = null;
 	
@@ -140,33 +137,6 @@ public class Glyph : FontDisplay {
 		undo_list.clear ();
 		redo_list.clear ();
 	}
-		
-	public string get_ligature_string () {
-		return substitution;
-	}
-	
-	public GlyphSequence get_ligature () {
-		int index = 0;
-		unichar c;
-		GlyphSequence gs = new GlyphSequence ();
-		Font font = BirdFont.get_current_font ();
-		StringBuilder s;
-		Glyph? g;
-		
-		while (substitution.get_next_char (ref index, out c)) {
-			s = new StringBuilder ();
-			s.append_unichar (c);
-			g = font.get_glyph (s.str);
-			
-			if (g == null) {
-				warning ("Glyph for $(s.str) does not exsist.");
-			} else {
-				gs.glyph.add (g);
-			}
-		}
-
-		return gs;		
-	}
 	
 	public void set_empty_ttf (bool e) {
 		empty = e;
@@ -174,15 +144,6 @@ public class Glyph : FontDisplay {
 
 	public bool is_empty_ttf () {
 		return empty;
-	}
-		
-	public void set_ligature_substitution (string glyph_sequence) {
-		ligature = true;
-		substitution = glyph_sequence;
-	}
-	
-	public bool is_ligature () {
-		return ligature;
 	}
 
 	public void clear_active_paths () {
@@ -1645,10 +1606,7 @@ public class Glyph : FontDisplay {
 			g.background_image = ((!) background_image).copy ();
 		}
 
-		g.ligature = ligature;
-		g.substitution = substitution;
 		g.empty = empty;
-		
 		g.open = open;
 		
 		return g;

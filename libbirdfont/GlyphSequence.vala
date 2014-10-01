@@ -31,43 +31,38 @@ public class GlyphSequence {
 	 */
 	public GlyphSequence process_ligatures () {
 		// FIXME add range to ligature
-		GlyphSequence ligatures = new GlyphSequence ();
+		GlyphSequence ligature_sequence = new GlyphSequence ();
 		Font font = BirdFont.get_current_font ();
-		Glyph liga;
-		GlyphCollection? gc;
 		bool has_range = false;
+		Ligatures ligatures;
 		
 		foreach (Glyph? g in glyph) {
-			ligatures.glyph.add (g);
+			ligature_sequence.glyph.add (g);
 		}
 				
 		foreach (GlyphRange? r in ranges) { 
-			ligatures.ranges.add (r);
+			ligature_sequence.ranges.add (r);
 			if (r != null) {
 				has_range = true;
 			}
 		}
 		
-		// FIXME: ligatures make this list invalid
 		// skip ligature substitution if this sequence contains ranges
 		if (has_range) {
-			return ligatures;
+			return ligature_sequence;
 		}
 		
-			
-		for (uint i = 0; ; i++) {
-			gc = font.get_ligature (i);
-			
-			if (gc == null) {
-				break;
-			}
-
-			liga = ((!) gc).get_current ();		
-			ligatures.replace (liga.get_ligature (), liga);
-			i++;
+		ligatures = font.get_ligatures ();
+		ligatures.get_single_substitution_ligatures ((substitute, ligature) => {
+			ligature_sequence.replace (substitute, ligature.get_current ());
+		});
+		
+		ligature_sequence.ranges.clear ();
+		foreach (Glyph? g in ligature_sequence.glyph) {
+			ligature_sequence.ranges.add (null);
 		}
 		
-		return ligatures;
+		return ligature_sequence;
 	}
 	
 	void replace (GlyphSequence old, Glyph replacement) {
@@ -118,8 +113,7 @@ public class GlyphSequence {
 			i++;
 		}
 		
-		glyph = new_list;
-				
+		glyph = new_list;		
 	}
 }
 

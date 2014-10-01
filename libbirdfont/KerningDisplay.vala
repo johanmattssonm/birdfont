@@ -319,13 +319,11 @@ public class KerningDisplay : FontDisplay {
 				
 				if (handle == wi && row_index == 0) {
 					if (wi >= word_with_ligatures.ranges.size) {
-						warning (@"$wi > $(word_with_ligatures.ranges.size) Number of glyphs: $(word_with_ligatures.glyph.size)");
 						return false;
 					}
 					return_val_if_fail (wi - 1 >= 0, false);
 					
 					if (word_with_ligatures.ranges.size != word_with_ligatures.glyph.size) {
-						warning (@"ranges and glyphs does not match. $(word_with_ligatures.ranges.size) != $(word_with_ligatures.glyph.size)");
 						return false;
 					}
 					
@@ -423,7 +421,6 @@ public class KerningDisplay : FontDisplay {
 				n = grr.get_all_ranges ();
 				has_kerning = classes.has_kerning (f, n);
 				undo_items.add (new UndoItem (f, n, kern, has_kerning));
-
 				redo_items.clear ();
 				first_update = false;
 			}
@@ -438,6 +435,7 @@ public class KerningDisplay : FontDisplay {
 
 	/** Class based gpos kerning. */
 	public double get_kerning_for_pair (string a, string b, GlyphRange? gr_left, GlyphRange? gr_right) {
+		double k;
 		GlyphRange grl, grr;
 		try {
 			if (gr_left == null) {
@@ -467,10 +465,10 @@ public class KerningDisplay : FontDisplay {
 			}
 			
 			if (gr_left == null && gr_right == null) {
-				return KerningClasses.get_instance ().get_kerning (a, b);
+				k = KerningClasses.get_instance ().get_kerning (a, b);
+				return k;
 			}			
 		} catch (MarkupError e) {
-			// FIXME: unassigned glyphs and ligatures
 			warning (e.message);
 		}
 		
@@ -889,14 +887,14 @@ public class KerningDisplay : FontDisplay {
 		r = GlyphRange.unserialize (ui.next);
 				
 		try {
+			glyph_range_first = new GlyphRange ();
+			glyph_range_next = new GlyphRange ();
+			
+			glyph_range_first.parse_ranges (ui.first);
+			glyph_range_next.parse_ranges (ui.next);
+				
 			if (!ui.has_kerning) {
-				if (l.char_count () > 1 || r.char_count () > 1) {
-					glyph_range_first = new GlyphRange ();
-					glyph_range_next = new GlyphRange ();
-					
-					glyph_range_first.parse_ranges (ui.first);
-					glyph_range_next.parse_ranges (ui.next);
-					
+				if (glyph_range_first.is_class () || glyph_range_next.is_class ()) {
 					redo_state.first = glyph_range_first.get_all_ranges ();
 					redo_state.next = glyph_range_next.get_all_ranges ();
 					redo_state.has_kerning = true;
@@ -918,7 +916,7 @@ public class KerningDisplay : FontDisplay {
 					
 					classes.delete_kerning_for_pair (ui.first, ui.next);
 				}
-			} else if (ui.first.char_count () > 1 || ui.next.char_count () > 1) {
+			} else if (glyph_range_first.is_class () || glyph_range_next.is_class ()) {
 				glyph_range_first = new GlyphRange ();
 				glyph_range_next = new GlyphRange ();
 				
@@ -938,7 +936,6 @@ public class KerningDisplay : FontDisplay {
 									
 				classes.set_kerning (glyph_range_first, glyph_range_next, ui.kerning);
 			} else {
-				
 				redo_state.first = ui.first;
 				redo_state.next = ui.next;
 				redo_state.has_kerning = true;
