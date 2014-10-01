@@ -13,7 +13,9 @@
 */
 namespace Bird {
 
-/** Representation of one XML attribute. */
+/** 
+ * Representation of one XML attribute.
+ */
 public class Attribute : GLib.Object {
 	
 	public string ns;
@@ -32,17 +34,23 @@ public class Attribute : GLib.Object {
 		this.content = "";
 	}
 	
-	/** @return name space part for this attribute. */
+	/** 
+	 * @return name space part for this attribute.
+	 */
 	public string get_namespace () {
 		return ns;
 	}
 	
-	/** @return the name of this attribute. */
+	/**
+	 * @return the name of this attribute. 
+	 */
 	public string get_name () {
 		return name;
 	}
 
-	/** @return the value of this attribute. */
+	/** 
+	 * @return the value of this attribute.
+	 */
 	public string get_content () {
 		return content;
 	}

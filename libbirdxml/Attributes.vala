@@ -13,7 +13,9 @@
 */
 namespace Bird {
 
-/** Iterator for XML attributes. */
+/** 
+ * Iterator for XML attributes. 
+ */
 public class Attributes : GLib.Object {
 	
 	Tag tag;

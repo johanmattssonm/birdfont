@@ -391,27 +391,23 @@ public class Font : GLib.Object {
 			return;
 		}
 		
-		// FIXME: move unassinged
-		if (glyph_collection.get_unicode () != "" || glyph_collection.is_unassigned ()) {
+		if (glyph_collection.get_name () != "") {
 			glyph_name.insert (glyph_collection.get_name (), glyph_collection);			
 		}
 		
-		glyph_cache.insert (glyph_collection.get_unicode (), glyph_collection);
+		if (glyph_collection.get_unicode () !=  "") {
+			glyph_cache.insert ((!) glyph_collection.get_unicode (), glyph_collection);
+		} else {
+			glyph_cache.insert ((!) glyph_collection.get_name (), glyph_collection);
+		}
+		
+		if (glyph_collection.is_unassigned ()) {
+			ligature.insert (glyph_collection.get_name (), glyph_collection);
+		}
 	}
 	
 	public string get_name_for_character (unichar c) {
 		StringBuilder sb;
-		
-		// FIXME: this is too slow
-		/*
-		while ((gl = get_glyph_indice (i++)) != null) {
-			g = (!) gl;
-			
-			if (g.unichar_code == c) {
-				return g.name;
-			}
-		}
-		*/
 		
 		if (c == 0) {
 			return ".null".dup ();

@@ -14,6 +14,9 @@
 
 namespace Bird {
 
+/**
+ * Representation of one XML tag.
+ */
 public class Tag : GLib.Object {
 	
 	int tag_index; 
@@ -29,6 +32,8 @@ public class Tag : GLib.Object {
 	Tag? next_tag = null;
 	Attribute? next_attribute = null;
 	
+	bool error = false;
+	
 	internal Tag (string name, string attributes, string content) {
 		this.name = name;
 		this.data = content;
@@ -42,18 +47,25 @@ public class Tag : GLib.Object {
 		attributes = "";
 		name = "";
 	}
-
-	/** Get tag attributes for this tag. */
+	
+	/** 
+	 * Get tag attributes for this tag. 
+	 * @return a container with all the attributes
+	 */
 	public Attributes get_attributes () {
 		return new Attributes (this);
 	}
 
-	/** Iterate over all tags inside of this tag. */
+	/** 
+	 * Iterate over all tags inside of this tag.
+	 */
 	public Iterator iterator () {
 		return new Iterator(this);
 	}
 
-	/** Reset the parser and start from the beginning XML tag. */
+	/** 
+	 * Reset the parser and start from the beginning XML tag.
+	 */
 	public void reparse () {
 		tag_index = 0;
 		next_tag = obtain_next_tag ();
@@ -64,17 +76,25 @@ public class Tag : GLib.Object {
 		next_attribute = obtain_next_attribute ();
 	}
 	
-	/** @return the name of this tag. */
+	/** 
+	 * Obtain the name of the tag.
+	 * @return the name of this tag. 
+	 */ 
 	public string get_name () {
 		return name;
 	}
 
-	/** @return data between the starty and end tag. */
+	/** 
+	 * Obtain tag content.
+	 * @return data between the start and end tags.
+	 */
 	public string get_content () {
 		return data;
 	}
 
-	/** @return true if there is one more tags left */
+	/** 
+	 * @return true if there is one more tags left
+	 */
 	internal bool has_more_tags () {
 		return has_tags;
 	}
@@ -96,6 +116,10 @@ public class Tag : GLib.Object {
 		Attribute r = next_attribute == null ? new Attribute.empty () : (!) next_attribute;
 		next_attribute = obtain_next_attribute ();
 		return r;
+	}
+	
+	internal bool has_failed () {
+		return error;
 	}
 	
 	Tag obtain_next_tag () {
@@ -132,7 +156,8 @@ public class Tag : GLib.Object {
 				separator = find_next_separator (index);
 
 				if (separator < 0) {
-					warning ("Expecting a separator after index %d.", index);
+					error = true;
+					warning ("Expecting a separator.");
 					return new Tag.empty ();
 				}
 				
@@ -215,6 +240,7 @@ public class Tag : GLib.Object {
 			}
 		}
 		
+		error = true;
 		warning (@"No closing tag for $(name).");
 		return -1;
 	}
@@ -275,6 +301,7 @@ public class Tag : GLib.Object {
 		while (true) {
 			previous_index = index;
 			if (!attributes.get_next_char (ref index, out c)) {
+				error = true;
 				warning (@"Unexpected end of attributes in tag $(this.name)");
 				has_attributes = false;
 				return new Attribute.empty ();
@@ -301,6 +328,7 @@ public class Tag : GLib.Object {
 					break;
 				} else {
 					has_attributes = false;
+					error = true;
 					warning (@"Expecting equal sign for attribute $(attribute_name).");
 					return new Attribute.empty ();
 				}
@@ -313,6 +341,7 @@ public class Tag : GLib.Object {
 					break;
 				} else {
 					has_attributes = false;
+					error = true;
 					warning (@"Expecting quote for attribute $(attribute_name).");
 					return new Attribute.empty ();
 				}
@@ -325,6 +354,7 @@ public class Tag : GLib.Object {
 		while (true) {
 			if (!attributes.get_next_char (ref index, out c)) {
 				has_attributes = false;
+				error = true;
 				warning (@"Expecting end quote for attribute $(attribute_name).");
 				return new Attribute.empty ();
 			}

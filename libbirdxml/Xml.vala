@@ -11,34 +11,135 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
     Lesser General Public License for more details.
 */
+
+/** 
+ * Tools originally written for the BirdFont project.
+ */
 namespace Bird {
 
-/** A small xml parser originally written for the BirdFont project. */
+/** 
+ * XML parser
+ * 
+ * A tiny XML parser written in Vala.
+ * 
+ * Example:
+ * {{{
+ * 
+ * /* Print all tags and attributes in an XML document. 
+ *  *
+ *  * Expected output:
+ *  * tag1
+ *  * tag2
+ *  * attribute1
+ *  */
+ * public static int main (string[] arg) {
+ * 	Tag root;
+ * 	XmlParser parser;
+ * 
+ * 	parser = new XmlParser ("""<tag1><tag2 attribute1=""/></tag1>"");	
+ * 
+ * 	if (parser.validate ()) {
+ * 		root = parser.get_root_tag ();
+ * 		print_tags (root);
+ * 	}
+ * }
+ * 
+ * 
+ * void print_tags (Tag tag) {
+ * 	print (tag.get_name ());
+ * 	print ("\n");
+ * 	print_attributes (tag);
+ * 
+ * 	foreach (Tag t in tag) {
+ * 		print_tags (t);
+ * 	}
+ * }
+ * 
+ * void print_attributes (Tag tag) {
+ * 	foreach (Attribute attribute in tag.get_attributes ()) {
+ * 		print (attribute.get_name ()");
+ * 		print ("\n");
+ * 	}
+ * }
+ * 
+ * }}}
+ * 
+ */
 public class XmlParser : GLib.Object {
 	
 	Tag root;
 	string data;
+	bool error;
 
-	/** Create a new xml parser. */
+	/** 
+	 * Create a new xml parser. 
+	 * @param data valid xml data
+	 */
 	public XmlParser (string data) {
 		this.data = data;
 		reparse ();
 	}
 	
-	/** @return the root tag. */
+	/** 
+	 * Determine if the document can be parsed.
+	 * @return true if the xml document is valid xml.
+	 */
+	public bool validate () {
+		reparse ();
+		Tag root = get_root_tag ();
+		
+		if (error) {
+			return false;
+		}
+		
+		validate_tags (root);
+			
+		reparse ();
+		return !error;
+	}
+	
+	void validate_tags (Tag tag) {
+		Attributes attributes = tag.get_attributes ();
+		
+		foreach (Attribute a in attributes) {
+			if (tag.has_failed ()) {
+				error = true;
+				return;
+			}
+		}
+		
+		foreach (Tag t in tag) {
+			if (tag.has_failed ()) {
+				error = true;
+				return;
+			}
+			
+			validate_tags (t);
+		}		
+	}
+	
+	/** 
+	 * Obtain the root tag.
+	 * @return the root tag. 
+	 */
 	public Tag get_root_tag () {
 		reparse ();
 		return root;
 	}
 	
-	/** Reset the parser and start from the beginning of the XML document. */
+	/** 
+	 * Reset the parser and start from the beginning of the XML document. 
+	 */
 	internal void reparse () {
 		int root_index;
 		Tag container;
 		
+		error = false;
+		
 		root_index = find_root_tag ();
 		if (root_index == -1) {
 			warning ("No root tag found.");
+			error = true;
 			root = new Tag.empty ();
 		} else {
 			container = new Tag ("", "", data.substring (root_index));
@@ -46,16 +147,6 @@ public class XmlParser : GLib.Object {
 		}
 	}
 	
-	/** @return the root tag. **/
-	internal Tag get_next_tag () {
-		return root.get_next_tag ();
-	}
-	
-	/** @return true if there is one more tags left */
-	internal bool has_more_tags () {
-		return root.has_more_tags ();
-	}
-		
 	int find_root_tag () {
 		int index = 0;
 		int prev_index = 0;
