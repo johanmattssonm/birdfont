@@ -894,8 +894,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.Box box;
 		
 		box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-		
-		Screen screen = Screen.get_default ();
 
 		get_position (out parent_x, out parent_y);
 		toolbox.translate_coordinates (toolbox.get_toplevel (), 0, 0, out tool_box_x, out tool_box_y);
