@@ -53,7 +53,7 @@ public class GsubTable : Table {
 		// feature table
 		fd.add_ushort (1); // number of features
 		
-		fd.add_tag ("clig"); // contextual ligatures, single substitution
+		fd.add_tag ("clig"); // feature tag
 		fd.add_ushort (8); // offset to feature
 		
 		fd.add_ushort (0); // feature prameters (null)
@@ -63,27 +63,42 @@ public class GsubTable : Table {
 		// lookup table
 		fd.add_ushort (1); // number of lookups
 		fd.add_ushort (4); // offset to lookup 1
+
+		fd.add_ushort (4); // lookup type // FIXME	
+		fd.add_ushort (0); // lookup flags
+		fd.add_ushort (1); // number of subtables
+		fd.add_ushort (8); // array of offsets to subtable
 		
 		// ligature substitution subtable
-		fd.add_ushort (1); // lookup type, format identifier
-		fd.add_ushort (20); // offset to coverage
+		fd.add_ushort (1); // format identifier
+		fd.add_ushort (8); // offset to coverage
 		fd.add_ushort (1); // number of ligature set tables
-		fd.add_ushort (10); // array of offsets to ligature sets
-		
-		// ligature sets
-		fd.add_ushort (1); // number of offsets
-		fd.add_ushort (4); // offset to ligature table
-		
-		// ligatures
-		fd.add_ushort ((uint16) glyf_table.get_gid ("fi")); // gid of ligature
-		fd.add_ushort (2); // number of components
-		fd.add_ushort ((uint16) glyf_table.get_gid ("f")); // gid to component 
-		fd.add_ushort ((uint16) glyf_table.get_gid ("i")); // gid to component 
+		fd.add_ushort (18); // array of offsets to ligature sets
 		
 		// coverage
-		fd.add_ushort (1); // format
-		fd.add_ushort (1); // num glyphs
-		fd.add_ushort ((uint16) glyf_table.get_gid ("f")); // gid
+		fd.add_ushort (2); // format
+		fd.add_ushort (1); // num ranges
+		fd.add_ushort ((uint16) glyf_table.get_gid ("f")); // start gid
+		fd.add_ushort ((uint16) glyf_table.get_gid ("f")); // end gid
+		fd.add_ushort (0); // coverage start index
+		
+		// ligature
+		fd.add_ushort (3); // number of ligatures in this set
+		fd.add_ushort (8); // offset to ligature
+		fd.add_ushort (14); // offset to ligature
+		fd.add_ushort (20); // offset to ligature
+
+		fd.add_ushort ((uint16) glyf_table.get_gid ("fi")); // DELETE);
+		fd.add_ushort (2); // number of components
+		fd.add_ushort ((uint16) glyf_table.get_gid ("i")); // gid to component 
+
+		fd.add_ushort ((uint16) glyf_table.get_gid ("fi")); // DELETE);
+		fd.add_ushort (2); // number of components
+		fd.add_ushort ((uint16) glyf_table.get_gid ("i")); // gid to component 
+
+		fd.add_ushort ((uint16) glyf_table.get_gid ("fi")); // DELETE);
+		fd.add_ushort (2); // number of components
+		fd.add_ushort ((uint16) glyf_table.get_gid ("i")); // gid to component 
 		
 		fd.pad ();	
 		this.font_data = fd;

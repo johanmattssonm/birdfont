@@ -92,7 +92,7 @@ public class DirectoryTable : Table {
 			tables.add (this);
 			
 			tables.add (gpos_table);
-			//tables.add (gsub_table);
+			tables.add (gsub_table);
 			
 			tables.add (os_2_table);
 
