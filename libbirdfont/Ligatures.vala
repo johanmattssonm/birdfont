@@ -24,9 +24,12 @@ public class Ligatures : GLib.Object {
 
 	public Ligatures () {
 	}
-
+	
+	// FIXME: keep ligatures sorted, long strings first
 	public void get_ligatures (LigatureIterator iter) {
-		iter ("f i", "fi");
+		iter ("a f", "af");
+		iter ("f f i", "ffi");
+		iter ("f i", "fi");		
 	}
 
 	public void get_single_substitution_ligatures (SingleLigatureIterator iter) {

@@ -21,8 +21,7 @@ public class FontData : Object {
 
 	// Write pointer
 	uint wp = 0;
-	
-	// length without padding
+
 	uint32 len = 0;
 	uint32 padding = 0;
 	
@@ -40,6 +39,10 @@ public class FontData : Object {
 			delete table_data;
 			table_data = null;
 		}
+	}
+	
+	public int get_read_pos () {
+		return (int) rp;
 	}
 	
 	public void write_at (uint pos, uint8 new_data) throws GLib.Error

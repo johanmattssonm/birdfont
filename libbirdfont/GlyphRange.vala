@@ -32,7 +32,6 @@ public class GlyphRange {
 	
 	public void add_unassigned (string glyph_name) {
 		unassigned.add (glyph_name);
-		len++;
 	}
 	
 	public bool is_class () {
