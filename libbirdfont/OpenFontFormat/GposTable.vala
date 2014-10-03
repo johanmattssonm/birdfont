@@ -15,7 +15,7 @@ using Math;
 
 namespace BirdFont {
 
-public class GposTable : Table {
+public class GposTable : OtfTable {
 	
 	GlyfTable glyf_table;
 	KernList pairs;

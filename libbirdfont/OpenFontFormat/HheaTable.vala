@@ -16,7 +16,7 @@ using Math;
 
 namespace BirdFont {
 
-public class HheaTable : Table {
+public class HheaTable : OtfTable {
 
 	Fixed version;
 	int16 ascender;

@@ -17,62 +17,68 @@ using Math;
 
 namespace BirdFont {
 
-public class LigatureList : FontDisplay {
-	
-	int scroll = 0;
-	int visible_rows = 0;
-	WidgetAllocation allocation;
+public class LigatureList : Table {
+	Gee.ArrayList<Row> rows = new Gee.ArrayList<Row> ();
+
+	public const int NEW_LIGATURE = -1;
 	
 	public LigatureList () {
-		allocation = new WidgetAllocation ();
 	}
 
-	public override void draw (WidgetAllocation allocation, Context cr) {
-		Ligatures ligatures = BirdFont.get_current_font ().get_ligatures ();
-		int y = 20;
-		int s = 0;
-		bool color = (scroll % 2) == 0;
-		
-		this.allocation = allocation;
-		
-		visible_rows = (int) (allocation.height / 18.0);
-		
-		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
-		cr.rectangle (0, 0, allocation.width, allocation.height);
-		cr.fill ();
-		cr.restore ();
-		
-		cr.save ();
-		cr.set_source_rgba (0.3, 0.3, 0.3, 1);
-		cr.set_font_size (12);
+	public override Gee.ArrayList<Row> get_rows () {
+		return rows;
+	}
 
-		ligatures.get_ligatures ((substitution, ligature) => {
-			if (s++ >= scroll) {
-				draw_row (allocation, cr, substitution, ligature, y, color);
-				y += 18;
-				color = !color;
+	void add_ligature (string subst, string liga) {
+		Font font = BirdFont.get_current_font ();
+		Ligatures ligatures = font.get_ligatures ();
+		ligatures.add_ligature (subst, liga);
+	}
+
+	public override void selected_row (Row row, int column, bool delete_button) {
+		Font font = BirdFont.get_current_font ();
+		Ligatures ligatures = font.get_ligatures ();
+		
+		if (row.get_index () == NEW_LIGATURE) {
+			add_ligature (t_("substitute"), t_("ligature"));
+			MainWindow.native_window.hide_text_input ();
+		} else if (ligatures.count () != 0) {
+			if (delete_button) {
+				return_if_fail (0 <= row.get_index () < ligatures.count ());
+				ligatures.remove_at (row.get_index ());
+				MainWindow.native_window.hide_text_input ();
+			} else if (column == 0) {
+				if (!(0 <= row.get_index () < ligatures.count ())) {
+					warning (@"Index: $(row.get_index ()) ligatures.count (): $(ligatures.count ())");
+					return;
+				}
+				ligatures.set_ligature (row.get_index ());
+			} else if (column == 2) {
+				return_if_fail (0 <= row.get_index () < ligatures.count ());
+				ligatures.set_substitution (row.get_index ());
 			}
+		}
+
+		update_rows ();
+		update_scrollbar ();
+		font.touch ();
+	}
+
+	public override void update_rows () {
+		int i;
+		Font font = BirdFont.get_current_font ();
+		Ligatures ligatures = font.get_ligatures ();
+		
+		rows.clear ();
+		rows.add (new Row (t_("New Ligature"), NEW_LIGATURE, false));
+		
+		i = 0;
+		ligatures.get_ligatures ((subst, liga) => {
+			rows.add (new Row.columns_3 (@"$subst", "->",  @"$liga", i));
+			i++;
 		});
 		
-		cr.restore ();
-	}	
-
-	private static void draw_row (WidgetAllocation allocation, Context cr,
-		string substitution, string ligature, int y, bool color) {
-
-		if (color) {
-			cr.save ();
-			cr.set_source_rgba (224/255.0, 224/255.0, 224/255.0, 1);
-			cr.rectangle (0, y - 14, allocation.width, 18);
-			cr.fill ();
-			cr.restore ();
-		}
-		
-		cr.move_to (30, y);
-		cr.show_text (substitution);
-		cr.move_to (230, y);
-		cr.show_text (ligature);
+		GlyphCanvas.redraw ();
 	}
 
 	public override string get_label () {
@@ -82,69 +88,6 @@ public class LigatureList : FontDisplay {
 	public override string get_name () {
 		return "Ligatures";
 	}
-
-	public override bool has_scrollbar () {
-		return true;
-	}
-	
-	public override void scroll_wheel_down (double x, double y) {
-		Ligatures ligatures = BirdFont.get_current_font ().get_ligatures ();
-		uint liga = ligatures.count ();
-		scroll += 3;
-
-		if (scroll > liga - visible_rows) {
-			scroll = (int) (liga - visible_rows);
-		}
-		
-		if (visible_rows > liga) {
-			scroll = 0;
-		} 
-		
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-	
-	public override void scroll_wheel_up (double x, double y) {
-		scroll -= 3;
-		
-		if (scroll < 0) {
-			scroll = 0;
-		}
-		
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-
-	public override void selected_canvas () {
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-	
-	public void update_scrollbar () {
-		Ligatures ligatures = BirdFont.get_current_font ().get_ligatures ();
-		uint rows = ligatures.count ();
-
-		if (rows == 0 || visible_rows == 0) {
-			MainWindow.set_scrollbar_size (0);
-			MainWindow.set_scrollbar_position (0);
-		} else {
-			MainWindow.set_scrollbar_size ((double) visible_rows / rows);
-			MainWindow.set_scrollbar_position ((double) scroll /  rows);
-		}
-	}
-
-	public override void scroll_to (double percent) {
-		Ligatures ligatures = BirdFont.get_current_font ().get_ligatures ();
-		uint liga = ligatures.count ();
-		scroll = (int) (percent * liga);
-		
-		if (scroll > liga - visible_rows) {
-			scroll = (int) (liga - visible_rows);
-		}
-		
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
 }
 
 }
-

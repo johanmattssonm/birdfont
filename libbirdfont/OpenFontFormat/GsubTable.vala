@@ -15,7 +15,7 @@ using Math;
 
 namespace BirdFont {
 
-public class GsubTable : Table {
+public class GsubTable : OtfTable {
 	
 	GlyfTable glyf_table;
 	
@@ -155,7 +155,7 @@ public class GsubTable : Table {
 			warning (@"Bad identifier expecting 1 found $identifier");
 		}
 		
-		uint16 coverage_offset = fd.read_ushort ();
+		uint16 coverage_offset = fd.read_ushort (); // TODO: read coverage
 		uint16 num_sets = fd.read_ushort ();
 		
 		Gee.ArrayList<int> liga_set_offsets = new Gee.ArrayList<int> ();

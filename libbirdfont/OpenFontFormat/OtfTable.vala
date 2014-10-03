@@ -15,7 +15,7 @@
 
 namespace BirdFont {
 
-public class Table : Object {
+public class OtfTable : Object {
 
 	public string id = "NO_ID";
 
@@ -51,14 +51,14 @@ public class Table : Object {
 		bool valid;
 		
 		if (length == 0) {
-			stderr.printf (@"Table $id is of zero length.\n");			
+			stderr.printf (@"OtfTable $id is of zero length.\n");			
 			valid = false;
 		} else {
-			valid = Table.validate_table (dis, checksum, offset, length, id);
+			valid = OtfTable.validate_table (dis, checksum, offset, length, id);
 		}
 		
 		if (!valid) {
-			stderr.printf (@"Table $id is invalid.\n");
+			stderr.printf (@"OtfTable $id is invalid.\n");
 		}
 		
 		return valid;

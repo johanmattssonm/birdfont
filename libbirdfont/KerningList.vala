@@ -177,27 +177,28 @@ public class KerningList : FontDisplay {
 		glyph_range_first = new GlyphRange ();
 		glyph_range_next = new GlyphRange ();
 		
-		glyph_range_first.parse_ranges (left);
-		glyph_range_next.parse_ranges (right);
-							
 		try {
-			if (left != "" && right != "") {
-				if (glyph_range_first.is_class () || glyph_range_next.is_class ()) {
-					
-					kerning = classes.get_kerning_for_range (glyph_range_first, glyph_range_next);
-					class_index = classes.get_kerning_item_index (glyph_range_first, glyph_range_next);
-					
-					classes.delete_kerning_for_class (left, right);
-				} else {
-					kerning = classes.get_kerning (left, right);
-					classes.delete_kerning_for_pair (left, right);
-				}
-				
-				undo_items.add (new UndoItem (left, right, kerning, class_index));
-				font.touch ();
-			}
-		} catch (MarkupError e) {
+			glyph_range_first.parse_ranges (left);
+			glyph_range_next.parse_ranges (right);
+		} catch (GLib.MarkupError e) {
 			warning (e.message);
+			return;
+		}
+
+		if (left != "" && right != "") {
+			if (glyph_range_first.is_class () || glyph_range_next.is_class ()) {
+				
+				kerning = classes.get_kerning_for_range (glyph_range_first, glyph_range_next);
+				class_index = classes.get_kerning_item_index (glyph_range_first, glyph_range_next);
+				
+				classes.delete_kerning_for_class (left, right);
+			} else {
+				kerning = classes.get_kerning (left, right);
+				classes.delete_kerning_for_pair (left, right);
+			}
+			
+			undo_items.add (new UndoItem (left, right, kerning, class_index));
+			font.touch ();
 		}
 	}
 

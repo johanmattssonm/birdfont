@@ -19,6 +19,9 @@ namespace BirdFont {
 
 public class Ligatures : GLib.Object {
 	
+	public Gee.ArrayList<string> ligature = new Gee.ArrayList<string> ();
+	public Gee.ArrayList<string> substitution = new Gee.ArrayList<string> ();
+	
 	public delegate void LigatureIterator (string substitution, string ligature);
 	public delegate void SingleLigatureIterator (GlyphSequence substitution, GlyphCollection ligature);
 
@@ -64,10 +67,26 @@ public class Ligatures : GLib.Object {
 	}
 		
 	public int count () {
-		return 1;
+		return ligature.size;
 	}
 	
+	public void remove_at (int i) {
+		return_if_fail (0 <= i < ligature.size);
+		return_if_fail (0 <= i < substitution.size);
+		ligature.remove_at (i);
+		substitution.remove_at (i);
+	}
 	
+	public void set_ligature (int index) {
+	}
+	
+	public void set_substitution (int index) {
+	}	
+
+	public void add_ligature (string subst, string liga) {
+		substitution.insert (0, subst);
+		ligature.insert (0, liga);
+	}
 }
 
 }

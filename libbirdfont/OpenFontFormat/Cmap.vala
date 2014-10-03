@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class CmapTable : Table { 
+public class CmapTable : OtfTable { 
 	
 	GlyfTable glyf_table;	
 	CmapSubtableFormat4 cmap_format4 = new CmapSubtableFormat4 ();

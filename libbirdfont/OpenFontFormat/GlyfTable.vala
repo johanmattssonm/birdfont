@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class GlyfTable : Table {
+public class GlyfTable : OtfTable {
 	// Flags for composite glyph
 	static const uint16 BOTH_ARE_WORDS = 1 << 0;
 	static const uint16 BOTH_ARE_XY_VALUES = 1 << 1;

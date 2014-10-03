@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class CvtTable : Table {
+public class CvtTable : OtfTable {
 	
 	public CvtTable () {
 		id = "cvt ";

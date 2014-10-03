@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class HeadTable : Table {
+public class HeadTable : OtfTable {
 
 	public int16 xmin = int16.MIN;
 	public int16 ymin = int16.MIN;

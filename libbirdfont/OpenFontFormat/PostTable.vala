@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class PostTable : Table {
+public class PostTable : OtfTable {
 	
 	GlyfTable glyf_table;
 	

@@ -43,7 +43,7 @@ public class OpenFontFormatWriter : Object  {
 	public void write_ttf_font (Font nfont) throws Error {
 		long dl;
 		uint8* data;
-		Gee.ArrayList<Table> tables;
+		Gee.ArrayList<OtfTable> tables;
 		FontData fd;
 		uint l;
 		
@@ -59,7 +59,7 @@ public class OpenFontFormatWriter : Object  {
 			return;
 		}
 		
-		foreach (Table t in tables) {
+		foreach (OtfTable t in tables) {
 			fd = t.get_font_data ();
 			data = fd.table_data;
 			l = fd.length_with_padding ();

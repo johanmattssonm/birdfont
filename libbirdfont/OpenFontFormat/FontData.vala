@@ -102,7 +102,7 @@ public class FontData : Object {
 		uint l;
 		
 		if (length_with_padding () % 4 != 0) {
-			warning ("Table is not padded to correct size.");
+			warning ("OtfTable is not padded to correct size.");
 		}
 				
 		seek (0);

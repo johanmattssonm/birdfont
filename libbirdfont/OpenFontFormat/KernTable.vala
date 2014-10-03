@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class KernTable : Table {
+public class KernTable : OtfTable {
 	
 	public static const uint16 HORIZONTAL = 1;
 	public static const uint16 MINIMUM = 1 << 1;

@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class GaspTable : Table {
+public class GaspTable : OtfTable {
 
 	public const uint16 NONE = 0;
 	public const uint16 GASP_GRIDFIT = 1;

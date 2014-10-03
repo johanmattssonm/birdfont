@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class LocaTable : Table {
+public class LocaTable : OtfTable {
 	
 	uint32* glyph_offsets = null;
 	public uint32 size = 0;

@@ -90,17 +90,6 @@ class GridTool : Tool {
 		
 		update_lines ();
 	}
-	
-	public static void ttf_grid (ref int pixel_x, ref int pixel_y) {
-		double coordinate_x = Glyph.path_coordinate_x (pixel_x);
-		double coordinate_y = Glyph.path_coordinate_y (pixel_y);
-		
-		coordinate_x = GlyfData.tie_to_ttf_grid_x (MainWindow.get_current_glyph (), coordinate_x);
-		coordinate_y = GlyfData.tie_to_ttf_grid_y (BirdFont.get_current_font (), coordinate_y);
-		
-		pixel_x = Glyph.reverse_path_coordinate_x (coordinate_x);
-		pixel_y = Glyph.reverse_path_coordinate_y (coordinate_y);
-	}
 
 	public static void ttf_grid_coordinate (ref double x, ref double y) {
 		x = GlyfData.tie_to_ttf_grid_x (MainWindow.get_current_glyph (), x);

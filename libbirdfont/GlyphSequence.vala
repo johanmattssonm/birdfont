@@ -58,7 +58,7 @@ public class GlyphSequence {
 		});
 		
 		ligature_sequence.ranges.clear ();
-		foreach (Glyph? g in ligature_sequence.glyph) {
+		for (int i = 0; i < ligature_sequence.glyph.size; i++) {
 			ligature_sequence.ranges.add (null);
 		}
 		

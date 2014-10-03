@@ -15,7 +15,7 @@
 namespace BirdFont {
 
 /** Type2, PostScript outlines */
-public class CffTable : Table {
+public class CffTable : OtfTable {
 
 	static const uint8 HSTEM = 1;
 	static const uint8 VSTEM = 3;

@@ -15,7 +15,7 @@
 namespace BirdFont {
 
 /** Table with list of tables sorted by table tag. */
-public class DirectoryTable : Table {
+public class DirectoryTable : OtfTable {
 	
 	public CmapTable cmap_table;
 	public CvtTable  cvt_table;
@@ -36,7 +36,7 @@ public class DirectoryTable : Table {
 	
 	public OffsetTable offset_table;
 	
-	Gee.ArrayList<Table> tables;
+	Gee.ArrayList<OtfTable> tables;
 	
 	public DirectoryTable () {
 		offset_table = new OffsetTable (this);
@@ -60,7 +60,7 @@ public class DirectoryTable : Table {
 		
 		id = "Directory table";
 		
-		tables = new Gee.ArrayList<Table> ();
+		tables = new Gee.ArrayList<OtfTable> ();
 	}
 
 	public void process () throws GLib.Error {
@@ -86,7 +86,7 @@ public class DirectoryTable : Table {
 		process_directory (); // this table
 	}
 
-	public Gee.ArrayList<Table> get_tables () {
+	public Gee.ArrayList<OtfTable> get_tables () {
 		if (tables.size == 0) {
 			tables.add (offset_table);
 			tables.add (this);
@@ -393,7 +393,7 @@ public class DirectoryTable : Table {
 	public long get_font_file_size () {
 		long length = 0;
 		
-		foreach (Table t in tables) {
+		foreach (OtfTable t in tables) {
 			length += t.get_font_data ().length_with_padding ();
 		}
 		
@@ -408,7 +408,7 @@ public class DirectoryTable : Table {
 	// Check sum adjustment for the entire font
 	public uint32 get_font_file_checksum () {
 		uint32 check_sum = 0;
-		foreach (Table t in tables) {
+		foreach (OtfTable t in tables) {
 			t.get_font_data ().continous_check_sum (ref check_sum);
 		}
 		return check_sum;
@@ -436,7 +436,7 @@ public class DirectoryTable : Table {
 		head_table.process ();
 		
 		// write the directory 
-		foreach (Table t in tables) {
+		foreach (OtfTable t in tables) {
 						
 			if (t is DirectoryTable || t is OffsetTable) {
 				continue;

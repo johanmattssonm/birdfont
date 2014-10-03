@@ -43,7 +43,7 @@ public class LigatureSet : GLib.Object {
 		return (!) ligatures.get (0).substitution.get (0).to_string ();
 	}
 	
-	public FontData get_set_data () {
+	public FontData get_set_data () throws GLib.Error {
 		FontData fd, ligature_data;
 		uint16 o, pos;
 		
