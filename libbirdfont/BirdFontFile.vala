@@ -137,13 +137,8 @@ class BirdFontFile : GLib.Object {
 				os.put_string (@"</images>\n");
 				os.put_string ("\n");
 			}
-		
-			// FIXME: no need to iterate over all glyphs twise
+			
 			font.glyph_cache.for_each ((gc) => {
-				if (is_null (gc)) {
-					warning ("No glyph collection");
-				}
-				
 				try {
 					write_glyph_collection (gc, os);
 				} catch (GLib.Error e) {
@@ -152,6 +147,9 @@ class BirdFontFile : GLib.Object {
 					
 				TooltipArea.show_text (t_("Saving"));
 			});
+			
+			os.put_string ("\n");
+			write_ligatures (os);
 			
 			font.glyph_cache.for_each ((gc) => {
 				BackgroundImage bg;
@@ -663,7 +661,11 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "spacing") {
 				parse_spacing_class (t);
 			}
-									
+
+			if (t.get_name () == "ligature") {
+				parse_ligature (t);
+			}
+												
 			TooltipArea.show_text (t_("Loading XML data."));
 		}
 
@@ -681,6 +683,12 @@ class BirdFontFile : GLib.Object {
 				parse_background_image (child);
 			}			
 		}
+	}
+
+	public static string serialize_attribute (string s) {
+		string n = s.replace ("\"", "quote");
+		n = n.replace ("&", "ampersand");
+		return n;
 	}
 
 	public static string unserialize (string s) {
@@ -1347,6 +1355,39 @@ class BirdFontFile : GLib.Object {
 		}
 		
 		img.set_position (img.img_x, img.img_y);	
+	}
+	
+	public void write_ligatures (DataOutputStream os) {
+		Ligatures ligatures = font.get_ligatures ();
+		
+		try {
+			ligatures.get_ligatures ((subst, liga) => {
+				string l = serialize_attribute (liga);
+				string s = serialize_attribute (subst);
+				os.put_string ("<ligature sequence=\"$(s)\" replacement=\"$(l)\"/>\n");
+			});
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+	
+	public void parse_ligature (Tag t) {
+		string sequence = "";
+		string ligature = "";
+		Ligatures ligatures;
+		
+		foreach (Attribute a in t.get_attributes ()) {
+			if (a.get_name () == "sequence") {
+				sequence = a.get_content ();
+			}
+
+			if (a.get_name () == "replacement") {
+				ligature = a.get_content ();
+			}
+		}
+		
+		ligatures = font.get_ligatures ();
+		ligatures.add_ligature (sequence, ligature);
 	}
 }
 

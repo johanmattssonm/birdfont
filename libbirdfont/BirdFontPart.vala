@@ -199,6 +199,12 @@ public class BirdFontPart : GLib.Object{
 			bf.write_closing_root_tag (os);
 			os.close ();
 
+			os = create_file ("ligatures.bfp");
+			bf.write_root_tag (os);
+			bf.write_ligatures (os);
+			bf.write_closing_root_tag (os);
+			os.close ();
+			
 			font.glyph_cache.for_each ((gc) => {
 				try {
 					string selected_file_name;
