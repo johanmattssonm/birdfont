@@ -764,10 +764,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		menubar.append (tab_launcher);
 		menubar.append (tool_launcher);
 		menubar.append (kerning_launcher);
+		menubar.append (ligature_launcher);
 		
 		if (BirdFont.has_argument ("--test")) {
 			menubar.append (git_launcher);
-			menubar.append (ligature_launcher);
 		}
 				
 		return menubar;	
@@ -855,7 +855,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		text_box.show ();
 		text_entry.set_text (listener.default_text);
 		text_entry.activate.connect (() => {
-			listener.signal_submit (listener.default_text);
+			text_listener.signal_submit (text_entry.text);
 			text_input_is_active = false;
 		});
 		text_entry.grab_focus ();

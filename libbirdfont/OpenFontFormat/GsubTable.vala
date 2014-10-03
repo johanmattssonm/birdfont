@@ -81,15 +81,24 @@ public class GsubTable : OtfTable {
 		liga_sets = new Gee.ArrayList<LigatureSet> ();
 		lig_set = new LigatureSet (glyf_table);
 		last_set = new LigatureSet (glyf_table);
-		ligatures.get_ligatures ((s, l) => {
+		ligatures.get_ligatures ((s, lig) => {
 			string[] parts = s.split (" ");
-			
+			string l = lig;
+
+			if (l.has_prefix ("U+") || l.has_prefix ("u+")) {
+				l = (!) Font.to_unichar (l).to_string ();
+			}
+							
 			if (!font.has_glyph (l)) {
 				warning (@"Ligature $l does not correspond to a glyph in this font.");
 				return;
 			}
 			
-			foreach (string p in parts) {
+			foreach (string p in parts) {		
+				if (p.has_prefix ("U+") || p.has_prefix ("u+")) {
+					p = (!) Font.to_unichar (p).to_string ();
+				}
+				
 				if (!font.has_glyph (p)) {
 					warning (@"Ligature substitution of $p is not possible, the character does have a glyph.");
 					return;

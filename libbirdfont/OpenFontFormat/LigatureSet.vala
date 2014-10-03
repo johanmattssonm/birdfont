@@ -35,12 +35,23 @@ public class LigatureSet : GLib.Object {
 	}
 	
 	public string get_coverage_char () {
+		string s;
+		string[] sp;
+		
 		if (ligatures.size == 0) {
 			warning ("No ligatures in set.");
 			return "";
 		}
 		
-		return (!) ligatures.get (0).substitution.get (0).to_string ();
+		s = ligatures.get (0).substitution;
+		
+		if (s.has_prefix ("U+") || s.has_prefix ("u+")) {
+			sp = s.split (" ");
+			return_val_if_fail (sp.length > 0, "");
+			s = (!) Font.to_unichar (sp[0]).to_string ();
+		}
+		
+		return (!) s.get (0).to_string ();
 	}
 	
 	public FontData get_set_data () throws GLib.Error {
@@ -71,8 +82,16 @@ public class LigatureSet : GLib.Object {
 	void add_ligature (FontData fd, Ligature ligature) throws GLib.Error {
 		string[] parts = ligature.substitution.split (" ");
 		bool first = true;
-		int gid = glyf_table.get_gid (ligature.ligature);
-		
+		int gid;
+		string l;
+
+		l = ligature.ligature;
+		if (l.has_prefix ("U+") || l.has_prefix ("u+")) {
+			l = (!) Font.to_unichar (l).to_string ();
+		}
+			
+		gid = glyf_table.get_gid (l);
+					
 		if (gid == -1) {
 			warning (@"No glyph ID for ligature $(ligature.ligature).");
 			gid = 0;
@@ -84,8 +103,19 @@ public class LigatureSet : GLib.Object {
 		fd.add_ushort ((uint16) parts.length); 
 
 		foreach (string p in parts) {
+			if (p.has_prefix ("U+") || p.has_prefix ("u+")) {
+				p = (!) Font.to_unichar (p).to_string ();
+			}
+
+			gid = (uint16) glyf_table.get_gid (p);
+
+			if (gid == -1) {
+				warning (@"No glyph ID for ligature $(ligature.ligature).");
+				gid = 0;
+			}
+				
 			if (!first) {
-				fd.add_ushort ((uint16) glyf_table.get_gid (p));
+				fd.add_ushort ((uint16) gid);
 			}
 			
 			first = false;

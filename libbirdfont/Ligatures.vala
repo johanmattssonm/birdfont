@@ -30,7 +30,7 @@ public class Ligatures : GLib.Object {
 	// FIXME: keep ligatures sorted, long strings first
 	public void get_ligatures (LigatureIterator iter) {
 		foreach (Ligature l in ligatures) {
-			iter (l.ligature, l.substitution);
+			iter (l.substitution, l.ligature);
 		}	
 	}
 
@@ -130,29 +130,10 @@ public class Ligatures : GLib.Object {
 			first = (Ligature) a;
 			next = (Ligature) b;
 			
-			chars_first = first.substitution.char_count ();
-			chars_next = next.substitution.char_count ();
+			chars_first = first.substitution.split (" ").length;
+			chars_next = next.substitution.split (" ").length;
 							
 			return chars_next - chars_first;
-			
-			if (first.get_first_char () == next.get_first_char ()) {
-				chars_first = first.substitution.char_count ();
-				chars_next = next.substitution.char_count ();
-				
-				
-				r = chars_first > chars_next; // DELETE
-				print (@"$chars_first $chars_next  $(first.substitution)  $(next.substitution)   $(r) \n");
-				
-				if (chars_first != chars_next) {
-					return 0;
-				}
-				
-				r = chars_first > chars_next;
-			} else {			
-				r = first.get_first_char () > next.get_first_char ();
-			}
-			
-			return (r) ? 1 : -1;
 		});		
 	}
 }

@@ -48,14 +48,14 @@ public class LigatureList : Table {
 				ligatures.remove_at (row.get_index ());
 				MainWindow.native_window.hide_text_input ();
 			} else if (column == 0) {
-				return_if_fail (0 <= row.get_index () < ligatures.count ());
-				ligatures.set_substitution (row.get_index ());
-			} else if (column == 2) {
 				if (!(0 <= row.get_index () < ligatures.count ())) {
 					warning (@"Index: $(row.get_index ()) ligatures.count (): $(ligatures.count ())");
 					return;
 				}
-				ligatures.set_ligature (row.get_index ());
+				ligatures.set_ligature (row.get_index ());			
+			} else if (column == 2) {
+				return_if_fail (0 <= row.get_index () < ligatures.count ());
+				ligatures.set_substitution (row.get_index ());
 			}
 		}
 

@@ -125,7 +125,6 @@ class BirdFontFile : GLib.Object {
 			write_settings (os);
 			
 			os.put_string ("\n");
-			
 			// FIXME: add this to a font specific settings file
 			if (font.background_images.size > 0) {
 				os.put_string (@"<images>\n");
@@ -181,6 +180,7 @@ class BirdFontFile : GLib.Object {
 				TooltipArea.show_text (t_("Saving"));
 			});
 			
+			os.put_string ("\n");
 			write_spacing_classes (os);
 			write_kerning (os);
 			write_closing_root_tag (os);
@@ -687,7 +687,7 @@ class BirdFontFile : GLib.Object {
 
 	public static string serialize_attribute (string s) {
 		string n = s.replace ("\"", "quote");
-		n = n.replace ("&", "ampersand");
+		n = n.replace ("&", "ampersand");								
 		return n;
 	}
 
@@ -1362,9 +1362,9 @@ class BirdFontFile : GLib.Object {
 		
 		try {
 			ligatures.get_ligatures ((subst, liga) => {
-				string l = serialize_attribute (liga);
-				string s = serialize_attribute (subst);
-				os.put_string ("<ligature sequence=\"$(s)\" replacement=\"$(l)\"/>\n");
+				string lig = serialize_attribute (liga);
+				string sequence = serialize_attribute (subst);
+				os.put_string (@"<ligature sequence=\"$(sequence)\" replacement=\"$(lig)\"/>\n");
 			});
 		} catch (GLib.Error e) {
 			warning (e.message);
