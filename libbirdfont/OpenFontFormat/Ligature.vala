@@ -22,6 +22,10 @@ public class Ligature : GLib.Object {
 		this.ligature = ligature;
 		this.substitution = substitution;
 	}
+	
+	public unichar get_first_char () {
+		return substitution.get (0);
+	}
 }
 
 }

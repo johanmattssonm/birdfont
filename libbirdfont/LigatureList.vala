@@ -40,7 +40,7 @@ public class LigatureList : Table {
 		Ligatures ligatures = font.get_ligatures ();
 		
 		if (row.get_index () == NEW_LIGATURE) {
-			add_ligature (t_("substitute"), t_("ligature"));
+			add_ligature (t_("character sequence"), t_("ligature"));
 			MainWindow.native_window.hide_text_input ();
 		} else if (ligatures.count () != 0) {
 			if (delete_button) {
@@ -48,14 +48,14 @@ public class LigatureList : Table {
 				ligatures.remove_at (row.get_index ());
 				MainWindow.native_window.hide_text_input ();
 			} else if (column == 0) {
+				return_if_fail (0 <= row.get_index () < ligatures.count ());
+				ligatures.set_substitution (row.get_index ());
+			} else if (column == 2) {
 				if (!(0 <= row.get_index () < ligatures.count ())) {
 					warning (@"Index: $(row.get_index ()) ligatures.count (): $(ligatures.count ())");
 					return;
 				}
 				ligatures.set_ligature (row.get_index ());
-			} else if (column == 2) {
-				return_if_fail (0 <= row.get_index () < ligatures.count ());
-				ligatures.set_substitution (row.get_index ());
 			}
 		}
 
@@ -68,13 +68,16 @@ public class LigatureList : Table {
 		int i;
 		Font font = BirdFont.get_current_font ();
 		Ligatures ligatures = font.get_ligatures ();
+		Row row;
 		
 		rows.clear ();
-		rows.add (new Row (t_("New Ligature"), NEW_LIGATURE, false));
+		row = new Row (t_("New Ligature"), NEW_LIGATURE, false);
+		rows.add (row);
 		
 		i = 0;
 		ligatures.get_ligatures ((subst, liga) => {
-			rows.add (new Row.columns_3 (@"$subst", "->",  @"$liga", i));
+			row = new Row.columns_3 (@"$liga", "",  @"$subst", i);
+			rows.add (row);
 			i++;
 		});
 		
