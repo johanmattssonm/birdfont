@@ -27,7 +27,6 @@ public class Ligatures : GLib.Object {
 	public Ligatures () {
 	}
 	
-	// FIXME: keep ligatures sorted, long strings first
 	public void get_ligatures (LigatureIterator iter) {
 		foreach (Ligature l in ligatures) {
 			iter (l.substitution, l.ligature);
@@ -89,6 +88,7 @@ public class Ligatures : GLib.Object {
 		
 		listener.signal_submit.connect (() => {
 			MainWindow.native_window.hide_text_input ();
+			MainWindow.get_ligature_display ().update_rows ();
 		});
 		
 		MainWindow.native_window.set_text_listener (listener);
@@ -110,6 +110,7 @@ public class Ligatures : GLib.Object {
 		
 		listener.signal_submit.connect (() => {
 			MainWindow.native_window.hide_text_input ();
+			MainWindow.get_ligature_display ().update_rows ();
 		});
 		
 		MainWindow.native_window.set_text_listener (listener);
