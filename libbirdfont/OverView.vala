@@ -1048,6 +1048,7 @@ public class OverView : FontDisplay {
 		int length = 0;
 		bool see_also = false;
 		WidgetAllocation allocation = MainWindow.get_overview ().allocation;
+		string name;
 		
 		entry = ((!)character_info).get_entry ();
 		
@@ -1087,37 +1088,43 @@ public class OverView : FontDisplay {
 		cr.restore ();
 
 		// database entry
-		i = 0;
-		foreach (string line in entry.split ("\n")) {
-			if (i == 0) {
-				column = line.split ("\t");
-				return_if_fail (column.length == 2);
-				unicode_value = "U+" + column[0];
-				unicode_description = column[1];
+		
+		if (((!)character_info).is_ligature ()) {
+			name = ((!)character_info).get_name ();
+			draw_info_line ("Ligature " + name, cr, x, y, 0);
+		} else {
+			i = 0;
+			foreach (string line in entry.split ("\n")) {
+				if (i == 0) {
+					column = line.split ("\t");
+					return_if_fail (column.length == 2);
+					unicode_value = "U+" + column[0];
+					unicode_description = column[1];
 
-				draw_info_line (unicode_description, cr, x, y, i);
-				i++;
-
-				draw_info_line (unicode_value, cr, x, y, i);
-				i++;			
-			} else {
-				
-				if (line.has_prefix ("\t*")) {
-					draw_info_line (line.replace ("\t*", "•"), cr, x, y, i);
-					i++;					
-				} else if (line.has_prefix ("\tx (")) {
-					if (!see_also) {
-						i++;
-						draw_info_line (t_("See also:"), cr, x, y, i);
-						i++;
-						see_also = true;
-					}
-					
-					draw_info_line (line.replace ("\tx (", "•").replace (")", ""), cr, x, y, i);
+					draw_info_line (unicode_description, cr, x, y, i);
 					i++;
+
+					draw_info_line (unicode_value, cr, x, y, i);
+					i++;			
 				} else {
+					
+					if (line.has_prefix ("\t*")) {
+						draw_info_line (line.replace ("\t*", "•"), cr, x, y, i);
+						i++;					
+					} else if (line.has_prefix ("\tx (")) {
+						if (!see_also) {
+							i++;
+							draw_info_line (t_("See also:"), cr, x, y, i);
+							i++;
+							see_also = true;
+						}
+						
+						draw_info_line (line.replace ("\tx (", "•").replace (")", ""), cr, x, y, i);
+						i++;
+					} else {
 
-					i++;
+						i++;
+					}
 				}
 			}
 		}

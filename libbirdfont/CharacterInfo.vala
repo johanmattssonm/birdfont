@@ -23,13 +23,28 @@ public class CharacterInfo : GLib.Object {
 	double x = 0;
 	double y = 0;
 	unichar unicode;
+	bool ligature = false;
+	string name = "";
 	
-	public CharacterInfo (unichar c) {
+	public CharacterInfo (unichar c, GlyphCollection? gc) {
 		unicode = c;
 		
 		if (info_icon == null) {
 			info_icon = Icons.get_icon ("info_icon.png");
 		}
+		
+		if (gc != null) {
+			ligature = ((!) gc).is_unassigned ();
+			name = ((!) gc).get_name ();
+		}
+	}
+	
+	public string get_name () {
+		return name;
+	}
+	
+	public bool is_ligature () {
+		return ligature;
 	}
 	
 	public string get_entry () {

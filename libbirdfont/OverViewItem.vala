@@ -38,7 +38,7 @@ public class OverViewItem : GLib.Object {
 		this.y = y;
 		this.character = character;
 		this.glyphs = glyphs;
-		this.info = new CharacterInfo (character);
+		this.info = new CharacterInfo (character, glyphs);
 	}
 	
 	public string get_name () {
