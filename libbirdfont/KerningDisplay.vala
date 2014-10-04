@@ -523,19 +523,22 @@ public class KerningDisplay : FontDisplay {
 	void set_selected_handle (int handle) {
 		Glyph? g;
 		selected_handle = handle;
+		GlyphSequence sequence_with_ligatures;
+
+		sequence_with_ligatures = row.get (0).process_ligatures ();
 		
 		if (selected_handle <= 0) {
 			selected_handle = 1;
 		}
 		
-		if (selected_handle >= row.get (0).glyph.size) {
-			selected_handle = (int) row.get (0).glyph.size - 1;
+		if (selected_handle >= sequence_with_ligatures.glyph.size) {
+			selected_handle = (int) sequence_with_ligatures.glyph.size - 1;
 		}
 		
 		set_active_handle_index (handle);
 		
-		if (0 <= selected_handle - 1 < row.get (0).glyph.size) {
-			g = row.get (0).glyph.get (selected_handle - 1);
+		if (0 <= selected_handle - 1 < sequence_with_ligatures.glyph.size) {
+			g = sequence_with_ligatures.glyph.get (selected_handle - 1);
 			if (g != null) {
 				left_active_glyph = (!) g;
 			}
