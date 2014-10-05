@@ -49,8 +49,7 @@ LIBS = [
     'gdk-pixbuf-2.0',
     'webkitgtk-3.0',
     config.GEE,
-    'libnotify',
-    'libgit2'
+    'libnotify'
     ]
 
 LIBBIRD_XML_LIBS = [
