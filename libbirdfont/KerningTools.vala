@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -63,6 +63,13 @@ public class KerningTools : ToolCollection  {
 			GlyphCanvas.redraw ();
 		});
 		kerning_tools.add_tool (insert_last);
+
+		Tool insert_unicode = new Tool ("insert_unichar", t_("Insert character by unicode value"), 'U', CTRL);
+		insert_unicode.select_action.connect ((self) => {
+			KerningDisplay d = MainWindow.get_kerning_display ();
+			d.insert_unichar ();
+		});
+		kerning_tools.add_tool (insert_unicode);
 				
 		SpinButton font_size1 = new SpinButton ("kerning_font_size_one", t_("Font size"));
 

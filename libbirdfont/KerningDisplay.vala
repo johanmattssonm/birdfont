@@ -585,43 +585,86 @@ public class KerningDisplay : FontDisplay {
 		if (suppress_input) {
 			return;
 		}
-		
-		if (keyval == Key.LEFT && KeyBindings.modifier == NONE) {
-			first_update = true;
-			set_space (selected_handle, -1 / KerningTools.font_size);
-		}
-		
-		if (keyval == Key.RIGHT && KeyBindings.modifier == NONE) {
-			first_update = true;
-			set_space (selected_handle, 1 / KerningTools.font_size);
-		}
 
-		if (KeyBindings.modifier == CTRL && (keyval == Key.LEFT || keyval == Key.RIGHT)) {
-			if (keyval == Key.LEFT) { 
-				selected_handle--;
+		if (keyval == 'u' || keyval == 'U' && KeyBindings.has_ctrl ()) {
+			insert_unichar ();
+		} else {
+			if (keyval == Key.LEFT && KeyBindings.modifier == NONE) {
+				first_update = true;
+				set_space (selected_handle, -1 / KerningTools.font_size);
 			}
 			
-			if (keyval == Key.RIGHT) {
-				selected_handle++;
+			if (keyval == Key.RIGHT && KeyBindings.modifier == NONE) {
+				first_update = true;
+				set_space (selected_handle, 1 / KerningTools.font_size);
+			}
+
+			if (KeyBindings.modifier == CTRL && (keyval == Key.LEFT || keyval == Key.RIGHT)) {
+				if (keyval == Key.LEFT) { 
+					selected_handle--;
+				}
+				
+				if (keyval == Key.RIGHT) {
+					selected_handle++;
+				}
+				
+				set_selected_handle (selected_handle);
 			}
 			
-			set_selected_handle (selected_handle);
-		}
-		
-		if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {		
-			if (keyval == Key.BACK_SPACE && row.size > 0 && row.get (0).glyph.size > 0) {
-				row.get (0).glyph.remove_at (row.get (0).glyph.size - 1);
-				row.get (0).ranges.remove_at (row.get (0).ranges.size - 1);
+			if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {		
+				if (keyval == Key.BACK_SPACE && row.size > 0 && row.get (0).glyph.size > 0) {
+					row.get (0).glyph.remove_at (row.get (0).glyph.size - 1);
+					row.get (0).ranges.remove_at (row.get (0).ranges.size - 1);
+				}
+				
+				if (row.size == 0 || c == Key.ENTER) {
+					new_line ();
+				}
+				
+				add_character (c);
 			}
-			
-			if (row.size == 0 || c == Key.ENTER) {
-				new_line ();
-			}
-			
-			add_character (c);
 		}
 		
 		GlyphCanvas.redraw ();
+	}
+	
+	public void insert_unichar () {
+		TextListener listener;
+		string submitted_value = "";
+		string unicodestart;
+		
+		unicodestart = (KeyBindings.has_shift ()) ? "" : "U+";
+
+		listener = new TextListener (t_("Unicode"), unicodestart, t_("Insert"));
+		
+		listener.signal_text_input.connect ((text) => {
+			submitted_value = text;
+			
+			if (MenuTab.suppress_event) {
+				return;
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		
+		listener.signal_submit.connect (() => {
+			unichar c;
+			MainWindow.native_window.hide_text_input ();
+			
+			text_input = false;
+			suppress_input = false;
+			
+			if (submitted_value.has_prefix ("u+") || submitted_value.has_prefix ("U+")) {
+				c = Font.to_unichar (submitted_value);
+				add_character (c);
+			} else {
+				add_text (submitted_value);
+			}
+		});
+		
+		suppress_input = true;
+		text_input = true;
+		MainWindow.native_window.set_text_listener (listener);
 	}
 	
 	public void new_line () {
@@ -809,7 +852,7 @@ public class KerningDisplay : FontDisplay {
 		text_input = true;
 		MainWindow.native_window.set_text_listener (listener);
 		
-		GlyphCanvas.redraw ();		
+		GlyphCanvas.redraw ();
 	}
 	
 	public override void button_press (uint button, double ex, double ey) {
