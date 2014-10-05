@@ -1,3 +1,10 @@
+birdfont (1.6) stable;
+
+  * Ligature substitution, (Open Type Feature, GSUB table)
+  * Input characters by unicode value in kerning tab
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Oct  5 22:16:36 CEST 2014
+
 birdfont (1.5) stable;
 
   * Bug fixes

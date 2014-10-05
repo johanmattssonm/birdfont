@@ -586,7 +586,7 @@ public class KerningDisplay : FontDisplay {
 			return;
 		}
 
-		if (keyval == 'u' || keyval == 'U' && KeyBindings.has_ctrl ()) {
+		if ((keyval == 'u' || keyval == 'U') && KeyBindings.has_ctrl ()) {
 			insert_unichar ();
 		} else {
 			if (keyval == Key.LEFT && KeyBindings.modifier == NONE) {
