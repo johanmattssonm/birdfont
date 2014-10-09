@@ -34,7 +34,6 @@ public class GposTable : OtfTable {
 		this.glyf_table = glyf_table;
 		this.pairs = new KernList (glyf_table);
 
-
 		printd ("Process GPOS\n");
 
 		fd.add_ulong (0x00010000); // table version

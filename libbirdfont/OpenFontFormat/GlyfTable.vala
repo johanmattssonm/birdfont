@@ -43,6 +43,7 @@ public class GlyfTable : OtfTable {
 
 	// sorted array of glyphs
 	public Gee.ArrayList<GlyphCollection> glyphs;
+	public Gee.ArrayList<GlyfData> glyf_data;
 	public uint number_of_unassigned_glyphs = 0;
 	
 	uint16 max_points = 0;
@@ -53,6 +54,7 @@ public class GlyfTable : OtfTable {
 		loca_table = l;
 		location_offsets = new Gee.ArrayList<uint32> ();
 		glyphs = new Gee.ArrayList<GlyphCollection> ();
+		glyf_data = new Gee.ArrayList<GlyfData> ();
 	}	
 
 	public int get_gid (string name) {
@@ -209,6 +211,8 @@ public class GlyfTable : OtfTable {
 		
 		g.remove_empty_paths ();
 		glyf_data = g.get_ttf_data ();
+		
+		this.glyf_data.add (glyf_data);
 		
 		if (g.path_list.size == 0 || glyf_data.paths.size == 0 || glyf_data.get_ncontours () == 0) {
 			// location_offsets will be equal to location_offset + 1 for

@@ -62,7 +62,7 @@ public class KernList : GLib.Object {
 			num_pairs += kerning_pair.kerning.size;
 			foreach (Kerning k in kerning_pair.kerning) {
 				gid_right = (uint16) glyf_table.get_gid (k.get_glyph ().get_name ());
-				current_pairs.pairs.add (new Kern (gid_left, gid_right, (int16) (k.val * HeadTable.UNITS)));
+				current_pairs.pairs.add (new Kern (gid_left, gid_right, (int16) Math.rint (k.val * HeadTable.UNITS)));
 			}
 		});
 		

@@ -102,13 +102,14 @@ public class HmtxTable : OtfTable {
 		int16 rsb;
 		int16 lsb;
 
-		int16 left_marker;		
-		int16 right_marker;
+		int16 left_guide;		
+		int16 right_guide;
 		
 		double xmin;
 		double ymin;
 		double xmax;
 		double ymax;
+		int i;
 		
 		Glyph g;
 		
@@ -120,20 +121,24 @@ public class HmtxTable : OtfTable {
 		
 		// advance and lsb
 		nmetrics = 0;
+		i = 0;
 		foreach (GlyphCollection gc in glyf_table.glyphs) {
 			g = gc.get_current ();
-			g.boundaries (out xmin, out ymin, out xmax, out ymax);
+			
+			return_if_fail (0 <= i < glyf_table.glyf_data.size);
+						
+			GlyfData gd = glyf_table.glyf_data.get (i);
 
-			xmax = Math.rint (xmax * HeadTable.UNITS);
-			xmin = Math.rint (xmin * HeadTable.UNITS);
+			xmax = gd.bounding_box_xmax;
+			xmin = gd.bounding_box_xmin;
 			
-			left_marker = (int16) Math.rint (g.left_limit * HeadTable.UNITS);
-			right_marker = (int16) Math.rint (g.right_limit * HeadTable.UNITS);
+			left_guide = (int16) Math.rint (g.left_limit * HeadTable.UNITS);
+			right_guide = (int16) Math.rint (g.right_limit * HeadTable.UNITS);
 			
-			lsb = (int16) xmin - left_marker;
-			advance = right_marker - left_marker;
+			lsb = (int16) xmin;
+			advance = right_guide - left_guide;
 			
-			extent = (int16) (lsb + xmax - xmin);
+			extent = (int16) xmax;
 			rsb = (int16) Math.rint (advance - extent);
 						
 			fd.add_u16 (advance);
@@ -163,6 +168,7 @@ public class HmtxTable : OtfTable {
 			
 			advance_width[nmetrics] = (uint16) extent;
 			nmetrics++;
+			i++;
 		}
 		
 		// monospaced lsb ...
