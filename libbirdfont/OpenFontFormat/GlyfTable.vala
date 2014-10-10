@@ -156,7 +156,7 @@ public class GlyfTable : OtfTable {
 			warning ("No glyphs in font.");
 		}
 			
-		// add glyphs, first all assigned then the unassigned ones
+		// add glyphs
 		for (indice = 0; (gcn = font.get_glyph_collection_indice (indice)) != null; indice++) {		
 			gc = (!) gcn;
 			g = gc.get_current ().copy ();

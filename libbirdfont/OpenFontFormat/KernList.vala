@@ -64,6 +64,14 @@ public class KernList : GLib.Object {
 				gid_right = (uint16) glyf_table.get_gid (k.get_glyph ().get_name ());
 				current_pairs.pairs.add (new Kern (gid_left, gid_right, (int16) Math.rint (k.val * HeadTable.UNITS)));
 			}
+			
+			current_pairs.pairs.sort ((a, b) => {
+				return a.right - b.right;
+			});
+		});
+		
+		pairs.sort ((a, b) => {
+			return a.left - b.left;
 		});
 		
 		return num_pairs;

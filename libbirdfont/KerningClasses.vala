@@ -176,6 +176,10 @@ public class KerningClasses : GLib.Object {
 			warning (e.message);
 		}
 		
+		if (!(gf.is_class () || gn.is_class ())) {
+			return false;
+		}
+		
 		return get_kerning_item_index (gf, gn) != -1;
 	}
 
@@ -405,35 +409,35 @@ public class KerningClasses : GLib.Object {
 		Gee.ArrayList<KerningPair> pairs = new Gee.ArrayList<KerningPair> ();
 		double kerning;
 		string right;
+		string name;
+		Glyph? g;
 		
 		// Create a list of first glyph in all pairs
 		foreach (GlyphRange r in classes_first) {
 			foreach (UniRange u in r.ranges) {
 				for (unichar c = u.start; c <= u.stop; c++) {
-					string name = (!)c.to_string ();
-					Glyph? g = font.get_glyph (name);
+					name = (!)c.to_string ();
+					g = font.get_glyph (name);
 					if (g != null && !left_glyphs.contains ((!) g)) {
 						left_glyphs.add ((!) g);
 					}
 				}
 			}
-				
-			// TODO: GlyphRange.unassigned
+			
+			foreach (string n in r.unassigned) {
+				g = font.get_glyph (n);
+				if (g != null && !left_glyphs.contains ((!) g)) {
+					left_glyphs.add ((!) g);
+				}
+			}
 		}
 		
-		foreach (string name in single_kerning_letters_left) {
-			Glyph? g = font.get_glyph (name);
+		foreach (string n in single_kerning_letters_left) {
+			g = font.get_glyph (n);
 			if (g != null && !left_glyphs.contains ((!) g)) {
 				left_glyphs.add ((!) g);
 			}
 		}
-		
-		left_glyphs.sort ((a, b) => {
-			Glyph first, next;
-			first = (Glyph) a;
-			next = (Glyph) b;
-			return strcmp (first.get_name (), next.get_name ());
-		});
 
 		// add the right hand glyph and the kerning value
 		foreach (Glyph character in left_glyphs) {
@@ -445,19 +449,25 @@ public class KerningClasses : GLib.Object {
 					for (unichar c = u.start; c <= u.stop; c++) {
 						right = (!)c.to_string ();
 						
-						if (font.has_glyph (right)) {
+						if (font.has_glyph (right) && has_kerning (character.get_name (), right)) {
 							kerning = get_kerning (character.get_name (), right);
 							kl.add_unique ((!) font.get_glyph (right), kerning);
 						}
 					}
 				}
-				// TODO: GlyphRange.unassigned
+
+				foreach (string n in r.unassigned) {
+					if (font.has_glyph (n) && has_kerning (character.get_name (), n)) {
+						kerning = get_kerning (character.get_name (), n);
+						kl.add_unique ((!) font.get_glyph (n), kerning);
+					}
+				}
 			}
 
-			// TODO: The get_kerning () function is still rather slow. Optimize it.
+			// TODO: The get_kerning () function is still slow. Optimize it.
 			foreach (string right_glyph_name in single_kerning_letters_right) {
 				Glyph? gl = font.get_glyph (right_glyph_name);
-				if (gl != null) {
+				if (gl != null && has_kerning (character.get_name (), right_glyph_name)) {
 					kerning = get_kerning (character.get_name (), right_glyph_name);
 					kl.add_unique ((!) gl , kerning);
 				}
