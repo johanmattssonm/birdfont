@@ -1,3 +1,9 @@
+birdfont (1.7) stable;
+
+  * Fixes a critical spacing bug and bugs in the drawing canvas.
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Oct 10 15:28:26 CEST 2014
+
 birdfont (1.6) stable;
 
   * Ligature substitution, (Open Type Feature, GSUB table)
