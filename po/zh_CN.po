@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-04 08:34+0200\n"
+"POT-Creation-Date: 2014-10-10 10:51+0200\n"
 "PO-Revision-Date: 2014-08-12 02:25+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -498,7 +498,7 @@ msgstr ""
 msgid "Show grid"
 msgstr "显示网格"
 
-#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:783
+#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:829
 #, fuzzy
 msgid "Kerning"
 msgstr "字距："
@@ -519,7 +519,15 @@ msgstr "输入“space”以调整空格字符距离，输入“divis”以调�
 msgid "Kerning:"
 msgstr "字距："
 
-#: libbirdfont/KerningDisplay.vala:783 libbirdfont/MainWindow.vala:164
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Unicode"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Insert"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:829 libbirdfont/MainWindow.vala:164
 #: libbirdfont/SpinButton.vala:197
 #, fuzzy
 msgid "Close"
@@ -538,7 +546,7 @@ msgstr ""
 msgid "Kerning class"
 msgstr "字距类"
 
-#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:84
+#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:83
 #: libbirdfont/Ligatures.vala:104 libbirdfont/SpacingClass.vala:45
 #: libbirdfont/SpinButton.vala:197
 msgid "Set"
@@ -561,10 +569,14 @@ msgid "Insert last edited glyph"
 msgstr ""
 
 #: libbirdfont/KerningTools.vala:67
+msgid "Insert character by unicode value"
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:74
 msgid "Font size"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:92
+#: libbirdfont/KerningTools.vala:99
 msgid "Font size "
 msgstr ""
 
@@ -589,7 +601,7 @@ msgstr ""
 msgid "Ligatures"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:84
+#: libbirdfont/Ligatures.vala:83
 msgid "Ligature"
 msgstr ""
 
@@ -648,7 +660,7 @@ msgstr "覆盖"
 msgid "No glyphs in this view."
 msgstr "在此视图中没有字形。"
 
-#: libbirdfont/OverView.vala:1111
+#: libbirdfont/OverView.vala:1117
 #, fuzzy
 msgid "See also:"
 msgstr "Ayrıca bakınız:"

@@ -6,90 +6,93 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-04 08:34+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2014-10-10 10:51+0200\n"
+"PO-Revision-Date: 2014-10-08 14:58+0000\n"
+"Last-Translator: pedroSK <p.hlavacik@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.11.0-rc1\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"X-POOTLE-MTIME: 1412780293.000000\n"
 
 #: libbirdfont/Argument.vala:244
 msgid "Usage"
-msgstr ""
+msgstr "Použitie"
 
 #: libbirdfont/Argument.vala:246 libbirdfont/BirdFont.vala:178
 #: birdfont-autotrace/AutoTrace.vala:68
 msgid "FILE"
-msgstr ""
+msgstr "Súbor"
 
 #: libbirdfont/Argument.vala:246 libbirdfont/BirdFont.vala:178
 #: birdfont-autotrace/AutoTrace.vala:68
 msgid "OPTION"
-msgstr ""
+msgstr "Možnosť"
 
 #: libbirdfont/Argument.vala:248
 msgid "enable Android customizations"
-msgstr ""
+msgstr "povoliť prispôsobenia pre Android"
 
 #: libbirdfont/Argument.vala:249
 msgid "show coordinate in glyph view"
-msgstr ""
+msgstr "Zobraziť súradnice v prehľade znakov"
 
 #: libbirdfont/Argument.vala:250
 msgid "exit if a test case fails"
-msgstr ""
+msgstr "Ukončiť pri zlyhaní testu"
 
 #: libbirdfont/Argument.vala:251
+#, fuzzy
 msgid "treat warnings as fatal"
-msgstr ""
+msgstr "posudzovať varovania ako fatálne"
 
 #: libbirdfont/Argument.vala:252
 msgid "show this message"
-msgstr ""
+msgstr "Zobraziť túto správu"
 
 #: libbirdfont/Argument.vala:253
 msgid "write a log file"
-msgstr ""
+msgstr "Zapísať Log súbor"
 
 #: libbirdfont/Argument.vala:254
 msgid "enable Machintosh customizations"
-msgstr ""
+msgstr "Povoliť prispôsobenia pre Mac"
 
 #: libbirdfont/Argument.vala:255
 msgid "don't translate"
-msgstr ""
+msgstr "Neprekladať"
 
 #: libbirdfont/Argument.vala:256
 msgid "sleep between each command in test suite"
-msgstr ""
+msgstr "uspávať medzi jednotlivými príkazmi testovacej sady"
 
 #: libbirdfont/Argument.vala:257
 msgid "run test case"
-msgstr ""
+msgstr "Spustiť test"
 
 #: libbirdfont/BackgroundTool.vala:41
 msgid "Move, resize and rotate background image"
-msgstr ""
+msgstr "Posunúť, zmeniť veľkosť a otočiť obrázok pozadia"
 
 #: libbirdfont/BackgroundTool.vala:197
 msgid "Select background image"
-msgstr ""
+msgstr "Vybrať obrázok pozadia"
 
 #: libbirdfont/BirdFont.vala:22 libbirdfont/BirdFont.vala:176
 #: birdfont-autotrace/AutoTrace.vala:66
 msgid "Usage:"
-msgstr ""
+msgstr "Použitie"
 
 #: libbirdfont/BirdFont.vala:24
 msgid "BF-FILE"
-msgstr ""
+msgstr "Súbor-BF"
 
 #: libbirdfont/BirdFont.vala:24
 msgid "SVG-FILES ..."
-msgstr ""
+msgstr "Súbor-SVG"
 
 #: libbirdfont/BirdFont.vala:58 libbirdfont/BirdFont.vala:66
 msgid "does not exist."
@@ -130,23 +133,23 @@ msgstr ""
 #: libbirdfont/BirdFont.vala:165 libbirdfont/VersionList.vala:218
 #: birdfont/GtkWindow.vala:1386
 msgid "Version"
-msgstr ""
+msgstr "Verzia"
 
 #: libbirdfont/BirdFont.vala:179
 msgid "print this message\n"
-msgstr ""
+msgstr "Zobraziť túto správu\n"
 
 #: libbirdfont/BirdFont.vala:180
 msgid "write files to this directory\n"
-msgstr ""
+msgstr "Uložiť súbory do tohto adresára\n"
 
 #: libbirdfont/BirdFont.vala:181
 msgid "write svg file\n"
-msgstr ""
+msgstr "Uložiť súbor SVG\n"
 
 #: libbirdfont/BirdFont.vala:182
 msgid "write ttf and eot files\n"
-msgstr ""
+msgstr "Uložiť TTF a EOT súbory\n"
 
 #: libbirdfont/BirdFont.vala:293
 msgid "Can't find output directory"
@@ -488,7 +491,7 @@ msgstr ""
 msgid "Show grid"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:783
+#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:829
 msgid "Kerning"
 msgstr ""
 
@@ -508,7 +511,15 @@ msgstr ""
 msgid "Kerning:"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:783 libbirdfont/MainWindow.vala:164
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Unicode"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Insert"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:829 libbirdfont/MainWindow.vala:164
 #: libbirdfont/SpinButton.vala:197
 msgid "Close"
 msgstr ""
@@ -526,7 +537,7 @@ msgstr ""
 msgid "Kerning class"
 msgstr ""
 
-#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:84
+#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:83
 #: libbirdfont/Ligatures.vala:104 libbirdfont/SpacingClass.vala:45
 #: libbirdfont/SpinButton.vala:197
 msgid "Set"
@@ -549,10 +560,14 @@ msgid "Insert last edited glyph"
 msgstr ""
 
 #: libbirdfont/KerningTools.vala:67
+msgid "Insert character by unicode value"
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:74
 msgid "Font size"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:92
+#: libbirdfont/KerningTools.vala:99
 msgid "Font size "
 msgstr ""
 
@@ -576,7 +591,7 @@ msgstr ""
 msgid "Ligatures"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:84
+#: libbirdfont/Ligatures.vala:83
 msgid "Ligature"
 msgstr ""
 
@@ -632,7 +647,7 @@ msgstr ""
 msgid "No glyphs in this view."
 msgstr ""
 
-#: libbirdfont/OverView.vala:1111
+#: libbirdfont/OverView.vala:1117
 msgid "See also:"
 msgstr ""
 

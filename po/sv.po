@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-04 08:34+0200\n"
+"POT-Creation-Date: 2014-10-10 10:51+0200\n"
 "PO-Revision-Date: 2014-10-04 06:33+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -492,7 +492,7 @@ msgstr "Filen är skrivskyddad."
 msgid "Show grid"
 msgstr "Visa rutnät"
 
-#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:783
+#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:829
 msgid "Kerning"
 msgstr "Kerning"
 
@@ -516,7 +516,15 @@ msgstr ""
 msgid "Kerning:"
 msgstr "Kerning:"
 
-#: libbirdfont/KerningDisplay.vala:783 libbirdfont/MainWindow.vala:164
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Unicode"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Insert"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:829 libbirdfont/MainWindow.vala:164
 #: libbirdfont/SpinButton.vala:197
 msgid "Close"
 msgstr "Stäng"
@@ -536,7 +544,7 @@ msgstr ""
 msgid "Kerning class"
 msgstr "Kerning klass"
 
-#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:84
+#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:83
 #: libbirdfont/Ligatures.vala:104 libbirdfont/SpacingClass.vala:45
 #: libbirdfont/SpinButton.vala:197
 msgid "Set"
@@ -559,10 +567,14 @@ msgid "Insert last edited glyph"
 msgstr "Lägg till det senast redigerade tecknet"
 
 #: libbirdfont/KerningTools.vala:67
+msgid "Insert character by unicode value"
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:74
 msgid "Font size"
 msgstr "Teckenstorlek"
 
-#: libbirdfont/KerningTools.vala:92
+#: libbirdfont/KerningTools.vala:99
 msgid "Font size "
 msgstr "Teckenstorlek "
 
@@ -586,7 +598,7 @@ msgstr "Ny ligatur"
 msgid "Ligatures"
 msgstr "Ligaturer"
 
-#: libbirdfont/Ligatures.vala:84
+#: libbirdfont/Ligatures.vala:83
 msgid "Ligature"
 msgstr "Ligatur"
 
@@ -642,7 +654,7 @@ msgstr "Översikt"
 msgid "No glyphs in this view."
 msgstr "Inga tecken att visa."
 
-#: libbirdfont/OverView.vala:1111
+#: libbirdfont/OverView.vala:1117
 msgid "See also:"
 msgstr "Se även:"
 

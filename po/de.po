@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-04 08:34+0200\n"
-"PO-Revision-Date: 2014-09-28 09:17+0000\n"
+"POT-Creation-Date: 2014-10-10 10:51+0200\n"
+"PO-Revision-Date: 2014-10-09 06:17+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1411895866.000000\n"
+"X-POOTLE-MTIME: 1412835425.000000\n"
 
 #: libbirdfont/Argument.vala:244
 msgid "Usage"
@@ -394,9 +394,8 @@ msgid "Show full glyph"
 msgstr "Gesamtes Zeichen anzeigen"
 
 #: libbirdfont/DrawingTools.vala:893
-#, fuzzy
 msgid "Fit in view"
-msgstr "Ansicht anpassen."
+msgstr "Ansicht anpassen"
 
 #: libbirdfont/DrawingTools.vala:900
 msgid "Zoom in on background image"
@@ -491,7 +490,7 @@ msgstr "Die Datei ist schreibgeschützt."
 msgid "Show grid"
 msgstr "Raster anzeigen"
 
-#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:783
+#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:829
 msgid "Kerning"
 msgstr "Unterschneidung"
 
@@ -514,7 +513,15 @@ msgstr ""
 msgid "Kerning:"
 msgstr "Unterschneidung:"
 
-#: libbirdfont/KerningDisplay.vala:783 libbirdfont/MainWindow.vala:164
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Unicode"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Insert"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:829 libbirdfont/MainWindow.vala:164
 #: libbirdfont/SpinButton.vala:197
 msgid "Close"
 msgstr "Schließen"
@@ -534,7 +541,7 @@ msgstr ""
 msgid "Kerning class"
 msgstr "Unterschneidungsklasse"
 
-#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:84
+#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:83
 #: libbirdfont/Ligatures.vala:104 libbirdfont/SpacingClass.vala:45
 #: libbirdfont/SpinButton.vala:197
 msgid "Set"
@@ -557,10 +564,14 @@ msgid "Insert last edited glyph"
 msgstr "Zuletzt bearbeitete Glyphe einfügen"
 
 #: libbirdfont/KerningTools.vala:67
+msgid "Insert character by unicode value"
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:74
 msgid "Font size"
 msgstr "Schriftgröße"
 
-#: libbirdfont/KerningTools.vala:92
+#: libbirdfont/KerningTools.vala:99
 msgid "Font size "
 msgstr "Schriftgröße"
 
@@ -573,24 +584,26 @@ msgid "character sequence"
 msgstr ""
 
 #: libbirdfont/LigatureList.vala:43
+#, fuzzy
 msgid "ligature"
-msgstr ""
+msgstr "Ligatur"
 
 #: libbirdfont/LigatureList.vala:74
 msgid "New Ligature"
-msgstr ""
+msgstr "Neue Ligatur"
 
 #: libbirdfont/LigatureList.vala:88
 msgid "Ligatures"
 msgstr "Ligatur"
 
-#: libbirdfont/Ligatures.vala:84
+#: libbirdfont/Ligatures.vala:83
+#, fuzzy
 msgid "Ligature"
-msgstr ""
+msgstr "Ligatur"
 
 #: libbirdfont/Ligatures.vala:104
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: libbirdfont/Line.vala:106
 msgid "Position"
@@ -618,7 +631,7 @@ msgstr "Name"
 
 #: libbirdfont/MenuTab.vala:461
 msgid "Add ligature"
-msgstr ""
+msgstr "Ligatur hinzufügen"
 
 #: libbirdfont/MoveTool.vala:41
 msgid "Move paths"
@@ -640,7 +653,7 @@ msgstr "Übersicht"
 msgid "No glyphs in this view."
 msgstr "Keine Zeichen in dieser Ansicht."
 
-#: libbirdfont/OverView.vala:1111
+#: libbirdfont/OverView.vala:1117
 msgid "See also:"
 msgstr "Siehe auch:"
 
@@ -851,7 +864,7 @@ msgstr "_Vorheriger Tab"
 #: birdfont/GtkWindow.vala:593
 #, fuzzy
 msgid "_Close Tab"
-msgstr "Reiter s_chließen"
+msgstr "Reiter schließen"
 
 #: birdfont/GtkWindow.vala:600
 msgid "Close _All Tabs"
@@ -876,7 +889,7 @@ msgstr "_Verschieben"
 #: birdfont/GtkWindow.vala:634
 #, fuzzy
 msgid "Show _Full Unicode Characters Set"
-msgstr "Ganzen _Unicodezeichensatz anzeigen"
+msgstr "Ganzen Unicodezeichensatz anzeigen"
 
 #: birdfont/GtkWindow.vala:641
 msgid "Show De_fault Characters Set"
@@ -936,7 +949,7 @@ msgstr "_Ligaturen anzeigen"
 
 #: birdfont/GtkWindow.vala:734
 msgid "_Add Ligature"
-msgstr ""
+msgstr "Ligatur hinzufügen"
 
 #: birdfont/GtkWindow.vala:741
 msgid "_File"

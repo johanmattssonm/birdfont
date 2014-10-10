@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-04 08:34+0200\n"
+"POT-Creation-Date: 2014-10-10 10:51+0200\n"
 "PO-Revision-Date: 2014-09-18 20:35+0000\n"
 "Last-Translator: victorwestmann <victor.westmann@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -491,7 +491,7 @@ msgstr "O arquivo está protegido contra gravação."
 msgid "Show grid"
 msgstr "Exibir grade"
 
-#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:783
+#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:829
 msgid "Kerning"
 msgstr "Espacejamento"
 
@@ -514,7 +514,15 @@ msgstr ""
 msgid "Kerning:"
 msgstr "Espacejamento:"
 
-#: libbirdfont/KerningDisplay.vala:783 libbirdfont/MainWindow.vala:164
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Unicode"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Insert"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:829 libbirdfont/MainWindow.vala:164
 #: libbirdfont/SpinButton.vala:197
 msgid "Close"
 msgstr "Fechar"
@@ -534,7 +542,7 @@ msgstr ""
 msgid "Kerning class"
 msgstr "Classe de espacejamento"
 
-#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:84
+#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:83
 #: libbirdfont/Ligatures.vala:104 libbirdfont/SpacingClass.vala:45
 #: libbirdfont/SpinButton.vala:197
 msgid "Set"
@@ -557,10 +565,14 @@ msgid "Insert last edited glyph"
 msgstr "Inserir o último glifo editado"
 
 #: libbirdfont/KerningTools.vala:67
+msgid "Insert character by unicode value"
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:74
 msgid "Font size"
 msgstr "Tamanho da fonte"
 
-#: libbirdfont/KerningTools.vala:92
+#: libbirdfont/KerningTools.vala:99
 msgid "Font size "
 msgstr "Tamanho da fonte"
 
@@ -584,7 +596,7 @@ msgstr ""
 msgid "Ligatures"
 msgstr "Ligaduras"
 
-#: libbirdfont/Ligatures.vala:84
+#: libbirdfont/Ligatures.vala:83
 msgid "Ligature"
 msgstr ""
 
@@ -640,7 +652,7 @@ msgstr "Resumo"
 msgid "No glyphs in this view."
 msgstr "Nenhum caractere para exibição."
 
-#: libbirdfont/OverView.vala:1111
+#: libbirdfont/OverView.vala:1117
 msgid "See also:"
 msgstr "Veja também:"
 

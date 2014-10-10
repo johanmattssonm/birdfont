@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-04 08:34+0200\n"
-"PO-Revision-Date: 2014-09-30 12:48+0000\n"
+"POT-Creation-Date: 2014-10-10 10:51+0200\n"
+"PO-Revision-Date: 2014-10-05 18:40+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1412081295.000000\n"
+"X-POOTLE-MTIME: 1412534426.000000\n"
 
 #: libbirdfont/Argument.vala:244
 msgid "Usage"
@@ -489,7 +489,7 @@ msgstr "Soubor je chráněn proti zápisu."
 msgid "Show grid"
 msgstr "Ukázat mřížku"
 
-#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:783
+#: libbirdfont/KerningDisplay.vala:51 libbirdfont/KerningDisplay.vala:829
 msgid "Kerning"
 msgstr "Podřezávání"
 
@@ -510,7 +510,15 @@ msgstr ""
 msgid "Kerning:"
 msgstr "Podřezávání:"
 
-#: libbirdfont/KerningDisplay.vala:783 libbirdfont/MainWindow.vala:164
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Unicode"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:638
+msgid "Insert"
+msgstr ""
+
+#: libbirdfont/KerningDisplay.vala:829 libbirdfont/MainWindow.vala:164
 #: libbirdfont/SpinButton.vala:197
 msgid "Close"
 msgstr "Zavřít"
@@ -530,7 +538,7 @@ msgstr ""
 msgid "Kerning class"
 msgstr "Třída podřezávání"
 
-#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:84
+#: libbirdfont/KerningRange.vala:102 libbirdfont/Ligatures.vala:83
 #: libbirdfont/Ligatures.vala:104 libbirdfont/SpacingClass.vala:45
 #: libbirdfont/SpinButton.vala:197
 msgid "Set"
@@ -553,10 +561,14 @@ msgid "Insert last edited glyph"
 msgstr "Vložit naposledy upravované znaky"
 
 #: libbirdfont/KerningTools.vala:67
+msgid "Insert character by unicode value"
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:74
 msgid "Font size"
 msgstr "Velikost písma"
 
-#: libbirdfont/KerningTools.vala:92
+#: libbirdfont/KerningTools.vala:99
 msgid "Font size "
 msgstr "Velikost písma "
 
@@ -566,27 +578,27 @@ msgstr "Znaková sada"
 
 #: libbirdfont/LigatureList.vala:43
 msgid "character sequence"
-msgstr ""
+msgstr "kombinace znaků"
 
 #: libbirdfont/LigatureList.vala:43
 msgid "ligature"
-msgstr ""
+msgstr "slitek"
 
 #: libbirdfont/LigatureList.vala:74
 msgid "New Ligature"
-msgstr ""
+msgstr "Nový slitek"
 
 #: libbirdfont/LigatureList.vala:88
 msgid "Ligatures"
 msgstr "Slitky"
 
-#: libbirdfont/Ligatures.vala:84
+#: libbirdfont/Ligatures.vala:83
 msgid "Ligature"
-msgstr ""
+msgstr "Slitek"
 
 #: libbirdfont/Ligatures.vala:104
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #: libbirdfont/Line.vala:106
 msgid "Position"
@@ -614,7 +626,7 @@ msgstr "Název"
 
 #: libbirdfont/MenuTab.vala:461
 msgid "Add ligature"
-msgstr ""
+msgstr "Přidat slitek"
 
 #: libbirdfont/MoveTool.vala:41
 msgid "Move paths"
@@ -636,7 +648,7 @@ msgstr "Přehled"
 msgid "No glyphs in this view."
 msgstr "Žádné znaky v tomto pohledu."
 
-#: libbirdfont/OverView.vala:1111
+#: libbirdfont/OverView.vala:1117
 msgid "See also:"
 msgstr "odívat se také na:"
 
@@ -930,7 +942,7 @@ msgstr "_Ukázat slitky"
 
 #: birdfont/GtkWindow.vala:734
 msgid "_Add Ligature"
-msgstr ""
+msgstr "_Přidat slitek"
 
 #: birdfont/GtkWindow.vala:741
 msgid "_File"
