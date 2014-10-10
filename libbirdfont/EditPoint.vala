@@ -531,7 +531,12 @@ public class EditPoint : GLib.Object {
 		left_handle.convert_to_line ();
 		right_handle.convert_to_line ();		
 	}
-		
+
+	public void convert_to_curve () {
+		left_handle.convert_to_curve ();
+		right_handle.convert_to_curve ();		
+	}
+			
 	public string to_string () {
 		StringBuilder s = new StringBuilder ();
 		s.append (@"Position: $x, $y\n");

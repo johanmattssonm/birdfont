@@ -269,8 +269,6 @@ public class PenTool : Tool {
 	public static void delete_selected_points () {
 		Glyph g = MainWindow.get_current_glyph ();
 
-		print ("Break path.");
-
 		foreach (PointSelection p in selected_points) {
 			p.point.deleted = true;
 		}

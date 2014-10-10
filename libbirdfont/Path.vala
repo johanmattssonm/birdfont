@@ -1668,7 +1668,22 @@ public class Path {
 				break;
 			}
 		}
+		
+		// don't tie end points on the open path
+		if (points.size > 1) {
+			p = points.get (1);
+			p.convert_to_curve ();
+			p.set_reflective_handles (false);
+			p.set_tie_handle (false);
+		}
 
+		if (points.size > 0) {
+			p = points.get (points.size - 1);
+			p.convert_to_curve ();
+			p.set_reflective_handles (false);
+			p.set_tie_handle (false);
+		}
+		
 		// copy points after the deleted point
 		while (i < points.size) {
 			p = points.get (i);
