@@ -774,7 +774,7 @@ public class KerningDisplay : FontDisplay {
 					kern = get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 				}
 								
-				d = Math.pow (fs * (x + kern) - ex, 2) + fs * Math.pow (y - ey, 2);
+				d = Math.pow (fs * (x + kern) - ex, 2) + Math.pow (fs * (y - ey), 2);
 				
 				if (d < min) {
 					min = d;
