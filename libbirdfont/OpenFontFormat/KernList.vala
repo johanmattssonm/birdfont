@@ -66,12 +66,16 @@ public class KernList : GLib.Object {
 			}
 			
 			current_pairs.pairs.sort ((a, b) => {
-				return a.right - b.right;
+				Kern first = (Kern) a;
+				Kern next = (Kern) b;
+				return first.right - next.right;
 			});
 		});
 		
 		pairs.sort ((a, b) => {
-			return a.left - b.left;
+			PairFormat1 first = (PairFormat1) a;
+			PairFormat1 next = (PairFormat1) b;
+			return first.left - next.left;
 		});
 		
 		return num_pairs;
