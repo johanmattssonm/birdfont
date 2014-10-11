@@ -269,7 +269,7 @@ public class TabBar : GLib.Object {
 		if (tabs.size == 1) {
 			empty_tab_canvas = new EmptyTab ("", "");
 			gc = new GlyphCollection.with_glyph('\0', "");
-			MainWindow.get_glyph_canvas ().set_display (empty_tab_canvas);
+			GlyphCanvas.set_display (empty_tab_canvas);
 			MainWindow.get_glyph_canvas ().set_current_glyph_collection (gc);
 			empty_tab = new Tab (empty_tab_canvas, 0, false);
 			signal_tab_selected (empty_tab);

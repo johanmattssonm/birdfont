@@ -1366,7 +1366,7 @@ class BirdFontFile : GLib.Object {
 				string sequence = serialize_attribute (subst);
 				os.put_string (@"<ligature sequence=\"$(sequence)\" replacement=\"$(lig)\"/>\n");
 			});
-		} catch (GLib.Error e) {
+		} catch (GLib.IOError e) {
 			warning (e.message);
 		}
 	}
