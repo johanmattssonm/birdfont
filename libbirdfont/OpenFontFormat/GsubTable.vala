@@ -29,14 +29,7 @@ public class GsubTable : OtfTable {
 
 	public void process () throws GLib.Error {
 		FontData fd = new FontData ();
-		Font font = BirdFont.get_current_font ();
-		Ligatures ligatures = font.get_ligatures ();
-		LigatureSet lig_set;
-		LigatureSet last_set;
-		FontData set_data;
-		Gee.ArrayList<LigatureSet> liga_sets;
-		uint16 ligature_pos;
-		uint16 table_start;
+		FontData clig_subtable;
 		
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
@@ -77,7 +70,30 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (1); // number of subtables
 		fd.add_ushort (8); // array of offsets to subtable
 
-		// add existing ligatures
+		clig_subtable = get_ligature_subtable ();
+		fd.append (clig_subtable);
+		
+		fd.pad ();
+		
+		this.font_data = fd;
+	}
+
+	FontData get_ligature_subtable () {
+		Font font;
+		Ligatures ligatures;
+		LigatureSet lig_set;
+		LigatureSet last_set;
+		FontData set_data;
+		Gee.ArrayList<LigatureSet> liga_sets;
+		uint16 ligature_pos;
+		uint16 table_start;
+		FontData fd;
+		
+		font = BirdFont.get_current_font ();
+		ligatures = font.get_ligatures ();		
+		fd = new FontData ();
+		
+		// create ligature list
 		liga_sets = new Gee.ArrayList<LigatureSet> ();
 		lig_set = new LigatureSet (glyf_table);
 		last_set = new LigatureSet (glyf_table);
@@ -149,12 +165,59 @@ public class GsubTable : OtfTable {
 			set_data = l.get_set_data ();
 			fd.append (set_data);
 		}
-		
-		fd.pad ();
-		
-		this.font_data = fd;
 	}
 
+	// chaining context substitution format3
+	FontData get_context_substition_subtable () {
+		FontData fd = new FontData ();
+		
+		fd.add_ushort (3); // format identifier
+		
+		fd.add_ushort (1); // backtrack glyph count
+		// array of offsets to coverage table
+		fd.add_ushort (18);
+		
+		fd.add_ushort (1); // input glyph count (middle)
+		// array of offsets to coverage table
+		fd.add_ushort (18 + 6);
+		
+		fd.add_ushort (1); // lookahead glyph count
+		// array of offsets to coverage table
+		fd.add_ushort (18 + 2 * 6);
+
+		fd.add_ushort (1); // substitute, (ligatures)
+		// array of offsets to coverage table
+		fd.add_ushort (18 + 3 * 6);
+
+		// backtrack coverage table1
+		fd.add_ushort (1); // format
+		fd.add_ushort (1); // coverage array length
+		
+		// gid array
+		fd.add_ushort ((uint16) glyf_table.get_gid ("a"));
+		
+		// input coverage table1
+		fd.add_ushort (1); // format
+		fd.add_ushort (1); // coverage array length
+		
+		// gid array
+		fd.add_ushort ((uint16) glyf_table.get_gid ("r"));
+
+		// lookahead coverage table1
+		fd.add_ushort (1); // format
+		fd.add_ushort (1); // coverage array length
+		
+		// gid array
+		fd.add_ushort ((uint16) glyf_table.get_gid ("t"));
+
+		// substitute coverage table1
+		fd.add_ushort (1); // format
+		fd.add_ushort (1); // coverage array length
+		
+		// gid array
+		fd.add_ushort ((uint16) glyf_table.get_gid ("art"));
+	}
+	
 	void parse_ligatures (FontData fd, int table_start) {
 		fd.seek (table_start);
 		
