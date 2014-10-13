@@ -793,13 +793,13 @@ class BirdFontFile : GLib.Object {
 		}
 
 		if (!font.get_backgrounds_folder ().query_exists ()) {
-			DirUtils.create ((!) font.get_backgrounds_folder ().get_path (), 0xFFFFFF);
+			DirUtils.create ((!) font.get_backgrounds_folder ().get_path (), 0755);
 		}
 		
 		img_dir = font.get_backgrounds_folder ().get_child ("parts");
 
 		if (!img_dir.query_exists ()) {
-			DirUtils.create ((!) img_dir.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) img_dir.get_path (), 0755);
 		}
 	
 		img_file = img_dir.get_child (@"$(file).png");
@@ -1359,16 +1359,16 @@ class BirdFontFile : GLib.Object {
 	
 	public void write_ligatures (DataOutputStream os) {
 		Ligatures ligatures = font.get_ligatures ();
-		
-		try {
-			ligatures.get_ligatures ((subst, liga) => {
+
+		ligatures.get_ligatures ((subst, liga) => {
+			try {
 				string lig = serialize_attribute (liga);
 				string sequence = serialize_attribute (subst);
 				os.put_string (@"<ligature sequence=\"$(sequence)\" replacement=\"$(lig)\"/>\n");
-			});
-		} catch (GLib.IOError e) {
-			warning (e.message);
-		}
+			} catch (GLib.IOError e) {
+				warning (e.message);
+			}
+		});
 	}
 	
 	public void parse_ligature (Tag t) {

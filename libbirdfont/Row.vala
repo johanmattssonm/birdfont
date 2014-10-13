@@ -20,8 +20,8 @@ public class Row : GLib.Object {
 
 	int index = 0;
 	bool delete_button = true;
-	
 	Gee.ArrayList<string> columns_labels = new Gee.ArrayList<string> ();
+	GLib.Object? row_data = null;
 	
 	public int columns {
 		get {
@@ -34,12 +34,59 @@ public class Row : GLib.Object {
 		columns_labels.add (label);
 		this.delete_button = delete_button;
 	}
-	
-	public Row.columns_3 (string label0, string label1, string label2, int index) {
+
+	public Row.columns_2 (string label0, string label1, int index,
+		bool delete_button = true) {
+			
+		columns_labels.add (label0);
+		columns_labels.add (label1);
+		this.index = index;
+		this.delete_button = delete_button;
+	}
+		
+	public Row.columns_3 (string label0, string label1, string label2,
+		int index, bool delete_button = true) {
+			
 		columns_labels.add (label0);
 		columns_labels.add (label1);
 		columns_labels.add (label2);
 		this.index = index;
+		this.delete_button = delete_button;
+	}
+
+	public Row.columns_4 (string label0, string label1, string label2, 
+		string label3, int index, bool delete_button = true) {
+			
+		columns_labels.add (label0);
+		columns_labels.add (label1);
+		columns_labels.add (label2);
+		columns_labels.add (label3);
+		this.index = index;
+		this.delete_button = delete_button;
+	}
+	
+	public Row.columns_5 (string label0, string label1, string label2,
+		string label3, string label4, int index, bool delete_button = true) {
+			
+		columns_labels.add (label0);
+		columns_labels.add (label1);
+		columns_labels.add (label2);
+		columns_labels.add (label3);
+		columns_labels.add (label4);
+		this.index = index;
+		this.delete_button = delete_button;
+	}
+
+	public bool has_row_data () {
+		return row_data != null;
+	}
+
+	public GLib.Object? get_row_data () {
+		return row_data;
+	}
+
+	public void set_row_data (GLib.Object o) {
+		row_data = o;
 	}
 	
 	public bool has_delete_button () {

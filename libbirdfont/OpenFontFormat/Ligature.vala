@@ -17,7 +17,7 @@ namespace BirdFont {
 public class Ligature : GLib.Object {
 	public string ligature = "";
 	public string substitution = "";
-	
+
 	public Ligature (string ligature, string substitution) {
 		this.ligature = ligature;
 		this.substitution = substitution;
@@ -25,6 +25,48 @@ public class Ligature : GLib.Object {
 	
 	public unichar get_first_char () {
 		return substitution.get (0);
+	}
+	
+	public void set_ligature () {
+		TextListener listener;
+		
+		listener = new TextListener (t_("Ligature"), ligature, t_("Set"));
+		
+		listener.signal_text_input.connect ((text) => {
+			ligature = text;
+		});
+		
+		listener.signal_submit.connect (() => {
+			MainWindow.native_window.hide_text_input ();
+			MainWindow.get_ligature_display ().update_rows ();
+		});
+		
+		MainWindow.native_window.set_text_listener (listener);
+	}
+	
+	public void set_substitution (ContextualLigature? clig = null) {
+		TextListener listener;
+		ContextualLigature? cl = clig;
+		
+		listener = new TextListener (t_("Text"), substitution, t_("Set"));
+		
+		listener.signal_text_input.connect ((text) => {
+			Font f = BirdFont.get_current_font ();
+			Ligatures l = f.get_ligatures ();
+			substitution = text;
+			l.sort_ligatures ();
+			
+			if (cl != null) {
+				((!) cl).sort ();
+			}
+		});
+		
+		listener.signal_submit.connect (() => {
+			MainWindow.native_window.hide_text_input ();
+			MainWindow.get_ligature_display ().update_rows ();
+		});
+		
+		MainWindow.native_window.set_text_listener (listener);
 	}
 }
 

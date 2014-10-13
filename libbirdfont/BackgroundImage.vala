@@ -225,17 +225,17 @@ public class BackgroundImage {
 		
 		dir = BirdFont.get_settings_directory ();
 		if (!dir.query_exists ()) {
-			DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) dir.get_path (), 0755);
 		}
 		
 		dir = font.get_backgrounds_folder ();
 		if (!dir.query_exists ()) {
-			DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) dir.get_path (), 0755);
 		}
 
 		dir = font.get_backgrounds_folder ().get_child ("parts");
 		if (!dir.query_exists ()) {
-			DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) dir.get_path (), 0755);
 		}
 	}
 

@@ -386,11 +386,11 @@ public class BirdFontPart : GLib.Object{
 		}
 		
 		if (!dir.query_exists ()) {
-			DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) dir.get_path (), 0755);
 		}
 		
 		root_directory = (!) bfp_dir.get_path ();
-		DirUtils.create (root_directory, 0xFFFFFF);
+		DirUtils.create (root_directory, 0755);
 	}
 
 	private void find_all_parts (string bfp_file) throws GLib.Error {	
@@ -473,7 +473,7 @@ public class BirdFontPart : GLib.Object{
 		dir = dir.get_child (subdir);
 		
 		if (!dir.query_exists ()) {
-			DirUtils.create ((!) dir.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) dir.get_path (), 0755);
 		} else {
 			info = dir.query_info (FILE_ATTRIBUTES, FileQueryInfoFlags.NONE);
 			if (info.get_file_type () != FileType.DIRECTORY) {

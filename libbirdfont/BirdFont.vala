@@ -535,7 +535,7 @@ public class BirdFont {
 		File backup = settings.get_child ("preview");
 		
 		if (!backup.query_exists ()) {
-			DirUtils.create ((!) backup.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) backup.get_path (), 0755);
 		}
 			
 		return backup;
@@ -545,7 +545,7 @@ public class BirdFont {
 		File thumbnails = get_settings_directory ().get_child ("thumbnails");
 		
 		if (!thumbnails.query_exists ()) {
-			DirUtils.create ((!) thumbnails.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) thumbnails.get_path (), 0755);
 		}
 		
 		return thumbnails;
@@ -562,12 +562,12 @@ public class BirdFont {
 
 		if (!home.query_exists ()) {
 			printd ("Create settings directory.");
-			DirUtils.create ((!) home.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) home.get_path (),0755);
 		}
 #else	
 		home_path = (settings_directory != null) 
-			? (!) settings_directory : Environment.get_home_dir ();
-			
+			? (!) settings_directory : Environment.get_user_config_dir ();
+						
 		if (is_null (home_path)) {
 			warning ("No home directory set.");
 			home_path = ".";
@@ -575,10 +575,10 @@ public class BirdFont {
 		
 		home = File.new_for_path (home_path);
 #endif
-		settings = home.get_child (".birdfont");
+		settings = home.get_child ("birdfont");
 				
 		if (!settings.query_exists ()) {
-			DirUtils.create ((!) settings.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) settings.get_path (), 0755);
 		}
 			
 		return settings;
@@ -589,7 +589,7 @@ public class BirdFont {
 		File backup = settings.get_child ("backup");
 		
 		if (!backup.query_exists ()) {
-			DirUtils.create ((!) backup.get_path (), 0xFFFFFF);
+			DirUtils.create ((!) backup.get_path (), 0755);
 		}
 			
 		return backup;

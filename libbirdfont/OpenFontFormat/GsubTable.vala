@@ -24,7 +24,7 @@ public class GsubTable : OtfTable {
 		id = "GSUB";
 	}
 	
-	public override void parse (FontData dis) throws Error {
+	public override void parse (FontData dis) throws GLib.Error {
 	}
 
 	public void process () throws GLib.Error {
@@ -110,7 +110,7 @@ public class GsubTable : OtfTable {
 		this.font_data = fd;
 	}
 
-	FontData get_ligature_subtable (LigatureSetList liga_list) {
+	FontData get_ligature_subtable (LigatureSetList liga_list) throws GLib.Error {
 		FontData set_data;
 		Gee.ArrayList<LigatureSet> liga_sets;
 		uint16 ligature_pos;
