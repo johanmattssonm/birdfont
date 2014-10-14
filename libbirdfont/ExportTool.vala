@@ -165,6 +165,8 @@ public class ExportTool : GLib.Object {
 	internal static void export_all () {
 		Font font = BirdFont.get_current_font ();
 		
+		printd ("Exporting all fonts.\n");
+		
 		if (font.font_file == null) {
 			warning ("Font is not saved.");
 		} else {
@@ -380,11 +382,13 @@ os.put_string (
 		File ttf_file;
 		File eot_file;
 		bool done = true;
-				
+		
 		try {
 			ttf_file = folder.get_child (current_font.get_full_name () + ".ttf");
 			eot_file = folder.get_child (current_font.get_full_name () + ".eot");
 
+			printd (@"Writing TTF fonts to $((!) ttf_file.get_path ())\n");
+			
 			if (ttf_file.query_exists ()) {
 				ttf_file.delete ();
 			}

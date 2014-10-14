@@ -213,7 +213,7 @@ public static int run_export (string[] arg) {
 	BirdFont.current_glyph_collection = new GlyphCollection.with_glyph ( '\0', "null");
 	main_window = new MainWindow ();
 	
-	// FIXME: create a option for this and structure the log messages
+	// FIXME: create a option for this and add structure the log messages
 	// init_logfile ();
 	
 	for (int i = 1; i < arg.length; i++) {
@@ -397,9 +397,10 @@ public class BirdFont {
 		BirdFont.logging = args.has_argument ("--log");
 #endif
 
-		if (BirdFont.logging) {
+		// FIXME: don't create log files
+		//if (BirdFont.logging) {
 			init_logfile ();
-		}
+		//}
 		
 		if (!args.has_argument ("--no-translation")) {
 			init_gettext ();
