@@ -236,7 +236,7 @@ public class PenTool : Tool {
 		path_stroke_width = width;
 	}
 	
-	private bool has_join_icon () {
+	public bool has_join_icon () {
 		double mx, my;
 		get_tie_position (out mx, out my);
 		return (mx > -10 * MainWindow.units && my > -10 * MainWindow.units);
@@ -735,7 +735,7 @@ public class PenTool : Tool {
 	/** Set fill property to transparend for counter paths. */ 
 	public static void force_direction () {
 		Glyph g = MainWindow.get_current_glyph ();
-		
+
 		// don't retain direction
 		clockwise.clear ();
 		counter_clockwise.clear ();

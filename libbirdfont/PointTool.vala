@@ -80,7 +80,7 @@ public class PointTool : Tool {
 		});
 	}
 	
-	private static Tool pen () {
+	public static Tool pen () {
 		return MainWindow.get_toolbox ().get_tool ("pen_tool");
 	}
 }

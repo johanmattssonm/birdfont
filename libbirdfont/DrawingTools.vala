@@ -35,6 +35,7 @@ public class DrawingTools : ToolCollection  {
 	public static MoveTool move_tool;
 	public static PenTool pen_tool;
 
+	ForesightTool foresight_tool;
 	PointTool point_tool;
 	ZoomTool zoom_tool;
 	public static ResizeTool resize_tool;
@@ -103,6 +104,12 @@ public class DrawingTools : ToolCollection  {
 		grid_expander = grid;
 
 		// Draw tools
+		foresight_tool = new ForesightTool ("foresight");
+		foresight_tool.select_action.connect ((self) => {
+			update_drawing_and_background_tools (self);
+		});
+		draw_tools.add_tool (foresight_tool);
+		
 		pen_tool = new PenTool ("pen_tool");
 		pen_tool.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);
@@ -1325,6 +1332,7 @@ public class DrawingTools : ToolCollection  {
 			move_background.set_selected (false);
 			cut_background.set_selected (false);
 			
+			foresight_tool.set_selected (false);
 			pen_tool.set_selected (false);
 			point_tool.set_selected (false);
 			zoom_tool.set_selected (false);
@@ -1346,7 +1354,8 @@ public class DrawingTools : ToolCollection  {
 		
 			if (resize_tool.is_selected () || move_tool.is_selected ()) {
 				show_object_tool_modifiers ();
-			} else if (pen_tool.is_selected () 
+			} else if (foresight_tool.is_selected ()
+					|| pen_tool.is_selected () 
 					|| point_tool.is_selected ()
 					|| track_tool.is_selected ()) {
 				show_point_tool_modifiers ();

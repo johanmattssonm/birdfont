@@ -43,7 +43,7 @@ public class Path {
 	bool edit = true;
 	bool open = true;
 	
-	bool direction_is_set = false;
+	public bool direction_is_set = false;
 	bool no_derived_direction = false;
 	bool clockwise_direction = true;
 
@@ -90,6 +90,9 @@ public class Path {
 	
 	public double rotation = 0;
 	public double skew = 0;
+	
+	public bool hide_end_handle = true;
+	public bool highlight_last_segment = false;
 	
 	public Path () {	
 		string width;
@@ -207,6 +210,7 @@ public class Path {
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
 		unowned EditPoint em;
+		int i;
 		
 		if (points.size < 2) {
 			return;
@@ -215,23 +219,52 @@ public class Path {
 		cr.new_path ();
 		
 		// draw lines
+		i = 0;
 		foreach (EditPoint e in points) {
 			if (n != null) {
 				en = (!) n;
-				draw_next (en, e, cr);
+				if (!highlight_last_segment || i != points.size - 1) {
+					draw_next (en, e, cr);
+				}
 			}
 			
 			n = e;
+			i++;
 		}
 
 		// close path
 		if (!is_open () && n != null) {
-			en = (!) n;
-			em = points.get (0).get_link_item ();
-			draw_next (en, em, cr);
+			if (highlight_last_segment) {
+				cr.stroke ();
+				en = points.get (points.size - 1).get_link_item ();
+				em = points.get (0).get_link_item ();
+				draw_next (en, em, cr);
+				cr.stroke ();
+			} else {	
+				en = (!) n;
+				em = points.get (0).get_link_item ();
+				draw_next (en, em, cr);
+				cr.stroke ();
+			}
+		} else {
+			cr.stroke ();
 		}
 
-		cr.stroke ();
+		// draw highlighted segment			
+		if (highlight_last_segment && points.size >= 2) {
+			line_color_r = 0.5;
+			line_color_g = 0.5;
+			line_color_b = 0.8;
+			line_color_a = 1;
+			
+			draw_next (points.get (points.size - 2), points.get (points.size - 1), cr);
+			cr.stroke ();
+			
+			line_color_r = 0;
+			line_color_g = 0;
+			line_color_b = 0;
+			line_color_a = 1;
+		}
 	}
 	
 	public void draw_edit_points (Context cr) {		
@@ -262,7 +295,7 @@ public class Path {
 		Glyph g;
 		double center_x, center_y;
 		double ex, ey;
-
+		
 		if (points.size == 0){
 			return;
 		}
@@ -286,7 +319,7 @@ public class Path {
 			
 			n = e;
 		}
-		
+
 		// close path
 		if (!is_open () && points.size >= 2 && n != null) {
 			en = (!) n;
@@ -452,7 +485,7 @@ public class Path {
 				img_left = (!) edit_point_handle_image;
 			}
 
-			if (!(is_open () && e == points.get (points.size - 1))) {
+			if (!hide_end_handle || !(is_open () && e == points.get (points.size - 1))) {
 				draw_line (handle_right, e, cr, 0.15);
 				draw_image (cr, img_right, e.get_right_handle ().x, e.get_right_handle ().y);
 			}
@@ -515,13 +548,15 @@ public class Path {
 	 */
 	public bool force_direction (Direction direction) {
 		bool c = (direction == Direction.CLOCKWISE);
+		bool d = is_clockwise ();
 		direction_is_set = true;
 		
-		if (c != is_clockwise ()) {
+		if (c != d) {
 			this.reverse ();
 		}
 		
-		if (unlikely (is_clockwise () != c)) {
+		d = is_clockwise ();
+		if (unlikely (d != c)) {
 			warning ("Failed to set direction for path in force_direction.");
 			return true;
 		}
@@ -669,6 +704,9 @@ public class Path {
 		new_path.fill = fill;
 		new_path.direction_is_set = direction_is_set;
 		new_path.create_list ();
+		
+		new_path.hide_end_handle = hide_end_handle;
+		new_path.highlight_last_segment = highlight_last_segment;
 		
 		return new_path;
 	}	
