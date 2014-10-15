@@ -485,8 +485,8 @@ public class EditPoint : GLib.Object {
 				
 		set_position (tx, ty);
 		
-		left_handle.move_to_coordinate_internal (lx, ly);
-		right_handle.move_to_coordinate_internal (rx, ry);
+		left_handle.move_to_coordinate (lx, ly);
+		right_handle.move_to_coordinate (rx, ry);
 	}
 		
 	public void set_position (double tx, double ty) {
