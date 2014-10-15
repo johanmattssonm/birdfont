@@ -172,25 +172,20 @@ public class ForesightTool : Tool {
 		PenTool.selected_points.clear ();
 		PenTool.selected_handle = new EditPointHandle.empty ();
 
-		p.release_action (p, 3, x, y);		
-		//p.press_action (p, 1, x, y);
-		
-		//return_if_fail (PenTool.selected_points.size != 0);
-		//last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
-		
-		//p.release_action (p, 1, x, y);
+		p.release_action (p, 3, x, y);
 		
 		last = p.new_point_action (x, y);
-		p.move_selected = false;
-		
+
 		p.press_action (p, 3, x, y);
 		
 		PenTool.selected_points.clear ();
 		PenTool.selected_points.add (last);	
 		PenTool.selected_point = last.point; 
 		PenTool.active_edit_point = null;
+		PenTool.show_selection_box = false;
 		
 		PenTool.move_selected_handle = false;
+		PenTool.move_selected = true;
 	}
 }
 

@@ -49,7 +49,7 @@ public class PenTool : Tool {
 	private static double last_point_x = 0;
 	private static double last_point_y = 0;
 
-	private static bool show_selection_box = false;
+	public static bool show_selection_box = false;
 	private static double selection_box_x = 0;
 	private static double selection_box_y = 0;
 	private static double selection_box_last_x = 0;

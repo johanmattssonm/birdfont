@@ -625,7 +625,7 @@ void init_logfile () {
 		((!)BirdFont.logstream).put_string ((!) log.get_path ());
 		((!)BirdFont.logstream).put_string ("\n");
 		
-		warning ("Logging to " + (!) log.get_path ());
+		warning ("Logging to " + (!) log.get_path ());	
 	} catch (GLib.Error e) {
 		warning (e.message);
 		warning ((!) log.get_path ());
@@ -635,6 +635,9 @@ void init_logfile () {
 	Log.set_handler (null, levels, log_warning);		
 		
 	BirdFont.logging = true;
+
+	printd (@"Program version: $(VERSION)\n");
+	printd (@"built on $(BUILD_TIMESTAMP)\n");
 }
 
 internal static void log_warning (string? log_domain, LogLevelFlags log_levels, string message) {
@@ -705,6 +708,8 @@ public static File get_child (File folder, string file_name) {
 	if (!f.has_suffix (s)) {
 		f += s;
 	}
+	
+	printd (@"File: Directory: $f Name: $n)\n");
 	
 	return File.new_for_path (f + n);
 }
