@@ -107,7 +107,7 @@ public class FileTab : FontDisplay {
 		}
 		
 		backup_file = BirdFont.get_backup_directory ();
-		backup_file = backup_file.get_child (file_name);
+		backup_file = get_child (backup_file, file_name);
 		load_font ((!) backup_file.get_path ());
 	}
 	
@@ -120,7 +120,7 @@ public class FileTab : FontDisplay {
 		
 		try {
 			backup_file = BirdFont.get_backup_directory ();
-			backup_file = backup_file.get_child (file_name);
+			backup_file = get_child (backup_file, file_name);
 			if (backup_file.query_exists ()) {
 				backup_file.delete ();	
 			}
@@ -292,7 +292,7 @@ public class FileTab : FontDisplay {
 		File thumbnail;
 		double u = MainWindow.units;
 		
-		thumbnail = BirdFont.get_thumbnail_directory ().get_child (backup);
+		thumbnail = get_child (BirdFont.get_thumbnail_directory (), backup);
 			
 		draw_background (cr, allocation, y, color);
 		
@@ -446,7 +446,7 @@ public class FileTab : FontDisplay {
 			enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
 			while ((file_info = enumerator.next_file ()) != null) {
 				file_name = ((!) file_info).get_name ();
-				backup_file = dir.get_child (file_name);
+				backup_file = get_child (dir, file_name);
 				backup_file.delete ();
 			}
 		} catch (Error e) {

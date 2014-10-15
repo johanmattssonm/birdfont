@@ -533,7 +533,7 @@ public class BirdFont {
 	
 	public static File get_preview_directory () {
 		File settings = get_settings_directory ();
-		File backup = settings.get_child ("preview");
+		File backup = get_child(settings, "preview");
 		
 		if (!backup.query_exists ()) {
 			DirUtils.create ((!) backup.get_path (), 0755);
@@ -543,7 +543,7 @@ public class BirdFont {
 	}
 
 	internal static File get_thumbnail_directory () {
-		File thumbnails = get_settings_directory ().get_child ("thumbnails");
+		File thumbnails = get_child (get_settings_directory (), "thumbnails");
 		
 		if (!thumbnails.query_exists ()) {
 			DirUtils.create ((!) thumbnails.get_path (), 0755);
@@ -576,7 +576,7 @@ public class BirdFont {
 		
 		home = File.new_for_path (home_path);
 #endif
-		settings = home.get_child ("birdfont");
+		settings = get_child(home, "birdfont");
 				
 		if (!settings.query_exists ()) {
 			DirUtils.create ((!) settings.get_path (), 0755);
@@ -587,7 +587,7 @@ public class BirdFont {
 
 	internal static File get_backup_directory () {
 		File settings = get_settings_directory ();
-		File backup = settings.get_child ("backup");
+		File backup = get_child (settings, "backup");
 		
 		if (!backup.query_exists ()) {
 			DirUtils.create ((!) backup.get_path (), 0755);
@@ -619,7 +619,7 @@ void init_logfile () {
 		t = new DateTime.now_local ();
 		settings = BirdFont.get_settings_directory ();
 		s = t.to_string ().replace (":", "_");
-		log = settings.get_child (@"birdfont_$s.log");
+		log = get_child (settings, @"birdfont_$s.log");
 		
 		BirdFont.logstream = new DataOutputStream (log.create (FileCreateFlags.REPLACE_DESTINATION));
 		((!)BirdFont.logstream).put_string ((!) log.get_path ());
@@ -685,3 +685,28 @@ public static void warn_if_test (string message) {
 	}
 }
 
+/** Obtain a handle to a file in a folder. */ 
+public static File get_child (File folder, string file_name) {
+	string f;
+	string s;
+	string n;
+
+	// avoid drive letter problems on windows
+	
+	n = file_name;
+	if (unlikely (BirdFont.win32 && file_name.index_of ("\\") != -1)) {
+		warning ("File name contains path separator.");
+		n = n.substring (n.last_index_of ("\\")).replace ("\\", "");
+	}
+	
+	f = (!) folder.get_path ();
+	s = (BirdFont.win32) ? "\\" : "/"; 
+	
+	if (!f.has_suffix (s)) {
+		f += s;
+	}
+	
+	return File.new_for_path (f + n);
+}
+
+}

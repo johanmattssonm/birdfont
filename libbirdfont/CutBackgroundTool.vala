@@ -217,7 +217,7 @@ class CutBackgroundTool : Tool {
 		string fn;
 		double wc, hc;
 		
-		img_dir =  f.get_backgrounds_folder ().get_child ("parts");
+		img_dir = get_child (f.get_backgrounds_folder (), "parts");
 
 		if (!img_dir.query_exists ()) {
 			if (DirUtils.create_with_parents ((!) img_dir.get_path (), 755) != 0) {

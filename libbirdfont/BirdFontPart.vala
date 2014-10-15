@@ -68,7 +68,7 @@ public class BirdFontPart : GLib.Object{
 			font.background_images.clear ();
 
 			bfp_dir = File.new_for_path (root_directory);
-			image_dir = bfp_dir.get_child ("images");
+			image_dir = get_child (bfp_dir, "images");
 			copy_backgrounds ((!) image_dir.get_path ());
 
 			foreach (string fn in parts) {
@@ -278,6 +278,7 @@ public class BirdFontPart : GLib.Object{
 		File image_dir;
 		BackgroundImage bg;
 		File found;
+		File parts;
 		File dest;
 		
 		image_dir = File.new_for_path (folder);
@@ -295,13 +296,14 @@ public class BirdFontPart : GLib.Object{
 				name = info.get_name ();
 				
 				if (info.get_file_type () == FileType.DIRECTORY) {
-					found = image_dir.get_child (name);
+					found = get_child (image_dir, name);
 					copy_backgrounds ((!) found.get_path ());
 				}
 				
 				if (name.has_suffix (".png")) {
-					found = image_dir.get_child (name);
-					dest = font.get_backgrounds_folder ().get_child ("parts").get_child (name);
+					found = get_child (image_dir, name);
+					parts = get_child (font.get_backgrounds_folder (), "parts");
+					dest = get_child (parts, name);
 					bg = new BackgroundImage ((!) found.get_path ());
 					bg.create_background_folders (font);
 					bg.copy_if_new (dest);
@@ -377,11 +379,11 @@ public class BirdFontPart : GLib.Object{
 		if (directory.has_suffix (font.get_full_name ())) {
 			bfp_dir = dir;
 		} else {
-			bfp_dir = dir.get_child (font.get_full_name ());
+			bfp_dir = get_child (dir, font.get_full_name ());
 		}
 		
 		while (bfp_dir.query_exists ()) {
-			bfp_dir = dir.get_child (@"$(font.get_full_name ())_$(i)");
+			bfp_dir = get_child (dir, @"$(font.get_full_name ())_$(i)");
 			i++;
 		}
 		
@@ -429,9 +431,9 @@ public class BirdFontPart : GLib.Object{
 			info = (!) fi;
 			name = info.get_name ();
 			if (info.get_file_type () == FileType.DIRECTORY) {
-				find_parts ((!) ((!) start.get_child (name)).get_path ());
+				find_parts ((!) ((!) get_child (start, name)).get_path ());
 			} else if (name.has_suffix (".bfp")) {
-				found = start.get_child (name);
+				found = get_child (start, name);
 				parts.add ((!) found.get_path ());
 			}
 		}
@@ -470,7 +472,7 @@ public class BirdFontPart : GLib.Object{
 		File dir;
 		
 		dir = d;
-		dir = dir.get_child (subdir);
+		dir = get_child (dir, subdir);
 		
 		if (!dir.query_exists ()) {
 			DirUtils.create ((!) dir.get_path (), 0755);
@@ -497,7 +499,7 @@ public class BirdFontPart : GLib.Object{
 			dir = new_subdirectory (dir, subdir2);
 		}
 				
-		file = dir.get_child (name);
+		file = get_child (dir, name);
 
 		if (file.query_file_type (0) == FileType.DIRECTORY) {
 			throw new FileError.FAILED (@"Can't save font, $name is a directory.");

@@ -233,7 +233,7 @@ public class BackgroundImage {
 			DirUtils.create ((!) dir.get_path (), 0755);
 		}
 
-		dir = font.get_backgrounds_folder ().get_child ("parts");
+		dir = get_child (font.get_backgrounds_folder (), "parts");
 		if (!dir.query_exists ()) {
 			DirUtils.create ((!) dir.get_path (), 0755);
 		}
@@ -314,7 +314,7 @@ public class BackgroundImage {
 		Font font = BirdFont.get_current_font ();
 		File folder = font.get_backgrounds_folder ();
 		File original = File.new_for_path (file_name);
-		File png_image = folder.get_child (@"full_$((!)original.get_basename ())");
+		File png_image = get_child (folder, @"full_$((!)original.get_basename ())");
 		bool converted;
 		
 		if (png_image.query_exists ()) {

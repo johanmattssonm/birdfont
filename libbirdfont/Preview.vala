@@ -38,7 +38,7 @@ public class Preview : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 		string fn = get_html_file_name ();
 		File dir = font.get_folder ();
-		File file = dir.get_child (fn);
+		File file = get_child (dir, fn);
 		
 		if (!file.query_exists ()) {
 			ExportTool.generate_html_document ((!)file.get_path (), font);				
@@ -51,7 +51,7 @@ public class Preview : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 		string path = get_html_file_name ();
 		File dir = font.get_folder ();
-		File file = dir.get_child (path);
+		File file = get_child (dir, path);
 		return file.query_exists ();
 	}
 	
@@ -59,7 +59,7 @@ public class Preview : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 		string path = get_html_file_name ();
 		File dir = font.get_folder ();
-		File file = dir.get_child (path);
+		File file = get_child (dir, path);
 		ExportTool.generate_html_document ((!)file.get_path (), font);
 	}
 
@@ -67,7 +67,7 @@ public class Preview : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 		string path = get_html_file_name ();
 		File dir = font.get_folder ();
-		File file = dir.get_child (path);
+		File file = get_child (dir, path);
 		try {
 			file.delete ();
 		} catch (Error e) {
@@ -92,7 +92,7 @@ public class Preview : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 		string html = get_html_file_name ();
 		File dir = font.get_folder ();
-		File file = dir.get_child (html);
+		File file = get_child (dir, html);
 		return "file:///" + (!)	file.get_path ();
 	}
 	
@@ -115,9 +115,9 @@ public class Preview : FontDisplay {
 			
 			preview_directory = BirdFont.get_preview_directory ();
 			
-			f_ttf = font.get_folder ().get_child (@"$(font.get_full_name ()).ttf");
-			f_eot = font.get_folder ().get_child (@"$(font.get_full_name ()).eot");
-			f_svg = font.get_folder ().get_child (@"$(font.get_full_name ()).svg");
+			f_ttf = get_child (font.get_folder (), @"$(font.get_full_name ()).ttf");
+			f_eot = get_child (font.get_folder (), @"$(font.get_full_name ()).eot");
+			f_svg = get_child (font.get_folder (), @"$(font.get_full_name ()).svg");
 
 			if (!f_ttf.query_exists ()) {
 				warning ("TTF file does not exist.");

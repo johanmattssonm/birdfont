@@ -153,7 +153,7 @@ public class Font : GLib.Object {
 	
 	public File get_backgrounds_folder () {
 		string fn = @"$(get_name ()) backgrounds";
-		File f = BirdFont.get_settings_directory ().get_child (fn);
+		File f = get_child (BirdFont.get_settings_directory (), fn);
 		return f;
 	}
 
@@ -528,7 +528,7 @@ public class Font : GLib.Object {
 		File file;
 		string backup_file;
 		
-		new_file = dir.get_child (@"$(name).bf");
+		new_file = get_child (dir, @"$(name).bf");
 		backup_file = (!) ((!) new_file).get_path ();
 		
 		try {
@@ -549,7 +549,7 @@ public class Font : GLib.Object {
 		string backup_file;
 		BirdFontFile birdfont_file = new BirdFontFile (this);
 
-		temp_file = dir.get_child (@"$(name).bf");
+		temp_file = get_child (dir, @"$(name).bf");
 		backup_file = (!) ((!) temp_file).get_path ();
 		backup_file = backup_file.replace (" ", "_");
 		

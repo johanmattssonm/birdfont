@@ -796,13 +796,13 @@ class BirdFontFile : GLib.Object {
 			DirUtils.create ((!) font.get_backgrounds_folder ().get_path (), 0755);
 		}
 		
-		img_dir = font.get_backgrounds_folder ().get_child ("parts");
+		img_dir = get_child (font.get_backgrounds_folder (), "parts");
 
 		if (!img_dir.query_exists ()) {
 			DirUtils.create ((!) img_dir.get_path (), 0755);
 		}
 	
-		img_file = img_dir.get_child (@"$(file).png");
+		img_file = get_child (img_dir, @"$(file).png");
 		
 		if (img_file.query_exists ()) {
 			return;
@@ -1310,11 +1310,11 @@ class BirdFontFile : GLib.Object {
 		BackgroundImage img;
 		BackgroundImage? new_img = null;
 		
-		File img_file = font.get_backgrounds_folder ().get_child ("parts");
+		File img_file = get_child (font.get_backgrounds_folder (), "parts");
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "sha1") {
-				img_file = img_file.get_child (attr.get_content () + ".png");
+				img_file = get_child (img_file, attr.get_content () + ".png");
 
 				if (!img_file.query_exists ()) {
 					warning (@"Background file has not been created yet. $((!) img_file.get_path ())");

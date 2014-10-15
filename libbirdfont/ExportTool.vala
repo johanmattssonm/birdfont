@@ -422,7 +422,7 @@ os.put_string (
 		SvgFontFormatWriter fo;
 		
 		try {
-			file = folder.get_child (file_name);
+			file = get_child (folder, file_name);
 			
 			if (file.query_exists ()) {
 				file.delete ();

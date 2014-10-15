@@ -104,7 +104,7 @@ public class Preferences {
 		}
 
 		printd ("get settings file");
-		settings = app_dir.get_child ("settings");
+		settings = get_child (app_dir, "settings");
 
 		if (is_null (settings)) {
 			warning ("No setting directory.");
@@ -158,7 +158,7 @@ public class Preferences {
 	public static void save () {
 		try {
 			File app_dir = BirdFont.get_settings_directory ();
-			File settings = app_dir.get_child ("settings");
+			File settings = get_child (app_dir, "settings");
 
 			return_if_fail (app_dir.query_exists ());
 		

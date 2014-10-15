@@ -207,7 +207,7 @@ class TestCases {
 			warning ("TTF export failed.");
 		}
 		
-		f = f.get_child (font.get_name () + ".ttf");
+		f = get_child (f, font.get_name () + ".ttf");
 		if (!f.query_exists ()) {
 			warning ("File does not exist.");
 		}
@@ -345,7 +345,7 @@ class TestCases {
 			DataOutputStream d;
 			FileOutputStream? os;
 			
-			temp_file = BirdFont.get_settings_directory ().get_child ("illustrator_test.svg");
+			temp_file = get_child (BirdFont.get_settings_directory (), "illustrator_test.svg");
 			
 			if (temp_file.query_exists ()) {
 				temp_file.delete ();
@@ -439,7 +439,7 @@ class TestCases {
 			DataOutputStream d;
 			FileOutputStream? os;
 			
-			temp_file = BirdFont.get_settings_directory ().get_child ("inkscape_test.svg");
+			temp_file = get_child (BirdFont.get_settings_directory (), "inkscape_test.svg");
 			
 			if (temp_file.query_exists ()) {
 				temp_file.delete ();

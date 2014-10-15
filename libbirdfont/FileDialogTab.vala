@@ -132,7 +132,7 @@ public class FileDialogTab : FontDisplay {
 			if (selected_filename == "") {
 				action.cancel ();
 			} else {
-				f = current_dir.get_child (selected_filename);
+				f = get_child (current_dir, selected_filename);
 				action.file_selected ((!)f.get_path ());
 			}
 		});
@@ -221,6 +221,7 @@ public class FileDialogTab : FontDisplay {
 		double y = 0;
 		string selected;
 		bool dir = false;
+		File f;
 		
 		selected = "";
 
@@ -252,7 +253,8 @@ public class FileDialogTab : FontDisplay {
 				if (selected == "..") {
 					propagate_files ((!)((!)current_dir.get_parent ()).get_path ());
 				} else {
-					propagate_files ((!)current_dir.get_child (selected).get_path ());
+					f = get_child (current_dir, selected);
+					propagate_files ((!) f.get_path ());
 				}
 			}
 		}
