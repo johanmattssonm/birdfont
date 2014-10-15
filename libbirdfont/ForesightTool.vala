@@ -17,7 +17,7 @@ using Cairo;
 
 namespace BirdFont {
 
-/** Move control points. */
+/** Create Beziér curves and preview the path. */
 public class ForesightTool : Tool {
 	
 	public const uint NONE = 0;
@@ -32,9 +32,11 @@ public class ForesightTool : Tool {
 		base (name, t_ ("Create Beziér curves"), '.', CTRL);
 
 		select_action.connect ((self) => {
+			state = NONE;
 		});
 
 		deselect_action.connect ((self) => {
+			state = NONE;
 		});
 		
 		press_action.connect ((self, b, x, y) => {
@@ -44,7 +46,7 @@ public class ForesightTool : Tool {
 			
 			if (state == NONE) {
 				add_new_point (x, y);
-				move_action (this, x + 10, y + 10);
+				move_action (this, x, y);
 				state = MOVE_HANDLES;
 				PenTool.active_path.hide_end_handle = false;
 			}
@@ -124,6 +126,7 @@ public class ForesightTool : Tool {
 				PenTool.move_selected_handle = true;
 				PenTool.selected_handle = (state == MOVE_LAST_HANDLE)
 					? last.point.get_left_handle () : last.point.get_right_handle ();
+				
 				last.point.set_reflective_handles (true);
 				last.point.convert_to_curve ();
 				p.move_action (p, x, y);
@@ -133,7 +136,14 @@ public class ForesightTool : Tool {
 
 				last.point.set_tie_handle (true);
 			} else {
-				p.move_action (p, x, y);
+				
+				if (DrawingTools.get_selected_point_type () != PointType.QUADRATIC) {
+					p.move_action (p, x, y);
+				} else {
+					PenTool.move_point_independent_of_handle = true;
+					p.move_action (p, x, y);
+					PenTool.move_point_independent_of_handle = false;
+				}
 			}
 			
 		});
@@ -157,18 +167,22 @@ public class ForesightTool : Tool {
 	void add_new_point (int x, int y) {
 		PointSelection last;
 		
-		Tool p = PointTool.pen ();
+		PenTool p = (PenTool) PointTool.pen ();
 		
 		PenTool.selected_points.clear ();
 		PenTool.selected_handle = new EditPointHandle.empty ();
 
 		p.release_action (p, 3, x, y);		
-		p.press_action (p, 1, x, y);
+		//p.press_action (p, 1, x, y);
 		
-		return_if_fail (PenTool.selected_points.size != 0);
-		last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
+		//return_if_fail (PenTool.selected_points.size != 0);
+		//last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
 		
-		p.release_action (p, 1, x, y);
+		//p.release_action (p, 1, x, y);
+		
+		last = p.new_point_action (x, y);
+		p.move_selected = false;
+		
 		p.press_action (p, 3, x, y);
 		
 		PenTool.selected_points.clear ();

@@ -384,8 +384,8 @@ os.put_string (
 		bool done = true;
 		
 		try {
-			ttf_file = folder.get_child (current_font.get_full_name () + ".ttf");
-			eot_file = folder.get_child (current_font.get_full_name () + ".eot");
+			ttf_file = get_child (folder, current_font.get_full_name () + ".ttf");
+			eot_file = get_child (folder, current_font.get_full_name () + ".eot");
 
 			printd (@"Writing TTF fonts to $((!) ttf_file.get_path ())\n");
 			

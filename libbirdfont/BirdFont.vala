@@ -685,4 +685,3 @@ public static void warn_if_test (string message) {
 	}
 }
 
-}

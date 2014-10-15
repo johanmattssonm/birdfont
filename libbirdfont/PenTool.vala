@@ -32,6 +32,8 @@ public class PenTool : Tool {
 	public static bool move_point_on_path = false;
 
 	public static bool edit_active_corner = false;
+
+	public static bool move_point_independent_of_handle = false;
 	
 	public static Gee.ArrayList<PointSelection> selected_points; 
 
@@ -607,8 +609,14 @@ public class PenTool : Tool {
 				delta_coordinate_y = coordinate_y - last_point_y;
 				
 				foreach (PointSelection selected in selected_points) {
-					selected.point.set_position (selected.point.x + delta_coordinate_x,
-						selected.point.y + delta_coordinate_y);
+					if (move_point_independent_of_handle) {
+						selected.point.set_independet_position (selected.point.x + delta_coordinate_x,
+							selected.point.y + delta_coordinate_y);
+					} else {
+						selected.point.set_position (selected.point.x + delta_coordinate_x,
+							selected.point.y + delta_coordinate_y);
+					}
+					
 					selected.point.recalculate_linear_handles ();
 					selected.path.update_region_boundaries ();
 				}
@@ -620,8 +628,14 @@ public class PenTool : Tool {
 				delta_coordinate_y = coordinate_y - last_point_y;
 				
 				foreach (PointSelection selected in selected_points) {
-					selected.point.set_position (selected.point.x + delta_coordinate_x,
-						selected.point.y + delta_coordinate_y);
+					if (move_point_independent_of_handle) {
+						selected.point.set_independet_position (selected.point.x + delta_coordinate_x,
+							selected.point.y + delta_coordinate_y);
+					} else {
+						selected.point.set_position (selected.point.x + delta_coordinate_x,
+							selected.point.y + delta_coordinate_y);
+					}
+						
 					selected.point.recalculate_linear_handles ();
 					selected.path.update_region_boundaries ();
 				}
@@ -632,8 +646,14 @@ public class PenTool : Tool {
 				delta_coordinate_y = coordinate_y - last_point_y;
 
 				foreach (PointSelection selected in selected_points) {
-					selected.point.set_position (selected.point.x + delta_coordinate_x,
-						selected.point.y + delta_coordinate_y);
+					
+					if (move_point_independent_of_handle) {
+						selected.point.set_independet_position (selected.point.x + delta_coordinate_x,
+							selected.point.y + delta_coordinate_y);
+					} else {
+						selected.point.set_position (selected.point.x + delta_coordinate_x,
+							selected.point.y + delta_coordinate_y);
+					}
 					
 					selected.point.recalculate_linear_handles ();
 					selected.path.update_region_boundaries ();
@@ -1328,7 +1348,7 @@ public class PenTool : Tool {
 		}
 	}
 	
-	public void new_point_action (int x, int y) {
+	public PointSelection new_point_action (int x, int y) {
 		Glyph glyph;
 		PointSelection new_point;
 		glyph = MainWindow.get_current_glyph ();
@@ -1346,6 +1366,8 @@ public class PenTool : Tool {
 		add_selected_point (selected_point, glyph.active_paths.get (glyph.active_paths.size - 1));
 
 		move_selected = true;
+		
+		return new_point;
 	}
 	
 	public static PointSelection add_new_edit_point (int x, int y) {

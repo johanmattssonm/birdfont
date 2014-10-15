@@ -227,6 +227,8 @@ public class EditPoint : GLib.Object {
 		unowned EditPoint n;
 		double nx, ny;
 
+		return_if_fail (!is_null (right_handle) && !is_null (left_handle));
+
 		if (prev == null && next != null) {
 			// FIXME: prev = get_next ().last ();
 		}
@@ -235,6 +237,8 @@ public class EditPoint : GLib.Object {
 		if (prev != null) {
 			n = get_prev ();
 			h = get_left_handle ();
+		
+			return_if_fail (!is_null (n) && !is_null (h));
 			
 			if (h.type == PointType.LINE_CUBIC) {
 				nx = x + ((n.x - x) / 3);
@@ -256,13 +260,14 @@ public class EditPoint : GLib.Object {
 												
 			// the other side
 			h = n.get_right_handle ();
-			
+			return_if_fail (!is_null (h) && !is_null (h));
+				
 			if (h.type == PointType.LINE_DOUBLE_CURVE) {
 				nx = n.x + ((x - n.x) / 4);
 				ny = n.y + ((y - n.y) / 4);	
 				h.move_to_coordinate (nx, ny);
 			}
-			
+					
 			if (h.type == PointType.LINE_CUBIC) {
 				nx = n.x + ((x - n.x) / 3);
 				ny = n.y + ((y - n.y) / 3);	
@@ -280,6 +285,8 @@ public class EditPoint : GLib.Object {
 		if (next != null) {
 			n = get_next ();
 			h = get_right_handle ();
+			
+			return_if_fail (!is_null (n) && !is_null (h));
 			
 			if (h.type == PointType.LINE_CUBIC) {
 				nx = x + ((n.x - x) / 3);
@@ -303,6 +310,7 @@ public class EditPoint : GLib.Object {
 			}
 
 			h = n.get_left_handle ();
+			return_if_fail (!is_null (h));
 			
 			if (h.type == PointType.LINE_CUBIC) {
 				nx = n.x + ((x - n.x) / 3);
@@ -431,10 +439,18 @@ public class EditPoint : GLib.Object {
 	}
 
 	public unowned EditPointHandle get_left_handle () {
+		if (unlikely (is_null (left_handle))) {
+			warning ("EditPoint.left_handle is null");
+		}
+		
 		return left_handle;
 	}
 	
 	public unowned EditPointHandle get_right_handle () {
+		if (unlikely (is_null (right_handle))) {
+			warning ("EditPoint.right_handle is null");
+		}
+		
 		return right_handle;
 	}
 	
@@ -456,6 +472,21 @@ public class EditPoint : GLib.Object {
 	
 	public unowned EditPoint get_link_item () {
 		return this;
+	}
+	
+	public void set_independet_position (double tx, double ty) {
+		double rx, ry, lx, ly;
+		
+		rx = right_handle.x;
+		ry = right_handle.y;
+
+		lx = left_handle.x;
+		ly = left_handle.y;
+				
+		set_position (tx, ty);
+		
+		left_handle.move_to_coordinate_internal (lx, ly);
+		right_handle.move_to_coordinate_internal (rx, ry);
 	}
 		
 	public void set_position (double tx, double ty) {
