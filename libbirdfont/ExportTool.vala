@@ -121,6 +121,8 @@ public class ExportTool : GLib.Object {
 			File file;
 			DataOutputStream os;
 			string name;
+			string fn;
+			int i;
 			
 			name = glyph.get_name ();
 			
@@ -129,21 +131,18 @@ public class ExportTool : GLib.Object {
 			}
 			
 			svg_file = (!) f;
-			
-			if (svg_file.index_of (".svg") == -1) {
-				svg_file += ".svg";
-			}
-			
-			file = File.new_for_path (svg_file);
-			
+
 			if (!(fd is Glyph)) {
 				return;
 			}
 			
 			try {
-				
-				if (file.query_exists ()) {
-					file.delete ();
+				i = 1;
+				fn = svg_file.replace (".svg", "");
+				file = File.new_for_path (fn + ".svg");
+				while (file.query_exists ()) {
+					file = File.new_for_path (fn + @"$i.svg");
+					i++;
 				}
 				
 				glyph_svg = export_current_glyph_to_string ();
