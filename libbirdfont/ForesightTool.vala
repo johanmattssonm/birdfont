@@ -27,6 +27,7 @@ public class ForesightTool : Tool {
 	public const uint MOVE_LAST_HANDLE = 3;
 	
 	uint state = NONE;
+	bool move_right_handle = true;
 
 	public ForesightTool (string name) {
 		base (name, t_ ("Create Beziér curves"), '.', CTRL);
@@ -50,7 +51,6 @@ public class ForesightTool : Tool {
 				p.release_action (p, 3, x, y);
 				
 				add_new_point (x, y);
-				// FIXME: DELETE move_action (this, x, y);
 				
 				state = MOVE_HANDLES;
 			}
@@ -126,7 +126,8 @@ public class ForesightTool : Tool {
 		move_action.connect ((self, x, y) => {
 			Tool p =  PointTool.pen ();
 			PointSelection last;
-
+			bool rh;
+			
 			PenTool.active_path.hide_end_handle = (state == MOVE_POINT);
 
 			if (state == MOVE_HANDLES || state == MOVE_LAST_HANDLE) {
@@ -134,7 +135,14 @@ public class ForesightTool : Tool {
 				last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
 				
 				PenTool.move_selected_handle = true;
-				PenTool.selected_handle = (state == MOVE_LAST_HANDLE)
+				
+				rh = (state == MOVE_LAST_HANDLE);
+				
+				if (!move_right_handle) {
+					rh = !rh;
+				}
+				
+				PenTool.selected_handle = (rh) 
 					? last.point.get_left_handle () : last.point.get_right_handle ();
 				
 				last.point.set_reflective_handles (true);
@@ -161,6 +169,19 @@ public class ForesightTool : Tool {
 		
 		key_press_action.connect ((self, keyval) => {
 			Tool p = PointTool.pen ();
+			
+			switch (keyval) {
+				case 's':
+					switch_to_line_mode ();
+					break;
+				case 'l':
+					move_right_handle = true;
+					break;
+				case 'r':
+					move_right_handle = false;
+					break;				
+			}
+						
 			p.key_press_action (p, keyval);
 		});
 		
@@ -173,6 +194,20 @@ public class ForesightTool : Tool {
 			Tool p = PointTool.pen ();
 			p.draw_action (p, cairo_context, glyph);
 		});
+	}
+	
+	void switch_to_line_mode () {
+		EditPoint ep;
+		EditPoint last;
+		
+		if (PenTool.active_path.points.size > 2) {
+			ep = PenTool.active_path.points.get (PenTool.active_path.points.size - 2);
+			ep.get_right_handle ().convert_to_line ();
+			ep.set_tie_handle (false);
+			
+			last = PenTool.active_path.points.get (PenTool.active_path.points.size - 1);
+			last.convert_to_line ();
+		}
 	}
 	
 	void add_new_point (int x, int y) {
@@ -204,8 +239,9 @@ public class ForesightTool : Tool {
 				last.point.get_left_handle ().x = handle_x;
 				last.point.get_left_handle ().y = handle_y;
 			}
-
+			
 			p.press_action (p, 3, x, y);
+			p.move_action (p, x, y);
 		}
 		
 		PenTool.selected_points.clear ();
