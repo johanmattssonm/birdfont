@@ -46,8 +46,8 @@ public class PenTool : Tool {
 	
 	public static EditPoint selected_point;
 
-	private static double last_point_x = 0;
-	private static double last_point_y = 0;
+	public static double last_point_x = 0;
+	public static double last_point_y = 0;
 
 	public static bool show_selection_box = false;
 	private static double selection_box_x = 0;
@@ -76,7 +76,9 @@ public class PenTool : Tool {
 	
 	public static double path_stroke_width = 0;
 	public static double simplification_threshold = 0.5;
-			
+		
+	public static bool retain_angle = false;
+		
 	public PenTool (string name) {	
 		base (name, t_("Add new points"));
 		
@@ -535,13 +537,19 @@ public class PenTool : Tool {
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
 		set_default_handle_positions ();
-		
+
+		if (move_selected_handle && move_selected) {
+			warning ("move_selected_handle && move_selected");
+			move_selected = false;
+			move_selected_handle = true;
+		}
+
 		// move control point handles
 		if (move_selected_handle) {
 			set_type_for_moving_handle ();
 
-			// don't update angle if the user is pressing shift
-			if (KeyBindings.modifier == SHIFT) {
+			// don't update angle if the user is holding down shift
+			if (KeyBindings.modifier == SHIFT || PenTool.retain_angle) {
 				angle = selected_handle.angle;
 			}
 
@@ -549,25 +557,26 @@ public class PenTool : Tool {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
 				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
-				delta_coordinate_x = coordinate_x - selected_handle.x;
-				delta_coordinate_y = coordinate_y - selected_handle.y;
-				selected_handle.move_delta_coordinate (delta_coordinate_x, delta_coordinate_y);
+				delta_coordinate_x = coordinate_x - last_point_x;
+				delta_coordinate_y = coordinate_y - last_point_y;			
+				selected_handle.move_to_coordinate (selected_handle.x + delta_coordinate_x, selected_handle.y + delta_coordinate_y);
 			} else if (GridTool.has_ttf_grid ()) {
+				// FIXME:
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
 				GridTool.ttf_grid_coordinate (ref coordinate_x, ref coordinate_y);
-				delta_coordinate_x = coordinate_x - selected_handle.x;
-				delta_coordinate_y = coordinate_y - selected_handle.y;				
+				delta_coordinate_x = coordinate_x - last_point_x;
+				delta_coordinate_y = coordinate_y - last_point_y;				
 				selected_handle.move_delta_coordinate (delta_coordinate_x, delta_coordinate_y);
 			} else {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
-				delta_coordinate_x = coordinate_x - selected_handle.x;
-				delta_coordinate_y = coordinate_y - selected_handle.y;				
+				delta_coordinate_x = coordinate_x - last_point_x;
+				delta_coordinate_y = coordinate_y - last_point_y;			
 				selected_handle.move_delta_coordinate (delta_coordinate_x, delta_coordinate_y);
 			}
 
-			if (KeyBindings.modifier == SHIFT) {
+			if (KeyBindings.modifier == SHIFT || PenTool.retain_angle) {
 				selected_handle.angle = angle;
 				selected_handle.process_connected_handle ();
 				

@@ -663,6 +663,8 @@ void printd (string s) {
 			} else {
 				warning ("No logstream.");
 			}
+			
+			stderr.printf (s);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
