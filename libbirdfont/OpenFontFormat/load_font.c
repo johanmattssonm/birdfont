@@ -753,6 +753,10 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		FT_Load_Glyph(face, gid, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
 		g_string_append_printf (bf, "<collection unicode=\"U+20\">\n");
 		g_string_append_printf (bf, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 0.0, face->glyph->metrics.horiAdvance * units);
+		
+		bf_data = get_bf_path (charcode, face, units_per_em, err);
+		g_string_append (bf, bf_data->str);	
+					
 		g_string_append (bf, "\t</glyph>\n");
 		g_string_append_printf (bf, "</collection>\n");
 	}
