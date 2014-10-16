@@ -29,6 +29,9 @@ public class ForesightTool : Tool {
 	uint state = NONE;
 	bool move_right_handle = true;
 
+	int last_x = 0;
+	int last_y = 0;
+
 	public ForesightTool (string name) {
 		base (name, t_ ("Create Beziér curves"), '.', CTRL);
 
@@ -165,6 +168,8 @@ public class ForesightTool : Tool {
 				}
 			}
 			
+			last_x = x;
+			last_y = y;
 		});
 		
 		key_press_action.connect ((self, keyval) => {
@@ -174,11 +179,10 @@ public class ForesightTool : Tool {
 				case 's':
 					switch_to_line_mode ();
 					break;
-				case 'l':
-					move_right_handle = true;
-					break;
 				case 'r':
-					move_right_handle = false;
+					move_right_handle = !move_right_handle;
+					state = MOVE_HANDLES;
+					move_action (self, last_x, last_y);
 					break;				
 			}
 						
