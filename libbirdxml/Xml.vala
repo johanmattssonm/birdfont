@@ -34,7 +34,7 @@ namespace Bird {
  * 	Tag root;
  * 	XmlParser parser;
  * 
- * 	parser = new XmlParser ("""<tag1><tag2 attribute1=""/></tag1>"");	
+ * 	parser = new XmlParser ("""<tag1><tag2 attribute1=""/></tag1>""");	
  * 
  * 	if (parser.validate ()) {
  * 		root = parser.get_root_tag ();
@@ -54,7 +54,8 @@ namespace Bird {
  * }
  * 
  * void print_attributes (Tag tag) {
- * 	foreach (Attribute attribute in tag.get_attributes ()) {
+ * 	Attributes attributes = tag.get_attributes ();
+ * 	foreach (Attribute attribute in attributes) {
  * 		print (attribute.get_name ()");
  * 		print ("\n");
  * 	}

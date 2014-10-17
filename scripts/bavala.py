@@ -145,7 +145,7 @@ class Vala(object):
                 }
 
 
-    def gen_so(self):
+    def gen_so(self, generated_libs = None):
         """generate ".so" lib file"""
         def compile_cmd(conf, libs):
             obj_glob = join(self.build, self.src, '*.o')
@@ -153,7 +153,12 @@ class Vala(object):
                     + '-Wl,-soname,' + self.so_name 
 			        + ' ' + obj_glob
                     + ' -o ' + self.so ]
+
             flags = [conf[l].strip() for l in libs]
+
+            if generated_libs:
+			    flags += [generated_libs]
+			    
             return cmd(config.CC, opts, flags)
 
         return {

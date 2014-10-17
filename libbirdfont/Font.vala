@@ -172,7 +172,8 @@ public class Font : GLib.Object {
 		if (font_file != null) {
 			fn = (!) font_file;
 			
-			if (fn.index_of ("\\") != -1) { // assume only absolute paths are used on windows
+			// assume only absolute paths are used on windows
+			if (BirdFont.win32) {
 				return fn;
 			} else {
 				file = File.new_for_path (fn);
@@ -212,12 +213,18 @@ public class Font : GLib.Object {
 	/** @return an absolute path to the font folder. */
 	public File get_folder () {
 		string p = get_folder_path ();
-		File file = File.new_for_path (p);
+		File fp = File.new_for_path (p);
 		
-		if (p.index_of ("\\") == -1 && !p.has_prefix ("/")) {
-			p = (!) file.resolve_relative_path ("").get_path ();
+		if (BirdFont.win32) {
+			if (p.index_of (":\\") == -1) {
+				p = (!) fp.resolve_relative_path ("").get_path ();
+			}
+		} else {
+			if (!p.has_prefix ("/")) {
+				p = (!) fp.resolve_relative_path ("").get_path ();
+			}
 		}
-			
+		
 		return File.new_for_path (p);
 	}
 	

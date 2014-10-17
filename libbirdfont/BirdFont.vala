@@ -698,15 +698,15 @@ public static File get_child (File folder, string file_name) {
 
 	// avoid drive letter problems on windows
 	
-	n = file_name;
-	if (unlikely (BirdFont.win32 && file_name.index_of ("\\") != -1)) {
-		warning ("File name contains path separator.");
-		n = n.substring (n.last_index_of ("\\")).replace ("\\", "");
-	}
-	
 	f = (!) folder.get_path ();
 	s = (BirdFont.win32) ? "\\" : "/"; 
 	
+	n = file_name;
+	if (unlikely (BirdFont.win32 && file_name.index_of ("\\") != -1)) {
+		warning (@"File name contains path separator: $file_name, Directory: $f");
+		n = n.substring (n.last_index_of ("\\")).replace ("\\", "");
+	}
+
 	if (!f.has_suffix (s)) {
 		f += s;
 	}
