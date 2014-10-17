@@ -225,12 +225,12 @@ public class FileDialogTab : FontDisplay {
 		
 		selected = "";
 
-		foreach (string file in directories) {
+		foreach (string d in directories) {
 			if (s++ >= scroll) {
 				y += 18 * MainWindow.units;
 				
 				if (y - 10 * MainWindow.units <= ey <= y + 5 * MainWindow.units) {
-					selected = file;
+					selected = d;
 					dir = true;
 				}
 			}
@@ -253,8 +253,13 @@ public class FileDialogTab : FontDisplay {
 				if (selected == "..") {
 					propagate_files ((!)((!)current_dir.get_parent ()).get_path ());
 				} else {
-					f = get_child (current_dir, selected);
-					propagate_files ((!) f.get_path ());
+					
+					if (selected.index_of (":\\") != -1) {
+						propagate_files (selected);
+					} else {
+						f = get_child (current_dir, selected);
+						propagate_files ((!) f.get_path ());
+					}
 				}
 			}
 		}

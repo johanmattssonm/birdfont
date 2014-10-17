@@ -243,7 +243,11 @@ public class Font : GLib.Object {
 		} else {
 			p = p.substring (0, i);
 		}
-	
+			
+		if (p.index_of (":") != -1 && p.char_count () == 2) {
+			p += "\\";
+		}
+		
 		return p;
 	}
 	
