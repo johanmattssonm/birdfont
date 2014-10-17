@@ -372,8 +372,14 @@ os.put_string (
 
 	public static bool export_ttf_font () {
 		Font font = BirdFont.get_current_font ();
-		File file = font.get_folder ();
-		return export_ttf_font_path (file);
+		File f = font.get_folder ();
+		
+		printd (@"export_ttf_font:\n");
+		printd (@"font.get_path (): $(font.get_path ())\n");
+		printd (@"font.get_folder_path (): $(font.get_folder_path ())\n");
+		printd (@"font.get_folder (): $((!) f.get_path ())\n");
+		
+		return export_ttf_font_path (f);
 	}
 
 	public static bool export_ttf_font_path (File folder) {

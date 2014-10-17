@@ -65,7 +65,7 @@ public class PenTool : Tool {
 	
 	private static ImageSurface? tie_icon = null;
 	
-	/** First move action must move the current point in to the grid. */
+	/* First move action must move the current point in to the grid. */
 	bool first_move_action = false;
 	
 	/** Move curve handle instead of control point. */
@@ -651,6 +651,8 @@ public class PenTool : Tool {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
 
+				GridTool.ttf_grid_coordinate (ref coordinate_x, ref coordinate_y);
+	
 				if (selected_point.tie_handles && KeyBindings.modifier == SHIFT) {
 					
 					if (first_move_action) {
@@ -661,7 +663,6 @@ public class PenTool : Tool {
 					move_point_on_handles (coordinate_x, coordinate_y, out coordinate_x, out coordinate_y);
 				}
 				
-				GridTool.ttf_grid_coordinate (ref coordinate_x, ref coordinate_y);
 				delta_coordinate_x = coordinate_x - last_point_x;
 				delta_coordinate_y = coordinate_y - last_point_y;
 				
@@ -802,7 +803,9 @@ public class PenTool : Tool {
 			last_selected_is_handle = false;
 		}
 
-		if (selected_points.size == 0 && !active_handle.active) {
+		if (!KeyBindings.has_shift () 
+				&& selected_points.size == 0
+				&& !active_handle.active) {
 			show_selection_box = true;
 		}
 
@@ -918,7 +921,7 @@ public class PenTool : Tool {
 		
 		if (active_edit_point != null) {
 			if (KeyBindings.modifier == SHIFT) {
-				if (((!)active_edit_point).is_selected ()) {
+				if (((!)active_edit_point).is_selected () && selected_points.size > 1) {
 					((!)active_edit_point).set_selected (false);
 					remove_from_selected ((!)active_edit_point);
 					selected_point = new EditPoint ();

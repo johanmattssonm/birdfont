@@ -95,7 +95,7 @@ public class Toolbox : GLib.Object  {
 			warn_if_test ("Event suppressed");
 			return;
 		}
-		
+				
 		foreach (Expander exp in current_set.get_expanders ()) {
 			foreach (Tool t in exp.tool) {
 				t.set_active (false);

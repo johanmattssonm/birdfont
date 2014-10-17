@@ -711,7 +711,7 @@ public static File get_child (File folder, string file_name) {
 		f += s;
 	}
 	
-	printd (@"File: Directory: $f Name: $n)\n");
+	printd (@"File: Directory: $f Name: $n\n");
 	
 	return File.new_for_path (f + n);
 }
