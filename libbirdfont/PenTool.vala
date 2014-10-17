@@ -123,10 +123,10 @@ public class PenTool : Tool {
 			}
 			
 			first_move_action = true;
-			
+
 			last_point_x = Glyph.path_coordinate_x (x);
 			last_point_y = Glyph.path_coordinate_y (y);
-
+		
 			move_action (this, x, y);
 
 			press (b, x, y, false);
@@ -216,6 +216,13 @@ public class PenTool : Tool {
 					move_select_next_point (keyval);
 				}
 			}	
+			
+			if (KeyBindings.has_shift ()) {
+				if (selected_point.tie_handles && KeyBindings.modifier == SHIFT) {
+					last_point_x = selected_point.x;
+					last_point_y = selected_point.y;
+				}
+			}
 		});
 		
 		key_release_action.connect ((self, keyval) => {
@@ -533,6 +540,7 @@ public class PenTool : Tool {
 		double coordinate_x, coordinate_y;
 		double delta_coordinate_x, delta_coordinate_y;
 		double angle = 0;
+		bool tied;
 		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
@@ -541,7 +549,7 @@ public class PenTool : Tool {
 		if (move_selected_handle && move_selected) {
 			warning ("move_selected_handle && move_selected");
 			move_selected = false;
-			move_selected_handle = true;
+			move_selected_handle = false;
 		}
 
 		// move control point handles
@@ -561,7 +569,6 @@ public class PenTool : Tool {
 				delta_coordinate_y = coordinate_y - last_point_y;			
 				selected_handle.move_to_coordinate (selected_handle.x + delta_coordinate_x, selected_handle.y + delta_coordinate_y);
 			} else if (GridTool.has_ttf_grid ()) {
-				// FIXME:
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
 				GridTool.ttf_grid_coordinate (ref coordinate_x, ref coordinate_y);
@@ -604,21 +611,32 @@ public class PenTool : Tool {
 				last_point_x = Glyph.path_coordinate_x (x);
 				last_point_y = Glyph.path_coordinate_y (y);
 			}
-			
-			return;
 		}
 
 		// move edit point
 		if (move_selected) {
+			
 			if (GridTool.is_visible ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
-				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
+				
+				if (selected_point.tie_handles && KeyBindings.modifier == SHIFT) {
+					
+					if (first_move_action) {
+						last_point_x = selected_point.x;
+						last_point_y = selected_point.y;
+					}
+					
+					move_point_on_handles (coordinate_x, coordinate_y, out coordinate_x, out coordinate_y);
+				} else {
+					GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
+				}
+				
 				delta_coordinate_x = coordinate_x - last_point_x;
-				delta_coordinate_y = coordinate_y - last_point_y;
+				delta_coordinate_y = coordinate_y - last_point_y;	
 				
 				foreach (PointSelection selected in selected_points) {
-					if (move_point_independent_of_handle) {
+					if (move_point_independent_of_handle || KeyBindings.modifier == SHIFT) {
 						selected.point.set_independet_position (selected.point.x + delta_coordinate_x,
 							selected.point.y + delta_coordinate_y);
 					} else {
@@ -632,14 +650,28 @@ public class PenTool : Tool {
 			} else if (GridTool.has_ttf_grid ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
+
+				if (selected_point.tie_handles && KeyBindings.modifier == SHIFT) {
+					
+					if (first_move_action) {
+						last_point_x = selected_point.x;
+						last_point_y = selected_point.y;
+					}
+					
+					move_point_on_handles (coordinate_x, coordinate_y, out coordinate_x, out coordinate_y);
+				}
+				
 				GridTool.ttf_grid_coordinate (ref coordinate_x, ref coordinate_y);
 				delta_coordinate_x = coordinate_x - last_point_x;
 				delta_coordinate_y = coordinate_y - last_point_y;
 				
 				foreach (PointSelection selected in selected_points) {
-					if (move_point_independent_of_handle) {
+					if (move_point_independent_of_handle || KeyBindings.modifier == SHIFT) {
+						tied = selected.point.tie_handles;
+						selected.point.tie_handles = false;
 						selected.point.set_independet_position (selected.point.x + delta_coordinate_x,
 							selected.point.y + delta_coordinate_y);
+						selected.point.tie_handles = tied;
 					} else {
 						selected.point.set_position (selected.point.x + delta_coordinate_x,
 							selected.point.y + delta_coordinate_y);
@@ -649,14 +681,28 @@ public class PenTool : Tool {
 					selected.path.update_region_boundaries ();
 				}
 			} else {
-				coordinate_x = Glyph.path_coordinate_x (x);
-				coordinate_y = Glyph.path_coordinate_y (y);
-				delta_coordinate_x = coordinate_x - last_point_x;
-				delta_coordinate_y = coordinate_y - last_point_y;
 
+				coordinate_x = Glyph.path_coordinate_x (x);
+				coordinate_y = Glyph.path_coordinate_y (y);	
+									
+				if (selected_point.tie_handles && KeyBindings.modifier == SHIFT) {
+					
+					if (first_move_action) {
+						last_point_x = selected_point.x;
+						last_point_y = selected_point.y;
+					}
+					
+					move_point_on_handles (coordinate_x, coordinate_y, out coordinate_x, out coordinate_y);
+					delta_coordinate_x = coordinate_x - last_point_x;
+					delta_coordinate_y = coordinate_y - last_point_y;	
+				} else {
+					delta_coordinate_x = coordinate_x - last_point_x;
+					delta_coordinate_y = coordinate_y - last_point_y;	
+				}
+				
 				foreach (PointSelection selected in selected_points) {
 					
-					if (move_point_independent_of_handle) {
+					if (move_point_independent_of_handle || KeyBindings.modifier == SHIFT) {
 						selected.point.set_independet_position (selected.point.x + delta_coordinate_x,
 							selected.point.y + delta_coordinate_y);
 					} else {
@@ -668,7 +714,11 @@ public class PenTool : Tool {
 					selected.path.update_region_boundaries ();
 				}
 			}
-			if (GridTool.is_visible ()) {
+
+			if (selected_point.tie_handles && KeyBindings.modifier == SHIFT) {
+				last_point_x = selected_point.x;
+				last_point_y = selected_point.y;
+			} else if (GridTool.is_visible ()) {
 				last_point_x = selected_point.x;
 				last_point_y = selected_point.y;
 			} else if (GridTool.has_ttf_grid ()) {
@@ -679,6 +729,18 @@ public class PenTool : Tool {
 				last_point_y = Glyph.path_coordinate_y (y);
 			}
 		}
+	}
+
+	private void move_point_on_handles (double px, double py, out double cx, out double cy) {
+		EditPoint ep;
+		ep = selected_point.copy ();
+		ep.tie_handles = false;
+		ep.reflective_point = false;
+		ep.get_right_handle ().angle += PI / 2;
+		ep.x = px;
+		ep.y = py;
+
+		Path.find_intersection_handle (ep.get_right_handle (), selected_point.get_right_handle (), out cx, out cy);
 	}
 
 	public void press (int button, int x, int y, bool double_click) {
