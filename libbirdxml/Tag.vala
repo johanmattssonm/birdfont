@@ -17,24 +17,30 @@ namespace Bird {
 /**
  * Representation of one XML tag.
  */
-public class Tag : GLib.Object {
+[Compact]
+[CCode (ref_function = "bird_tag_ref", unref_function = "bird_tag_unref")]
+public class Tag {
 	
-	int tag_index; 
-	int attribute_index;
+	public int tag_index; 
+	public int attribute_index;
 	
-	bool has_tags;
-	bool has_attributes;
+	public bool has_tags;
+	public bool has_attributes;
 	
-	string name;
-	string data;
-	string attributes;
+	public string name;
+	public string data;
+	public string attributes;
 	
-	Tag? next_tag = null;
-	Attribute? next_attribute = null;
+	public Tag? next_tag = null;
+	public Attribute? next_attribute = null;
 	
-	bool error = false;
+	public bool error = false;
+	public int log_level = WARNINGS;
 	
-	internal Tag (string name, string attributes, string content) {
+	public int refcount = 1;
+	
+	internal Tag (string name, string attributes, string content, int log_level) {
+		this.log_level = log_level;
 		this.name = name;
 		this.data = content;
 		this.attributes = attributes;
@@ -46,6 +52,21 @@ public class Tag : GLib.Object {
 		data = "";
 		attributes = "";
 		name = "";
+	}
+
+	/** Increment the reference count.
+	 * @return a pointer to this object
+	 */
+	public unowned Tag @ref () {
+		refcount++;
+		return this;
+	}
+	
+	/** Decrement the reference count and free the object when zero object are holding references to it.*/
+	public void unref () {
+		if (--refcount == 0) {
+			this.free ();
+		}
 	}
 	
 	/** 
@@ -157,7 +178,7 @@ public class Tag : GLib.Object {
 
 				if (separator < 0) {
 					error = true;
-					warning ("Expecting a separator.");
+					warn ("Expecting a separator.");
 					return new Tag.empty ();
 				}
 				
@@ -182,7 +203,7 @@ public class Tag : GLib.Object {
 					data.get_next_char (ref end_tag_index, out c);
 				}
 				
-				return new Tag (name, attributes, content);	
+				return new Tag (name, attributes, content, log_level);	
 			}
 		}
 		
@@ -241,7 +262,7 @@ public class Tag : GLib.Object {
 		}
 		
 		error = true;
-		warning (@"No closing tag for $(name).");
+		warn (@"No closing tag for $(name).");
 		return -1;
 	}
 	
@@ -302,7 +323,7 @@ public class Tag : GLib.Object {
 			previous_index = index;
 			if (!attributes.get_next_char (ref index, out c)) {
 				error = true;
-				warning (@"Unexpected end of attributes in tag $(this.name)");
+				warn (@"Unexpected end of attributes in tag $(this.name)");
 				has_attributes = false;
 				return new Attribute.empty ();
 			}
@@ -329,7 +350,7 @@ public class Tag : GLib.Object {
 				} else {
 					has_attributes = false;
 					error = true;
-					warning (@"Expecting equal sign for attribute $(attribute_name).");
+					warn (@"Expecting equal sign for attribute $(attribute_name).");
 					return new Attribute.empty ();
 				}
 			}
@@ -342,7 +363,7 @@ public class Tag : GLib.Object {
 				} else {
 					has_attributes = false;
 					error = true;
-					warning (@"Expecting quote for attribute $(attribute_name).");
+					warn (@"Expecting quote for attribute $(attribute_name).");
 					return new Attribute.empty ();
 				}
 			}
@@ -355,7 +376,7 @@ public class Tag : GLib.Object {
 			if (!attributes.get_next_char (ref index, out c)) {
 				has_attributes = false;
 				error = true;
-				warning (@"Expecting end quote for attribute $(attribute_name).");
+				warn (@"Expecting end quote for attribute $(attribute_name).");
 				return new Attribute.empty ();
 			}
 			
@@ -373,9 +394,12 @@ public class Tag : GLib.Object {
 		return new Attribute (ns, attribute_name, content);
 	}
 
+	[Compact]
+	[CCode (ref_function = "bird_tag_iterator_ref", unref_function = "bird_tag_iterator_unref")]
 	public class Iterator {
-		Tag tag;
-		Tag? next_tag = null;
+		public Tag tag;
+		public Tag? next_tag = null;
+		public int iterator_efcount = 1;
 		
 		internal Iterator (Tag t) {
 			tag = t;
@@ -393,13 +417,38 @@ public class Tag : GLib.Object {
 		}
 
 		public Tag get () {
-			if (unlikely (next_tag == null)) {
-				warning ("No tag is parsed yet.");
+			if (next_tag == null) {
+				XmlParser.warning ("No tag is parsed yet.");
 				return new Tag.empty ();
 			}
 			return (!) next_tag;
 		}
+		
+		/** Increment the reference count.
+		 * @return a pointer to this object
+		 */
+		public unowned Tag.Iterator @ref () {
+			iterator_efcount++;
+			return this;
+		}
+		
+		/** Decrement the reference count and free the object when zero object are holding references to it.*/
+		public void unref () {
+			if (--iterator_efcount == 0) {
+				this.free ();
+			}
+		}
+		
+		private extern void free ();
 	}
+	
+	internal void warn (string message) {
+		if (log_level == WARNINGS) {
+			XmlParser.warning (message);
+		}
+	}
+	
+	private extern void free ();
 }
 
 }

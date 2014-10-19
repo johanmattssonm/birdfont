@@ -38,6 +38,8 @@ public class KerningDisplay : FontDisplay {
 	Gee.ArrayList<UndoItem> undo_items;
 	Gee.ArrayList<UndoItem> redo_items;
 	bool first_update = true;
+
+	Font current_font = new Font ();
 	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
@@ -93,10 +95,9 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	double get_row_height () {
-		Font font = BirdFont.get_current_font ();
-		return font.top_limit - font.bottom_limit;
+		return current_font.top_limit - current_font.bottom_limit;
 	}
-	
+
 	public void draw_kerning_pairs (WidgetAllocation allocation, Context cr) {
 		Glyph glyph;
 		double x, y, w, kern, alpha;
@@ -111,7 +112,7 @@ public class KerningDisplay : FontDisplay {
 		Font font;
 		double item_size = 1.0 / KerningTools.font_size;
 		
-		font = BirdFont.get_current_font ();
+		font = current_font;
 		i = 0;
 		
 		// bg color
@@ -173,7 +174,7 @@ public class KerningDisplay : FontDisplay {
 					
 					w = glyph.get_width ();
 				}
-
+				
 				// handle
 				if (first_row && (active_handle == i || selected_handle == i)) {
 					x2 = x + kern / 2.0;
@@ -290,7 +291,7 @@ public class KerningDisplay : FontDisplay {
 		GlyphRange? gr_left, gr_right;
 		int row_index = 0;
 		
-		font = BirdFont.get_current_font ();
+		font = current_font;
 
 		font.touch ();
 
@@ -369,7 +370,7 @@ public class KerningDisplay : FontDisplay {
 		Font font;
 		GlyphRange? gr_left, gr_right;
 
-		font = BirdFont.get_current_font ();
+		font = current_font;
 		font.touch ();
 
 		if (!KerningTools.adjust_side_bearings) {
@@ -394,7 +395,7 @@ public class KerningDisplay : FontDisplay {
 		bool has_kerning;
 		Font font;
 		
-		font = BirdFont.get_current_font ();
+		font = current_font;
 		font.touch ();
 				
 		kern = get_kerning_for_pair (a, b, gr_left, gr_right);
@@ -434,7 +435,7 @@ public class KerningDisplay : FontDisplay {
 	}
 
 	/** Class based gpos kerning. */
-	public double get_kerning_for_pair (string a, string b, GlyphRange? gr_left, GlyphRange? gr_right) {
+	public static double get_kerning_for_pair (string a, string b, GlyphRange? gr_left, GlyphRange? gr_right) {
 		double k;
 		GlyphRange grl, grr;
 		try {
@@ -476,12 +477,18 @@ public class KerningDisplay : FontDisplay {
 		
 		return 0;
 	}
+	
+	public void set_current_font (Font f) {
+		current_font = f;
+	}
+	
 	public override void selected_canvas () {
 		Glyph g;
 		GlyphSequence w;
 		StringBuilder s = new StringBuilder ();
 		bool append_char = false;
-		Font font = BirdFont.get_current_font ();
+		
+		current_font = BirdFont.get_current_font ();
 		
 		KeyBindings.set_require_modifier (true);
 		
@@ -495,7 +502,7 @@ public class KerningDisplay : FontDisplay {
 		if (append_char) {
 			w = new GlyphSequence ();
 			row.add (w);
-			w.glyph.insert (0, font.get_glyph (s.str));
+			w.glyph.insert (0, current_font.get_glyph (s.str));
 		}		
 	}
 	
@@ -504,7 +511,7 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public void add_range (GlyphRange range) {
-		Font font = BirdFont.get_current_font ();
+		Font font = current_font;
 		Glyph? glyph;
 		
 		glyph = font.get_glyph_by_name (range.get_char (0));
@@ -680,7 +687,7 @@ public class KerningDisplay : FontDisplay {
 			return;
 		}
 		
-		f = BirdFont.get_current_font ();
+		f = current_font;
 		
 		if (!is_modifier_key (c) && c.validate ()) {
 			name = f.get_name_for_character (c);
@@ -924,7 +931,7 @@ public class KerningDisplay : FontDisplay {
 	public UndoItem apply_undo (UndoItem ui) {
 		KerningClasses classes = KerningClasses.get_instance ();
 		GlyphRange glyph_range_first, glyph_range_next;
-		Font font = BirdFont.get_current_font ();
+		Font font = current_font;
 		string l, r;
 		UndoItem redo_state = new UndoItem ("", "", 0, false);
 		double? k;

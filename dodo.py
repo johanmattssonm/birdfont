@@ -52,8 +52,13 @@ LIBS = [
     'libnotify'
     ]
 
-LIBBIRD_XML_LIBS = [
-    'glib-2.0'
+if not config.POSIXVALA:
+    LIBBIRD_XML_LIBS = [
+        'glib-2.0'
+    ]
+else:
+    LIBBIRD_XML_LIBS = [
+        'posixvala'	
     ]
 
 def task_build ():

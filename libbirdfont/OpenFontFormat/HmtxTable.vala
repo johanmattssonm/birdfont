@@ -106,9 +106,7 @@ public class HmtxTable : OtfTable {
 		int16 right_guide;
 		
 		double xmin;
-		double ymin;
 		double xmax;
-		double ymax;
 		int i;
 		
 		Glyph g;

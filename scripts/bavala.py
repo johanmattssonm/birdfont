@@ -24,6 +24,7 @@ from os.path import join
 from doit.action import CmdAction
 import config
 import fnmatch
+import subprocess
 
 def cmd(name, *args):
     """create string for command line"""
@@ -129,7 +130,16 @@ class Vala(object):
     def gen_o(self, opts):
         """compile C files to obj `.o` """
         def compile_cmd(conf, opts, libs, pos):
-            flags = [conf[l].strip() for l in libs]
+            flags = []
+            for l in libs:
+                process = subprocess.Popen ('pkg-config --cflags ' + l, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                cflags = process.stdout.readline()
+                process.communicate()[0]
+                if not process.returncode == 0:
+                    print ( "Library not found: " + l)
+                    exit (1)
+                flags += [cflags.strip ()]
+
             return cmd(config.CC, opts, flags, pos)
 
         for cc, obj in zip(self.cc, self.obj):
@@ -154,7 +164,15 @@ class Vala(object):
 			        + ' ' + obj_glob
                     + ' -o ' + self.so ]
 
-            flags = [conf[l].strip() for l in libs]
+            flags = []
+            for l in libs:
+                process = subprocess.Popen ('pkg-config --cflags ' + l, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                cflags = process.stdout.readline()
+                process.communicate()[0]
+                if not process.returncode == 0:
+                    print ( "Library not found: " + l)
+                    exit (1)
+                flags += [cflags.strip ()]
 
             if generated_libs:
 			    flags += [generated_libs]
@@ -200,6 +218,7 @@ class Vala(object):
             'file_dep': self.cc + [ d.so_link for d in self.vala_deps ],
             'targets': [ target ],
             }
+
 
 
 

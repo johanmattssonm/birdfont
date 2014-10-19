@@ -39,10 +39,13 @@ def write_config (prefix):
 
 	f.write("}")
 
-def write_compile_parameters (prefix, dest, cc, gee):
+def write_compile_parameters (prefix, dest, cc, gee, posixvala):
 	f = open('./scripts/config.py', 'w+')
 	f.write("#!/usr/bin/python\n")
 	f.write("PREFIX =  \"" + prefix + "\"\n")
 	f.write("DEST = \"" + dest + "\"\n")
 	f.write("CC = \"" + cc + "\"\n")
 	f.write("GEE = \"" + gee + "\"\n")
+	f.write("POSIXVALA = \"" + posixvala + "\"\n")
+
+	

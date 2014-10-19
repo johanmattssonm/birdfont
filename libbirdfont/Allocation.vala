@@ -20,6 +20,16 @@ public class WidgetAllocation : GLib.Object {
 	public int x = 0;
 	public int y = 0;
 	
+	public WidgetAllocation () {
+	}
+	
+	public WidgetAllocation.for_area (int x, int y, int width, int height) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+	
 	public WidgetAllocation copy () {
 		WidgetAllocation w = new WidgetAllocation ();
 		w.x = x;

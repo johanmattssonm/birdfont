@@ -783,6 +783,12 @@ public class DrawingTools : ToolCollection  {
 		characterset_tools.add_tool (avalilable_characters);
 
 		if (BirdFont.has_argument ("--test")) {
+			Tool text_rendering = new Tool ("text_rendering");
+			text_rendering.select_action.connect((self) => {
+				TextArea.test ();
+			});
+			test_tools.add_tool (text_rendering);
+			
 			Tool test_case = new Tool ("test_case");
 			test_case.select_action.connect((self) => {
 					if (self.is_selected ()) {

@@ -17,6 +17,10 @@
  */
 namespace Bird {
 
+/** Log levels */
+internal const int NONE = 0;
+internal const int WARNINGS = 1;
+
 /** 
  * XML parser
  * 
@@ -64,11 +68,13 @@ namespace Bird {
  * }}}
  * 
  */
-public class XmlParser : GLib.Object {
-	
-	Tag root;
-	string data;
-	bool error;
+[Compact]
+[CCode (ref_function = "bird_xml_parser_ref", unref_function = "bird_xml_parser_unref")]
+public class XmlParser {
+	public Tag root;
+	public string data;
+	public bool error;
+	public int refcount = 1;
 
 	/** 
 	 * Create a new xml parser. 
@@ -76,24 +82,38 @@ public class XmlParser : GLib.Object {
 	 */
 	public XmlParser (string data) {
 		this.data = data;
-		reparse ();
+		reparse (NONE);
+	}
+
+	/** Increment the reference count.
+	 * @return a pointer to this object
+	 */
+	public unowned XmlParser @ref () {
+		refcount++;
+		return this;
 	}
 	
+	/** Decrement the reference count and free the object when zero object are holding references to it.*/
+	public void unref () {
+		if (--refcount == 0) {
+			this.free ();
+		}
+	}
+		
 	/** 
 	 * Determine if the document can be parsed.
 	 * @return true if the xml document is valid xml.
 	 */
 	public bool validate () {
-		reparse ();
-		Tag root = get_root_tag ();
-		
+		reparse (NONE);
+
 		if (error) {
 			return false;
 		}
 		
 		validate_tags (root);
 			
-		reparse ();
+		reparse (NONE);
 		return !error;
 	}
 	
@@ -122,26 +142,30 @@ public class XmlParser : GLib.Object {
 	 * @return the root tag. 
 	 */
 	public Tag get_root_tag () {
-		reparse ();
+		reparse (WARNINGS);
 		return root;
 	}
 	
 	/** 
 	 * Reset the parser and start from the beginning of the XML document. 
 	 */
-	internal void reparse () {
+	internal void reparse (int log_level) {
 		int root_index;
 		Tag container;
+		string content;
 		
 		error = false;
 		
 		root_index = find_root_tag ();
 		if (root_index == -1) {
-			warning ("No root tag found.");
+			if (log_level == WARNINGS) {
+				XmlParser.warning ("No root tag found.");
+			}
 			error = true;
 			root = new Tag.empty ();
 		} else {
-			container = new Tag ("", "", data.substring (root_index));
+			content = data.substring (root_index);
+			container = new Tag ("", "", content, log_level);
 			root = container.get_next_tag ();
 		}
 	}
@@ -169,6 +193,15 @@ public class XmlParser : GLib.Object {
 		
 		return -1;
 	}
+
+	/** Print a warning message. */
+	public static void warning (string message) {
+		print ("XML Parser: "); 
+		print (message);
+		print ("\n");
+	}
+	
+	private extern void free ();
 }
 
 }
