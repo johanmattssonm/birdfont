@@ -23,6 +23,7 @@ public class TextArea {
 	Font font;
 	string text;
 	GlyphSequence glyph_sequence;
+	double line_gap = 20;
 	
 	public TextArea () {
 		font = new Font ();
@@ -62,12 +63,7 @@ public class TextArea {
 		return f != null;
 	}
 	
-	public void draw (Context cr, int x, int y, int width, int height) {
-		WidgetAllocation wa = new WidgetAllocation.for_area (x, y, width, height);
-		draw_glyphs (wa, cr);
-	}
-
-	public void draw_glyphs (WidgetAllocation allocation, Context cr) {
+	public void draw (Context cr, int px, int py, int width, int height, double font_size_in_pixels) {
 		Glyph glyph;
 		double x, y, w, kern;
 		int i, wi;
@@ -76,18 +72,21 @@ public class TextArea {
 		GlyphRange? gr_left, gr_right;
 		double row_height;
 		GlyphSequence word;
+		double center_x, center_y;
+		double ratio;
 		
 		i = 0;
+		row_height = get_row_height ();
+		
+		ratio = font_size_in_pixels / row_height;
 		
 		cr.save ();
-		cr.scale (KerningTools.font_size, KerningTools.font_size);
+		cr.scale (ratio, ratio);
 		
-		glyph = MainWindow.get_current_glyph ();
-		
-		row_height = get_row_height ();
-	
-		y = get_row_height () + font.base_line + 20;
-		x = 20;
+		glyph = new Glyph ("", '\0');
+
+		y = get_row_height () + font.base_line + py;
+		x = px;
 		w = 0;
 		prev = null;
 		kern = 0;
@@ -98,10 +97,6 @@ public class TextArea {
 		gr_left = null;
 		gr_right = null;
 		foreach (Glyph? g in word_with_ligatures.glyph) {
-			if (g == null) {
-				continue;
-			}
-			
 			if (prev == null || wi == 0) {
 				kern = 0;
 			} else {
@@ -115,19 +110,18 @@ public class TextArea {
 			}
 					
 			// draw glyph
-			if (g == null) {
-				w = 50;
-			} else {
-				glyph = (!) g;
+			glyph = (g == null) ? font.get_not_def_character ().get_current () : (!) g;
 
-				cr.save ();
-				glyph.add_help_lines ();
-				cr.translate (kern + x - glyph.get_lsb () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
-				glyph.draw_paths (cr);
-				cr.restore ();
-				
-				w = glyph.get_width ();
-			}
+			center_x = glyph.allocation.width / 2.0;
+			center_y = glyph.allocation.height / 2.0;
+
+			cr.save ();
+			glyph.add_help_lines ();
+			cr.translate (kern + x - center_x - glyph.get_lsb (), y - center_y + glyph.get_baseline ());
+			glyph.draw_paths (cr);
+			cr.restore ();
+			
+			w = glyph.get_width ();
 
 			x += w + kern;
 
@@ -137,7 +131,7 @@ public class TextArea {
 			i++;
 		}
 					
-		y += row_height + 20;
+		y += row_height + line_gap;
 		x = 20;
 			
 		cr.restore ();		

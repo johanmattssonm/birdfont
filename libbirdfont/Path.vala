@@ -287,12 +287,11 @@ public class Path {
 	 * Call Context.new_path (); before this method and Context.fill ()
 	 * to show the path.
 	 */
-	public void draw_path (Context cr, Color? color = null) {
+	public void draw_path (Context cr, Glyph glyph, Color? color = null) {
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
 		unowned EditPoint em;
 		Color c;
-		Glyph g;
 		double center_x, center_y;
 		double ex, ey;
 		
@@ -300,10 +299,8 @@ public class Path {
 			return;
 		}
 
-		g = MainWindow.get_current_glyph ();
-		
-		center_x = g.allocation.width / 2.0;
-		center_y = g.allocation.height / 2.0;
+		center_x = glyph.allocation.width / 2.0;
+		center_y = glyph.allocation.height / 2.0;
 
 		ex = center_x + points.get (0).x;
 		ey = center_y - points.get (0).y;

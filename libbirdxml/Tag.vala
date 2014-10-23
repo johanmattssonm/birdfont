@@ -65,7 +65,7 @@ public class Tag {
 	/** Decrement the reference count and free the object when zero object are holding references to it.*/
 	public void unref () {
 		if (--refcount == 0) {
-			this.free ();
+			this.finalize ();
 		}
 	}
 	
@@ -435,11 +435,11 @@ public class Tag {
 		/** Decrement the reference count and free the object when zero object are holding references to it.*/
 		public void unref () {
 			if (--iterator_efcount == 0) {
-				this.free ();
+				this.finalize ();
 			}
 		}
 		
-		private extern void free ();
+		private extern void finalize ();
 	}
 	
 	internal void warn (string message) {
@@ -448,7 +448,7 @@ public class Tag {
 		}
 	}
 	
-	private extern void free ();
+	private extern void finalize ();
 }
 
 }

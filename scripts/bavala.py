@@ -91,7 +91,7 @@ class Vala(object):
 
     def gen_c(self, opts):
         """translate code from vala to C and create .vapi"""
-        options = ['--ccode', '--save-temps']
+        options = ['--ccode']
         options.extend(opts)
         params = {
             'basedir': join(self.build, self.src),
@@ -132,13 +132,14 @@ class Vala(object):
         def compile_cmd(conf, opts, libs, pos):
             flags = []
             for l in libs:
-                process = subprocess.Popen ('pkg-config --cflags ' + l, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                cflags = process.stdout.readline()
-                process.communicate()[0]
-                if not process.returncode == 0:
-                    print ( "Library not found: " + l)
-                    exit (1)
-                flags += [cflags.strip ()]
+		if not l == "posix":
+                    process = subprocess.Popen ('pkg-config --cflags ' + l, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    cflags = process.stdout.readline()
+                    process.communicate()[0]
+                    if not process.returncode == 0:
+                        print ( "Library not found: " + l)
+                        exit (1)
+                    flags += [cflags.strip ()]
 
             return cmd(config.CC, opts, flags, pos)
 
@@ -166,13 +167,14 @@ class Vala(object):
 
             flags = []
             for l in libs:
-                process = subprocess.Popen ('pkg-config --cflags ' + l, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                cflags = process.stdout.readline()
-                process.communicate()[0]
-                if not process.returncode == 0:
-                    print ( "Library not found: " + l)
-                    exit (1)
-                flags += [cflags.strip ()]
+                if not l == "posix":
+                    process = subprocess.Popen ('pkg-config --cflags ' + l, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    cflags = process.stdout.readline()
+                    process.communicate()[0]
+                    if not process.returncode == 0:
+                        print ( "Library not found: " + l)
+                        exit (1)
+                    flags += [cflags.strip ()]
 
             if generated_libs:
 			    flags += [generated_libs]

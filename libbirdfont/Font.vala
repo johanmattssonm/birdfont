@@ -392,6 +392,9 @@ public class Font : GLib.Object {
 		g.add_path (i);
 		g.add_path (p);
 
+		i.recalculate_linear_handles ();
+		p.recalculate_linear_handles ();
+
 		return gc;
 	}
 

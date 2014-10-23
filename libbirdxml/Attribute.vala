@@ -49,12 +49,12 @@ public class Attribute {
 	/** Decrement the reference count and free the object when zero object are holding references to it.*/
 	public void unref () {
 		if (--refcount == 0) {
-			this.free ();
+			this.finalize ();
 		}
 	}
 	
 	/** 
-	 * @return name space part for this attribute.
+	 * @return namespace part for this attribute.
 	 */
 	public string get_namespace () {
 		return ns;
@@ -74,7 +74,7 @@ public class Attribute {
 		return content;
 	}
 	
-	private extern void free ();
+	private extern void finalize ();
 }
 
 }

@@ -340,6 +340,8 @@ public class Glyph : FontDisplay {
 		KeyBindings.set_require_modifier (false);
 		glyph_sequence = Preferences.get ("glyph_sequence");
 		
+		GridTool.update_lines ();
+		
 		if (!is_null (MainWindow.native_window)) {
 			MainWindow.native_window.set_scrollbar_size (0);
 		}
@@ -1353,7 +1355,7 @@ public class Glyph : FontDisplay {
 				stroke = StrokeTool.get_stroke (p, p.stroke);
 				draw_path_list (stroke, cr, Color.black ());
 			} else {
-				p.draw_path (cr, Color.black ());
+				p.draw_path (cr, this, Color.black ());
 			}
 		}
 		cr.fill ();
@@ -1369,7 +1371,7 @@ public class Glyph : FontDisplay {
 					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr, get_path_fill_color ());
 				}
 
-				p.draw_path (cr, get_path_fill_color ());
+				p.draw_path (cr, this, get_path_fill_color ());
 			}
 			cr.fill ();
 			cr.restore ();
@@ -1397,7 +1399,7 @@ public class Glyph : FontDisplay {
 			cr.new_path ();
 			foreach (Path p in path_list) {
 				if (p.stroke == 0) {
-					p.draw_path (cr, Color.black ());
+					p.draw_path (cr, this, Color.black ());
 				} else {
 					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr, Color.black ());
 				}
@@ -1410,7 +1412,7 @@ public class Glyph : FontDisplay {
 				cr.save ();
 				cr.new_path ();
 				if (p.stroke == 0) {
-					p.draw_path (cr);
+					p.draw_path (cr, this);
 				} else {
 					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr);
 				}
@@ -1433,7 +1435,7 @@ public class Glyph : FontDisplay {
 	
 	private void draw_path_list (PathList pl, Context cr, Color? c = null) {
 		foreach (Path p in pl.paths) {
-			p.draw_path (cr, c);
+			p.draw_path (cr, this, c);
 		}
 	}
 		

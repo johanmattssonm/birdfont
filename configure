@@ -49,7 +49,7 @@ def test_library_version (lib):
 def has_posixvala ():
 	posixvala = test_library_version ('posixvala')
 	if not posixvala:
-		print (OKGREEN + "Posix profile disable Glib will be used." + ENDC)
+		print (OKGREEN + "Glib will be used instead of Posix (libc)." + ENDC)
 		return "False"
 		
 	return "True"
