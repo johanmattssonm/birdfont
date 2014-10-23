@@ -58,7 +58,8 @@ if not config.POSIXVALA:
     ]
 else:
     LIBBIRD_XML_LIBS = [
-        'posix'	
+        'posix',
+	'posixtypes'
     ]
 
 def task_build ():
@@ -96,7 +97,7 @@ libbirdxml = Vala(src='libbirdxml', build='build', library='birdxml', so_version
 def task_libbirdxml():
 
     if config.POSIXVALA:
-        yield libbirdxml.gen_c(valac_options + ['--nostdpkg'])
+        yield libbirdxml.gen_c(valac_options + ['--profile posix'])
     else:
         yield libbirdxml.gen_c(valac_options)
 
