@@ -126,6 +126,7 @@ public class SvgParser {
 		PathList pl = new PathList ();
 	
 		foreach (Tag t in tag) {
+			
 			if (t.get_name () == "g") {
 				parse_layer (t, pl);
 			}
@@ -431,10 +432,6 @@ public class SvgParser {
 		int large_arc;
 		int arc_sweep;
 		double arc_dest_x, arc_dest_y;
-		
-		if (d.index_of ("z") == -1 && d.index_of ("Z") == -1) { // ignore all open paths
-			return path_list;
-		}
 
 		font = BirdFont.get_current_font ();
 		
@@ -1222,11 +1219,6 @@ public class SvgParser {
 				
 		if (num_b == 0) {
 			warning ("No SVG data");
-			return path_list;
-		}
-		
-		if (b[num_b - 1].type != 'z') {
-			warning ("Path is open.");
 			return path_list;
 		}
 		
