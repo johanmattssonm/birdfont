@@ -72,16 +72,18 @@ internal const int WARNINGS = 1;
 [CCode (ref_function = "bird_xml_parser_ref", unref_function = "bird_xml_parser_unref")]
 public class XmlParser {
 	public Tag root;
-	public string data;
+	public XmlString data;
+	public string input;
 	public bool error;
 	public int refcount = 1;
-
+	
 	/** 
 	 * Create a new xml parser. 
 	 * @param data valid xml data
 	 */
 	public XmlParser (string data) {
-		this.data = data;
+		this.input = data;
+		this.data = new XmlString (data, data.length);
 		reparse (NONE);
 	}
 
@@ -121,7 +123,7 @@ public class XmlParser {
 		Attributes attributes = tag.get_attributes ();
 		
 		foreach (Attribute a in attributes) {
-			if (tag.has_failed () || a.get_name () == "") {
+			if (tag.has_failed () || a.name.length == 0) {
 				error = true;
 				return;
 			}
@@ -152,7 +154,7 @@ public class XmlParser {
 	internal void reparse (int log_level) {
 		int root_index;
 		Tag container;
-		string content;
+		XmlString content;
 		
 		error = false;
 		
@@ -165,7 +167,7 @@ public class XmlParser {
 			root = new Tag.empty ();
 		} else {
 			content = data.substring (root_index);
-			container = new Tag ("", "", content, log_level);
+			container = new Tag (new XmlString ("", 0), new XmlString ("", 0), content, log_level);
 			root = container.get_next_tag ();
 		}
 	}
@@ -196,7 +198,7 @@ public class XmlParser {
 
 	/** Print a warning message. */
 	public static void warning (string message) {
-		print ("XML Parser: "); 
+		print ("XML error: "); 
 		print (message);
 		print ("\n");
 	}

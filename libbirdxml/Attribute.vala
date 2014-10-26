@@ -20,22 +20,22 @@ namespace Bird {
 [CCode (ref_function = "bird_attribute_ref", unref_function = "bird_attribute_unref")]
 public class Attribute {
 	
-	public string ns;
-	public string name;
-	public string content;
+	public XmlString ns;
+	public XmlString name;
+	public XmlString content;
 
 	public int refcount = 1;
 	
-	internal Attribute (string ns, string name, string content) {
+	internal Attribute (XmlString ns, XmlString name, XmlString content) {
 		this.ns = ns;
 		this.name = name;
 		this.content = content;
 	}
 
 	internal Attribute.empty () {
-		this.ns = "";
-		this.name = "";
-		this.content = "";
+		this.ns = new XmlString ("", 0);
+		this.name = new XmlString ("", 0);
+		this.content = new XmlString ("", 0);
 	}
 	
 	/** Increment the reference count.
@@ -57,21 +57,21 @@ public class Attribute {
 	 * @return namespace part for this attribute.
 	 */
 	public string get_namespace () {
-		return ns;
+		return ns.to_string ();
 	}
 	
 	/**
 	 * @return the name of this attribute. 
 	 */
 	public string get_name () {
-		return name;
+		return name.to_string ();
 	}
 
 	/** 
 	 * @return the value of this attribute.
 	 */
 	public string get_content () {
-		return content;
+		return content.to_string ();
 	}
 	
 	private extern void finalize ();

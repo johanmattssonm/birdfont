@@ -27,9 +27,9 @@ public class Tag {
 	public bool has_tags;
 	public bool has_attributes;
 	
-	public string name;
-	public string data;
-	public string attributes;
+	public XmlString name;
+	public XmlString data;
+	public XmlString attributes;
 	
 	public Tag? next_tag = null;
 	public Attribute? next_attribute = null;
@@ -39,7 +39,7 @@ public class Tag {
 	
 	public int refcount = 1;
 	
-	internal Tag (string name, string attributes, string content, int log_level) {
+	internal Tag (XmlString name, XmlString attributes, XmlString content, int log_level) {
 		this.log_level = log_level;
 		this.name = name;
 		this.data = content;
@@ -49,9 +49,9 @@ public class Tag {
 	}
 	
 	internal Tag.empty () {
-		data = "";
-		attributes = "";
-		name = "";
+		data = new XmlString ("", 0);
+		attributes = new XmlString ("", 0);
+		name = new XmlString ("", 0);
 	}
 
 	/** Increment the reference count.
@@ -102,7 +102,7 @@ public class Tag {
 	 * @return the name of this tag. 
 	 */ 
 	public string get_name () {
-		return name;
+		return name.to_string ();
 	}
 
 	/** 
@@ -110,7 +110,7 @@ public class Tag {
 	 * @return data between the start and end tags.
 	 */
 	public string get_content () {
-		return data;
+		return data.to_string ();
 	}
 
 	/** 
@@ -148,15 +148,15 @@ public class Tag {
 		Tag tag;
 		
 		tag = find_next_tag (tag_index, out end_tag_index);
-		
+
 		if (end_tag_index != -1) {
 			tag_index = end_tag_index;
 			has_tags = true;
-		} else {
-			has_tags = false;
+			return tag;
 		}
 		
-		return tag;
+		has_tags = false;
+		return new Tag.empty ();
 	}
 	
 	Tag find_next_tag (int start, out int end_tag_index) {
@@ -166,12 +166,13 @@ public class Tag {
 		int end;
 		int closing_tag;
 
-		string name;
-		string attributes;
-		string content;
+		XmlString name;
+		XmlString attributes;
+		XmlString content;
 	
 		index = start;
 		end_tag_index = -1;
+		
 		while (data.get_next_char (ref index, out c)) {
 			if (c == '<') {
 				separator = find_next_separator (index);
@@ -192,12 +193,30 @@ public class Tag {
 				attributes = data.substring (separator, end - separator);
 				
 				if (attributes.has_suffix ("/")) {
-					content = "";
+					content = new XmlString ("", 0);
 					end_tag_index = data.index_of (">", index);
 					data.get_next_char (ref end_tag_index, out c);
 				} else {
-					data.get_next_char (ref end, out c); // skip >
+					if (!data.get_next_char (ref end, out c)) {; // skip >
+						warn ("Unexpected end of data.");
+						error = true;
+						break;
+					}
+					
+					if (c != '>') {
+						warn ("Expecting '>'");
+						error = true;
+						break;
+					}
+					
 					closing_tag = find_closing_tag (name, end);
+					
+					if (closing_tag == -1) {
+						warn ("No closing tag.");
+						error = true;
+						break;
+					}
+					
 					content = data.substring (end, closing_tag - end);
 					end_tag_index = data.index_of (">", closing_tag);
 					data.get_next_char (ref end_tag_index, out c);
@@ -230,12 +249,18 @@ public class Tag {
 		return -1;
 	}
 	
-	int find_closing_tag (string name, int start) {
+	int find_closing_tag (XmlString name, int start) {
 		int index = start;
 		int slash_index = start;
 		int previous_index;
 		unichar c;
 		int start_count = 0;
+		
+		if (name.length == 0) {
+			error = true;
+			warn ("No name for tag.");
+			return -1;
+		}
 		
 		while (true) {
 			previous_index = index;
@@ -262,11 +287,12 @@ public class Tag {
 		}
 		
 		error = true;
-		warn (@"No closing tag for $(name).");
+		warn (@"No closing tag for $(name.to_string ())");
+		
 		return -1;
 	}
 	
-	bool is_tag (string name, int start) {
+	bool is_tag (XmlString name, int start) {
 		int index = 0;
 		int data_index = start;
 		unichar c;
@@ -293,9 +319,9 @@ public class Tag {
 		int previous_index;
 		int index = attribute_index;
 		int name_start;
-		string attribute_name;		
-		string ns;
-		string content;
+		XmlString attribute_name;		
+		XmlString ns;
+		XmlString content;
 		int ns_separator;
 		int content_start;
 		int content_stop;
@@ -335,7 +361,7 @@ public class Tag {
 		
 		attribute_name = attributes.substring (name_start, previous_index - name_start);
 		index = name_start + attribute_name.length;
-		ns = "";
+		ns = new XmlString ("", 0);
 		ns_separator = attribute_name.index_of (":");
 		if (ns_separator != -1) {
 			ns = attribute_name.substring (0, ns_separator);
@@ -407,6 +433,10 @@ public class Tag {
 		}
 
 		public bool next () {
+			if (tag.error) { 
+				return false;
+			}
+			
 			if (tag.has_more_tags ()) {
 				next_tag = tag.get_next_tag ();
 			} else {
