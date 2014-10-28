@@ -43,6 +43,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		-H build/libbirdfont/birdfont.h \
 		libbirdfont/*.vala \
 		libbirdfont/OpenFontFormat/*.vala \
+		libbirdfont/Renderer/*.vala \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0 \
 		--pkg cairo \
@@ -121,6 +122,7 @@ def libbirdxml(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull =
 	run(valac + """\
 		-C \
 		""" + valaflags + """ \
+		--pkg posix \
 		--vapidir=./ \
 		--basedir build/libbirdxml/ \
 		""" + experimentalNonNull + """ \

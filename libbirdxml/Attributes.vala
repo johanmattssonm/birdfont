@@ -42,7 +42,7 @@ public class Attributes {
 	/** Decrement the reference count and free the object when zero object are holding references to it.*/
 	public void unref () {
 		if (--refcount == 0) {
-			this.finalize ();
+			this.free ();
 		}
 	}
 	
@@ -89,14 +89,14 @@ public class Attributes {
 		/** Decrement the reference count and free the object when zero object are holding references to it.*/
 		public void unref () {
 			if (--iterator_refcount == 0) {
-				this.finalize ();
+				this.free ();
 			}
 		}
 		
-		private extern void finalize ();
+		private extern void free ();
 	}
 	
-	private extern void finalize ();
+	private extern void free ();
 }
 
 }

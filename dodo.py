@@ -54,7 +54,8 @@ LIBS = [
 
 if not config.POSIXVALA:
     LIBBIRD_XML_LIBS = [
-        'glib-2.0'
+        'glib-2.0',
+	'posix'
     ]
 else:
     LIBBIRD_XML_LIBS = [
