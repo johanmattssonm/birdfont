@@ -406,10 +406,9 @@ public class BirdFont {
 		BirdFont.logging = args.has_argument ("--log");
 #endif
 
-		// FIXME: don't create log files
-		//if (BirdFont.logging) {
+		if (BirdFont.logging) {
 			init_logfile ();
-		//}
+		}
 		
 		if (!args.has_argument ("--no-translation")) {
 			init_gettext ();

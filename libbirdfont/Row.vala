@@ -35,6 +35,12 @@ public class Row : GLib.Object {
 		this.delete_button = delete_button;
 	}
 
+	public Row.columns_1 (string label, int index, bool delete_button = true) {
+		this.index = index;
+		columns_labels.add (label);
+		this.delete_button = delete_button;
+	}
+	
 	public Row.columns_2 (string label0, string label1, int index,
 		bool delete_button = true) {
 			
