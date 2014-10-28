@@ -366,8 +366,17 @@ public class BirdFont {
 	public static Font current_font;
 	public static GlyphCollection current_glyph_collection;
 	
-	public BirdFont () {	
+	public static Drawing? drawing = null;
+	
+	public BirdFont () {
+		set_defaul_drawing_callbacks ();
 	}
+	
+	void set_defaul_drawing_callbacks () {
+		if (drawing == null) {
+			drawing = new Drawing ();
+		}
+	}	
 	
 	/**
 	 * @param arg command line arguments
@@ -714,6 +723,10 @@ public static File get_child (File folder, string file_name) {
 	printd (@"File: Directory: $f Name: $n\n");
 	
 	return File.new_for_path (f + n);
+}
+
+public static void set_drawing_callbacks (Drawing callbacks) {
+	BirdFont.drawing = callbacks;
 }
 
 }

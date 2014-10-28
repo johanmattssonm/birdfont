@@ -31,7 +31,7 @@ public class FontCache {
 		bool ok;
 		
 		if (file_name == "") {
-			stderr.printf ("No file name provided.");
+			stderr.printf ("No file name provided.\n");
 			return null;
 		}
 		
@@ -42,7 +42,7 @@ public class FontCache {
 			f.set_file (file_name, false);
 			ok = f.load ();
 			if (!ok) {
-				stderr.printf ("Can't load %s", file_name);
+				stderr.printf ("Can't load %s\n", file_name);
 				return null;
 			}
 			
