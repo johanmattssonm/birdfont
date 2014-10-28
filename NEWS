@@ -1,5 +1,6 @@
 birdfont (1.8) stable;
 
+  * A new Beziér drawing tool
   * Move paths independent from handles or along handles.
   * Bug fixes
 
