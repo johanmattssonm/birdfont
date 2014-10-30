@@ -796,12 +796,6 @@ public class OverView : FontDisplay {
 		return false;
 	}
 	
-	bool select_visible_character (unichar c) {
-		StringBuilder s = new StringBuilder ();
-		s.append_unichar (c);
-		return select_visible_glyph (s.str);
-	}
-	
 	public void scroll_to_char (unichar c) {
 		StringBuilder s = new StringBuilder ();
 

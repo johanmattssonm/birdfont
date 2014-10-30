@@ -24,6 +24,7 @@ public class TextArea {
 	string text;
 	GlyphSequence glyph_sequence;
 	double line_gap = 20;
+	public delegate void Iterator (Glyph glyph, double kerning);
 	
 	public TextArea () {
 		font = new Font ();
@@ -50,43 +51,23 @@ public class TextArea {
 			name = font.get_name_for_character (c);
 			g = font.get_glyph_by_name (name);
 			glyph_sequence.glyph.add (g);
-		}		
+		}	
 	}
-	
-	public bool load_font (string file) {
-		Font? f = font_cache.get_font (file);
-		
-		if (f != null) {
-			font = (!) f;
-		}
-		
-		return f != null;
-	}
-	
-	public void draw (Context cr, int px, int py, int width, int height, double font_size_in_pixels) {
+
+	public void iterate (Iterator iter) {
 		Glyph glyph;
-		double x, y, w, kern;
-		int i, wi;
+		double w, kern;
+		int wi;
 		Glyph? prev;
 		GlyphSequence word_with_ligatures;
 		GlyphRange? gr_left, gr_right;
 		double row_height;
 		GlyphSequence word;
-		double center_x, center_y;
-		double ratio;
 		
-		i = 0;
 		row_height = get_row_height ();
-		
-		ratio = font_size_in_pixels / row_height;
-		
-		cr.save ();
-		cr.scale (ratio, ratio);
 		
 		glyph = new Glyph ("", '\0');
 
-		y = get_row_height () + font.base_line + py;
-		x = px;
 		w = 0;
 		prev = null;
 		kern = 0;
@@ -109,32 +90,62 @@ public class TextArea {
 				kern = KerningDisplay.get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 			}
 					
-			// draw glyph
+			// process glyph
 			glyph = (g == null) ? font.get_not_def_character ().get_current () : (!) g;
+			iter (glyph, kern);
+			
+			prev = g;
+			wi++;
+		}
+	}
 
-			center_x = glyph.allocation.width / 2.0;
-			center_y = glyph.allocation.height / 2.0;
+	public double get_max_extent_x (double font_size_in_pixels) {
+		double x = 0;
+		
+		iterate ((glyph, kerning) => {
+			x += glyph.get_width () + kerning;
+		});
+		
+		return x;
+	}
+	
+	public bool load_font (string file) {
+		Font? f = font_cache.get_font (file);
+		
+		if (f != null) {
+			font = (!) f;
+		}
+		
+		return f != null;
+	}
+	
+	public void draw (Context cr, int px, int py, int width, int height, double font_size_in_pixels) {
+		double x, y;
+		double row_height, ratio;
+
+		row_height = get_row_height ();		
+		ratio = font_size_in_pixels / row_height;
+		
+		cr.save ();
+		cr.scale (ratio, ratio);
+
+		y = get_row_height () + font.base_line + py;
+		x = px;
+		
+		iterate ((glyph, kerning) => {
+			double center_x = glyph.allocation.width / 2.0;
+			double center_y = glyph.allocation.height / 2.0;
 
 			cr.save ();
 			glyph.add_help_lines ();
-			cr.translate (kern + x - center_x - glyph.get_lsb (), y - center_y + glyph.get_baseline ());
+			cr.translate (kerning + x - center_x - glyph.get_lsb (), y - center_y + glyph.get_baseline ());
 			glyph.draw_paths (cr);
 			cr.restore ();
 			
-			w = glyph.get_width ();
-
-			x += w + kern;
-
-			prev = g;
-			
-			wi++;
-			i++;
-		}
-					
-		y += row_height + line_gap;
-		x = 20;
-			
-		cr.restore ();		
+			x += glyph.get_width () + kerning;
+		});
+		
+		cr.restore ();	
 	}	
 
 	double get_row_height () {
