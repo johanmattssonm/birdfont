@@ -785,7 +785,7 @@ public class DrawingTools : ToolCollection  {
 		if (BirdFont.has_argument ("--test")) {
 			Tool text_rendering = new Tool ("text_rendering");
 			text_rendering.select_action.connect((self) => {
-				TextArea.test ();
+				Text.test ();
 			});
 			test_tools.add_tool (text_rendering);
 			

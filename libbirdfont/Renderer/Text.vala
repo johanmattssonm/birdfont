@@ -17,7 +17,7 @@ using Cairo;
 namespace BirdFont {
 
 /** Test implementation of a birdfont rendering engine. */
-public class TextArea {
+public class Text {
 	
 	FontCache font_cache;
 	Font font;
@@ -26,7 +26,7 @@ public class TextArea {
 	double line_gap = 20;
 	public delegate void Iterator (Glyph glyph, double kerning);
 	
-	public TextArea () {
+	public Text () {
 		font = new Font ();
 		text = "";
 		glyph_sequence = new GlyphSequence ();
@@ -101,9 +101,10 @@ public class TextArea {
 
 	public double get_max_extent_x (double font_size_in_pixels) {
 		double x = 0;
+		double ratio = font_size_in_pixels / get_row_height ();
 		
 		iterate ((glyph, kerning) => {
-			x += glyph.get_width () + kerning;
+			x += (glyph.get_width () + kerning) * ratio;
 		});
 		
 		return x;
@@ -127,7 +128,6 @@ public class TextArea {
 		ratio = font_size_in_pixels / row_height;
 		
 		cr.save ();
-		//cr.scale (ratio, ratio);
 
 		y = get_row_height () + font.base_line + py;
 		x = px;
@@ -137,16 +137,16 @@ public class TextArea {
 			
 			glyph.add_help_lines ();
 			
-			x += kerning;
+			x += kerning * ratio;
 			cr.save ();
 			cr.new_path ();
 			foreach (Path path in glyph.path_list) {
-				draw_path (cr, path, lsb, x, y);
+				draw_path (cr, path, lsb, x, y, ratio);
 			}
 			cr.fill ();
 			cr.restore ();
 			
-			x += glyph.get_width ();
+			x += glyph.get_width () * ratio;
 		});
 		
 		cr.set_source_rgba (0, 0, 0, 1);
@@ -155,27 +155,29 @@ public class TextArea {
 		cr.restore ();	
 	}	
 
-	void draw_path (Context cr, Path path, double lsb, double x, double y) {
+	void draw_path (Context cr, Path path, double lsb, double x, double y, double scale) {
 		EditPoint e, prev;
-		double xb, yb, xc, yc, xd, yd;
+		double xa, ya, xb, yb, xc, yc, xd, yd;
 			
 		if (path.points.size > 0) {
 
 			prev = path.points.get (0);
-			cr.move_to (prev.x - lsb + x, y - prev.y);
+			xa = (prev.x - lsb) * scale + x;
+			ya = y - prev.y * scale;
+			cr.move_to (xa, ya);
 			
 			for (int i = 1; i < path.points.size; i++) {
 				e = path.points.get (i).copy ();
 				PenTool.convert_point_segment_type (prev, e, PointType.CUBIC);
 				
-				xb = prev.get_right_handle ().x - lsb + x;
-				yb = y - prev.get_right_handle ().y;
+				xb = (prev.get_right_handle ().x - lsb) * scale + x;
+				yb = y - prev.get_right_handle ().y * scale;
 
-				xc = e.get_left_handle ().x - lsb + x;
-				yc = y - e.get_left_handle ().y;
+				xc = (e.get_left_handle ().x - lsb) * scale + x;
+				yc = y - e.get_left_handle ().y * scale;
 					
-				xd = e.x - lsb + x;
-				yd = y - e.y;
+				xd = (e.x - lsb) * scale + x;
+				yd = y - e.y * scale;
 				
 				cr.curve_to (xb, yb, xc, yc, xd, yd);
 				cr.line_to (xd, yd);
@@ -186,14 +188,14 @@ public class TextArea {
 			// close path
 			e = path.points.get (0);
 			
-			xb = prev.get_right_handle ().x - lsb + x;
-			yb = y - prev.get_right_handle ().y;
+			xb = (prev.get_right_handle ().x - lsb) * scale + x;
+			yb = y - prev.get_right_handle ().y * scale;
 
-			xc = e.get_left_handle ().x - lsb + x;
-			yc = y - e.get_left_handle ().y;
+			xc = (e.get_left_handle ().x - lsb) * scale + x;
+			yc = y - e.get_left_handle ().y * scale;
 				
-			xd = e.x - lsb + x;
-			yd = y - e.y;
+			xd = (e.x - lsb) * scale + x;
+			yd = y - e.y * scale;
 			
 			cr.curve_to (xb, yb, xc, yc, xd, yd);
 		}

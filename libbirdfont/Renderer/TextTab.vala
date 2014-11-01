@@ -19,20 +19,20 @@ namespace BirdFont {
 /** Testing class for an experimental implementation of a birdfont rendering engine. */
 public class TextTab : FontDisplay {
 
-	TextArea text_area;
-	TextArea text_area2;
-	TextArea text_area3;
+	Text text_area;
+	Text text_area2;
+	Text text_area3;
 
 	public TextTab () {	
-		text_area = new TextArea ();
+		text_area = new Text ();
 		text_area.load_font ("testfont.bf");
 		text_area.set_text ("Test");
 
-		text_area2 = new TextArea ();
+		text_area2 = new Text ();
 		text_area2.load_font ("testfont.bf");
 		text_area2.set_text ("Birdfont ÅÄÖ");
 
-		text_area3 = new TextArea ();
+		text_area3 = new Text ();
 		text_area3.load_font ("testfont.bf");
 		text_area3.set_text ("TEST 3");
 	}
