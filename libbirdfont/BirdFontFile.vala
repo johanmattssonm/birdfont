@@ -207,7 +207,7 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	public void write_spacing_classes (DataOutputStream os)  throws GLib.Error {
-		SpacingClassTab s = MainWindow.get_spacing_class_tab ();
+		SpacingData s = font.get_spacing ();
 		
 		foreach (SpacingClass sc in s.classes) {
 				os.put_string ("<spacing ");
@@ -226,29 +226,30 @@ class BirdFontFile : GLib.Object {
 	public void write_kerning (DataOutputStream os)  throws GLib.Error {
 			uint num_kerning_pairs;
 			string range;
+			KerningClasses classes = font.get_kerning_classes ();
 			
-			num_kerning_pairs = KerningClasses.get_instance ().classes_first.size;
+			num_kerning_pairs = classes.classes_first.size;
 
 			for (int i = 0; i < num_kerning_pairs; i++) {
-				range = KerningClasses.get_instance ().classes_first.get (i).get_all_ranges ();
+				range = classes.classes_first.get (i).get_all_ranges ();
 				
 				os.put_string ("<kerning ");
 				os.put_string ("left=\"");
 				os.put_string (range);
 				os.put_string ("\" ");
 				
-				range = KerningClasses.get_instance ().classes_last.get (i).get_all_ranges ();
+				range = classes.classes_last.get (i).get_all_ranges ();
 				
 				os.put_string ("right=\"");
 				os.put_string (range);
 				os.put_string ("\" ");
 				
 				os.put_string ("hadjustment=\"");
-				os.put_string (round (KerningClasses.get_instance ().classes_kerning.get (i).val));
+				os.put_string (round (classes.classes_kerning.get (i).val));
 				os.put_string ("\" />\n");
 			}
 			
-			KerningClasses.get_instance ().get_single_position_pairs ((l, r, k) => {
+			classes.get_single_position_pairs ((l, r, k) => {
 				try {
 					os.put_string ("<kerning ");
 					os.put_string ("left=\"");
@@ -712,7 +713,7 @@ class BirdFontFile : GLib.Object {
 	
 	private void parse_spacing_class (Tag tag) {
 		string first, next;
-		SpacingClassTab spacing_class_tab = MainWindow.get_spacing_class_tab ();
+		SpacingData spacing = font.get_spacing ();
 		
 		first = "";
 		next = "";
@@ -727,7 +728,7 @@ class BirdFontFile : GLib.Object {
 			}		
 		}
 		
-		spacing_class_tab.add_class (first, next);
+		spacing.add_class (first, next);
 	}
 	
 	private void parse_kerning (Tag tag) {
@@ -765,7 +766,7 @@ class BirdFontFile : GLib.Object {
 				KerningTools.add_unique_class (kerning_range);
 			}
 
-			KerningClasses.get_instance ().set_kerning (range_left, range_right, hadjustment);
+			font.get_kerning_classes ().set_kerning (range_left, range_right, hadjustment);
 			
 		} catch (MarkupError e) {
 			warning (e.message);

@@ -37,7 +37,11 @@ public class KerningClasses : GLib.Object {
 	/** Ensure that map iterator is not invalidated because of inserts. */
 	bool protect_map = false;
 
-	public KerningClasses () {
+	Font font;
+
+	public KerningClasses (Font font) {
+		this.font = font;
+		
 		classes_first = new Gee.ArrayList<GlyphRange> ();
 		classes_last = new Gee.ArrayList<GlyphRange> ();
 		classes_kerning = new Gee.ArrayList<Kerning> ();
@@ -48,8 +52,48 @@ public class KerningClasses : GLib.Object {
 		single_kerning = new HashMap<string, double?> ();
 	}
 
-	public static KerningClasses get_instance () {
-		return BirdFont.get_current_font ().get_kerning_classes ();
+	/** Class based gpos kerning. */
+	public double get_kerning_for_pair (string a, string b, GlyphRange? gr_left, GlyphRange? gr_right) {
+		double k;
+		GlyphRange grl, grr;
+		try {
+			if (gr_left == null) {
+				grl = new GlyphRange ();
+				grl.parse_ranges (a);
+			} else {
+				grl = (!) gr_left;
+			}
+
+			if (gr_right == null) {
+				grr = new GlyphRange ();
+				grr.parse_ranges (a);
+			} else {
+				grr = (!) gr_right;
+			}
+			
+			if (gr_left != null && gr_right != null) {
+				return get_kerning_for_range (grl, grr);
+			}
+
+			if (gr_left != null && gr_right == null) {
+				return get_kern_for_range_to_char (grl, b);
+			}
+			
+			if (gr_left == null && gr_right != null) {
+				return get_kern_for_char_to_range (a, grr);
+			}
+			
+			if (gr_left == null && gr_right == null) {
+				k = get_kerning (a, b);
+				return k;
+			}			
+		} catch (MarkupError e) {
+			warning (e.message);
+		}
+		
+		warning ("no kerning found");
+		
+		return 0;
 	}
 
 	public void update_space_class (string c) {
@@ -85,6 +129,10 @@ public class KerningClasses : GLib.Object {
 		
 		return k;
 	} 
+
+	private Gee.ArrayList<string> get_spacing_class (string c) {
+		return font.get_spacing ().get_all_connections (c);
+	}
 
 	public void set_kerning_for_single_glyphs (string le, string ri, double k) {
 		string left = GlyphRange.serialize (le);
@@ -404,7 +452,6 @@ public class KerningClasses : GLib.Object {
 	}
 	
 	public void all_pairs (KerningIterator kerningIterator) {
-		Font font = BirdFont.get_current_font ();
 		Gee.ArrayList<Glyph> left_glyphs = new Gee.ArrayList<Glyph> ();
 		Gee.ArrayList<KerningPair> pairs = new Gee.ArrayList<KerningPair> ();
 		double kerning;
@@ -512,11 +559,7 @@ public class KerningClasses : GLib.Object {
 		classes_last.remove_at (index);
 		classes_kerning.remove_at (index);
 	}
-	
-	private Gee.ArrayList<string> get_spacing_class (string c) {
-		return MainWindow.get_spacing_class_tab ().get_all_connections (c);
-	}
-	
+
 	public void delete_kerning_for_pair (string left, string right) {
 		foreach (string l in get_spacing_class (left)) {
 			foreach (string r in get_spacing_class (right)) {

@@ -32,7 +32,7 @@ public class KerningList : FontDisplay {
 	}
 
 	private void update_single_pair_list () {
-		KerningClasses classes = KerningClasses.get_instance ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
 		
 		single_pairs.clear ();
 		
@@ -44,7 +44,7 @@ public class KerningList : FontDisplay {
 	}
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
-		KerningClasses classes = KerningClasses.get_instance ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
 		int y = 20;
 		int s = 0;
 		bool color = (scroll % 2) == 0;
@@ -122,7 +122,7 @@ public class KerningList : FontDisplay {
 	}
 
 	public override void button_release (int button, double ex, double ey) {
-		KerningClasses classes = KerningClasses.get_instance ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
 		int s = 0;
 		int y = 0;
 		string l, r;
@@ -166,8 +166,8 @@ public class KerningList : FontDisplay {
 	 void delete_kerning (string left, string right) {
 		double kerning = 0;
 		GlyphRange glyph_range_first, glyph_range_next;
-		KerningClasses classes = KerningClasses.get_instance ();
 		Font font = BirdFont.get_current_font ();
+		KerningClasses classes = font.get_kerning_classes ();
 		string l, r;
 		int class_index = -1;
 		
@@ -215,7 +215,8 @@ public class KerningList : FontDisplay {
 	}
 	
 	public override void scroll_wheel_down (double x, double y) {
-		uint pairs = KerningClasses.get_instance ().get_number_of_pairs ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
+		uint pairs = classes.get_number_of_pairs ();
 		scroll += 3;
 
 		if (scroll > pairs - visible_rows) {
@@ -248,7 +249,8 @@ public class KerningList : FontDisplay {
 	}
 	
 	public void update_scrollbar () {
-		uint rows = KerningClasses.get_instance ().get_number_of_pairs ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
+		uint rows = classes.get_number_of_pairs ();
 
 		if (rows == 0 || visible_rows == 0) {
 			MainWindow.set_scrollbar_size (0);
@@ -260,7 +262,8 @@ public class KerningList : FontDisplay {
 	}
 
 	public override void scroll_to (double percent) {
-		uint pairs = KerningClasses.get_instance ().get_number_of_pairs ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
+		uint pairs = classes.get_number_of_pairs ();
 		scroll = (int) (percent * pairs);
 		
 		if (scroll > pairs - visible_rows) {
@@ -272,7 +275,7 @@ public class KerningList : FontDisplay {
 	
 	public override void undo () {
 		UndoItem ui;
-		KerningClasses classes = KerningClasses.get_instance ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
 		GlyphRange glyph_range_first, glyph_range_next;
 		
 		try {

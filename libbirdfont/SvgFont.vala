@@ -72,6 +72,7 @@ class SvgFont : GLib.Object {
 		unichar l, r;
 		StringBuilder sl, sr;
 		GlyphRange grr, grl;
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			// left
@@ -117,7 +118,7 @@ class SvgFont : GLib.Object {
 					grr = new GlyphRange ();
 					grr.parse_ranges (sr.str);
 				
-					KerningClasses.get_instance ().set_kerning (grl, grr, -kerning);
+					classes.set_kerning (grl, grr, -kerning);
 				} catch (MarkupError e) {
 					warning (e.message);
 				}		

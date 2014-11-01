@@ -87,7 +87,7 @@ public class TextArea {
 				gr_left = word_with_ligatures.ranges.get (wi - 1);
 				gr_right = word_with_ligatures.ranges.get (wi);
 
-				kern = KerningDisplay.get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
+				kern = font.get_kerning_classes ().get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 			}
 					
 			// process glyph
@@ -127,26 +127,77 @@ public class TextArea {
 		ratio = font_size_in_pixels / row_height;
 		
 		cr.save ();
-		cr.scale (ratio, ratio);
+		//cr.scale (ratio, ratio);
 
 		y = get_row_height () + font.base_line + py;
 		x = px;
-		
+					
 		iterate ((glyph, kerning) => {
-			double center_x = glyph.allocation.width / 2.0;
-			double center_y = glyph.allocation.height / 2.0;
-
-			cr.save ();
+			double lsb = glyph.left_limit;
+			
 			glyph.add_help_lines ();
-			cr.translate (kerning + x - center_x - glyph.get_lsb (), y - center_y + glyph.get_baseline ());
-			glyph.draw_paths (cr);
+			
+			x += kerning;
+			cr.save ();
+			cr.new_path ();
+			foreach (Path path in glyph.path_list) {
+				draw_path (cr, path, lsb, x, y);
+			}
+			cr.fill ();
 			cr.restore ();
 			
-			x += glyph.get_width () + kerning;
+			x += glyph.get_width ();
 		});
 		
+		cr.set_source_rgba (0, 0, 0, 1);
+		cr.fill ();
+
 		cr.restore ();	
 	}	
+
+	void draw_path (Context cr, Path path, double lsb, double x, double y) {
+		EditPoint e, prev;
+		double xb, yb, xc, yc, xd, yd;
+			
+		if (path.points.size > 0) {
+
+			prev = path.points.get (0);
+			cr.move_to (prev.x - lsb + x, y - prev.y);
+			
+			for (int i = 1; i < path.points.size; i++) {
+				e = path.points.get (i).copy ();
+				PenTool.convert_point_segment_type (prev, e, PointType.CUBIC);
+				
+				xb = prev.get_right_handle ().x - lsb + x;
+				yb = y - prev.get_right_handle ().y;
+
+				xc = e.get_left_handle ().x - lsb + x;
+				yc = y - e.get_left_handle ().y;
+					
+				xd = e.x - lsb + x;
+				yd = y - e.y;
+				
+				cr.curve_to (xb, yb, xc, yc, xd, yd);
+				cr.line_to (xd, yd);
+				
+				prev = e;
+			}
+			
+			// close path
+			e = path.points.get (0);
+			
+			xb = prev.get_right_handle ().x - lsb + x;
+			yb = y - prev.get_right_handle ().y;
+
+			xc = e.get_left_handle ().x - lsb + x;
+			yc = y - e.get_left_handle ().y;
+				
+			xd = e.x - lsb + x;
+			yd = y - e.y;
+			
+			cr.curve_to (xb, yb, xc, yc, xd, yd);
+		}
+	}
 
 	double get_row_height () {
 		return font.top_limit - font.bottom_limit;

@@ -529,7 +529,6 @@ public class BirdFont {
 			MainWindow.get_drawing_tools ().add_new_grid ();
 		}
 		
-		SpacingClassTab.remove_all_spacing_classes ();
 		KerningTools.update_kerning_classes ();
 		
 		return current_font;

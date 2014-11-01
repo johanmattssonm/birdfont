@@ -162,7 +162,7 @@ public class KerningTools : ToolCollection  {
 	}
 	
 	public static void update_kerning_classes () {
-		KerningClasses k = KerningClasses.get_instance ();
+		KerningClasses k = BirdFont.get_current_font ().get_kerning_classes ();
 		KerningRange kr;
 		GlyphRange r;
 		int i;

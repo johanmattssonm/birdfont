@@ -32,6 +32,7 @@ public class KernList : GLib.Object {
 	/** @return number of pairs. */
 	public uint fetch_all_pairs () {
 		PairFormat1 current_pairs = new PairFormat1 ();
+		KerningClasses classes;
 		
 		if (pairs.size > 0 || num_pairs > 0) {
 			warning ("Pairs already loaded.");
@@ -40,7 +41,8 @@ public class KernList : GLib.Object {
 		num_pairs = 0;
 		pairs.clear ();
 		
-		KerningClasses.get_instance ().all_pairs ((kp) => {
+		classes = BirdFont.get_current_font ().get_kerning_classes ();
+		classes.all_pairs ((kp) => {
 			uint16 gid_left, gid_right;
 			KerningPair kerning_pair = kp;
 			int i;

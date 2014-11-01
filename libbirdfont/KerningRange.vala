@@ -63,8 +63,10 @@ public class KerningRange : Tool {
 	
 	public void set_ranges (string r) {
 		GlyphRange glyph_range = new GlyphRange ();
+		SpacingData spacing = BirdFont.get_current_font ().get_spacing ();
 		string new_range;
 		string ch;
+		
 		try {	
 			glyph_range.parse_ranges (r);
 			new_range = glyph_range.get_all_ranges ();
@@ -72,7 +74,7 @@ public class KerningRange : Tool {
 			for (int i = 0; i < glyph_range.get_length (); i++) {
 				ch = glyph_range.get_char (i);
 				
-				foreach (string c in MainWindow.get_spacing_class_tab ().get_all_connections (ch)) {
+				foreach (string c in spacing.get_all_connections (ch)) {
 					if (!glyph_range.has_character (c) && c != "" && c != "?") {
 						new_range += " " + GlyphRange.serialize (c);
 					}
@@ -82,7 +84,7 @@ public class KerningRange : Tool {
 			set_one_range (new_range);
 			malformed = false;
 		} catch (MarkupError e) {
-			KerningClasses.get_instance ().print_all ();
+			warning (@"Failed to add range \"$r\"");
 			warning (e.message);
 			malformed = true;
 		}

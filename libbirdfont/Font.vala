@@ -84,7 +84,7 @@ public class Font : GLib.Object {
 	/** File format. */
 	public FontFormat format = FontFormat.BIRDFONT;
 	
-	KerningClasses kerning_classes;
+	SpacingData spacing;
 	
 	bool read_only = false;
 	
@@ -97,6 +97,8 @@ public class Font : GLib.Object {
 	Ligatures ligatures_substitution;
 	
 	public Font () {
+		KerningClasses kerning_classes;
+		
 		postscript_name = "Typeface";
 		name = "Typeface";
 		subfamily = "Regular";
@@ -112,8 +114,9 @@ public class Font : GLib.Object {
 	
 		grid_width = new Gee.ArrayList<string> ();
 	
-		kerning_classes = new KerningClasses ();
-		
+		kerning_classes = new KerningClasses (this);
+		spacing = new SpacingData (kerning_classes);
+
 		top_limit = 84 ;
 		top_position = 72;
 		xheight_position = 56;
@@ -148,9 +151,13 @@ public class Font : GLib.Object {
 	}
 
 	public KerningClasses get_kerning_classes () {
-		return kerning_classes;
+		return spacing.get_kerning_classes ();
 	}
-	
+
+	public SpacingData get_spacing () {
+		return spacing;
+	}
+		
 	public File get_backgrounds_folder () {
 		string fn = @"$(get_name ()) backgrounds";
 		File f = get_child (BirdFont.get_settings_directory (), fn);

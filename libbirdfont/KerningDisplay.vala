@@ -390,14 +390,15 @@ public class KerningDisplay : FontDisplay {
 			double val) {
 		double kern;
 		GlyphRange grl, grr;
-		KerningClasses classes = KerningClasses.get_instance ();
+		KerningClasses classes;
 		string n, f;
 		bool has_kerning;
 		Font font;
 		
 		font = current_font;
 		font.touch ();
-				
+		classes = font.get_kerning_classes ();
+			
 		kern = get_kerning_for_pair (a, b, gr_left, gr_right);
 		
 		try {
@@ -434,48 +435,9 @@ public class KerningDisplay : FontDisplay {
 		}
 	}
 
-	/** Class based gpos kerning. */
 	public static double get_kerning_for_pair (string a, string b, GlyphRange? gr_left, GlyphRange? gr_right) {
-		double k;
-		GlyphRange grl, grr;
-		try {
-			if (gr_left == null) {
-				grl = new GlyphRange ();
-				grl.parse_ranges (a);
-			} else {
-				grl = (!) gr_left;
-			}
-
-			if (gr_right == null) {
-				grr = new GlyphRange ();
-				grr.parse_ranges (a);
-			} else {
-				grr = (!) gr_right;
-			}
-			
-			if (gr_left != null && gr_right != null) {
-				return KerningClasses.get_instance ().get_kerning_for_range (grl, grr);
-			}
-
-			if (gr_left != null && gr_right == null) {
-				return KerningClasses.get_instance ().get_kern_for_range_to_char (grl, b);
-			}
-			
-			if (gr_left == null && gr_right != null) {
-				return KerningClasses.get_instance ().get_kern_for_char_to_range (a, grr);
-			}
-			
-			if (gr_left == null && gr_right == null) {
-				k = KerningClasses.get_instance ().get_kerning (a, b);
-				return k;
-			}			
-		} catch (MarkupError e) {
-			warning (e.message);
-		}
-		
-		warning ("no kerning found");
-		
-		return 0;
+		KerningClasses k = BirdFont.get_current_font ().get_kerning_classes ();
+		return k.get_kerning_for_pair (a, b, gr_left, gr_right);
 	}
 	
 	public void set_current_font (Font f) {
@@ -929,7 +891,7 @@ public class KerningDisplay : FontDisplay {
 	
 	/** @return redo state. */
 	public UndoItem apply_undo (UndoItem ui) {
-		KerningClasses classes = KerningClasses.get_instance ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
 		GlyphRange glyph_range_first, glyph_range_next;
 		Font font = current_font;
 		string l, r;

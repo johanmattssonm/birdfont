@@ -21,6 +21,7 @@ public class TextTab : FontDisplay {
 
 	TextArea text_area;
 	TextArea text_area2;
+	TextArea text_area3;
 
 	public TextTab () {	
 		text_area = new TextArea ();
@@ -30,11 +31,16 @@ public class TextTab : FontDisplay {
 		text_area2 = new TextArea ();
 		text_area2.load_font ("testfont.bf");
 		text_area2.set_text ("Birdfont ÅÄÖ");
+
+		text_area3 = new TextArea ();
+		text_area3.load_font ("testfont.bf");
+		text_area3.set_text ("TEST 3");
 	}
 
-	public override void draw (WidgetAllocation allocation, Context cr) {
+	public override void draw (WidgetAllocation allocation, Context cr) {		
 		text_area.draw (cr, 0, 0, 200, 200, 16);
 		text_area2.draw (cr, 0, 100, 200, 200, 16);
+		text_area3.draw (cr, 0, 200, 200, 200, 16);
 	}	
 }
 

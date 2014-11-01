@@ -340,7 +340,8 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 		
-		KerningClasses.get_instance ().remove_all_pairs ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
+		classes.remove_all_pairs ();
 		KerningTools.update_kerning_classes ();
 	}
 	

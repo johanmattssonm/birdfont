@@ -1775,6 +1775,8 @@ public class Glyph : FontDisplay {
 		double box_x1, box_x2, box_y1, box_y2;
 		double marker_x, marker_y;
 		
+		KerningClasses classes = font.get_kerning_classes ();
+		
 		x = 0;
 		
 		box_x1 = path_coordinate_x (0);
@@ -1796,7 +1798,7 @@ public class Glyph : FontDisplay {
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ().get_current ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
-				kern = KerningClasses.get_instance ().get_kerning (last_name, name);
+				kern = classes.get_kerning (last_name, name);
 			} else {
 				kern = 0;
 			}
@@ -1829,7 +1831,7 @@ public class Glyph : FontDisplay {
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ().get_current ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
-				kern = KerningClasses.get_instance ().get_kerning (name, last_name);
+				kern = classes.get_kerning (name, last_name);
 			} else {
 				kern = 0;
 			}
@@ -2003,7 +2005,7 @@ public class Glyph : FontDisplay {
 		GlyphCollection gc;
 		Glyph glyph;
 		
-		foreach (string l in MainWindow.get_spacing_class_tab ()
+		foreach (string l in font.get_spacing ()
 				.get_all_connections ((!) unichar_code.to_string ())) {
 			if (l != (!) unichar_code.to_string ()) {
 				g = font.get_glyph_collection (l);
@@ -2026,7 +2028,7 @@ public class Glyph : FontDisplay {
 		GlyphCollection gc;
 		Glyph glyph;
 		
-		foreach (string l in MainWindow.get_spacing_class_tab ()
+		foreach (string l in font.get_spacing ()
 				.get_all_connections ((!) unichar_code.to_string ())) {
 			if (l != (!) unichar_code.to_string ()) {
 				g = font.get_glyph_collection (l);
