@@ -600,12 +600,12 @@ public class TabBar : GLib.Object {
 
 		if (has_scroll ()) {
 			// left arrow
-			cr.set_source_surface ((!) to_previous_tab, 2 / scale, h - ((!) to_previous_tab).get_height () - 5 / scale);
+			cr.set_source_surface ((!) to_previous_tab, 2 / scale, h / 2.0 - ((!) to_previous_tab).get_height () / 2);
 			cr.paint ();
 
 			// right arrow
 			next_tab_x = (has_progress_wheel ()) ? w - (2 * 19 + 3) / scale : w - 19 / scale;
-			cr.set_source_surface ((!) next_tab, next_tab_x, h - ((!) next_tab).get_height () - 5 / scale);
+			cr.set_source_surface ((!) next_tab, next_tab_x, h / 2.0 - ((!) next_tab).get_height () / 2.0);
 			cr.paint ();
 		}
 		

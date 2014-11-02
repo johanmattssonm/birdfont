@@ -176,9 +176,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		toolbox = new ToolboxCanvas (MainWindow.get_toolbox ()); 
 		list_box = new Box (Orientation.HORIZONTAL, 0);
-		list_box.pack_start (tab_box, true, true, 0);
 		list_box.pack_start (toolbox, false, false, 0);
-
+		list_box.pack_start (tab_box, true, true, 0);
+		
 		Box vbox = new Box (Orientation.VERTICAL, 0);
 		
 		vbox.pack_start(create_menu (), false, false, 0);
