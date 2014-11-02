@@ -584,7 +584,7 @@ public class TabBar : GLib.Object {
 		return_if_fail (next_tab != null);
 		return_if_fail (progress != null);
 		return_if_fail (tab_bar_background != null);
-		
+
 		cr.save ();
 		cr.set_line_width (0);
 		cr.set_source_rgba (background_r, background_g, background_b, 1);

@@ -19,6 +19,8 @@ namespace BirdFont {
 
 public class Expander : GLib.Object {
 	
+	public bool draw_separator { get; set; }
+	
 	public double x = 7;
 	public double y = 5;
 	public double scroll = 0;
@@ -40,7 +42,8 @@ public class Expander : GLib.Object {
 	double content_height = 0;
 	
 	public Expander () {
-		tool = new Gee.ArrayList<Tool> ();	
+		tool = new Gee.ArrayList<Tool> ();
+		draw_separator = true;
 	}
 
 	public double get_content_height () {
@@ -90,7 +93,10 @@ public class Expander : GLib.Object {
 		}
 
 		foreach (Tool t in tool) {
-			if (t is KerningRange) {
+			if (t is FontName) {
+				t.w = Toolbox.allocation_width * scale;
+				t.h = 20 * scale;
+			} else if (t is KerningRange) {
 				t.w = Toolbox.allocation_width * scale;
 				t.h = 17 * scale;				
 			} else {
@@ -185,33 +191,35 @@ public class Expander : GLib.Object {
 		double yt = y + scroll + 2;
 		double ih2 = 5.4 / 2;
 		double iw2 = 5.4 / 2;
-				
-		cr.save ();
-		cr.set_line_width (0.5);
-		cr.set_source_rgba (0, 0, 0, 0.25);
-		cr.move_to (x, yt);
-		cr.line_to (wd - w - x + 6, yt);	
-		cr.stroke ();
-		cr.restore ();
 		
-		// arrow
-		cr.save ();
-		cr.new_path ();
-		cr.set_line_width (1);
-		cr.set_source_rgba (0, 0, 0, opacity);
-		
-		cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
-		cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
-		cr.line_to (x + iw2, yt + 2 + 1);	
+		if (draw_separator) {		
+			cr.save ();
+			cr.set_line_width (0.5);
+			cr.set_source_rgba (0, 0, 0, 0.25);
+			cr.move_to (x, yt);
+			cr.line_to (wd - w - x + 6, yt);	
+			cr.stroke ();
+			cr.restore ();
+			
+			// arrow
+			cr.save ();
+			cr.new_path ();
+			cr.set_line_width (1);
+			cr.set_source_rgba (0, 0, 0, opacity);
+			
+			cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
+			cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
+			cr.line_to (x + iw2, yt + 2 + 1);	
 
-		cr.close_path();
-		cr.stroke ();
-		cr.restore ();
+			cr.close_path();
+			cr.stroke ();
+			cr.restore ();
+		}
 	}
 	
 	public void draw_content (int w, int h, Context cr) {
 		cr.save ();
-		foreach (var t in tool) {
+		foreach (Tool t in tool) {
 			if (t.tool_is_visible ()) {
 				t.draw (cr);
 			}

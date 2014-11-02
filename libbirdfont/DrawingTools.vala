@@ -89,7 +89,8 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tools = new Expander ();
 		shape_tools = new Expander ();
-			
+		
+		Expander font_name = new Expander ();
 		Expander path_tool_modifiers = new Expander ();
 		Expander key_tools = new Expander ();
 		Expander draw_tool_modifiers = new Expander ();
@@ -102,6 +103,10 @@ public class DrawingTools : ToolCollection  {
 		Expander style_tools = new Expander ();
 		
 		grid_expander = grid;
+
+		// font name 
+		font_name.add_tool (new FontName ());
+		font_name.draw_separator = false;
 
 		// Draw tools
 		foresight_tool = new ForesightTool ("foresight");
@@ -1129,7 +1134,7 @@ public class DrawingTools : ToolCollection  {
 			pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
 		});
 
-		// selection policy	
+		add_expander (font_name);
 		add_expander (draw_tools);
 		
 		if (BirdFont.android) {
