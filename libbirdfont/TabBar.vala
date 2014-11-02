@@ -754,7 +754,7 @@ public class TabBar : GLib.Object {
 				if (tab_index == first_tab) {
 					cr.save ();
 					cr.set_source_rgba (70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
-					cr.rectangle (- 1 / scale, 0, 1 / scale, h);
+					cr.rectangle (0, 0, 1 / scale, h);
 					cr.fill ();
 					cr.restore ();
 				}

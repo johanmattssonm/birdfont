@@ -21,6 +21,8 @@ public class Line : GLib.Object {
 	public static const bool VERTICAL = true;
 	public static const bool HORIZONTAL = false;
 	
+	public bool dashed { get; set; }
+	
 	string label;
 	bool vertical;
 	
@@ -45,6 +47,8 @@ public class Line : GLib.Object {
 		this.vertical = vertical;
 		this.pos = position;
 		
+		dashed = false;
+		
 		r = 0.7;
 		g = 0.7;
 		b = 0.8;
@@ -60,6 +64,7 @@ public class Line : GLib.Object {
 		l.a = a;
 		
 		l.visible = visible;
+		l.dashed = dashed;
 		
 		return l;
 	}
@@ -264,13 +269,22 @@ public class Line : GLib.Object {
 		double p, h, w;
 		double size = (active) ? 8 : 5;
 		
-		if (!visible) return;
+		if (!visible) {
+			return;
+		}
 		
 		cr.save ();
 		cr.set_line_width (1);
 		
-		if (active) cr.set_source_rgba (0, 0, 0.3, 1);
-		else cr.set_source_rgba (r, this.g, b, a);
+		if (dashed) {
+			cr.set_dash ({20, 20}, 0);
+		}
+		
+		if (active) {
+			cr.set_source_rgba (0, 0, 0.3, 1);
+		} else {
+			cr.set_source_rgba (r, this.g, b, a);
+		}
 		
 		// Line
 		if (is_vertical ()) {

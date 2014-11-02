@@ -23,6 +23,7 @@ public class Toolbox : GLib.Object  {
 	public DrawingTools drawing_tools;
 	public KerningTools kerning_tools;
 	public PreviewTools preview_tools;
+	public OverviewTools overview_tools;
 	
 	Tool current_tool;
 	
@@ -49,6 +50,7 @@ public class Toolbox : GLib.Object  {
 		drawing_tools = new DrawingTools (glyph_canvas); 
 		kerning_tools = new KerningTools ();
 		preview_tools = new PreviewTools ();
+		overview_tools = new OverviewTools ();
 		
 		tool_sets.append (drawing_tools);
 		tool_sets.append (kerning_tools);
@@ -62,6 +64,8 @@ public class Toolbox : GLib.Object  {
 				current_set = kerning_tools;
 			} else if (tab_name == "Preview") {
 				current_set = preview_tools;
+			} else if (tab_name == "Overview") {
+				current_set = overview_tools;
 			} else {
 				current_set = drawing_tools;
 			}
@@ -414,16 +418,12 @@ public class Toolbox : GLib.Object  {
 		
 		cr.rectangle (0, 0, w, h);
 		cr.set_line_width (0);
-		if (BirdFont.android) {
-			cr.set_source_rgba (222/255.0, 221/255.0, 222/255.0, 1);
-		} else {
-			cr.set_source_rgba (51/255.0, 54/255.0, 59/255.0, 1);
-		}
+		cr.set_source_rgba (51/255.0, 54/255.0, 59/255.0, 1);
 		cr.fill ();
 		
 		cr.rectangle (0, 0, 1, h);
 		cr.set_line_width (0);
-		cr.set_source_rgba (0/255.0, 0/255.0, 0/255.0, 1);
+		cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		cr.fill ();
 		
 		draw_expanders (w, h, cr);

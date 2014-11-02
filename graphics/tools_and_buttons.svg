@@ -1206,15 +1206,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="6.250608"
-     inkscape:cx="294.83826"
-     inkscape:cy="593.47879"
+     inkscape:zoom="1.1049618"
+     inkscape:cx="329.13142"
+     inkscape:cy="671.7607"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
-     inkscape:window-width="1202"
+     inkscape:window-width="1218"
      inkscape:window-height="745"
-     inkscape:window-x="78"
+     inkscape:window-x="62"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
      showguides="true"
@@ -1228,7 +1228,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -3624,48 +3624,15 @@
        sodipodi:ry="18.070375"
        d="m 219.00678,133.99237 a 15.290318,18.070375 0 1 1 -30.58064,0 15.290318,18.070375 0 1 1 30.58064,0 z"
        transform="matrix(0.39792146,0,0,0.03494084,148.58689,59.804985)" />
-    <image
-       y="0.6927166"
-       x="404.71494"
-       id="image3518"
-       xlink:href="file:///home/johan/H%C3%A4mtningar/BF_CharacterSet_Dark.jpg"
-       height="738"
-       width="909" />
     <rect
-       style="opacity:0.98000004;color:#000000;fill:#ea4d1a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.75199997;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3521"
-       width="5.4599066"
-       height="38.8801"
-       x="270.5"
-       y="134.5" />
-    <rect
-       style="opacity:0.98000004;color:#000000;fill:#464d53;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.75199997;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       id="rect3523"
-       width="1.8100172"
-       height="38.902409"
-       x="270.37643"
-       y="134.53888" />
-    <g
-       id="g4318"
-       inkscape:export-filename="/home/johan/birdfont/icons/tab3_right.png"
+       style="opacity:0.98000004;color:#000000;fill:#5e6c77;fill-opacity:1;fill-rule:nonzero;stroke:#5e6c77;stroke-width:11.4018774;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       id="rect3516"
+       width="10.67344"
+       height="4.1808019"
+       x="395.18619"
+       y="19.503733"
+       inkscape:export-filename="/home/johan/birdfont/icons/overview_counter.png"
        inkscape:export-xdpi="320"
-       inkscape:export-ydpi="320">
-      <rect
-         transform="scale(-1,1)"
-         y="134.50909"
-         x="-284.88071"
-         height="38.8801"
-         width="4.5"
-         id="rect3521-8"
-         style="opacity:0.98000004;color:#000000;fill:#ea4d1a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.75199997;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-      <rect
-         transform="scale(-1,1)"
-         y="134.54797"
-         x="-285.00427"
-         height="38.902409"
-         width="1.8100172"
-         id="rect3523-6"
-         style="opacity:0.98000004;color:#000000;fill:#464d53;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.75199997;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-    </g>
+       inkscape:export-ydpi="320" />
   </g>
 </svg>

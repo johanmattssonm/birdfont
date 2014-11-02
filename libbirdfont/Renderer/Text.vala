@@ -41,7 +41,7 @@ public class Text {
 	string text;
 	GlyphSequence glyph_sequence;
 	double line_gap = 20;
-	public delegate void Iterator (Glyph glyph, double kerning);
+	public delegate void Iterator (Glyph glyph, double kerning, bool last);
 	
 	public Text () {
 		current_font = null;
@@ -80,6 +80,7 @@ public class Text {
 		GlyphRange? gr_left, gr_right;
 		double row_height;
 		GlyphSequence word;
+		Glyph? g;
 		
 		row_height = get_row_height ();
 		
@@ -94,7 +95,9 @@ public class Text {
 		word_with_ligatures = word.process_ligatures ();
 		gr_left = null;
 		gr_right = null;
-		foreach (Glyph? g in word_with_ligatures.glyph) {
+		for (int i = 0; i < word_with_ligatures.glyph.size; i++) {
+			g = word_with_ligatures.glyph.get (i);
+			
 			if (prev == null || wi == 0) {
 				kern = 0;
 			} else {
@@ -109,7 +112,7 @@ public class Text {
 					
 			// process glyph
 			glyph = (g == null) ? font.get_not_def_character ().get_current () : (!) g;
-			iter (glyph, kern);
+			iter (glyph, kern, i + 1 == word_with_ligatures.glyph.size);
 			
 			prev = g;
 			wi++;
@@ -119,9 +122,20 @@ public class Text {
 	public double get_extent (double font_size_in_pixels) {
 		double x = 0;
 		double ratio = font_size_in_pixels / get_row_height ();
-		
-		iterate ((glyph, kerning) => {
-			x += (glyph.get_width () + kerning) * ratio;
+
+		iterate ((glyph, kerning, last) => {
+			double x1, y1, x2, y2;
+			double lsb;
+			
+			glyph.add_help_lines ();
+			lsb = glyph.left_limit;
+			
+			if (!last) {
+				x += (glyph.get_width () + kerning) * ratio;
+			} else {
+				glyph.boundaries (out x1, out y1, out x2, out y2);
+				x += (x2 - lsb) * ratio;
+			}
 		});
 		
 		return x;
@@ -149,10 +163,12 @@ public class Text {
 		y = ratio * (get_row_height () + font.base_line) + py;
 		x = px;
 					
-		iterate ((glyph, kerning) => {
-			double lsb = glyph.left_limit;
+		iterate ((glyph, kerning, last) => {
+			double lsb;;
 			
 			glyph.add_help_lines ();
+			
+			lsb = glyph.left_limit;
 			
 			x += kerning * ratio;
 			cr.save ();

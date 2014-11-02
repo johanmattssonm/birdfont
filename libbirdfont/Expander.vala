@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -18,6 +18,8 @@ using Math;
 namespace BirdFont {
 
 public class Expander : GLib.Object {
+
+	private static const double HEADLINE_MARGIN = 20;
 	
 	public bool draw_separator { get; set; }
 	
@@ -41,7 +43,10 @@ public class Expander : GLib.Object {
 	
 	double content_height = 0;
 	
-	public Expander () {
+	string? headline;
+	
+	public Expander (string? headline = null) {
+		this.headline = headline;
 		tool = new Gee.ArrayList<Tool> ();
 		draw_separator = true;
 	}
@@ -93,7 +98,10 @@ public class Expander : GLib.Object {
 		}
 
 		foreach (Tool t in tool) {
-			if (t is FontName) {
+			if (t is OverviewTool) {
+				t.w = Toolbox.allocation_width;
+				t.h = 15 * scale;
+			} else if (t is FontName) {
 				t.w = Toolbox.allocation_width * scale;
 				t.h = 20 * scale;
 			} else if (t is KerningRange) {
@@ -111,6 +119,11 @@ public class Expander : GLib.Object {
 			content_height = 0;
 		}
 
+		if (headline != null) {
+			yt += 10 + HEADLINE_MARGIN;
+			content_height += yt;
+		}
+		
 		foreach (Tool t in tool) {
 			if (t.tool_is_visible ()) {
 				if (new_row) {
@@ -191,11 +204,17 @@ public class Expander : GLib.Object {
 		double yt = y + scroll + 2;
 		double ih2 = 5.4 / 2;
 		double iw2 = 5.4 / 2;
-		
-		if (draw_separator) {		
+		Text title;
+
+		if (headline != null) {
+			title = new Text ();
+			title.set_text ((!) headline);
+			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			title.draw (cr, x, y + HEADLINE_MARGIN, 8);
+		} else if (draw_separator) {		
 			cr.save ();
 			cr.set_line_width (0.5);
-			cr.set_source_rgba (0, 0, 0, 0.25);
+			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			cr.move_to (x, yt);
 			cr.line_to (wd - w - x + 6, yt);	
 			cr.stroke ();

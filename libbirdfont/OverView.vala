@@ -36,7 +36,7 @@ public class OverView : FontDisplay {
 	public signal void open_new_glyph_signal (unichar c);
 	public signal void open_glyph_signal (GlyphCollection c);
 	
-	GlyphRange glyph_range;
+	public GlyphRange glyph_range;
 	string search_query = "";
 	
 	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
@@ -46,7 +46,7 @@ public class OverView : FontDisplay {
 	Gee.ArrayList<OverViewUndoItem> redo_items = new Gee.ArrayList<OverViewUndoItem> ();
 	
 	/** Show all characters that has been drawn. */
-	bool all_available = true;
+	public bool all_available = true;
 	
 	/** Show unicode database info. */
 	CharacterInfo? character_info = null;
@@ -102,6 +102,8 @@ public class OverView : FontDisplay {
 				
 				set_initial_zoom ();
 			}
+			
+			OverviewTools.update_overview_characterset ();
 		});
 		
 		update_scrollbar ();
@@ -224,6 +226,7 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void selected_canvas () {
+		OverviewTools.update_overview_characterset ();
 		redraw_area (0, 0, allocation.width, allocation.height);
 		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
@@ -292,6 +295,8 @@ public class OverView : FontDisplay {
 		if (selected > visible_items.size) {
 			selected_item = get_selected_item ();
 		}
+		
+		GlyphCanvas.redraw ();
 	}
 	
 	OverViewItem get_selected_item () {

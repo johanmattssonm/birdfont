@@ -373,7 +373,8 @@ public class Glyph : FontDisplay {
 		
 		double xhp = BirdFont.get_current_font ().xheight_position;
 		Line xheight_line = new Line ("x-height", xhp, false);
-		xheight_line.set_color (33 / 255.0, 68 / 255.0, 120 / 255.0, 166 / 255.0);
+		xheight_line.set_color (120 / 255.0, 68 / 255.0, 120 / 255.0, 120 / 255.0);
+		xheight_line.dashed = true;
 		xheight_line.position_updated.connect ((pos) => {				
 				Font f = BirdFont.get_current_font ();
 				f.xheight_position = pos;

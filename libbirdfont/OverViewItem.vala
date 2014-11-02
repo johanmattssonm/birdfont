@@ -32,6 +32,8 @@ public class OverViewItem : GLib.Object {
 	public static double width = 100;
 	public static double height = 130;
 	public static double margin = 20;
+
+	static double glyph_scale = 1.0;
 	
 	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	
 		this.x = x;
@@ -125,40 +127,49 @@ public class OverViewItem : GLib.Object {
 		draw_caption (cr);	
 	}
 
-	private bool draw_thumbnail (Context cr, GlyphCollection? gl, double x, double y) {
+	private void draw_thumbnail (Context cr, GlyphCollection? gl, double x, double y) {
 		Glyph g;
 		Font font;
 		double gx, gy;
 		double x1, x2, y1, y2;
-		double scale;
-		double scale_box;
+		double scale, scale_box;
 		double w, h;
 		double glyph_width, glyph_height;
 		Surface s;
 		Context c;
+		Text fallback;
+		double font_size;
+
+		font = BirdFont.get_current_font ();
+		w = width;
+		h = height;
 		
-		if (gl != null) {
-			font = BirdFont.get_current_font ();
-			w = width;
-			h = height;
+		scale_box = width / DEFAULT_WIDTH;
+
+		s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
+		c = new Context (s);
 			
-			scale_box = (width / DEFAULT_WIDTH);
-					
+		if (gl != null) {
 			g = ((!) gl).get_current ();
 			g.boundaries (out x1, out y1, out x2, out y2);
 		
 			glyph_width = x2 - x1;
 			glyph_height = y2 - y1;
+
+			if (glyph_scale == 1) {
+				// caption height is 20
+				glyph_scale = (h - 20) / (font.top_limit - font.bottom_limit);	
+			}
 			
-			// caption height is 20
-			scale = (h - 20) / (font.top_limit - font.bottom_limit);
+			scale = glyph_scale;
 			
 			gx = ((w / scale) - glyph_width) / 2;
 			gy = (h / scale) - 25 / scale;
-			
-			s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
-			c = new Context (s);
-			
+				
+			if (gx < 0) {
+				glyph_scale = 1 + 2 * gx / width;
+			}
+
 			c.save ();
 			c.scale (scale, scale);	
 
@@ -168,14 +179,22 @@ public class OverViewItem : GLib.Object {
 			
 			g.draw_paths (c);
 			c.restore ();
-
-			cr.save ();
-			cr.set_source_surface (s, x, y - h);
-			cr.paint ();
-			cr.restore ();
+		} else {
+			c.save ();
+			fallback = new Text ();
+			c.set_source_rgba (219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
+			fallback.set_text ((!) character.to_string ());
+			font_size = DEFAULT_HEIGHT * 0.5;
+			gx = (width - fallback.get_extent (font_size)) / 2.0;
+			gy = (height - DEFAULT_HEIGHT / 2.0) / 2.0;
+			fallback.draw (c, gx, gy, font_size);
+			c.restore ();
 		}
 		
-		return (gl != null);
+		cr.save ();
+		cr.set_source_surface (s, x, y - h);
+		cr.paint ();
+		cr.restore ();
 	}
 
 	public bool has_icons () {
