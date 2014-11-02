@@ -1095,7 +1095,7 @@ class TabbarCanvas : DrawingArea {
 			queue_draw_area (x, y, w, h);
 		});
 				
-		set_size_request (20, 33);
+		set_size_request (20, 38);
 	}
 	
 }

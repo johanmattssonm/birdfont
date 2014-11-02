@@ -18,16 +18,33 @@ namespace BirdFont {
 
 /** Test implementation of a birdfont rendering engine. */
 public class Text {
+
+	Font font {
+		get {
+			if (current_font == null) {
+				current_font = new Font ();
+				if (!load_font ("testfont.bf")) {
+					current_font =  new Font ();
+				}
+			}
+			
+			return (!) current_font;
+		}
+		
+		set {
+			current_font = value;
+		}
+	}
 	
 	FontCache font_cache;
-	Font font;
+	Font? current_font;
 	string text;
 	GlyphSequence glyph_sequence;
 	double line_gap = 20;
 	public delegate void Iterator (Glyph glyph, double kerning);
 	
 	public Text () {
-		font = new Font ();
+		current_font = null;
 		text = "";
 		glyph_sequence = new GlyphSequence ();
 		font_cache = FontCache.get_default_cache ();
@@ -99,7 +116,7 @@ public class Text {
 		}
 	}
 
-	public double get_max_extent_x (double font_size_in_pixels) {
+	public double get_extent (double font_size_in_pixels) {
 		double x = 0;
 		double ratio = font_size_in_pixels / get_row_height ();
 		
@@ -120,7 +137,7 @@ public class Text {
 		return f != null;
 	}
 	
-	public void draw (Context cr, int px, int py, int width, int height, double font_size_in_pixels) {
+	public void draw (Context cr, double px, double py, double font_size_in_pixels) {
 		double x, y;
 		double row_height, ratio;
 
@@ -129,7 +146,7 @@ public class Text {
 		
 		cr.save ();
 
-		y = get_row_height () + font.base_line + py;
+		y = ratio * (get_row_height () + font.base_line) + py;
 		x = px;
 					
 		iterate ((glyph, kerning) => {
