@@ -140,7 +140,9 @@ public class CharDatabase {
 		}
 		
 		try {
-			glyph_range.parse_ranges (full_unicode_range.get_all_ranges ());
+			if (!is_null (full_unicode_range)) {
+				glyph_range.parse_ranges (full_unicode_range.get_all_ranges ());
+			}
 		} catch (MarkupError e) {
 			warning (e.message);
 		}

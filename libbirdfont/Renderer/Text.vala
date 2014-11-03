@@ -119,6 +119,7 @@ public class Text {
 		}
 	}
 
+	// FIXME: some fonts does not have on curve extrema
 	public double get_extent (double font_size_in_pixels) {
 		double x = 0;
 		double ratio = font_size_in_pixels / get_row_height ();

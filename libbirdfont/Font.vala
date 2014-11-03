@@ -380,8 +380,10 @@ public class Font : GLib.Object {
 		gc.set_unassigned (true);
 		gc.add_glyph (g);
 		
-		g.left_limit = -33;
+		g.left_limit = -20;
 		g.right_limit = 33;
+		
+		g.add_help_lines ();
 		
 		p.add (-20, top_position - 5);
 		p.add (20, top_position - 5);

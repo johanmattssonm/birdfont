@@ -21,6 +21,9 @@ public class OverviewTools : ToolCollection  {
 	static OverviewTool all_glyphs;
 	static OverviewTool default_glyphs;
 	static OverviewTool unicode;
+	static OverviewTool add_character_set;
+
+	static Gee.ArrayList<OverviewTool> custom_character_sets;
 
 	public static Gee.ArrayList<Expander> expanders;
 
@@ -29,6 +32,7 @@ public class OverviewTools : ToolCollection  {
 		Expander character_sets = new Expander (t_("Character Sets"));
 		
 		expanders = new Gee.ArrayList<Expander> ();
+		custom_character_sets = new Gee.ArrayList<OverviewTool> ();
 		
 		font_name.add_tool (new FontName ());
 		font_name.draw_separator = false;
@@ -37,6 +41,7 @@ public class OverviewTools : ToolCollection  {
 		all_glyphs.select_action.connect ((self) => {
 			OverView overview = MainWindow.get_overview ();
 			overview.display_all_available_glyphs ();
+			update_overview_characterset ();
 		});
 		character_sets.add_tool (all_glyphs);
 
@@ -46,6 +51,7 @@ public class OverviewTools : ToolCollection  {
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_default_range (gr);
 			overview.set_glyph_range (gr);
+			update_overview_characterset ();
 		});
 		character_sets.add_tool (default_glyphs);
 
@@ -55,16 +61,28 @@ public class OverviewTools : ToolCollection  {
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_full_unicode_range (gr);
 			overview.set_glyph_range (gr);
+			update_overview_characterset ();
 		});
 		character_sets.add_tool (unicode);
 
+		add_character_set = new OverviewTool ("+ " + t_("Add"));
+		add_character_set.select_action.connect ((self) => {
+			OverviewTool o = new OverviewTool (t_("Character Set"));
+			custom_character_sets.add (o);
+			character_sets.add_tool (o);
+			update_overview_characterset ();
+		});
+		add_character_set.panel_release_action.connect ((self, b, x, y) => {
+			add_character_set.set_selected (false);
+		});
+		add_character_set.has_counter = false;
+		character_sets.add_tool (add_character_set);
+
 		character_sets.set_persistent (true);
-		character_sets.set_unique (true);
+		character_sets.set_unique (false);
 
 		expanders.add (font_name);
 		expanders.add (character_sets);
-		
-		update_overview_characterset ();
 	}
 	
 	public static void update_overview_characterset () {
@@ -94,6 +112,7 @@ public class OverviewTools : ToolCollection  {
 		all_glyphs.set_selected (false);
 		default_glyphs.set_selected (false);
 		unicode.set_selected (false);
+		add_character_set.set_selected (false);
 		
 		if (overview.all_available) {
 			all_glyphs.set_selected (true);
@@ -101,7 +120,9 @@ public class OverviewTools : ToolCollection  {
 			default_glyphs.set_selected (true);
 		} else if (overview.glyph_range.name == "Unicode") {
 			unicode.set_selected (true);
-		} 
+		}
+		
+		Toolbox.redraw_tool_box ();
 	}
 
 	static string get_display_value (uint size) {

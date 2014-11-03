@@ -93,7 +93,7 @@ public class DrawingTools : ToolCollection  {
 		Expander font_name = new Expander ();
 		Expander path_tool_modifiers = new Expander ();
 		Expander key_tools = new Expander ();
-		Expander draw_tool_modifiers = new Expander ();
+		Expander draw_tool_modifiers = new Expander (t_("Background Tools"));
 		Expander characterset_tools = new Expander ();
 		Expander test_tools = new Expander ();
 		Expander guideline_tools = new Expander ();
@@ -788,12 +788,6 @@ public class DrawingTools : ToolCollection  {
 		characterset_tools.add_tool (avalilable_characters);
 
 		if (BirdFont.has_argument ("--test")) {
-			Tool text_rendering = new Tool ("text_rendering");
-			text_rendering.select_action.connect((self) => {
-				Text.test ();
-			});
-			test_tools.add_tool (text_rendering);
-			
 			Tool test_case = new Tool ("test_case");
 			test_case.select_action.connect((self) => {
 					if (self.is_selected ()) {
