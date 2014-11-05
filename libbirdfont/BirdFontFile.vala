@@ -293,6 +293,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string (@"<version>$(Markup.escape_text (font.version))</version>\n");
 		os.put_string (@"<description>$(Markup.escape_text (font.description))</description>\n");
 		os.put_string (@"<copyright>$(Markup.escape_text (font.copyright))</copyright>\n");
+		os.put_string (@"<weight>$(font.weight)</weight>\n");
 	}
 
 	public void write_lines (DataOutputStream os) throws GLib.Error {
@@ -665,7 +666,11 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "ligature") {
 				parse_ligature (t);
 			}
-												
+
+			if (t.get_name () == "weight") {
+				font.weight = int.parse (t.get_content ());
+			}
+							
 			TooltipArea.show_text (t_("Loading XML data."));
 		}
 
