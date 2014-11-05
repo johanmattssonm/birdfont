@@ -35,10 +35,7 @@ public static int main (string[] arg) {
 	window.set_native (native_window);
 	native_window.init ();
 
-	file = BirdFont.BirdFont.args.get_file ();
-	if (file != "") {
-		FileTab.load_font (file);
-	}
+	birdfont.load_file_from_command_line ();
 
 	load_ucd ();
 	Gtk.main ();
