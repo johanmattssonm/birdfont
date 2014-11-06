@@ -51,6 +51,10 @@ public class Expander : GLib.Object {
 		draw_separator = true;
 	}
 
+	public void set_headline (string? h) {
+		headline = h;
+	}
+
 	public double get_content_height () {
 		return content_height;
 	}
@@ -119,7 +123,7 @@ public class Expander : GLib.Object {
 			content_height = 0;
 		}
 
-		if (headline != null) {
+		if (headline != null && tool.size > 0) {
 			yt += 10 * scale + HEADLINE_MARGIN;
 			content_height += 10 * scale + HEADLINE_MARGIN;
 		}
@@ -206,7 +210,7 @@ public class Expander : GLib.Object {
 		double iw2 = 5.4 / 2;
 		Text title;
 
-		if (headline != null) {
+		if (headline != null && tool.size > 0) {
 			title = new Text ();
 			title.set_text ((!) headline);
 			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);

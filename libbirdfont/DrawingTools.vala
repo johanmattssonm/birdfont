@@ -23,6 +23,7 @@ public class DrawingTools : ToolCollection  {
 	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
 	Expander draw_tools;
+	Expander draw_tool_modifiers;
 	Expander grid_expander;
 	Expander shape_tools;
 	
@@ -93,17 +94,17 @@ public class DrawingTools : ToolCollection  {
 		background_scale = new SpinButton ();
 		
 		draw_tools = new Expander ();
+		draw_tool_modifiers = new Expander (t_("Control Point Tools"));
 		shape_tools = new Expander (t_("Geometrical Shapes"));
 		
 		Expander font_name = new Expander ();
 		Expander key_tools = new Expander (); // tools on android
-		Expander draw_tool_modifiers = new Expander (t_("Background Tools"));
 		Expander characterset_tools = new Expander ();
 		Expander test_tools = new Expander ();
 		Expander guideline_tools = new Expander (t_("Guidelines & Grid"));
 		Expander view_tools = new Expander (t_("Zoom"));
 		Expander grid = new Expander (t_("Grid Size"));
-		
+
 		Expander style_tools = new Expander ();
 		
 		grid_expander = grid;
@@ -1299,6 +1300,8 @@ public class DrawingTools : ToolCollection  {
 	}
 
 	void show_background_tool_modifiers () {
+		draw_tool_modifiers.set_headline (t_("Background Tools"));
+		
 		cut_background.set_tool_visibility (true);
 		show_bg.set_tool_visibility (true);
 		bg_selection.set_tool_visibility (true);
@@ -1311,6 +1314,8 @@ public class DrawingTools : ToolCollection  {
 	}
 			
 	void show_point_tool_modifiers () {
+		draw_tool_modifiers.set_headline (t_("Control Point Tools"));
+		
 		tie_handles.set_tool_visibility (true);
 		reflect_handle.set_tool_visibility (true);
 		create_line.set_tool_visibility (true);
@@ -1322,6 +1327,8 @@ public class DrawingTools : ToolCollection  {
 	}
 	
 	void show_object_tool_modifiers () {
+		draw_tool_modifiers.set_headline (t_("Object Tools"));
+		
 		x_coordinate.set_tool_visibility (true);
 		y_coordinate.set_tool_visibility (true);
 		rotation.set_tool_visibility (true);
