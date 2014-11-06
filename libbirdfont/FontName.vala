@@ -29,12 +29,22 @@ public class FontName : Tool {
 	public override void draw (Context cr) {
 		Text font_name;
 		double text_height;
+		double extent;
+		double width = Toolbox.allocation_width * Toolbox.get_scale ();
+		double max_width;
 		
 		cr.save ();
 		// tab label
 		font_name = new Text ();
 		font_name.set_text (BirdFont.get_current_font ().get_full_name ());
 		text_height = 12;
+		
+		max_width = (width - 2 * x * Toolbox.get_scale ());
+		extent = font_name.get_extent (text_height) * Toolbox.get_scale ();
+		if (extent > max_width) {
+			text_height *= max_width / extent;
+		}
+		
 		cr.set_source_rgba (234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 		font_name.draw (cr, x, y + 3, text_height);
 		cr.restore ();

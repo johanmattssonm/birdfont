@@ -98,7 +98,7 @@ public class Text {
 		for (int i = 0; i < word_with_ligatures.glyph.size; i++) {
 			g = word_with_ligatures.glyph.get (i);
 			
-			if (prev == null || wi == 0) {
+			if (g == null || prev == null || wi == 0) {
 				kern = 0;
 			} else {
 				return_if_fail (wi < word_with_ligatures.ranges.size);

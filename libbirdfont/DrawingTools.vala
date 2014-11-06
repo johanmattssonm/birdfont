@@ -1325,10 +1325,10 @@ public class DrawingTools : ToolCollection  {
 		height.set_tool_visibility (true);
 		skew.set_tool_visibility (true);
 
-		reverse_path_tool.set_selected (true);
-		move_layer.set_selected (true);
-		flip_vertical.set_selected (true);
-		flip_horizontal.set_selected (true);
+		reverse_path_tool.set_tool_visibility (true);
+		move_layer.set_tool_visibility (true);
+		flip_vertical.set_tool_visibility (true);
+		flip_horizontal.set_tool_visibility (true);
 	}
 	
 	void update_drawing_and_background_tools (Tool current_tool) {
