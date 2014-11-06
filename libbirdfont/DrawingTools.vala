@@ -1273,6 +1273,10 @@ public class DrawingTools : ToolCollection  {
 		width.set_tool_visibility (false);
 		height.set_tool_visibility (false);
 		skew.set_tool_visibility (false);
+		reverse_path_tool.set_tool_visibility (false);
+		move_layer.set_tool_visibility (false);
+		flip_vertical.set_tool_visibility (false);
+		flip_horizontal.set_tool_visibility (false);
 
 		tie_handles.set_tool_visibility (false);
 		reflect_handle.set_tool_visibility (false);
