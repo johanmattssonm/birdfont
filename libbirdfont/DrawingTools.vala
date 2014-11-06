@@ -81,24 +81,28 @@ public class DrawingTools : ToolCollection  {
 	public Tool inser_point_on_path_tool;
 	Tool undo_tool;
 	Tool select_all_button;
-				
+	
+	Tool reverse_path_tool;
+	Tool move_layer;
+	Tool flip_vertical;
+	Tool flip_horizontal;
+	
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
 		
 		background_scale = new SpinButton ();
 		
 		draw_tools = new Expander ();
-		shape_tools = new Expander ();
+		shape_tools = new Expander (t_("Geometrical Shapes"));
 		
 		Expander font_name = new Expander ();
-		Expander path_tool_modifiers = new Expander ();
-		Expander key_tools = new Expander ();
+		Expander key_tools = new Expander (); // tools on android
 		Expander draw_tool_modifiers = new Expander (t_("Background Tools"));
 		Expander characterset_tools = new Expander ();
 		Expander test_tools = new Expander ();
-		Expander guideline_tools = new Expander ();
-		Expander view_tools = new Expander ();
-		Expander grid = new Expander ();
+		Expander guideline_tools = new Expander (t_("Guidelines & Grid"));
+		Expander view_tools = new Expander (t_("Zoom"));
+		Expander grid = new Expander (t_("Grid Size"));
 		
 		Expander style_tools = new Expander ();
 		
@@ -563,7 +567,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tool_modifiers.add_tool (create_line);
 	
-		Tool reverse_path_tool = new Tool ("reverse_path", t_("Create counter from outline"));
+		reverse_path_tool = new Tool ("reverse_path", t_("Create counter from outline"));
 		reverse_path_tool.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			
@@ -573,9 +577,9 @@ public class DrawingTools : ToolCollection  {
 		
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 		});
-		path_tool_modifiers.add_tool (reverse_path_tool);
+		draw_tool_modifiers.add_tool (reverse_path_tool);
 
-		Tool move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"), 'd');
+		move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"), 'd');
 		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 
@@ -584,21 +588,21 @@ public class DrawingTools : ToolCollection  {
 				g.path_list.insert (0, p);
 			}
 		});
-		path_tool_modifiers.add_tool (move_layer);
+		draw_tool_modifiers.add_tool (move_layer);
 
-		Tool flip_vertical = new Tool ("flip_vertical", t_("Flip path vertically"));
+		flip_vertical = new Tool ("flip_vertical", t_("Flip path vertically"));
 		flip_vertical.select_action.connect ((self) => {
 			MoveTool.flip_vertical ();
 			MainWindow.get_current_glyph ().update_view ();
 		});
-		path_tool_modifiers.add_tool (flip_vertical);
+		draw_tool_modifiers.add_tool (flip_vertical);
 
-		Tool flip_horizontal = new Tool ("flip_horizontal", t_("Flip path horizontally"));
+		flip_horizontal = new Tool ("flip_horizontal", t_("Flip path horizontally"));
 		flip_horizontal.select_action.connect ((self) => {
 			MoveTool.flip_horizontal ();
 			MainWindow.get_current_glyph ().update_view ();
 		});
-		path_tool_modifiers.add_tool (flip_horizontal);
+		draw_tool_modifiers.add_tool (flip_horizontal);
 
 		// background tools
 		background_scale = new SpinButton ("scale_background", t_("Set size for background image"));
@@ -1136,8 +1140,7 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		add_expander (draw_tool_modifiers);
-		add_expander (path_tool_modifiers);	
-		
+
 		add_expander (characterset_tools);
 		add_expander (guideline_tools);
 		add_expander (grid);
@@ -1158,9 +1161,6 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tool_modifiers.set_persistent (true);
 		draw_tool_modifiers.set_unique (false);
-		
-		path_tool_modifiers.set_persistent (false);
-		path_tool_modifiers.set_unique (false);
 
 		characterset_tools.set_persistent (true);
 		characterset_tools.set_unique (true);
@@ -1324,6 +1324,11 @@ public class DrawingTools : ToolCollection  {
 		width.set_tool_visibility (true);
 		height.set_tool_visibility (true);
 		skew.set_tool_visibility (true);
+
+		reverse_path_tool.set_selected (true);
+		move_layer.set_selected (true);
+		flip_vertical.set_selected (true);
+		flip_horizontal.set_selected (true);
 	}
 	
 	void update_drawing_and_background_tools (Tool current_tool) {
@@ -1354,7 +1359,12 @@ public class DrawingTools : ToolCollection  {
 
 			rectangle.set_selected (false);
 			circle.set_selected (false);
-		
+			
+			reverse_path_tool.set_selected (false);
+			move_layer.set_selected (false);
+			flip_vertical.set_selected (false);
+			flip_horizontal.set_selected (false);
+			
 			current_tool.set_selected (true);
 		
 			if (resize_tool.is_selected () || move_tool.is_selected ()) {
