@@ -499,6 +499,13 @@ public class BirdFont {
 #endif
 	}
 	
+	public static void load_font_from_command_line () {
+		string file = args.get_file ();
+		if (file != "") {
+			FileTab.load_font (file);
+		}	
+	}
+	
 	public static Font get_current_font () {
 		return current_font;
 	}

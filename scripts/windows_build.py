@@ -23,7 +23,7 @@ library_ldflags= "";
 
 import configfile
 configfile.write_config (prefix)
-configfile.write_compile_parameters (".\\\\", "build", "gcc", "gee-1.0")
+configfile.write_compile_parameters (".\\\\", "build", "gcc", "gee-1.0", "False")
 
 import build
 from translations import compile_translations
