@@ -186,7 +186,7 @@ public class MenuTab : FontDisplay {
 			BirdFont.new_font ();			
 			MainWindow.native_window.font_loaded ();
 			
-			select_overview ();
+			show_default_characters ();
 			
 			GlyphCanvas.redraw ();
 		});
@@ -494,7 +494,7 @@ public class MenuTab : FontDisplay {
 		MainWindow.native_window.set_text_listener (listener);
 	}
 	
-	public static void show_all_available_characters () {
+	public static void show_default_characters () {
 		MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
 		OverView o = MainWindow.get_overview ();
 		GlyphRange gr = new GlyphRange ();
@@ -509,7 +509,7 @@ public class MenuTab : FontDisplay {
 		MainWindow.get_tab_bar ().select_tab_name ("Overview");
 	}
 	
-	public static void show_default_characters () {
+	public static void show_all_available_characters () {
 		MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
 		OverView o = MainWindow.get_overview ();
 		
