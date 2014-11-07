@@ -21,7 +21,6 @@ public class OverviewTools : ToolCollection  {
 	static OverviewTool all_glyphs;
 	static OverviewTool default_glyphs;
 	static OverviewTool unicode;
-	static OverviewTool add_character_set;
 
 	static Gee.ArrayList<OverviewTool> custom_character_sets;
 
@@ -64,20 +63,7 @@ public class OverviewTools : ToolCollection  {
 			update_overview_characterset ();
 		});
 		character_sets.add_tool (unicode);
-
-		add_character_set = new OverviewTool ("+ " + t_("Add"));
-		add_character_set.select_action.connect ((self) => {
-			OverviewTool o = new OverviewTool (t_("Character Set"));
-			custom_character_sets.add (o);
-			character_sets.add_tool (o);
-			update_overview_characterset ();
-		});
-		add_character_set.panel_release_action.connect ((self, b, x, y) => {
-			add_character_set.set_selected (false);
-		});
-		add_character_set.has_counter = false;
-		character_sets.add_tool (add_character_set);
-
+		
 		character_sets.set_persistent (true);
 		character_sets.set_unique (false);
 
@@ -116,7 +102,6 @@ public class OverviewTools : ToolCollection  {
 		all_glyphs.set_selected (false);
 		default_glyphs.set_selected (false);
 		unicode.set_selected (false);
-		add_character_set.set_selected (false);
 		
 		if (overview.all_available) {
 			all_glyphs.set_selected (true);
