@@ -51,7 +51,8 @@ def has_posixvala ():
 	if not posixvala:
 		print (OKGREEN + "Glib will be used instead of Posix (libc)." + ENDC)
 		return "False"
-		
+	else: 
+		print (OKGREEN + "Using posix profile." + ENDC)			
 	return "True"
 
 def configure (gtk, libbgee, posixvala):

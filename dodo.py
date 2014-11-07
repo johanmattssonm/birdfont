@@ -97,7 +97,7 @@ valac_options = [
 libbirdxml = Vala(src='libbirdxml', build='build', library='birdxml', so_version=version.LIBBIRDXML_SO_VERSION, pkg_libs=LIBBIRD_XML_LIBS)
 def task_libbirdxml():
 
-    if config.POSIXVALA:
+    if config.POSIXVALA == True:
         yield libbirdxml.gen_c(valac_options + ['--profile posix'])
     else:
         yield libbirdxml.gen_c(valac_options)
