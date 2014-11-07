@@ -101,7 +101,8 @@ public class MenuTab : FontDisplay {
 		if (BirdFont.get_current_font ().is_empty ()) {
 			show_default_characters ();
 		} else {
-			show_all_available_characters ();
+			MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
+			MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		}
 	}
 	
@@ -517,8 +518,8 @@ public class MenuTab : FontDisplay {
 			MenuTab.new_file ();
 		}
 		
-		o.display_all_available_glyphs ();
 		MainWindow.get_tab_bar ().select_tab_name ("Overview");
+		OverviewTools.show_all_available_characters ();
 	}
 }
 

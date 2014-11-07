@@ -1271,6 +1271,8 @@ public class DrawingTools : ToolCollection  {
 		cubic_points.set_tool_visibility (true);
 		double_points.set_tool_visibility (true);
 		convert_points.set_tool_visibility (true);
+		
+		reverse_path_tool.set_tool_visibility (true);
 	}
 	
 	void show_object_tool_modifiers () {

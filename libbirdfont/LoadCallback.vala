@@ -41,9 +41,7 @@ public class LoadCallback : GLib.Object {
 		dialog.signal_save.connect (() => {
 			MainWindow.close_all_tabs ();
 			MenuTab.set_save_callback (new SaveCallback ());
-			MenuTab.save_callback.file_saved.connect (() => {
-				load_new_font ();
-			});
+			MenuTab.save_callback.file_saved.connect (load_new_font);
 			MenuTab.save_callback.save (); // background thread
 		});
 		
@@ -77,7 +75,7 @@ public class LoadCallback : GLib.Object {
 				
 				file_loaded.connect (() => {
 					KerningTools.update_kerning_classes ();
-					MenuTab.select_overview ();
+					MenuTab.show_all_available_characters ();
 				});
 			}
 		});

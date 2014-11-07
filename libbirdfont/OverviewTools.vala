@@ -85,6 +85,10 @@ public class OverviewTools : ToolCollection  {
 		expanders.add (character_sets);
 	}
 	
+	public static void show_all_available_characters () {
+		all_glyphs.select_action (all_glyphs);
+	}
+	
 	public static void update_overview_characterset () {
 		GlyphRange gr;
 		uint size;

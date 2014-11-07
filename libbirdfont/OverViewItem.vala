@@ -184,9 +184,9 @@ public class OverViewItem : GLib.Object {
 			fallback = new Text ();
 			c.set_source_rgba (219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
 			fallback.set_text ((!) character.to_string ());
-			font_size = DEFAULT_HEIGHT * 0.5;
+			font_size = DEFAULT_HEIGHT;
 			gx = (width - fallback.get_extent (font_size)) / 2.0;
-			gy = (height - DEFAULT_HEIGHT / 2.0) / 2.0;
+			gy = 30 - (DEFAULT_HEIGHT / 2.0) * (height / DEFAULT_HEIGHT);
 			fallback.draw (c, gx, gy, font_size);
 			c.restore ();
 		}

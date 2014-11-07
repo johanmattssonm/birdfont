@@ -24,6 +24,10 @@ public class FontName : Tool {
 		if (name != null) {
 			base.name = (!) name;
 		}
+		
+		select_action.connect ((tool) => {
+			MenuTab.select_overview ();
+		});
 	}
 	
 	public override void draw (Context cr) {
