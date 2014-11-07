@@ -745,53 +745,6 @@ public class DrawingTools : ToolCollection  {
 			
 		draw_tool_modifiers.add_tool (auto_trace);		
 		
-		// Character set tools
-		Tool full_unicode = new Tool ("utf_8", t_("Show full unicode characters set"));
-		full_unicode.select_action.connect ((self) => {
-				MainWindow.get_tab_bar ().add_unique_tab (new OverView ());	
-				OverView o = MainWindow.get_overview ();
-				GlyphRange gr = new GlyphRange ();
-				
-				if (!BirdFont.get_current_font ().initialised) {
-					MenuTab.new_file ();
-				}
-				
-				DefaultCharacterSet.use_full_unicode_range (gr);
-				o.set_glyph_range (gr);
-				MainWindow.get_tab_bar ().select_tab_name ("Overview");
-			});
-		characterset_tools.add_tool (full_unicode);
-
-		Tool custom_character_set = new Tool ("custom_character_set", t_("Show default characters set"), 'r', CTRL);
-		custom_character_set.select_action.connect ((self) => {
-			MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
-			OverView o = MainWindow.get_overview ();
-			GlyphRange gr = new GlyphRange ();
-
-			if (!BirdFont.get_current_font ().initialised) {
-				MenuTab.new_file ();
-			}
-			
-			DefaultCharacterSet.use_default_range (gr);
-			o.set_glyph_range (gr);
-			MainWindow.get_tab_bar ().select_tab_name ("Overview");
-		});
-		characterset_tools.add_tool (custom_character_set);
-
-		Tool avalilable_characters = new Tool ("available_characters", t_("Show all characters in the font"), 'd', CTRL);
-		avalilable_characters.select_action.connect ((self) => {
-			MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
-			OverView o = MainWindow.get_overview ();
-			
-			if (!BirdFont.get_current_font ().initialised) {
-				MenuTab.new_file ();
-			}
-			
-			o.display_all_available_glyphs ();
-			MainWindow.get_tab_bar ().select_tab_name ("Overview");
-		});
-		characterset_tools.add_tool (avalilable_characters);
-
 		if (BirdFont.has_argument ("--test")) {
 			Tool test_case = new Tool ("test_case");
 			test_case.select_action.connect((self) => {

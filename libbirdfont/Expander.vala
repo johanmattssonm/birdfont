@@ -210,33 +210,35 @@ public class Expander : GLib.Object {
 		double iw2 = 5.4 / 2;
 		Text title;
 
-		if (headline != null && tool.size > 0) {
-			title = new Text ();
-			title.set_text ((!) headline);
-			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			title.draw (cr, x, yt + HEADLINE_MARGIN, 8);
-		} else if (draw_separator) {		
-			cr.save ();
-			cr.set_line_width (0.5);
-			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			cr.move_to (x, yt);
-			cr.line_to (wd - w - x + 6, yt);	
-			cr.stroke ();
-			cr.restore ();
-			
-			// arrow
-			cr.save ();
-			cr.new_path ();
-			cr.set_line_width (1);
-			cr.set_source_rgba (0, 0, 0, opacity);
-			
-			cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
-			cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
-			cr.line_to (x + iw2, yt + 2 + 1);	
+		if (tool.size > 0) {
+			if (headline != null) {
+				title = new Text ();
+				title.set_text ((!) headline);
+				cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+				title.draw (cr, x, yt + HEADLINE_MARGIN, 8);
+			} else if (draw_separator) {		
+				cr.save ();
+				cr.set_line_width (0.5);
+				cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+				cr.move_to (x, yt);
+				cr.line_to (wd - w - x + 6, yt);	
+				cr.stroke ();
+				cr.restore ();
+				
+				// arrow
+				cr.save ();
+				cr.new_path ();
+				cr.set_line_width (1);
+				cr.set_source_rgba (0, 0, 0, opacity);
+				
+				cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
+				cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
+				cr.line_to (x + iw2, yt + 2 + 1);	
 
-			cr.close_path();
-			cr.stroke ();
-			cr.restore ();
+				cr.close_path();
+				cr.stroke ();
+				cr.restore ();
+			}
 		}
 	}
 	

@@ -33,6 +33,10 @@ public class KerningTools : ToolCollection  {
 		Expander kerning_tools = new Expander ();
 		classes = new Expander ();
 		expanders = new Gee.ArrayList<Expander> ();
+
+		Expander font_name = new Expander ();
+		font_name.add_tool (new FontName ());
+		font_name.draw_separator = false;
 		
 		Tool new_kerning_class = new Tool ("kerning_class", t_("Create new kerning class."));
 		new_kerning_class.select_action.connect ((self) => {
@@ -126,6 +130,7 @@ public class KerningTools : ToolCollection  {
 		classes.set_persistent (true);
 		classes.set_unique (true);
 		
+		expanders.add (font_name);
 		expanders.add (kerning_tools);
 		expanders.add (classes);
 	}

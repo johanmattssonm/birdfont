@@ -99,9 +99,9 @@ public class MenuTab : FontDisplay {
 		}
 		
 		if (BirdFont.get_current_font ().is_empty ()) {
-			Toolbox.select_tool_by_name ("custom_character_set");
+			show_default_characters ();
 		} else {
-			Toolbox.select_tool_by_name ("available_characters");	
+			show_all_available_characters ();
 		}
 	}
 	
@@ -488,10 +488,37 @@ public class MenuTab : FontDisplay {
 			o.scroll_to_glyph (ligature_name);
 			
 			MainWindow.native_window.hide_text_input ();
-			Toolbox.select_tool_by_name ("available_characters");
+			show_all_available_characters ();
 		});
 		
 		MainWindow.native_window.set_text_listener (listener);
+	}
+	
+	public static void show_all_available_characters () {
+		MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
+		OverView o = MainWindow.get_overview ();
+		GlyphRange gr = new GlyphRange ();
+
+		if (!BirdFont.get_current_font ().initialised) {
+			MenuTab.new_file ();
+		}
+			
+		DefaultCharacterSet.use_default_range (gr);
+		o.set_glyph_range (gr);
+
+		MainWindow.get_tab_bar ().select_tab_name ("Overview");
+	}
+	
+	public static void show_default_characters () {
+		MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
+		OverView o = MainWindow.get_overview ();
+		
+		if (!BirdFont.get_current_font ().initialised) {
+			MenuTab.new_file ();
+		}
+		
+		o.display_all_available_glyphs ();
+		MainWindow.get_tab_bar ().select_tab_name ("Overview");
 	}
 }
 
