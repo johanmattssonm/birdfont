@@ -63,7 +63,7 @@ public class OverviewTool : Tool {
 		cr.save ();
 		font_name = new Text ();
 		font_name.set_text (label);
-		text_height = 10;
+		text_height = 18;
 
 		if (is_selected ()) {
 			cr.set_source_rgba (1, 1, 1, 1);
@@ -71,7 +71,7 @@ public class OverviewTool : Tool {
 			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		}
 		
-		font_name.draw (cr, x + 14, y + 4, text_height);
+		font_name.draw (cr, x + 14, y - 4.5, text_height);
 		cr.restore ();
 
 		// glyph count
@@ -88,10 +88,10 @@ public class OverviewTool : Tool {
 			
 			glyph_count = new Text ();
 			glyph_count.set_text (@"$(this.number)");
-			text_height = 6 / scale;
+			text_height = 12 / scale;
 			
 			center_x = bgx + ((!) counter_background).get_width () / 2.0  - glyph_count.get_extent (text_height) / 2.0;
-			center_y = bgy + ((!) counter_background).get_height () / 2.0 - text_height / 2.0;
+			center_y = bgy + ((!) counter_background).get_height () / 2.0 - text_height / 2.0 - 3 / scale;;
 			
 			if (is_selected ()) {
 				cr.set_source_rgba (1, 1, 1, 1);

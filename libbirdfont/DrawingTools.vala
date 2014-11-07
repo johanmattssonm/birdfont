@@ -93,13 +93,12 @@ public class DrawingTools : ToolCollection  {
 		
 		background_scale = new SpinButton ();
 		
-		draw_tools = new Expander ();
+		draw_tools = new Expander (t_("Drawing Tools"));
 		draw_tool_modifiers = new Expander (t_("Control Point Tools"));
 		shape_tools = new Expander (t_("Geometrical Shapes"));
 		
 		Expander font_name = new Expander ();
 		Expander key_tools = new Expander (); // tools on android
-		Expander characterset_tools = new Expander ();
 		Expander test_tools = new Expander ();
 		Expander guideline_tools = new Expander (t_("Guidelines & Grid"));
 		Expander view_tools = new Expander (t_("Zoom"));
@@ -1094,8 +1093,6 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		add_expander (draw_tool_modifiers);
-
-		add_expander (characterset_tools);
 		add_expander (guideline_tools);
 		add_expander (grid);
 		add_expander (view_tools);
@@ -1115,9 +1112,6 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tool_modifiers.set_persistent (true);
 		draw_tool_modifiers.set_unique (false);
-
-		characterset_tools.set_persistent (true);
-		characterset_tools.set_unique (true);
 		
 		test_tools.set_persistent (true);
 	

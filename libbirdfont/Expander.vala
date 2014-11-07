@@ -215,7 +215,7 @@ public class Expander : GLib.Object {
 				title = new Text ();
 				title.set_text ((!) headline);
 				cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-				title.draw (cr, x, yt + HEADLINE_MARGIN, 8);
+				title.draw (cr, x, yt + HEADLINE_MARGIN - 7, 14);
 			} else if (draw_separator) {		
 				cr.save ();
 				cr.set_line_width (0.5);

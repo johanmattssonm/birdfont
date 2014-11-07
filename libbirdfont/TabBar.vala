@@ -649,7 +649,6 @@ public class TabBar : GLib.Object {
 		double tabs_end = width / scale;
 		double h = height / scale;
 		double tab_height;
-		double tab_y;
 		Tab t;
 		Text label;
 					
@@ -665,7 +664,6 @@ public class TabBar : GLib.Object {
 		}
 		
 		tab_height = this.height / scale;
-		tab_y = h - tab_height;
 		
 		for (int tab_index = first_tab; tab_index < tabs.size; tab_index++) {
 			t = tabs.get (tab_index);
@@ -728,10 +726,10 @@ public class TabBar : GLib.Object {
 			// tab label
 			label = new Text ();
 			label.set_text (t.get_label ());
-			text_height = 8 / scale;
+			text_height = 16 / scale;
 			text_width = label.get_extent (text_height);
 			center_x = tab_width / 2.0 - text_width / 2.0;
-			center_y = h / 2.0 - text_height / 2;
+			center_y = tab_height / 2.0 - 12 / scale;
 			
 			if (tab_index == selected) {
 				cr.set_source_rgba (40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
