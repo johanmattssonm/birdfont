@@ -59,6 +59,7 @@ public class DrawingTools : ToolCollection  {
 	SpinButton auto_trace_resolution;
 	Tool auto_trace;
 	SpinButton auto_trace_simplify;
+	Tool delete_background;
 
 	Tool rectangle;
 	Tool circle;
@@ -743,7 +744,14 @@ public class DrawingTools : ToolCollection  {
 		});			
 			
 		draw_tool_modifiers.add_tool (auto_trace);		
-		
+
+		delete_background = new Tool ("delete_background", t_("Delete background image"));
+		delete_background.select_action.connect ((self) => {
+			MainWindow.get_current_glyph ().delete_background ();
+		});			
+			
+		draw_tool_modifiers.add_tool (delete_background);	
+				
 		if (BirdFont.has_argument ("--test")) {
 			Tool test_case = new Tool ("test_case");
 			test_case.select_action.connect((self) => {
@@ -1244,6 +1252,7 @@ public class DrawingTools : ToolCollection  {
 		auto_trace_resolution.set_tool_visibility (false);
 		auto_trace.set_tool_visibility (false);
 		auto_trace_simplify.set_tool_visibility (false);
+		delete_background.set_tool_visibility (false);
 	}
 
 	void show_background_tool_modifiers () {
@@ -1258,6 +1267,7 @@ public class DrawingTools : ToolCollection  {
 		auto_trace_resolution.set_tool_visibility (true);
 		auto_trace.set_tool_visibility (true);
 		auto_trace_simplify.set_tool_visibility (true);
+		delete_background.set_tool_visibility (true);
 	}
 			
 	void show_point_tool_modifiers () {
@@ -1311,6 +1321,7 @@ public class DrawingTools : ToolCollection  {
 			stroke_tool.set_selected (false);
 			track_tool.set_selected (false);
 			move_canvas.set_selected (false);
+			delete_background.set_selected (false);
 			
 			show_bg.set_selected (g.get_background_visible ());
 			show_bg.set_active (false);

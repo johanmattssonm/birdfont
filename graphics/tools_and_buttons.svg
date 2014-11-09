@@ -1523,9 +1523,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="25.134834"
-     inkscape:cx="297.92082"
-     inkscape:cy="210.59135"
+     inkscape:zoom="4.4432529"
+     inkscape:cx="411.21063"
+     inkscape:cy="248.2595"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -5523,6 +5523,14 @@
        x="375.91254"
        y="550.1947"
        inkscape:export-filename="/home/johan/birdfont/icons/auto_trace_resolution.png"
+       inkscape:export-xdpi="319"
+       inkscape:export-ydpi="319" />
+    <path
+       style="fill:#000000;fill-opacity:0;stroke:#656a73;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 406.78643,542.63457 -2.15625,2.25 4.1875,3.96875 -4.1875,3.96875 2.15625,2.25 4.28125,-4.0625 4.3125,4.0625 2.125,-2.25 -4.1875,-3.96875 4.1875,-3.96875 -2.125,-2.25 -4.3125,4.0625 -4.28125,-4.0625 z"
+       id="rect3375-3"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/johan/birdfont/icons/delete_background.png"
        inkscape:export-xdpi="319"
        inkscape:export-ydpi="319" />
   </g>

@@ -165,6 +165,12 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
+	public void delete_background () {
+		store_undo_state ();
+		background_image = null;
+		GlyphCanvas.redraw ();
+	}
+	
 	public Path? get_active_path () {
 		return_val_if_fail (active_paths.size > 0, null);
 		return active_paths.get (active_paths.size - 1);
