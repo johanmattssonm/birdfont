@@ -36,21 +36,13 @@ public class BackgroundTools : ToolCollection  {
 		parts.set_persistent (true);
 		parts.set_unique (true);
 		
+		background_tools.add_tool (select_background);
+		
 		LabelTool add_new_image = new LabelTool (t_("Add"));
 		add_new_image.select_action.connect ((t) => {
 			load_image ();
 		});
 		background_selection.add_tool (add_new_image);
-
-		LabelTool remove_image = new LabelTool (t_("Remove"));
-		background_selection.add_tool (remove_image);
-
-		select_background.select_action.connect ((t) => {
-			foreach (Tool tool in background_tools.tool) {
-				tool.set_selected (false);
-			}
-		});
-		background_tools.add_tool (select_background);
 
 		background_tools.add_tool (DrawingTools.move_background);
 		background_tools.add_tool (DrawingTools.move_canvas);
@@ -70,30 +62,46 @@ public class BackgroundTools : ToolCollection  {
 		parts.tool.clear ();
 	}
 
+	void set_default_canvas () {
+		MainWindow.get_tab_bar ().select_tab_name ("Backgrounds");
+	}
+
 	public void add_part (BackgroundSelection selection) {
 		BackgroundPartLabel label;
 		label = new BackgroundPartLabel (selection, t_("No Glyph Selected"));
 		label.select_action.connect ((t) => {
 			BackgroundPartLabel bpl = (BackgroundPartLabel) t;
+			GlyphSelection gs = new GlyphSelection ();
 
+			gs.selected_glyph.connect ((gc) => {
+				bpl.selection.assigned_glyph = gc;
+				bpl.label = gc.get_name ();
+				set_default_canvas ();
+			});
+			
+			if (!bpl.deleted) {
+				GlyphCanvas.set_display (gs);	
+			}			
 		});
 		label.delete_action.connect ((t) => {
 			// don't invalidate the toolbox iterator
 			IdleSource idle = new IdleSource (); 
 			idle.set_callback (() => {
-				Glyph g;
+				GlyphCollection g;
 				BackgroundPartLabel bpl;
 				
 				bpl = (BackgroundPartLabel) t;
+				bpl.deleted = true;
 				
 				if (bpl.selection.assigned_glyph != null){
 					g = (!) bpl.selection.assigned_glyph;
-					g.set_background_image (null);
+					g.get_current ().set_background_image (null);
 				}
 			
 				parts.tool.remove (bpl);
 				bpl.selection.parent_image.selections.remove (bpl.selection);
 				MainWindow.get_toolbox ().update_expanders ();
+				set_default_canvas ();
 				Toolbox.redraw_tool_box ();
 				GlyphCanvas.redraw ();
 				return false;
@@ -122,7 +130,6 @@ public class BackgroundTools : ToolCollection  {
 	}
 	
 	void add_image_file (string file_path) {
-		Font font = BirdFont.get_current_font ();
 		File f = File.new_for_path (file_path);
 		string fn = (!) f.get_basename ();
 		BackgroundImage image = new BackgroundImage (file_path);
@@ -136,7 +143,7 @@ public class BackgroundTools : ToolCollection  {
 		image.name = fn;
 		
 		add_image (image);
-		font.add_background_image (image);
+		
 		GlyphCanvas.redraw ();
 		MainWindow.get_toolbox ().update_expanders ();
 		Toolbox.redraw_tool_box ();
@@ -146,16 +153,50 @@ public class BackgroundTools : ToolCollection  {
 		LabelTool image_selection;
 		double xc, yc;
 		BackgroundTab bt;
+		Font font;
+		
+		font = BirdFont.get_current_font ();
 
 		image_selection = new BackgroundSelectionLabel (image, image.name);
 		image_selection.select_action.connect ((t) => {
 			BackgroundTab background_tab = BackgroundTab.get_instance ();
 			BackgroundSelectionLabel bg = (BackgroundSelectionLabel) t;
-			background_tab.set_background_image (bg.img);
-			background_tab.set_background_visible (true);
-			ZoomTool.zoom_full_background_image ();
-			GlyphCanvas.redraw ();		
+			
+			if (!bg.deleted) {
+				background_tab.set_background_image (bg.img);
+				background_tab.set_background_visible (true);
+				ZoomTool.zoom_full_background_image ();
+				GlyphCanvas.redraw ();
+			}
+			
+			set_default_canvas ();
 		});
+		
+		image_selection.delete_action.connect ((t) => {
+			// don't invalidate the toolbox iterator
+			IdleSource idle = new IdleSource (); 
+			idle.set_callback (() => {
+				GlyphCollection g;
+				BackgroundSelectionLabel bsl;
+				Font f = BirdFont.get_current_font ();
+				
+				bsl = (BackgroundSelectionLabel) t;
+				bsl.deleted = true;
+			
+				files.tool.remove (bsl);
+				f.background_images.remove (bsl.img);
+
+				MainWindow.get_toolbox ().update_expanders ();
+				set_default_canvas ();
+				Toolbox.redraw_tool_box ();
+				GlyphCanvas.redraw ();
+				return false;
+			});
+			idle.attach (null);
+		});
+		
+		image_selection.has_delete_button = true;
+		
 		files.add_tool (image_selection);
 
 		bt = BackgroundTab.get_instance ();
@@ -181,21 +222,27 @@ public class BackgroundTools : ToolCollection  {
 				
 		image.center_in_glyph ();
 		ZoomTool.zoom_full_background_image ();
+		
+		font.add_background_image (image);
 	}
 	
 	class BackgroundSelectionLabel : LabelTool {
 		public BackgroundImage img;
+		public bool deleted;
 		public BackgroundSelectionLabel (BackgroundImage img, string base_name) {
 			base (base_name);
 			this.img = img;
+			deleted = false;
 		}
 	}
 
 	class BackgroundPartLabel : LabelTool {
+		public bool deleted;
 		public BackgroundSelection selection;
 		public BackgroundPartLabel (BackgroundSelection selection, string base_name) {
 			base (base_name);
 			this.selection = selection;
+			deleted = false;
 		}
 	}
 }

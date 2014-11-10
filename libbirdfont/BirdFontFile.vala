@@ -733,10 +733,7 @@ class BirdFontFile : GLib.Object {
 					((!) new_img).name = name;
 					Toolbox.background_tools.add_image ((!) new_img);
 				} else {
-					warning (@"No image found, name: $name");
-					if (new_img == null) {
-						warning ("No image created.");
-					}					
+					warning (@"No image found, name: $name");				
 				}
 			}
 		}

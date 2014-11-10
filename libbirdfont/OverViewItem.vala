@@ -90,25 +90,11 @@ public class OverViewItem : GLib.Object {
 		return s;
 	}
 
-	public void double_click (uint button, double px, double py) {
+	public bool double_click (uint button, double px, double py) {
 		selected = (x <= px <= x + width) && (y <= py <= y + height);
-		
-		if (selected) {
-			edit_glyph ();
-		}
+		return selected;
 	}
-	
-	public void edit_glyph () {
-		OverView overview = MainWindow.get_overview ();
-		
-		if (glyphs == null) {
-			overview.open_new_glyph_signal (character);
-		} else {
-			overview.open_glyph_signal ((!) glyphs);
-			((!) glyphs).get_current ().close_path ();
-		}		
-	}
-	
+
 	public void draw (Context cr) {
 		cr.save ();
 		cr.set_source_rgba (1, 1, 1, 1);

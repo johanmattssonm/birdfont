@@ -14,27 +14,18 @@
 
 namespace BirdFont {
 
-public class BackgroundSelection : GLib.Object {
-	
-	public GlyphCollection? assigned_glyph;
-	public BackgroundImage image;
-	public BackgroundImage parent_image;
-	
-	public double x;
-	public double y;
-	public double w;
-	public double h;
-	
-	public BackgroundSelection (BackgroundImage img, BackgroundImage parent_img,
-		double x, double y, double w, double h) {
-			
-		assigned_glyph = null;
-		parent_image = parent_img;
-		image = img;
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
+public class GlyphSelection : OverView {
+
+	public signal void selected_glyph (GlyphCollection gc);
+
+	public GlyphSelection () {
+		base (null, false);
+		display_all_available_glyphs ();
+		
+		open_glyph_signal.connect ((gc) => {
+			selected_glyph (gc);
+			Toolbox.redraw_tool_box ();
+		});
 	}
 }
 
