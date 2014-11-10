@@ -20,7 +20,8 @@ namespace BirdFont {
 public class BackgroundImage {
 	
 	public string name = "";
-		
+	public Gee.ArrayList<BackgroundSelection> selections;
+	
 	public double img_x = 0;
 	public double img_y = 0;
 	
@@ -92,6 +93,7 @@ public class BackgroundImage {
 				
 	public BackgroundImage (string file_name) {
 		path = file_name;
+		selections = new Gee.ArrayList<BackgroundSelection> ();
 	}
 
 	public BackgroundImage copy () {
@@ -108,8 +110,16 @@ public class BackgroundImage {
 		bg.threshold = threshold;
 		bg.high_contrast = high_contrast;
 		bg.trace_resolution = trace_resolution;
+		
+		foreach (BackgroundSelection b in selections) {
+			bg.selections.add (b);
+		}
 
 		return bg;		
+	}
+
+	public void add_selection (BackgroundSelection bs) {
+		selections.add (bs);
 	}
 
 	public void set_trace_simplification (double s) {

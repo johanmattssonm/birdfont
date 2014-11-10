@@ -22,6 +22,8 @@ public class LabelTool : Tool {
 	public string label { get; set; }
 	public string number { get; set; }
 	public bool has_counter { get; set; }
+	public bool has_delete_button { get; set; }
+	public signal void delete_action (LabelTool self);
 
 	public LabelTool (string label) {
 		base ();
@@ -29,10 +31,14 @@ public class LabelTool : Tool {
 		this.label = label;
 		this.number = "-";
 		
+		has_delete_button = false;
 		has_counter = false;
 		counter_background = Icons.get_icon ("overview_counter.png");
 		
 		panel_press_action.connect ((selected, button, tx, ty) => {
+			if (has_delete_button && y <= ty <= y + h && tx >= w - 30) {
+				delete_action (this);
+			}
 		});
 
 		panel_move_action.connect ((selected, button, tx, ty) => {
@@ -100,6 +106,16 @@ public class LabelTool : Tool {
 			cr.restore ();
 		}
 		
+		if (has_delete_button) {
+			cr.save ();
+			cr.set_line_width (1);
+			cr.move_to (w - 20, y + h / 2 - 2.5 + 2);
+			cr.line_to (w - 25, y + h / 2 + 2.5 + 2);
+			cr.move_to (w - 20, y + h / 2 + 2.5 + 2);
+			cr.line_to (w - 25, y + h / 2 - 2.5 + 2);	
+			cr.stroke ();
+			cr.restore ();
+		}
 	}
 }
 

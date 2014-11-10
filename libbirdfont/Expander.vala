@@ -155,8 +155,14 @@ public class Expander : GLib.Object {
 		update_tool_position ();
 	}
 	
-	public void add_tool (Tool t) {
-		tool.add (t);
+	public void add_tool (Tool t, int position = -1) {
+		if (position < 0) {
+			tool.add (t);
+		} else {
+			return_if_fail (position <= tool.size);
+			tool.insert (position, t);
+		}
+		
 		update_tool_position ();
 		
 		t.select_action.connect ((selected) => {

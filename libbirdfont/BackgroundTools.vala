@@ -16,9 +16,11 @@ namespace BirdFont {
 
 public class BackgroundTools : ToolCollection  {
 	Expander files;
+	Expander parts;
 	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
 	public BackgroundTools () {
+		BackgroundSelectionTool select_background = new BackgroundSelectionTool ();
 		Expander background_selection = new Expander (t_("Images"));
 		Expander background_tools = new Expander ();
 
@@ -30,6 +32,10 @@ public class BackgroundTools : ToolCollection  {
 		files.set_persistent (true);
 		files.set_unique (true);
 
+		parts = new Expander (t_("Parts"));
+		parts.set_persistent (true);
+		parts.set_unique (true);
+		
 		LabelTool add_new_image = new LabelTool (t_("Add"));
 		add_new_image.select_action.connect ((t) => {
 			load_image ();
@@ -38,13 +44,12 @@ public class BackgroundTools : ToolCollection  {
 
 		LabelTool remove_image = new LabelTool (t_("Remove"));
 		background_selection.add_tool (remove_image);
-		
-		Tool select_background = new Tool ("select_background", t_("Select Background"));
-		select_background.select_action.connect ((self) => {
+
+		select_background.select_action.connect ((t) => {
+			foreach (Tool tool in background_tools.tool) {
+				tool.set_selected (false);
+			}
 		});
-		
-		select_background.editor_events = true;
-		select_background.persistent = true;
 		background_tools.add_tool (select_background);
 
 		background_tools.add_tool (DrawingTools.move_background);
@@ -57,10 +62,48 @@ public class BackgroundTools : ToolCollection  {
 		expanders.add (DrawingTools.guideline_tools);
 		expanders.add (background_selection);
 		expanders.add (files);
+		expanders.add (parts);
 	}
 
 	public void remove_images () {
 		files.tool.clear ();
+		parts.tool.clear ();
+	}
+
+	public void add_part (BackgroundSelection selection) {
+		BackgroundPartLabel label;
+		label = new BackgroundPartLabel (selection, t_("No Glyph Selected"));
+		label.select_action.connect ((t) => {
+			BackgroundPartLabel bpl = (BackgroundPartLabel) t;
+
+		});
+		label.delete_action.connect ((t) => {
+			// don't invalidate the toolbox iterator
+			IdleSource idle = new IdleSource (); 
+			idle.set_callback (() => {
+				Glyph g;
+				BackgroundPartLabel bpl;
+				
+				bpl = (BackgroundPartLabel) t;
+				
+				if (bpl.selection.assigned_glyph != null){
+					g = (!) bpl.selection.assigned_glyph;
+					g.set_background_image (null);
+				}
+			
+				parts.tool.remove (bpl);
+				bpl.selection.parent_image.selections.remove (bpl.selection);
+				MainWindow.get_toolbox ().update_expanders ();
+				Toolbox.redraw_tool_box ();
+				GlyphCanvas.redraw ();
+				return false;
+			});
+			idle.attach (null);
+		});
+		label.has_delete_button = true;
+		parts.add_tool (label, 0);
+		MainWindow.get_toolbox ().update_expanders ();
+		Toolbox.redraw_tool_box ();
 	}
 
 	public override Gee.ArrayList<Expander> get_expanders () {
@@ -95,6 +138,7 @@ public class BackgroundTools : ToolCollection  {
 		add_image (image);
 		font.add_background_image (image);
 		GlyphCanvas.redraw ();
+		MainWindow.get_toolbox ().update_expanders ();
 		Toolbox.redraw_tool_box ();
 	}
 	
@@ -103,10 +147,10 @@ public class BackgroundTools : ToolCollection  {
 		double xc, yc;
 		BackgroundTab bt;
 
-		image_selection = new BackgroundSelection (image, image.name);
+		image_selection = new BackgroundSelectionLabel (image, image.name);
 		image_selection.select_action.connect ((t) => {
 			BackgroundTab background_tab = BackgroundTab.get_instance ();
-			BackgroundSelection bg = (BackgroundSelection) t;
+			BackgroundSelectionLabel bg = (BackgroundSelectionLabel) t;
 			background_tab.set_background_image (bg.img);
 			background_tab.set_background_visible (true);
 			ZoomTool.zoom_full_background_image ();
@@ -139,11 +183,19 @@ public class BackgroundTools : ToolCollection  {
 		ZoomTool.zoom_full_background_image ();
 	}
 	
-	class BackgroundSelection : LabelTool {
+	class BackgroundSelectionLabel : LabelTool {
 		public BackgroundImage img;
-		public BackgroundSelection (BackgroundImage img, string base_name) {
+		public BackgroundSelectionLabel (BackgroundImage img, string base_name) {
 			base (base_name);
 			this.img = img;
+		}
+	}
+
+	class BackgroundPartLabel : LabelTool {
+		public BackgroundSelection selection;
+		public BackgroundPartLabel (BackgroundSelection selection, string base_name) {
+			base (base_name);
+			this.selection = selection;
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -28,10 +28,15 @@ public class CutBackgroundTool : Tool {
 	bool is_set = false;
 	bool is_done = false;
 		
-	public signal void new_image (BackgroundImage file);
-	
-	public CutBackgroundTool (string name) {
-		base (name, t_("Crop background image"));
+	public signal void new_image (BackgroundImage file, 
+		double coordinate_x, double coordinate_y, double width, double height);
+		
+	public bool self_destination = true;
+		
+	public CutBackgroundTool (string name, string? tool_tip = null) {
+		string tt;
+		tt = (tool_tip == null) ? t_("Crop background image") : (!) tool_tip;
+		base (name, tt);
 
 		select_action.connect((self) => {
 		});
@@ -85,7 +90,7 @@ public class CutBackgroundTool : Tool {
 		});
 		
 		draw_action.connect ((self, cr, glyph) => {
-			if (is_visible) {
+			if (is_visible && x1 - x2 != 0 && y1 - y2 != 0) {
 				// draw a border around the selection
 				cr.save ();
 				cr.set_line_width (2.0);
@@ -107,16 +112,21 @@ public class CutBackgroundTool : Tool {
 			}
 		});
 
-		new_image.connect ((file) => {
-			Glyph glyph = MainWindow.get_current_glyph ();
-			TabBar tb = MainWindow.get_tab_bar ();
+		new_image.connect ((file, x, y, w, h) => {
+			Glyph glyph;
+			TabBar tb;
 			
-			glyph.store_undo_state ();
+			if (self_destination) {		
+				glyph = MainWindow.get_current_glyph ();
+				tb = MainWindow.get_tab_bar ();
 			
-			glyph.set_background_image (file);
-			tb.select_tab_name (glyph.get_name ());
-			
-			glyph.set_background_visible (true);
+				glyph.store_undo_state ();
+				
+				glyph.set_background_image (file);
+				tb.select_tab_name (glyph.get_name ());
+				
+				glyph.set_background_visible (true);
+			}
 		});
 
 	}
@@ -216,6 +226,7 @@ public class CutBackgroundTool : Tool {
 		File img_file_next;
 		string fn;
 		double wc, hc;
+		double px, py, w, h;
 		
 		img_dir = get_child (f.get_backgrounds_folder (), "parts");
 
@@ -265,7 +276,12 @@ public class CutBackgroundTool : Tool {
 		newbg.img_scale_x = original_bg.img_scale_x;
 		newbg.img_scale_y = original_bg.img_scale_y;
 
-		new_image (newbg);
+		px = Glyph.path_coordinate_x (fmin (x1, x2));
+		py = Glyph.path_coordinate_y (fmin (y1, y2));
+		w = Glyph.path_coordinate_x (fmax (x1, x2)) - px;
+		h = Glyph.path_coordinate_y (fmax (y1, y2)) - py;
+		
+		new_image (newbg, px, py, w, h);
 #endif
 	}
 }
