@@ -58,7 +58,7 @@ public class FileTab : FontDisplay {
 				MainWindow.get_drawing_tools ().parse_grid (v);
 			}
 			
-			MainWindow.get_drawing_tools ().background_scale.set_value (f.background_scale);
+			DrawingTools.background_scale.set_value (f.background_scale);
 			KerningTools.update_kerning_classes ();
 			MenuTab.show_all_available_characters ();
 		});

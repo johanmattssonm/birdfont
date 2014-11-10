@@ -12,8 +12,6 @@
     Lesser General Public License for more details.
 */
 
-// FIXME: using Git;
-
 namespace BirdFont {
 
 /** BirdFontPart is a class for parsing .bfp files. The file format is 
@@ -27,8 +25,6 @@ public class BirdFontPart : GLib.Object{
 	Font font;
 	Gee.ArrayList<string> parts;
 	string root_directory;
-	// Index git_index;
-	// Repository? git_repository;
 
 	static string FILE_ATTRIBUTES = "standard::*";
 
@@ -38,22 +34,6 @@ public class BirdFontPart : GLib.Object{
 		this.font = font;
 		parts = new Gee.ArrayList<string> ();
 		root_directory = "";
-	}
-
-	public static void git_init () {
-		if (!running_git) {
-// FIXME: 			Git.Threads.init ();
-		}
-		
-		running_git = true;
-	}
-
-	public static void git_shutdown () {
-		if (running_git) {
-// FIXME: 			Git.Threads.shutdown ();
-		}
-		
-		running_git = false;
 	}
 	
 	public bool load (string bfp_file) {
@@ -94,30 +74,6 @@ public class BirdFontPart : GLib.Object{
 		return path;
 	}
 	
-	bool create_git_repository () {
-		// FIXME: 
-		/*
-		File root = File.new_for_path (root_directory);
-		File git = root.get_child (".git");
-		Repository repo;
-		
-		if (!git.query_exists ()) {
-			if (Repository.init (out repo, root_directory, false) != Git.Error.OK) {
-				warning ("Can not create git repository.");
-				return false;
-			}
-		}
-
-		if (Repository.open (out git_repository, root_directory) != Git.Error.OK) {
-			warning ("Can not open git repository.");
-			return false;
-		}
-					
-		// FIXME: ((!) git_repository).get_index (out git_index);
-*/
-		return true;
-	}
-	
 	public bool save () {
 		DataOutputStream os;
 		BirdFontFile bf = new BirdFontFile (font);
@@ -125,35 +81,10 @@ public class BirdFontPart : GLib.Object{
 		string file_name;
 		string glyph_dir_name;
 		File glyph_file;
-// FIXME: 		Signature? sig;
-// FIXME: 		object_id id;
-// FIXME: 		Git.Tree tree;
-		int nparents;
-// FIXME: 		Git.Commit[] parents;
 		
 		if (root_directory == "") {
 			warning ("No directory is created for this birdfont part.");
 			return false;
-		}
-		
-		git_init ();
-		
-		if (!create_git_repository ()) {
-			return false;
-		}
-		
-		// FIXME: return_val_if_fail (!is_null (git_repository), false);
-		/*
-		if (git_index.write_tree (out id) != Git.Error.OK) {
-			warning ("write_tree failed");
-			error = true;
-		}
-			
-		Signature.create_now (out sig, "Test Namn", "test@test.com");
-		
-		if (((!) git_repository).lookup_tree(out tree, id) != Git.Error.OK) {
-			warning ("Can't find tree.");
-			error = true;
 		}
             
 		try {
@@ -245,28 +176,19 @@ public class BirdFontPart : GLib.Object{
 			bf.write_kerning (os);
 			bf.write_closing_root_tag (os);
 			os.close ();
-			
+
+			os = create_file ("images.bfp");
+			bf.write_root_tag (os);
+			bf.write_images (os);
+			bf.write_closing_root_tag (os);
+			os.close ();
+						
 		} catch (GLib.Error e) {
 			warning (@"Failed to save bfp files to $root_directory\n");
 			warning (@"$(e.message) \n");
 			error = true;
 		}
-
-		if (((!) git_repository).is_empty) {
-			nparents = 0;
-		} else {
-			nparents = 0;
-		}
 		
-		parents = new Git.Commit[0];
-		if (((!) git_repository).create_commit (id, "HEAD", (!) sig, (!) sig, 
-				"utf-8", "Improved typeface", tree, parents) != Git.Error.OK) {
-			warning ("Can't commit");
-			error = true;
-		}
-		
-		git_shutdown ();
-		*/
 		return !error;
 	}
 

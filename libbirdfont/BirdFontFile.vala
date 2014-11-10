@@ -125,17 +125,6 @@ class BirdFontFile : GLib.Object {
 			write_settings (os);
 			
 			os.put_string ("\n");
-			// FIXME: add this to a font specific settings file
-			if (font.background_images.size > 0) {
-				os.put_string (@"<images>\n");
-				
-				foreach (string f in font.background_images) {
-					os.put_string (@"\t<img src=\"$f\"/>\n");
-				}
-			
-				os.put_string (@"</images>\n");
-				os.put_string ("\n");
-			}
 			
 			font.glyph_cache.for_each ((gc) => {
 				try {
@@ -146,6 +135,10 @@ class BirdFontFile : GLib.Object {
 					
 				TooltipArea.show_text (t_("Saving"));
 			});
+			
+			os.put_string ("\n");
+			
+			write_images (os);
 			
 			os.put_string ("\n");
 			write_ligatures (os);
@@ -162,15 +155,14 @@ class BirdFontFile : GLib.Object {
 							
 							if (!bg.is_valid ()) {
 								continue;
-							}
+							}	
 							
-							os.put_string (@"<background-image sha1=\"");
-							os.put_string (bg.get_sha1 ());
-							os.put_string ("\" ");
-							os.put_string (" data=\"");
-							os.put_string (data);
-							os.put_string ("\" />\n");	
+							write_image (os, bg.get_sha1 (), data);
 						}
+					}
+					
+					foreach (BackgroundImage b in font.background_images) {
+						write_image (os, b.get_sha1 (), b.get_png_base64 ());
 					}
 				} catch (GLib.Error ef) {
 					warning (@"Failed to save $path \n");
@@ -193,6 +185,33 @@ class BirdFontFile : GLib.Object {
 		}
 	
 		return true;
+	}
+	
+	public void write_images (DataOutputStream os) throws GLib.Error {
+		if (font.background_images.size > 0) {
+			os.put_string (@"<images>\n");
+			
+			foreach (BackgroundImage b in font.background_images) {
+				
+				if (b.name == "") {
+					warning ("No name.");
+				}
+				
+				os.put_string (@"\t<image name=\"$(b.name)\" sha1=\"$(b.get_sha1 ())\"/>\n");
+			}
+		
+			os.put_string (@"</images>\n");
+			os.put_string ("\n");
+		}	
+	}
+	
+	public void write_image (DataOutputStream os, string sha1, string data) throws GLib.Error {
+		os.put_string (@"<background-image sha1=\"");
+		os.put_string (sha1);
+		os.put_string ("\" ");
+		os.put_string (" data=\"");
+		os.put_string (data);
+		os.put_string ("\" />\n");
 	}
 	
 	public void write_root_tag (DataOutputStream os) throws GLib.Error {
@@ -671,12 +690,56 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "weight") {
 				font.weight = int.parse (t.get_content ());
 			}
-							
+
+			if (t.get_name () == "images") {
+				parse_images (t);
+			}
+										
 			TooltipArea.show_text (t_("Loading XML data."));
 		}
 
 		TooltipArea.show_text ("");
 		return true;
+	}
+	
+	public void parse_images (Tag tag) {
+		BackgroundImage? new_img;
+		string name;
+		File img_file;
+		
+		foreach (Tag t in tag) {
+			if (t.get_name () == "image") {
+				name = "";
+				new_img = null;
+				img_file = get_child (font.get_backgrounds_folder (), "parts");
+
+				foreach (Attribute attr in t.get_attributes ()) {
+					if (attr.get_name () == "sha1") {
+						img_file = get_child (img_file, attr.get_content () + ".png");
+
+						if (!img_file.query_exists ()) {
+							warning (@"Background file has not been created yet. $((!) img_file.get_path ())");
+						}
+						
+						new_img = new BackgroundImage ((!) img_file.get_path ());
+					}
+					
+					if (attr.get_name () == "name") {
+						name = attr.get_content ();
+					}
+				}
+				
+				if (new_img != null && name != "") {
+					((!) new_img).name = name;
+					Toolbox.background_tools.add_image ((!) new_img);
+				} else {
+					warning (@"No image found, name: $name");
+					if (new_img == null) {
+						warning ("No image created.");
+					}					
+				}
+			}
+		}
 	}
 	
 	private void create_background_files (Tag root) {

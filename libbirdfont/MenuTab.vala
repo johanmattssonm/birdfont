@@ -135,7 +135,7 @@ public class MenuTab : FontDisplay {
 	}
 		
 	public static void set_font_setting_from_tools (Font f) {	
-		f.background_scale = MainWindow.get_drawing_tools ().background_scale.get_display_value ();
+		f.background_scale = DrawingTools.background_scale.get_display_value ();
 		
 		f.grid_width.clear ();
 		
@@ -520,6 +520,18 @@ public class MenuTab : FontDisplay {
 		
 		MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		OverviewTools.show_all_available_characters ();
+	}
+	
+	public static void show_background_tab () {
+		BackgroundTab bt;
+		
+		if (suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
+		bt = BackgroundTab.get_instance ();
+		MainWindow.get_tab_bar ().add_unique_tab (bt);
 	}
 }
 

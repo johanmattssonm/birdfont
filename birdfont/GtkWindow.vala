@@ -536,6 +536,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		import_svg_item.activate.connect (() => { SvgParser.import (); });	
 		import_svg_item.add_accelerator ("activate", accel_group, 'I', Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
+		Gtk.MenuItem add_backgrounds = new Gtk.MenuItem.with_mnemonic (t_("Add _Backgrounds"));
+		edit_menu.append (add_backgrounds);
+		add_backgrounds.activate.connect (() => { MenuTab.show_background_tab (); });	
+
 		Gtk.MenuItem simplify_item = new Gtk.MenuItem.with_mnemonic (t_("Simpl_ify Path"));
 		edit_menu.append (simplify_item);
 		simplify_item.activate.connect (() => { MenuTab.simplify_path (); });	

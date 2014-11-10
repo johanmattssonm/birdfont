@@ -18,11 +18,11 @@ namespace BirdFont {
 
 public class OverviewTools : ToolCollection  {
 
-	static OverviewTool all_glyphs;
-	static OverviewTool default_glyphs;
-	static OverviewTool unicode;
+	static LabelTool all_glyphs;
+	static LabelTool default_glyphs;
+	static LabelTool unicode;
 
-	static Gee.ArrayList<OverviewTool> custom_character_sets;
+	static Gee.ArrayList<LabelTool> custom_character_sets;
 
 	public static Gee.ArrayList<Expander> expanders;
 
@@ -31,12 +31,13 @@ public class OverviewTools : ToolCollection  {
 		Expander character_sets = new Expander (t_("Character Sets"));
 		
 		expanders = new Gee.ArrayList<Expander> ();
-		custom_character_sets = new Gee.ArrayList<OverviewTool> ();
+		custom_character_sets = new Gee.ArrayList<LabelTool> ();
 		
 		font_name.add_tool (new FontName ());
 		font_name.draw_separator = false;
 				
-		all_glyphs = new OverviewTool (t_("All Glyphs"));
+		all_glyphs = new LabelTool (t_("All Glyphs"));
+		all_glyphs.has_counter = true;
 		all_glyphs.select_action.connect ((self) => {
 			OverView overview = MainWindow.get_overview ();
 			overview.display_all_available_glyphs ();
@@ -44,7 +45,8 @@ public class OverviewTools : ToolCollection  {
 		});
 		character_sets.add_tool (all_glyphs);
 
-		default_glyphs = new OverviewTool (t_("Default"));
+		default_glyphs = new LabelTool (t_("Default"));
+		default_glyphs.has_counter = true;
 		default_glyphs.select_action.connect ((self) => {
 			OverView overview = MainWindow.get_overview ();
 			GlyphRange gr = new GlyphRange ();
@@ -54,7 +56,8 @@ public class OverviewTools : ToolCollection  {
 		});
 		character_sets.add_tool (default_glyphs);
 
-		unicode = new OverviewTool (t_("Unicode"));
+		unicode = new LabelTool (t_("Unicode"));
+		unicode.has_counter = true;
 		unicode.select_action.connect ((self) => {
 			OverView overview = MainWindow.get_overview ();
 			GlyphRange gr = new GlyphRange ();

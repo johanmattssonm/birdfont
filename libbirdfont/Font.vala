@@ -35,7 +35,7 @@ public class Font : GLib.Object {
 	/** Table with ligatures. */
 	public GlyphTable ligature;
 	
-	public Gee.ArrayList<string> background_images = new Gee.ArrayList<string> ();
+	public Gee.ArrayList<BackgroundImage> background_images;
 	public string background_scale = "1";
 		
 	/** Top margin */
@@ -128,6 +128,8 @@ public class Font : GLib.Object {
 		
 		deleted_glyphs = new Gee.ArrayList<Glyph> ();
 		ligatures_substitution = new Ligatures ();
+		
+		background_images = new Gee.ArrayList<BackgroundImage> ();
 	}
 
 	public Ligatures get_ligatures () {
@@ -540,8 +542,8 @@ public class Font : GLib.Object {
 		return null;
 	}
 	
-	public void add_background_image (string file) {
-		background_images.add (file);
+	public void add_background_image (BackgroundImage image) {
+		background_images.add (image);
 	}
 	
 	/** Delete temporary rescue files. */

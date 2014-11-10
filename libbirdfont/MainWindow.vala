@@ -84,7 +84,7 @@ public class MainWindow : GLib.Object {
 	}
 
 	public static DrawingTools get_drawing_tools () {
-		return tools.drawing_tools;
+		return Toolbox.drawing_tools;
 	}
 
 	public void set_native (NativeWindow nw) {

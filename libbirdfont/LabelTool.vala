@@ -16,20 +16,20 @@ using Cairo;
 
 namespace BirdFont {
 
-public class OverviewTool : Tool {
+public class LabelTool : Tool {
 
 	private static ImageSurface? counter_background = null;
 	public string label { get; set; }
 	public string number { get; set; }
 	public bool has_counter { get; set; }
 
-	public OverviewTool (string label) {
+	public LabelTool (string label) {
 		base ();
 
 		this.label = label;
 		this.number = "-";
 		
-		has_counter = true;
+		has_counter = false;
 		counter_background = Icons.get_icon ("overview_counter.png");
 		
 		panel_press_action.connect ((selected, button, tx, ty) => {
@@ -37,10 +37,6 @@ public class OverviewTool : Tool {
 
 		panel_move_action.connect ((selected, button, tx, ty) => {
 			return false;
-		});
-
-		panel_release_action.connect ((selected, button, tx, ty) => {
-			set_selected (y <= ty <= y + h);
 		});
 	}
 	

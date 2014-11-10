@@ -102,7 +102,7 @@ public class Expander : GLib.Object {
 		}
 
 		foreach (Tool t in tool) {
-			if (t is OverviewTool) {
+			if (t is LabelTool) {
 				t.w = Toolbox.allocation_width * scale;
 				t.h = 15 * scale;
 			} else if (t is FontName) {

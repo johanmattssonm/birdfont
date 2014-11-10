@@ -18,12 +18,13 @@ using Math;
 namespace BirdFont {
 
 public class Toolbox : GLib.Object  {
-	ToolCollection current_set; 
+	public static ToolCollection current_set; 
 	
-	public DrawingTools drawing_tools;
+	public static DrawingTools drawing_tools;
 	public KerningTools kerning_tools;
 	public PreviewTools preview_tools;
 	public OverviewTools overview_tools;
+	public static BackgroundTools background_tools;
 	
 	Tool current_tool;
 	
@@ -51,6 +52,7 @@ public class Toolbox : GLib.Object  {
 		kerning_tools = new KerningTools ();
 		preview_tools = new PreviewTools ();
 		overview_tools = new OverviewTools ();
+		background_tools = new BackgroundTools ();
 		
 		tool_sets.append (drawing_tools);
 		tool_sets.append (kerning_tools);
@@ -66,6 +68,8 @@ public class Toolbox : GLib.Object  {
 				current_set = preview_tools;
 			} else if (tab_name == "Overview") {
 				current_set = overview_tools;
+			} else if (tab_name == "Backgrounds") {
+				current_set = background_tools;
 			} else {
 				current_set = drawing_tools;
 			}

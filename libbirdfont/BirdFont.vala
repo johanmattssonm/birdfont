@@ -529,6 +529,10 @@ public class BirdFont {
 			MainWindow.get_drawing_tools ().add_new_grid ();
 		}
 		
+		if (!is_null (Toolbox.background_tools)) {
+			Toolbox.background_tools.remove_images ();
+		}
+		
 		KerningTools.update_kerning_classes ();
 		
 		return current_font;

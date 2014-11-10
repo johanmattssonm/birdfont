@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class ZoomTool : Tool {
+public class ZoomTool : Tool {
 
 	int zoom_area_begin_x = -1;
 	int zoom_area_begin_y = -1;
@@ -69,10 +69,12 @@ class ZoomTool : Tool {
 		});
 	}
 
-	public void zoom_full_background_image () {
+	public static void zoom_full_background_image () {
 		BackgroundImage bg;
 		Glyph g = MainWindow.get_current_glyph ();
 		int x, y;
+		
+		g.reset_zoom ();
 		
 		if (g.get_background_image () == null) {
 			return;

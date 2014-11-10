@@ -17,7 +17,7 @@ using Math;
 
 namespace BirdFont {
 
-class CutBackgroundTool : Tool {
+public class CutBackgroundTool : Tool {
 
 	double x1 = 0;
 	double y1 = 0;

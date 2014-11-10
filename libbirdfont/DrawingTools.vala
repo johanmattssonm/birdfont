@@ -23,9 +23,11 @@ public class DrawingTools : ToolCollection  {
 	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
 	Expander draw_tools;
-	Expander draw_tool_modifiers;
 	Expander grid_expander;
 	Expander shape_tools;
+	public static Expander draw_tool_modifiers;
+	public static Expander view_tools;
+	public static Expander guideline_tools;
 	
 	public static SpinButton precision;
 	
@@ -38,11 +40,11 @@ public class DrawingTools : ToolCollection  {
 
 	ForesightTool foresight_tool;
 	PointTool point_tool;
-	ZoomTool zoom_tool;
+	static ZoomTool zoom_tool;
 	public static ResizeTool resize_tool;
 	StrokeTool stroke_tool;
 	TrackTool track_tool;
-	BackgroundTool move_background;
+	public static BackgroundTool move_background;
 	public static Tool move_canvas;
 	
 	Tool quadratic_points;
@@ -50,11 +52,11 @@ public class DrawingTools : ToolCollection  {
 	Tool double_points;
 	Tool convert_points;
 
-	CutBackgroundTool cut_background;
+	public static CutBackgroundTool cut_background;
 	Tool show_bg;
 	Tool bg_selection;
 	SpinButton background_threshold;
-	public SpinButton background_scale;
+	public static SpinButton background_scale;
 	Tool high_contrast_background;
 	SpinButton auto_trace_resolution;
 	Tool auto_trace;
@@ -97,12 +99,12 @@ public class DrawingTools : ToolCollection  {
 		draw_tools = new Expander (t_("Drawing Tools"));
 		draw_tool_modifiers = new Expander (t_("Control Point Tools"));
 		shape_tools = new Expander (t_("Geometrical Shapes"));
+		view_tools = new Expander (t_("Zoom"));
+		guideline_tools = new Expander (t_("Guidelines & Grid"));
 		
 		Expander font_name = new Expander ();
 		Expander key_tools = new Expander (); // tools on android
 		Expander test_tools = new Expander ();
-		Expander guideline_tools = new Expander (t_("Guidelines & Grid"));
-		Expander view_tools = new Expander (t_("Zoom"));
 		Expander grid = new Expander (t_("Grid Size"));
 
 		Expander style_tools = new Expander ();
@@ -878,10 +880,7 @@ public class DrawingTools : ToolCollection  {
 		zoom_bg.select_action.connect((self) => {
 			if (MainWindow.get_current_glyph ().get_background_image () != null) {
 				zoom_tool.store_current_view ();					
-				glyph_canvas.get_current_display ().reset_zoom ();
-				
-				zoom_tool.zoom_full_background_image ();
-				
+				ZoomTool.zoom_full_background_image ();
 				glyph_canvas.redraw_area(0, 0, GlyphCanvas.allocation.width, GlyphCanvas.allocation.height);
 			}
 		});
@@ -1147,9 +1146,11 @@ public class DrawingTools : ToolCollection  {
 		
 		move_background.editor_events = true;
 		cut_background.editor_events = true;
-				
+		move_canvas.editor_events = true;	
+		
 		move_background.persistent = true;
 		cut_background.persistent = true;
+		move_canvas.persistent = true;
 
 		precision.persistent = true;
 		stroke_width.persistent = true;
@@ -1301,9 +1302,9 @@ public class DrawingTools : ToolCollection  {
 		flip_horizontal.set_tool_visibility (true);
 	}
 	
-	void update_drawing_and_background_tools (Tool current_tool) {
+	public void update_drawing_and_background_tools (Tool current_tool) {
 		IdleSource idle = new IdleSource ();
-		
+
 		idle.set_callback (() => {
 			Glyph g = MainWindow.get_current_glyph ();
 

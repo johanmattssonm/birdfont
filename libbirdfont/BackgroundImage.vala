@@ -18,6 +18,8 @@ using Math;
 namespace BirdFont {
 	
 public class BackgroundImage {
+	
+	public string name = "";
 		
 	public double img_x = 0;
 	public double img_y = 0;

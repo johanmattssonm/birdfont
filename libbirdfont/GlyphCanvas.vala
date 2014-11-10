@@ -55,13 +55,15 @@ public class GlyphCanvas : GLib.Object {
 		current_display = fd;
 	}
 	
-	public void set_current_glyph_collection (GlyphCollection gc) {
+	public void set_current_glyph_collection (GlyphCollection gc, bool signal_selected = true) {
 		Glyph g = gc.get_current ();
 		
 		BirdFont.current_glyph_collection = gc;
 		g.resized (allocation);
 		
-		current_display.selected_canvas ();
+		if (signal_selected) {
+			current_display.selected_canvas ();
+		}
 		
 		current_display.redraw_area.connect ((x, y, w, h) => {
 			signal_redraw_area ((int)x, (int)y, (int)w, (int)h);
