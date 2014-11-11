@@ -68,15 +68,25 @@ public class BackgroundTools : ToolCollection  {
 
 	public void add_part (BackgroundSelection selection) {
 		BackgroundPartLabel label;
-		label = new BackgroundPartLabel (selection, t_("No Glyph Selected"));
+		label = new BackgroundPartLabel (selection, t_("Select Glyph"));
 		label.select_action.connect ((t) => {
 			BackgroundPartLabel bpl = (BackgroundPartLabel) t;
 			GlyphSelection gs = new GlyphSelection ();
-
+			
 			gs.selected_glyph.connect ((gc) => {
+				GlyphCollection pgc;
+				
+				if (bpl.selection.assigned_glyph != null) {
+					pgc = (!) bpl.selection.assigned_glyph;
+					pgc.get_current ().set_background_image (null);
+				}		
+				
 				bpl.selection.assigned_glyph = gc;
 				bpl.label = gc.get_name ();
+				gc.get_current ().set_background_image (bpl.selection.image);
+				bpl.selection.image.center_in_glyph (gc.get_current ());
 				set_default_canvas ();
+				ZoomTool.zoom_full_background_image ();
 			});
 			
 			if (!bpl.deleted) {

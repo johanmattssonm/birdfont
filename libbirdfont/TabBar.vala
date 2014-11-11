@@ -729,7 +729,7 @@ public class TabBar : GLib.Object {
 			text_height = 16 / scale;
 			text_width = label.get_extent (text_height);
 			center_x = tab_width / 2.0 - text_width / 2.0;
-			center_y = tab_height / 2.0 - 12 / scale;
+			center_y = tab_height / 2.0 + 4 / scale;
 			
 			if (tab_index == selected) {
 				cr.set_source_rgba (40 / 255.0, 57 / 255.0, 65 / 255.0, 1);

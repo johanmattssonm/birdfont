@@ -1346,9 +1346,15 @@ public class BackgroundImage {
 		return false;
 	}
 	
-	public void center_in_glyph () {
-		Glyph g = MainWindow.get_current_glyph ();
+	public void center_in_glyph (Glyph? glyph = null) {
+		Glyph g;
 		Font f = BirdFont.get_current_font ();
+		
+		if (glyph != null) {
+			g = (!) glyph;
+		} else {
+			g = MainWindow.get_current_glyph ();
+		}
 		
 		img_middle_x = g.left_limit + (g.right_limit - g.left_limit) / 2;
 		img_middle_y = f.bottom_position + (f.top_position - f.bottom_position) / 2;

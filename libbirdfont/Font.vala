@@ -511,9 +511,9 @@ public class Font : GLib.Object {
 		return ((!)gc).get_current ();
 	}
 		
-	public Glyph? get_glyph (string unicode) {
+	public Glyph? get_glyph (string name) {
 		GlyphCollection? gc = null;
-		gc = glyph_cache.get (unicode);
+		gc = glyph_name.get (name);
 
 		if (gc == null || ((!)gc).length () == 0) {
 			return null;

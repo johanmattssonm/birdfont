@@ -50,7 +50,7 @@ public class FontName : Tool {
 		}
 		
 		cr.set_source_rgba (234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
-		font_name.draw (cr, x, y - 10 / Toolbox.get_scale (), text_height);
+		font_name.draw (cr, x, y + 13 * Toolbox.get_scale (), text_height);
 		cr.restore ();
 	}
 }

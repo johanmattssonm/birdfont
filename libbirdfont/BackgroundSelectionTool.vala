@@ -34,6 +34,9 @@ public class BackgroundSelectionTool : CutBackgroundTool {
 		draw_action.connect ((self, cr, glyph) => {
 			double x, y, w, h;
 			BackgroundImage bg;
+			Text label = new Text ();
+			GlyphCollection g;
+			double tx, ty, font_height;
 			
 			if (glyph.get_background_image () == null) {
 				warning ("No image");
@@ -50,12 +53,33 @@ public class BackgroundSelectionTool : CutBackgroundTool {
 				
 				cr.save ();
 				cr.set_line_width (2.0);
-				cr.set_source_rgba (237 / 255.0, 67 / 255.0, 0, 1);
+				
+				if (bs.assigned_glyph != null) {
+					cr.set_source_rgba (237 / 255.0, 67 / 255.0, 0, 1);
+				} else {
+					cr.set_source_rgba (132 / 255.0, 132 / 255.0, 132 / 255.0, 1);
+				}
+				
 				cr.rectangle (x, y, w, h);
 				cr.stroke ();
-
+				
 				cr.arc (x + w, y + h, 9.0, 0, 2 * PI);
 				cr.fill ();
+				
+				if (bs.assigned_glyph != null) {
+					g = (!) bs.assigned_glyph;
+					
+					if (label.has_character (g.get_name ())) {
+						font_height = 18;
+						cr.set_source_rgba (1, 1, 1, 1);
+						label.set_text (g.get_name ());
+						tx = x  + w - label.get_width (font_height) / 2.0;
+						ty = y + h;
+						ty += label.get_height (font_height) / 2.0;
+						ty -= label.get_decender (font_height);
+						label.draw (cr, tx, ty, font_height);
+					}
+				}
 				
 				cr.restore ();
 			}

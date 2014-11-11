@@ -47,7 +47,7 @@ public class LabelTool : Tool {
 	}
 	
 	public override void draw (Context cr) {
-		Text font_name, glyph_count;
+		Text label_text, glyph_count;
 		double text_height;
 		double scale, bgx, bgy;
 		double center_x, center_y;
@@ -63,8 +63,8 @@ public class LabelTool : Tool {
 		
 		// tab label
 		cr.save ();
-		font_name = new Text ();
-		font_name.set_text (label);
+		label_text = new Text ();
+		label_text.set_text (label);
 		text_height = 18;
 
 		if (is_selected ()) {
@@ -73,7 +73,7 @@ public class LabelTool : Tool {
 			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		}
 		
-		font_name.draw (cr, x + 14, y - 4.5, text_height);
+		label_text.draw (cr, x + 14, y + h - 1.5, text_height);
 		cr.restore ();
 
 		// glyph count
@@ -93,7 +93,7 @@ public class LabelTool : Tool {
 			text_height = 12 / scale;
 			
 			center_x = bgx + ((!) counter_background).get_width () / 2.0  - glyph_count.get_extent (text_height) / 2.0;
-			center_y = bgy + ((!) counter_background).get_height () / 2.0 - text_height / 2.0 - 3 / scale;;
+			center_y = bgy + ((!) counter_background).get_height () / 2.0 + 4 / scale;
 			
 			if (is_selected ()) {
 				cr.set_source_rgba (1, 1, 1, 1);
