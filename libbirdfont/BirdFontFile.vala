@@ -787,14 +787,15 @@ class BirdFontFile : GLib.Object {
 				if (new_img != null && name != "") {
 					img = (!) new_img;
 					img.name = name;
+					
+					Toolbox.background_tools.add_image (img);
+					parse_image_selections (img, t);
+					
 					img.img_x = x;
 					img.img_y = y;
 					img.img_scale_x = scale_x;
 					img.img_scale_y = scale_y;
 					img.img_rotation = rotation;
-					Toolbox.background_tools.add_image (img);
-					
-					parse_imgage_selections (img, t);
 				} else {
 					warning (@"No image found, name: $name");				
 				}
@@ -802,7 +803,7 @@ class BirdFontFile : GLib.Object {
 		}
 	}
 	
-	private void parse_imgage_selections (BackgroundImage image, Tag tag) {
+	private void parse_image_selections (BackgroundImage image, Tag tag) {
 		double x, y, w, h;
 		string? assigned_glyph;
 		BackgroundSelection s;

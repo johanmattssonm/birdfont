@@ -21,12 +21,14 @@ public class BackgroundImage {
 	
 	public string name = "";
 	public Gee.ArrayList<BackgroundSelection> selections;
-	
+
+	/** Image position in canvas coordinates. */
 	public double img_x = 0;
 	public double img_y = 0;
-	
+		
 	public double img_scale_x = 1;
 	public double img_scale_y = 1;
+	
 	public double img_rotation = 0;
 	private int size = -1;
 

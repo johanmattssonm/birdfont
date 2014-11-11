@@ -20,10 +20,50 @@ public class BackgroundSelection : GLib.Object {
 	public BackgroundImage? image;
 	public BackgroundImage parent_image;
 	
-	public double x;
-	public double y;
-	public double w;
-	public double h;
+	public double x {
+		get {
+			return x_img * parent_image.img_scale_x + parent_image.img_middle_x;
+		}
+		
+		set {
+			x_img = value / parent_image.img_scale_x - parent_image.img_middle_x;
+		}
+	}
+	
+	public double y {
+		get {
+			return y_img * parent_image.img_scale_y + parent_image.img_middle_y;
+		}
+		
+		set {
+			y_img = (value - parent_image.img_middle_y) / parent_image.img_scale_y;
+		}
+	}
+	
+	public double w {
+		get {
+			return width * parent_image.img_scale_x;
+		}
+		
+		set {
+			width = value / parent_image.img_scale_x;
+		}
+	}
+	
+	public double h {
+		get {
+			return height * parent_image.img_scale_y;
+		}
+		
+		set {
+			height = value / parent_image.img_scale_y;
+		}
+	}
+	
+	private double height;
+	private double width;
+	private double x_img;
+	private double y_img;
 	
 	public BackgroundSelection (BackgroundImage? img, BackgroundImage parent_img,
 		double x, double y, double w, double h) {

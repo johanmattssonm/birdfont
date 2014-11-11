@@ -49,6 +49,12 @@ public class BackgroundTab : Glyph {
 		canvas.set_current_glyph_collection (gc, false);
 		DrawingTools.background_scale.set_tool_visibility (true);
 	}
+	
+	public override void draw (WidgetAllocation allocation, Context cr) {
+		base.draw (allocation, cr);
+		Tool t = Toolbox.background_tools.select_background;
+		t.draw_action (t, cr, this);
+	}
 }
 
 }

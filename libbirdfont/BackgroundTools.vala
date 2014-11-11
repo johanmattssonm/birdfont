@@ -15,18 +15,22 @@
 namespace BirdFont {
 
 public class BackgroundTools : ToolCollection  {
+	
+	public BackgroundSelectionTool select_background;
+	
 	Expander files;
 	Expander parts;
 	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
 	public BackgroundTools () {
-		BackgroundSelectionTool select_background = new BackgroundSelectionTool ();
 		Expander background_selection = new Expander (t_("Images"));
 		Expander background_tools = new Expander ();
 
 		Expander font_name = new Expander ();
 		font_name.add_tool (new FontName ());
 		font_name.draw_separator = false;
+
+		select_background = new BackgroundSelectionTool ();
 
 		files = new Expander (t_("Files"));
 		files.set_persistent (true);
@@ -66,9 +70,23 @@ public class BackgroundTools : ToolCollection  {
 		MainWindow.get_tab_bar ().select_tab_name ("Backgrounds");
 	}
 
+	public void update_parts_list (BackgroundImage current_image) {
+		parts.tool.clear ();
+		
+		foreach (BackgroundSelection selection in current_image.selections) {
+			add_part (selection);
+		}
+	}
+
 	public void add_part (BackgroundSelection selection) {
 		BackgroundPartLabel label;
-		label = new BackgroundPartLabel (selection, t_("Select Glyph"));
+		
+		if (selection.assigned_glyph == null) {
+			label = new BackgroundPartLabel (selection, t_("Select Glyph"));
+		} else {
+			label = new BackgroundPartLabel (selection, (!) selection.assigned_glyph);
+		}
+		
 		label.select_action.connect ((t) => {
 			BackgroundPartLabel bpl = (BackgroundPartLabel) t;
 			GlyphSelection gs = new GlyphSelection ();
@@ -98,6 +116,7 @@ public class BackgroundTools : ToolCollection  {
 				GlyphCanvas.set_display (gs);	
 			}			
 		});
+		
 		label.delete_action.connect ((t) => {
 			// don't invalidate the toolbox iterator
 			IdleSource idle = new IdleSource (); 
@@ -127,8 +146,11 @@ public class BackgroundTools : ToolCollection  {
 		});
 		label.has_delete_button = true;
 		parts.add_tool (label, 0);
-		MainWindow.get_toolbox ().update_expanders ();
-		Toolbox.redraw_tool_box ();
+		
+		if (!is_null (MainWindow.get_toolbox ())) {
+			MainWindow.get_toolbox ().update_expanders ();
+			Toolbox.redraw_tool_box ();
+		}
 	}
 
 	public override Gee.ArrayList<Expander> get_expanders () {
@@ -183,7 +205,9 @@ public class BackgroundTools : ToolCollection  {
 				background_tab.set_background_image (bg.img);
 				background_tab.set_background_visible (true);
 				ZoomTool.zoom_full_background_image ();
+				update_parts_list (bg.img);
 				GlyphCanvas.redraw ();
+				Toolbox.redraw_tool_box ();
 			}
 			
 			set_default_canvas ();
