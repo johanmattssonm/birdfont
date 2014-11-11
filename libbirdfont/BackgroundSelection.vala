@@ -16,8 +16,8 @@ namespace BirdFont {
 
 public class BackgroundSelection : GLib.Object {
 	
-	public GlyphCollection? assigned_glyph;
-	public BackgroundImage image;
+	public string? assigned_glyph;
+	public BackgroundImage? image;
 	public BackgroundImage parent_image;
 	
 	public double x;
@@ -25,7 +25,7 @@ public class BackgroundSelection : GLib.Object {
 	public double w;
 	public double h;
 	
-	public BackgroundSelection (BackgroundImage img, BackgroundImage parent_img,
+	public BackgroundSelection (BackgroundImage? img, BackgroundImage parent_img,
 		double x, double y, double w, double h) {
 			
 		assigned_glyph = null;

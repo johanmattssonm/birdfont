@@ -74,17 +74,22 @@ public class BackgroundTools : ToolCollection  {
 			GlyphSelection gs = new GlyphSelection ();
 			
 			gs.selected_glyph.connect ((gc) => {
-				GlyphCollection pgc;
+				GlyphCollection? pgc;
+				Font font = BirdFont.get_current_font ();
 				
-				if (bpl.selection.assigned_glyph != null) {
-					pgc = (!) bpl.selection.assigned_glyph;
-					pgc.get_current ().set_background_image (null);
+				pgc = font.get_glyph_collection_by_name (bpl.selection.assigned_glyph);
+				if (pgc != null) {
+					((!) pgc).get_current ().set_background_image (null);
 				}		
 				
-				bpl.selection.assigned_glyph = gc;
+				bpl.selection.assigned_glyph = gc.get_name ();
 				bpl.label = gc.get_name ();
 				gc.get_current ().set_background_image (bpl.selection.image);
-				bpl.selection.image.center_in_glyph (gc.get_current ());
+				
+				if (bpl.selection.image != null) {
+					((!) bpl.selection.image).center_in_glyph (gc.get_current ());
+				}
+				
 				set_default_canvas ();
 				ZoomTool.zoom_full_background_image ();
 			});
@@ -97,16 +102,18 @@ public class BackgroundTools : ToolCollection  {
 			// don't invalidate the toolbox iterator
 			IdleSource idle = new IdleSource (); 
 			idle.set_callback (() => {
-				GlyphCollection g;
+				GlyphCollection? gc;
 				BackgroundPartLabel bpl;
+				Font font = BirdFont.get_current_font ();
 				
 				bpl = (BackgroundPartLabel) t;
 				bpl.deleted = true;
-				
-				if (bpl.selection.assigned_glyph != null){
-					g = (!) bpl.selection.assigned_glyph;
-					g.get_current ().set_background_image (null);
+
+				gc = font.get_glyph_collection_by_name (bpl.selection.assigned_glyph);
+				if (gc != null) {
+					((!) gc).get_current ().set_background_image (null);
 				}
+				
 			
 				parts.tool.remove (bpl);
 				bpl.selection.parent_image.selections.remove (bpl.selection);

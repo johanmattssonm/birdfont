@@ -493,10 +493,14 @@ public class Font : GLib.Object {
 	}
 
 	/** Get glyph collection by name. */
-	public GlyphCollection? get_glyph_collection_by_name (string glyph) {
+	public GlyphCollection? get_glyph_collection_by_name (string? glyph) {
 		// TODO: load from disk here if needed.
 		GlyphCollection? gc = null;
-		gc = glyph_name.get (glyph);		
+		
+		if (glyph != null) {
+			gc = glyph_name.get ((!) glyph);
+		}
+		
 		return gc;
 	}
 

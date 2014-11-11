@@ -512,7 +512,6 @@ public class MenuTab : FontDisplay {
 	
 	public static void show_all_available_characters () {
 		MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
-		OverView o = MainWindow.get_overview ();
 		
 		if (!BirdFont.get_current_font ().initialised) {
 			MenuTab.new_file ();

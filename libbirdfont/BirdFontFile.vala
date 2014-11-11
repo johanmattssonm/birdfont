@@ -188,6 +188,8 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	public void write_images (DataOutputStream os) throws GLib.Error {
+		string glyph_name;
+		
 		if (font.background_images.size > 0) {
 			os.put_string (@"<images>\n");
 			
@@ -197,7 +199,32 @@ class BirdFontFile : GLib.Object {
 					warning ("No name.");
 				}
 				
-				os.put_string (@"\t<image name=\"$(b.name)\" sha1=\"$(b.get_sha1 ())\"/>\n");
+				os.put_string ("\t<image ");
+				os.put_string (@"name=\"$(b.name)\" ");
+				os.put_string (@"sha1=\"$(b.get_sha1 ())\" ");
+				os.put_string (@"x=\"$(b.img_x)\" ");
+				os.put_string (@"y=\"$(b.img_y)\" ");
+				os.put_string (@"scale_x=\"$(b.img_scale_x)\" ");
+				os.put_string (@"scale_y=\"$(b.img_scale_y)\" ");
+				os.put_string (@"rotation=\"$(b.img_rotation)\" ");
+				os.put_string (">\n");
+				
+				foreach (BackgroundSelection selection in b.selections) {
+					os.put_string ("\t\t<selection ");
+					os.put_string (@"x=\"$(selection.x)\" ");
+					os.put_string (@"y=\"$(selection.y)\" ");
+					os.put_string (@"width=\"$(selection.w)\" ");
+					os.put_string (@"height=\"$(selection.h)\" ");
+					
+					if (selection.assigned_glyph != null) {
+						glyph_name = (!) selection.assigned_glyph;
+						os.put_string (@"glyph=\"$(glyph_name)\" ");
+					}
+					
+					os.put_string ("/>\n");
+				}
+				
+				os.put_string (@"\t</image>\n");
 			}
 		
 			os.put_string (@"</images>\n");
@@ -704,8 +731,10 @@ class BirdFontFile : GLib.Object {
 	
 	public void parse_images (Tag tag) {
 		BackgroundImage? new_img;
+		BackgroundImage img;
 		string name;
 		File img_file;
+		double x, y, scale_x, scale_y, rotation;
 		
 		foreach (Tag t in tag) {
 			if (t.get_name () == "image") {
@@ -713,6 +742,12 @@ class BirdFontFile : GLib.Object {
 				new_img = null;
 				img_file = get_child (font.get_backgrounds_folder (), "parts");
 
+				x = 0;
+				y = 0;
+				scale_x = 0;
+				scale_y = 0;
+				rotation = 0;
+				
 				foreach (Attribute attr in t.get_attributes ()) {
 					if (attr.get_name () == "sha1") {
 						img_file = get_child (img_file, attr.get_content () + ".png");
@@ -727,14 +762,86 @@ class BirdFontFile : GLib.Object {
 					if (attr.get_name () == "name") {
 						name = attr.get_content ();
 					}
+					
+					if (attr.get_name () == "x") {
+						x = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "y") {
+						y = parse_double (attr.get_content ());
+					}
+					
+					if (attr.get_name () == "scale_x") {
+						scale_x = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "scale_y") {
+						scale_y = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "rotation") {
+						rotation = parse_double (attr.get_content ());
+					}
 				}
 				
 				if (new_img != null && name != "") {
-					((!) new_img).name = name;
-					Toolbox.background_tools.add_image ((!) new_img);
+					img = (!) new_img;
+					img.name = name;
+					img.img_x = x;
+					img.img_y = y;
+					img.img_scale_x = scale_x;
+					img.img_scale_y = scale_y;
+					img.img_rotation = rotation;
+					Toolbox.background_tools.add_image (img);
+					
+					parse_imgage_selections (img, t);
 				} else {
 					warning (@"No image found, name: $name");				
 				}
+			}
+		}
+	}
+	
+	private void parse_imgage_selections (BackgroundImage image, Tag tag) {
+		double x, y, w, h;
+		string? assigned_glyph;
+		BackgroundSelection s;
+		
+		foreach (Tag t in tag) {
+			if (t.get_name () == "selection") {
+				
+				x = 0;
+				y = 0;
+				w = 0;
+				h = 0;
+				assigned_glyph = null;
+				
+				foreach (Attribute attr in t.get_attributes ()) {
+					if (attr.get_name () == "x") {
+						x = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "y") {
+						y = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "width") {
+						w = parse_double (attr.get_content ());
+					}
+					
+					if (attr.get_name () == "height") {
+						h = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "glyph") {
+						assigned_glyph = attr.get_content ();
+					}
+				}
+				
+				s = new BackgroundSelection (null, image, x, y, w, h);
+				s.assigned_glyph = assigned_glyph;
+				
+				image.selections.add (s);
 			}
 		}
 	}
