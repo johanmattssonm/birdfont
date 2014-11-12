@@ -23,7 +23,8 @@ public class Glyph : FontDisplay {
 	bool background_image_visible = true;
 	
 	// Glyph zoom level
-	public double view_zoom = 0.01;
+	public double view_zoom = 0.1;
+	
 	public double view_offset_x = 0;
 	public double view_offset_y = 0;
 	Gee.ArrayList<ZoomView> zoom_list = new Gee.ArrayList<ZoomView> ();
@@ -100,7 +101,7 @@ public class Glyph : FontDisplay {
 		path_list.add (new Path ());
 		
 		add_help_lines ();
-
+		
 		left_limit = -28;
 		right_limit = 28;
 	}
@@ -351,6 +352,12 @@ public class Glyph : FontDisplay {
 		if (!is_null (MainWindow.native_window)) {
 			MainWindow.native_window.set_scrollbar_size (0);
 		}
+		
+		update_zoom_bar ();
+	}
+	
+	void update_zoom_bar () {
+		Toolbox.drawing_tools.zoom_bar.set_zoom ((view_zoom - 1) / 20);
 	}
 	
 	public void remove_lines () {
@@ -1168,6 +1175,7 @@ public class Glyph : FontDisplay {
 		set_zoom_area (10, 10, allocation.width - 10, allocation.height - 10);
 		set_zoom_from_area ();
 		update_view ();
+		update_zoom_bar ();
 	}
 	
 	public override void zoom_out () {
@@ -1176,10 +1184,12 @@ public class Glyph : FontDisplay {
 		set_zoom_area (-n, -n, allocation.width + n, allocation.height + n);
 		set_zoom_from_area ();
 		update_view ();
+		update_zoom_bar ();
 	}
 	
 	public override void zoom_max () {
 		default_zoom ();
+		update_zoom_bar ();
 	}
 	
 	public override void zoom_min () {
@@ -1215,7 +1225,7 @@ public class Glyph : FontDisplay {
 		zoom_out (); // add some margin
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
-		
+		update_zoom_bar ();
 	}
 
 	public override void store_current_view () {
@@ -1249,6 +1259,8 @@ public class Glyph : FontDisplay {
 		view_offset_y = z.y;
 		view_zoom = z.zoom;
 		allocation = z.allocation;
+		
+		update_zoom_bar ();
 	}
 
 	public override void next_view () {
@@ -1265,7 +1277,9 @@ public class Glyph : FontDisplay {
 		view_offset_x = z.x;
 		view_offset_y = z.y;
 		view_zoom = z.zoom;
-		allocation = z.allocation;		
+		allocation = z.allocation;
+		
+		update_zoom_bar ();		
 	}
 	
 	public override void reset_zoom () {
@@ -1275,6 +1289,7 @@ public class Glyph : FontDisplay {
 		set_zoom (1);
 		
 		store_current_view ();
+		update_zoom_bar ();
 	}
 	
 	/** Get x-height or top line. */
@@ -1329,7 +1344,7 @@ public class Glyph : FontDisplay {
 		return true;
 	}
 	
-	private void set_zoom (double z)
+	public void set_zoom (double z)
 		requires (z > 0)
 	{		
 		view_zoom = z;

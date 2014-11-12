@@ -226,6 +226,8 @@ public class BackgroundTools : ToolCollection  {
 			
 				files.tool.remove (bsl);
 				f.background_images.remove (bsl.img);
+				
+				MainWindow.get_current_glyph ().set_background_image (null);
 
 				MainWindow.get_toolbox ().update_expanders ();
 				set_default_canvas ();

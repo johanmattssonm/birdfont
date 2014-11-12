@@ -527,8 +527,8 @@ public class EditPoint : GLib.Object {
 		
 		ivz = 1 / g.view_zoom;
 		
-		xc = (g.allocation.width / 2.0);
-		yc = (g.allocation.height / 2.0);
+		xc = g.allocation.width / 2.0;
+		yc = g.allocation.height / 2.0;
 				
 		x *= ivz;
 		y *= ivz;

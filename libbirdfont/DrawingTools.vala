@@ -91,6 +91,8 @@ public class DrawingTools : ToolCollection  {
 	Tool flip_vertical;
 	Tool flip_horizontal;
 	
+	public ZoomBar zoom_bar;
+	
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		glyph_canvas = main_glyph_canvas;
 		
@@ -840,6 +842,27 @@ public class DrawingTools : ToolCollection  {
 		guideline_tools.add_tool (new_grid);
 
 		// Zoom tools 
+		zoom_bar = new ZoomBar ();
+		zoom_bar.new_zoom.connect ((z) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			double zoom = 20 * z + 1;
+			double xc, yc, nxc, nyc;
+
+			xc = Glyph.path_coordinate_x (Glyph.xc ());
+			yc = Glyph.path_coordinate_y (Glyph.yc ());
+						
+			g.set_zoom (zoom);
+
+			nxc = Glyph.path_coordinate_x (Glyph.xc ());
+			nyc = Glyph.path_coordinate_y (Glyph.yc ());
+			
+			g.view_offset_x -= nxc - xc;
+			g.view_offset_y += nyc - yc;
+						
+			GlyphCanvas.redraw ();
+		});
+		view_tools.add_tool (zoom_bar);
+		
 		Tool zoom_in = new Tool ("zoom_in", t_("Zoom in"), '+', CTRL);
 		zoom_in.select_action.connect ((self) => {
 			zoom_tool.store_current_view ();

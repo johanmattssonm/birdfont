@@ -88,6 +88,8 @@ public class Expander : GLib.Object {
 		double yt = y + scroll + margin_small;
 		bool new_row = false;
 		bool has_visible_tools = false;
+		Tool previous;
+		bool first_row;
 
 		foreach (Tool t in tool) {
 			if (t.tool_is_visible ()) {
@@ -100,9 +102,12 @@ public class Expander : GLib.Object {
 			content_height = 0;
 			return;
 		}
-
+		
 		foreach (Tool t in tool) {
-			if (t is LabelTool) {
+			if (t is ZoomBar) {
+				t.w = Toolbox.allocation_width * scale;
+				t.h = 7 * scale;
+			} else if (t is LabelTool) {
 				t.w = Toolbox.allocation_width * scale;
 				t.h = 15 * scale;
 			} else if (t is FontName) {
@@ -128,20 +133,35 @@ public class Expander : GLib.Object {
 			content_height += 10 * scale + HEADLINE_MARGIN;
 		}
 		
-		foreach (Tool t in tool) {
-			if (t.tool_is_visible ()) {
-				if (new_row) {
-					content_height += t.h + margin_small; 
-					xt = x;
-					yt += t.h + margin_small;
+		if (tool.size > 0) {
+			previous = tool.get (0);
+			first_row = true;
+			foreach (Tool t in tool) {
+				if (t.tool_is_visible ()) {
+					new_row = xt + t.w > Toolbox.allocation_width - margin_small;
+					
+					if (t is ZoomBar) { // add extra space around zoom bar
+						content_height += 30 * scale;
+					}
+					
+					if (previous is ZoomBar) {
+						yt += margin_small;
+					}
+					
+					if (new_row && !first_row) {
+						content_height += previous.h + margin_small; 
+						xt = x;
+						yt += previous.h + margin_small;
+					}
+				
+					t.x = xt;
+					t.y = yt;
+				
+					xt += t.w + margin_small;
+					
+					previous = t;
+					first_row = false;
 				}
-			
-				t.x = xt;
-				t.y = yt;
-			
-				xt += t.w + margin_small;
-
-				new_row = xt + t.w > Toolbox.allocation_width - margin_small;
 			}
 		}
 	}
