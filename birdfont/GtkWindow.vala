@@ -476,7 +476,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Gtk.MenuItem select_language_item = new Gtk.MenuItem.with_mnemonic (t_("Select _Character Set"));
 		file_menu.append (select_language_item);
 		select_language_item.activate.connect (() => { MenuTab.select_language (); });
-		
+
+		Gtk.MenuItem settings_item = new Gtk.MenuItem.with_mnemonic (t_("Settings"));
+		file_menu.append (settings_item);
+		settings_item.activate.connect (() => { MenuTab.show_settings_tab (); });
+				
 		Gtk.MenuItem quit_item = new Gtk.MenuItem.with_mnemonic (t_("_Quit"));
 		file_menu.append (quit_item);
 		quit_item.activate.connect (() => { MenuTab.quit (); });

@@ -532,6 +532,10 @@ public class MenuTab : FontDisplay {
 		bt = BackgroundTab.get_instance ();
 		MainWindow.get_tab_bar ().add_unique_tab (bt);
 	}
+	
+	public static void show_settings_tab () {
+		MainWindow.get_tab_bar ().add_unique_tab (new SettingsDisplay ());
+	}
 }
 
 }

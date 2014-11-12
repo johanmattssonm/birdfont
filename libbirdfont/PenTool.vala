@@ -532,7 +532,7 @@ public class PenTool : Tool {
 	
 	public void set_precision (double p) {
 		precision = p;
-		DrawingTools.precision.set_value_round (p, false, false);
+		SettingsDisplay.precision.set_value_round (p, false, false);
 	}
 	
 	public void move (int x, int y) {

@@ -25,7 +25,7 @@ public class ColorTool : Tool {
 	
 	public signal void color_updated ();
 	
-	public ColorTool (string tooltip) {
+	public ColorTool (string tooltip = "") {
 		base (null, tooltip);
 
 		select_action.connect((self) => {

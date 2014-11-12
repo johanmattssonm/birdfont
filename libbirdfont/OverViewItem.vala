@@ -145,7 +145,7 @@ public class OverViewItem : GLib.Object {
 		Font font;
 		double gx, gy;
 		double x1, x2, y1, y2;
-		double scale, scale_box;
+		double scale_box;
 		double w, h;
 		double glyph_width, glyph_height;
 		Surface s;
@@ -186,7 +186,7 @@ public class OverViewItem : GLib.Object {
 			fallback = new Text ();
 			c.set_source_rgba (219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
 			fallback.set_text ((!) character.to_string ());
-			font_size = height * 0.9;
+			font_size = height * 0.8;
 			gx = (width - fallback.get_extent (font_size)) / 2.0;
 			gy = height - 30;
 			fallback.draw (c, gx, gy, font_size);

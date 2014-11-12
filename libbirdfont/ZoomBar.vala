@@ -69,7 +69,10 @@ public class ZoomBar : Tool {
 		}
 		
 		set_zoom (zoom_level);
-		new_zoom (zoom_level);
+		
+		if (!MenuTab.suppress_event) {
+			new_zoom (zoom_level);
+		}
 	}
 	
 	public override void draw (Context cr) {

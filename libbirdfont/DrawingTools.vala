@@ -30,8 +30,6 @@ public class DrawingTools : ToolCollection  {
 	public static Expander view_tools;
 	public static Expander guideline_tools;
 	
-	public static SpinButton precision;
-	
 	public static PointType point_type = PointType.DOUBLE_CURVE;
 	
 	public static SpinButton object_stroke;
@@ -44,7 +42,7 @@ public class DrawingTools : ToolCollection  {
 	static ZoomTool zoom_tool;
 	public static ResizeTool resize_tool;
 	StrokeTool stroke_tool;
-	TrackTool track_tool;
+	public static TrackTool track_tool;
 	public static BackgroundTool move_background;
 	public static Tool move_canvas;
 	
@@ -110,8 +108,6 @@ public class DrawingTools : ToolCollection  {
 		Expander key_tools = new Expander (); // tools on android
 		Expander test_tools = new Expander ();
 		Expander grid = new Expander (t_("Grid Size"));
-
-		Expander style_tools = new Expander ();
 		
 		grid_expander = grid;
 
@@ -865,19 +861,21 @@ public class DrawingTools : ToolCollection  {
 		});
 		zoombar_tool.add_tool (zoom_bar);
 		
-		Tool zoom_in = new Tool ("zoom_in", t_("Zoom in"), '+', CTRL);
+		Tool zoom_in = new Tool ("zoom_in", "", '+', CTRL);
 		zoom_in.select_action.connect ((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_in ();
 		});
 		view_tools.add_tool (zoom_in);
+		zoom_in.set_tool_visibility (false);
 
-		Tool zoom_out = new Tool ("zoom_out", t_("Zoom out"), '-', CTRL);
+		Tool zoom_out = new Tool ("zoom_out", "", '-', CTRL);
 		zoom_out.select_action.connect ((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_out ();
 		});
 		view_tools.add_tool (zoom_out);
+		zoom_out.set_tool_visibility (false);
 
 		Tool reset_zoom = new Tool ("zoom_1_1", t_("Use one pixel per unit"), '0', CTRL);
 		reset_zoom.select_action.connect ((self) => {
@@ -886,6 +884,7 @@ public class DrawingTools : ToolCollection  {
 				glyph_canvas.redraw_area(0, 0, GlyphCanvas.allocation.width, GlyphCanvas.allocation.height);
 			});
 		view_tools.add_tool (reset_zoom);
+		reset_zoom.set_tool_visibility (false);
 
 		Tool full_glyph = new Tool ("full_glyph", t_("Show full glyph"));
 		full_glyph.select_action.connect((self) => {
@@ -917,11 +916,12 @@ public class DrawingTools : ToolCollection  {
 		});
 		view_tools.add_tool (zoom_prev);
 
-		Tool zoom_next = new Tool ("next", t_("Next view"));
+		Tool zoom_next = new Tool ("next");
 		zoom_next.select_action.connect((self) => {
 			zoom_tool.next_view ();
 		});
 		view_tools.add_tool (zoom_next);
+		zoom_next.set_tool_visibility (false);
 		
 		// shape tools 
 		circle = new CircleTool ("circle");
@@ -935,188 +935,7 @@ public class DrawingTools : ToolCollection  {
 			update_drawing_and_background_tools (self);
 		});
 		shape_tools.add_tool (rectangle);
-								
-		// settings
-		ColorTool stroke_color = new ColorTool (t_("Stroke color"));
-		stroke_color.color_updated.connect (() => {
-			Path.line_color_r = stroke_color.color_r;
-			Path.line_color_g = stroke_color.color_g;
-			Path.line_color_b = stroke_color.color_b;
-			Path.line_color_a = stroke_color.color_a;
-
-			if (Path.line_color_a == 0) {
-				Path.line_color_a = 1;
-			}
-
-			Preferences.set ("line_color_r", @"$(Path.line_color_r)");
-			Preferences.set ("line_color_g", @"$(Path.line_color_g)");
-			Preferences.set ("line_color_b", @"$(Path.line_color_b)");
-			Preferences.set ("line_color_a", @"$(Path.line_color_a)");
-
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-		});
-		stroke_color.set_r (double.parse (Preferences.get ("line_color_r")));
-		stroke_color.set_g (double.parse (Preferences.get ("line_color_g")));
-		stroke_color.set_b (double.parse (Preferences.get ("line_color_b")));
-		stroke_color.set_a (double.parse (Preferences.get ("line_color_a")));
-		style_tools.add_tool (stroke_color);
 		
-		SpinButton stroke_width = new SpinButton ("stroke_width", t_("Stroke width"));
-
-		style_tools.add_tool (stroke_width);
-		
-		stroke_width.set_max (4);
-		stroke_width.set_min (0.002);
-		stroke_width.set_value_round (1);
-
-		if (Preferences.get ("stroke_width_for_open_paths") != "") {
-			stroke_width.set_value (Preferences.get ("stroke_width_for_open_paths"));
-		}
-
-		stroke_width.new_value_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			Path.stroke_width = stroke_width.get_value ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-			Preferences.set ("stroke_width_for_open_paths", stroke_width.get_display_value ());
-			MainWindow.get_toolbox ().redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
-		});
-		
-		Path.stroke_width = stroke_width.get_value ();
-		
-		ColorTool handle_color = new ColorTool (t_("Handle color"));
-		handle_color.color_updated.connect (() => {
-			Path.handle_color_r = handle_color.color_r;
-			Path.handle_color_g = handle_color.color_g;
-			Path.handle_color_b = handle_color.color_b;
-			Path.handle_color_a = handle_color.color_a;
-
-			Preferences.set ("handle_color_r", @"$(Path.handle_color_r)");
-			Preferences.set ("handle_color_g", @"$(Path.handle_color_g)");
-			Preferences.set ("handle_color_b", @"$(Path.handle_color_b)");
-			Preferences.set ("handle_color_a", @"$(Path.handle_color_a)");
-
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-		});
-		handle_color.set_r (double.parse (Preferences.get ("handle_color_r")));
-		handle_color.set_g (double.parse (Preferences.get ("handle_color_g")));
-		handle_color.set_b (double.parse (Preferences.get ("handle_color_b")));
-		handle_color.set_a (double.parse (Preferences.get ("handle_color_a")));
-		style_tools.add_tool (handle_color);
-
-		// adjust precision
-		string precision_value = Preferences.get ("precision");
-		precision = new SpinButton ("precision", t_("Set precision"));
-		
-		if (precision_value != "") {
-			precision.set_value (precision_value);
-		} else {
-#if ANDROID
-			precision.set_value_round (0.5);
-#else
-			precision.set_value_round (1);
-#endif
-		}
-		
-		precision.new_value_action.connect ((self) => {
-			MainWindow.get_toolbox ().select_tool (precision);
-			Preferences.set ("precision", self.get_display_value ());
-			MainWindow.get_toolbox ().redraw ((int) precision.x, (int) precision.y, 70, 70);
-		});
-
-		precision.select_action.connect((self) => {
-			pen_tool.set_precision (((SpinButton)self).get_value ());
-		});
-		
-		precision.set_min (0.001);
-		precision.set_max (1);
-		
-		style_tools.add_tool (precision);
-
-		Tool show_all_line_handles = new Tool ("show_all_line_handles", t_("Show all control point handles or only handles for the selected points."));
-		show_all_line_handles.select_action.connect((self) => {
-			Path.show_all_line_handles = !Path.show_all_line_handles;
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
-		});
-		style_tools.add_tool (show_all_line_handles);
-
-		// fill color
-		ColorTool fill_color = new ColorTool (t_("Object color"));
-		fill_color.color_updated.connect (() => {
-			Path.fill_color_r = fill_color.color_r;
-			Path.fill_color_g = fill_color.color_g;
-			Path.fill_color_b = fill_color.color_b;
-			Path.fill_color_a = fill_color.color_a;
-
-			Preferences.set ("fill_color_r", @"$(Path.fill_color_r)");
-			Preferences.set ("fill_color_g", @"$(Path.fill_color_g)");
-			Preferences.set ("fill_color_b", @"$(Path.fill_color_b)");
-			Preferences.set ("fill_color_a", @"$(Path.fill_color_a)");
-
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-		});
-		fill_color.set_r (double.parse (Preferences.get ("fill_color_r")));
-		fill_color.set_g (double.parse (Preferences.get ("fill_color_g")));
-		fill_color.set_b (double.parse (Preferences.get ("fill_color_b")));
-		fill_color.set_a (double.parse (Preferences.get ("fill_color_a")));
-		style_tools.add_tool (fill_color);
-
-		Tool fill_open_path = new Tool ("fill_open_path", t_("Set fill color for open paths."));
-		fill_open_path.select_action.connect((self) => {
-			Path.fill_open_path = !Path.fill_open_path;
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
-		});
-		style_tools.add_tool (fill_open_path);
-
-		Tool ttf_units = new Tool ("ttf_units", t_("Use TTF units."));
-		ttf_units.select_action.connect((self) => {
-			GridTool.ttf_units = !GridTool.ttf_units;
-			Preferences.set ("ttf_units", @"$(GridTool.ttf_units)");
-		});
-		style_tools.add_tool (ttf_units);
-
-		SpinButton freehand_samples = new SpinButton ("freehand_samples_per_point", t_("Adjust the number of samples per point in the freehand tool."));
-
-		style_tools.add_tool (freehand_samples);
-		
-		freehand_samples.set_max (9);
-		freehand_samples.set_min (0.002);
-		
-		if (BirdFont.android) {
-			freehand_samples.set_value_round (2.5);
-		} else {
-			freehand_samples.set_value_round (1);
-		}
-
-		if (Preferences.get ("freehand_samples") != "") {
-			freehand_samples.set_value (Preferences.get ("freehand_samples"));
-			track_tool.set_samples_per_point (freehand_samples.get_value ());
-		}
-
-		freehand_samples.new_value_action.connect ((self) => {
-			track_tool.set_samples_per_point (freehand_samples.get_value ());
-		});
-
-		SpinButton simplification_threshold = new SpinButton ("simplification_threshold", t_("Simplification threshold"));
-		simplification_threshold.set_value_round (0.5);
-		style_tools.add_tool (simplification_threshold);
-		
-		simplification_threshold.set_max (5);
-		freehand_samples.set_min (0.002);
-
-		if (Preferences.get ("simplification_threshold") != "") {
-			freehand_samples.set_value (Preferences.get ("simplification_threshold"));
-			pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
-		}
-
-		freehand_samples.new_value_action.connect ((self) => {
-			pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
-		});
-
 		add_expander (font_name);
 		add_expander (draw_tools);
 		
@@ -1130,7 +949,6 @@ public class DrawingTools : ToolCollection  {
 		add_expander (zoombar_tool);
 		add_expander (view_tools);
 		add_expander (shape_tools);
-		add_expander (style_tools);
 		
 		// Fixa: add_expander (trace);
 		if (BirdFont.has_argument ("--test")) {
@@ -1156,9 +974,6 @@ public class DrawingTools : ToolCollection  {
 
 		shape_tools.set_persistent (true);
 		shape_tools.set_unique (true);
-		
-		style_tools.set_persistent (true);
-		style_tools.set_unique (true);
 
 		view_tools.draw_separator = false;
 				
@@ -1179,9 +994,6 @@ public class DrawingTools : ToolCollection  {
 		move_background.persistent = true;
 		cut_background.persistent = true;
 		move_canvas.persistent = true;
-
-		precision.persistent = true;
-		stroke_width.persistent = true;
 		
 		// Default selection
 		IdleSource idle = new IdleSource ();

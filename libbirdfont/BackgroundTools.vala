@@ -23,9 +23,9 @@ public class BackgroundTools : ToolCollection  {
 	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
 	public BackgroundTools () {
+		Expander background_tools = new Expander (t_("Select Background Image"));
 		Expander background_selection = new Expander (t_("Images"));
-		Expander background_tools = new Expander ();
-
+		
 		Expander font_name = new Expander ();
 		font_name.add_tool (new FontName ());
 		font_name.draw_separator = false;
@@ -54,6 +54,7 @@ public class BackgroundTools : ToolCollection  {
 
 		expanders.add (font_name);
 		expanders.add (background_tools);
+		expanders.add (DrawingTools.zoombar_tool);
 		expanders.add (DrawingTools.view_tools);
 		expanders.add (DrawingTools.guideline_tools);
 		expanders.add (background_selection);

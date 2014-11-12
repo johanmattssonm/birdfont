@@ -20,9 +20,9 @@ public class Tool : GLib.Object {
 	
 	public double x = 0;
 	public double y = 0;
-	public double w = 30;
-	public double h = 30;
-
+	public double w = 33 * Toolbox.get_scale ();
+	public double h = (33 / 1.11) * Toolbox.get_scale ();
+	
 	protected bool active = false;
 	protected bool selected = false;
 	
