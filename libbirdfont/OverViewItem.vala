@@ -113,6 +113,33 @@ public class OverViewItem : GLib.Object {
 		draw_caption (cr);	
 	}
 
+	public void adjust_scale () {
+		double x1, x2, y1, y2, glyph_width, glyph_height, scale, gx, gy;
+		Glyph g;
+		Font font;
+		
+		if (glyphs != null) {
+			font = BirdFont.get_current_font ();
+			g = ((!) glyphs).get_current ();
+			g.boundaries (out x1, out y1, out x2, out y2);
+		
+			glyph_width = x2 - x1;
+			glyph_height = y2 - y1;
+
+			if (glyph_scale == 1) {
+				// caption height is 20
+				glyph_scale = (height - 20) / (font.top_limit - font.bottom_limit);	
+			}
+			
+			scale = glyph_scale;			
+			gx = ((width / scale) - glyph_width) / 2;
+		
+			if (gx < 0) {
+				glyph_scale = 1 + 2 * gx / width;
+			}
+		}
+	}
+
 	private void draw_thumbnail (Context cr, GlyphCollection? gl, double x, double y) {
 		Glyph g;
 		Font font;
@@ -141,23 +168,12 @@ public class OverViewItem : GLib.Object {
 		
 			glyph_width = x2 - x1;
 			glyph_height = y2 - y1;
-
-			if (glyph_scale == 1) {
-				// caption height is 20
-				glyph_scale = (h - 20) / (font.top_limit - font.bottom_limit);	
-			}
 			
-			scale = glyph_scale;
-			
-			gx = ((w / scale) - glyph_width) / 2;
-			gy = (h / scale) - 25 / scale;
-				
-			if (gx < 0) {
-				glyph_scale = 1 + 2 * gx / width;
-			}
+			gx = ((w / glyph_scale) - glyph_width) / 2;
+			gy = (h / glyph_scale) - 25 / glyph_scale;
 
 			c.save ();
-			c.scale (scale, scale);	
+			c.scale (glyph_scale, glyph_scale);	
 
 			g.add_help_lines ();
 			
@@ -170,9 +186,9 @@ public class OverViewItem : GLib.Object {
 			fallback = new Text ();
 			c.set_source_rgba (219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
 			fallback.set_text ((!) character.to_string ());
-			font_size = height;
+			font_size = height * 0.9;
 			gx = (width - fallback.get_extent (font_size)) / 2.0;
-			gy = 30 - (height / 2.0) * (height / height);
+			gy = height - 30;
 			fallback.draw (c, gx, gy, font_size);
 			c.restore ();
 		}

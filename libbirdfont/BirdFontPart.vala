@@ -28,8 +28,6 @@ public class BirdFontPart : GLib.Object{
 
 	static string FILE_ATTRIBUTES = "standard::*";
 
-	static bool running_git = false;
-
 	public BirdFontPart (Font font) {	
 		this.font = font;
 		parts = new Gee.ArrayList<string> ();

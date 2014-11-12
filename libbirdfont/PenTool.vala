@@ -747,7 +747,6 @@ public class PenTool : Tool {
 	public void press (int button, int x, int y, bool double_click) {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
-		Toolbox tb = MainWindow.get_toolbox ();
 		
 		return_if_fail (g != null);
 

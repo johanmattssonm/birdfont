@@ -236,10 +236,11 @@ public class OverView : FontDisplay {
 		GlyphCanvas.redraw ();
 	}
 	
-	public static void update_zoom_bar () {
+	public void update_zoom_bar () {
 		double z = OverViewItem.width / OverViewItem.DEFAULT_WIDTH - 0.5;
 		Toolbox.overview_tools.zoom_bar.set_zoom (z);
 		Toolbox.redraw_tool_box ();
+		update_item_list ();
 	}
 	
 	public void set_zoom (double zoom) {
@@ -391,6 +392,8 @@ public class OverView : FontDisplay {
 			}
 			
 			item = new OverViewItem (glyphs, character, x, y);
+			item.adjust_scale ();
+			
 			x += OverViewItem.full_width ();
 			
 			if (x + OverViewItem.full_width () >= allocation.width) {

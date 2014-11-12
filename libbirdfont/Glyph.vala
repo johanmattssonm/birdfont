@@ -193,21 +193,23 @@ public class Glyph : FontDisplay {
 	
 		foreach (Path p in path_list) {
 			p.update_region_boundaries ();
-						
-			if (p.xmin < x1) {
-				x1 = p.xmin;
-			}
-			
-			if (p.xmax > x2) {
-				x2 = p.xmax;
-			}
-			
-			if (p.ymin < y1) {
-				y1 = p.ymin;
-			}
-			
-			if (p.ymax > y2) {
-				y2 = p.ymax;
+					
+			if (p.points.size > 0) {
+				if (p.xmin < x1) {
+					x1 = p.xmin;
+				}
+				
+				if (p.xmax > x2) {
+					x2 = p.xmax;
+				}
+				
+				if (p.ymin < y1) {
+					y1 = p.ymin;
+				}
+				
+				if (p.ymax > y2) {
+					y2 = p.ymax;
+				}
 			}
 		}
 	}

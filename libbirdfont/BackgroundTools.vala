@@ -217,7 +217,6 @@ public class BackgroundTools : ToolCollection  {
 			// don't invalidate the toolbox iterator
 			IdleSource idle = new IdleSource (); 
 			idle.set_callback (() => {
-				GlyphCollection g;
 				BackgroundSelectionLabel bsl;
 				Font f = BirdFont.get_current_font ();
 				

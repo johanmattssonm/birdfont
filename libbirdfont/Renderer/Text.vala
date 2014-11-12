@@ -40,7 +40,6 @@ public class Text {
 	Font? current_font;
 	string text;
 	GlyphSequence glyph_sequence;
-	double line_gap = 20;
 	public delegate void Iterator (Glyph glyph, double kerning, bool last);
 	
 	public Text () {
@@ -307,10 +306,6 @@ public class Text {
 
 	double get_row_height () {
 		return font.top_limit - font.bottom_limit;
-	}
-	
-	internal static void test () {
-		MainWindow.get_tab_bar ().add_tab (new TextTab ());
 	}
 }
 
