@@ -172,8 +172,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		tab_box.pack_start (text_box, false, false, 5);	
 		tab_box.pack_start (canvas_box, true, true, 0);
 
-		tab_box.pack_start (new TooltipCanvas (MainWindow.get_tooltip ()), false, false, 0);
-		
 		toolbox = new ToolboxCanvas (MainWindow.get_toolbox ()); 
 		list_box = new Box (Orientation.HORIZONTAL, 0);
 		list_box.pack_start (toolbox, false, false, 0);
@@ -1274,40 +1272,6 @@ public class GlyphCanvasArea : DrawingArea  {
 		} else if (has_flag (k, ModifierType.MOD5_MASK)) {
 			KeyBindings.set_modifier (LOGO);
 		}
-	}
-}
-
-public class TooltipCanvas : DrawingArea {
-	TooltipArea tooltip_area;
-	
-	public TooltipCanvas (TooltipArea ta) {
-		tooltip_area = ta;
-
-		draw.connect ((t, e)=> {
-				WidgetAllocation allocation = new WidgetAllocation ();
-				Gtk.Allocation alloc;
-				
-				Context cr = cairo_create (get_window ());
-				
-				get_allocation (out alloc);
-
-				allocation.width = alloc.width;
-				allocation.height = alloc.height;
-				allocation.y = alloc.x;
-				allocation.y = alloc.y;
-				
-				tooltip_area.draw (cr, allocation);
-
-				return true;
-		});
-		
-		tooltip_area.redraw.connect (() => {
-			Gtk.Allocation alloc;
-			get_allocation (out alloc);
-			queue_draw_area (0, 0, alloc.width, alloc.height);
-		});
-		
-		set_size_request (10, 20);
 	}
 }
 
