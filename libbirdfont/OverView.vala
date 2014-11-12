@@ -229,26 +229,42 @@ public class OverView : FontDisplay {
 	
 	public override void selected_canvas () {
 		OverviewTools.update_overview_characterset ();
-		GlyphCanvas.redraw ();
 		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
+		update_zoom_bar ();
+		OverViewItem.glyph_scale = 1;
 		GlyphCanvas.redraw ();
+	}
+	
+	public static void update_zoom_bar () {
+		double z = OverViewItem.width / OverViewItem.DEFAULT_WIDTH - 0.5;
+		Toolbox.overview_tools.zoom_bar.set_zoom (z);
+		Toolbox.redraw_tool_box ();
+	}
+	
+	public void set_zoom (double zoom) {
+		double z = zoom + 0.5;
+		OverViewItem.glyph_scale = 1;
+		OverViewItem.width = OverViewItem.DEFAULT_WIDTH * z;
+		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT * z;
+		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * z;
+		GlyphCanvas.redraw ();	
 	}
 	
 	public override void zoom_min () {
 		OverViewItem.width = OverViewItem.DEFAULT_WIDTH * 0.5;
 		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT * 0.5;
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * 0.5;
-		
 		GlyphCanvas.redraw ();
+		update_zoom_bar ();
 	}
 	
 	public override void reset_zoom () {
 		OverViewItem.width = OverViewItem.DEFAULT_WIDTH;
 		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT;
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN;
-		
 		GlyphCanvas.redraw ();
+		update_zoom_bar ();
 	}
 
 	public override void zoom_max () {
@@ -260,8 +276,9 @@ public class OverView : FontDisplay {
 	public override void zoom_in () {
 		OverViewItem.width *= 1.1;
 		OverViewItem.height *= 1.1;
-		OverViewItem.margin *= 1.1;		
+		OverViewItem.margin *= 1.1;
 		GlyphCanvas.redraw ();
+		update_zoom_bar ();
 	}
 	
 	public override void zoom_out () {
@@ -269,6 +286,7 @@ public class OverView : FontDisplay {
 		OverViewItem.height *= 0.9;
 		OverViewItem.margin *= 0.9;	
 		GlyphCanvas.redraw ();
+		update_zoom_bar ();
 	}
 
 	public override void store_current_view () {

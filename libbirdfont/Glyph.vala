@@ -818,6 +818,8 @@ public class Glyph : FontDisplay {
 			zoom_area_is_visible = false;
 			store_current_view ();
 		}
+		
+		update_zoom_bar ();
 	}
 	
 	public void show_zoom_area (int sx, int sy, int nx, int ny) {

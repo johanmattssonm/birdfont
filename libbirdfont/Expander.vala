@@ -140,14 +140,6 @@ public class Expander : GLib.Object {
 				if (t.tool_is_visible ()) {
 					new_row = xt + t.w > Toolbox.allocation_width - margin_small;
 					
-					if (t is ZoomBar) { // add extra space around zoom bar
-						content_height += 30 * scale;
-					}
-					
-					if (previous is ZoomBar) {
-						yt += margin_small;
-					}
-					
 					if (new_row && !first_row) {
 						content_height += previous.h + margin_small; 
 						xt = x;

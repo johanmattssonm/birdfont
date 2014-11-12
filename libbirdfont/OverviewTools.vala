@@ -25,17 +25,25 @@ public class OverviewTools : ToolCollection  {
 	static Gee.ArrayList<LabelTool> custom_character_sets;
 
 	public static Gee.ArrayList<Expander> expanders;
+	public ZoomBar zoom_bar;
 
 	public OverviewTools () {
 		Expander font_name = new Expander ();
 		Expander character_sets = new Expander (t_("Character Sets"));
+		Expander zoom_expander = new Expander (t_("Zoom"));
 		
 		expanders = new Gee.ArrayList<Expander> ();
 		custom_character_sets = new Gee.ArrayList<LabelTool> ();
 		
 		font_name.add_tool (new FontName ());
 		font_name.draw_separator = false;
-				
+
+		zoom_bar = new ZoomBar ();
+		zoom_bar.new_zoom.connect ((z) => {
+			MainWindow.get_overview ().set_zoom (z);
+		});
+		zoom_expander.add_tool (zoom_bar);
+						
 		all_glyphs = new LabelTool (t_("All Glyphs"));
 		all_glyphs.has_counter = true;
 		all_glyphs.select_action.connect ((self) => {
@@ -71,6 +79,7 @@ public class OverviewTools : ToolCollection  {
 		character_sets.set_unique (false);
 
 		expanders.add (font_name);
+		expanders.add (zoom_expander);
 		expanders.add (character_sets);
 	}
 	

@@ -33,7 +33,7 @@ public class OverViewItem : GLib.Object {
 	public static double height = 130;
 	public static double margin = 20;
 
-	static double glyph_scale = 1.0;
+	public static double glyph_scale = 1.0;
 	
 	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	
 		this.x = x;
@@ -170,9 +170,9 @@ public class OverViewItem : GLib.Object {
 			fallback = new Text ();
 			c.set_source_rgba (219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
 			fallback.set_text ((!) character.to_string ());
-			font_size = DEFAULT_HEIGHT;
+			font_size = height;
 			gx = (width - fallback.get_extent (font_size)) / 2.0;
-			gy = 30 - (DEFAULT_HEIGHT / 2.0) * (height / DEFAULT_HEIGHT);
+			gy = 30 - (height / 2.0) * (height / height);
 			fallback.draw (c, gx, gy, font_size);
 			c.restore ();
 		}

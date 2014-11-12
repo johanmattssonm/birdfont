@@ -26,6 +26,7 @@ public class DrawingTools : ToolCollection  {
 	Expander grid_expander;
 	Expander shape_tools;
 	public static Expander draw_tool_modifiers;
+	public static Expander zoombar_tool;
 	public static Expander view_tools;
 	public static Expander guideline_tools;
 	
@@ -101,7 +102,8 @@ public class DrawingTools : ToolCollection  {
 		draw_tools = new Expander (t_("Drawing Tools"));
 		draw_tool_modifiers = new Expander (t_("Control Point Tools"));
 		shape_tools = new Expander (t_("Geometrical Shapes"));
-		view_tools = new Expander (t_("Zoom"));
+		zoombar_tool = new Expander (t_("Zoom"));
+		view_tools = new Expander ();
 		guideline_tools = new Expander (t_("Guidelines & Grid"));
 		
 		Expander font_name = new Expander ();
@@ -861,7 +863,7 @@ public class DrawingTools : ToolCollection  {
 						
 			GlyphCanvas.redraw ();
 		});
-		view_tools.add_tool (zoom_bar);
+		zoombar_tool.add_tool (zoom_bar);
 		
 		Tool zoom_in = new Tool ("zoom_in", t_("Zoom in"), '+', CTRL);
 		zoom_in.select_action.connect ((self) => {
@@ -1125,6 +1127,7 @@ public class DrawingTools : ToolCollection  {
 		add_expander (draw_tool_modifiers);
 		add_expander (guideline_tools);
 		add_expander (grid);
+		add_expander (zoombar_tool);
 		add_expander (view_tools);
 		add_expander (shape_tools);
 		add_expander (style_tools);
@@ -1156,7 +1159,9 @@ public class DrawingTools : ToolCollection  {
 		
 		style_tools.set_persistent (true);
 		style_tools.set_unique (true);
-		
+
+		view_tools.draw_separator = false;
+				
 		// let these tools progagate events even when other tools are selected			
 		foreach (Tool t in draw_tools.tool) {
 			t.editor_events = true;

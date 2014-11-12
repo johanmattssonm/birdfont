@@ -23,7 +23,7 @@ public class Toolbox : GLib.Object  {
 	public static DrawingTools drawing_tools;
 	public KerningTools kerning_tools;
 	public PreviewTools preview_tools;
-	public OverviewTools overview_tools;
+	public static OverviewTools overview_tools;
 	public static BackgroundTools background_tools;
 	
 	Tool current_tool;
@@ -288,7 +288,9 @@ public class Toolbox : GLib.Object  {
 
 	public static void redraw_tool_box () {
 		Toolbox t = MainWindow.get_toolbox ();
-		t.redraw (0, 0, allocation_width, allocation_height);
+		if (!is_null (t)) {
+			t.redraw (0, 0, allocation_width, allocation_height);
+		}
 	}
 	
 	public void reset_active_tool () {
