@@ -29,6 +29,7 @@ public class MainWindow : GLib.Object {
 	public static CharDatabase character_database;
 	public static LigatureList ligature_display;
 	public static SpacingClassTab spacing_class_tab;
+	public static Menu menu;
 	
 	/** Number of pixels per mm */
 	public static double units = 1;
@@ -47,6 +48,11 @@ public class MainWindow : GLib.Object {
 		character_database = new CharDatabase ();
 		ligature_display = new LigatureList ();
 		spacing_class_tab = new SpacingClassTab ();
+		menu = new Menu ();
+	}
+
+	public static Menu get_menu () {
+		return menu;
 	}
 
 	/** Set the number of picels per millimeter for the current screen. */

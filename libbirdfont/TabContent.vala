@@ -59,6 +59,8 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void draw (WidgetAllocation allocation, Context cr) {
+		Menu menu = MainWindow.get_menu ();
+		
 		if (MenuTab.suppress_event) {
 			cr.save ();
 			cr.set_source_rgba (1, 1, 1, 1);
@@ -69,6 +71,10 @@ public class TabContent : GLib.Object {
 			GlyphCanvas.set_allocation (allocation);
 			MainWindow.get_current_glyph ().resized (allocation);
 			GlyphCanvas.current_display.draw (allocation, cr);
+			
+			if (menu.show_menu) {
+				menu.draw (allocation, cr);
+			}
 		}
 	}
 	
@@ -111,7 +117,11 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.button_release (button, x, y);
+		if (MainWindow.get_menu ().show_menu) {
+			MainWindow.get_menu ().button_release (button, x, y);
+		} else {
+			GlyphCanvas.current_display.button_release (button, x, y);
+		}
 	}
 	
 	public static void button_press (uint button, double x, double y) {
@@ -119,7 +129,9 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.button_press (button, x, y);
+		if (!MainWindow.get_menu ().show_menu) {
+			GlyphCanvas.current_display.button_press (button, x, y);
+		}
 	}
 
 	public static void double_click (uint button, double ex, double ey) {
@@ -127,7 +139,9 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.double_click (button, ex, ey);
+		if (!MainWindow.get_menu ().show_menu) {
+			GlyphCanvas.current_display.double_click (button, ex, ey);
+		}
 	}
 	
 	public static void scroll_wheel_up (double x, double y) {
@@ -135,7 +149,9 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.scroll_wheel_up (x, y);
+		if (!MainWindow.get_menu ().show_menu) {
+			GlyphCanvas.current_display.scroll_wheel_up (x, y);
+		}
 	}
 	
 	public static void scroll_wheel_down (double x, double y) {
@@ -143,7 +159,9 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.scroll_wheel_down (x, y);
+		if (!MainWindow.get_menu ().show_menu) {
+			GlyphCanvas.current_display.scroll_wheel_down (x, y);
+		}
 	}
 
 	public static void tap_down (int finger, int x, int y) {
@@ -151,7 +169,9 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.tap_down (finger, x, y);
+		if (!MainWindow.get_menu ().show_menu) {
+			GlyphCanvas.current_display.tap_down (finger, x, y);
+		}
 	}
 	
 	public static void tap_up (int finger, int x, int y) {
@@ -159,7 +179,9 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.tap_up (finger, x, y);
+		if (!MainWindow.get_menu ().show_menu) {
+			GlyphCanvas.current_display.tap_up (finger, x, y);
+		}
 	}
 	
 	public static void tap_move (int finger, int x, int y) {
@@ -167,7 +189,9 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.tap_move (finger, x, y);
+		if (!MainWindow.get_menu ().show_menu) {
+			GlyphCanvas.current_display.tap_move (finger, x, y);
+		}
 	}
 		
 	public static void undo () {

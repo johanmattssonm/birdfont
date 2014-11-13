@@ -27,6 +27,7 @@ public class TabBar : GLib.Object {
 	static const int NEXT_TAB = -2;
 	static const int PREVIOUS_TAB = -3;
 	static const int PROGRESS_WHEEL = -3;
+	static const int SHOW_MENU = -4;
 
 	int first_tab = 0;
 	int selected = 0;
@@ -45,6 +46,7 @@ public class TabBar : GLib.Object {
 	ImageSurface? to_previous_tab;
 	
 	ImageSurface? tab_bar_background = null;
+	ImageSurface? menu_icon;
 	
 	double scale = 1; // scale images in 320 dpi
 	
@@ -63,6 +65,8 @@ public class TabBar : GLib.Object {
 		
 		progress = Icons.get_icon ("progress_wheel.png");
 		tab_bar_background = Icons.get_icon ("tab_bar_background.png");
+		
+		menu_icon = Icons.get_icon ("menu.png");
 	}
 	
 	public void set_background_color (double r, double g, double b) {
@@ -72,6 +76,11 @@ public class TabBar : GLib.Object {
 	}
 	
 	public void motion (double x, double y) {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
 		over_close (x, y, out over, out over_close_tab);
 	}
 
@@ -86,7 +95,13 @@ public class TabBar : GLib.Object {
 			return;
 		}
 
-		if (has_scroll () && has_progress_wheel ()) {
+		if (!has_progress_wheel ()) {
+			if (x > width - 25) {
+				over_close_tab = NO_TAB;
+				over = SHOW_MENU;
+				return;
+			}
+		} else if (has_scroll () && has_progress_wheel ()) {
 			if (x > width - 19) {
 				over_close_tab = NO_TAB;
 				over = PROGRESS_WHEEL;
@@ -386,6 +401,12 @@ public class TabBar : GLib.Object {
 		// always close any pending text input if the user switches tab
 		MainWindow.native_window.hide_text_input ();
 
+		if (index == SHOW_MENU) {
+			MainWindow.get_menu ().show_menu = ! MainWindow.get_menu ().show_menu;
+			GlyphCanvas.redraw ();
+			return;
+		}
+		
 		if (index == NEXT_TAB) {
 			selected++;
 			
@@ -507,6 +528,8 @@ public class TabBar : GLib.Object {
 	
 	public void select_tab_click (double x, double y, int width, int height) {
 		int over, close;
+		
+		MainWindow.get_menu ().show_menu = false;
 		
 		this.width = width;
 		this.height = height;
@@ -634,7 +657,19 @@ public class TabBar : GLib.Object {
 			progress_y = (has_scroll ()) ? h - ((!) progress).get_height () - 5 / scale : (h - ((!) progress).get_height ()) / 2;
 			cr.set_source_surface (c.get_target (), w - 19 / scale, progress_y);
 			cr.paint ();
-			
+		} else {
+			// menu icon
+			if (menu_icon != null) {
+				
+				if (MainWindow.get_menu ().show_menu) {
+					cr.set_source_rgba (38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+					cr.rectangle (w - 32 / scale, 0, 32 / scale, h);
+					cr.fill ();
+				}
+				
+				cr.set_source_surface ((!) menu_icon, w - 25 / scale, h / 2.0 - ((!) menu_icon).get_height () / 2.0);
+				cr.paint ();
+			}
 		}
 		
 		draw_tabs (cr);

@@ -1524,8 +1524,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="4.0000001"
-     inkscape:cx="324.93909"
-     inkscape:cy="128.40856"
+     inkscape:cx="459.05169"
+     inkscape:cy="687.23668"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
      showgrid="false"
@@ -3955,12 +3955,12 @@
        inkscape:export-xdpi="320"
        inkscape:export-ydpi="320" />
     <rect
-       style="opacity:1;color:#000000;fill:#33363b;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:20;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#33363b;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:20;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect4330"
        width="174.22142"
-       height="37.342556"
+       height="37.098652"
        x="270.01135"
-       y="130.7104" />
+       y="130.9543" />
     <path
        style="fill:#2c2f33;fill-opacity:1;stroke:#26272b;stroke-width:1.08162749;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1"
        d="m 369.43527,135.01754 18.88609,0.13751 c 3.96902,0.0969 5.3426,1.35943 5.77448,4.78631 l 0.0259,17.0893 c -0.12039,3.50816 -1.85708,4.92123 -4.96983,4.90512 l -20.94199,0 c -2.02353,-0.10763 -3.91115,-0.89537 -4.00655,-3.65731 l 0,-17.73466 c 0.003,-3.90203 1.49133,-5.42246 5.23184,-5.52627 z"
@@ -5765,5 +5765,36 @@
        inkscape:export-filename="/home/johan/birdfont/icons/generate_html_document.png"
        inkscape:export-xdpi="320"
        inkscape:export-ydpi="320" />
+    <g
+       id="g3826"
+       transform="translate(-19.999999,-59.499998)"
+       inkscape:export-filename="/home/johan/birdfont/icons/menu.png"
+       inkscape:export-xdpi="320"
+       inkscape:export-ydpi="320">
+      <path
+         inkscape:export-ydpi="319.88824"
+         inkscape:export-xdpi="319.88824"
+         inkscape:export-filename="/home/johan/birdfont/icons/zoom_out.png"
+         style="fill:none;stroke:#656a73;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 429.55443,116.58311 -16.23756,0"
+         id="path4868-4-9-2-3"
+         inkscape:connector-curvature="0" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4947-0-3"
+         d="m 429.55443,120.41629 -16.23756,0"
+         style="fill:none;stroke:#656a73;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         inkscape:export-filename="/home/johan/birdfont/icons/zoom_out.png"
+         inkscape:export-xdpi="319.88824"
+         inkscape:export-ydpi="319.88824" />
+      <path
+         inkscape:export-ydpi="319.88824"
+         inkscape:export-xdpi="319.88824"
+         inkscape:export-filename="/home/johan/birdfont/icons/zoom_out.png"
+         style="fill:none;stroke:#656a73;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 429.55443,124.53239 -16.23756,0"
+         id="path3824"
+         inkscape:connector-curvature="0" />
+    </g>
   </g>
 </svg>
