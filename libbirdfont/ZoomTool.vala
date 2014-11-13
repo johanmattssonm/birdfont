@@ -20,12 +20,12 @@ public class ZoomTool : Tool {
 	int zoom_area_begin_y = -1;
 	
 	int view_index = 0;
-	List<Tab> views;
+	Gee.ArrayList<Tab> views;
 	
 	public ZoomTool (string n) {
 		base (n, "Zoom", 'z');
 
-		views = new List<Tab> ();
+		views = new Gee.ArrayList<Tab> ();
 
 		select_action.connect((self) => {
 		});
@@ -97,27 +97,26 @@ public class ZoomTool : Tool {
 	
 	/** Add an item to zoom view list. */
 	public void store_current_view () {	
-		if (views.length () - 1 > view_index) {
-			unowned List<Tab> i = views.nth (view_index + 1);
-			while (i != i.last ()) {
-				i.delete_link (i.next);
+		if (views.size - 1 > view_index) {
+			int i = view_index + 1;
+			while (i != views.size - 1) {
+				views.remove_at (i);
 			}
 		}
 		
-		views.append (MainWindow.get_current_tab ());
-		view_index = (int)views.length () - 1;
+		views.add (MainWindow.get_current_tab ());
+		view_index = (int) views.size - 1;
 		MainWindow.get_current_display ().store_current_view ();
 	}
 
 	/** Redo last zoom.*/
 	public void next_view () {
-		if (view_index + 1 >= (int) views.length ()) {
+		if (view_index + 1 >= (int) views.size) {
 			return;
 		}
 		
 		view_index++;
 	
-		MainWindow.select_tab (views.nth (view_index).data);
 		MainWindow.get_current_display ().next_view ();
 		GlyphCanvas.redraw ();
 	}
@@ -130,7 +129,6 @@ public class ZoomTool : Tool {
 		
 		view_index--;
 	
-		MainWindow.select_tab (views.nth (view_index).data);
 		MainWindow.get_current_display ().restore_last_view ();
 		GlyphCanvas.redraw ();
 	}

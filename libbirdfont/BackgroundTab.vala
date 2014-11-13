@@ -25,6 +25,10 @@ public class BackgroundTab : Glyph {
 		base ("", '\0');
 		singleton = this;
 		add_help_lines ();
+		
+		Toolbox tools = MainWindow.get_toolbox ();
+		ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");
+		z.store_current_view ();
 	}
 
 	public static BackgroundTab get_instance () {
