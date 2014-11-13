@@ -426,6 +426,7 @@ public class Toolbox : GLib.Object  {
 	public void draw (int w, int h, Context cr) { 
 		EmptySet empty_set;
 		ImageSurface bg;
+		double scale_x, scale_y, scale;
 		
 		if (current_set is EmptySet) {
 			empty_set = (EmptySet) current_set;
@@ -433,8 +434,13 @@ public class Toolbox : GLib.Object  {
 			if (empty_set.background != null) {
 				bg = (!) empty_set.background;
 				
+				scale_x = (double) allocation_width / bg.get_width ();
+				scale_y = (double) allocation_height / bg.get_height ();
+				
+				scale = fmax (scale_x, scale_y);
+				
 				cr.save ();
-				cr.scale ((double) allocation_width / bg.get_width (), (double) allocation_height / bg.get_height ());
+				cr.scale (scale, scale);
 				cr.set_source_surface (bg, 0, 0);
 				cr.paint ();				
 				cr.restore ();
