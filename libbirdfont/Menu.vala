@@ -51,12 +51,13 @@ public class Menu : GLib.Object {
 	public Menu () {
 		SubMenu menu = new SubMenu ();
 		SubMenu file_menu = new SubMenu ();
+		SubMenu edit_menu = new SubMenu ();
 		
+		// file menu
 		MenuItem file = new MenuItem (t_("File"));
 		file.action.connect (() => {
 			set_menu (file_menu);
 		});
-		
 		menu.items.add (file);
 
 		MenuItem new_file = new MenuItem (t_("New"), "new");
@@ -135,7 +136,154 @@ public class Menu : GLib.Object {
 			show_menu = false;
 		});
 		file_menu.items.add (quit);
-																		
+
+		// edit menu
+		MenuItem edit = new MenuItem (t_("Edit"));
+		edit.action.connect (() => {
+			set_menu (edit_menu);
+		});
+		menu.items.add (edit);
+
+		MenuItem undo = new MenuItem (t_("Undo"), "undo");
+		undo.action.connect (() => {
+			TabContent.undo ();
+			show_menu = false;
+		});
+		edit_menu.items.add (undo);
+
+		MenuItem redo = new MenuItem (t_("Redo"), "redo");
+		redo.action.connect (() => {
+			TabContent.redo ();
+			show_menu = false;
+		});
+		edit_menu.items.add (redo);
+
+		MenuItem copy = new MenuItem (t_("Copy"), "copy");
+		copy.action.connect (() => {
+			ClipTool.copy ();
+			show_menu = false;
+		});
+		edit_menu.items.add (copy);
+
+		MenuItem paste = new MenuItem (t_("Paste"), "paste");
+		paste.action.connect (() => {
+			ClipTool.paste ();
+			show_menu = false;
+		});
+		edit_menu.items.add (paste);
+
+		MenuItem paste_in_place = new MenuItem (t_("Paste In Place"), "paste in place");
+		paste_in_place.action.connect (() => {
+			ClipTool.paste_in_place ();
+			show_menu = false;
+		});
+		edit_menu.items.add (paste_in_place);
+		
+		MenuItem select_all_paths = new MenuItem (t_("Select All Paths"), "select all paths");
+		select_all_paths.action.connect (() => {
+			MainWindow.select_all_paths ();
+			show_menu = false;
+		});
+		edit_menu.items.add (select_all_paths);
+
+		MenuItem move_to_baseline = new MenuItem (t_("Move To Baseline"), "move to baseline");
+		move_to_baseline.action.connect (() => {
+			MenuTab.move_to_baseline ();
+			show_menu = false;
+		});
+		edit_menu.items.add (move_to_baseline);
+
+		MenuItem search = new MenuItem (t_("Search"), "search");
+		search.action.connect (() => {
+			OverView.search ();
+			show_menu = false;
+		});
+		edit_menu.items.add (search);
+
+		MenuItem export_glyph = new MenuItem (t_("Export Glyph as SVG"), "export glyph as svg");
+		export_glyph.action.connect (() => {
+			ExportTool.export_current_glyph ();
+			show_menu = false;
+		});
+		edit_menu.items.add (export_glyph);
+
+		MenuItem import_svg = new MenuItem (t_("Import SVG file"), "import svg file");
+		import_svg.action.connect (() => {
+			SvgParser.import ();
+			show_menu = false;
+		});
+		edit_menu.items.add (import_svg);
+
+		MenuItem import_background_image = new MenuItem (t_("Import Background Image"), "import background image");
+		import_background_image.action.connect (() => {
+			MenuTab.show_background_tab ();
+			show_menu = false;
+		});
+		edit_menu.items.add (import_background_image);
+
+		MenuItem simplify_path = new MenuItem (t_("Simplify Path"), "simplify path");
+		simplify_path.action.connect (() => {
+			MenuTab.simplify_path ();
+			show_menu = false;
+		});
+		edit_menu.items.add (simplify_path);
+
+		MenuItem close_path = new MenuItem (t_("Close Path"), "close path");
+		close_path.action.connect (() => {
+			PenTool.close_all_paths ();
+			show_menu = false;
+		});
+		edit_menu.items.add (close_path);
+
+		MenuItem glyph_sequence = new MenuItem (t_("Glyph Sequence"), "glyph sequence");
+		glyph_sequence.action.connect (() => {
+			MainWindow.update_glyph_sequence ();
+			show_menu = false;
+		});
+		edit_menu.items.add (glyph_sequence);
+
+		MenuItem set_background_glyph = new MenuItem (t_("Set Background Glyph"), "set background glyph");
+		set_background_glyph.action.connect (() => {
+			MenuTab.use_current_glyph_as_background ();
+			show_menu = false;
+		});
+		edit_menu.items.add (set_background_glyph);
+
+		MenuItem remove_background_glyph = new MenuItem (t_("Remove Background Glyph"), "remove background glyph");
+		remove_background_glyph.action.connect (() => {
+			MenuTab.reset_glyph_background ();
+			show_menu = false;
+		});
+		edit_menu.items.add (remove_background_glyph);
+
+		MenuItem select_point_above = new MenuItem (t_("Select Point Above"), "select point above");
+		select_point_above.action.connect (() => {
+			PenTool.select_point_up ();
+			show_menu = false;
+		});
+		edit_menu.items.add (select_point_above);
+
+		MenuItem select_next_point = new MenuItem (t_("Select Next Point"), "select next point");
+		select_next_point.action.connect (() => {
+			PenTool.select_point_right ();
+			show_menu = false;
+		});
+		edit_menu.items.add (select_next_point);
+		
+		MenuItem select_previous_point = new MenuItem (t_("Select Previous Point"), "select previous point");
+		select_previous_point.action.connect (() => {
+			PenTool.select_point_left ();
+			show_menu = false;
+		});
+		edit_menu.items.add (select_previous_point);
+
+		MenuItem select_point_below = new MenuItem (t_("Select Point Below"), "select point below");
+		select_point_below.action.connect (() => {
+			PenTool.select_point_down ();
+			show_menu = false;
+		});
+		edit_menu.items.add (select_point_below);
+																																														
 		current_menu = menu;
 		top_menu = menu;
 		allocation = new WidgetAllocation ();
