@@ -34,6 +34,7 @@ public class ColorTool : Tool {
 		
 		color_updated.connect (() => {
 			MainWindow.get_toolbox ().redraw ((int)x, (int)y, (int)x + 20, (int)y + 20);
+			GlyphCanvas.redraw ();
 		});
 	}
 	

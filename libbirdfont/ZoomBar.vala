@@ -103,7 +103,6 @@ public class ZoomBar : Tool {
 	}
 	
 	void draw_bar (Context cr) {
-		double scale = Toolbox.get_scale ();
 		double height = h;
 		double radius = height / 2;
 		double margin = w * 0.1;

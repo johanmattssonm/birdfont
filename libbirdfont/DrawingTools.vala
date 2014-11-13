@@ -1000,7 +1000,8 @@ public class DrawingTools : ToolCollection  {
 		idle.set_callback (() => {
 			MainWindow.get_toolbox ().reset_active_tool ();
 		
-			pen_tool.set_selected (true);
+			foresight_tool.set_selected (true);
+			update_drawing_and_background_tools (foresight_tool);
 			
 			select_draw_tool ();			
 			set_point_type_from_preferences ();

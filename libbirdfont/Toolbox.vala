@@ -62,6 +62,7 @@ public class Toolbox : GLib.Object  {
 		
 		tab_bar.signal_tab_selected.connect ((tab) => {
 			string tab_name = tab.get_display ().get_name ();
+			
 			if (tab_name == "Kerning") {
 				current_set = kerning_tools;
 			} else if (tab_name == "Preview") {
@@ -70,9 +71,12 @@ public class Toolbox : GLib.Object  {
 				current_set = overview_tools;
 			} else if (tab_name == "Backgrounds") {
 				current_set = background_tools;
-			} else {
+			} else if (tab.get_display () is Glyph) {
 				current_set = drawing_tools;
-			}
+			} else {
+				current_set = new EmptySet ();
+			} 
+		
 			
 			update_expanders ();
 			redraw (0, 0, allocation_width, allocation_height);
@@ -420,17 +424,52 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void draw (int w, int h, Context cr) { 
-		cr.save ();
+		EmptySet empty_set;
+		ImageSurface bg;
 		
-		cr.rectangle (0, 0, w, h);
-		cr.set_line_width (0);
-		cr.set_source_rgba (51/255.0, 54/255.0, 59/255.0, 1);
-		cr.fill ();
+		if (current_set is EmptySet) {
+			empty_set = (EmptySet) current_set;
+			
+			if (empty_set.background != null) {
+				bg = (!) empty_set.background;
+				
+				cr.save ();
+				cr.scale ((double) allocation_width / bg.get_width (), (double) allocation_height / bg.get_height ());
+				cr.set_source_surface (bg, 0, 0);
+				cr.paint ();				
+				cr.restore ();
+				
+				draw_expanders (w, h, cr);
+			}
+		} else {
+			cr.save ();
+			
+			cr.rectangle (0, 0, w, h);
+			cr.set_line_width (0);
+			cr.set_source_rgba (51/255.0, 54/255.0, 59/255.0, 1);
+			cr.fill ();
 
-		draw_expanders (w, h, cr);
-		
-		cr.restore ();
+			draw_expanders (w, h, cr);
+			
+			cr.restore ();
+		}
 	}
+	
+	public class EmptySet : ToolCollection  {
+		
+		public ImageSurface? background;
+		Gee.ArrayList<Expander> expanders;
+		
+		public EmptySet () {
+			background = Icons.get_icon ("corvus_monedula.png");
+			expanders = new Gee.ArrayList<Expander> ();
+		}
+		
+		public override Gee.ArrayList<Expander> get_expanders () {
+			return expanders;
+		}
+	}
+
 }
 
 }
