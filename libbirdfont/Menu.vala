@@ -52,6 +52,7 @@ public class Menu : GLib.Object {
 		SubMenu menu = new SubMenu ();
 		SubMenu file_menu = new SubMenu ();
 		SubMenu edit_menu = new SubMenu ();
+		SubMenu tab_menu = new SubMenu ();
 		
 		// file menu
 		MenuItem file = new MenuItem (t_("File"));
@@ -283,7 +284,50 @@ public class Menu : GLib.Object {
 			show_menu = false;
 		});
 		edit_menu.items.add (select_point_below);
-																																														
+
+		// tab menu
+		MenuItem tab = new MenuItem (t_("Tab"));
+		tab.action.connect (() => {
+			set_menu (tab_menu);
+		});
+		menu.items.add (tab);
+
+		MenuItem next_tab = new MenuItem (t_("Next Tab"), "next tab");
+		next_tab.action.connect (() => {
+			MainWindow.next_tab ();
+			show_menu = false;
+		});
+		tab_menu.items.add (next_tab);
+
+		MenuItem previous_tab = new MenuItem (t_("Previous Tab"), "previous tab");
+		previous_tab.action.connect (() => {
+			MainWindow.previous_tab ();
+			show_menu = false;
+		});
+		tab_menu.items.add (previous_tab);
+
+		MenuItem close_tab = new MenuItem (t_("Close Tab"), "close tab");
+		close_tab.action.connect (() => {
+			MainWindow.close_tab ();
+			show_menu = false;
+		});
+		tab_menu.items.add (close_tab);
+		
+		MenuItem close_all_tabs = new MenuItem (t_("Close All Tabs"), "close all tabs");
+		close_all_tabs.action.connect (() => {
+			MainWindow.close_all_tabs ();
+			show_menu = false;
+		});
+		tab_menu.items.add (close_all_tabs);
+
+		// show overview
+		MenuItem overview = new MenuItem (t_("Show Overview"));
+		overview.action.connect (() => {
+			MenuTab.select_overview ();
+			show_menu = false;
+		});
+		menu.items.add (overview);
+																																												
 		current_menu = menu;
 		top_menu = menu;
 		allocation = new WidgetAllocation ();
