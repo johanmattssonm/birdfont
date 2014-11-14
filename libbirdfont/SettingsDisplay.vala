@@ -25,13 +25,18 @@ public class SettingsDisplay : FontDisplay {
 	Gee.ArrayList<SettingsItem> tools;
 
 	public static SpinButton precision;
-		
+	
+	SettingsItem new_key_bindings = new SettingsItem.head_line ("");
+	bool update_key_bindings = false;
+	
 	public SettingsDisplay () {
 		allocation = new WidgetAllocation ();
 		tools = new Gee.ArrayList<SettingsItem> ();
 		content_height = 200;
 		
 		// setting items
+		tools.add (new SettingsItem.head_line (t_("Settings")));
+		
 		ColorTool stroke_color = new ColorTool ();
 		stroke_color.color_updated.connect (() => {
 			Path.line_color_r = stroke_color.color_r;
@@ -210,7 +215,12 @@ public class SettingsDisplay : FontDisplay {
 		freehand_samples.new_value_action.connect ((self) => {
 			DrawingTools.pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
 		});
-
+		
+		tools.add (new SettingsItem.head_line (t_("Key Bindings")));
+		
+		foreach (MenuItem menu_item in MainWindow.get_menu ().sorted_menu_items) {
+			tools.add (new SettingsItem.key_binding (menu_item));
+		}
 	}
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
@@ -228,40 +238,78 @@ public class SettingsDisplay : FontDisplay {
 		cr.fill ();
 		cr.stroke ();
 		cr.restore ();
-
-		// headline background
-		cr.save ();
-		cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		cr.rectangle (0, -scroll, allocation.width, 40 * MainWindow.units);
-		cr.fill ();
-		cr.restore ();
-			
-		cr.save ();
-		headline = new Text ();
-		headline.set_text (t_("Settings"));
-		cr.set_source_rgba (1, 1, 1, 1);
-		headline.draw (cr, 21 * MainWindow.units, 25 * MainWindow.units - scroll, 20 * MainWindow.units);
-		cr.restore ();		
 		
 		foreach (SettingsItem s in tools) {
-			s.draw (allocation, cr);
+			if (-20 * MainWindow.units <= s.y <= allocation.height + 20 * MainWindow.units) {
+				s.draw (allocation, cr);
+			}
 		}
 	}	
 
 	void layout () {
-		double y = 50 * MainWindow.units - scroll;
+		double y = -scroll;
+		bool first = true;
 		foreach (SettingsItem s in tools) {
+			
+			if (!first && s.headline) {
+				y += 30 * MainWindow.units;
+			}
+			
 			s.y = y;
-			y += 40 * MainWindow.units;
+			
+			if (s.button != null) {
+				((!) s.button).y = y;
+				((!) s.button).x = 20 * MainWindow.units;
+			}
+			
+			if (s.headline) {
+				y += 50 * MainWindow.units;
+			} else {
+				y += 40 * MainWindow.units;
+			}
+			
+			first = false;
 		}
+
 		content_height = y + scroll;
 	}
 
-	public override void button_press (uint button, double x, double y) {
+	void set_key_bindings (SettingsItem item) {	
+		if (new_key_bindings.active) {
+			new_key_bindings.active = false;
+			update_key_bindings = false;
+		} else {	
+			new_key_bindings.active = false;
+			new_key_bindings = item;
+			update_key_bindings = true;
+			new_key_bindings.active = true;
+		}
+	}
+
+	public override void key_release (uint keyval) {
+		if (update_key_bindings) {
+			if (KeyBindings.get_mod_from_key (keyval) == 0) {
+				new_key_bindings.menu_item.modifiers = KeyBindings.modifier;
+				new_key_bindings.menu_item.key = (unichar) keyval;
+				update_key_bindings = false;
+				new_key_bindings.active = false;
+				MainWindow.get_menu ().write_key_bindings ();
+				GlyphCanvas.redraw ();
+			}
+		}
+	}
+
+	public override void button_press (uint button, double x, double y) {	
 		foreach (SettingsItem s in tools) {
-			if (s.button.is_over (x, y)) {
-				s.button.panel_press_action (s.button, button, x, y);
-				s.button.select_action (s.button);
+			if (s.handle_events && s.button != null) {
+				if (((!) s.button).is_over (x, y)) {
+					((!) s.button).panel_press_action ((!) s.button, button, x, y);
+					((!) s.button).set_selected (! ((!) s.button).selected);
+					
+					if (((!) s.button).selected) {
+						((!) s.button).select_action ((!) s.button);
+					}
+				}
 			}
 		}
 		GlyphCanvas.redraw ();
@@ -269,8 +317,14 @@ public class SettingsDisplay : FontDisplay {
 	
 	public override void button_release (int button, double x, double y) {
 		foreach (SettingsItem s in tools) {
-			if (s.button.is_over (x, y) || s.button.is_active ()) {
-				s.button.panel_release_action (s.button, button, x, y);
+			if (s.handle_events && s.button != null) {
+				if (((!) s.button).is_over (x, y) || ((!) s.button).is_active ()) {
+					((!) s.button).panel_release_action ((!) s.button, button, x, y);
+				}
+			}
+			
+			if (s.key_bindings && s.y <= y < s.y + 40 * MainWindow.units && button == 1) {
+				set_key_bindings (s);
 			}
 		}
 		GlyphCanvas.redraw ();
@@ -280,8 +334,10 @@ public class SettingsDisplay : FontDisplay {
 		bool consumed = false;
 		
 		foreach (SettingsItem s in tools) {
-			if (s.button.panel_move_action (s.button, x, y)) {
-				consumed = true;
+			if (s.handle_events && s.button != null) {
+				if (((!) s.button).panel_move_action ((!) s.button, x, y)) {
+					consumed = true;
+				}
 			}
 		}
 		
@@ -305,13 +361,15 @@ public class SettingsDisplay : FontDisplay {
 	
 	public override void scroll_wheel_down (double x, double y) {
 		foreach (SettingsItem s in tools) {
-			if (s.button.is_over (x, y)) {
-				s.button.scroll_wheel_down_action (s.button);
-				return;
+			if (s.handle_events && s.button != null) {
+				if (((!) s.button).is_over (x, y)) {
+					((!) s.button).scroll_wheel_down_action ((!) s.button);
+					return;
+				}
 			}
 		}
 		
-		scroll += 15 * MainWindow.units;
+		scroll += 25 * MainWindow.units;
 
 		if (scroll + allocation.height >=  content_height) {
 			scroll = content_height - allocation.height;
@@ -323,13 +381,15 @@ public class SettingsDisplay : FontDisplay {
 	
 	public override void scroll_wheel_up (double x, double y) {
 		foreach (SettingsItem s in tools) {
-			if (s.button.is_over (x, y)) {
-				s.button.scroll_wheel_up_action (s.button);
-				return;
+			if (s.handle_events && s.button != null) {
+				if (((!) s.button).is_over (x, y)) {
+					((!) s.button).scroll_wheel_up_action ((!) s.button);
+					return;
+				}
 			}
 		}
 		
-		scroll -= 15 * MainWindow.units;;
+		scroll -= 25 * MainWindow.units;
 		
 		if (scroll < 0) {
 			scroll = 0;
@@ -340,6 +400,7 @@ public class SettingsDisplay : FontDisplay {
 	}
 
 	public override void selected_canvas () {
+		MainWindow.get_toolbox ().set_default_tool_size ();
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
 	}
@@ -354,32 +415,6 @@ public class SettingsDisplay : FontDisplay {
 		double h = content_height - allocation.height;
 		scroll = percent * h;
 		GlyphCanvas.redraw ();
-	}
-	
-	class SettingsItem : GLib.Object {
-		
-		public double y;
-		public Tool button;
-		
-		Text label;
-		
-		public SettingsItem (Tool tool, string description) {
-			button = tool;
-			label = new Text ();
-			label.set_text (description);
-			y = 0;
-		}
-		
-		public void draw (WidgetAllocation allocation, Context cr) {
-			button.y = y;
-			button.x = 20 * MainWindow.units;
-			button.draw (cr);
-			
-			cr.save ();
-			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			label.draw (cr, 60 * MainWindow.units, y + 20 * MainWindow.units, 17 * MainWindow.units);
-			cr.restore ();
-		}
 	}
 }
 

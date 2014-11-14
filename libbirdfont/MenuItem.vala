@@ -19,6 +19,8 @@ public class MenuItem : GLib.Object {
 	public signal void action ();
 	public Text label;
 	public string identifier;
+
+	public double y;
 	
 	// key bindings
 	public uint modifiers = NONE;
@@ -28,8 +30,37 @@ public class MenuItem : GLib.Object {
 		this.label = new Text ();
 		this.label.set_text (label);
 		this.identifier = identifier;
+		y = 0;
 	}
-	
+
+	public string get_key_bindings () {
+		string key_binding = "";
+		
+		if (key != '\0') {
+			key_binding += "(";
+			
+			if ((modifiers & CTRL) > 0) {
+				key_binding += "Ctrl+";
+			}
+			
+			if ((modifiers & ALT) > 0) {
+				key_binding += "Alt+";
+			}
+			
+			if ((modifiers & LOGO) > 0) {
+				key_binding += "Command+";
+			}
+			
+			if ((modifiers & SHIFT) > 0) {
+				key_binding += "Shift+";
+			}
+			
+			key_binding += (!) key.to_string ();
+			key_binding += ")";
+		}
+		
+		return key_binding;
+	}
 }
 
 }

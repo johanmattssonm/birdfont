@@ -81,7 +81,7 @@ public class Expander : GLib.Object {
 		unique = u;
 	}
 	
-	private void update_tool_position () {
+	public void update_tool_position () {
 		double scale = Toolbox.get_scale ();
 		double margin_small = 5 * scale;
 		double xt = x;

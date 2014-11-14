@@ -97,10 +97,8 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		if (GlyphCanvas.current_display is Glyph) {
-			GlyphCanvas.current_display.key_release (keyval);
-		}
-		
+		GlyphCanvas.current_display.key_release (keyval);
+
 		KeyBindings.remove_modifier_from_keyval (keyval);
 	}
 	

@@ -23,8 +23,8 @@ public class Tool : GLib.Object {
 	public double w = 33 * Toolbox.get_scale ();
 	public double h = (33 / 1.11) * Toolbox.get_scale ();
 	
-	protected bool active = false;
-	protected bool selected = false;
+	public bool active = false;
+	public bool selected = false;
 	
 	ImageSurface? icon = null;
 		
@@ -250,6 +250,12 @@ public class Tool : GLib.Object {
 		cr.save ();
 		
 		scale = w / 111.0; // scale to 320 dpi
+		
+		if (unlikely (scale == 0)) {
+			warning ("Scale is zero.");
+			scale = 33 / 111.0;
+		}
+		
 		cr.scale (scale, scale);
 		
 		bgx = xt / scale;

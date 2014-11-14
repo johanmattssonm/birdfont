@@ -38,7 +38,7 @@ public class Text {
 	
 	FontCache font_cache;
 	Font? current_font;
-	string text;
+	public string text;
 	GlyphSequence glyph_sequence;
 	public delegate void Iterator (Glyph glyph, double kerning, bool last);
 	

@@ -50,6 +50,7 @@ public class Menu : GLib.Object {
 	double height = 25 * MainWindow.units;
 	
 	public Gee.HashMap<string, MenuItem> menu_items = new Gee.HashMap<string, MenuItem> ();
+	public Gee.ArrayList<MenuItem> sorted_menu_items = new Gee.ArrayList<MenuItem> ();
 
 	public Menu () {
 		SubMenu menu = new SubMenu ();
@@ -420,7 +421,6 @@ public class Menu : GLib.Object {
 
 		add_tool_key_bindings ();
 		load_key_bindings ();
-		write_key_bindings ();
 	}
 
 	void load_key_bindings () {
@@ -443,12 +443,7 @@ public class Menu : GLib.Object {
 		try {
 			FileUtils.get_contents((!) f.get_path (), out xml_data);
 			parser = new XmlParser (xml_data);
-			
-			foreach (Tag tag in parser) {
-				if (tag.get_name () == "bindings") {
-					parse_bindings (tag);
-				}
-			}
+			parse_bindings (parser.get_root_tag ());
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
@@ -456,8 +451,8 @@ public class Menu : GLib.Object {
 
 	void parse_bindings (Tag tag) {
 		foreach (Tag t in tag) {
-			if (tag.get_name () == "action") {
-				parse_binding (tag.get_attributes ());
+			if (t.get_name () == "action") {
+				parse_binding (t.get_attributes ());
 			}
 		}
 	}
@@ -496,7 +491,9 @@ public class Menu : GLib.Object {
 		}
 		
 		ma = menu_items.get (action);
-		if (ma != null) {
+		if (ma == null) {
+			warning (@"No action for $action");
+		} else {
 			menu_action = (!) ma;
 			menu_action.modifiers = modifier;
 			menu_action.key = key;
@@ -508,6 +505,7 @@ public class Menu : GLib.Object {
 		
 		if (description != "") {
 			menu_items.set (description, i);
+			sorted_menu_items.add (i);
 		}
 								
 		return i;
@@ -540,6 +538,7 @@ public class Menu : GLib.Object {
 					tool_item = new ToolItem (t);
 					if (tool_item.identifier != "") {
 						menu_items.set (tool_item.identifier, tool_item);
+						sorted_menu_items.add (tool_item);
 					}
 				}
 			}
@@ -633,19 +632,6 @@ public class Menu : GLib.Object {
 		
 		public SubMenu () {
 			items = new Gee.ArrayList<MenuItem> ();
-		}
-	}
-	
-	public class ToolItem : MenuItem {
-		public ToolItem (Tool tool) {
-			base (tool.tip, tool.name);
-			
-			modifiers = tool.modifier_flag;
-			key = tool.key;
-			
-			action.connect (() => {
-				tool.select_action (tool);
-			});
 		}
 	}
 }

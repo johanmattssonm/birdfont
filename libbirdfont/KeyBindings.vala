@@ -103,7 +103,7 @@ public class KeyBindings {
 		require_modifier = t;
 	}
 
-	private static uint get_mod_from_key (uint keyval) {
+	public static uint get_mod_from_key (uint keyval) {
 		uint mod = 0;
 		mod |= (keyval == Key.CTRL_RIGHT || keyval == Key.CTRL_LEFT) ? CTRL : 0;
 		mod |= (keyval == Key.SHIFT_RIGHT || keyval == Key.SHIFT_LEFT) ? SHIFT : 0;

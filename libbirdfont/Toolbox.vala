@@ -393,6 +393,14 @@ public class Toolbox : GLib.Object  {
 		return Toolbox.allocation_width / 160.0;
 	}
 	
+	public void set_default_tool_size () {
+		foreach (ToolCollection t in tool_sets) {
+			foreach (Expander e in t.get_expanders ()) {
+				e.update_tool_position ();
+			}
+		}
+	}
+	
 	public void update_expanders () {
 		double pos;
 		
