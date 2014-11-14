@@ -22,8 +22,9 @@ public class Text {
 	Font font {
 		get {
 			if (current_font == null) {
+				File path = SearchPaths.find_file ("resources", "roboto.bf");
 				current_font = new Font ();
-				if (!load_font ("testfont.bf")) {
+				if (!load_font ((!) path.get_path ())) {
 					current_font =  new Font ();
 				}
 			}

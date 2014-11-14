@@ -117,13 +117,6 @@ public class Menu : GLib.Object {
 		});
 		file_menu.items.add (preview);
 
-		MenuItem description = add_menu_item (t_("Name and Description"), "name and description");
-		description.action.connect (() => {
-			MenuTab.show_description ();
-			show_menu = false;
-		});
-		file_menu.items.add (description);
-
 		MenuItem select_character_set = add_menu_item (t_("Select Character Set"), "select character set");
 		select_character_set.action.connect (() => {
 			MenuTab.select_language ();
@@ -420,7 +413,14 @@ public class Menu : GLib.Object {
 			show_menu = false;
 		});
 		menu.items.add (settings);
-																																												
+
+		MenuItem description = add_menu_item (t_("Name and Description"), "name and description");
+		description.action.connect (() => {
+			MenuTab.show_description ();
+			show_menu = false;
+		});
+		menu.items.add (description);
+																																														
 		current_menu = menu;
 		top_menu = menu;
 		allocation = new WidgetAllocation ();
