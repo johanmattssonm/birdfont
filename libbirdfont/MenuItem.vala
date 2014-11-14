@@ -56,7 +56,24 @@ public class MenuItem : GLib.Object {
 				key_binding += "Shift+";
 			}
 			
-			key_binding += (!) key.to_string ();
+			switch (key) {
+				case Key.UP:
+					key_binding += "UP";
+					break;
+				case Key.DOWN:
+					key_binding += "DOWN";
+					break;
+				case Key.LEFT:
+					key_binding += "LEFT";
+					break;
+				case Key.RIGHT:
+					key_binding += "RIGHT";
+					break;
+				default:
+					key_binding += (!) key.to_string ();
+					break;
+			}
+			
 			key_binding += ")";
 		}
 		

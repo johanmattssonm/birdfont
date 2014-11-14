@@ -41,14 +41,7 @@ public class GlyphCanvas : GLib.Object {
 	}
 	
 	public void key_press (uint e) {
-		Toolbox tb;
-		
 		current_display.key_press (e);
-		
-		if (current_display is Glyph) {
-			tb = MainWindow.get_toolbox ();
-			tb.key_press (e);
-		}
 	}
 	
 	internal static void set_display (FontDisplay fd) {

@@ -19,7 +19,7 @@ public class ToolItem : MenuItem {
 	public Tool tool;
 
 	public ToolItem (Tool tool) {
-		base (tool.tip, tool.tip); // FIXME: untranslated tip.
+		base (tool.tip, tool.name);
 		
 		this.tool = tool;
 		

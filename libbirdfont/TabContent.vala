@@ -83,12 +83,8 @@ public class TabContent : GLib.Object {
 			return;
 		}
 
-		if (GlyphCanvas.current_display is Glyph) {
-			MainWindow.tools.key_press (keyval);
-		}
-		
 		KeyBindings.add_modifier_from_keyval (keyval);
-		
+		MainWindow.get_menu ().process_key_binding_events (keyval);
 		GlyphCanvas.current_display.key_press (keyval);
 	}
 	
@@ -98,7 +94,6 @@ public class TabContent : GLib.Object {
 		}
 		
 		GlyphCanvas.current_display.key_release (keyval);
-
 		KeyBindings.remove_modifier_from_keyval (keyval);
 	}
 	

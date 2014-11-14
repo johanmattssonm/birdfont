@@ -431,15 +431,16 @@ public class Menu : GLib.Object {
 
 	public void process_key_binding_events (uint keyval) {
 		string display;
+		FontDisplay current_display = MainWindow.get_current_display ();
 		
 		foreach (MenuItem item in sorted_menu_items) {
 			if (item.key == (unichar) keyval && item.modifiers == KeyBindings.modifier) {
 				
-				if (BirdFont.get_current_display () is Glyph && item.display == "Glyph") {
+				if (current_display is Glyph && item.display == "Glyph") {
 					item.action ();
 				}
 				
-				display = BirdFont.get_current_display ().get_name ();
+				display = current_display.get_name ();
 				if (item.display == "" || item.display == display) {
 					item.action ();
 				}
@@ -539,19 +540,21 @@ public class Menu : GLib.Object {
 		double y = 0;
 		double x = allocation.width - width;
 		
-		foreach (MenuItem item in current_menu.items) {
-			if (x <= ex < allocation.width && y <= ey <= y + height) {
-				item.action ();
-				GlyphCanvas.redraw ();
-				return;
+		if (button == 1) {
+			foreach (MenuItem item in current_menu.items) {
+				if (x <= ex < allocation.width && y <= ey <= y + height) {
+					item.action ();
+					GlyphCanvas.redraw ();
+					return;
+				}
+				
+				y += height;
 			}
 			
-			y += height;
+			menu_visibility = false;
+			current_menu = (!) top_menu;
+			GlyphCanvas.redraw ();
 		}
-		
-		menu_visibility = false;
-		current_menu = (!) top_menu;
-		GlyphCanvas.redraw ();
 	}
 
 	void add_tool_key_bindings () {
@@ -561,12 +564,25 @@ public class Menu : GLib.Object {
 				foreach (Tool t in e.tool) {
 					tool_item = new ToolItem (t);
 					if (tool_item.identifier != "") {
+						remove_menu_item (tool_item.identifier);
 						menu_items.set (tool_item.identifier, tool_item);
 						sorted_menu_items.add (tool_item);
 					}
 				}
 			}
 		}
+	}
+
+	public void remove_menu_item (string identifier) {
+		int i = 0;
+		foreach (MenuItem mi in sorted_menu_items) {
+			if (mi.identifier == identifier) {
+				sorted_menu_items.remove_at (i);
+				break;
+			}
+		}
+		
+		menu_items.unset (identifier);
 	}
 
 	public void set_menu (SubMenu m) {

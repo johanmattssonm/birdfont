@@ -103,25 +103,6 @@ public class Toolbox : GLib.Object  {
 			Toolbox.redraw_tool_box ();
 		}
 	}
-
-	public void key_press (uint keyval) {
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
-				
-		foreach (Expander exp in current_set.get_expanders ()) {
-			foreach (Tool t in exp.tool) {
-				t.set_active (false);
-				
-				if (t.tool_is_visible () && t.key == keyval 
-					&& t.modifier_flag == NONE 
-					&& KeyBindings.modifier == NONE) {
-					select_tool (t);
-				}
-			}
-		}
-	}
 	
 	public void press (uint button, double x, double y) {
 		if (MenuTab.suppress_event) {
