@@ -25,6 +25,7 @@ public class MenuItem : GLib.Object {
 	// key bindings
 	public uint modifiers = NONE;
 	public unichar key = '\0';
+	public string display = "";	
 	
 	public MenuItem (string label, string identifier = "") {
 		this.label = new Text ();

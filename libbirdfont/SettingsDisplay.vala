@@ -288,7 +288,6 @@ public class SettingsDisplay : FontDisplay {
 
 	public override void key_release (uint keyval) {
 		if (update_key_bindings) {
-			print (@"$keyval\n");
 			if (keyval == Key.BACK_SPACE) {
 				update_key_bindings = false;
 				new_key_bindings.active = false;

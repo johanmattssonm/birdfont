@@ -262,6 +262,7 @@ public class Menu : GLib.Object {
 			PenTool.select_point_up ();
 			show_menu = false;
 		});
+		select_point_above.display = "Glyph";
 		edit_menu.items.add (select_point_above);
 
 		MenuItem select_next_point = add_menu_item (t_("Select Next Point"), "select next point");
@@ -269,6 +270,7 @@ public class Menu : GLib.Object {
 			PenTool.select_point_right ();
 			show_menu = false;
 		});
+		select_next_point.display = "Glyph";
 		edit_menu.items.add (select_next_point);
 		
 		MenuItem select_previous_point = add_menu_item (t_("Select Previous Point"), "select previous point");
@@ -276,6 +278,7 @@ public class Menu : GLib.Object {
 			PenTool.select_point_left ();
 			show_menu = false;
 		});
+		select_previous_point.display = "Glyph";
 		edit_menu.items.add (select_previous_point);
 
 		MenuItem select_point_below = add_menu_item (t_("Select Point Below"), "select point below");
@@ -283,6 +286,7 @@ public class Menu : GLib.Object {
 			PenTool.select_point_down ();
 			show_menu = false;
 		});
+		select_point_below.display = "Glyph";
 		edit_menu.items.add (select_point_below);
 
 		// tab menu
@@ -353,6 +357,7 @@ public class Menu : GLib.Object {
 			KerningDisplay.next_pair ();
 			show_menu = false;
 		});
+		next_kerning_pair.display = "Kerning";
 		kerning_menu.items.add (next_kerning_pair);
 
 		MenuItem previous_kerning_pair = add_menu_item (t_("Select Previous Kerning Pair"), "select previous kerning pair");
@@ -360,6 +365,7 @@ public class Menu : GLib.Object {
 			KerningDisplay.previous_pair ();
 			show_menu = false;
 		});
+		previous_kerning_pair.display = "Kerning";
 		kerning_menu.items.add (previous_kerning_pair);
 
 		// ligature menu
@@ -421,6 +427,24 @@ public class Menu : GLib.Object {
 
 		add_tool_key_bindings ();
 		load_key_bindings ();
+	}
+
+	public void process_key_binding_events (uint keyval) {
+		string display;
+		
+		foreach (MenuItem item in sorted_menu_items) {
+			if (item.key == (unichar) keyval && item.modifiers == KeyBindings.modifier) {
+				
+				if (BirdFont.get_current_display () is Glyph && item.display == "Glyph") {
+					item.action ();
+				}
+				
+				display = BirdFont.get_current_display ().get_name ();
+				if (item.display == "" || item.display == display) {
+					item.action ();
+				}
+			}
+		}
 	}
 
 	void load_key_bindings () {
