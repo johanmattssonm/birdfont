@@ -42,9 +42,9 @@ public class Toolbox : GLib.Object  {
 	bool scrolling_touch = false;
 	double scroll_y = 0;
 
-	private List<ToolCollection> tool_sets = new List<ToolCollection> ();
+	public List<ToolCollection> tool_sets = new List<ToolCollection> ();
 		
-	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
+	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {	
 		current_tool = new Tool ("no_icon");
 		press_tool = new Tool (null);
 
@@ -57,6 +57,8 @@ public class Toolbox : GLib.Object  {
 		tool_sets.append (drawing_tools);
 		tool_sets.append (kerning_tools);
 		tool_sets.append (preview_tools);
+		tool_sets.append (overview_tools);
+		tool_sets.append (background_tools);
 		
 		current_set = drawing_tools;
 		

@@ -1097,7 +1097,7 @@ class TabbarCanvas : DrawingArea {
 			queue_draw_area (0, 0, alloc.width, alloc.height);	
 		});
 
-		tabbar.redraw.connect ((x, y, w, h) => {
+		tabbar.redraw_tab_bar.connect ((x, y, w, h) => {
 			queue_draw_area (x, y, w, h);
 		});
 				

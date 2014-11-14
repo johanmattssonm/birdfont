@@ -148,6 +148,10 @@ public class XmlParser {
 		return root;
 	}
 	
+	public Tag.Iterator iterator () {
+		return get_root_tag ().iterator ();
+	}
+	
 	/** 
 	 * Reset the parser and start from the beginning of the XML document. 
 	 */

@@ -13,6 +13,7 @@
 */
 
 using Cairo;
+using Bird;
 
 namespace BirdFont {
 
@@ -47,91 +48,89 @@ public class Menu : GLib.Object {
 
 	double width = 250 * MainWindow.units;
 	double height = 25 * MainWindow.units;
-		
+	
+	public Gee.HashMap<string, MenuItem> menu_items = new Gee.HashMap<string, MenuItem> ();
+
 	public Menu () {
 		SubMenu menu = new SubMenu ();
 		SubMenu file_menu = new SubMenu ();
 		SubMenu edit_menu = new SubMenu ();
 		SubMenu tab_menu = new SubMenu ();
+		SubMenu kerning_menu = new SubMenu ();
+		SubMenu ligature_menu = new SubMenu ();
+		SubMenu git_menu = new SubMenu ();
 		
 		// file menu
-		MenuItem file = new MenuItem (t_("File"));
+		MenuItem file = add_menu_item (t_("File"));
 		file.action.connect (() => {
 			set_menu (file_menu);
 		});
 		menu.items.add (file);
 
-		MenuItem new_file = new MenuItem (t_("New"), "new");
+		MenuItem new_file = add_menu_item (t_("New"), "new");
 		new_file.action.connect (() => {
 			MenuTab.new_file ();
 			show_menu = false;
 		});
 		file_menu.items.add (new_file);
 				
-		MenuItem open = new MenuItem (t_("Open"), "open");
+		MenuItem open = add_menu_item (t_("Open"), "open");
 		open.action.connect (() => {
 			show_menu = false;
 			MenuTab.load ();
 		});
 		file_menu.items.add (open);
 
-		MenuItem recent_files = new MenuItem (t_("Recent Files"), "recent files");
+		MenuItem recent_files = add_menu_item (t_("Recent Files"), "recent files");
 		recent_files.action.connect (() => {
 			show_menu = false;
 			MainWindow.open_recent_files_tab ();
 		});
 		file_menu.items.add (recent_files);
 		
-		MenuItem save = new MenuItem (t_("Save"), "save");
+		MenuItem save = add_menu_item (t_("Save"), "save");
 		save.action.connect (() => {
 			MenuTab.save ();
 			show_menu = false;
 		});
 		file_menu.items.add (save);
 
-		MenuItem save_as = new MenuItem (t_("Save As"), "save as");
+		MenuItem save_as = add_menu_item (t_("Save As"), "save as");
 		save_as.action.connect (() => {
 			MenuTab.save_as ();
 			show_menu = false;
 		});
 		file_menu.items.add (save_as);
 
-		MenuItem export = new MenuItem (t_("Export"), "export");
+		MenuItem export = add_menu_item (t_("Export"), "export");
 		export.action.connect (() => {
 			MenuTab.export_fonts_in_background ();
 			show_menu = false;
 		});
 		file_menu.items.add (export);
 
-		MenuItem preview = new MenuItem (t_("Preview"), "preview");
+		MenuItem preview = add_menu_item (t_("Preview"), "preview");
 		preview.action.connect (() => {
 			MenuTab.preview ();
 			show_menu = false;
 		});
 		file_menu.items.add (preview);
 
-		MenuItem description = new MenuItem (t_("Name and Description"), "name and description");
+		MenuItem description = add_menu_item (t_("Name and Description"), "name and description");
 		description.action.connect (() => {
 			MenuTab.show_description ();
 			show_menu = false;
 		});
 		file_menu.items.add (description);
 
-		MenuItem select_character_set = new MenuItem (t_("Select Character Set"), "select character set");
+		MenuItem select_character_set = add_menu_item (t_("Select Character Set"), "select character set");
 		select_character_set.action.connect (() => {
 			MenuTab.select_language ();
 			show_menu = false;
 		});
 		file_menu.items.add (select_character_set);
-		
-		MenuItem settings = new MenuItem (t_("Settings"), "settings");
-		settings.action.connect (() => {
-			MenuTab.show_settings_tab ();
-			show_menu = false;
-		});
-		file_menu.items.add (settings);
 
-		MenuItem quit = new MenuItem (t_("Quit"), "quit");
+		MenuItem quit = add_menu_item (t_("Quit"), "quit");
 		quit.action.connect (() => {
 			MenuTab.quit ();
 			show_menu = false;
@@ -139,146 +138,146 @@ public class Menu : GLib.Object {
 		file_menu.items.add (quit);
 
 		// edit menu
-		MenuItem edit = new MenuItem (t_("Edit"));
+		MenuItem edit = add_menu_item (t_("Edit"));
 		edit.action.connect (() => {
 			set_menu (edit_menu);
 		});
 		menu.items.add (edit);
 
-		MenuItem undo = new MenuItem (t_("Undo"), "undo");
+		MenuItem undo = add_menu_item (t_("Undo"), "undo");
 		undo.action.connect (() => {
 			TabContent.undo ();
 			show_menu = false;
 		});
 		edit_menu.items.add (undo);
 
-		MenuItem redo = new MenuItem (t_("Redo"), "redo");
+		MenuItem redo = add_menu_item (t_("Redo"), "redo");
 		redo.action.connect (() => {
 			TabContent.redo ();
 			show_menu = false;
 		});
 		edit_menu.items.add (redo);
 
-		MenuItem copy = new MenuItem (t_("Copy"), "copy");
+		MenuItem copy = add_menu_item (t_("Copy"), "copy");
 		copy.action.connect (() => {
 			ClipTool.copy ();
 			show_menu = false;
 		});
 		edit_menu.items.add (copy);
 
-		MenuItem paste = new MenuItem (t_("Paste"), "paste");
+		MenuItem paste = add_menu_item (t_("Paste"), "paste");
 		paste.action.connect (() => {
 			ClipTool.paste ();
 			show_menu = false;
 		});
 		edit_menu.items.add (paste);
 
-		MenuItem paste_in_place = new MenuItem (t_("Paste In Place"), "paste in place");
+		MenuItem paste_in_place = add_menu_item (t_("Paste In Place"), "paste in place");
 		paste_in_place.action.connect (() => {
 			ClipTool.paste_in_place ();
 			show_menu = false;
 		});
 		edit_menu.items.add (paste_in_place);
 		
-		MenuItem select_all_paths = new MenuItem (t_("Select All Paths"), "select all paths");
+		MenuItem select_all_paths = add_menu_item (t_("Select All Paths"), "select all paths");
 		select_all_paths.action.connect (() => {
 			MainWindow.select_all_paths ();
 			show_menu = false;
 		});
 		edit_menu.items.add (select_all_paths);
 
-		MenuItem move_to_baseline = new MenuItem (t_("Move To Baseline"), "move to baseline");
+		MenuItem move_to_baseline = add_menu_item (t_("Move To Baseline"), "move to baseline");
 		move_to_baseline.action.connect (() => {
 			MenuTab.move_to_baseline ();
 			show_menu = false;
 		});
 		edit_menu.items.add (move_to_baseline);
 
-		MenuItem search = new MenuItem (t_("Search"), "search");
+		MenuItem search = add_menu_item (t_("Search"), "search");
 		search.action.connect (() => {
 			OverView.search ();
 			show_menu = false;
 		});
 		edit_menu.items.add (search);
 
-		MenuItem export_glyph = new MenuItem (t_("Export Glyph as SVG"), "export glyph as svg");
+		MenuItem export_glyph = add_menu_item (t_("Export Glyph as SVG"), "export glyph as svg");
 		export_glyph.action.connect (() => {
 			ExportTool.export_current_glyph ();
 			show_menu = false;
 		});
 		edit_menu.items.add (export_glyph);
 
-		MenuItem import_svg = new MenuItem (t_("Import SVG file"), "import svg file");
+		MenuItem import_svg = add_menu_item (t_("Import SVG file"), "import svg file");
 		import_svg.action.connect (() => {
 			SvgParser.import ();
 			show_menu = false;
 		});
 		edit_menu.items.add (import_svg);
 
-		MenuItem import_background_image = new MenuItem (t_("Import Background Image"), "import background image");
+		MenuItem import_background_image = add_menu_item (t_("Import Background Image"), "import background image");
 		import_background_image.action.connect (() => {
 			MenuTab.show_background_tab ();
 			show_menu = false;
 		});
 		edit_menu.items.add (import_background_image);
 
-		MenuItem simplify_path = new MenuItem (t_("Simplify Path"), "simplify path");
+		MenuItem simplify_path = add_menu_item (t_("Simplify Path"), "simplify path");
 		simplify_path.action.connect (() => {
 			MenuTab.simplify_path ();
 			show_menu = false;
 		});
 		edit_menu.items.add (simplify_path);
 
-		MenuItem close_path = new MenuItem (t_("Close Path"), "close path");
+		MenuItem close_path = add_menu_item (t_("Close Path"), "close path");
 		close_path.action.connect (() => {
 			PenTool.close_all_paths ();
 			show_menu = false;
 		});
 		edit_menu.items.add (close_path);
 
-		MenuItem glyph_sequence = new MenuItem (t_("Glyph Sequence"), "glyph sequence");
+		MenuItem glyph_sequence = add_menu_item (t_("Glyph Sequence"), "glyph sequence");
 		glyph_sequence.action.connect (() => {
 			MainWindow.update_glyph_sequence ();
 			show_menu = false;
 		});
 		edit_menu.items.add (glyph_sequence);
 
-		MenuItem set_background_glyph = new MenuItem (t_("Set Background Glyph"), "set background glyph");
+		MenuItem set_background_glyph = add_menu_item (t_("Set Background Glyph"), "set background glyph");
 		set_background_glyph.action.connect (() => {
 			MenuTab.use_current_glyph_as_background ();
 			show_menu = false;
 		});
 		edit_menu.items.add (set_background_glyph);
 
-		MenuItem remove_background_glyph = new MenuItem (t_("Remove Background Glyph"), "remove background glyph");
+		MenuItem remove_background_glyph = add_menu_item (t_("Remove Background Glyph"), "remove background glyph");
 		remove_background_glyph.action.connect (() => {
 			MenuTab.reset_glyph_background ();
 			show_menu = false;
 		});
 		edit_menu.items.add (remove_background_glyph);
 
-		MenuItem select_point_above = new MenuItem (t_("Select Point Above"), "select point above");
+		MenuItem select_point_above = add_menu_item (t_("Select Point Above"), "select point above");
 		select_point_above.action.connect (() => {
 			PenTool.select_point_up ();
 			show_menu = false;
 		});
 		edit_menu.items.add (select_point_above);
 
-		MenuItem select_next_point = new MenuItem (t_("Select Next Point"), "select next point");
+		MenuItem select_next_point = add_menu_item (t_("Select Next Point"), "select next point");
 		select_next_point.action.connect (() => {
 			PenTool.select_point_right ();
 			show_menu = false;
 		});
 		edit_menu.items.add (select_next_point);
 		
-		MenuItem select_previous_point = new MenuItem (t_("Select Previous Point"), "select previous point");
+		MenuItem select_previous_point = add_menu_item (t_("Select Previous Point"), "select previous point");
 		select_previous_point.action.connect (() => {
 			PenTool.select_point_left ();
 			show_menu = false;
 		});
 		edit_menu.items.add (select_previous_point);
 
-		MenuItem select_point_below = new MenuItem (t_("Select Point Below"), "select point below");
+		MenuItem select_point_below = add_menu_item (t_("Select Point Below"), "select point below");
 		select_point_below.action.connect (() => {
 			PenTool.select_point_down ();
 			show_menu = false;
@@ -286,51 +285,232 @@ public class Menu : GLib.Object {
 		edit_menu.items.add (select_point_below);
 
 		// tab menu
-		MenuItem tab = new MenuItem (t_("Tab"));
+		MenuItem tab = add_menu_item (t_("Tab"));
 		tab.action.connect (() => {
 			set_menu (tab_menu);
 		});
 		menu.items.add (tab);
 
-		MenuItem next_tab = new MenuItem (t_("Next Tab"), "next tab");
+		MenuItem next_tab = add_menu_item (t_("Next Tab"), "next tab");
 		next_tab.action.connect (() => {
 			MainWindow.next_tab ();
 			show_menu = false;
 		});
 		tab_menu.items.add (next_tab);
 
-		MenuItem previous_tab = new MenuItem (t_("Previous Tab"), "previous tab");
+		MenuItem previous_tab = add_menu_item (t_("Previous Tab"), "previous tab");
 		previous_tab.action.connect (() => {
 			MainWindow.previous_tab ();
 			show_menu = false;
 		});
 		tab_menu.items.add (previous_tab);
 
-		MenuItem close_tab = new MenuItem (t_("Close Tab"), "close tab");
+		MenuItem close_tab = add_menu_item (t_("Close Tab"), "close tab");
 		close_tab.action.connect (() => {
 			MainWindow.close_tab ();
 			show_menu = false;
 		});
 		tab_menu.items.add (close_tab);
 		
-		MenuItem close_all_tabs = new MenuItem (t_("Close All Tabs"), "close all tabs");
+		MenuItem close_all_tabs = add_menu_item (t_("Close All Tabs"), "close all tabs");
 		close_all_tabs.action.connect (() => {
 			MainWindow.close_all_tabs ();
 			show_menu = false;
 		});
 		tab_menu.items.add (close_all_tabs);
+		
+		// tab menu
+		MenuItem kerning = add_menu_item (t_("Kerning"));
+		kerning.action.connect (() => {
+			set_menu (kerning_menu);
+		});
+		menu.items.add (kerning);
 
+		MenuItem kerning_tab = add_menu_item (t_("Show Kerning Tab"), "show kerning tab");
+		kerning_tab.action.connect (() => {
+			MenuTab.show_kerning_context ();
+			show_menu = false;
+		});
+		kerning_menu.items.add (kerning_tab);
+
+		MenuItem list_kernings = add_menu_item (t_("List Kerning Pairs"), "list kerning pairs");
+		list_kernings.action.connect (() => {
+			MenuTab.list_all_kerning_pairs ();
+			show_menu = false;
+		});
+		kerning_menu.items.add (list_kernings);
+
+		MenuItem show_spacing = add_menu_item (t_("Show Spacing Tab"), "show spacing tab");
+		show_spacing.action.connect (() => {
+			MenuTab.show_spacing_tab ();
+			show_menu = false;
+		});
+		kerning_menu.items.add (show_spacing);
+
+		MenuItem next_kerning_pair = add_menu_item (t_("Select Next Kerning Pair"), "select next kerning pair");
+		next_kerning_pair.action.connect (() => {
+			KerningDisplay.next_pair ();
+			show_menu = false;
+		});
+		kerning_menu.items.add (next_kerning_pair);
+
+		MenuItem previous_kerning_pair = add_menu_item (t_("Select Previous Kerning Pair"), "select previous kerning pair");
+		previous_kerning_pair.action.connect (() => {
+			KerningDisplay.previous_pair ();
+			show_menu = false;
+		});
+		kerning_menu.items.add (previous_kerning_pair);
+
+		// ligature menu
+		MenuItem ligature = add_menu_item (t_("Ligatures"));
+		ligature.action.connect (() => {
+			set_menu (ligature_menu);
+		});
+		menu.items.add (ligature);
+
+		MenuItem ligature_tab = add_menu_item (t_("Show Ligatures"), "show ligature tab");
+		ligature_tab.action.connect (() => {
+			MenuTab.show_ligature_tab ();
+			show_menu = false;
+		});
+		ligature_menu.items.add (ligature_tab);
+
+		MenuItem add_ligature = add_menu_item (t_("Add Ligature"), "add ligature");
+		add_ligature.action.connect (() => {
+			MenuTab.add_ligature ();
+			show_menu = false;
+		});
+		ligature_menu.items.add (add_ligature);
+		
+		// git menu
+		if (BirdFont.has_argument ("--test")) {
+			MenuItem git = add_menu_item (t_("Git"));
+			git.action.connect (() => {
+				set_menu (git_menu);
+			});
+			menu.items.add (git);
+
+			MenuItem save_bfp = add_menu_item (t_("Save As .bfp"), "save as .bfp");
+			save_bfp.action.connect (() => {
+				MenuTab.save_as_bfp ();
+				show_menu = false;
+			});
+			git_menu.items.add (save_bfp);	
+		}
+												
 		// show overview
-		MenuItem overview = new MenuItem (t_("Show Overview"));
+		MenuItem overview = add_menu_item (t_("Overview"));
 		overview.action.connect (() => {
 			MenuTab.select_overview ();
 			show_menu = false;
 		});
 		menu.items.add (overview);
+
+		// settings 
+		MenuItem settings = add_menu_item (t_("Settings"), "settings");
+		settings.action.connect (() => {
+			MenuTab.show_settings_tab ();
+			show_menu = false;
+		});
+		menu.items.add (settings);
 																																												
 		current_menu = menu;
 		top_menu = menu;
 		allocation = new WidgetAllocation ();
+
+		add_tool_key_bindings ();
+		load_key_bindings ();
+		write_key_bindings ();
+	}
+
+	void load_key_bindings () {
+		File default_key_bindings = SearchPaths.find_file (null, "key_bindings.xml");
+		File user_key_bindings = get_child (BirdFont.get_settings_directory (), "key_bindings.xml");
+		
+		if (default_key_bindings.query_exists ()) {
+			parse_key_bindings (default_key_bindings);
+		}
+
+		if (user_key_bindings.query_exists ()) {
+			parse_key_bindings (user_key_bindings);
+		}
+	}
+
+	void parse_key_bindings (File f) {
+		string xml_data;
+		XmlParser parser;
+		
+		try {
+			FileUtils.get_contents((!) f.get_path (), out xml_data);
+			parser = new XmlParser (xml_data);
+			
+			foreach (Tag tag in parser) {
+				if (tag.get_name () == "bindings") {
+					parse_bindings (tag);
+				}
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+
+	void parse_bindings (Tag tag) {
+		foreach (Tag t in tag) {
+			if (tag.get_name () == "action") {
+				parse_binding (tag.get_attributes ());
+			}
+		}
+	}
+
+	void parse_binding (Attributes attr) {
+		uint modifier = NONE;
+		unichar key = '\0';
+		string action = "";
+		MenuItem menu_action;
+		MenuItem? ma;
+		
+		foreach (Attribute a in attr) {
+			if (a.get_name () == "key") {
+				key = a.get_content ().get_char (0);
+			}
+			
+			if (a.get_name () == "ctrl" && a.get_content () == "true") {
+				modifier |= CTRL;
+			}
+
+			if (a.get_name () == "alt" && a.get_content () == "true") {
+				modifier |= ALT;
+			}
+
+			if (a.get_name () == "command" && a.get_content () == "true") {
+				modifier |= LOGO;
+			}
+			
+			if (a.get_name () == "shift" && a.get_content () == "true") {
+				modifier |= SHIFT;
+			}
+			
+			if (a.get_name () == "action") {
+				action = a.get_content ();
+			}
+		}
+		
+		ma = menu_items.get (action);
+		if (ma != null) {
+			menu_action = (!) ma;
+			menu_action.modifiers = modifier;
+			menu_action.key = key;
+		}
+	}
+	
+	MenuItem add_menu_item (string label, string description = "") {
+		MenuItem i = new MenuItem (label, description);
+		
+		if (description != "") {
+			menu_items.set (description, i);
+		}
+								
+		return i;
 	}
 
 	public void button_release (int button, double ex, double ey) {
@@ -350,6 +530,20 @@ public class Menu : GLib.Object {
 		menu_visibility = false;
 		current_menu = (!) top_menu;
 		GlyphCanvas.redraw ();
+	}
+
+	void add_tool_key_bindings () {
+		ToolItem tool_item;
+		foreach (ToolCollection tool_set in MainWindow.get_toolbox ().tool_sets) {
+			foreach (Expander e in tool_set.get_expanders ()) {
+				foreach (Tool t in e.tool) {
+					tool_item = new ToolItem (t);
+					if (tool_item.identifier != "") {
+						menu_items.set (tool_item.identifier, tool_item);
+					}
+				}
+			}
+		}
 	}
 
 	public void set_menu (SubMenu m) {
@@ -384,6 +578,56 @@ public class Menu : GLib.Object {
 		}
 	}
 
+	public void write_key_bindings () {
+		DataOutputStream os;
+		File file;
+		bool has_ctrl, has_alt, has_command, has_shift;
+		
+		file = get_child (BirdFont.get_settings_directory (), "key_bindings.xml");
+		
+		try {
+			if (file.query_exists ()) {
+				file.delete ();
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+		
+		try {
+		os = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
+		os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
+		os.put_string ("\n");
+		
+		os.put_string ("<bindings>\n");
+			foreach (MenuItem item in menu_items.values) {
+				os.put_string ("\t<action ");
+				
+				os.put_string (@"key=\"$((!)item.key.to_string ())\" ");
+				
+				has_ctrl = (item.modifiers & CTRL) > 0;
+				os.put_string (@"ctrl=\"$(has_ctrl.to_string ())\" ");
+
+				has_alt = (item.modifiers & ALT) > 0;
+				os.put_string (@"alt=\"$(has_alt.to_string ())\" ");		
+
+				has_command = (item.modifiers & LOGO) > 0;
+				os.put_string (@"command=\"$(has_command.to_string ())\" ");
+					
+				has_shift = (item.modifiers & SHIFT) > 0;
+				os.put_string (@"shift=\"$(has_shift.to_string ())\" ");			
+				
+				os.put_string (@"action=\"$(item.identifier)\" ");
+				
+				os.put_string ("/>\n");
+			}
+			os.put_string ("</bindings>\n");
+			
+			os.close ();
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+
 	public class SubMenu : GLib.Object { 
 		public Gee.ArrayList<MenuItem> items;
 		
@@ -392,18 +636,17 @@ public class Menu : GLib.Object {
 		}
 	}
 	
-	public class MenuItem : GLib.Object {
-		
-		public signal void action ();
-		public Text label;
-		public string identifier;
-		
-		public MenuItem (string label, string identifier = "") {
-			this.label = new Text ();
-			this.label.set_text (label);
-			this.identifier = identifier;
+	public class ToolItem : MenuItem {
+		public ToolItem (Tool tool) {
+			base (tool.tip, tool.name);
+			
+			modifiers = tool.modifier_flag;
+			key = tool.key;
+			
+			action.connect (() => {
+				tool.select_action (tool);
+			});
 		}
-		
 	}
 }
 

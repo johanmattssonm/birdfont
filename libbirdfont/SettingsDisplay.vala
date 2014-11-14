@@ -20,7 +20,7 @@ namespace BirdFont {
 public class SettingsDisplay : FontDisplay {
 	
 	double scroll = 0;
-	double content_height;
+	double content_height = 1;
 	WidgetAllocation allocation;
 	Gee.ArrayList<SettingsItem> tools;
 
@@ -232,7 +232,7 @@ public class SettingsDisplay : FontDisplay {
 		// headline background
 		cr.save ();
 		cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		cr.rectangle (0, 0, allocation.width, 40 * MainWindow.units);
+		cr.rectangle (0, -scroll, allocation.width, 40 * MainWindow.units);
 		cr.fill ();
 		cr.restore ();
 			
@@ -240,7 +240,7 @@ public class SettingsDisplay : FontDisplay {
 		headline = new Text ();
 		headline.set_text (t_("Settings"));
 		cr.set_source_rgba (1, 1, 1, 1);
-		headline.draw (cr, 21 * MainWindow.units, 25 * MainWindow.units, 20 * MainWindow.units);
+		headline.draw (cr, 21 * MainWindow.units, 25 * MainWindow.units - scroll, 20 * MainWindow.units);
 		cr.restore ();		
 		
 		foreach (SettingsItem s in tools) {
@@ -249,11 +249,12 @@ public class SettingsDisplay : FontDisplay {
 	}	
 
 	void layout () {
-		double y = 50 * MainWindow.units;
+		double y = 50 * MainWindow.units - scroll;
 		foreach (SettingsItem s in tools) {
 			s.y = y;
 			y += 40 * MainWindow.units;
-		}		
+		}
+		content_height = y + scroll;
 	}
 
 	public override void button_press (uint button, double x, double y) {
@@ -310,7 +311,7 @@ public class SettingsDisplay : FontDisplay {
 			}
 		}
 		
-		scroll += 10;
+		scroll += 15 * MainWindow.units;
 
 		if (scroll + allocation.height >=  content_height) {
 			scroll = content_height - allocation.height;
@@ -328,7 +329,7 @@ public class SettingsDisplay : FontDisplay {
 			}
 		}
 		
-		scroll -= 10;
+		scroll -= 15 * MainWindow.units;;
 		
 		if (scroll < 0) {
 			scroll = 0;
@@ -344,12 +345,14 @@ public class SettingsDisplay : FontDisplay {
 	}
 	
 	public void update_scrollbar () {
+		double h = content_height - allocation.height;
 		MainWindow.set_scrollbar_size (allocation.height / content_height);
-		MainWindow.set_scrollbar_position (scroll /  content_height);
+		MainWindow.set_scrollbar_position (scroll /  h);
 	}
 
 	public override void scroll_to (double percent) {
-		scroll = percent * content_height;
+		double h = content_height - allocation.height;
+		scroll = percent * h;
 		GlyphCanvas.redraw ();
 	}
 	

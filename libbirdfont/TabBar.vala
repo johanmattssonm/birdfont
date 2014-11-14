@@ -35,7 +35,7 @@ public class TabBar : GLib.Object {
 	int over_close_tab = NO_TAB;
 	
 	public signal void signal_tab_selected (Tab selected_tab);
-	public signal void redraw (int x, int y, int w, int h);
+	public signal void redraw_tab_bar (int x, int y, int w, int h);
 
 	Tab? previous_tab = null;
 	Tab? current_tab = null;
@@ -67,6 +67,15 @@ public class TabBar : GLib.Object {
 		tab_bar_background = Icons.get_icon ("tab_bar_background.png");
 		
 		menu_icon = Icons.get_icon ("menu.png");
+	}
+	
+	public void redraw (int x, int y, int w, int h) {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Redraw tab bar: event suppressed");
+			return;
+		}
+		
+		redraw_tab_bar (x, y, w, h);
 	}
 	
 	public void set_background_color (double r, double g, double b) {
@@ -825,7 +834,8 @@ public class TabBar : GLib.Object {
 				if (wheel_rotation > 2 * Math.PI) {
 					wheel_rotation -= 2 * Math.PI;
 				}
-				redraw (width - 19, 0, 19, height);
+				
+				redraw_tab_bar (width - 19, 0, 19, height);
 				return processing;
 			});
 			timer.attach (null);

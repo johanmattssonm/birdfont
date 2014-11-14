@@ -52,7 +52,7 @@ public class Tool : GLib.Object {
 	
 	public signal void draw_action (Tool selected, Context cr, Glyph glyph);
 	
-	protected string name = "";
+	public string name = "";
 	
 	static int next_id = 1;
 	
@@ -62,7 +62,7 @@ public class Tool : GLib.Object {
 	
 	bool show_bg = true;
 	
-	string tip = "";
+	public string tip = "";
 
 	// keyboard bindings
 	public uint modifier_flag;
