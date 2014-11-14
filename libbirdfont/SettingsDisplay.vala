@@ -288,14 +288,21 @@ public class SettingsDisplay : FontDisplay {
 
 	public override void key_release (uint keyval) {
 		if (update_key_bindings) {
-			if (KeyBindings.get_mod_from_key (keyval) == 0) {
+			print (@"$keyval\n");
+			if (keyval == Key.BACK_SPACE) {
+				update_key_bindings = false;
+				new_key_bindings.active = false;
+				new_key_bindings.menu_item.modifiers = NONE;
+				new_key_bindings.menu_item.key = '\0';	
+			} else if (KeyBindings.get_mod_from_key (keyval) == NONE) {
 				new_key_bindings.menu_item.modifiers = KeyBindings.modifier;
 				new_key_bindings.menu_item.key = (unichar) keyval;
 				update_key_bindings = false;
 				new_key_bindings.active = false;
-				MainWindow.get_menu ().write_key_bindings ();
-				GlyphCanvas.redraw ();
 			}
+			
+			MainWindow.get_menu ().write_key_bindings ();
+			GlyphCanvas.redraw ();	
 		}
 	}
 
