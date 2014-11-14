@@ -38,7 +38,7 @@ public class MoveTool : Tool {
 	public signal void objects_deselected ();
 	
 	public MoveTool (string n) {
-		base (n, t_("Move paths"), 'm', CTRL);
+		base (n, t_("Move paths"));
 
 		select_action.connect((self) => {
 			Glyph glyph = MainWindow.get_current_glyph ();

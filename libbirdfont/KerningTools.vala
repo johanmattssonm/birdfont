@@ -68,7 +68,7 @@ public class KerningTools : ToolCollection  {
 		});
 		kerning_tools.add_tool (insert_last);
 
-		Tool insert_unicode = new Tool ("insert_unichar", t_("Insert character by unicode value"), 'U', CTRL);
+		Tool insert_unicode = new Tool ("insert_unichar", t_("Insert character by unicode value"));
 		insert_unicode.select_action.connect ((self) => {
 			KerningDisplay d = MainWindow.get_kerning_display ();
 			d.insert_unichar ();

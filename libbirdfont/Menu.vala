@@ -563,8 +563,7 @@ public class Menu : GLib.Object {
 			foreach (Expander e in tool_set.get_expanders ()) {
 				foreach (Tool t in e.tool) {
 					tool_item = new ToolItem (t);
-					if (tool_item.identifier != "") {
-						remove_menu_item (tool_item.identifier);
+					if (tool_item.identifier != "" && !has_menu_item (tool_item.identifier)) {
 						menu_items.set (tool_item.identifier, tool_item);
 						sorted_menu_items.add (tool_item);
 					}
@@ -573,16 +572,15 @@ public class Menu : GLib.Object {
 		}
 	}
 
-	public void remove_menu_item (string identifier) {
+	public bool has_menu_item (string identifier) {
 		int i = 0;
 		foreach (MenuItem mi in sorted_menu_items) {
 			if (mi.identifier == identifier) {
-				sorted_menu_items.remove_at (i);
-				break;
+				return true;
 			}
 		}
 		
-		menu_items.unset (identifier);
+		return false;
 	}
 
 	public void set_menu (SubMenu m) {
@@ -638,7 +636,7 @@ public class Menu : GLib.Object {
 		os.put_string ("\n");
 		
 		os.put_string ("<bindings>\n");
-			foreach (MenuItem item in menu_items.values) {
+			foreach (MenuItem item in sorted_menu_items) {
 				os.put_string ("\t<action ");
 				
 				os.put_string (@"key=\"$((!)item.key.to_string ())\" ");

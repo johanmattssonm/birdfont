@@ -36,7 +36,7 @@ public class ForesightTool : Tool {
 	Path current_path = new Path ();
 
 	public ForesightTool (string name) {
-		base (name, t_ ("Create Beziér curves"), '.', CTRL);
+		base (name, t_ ("Create Beziér curves"));
 
 		select_action.connect ((self) => {
 			state = NONE;

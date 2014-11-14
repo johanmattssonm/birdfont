@@ -164,7 +164,7 @@ public class DrawingTools : ToolCollection  {
 		});	
 		draw_tools.add_tool (move_background);
 
-		move_canvas = new Tool ("move_canvas", t_("Move canvas"), 'h');
+		move_canvas = new Tool ("move_canvas", t_("Move canvas"));
 		move_canvas.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);
 		});	
@@ -505,7 +505,7 @@ public class DrawingTools : ToolCollection  {
 		}
 
 		// tie edit point handles
-		tie_handles = new Tool ("tie_point", t_("Tie curve handles for the selected edit point"), 'w');
+		tie_handles = new Tool ("tie_point", t_("Tie curve handles for the selected edit point"));
 		tie_handles.select_action.connect ((self) => {
 			bool tie;
 			EditPoint p;
@@ -541,7 +541,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tool_modifiers.add_tool (tie_handles);
 		
 		// symmetrical handles
-		reflect_handle = new Tool ("symmetric", t_("Symmetrical handles"), 'r');
+		reflect_handle = new Tool ("symmetric", t_("Symmetrical handles"));
 		reflect_handle.select_action.connect ((self) => {
 			bool symmetrical;
 			PointSelection ep;
@@ -563,7 +563,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tool_modifiers.add_tool (reflect_handle);
 
-		create_line = new Tool ("create_line", t_("Convert segment to line."), 'r');
+		create_line = new Tool ("create_line", t_("Convert segment to line."));
 		create_line.select_action.connect ((self) => {
 			PenTool.convert_segment_to_line ();
 			MainWindow.get_current_glyph ().update_view ();
@@ -582,7 +582,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tool_modifiers.add_tool (reverse_path_tool);
 
-		move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"), 'd');
+		move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"));
 		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 
@@ -797,7 +797,7 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		// guide lines, grid and other guidlines
-		help_lines = new Tool ("help_lines", t_("Show guidelines"), 'l');
+		help_lines = new Tool ("help_lines", t_("Show guidelines"));
 		help_lines.select_action.connect ((self) => {
 				bool h;
 				h = GlyphCanvas.get_current_glyph ().get_show_help_lines ();
@@ -808,7 +808,7 @@ public class DrawingTools : ToolCollection  {
 
 		guideline_tools.add_tool (help_lines);
 
-		xheight_help_lines = new Tool ("show_xheight_helplines", t_("Show guidelines for x-height and baseline"), 'x');
+		xheight_help_lines = new Tool ("show_xheight_helplines", t_("Show guidelines for x-height and baseline"));
 		xheight_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_xheight_lines_visible ();
@@ -822,7 +822,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		guideline_tools.add_tool (xheight_help_lines);
 
-		background_help_lines = new Tool ("background_help_lines", t_("Show guidelines at top and bottom margin"), 't');
+		background_help_lines = new Tool ("background_help_lines", t_("Show guidelines at top and bottom margin"));
 		background_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_margin_lines_visible ();
@@ -836,7 +836,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		guideline_tools.add_tool (background_help_lines);
 
-		Tool new_grid = new GridTool ("new_grid");
+		Tool new_grid = new GridTool ("show_grid");
 		guideline_tools.add_tool (new_grid);
 
 		// Zoom tools 
@@ -861,7 +861,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		zoombar_tool.add_tool (zoom_bar);
 		
-		Tool zoom_in = new Tool ("zoom_in", "", '+', CTRL);
+		Tool zoom_in = new Tool ("zoom_in", "Zoom In");
 		zoom_in.select_action.connect ((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_in ();
@@ -869,7 +869,7 @@ public class DrawingTools : ToolCollection  {
 		view_tools.add_tool (zoom_in);
 		zoom_in.set_tool_visibility (false);
 
-		Tool zoom_out = new Tool ("zoom_out", "", '-', CTRL);
+		Tool zoom_out = new Tool ("zoom_out", "Zoom Out");
 		zoom_out.select_action.connect ((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_out ();
@@ -877,7 +877,7 @@ public class DrawingTools : ToolCollection  {
 		view_tools.add_tool (zoom_out);
 		zoom_out.set_tool_visibility (false);
 
-		Tool reset_zoom = new Tool ("zoom_1_1", t_("Use one pixel per unit"), '0', CTRL);
+		Tool reset_zoom = new Tool ("zoom_1_1", t_("Zoom Out More"));
 		reset_zoom.select_action.connect ((self) => {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().reset_zoom ();
@@ -893,7 +893,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		view_tools.add_tool (full_glyph);
 
-		Tool zoom_boundaries = new Tool ("zoom_boundaries", t_("Fit in view"), 'v');
+		Tool zoom_boundaries = new Tool ("zoom_boundaries", t_("Fit in view"));
 		zoom_boundaries.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_max ();

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<bindings>
+	<action key="n" ctrl="true" alt="false" command="false" shift="false" action="new" />
+	<action key="o" ctrl="true" alt="false" command="false" shift="false" action="open" />
+	<action key="r" ctrl="true" alt="false" command="false" shift="false" action="recent files" />
+	<action key="s" ctrl="true" alt="false" command="false" shift="false" action="save" />
+	<action key="S" ctrl="true" alt="false" command="false" shift="true" action="save as" />
+	<action key="e" ctrl="true" alt="false" command="false" shift="false" action="export" />
+	<action key="p" ctrl="true" alt="false" command="false" shift="false" action="preview" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="name and description" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select character set" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="quit" />
+	<action key="z" ctrl="true" alt="false" command="false" shift="false" action="undo" />
+	<action key="Z" ctrl="true" alt="false" command="false" shift="true" action="redo" />
+	<action key="c" ctrl="true" alt="false" command="false" shift="false" action="copy" />
+	<action key="v" ctrl="true" alt="false" command="false" shift="false" action="paste" />
+	<action key="V" ctrl="true" alt="false" command="false" shift="true" action="paste in place" />
+	<action key="a" ctrl="true" alt="false" command="false" shift="false" action="select all paths" />
+	<action key="b" ctrl="false" alt="false" command="false" shift="false" action="move to baseline" />
+	<action key="f" ctrl="true" alt="false" command="false" shift="false" action="search" />
+	<action key="E" ctrl="true" alt="false" command="false" shift="true" action="export glyph as svg" />
+	<action key="i" ctrl="true" alt="false" command="false" shift="false" action="import svg file" />
+	<action key="b" ctrl="true" alt="false" command="false" shift="false" action="import background image" />
+	<action key="p" ctrl="false" alt="false" command="false" shift="false" action="simplify path" />
+	<action key="c" ctrl="false" alt="false" command="false" shift="false" action="close path" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="glyph sequence" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="set background glyph" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="remove background glyph" />
+	<action key="ｒ" ctrl="true" alt="false" command="false" shift="false" action="select point above" />
+	<action key="ｓ" ctrl="true" alt="false" command="false" shift="false" action="select next point" />
+	<action key="ｑ" ctrl="true" alt="false" command="false" shift="false" action="select previous point" />
+	<action key="ｔ" ctrl="true" alt="false" command="false" shift="false" action="select point below" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="next tab" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="previous tab" />
+	<action key="w" ctrl="true" alt="false" command="false" shift="false" action="close tab" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="close all tabs" />
+	<action key="k" ctrl="true" alt="false" command="false" shift="false" action="show kerning tab" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="list kerning pairs" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show spacing tab" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select next kerning pair" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select previous kerning pair" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show ligature tab" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="add ligature" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="save as .bfp" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="settings" />
+	<action key="b" ctrl="false" alt="false" command="false" shift="false" action="foresight" />
+	<action key="n" ctrl="false" alt="false" command="false" shift="false" action="pen_tool" />
+	<action key="m" ctrl="false" alt="false" command="false" shift="false" action="point_tool" />
+	<action key="z" ctrl="false" alt="false" command="false" shift="false" action="zoom_tool" />
+	<action key="o" ctrl="false" alt="false" command="false" shift="false" action="move" />
+	<action key="r" ctrl="false" alt="false" command="false" shift="false" action="resize" />
+	<action key="f" ctrl="false" alt="false" command="false" shift="false" action="track" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="move_background" />
+	<action key="h" ctrl="false" alt="false" command="false" shift="false" action="move_canvas" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="quadratic_points" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="cubic_points" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="double_points" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="convert_point" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="x_coordinate" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="y_coordinate" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="rotation" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="skew" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="width" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="height" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="object_stroke" />
+	<action key="w" ctrl="false" alt="false" command="false" shift="false" action="tie_point" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="symmetric" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="create_line" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="reverse_path" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="move_layer" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="flip_vertical" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="flip_horizontal" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="scale_background" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="cut_background" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show_background" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="insert_background" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="high_contrast_background" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="contrast_threshold" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="auto_trace_resolution" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="auto_trace_simplify" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="autotrace" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="delete_background" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="help_lines" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show_xheight_helplines" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="background_help_lines" />
+	<action key="g" ctrl="false" alt="false" command="false" shift="false" action="show_grid" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="zoom_in" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="zoom_out" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="zoom_1_1" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="full_glyph" />
+	<action key="v" ctrl="false" alt="false" command="false" shift="false" action="zoom_boundaries" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="zoom_background_image" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="prev" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="next" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="circle" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="rectangle" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="test_case" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="slow_test" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_class" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_text_input" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="side_bearings" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="insert_last_glyph" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="insert_unichar" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_font_size_one" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_font_size_two" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="update_webview" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="export_fonts" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="generate_html_document" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select_background" />
+</bindings>
