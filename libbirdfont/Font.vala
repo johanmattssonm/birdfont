@@ -597,7 +597,6 @@ public class Font : GLib.Object {
 			bfp_file.create_directory (directory);
 			bfp_file.save ();
 			this.bfp = true;
-			Preferences.add_recent_files (bfp_file.get_path ());
 		} catch (GLib.Error e) {
 			warning (e.message);
 			// FIXME: notify user
@@ -656,7 +655,6 @@ public class Font : GLib.Object {
 		}
 		
 		modified = false;
-		Preferences.add_recent_files (get_path ());
 	}
 
 	public void set_font_file (string path) {
@@ -672,7 +670,7 @@ public class Font : GLib.Object {
 		return (glyph_name.length () == 0);
 	}
 
-	public void set_file (string path, bool recent = true) {
+	public void set_file (string path) {
 		font_file = path;
 	}
 
@@ -755,9 +753,7 @@ public class Font : GLib.Object {
 			format = FontFormat.FREETYPE;
 			
 			font_file = null;
-		}	
-
-		Preferences.add_recent_files (get_path ());
+		}
 		
 		return loaded;
 	}
@@ -793,9 +789,7 @@ public class Font : GLib.Object {
 		font_data = ((!) data).str;
 		parsed = bf_font.load_data (font_data);
 		
-		if (parsed) {
-			Preferences.add_recent_files (path);
-		} else {
+		if (!parsed) {
 			warning ("Failed to parse loaded freetype font.");	
 		}
 		

@@ -56,6 +56,8 @@ public class SaveCallback : GLib.Object {
 					i++;
 				}
 				
+				Preferences.add_recent_files (file_name);
+				
 				font.font_file = file_name;
 				save ();
 				saved = true;

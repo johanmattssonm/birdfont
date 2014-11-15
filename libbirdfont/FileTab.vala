@@ -76,6 +76,8 @@ public class FileTab : FontDisplay {
 			MainWindow.close_all_tabs ();
 			
 			f.set_file (fn);
+			Preferences.add_recent_files (fn);
+			
 			MainWindow.native_window.load (); // background thread
 		});
 

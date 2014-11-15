@@ -76,6 +76,7 @@ public class LoadCallback : GLib.Object {
 				file_loaded.connect (() => {
 					KerningTools.update_kerning_classes ();
 					MenuTab.show_all_available_characters ();
+					Preferences.add_recent_files (fn);
 				});
 			}
 		});
