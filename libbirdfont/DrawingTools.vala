@@ -916,7 +916,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		view_tools.add_tool (zoom_prev);
 
-		Tool zoom_next = new Tool ("next");
+		Tool zoom_next = new Tool ("next", t_("Next view"));
 		zoom_next.select_action.connect((self) => {
 			zoom_tool.next_view ();
 		});
@@ -1011,8 +1011,9 @@ public class DrawingTools : ToolCollection  {
 				help_lines.set_active (false);
 			}
 
-			add_new_grid ();
-			add_new_grid ();
+			add_new_grid (1);
+			add_new_grid (2);
+			add_new_grid (4);
 			
 			MainWindow.get_toolbox ().move (0, 0);
 			
@@ -1262,7 +1263,7 @@ public class DrawingTools : ToolCollection  {
 		MainWindow.get_toolbox ().select_tool (sb);
 	}
 
-	public SpinButton add_new_grid () {
+	public SpinButton add_new_grid (double size = 2) {
 		SpinButton grid_width = new SpinButton ("grid_width", t_("Set size for grid"));
 		Toolbox tb = MainWindow.get_toolbox ();
 		
@@ -1279,6 +1280,8 @@ public class DrawingTools : ToolCollection  {
 		grid_expander.add_tool (grid_width);
 
 		GridTool.sizes.add (grid_width);
+		
+		grid_width.set_value_round (size);
 
 		tb.update_expanders ();
 		
