@@ -20,8 +20,13 @@ public class MenuTab : FontDisplay {
 	 * 
 	 * Do always check the return value of set_suppress_event when this
 	 * variable is updated.
+	 * 
+	 * This variable is used only in the gui thread.
 	 */
 	public static bool suppress_event;
+
+	/** True if the background thread is running. */
+	public static bool background_thread;
 
 	/** A notification sent when the file has been saved. */
 	public static SaveCallback save_callback;
@@ -40,6 +45,7 @@ public class MenuTab : FontDisplay {
 		export_callback = new ExportCallback ();
 		
 		suppress_event = false;
+		background_thread = false;
 	}
 
 	public static void set_save_callback (SaveCallback c) {
@@ -80,6 +86,7 @@ public class MenuTab : FontDisplay {
 			warning ("suppress_event is already set");
 			return false;
 		}
+		background_thread = e;
 		suppress_event = e;
 		return true;
 	}

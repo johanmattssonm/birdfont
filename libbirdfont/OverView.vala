@@ -61,8 +61,6 @@ public class OverView : FontDisplay {
 			set_glyph_range (gr);
 		}
 
-		reset_zoom ();
-		
 		if (open_selected) {
 			this.open_glyph_signal.connect ((glyph_collection) => {
 				TabBar tabs = MainWindow.get_tab_bar ();
@@ -109,6 +107,7 @@ public class OverView : FontDisplay {
 		}
 		
 		update_scrollbar ();
+		reset_zoom ();
 	}
 	
 	public GlyphCollection add_empty_character_to_font (unichar character, bool unassigned, string name) {
@@ -322,7 +321,6 @@ public class OverView : FontDisplay {
 	
 	OverViewItem get_selected_item () {
 		if (visible_items.size == 0) {
-			warning ("No items.");
 			return new OverViewItem (null, '\0', 0, 0);
 		}
 		

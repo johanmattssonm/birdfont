@@ -411,7 +411,7 @@ public class TabBar : GLib.Object {
 		MainWindow.native_window.hide_text_input ();
 
 		if (index == SHOW_MENU) {
-			MainWindow.get_menu ().show_menu = ! MainWindow.get_menu ().show_menu;
+			MainWindow.get_menu ().show_menu = !MainWindow.get_menu ().show_menu;
 			GlyphCanvas.redraw ();
 			return;
 		}
@@ -538,7 +538,10 @@ public class TabBar : GLib.Object {
 	public void select_tab_click (double x, double y, int width, int height) {
 		int over, close;
 		
-		MainWindow.get_menu ().show_menu = false;
+		if (MainWindow.get_menu ().show_menu) {
+			MainWindow.get_menu ().show_menu = false;
+			GlyphCanvas.redraw ();
+		}
 		
 		this.width = width;
 		this.height = height;

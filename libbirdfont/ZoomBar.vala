@@ -50,7 +50,10 @@ public class ZoomBar : Tool {
 	/** Zoom level from 0 to 1. */
 	public void set_zoom (double z) {
 		zoom_level = z;
-		Toolbox.redraw_tool_box ();
+		
+		if (!MenuTab.background_thread) {
+			Toolbox.redraw_tool_box ();
+		}
 	}
 	
 	void set_zoom_from_mouse (double tx) {
