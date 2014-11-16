@@ -94,7 +94,7 @@ public class KerningDisplay : FontDisplay {
 		cr.restore ();
 	}
 	
-	double get_row_height () {
+	public double get_row_height () {
 		return current_font.top_limit - current_font.bottom_limit;
 	}
 

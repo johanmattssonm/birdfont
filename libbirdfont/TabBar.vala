@@ -774,7 +774,8 @@ public class TabBar : GLib.Object {
 			label = new Text ();
 			label.set_text (t.get_label ());
 			text_height = 16 / scale;
-			text_width = label.get_extent (text_height);
+			label.set_font_size (text_height);
+			text_width = label.get_extent ();
 			center_x = tab_width / 2.0 - text_width / 2.0;
 			center_y = tab_height / 2.0 + 4 / scale;
 			
@@ -784,7 +785,8 @@ public class TabBar : GLib.Object {
 				cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			}
 			
-			label.draw (cr, center_x, center_y, text_height);
+			label.set_font_size (text_height);
+			label.draw_at_baseline (cr, center_x, center_y);
 						
 			// edges
 			if (tab_index != selected) { // don't draw edges for the selected tab

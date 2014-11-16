@@ -107,12 +107,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			
 			scrollbar.set_visible (fd.has_scrollbar ());
 			
-			if (fd.get_name () == "Description") {
-				description.update_fields ();
-				description.canvas.set_visible (true);
-				html_box.set_visible (false);
-				glyph_canvas_area.set_visible (false);
-			} else if (fd.get_name () == "Preview") {
+			if (fd.get_name () == "Preview") {
 				uri = Preview.get_uri ();
 				html = Preview.get_html_with_absolute_paths ();
 										

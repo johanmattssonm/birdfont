@@ -17,9 +17,9 @@ using Cairo;
 namespace BirdFont {
 
 /** Test implementation of a birdfont rendering engine. */
-public class Text {
+public class Text : Widget {
 
-	Font font {
+	public Font font {
 		get {
 			if (current_font == null) {
 				File path = SearchPaths.find_file (null, "roboto.bf");
@@ -42,12 +42,20 @@ public class Text {
 	public string text;
 	GlyphSequence glyph_sequence;
 	public delegate void Iterator (Glyph glyph, double kerning, bool last);
+	double font_size;
 	
-	public Text () {
+	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		current_font = null;
-		text = "";
+		this.margin_bottom = margin_bottom;
 		glyph_sequence = new GlyphSequence ();
 		font_cache = FontCache.get_default_cache ();
+		
+		set_text (text);
+		set_font_size (size);
+	}
+
+	public void set_font_size (double height_in_pixels) {
+		font_size = height_in_pixels;
 	}
 
 	public void set_font_cache (FontCache font_cache) {
@@ -83,11 +91,8 @@ public class Text {
 		Glyph? prev;
 		GlyphSequence word_with_ligatures;
 		GlyphRange? gr_left, gr_right;
-		double row_height;
 		GlyphSequence word;
 		Glyph? g;
-		
-		row_height = get_row_height ();
 		
 		glyph = new Glyph ("", '\0');
 
@@ -125,9 +130,9 @@ public class Text {
 	}
 
 	// FIXME: some fonts doesn't have on curve extrema
-	public double get_extent (double font_size_in_pixels) {
+	public double get_extent () {
 		double x = 0;
-		double ratio = font_size_in_pixels / get_row_height ();
+		double ratio = get_scale ();
 
 		iterate ((glyph, kerning, last) => {
 			double x1, y1, x2, y2;
@@ -147,26 +152,45 @@ public class Text {
 		return x;
 	}
 
-	public double get_height (double font_size_in_pixels) {
-		double ratio = font_size_in_pixels / get_row_height ();
-		double max_y = 0;
+	public double get_sidebearing_extent () {
+		double x = 0;
+		double ratio = get_scale ();
+
+		iterate ((glyph, kerning, last) => {
+			double lsb;
+			
+			glyph.add_help_lines ();
+			lsb = glyph.left_limit;
+			x += (glyph.get_width () + kerning) * ratio;
+		});
+		
+		return x;
+	}
+
+	public override double get_height () {
+		return font_size;
+	}
+
+	public double get_glyph_height () {
+		double ratio = get_scale ();
+		double max_height = 0;
 
 		iterate ((glyph, kerning, last) => {
 			double x1, y1, x2, y2;
-			double y;
+			double h;
 			glyph.boundaries (out x1, out y1, out x2, out y2);
-			y = Math.fmax (y1, y2) - Math.fmin (y1, y2) ;
-			if (y > max_y) {
-				max_y = y;
+			h = Math.fmax (y1, y2) - Math.fmin (y1, y2) ;
+			if (h > max_height) {
+				max_height = h;
 			}
 		});
 		
-		return max_y * ratio;
+		return max_height * ratio;
 	}	
 
-	public double get_width (double font_size_in_pixels) {
+	public override double get_width () {
 		double x = 0;
-		double ratio = font_size_in_pixels / get_row_height ();
+		double ratio = get_scale ();
 		bool first = true;
 		
 		iterate ((glyph, kerning, last) => {
@@ -192,7 +216,7 @@ public class Text {
 	}
 
 	public double get_decender (double font_size_in_pixels) {
-		double ratio = font_size_in_pixels / get_row_height ();
+		double ratio = get_scale ();
 		double min_y = 0;
 		double decender;
 		
@@ -219,13 +243,17 @@ public class Text {
 		
 		return f != null;
 	}
-		
-	public void draw (Context cr, double px, double py, double font_size_in_pixels) {
+	
+	public override void draw (Context cr) {
+		double y = widget_y + get_height () + get_scale () * (font.bottom_limit + font.base_line);
+		draw_at_baseline (cr, widget_x, y);
+	}
+	
+	public void draw_at_baseline (Context cr, double px, double py) {
 		double x, y;
-		double row_height, ratio;
+		double ratio;
 
-		row_height = get_row_height ();		
-		ratio = font_size_in_pixels / row_height;
+		ratio = get_scale ();
 		
 		cr.save ();
 
@@ -233,7 +261,7 @@ public class Text {
 		x = px;
 					
 		iterate ((glyph, kerning, last) => {
-			double lsb;;
+			double lsb;
 			
 			glyph.add_help_lines ();
 			
@@ -305,8 +333,8 @@ public class Text {
 		}
 	}
 
-	double get_row_height () {
-		return font.top_limit - font.bottom_limit;
+	public double get_scale () {
+		return font_size / (font.top_limit - font.bottom_limit);
 	}
 }
 

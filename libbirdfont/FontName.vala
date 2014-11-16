@@ -44,13 +44,15 @@ public class FontName : Tool {
 		text_height = 22;
 		
 		max_width = (width - 2 * x * Toolbox.get_scale ());
-		extent = font_name.get_extent (text_height) * Toolbox.get_scale ();
+		font_name.set_font_size (text_height);
+		extent = font_name.get_extent () * Toolbox.get_scale ();
 		if (extent > max_width) {
 			text_height *= max_width / extent;
 		}
 		
 		cr.set_source_rgba (234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
-		font_name.draw (cr, x, y + 13 * Toolbox.get_scale (), text_height);
+		font_name.set_font_size (text_height);
+		font_name.draw_at_baseline (cr, x, y + 13 * Toolbox.get_scale ());
 		cr.restore ();
 	}
 }

@@ -70,11 +70,13 @@ public class BackgroundSelectionTool : CutBackgroundTool {
 						font_height = 18;
 						cr.set_source_rgba (1, 1, 1, 1);
 						label.set_text ((!) bs.assigned_glyph);
-						tx = x  + w - label.get_width (font_height) / 2.0;
+						label.set_font_size (font_height);
+						tx = x  + w - label.get_width () / 2.0;
 						ty = y + h;
-						ty += label.get_height (font_height) / 2.0;
+						ty += label.get_height () / 2.0;
 						ty -= label.get_decender (font_height);
-						label.draw (cr, tx, ty, font_height);
+						label.set_font_size (font_height);
+						label.draw_at_baseline (cr, tx, ty);
 					}
 				}
 				

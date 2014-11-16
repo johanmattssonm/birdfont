@@ -73,7 +73,8 @@ public class LabelTool : Tool {
 			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		}
 		
-		label_text.draw (cr, x + 14, y + h - 1.5, text_height);
+		label_text.set_font_size (text_height);
+		label_text.draw_at_baseline (cr, x + 14, y + h - 1.5);
 		cr.restore ();
 
 		// glyph count
@@ -92,7 +93,8 @@ public class LabelTool : Tool {
 			glyph_count.set_text (@"$(this.number)");
 			text_height = 12 / scale;
 			
-			center_x = bgx + ((!) counter_background).get_width () / 2.0  - glyph_count.get_extent (text_height) / 2.0;
+			glyph_count.set_font_size (text_height);
+			center_x = bgx + ((!) counter_background).get_width () / 2.0  - glyph_count.get_extent () / 2.0;
 			center_y = bgy + ((!) counter_background).get_height () / 2.0 + 4 / scale;
 			
 			if (is_selected ()) {
@@ -101,7 +103,8 @@ public class LabelTool : Tool {
 				cr.set_source_rgba (51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
 			}
 			
-			glyph_count.draw (cr, center_x, center_y, text_height);
+			glyph_count.set_font_size (text_height);
+			glyph_count.draw_at_baseline (cr, center_x, center_y);
 									
 			cr.restore ();
 		}

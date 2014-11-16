@@ -251,7 +251,7 @@ public class MenuTab : FontDisplay {
 	} 
 	
 	public static void show_description () {
-		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionTab ());
+		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionDisplay ());
 	}
 	
 	public static void show_kerning_context () {
