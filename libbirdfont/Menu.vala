@@ -588,13 +588,43 @@ public class Menu : GLib.Object {
 		GlyphCanvas.redraw ();
 	}
 	
+	public double layout_width () {
+		Text key_binding = new Text ();
+		double font_size = 17 * MainWindow.units;;
+		double w;
+		
+		width = 0;
+		foreach (MenuItem item in current_menu.items) {
+			key_binding.set_text (item.get_key_bindings ());
+			
+			w = item.label.get_extent (font_size);
+			w += key_binding.get_extent (font_size);
+			w += 3 * height * MainWindow.units;
+			
+			if (w > width) {
+				width = w;
+			}
+		}
+		
+		return width;
+	}
+	
 	public void draw (WidgetAllocation allocation, Context cr) {
-		double y = 0;
-		double x = allocation.width - width;
+		double y;
+		double x;
 		double label_x;
 		double label_y;
 		double font_size;
+		Text key_binding;
+		double binding_extent;
 		
+		width = layout_width ();
+		
+		key_binding = new Text ();
+		
+		x = allocation.width - width;
+		y = 0;
+		font_size = 17 * MainWindow.units;
 		this.allocation = allocation;
 		
 		foreach (MenuItem item in current_menu.items) {
@@ -607,10 +637,14 @@ public class Menu : GLib.Object {
 			cr.save ();
 			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			label_x = allocation.width - width + 0.7 * height * MainWindow.units;
-			font_size = 17 * MainWindow.units;
 			label_y = y + font_size - 1 * MainWindow.units;
 			item.label.draw (cr, label_x, label_y, font_size);
-						
+			
+			key_binding.set_text (item.get_key_bindings ());
+			binding_extent = key_binding.get_extent (font_size);
+			label_x = x + width - binding_extent - 0.6 * height * MainWindow.units;
+			key_binding.draw (cr, label_x, label_y, font_size);
+			
 			y += height;
 		}
 	}
