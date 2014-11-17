@@ -28,6 +28,20 @@ public abstract class Widget : GLib.Object {
 	public abstract void draw (Context cr);
 	
 	public WidgetAllocation allocation = new WidgetAllocation ();
+
+	public void draw_rounded_rectangle (Context cr, double x, double y, double w, double h, double radius) {	
+		// fixme radius is padding not margin
+		cr.move_to (x, y + radius);
+		cr.arc (x + radius, y + radius, radius, 2 * (PI / 2), 3 * (PI / 2));
+		cr.line_to (x + w - radius, y);
+		cr.arc (x + w - radius, y + radius, radius, 3 * (PI / 2), 4 * (PI / 2));
+		cr.line_to (x + w, y + h);		
+		cr.arc (x + w - radius, y + h, radius, 4 * (PI / 2), 5 * (PI / 2));
+		cr.line_to (x + radius, y + h + radius);
+		cr.arc (x + radius, y + h, radius, 5 * (PI / 2), 6 * (PI / 2));
+		cr.line_to (x, y + radius);
+		cr.close_path ();			
+	}
 }
 
 }

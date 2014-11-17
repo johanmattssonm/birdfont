@@ -42,7 +42,7 @@ public class Text : Widget {
 	public string text;
 	GlyphSequence glyph_sequence;
 	public delegate void Iterator (Glyph glyph, double kerning, bool last);
-	double font_size;
+	public double font_size;
 	
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		current_font = null;

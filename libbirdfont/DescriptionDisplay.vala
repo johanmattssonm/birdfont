@@ -28,6 +28,8 @@ public class DescriptionDisplay : FontDisplay {
 	TextArea postscript_name;
 	TextArea name;
 	TextArea style;
+	CheckBox bold;
+	CheckBox italic;
 	TextArea weight;
 	TextArea full_name;
 	TextArea unique_id;
@@ -79,12 +81,27 @@ public class DescriptionDisplay : FontDisplay {
 		widgets.add (name);
 				
 		widgets.add (new Text (t_("Style"), label_size, label_margin));
-		style.margin_bottom = margin;
+		style.margin_bottom = 1.5 * margin;
 		style.set_text (font.subfamily);
 		style.text_changed.connect ((t) => {
 			font.subfamily = t;
 		});
 		widgets.add (style);
+		
+		bold = new CheckBox (t_("Bold"), label_size);
+		bold.updated.connect ((c) => {
+			font.bold = c;
+		});
+		bold.checked = font.bold;
+		widgets.add (bold);
+		
+		italic = new CheckBox (t_("Italic"), label_size);
+		italic.updated.connect ((c) => {
+			font.italic = c;
+		});
+		italic.checked = font.italic;
+		italic.margin_bottom = margin;
+		widgets.add (italic);
 		
 		widgets.add (new Text (t_("Weight"), label_size, label_margin));
 		weight.margin_bottom = margin;
@@ -216,6 +233,7 @@ public class DescriptionDisplay : FontDisplay {
 
 	public override void button_press (uint button, double x, double y) {
 		TextArea t;
+		CheckBox c;
 		
 		if (keyboard_focus != null) {
 			t = (!) keyboard_focus;
@@ -231,6 +249,9 @@ public class DescriptionDisplay : FontDisplay {
 					t = (TextArea) w;
 					t.draw_carret = true;
 					keyboard_focus = t;
+				} else if (w is CheckBox) {
+					c = (CheckBox) w;
+					c.set_checked (!c.checked);
 				}
 			}
 		}

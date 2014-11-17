@@ -197,14 +197,14 @@ public class TextArea : Widget {
 			cr.save ();
 			cr.set_line_width (1);
 			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			create_border (cr, x, y);
+			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
 			cr.fill ();
 			cr.restore ();
 			
 			// border
 			cr.save ();
 			cr.set_line_width (1);
-			create_border (cr, x, y);
+			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
 			cr.stroke ();
 			cr.restore ();
 		}
@@ -318,23 +318,6 @@ public class TextArea : Widget {
 		}
 		
 		return n;
-	}
-
-	void create_border (Context cr, double x, double y) {
-		double radius = padding;		
-		double w = width;
-		double h = height;
-		
-		cr.move_to (x, y + radius);
-		cr.arc (x + radius, y + radius, radius, 2 * (PI / 2), 3 * (PI / 2));
-		cr.line_to (x + w - radius, y);
-		cr.arc (x + w - radius, y + radius, radius, 3 * (PI / 2), 4 * (PI / 2));
-		cr.line_to (x + w, y + h);		
-		cr.arc (x + w - radius, y + h, radius, 4 * (PI / 2), 5 * (PI / 2));
-		cr.line_to (x + radius, y + h + radius);
-		cr.arc (x + radius, y + h, radius, 5 * (PI / 2), 6 * (PI / 2));
-		cr.line_to (x, y + radius);
-		cr.close_path ();		
 	}
 }
 
