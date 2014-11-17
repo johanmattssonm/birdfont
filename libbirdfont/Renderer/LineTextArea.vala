@@ -17,17 +17,15 @@ using Math;
 
 namespace BirdFont {
 
-public abstract class Widget : GLib.Object {
+public class LineTextArea : TextArea {
 
-	public double margin_bottom = 0;
-	public double widget_x = 0;
-	public double widget_y = 0;
-
-	public abstract double get_height ();
-	public abstract double get_width ();
-	public abstract void draw (Context cr);
-	
-	public WidgetAllocation allocation = new WidgetAllocation ();
+	public LineTextArea (double size) {
+		base (size);
+		single_line = true;
+		min_height = size;
+		height = min_height;
+		layout ();
+	}
 }
 
 }

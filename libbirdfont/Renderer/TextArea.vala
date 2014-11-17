@@ -22,19 +22,22 @@ public class TextArea : Widget {
 	public double min_width = 500;
 	public double min_height = 100;
 	public double font_size;
-	public double margin = 10;
+	public double padding = 3.3;
+	public bool single_line = false;
 	
-	public bool draw_carret = true;
+	public bool draw_carret = false;
 	public bool draw_border = true;
 
-	private double width;
-	private double height;
+	public double width;
+	public double height;
 
 	int carret = 0;
 	string text = "";
 	int text_length = 0;
 		
 	int iter_pos;
+	
+	public signal void text_changed (string text);
 	
 	public TextArea (double font_size = 14) {
 		this.font_size = font_size;
@@ -55,10 +58,19 @@ public class TextArea : Widget {
 	}
 	
 	public void set_text (string t) {
-		int tl = t.length;
-		text = t;
+		int tl;
+		
+		if (single_line) {
+			text = t.replace ("\n", "").replace ("\r", "");
+		} else {
+			text = t;
+		}
+		
+		tl = t.length;
 		carret = tl;
 		text_length += tl;
+		
+		text_changed (text);
 	}
 	
 	public void remove_last_character () {
@@ -73,33 +85,66 @@ public class TextArea : Widget {
 		set_text (text.substring (0, last_index) + text.substring (carret));
 	}
 	
+	public void move_carret_next () {
+		int index = 0;
+		unichar c;
+		char* s = (char*) text + carret;
+		string n = (string) s;
+		
+		n.get_next_char (ref index, out c);
+		carret += index;
+	}
+
+	public void move_carret_previous () {
+		int last_index = 0;
+		int index = 0;
+		unichar c;
+		
+		while (text.get_next_char (ref index, out c) && index < carret) {
+			last_index = index;
+		}
+		
+		carret = last_index;
+	}
+		
 	public void insert_text (string t) {
+		string s;
+		
+		if (single_line) {
+			s = t.replace ("\n", "").replace ("\r", "");
+		} else {
+			s = t;
+		}
+
 		string nt = text.substring (0, carret);
-		int tl = t.length;
-		nt += t;
+		int tl = s.length;
+		nt += s;
 		nt += text.substring (carret);
 		carret += tl;
 		text = nt;
 		text_length += tl;
+		
+		text_changed (text);
 	}
 	
-	void layout () {
+	public void layout () {
 		Text word;
 		double p;
 		double tx, ty;
 		string w;
 		double xmax = 0;
-		double width = this.width - 2 * margin;
-		double height = this.height - 2 * margin;
+		double width = this.width - 2 * padding;
+		double height = this.height - 2 * padding;
+		bool carret_visibility;
 		
 		iter_pos = 0;
 		word = new Text ();
 		word.set_font_size (font_size);
 		
 		tx = 0;
-		ty = 0;
+		ty = font_size;
 		while (iter_pos < text_length) {
-			w = get_next_word (out draw_carret);
+			w = get_next_word (out carret_visibility);
 			
 			if (w == "") {
 				break;
@@ -109,9 +154,11 @@ public class TextArea : Widget {
 			
 			p = word.get_sidebearing_extent ();
 			
-			if (tx + p > width || w == "\n") {
-				tx = 0;
-				ty += font_size;
+			if (!single_line) {
+				if (tx + p > width || w == "\n") {
+					tx = 0;
+					ty += font_size;
+				}
 			}
 			
 			if (w != "\n") {
@@ -126,10 +173,10 @@ public class TextArea : Widget {
 		this.width = min_width;
 		
 		if (xmax > width) {
-			this.width = xmax + 2 * margin;
+			this.width = xmax + 2 * padding;
 		}
 		
-		this.height = fmax (min_height, ty + 2 * margin);
+		this.height = fmax (min_height, ty + 2 * padding);
 	}
 	
 	public override void draw (Context cr) {
@@ -137,8 +184,7 @@ public class TextArea : Widget {
 		double p;
 		double tx, ty;
 		string w;
-		bool draw_carret;
-		double carret_y;
+		bool carret_at_end_of_word;
 		double scale;
 		double width;
 		double x = widget_x;
@@ -150,7 +196,7 @@ public class TextArea : Widget {
 			// background
 			cr.save ();
 			cr.set_line_width (1);
-			cr.set_source_rgba (1, 1, 1, 1);
+			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			create_border (cr, x, y);
 			cr.fill ();
 			cr.restore ();
@@ -164,22 +210,24 @@ public class TextArea : Widget {
 		}
 		
 		cr.save ();
-		cr.set_source_rgba (38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
 		
 		iter_pos = 0;
 		word = new Text ();
 		
-		width = this.width - margin;
-		x += margin;
+		width = this.width - padding;
+		x += padding;
 		word.set_font_size (font_size);
 		scale = word.get_scale ();
-		//y += font_size - scale * (word.font.bottom_limit - word.font.base_line);
 		y += font_size;
+		
+		if (draw_carret && iter_pos == 0 && text_length == 0) {
+			draw_carret_at (cr, x + padding, y + padding);
+		}
 		
 		tx = 0;
 		ty = 0;
 		while (iter_pos < text_length) {
-			w = get_next_word (out draw_carret);
+			w = get_next_word (out carret_at_end_of_word);
 			
 			if (w == "") {
 				break;
@@ -198,37 +246,40 @@ public class TextArea : Widget {
 				tx += p;
 			}
 			
-			if (draw_carret && this.draw_carret) {
-				cr.save ();
-				cr.set_line_width (1);
-				carret_y = y + ty;
-				carret_y += scale * -word.font.bottom_limit;
-				cr.move_to (x + tx, carret_y);
-				cr.line_to (x + tx, carret_y - font_size);
-				cr.stroke ();
-				cr.restore ();
+			if (carret_at_end_of_word && draw_carret) {
+				draw_carret_at (cr, x + tx, y + ty + scale * - word.font.bottom_limit);
 			}
 		}
 		cr.restore ();
 	}
 	
-	string get_next_word (out bool draw_carret) {
+	void draw_carret_at (Context cr, double x, double y) {
+		cr.save ();
+		cr.set_source_rgba (0, 0, 0, 0.5);
+		cr.set_line_width (1);
+		cr.move_to (x, y);
+		cr.line_to (x, y - font_size);
+		cr.stroke ();
+		cr.restore ();		
+	}
+	
+	string get_next_word (out bool carret_at_end_of_word) {
 		int i;
 		int ni;
 		int pi;
 		string n;
 		int nl;
 		
-		draw_carret = false;
+		carret_at_end_of_word = false;
 		
 		if (iter_pos >= text_length) {
-			draw_carret = true;
+			carret_at_end_of_word = true;
 			return "".dup ();
 		}
 		
 		if (text.get_char (iter_pos) == '\n') {
 			iter_pos += "\n".length;
-			draw_carret = (iter_pos == carret);
+			carret_at_end_of_word = (iter_pos == carret);
 			return "\n".dup ();
 		}
 		
@@ -257,20 +308,20 @@ public class TextArea : Widget {
 		if (iter_pos < carret < iter_pos + nl) {
 			n = text.substring (iter_pos, carret - iter_pos);
 			nl = n.length;
-			draw_carret = true;
+			carret_at_end_of_word = true;
 		}
 		
 		iter_pos += nl;
 		
 		if (iter_pos == carret) {
-			draw_carret = true;
+			carret_at_end_of_word = true;
 		}
 		
 		return n;
 	}
 
 	void create_border (Context cr, double x, double y) {
-		double radius = margin;		
+		double radius = padding;		
 		double w = width;
 		double h = height;
 		

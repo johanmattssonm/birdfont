@@ -223,9 +223,7 @@ public class SettingsDisplay : FontDisplay {
 		}
 	}
 
-	public override void draw (WidgetAllocation allocation, Context cr) {
-		Text headline;
-		
+	public override void draw (WidgetAllocation allocation, Context cr) {		
 		this.allocation = allocation;
 		
 		layout ();
