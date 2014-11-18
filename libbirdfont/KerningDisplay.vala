@@ -40,6 +40,7 @@ public class KerningDisplay : FontDisplay {
 	bool first_update = true;
 
 	Font current_font = new Font ();
+	Text kerning_label = new Text ();
 	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
@@ -203,6 +204,15 @@ public class KerningDisplay : FontDisplay {
 					cr.set_font_size (10);
 					cr.show_text (((!)g).get_name ());
 					cr.restore ();
+					
+					if (active_handle == i) {
+						cr.save ();
+						kerning_label.widget_x = x2;
+						kerning_label.widget_y = y + 40  * item_size;
+						kerning_label.draw (cr);
+						cr.fill ();
+						cr.restore ();
+					}
 				}	
 				
 				x += w + kern;
@@ -253,9 +263,8 @@ public class KerningDisplay : FontDisplay {
 	}
 
 	private void display_kerning_value (double k) {
-		string kerning_label = t_("Kerning:");
 		string kerning = round (k);
-		TooltipArea.show_text (@"$kerning_label $(kerning)");
+		kerning_label = new Text (@"$(kerning)", 17 * MainWindow.units);
 	}
 	
 	private void set_active_handle_index (int h) {
