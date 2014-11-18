@@ -203,29 +203,53 @@ public class DescriptionDisplay : FontDisplay {
 		}
 		
 		focus = (!) keyboard_focus;
-		if (!KeyBindings.has_alt () && !KeyBindings.has_ctrl ()) {
-			switch (c) {
-				case Key.RIGHT:
-					focus.move_carret_next ();
-					break;
-				case Key.LEFT:
-					focus.move_carret_previous ();
-					break;
-				case Key.BACK_SPACE:
+		switch (c) {
+			case 'a':
+				if (KeyBindings.has_ctrl ()) {
+					focus.select_all ();
+				}
+				break;
+			case 'c':
+				if (KeyBindings.has_ctrl ()) {
+					ClipTool.copy_text (focus);
+				}
+				break;
+			case 'v':
+				if (KeyBindings.has_ctrl ()) {
+					ClipTool.paste_text (focus);
+				}
+				break;
+			case Key.RIGHT:
+				focus.move_carret_next ();
+				break;
+			case Key.LEFT:
+				focus.move_carret_previous ();
+				break;
+			case Key.BACK_SPACE:
+				if (focus.has_selection ()) {
+					focus.delete_selected_text ();
+				} else {
 					focus.remove_last_character ();
-					break;
-				case Key.ENTER:
-					focus.insert_text ("\n");
-					break;				
-				default:
-					if (!is_modifier_key (keyval)) {
-						s = (!) c.to_string ();
-						if (s.validate () && keyboard_focus != null) {
-							focus.insert_text (s);
-						}
+				}
+				break;
+			case Key.ENTER:
+				focus.insert_text ("\n");
+				break;
+			case Key.DEL:
+				if (focus.has_selection ()) {
+					focus.delete_selected_text ();
+				} else {
+					focus.remove_next_character ();
+				}
+				break;		
+			default:
+				if (!is_modifier_key (keyval)) {
+					s = (!) c.to_string ();
+					if (s.validate () && keyboard_focus != null) {
+						focus.insert_text (s);
 					}
-					break;
-			}
+				}
+				break;
 		}
 		
 		GlyphCanvas.redraw ();
@@ -233,21 +257,20 @@ public class DescriptionDisplay : FontDisplay {
 
 	public override void button_press (uint button, double x, double y) {
 		TextArea t;
+		TextArea old;
 		CheckBox c;
 		
-		if (keyboard_focus != null) {
-			t = (!) keyboard_focus;
-			t.draw_carret = false;
-			keyboard_focus = null;
-		}
-		
 		foreach (Widget w in widgets) {
-			if (w.widget_x <= x <= w.widget_x + w.get_width ()
-				&&  w.widget_y <= y <= w.widget_y + w.get_height ()) {
-				
+			if (w.is_over (x, y)) {
 				if (w is TextArea) {
 					t = (TextArea) w;
+					if (keyboard_focus != null && (!) keyboard_focus != t) {
+						old = (!) keyboard_focus;
+						old.draw_carret = false;
+					}
+					
 					t.draw_carret = true;
+					t.button_press (button, x, y);
 					keyboard_focus = t;
 				} else if (w is CheckBox) {
 					c = (CheckBox) w;
@@ -260,10 +283,25 @@ public class DescriptionDisplay : FontDisplay {
 	}
 	
 	public override void button_release (int button, double x, double y) {
+		TextArea t;
+		
+		if (keyboard_focus != null) {
+			t = (!) keyboard_focus;
+			t.button_release (button, x, y);
+		}
+					
 		GlyphCanvas.redraw ();
 	}
 
 	public override void motion_notify (double x, double y) {
+		TextArea t;
+		
+		if (keyboard_focus != null) {
+			t = (!) keyboard_focus;
+			if (t.motion (x, y)) {
+				GlyphCanvas.redraw ();
+			}
+		}
 	}
 
 	public override string get_label () {

@@ -42,6 +42,11 @@ public abstract class Widget : GLib.Object {
 		cr.line_to (x, y + radius);
 		cr.close_path ();			
 	}
+
+	public bool is_over (double x, double y) {
+		return widget_x <= x <= widget_x + get_width () 
+			&&  widget_y <= y <= widget_y + get_height ();
+	}
 }
 
 }

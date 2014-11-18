@@ -391,6 +391,21 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}
 	}
 	
+	public void set_clipboard_text (string text) {
+		clipboard.set_text (text, -1);
+	}
+	
+	public string get_clipboard_text () {
+		string? t;
+		
+		t = clipboard.wait_for_text ();
+		if (t != null) {
+			return ((!) t).dup ();
+		}
+		
+		return "".dup ();
+	}
+	
 	public void set_clipboard (string svg) {
 		TargetEntry t = { "image/svg+xml", 0, 0 };
 		TargetEntry[] targets = { t };

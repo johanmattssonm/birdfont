@@ -73,7 +73,8 @@ bool is_modifier_key (uint i) {
 		Key.TAB == i || 
 		Key.CAPS_LOCK == i || 
 		Key.LOGO_RIGHT == i ||
-		Key.ENTER == i;
+		Key.ENTER == i ||
+		Key.DEL == i;
 }
 
 /** Modifier flags */

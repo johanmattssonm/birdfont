@@ -69,6 +69,13 @@ public interface NativeWindow : GLib.Object {
 
 	/** Load images in a background thread. */
 	public abstract void run_background_thread (Task t);
+	
+	/** Copy text to clipboard. */
+	public abstract void set_clipboard_text (string text);
+	
+	/** Get text from clipboard. */
+	public abstract string get_clipboard_text ();
+	
 }
 
 }

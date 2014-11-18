@@ -16,11 +16,22 @@ namespace BirdFont {
 
 public class ClipTool : Tool {
 
+	public static void copy_text (TextArea t) {
+		MainWindow.native_window.set_clipboard_text (t.get_selected_text ());		
+	}
+
+	public static void paste_text (TextArea t) {
+		if (t.carret_is_visible) {
+			t.insert_text (MainWindow.native_window.get_clipboard_text ());
+		}
+	}
+
 	public static void copy () {
 		FontDisplay fd = MainWindow.get_current_display ();
 		string svg_data;
 		string bf_data;
 		string data;
+		TextArea t;
 		
 		if (fd is Glyph) {
 			svg_data = ExportTool.export_selected_paths_to_svg ();
@@ -28,11 +39,9 @@ public class ClipTool : Tool {
 			data = svg_data + bf_data;
 			MainWindow.native_window.set_clipboard (data);
 			MainWindow.native_window.set_inkscape_clipboard (data);
-		}
-		
-		if (fd is OverView) {
+		} else if (fd is OverView) {
 			copy_overview_glyphs ();
-		}			
+		}
 	}
 
 	/** Copy entire glyph. */
@@ -77,6 +86,7 @@ public class ClipTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		double x, y, w, h;
 		double dx, dy;
+		TextArea t;
 		
 		if (fd is Glyph) {
 			paste_paths (false);
@@ -89,15 +99,11 @@ public class ClipTool : Tool {
 			foreach (Path path in g.active_paths) {
 				path.move (dx, dy);
 			}
-		}
-		
-		if (fd is KerningDisplay) {
+		} else if (fd is KerningDisplay) {
 			paste_letters_to_kerning_tab ();
-		}
-		
-		if (fd is OverView) {
+		} else if (fd is OverView) {
 			paste_to_overview ();
-		}	
+		}
 	}
 	
 	static void paste_paths (bool paste_guide_lines) {
