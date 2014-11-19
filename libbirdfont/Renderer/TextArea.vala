@@ -51,6 +51,7 @@ public class TextArea : Widget {
 	int iter_pos;
 	
 	public signal void text_changed (string text);
+	Gee.ArrayList<Paragraph> paragraphs = new Gee.ArrayList<Paragraph>  ();
 	
 	public TextArea (double font_size = 14) {
 		this.font_size = font_size;
@@ -68,6 +69,20 @@ public class TextArea : Widget {
 
 	public void set_font_size (double z) {
 		font_size = z;
+	}
+	
+	void generate_paragraphs () {
+		Paragraph paragraph;
+		string[] p = text.split ("\n");
+		double y = 200;
+		
+		foreach (string t in p) {
+			paragraph = new Paragraph (t);
+			paragraphs.add (paragraph);
+			paragraph.y = y;
+			
+			y += 200;
+		}
 	}
 	
 	public void set_text (string t) {
@@ -245,6 +260,11 @@ public class TextArea : Widget {
 				if (tx + p > width || w == "\n") {
 					tx = 0;
 					ty += font_size;
+					
+					if (ty + widget_y > 2 * allocation.height) {
+						height = widget_y + 2 * allocation.height;
+						break;
+					}
 				}
 			}
 			
@@ -404,6 +424,10 @@ public class TextArea : Widget {
 					ty += font_size;
 				}
 				
+				if (y + ty > allocation.height) {
+					break;
+				}
+				
 				if (w != "\n") {
 					iter_pos -= w.length;
 					word.iterate ((glyph, kerning, last) => {
@@ -452,7 +476,11 @@ public class TextArea : Widget {
 				word.draw_at_baseline (cr, x + tx, y + ty);
 				tx += p;
 			}
-			
+
+			if (y + ty > allocation.height) {
+				break;
+			}
+							
 			if (carret_at_end_of_word && draw_carret) {
 				draw_carret_at (cr, x + tx, y + ty + scale * - word.font.bottom_limit);
 			}
@@ -538,6 +566,18 @@ public class TextArea : Widget {
 		}
 		
 		return n;
+	}
+	
+	class Paragraph : GLib.Object {
+		public double x = -1;
+		public double y = -1;
+		public string text;
+		public Gee.ArrayList<Text> words = new Gee.ArrayList<Text> ();
+		
+		public Paragraph (string text) {
+			this.text = text;
+		}
+		
 	}
 }
 
