@@ -47,6 +47,12 @@ public abstract class Widget : GLib.Object {
 		return widget_x <= x <= widget_x + get_width () 
 			&&  widget_y <= y <= widget_y + get_height ();
 	}
+	
+	public bool is_on_screen () {
+		return (widget_y <= 0 <= widget_y + get_height ())
+			|| (widget_y <= allocation.height <= widget_y + get_height ())
+			|| (0 <= widget_y <= allocation.height);
+	}
 }
 
 }

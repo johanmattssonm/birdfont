@@ -31,7 +31,6 @@ public class ClipTool : Tool {
 		string svg_data;
 		string bf_data;
 		string data;
-		TextArea t;
 		
 		if (fd is Glyph) {
 			svg_data = ExportTool.export_selected_paths_to_svg ();
@@ -86,7 +85,6 @@ public class ClipTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		double x, y, w, h;
 		double dx, dy;
-		TextArea t;
 		
 		if (fd is Glyph) {
 			paste_paths (false);

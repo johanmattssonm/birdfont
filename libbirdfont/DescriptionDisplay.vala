@@ -167,25 +167,31 @@ public class DescriptionDisplay : FontDisplay {
 		cr.restore ();
 
 		foreach (Widget w in widgets) {
-			if (w is Text) {
-				cr.save ();
-				cr.set_source_rgba (0, 0, 0, 1);
-				w.draw (cr);
-				cr.restore ();
-			} else {
-				w.draw (cr);
+			if (w.is_on_screen ()) {			
+				if (w is Text) {
+					cr.save ();
+					cr.set_source_rgba (0, 0, 0, 1);
+					w.draw (cr);
+					cr.restore ();
+				} else {
+					w.draw (cr);
+				}
 			}
 		}
 	}	
 
 	void layout () {
 		double y = -scroll;
-		double margin;
 		
 		foreach (Widget w in widgets) {
 			w.widget_x = 17 * MainWindow.units;
 			w.widget_y = y;
 			w.allocation = allocation;
+			
+			if (w is TextArea) {
+				((TextArea) w).layout ();
+			}
+			
 			y += w.get_height () + w.margin_bottom;
 		}
 		

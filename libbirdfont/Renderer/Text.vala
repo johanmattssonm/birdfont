@@ -43,7 +43,13 @@ public class Text : Widget {
 	GlyphSequence glyph_sequence;
 	public delegate void Iterator (Glyph glyph, double kerning, bool last);
 	public double font_size;
-	
+	public double sidebearing_extent = 0;
+
+	double r = 0;
+	double g = 0;
+	double b = 0;
+	double a = 1;
+			
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		current_font = null;
 		this.margin_bottom = margin_bottom;
@@ -56,6 +62,7 @@ public class Text : Widget {
 
 	public void set_font_size (double height_in_pixels) {
 		font_size = height_in_pixels;
+		sidebearing_extent = 0;
 	}
 
 	public void set_font_cache (FontCache font_cache) {
@@ -76,7 +83,7 @@ public class Text : Widget {
 			name = font.get_name_for_character (c);
 			g = font.get_glyph_by_name (name);
 			glyph_sequence.glyph.add (g);
-		}	
+		}
 	}
 
 	/** @param character a string with a single glyph or the name of the glyph if it is a ligature. */
@@ -153,16 +160,23 @@ public class Text : Widget {
 	}
 
 	public double get_sidebearing_extent () {
-		double x = 0;
-		double ratio = get_scale ();
-
+		double x ;
+		double ratio;
+		
+		if (likely (sidebearing_extent > 0)) {
+			return sidebearing_extent;
+		}
+		
+		x = 0;
+		ratio = get_scale ();
+		
 		iterate ((glyph, kerning, last) => {
 			double lsb;
-			
 			glyph.add_help_lines ();
 			lsb = glyph.left_limit;
 			x += (glyph.get_width () + kerning) * ratio;
 		});
+		
 		
 		return x;
 	}
@@ -249,42 +263,76 @@ public class Text : Widget {
 		draw_at_baseline (cr, widget_x, y);
 	}
 	
-	public void draw_at_baseline (Context cr, double px, double py) {
+	public void draw_at_top (Context cr, double px, double py, int64 cacheid = -1) {
+		double s = get_scale ();
+		double y = py + s * (font.top_limit - font.base_line);
+		draw_at_baseline (cr, px, y, cacheid);
+	}
+	
+	public void set_source_rgba (double r, double g, double b, double a) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.a = a;
+	}
+	
+	public int64 get_cache_id () {
+		int64 s = (((int64) font_size) << 32) 
+			| (((int64) (r * 255)) << 24)
+			| (((int64) (g * 255)) << 16)
+			| (((int64) (b * 255)) << 8)
+			| (((int64) (a * 255)) << 0);
+		return s;
+	}
+	
+	public void draw_at_baseline (Context cr, double px, double py, int64 cacheid = -1) {
 		double x, y;
 		double ratio;
-
+		Font f;
+		double cc_y;
+		int64 cache_id = (cacheid < 0) ? get_cache_id () : cacheid;
+			
 		ratio = get_scale ();
-		
-		cr.save ();
+		f = BirdFont.get_current_font ();
+		cc_y = (f.top_limit - f.base_line) * ratio;
 
 		y = py;
 		x = px;
 					
 		iterate ((glyph, kerning, last) => {
 			double lsb;
+			Surface cache;
+			Context cc;
 			
-			glyph.add_help_lines ();
-			
-			lsb = glyph.left_limit;
-			
-			x += kerning * ratio;
-			cr.save ();
-			cr.new_path ();
-			foreach (Path path in glyph.path_list) {
-				draw_path (cr, path, lsb, x, y, ratio);
+			if (unlikely (!glyph.has_cache (cache_id))) {
+				glyph.add_help_lines ();
+				
+				cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) (glyph.get_width () * ratio) + 1, (int) font_size + 1);
+				cc = new Context (cache);
+				
+				lsb = glyph.left_limit;
+
+				cc.save ();
+				cc.set_source_rgba (r, g, b, a);
+				cc.new_path ();
+
+				foreach (Path path in glyph.path_list) {
+					draw_path (cc, path, lsb, 0, cc_y, ratio);
+				}
+				cc.fill ();
+				cc.restore ();
+
+				glyph.set_cache (cache_id, cache);
 			}
-			cr.fill ();
-			cr.restore ();
-			
+
+			x += kerning * ratio;
+			cr.set_source_surface (glyph.get_cache (cache_id), x, y - cc_y);
 			x += glyph.get_width () * ratio;
+			
+			cr.paint ();
 		});
-		
-		cr.set_source_rgba (0, 0, 0, 1);
-		cr.fill ();
-
-		cr.restore ();	
-	}	
-
+	}
+	
 	void draw_path (Context cr, Path path, double lsb, double x, double y, double scale) {
 		EditPoint e, prev;
 		double xa, ya, xb, yb, xc, yc, xd, yd;

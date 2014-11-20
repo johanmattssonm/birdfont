@@ -66,7 +66,7 @@ class SettingsItem : GLib.Object {
 			cr.restore ();
 				
 			cr.save ();
-			cr.set_source_rgba (1, 1, 1, 1);
+			label.set_source_rgba (1, 1, 1, 1);
 			label.set_font_size (20 * MainWindow.units);
 			label.draw_at_baseline (cr, 21 * MainWindow.units, y + 25 * MainWindow.units);
 			cr.restore ();

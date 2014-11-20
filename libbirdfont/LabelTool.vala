@@ -68,9 +68,9 @@ public class LabelTool : Tool {
 		text_height = 18;
 
 		if (is_selected ()) {
-			cr.set_source_rgba (1, 1, 1, 1);
+			label_text.set_source_rgba (1, 1, 1, 1);
 		} else {
-			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			label_text.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		}
 		
 		label_text.set_font_size (text_height);
@@ -98,9 +98,9 @@ public class LabelTool : Tool {
 			center_y = bgy + ((!) counter_background).get_height () / 2.0 + 4 / scale;
 			
 			if (is_selected ()) {
-				cr.set_source_rgba (1, 1, 1, 1);
+				glyph_count.set_source_rgba (1, 1, 1, 1);
 			} else {
-				cr.set_source_rgba (51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
+				glyph_count.set_source_rgba (51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
 			}
 			
 			glyph_count.set_font_size (text_height);

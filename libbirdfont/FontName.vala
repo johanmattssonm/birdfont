@@ -50,7 +50,7 @@ public class FontName : Tool {
 			text_height *= max_width / extent;
 		}
 		
-		cr.set_source_rgba (234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+		font_name.set_source_rgba (234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 		font_name.set_font_size (text_height);
 		font_name.draw_at_baseline (cr, x, y + 13 * Toolbox.get_scale ());
 		cr.restore ();

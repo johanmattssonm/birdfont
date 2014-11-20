@@ -114,7 +114,7 @@ public class OverViewItem : GLib.Object {
 	}
 
 	public void adjust_scale () {
-		double x1, x2, y1, y2, glyph_width, glyph_height, scale, gx, gy;
+		double x1, x2, y1, y2, glyph_width, glyph_height, scale, gx;
 		Glyph g;
 		Font font;
 		
@@ -184,7 +184,7 @@ public class OverViewItem : GLib.Object {
 		} else {
 			c.save ();
 			fallback = new Text ();
-			c.set_source_rgba (219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
+			fallback.set_source_rgba (219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
 			fallback.set_text ((!) character.to_string ());
 			font_size = height * 0.8;
 			fallback.set_font_size (font_size);

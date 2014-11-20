@@ -573,7 +573,6 @@ public class Menu : GLib.Object {
 	}
 
 	public bool has_menu_item (string identifier) {
-		int i = 0;
 		foreach (MenuItem mi in sorted_menu_items) {
 			if (mi.identifier == identifier) {
 				return true;

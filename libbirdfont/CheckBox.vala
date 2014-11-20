@@ -61,6 +61,7 @@ public class CheckBox : Widget {
 		
 		cr.save ();
 		cr.set_line_width (1);
+		cr.set_source_rgba (0, 0, 0, 1);		
 		draw_rounded_rectangle (cr, widget_x, widget_y + center_y, w, h - padding, padding);
 		cr.stroke ();
 		cr.restore ();
@@ -68,6 +69,7 @@ public class CheckBox : Widget {
 		if (checked) {
 			cr.save ();
 			
+			cr.set_source_rgba (0, 0, 0, 1);
 			cr.set_line_width (1);
 			
 			cr.move_to (widget_x + d, widget_y + d + center_y);

@@ -49,22 +49,26 @@ public class TextArea : Widget {
 	int text_length = 0;
 		
 	int iter_pos;
+	int last_paragraph = 0;
 	
 	public signal void text_changed (string text);
 	Gee.ArrayList<Paragraph> paragraphs = new Gee.ArrayList<Paragraph>  ();
+	private static const int DONE = -2; 
 	
-	public TextArea (double font_size = 14) {
+	int64 cache_id = -1;
+	
+	public TextArea (double font_size = 20) {
 		this.font_size = font_size;
 		width = min_width;
 		height = min_height;
 	}
 
 	public override double get_height () {
-		return height;
+		return height + 2 * padding;
 	}
 
 	public override double get_width () {
-		return width;
+		return width + 2 * padding;
 	}
 
 	public void set_font_size (double z) {
@@ -73,15 +77,24 @@ public class TextArea : Widget {
 	
 	void generate_paragraphs () {
 		Paragraph paragraph;
-		string[] p = text.split ("\n");
-		double y = 200;
+
+		int next_paragraph = -1;
 		
-		foreach (string t in p) {
-			paragraph = new Paragraph (t);
+		if (last_paragraph == DONE) {
+			return;
+		}
+	
+		next_paragraph = text.index_of ("\n", last_paragraph);
+		
+		if (next_paragraph == -1) {
+			paragraph = new Paragraph (text.substring (last_paragraph), font_size);
 			paragraphs.add (paragraph);
-			paragraph.y = y;
-			
-			y += 200;
+			last_paragraph = DONE;
+		} else {
+			next_paragraph +=  "\n".length;
+			paragraph = new Paragraph (text.substring (last_paragraph, next_paragraph - last_paragraph), font_size);
+			paragraphs.add (paragraph);
+			last_paragraph = next_paragraph;
 		}
 	}
 	
@@ -97,6 +110,9 @@ public class TextArea : Widget {
 		tl = t.length;
 		carret = tl;
 		text_length += tl;
+		
+		paragraphs.clear ();
+		generate_paragraphs ();
 		
 		text_changed (text);
 	}
@@ -224,62 +240,67 @@ public class TextArea : Widget {
 		text = nt;
 		text_length += tl;
 		
+		paragraphs.clear (); // DELETE
+		generate_paragraphs (); // FIXME:
+		
 		text_changed (text);
 	}
 	
 	/** @return offset to click in text. */
 	public int layout (double click_x = -1, double click_y = -1) {
-		Text word;
 		double p;
 		double tx, ty;
 		string w;
 		double xmax = 0;
 		double width = this.width - 2 * padding;
-		double height = this.height - 2 * padding;
-		bool carret_visibility;
 		int carret_position = text_length;
-
-		word = new Text ();
-		word.set_font_size (font_size);
 		
 		tx = 0;
 		ty = font_size;
 		iter_pos = 0;
-		while (iter_pos < text_length) {
-			w = get_next_word (out carret_visibility, ref iter_pos);
-			
-			if (w == "") {
-				break;
-			}
-
-			word.set_text (w);
-			
-			p = word.get_sidebearing_extent ();
-			
-			if (!single_line) {
-				if (tx + p > width || w == "\n") {
-					tx = 0;
-					ty += font_size;
+										
+		foreach (Paragraph paragraph in paragraphs) {
+			if (paragraph.need_layout) {
+				paragraph.start_y = ty;
+				paragraph.start_x = tx;
+				
+				foreach (Text next_word in paragraph.words) {
+					w = next_word.text;
+					p = next_word.get_sidebearing_extent ();
 					
-					if (ty + widget_y > 2 * allocation.height) {
-						height = widget_y + 2 * allocation.height;
+					if (w == "") {
 						break;
 					}
+
+					if (!single_line) {
+						if (tx + p > width || w == "\n") {
+							tx = 0;
+							ty += next_word.font_size;
+						}
+					}
+					
+					if (widget_y + ty - font_size <= click_y <= widget_y + ty + padding
+						&& widget_x + tx <= click_x) {
+						carret_position = find_carret_pos_in_word (next_word, iter_pos, tx, click_x);
+					}
+												
+					if (w != "\n") {
+						tx += p;
+					}
+					
+					if (tx > xmax) {
+						xmax = tx;
+					}
 				}
+				
+				paragraph.width = xmax;
+				paragraph.end_x = tx;
+				paragraph.end_y = ty;
+				paragraph.need_layout = false;
 			}
-			
-			if (widget_y + ty - font_size <= click_y <= widget_y + ty + padding
-				&& widget_x + tx <= click_x) {
-				carret_position = find_carret_pos_in_word (word, iter_pos, tx, click_x);
-			}
-										
-			if (w != "\n") {
-				tx += p;
-			}
-			
-			if (tx > xmax) {
-				xmax = tx;
-			}
+									
+			tx = paragraph.end_x;
+			ty = paragraph.end_y;
 		}
 		
 		this.width = min_width;
@@ -293,7 +314,16 @@ public class TextArea : Widget {
 		if (click_x > 0 && click_x < widget_x + padding) {
 			carret_position = 0;
 		}
-				
+
+		if (last_paragraph != DONE) {
+			this.height = (text_length / (double) last_paragraph) * ty + 2 * padding; // estimate height
+		}
+		
+		if (ty + widget_y < allocation.height && last_paragraph != DONE) {
+			generate_paragraphs ();
+			return layout (click_x, click_y);
+		}
+		
 		return carret_position;
 	}
 	
@@ -313,6 +343,7 @@ public class TextArea : Widget {
 			i += ((!) glyph.get_unichar ().to_string ()).length;
 			wx += (glyph.get_width () + kerning) * ratio;
 			d = Math.fabs (wx - click_x);
+			
 			if (d < min_d) {
 				min_d = d;
 				carret_position = iter_pos - w.length + i;
@@ -375,6 +406,7 @@ public class TextArea : Widget {
 			// border
 			cr.save ();
 			cr.set_line_width (1);
+			cr.set_source_rgba (0, 0, 0, 1);
 			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
 			cr.stroke ();
 			cr.restore ();
@@ -395,6 +427,8 @@ public class TextArea : Widget {
 		}
 		
 		// draw selection background
+		// FIXME: put back
+		/*
 		if (selection_end >= 0 && selection_end != carret) {
 			tx = 0;
 			ty = 0;
@@ -451,8 +485,89 @@ public class TextArea : Widget {
 			
 			cr.restore ();
 		}
-		
+		*/
 
+		tx = 0;
+		ty = 0;	
+		
+		int first_visible = 0;
+		int last_visible;
+		int paragraphs_size = paragraphs.size;
+		while (first_visible < paragraphs_size) {
+			if (paragraphs.get (first_visible).text_is_on_screen (allocation, widget_y)) {
+				break;
+			}
+			first_visible++;
+		}
+		
+		last_visible = first_visible;
+		while (last_visible < paragraphs_size) {
+			if (!paragraphs.get (last_visible).text_is_on_screen (allocation, widget_y)) {
+				last_visible++;
+				break;
+			}
+			last_visible++;
+		}	
+		
+		if (paragraphs_size == 0) {
+			return;
+		}
+		
+		Context cc; // cached context
+		double cc_x, cc_y;
+		Paragraph paragraph;
+		paragraph = paragraphs.get (0);
+		
+		tx = paragraph.start_x;
+		ty = paragraph.start_y;
+
+		if (cache_id == -1 && paragraphs.size > 0 && paragraphs.get (0).words.size > 0) {
+			Text t = paragraphs.get (0).words.get (0);
+			t.set_source_rgba (0, 0, 0, 1);
+			cache_id = t.get_cache_id ();
+		}
+				
+		for (int i = first_visible; i < last_visible; i++) { 
+			paragraph = paragraphs.get (i);
+			
+			tx = paragraph.start_x;
+			ty = paragraph.start_y;
+
+			if (paragraph.cached_surface == null) {		
+				paragraph.cached_surface = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, paragraph.get_width (), paragraph.get_height () + (int) font_size + 1);
+				cc = new Context ((!) paragraph.cached_surface);
+		
+				cc_x = paragraph.start_x;
+				cc_y = 0;
+				
+				foreach (Text next_word in paragraph.words) {
+					w = next_word.text;
+					
+					next_word.set_source_rgba (0, 0, 0, 1);
+					
+					p = next_word.get_sidebearing_extent ();
+					
+					if (cc_x + p > width || w == "\n") {
+						cc_x = 0;
+						cc_y += next_word.font_size;
+					}
+					
+					if (w != "\n") {
+						next_word.draw_at_top (cc, cc_x, cc_y, cache_id);
+						cc_x += p;
+					}
+				}
+			}
+			
+			if (likely (paragraph.cached_surface != null)) {
+				cr.set_source_surface ((!) paragraph.cached_surface, x + tx, widget_y + paragraph.start_y - font_size + padding);
+				cr.paint ();
+			} else {
+				warning ("No paragraph image.");
+			}
+		}
+		
+/*
 		// draw characters
 		tx = 0;
 		ty = 0;
@@ -486,6 +601,7 @@ public class TextArea : Widget {
 			}
 		}
 		cr.restore ();
+		*/
 	}
 	
 	void draw_carret_at (Context cr, double x, double y) {
@@ -569,15 +685,120 @@ public class TextArea : Widget {
 	}
 	
 	class Paragraph : GLib.Object {
-		public double x = -1;
-		public double y = -1;
+		public double end_x = -10000;
+		public double end_y = -10000;
+		
+		public double start_x = -10000;
+		public double start_y = -10000;
+		
+		public double width = -10000;
+		
 		public string text;
 		public Gee.ArrayList<Text> words = new Gee.ArrayList<Text> ();
 		
-		public Paragraph (string text) {
+		int text_length;
+		
+		public bool need_layout = true;
+		
+		public Surface? cached_surface = null;
+		
+		public Paragraph (string text, double font_size) {
 			this.text = text;
+			text_length = text.length;
+			generate_words (font_size);
+		}
+
+		public int get_height () {
+			return (int) (end_y - start_y) + 1;
 		}
 		
+		public int get_width () {
+			return (int) width + 1;
+		}
+		
+		public bool text_is_on_screen (WidgetAllocation alloc, double widget_y) {
+			bool v = (0 <= start_y + widget_y <= alloc.height)
+				|| (0 <= end_y + widget_y <= alloc.height)
+				|| (start_y + widget_y <= 0 && alloc.height <= end_y + widget_y);
+			return v;
+		}
+
+		void generate_words (double font_size) {
+			string w;
+			int p = 0;
+			bool carret_at_word_end = false;
+			Text word;
+			int carret = 0;
+			int iter_pos = 0;
+
+			while (p < text_length) {
+				w = get_next_word (out carret_at_word_end, ref iter_pos, carret);
+				
+				if (w == "") {
+					break;
+				}
+				
+				word = new Text (w, font_size);
+				words.add (word);
+			}
+		}
+
+		string get_next_word (out bool carret_at_end_of_word, ref int iter_pos, int carret) {
+			int i;
+			int ni;
+			int pi;
+			string n;
+			int nl;
+			
+			carret_at_end_of_word = false;
+			
+			if (iter_pos >= text_length) {
+				carret_at_end_of_word = true;
+				return "".dup ();
+			}
+			
+			if (text.get_char (iter_pos) == '\n') {
+				iter_pos += "\n".length;
+				carret_at_end_of_word = (iter_pos == carret);
+				return "\n".dup ();
+			}
+			
+			i = text.index_of (" ", iter_pos);
+			pi = i + " ".length;
+			
+			ni = text.index_of ("\t", iter_pos);
+			if (ni != -1 && ni < pi || i == -1) {
+				i = ni;
+				pi = i  + "\t".length;
+			}
+			
+			ni = text.index_of ("\n", iter_pos);
+			if (ni != -1 && ni < pi || i == -1) {
+				i = ni;
+				pi = i;
+			}
+			
+			if (iter_pos + iter_pos - pi > text_length || i == -1) {
+				n = text.substring (iter_pos);
+			} else {
+				n = text.substring (iter_pos, pi - iter_pos);
+			}
+			
+			nl = n.length;
+			if (iter_pos < carret < iter_pos + nl) {
+				n = text.substring (iter_pos, carret - iter_pos);
+				nl = n.length;
+				carret_at_end_of_word = true;
+			}
+			
+			iter_pos += nl;
+			
+			if (iter_pos == carret) {
+				carret_at_end_of_word = true;
+			}
+			
+			return n;
+		}
 	}
 }
 
