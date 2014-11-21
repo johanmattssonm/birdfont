@@ -152,24 +152,39 @@ public class TextArea : Widget {
 	}
 	
 	public void remove_last_character () {
-		int last_index = 0;
-		int index = 0;
-		unichar c;
-		
-		while (text.get_next_char (ref index, out c) && index < carret.character_index) {
-			last_index = index;
-		}
-		
-		set_text (text.substring (0, last_index) + text.substring (carret.character_index));
-		selection_end = -1;
-		carret.character_index = last_index;
+		move_carret_previous ();
+		remove_next_character ();
 	}
 	
 	public void remove_next_character () {
-		int index = carret.character_index;
-		unichar c;		
-		text.get_next_char (ref index, out c);
-		set_text (text.substring (0, carret.character_index) + text.substring (index));
+		Paragraph paragraph;
+		Paragraph next_paragraph;
+		int index;
+		unichar c;
+		
+		return_if_fail (0 <= carret.paragraph < paragraphs.size);
+		paragraph = paragraphs.get (carret.paragraph);
+		
+		index = carret.character_index;
+	
+		paragraph.text.get_next_char (ref index, out c);
+		
+		if (index >= paragraph.text_length) {
+			string np = paragraph.text.substring (0, carret.character_index);
+			
+			if (carret.paragraph + 1 < paragraphs.size) {
+				next_paragraph = paragraphs.get (carret.paragraph + 1);
+				paragraphs.remove_at (carret.paragraph + 1);
+				
+				np = np + next_paragraph.text;
+			}
+			
+			paragraph.set_text (np);
+		} else {
+			paragraph.set_text (paragraph.text.substring (0, carret.character_index) + paragraph.text.substring (index));
+		}
+		
+		layout ();
 	}
 	
 	public void move_carret_next () {
@@ -388,6 +403,7 @@ public class TextArea : Widget {
 		int carret_paragraph = 0;
 		int carret_position = 0;
 		int i = 0;
+		double dd;
 		
 		if (paragraphs.size > 0) {
 			carret_position = paragraphs.get (carret_paragraph).text.length;
@@ -455,38 +471,20 @@ public class TextArea : Widget {
 			layout ();
 			return;
 		}
-	}
-	
-	private int find_carret_pos_in_word (Text word, int iter_pos, double tx, double click_x) {
-		double wx = widget_x + tx + padding;
-		double ratio = word.get_scale ();
-		int i = 0;
-		double d = 0;
-		double min_d = Math.fabs (click_x - wx);
-		int carret_position;
-		string w = word.text;
+
+		ty = font_size;
+		tx = 0;
 		
-		carret_position = iter_pos - w.length;
-		word.iterate ((glyph, kerning, last) => {
-			glyph.add_help_lines ();
+		foreach (Paragraph paragraph in paragraphs) {
+			dd = ty - paragraph.start_y;
 			
-			i += ((!) glyph.get_unichar ().to_string ()).length;
-			wx += (glyph.get_width () + kerning) * ratio;
-			d = Math.fabs (wx - click_x);
-			
-			if (d < min_d) {
-				min_d = d;
-				carret_position = iter_pos - w.length + i;
+			if (dd != 0) {
+				paragraph.start_y += dd;
+				paragraph.end_y += dd;
 			}
-		});
-			
-		d = Math.fabs (click_x - wx);
-		if (d < min_d) {
-			min_d = d;
-			carret_position = iter_pos + i;
+						
+			ty = paragraph.end_y;
 		}
-		
-		return carret_position;
 	}
 	
 	public void button_press (uint button, double x, double y) {
