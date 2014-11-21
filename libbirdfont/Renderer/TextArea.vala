@@ -45,7 +45,9 @@ public class TextArea : Widget {
 	int selection_end = -1;
 	bool update_selection = false;
 	
+	public signal void scroll (double pixels);
 	public signal void text_changed (string text);
+	
 	Gee.ArrayList<Paragraph> paragraphs = new Gee.ArrayList<Paragraph>  ();
 	private static const int DONE = -2; 
 	
@@ -171,69 +173,82 @@ public class TextArea : Widget {
 	}
 	
 	public void move_carret_next () {
-	//FIXME:
-/*
-		int index = 0;
-		int index_space;
+		Paragraph paragraph;
+		int index;
 		unichar c;
-		char* s = (char*) text + carret.character_index;
-		string n = (string) s;
-
-		if (!has_selection () && KeyBindings.has_shift ()) {
-			selection_end = carret;
-		} else if (!KeyBindings.has_shift ()) {
-			selection_end = -1;
+		
+		return_if_fail (0 <= carret.paragraph < paragraphs.size);
+		paragraph = paragraphs.get (carret.paragraph);
+		
+		index = carret.character_index;
+		paragraph.text.get_next_char (ref index, out c);
+		
+		if (index >= paragraph.text_length && carret.paragraph + 1 < paragraphs.size) {
+			carret.paragraph++;
+			carret.character_index = 0;
+		} else {
+			carret.character_index = index;
 		}
-		
-		n.get_next_char (ref index, out c);
-		
-		if (KeyBindings.has_ctrl ()) {
-			index_space = n.index_of (" ", index);
-			if (index_space != -1) {
-				index = index_space;
-			}
-		}
-		
-		carret += index;
-		*/
 	}
 
 	public void move_carret_previous () {
-	//FIXME:
-/*
-		int last_index = 0;
-		int index = 0;
+		Paragraph paragraph;
+		int index, last_index;
 		unichar c;
-		int index_space;
 		
-		if (carret.character_index == 0) {
-			carret.paragraph--;
-		}
+		return_if_fail (0 <= carret.paragraph < paragraphs.size);
+		paragraph = paragraphs.get (carret.paragraph);
+		
+		index = 0;
+		last_index = -1;
 		
 		while (text.get_next_char (ref index, out c) && index < carret.character_index) {
 			last_index = index;
 		}
 		
-		if (!has_selection () && KeyBindings.has_shift ()) {
-			//FIXME: selection_end = carret;
-		} else if (!KeyBindings.has_shift ()) {
-			selection_end = -1;
-		}
-
-		if (KeyBindings.has_ctrl ()) {
-			index_space = text.last_index_of (" ", last_index);
-			if (index_space != -1) {
-				last_index = index_space;
+		if (last_index < 0 && carret.paragraph > 0) {
+			carret.paragraph--;
+			
+			return_if_fail (0 <= carret.paragraph < paragraphs.size);
+			paragraph = paragraphs.get (carret.paragraph);
+			carret.character_index = paragraph.text_length;
+			
+			if (paragraph.text.has_suffix ("\n")) {
+				carret.character_index -= "\n".length;
 			}
+		} else {
+			carret.character_index = (last_index) > 0 ? last_index : 0;
 		}
-				
-		carret.character_index = last_index;
-		*/
 	}
 	
+	public void move_carret_next_row () {
+		double nr = font_size;
+		
+		if (carret.desired_y + 2 * font_size >= allocation.height) {
+			scroll (2 * font_size);
+			nr = -font_size;
+		}
+		
+		if (carret.desired_y + nr < widget_y + height - padding) {
+			carret = get_carret_at (carret.desired_x, carret.desired_y + nr);
+		}
+	}
+
+	public void move_carret_previous_row () {
+		double nr = -font_size;
+		
+		if (carret.desired_y - 2 * font_size < 0) {
+			scroll (-2 * font_size);
+			nr = font_size;
+		}
+		
+		if (carret.desired_y + nr > widget_y + padding) {
+			carret = get_carret_at (carret.desired_x, carret.desired_y + nr);
+		}
+	}
+		
 	public bool has_selection () {
 		return false;
-		// FIXME: return selection_end >= 0 && selection_end != carret;
 	}
 		
 	public void insert_text (string t) {
@@ -244,6 +259,23 @@ public class TextArea : Widget {
 			s = t.replace ("\n", "").replace ("\r", "");
 		} else {
 			s = t;
+			
+			if (t.last_index_of ("\n") > 0) {
+				string[] parts = t.split ("\n");
+				int i;
+				for (i = 0; i < parts.length -1; i++) {
+					insert_text (parts[i]);
+					insert_text ("\n");
+				}
+
+				insert_text (parts[parts.length - 1]);
+				
+				if (s.has_suffix ("\n")) {
+					insert_text ("\n");
+				}
+				
+				return;
+			}
 		}
 
 		if (has_selection ()) {
@@ -260,6 +292,7 @@ public class TextArea : Widget {
 		carret.character_index += tl;
 	
 		paragraph.set_text (nt);
+		
 		layout ();
 		
 		text_changed (get_text ());
@@ -284,6 +317,8 @@ public class TextArea : Widget {
 		double dt;
 		
 		c.paragraph = -1;
+		c.desired_x = click_x;
+		c.desired_y = click_y;
 		
 		foreach (Paragraph paragraph in paragraphs) {
 			if (paragraph.text_is_on_screen (allocation, widget_y)) {
@@ -336,8 +371,8 @@ public class TextArea : Widget {
 		}
 		
 		if (unlikely (c.paragraph < 0)) {
-			warning (@"No carret");
-			return new Carret ();
+			c.paragraph = 0;
+			c.character_index = 0;
 		}
 		
 		return c;
@@ -756,7 +791,7 @@ public class TextArea : Widget {
 		public string text;
 		public Gee.ArrayList<Text> words = new Gee.ArrayList<Text> ();
 		
-		int text_length;
+		public int text_length;
 		
 		public bool need_layout = true;
 		
@@ -875,6 +910,9 @@ public class TextArea : Widget {
 		
 		public int paragraph = 0;
 		public int character_index = 0;
+		
+		public double desired_x = 0;
+		public double desired_y = 0;
 		
 		public Carret () {
 		}

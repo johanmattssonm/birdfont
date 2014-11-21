@@ -138,6 +138,7 @@ public class DescriptionDisplay : FontDisplay {
 		widgets.add (new Text (t_("Description"), label_size, label_margin));
 		description.margin_bottom = margin;
 		description.set_text (font.description);
+		description.scroll.connect (scroll_event);
 		description.text_changed.connect ((t) => {
 			font.description = t;
 		});
@@ -146,6 +147,7 @@ public class DescriptionDisplay : FontDisplay {
 		widgets.add (new Text (t_("Copyright"), label_size, label_margin));
 		copyright.margin_bottom = margin;
 		copyright.set_text (font.copyright);
+		copyright.scroll.connect (scroll_event);
 		copyright.text_changed.connect ((t) => {
 			font.copyright = t;
 		});
@@ -199,9 +201,14 @@ public class DescriptionDisplay : FontDisplay {
 		update_scrollbar ();
 	}
 
+	public void scroll_event (double p) {
+		scroll += p;
+		layout ();
+		GlyphCanvas.redraw ();
+	}
+
 	public override void key_press (uint keyval) {
 		unichar c = (unichar) keyval;
-		string s;
 		TextArea focus;
 		
 		if (keyboard_focus == null) {
@@ -236,6 +243,12 @@ public class DescriptionDisplay : FontDisplay {
 				break;
 			case Key.LEFT:
 				focus.move_carret_previous ();
+				break;
+			case Key.DOWN:
+				focus.move_carret_next_row ();
+				break;
+			case Key.UP:
+				focus.move_carret_previous_row ();
 				break;
 			case Key.BACK_SPACE:
 				if (focus.has_selection ()) {
