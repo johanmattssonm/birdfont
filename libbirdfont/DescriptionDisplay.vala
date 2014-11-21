@@ -213,16 +213,22 @@ public class DescriptionDisplay : FontDisplay {
 			case 'a':
 				if (KeyBindings.has_ctrl ()) {
 					focus.select_all ();
+				} else {
+					insert_character (keyval);
 				}
 				break;
 			case 'c':
 				if (KeyBindings.has_ctrl ()) {
 					ClipTool.copy_text (focus);
+				} else {
+					insert_character (keyval);
 				}
 				break;
 			case 'v':
 				if (KeyBindings.has_ctrl ()) {
 					ClipTool.paste_text (focus);
+				} else {
+					insert_character (keyval);
 				}
 				break;
 			case Key.RIGHT:
@@ -249,16 +255,30 @@ public class DescriptionDisplay : FontDisplay {
 				}
 				break;		
 			default:
-				if (!is_modifier_key (keyval)) {
-					s = (!) c.to_string ();
-					if (s.validate () && keyboard_focus != null) {
-						focus.insert_text (s);
-					}
-				}
+				insert_character (keyval);
 				break;
 		}
 		
 		GlyphCanvas.redraw ();
+	}
+
+	public void insert_character (uint keyval) {
+		unichar c = (unichar) keyval;
+		string s;
+		TextArea focus;
+		
+		if (keyboard_focus == null) {
+			return;
+		}
+		
+		focus = (!) keyboard_focus;
+				
+		if (!is_modifier_key (keyval)) {
+			s = (!) c.to_string ();
+			if (s.validate () && keyboard_focus != null) {
+				focus.insert_text (s);
+			}
+		}
 	}
 
 	public override void button_press (uint button, double x, double y) {

@@ -381,6 +381,10 @@ public class Text : Widget {
 		}
 	}
 
+	public double get_baseline_to_bottom () {
+		return get_scale () * (font.base_line - font.bottom_limit);
+	}
+
 	public double get_scale () {
 		return font_size / (font.top_limit - font.bottom_limit);
 	}
