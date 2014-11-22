@@ -59,6 +59,7 @@ public class TextArea : Widget {
 	int text_length;
 	
 	Gee.ArrayList<TextUndoItem> undo_items = new Gee.ArrayList<TextUndoItem> ();
+	Gee.ArrayList<TextUndoItem> redo_items = new Gee.ArrayList<TextUndoItem> ();
 	
 	bool store_undo_state_at_next_event = false;
 	
@@ -137,6 +138,13 @@ public class TextArea : Widget {
 					add_character (keyval);
 				}
 				break;
+			case 'y':
+				if (KeyBindings.has_ctrl ()) {
+					redo ();
+				} else {
+					add_character (keyval);
+				}
+				break;
 			case 'z':
 				if (KeyBindings.has_ctrl ()) {
 					undo ();
@@ -160,10 +168,12 @@ public class TextArea : Widget {
 				if (has_selection ()) {
 					ui = delete_selected_text ();
 					undo_items.add (ui);
+					redo_items.clear ();
 					store_undo_state_at_next_event = true;
 				} else {
 					ui = remove_last_character ();
 					undo_items.add (ui);
+					redo_items.clear ();
 					store_undo_state_at_next_event = true;
 				}
 				break;
@@ -175,10 +185,12 @@ public class TextArea : Widget {
 				if (has_selection ()) {
 					ui = delete_selected_text ();
 					undo_items.add (ui);
+					redo_items.clear ();
 					store_undo_state_at_next_event = true;
 				} else {
 					ui = remove_next_character ();
 					undo_items.add (ui);
+					redo_items.clear ();
 					store_undo_state_at_next_event = true;
 				}
 				break;		
@@ -529,6 +541,7 @@ public class TextArea : Widget {
 		if (has_selection () && show_selection) {
 			ui = delete_selected_text ();
 			undo_items.add (ui);
+			redo_items.clear ();
 		}
 		
 		return_if_fail (0 <= carret.paragraph < paragraphs.size);
@@ -1087,14 +1100,72 @@ public class TextArea : Widget {
 	public void store_undo_edit_state () {
 		TextUndoItem ui = new TextUndoItem (carret);
 		ui.edited.add (get_current_paragraph ().copy ());
-		undo_items.add (ui);		
+		undo_items.add (ui);
+		redo_items.clear ();
 	}
+	
+	public void redo () {
+		TextUndoItem i;
+		TextUndoItem undo_item;
 		
+		if (redo_items.size > 0) {
+			i = redo_items.get (redo_items.size - 1); 
+			
+			undo_item = new TextUndoItem (i.carret);
+			
+			i.deleted.sort ((a, b) => {
+				Paragraph pa = (Paragraph) a;
+				Paragraph pb = (Paragraph) b;
+				return a.index - b.index;
+			});
+			
+			foreach (Paragraph p in i.deleted) {
+				if (unlikely (!(0 <= p.index < paragraphs.size))) {
+					warning ("Paragraph not found.");
+				} else {
+					undo_item.deleted.add (p.copy ());
+					paragraphs.remove_at (p.index);
+				}
+			}
+
+			foreach (Paragraph p in i.edited) {
+				if (unlikely (!(0 <= p.index < paragraphs.size))) {
+					warning (@"Index: $(p.index ) out of bounds, size: $(paragraphs.size)");
+					return;
+				}
+				
+				undo_item.edited.add (paragraphs.get (p.index).copy ());
+				paragraphs.set (p.index, p.copy ());
+			}			
+
+			foreach (Paragraph p in i.added) {
+				if (p.index == paragraphs.size) {
+					paragraphs.add (p.copy ());
+				} else {
+					if (unlikely (!(0 <= p.index < paragraphs.size))) {
+						warning (@"Index: $(p.index) out of bounds, size: $(paragraphs.size)");
+					} else {
+						undo_item.added.add (paragraphs.get (p.index).copy ());
+						paragraphs.insert (p.index, p.copy ());
+					}
+				}
+			}
+			
+			redo_items.remove_at (redo_items.size - 1);
+			undo_items.add (undo_item);
+			
+			carret = i.carret.copy ();
+			layout ();
+		}
+	}
+	
 	public void undo () {
 		TextUndoItem i;
+		TextUndoItem redo_item;
 		
 		if (undo_items.size > 0) {
 			i = undo_items.get (undo_items.size - 1); 
+			redo_item = new TextUndoItem (i.carret);
 			
 			i.deleted.sort ((a, b) => {
 				Paragraph pa = (Paragraph) a;
@@ -1106,30 +1177,36 @@ public class TextArea : Widget {
 				if (p.index == paragraphs.size) {
 					paragraphs.add (p.copy ());
 				} else {
-					if (unlikley (!(0 <= p.index < paragraphs.size))) {
+					if (unlikely (!(0 <= p.index < paragraphs.size))) {
 						warning (@"Index: $(p.index) out of bounds, size: $(paragraphs.size)");
 					} else {
+						redo_item.deleted.add (p.copy ());
 						paragraphs.insert (p.index, p.copy ());
 					}
 				}
 			}
 
 			foreach (Paragraph p in i.edited) {
-				if (unlikley (!(0 <= p.index < paragraphs.size))) {
+				if (unlikely (!(0 <= p.index < paragraphs.size))) {
 					warning (@"Index: $(p.index ) out of bounds, size: $(paragraphs.size)");
 					return;
 				}
 				
+				redo_item.edited.add (paragraphs.get (p.index).copy ());
 				paragraphs.set (p.index, p.copy ());
 			}			
 
 			foreach (Paragraph p in i.added) {
-				if (unlikely (!paragraphs.remove (p))) {
+				if (unlikely (!(0 <= p.index < paragraphs.size))) {
 					warning ("Paragraph not found.");
+				} else {
+					redo_item.added.add (paragraphs.get (p.index).copy ());
+					paragraphs.remove_at (p.index);
 				}
 			}
 			
 			undo_items.remove_at (undo_items.size - 1);
+			redo_items.add (redo_item);
 			
 			carret = i.carret.copy ();
 			layout ();
