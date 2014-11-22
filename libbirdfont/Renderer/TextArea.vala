@@ -125,7 +125,7 @@ public class TextArea : Widget {
 	}
 	
 	public string get_selected_text () {
-		if (!has_selection () && show_selection) {
+		if (!has_selection ()) {
 			return "".dup ();
 		}
 		
@@ -134,11 +134,11 @@ public class TextArea : Widget {
 	}
 	
 	public void select_all () {
-		if (paragraphs.size > 0) {
-			while (last_paragraph != DONE) {
-				generate_paragraphs ();
-			}
+		while (last_paragraph != DONE) {
+			generate_paragraphs ();
+		}
 			
+		if (paragraphs.size > 0) {
 			carret.paragraph = 0;
 			carret.character_index = 0;
 			selection_end.paragraph = paragraphs.size - 1;
@@ -150,10 +150,15 @@ public class TextArea : Widget {
 	public void delete_selected_text () {
 		Carret selection_start, selection_stop;
 		int i;
-		Paragraph pg;
+		Paragraph pg, pge;
 		string e, s, n;
+		bool same;
 		
-		if (show_selection) {
+		e = "";
+		s = "";
+		n = "";
+		
+		if (has_selection ()) {
 			if (carret.paragraph == selection_end.paragraph) {
 				selection_start = carret.character_index < selection_end.character_index ? carret : selection_end;
 				selection_stop = carret.character_index > selection_end.character_index ? carret : selection_end;
@@ -161,29 +166,53 @@ public class TextArea : Widget {
 				selection_start = carret.paragraph < selection_end.paragraph ? carret : selection_end;
 				selection_stop = carret.paragraph > selection_end.paragraph ? carret : selection_end;	
 			}
-
-			if (selection_start.paragraph != selection_stop.paragraph) {
+			
+			same = selection_start.paragraph == selection_stop.paragraph;
+			
+			if (!same) {
 				pg = paragraphs.get (selection_start.paragraph);
 				s = pg.text.substring (0, selection_start.character_index);
 				pg.set_text (s);
-				
-				pg = paragraphs.get (selection_stop.paragraph);
-				e = pg.text.substring (selection_start.character_index);
-				pg.set_text (e);
+
+				pge = paragraphs.get (selection_stop.paragraph);
+				e = pge.text.substring (selection_stop.character_index);
+								
+				if (!s.has_suffix ("\n")) {
+					pg.set_text (s + e);
+					pge.set_text ("");
+				} else {
+					pge.set_text (e);
+				}
 			} else {
 				pg = paragraphs.get (selection_start.paragraph);
 				n = pg.text.substring (0, selection_start.character_index);
 				n += pg.text.substring (selection_stop.character_index);
-				pg.set_text (n);	
+				pg.set_text (n);
+				
+				if (n == "") {
+					paragraphs.remove_at (selection_start.paragraph);
+				}
 			}
-						
+			
+			if (e == "" && !same) {
+				paragraphs.remove_at (selection_stop.paragraph);
+			}
+			
 			for (i = selection_stop.paragraph - 1; i > selection_start.paragraph; i--) {
-				return_if_fail (0 <= i <= paragraphs.size);
+				return_if_fail (0 <= i < paragraphs.size);
 				paragraphs.remove_at (i);
 			}
+			
+			if (s == "" && !same) {
+				paragraphs.remove_at (selection_start.paragraph);
+			}
+			
+			carret = selection_start;
+			selection_end = carret.copy ();
+					
+			show_selection = false;
+			layout ();
 		}
-		
-		show_selection = false;
 	}
 	
 	public void remove_last_character () {
@@ -308,8 +337,12 @@ public class TextArea : Widget {
 			carret = get_carret_at (carret.desired_x, carret.desired_y + nr);
 		}
 	}
-		
+	
 	public bool has_selection () {
+		return show_selection && selection_is_visible ();
+	}
+	
+	private bool selection_is_visible () {
 		return carret.paragraph != selection_end.paragraph || carret.character_index != selection_end.character_index;
 	}
 		
@@ -378,6 +411,7 @@ public class TextArea : Widget {
 		int ch_index;
 		double min_d = double.MAX;
 		Carret c = new Carret ();
+		double dt;
 
 		c.paragraph = -1;
 		c.desired_x = click_x;
@@ -397,26 +431,46 @@ public class TextArea : Widget {
 					
 					p = next_word.get_sidebearing_extent ();
 
-					if (ty - next_word.font_size + next_word.get_baseline_to_bottom () <= click_y <= ty + next_word.get_baseline_to_bottom ()) {
+					if ((ty - next_word.font_size + next_word.get_baseline_to_bottom () <= click_y <= ty + next_word.get_baseline_to_bottom ())
+						&& (next_word.widget_x + widget_x + padding <= click_x <= next_word.widget_x + widget_x + padding + next_word.get_sidebearing_extent ())) {
+						
 						next_word.iterate ((glyph, kerning, last) => {
 							double cw;
 							int ci;
 							double d;
+
+							d = Math.fabs (click_x - (tx + widget_x + padding));
+							if (d < min_d) {
+								min_d = d;
+								c.character_index = ch_index;
+								c.paragraph = i;
+							}
 							
 							cw = (glyph.get_width ()) * next_word.get_scale () + kerning;
 							ci = ((!) glyph.get_unichar ().to_string ()).length;
 							
-							d = Math.fabs (click_x - (tx + widget_x + cw + padding));
-							if (d < min_d) {
-								min_d = d;
-								c.character_index = ch_index + ci;
-								c.paragraph = i;
-							}
-							
 							tx += cw;
 							ch_index += ci;
 						});
+
+						
+						dt = Math.fabs (click_x - (tx + widget_x + padding));
+						if (dt < min_d) {
+							min_d = dt;
+							c.character_index = ch_index;
+							c.paragraph = i;
+						}
 					} else {
+					
+						if (ty - next_word.font_size + next_word.get_baseline_to_bottom () <= click_y <= ty + next_word.get_baseline_to_bottom ()) {
+							dt = Math.fabs (click_x - (tx + widget_x + padding));
+							if (dt < min_d) {
+								min_d = dt;
+								c.character_index = ch_index;
+								c.paragraph = i;
+							}
+						}
+						
 						if (tx + p > width || w == "\n") {
 							tx = 0;
 							ty += next_word.font_size;
@@ -448,20 +502,25 @@ public class TextArea : Widget {
 		string w;
 		double xmax = 0;
 		double width = this.width - 2 * padding;
-		int carret_paragraph = 0;
-		int carret_position = 0;
 		int i = 0;
 		double dd;
-		
-		if (paragraphs.size > 0) {
-			carret_position = paragraphs.get (carret_paragraph).text.length;
-			carret_paragraph = paragraphs.size - 1;
-		}
 		
 		tx = 0;
 		ty = font_size;
 
+		for (i = paragraphs.size - 1; i >= 0; i--) {
+			if (paragraphs.get (i).is_empty ()) {
+				paragraphs.remove_at (i);
+			}
+		}
+
+		i = 0;
 		foreach (Paragraph paragraph in paragraphs) {
+			
+			if (unlikely (paragraph.is_empty ())) {
+				warning ("Empty.");
+			}
+			
 			if (paragraph.need_layout) {
 
 				paragraph.start_y = ty;
@@ -536,6 +595,9 @@ public class TextArea : Widget {
 			if (dd != 0) {
 				paragraph.start_y += dd;
 				paragraph.end_y += dd;
+				foreach (Text word in paragraph.words) {
+					word.widget_y += dd;
+				}
 			}
 						
 			ty = paragraph.end_y;
@@ -552,12 +614,13 @@ public class TextArea : Widget {
 
 	public void button_release (uint button, double x, double y) {
 		update_selection = false;
+		show_selection = selection_is_visible ();
 	}
 	
 	public bool motion (double x, double y) {
 		if (update_selection) {
 			selection_end = get_carret_at (x, y);
-			show_selection = has_selection ();
+			show_selection = selection_is_visible ();
 		}
 		
 		return update_selection;
@@ -607,7 +670,7 @@ public class TextArea : Widget {
 		y += font_size;
 		
 		// draw selection background
-		if (has_selection () && show_selection) {
+		if (has_selection ()) {
 			tx = 0;
 			ty = 0;
 			
@@ -623,22 +686,21 @@ public class TextArea : Widget {
 			cr.set_source_rgba (234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 
 			for (int i = selection_start.paragraph; i <= selection_end.paragraph; i++) {
-				return_if_fail (0 <= i <= paragraphs.size);
+				return_if_fail (0 <= i < paragraphs.size);
 				Paragraph pg = paragraphs.get (i);
 
 				if (pg.text_is_on_screen (allocation, widget_y)) {
 					int char_index = 0;
-
-					tx = pg.start_x + widget_x + padding;
-					ty = pg.start_y;
 					
 					foreach (Text next_word in pg.words) {
 						double cw = next_word.get_sidebearing_extent ();
 						bool paint_background = false;
 						bool partial_start = false;
 						bool partial_stop = false;
+						int wl;
 						
 						w = next_word.text;
+						wl = w.length;
 						scale = next_word.get_scale ();
 												
 						if (selection_start.paragraph == selection_end.paragraph) {
@@ -650,8 +712,8 @@ public class TextArea : Widget {
 							paint_background = true;
 							partial_start = true;
 						} else if (selection_end.paragraph == i) {
-							paint_background = true;
-							partial_stop = true;
+							paint_background = char_index + wl < selection_end.character_index;
+							partial_stop = !paint_background;
 						}
 						
 						if (paint_background && !(partial_start || partial_stop)) {	
@@ -667,8 +729,8 @@ public class TextArea : Widget {
 							next_word.iterate ((glyph, kerning, last) => {
 								double cwi;
 								int ci;
-								bool draw = (index > selection_start.character_index && partial_start && !partial_stop)
-									|| (index < selection_start.character_index && !partial_start && partial_stop)
+								bool draw = (index >= selection_start.character_index && partial_start && !partial_stop)
+									|| (index < selection_stop.character_index && !partial_start && partial_stop)
 									|| (selection_start.character_index <= index < selection_stop.character_index && partial_start && partial_stop);
 								
 								cwi = (glyph.get_width ()) * next_word.get_scale () + kerning;
@@ -683,7 +745,7 @@ public class TextArea : Widget {
 								ci = ((!) glyph.get_unichar ().to_string ()).length;
 								index += ci;
 							});
-						}				
+						}	
 					
 						char_index += w.length;	
 					}
@@ -760,17 +822,36 @@ public class TextArea : Widget {
 			}
 		}
 		
-		get_carret_position (out carret_x, out carret_y);
-		draw_carret_at (cr, carret_x, carret_y);
+		
+		
+		if (carret_is_visible) {
+			get_carret_position (carret, out carret_x, out carret_y);
+			
+			if (carret_y < 0) {
+				draw_carret_at (cr, widget_x + padding, widget_y + font_size + padding);
+			} else {
+				draw_carret_at (cr, carret_x, carret_y);
+			}
+		}
+		
+		if (has_selection ()) {
+			get_carret_position (selection_end, out carret_x, out carret_y);
+			
+			if (carret_y < 0) {
+				draw_carret_at (cr, widget_x + padding, widget_y + font_size + padding);
+			} else {
+				draw_carret_at (cr, carret_x, carret_y);
+			}
+		}
 	}
 	
-	void get_carret_position (out double carret_x, out double carret_y) {
+	void get_carret_position (Carret carret, out double carret_x, out double carret_y) {
 		Paragraph paragraph;
 		
-		carret_x = 0;
-		carret_y = 0;
+		carret_x = -1;
+		carret_y = -1;
 		
-		return_if_fail (0 <= carret.paragraph <= paragraphs.size);
+		return_if_fail (0 <= carret.paragraph < paragraphs.size);
 		paragraph = paragraphs.get (carret.paragraph);
 
 		double tx = paragraph.start_x;
@@ -868,6 +949,10 @@ public class TextArea : Widget {
 		public Paragraph (string text, double font_size) {
 			this.font_size = font_size;
 			set_text (text);
+		}
+
+		public bool is_empty () {
+			return text == "";
 		}
 
 		public void set_text (string t) {
@@ -990,11 +1075,11 @@ public class TextArea : Widget {
 		public Carret copy () {
 			Carret c = new Carret ();
 			
-			c.paragraph = c.paragraph;
-			c.character_index = c.character_index;
+			c.paragraph = paragraph;
+			c.character_index = character_index;
 			
-			c.desired_x = c.desired_x;
-			c.desired_y = c.desired_y;
+			c.desired_x = desired_x;
+			c.desired_y = desired_y;
 			
 			return c;
 		}

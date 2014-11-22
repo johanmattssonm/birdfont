@@ -251,7 +251,7 @@ public class DescriptionDisplay : FontDisplay {
 				focus.move_carret_previous_row ();
 				break;
 			case Key.BACK_SPACE:
-				if (focus.has_selection () && focus.show_selection) {
+				if (focus.has_selection ()) {
 					focus.delete_selected_text ();
 				} else {
 					focus.remove_last_character ();
@@ -261,7 +261,7 @@ public class DescriptionDisplay : FontDisplay {
 				focus.insert_text ("\n");
 				break;
 			case Key.DEL:
-				if (focus.has_selection () && focus.show_selection) {
+				if (focus.has_selection ()) {
 					focus.delete_selected_text ();
 				} else {
 					focus.remove_next_character ();
