@@ -255,12 +255,43 @@ public class TextArea : Widget {
 	}
 	
 	public string get_selected_text () {
+		Carret selection_start, selection_stop;
+		int i;
+		Paragraph pg;
+		StringBuilder sb;
+		
+		sb = new StringBuilder ();
+		
 		if (!has_selection ()) {
 			return "".dup ();
 		}
 		
-		//FIXME:
-		return "".dup ();
+		if (carret.paragraph == selection_end.paragraph) {
+			selection_start = carret.character_index < selection_end.character_index ? carret : selection_end;
+			selection_stop = carret.character_index > selection_end.character_index ? carret : selection_end;
+		} else {
+			selection_start = carret.paragraph < selection_end.paragraph ? carret : selection_end;
+			selection_stop = carret.paragraph > selection_end.paragraph ? carret : selection_end;	
+		}
+		
+		if (selection_start.paragraph == selection_stop.paragraph) {
+			pg = paragraphs.get (selection_start.paragraph);
+			return pg.text.substring (selection_start.character_index, selection_stop.character_index - selection_start.character_index);
+		}
+		
+		pg = paragraphs.get (selection_start.paragraph);
+		sb.append (pg.text.substring (selection_start.character_index));
+		
+		for (i = selection_start.paragraph + 1; i < selection_stop.paragraph; i++) {
+			return_if_fail (0 <= i < paragraphs.size);
+			pg = paragraphs.get (i);
+			sb.append (pg.text);
+		}
+
+		pg = paragraphs.get (selection_stop.paragraph);
+		sb.append (pg.text.substring (0, selection_stop.character_index));
+				
+		return sb.str;
 	}
 	
 	public void select_all () {
