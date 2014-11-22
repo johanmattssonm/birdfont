@@ -58,6 +58,10 @@ public class TextArea : Widget {
 	string text;
 	int text_length;
 	
+	Gee.ArrayList<TextUndoItem> undo_items = new Gee.ArrayList<TextUndoItem> ();
+	
+	bool store_undo_state_at_next_event = false;
+	
 	public TextArea (double font_size = 20) {
 		this.font_size = font_size;
 		width = min_width;
@@ -88,17 +92,131 @@ public class TextArea : Widget {
 		next_paragraph = text.index_of ("\n", last_paragraph);
 		
 		if (next_paragraph == -1) {
-			paragraph = new Paragraph (text.substring (last_paragraph), font_size);
+			paragraph = new Paragraph (text.substring (last_paragraph), font_size, paragraphs.size);
 			paragraphs.add (paragraph);
 			last_paragraph = DONE;
 		} else {
 			next_paragraph +=  "\n".length;
-			paragraph = new Paragraph (text.substring (last_paragraph, next_paragraph - last_paragraph), font_size);
+			paragraph = new Paragraph (text.substring (last_paragraph, next_paragraph - last_paragraph), font_size, paragraphs.size);
 			paragraphs.add (paragraph);
 			last_paragraph = next_paragraph;
 		}
 	}
 	
+	public void key_press (uint keyval) {
+		unichar c;
+		TextUndoItem ui;
+		
+		c = (unichar) keyval;
+			
+		switch (c) {
+			case ' ':
+				store_undo_edit_state ();
+				add_character (keyval);
+				break;
+			case 'a':
+				if (KeyBindings.has_ctrl ()) {
+					select_all ();
+				} else {
+					add_character (keyval);
+				}
+				break;
+			case 'c':
+				if (KeyBindings.has_ctrl ()) {
+					ClipTool.copy_text (this);
+				} else {
+					add_character (keyval);
+				}
+				break;
+			case 'v':
+				if (KeyBindings.has_ctrl ()) {
+					store_undo_edit_state ();
+					ClipTool.paste_text (this);
+					store_undo_state_at_next_event = true;
+				} else {
+					add_character (keyval);
+				}
+				break;
+			case 'z':
+				if (KeyBindings.has_ctrl ()) {
+					undo ();
+				} else {
+					add_character (keyval);
+				}
+				break;
+			case Key.RIGHT:
+				move_carret_next ();
+				break;
+			case Key.LEFT:
+				move_carret_previous ();
+				break;
+			case Key.DOWN:
+				move_carret_next_row ();
+				break;
+			case Key.UP:
+				move_carret_previous_row ();
+				break;
+			case Key.BACK_SPACE:
+				if (has_selection ()) {
+					ui = delete_selected_text ();
+					undo_items.add (ui);
+					store_undo_state_at_next_event = true;
+				} else {
+					ui = remove_last_character ();
+					undo_items.add (ui);
+					store_undo_state_at_next_event = true;
+				}
+				break;
+			case Key.ENTER:
+				store_undo_edit_state ();
+				insert_text ("\n");
+				break;
+			case Key.DEL:
+				if (has_selection ()) {
+					ui = delete_selected_text ();
+					undo_items.add (ui);
+					store_undo_state_at_next_event = true;
+				} else {
+					ui = remove_next_character ();
+					undo_items.add (ui);
+					store_undo_state_at_next_event = true;
+				}
+				break;		
+			default:
+				add_character (keyval);
+				break;
+		}
+		
+		GlyphCanvas.redraw ();
+	}
+
+	private void add_character (uint keyval) {
+		unichar c = (unichar) keyval;
+		string s;
+		TextArea focus;
+		TextUndoItem ui;
+		
+		if (!is_modifier_key (keyval)) {
+			s = (!) c.to_string ();		
+			
+			if (s.validate ()) {				
+				if (store_undo_state_at_next_event) {
+					store_undo_edit_state ();
+					store_undo_state_at_next_event = false;
+				}
+				
+				insert_text (s);
+			}
+		}
+	}
+
+	Paragraph get_current_paragraph () {
+		Paragraph p;
+		return_val_if_fail (0 <= carret.paragraph < paragraphs.size, new Paragraph ("", 0, 0));
+		p = paragraphs.get (carret.paragraph);
+		return p;
+	}
+
 	public void set_text (string t) {
 		int tl;
 		
@@ -147,87 +265,111 @@ public class TextArea : Widget {
 		}
 	}
 	
-	public void delete_selected_text () {
+	public TextUndoItem delete_selected_text () {
 		Carret selection_start, selection_stop;
 		int i;
 		Paragraph pg, pge;
 		string e, s, n;
 		bool same;
+		TextUndoItem ui;
+		
+		ui = new TextUndoItem (carret);
 		
 		e = "";
 		s = "";
 		n = "";
 		
-		if (has_selection ()) {
-			if (carret.paragraph == selection_end.paragraph) {
-				selection_start = carret.character_index < selection_end.character_index ? carret : selection_end;
-				selection_stop = carret.character_index > selection_end.character_index ? carret : selection_end;
-			} else {
-				selection_start = carret.paragraph < selection_end.paragraph ? carret : selection_end;
-				selection_stop = carret.paragraph > selection_end.paragraph ? carret : selection_end;	
-			}
-			
-			same = selection_start.paragraph == selection_stop.paragraph;
-			
-			if (!same) {
-				pg = paragraphs.get (selection_start.paragraph);
-				s = pg.text.substring (0, selection_start.character_index);
-				pg.set_text (s);
-
-				pge = paragraphs.get (selection_stop.paragraph);
-				e = pge.text.substring (selection_stop.character_index);
-								
-				if (!s.has_suffix ("\n")) {
-					pg.set_text (s + e);
-					pge.set_text ("");
-				} else {
-					pge.set_text (e);
-				}
-			} else {
-				pg = paragraphs.get (selection_start.paragraph);
-				n = pg.text.substring (0, selection_start.character_index);
-				n += pg.text.substring (selection_stop.character_index);
-				pg.set_text (n);
-				
-				if (n == "") {
-					paragraphs.remove_at (selection_start.paragraph);
-				}
-			}
-			
-			if (e == "" && !same) {
-				paragraphs.remove_at (selection_stop.paragraph);
-			}
-			
-			for (i = selection_stop.paragraph - 1; i > selection_start.paragraph; i--) {
-				return_if_fail (0 <= i < paragraphs.size);
-				paragraphs.remove_at (i);
-			}
-			
-			if (s == "" && !same) {
-				paragraphs.remove_at (selection_start.paragraph);
-			}
-			
-			carret = selection_start;
-			selection_end = carret.copy ();
-					
-			show_selection = false;
-			layout ();
+		if (!has_selection ()) {
+			warning ("No selected text.");
+			return ui;
 		}
+		
+		if (carret.paragraph == selection_end.paragraph) {
+			selection_start = carret.character_index < selection_end.character_index ? carret : selection_end;
+			selection_stop = carret.character_index > selection_end.character_index ? carret : selection_end;
+		} else {
+			selection_start = carret.paragraph < selection_end.paragraph ? carret : selection_end;
+			selection_stop = carret.paragraph > selection_end.paragraph ? carret : selection_end;	
+		}
+		
+		same = selection_start.paragraph == selection_stop.paragraph;
+		
+		if (!same) {
+			pg = paragraphs.get (selection_start.paragraph);
+			s = pg.text.substring (0, selection_start.character_index);
+
+			pge = paragraphs.get (selection_stop.paragraph);
+			e = pge.text.substring (selection_stop.character_index);
+							
+			if (!s.has_suffix ("\n")) {
+				ui.deleted.add (pge.copy ());
+				ui.edited.add (pg.copy ());
+				
+				pg.set_text (s + e);
+				pge.set_text ("");
+			} else {
+				ui.edited.add (pg.copy ());
+				ui.edited.add (pge.copy ());
+				
+				pg.set_text (s);
+				pge.set_text (e);
+			}
+		} else {
+			pg = paragraphs.get (selection_start.paragraph);
+			n = pg.text.substring (0, selection_start.character_index);
+			n += pg.text.substring (selection_stop.character_index);
+			
+			if (n == "") {
+				ui.deleted.add (pg.copy ());
+				paragraphs.remove_at (selection_start.paragraph);
+			} else {
+				ui.edited.add (pg.copy ());
+			}
+			
+			pg.set_text (n);
+		}
+		
+		if (e == "" && !same) {
+			paragraphs.remove_at (selection_stop.paragraph);
+		}
+		
+		for (i = selection_stop.paragraph - 1; i > selection_start.paragraph; i--) {
+			return_if_fail (0 <= i < paragraphs.size);
+			ui.deleted.add (paragraphs.get (i));
+			paragraphs.remove_at (i);
+		}
+		
+		if (s == "" && !same) {
+			paragraphs.remove_at (selection_start.paragraph);
+		}
+		
+		carret = selection_start;
+		selection_end = carret.copy ();
+				
+		show_selection = false;
+		layout ();
+		
+		return ui;
 	}
 	
-	public void remove_last_character () {
+	public TextUndoItem remove_last_character () {
+		TextUndoItem ui;
 		move_carret_previous ();
-		remove_next_character ();
+		ui = remove_next_character ();
+		return ui;
 	}
 	
-	public void remove_next_character () {
+	public TextUndoItem remove_next_character () {
 		Paragraph paragraph;
 		Paragraph next_paragraph;
 		int index;
 		unichar c;
 		string np;
+		TextUndoItem ui;
 		
-		return_if_fail (0 <= carret.paragraph < paragraphs.size);
+		ui = new TextUndoItem (carret);
+		
+		return_val_if_fail (0 <= carret.paragraph < paragraphs.size, ui);
 		paragraph = paragraphs.get (carret.paragraph);
 		
 		index = carret.character_index;
@@ -242,23 +384,33 @@ public class TextArea : Widget {
 				paragraphs.remove_at (carret.paragraph + 1);
 				
 				np = np + next_paragraph.text;
+				
+				ui.deleted.add (next_paragraph);
 			}
 			
 			paragraph.set_text (np);
+			ui.edited.add (paragraph);
 		} else {
 			np = paragraph.text.substring (0, carret.character_index) + paragraph.text.substring (index);
 			paragraph.set_text (np);
-			
+
 			if (np == "") {
 				return_if_fail (carret.paragraph > 0);
 				carret.paragraph--;
 				paragraph = paragraphs.get (carret.paragraph);
 				carret.character_index = paragraph.text_length;
+				
+				ui.deleted.add (paragraphs.get (carret.paragraph + 1));
+				
 				paragraphs.remove_at (carret.paragraph + 1);
+			} else {
+				ui.edited.add (paragraph);
 			}
 		}
 		
 		layout ();
+		
+		return ui;
 	}
 	
 	public void move_carret_next () {
@@ -345,11 +497,12 @@ public class TextArea : Widget {
 	private bool selection_is_visible () {
 		return carret.paragraph != selection_end.paragraph || carret.character_index != selection_end.character_index;
 	}
-		
+	
 	public void insert_text (string t) {
 		string s;
 		Paragraph paragraph;
-		
+		TextUndoItem ui;
+				
 		if (single_line) {
 			s = t.replace ("\n", "").replace ("\r", "");
 		} else {
@@ -374,7 +527,8 @@ public class TextArea : Widget {
 		}
 
 		if (has_selection () && show_selection) {
-			delete_selected_text ();
+			ui = delete_selected_text ();
+			undo_items.add (ui);
 		}
 		
 		return_if_fail (0 <= carret.paragraph < paragraphs.size);
@@ -393,6 +547,8 @@ public class TextArea : Widget {
 		show_selection = false;
 		
 		text_changed (get_text ());
+		
+		// FIXME: new paragraphs
 	}
 	
 	public string get_text () {
@@ -492,6 +648,8 @@ public class TextArea : Widget {
 			c.character_index = 0;
 		}
 		
+		store_undo_state_at_next_event = true;
+		
 		return c;
 	}
 	
@@ -518,7 +676,7 @@ public class TextArea : Widget {
 		foreach (Paragraph paragraph in paragraphs) {
 			
 			if (unlikely (paragraph.is_empty ())) {
-				warning ("Empty.");
+				warning ("Empty paragraph.");
 			}
 			
 			if (paragraph.need_layout) {
@@ -923,10 +1081,73 @@ public class TextArea : Widget {
 		cr.move_to (x, y);
 		cr.line_to (x, y - font_size);
 		cr.stroke ();
-		cr.restore ();		
+		cr.restore ();	
+	}
+
+	public void store_undo_edit_state () {
+		TextUndoItem ui = new TextUndoItem (carret);
+		ui.edited.add (get_current_paragraph ().copy ());
+		undo_items.add (ui);		
 	}
 		
-	class Paragraph : GLib.Object {
+	public void undo () {
+		TextUndoItem i;
+		
+		if (undo_items.size > 0) {
+			i = undo_items.get (undo_items.size - 1); 
+			
+			i.deleted.sort ((a, b) => {
+				Paragraph pa = (Paragraph) a;
+				Paragraph pb = (Paragraph) b;
+				return a.index - b.index;
+			});
+			
+			foreach (Paragraph p in i.deleted) {
+				if (p.index == paragraphs.size) {
+					paragraphs.add (p.copy ());
+				} else {
+					if (unlikley (!(0 <= p.index < paragraphs.size))) {
+						warning (@"Index: $(p.index) out of bounds, size: $(paragraphs.size)");
+					} else {
+						paragraphs.insert (p.index, p.copy ());
+					}
+				}
+			}
+
+			foreach (Paragraph p in i.edited) {
+				if (unlikley (!(0 <= p.index < paragraphs.size))) {
+					warning (@"Index: $(p.index ) out of bounds, size: $(paragraphs.size)");
+					return;
+				}
+				
+				paragraphs.set (p.index, p.copy ());
+			}			
+
+			foreach (Paragraph p in i.added) {
+				if (unlikely (!paragraphs.remove (p))) {
+					warning ("Paragraph not found.");
+				}
+			}
+			
+			undo_items.remove_at (undo_items.size - 1);
+			
+			carret = i.carret.copy ();
+			layout ();
+		}
+	}
+	
+	public class TextUndoItem : GLib.Object {
+		public Carret carret;
+		public Gee.ArrayList<Paragraph> added = new Gee.ArrayList<Paragraph> ();
+		public Gee.ArrayList<Paragraph> edited = new Gee.ArrayList<Paragraph> ();
+		public Gee.ArrayList<Paragraph> deleted = new Gee.ArrayList<Paragraph> ();
+		
+		public TextUndoItem (Carret c) {
+			carret = c.copy ();
+		}
+	}
+		
+	public class Paragraph : GLib.Object {
 		public double end_x = -10000;
 		public double end_y = -10000;
 		
@@ -936,7 +1157,18 @@ public class TextArea : Widget {
 		public double width = -10000;
 		
 		public string text;
-		public Gee.ArrayList<Text> words = new Gee.ArrayList<Text> ();
+		
+		public Gee.ArrayList<Text> words {
+			get {
+				if (words_in_paragraph.size == 0) {
+					generate_words ();
+				}
+				
+				return words_in_paragraph;
+			}
+		}
+		
+		private Gee.ArrayList<Text> words_in_paragraph = new Gee.ArrayList<Text> ();
 		
 		public int text_length;
 		
@@ -946,9 +1178,18 @@ public class TextArea : Widget {
 		
 		double font_size;
 		
-		public Paragraph (string text, double font_size) {
+		public int index;
+		
+		public Paragraph (string text, double font_size, int index) {
+			this.index = index;
 			this.font_size = font_size;
 			set_text (text);
+		}
+
+		public Paragraph copy () {
+			Paragraph p = new Paragraph (text.dup (), font_size, index);
+			p.need_layout = true;
+			return p;
 		}
 
 		public bool is_empty () {
@@ -979,7 +1220,7 @@ public class TextArea : Widget {
 			return v;
 		}
 
-		void generate_words () {
+		private void generate_words () {
 			string w;
 			int p = 0;
 			bool carret_at_word_end = false;
@@ -995,7 +1236,7 @@ public class TextArea : Widget {
 				}
 				
 				word = new Text (w, font_size);
-				words.add (word);
+				words_in_paragraph.add (word);
 			}
 		}
 

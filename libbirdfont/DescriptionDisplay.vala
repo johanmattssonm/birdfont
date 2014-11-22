@@ -208,7 +208,6 @@ public class DescriptionDisplay : FontDisplay {
 	}
 
 	public override void key_press (uint keyval) {
-		unichar c = (unichar) keyval;
 		TextArea focus;
 		
 		if (keyboard_focus == null) {
@@ -216,84 +215,9 @@ public class DescriptionDisplay : FontDisplay {
 		}
 		
 		focus = (!) keyboard_focus;
-		switch (c) {
-			case 'a':
-				if (KeyBindings.has_ctrl ()) {
-					focus.select_all ();
-				} else {
-					insert_character (keyval);
-				}
-				break;
-			case 'c':
-				if (KeyBindings.has_ctrl ()) {
-					ClipTool.copy_text (focus);
-				} else {
-					insert_character (keyval);
-				}
-				break;
-			case 'v':
-				if (KeyBindings.has_ctrl ()) {
-					ClipTool.paste_text (focus);
-				} else {
-					insert_character (keyval);
-				}
-				break;
-			case Key.RIGHT:
-				focus.move_carret_next ();
-				break;
-			case Key.LEFT:
-				focus.move_carret_previous ();
-				break;
-			case Key.DOWN:
-				focus.move_carret_next_row ();
-				break;
-			case Key.UP:
-				focus.move_carret_previous_row ();
-				break;
-			case Key.BACK_SPACE:
-				if (focus.has_selection ()) {
-					focus.delete_selected_text ();
-				} else {
-					focus.remove_last_character ();
-				}
-				break;
-			case Key.ENTER:
-				focus.insert_text ("\n");
-				break;
-			case Key.DEL:
-				if (focus.has_selection ()) {
-					focus.delete_selected_text ();
-				} else {
-					focus.remove_next_character ();
-				}
-				break;		
-			default:
-				insert_character (keyval);
-				break;
-		}
-		
-		GlyphCanvas.redraw ();
+		focus.key_press (keyval);
 	}
-
-	public void insert_character (uint keyval) {
-		unichar c = (unichar) keyval;
-		string s;
-		TextArea focus;
-		
-		if (keyboard_focus == null) {
-			return;
-		}
-		
-		focus = (!) keyboard_focus;
-				
-		if (!is_modifier_key (keyval)) {
-			s = (!) c.to_string ();
-			if (s.validate () && keyboard_focus != null) {
-				focus.insert_text (s);
-			}
-		}
-	}
-
+	
 	public override void button_press (uint button, double x, double y) {
 		TextArea t;
 		TextArea old;
