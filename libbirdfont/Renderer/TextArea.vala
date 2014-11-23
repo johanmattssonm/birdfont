@@ -131,7 +131,6 @@ public class TextArea : Widget {
 				break;
 			case 'v':
 				if (KeyBindings.has_ctrl ()) {
-					store_undo_edit_state ();
 					ClipTool.paste_text (this);
 					store_undo_state_at_next_event = true;
 				} else {
@@ -606,35 +605,45 @@ public class TextArea : Widget {
 		paragraph = paragraphs.get (carret.paragraph);
 		
 		if (pgs.size > 0) {
+			
+			if (!u) {
+				ui.edited.add (paragraph.copy ());
+			}
+			
 			string first = pgs.get (0);
 			
+			string end; 
 			string nt = paragraph.text.substring (0, carret.character_index);
 			int tl = first.length;
 			nt += first;
-			nt += paragraph.text.substring (carret.character_index);
-			carret.character_index += tl;
+			end = paragraph.text.substring (carret.character_index);
 		
 			paragraph.set_text (nt);
 			
-			int paragraph_index = carret.paragraph + 1;
+			int paragraph_index = carret.paragraph;
+			Paragraph next_paragraph = paragraph;
 			for (int i = 1; i < pgs.size; i++) {
+				paragraph_index++;
 				string next = pgs.get (i);
-				Paragraph next_paragraph = new Paragraph (next, font_size, paragraph_index);
-				paragraphs.add (next_paragraph);
+				next_paragraph = new Paragraph (next, font_size, paragraph_index);
+				paragraphs.insert (paragraph_index, next_paragraph);
 				ui.added.add (next_paragraph);
 				u = true;
-				paragraph_index++;
 			}
+
+			carret.paragraph = paragraph_index;
+			carret.character_index = next_paragraph.text.length;
 			
-			layout ();
-			text_changed (get_text ());
+			next_paragraph.set_text (next_paragraph.text + end);
 		}
 		
 		if (u) {
 			undo_items.add (ui);
-			redo_items.clear ();	
+			redo_items.clear ();
 		}
-		
+
+		layout ();
+		text_changed (get_text ());
 		show_selection = false;
 	}
 	
@@ -1184,9 +1193,24 @@ public class TextArea : Widget {
 			i.deleted.sort ((a, b) => {
 				Paragraph pa = (Paragraph) a;
 				Paragraph pb = (Paragraph) b;
+				return b.index - a.index;
+			});
+
+			i.added.sort ((a, b) => {
+				Paragraph pa = (Paragraph) a;
+				Paragraph pb = (Paragraph) b;
 				return a.index - b.index;
 			});
 
+			foreach (Paragraph p in i.deleted) {
+				if (unlikely (!(0 <= p.index < paragraphs.size))) {
+					warning ("Paragraph not found.");
+				} else {
+					undo_item.deleted.add (p.copy ());
+					paragraphs.remove_at (p.index);
+				}
+			}
+						
 			foreach (Paragraph p in i.added) {
 				if (p.index == paragraphs.size) {
 					paragraphs.add (p.copy ());
@@ -1197,15 +1221,6 @@ public class TextArea : Widget {
 						undo_item.added.add (paragraphs.get (p.index).copy ());
 						paragraphs.insert (p.index, p.copy ());
 					}
-				}
-			}
-						
-			foreach (Paragraph p in i.deleted) {
-				if (unlikely (!(0 <= p.index < paragraphs.size))) {
-					warning ("Paragraph not found.");
-				} else {
-					undo_item.deleted.add (p.copy ());
-					paragraphs.remove_at (p.index);
 				}
 			}
 
@@ -1241,6 +1256,12 @@ public class TextArea : Widget {
 				return a.index - b.index;
 			});
 
+			i.added.sort ((a, b) => {
+				Paragraph pa = (Paragraph) a;
+				Paragraph pb = (Paragraph) b;
+				return b.index - a.index;
+			});
+			
 			foreach (Paragraph p in i.added) {
 				if (unlikely (!(0 <= p.index < paragraphs.size))) {
 					warning ("Paragraph not found.");
@@ -1347,7 +1368,6 @@ public class TextArea : Widget {
 			need_layout = true;
 			words.clear ();
 			cached_surface = null;
-			generate_words ();
 		}
 
 		public int get_height () {
