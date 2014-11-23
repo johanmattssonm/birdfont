@@ -42,7 +42,9 @@ public enum Key {
 	TAB = 65289,
 	DEL = 65535,
 	NUM_PLUS = 65451,
-	NUM_MINUS = 65453
+	NUM_MINUS = 65453,
+	END = 65367,
+	HOME = 65360
 }
 
 bool is_arrow_key (uint keyval) {

@@ -109,7 +109,7 @@ public class TextArea : Widget {
 		TextUndoItem ui;
 		
 		c = (unichar) keyval;
-			
+		
 		switch (c) {
 			case ' ':
 				store_undo_edit_state ();
@@ -164,6 +164,12 @@ public class TextArea : Widget {
 			case Key.UP:
 				move_carret_previous_row ();
 				break;
+			case Key.END:
+				move_carret_to_end_of_line ();
+				break;
+			case Key.HOME:
+				move_carret_to_beginning_of_line ();
+				break;
 			case Key.BACK_SPACE:
 				if (has_selection ()) {
 					ui = delete_selected_text ();
@@ -201,7 +207,7 @@ public class TextArea : Widget {
 		
 		GlyphCanvas.redraw ();
 	}
-
+	
 	private void add_character (uint keyval) {
 		unichar c = (unichar) keyval;
 		string s;
@@ -224,7 +230,14 @@ public class TextArea : Widget {
 
 	Paragraph get_current_paragraph () {
 		Paragraph p;
-		return_val_if_fail (0 <= carret.paragraph < paragraphs.size, new Paragraph ("", 0, 0));
+		
+		if (unlikely (!(0 <= carret.paragraph < paragraphs.size))) {
+			warning (@"No paragraph, index: $(carret.paragraph), size: $(paragraphs.size)");
+			p = new Paragraph ("", 0, 0);
+			paragraphs.add (p);
+			return p;
+		}
+		
 		p = paragraphs.get (carret.paragraph);
 		return p;
 	}
@@ -386,7 +399,7 @@ public class TextArea : Widget {
 			paragraphs.remove_at (selection_start.paragraph);
 		}
 		
-		carret = selection_start;
+		carret = selection_start.copy ();
 		selection_end = carret.copy ();
 				
 		show_selection = false;
@@ -486,7 +499,7 @@ public class TextArea : Widget {
 		index = 0;
 		last_index = -1;
 		
-		while (text.get_next_char (ref index, out c) && index < carret.character_index) {
+		while (paragraph.text.get_next_char (ref index, out c) && index < carret.character_index) {
 			last_index = index;
 		}
 		
@@ -516,10 +529,19 @@ public class TextArea : Widget {
 		}
 		
 		if (carret.desired_y + nr < widget_y + height - padding) {
-			carret = get_carret_at (carret.desired_x, carret.desired_y + nr);
+			carret = get_carret_at (carret.desired_x - widget_x - padding, carret.desired_y + nr);
 		}
 	}
 
+	public void move_carret_to_end_of_line () {
+		carret = get_carret_at (widget_x + padding + width, carret.desired_y, false);	
+	}
+
+	public void move_carret_to_beginning_of_line () {
+		carret = get_carret_at (0, carret.desired_y, false);	
+	}
+	
+	
 	public void move_carret_previous_row () {
 		double nr = -font_size;
 		
@@ -603,7 +625,7 @@ public class TextArea : Widget {
 		return sb.str;
 	}
 	
-	Carret get_carret_at (double click_x, double click_y) {
+	Carret get_carret_at (double click_x, double click_y, bool check_boundaries = true) {
 		int i = 0;
 		double tx, ty;
 		double p;
@@ -618,71 +640,72 @@ public class TextArea : Widget {
 		c.desired_y = click_y;
 		
 		foreach (Paragraph paragraph in paragraphs) {
-			if (paragraph.text_is_on_screen (allocation, widget_y)) {
+			if (!check_boundaries || paragraph.text_is_on_screen (allocation, widget_y)) {
 				ch_index = 0;
-				
-				tx = paragraph.start_x;
-				ty = paragraph.start_y + widget_y;
-				
-				foreach (Text next_word in paragraph.words) {
-					w = next_word.text;
-					
-					next_word.set_source_rgba (0, 0, 0, 1);
-					
-					p = next_word.get_sidebearing_extent ();
 
-					if ((ty - next_word.font_size + next_word.get_baseline_to_bottom () <= click_y <= ty + next_word.get_baseline_to_bottom ())
-						&& (next_word.widget_x + widget_x + padding <= click_x <= next_word.widget_x + widget_x + padding + next_word.get_sidebearing_extent ())) {
+				if (paragraph.start_y + widget_y - font_size <= click_y <= paragraph.end_y + widget_y + font_size) { 
+					foreach (Text next_word in paragraph.words) {
+						double tt_click = click_y - widget_y - padding + font_size; //  - next_word.get_baseline_to_bottom (); //- font_size + next_word.get_baseline_to_bottom ();
 						
-						next_word.iterate ((glyph, kerning, last) => {
-							double cw;
-							int ci;
-							double d;
-
-							d = Math.fabs (click_x - (tx + widget_x + padding));
-							if (d < min_d) {
-								min_d = d;
-								c.character_index = ch_index;
-								c.paragraph = i;
-							}
+						w = next_word.text;
+						if (next_word.widget_y <= tt_click <= next_word.widget_y + font_size) {
+							next_word.set_source_rgba (0, 0, 0, 1);
 							
-							cw = (glyph.get_width ()) * next_word.get_scale () + kerning;
-							ci = ((!) glyph.get_unichar ().to_string ()).length;
-							
-							tx += cw;
-							ch_index += ci;
-						});
+							p = next_word.get_sidebearing_extent ();
 
-						
-						dt = Math.fabs (click_x - (tx + widget_x + padding));
-						if (dt < min_d) {
-							min_d = dt;
-							c.character_index = ch_index;
-							c.paragraph = i;
-						}
-					} else {
-					
-						if (ty - next_word.font_size + next_word.get_baseline_to_bottom () <= click_y <= ty + next_word.get_baseline_to_bottom ()) {
-							dt = Math.fabs (click_x - (tx + widget_x + padding));
-							if (dt < min_d) {
-								min_d = dt;
-								c.character_index = ch_index;
-								c.paragraph = i;
+							if ((next_word.widget_y <= tt_click <= next_word.widget_y + font_size)
+								&& (next_word.widget_x + widget_x + padding <= click_x <= next_word.widget_x + widget_x + padding + next_word.get_sidebearing_extent ())) {
+														
+								tx = widget_x + next_word.widget_x + padding;
+								ty = widget_y + next_word.widget_y + padding;
+								
+								next_word.iterate ((glyph, kerning, last) => {
+									double cw;
+									int ci;
+									double d;
+									string gc = (!) glyph.get_unichar ().to_string ();
+									
+									d = Math.fabs (click_x - tx);
+									if (d <= min_d) {
+										min_d = d;
+										c.character_index = ch_index;
+										c.paragraph = i;
+									}
+									
+									cw = (glyph.get_width ()) * next_word.get_scale () + kerning;
+									ci = gc.length;
+									
+									tx += cw;
+									ch_index += ci;
+								});
+
+								dt = Math.fabs (click_x - (tx + widget_x + padding));
+								if (dt < min_d) {
+									min_d = dt;
+									c.character_index = ch_index;
+									c.paragraph = i;
+								}
+							} else {
+								dt = Math.fabs (click_x - (next_word.widget_x + widget_x + padding + next_word.get_sidebearing_extent ()));
+								
+								if (dt < min_d) {
+									min_d = dt;
+									c.character_index = ch_index + w.length;
+									
+									if (w.has_suffix ("\n")) {
+										c.character_index -= "\n".length;
+									}
+									
+									c.paragraph = i;
+								}
+							
+								ch_index += w.length;
 							}
+						} else {
+							ch_index += w.length;
 						}
-						
-						if (tx + p > width || w == "\n") {
-							tx = 0;
-							ty += next_word.font_size;
-						}
-											
-						if (w != "\n") {
-							tx += p;
-						}
-						
-						ch_index += w.length;
 					}
-				}				
+				}
 			}
 			i++;
 		}
@@ -710,19 +733,14 @@ public class TextArea : Widget {
 		tx = 0;
 		ty = font_size;
 
-		for (i = paragraphs.size - 1; i >= 0; i--) {
+		for (i = paragraphs.size - 1; i >= 0 && paragraphs.size > 1; i--) {
 			if (paragraphs.get (i).is_empty ()) {
 				paragraphs.remove_at (i);
 			}
 		}
 
 		i = 0;
-		foreach (Paragraph paragraph in paragraphs) {
-			
-			if (unlikely (paragraph.is_empty ())) {
-				warning ("Empty paragraph.");
-			}
-			
+		foreach (Paragraph paragraph in paragraphs) {			
 			if (paragraph.need_layout) {
 
 				paragraph.start_y = ty;
@@ -736,22 +754,30 @@ public class TextArea : Widget {
 						break;
 					}
 
-					if (!single_line) {
-						if (tx + p > width || w == "\n") {
-							tx = 0;
-							ty += next_word.font_size;
+					if (w == "\n") {
+						next_word.widget_x = tx;
+						next_word.widget_y = ty;
+						
+						tx = 0;
+						ty += next_word.font_size;
+					} else {
+						if (!single_line) {
+							if (tx + p > width || w == "\n") {
+								tx = 0;
+								ty += next_word.font_size;
+							}
 						}
-					}
-					
-					if (tx > xmax) {
-						xmax = tx;
-					}
-
-					next_word.widget_x = tx;
-					next_word.widget_y = ty;
-
-					if (w != "\n") {
-						tx += p;
+						
+						if (tx > xmax) {
+							xmax = tx;
+						}
+						
+						next_word.widget_x = tx;
+						next_word.widget_y = ty;
+						
+						if (w != "\n") {
+							tx += p;
+						}
 					}
 				}
 				
@@ -1023,9 +1049,7 @@ public class TextArea : Widget {
 				warning ("No paragraph image.");
 			}
 		}
-		
-		
-		
+
 		if (carret_is_visible) {
 			get_carret_position (carret, out carret_x, out carret_y);
 			
@@ -1049,19 +1073,20 @@ public class TextArea : Widget {
 	
 	void get_carret_position (Carret carret, out double carret_x, out double carret_y) {
 		Paragraph paragraph;
-		
+		double tx;
+		double ty;
+		int ch_index;
+		int wl;
+		double pos_x, pos_y;
+
+		ch_index = 0;
+
 		carret_x = -1;
 		carret_y = -1;
-		
+
 		return_if_fail (0 <= carret.paragraph < paragraphs.size);
 		paragraph = paragraphs.get (carret.paragraph);
 
-		double tx = paragraph.start_x;
-		double ty = paragraph.start_y + widget_y;
-		int ch_index = 0;
-		int wl;
-		double pos_x, pos_y;
-		
 		pos_x = -1;
 		pos_y = -1;
 		
@@ -1070,45 +1095,36 @@ public class TextArea : Widget {
 			double p = next_word.get_sidebearing_extent ();
 			wl = w.length;
 
-			if (carret.character_index >= ch_index + wl) {
-				pos_x = tx + next_word.get_sidebearing_extent () + padding + widget_x;
-				pos_y = ty + next_word.get_baseline_to_bottom ();		
-			} else if (ch_index <= carret.character_index <= ch_index + wl) {
-				
+			if (carret.character_index == ch_index) {
+				pos_x = next_word.widget_x + widget_x + padding;
+				pos_y = widget_y + next_word.widget_y + next_word.get_baseline_to_bottom ();		
+			} else if (carret.character_index >= ch_index + wl) {
+				pos_x = next_word.widget_x + next_word.get_sidebearing_extent () + widget_x + padding;
+				pos_y = widget_y + next_word.widget_y + next_word.get_baseline_to_bottom ();		
+			} else if (ch_index < carret.character_index <= ch_index + wl) {
+				tx = widget_x + next_word.widget_x;
+				ty = widget_y + next_word.widget_y + next_word.get_baseline_to_bottom ();
+		
 				if (carret.character_index <= ch_index) {
-					pos_x = padding + widget_x;
-					pos_y = ty + next_word.get_baseline_to_bottom ();		
+					pos_x = widget_x;
+					pos_y = ty;		
 				}
 
 				next_word.iterate ((glyph, kerning, last) => {
 					double cw;
 					int ci;
-					
+
 					cw = (glyph.get_width ()) * next_word.get_scale () + kerning;
 					ci = ((!) glyph.get_unichar ().to_string ()).length;
 					
-					if (ch_index == carret.character_index) {
-						pos_x = tx + padding + widget_x;
-						pos_y = ty + next_word.get_baseline_to_bottom ();						
-					}
-					
 					if (ch_index < carret.character_index <= ch_index + ci) {
-						pos_x = tx + padding + widget_x + cw;
-						pos_y = ty + next_word.get_baseline_to_bottom ();
+						pos_x = tx + cw + padding;
+						pos_y = ty;
 					}
 					
 					tx += cw;
 					ch_index += ci;
 				});
-			}
-			
-			if (tx + p > width || w == "\n") {
-				tx = 0;
-				ty += next_word.font_size;
-			}
-			
-			if (w != "\n") {
-				tx += p;
 			}
 			
 			ch_index += wl;
@@ -1409,10 +1425,19 @@ public class TextArea : Widget {
 	public class Carret : GLib.Object {
 		
 		public int paragraph = 0;
-		public int character_index = 0;
+		
+		public int character_index {
+			get { return ci; }
+			set { if (value == 0) b(); ci = value; }
+		}
+		
+		private int ci = 0;
 		
 		public double desired_x = 0;
 		public double desired_y = 0;
+		
+		public void b () {
+		}
 		
 		public Carret () {
 		}
