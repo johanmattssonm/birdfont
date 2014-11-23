@@ -567,54 +567,75 @@ public class TextArea : Widget {
 		string s;
 		Paragraph paragraph;
 		TextUndoItem ui;
-				
+		Gee.ArrayList<string> pgs;
+		bool u = false;
+		
+		pgs = new Gee.ArrayList<string> ();
+		
 		if (single_line) {
 			s = t.replace ("\n", "").replace ("\r", "");
+			pgs.add (s);
 		} else {
-			s = t;
-			
 			if (t.last_index_of ("\n") > 0) {
 				string[] parts = t.split ("\n");
 				int i;
 				for (i = 0; i < parts.length -1; i++) {
-					insert_text (parts[i]);
-					insert_text ("\n");
+					pgs.add (parts[i]);
+					pgs.add ("\n");
 				}
 
-				insert_text (parts[parts.length - 1]);
+				pgs.add (parts[parts.length - 1]);
 				
-				if (s.has_suffix ("\n")) {
-					insert_text ("\n");
+				if (t.has_suffix ("\n")) {
+					pgs.add ("\n");
 				}
-				
-				return;
+			} else {
+				s = t;
+				pgs.add (s);
 			}
 		}
 
 		if (has_selection () && show_selection) {
 			ui = delete_selected_text ();
-			undo_items.add (ui);
-			redo_items.clear ();
+			u = true;
+		} else {
+			ui = new TextUndoItem (carret);
 		}
 		
 		return_if_fail (0 <= carret.paragraph < paragraphs.size);
 		paragraph = paragraphs.get (carret.paragraph);
 		
-		string nt = paragraph.text.substring (0, carret.character_index);
-		int tl = s.length;
-		nt += s;
-		nt += paragraph.text.substring (carret.character_index);
-		carret.character_index += tl;
-	
-		paragraph.set_text (nt);
+		if (pgs.size > 0) {
+			string first = pgs.get (0);
+			
+			string nt = paragraph.text.substring (0, carret.character_index);
+			int tl = first.length;
+			nt += first;
+			nt += paragraph.text.substring (carret.character_index);
+			carret.character_index += tl;
 		
-		layout ();
+			paragraph.set_text (nt);
+			
+			int paragraph_index = carret.paragraph + 1;
+			for (int i = 1; i < pgs.size; i++) {
+				string next = pgs.get (i);
+				Paragraph next_paragraph = new Paragraph (next, font_size, paragraph_index);
+				paragraphs.add (next_paragraph);
+				ui.added.add (next_paragraph);
+				u = true;
+				paragraph_index++;
+			}
+			
+			layout ();
+			text_changed (get_text ());
+		}
+		
+		if (u) {
+			undo_items.add (ui);
+			redo_items.clear ();	
+		}
 		
 		show_selection = false;
-		
-		text_changed (get_text ());
-		
-		// FIXME: new paragraphs
 	}
 	
 	public string get_text () {
@@ -1165,7 +1186,20 @@ public class TextArea : Widget {
 				Paragraph pb = (Paragraph) b;
 				return a.index - b.index;
 			});
-			
+
+			foreach (Paragraph p in i.added) {
+				if (p.index == paragraphs.size) {
+					paragraphs.add (p.copy ());
+				} else {
+					if (unlikely (!(0 <= p.index < paragraphs.size))) {
+						warning (@"Index: $(p.index) out of bounds, size: $(paragraphs.size)");
+					} else {
+						undo_item.added.add (paragraphs.get (p.index).copy ());
+						paragraphs.insert (p.index, p.copy ());
+					}
+				}
+			}
+						
 			foreach (Paragraph p in i.deleted) {
 				if (unlikely (!(0 <= p.index < paragraphs.size))) {
 					warning ("Paragraph not found.");
@@ -1184,19 +1218,6 @@ public class TextArea : Widget {
 				undo_item.edited.add (paragraphs.get (p.index).copy ());
 				paragraphs.set (p.index, p.copy ());
 			}			
-
-			foreach (Paragraph p in i.added) {
-				if (p.index == paragraphs.size) {
-					paragraphs.add (p.copy ());
-				} else {
-					if (unlikely (!(0 <= p.index < paragraphs.size))) {
-						warning (@"Index: $(p.index) out of bounds, size: $(paragraphs.size)");
-					} else {
-						undo_item.added.add (paragraphs.get (p.index).copy ());
-						paragraphs.insert (p.index, p.copy ());
-					}
-				}
-			}
 			
 			redo_items.remove_at (redo_items.size - 1);
 			undo_items.add (undo_item);
@@ -1219,7 +1240,16 @@ public class TextArea : Widget {
 				Paragraph pb = (Paragraph) b;
 				return a.index - b.index;
 			});
-			
+
+			foreach (Paragraph p in i.added) {
+				if (unlikely (!(0 <= p.index < paragraphs.size))) {
+					warning ("Paragraph not found.");
+				} else {
+					redo_item.added.add (paragraphs.get (p.index).copy ());
+					paragraphs.remove_at (p.index);
+				}
+			}
+						
 			foreach (Paragraph p in i.deleted) {
 				if (p.index == paragraphs.size) {
 					paragraphs.add (p.copy ());
@@ -1242,15 +1272,6 @@ public class TextArea : Widget {
 				redo_item.edited.add (paragraphs.get (p.index).copy ());
 				paragraphs.set (p.index, p.copy ());
 			}			
-
-			foreach (Paragraph p in i.added) {
-				if (unlikely (!(0 <= p.index < paragraphs.size))) {
-					warning ("Paragraph not found.");
-				} else {
-					redo_item.added.add (paragraphs.get (p.index).copy ());
-					paragraphs.remove_at (p.index);
-				}
-			}
 			
 			undo_items.remove_at (undo_items.size - 1);
 			redo_items.add (redo_item);
