@@ -266,6 +266,22 @@ public class TextArea : Widget {
 		text_changed (get_text ());
 	}
 	
+	Carret get_selection_start () {
+		if (carret.paragraph == selection_end.paragraph) {
+			return carret.character_index < selection_end.character_index ? carret : selection_end;
+		}
+		
+		return carret.paragraph < selection_end.paragraph ? carret : selection_end;	
+	}
+
+	Carret get_selection_stop () {
+		if (carret.paragraph == selection_end.paragraph) {
+			return carret.character_index > selection_end.character_index ? carret : selection_end;
+		}
+		
+		return carret.paragraph > selection_end.paragraph ? carret : selection_end;		
+	}
+		
 	public string get_selected_text () {
 		Carret selection_start, selection_stop;
 		int i;
@@ -278,13 +294,8 @@ public class TextArea : Widget {
 			return "".dup ();
 		}
 		
-		if (carret.paragraph == selection_end.paragraph) {
-			selection_start = carret.character_index < selection_end.character_index ? carret : selection_end;
-			selection_stop = carret.character_index > selection_end.character_index ? carret : selection_end;
-		} else {
-			selection_start = carret.paragraph < selection_end.paragraph ? carret : selection_end;
-			selection_stop = carret.paragraph > selection_end.paragraph ? carret : selection_end;	
-		}
+		selection_start = get_selection_start ();
+		selection_stop = get_selection_stop ();
 		
 		if (selection_start.paragraph == selection_stop.paragraph) {
 			pg = paragraphs.get (selection_start.paragraph);
@@ -339,13 +350,8 @@ public class TextArea : Widget {
 			return ui;
 		}
 		
-		if (carret.paragraph == selection_end.paragraph) {
-			selection_start = carret.character_index < selection_end.character_index ? carret : selection_end;
-			selection_stop = carret.character_index > selection_end.character_index ? carret : selection_end;
-		} else {
-			selection_start = carret.paragraph < selection_end.paragraph ? carret : selection_end;
-			selection_stop = carret.paragraph > selection_end.paragraph ? carret : selection_end;	
-		}
+		selection_start = get_selection_start ();
+		selection_stop = get_selection_stop ();
 		
 		same = selection_start.paragraph == selection_stop.paragraph;
 		
@@ -402,9 +408,18 @@ public class TextArea : Widget {
 		selection_end = carret.copy ();
 				
 		show_selection = false;
+		update_paragraph_index ();
 		layout ();
 		
 		return ui;
+	}
+	
+	void update_paragraph_index () {
+		int i = 0;
+		foreach (Paragraph p in paragraphs) {
+			p.index = i;
+			i++;
+		}
 	}
 	
 	public TextUndoItem remove_last_character () {
@@ -463,8 +478,9 @@ public class TextArea : Widget {
 			}
 		}
 		
+		update_paragraph_index ();
 		layout ();
-		
+
 		return ui;
 	}
 	
@@ -605,7 +621,6 @@ public class TextArea : Widget {
 		paragraph = paragraphs.get (carret.paragraph);
 		
 		if (pgs.size > 0) {
-			
 			if (!u) {
 				ui.edited.add (paragraph.copy ());
 			}
@@ -642,6 +657,7 @@ public class TextArea : Widget {
 			redo_items.clear ();
 		}
 
+		update_paragraph_index ();
 		layout ();
 		text_changed (get_text ());
 		show_selection = false;
@@ -759,6 +775,7 @@ public class TextArea : Widget {
 		double width = this.width - 2 * padding;
 		int i = 0;
 		double dd;
+		bool on_screen;
 		
 		tx = 0;
 		ty = font_size;
@@ -771,10 +788,13 @@ public class TextArea : Widget {
 
 		i = 0;
 		foreach (Paragraph paragraph in paragraphs) {			
-			if (paragraph.need_layout) {
+			if (paragraph.need_layout 
+				|| (paragraph.text_area_width != width
+					&& paragraph.text_is_on_screen (allocation, widget_y))) {
 
 				paragraph.start_y = ty;
 				paragraph.start_x = tx;
+				paragraph.text_area_width = width;
 				
 				foreach (Text next_word in paragraph.words) {
 					w = next_word.text;
@@ -797,11 +817,11 @@ public class TextArea : Widget {
 								ty += next_word.font_size;
 							}
 						}
-						
-						if (tx > xmax) {
-							xmax = tx;
+
+						if (tx + p > xmax) {
+							xmax = tx + p;
 						}
-						
+												
 						next_word.widget_x = tx;
 						next_word.widget_y = ty;
 						
@@ -826,10 +846,10 @@ public class TextArea : Widget {
 			i++;
 		}
 		
-		this.width = min_width;
-		
 		if (xmax > width) {
 			this.width = xmax + 2 * padding;
+			layout ();
+			return;
 		}
 		
 		this.height = fmax (min_height, ty + 2 * padding);
@@ -932,18 +952,13 @@ public class TextArea : Widget {
 			tx = 0;
 			ty = 0;
 			
-			if (carret.paragraph == selection_end.paragraph) {
-				selection_start = carret.character_index < selection_end.character_index ? carret : selection_end;
-				selection_stop = carret.character_index > selection_end.character_index ? carret : selection_end;
-			} else {
-				selection_start = carret.paragraph < selection_end.paragraph ? carret : selection_end;
-				selection_stop = carret.paragraph > selection_end.paragraph ? carret : selection_end;	
-			}
+			selection_start = get_selection_start ();
+			selection_stop = get_selection_stop ();
 			
 			cr.save ();
 			cr.set_source_rgba (234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 
-			for (int i = selection_start.paragraph; i <= selection_end.paragraph; i++) {
+			for (int i = selection_start.paragraph; i <= selection_stop.paragraph; i++) {
 				return_if_fail (0 <= i < paragraphs.size);
 				Paragraph pg = paragraphs.get (i);
 
@@ -961,16 +976,16 @@ public class TextArea : Widget {
 						wl = w.length;
 						scale = next_word.get_scale ();
 												
-						if (selection_start.paragraph == selection_end.paragraph) {
+						if (selection_start.paragraph == selection_stop.paragraph) {
 							partial_start = true;
 							partial_stop = true;
-						} else if (selection_start.paragraph < i < selection_end.paragraph) {
+						} else if (selection_start.paragraph < i < selection_stop.paragraph) {
 							paint_background = true;
 						} else if (selection_start.paragraph == i) {
 							paint_background = true;
 							partial_start = true;
-						} else if (selection_end.paragraph == i) {
-							paint_background = char_index + wl < selection_end.character_index;
+						} else if (selection_stop.paragraph == i) {
+							paint_background = char_index + wl < selection_stop.character_index;
 							partial_stop = !paint_background;
 						}
 						
@@ -1321,6 +1336,7 @@ public class TextArea : Widget {
 		public double start_y = -10000;
 		
 		public double width = -10000;
+		public double text_area_width = -10000;
 		
 		public string text;
 		

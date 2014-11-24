@@ -177,7 +177,7 @@ public class Text : Widget {
 			x += (glyph.get_width () + kerning) * ratio;
 		});
 		
-		
+		sidebearing_extent = x;
 		return x;
 	}
 
