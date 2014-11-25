@@ -647,6 +647,7 @@ public class Menu : GLib.Object {
 			binding_extent = key_binding.get_extent ();
 			label_x = x + width - binding_extent - 0.6 * height * MainWindow.units;
 			key_binding.set_font_size (font_size);
+			key_binding.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			key_binding.draw_at_baseline (cr, label_x, label_y);
 			
 			y += height;

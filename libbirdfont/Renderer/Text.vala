@@ -314,13 +314,11 @@ public class Text : Widget {
 	public void draw_at_baseline (Context cr, double px, double py, int64 cacheid = -1) {
 		double x, y;
 		double ratio;
-		Font f;
 		double cc_y;
 		int64 cache_id = (cacheid < 0) ? get_cache_id () : cacheid;
 			
 		ratio = get_scale ();
-		f = BirdFont.get_current_font ();
-		cc_y = (f.top_limit - f.base_line) * ratio;
+		cc_y = (font.top_limit - font.base_line) * ratio;
 
 		y = py;
 		x = px;
@@ -345,6 +343,7 @@ public class Text : Widget {
 				foreach (Path path in glyph.path_list) {
 					draw_path (cc, path, lsb, 0, cc_y, ratio);
 				}
+				
 				cc.fill ();
 				cc.restore ();
 
