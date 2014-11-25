@@ -54,8 +54,9 @@ public class KerningClasses : GLib.Object {
 
 	/** Class based gpos kerning. */
 	public double get_kerning_for_pair (string a, string b, GlyphRange? gr_left, GlyphRange? gr_right) {
-		double k;
+		double k = 0;
 		GlyphRange grl, grr;
+		
 		try {
 			if (gr_left == null) {
 				grl = new GlyphRange ();
@@ -70,11 +71,16 @@ public class KerningClasses : GLib.Object {
 			} else {
 				grr = (!) gr_right;
 			}
-			
+
+			if (gr_left == null && gr_right == null) {
+				k = get_kerning (a, b);
+				return k;
+			}
+						
 			if (gr_left != null && gr_right != null) {
 				return get_kerning_for_range (grl, grr);
 			}
-
+			
 			if (gr_left != null && gr_right == null) {
 				return get_kern_for_range_to_char (grl, b);
 			}
@@ -82,16 +88,13 @@ public class KerningClasses : GLib.Object {
 			if (gr_left == null && gr_right != null) {
 				return get_kern_for_char_to_range (a, grr);
 			}
-			
-			if (gr_left == null && gr_right == null) {
-				k = get_kerning (a, b);
-				return k;
-			}			
 		} catch (MarkupError e) {
 			warning (e.message);
 		}
 		
-		warning ("no kerning found");
+		if (unlikely (k == 0)) {
+			warning ("no kerning found");
+		}
 		
 		return 0;
 	}

@@ -44,7 +44,8 @@ public class Test : Object {
 	}
 	
 	public double get_time () {
-		return time_stamp / 1000000.0;
+		double stop_time = GLib.get_real_time ();
+		return (stop_time - time_stamp) / 1000000.0;
 	}
 	
 	public bool is_benchmark () {

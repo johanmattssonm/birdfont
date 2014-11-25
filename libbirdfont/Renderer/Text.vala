@@ -40,7 +40,19 @@ public class Text : Widget {
 	FontCache font_cache;
 	Font? current_font;
 	public string text;
-	GlyphSequence glyph_sequence;
+	
+	GlyphSequence glyph_sequence {
+		get {
+			if (gs == null) {
+				gs = generate_glyphs ();
+			}
+			
+			return (!) gs;
+		}
+	}
+	
+	GlyphSequence? gs = null;
+	
 	public delegate void Iterator (Glyph glyph, double kerning, bool last);
 	public double font_size;
 	public double sidebearing_extent = 0;
@@ -53,11 +65,10 @@ public class Text : Widget {
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		current_font = null;
 		this.margin_bottom = margin_bottom;
-		glyph_sequence = new GlyphSequence ();
 		font_cache = FontCache.get_default_cache ();
 		
-		set_text (text);
 		set_font_size (size);
+		set_text (text);
 	}
 
 	public void set_font_size (double height_in_pixels) {
@@ -70,20 +81,27 @@ public class Text : Widget {
 	}
 	
 	public void set_text (string text) {	
+		this.text = text;
+		gs = null;
+	}
+
+	private GlyphSequence generate_glyphs () {
 		int index;
 		unichar c;
 		string name;
 		Glyph? g;
+		GlyphSequence gs;
 		
-		this.text = text;
-		glyph_sequence = new GlyphSequence ();
+		gs = new GlyphSequence ();
 		
 		index = 0;
 		while (text.get_next_char (ref index, out c)) {
 			name = font.get_name_for_character (c);
 			g = font.get_glyph_by_name (name);
-			glyph_sequence.glyph.add (g);
+			gs.glyph.add (g);
 		}
+		
+		return gs;
 	}
 
 	/** @param character a string with a single glyph or the name of the glyph if it is a ligature. */
@@ -100,6 +118,7 @@ public class Text : Widget {
 		GlyphRange? gr_left, gr_right;
 		GlyphSequence word;
 		Glyph? g;
+		KerningClasses kc;
 		
 		glyph = new Glyph ("", '\0');
 
@@ -109,10 +128,14 @@ public class Text : Widget {
 		
 		word = glyph_sequence;
 		wi = 0;
+
 		word_with_ligatures = word.process_ligatures ();
+		
 		gr_left = null;
 		gr_right = null;
+		kc = font.get_kerning_classes ();
 		for (int i = 0; i < word_with_ligatures.glyph.size; i++) {
+
 			g = word_with_ligatures.glyph.get (i);
 			
 			if (g == null || prev == null || wi == 0) {
@@ -124,7 +147,7 @@ public class Text : Widget {
 				gr_left = word_with_ligatures.ranges.get (wi - 1);
 				gr_right = word_with_ligatures.ranges.get (wi);
 
-				kern = font.get_kerning_classes ().get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
+				kern = kc.get_kerning_for_pair (((!) prev).get_name (), ((!) g).get_name (), gr_left, gr_right);
 			}
 					
 			// process glyph
@@ -169,10 +192,13 @@ public class Text : Widget {
 		
 		x = 0;
 		ratio = get_scale ();
-		
+
+		if (unlikely (ratio == 0)) {
+			warning ("No scale.");
+		}
+				
 		iterate ((glyph, kerning, last) => {
 			double lsb;
-			glyph.add_help_lines ();
 			lsb = glyph.left_limit;
 			x += (glyph.get_width () + kerning) * ratio;
 		});
