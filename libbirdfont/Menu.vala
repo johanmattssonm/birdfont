@@ -637,9 +637,9 @@ public class Menu : GLib.Object {
 			cr.restore ();
 			
 			cr.save ();
-			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			label_x = allocation.width - width + 0.7 * height * MainWindow.units;
 			label_y = y + font_size - 1 * MainWindow.units;
+			item.label.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			item.label.draw_at_baseline (cr, label_x, label_y);
 			
 			key_binding.set_text (item.get_key_bindings ());

@@ -81,13 +81,13 @@ public class TextArea : Widget {
 		font_size = z;
 	}
 	
-	void generate_paragraphs () {
+	bool generate_paragraphs () {
 		Paragraph paragraph;
 
 		int next_paragraph = -1;
 		
 		if (last_paragraph == DONE) {
-			return;
+			return false;
 		}
 	
 		next_paragraph = text.index_of ("\n", last_paragraph);
@@ -102,14 +102,19 @@ public class TextArea : Widget {
 			paragraphs.add (paragraph);
 			last_paragraph = next_paragraph;
 		}
+		
+		return last_paragraph != DONE;
+	}
+	
+	void generate_all_paragraphs () {
+		while (generate_paragraphs ()) {
+		}
 	}
 	
 	public void key_press (uint keyval) {
 		unichar c;
 		TextUndoItem ui;
-		
-		Test t = new Test.time ("key_press");
-		
+				
 		c = (unichar) keyval;
 		
 		switch (c) {
@@ -154,21 +159,27 @@ public class TextArea : Widget {
 				}
 				break;
 			case Key.RIGHT:
+				check_selection ();
 				move_carret_next ();
 				break;
 			case Key.LEFT:
+				check_selection ();
 				move_carret_previous ();
 				break;
 			case Key.DOWN:
+				check_selection ();
 				move_carret_next_row ();
 				break;
 			case Key.UP:
+				check_selection ();
 				move_carret_previous_row ();
 				break;
 			case Key.END:
+				check_selection ();
 				move_carret_to_end_of_line ();
 				break;
 			case Key.HOME:
+				check_selection ();
 				move_carret_to_beginning_of_line ();
 				break;
 			case Key.BACK_SPACE:
@@ -183,6 +194,7 @@ public class TextArea : Widget {
 					redo_items.clear ();
 					store_undo_state_at_next_event = true;
 				}
+				text_changed (get_text ());
 				break;
 			case Key.ENTER:
 				store_undo_edit_state ();
@@ -200,15 +212,21 @@ public class TextArea : Widget {
 					redo_items.clear ();
 					store_undo_state_at_next_event = true;
 				}
+				text_changed (get_text ());
 				break;		
 			default:
 				add_character (keyval);
 				break;
 		}
-		
-		if (t.get_time () > 0.1) t.print ();
-		
+			
 		GlyphCanvas.redraw ();
+	}
+	
+	void check_selection () {
+		if (!has_selection () && KeyBindings.has_shift ()) {
+			show_selection = true;
+			selection_end = carret.copy ();
+		}	
 	}
 	
 	private void add_character (uint keyval) {
@@ -678,15 +696,15 @@ public class TextArea : Widget {
 	
 	// FIXME: corruption?
 	public string get_text () {
-		Test b = new Test.time ("get txt");
 		StringBuilder sb = new StringBuilder ();
+		
+		generate_all_paragraphs ();
 		
 		foreach (Paragraph p in paragraphs) {
 			sb.append (p.text);
 		}
-		if (b.get_time () > 0.1) b.print ();
-		
-		return sb.str.dup ();
+
+		return sb.str;
 	}
 	
 	Carret get_carret_at (double click_x, double click_y, bool check_boundaries = true) {
@@ -718,7 +736,7 @@ public class TextArea : Widget {
 							p = next_word.get_sidebearing_extent ();
 
 							if ((next_word.widget_y <= tt_click <= next_word.widget_y + font_size)
-								&& (next_word.widget_x + widget_x + padding <= click_x <= next_word.widget_x + widget_x + padding + next_word.get_sidebearing_extent ())) {
+								&& (next_word.widget_x + widget_x <= click_x <= next_word.widget_x + widget_x + padding + next_word.get_sidebearing_extent ())) {
 														
 								tx = widget_x + next_word.widget_x + padding;
 								ty = widget_y + next_word.widget_y + padding;
@@ -948,12 +966,8 @@ public class TextArea : Widget {
 		double carret_x;
 		double carret_y;
 		
-		Test t0 = new Test.time ("layout");
-		
 		layout ();
 		
-		if (t0.get_time () > 0.1) t0.print ();
-
 		if (draw_border) {
 			// background
 			cr.save ();
@@ -1085,6 +1099,10 @@ public class TextArea : Widget {
 		}	
 		
 		if (paragraphs_size == 0) {
+			if (carret_is_visible) {
+				draw_carret_at (cr, widget_x + padding, widget_y + font_size + padding);
+			}
+			
 			return;
 		}
 		
@@ -1095,8 +1113,6 @@ public class TextArea : Widget {
 		
 		tx = paragraph.start_x;
 		ty = paragraph.start_y;
-
-		Test t1 = new Test.time ("draw");
 
 		if (cache_id == -1 && paragraphs.size > 0 && paragraphs.get (0).words.size > 0) {
 			Text t = paragraphs.get (0).words.get (0);
@@ -1130,8 +1146,6 @@ public class TextArea : Widget {
 				warning ("No paragraph image.");
 			}
 		}
-
-		if (t1.get_time () > 0.1) t1.print ();
 
 		if (carret_is_visible) {
 			get_carret_position (carret, out carret_x, out carret_y);
