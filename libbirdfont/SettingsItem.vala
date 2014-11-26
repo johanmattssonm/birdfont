@@ -88,7 +88,7 @@ class SettingsItem : GLib.Object {
 			}
 			
 			cr.save ();
-			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			label.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			label.set_font_size (17 * MainWindow.units);
 			label.draw_at_baseline (cr, label_x, y + 20 * MainWindow.units);
 			cr.restore ();
@@ -99,9 +99,9 @@ class SettingsItem : GLib.Object {
 				cr.save ();
 				
 				if (active) {
-					cr.set_source_rgba (1, 1, 1, 1);
+					key_binding_text.set_source_rgba (1, 1, 1, 1);
 				} else {
-					cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+					key_binding_text.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 				}
 				
 				key_binding_text.set_font_size (17 * MainWindow.units);

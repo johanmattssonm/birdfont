@@ -82,8 +82,9 @@ public class TabContent : GLib.Object {
 		if (MenuTab.suppress_event) {
 			return;
 		}
-
+		
 		KeyBindings.add_modifier_from_keyval (keyval);
+		
 		MainWindow.get_menu ().process_key_binding_events (keyval);
 		GlyphCanvas.current_display.key_press (keyval);
 	}
