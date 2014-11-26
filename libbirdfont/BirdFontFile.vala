@@ -663,15 +663,15 @@ class BirdFontFile : GLib.Object {
 			}
 
 			if (t.get_name () == "postscript_name") {
-				font.postscript_name = t.get_content ();
+				font.postscript_name = XmlParser.parse_escaped_text (t.get_content ());
 			}
 			
 			if (t.get_name () == "name") {
-				font.name = t.get_content ();
+				font.name = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "subfamily") {
-				font.subfamily = t.get_content ();
+				font.subfamily = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "bold") {
@@ -683,23 +683,23 @@ class BirdFontFile : GLib.Object {
 			}
 			
 			if (t.get_name () == "full_name") {
-				font.full_name = t.get_content ();
+				font.full_name = XmlParser.parse_escaped_text (t.get_content ());
 			}
 			
 			if (t.get_name () == "unique_identifier") {
-				font.unique_identifier = t.get_content ();
+				font.unique_identifier = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "version") {
-				font.version = t.get_content ();
+				font.version = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "description") {
-				font.description = t.get_content ();
+				font.description = XmlParser.parse_escaped_text (t.get_content ());
 			}
 			
 			if (t.get_name () == "copyright") {
-				font.copyright = t.get_content ();
+				font.copyright = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "kerning") {
@@ -728,7 +728,7 @@ class BirdFontFile : GLib.Object {
 		TooltipArea.show_text ("");
 		return true;
 	}
-	
+		
 	public void parse_images (Tag tag) {
 		BackgroundImage? new_img;
 		BackgroundImage img;

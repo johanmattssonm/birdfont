@@ -2106,6 +2106,7 @@ public class Glyph : FontDisplay {
 		
 		return (int) (0xFFFFFFFF & i);
 	}
+
 }
 
 }
