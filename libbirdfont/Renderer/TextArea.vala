@@ -1274,13 +1274,13 @@ public class TextArea : Widget {
 			i.deleted.sort ((a, b) => {
 				Paragraph pa = (Paragraph) a;
 				Paragraph pb = (Paragraph) b;
-				return b.index - a.index;
+				return pb.index - pa.index;
 			});
 
 			i.added.sort ((a, b) => {
 				Paragraph pa = (Paragraph) a;
 				Paragraph pb = (Paragraph) b;
-				return a.index - b.index;
+				return pa.index - pb.index;
 			});
 
 			foreach (Paragraph p in i.deleted) {
@@ -1334,13 +1334,13 @@ public class TextArea : Widget {
 			i.deleted.sort ((a, b) => {
 				Paragraph pa = (Paragraph) a;
 				Paragraph pb = (Paragraph) b;
-				return a.index - b.index;
+				return pa.index - pb.index;
 			});
 
 			i.added.sort ((a, b) => {
 				Paragraph pa = (Paragraph) a;
 				Paragraph pb = (Paragraph) b;
-				return b.index - a.index;
+				return pb.index - pa.index;
 			});
 			
 			foreach (Paragraph p in i.added) {

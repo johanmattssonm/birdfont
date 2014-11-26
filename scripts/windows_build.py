@@ -35,5 +35,7 @@ run("windres ./resources/win32/icon.rc -O coff -o ./build/icon.res")
 build.libbirdxml(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdxml.dll")
 build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdfont.dll")
 build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags)
+build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags)
+build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags)
 
 print ("Done")

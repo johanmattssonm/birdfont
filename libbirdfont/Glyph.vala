@@ -97,7 +97,28 @@ public class Glyph : FontDisplay {
 	
 	/** Cache for Cairo rendering */
 	
-	HashMap<int64?, Surface> glyph_cache = new HashMap<int64?, Surface> ((Gee.HashDataFunc<int64?>) hash_int64,  (Gee.EqualDataFunc<int64?>) equal_int64);
+	HashMap<int64?, Surface> glyph_cache = new HashMap<int64?, Surface> ((v) => {
+		int? t = (int?) v;
+		int i = (!) t;
+		
+		if (i == 0) {
+			return 0;
+		}
+		
+		return (int) (0xFFFFFFFF & i);
+	},  (a, b) => {
+		int64? i1;
+		int64? i2;
+		
+		i1 = (int64?) a;
+		i2 = (int64?) b;
+		
+		if (i1 == null || i1 == null) {
+			return false;
+		}
+		
+		return (!) i1 == (!) i2;
+	});
 
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
@@ -2090,23 +2111,6 @@ public class Glyph : FontDisplay {
 		
 		return glyph_cache.get (font_size);
 	}
-	
-	public static bool equal_int64 (int64? i1, int64? i2) {
-		if (i1 == null || i1 == null) {
-			return false;
-		}
-		
-		return (!) i1 == (!) i2;
-	}
-
-	public static int hash_int64 (int64? i) {
-		if (i == 0) {
-			return 0;
-		}
-		
-		return (int) (0xFFFFFFFF & i);
-	}
-
 }
 
 }
