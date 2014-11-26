@@ -21,7 +21,7 @@ namespace BirdFont {
 public class PointTool : Tool {
 	
 	public PointTool (string name) {
-		base (name, t_ ("Move control points"), '.', CTRL);
+		base (name, t_ ("Move control points"));
 
 		select_action.connect ((self) => {
 		});

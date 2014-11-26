@@ -202,6 +202,19 @@ public class XmlParser {
 		print (message);
 		print ("\n");
 	}
+
+	/** Replace escaped character with plain text characters. 
+	 * &amp; will be replaced with & etc.
+	 */
+	public static string parse_escaped_text (string s) {
+		string t;
+		t = s.replace ("&quot;", "\"");
+		t = t.replace ("&apos;;", "'");
+		t = t.replace ("&lt;", "<");
+		t = t.replace ("&gt;", ">");
+		t = t.replace ("&amp;", "&");
+		return t;
+	}
 	
 	private extern void free ();
 }

@@ -42,7 +42,9 @@ public enum Key {
 	TAB = 65289,
 	DEL = 65535,
 	NUM_PLUS = 65451,
-	NUM_MINUS = 65453
+	NUM_MINUS = 65453,
+	END = 65367,
+	HOME = 65360
 }
 
 bool is_arrow_key (uint keyval) {
@@ -72,7 +74,9 @@ bool is_modifier_key (uint i) {
 		Key.LOGO_RIGHT == i || 
 		Key.TAB == i || 
 		Key.CAPS_LOCK == i || 
-		Key.LOGO_RIGHT == i;
+		Key.LOGO_RIGHT == i ||
+		Key.ENTER == i ||
+		Key.DEL == i;
 }
 
 /** Modifier flags */
@@ -103,7 +107,7 @@ public class KeyBindings {
 		require_modifier = t;
 	}
 
-	private static uint get_mod_from_key (uint keyval) {
+	public static uint get_mod_from_key (uint keyval) {
 		uint mod = 0;
 		mod |= (keyval == Key.CTRL_RIGHT || keyval == Key.CTRL_LEFT) ? CTRL : 0;
 		mod |= (keyval == Key.SHIFT_RIGHT || keyval == Key.SHIFT_LEFT) ? SHIFT : 0;

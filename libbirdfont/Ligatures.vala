@@ -162,7 +162,6 @@ public class Ligatures : GLib.Object {
 				
 	public void set_ligature (int index) {
 		Ligature lig;
-		TextListener listener;
 		
 		return_if_fail (0 <= index < ligatures.size);
 		
@@ -172,7 +171,6 @@ public class Ligatures : GLib.Object {
 	
 	public void set_substitution (int index) {
 		Ligature lig;
-		TextListener listener;
 		
 		return_if_fail (0 <= index < ligatures.size);
 		

@@ -97,7 +97,7 @@ valac_options = [
 libbirdxml = Vala(src='libbirdxml', build='build', library='birdxml', so_version=version.LIBBIRDXML_SO_VERSION, pkg_libs=LIBBIRD_XML_LIBS)
 def task_libbirdxml():
 
-    if config.POSIXVALA:
+    if config.POSIXVALA == True:
         yield libbirdxml.gen_c(valac_options + ['--profile posix'])
     else:
         yield libbirdxml.gen_c(valac_options)
@@ -111,7 +111,7 @@ libbird = Vala(src='libbirdfont', build='build', library='birdfont', so_version=
 def task_libbirdfont():
     yield libbird.gen_c(valac_options)
     yield libbird.gen_o(['-fPIC -I./build/', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
-    yield libbird.gen_so('-l birdxml')
+    yield libbird.gen_so('-L ./build -l birdxml')
     yield libbird.gen_ln()
 
 

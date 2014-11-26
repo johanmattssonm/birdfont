@@ -33,6 +33,10 @@ public class KerningTools : ToolCollection  {
 		Expander kerning_tools = new Expander ();
 		classes = new Expander ();
 		expanders = new Gee.ArrayList<Expander> ();
+
+		Expander font_name = new Expander ();
+		font_name.add_tool (new FontName ());
+		font_name.draw_separator = false;
 		
 		Tool new_kerning_class = new Tool ("kerning_class", t_("Create new kerning class."));
 		new_kerning_class.select_action.connect ((self) => {
@@ -64,7 +68,7 @@ public class KerningTools : ToolCollection  {
 		});
 		kerning_tools.add_tool (insert_last);
 
-		Tool insert_unicode = new Tool ("insert_unichar", t_("Insert character by unicode value"), 'U', CTRL);
+		Tool insert_unicode = new Tool ("insert_unichar", t_("Insert character by unicode value"));
 		insert_unicode.select_action.connect ((self) => {
 			KerningDisplay d = MainWindow.get_kerning_display ();
 			d.insert_unichar ();
@@ -126,6 +130,7 @@ public class KerningTools : ToolCollection  {
 		classes.set_persistent (true);
 		classes.set_unique (true);
 		
+		expanders.add (font_name);
 		expanders.add (kerning_tools);
 		expanders.add (classes);
 	}
@@ -162,7 +167,7 @@ public class KerningTools : ToolCollection  {
 	}
 	
 	public static void update_kerning_classes () {
-		KerningClasses k = KerningClasses.get_instance ();
+		KerningClasses k = BirdFont.get_current_font ().get_kerning_classes ();
 		KerningRange kr;
 		GlyphRange r;
 		int i;

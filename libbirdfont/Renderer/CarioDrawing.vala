@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 2013 Johan Mattsson
+    Copyright (C) 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -12,22 +12,23 @@
     Lesser General Public License for more details.
 */
 
+using Cairo;
+
 namespace BirdFont {
 
-/** Names and description for the TTF Name table.
- * The actual tab is implemented in the GTK window.
- */
-public class DescriptionTab : FontDisplay {	
-	public DescriptionTab () {
-	}
+public class CairoDrawing {
 	
-	public override string get_name () {
-		return "Description";
+	public static Context? drawing_context;
+	
+	public static void new_path (double xa, double ya) {	
 	}
 
-	public override string get_label () {
-		return t_("Description");
+	public static void curve_to (double xb, double yb, double xc, double yc, double xd, double yd) {
 	}
+
+	public static void close_path (double x, double y) {
+	}
+
 }
 
 }

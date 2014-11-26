@@ -20,7 +20,11 @@ public class PreviewTools : ToolCollection  {
 	
 	public PreviewTools () {
 		Expander webview_tools = new Expander ();
-		
+
+		Expander font_name = new Expander ();
+		font_name.add_tool (new FontName ());
+		font_name.draw_separator = false;
+				
 		Tool update_webview_button = new Tool ("update_webview", t_("Reload webview"));
 		update_webview_button.select_action.connect ((self) => {
 			update_preview ();
@@ -39,6 +43,7 @@ public class PreviewTools : ToolCollection  {
 		});
 		webview_tools.add_tool (generate_html_button);
 		
+		expanders.add (font_name);
 		expanders.add (webview_tools);
 	}
 

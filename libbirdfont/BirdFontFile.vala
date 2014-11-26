@@ -125,17 +125,6 @@ class BirdFontFile : GLib.Object {
 			write_settings (os);
 			
 			os.put_string ("\n");
-			// FIXME: add this to a font specific settings file
-			if (font.background_images.size > 0) {
-				os.put_string (@"<images>\n");
-				
-				foreach (string f in font.background_images) {
-					os.put_string (@"\t<img src=\"$f\"/>\n");
-				}
-			
-				os.put_string (@"</images>\n");
-				os.put_string ("\n");
-			}
 			
 			font.glyph_cache.for_each ((gc) => {
 				try {
@@ -146,6 +135,10 @@ class BirdFontFile : GLib.Object {
 					
 				TooltipArea.show_text (t_("Saving"));
 			});
+			
+			os.put_string ("\n");
+			
+			write_images (os);
 			
 			os.put_string ("\n");
 			write_ligatures (os);
@@ -162,15 +155,14 @@ class BirdFontFile : GLib.Object {
 							
 							if (!bg.is_valid ()) {
 								continue;
-							}
+							}	
 							
-							os.put_string (@"<background-image sha1=\"");
-							os.put_string (bg.get_sha1 ());
-							os.put_string ("\" ");
-							os.put_string (" data=\"");
-							os.put_string (data);
-							os.put_string ("\" />\n");	
+							write_image (os, bg.get_sha1 (), data);
 						}
+					}
+					
+					foreach (BackgroundImage b in font.background_images) {
+						write_image (os, b.get_sha1 (), b.get_png_base64 ());
 					}
 				} catch (GLib.Error ef) {
 					warning (@"Failed to save $path \n");
@@ -195,6 +187,60 @@ class BirdFontFile : GLib.Object {
 		return true;
 	}
 	
+	public void write_images (DataOutputStream os) throws GLib.Error {
+		string glyph_name;
+		
+		if (font.background_images.size > 0) {
+			os.put_string (@"<images>\n");
+			
+			foreach (BackgroundImage b in font.background_images) {
+				
+				if (b.name == "") {
+					warning ("No name.");
+				}
+				
+				os.put_string ("\t<image ");
+				os.put_string (@"name=\"$(b.name)\" ");
+				os.put_string (@"sha1=\"$(b.get_sha1 ())\" ");
+				os.put_string (@"x=\"$(b.img_x)\" ");
+				os.put_string (@"y=\"$(b.img_y)\" ");
+				os.put_string (@"scale_x=\"$(b.img_scale_x)\" ");
+				os.put_string (@"scale_y=\"$(b.img_scale_y)\" ");
+				os.put_string (@"rotation=\"$(b.img_rotation)\" ");
+				os.put_string (">\n");
+				
+				foreach (BackgroundSelection selection in b.selections) {
+					os.put_string ("\t\t<selection ");
+					os.put_string (@"x=\"$(selection.x)\" ");
+					os.put_string (@"y=\"$(selection.y)\" ");
+					os.put_string (@"width=\"$(selection.w)\" ");
+					os.put_string (@"height=\"$(selection.h)\" ");
+					
+					if (selection.assigned_glyph != null) {
+						glyph_name = (!) selection.assigned_glyph;
+						os.put_string (@"glyph=\"$(glyph_name)\" ");
+					}
+					
+					os.put_string ("/>\n");
+				}
+				
+				os.put_string (@"\t</image>\n");
+			}
+		
+			os.put_string (@"</images>\n");
+			os.put_string ("\n");
+		}	
+	}
+	
+	public void write_image (DataOutputStream os, string sha1, string data) throws GLib.Error {
+		os.put_string (@"<background-image sha1=\"");
+		os.put_string (sha1);
+		os.put_string ("\" ");
+		os.put_string (" data=\"");
+		os.put_string (data);
+		os.put_string ("\" />\n");
+	}
+	
 	public void write_root_tag (DataOutputStream os) throws GLib.Error {
 		os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
 		os.put_string ("\n");
@@ -207,7 +253,7 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	public void write_spacing_classes (DataOutputStream os)  throws GLib.Error {
-		SpacingClassTab s = MainWindow.get_spacing_class_tab ();
+		SpacingData s = font.get_spacing ();
 		
 		foreach (SpacingClass sc in s.classes) {
 				os.put_string ("<spacing ");
@@ -226,29 +272,30 @@ class BirdFontFile : GLib.Object {
 	public void write_kerning (DataOutputStream os)  throws GLib.Error {
 			uint num_kerning_pairs;
 			string range;
+			KerningClasses classes = font.get_kerning_classes ();
 			
-			num_kerning_pairs = KerningClasses.get_instance ().classes_first.size;
+			num_kerning_pairs = classes.classes_first.size;
 
 			for (int i = 0; i < num_kerning_pairs; i++) {
-				range = KerningClasses.get_instance ().classes_first.get (i).get_all_ranges ();
+				range = classes.classes_first.get (i).get_all_ranges ();
 				
 				os.put_string ("<kerning ");
 				os.put_string ("left=\"");
 				os.put_string (range);
 				os.put_string ("\" ");
 				
-				range = KerningClasses.get_instance ().classes_last.get (i).get_all_ranges ();
+				range = classes.classes_last.get (i).get_all_ranges ();
 				
 				os.put_string ("right=\"");
 				os.put_string (range);
 				os.put_string ("\" ");
 				
 				os.put_string ("hadjustment=\"");
-				os.put_string (round (KerningClasses.get_instance ().classes_kerning.get (i).val));
+				os.put_string (round (classes.classes_kerning.get (i).val));
 				os.put_string ("\" />\n");
 			}
 			
-			KerningClasses.get_instance ().get_single_position_pairs ((l, r, k) => {
+			classes.get_single_position_pairs ((l, r, k) => {
 				try {
 					os.put_string ("<kerning ");
 					os.put_string ("left=\"");
@@ -616,15 +663,15 @@ class BirdFontFile : GLib.Object {
 			}
 
 			if (t.get_name () == "postscript_name") {
-				font.postscript_name = t.get_content ();
+				font.postscript_name = XmlParser.parse_escaped_text (t.get_content ());
 			}
 			
 			if (t.get_name () == "name") {
-				font.name = t.get_content ();
+				font.name = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "subfamily") {
-				font.subfamily = t.get_content ();
+				font.subfamily = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "bold") {
@@ -636,23 +683,23 @@ class BirdFontFile : GLib.Object {
 			}
 			
 			if (t.get_name () == "full_name") {
-				font.full_name = t.get_content ();
+				font.full_name = XmlParser.parse_escaped_text (t.get_content ());
 			}
 			
 			if (t.get_name () == "unique_identifier") {
-				font.unique_identifier = t.get_content ();
+				font.unique_identifier = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "version") {
-				font.version = t.get_content ();
+				font.version = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "description") {
-				font.description = t.get_content ();
+				font.description = XmlParser.parse_escaped_text (t.get_content ());
 			}
 			
 			if (t.get_name () == "copyright") {
-				font.copyright = t.get_content ();
+				font.copyright = XmlParser.parse_escaped_text (t.get_content ());
 			}
 
 			if (t.get_name () == "kerning") {
@@ -670,12 +717,131 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "weight") {
 				font.weight = int.parse (t.get_content ());
 			}
-							
-			TooltipArea.show_text (t_("Loading XML data."));
+			if (t.get_name () == "images") {
+				parse_images (t);
+			}
 		}
 
 		TooltipArea.show_text ("");
 		return true;
+	}
+		
+	public void parse_images (Tag tag) {
+		BackgroundImage? new_img;
+		BackgroundImage img;
+		string name;
+		File img_file;
+		double x, y, scale_x, scale_y, rotation;
+		
+		foreach (Tag t in tag) {
+			if (t.get_name () == "image") {
+				name = "";
+				new_img = null;
+				img_file = get_child (font.get_backgrounds_folder (), "parts");
+
+				x = 0;
+				y = 0;
+				scale_x = 0;
+				scale_y = 0;
+				rotation = 0;
+				
+				foreach (Attribute attr in t.get_attributes ()) {
+					if (attr.get_name () == "sha1") {
+						img_file = get_child (img_file, attr.get_content () + ".png");
+
+						if (!img_file.query_exists ()) {
+							warning (@"Background file has not been created yet. $((!) img_file.get_path ())");
+						}
+						
+						new_img = new BackgroundImage ((!) img_file.get_path ());
+					}
+					
+					if (attr.get_name () == "name") {
+						name = attr.get_content ();
+					}
+					
+					if (attr.get_name () == "x") {
+						x = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "y") {
+						y = parse_double (attr.get_content ());
+					}
+					
+					if (attr.get_name () == "scale_x") {
+						scale_x = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "scale_y") {
+						scale_y = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "rotation") {
+						rotation = parse_double (attr.get_content ());
+					}
+				}
+				
+				if (new_img != null && name != "") {
+					img = (!) new_img;
+					img.name = name;
+					
+					Toolbox.background_tools.add_image (img);
+					parse_image_selections (img, t);
+					
+					img.img_x = x;
+					img.img_y = y;
+					img.img_scale_x = scale_x;
+					img.img_scale_y = scale_y;
+					img.img_rotation = rotation;
+				} else {
+					warning (@"No image found, name: $name");				
+				}
+			}
+		}
+	}
+	
+	private void parse_image_selections (BackgroundImage image, Tag tag) {
+		double x, y, w, h;
+		string? assigned_glyph;
+		BackgroundSelection s;
+		
+		foreach (Tag t in tag) {
+			if (t.get_name () == "selection") {
+				
+				x = 0;
+				y = 0;
+				w = 0;
+				h = 0;
+				assigned_glyph = null;
+				
+				foreach (Attribute attr in t.get_attributes ()) {
+					if (attr.get_name () == "x") {
+						x = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "y") {
+						y = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "width") {
+						w = parse_double (attr.get_content ());
+					}
+					
+					if (attr.get_name () == "height") {
+						h = parse_double (attr.get_content ());
+					}
+
+					if (attr.get_name () == "glyph") {
+						assigned_glyph = attr.get_content ();
+					}
+				}
+				
+				s = new BackgroundSelection (null, image, x, y, w, h);
+				s.assigned_glyph = assigned_glyph;
+				
+				image.selections.add (s);
+			}
+		}
 	}
 	
 	private void create_background_files (Tag root) {
@@ -717,7 +883,7 @@ class BirdFontFile : GLib.Object {
 	
 	private void parse_spacing_class (Tag tag) {
 		string first, next;
-		SpacingClassTab spacing_class_tab = MainWindow.get_spacing_class_tab ();
+		SpacingData spacing = font.get_spacing ();
 		
 		first = "";
 		next = "";
@@ -732,7 +898,7 @@ class BirdFontFile : GLib.Object {
 			}		
 		}
 		
-		spacing_class_tab.add_class (first, next);
+		spacing.add_class (first, next);
 	}
 	
 	private void parse_kerning (Tag tag) {
@@ -770,7 +936,7 @@ class BirdFontFile : GLib.Object {
 				KerningTools.add_unique_class (kerning_range);
 			}
 
-			KerningClasses.get_instance ().set_kerning (range_left, range_right, hadjustment);
+			font.get_kerning_classes ().set_kerning (range_left, range_right, hadjustment);
 			
 		} catch (MarkupError e) {
 			warning (e.message);

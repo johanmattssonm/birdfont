@@ -14,6 +14,7 @@
 
 using Cairo;
 using Math;
+using Gee;
 
 namespace BirdFont {
 
@@ -23,7 +24,8 @@ public class Glyph : FontDisplay {
 	bool background_image_visible = true;
 	
 	// Glyph zoom level
-	public double view_zoom = 0.01;
+	public double view_zoom = 0.1;
+	
 	public double view_offset_x = 0;
 	public double view_offset_y = 0;
 	Gee.ArrayList<ZoomView> zoom_list = new Gee.ArrayList<ZoomView> ();
@@ -93,6 +95,10 @@ public class Glyph : FontDisplay {
 	/** Cache quadratic form on export. */
 	GlyfData? ttf_data = null;
 	
+	/** Cache for Cairo rendering */
+	
+	HashMap<int64?, Surface> glyph_cache = new HashMap<int64?, Surface> ((Gee.HashDataFunc<int64?>) hash_int64,  (Gee.EqualDataFunc<int64?>) equal_int64);
+
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -100,7 +106,7 @@ public class Glyph : FontDisplay {
 		path_list.add (new Path ());
 		
 		add_help_lines ();
-
+		
 		left_limit = -28;
 		right_limit = 28;
 	}
@@ -119,7 +125,7 @@ public class Glyph : FontDisplay {
 		
 		return (!) ttf_data;
 	}
-
+	
 	public PathList get_quadratic_paths () {
 		PointConverter pc;
 		PathList pl;
@@ -165,6 +171,12 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
+	public void delete_background () {
+		store_undo_state ();
+		background_image = null;
+		GlyphCanvas.redraw ();
+	}
+	
 	public Path? get_active_path () {
 		return_val_if_fail (active_paths.size > 0, null);
 		return active_paths.get (active_paths.size - 1);
@@ -186,21 +198,23 @@ public class Glyph : FontDisplay {
 	
 		foreach (Path p in path_list) {
 			p.update_region_boundaries ();
-						
-			if (p.xmin < x1) {
-				x1 = p.xmin;
-			}
-			
-			if (p.xmax > x2) {
-				x2 = p.xmax;
-			}
-			
-			if (p.ymin < y1) {
-				y1 = p.ymin;
-			}
-			
-			if (p.ymax > y2) {
-				y2 = p.ymax;
+					
+			if (p.points.size > 0) {
+				if (p.xmin < x1) {
+					x1 = p.xmin;
+				}
+				
+				if (p.xmax > x2) {
+					x2 = p.xmax;
+				}
+				
+				if (p.ymin < y1) {
+					y1 = p.ymin;
+				}
+				
+				if (p.ymax > y2) {
+					y2 = p.ymax;
+				}
 			}
 		}
 	}
@@ -345,6 +359,12 @@ public class Glyph : FontDisplay {
 		if (!is_null (MainWindow.native_window)) {
 			MainWindow.native_window.set_scrollbar_size (0);
 		}
+		
+		update_zoom_bar ();
+	}
+	
+	void update_zoom_bar () {
+		Toolbox.drawing_tools.zoom_bar.set_zoom ((view_zoom - 1) / 20);
 	}
 	
 	public void remove_lines () {
@@ -373,7 +393,8 @@ public class Glyph : FontDisplay {
 		
 		double xhp = BirdFont.get_current_font ().xheight_position;
 		Line xheight_line = new Line ("x-height", xhp, false);
-		xheight_line.set_color (33 / 255.0, 68 / 255.0, 120 / 255.0, 166 / 255.0);
+		xheight_line.set_color (120 / 255.0, 68 / 255.0, 120 / 255.0, 120 / 255.0);
+		xheight_line.dashed = true;
 		xheight_line.position_updated.connect ((pos) => {				
 				Font f = BirdFont.get_current_font ();
 				f.xheight_position = pos;
@@ -804,6 +825,8 @@ public class Glyph : FontDisplay {
 			zoom_area_is_visible = false;
 			store_current_view ();
 		}
+		
+		update_zoom_bar ();
 	}
 	
 	public void show_zoom_area (int sx, int sy, int nx, int ny) {
@@ -1161,6 +1184,7 @@ public class Glyph : FontDisplay {
 		set_zoom_area (10, 10, allocation.width - 10, allocation.height - 10);
 		set_zoom_from_area ();
 		update_view ();
+		update_zoom_bar ();
 	}
 	
 	public override void zoom_out () {
@@ -1169,10 +1193,12 @@ public class Glyph : FontDisplay {
 		set_zoom_area (-n, -n, allocation.width + n, allocation.height + n);
 		set_zoom_from_area ();
 		update_view ();
+		update_zoom_bar ();
 	}
 	
 	public override void zoom_max () {
 		default_zoom ();
+		update_zoom_bar ();
 	}
 	
 	public override void zoom_min () {
@@ -1208,7 +1234,7 @@ public class Glyph : FontDisplay {
 		zoom_out (); // add some margin
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
-		
+		update_zoom_bar ();
 	}
 
 	public override void store_current_view () {
@@ -1242,6 +1268,8 @@ public class Glyph : FontDisplay {
 		view_offset_y = z.y;
 		view_zoom = z.zoom;
 		allocation = z.allocation;
+		
+		update_zoom_bar ();
 	}
 
 	public override void next_view () {
@@ -1258,7 +1286,9 @@ public class Glyph : FontDisplay {
 		view_offset_x = z.x;
 		view_offset_y = z.y;
 		view_zoom = z.zoom;
-		allocation = z.allocation;		
+		allocation = z.allocation;
+		
+		update_zoom_bar ();		
 	}
 	
 	public override void reset_zoom () {
@@ -1268,6 +1298,7 @@ public class Glyph : FontDisplay {
 		set_zoom (1);
 		
 		store_current_view ();
+		update_zoom_bar ();
 	}
 	
 	/** Get x-height or top line. */
@@ -1322,7 +1353,7 @@ public class Glyph : FontDisplay {
 		return true;
 	}
 	
-	private void set_zoom (double z)
+	public void set_zoom (double z)
 		requires (z > 0)
 	{		
 		view_zoom = z;
@@ -1775,6 +1806,8 @@ public class Glyph : FontDisplay {
 		double box_x1, box_x2, box_y1, box_y2;
 		double marker_x, marker_y;
 		
+		KerningClasses classes = font.get_kerning_classes ();
+		
 		x = 0;
 		
 		box_x1 = path_coordinate_x (0);
@@ -1796,7 +1829,7 @@ public class Glyph : FontDisplay {
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ().get_current ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
-				kern = KerningClasses.get_instance ().get_kerning (last_name, name);
+				kern = classes.get_kerning (last_name, name);
 			} else {
 				kern = 0;
 			}
@@ -1829,7 +1862,7 @@ public class Glyph : FontDisplay {
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ().get_current ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
-				kern = KerningClasses.get_instance ().get_kerning (name, last_name);
+				kern = classes.get_kerning (name, last_name);
 			} else {
 				kern = 0;
 			}
@@ -2003,7 +2036,7 @@ public class Glyph : FontDisplay {
 		GlyphCollection gc;
 		Glyph glyph;
 		
-		foreach (string l in MainWindow.get_spacing_class_tab ()
+		foreach (string l in font.get_spacing ()
 				.get_all_connections ((!) unichar_code.to_string ())) {
 			if (l != (!) unichar_code.to_string ()) {
 				g = font.get_glyph_collection (l);
@@ -2026,7 +2059,7 @@ public class Glyph : FontDisplay {
 		GlyphCollection gc;
 		Glyph glyph;
 		
-		foreach (string l in MainWindow.get_spacing_class_tab ()
+		foreach (string l in font.get_spacing ()
 				.get_all_connections ((!) unichar_code.to_string ())) {
 			if (l != (!) unichar_code.to_string ()) {
 				g = font.get_glyph_collection (l);
@@ -2040,6 +2073,40 @@ public class Glyph : FontDisplay {
 			}
 		}	
 	}
+
+	public void set_cache (int64 font_size, Surface cache) {
+		glyph_cache.set (font_size, cache);
+	}
+
+	public bool has_cache (int64 font_size) {
+		return glyph_cache.has_key (font_size);
+	}
+
+	public Surface get_cache (int64 font_size) {
+		if (unlikely (!has_cache (font_size))) {
+			warning ("No cache for glyph.");
+			return new ImageSurface (Cairo.Format.ARGB32, 1, 1);
+		}
+		
+		return glyph_cache.get (font_size);
+	}
+	
+	public static bool equal_int64 (int64? i1, int64? i2) {
+		if (i1 == null || i1 == null) {
+			return false;
+		}
+		
+		return (!) i1 == (!) i2;
+	}
+
+	public static int hash_int64 (int64? i) {
+		if (i == 0) {
+			return 0;
+		}
+		
+		return (int) (0xFFFFFFFF & i);
+	}
+
 }
 
 }

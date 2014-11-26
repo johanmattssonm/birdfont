@@ -532,11 +532,15 @@ public class BirdFont {
 		
 		if (!is_null (MainWindow.tools)) {
 			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
-			MainWindow.get_drawing_tools ().add_new_grid ();
-			MainWindow.get_drawing_tools ().add_new_grid ();
+			MainWindow.get_drawing_tools ().add_new_grid (1);
+			MainWindow.get_drawing_tools ().add_new_grid (2);
+			MainWindow.get_drawing_tools ().add_new_grid (4);
 		}
 		
-		SpacingClassTab.remove_all_spacing_classes ();
+		if (!is_null (Toolbox.background_tools)) {
+			Toolbox.background_tools.remove_images ();
+		}
+		
 		KerningTools.update_kerning_classes ();
 		
 		return current_font;

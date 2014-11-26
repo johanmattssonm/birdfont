@@ -305,8 +305,7 @@ public class SpinButton : Tool {
 		}
 		
 		if (big_number) {
-
-			if (v == "") {
+			if (v == "" || v == "0") {
 				v = "0.0000";
 			}
 			
@@ -449,7 +448,7 @@ public class SpinButton : Tool {
 		if (!show_icon_tool_icon || waiting_for_icon_switch) {
 			cr.save ();
 		
-			cr.set_source_rgba (99/255.0, 99/255.0, 99/255.0, 1);
+			cr.set_source_rgba (101 / 255.0, 106 / 255.0, 115 / 255.0, 1);
 			
 			cr.set_font_size (10 * scale);
 			cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);

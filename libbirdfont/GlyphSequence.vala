@@ -26,6 +26,10 @@ public class GlyphSequence {
 		ranges = new Gee.ArrayList<GlyphRange?> ();
 	}
 	
+	public int length () {
+		return glyph.size;
+	}
+	
 	/** Do ligature substitution.
 	 * @return a new sequence with ligatures
 	 */

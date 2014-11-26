@@ -35,7 +35,7 @@ public class Font : GLib.Object {
 	/** Table with ligatures. */
 	public GlyphTable ligature;
 	
-	public Gee.ArrayList<string> background_images = new Gee.ArrayList<string> ();
+	public Gee.ArrayList<BackgroundImage> background_images;
 	public string background_scale = "1";
 		
 	/** Top margin */
@@ -84,7 +84,7 @@ public class Font : GLib.Object {
 	/** File format. */
 	public FontFormat format = FontFormat.BIRDFONT;
 	
-	KerningClasses kerning_classes;
+	SpacingData spacing;
 	
 	bool read_only = false;
 	
@@ -97,6 +97,8 @@ public class Font : GLib.Object {
 	Ligatures ligatures_substitution;
 	
 	public Font () {
+		KerningClasses kerning_classes;
+		
 		postscript_name = "Typeface";
 		name = "Typeface";
 		subfamily = "Regular";
@@ -112,8 +114,9 @@ public class Font : GLib.Object {
 	
 		grid_width = new Gee.ArrayList<string> ();
 	
-		kerning_classes = new KerningClasses ();
-		
+		kerning_classes = new KerningClasses (this);
+		spacing = new SpacingData (kerning_classes);
+
 		top_limit = 84 ;
 		top_position = 72;
 		xheight_position = 56;
@@ -125,6 +128,8 @@ public class Font : GLib.Object {
 		
 		deleted_glyphs = new Gee.ArrayList<Glyph> ();
 		ligatures_substitution = new Ligatures ();
+		
+		background_images = new Gee.ArrayList<BackgroundImage> ();
 	}
 
 	public Ligatures get_ligatures () {
@@ -148,9 +153,13 @@ public class Font : GLib.Object {
 	}
 
 	public KerningClasses get_kerning_classes () {
-		return kerning_classes;
+		return spacing.get_kerning_classes ();
 	}
-	
+
+	public SpacingData get_spacing () {
+		return spacing;
+	}
+		
 	public File get_backgrounds_folder () {
 		string fn = @"$(get_name ()) backgrounds";
 		File f = get_child (BirdFont.get_settings_directory (), fn);
@@ -373,8 +382,10 @@ public class Font : GLib.Object {
 		gc.set_unassigned (true);
 		gc.add_glyph (g);
 		
-		g.left_limit = -33;
+		g.left_limit = -20;
 		g.right_limit = 33;
+		
+		g.add_help_lines ();
 		
 		p.add (-20, top_position - 5);
 		p.add (20, top_position - 5);
@@ -482,10 +493,14 @@ public class Font : GLib.Object {
 	}
 
 	/** Get glyph collection by name. */
-	public GlyphCollection? get_glyph_collection_by_name (string glyph) {
+	public GlyphCollection? get_glyph_collection_by_name (string? glyph) {
 		// TODO: load from disk here if needed.
 		GlyphCollection? gc = null;
-		gc = glyph_name.get (glyph);		
+		
+		if (glyph != null) {
+			gc = glyph_name.get ((!) glyph);
+		}
+		
 		return gc;
 	}
 
@@ -500,9 +515,9 @@ public class Font : GLib.Object {
 		return ((!)gc).get_current ();
 	}
 		
-	public Glyph? get_glyph (string unicode) {
+	public Glyph? get_glyph (string name) {
 		GlyphCollection? gc = null;
-		gc = glyph_cache.get (unicode);
+		gc = glyph_name.get (name);
 
 		if (gc == null || ((!)gc).length () == 0) {
 			return null;
@@ -531,8 +546,8 @@ public class Font : GLib.Object {
 		return null;
 	}
 	
-	public void add_background_image (string file) {
-		background_images.add (file);
+	public void add_background_image (BackgroundImage image) {
+		background_images.add (image);
 	}
 	
 	/** Delete temporary rescue files. */
@@ -582,7 +597,6 @@ public class Font : GLib.Object {
 			bfp_file.create_directory (directory);
 			bfp_file.save ();
 			this.bfp = true;
-			Preferences.add_recent_files (bfp_file.get_path ());
 		} catch (GLib.Error e) {
 			warning (e.message);
 			// FIXME: notify user
@@ -641,7 +655,6 @@ public class Font : GLib.Object {
 		}
 		
 		modified = false;
-		Preferences.add_recent_files (get_path ());
 	}
 
 	public void set_font_file (string path) {
@@ -657,7 +670,7 @@ public class Font : GLib.Object {
 		return (glyph_name.length () == 0);
 	}
 
-	public void set_file (string path, bool recent = true) {
+	public void set_file (string path) {
 		font_file = path;
 	}
 
@@ -740,9 +753,7 @@ public class Font : GLib.Object {
 			format = FontFormat.FREETYPE;
 			
 			font_file = null;
-		}	
-
-		Preferences.add_recent_files (get_path ());
+		}
 		
 		return loaded;
 	}
@@ -778,9 +789,7 @@ public class Font : GLib.Object {
 		font_data = ((!) data).str;
 		parsed = bf_font.load_data (font_data);
 		
-		if (parsed) {
-			Preferences.add_recent_files (path);
-		} else {
+		if (!parsed) {
 			warning ("Failed to parse loaded freetype font.");	
 		}
 		

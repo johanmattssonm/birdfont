@@ -22,8 +22,8 @@ public class DefaultCharacterSet {
 	public static void create_default_character_sets () {
 		languages = new DefaultLanguages ();
 		
-		add_language (t_("Default language"), "", "");
-		add_language (t_("Private use area"), "PRIVATE_USE", "");
+		add_language (t_("Default Language"), "", "");
+		add_language (t_("Private Use Area"), "PRIVATE_USE", "");
 		
 		add_language (t_("Chinese"), "zh", "");
 		add_language (t_("English"), "en", "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z");
@@ -63,6 +63,8 @@ public class DefaultCharacterSet {
 		} else {
 			use_default_range_alphabetic (gr);
 		}
+		
+		gr.name = "Default";
 	}
 	
 	private static string get_prefered_language_code () {
@@ -277,6 +279,8 @@ public class DefaultCharacterSet {
 				gr.add_range ('\0', (unichar) 0xFFF8);
 			}
 		}
+		
+		gr.name = "Unicode";
 	}
 	
 	public static DefaultLanguages get_default_languages () {

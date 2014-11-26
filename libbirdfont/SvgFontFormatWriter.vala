@@ -49,6 +49,8 @@ class SvgFontFormatWriter : Object  {
 		
 		string uni;
 		
+		KerningClasses classes;
+		
 		put ("""<?xml version="1.0" standalone="no"?>""");
 		put ("""<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >""");
 		put ("""<svg>""");
@@ -86,7 +88,8 @@ class SvgFontFormatWriter : Object  {
 		}
 		
 		// FIXME: ligatures
-		KerningClasses.get_instance ().all_pairs ((kerning) => {
+		classes = BirdFont.get_current_font ().get_kerning_classes ();
+		classes.all_pairs ((kerning) => {
 			string l, r;
 			
 			foreach (Kerning k in kerning.kerning) {

@@ -36,7 +36,7 @@ public class ForesightTool : Tool {
 	Path current_path = new Path ();
 
 	public ForesightTool (string name) {
-		base (name, t_ ("Create Beziér curves"), '.', CTRL);
+		base (name, t_ ("Create Beziér curves"));
 
 		select_action.connect ((self) => {
 			state = NONE;
@@ -129,6 +129,7 @@ public class ForesightTool : Tool {
 				
 				last.path.direction_is_set = false;
 				PenTool.force_direction ();
+			} else if (state == MOVE_POINT) {
 			} else {
 				warning (@"Unknown state $state.");
 			}

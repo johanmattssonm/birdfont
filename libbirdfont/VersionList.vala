@@ -204,7 +204,8 @@ public class VersionList : DropMenu {
 			updated_glyph.view_zoom = glyph.view_zoom;
 			updated_glyph.view_offset_x = glyph.view_offset_x;
 			updated_glyph.view_offset_y = glyph.view_offset_y;
-			updated_glyph.close_path ();
+			// FIXME: don't run this in Renderer
+			// updated_glyph.close_path ();
 		}
 	}
 	

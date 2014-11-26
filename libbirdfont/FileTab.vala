@@ -58,9 +58,9 @@ public class FileTab : FontDisplay {
 				MainWindow.get_drawing_tools ().parse_grid (v);
 			}
 			
-			MainWindow.get_drawing_tools ().background_scale.set_value (f.background_scale);
+			DrawingTools.background_scale.set_value (f.background_scale);
 			KerningTools.update_kerning_classes ();
-			MenuTab.select_overview ();
+			MenuTab.show_all_available_characters ();
 		});
 		
 		dialog.signal_discard.connect (() => {
@@ -76,6 +76,8 @@ public class FileTab : FontDisplay {
 			MainWindow.close_all_tabs ();
 			
 			f.set_file (fn);
+			Preferences.add_recent_files (fn);
+			
 			MainWindow.native_window.load (); // background thread
 		});
 

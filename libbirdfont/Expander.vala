@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -18,6 +18,10 @@ using Math;
 namespace BirdFont {
 
 public class Expander : GLib.Object {
+
+	private static const double HEADLINE_MARGIN = 6;
+	
+	public bool draw_separator { get; set; }
 	
 	public double x = 7;
 	public double y = 5;
@@ -39,8 +43,16 @@ public class Expander : GLib.Object {
 	
 	double content_height = 0;
 	
-	public Expander () {
-		tool = new Gee.ArrayList<Tool> ();	
+	string? headline;
+	
+	public Expander (string? headline = null) {
+		this.headline = headline;
+		tool = new Gee.ArrayList<Tool> ();
+		draw_separator = true;
+	}
+
+	public void set_headline (string? h) {
+		headline = h;
 	}
 
 	public double get_content_height () {
@@ -69,13 +81,15 @@ public class Expander : GLib.Object {
 		unique = u;
 	}
 	
-	private void update_tool_position () {
+	public void update_tool_position () {
 		double scale = Toolbox.get_scale ();
 		double margin_small = 5 * scale;
 		double xt = x;
 		double yt = y + scroll + margin_small;
 		bool new_row = false;
 		bool has_visible_tools = false;
+		Tool previous;
+		bool first_row;
 
 		foreach (Tool t in tool) {
 			if (t.tool_is_visible ()) {
@@ -88,9 +102,18 @@ public class Expander : GLib.Object {
 			content_height = 0;
 			return;
 		}
-
+		
 		foreach (Tool t in tool) {
-			if (t is KerningRange) {
+			if (t is ZoomBar) {
+				t.w = Toolbox.allocation_width * scale;
+				t.h = 7 * scale;
+			} else if (t is LabelTool) {
+				t.w = Toolbox.allocation_width * scale;
+				t.h = 15 * scale;
+			} else if (t is FontName) {
+				t.w = Toolbox.allocation_width * scale;
+				t.h = 20 * scale;
+			} else if (t is KerningRange) {
 				t.w = Toolbox.allocation_width * scale;
 				t.h = 17 * scale;				
 			} else {
@@ -105,20 +128,32 @@ public class Expander : GLib.Object {
 			content_height = 0;
 		}
 
-		foreach (Tool t in tool) {
-			if (t.tool_is_visible ()) {
-				if (new_row) {
-					content_height += t.h + margin_small; 
-					xt = x;
-					yt += t.h + margin_small;
+		if (headline != null && tool.size > 0) {
+			yt += 10 * scale + HEADLINE_MARGIN;
+			content_height += 10 * scale + HEADLINE_MARGIN;
+		}
+		
+		if (tool.size > 0) {
+			previous = tool.get (0);
+			first_row = true;
+			foreach (Tool t in tool) {
+				if (t.tool_is_visible ()) {
+					new_row = xt + t.w > Toolbox.allocation_width - margin_small;
+					
+					if (new_row && !first_row) {
+						content_height += previous.h + margin_small; 
+						xt = x;
+						yt += previous.h + margin_small;
+					}
+				
+					t.x = xt;
+					t.y = yt;
+				
+					xt += t.w + margin_small;
+					
+					previous = t;
+					first_row = false;
 				}
-			
-				t.x = xt;
-				t.y = yt;
-			
-				xt += t.w + margin_small;
-
-				new_row = xt + t.w > Toolbox.allocation_width - margin_small;
 			}
 		}
 	}
@@ -132,8 +167,14 @@ public class Expander : GLib.Object {
 		update_tool_position ();
 	}
 	
-	public void add_tool (Tool t) {
-		tool.add (t);
+	public void add_tool (Tool t, int position = -1) {
+		if (position < 0) {
+			tool.add (t);
+		} else {
+			return_if_fail (position <= tool.size);
+			tool.insert (position, t);
+		}
+		
 		update_tool_position ();
 		
 		t.select_action.connect ((selected) => {
@@ -185,33 +226,44 @@ public class Expander : GLib.Object {
 		double yt = y + scroll + 2;
 		double ih2 = 5.4 / 2;
 		double iw2 = 5.4 / 2;
-				
-		cr.save ();
-		cr.set_line_width (0.5);
-		cr.set_source_rgba (0, 0, 0, 0.25);
-		cr.move_to (x, yt);
-		cr.line_to (wd - w - x + 6, yt);	
-		cr.stroke ();
-		cr.restore ();
-		
-		// arrow
-		cr.save ();
-		cr.new_path ();
-		cr.set_line_width (1);
-		cr.set_source_rgba (0, 0, 0, opacity);
-		
-		cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
-		cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
-		cr.line_to (x + iw2, yt + 2 + 1);	
+		Text title;
 
-		cr.close_path();
-		cr.stroke ();
-		cr.restore ();
+		if (tool.size > 0) {
+			if (headline != null) {
+				title = new Text ();
+				title.set_text ((!) headline);
+				title.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+				title.set_font_size (14);
+				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 7);
+			} else if (draw_separator) {		
+				cr.save ();
+				cr.set_line_width (0.5);
+				cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+				cr.move_to (x, yt);
+				cr.line_to (wd - w - x + 6, yt);	
+				cr.stroke ();
+				cr.restore ();
+				
+				// arrow
+				cr.save ();
+				cr.new_path ();
+				cr.set_line_width (1);
+				cr.set_source_rgba (0, 0, 0, opacity);
+				
+				cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
+				cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
+				cr.line_to (x + iw2, yt + 2 + 1);	
+
+				cr.close_path();
+				cr.stroke ();
+				cr.restore ();
+			}
+		}
 	}
 	
 	public void draw_content (int w, int h, Context cr) {
 		cr.save ();
-		foreach (var t in tool) {
+		foreach (Tool t in tool) {
 			if (t.tool_is_visible ()) {
 				t.draw (cr);
 			}

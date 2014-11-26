@@ -252,7 +252,7 @@ public class GlyfData : GLib.Object {
 			if (c > bounding_box_xmax) {
 				bounding_box_xmax = c;
 			}
-				
+			
 			last = c;
 			i++;
 		}

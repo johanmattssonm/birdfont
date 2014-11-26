@@ -20,11 +20,11 @@ public class Tool : GLib.Object {
 	
 	public double x = 0;
 	public double y = 0;
-	public double w = 30;
-	public double h = 30;
-
-	protected bool active = false;
-	protected bool selected = false;
+	public double w = 33 * Toolbox.get_scale ();
+	public double h = (33 / 1.11) * Toolbox.get_scale ();
+	
+	public bool active = false;
+	public bool selected = false;
 	
 	ImageSurface? icon = null;
 		
@@ -52,7 +52,7 @@ public class Tool : GLib.Object {
 	
 	public signal void draw_action (Tool selected, Context cr, Glyph glyph);
 	
-	protected string name = "";
+	public string name = "";
 	
 	static int next_id = 1;
 	
@@ -62,7 +62,7 @@ public class Tool : GLib.Object {
 	
 	bool show_bg = true;
 	
-	string tip = "";
+	public string tip = "";
 
 	// keyboard bindings
 	public uint modifier_flag;
@@ -250,6 +250,12 @@ public class Tool : GLib.Object {
 		cr.save ();
 		
 		scale = w / 111.0; // scale to 320 dpi
+		
+		if (unlikely (scale == 0)) {
+			warning ("Scale is zero.");
+			scale = 33 / 111.0;
+		}
+		
 		cr.scale (scale, scale);
 		
 		bgx = xt / scale;

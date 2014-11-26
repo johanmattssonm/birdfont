@@ -18,12 +18,17 @@ using Math;
 namespace BirdFont {
 	
 public class BackgroundImage {
-		
+	
+	public string name = "";
+	public Gee.ArrayList<BackgroundSelection> selections;
+
+	/** Image position in canvas coordinates. */
 	public double img_x = 0;
 	public double img_y = 0;
-	
+		
 	public double img_scale_x = 1;
 	public double img_scale_y = 1;
+	
 	public double img_rotation = 0;
 	private int size = -1;
 
@@ -90,6 +95,7 @@ public class BackgroundImage {
 				
 	public BackgroundImage (string file_name) {
 		path = file_name;
+		selections = new Gee.ArrayList<BackgroundSelection> ();
 	}
 
 	public BackgroundImage copy () {
@@ -106,8 +112,16 @@ public class BackgroundImage {
 		bg.threshold = threshold;
 		bg.high_contrast = high_contrast;
 		bg.trace_resolution = trace_resolution;
+		
+		foreach (BackgroundSelection b in selections) {
+			bg.selections.add (b);
+		}
 
 		return bg;		
+	}
+
+	public void add_selection (BackgroundSelection bs) {
+		selections.add (bs);
 	}
 
 	public void set_trace_simplification (double s) {
@@ -1334,9 +1348,15 @@ public class BackgroundImage {
 		return false;
 	}
 	
-	public void center_in_glyph () {
-		Glyph g = MainWindow.get_current_glyph ();
+	public void center_in_glyph (Glyph? glyph = null) {
+		Glyph g;
 		Font f = BirdFont.get_current_font ();
+		
+		if (glyph != null) {
+			g = (!) glyph;
+		} else {
+			g = MainWindow.get_current_glyph ();
+		}
 		
 		img_middle_x = g.left_limit + (g.right_limit - g.left_limit) / 2;
 		img_middle_y = f.bottom_position + (f.top_position - f.bottom_position) / 2;

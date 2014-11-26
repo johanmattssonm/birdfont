@@ -39,7 +39,7 @@ public class FontCache {
 			f = new Font ();
 			this.file_name = file_name;
 			
-			f.set_file (file_name, false);
+			f.set_file (file_name);
 			ok = f.load ();
 			if (!ok) {
 				stderr.printf ("Can't load %s\n", file_name);

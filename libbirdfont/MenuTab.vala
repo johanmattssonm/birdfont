@@ -20,8 +20,13 @@ public class MenuTab : FontDisplay {
 	 * 
 	 * Do always check the return value of set_suppress_event when this
 	 * variable is updated.
+	 * 
+	 * This variable is used only in the gui thread.
 	 */
 	public static bool suppress_event;
+
+	/** True if the background thread is running. */
+	public static bool background_thread;
 
 	/** A notification sent when the file has been saved. */
 	public static SaveCallback save_callback;
@@ -40,6 +45,7 @@ public class MenuTab : FontDisplay {
 		export_callback = new ExportCallback ();
 		
 		suppress_event = false;
+		background_thread = false;
 	}
 
 	public static void set_save_callback (SaveCallback c) {
@@ -80,6 +86,7 @@ public class MenuTab : FontDisplay {
 			warning ("suppress_event is already set");
 			return false;
 		}
+		background_thread = e;
 		suppress_event = e;
 		return true;
 	}
@@ -99,9 +106,10 @@ public class MenuTab : FontDisplay {
 		}
 		
 		if (BirdFont.get_current_font ().is_empty ()) {
-			Toolbox.select_tool_by_name ("custom_character_set");
+			show_default_characters ();
 		} else {
-			Toolbox.select_tool_by_name ("available_characters");	
+			MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
+			MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		}
 	}
 	
@@ -134,7 +142,7 @@ public class MenuTab : FontDisplay {
 	}
 		
 	public static void set_font_setting_from_tools (Font f) {	
-		f.background_scale = MainWindow.get_drawing_tools ().background_scale.get_display_value ();
+		f.background_scale = DrawingTools.background_scale.get_display_value ();
 		
 		f.grid_width.clear ();
 		
@@ -186,7 +194,7 @@ public class MenuTab : FontDisplay {
 			BirdFont.new_font ();			
 			MainWindow.native_window.font_loaded ();
 			
-			select_overview ();
+			show_default_characters ();
 			
 			GlyphCanvas.redraw ();
 		});
@@ -243,7 +251,7 @@ public class MenuTab : FontDisplay {
 	} 
 	
 	public static void show_description () {
-		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionTab ());
+		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionDisplay ());
 	}
 	
 	public static void show_kerning_context () {
@@ -340,7 +348,8 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 		
-		KerningClasses.get_instance ().remove_all_pairs ();
+		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
+		classes.remove_all_pairs ();
 		KerningTools.update_kerning_classes ();
 	}
 	
@@ -487,10 +496,52 @@ public class MenuTab : FontDisplay {
 			o.scroll_to_glyph (ligature_name);
 			
 			MainWindow.native_window.hide_text_input ();
-			Toolbox.select_tool_by_name ("available_characters");
+			show_all_available_characters ();
 		});
 		
 		MainWindow.native_window.set_text_listener (listener);
+	}
+	
+	public static void show_default_characters () {
+		MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
+		OverView o = MainWindow.get_overview ();
+		GlyphRange gr = new GlyphRange ();
+
+		if (!BirdFont.get_current_font ().initialised) {
+			MenuTab.new_file ();
+		}
+			
+		DefaultCharacterSet.use_default_range (gr);
+		o.set_glyph_range (gr);
+
+		MainWindow.get_tab_bar ().select_tab_name ("Overview");
+	}
+	
+	public static void show_all_available_characters () {
+		MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
+		
+		if (!BirdFont.get_current_font ().initialised) {
+			MenuTab.new_file ();
+		}
+		
+		MainWindow.get_tab_bar ().select_tab_name ("Overview");
+		OverviewTools.show_all_available_characters ();
+	}
+	
+	public static void show_background_tab () {
+		BackgroundTab bt;
+		
+		if (suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
+		bt = BackgroundTab.get_instance ();
+		MainWindow.get_tab_bar ().add_unique_tab (bt);
+	}
+	
+	public static void show_settings_tab () {
+		MainWindow.get_tab_bar ().add_unique_tab (new SettingsDisplay ());
 	}
 }
 

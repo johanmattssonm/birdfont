@@ -18,11 +18,13 @@ using Math;
 namespace BirdFont {
 
 public class Toolbox : GLib.Object  {
-	ToolCollection current_set; 
+	public static ToolCollection current_set; 
 	
-	public DrawingTools drawing_tools;
+	public static DrawingTools drawing_tools;
 	public KerningTools kerning_tools;
 	public PreviewTools preview_tools;
+	public static OverviewTools overview_tools;
+	public static BackgroundTools background_tools;
 	
 	Tool current_tool;
 	
@@ -40,31 +42,43 @@ public class Toolbox : GLib.Object  {
 	bool scrolling_touch = false;
 	double scroll_y = 0;
 
-	private List<ToolCollection> tool_sets = new List<ToolCollection> ();
+	public List<ToolCollection> tool_sets = new List<ToolCollection> ();
 		
-	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
+	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {	
 		current_tool = new Tool ("no_icon");
 		press_tool = new Tool (null);
 
 		drawing_tools = new DrawingTools (glyph_canvas); 
 		kerning_tools = new KerningTools ();
 		preview_tools = new PreviewTools ();
+		overview_tools = new OverviewTools ();
+		background_tools = new BackgroundTools ();
 		
 		tool_sets.append (drawing_tools);
 		tool_sets.append (kerning_tools);
 		tool_sets.append (preview_tools);
+		tool_sets.append (overview_tools);
+		tool_sets.append (background_tools);
 		
 		current_set = drawing_tools;
 		
 		tab_bar.signal_tab_selected.connect ((tab) => {
 			string tab_name = tab.get_display ().get_name ();
+			
 			if (tab_name == "Kerning") {
 				current_set = kerning_tools;
 			} else if (tab_name == "Preview") {
 				current_set = preview_tools;
-			} else {
+			} else if (tab_name == "Overview") {
+				current_set = overview_tools;
+			} else if (tab_name == "Backgrounds") {
+				current_set = background_tools;
+			} else if (tab.get_display () is Glyph) {
 				current_set = drawing_tools;
-			}
+			} else {
+				current_set = new EmptySet ();
+			} 
+		
 			
 			update_expanders ();
 			redraw (0, 0, allocation_width, allocation_height);
@@ -87,25 +101,6 @@ public class Toolbox : GLib.Object  {
 			allocation_width = w;
 			allocation_height = h;
 			Toolbox.redraw_tool_box ();
-		}
-	}
-
-	public void key_press (uint keyval) {
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
-				
-		foreach (Expander exp in current_set.get_expanders ()) {
-			foreach (Tool t in exp.tool) {
-				t.set_active (false);
-				
-				if (t.tool_is_visible () && t.key == keyval 
-					&& t.modifier_flag == NONE 
-					&& KeyBindings.modifier == NONE) {
-					select_tool (t);
-				}
-			}
 		}
 	}
 	
@@ -279,8 +274,15 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public static void redraw_tool_box () {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Don't redraw toolbox when background thread is running.");
+			return;
+		}
+		
 		Toolbox t = MainWindow.get_toolbox ();
-		t.redraw (0, 0, allocation_width, allocation_height);
+		if (!is_null (t)) {
+			t.redraw (0, 0, allocation_width, allocation_height);
+		}
 	}
 	
 	public void reset_active_tool () {
@@ -377,6 +379,14 @@ public class Toolbox : GLib.Object  {
 		return Toolbox.allocation_width / 160.0;
 	}
 	
+	public void set_default_tool_size () {
+		foreach (ToolCollection t in tool_sets) {
+			foreach (Expander e in t.get_expanders ()) {
+				e.update_tool_position ();
+			}
+		}
+	}
+	
 	public void update_expanders () {
 		double pos;
 		
@@ -410,26 +420,58 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void draw (int w, int h, Context cr) { 
-		cr.save ();
+		EmptySet empty_set;
+		ImageSurface bg;
+		double scale_x, scale_y, scale;
 		
-		cr.rectangle (0, 0, w, h);
-		cr.set_line_width (0);
-		if (BirdFont.android) {
-			cr.set_source_rgba (222/255.0, 221/255.0, 222/255.0, 1);
+		if (current_set is EmptySet) {
+			empty_set = (EmptySet) current_set;
+			
+			if (empty_set.background != null) {
+				bg = (!) empty_set.background;
+				
+				scale_x = (double) allocation_width / bg.get_width ();
+				scale_y = (double) allocation_height / bg.get_height ();
+				
+				scale = fmax (scale_x, scale_y);
+				
+				cr.save ();
+				cr.scale (scale, scale);
+				cr.set_source_surface (bg, 0, 0);
+				cr.paint ();				
+				cr.restore ();
+				
+				draw_expanders (w, h, cr);
+			}
 		} else {
-			cr.set_source_rgba (240/255.0, 240/255.0, 240/255.0, 1);
+			cr.save ();
+			
+			cr.rectangle (0, 0, w, h);
+			cr.set_line_width (0);
+			cr.set_source_rgba (51/255.0, 54/255.0, 59/255.0, 1);
+			cr.fill ();
+
+			draw_expanders (w, h, cr);
+			
+			cr.restore ();
 		}
-		cr.fill ();
-		
-		cr.rectangle (0, 0, 1, h);
-		cr.set_line_width (0);
-		cr.set_source_rgba (0/255.0, 0/255.0, 0/255.0, 1);
-		cr.fill ();
-		
-		draw_expanders (w, h, cr);
-		
-		cr.restore ();
 	}
+	
+	public class EmptySet : ToolCollection  {
+		
+		public ImageSurface? background;
+		Gee.ArrayList<Expander> expanders;
+		
+		public EmptySet () {
+			background = Icons.get_icon ("corvus_monedula.png");
+			expanders = new Gee.ArrayList<Expander> ();
+		}
+		
+		public override Gee.ArrayList<Expander> get_expanders () {
+			return expanders;
+		}
+	}
+
 }
 
 }

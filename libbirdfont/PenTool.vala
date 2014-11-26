@@ -532,7 +532,7 @@ public class PenTool : Tool {
 	
 	public void set_precision (double p) {
 		precision = p;
-		DrawingTools.precision.set_value_round (p, false, false);
+		SettingsDisplay.precision.set_value_round (p, false, false);
 	}
 	
 	public void move (int x, int y) {
@@ -747,12 +747,11 @@ public class PenTool : Tool {
 	public void press (int button, int x, int y, bool double_click) {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
-		Toolbox tb = MainWindow.get_toolbox ();
 		
 		return_if_fail (g != null);
 
 		if ((double_click && !BirdFont.android)
-				|| tb.drawing_tools.inser_point_on_path_tool.is_selected ()) {
+				|| Toolbox.drawing_tools.inser_point_on_path_tool.is_selected ()) {
 			glyph.insert_new_point_on_path (x, y);
 			return;
 		}

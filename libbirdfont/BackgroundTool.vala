@@ -99,6 +99,32 @@ public class BackgroundTool : Tool {
 		move_action.connect((self, x, y) => {			
 			move (x, y);
 		});
+
+		key_press_action.connect ((self, keyval) => {
+			move_bg = true;
+			begin_x = 0;
+			begin_y = 0;
+					
+			switch (keyval) {
+				case Key.UP:
+					move (0, -1);
+					break;
+				case Key.DOWN:
+					move (0, 1);
+					break;
+				case Key.LEFT:
+					move (-1, 0);
+					break;
+				case Key.RIGHT:
+					move (1, 0);
+					break;						
+				default:
+					break;
+			}
+			
+			move_bg = false;
+		});
+
 		
 		draw_action.connect ((self, cairo_context, glyph) => {
 			Glyph g = MainWindow.get_current_glyph ();

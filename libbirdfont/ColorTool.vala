@@ -25,7 +25,7 @@ public class ColorTool : Tool {
 	
 	public signal void color_updated ();
 	
-	public ColorTool (string tooltip) {
+	public ColorTool (string tooltip = "") {
 		base (null, tooltip);
 
 		select_action.connect((self) => {
@@ -34,6 +34,7 @@ public class ColorTool : Tool {
 		
 		color_updated.connect (() => {
 			MainWindow.get_toolbox ().redraw ((int)x, (int)y, (int)x + 20, (int)y + 20);
+			GlyphCanvas.redraw ();
 		});
 	}
 	

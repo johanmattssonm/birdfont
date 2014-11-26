@@ -32,6 +32,8 @@ public class OverViewItem : GLib.Object {
 	public static double width = 100;
 	public static double height = 130;
 	public static double margin = 20;
+
+	public static double glyph_scale = 1.0;
 	
 	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	
 		this.x = x;
@@ -88,25 +90,11 @@ public class OverViewItem : GLib.Object {
 		return s;
 	}
 
-	public void double_click (uint button, double px, double py) {
+	public bool double_click (uint button, double px, double py) {
 		selected = (x <= px <= x + width) && (y <= py <= y + height);
-		
-		if (selected) {
-			edit_glyph ();
-		}
+		return selected;
 	}
-	
-	public void edit_glyph () {
-		OverView overview = MainWindow.get_overview ();
-		
-		if (glyphs == null) {
-			overview.open_new_glyph_signal (character);
-		} else {
-			overview.open_glyph_signal ((!) glyphs);
-			((!) glyphs).get_current ().close_path ();
-		}		
-	}
-	
+
 	public void draw (Context cr) {
 		cr.save ();
 		cr.set_source_rgba (1, 1, 1, 1);
@@ -125,42 +113,67 @@ public class OverViewItem : GLib.Object {
 		draw_caption (cr);	
 	}
 
-	private bool draw_thumbnail (Context cr, GlyphCollection? gl, double x, double y) {
+	public void adjust_scale () {
+		double x1, x2, y1, y2, glyph_width, glyph_height, scale, gx;
+		Glyph g;
+		Font font;
+		
+		if (glyphs != null) {
+			font = BirdFont.get_current_font ();
+			g = ((!) glyphs).get_current ();
+			g.boundaries (out x1, out y1, out x2, out y2);
+		
+			glyph_width = x2 - x1;
+			glyph_height = y2 - y1;
+
+			if (glyph_scale == 1) {
+				// caption height is 20
+				glyph_scale = (height - 20) / (font.top_limit - font.bottom_limit);	
+			}
+			
+			scale = glyph_scale;			
+			gx = ((width / scale) - glyph_width) / 2;
+		
+			if (gx < 0) {
+				glyph_scale = 1 + 2 * gx / width;
+			}
+		}
+	}
+
+	private void draw_thumbnail (Context cr, GlyphCollection? gl, double x, double y) {
 		Glyph g;
 		Font font;
 		double gx, gy;
 		double x1, x2, y1, y2;
-		double scale;
 		double scale_box;
 		double w, h;
 		double glyph_width, glyph_height;
 		Surface s;
 		Context c;
+		Text fallback;
+		double font_size;
+
+		font = BirdFont.get_current_font ();
+		w = width;
+		h = height;
 		
-		if (gl != null) {
-			font = BirdFont.get_current_font ();
-			w = width;
-			h = height;
+		scale_box = width / DEFAULT_WIDTH;
+
+		s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
+		c = new Context (s);
 			
-			scale_box = (width / DEFAULT_WIDTH);
-					
+		if (gl != null) {
 			g = ((!) gl).get_current ();
 			g.boundaries (out x1, out y1, out x2, out y2);
 		
 			glyph_width = x2 - x1;
 			glyph_height = y2 - y1;
 			
-			// caption height is 20
-			scale = (h - 20) / (font.top_limit - font.bottom_limit);
-			
-			gx = ((w / scale) - glyph_width) / 2;
-			gy = (h / scale) - 25 / scale;
-			
-			s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
-			c = new Context (s);
-			
+			gx = ((w / glyph_scale) - glyph_width) / 2;
+			gy = (h / glyph_scale) - 25 / glyph_scale;
+
 			c.save ();
-			c.scale (scale, scale);	
+			c.scale (glyph_scale, glyph_scale);	
 
 			g.add_help_lines ();
 			
@@ -168,14 +181,24 @@ public class OverViewItem : GLib.Object {
 			
 			g.draw_paths (c);
 			c.restore ();
-
-			cr.save ();
-			cr.set_source_surface (s, x, y - h);
-			cr.paint ();
-			cr.restore ();
+		} else {
+			c.save ();
+			fallback = new Text ();
+			fallback.set_source_rgba (219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
+			fallback.set_text ((!) character.to_string ());
+			font_size = height * 0.8;
+			fallback.set_font_size (font_size);
+			gx = (width - fallback.get_extent ()) / 2.0;
+			gy = height - 30;
+			fallback.set_font_size (font_size);
+			fallback.draw_at_baseline (c, gx, gy);
+			c.restore ();
 		}
 		
-		return (gl != null);
+		cr.save ();
+		cr.set_source_surface (s, x, y - h);
+		cr.paint ();
+		cr.restore ();
 	}
 
 	public bool has_icons () {

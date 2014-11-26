@@ -16,6 +16,8 @@ namespace BirdFont {
 
 public class GlyphRange {
 	
+	public string name {get; set;}
+	
 	public Gee.ArrayList<UniRange> ranges;
 	
 	/** Glyphs without a corresponding unicode value (ligatures). */
@@ -28,6 +30,7 @@ public class GlyphRange {
 	public GlyphRange () {
 		ranges = new Gee.ArrayList<UniRange> ();
 		unassigned = new Gee.ArrayList<string> ();
+		name = "No name";
 	}
 	
 	public void add_unassigned (string glyph_name) {
