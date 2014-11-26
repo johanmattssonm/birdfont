@@ -226,7 +226,11 @@ public class TextArea : Widget {
 		if (!has_selection () && KeyBindings.has_shift ()) {
 			show_selection = true;
 			selection_end = carret.copy ();
-		}	
+		}
+		
+		if (!KeyBindings.has_shift ()) {
+			show_selection = false;
+		}
 	}
 	
 	private void add_character (uint keyval) {

@@ -129,6 +129,7 @@ public class ForesightTool : Tool {
 				
 				last.path.direction_is_set = false;
 				PenTool.force_direction ();
+			} else if (state == MOVE_POINT) {
 			} else {
 				warning (@"Unknown state $state.");
 			}

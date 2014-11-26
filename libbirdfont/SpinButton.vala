@@ -305,8 +305,7 @@ public class SpinButton : Tool {
 		}
 		
 		if (big_number) {
-
-			if (v == "") {
+			if (v == "" || v == "0") {
 				v = "0.0000";
 			}
 			
