@@ -44,8 +44,7 @@ public class TabBar : GLib.Object {
 
 	ImageSurface? next_tab;
 	ImageSurface? to_previous_tab;
-	
-	ImageSurface? tab_bar_background = null;
+
 	ImageSurface? menu_icon;
 	
 	double scale = 1; // scale images in 320 dpi
@@ -64,7 +63,6 @@ public class TabBar : GLib.Object {
 		to_previous_tab = Icons.get_icon ("previous_tab.png");
 		
 		progress = Icons.get_icon ("progress_wheel.png");
-		tab_bar_background = Icons.get_icon ("tab_bar_background.png");
 		
 		menu_icon = Icons.get_icon ("menu.png");
 	}
@@ -618,7 +616,6 @@ public class TabBar : GLib.Object {
 		return_if_fail (to_previous_tab != null);
 		return_if_fail (next_tab != null);
 		return_if_fail (progress != null);
-		return_if_fail (tab_bar_background != null);
 
 		cr.save ();
 		cr.set_line_width (0);
