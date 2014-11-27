@@ -96,7 +96,7 @@ public class KeyBindings {
 
 	public static bool require_modifier;
 
-	public uint get_modifiers () {
+	public static uint get_modifiers () {
 		return modifier;
 	}
 
@@ -120,8 +120,8 @@ public class KeyBindings {
 	}
 
 	public static void remove_modifier_from_keyval (uint keyval) {
-		uint mod = get_mod_from_key (keyval);
-		set_modifier (modifier ^ mod);		
+		uint mod = 0xFFFFFF ^ get_mod_from_key (keyval);
+		set_modifier (modifier & mod);
 	}
 
 	public static void add_modifier_from_keyval (uint keyval) {

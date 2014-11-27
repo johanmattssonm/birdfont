@@ -22,11 +22,7 @@ public class Text : Widget {
 	public Font font {
 		get {
 			if (current_font == null) {
-				File path = SearchPaths.find_file (null, "roboto.bf");
-				current_font = new Font ();
-				if (!load_font ((!) path.get_path ())) {
-					current_font =  new Font ();
-				}
+				load_default_font ();
 			}
 			
 			return (!) current_font;
@@ -69,6 +65,13 @@ public class Text : Widget {
 		
 		set_font_size (size);
 		set_text (text);
+	}
+
+	public static void load_default_font () {
+		File path = SearchPaths.find_file (null, "roboto.bf");
+		if (FontCache.get_default_cache ().get_font ((!) path.get_path ()) == null) {
+			warning ("Default font not found.");
+		}
 	}
 
 	public void set_font_size (double height_in_pixels) {
