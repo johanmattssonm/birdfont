@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-19 04:55+0100\n"
+"POT-Creation-Date: 2014-11-27 12:20+0100\n"
 "PO-Revision-Date: 2014-07-26 21:55+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -196,10 +196,6 @@ msgstr ""
 msgid "Saving"
 msgstr ""
 
-#: libbirdfont/BirdFontFile.vala:725
-msgid "Loading XML data."
-msgstr ""
-
 #: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
 msgstr ""
@@ -213,9 +209,8 @@ msgid "Crop background image"
 msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:25
-#, fuzzy
 msgid "Default Language"
-msgstr "שפת בררת המחדל"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:26
 msgid "Private Use Area"
@@ -264,10 +259,9 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:63
-#: libbirdfont/DescriptionDisplay.vala:308 libbirdfont/Menu.vala:417
-#, fuzzy
+#: libbirdfont/DescriptionDisplay.vala:271 libbirdfont/Menu.vala:417
 msgid "Name and Description"
-msgstr "תיאור"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:67 birdfont/GtkWindow.vala:950
 msgid "PostScript Name"
@@ -306,7 +300,7 @@ msgstr ""
 msgid "Description"
 msgstr "תיאור"
 
-#: libbirdfont/DescriptionDisplay.vala:146 birdfont/GtkWindow.vala:1021
+#: libbirdfont/DescriptionDisplay.vala:147 birdfont/GtkWindow.vala:1021
 msgid "Copyright"
 msgstr ""
 
@@ -915,9 +909,8 @@ msgid "All Glyphs"
 msgstr ""
 
 #: libbirdfont/OverviewTools.vala:56
-#, fuzzy
 msgid "Default"
-msgstr "שפת בררת המחדל"
+msgstr ""
 
 #: libbirdfont/PenTool.vala:83
 msgid "Add new points"
@@ -1066,6 +1059,9 @@ msgstr ""
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
 msgstr ""
+
+#~ msgid "Default language"
+#~ msgstr "שפת בררת המחדל"
 
 #~ msgid "exit if a test case failes"
 #~ msgstr "לצאת אם נכשלת בדיקה"

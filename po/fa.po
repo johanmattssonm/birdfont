@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-19 04:55+0100\n"
+"POT-Creation-Date: 2014-11-27 12:20+0100\n"
 "PO-Revision-Date: 2014-03-03 21:28+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,14 +73,12 @@ msgid "run test case"
 msgstr ""
 
 #: libbirdfont/BackgroundSelectionTool.vala:23
-#, fuzzy
 msgid "Select Background"
-msgstr "پس‌زمینه‌ها"
+msgstr ""
 
 #: libbirdfont/BackgroundTab.vala:46
-#, fuzzy
 msgid "Background Image"
-msgstr "چیدن تصویر پس‌زمینه"
+msgstr ""
 
 #: libbirdfont/BackgroundTool.vala:41
 msgid "Move, resize and rotate background image"
@@ -91,9 +89,8 @@ msgid "Select background image"
 msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:26
-#, fuzzy
 msgid "Select Background Image"
-msgstr "چیدن تصویر پس‌زمینه"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:27
 msgid "Images"
@@ -206,10 +203,6 @@ msgstr "نمی توان شاخه خروجی را پیدا کرد"
 msgid "Saving"
 msgstr ""
 
-#: libbirdfont/BirdFontFile.vala:725
-msgid "Loading XML data."
-msgstr ""
-
 #: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
 msgstr "بارگذارینویسه های یونیکد از دیتابیس"
@@ -223,14 +216,12 @@ msgid "Crop background image"
 msgstr "چیدن تصویر پس‌زمینه"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
-#, fuzzy
 msgid "Default Language"
-msgstr "زبان پیش‌گزیده"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:26
-#, fuzzy
 msgid "Private Use Area"
-msgstr "ناحیه‌ی خصوصی"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:28
 msgid "Chinese"
@@ -276,10 +267,9 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:63
-#: libbirdfont/DescriptionDisplay.vala:308 libbirdfont/Menu.vala:417
-#, fuzzy
+#: libbirdfont/DescriptionDisplay.vala:271 libbirdfont/Menu.vala:417
 msgid "Name and Description"
-msgstr "شرح"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:67 birdfont/GtkWindow.vala:950
 msgid "PostScript Name"
@@ -318,7 +308,7 @@ msgstr ""
 msgid "Description"
 msgstr "شرح"
 
-#: libbirdfont/DescriptionDisplay.vala:146 birdfont/GtkWindow.vala:1021
+#: libbirdfont/DescriptionDisplay.vala:147 birdfont/GtkWindow.vala:1021
 msgid "Copyright"
 msgstr ""
 
@@ -471,9 +461,8 @@ msgid "Autotrace background image"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:750
-#, fuzzy
 msgid "Delete background image"
-msgstr "چیدن تصویر پس‌زمینه"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:800
 msgid "Show guidelines"
@@ -512,9 +501,8 @@ msgid "Next view"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1102
-#, fuzzy
 msgid "Background Tools"
-msgstr "پس‌زمینه‌ها"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1132
 msgid "Object Tools"
@@ -732,9 +720,8 @@ msgid "Preview"
 msgstr ""
 
 #: libbirdfont/Menu.vala:120
-#, fuzzy
 msgid "Select Character Set"
-msgstr "مجموعه نویسه‌گان پیش‌فرض:"
+msgstr ""
 
 #: libbirdfont/Menu.vala:127
 msgid "Quit"
@@ -781,9 +768,8 @@ msgid "Import SVG file"
 msgstr ""
 
 #: libbirdfont/Menu.vala:211
-#, fuzzy
 msgid "Import Background Image"
-msgstr "چیدن تصویر پس‌زمینه"
+msgstr ""
 
 #: libbirdfont/Menu.vala:218
 msgid "Simplify Path"
@@ -798,9 +784,8 @@ msgid "Glyph Sequence"
 msgstr ""
 
 #: libbirdfont/Menu.vala:239
-#, fuzzy
 msgid "Set Background Glyph"
-msgstr "پس‌زمینه‌ها"
+msgstr ""
 
 #: libbirdfont/Menu.vala:246
 msgid "Remove Background Glyph"
@@ -924,18 +909,16 @@ msgid "Yes, don't ask again."
 msgstr ""
 
 #: libbirdfont/OverviewTools.vala:32
-#, fuzzy
 msgid "Character Sets"
-msgstr "مجموعه نویسه‌گان پیش‌فرض:"
+msgstr ""
 
 #: libbirdfont/OverviewTools.vala:47
 msgid "All Glyphs"
 msgstr ""
 
 #: libbirdfont/OverviewTools.vala:56
-#, fuzzy
 msgid "Default"
-msgstr "زبان پیش‌گزیده"
+msgstr ""
 
 #: libbirdfont/PenTool.vala:83
 msgid "Add new points"
@@ -1085,6 +1068,12 @@ msgstr ""
 msgid "Writing"
 msgstr ""
 
+#~ msgid "Default language"
+#~ msgstr "زبان پیش‌گزیده"
+
+#~ msgid "Private use area"
+#~ msgstr "ناحیه‌ی خصوصی"
+
 #~ msgid "Show full unicode characters set"
 #~ msgstr "نمایش کامل نویسه های یونیکد"
 
@@ -1092,8 +1081,15 @@ msgstr ""
 #~ msgstr "مجموعه نویسه‌گان پیش‌فرض:"
 
 #, fuzzy
+#~ msgid "Show De_fault Characters Set"
+#~ msgstr "مجموعه نویسه‌گان پیش‌فرض:"
+
+#, fuzzy
 #~ msgid "Show _full unicode characters set"
 #~ msgstr "نمایش کامل نویسه های یونیکد"
+
+#~ msgid "Backgrounds"
+#~ msgstr "پس‌زمینه‌ها"
 
 #, fuzzy
 #~ msgid "Zoom in background image"

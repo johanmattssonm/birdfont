@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-19 04:55+0100\n"
+"POT-Creation-Date: 2014-11-27 12:20+0100\n"
 "PO-Revision-Date: 2014-09-30 21:54+0000\n"
 "Last-Translator: Ceyhun <sezenoglu@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,14 +74,12 @@ msgid "run test case"
 msgstr ""
 
 #: libbirdfont/BackgroundSelectionTool.vala:23
-#, fuzzy
 msgid "Select Background"
-msgstr "Arkaplanlar"
+msgstr ""
 
 #: libbirdfont/BackgroundTab.vala:46
-#, fuzzy
 msgid "Background Image"
-msgstr "Arkaplan imajı kesme"
+msgstr ""
 
 #: libbirdfont/BackgroundTool.vala:41
 msgid "Move, resize and rotate background image"
@@ -92,9 +90,8 @@ msgid "Select background image"
 msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:26
-#, fuzzy
 msgid "Select Background Image"
-msgstr "Arkaplan imajı kesme"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:27
 msgid "Images"
@@ -200,10 +197,6 @@ msgstr "Output dizini bulunamadı"
 msgid "Saving"
 msgstr "Kaydediliyor"
 
-#: libbirdfont/BirdFontFile.vala:725
-msgid "Loading XML data."
-msgstr "XML datası yükleniyor"
-
 #: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
 msgstr ""
@@ -217,9 +210,8 @@ msgid "Crop background image"
 msgstr "Arkaplan imajı kesme"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
-#, fuzzy
 msgid "Default Language"
-msgstr "Ön tanımlı dil"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:26
 msgid "Private Use Area"
@@ -269,10 +261,9 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:63
-#: libbirdfont/DescriptionDisplay.vala:308 libbirdfont/Menu.vala:417
-#, fuzzy
+#: libbirdfont/DescriptionDisplay.vala:271 libbirdfont/Menu.vala:417
 msgid "Name and Description"
-msgstr "Tanım"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:67 birdfont/GtkWindow.vala:950
 msgid "PostScript Name"
@@ -312,7 +303,7 @@ msgstr ""
 msgid "Description"
 msgstr "Tanım"
 
-#: libbirdfont/DescriptionDisplay.vala:146 birdfont/GtkWindow.vala:1021
+#: libbirdfont/DescriptionDisplay.vala:147 birdfont/GtkWindow.vala:1021
 msgid "Copyright"
 msgstr "Telif Hakkı"
 
@@ -321,18 +312,16 @@ msgid "Drawing Tools"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:101 libbirdfont/DrawingTools.vala:1117
-#, fuzzy
 msgid "Control Point Tools"
-msgstr "Kontrol noktası taşı"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:102
 msgid "Geometrical Shapes"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:103 libbirdfont/OverviewTools.vala:33
-#, fuzzy
 msgid "Zoom"
-msgstr "Yakınlaştır"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:105
 msgid "Guidelines & Grid"
@@ -467,9 +456,8 @@ msgid "Autotrace background image"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:750
-#, fuzzy
 msgid "Delete background image"
-msgstr "Arkaplan imajı kesme"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:800
 msgid "Show guidelines"
@@ -484,9 +472,8 @@ msgid "Show guidelines at top and bottom margin"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:880
-#, fuzzy
 msgid "Zoom Out More"
-msgstr "Uzaklaştır"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:889
 msgid "Show full glyph"
@@ -509,9 +496,8 @@ msgid "Next view"
 msgstr "Sonraki görünüm"
 
 #: libbirdfont/DrawingTools.vala:1102
-#, fuzzy
 msgid "Background Tools"
-msgstr "Arkaplanlar"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1132
 msgid "Object Tools"
@@ -556,9 +542,8 @@ msgid "The file is write protected."
 msgstr ""
 
 #: libbirdfont/ForesightTool.vala:39
-#, fuzzy
 msgid "Create Beziér curves"
-msgstr "Kübik Bezier eğrisi oluştur"
+msgstr ""
 
 #: libbirdfont/GridTool.vala:35
 msgid "Show grid"
@@ -654,9 +639,8 @@ msgid "ligature"
 msgstr ""
 
 #: libbirdfont/LigatureList.vala:55
-#, fuzzy
 msgid "beginning"
-msgstr "Harf aralığı (Kerning)"
+msgstr ""
 
 #: libbirdfont/LigatureList.vala:55
 msgid "middle"
@@ -683,9 +667,8 @@ msgid "Ligatures"
 msgstr ""
 
 #: libbirdfont/Ligatures.vala:107
-#, fuzzy
 msgid "Beginning"
-msgstr "Harf aralığı (Kerning)"
+msgstr ""
 
 #: libbirdfont/Ligatures.vala:128
 msgid "Middle"
@@ -708,37 +691,32 @@ msgid "Glyph sequence"
 msgstr ""
 
 #: libbirdfont/Menu.vala:65
-#, fuzzy
 msgid "File"
-msgstr "Dosyalar"
+msgstr ""
 
 #: libbirdfont/Menu.vala:71
 msgid "New"
 msgstr ""
 
 #: libbirdfont/Menu.vala:85
-#, fuzzy
 msgid "Recent Files"
-msgstr "Son dosyalar"
+msgstr ""
 
 #: libbirdfont/Menu.vala:99
-#, fuzzy
 msgid "Save As"
-msgstr "Kaydet"
+msgstr ""
 
 #: libbirdfont/Menu.vala:106
-#, fuzzy
 msgid "Export"
-msgstr "İçe Aktar"
+msgstr ""
 
 #: libbirdfont/Menu.vala:113 libbirdfont/Preview.vala:27
 msgid "Preview"
 msgstr "Önizleme"
 
 #: libbirdfont/Menu.vala:120
-#, fuzzy
 msgid "Select Character Set"
-msgstr "Karakter seti"
+msgstr ""
 
 #: libbirdfont/Menu.vala:127
 msgid "Quit"
@@ -753,9 +731,8 @@ msgid "Redo"
 msgstr ""
 
 #: libbirdfont/Menu.vala:155
-#, fuzzy
 msgid "Copy"
-msgstr "Telif Hakkı"
+msgstr ""
 
 #: libbirdfont/Menu.vala:162
 msgid "Paste"
@@ -786,9 +763,8 @@ msgid "Import SVG file"
 msgstr ""
 
 #: libbirdfont/Menu.vala:211
-#, fuzzy
 msgid "Import Background Image"
-msgstr "Arkaplan imajı kesme"
+msgstr ""
 
 #: libbirdfont/Menu.vala:218
 msgid "Simplify Path"
@@ -803,9 +779,8 @@ msgid "Glyph Sequence"
 msgstr ""
 
 #: libbirdfont/Menu.vala:239
-#, fuzzy
 msgid "Set Background Glyph"
-msgstr "Arkaplanlar"
+msgstr ""
 
 #: libbirdfont/Menu.vala:246
 msgid "Remove Background Glyph"
@@ -836,9 +811,8 @@ msgid "Next Tab"
 msgstr ""
 
 #: libbirdfont/Menu.vala:299
-#, fuzzy
 msgid "Previous Tab"
-msgstr "Önceki görünüm"
+msgstr ""
 
 #: libbirdfont/Menu.vala:306
 msgid "Close Tab"
@@ -849,9 +823,8 @@ msgid "Close All Tabs"
 msgstr ""
 
 #: libbirdfont/Menu.vala:327
-#, fuzzy
 msgid "Show Kerning Tab"
-msgstr "Harf aralığı (Kerning)"
+msgstr ""
 
 #: libbirdfont/Menu.vala:334
 msgid "List Kerning Pairs"
@@ -870,9 +843,8 @@ msgid "Select Previous Kerning Pair"
 msgstr ""
 
 #: libbirdfont/Menu.vala:371
-#, fuzzy
 msgid "Show Ligatures"
-msgstr "Izgarayı göster"
+msgstr ""
 
 #: libbirdfont/Menu.vala:387
 msgid "Git"
@@ -932,18 +904,16 @@ msgid "Yes, don't ask again."
 msgstr "Evet, tekrar sorma."
 
 #: libbirdfont/OverviewTools.vala:32
-#, fuzzy
 msgid "Character Sets"
-msgstr "Karakter seti"
+msgstr ""
 
 #: libbirdfont/OverviewTools.vala:47
 msgid "All Glyphs"
 msgstr ""
 
 #: libbirdfont/OverviewTools.vala:56
-#, fuzzy
 msgid "Default"
-msgstr "Ön tanımlı dil"
+msgstr ""
 
 #: libbirdfont/PenTool.vala:83
 msgid "Add new points"
@@ -995,9 +965,8 @@ msgid "Precision for pen tool"
 msgstr ""
 
 #: libbirdfont/SettingsDisplay.vala:143
-#, fuzzy
 msgid "Show or hide control point handles"
-msgstr "Kontrol noktası taşı"
+msgstr ""
 
 #: libbirdfont/SettingsDisplay.vala:165
 msgid "Object color"
@@ -1096,6 +1065,15 @@ msgstr ""
 msgid "Writing"
 msgstr "Yazılıyor"
 
+#~ msgid "Loading XML data."
+#~ msgstr "XML datası yükleniyor"
+
+#~ msgid "Default language"
+#~ msgstr "Ön tanımlı dil"
+
+#~ msgid "Zoom in"
+#~ msgstr "Yakınlaştır"
+
 #~ msgid "Zoom out"
 #~ msgstr "Uzaklaştır"
 
@@ -1106,6 +1084,10 @@ msgstr "Yazılıyor"
 #, fuzzy
 #~ msgid "_Open"
 #~ msgstr "Aç"
+
+#, fuzzy
+#~ msgid "_Recent Files"
+#~ msgstr "Son dosyalar"
 
 #, fuzzy
 #~ msgid "_Preview"
@@ -1124,8 +1106,15 @@ msgstr "Yazılıyor"
 #~ msgstr "Yakınlaştır"
 
 #, fuzzy
+#~ msgid "Zoom _Out"
+#~ msgstr "Uzaklaştır"
+
+#, fuzzy
 #~ msgid "_Kerning"
 #~ msgstr "Harf aralığı (Kerning)"
+
+#~ msgid "Backgrounds"
+#~ msgstr "Arkaplanlar"
 
 #~ msgid "Creating thumbnails"
 #~ msgstr "Küçük resimler oluşturuluyor"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-19 04:55+0100\n"
+"POT-Creation-Date: 2014-11-27 12:20+0100\n"
 "PO-Revision-Date: 2014-10-10 14:27+0000\n"
 "Last-Translator: pedroSK <p.hlavacik@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,14 +74,12 @@ msgid "run test case"
 msgstr "Spustiť test"
 
 #: libbirdfont/BackgroundSelectionTool.vala:23
-#, fuzzy
 msgid "Select Background"
-msgstr "Vybrať obrázok pozadia"
+msgstr ""
 
 #: libbirdfont/BackgroundTab.vala:46
-#, fuzzy
 msgid "Background Image"
-msgstr "Orezať obrázok pozadia"
+msgstr ""
 
 #: libbirdfont/BackgroundTool.vala:41
 msgid "Move, resize and rotate background image"
@@ -92,9 +90,8 @@ msgid "Select background image"
 msgstr "Vybrať obrázok pozadia"
 
 #: libbirdfont/BackgroundTools.vala:26
-#, fuzzy
 msgid "Select Background Image"
-msgstr "Vybrať obrázok pozadia"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:27
 msgid "Images"
@@ -109,14 +106,12 @@ msgid "Parts"
 msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:45
-#, fuzzy
 msgid "Add"
-msgstr "Pridávam"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:86
-#, fuzzy
 msgid "Select Glyph"
-msgstr "Vybrať farbu"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:169 libbirdfont/LoadCallback.vala:84
 #: libbirdfont/Menu.vala:78
@@ -203,10 +198,6 @@ msgstr "Nepodarilo sa nájsť výstupný adresár"
 msgid "Saving"
 msgstr "Ukladám"
 
-#: libbirdfont/BirdFontFile.vala:725
-msgid "Loading XML data."
-msgstr "Nahrávajú sa XML dáta"
-
 #: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
 msgstr "Nahráva sa databáza znakov Unicode"
@@ -220,14 +211,12 @@ msgid "Crop background image"
 msgstr "Orezať obrázok pozadia"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
-#, fuzzy
 msgid "Default Language"
-msgstr "Predvolený jazyk"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:26
-#, fuzzy
 msgid "Private Use Area"
-msgstr "Súkromná oblasť"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:28
 msgid "Chinese"
@@ -276,10 +265,9 @@ msgstr ""
 "U Ú V W X Y Ý Z Ž"
 
 #: libbirdfont/DescriptionDisplay.vala:63
-#: libbirdfont/DescriptionDisplay.vala:308 libbirdfont/Menu.vala:417
-#, fuzzy
+#: libbirdfont/DescriptionDisplay.vala:271 libbirdfont/Menu.vala:417
 msgid "Name and Description"
-msgstr "Názov a Popis"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:67 birdfont/GtkWindow.vala:950
 msgid "PostScript Name"
@@ -318,7 +306,7 @@ msgstr ""
 msgid "Description"
 msgstr "Popis"
 
-#: libbirdfont/DescriptionDisplay.vala:146 birdfont/GtkWindow.vala:1021
+#: libbirdfont/DescriptionDisplay.vala:147 birdfont/GtkWindow.vala:1021
 msgid "Copyright"
 msgstr ""
 
@@ -327,19 +315,16 @@ msgid "Drawing Tools"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:101 libbirdfont/DrawingTools.vala:1117
-#, fuzzy
 msgid "Control Point Tools"
-msgstr "Posunúť kontrolné body"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:102
-#, fuzzy
 msgid "Geometrical Shapes"
-msgstr "Symetrické úchyty"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:103 libbirdfont/OverviewTools.vala:33
-#, fuzzy
 msgid "Zoom"
-msgstr "Priblížiť"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:105
 msgid "Guidelines & Grid"
@@ -474,9 +459,8 @@ msgid "Autotrace background image"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:750
-#, fuzzy
 msgid "Delete background image"
-msgstr "Vybrať obrázok pozadia"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:800
 msgid "Show guidelines"
@@ -491,9 +475,8 @@ msgid "Show guidelines at top and bottom margin"
 msgstr "Zobraziť vodítka na hornom a dolnom okraji"
 
 #: libbirdfont/DrawingTools.vala:880
-#, fuzzy
 msgid "Zoom Out More"
-msgstr "Zmenšiť"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:889
 msgid "Show full glyph"
@@ -520,9 +503,8 @@ msgid "Background Tools"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1132
-#, fuzzy
 msgid "Object Tools"
-msgstr "Farba objektu"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1267
 msgid "Set size for grid"
@@ -563,9 +545,8 @@ msgid "The file is write protected."
 msgstr ""
 
 #: libbirdfont/ForesightTool.vala:39
-#, fuzzy
 msgid "Create Beziér curves"
-msgstr "Vytvoriť kvadratické Bézierove krivky"
+msgstr ""
 
 #: libbirdfont/GridTool.vala:35
 msgid "Show grid"
@@ -685,9 +666,8 @@ msgid "New Contextual Substitution"
 msgstr ""
 
 #: libbirdfont/LigatureList.vala:133 libbirdfont/Menu.vala:378
-#, fuzzy
 msgid "Add Ligature"
-msgstr "Ligatúra"
+msgstr ""
 
 #: libbirdfont/LigatureList.vala:151 libbirdfont/Menu.vala:365
 msgid "Ligatures"
@@ -718,47 +698,40 @@ msgid "Glyph sequence"
 msgstr "Poradie znakov"
 
 #: libbirdfont/Menu.vala:65
-#, fuzzy
 msgid "File"
-msgstr "Súbor"
+msgstr ""
 
 #: libbirdfont/Menu.vala:71
-#, fuzzy
 msgid "New"
-msgstr "Nový"
+msgstr ""
 
 #: libbirdfont/Menu.vala:85
-#, fuzzy
 msgid "Recent Files"
-msgstr "Nedávne súbory"
+msgstr ""
 
 #: libbirdfont/Menu.vala:99
-#, fuzzy
 msgid "Save As"
-msgstr "Uložiť ako"
+msgstr ""
 
 #: libbirdfont/Menu.vala:106
-#, fuzzy
 msgid "Export"
-msgstr "Export"
+msgstr ""
 
 #: libbirdfont/Menu.vala:113 libbirdfont/Preview.vala:27
 msgid "Preview"
 msgstr "Náhľad"
 
 #: libbirdfont/Menu.vala:120
-#, fuzzy
 msgid "Select Character Set"
-msgstr "Zobraziť predvolenú znakovú sadu"
+msgstr ""
 
 #: libbirdfont/Menu.vala:127
 msgid "Quit"
 msgstr ""
 
 #: libbirdfont/Menu.vala:135
-#, fuzzy
 msgid "Edit"
-msgstr "Upraviť"
+msgstr ""
 
 #: libbirdfont/Menu.vala:148
 msgid "Redo"
@@ -777,9 +750,8 @@ msgid "Paste In Place"
 msgstr ""
 
 #: libbirdfont/Menu.vala:176
-#, fuzzy
 msgid "Select All Paths"
-msgstr "Vybrať všetky body alebo cesty"
+msgstr ""
 
 #: libbirdfont/Menu.vala:183
 msgid "Move To Baseline"
@@ -790,69 +762,56 @@ msgid "Search"
 msgstr ""
 
 #: libbirdfont/Menu.vala:197
-#, fuzzy
 msgid "Export Glyph as SVG"
-msgstr "Exportovať znaky ako SVG"
+msgstr ""
 
 #: libbirdfont/Menu.vala:204
-#, fuzzy
 msgid "Import SVG file"
-msgstr "Importovať SVG"
+msgstr ""
 
 #: libbirdfont/Menu.vala:211
-#, fuzzy
 msgid "Import Background Image"
-msgstr "Orezať obrázok pozadia"
+msgstr ""
 
 #: libbirdfont/Menu.vala:218
-#, fuzzy
 msgid "Simplify Path"
-msgstr "Zjednodušiť cestu"
+msgstr ""
 
 #: libbirdfont/Menu.vala:225
-#, fuzzy
 msgid "Close Path"
-msgstr "Uzavrieť cestu"
+msgstr ""
 
 #: libbirdfont/Menu.vala:232
-#, fuzzy
 msgid "Glyph Sequence"
-msgstr "Poradie znakov"
+msgstr ""
 
 #: libbirdfont/Menu.vala:239
-#, fuzzy
 msgid "Set Background Glyph"
-msgstr "Nastaviť pozadie znakov"
+msgstr ""
 
 #: libbirdfont/Menu.vala:246
-#, fuzzy
 msgid "Remove Background Glyph"
-msgstr "Ostrániť pozadie znakov"
+msgstr ""
 
 #: libbirdfont/Menu.vala:253
-#, fuzzy
 msgid "Select Point Above"
-msgstr "Vybrať bod nad"
+msgstr ""
 
 #: libbirdfont/Menu.vala:261
-#, fuzzy
 msgid "Select Next Point"
-msgstr "Vybrať bod nad"
+msgstr ""
 
 #: libbirdfont/Menu.vala:269
-#, fuzzy
 msgid "Select Previous Point"
-msgstr "Vybrať bod nad"
+msgstr ""
 
 #: libbirdfont/Menu.vala:277
-#, fuzzy
 msgid "Select Point Below"
-msgstr "Vybrať bod nad"
+msgstr ""
 
 #: libbirdfont/Menu.vala:286
-#, fuzzy
 msgid "Tab"
-msgstr "Karta"
+msgstr ""
 
 #: libbirdfont/Menu.vala:292
 msgid "Next Tab"
@@ -863,50 +822,44 @@ msgid "Previous Tab"
 msgstr ""
 
 #: libbirdfont/Menu.vala:306
-#, fuzzy
 msgid "Close Tab"
-msgstr "Zavrieť"
+msgstr ""
 
 #: libbirdfont/Menu.vala:313
 msgid "Close All Tabs"
 msgstr ""
 
 #: libbirdfont/Menu.vala:327
-#, fuzzy
 msgid "Show Kerning Tab"
-msgstr "Dvojice kerningu"
+msgstr ""
 
 #: libbirdfont/Menu.vala:334
-#, fuzzy
 msgid "List Kerning Pairs"
-msgstr "Dvojice kerningu"
+msgstr ""
 
 #: libbirdfont/Menu.vala:341
 msgid "Show Spacing Tab"
 msgstr ""
 
 #: libbirdfont/Menu.vala:348
-#, fuzzy
 msgid "Select Next Kerning Pair"
-msgstr "Dvojice kerningu"
+msgstr ""
 
 #: libbirdfont/Menu.vala:356
 msgid "Select Previous Kerning Pair"
 msgstr ""
 
 #: libbirdfont/Menu.vala:371
-#, fuzzy
 msgid "Show Ligatures"
-msgstr "Ligatúry"
+msgstr ""
 
 #: libbirdfont/Menu.vala:387
 msgid "Git"
 msgstr ""
 
 #: libbirdfont/Menu.vala:393
-#, fuzzy
 msgid "Save As .bfp"
-msgstr "Uložiť ako"
+msgstr ""
 
 #: libbirdfont/Menu.vala:402 libbirdfont/OverView.vala:302
 msgid "Overview"
@@ -958,19 +911,16 @@ msgid "Yes, don't ask again."
 msgstr "Áno, túto otázku už viac nezobrazovať."
 
 #: libbirdfont/OverviewTools.vala:32
-#, fuzzy
 msgid "Character Sets"
-msgstr "Zobraziť predvolenú znakovú sadu"
+msgstr ""
 
 #: libbirdfont/OverviewTools.vala:47
-#, fuzzy
 msgid "All Glyphs"
-msgstr "Znak"
+msgstr ""
 
 #: libbirdfont/OverviewTools.vala:56
-#, fuzzy
 msgid "Default"
-msgstr "Predvolený jazyk"
+msgstr ""
 
 #: libbirdfont/PenTool.vala:83
 msgid "Add new points"
@@ -1021,32 +971,28 @@ msgid "Precision for pen tool"
 msgstr ""
 
 #: libbirdfont/SettingsDisplay.vala:143
-#, fuzzy
 msgid "Show or hide control point handles"
-msgstr "Posunúť kontrolné body"
+msgstr ""
 
 #: libbirdfont/SettingsDisplay.vala:165
 msgid "Object color"
 msgstr "Farba objektu"
 
 #: libbirdfont/SettingsDisplay.vala:173
-#, fuzzy
 msgid "Fill open paths."
-msgstr "Nastaviť farbu výplne pre otvorené cesty"
+msgstr ""
 
 #: libbirdfont/SettingsDisplay.vala:180
 msgid "Use TTF units."
 msgstr "používať TTF jednotky"
 
 #: libbirdfont/SettingsDisplay.vala:183
-#, fuzzy
 msgid "Number of points added by the freehand tool"
-msgstr "Nastaviť počet vzoriek na bod v nástroji Freehand tool"
+msgstr ""
 
 #: libbirdfont/SettingsDisplay.vala:205
-#, fuzzy
 msgid "Path simplification threshold"
-msgstr "Hodnota prahu zjednodušenia"
+msgstr ""
 
 #: libbirdfont/SettingsDisplay.vala:219
 msgid "Key Bindings"
@@ -1125,11 +1071,24 @@ msgstr "Neznámy formát."
 msgid "Writing"
 msgstr "Ukladá sa"
 
+#~ msgid "Loading XML data."
+#~ msgstr "Nahrávajú sa XML dáta"
+
+#~ msgid "Default language"
+#~ msgstr "Predvolený jazyk"
+
+#, fuzzy
+#~ msgid "Private use area"
+#~ msgstr "Súkromná oblasť"
+
 #~ msgid "Show default characters set"
 #~ msgstr "Zobraziť štandardnú znakovú sadu"
 
 #~ msgid "Show all characters in the font"
 #~ msgstr "Zobraziť všetky znaky písma"
+
+#~ msgid "Zoom in"
+#~ msgstr "Priblížiť"
 
 #~ msgid "Zoom out"
 #~ msgstr "Zmenšiť"
@@ -1137,20 +1096,72 @@ msgstr "Ukladá sa"
 #~ msgid "Use one pixel per unit"
 #~ msgstr "Použiť jeden pixel na jednotku"
 
+#~ msgid "Set fill color for open paths."
+#~ msgstr "Nastaviť farbu výplne pre otvorené cesty"
+
+#~ msgid "Adjust the number of samples per point in the freehand tool."
+#~ msgstr "Nastaviť počet vzoriek na bod v nástroji Freehand tool"
+
+#, fuzzy
+#~ msgid "Simplification threshold"
+#~ msgstr "Hodnota prahu zjednodušenia"
+
 #~ msgid "Kerning:"
 #~ msgstr "Veľkosť medzery za znakom:"
+
+#~ msgid "Ligature"
+#~ msgstr "Ligatúra"
 
 #~ msgid "Text"
 #~ msgstr "Text"
 
+#~ msgid "_New"
+#~ msgstr "Nový"
+
 #~ msgid "_Open"
 #~ msgstr "Otvoriť"
+
+#~ msgid "_Recent Files"
+#~ msgstr "Nedávne súbory"
+
+#~ msgid "Save _as"
+#~ msgstr "Uložiť ako"
+
+#~ msgid "_Export"
+#~ msgstr "Export"
 
 #~ msgid "_Preview"
 #~ msgstr "Náhľad"
 
+#~ msgid "Name and _Description"
+#~ msgstr "Názov a Popis"
+
 #~ msgid "_Search"
 #~ msgstr "Hľadať"
+
+#~ msgid "_Export Glyph as SVG"
+#~ msgstr "Exportovať znaky ako SVG"
+
+#~ msgid "_Import SVG"
+#~ msgstr "Importovať SVG"
+
+#~ msgid "Simpl_ify Path"
+#~ msgstr "Zjednodušiť cestu"
+
+#~ msgid "Close _Path"
+#~ msgstr "Uzavrieť cestu"
+
+#~ msgid "_Glyph Sequence"
+#~ msgstr "Poradie znakov"
+
+#~ msgid "Set Glyph _Background"
+#~ msgstr "Nastaviť pozadie znakov"
+
+#~ msgid "_Remove Glyph Background"
+#~ msgstr "Ostrániť pozadie znakov"
+
+#~ msgid "_Select Point Above"
+#~ msgstr "Vybrať bod nad"
 
 #~ msgid "_Create Counter Path"
 #~ msgstr "Vytvoriť obrátenú cestu"
@@ -1160,6 +1171,9 @@ msgstr "Ukladá sa"
 
 #~ msgid "Show _Full Unicode Characters Set"
 #~ msgstr "Zobraziť úplnú sadu znakov Unicode"
+
+#~ msgid "Show De_fault Characters Set"
+#~ msgstr "Zobraziť predvolenú znakovú sadu"
 
 #~ msgid "Show Characters in Font"
 #~ msgstr "Zobraziť znaky písma"
@@ -1172,6 +1186,18 @@ msgstr "Ukladá sa"
 
 #~ msgid "_Zoom In"
 #~ msgstr "Priblížiť"
+
+#~ msgid "Zoom _Out"
+#~ msgstr "Zmenšiť"
+
+#~ msgid "_File"
+#~ msgstr "Súbor"
+
+#~ msgid "_Edit"
+#~ msgstr "Upraviť"
+
+#~ msgid "_Tab"
+#~ msgstr "Karta"
 
 #~ msgid "T_ool"
 #~ msgstr "Nástroj"

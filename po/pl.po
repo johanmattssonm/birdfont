@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-19 04:55+0100\n"
+"POT-Creation-Date: 2014-11-27 12:20+0100\n"
 "PO-Revision-Date: 2014-07-05 12:02+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,14 +74,12 @@ msgid "run test case"
 msgstr "uruchom test"
 
 #: libbirdfont/BackgroundSelectionTool.vala:23
-#, fuzzy
 msgid "Select Background"
-msgstr "Tła"
+msgstr ""
 
 #: libbirdfont/BackgroundTab.vala:46
-#, fuzzy
 msgid "Background Image"
-msgstr "Kadruj tło"
+msgstr ""
 
 #: libbirdfont/BackgroundTool.vala:41
 msgid "Move, resize and rotate background image"
@@ -92,9 +90,8 @@ msgid "Select background image"
 msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:26
-#, fuzzy
 msgid "Select Background Image"
-msgstr "Pokaż/ukryj tło"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:27
 msgid "Images"
@@ -113,9 +110,8 @@ msgid "Add"
 msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:86
-#, fuzzy
 msgid "Select Glyph"
-msgstr "Usuń zaznaczony glif"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:169 libbirdfont/LoadCallback.vala:84
 #: libbirdfont/Menu.vala:78
@@ -201,10 +197,6 @@ msgstr "Nie można znaleźć katalogu docelowego"
 msgid "Saving"
 msgstr ""
 
-#: libbirdfont/BirdFontFile.vala:725
-msgid "Loading XML data."
-msgstr ""
-
 #: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
 msgstr ""
@@ -218,14 +210,12 @@ msgid "Crop background image"
 msgstr "Kadruj tło"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
-#, fuzzy
 msgid "Default Language"
-msgstr "Język domyślny"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:26
-#, fuzzy
 msgid "Private Use Area"
-msgstr "Obszar użytku prywatnego"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:28
 msgid "Chinese"
@@ -271,10 +261,9 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
 #: libbirdfont/DescriptionDisplay.vala:63
-#: libbirdfont/DescriptionDisplay.vala:308 libbirdfont/Menu.vala:417
-#, fuzzy
+#: libbirdfont/DescriptionDisplay.vala:271 libbirdfont/Menu.vala:417
 msgid "Name and Description"
-msgstr "Nazwa i opis"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:67 birdfont/GtkWindow.vala:950
 msgid "PostScript Name"
@@ -313,7 +302,7 @@ msgstr ""
 msgid "Description"
 msgstr "Opis"
 
-#: libbirdfont/DescriptionDisplay.vala:146 birdfont/GtkWindow.vala:1021
+#: libbirdfont/DescriptionDisplay.vala:147 birdfont/GtkWindow.vala:1021
 msgid "Copyright"
 msgstr ""
 
@@ -330,9 +319,8 @@ msgid "Geometrical Shapes"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:103 libbirdfont/OverviewTools.vala:33
-#, fuzzy
 msgid "Zoom"
-msgstr "Przybliż"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:105
 msgid "Guidelines & Grid"
@@ -467,9 +455,8 @@ msgid "Autotrace background image"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:750
-#, fuzzy
 msgid "Delete background image"
-msgstr "Kadruj tło"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:800
 msgid "Show guidelines"
@@ -484,9 +471,8 @@ msgid "Show guidelines at top and bottom margin"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:880
-#, fuzzy
 msgid "Zoom Out More"
-msgstr "Oddal"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:889
 msgid "Show full glyph"
@@ -510,14 +496,12 @@ msgid "Next view"
 msgstr "Następny widok"
 
 #: libbirdfont/DrawingTools.vala:1102
-#, fuzzy
 msgid "Background Tools"
-msgstr "Tła"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1132
-#, fuzzy
 msgid "Object Tools"
-msgstr "Kolor obiektu"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1267
 msgid "Set size for grid"
@@ -655,9 +639,8 @@ msgid "ligature"
 msgstr ""
 
 #: libbirdfont/LigatureList.vala:55
-#, fuzzy
 msgid "beginning"
-msgstr "Kerning"
+msgstr ""
 
 #: libbirdfont/LigatureList.vala:55
 msgid "middle"
@@ -684,9 +667,8 @@ msgid "Ligatures"
 msgstr ""
 
 #: libbirdfont/Ligatures.vala:107
-#, fuzzy
 msgid "Beginning"
-msgstr "Kerning"
+msgstr ""
 
 #: libbirdfont/Ligatures.vala:128
 msgid "Middle"
@@ -709,43 +691,36 @@ msgid "Glyph sequence"
 msgstr "Sekwencja glifów"
 
 #: libbirdfont/Menu.vala:65
-#, fuzzy
 msgid "File"
-msgstr "Pliki"
+msgstr ""
 
 #: libbirdfont/Menu.vala:71
-#, fuzzy
 msgid "New"
-msgstr "_Nowy"
+msgstr ""
 
 #: libbirdfont/Menu.vala:85
-#, fuzzy
 msgid "Recent Files"
-msgstr "_Ostatnie pliki"
+msgstr ""
 
 #: libbirdfont/Menu.vala:99
-#, fuzzy
 msgid "Save As"
-msgstr "Zapisz jako"
+msgstr ""
 
 #: libbirdfont/Menu.vala:106
-#, fuzzy
 msgid "Export"
-msgstr "_Eksportuj"
+msgstr ""
 
 #: libbirdfont/Menu.vala:113 libbirdfont/Preview.vala:27
 msgid "Preview"
 msgstr "Podgląd"
 
 #: libbirdfont/Menu.vala:120
-#, fuzzy
 msgid "Select Character Set"
-msgstr "Pokaż domyślne kodowanie znaków"
+msgstr ""
 
 #: libbirdfont/Menu.vala:127
-#, fuzzy
 msgid "Quit"
-msgstr "_Zakończ"
+msgstr ""
 
 #: libbirdfont/Menu.vala:135
 msgid "Edit"
@@ -756,14 +731,12 @@ msgid "Redo"
 msgstr ""
 
 #: libbirdfont/Menu.vala:155
-#, fuzzy
 msgid "Copy"
-msgstr "_Kopiuj"
+msgstr ""
 
 #: libbirdfont/Menu.vala:162
-#, fuzzy
 msgid "Paste"
-msgstr "_Wklej"
+msgstr ""
 
 #: libbirdfont/Menu.vala:169
 msgid "Paste In Place"
@@ -786,86 +759,72 @@ msgid "Export Glyph as SVG"
 msgstr ""
 
 #: libbirdfont/Menu.vala:204
-#, fuzzy
 msgid "Import SVG file"
-msgstr "_Importuj SVG"
+msgstr ""
 
 #: libbirdfont/Menu.vala:211
-#, fuzzy
 msgid "Import Background Image"
-msgstr "Kadruj tło"
+msgstr ""
 
 #: libbirdfont/Menu.vala:218
 msgid "Simplify Path"
 msgstr ""
 
 #: libbirdfont/Menu.vala:225
-#, fuzzy
 msgid "Close Path"
-msgstr "Zakończ ścieżkę"
+msgstr ""
 
 #: libbirdfont/Menu.vala:232
-#, fuzzy
 msgid "Glyph Sequence"
-msgstr "Sekwencja glifów"
+msgstr ""
 
 #: libbirdfont/Menu.vala:239
-#, fuzzy
 msgid "Set Background Glyph"
-msgstr "Tła"
+msgstr ""
 
 #: libbirdfont/Menu.vala:246
 msgid "Remove Background Glyph"
 msgstr ""
 
 #: libbirdfont/Menu.vala:253
-#, fuzzy
 msgid "Select Point Above"
-msgstr "Zaznacz punkt poniżej"
+msgstr ""
 
 #: libbirdfont/Menu.vala:261
-#, fuzzy
 msgid "Select Next Point"
-msgstr "Zaznacz następny punkt"
+msgstr ""
 
 #: libbirdfont/Menu.vala:269
-#, fuzzy
 msgid "Select Previous Point"
-msgstr "Zaznacz poprzedni punkt"
+msgstr ""
 
 #: libbirdfont/Menu.vala:277
-#, fuzzy
 msgid "Select Point Below"
-msgstr "Zaznacz punkt poniżej"
+msgstr ""
 
 #: libbirdfont/Menu.vala:286
 msgid "Tab"
 msgstr ""
 
 #: libbirdfont/Menu.vala:292
-#, fuzzy
 msgid "Next Tab"
-msgstr "_Następna karta"
+msgstr ""
 
 #: libbirdfont/Menu.vala:299
-#, fuzzy
 msgid "Previous Tab"
-msgstr "_Poprzednia karta"
+msgstr ""
 
 #: libbirdfont/Menu.vala:306
-#, fuzzy
 msgid "Close Tab"
-msgstr "_Zamknij kartę"
+msgstr ""
 
 #: libbirdfont/Menu.vala:313
-#, fuzzy
 msgid "Close All Tabs"
-msgstr "Zamknij wszystkie karty"
+msgstr ""
 
 #: libbirdfont/Menu.vala:327
-#, fuzzy
 msgid "Show Kerning Tab"
-msgstr "Kerning"
+msgstr ""
 
 #: libbirdfont/Menu.vala:334
 msgid "List Kerning Pairs"
@@ -876,28 +835,24 @@ msgid "Show Spacing Tab"
 msgstr ""
 
 #: libbirdfont/Menu.vala:348
-#, fuzzy
 msgid "Select Next Kerning Pair"
-msgstr "Zaznacz następny punkt"
+msgstr ""
 
 #: libbirdfont/Menu.vala:356
-#, fuzzy
 msgid "Select Previous Kerning Pair"
-msgstr "Zaznacz poprzedni punkt"
+msgstr ""
 
 #: libbirdfont/Menu.vala:371
-#, fuzzy
 msgid "Show Ligatures"
-msgstr "Pokaż wytyczne"
+msgstr ""
 
 #: libbirdfont/Menu.vala:387
 msgid "Git"
 msgstr ""
 
 #: libbirdfont/Menu.vala:393
-#, fuzzy
 msgid "Save As .bfp"
-msgstr "Zapisz jako"
+msgstr ""
 
 #: libbirdfont/Menu.vala:402 libbirdfont/OverView.vala:302
 msgid "Overview"
@@ -949,18 +904,16 @@ msgid "Yes, don't ask again."
 msgstr "Tak, nie pytaj ponownie."
 
 #: libbirdfont/OverviewTools.vala:32
-#, fuzzy
 msgid "Character Sets"
-msgstr "Pokaż domyślne kodowanie znaków"
+msgstr ""
 
 #: libbirdfont/OverviewTools.vala:47
 msgid "All Glyphs"
 msgstr ""
 
 #: libbirdfont/OverviewTools.vala:56
-#, fuzzy
 msgid "Default"
-msgstr "Język domyślny"
+msgstr ""
 
 #: libbirdfont/PenTool.vala:83
 msgid "Add new points"
@@ -1019,9 +972,8 @@ msgid "Object color"
 msgstr "Kolor obiektu"
 
 #: libbirdfont/SettingsDisplay.vala:173
-#, fuzzy
 msgid "Fill open paths."
-msgstr "Przesunięcie ścieżki"
+msgstr ""
 
 #: libbirdfont/SettingsDisplay.vala:180
 msgid "Use TTF units."
@@ -1111,8 +1063,17 @@ msgstr ""
 msgid "Writing"
 msgstr ""
 
+#~ msgid "Default language"
+#~ msgstr "Język domyślny"
+
+#~ msgid "Private use area"
+#~ msgstr "Obszar użytku prywatnego"
+
 #~ msgid "Show default characters set"
 #~ msgstr "Pokaż domyślne kodowanie znaków"
+
+#~ msgid "Zoom in"
+#~ msgstr "Przybliż"
 
 #~ msgid "Zoom out"
 #~ msgstr "Oddal"
@@ -1124,38 +1085,104 @@ msgstr ""
 #~ msgid "Kerning:"
 #~ msgstr "Kerning"
 
+#~ msgid "_New"
+#~ msgstr "_Nowy"
+
 #~ msgid "_Open"
 #~ msgstr "_Otwórz"
+
+#~ msgid "_Recent Files"
+#~ msgstr "_Ostatnie pliki"
 
 #, fuzzy
 #~ msgid "Save _as"
 #~ msgstr "_Zapisz jako"
 
+#~ msgid "_Export"
+#~ msgstr "_Eksportuj"
+
 #~ msgid "_Preview"
 #~ msgstr "_Podgląd"
+
+#~ msgid "Name and _Description"
+#~ msgstr "Nazwa i opis"
+
+#~ msgid "_Quit"
+#~ msgstr "_Zakończ"
 
 #~ msgid "_Undo"
 #~ msgstr "_Cofnij"
 
+#~ msgid "_Copy"
+#~ msgstr "_Kopiuj"
+
+#~ msgid "_Paste"
+#~ msgstr "_Wklej"
+
 #~ msgid "_Search"
 #~ msgstr "_Wyszukaj"
+
+#~ msgid "_Import SVG"
+#~ msgstr "_Importuj SVG"
+
+#~ msgid "Close _Path"
+#~ msgstr "Zakończ ścieżkę"
+
+#, fuzzy
+#~ msgid "_Glyph Sequence"
+#~ msgstr "Sekwencja glifów"
+
+#~ msgid "Select _Next Point"
+#~ msgstr "Zaznacz następny punkt"
+
+#~ msgid "Select _Previous Point"
+#~ msgstr "Zaznacz poprzedni punkt"
+
+#~ msgid "Select Point _Below"
+#~ msgstr "Zaznacz punkt poniżej"
+
+#~ msgid "_Next Tab"
+#~ msgstr "_Następna karta"
+
+#~ msgid "_Previous Tab"
+#~ msgstr "_Poprzednia karta"
+
+#~ msgid "Close _All Tabs"
+#~ msgstr "Zamknij wszystkie karty"
+
+#, fuzzy
+#~ msgid "Show De_fault Characters Set"
+#~ msgstr "Pokaż domyślne kodowanie znaków"
 
 #, fuzzy
 #~ msgid "_Zoom In"
 #~ msgstr "Przybliż"
 
 #, fuzzy
+#~ msgid "Zoom _Out"
+#~ msgstr "Oddal"
+
+#, fuzzy
 #~ msgid "_Kerning"
 #~ msgstr "Kerning"
 
+#~ msgid "_Close tab"
+#~ msgstr "_Zamknij kartę"
+
 #~ msgid "Set contrast for background image"
 #~ msgstr "Ustaw kontrast dla tła"
+
+#~ msgid "Backgrounds"
+#~ msgstr "Tła"
 
 #~ msgid "Creating thumbnails"
 #~ msgstr "Tworzenie miniatur"
 
 #~ msgid "Merge paths"
 #~ msgstr "Połączenie ścieżek"
+
+#~ msgid "Delete selected glyph"
+#~ msgstr "Usuń zaznaczony glif"
 
 #~ msgid "Right click to add new points, left click to move points"
 #~ msgstr ""
@@ -1171,6 +1198,9 @@ msgstr ""
 
 #~ msgid "Continue"
 #~ msgstr "Kontynuuj"
+
+#~ msgid "Save as"
+#~ msgstr "Zapisz jako"
 
 #~ msgid ""
 #~ "The loaded font will be overwritten if you choose to continue with "

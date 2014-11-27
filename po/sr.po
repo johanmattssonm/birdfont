@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-19 04:55+0100\n"
+"POT-Creation-Date: 2014-11-27 12:20+0100\n"
 "PO-Revision-Date: 2014-09-04 12:10+0000\n"
 "Last-Translator: goya <nisam.depresivan@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,10 +198,6 @@ msgstr ""
 msgid "Saving"
 msgstr ""
 
-#: libbirdfont/BirdFontFile.vala:725
-msgid "Loading XML data."
-msgstr ""
-
 #: libbirdfont/CharDatabase.vala:134
 msgid "Loading the unicode character database"
 msgstr ""
@@ -265,7 +261,7 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:63
-#: libbirdfont/DescriptionDisplay.vala:308 libbirdfont/Menu.vala:417
+#: libbirdfont/DescriptionDisplay.vala:271 libbirdfont/Menu.vala:417
 msgid "Name and Description"
 msgstr ""
 
@@ -306,7 +302,7 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: libbirdfont/DescriptionDisplay.vala:146 birdfont/GtkWindow.vala:1021
+#: libbirdfont/DescriptionDisplay.vala:147 birdfont/GtkWindow.vala:1021
 msgid "Copyright"
 msgstr ""
 
