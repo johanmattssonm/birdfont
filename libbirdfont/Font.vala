@@ -96,6 +96,8 @@ public class Font : GLib.Object {
 
 	Ligatures ligatures_substitution;
 	
+	public static string? default_license = null; 
+	
 	public Font () {
 		KerningClasses kerning_classes;
 		
@@ -106,7 +108,7 @@ public class Font : GLib.Object {
 		unique_identifier = "Typeface";
 		version = "Version 1.0";
 		description = "";
-		copyright = "";
+		copyright = default_license != null ? ((!) default_license).dup () : "";
 	
 		glyph_cache = new GlyphTable ();
 		glyph_name = new GlyphTable ();
@@ -130,6 +132,10 @@ public class Font : GLib.Object {
 		ligatures_substitution = new Ligatures ();
 		
 		background_images = new Gee.ArrayList<BackgroundImage> ();
+	}
+
+	public static void set_default_license (string license) {
+		default_license = license;
 	}
 
 	public Ligatures get_ligatures () {

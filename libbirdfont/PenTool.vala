@@ -223,6 +223,8 @@ public class PenTool : Tool {
 					last_point_y = selected_point.y;
 				}
 			}
+			
+			GlyphCanvas.redraw ();
 		});
 		
 		key_release_action.connect ((self, keyval) => {

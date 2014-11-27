@@ -62,11 +62,13 @@ public class TextArea : Widget {
 	Gee.ArrayList<TextUndoItem> redo_items = new Gee.ArrayList<TextUndoItem> ();
 	
 	bool store_undo_state_at_next_event = false;
+	bool editable;
 	
 	public TextArea (double font_size = 20) {
 		this.font_size = font_size;
 		width = min_width;
 		height = min_height;
+		editable = true;
 	}
 
 	public override double get_height () {
@@ -114,7 +116,11 @@ public class TextArea : Widget {
 	public void key_press (uint keyval) {
 		unichar c;
 		TextUndoItem ui;
-				
+		
+		if (!editable) {
+			return;
+		}
+		
 		c = (unichar) keyval;
 		
 		switch (c) {
@@ -1381,6 +1387,10 @@ public class TextArea : Widget {
 			carret = i.carret.copy ();
 			layout ();
 		}
+	}
+	
+	public void set_editable (bool editable) {
+		this.editable = editable;
 	}
 	
 	public class TextUndoItem : GLib.Object {

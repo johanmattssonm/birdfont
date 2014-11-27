@@ -78,8 +78,7 @@ public class MenuTab : FontDisplay {
 	
 	public static void export_fonts_in_background () {
 		if (suppress_event || MainWindow.native_window.can_export ()) {
-			warning ("suppress_event is already set");
-			return false;
+			return;
 		}
 		
 		MenuTab.export_callback = new ExportCallback ();

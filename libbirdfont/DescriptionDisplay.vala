@@ -39,6 +39,8 @@ public class DescriptionDisplay : FontDisplay {
 	
 	Gee.ArrayList<Widget> widgets;
 	
+	private static bool disable_copyright = false;
+	
 	public DescriptionDisplay () {
 		double margin = 12 * MainWindow.units;
 		double label_size = 20 * MainWindow.units;
@@ -151,7 +153,12 @@ public class DescriptionDisplay : FontDisplay {
 		copyright.text_changed.connect ((t) => {
 			font.copyright = t;
 		});
+		copyright.set_editable (!disable_copyright);
 		widgets.add (copyright);
+	}
+
+	public static void set_copyright_editable (bool t) {
+		disable_copyright = !t;
 	}
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
@@ -302,6 +309,7 @@ public class DescriptionDisplay : FontDisplay {
 	}
 
 	public override void selected_canvas () {
+		copyright.set_editable (!disable_copyright);
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
 	}
