@@ -76,6 +76,8 @@ public interface NativeWindow : GLib.Object {
 	/** Get text from clipboard. */
 	public abstract string get_clipboard_text ();
 	
+	/** @return true if the current font can be exported. */
+	public abstract bool can_export ();
 }
 
 }

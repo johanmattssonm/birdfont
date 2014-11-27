@@ -691,6 +691,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MenuTab.stop_background_thread ();
 		return null;
 	}
+	
+	public bool can_export () {
+		return true;
+	}
 }
 
 class TabbarCanvas : DrawingArea {
