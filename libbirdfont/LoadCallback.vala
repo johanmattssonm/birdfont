@@ -44,11 +44,15 @@ public class LoadCallback : GLib.Object {
 			MenuTab.save_callback.file_saved.connect (load_new_font);
 			MenuTab.save_callback.save (); // background thread
 		});
-		
+
+		dialog.signal_cancel.connect (() => {
+			MainWindow.hide_dialog ();
+		});
+				
 		if (!font.is_modified ()) {
 			dialog.signal_discard ();
 		} else {
-			MainWindow.native_window.set_save_dialog (dialog);
+			MainWindow.show_dialog (new SaveDialog (dialog));
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -30,6 +30,7 @@ public class MainWindow : GLib.Object {
 	public static LigatureList ligature_display;
 	public static SpacingClassTab spacing_class_tab;
 	public static Menu menu;
+	public static Dialog dialog;
 	
 	/** Number of pixels per mm */
 	public static double units = 1;
@@ -49,6 +50,22 @@ public class MainWindow : GLib.Object {
 		ligature_display = new LigatureList ();
 		spacing_class_tab = new SpacingClassTab ();
 		menu = new Menu ();
+		dialog = new Dialog ();
+	}
+
+	public static Dialog get_dialog () {
+		return dialog;
+	}
+
+	public static void show_dialog (Dialog d) {
+		dialog = d;
+		dialog.visible = true;
+		GlyphCanvas.redraw ();
+	}
+
+	public static void hide_dialog () {
+		dialog = new Dialog ();
+		dialog.visible = false;
 	}
 
 	public static Menu get_menu () {

@@ -140,6 +140,8 @@ public class PenTool : Tool {
 			
 			last_point_x = Glyph.path_coordinate_x (x);
 			last_point_y = Glyph.path_coordinate_y (y);
+			
+			BirdFont.get_current_font ().touch ();
 		});
 		
 		double_click_action.connect ((self, b, x, y) => {
@@ -186,6 +188,7 @@ public class PenTool : Tool {
 			}
 			
 			point_selection_image = false;
+			BirdFont.get_current_font ().touch ();
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -225,6 +228,7 @@ public class PenTool : Tool {
 			}
 			
 			GlyphCanvas.redraw ();
+			BirdFont.get_current_font ().touch ();
 		});
 		
 		key_release_action.connect ((self, keyval) => {

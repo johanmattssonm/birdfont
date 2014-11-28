@@ -52,7 +52,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	Label text_input_label;
 	Entry text_entry;
 	Box text_box;
-	Button submit_text_button;
+	Gtk.Button submit_text_button;
 	
 	Gtk.Window tooltip_window = new Gtk.Window ();
 	
@@ -84,7 +84,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		
 		delete_event.connect (() => {
 			MenuTab.quit ();
-			return false;
+			return true;
 		});
 		
 		set_size_and_position ();
@@ -143,7 +143,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		canvas_box.pack_start (description.canvas, true, true, 0);
 		canvas_box.pack_start (scrollbar, false, true, 0);
 
-		submit_text_button = new Button ();
+		submit_text_button = new Gtk.Button ();
 		submit_text_button.set_label ("Submit");
 		text_input_label = new Label ("   " + "Text");
 		text_entry = new Entry ();
@@ -208,27 +208,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MainWindow.open_recent_files_tab ();
 	}
 
-	public void set_save_dialog (SaveDialogListener d) {
-		Gtk.Dialog dialog = new Gtk.Dialog.with_buttons (d.message, null, 0);
-		
-		dialog.add_button (d.save_message, 0);
-		dialog.add_button (d.discard_message, 1);
-		
-		dialog.response.connect ((respons) => {
-			switch (respons) {
-				case 0:
-					d.save ();
-					break;
-				case 1:
-					d.discard ();
-					break;
-			}
-			dialog.destroy ();
-		}); 
-		
-		dialog.show_all ();
-	}
-
 	public void font_loaded () {
 		Font f = BirdFont.get_current_font ();
 		set_title (@"BirdFont $(f.full_name)");
@@ -278,7 +257,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		ColorChooserWidget color_selection;
 		
 		public ColorWindow (ColorTool color_tool) {
-			Button set_button;
+			Gtk.Button set_button;
 			
 			title = t_("Select color");
 			window_position = Gtk.WindowPosition.CENTER;
@@ -309,7 +288,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				color_selection.rgba = c;
 			});
 
-			set_button = new Button.with_label (_("Set"));
+			set_button = new Gtk.Button.with_label (_("Set"));
 			box.add (set_button);
 
 			set_button.clicked.connect (() => {

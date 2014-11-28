@@ -59,18 +59,27 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void draw (WidgetAllocation allocation, Context cr) {
-		Menu menu = MainWindow.get_menu ();
+		Menu menu;
+		Dialog dialog;
 		
-		if (MenuTab.suppress_event) {
+		if (unlikely (MenuTab.suppress_event)) {
 			cr.save ();
 			cr.set_source_rgba (1, 1, 1, 1);
 			cr.rectangle (0, 0, allocation.width, allocation.height);
 			cr.fill ();
 			cr.restore ();
 		} else {
+			menu = MainWindow.get_menu ();
+			dialog = MainWindow.get_dialog ();
+		
 			GlyphCanvas.set_allocation (allocation);
 			MainWindow.get_current_glyph ().resized (allocation);
 			GlyphCanvas.current_display.draw (allocation, cr);
+			
+			if (dialog.visible) {
+				dialog.allocation = allocation;
+				dialog.draw (cr);
+			}
 			
 			if (menu.show_menu) {
 				menu.draw (allocation, cr);
@@ -122,8 +131,10 @@ public class TabContent : GLib.Object {
 		if (MenuTab.suppress_event) {
 			return;
 		}
-		
-		if (!MainWindow.get_menu ().show_menu) {
+
+		if (MainWindow.get_dialog ().visible) {
+			MainWindow.get_dialog ().button_press (button, x, y);
+		} else if (!MainWindow.get_menu ().show_menu) {
 			GlyphCanvas.current_display.button_press (button, x, y);
 		}
 	}
@@ -232,4 +243,3 @@ public class TabContent : GLib.Object {
 }
 
 }
-

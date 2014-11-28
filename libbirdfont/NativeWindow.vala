@@ -34,9 +34,6 @@ public interface NativeWindow : GLib.Object {
 	/** Remove the text listener and hode the text area. */
 	public abstract void hide_text_input ();
 
-	/** Show save dialog */
-	public abstract void set_save_dialog (SaveDialogListener dialog);
-
 	/** Show overwrite dialog */
 	public abstract void set_overwrite_dialog (OverWriteDialogListener dialog);
 	

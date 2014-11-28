@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -12,31 +12,32 @@
     Lesser General Public License for more details.
 */
 
+using Cairo;
+
 namespace BirdFont {
 
-public class SaveDialogListener : GLib.Object {
-	
-	public signal void signal_save ();
-	public signal void signal_discard ();
-	public signal void signal_cancel ();
-	
-	public string message;
-	public string discard_message;
-	public string save_message;
-	
-	public SaveDialogListener () {
-		this.message = t_("Save?");
-		this.save_message = t_("Save");
-		this.discard_message = t_("Discard");
-	}
-	
-	public void save () {
-		signal_save ();
+public class Dialog : Widget {
+
+	public bool visible { get; set; }
+
+	public Dialog () {
+		visible = false;
 	}
 
-	public void discard () {
-		signal_discard ();
+	public override void draw (Context cr) {	
 	}
+
+	public override double get_height () {
+		return 0;	
+	}
+
+	public override double get_width () {
+		return 0;	
+	}
+	
+	public virtual void button_press (uint button, double x, double y) {
+	}
+	
 }
 
 }

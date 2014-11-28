@@ -71,6 +71,7 @@ public class DescriptionDisplay : FontDisplay {
 		postscript_name.set_text (font.postscript_name);
 		postscript_name.text_changed.connect ((t) => {
 			font.postscript_name = t;
+			font.touch ();
 		});
 		widgets.add (postscript_name);
 		
@@ -79,6 +80,7 @@ public class DescriptionDisplay : FontDisplay {
 		name.set_text (font.name);
 		name.text_changed.connect ((t) => {
 			font.name = t;
+			font.touch ();
 		});
 		widgets.add (name);
 				
@@ -87,12 +89,14 @@ public class DescriptionDisplay : FontDisplay {
 		style.set_text (font.subfamily);
 		style.text_changed.connect ((t) => {
 			font.subfamily = t;
+			font.touch ();
 		});
 		widgets.add (style);
 		
 		bold = new CheckBox (t_("Bold"), label_size);
 		bold.updated.connect ((c) => {
 			font.bold = c;
+			font.touch ();
 		});
 		bold.checked = font.bold;
 		widgets.add (bold);
@@ -100,6 +104,7 @@ public class DescriptionDisplay : FontDisplay {
 		italic = new CheckBox (t_("Italic"), label_size);
 		italic.updated.connect ((c) => {
 			font.italic = c;
+			font.touch ();
 		});
 		italic.checked = font.italic;
 		italic.margin_bottom = margin;
@@ -110,6 +115,7 @@ public class DescriptionDisplay : FontDisplay {
 		weight.set_text (font.get_weight ());
 		weight.text_changed.connect ((t) => {
 			font.set_weight (t);
+			font.touch ();
 		});
 		widgets.add (weight);
 		
@@ -118,6 +124,7 @@ public class DescriptionDisplay : FontDisplay {
 		full_name.set_text (font.full_name);
 		full_name.text_changed.connect ((t) => {
 			font.full_name = t;
+			font.touch ();
 		});
 		widgets.add (full_name);
 		
@@ -126,6 +133,7 @@ public class DescriptionDisplay : FontDisplay {
 		unique_id.set_text (font.unique_identifier);
 		unique_id.text_changed.connect ((t) => {
 			font.unique_identifier = t;
+			font.touch ();
 		});
 		widgets.add (unique_id);
 		
@@ -134,6 +142,7 @@ public class DescriptionDisplay : FontDisplay {
 		version.set_text (font.version);
 		version.text_changed.connect ((t) => {
 			font.version = t;
+			font.touch ();
 		});
 		widgets.add (version);
 
@@ -143,6 +152,7 @@ public class DescriptionDisplay : FontDisplay {
 		description.scroll.connect (scroll_event);
 		description.text_changed.connect ((t) => {
 			font.description = t;
+			font.touch ();
 		});
 		widgets.add (description);
 		
@@ -152,6 +162,7 @@ public class DescriptionDisplay : FontDisplay {
 		copyright.scroll.connect (scroll_event);
 		copyright.text_changed.connect ((t) => {
 			font.copyright = t;
+			font.touch ();
 		});
 		copyright.set_editable (!disable_copyright);
 		widgets.add (copyright);

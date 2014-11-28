@@ -210,11 +210,17 @@ public class MenuTab : FontDisplay {
 			});
 			save_callback.save ();
 		});
-		
+
+		dialog.signal_cancel.connect (() => {
+			MainWindow.hide_dialog ();
+		});
+				
 		if (!font.is_modified ()) {
+			print ("NOT modified\n");
 			dialog.signal_discard ();
 		} else {
-			MainWindow.native_window.set_save_dialog (dialog);
+			print ("Show dialog\n");
+			MainWindow.show_dialog (new SaveDialog (dialog));
 		}
 		
 		return;
@@ -246,11 +252,15 @@ public class MenuTab : FontDisplay {
 			});
 			save_callback.save ();
 		});
-		
+
+		dialog.signal_cancel.connect (() => {
+			MainWindow.hide_dialog ();
+		});
+				
 		if (!font.is_modified ()) {
 			dialog.signal_discard ();
 		} else {
-			MainWindow.native_window.set_save_dialog (dialog);
+			MainWindow.show_dialog (new SaveDialog (dialog));
 		}
 	} 
 	
