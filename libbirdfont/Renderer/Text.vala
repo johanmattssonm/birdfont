@@ -218,7 +218,7 @@ public class Text : Widget {
 		return font_size;
 	}
 
-	public double get_glyph_height () {
+	public double get_acender () {
 		double ratio = get_scale ();
 		double max_height = 0;
 
@@ -232,7 +232,7 @@ public class Text : Widget {
 			}
 		});
 		
-		return max_height * ratio;
+		return max_height * ratio - font.base_line * ratio;
 	}	
 
 	public override double get_width () {
@@ -262,7 +262,7 @@ public class Text : Widget {
 		return x;
 	}
 
-	public double get_decender (double font_size_in_pixels) {
+	public double get_decender () {
 		double ratio = get_scale ();
 		double min_y = 0;
 		double decender;
@@ -277,7 +277,7 @@ public class Text : Widget {
 			}
 		});
 		
-		decender = font.base_line - (min_y * ratio);
+		decender = font.base_line * ratio - min_y * ratio;
 		return decender > 0 ? decender : 0; 
 	}		
 

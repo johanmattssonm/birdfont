@@ -35,7 +35,7 @@ public class BackgroundSelectionTool : CutBackgroundTool {
 			double x, y, w, h;
 			BackgroundImage bg;
 			Text label = new Text ();
-			double tx, ty, font_height;
+			double tx, ty, font_height, glyph_height;
 			
 			if (glyph.get_background_image () == null) {
 				warning ("No image");
@@ -72,9 +72,7 @@ public class BackgroundSelectionTool : CutBackgroundTool {
 						label.set_text ((!) bs.assigned_glyph);
 						label.set_font_size (font_height);
 						tx = x  + w - label.get_width () / 2.0;
-						ty = y + h;
-						ty += label.get_height () / 2.0;
-						ty -= label.get_decender (font_height);
+						ty = y + h + label.get_acender () / 2.0 -  label.get_decender ();
 						label.set_font_size (font_height);
 						label.draw_at_baseline (cr, tx, ty);
 					}
