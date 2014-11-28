@@ -653,6 +653,10 @@ public class TextArea : Widget {
 		if (has_selection () && show_selection) {
 			ui = delete_selected_text ();
 			u = true;
+			
+			if (paragraphs.size == 0) {
+				paragraphs.add (new Paragraph ("", font_size, 0));
+			}
 		} else {
 			ui = new TextUndoItem (carret);
 		}
@@ -669,7 +673,7 @@ public class TextArea : Widget {
 			
 			string end; 
 			string nt = paragraph.text.substring (0, carret.character_index);
-			int tl = first.length;
+			
 			nt += first;
 			end = paragraph.text.substring (carret.character_index);
 		
