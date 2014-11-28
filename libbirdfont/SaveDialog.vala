@@ -32,16 +32,19 @@ public class SaveDialog : Dialog {
 		
 		save_button = new Button (t_("Save"));
 		save_button.action.connect (() => {
+			MainWindow.hide_dialog ();
 			callbacks.signal_save ();
 		});
 		
 		discard_button = new Button (t_("Discard"));
 		discard_button.action.connect (() => {
+			MainWindow.hide_dialog ();
 			callbacks.signal_discard ();
 		});
 		
 		cancel_button = new Button (t_("Cancel"));
 		cancel_button.action.connect (() => {
+			MainWindow.hide_dialog ();
 			callbacks.signal_cancel ();
 		});
 		

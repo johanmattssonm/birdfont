@@ -50,6 +50,7 @@ public class MainWindow : GLib.Object {
 		ligature_display = new LigatureList ();
 		spacing_class_tab = new SpacingClassTab ();
 		menu = new Menu ();
+		
 		dialog = new Dialog ();
 	}
 
@@ -66,6 +67,7 @@ public class MainWindow : GLib.Object {
 	public static void hide_dialog () {
 		dialog = new Dialog ();
 		dialog.visible = false;
+		GlyphCanvas.redraw ();
 	}
 
 	public static Menu get_menu () {

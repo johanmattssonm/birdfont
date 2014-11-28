@@ -63,31 +63,31 @@ public class KerningRange : Tool {
 	
 	public void set_ranges (string r) {
 		GlyphRange glyph_range = new GlyphRange ();
-		SpacingData spacing = BirdFont.get_current_font ().get_spacing ();
+		Font font = BirdFont.get_current_font ();
+		SpacingData spacing = font.get_spacing ();
 		string new_range;
 		string ch;
 		
-		try {	
-			glyph_range.parse_ranges (r);
-			new_range = glyph_range.get_all_ranges ();
+		glyph_range.parse_ranges (r);
+		new_range = glyph_range.get_all_ranges ();
+		
+		malformed = false;
+		
+		for (int i = 0; i < glyph_range.get_length (); i++) {
+			ch = glyph_range.get_char (i);
 			
-			for (int i = 0; i < glyph_range.get_length (); i++) {
-				ch = glyph_range.get_char (i);
-				
-				foreach (string c in spacing.get_all_connections (ch)) {
-					if (!glyph_range.has_character (c) && c != "" && c != "?") {
-						new_range += " " + GlyphRange.serialize (c);
-					}
+			foreach (string c in spacing.get_all_connections (ch)) {
+				if (!glyph_range.has_character (c) && c != "" && c != "?") {
+					new_range += " " + GlyphRange.serialize (c);
 				}
 			}
 			
-			set_one_range (new_range);
-			malformed = false;
-		} catch (MarkupError e) {
-			warning (@"Failed to add range \"$r\"");
-			warning (e.message);
-			malformed = true;
+			if (!font.has_glyph (ch)) {
+				malformed = true;
+			}
 		}
+		
+		set_one_range (new_range);
 	}
 		
 	private void set_one_range (string r) throws MarkupError {
@@ -132,7 +132,7 @@ public class KerningRange : Tool {
 		cr.save ();
 	
 		if (malformed) { 
-			cr.set_source_rgba (108/255.0, 0/255.0, 0/255.0, 1);
+			cr.set_source_rgba (0, 0, 0, 1);
 		} else if (!active) {
 			cr.set_source_rgba (99/255.0, 99/255.0, 99/255.0, 1);
 		} else {

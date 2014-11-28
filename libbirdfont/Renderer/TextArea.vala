@@ -40,7 +40,7 @@ public class TextArea : Widget {
 
 	public double width;
 	public double height;
-
+	
 	Carret carret = new Carret ();
 	Carret selection_end = new Carret ();
 	bool update_selection = false;
@@ -62,7 +62,7 @@ public class TextArea : Widget {
 	Gee.ArrayList<TextUndoItem> redo_items = new Gee.ArrayList<TextUndoItem> ();
 	
 	bool store_undo_state_at_next_event = false;
-	bool editable;
+	public bool editable;
 	
 	public TextArea (double font_size = 20) {
 		this.font_size = font_size;
@@ -824,6 +824,10 @@ public class TextArea : Widget {
 		
 		tx = 0;
 		ty = font_size;
+
+		if (unlikely (allocation.height == 0)) {
+			warning ("Allocation is not set.");
+		}
 
 		for (i = paragraphs.size - 1; i >= 0 && paragraphs.size > 1; i--) {
 			if (unlikely (paragraphs.get (i).is_empty ())) {

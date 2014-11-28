@@ -31,8 +31,7 @@ public class KerningDisplay : FontDisplay {
 	double begin_handle_y = 0;
 	
 	double last_handle_x = 0;
-
-	bool parse_error = false;
+	
 	bool text_input = false;
 
 	Gee.ArrayList<UndoItem> undo_items;
@@ -59,40 +58,15 @@ public class KerningDisplay : FontDisplay {
 	}
 
 	public void show_parse_error () {
-		parse_error = true;
-	}
-	
-	public override void draw (WidgetAllocation allocation, Context cr) {
-		if (parse_error) {
-			draw_error_message (allocation, cr);
-		} else {
-			draw_kerning_pairs (allocation, cr);
-		}
-	}
-	
-	public void draw_error_message (WidgetAllocation allocation, Context cr) {
 		string line1 = t_("The current kerning class is malformed.");
 		string line2 = t_("Add single characters separated by space and ranges on the form A-Z.");
 		string line3 = t_("Type “space” to kern the space character and “divis” to kern -.");
-		
-		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
-		cr.rectangle (0, 0, allocation.width, allocation.height);
-		cr.fill ();
-		
-		cr.set_font_size (18);
-		cr.set_source_rgba (0.3, 0.3, 0.3, 1);
-		cr.move_to (30, 40);
-		cr.show_text (line1);
-		
-		cr.set_font_size (14);
-		cr.move_to (30, 60);
-		cr.show_text (line2);
-
-		cr.set_font_size (14);
-		cr.move_to (30, 80);
-		cr.show_text (line3);				
-		cr.restore ();
+				
+		MainWindow.show_dialog (new MessageDialog (line1 + " " + line2 + " " + line3));
+	}
+	
+	public override void draw (WidgetAllocation allocation, Context cr) {
+		draw_kerning_pairs (allocation, cr);
 	}
 	
 	public double get_row_height () {
@@ -558,8 +532,7 @@ public class KerningDisplay : FontDisplay {
 		}
 		
 		c = (unichar) keyval;
-		parse_error = false;
-		
+
 		if (suppress_input) {
 			return;
 		}
@@ -782,7 +755,6 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public override void button_release (int button, double ex, double ey) {
-		parse_error = false;
 		set_active_handle (ex, ey);
 		moving = false;
 		first_update = true;
