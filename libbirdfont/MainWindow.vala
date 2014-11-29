@@ -64,6 +64,10 @@ public class MainWindow : GLib.Object {
 		GlyphCanvas.redraw ();
 	}
 
+	public static void show_message (string text) {
+		show_dialog (new MessageDialog (text));
+	}
+
 	public static void hide_dialog () {
 		dialog = new Dialog ();
 		dialog.visible = false;

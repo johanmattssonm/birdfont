@@ -60,11 +60,17 @@ public class KerningTools : ToolCollection  {
 		side_bearings.set_persistent (true);
 		kerning_tools.add_tool (side_bearings);
 
-		Tool insert_last = new Tool ("insert_last_glyph", t_("Insert last edited glyph"));
+		Tool insert_last = new Tool ("insert_last_glyph", t_("Insert glyph from overview"));
 		insert_last.select_action.connect ((self) => {
 			KerningDisplay d = MainWindow.get_kerning_display ();
-			d.inser_glyph (MainWindow.get_current_glyph ());
-			GlyphCanvas.redraw ();
+			GlyphSelection gs = new GlyphSelection ();
+			
+			gs.selected_glyph.connect ((gc) => {
+				d.inser_glyph (gc.get_current ());
+				MainWindow.get_tab_bar ().select_tab_name ("Kerning");
+			});
+			
+			GlyphCanvas.set_display (gs);
 		});
 		kerning_tools.add_tool (insert_last);
 

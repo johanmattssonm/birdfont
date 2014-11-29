@@ -114,7 +114,7 @@ public class BackgroundTools : ToolCollection  {
 			});
 			
 			if (!bpl.deleted) {
-				GlyphCanvas.set_display (gs);	
+				GlyphCanvas.set_display (gs);
 			}			
 		});
 		
