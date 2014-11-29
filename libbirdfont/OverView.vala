@@ -78,36 +78,43 @@ public class OverView : FontDisplay {
 			});
 
 			this.open_new_glyph_signal.connect ((character) => {
-				StringBuilder name = new StringBuilder ();
-				TabBar tabs = MainWindow.get_tab_bar ();
-				bool selected;
-				Glyph glyph;
-				GlyphCollection glyph_collection;
-				GlyphCanvas canvas;
-					
-				name.append_unichar (character);
-				selected = tabs.select_char (name.str);
-						
-				if (!selected) {
-					glyph_collection = add_character_to_font (character);
-					
-					glyph = glyph_collection.get_current ();
-					tabs.add_tab (glyph, true, glyph_collection);
-					
-					selected_items.add (glyph_collection);
-					
-					canvas = MainWindow.get_glyph_canvas ();
-					canvas.set_current_glyph_collection (glyph_collection);
-					
-					set_initial_zoom ();
-				}
-				
-				OverviewTools.update_overview_characterset ();
+				create_new_glyph (character);
 			});
 		}
 		
 		update_scrollbar ();
 		reset_zoom ();
+	}
+	
+	public GlyphCollection create_new_glyph (unichar character) {
+		StringBuilder name = new StringBuilder ();
+		TabBar tabs = MainWindow.get_tab_bar ();
+		bool selected;
+		Glyph glyph;
+		GlyphCollection glyph_collection = MainWindow.get_current_glyph_collection ();
+		GlyphCanvas canvas;
+			
+		name.append_unichar (character);
+		selected = tabs.select_char (name.str);
+				
+		if (!selected) {
+			glyph_collection = add_character_to_font (character);
+			
+			glyph = glyph_collection.get_current ();
+			tabs.add_tab (glyph, true, glyph_collection);
+			
+			selected_items.add (glyph_collection);
+			
+			canvas = MainWindow.get_glyph_canvas ();
+			canvas.set_current_glyph_collection (glyph_collection);
+			
+			set_initial_zoom ();
+		} else {
+			warning ("Glyph is already open");
+		}
+		
+		OverviewTools.update_overview_characterset ();
+		return glyph_collection;
 	}
 	
 	public GlyphCollection add_empty_character_to_font (unichar character, bool unassigned, string name) {

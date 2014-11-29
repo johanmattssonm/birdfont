@@ -40,14 +40,14 @@ public class OverviewTools : ToolCollection  {
 
 		zoom_bar = new ZoomBar ();
 		zoom_bar.new_zoom.connect ((z) => {
-			MainWindow.get_overview ().set_zoom (z);
+			get_overview ().set_zoom (z);
 		});
 		zoom_expander.add_tool (zoom_bar);
 						
 		all_glyphs = new LabelTool (t_("All Glyphs"));
 		all_glyphs.has_counter = true;
 		all_glyphs.select_action.connect ((self) => {
-			OverView overview = MainWindow.get_overview ();
+			OverView overview = get_overview ();
 			overview.display_all_available_glyphs ();
 			update_overview_characterset ();
 		});
@@ -56,7 +56,7 @@ public class OverviewTools : ToolCollection  {
 		default_glyphs = new LabelTool (t_("Default"));
 		default_glyphs.has_counter = true;
 		default_glyphs.select_action.connect ((self) => {
-			OverView overview = MainWindow.get_overview ();
+			OverView overview = get_overview ();
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_default_range (gr);
 			overview.set_glyph_range (gr);
@@ -67,7 +67,7 @@ public class OverviewTools : ToolCollection  {
 		unicode = new LabelTool (t_("Unicode"));
 		unicode.has_counter = true;
 		unicode.select_action.connect ((self) => {
-			OverView overview = MainWindow.get_overview ();
+			OverView overview = get_overview ();
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_full_unicode_range (gr);
 			overview.set_glyph_range (gr);
@@ -81,6 +81,18 @@ public class OverviewTools : ToolCollection  {
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
 		expanders.add (character_sets);
+	}
+	
+	public OverView get_overview () {
+		FontDisplay fd = MainWindow.get_current_display ();
+		
+		if (fd is OverView || fd is GlyphSelection) {
+			return (OverView) fd;
+		}
+		
+		warning ("Current tab is not overview.");
+		
+		return new OverView ();
 	}
 	
 	public static void show_all_available_characters () {

@@ -68,26 +68,31 @@ public class KerningRange : Tool {
 		string new_range;
 		string ch;
 		
-		glyph_range.parse_ranges (r);
-		new_range = glyph_range.get_all_ranges ();
-		
-		malformed = false;
-		
-		for (int i = 0; i < glyph_range.get_length (); i++) {
-			ch = glyph_range.get_char (i);
+		try {
+			glyph_range.parse_ranges (r);
+			new_range = glyph_range.get_all_ranges ();
 			
-			foreach (string c in spacing.get_all_connections (ch)) {
-				if (!glyph_range.has_character (c) && c != "" && c != "?") {
-					new_range += " " + GlyphRange.serialize (c);
+			malformed = false;
+			
+			for (int i = 0; i < glyph_range.get_length (); i++) {
+				ch = glyph_range.get_char (i);
+				
+				foreach (string c in spacing.get_all_connections (ch)) {
+					if (!glyph_range.has_character (c) && c != "" && c != "?") {
+						new_range += " " + GlyphRange.serialize (c);
+					}
+				}
+				
+				if (!font.has_glyph (ch)) {
+					malformed = true;
 				}
 			}
 			
-			if (!font.has_glyph (ch)) {
-				malformed = true;
-			}
+			set_one_range (new_range);
+		} catch (GLib.MarkupError e) {
+			warning (e.message);
+			malformed = true;
 		}
-		
-		set_one_range (new_range);
 	}
 		
 	private void set_one_range (string r) throws MarkupError {

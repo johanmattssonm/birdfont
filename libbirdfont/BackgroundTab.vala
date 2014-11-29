@@ -52,6 +52,7 @@ public class BackgroundTab : Glyph {
 		gc.add_glyph (this);
 		canvas.set_current_glyph_collection (gc, false);
 		DrawingTools.background_scale.set_tool_visibility (true);
+		ZoomTool.zoom_full_background_image ();
 	}
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {

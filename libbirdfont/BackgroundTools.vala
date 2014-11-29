@@ -101,20 +101,17 @@ public class BackgroundTools : ToolCollection  {
 					((!) pgc).get_current ().set_background_image (null);
 				}		
 				
-				bpl.selection.assigned_glyph = gc.get_name ();
-				bpl.label = gc.get_name ();
-				gc.get_current ().set_background_image (bpl.selection.image);
-				
-				if (bpl.selection.image != null) {
-					((!) bpl.selection.image).center_in_glyph (gc.get_current ());
-				}
-				
-				set_default_canvas ();
-				ZoomTool.zoom_full_background_image ();
+				set_new_background_image (gc, bpl);
+			});
+			
+			gs.open_new_glyph_signal.connect ((character) => {
+				GlyphCollection gc = gs.create_new_glyph (character);
+				set_new_background_image (gc, bpl);
 			});
 			
 			if (!bpl.deleted) {
 				GlyphCanvas.set_display (gs);
+				Toolbox.set_toolbox_from_tab ("Overview");
 			}			
 		});
 		
@@ -133,8 +130,7 @@ public class BackgroundTools : ToolCollection  {
 				if (gc != null) {
 					((!) gc).get_current ().set_background_image (null);
 				}
-				
-			
+
 				parts.tool.remove (bpl);
 				bpl.selection.parent_image.selections.remove (bpl.selection);
 				MainWindow.get_toolbox ().update_expanders ();
@@ -152,6 +148,19 @@ public class BackgroundTools : ToolCollection  {
 			MainWindow.get_toolbox ().update_expanders ();
 			Toolbox.redraw_tool_box ();
 		}
+	}
+
+	void set_new_background_image (GlyphCollection gc, BackgroundPartLabel bpl) {
+		bpl.selection.assigned_glyph = gc.get_name ();
+		bpl.label = gc.get_name ();
+		gc.get_current ().set_background_image (bpl.selection.image);
+		
+		if (bpl.selection.image != null) {
+			((!) bpl.selection.image).center_in_glyph (gc.get_current ());
+		}
+		
+		set_default_canvas ();
+		ZoomTool.zoom_full_background_image ();
 	}
 
 	public override Gee.ArrayList<Expander> get_expanders () {

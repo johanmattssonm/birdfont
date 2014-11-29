@@ -64,27 +64,29 @@ public class Toolbox : GLib.Object  {
 		
 		tab_bar.signal_tab_selected.connect ((tab) => {
 			string tab_name = tab.get_display ().get_name ();
-			
-			if (tab_name == "Kerning") {
-				current_set = kerning_tools;
-			} else if (tab_name == "Preview") {
-				current_set = preview_tools;
-			} else if (tab_name == "Overview") {
-				current_set = overview_tools;
-			} else if (tab_name == "Backgrounds") {
-				current_set = background_tools;
-			} else if (tab.get_display () is Glyph) {
-				current_set = drawing_tools;
-			} else {
-				current_set = new EmptySet ();
-			} 
-		
-			
-			update_expanders ();
-			redraw (0, 0, allocation_width, allocation_height);
+			set_toolbox_from_tab (tab_name, tab);
 		});
 		
 		update_expanders ();
+	}
+
+	public static void set_toolbox_from_tab (string tab_name, Tab? t = null) {		
+		if (tab_name == "Kerning") {
+			current_set = (ToolCollection) kerning_tools;
+		} else if (tab_name == "Preview") {
+			current_set = (ToolCollection) preview_tools;
+		} else if (tab_name == "Overview") {
+			current_set = (ToolCollection) overview_tools;
+		} else if (tab_name == "Backgrounds") {
+			current_set = (ToolCollection) background_tools;
+		} else if (t != null && ((!) t).get_display () is Glyph) {
+			current_set = (ToolCollection) drawing_tools;
+		} else {
+			current_set = new EmptySet ();
+		}
+		
+		MainWindow.get_toolbox ().update_expanders ();
+		redraw_tool_box ();
 	}
 
 	public static Tool get_move_tool () {
