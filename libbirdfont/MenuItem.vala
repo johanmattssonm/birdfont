@@ -58,16 +58,16 @@ public class MenuItem : GLib.Object {
 			
 			switch (key) {
 				case Key.UP:
-					key_binding += "UP";
+					key_binding += t_("UP");
 					break;
 				case Key.DOWN:
-					key_binding += "DOWN";
+					key_binding += t_("DOWN");
 					break;
 				case Key.LEFT:
-					key_binding += "LEFT";
+					key_binding += t_("LEFT");
 					break;
 				case Key.RIGHT:
-					key_binding += "RIGHT";
+					key_binding += t_("RIGHT");
 					break;
 				default:
 					key_binding += (!) key.to_string ();

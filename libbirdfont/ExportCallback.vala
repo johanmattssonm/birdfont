@@ -22,7 +22,12 @@ public class ExportCallback : GLib.Object {
 	}
 
 	public void export_fonts_in_background () {
-		Font font = BirdFont.get_current_font ();		
+		Font font = BirdFont.get_current_font ();
+		
+		if (!MainWindow.native_window.can_export ()) {
+			return;
+		}
+		
 		if (font.font_file == null) {
 			MenuTab.set_save_callback (new SaveCallback ());
 			MenuTab.save_callback.file_saved.connect (() => {

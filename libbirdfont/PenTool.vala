@@ -757,7 +757,7 @@ public class PenTool : Tool {
 		return_if_fail (g != null);
 
 		if ((double_click && !BirdFont.android)
-				|| Toolbox.drawing_tools.inser_point_on_path_tool.is_selected ()) {
+				|| Toolbox.drawing_tools.insert_point_on_path_tool.is_selected ()) {
 			glyph.insert_new_point_on_path (x, y);
 			return;
 		}

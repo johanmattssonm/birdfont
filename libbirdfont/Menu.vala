@@ -444,6 +444,10 @@ public class Menu : GLib.Object {
 				if (item.display == "" || item.display == display) {
 					item.action ();
 				}
+				
+				if (item is ToolItem) {
+					MainWindow.get_toolbox ().set_current_tool (((ToolItem) item).tool);
+				}
 			}
 		}
 	}

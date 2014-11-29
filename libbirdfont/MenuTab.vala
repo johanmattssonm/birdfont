@@ -77,7 +77,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void export_fonts_in_background () {
-		if (suppress_event || MainWindow.native_window.can_export ()) {
+		if (suppress_event || !MainWindow.native_window.can_export ()) {
 			return;
 		}
 		

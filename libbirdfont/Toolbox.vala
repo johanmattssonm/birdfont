@@ -307,6 +307,12 @@ public class Toolbox : GLib.Object  {
 		return null;
 	}
 
+	public void set_current_tool (Tool tool) {
+		if (tool.editor_events) {
+			current_tool = tool;
+		}
+	}
+
 	public Tool get_current_tool () {
 		return current_tool;
 	}
@@ -333,9 +339,7 @@ public class Toolbox : GLib.Object  {
 							redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
 						}
 						
-						if (tool.editor_events) {
-							current_tool = tool;
-						}
+						set_current_tool (tool);
 					}
 				}
 			}

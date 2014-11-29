@@ -81,7 +81,7 @@ public class DrawingTools : ToolCollection  {
 	Tool create_line;
 
 	Tool delete_button;
-	public Tool inser_point_on_path_tool;
+	public Tool insert_point_on_path_tool;
 	Tool undo_tool;
 	Tool select_all_button;
 	
@@ -202,13 +202,13 @@ public class DrawingTools : ToolCollection  {
 		key_tools.add_tool (undo_tool);
 		
 		bool insert_points = false;
-		inser_point_on_path_tool = new Tool ("new_point_on_path", t_("Insert new points on path"));
-		inser_point_on_path_tool.select_action.connect ((self) => {
+		insert_point_on_path_tool = new Tool ("new_point_on_path", t_("Insert new points on path"));
+		insert_point_on_path_tool.select_action.connect ((self) => {
 			insert_points = !insert_points;
-			inser_point_on_path_tool.set_selected (insert_points);
+			insert_point_on_path_tool.set_selected (insert_points);
 		});
-		inser_point_on_path_tool.set_persistent (true);
-		key_tools.add_tool (inser_point_on_path_tool);		
+		insert_point_on_path_tool.set_persistent (true);
+		key_tools.add_tool (insert_point_on_path_tool);		
 			
 		// quadratic Bézier points
 		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
