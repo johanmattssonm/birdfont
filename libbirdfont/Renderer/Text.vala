@@ -170,12 +170,11 @@ public class Text : Widget {
 	public double get_extent () {
 		double x = 0;
 		double ratio = get_scale ();
-
+		
 		iterate ((glyph, kerning, last) => {
 			double x1, y1, x2, y2;
 			double lsb;
 			
-			glyph.add_help_lines ();
 			lsb = glyph.left_limit;
 			
 			if (!last) {
@@ -244,7 +243,6 @@ public class Text : Widget {
 			double x1, y1, x2, y2;
 			double lsb;
 			
-			glyph.add_help_lines ();
 			lsb = glyph.left_limit;
 			
 			if (first) {
@@ -336,8 +334,6 @@ public class Text : Widget {
 			Context cc;
 			
 			if (unlikely (!glyph.has_cache (cache_id))) {
-				glyph.add_help_lines ();
-				
 				cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) (glyph.get_width () * ratio) + 1, (int) font_size + 1);
 				cc = new Context (cache);
 				

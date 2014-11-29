@@ -21,8 +21,8 @@ public class Toolbox : GLib.Object  {
 	public static ToolCollection current_set; 
 	
 	public static DrawingTools drawing_tools;
-	public KerningTools kerning_tools;
-	public PreviewTools preview_tools;
+	public static KerningTools kerning_tools;
+	public static PreviewTools preview_tools;
 	public static OverviewTools overview_tools;
 	public static BackgroundTools background_tools;
 	

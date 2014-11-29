@@ -395,9 +395,9 @@ public class Glyph : FontDisplay {
 	
 	public void add_help_lines () {
 		remove_lines ();
-
+		
 		return_if_fail (!is_null (BirdFont.get_current_font ()));
-
+		
 		double bgt = BirdFont.get_current_font ().top_limit;
 		Line top_margin_line = new Line ("top margin", bgt, false);
 		top_margin_line.set_color (0.7, 0, 0, 0.5);
@@ -427,7 +427,6 @@ public class Glyph : FontDisplay {
 				Font f = BirdFont.get_current_font ();
 				f.base_line = pos;
 			});
-
 		
 		double bp = BirdFont.get_current_font ().bottom_position;
 		Line bottom_line = new Line ("bottom", bp, false);
