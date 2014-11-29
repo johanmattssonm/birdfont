@@ -181,8 +181,9 @@ public class KerningDisplay : FontDisplay {
 					
 					if (active_handle == i) {
 						cr.save ();
-						kerning_label.widget_x = x2;
-						kerning_label.widget_y = y + 40  * item_size;
+						cr.scale (1 / KerningTools.font_size, 1 / KerningTools.font_size);
+						kerning_label.widget_x = x2 * KerningTools.font_size;
+						kerning_label.widget_y = y * KerningTools.font_size + 40;
 						kerning_label.draw (cr);
 						cr.fill ();
 						cr.restore ();
@@ -238,6 +239,7 @@ public class KerningDisplay : FontDisplay {
 
 	private void display_kerning_value (double k) {
 		string kerning = round (k);
+		double item_size = 1.0 / KerningTools.font_size;
 		kerning_label = new Text (@"$(kerning)", 17 * MainWindow.units);
 	}
 	
