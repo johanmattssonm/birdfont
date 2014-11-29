@@ -59,6 +59,13 @@ public class MainWindow : GLib.Object {
 	}
 
 	public static void show_dialog (Dialog d) {
+		Tab t = MainWindow.get_tab_bar ().get_selected_tab ();
+		string tab_name = t.get_display ().get_name ();
+		
+		if (tab_name == "Preview") {
+			MenuTab.select_overview ();
+		}
+				
 		dialog = d;
 		dialog.visible = true;
 		GlyphCanvas.redraw ();
