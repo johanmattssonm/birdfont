@@ -22,6 +22,8 @@ public abstract class FontDisplay : GLib.Object {
 	private static double last_tap_y = -1;
 	private static double last_tap_time = 0;
 
+	public static bool dirty_scrollbar = true;
+
 	/** Queue redraw area */
 	public signal void redraw_area (double x, double y, double w, double h);
 	
@@ -42,6 +44,9 @@ public abstract class FontDisplay : GLib.Object {
 		return false;
 	}
 	
+	public virtual void update_scrollbar () {
+	}
+		
 	public virtual void scroll_to (double percent) {
 	}
 	

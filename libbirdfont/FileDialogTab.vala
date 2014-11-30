@@ -307,7 +307,7 @@ public class FileDialogTab : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
-	public void update_scrollbar () {
+	public override void update_scrollbar () {
 		uint rows = files.size + directories.size;
 
 		if (rows == 0 || visible_rows == 0) {

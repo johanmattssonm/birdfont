@@ -409,7 +409,7 @@ public class SettingsDisplay : FontDisplay {
 		GlyphCanvas.redraw ();
 	}
 	
-	public void update_scrollbar () {
+	public override void update_scrollbar () {
 		double h = content_height - allocation.height;
 		MainWindow.set_scrollbar_size (allocation.height / content_height);
 		MainWindow.set_scrollbar_position (scroll /  h);

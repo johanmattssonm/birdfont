@@ -248,7 +248,7 @@ public class KerningList : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
-	public void update_scrollbar () {
+	public override void update_scrollbar () {
 		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
 		uint rows = classes.get_number_of_pairs ();
 

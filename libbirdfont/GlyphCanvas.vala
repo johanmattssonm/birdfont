@@ -56,6 +56,7 @@ public class GlyphCanvas : GLib.Object {
 		
 		if (signal_selected) {
 			current_display.selected_canvas ();
+			current_display.dirty_scrollbar = true;
 		}
 		
 		current_display.redraw_area.connect ((x, y, w, h) => {

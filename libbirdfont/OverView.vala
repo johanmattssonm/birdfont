@@ -1043,7 +1043,7 @@ public class OverView : FontDisplay {
 		open_overview_item (selected_item);
 	}
 
-	public void update_scrollbar () {
+	public override void update_scrollbar () {
 		Font f;
 		double nrows = 0;
 		double pos = 0;
