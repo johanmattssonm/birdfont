@@ -23,6 +23,10 @@ public class Text : Widget {
 		get {
 			if (current_font == null) {
 				current_font = get_default_font ();
+				
+				if (current_font == null) {
+					current_font = new Font ();
+				}
 			}
 			
 			return (!) current_font;
