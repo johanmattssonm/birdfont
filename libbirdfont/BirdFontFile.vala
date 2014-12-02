@@ -1175,6 +1175,7 @@ class BirdFontFile : GLib.Object {
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "data") {
 				path.point_data = attr.get_content ();
+				path.control_points = null;
 			}
 		}
 
@@ -1186,10 +1187,6 @@ class BirdFontFile : GLib.Object {
 			if (attr.get_name () == "skew") {
 				path.skew = double.parse (attr.get_content ());
 			}	
-		}
-			
-		if (path.points.size == 0) {
-			warning ("Empty path");
 		}
 		
 		return path;	
@@ -1357,23 +1354,22 @@ class BirdFontFile : GLib.Object {
 		path.close ();
 	}
 	
-	public static Path parse_path_data (string data) {
+	public static void parse_path_data (string data, Path path) {
 		string[] d = data.split (" ");
 		string[] p, p1, p2;
 		int i = 0;
-		Path path = new Path ();
 		string instruction = "";
 		bool open = false;
 
 		if (data == "") {
-			return path;
+			return;
 		}
 		
 		return_val_if_fail (d.length > 1, path);
 		
 		if (!(d[0] == "S" || d[0] == "B")) {
 			warning ("No start point.");
-			return path;
+			return;
 		}
 		
 		instruction = d[i++];
@@ -1395,7 +1391,7 @@ class BirdFontFile : GLib.Object {
 			
 			if (instruction == "") {
 				warning (@"No instruction at index $i.");
-				return path;
+				return;
 			}
 			
 			if (instruction == "L") {
@@ -1448,7 +1444,7 @@ class BirdFontFile : GLib.Object {
 				open = true;
 			} else {
 				warning (@"invalid instruction $instruction");
-				return path;
+				return;
 			}
 		}
 
@@ -1462,9 +1458,7 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 		
-		path.update_region_boundaries ();
-		
-		return path;	
+		path.update_region_boundaries ();	
 	}
 	
 	private static double parse_double (string p) {

@@ -28,14 +28,14 @@ public class Path {
 		get  {
 			if (control_points == null) {
 				control_points = new  Gee.ArrayList<EditPoint> ();
-				BirdFontFile.parse_path_data (point_data);
+				BirdFontFile.parse_path_data (point_data, this);
 			}
 			
 			return (!) control_points;
 		}
 	}
 
-	Gee.ArrayList<EditPoint>? control_points = null;
+	public Gee.ArrayList<EditPoint>? control_points = null;
 
 	EditPoint? last_point = null;
 	

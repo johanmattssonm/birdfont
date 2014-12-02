@@ -381,7 +381,9 @@ public class ClipTool : Tool {
 	}
 	
 	static void import_birdfont_path (Glyph glyph, string data) {
-		Path path = BirdFontFile.parse_path_data (data);
+		Path path = new Path ();
+		
+		BirdFontFile.parse_path_data (data, path);
 
 		if (path.points.size > 0) {
 			glyph.add_path (path);
