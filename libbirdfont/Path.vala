@@ -29,6 +29,7 @@ public class Path {
 			if (control_points == null) {
 				control_points = new  Gee.ArrayList<EditPoint> ();
 				BirdFontFile.parse_path_data (point_data, this);
+				point_data = "";
 			}
 			
 			return (!) control_points;
