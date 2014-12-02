@@ -39,7 +39,6 @@ public class MessageDialog : Dialog {
 	}
 
 	public override void draw (Context cr) {	
-		Text headline;
 		double cx, cy;
 		double width, height;
 

@@ -77,7 +77,7 @@ public class ZoomBar : Tool {
 			new_zoom (zoom_level);
 		}
 		
-		GlyphCanvas.current_display.dirty_scrollbar = true;
+		FontDisplay.dirty_scrollbar = true;
 	}
 	
 	public override void draw (Context cr) {

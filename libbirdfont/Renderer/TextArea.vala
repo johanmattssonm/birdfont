@@ -242,9 +242,7 @@ public class TextArea : Widget {
 	private void add_character (uint keyval) {
 		unichar c = (unichar) keyval;
 		string s;
-		TextArea focus;
-		TextUndoItem ui;
-		
+
 		if (!is_modifier_key (keyval) 
 			&& !KeyBindings.has_ctrl ()
 			&& !KeyBindings.has_alt ()) {
@@ -824,7 +822,6 @@ public class TextArea : Widget {
 		double xmax = 0;
 		int i = 0;
 		double dd;
-		bool on_screen;
 		
 		tx = 0;
 		ty = font_size;
@@ -973,7 +970,6 @@ public class TextArea : Widget {
 	
 	public override void draw (Context cr) {
 		Text word;
-		double p;
 		double tx, ty;
 		string w;
 		double scale;
@@ -1125,7 +1121,6 @@ public class TextArea : Widget {
 		}
 		
 		Context cc; // cached context
-		double cc_x, cc_y;
 		Paragraph paragraph;
 		paragraph = paragraphs.get (0);
 		
@@ -1207,7 +1202,6 @@ public class TextArea : Widget {
 		
 		foreach (Text next_word in paragraph.words) {
 			string w = next_word.text;
-			double p = next_word.get_sidebearing_extent ();
 			wl = w.length;
 
 			if (carret.character_index == ch_index) {

@@ -85,9 +85,9 @@ public class TabContent : GLib.Object {
 				menu.draw (allocation, cr);
 			}
 			
-			if (GlyphCanvas.current_display.dirty_scrollbar) {
+			if (FontDisplay.dirty_scrollbar) {
 				GlyphCanvas.current_display.update_scrollbar ();
-				GlyphCanvas.current_display.dirty_scrollbar = false;
+				FontDisplay.dirty_scrollbar = false;
 			}
 		}
 	}

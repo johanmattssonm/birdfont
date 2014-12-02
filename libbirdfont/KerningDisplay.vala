@@ -239,7 +239,6 @@ public class KerningDisplay : FontDisplay {
 
 	private void display_kerning_value (double k) {
 		string kerning = round (k);
-		double item_size = 1.0 / KerningTools.font_size;
 		kerning_label = new Text (@"$(kerning)", 17 * MainWindow.units);
 	}
 	

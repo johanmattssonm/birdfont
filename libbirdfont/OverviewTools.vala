@@ -50,7 +50,7 @@ public class OverviewTools : ToolCollection  {
 			OverView overview = get_overview ();
 			overview.display_all_available_glyphs ();
 			update_overview_characterset ();
-			overview.dirty_scrollbar = true;
+			FontDisplay.dirty_scrollbar = true;
 		});
 		character_sets.add_tool (all_glyphs);
 
@@ -62,7 +62,7 @@ public class OverviewTools : ToolCollection  {
 			DefaultCharacterSet.use_default_range (gr);
 			overview.set_glyph_range (gr);
 			update_overview_characterset ();
-			overview.dirty_scrollbar = true;
+			FontDisplay.dirty_scrollbar = true;
 		});
 		character_sets.add_tool (default_glyphs);
 
@@ -74,7 +74,7 @@ public class OverviewTools : ToolCollection  {
 			DefaultCharacterSet.use_full_unicode_range (gr);
 			overview.set_glyph_range (gr);
 			update_overview_characterset ();
-			overview.dirty_scrollbar = true;
+			FontDisplay.dirty_scrollbar = true;
 		});
 		character_sets.add_tool (unicode);
 		

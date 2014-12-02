@@ -80,7 +80,6 @@ public class SaveDialog : Dialog {
 	}
 
 	public override void draw (Context cr) {	
-		Text headline;
 		double cx, cy;
 		
 		layout ();
