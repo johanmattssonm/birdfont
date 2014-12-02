@@ -32,7 +32,7 @@ public class Glyph : FontDisplay {
 	int zoom_list_index = 0;
 	
 	// Paths
-	public Gee.ArrayList<Path> path_list = new Gee.ArrayList<Path> ();
+	public Gee.ArrayList<Path> path_list = new Gee.ArrayList<Path> ();	
 	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
 
 	// The point where edit event begun 

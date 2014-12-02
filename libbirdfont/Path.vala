@@ -24,7 +24,18 @@ public enum Direction {
 
 public class Path {
 	
-	public Gee.ArrayList<EditPoint> points;
+	public Gee.ArrayList<EditPoint> points {
+		get  {
+			if (control_points == null) {
+				control_points = new  Gee.ArrayList<EditPoint> ();
+				BirdFontFile.parse_path_data (point_data);
+			}
+			
+			return (!) control_points;
+		}
+	}
+
+	Gee.ArrayList<EditPoint>? control_points = null;
 
 	EditPoint? last_point = null;
 	
@@ -94,10 +105,11 @@ public class Path {
 	public bool hide_end_handle = true;
 	public bool highlight_last_segment = false;
 	
+	public string point_data = "";
+	
 	public Path () {	
 		string width;
-		points = new Gee.ArrayList<EditPoint> ();
-		
+
 		if (edit_point_image == null) {
 			edit_point_image = Icons.get_icon ("edit_point.png");
 			active_edit_point_image = Icons.get_icon ("active_edit_point.png");

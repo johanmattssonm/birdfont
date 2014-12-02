@@ -1174,7 +1174,7 @@ class BirdFontFile : GLib.Object {
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "data") {
-				path = parse_path_data (attr.get_content ());
+				path.point_data = attr.get_content ();
 			}
 		}
 
