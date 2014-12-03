@@ -58,9 +58,10 @@ public class ForesightTool : Tool {
 			} else {	
 				if (state == NONE) {
 					p.press_action (p, 3, x, y);
+					p.move_action (p, x, y);
 					p.release_action (p, 3, x, y);
 					
-					add_new_point (x, y);
+					//add_new_point (x, y);
 					
 					state = MOVE_HANDLES;
 				}
@@ -80,9 +81,12 @@ public class ForesightTool : Tool {
 						
 						first_point = PenTool.active_path.points.get (0);
 						clockwise = PenTool.active_path.is_clockwise ();
-					
+						
+						p.move_selected = false;
 						p.release_action (p, 3, x, y);
-						p.press_action (p, 3, x, y);
+						
+						p.move_selected = false;
+						p.press_action (p, 2, x, y);
 
 						if (ps.path.has_point (first_point)) {
 							ps.path.reverse ();
@@ -121,9 +125,13 @@ public class ForesightTool : Tool {
 				add_new_point (x, y);
 			} else if (state == MOVE_LAST_HANDLE) {
 				state = NONE;
+				previous_point = 0;
 				return_if_fail (PenTool.selected_points.size != 0);
+				
 				last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
+				
 				p.release_action (p, 3, x, y);
+				
 				PenTool.selected_points.add (last);
 				PenTool.active_path.highlight_last_segment = false;
 				
