@@ -142,6 +142,11 @@ public class PenTool : Tool {
 			last_point_y = Glyph.path_coordinate_y (y);
 			
 			BirdFont.get_current_font ().touch ();
+			
+			// move new points on to grid
+			if (GridTool.has_ttf_grid () || GridTool.is_visible ()) {
+				move (x, y);	
+			}
 		});
 		
 		double_click_action.connect ((self, b, x, y) => {
