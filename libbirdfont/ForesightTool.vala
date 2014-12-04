@@ -21,18 +21,15 @@ namespace BirdFont {
 public class ForesightTool : Tool {
 	
 	public const uint NONE = 0;
-	
 	public const uint MOVE_POINT = 1;
 	public const uint MOVE_HANDLES = 2;
 	public const uint MOVE_LAST_HANDLE = 3;
+	public const uint MOVE_FIRST_HANDLE = 3;
 	
 	uint state = NONE;
 	bool move_right_handle = true;
 	int previous_point = 0;
-
-	int last_x = 0;
-	int last_y = 0;
-
+	
 	Path current_path = new Path ();
 
 	public ForesightTool (string name) {
@@ -57,20 +54,26 @@ public class ForesightTool : Tool {
 				state = MOVE_POINT;
 			} else {	
 				if (state == NONE) {
-					p.press_action (p, 3, x, y);
-					p.move_action (p, x, y);
-					p.release_action (p, 3, x, y);
+					state = MOVE_POINT;
+					add_new_point (x, y);
 					
-					//add_new_point (x, y);
+					p.last_point_x = Glyph.path_coordinate_x (x);
+					p.last_point_y = Glyph.path_coordinate_y (y);
 					
-					state = MOVE_HANDLES;
-				}
-				
-				if (state == MOVE_POINT) {			
+					move_action (this, x, y);
+					
+					state = MOVE_FIRST_HANDLE;
+				} else if (state == MOVE_POINT) {			
 					state = MOVE_HANDLES;
 					
 					if (p.has_join_icon ()) {
-						return_if_fail (PenTool.active_path.points.size != 0);
+						print ("JOIN\n");
+					
+						if (unlikely (PenTool.active_path.points.size == 0)) {
+							warning ("No point to join.");
+							return;
+						}
+
 						ps = new PointSelection (PenTool.active_path.points.get (PenTool.active_path.points.size - 1), PenTool.active_path);
 						ps.point.set_tie_handle (false);
 						ps.point.convert_to_curve ();
@@ -83,7 +86,7 @@ public class ForesightTool : Tool {
 						clockwise = PenTool.active_path.is_clockwise ();
 						
 						p.move_selected = false;
-						p.release_action (p, 3, x, y);
+						p.release_action (p, 2, x, y);
 						
 						p.move_selected = false;
 						p.press_action (p, 2, x, y);
@@ -117,26 +120,40 @@ public class ForesightTool : Tool {
 		});
 
 		release_action.connect ((self, b, x, y) => {
-			Tool p = PointTool.pen ();
+			PenTool p = (PenTool) PointTool.pen ();
 			PointSelection last;
-			
-			if (state == MOVE_HANDLES) {
+
+			if (state == MOVE_HANDLES || state == MOVE_FIRST_HANDLE) {
+				if (state == MOVE_FIRST_HANDLE) {
+					last = add_new_point (x + 100, y);
+					last.point.x = Glyph.path_coordinate_x (x);
+					last.point.y = Glyph.path_coordinate_y (y);
+				} else {
+					last = add_new_point (x, y);
+				}
+				
 				state = MOVE_POINT;
-				add_new_point (x, y);
 			} else if (state == MOVE_LAST_HANDLE) {
-				state = NONE;
 				previous_point = 0;
-				return_if_fail (PenTool.selected_points.size != 0);
+				
+				if (unlikely (PenTool.selected_points.size == 0)) {
+					warning ("No point in move last handle.");
+					return;
+				}
 				
 				last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
 				
-				p.release_action (p, 3, x, y);
+				p.release_action (p, 2, x, y);
 				
 				PenTool.selected_points.add (last);
 				PenTool.active_path.highlight_last_segment = false;
 				
 				last.path.direction_is_set = false;
 				PenTool.force_direction ();
+				
+				print ("LAST.");
+				
+				state = NONE;
 			} else if (state == MOVE_POINT) {
 			} else {
 				warning (@"Unknown state $state.");
@@ -159,7 +176,10 @@ public class ForesightTool : Tool {
 					return_if_fail (PenTool.active_path.points.size >= previous_point + 1);
 					last = new PointSelection (PenTool.active_path.points.get (PenTool.active_path.points.size - (previous_point + 1)), PenTool.active_path);				
 				} else {
-					return_if_fail (PenTool.selected_points.size != 0);
+					if (unlikely (PenTool.selected_points.size == 0)) {
+						warning ("No point to move in state %u", state);
+						return;
+					}
 					last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
 				}
 				
@@ -218,9 +238,6 @@ public class ForesightTool : Tool {
 					PenTool.move_point_independent_of_handle = false;
 				}
 			}
-			
-			last_x = x;
-			last_y = y;
 		});
 		
 		key_press_action.connect ((self, keyval) => {
@@ -282,7 +299,7 @@ public class ForesightTool : Tool {
 		}
 	}
 	
-	void add_new_point (int x, int y) {
+	PointSelection add_new_point (int x, int y) {
 		PointSelection last;
 		double handle_x, handle_y;
 		
@@ -291,7 +308,11 @@ public class ForesightTool : Tool {
 		if (PenTool.active_path.points.size == 0) {
 			last = p.new_point_action (x, y);
 		} else {
-			return_if_fail (PenTool.selected_points.size != 0);
+			if (PenTool.selected_points.size == 0) {
+				warning ("No selected points.");
+				return new PointSelection.empty ();
+			}
+			
 			last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
 			
 			PenTool.selected_points.clear ();
@@ -330,6 +351,8 @@ public class ForesightTool : Tool {
 		PenTool.active_path.hide_end_handle = (state == MOVE_POINT);
 		
 		current_path = last.path;
+		
+		return last;
 	}
 }
 

@@ -163,6 +163,7 @@ public class PenTool : Tool {
 			y = Glyph.path_coordinate_y (iy);
 						
 			if (has_join_icon ()) {
+				print ("merge in pen_tool\n");
 				join_paths (x, y);
 			}
 
