@@ -1217,7 +1217,7 @@ public class SvgParser {
 		
 		path = new Path ();
 				
-		if (num_b == 0) {
+		if (num_b <= 1) {
 			warning ("No SVG data");
 			return path_list;
 		}
@@ -1225,7 +1225,10 @@ public class SvgParser {
 		first_left_x = 0;
 		first_left_y = 0;
 		
+		print("\n");
 		for (int i = 0; i < num_b; i++) {
+			print(b[i].to_string () + "\n");
+						
 			if (b[i].type == '\0') {
 				warning ("Parser error.");
 				return path_list;
@@ -1234,8 +1237,16 @@ public class SvgParser {
 				path.create_list ();
 				path.recalculate_linear_handles ();
 				path_list.add (path);
+				
+				if (b[1].type == 'C' || b[1].type == 'S') {
+					return_val_if_fail (path.points.size != 0, path_list);
+					ep = path.points.get (path.points.size - 1);
+					ep.get_right_handle ().set_point_type (PointType.CUBIC);
+					ep.get_right_handle ().move_to_coordinate (b[1].x0, b[1].y0);
+				}
+
 				path = new Path ();
-				first_point = true;
+				first_point = true;				
 			} else if (b[i].type == 'M') {
 			} else if (b[i].type == 'L') {
 
@@ -1249,7 +1260,7 @@ public class SvgParser {
 				ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
 				
 				if (b[i -1].type == 'L' || first_point) {
-					ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
+					//ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
 				}
 				
 				if (b[i + 1].type == 'C' || b[i + 1].type == 'S') {
@@ -1279,14 +1290,14 @@ public class SvgParser {
 
 				if (b[i].type == 'S') {
 					smooth_points.add (ep);
-				}				
-				
+				}		
+
 				if (b[i + 1].type != 'z') {
 					ep.get_right_handle ().move_to_coordinate (b[i + 1].x0, b[i + 1].y0);
 				} else {
 					ep.get_right_handle ().move_to_coordinate (first_left_x, first_left_y);
 				}
-				
+								
 				first_point = false;
 			} else {
 				warning ("Unknown control point type.");
