@@ -60,7 +60,7 @@ internal const int WARNINGS = 1;
  * void print_attributes (Tag tag) {
  * 	Attributes attributes = tag.get_attributes ();
  * 	foreach (Attribute attribute in attributes) {
- * 		print (attribute.get_name ()");
+ * 		print (attribute.get_name ());
  * 		print ("\n");
  * 	}
  * }

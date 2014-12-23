@@ -50,7 +50,6 @@ class TestBirdFont : GLib.Object {
 		test_cases = tests.get_test_functions ();
 		current_case = test_cases.first ();
 		test_cases_to_run = "All";
-		
 		from_command_line ();
 	}
 	
@@ -60,6 +59,12 @@ class TestBirdFont : GLib.Object {
 	
 	public static void set_slow_test (bool s) {
 		slow_test = s;
+	}
+	
+	public static void run_tests () {
+		TestBirdFont t = get_singleton ();
+		state = RUNNING;
+		t.run_all_tests ();
 	}
 	
 	public static TestBirdFont get_singleton () {
@@ -105,7 +110,7 @@ class TestBirdFont : GLib.Object {
 			if (st == "All" || st == "") {
 				return;
 			} else {
-				stderr.printf  (@"Run only test case \"$st\" \n");
+				stderr.printf  (@"Run test case \"$st\" \n");
 			}
 			
 			test_cases_to_run = st;
@@ -210,7 +215,7 @@ class TestBirdFont : GLib.Object {
 					
 			has_failed = false;
 			has_skipped = false;
-
+			
 			if (test_cases_to_run != "All" && test_cases_to_run != test.name) {
 				has_skipped = true;
 			} else {

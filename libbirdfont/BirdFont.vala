@@ -483,6 +483,8 @@ public class BirdFont {
 		DefaultCharacterSet.get_characters_for_prefered_language ();
 
 		HeadTable.init ();
+		
+		TestBirdFont.run_tests ();
 	}
 
 	public static void set_bundle_path (string path) {

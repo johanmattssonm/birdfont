@@ -12,6 +12,8 @@
     Lesser General Public License for more details.
 */
 
+using Bird;
+
 namespace BirdFont {
 
 /** All the things we want to test listed is here. */
@@ -47,6 +49,7 @@ class TestCases {
 		add (test_double_quadratic, "Double quadratic");
 		add (test_raster_path, "Raster path");
 		add (test_file_path, "File path");
+		add (test_xml, "XML");
 
 		add_bechmark (benchmark_stroke, "Stroke");
 	}
@@ -1284,6 +1287,45 @@ class TestCases {
 			warning (@"Wrong folder, $folder");
 		}	
 	}
+	
+	static void test_xml () {
+		Tag root;
+		XmlParser parser;
+
+		parser = new XmlParser ("""<g><g><g></g><g><g></g></g></g></g>""");	
+
+		root = parser.get_root_tag ();
+		print_tags (root);
+
+		if (parser.validate ()) {
+			root = parser.get_root_tag ();
+			print_tags (root);
+		} else {
+			warning ("Invalid XML code.");
+		}
+
+	}
+
+	static void print_tags (Tag tag) {
+		print (tag.get_name ());
+		print ("\n");
+		print_attributes (tag);
+		print (tag.get_content ());
+
+		foreach (Tag t in tag) {
+			print_tags (t);
+		}
+	}
+
+	static void print_attributes (Tag tag) {
+		Attributes attributes = tag.get_attributes ();
+		foreach (Attribute attribute in attributes) {
+			print ("\t");
+			print (attribute.get_name ());
+			print ("\n");
+		}
+	}
+
 }
 
 }

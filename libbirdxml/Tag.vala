@@ -253,8 +253,8 @@ public class Tag {
 		int index = start;
 		int slash_index = start;
 		int previous_index;
-		unichar c;
-		int start_count = 0;
+		unichar c, slash;
+		int start_count = 1;
 		
 		if (name.length == 0) {
 			error = true;
@@ -265,14 +265,15 @@ public class Tag {
 		while (true) {
 			previous_index = index;
 			if (!data.get_next_char (ref index, out c)) {
+				warn (@"Unexpected end of file");
 				break;
 			}
 			
 			if (c == '<') {
 				slash_index = index;
-				data.get_next_char (ref slash_index, out c);
-				if (c == '/' && is_tag (name, slash_index)) {
-					if (start_count == 0) {
+				data.get_next_char (ref slash_index, out slash);
+				if (slash == '/' && is_tag (name, slash_index)) {
+					if (start_count == 1) {
 						return previous_index;
 					} else {
 						start_count--;
@@ -281,7 +282,7 @@ public class Tag {
 						}
 					}
 				} else if (is_tag (name, index)) {
-					start_count++;					
+					start_count++;
 				}
 			}
 		}
@@ -305,7 +306,6 @@ public class Tag {
 				}
 			}
 		}
-		
 		
 		if (data.get_next_char (ref data_index, out c_data)) {
 			return c_data == '>' || c_data == ' ' || c_data == '\t' 
