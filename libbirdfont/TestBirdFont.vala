@@ -42,7 +42,7 @@ class TestBirdFont : GLib.Object {
 		
 	static bool slow_test = false;
 	
-	string test_cases_to_run; // name of specific test case or all to run all test cases
+	public string test_cases_to_run; // name of specific test case or all to run all test cases
 	
 	public TestBirdFont () {
 		assert (singleton == null);
