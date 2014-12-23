@@ -162,6 +162,10 @@ public class SvgParser {
 			if (t.get_name () == "polygon") {
 				parse_polygon (t, layer);
 			}
+
+			if (t.get_name () == "rect") {
+				parse_rect (t, layer);
+			}
 		}
 		
 		foreach (Attribute attr in tag.get_attributes ()) {	
@@ -323,20 +327,106 @@ public class SvgParser {
 		param = function.substring (i);
 
 		param = param.replace ("(", "");
+		param = param.replace ("\n", " ");
+		param = param.replace ("\t", " ");
 		param = param.replace (",", " ");
-				
-		return param;			
+		
+		while (param.index_of ("  ") > -1) {
+			param.replace ("  ", " ");
+		}
+			
+		return param.strip();			
+	}
+	
+	private void parse_rect (Tag tag, PathList pl) {
+		Path p;
+		double x, y, x2, y2;
+		BezierPoints[] bezier_points;
+		Glyph g;
+		PathList npl = new PathList ();
+		
+		x = 0;
+		y = 0;
+		x2 = 0;
+		y2 = 0;
+			
+		foreach (Attribute attr in tag.get_attributes ()) {			
+			if (attr.get_name () == "x") {
+				x = parse_double (attr.get_content ());
+			}
+			
+			if (attr.get_name () == "y") {
+				y = -parse_double (attr.get_content ());
+			}
+
+			if (attr.get_name () == "width") {
+				x2 = parse_double (attr.get_content ());
+			}
+			
+			if (attr.get_name () == "height") {
+				y2 = -parse_double (attr.get_content ());
+			}
+		}
+		
+		x2 += x;
+		y2 += y;
+
+		bezier_points = new BezierPoints[4];
+		bezier_points[0] = new BezierPoints ();
+		bezier_points[0].type == 'L';
+		bezier_points[0].x0 = x;
+		bezier_points[0].y0 = y;
+
+		bezier_points[1] = new BezierPoints ();
+		bezier_points[1].type == 'L';
+		bezier_points[1].x0 = x2;
+		bezier_points[1].y0 = y;
+
+		bezier_points[2] = new BezierPoints ();
+		bezier_points[2].type == 'L';
+		bezier_points[2].x0 = x2;
+		bezier_points[2].y0 = y2;
+
+		bezier_points[3] = new BezierPoints ();
+		bezier_points[3].type == 'L';
+		bezier_points[3].x0 = x;
+		bezier_points[3].y0 = y2;
+		
+		g = MainWindow.get_current_glyph ();
+		move_and_resize (bezier_points, 4, false, 1, g);
+					
+		p = new Path ();	
+		
+		p.add (bezier_points[0].x0, bezier_points[0].y0);
+		p.add (bezier_points[1].x0, bezier_points[1].y0);
+		p.add (bezier_points[2].x0, bezier_points[2].y0);
+		p.add (bezier_points[3].x0, bezier_points[3].y0);
+						
+		p.close ();
+		p.create_list ();
+		p.recalculate_linear_handles ();		
+		
+		npl.add (p);
+		
+		// FIXME: right layer for other transforms
+		foreach (Attribute attr in tag.get_attributes ()) {
+			if (attr.get_name () == "transform") {
+				transform (attr.get_content (), npl);
+			}
+		}
+		
+		pl.append (npl);
 	}
 		
 	private void parse_polygon (Tag tag, PathList pl) {
 		Path p;
 		
-		foreach (Attribute attr in tag.get_attributes ()) {			
+		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "points") {
 				p = parse_polygon_data (attr.get_content ());
 				pl.add (p);
 			}
-		}		
+		}	
 	}
 	
 	private void parse_path (Tag tag, PathList pl) {
