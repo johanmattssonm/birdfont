@@ -329,12 +329,11 @@ public class SvgParser {
 	}
 		
 	private void parse_polygon (Tag tag, PathList pl) {
-		Glyph glyph = MainWindow.get_current_glyph ();
 		Path p;
 		
 		foreach (Attribute attr in tag.get_attributes ()) {			
 			if (attr.get_name () == "points") {
-				p = parse_polygon_data (attr.get_content (), glyph);
+				p = parse_polygon_data (attr.get_content ());
 				pl.add (p);
 			}
 		}		
@@ -1224,10 +1223,8 @@ public class SvgParser {
 		
 		first_left_x = 0;
 		first_left_y = 0;
-		
-		print("\n");
+
 		for (int i = 0; i < num_b; i++) {
-			print(b[i].to_string () + "\n");
 						
 			if (b[i].type == '\0') {
 				warning ("Parser error.");
@@ -1235,8 +1232,6 @@ public class SvgParser {
 			} else if (b[i].type == 'z') {
 				path.close ();
 				path.create_list ();
-				path.recalculate_linear_handles ();
-				path_list.add (path);
 				
 				if (b[1].type == 'C' || b[1].type == 'S') {
 					return_val_if_fail (path.points.size != 0, path_list);
@@ -1245,6 +1240,9 @@ public class SvgParser {
 					ep.get_right_handle ().move_to_coordinate (b[1].x0, b[1].y0);
 				}
 
+				path.recalculate_linear_handles ();
+				path_list.add (path);
+				
 				path = new Path ();
 				first_point = true;				
 			} else if (b[i].type == 'M') {
@@ -1374,24 +1372,44 @@ public class SvgParser {
 		return double.try_parse ((!) s);
 	}
 	
-	Path parse_polygon_data (string polygon_points, Glyph glyph) {
+	Path parse_polygon_data (string polygon_points) {
 		string data = add_separators (polygon_points);
 		string[] c = data.split (" ");
-		Path path = new Path ();
+		Path path;
+		BezierPoints[] bezier_points = new BezierPoints[c.length + 1];
+		int bi;
+		Glyph g;
 		
+		bi = 0;
 		for (int i = 0; i < c.length - 1; i += 2) {	
-			if (i + 1 == c.length) {
+			if (i + 1 >= c.length) {
 				warning ("No y value.");
 				break;
 			}
+
+			if (bi >= bezier_points.length) {
+				warning ("End of bezier_points");
+				break;
+			}
+
+			bezier_points[bi] = new BezierPoints ();
+			bezier_points[bi].type == 'L';
+			bezier_points[bi].x0 = parse_double (c[i]);
+			bezier_points[bi].y0 = -parse_double (c[i + 1]);
+			bi++;
+		}
 			
-			path.add (parse_double (c[i]), -parse_double (c[i + 1]));
+		g = MainWindow.get_current_glyph ();
+		move_and_resize (bezier_points, bi, false, 1, g);
+		
+		path = new Path ();
+		for (int i = 0; i < bi; i++) {
+			path.add (bezier_points[i].x0, bezier_points[i].y0);
 		}
 		
-		glyph.add_path (path);
 		path.close ();
 		path.create_list ();
-		glyph.close_path ();
+		path.recalculate_linear_handles ();
 		
 		return path;
 	}
