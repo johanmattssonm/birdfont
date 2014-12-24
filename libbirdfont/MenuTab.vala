@@ -76,8 +76,42 @@ public class MenuTab : FontDisplay {
 		idle.attach (null);
 	}
 	
+	public static bool validate_metadata () {
+		Font font = BirdFont.get_current_font ();
+		string m = t_("Missing metadata in font:\n") + " ";
+		
+		if (font.postscript_name == "") {
+			MainWindow.show_message (m + t_("PostScript Name"));
+			return false;
+		}
+
+		if (font.name == "") {
+			MainWindow.show_message (m + t_("Name"));
+			return false;
+		}
+
+		if (font.subfamily == "") {
+			MainWindow.show_message (m + t_("Style"));
+			return false;
+		}
+
+		if (font.full_name == "") {
+			MainWindow.show_message (m + t_("Full Name (Name and Style)"));
+			return false;
+		}
+
+		if (font.unique_identifier == "") {
+			MainWindow.show_message (m + t_("Unique Identifier"));
+			return false;
+		}
+
+		return true;
+	}
+	
 	public static void export_fonts_in_background () {
-		if (suppress_event || !MainWindow.native_window.can_export ()) {
+		if (suppress_event 
+			|| !MainWindow.native_window.can_export ()
+			|| !validate_metadata ()) {
 			return;
 		}
 		

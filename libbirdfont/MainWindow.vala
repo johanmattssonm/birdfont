@@ -58,7 +58,8 @@ public class MainWindow : GLib.Object {
 		return dialog;
 	}
 
-	public static void show_dialog (Dialog d) {
+	public static void show_dialog (Dialog d) 
+	requires (!is_null(MainWindow.get_tab_bar ())) {
 		Tab t = MainWindow.get_tab_bar ().get_selected_tab ();
 		string tab_name = t.get_display ().get_name ();
 		
