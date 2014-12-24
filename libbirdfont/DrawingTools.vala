@@ -93,6 +93,8 @@ public class DrawingTools : ToolCollection  {
 	public ZoomBar zoom_bar;
 	
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
+		bool selected_line;
+		
 		glyph_canvas = main_glyph_canvas;
 		
 		background_scale = new SpinButton ();
@@ -799,16 +801,17 @@ public class DrawingTools : ToolCollection  {
 		// guide lines, grid and other guidlines
 		help_lines = new Tool ("help_lines", t_("Show guidelines"));
 		help_lines.select_action.connect ((self) => {
-				bool h;
-				h = GlyphCanvas.get_current_glyph ().get_show_help_lines ();
-				GlyphCanvas.get_current_glyph ().set_show_help_lines (!h);
-				self.set_selected (!h);
-				GlyphCanvas.get_current_glyph ().redraw_help_lines ();
-			});	
-
+			bool h;
+			h = GlyphCanvas.get_current_glyph ().get_show_help_lines ();
+			GlyphCanvas.get_current_glyph ().set_show_help_lines (!h);
+			self.set_selected (!h);
+			GlyphCanvas.get_current_glyph ().redraw_help_lines ();
+		});
+		selected_line = GlyphCanvas.get_current_glyph ().get_show_help_lines ();
+		help_lines.set_selected (selected_line);
 		guideline_tools.add_tool (help_lines);
 
-		xheight_help_lines = new Tool ("show_xheight_helplines", t_("Show guidelines for x-height and baseline"));
+		xheight_help_lines = new Tool ("show_xheight_helplines", t_("Show more guidelines"));
 		xheight_help_lines.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			bool v = !g.get_xheight_lines_visible ();
@@ -820,6 +823,8 @@ public class DrawingTools : ToolCollection  {
 				MainWindow.get_toolbox ().select_tool (help_lines);
 			}
 		});
+		selected_line = GlyphCanvas.get_current_glyph ().get_xheight_lines_visible ();
+		xheight_help_lines.set_selected (selected_line);
 		guideline_tools.add_tool (xheight_help_lines);
 
 		background_help_lines = new Tool ("background_help_lines", t_("Show guidelines at top and bottom margin"));
@@ -834,6 +839,8 @@ public class DrawingTools : ToolCollection  {
 				MainWindow.get_toolbox ().select_tool (help_lines);
 			}
 		});
+		selected_line = GlyphCanvas.get_current_glyph ().get_margin_lines_visible ();
+		background_help_lines.set_selected (selected_line);
 		guideline_tools.add_tool (background_help_lines);
 
 		Tool new_grid = new GridTool ("show_grid");
