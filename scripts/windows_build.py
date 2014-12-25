@@ -18,12 +18,11 @@ valaflags = ""
 cc = "gcc"
 cflags = "-g ./build/icon.res -Wl,-subsystem,windows "
 ldflags = ""
-library_cflags = "-Wl,-subsystem,windows "
 library_ldflags= "";
 
 import configfile
 configfile.write_config (prefix)
-configfile.write_compile_parameters (".\\\\", "build", "gcc", "gee-1.0", "False")
+configfile.write_compile_parameters (".\\\\", "build", "gcc", "gee-0.8", "False")
 
 import build
 from translations import compile_translations
@@ -34,6 +33,11 @@ compile_translations()
 run("windres ./resources/win32/icon.rc -O coff -o ./build/icon.res")
 build.libbirdxml(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdxml.dll")
 build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdfont.dll")
+
+run ("cp build/bin/libbirdfont.dll ./")
+run ("gcc -Wl,-subsystem,windows -Wl,--output-def,build/bin/libbirdfont.def,--out-implib -shared -Wl,-soname,libbirdfont.dll libbirdfont.dll")
+run ("rm libbirdfont.dll")
+
 build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags)
 build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags)
 build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags)
