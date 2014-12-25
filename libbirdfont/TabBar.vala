@@ -630,7 +630,7 @@ public class TabBar : GLib.Object {
 		w = width / scale;
 		h = height / scale;
 
-		if (has_scroll ()) {
+		if (has_scroll () && !has_progress_wheel ()) {
 			// left arrow
 			cr.set_source_surface ((!) to_previous_tab, 2 / scale, h / 2.0 - ((!) to_previous_tab).get_height () / 2);
 			cr.paint ();
@@ -837,7 +837,7 @@ public class TabBar : GLib.Object {
 					wheel_rotation -= 2 * Math.PI;
 				}
 				
-				redraw_tab_bar (width - 19, 0, 19, height);
+				redraw_tab_bar (width - 40, 0, 40, height);
 				return processing;
 			});
 			timer.attach (null);
@@ -845,8 +845,10 @@ public class TabBar : GLib.Object {
 	}
 	
 	public static void start_wheel () {
+		TabBar t;		
 		if (!is_null (MainWindow.get_tab_bar ())) {
-			MainWindow.get_tab_bar ().set_progress (true);
+			t = MainWindow.get_tab_bar ();
+			t.set_progress (true);
 		}
 	}
 
