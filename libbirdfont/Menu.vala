@@ -441,7 +441,9 @@ public class Menu : GLib.Object {
 				}
 				
 				display = current_display.get_name ();
-				if (item.display == "" || item.display == display) {
+				
+				if (SettingsDisplay.update_key_bindings 
+					&& (item.display == "" || item.display == display)) {
 					item.action ();
 				}
 				
