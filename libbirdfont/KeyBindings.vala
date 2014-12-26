@@ -82,16 +82,17 @@ bool is_modifier_key (uint i) {
 /** Modifier flags */
 public static const uint NONE  = 0;
 public static const uint CTRL  = 1 << 0;
-public static const uint ALT   = 1 << 2;
-public static const uint SHIFT = 1 << 3;
-public static const uint LOGO  = 1 << 4;
+public static const uint ALT   = 1 << 1;
+public static const uint SHIFT = 1 << 2;
+public static const uint LOGO  = 1 << 3;
 
 public class KeyBindings {
 	
 	static bool modifier_ctrl = false;
 	static bool modifier_alt = false;
 	static bool modifier_shift = false;
-		
+	static bool modifier_logo = false;
+	
 	public static uint modifier = 0;
 
 	public static bool require_modifier;
@@ -105,6 +106,7 @@ public class KeyBindings {
 		modifier_ctrl = false;
 		modifier_alt = false;
 		modifier_shift = false;
+		modifier_logo = false;
 	}
 
 	public static void set_require_modifier (bool t) {
@@ -116,6 +118,7 @@ public class KeyBindings {
 		mod |= (keyval == Key.CTRL_RIGHT || keyval == Key.CTRL_LEFT) ? CTRL : 0;
 		mod |= (keyval == Key.SHIFT_RIGHT || keyval == Key.SHIFT_LEFT) ? SHIFT : 0;
 		mod |= (keyval == Key.ALT_LEFT || keyval == Key.ALT_GR) ? ALT : 0;
+		mod |= (keyval == Key.LOGO_LEFT || keyval == Key.LOGO_RIGHT) ? LOGO : 0;
 		return mod;		
 	}
 
@@ -135,6 +138,7 @@ public class KeyBindings {
 		modifier_ctrl = ((modifier & CTRL) > 0);
 		modifier_alt = ((modifier & ALT) > 0);
 		modifier_shift = ((modifier & SHIFT) > 0);
+		modifier_logo = ((modifier & LOGO) > 0);
 	}
 
 	public static bool has_alt () {
@@ -147,6 +151,10 @@ public class KeyBindings {
 		
 	public static bool has_ctrl () {
 		return modifier_ctrl;
+	}
+
+	public static bool has_logo () {
+		return modifier_logo;
 	}
 }
 
