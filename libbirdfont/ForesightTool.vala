@@ -24,7 +24,7 @@ public class ForesightTool : Tool {
 	public const uint MOVE_POINT = 1;
 	public const uint MOVE_HANDLES = 2;
 	public const uint MOVE_LAST_HANDLE = 3;
-	public const uint MOVE_FIRST_HANDLE = 3;
+	public const uint MOVE_FIRST_HANDLE = 4;
 	
 	uint state = NONE;
 	bool move_right_handle = true;
@@ -66,9 +66,7 @@ public class ForesightTool : Tool {
 				} else if (state == MOVE_POINT) {			
 					state = MOVE_HANDLES;
 					
-					if (p.has_join_icon ()) {
-						print ("JOIN\n");
-					
+					if (p.has_join_icon ()) {					
 						if (unlikely (PenTool.active_path.points.size == 0)) {
 							warning ("No point to join.");
 							return;
@@ -124,11 +122,7 @@ public class ForesightTool : Tool {
 			PointSelection last;
 
 			if (state == MOVE_HANDLES || state == MOVE_FIRST_HANDLE) {
-				if (state == MOVE_FIRST_HANDLE) {
-					last = add_new_point (x + 100, y);
-					last.point.x = Glyph.path_coordinate_x (x);
-					last.point.y = Glyph.path_coordinate_y (y);
-				} else {
+				if (state != MOVE_FIRST_HANDLE) { // FIXME:
 					last = add_new_point (x, y);
 				}
 				
@@ -150,8 +144,6 @@ public class ForesightTool : Tool {
 				
 				last.path.direction_is_set = false;
 				PenTool.force_direction ();
-				
-				print ("LAST.");
 				
 				state = NONE;
 			} else if (state == MOVE_POINT) {
