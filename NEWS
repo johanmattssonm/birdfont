@@ -1,3 +1,15 @@
+birdfont (2.0) stable;
+
+  * New UI layout
+  * New zoom tool
+  * Improved background import
+  * Customizable short cuts
+  * New tab for changing font name
+  * Illustrator SVG import and other bug fixes
+  * Load bf fonts faster
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Dec 26 14:24:07 CET 2014
+
 birdfont (1.8) stable;
 
   * Fix compability with Inkscape
