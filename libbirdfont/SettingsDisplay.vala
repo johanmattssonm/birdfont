@@ -27,7 +27,7 @@ public class SettingsDisplay : FontDisplay {
 	public static SpinButton precision;
 	
 	SettingsItem new_key_bindings = new SettingsItem.head_line ("");
-	static bool update_key_bindings = false;
+	public static bool update_key_bindings = false;
 	
 	public SettingsDisplay () {
 		allocation = new WidgetAllocation ();
