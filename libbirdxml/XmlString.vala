@@ -97,7 +97,15 @@ public class XmlString {
 	}	
 
 	internal bool get_next_char (ref int index, out unichar c) {
-		unowned string s = (string) data;
+		unowned string s;
+		unowned string? n = data;
+		
+		if (n == null) {
+			c = '\0';
+			return false;
+		}
+		
+		s = (string) n;
 		
 		if (index < 0) {
 			c = '\0';
