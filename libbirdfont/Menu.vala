@@ -522,9 +522,7 @@ public class Menu : GLib.Object {
 		}
 		
 		ma = menu_items.get (action);
-		if (ma == null) {
-			warning (@"No action for $action");
-		} else {
+		if (ma != null) {
 			menu_action = (!) ma;
 			menu_action.modifiers = modifier;
 			menu_action.key = key;

@@ -98,7 +98,7 @@ public class XmlString {
 
 	internal bool get_next_char (ref int index, out unichar c) {
 		unowned string s;
-		unowned string? n = data;
+		unowned string? n = (string) data;
 		
 		if (n == null) {
 			c = '\0';
@@ -115,7 +115,7 @@ public class XmlString {
 			return false;
 		}
 		
-		s = (string) n;
+		s = (!) n;
 		
 		return s.get_next_char (ref index, out c);
 	}

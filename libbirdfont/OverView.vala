@@ -851,7 +851,6 @@ public class OverView : FontDisplay {
 		index = -1;
 		
 		if (items_per_row <= 0) {
-			warning ("No items.");
 			return;
 		}
 

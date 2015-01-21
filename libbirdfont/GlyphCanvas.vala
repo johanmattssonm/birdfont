@@ -54,17 +54,19 @@ public class GlyphCanvas : GLib.Object {
 		BirdFont.current_glyph_collection = gc;
 		g.resized (allocation);
 		
-		if (signal_selected) {
-			current_display.selected_canvas ();
-			FontDisplay.dirty_scrollbar = true;
-		}
-		
-		current_display.redraw_area.connect ((x, y, w, h) => {
-			signal_redraw_area ((int)x, (int)y, (int)w, (int)h);
-		});
+		if (!is_null (current_display)) {
+			if (signal_selected) {
+				current_display.selected_canvas ();
+				FontDisplay.dirty_scrollbar = true;
+			}
+			
+			current_display.redraw_area.connect ((x, y, w, h) => {
+				signal_redraw_area ((int)x, (int)y, (int)w, (int)h);
+			});
 
-		redraw ();
-		
+			redraw ();
+		}
+		 
 		if (!is_null (MainWindow.native_window)) {
 			MainWindow.native_window.update_window_size ();
 		}
