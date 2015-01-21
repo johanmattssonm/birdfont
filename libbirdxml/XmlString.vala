@@ -105,8 +105,6 @@ public class XmlString {
 			return false;
 		}
 		
-		s = (string) n;
-		
 		if (index < 0) {
 			c = '\0';
 			return false;			
@@ -116,6 +114,8 @@ public class XmlString {
 			c = '\0';
 			return false;
 		}
+		
+		s = (string) n;
 		
 		return s.get_next_char (ref index, out c);
 	}

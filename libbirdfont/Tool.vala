@@ -224,8 +224,6 @@ public class Tool : GLib.Object {
 		
 		if (!a) {
 			deselect_action (this);
-		} else {
-			((!)tpa).update_text ();
 		}
 		
 		return true;

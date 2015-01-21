@@ -253,10 +253,6 @@ public class Toolbox : GLib.Object  {
 					update = t.set_active (active);
 					tpa = MainWindow.get_tooltip ();
 					
-					if (active && tpa != null) {
-						((!)tpa).update_text ();
-					}
-					
 					if (update) {
 						redraw (0, 0, allocation_width, allocation_height);
 					}
