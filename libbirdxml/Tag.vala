@@ -165,6 +165,7 @@ public class Tag {
 		int separator;
 		int end;
 		int closing_tag;
+		XmlString? d;
 
 		XmlString name;
 		XmlString attributes;
@@ -173,7 +174,8 @@ public class Tag {
 		index = start;
 		end_tag_index = -1;
 		
-		if (is_null(data)) {
+		d = data;
+		if (d == null) {
 			warn ("No data in xml string.");
 		}
 		
