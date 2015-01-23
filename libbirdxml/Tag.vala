@@ -173,6 +173,10 @@ public class Tag {
 		index = start;
 		end_tag_index = -1;
 		
+		if (is_null(data)) {
+			warn ("No data in xml string.");
+		}
+		
 		while (data.get_next_char (ref index, out c)) {
 			if (c == '<') {
 				separator = find_next_separator (index);
