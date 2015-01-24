@@ -42,6 +42,7 @@ public class XmlString {
 	/** Decrement the reference count and free the object when zero object are holding references to it.*/
 	public void unref () {
 		if (--refcount == 0) {
+			delete data;
 			this.free ();
 		}
 	}

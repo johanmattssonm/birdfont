@@ -171,12 +171,18 @@ public class Tag {
 		XmlString attributes;
 		XmlString content;
 	
+		if (start < 0) {
+			warn ("Negative index.");
+			return new Tag.empty ();
+		}
+	
 		index = start;
 		end_tag_index = -1;
 		
 		d = data;
 		if (d == null) {
 			warn ("No data in xml string.");
+			return new Tag.empty ();
 		}
 		
 		while (data.get_next_char (ref index, out c)) {
