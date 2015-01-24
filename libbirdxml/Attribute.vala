@@ -16,9 +16,7 @@ namespace Bird {
 /** 
  * Representation of one XML attribute.
  */
-[Compact]
-[CCode (ref_function = "bird_attribute_ref", unref_function = "bird_attribute_unref")]
-public class Attribute {
+public class Attribute : GLib.Object {
 	
 	public XmlString ns;
 	public XmlString name;
@@ -36,21 +34,6 @@ public class Attribute {
 		this.ns = new XmlString ("", 0);
 		this.name = new XmlString ("", 0);
 		this.content = new XmlString ("", 0);
-	}
-	
-	/** Increment the reference count.
-	 * @return a pointer to this object
-	 */
-	public unowned Attribute @ref () {
-		refcount++;
-		return this;
-	}
-	
-	/** Decrement the reference count and free the object when zero object are holding references to it.*/
-	public void unref () {
-		if (--refcount == 0) {
-			this.free ();
-		}
 	}
 	
 	/** 
@@ -73,8 +56,6 @@ public class Attribute {
 	public string get_content () {
 		return content.to_string ();
 	}
-	
-	private extern void free ();
 }
 
 }

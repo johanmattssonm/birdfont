@@ -18,9 +18,7 @@ namespace Bird {
  * copies a pointer to string instead of the data. It is faster if the string is 
  * huge.
  */
-[Compact]
-[CCode (ref_function = "bird_xml_string_ref", unref_function = "bird_xml_string_unref")]
-public class XmlString {
+public class XmlString : GLib.Object {
 	
 	public int length;
 	public char* data;
@@ -29,22 +27,6 @@ public class XmlString {
 	internal XmlString (char* data, int length) {
 		this.data = data;
 		this.length = length;
-	}
-	
-	/** Increment the reference count.
-	 * @return a pointer to this object
-	 */
-	public unowned XmlString @ref () {
-		refcount++;
-		return this;
-	}
-	
-	/** Decrement the reference count and free the object when zero object are holding references to it.*/
-	public void unref () {
-		if (--refcount == 0) {
-			delete data;
-			this.free ();
-		}
 	}
 
 	internal int index_of (string needle, int offset = 0) {
@@ -142,8 +124,6 @@ public class XmlString {
 		
 		return s.ndup (length);
 	}
-	
-	private extern void free ();
 }
 
 }

@@ -68,9 +68,7 @@ internal const int WARNINGS = 1;
  * }}}
  * 
  */
-[Compact]
-[CCode (ref_function = "bird_xml_parser_ref", unref_function = "bird_xml_parser_unref")]
-public class XmlParser {
+public class XmlParser : GLib.Object {
 	public Tag root;
 	public XmlString data;
 	public string input;
@@ -85,21 +83,6 @@ public class XmlParser {
 		this.input = data;
 		this.data = new XmlString (data, data.length);
 		reparse (NONE);
-	}
-
-	/** Increment the reference count.
-	 * @return a pointer to this object
-	 */
-	public unowned XmlParser @ref () {
-		refcount++;
-		return this;
-	}
-	
-	/** Decrement the reference count and free the object when zero object are holding references to it.*/
-	public void unref () {
-		if (--refcount == 0) {
-			this.free ();
-		}
 	}
 		
 	/** 
@@ -215,8 +198,6 @@ public class XmlParser {
 		t = t.replace ("&amp;", "&");
 		return t;
 	}
-	
-	private extern void free ();
 }
 
 }

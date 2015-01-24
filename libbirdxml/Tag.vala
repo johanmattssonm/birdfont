@@ -17,9 +17,7 @@ namespace Bird {
 /**
  * Representation of one XML tag.
  */
-[Compact]
-[CCode (ref_function = "bird_tag_ref", unref_function = "bird_tag_unref")]
-public class Tag {
+public class Tag : GLib.Object {
 	
 	public int tag_index; 
 	public int attribute_index;
@@ -52,21 +50,6 @@ public class Tag {
 		data = new XmlString ("", 0);
 		attributes = new XmlString ("", 0);
 		name = new XmlString ("", 0);
-	}
-
-	/** Increment the reference count.
-	 * @return a pointer to this object
-	 */
-	public unowned Tag @ref () {
-		refcount++;
-		return this;
-	}
-	
-	/** Decrement the reference count and free the object when zero object are holding references to it.*/
-	public void unref () {
-		if (--refcount == 0) {
-			this.free ();
-		}
 	}
 	
 	/** 
@@ -432,9 +415,7 @@ public class Tag {
 		return new Attribute (ns, attribute_name, content);
 	}
 
-	[Compact]
-	[CCode (ref_function = "bird_tag_iterator_ref", unref_function = "bird_tag_iterator_unref")]
-	public class Iterator {
+	public class Iterator : GLib.Object {
 		public Tag tag;
 		public Tag? next_tag = null;
 		public int iterator_efcount = 1;
@@ -465,23 +446,6 @@ public class Tag {
 			}
 			return (!) next_tag;
 		}
-		
-		/** Increment the reference count.
-		 * @return a pointer to this object
-		 */
-		public unowned Tag.Iterator @ref () {
-			iterator_efcount++;
-			return this;
-		}
-		
-		/** Decrement the reference count and free the object when zero object are holding references to it.*/
-		public void unref () {
-			if (--iterator_efcount == 0) {
-				this.free ();
-			}
-		}
-		
-		private extern void free ();
 	}
 	
 	internal void warn (string message) {
@@ -489,8 +453,6 @@ public class Tag {
 			XmlParser.warning (message);
 		}
 	}
-	
-	private extern void free ();
 }
 
 }

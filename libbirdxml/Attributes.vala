@@ -16,9 +16,7 @@ namespace Bird {
 /** 
  * Iterator for XML attributes. 
  */
-[Compact]
-[CCode (ref_function = "bird_attributes_ref", unref_function = "bird_attributes_unref")]
-public class Attributes {
+public class Attributes : GLib.Object {
 	
 	public Tag tag;
 	public int refcount = 1;
@@ -31,24 +29,7 @@ public class Attributes {
 		return new Iterator (tag);
 	}
 
-	/** Increment the reference count.
-	 * @return a pointer to this object
-	 */
-	public unowned Attributes @ref () {
-		refcount++;
-		return this;
-	}
-	
-	/** Decrement the reference count and free the object when zero object are holding references to it.*/
-	public void unref () {
-		if (--refcount == 0) {
-			this.free ();
-		}
-	}
-	
-	[Compact]
-	[CCode (ref_function = "bird_attributes_iterator_ref", unref_function = "bird_attributes_iterator_unref")]
-	public class Iterator {
+	public class Iterator : GLib.Object {
 		public Tag tag;
 		public Attribute? next_attribute;
 		public int iterator_refcount = 1;
@@ -77,26 +58,7 @@ public class Attributes {
 			
 			return (!) next_attribute;
 		}
-		
-		/** Increment the reference count.
-		 * @return a pointer to this object
-		 */
-		public unowned Iterator @ref () {
-			iterator_refcount++;
-			return this;
-		}
-		
-		/** Decrement the reference count and free the object when zero object are holding references to it.*/
-		public void unref () {
-			if (--iterator_refcount == 0) {
-				this.free ();
-			}
-		}
-		
-		private extern void free ();
 	}
-	
-	private extern void free ();
 }
 
 }
