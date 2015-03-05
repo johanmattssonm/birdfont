@@ -444,13 +444,15 @@ public class Menu : GLib.Object {
 				
 				display = current_display.get_name ();
 				
-				if (!SettingsDisplay.update_key_bindings 
-					&& (item.display == "" || item.display == display)) {
-					item.action ();
-				}
-				
-				if (item is ToolItem) {
-					MainWindow.get_toolbox ().set_current_tool (((ToolItem) item).tool);
+				if (!(display == "Kerning" && item.modifiers == NONE)) {
+					if (!SettingsDisplay.update_key_bindings 
+						&& (item.display == "" || item.display == display)) {
+						item.action ();
+					}
+					
+					if (item is ToolItem) {
+						MainWindow.get_toolbox ().set_current_tool (((ToolItem) item).tool);
+					}
 				}
 			}
 		}
