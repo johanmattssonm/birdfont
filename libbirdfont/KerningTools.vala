@@ -30,13 +30,27 @@ public class KerningTools : ToolCollection  {
 	}
 	
 	public static void init () {
-		Expander kerning_tools = new Expander ();
+		Expander kerning_tools = new Expander (t_("Kerning Tools"));
 		classes = new Expander ();
 		expanders = new Gee.ArrayList<Expander> ();
 
 		Expander font_name = new Expander ();
 		font_name.add_tool (new FontName ());
 		font_name.draw_separator = false;
+
+		Expander zoom_expander = new Expander (t_("Font Size"));
+
+		ZoomBar zoom_bar = new ZoomBar ();
+		zoom_bar.new_zoom.connect ((z) => {
+			font_size = 3 * z;
+			
+			if (font_size < 0.1) {
+				font_size = 0.1;
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		zoom_expander.add_tool (zoom_bar);
 		
 		Tool new_kerning_class = new Tool ("kerning_class", t_("Create new kerning class."));
 		new_kerning_class.select_action.connect ((self) => {
@@ -137,6 +151,7 @@ public class KerningTools : ToolCollection  {
 		classes.set_unique (true);
 		
 		expanders.add (font_name);
+		expanders.add (zoom_expander);
 		expanders.add (kerning_tools);
 		expanders.add (classes);
 	}
