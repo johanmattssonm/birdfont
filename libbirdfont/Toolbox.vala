@@ -25,6 +25,7 @@ public class Toolbox : GLib.Object  {
 	public static PreviewTools preview_tools;
 	public static OverviewTools overview_tools;
 	public static BackgroundTools background_tools;
+	public static HiddenTools hidden_tools;
 	
 	Tool current_tool;
 	
@@ -53,12 +54,14 @@ public class Toolbox : GLib.Object  {
 		preview_tools = new PreviewTools ();
 		overview_tools = new OverviewTools ();
 		background_tools = new BackgroundTools ();
+		hidden_tools = new HiddenTools ();
 		
 		tool_sets.append (drawing_tools);
 		tool_sets.append (kerning_tools);
 		tool_sets.append (preview_tools);
 		tool_sets.append (overview_tools);
 		tool_sets.append (background_tools);
+		tool_sets.append (hidden_tools); // tools without a button
 		
 		current_set = drawing_tools;
 		

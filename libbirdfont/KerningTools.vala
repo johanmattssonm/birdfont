@@ -24,6 +24,7 @@ public class KerningTools : ToolCollection  {
 	public static bool adjust_side_bearings = false;
 	
 	public static double font_size = 1;
+	public static ZoomBar zoom_bar;
 	
 	public KerningTools () {
 		init ();
@@ -40,7 +41,7 @@ public class KerningTools : ToolCollection  {
 
 		Expander zoom_expander = new Expander (t_("Font Size"));
 
-		ZoomBar zoom_bar = new ZoomBar ();
+		zoom_bar = new ZoomBar ();
 		zoom_bar.new_zoom.connect ((z) => {
 			font_size = 3 * z;
 			

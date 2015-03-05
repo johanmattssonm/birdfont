@@ -433,7 +433,9 @@ public class Menu : GLib.Object {
 		string display;
 		FontDisplay current_display = MainWindow.get_current_display ();
 		
-		foreach (MenuItem item in sorted_menu_items) {
+		unichar c = (unichar) keyval;
+
+		foreach (MenuItem item in sorted_menu_items) {		
 			if (item.key == (unichar) keyval && item.modifiers == KeyBindings.modifier) {
 				
 				if (current_display is Glyph && item.display == "Glyph") {

@@ -956,6 +956,28 @@ public class KerningDisplay : FontDisplay {
 		
 		return redo_state;
 	}
+
+	public override void zoom_in () {
+		KerningTools.font_size += 0.1;
+		
+		if (KerningTools.font_size > 3) {
+			KerningTools.font_size = 3;
+		}
+
+		KerningTools.zoom_bar.set_zoom (KerningTools.font_size / 3);
+		GlyphCanvas.redraw ();
+	}
+
+	public override void zoom_out () {
+		KerningTools.font_size -= 0.1;
+		
+		if (KerningTools.font_size < 0.3) {
+			KerningTools.font_size = 0.3;
+		}
+		
+		KerningTools.zoom_bar.set_zoom (KerningTools.font_size / 3);
+		GlyphCanvas.redraw ();
+	}
 	
 	public class UndoItem : GLib.Object {
 		public string first;

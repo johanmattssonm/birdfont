@@ -39,7 +39,7 @@ public class DrawingTools : ToolCollection  {
 
 	ForesightTool foresight_tool;
 	PointTool point_tool;
-	static ZoomTool zoom_tool;
+	public static ZoomTool zoom_tool;
 	public static ResizeTool resize_tool;
 	StrokeTool stroke_tool;
 	public static TrackTool track_tool;
@@ -867,22 +867,6 @@ public class DrawingTools : ToolCollection  {
 			GlyphCanvas.redraw ();
 		});
 		zoombar_tool.add_tool (zoom_bar);
-		
-		Tool zoom_in = new Tool ("zoom_in", "Zoom In");
-		zoom_in.select_action.connect ((self) => {
-			zoom_tool.store_current_view ();
-			glyph_canvas.get_current_display ().zoom_in ();
-		});
-		view_tools.add_tool (zoom_in);
-		zoom_in.set_tool_visibility (false);
-
-		Tool zoom_out = new Tool ("zoom_out", "Zoom Out");
-		zoom_out.select_action.connect ((self) => {
-			zoom_tool.store_current_view ();
-			glyph_canvas.get_current_display ().zoom_out ();
-		});
-		view_tools.add_tool (zoom_out);
-		zoom_out.set_tool_visibility (false);
 
 		Tool reset_zoom = new Tool ("zoom_1_1", t_("Zoom Out More"));
 		reset_zoom.select_action.connect ((self) => {

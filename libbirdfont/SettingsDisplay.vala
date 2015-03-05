@@ -345,7 +345,6 @@ public class SettingsDisplay : FontDisplay {
 			}
 		}
 		
-		// TODO: ignore scrolling if event is consumed
 		if (consumed) {
 			GlyphCanvas.redraw ();
 		}

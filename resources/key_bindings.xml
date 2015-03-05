@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <bindings>
-	<action key="n" ctrl="true" alt="false" command="false" shift="false" action="new" />
+	<action key="ο" ctrl="false" alt="true" command="false" shift="false" action="new" />
 	<action key="o" ctrl="true" alt="false" command="false" shift="false" action="open" />
 	<action key="r" ctrl="true" alt="false" command="false" shift="false" action="recent files" />
 	<action key="s" ctrl="true" alt="false" command="false" shift="false" action="save" />
 	<action key="S" ctrl="true" alt="false" command="false" shift="true" action="save as" />
 	<action key="e" ctrl="true" alt="false" command="false" shift="false" action="export" />
 	<action key="p" ctrl="true" alt="false" command="false" shift="false" action="preview" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="name and description" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select character set" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="quit" />
 	<action key="z" ctrl="true" alt="false" command="false" shift="false" action="undo" />
@@ -41,7 +40,9 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select previous kerning pair" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show ligature tab" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="add ligature" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="save as .bfp" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="settings" />
+	<action key="d" ctrl="true" alt="false" command="false" shift="false" action="name and description" />
 	<action key="b" ctrl="false" alt="false" command="false" shift="false" action="foresight" />
 	<action key="n" ctrl="false" alt="false" command="false" shift="false" action="pen_tool" />
 	<action key="m" ctrl="false" alt="false" command="false" shift="false" action="point_tool" />
@@ -61,6 +62,7 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="skew" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="width" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="height" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="object_stroke" />
 	<action key="w" ctrl="false" alt="false" command="false" shift="false" action="tie_point" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="symmetric" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="create_line" />
@@ -82,8 +84,6 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show_xheight_helplines" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="background_help_lines" />
 	<action key="g" ctrl="false" alt="false" command="false" shift="false" action="show_grid" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="zoom_in" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="zoom_out" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="zoom_1_1" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="full_glyph" />
 	<action key="v" ctrl="false" alt="false" command="false" shift="false" action="zoom_boundaries" />
@@ -103,4 +103,6 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="export_fonts" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="generate_html_document" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select_background" />
+	<action key="+" ctrl="true" alt="false" command="false" shift="false" action="zoom_in" />
+	<action key="-" ctrl="true" alt="false" command="false" shift="false" action="zoom_out" />
 </bindings>
