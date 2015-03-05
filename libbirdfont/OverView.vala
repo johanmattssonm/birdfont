@@ -1196,8 +1196,10 @@ public class OverView : FontDisplay {
 				- (int) ((GlyphCollection) b).get_unicode_character ();
 		});
 
+		print ("A\n");
 		index = (uint32) first_visible + selected;
 		for (i = 0; i < copied_glyphs.size; i++) {
+			print ("b\n");
 			if (all_available) {
 				if (f.length () == 0) {
 					c = add_empty_character_to_font (glyps.get (i).get_unicode_character (),
@@ -1220,7 +1222,8 @@ public class OverView : FontDisplay {
 				
 				return_if_fail (c != null);
 				gc = (!) c; 
-			} else {				
+			} else {
+				print ("c\n");			
 				if (i != 0) {
 					s = (int) copied_glyphs.get (i).get_unicode_character ();
 					s -= (int) copied_glyphs.get (i - 1).get_unicode_character ();
@@ -1228,13 +1231,17 @@ public class OverView : FontDisplay {
 					skip += s;
 				}
 				
+				print ("d\n");
 				character_string = glyph_range.get_char ((uint32) (index + skip));
+				print ("e\n");
 				c = f.get_glyph_collection_by_name (character_string);
 				
+				print ("f\n");
 				if (c == null) {
+					print ("g\n");
 					gc = add_empty_character_to_font (character_string.get_char (), 
-						glyps.get (i).is_unassigned (),
-						glyps.get (i).get_name ());
+						copied_glyphs.get (i).is_unassigned (),
+						copied_glyphs.get (i).get_name ());
 				} else {
 					gc = (!) c;
 				}
@@ -1249,6 +1256,11 @@ public class OverView : FontDisplay {
 			undo_item.glyphs.add (g.copy ());
 		}
 		store_undo_items (undo_item);
+		
+		if (glyps.size != copied_glyphs.size) {
+			warning ("glyps.size != copied_glyphs.size");
+			return;
+		}
 		
 		i = 0;
 		foreach (GlyphCollection g in glyps) {
