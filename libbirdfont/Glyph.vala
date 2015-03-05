@@ -444,15 +444,27 @@ public class Glyph : FontDisplay {
 							
 		Line left_line = new Line ("left", left_limit, true);
 		left_line.position_updated.connect ((pos) => {
+			double x1, y1, x2, y2;
+			
 			left_limit = pos;
 			update_other_spacing_classes ();
+			
+			boundaries (out x1, out y1, out x2, out y2);
+			left_line.set_metrics (x1 - pos);
 		});
+		left_line.position_updated (left_limit);
 		
 		Line right_line = new Line ("right", right_limit, true);
 		right_line.position_updated.connect ((pos) => {
+			double x1, y1, x2, y2;
+			
 			right_limit = pos;
 			update_other_spacing_classes ();
+			
+			boundaries (out x1, out y1, out x2, out y2);
+			right_line.set_metrics (pos - x2);
 		});
+		right_line.position_updated (right_limit);
 		
 		// lists of lines are sorted and lines are added only if 
 		// they are relevant for a particular glyph.

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 2014 Johan Mattsson
+    Copyright (C) 2012 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -25,6 +25,7 @@ public class Line : GLib.Object {
 	
 	string label;
 	bool vertical;
+	string metrics;
 	
 	public double pos;
 	
@@ -48,6 +49,7 @@ public class Line : GLib.Object {
 		this.pos = position;
 		
 		dashed = false;
+		metrics = "";
 		
 		r = 0.7;
 		g = 0.7;
@@ -67,6 +69,25 @@ public class Line : GLib.Object {
 		l.dashed = dashed;
 		
 		return l;
+	}
+	
+	public void set_metrics (double m) {
+		string t = @"$m";
+		string s = "";
+		
+		int i;
+		unichar c;
+		
+		i = 0;
+		while (t.get_next_char (ref i, out c)) {
+			s = s + (!) c.to_string ();
+			
+			if (i >= 5) {
+				break;
+			}
+		}
+		
+		metrics = s;
 	}
 	
 	public void set_visible (bool v) {
@@ -268,6 +289,7 @@ public class Line : GLib.Object {
 		Glyph g = MainWindow.get_current_glyph ();
 		double p, h, w;
 		double size = (active) ? 8 : 5;
+		Text glyph_metrics;
 		
 		if (!visible) {
 			return;
@@ -304,6 +326,12 @@ public class Line : GLib.Object {
 				cr.line_to (p + size, h);
 				cr.close_path();
 				cr.fill ();
+				
+				glyph_metrics = new Text (metrics, 17);
+				glyph_metrics.set_source_rgba (72 / 255.0, 72 / 255.0, 72 / 255.0, 1);
+				glyph_metrics.widget_x = p + 10;
+				glyph_metrics.widget_y = h - 25;
+				glyph_metrics.draw (cr);
 			}
 			
 		} else {
@@ -343,6 +371,8 @@ public class Line : GLib.Object {
 		
 		cr.restore ();
 	}
+
+	
 
 }
 
