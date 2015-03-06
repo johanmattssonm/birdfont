@@ -53,6 +53,8 @@ public class MainWindow : GLib.Object {
 		menu = new Menu ();
 		dialog = new Dialog ();
 		spacing_tab = new SpacingTab ();
+		
+		tools.select_tool (DrawingTools.foresight_tool);
 	}
 
 	public static SpacingTab get_spacing_tab () {

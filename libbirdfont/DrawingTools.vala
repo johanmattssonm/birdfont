@@ -37,7 +37,7 @@ public class DrawingTools : ToolCollection  {
 	public static MoveTool move_tool;
 	public static PenTool pen_tool;
 
-	ForesightTool foresight_tool;
+	public static ForesightTool foresight_tool;
 	PointTool point_tool;
 	public static ZoomTool zoom_tool;
 	public static ResizeTool resize_tool;
