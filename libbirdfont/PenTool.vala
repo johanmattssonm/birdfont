@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014, 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -784,6 +784,14 @@ public class PenTool : Tool {
 		
 		if (button == 3) {
 			move_point_event (x, y);
+			
+			// alt+click on a handle ends the symmetrical editing
+			if (KeyBindings.has_alt () && is_over_handle (x, y)) {
+				selected_handle.parent.set_reflective_handles (false);
+				selected_handle.parent.set_tie_handle (false);
+				GlyphCanvas.redraw ();
+			}
+			
 			return;
 		}
 	}
@@ -951,6 +959,13 @@ public class PenTool : Tool {
 					selected_point = (!)active_edit_point;
 					add_selected_point (selected_point, active_path); // FIXME: double check active path
 					last_selected_is_handle = false;
+				}
+				
+				// alt+click creates a point with symmetrical handles
+				if (KeyBindings.has_alt ()) {
+					selected_point.set_reflective_handles (true);
+					selected_point.process_symmetrical_handles ();
+					GlyphCanvas.redraw ();
 				}
 			}
 		}
@@ -1657,7 +1672,7 @@ public class PenTool : Tool {
 	private void curve_corner_event (double event_x, double event_y) {
 		MainWindow.get_current_glyph ().open_path ();
 		PointSelection p;
-		
+
 		if (!is_over_handle (event_x, event_y)) {
 			return;
 		}
