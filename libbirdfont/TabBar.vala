@@ -128,6 +128,10 @@ public class TabBar : GLib.Object {
 			}
 		}
 		
+		if (has_scroll ()) {
+			offset += 25;
+		}
+		
 		foreach (Tab t in tabs) {
 			if (i < first_tab) {
 				i++;
@@ -139,6 +143,7 @@ public class TabBar : GLib.Object {
 				
 				close_y = height / 2.0 - 4 < y < height / 2.0 + 4;
 				close_x = x > offset + t.get_width () - 16;
+				
 				if (close_y && close_x) {
 					over_close_tab =  i;
 				} else {
@@ -637,6 +642,7 @@ public class TabBar : GLib.Object {
 
 			// right arrow
 			next_tab_x = (has_progress_wheel ()) ? w - (2 * 19 + 3) / scale : w - 19 / scale;
+			next_tab_x-= 32 / scale;
 			cr.set_source_surface ((!) next_tab, next_tab_x, h / 2.0 - ((!) next_tab).get_height () / 2.0);
 			cr.paint ();
 		}
@@ -701,7 +707,7 @@ public class TabBar : GLib.Object {
 		}
 		
 		if (has_scroll ()) {
-			tabs_end -= 19 / scale;
+			tabs_end -= 32 / scale;
 			offset = 24 / scale;
 		} else {
 			offset = 0;
