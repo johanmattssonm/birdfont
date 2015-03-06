@@ -596,7 +596,10 @@ public class KerningDisplay : FontDisplay {
 				set_selected_handle (selected_handle);
 			}
 			
-			if (KeyBindings.modifier == NONE || KeyBindings.modifier == SHIFT) {		
+			if (KeyBindings.modifier == NONE 
+				|| KeyBindings.modifier == SHIFT 
+				|| KeyBindings.modifier == ALT) {		
+				
 				if (keyval == Key.BACK_SPACE && row.size > 0 && row.get (0).glyph.size > 0) {
 					row.get (0).glyph.remove_at (row.get (0).glyph.size - 1);
 					row.get (0).ranges.remove_at (row.get (0).ranges.size - 1);
