@@ -31,6 +31,7 @@ public class MainWindow : GLib.Object {
 	public static SpacingClassTab spacing_class_tab;
 	public static Menu menu;
 	public static Dialog dialog;
+	public static SpacingTab spacing_tab;
 	
 	/** Number of pixels per mm */
 	public static double units = 1;
@@ -50,8 +51,12 @@ public class MainWindow : GLib.Object {
 		ligature_display = new LigatureList ();
 		spacing_class_tab = new SpacingClassTab ();
 		menu = new Menu ();
-		
 		dialog = new Dialog ();
+		spacing_tab = new SpacingTab ();
+	}
+
+	public static SpacingTab get_spacing_tab () {
+		return spacing_tab;
 	}
 
 	public static Dialog get_dialog () {

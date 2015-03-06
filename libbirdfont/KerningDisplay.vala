@@ -26,6 +26,7 @@ public class KerningDisplay : FontDisplay {
 	int selected_handle = -1;
 	bool moving = false;
 	Glyph left_active_glyph = new Glyph ("null", '\0');
+	Glyph right_active_glyph = new Glyph ("null", '\0');
 	
 	double begin_handle_x = 0;
 	double begin_handle_y = 0;
@@ -41,12 +42,19 @@ public class KerningDisplay : FontDisplay {
 	Font current_font = new Font ();
 	Text kerning_label = new Text ();
 	
+	public bool adjust_side_bearings = false;
+	bool right_side_bearing = true;
+	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
 		row = new Gee.ArrayList <GlyphSequence> ();
 		undo_items = new Gee.ArrayList <UndoItem> ();
 		redo_items = new Gee.ArrayList <UndoItem> ();
 		row.add (w);
+	}
+
+	public GlyphSequence get_first_row () {
+		return row.size > 0 ? row.get (0) : new GlyphSequence ();
 	}
 
 	public override string get_label () {
@@ -86,6 +94,7 @@ public class KerningDisplay : FontDisplay {
 		double row_height;
 		Font font;
 		double item_size = 1.0 / KerningTools.font_size;
+		double item_size2 = 2.0 / KerningTools.font_size;
 		
 		font = current_font;
 		i = 0;
@@ -162,24 +171,34 @@ public class KerningDisplay : FontDisplay {
 						cr.set_source_rgba (123/255.0, 123/255.0, 123/255.0, 1);
 					}
 					
-					cr.move_to (x2 - 5 * item_size, y + 20 * item_size);
-					cr.line_to (x2 + 0, y + 20 * item_size - 5 * item_size);
-					cr.line_to (x2 + 5 * item_size, y + 20* item_size);
-					cr.fill ();
-					
-					if (gr_left != null || gr_right != null) {
-						cr.move_to (x2 - 5 * item_size, y + 20  * item_size);
-						cr.line_to (x2 + 5 * item_size, y + 20  * item_size);
-						cr.line_to (x2 + 5 * item_size, y + 24  * item_size);
-						cr.line_to (x2 - 5 * item_size, y + 24  * item_size);
+					if (!adjust_side_bearings) {
+						cr.move_to (x2 - 5 * item_size, y + 20 * item_size);
+						cr.line_to (x2, y + 20 * item_size - 5 * item_size);
+						cr.line_to (x2 + 5 * item_size, y + 20* item_size);
 						cr.fill ();
+						
+						if (gr_left != null || gr_right != null) {
+							cr.move_to (x2 - 5 * item_size, y + 20  * item_size);
+							cr.line_to (x2 + 5 * item_size, y + 20  * item_size);
+							cr.line_to (x2 + 5 * item_size, y + 24  * item_size);
+							cr.line_to (x2 - 5 * item_size, y + 24  * item_size);
+							cr.fill ();
+						}
+					} else {
+						if (right_side_bearing) {
+							cr.move_to (x2 - 5 * item_size2, y + 20 * item_size2);
+							cr.line_to (x2, y + 20 * item_size2 - 5 * item_size2);
+							cr.line_to (x2, y + 20* item_size2);
+							cr.fill ();
+						} else {
+							cr.move_to (x2, y + 20 * item_size2);
+							cr.line_to (x2, y + 20 * item_size2 - 5 * item_size2);
+							cr.line_to (x2 + 5 * item_size2, y + 20* item_size2);
+							cr.fill ();
+						}
 					}
 					
-					cr.set_font_size (10);
-					cr.show_text (((!)g).get_name ());
-					cr.restore ();
-					
-					if (active_handle == i) {
+					if (active_handle == i && !adjust_side_bearings) {
 						cr.save ();
 						cr.scale (1 / KerningTools.font_size, 1 / KerningTools.font_size);
 						kerning_label.widget_x = x2 * KerningTools.font_size;
@@ -341,7 +360,7 @@ public class KerningDisplay : FontDisplay {
 			return;
 		}
 		
-		if (!KerningTools.adjust_side_bearings) {
+		if (!adjust_side_bearings) {
 			kern = get_kerning_for_handle (handle);
 			set_space (handle, val - kern);	
 		}
@@ -357,14 +376,21 @@ public class KerningDisplay : FontDisplay {
 		font = current_font;
 		font.touch ();
 
-		if (!KerningTools.adjust_side_bearings) {
+		if (!adjust_side_bearings) {
 			get_kerning_pair (handle, out a, out b, out gr_left, out gr_right);
 			set_kerning_pair (a, b, ref gr_left, ref gr_right, val);
 		} else {
-			left_active_glyph.right_limit += val;
-			left_active_glyph.remove_lines ();
-			left_active_glyph.add_help_lines ();
-			left_active_glyph.update_other_spacing_classes ();
+			if (right_side_bearing) {
+				left_active_glyph.right_limit += val;
+				left_active_glyph.remove_lines ();
+				left_active_glyph.add_help_lines ();
+				left_active_glyph.update_other_spacing_classes ();
+			} else {
+				right_active_glyph.left_limit -= val;
+				right_active_glyph.remove_lines ();
+				right_active_glyph.add_help_lines ();
+				right_active_glyph.update_other_spacing_classes ();
+			}
 		}
 	}
 
@@ -494,6 +520,13 @@ public class KerningDisplay : FontDisplay {
 			g = sequence_with_ligatures.glyph.get (selected_handle - 1);
 			if (g != null) {
 				left_active_glyph = (!) g;
+			}
+		}
+
+		if (0 <= selected_handle < sequence_with_ligatures.glyph.size) {
+			g = sequence_with_ligatures.glyph.get (selected_handle);
+			if (g != null) {
+				right_active_glyph = (!) g;
 			}
 		}
 		
@@ -730,6 +763,10 @@ public class KerningDisplay : FontDisplay {
 				
 				if (d < min) {
 					min = d;
+					
+					if (ex != fs * (x + kern)) {	// don't swap direction after button release
+						right_side_bearing = ex < fs * (x + kern); // right or left side bearing handle
+					}
 					
 					if (active_handle != i - row_index) {
 						set_active_handle_index (i - row_index);

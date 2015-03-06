@@ -318,12 +318,19 @@ public class Menu : GLib.Object {
 		tab_menu.items.add (close_all_tabs);
 		
 		// tab menu
-		MenuItem kerning = add_menu_item (t_("Kerning"));
+		MenuItem kerning = add_menu_item (t_("Spacing and Kerning"));
 		kerning.action.connect (() => {
 			set_menu (kerning_menu);
 		});
 		menu.items.add (kerning);
 
+		MenuItem spacing_tab = add_menu_item (t_("Show Spacing Tab"), "show spacing tab");
+		spacing_tab.action.connect (() => {
+			MenuTab.show_spacing_tab ();
+			show_menu = false;
+		});
+		kerning_menu.items.add (spacing_tab);
+		
 		MenuItem kerning_tab = add_menu_item (t_("Show Kerning Tab"), "show kerning tab");
 		kerning_tab.action.connect (() => {
 			MenuTab.show_kerning_context ();
@@ -338,9 +345,9 @@ public class Menu : GLib.Object {
 		});
 		kerning_menu.items.add (list_kernings);
 
-		MenuItem show_spacing = add_menu_item (t_("Show Spacing Tab"), "show spacing tab");
+		MenuItem show_spacing = add_menu_item (t_("Spacing Classes"), "show spacing tab");
 		show_spacing.action.connect (() => {
-			MenuTab.show_spacing_tab ();
+			MenuTab.show_spacing_class_tab ();
 			show_menu = false;
 		});
 		kerning_menu.items.add (show_spacing);

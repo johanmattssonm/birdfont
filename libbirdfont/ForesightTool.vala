@@ -57,8 +57,8 @@ public class ForesightTool : Tool {
 					state = MOVE_POINT;
 					add_new_point (x, y);
 					
-					p.last_point_x = Glyph.path_coordinate_x (x);
-					p.last_point_y = Glyph.path_coordinate_y (y);
+					PenTool.last_point_x = Glyph.path_coordinate_x (x);
+					PenTool.last_point_y = Glyph.path_coordinate_y (y);
 					
 					move_action (this, x, y);
 					
@@ -83,10 +83,10 @@ public class ForesightTool : Tool {
 						first_point = PenTool.active_path.points.get (0);
 						clockwise = PenTool.active_path.is_clockwise ();
 						
-						p.move_selected = false;
+						PenTool.move_selected = false;
 						p.release_action (p, 2, x, y);
 						
-						p.move_selected = false;
+						PenTool.move_selected = false;
 						p.press_action (p, 2, x, y);
 
 						if (ps.path.has_point (first_point)) {

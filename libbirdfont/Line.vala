@@ -327,11 +327,13 @@ public class Line : GLib.Object {
 				cr.close_path();
 				cr.fill ();
 				
-				glyph_metrics = new Text (metrics, 17);
-				glyph_metrics.set_source_rgba (72 / 255.0, 72 / 255.0, 72 / 255.0, 1);
-				glyph_metrics.widget_x = p + 10;
-				glyph_metrics.widget_y = h - 25;
-				glyph_metrics.draw (cr);
+				if (get_active ()) { 
+					glyph_metrics = new Text (metrics, 17);
+					glyph_metrics.set_source_rgba (72 / 255.0, 72 / 255.0, 72 / 255.0, 1);
+					glyph_metrics.widget_x = p + 10;
+					glyph_metrics.widget_y = h - 25;
+					glyph_metrics.draw (cr);
+				}
 			}
 			
 		} else {
@@ -353,7 +355,7 @@ public class Line : GLib.Object {
 		}
 		
 		// Label
-		if (get_active ()) {				 
+		if (get_active ()) { 
 			if (is_vertical ()) {
 				h = g.allocation.height;
 				cr.move_to (p + 8 , h - 30);

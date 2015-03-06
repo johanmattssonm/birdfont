@@ -95,8 +95,10 @@ public class Glyph : FontDisplay {
 	/** Cache quadratic form on export. */
 	GlyfData? ttf_data = null;
 	
-	/** Cache for Cairo rendering */
+	Line left_line;
+	Line right_line;
 	
+	/** Cache for Cairo rendering */
 	HashMap<int64?, Surface> glyph_cache = new HashMap<int64?, Surface> ((v) => {
 		int? t = (int?) v;
 		int i = (!) t;
@@ -441,8 +443,8 @@ public class Glyph : FontDisplay {
 		bottom_margin_line.position_updated.connect ((pos) => {
 			BirdFont.get_current_font ().bottom_limit = pos;
 		});
-							
-		Line left_line = new Line ("left", left_limit, true);
+					
+		left_line = new Line ("left", left_limit, true);
 		left_line.position_updated.connect ((pos) => {
 			double x1, y1, x2, y2;
 			
@@ -454,7 +456,7 @@ public class Glyph : FontDisplay {
 		});
 		left_line.position_updated (left_limit);
 		
-		Line right_line = new Line ("right", right_limit, true);
+		right_line = new Line ("right", right_limit, true);
 		right_line.position_updated.connect ((pos) => {
 			double x1, y1, x2, y2;
 			
@@ -492,6 +494,18 @@ public class Glyph : FontDisplay {
 		
 		add_line (bottom_margin_line);
 		bottom_margin_line.set_visible (margin_boundaries_visible);
+	}
+
+	public double get_left_side_bearing () {
+		double x1, y1, x2, y2;
+		boundaries (out x1, out y1, out x2, out y2);
+		return x1 - left_limit;
+	}
+
+	public double get_right_side_bearing () {
+		double x1, y1, x2, y2;
+		boundaries (out x1, out y1, out x2, out y2);
+		return right_limit - x2;	
 	}
 	
 	bool has_top_line () {

@@ -21,7 +21,6 @@ public class KerningTools : ToolCollection  {
 	public static Gee.ArrayList<Expander> expanders;
 	public static int next_class = 0;
 	public static Expander classes;
-	public static bool adjust_side_bearings = false;
 	
 	public static double font_size = 1;
 	public static ZoomBar zoom_bar;
@@ -66,14 +65,6 @@ public class KerningTools : ToolCollection  {
 			d.set_kerning_by_text ();
 		});
 		kerning_tools.add_tool (text_kerning);
-
-		Tool side_bearings = new Tool ("side_bearings", t_("Adjust right side bearing."));
-		side_bearings.select_action.connect ((self) => {
-			KerningTools.adjust_side_bearings = !KerningTools.adjust_side_bearings;
-			side_bearings.set_selected (KerningTools.adjust_side_bearings);
-		});
-		side_bearings.set_persistent (true);
-		kerning_tools.add_tool (side_bearings);
 
 		Tool insert_last = new Tool ("insert_last_glyph", t_("Insert glyph from overview"));
 		insert_last.select_action.connect ((self) => {

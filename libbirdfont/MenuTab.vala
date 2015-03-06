@@ -312,6 +312,16 @@ public class MenuTab : FontDisplay {
 		MainWindow.get_tab_bar ().add_unique_tab (kd);
 	}
 
+	public static void show_spacing_tab () {
+		if (suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
+		SpacingTab s = MainWindow.get_spacing_tab ();
+		MainWindow.get_tab_bar ().add_unique_tab (s);
+	}
+
 	public static void show_ligature_tab () {
 		if (suppress_event) {
 			warn_if_test ("Event suppressed");
@@ -501,7 +511,7 @@ public class MenuTab : FontDisplay {
 		g.update_view ();
 	}
 	
-	public static void show_spacing_tab () {
+	public static void show_spacing_class_tab () {
 		SpacingClassTab t = MainWindow.get_spacing_class_tab ();
 		MainWindow.get_tab_bar ().add_unique_tab (t);
 	}
