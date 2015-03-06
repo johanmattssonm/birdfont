@@ -63,6 +63,7 @@ public class Glyph : FontDisplay {
 	bool view_is_moving = false;
 	public double move_offset_x = 0;
 	public double move_offset_y = 0;
+	bool move_canvas = false;
 
 	public WidgetAllocation allocation = new WidgetAllocation ();
 
@@ -332,9 +333,9 @@ public class Glyph : FontDisplay {
 	}
 		
 	public override void scroll_wheel_up (double x, double y) {
-		if (KeyBindings.has_ctrl ()) {
+		if (KeyBindings.has_alt ()) {
 			zoom_in_at_point (x, y);
-		} else if (KeyBindings.has_alt ()) { 
+		} else if (KeyBindings.has_ctrl ()) { 
 			view_offset_x -= 10 / view_zoom;
 		} else {
 			view_offset_y -= 10 / view_zoom;
@@ -344,9 +345,9 @@ public class Glyph : FontDisplay {
 	}
 	
 	public override void scroll_wheel_down (double x, double y) {
-		if (KeyBindings.has_ctrl ()) {
+		if (KeyBindings.has_alt ()) {
 			zoom_out_at_point (x, y);
-		} else	if (KeyBindings.has_alt ()) { 
+		} else	if (KeyBindings.has_ctrl ()) { 
 			view_offset_x += 10 / view_zoom;
 		} else {
 			view_offset_y += 10 / view_zoom;
@@ -644,12 +645,20 @@ public class Glyph : FontDisplay {
 		Tool t;
 		t = MainWindow.get_toolbox ().get_current_tool ();
 		t.key_release_action (t, keyval);
+
+		if (keyval == (uint)' ') {
+			move_canvas = false;
+		}
 	}
 
 	public override void key_press (uint keyval) {	
 		Tool t = MainWindow.get_toolbox ().get_current_tool ();
 		t.key_press_action (t, keyval);
 		
+		if (keyval == (uint)' ') {
+			move_canvas = true;
+		}
+
 		switch (keyval) {
 			case Key.NUM_PLUS:
 				zoom_in ();
@@ -789,7 +798,7 @@ public class Glyph : FontDisplay {
 			return;
 		}
 			
-		if (KeyBindings.has_ctrl () || DrawingTools.move_canvas.is_selected ()) {
+		if (move_canvas || DrawingTools.move_canvas.is_selected ()) {
 			view_is_moving = true;
 			move_offset_x = view_offset_x;
 			move_offset_y = view_offset_y;

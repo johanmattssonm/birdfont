@@ -114,7 +114,7 @@ public class KeyBindings {
 	}
 
 	public static uint get_mod_from_key (uint keyval) {
-		uint mod = 0;
+		uint mod = NONE;
 		mod |= (keyval == Key.CTRL_RIGHT || keyval == Key.CTRL_LEFT) ? CTRL : 0;
 		mod |= (keyval == Key.SHIFT_RIGHT || keyval == Key.SHIFT_LEFT) ? SHIFT : 0;
 		mod |= (keyval == Key.ALT_LEFT || keyval == Key.ALT_GR) ? ALT : 0;

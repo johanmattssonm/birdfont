@@ -853,8 +853,6 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 
 		button_press_event.connect ((t, e)=> {
-			set_modifier ((int) e.state);
-			
 			if (e.type == EventType.BUTTON_PRESS) {
 				TabContent.button_press (e.button, e.x, e.y);	
 			} else if (e.type == EventType.2BUTTON_PRESS) {
@@ -865,7 +863,6 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 		
 		button_release_event.connect ((t, e)=> {
-			set_modifier ((int) e.state);
 			TabContent.button_release ((int) e.button, e.x, e.y);
 			return true;
 		});
@@ -876,8 +873,6 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 		
 		scroll_event.connect ((t, e)=> {
-			set_modifier ((int) e.state);
-			
 			if (e.direction == Gdk.ScrollDirection.UP) {
 				TabContent.scroll_wheel_up (e.x, e.y);
 			} else if (e.direction == Gdk.ScrollDirection.DOWN) {
@@ -889,20 +884,6 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 		
 		can_focus = true;
-	}
-
-	static void set_modifier (int k) {
-		KeyBindings.set_modifier (NONE);
-
-		if (has_flag (k, ModifierType.SHIFT_MASK)) {
-			KeyBindings.set_modifier (SHIFT);
-		} else if (has_flag (k, ModifierType.CONTROL_MASK)) {
-			KeyBindings.set_modifier (CTRL);
-		} else if (has_flag (k, ModifierType.CONTROL_MASK | ModifierType.SHIFT_MASK)) {
-			KeyBindings.set_modifier (SHIFT | CTRL);
-		} else if (has_flag (k, ModifierType.MOD5_MASK)) {
-			KeyBindings.set_modifier (LOGO);
-		}
 	}
 }
 
