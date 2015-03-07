@@ -78,7 +78,7 @@ public class MenuTab : FontDisplay {
 	
 	public static bool validate_metadata () {
 		Font font = BirdFont.get_current_font ();
-		string m = t_("Missing metadata in font:\n") + " ";
+		string m = t_("Missing metadata in font:") + "\n ";
 		
 		if (font.postscript_name == "") {
 			MainWindow.show_message (m + t_("PostScript Name"));
