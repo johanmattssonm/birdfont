@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 2013 2014 Johan Mattsson
+    Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -79,6 +79,7 @@ public class Glyph : FontDisplay {
 	bool show_help_lines = true;
 	bool xheight_lines_visible = false;
 	bool margin_boundaries_visible = false;
+	string new_guide_name = "";
 	
 	Gee.ArrayList<Glyph> undo_list = new Gee.ArrayList<Glyph> ();
 	Gee.ArrayList<Glyph> redo_list = new Gee.ArrayList<Glyph> ();
@@ -495,6 +496,10 @@ public class Glyph : FontDisplay {
 		
 		add_line (bottom_margin_line);
 		bottom_margin_line.set_visible (margin_boundaries_visible);
+		
+		foreach (Line guide in BirdFont.get_current_font ().custom_guides) {
+			add_line (guide);
+		}
 	}
 
 	public double get_left_side_bearing () {
@@ -2144,6 +2149,32 @@ public class Glyph : FontDisplay {
 		}
 		
 		return glyph_cache.get (font_size);
+	}
+	
+	public void add_custom_guide () {
+		TextListener listener;
+		
+		listener = new TextListener (t_("Guide"), "", t_("Add"));
+		
+		listener.signal_text_input.connect ((text) => {
+			new_guide_name = text;
+		});
+		
+		listener.signal_submit.connect (() => {
+			Line guide;
+			double position;
+			
+			position = path_coordinate_y (allocation.height / 2.0);
+			guide = new Line (new_guide_name, position);
+			horizontal_help_lines.add (guide);
+			
+			BirdFont.get_current_font ().custom_guides.add (guide);
+			
+			MainWindow.native_window.hide_text_input ();
+			GlyphCanvas.redraw ();
+		});
+		
+		MainWindow.native_window.set_text_listener (listener);
 	}
 }
 

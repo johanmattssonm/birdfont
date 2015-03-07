@@ -351,6 +351,11 @@ class BirdFontFile : GLib.Object {
 		os.put_string (@"\t<base_line>$(round (font.base_line))</base_line>\n");
 		os.put_string (@"\t<bottom_position>$(round (font.bottom_position))</bottom_position>\n");
 		os.put_string (@"\t<bottom_limit>$(round (font.bottom_limit))</bottom_limit>\n");
+		
+		foreach (Line guide in BirdFont.get_current_font ().custom_guides) {
+			os.put_string (@"\t<custom_guide label=\"$(guide.label)\">$(round (guide.pos))</custom_guide>\n");
+		}
+		
 		os.put_string ("</horizontal>\n");
 	}
 
@@ -1007,6 +1012,10 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	private void parse_horizontal_lines (Tag tag) {
+		Line line;
+		string label;
+		double position;
+		
 		foreach (Tag t in tag) {
 			if (t.get_name () == "top_limit" && t.get_content () != "") {
 				font.top_limit = parse_double_from_node (t);
@@ -1030,6 +1039,21 @@ class BirdFontFile : GLib.Object {
 			
 			if (t.get_name () == "bottom_limit" && t.get_content () != "") {
 				font.bottom_limit = parse_double_from_node (t);
+			}
+			
+			if (t.get_name () == "custom_guide" && t.get_content () != "") {
+				position = parse_double_from_node (t);
+				
+				label = "";
+				foreach (Attribute attr in t.get_attributes ()) {
+					if (attr.get_name () == "label") {
+						label = attr.get_content ();
+					}
+				}
+				
+				line = new Line (label, position);
+				
+				BirdFont.get_current_font ().custom_guides.add (line);
 			}
 		}	
 	}

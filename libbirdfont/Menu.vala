@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -249,6 +249,13 @@ public class Menu : GLib.Object {
 			show_menu = false;
 		});
 		edit_menu.items.add (remove_background_glyph);
+
+		MenuItem create_guide = add_menu_item (t_("Create Guide"), "create guide");
+		create_guide.action.connect (() => {
+			MainWindow.get_current_glyph ().add_custom_guide ();
+			show_menu = false;
+		});
+		edit_menu.items.add (create_guide);
 
 		MenuItem select_point_above = add_menu_item (t_("Select Point Above"), "select point above");
 		select_point_above.action.connect (() => {

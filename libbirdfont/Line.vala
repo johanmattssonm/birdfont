@@ -23,7 +23,7 @@ public class Line : GLib.Object {
 	
 	public bool dashed { get; set; }
 	
-	string label;
+	public string label;
 	bool vertical;
 	string metrics;
 	

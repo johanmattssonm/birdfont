@@ -56,6 +56,9 @@ public class Font : GLib.Object {
 	/** Bottom margin */
 	public double bottom_limit;
 	
+	/** Custom guides. */
+	public Gee.ArrayList<Line> custom_guides = new Gee.ArrayList<Line> ();
+	
 	public string? font_file = null;
 	
 	bool modified = false;
