@@ -43,10 +43,10 @@ if not options.valac:
 
 prefix = options.prefix
 valac = options.valac
-valaflags = ""
+valaflags = "--pkg gdk-pixbuf-2.0 --pkg gtk+-2.0"
 cc = options.cc
-cflags = options.cflags
-ldflags = options.ldflags
+cflags = options.cflags + " " + "$(pkg-config --cflags gdk-pixbuf-2.0)"
+ldflags = options.ldflags + " " + "$(pkg-config --libs gdk-pixbuf-2.0)"
 library_cflags = options.cflags
 library_ldflags= options.ldflags + " -Wl,-soname," + "libbirdfont.so." + version.LIBBIRDXML_SO_VERSION
 

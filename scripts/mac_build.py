@@ -44,10 +44,10 @@ if not options.valac:
 
 prefix = options.prefix
 valac = options.valac
-valaflags = ""
+valaflags = "--pkg gdk-pixbuf-2.0 --pkg gtk+-2.0"
 cc = options.cc
-cflags = options.cflags
-ldflags = options.ldflags
+cflags = options.cflags + " " + "$(pkg-config --cflags gdk-pixbuf-2.0)"
+ldflags = options.ldflags + " " + "$(pkg-config --libs gdk-pixbuf-2.0)"
 
 library_cflags = "-fno-common -fPIC " + cflags 
 library_ldflags = options.ldflags + " " + """-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,""" + prefix + """/lib/libbirdfont.dylib""" 

@@ -13,7 +13,6 @@
 */
 
 using Cairo;
-using Gdk;
 
 namespace BirdFont {
 
