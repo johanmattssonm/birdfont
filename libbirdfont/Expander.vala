@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 2014 Johan Mattsson
+    Copyright (C) 2012 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -129,8 +129,8 @@ public class Expander : GLib.Object {
 		}
 
 		if (headline != null && tool.size > 0) {
-			yt += 10 * scale + HEADLINE_MARGIN;
-			content_height += 10 * scale + HEADLINE_MARGIN;
+			yt += 17 * scale + HEADLINE_MARGIN;
+			content_height += 17 * scale + HEADLINE_MARGIN;
 		}
 		
 		if (tool.size > 0) {
@@ -233,8 +233,8 @@ public class Expander : GLib.Object {
 				title = new Text ();
 				title.set_text ((!) headline);
 				title.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-				title.set_font_size (14);
-				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 7);
+				title.set_font_size (17 * Toolbox.get_scale ());
+				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 13  * Toolbox.get_scale ());
 			} else if (draw_separator) {		
 				cr.save ();
 				cr.set_line_width (0.5);
