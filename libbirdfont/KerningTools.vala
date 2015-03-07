@@ -86,56 +86,7 @@ public class KerningTools : ToolCollection  {
 			d.insert_unichar ();
 		});
 		kerning_tools.add_tool (insert_unicode);
-				
-		SpinButton font_size1 = new SpinButton ("kerning_font_size_one", t_("Font size"));
-
-		font_size1.set_max (9);
-		font_size1.set_min (0.1);
-		font_size1.set_value_round (0.5);
-
-		if (Preferences.get ("kerning_font_size_one_settings") != "") {
-			font_size1.set_value (Preferences.get ("kerning_font_size_one_settings"));
-		}
-
-		font_size1.select_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			KerningTools.font_size = font_size1.get_value ();
-			g.update_view ();
-		});
-
-		font_size1.new_value_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			KerningTools.font_size = font_size1.get_value ();
-			g.update_view ();
-			Preferences.set ("kerning_font_size_one_settings", font_size1.get_display_value ());
-		});
-			
-		kerning_tools.add_tool (font_size1);
-
-		SpinButton font_size2 = new SpinButton ("kerning_font_size_two", t_("Font size "));
-
-		font_size2.set_max (9);
-		font_size2.set_min (0.1);
-		font_size2.set_value_round (1);
-
-		if (Preferences.get ("kerning_font_size_two_settings") != "") {
-			font_size2.set_value (Preferences.get ("kerning_font_size_two_settings"));
-		}
-
-		font_size2.new_value_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			KerningTools.font_size = font_size2.get_value ();
-			g.update_view ();
-			Preferences.set ("kerning_font_size_two_settings", font_size2.get_display_value ());
-		});
-
-		font_size2.select_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			KerningTools.font_size = font_size2.get_value ();
-			g.update_view ();
-		});
-		kerning_tools.add_tool (font_size2);
-
+		
 		kerning_tools.set_persistent (false);
 		kerning_tools.set_unique (false);
 
