@@ -175,7 +175,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 			
 	run(valac + """ \
 		-C \
-		""" + valaflags + """
+		""" + valaflags + """ \
 		""" + experimentalNonNull + """ \
 		--enable-experimental \
 		--define=MAC \
@@ -233,7 +233,7 @@ def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 			
 	run(valac + """ \
 		-C \
-		""" + valaflags + """
+		""" + valaflags + """ \
 		""" + experimentalNonNull + """ \
 		--enable-experimental \
 		--define=MAC birdfont-import/*.vala \
@@ -284,7 +284,6 @@ def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = 
 		--pkg gio-2.0  \
 		--pkg cairo \
 		--pkg gdk-pixbuf-2.0 \
-		--pkg gtk+-2.0 \
 		--pkg libbirdfont""")
 	run("mv birdfont-autotrace/*.c build/birdfont-autotrace/")
 
