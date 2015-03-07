@@ -1,3 +1,13 @@
+birdfont (2.1.0) stable;
+
+  * A new spacing tab
+  * Improved Beziér editing
+  * Side bearing metrics in edit view
+  * Key bindings for zoom in and zoom out in kerning tab
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Mar  7 14:49:19 CET 2015
+
 birdfont (2.0) stable;
 
   * New UI layout
