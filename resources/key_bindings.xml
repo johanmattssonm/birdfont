@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <bindings>
-	<action key="ο" ctrl="false" alt="true" command="false" shift="false" action="new" />
+	<action key="n" ctrl="false" alt="true" command="false" shift="false" action="new" />
 	<action key="o" ctrl="true" alt="false" command="false" shift="false" action="open" />
 	<action key="r" ctrl="true" alt="false" command="false" shift="false" action="recent files" />
 	<action key="s" ctrl="true" alt="false" command="false" shift="false" action="save" />

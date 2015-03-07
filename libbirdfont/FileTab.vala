@@ -26,11 +26,20 @@ public class FileTab : FontDisplay {
 	Gee.ArrayList<Font> recent_fonts = new Gee.ArrayList<Font> ();
 	Gee.ArrayList<string> backups = new Gee.ArrayList<string> (); // FIXME: use ref counted object
 	
+	Button create_new_font;
+	
 	public signal void open_file ();
 	
 	public FileTab () {
 		row_height = 30 * MainWindow.units;
 		top = 2 * row_height;
+		create_new_font = new Button (t_("New Font"));
+		create_new_font.widget_x = 50 * MainWindow.units;
+		create_new_font.widget_y = top + 20 * MainWindow.units;
+		
+		create_new_font.action.connect (() => {
+			MenuTab.new_file ();
+		});
 	}
 
 	public static void load_font (string fn) {
@@ -137,6 +146,12 @@ public class FileTab : FontDisplay {
 		selected_canvas ();
 	}
 	
+	public override void button_press (uint button, double ex, double ey) {
+		if (recent_fonts.size == 0 && !has_backup ()) {
+			create_new_font.button_press (button, ex, ey);
+		}
+	}
+	
 	public override void button_release (int button, double ex, double ey) {
 		int r, i;
 		
@@ -235,6 +250,8 @@ public class FileTab : FontDisplay {
 			cr.move_to (50 * MainWindow.units, top - 9 * MainWindow.units);
 			cr.show_text (t_("No fonts created yet."));
 			cr.restore ();
+			
+			create_new_font.draw (cr);
 		}
 		
 		if (scroll == 0 && recent_fonts.size > 0) {
