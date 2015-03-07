@@ -38,8 +38,9 @@ run ("cp build/bin/libbirdfont.dll ./")
 run ("gcc -Wl,-subsystem,windows -Wl,--output-def,build/bin/libbirdfont.def,--out-implib -shared -Wl,-soname,libbirdfont.dll libbirdfont.dll")
 run ("rm libbirdfont.dll")
 
-build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags)
-build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags)
-build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags)
+#FIMXE
+#build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags)
+#build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags)
+#build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags)
 
 print ("Done")

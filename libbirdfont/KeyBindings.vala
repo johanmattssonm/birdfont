@@ -12,8 +12,6 @@
     Lesser General Public License for more details.
 */
 
-using Gdk;
-
 namespace BirdFont {
 
 // FIXME a lot of these things have been replaced and can safely be removed
