@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -20,6 +20,7 @@ public class SaveDialog : Dialog {
 	
 	SaveDialogListener listener;
 	
+	Text save_question;
 	Button save_button;
 	Button discard_button;
 	Button cancel_button;
@@ -27,8 +28,12 @@ public class SaveDialog : Dialog {
 	double width = 0;
 	double height;
 	
+	static const double question_font_size = 23;
+	
 	public SaveDialog (SaveDialogListener callbacks) {
 		listener = callbacks;
+		
+		save_question = new Text (t_("Save changes?"), question_font_size * MainWindow.units);
 		
 		save_button = new Button (t_("Save"));
 		save_button.action.connect (() => {
@@ -48,14 +53,15 @@ public class SaveDialog : Dialog {
 			callbacks.signal_cancel ();
 		});
 		
-		height = 70 * MainWindow.units;
+		height = 90 * MainWindow.units;
 	}
 
 	void layout () {
 		double cx = 0;
 		double cy = (allocation.height - height) / 2.0;
 		double center;
-				
+		double qh;
+		
 		cx = 20 * MainWindow.units;
 		save_button.widget_x = cx;
 
@@ -69,14 +75,20 @@ public class SaveDialog : Dialog {
 		
 		center = (allocation.width - width) / 2.0;
 		
+		save_question.widget_x = save_button.widget_x + center;
+		save_question.widget_y = cy + 15 * MainWindow.units;
+		save_question.set_source_rgba (1, 1, 1, 1);
+		
+		qh = (question_font_size + 1) * MainWindow.units;
+		
 		save_button.widget_x += center;
-		save_button.widget_y = cy + 25 * MainWindow.units;
+		save_button.widget_y = cy + qh + 25 * MainWindow.units;
 		
 		discard_button.widget_x += center;
-		discard_button.widget_y = cy + 25 * MainWindow.units;
+		discard_button.widget_y = cy + qh + 25 * MainWindow.units;
 		
 		cancel_button.widget_x += center;
-		cancel_button.widget_y = cy + 25 * MainWindow.units;
+		cancel_button.widget_y = cy + qh + 25 * MainWindow.units;
 	}
 
 	public override void draw (Context cr) {	
@@ -106,6 +118,7 @@ public class SaveDialog : Dialog {
 		cr.stroke ();
 		cr.restore ();
 
+		save_question.draw (cr);
 		save_button.draw (cr);
 		discard_button.draw (cr);
 		cancel_button.draw (cr);
