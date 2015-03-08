@@ -144,7 +144,7 @@ public class PenTool : Tool {
 			BirdFont.get_current_font ().touch ();
 			
 			// move new points on to grid
-			if (GridTool.has_ttf_grid () || GridTool.is_visible ()) {
+			if (b == 1 && (GridTool.has_ttf_grid () || GridTool.is_visible ())) {
 				move (x, y);	
 			}
 		});
@@ -1424,26 +1424,6 @@ public class PenTool : Tool {
 
 		if (distance < contact_surface) {
 			set_active_edit_point (e.point, e.path);
-		
-			if (first_move_action && GridTool.is_visible () && move_selected) {
-				coordinate_x = e.point.x;
-				coordinate_y = e.point.y;
-				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
-				px = Glyph.reverse_path_coordinate_x (coordinate_x);
-				py = Glyph.reverse_path_coordinate_y (coordinate_y);
-
-				first_move_action = false;
-			} else if (first_move_action && GridTool.has_ttf_grid () && move_selected) {
-				coordinate_x = e.point.x;
-				coordinate_y = e.point.y;
-				
-				GridTool.ttf_grid_coordinate (ref coordinate_x, ref coordinate_y);
-
-				px = Glyph.reverse_path_coordinate_x (coordinate_x);
-				py = Glyph.reverse_path_coordinate_y (coordinate_y);
-				
-				first_move_action = false;
-			} 
 		}
 	}
 	
