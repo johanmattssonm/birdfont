@@ -137,6 +137,7 @@ public class BackgroundTools : ToolCollection  {
 				set_default_canvas ();
 				Toolbox.redraw_tool_box ();
 				GlyphCanvas.redraw ();
+				
 				return false;
 			});
 			idle.attach (null);

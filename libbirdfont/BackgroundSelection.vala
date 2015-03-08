@@ -26,7 +26,7 @@ public class BackgroundSelection : GLib.Object {
 		}
 		
 		set {
-			x_img = value / parent_image.img_scale_x - parent_image.img_middle_x;
+			x_img = (value - parent_image.img_middle_x) / parent_image.img_scale_x;
 		}
 	}
 	

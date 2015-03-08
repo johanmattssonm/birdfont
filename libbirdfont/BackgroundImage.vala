@@ -631,8 +631,8 @@ public class BackgroundImage {
 		cr.fill ();
 
 		cr.set_line_width (ivz);
-		cr.move_to (x + 2.5* ivz, y + 2.5* ivz);
-		cr.line_to (x2 + 2.5* ivz, y2 + 2.5* ivz);
+		cr.move_to (x + 2.5 * ivz, y + 2.5 * ivz);
+		cr.line_to (x2 + 2.5 * ivz, y2 + 2.5 * ivz);
 		cr.stroke ();
 										
 		cr.restore ();
