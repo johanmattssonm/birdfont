@@ -33,7 +33,7 @@ public class KerningDisplay : FontDisplay {
 	
 	double last_handle_x = 0;
 	
-	bool text_input = false;
+	public bool text_input = false;
 
 	Gee.ArrayList<UndoItem> undo_items;
 	Gee.ArrayList<UndoItem> redo_items;
@@ -847,10 +847,6 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public override void button_press (uint button, double ex, double ey) {
-		if (MenuTab.suppress_event) {
-			return;
-		}
-		
 		set_active_handle (ex, ey);
 		set_selected_handle (active_handle);
 		begin_handle_x = ex;

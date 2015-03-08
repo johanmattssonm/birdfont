@@ -19,9 +19,14 @@ namespace BirdFont {
 /** Kerning context. */
 public class SpacingTab : KerningDisplay {
 
+	double box_size = 122 * MainWindow.units;
 	double height = 44 * MainWindow.units;
 	double character_height = 20 * MainWindow.units;
-		
+	
+	WidgetAllocation allocation;
+	
+	Glyph text_input_glyph;
+	
 	public SpacingTab () {
 		adjust_side_bearings = true;
 	}
@@ -40,7 +45,6 @@ public class SpacingTab : KerningDisplay {
 	}
 	
 	void draw_spacing_metrix (WidgetAllocation allocation, Context cr) {
-
 		GlyphSequence row;
 		int index;
 
@@ -78,10 +82,9 @@ public class SpacingTab : KerningDisplay {
 		double end, middle;
 		double l, r;
 		Text left, right, cap;
-		double box_size;
 		unichar c;
 		
-		box_size = 122 * MainWindow.units;
+		this.allocation = allocation;
 		
 		// end mark
 		end = (index + 1) * box_size;
@@ -155,6 +158,114 @@ public class SpacingTab : KerningDisplay {
 		}
 		
 		return s;
+	}
+	
+	public override void button_press (uint button, double ex, double ey) {
+		GlyphSequence row;
+		double p;
+		
+		if (ey >= allocation.height - height) {
+			// TODO: add button for processing ligatures
+			row = get_first_row ().process_ligatures ();
+			p = 0;
+			foreach (Glyph? g in row.glyph) {
+				if (p < ex < p + box_size / 2.0) {
+					update_lsb(g);
+				} 
+
+				if (p + box_size / 2.0 < ex < p + box_size) {
+					update_rsb(g);
+				}
+				
+				p += box_size;
+			}
+		} else {
+			base.button_press (button, ex, ey);
+		}
+	}
+	
+	public override void button_release (int button, double ex, double ey) {
+		if (button == 3) {
+			return;
+		}
+		
+		if (!(ey >= allocation.height - height)) {
+			base.button_release (button, ex, ey);
+		}
+	}
+	
+	void update_lsb (Glyph? g) {
+		TextListener listener;
+		string submitted_value = "";
+
+		if (g == null) {
+			return;
+		}
+		
+		text_input_glyph = (!) g;
+		listener = new TextListener (t_("Left"), @"$(text_input_glyph.get_left_side_bearing ())", t_("Set"));
+		
+		listener.signal_text_input.connect ((text) => {
+			submitted_value = text;
+			
+			if (MenuTab.suppress_event) {
+				return;
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		
+		listener.signal_submit.connect (() => {
+			double v;
+			MainWindow.native_window.hide_text_input ();
+			
+			text_input = false;
+			suppress_input = false;
+			
+			v = double.parse (submitted_value);
+			text_input_glyph.left_limit -= v - text_input_glyph.get_left_side_bearing ();
+		});
+		
+		suppress_input = true;
+		text_input = true;
+		MainWindow.native_window.set_text_listener (listener);
+	}
+	
+	void update_rsb (Glyph? g) {
+		TextListener listener;
+		string submitted_value = "";
+
+		if (g == null) {
+			return;
+		}
+		
+		text_input_glyph = (!) g;
+		listener = new TextListener (t_("Right"), @"$(text_input_glyph.get_right_side_bearing ())", t_("Set"));
+		
+		listener.signal_text_input.connect ((text) => {
+			submitted_value = text;
+			
+			if (MenuTab.suppress_event) {
+				return;
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		
+		listener.signal_submit.connect (() => {
+			double v;
+			MainWindow.native_window.hide_text_input ();
+			
+			text_input = false;
+			suppress_input = false;
+			
+			v = double.parse (submitted_value);
+			text_input_glyph.right_limit += v - text_input_glyph.get_right_side_bearing ();
+		});
+		
+		suppress_input = true;
+		text_input = true;
+		MainWindow.native_window.set_text_listener (listener);
 	}
 }
 

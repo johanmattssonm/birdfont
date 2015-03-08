@@ -23,7 +23,7 @@ public class BackgroundTools : ToolCollection  {
 	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
 	public BackgroundTools () {
-		Expander background_tools = new Expander (t_("Select Background Image"));
+		Expander background_tools = new Expander (t_("Background Image"));
 		Expander background_selection = new Expander (t_("Images"));
 		
 		Expander font_name = new Expander ();
