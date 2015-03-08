@@ -257,6 +257,13 @@ public class Menu : GLib.Object {
 		});
 		edit_menu.items.add (create_guide);
 
+		MenuItem show_guide_guide = add_menu_item (t_("List Guides"), "show guide tab");
+		show_guide_guide.action.connect (() => {
+			MenuTab.show_guide_tab ();
+			show_menu = false;
+		});
+		edit_menu.items.add (show_guide_guide);
+		
 		MenuItem select_point_above = add_menu_item (t_("Select Point Above"), "select point above");
 		select_point_above.action.connect (() => {
 			PenTool.select_point_up ();
