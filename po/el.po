@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-07 15:17+0100\n"
+"POT-Creation-Date: 2015-03-09 13:13+0100\n"
 "PO-Revision-Date: 2014-08-28 18:37+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,7 +76,7 @@ msgstr "εκτέλεση δοκιμής"
 msgid "Select Background"
 msgstr ""
 
-#: libbirdfont/BackgroundTab.vala:46
+#: libbirdfont/BackgroundTab.vala:46 libbirdfont/BackgroundTools.vala:26
 msgid "Background Image"
 msgstr ""
 
@@ -86,10 +86,6 @@ msgstr "Μετακίνηση, αλλαγή μεγέθους και περιστ�
 
 #: libbirdfont/BackgroundTool.vala:223
 msgid "Select background image"
-msgstr ""
-
-#: libbirdfont/BackgroundTools.vala:26
-msgid "Select Background Image"
 msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:27
@@ -104,7 +100,7 @@ msgstr "Αρχεία"
 msgid "Parts"
 msgstr ""
 
-#: libbirdfont/BackgroundTools.vala:45
+#: libbirdfont/BackgroundTools.vala:45 libbirdfont/Glyph.vala:2157
 msgid "Add"
 msgstr ""
 
@@ -112,7 +108,7 @@ msgstr ""
 msgid "Select Glyph"
 msgstr ""
 
-#: libbirdfont/BackgroundTools.vala:178 libbirdfont/LoadCallback.vala:88
+#: libbirdfont/BackgroundTools.vala:179 libbirdfont/LoadCallback.vala:88
 #: libbirdfont/Menu.vala:78
 msgid "Open"
 msgstr "Άνοιγμα"
@@ -261,7 +257,7 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω"
 
 #: libbirdfont/DescriptionDisplay.vala:65
-#: libbirdfont/DescriptionDisplay.vala:289 libbirdfont/Menu.vala:424
+#: libbirdfont/DescriptionDisplay.vala:289 libbirdfont/Menu.vala:438
 msgid "Name and Description"
 msgstr ""
 
@@ -471,9 +467,8 @@ msgid "Show guidelines"
 msgstr "Εμφάνιση οδηγών"
 
 #: libbirdfont/DrawingTools.vala:814
-#, fuzzy
 msgid "Show more guidelines"
-msgstr "Εμφάνιση οδηγών"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:830
 msgid "Show guidelines at top and bottom margin"
@@ -522,7 +517,7 @@ msgstr ""
 
 #: libbirdfont/ExportTool.vala:158 libbirdfont/Menu.vala:92
 #: libbirdfont/MenuTab.vala:215 libbirdfont/SaveCallback.vala:67
-#: libbirdfont/SaveDialog.vala:33 libbirdfont/SaveDialogListener.vala:29
+#: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Αποθήκευση"
 
@@ -535,9 +530,8 @@ msgid "Writing SVG file."
 msgstr "Εγγραφή αρχείου SVG"
 
 #: libbirdfont/FileTab.vala:36
-#, fuzzy
 msgid "New Font"
-msgstr "Νέα έκδοση"
+msgstr ""
 
 #: libbirdfont/FileTab.vala:251
 msgid "No fonts created yet."
@@ -551,7 +545,7 @@ msgstr "Πρόσφατα αρχεία"
 msgid "Backup"
 msgstr "Αντίγραφο ασφαλείας"
 
-#: libbirdfont/Font.vala:648
+#: libbirdfont/Font.vala:651
 msgid "The file is write protected."
 msgstr ""
 
@@ -559,21 +553,27 @@ msgstr ""
 msgid "Create Beziér curves"
 msgstr ""
 
+#: libbirdfont/Glyph.vala:2157
+msgid "Guide"
+msgstr ""
+
 #: libbirdfont/GridTool.vala:35
 msgid "Show grid"
 msgstr "Προβολή πλέγματος"
 
+#: libbirdfont/GuideTab.vala:56
+msgid "Guides"
+msgstr ""
+
 #: libbirdfont/HiddenTools.vala:28
-#, fuzzy
 msgid "Zoom In"
-msgstr "_Εστίαση"
+msgstr ""
 
 #: libbirdfont/HiddenTools.vala:35
-#, fuzzy
 msgid "Zoom out"
-msgstr "_Εστίαση"
+msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:61 libbirdfont/KerningDisplay.vala:820
+#: libbirdfont/KerningDisplay.vala:61 libbirdfont/KerningDisplay.vala:822
 msgid "Kerning"
 msgstr "Διαστοιχείωση"
 
@@ -590,15 +590,15 @@ msgstr ""
 msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:626 libbirdfont/OverviewTools.vala:69
+#: libbirdfont/KerningDisplay.vala:627 libbirdfont/OverviewTools.vala:69
 msgid "Unicode"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:626
+#: libbirdfont/KerningDisplay.vala:627
 msgid "Insert"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:820 libbirdfont/MainWindow.vala:208
+#: libbirdfont/KerningDisplay.vala:822 libbirdfont/MainWindow.vala:208
 #: libbirdfont/MessageDialog.vala:35 libbirdfont/SpinButton.vala:197
 msgid "Close"
 msgstr "Τερματισμός"
@@ -616,16 +616,16 @@ msgstr ""
 msgid "Kerning class"
 msgstr ""
 
-#: libbirdfont/KerningRange.vala:109 libbirdfont/Ligatures.vala:107
-#: libbirdfont/Ligatures.vala:128 libbirdfont/Ligatures.vala:149
-#: libbirdfont/SpacingClass.vala:45 libbirdfont/SpinButton.vala:197
+#: libbirdfont/KerningRange.vala:109 libbirdfont/Ligatures.vala:109
+#: libbirdfont/Ligatures.vala:130 libbirdfont/Ligatures.vala:151
+#: libbirdfont/SpacingClass.vala:45 libbirdfont/SpacingTab.vala:208
+#: libbirdfont/SpacingTab.vala:245 libbirdfont/SpinButton.vala:197
 msgid "Set"
 msgstr ""
 
 #: libbirdfont/KerningTools.vala:33
-#, fuzzy
 msgid "Kerning Tools"
-msgstr "Διαστοιχείωση"
+msgstr ""
 
 #: libbirdfont/KerningTools.vala:41
 msgid "Font Size"
@@ -645,14 +645,6 @@ msgstr ""
 
 #: libbirdfont/KerningTools.vala:83
 msgid "Insert character by unicode value"
-msgstr ""
-
-#: libbirdfont/KerningTools.vala:90
-msgid "Font size"
-msgstr ""
-
-#: libbirdfont/KerningTools.vala:115
-msgid "Font size "
 msgstr ""
 
 #: libbirdfont/LanguageSelectionTab.vala:92
@@ -687,23 +679,23 @@ msgstr ""
 msgid "New Contextual Substitution"
 msgstr ""
 
-#: libbirdfont/LigatureList.vala:133 libbirdfont/Menu.vala:385
+#: libbirdfont/LigatureList.vala:133 libbirdfont/Menu.vala:399
 msgid "Add Ligature"
 msgstr ""
 
-#: libbirdfont/LigatureList.vala:151 libbirdfont/Menu.vala:372
+#: libbirdfont/LigatureList.vala:151 libbirdfont/Menu.vala:386
 msgid "Ligatures"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:107
+#: libbirdfont/Ligatures.vala:109
 msgid "Beginning"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:128
+#: libbirdfont/Ligatures.vala:130
 msgid "Middle"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:149
+#: libbirdfont/Ligatures.vala:151
 msgid "End"
 msgstr ""
 
@@ -816,86 +808,94 @@ msgid "Remove Background Glyph"
 msgstr ""
 
 #: libbirdfont/Menu.vala:253
+msgid "Create Guide"
+msgstr ""
+
+#: libbirdfont/Menu.vala:260
+msgid "List Guides"
+msgstr ""
+
+#: libbirdfont/Menu.vala:267
 msgid "Select Point Above"
 msgstr ""
 
-#: libbirdfont/Menu.vala:261
+#: libbirdfont/Menu.vala:275
 msgid "Select Next Point"
 msgstr ""
 
-#: libbirdfont/Menu.vala:269
+#: libbirdfont/Menu.vala:283
 msgid "Select Previous Point"
 msgstr ""
 
-#: libbirdfont/Menu.vala:277
+#: libbirdfont/Menu.vala:291
 msgid "Select Point Below"
 msgstr ""
 
-#: libbirdfont/Menu.vala:286
+#: libbirdfont/Menu.vala:300
 msgid "Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:292
+#: libbirdfont/Menu.vala:306
 msgid "Next Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:299
+#: libbirdfont/Menu.vala:313
 msgid "Previous Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:306
+#: libbirdfont/Menu.vala:320
 msgid "Close Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:313
+#: libbirdfont/Menu.vala:327
 msgid "Close All Tabs"
 msgstr ""
 
-#: libbirdfont/Menu.vala:321
+#: libbirdfont/Menu.vala:335
 msgid "Spacing and Kerning"
 msgstr ""
 
-#: libbirdfont/Menu.vala:327
+#: libbirdfont/Menu.vala:341
 msgid "Show Spacing Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:334
+#: libbirdfont/Menu.vala:348
 msgid "Show Kerning Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:341
+#: libbirdfont/Menu.vala:355
 msgid "List Kerning Pairs"
 msgstr ""
 
-#: libbirdfont/Menu.vala:348 libbirdfont/SpacingClassTab.vala:80
+#: libbirdfont/Menu.vala:362 libbirdfont/SpacingClassTab.vala:80
 msgid "Spacing Classes"
 msgstr ""
 
-#: libbirdfont/Menu.vala:355
+#: libbirdfont/Menu.vala:369
 msgid "Select Next Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:363
+#: libbirdfont/Menu.vala:377
 msgid "Select Previous Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:378
+#: libbirdfont/Menu.vala:392
 msgid "Show Ligatures"
 msgstr ""
 
-#: libbirdfont/Menu.vala:394
+#: libbirdfont/Menu.vala:408
 msgid "Git"
 msgstr ""
 
-#: libbirdfont/Menu.vala:400
+#: libbirdfont/Menu.vala:414
 msgid "Save As .bfp"
 msgstr ""
 
-#: libbirdfont/Menu.vala:409 libbirdfont/OverView.vala:309
+#: libbirdfont/Menu.vala:423 libbirdfont/OverView.vala:309
 msgid "Overview"
 msgstr "Επισκόπηση"
 
-#: libbirdfont/Menu.vala:417 libbirdfont/SettingsDisplay.vala:38
+#: libbirdfont/Menu.vala:431 libbirdfont/SettingsDisplay.vala:38
 #: libbirdfont/SettingsDisplay.vala:354
 msgid "Settings"
 msgstr ""
@@ -917,7 +917,7 @@ msgid "RIGHT"
 msgstr ""
 
 #: libbirdfont/MenuTab.vala:81
-msgid "Missing metadata in font:\n"
+msgid "Missing metadata in font:"
 msgstr ""
 
 #: libbirdfont/MenuTab.vala:133
@@ -953,7 +953,7 @@ msgstr ""
 msgid "Overwrite"
 msgstr ""
 
-#: libbirdfont/OverWriteDialogListener.vala:32 libbirdfont/SaveDialog.vala:45
+#: libbirdfont/OverWriteDialogListener.vala:32 libbirdfont/SaveDialog.vala:50
 msgid "Cancel"
 msgstr ""
 
@@ -1001,7 +1001,11 @@ msgstr "Ορθογώνιο"
 msgid "Resize and rotate paths"
 msgstr ""
 
-#: libbirdfont/SaveDialog.vala:39 libbirdfont/SaveDialogListener.vala:30
+#: libbirdfont/SaveDialog.vala:36
+msgid "Save changes?"
+msgstr ""
+
+#: libbirdfont/SaveDialog.vala:44 libbirdfont/SaveDialogListener.vala:30
 msgid "Discard"
 msgstr "Απόρριψη"
 
@@ -1057,8 +1061,16 @@ msgstr ""
 msgid "New spacing class"
 msgstr ""
 
-#: libbirdfont/SpacingTab.vala:30
+#: libbirdfont/SpacingTab.vala:35
 msgid "Spacing"
+msgstr ""
+
+#: libbirdfont/SpacingTab.vala:208
+msgid "Left"
+msgstr ""
+
+#: libbirdfont/SpacingTab.vala:245
+msgid "Right"
 msgstr ""
 
 #: libbirdfont/SvgParser.vala:50
@@ -1196,6 +1208,9 @@ msgstr ""
 
 #~ msgid "_Create Path"
 #~ msgstr "_Δημιουργία διαδρομής"
+
+#~ msgid "_Zoom"
+#~ msgstr "_Εστίαση"
 
 #~ msgid "_Create Counter Path"
 #~ msgstr "_Δημιουργία διαδρομής κοίλου"

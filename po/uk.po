@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-07 15:28+0100\n"
+"POT-Creation-Date: 2015-03-09 13:13+0100\n"
 "PO-Revision-Date: 2014-06-30 01:43+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -82,7 +82,7 @@ msgstr "запустити тест"
 msgid "Select Background"
 msgstr ""
 
-#: libbirdfont/BackgroundTab.vala:46
+#: libbirdfont/BackgroundTab.vala:46 libbirdfont/BackgroundTools.vala:26
 msgid "Background Image"
 msgstr ""
 
@@ -92,10 +92,6 @@ msgstr "Переміщення, зміна розміру і поворот фо
 
 #: libbirdfont/BackgroundTool.vala:223
 msgid "Select background image"
-msgstr ""
-
-#: libbirdfont/BackgroundTools.vala:26
-msgid "Select Background Image"
 msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:27
@@ -110,7 +106,7 @@ msgstr "Файли"
 msgid "Parts"
 msgstr ""
 
-#: libbirdfont/BackgroundTools.vala:45
+#: libbirdfont/BackgroundTools.vala:45 libbirdfont/Glyph.vala:2157
 msgid "Add"
 msgstr ""
 
@@ -118,7 +114,7 @@ msgstr ""
 msgid "Select Glyph"
 msgstr ""
 
-#: libbirdfont/BackgroundTools.vala:178 libbirdfont/LoadCallback.vala:88
+#: libbirdfont/BackgroundTools.vala:179 libbirdfont/LoadCallback.vala:88
 #: libbirdfont/Menu.vala:78
 msgid "Open"
 msgstr "Відкрити"
@@ -272,7 +268,7 @@ msgstr ""
 "Х, Ц, Ч, Ш, Щ, Ь, Ю, Я"
 
 #: libbirdfont/DescriptionDisplay.vala:65
-#: libbirdfont/DescriptionDisplay.vala:289 libbirdfont/Menu.vala:424
+#: libbirdfont/DescriptionDisplay.vala:289 libbirdfont/Menu.vala:438
 #, fuzzy
 msgid "Name and Description"
 msgstr "Ім'я та _Опис"
@@ -532,7 +528,7 @@ msgstr "Було створено три файли шрифту."
 
 #: libbirdfont/ExportTool.vala:158 libbirdfont/Menu.vala:92
 #: libbirdfont/MenuTab.vala:215 libbirdfont/SaveCallback.vala:67
-#: libbirdfont/SaveDialog.vala:33 libbirdfont/SaveDialogListener.vala:29
+#: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Зберегти"
 
@@ -560,7 +556,7 @@ msgstr "Останні файли"
 msgid "Backup"
 msgstr "Резервна копія"
 
-#: libbirdfont/Font.vala:648
+#: libbirdfont/Font.vala:651
 msgid "The file is write protected."
 msgstr ""
 
@@ -568,9 +564,17 @@ msgstr ""
 msgid "Create Beziér curves"
 msgstr ""
 
+#: libbirdfont/Glyph.vala:2157
+msgid "Guide"
+msgstr ""
+
 #: libbirdfont/GridTool.vala:35
 msgid "Show grid"
 msgstr "Показати сітку"
+
+#: libbirdfont/GuideTab.vala:56
+msgid "Guides"
+msgstr ""
 
 #: libbirdfont/HiddenTools.vala:28
 msgid "Zoom In"
@@ -581,7 +585,7 @@ msgstr ""
 msgid "Zoom out"
 msgstr "Віддалити"
 
-#: libbirdfont/KerningDisplay.vala:61 libbirdfont/KerningDisplay.vala:820
+#: libbirdfont/KerningDisplay.vala:61 libbirdfont/KerningDisplay.vala:822
 msgid "Kerning"
 msgstr "Кернінг"
 
@@ -598,15 +602,15 @@ msgstr ""
 msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr "Ввести “space” для керну простору символів та “divis” для керну -."
 
-#: libbirdfont/KerningDisplay.vala:626 libbirdfont/OverviewTools.vala:69
+#: libbirdfont/KerningDisplay.vala:627 libbirdfont/OverviewTools.vala:69
 msgid "Unicode"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:626
+#: libbirdfont/KerningDisplay.vala:627
 msgid "Insert"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:820 libbirdfont/MainWindow.vala:208
+#: libbirdfont/KerningDisplay.vala:822 libbirdfont/MainWindow.vala:208
 #: libbirdfont/MessageDialog.vala:35 libbirdfont/SpinButton.vala:197
 msgid "Close"
 msgstr "Закрити"
@@ -625,9 +629,10 @@ msgstr ""
 msgid "Kerning class"
 msgstr "Клас кернінгу"
 
-#: libbirdfont/KerningRange.vala:109 libbirdfont/Ligatures.vala:107
-#: libbirdfont/Ligatures.vala:128 libbirdfont/Ligatures.vala:149
-#: libbirdfont/SpacingClass.vala:45 libbirdfont/SpinButton.vala:197
+#: libbirdfont/KerningRange.vala:109 libbirdfont/Ligatures.vala:109
+#: libbirdfont/Ligatures.vala:130 libbirdfont/Ligatures.vala:151
+#: libbirdfont/SpacingClass.vala:45 libbirdfont/SpacingTab.vala:208
+#: libbirdfont/SpacingTab.vala:245 libbirdfont/SpinButton.vala:197
 msgid "Set"
 msgstr "Встановити"
 
@@ -654,15 +659,6 @@ msgstr ""
 #: libbirdfont/KerningTools.vala:83
 msgid "Insert character by unicode value"
 msgstr ""
-
-#: libbirdfont/KerningTools.vala:90
-#, fuzzy
-msgid "Font size"
-msgstr "Розмір шрифту"
-
-#: libbirdfont/KerningTools.vala:115
-msgid "Font size "
-msgstr "Розмір шрифту"
 
 #: libbirdfont/LanguageSelectionTab.vala:92
 msgid "Character Set"
@@ -696,23 +692,23 @@ msgstr ""
 msgid "New Contextual Substitution"
 msgstr ""
 
-#: libbirdfont/LigatureList.vala:133 libbirdfont/Menu.vala:385
+#: libbirdfont/LigatureList.vala:133 libbirdfont/Menu.vala:399
 msgid "Add Ligature"
 msgstr ""
 
-#: libbirdfont/LigatureList.vala:151 libbirdfont/Menu.vala:372
+#: libbirdfont/LigatureList.vala:151 libbirdfont/Menu.vala:386
 msgid "Ligatures"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:107
+#: libbirdfont/Ligatures.vala:109
 msgid "Beginning"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:128
+#: libbirdfont/Ligatures.vala:130
 msgid "Middle"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:149
+#: libbirdfont/Ligatures.vala:151
 msgid "End"
 msgstr ""
 
@@ -840,95 +836,103 @@ msgid "Remove Background Glyph"
 msgstr ""
 
 #: libbirdfont/Menu.vala:253
+msgid "Create Guide"
+msgstr ""
+
+#: libbirdfont/Menu.vala:260
+msgid "List Guides"
+msgstr ""
+
+#: libbirdfont/Menu.vala:267
 #, fuzzy
 msgid "Select Point Above"
 msgstr "_Виділити точку над"
 
-#: libbirdfont/Menu.vala:261
+#: libbirdfont/Menu.vala:275
 #, fuzzy
 msgid "Select Next Point"
 msgstr "Виділіть _Наступну Точку"
 
-#: libbirdfont/Menu.vala:269
+#: libbirdfont/Menu.vala:283
 #, fuzzy
 msgid "Select Previous Point"
 msgstr "Виділіть _Попередню Точку"
 
-#: libbirdfont/Menu.vala:277
+#: libbirdfont/Menu.vala:291
 #, fuzzy
 msgid "Select Point Below"
 msgstr "Виділіть Точку _Нижче"
 
-#: libbirdfont/Menu.vala:286
+#: libbirdfont/Menu.vala:300
 msgid "Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:292
+#: libbirdfont/Menu.vala:306
 #, fuzzy
 msgid "Next Tab"
 msgstr "_Наступна вкладка"
 
-#: libbirdfont/Menu.vala:299
+#: libbirdfont/Menu.vala:313
 #, fuzzy
 msgid "Previous Tab"
 msgstr "_Попередня вкладка"
 
-#: libbirdfont/Menu.vala:306
+#: libbirdfont/Menu.vala:320
 #, fuzzy
 msgid "Close Tab"
 msgstr "_Закрити вкладку"
 
-#: libbirdfont/Menu.vala:313
+#: libbirdfont/Menu.vala:327
 #, fuzzy
 msgid "Close All Tabs"
 msgstr "Закрити _усі вкладки"
 
-#: libbirdfont/Menu.vala:321
+#: libbirdfont/Menu.vala:335
 msgid "Spacing and Kerning"
 msgstr ""
 
-#: libbirdfont/Menu.vala:327
+#: libbirdfont/Menu.vala:341
 msgid "Show Spacing Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:334
+#: libbirdfont/Menu.vala:348
 #, fuzzy
 msgid "Show Kerning Tab"
 msgstr "Показати вкладку кернінгу"
 
-#: libbirdfont/Menu.vala:341
+#: libbirdfont/Menu.vala:355
 msgid "List Kerning Pairs"
 msgstr ""
 
-#: libbirdfont/Menu.vala:348 libbirdfont/SpacingClassTab.vala:80
+#: libbirdfont/Menu.vala:362 libbirdfont/SpacingClassTab.vala:80
 msgid "Spacing Classes"
 msgstr ""
 
-#: libbirdfont/Menu.vala:355
+#: libbirdfont/Menu.vala:369
 msgid "Select Next Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:363
+#: libbirdfont/Menu.vala:377
 msgid "Select Previous Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:378
+#: libbirdfont/Menu.vala:392
 msgid "Show Ligatures"
 msgstr ""
 
-#: libbirdfont/Menu.vala:394
+#: libbirdfont/Menu.vala:408
 msgid "Git"
 msgstr ""
 
-#: libbirdfont/Menu.vala:400
+#: libbirdfont/Menu.vala:414
 msgid "Save As .bfp"
 msgstr ""
 
-#: libbirdfont/Menu.vala:409 libbirdfont/OverView.vala:309
+#: libbirdfont/Menu.vala:423 libbirdfont/OverView.vala:309
 msgid "Overview"
 msgstr "Огляд"
 
-#: libbirdfont/Menu.vala:417 libbirdfont/SettingsDisplay.vala:38
+#: libbirdfont/Menu.vala:431 libbirdfont/SettingsDisplay.vala:38
 #: libbirdfont/SettingsDisplay.vala:354
 msgid "Settings"
 msgstr ""
@@ -985,7 +989,7 @@ msgstr "Перезаписати TTF файл?"
 msgid "Overwrite"
 msgstr "Перезаписати"
 
-#: libbirdfont/OverWriteDialogListener.vala:32 libbirdfont/SaveDialog.vala:45
+#: libbirdfont/OverWriteDialogListener.vala:32 libbirdfont/SaveDialog.vala:50
 msgid "Cancel"
 msgstr "Відміна"
 
@@ -1034,7 +1038,11 @@ msgstr "Прямокутник"
 msgid "Resize and rotate paths"
 msgstr "Перерозмір та обертання шляхів"
 
-#: libbirdfont/SaveDialog.vala:39 libbirdfont/SaveDialogListener.vala:30
+#: libbirdfont/SaveDialog.vala:36
+msgid "Save changes?"
+msgstr ""
+
+#: libbirdfont/SaveDialog.vala:44 libbirdfont/SaveDialogListener.vala:30
 msgid "Discard"
 msgstr "Відкинути"
 
@@ -1090,8 +1098,16 @@ msgstr ""
 msgid "New spacing class"
 msgstr ""
 
-#: libbirdfont/SpacingTab.vala:30
+#: libbirdfont/SpacingTab.vala:35
 msgid "Spacing"
+msgstr ""
+
+#: libbirdfont/SpacingTab.vala:208
+msgid "Left"
+msgstr ""
+
+#: libbirdfont/SpacingTab.vala:245
+msgid "Right"
 msgstr ""
 
 #: libbirdfont/SvgParser.vala:50
@@ -1156,6 +1172,13 @@ msgstr ""
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
 msgstr "Запис"
+
+#, fuzzy
+#~ msgid "Font size"
+#~ msgstr "Розмір шрифту"
+
+#~ msgid "Font size "
+#~ msgstr "Розмір шрифту"
 
 #~ msgid "Show guidelines for x-height and baseline"
 #~ msgstr "Показати орієнтири для Х-висоти та базової лінії"

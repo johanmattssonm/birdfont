@@ -7,6 +7,7 @@ def task_update_translations ():
 
 	for file in os.listdir('./po'):
 		if file == "birdfont.pot": continue
+		if not file.find ('skip') == -1: continue		
 	
 		loc = file.replace (".po", "")
 		d = "./po/" + loc + ".po"
