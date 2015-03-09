@@ -55,7 +55,7 @@ public class LabelTool : Tool {
 		// background
 		if (is_selected ()) {
 			cr.save ();
-			cr.set_source_rgba (38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+			Theme.color (cr, "Background 3");
 			cr.rectangle (0, y - 2, w, h + 7);
 			cr.fill ();
 			cr.restore ();		
@@ -68,9 +68,9 @@ public class LabelTool : Tool {
 		text_height = 18;
 
 		if (is_selected ()) {
-			label_text.set_source_rgba (1, 1, 1, 1);
+			Theme.text_color (label_text, "Background 1");
 		} else {
-			label_text.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.text_color (label_text, "Foreground 2");
 		}
 		
 		label_text.set_font_size (text_height);
@@ -98,9 +98,9 @@ public class LabelTool : Tool {
 			center_y = bgy + ((!) counter_background).get_height () / 2.0 + 4 / scale;
 			
 			if (is_selected ()) {
-				glyph_count.set_source_rgba (1, 1, 1, 1);
+				Theme.text_color (glyph_count, "Background 1");
 			} else {
-				glyph_count.set_source_rgba (51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
+				Theme.text_color (glyph_count, "Background 4");
 			}
 			
 			glyph_count.set_font_size (text_height);

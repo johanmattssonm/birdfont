@@ -54,14 +54,14 @@ public class CheckBox : Widget {
 		double center_y = (get_height () - (h + 2 * padding)) / 2.0 + padding;
 
 		cr.save ();
-		cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);		
+		Theme.color (cr, "Background 2");	
 		draw_rounded_rectangle (cr, widget_x, widget_y + center_y, w, h - padding, padding);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
 		cr.set_line_width (1);
-		cr.set_source_rgba (0, 0, 0, 1);		
+		Theme.color (cr, "Foreground 1");
 		draw_rounded_rectangle (cr, widget_x, widget_y + center_y, w, h - padding, padding);
 		cr.stroke ();
 		cr.restore ();
@@ -69,7 +69,7 @@ public class CheckBox : Widget {
 		if (checked) {
 			cr.save ();
 			
-			cr.set_source_rgba (0, 0, 0, 1);
+			Theme.color (cr, "Foreground 1");
 			cr.set_line_width (1);
 			
 			cr.move_to (widget_x + d, widget_y + d + center_y);

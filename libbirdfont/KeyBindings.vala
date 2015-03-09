@@ -14,8 +14,6 @@
 
 namespace BirdFont {
 
-// FIXME a lot of these things have been replaced and can safely be removed
-
 public enum Key {
 	NONE = 0,
 	UP = 65362,

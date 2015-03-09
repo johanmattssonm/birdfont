@@ -404,7 +404,7 @@ public class Glyph : FontDisplay {
 		
 		double bgt = BirdFont.get_current_font ().top_limit;
 		Line top_margin_line = new Line ("top margin", bgt, false);
-		top_margin_line.set_color (0.7, 0, 0, 0.5);
+		top_margin_line.set_color_theme ("Guide 2");
 		top_margin_line.position_updated.connect ((pos) => {
 			BirdFont.get_current_font ().top_limit = pos;
 		});
@@ -418,7 +418,7 @@ public class Glyph : FontDisplay {
 		
 		double xhp = BirdFont.get_current_font ().xheight_position;
 		Line xheight_line = new Line ("x-height", xhp, false);
-		xheight_line.set_color (120 / 255.0, 68 / 255.0, 120 / 255.0, 120 / 255.0);
+		xheight_line.set_color_theme ("Guide 3");
 		xheight_line.dashed = true;
 		xheight_line.position_updated.connect ((pos) => {				
 				Font f = BirdFont.get_current_font ();
@@ -434,14 +434,13 @@ public class Glyph : FontDisplay {
 		
 		double bp = BirdFont.get_current_font ().bottom_position;
 		Line bottom_line = new Line ("bottom", bp, false);
-		bottom_line.set_color (33 / 255.0, 68 / 255.0, 120 / 255.0, 166 / 255.0);
 		bottom_line.position_updated.connect ((pos) => {
 				BirdFont.get_current_font ().bottom_position = pos;
 			});
 
 		double bgb = BirdFont.get_current_font ().bottom_limit;
 		Line bottom_margin_line = new Line ("bottom margin", bgb, false);
-		bottom_margin_line.set_color (0.7, 0, 0, 0.5);
+		bottom_margin_line.set_color_theme ("Guide 2");
 		bottom_margin_line.position_updated.connect ((pos) => {
 			BirdFont.get_current_font ().bottom_limit = pos;
 		});
@@ -1428,7 +1427,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	private void draw_coordinate (Context cr) {
-		cr.set_source_rgba (0.5, 0.5, 0.5, 1);
+		Theme.color (cr, "Foreground 3");
 		cr.set_font_size (12);
 		cr.move_to (0, 10);
 		cr.show_text (@"($motion_x, $motion_y)");
@@ -1533,20 +1532,20 @@ public class Glyph : FontDisplay {
 	private void draw_zoom_area(Context cr) {
 		cr.save ();
 		cr.set_line_width (2.0);
-		cr.set_source_rgba (0, 0, 1, 0.3);
+		Theme.color (cr, "Foreground 3");
 		cr.rectangle (Math.fmin (zoom_x1, zoom_x2), Math.fmin (zoom_y1, zoom_y2), Math.fabs (zoom_x1 - zoom_x2), Math.fabs (zoom_y1 - zoom_y2));
 		cr.stroke ();
 		cr.restore ();
 	}
 
 	private void draw_background_color (Context cr, double opacity) {
-		cr.save ();
-		cr.rectangle (0, 0, allocation.width, allocation.height);
-		cr.set_line_width (0);
-		cr.set_source_rgba (1, 1, 1, opacity);
-		cr.fill ();
-		cr.stroke ();
-		cr.restore ();
+		if (opacity > 0) {
+			cr.save ();
+			cr.rectangle (0, 0, allocation.width, allocation.height);
+			Theme.color (cr, "Background 1");
+			cr.fill ();
+			cr.restore ();
+		}
 	}
 	
 	private void draw_help_lines (Context cr) {
@@ -1776,34 +1775,6 @@ public class Glyph : FontDisplay {
 
 		redraw_area (0, 0, allocation.width, allocation.height);		
 	}
-	
-	public ImageSurface get_thumbnail () {
-		ImageSurface img;
-		Context cr;
-		double gx, gy;
-		double x1, x2, y1, y2;
-		Font font = BirdFont.get_current_font ();
-
-		remove_empty_paths ();
-		boundaries (out x1, out y1, out x2, out y2);
-
-		if (x2 - x1 < 1 || y2 - y1 < 1) { // create an empty thumbnail 
-			img = new ImageSurface (Format.ARGB32, 100, 100);
-		} else {
-			img = new ImageSurface (Format.ARGB32, (int) (x2 - x1), (int) (y2 - y1));
-		}
-		
-		gx = left_limit - x1;
-		gy = (y2 - y1) + font.base_line + y1;
-		
-		cr = new Context (img);
-		
-		cr.save ();
-		cr.set_source_rgba (0, 0, 0, 1);
-		Svg.draw_svg_path (cr, get_svg_data (), gx, gy);	
-		cr.restore ();
-		return img;
-	}
 
 	/** Split curve in two parts and add a new point in between.
 	 * @return the new point
@@ -1903,7 +1874,7 @@ public class Glyph : FontDisplay {
 				
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
-				cr.set_source_rgba (0, 0, 0, 1);
+				Theme.color (cr, "Foreground 1");
 
 				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), marker_x, marker_y);
 				cr.restore ();
@@ -1938,7 +1909,7 @@ public class Glyph : FontDisplay {
 				cr.save ();
 				cr.scale (glyph.view_zoom, glyph.view_zoom);
 				cr.translate (-glyph.view_offset_x, -glyph.view_offset_y);
-				cr.set_source_rgba (0, 0, 0, 1);
+				Theme.color (cr, "Foreground 1");
 				Svg.draw_svg_path (cr, juxtaposed.get_svg_data (), marker_x, marker_y);
 				cr.restore ();
 			}
@@ -1972,7 +1943,8 @@ public class Glyph : FontDisplay {
 			cr.save ();
 			cr.scale (view_zoom, view_zoom);
 			cr.translate (-view_offset_x, -view_offset_y);
-			cr.set_source_rgba (0.2, 0.2, 0.2, 0.5);
+			Theme.color (cr, "Background Glyph");
+			
 			Svg.draw_svg_path (cr, g.get_svg_data (), 
 				Glyph.xc () + left - (left - current_left) , 
 				Glyph.yc () - baseline);

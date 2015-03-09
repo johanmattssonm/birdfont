@@ -147,7 +147,6 @@ public class CharDatabaseParser : GLib.Object {
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
 			CharDatabase.full_unicode_range = utf8;
-			CharDatabase.show_loading_message ();
 			CharDatabase.database_is_loaded = true;
 			return false;
 		});

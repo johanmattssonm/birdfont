@@ -232,13 +232,13 @@ public class Expander : GLib.Object {
 			if (headline != null) {
 				title = new Text ();
 				title.set_text ((!) headline);
-				title.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+				Theme.text_color (title, "Foreground 2");
 				title.set_font_size (17 * Toolbox.get_scale ());
 				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 13  * Toolbox.get_scale ());
-			} else if (draw_separator) {		
+			} else if (draw_separator) {	
 				cr.save ();
 				cr.set_line_width (0.5);
-				cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+				Theme.color (cr, "Foreground 2");
 				cr.move_to (x, yt);
 				cr.line_to (wd - w - x + 6, yt);	
 				cr.stroke ();
@@ -248,7 +248,8 @@ public class Expander : GLib.Object {
 				cr.save ();
 				cr.new_path ();
 				cr.set_line_width (1);
-				cr.set_source_rgba (0, 0, 0, opacity);
+				
+				Theme.color_opacity (cr, "Foreground 2", opacity);
 				
 				cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
 				cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);

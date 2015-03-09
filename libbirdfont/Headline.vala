@@ -28,7 +28,7 @@ class Headline : Widget {
 	
 	public override void draw (Context cr) {
 		cr.save ();
-		cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.color (cr, "Background 2");
 		cr.rectangle (0, widget_y, allocation.width, 40 * MainWindow.units);
 		cr.fill ();
 		cr.restore ();

@@ -99,10 +99,12 @@ class GridTool : Tool {
 	public static void update_lines () {
 		Glyph g = MainWindow.get_current_glyph ();
 		double step = size_y;
+		Color color = Theme.get_color ("Grid");
 		double i;
 		int max_lines = 600;
 		int n;
 		Line t, l, u;
+
 
 		Line baseline = g.get_line ("baseline");
 		Line bottom_margin = g.get_line ("bottom margin");
@@ -118,7 +120,7 @@ class GridTool : Tool {
 		for (i = left.get_pos () - 7 * step; i <= right.get_pos () + 7 * step; i += step) {	
 			l = new Line ("grid", i, Line.VERTICAL);
 			l.set_moveable (false);
-			l.set_color (0.2, 0.6, 0.2, 0.2);
+			l.set_color (color.r, color.g, color.b, color.a);
 			vertical.add (l);
 			
 			if (++n >= max_lines) {
@@ -130,7 +132,7 @@ class GridTool : Tool {
 		for (i = baseline.get_pos () - step; i >= bottom_margin.get_pos () - 7 * step; i -= step) {
 			t = new Line ("grid", i, Line.HORIZONTAL);
 			t.set_moveable (false);
-			t.set_color (0.2, 0.6, 0.2, 0.2);
+			t.set_color (color.r, color.g, color.b, color.a);
 			horizontal.insert (0, t);	
 
 			if (++n >= max_lines) {
@@ -142,7 +144,7 @@ class GridTool : Tool {
 		for (i = baseline.get_pos (); i <= top_margin.get_pos () + 7 * step; i += step) {
 			u = new Line ("grid", i, Line.HORIZONTAL);
 			u.set_moveable (false);
-			u.set_color (0.2, 0.6, 0.2, 0.2);
+			u.set_color (color.r, color.g, color.b, color.a);
 			horizontal.add (u);	
 
 			if (++n >= max_lines) {

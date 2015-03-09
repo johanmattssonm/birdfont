@@ -36,10 +36,6 @@ public class CharDatabase {
 		GlyphRange ucd_result = new GlyphRange ();
 		unichar c;
 		
-		if (!database_is_loaded) {
-			show_loading_message ();
-		}
-
 		return_val_if_fail (!is_null (index), result);		
 		return_val_if_fail (result.get_length () == 0, result);
 		
@@ -130,15 +126,7 @@ public class CharDatabase {
 		return description;		
 	}
 	
-	public static void show_loading_message () {
-		TooltipArea.show_text (t_("Loading the unicode character database") + " ...");
-	}
-	
 	public static void get_full_unicode (GlyphRange glyph_range) {
-		if (!database_is_loaded) {
-			show_loading_message ();
-		}
-		
 		try {
 			if (!is_null (full_unicode_range)) {
 				glyph_range.parse_ranges (full_unicode_range.get_all_ranges ());

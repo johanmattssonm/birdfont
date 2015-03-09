@@ -238,14 +238,14 @@ public class FileTab : FontDisplay {
 		visible_rows = (int) (allocation.height / row_height);
 		
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
+		Theme.color (cr, "Background 1");
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();
 
 		if (recent_fonts.size == 0 && !has_backup ()) {
 			cr.save ();
-			cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+			Theme.color (cr, "Background 5");
 			cr.set_font_size (18 * MainWindow.units);
 			cr.move_to (50 * MainWindow.units, top - 9 * MainWindow.units);
 			cr.show_text (t_("No fonts created yet."));
@@ -256,7 +256,7 @@ public class FileTab : FontDisplay {
 		
 		if (scroll == 0 && recent_fonts.size > 0) {
 			cr.save ();
-			cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+			Theme.color (cr, "Background 5");
 			cr.set_font_size (18 * MainWindow.units);
 			cr.move_to (50 * MainWindow.units, top - 9 * MainWindow.units);
 			cr.show_text (t_("Recent files"));
@@ -264,7 +264,7 @@ public class FileTab : FontDisplay {
 		}
 		
 		cr.save ();
-		cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+		Theme.color (cr, "Background 5");
 		cr.set_font_size (12 * MainWindow.units);
 
 		foreach (Font font in recent_fonts) {
@@ -280,7 +280,7 @@ public class FileTab : FontDisplay {
 			
 			if (s >= scroll) {
 				cr.save ();
-				cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+				Theme.color (cr, "Background 5");
 				cr.set_font_size (18 * MainWindow.units);
 				cr.move_to (50 * MainWindow.units, y + 2 * row_height - 9 * MainWindow.units);
 				cr.show_text (t_("Backup"));

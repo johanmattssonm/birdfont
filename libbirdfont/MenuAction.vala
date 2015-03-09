@@ -43,7 +43,7 @@ public class MenuAction : GLib.Object {
 		
 		if (selected) {
 			cr.save ();
-			cr.set_source_rgba (234/255.0, 234/255.0, 234/255.0, 1);
+			Theme.color (cr, "Selected Menu Item");
 			cr.rectangle (x - 2, y - 12, 93, 15);
 			cr.fill_preserve ();
 			cr.stroke ();
@@ -59,7 +59,8 @@ public class MenuAction : GLib.Object {
 		}
 		
 		cr.save ();
-		cr.set_source_rgba (0, 0, 0, 1);
+		
+		Theme.color (cr, "Foreground 1");
 		
 		cr.set_font_size (12);
 		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);

@@ -150,13 +150,13 @@ public class FileDialogTab : FontDisplay {
 		visible_rows = (int) (allocation.height / 18.0);
 		
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
+		Theme.color (cr, "Background 4");
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
-		cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+		Theme.color (cr, "Background 5");
 		cr.set_font_size (12);
 
 		foreach (string file in directories) {
@@ -184,13 +184,13 @@ public class FileDialogTab : FontDisplay {
 		if (color) {
 			if (dark) {
 				cr.save ();
-				cr.set_source_rgba (55/255.0, 55/255.0, 55/255.0, 1);
+				Theme.color (cr, "Background 8");
 				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
 				cr.fill ();
 				cr.restore ();
 			} else {
 				cr.save ();
-				cr.set_source_rgba (224/255.0, 224/255.0, 224/255.0, 1);
+				Theme.color (cr, "Background 6");
 				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
 				cr.fill ();
 				cr.restore ();
@@ -198,7 +198,7 @@ public class FileDialogTab : FontDisplay {
 		} else {
 			if (dark) {
 				cr.save ();
-				cr.set_source_rgba (72/255.0, 72/255.0, 72/255.0, 1);
+				Theme.color (cr, "Background 9");
 				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
 				cr.fill ();
 				cr.restore ();
@@ -207,7 +207,7 @@ public class FileDialogTab : FontDisplay {
 		
 		cr.save ();
 		if (dark) {
-			cr.set_source_rgba (255/255.0, 255/255.0, 255/255.0, 1);
+			Theme.color (cr, "Background 1");
 		}
 		cr.move_to (60, y);
 		cr.set_font_size (12 * MainWindow.units);

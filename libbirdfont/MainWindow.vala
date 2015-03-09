@@ -21,7 +21,6 @@ public class MainWindow : GLib.Object {
 	public static MainWindow singleton;
 	public static MenuTab menu_tab;
 	public static FileTab file_tab;
-	public static TooltipArea tooltip;
 	public static OverView over_view;	
 	public static TabBar tabs;
 	public static NativeWindow native_window;
@@ -44,7 +43,6 @@ public class MainWindow : GLib.Object {
 		tools = new Toolbox (glyph_canvas, tabs);
 		menu_tab = new MenuTab ();
 		file_tab = new FileTab ();
-		tooltip = new TooltipArea ();
 		over_view = new OverView();
 		kerning_display = new KerningDisplay ();
 		character_database = new CharDatabase ();
@@ -175,10 +173,6 @@ public class MainWindow : GLib.Object {
 
 	public static Tab get_current_tab () {
 		return tabs.get_selected_tab ();
-	}
-
-	public static TooltipArea get_tooltip () {
-		return tooltip;
 	}
 
 	public static bool select_tab (Tab t) {

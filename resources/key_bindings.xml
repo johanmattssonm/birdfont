@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <bindings>
-	<action key="n" ctrl="false" alt="true" command="false" shift="false" action="new" />
+	<action key="n" ctrl="true" alt="false" command="false" shift="false" action="new" />
 	<action key="o" ctrl="true" alt="false" command="false" shift="false" action="open" />
 	<action key="r" ctrl="true" alt="false" command="false" shift="false" action="recent files" />
 	<action key="s" ctrl="true" alt="false" command="false" shift="false" action="save" />
@@ -25,6 +25,8 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="glyph sequence" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="set background glyph" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="remove background glyph" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="create guide" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show guide tab" />
 	<action key="ｒ" ctrl="true" alt="false" command="false" shift="false" action="select point above" />
 	<action key="ｓ" ctrl="true" alt="false" command="false" shift="false" action="select next point" />
 	<action key="ｑ" ctrl="true" alt="false" command="false" shift="false" action="select previous point" />
@@ -33,9 +35,10 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="previous tab" />
 	<action key="w" ctrl="true" alt="false" command="false" shift="false" action="close tab" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="close all tabs" />
+	<action key="l" ctrl="true" alt="false" command="false" shift="false" action="show spacing tab" />
 	<action key="k" ctrl="true" alt="false" command="false" shift="false" action="show kerning tab" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="list kerning pairs" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show spacing tab" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show spacing classes" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select next kerning pair" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select previous kerning pair" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show ligature tab" />
@@ -92,13 +95,12 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="next" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="circle" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="rectangle" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="test_case" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="slow_test" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_class" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_text_input" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="side_bearings" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="insert_last_glyph" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="insert_unichar" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_font_size_one" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_font_size_two" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="update_webview" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="export_fonts" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="generate_html_document" />

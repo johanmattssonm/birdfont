@@ -51,14 +51,14 @@ public class SpacingTab : KerningDisplay {
 
 		// background
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
+		Theme.color (cr, "Background 1");
 		cr.rectangle (0, allocation.height - height, allocation.width, height);
 		cr.fill ();
 		cr.restore ();
 		
 		// character bar
 		cr.save ();
-		cr.set_source_rgba (0.5, 0.5, 0.5, 1);
+		Theme.color (cr, "Foreground 3");
 		cr.set_line_width (0.8);
 		cr.move_to (0, allocation.height - height);
 		cr.line_to (allocation.width, allocation.height - height);
@@ -112,21 +112,21 @@ public class SpacingTab : KerningDisplay {
 			
 			c = g.get_unichar ();
 			cap = new Text ((!) c.to_string (), 17);
-			cap.set_source_rgba (72 / 255.0, 72 / 255.0, 72 / 255.0, 1);
+			Theme.text_color (cap, "Foreground 3");
 			cap.widget_x = middle - cap.get_extent () / 2.0;
 			cap.widget_y = allocation.height - height + character_height - 4 * MainWindow.units;
 			cap.draw_at_baseline (cr, cap.widget_x, cap.widget_y);			
 			
 			l = g.get_left_side_bearing ();
 			left = new Text (truncate (l, 5), 17);
-			left.set_source_rgba (72 / 255.0, 72 / 255.0, 72 / 255.0, 1);
+			Theme.text_color (left, "Foreground 3");
 			left.widget_x = middle - box_size / 2.0 + (box_size / 2.0 - left.get_extent ()) / 2.0;
 			left.widget_y = allocation.height - 7 * MainWindow.units;
 			left.draw_at_baseline (cr, left.widget_x, left.widget_y);
 
 			r = g.get_right_side_bearing ();
 			right = new Text (truncate (r, 5), 17);
-			right.set_source_rgba (72 / 255.0, 72 / 255.0, 72 / 255.0, 1);
+			Theme.text_color (right, "Foreground 3");
 			right.widget_x = end - (box_size / 2.0 - right.get_extent ()) / 2.0 - right.get_extent ();
 			right.widget_y = allocation.height - 7 * MainWindow.units;
 			right.draw_at_baseline (cr, right.widget_x, right.widget_y);					

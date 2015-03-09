@@ -68,7 +68,6 @@ public class BackgroundSelectionTool : CutBackgroundTool {
 				if (bs.assigned_glyph != null) {
 					if (label.has_character ((!) bs.assigned_glyph)) {
 						font_height = 18;
-						cr.set_source_rgba (1, 1, 1, 1);
 						label.set_text ((!) bs.assigned_glyph);
 						label.set_font_size (font_height);
 						tx = x  + w - label.get_width () / 2.0;

@@ -77,7 +77,7 @@ public class SaveDialog : Dialog {
 		
 		save_question.widget_x = save_button.widget_x + center;
 		save_question.widget_y = cy + 15 * MainWindow.units;
-		save_question.set_source_rgba (1, 1, 1, 1);
+		Theme.text_color (save_question, "Background 1");
 		
 		qh = (question_font_size + 1) * MainWindow.units;
 		
@@ -100,19 +100,19 @@ public class SaveDialog : Dialog {
 		cy = (allocation.height - height) / 2.0;
 		
 		cr.save ();
-		cr.set_source_rgba (0, 0, 0, 0.3);
+		Theme.color_opacity (cr, "Foreground 1", 0.3);
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
-		cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.color (cr, "Background 2");
 		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
-		cr.set_source_rgba (0, 0, 0, 1);
+		Theme.color (cr, "Foreground 1");
 		cr.set_line_width (1);
 		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
 		cr.stroke ();

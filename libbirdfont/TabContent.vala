@@ -64,7 +64,7 @@ public class TabContent : GLib.Object {
 		
 		if (unlikely (MenuTab.suppress_event)) {
 			cr.save ();
-			cr.set_source_rgba (1, 1, 1, 1);
+			Theme.color (cr, "Background 1");
 			cr.rectangle (0, 0, allocation.width, allocation.height);
 			cr.fill ();
 			cr.restore ();

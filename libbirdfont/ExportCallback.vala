@@ -43,7 +43,6 @@ public class ExportCallback : GLib.Object {
 	public static void export_fonts () {
 		ExportTool.export_ttf_font ();
 		ExportTool.export_svg_font ();
-		TooltipArea.show_text (t_("Three font files have been created."));	
 	}
 }
 

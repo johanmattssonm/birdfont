@@ -359,7 +359,7 @@ public class Menu : GLib.Object {
 		});
 		kerning_menu.items.add (list_kernings);
 
-		MenuItem show_spacing = add_menu_item (t_("Spacing Classes"), "show spacing tab");
+		MenuItem show_spacing = add_menu_item (t_("Spacing Classes"), "show spacing classes");
 		show_spacing.action.connect (() => {
 			MenuTab.show_spacing_class_tab ();
 			show_menu = false;
@@ -660,7 +660,7 @@ public class Menu : GLib.Object {
 		
 		foreach (MenuItem item in current_menu.items) {
 			cr.save ();
-			cr.set_source_rgba (38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+			Theme.color (cr, "Background 3");
 			cr.rectangle (x, y, width, height);
 			cr.fill ();
 			cr.restore ();
@@ -668,7 +668,7 @@ public class Menu : GLib.Object {
 			cr.save ();
 			label_x = allocation.width - width + 0.7 * height * MainWindow.units;
 			label_y = y + font_size - 1 * MainWindow.units;
-			item.label.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.text_color (item.label, "Foreground 2");
 			item.label.draw_at_baseline (cr, label_x, label_y);
 			
 			key_binding.set_text (item.get_key_bindings ());
@@ -676,7 +676,7 @@ public class Menu : GLib.Object {
 			binding_extent = key_binding.get_extent ();
 			label_x = x + width - binding_extent - 0.6 * height * MainWindow.units;
 			key_binding.set_font_size (font_size);
-			key_binding.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.text_color (key_binding, "Foreground 2");
 			key_binding.draw_at_baseline (cr, label_x, label_y);
 			
 			y += height;
@@ -699,11 +699,12 @@ public class Menu : GLib.Object {
 		}
 		
 		try {
-		os = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
-		os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
-		os.put_string ("\n");
-		
-		os.put_string ("<bindings>\n");
+			os = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
+			os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
+			os.put_string ("\n");
+			
+			os.put_string ("<bindings>\n");
+			
 			foreach (MenuItem item in sorted_menu_items) {
 				os.put_string ("\t<action ");
 				

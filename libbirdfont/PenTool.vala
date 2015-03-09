@@ -1225,7 +1225,7 @@ public class PenTool : Tool {
 		h = fmax (selection_box_y, selection_box_last_y) - y;
 		
 		cr.save ();
-		cr.set_source_rgba (0, 0, 0.3, 1);
+		Theme.color (cr, "Background 4");
 		cr.set_line_width (2);
 		cr.rectangle (x, y, w, h);
 		cr.stroke ();

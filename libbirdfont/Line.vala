@@ -51,10 +51,7 @@ public class Line : GLib.Object {
 		dashed = false;
 		metrics = "";
 		
-		r = 0.7;
-		g = 0.7;
-		b = 0.8;
-		a = 1;
+		set_color_theme ("Guide 1");
 	}
 	
 	public Line copy () {
@@ -100,6 +97,15 @@ public class Line : GLib.Object {
 
 	public void set_moveable (bool m) {
 		moveable = m;
+	}
+	
+	public void set_color_theme (string color) {
+		Color c = Theme.get_color (color);
+		
+		r = c.r;
+		g = c.g;
+		b = c.b;
+		a = c.a;
 	}
 	
 	public void set_color (double r, double g, double b, double a) {
@@ -304,7 +310,7 @@ public class Line : GLib.Object {
 		}
 		
 		if (active) {
-			cr.set_source_rgba (0, 0, 0.3, 1);
+			Theme.color (cr, "Highlighted Guide");
 		} else {
 			cr.set_source_rgba (r, this.g, b, a);
 		}
@@ -330,7 +336,7 @@ public class Line : GLib.Object {
 				
 				if (get_active ()) { 
 					glyph_metrics = new Text (metrics, 17);
-					glyph_metrics.set_source_rgba (72 / 255.0, 72 / 255.0, 72 / 255.0, 1);
+					Theme.text_color (glyph_metrics, "Highlighted Guide");
 					glyph_metrics.widget_x = p + 10;
 					glyph_metrics.widget_y = h - 25;
 					glyph_metrics.draw (cr);
@@ -371,7 +377,7 @@ public class Line : GLib.Object {
 			}
 			
 			if (active) {
-				line_label.set_source_rgba (0, 0, 0.3, 1);
+				Theme.text_color (line_label, "Highlighted Guide");
 			} else {
 				line_label.set_source_rgba (r, this.g, b, a);
 			}

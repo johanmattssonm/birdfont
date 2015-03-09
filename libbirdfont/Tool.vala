@@ -105,7 +105,6 @@ public class Tool : GLib.Object {
 		next_id++;
 		
 		panel_press_action.connect ((self, button, x, y) => {
-			MainWindow.get_tooltip ().set_text_from_tool ();
 		});
 		
 		move_out_action.connect ((self) => {
@@ -214,10 +213,7 @@ public class Tool : GLib.Object {
 		return (x <= xp <= x + w  && y <= yp <= y + h);  
 	}
 	
-	public bool set_selected (bool a) {
-		TooltipArea? tpa = null;					
-		tpa = MainWindow.get_tooltip ();
-							
+	public bool set_selected (bool a) {						
 		new_selection = true;
 		selected = a;
 		set_active (a);

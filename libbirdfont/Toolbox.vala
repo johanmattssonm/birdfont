@@ -233,7 +233,6 @@ public class Toolbox : GLib.Object  {
 		bool a;
 		bool consumed = false;
 		bool active;
-		TooltipArea? tpa = null;
 					
 		foreach (Expander exp in current_set.get_expanders ()) {
 			a = exp.is_over (x, y);
@@ -247,14 +246,12 @@ public class Toolbox : GLib.Object  {
 			foreach (Tool t in exp.tool) {
 				if (t.tool_is_visible ()) {
 					active = t.is_over (x, y);
-					tpa = null;
-					
+
 					if (!active && t.is_active ()) {
 						t.move_out_action (t);
 					}
 					
 					update = t.set_active (active);
-					tpa = MainWindow.get_tooltip ();
 					
 					if (update) {
 						redraw (0, 0, allocation_width, allocation_height);
@@ -453,7 +450,7 @@ public class Toolbox : GLib.Object  {
 			
 			cr.rectangle (0, 0, w, h);
 			cr.set_line_width (0);
-			cr.set_source_rgba (51/255.0, 54/255.0, 59/255.0, 1);
+			Theme.color (cr, "Background 4");
 			cr.fill ();
 
 			draw_expanders (w, h, cr);

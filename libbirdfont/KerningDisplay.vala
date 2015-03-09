@@ -101,7 +101,7 @@ public class KerningDisplay : FontDisplay {
 		
 		// bg color
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
+		Theme.color (cr, "Background 1");
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();
@@ -166,7 +166,7 @@ public class KerningDisplay : FontDisplay {
 					cr.save ();
 					
 					if (selected_handle == i) {
-						cr.set_source_rgba (0, 0, 0, 1);
+						Theme.color (cr, "Foreground 1");
 					} else { 
 						cr.set_source_rgba (123/255.0, 123/255.0, 123/255.0, 1);
 					}
@@ -233,7 +233,7 @@ public class KerningDisplay : FontDisplay {
 				caret_y = get_row_height () + font.base_line + 20;
 				cr.save ();
 				cr.set_line_width (1.0 / KerningTools.font_size);
-				cr.set_source_rgba (0, 0, 0, 0.5);
+				Theme.color_opacity (cr, "Foreground 1", 0.5);
 				cr.move_to (x2, caret_y + 20);
 				cr.line_to (x2, 20);
 				cr.stroke ();

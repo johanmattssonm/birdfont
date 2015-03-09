@@ -97,13 +97,13 @@ public class OverViewItem : GLib.Object {
 
 	public void draw (Context cr) {
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
+		Theme.color (cr, "Background 1");
 		cr.rectangle (x, y, width, height);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
-		cr.set_source_rgba (0, 0, 0, 1);
+		Theme.color (cr, "Foreground 1");
 		cr.rectangle (x, y, width, height);
 		cr.set_line_width (0.5);
 		cr.stroke ();
@@ -234,7 +234,7 @@ public class OverViewItem : GLib.Object {
 
 		cr.save ();
 		cr.set_font_size (14);
-		cr.set_source_rgba (0, 0, 0, 1);
+		Theme.color (cr, "Foreground 1");
 		cr.move_to (x + 0.08 * width, y + height - 6);
 		
 		if (glyphs == null) {

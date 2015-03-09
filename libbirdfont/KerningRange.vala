@@ -44,12 +44,6 @@ public class KerningRange : Tool {
 		});
 
 		panel_move_action.connect ((selected, button, tx, ty) => {
-			active = is_over (tx, ty);
-			
-			if (active) {
-				TooltipArea.show_text (t_("Right click to edit the class and left click to kern glyphs in the class."));
-			}
-			
 			return false;
 		});
 
@@ -136,13 +130,8 @@ public class KerningRange : Tool {
 		
 		cr.save ();
 	
-		if (malformed) { 
-			cr.set_source_rgba (0, 0, 0, 1);
-		} else if (!active) {
-			cr.set_source_rgba (99/255.0, 99/255.0, 99/255.0, 1);
-		} else {
-			cr.set_source_rgba (0, 0, 0, 1);
-		}
+		// FIXME: use color to indicate error
+		Theme.color (cr, "Foreground 1");
 		
 		cr.set_font_size (10);
 		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);

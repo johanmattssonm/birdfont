@@ -55,13 +55,13 @@ public class LanguageSelectionTab : FontDisplay {
 		visible_rows = (int) (allocation.height / 18.0);
 		
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
+		Theme.color (cr, "Background 1");
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
-		cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+		Theme.color (cr, "Background 5");
 		cr.set_font_size (12);
 		
 		foreach (string language in DefaultLanguages.names) {
@@ -78,7 +78,7 @@ public class LanguageSelectionTab : FontDisplay {
 
 		if (color) {
 			cr.save ();
-			cr.set_source_rgba (224/255.0, 224/255.0, 224/255.0, 1);
+			Theme.color (cr, "Background 6");
 			cr.rectangle (0, y - 14, allocation.width, 18);
 			cr.fill ();
 			cr.restore ();

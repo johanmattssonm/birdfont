@@ -18,8 +18,8 @@ namespace BirdFont {
 
 public class TabBar : GLib.Object {
 	
-	int width = 0;
-	int height = 0;
+	public int width = 0;
+	public int height = 0;
 	
 	public Gee.ArrayList<Tab> tabs;
 
@@ -677,7 +677,7 @@ public class TabBar : GLib.Object {
 			if (menu_icon != null) {
 				
 				if (MainWindow.get_menu ().show_menu) {
-					cr.set_source_rgba (38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+					Theme.color (cr, "Background 3");
 					cr.rectangle (w - 32 / scale, 0, 32 / scale, h);
 					cr.fill ();
 				}
@@ -731,19 +731,19 @@ public class TabBar : GLib.Object {
 			// background
 			if (tab_index == selected) {
 				cr.save ();
-				cr.set_source_rgba (234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+				Theme.color (cr, "Highlighted 1");
 				cr.rectangle (0, 0, tab_width, h);
 				cr.fill ();
 				cr.restore ();				
 			} else if (tab_index == over) {
 				cr.save ();
-				cr.set_source_rgba (56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
+				Theme.color (cr, "Backgrund 7");
 				cr.rectangle (0, 0, tab_width, h);
 				cr.fill ();
 				cr.restore ();			
 			} else {
 				cr.save ();
-				cr.set_source_rgba (51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
+				Theme.color (cr, "Background 4");
 				cr.rectangle (0, 0, tab_width, h);
 				cr.fill ();
 				cr.restore ();
@@ -758,9 +758,9 @@ public class TabBar : GLib.Object {
 				close_opacity = (over_close_tab == tab_index) ? 1 : 0.2; 
 
 				if (tab_index == selected) {
-					cr.set_source_rgba (40 / 255.0, 57 / 255.0, 65 / 255.0, close_opacity);
+					Theme.color_opacity (cr, "Foreground 4", close_opacity);
 				} else {
-					cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, close_opacity);
+					Theme.color_opacity (cr, "Foreground 2", close_opacity);
 				}
 				
 				cr.move_to (tab_width - 7 / scale, h / 2.0 - 2.5 / scale);
@@ -783,9 +783,9 @@ public class TabBar : GLib.Object {
 			center_y = tab_height / 2.0 + 4 / scale;
 			
 			if (tab_index == selected) {
-				label.set_source_rgba (40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
+				Theme.text_color (label, "Foreground 4");
 			} else {
-				label.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+				Theme.text_color (label, "Foreground 2");
 			}
 			
 			label.set_font_size (text_height);
@@ -795,7 +795,7 @@ public class TabBar : GLib.Object {
 			if (tab_index != selected) { // don't draw edges for the selected tab
 				if (tab_index + 1 != selected) {
 					cr.save ();
-					cr.set_source_rgba (70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
+					Theme.color (cr, "Foreground 5");
 					cr.rectangle (tab_width - 1 / scale, 0, 1 / scale, h);
 					cr.fill ();
 					cr.restore ();
@@ -803,7 +803,7 @@ public class TabBar : GLib.Object {
 				
 				if (tab_index == first_tab) {
 					cr.save ();
-					cr.set_source_rgba (70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
+					Theme.color (cr, "Foreground 5");
 					cr.rectangle (0, 0, 1 / scale, h);
 					cr.fill ();
 					cr.restore ();

@@ -743,7 +743,7 @@ public class TextArea : Widget {
 						
 						w = next_word.text;
 						if (next_word.widget_y <= tt_click <= next_word.widget_y + font_size) {
-							next_word.set_source_rgba (0, 0, 0, 1);
+							Theme.text_color (next_word, "Foreground 1");
 							
 							p = next_word.get_sidebearing_extent ();
 
@@ -986,7 +986,7 @@ public class TextArea : Widget {
 			// background
 			cr.save ();
 			cr.set_line_width (1);
-			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.color (cr, "Foreground 2");
 			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
 			cr.fill ();
 			cr.restore ();
@@ -994,7 +994,7 @@ public class TextArea : Widget {
 			// border
 			cr.save ();
 			cr.set_line_width (1);
-			cr.set_source_rgba (0, 0, 0, 1);
+			Theme.color (cr, "Foreground 1");
 			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
 			cr.stroke ();
 			cr.restore ();
@@ -1018,7 +1018,7 @@ public class TextArea : Widget {
 			selection_stop = get_selection_stop ();
 			
 			cr.save ();
-			cr.set_source_rgba (234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+			Theme.color (cr, "Highlighted 1");
 
 			for (int i = selection_start.paragraph; i <= selection_stop.paragraph; i++) {
 				return_if_fail (0 <= i < paragraphs.size);
@@ -1129,7 +1129,7 @@ public class TextArea : Widget {
 
 		if (cache_id == -1 && paragraphs.size > 0 && paragraphs.get (0).words.size > 0) {
 			Text t = paragraphs.get (0).words.get (0);
-			t.set_source_rgba (0, 0, 0, 1);
+			Theme.text_color (t, "Foreground 1");
 			cache_id = t.get_cache_id ();
 		}
 		
@@ -1144,8 +1144,8 @@ public class TextArea : Widget {
 				cc = new Context ((!) paragraph.cached_surface);
 
 				foreach (Text next_word in paragraph.words) {
-					next_word.set_source_rgba (0, 0, 0, 1);
-
+					Theme.text_color (next_word, "Foreground 1");
+					
 					if (next_word.text != "\n") {
 						next_word.draw_at_top (cc, next_word.widget_x, next_word.widget_y - ty, cache_id);
 					}

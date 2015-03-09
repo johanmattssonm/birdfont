@@ -53,6 +53,36 @@ class SettingsItem : GLib.Object {
 		handle_events = false;
 		headline = true;
 	}
+
+	public SettingsItem.color (string color) {
+		ColorTool cb;
+		Color c;
+		
+		c = Theme.get_color (color);
+
+		label = new Text ();
+		label.set_text (color);
+		handle_events = true;
+		
+		cb = new ColorTool (color);
+		cb.set_r (c.r);
+		cb.set_g (c.g);
+		cb.set_b (c.b);
+		cb.set_a (c.a);
+		
+		cb.color_updated.connect (() => {
+			TabBar tab_bar;
+			
+			Theme.save_color (color, cb.color_r, cb.color_g, cb.color_b, cb.color_a);
+			
+			tab_bar = MainWindow.get_tab_bar ();
+			tab_bar.redraw (0, 0, tab_bar.width, tab_bar.height);
+			GlyphCanvas.redraw ();
+			Toolbox.redraw_tool_box ();
+		});
+	
+		button = cb;
+	}
 	
 	public void draw (WidgetAllocation allocation, Context cr) {
 		Tool t;
@@ -60,20 +90,20 @@ class SettingsItem : GLib.Object {
 		
 		if (headline) {
 			cr.save ();
-			cr.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.color (cr, "Background 2");
 			cr.rectangle (0, y, allocation.width, 40 * MainWindow.units);
 			cr.fill ();
 			cr.restore ();
 				
 			cr.save ();
-			label.set_source_rgba (1, 1, 1, 1);
+			Theme.text_color (label, "Background 1");
 			label.set_font_size (20 * MainWindow.units);
 			label.draw_at_baseline (cr, 21 * MainWindow.units, y + 25 * MainWindow.units);
 			cr.restore ();
 		} else {
 			if (active) {
 				cr.save ();
-				cr.set_source_rgba (38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+				Theme.color (cr, "Background 3");
 				cr.rectangle (0, y - 5 * MainWindow.units, allocation.width, 40 * MainWindow.units);
 				cr.fill ();
 				cr.restore ();
@@ -88,7 +118,7 @@ class SettingsItem : GLib.Object {
 			}
 			
 			cr.save ();
-			label.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.text_color (label, "Foreground 2");
 			label.set_font_size (17 * MainWindow.units);
 			label.draw_at_baseline (cr, label_x, y + 20 * MainWindow.units);
 			cr.restore ();
@@ -99,9 +129,9 @@ class SettingsItem : GLib.Object {
 				cr.save ();
 				
 				if (active) {
-					key_binding_text.set_source_rgba (1, 1, 1, 1);
+					Theme.text_color (key_binding_text, "Background 1");
 				} else {
-					key_binding_text.set_source_rgba (101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+					Theme.text_color (key_binding_text, "Foreground 2");
 				}
 				
 				key_binding_text.set_font_size (17 * MainWindow.units);

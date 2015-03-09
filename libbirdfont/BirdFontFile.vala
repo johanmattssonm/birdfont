@@ -132,8 +132,6 @@ class BirdFontFile : GLib.Object {
 				} catch (GLib.Error e) {
 					warning (e.message);
 				}
-					
-				TooltipArea.show_text (t_("Saving"));
 			});
 			
 			os.put_string ("\n");
@@ -168,8 +166,6 @@ class BirdFontFile : GLib.Object {
 					warning (@"Failed to save $path \n");
 					warning (@"$(ef.message) \n");
 				}
-					
-				TooltipArea.show_text (t_("Saving"));
 			});
 			
 			os.put_string ("\n");
@@ -312,8 +308,6 @@ class BirdFontFile : GLib.Object {
 				} catch (GLib.Error e) {
 					warning (@"$(e.message) \n");
 				}
-				
-				TooltipArea.show_text (t_("Saving"));
 			});
 	}
 	
@@ -726,8 +720,7 @@ class BirdFontFile : GLib.Object {
 				parse_images (t);
 			}
 		}
-
-		TooltipArea.show_text ("");
+		
 		return true;
 	}
 		

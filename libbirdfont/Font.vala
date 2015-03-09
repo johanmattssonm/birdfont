@@ -648,7 +648,6 @@ public class Font : GLib.Object {
 
 		if (read_only) {
 			warning (@"$path is write protected.");
-			TooltipArea.show_text (t_("The file is write protected."));
 			return;			
 		}
 				

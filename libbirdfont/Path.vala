@@ -211,7 +211,7 @@ public class Path {
 		
 		cr.save ();
 		
-		cr.set_source_rgba (0, 0, 0.3, 1);
+		Theme.color (cr, "Background 4");
 		cr.set_line_width (2);
 		cr.rectangle (x, y, x2 - x, y2 - y);
 		cr.stroke ();
@@ -1617,7 +1617,7 @@ public class Path {
 			cr.save ();
 			
 			all_of_path ((x, y) => {
-				//cr.set_source_rgba (0.3, 0.3, 0.3, 1);
+				//Theme.color (cr, "Background 5");
 				cr.move_to (px + xc, -py + yc);
 				cr.line_to (x + xc, -y + yc);
 				

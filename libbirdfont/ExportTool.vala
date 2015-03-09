@@ -401,9 +401,7 @@ os.put_string (
 			if (eot_file.query_exists ()) {
 				eot_file.delete ();
 			}
-			
-			TooltipArea.show_text (t_("Writing TTF and EOT files."));
-			
+						
 			write_ttf ((!) ttf_file.get_path ());
 			write_eot ((!) ttf_file.get_path (), (!) eot_file.get_path ());
 		} catch (Error e) {
@@ -416,7 +414,6 @@ os.put_string (
 
 	public static bool export_svg_font () {
 		Font font = BirdFont.get_current_font ();
-		TooltipArea.show_text (t_("Writing SVG file."));
 		return export_svg_font_path (font.get_folder ());
 	}
 		
@@ -439,7 +436,6 @@ os.put_string (
 			fo.close ();
 		} catch (Error e) {
 			critical (@"$(e.message)");
-			TooltipArea.show_text (e.message);
 			return false;
 		}
 		

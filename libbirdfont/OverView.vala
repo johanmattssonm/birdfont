@@ -439,7 +439,8 @@ public class OverView : FontDisplay {
 		
 		// clear canvas
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1);
+		Theme.color (cr, "Background 1");
+		
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();
@@ -459,7 +460,7 @@ public class OverView : FontDisplay {
 		
 	void draw_empty_canvas (WidgetAllocation allocation, Context cr) {
 		cr.save ();
-		cr.set_source_rgba (156/255.0, 156/255.0, 156/255.0, 1);
+		Theme.color (cr, "Background 7");
 		cr.move_to (30, 40);
 		cr.set_font_size (18);
 		cr.show_text (t_("No glyphs in this view."));
@@ -1114,13 +1115,13 @@ public class OverView : FontDisplay {
 		
 		// background	
 		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 0.98);
+		Theme.color_opacity (cr, "Background 1", 0.98);
 		cr.rectangle (x, y, w, h);
 		cr.fill ();
 		cr.restore ();
 
 		cr.save ();
-		cr.set_source_rgba (0, 0, 0, 0.98);
+		Theme.color_opacity (cr, "Foreground 1", 0.98);
 		cr.set_line_width (2);
 		cr.rectangle (x, y, w, h);
 		cr.stroke ();
@@ -1172,7 +1173,7 @@ public class OverView : FontDisplay {
 	void draw_info_line (string line, Context cr, double x, double y, int row) {
 		cr.save ();
 		cr.set_font_size (12);
-		cr.set_source_rgba (0, 0, 0, 1);
+		Theme.color (cr, "Foreground 1");
 		cr.move_to (x + 10, y + 28 + row * 18 * 1.2);
 		cr.show_text (line);
 		cr.restore ();		

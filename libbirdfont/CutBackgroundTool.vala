@@ -94,7 +94,7 @@ public class CutBackgroundTool : Tool {
 				// draw a border around the selection
 				cr.save ();
 				cr.set_line_width (2.0);
-				cr.set_source_rgba (0, 0, 0, 0.3);
+				Theme.color_opacity (cr, "Foreground 1", 0.3);
 				cr.rectangle (fmin (x1, x2), fmin (y1, y2), fabs (x1 - x2), fabs (y1 - y2));
 				cr.stroke ();
 				cr.restore ();
@@ -102,7 +102,7 @@ public class CutBackgroundTool : Tool {
 				// make the area outside of the selection grey
 				cr.save ();
 				cr.set_line_width (0);
-				cr.set_source_rgba (0, 0, 0, 0.075);
+				Theme.color_opacity (cr, "Foreground 1", 0.075);
 				cr.rectangle (0, 0, glyph.allocation.width, fmin (y1, y2));
 				cr.rectangle (0, fmin (y1, y2), fmin (x1, x2), fabs (y1 - y2));
 				cr.rectangle (0, fmin (y1, y2) + fabs (y1 - y2), glyph.allocation.width, glyph.allocation.height - fabs (y1 - y2));
@@ -170,7 +170,7 @@ public class CutBackgroundTool : Tool {
 		wc = bg.get_margin_width ();
 		hc = bg.get_margin_height ();
 		
-		cg.set_source_rgba (1, 1, 1, 1);
+		Theme.color (cg, "Background 1");
 		cg.rectangle (0, 0, bg.size_margin, bg.size_margin);
 		cg.fill ();
 
@@ -203,7 +203,7 @@ public class CutBackgroundTool : Tool {
 		sr = new Surface.similar (sg, img.get_content (), (int) (w / bg.img_scale_x), (int) (h / bg.img_scale_y));
 		cr = new Context (sr);
 
-		cr.set_source_rgba (1, 1, 1, 1);
+		Theme.color (cr, "Background 1");
 		cr.rectangle (0, 0, w, h);
 		cr.fill ();
 
