@@ -47,6 +47,7 @@ public class SpacingTab : KerningDisplay {
 	void draw_spacing_metrix (WidgetAllocation allocation, Context cr) {
 		GlyphSequence row;
 		int index;
+		Font font = BirdFont.get_current_font ();
 
 		// background
 		cr.save ();
@@ -69,7 +70,7 @@ public class SpacingTab : KerningDisplay {
 		cr.restore ();
 		
 		// TODO: add button for processing ligatures
-		row = get_first_row ().process_ligatures ();
+		row = get_first_row ().process_ligatures (font);
 		index = 0;
 		foreach (Glyph? g in row.glyph) {
 			draw_glyph_spacing (allocation, cr, g, index);
@@ -163,10 +164,11 @@ public class SpacingTab : KerningDisplay {
 	public override void button_press (uint button, double ex, double ey) {
 		GlyphSequence row;
 		double p;
+		Font font = BirdFont.get_current_font ();
 		
 		if (ey >= allocation.height - height) {
 			// TODO: add button for processing ligatures
-			row = get_first_row ().process_ligatures ();
+			row = get_first_row ().process_ligatures (font);
 			p = 0;
 			foreach (Glyph? g in row.glyph) {
 				if (p < ex < p + box_size / 2.0) {

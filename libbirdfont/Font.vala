@@ -132,7 +132,7 @@ public class Font : GLib.Object {
 		bfp_file = new BirdFontPart (this);
 		
 		deleted_glyphs = new Gee.ArrayList<Glyph> ();
-		ligatures_substitution = new Ligatures ();
+		ligatures_substitution = new Ligatures (this);
 		
 		background_images = new Gee.ArrayList<BackgroundImage> ();
 	}

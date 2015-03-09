@@ -122,7 +122,7 @@ public class KerningDisplay : FontDisplay {
 		
 		foreach (GlyphSequence word in row) {
 			wi = 0;
-			word_with_ligatures = word.process_ligatures ();
+			word_with_ligatures = word.process_ligatures (font);
 			gr_left = null;
 			gr_right = null;
 			foreach (Glyph? g in word_with_ligatures.glyph) {
@@ -311,7 +311,7 @@ public class KerningDisplay : FontDisplay {
 		}
 		
 		foreach (GlyphSequence word in row) {
-			word_with_ligatures = word.process_ligatures ();
+			word_with_ligatures = word.process_ligatures (font);
 			ranges_index = 0;
 			foreach (Glyph? g in word_with_ligatures.glyph) {
 				
@@ -503,8 +503,9 @@ public class KerningDisplay : FontDisplay {
 		Glyph? g;
 		selected_handle = handle;
 		GlyphSequence sequence_with_ligatures;
+		Font font = BirdFont.get_current_font ();
 
-		sequence_with_ligatures = row.get (0).process_ligatures ();
+		sequence_with_ligatures = row.get (0).process_ligatures (font);
 		
 		if (selected_handle <= 0) {
 			selected_handle = 1;
@@ -724,6 +725,7 @@ public class KerningDisplay : FontDisplay {
 		int col_index = 0;
 		double fs = KerningTools.font_size;
 		Glyph glyph = new Glyph.no_lines ("");
+		Font font = BirdFont.get_current_font ();
 		
 		GlyphRange? gr_left, gr_right;
 		
@@ -734,7 +736,7 @@ public class KerningDisplay : FontDisplay {
 		foreach (GlyphSequence word in row) {
 			col_index = 0;
 			
-			word_with_ligatures = word.process_ligatures ();
+			word_with_ligatures = word.process_ligatures (font);
 			foreach (Glyph? g in word_with_ligatures.glyph) {
 				if (g == null) {
 					w = 50;

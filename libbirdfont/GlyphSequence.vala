@@ -13,7 +13,7 @@
 */
 namespace BirdFont {
 
-public class GlyphSequence {
+public class GlyphSequence : GLib.Object {
 	
 	/** A list of all glyphs */
 	public Gee.ArrayList<Glyph?> glyph;
@@ -33,10 +33,9 @@ public class GlyphSequence {
 	/** Do ligature substitution.
 	 * @return a new sequence with ligatures
 	 */
-	public GlyphSequence process_ligatures () {
+	public GlyphSequence process_ligatures (Font font) {
 		// FIXME add range to ligature
 		GlyphSequence ligature_sequence = new GlyphSequence ();
-		Font font = BirdFont.get_current_font ();
 		bool has_range = false;
 		Ligatures ligatures;
 		

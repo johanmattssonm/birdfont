@@ -88,6 +88,7 @@ def task_pkg_flags():
 
 
 valac_options = [
+	'--thread',
 	'--enable-experimental-non-null',
 	'--enable-experimental',
 	'--target-glib=2.34', # see bug 0000004

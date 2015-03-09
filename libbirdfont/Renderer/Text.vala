@@ -130,6 +130,12 @@ public class Text : Widget {
 		GlyphSequence word;
 		Glyph? g;
 		KerningClasses kc;
+
+		// FIXME: Create a thread safe implementation of the bf text rendering
+		// The problem is (probably) in the spacing and kerning code.
+		if (MenuTab.suppress_event) {
+			return;
+		}
 		
 		glyph = new Glyph ("", '\0');
 
@@ -140,11 +146,12 @@ public class Text : Widget {
 		word = glyph_sequence;
 		wi = 0;
 
-		word_with_ligatures = word.process_ligatures ();
+		return_if_fail (current_font != null);
+		word_with_ligatures = word.process_ligatures ((!) current_font);
 		
 		gr_left = null;
 		gr_right = null;
-		kc = font.get_kerning_classes ();
+		kc = ((!) current_font).get_kerning_classes ();
 		for (int i = 0; i < word_with_ligatures.glyph.size; i++) {
 
 			g = word_with_ligatures.glyph.get (i);
@@ -324,7 +331,9 @@ public class Text : Widget {
 		double x, y;
 		double ratio;
 		double cc_y;
-		int64 cache_id = (cacheid < 0) ? get_cache_id () : cacheid;
+		int64 cache_id;
+		
+		cache_id = (cacheid < 0) ? get_cache_id () : cacheid;
 			
 		ratio = get_scale ();
 		cc_y = (font.top_limit - font.base_line) * ratio;

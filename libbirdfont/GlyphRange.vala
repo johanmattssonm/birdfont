@@ -399,7 +399,7 @@ public class GlyphRange {
 		string chr;
 		UniRange r;
 		StringBuilder sb;
-		unichar c;
+		unichar c;		
 		
 		if (index > len + unassigned.size) {
 			return "\0".dup();
@@ -428,8 +428,14 @@ public class GlyphRange {
 				
 		sb = new StringBuilder ();
 		c = r.get_char ((unichar) (ti + r.length ()));
+		
+		if (unlikely (!c.validate ())) {
+			warning ("Not a valid unicode character.");
+			return "";
+		}
+		
 		sb.append_unichar (c);
-
+		
 		return sb.str;
 	}
 	

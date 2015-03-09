@@ -27,7 +27,10 @@ public class Ligatures : GLib.Object {
 
 	public delegate void ContextualLigatureIterator (ContextualLigature lig);
 
-	public Ligatures () {
+	Font font;
+
+	public Ligatures (Font font) {
+		this.font = font;
 	}
 	
 	public void get_ligatures (LigatureIterator iter) {
@@ -44,7 +47,6 @@ public class Ligatures : GLib.Object {
 
 	public void get_single_substitution_ligatures (SingleLigatureIterator iter) {
 		get_ligatures ((substitution, ligature) => {
-			Font font = BirdFont.get_current_font ();
 			GlyphCollection? gc;
 			GlyphCollection li;
 			GlyphSequence gs;

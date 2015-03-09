@@ -21,7 +21,7 @@ public class SpacingData : GLib.Object {
 	public KerningClasses kerning_classes;
 	
 	public Gee.ArrayList<SpacingClass> classes = new Gee.ArrayList<SpacingClass> ();
-	Gee.ArrayList<string> connections = new Gee.ArrayList<string> ();
+	Gee.ArrayList<String> connections = new Gee.ArrayList<String> ();
 
 	public SpacingData (KerningClasses kerning) {
 		kerning_classes = kerning;
@@ -32,13 +32,15 @@ public class SpacingData : GLib.Object {
 	}
 
 	public Gee.ArrayList<string> get_all_connections (string glyph) {
+		String s;
 		Gee.ArrayList<string> c = new Gee.ArrayList<string> ();
 		
 		connections.clear ();
+		
 		add_connections (glyph);
 		
-		foreach (string t in connections) {
-			c.add (t);
+		foreach (String t in connections) {
+			c.add (t.data.dup ());
 		}
 		
 		connections.clear ();
@@ -46,18 +48,30 @@ public class SpacingData : GLib.Object {
 		return c;
 	}
 	
+	bool has_connection (string s) {
+		foreach (String t in connections) {
+			if (t.data == s) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public void add_connections (string glyph) {
-		connections.add (glyph);
+		String sb = new String (glyph);
+		
+		connections.add (sb);
 		
 		foreach (SpacingClass s in classes) {
 			if (s.first == glyph) {
-				if (connections.index_of (s.next) == -1) {
+				if (has_connection (s.next)) {
 					add_connections (s.next);
 				}
 			}
 
 			if (s.next == glyph) {
-				if (connections.index_of (s.first) == -1) {
+				if (has_connection (s.first)) {
 					add_connections (s.first);
 				}
 			}
@@ -81,7 +95,7 @@ public class SpacingData : GLib.Object {
 	}
 
 	public void update_kerning (SpacingClass s) {
-		Font font = BirdFont.get_current_font ();
+		Font font = kerning_classes.font;
 		GlyphCollection? g;
 		GlyphCollection gc;
 		
@@ -104,6 +118,15 @@ public class SpacingData : GLib.Object {
 		}
 		
 		KerningTools.update_spacing_classes ();
+	}
+	
+	class String : GLib.Object {
+		
+		public string data;
+		
+		public String (string s) {
+			data = s.dup ();
+		}	
 	}
 }
 
