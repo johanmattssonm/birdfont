@@ -523,6 +523,18 @@ public class BirdFont {
 		
 		Theme.save_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
 		
+		Theme.save_color ("Tool Border 1", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.save_color ("Tool Background 1", 14 / 255.0, 16 / 255.0, 17 / 255.0, 1);
+
+		Theme.save_color ("Tool Border 2", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.save_color ("Tool Background 2", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
+
+		Theme.save_color ("Tool Border 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.save_color ("Tool Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
+
+		Theme.save_color ("Tool Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.save_color ("Tool Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
+			
 		N_("Background 1");
 		N_("Background 2");
 		N_("Background 3");
@@ -536,8 +548,26 @@ public class BirdFont {
 		N_("Foreground 1");
 		N_("Foreground 2");
 		N_("Foreground 3");
+		N_("Foreground 4");
+		N_("Foreground 5");
 		
 		N_("Highlighted 1");
+		N_("Highlighted Guide");
+		
+		N_("Grid");
+		
+		N_("Guide 1");
+		N_("Guide 2");
+		N_("Guide 3");
+		
+		N_("Tool Border 1");
+		N_("Tool Background 1");
+		N_("Tool Border 2");
+		N_("Tool Background 2");
+		N_("Tool Border 3");
+		N_("Tool Background 3");
+		N_("Tool Border 4");
+		N_("Tool Background 4");
 	}
 
 	public static void set_bundle_path (string path) {

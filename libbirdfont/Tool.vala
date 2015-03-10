@@ -16,13 +16,15 @@ using Cairo;
 
 namespace BirdFont {
 
-public class Tool : GLib.Object {
+public class Tool : Widget {
 	
 	public double x = 0;
 	public double y = 0;
 	public double w = 33 * Toolbox.get_scale ();
 	public double h = (33 / 1.11) * Toolbox.get_scale ();
-	
+
+	double scale;
+			
 	public bool active = false;
 	public bool selected = false;
 	
@@ -86,6 +88,8 @@ public class Tool : GLib.Object {
 	public Tool (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
 		this.tip = tip;
 		
+		scale = w / 111.0; // scale to 320 dpi
+		
 		if (selected_button == null) {
 			selected_button = Icons.get_icon ("tool_button_selected.png");
 			active_selected_button = Icons.get_icon ("tool_button_selected_active.png");
@@ -120,6 +124,14 @@ public class Tool : GLib.Object {
 		});
 	}
 
+	public override double get_height () {
+		return 33 * scale;
+	}
+
+	public override double get_width () {
+		return 33 * scale;
+	}
+	
 	public void set_tool_visibility (bool v) {
 		visible = v;
 	}
@@ -232,18 +244,17 @@ public class Tool : GLib.Object {
 		return ret;
 	}
 	
-	public virtual void draw (Context cr) {
+	public override void draw (Context cr) {
 		double xt = x;
 		double yt = y;
 		
 		double bgx, bgy;
 		double iconx, icony;
 		
-		double scale;
-
-		cr.save ();
+		string border = "Foreground 1";
+		string background = "Background 1";
 		
-		scale = w / 111.0; // scale to 320 dpi
+		cr.save ();
 		
 		if (unlikely (scale == 0)) {
 			warning ("Scale is zero.");
@@ -257,25 +268,34 @@ public class Tool : GLib.Object {
 
 		// Button in four states
 		if (selected && selected_button != null) {
-			cr.set_source_surface ((!) selected_button, bgx, bgy);
-			cr.paint ();
+			border = "Tool Border 1";
+			background = "Tool Background 1";
 		}
 
 		if (selected && active && active_selected_button != null) {
-			cr.set_source_surface ((!) active_selected_button, bgx, bgy);
-			cr.paint ();
+			border = "Tool Border 2";
+			background = "Tool Background 2";
 		}
 
 		if (!selected && deselected_button != null) {
-			cr.set_source_surface ((!) deselected_button, bgx, bgy);
-			cr.paint ();
+			border = "Tool Border 3";
+			background = "Tool Background 3";
 		}
 
 		if (!selected && active && active_deselected_button != null) {
-			cr.set_source_surface ((!) active_deselected_button, bgx, bgy);
-			cr.paint ();
+			border = "Tool Border 4";
+			background = "Tool Background 4";
 		}
+
+		Theme.color (cr, background);
+		draw_rounded_rectangle (cr, bgx, bgy, 34 / scale, 28 / scale, 4 / scale);
+		cr.fill ();
 				
+		cr.set_line_width (1 / scale);
+		Theme.color (cr, border);
+		draw_rounded_rectangle (cr, bgx, bgy, 34 / scale, 28 / scale, 4 / scale);
+		cr.stroke ();
+					
 		if (icon != null) {
 			ImageSurface i = (!) icon;
 			
