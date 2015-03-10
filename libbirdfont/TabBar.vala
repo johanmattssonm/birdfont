@@ -737,7 +737,7 @@ public class TabBar : GLib.Object {
 				cr.restore ();				
 			} else if (tab_index == over) {
 				cr.save ();
-				Theme.color (cr, "Backgrund 7");
+				Theme.color (cr, "Background 7");
 				cr.rectangle (0, 0, tab_width, h);
 				cr.fill ();
 				cr.restore ();			

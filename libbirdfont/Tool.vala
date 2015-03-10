@@ -70,11 +70,6 @@ public class Tool : Widget {
 	public uint modifier_flag;
 	public unichar key;
 	
-	private static ImageSurface? selected_button = null;
-	private static ImageSurface? active_selected_button = null;
-	private static ImageSurface? deselected_button = null;
-	private static ImageSurface? active_deselected_button = null;
-	
 	public bool persistent = false;
 	public bool editor_events = false;
 	
@@ -89,13 +84,6 @@ public class Tool : Widget {
 		this.tip = tip;
 		
 		scale = w / 111.0; // scale to 320 dpi
-		
-		if (selected_button == null) {
-			selected_button = Icons.get_icon ("tool_button_selected.png");
-			active_selected_button = Icons.get_icon ("tool_button_selected_active.png");
-			deselected_button = Icons.get_icon ("tool_button_deselected.png");
-			active_deselected_button = Icons.get_icon ("tool_button_deselected_active.png");
-		}
 		
 		if (name != null) {
 			set_icon ((!) name);
@@ -251,8 +239,8 @@ public class Tool : Widget {
 		double bgx, bgy;
 		double iconx, icony;
 		
-		string border = "Foreground 1";
-		string background = "Background 1";
+		string border = "Tool Border 3";
+		string background = "Tool Border 3";
 		
 		cr.save ();
 		
@@ -267,22 +255,22 @@ public class Tool : Widget {
 		bgy = yt / scale;
 
 		// Button in four states
-		if (selected && selected_button != null) {
+		if (selected) {
 			border = "Tool Border 1";
 			background = "Tool Background 1";
 		}
 
-		if (selected && active && active_selected_button != null) {
+		if (selected && active) {
 			border = "Tool Border 2";
 			background = "Tool Background 2";
 		}
 
-		if (!selected && deselected_button != null) {
+		if (!selected) {
 			border = "Tool Border 3";
 			background = "Tool Background 3";
 		}
 
-		if (!selected && active && active_deselected_button != null) {
+		if (!selected && active) {
 			border = "Tool Border 4";
 			background = "Tool Background 4";
 		}

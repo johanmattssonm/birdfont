@@ -100,7 +100,7 @@ public class DrawingTools : ToolCollection  {
 		background_scale = new SpinButton ();
 		
 		draw_tools = new Expander (t_("Drawing Tools"));
-		draw_tool_modifiers = new Expander (t_("Control Point Tools"));
+		draw_tool_modifiers = new Expander (t_("Control Point"));
 		shape_tools = new Expander (t_("Geometrical Shapes"));
 		zoombar_tool = new Expander (t_("Zoom"));
 		view_tools = new Expander ();

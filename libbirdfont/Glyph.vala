@@ -1532,7 +1532,7 @@ public class Glyph : FontDisplay {
 	private void draw_zoom_area(Context cr) {
 		cr.save ();
 		cr.set_line_width (2.0);
-		Theme.color (cr, "Foreground 3");
+		Theme.color (cr, "Foreground 4");
 		cr.rectangle (Math.fmin (zoom_x1, zoom_x2), Math.fmin (zoom_y1, zoom_y2), Math.fabs (zoom_x1 - zoom_x2), Math.fabs (zoom_y1 - zoom_y2));
 		cr.stroke ();
 		cr.restore ();
