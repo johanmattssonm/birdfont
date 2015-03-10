@@ -381,7 +381,7 @@ public class Toolbox : GLib.Object  {
 		b.select_tool (b.get_tool (name));
 	}
 	
-	public static bool set_scale (double s) {
+	public static void set_scale (double s) {
 		scale = s;
 	}
 	
