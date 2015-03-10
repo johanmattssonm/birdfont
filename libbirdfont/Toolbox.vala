@@ -44,8 +44,12 @@ public class Toolbox : GLib.Object  {
 	double scroll_y = 0;
 
 	public List<ToolCollection> tool_sets = new List<ToolCollection> ();
-		
+	
+	static double scale = 1;
+	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {	
+		scale = Toolbox.allocation_width / 160.0;
+		
 		current_tool = new Tool ("no_icon");
 		press_tool = new Tool (null);
 
@@ -377,8 +381,12 @@ public class Toolbox : GLib.Object  {
 		b.select_tool (b.get_tool (name));
 	}
 	
+	public static bool set_scale (double s) {
+		scale = s;
+	}
+	
 	public static double get_scale () {
-		return Toolbox.allocation_width / 160.0;
+		return scale;
 	}
 	
 	public void set_default_tool_size () {
