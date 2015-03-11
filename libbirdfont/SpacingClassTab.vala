@@ -34,7 +34,7 @@ public class SpacingClassTab : Table {
 		
 		if (row.get_index () == -1) {
 			spacing.add_class ("?", "?");
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			update_rows ();
 			update_scrollbar ();
 			font.touch ();
@@ -42,7 +42,7 @@ public class SpacingClassTab : Table {
 			if (delete_button) {
 				return_if_fail (0 <= row.get_index () < spacing.classes.size);
 				spacing.classes.remove_at (row.get_index ());
-				MainWindow.native_window.hide_text_input ();
+				TabContent.hide_text_input ();
 				update_rows ();
 				update_scrollbar ();
 				font.touch ();

@@ -37,11 +37,11 @@ public class Ligature : GLib.Object {
 		});
 		
 		listener.signal_submit.connect (() => {
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
 		});
 		
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 	
 	public void set_substitution (ContextualLigature? clig = null) {
@@ -62,11 +62,11 @@ public class Ligature : GLib.Object {
 		});
 		
 		listener.signal_submit.connect (() => {
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
 		});
 		
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 }
 

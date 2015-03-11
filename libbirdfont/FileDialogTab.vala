@@ -137,7 +137,7 @@ public class FileDialogTab : FontDisplay {
 			}
 		});
 		
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 			
 	public override void draw (WidgetAllocation allocation, Context cr) {

@@ -172,11 +172,11 @@ public class OverView : FontDisplay {
 			OverView o = MainWindow.get_overview ();
 			GlyphRange r = CharDatabase.search (o.search_query);
 			o.set_glyph_range (r);
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		});
 		
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 	
 	public Glyph? get_current_glyph () {

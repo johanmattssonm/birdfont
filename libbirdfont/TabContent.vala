@@ -19,6 +19,11 @@ namespace BirdFont {
 /** Interface for events from native window to the current tab. */
 public class TabContent : GLib.Object {
 
+	static Text text_input_label;
+	static LineTextArea text_input;
+	static Button text_input_button;
+	static bool text_input_visible = false;
+
 	public static void zoom_in () {
 		if (MenuTab.suppress_event) {
 		}
@@ -89,6 +94,10 @@ public class TabContent : GLib.Object {
 				GlyphCanvas.current_display.update_scrollbar ();
 				FontDisplay.dirty_scrollbar = false;
 			}
+			
+			if (text_input_visible) {
+				draw_text_input (allocation, cr);
+			}
 		}
 	}
 	
@@ -99,17 +108,24 @@ public class TabContent : GLib.Object {
 		
 		KeyBindings.add_modifier_from_keyval (keyval);
 		
-		MainWindow.get_menu ().process_key_binding_events (keyval);
-		GlyphCanvas.current_display.key_press (keyval);
+		if (!text_input_visible) {
+			MainWindow.get_menu ().process_key_binding_events (keyval);
+			GlyphCanvas.current_display.key_press (keyval);
+		} else {
+			text_input.key_press (keyval);
+		}
 	}
 	
 	public static void key_release (uint keyval) {
 		if (MenuTab.suppress_event) {
 			return;
 		}
-		
-		GlyphCanvas.current_display.key_release (keyval);
+
 		KeyBindings.remove_modifier_from_keyval (keyval);
+
+		if (!text_input_visible) {
+			GlyphCanvas.current_display.key_release (keyval);
+		}
 	}
 	
 	public static void motion_notify (double x, double y) {
@@ -117,7 +133,11 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
-		GlyphCanvas.current_display.motion_notify (x, y);
+		if (!text_input_visible) {
+			GlyphCanvas.current_display.motion_notify (x, y);
+		} else {
+			text_input.motion (x, y);
+		}
 	}
 	
 	public static void button_release (int button, double x, double y) {
@@ -129,6 +149,10 @@ public class TabContent : GLib.Object {
 			MainWindow.get_menu ().button_release (button, x, y);
 		} else {
 			GlyphCanvas.current_display.button_release (button, x, y);
+			
+			if (text_input_visible) {
+				text_input.button_release (button, x, y);
+			}
 		}
 	}
 	
@@ -141,6 +165,11 @@ public class TabContent : GLib.Object {
 			MainWindow.get_dialog ().button_press (button, x, y);
 		} else if (!MainWindow.get_menu ().show_menu) {
 			GlyphCanvas.current_display.button_press (button, x, y);
+			
+			if (text_input_visible) {
+				text_input.button_press (button, x, y);
+				text_input_button.button_press (button, x, y);
+			}
 		}
 	}
 
@@ -244,6 +273,66 @@ public class TabContent : GLib.Object {
 		}
 		
 		return uri;
+	}
+	
+	public static void draw_text_input (WidgetAllocation allocation, Context cr) {
+		cr.save ();
+		Theme.color (cr, "Background 4");
+		cr.rectangle (0, 0, allocation.width, 51);
+		cr.fill ();
+		cr.restore ();
+		
+		Theme.text_color (text_input_label, "Background 1");
+		
+		text_input_label.allocation = allocation;
+		text_input_label.widget_x = 10;
+		text_input_label.widget_y = 17;
+
+		text_input.allocation = allocation;
+		text_input.widget_x = text_input_label.get_extent () + 20;
+		text_input.widget_y = 10;
+		text_input.width = allocation.width 
+			- text_input_button.get_width () 
+			- text_input_label.get_extent ()
+			- 40;
+		
+		text_input_button.allocation = allocation;
+		text_input_button.widget_x = text_input.widget_x + text_input.width + 10;
+		text_input_button.widget_y = 10;
+
+		text_input_label.draw (cr);
+		text_input.draw (cr);
+		text_input_button.draw (cr);
+	}
+	
+	public static void show_text_input (TextListener tl) {
+		text_input_label = new Text (tl.label);
+		text_input = new LineTextArea (20 * MainWindow.units);
+		text_input_button = new Button (tl.button_label);
+		
+		text_input.carret_is_visible = true;
+		
+		text_input.set_text (tl.default_text);
+		text_input.text_changed.connect ((text) => {
+			tl.signal_text_input (text);
+		});
+		
+		text_input.enter.connect ((text) => {
+			tl.signal_submit (text);
+			text_input_visible = false;
+			GlyphCanvas.redraw ();
+		});
+		
+		text_input_button.action.connect (() => {
+			tl.signal_submit (text_input.get_text ());
+		});
+		
+		text_input_visible = true;
+		GlyphCanvas.redraw ();
+	}
+	
+	public static void hide_text_input () {
+		text_input_visible = false;
 	}
 }
 

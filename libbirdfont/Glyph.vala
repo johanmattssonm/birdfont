@@ -2142,11 +2142,11 @@ public class Glyph : FontDisplay {
 			
 			BirdFont.get_current_font ().custom_guides.add (guide);
 			
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			GlyphCanvas.redraw ();
 		});
 		
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 }
 

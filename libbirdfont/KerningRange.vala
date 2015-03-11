@@ -108,7 +108,7 @@ public class KerningRange : Tool {
 		
 		listener.signal_submit.connect (() => {
 			MainWindow.get_kerning_display ().suppress_input = false;
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			
 			// remove all empty classes
 			if (ranges == "") {
@@ -119,7 +119,7 @@ public class KerningRange : Tool {
 		
 		kerning_display.suppress_input = true;
 		
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 	
 	public override void draw (Context cr) {
