@@ -71,7 +71,8 @@ public class Argument : GLib.Object {
 				a == "--mac" ||
 				a == "--android" ||
 				a == "--log" ||
-				a == "--no-ucd") {
+				a == "--no-ucd" ||
+				a == "--windows") {
 				prev = a;
 				i++;
 				continue;
@@ -209,6 +210,8 @@ public class Argument : GLib.Object {
 				return "--android";
 			case 'l': 
 				return "--log";
+			case 'w': 
+				return "--windows";
 		}
 		
 		return "";
@@ -252,6 +255,7 @@ public class Argument : GLib.Object {
 		print_padded ("-h, --help", t_("show this message"));
 		print_padded ("-l, --log", t_("write a log file"));
 		print_padded ("-m, --mac", t_("enable Machintosh customizations"));
+		print_padded ("-w, --windows", t_("enable Windows customizations"));
 		print_padded ("-n, --no-translation", t_("don't translate"));
 		print_padded ("-s, --slow", t_("sleep between each command in test suite"));
 		print_padded ("-t --test [TEST]", t_("run test case"));

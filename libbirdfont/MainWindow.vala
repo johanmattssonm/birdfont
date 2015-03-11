@@ -214,7 +214,7 @@ public class MainWindow : GLib.Object {
 		return singleton;
 	}
 	
-	public static void file_chooser (string title, FileChooser fc, uint flags) {
+	public static void file_chooser (string title, FileChooser fc, uint flags) {		
 		MainWindow.native_window.file_chooser (title, fc, flags);
 	}
 	

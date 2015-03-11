@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -284,11 +284,11 @@ public class TabContent : GLib.Object {
 		
 		Theme.text_color (text_input_label, "Background 1");
 		
-		text_input_label.allocation = allocation;
 		text_input_label.widget_x = 10;
 		text_input_label.widget_y = 17;
 
 		text_input.allocation = allocation;
+		text_input.layout ();
 		text_input.widget_x = text_input_label.get_extent () + 20;
 		text_input.widget_y = 10;
 		text_input.width = allocation.width 
