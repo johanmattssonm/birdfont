@@ -61,7 +61,9 @@ public class Text : Widget {
 	double g = 0;
 	double b = 0;
 	double a = 1;
-			
+	
+	bool use_cached_glyphs = true;
+		
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		current_font = null;
 		this.margin_bottom = margin_bottom;
@@ -69,6 +71,10 @@ public class Text : Widget {
 		
 		set_font_size (size);
 		set_text (text);
+	}
+
+	public void use_cache (bool cache) {
+		use_cached_glyphs = cache;
 	}
 
 	public static void load_default_font () {
@@ -340,38 +346,71 @@ public class Text : Widget {
 
 		y = py;
 		x = px;
-					
-		iterate ((glyph, kerning, last) => {
-			double lsb;
-			Surface cache;
-			Context cc;
+
+		if (likely (use_cached_glyphs)) {
+			iterate ((glyph, kerning, last) => {
+				x += kerning * ratio;
+				draw_chached (cr ,glyph, kerning, last, x, y, cc_y, cache_id, ratio);
+				x += glyph.get_width () * ratio;
+			});
+		} else {
+			iterate ((glyph, kerning, last) => {
+				x += kerning * ratio;
+				draw_without_cache (cr, glyph, kerning, last, x, y, cc_y, cache_id, ratio);
+				x += glyph.get_width () * ratio;
+			});
+		}
+	}
+	
+	void draw_without_cache (Context cr, Glyph glyph, double kerning, bool last, 
+		double x, double y, double cc_y, int64 cache_id, double ratio) {
+	
+		double lsb;
+		
+		cr.save ();
+		cr.set_source_rgba (r, g, b, a);
+		cr.new_path ();
+
+		lsb = glyph.left_limit;
+
+		foreach (Path path in glyph.path_list) {
+			draw_path (cr, path, lsb, x, y, ratio);
+		}
+
+		cr.fill ();
+		cr.restore ();
+		
+	}
+	
+	void draw_chached (Context cr, Glyph glyph, double kerning, bool last, 
+		double x, double y, double cc_y,int64 cache_id, double ratio) {
+		
+		double lsb;
+		Surface cache;
+		Context cc;
+		
+		if (unlikely (!glyph.has_cache (cache_id))) {
+			cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) (glyph.get_width () * ratio) + 1, (int) font_size + 1);
+			cc = new Context (cache);
 			
-			if (unlikely (!glyph.has_cache (cache_id))) {
-				cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) (glyph.get_width () * ratio) + 1, (int) font_size + 1);
-				cc = new Context (cache);
-				
-				lsb = glyph.left_limit;
+			lsb = glyph.left_limit;
 
-				cc.save ();
-				cc.set_source_rgba (r, g, b, a);
-				cc.new_path ();
+			cc.save ();
+			cc.set_source_rgba (r, g, b, a);
+			cc.new_path ();
 
-				foreach (Path path in glyph.path_list) {
-					draw_path (cc, path, lsb, 0, cc_y, ratio);
-				}
-				
-				cc.fill ();
-				cc.restore ();
-
-				glyph.set_cache (cache_id, cache);
+			foreach (Path path in glyph.path_list) {
+				draw_path (cc, path, lsb, 0, cc_y, ratio);
 			}
-
-			x += kerning * ratio;
-			cr.set_source_surface (glyph.get_cache (cache_id), x, y - cc_y);
-			x += glyph.get_width () * ratio;
 			
-			cr.paint ();
-		});
+			cc.fill ();
+			cc.restore ();
+
+			glyph.set_cache (cache_id, cache);
+		}
+
+		cr.set_source_surface (glyph.get_cache (cache_id), x, y - cc_y);		
+		cr.paint ();
 	}
 	
 	void draw_path (Context cr, Path path, double lsb, double x, double y, double scale) {

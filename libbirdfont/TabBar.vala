@@ -775,6 +775,7 @@ public class TabBar : GLib.Object {
 			
 			// tab label
 			label = new Text ();
+			label.use_cache (false);
 			label.set_text (t.get_label ());
 			text_height = 16 / scale;
 			label.set_font_size (text_height);
