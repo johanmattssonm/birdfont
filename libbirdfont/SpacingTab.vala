@@ -219,7 +219,7 @@ public class SpacingTab : KerningDisplay {
 		
 		listener.signal_submit.connect (() => {
 			double v;
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			
 			text_input = false;
 			suppress_input = false;
@@ -230,7 +230,7 @@ public class SpacingTab : KerningDisplay {
 		
 		suppress_input = true;
 		text_input = true;
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 	
 	void update_rsb (Glyph? g) {
@@ -256,7 +256,7 @@ public class SpacingTab : KerningDisplay {
 		
 		listener.signal_submit.connect (() => {
 			double v;
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			
 			text_input = false;
 			suppress_input = false;
@@ -267,7 +267,7 @@ public class SpacingTab : KerningDisplay {
 		
 		suppress_input = true;
 		text_input = true;
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 }
 

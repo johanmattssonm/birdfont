@@ -49,11 +49,11 @@ public class LigatureList : Table {
 		
 		if (row.get_index () == NEW_LIGATURE && column == 0) {
 			add_ligature (t_("character sequence"), t_("ligature"));
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 		} else if (row.get_index () == NEW_LIGATURE && column == 1) {
 			if (BirdFont.has_argument ("--test")) {
 				add_contextual_ligature (t_("beginning"), t_("middle"), t_("end"));
-				MainWindow.native_window.hide_text_input ();
+				TabContent.hide_text_input ();
 			}
 		} else if (row.has_row_data ()) {
 			i = row.get_index ();
@@ -71,7 +71,7 @@ public class LigatureList : Table {
 				if (delete_button) {
 					return_if_fail (0 <= row.get_index () < ligatures.count ());
 					ligatures.remove_at (row.get_index ());
-					MainWindow.native_window.hide_text_input ();
+					TabContent.hide_text_input ();
 				} else if (column == 0) {
 					return_if_fail (0 <= row.get_index () < ligatures.count ());
 					ligatures.set_ligature (row.get_index ());
@@ -86,7 +86,7 @@ public class LigatureList : Table {
 				return_if_fail (0 <= i < ligatures.count_contextual_ligatures ());
 				if (delete_button) {
 					ligatures.remove_contextual_ligatures_at (i);
-					MainWindow.native_window.hide_text_input ();
+					TabContent.hide_text_input ();
 				} else if (column == 0) {
 					ligatures.set_beginning (i);
 				} else if (column == 1) {

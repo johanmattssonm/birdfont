@@ -427,12 +427,16 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public void file_chooser (string title, FileChooser fc, uint flags) {
 		string? fn = null;
 		
-		if ((flags & FileChooser.LOAD) > 0) {
-			fn = show_file_chooser (title, FileChooserAction.OPEN, Stock.OPEN);
-		} else if ((flags & FileChooser.SAVE) > 0) {
-			fn = show_file_chooser (title, FileChooserAction.SAVE, Stock.SAVE);
-		} else {
-			warning ("Unknown type");
+		if (BirdFont.get_arguments () .has_argument ("--windows")) {
+			MenuTab.show_file_dialog_tab (title, fc);
+		} else {		
+			if ((flags & FileChooser.LOAD) > 0) {
+				fn = show_file_chooser (title, FileChooserAction.OPEN, Stock.OPEN);
+			} else if ((flags & FileChooser.SAVE) > 0) {
+				fn = show_file_chooser (title, FileChooserAction.SAVE, Stock.SAVE);
+			} else {
+				warning ("Unknown type");
+			}
 		}
 		
 		fc.selected (fn);

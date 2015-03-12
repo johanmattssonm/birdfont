@@ -12,18 +12,17 @@
     Lesser General Public License for more details.
 */
 
+using Gee;
+
 namespace BirdFont {
 
 /** Thread specific font cache. */	
-public class FontCache {
-	Font? font;
-	string file_name;
-	
+public class FontCache {	
 	static FontCache? default_cache = null;
+	Gee.HashMap<string, Font> fonts;
 	
 	public FontCache () {
-		font = null;
-		file_name = "";
+		fonts = new Gee.HashMap<string, Font> ();
 	}
 	
 	public Font? get_font (string file_name) {
@@ -35,21 +34,22 @@ public class FontCache {
 			return null;
 		}
 		
-		if (this.file_name != file_name) {
-			f = new Font ();
-			this.file_name = file_name;
-			
-			f.set_file (file_name);
-			ok = f.load ();
-			if (!ok) {
-				stderr.printf ("Can't load %s\n", file_name);
-				return null;
-			}
-			
-			font = f;
+		if (fonts.has_key (file_name)) {
+			return fonts.get (file_name);
 		}
 		
-		return font;
+		print (@"LOAD FONT $file_name\n");
+		f = new Font ();
+		f.set_file (file_name);
+		ok = f.load ();
+		if (!ok) {
+			stderr.printf ("Can't load %s\n", file_name);
+			return null;
+		}
+		
+		fonts.set (file_name, f);
+		
+		return f;
 	}
 	
 	public static FontCache get_default_cache () {

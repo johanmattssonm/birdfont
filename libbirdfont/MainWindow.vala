@@ -205,16 +205,16 @@ public class MainWindow : GLib.Object {
 			GlyphCanvas.redraw ();
 		});
 		listener.signal_submit.connect (() => {
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 		});
-		native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 	
 	public static MainWindow get_singleton () {
 		return singleton;
 	}
 	
-	public static void file_chooser (string title, FileChooser fc, uint flags) {
+	public static void file_chooser (string title, FileChooser fc, uint flags) {		
 		MainWindow.native_window.file_chooser (title, fc, flags);
 	}
 	

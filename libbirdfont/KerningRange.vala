@@ -23,8 +23,8 @@ public class KerningRange : Tool {
 	public GlyphRange glyph_range; 
 	bool malformed = false;
 	
-	public KerningRange (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
-		base (null , tip, key, modifier_flag);
+	public KerningRange (string? name = null, string tip = "") {
+		base (null , tip);
 		glyph_range = new GlyphRange (); 
 		
 		if (name != null) {
@@ -108,7 +108,7 @@ public class KerningRange : Tool {
 		
 		listener.signal_submit.connect (() => {
 			MainWindow.get_kerning_display ().suppress_input = false;
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			
 			// remove all empty classes
 			if (ranges == "") {
@@ -119,7 +119,7 @@ public class KerningRange : Tool {
 		
 		kerning_display.suppress_input = true;
 		
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 	
 	public override void draw (Context cr) {

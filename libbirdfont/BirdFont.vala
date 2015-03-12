@@ -442,7 +442,9 @@ public class BirdFont {
 		experimental = args.has_argument ("--test");
 		show_coordinates = args.has_argument ("--show-coordinates") || experimental;
 		fatal_wanings = args.has_argument ("--fatal-warning");
-		win32 = (arg[0].index_of (".exe") > -1) || arg[0] == "wine";
+		win32 = (arg[0].index_of (".exe") > -1) 
+			|| arg[0] == "wine"
+			|| args.has_argument ("--windows");
 
 #if MAC
 		mac = true;
@@ -495,6 +497,10 @@ public class BirdFont {
 		}
 	}
 
+	public static Argument get_arguments () {
+		return args;
+	}
+
 	void save_default_colors () {
 		Theme.save_color ("Background 1", 1, 1, 1, 1);
 		Theme.save_color ("Background 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
@@ -503,7 +509,7 @@ public class BirdFont {
 		Theme.save_color ("Background 5", 0.3, 0.3, 0.3, 1);
 		Theme.save_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
 		Theme.save_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
-		Theme.save_color ("Background 7", 55/255.0, 55/255.0, 55/255.0, 1);
+		Theme.save_color ("Background 8", 55/255.0, 55/255.0, 55/255.0, 1);
 		Theme.save_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
 		
 		Theme.save_color ("Foreground 1", 0, 0, 0, 1);
@@ -534,7 +540,9 @@ public class BirdFont {
 
 		Theme.save_color ("Tool Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
 		Theme.save_color ("Tool Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
-			
+		
+		Theme.save_color ("Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		
 		N_("Background 1");
 		N_("Background 2");
 		N_("Background 3");
@@ -568,6 +576,8 @@ public class BirdFont {
 		N_("Tool Background 3");
 		N_("Tool Border 4");
 		N_("Tool Background 4");
+		
+		N_("Button Foreground");
 	}
 
 	public static void set_bundle_path (string path) {

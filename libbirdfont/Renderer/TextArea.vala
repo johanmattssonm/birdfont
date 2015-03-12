@@ -48,6 +48,7 @@ public class TextArea : Widget {
 	
 	public signal void scroll (double pixels);
 	public signal void text_changed (string text);
+	public signal void enter (string text);
 	
 	Gee.ArrayList<Paragraph> paragraphs = new Gee.ArrayList<Paragraph>  ();
 	private static const int DONE = -2; 
@@ -205,6 +206,10 @@ public class TextArea : Widget {
 			case Key.ENTER:
 				store_undo_edit_state ();
 				insert_text ("\n");
+				
+				if (single_line) {
+					enter (get_text ());
+				}
 				break;
 			case Key.DEL:
 				if (has_selection ()) {
@@ -740,7 +745,7 @@ public class TextArea : Widget {
 				if (paragraph.start_y + widget_y - font_size <= click_y <= paragraph.end_y + widget_y + font_size) { 
 					foreach (Text next_word in paragraph.words) {
 						double tt_click = click_y - widget_y - padding + font_size; //  - next_word.get_baseline_to_bottom (); //- font_size + next_word.get_baseline_to_bottom ();
-						
+
 						w = next_word.text;
 						if (next_word.widget_y <= tt_click <= next_word.widget_y + font_size) {
 							Theme.text_color (next_word, "Foreground 1");
@@ -760,6 +765,7 @@ public class TextArea : Widget {
 									string gc = (!) glyph.get_unichar ().to_string ();
 									
 									d = Math.fabs (click_x - tx);
+									
 									if (d <= min_d) {
 										min_d = d;
 										c.character_index = ch_index;
@@ -825,11 +831,7 @@ public class TextArea : Widget {
 		
 		tx = 0;
 		ty = font_size;
-
-		if (unlikely (allocation.height == 0)) {
-			warning ("Allocation is not set.");
-		}
-
+		
 		for (i = paragraphs.size - 1; i >= 0 && paragraphs.size > 1; i--) {
 			if (unlikely (paragraphs.get (i).is_empty ())) {
 				warning ("Empty paragraph.");
@@ -1564,17 +1566,19 @@ public class TextArea : Widget {
 		public int paragraph = 0;
 		
 		public int character_index {
-			get { return ci; }
-			set { if (value == 0) b(); ci = value; }
+			get { 
+				return ci;
+			}
+			
+			set { 
+				ci = value;
+			}
 		}
 		
 		private int ci = 0;
 		
 		public double desired_x = 0;
 		public double desired_y = 0;
-		
-		public void b () {
-		}
 		
 		public Carret () {
 		}

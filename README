@@ -19,8 +19,9 @@ with a -dev or -devel affix:
 valac
 libgee-dev
 libglib2.0-dev 
-libgtk2.0-dev 
+libgtk-3-dev 
 libwebkitgtk-dev
+libnotify-dev
 unicode-data (unicode character database)
 
 BirdFont have two build systems, one python script that builds all binaries at

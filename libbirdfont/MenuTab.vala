@@ -266,7 +266,7 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 
-		MainWindow.native_window.hide_text_input ();
+		TabContent.hide_text_input ();
 
 		SaveDialogListener dialog = new SaveDialogListener ();
 		Font font = BirdFont.get_current_font ();
@@ -553,11 +553,11 @@ public class MenuTab : FontDisplay {
 			o.display_all_available_glyphs ();
 			o.scroll_to_glyph (ligature_name);
 			
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			show_all_available_characters ();
 		});
 		
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 	
 	public static void show_default_characters () {

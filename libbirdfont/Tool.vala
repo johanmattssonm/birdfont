@@ -28,6 +28,7 @@ public class Tool : Widget {
 	public bool active = false;
 	public bool selected = false;
 	
+	Text icon_font;
 	ImageSurface? icon = null;
 		
 	public signal void select_action (Tool selected);
@@ -80,8 +81,10 @@ public class Tool : Widget {
 	bool visible = true;
 	
 	/** Create tool with a certain name and load icon "name".png */
-	public Tool (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
+	public Tool (string? name = null, string tip = "") {
 		this.tip = tip;
+		
+		icon_font = new Text ();
 		
 		scale = w / 111.0; // scale to 320 dpi
 		
@@ -89,9 +92,6 @@ public class Tool : Widget {
 			set_icon ((!) name);
 			this.name = (!) name;
 		}
-		
-		this.key = key;
-		this.modifier_flag = modifier_flag;
 				
 		id = next_id;
 		next_id++;
@@ -179,10 +179,16 @@ public class Tool : Widget {
 	}
 	
 	public void set_icon (string name) {
-		StringBuilder n = new StringBuilder ();
-		n.append (name);
-		n.append (".png");
-		icon = Icons.get_icon (n.str);
+		bool found;
+		
+		icon_font = new Text ((!) name);
+		found = icon_font.load_font ("icons.bf");
+		icon_font.use_cache (true);
+		icon_font.set_font_size (35);
+		
+		if (!found) {
+			warning ("Icon font for toolbox was not found.");
+		}
 	}
 	
 	public bool is_active () {
@@ -243,16 +249,9 @@ public class Tool : Widget {
 		string background = "Tool Border 3";
 		
 		cr.save ();
-		
-		if (unlikely (scale == 0)) {
-			warning ("Scale is zero.");
-			scale = 33 / 111.0;
-		}
-		
-		cr.scale (scale, scale);
-		
-		bgx = xt / scale;
-		bgy = yt / scale;
+			
+		bgx = xt;
+		bgy = yt;
 
 		// Button in four states
 		if (selected) {
@@ -276,27 +275,23 @@ public class Tool : Widget {
 		}
 
 		Theme.color (cr, background);
-		draw_rounded_rectangle (cr, bgx, bgy, 34 / scale, 28 / scale, 4 / scale);
+		draw_rounded_rectangle (cr, bgx, bgy, 34, 28, 4);
 		cr.fill ();
 				
-		cr.set_line_width (1 / scale);
+		cr.set_line_width (1);
 		Theme.color (cr, border);
-		draw_rounded_rectangle (cr, bgx, bgy, 34 / scale, 28 / scale, 4 / scale);
+		draw_rounded_rectangle (cr, bgx, bgy, 34, 28, 4);
 		cr.stroke ();
-					
-		if (icon != null) {
-			ImageSurface i = (!) icon;
-			
-			if (likely (i.status () == Cairo.Status.SUCCESS)) {
-				iconx = bgx + w / scale / 2 - i.get_width () / 2;
-				icony = bgy + h / scale / 2 - i.get_height () / 2;
+		
+		iconx = bgx + w / 2 - icon_font.get_sidebearing_extent () / 2;
+		icony = bgy + h / 2 - icon_font.get_height () / 2;
+		
+		Theme.text_color (icon_font, "Button Foreground");
+		
+		icon_font.widget_x = iconx;
+		icon_font.widget_y = icony;
 
-				cr.set_source_surface (i, iconx, icony);
-				cr.paint ();
-			} else {
-				warning (@"Falied to load icon for $name");
-			}
-		}
+		icon_font.draw (cr);
 		
 		cr.restore ();
 	}

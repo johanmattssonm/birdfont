@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -137,11 +137,11 @@ public class FileDialogTab : FontDisplay {
 			}
 		});
 		
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 			
 	public override void draw (WidgetAllocation allocation, Context cr) {
-		double y = 20 * MainWindow.units;
+		double y = 75 * MainWindow.units;
 		int s = 0;
 		bool color = (scroll % 2) == 0;
 		
@@ -202,9 +202,16 @@ public class FileDialogTab : FontDisplay {
 				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
 				cr.fill ();
 				cr.restore ();
+			} else {
+				cr.save ();
+				Theme.color (cr, "Background 1");
+				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
+				cr.fill ();
+				cr.restore ();
 			}
 		}
 		
+		// text
 		cr.save ();
 		if (dark) {
 			Theme.color (cr, "Background 1");
@@ -218,7 +225,7 @@ public class FileDialogTab : FontDisplay {
 
 	public override void button_release (int button, double ex, double ey) {
 		int s = 0;
-		double y = 0;
+		double y = 75 * MainWindow.units - 20 * MainWindow.units;
 		string selected;
 		bool dir = false;
 		File f;
@@ -248,6 +255,7 @@ public class FileDialogTab : FontDisplay {
 		
 		if (button == 1) {
 			if (!dir) {
+				selected_filename = selected;
 				show_text_area (selected);
 			} else {
 				if (selected == "..") {
@@ -268,6 +276,22 @@ public class FileDialogTab : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 
+	public override void double_click (uint button, double ex, double ey) {	
+		File f;
+
+		button_release ((int) button, ex, ey);
+
+		if (is_null (selected_filename)) {
+			warning ("No file.");
+			return;
+		}
+		
+		if (selected_filename != "") {
+			f = get_child (current_dir, selected_filename);
+			action.file_selected ((!)f.get_path ());
+		}
+	}
+
 	public override string get_label () {
 		return title;
 	}
@@ -281,14 +305,14 @@ public class FileDialogTab : FontDisplay {
 	}
 	
 	public override void scroll_wheel_down (double x, double y) {
-		int nfiles = files.size + directories.size;
+		double rows = 4.16 + files.size + directories.size;
 		scroll += 3;
 
-		if (scroll > nfiles - visible_rows) {
-			scroll = (int) (nfiles - visible_rows);
+		if (scroll > rows - visible_rows) {
+			scroll = (int) (rows - visible_rows);
 		}
 		
-		if (visible_rows > nfiles) {
+		if (visible_rows > rows) {
 			scroll = 0;
 		} 
 		
@@ -308,19 +332,19 @@ public class FileDialogTab : FontDisplay {
 	}
 	
 	public override void update_scrollbar () {
-		uint rows = files.size + directories.size;
+		double rows = 4.16 + files.size + directories.size; // 4.16 rows under the text input
 
 		if (rows == 0 || visible_rows == 0) {
 			MainWindow.set_scrollbar_size (0);
 			MainWindow.set_scrollbar_position (0);
 		} else {
-			MainWindow.set_scrollbar_size ((double) visible_rows / rows);
-			MainWindow.set_scrollbar_position ((double) scroll /  rows);
+			MainWindow.set_scrollbar_size (visible_rows / rows);
+			MainWindow.set_scrollbar_position (scroll /  rows);
 		}
 	}
 
 	public override void scroll_to (double percent) {
-		uint rows = files.size + directories.size;
+		double rows = 4.16 + files.size + directories.size;
 		scroll = (int) (percent * rows);
 		
 		if (scroll > rows - visible_rows) {

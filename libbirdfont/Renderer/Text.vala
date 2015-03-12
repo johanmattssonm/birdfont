@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -61,7 +61,9 @@ public class Text : Widget {
 	double g = 0;
 	double b = 0;
 	double a = 1;
-			
+	
+	bool use_cached_glyphs = true;
+		
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		current_font = null;
 		this.margin_bottom = margin_bottom;
@@ -71,16 +73,35 @@ public class Text : Widget {
 		set_text (text);
 	}
 
+	public void use_cache (bool cache) {
+		use_cached_glyphs = cache;
+	}
+
 	public static void load_default_font () {
 		if (get_default_font () == null) {
 			warning ("Default font not found.");
 		}
 	}
 	
+	/** Set font for this text area.
+	 * @param font_absolute path to the font file or a file name for one of the font files in search paths.
+	 * @return true if the font was found
+	 */
+	public bool load_font (string font_file) {
+		File path;
+		File f;
+		
+		f = File.new_for_path (font_file);
+		path = (f.query_exists ()) ? f : SearchPaths.find_file (null, font_file);
+		
+		current_font = FontCache.get_default_cache ().get_font ((!) path.get_path ());
+		return current_font != null;
+	}
+
 	public static Font? get_default_font () {
 		File path = SearchPaths.find_file (null, "roboto.bf");
 		return FontCache.get_default_cache ().get_font ((!) path.get_path ());
-	}
+	}	
 
 	public void set_font_size (double height_in_pixels) {
 		font_size = height_in_pixels;
@@ -289,16 +310,6 @@ public class Text : Widget {
 		decender = font.base_line * ratio - min_y * ratio;
 		return decender > 0 ? decender : 0; 
 	}		
-
-	public bool load_font (string file) {
-		Font? f = font_cache.get_font (file);
-		
-		if (f != null) {
-			font = (!) f;
-		}
-		
-		return f != null;
-	}
 	
 	public override void draw (Context cr) {
 		double y = widget_y + get_height () + get_scale () * (font.bottom_limit + font.base_line);
@@ -340,38 +351,71 @@ public class Text : Widget {
 
 		y = py;
 		x = px;
-					
-		iterate ((glyph, kerning, last) => {
-			double lsb;
-			Surface cache;
-			Context cc;
+
+		if (use_cached_glyphs) { // FIXME:
+			iterate ((glyph, kerning, last) => {
+				x += kerning * ratio;
+				draw_chached (cr ,glyph, kerning, last, x, y, cc_y, cache_id, ratio);
+				x += glyph.get_width () * ratio;
+			});
+		} else {
+			iterate ((glyph, kerning, last) => {
+				x += kerning * ratio;
+				draw_without_cache (cr, glyph, kerning, last, x, y, cc_y, cache_id, ratio);
+				x += glyph.get_width () * ratio;
+			});
+		}
+	}
+	
+	void draw_without_cache (Context cr, Glyph glyph, double kerning, bool last, 
+		double x, double y, double cc_y, int64 cache_id, double ratio) {
+	
+		double lsb;
+		
+		cr.save ();
+		cr.set_source_rgba (r, g, b, a);
+		cr.new_path ();
+
+		lsb = glyph.left_limit;
+
+		foreach (Path path in glyph.path_list) {
+			draw_path (cr, path, lsb, x, y, ratio);
+		}
+
+		cr.fill ();
+		cr.restore ();
+		
+	}
+	
+	void draw_chached (Context cr, Glyph glyph, double kerning, bool last, 
+		double x, double y, double cc_y,int64 cache_id, double ratio) {
+		
+		double lsb;
+		Surface cache;
+		Context cc;
+		
+		if (unlikely (!glyph.has_cache (cache_id))) {
+			cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) (glyph.get_width () * ratio) + 1, (int) font_size + 1);
+			cc = new Context (cache);
 			
-			if (unlikely (!glyph.has_cache (cache_id))) {
-				cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) (glyph.get_width () * ratio) + 1, (int) font_size + 1);
-				cc = new Context (cache);
-				
-				lsb = glyph.left_limit;
+			lsb = glyph.left_limit;
 
-				cc.save ();
-				cc.set_source_rgba (r, g, b, a);
-				cc.new_path ();
+			cc.save ();
+			cc.set_source_rgba (r, g, b, a);
+			cc.new_path ();
 
-				foreach (Path path in glyph.path_list) {
-					draw_path (cc, path, lsb, 0, cc_y, ratio);
-				}
-				
-				cc.fill ();
-				cc.restore ();
-
-				glyph.set_cache (cache_id, cache);
+			foreach (Path path in glyph.path_list) {
+				draw_path (cc, path, lsb, 0, cc_y, ratio);
 			}
-
-			x += kerning * ratio;
-			cr.set_source_surface (glyph.get_cache (cache_id), x, y - cc_y);
-			x += glyph.get_width () * ratio;
 			
-			cr.paint ();
-		});
+			cc.fill ();
+			cc.restore ();
+
+			glyph.set_cache (cache_id, cache);
+		}
+
+		cr.set_source_surface (glyph.get_cache (cache_id), x, y - cc_y);		
+		cr.paint ();
 	}
 	
 	void draw_path (Context cr, Path path, double lsb, double x, double y, double scale) {

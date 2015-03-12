@@ -21,9 +21,11 @@ public class LineTextArea : TextArea {
 
 	public LineTextArea (double size) {
 		base (size);
+		
 		single_line = true;
 		min_height = size;
 		height = min_height;
+		
 		layout ();
 	}
 }

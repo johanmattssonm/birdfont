@@ -42,8 +42,8 @@ public class SpinButton : Tool {
 	bool waiting_for_icon_switch = false;
 	bool show_icon_tool_icon = false;
 	
-	public SpinButton (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
-		base (null , tip, key, modifier_flag);
+	public SpinButton (string? name = null, string tip = "") {
+		base (null , tip);
 		
 		if (name != null) {
 			base.name = (!) name;
@@ -202,11 +202,11 @@ public class SpinButton : Tool {
 		});
 
 		listener.signal_submit.connect (() => {
-			MainWindow.native_window.hide_text_input ();
+			TabContent.hide_text_input ();
 			redraw ();
 		});
 
-		MainWindow.native_window.set_text_listener (listener);
+		TabContent.show_text_input (listener);
 	}
 	
 	public void set_max (double max) {
