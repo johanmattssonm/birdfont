@@ -745,7 +745,7 @@ public class TextArea : Widget {
 				if (paragraph.start_y + widget_y - font_size <= click_y <= paragraph.end_y + widget_y + font_size) { 
 					foreach (Text next_word in paragraph.words) {
 						double tt_click = click_y - widget_y - padding + font_size; //  - next_word.get_baseline_to_bottom (); //- font_size + next_word.get_baseline_to_bottom ();
-						
+
 						w = next_word.text;
 						if (next_word.widget_y <= tt_click <= next_word.widget_y + font_size) {
 							Theme.text_color (next_word, "Foreground 1");
@@ -765,6 +765,7 @@ public class TextArea : Widget {
 									string gc = (!) glyph.get_unichar ().to_string ();
 									
 									d = Math.fabs (click_x - tx);
+									
 									if (d <= min_d) {
 										min_d = d;
 										c.character_index = ch_index;
@@ -1570,9 +1571,7 @@ public class TextArea : Widget {
 			}
 			
 			set { 
-				if (value == 0) {
-					ci = value;
-				}
+				ci = value;
 			}
 		}
 		

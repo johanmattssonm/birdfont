@@ -540,7 +540,9 @@ public class BirdFont {
 
 		Theme.save_color ("Tool Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
 		Theme.save_color ("Tool Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
-			
+		
+		Theme.save_color ("Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		
 		N_("Background 1");
 		N_("Background 2");
 		N_("Background 3");
@@ -574,6 +576,8 @@ public class BirdFont {
 		N_("Tool Background 3");
 		N_("Tool Border 4");
 		N_("Tool Background 4");
+		
+		N_("Button Foreground");
 	}
 
 	public static void set_bundle_path (string path) {

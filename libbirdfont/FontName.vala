@@ -18,8 +18,8 @@ namespace BirdFont {
 
 public class FontName : Tool {
 
-	public FontName (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
-		base (null , tip, key, modifier_flag);
+	public FontName (string? name = null, string tip = "") {
+		base (null , tip);
 
 		if (name != null) {
 			base.name = (!) name;

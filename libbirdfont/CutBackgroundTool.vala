@@ -135,11 +135,11 @@ public class CutBackgroundTool : Tool {
 		return fmin (x1, x2) + 1 < x < fmax (x1, x2) - 1 && fmin (y1, y2) + 1 < y < fmax (y1, y2) - 1;
 	}
 
-	double get_width () {
+	public override double get_width () {
 		return fabs (x1 - x2);
 	}
 
-	double get_height () {
+	public override double get_height () {
 		return fabs (y1 - y2);
 	}
 

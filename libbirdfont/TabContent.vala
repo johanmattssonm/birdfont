@@ -137,6 +137,7 @@ public class TabContent : GLib.Object {
 			GlyphCanvas.current_display.motion_notify (x, y);
 		} else {
 			text_input.motion (x, y);
+			GlyphCanvas.redraw ();
 		}
 	}
 	

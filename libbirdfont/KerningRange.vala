@@ -23,8 +23,8 @@ public class KerningRange : Tool {
 	public GlyphRange glyph_range; 
 	bool malformed = false;
 	
-	public KerningRange (string? name = null, string tip = "", unichar key = '\0', uint modifier_flag = 0) {
-		base (null , tip, key, modifier_flag);
+	public KerningRange (string? name = null, string tip = "") {
+		base (null , tip);
 		glyph_range = new GlyphRange (); 
 		
 		if (name != null) {

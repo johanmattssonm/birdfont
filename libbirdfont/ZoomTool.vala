@@ -23,7 +23,7 @@ public class ZoomTool : Tool {
 	Gee.ArrayList<Tab> views;
 	
 	public ZoomTool (string n) {
-		base (n, "Zoom", 'z');
+		base (n, "Zoom");
 
 		views = new Gee.ArrayList<Tab> ();
 

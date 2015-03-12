@@ -27,6 +27,7 @@ parser.add_option("-c", "--cc", dest="cc", help="select the C compiler", metavar
 parser.add_option("-f", "--cflags", dest="cflags", help="set compiler flags", metavar="CFLAGS")
 parser.add_option("-l", "--ldflags", dest="ldflags", help="set linker flags", metavar="LDFLAGS")
 parser.add_option("-v", "--valac", dest="valac", help="select vala compiler", metavar="VALAC")
+parser.add_option("-w", "--valac-flags", dest="valaflags", help="vala flags", metavar="VALAFLAGS")
 
 (options, args) = parser.parse_args()
 
@@ -40,10 +41,12 @@ if not options.ldflags:
 	options.ldflags = ""
 if not options.valac:
 	options.valac = "valac"
+if not options.valaflags:
+	options.valaflags = ""
 
 prefix = options.prefix
 valac = options.valac
-valaflags = "--pkg gdk-pixbuf-2.0 --pkg gtk+-3.0"
+valaflags = options.valaflags + " --pkg gdk-pixbuf-2.0 --pkg gtk+-3.0"
 cc = options.cc
 cflags = options.cflags + " " + "$(pkg-config --cflags gdk-pixbuf-2.0)"
 ldflags = options.ldflags + " " + "$(pkg-config --libs gdk-pixbuf-2.0)"
