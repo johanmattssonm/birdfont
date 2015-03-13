@@ -29,6 +29,7 @@ public class CharacterInfo : GLib.Object {
 	public CharacterInfo (unichar c, GlyphCollection? gc) {
 		unicode = c;
 		icon = new Text ("info_icon", 22);
+		icon.load_font ("icons.bf");
 		
 		if (gc != null) {
 			ligature = ((!) gc).is_unassigned ();

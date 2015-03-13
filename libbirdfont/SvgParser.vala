@@ -325,7 +325,7 @@ public class SvgParser {
 		}
 		
 		foreach (Path path in pl.paths) {
-			path.move (x, y); // ?x ?
+			path.move (x, -y);
 		}
 	}
 
