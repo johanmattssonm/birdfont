@@ -444,11 +444,41 @@ public class SvgParser {
 	private void parse_path (Tag tag, Layer pl) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
-		
+		int inside_count;
+		bool inside;
+
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "d") {
 				path_list = parse_svg_data (attr.get_content (), glyph);
 				pl.paths.append (path_list);
+			}
+		}
+		
+		// assume the even odd rule is applied and convert the path
+		// to a path using the non-zero rule
+		foreach (Path p1 in pl.paths.paths) {
+			inside_count = 0;
+			
+			foreach (Path p2 in pl.paths.paths) {
+				if (p1 != p2) {
+					inside = true;
+					
+					foreach (EditPoint ep in p1.points) {
+						if (!is_inside (ep, p2)) {
+							inside = false;
+						}
+					}
+					
+					if (inside) {
+						inside_count++; 
+					}
+				}
+			}
+			
+			if (inside_count % 2 == 0) {
+				p1.force_direction (Direction.CLOCKWISE);
+			} else {
+				p1.force_direction (Direction.COUNTER_CLOCKWISE);
 			}
 		}
 		
@@ -458,7 +488,30 @@ public class SvgParser {
 			}
 		}
 	}
-	
+
+	/** Check if a point is inside using the even odd fill rule. */
+	bool is_inside (EditPoint point, Path path) {
+		EditPoint prev;
+		bool inside = false;
+		
+		if (path.points.size == 0) {
+			return false;
+		}
+		
+		prev = path.points.get (path.points.size - 1);
+		
+		foreach (EditPoint p in path.points) {
+			if  ((p.y > point.y) != (prev.y > point.y)
+				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
+				inside = !inside;
+			}
+			
+			prev = p;
+		}
+		
+		return inside;
+	}
+
 	/** Add space as separator to svg data. 
 	 * @param d svg data
 	 */
