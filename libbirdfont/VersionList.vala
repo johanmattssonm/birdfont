@@ -24,7 +24,7 @@ public class VersionList : DropMenu {
 	public Gee.ArrayList<Glyph> glyphs;
 	
 	public VersionList (Glyph? g = null, GlyphCollection glyph_collection) {
-		base ("version");
+		base ();
 		
 		this.glyph_collection = glyph_collection;
 		glyphs = new  Gee.ArrayList<Glyph> ();
@@ -48,6 +48,8 @@ public class VersionList : DropMenu {
 			Font font = BirdFont.get_current_font ();
 			OverView over_view = MainWindow.get_overview ();
 			
+			font.touch ();
+			
 			index--; // first item is the add new action
 			
 			// delete the entire glyph if the last remaining version is removed
@@ -60,7 +62,6 @@ public class VersionList : DropMenu {
 			return_if_fail (0 <= index < glyphs.size);
 			
 			font.deleted_glyphs.add (glyph_collection.get_current ());
-			font.touch ();
 			
 			over_view.store_undo_state (glyph_collection.copy ());
 			glyphs.remove_at (index);

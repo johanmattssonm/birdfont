@@ -278,17 +278,22 @@ public class OverViewItem : GLib.Object {
 	private void draw_menu (Context cr) {
 		GlyphCollection g;
 		DropMenu menu;
-		
+		Text icon;
+				
 		if (glyphs == null) {
 			return;
 		}
 		
-		g = (!) glyphs;
+		icon = new Text ("dropdown_menu", 17);
+		icon.load_font ("icons.bf");
+		icon.use_cache (false);
+		Theme.text_color (icon, "Foreground 1");
+		icon.draw_at_top (cr, x + width - 32, y + height - 19);
 		
-		menu = g.get_version_list ();
-		menu.set_position (x + width - 32, y + height - 16);
-		menu.draw_icon (cr);
+		g = (!) glyphs;
+		menu = g.get_version_list ();		
 		menu.draw_menu (cr);
+		menu.set_position (x + width - 32, y + height - 16);
 	}
 }
 

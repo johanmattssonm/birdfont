@@ -31,7 +31,7 @@ public class DropMenu : GLib.Object {
 	
 	double menu_x = -1;
 	
-	bool menu_visible = false;
+	public bool menu_visible = false;
 
 	Gee.ArrayList <MenuAction> actions = new Gee.ArrayList <MenuAction> ();
 
@@ -39,14 +39,9 @@ public class DropMenu : GLib.Object {
 	
 	MenuDirection direction = MenuDirection.DROP_DOWN;
 	
-	ImageSurface? icon = null;
-	
 	public signal void signal_delete_item  (int item_index);
 	
-	public DropMenu (string icon_file = "") {
-		if (icon_file != "") {
-			icon = Icons.get_icon (@"$icon_file.png");
-		}
+	public DropMenu () {
 	}
 	
 	public MenuAction get_action_index (int index) {
@@ -223,32 +218,6 @@ public class DropMenu : GLib.Object {
 			
 			item.draw (ix, iy, cr);
 			n++;
-		}
-		
-		cr.restore ();
-	}
-	
-	public void draw_icon (Context cr) {
-		double alpha = 1;
-		ImageSurface i = (!) icon;
-		
-		if (!menu_visible) {
-			alpha = 0;
-		}
-		
-		cr.save ();
-		
-		cr.set_source_rgba (234/255.0, 234/255.0, 234/255.0, alpha);
-		
-		cr.rectangle (x, y, 12, 12);
-		cr.fill_preserve ();
-		cr.stroke ();
-		
-		if (likely (icon != null && i.status () == Cairo.Status.SUCCESS)) {
-			cr.set_source_surface (i, x, y + (12 - i.get_height ()) / 2.0);
-			cr.paint ();
-		} else {
-			warning ("Failed to load icon.");
 		}
 		
 		cr.restore ();
