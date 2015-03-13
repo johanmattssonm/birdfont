@@ -124,7 +124,7 @@ public class SvgParser {
 	}
 	
 	private PathList parse_svg_file (Tag tag) {
-		PathList pl = new PathList ();
+		Layer pl = new Layer ();
 	
 		foreach (Tag t in tag) {
 			
@@ -145,40 +145,51 @@ public class SvgParser {
 			}
 		}
 		
-		return pl;
+		return pl.get_all_paths ();
 	}
 	
-	private void parse_layer (Tag tag, PathList pl) {
-		PathList layer = new PathList ();
+	private void parse_layer (Tag tag, Layer pl) {
+		Layer layer;
 		
 		foreach (Tag t in tag) {
 			if (t.get_name () == "path") {
-				parse_path (t, layer);
+				parse_path (t, pl);
 			}
 			
 			if (t.get_name () == "g") {
+				layer = new Layer ();
 				parse_layer (t, layer);
+				pl.subgroups.add (layer);
 			}
 			
 			if (t.get_name () == "polygon") {
-				parse_polygon (t, layer);
+				parse_polygon (t, pl);
 			}
 
 			if (t.get_name () == "rect") {
-				parse_rect (t, layer);
-			}
-		}
-		
-		foreach (Attribute attr in tag.get_attributes ()) {	
-			if (attr.get_name () == "transform") {
-				transform (attr.get_content (), layer);
+				parse_rect (t, pl);
 			}
 		}
 
-		pl.append (layer);
+		foreach (Attribute attr in tag.get_attributes ()) {	
+			if (attr.get_name () == "transform") {
+				transform (attr.get_content (), pl);
+			}
+		}
 	}
 	
-	private void transform (string transform_functions, PathList pl) {
+	private void transform (string transform_functions, Layer layer) {
+		transform_paths (transform_functions, layer.paths);
+		transform_subgroups (transform_functions, layer);
+	}
+	
+	private void transform_subgroups (string transform_functions, Layer layer) {
+		foreach (Layer subgroup in layer.subgroups) {
+			transform (transform_functions, subgroup);
+		}
+	}
+	
+	private void transform_paths (string transform_functions, PathList pl) {
 		string data = transform_functions.dup ();
 		string[] functions;
 		
@@ -194,7 +205,7 @@ public class SvgParser {
 		data = data.replace (")", "|"); 
 		functions = data.split ("|");
 		
-		for (int i = 0; i < functions.length; i++) {
+		for (int i = functions.length - 1; i >= 0; i--) {
 			if (functions[i].has_prefix ("translate")) {
 				translate (functions[i], pl);
 			}
@@ -315,7 +326,7 @@ public class SvgParser {
 		}
 		
 		foreach (Path path in pl.paths) {
-			path.move (-x, y);
+			path.move (x, y); // ?x ?
 		}
 	}
 
@@ -339,7 +350,7 @@ public class SvgParser {
 		return param.strip();			
 	}
 	
-	private void parse_rect (Tag tag, PathList pl) {
+	private void parse_rect (Tag tag, Layer pl) {
 		Path p;
 		double x, y, x2, y2;
 		BezierPoints[] bezier_points;
@@ -412,38 +423,38 @@ public class SvgParser {
 		// FIXME: right layer for other transforms
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "transform") {
-				transform (attr.get_content (), npl);
+				transform_paths (attr.get_content (), npl);
 			}
 		}
 		
-		pl.append (npl);
+		pl.paths.append (npl);
 	}
 		
-	private void parse_polygon (Tag tag, PathList pl) {
+	private void parse_polygon (Tag tag, Layer pl) {
 		Path p;
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "points") {
 				p = parse_polygon_data (attr.get_content ());
-				pl.add (p);
+				pl.paths.add (p);
 			}
 		}	
 	}
 	
-	private void parse_path (Tag tag, PathList pl) {
+	private void parse_path (Tag tag, Layer pl) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "d") {
 				path_list = parse_svg_data (attr.get_content (), glyph);
-				pl.append (path_list);
+				pl.paths.append (path_list);
 			}
 		}
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "transform") {
-				transform (attr.get_content (), path_list);
+				transform_paths (attr.get_content (), path_list);
 			}
 		}
 	}
