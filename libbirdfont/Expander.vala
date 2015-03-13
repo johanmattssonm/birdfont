@@ -232,7 +232,7 @@ public class Expander : GLib.Object {
 			if (headline != null) {
 				title = new Text ();
 				title.set_text ((!) headline);
-				title.use_cache (true); // FIXME: shapen text
+				title.use_cache (false);
 				Theme.text_color (title, "Foreground 2");
 				title.set_font_size (17 * Toolbox.get_scale ());
 				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 13  * Toolbox.get_scale ());
