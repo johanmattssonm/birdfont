@@ -215,7 +215,7 @@ public class Tool : Widget {
 		return tip;
 	}
 
-	public bool is_over (double xp, double yp) {
+	public new bool is_over (double xp, double yp) {
 		return (x <= xp <= x + w  && y <= yp <= y + h);  
 	}
 	

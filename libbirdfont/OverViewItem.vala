@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2014 Johan Mattsson
+    Copyright (C) 2012 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -208,6 +208,8 @@ public class OverViewItem : GLib.Object {
 	public void draw_caption (Context cr) {
 		StringBuilder name = new StringBuilder ();
 		Cairo.Pattern p;
+		string text;
+		Text label;
 		
 		name.append_unichar (character);
 		
@@ -232,18 +234,38 @@ public class OverViewItem : GLib.Object {
 			draw_character_info_icon (cr);
 		}
 
-		cr.save ();
-		cr.set_font_size (14);
-		Theme.color (cr, "Foreground 1");
-		cr.move_to (x + 0.08 * width, y + height - 6);
+		text = (glyphs == null) 
+			? name.str
+			: ((!) glyphs).get_current ().name;
 		
-		if (glyphs == null) {
-			cr.show_text (name.str);
-		} else {
-			cr.show_text (((!)glyphs).get_current ().name);
+		text = truncate_label (text);	
+		label = new Text (text, 17);
+		label.use_cache (false); // Fixme: Improve cache
+		Theme.text_color (label, "Foreground 1");
+		
+		label.draw_at_baseline (cr, x + 0.08 * width, y + height - 6);
+	}
+	
+	private string truncate_label (string label) {
+		Text text = new Text (label, 17);
+		double w = has_icons () ? width - 40 : width;
+		StringBuilder sb = new StringBuilder ();
+		StringBuilder result = new StringBuilder ();
+		int index = 0;
+		unichar c;
+		
+		while (label.get_next_char (ref index, out c)) {
+			sb.append_unichar (c);
+			text.set_text (sb.str);
+			
+			if (text.get_sidebearing_extent () >= w) {
+				break;
+			}
+			
+			result.append_unichar (c);
 		}
 		
-		cr.restore ();
+		return result.str;
 	}
 
 	private void draw_character_info_icon (Context cr) {

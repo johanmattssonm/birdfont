@@ -127,8 +127,12 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 <collection name="contrast_threshold">
-	<selected id="1"/>
+	<selected id="2"/>
 	<glyph id="1" left="-32.797247476493389" right="33.128416240320774">
+		<path stroke="0" skew="0" data="B -27.1088183313,54.3847655693 M 27.1105242909,54.3847655693 M 27.1105242909,0.1654591265 M -27.1088183313,0.1654591265 M -27.1088183313,54.3847655693" />
+		<path stroke="0" skew="0" data="B -23.3764411353,2.2013472799 M -20.5619807589,4.8721883250 M -15.2103849146,3.0057465036 M -17.0635466273,8.8897693787 M -14.6212435542,11.6944957747 M -21.8306134081,26.6388242267 M -8.5808359207,18.2440323332 M -4.5400544615,21.9685548383 M 8.6704111470,14.7957780085 M 1.1259609382,28.6830595561 M 4.7143449552,32.0806207982 M -1.9220386362,45.6950395131 M 10.4555360248,37.2124086409 M 13.5668256212,41.0360058700 M 18.9070497252,40.6326845544 M 17.7624900365,46.3785412663 M 21.6212022466,50.9917151254 M -23.1889232170,50.9312954990 M -23.3764411353,2.2013472799" />
+	</glyph>
+	<glyph id="2" left="-32.797247476493389" right="33.128416240320774">
 		<path stroke="0" skew="0" data="B -27.1088183313,54.3847655693 M 27.1105242909,54.3847655693 M 27.1105242909,0.1654591265 M -27.1088183313,0.1654591265 M -27.1088183313,54.3847655693" />
 		<path stroke="0" skew="0" data="B -23.3764411353,2.2013472799 M -20.5619807589,4.8721883250 M -15.2103849146,3.0057465036 M -17.0635466273,8.8897693787 M -14.6212435542,11.6944957747 M -21.8306134081,26.6388242267 M -8.5808359207,18.2440323332 M -4.5400544615,21.9685548383 M 8.6704111470,14.7957780085 M 1.1259609382,28.6830595561 M 4.7143449552,32.0806207982 M -1.9220386362,45.6950395131 M 10.4555360248,37.2124086409 M 13.5668256212,41.0360058700 M 18.9070497252,40.6326845544 M 17.7624900365,46.3785412663 M 21.6212022466,50.9917151254 M -23.1889232170,50.9312954990 M -23.3764411353,2.2013472799" />
 	</glyph>
@@ -259,6 +263,9 @@ GNU Lesser General Public License</copyright>
 <collection name="generate_html_document">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
+		<path stroke="0" skew="0" data="S -20.0000000000,36.0000000000 L -8.0000000000,52.0000000000 L 20.0000000000,52.0000000000 L 20.0000000000,28.0000000000 L 20.0000000000,0.0000000000 L -20.0000000000,0.0000000000 L -20.0000000000,36.0000000000" />
+		<path stroke="0" skew="0" data="S -16.0000000000,4.0000000000 L 16.0000000000,4.0000000000 L 16.0000000000,48.0000000000 L -5.3544973545,48.0000000000 L -16.0000000000,33.6190476190 L -16.0000000000,4.0000000000" />
+		<path stroke="0" skew="0" data="S -0.8888888889,33.9444444444 L -16.8941798942,30.3730158730 L -17.5555555556,33.0185185185 L -4.1957671958,35.9285714286 L -5.1216931217,47.9656084656 L -1.6825396825,48.8915343915 L -0.8888888889,33.9444444444" />
 	</glyph>
 </collection>
 <collection unicode="U+68">
@@ -744,62 +751,62 @@ GNU Lesser General Public License</copyright>
 
 <ligature sequence="i n s e r t _ g l y p h _ f r o m _ o v e r v i e w" replacement="insert_glyph_from_overview"/>
 <ligature sequence="h i g h _ c o n t r a s t _ b a c k g r o u n d" replacement="high_contrast_background"/>
-<ligature sequence="g e n e r a t e _ h t m l _ d o c u m e n t" replacement="generate_html_document"/>
 <ligature sequence="s h o w _ x h e i g h t _ h e l p l i n e s" replacement="show_xheight_helplines"/>
-<ligature sequence="z o o m _ b a c k g r o u n d _ i m a g e" replacement="zoom_background_image"/>
-<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution"/>
+<ligature sequence="g e n e r a t e _ h t m l _ d o c u m e n t" replacement="generate_html_document"/>
 <ligature sequence="b a c k g r o u n d _ h e l p _ l i n e s" replacement="background_help_lines"/>
+<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution"/>
+<ligature sequence="z o o m _ b a c k g r o u n d _ i m a g e" replacement="zoom_background_image"/>
 <ligature sequence="a u t o _ t r a c e _ s i m p l i f y" replacement="auto_trace_simplify"/>
-<ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold"/>
 <ligature sequence="k e r n i n g _ t e x t _ i n p u t" replacement="kerning_text_input"/>
-<ligature sequence="s e l e c t _ b a c k g r o u n d" replacement="select_background"/>
-<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
-<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
+<ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold"/>
 <ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background"/>
-<ligature sequence="q u a d r a t i c _ p o i n t s" replacement="quadratic_points"/>
+<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
+<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
+<ligature sequence="s e l e c t _ b a c k g r o u n d" replacement="select_background"/>
 <ligature sequence="s c a l e _ b a c k g r o u n d" replacement="scale_background"/>
-<ligature sequence="u p d a t e _ w e b w v i e w" replacement="update_webview"/>
-<ligature sequence="z o o m _ b o u n d a r i e s" replacement="zoom_boundaries"/>
-<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background"/>
-<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal"/>
+<ligature sequence="q u a d r a t i c _ p o i n t s" replacement="quadratic_points"/>
 <ligature sequence="m o v e _ b a c k g r o u n d" replacement="move_background"/>
-<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background"/>
+<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal"/>
+<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background"/>
+<ligature sequence="z o o m _ b o u n d a r i e s" replacement="zoom_boundaries"/>
 <ligature sequence="i n s e r t _ u n i c h a r" replacement="insert_unichar"/>
-<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class"/>
-<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points"/>
-<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point"/>
-<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button"/>
+<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background"/>
+<ligature sequence="u p d a t e _ w e b v i e w" replacement="update_webview"/>
 <ligature sequence="f l i p _ v e r t i c a l" replacement="flip_vertical"/>
-<ligature sequence="e x p o r t _ f o n t s" replacement="export_fonts"/>
-<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path"/>
-<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points"/>
-<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate"/>
+<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button"/>
+<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point"/>
+<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points"/>
+<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class"/>
 <ligature sequence="y _ c o o r d i n a t e" replacement="y_coordinate"/>
-<ligature sequence="m o v e _ c a n v a s" replacement="move_canvas"/>
-<ligature sequence="s p i n _ b u t t o n" replacement="spin_button"/>
+<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate"/>
+<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points"/>
+<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path"/>
+<ligature sequence="e x p o r t _ f o n t s" replacement="export_fonts"/>
 <ligature sequence="c r e a t e _ l i n e" replacement="create_line"/>
-<ligature sequence="f u l l _ g l y p h" replacement="full_glyph"/>
-<ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
-<ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
-<ligature sequence="m o v e _ l a y e r" replacement="move_layer"/>
+<ligature sequence="s p i n _ b u t t o n" replacement="spin_button"/>
+<ligature sequence="m o v e _ c a n v a s" replacement="move_canvas"/>
 <ligature sequence="h e l p _ l i n e s" replacement="help_lines"/>
-<ligature sequence="r e c t a n g l e" replacement="rectangle"/>
-<ligature sequence="z o o m _ t o o l" replacement="zoom_tool"/>
-<ligature sequence="f o r e s i g h t" replacement="foresight"/>
-<ligature sequence="s y m m e t r i c" replacement="symmetric"/>
-<ligature sequence="t i e _ p o i n t" replacement="tie_point"/>
-<ligature sequence="u n d o _ t o o l" replacement="undo_tool"/>
-<ligature sequence="a u t o t r a c e" replacement="autotrace"/>
+<ligature sequence="m o v e _ l a y e r" replacement="move_layer"/>
+<ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
+<ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
+<ligature sequence="f u l l _ g l y p h" replacement="full_glyph"/>
 <ligature sequence="s h o w _ g r i d" replacement="show_grid"/>
-<ligature sequence="p e n _ t o o l" replacement="pen_tool"/>
+<ligature sequence="a u t o t r a c e" replacement="autotrace"/>
+<ligature sequence="u n d o _ t o o l" replacement="undo_tool"/>
+<ligature sequence="t i e _ p o i n t" replacement="tie_point"/>
+<ligature sequence="s y m m e t r i c" replacement="symmetric"/>
+<ligature sequence="f o r e s i g h t" replacement="foresight"/>
+<ligature sequence="z o o m _ t o o l" replacement="zoom_tool"/>
+<ligature sequence="r e c t a n g l e" replacement="rectangle"/>
 <ligature sequence="r o t a t i o n" replacement="rotation"/>
-<ligature sequence="c i r c l e" replacement="circle"/>
-<ligature sequence="r e s i z e" replacement="resize"/>
+<ligature sequence="p e n _ t o o l" replacement="pen_tool"/>
 <ligature sequence="h e i g h t" replacement="height"/>
-<ligature sequence="t r a c k" replacement="track"/>
+<ligature sequence="r e s i z e" replacement="resize"/>
+<ligature sequence="c i r c l e" replacement="circle"/>
 <ligature sequence="w i d t h" replacement="width"/>
-<ligature sequence="p r e v" replacement="prev"/>
-<ligature sequence="m o v e" replacement="move"/>
+<ligature sequence="t r a c k" replacement="track"/>
 <ligature sequence="s k e w" replacement="skew"/>
+<ligature sequence="m o v e" replacement="move"/>
+<ligature sequence="p r e v" replacement="prev"/>
 
 </font>

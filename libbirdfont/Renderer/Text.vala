@@ -115,6 +115,7 @@ public class Text : Widget {
 	public void set_text (string text) {	
 		this.text = text;
 		gs = null;
+		sidebearing_extent = 0;
 	}
 
 	private GlyphSequence generate_glyphs () {
