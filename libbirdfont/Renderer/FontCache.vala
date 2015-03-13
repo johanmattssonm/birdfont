@@ -25,6 +25,14 @@ public class FontCache {
 		fonts = new Gee.HashMap<string, Font> ();
 	}
 	
+	public void reload_font (string file_name) {
+		Font? f = get_font (file_name);
+		
+		if (f != null) {
+			((!) f).load ();
+		}
+	}
+	
 	public Font? get_font (string file_name) {
 		Font f;
 		bool ok;

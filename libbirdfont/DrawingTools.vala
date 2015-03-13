@@ -123,7 +123,7 @@ public class DrawingTools : ToolCollection  {
 			update_drawing_and_background_tools (self);
 		});
 		draw_tools.add_tool (foresight_tool);
-		
+			
 		pen_tool = new PenTool ("pen_tool");
 		pen_tool.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);

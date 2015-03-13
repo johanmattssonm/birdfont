@@ -67,7 +67,6 @@ public class SvgParser {
 			if (l.index_of ("Inkscape") > -1 || l.index_of ("inkscape") > -1) {
 				parser.set_format (SvgFormat.INKSCAPE);
 				has_format = true;
-				print("Inkscape SVG import.\n");
 			}
 		}
 		
@@ -308,7 +307,7 @@ public class SvgParser {
 			path.scale (-x, y);
 		}
 	}
-		
+	
 	private void translate (string function, PathList pl) {
 		string parameters = get_transform_parameters (function);
 		string[] p = parameters.split (" ");
@@ -1108,7 +1107,19 @@ public class SvgParser {
 				warning (@"Unknown instruction: $(c[i])");
 			}
 		}
-
+		
+		if (bi == 0) {
+			warning ("No points in path.");
+			return path_list;	
+		}
+		
+		// TODO: this code assumes that all paths are closed since stroke has not been implemented yet
+		if (bezier_points[bi - 1].type != 'z') {
+			bezier_points[bi].type = 'z';
+			bezier_points[bi].svg_type = 'z';
+			bi++;
+		}
+		
 		move_and_resize (bezier_points, bi, svg_glyph, units, glyph);
 
 		if (format == SvgFormat.ILLUSTRATOR) {

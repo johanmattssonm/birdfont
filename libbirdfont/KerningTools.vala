@@ -66,7 +66,7 @@ public class KerningTools : ToolCollection  {
 		});
 		kerning_tools.add_tool (text_kerning);
 
-		Tool insert_last = new Tool ("insert_last_glyph", t_("Insert glyph from overview"));
+		Tool insert_last = new Tool ("insert_glyph_from_overview", t_("Insert glyph from overview"));
 		insert_last.select_action.connect ((self) => {
 			KerningDisplay d = MainWindow.get_kerning_display ();
 			GlyphSelection gs = new GlyphSelection ();
