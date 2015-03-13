@@ -1131,7 +1131,7 @@ public class OverView : FontDisplay {
 		
 		if (((!)character_info).is_ligature ()) {
 			name = ((!)character_info).get_name ();
-			draw_info_line ("Ligature " + name, cr, x, y, 0);
+			draw_info_line (t_("Ligature") + " :" + name, cr, x, y, 0);
 		} else {
 			i = 0;
 			foreach (string line in entry.split ("\n")) {

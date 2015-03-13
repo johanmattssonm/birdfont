@@ -19,7 +19,7 @@ namespace BirdFont {
 /** Display functions for a unicode character database entry. */
 public class CharacterInfo : GLib.Object {
 
-	static ImageSurface? info_icon = null;
+	Text icon;
 	double x = 0;
 	double y = 0;
 	unichar unicode;
@@ -28,14 +28,14 @@ public class CharacterInfo : GLib.Object {
 	
 	public CharacterInfo (unichar c, GlyphCollection? gc) {
 		unicode = c;
-		
-		if (info_icon == null) {
-			info_icon = Icons.get_icon ("info_icon.png");
-		}
+		icon = new Text ("info_icon", 22);
 		
 		if (gc != null) {
 			ligature = ((!) gc).is_unassigned ();
 			name = ((!) gc).get_name ();
+			icon.load_font ("icons.bf");
+			icon.use_cache (false);
+			Theme.text_color (icon, "Foreground 1");
 		}
 	}
 	
@@ -61,17 +61,7 @@ public class CharacterInfo : GLib.Object {
 	}
 	
 	public void draw_icon (Context cr) {	
-		ImageSurface i = (!) info_icon;
-		
-		// info icon			
-		if (likely (info_icon != null && i.status () == Cairo.Status.SUCCESS)) {
-			cr.save ();
-			cr.set_source_surface (i, x, y);
-			cr.paint ();
-			cr.restore ();
-		} else {
-			warning ("Failed to load icon.");
-		}		
+		icon.draw_at_top (cr, x, y);	
 	}
 }
 

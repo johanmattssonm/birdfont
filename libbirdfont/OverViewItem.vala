@@ -270,7 +270,7 @@ public class OverViewItem : GLib.Object {
 
 	private void draw_character_info_icon (Context cr) {
 		double px = x + width - 17;
-		double py = y + height - 16;
+		double py = y + height - 21;
 		info.set_position (px, py);
 		info.draw_icon (cr);
 	}
