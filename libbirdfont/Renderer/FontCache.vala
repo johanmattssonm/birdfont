@@ -46,7 +46,6 @@ public class FontCache {
 			return fonts.get (file_name);
 		}
 		
-		print (@"LOAD FONT $file_name\n");
 		f = new Font ();
 		f.set_file (file_name);
 		ok = f.load ();

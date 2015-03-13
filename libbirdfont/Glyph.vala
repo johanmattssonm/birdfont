@@ -389,9 +389,10 @@ public class Glyph : FontDisplay {
 	}
 	
 	void update_zoom_bar () {
-		return_if_fail (!is_null (Toolbox.drawing_tools));
-		return_if_fail (!is_null (Toolbox.drawing_tools.zoom_bar));
-		Toolbox.drawing_tools.zoom_bar.set_zoom ((view_zoom - 1) / 20);
+		if (!is_null (Toolbox.drawing_tools)
+			&& !is_null (Toolbox.drawing_tools.zoom_bar)) {
+			Toolbox.drawing_tools.zoom_bar.set_zoom ((view_zoom - 1) / 20);
+		}
 	}
 	
 	public void remove_lines () {

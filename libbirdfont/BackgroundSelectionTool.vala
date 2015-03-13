@@ -38,7 +38,7 @@ public class BackgroundSelectionTool : CutBackgroundTool {
 			double tx, ty, font_height;
 			
 			if (glyph.get_background_image () == null) {
-				warning ("No image");
+				// No image to draw.
 				return;
 			}
 			
