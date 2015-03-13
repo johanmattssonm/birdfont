@@ -67,6 +67,7 @@ public class SvgParser {
 			if (l.index_of ("Inkscape") > -1 || l.index_of ("inkscape") > -1) {
 				parser.set_format (SvgFormat.INKSCAPE);
 				has_format = true;
+				print("Inkscape SVG import.\n");
 			}
 		}
 		
@@ -1190,7 +1191,7 @@ public class SvgParser {
 
 				ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
 				
-				if (i == 0) {
+				if (i == 0 || (b[i - 1].type == 'z')) {
 					ep.get_left_handle ().set_point_type (last_type);
 					ep.get_left_handle ().move_to_coordinate (last_x, last_y);
 				} else {
