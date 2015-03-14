@@ -46,8 +46,12 @@ public class Toolbox : GLib.Object  {
 	public List<ToolCollection> tool_sets = new List<ToolCollection> ();
 	
 	static double scale = 1;
+
+	string? tool_tip = null;
+	double tool_tip_x = 0;
+	double tool_tip_y = 0;
 	
-	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {			
+	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		current_tool = new Tool ("no_icon");
 		press_tool = new Tool (null);
 
@@ -465,7 +469,43 @@ public class Toolbox : GLib.Object  {
 			draw_expanders (w, h, cr);
 			
 			cr.restore ();
+			
+			draw_tool_tip (cr);
 		}
+	}
+	
+	private void draw_tool_tip (Context cr) {
+		TextArea t;
+		
+		if (tool_tip != null && tool_tip != "") {
+			t = new TextArea (20 * get_scale ());
+			t.allocation = new WidgetAllocation.for_area (0, 0, allocation_width, allocation_height);
+			t.set_editable (false);
+			t.set_text ((!) tool_tip);
+			t.width = allocation_width - 20 * get_scale ();
+			t.min_height = 17 * get_scale ();
+			t.height = 17 * get_scale ();
+
+			t.layout ();
+
+			t.widget_x = 10 * get_scale ();
+			t.widget_y = tool_tip_y - t.height - 5 * get_scale ();		
+
+			t.draw (cr);
+		}
+	}
+	
+	public void hide_tooltip () {
+		tool_tip = null;
+		redraw_tool_box ();
+	}
+	
+	public void show_tooltip (string tool_tip, double x, double y) {
+		this.tool_tip = tool_tip;
+		this.tool_tip_x = x;
+		this.tool_tip_y = y;
+		
+		redraw_tool_box ();
 	}
 	
 	public class EmptySet : ToolCollection  {

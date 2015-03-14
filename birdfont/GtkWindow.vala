@@ -521,52 +521,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		return true;
 	}
 	
-	// TODO: add the default tooltip style to the label
-	public void show_tooltip (string tooltip, int x, int y) {
-		Label tooltip_label;
-		int parent_x, parent_y;
-		int tool_box_x, tool_box_y;
-		int posx, posy;
-		Gtk.Allocation label_allocation;
-		Gtk.Box box;
-		
-		box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-
-		get_position (out parent_x, out parent_y);
-		toolbox.translate_coordinates (toolbox.get_toplevel (), 0, 0, out tool_box_x, out tool_box_y);
-		
-		tooltip_window.hide ();
-		
-		tooltip_window = new Gtk.Window (Gtk.WindowType.POPUP);
-		tooltip_label = new Label(tooltip);
-		tooltip_label.margin = 0;
-		
-		box.pack_start (tooltip_label, true, true, 0);
-		
-		tooltip_window.add (box);
-		tooltip_label.show();
-		box.show ();
-		
-		posx = parent_x + tool_box_x + x;
-		posy = parent_y + tool_box_y + y - 7;
-		tooltip_window.move (posx, posy);
-
-		tooltip_window.show();
-
-		label_allocation = new Gtk.Allocation ();
-		tooltip_label.size_allocate (label_allocation);
-
-		// move label to the left if it is off screen
-		if (posx + label_allocation.width > screen.get_width () - 20) {
-			tooltip_window.move (screen.get_width () - label_allocation.width - 20, posy);
-		}
-
-	}
-
-	public void hide_tooltip () {
-		tooltip_window.hide ();
-	}
-
 	public void run_background_thread (Task t) {
 		unowned Thread<void*> bg;
 		

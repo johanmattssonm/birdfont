@@ -100,7 +100,7 @@ public class Tool : Widget {
 		});
 		
 		move_out_action.connect ((self) => {
-			MainWindow.native_window.hide_tooltip ();
+			MainWindow.get_toolbox ().hide_tooltip ();
 			active_tooltip.showing_this_tooltip = false;
 		});
 		
@@ -158,13 +158,16 @@ public class Tool : Widget {
 	
 	public static void show_tooltip () {
 		TimeoutSource timer_hide;
+		Toolbox toolbox;
+		
+		toolbox = MainWindow.get_toolbox ();
 		
 		// hide tooltip label later
 		if (!active_tooltip.showing_this_tooltip) {
 			timer_hide = new TimeoutSource (1500);
 			timer_hide.set_callback (() => {
 				if (!active_tooltip.is_active ()) {
-					MainWindow.native_window.hide_tooltip ();
+					toolbox.hide_tooltip ();
 					active_tooltip.showing_this_tooltip = false;
 					active_tooltip = new Tool ();
 				}				
@@ -174,8 +177,9 @@ public class Tool : Widget {
 		}
 		
 		active_tooltip.showing_this_tooltip = true;
-		MainWindow.native_window.hide_tooltip ();
-		MainWindow.native_window.show_tooltip (active_tooltip.tip, (int)active_tooltip.x, (int)active_tooltip.y);
+			
+		toolbox.hide_tooltip ();
+		toolbox.show_tooltip (active_tooltip.tip, (int) active_tooltip.x, (int) active_tooltip.y);
 	}
 	
 	public void set_icon (string name) {

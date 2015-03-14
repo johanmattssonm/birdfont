@@ -29,7 +29,7 @@ public abstract class Widget : GLib.Object {
 	
 	public WidgetAllocation allocation = new WidgetAllocation ();
 
-	public void draw_rounded_rectangle (Context cr, double x, double y, double w, double h, double radius) {	
+	public static void draw_rounded_rectangle (Context cr, double x, double y, double w, double h, double radius) {	
 		// fixme radius is padding not margin
 		cr.move_to (x, y + radius);
 		cr.arc (x + radius, y + radius, radius, 2 * (PI / 2), 3 * (PI / 2));

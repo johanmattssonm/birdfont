@@ -832,6 +832,10 @@ public class TextArea : Widget {
 		tx = 0;
 		ty = font_size;
 		
+		if (allocation.width <= 0 || allocation.height <= 0) {
+			warning ("Parent widget allocation is not set.");
+		}
+		
 		for (i = paragraphs.size - 1; i >= 0 && paragraphs.size > 1; i--) {
 			if (unlikely (paragraphs.get (i).is_empty ())) {
 				warning ("Empty paragraph.");

@@ -39,12 +39,6 @@ public interface NativeWindow : GLib.Object {
 
 	/** Convert an image to PNG format. */
 	public abstract bool convert_to_png (string from, string to);
-
-	/** Show help text. */
-	public abstract void show_tooltip (string tooltip, int x, int y);
-	
-	/** Hide help text. */
-	public abstract void hide_tooltip ();
 	
 	/** Export fonts in a background thread. */
 	public abstract void export_font ();
