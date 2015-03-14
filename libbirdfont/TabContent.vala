@@ -24,6 +24,8 @@ public class TabContent : GLib.Object {
 	static Button text_input_button;
 	static bool text_input_visible = false;
 
+	static const int TEXT_INPUT_HEIGHT = 51;
+
 	public static void zoom_in () {
 		if (MenuTab.suppress_event) {
 		}
@@ -149,10 +151,16 @@ public class TabContent : GLib.Object {
 		if (MainWindow.get_menu ().show_menu) {
 			MainWindow.get_menu ().button_release (button, x, y);
 		} else {
-			GlyphCanvas.current_display.button_release (button, x, y);
-			
 			if (text_input_visible) {
 				text_input.button_release (button, x, y);
+
+				if (y > TEXT_INPUT_HEIGHT) {
+					hide_text_input ();
+				}
+				
+				GlyphCanvas.redraw ();
+			} else {
+				GlyphCanvas.current_display.button_release (button, x, y);
 			}
 		}
 	}
@@ -165,11 +173,11 @@ public class TabContent : GLib.Object {
 		if (MainWindow.get_dialog ().visible) {
 			MainWindow.get_dialog ().button_press (button, x, y);
 		} else if (!MainWindow.get_menu ().show_menu) {
-			GlyphCanvas.current_display.button_press (button, x, y);
-			
 			if (text_input_visible) {
 				text_input.button_press (button, x, y);
 				text_input_button.button_press (button, x, y);
+			} else {
+				GlyphCanvas.current_display.button_press (button, x, y);
 			}
 		}
 	}
@@ -279,7 +287,7 @@ public class TabContent : GLib.Object {
 	public static void draw_text_input (WidgetAllocation allocation, Context cr) {
 		cr.save ();
 		Theme.color (cr, "Background 4");
-		cr.rectangle (0, 0, allocation.width, 51);
+		cr.rectangle (0, 0, allocation.width, TEXT_INPUT_HEIGHT);
 		cr.fill ();
 		cr.restore ();
 		
