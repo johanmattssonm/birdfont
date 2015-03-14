@@ -37,31 +37,6 @@ public class SettingsDisplay : FontDisplay {
 		// setting items
 		tools.add (new SettingsItem.head_line (t_("Settings")));
 		
-		ColorTool stroke_color = new ColorTool ();
-		stroke_color.color_updated.connect (() => {
-			Path.line_color_r = stroke_color.color_r;
-			Path.line_color_g = stroke_color.color_g;
-			Path.line_color_b = stroke_color.color_b;
-			Path.line_color_a = stroke_color.color_a;
-
-			if (Path.line_color_a == 0) {
-				Path.line_color_a = 1;
-			}
-
-			Preferences.set ("line_color_r", @"$(Path.line_color_r)");
-			Preferences.set ("line_color_g", @"$(Path.line_color_g)");
-			Preferences.set ("line_color_b", @"$(Path.line_color_b)");
-			Preferences.set ("line_color_a", @"$(Path.line_color_a)");
-
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-		});
-		stroke_color.set_r (double.parse (Preferences.get ("line_color_r")));
-		stroke_color.set_g (double.parse (Preferences.get ("line_color_g")));
-		stroke_color.set_b (double.parse (Preferences.get ("line_color_b")));
-		stroke_color.set_a (double.parse (Preferences.get ("line_color_a")));
-		tools.add (new SettingsItem (stroke_color, t_("Stroke color")));
-		
 		SpinButton stroke_width = new SpinButton ("stroke_width");
 		tools.add (new SettingsItem (stroke_width, t_("Stroke width")));
 		
@@ -83,28 +58,6 @@ public class SettingsDisplay : FontDisplay {
 		
 		Path.stroke_width = stroke_width.get_value ();
 		
-		ColorTool handle_color = new ColorTool ();
-		handle_color.color_updated.connect (() => {
-			Path.handle_color_r = handle_color.color_r;
-			Path.handle_color_g = handle_color.color_g;
-			Path.handle_color_b = handle_color.color_b;
-			Path.handle_color_a = handle_color.color_a;
-
-			Preferences.set ("handle_color_r", @"$(Path.handle_color_r)");
-			Preferences.set ("handle_color_g", @"$(Path.handle_color_g)");
-			Preferences.set ("handle_color_b", @"$(Path.handle_color_b)");
-			Preferences.set ("handle_color_a", @"$(Path.handle_color_a)");
-
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-		});
-		handle_color.set_r (double.parse (Preferences.get ("handle_color_r")));
-		handle_color.set_g (double.parse (Preferences.get ("handle_color_g")));
-		handle_color.set_b (double.parse (Preferences.get ("handle_color_b")));
-		handle_color.set_a (double.parse (Preferences.get ("handle_color_a")));
-		
-		tools.add (new SettingsItem (handle_color, t_("Handle color")));
-
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
 		precision = new SpinButton ("precision");
@@ -141,28 +94,6 @@ public class SettingsDisplay : FontDisplay {
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
 		});
 		tools.add (new SettingsItem (show_all_line_handles, t_("Show or hide control point handles")));
-
-		// fill color
-		ColorTool fill_color = new ColorTool ();
-		fill_color.color_updated.connect (() => {
-			Path.fill_color_r = fill_color.color_r;
-			Path.fill_color_g = fill_color.color_g;
-			Path.fill_color_b = fill_color.color_b;
-			Path.fill_color_a = fill_color.color_a;
-
-			Preferences.set ("fill_color_r", @"$(Path.fill_color_r)");
-			Preferences.set ("fill_color_g", @"$(Path.fill_color_g)");
-			Preferences.set ("fill_color_b", @"$(Path.fill_color_b)");
-			Preferences.set ("fill_color_a", @"$(Path.fill_color_a)");
-
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-		});
-		fill_color.set_r (double.parse (Preferences.get ("fill_color_r")));
-		fill_color.set_g (double.parse (Preferences.get ("fill_color_g")));
-		fill_color.set_b (double.parse (Preferences.get ("fill_color_b")));
-		fill_color.set_a (double.parse (Preferences.get ("fill_color_a")));
-		tools.add (new SettingsItem (fill_color, t_("Object color")));
 
 		Tool fill_open_path = new Tool ("fill_open_path");
 		fill_open_path.select_action.connect((self) => {

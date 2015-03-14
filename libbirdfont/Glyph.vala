@@ -1517,7 +1517,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	private Color get_path_fill_color () {
-		return new Color (Path.fill_color_r, Path.fill_color_g, Path.fill_color_b, Path.fill_color_a);
+		return Theme.get_color ("Fill Color");
 	}
 	
 	private void draw_outline_for_paths (PathList pl, Context cr) {

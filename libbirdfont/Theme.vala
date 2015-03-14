@@ -84,6 +84,10 @@ public class Theme : GLib.Object {
 		color_list = new Gee.ArrayList<string> ();
 		colors = new Gee.HashMap<string, Color> ();
 		
+		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
+		
 		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
 		Theme.set_default_color ("Background 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		Theme.set_default_color ("Background 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
@@ -124,6 +128,10 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Tool Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
 		
 		Theme.set_default_color ("Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		
+		N_("Stroke Color");
+		N_("Handle Color");
+		N_("Fill Color");
 		
 		N_("Background 1");
 		N_("Background 2");

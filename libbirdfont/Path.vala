@@ -80,21 +80,6 @@ public class Path {
 	public static ImageSurface? cubic_selected_edit_point_image = null;
 	public static ImageSurface? cubic_active_selected_edit_point_image = null;
 	
-	public static double line_color_r = 0;
-	public static double line_color_g = 0;
-	public static double line_color_b = 0;
-	public static double line_color_a = 1;
-
-	public static double handle_color_r = 0;
-	public static double handle_color_g = 0;
-	public static double handle_color_b = 0;
-	public static double handle_color_a = 1;
-
-	public static double fill_color_r = 0;
-	public static double fill_color_g = 0;
-	public static double fill_color_b = 0;
-	public static double fill_color_a = 1;
-	
 	/** The stroke of an outline when the path is not filled. */
 	public static double stroke_width = 1;
 	public static bool show_all_line_handles = true;
@@ -127,21 +112,6 @@ public class Path {
 			width = Preferences.get ("stroke_width");
 			if (width != "") {
 				stroke_width = double.parse (width);
-
-				line_color_r = double.parse (Preferences.get ("line_color_r"));
-				line_color_g = double.parse (Preferences.get ("line_color_g"));
-				line_color_b = double.parse (Preferences.get ("line_color_b"));
-				line_color_a = double.parse (Preferences.get ("line_color_a"));
-
-				handle_color_r = double.parse (Preferences.get ("handle_color_r"));
-				handle_color_g = double.parse (Preferences.get ("handle_color_g"));
-				handle_color_b = double.parse (Preferences.get ("handle_color_b"));
-				handle_color_a = double.parse (Preferences.get ("handle_color_a"));
-
-				fill_color_r = double.parse (Preferences.get ("fill_color_r"));
-				fill_color_g = double.parse (Preferences.get ("fill_color_g"));
-				fill_color_b = double.parse (Preferences.get ("fill_color_b"));
-				fill_color_a = double.parse (Preferences.get ("fill_color_a"));
 			}
 		}
 	}
@@ -265,18 +235,8 @@ public class Path {
 
 		// draw highlighted segment			
 		if (highlight_last_segment && points.size >= 2) {
-			line_color_r = 0.5;
-			line_color_g = 0.5;
-			line_color_b = 0.8;
-			line_color_a = 1;
-			
-			draw_next (points.get (points.size - 2), points.get (points.size - 1), cr);
+			draw_next (points.get (points.size - 2), points.get (points.size - 1), cr, true);
 			cr.stroke ();
-			
-			line_color_r = 0;
-			line_color_g = 0;
-			line_color_b = 0;
-			line_color_a = 1;
 		}
 	}
 	
@@ -352,18 +312,18 @@ public class Path {
 		}
 	}
 
-	private void draw_next (EditPoint e, EditPoint en, Context cr) {
+	private void draw_next (EditPoint e, EditPoint en, Context cr, bool highlighted = false) {
 		PointType r = e.get_right_handle ().type;
 		PointType l = en.get_left_handle ().type;
 		
 		if (r == PointType.DOUBLE_CURVE || l == PointType.DOUBLE_CURVE) {
-			draw_double_curve (e, en, cr);
+			draw_double_curve (e, en, cr, highlighted);
 		} else {
-			draw_curve (e, en, cr);
+			draw_curve (e, en, cr, highlighted);
 		}
 	}
 	
-	private static void draw_double_curve (EditPoint e, EditPoint en, Context cr) {
+	private static void draw_double_curve (EditPoint e, EditPoint en, Context cr, bool highlighted) {
 		EditPoint middle;
 		double x, y;
 		
@@ -376,11 +336,11 @@ public class Path {
 		middle.right_handle.type = PointType.DOUBLE_CURVE;
 		middle.left_handle.type = PointType.DOUBLE_CURVE;
 		
-		draw_curve (e, middle, cr);
-		draw_curve (middle, en, cr);		
+		draw_curve (e, middle, cr, highlighted);
+		draw_curve (middle, en, cr, highlighted);		
 	}
 		
-	private static void draw_curve (EditPoint e, EditPoint en, Context cr, double alpha = 1) {
+	private static void draw_curve (EditPoint e, EditPoint en, Context cr, bool highlighted = false, double alpha = 1) {
 		Glyph g = MainWindow.get_current_glyph ();
 		double xa, ya, xb, yb, xc, yc, xd, yd;
 		PointType t = e.get_right_handle ().type;
@@ -388,7 +348,12 @@ public class Path {
 		
 		get_bezier_points (e, en, out xa, out ya, out xb, out yb, out xc, out yc, out xd, out yd);
 
-		cr.set_source_rgba (line_color_r, line_color_g, line_color_b, line_color_a);
+		if (!highlighted) {
+			Theme.color (cr, "Stroke Color");
+		} else {
+			Theme.color (cr, "Highlighted Guide");
+		}
+		
 		cr.set_line_width (stroke_width / g.view_zoom);
 		
 		cr.line_to (xa, ya); // this point makes sense only if it is in the first or last position
@@ -454,8 +419,8 @@ public class Path {
 		double ax, ay, bx, by;
 
 		get_line_points (e, en, out ax, out ay, out bx, out by);
-	
-		cr.set_source_rgba (handle_color_r, handle_color_g, handle_color_b, handle_color_a);
+		
+		Theme.color (cr, "Handle Color");
 		cr.set_line_width (1.7 * (stroke_width / g.view_zoom));
 
 		cr.line_to (ax, ay);
