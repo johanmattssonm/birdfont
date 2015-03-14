@@ -124,7 +124,7 @@ public class ResizeTool : Tool {
 					out selection_box_height);	
 			}
 		
-			if (move_paths) {
+			if (move_paths || rotate_path || resize_path) {
 				GlyphCanvas.redraw ();
 			}
 			
