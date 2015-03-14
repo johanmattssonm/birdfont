@@ -236,7 +236,7 @@ public class ResizeTool : Tool {
 		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
 		
 		cr.save ();
-		Theme.color (cr, "Highlight 1");
+		Theme.color (cr, "Highlighted 1");
 		cr.rectangle (cx - 2.5, cy - 2.5, 5, 5);
 		cr.fill ();
 
@@ -248,7 +248,7 @@ public class ResizeTool : Tool {
 		cr.line_to (cx + hx, cy + hy);
 		cr.stroke ();
 
-		Theme.color (cr, "Highlight 1");
+		Theme.color (cr, "Highlighted 1");
 		cr.rectangle (cx + hx - 2.5, cy + hy - 2.5, 5, 5);
 		cr.fill ();
 					

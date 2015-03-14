@@ -428,10 +428,7 @@ public class BirdFont {
 
 		Preferences.load ();
 		
-		// FIXME: DELETE
-		Theme.load_theme ();
-		save_default_colors ();
-
+		Theme.set_default_colors ();
 		Theme.load_theme ();
 		
 		current_font = new Font ();
@@ -499,85 +496,6 @@ public class BirdFont {
 
 	public static Argument get_arguments () {
 		return args;
-	}
-
-	void save_default_colors () {
-		Theme.save_color ("Background 1", 1, 1, 1, 1);
-		Theme.save_color ("Background 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		Theme.save_color ("Background 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.save_color ("Background 4", 51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
-		Theme.save_color ("Background 5", 0.3, 0.3, 0.3, 1);
-		Theme.save_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
-		Theme.save_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
-		Theme.save_color ("Background 8", 55/255.0, 55/255.0, 55/255.0, 1);
-		Theme.save_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
-		
-		Theme.save_color ("Foreground 1", 0, 0, 0, 1);
-		Theme.save_color ("Foreground 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		Theme.save_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
-		Theme.save_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
-		Theme.save_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
-		
-		Theme.save_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
-		
-		Theme.save_color ("Highlighted Guide", 0, 0, 0.3, 1);
-		Theme.save_color ("Guide 1", 0.7, 0.7, 0.8, 1);
-		Theme.save_color ("Guide 2", 0.7, 0, 0, 0.5);
-		Theme.save_color ("Guide 3", 120 / 255.0, 68 / 255.0, 120 / 255.0, 120 / 255.0);
-		
-		Theme.save_color ("Grid",0.2, 0.6, 0.2, 0.2);
-		
-		Theme.save_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
-		
-		Theme.save_color ("Tool Border 1", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.save_color ("Tool Background 1", 14 / 255.0, 16 / 255.0, 17 / 255.0, 1);
-
-		Theme.save_color ("Tool Border 2", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.save_color ("Tool Background 2", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
-
-		Theme.save_color ("Tool Border 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.save_color ("Tool Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
-
-		Theme.save_color ("Tool Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.save_color ("Tool Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
-		
-		Theme.save_color ("Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		
-		N_("Background 1");
-		N_("Background 2");
-		N_("Background 3");
-		N_("Background 4");
-		N_("Background 5");
-		N_("Background 6");
-		N_("Background 7");
-		N_("Background 8");
-		N_("Background 9");
-		
-		N_("Foreground 1");
-		N_("Foreground 2");
-		N_("Foreground 3");
-		N_("Foreground 4");
-		N_("Foreground 5");
-		
-		N_("Highlighted 1");
-		N_("Highlighted Guide");
-		
-		N_("Grid");
-		
-		N_("Guide 1");
-		N_("Guide 2");
-		N_("Guide 3");
-		
-		N_("Tool Border 1");
-		N_("Tool Background 1");
-		N_("Tool Border 2");
-		N_("Tool Background 2");
-		N_("Tool Border 3");
-		N_("Tool Background 3");
-		N_("Tool Border 4");
-		N_("Tool Background 4");
-		
-		N_("Button Foreground");
 	}
 
 	public static void set_bundle_path (string path) {
