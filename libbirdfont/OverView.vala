@@ -683,42 +683,51 @@ public class OverView : FontDisplay {
 			
 			case Key.UP:
 				key_up ();
+				selected_item = get_selected_item ();
 				return;
 				
 			case Key.RIGHT:
 				key_right ();
+				selected_item = get_selected_item ();
 				return;
 				
 			case Key.LEFT:
 				key_left ();
+				selected_item = get_selected_item ();
 				return;
 				
 			case Key.DOWN:
 				key_down ();
+				selected_item = get_selected_item ();
 				return;
 				
 			case Key.PG_UP:
 				for (int i = 0; i < rows; i++) {
 					key_up ();
 				}
+				selected_item = get_selected_item ();
 				return;
 				
 			case Key.PG_DOWN:
 				for (int i = 0; i < rows; i++) {
 					key_down ();
 				}
+				selected_item = get_selected_item ();
 				return;
 				
 			case Key.DEL:
 				delete_selected_glyph ();
+				selected_item = get_selected_item ();
 				return;
 				
 			case Key.BACK_SPACE:
 				delete_selected_glyph ();
+				selected_item = get_selected_item ();
 				return;
 		}
 
 		scroll_to_char (keyval);
+		selected_item = get_selected_item ();
 	}
 	
 	public void delete_selected_glyph () {
