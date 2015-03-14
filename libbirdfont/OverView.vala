@@ -446,7 +446,7 @@ public class OverView : FontDisplay {
 		cr.restore ();
 		
 		foreach (OverViewItem i in visible_items) {
-			i.draw (cr);
+			i.draw (allocation, cr);
 		}
 		
 		if (visible_items.size == 0) {

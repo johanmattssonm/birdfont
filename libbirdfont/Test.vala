@@ -36,12 +36,6 @@ public class Test : Object {
 	public void timer_start () {
 		time_stamp = GLib.get_real_time ();
 	}
-
-	public void timer_stop () {
-		double stop_time = GLib.get_real_time ();
-		print_time ("Timer stop after", stop_time);
-		time_stamp = stop_time - time_stamp;
-	}
 	
 	public double get_time () {
 		double stop_time = GLib.get_real_time ();

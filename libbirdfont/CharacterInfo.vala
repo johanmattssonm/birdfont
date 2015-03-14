@@ -58,7 +58,7 @@ public class CharacterInfo : GLib.Object {
 	}
 	
 	public bool is_over_icon (double px, double py) {
-		return (x <= px <= x + 12) && (y <= py <= y + 12);
+		return (x <= px <= x + 12) && (y <= py <= y + 24);
 	}
 	
 	public void draw_icon (Context cr) {	

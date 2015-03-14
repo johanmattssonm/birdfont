@@ -95,7 +95,15 @@ public class OverViewItem : GLib.Object {
 		return selected;
 	}
 
-	public void draw (Context cr) {
+	public bool is_on_screen (WidgetAllocation allocation) {
+		return y + height > 0 && y < allocation.height;
+	}
+
+	public void draw (WidgetAllocation allocation, Context cr) {
+		if (!is_on_screen (allocation)) {
+			return;
+		}
+		
 		cr.save ();
 		Theme.color (cr, "Background 1");
 		cr.rectangle (x, y, width, height);
@@ -194,7 +202,7 @@ public class OverViewItem : GLib.Object {
 			fallback.draw_at_baseline (c, gx, gy);
 			c.restore ();
 		}
-		
+				
 		cr.save ();
 		cr.set_source_surface (s, x, y - h);
 		cr.paint ();
@@ -238,34 +246,13 @@ public class OverViewItem : GLib.Object {
 			? name.str
 			: ((!) glyphs).get_current ().name;
 		
-		text = truncate_label (text);	
+		double w = has_icons () ? width - 43 : width;
 		label = new Text (text, 17);
+		label.truncate (w);
 		label.use_cache (false); // Fixme: Improve cache
 		Theme.text_color (label, "Foreground 1");
 		
 		label.draw_at_baseline (cr, x + 0.08 * width, y + height - 6);
-	}
-	
-	private string truncate_label (string label) {
-		Text text = new Text (label, 17);
-		double w = has_icons () ? width - 40 : width;
-		StringBuilder sb = new StringBuilder ();
-		StringBuilder result = new StringBuilder ();
-		int index = 0;
-		unichar c;
-		
-		while (label.get_next_char (ref index, out c)) {
-			sb.append_unichar (c);
-			text.set_text (sb.str);
-			
-			if (text.get_sidebearing_extent () >= w) {
-				break;
-			}
-			
-			result.append_unichar (c);
-		}
-		
-		return result.str;
 	}
 
 	private void draw_character_info_icon (Context cr) {

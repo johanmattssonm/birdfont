@@ -222,7 +222,7 @@ class TestBirdFont : GLib.Object {
 				if (test.is_benchmark ()) {
 					test.timer_start ();
 					test.callback ();
-					test.timer_stop ();
+					test.print ();
 				} else {
 					test.callback ();
 				}

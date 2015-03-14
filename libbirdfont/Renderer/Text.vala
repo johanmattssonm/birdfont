@@ -63,7 +63,8 @@ public class Text : Widget {
 	double a = 1;
 	
 	bool use_cached_glyphs = true;
-		
+	double truncated_width = -1;
+	
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		current_font = null;
 		this.margin_bottom = margin_bottom;
@@ -189,7 +190,7 @@ public class Text : Widget {
 
 				kern = kc.get_kerning_for_pair (((!) prev).get_name (), ((!) g).get_name (), gr_left, gr_right);
 			}
-					
+				
 			// process glyph
 			glyph = (g == null) ? font.get_not_def_character ().get_current () : (!) g;
 			iter (glyph, kern, i + 1 == word_with_ligatures.glyph.size);
@@ -353,17 +354,35 @@ public class Text : Widget {
 		y = py;
 		x = px;
 
-		if (use_cached_glyphs) { // FIXME:
+		if (use_cached_glyphs) {
 			iterate ((glyph, kerning, last) => {
+				double end;
+				
 				x += kerning * ratio;
+				end = x + glyph.get_width () * ratio;
+				
+				// truncation
+				if (truncated_width > 0 && end - px > truncated_width) {
+					return;
+				}
+				
 				draw_chached (cr ,glyph, kerning, last, x, y, cc_y, cache_id, ratio);
-				x += glyph.get_width () * ratio;
+				x = end;
 			});
 		} else {
 			iterate ((glyph, kerning, last) => {
+				double end;
+				
 				x += kerning * ratio;
+				end = x + glyph.get_width () * ratio;
+				
+				// truncation
+				if (truncated_width > 0 && end - px > truncated_width) {
+					return;
+				}
+				
 				draw_without_cache (cr, glyph, kerning, last, x, y, cc_y, cache_id, ratio);
-				x += glyph.get_width () * ratio;
+				x = end;
 			});
 		}
 	}
@@ -473,6 +492,10 @@ public class Text : Widget {
 
 	public double get_scale () {
 		return font_size / (font.top_limit - font.bottom_limit);
+	}
+
+	public void truncate (double max_width) {
+		truncated_width = max_width;
 	}
 }
 
