@@ -99,6 +99,10 @@ public class MoveTool : Tool {
 		double dy = last_y - y; 
 		double p = PenTool.precision;
 		
+		if (!move_path) {
+			return;
+		}
+		
 		if (move_path && (fabs(dx) > 0 || fabs (dy) > 0)) {
 			moved = true;
 			foreach (Path path in glyph.active_paths) {

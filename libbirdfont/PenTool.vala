@@ -1342,13 +1342,16 @@ public class PenTool : Tool {
 	}
 		
 	public static void set_active_edit_point (EditPoint? e, Path path) {
+		bool redraw;
 		Glyph g = MainWindow.get_current_glyph ();
+		
 		foreach (var p in g.path_list) {
 			foreach (var ep in p.points) {
 				ep.set_active (false);
 			}
 		}
 		
+		redraw = active_edit_point != e; 
 		active_edit_point = e;
 		active_path = path;
 		
@@ -1356,7 +1359,9 @@ public class PenTool : Tool {
 			((!)e).set_active (true);
 		}
 
-		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+		if (redraw) {
+			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+		}
 	}
 
 	PointSelection? get_closest_point (double ex, double ey, out Path? path) {

@@ -24,6 +24,8 @@ public class ResizeTool : Tool {
 	double last_resize_y;
 	double last_resize_x;
 
+	bool move_paths = false;
+
 	ImageSurface? resize_handle;
 
 	static double selection_box_width = 0;
@@ -94,13 +96,15 @@ public class ResizeTool : Tool {
 			last_resize_x = x;
 			last_rotate_y = y;
 			
-
 			MoveTool.press (b, x, y);
+			
+			move_paths = true;
 		});
 
 		release_action.connect((self, b, x, y) => {
 			resize_path = false;
 			rotate_path = false;
+			move_paths = false;
 			DrawingTools.move_tool.release (b, x, y);
 		});
 		
@@ -120,7 +124,10 @@ public class ResizeTool : Tool {
 					out selection_box_height);	
 			}
 		
-			GlyphCanvas.redraw ();
+			if (move_paths) {
+				GlyphCanvas.redraw ();
+			}
+			
 			DrawingTools.move_tool.move (x, y);
 		});
 		
