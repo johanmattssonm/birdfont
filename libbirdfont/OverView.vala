@@ -1210,22 +1210,22 @@ public class OverView : FontDisplay {
 		for (i = 0; i < copied_glyphs.size; i++) {
 			if (all_available) {
 				if (f.length () == 0) {
-					c = add_empty_character_to_font (glyps.get (i).get_unicode_character (),
-						glyps.get (i).is_unassigned (), glyps.get (i).get_name ());
+					c = add_empty_character_to_font (copied_glyphs.get (i).get_unicode_character (),
+						copied_glyphs.get (i).is_unassigned (), 
+						copied_glyphs.get (i).get_name ());
 				} else if (index >= f.length ()) {
-					c = add_empty_character_to_font (
-						((!)f.get_glyph_collection_indice (f.length () - 1))
-							.get_unicode_character () + i,
-						glyps.get (i).is_unassigned (),
-						glyps.get (i).get_name ());
+					// FIXME: duplicated unicodes?
+					c = add_empty_character_to_font (copied_glyphs.get (i).get_unicode_character (),
+						copied_glyphs.get (i).is_unassigned (), 
+						copied_glyphs.get (i).get_name ());
 				} else {
 					c = f.get_glyph_collection_indice ((uint32) index);
 				}
 				
 				if (c == null) {
 					c = add_empty_character_to_font (copied_glyphs.get (i).get_unicode_character (),
-						glyps.get (i).is_unassigned (),
-						glyps.get (i).get_name ());
+						copied_glyphs.get (i).is_unassigned (),
+						copied_glyphs.get (i).get_name ());
 				}
 				
 				return_if_fail (c != null);
@@ -1259,18 +1259,24 @@ public class OverView : FontDisplay {
 			undo_item.glyphs.add (g.copy ());
 		}
 		store_undo_items (undo_item);
-		
+
 		if (glyps.size != copied_glyphs.size) {
 			warning ("glyps.size != copied_glyphs.size");
 			return;
 		}
-		
+
 		i = 0;
 		foreach (GlyphCollection g in glyps) {
 			glyph = copied_glyphs.get (i).get_current ().copy ();
 			glyph.version_id = (glyph.version_id == -1 || g.length () == 0) ? 1 : g.get_last_id () + 1;
-			glyph.unichar_code =  g.get_unicode_character ();
-			glyph.name = (!) glyph.unichar_code.to_string ();
+			glyph.unichar_code = g.get_unicode_character ();
+
+			if (!g.is_unassigned ()) {
+				glyph.name = (!) glyph.unichar_code.to_string ();
+			} else {
+				glyph.name = g.get_name ();
+			}
+			
 			g.insert_glyph (glyph, true);
 			i++;
 		}
