@@ -81,9 +81,6 @@ installed = open ('build/installed', 'w')
 installed.write ('build/installed\n')
 
 # install it:
-for file in os.listdir('./layout'):
-	install ('layout/' + file, '/share/birdfont/layout', 644)
-
 for file in os.listdir('./icons'):
 	install ('icons/' + file, '/share/birdfont/icons', 644)
 
