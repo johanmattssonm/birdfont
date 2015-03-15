@@ -77,7 +77,7 @@ public class SaveDialog : Dialog {
 		
 		save_question.widget_x = save_button.widget_x + center;
 		save_question.widget_y = cy + 15 * MainWindow.units;
-		Theme.text_color (save_question, "Background 1");
+		Theme.text_color (save_question, "Foreground Inverted");
 		
 		qh = (question_font_size + 1) * MainWindow.units;
 		

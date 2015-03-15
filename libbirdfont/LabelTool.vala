@@ -68,7 +68,7 @@ public class LabelTool : Tool {
 		text_height = 18;
 
 		if (is_selected ()) {
-			Theme.text_color (label_text, "Background 1");
+			Theme.text_color (label_text, "Foreground Inverted");
 		} else {
 			Theme.text_color (label_text, "Foreground 2");
 		}

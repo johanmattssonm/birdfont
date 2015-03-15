@@ -109,6 +109,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
 		Theme.set_default_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
 		Theme.set_default_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
+		Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
 		
 		Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 		
@@ -154,6 +155,7 @@ public class Theme : GLib.Object {
 		N_("Foreground 3");
 		N_("Foreground 4");
 		N_("Foreground 5");
+		N_("Foreground Inverted");
 		
 		N_("Highlighted 1");
 		N_("Highlighted Guide");

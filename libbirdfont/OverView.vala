@@ -440,7 +440,6 @@ public class OverView : FontDisplay {
 		// clear canvas
 		cr.save ();
 		Theme.color (cr, "Background 1");
-		
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();

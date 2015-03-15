@@ -96,7 +96,7 @@ class SettingsItem : GLib.Object {
 			cr.restore ();
 				
 			cr.save ();
-			Theme.text_color (label, "Background 1");
+			Theme.text_color (label, "Foreground Inverted");
 			label.set_font_size (20 * MainWindow.units);
 			label.draw_at_baseline (cr, 21 * MainWindow.units, y + 25 * MainWindow.units);
 			cr.restore ();
@@ -129,7 +129,7 @@ class SettingsItem : GLib.Object {
 				cr.save ();
 				
 				if (active) {
-					Theme.text_color (key_binding_text, "Background 1");
+					Theme.text_color (key_binding_text, "Foreground Inverted");
 				} else {
 					Theme.text_color (key_binding_text, "Foreground 2");
 				}

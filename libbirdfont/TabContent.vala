@@ -295,7 +295,7 @@ public class TabContent : GLib.Object {
 		cr.fill ();
 		cr.restore ();
 		
-		Theme.text_color (text_input_label, "Background 1");
+		Theme.text_color (text_input_label, "Foreground Inverted");
 		
 		text_input_label.widget_x = 10;
 		text_input_label.widget_y = 17;
