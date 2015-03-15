@@ -53,8 +53,6 @@ public class TextArea : Widget {
 	Gee.ArrayList<Paragraph> paragraphs = new Gee.ArrayList<Paragraph>  ();
 	private static const int DONE = -2; 
 	
-	int64 cache_id = -1;
-	
 	int last_paragraph = 0;
 	string text;
 	int text_length;
@@ -1129,10 +1127,9 @@ public class TextArea : Widget {
 		tx = paragraph.start_x;
 		ty = paragraph.start_y;
 
-		if (cache_id == -1 && paragraphs.size > 0 && paragraphs.get (0).words.size > 0) {
+		if (paragraphs.size > 0 && paragraphs.get (0).words.size > 0) {
 			Text t = paragraphs.get (0).words.get (0);
 			Theme.text_color (t, "Foreground 1");
-			cache_id = t.get_cache_id ();
 		}
 		
 		for (int i = first_visible; i < last_visible; i++) {
@@ -1149,7 +1146,7 @@ public class TextArea : Widget {
 					Theme.text_color (next_word, "Foreground 1");
 					
 					if (next_word.text != "\n") {
-						next_word.draw_at_top (cc, next_word.widget_x, next_word.widget_y - ty, cache_id);
+						next_word.draw_at_top (cc, next_word.widget_x, next_word.widget_y - ty);
 					}
 				}
 			}
