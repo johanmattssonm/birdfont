@@ -20,6 +20,7 @@ valac
 libgee-dev
 libglib2.0-dev 
 libgtk-3-dev 
+python-gtk2-dev
 libwebkitgtk-3.0-dev
 libnotify-dev
 unicode-data (unicode character database)
