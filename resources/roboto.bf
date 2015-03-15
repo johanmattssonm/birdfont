@@ -23,6 +23,10 @@
 	<bottom_limit>-27.0996090000</bottom_limit>
 </horizontal>
 
+<grid width="1.0000"/>
+<grid width="2.0000"/>
+<grid width="4.0000"/>
+
 <background scale="1.0000" />
 
 <collection unicode="U+20">
@@ -6186,4 +6190,5 @@
 
 
 
+<kerning left="T" right="e" hadjustment="-11.3891448975" />
 </font>

@@ -101,28 +101,7 @@ public class Glyph : FontDisplay {
 	Line right_line;
 	
 	/** Cache for Cairo rendering */
-	HashMap<int64?, Surface> glyph_cache = new HashMap<int64?, Surface> ((v) => {
-		int? t = (int?) v;
-		int i = (!) t;
-		
-		if (i == 0) {
-			return 0;
-		}
-		
-		return (int) (0xFFFFFFFF & i);
-	},  (a, b) => {
-		int64? i1;
-		int64? i2;
-		
-		i1 = (int64?) a;
-		i2 = (int64?) b;
-		
-		if (i1 == null || i1 == null) {
-			return false;
-		}
-		
-		return (!) i1 == (!) i2;
-	});
+	HashMap<string, Surface> glyph_cache = new HashMap<string, Surface> ();
 
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
@@ -2109,21 +2088,21 @@ public class Glyph : FontDisplay {
 		}	
 	}
 
-	public void set_cache (int64 font_size, Surface cache) {
-		glyph_cache.set (font_size, cache);
+	public void set_cache (string key, Surface cache) {
+		glyph_cache.set (key, cache);
 	}
 
-	public bool has_cache (int64 font_size) {
-		return glyph_cache.has_key (font_size);
+	public bool has_cache (string key) {
+		return glyph_cache.has_key (key);
 	}
 
-	public Surface get_cache (int64 font_size) {
-		if (unlikely (!has_cache (font_size))) {
+	public Surface get_cache (string key) {
+		if (unlikely (!has_cache (key))) {
 			warning ("No cache for glyph.");
 			return new ImageSurface (Cairo.Format.ARGB32, 1, 1);
 		}
 		
-		return glyph_cache.get (font_size);
+		return glyph_cache.get (key);
 	}
 	
 	public void add_custom_guide () {

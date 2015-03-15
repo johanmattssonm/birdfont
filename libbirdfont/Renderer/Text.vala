@@ -318,7 +318,7 @@ public class Text : Widget {
 		draw_at_baseline (cr, widget_x, y);
 	}
 	
-	public void draw_at_top (Context cr, double px, double py, int64 cacheid = -1) {
+	public void draw_at_top (Context cr, double px, double py, string cacheid = "") {
 		double s = get_scale ();
 		double y = py + s * (font.top_limit - font.base_line);
 		draw_at_baseline (cr, px, y, cacheid);
@@ -331,22 +331,31 @@ public class Text : Widget {
 		this.a = a;
 	}
 	
-	public int64 get_cache_id () {
-		int64 s = (((int64) font_size) << 32) 
-			| (((int64) (r * 255)) << 24)
+	public string get_cache_id (int offset_x, int offset_y) {
+		string key;
+		int64 c;
+		
+		c = (((int64) (r * 255)) << 24)
 			| (((int64) (g * 255)) << 16)
 			| (((int64) (b * 255)) << 8)
 			| (((int64) (a * 255)) << 0);
-		return s;
+		
+		// FIXME: use binary key
+		key = @"$font_size $c $offset_x $offset_y";
+		
+		return key;
 	}
 	
-	public void draw_at_baseline (Context cr, double px, double py, int64 cacheid = -1) {
+	public void draw_at_baseline (Context cr, double px, double py, string cacheid = "") {
 		double x, y;
 		double ratio;
 		double cc_y;
-		int64 cache_id;
+		string cache_id;
+		int offset_x, offset_y;
 		
-		cache_id = (cacheid < 0) ? get_cache_id () : cacheid;
+		offset_x = (int) (10 * (px - (int) px));
+		offset_y = (int) (10 * (py - (int) py));
+		cache_id = (cacheid == "") ? get_cache_id (offset_x, offset_y) : cacheid;
 			
 		ratio = get_scale ();
 		cc_y = (font.top_limit - font.base_line) * ratio;
@@ -366,7 +375,9 @@ public class Text : Widget {
 					return;
 				}
 				
-				draw_chached (cr ,glyph, kerning, last, x, y, cc_y, cache_id, ratio);
+				draw_chached (cr ,glyph, kerning, last, x, y, cc_y, 
+					cache_id, ratio, offset_x, offset_y);
+					
 				x = end;
 			});
 		} else {
@@ -381,14 +392,14 @@ public class Text : Widget {
 					return;
 				}
 				
-				draw_without_cache (cr, glyph, kerning, last, x, y, cc_y, cache_id, ratio);
+				draw_without_cache (cr, glyph, kerning, last, x, y, cc_y, ratio);
 				x = end;
 			});
 		}
 	}
 	
 	void draw_without_cache (Context cr, Glyph glyph, double kerning, bool last, 
-		double x, double y, double cc_y, int64 cache_id, double ratio) {
+		double x, double y, double cc_y, double ratio) {
 	
 		double lsb;
 		
@@ -408,7 +419,8 @@ public class Text : Widget {
 	}
 	
 	void draw_chached (Context cr, Glyph glyph, double kerning, bool last, 
-		double x, double y, double cc_y,int64 cache_id, double ratio) {
+		double x, double y, double cc_y, string cache_id, double ratio,
+		int offset_x, int offset_y) {
 		
 		double lsb;
 		Surface cache;
@@ -425,7 +437,7 @@ public class Text : Widget {
 			cc.new_path ();
 
 			foreach (Path path in glyph.path_list) {
-				draw_path (cc, path, lsb, 0, cc_y, ratio);
+				draw_path (cc, path, lsb, offset_x / 10.0, cc_y + offset_y / 10.0, ratio);
 			}
 			
 			cc.fill ();
@@ -434,7 +446,7 @@ public class Text : Widget {
 			glyph.set_cache (cache_id, cache);
 		}
 
-		cr.set_source_surface (glyph.get_cache (cache_id), x, y - cc_y);		
+		cr.set_source_surface (glyph.get_cache (cache_id), (int) x, (int) (y - cc_y));		
 		cr.paint ();
 	}
 	
