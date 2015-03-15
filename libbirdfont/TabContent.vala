@@ -131,6 +131,8 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void motion_notify (double x, double y) {
+		Toolbox toolbox;
+		
 		if (MenuTab.suppress_event) {
 			return;
 		}
@@ -141,6 +143,9 @@ public class TabContent : GLib.Object {
 			text_input.motion (x, y);
 			GlyphCanvas.redraw ();
 		}
+		
+		toolbox = MainWindow.get_toolbox ();
+		toolbox.hide_tooltip ();
 	}
 	
 	public static void button_release (int button, double x, double y) {
@@ -152,12 +157,7 @@ public class TabContent : GLib.Object {
 			MainWindow.get_menu ().button_release (button, x, y);
 		} else {
 			if (text_input_visible) {
-				text_input.button_release (button, x, y);
-
-				if (y > TEXT_INPUT_HEIGHT) {
-					hide_text_input ();
-				}
-				
+				text_input.button_release (button, x, y);				
 				GlyphCanvas.redraw ();
 			} else {
 				GlyphCanvas.current_display.button_release (button, x, y);
@@ -176,6 +176,10 @@ public class TabContent : GLib.Object {
 			if (text_input_visible) {
 				text_input.button_press (button, x, y);
 				text_input_button.button_press (button, x, y);
+				
+				if (y > TEXT_INPUT_HEIGHT) {
+					hide_text_input ();
+				}
 			} else {
 				GlyphCanvas.current_display.button_press (button, x, y);
 			}

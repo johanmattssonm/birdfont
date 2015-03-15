@@ -21,6 +21,8 @@ public class Theme : GLib.Object {
 
 	static Gee.HashMap<string, Color> colors;
 	public static Gee.ArrayList<string> color_list;
+	public static Gee.ArrayList<string> themes;
+	public static string current_theme;
 
 	public static void text_color (Text text, string name) {
 		Color c;
@@ -69,6 +71,7 @@ public class Theme : GLib.Object {
 		c = colors.get (name);
 		text.set_source_rgba (c.r, c.g, c.b, opacity);
 	}
+	
 	public static Color get_color (string name) {
 		Color c;
 		
@@ -81,8 +84,11 @@ public class Theme : GLib.Object {
 	}
 	
 	public static void set_default_colors () {
+		current_theme = "";
+		
 		color_list = new Gee.ArrayList<string> ();
 		colors = new Gee.HashMap<string, Color> ();
+		themes = new Gee.ArrayList<string> ();
 		
 		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
 		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
@@ -168,6 +174,34 @@ public class Theme : GLib.Object {
 		N_("Tool Background 4");
 		
 		N_("Button Foreground");
+		
+		add_theme_files ();
+	}
+	
+	static void add_theme_files () {
+		FileEnumerator enumerator;
+		FileInfo? file_info;
+		string file_name;
+		File dir;
+		
+		dir = BirdFont.get_settings_directory ();
+
+		themes.clear ();
+		themes.add ("default.theme");
+		themes.add ("high_contrast.theme");
+		
+		try {
+			enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+			while ((file_info = enumerator.next_file ()) != null) {
+				file_name = ((!) file_info).get_name ();
+				
+				if (file_name.has_suffix (".theme")) {
+					themes.add (file_name);
+				}
+			}
+		} catch (Error e) {
+			warning (e.message);
+		}
 	}
 	
 	public static void set_default_color (string name, double r, double g, double b, double a) {
@@ -181,24 +215,52 @@ public class Theme : GLib.Object {
 		write_theme ();
 	}
 
-	public static void load_theme () {
-		File default_theme = SearchPaths.find_file (null, "theme.xml");
-		File user_theme = get_child (BirdFont.get_settings_directory (), "theme.xml");
+	public static void load_theme (string theme_file) {
+		File default_theme;
+		File user_theme;
 
-		if (default_theme.query_exists ()) {
-			parse_theme (default_theme);
-		}
-
+		user_theme = get_child (BirdFont.get_settings_directory (), theme_file);
 		if (user_theme.query_exists ()) {
+			current_theme = theme_file;
 			parse_theme (user_theme);
+			return;
 		}
+		
+		default_theme = SearchPaths.find_file (null, theme_file);
+		if (default_theme.query_exists ()) {
+			current_theme = theme_file;
+			parse_theme (default_theme);
+			return;
+		}
+		
+		warning (@"Theme not found: $theme_file");
 	}
 
 	public static void write_theme () {
 		DataOutputStream os;
 		File file;
+		int i;
+		string base_name;
+		
+		if (current_theme == "") {
+			warning ("No name for theme.");
+			return;
+		}
 
-		file = get_child (BirdFont.get_settings_directory (), "theme.xml");
+		if (current_theme == "default.theme" || current_theme == "high_contrast.theme") {
+			current_theme = "custom.theme";
+			
+			file = get_child (BirdFont.get_settings_directory (), current_theme);
+			i = 2;
+			base_name = "custom";
+			while (file.query_exists ()) {
+				current_theme = @"$(base_name)_theme_$(i).theme";
+				file = get_child (BirdFont.get_settings_directory (), current_theme);
+				i++;
+			}
+		}
+
+		file = get_child (BirdFont.get_settings_directory (), current_theme);
 		
 		try {
 			if (file.query_exists ()) {
@@ -233,6 +295,8 @@ public class Theme : GLib.Object {
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
+		
+		add_theme_files ();
 	}
 
 	static void parse_theme (File f) {
@@ -286,6 +350,27 @@ public class Theme : GLib.Object {
 		}
 
 		colors.set (name, new Color (r, g, b, a));
+	}
+	
+	public static void add_new_theme (SettingsDisplay d) {
+		TextListener listener;
+
+		listener = new TextListener (t_("New theme"), "", t_("Set"));
+		
+		listener.signal_text_input.connect ((text) => {
+			if (text != "") {
+				current_theme = text + ".theme";
+				themes.add (current_theme);
+			}
+		});
+		
+		listener.signal_submit.connect (() => {
+			TabContent.hide_text_input ();
+			write_theme ();
+			d.create_setting_items ();
+		});
+		
+		TabContent.show_text_input (listener);		
 	}
 }
 

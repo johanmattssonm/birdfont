@@ -496,8 +496,10 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void hide_tooltip () {
-		tool_tip = null;
-		redraw_tool_box ();
+		if (tool_tip != null) {
+			tool_tip = null;
+			redraw_tool_box ();
+		}
 	}
 	
 	public void show_tooltip (string tool_tip, double x, double y) {

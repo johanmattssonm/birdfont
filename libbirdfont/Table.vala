@@ -104,6 +104,10 @@ public abstract class Table : FontDisplay {
 		Row? selected = null;
 		bool over_delete = false;
 
+		if (button != 1) {
+			return;
+		}
+
 		foreach (Row r in get_rows ()) {
 			if (s++ >= scroll) {
 				y += 18 * MainWindow.units;

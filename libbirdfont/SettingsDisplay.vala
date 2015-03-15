@@ -33,7 +33,12 @@ public class SettingsDisplay : FontDisplay {
 		allocation = new WidgetAllocation ();
 		tools = new Gee.ArrayList<SettingsItem> ();
 		content_height = 200;
-		
+		precision = new SpinButton ("precision");
+		create_setting_items ();
+	}
+	
+	public void create_setting_items () {
+		tools.clear ();
 		// setting items
 		tools.add (new SettingsItem.head_line (t_("Settings")));
 		
@@ -60,8 +65,7 @@ public class SettingsDisplay : FontDisplay {
 		
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
-		precision = new SpinButton ("precision");
-		
+
 		if (precision_value != "") {
 			precision.set_value (precision_value);
 		} else {
@@ -153,10 +157,83 @@ public class SettingsDisplay : FontDisplay {
 			tools.add (new SettingsItem.key_binding (menu_item));
 		}
 		
+		tools.add (new SettingsItem.head_line (t_("Themes")));
+		
+		Gee.ArrayList<Tool> theme_buttons = new Gee.ArrayList<Tool> ();
+		
+		foreach (string theme in Theme.themes) {			
+			string label;
+			Tool select_theme = new Tool (theme);
+			
+			select_theme.deselect_action.connect((self) => {
+				self.set_selected (true);
+			});
+			
+			select_theme.select_action.connect((self) => {
+				string theme_file = self.get_name ();
+				TabBar tb;
+				
+				Preferences.set ("theme", theme_file);
+				Theme.load_theme (theme_file);
+								
+				self.set_selected (false);
+				create_setting_items ();
+				
+				Toolbox.redraw_tool_box ();
+				GlyphCanvas.redraw ();
+				
+				tb = MainWindow.get_tab_bar ();
+				tb.redraw (0, 0, tb.width, tb.height);
+			});
+			
+			select_theme.set_icon ("theme");
+			
+			if (theme == "default.theme") {
+				label = t_("Default theme");
+			} else if (theme == "high_contrast.theme") {
+				label = t_("High contrast theme");
+			} else if (theme == "custom.theme") {
+				label = t_("Custom theme");
+			} else {
+				label = theme.replace (".theme", "");
+			}
+			
+			tools.add (new SettingsItem (select_theme, label));
+			theme_buttons.add (select_theme);
+			
+			if (select_theme.get_name () == Theme.current_theme) {
+				select_theme.set_selected (true);
+			}
+		}
+
+		foreach (Tool t in theme_buttons) {
+			t.set_selected (false);
+		}
+
+		Tool add_theme = new Tool ("add_new_theme");
+		add_theme.select_action.connect((self) => {
+			foreach (Tool t in theme_buttons) {
+				t.set_selected (false);
+			}
+			
+			self.set_selected (false);
+			Theme.add_new_theme (this); 
+			GlyphCanvas.redraw ();
+		});
+		tools.add (new SettingsItem (add_theme, t_("Add new theme")));
+		
 		tools.add (new SettingsItem.head_line (t_("Colors")));
 
 		foreach (string color in Theme.color_list) {
-			tools.add (new SettingsItem.color (color));
+			SettingsItem s = new SettingsItem.color (color);
+			ColorTool c = (ColorTool) ((!) s.button);
+			
+			tools.add (s);
+			
+			c.color_updated.connect (() => {
+				create_setting_items ();
+				GlyphCanvas.redraw ();
+			});
 		}		
 	}
 

@@ -387,6 +387,7 @@ public class BirdFont {
 		int i;
 		File font_file;
 		string exec_path;
+		string theme;
 
 		args = new Argument.command_line (arg);
 
@@ -429,7 +430,11 @@ public class BirdFont {
 		Preferences.load ();
 		
 		Theme.set_default_colors ();
-		Theme.load_theme ();
+		
+		theme = Preferences.get ("theme");
+		if (theme != "") {
+			Theme.load_theme (theme);
+		}
 		
 		current_font = new Font ();
 		current_font.set_name ("");

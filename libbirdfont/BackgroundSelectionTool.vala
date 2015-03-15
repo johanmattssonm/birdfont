@@ -20,7 +20,7 @@ namespace BirdFont {
 public class BackgroundSelectionTool : CutBackgroundTool {
 	
 	public BackgroundSelectionTool () {
-		base ("select_background", t_("Select Background"));
+		base ("select_background", t_("Select background"));
 		editor_events = true;
 		persistent = true;
 		self_destination = false;

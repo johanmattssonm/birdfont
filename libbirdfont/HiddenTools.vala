@@ -25,7 +25,7 @@ public class HiddenTools : ToolCollection  {
 		Expander hidden_expander = new Expander ();
 		expanders = new Gee.ArrayList<Expander> ();
 		
-		Tool zoom_in = new Tool ("zoom_in", t_("Zoom In"));
+		Tool zoom_in = new Tool ("zoom_in", t_("Zoom in"));
 		zoom_in.select_action.connect ((self) => {
 			DrawingTools.zoom_tool.store_current_view ();
 			GlyphCanvas.current_display.zoom_in ();
