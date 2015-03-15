@@ -249,8 +249,8 @@ public class Tool : Widget {
 		double bgx, bgy;
 		double iconx, icony;
 		
-		string border = "Tool Border 3";
-		string background = "Tool Border 3";
+		string border = "Button Border 3";
+		string background = "Button Border 3";
 		
 		cr.save ();
 			
@@ -259,23 +259,23 @@ public class Tool : Widget {
 
 		// Button in four states
 		if (selected) {
-			border = "Tool Border 1";
-			background = "Tool Background 1";
+			border = "Button Border 1";
+			background = "Button Background 1";
 		}
 
 		if (selected && active) {
-			border = "Tool Border 2";
-			background = "Tool Background 2";
+			border = "Button Border 2";
+			background = "Button Background 2";
 		}
 
 		if (!selected) {
-			border = "Tool Border 3";
-			background = "Tool Background 3";
+			border = "Button Border 3";
+			background = "Button Background 3";
 		}
 
 		if (!selected && active) {
-			border = "Tool Border 4";
-			background = "Tool Background 4";
+			border = "Button Border 4";
+			background = "Button Background 4";
 		}
 
 		Theme.color (cr, background);
@@ -290,7 +290,11 @@ public class Tool : Widget {
 		iconx = bgx + w / 2 - icon_font.get_sidebearing_extent () / 2;
 		icony = bgy + h / 2 - icon_font.get_height () / 2;
 		
-		Theme.text_color (icon_font, "Button Foreground");
+		if (!selected || active) {
+			Theme.text_color (icon_font, "Button Foreground");
+		} else {
+			Theme.text_color (icon_font, "Selected Button Foreground");
+		}	
 		
 		icon_font.widget_x = iconx;
 		icon_font.widget_y = icony;

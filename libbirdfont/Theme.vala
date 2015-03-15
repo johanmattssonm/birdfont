@@ -122,19 +122,20 @@ public class Theme : GLib.Object {
 		
 		Theme.set_default_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
 		
-		Theme.set_default_color ("Tool Border 1", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Tool Background 1", 14 / 255.0, 16 / 255.0, 17 / 255.0, 1);
+		Theme.set_default_color ("Button Border 1", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Button Background 1", 14 / 255.0, 16 / 255.0, 17 / 255.0, 1);
 
-		Theme.set_default_color ("Tool Border 2", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Tool Background 2", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
+		Theme.set_default_color ("Button Border 2", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Button Background 2", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
 
-		Theme.set_default_color ("Tool Border 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Tool Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
+		Theme.set_default_color ("Button Border 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Button Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
 
-		Theme.set_default_color ("Tool Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Tool Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
+		Theme.set_default_color ("Button Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Button Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
 		
 		Theme.set_default_color ("Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Selected Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		
 		N_("Stroke Color");
 		N_("Handle Color");
@@ -166,14 +167,14 @@ public class Theme : GLib.Object {
 		N_("Guide 2");
 		N_("Guide 3");
 		
-		N_("Tool Border 1");
-		N_("Tool Background 1");
-		N_("Tool Border 2");
-		N_("Tool Background 2");
-		N_("Tool Border 3");
-		N_("Tool Background 3");
-		N_("Tool Border 4");
-		N_("Tool Background 4");
+		N_("Button Border 1");
+		N_("Button Background 1");
+		N_("Button Border 2");
+		N_("Button Background 2");
+		N_("Button Border 3");
+		N_("Button Background 3");
+		N_("Button Border 4");
+		N_("Button Background 4");
 		
 		N_("Button Foreground");
 		

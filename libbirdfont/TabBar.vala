@@ -624,7 +624,7 @@ public class TabBar : GLib.Object {
 
 		cr.save ();
 		cr.set_line_width (0);
-		cr.set_source_rgba (background_r, background_g, background_b, 1);
+		Theme.color (cr, "Background 4");
 		cr.rectangle (0, 0, width, height);
 		cr.fill ();
 		cr.restore ();
