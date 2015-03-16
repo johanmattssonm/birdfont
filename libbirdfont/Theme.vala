@@ -137,46 +137,46 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		Theme.set_default_color ("Selected Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		
-		N_("Stroke Color");
-		N_("Handle Color");
-		N_("Fill Color");
+		t_("Stroke Color");
+		t_("Handle Color");
+		t_("Fill Color");
 		
-		N_("Background 1");
-		N_("Background 2");
-		N_("Background 3");
-		N_("Background 4");
-		N_("Background 5");
-		N_("Background 6");
-		N_("Background 7");
-		N_("Background 8");
-		N_("Background 9");
+		t_("Background 1");
+		t_("Background 2");
+		t_("Background 3");
+		t_("Background 4");
+		t_("Background 5");
+		t_("Background 6");
+		t_("Background 7");
+		t_("Background 8");
+		t_("Background 9");
 		
-		N_("Foreground 1");
-		N_("Foreground 2");
-		N_("Foreground 3");
-		N_("Foreground 4");
-		N_("Foreground 5");
-		N_("Foreground Inverted");
+		t_("Foreground 1");
+		t_("Foreground 2");
+		t_("Foreground 3");
+		t_("Foreground 4");
+		t_("Foreground 5");
+		t_("Foreground Inverted");
 		
-		N_("Highlighted 1");
-		N_("Highlighted Guide");
+		t_("Highlighted 1");
+		t_("Highlighted Guide");
 		
-		N_("Grid");
+		t_("Grid");
 		
-		N_("Guide 1");
-		N_("Guide 2");
-		N_("Guide 3");
+		t_("Guide 1");
+		t_("Guide 2");
+		t_("Guide 3");
 		
-		N_("Button Border 1");
-		N_("Button Background 1");
-		N_("Button Border 2");
-		N_("Button Background 2");
-		N_("Button Border 3");
-		N_("Button Background 3");
-		N_("Button Border 4");
-		N_("Button Background 4");
+		t_("Button Border 1");
+		t_("Button Background 1");
+		t_("Button Border 2");
+		t_("Button Background 2");
+		t_("Button Border 3");
+		t_("Button Background 3");
+		t_("Button Border 4");
+		t_("Button Background 4");
 		
-		N_("Button Foreground");
+		t_("Button Foreground");
 		
 		add_theme_files ();
 	}
@@ -376,12 +376,12 @@ public class Theme : GLib.Object {
 		TabContent.show_text_input (listener);		
 	}
 	
-	public static string get_icon_file () {
+	public static string get_icot_file () {
 		string icons;
 		File f;
 
-		return_val_if_fail (!is_null (current_theme), "icons.bf".dup ());
-		return_val_if_fail (current_theme != "", "icons.bf".dup ());
+		returt_val_if_fail (!is_null (current_theme), "icons.bf".dup ());
+		returt_val_if_fail (current_theme != "", "icons.bf".dup ());
 		
 		if (current_theme == "default.theme" || current_theme == "high_contrast.theme") {
 			return "icons.bf".dup ();
