@@ -207,6 +207,8 @@ public class KerningDisplay : FontDisplay {
 						cr.fill ();
 						cr.restore ();
 					}
+					
+					cr.restore ();
 				}	
 				
 				x += w + kern;
@@ -253,6 +255,7 @@ public class KerningDisplay : FontDisplay {
 			row.remove_at (j);
 		}
 		
+		cr.fill ();
 		cr.restore ();
 	}
 

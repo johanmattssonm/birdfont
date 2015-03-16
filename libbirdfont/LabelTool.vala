@@ -24,7 +24,7 @@ public class LabelTool : Tool {
 	public bool has_delete_button { get; set; }
 	public signal void delete_action (LabelTool self);
 
-	double counter_box_width = 22;
+	double counter_box_width = 24;
 	double counter_box_height = 11;
 
 	public LabelTool (string label) {
@@ -91,7 +91,7 @@ public class LabelTool : Tool {
 			
 			glyph_count = new Text ();
 			glyph_count.set_text (@"$(this.number)");
-			text_height = 13;
+			text_height = 12;
 			
 			glyph_count.set_font_size (text_height);
 			center_x = bgx + (counter_box_width / 2.0  - glyph_count.get_extent () / 2.0);
