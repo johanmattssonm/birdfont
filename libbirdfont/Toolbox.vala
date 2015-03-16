@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 2014 Johan Mattsson
+    Copyright (C) 2012 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -26,6 +26,7 @@ public class Toolbox : GLib.Object  {
 	public static OverviewTools overview_tools;
 	public static BackgroundTools background_tools;
 	public static HiddenTools hidden_tools;
+	public static SpacingTools spacing_tools;
 	
 	Tool current_tool;
 	
@@ -61,6 +62,7 @@ public class Toolbox : GLib.Object  {
 		overview_tools = new OverviewTools ();
 		background_tools = new BackgroundTools ();
 		hidden_tools = new HiddenTools ();
+		spacing_tools = new SpacingTools ();
 		
 		tool_sets.append (drawing_tools);
 		tool_sets.append (kerning_tools);
@@ -80,7 +82,9 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public static void set_toolbox_from_tab (string tab_name, Tab? t = null) {		
-		if (tab_name == "Kerning") {
+		if (tab_name == "Spacing") {
+			current_set = (ToolCollection) spacing_tools;
+		} else if (tab_name == "Kerning") {
 			current_set = (ToolCollection) kerning_tools;
 		} else if (tab_name == "Preview") {
 			current_set = (ToolCollection) preview_tools;
