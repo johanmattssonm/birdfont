@@ -84,101 +84,104 @@ public class Theme : GLib.Object {
 	}
 	
 	public static void set_default_colors () {
-		current_theme = "default.theme"; // FIXME: only on test
-		
-		color_list = new Gee.ArrayList<string> ();
-		colors = new Gee.HashMap<string, Color> ();
-		themes = new Gee.ArrayList<string> ();
-		
-		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
-		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
-		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
-		
-		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
-		Theme.set_default_color ("Background 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		Theme.set_default_color ("Background 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Background 4", 51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
-		Theme.set_default_color ("Background 5", 0.3, 0.3, 0.3, 1);
-		Theme.set_default_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
-		Theme.set_default_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
-		Theme.set_default_color ("Background 8", 55/255.0, 55/255.0, 55/255.0, 1);
-		Theme.set_default_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
-		
-		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
-		Theme.set_default_color ("Foreground 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
-		Theme.set_default_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
-		Theme.set_default_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
-		Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
-		
-		Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
-		
-		Theme.set_default_color ("Highlighted Guide", 0, 0, 0.3, 1);
-		Theme.set_default_color ("Guide 1", 0.7, 0.7, 0.8, 1);
-		Theme.set_default_color ("Guide 2", 0.7, 0, 0, 0.5);
-		Theme.set_default_color ("Guide 3", 120 / 255.0, 68 / 255.0, 120 / 255.0, 120 / 255.0);
-		
-		Theme.set_default_color ("Grid",0.2, 0.6, 0.2, 0.2);
-		
-		Theme.set_default_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
-		
-		Theme.set_default_color ("Button Border 1", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Button Background 1", 14 / 255.0, 16 / 255.0, 17 / 255.0, 1);
-
-		Theme.set_default_color ("Button Border 2", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Button Background 2", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
-
-		Theme.set_default_color ("Button Border 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Button Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
-
-		Theme.set_default_color ("Button Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Button Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
-		
-		Theme.set_default_color ("Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		Theme.set_default_color ("Selected Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		
-		t_("Stroke Color");
-		t_("Handle Color");
-		t_("Fill Color");
-		
-		t_("Background 1");
-		t_("Background 2");
-		t_("Background 3");
-		t_("Background 4");
-		t_("Background 5");
-		t_("Background 6");
-		t_("Background 7");
-		t_("Background 8");
-		t_("Background 9");
-		
-		t_("Foreground 1");
-		t_("Foreground 2");
-		t_("Foreground 3");
-		t_("Foreground 4");
-		t_("Foreground 5");
-		t_("Foreground Inverted");
-		
-		t_("Highlighted 1");
-		t_("Highlighted Guide");
-		
-		t_("Grid");
-		
-		t_("Guide 1");
-		t_("Guide 2");
-		t_("Guide 3");
-		
-		t_("Button Border 1");
-		t_("Button Background 1");
-		t_("Button Border 2");
-		t_("Button Background 2");
-		t_("Button Border 3");
-		t_("Button Background 3");
-		t_("Button Border 4");
-		t_("Button Background 4");
-		
-		t_("Button Foreground");
-		
 		add_theme_files ();
+		current_theme = "default.theme";
+		
+		if (Argument.has_argument ("--test") {
+			current_theme = "generated_theme.theme";
+			
+			color_list = new Gee.ArrayList<string> ();
+			colors = new Gee.HashMap<string, Color> ();
+			themes = new Gee.ArrayList<string> ();
+			
+			Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
+			Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
+			Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
+			
+			Theme.set_default_color ("Background 1", 1, 1, 1, 1);
+			Theme.set_default_color ("Background 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.set_default_color ("Background 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+			Theme.set_default_color ("Background 4", 51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
+			Theme.set_default_color ("Background 5", 0.3, 0.3, 0.3, 1);
+			Theme.set_default_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
+			Theme.set_default_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
+			Theme.set_default_color ("Background 8", 55/255.0, 55/255.0, 55/255.0, 1);
+			Theme.set_default_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
+			
+			Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
+			Theme.set_default_color ("Foreground 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
+			Theme.set_default_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
+			Theme.set_default_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
+			Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
+			
+			Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+			
+			Theme.set_default_color ("Highlighted Guide", 0, 0, 0.3, 1);
+			Theme.set_default_color ("Guide 1", 0.7, 0.7, 0.8, 1);
+			Theme.set_default_color ("Guide 2", 0.7, 0, 0, 0.5);
+			Theme.set_default_color ("Guide 3", 120 / 255.0, 68 / 255.0, 120 / 255.0, 120 / 255.0);
+			
+			Theme.set_default_color ("Grid",0.2, 0.6, 0.2, 0.2);
+			
+			Theme.set_default_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
+			
+			Theme.set_default_color ("Button Border 1", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+			Theme.set_default_color ("Button Background 1", 14 / 255.0, 16 / 255.0, 17 / 255.0, 1);
+
+			Theme.set_default_color ("Button Border 2", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+			Theme.set_default_color ("Button Background 2", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
+
+			Theme.set_default_color ("Button Border 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+			Theme.set_default_color ("Button Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
+
+			Theme.set_default_color ("Button Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+			Theme.set_default_color ("Button Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
+			
+			Theme.set_default_color ("Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.set_default_color ("Selected Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			
+			t_("Stroke Color");
+			t_("Handle Color");
+			t_("Fill Color");
+			
+			t_("Background 1");
+			t_("Background 2");
+			t_("Background 3");
+			t_("Background 4");
+			t_("Background 5");
+			t_("Background 6");
+			t_("Background 7");
+			t_("Background 8");
+			t_("Background 9");
+			
+			t_("Foreground 1");
+			t_("Foreground 2");
+			t_("Foreground 3");
+			t_("Foreground 4");
+			t_("Foreground 5");
+			t_("Foreground Inverted");
+			
+			t_("Highlighted 1");
+			t_("Highlighted Guide");
+			
+			t_("Grid");
+			
+			t_("Guide 1");
+			t_("Guide 2");
+			t_("Guide 3");
+			
+			t_("Button Border 1");
+			t_("Button Background 1");
+			t_("Button Border 2");
+			t_("Button Background 2");
+			t_("Button Border 3");
+			t_("Button Background 3");
+			t_("Button Border 4");
+			t_("Button Background 4");
+			
+			t_("Button Foreground");
+		}
 	}
 	
 	static void add_theme_files () {
@@ -376,12 +379,12 @@ public class Theme : GLib.Object {
 		TabContent.show_text_input (listener);		
 	}
 	
-	public static string get_icot_file () {
+	public static string get_icon_file () {
 		string icons;
 		File f;
 
-		returt_val_if_fail (!is_null (current_theme), "icons.bf".dup ());
-		returt_val_if_fail (current_theme != "", "icons.bf".dup ());
+		return_val_if_fail (!is_null (current_theme), "icons.bf".dup ());
+		return_val_if_fail (current_theme != "", "icons.bf".dup ());
 		
 		if (current_theme == "default.theme" || current_theme == "high_contrast.theme") {
 			return "icons.bf".dup ();

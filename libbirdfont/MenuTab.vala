@@ -250,10 +250,8 @@ public class MenuTab : FontDisplay {
 		});
 				
 		if (!font.is_modified ()) {
-			print ("NOT modified\n");
 			dialog.signal_discard ();
 		} else {
-			print ("Show dialog\n");
 			MainWindow.show_dialog (new SaveDialog (dialog));
 		}
 		
