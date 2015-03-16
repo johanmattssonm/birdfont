@@ -149,6 +149,10 @@ public class Theme : GLib.Object {
 			Theme.set_default_color ("Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			
+			Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			
+			Theme.set_default_color ("Text Area Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			
 			t_("Stroke Color");
 			t_("Handle Color");
 			t_("Fill Color");
@@ -192,6 +196,12 @@ public class Theme : GLib.Object {
 			t_("Button Background 4");
 			
 			t_("Button Foreground");
+			t_("Selected Button Foreground");
+			
+			t_("Tool Foreground");
+			t_("Selected Tool Foreground");
+			
+			t_("Text Area Background");
 		}
 	}
 	

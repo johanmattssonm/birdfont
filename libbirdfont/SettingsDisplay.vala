@@ -166,7 +166,7 @@ public class SettingsDisplay : FontDisplay {
 			Tool select_theme = new Tool (theme);
 			
 			select_theme.deselect_action.connect((self) => {
-				self.set_selected (true);
+				self.set_active (false);
 			});
 			
 			select_theme.select_action.connect((self) => {
@@ -175,8 +175,13 @@ public class SettingsDisplay : FontDisplay {
 				
 				Preferences.set ("theme", theme_file);
 				Theme.load_theme (theme_file);
-								
-				self.set_selected (false);
+					
+				foreach (Tool t in theme_buttons) {
+					t.set_selected (false);
+					t.set_active (false);
+				}
+				
+				self.set_selected (true);
 				create_setting_items ();
 				
 				Toolbox.redraw_tool_box ();
@@ -207,7 +212,7 @@ public class SettingsDisplay : FontDisplay {
 		}
 
 		foreach (Tool t in theme_buttons) {
-			t.set_selected (false);
+			t.set_selected (t.name == Theme.current_theme);
 		}
 
 		Tool add_theme = new Tool ("add_new_theme");

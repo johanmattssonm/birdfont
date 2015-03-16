@@ -27,7 +27,6 @@ public class Button : Widget {
 	public Button (string label) {
 		font_size =  17 * MainWindow.units;
 		this.label = new Text (label, font_size);
-		Theme.text_color (this.label, "Button Foreground");
 		padding = 15 * MainWindow.units;
 	}
 
@@ -46,6 +45,7 @@ public class Button : Widget {
 		cr.restore ();
 
 		cr.save ();
+		Theme.text_color (label, "Button Foreground");
 		label.draw_at_top (cr, widget_x + padding, widget_y + (2 * padding - font_size - 3 * MainWindow.units) / 2.0);
 		cr.restore ();
 	}

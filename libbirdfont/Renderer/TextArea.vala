@@ -61,7 +61,9 @@ public class TextArea : Widget {
 	Gee.ArrayList<TextUndoItem> redo_items = new Gee.ArrayList<TextUndoItem> ();
 	
 	bool store_undo_state_at_next_event = false;
+	
 	public bool editable;
+	public bool use_cache = true;
 	
 	public TextArea (double font_size = 20) {
 		this.font_size = font_size;
@@ -990,7 +992,7 @@ public class TextArea : Widget {
 			// background
 			cr.save ();
 			cr.set_line_width (1);
-			Theme.color (cr, "Background 2");
+			Theme.color (cr, "Text Area Background");
 			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
 			cr.fill ();
 			cr.restore ();
@@ -1007,6 +1009,7 @@ public class TextArea : Widget {
 		cr.save ();
 
 		word = new Text ();
+		word.use_cache (use_cache);
 		
 		width = this.width - padding;
 		x += padding;
