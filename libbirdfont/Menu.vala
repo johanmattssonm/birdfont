@@ -668,7 +668,7 @@ public class Menu : GLib.Object {
 			cr.save ();
 			label_x = allocation.width - width + 0.7 * height * MainWindow.units;
 			label_y = y + font_size - 1 * MainWindow.units;
-			Theme.text_color (item.label, "Foreground 2");
+			Theme.text_color (item.label, "Menu Foreground");
 			item.label.draw_at_baseline (cr, label_x, label_y);
 			
 			key_binding.set_text (item.get_key_bindings ());
@@ -676,7 +676,7 @@ public class Menu : GLib.Object {
 			binding_extent = key_binding.get_extent ();
 			label_x = x + width - binding_extent - 0.6 * height * MainWindow.units;
 			key_binding.set_font_size (font_size);
-			Theme.text_color (key_binding, "Foreground 2");
+			Theme.text_color (key_binding, "Menu Foreground");
 			key_binding.draw_at_baseline (cr, label_x, label_y);
 			
 			y += height;

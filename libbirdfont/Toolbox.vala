@@ -482,7 +482,7 @@ public class Toolbox : GLib.Object  {
 		TextArea t;
 		
 		if (tool_tip != null && tool_tip != "") {
-			t = new TextArea (15 * get_scale ());
+			t = new TextArea (17 * get_scale ());
 			t.allocation = new WidgetAllocation.for_area (0, 0, allocation_width, allocation_height);
 			t.set_editable (false);
 			t.set_text ((!) tool_tip);

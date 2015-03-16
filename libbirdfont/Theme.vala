@@ -84,15 +84,15 @@ public class Theme : GLib.Object {
 	}
 	
 	public static void set_default_colors () {
-		add_theme_files ();
 		current_theme = "default.theme";
+		color_list = new Gee.ArrayList<string> ();
+		colors = new Gee.HashMap<string, Color> ();
+		themes = new Gee.ArrayList<string> ();
+
+		add_theme_files ();
 		
-		if (Argument.has_argument ("--test") {
+		if (BirdFont.has_argument ("--test")) {
 			current_theme = "generated_theme.theme";
-			
-			color_list = new Gee.ArrayList<string> ();
-			colors = new Gee.HashMap<string, Color> ();
-			themes = new Gee.ArrayList<string> ();
 			
 			Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
 			Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
@@ -107,13 +107,16 @@ public class Theme : GLib.Object {
 			Theme.set_default_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
 			Theme.set_default_color ("Background 8", 55/255.0, 55/255.0, 55/255.0, 1);
 			Theme.set_default_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
+			Theme.set_default_color ("Background 10", 223/255.0, 223/255.0, 223/255.0, 1);
 			
 			Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
 			Theme.set_default_color ("Foreground 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
 			Theme.set_default_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
 			Theme.set_default_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
+			Theme.set_default_color ("Foreground 6", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
 			Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
+			Theme.set_default_color ("Menu Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			
 			Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 			
@@ -138,8 +141,11 @@ public class Theme : GLib.Object {
 			Theme.set_default_color ("Button Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
 			Theme.set_default_color ("Button Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
 			
-			Theme.set_default_color ("Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			Theme.set_default_color ("Selected Button Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.set_default_color ("Button Foreground", 1, 1, 1, 1);
+			Theme.set_default_color ("Selected Button Foreground", 1, 1, 1, 1);
+
+			Theme.set_default_color ("Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 			
 			t_("Stroke Color");
 			t_("Handle Color");
@@ -161,6 +167,7 @@ public class Theme : GLib.Object {
 			t_("Foreground 4");
 			t_("Foreground 5");
 			t_("Foreground Inverted");
+			t_("Menu Foreground");
 			
 			t_("Highlighted 1");
 			t_("Highlighted Guide");

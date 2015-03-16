@@ -292,10 +292,10 @@ public class Tool : Widget {
 		iconx = bgx + w / 2 - icon_font.get_sidebearing_extent () / 2;
 		icony = bgy + h / 2 - icon_font.get_height () / 2;
 		
-		if (!selected || active) {
-			Theme.text_color (icon_font, "Button Foreground");
+		if (!selected) {
+			Theme.text_color (icon_font, "Tool Foreground");
 		} else {
-			Theme.text_color (icon_font, "Selected Button Foreground");
+			Theme.text_color (icon_font, "Selected Tool Foreground");
 		}	
 		
 		icon_font.widget_x = iconx;

@@ -245,7 +245,7 @@ public class FileTab : FontDisplay {
 
 		if (recent_fonts.size == 0 && !has_backup ()) {
 			cr.save ();
-			Theme.color (cr, "Background 5");
+			Theme.color (cr, "Foreground 2");
 			cr.set_font_size (18 * MainWindow.units);
 			cr.move_to (50 * MainWindow.units, top - 9 * MainWindow.units);
 			cr.show_text (t_("No fonts created yet."));
@@ -256,7 +256,7 @@ public class FileTab : FontDisplay {
 		
 		if (scroll == 0 && recent_fonts.size > 0) {
 			cr.save ();
-			Theme.color (cr, "Background 5");
+			Theme.color (cr, "Foreground 2");
 			cr.set_font_size (18 * MainWindow.units);
 			cr.move_to (50 * MainWindow.units, top - 9 * MainWindow.units);
 			cr.show_text (t_("Recent files"));
@@ -303,12 +303,16 @@ public class FileTab : FontDisplay {
 
 	private void draw_file_row (WidgetAllocation allocation, Context cr, Font font, bool color, double y) {
 		string fn = (!) font.font_file;
+		Text file;
 		
 		fn = fn.substring (fn.replace ("\\", "/").last_index_of ("/") + 1);
 		draw_background (cr, allocation, y, color);
 		
-		cr.move_to (50 * MainWindow.units, y + row_height / 2 + 5 * MainWindow.units);
-		cr.show_text (fn);
+		file = new Text (fn);
+		Theme.text_color (file, "Foreground 6");
+		file.widget_x = 50 * MainWindow.units;
+		file.widget_y = y + 5 * MainWindow.units;
+		file.draw (cr);
 	}
 
 	private void draw_backup_row (WidgetAllocation allocation, Context cr, string backup, bool color, double y) {
@@ -334,15 +338,15 @@ public class FileTab : FontDisplay {
 	
 	void draw_background (Context cr, WidgetAllocation allocation, double y, bool color) {
 		if (color) {
-			draw_background_color (cr, allocation, y, 224);
+			draw_background_color (cr, allocation, y, 1);
 		} else {
-			draw_background_color (cr, allocation, y, 239);
+			draw_background_color (cr, allocation, y, 0.5);
 		}
 	}
 	
-	void draw_background_color (Context cr, WidgetAllocation allocation, double y, int color) {
+	void draw_background_color (Context cr, WidgetAllocation allocation, double y, double opacity) {
 		cr.save ();
-		cr.set_source_rgba (color/255.0, color/255.0, color/255.0, 1);
+		Theme.color_opacity (cr, "Background 10", opacity);
 		cr.rectangle (0, y, allocation.width, row_height);
 		cr.fill ();
 		cr.restore ();

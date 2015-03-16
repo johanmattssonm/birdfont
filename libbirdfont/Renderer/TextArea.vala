@@ -990,7 +990,7 @@ public class TextArea : Widget {
 			// background
 			cr.save ();
 			cr.set_line_width (1);
-			Theme.color (cr, "Foreground 2");
+			Theme.color (cr, "Background 2");
 			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
 			cr.fill ();
 			cr.restore ();

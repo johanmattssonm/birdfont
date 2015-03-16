@@ -27,19 +27,19 @@ public class Button : Widget {
 	public Button (string label) {
 		font_size =  17 * MainWindow.units;
 		this.label = new Text (label, font_size);
-		Theme.text_color (this.label, "Background 1");
+		Theme.text_color (this.label, "Button Foreground");
 		padding = 15 * MainWindow.units;
 	}
 
 	public override void draw (Context cr) {	
 		cr.save ();
-		Theme.color (cr, "Background 4");
+		Theme.color (cr, "Button Background 3");
 		draw_rounded_rectangle (cr, widget_x, widget_y, get_width (), padding, padding);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
-		Theme.color (cr, "Foreground 1");
+		Theme.color (cr, "Button Border 3");
 		cr.set_line_width (1);
 		draw_rounded_rectangle (cr, widget_x, widget_y, get_width (), padding, padding);
 		cr.stroke ();

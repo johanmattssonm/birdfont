@@ -741,6 +741,10 @@ public class PenTool : Tool {
 				last_point_y = Glyph.path_coordinate_y (y);
 			}
 		}
+		
+		if (show_selection_box) {
+			GlyphCanvas.redraw ();
+		}
 	}
 
 	private void move_point_on_handles (double px, double py, out double cx, out double cy) {
