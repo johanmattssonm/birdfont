@@ -350,13 +350,7 @@ public class Text : Widget {
 		double x, y;
 		double ratio;
 		double cc_y;
-		string cache_id;
-		int offset_x, offset_y;
-		
-		offset_x = (int) (10 * (px - (int) px));
-		offset_y = (int) (10 * (py - (int) py));
-		cache_id = (cacheid == "") ? get_cache_id (offset_x, offset_y) : cacheid;
-			
+
 		ratio = get_scale ();
 		cc_y = (font.top_limit - font.base_line) * ratio;
 
@@ -366,6 +360,8 @@ public class Text : Widget {
 		if (use_cached_glyphs) {
 			iterate ((glyph, kerning, last) => {
 				double end;
+				int offset_x, offset_y;
+				string cache_id;
 				
 				x += kerning * ratio;
 				end = x + glyph.get_width () * ratio;
@@ -376,7 +372,7 @@ public class Text : Widget {
 				}
 				
 				draw_chached (cr ,glyph, kerning, last, x, y, cc_y, 
-					cache_id, ratio, offset_x, offset_y);
+					ratio, cacheid);
 					
 				x = end;
 			});
@@ -419,15 +415,24 @@ public class Text : Widget {
 	}
 	
 	void draw_chached (Context cr, Glyph glyph, double kerning, bool last, 
-		double x, double y, double cc_y, string cache_id, double ratio,
-		int offset_x, int offset_y) {
+		double x, double y, double cc_y, double ratio,
+		string cacheid = "") {
 		
 		double lsb;
 		Surface cache;
 		Context cc;
+		string cache_id;
+		double xp = x;
+		double yp = y - cc_y;
+		int offset_x, offset_y;
+
+		offset_x = (int) (10 * (xp - (int) xp));
+		offset_y = (int) (10 * (yp - (int) yp));
 		
+		cache_id = (cacheid == "") ? get_cache_id (offset_x, offset_y) : cacheid;		
+				
 		if (unlikely (!glyph.has_cache (cache_id))) {
-			cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) (glyph.get_width () * ratio) + 1, (int) font_size + 1);
+			cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) (glyph.get_width () * ratio) + 2, (int) font_size + 2);
 			cc = new Context (cache);
 			
 			lsb = glyph.left_limit;
@@ -446,7 +451,7 @@ public class Text : Widget {
 			glyph.set_cache (cache_id, cache);
 		}
 
-		cr.set_source_surface (glyph.get_cache (cache_id), (int) x, (int) (y - cc_y));		
+		cr.set_source_surface (glyph.get_cache (cache_id), (int) xp, (int) yp);		
 		cr.paint ();
 	}
 	

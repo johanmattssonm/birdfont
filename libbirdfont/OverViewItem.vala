@@ -109,11 +109,11 @@ public class OverViewItem : GLib.Object {
 		cr.rectangle (x, y, width, height);
 		cr.fill ();
 		cr.restore ();
-		
+
 		cr.save ();
-		Theme.color (cr, "Foreground 1");
+		Theme.color (cr, "Foreground 3");
 		cr.rectangle (x, y, width, height);
-		cr.set_line_width (0.5);
+		cr.set_line_width (1);
 		cr.stroke ();
 		cr.restore ();
 		
@@ -192,7 +192,7 @@ public class OverViewItem : GLib.Object {
 		} else {
 			c.save ();
 			fallback = new Text ();
-			fallback.set_source_rgba (219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
+			Theme.text_color (fallback, "Foreground 7");
 			fallback.set_text ((!) character.to_string ());
 			font_size = height * 0.8;
 			fallback.set_font_size (font_size);
@@ -249,8 +249,8 @@ public class OverViewItem : GLib.Object {
 		double w = has_icons () ? width - 43 : width;
 		label = new Text (text, 17);
 		label.truncate (w);
-		label.use_cache (false); // Fixme: Improve cache
-		Theme.text_color (label, "Foreground 1");
+		label.use_cache (true);
+		Theme.text_color (label, "Foreground 6");
 		
 		label.draw_at_baseline (cr, x + 0.08 * width, y + height - 6);
 	}
@@ -273,8 +273,8 @@ public class OverViewItem : GLib.Object {
 		
 		icon = new Text ("dropdown_menu", 17);
 		icon.load_font ("icons.bf");
-		icon.use_cache (false);
-		Theme.text_color (icon, "Foreground 1");
+		icon.use_cache (true);
+		Theme.text_color (icon, "Foreground 6");
 		icon.draw_at_top (cr, x + width - 32, y + height - 19);
 		
 		g = (!) glyphs;
