@@ -20,6 +20,16 @@ public class SearchPaths {
 	private static string resources_folder = "";
 	
 	public static File find_file (string? dir, string name) {
+		File f = search_file (dir, name);
+
+		if (!f.query_exists ()) {
+			warning (@"Did not find file $name");
+		}
+		
+		return f;
+	}
+	
+	public static File search_file (string? dir, string name) {
 		File f;
 		string d = (dir == null) ? "" : (!) dir;
 		string resources;
@@ -82,9 +92,7 @@ public class SearchPaths {
 
 		f = get_file (@"/usr/share/birdfont/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
-								
-		warning (@"Did not find file $name in $d (resources: $resources)");
-			
+
 		return f;		
 	}
 		

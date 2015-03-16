@@ -184,14 +184,16 @@ public class Tool : Widget {
 	
 	public void set_icon (string name) {
 		bool found;
+		string icon_file;
 		
+		icon_file = Theme.get_icon_file ();
 		icon_font = new Text ((!) name);
-		found = icon_font.load_font ("icons.bf");
+		found = icon_font.load_font (icon_file);
 		icon_font.use_cache (false);
 		icon_font.set_font_size (35);
 		
 		if (!found) {
-			warning ("Icon font for toolbox was not found.");
+			warning (@"Icon font for toolbox was not found. ($(icon_file))");
 		}
 	}
 	

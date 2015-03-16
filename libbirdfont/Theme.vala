@@ -84,7 +84,7 @@ public class Theme : GLib.Object {
 	}
 	
 	public static void set_default_colors () {
-		current_theme = "";
+		current_theme = "default.theme"; // FIXME: only on test
 		
 		color_list = new Gee.ArrayList<string> ();
 		colors = new Gee.HashMap<string, Color> ();
@@ -374,6 +374,27 @@ public class Theme : GLib.Object {
 		});
 		
 		TabContent.show_text_input (listener);		
+	}
+	
+	public static string get_icon_file () {
+		string icons;
+		File f;
+
+		return_val_if_fail (!is_null (current_theme), "icons.bf".dup ());
+		return_val_if_fail (current_theme != "", "icons.bf".dup ());
+		
+		if (current_theme == "default.theme" || current_theme == "high_contrast.theme") {
+			return "icons.bf".dup ();
+		}
+		
+		icons = current_theme.replace (".theme", ".bf");
+		f = SearchPaths.search_file (null, icons);
+		
+		if (f.query_exists ()) {
+			return icons;
+		}
+		
+		return "icons.bf".dup ();
 	}
 }
 
