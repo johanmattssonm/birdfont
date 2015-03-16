@@ -451,8 +451,11 @@ public class Text : Widget {
 			glyph.set_cache (cache_id, cache);
 		}
 
+		cr.save ();
+		cr.set_antialias (Cairo.Antialias.NONE);
 		cr.set_source_surface (glyph.get_cache (cache_id), (int) xp, (int) yp);		
 		cr.paint ();
+		cr.restore ();
 	}
 	
 	void draw_path (Context cr, Path path, double lsb, double x, double y, double scale) {
