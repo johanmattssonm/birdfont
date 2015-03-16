@@ -434,8 +434,7 @@ public class Glyph : FontDisplay {
 			left_limit = pos;
 			update_other_spacing_classes ();
 			
-			boundaries (out x1, out y1, out x2, out y2);
-			left_line.set_metrics (x1 - pos);
+			left_line.set_metrics (get_left_side_bearing ());
 		});
 		left_line.position_updated (left_limit);
 		
@@ -446,8 +445,7 @@ public class Glyph : FontDisplay {
 			right_limit = pos;
 			update_other_spacing_classes ();
 			
-			boundaries (out x1, out y1, out x2, out y2);
-			right_line.set_metrics (pos - x2);
+			right_line.set_metrics (get_right_side_bearing ());
 		});
 		right_line.position_updated (right_limit);
 		
@@ -485,14 +483,24 @@ public class Glyph : FontDisplay {
 
 	public double get_left_side_bearing () {
 		double x1, y1, x2, y2;
-		boundaries (out x1, out y1, out x2, out y2);
-		return x1 - left_limit;
+		
+		if (path_list.size > 0 && path_list.get (0).points.size > 0) {
+			boundaries (out x1, out y1, out x2, out y2);
+			return x1 - left_limit;
+		} else {
+			return right_limit - left_limit;
+		}
 	}
 
 	public double get_right_side_bearing () {
 		double x1, y1, x2, y2;
-		boundaries (out x1, out y1, out x2, out y2);
-		return right_limit - x2;	
+		
+		if (path_list.size > 0 && path_list.get (0).points.size > 0) {
+			boundaries (out x1, out y1, out x2, out y2);
+			return right_limit - x2;
+		} else {
+			return right_limit - left_limit;
+		}
 	}
 	
 	bool has_top_line () {
