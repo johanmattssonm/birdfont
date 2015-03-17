@@ -27,7 +27,6 @@ public static int main (string[] arg) {
 	birdfont = new BirdFont.BirdFont ();
 	birdfont.init (arg, null);
 	Gtk.init (ref arg);
-	parse_gtk_rc ();
 	
 	window = new MainWindow ();
 	native_window = new GtkWindow ("birdfont");	
@@ -41,11 +40,6 @@ public static int main (string[] arg) {
 	Gtk.main ();
 
 	return 0;
-}
-
-void parse_gtk_rc () {
-	File f = FontDisplay.find_file ("layout", "birdfont.rc");
-	Gtk.rc_parse ((!) f.get_path ());
 }
 
 /** Load descriptions from the unicode character database in a 

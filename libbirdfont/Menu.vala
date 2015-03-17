@@ -453,7 +453,7 @@ public class Menu : GLib.Object {
 	public void process_key_binding_events (uint keyval) {
 		string display;
 		FontDisplay current_display = MainWindow.get_current_display ();
-		
+		ToolItem tm;
 		unichar c = (unichar) keyval;
 
 		foreach (MenuItem item in sorted_menu_items) {		
@@ -472,7 +472,13 @@ public class Menu : GLib.Object {
 					}
 					
 					if (item is ToolItem) {
-						MainWindow.get_toolbox ().set_current_tool (((ToolItem) item).tool);
+						tm  = (ToolItem) item;
+						
+						if (!tm.tool.is_tool_modifier) {
+							MainWindow.get_toolbox ().set_current_tool (tm.tool);
+						} else {
+							tm.tool.select_action (tm.tool);
+						}
 					}
 				}
 			}

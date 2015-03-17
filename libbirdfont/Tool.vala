@@ -79,6 +79,7 @@ public class Tool : Widget {
 	static Tool active_tooltip = new Tool ();
 	
 	bool visible = true;
+	public bool is_tool_modifier = false;
 	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "") {

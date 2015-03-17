@@ -35,12 +35,14 @@ public class ForesightTool : Tool {
 	int last_move_x = 0;
 	int last_move_y = 0;
 
+	public bool skip_deselect = false;
+
 	public ForesightTool (string name) {
 		base (name, t_ ("Create Beziér curves"));
 
 		select_action.connect ((self) => {
 			PenTool p = (PenTool) PointTool.pen ();
-			
+		
 			if (state != NONE) {
 				p.release_action (p, 1, last_move_x, last_move_y);
 			}
@@ -79,8 +81,8 @@ public class ForesightTool : Tool {
 					PenTool.last_point_y = Glyph.path_coordinate_y (y);
 					
 					move_action (this, x, y);
-					
 					state = MOVE_FIRST_HANDLE;
+					release_action(this, b, x, y);
 				} else if (state == MOVE_POINT) {			
 					state = MOVE_HANDLES;
 					
@@ -259,36 +261,7 @@ public class ForesightTool : Tool {
 		});
 		
 		key_press_action.connect ((self, keyval) => {
-			Tool p = PointTool.pen ();
-			unichar c = ((unichar) keyval).tolower ();
-			EditPoint ep;
-			
-			switch (c) {
-				case 's':
-					switch_to_line_mode ();
-					break;
-				case 'r':
-					move_right_handle = !move_right_handle;
-					state = MOVE_HANDLES;
-					break;			
-				case 'p':
-					previous_point++;
-					state = MOVE_HANDLES;
-					break;
-				case 'w':	
-					if (previous_point != 0) {
-						return_if_fail (current_path.points.size >= (previous_point + 1));
-						ep = current_path.points.get (current_path.points.size - (previous_point + 1));
-					} else {
-						return_if_fail (current_path.points.size >= 1);
-						ep = current_path.points.get (current_path.points.size - 1);
-					}
-					
-					ep.set_tie_handle (!ep.tie_handles);
-					
-					break;
-			}
-						
+			PenTool p = (PenTool) PointTool.pen ();
 			p.key_press_action (p, keyval);
 		});
 		
@@ -303,7 +276,7 @@ public class ForesightTool : Tool {
 		});
 	}
 	
-	void switch_to_line_mode () {
+	public void switch_to_line_mode () {
 		EditPoint ep;
 		EditPoint last;
 		
@@ -314,6 +287,8 @@ public class ForesightTool : Tool {
 			
 			last = PenTool.active_path.points.get (PenTool.active_path.points.size - 1);
 			last.convert_to_line ();
+			
+			move_action (this, last_move_x, last_move_y);
 		}
 	}
 	
