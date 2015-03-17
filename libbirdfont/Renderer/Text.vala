@@ -153,14 +153,8 @@ public class Text : Widget {
 		GlyphSequence word;
 		Glyph? g;
 		KerningClasses kc;
-
-		// FIXME: Create a thread safe implementation of the bf text rendering
-		// The problem is (probably) in the spacing and kerning code.
-		if (MenuTab.suppress_event) {
-			return;
-		}
 		
-		glyph = new Glyph ("", '\0');
+		glyph = new Glyph.no_lines ("", '\0');
 
 		w = 0;
 		prev = null;

@@ -68,14 +68,11 @@ public class TabBar : GLib.Object {
 		
 		right_arrow = new Text ("right_arrow");
 		right_arrow.load_font (Theme.get_icon_file ());
+		
+		start_wheel ();
 	}
 	
-	public void redraw (int x, int y, int w, int h) {
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Redraw tab bar: event suppressed");
-			return;
-		}
-		
+	public void redraw (int x, int y, int w, int h) {	
 		redraw_tab_bar (x, y, w, h);
 	}
 	
@@ -655,35 +652,24 @@ public class TabBar : GLib.Object {
 		
 		// progress wheel
 		if (has_progress_wheel ()) {
-			
-			// FIXME: make text rendering thread safe and update position
 			double progress_size = 40 / scale;
 			Surface s = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) progress_size, (int) progress_size);
 			Context c = new Context (s);
 			
-			if (MainWindow.get_menu ().show_menu) {
-				Theme.text_color (menu_icon, "Foreground Inverted");
-			} else {
-				Theme.text_color (menu_icon, "Foreground 2");
-			}
+			Theme.text_color (progress_icon, "Foreground 2");
 			
 			progress_icon.set_font_size (progress_size);
-			progress_icon.widget_x = 0;
-			progress_icon.widget_y = 0;
+			progress_icon.widget_x = w - 20 / scale;
+			progress_icon.widget_y = h / 2.0;
+			progress_icon.use_cache (false);
 			
-			c.translate (progress_size / 2.0, progress_size / 2.0);
-			c.rotate (wheel_rotation);
-			c.translate (-progress_size / 2.0, -progress_size / 2.0);
+			cr.save ();
+			cr.translate (progress_icon.widget_x, progress_icon.widget_y);
+			cr.rotate (wheel_rotation);
+			cr.translate (-progress_icon.widget_x, -progress_icon.widget_y);
 			
-			progress_icon.draw (c);
-			
-			c.translate (progress_size / 2.0, progress_size / 2.0);
-			c.paint ();
-			c.restore ();
-
-			progress_y = (has_scroll ()) ? h - progress_size - 5 / scale : (h - progress_size) / 2;
-			cr.set_source_surface (c.get_target (), w - 19 / scale, progress_y);
-			cr.paint ();
+			progress_icon.draw (cr);
+			cr.restore ();
 		} else {
 			// menu icon
 			if (MainWindow.get_menu ().show_menu) {
@@ -718,7 +704,7 @@ public class TabBar : GLib.Object {
 		double tab_height;
 		Tab t;
 		Text label;
-					
+			
 		if (has_progress_wheel ()) {
 			tabs_end -= 19 / scale;
 		}
