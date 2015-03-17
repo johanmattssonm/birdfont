@@ -440,30 +440,24 @@ public class SpinButton : Tool {
 		double scale = Toolbox.get_scale ();
 		
 		double xt = x + w / 2;
-		double yt = y + h / 2;
+		double yt = y;
 
-		double text_x = -15 * scale;
-		double text_y = 3 * scale;
+		double text_x = -14 * scale;
+		double text_y = 7 * scale;
+		Text text = new Text (get_short_display_value (), 15);
 		
 		base.draw (cr);
 	
 		if (!show_icon_tool_icon || waiting_for_icon_switch) {
-			cr.save ();
-			Theme.color (cr, "Background 2");
-			cr.set_font_size (10 * scale);
-			cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
-			
-			if (BirdFont.android) {
-				cr.move_to (xt + text_x + 0.6 * MainWindow.units, yt + text_y);
-			} else if (BirdFont.mac || BirdFont.win32)  {
-				cr.move_to (xt + text_x + 2, yt + text_y);
+			if (is_selected ()) {
+				Theme.text_color (text, "Selected Tool Foreground");
 			} else {
-				cr.move_to (xt + text_x, yt + text_y);
+				Theme.text_color (text, "Tool Foreground");
 			}
 			
-			cr.show_text (get_short_display_value ());
-			
-			cr.restore ();
+			text.widget_x = xt + text_x;
+			text.widget_y = yt + text_y;
+			text.draw (cr);
 		}
 	}
 	

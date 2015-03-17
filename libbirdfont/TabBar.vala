@@ -670,12 +670,6 @@ public class TabBar : GLib.Object {
 			progress_icon.set_font_size (progress_size);
 			progress_icon.widget_x = 0;
 			progress_icon.widget_y = 0;
-						
-			c.save ();
-			c.rectangle (0, 0, progress_size, progress_size);
-			c.set_line_width (0);
-			c.set_source_rgba (background_r, background_g, background_b, 1);
-			c.fill_preserve ();	
 			
 			c.translate (progress_size / 2.0, progress_size / 2.0);
 			c.rotate (wheel_rotation);
