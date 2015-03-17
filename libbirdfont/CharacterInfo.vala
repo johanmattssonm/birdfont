@@ -36,7 +36,6 @@ public class CharacterInfo : GLib.Object {
 			name = ((!) gc).get_name ();
 			icon.load_font ("icons.bf");
 			icon.use_cache (false);
-			Theme.text_color (icon, "Foreground 1");
 		}
 	}
 	
@@ -61,7 +60,13 @@ public class CharacterInfo : GLib.Object {
 		return (x <= px <= x + 12) && (y <= py <= y + 24);
 	}
 	
-	public void draw_icon (Context cr) {	
+	public void draw_icon (Context cr, bool selected) {	
+		if (selected) {
+			Theme.text_color (icon, "Overview Selected Foreground");
+		} else {
+			Theme.text_color (icon, "Overview Foreground");
+		}
+		
 		icon.draw_at_top (cr, x, y);	
 	}
 }

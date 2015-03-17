@@ -5,10 +5,12 @@
 	<color name="Foreground 6" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 1" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Guide 2" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Foreground 7" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Foreground 7" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 2" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Guide 3" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Selected Overview Item 1" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 3" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Selected Overview Item 2" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 4" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Background 5" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Background 6" red="1" green="1" blue="1" alpha="1"/>
@@ -33,12 +35,16 @@
 	<color name="Handle Color" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Button Border 4" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Highlighted Guide" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Overview Item 1" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Overview Item 2" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Selected Button Foreground" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Menu Foreground" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Overview Foreground" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Tool Foreground" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Foreground 1" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Foreground 2" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Foreground 3" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Overview Selected Foreground" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Foreground 4" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Foreground Inverted" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Foreground 5" red="0" green="0" blue="0" alpha="1"/>

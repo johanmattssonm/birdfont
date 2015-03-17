@@ -8,7 +8,9 @@
 	<color name="Foreground 7" red="0.85882352941176465" green="0.8666666666666667" blue="0.9137254901960784" alpha="1"/>
 	<color name="Background 2" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
 	<color name="Guide 3" red="0.47058823529411764" green="0.26666666666666666" blue="0.47058823529411764" alpha="0.47058823529411764"/>
+	<color name="Selected Overview Item 1" red="0.81568627450980391" green="0.81568627450980391" blue="0.81568627450980391" alpha="1"/>
 	<color name="Background 3" red="0.14901960784313725" green="0.15294117647058825" blue="0.16862745098039217" alpha="1"/>
+	<color name="Selected Overview Item 2" red="0.89803921568627454" green="0.89803921568627454" blue="0.89803921568627454" alpha="1"/>
 	<color name="Background 4" red="0.20000000000000001" green="0.21176470588235294" blue="0.23137254901960785" alpha="1"/>
 	<color name="Background 5" red="0.29999999999999999" green="0.29999999999999999" blue="0.29999999999999999" alpha="1"/>
 	<color name="Background 6" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1"/>
@@ -33,12 +35,16 @@
 	<color name="Handle Color" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Button Border 4" red="0.14901960784313725" green="0.15294117647058825" blue="0.16862745098039217" alpha="1"/>
 	<color name="Highlighted Guide" red="0" green="0" blue="0.29999999999999999" alpha="1"/>
+	<color name="Overview Item 1" red="0.92549019607843142" green="0.92549019607843142" blue="0.92549019607843142" alpha="1"/>
+	<color name="Overview Item 2" red="0.96470588235294119" green="0.96470588235294119" blue="0.96470588235294119" alpha="1"/>
 	<color name="Selected Button Foreground" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Menu Foreground" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
+	<color name="Overview Foreground" red="0.17647058823529413" green="0.17647058823529413" blue="0.17647058823529413" alpha="1"/>
 	<color name="Tool Foreground" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
 	<color name="Foreground 1" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Foreground 2" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
 	<color name="Foreground 3" red="0.10196078431372549" green="0.11764705882352941" blue="0.12549019607843137" alpha="1"/>
+	<color name="Overview Selected Foreground" red="0.17647058823529413" green="0.17647058823529413" blue="0.17647058823529413" alpha="1"/>
 	<color name="Foreground 4" red="0.15686274509803921" green="0.22352941176470589" blue="0.25490196078431371" alpha="1"/>
 	<color name="Foreground Inverted" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Foreground 5" red="0.27450980392156865" green="0.30196078431372547" blue="0.32549019607843138" alpha="1"/>

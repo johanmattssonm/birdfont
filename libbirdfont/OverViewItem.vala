@@ -226,11 +226,9 @@ public class OverViewItem : GLib.Object {
 		p = new Cairo.Pattern.linear (0.0, y + height - 20, 0.0, y + height);
 
 		if (selected) {
-			p.add_color_stop_rgba (1, 208 / 255.0, 208 / 255.0, 208 / 255.0, 1);
-			p.add_color_stop_rgba (0, 229 / 255.0, 229 / 255.0, 229 / 255.0, 1);
+			Theme.gradient (p, "Selected Overview Item 1", "Selected Overview Item 2");
 		} else {
-			p.add_color_stop_rgba (1, 236 / 255.0, 236 / 255.0, 236 / 255.0, 1);
-			p.add_color_stop_rgba (0, 246 / 255.0, 246 / 255.0, 246 / 255.0, 1);
+			Theme.gradient (p, "Overview Item 1", "Overview Item 2");
 		}
 
 		cr.rectangle (x + 1, y + height - 20, width - 2, 20 - 1);
@@ -250,7 +248,12 @@ public class OverViewItem : GLib.Object {
 		label = new Text (text, 17);
 		label.truncate (w);
 		label.use_cache (true);
-		Theme.text_color (label, "Foreground 6");
+		
+		if (selected) {
+			Theme.text_color (label, "Overview Selected Foreground");
+		} else {
+			Theme.text_color (label, "Overview Foreground");
+		}
 		
 		label.draw_at_baseline (cr, x + 0.08 * width, y + height - 6);
 	}
@@ -259,7 +262,7 @@ public class OverViewItem : GLib.Object {
 		double px = x + width - 17;
 		double py = y + height - 21;
 		info.set_position (px, py);
-		info.draw_icon (cr);
+		info.draw_icon (cr, selected);
 	}
 	
 	private void draw_menu (Context cr) {
@@ -274,7 +277,13 @@ public class OverViewItem : GLib.Object {
 		icon = new Text ("dropdown_menu", 17);
 		icon.load_font ("icons.bf");
 		icon.use_cache (true);
-		Theme.text_color (icon, "Foreground 6");
+		
+		if (selected) {
+			Theme.text_color (icon, "Overview Selected Foreground");
+		} else {
+			Theme.text_color (icon, "Overview Foreground");
+		}
+		
 		icon.draw_at_top (cr, x + width - 32, y + height - 19);
 		
 		g = (!) glyphs;

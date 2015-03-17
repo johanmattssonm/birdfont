@@ -60,6 +60,14 @@ public class Theme : GLib.Object {
 		cr.set_source_rgba (c.r, c.g, c.b, opacity);
 	}
 
+	public static void gradient (Cairo.Pattern p, string name1, string name2) {
+		Color c1 = get_color (name1);
+		Color c2 = get_color (name2);
+		
+		p.add_color_stop_rgba (1, c1.r, c1.g, c1.b, c1.a);
+		p.add_color_stop_rgba (0, c2.r, c2.g, c2.b, c2.a);
+	}
+
 	public static void text_color_opacity (Text text, string name, double opacity) {
 		Color c;
 		
@@ -82,7 +90,7 @@ public class Theme : GLib.Object {
 		
 		return colors.get (name);
 	}
-	
+		
 	public static void set_default_colors () {
 		current_theme = "default.theme";
 		color_list = new Gee.ArrayList<string> ();
@@ -149,7 +157,17 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		
 		Theme.set_default_color ("Text Area Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			
+
+		Theme.set_default_color ("Selected Overview Item 1", 208 / 255.0, 208 / 255.0, 208 / 255.0, 1);
+		Theme.set_default_color ("Selected Overview Item 2", 229 / 255.0, 229 / 255.0, 229 / 255.0, 1);
+
+		Theme.set_default_color ("Overview Item 1", 236 / 255.0, 236 / 255.0, 236 / 255.0, 1);
+		Theme.set_default_color ("Overview Item 2", 246 / 255.0, 246 / 255.0, 246 / 255.0, 1);
+		
+		Theme.set_default_color ("Overview Selected Foreground", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
+		Theme.set_default_color ("Overview Foreground", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
+		
+		
 		if (BirdFont.has_argument ("--test")) {
 			current_theme = "generated_theme.theme";
 			write_theme ();
@@ -203,6 +221,15 @@ public class Theme : GLib.Object {
 			t_("Selected Tool Foreground");
 			
 			t_("Text Area Background");
+			
+			t_("Selected Overview Item 1");
+			t_("Selected Overview Item 2");
+
+			t_("Overview Item 1");
+			t_("Overview Item 2");
+		
+			t_("Overview Selected Foreground");
+			t_("Overview Foreground");
 		}
 	}
 	
