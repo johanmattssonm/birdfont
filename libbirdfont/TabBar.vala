@@ -659,7 +659,7 @@ public class TabBar : GLib.Object {
 			Theme.text_color (progress_icon, "Foreground 2");
 			
 			progress_icon.set_font_size (progress_size);
-			progress_icon.widget_x = w - 20 / scale;
+			progress_icon.widget_x = w - 14 / scale;
 			progress_icon.widget_y = h / 2.0;
 			progress_icon.use_cache (false);
 			

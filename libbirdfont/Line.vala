@@ -129,10 +129,12 @@ public class Line : GLib.Object {
 		Glyph g;
 		TextListener listener;
 		string position;
+		bool text_input = false;
 		
 		if (get_active ()) {
 			if (button == 3 || KeyBindings.has_shift ()) {
-				move = false;			
+				move = false;
+				text_input = true;		
 				position = @"$pos";
 
 				listener = new TextListener (t_("Position"), position, t_("Move"));
@@ -166,7 +168,7 @@ public class Line : GLib.Object {
 			active = false;
 		}
 		
-		return move;
+		return move || text_input;
 	}
 
 	void redraw_line () {
