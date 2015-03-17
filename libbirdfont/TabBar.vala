@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2014 Johan Mattsson
+    Copyright (C) 2012, 2014, 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -45,8 +45,6 @@ public class TabBar : GLib.Object {
 	ImageSurface? next_tab;
 	ImageSurface? to_previous_tab;
 
-	ImageSurface? menu_icon;
-	
 	double scale = 1; // scale images in 320 dpi
 	
 	bool processing = false;
@@ -56,6 +54,11 @@ public class TabBar : GLib.Object {
 	double background_g = 54 /255.0;
 	double background_b = 59 /255.0;
 	
+	Text menu_icon;
+	Text progress_icon;
+	Text left_arrow;
+	Text right_arrow;
+	
 	public TabBar () {
 		tabs = new Gee.ArrayList<Tab> ();
 
@@ -63,8 +66,18 @@ public class TabBar : GLib.Object {
 		to_previous_tab = Icons.get_icon ("previous_tab.png");
 		
 		progress = Icons.get_icon ("progress_wheel.png");
+
+		menu_icon = new Text ("menu_icon");
+		menu_icon.load_font (Theme.get_icon_file ());
 		
-		menu_icon = Icons.get_icon ("menu.png");
+		progress_icon = new Text ("progress");
+		progress_icon.load_font (Theme.get_icon_file ());
+
+		left_arrow = new Text ("left_arrow");
+		left_arrow.load_font (Theme.get_icon_file ());
+		
+		right_arrow = new Text ("right_arrow");
+		right_arrow.load_font (Theme.get_icon_file ());
 	}
 	
 	public void redraw (int x, int y, int w, int h) {
@@ -496,7 +509,7 @@ public class TabBar : GLib.Object {
 	private void scroll_to_tab (int index, bool send_signal_selected = true) {
 		double offset = 19;
 		int i = 0;
-		double end = (has_progress_wheel ()) ? width - 28 : width - 19;
+		double end = (has_progress_wheel ()) ? width - 68 : width - 40;
 		
 		if (index < first_tab) {
 			first_tab = index;
@@ -637,54 +650,78 @@ public class TabBar : GLib.Object {
 
 		if (has_scroll () && !has_progress_wheel ()) {
 			// left arrow
-			cr.set_source_surface ((!) to_previous_tab, 2 / scale, h / 2.0 - ((!) to_previous_tab).get_height () / 2);
-			cr.paint ();
+			Theme.text_color (left_arrow, "Foreground 2");
+			left_arrow.set_font_size (40 / scale);
+			left_arrow.widget_x =  2 / scale;
+			left_arrow.widget_y =  h / 2.0 - (40 / scale ) / 2;
+			left_arrow.draw (cr);
 
 			// right arrow
+			Theme.text_color (right_arrow, "Foreground 2");
 			next_tab_x = (has_progress_wheel ()) ? w - (2 * 19 + 3) / scale : w - 19 / scale;
 			next_tab_x-= 32 / scale;
-			cr.set_source_surface ((!) next_tab, next_tab_x, h / 2.0 - ((!) next_tab).get_height () / 2.0);
-			cr.paint ();
+
+			right_arrow.set_font_size (40 / scale);
+			right_arrow.widget_x =  next_tab_x;
+			right_arrow.widget_y =  h / 2.0 - (40 / scale ) / 2;
+			right_arrow.draw (cr);
 		}
 		
 		// progress wheel
 		if (has_progress_wheel ()) {
-			ImageSurface p = (!) progress;
-			Surface s = new Surface.similar (p, p.get_content (), p.get_width (), p.get_height ());
+			
+			// FIXME: make text rendering thread safe and update position
+			double progress_size = 40 / scale;
+			Surface s = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) progress_size, (int) progress_size);
 			Context c = new Context (s);
 			
+			if (MainWindow.get_menu ().show_menu) {
+				Theme.text_color (menu_icon, "Foreground Inverted");
+			} else {
+				Theme.text_color (menu_icon, "Foreground 2");
+			}
+			
+			progress_icon.set_font_size (progress_size);
+			progress_icon.widget_x = 0;
+			progress_icon.widget_y = 0;
+						
 			c.save ();
-			c.rectangle (0, 0, p.get_width (), p.get_height ());
+			c.rectangle (0, 0, progress_size, progress_size);
 			c.set_line_width (0);
 			c.set_source_rgba (background_r, background_g, background_b, 1);
 			c.fill_preserve ();	
 			
-			c.translate (p.get_width () / 2.0, p.get_height () / 2.0);
+			c.translate (progress_size / 2.0, progress_size / 2.0);
 			c.rotate (wheel_rotation);
-			c.translate (-p.get_width () / 2.0, -p.get_height () / 2.0);
+			c.translate (-progress_size / 2.0, -progress_size / 2.0);
 			
-			c.set_source_surface ((!) progress, 0 ,0);
+			progress_icon.draw (c);
 			
-			c.translate (p.get_width () / 2.0, p.get_height () / 2.0);
+			c.translate (progress_size / 2.0, progress_size / 2.0);
 			c.paint ();
 			c.restore ();
 
-			progress_y = (has_scroll ()) ? h - ((!) progress).get_height () - 5 / scale : (h - ((!) progress).get_height ()) / 2;
+			progress_y = (has_scroll ()) ? h - progress_size - 5 / scale : (h - progress_size) / 2;
 			cr.set_source_surface (c.get_target (), w - 19 / scale, progress_y);
 			cr.paint ();
 		} else {
 			// menu icon
-			if (menu_icon != null) {
-				
-				if (MainWindow.get_menu ().show_menu) {
-					Theme.color (cr, "Background 3");
-					cr.rectangle (w - 32 / scale, 0, 32 / scale, h);
-					cr.fill ();
-				}
-				
-				cr.set_source_surface ((!) menu_icon, w - 25 / scale, h / 2.0 - ((!) menu_icon).get_height () / 2.0);
-				cr.paint ();
+			if (MainWindow.get_menu ().show_menu) {
+				Theme.color (cr, "Background 3");
+				cr.rectangle (w - 32 / scale, 0, 32 / scale, h);
+				cr.fill ();
 			}
+			
+			if (MainWindow.get_menu ().show_menu) {
+				Theme.text_color (menu_icon, "Foreground Inverted");
+			} else {
+				Theme.text_color (menu_icon, "Foreground 2");
+			}
+			
+			menu_icon.set_font_size (40 / scale);
+			menu_icon.widget_x = w - 25 / scale;
+			menu_icon.widget_y = 3 / scale;
+			menu_icon.draw (cr);
 		}
 		
 		draw_tabs (cr);

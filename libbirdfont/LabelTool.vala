@@ -85,7 +85,7 @@ public class LabelTool : Tool {
 			bgy = y + 2;
 			
 			if (is_selected ()) {
-				Theme.color (cr, "Background 6");
+				Theme.color (cr, "Glyph Count Background");
 			} else {
 				Theme.color (cr, "Background 3");
 			}
