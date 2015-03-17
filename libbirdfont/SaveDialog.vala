@@ -100,7 +100,7 @@ public class SaveDialog : Dialog {
 		cy = (allocation.height - height) / 2.0;
 		
 		cr.save ();
-		Theme.color_opacity (cr, "Foreground 1", 0.3);
+		Theme.color (cr, "Dialog Shadow");
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();

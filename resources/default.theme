@@ -12,7 +12,9 @@
 	<color name="Background 3" red="0.14901960784313725" green="0.15294117647058825" blue="0.16862745098039217" alpha="1"/>
 	<color name="Selected Overview Item 2" red="0.89803921568627454" green="0.89803921568627454" blue="0.89803921568627454" alpha="1"/>
 	<color name="Background 4" red="0.20000000000000001" green="0.21176470588235294" blue="0.23137254901960785" alpha="1"/>
+	<color name="Dialog Shadow" red="0" green="0" blue="0" alpha="0.29999999999999999"/>
 	<color name="Background 5" red="0.29999999999999999" green="0.29999999999999999" blue="0.29999999999999999" alpha="1"/>
+	<color name="Glyph Count Background" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
 	<color name="Background 6" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1"/>
 	<color name="Background 7" red="0.2196078431372549" green="0.23137254901960785" blue="0.25490196078431371" alpha="1"/>
 	<color name="Background 8" red="0.21568627450980393" green="0.21568627450980393" blue="0.21568627450980393" alpha="1"/>

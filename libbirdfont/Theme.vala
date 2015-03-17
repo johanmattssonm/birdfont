@@ -169,6 +169,9 @@ public class Theme : GLib.Object {
 		
 		Theme.set_default_color ("Glyph Count Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		
+		Theme.set_default_color ("Dialog Shadow", 0, 0, 0, 0.3);
+		
+		
 		if (BirdFont.has_argument ("--test")) {
 			current_theme = "generated_theme.theme";
 			write_theme ();
@@ -233,6 +236,8 @@ public class Theme : GLib.Object {
 			t_("Overview Foreground");
 			
 			t_("Glyph Count Background");
+			
+			t_("Dialog Shadow");
 		}
 	}
 	
