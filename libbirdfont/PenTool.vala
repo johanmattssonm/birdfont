@@ -790,7 +790,9 @@ public class PenTool : Tool {
 			move_point_event (x, y);
 			
 			// alt+click on a handle ends the symmetrical editing
-			if (KeyBindings.has_alt () && is_over_handle (x, y)) {
+			if ((KeyBindings.has_alt () || KeyBindings.has_ctrl ())
+				&& is_over_handle (x, y)) {
+				
 				selected_handle.parent.set_reflective_handles (false);
 				selected_handle.parent.set_tie_handle (false);
 				GlyphCanvas.redraw ();
@@ -966,7 +968,7 @@ public class PenTool : Tool {
 				}
 				
 				// alt+click creates a point with symmetrical handles
-				if (KeyBindings.has_alt ()) {
+				if (KeyBindings.has_alt () || KeyBindings.has_ctrl ()) {
 					selected_point.set_reflective_handles (true);
 					selected_point.process_symmetrical_handles ();
 					GlyphCanvas.redraw ();

@@ -91,67 +91,68 @@ public class Theme : GLib.Object {
 
 		add_theme_files ();
 		
+		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
+		
+		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
+		Theme.set_default_color ("Background 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Background 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Background 4", 51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
+		Theme.set_default_color ("Background 5", 0.3, 0.3, 0.3, 1);
+		Theme.set_default_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
+		Theme.set_default_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
+		Theme.set_default_color ("Background 8", 55/255.0, 55/255.0, 55/255.0, 1);
+		Theme.set_default_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
+		Theme.set_default_color ("Background 10", 223/255.0, 223/255.0, 223/255.0, 1);
+		
+		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
+		Theme.set_default_color ("Foreground 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
+		Theme.set_default_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
+		Theme.set_default_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
+		Theme.set_default_color ("Foreground 6", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
+		Theme.set_default_color ("Foreground 7", 219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
+		
+		Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
+		Theme.set_default_color ("Menu Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		
+		Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+		
+		Theme.set_default_color ("Highlighted Guide", 0, 0, 0.3, 1);
+		Theme.set_default_color ("Guide 1", 0.7, 0.7, 0.8, 1);
+		Theme.set_default_color ("Guide 2", 0.7, 0, 0, 0.5);
+		Theme.set_default_color ("Guide 3", 120 / 255.0, 68 / 255.0, 120 / 255.0, 120 / 255.0);
+		
+		Theme.set_default_color ("Grid",0.2, 0.6, 0.2, 0.2);
+		
+		Theme.set_default_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
+		
+		Theme.set_default_color ("Button Border 1", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Button Background 1", 14 / 255.0, 16 / 255.0, 17 / 255.0, 1);
+
+		Theme.set_default_color ("Button Border 2", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Button Background 2", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
+
+		Theme.set_default_color ("Button Border 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Button Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
+
+		Theme.set_default_color ("Button Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Button Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
+		
+		Theme.set_default_color ("Button Foreground", 1, 1, 1, 1);
+		Theme.set_default_color ("Selected Button Foreground", 1, 1, 1, 1);
+
+		Theme.set_default_color ("Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		
+		Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		
+		Theme.set_default_color ("Text Area Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			
 		if (BirdFont.has_argument ("--test")) {
 			current_theme = "generated_theme.theme";
-			
-			Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
-			Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
-			Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
-			
-			Theme.set_default_color ("Background 1", 1, 1, 1, 1);
-			Theme.set_default_color ("Background 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			Theme.set_default_color ("Background 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-			Theme.set_default_color ("Background 4", 51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
-			Theme.set_default_color ("Background 5", 0.3, 0.3, 0.3, 1);
-			Theme.set_default_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
-			Theme.set_default_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
-			Theme.set_default_color ("Background 8", 55/255.0, 55/255.0, 55/255.0, 1);
-			Theme.set_default_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
-			Theme.set_default_color ("Background 10", 223/255.0, 223/255.0, 223/255.0, 1);
-			
-			Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
-			Theme.set_default_color ("Foreground 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
-			Theme.set_default_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
-			Theme.set_default_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
-			Theme.set_default_color ("Foreground 6", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
-			Theme.set_default_color ("Foreground 7", 219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
-			
-			Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
-			Theme.set_default_color ("Menu Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			
-			Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
-			
-			Theme.set_default_color ("Highlighted Guide", 0, 0, 0.3, 1);
-			Theme.set_default_color ("Guide 1", 0.7, 0.7, 0.8, 1);
-			Theme.set_default_color ("Guide 2", 0.7, 0, 0, 0.5);
-			Theme.set_default_color ("Guide 3", 120 / 255.0, 68 / 255.0, 120 / 255.0, 120 / 255.0);
-			
-			Theme.set_default_color ("Grid",0.2, 0.6, 0.2, 0.2);
-			
-			Theme.set_default_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
-			
-			Theme.set_default_color ("Button Border 1", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-			Theme.set_default_color ("Button Background 1", 14 / 255.0, 16 / 255.0, 17 / 255.0, 1);
-
-			Theme.set_default_color ("Button Border 2", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-			Theme.set_default_color ("Button Background 2", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
-
-			Theme.set_default_color ("Button Border 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-			Theme.set_default_color ("Button Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
-
-			Theme.set_default_color ("Button Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-			Theme.set_default_color ("Button Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
-			
-			Theme.set_default_color ("Button Foreground", 1, 1, 1, 1);
-			Theme.set_default_color ("Selected Button Foreground", 1, 1, 1, 1);
-
-			Theme.set_default_color ("Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			
-			Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-			
-			Theme.set_default_color ("Text Area Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+			write_theme ();
 			
 			t_("Stroke Color");
 			t_("Handle Color");
@@ -234,7 +235,6 @@ public class Theme : GLib.Object {
 	public static void set_default_color (string name, double r, double g, double b, double a) {
 		color_list.add (name);
 		colors.set (name, new Color (r, g, b, a));
-		write_theme (); // FIXME: don't overwrite color
 	}
 	
 	public static void save_color (string name, double r, double g, double b, double a) {
