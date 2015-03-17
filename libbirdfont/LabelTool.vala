@@ -83,8 +83,13 @@ public class LabelTool : Tool {
 			cr.save ();
 			bgx = Toolbox.allocation_width - counter_box_width - 15;
 			bgy = y + 2;
-
-			Theme.color (cr, "Background 3");
+			
+			if (is_selected ()) {
+				Theme.color (cr, "Background 6");
+			} else {
+				Theme.color (cr, "Background 3");
+			}
+			
 			draw_rounded_rectangle (cr, bgx, bgy, counter_box_width, counter_box_height, 3);
 			cr.fill ();
 			cr.restore ();
@@ -97,8 +102,12 @@ public class LabelTool : Tool {
 			center_x = bgx + (counter_box_width / 2.0  - glyph_count.get_extent () / 2.0);
 			center_y = bgy + (counter_box_height / 2.0 + 5);
 
-			Theme.text_color (glyph_count, "Foreground Inverted");
-	
+			if (is_selected ()) {
+				Theme.text_color (glyph_count, "Foreground");
+			} else {
+				Theme.text_color (glyph_count, "Foreground Inverted");
+			}
+			
 			glyph_count.set_font_size (text_height);
 			glyph_count.draw_at_baseline (cr, center_x, center_y);
 		}
