@@ -432,8 +432,11 @@ public class BirdFont {
 		Theme.set_default_colors ();
 		
 		theme = Preferences.get ("theme");
+		
 		if (theme != "") {
 			Theme.load_theme (theme);
+		} else {
+			Theme.load_theme ("default.theme");
 		}
 		
 		current_font = new Font ();

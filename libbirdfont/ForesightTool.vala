@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -32,14 +32,29 @@ public class ForesightTool : Tool {
 	
 	Path current_path = new Path ();
 
+	int last_move_x = 0;
+	int last_move_y = 0;
+
 	public ForesightTool (string name) {
 		base (name, t_ ("Create Beziér curves"));
 
 		select_action.connect ((self) => {
+			PenTool p = (PenTool) PointTool.pen ();
+			
+			if (state != NONE) {
+				p.release_action (p, 1, last_move_x, last_move_y);
+			}
+			
 			state = NONE;
 		});
 
 		deselect_action.connect ((self) => {
+			PenTool p = (PenTool) PointTool.pen ();
+			
+			if (state != NONE) {
+				p.release_action (p, 1, last_move_x, last_move_y);
+			}
+			
 			state = NONE;
 		});
 		
@@ -48,7 +63,10 @@ public class ForesightTool : Tool {
 			PointSelection ps;
 			EditPoint first_point;
 			bool clockwise;
-			
+
+			last_move_x = x;
+			last_move_y = y;
+
 			if (previous_point > 0) {
 				previous_point = 0;
 				state = MOVE_POINT;
@@ -120,13 +138,14 @@ public class ForesightTool : Tool {
 		release_action.connect ((self, b, x, y) => {
 			PenTool p = (PenTool) PointTool.pen ();
 			PointSelection last;
-
+			
 			if (state == MOVE_HANDLES || state == MOVE_FIRST_HANDLE) {
 				if (state != MOVE_FIRST_HANDLE) { // FIXME:
-					last = add_new_point (x, y);
+					last = add_new_point (x, y);	
 				}
 				
 				state = MOVE_POINT;
+				move_action (this, x, y);
 			} else if (state == MOVE_LAST_HANDLE) {
 				previous_point = 0;
 				
@@ -159,6 +178,9 @@ public class ForesightTool : Tool {
 			PointSelection last;
 			bool lh;
 			EditPointHandle h;
+
+			last_move_x = x;
+			last_move_y = y;
 			
 			PenTool.active_path = current_path;
 			PenTool.active_path.hide_end_handle = (state == MOVE_POINT);
@@ -229,6 +251,10 @@ public class ForesightTool : Tool {
 					p.move_action (p, x, y);
 					PenTool.move_point_independent_of_handle = false;
 				}
+			}
+			
+			if (PenTool.active_path.points.size < 3) {
+				PenTool.active_edit_point = null;
 			}
 		});
 		
@@ -309,9 +335,7 @@ public class ForesightTool : Tool {
 			
 			PenTool.selected_points.clear ();
 			PenTool.selected_handle = new EditPointHandle.empty ();
-
-			p.release_action (p, 3, x, y);
-			
+						
 			if (DrawingTools.get_selected_point_type () != PointType.QUADRATIC) {
 				last = p.new_point_action (x, y);
 			} else {
@@ -324,8 +348,6 @@ public class ForesightTool : Tool {
 				last.point.get_left_handle ().x = handle_x;
 				last.point.get_left_handle ().y = handle_y;
 			}
-			
-			p.press_action (p, 3, x, y);
 			
 			PenTool.move_selected = true;
 			p.move_action (p, x, y);
