@@ -13,6 +13,7 @@
 	<color name="Selected Overview Item 2" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 4" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Background 5" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Glyph Count Background" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Background 6" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Background 7" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Background 8" red="1" green="1" blue="1" alpha="1"/>

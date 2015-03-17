@@ -39,11 +39,6 @@ public class TabBar : GLib.Object {
 
 	Tab? previous_tab = null;
 	Tab? current_tab = null;
-	
-	ImageSurface? progress = null;
-
-	ImageSurface? next_tab;
-	ImageSurface? to_previous_tab;
 
 	double scale = 1; // scale images in 320 dpi
 	
@@ -61,11 +56,6 @@ public class TabBar : GLib.Object {
 	
 	public TabBar () {
 		tabs = new Gee.ArrayList<Tab> ();
-
-		next_tab = Icons.get_icon ("next_tab.png");
-		to_previous_tab = Icons.get_icon ("previous_tab.png");
-		
-		progress = Icons.get_icon ("progress_wheel.png");
 
 		menu_icon = new Text ("menu_icon");
 		menu_icon.load_font (Theme.get_icon_file ());
@@ -630,11 +620,7 @@ public class TabBar : GLib.Object {
 		this.width = width;
 		this.height = height;
 		this.scale = height / 117.0;
-				
-		return_if_fail (to_previous_tab != null);
-		return_if_fail (next_tab != null);
-		return_if_fail (progress != null);
-
+		
 		cr.save ();
 		cr.set_line_width (0);
 		Theme.color (cr, "Background 4");
