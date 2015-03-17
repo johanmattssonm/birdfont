@@ -35,12 +35,18 @@ public class OverViewItem : GLib.Object {
 
 	public static double glyph_scale = 1.0;
 	
+	Text icon;
+	
 	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	
 		this.x = x;
 		this.y = y;
 		this.character = character;
 		this.glyphs = glyphs;
 		this.info = new CharacterInfo (character, glyphs);
+
+		icon = new Text ("dropdown_menu", 17);
+		icon.load_font ("icons.bf");
+		icon.use_cache (true);
 	}
 	
 	public string get_name () {
@@ -268,15 +274,10 @@ public class OverViewItem : GLib.Object {
 	private void draw_menu (Context cr) {
 		GlyphCollection g;
 		DropMenu menu;
-		Text icon;
 				
 		if (glyphs == null) {
 			return;
 		}
-		
-		icon = new Text ("dropdown_menu", 17);
-		icon.load_font ("icons.bf");
-		icon.use_cache (true);
 		
 		if (selected) {
 			Theme.text_color (icon, "Overview Selected Foreground");

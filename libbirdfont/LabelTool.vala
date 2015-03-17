@@ -103,7 +103,7 @@ public class LabelTool : Tool {
 			center_y = bgy + (counter_box_height / 2.0 + 5);
 
 			if (is_selected ()) {
-				Theme.text_color (glyph_count, "Foreground");
+				Theme.text_color (glyph_count, "Foreground 1");
 			} else {
 				Theme.text_color (glyph_count, "Foreground Inverted");
 			}

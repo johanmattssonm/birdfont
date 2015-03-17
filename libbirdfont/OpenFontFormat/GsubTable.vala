@@ -73,14 +73,15 @@ public class GsubTable : OtfTable {
 		contextual = new LigatureSetList.context (glyf_table);
 		
 		clig_subtable = get_ligature_subtable (clig);
-		chained_context = get_chaining_contextual_substition_subtable ();
-		chained_ligatures = get_ligature_subtable (contextual);
+		// FIXME: put back contextual ligatures
+		//chained_context = get_chaining_contextual_substition_subtable ();
+		//chained_ligatures = get_ligature_subtable (contextual);
 		
 		// lookup table
-		fd.add_ushort (3); // number of lookups
+		fd.add_ushort (1); // number of lookups FIXME: should be 3
 		fd.add_ushort (8); // offset to lookup 1
-		fd.add_ushort (16); // offset to lookup 2
-		fd.add_ushort (24); // offset to lookup 3
+		//fd.add_ushort (16); // offset to lookup 2
+		//fd.add_ushort (24); // offset to lookup 3
 
 		length = 0;
 		fd.add_ushort (4); // lookup type 
@@ -89,6 +90,7 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (24 + length); // array of offsets to subtable
 		length += (uint16) clig_subtable.length_with_padding ();
 
+/*
 		fd.add_ushort (6); // lookup type 
 		fd.add_ushort (0); // lookup flags
 		fd.add_ushort (1); // number of subtables
@@ -100,10 +102,10 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (1); // number of subtables
 		fd.add_ushort (8 + length); // array of offsets to subtable
 		length += (uint16) chained_ligatures.length_with_padding ();
-		
+*/		
 		fd.append (clig_subtable);
-		fd.append (chained_context);
-		fd.append (chained_ligatures);
+		// fd.append (chained_context);
+		// fd.append (chained_ligatures);
 		
 		fd.pad ();
 		
