@@ -105,6 +105,7 @@ public class KerningList : FontDisplay {
 		
 		// remove kerning icon
 		cr.save ();
+		Theme.color (cr, "Foreground 1");
 		cr.set_line_width (1);
 		cr.move_to (10, y - 8);
 		cr.line_to (15, y - 3);
@@ -113,6 +114,7 @@ public class KerningList : FontDisplay {
 		cr.stroke ();
 		cr.restore ();
 		
+		Theme.color (cr, "Foreground 1");
 		cr.move_to (60, y);
 		cr.show_text (left);
 		cr.move_to (230, y);

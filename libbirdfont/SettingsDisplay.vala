@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -344,6 +344,8 @@ public class SettingsDisplay : FontDisplay {
 				if (((!) s.button).is_over (x, y) || ((!) s.button).is_active ()) {
 					((!) s.button).panel_release_action ((!) s.button, button, x, y);
 				}
+				
+				((!) s.button).panel_release_action (((!) s.button), button, x, y);
 			}
 			
 			if (s.key_bindings && s.y <= y < s.y + 40 * MainWindow.units && button == 1) {

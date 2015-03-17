@@ -730,7 +730,7 @@ public class TabBar : GLib.Object {
 		}
 		
 		if (has_scroll ()) {
-			tabs_end -= 32 / scale;
+			tabs_end -= 60 / scale;
 			offset = 24 / scale;
 		} else {
 			offset = 0;

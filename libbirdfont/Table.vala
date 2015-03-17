@@ -78,6 +78,7 @@ public abstract class Table : FontDisplay {
 
 		if (row.has_delete_button ()) {
 			cr.save ();
+			Theme.color (cr, "Foreground 1");
 			cr.set_line_width (1);
 			cr.move_to (10 * MainWindow.units, y - 8 * MainWindow.units);
 			cr.line_to (15 * MainWindow.units, y - 3 * MainWindow.units);
@@ -89,6 +90,7 @@ public abstract class Table : FontDisplay {
 		
 		for (int i = 0; i < row.columns; i++) {
 			cr.save ();
+			Theme.color (cr, "Foreground 1");
 			margin = (row.has_delete_button ()) ? 120 * MainWindow.units : 3* MainWindow.units;
 			cr.move_to (margin + i * 120 * MainWindow.units, y);
 			cr.set_font_size (12 * MainWindow.units);
