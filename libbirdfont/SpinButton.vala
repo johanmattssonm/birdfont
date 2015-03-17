@@ -58,6 +58,8 @@ public class SpinButton : Tool {
 			if (button == 3 || KeyBindings.modifier == LOGO) {
 				set_from_text ();
 				n = 0;
+				set_selected (false);
+				return;
 			}
 				
 			if (is_selected ()) {
@@ -93,7 +95,7 @@ public class SpinButton : Tool {
 				show_adjustmet_icon ();
 			}
 			
-			if (value_from_motion) {
+			if (value_from_motion && is_selected ()) {
 				d = (begin_y - ty) / 200;
 				d = (d < 0) ? -Math.pow (d, 2) : Math.pow (d, 2);
 				d *= 1000;

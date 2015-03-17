@@ -223,7 +223,8 @@ public class Tool : Widget {
 	}
 
 	public new bool is_over (double xp, double yp) {
-		return (x <= xp <= x + w  && y <= yp <= y + h);  
+		bool r = (x <= xp <= x + w  && y <= yp <= y + h);
+		return r;
 	}
 	
 	public bool set_selected (bool a) {						

@@ -322,16 +322,18 @@ public class SettingsDisplay : FontDisplay {
 		}
 	}
 
-	public override void button_press (uint button, double x, double y) {	
+	public override void button_press (uint button, double x, double y) {
 		foreach (SettingsItem s in tools) {
 			if (s.handle_events && s.button != null) {
 				if (((!) s.button).is_over (x, y)) {
-					((!) s.button).panel_press_action ((!) s.button, button, x, y);
+					
 					((!) s.button).set_selected (! ((!) s.button).selected);
 					
 					if (((!) s.button).selected) {
 						((!) s.button).select_action ((!) s.button);
 					}
+					
+					((!) s.button).panel_press_action ((!) s.button, button, x, y);
 				}
 			}
 		}
@@ -341,10 +343,6 @@ public class SettingsDisplay : FontDisplay {
 	public override void button_release (int button, double x, double y) {
 		foreach (SettingsItem s in tools) {
 			if (s.handle_events && s.button != null) {
-				if (((!) s.button).is_over (x, y) || ((!) s.button).is_active ()) {
-					((!) s.button).panel_release_action ((!) s.button, button, x, y);
-				}
-				
 				((!) s.button).panel_release_action (((!) s.button), button, x, y);
 			}
 			
@@ -357,6 +355,23 @@ public class SettingsDisplay : FontDisplay {
 
 	public override void motion_notify (double x, double y) {
 		bool consumed = false;
+		bool active;
+		bool update = false;
+		
+		foreach (SettingsItem si in tools) {
+			
+			if (si.handle_events && si.button != null) {
+				active = ((!) si.button).is_over (x, y);
+
+				if (!active && ((!) si.button).is_active ()) {
+					((!) si.button).move_out_action ((!) si.button);
+				}
+						
+				if (((!) si.button).set_active (active)) {
+					update = true;
+				}	
+			}	
+		}
 		
 		foreach (SettingsItem s in tools) {
 			if (s.handle_events && s.button != null) {
@@ -366,7 +381,7 @@ public class SettingsDisplay : FontDisplay {
 			}
 		}
 		
-		if (consumed) {
+		if (consumed || update) {
 			GlyphCanvas.redraw ();
 		}
 	}
