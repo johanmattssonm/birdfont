@@ -1,8 +1,15 @@
+birdfont (2.3.0) stable;
+
+  * Customizable color themes and better icons
+  * High contrast settings for better readability
+  * Fixes for problems in TTF creation and other bugs
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed Mar 18 14:46:30 CET 2015
+
 birdfont (2.2.0) stable;
 
   * Customizable guides
   * Bug fixes and many small UI improvements
-
 
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Mon Mar  9 13:01:03 CET 2015
 
