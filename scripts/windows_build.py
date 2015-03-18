@@ -16,7 +16,7 @@ prefix = ""
 valac = "valac"
 valaflags = ""
 cc = "gcc"
-cflags = "-g ./build/icon.res -Wl,-subsystem,windows "
+cflags = "-g -Wl,-subsystem,windows "
 ldflags = ""
 library_ldflags= "";
 
@@ -30,7 +30,6 @@ from translations import compile_translations
 from run import run
 
 compile_translations()
-run("windres ./resources/win32/icon.rc -O coff -o ./build/icon.res")
 build.libbirdxml(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdxml.dll")
 build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdfont.dll")
 
