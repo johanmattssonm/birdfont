@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014, 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -433,11 +433,9 @@ public class Path {
 		draw_edit_point_center (e, cr);
 	}
 	
-	public void draw_edit_point_handles (EditPoint e, Context cr)
-		requires (active_edit_point_handle_image != null && edit_point_handle_image != null)
-	{
-		ImageSurface img_right, img_left;
-
+	public void draw_edit_point_handles (EditPoint e, Context cr) {
+		string color_left = "Control Point Handle";
+		string color_right = "Control Point Handle";
 		EditPoint handle_right = e.get_right_handle ().get_point ();
 		EditPoint handle_left = e.get_left_handle ().get_point ();
 
@@ -445,54 +443,87 @@ public class Path {
 		
 		if (e.type != PointType.HIDDEN) {
 			if (e.get_right_handle ().selected) {
-				img_right = (!) selected_edit_point_handle_image;
+				color_right = "Selected Control Point Handle";
 			} else if (e.get_right_handle ().active) {
-				img_right = (!) active_edit_point_handle_image;
+				color_right = "Active Control Point Handle";
 			} else {
-				img_right = (!) edit_point_handle_image;
+				color_right = "Control Point Handle";
 			}
 			
 			if (e.get_left_handle ().selected) {
-				img_left = (!) selected_edit_point_handle_image;
+				color_left = "Selected Control Point Handle";
 			} else if (e.get_left_handle ().active) {
-				img_left = (!) active_edit_point_handle_image;
+				color_left = "Active Control Point Handle";
 			} else {
-				img_left = (!) edit_point_handle_image;
+				color_left = "Control Point Handle";
 			}
 
 			if (!hide_end_handle || !(is_open () && e == points.get (points.size - 1))) {
 				draw_line (handle_right, e, cr, 0.15);
-				draw_image (cr, img_right, e.get_right_handle ().x, e.get_right_handle ().y);
+				draw_control_point (cr, e.get_right_handle ().x, e.get_right_handle ().y, color_right);
 			}
 			
 			if (!(is_open () && e == points.get (0))) {
 				draw_line (handle_left, e, cr, 0.15);
-				draw_image (cr, img_left, e.get_left_handle ().x, e.get_left_handle ().y);
+				draw_control_point (cr, e.get_left_handle ().x, e.get_left_handle ().y, color_left);
 			}
 		}
 	}
 
-	public static void draw_edit_point_center (EditPoint e, Context cr) 
-		requires (active_edit_point_image != null && edit_point_image != null)
-	{	
-		ImageSurface img;
-		
+	public static void draw_edit_point_center (EditPoint e, Context cr) {
 		if (e.type != PointType.HIDDEN) {
 			if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
 				if (e.is_selected ()) {
-					img = (e.active_point) ? (!) cubic_active_selected_edit_point_image : (!) cubic_selected_edit_point_image;
+					if (e.active_point) {
+						draw_control_point (cr, e.x, e.y, "Selected Active Cubic Control Point");
+					} else {
+						draw_control_point (cr, e.x, e.y, "Selected Cubic Control Point");
+					}
 				} else {
-					img = (e.active_point) ? (!) cubic_active_edit_point_image : (!) cubic_edit_point_image;
+					if (e.active_point) {
+						draw_control_point (cr, e.x, e.y, "Active Cubic Control Point");
+					} else {
+						draw_control_point (cr, e.x, e.y, "Cubic Control Point");
+					}
 				}
 			} else {
 				if (e.is_selected ()) {
-					img = (e.active_point) ? (!) active_selected_edit_point_image : (!) selected_edit_point_image;
+					if (e.active_point) {
+						draw_control_point (cr, e.x, e.y, "Selected Active Quadratic Control Point");
+					} else {
+						draw_control_point (cr, e.x, e.y, "Selected Quadratic Control Point");
+					}
 				} else {
-					img = (e.active_point) ? (!) active_edit_point_image : (!) edit_point_image;
+					if (e.active_point) {
+						draw_control_point (cr, e.x, e.y, "Active Quadratic Control Point");
+					} else {
+						draw_control_point (cr, e.x, e.y, "Quadratic Control Point");
+					}
 				}
 			}
-			draw_image (cr, img, e.x, e.y);
 		} 
+	}
+	
+	static void draw_control_point (Context cr, double x, double y, string color) {
+		Glyph g = MainWindow.get_current_glyph ();
+		double ivz = 1 / g.view_zoom;
+		double width = size * Math.sqrt (stroke_width) * ivz;
+		double xc = g.allocation.width / 2.0;
+		double yc = g.allocation.height / 2.0;
+
+		cr.save ();
+
+		x = xc + x - (width / 2.0) * ivz; 
+		y = yc - y - (width / 2.0) * ivz;
+
+		Theme.color (cr, color);
+		
+		cr.move_to (x, y);
+		cr.arc (x, y, width, 0, 2 * Math.PI);
+		cr.close_path ();
+		cr.fill ();
+		
+		cr.restore ();
 	}
 	
 	public static void draw_image (Context cr, ImageSurface img, double x, double y) {

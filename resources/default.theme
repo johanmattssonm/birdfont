@@ -3,6 +3,7 @@
 	<color name="Highlighted 1" red="0.91764705882352937" green="0.30196078431372547" blue="0.10196078431372549" alpha="1"/>
 	<color name="Guide 1" red="0.69999999999999996" green="0.69999999999999996" blue="0.80000000000000004" alpha="1"/>
 	<color name="Foreground 6" red="0.17647058823529413" green="0.17647058823529413" blue="0.17647058823529413" alpha="1"/>
+	<color name="Active Quadratic Control Point" red="0.51372549019607838" green="0.71372549019607845" blue="1" alpha="1"/>
 	<color name="Background 1" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Guide 2" red="0.69999999999999996" green="0" blue="0" alpha="0.5"/>
 	<color name="Foreground 7" red="0.85882352941176465" green="0.8666666666666667" blue="0.9137254901960784" alpha="1"/>
@@ -16,12 +17,16 @@
 	<color name="Background 5" red="0.29999999999999999" green="0.29999999999999999" blue="0.29999999999999999" alpha="1"/>
 	<color name="Glyph Count Background" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
 	<color name="Background 6" red="0.8784313725490196" green="0.8784313725490196" blue="0.8784313725490196" alpha="1"/>
+	<color name="Selected Active Cubic Control Point" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Selected Cubic Control Point" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 7" red="0.2196078431372549" green="0.23137254901960785" blue="0.25490196078431371" alpha="1"/>
+	<color name="Control Point Handle" red="0.2196078431372549" green="0.24313725490196078" blue="0.17647058823529413" alpha="1"/>
 	<color name="Background 8" red="0.21568627450980393" green="0.21568627450980393" blue="0.21568627450980393" alpha="1"/>
 	<color name="Fill Color" red="0.5" green="0.5" blue="0.5" alpha="1"/>
 	<color name="Background 9" red="0.28235294117647058" green="0.28235294117647058" blue="0.28235294117647058" alpha="1"/>
 	<color name="Stroke Color" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Tool Foreground" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
+	<color name="Selected Control Point Handle" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Button Foreground" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Grid" red="0.20000000000000001" green="0.59999999999999998" blue="0.20000000000000001" alpha="0.20000000000000001"/>
 	<color name="Text Area Background" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
@@ -38,16 +43,22 @@
 	<color name="Button Border 4" red="0.14901960784313725" green="0.15294117647058825" blue="0.16862745098039217" alpha="1"/>
 	<color name="Highlighted Guide" red="0" green="0" blue="0.29999999999999999" alpha="1"/>
 	<color name="Overview Item 1" red="0.92549019607843142" green="0.92549019607843142" blue="0.92549019607843142" alpha="1"/>
+	<color name="Cubic Control Point" red="0.45490196078431372" green="0.45490196078431372" blue="0.45490196078431372" alpha="1"/>
+	<color name="Selected Active Quadratic Control Point" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Overview Item 2" red="0.96470588235294119" green="0.96470588235294119" blue="0.96470588235294119" alpha="1"/>
 	<color name="Selected Button Foreground" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Menu Foreground" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
 	<color name="Overview Foreground" red="0.17647058823529413" green="0.17647058823529413" blue="0.17647058823529413" alpha="1"/>
 	<color name="Tool Foreground" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
+	<color name="Selected Quadratic Control Point" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Active Cubic Control Point" red="0.62745098039215685" green="0.62745098039215685" blue="0.62745098039215685" alpha="1"/>
 	<color name="Foreground 1" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Active Control Point Handle" red="0.31372549019607843" green="0.46274509803921571" blue="0.25098039215686274" alpha="1"/>
 	<color name="Foreground 2" red="0.396078431372549" green="0.42352941176470588" blue="0.45490196078431372" alpha="1"/>
 	<color name="Foreground 3" red="0.10196078431372549" green="0.11764705882352941" blue="0.12549019607843137" alpha="1"/>
 	<color name="Overview Selected Foreground" red="0.17647058823529413" green="0.17647058823529413" blue="0.17647058823529413" alpha="1"/>
 	<color name="Foreground 4" red="0.15686274509803921" green="0.22352941176470589" blue="0.25490196078431371" alpha="1"/>
 	<color name="Foreground Inverted" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Foreground 5" red="0.27450980392156865" green="0.30196078431372547" blue="0.32549019607843138" alpha="1"/>
+	<color name="Quadratic Control Point" red="0.4823529411764706" green="0.59215686274509804" blue="0.72156862745098038" alpha="1"/>
 </theme>
