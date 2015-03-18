@@ -443,8 +443,6 @@ public class SvgParser {
 	private void parse_path (Tag tag, Layer pl) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
-		int inside_count;
-		bool inside;
 
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "d") {
@@ -456,28 +454,10 @@ public class SvgParser {
 		// assume the even odd rule is applied and convert the path
 		// to a path using the non-zero rule
 		foreach (Path p1 in pl.paths.paths) {
-			inside_count = 0;
-			
-			foreach (Path p2 in pl.paths.paths) {
-				if (p1 != p2) {
-					inside = true;
-					
-					foreach (EditPoint ep in p1.points) {
-						if (!is_inside (ep, p2)) {
-							inside = false;
-						}
-					}
-					
-					if (inside) {
-						inside_count++; 
-					}
-				}
-			}
-			
-			if (inside_count % 2 == 0) {
-				p1.force_direction (Direction.CLOCKWISE);
-			} else {
+			if (Path.is_counter (pl.paths, p1)) {
 				p1.force_direction (Direction.COUNTER_CLOCKWISE);
+			} else {
+				p1.force_direction (Direction.CLOCKWISE);
 			}
 		}
 		
@@ -489,7 +469,7 @@ public class SvgParser {
 	}
 
 	/** Check if a point is inside using the even odd fill rule. */
-	bool is_inside (EditPoint point, Path path) {
+	public static bool is_inside (EditPoint point, Path path) {
 		EditPoint prev;
 		bool inside = false;
 		

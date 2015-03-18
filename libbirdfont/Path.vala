@@ -2046,18 +2046,26 @@ public class Path {
 		return ep;
 	}
 	
-	public static bool is_counter (PathList pl, Path p) {
-		foreach (Path o in pl.paths) {
-			if (o != p) {
-				if (p.points.size > 0) {
-					if (o.is_over_coordinate (p.points.get (0).x, p.points.get (0).y)) {
-						return true;
+	public static bool is_counter (PathList pl, Path path) {
+		int inside_count = 0;
+		bool inside;
+		
+		foreach (Path p in pl.paths) {
+			if (p.points.size > 1 && p != path) {
+				inside = true;
+				foreach (EditPoint ep in path.points) {
+					if (!SvgParser.is_inside (ep, p)) {
+						inside = false;
 					}
+				}
+
+				if (inside) {
+					inside_count++; 
 				}
 			}
 		}
 		
-		return false;
+		return inside_count % 2 != 0;
 	}
 	
 	public void remove_points_on_points () {
