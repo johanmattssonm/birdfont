@@ -81,6 +81,15 @@ public class OverView : FontDisplay {
 				create_new_glyph (character);
 			});
 		}
+
+		IdleSource idle = new IdleSource ();
+
+		idle.set_callback (() => {			
+			selected_canvas ();
+			return false;
+		});
+		
+		idle.attach (null);
 		
 		update_scrollbar ();
 		reset_zoom ();
@@ -239,6 +248,7 @@ public class OverView : FontDisplay {
 		update_scrollbar ();
 		update_zoom_bar ();
 		OverViewItem.glyph_scale = 1;
+		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
 	}
 	
@@ -319,10 +329,7 @@ public class OverView : FontDisplay {
 		first_visible = 0;
 		selected = 0;
 		
-		if (selected > visible_items.size) {
-			selected_item = get_selected_item ();
-		}
-		
+		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
 	}
 	
@@ -1039,6 +1046,8 @@ public class OverView : FontDisplay {
 		scroll_top ();
 
 		// TODO: scroll down to c
+		update_item_list ();
+		selected_item = get_selected_item ();
 
 		GlyphCanvas.redraw ();
 	}

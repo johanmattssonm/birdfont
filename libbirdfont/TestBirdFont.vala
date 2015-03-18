@@ -81,7 +81,7 @@ class TestBirdFont : GLib.Object {
 		}	
 		
 		if (s == "" || s == "All") {
-			print ("No specific tescase given run all test cases.\n");
+			print ("No specific test case given run all test cases.\n");
 			return true;
 		}
 		
