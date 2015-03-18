@@ -64,24 +64,8 @@ public class Path {
 	
 	public delegate bool SegmentIterator (EditPoint start, EditPoint stop);
 	
-	public static ImageSurface? edit_point_image = null;
-	public static ImageSurface? active_edit_point_image = null;
-	
-	public static ImageSurface? edit_point_handle_image = null;
-	public static ImageSurface? active_edit_point_handle_image = null;
-	public static ImageSurface? selected_edit_point_handle_image = null;
-
-	public static ImageSurface? selected_edit_point_image = null;
-	public static ImageSurface? active_selected_edit_point_image = null;
-
-	public static ImageSurface? cubic_edit_point_image = null;
-	public static ImageSurface? cubic_active_edit_point_image = null;
-
-	public static ImageSurface? cubic_selected_edit_point_image = null;
-	public static ImageSurface? cubic_active_selected_edit_point_image = null;
-	
 	/** The stroke of an outline when the path is not filled. */
-	public static double stroke_width = 1;
+	public static double stroke_width = 0;
 	public static bool show_all_line_handles = true;
 	public static bool fill_open_path = false;
 	
@@ -95,24 +79,16 @@ public class Path {
 	
 	public Path () {	
 		string width;
-
-		if (edit_point_image == null) {
-			edit_point_image = Icons.get_icon ("edit_point.png");
-			active_edit_point_image = Icons.get_icon ("active_edit_point.png");
-			edit_point_handle_image = Icons.get_icon ("edit_point_handle.png");
-			active_edit_point_handle_image = Icons.get_icon ("active_edit_point_handle.png");
-			selected_edit_point_handle_image = Icons.get_icon ("selected_edit_point_handle.png");
-			selected_edit_point_image = Icons.get_icon ("selected_edit_point.png");
-			active_selected_edit_point_image = Icons.get_icon ("active_selected_edit_point.png");
-			cubic_edit_point_image = Icons.get_icon ("edit_point_cubic.png");
-			cubic_active_edit_point_image = Icons.get_icon ("active_edit_point_cubic.png");
-			cubic_selected_edit_point_image = Icons.get_icon ("selected_edit_point_cubic.png");
-			cubic_active_selected_edit_point_image  = Icons.get_icon ("active_selected_edit_point_cubic.png");
-	
+		
+		if (unlikely (stroke_width < 1)) {
 			width = Preferences.get ("stroke_width");
 			if (width != "") {
 				stroke_width = double.parse (width);
 			}
+		}
+
+		if (stroke_width < 1) {
+			stroke_width = 1;
 		}
 	}
 
@@ -504,7 +480,7 @@ public class Path {
 		} 
 	}
 	
-	static void draw_control_point (Context cr, double x, double y, string color) {
+	public static void draw_control_point (Context cr, double x, double y, string color, double size = 3.5) {
 		Glyph g = MainWindow.get_current_glyph ();
 		double ivz = 1 / g.view_zoom;
 		double width = size * Math.sqrt (stroke_width) * ivz;

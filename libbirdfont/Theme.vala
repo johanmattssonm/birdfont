@@ -173,17 +173,19 @@ public class Theme : GLib.Object {
 		
 		Theme.set_default_color ("Selected Active Cubic Control Point", 0, 0, 0, 1);
 		Theme.set_default_color ("Selected Cubic Control Point", 0, 0, 0, 1);
-		Theme.set_default_color ("Active Cubic Control Point", 160 / 255.0, 160 / 255.0, 160 / 255.0, 1);
+		Theme.set_default_color ("Active Cubic Control Point", 70 / 255.0, 70 / 255.0, 70 / 255.0, 1);
 		Theme.set_default_color ("Cubic Control Point", 116 / 255.0, 116 / 255.0, 116 / 255.0, 1);
 
 		Theme.set_default_color ("Selected Active Quadratic Control Point", 0, 0, 0, 1);
 		Theme.set_default_color ("Selected Quadratic Control Point", 0, 0, 0, 1);
-		Theme.set_default_color ("Active Quadratic Control Point", 131 / 255.0, 182 / 255.0, 255 / 255.0, 1);
+		Theme.set_default_color ("Active Quadratic Control Point", 85 / 255.0, 115 / 255.0, 149 / 255.0, 1);
 		Theme.set_default_color ("Quadratic Control Point", 123 / 255.0, 151 / 255.0, 184 / 255.0, 1);
 
 		Theme.set_default_color ("Selected Control Point Handle", 0, 0, 0, 1);
-		Theme.set_default_color ("Active Control Point Handle", 80 / 255.0, 118 / 255.0, 64 / 255.0, 1);
-		Theme.set_default_color ("Control Point Handle", 56 / 255.0, 62 / 255.0, 45 / 255.0, 1);
+		Theme.set_default_color ("Active Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
+		Theme.set_default_color ("Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
+		
+		Theme.set_default_color ("Merge", 101 / 255.0, 108 / 255.0, 116 / 255.0, 0.3);
 
 		if (BirdFont.has_argument ("--test")) {
 			current_theme = "generated_theme.theme";
@@ -266,6 +268,7 @@ public class Theme : GLib.Object {
 			t_("Active Control Point Handle");
 			t_("Control Point Handle");
 
+			t_("Merge");
 		}
 	}
 	

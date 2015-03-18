@@ -62,9 +62,7 @@ public class PenTool : Tool {
 	// The pixel where the user pressed the mouse button
 	public static int begin_action_x = 0; 
 	public static int begin_action_y = 0;
-	
-	private static ImageSurface? tie_icon = null;
-	
+		
 	/* First move action must move the current point in to the grid. */
 	bool first_move_action = false;
 	
@@ -94,8 +92,6 @@ public class PenTool : Tool {
 		selected_point = new EditPoint ();
 		clockwise = new Gee.ArrayList<Path> ();
 		counter_clockwise = new Gee.ArrayList<Path> ();
-		
-		tie_icon = Icons.get_icon ("tie_is_active.png");
 		
 		select_action.connect ((self) => {
 		});
@@ -1191,34 +1187,21 @@ public class PenTool : Tool {
 	
 	/** Higlight the selected point on Android. */
 	void draw_point_selection_circle (Context cr) {
-		ImageSurface img;
-		ImageSurface? i = null;
-		double x, y;
-		double ratio;
 		PointSelection ps;
 		
 		if (active_handle.active) {
-			i = Path.edit_point_handle_image;
+			Path.draw_control_point (cr, Glyph.path_coordinate_x (begin_action_x),
+				Glyph.path_coordinate_y (begin_action_y), "Control Point Handle");			
 		} else if (selected_points.size > 0) {
 			ps = selected_points.get (selected_points.size - 1);
 			
-			i = (ps.point.type == PointType.CUBIC) 
-				? Path.cubic_edit_point_image : Path.edit_point_image;
-		}
-		
-		if (i != null) {
-			img = (!) i;	
-			
-			cr.save ();
-			ratio = 60 * MainWindow.units / img.get_width ();
-			cr.scale (ratio, ratio);
-			x = begin_action_x - ratio * img.get_width () / 2;
-			x /= ratio;
-			y = begin_action_y - ratio * img.get_height () / 2;
-			y /= ratio;
-			cr.set_source_surface (img, x, y);
-			cr.paint ();
-			cr.restore ();
+			if (ps.point.type == PointType.CUBIC) {
+				Path.draw_control_point (cr, Glyph.path_coordinate_x (begin_action_x),
+					Glyph.path_coordinate_y (begin_action_y), "Selected Cubic Control Point");
+			} else {
+				Path.draw_control_point (cr, Glyph.path_coordinate_x (begin_action_x),
+					Glyph.path_coordinate_y (begin_action_y), "Selected Quadratic Control Point");			
+			}
 		}
 	}
 	
@@ -1239,37 +1222,14 @@ public class PenTool : Tool {
 	}
 	
 	public static void draw_join_icon (Context cr, double x, double y) {
-		double scale = (BirdFont.android) ? 5 : 1;
-		draw_icon (tie_icon, cr, x, y, scale);
+		cr.save ();
+		Theme.color (cr, "Merge");		
+		cr.move_to (x, y);
+		cr.arc (x, y, 15, 0, 2 * Math.PI);
+		cr.close_path ();
+		cr.fill ();
+		cr.restore ();
 	}
-
-	public static void draw_icon (ImageSurface? i, Context cr, double x, double y, double scale = 1) {
-		ImageSurface img;
-		double px, py, ratio;
-		
-		if (i != null) {
-			img = (!) tie_icon;	
-					
-			cr.save ();
-			
-			ratio = scale;
-			ratio *= 0.23; // 72 to 320 dpi
-			ratio *=  MainWindow.units;
-			cr.scale (ratio, ratio);
-			
-			px = x - ratio * img.get_width () / 2;
-			py = y - ratio * img.get_height () / 2;
-			px /= ratio;
-			py /= ratio;
-			
-			cr.set_source_surface (img, px, py);
-			cr.paint ();
-			cr.restore ();
-		} else {
-			warning ("No image.");
-		}
-	}
-		
 
 	void draw_merge_icon (Context cr) {
 		double x, y;
