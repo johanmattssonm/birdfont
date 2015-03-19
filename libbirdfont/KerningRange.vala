@@ -22,9 +22,13 @@ public class KerningRange : Tool {
 	public string ranges = "";
 	public GlyphRange glyph_range; 
 	bool malformed = false;
+	Font font;
 	
-	public KerningRange (string? name = null, string tip = "") {
+	public KerningRange (Font f, string? name = null, string tip = "") {
 		base (null , tip);
+
+		font = f;
+		
 		glyph_range = new GlyphRange (); 
 		
 		if (name != null) {
@@ -57,7 +61,6 @@ public class KerningRange : Tool {
 	
 	public void set_ranges (string r) {
 		GlyphRange glyph_range = new GlyphRange ();
-		Font font = BirdFont.get_current_font ();
 		SpacingData spacing = font.get_spacing ();
 		string new_range;
 		string ch;
@@ -90,7 +93,6 @@ public class KerningRange : Tool {
 	}
 		
 	private void set_one_range (string r) throws MarkupError {
-		Font f = BirdFont.get_current_font ();
 		GlyphRange old = new GlyphRange ();
 		
 		old.parse_ranges (ranges);
@@ -103,7 +105,7 @@ public class KerningRange : Tool {
 		glyph_range.parse_ranges (r);
 		glyph_range.set_class (true);
 
-		f.spacing.kerning_classes.update_range (old, glyph_range);
+		font.spacing.kerning_classes.update_range (old, glyph_range);
 	}
 	
 	public void update_kerning_classes () {
@@ -132,19 +134,21 @@ public class KerningRange : Tool {
 	
 	public override void draw (Context cr) {
 		double xt, yt;
+		Text label_text;
 
 		xt = x + 5;
 		yt = y + 10;
 		
 		cr.save ();
 	
-		// FIXME: use color to indicate error
-		Theme.color (cr, "Foreground 1");
+		label_text = new Text ();
+		label_text.set_text (name);
+		Theme.text_color (label_text, "Foreground 2");
+		label_text.set_font_size (18);
+		label_text.widget_x = x;
+		label_text.widget_y = y;
+		label_text.draw (cr);
 		
-		cr.set_font_size (10);
-		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
-		cr.move_to (xt, yt);
-		cr.show_text (name);
 		cr.restore ();
 	}
 }

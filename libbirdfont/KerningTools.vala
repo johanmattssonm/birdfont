@@ -54,7 +54,10 @@ public class KerningTools : ToolCollection  {
 		
 		Tool new_kerning_class = new Tool ("kerning_class", t_("Create new kerning class."));
 		new_kerning_class.select_action.connect ((self) => {
-			classes.add_tool (new KerningRange (@"Kerning class $(++next_class)"));
+			Font font = BirdFont.get_current_font ();
+			string label = t_("Kerning class");
+			KerningRange kr = new KerningRange (font, @"$label $(++next_class)");
+			classes.add_tool (kr);
 			Toolbox.redraw_tool_box ();
 		});
 		kerning_tools.add_tool (new_kerning_class);
@@ -131,7 +134,8 @@ public class KerningTools : ToolCollection  {
 	}
 	
 	public static void update_kerning_classes () {
-		KerningClasses k = BirdFont.get_current_font ().get_kerning_classes ();
+		Font font = BirdFont.get_current_font ();
+		KerningClasses k = font.get_kerning_classes ();
 		KerningRange kr;
 		GlyphRange r;
 		int i;
@@ -141,14 +145,14 @@ public class KerningTools : ToolCollection  {
 		for (i = 0; i < k.classes_first.size; i++) {
 			r = k.classes_first.get (i);
 			if (r.is_class ()) {
-				kr = new KerningRange ();
+				kr = new KerningRange (font);
 				kr.set_ranges (r.get_all_ranges ());
 				add_unique_class (kr);
 			}
 			
 			r = k.classes_last.get (i);
 			if (r.is_class ()) {
-				kr = new KerningRange ();
+				kr = new KerningRange (font);
 				kr.set_ranges (r.get_all_ranges ());
 				add_unique_class (kr);
 			}
