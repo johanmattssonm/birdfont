@@ -23,6 +23,7 @@ public class TabContent : GLib.Object {
 	static LineTextArea text_input;
 	static Button text_input_button;
 	static bool text_input_visible = false;
+	static TextListener text_callback;
 
 	static const int TEXT_INPUT_HEIGHT = 51;
 
@@ -319,6 +320,8 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void show_text_input (TextListener tl) {
+		text_callback = tl;
+		
 		text_input_label = new Text (tl.label);
 		text_input = new LineTextArea (20 * MainWindow.units);
 		text_input_button = new Button (tl.button_label);

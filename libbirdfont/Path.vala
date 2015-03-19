@@ -736,7 +736,6 @@ public class Path {
 	/** Variable precision */
 	public bool is_over_coordinate_var (double x, double y) {
 		PathList pathlist;
-		bool in_path = false;
 		int width;
 		ClickMap click_map;
 		int px, py;
@@ -774,11 +773,7 @@ public class Path {
 		click_x = (int) (width * ((x - xmin) / (xmax - xmin)));
 		click_y = (int) (width * ((y - ymin) / (ymax - ymin)));
 
-		in_path = click_map.get_value (click_x, click_y) != '\0';
-		
-		click_map.set_value (click_x, click_y, 'X');
-		
-		return in_path;
+		return click_map.get_value (click_x, click_y);
 	}
 	
 	public bool is_over_boundry (double x, double y) {
