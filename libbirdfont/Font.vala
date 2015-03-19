@@ -87,7 +87,7 @@ public class Font : GLib.Object {
 	/** File format. */
 	public FontFormat format = FontFormat.BIRDFONT;
 	
-	SpacingData spacing;
+	public SpacingData spacing;
 	
 	bool read_only = false;
 	

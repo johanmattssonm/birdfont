@@ -90,12 +90,20 @@ public class KerningRange : Tool {
 	}
 		
 	private void set_one_range (string r) throws MarkupError {
+		Font f = BirdFont.get_current_font ();
+		GlyphRange old = new GlyphRange ();
+		
+		old.parse_ranges (ranges);
+		old.set_class (true);
+		
 		ranges = r;
 		name = r;
 
 		glyph_range.empty ();
 		glyph_range.parse_ranges (r);
 		glyph_range.set_class (true);
+
+		f.spacing.kerning_classes.update_range (old, glyph_range);
 	}
 	
 	public void update_kerning_classes () {

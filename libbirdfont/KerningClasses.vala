@@ -52,6 +52,30 @@ public class KerningClasses : GLib.Object {
 		single_kerning = new HashMap<string, double?> ();
 	}
 
+	public void update_range (GlyphRange old, GlyphRange new_range) {
+		string o = old.get_all_ranges ();
+		
+		foreach (GlyphRange gr in classes_first) {
+			try {
+				if (gr.get_all_ranges () == o) {
+					gr.parse_ranges (new_range.get_all_ranges ());
+				}
+			} catch (GLib.MarkupError e) {
+				warning (e.message);
+			}
+		}
+		
+		foreach (GlyphRange gr in classes_last) {
+			try {
+				if (gr.get_all_ranges () == o) {
+					gr.parse_ranges (new_range.get_all_ranges ());
+				}
+			} catch (GLib.MarkupError e) {
+				warning (e.message);
+			}
+		}
+	}
+
 	/** Class based gpos kerning. */
 	public double get_kerning_for_pair (string a, string b, GlyphRange? gr_left, GlyphRange? gr_right) {
 		double k = 0;
