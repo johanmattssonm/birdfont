@@ -125,7 +125,9 @@ public class PenTool : Tool {
 		
 			move_action (this, x, y);
 
-			press (b, x, y, false);
+			if (!has_join_icon ()) {
+				press (b, x, y, false);
+			}
 
 			if (BirdFont.android) {
 				point_selection_image = true;
@@ -157,7 +159,7 @@ public class PenTool : Tool {
 			
 			x = Glyph.path_coordinate_x (ix);
 			y = Glyph.path_coordinate_y (iy);
-						
+
 			if (has_join_icon ()) {
 				join_paths (x, y);
 			}
@@ -195,7 +197,7 @@ public class PenTool : Tool {
 		move_action.connect ((self, x, y) => {
 			selection_box_last_x = x;
 			selection_box_last_y = y;
-			
+
 			if (Path.distance (begin_action_x, x, begin_action_y, y) > 10 * MainWindow.units) {
 				point_selection_image = false;
 			}
@@ -1013,7 +1015,9 @@ public class PenTool : Tool {
 		Path union, second_path;
 		EditPoint first_point;
 		int px, py;
-		
+		bool last_segment_is_line;
+		bool first_segment_is_line;
+
 		if (glyph.path_list.size == 0) {
 			return;
 		}
@@ -1024,11 +1028,13 @@ public class PenTool : Tool {
 			return;
 		}
 		path = (!) p;
-		
+
 		if (!path.is_open ()) {
 			warning ("Path is closed.");
 			return;
 		}
+		
+		return_if_fail (path.points.size > 1);
 		
 		if (active_edit_point == path.points.get (0)) {
 			path.reverse ();
@@ -1049,6 +1055,10 @@ public class PenTool : Tool {
 		py = Glyph.reverse_path_coordinate_y (((!) active_edit_point).y);
 		if (is_endpoint ((!) active_edit_point)
 			&& is_close_to_point (path.points.get (0), px, py)) {
+			
+			last_segment_is_line = path.get_last_point ().get_left_handle ().is_line ();
+			first_segment_is_line = path.get_first_point ().get_right_handle ().is_line ();
+			
 			// TODO: set point type
 			path.points.get (0).left_handle.move_to_coordinate (
 				path.points.get (path.points.size - 1).left_handle.x,
@@ -1068,6 +1078,16 @@ public class PenTool : Tool {
 			
 			path.close ();
 			glyph.close_path ();
+
+			if (last_segment_is_line) {
+				path.get_first_point ().get_left_handle ().convert_to_line ();
+				path.get_first_point ().recalculate_linear_handles ();
+			}
+
+			if (first_segment_is_line) {
+				path.get_first_point ().get_right_handle ().convert_to_line ();
+				path.get_first_point ().recalculate_linear_handles ();
+			}
 			
  			force_direction ();
 
@@ -1077,6 +1097,7 @@ public class PenTool : Tool {
 			}
 			
 			remove_all_selected_points ();
+
 			return;
 		}
 		
