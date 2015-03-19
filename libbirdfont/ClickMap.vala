@@ -63,10 +63,6 @@ public class ClickMap : GLib.Object {
 		c.fill ();
 		
 		c.restore ();
-		
-		if (path.points.size > 1) {
-			map.write_to_png ("/home/johan/map6.png");
-		}
 	}
 }
 
