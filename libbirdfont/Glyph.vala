@@ -186,13 +186,13 @@ public class Glyph : FontDisplay {
 		return active_paths.get (active_paths.size - 1);
 	}
 	
-	public void boundaries (out double x1, out double y1, out double x2, out double y2) {
+	public bool boundaries (out double x1, out double y1, out double x2, out double y2) {
 		if (path_list.size == 0) {
 			x1 = 0;
 			y1 = 0;
 			x2 = 0;
 			y2 = 0;
-			return;
+			return false;
 		}
 
 		x1 = double.MAX;
@@ -221,6 +221,8 @@ public class Glyph : FontDisplay {
 				}
 			}
 		}
+		
+		return x1 != double.MAX;
 	}
 	
 	public void selection_boundaries (out double x, out double y, out double w, out double h) {
@@ -484,8 +486,7 @@ public class Glyph : FontDisplay {
 	public double get_left_side_bearing () {
 		double x1, y1, x2, y2;
 		
-		if (path_list.size > 0 && path_list.get (0).points.size > 0) {
-			boundaries (out x1, out y1, out x2, out y2);
+		if (boundaries (out x1, out y1, out x2, out y2)) {
 			return x1 - left_limit;
 		} else {
 			return right_limit - left_limit;
@@ -495,8 +496,7 @@ public class Glyph : FontDisplay {
 	public double get_right_side_bearing () {
 		double x1, y1, x2, y2;
 		
-		if (path_list.size > 0 && path_list.get (0).points.size > 0) {
-			boundaries (out x1, out y1, out x2, out y2);
+		if (boundaries (out x1, out y1, out x2, out y2)) {
 			return right_limit - x2;
 		} else {
 			return right_limit - left_limit;

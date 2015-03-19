@@ -516,7 +516,6 @@ public class KerningClasses : GLib.Object {
 		// add the right hand glyph and the kerning value
 		foreach (Glyph character in left_glyphs) {
 			KerningPair kl = new KerningPair (character);
-			pairs.add (kl);
 
 			foreach (GlyphRange r in classes_last) {
 				foreach (UniRange u in r.ranges) {
@@ -547,6 +546,15 @@ public class KerningClasses : GLib.Object {
 				}
 			}
 			
+			if (kl.kerning.size > 0) {
+				pairs.add (kl);
+			}
+			
+			if (kl.kerning.size == 0) {
+				warning (@"No kerning pairs for character: $((kl.character.get_name ()))");
+			}
+			
+						
 			kl.sort ();
 		}
 		

@@ -57,7 +57,7 @@ public class KernList : GLib.Object {
 			pairs.add (current_pairs);
 			
 			if (unlikely (kerning_pair.kerning.size == 0)) {
-				warning ("No pairs.");
+				warning (@"No kerning pairs for character: $((kerning_pair.character.get_name ()))");
 			}
 			
 			i = 0;
