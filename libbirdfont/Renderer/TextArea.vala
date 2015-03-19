@@ -811,8 +811,8 @@ public class TextArea : Widget {
 		}
 		
 		if (unlikely (c.paragraph < 0)) {
-			c.paragraph = 0;
-			c.character_index = 0;
+			c.paragraph = paragraphs.size > 0 ? paragraphs.size - 1 : 0;
+			c.character_index = paragraphs.size > 0 ? paragraphs.get (c.paragraph).text.length : 0;
 		}
 		
 		store_undo_state_at_next_event = true;
