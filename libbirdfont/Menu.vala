@@ -476,8 +476,10 @@ public class Menu : GLib.Object {
 						
 						if (!tm.tool.is_tool_modifier) {
 							MainWindow.get_toolbox ().set_current_tool (tm.tool);
+							return;
 						} else {
 							tm.tool.select_action (tm.tool);
+							return;
 						}
 					}
 				}

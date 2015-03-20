@@ -21,7 +21,7 @@ public class SpacingData : GLib.Object {
 	public KerningClasses kerning_classes;
 	
 	public Gee.ArrayList<SpacingClass> classes = new Gee.ArrayList<SpacingClass> ();
-	Gee.ArrayList<String> connections = new Gee.ArrayList<String> ();
+	Gee.ArrayList<string> connections = new Gee.ArrayList<string> ();
 
 	public SpacingData (KerningClasses kerning) {
 		kerning_classes = kerning;
@@ -32,15 +32,14 @@ public class SpacingData : GLib.Object {
 	}
 
 	public Gee.ArrayList<string> get_all_connections (string glyph) {
-		String s;
 		Gee.ArrayList<string> c = new Gee.ArrayList<string> ();
 		
 		connections.clear ();
 		
 		add_connections (glyph);
 		
-		foreach (String t in connections) {
-			c.add (t.data.dup ());
+		foreach (string t in connections) {
+			c.add (t.dup ());
 		}
 		
 		connections.clear ();
@@ -49,8 +48,8 @@ public class SpacingData : GLib.Object {
 	}
 	
 	bool has_connection (string s) {
-		foreach (String t in connections) {
-			if (t.data == s) {
+		foreach (string t in connections) {
+			if (t == s) {
 				return true;
 			}
 		}
@@ -59,7 +58,7 @@ public class SpacingData : GLib.Object {
 	}
 	
 	public void add_connections (string glyph) {
-		String sb = new String (glyph);
+		string sb = glyph;
 		
 		connections.add (sb);
 		
@@ -118,15 +117,6 @@ public class SpacingData : GLib.Object {
 		}
 		
 		KerningTools.update_spacing_classes ();
-	}
-	
-	class String : GLib.Object {
-		
-		public string data;
-		
-		public String (string s) {
-			data = s.dup ();
-		}	
 	}
 }
 

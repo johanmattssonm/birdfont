@@ -360,9 +360,9 @@ public class MenuTab : FontDisplay {
 		}	
 			
 		dialog.overwrite_signal.connect (() => {
+			KeyBindings.set_modifier (NONE);
 			tab_bar.add_unique_tab (new Preview (), true);
 			PreviewTools.update_preview ();
-			KeyBindings.set_modifier (NONE);
 		});
 			
 		if ((format == FontFormat.SVG || format == FontFormat.FREETYPE) && !OverWriteDialogListener.dont_ask_again) {
@@ -466,6 +466,11 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void simplify_path () {
+		if (suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
 		Task t = new Task ();
 		t.task.connect (simplify);
 		MainWindow.native_window.run_background_thread (t);
