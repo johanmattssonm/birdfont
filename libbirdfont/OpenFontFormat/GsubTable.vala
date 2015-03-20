@@ -87,7 +87,7 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (4); // lookup type 
 		fd.add_ushort (0); // lookup flags
 		fd.add_ushort (1); // number of subtables
-		fd.add_ushort (24 + length); // array of offsets to subtable
+		fd.add_ushort (8 + length); // array of offsets to subtable FIXME: should be 24
 		length += (uint16) clig_subtable.length_with_padding ();
 
 /*
