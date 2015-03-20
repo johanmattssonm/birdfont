@@ -362,6 +362,7 @@ public class MenuTab : FontDisplay {
 		dialog.overwrite_signal.connect (() => {
 			tab_bar.add_unique_tab (new Preview (), true);
 			PreviewTools.update_preview ();
+			KeyBindings.set_modifier (NONE);
 		});
 			
 		if ((format == FontFormat.SVG || format == FontFormat.FREETYPE) && !OverWriteDialogListener.dont_ask_again) {
