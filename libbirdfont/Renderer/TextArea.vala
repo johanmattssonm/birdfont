@@ -130,21 +130,21 @@ public class TextArea : Widget {
 				add_character (keyval);
 				break;
 			case 'a':
-				if (KeyBindings.has_ctrl ()) {
+				if (KeyBindings.has_ctrl () || KeyBindings.has_logo ()) {
 					select_all ();
 				} else {
 					add_character (keyval);
 				}
 				break;
 			case 'c':
-				if (KeyBindings.has_ctrl ()) {
+				if (KeyBindings.has_ctrl () || KeyBindings.has_logo ()) {
 					ClipTool.copy_text (this);
 				} else {
 					add_character (keyval);
 				}
 				break;
 			case 'v':
-				if (KeyBindings.has_ctrl ()) {
+				if (KeyBindings.has_ctrl () || KeyBindings.has_logo ()) {
 					ClipTool.paste_text (this);
 					store_undo_state_at_next_event = true;
 				} else {
@@ -152,14 +152,14 @@ public class TextArea : Widget {
 				}
 				break;
 			case 'y':
-				if (KeyBindings.has_ctrl ()) {
+				if (KeyBindings.has_ctrl () || KeyBindings.has_logo ()) {
 					redo ();
 				} else {
 					add_character (keyval);
 				}
 				break;
 			case 'z':
-				if (KeyBindings.has_ctrl ()) {
+				if (KeyBindings.has_ctrl () || KeyBindings.has_logo ()) {
 					undo ();
 				} else {
 					add_character (keyval);
@@ -811,8 +811,8 @@ public class TextArea : Widget {
 		}
 		
 		if (unlikely (c.paragraph < 0)) {
-			c.paragraph = 0;
-			c.character_index = 0;
+			c.paragraph = paragraphs.size > 0 ? paragraphs.size - 1 : 0;
+			c.character_index = paragraphs.size > 0 ? paragraphs.get (c.paragraph).text.length : 0;
 		}
 		
 		store_undo_state_at_next_event = true;

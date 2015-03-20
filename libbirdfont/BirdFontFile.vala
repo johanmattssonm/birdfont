@@ -923,13 +923,13 @@ class BirdFontFile : GLib.Object {
 			}
 			
 			if (range_left.get_length () > 1) {
-				kerning_range = new KerningRange ();
+				kerning_range = new KerningRange (font);
 				kerning_range.set_ranges (range_left.get_all_ranges ());
 				KerningTools.add_unique_class (kerning_range);
 			}
 
 			if (range_right.get_length () > 1) {
-				kerning_range = new KerningRange ();
+				kerning_range = new KerningRange (font);
 				kerning_range.set_ranges (range_right.get_all_ranges ());
 				KerningTools.add_unique_class (kerning_range);
 			}

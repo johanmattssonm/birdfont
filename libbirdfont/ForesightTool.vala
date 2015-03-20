@@ -94,11 +94,9 @@ public class ForesightTool : Tool {
 
 						ps = new PointSelection (PenTool.active_path.points.get (PenTool.active_path.points.size - 1), PenTool.active_path);
 						ps.point.set_tie_handle (false);
-						ps.point.convert_to_curve ();
 						
 						ps = new PointSelection (PenTool.active_path.points.get (0), PenTool.active_path);
 						ps.point.set_tie_handle (false);
-						ps.point.convert_to_curve ();
 						
 						first_point = PenTool.active_path.points.get (0);
 						clockwise = PenTool.active_path.is_clockwise ();
@@ -197,6 +195,7 @@ public class ForesightTool : Tool {
 						return;
 					}
 					last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
+					last.point.convert_to_curve ();
 				}
 				
 				PenTool.move_selected_handle = true;

@@ -20,7 +20,7 @@ public class Row : GLib.Object {
 
 	int index = 0;
 	bool delete_button = true;
-	Gee.ArrayList<string> columns_labels = new Gee.ArrayList<string> ();
+	public Gee.ArrayList<string> columns_labels = new Gee.ArrayList<string> ();
 	GLib.Object? row_data = null;
 	
 	public int columns {

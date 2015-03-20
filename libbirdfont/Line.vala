@@ -172,16 +172,7 @@ public class Line : GLib.Object {
 	}
 
 	void redraw_line () {
-		double p;
-		Glyph g = MainWindow.get_current_glyph ();
-
-		if (vertical) {
-			p = Glyph.reverse_path_coordinate_x (pos);
-			queue_draw_area ((int)p - 100, 0, 200, g.allocation.height);
-		} else {
-			p = Glyph.reverse_path_coordinate_y (pos);
-			queue_draw_area (0, (int)p - 100, g.allocation.width, 300);
-		}
+		GlyphCanvas.redraw ();
 	}	
 	
 	public void move_line_to (int x, int y, WidgetAllocation allocation) {
