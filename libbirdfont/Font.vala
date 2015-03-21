@@ -703,7 +703,7 @@ public class Font : GLib.Object {
 		glyph_name.remove_all ();
 		ligature.remove_all ();
 		
-		if (path.has_suffix (".svg")) {
+		if (path.has_suffix (".svg") || path.has_suffix (".SVG")) {
 			Toolbox.select_tool_by_name ("cubic_points");
 			loaded = parse_svg_file (path);
 					
@@ -719,17 +719,17 @@ public class Font : GLib.Object {
 			format = FontFormat.FFI;
 		}
 
-		if (path.has_suffix (".bf")) {
+		if (path.has_suffix (".bf") || path.has_suffix (".BF")) {
 			loaded = parse_bf_file (path);
 			format = FontFormat.BIRDFONT;
 		}
 
-		if (path.has_suffix (".bfp")) {
+		if (path.has_suffix (".bfp") || path.has_suffix (".BFP")) {
 			loaded = parse_bfp_file (path);
 			format = FontFormat.BIRDFONT_PART;
 		}		
 		
-		if (path.has_suffix (".ttf")) {
+		if (path.has_suffix (".ttf") || path.has_suffix (".TTF")) {
 			loaded = parse_freetype_file (path);
 			
 			if (!loaded) {
@@ -751,7 +751,7 @@ public class Font : GLib.Object {
 			font_file = null; // make sure BirdFont asks where to save the file
 		}			
 
-		if (path.has_suffix (".otf")) {
+		if (path.has_suffix (".otf") || path.has_suffix (".OTF")) {
 			loaded = parse_freetype_file (path);
 						
 			if (!loaded) {

@@ -2096,7 +2096,7 @@ public class Glyph : FontDisplay {
 					glyph = gc.get_current ();
 					glyph.left_limit = left_limit;
 					glyph.right_limit = right_limit;
-					glyph.add_help_lines ();
+					// FIXME: DELETE glyph.add_help_lines ();
 				}
 			}
 		}	

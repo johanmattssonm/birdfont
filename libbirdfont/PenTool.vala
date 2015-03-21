@@ -124,10 +124,7 @@ public class PenTool : Tool {
 			last_point_y = Glyph.path_coordinate_y (y);
 		
 			move_action (this, x, y);
-
-			if (!has_join_icon ()) {
-				press (b, x, y, false);
-			}
+			press (b, x, y, false);
 
 			if (BirdFont.android) {
 				point_selection_image = true;

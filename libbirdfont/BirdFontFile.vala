@@ -261,7 +261,7 @@ class BirdFontFile : GLib.Object {
 				os.put_string (Font.to_hex (sc.next.get_char ()));
 				os.put_string ("\" ");
 				
-				os.put_string (" />\n");
+				os.put_string ("/>\n");
 		}
 	}
 		

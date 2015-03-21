@@ -58,19 +58,17 @@ public class SpacingData : GLib.Object {
 	}
 	
 	public void add_connections (string glyph) {
-		string sb = glyph;
-		
-		connections.add (sb);
+		connections.add (glyph);
 		
 		foreach (SpacingClass s in classes) {
 			if (s.first == glyph) {
-				if (has_connection (s.next)) {
+				if (!has_connection (s.next)) {
 					add_connections (s.next);
 				}
 			}
 
 			if (s.next == glyph) {
-				if (has_connection (s.first)) {
+				if (!has_connection (s.first)) {
 					add_connections (s.first);
 				}
 			}
