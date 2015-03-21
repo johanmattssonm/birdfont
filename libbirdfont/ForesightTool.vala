@@ -195,7 +195,7 @@ public class ForesightTool : Tool {
 						return;
 					}
 					last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
-					last.point.convert_to_curve ();
+					//last.point.convert_to_curve ();
 				}
 				
 				PenTool.move_selected_handle = true;

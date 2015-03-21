@@ -206,6 +206,11 @@ public class EditPoint : GLib.Object {
 		if (next == null || get_next ().next != null) {
 				return;
 		}
+
+		if (unlikely (reflective_point || tie_handles)) {
+			warning ("Points on lines can't have tied handles.");
+			return;
+		}
 		
 		px = get_next ().get_next ().x;
 		py = get_next ().get_next ().y;

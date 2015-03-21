@@ -1494,7 +1494,9 @@ public class PenTool : Tool {
 
 	static void set_default_handle_positions_on_path (Path path) {
 		foreach (EditPoint e in path.points) {
-			e.recalculate_linear_handles ();
+			if (!e.tie_handles && !e.reflective_point) {
+				e.recalculate_linear_handles ();
+			}
 		}
 	}
 	
