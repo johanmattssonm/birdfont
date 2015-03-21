@@ -15,6 +15,8 @@
 namespace BirdFont {
 	
 public class LoadCallback : GLib.Object {
+	SaveDialogListener dialog;
+	Font font;
 
 	public signal void file_loaded ();
 	
@@ -22,9 +24,6 @@ public class LoadCallback : GLib.Object {
 	}
 
 	public void load () {
-		SaveDialogListener dialog;
-		Font font;
-		
 		if (MenuTab.suppress_event) {
 			warn_if_test ("Event suppressed");
 			return;
