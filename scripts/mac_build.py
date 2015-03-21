@@ -59,8 +59,6 @@ configfile.write_config (prefix)
 compile_translations()
 build.libbirdxml(prefix, cc, xml_library_cflags, xml_library_ldflags, valac, valaflags, "libbirdxml." + version.LIBBIRDXML_SO_VERSION + ".dylib", False)
 build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, "libbirdfont." + version.SO_VERSION + ".dylib", False)
-build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, False)
-build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, False)
 build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, False)
 
 if not options.nogtk:

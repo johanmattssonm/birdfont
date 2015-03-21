@@ -128,6 +128,11 @@ public class TrackTool : Tool {
 			if (button == 1 && draw_freehand) {
 				add_endpoint_and_merge (x, y);
 			}
+			
+			set_tie ();
+			
+			PenTool.force_direction (); 
+			
 			BirdFont.get_current_font ().touch ();
 		});
 
@@ -169,6 +174,21 @@ public class TrackTool : Tool {
 			Tool p = MainWindow.get_toolbox ().get_tool ("pen_tool");
 			p.key_press_action (p, keyval);
 		});
+	}
+		
+	void set_tie () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		Path p = glyph.path_list.get (glyph.path_list.size - 1);
+		
+		foreach (EditPoint ep in p.points) {
+			if (ep.get_right_handle ().is_line () || ep.get_left_handle ().is_line ()) {
+				ep.set_tie_handle (false);
+			}
+
+			if (!ep.get_right_handle ().is_line () || !ep.get_left_handle ().is_line ()) {
+				ep.convert_to_curve ();
+			}
+		}
 	}
 
 	public void set_samples_per_point (double s) {
@@ -233,6 +253,7 @@ public class TrackTool : Tool {
 			if (DrawingTools.get_selected_point_type () == PointType.QUADRATIC) {
 				foreach (EditPoint e in p.points) {
 					if (e.tie_handles) {
+						e.convert_to_curve ();
 						e.process_tied_handle ();							
 					}
 				}
@@ -463,7 +484,9 @@ public class TrackTool : Tool {
 		EditPoint average;
 		Path p;
 		Glyph glyph;
-		Gee.ArrayList<EditPoint> points = new Gee.ArrayList<EditPoint> ();
+		Gee.ArrayList<EditPoint> points;
+		
+		points = new Gee.ArrayList<EditPoint> ();
 		
 		if (added_points == 0) {
 			warning ("No points to add.");
@@ -515,6 +538,7 @@ public class TrackTool : Tool {
 			if (p.points.size > 2) {
 				PenTool.convert_point_to_line (average.get_prev (), true);
 				average.get_prev ().process_tied_handle ();
+				average.get_prev ().set_tie_handle (false);
 			}
 		}
 

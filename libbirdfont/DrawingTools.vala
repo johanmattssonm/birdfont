@@ -1113,7 +1113,7 @@ public class DrawingTools : ToolCollection  {
 	}
 			
 	void show_point_tool_modifiers () {
-		draw_tool_modifiers.set_headline (t_("Control Point Tools"));
+		draw_tool_modifiers.set_headline (t_("Control Points"));
 		
 		tie_handles.set_tool_visibility (true);
 		reflect_handle.set_tool_visibility (true);

@@ -66,6 +66,8 @@ public class ForesightTool : Tool {
 			EditPoint first_point;
 			bool clockwise;
 
+			MainWindow.get_current_glyph ().store_undo_state ();
+
 			last_move_x = x;
 			last_move_y = y;
 
@@ -195,7 +197,12 @@ public class ForesightTool : Tool {
 						return;
 					}
 					last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
-					last.point.convert_to_curve ();
+					
+					if (last.point.get_right_handle ().is_line () || last.point.get_left_handle ().is_line ()) {
+						last.point.convert_to_curve ();
+						last.point.get_right_handle ().length = 0.01;
+						last.point.get_left_handle ().length = 0.01;
+					}
 				}
 				
 				PenTool.move_selected_handle = true;
@@ -215,9 +222,19 @@ public class ForesightTool : Tool {
 				PenTool.selected_handle = h;
 				PenTool.active_handle = h;
 				
+				if (previous_point == 0 
+					&& !last.point.reflective_point
+					&& !last.point.tie_handles) {
+					
+					last.point.convert_to_curve ();
+					last.point.set_reflective_handles (true);
+					last.point.get_right_handle ().length = 0.01;
+					last.point.get_left_handle ().length = 0.01;
+				}
+				
 				if (previous_point == 0) {
 					last.point.set_reflective_handles (true);
-				} 
+				}
 				
 				if (previous_point > 0) {
 					PenTool.retain_angle = last.point.tie_handles;
@@ -342,6 +359,34 @@ public class ForesightTool : Tool {
 		
 		return last;
 	}
+	
+	// FIXME: solve the straight line issue in undo
+	public override void before_undo () {
+		EditPoint last;
+		
+		if (PenTool.active_path.points.size > 1) {
+			last = PenTool.active_path.points.get (PenTool.active_path.points.size - 2);
+			last.convert_to_curve ();
+			
+			print (@"Before $(last.x)  $(last.y)\n");
+		}
+	}
+	
+	public override void after_undo () {
+		PenTool.selected_points.clear ();
+		PenTool.active_edit_point = null;
+		state = NONE;
+
+		EditPoint last;
+		
+		if (PenTool.active_path.points.size > 0) {
+			last = PenTool.active_path.points.get (PenTool.active_path.points.size - 1);
+			last.convert_to_curve ();
+			
+			print (@"After $(last.x)  $(last.y)\n");
+		}
+	}
+
 }
 
 }

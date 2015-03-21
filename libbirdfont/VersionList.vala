@@ -116,7 +116,7 @@ public class VersionList : DropMenu {
 		
 		if (unlikely (glyphs.size == 0 && current_version_id == -1)) {
 			warning (@"No glyphs added to collection");
-			gl = new Glyph ("", '\0');
+			gl = new Glyph.no_lines ("", '\0');
 		}
 		
 		return (!) gl;
