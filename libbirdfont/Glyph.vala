@@ -1703,10 +1703,14 @@ public class Glyph : FontDisplay {
 
 	public override void undo () {
 		Glyph g;
+		Tool tool;
 		
 		if (undo_list.size == 0) {
 			return;
 		}
+		
+		tool = MainWindow.get_toolbox ().get_current_tool ();
+		tool.before_undo ();
 		
 		g = undo_list.get (undo_list.size - 1);	
 		
@@ -1718,6 +1722,8 @@ public class Glyph : FontDisplay {
 		PenTool.update_selected_points ();
 		
 		clear_active_paths ();
+		
+		tool.after_undo ();
 	}
 
 	public override void redo () {

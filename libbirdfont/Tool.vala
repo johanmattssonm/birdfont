@@ -352,6 +352,13 @@ public class Tool : Widget {
 	public void set_persistent (bool p) {
 		persistent = p;
 	}
+	
+	public virtual void before_undo () {
+	}
+
+	public virtual void after_undo () {
+	}
+
 }
 
 }
