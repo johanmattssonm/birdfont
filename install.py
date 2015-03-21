@@ -51,20 +51,20 @@ if not os.path.exists ("build/configured"):
 	print ("Project is not configured")
 	exit (1)
 
-if not os.path.exists ("build/installed"):
-        print ("Project is not built")
-        exit (1)
-
 parser = OptionParser()
 parser.add_option ("-d", "--dest", dest="dest", help="install to this directory", metavar="DEST")
 parser.add_option ("-m", "--nogzip", dest="nogzip", help="don't gzip manpages", default=False)
 parser.add_option ("-n", "--manpages-directory", dest="mandir", help="put man pages in this directory under prefix")
 parser.add_option ("-l", "--libdir", dest="libdir", help="path to directory for shared libraries (lib or lib64).")
+parser.add_option ("-c", "--skip-command-line-tools", dest="nocli", help="don't install command line tools")
 
 (options, args) = parser.parse_args()
 
 if not options.dest:
 	options.dest = ""
+
+if not options.nocli:
+	options.nocli = False
 
 nogzip = options.nogzip
 
@@ -99,9 +99,10 @@ install ('resources/linux/birdfont.appdata.xml', '/share/appdata', 644)
 if os.path.isfile ('build/bin/birdfont'):
 	install ('build/bin/birdfont', '/bin', 755)
 
-install ('build/bin/birdfont-autotrace', '/bin', 755)
-install ('build/bin/birdfont-export', '/bin', 755)
-install ('build/bin/birdfont-import', '/bin', 755)
+if not options.nocli:
+	install ('build/bin/birdfont-autotrace', '/bin', 755)
+	install ('build/bin/birdfont-export', '/bin', 755)
+	install ('build/bin/birdfont-import', '/bin', 755)
 
 #library
 if not options.libdir:
@@ -137,7 +138,6 @@ else:
 	print ("Can't find libbirdfont.")
 	exit (1)
 
-
 if os.path.isfile ('build/bin/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION):
         install ('build/bin/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, libdir, 644)
         link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
@@ -155,16 +155,21 @@ else:
 
 	
 #manpages
+
 if not nogzip:
     install ('build/birdfont.1.gz', mandir, 644)
-    install ('build/birdfont-autotrace.1.gz', mandir, 644)
-    install ('build/birdfont-export.1.gz', mandir, 644)
-    install ('build/birdfont-import.1.gz', mandir, 644)
+
+    if not options.nocli:
+        install ('build/birdfont-autotrace.1.gz', mandir, 644)
+        install ('build/birdfont-export.1.gz', mandir, 644)
+        install ('build/birdfont-import.1.gz', mandir, 644)
 else:
     install ('resources/linux/birdfont.1', mandir, 644)
-    install ('resources/linux/birdfont-autotrace.1', mandir, 644)
-    install ('resources/linux/birdfont-export.1', mandir, 644)
-    install ('resources/linux/birdfont-import.1', mandir, 644)
+
+    if not options.nocli:
+        install ('resources/linux/birdfont-autotrace.1', mandir, 644)
+        install ('resources/linux/birdfont-export.1', mandir, 644)
+        install ('resources/linux/birdfont-import.1', mandir, 644)
 
 #translations
 for lang_dir in glob.glob('build/locale/*'):
