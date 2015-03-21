@@ -131,6 +131,8 @@ public class TrackTool : Tool {
 			
 			set_tie ();
 			
+			PenTool.force_direction (); 
+			
 			BirdFont.get_current_font ().touch ();
 		});
 
