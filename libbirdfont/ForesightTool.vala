@@ -195,7 +195,12 @@ public class ForesightTool : Tool {
 						return;
 					}
 					last = PenTool.selected_points.get (PenTool.selected_points.size - 1);
-					last.point.convert_to_curve ();
+					
+					if (last.point.get_right_handle ().is_line () || last.point.get_left_handle ().is_line ()) {
+						last.point.convert_to_curve ();
+						last.point.get_right_handle ().length = 0.01;
+						last.point.get_left_handle ().length = 0.01;
+					}
 				}
 				
 				PenTool.move_selected_handle = true;

@@ -33,6 +33,7 @@ public class DefaultCharacterSet {
 		add_language (t_("Latin"), "la", ""); 
 		add_language (t_("Russian"), "ro", "А Б В Г Д Е Ё Ж З И Й К Л М Н О П Р С Т У Ф Х Ц Ч Ш Щ Ъ Ы Ь Э Ю Я а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я");
 		add_language (t_("Swedish"), "sv", "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö a b c d e f g h i j k l m n o p q r s t u v w x y z å ä ö");
+		add_language (t_("Thai"), "th", "ก-ฺ ฿-๛");
 	}
 	
 	/** Add a new language to the menu for default character set.
@@ -109,9 +110,7 @@ public class DefaultCharacterSet {
 		
 		all_characters = get_characters_for_prefered_language ();
 		if (all_characters != "") {
-			foreach (string c in all_characters.split (" ")) {
-				gr.add_single (c.get_char ());
-			}
+			gr.parse_ranges (all_characters);
 		} else {			
 			/// All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
 			lower_case = t_("a b c d e f g h i j k l m n o p q r s t u v w x y z");
@@ -119,13 +118,8 @@ public class DefaultCharacterSet {
 			/// All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
 			upper_case = t_("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
 
-			foreach (string c in lower_case.split (" ")) {
-				gr.add_single (c.get_char ());
-			}
-
-			foreach (string c in upper_case.split (" ")) {
-				gr.add_single (c.get_char ());
-			}
+			gr.parse_ranges (lower_case);
+			gr.parse_ranges (upper_case);
 		}
 		
 		gr.add_range ('0', '9');
