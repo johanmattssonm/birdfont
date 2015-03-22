@@ -101,6 +101,9 @@ public class Font : GLib.Object {
 	
 	public static string? default_license = null; 
 	
+	public FontSettings settings;
+	public KerningStrings kerning_strings;
+	
 	public Font () {
 		KerningClasses kerning_classes;
 		
@@ -135,6 +138,10 @@ public class Font : GLib.Object {
 		ligatures_substitution = new Ligatures (this);
 		
 		background_images = new Gee.ArrayList<BackgroundImage> ();
+		
+		settings = new FontSettings ();
+		kerning_strings = new KerningStrings ();
+		kerning_strings.load (this);
 	}
 
 	public static void set_default_license (string license) {
@@ -626,6 +633,8 @@ public class Font : GLib.Object {
 		} else {
 			save_bf ();
 		}
+		
+		settings.save (get_file_name ());
 	}
 	
 	public bool save_bfp () {
@@ -762,6 +771,8 @@ public class Font : GLib.Object {
 			
 			font_file = null;
 		}
+		
+		settings.load (get_file_name ());
 		
 		return loaded;
 	}

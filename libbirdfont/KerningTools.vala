@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 2014 Johan Mattsson
+    Copyright (C) 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -89,6 +89,22 @@ public class KerningTools : ToolCollection  {
 			d.insert_unichar ();
 		});
 		kerning_tools.add_tool (insert_unicode);
+
+		Tool previous_kerning_string = new Tool ("previous_kerning_string", t_("Previous kerning string"));
+		previous_kerning_string.select_action.connect ((self) => {
+			KerningDisplay d = MainWindow.get_kerning_display ();
+			Font f = BirdFont.get_current_font ();
+			d.add_text (f.kerning_strings.next ());
+		});
+		kerning_tools.add_tool (previous_kerning_string);
+
+		Tool next_kerning_string = new Tool ("next_kerning_string", t_("Next kerning string"));
+		next_kerning_string.select_action.connect ((self) => {
+			KerningDisplay d = MainWindow.get_kerning_display ();
+			Font f = BirdFont.get_current_font ();
+			d.add_text (f.kerning_strings.previous ());			
+		});
+		kerning_tools.add_tool (next_kerning_string);
 		
 		kerning_tools.set_persistent (false);
 		kerning_tools.set_unique (false);

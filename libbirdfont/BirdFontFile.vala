@@ -662,15 +662,15 @@ class BirdFontFile : GLib.Object {
 			}
 
 			if (t.get_name () == "postscript_name") {
-				font.postscript_name = XmlParser.parse_escaped_text (t.get_content ());
+				font.postscript_name = XmlParser.decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "name") {
-				font.name = XmlParser.parse_escaped_text (t.get_content ());
+				font.name = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "subfamily") {
-				font.subfamily = XmlParser.parse_escaped_text (t.get_content ());
+				font.subfamily = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "bold") {
@@ -682,23 +682,23 @@ class BirdFontFile : GLib.Object {
 			}
 			
 			if (t.get_name () == "full_name") {
-				font.full_name = XmlParser.parse_escaped_text (t.get_content ());
+				font.full_name = XmlParser.decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "unique_identifier") {
-				font.unique_identifier = XmlParser.parse_escaped_text (t.get_content ());
+				font.unique_identifier = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "version") {
-				font.version = XmlParser.parse_escaped_text (t.get_content ());
+				font.version = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "description") {
-				font.description = XmlParser.parse_escaped_text (t.get_content ());
+				font.description = XmlParser.decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "copyright") {
-				font.copyright = XmlParser.parse_escaped_text (t.get_content ());
+				font.copyright = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "kerning") {

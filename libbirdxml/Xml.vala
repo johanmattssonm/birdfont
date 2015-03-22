@@ -189,7 +189,7 @@ public class XmlParser : GLib.Object {
 	/** Replace escaped character with plain text characters. 
 	 * &amp; will be replaced with & etc.
 	 */
-	public static string parse_escaped_text (string s) {
+	public static string decode (string s) {
 		string t;
 		t = s.replace ("&quot;", "\"");
 		t = t.replace ("&apos;;", "'");
@@ -198,6 +198,17 @@ public class XmlParser : GLib.Object {
 		t = t.replace ("&amp;", "&");
 		return t;
 	}
+
+	public static string encode (string s) {
+		string t;
+		t = s.replace ("\"", "&quot;");
+		t = t.replace ("'", "&apos;;");
+		t = t.replace ("<", "&lt;");
+		t = t.replace (">", "&gt;");
+		t = t.replace ("&", "&amp;");
+		return t;
+	}
+
 }
 
 }

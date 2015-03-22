@@ -89,37 +89,21 @@ public class Preferences {
 	}
 	
 	public static void load () {
-		File app_dir;
+		File config_dir;
 		File settings;
 		FileStream? settings_file;
 		unowned FileStream b;
 		string? l;
 		
-		printd ("get app");
-		app_dir = BirdFont.get_settings_directory ();
-		
-		if (is_null (app_dir)) {
-			warning ("No app directory.");
-			return;
-		}
+		config_dir = BirdFont.get_settings_directory ();
+		settings = get_child (config_dir, "settings");
 
-		printd ("get settings file");
-		settings = get_child (app_dir, "settings");
-
-		if (is_null (settings)) {
-			warning ("No setting directory.");
-			return;
-		}
-
-		printd ("create map");
 		data = new HashMap<string, string> ();
 
-		printd ("look at settings");
 		if (!settings.query_exists ()) {
 			return;
 		}
-		
-		printd ("open settings file");
+
 		settings_file = FileStream.open ((!) settings.get_path (), "r");
 		
 		if (settings_file == null) {
@@ -127,7 +111,6 @@ public class Preferences {
 			return;
 		}
 		
-		printd ("parse settings file");
 		b = (!) settings_file;
 		l = b.read_line ();
 		while ((l = b.read_line ())!= null) {
@@ -157,10 +140,10 @@ public class Preferences {
 	
 	public static void save () {
 		try {
-			File app_dir = BirdFont.get_settings_directory ();
-			File settings = get_child (app_dir, "settings");
+			File config_dir = BirdFont.get_settings_directory ();
+			File settings = get_child (config_dir, "settings");
 
-			return_if_fail (app_dir.query_exists ());
+			return_if_fail (config_dir.query_exists ());
 		
 			if (settings.query_exists ()) {
 				settings.delete ();
