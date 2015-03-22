@@ -36,11 +36,16 @@ public class GsubTable : OtfTable {
 		
 		LigatureSetList clig;
 		ContextualLigatureSet contextual;
+
+		uint16 feature_lookups;
 		
+		clig = new LigatureSetList.clig (glyf_table);
+		contextual = new ContextualLigatureSet (glyf_table);
+				
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
 		fd.add_ushort (30); // offset to feature list
-		fd.add_ushort (46); // offset to lookup list
+		fd.add_ushort (contextual.has_ligatures () ? 46 : 44); // offset to lookup list
 		
 		// script list
 		fd.add_ushort (1);   // number of items in script list
@@ -63,26 +68,39 @@ public class GsubTable : OtfTable {
 		fd.add_tag ("clig"); // feature tag
 		fd.add_ushort (8); // offset to feature
 		// FIXME: Should it be liga and clig?
-		
-		fd.add_ushort (0); // feature prameters (null)
-		fd.add_ushort (2); // number of lookups
-		fd.add_ushort (2); // lookup chained_context (etc.) The chained context tables are listed here but the actual ligature table is only referenced in the context table
-		fd.add_ushort (0); // lookup clig_subtable
 
 		clig = new LigatureSetList.clig (glyf_table);
 		contextual = new ContextualLigatureSet (glyf_table);
+
+		feature_lookups = contextual.has_ligatures () ? 2 : 1;
+		
+		fd.add_ushort (0); // feature prameters (null)
+		fd.add_ushort (feature_lookups); // number of lookups
+		
+		if (contextual.has_ligatures ()) {
+			fd.add_ushort (2); // lookup chained_context (etc.) The chained context tables are listed here but the actual ligature table is only referenced in the context table
+			fd.add_ushort (0); // lookup clig_subtable
+		} else {
+			fd.add_ushort (0); // lookup clig_subtable
+		}
 		
 		clig_subtable = get_ligature_subtable (clig);
 		chained_ligatures = get_ligature_subtable (contextual.ligatures);
 		chained_context = get_chaining_contextual_substition_subtable (contextual);
 		
 		// lookup table
-		fd.add_ushort (3); // number of lookups
-		fd.add_ushort (8); // offset to lookup 1 
-		fd.add_ushort (16); // offset to lookup 2
-		fd.add_ushort (24); // offset to lookup 3
-
-		uint16 lookups_end = 3 * 8;
+		uint16 lookups = contextual.has_ligatures () ? 3 : 1;
+		fd.add_ushort (lookups); // number of lookups
+		
+		if (contextual.has_ligatures ()) {
+			fd.add_ushort (8); // offset to lookup 1 
+			fd.add_ushort (16); // offset to lookup 2
+			fd.add_ushort (24); // offset to lookup 3
+		} else {
+			fd.add_ushort (4); // offset to lookup 1 
+		}
+		
+		uint16 lookups_end = lookups * 8;
 		length = 0;
 		fd.add_ushort (4); // lookup type 
 		fd.add_ushort (0); // lookup flags
@@ -90,26 +108,31 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (lookups_end + length); // array of offsets to subtable 
 		length += (uint16) clig_subtable.length_with_padding ();
 		lookups_end -= 8;
-	
-		fd.add_ushort (4); // lookup type 
-		fd.add_ushort (0); // lookup flags
-		fd.add_ushort (1); // number of subtables
-		fd.add_ushort (lookups_end + length); // array of offsets to subtable
-		length += (uint16) chained_ligatures.length_with_padding ();
-		lookups_end -= 8;
+		
+		if (contextual.has_ligatures ()) {
+			fd.add_ushort (4); // lookup type 
+			fd.add_ushort (0); // lookup flags
+			fd.add_ushort (1); // number of subtables
+			fd.add_ushort (lookups_end + length); // array of offsets to subtable
+			length += (uint16) chained_ligatures.length_with_padding ();
+			lookups_end -= 8;
 
-		fd.add_ushort (6); // lookup type 
-		fd.add_ushort (0); // lookup flags
-		fd.add_ushort (1); // number of subtables
-		fd.add_ushort (lookups_end + length); // array of offsets to subtable
-		length += (uint16) chained_context.length_with_padding ();
-		lookups_end -= 8;
+			fd.add_ushort (6); // lookup type 
+			fd.add_ushort (0); // lookup flags
+			fd.add_ushort (1); // number of subtables
+			fd.add_ushort (lookups_end + length); // array of offsets to subtable
+			length += (uint16) chained_context.length_with_padding ();
+			lookups_end -= 8;
+		}
 		
 		warn_if_fail (lookups_end == 0);
 		
 		fd.append (clig_subtable);
-		fd.append (chained_ligatures);
-		fd.append (chained_context);
+		
+		if (contextual.has_ligatures ()) {
+			fd.append (chained_ligatures);
+			fd.append (chained_context);
+		}
 		
 		fd.pad ();
 		
@@ -162,73 +185,74 @@ public class GsubTable : OtfTable {
 	FontData get_chaining_contextual_substition_subtable (ContextualLigatureSet contexts) throws GLib.Error {
 		FontData fd = new FontData ();
 		
-		ContextualLigature context = contexts.ligature_context.get (0); //FIXME:
-		
-		Gee.ArrayList<string> backtrack = get_names (context.backtrack);
-		Gee.ArrayList<string> input = get_names (context.input);
-		Gee.ArrayList<string> lookahead = get_names (context.lookahead);
-		
-		uint16 lookahead_offset, input_offset, backtrack_offset;
-		
-		fd.add_ushort (3); // format identifier
-		
-		backtrack_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * 2) + (uint16) (backtrack.size * 2);
-		fd.add_ushort ((uint16) backtrack.size); // backtrack glyph count
-		for (uint16 i = 0; i < input.size; i++) {
-			fd.add_ushort (backtrack_offset + 6 * i); // array of offsets to coverage table
-		}
-		
-		input_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * 2)  + (uint16) (backtrack.size * (2 + 6));
-		fd.add_ushort ((uint16) input.size); // input glyph count (middle)
-		for (uint16 i = 0; i < input.size; i++) {
-			fd.add_ushort (input_offset + 6 * i); // array of offsets to coverage table
-		}
-		
-		lookahead_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * (2 + 6)) + (uint16) (backtrack.size * (2 + 6));
-		fd.add_ushort ((uint16) lookahead.size); // lookahead glyph count
-		for (uint16 i = 0; i < lookahead.size; i++) {
-			fd.add_ushort (lookahead_offset + 6 * i); // array of offsets to coverage table
-		}
-		
-		fd.add_ushort (1); // substitute count
-		// substitution lookup records
-		fd.add_ushort (0); // glyph sequence index
-		fd.add_ushort (1); // go to the ligature substitution via lookup table
+		foreach (ContextualLigature context in contexts.ligature_context) {
+			
+			Gee.ArrayList<string> backtrack = get_names (context.backtrack);
+			Gee.ArrayList<string> input = get_names (context.input);
+			Gee.ArrayList<string> lookahead = get_names (context.lookahead);
+			
+			uint16 lookahead_offset, input_offset, backtrack_offset;
+			
+			fd.add_ushort (3); // format identifier
+			
+			backtrack_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * 2) + (uint16) (backtrack.size * 2);
+			fd.add_ushort ((uint16) backtrack.size); // backtrack glyph count
+			for (uint16 i = 0; i < input.size; i++) {
+				fd.add_ushort (backtrack_offset + 6 * i); // array of offsets to coverage table
+			}
+			
+			input_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * 2)  + (uint16) (backtrack.size * (2 + 6));
+			fd.add_ushort ((uint16) input.size); // input glyph count (middle)
+			for (uint16 i = 0; i < input.size; i++) {
+				fd.add_ushort (input_offset + 6 * i); // array of offsets to coverage table
+			}
+			
+			lookahead_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * (2 + 6)) + (uint16) (backtrack.size * (2 + 6));
+			fd.add_ushort ((uint16) lookahead.size); // lookahead glyph count
+			for (uint16 i = 0; i < lookahead.size; i++) {
+				fd.add_ushort (lookahead_offset + 6 * i); // array of offsets to coverage table
+			}
+			
+			fd.add_ushort (1); // substitute count
+			// substitution lookup records
+			fd.add_ushort (0); // glyph sequence index
+			fd.add_ushort (1); // go to the ligature substitution via lookup table
 
-		// backtrack coverage table1
-		if (fd.length_with_padding () != backtrack_offset) {
-			warning (@"Wrong backtrack offset: $backtrack_offset != $(fd.length_with_padding ())");
-		}
-		
-		// gid array 
-		foreach (string glyph_name in backtrack) {
-			fd.add_ushort (1); // format
-			fd.add_ushort ((uint16) backtrack.size); // coverage array length
-			fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
-		}
-				
-		// input coverage table1
-		if (fd.length_with_padding () != input_offset) {
-			warning (@"Wrong input offset: $input_offset != $(fd.length_with_padding ())");
-		}
-		
-		// gid array 
-		foreach (string glyph_name in input) {
-			fd.add_ushort (1); // format
-			fd.add_ushort ((uint16) input.size); // coverage array length
-			fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
-		}
+			// backtrack coverage table1
+			if (fd.length_with_padding () != backtrack_offset) {
+				warning (@"Wrong backtrack offset: $backtrack_offset != $(fd.length_with_padding ())");
+			}
+			
+			// gid array 
+			foreach (string glyph_name in backtrack) {
+				fd.add_ushort (1); // format
+				fd.add_ushort ((uint16) backtrack.size); // coverage array length
+				fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
+			}
+					
+			// input coverage table1
+			if (fd.length_with_padding () != input_offset) {
+				warning (@"Wrong input offset: $input_offset != $(fd.length_with_padding ())");
+			}
+			
+			// gid array 
+			foreach (string glyph_name in input) {
+				fd.add_ushort (1); // format
+				fd.add_ushort ((uint16) input.size); // coverage array length
+				fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
+			}
 
-		// lookahead coverage table1
-		if (fd.length_with_padding () != lookahead_offset) {
-			warning (@"Wrong lookahead offset: $lookahead_offset != $(fd.length_with_padding ())");
-		}
+			// lookahead coverage table1
+			if (fd.length_with_padding () != lookahead_offset) {
+				warning (@"Wrong lookahead offset: $lookahead_offset != $(fd.length_with_padding ())");
+			}
 
-		// gid array 
-		foreach (string glyph_name in lookahead) {
-			fd.add_ushort (1); // format
-			fd.add_ushort ((uint16) lookahead.size); // coverage array length
-			fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
+			// gid array 
+			foreach (string glyph_name in lookahead) {
+				fd.add_ushort (1); // format
+				fd.add_ushort ((uint16) lookahead.size); // coverage array length
+				fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
+			}
 		}
 		
 		return fd;

@@ -26,12 +26,18 @@ public class ContextualLigatureSet : GLib.Object {
 		ligatures = new LigatureSetList.contextual (glyf_table, this);
 	}
 	
+	public bool has_ligatures () {
+		return ligature_context.size > 0;
+	}
+	
 	void add_contextual_ligatures () {
 		ContextualLigature ligature ;
 		LigatureSet s;
 		
-		ligature = new ContextualLigature ("ralt", "a", "r", "t t");
-		ligature_context.add (ligature);
+		if (BirdFont.has_argument ("--test")) {
+			ligature = new ContextualLigature ("ralt", "a", "r", "t t");
+			ligature_context.add (ligature);
+		}
 	}
 }
 
