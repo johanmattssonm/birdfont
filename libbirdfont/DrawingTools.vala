@@ -123,7 +123,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tools.add_tool (foresight_tool);
 
-		Tool bezier_line = new Tool ("bezier_line", t_("Convert the last segment to a straight line in the Beziér tool"));
+		Tool bezier_line = new Tool ("bezier_line", t_("Convert the last segment to a straight line"));
 		bezier_line.select_action.connect ((self) => {
 			foresight_tool.switch_to_line_mode ();
 		});
