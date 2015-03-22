@@ -382,6 +382,19 @@ public class Menu : GLib.Object {
 		previous_kerning_pair.display = "Kerning";
 		kerning_menu.items.add (previous_kerning_pair);
 
+		MenuItem load_kerning_strings = add_menu_item (t_("Load Kerning Strings"), "load kerning strings");
+		load_kerning_strings.action.connect (() => {
+			BirdFont.get_current_font ().kerning_strings.load_file ();
+		});
+		kerning_menu.items.add (load_kerning_strings);
+
+		MenuItem reload_kerning_strings = add_menu_item (t_("Reload Kerning Strings"), "reloadload kerning strings");
+		reload_kerning_strings.action.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			f.kerning_strings.load (f);
+		});
+		kerning_menu.items.add (reload_kerning_strings);
+				
 		// ligature menu
 		MenuItem ligature = add_menu_item (t_("Ligatures"));
 		ligature.action.connect (() => {

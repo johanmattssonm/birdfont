@@ -115,7 +115,6 @@ public class DrawingTools : ToolCollection  {
 
 		// font name 
 		font_name.add_tool (new FontName ());
-		font_name.draw_separator = false;
 
 		// Draw tools
 		foresight_tool = new ForesightTool ("foresight");
@@ -973,8 +972,6 @@ public class DrawingTools : ToolCollection  {
 
 		shape_tools.set_persistent (true);
 		shape_tools.set_unique (true);
-
-		view_tools.draw_separator = false;
 				
 		// let these tools progagate events even when other tools are selected			
 		foreach (Tool t in draw_tools.tool) {

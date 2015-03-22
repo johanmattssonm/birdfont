@@ -27,7 +27,6 @@ public class SpacingTools : ToolCollection  {
 
 		Expander font_name = new Expander ();
 		font_name.add_tool (new FontName ());
-		font_name.draw_separator = false;
 
 		Expander zoom_expander = new Expander (t_("Font Size"));
 
@@ -43,8 +42,13 @@ public class SpacingTools : ToolCollection  {
 		});
 		zoom_expander.add_tool (zoom_bar);
 		
+		Expander spacing_tools_expander = new Expander ();
+		spacing_tools_expander.add_tool (KerningTools.previous_kerning_string);
+		spacing_tools_expander.add_tool (KerningTools.next_kerning_string);
+		
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
+		expanders.add (spacing_tools_expander);
 	}
 	
 	public override Gee.ArrayList<Expander> get_expanders () {

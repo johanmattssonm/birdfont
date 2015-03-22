@@ -25,6 +25,9 @@ public class KerningTools : ToolCollection  {
 	public static double font_size = 1;
 	public static ZoomBar zoom_bar;
 	
+	public static Tool previous_kerning_string;
+	public static Tool next_kerning_string;
+	
 	public KerningTools () {
 		init ();
 	}
@@ -36,7 +39,6 @@ public class KerningTools : ToolCollection  {
 
 		Expander font_name = new Expander ();
 		font_name.add_tool (new FontName ());
-		font_name.draw_separator = false;
 
 		Expander zoom_expander = new Expander (t_("Font Size"));
 
@@ -90,22 +92,44 @@ public class KerningTools : ToolCollection  {
 		});
 		kerning_tools.add_tool (insert_unicode);
 
-		Tool previous_kerning_string = new Tool ("previous_kerning_string", t_("Previous kerning string"));
+		string empty_kerning_text = t_("Open a text file with kerning strings first.");
+		
+		previous_kerning_string = new Tool ("previous_kerning_string", t_("Previous kerning string"));
 		previous_kerning_string.select_action.connect ((self) => {
-			KerningDisplay d = MainWindow.get_kerning_display ();
+			FontDisplay fd = MainWindow.get_current_display ();
+			KerningDisplay d = (KerningDisplay) fd;
 			Font f = BirdFont.get_current_font ();
-			d.add_text (f.kerning_strings.next ());
+			string w = f.kerning_strings.previous ();
+			
+			if (f.kerning_strings.is_empty ()) {
+				MainWindow.show_message (empty_kerning_text);
+			} else if (w == "") {
+				MainWindow.show_message (t_("You have reached the beginning of the list."));
+			} else {
+				d.new_line ();
+				d.add_text (w);
+			}
 		});
 		kerning_tools.add_tool (previous_kerning_string);
 
-		Tool next_kerning_string = new Tool ("next_kerning_string", t_("Next kerning string"));
+		next_kerning_string = new Tool ("next_kerning_string", t_("Next kerning string"));
 		next_kerning_string.select_action.connect ((self) => {
-			KerningDisplay d = MainWindow.get_kerning_display ();
+			FontDisplay fd = MainWindow.get_current_display ();
+			KerningDisplay d = (KerningDisplay) fd;
 			Font f = BirdFont.get_current_font ();
-			d.add_text (f.kerning_strings.previous ());			
+			string w = f.kerning_strings.next ();
+			
+			if (f.kerning_strings.is_empty ()) {
+				MainWindow.show_message (empty_kerning_text);
+			} else if (w == "") {
+				MainWindow.show_message (t_("You have reached the end of the list."));
+			} else {
+				d.new_line ();
+				d.add_text (w);
+			}	
 		});
 		kerning_tools.add_tool (next_kerning_string);
-		
+				
 		kerning_tools.set_persistent (false);
 		kerning_tools.set_unique (false);
 

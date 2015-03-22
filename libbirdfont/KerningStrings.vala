@@ -22,54 +22,81 @@ public class KerningStrings : GLib.Object {
 	public KerningStrings () {
 	}
 	
+	public bool is_empty () {
+		return kerning_strings.size == 0;
+	}
+	
 	public string next () {
 		string w = "";
+		Font font = BirdFont.get_current_font ();
 		
 		if (0 <= current_position < kerning_strings.size) {
 			w = kerning_strings.get (current_position);
+			current_position++;
+			font.settings.set_setting ("kerning_string_position", @"$current_position");
 		}
-		
-		current_position++;
 		
 		return w;
 	}
 
 	public string previous () {
 		string w = "";
-
-		current_position--;
+		Font font = BirdFont.get_current_font ();
 		
-		if (0 <= current_position < kerning_strings.size) {
+		if (0 <= current_position - 1 < kerning_strings.size) {
+			current_position--;
 			w = kerning_strings.get (current_position);
+			font.settings.set_setting ("kerning_string_position", @"$current_position");
 		}
 
 		return w;
 		
 	}
 	
+	public void load_file ()  {
+		FileChooser fc = new FileChooser ();
+		fc.file_selected.connect ((f) => {
+			Font font = BirdFont.get_current_font (); 
+			if (f != null) {
+				load_new_string (font, (!) f);
+			}
+		});
+		
+		MainWindow.file_chooser (t_("Load kerning strings"), fc, FileChooser.LOAD);
+	}
+	
 	public void load (Font font) {
 		string path;
 	
 		path = font.settings.get_setting ("kerning_string_file");
-		load_new_string (font, path);
+
+		if (path != "") {
+			load_new_string (font, path);
+			current_position = int.parse (font.settings.get_setting ("kerning_string_position"));
+		}
 	}
 	
 	public void load_new_string (Font font, string kerning_strings_file) {
 		File f;
 		string data;
 		string[] strings;
+		string w;
 		
 		try {
 			kerning_strings.clear ();
 
 			FileUtils.get_contents(kerning_strings_file, out data);
-			strings = data.split ("\n");
+			strings = data.replace ("\n", " ").split (" ");
 			
 			foreach (string s in strings) {
-				kerning_strings.add (s.replace ("\r", ""));
+				w = s.replace ("\r", "");
+				if (w != "") {
+					kerning_strings.add (s);
+					print (s + " Added");
+				}
 			}
 			
-			current_position = int.parse (font.settings.get_setting ("kerning_string_position"));		
+			current_position = 0;
 			
 			font.settings.set_setting ("kerning_string_file", kerning_strings_file);
 		} catch (GLib.Error e) {

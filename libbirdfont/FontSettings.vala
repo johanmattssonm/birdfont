@@ -61,19 +61,19 @@ public class FontSettings : GLib.Object {
 			
 			sb = new StringBuilder ();
 			
-			sb.append ("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>");
-			sb.append ("<settings>");
+			sb.append ("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n");
+			sb.append ("<settings>\n");
 			
 			foreach (var k in settings.keys) {
 				sb.append ("\t<setting key=\"");
 				sb.append (k);
-				sb.append (" \" ");
+				sb.append ("\" ");
 				sb.append ("value=\"");
 				sb.append (XmlParser.encode (settings.get (k)));
-				sb.append ("\" />");
+				sb.append ("\" />\n");
 			}
 			
-			sb.append ("</settings>");
+			sb.append ("</settings>\n");
 			
 			FileUtils.set_contents ((!) f.get_path (), sb.str);
 			
@@ -118,6 +118,8 @@ public class FontSettings : GLib.Object {
 				v = XmlParser.decode (a.get_content ());
 			}
 		}
+		
+		settings.set (key, v);
 	}
 
 }

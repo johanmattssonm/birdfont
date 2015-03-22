@@ -141,7 +141,6 @@ public class Font : GLib.Object {
 		
 		settings = new FontSettings ();
 		kerning_strings = new KerningStrings ();
-		kerning_strings.load (this);
 	}
 
 	public static void set_default_license (string license) {
@@ -772,7 +771,10 @@ public class Font : GLib.Object {
 			font_file = null;
 		}
 		
-		settings.load (get_file_name ());
+		if (loaded) {
+			settings.load (get_file_name ());
+			kerning_strings.load (this);
+		}
 		
 		return loaded;
 	}

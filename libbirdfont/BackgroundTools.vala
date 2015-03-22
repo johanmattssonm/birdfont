@@ -28,7 +28,6 @@ public class BackgroundTools : ToolCollection  {
 		
 		Expander font_name = new Expander ();
 		font_name.add_tool (new FontName ());
-		font_name.draw_separator = false;
 
 		select_background = new BackgroundSelectionTool ();
 

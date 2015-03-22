@@ -36,7 +36,6 @@ public class OverviewTools : ToolCollection  {
 		custom_character_sets = new Gee.ArrayList<LabelTool> ();
 		
 		font_name.add_tool (new FontName ());
-		font_name.draw_separator = false;
 
 		zoom_bar = new ZoomBar ();
 		zoom_bar.new_zoom.connect ((z) => {
