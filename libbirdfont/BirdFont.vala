@@ -214,7 +214,10 @@ public static int run_export (string[] arg) {
 	main_window = new MainWindow ();
 	
 	// FIXME: create a option for this and add structure the log messages
-	// init_logfile ();
+	
+	if (BirdFont.logging) {
+		init_logfile ();
+	}
 	
 	for (int i = 1; i < arg.length; i++) {
 
@@ -305,6 +308,10 @@ public static int run_export (string[] arg) {
 	}
 	
 	return 0;
+}
+
+public static void set_logging (bool log) {
+	BirdFont.logging = log;
 }
 
 public static string wine_to_unix_path (string exec_path) {
@@ -404,7 +411,10 @@ public class BirdFont {
 		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 		
 		android = args.has_argument ("--android");
-		BirdFont.logging = args.has_argument ("--log");
+		
+		if (!BirdFont.logging) {
+			BirdFont.logging = args.has_argument ("--log");
+		}
 #endif
 
 		if (BirdFont.logging) {
@@ -692,7 +702,7 @@ internal static void log_warning (string? log_domain, LogLevelFlags log_levels, 
 }
 
 /** Write debug output to logfile. */
-void printd (string s) {
+public static void printd (string s) {
 #if ANDROID
 	__android_log_print (ANDROID_LOG_WARN, "BirdFont", s);
 #else
