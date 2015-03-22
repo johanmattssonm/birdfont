@@ -22,10 +22,10 @@ public class LigatureSet : GLib.Object {
 		glyf_table = gt;
 	}
 	
-	public  void add (Ligature lig) {
+	public void add (Ligature lig) {
 		ligatures.add (lig);
 	}
-	
+
 	public bool starts_with (string s) {
 		if (ligatures.size == 0) {
 			return false;
@@ -78,7 +78,8 @@ public class LigatureSet : GLib.Object {
 		
 		return fd;
 	}
-	
+
+	/** Add ligature to fd */
 	void add_ligature (FontData fd, Ligature ligature) throws GLib.Error {
 		string[] parts = ligature.substitution.split (" ");
 		bool first = true;

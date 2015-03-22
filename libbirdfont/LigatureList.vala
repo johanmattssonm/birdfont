@@ -29,10 +29,10 @@ public class LigatureList : Table {
 		return rows;
 	}
 
-	void add_contextual_ligature (string backtrack, string input, string lookahead) {
+	void add_contextual_ligature (string ligature, string backtrack, string input, string lookahead) {
 		Font font = BirdFont.get_current_font ();
 		Ligatures ligatures = font.get_ligatures ();
-		ligatures.add_contextual_ligature (backtrack, input, lookahead);
+		ligatures.add_contextual_ligature (ligature, backtrack, input, lookahead);
 	}
 	
 	void add_ligature (string subst, string liga) {
@@ -52,13 +52,14 @@ public class LigatureList : Table {
 			TabContent.hide_text_input ();
 		} else if (row.get_index () == NEW_LIGATURE && column == 1) {
 			if (BirdFont.has_argument ("--test")) {
-				add_contextual_ligature (t_("beginning"), t_("middle"), t_("end"));
+				add_contextual_ligature (t_("substitution"), t_("beginning"), t_("middle"), t_("end"));
 				TabContent.hide_text_input ();
 			}
 		} else if (row.has_row_data ()) {
 			i = row.get_index ();
 			cl = (ContextualLigature) ((!) row.get_row_data ());
 			
+			/* // FIXME: DELETE
 			if (delete_button) {
 				cl.remove_ligature_at (i);
 			} else if (column == 0) {
@@ -66,6 +67,7 @@ public class LigatureList : Table {
 			} else if (column == 2) {
 				cl.set_substitution (i);
 			}
+			*/
 		} else if (row.get_index () < ligatures.count ()) {
 			if (ligatures.count () != 0) {
 				if (delete_button) {
@@ -87,7 +89,10 @@ public class LigatureList : Table {
 				if (delete_button) {
 					ligatures.remove_contextual_ligatures_at (i);
 					TabContent.hide_text_input ();
-				} else if (column == 0) {
+				}
+				
+				/* FIXME: DELETE
+				 else if (column == 0) {
 					ligatures.set_beginning (i);
 				} else if (column == 1) {
 					ligatures.set_middle (i);
@@ -96,6 +101,7 @@ public class LigatureList : Table {
 				} else if (column == 3) {
 					ligatures.add_substitution_at (i);
 				}
+				*/
 			}
 		}
 			
@@ -127,20 +133,8 @@ public class LigatureList : Table {
 		});
 
 		ligatures.get_contextual_ligatures ((liga) => {
-			int j;
-			
-			row = new Row.columns_4 (liga.backtrack, liga.input, liga.lookahead,
-				t_("Add Ligature"), i);
+			row = new Row.columns_4 (liga.ligatures, liga.backtrack, liga.input, liga.lookahead, i);
 			rows.add (row);
-			
-			j = 0;
-			foreach (Ligature l in liga.ligatures) {
-				row = new Row.columns_3 (l.ligature, "",  l.substitution, j);
-				row.set_row_data (liga);
-				rows.add (row);
-				j++;
-			}
-			
 			i++;
 		});
 				

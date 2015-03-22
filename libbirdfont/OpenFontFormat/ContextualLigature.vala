@@ -15,54 +15,29 @@
 namespace BirdFont {
 
 public class ContextualLigature : GLib.Object {
-
+	
 	public string backtrack = "";
 	public string input = "";
 	public string lookahead = "";
+	public string ligatures = "";
 
-	public Gee.ArrayList<Ligature> ligatures;
-
-	public ContextualLigature (string backtrack, string input, string lookahead) {
+	/** All arguments are list of glyph names separated by space. */
+	public ContextualLigature (string ligatures, string backtrack, string input, string lookahead) {
 		this.backtrack = backtrack;
 		this.input = input;
 		this.lookahead = lookahead;
+		this.ligatures = ligatures;
+	}
+
+	public Gee.ArrayList<Ligature> get_ligatures () {
+		Gee.ArrayList<Ligature> ligature_list = new Gee.ArrayList<Ligature> ();
+		string[] ligatures = ligatures.split (" ");
 		
-		ligatures = new Gee.ArrayList<Ligature> ();
-	}
-
-	public void remove_ligature_at (int i) {
-		return_if_fail (0 <= i < ligatures.size);
-		ligatures.remove_at (i);
-	}
-
-	public void add_ligature () {
-		Ligature l = new Ligature (t_("ligature"), t_("glyph sequence"));
-		ligatures.add (l);		
-	}
-	
-	public void set_ligature (int i) {
-		return_if_fail (0 <= i < ligatures.size);
-		ligatures.get (i).set_ligature ();
-	}
-
-	public void set_substitution (int i) {
-		return_if_fail (0 <= i < ligatures.size);
-		ligatures.get (i).set_substitution (this);
-	}
-	
-	public void sort () {
-		ligatures.sort ((a, b) => {
-			Ligature first, next;
-			int chars_first, chars_next;
-			
-			first = (Ligature) a;
-			next = (Ligature) b;
-			
-			chars_first = first.substitution.split (" ").length;
-			chars_next = next.substitution.split (" ").length;
-							
-			return chars_next - chars_first;
-		});	
+		foreach (string ligature_name in ligatures) {
+			ligature_list.add (new Ligature (ligature_name)); 
+		}
+		
+		return ligature_list;
 	}
 }
 

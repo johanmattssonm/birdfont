@@ -92,13 +92,7 @@ public class Ligatures : GLib.Object {
 		return_if_fail (0 <= i < contextual_ligatures.size);
 		contextual_ligatures.remove_at (i);
 	}
-	
-	/** Add ligaure for a chained substitution. */
-	public void add_substitution_at (int index) {
-		return_if_fail (0 <= index < contextual_ligatures.size);
-		contextual_ligatures.get (index).add_ligature ();
-	}
-	
+		
 	public void set_beginning (int index) {
 		ContextualLigature lig;
 		TextListener listener;
@@ -185,8 +179,8 @@ public class Ligatures : GLib.Object {
 		sort_ligatures ();
 	}
 
-	public void add_contextual_ligature (string backtrack, string input, string lookahead) {
-		ContextualLigature l = new ContextualLigature (backtrack, input, lookahead);
+	public void add_contextual_ligature (string ligature, string backtrack, string input, string lookahead) {
+		ContextualLigature l = new ContextualLigature (ligature, backtrack, input, lookahead);
 		contextual_ligatures.insert (0, l);
 		sort_ligatures ();
 	}
@@ -222,10 +216,6 @@ public class Ligatures : GLib.Object {
 								
 			return chars_next - chars_first;
 		});
-		
-		foreach (ContextualLigature c in contextual_ligatures) {
-			c.sort ();
-		}
 	}
 }
 

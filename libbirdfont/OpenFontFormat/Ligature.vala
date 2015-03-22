@@ -18,7 +18,7 @@ public class Ligature : GLib.Object {
 	public string ligature = "";
 	public string substitution = "";
 
-	public Ligature (string ligature, string substitution) {
+	public Ligature (string ligature, string substitution = "") {
 		this.ligature = ligature;
 		this.substitution = substitution;
 	}
@@ -44,9 +44,8 @@ public class Ligature : GLib.Object {
 		TabContent.show_text_input (listener);
 	}
 	
-	public void set_substitution (ContextualLigature? clig = null) {
+	public void set_substitution () {
 		TextListener listener;
-		ContextualLigature? cl = clig;
 		
 		listener = new TextListener (t_("Text"), substitution, t_("Set"));
 		
@@ -55,10 +54,6 @@ public class Ligature : GLib.Object {
 			Ligatures l = f.get_ligatures ();
 			substitution = text;
 			l.sort_ligatures ();
-			
-			if (cl != null) {
-				((!) cl).sort ();
-			}
 		});
 		
 		listener.signal_submit.connect (() => {
