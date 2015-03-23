@@ -80,12 +80,7 @@ class TestBirdFont : GLib.Object {
 			if (t.name == s) return true;
 		}	
 		
-		if (s == "" || s == "All") {
-			print ("No specific test case given run all test cases.\n");
-			return true;
-		}
-		
-		return false;
+		return s == "" || s == "All";
 	}
 
 	/** Run only test specified on the command line. */

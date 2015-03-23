@@ -401,7 +401,6 @@ public class Menu : GLib.Object {
 		MenuItem ligature = add_menu_item (t_("Ligatures"));
 		ligature.action.connect (() => {
 			set_menu (ligature_menu);
-			show_menu = false;
 		});
 		menu.items.add (ligature);
 
