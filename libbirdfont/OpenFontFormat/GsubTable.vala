@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -28,22 +28,21 @@ public class GsubTable : OtfTable {
 	}
 
 	public void process () throws GLib.Error {
-		FontData fd;
+		FontData fd = new FontData ();
 		FontData clig_subtable;
+		FontData chained_context;
+		FontData chained_ligatures;
 		uint16 length;
 		
-		LigatureSetList clig;
-		ContextualLigatureSet contextual;
+		LigatureList clig;
+		ContextList contextual;
 
 		uint16 feature_lookups;
-		uint16 lookups_end;
-		
-		Gee.ArrayList<FontData> chain_data;
 		
 		fd = new FontData ();
-		clig = new LigatureSetList.clig (glyf_table);
-		contextual = new ContextualLigatureSet (glyf_table);
-		
+		clig = new LigatureList.clig (glyf_table);
+		contextual = new ContextList (glyf_table);
+
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
 		fd.add_ushort (30); // offset to feature list
@@ -71,8 +70,8 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (8); // offset to feature
 		// FIXME: Should it be liga and clig?
 
-		clig = new LigatureSetList.clig (glyf_table);
-		contextual = new ContextualLigatureSet (glyf_table);
+		clig = new LigatureList.clig (glyf_table);
+		contextual = new ContextList (glyf_table);
 
 		feature_lookups = contextual.has_ligatures () ? 2 : 1;
 		
@@ -80,51 +79,33 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (feature_lookups); // number of lookups
 		
 		if (contextual.has_ligatures ()) {
-			fd.add_ushort (1 + contextual.get_size ()); // lookup chained_context (etc.) The chained context tables are listed here but the actual ligature table is only referenced in the context table
+			fd.add_ushort (2); // lookup chained_context (etc.) The chained context tables are listed here but the actual ligature table is only referenced in the context table
 			fd.add_ushort (0); // lookup clig_subtable
 		} else {
 			fd.add_ushort (0); // lookup clig_subtable
 		}
 		
-		clig_subtable = clig.get_data (glyf_table);
-		chain_data = get_chaining_contextual_substition_subtable (contextual);
+		clig_subtable = get_ligature_subtable (clig);
+		chained_ligatures = get_ligature_subtable (contextual.ligatures);
+		chained_context = get_chaining_contextual_substition_subtable (contextual);
 		
 		// lookup table
-		uint16 lookups;
-		
-		if (contextual.has_ligatures ()) {
-			lookups = 2 + (uint16) contextual.get_size ();
-		} else {
-			lookups = 1;
-		}
-		
+		uint16 lookups = contextual.has_ligatures () ? 3 : 1;
 		fd.add_ushort (lookups); // number of lookups
 		
 		if (contextual.has_ligatures ()) {
-			uint16 offset_to_lookup;
-
-			offset_to_lookup = 6 + 2 * contextual.get_size ();
-			fd.add_ushort (offset_to_lookup); // offset to lookup 1, regular ligatures
-			
-			for (int i = 0; i < contextual.get_size (); i++) {
-				offset_to_lookup += 8;
-				// offset to ligature lookups used in chaining substitution
-				fd.add_ushort (offset_to_lookup);
-			}
-
-			// offset to lookup for the chain table
-			offset_to_lookup += 8;
-			fd.add_ushort (offset_to_lookup); 
+			fd.add_ushort (8); // offset to lookup 1 
+			fd.add_ushort (16); // offset to lookup 2
+			fd.add_ushort (24); // offset to lookup 3
 		} else {
 			fd.add_ushort (4); // offset to lookup 1 
 		}
 		
-		lookups_end = 8; // regular ligatures
+		uint16 lookups_end;
 		
+		lookups_end = lookups * 8;
 		if (contextual.has_ligatures ()) {
-			lookups_end += 8 * contextual.get_size (); // contextual ligatures
-			lookups_end += 6; // chaining table
-			lookups_end += 2 * (uint16) contextual.get_size (); // chaining subtables
+			lookups_end += 2 * ((uint16) contextual.ligature_context.size - 1);
 		}
 		
 		length = 0;
@@ -142,7 +123,7 @@ public class GsubTable : OtfTable {
 				fd.add_ushort (0); // lookup flags
 				fd.add_ushort (1); // number of subtables
 
-				LigatureSetList ligature_set = contextual.ligatures.get (i);
+				LigatureList ligature_set = contextual.ligatures.get (i);
 				fd.add_ushort (lookups_end + length); // array of offsets to subtable
 				length += (uint16) ligature_set.get_data (glyf_table).length_with_padding ();
 				
@@ -151,24 +132,24 @@ public class GsubTable : OtfTable {
 
 			fd.add_ushort (6); // lookup type 
 			fd.add_ushort (0); // lookup flags
-			fd.add_ushort (contextual.get_size ()); // number of subtables
+			fd.add_ushort ((uint16) contextual.ligature_context.size); // number of subtables FIXME: 1?
 			
-			foreach (FontData d in chain_data) {
+			foreach (ContextualLigature c in contextual.ligature_context) {
 				fd.add_ushort (lookups_end + length); // array of offsets to subtable
-				length += (uint16) d.length_with_padding ();
+				length += (uint16) c.get_data (glyf_table).length_with_padding ();
 			}
 			
-			lookups_end -= 6 + 2 * chain_data.size;
+			lookups_end -= 7 + 2 * contextual.ligature_context.size;
 		}
 		
-		if (lookups_end != 0) {
-			warning (@"Wrong offset to end of lookups, $lookups_end bytes left.");
+		if (lookups_end == 0) {
+			warning ("Wring offset to end of lookups.");
 		}
 		
 		fd.append (clig_subtable);
 		
 		if (contextual.has_ligatures ()) {
-			foreach (LigatureSetList s in contextual.ligatures) {
+			foreach (LigatureList s in contextual.ligatures) {
 				fd.append (s.get_data (glyf_table));
 			}
 
@@ -182,17 +163,58 @@ public class GsubTable : OtfTable {
 		this.font_data = fd;
 	}
 
+	FontData get_ligature_subtable (LigatureCollection liga_list) throws GLib.Error {
+		FontData set_data;
+		Gee.ArrayList<LigatureSet> ligature_sets;
+		uint16 ligature_pos;
+		uint16 table_start;
+		FontData fd;
+		
+		ligature_sets = liga_list.ligature_sets;
+		fd = new FontData ();
+
+		// ligature substitution subtable
+		table_start = (uint16) fd.length_with_padding ();
+
+		fd.add_ushort (1); // format identifier
+		fd.add_ushort (6 + (uint16) 2 * ligature_sets.size); // offset to coverage
+		fd.add_ushort ((uint16) ligature_sets.size); // number of ligature set tables
+
+		// array of offsets to ligature sets
+		uint16 size = 0;
+		foreach (LigatureSet l in ligature_sets) {
+			ligature_pos = 10 + (uint16) ligature_sets.size * 4 + size;
+			fd.add_ushort (ligature_pos);
+			size += (uint16) l.get_set_data ().length_with_padding ();
+		}
+
+		// coverage
+		fd.add_ushort (1); // format
+		fd.add_ushort ((uint16) ligature_sets.size);
+
+		// coverage gid:
+		foreach (LigatureSet l in ligature_sets) {
+			fd.add_ushort ((uint16) glyf_table.get_gid (l.get_coverage_char ()));
+		}
+		
+		foreach (LigatureSet l in ligature_sets) {
+			set_data = l.get_set_data ();
+			fd.append (set_data);
+		}
+		
+		return fd;
+	}
+
 	// chaining contextual substitution format3
-	Gee.ArrayList<FontData> get_chaining_contextual_substition_subtable (ContextualLigatureSet contexts) throws GLib.Error {
+	Gee.ArrayList<FontData> get_chaining_contextual_substition_subtable (ContextList contexts) throws GLib.Error {
 		Gee.ArrayList<FontData> fd = new Gee.ArrayList<FontData> ();
 		uint16 ligature_lookup_index = 1;
 		
 		foreach (ContextualLigature context in contexts.ligature_context) {
-			fd.add (context.get_data (glyf_table, ligature_lookup_index)); 
-			ligature_lookup_index++;
+			fd_all.append (context.get_data (glyf_table)); // FIXME: remove..
 		}
 		
-		return fd;
+		return fd_all;
 	}
 	
 	void parse_ligatures (FontData fd, int table_start) {
@@ -249,7 +271,7 @@ public class GsubTable : OtfTable {
 	public static Gee.ArrayList<string> get_names (string glyphs) {
 		Gee.ArrayList<string> names = new Gee.ArrayList<string> ();
 		Font font = BirdFont.get_current_font ();
-		string[] parts = glyphs.strip ().split (" ");
+		string[] parts = glyphs.split (" ");
 								
 		foreach (string p in parts) {		
 			if (p.has_prefix ("U+") || p.has_prefix ("u+")) {
@@ -258,12 +280,10 @@ public class GsubTable : OtfTable {
 			
 			if (!font.has_glyph (p)) {
 				warning (@"The character $p does have a glyph.");
-				p = ".notdef";
+				return new Gee.ArrayList<string> ();
 			}
 			
-			if (p != "") {
-				names.add (p);
-			}
+			names.add (p);
 		}
 		
 		return names;
