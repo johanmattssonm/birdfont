@@ -40,7 +40,7 @@ public class ContextualLigature : GLib.Object {
 		return ligature_list;
 	}
 	
-	public FontData get_data (GlyfTable glyf_table, uint16 ligature_lookup_index) {
+	public FontData get_data (GlyfTable glyf_table) {
 		FontData fd = new FontData ();
 		
 		Gee.ArrayList<string> backtrack = GsubTable.get_names (backtrack);
@@ -74,7 +74,7 @@ public class ContextualLigature : GLib.Object {
 		fd.add_ushort (1); // substitute count
 		// substitution lookup records
 		fd.add_ushort (0); // glyph sequence index for the character that will be substituted 
-		fd.add_ushort (ligature_lookup_index); // go to the ligature substitution via lookup table
+		fd.add_ushort (1); // go to the ligature substitution via lookup table
 
 		// backtrack coverage table1
 		if (fd.length_with_padding () != backtrack_offset) {
