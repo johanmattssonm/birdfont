@@ -97,7 +97,7 @@ public class Font : GLib.Object {
 	
 	public Gee.ArrayList<Glyph> deleted_glyphs;
 
-	Ligatures ligatures_substitution;
+	public Ligatures ligature_substitution;
 	
 	public static string? default_license = null; 
 	
@@ -135,7 +135,7 @@ public class Font : GLib.Object {
 		bfp_file = new BirdFontPart (this);
 		
 		deleted_glyphs = new Gee.ArrayList<Glyph> ();
-		ligatures_substitution = new Ligatures (this);
+		ligature_substitution = new Ligatures (this);
 		
 		background_images = new Gee.ArrayList<BackgroundImage> ();
 		
@@ -148,7 +148,7 @@ public class Font : GLib.Object {
 	}
 
 	public Ligatures get_ligatures () {
-		return ligatures_substitution;
+		return ligature_substitution;
 	}
 
 	public void set_weight (string w) {

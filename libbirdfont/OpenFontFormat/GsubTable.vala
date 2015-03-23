@@ -100,7 +100,13 @@ public class GsubTable : OtfTable {
 			fd.add_ushort (4); // offset to lookup 1 
 		}
 		
-		uint16 lookups_end = lookups * 8;
+		uint16 lookups_end;
+		
+		lookups_end = lookups * 8;
+		if (contextual.has_ligatures ()) {
+			lookups_end += 2 * ((uint16) contextual.ligature_context.size - 1);
+		}
+		
 		length = 0;
 		fd.add_ushort (4); // lookup type 
 		fd.add_ushort (0); // lookup flags
@@ -119,13 +125,19 @@ public class GsubTable : OtfTable {
 
 			fd.add_ushort (6); // lookup type 
 			fd.add_ushort (0); // lookup flags
-			fd.add_ushort (1); // number of subtables
-			fd.add_ushort (lookups_end + length); // array of offsets to subtable
-			length += (uint16) chained_context.length_with_padding ();
-			lookups_end -= 8;
+			fd.add_ushort ((uint16) contextual.ligature_context.size); // number of subtables FIXME: 1?
+			
+			foreach (ContextualLigature c in contextual.ligature_context) {
+				fd.add_ushort (lookups_end + length); // array of offsets to subtable
+				length += (uint16) c.get_data (glyf_table).length_with_padding ();
+			}
+			
+			lookups_end -= 7 + 2 * contextual.ligature_context.size;
 		}
 		
-		warn_if_fail (lookups_end == 0);
+		if (lookups_end == 0) {
+			warning ("Wring offset to end of lookups.");
+		}
 		
 		fd.append (clig_subtable);
 		
@@ -183,79 +195,13 @@ public class GsubTable : OtfTable {
 
 	// chaining contextual substitution format3
 	FontData get_chaining_contextual_substition_subtable (ContextualLigatureSet contexts) throws GLib.Error {
-		FontData fd = new FontData ();
+		FontData fd_all = new FontData ();
 		
 		foreach (ContextualLigature context in contexts.ligature_context) {
-			
-			Gee.ArrayList<string> backtrack = get_names (context.backtrack);
-			Gee.ArrayList<string> input = get_names (context.input);
-			Gee.ArrayList<string> lookahead = get_names (context.lookahead);
-			
-			uint16 lookahead_offset, input_offset, backtrack_offset;
-			
-			fd.add_ushort (3); // format identifier
-			
-			backtrack_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * 2) + (uint16) (backtrack.size * 2);
-			fd.add_ushort ((uint16) backtrack.size); // backtrack glyph count
-			for (uint16 i = 0; i < input.size; i++) {
-				fd.add_ushort (backtrack_offset + 6 * i); // array of offsets to coverage table
-			}
-			
-			input_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * 2)  + (uint16) (backtrack.size * (2 + 6));
-			fd.add_ushort ((uint16) input.size); // input glyph count (middle)
-			for (uint16 i = 0; i < input.size; i++) {
-				fd.add_ushort (input_offset + 6 * i); // array of offsets to coverage table
-			}
-			
-			lookahead_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * (2 + 6)) + (uint16) (backtrack.size * (2 + 6));
-			fd.add_ushort ((uint16) lookahead.size); // lookahead glyph count
-			for (uint16 i = 0; i < lookahead.size; i++) {
-				fd.add_ushort (lookahead_offset + 6 * i); // array of offsets to coverage table
-			}
-			
-			fd.add_ushort (1); // substitute count
-			// substitution lookup records
-			fd.add_ushort (0); // glyph sequence index
-			fd.add_ushort (1); // go to the ligature substitution via lookup table
-
-			// backtrack coverage table1
-			if (fd.length_with_padding () != backtrack_offset) {
-				warning (@"Wrong backtrack offset: $backtrack_offset != $(fd.length_with_padding ())");
-			}
-			
-			// gid array 
-			foreach (string glyph_name in backtrack) {
-				fd.add_ushort (1); // format
-				fd.add_ushort ((uint16) backtrack.size); // coverage array length
-				fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
-			}
-					
-			// input coverage table1
-			if (fd.length_with_padding () != input_offset) {
-				warning (@"Wrong input offset: $input_offset != $(fd.length_with_padding ())");
-			}
-			
-			// gid array 
-			foreach (string glyph_name in input) {
-				fd.add_ushort (1); // format
-				fd.add_ushort ((uint16) input.size); // coverage array length
-				fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
-			}
-
-			// lookahead coverage table1
-			if (fd.length_with_padding () != lookahead_offset) {
-				warning (@"Wrong lookahead offset: $lookahead_offset != $(fd.length_with_padding ())");
-			}
-
-			// gid array 
-			foreach (string glyph_name in lookahead) {
-				fd.add_ushort (1); // format
-				fd.add_ushort ((uint16) lookahead.size); // coverage array length
-				fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
-			}
+			fd_all.append (context.get_data (glyf_table)); // FIXME: remove..
 		}
 		
-		return fd;
+		return fd_all;
 	}
 	
 	void parse_ligatures (FontData fd, int table_start) {

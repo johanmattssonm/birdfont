@@ -31,12 +31,11 @@ public class ContextualLigatureSet : GLib.Object {
 	}
 	
 	void add_contextual_ligatures () {
-		ContextualLigature ligature ;
-		LigatureSet s;
+		Font font = BirdFont.get_current_font ();
+		Ligatures ligatures = font.ligature_substitution;
 		
-		if (BirdFont.has_argument ("--test")) {
-			ligature = new ContextualLigature ("ralt", "a", "r", "t t");
-			ligature_context.add (ligature);
+		foreach (ContextualLigature c in ligatures.contextual_ligatures) {
+			ligature_context.add (c);
 		}
 	}
 }

@@ -49,10 +49,13 @@ public class LigatureSetList : GLib.Object {
 
 	void add_contextual_ligatures (GlyfTable glyf_table, ContextualLigatureSet ligatures) {
 		foreach (ContextualLigature c in ligatures.ligature_context) {
-			add_ligatures (glyf_table, "r", c.ligatures); // FIXME: parts = ""
+			foreach (string l in c.ligatures.strip ().split (" ")) {
+				add_ligatures (glyf_table, "r", l); // FIXME: parts = ""
+			}
 		}
 	}
-	
+
+	// multiple ligatures in non-contextual substitution
 	// FIXME: what if parts equals "" ? Which set does ligatures becomes a part of?
 	public void add_ligatures (GlyfTable glyf_table, string characters, string ligatures) 
 		requires (!is_null (lig_set) && !is_null (last_set)) {
