@@ -18,24 +18,32 @@ namespace BirdFont {
 public class ContextualLigatureSet : GLib.Object {
 
 	public Gee.ArrayList<ContextualLigature> ligature_context;
-	public LigatureSetList ligatures;
+	public Gee.ArrayList<LigatureSetList> ligatures;
 	
 	public ContextualLigatureSet (GlyfTable glyf_table) {
 		ligature_context = new Gee.ArrayList<ContextualLigature> ();	
-		add_contextual_ligatures ();
-		ligatures = new LigatureSetList.contextual (glyf_table, this);
+		ligatures = new Gee.ArrayList<LigatureSetList> ();
+		add_contextual_ligatures (glyf_table);
+	}
+	
+	public int16 get_size () {
+		if (ligatures.size != ligature_context.size) {
+			warning ("Expecting one substitution table per contextual ligature");
+		}
+		
+		return (int16) ligature_context.size;
 	}
 	
 	public bool has_ligatures () {
 		return ligature_context.size > 0;
 	}
 	
-	void add_contextual_ligatures () {
+	void add_contextual_ligatures (GlyfTable glyf_table) {
 		Font font = BirdFont.get_current_font ();
-		Ligatures ligatures = font.ligature_substitution;
 		
-		foreach (ContextualLigature c in ligatures.contextual_ligatures) {
+		foreach (ContextualLigature c in font.ligature_substitution.contextual_ligatures) {
 			ligature_context.add (c);
+			ligatures.add (new LigatureSetList.contextual (glyf_table, c));
 		}
 	}
 }
