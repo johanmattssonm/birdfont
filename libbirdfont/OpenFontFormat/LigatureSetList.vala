@@ -15,14 +15,14 @@ using Math;
 
 namespace BirdFont {
 
-public class LigatureCollection : GLib.Object {
+public class LigatureSetList : GLib.Object {
 
 	public Gee.ArrayList<LigatureSet> ligature_sets;
 
 	LigatureSet lig_set;
 	LigatureSet last_set;
 
-	public LigatureCollection.clig (GlyfTable glyf_table) {
+	public LigatureSetList.clig (GlyfTable glyf_table) {
 		ligature_sets = new Gee.ArrayList<LigatureSet> ();	
 		lig_set = new LigatureSet (glyf_table);
 		last_set = new LigatureSet (glyf_table);
@@ -30,7 +30,7 @@ public class LigatureCollection : GLib.Object {
 		add_clig_ligatures (glyf_table);
 	}
 
-	public LigatureCollection.contextual (GlyfTable glyf_table, ContextualLigature ligature) {
+	public LigatureSetList.contextual (GlyfTable glyf_table, ContextualLigature ligature) {
 		ligature_sets = new Gee.ArrayList<LigatureSet> ();	
 		lig_set = new LigatureSet (glyf_table);
 		last_set = new LigatureSet (glyf_table);
