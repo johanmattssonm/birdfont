@@ -32,8 +32,8 @@ public class GsubTable : OtfTable {
 		FontData clig_subtable;
 		uint16 length;
 		
-		LigatureSetList clig;
-		ContextualLigatureSet contextual;
+		LigatureCollection clig;
+		ContextualLigatureCollection contextual;
 
 		uint16 feature_lookups;
 		uint16 lookups_end;
@@ -41,8 +41,8 @@ public class GsubTable : OtfTable {
 		Gee.ArrayList<FontData> chain_data;
 		
 		fd = new FontData ();
-		clig = new LigatureSetList.clig (glyf_table);
-		contextual = new ContextualLigatureSet (glyf_table);
+		clig = new LigatureCollection.clig (glyf_table);
+		contextual = new ContextualLigatureCollection (glyf_table);
 		
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
@@ -71,8 +71,8 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (8); // offset to feature
 		// FIXME: Should it be liga and clig?
 
-		clig = new LigatureSetList.clig (glyf_table);
-		contextual = new ContextualLigatureSet (glyf_table);
+		clig = new LigatureCollection.clig (glyf_table);
+		contextual = new ContextualLigatureCollection (glyf_table);
 
 		feature_lookups = contextual.has_ligatures () ? 2 : 1;
 		
@@ -142,7 +142,7 @@ public class GsubTable : OtfTable {
 				fd.add_ushort (0); // lookup flags
 				fd.add_ushort (1); // number of subtables
 
-				LigatureSetList ligature_set = contextual.ligatures.get (i);
+				LigatureCollection ligature_set = contextual.ligatures.get (i);
 				fd.add_ushort (lookups_end + length); // array of offsets to subtable
 				length += (uint16) ligature_set.get_data (glyf_table).length_with_padding ();
 				
@@ -168,7 +168,7 @@ public class GsubTable : OtfTable {
 		fd.append (clig_subtable);
 		
 		if (contextual.has_ligatures ()) {
-			foreach (LigatureSetList s in contextual.ligatures) {
+			foreach (LigatureCollection s in contextual.ligatures) {
 				fd.append (s.get_data (glyf_table));
 			}
 
@@ -183,7 +183,7 @@ public class GsubTable : OtfTable {
 	}
 
 	// chaining contextual substitution format3
-	Gee.ArrayList<FontData> get_chaining_contextual_substition_subtable (ContextualLigatureSet contexts) throws GLib.Error {
+	Gee.ArrayList<FontData> get_chaining_contextual_substition_subtable (ContextualLigatureCollection contexts) throws GLib.Error {
 		Gee.ArrayList<FontData> fd = new Gee.ArrayList<FontData> ();
 		uint16 ligature_lookup_index = 1;
 		

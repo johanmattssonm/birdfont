@@ -99,13 +99,9 @@ public class LigatureList : Table {
 		Row row;
 		
 		rows.clear ();
-		if (BirdFont.has_argument ("--test")) {
-			row = new Row.columns_2 (t_("New Ligature"), t_("New Contextual Substitution"), NEW_LIGATURE, false);
-			rows.add (row);
-		} else {
-			row = new Row.columns_1 (t_("New Ligature"), NEW_LIGATURE, false);
-			rows.add (row);
-		}
+
+		row = new Row.columns_2 (t_("New Ligature"), t_("New Contextual Substitution"), NEW_LIGATURE, false);
+		rows.add (row);
 		
 		i = 0;
 		ligatures.get_ligatures ((subst, liga) => {
