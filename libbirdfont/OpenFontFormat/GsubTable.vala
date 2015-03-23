@@ -164,7 +164,7 @@ public class GsubTable : OtfTable {
 		this.font_data = fd;
 	}
 
-	FontData get_ligature_subtable (LigatureSetList liga_list) throws GLib.Error {
+	FontData get_ligature_subtable (LigatureCollection liga_list) throws GLib.Error {
 		FontData set_data;
 		Gee.ArrayList<LigatureSet> ligature_sets;
 		uint16 ligature_pos;
