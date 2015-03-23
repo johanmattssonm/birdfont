@@ -40,7 +40,8 @@ public class ContextualLigature : GLib.Object {
 		return ligature_list;
 	}
 	
-	public FontData get_data (GlyfTable glyf_table, uint16 ligature_lookup_index) {
+	public FontData get_font_data (GlyfTable glyf_table, uint16 ligature_lookup_index) 
+		throws GLib.Error {
 		FontData fd = new FontData ();
 		
 		Gee.ArrayList<string> backtrack = GsubTable.get_names (backtrack);

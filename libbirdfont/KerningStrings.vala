@@ -77,7 +77,6 @@ public class KerningStrings : GLib.Object {
 	}
 	
 	public void load_new_string (Font font, string kerning_strings_file) {
-		File f;
 		string data;
 		string[] strings;
 		string w;

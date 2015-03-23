@@ -1400,8 +1400,6 @@ public class PenTool : Tool {
 		double y = Glyph.path_coordinate_y (event_y);
 		double distance;
 		PointSelection e;
-		int px, py;
-		double coordinate_x, coordinate_y;
 		set_active_edit_point (null, new Path ());
 		
 		if (ep == null) {

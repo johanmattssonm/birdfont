@@ -29,7 +29,6 @@ public class Tool : Widget {
 	public bool selected = false;
 	
 	Text icon_font;
-	ImageSurface? icon = null;
 		
 	public signal void select_action (Tool selected);
 	public signal void deselect_action (Tool selected);

@@ -221,8 +221,6 @@ public class Expander : GLib.Object {
 	
 	public void draw (int wd, int hd, Context cr) {
 		double yt = y + scroll + 2;
-		double ih2 = 5.4 / 2;
-		double iw2 = 5.4 / 2;
 		Text title;
 
 		if (tool.size > 0) {

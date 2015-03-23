@@ -612,7 +612,6 @@ public class TabBar : GLib.Object {
 	public void draw (Context cr, int width, int height) {
 		double next_tab_x;
 		double w, h;
-		double progress_y;
 		
 		this.width = width;
 		this.height = height;
@@ -653,8 +652,6 @@ public class TabBar : GLib.Object {
 		// progress wheel
 		if (has_progress_wheel ()) {
 			double progress_size = 40 / scale;
-			Surface s = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) progress_size, (int) progress_size);
-			Context c = new Context (s);
 			
 			Theme.text_color (progress_icon, "Foreground 2");
 			

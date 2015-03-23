@@ -153,15 +153,16 @@ public class Tag : GLib.Object {
 		XmlString name;
 		XmlString attributes;
 		XmlString content;
-	
+
+		end_tag_index = -1;
+			
 		if (start < 0) {
 			warn ("Negative index.");
 			return new Tag.empty ();
 		}
 	
 		index = start;
-		end_tag_index = -1;
-		
+
 		d = data;
 		if (d == null) {
 			warn ("No data in xml string.");
@@ -439,7 +440,7 @@ public class Tag : GLib.Object {
 			return next_tag != null;
 		}
 
-		public Tag get () {
+		public new Tag get () {
 			if (next_tag == null) {
 				XmlParser.warning ("No tag is parsed yet.");
 				return new Tag.empty ();

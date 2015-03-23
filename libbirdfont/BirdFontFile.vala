@@ -1556,12 +1556,16 @@ class BirdFontFile : GLib.Object {
 			}
 		});
 		
-		foreach (ContextualLigature c in ligatures.contextual_ligatures) {
-			os.put_string (@"<contextual "
-				+ @"ligature=\"$(c.ligatures)\" "
-				+ @"backtrack=\"$(c.backtrack)\" "
-				+ @"input=\"$(c.input)\" "
-				+ @"lookahead=\"$(c.lookahead)\" />\n");
+		try {
+			foreach (ContextualLigature c in ligatures.contextual_ligatures) {
+				os.put_string (@"<contextual "
+					+ @"ligature=\"$(c.ligatures)\" "
+					+ @"backtrack=\"$(c.backtrack)\" "
+					+ @"input=\"$(c.input)\" "
+					+ @"lookahead=\"$(c.lookahead)\" />\n");
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
 		}
 	}
 	

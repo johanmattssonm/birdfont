@@ -42,7 +42,6 @@ public class FontSettings : GLib.Object {
 	
 	File get_settings_file () {
 		File config_directory = BirdFont.get_settings_directory ();
-		File settings = get_child (config_directory, "settings");
 		return get_child (config_directory, font_name.replace (".bf", ".config"));
 	}
 	
@@ -87,14 +86,18 @@ public class FontSettings : GLib.Object {
 		string xml_data;
 		XmlParser parser;
 		
-		settings.clear ();
-		font_name = font_file_name;
-		f = get_settings_file ();
-		
-		if (f.query_exists ()) {
-			FileUtils.get_contents((!) f.get_path (), out xml_data);
-			parser = new XmlParser (xml_data);
-			parse_settings (parser.get_root_tag ());	
+		try {
+			settings.clear ();
+			font_name = font_file_name;
+			f = get_settings_file ();
+			
+			if (f.query_exists ()) {
+				FileUtils.get_contents((!) f.get_path (), out xml_data);
+				parser = new XmlParser (xml_data);
+				parse_settings (parser.get_root_tag ());	
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
 		}
 	}
 	

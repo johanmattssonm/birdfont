@@ -86,7 +86,7 @@ public class GsubTable : OtfTable {
 			fd.add_ushort (0); // lookup clig_subtable
 		}
 		
-		clig_subtable = clig.get_data (glyf_table);
+		clig_subtable = clig.get_font_data (glyf_table);
 		chain_data = get_chaining_contextual_substition_subtable (contextual);
 		
 		// lookup table
@@ -144,7 +144,7 @@ public class GsubTable : OtfTable {
 
 				LigatureCollection ligature_set = contextual.ligatures.get (i);
 				fd.add_ushort (lookups_end + length); // array of offsets to subtable
-				length += (uint16) ligature_set.get_data (glyf_table).length_with_padding ();
+				length += (uint16) ligature_set.get_font_data (glyf_table).length_with_padding ();
 				
 				lookups_end -= 8;
 			}
@@ -169,7 +169,7 @@ public class GsubTable : OtfTable {
 		
 		if (contextual.has_ligatures ()) {
 			foreach (LigatureCollection s in contextual.ligatures) {
-				fd.append (s.get_data (glyf_table));
+				fd.append (s.get_font_data (glyf_table));
 			}
 
 			foreach (FontData d in chain_data) {
@@ -188,60 +188,13 @@ public class GsubTable : OtfTable {
 		uint16 ligature_lookup_index = 1;
 		
 		foreach (ContextualLigature context in contexts.ligature_context) {
-			fd.add (context.get_data (glyf_table, ligature_lookup_index)); 
+			fd.add (context.get_font_data (glyf_table, ligature_lookup_index)); 
 			ligature_lookup_index++;
 		}
 		
 		return fd;
 	}
 	
-	void parse_ligatures (FontData fd, int table_start) {
-		fd.seek (table_start);
-		
-		uint16 identifier = fd.read_ushort ();
-		
-		if (identifier != 1) {
-			warning (@"Bad identifier expecting 1 found $identifier");
-		}
-		
-		uint16 coverage_offset = fd.read_ushort (); // TODO: read coverage
-		uint16 num_sets = fd.read_ushort ();
-		
-		Gee.ArrayList<int> liga_set_offsets = new Gee.ArrayList<int> ();
-		for (int i = 0; i < num_sets; i++) {
-			uint16 liga_set_offset = fd.read_ushort ();
-			liga_set_offsets.add (table_start + liga_set_offset);
-		}
-		
-		foreach (int liga_set_pos in liga_set_offsets) {
-			fd.seek (liga_set_pos);
-			parse_ligature_set (fd);
-		}		
-	}
-	
-	/** Parse ligature set at the current position. */
-	void parse_ligature_set (FontData fd) {
-		int liga_start = fd.get_read_pos ();
-		uint nliga = fd.read_ushort ();
-		Gee.ArrayList<int> offsets = new Gee.ArrayList<int> ();
-		
-		for (uint i = 0; i < nliga; i++) {
-			int off = fd.read_ushort ();
-			offsets.add (off);
-		}
-
-		foreach (int off in offsets) {
-			fd.seek (liga_start);
-			fd.seek_relative (off);
-			uint16 lig = fd.read_ushort ();
-			uint16 nlig_comp = fd.read_ushort ();
-			
-			for (int i = 1; i < nlig_comp; i++) {
-				uint16 lig_comp = fd.read_ushort ();
-			} 
-		}
-	}
-
 	/** 
 	 * @param glyphs Name of glyphs or unicode values separated by space.
 	 * @return glyph names

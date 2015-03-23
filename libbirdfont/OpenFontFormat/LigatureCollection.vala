@@ -54,7 +54,6 @@ public class LigatureCollection : GLib.Object {
 	}
 
 	// multiple ligatures in non-contextual substitution
-	// FIXME: what if parts equals "" ? Which set does ligatures becomes a part of?
 	public void add_ligatures (GlyfTable glyf_table, string characters, string ligatures) 
 		requires (!is_null (lig_set) && !is_null (last_set)) {
 			
@@ -97,7 +96,7 @@ public class LigatureCollection : GLib.Object {
 		}		
 	}
 
-	public FontData get_data (GlyfTable glyf_table) throws GLib.Error {
+	public FontData get_font_data (GlyfTable glyf_table) throws GLib.Error {
 		FontData set_data;
 		uint16 ligature_pos;
 		uint16 table_start;

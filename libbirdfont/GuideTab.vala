@@ -32,7 +32,7 @@ public class GuideTab : Table {
 		int index = row.get_index ();
 		
 		if (delete_button) {
-			return_if_fail (0 <= index < BirdFont.get_current_font ().custom_guides.size);
+			return_if_fail (0 <= index < font.custom_guides.size);
 			BirdFont.get_current_font ().custom_guides.remove_at (index);
 			update_rows ();
 		}
@@ -40,7 +40,6 @@ public class GuideTab : Table {
 	
 	public override void update_rows () {
 		int i = 0;
-		SpacingData spacing = BirdFont.get_current_font ().get_spacing ();
 		
 		rows.clear ();
 		
