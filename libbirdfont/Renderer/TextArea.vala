@@ -711,7 +711,6 @@ public class TextArea : Widget {
 		show_selection = false;
 	}
 	
-	// FIXME: corruption?
 	public string get_text () {
 		StringBuilder sb = new StringBuilder ();
 		

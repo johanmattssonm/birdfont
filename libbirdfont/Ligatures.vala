@@ -19,8 +19,8 @@ namespace BirdFont {
 
 public class Ligatures : GLib.Object {
 	
-	Gee.ArrayList<Ligature> ligatures = new Gee.ArrayList<Ligature> ();
-	Gee.ArrayList<ContextualLigature> contextual_ligatures = new Gee.ArrayList<ContextualLigature> ();
+	public Gee.ArrayList<Ligature> ligatures = new Gee.ArrayList<Ligature> ();
+	public Gee.ArrayList<ContextualLigature> contextual_ligatures = new Gee.ArrayList<ContextualLigature> ();
 	
 	public delegate void LigatureIterator (string substitution, string ligature);
 	public delegate void SingleLigatureIterator (GlyphSequence substitution, GlyphCollection ligature);
@@ -153,7 +153,7 @@ public class Ligatures : GLib.Object {
 			MainWindow.get_ligature_display ().update_rows ();
 		});
 		
-		TabContent.show_text_input (listener);			
+		TabContent.show_text_input (listener);
 	}
 				
 	public void set_ligature (int index) {
@@ -164,7 +164,29 @@ public class Ligatures : GLib.Object {
 		lig = ligatures.get (index);
 		lig.set_ligature ();
 	}
-	
+
+	public void set_contextual_ligature (int index) {
+		ContextualLigature lig;
+		TextListener listener;
+		
+		return_if_fail (0 <= index < contextual_ligatures.size);
+
+		lig = contextual_ligatures.get (index);
+		listener = new TextListener (t_("Ligature"), lig.ligatures, t_("Set"));
+		
+		listener.signal_text_input.connect ((text) => {
+			lig.ligatures = text;
+		});
+		
+		listener.signal_submit.connect (() => {
+			TabContent.hide_text_input ();
+			MainWindow.get_ligature_display ().update_rows ();
+		});
+		
+		TabContent.show_text_input (listener);			
+
+	}
+		
 	public void set_substitution (int index) {
 		Ligature lig;
 		

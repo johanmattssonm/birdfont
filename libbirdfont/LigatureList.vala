@@ -45,7 +45,6 @@ public class LigatureList : Table {
 		Font font = BirdFont.get_current_font ();
 		Ligatures ligatures = font.get_ligatures ();
 		int i;
-		ContextualLigature cl;
 		
 		if (row.get_index () == NEW_LIGATURE && column == 0) {
 			add_ligature (t_("character sequence"), t_("ligature"));
@@ -55,19 +54,6 @@ public class LigatureList : Table {
 				add_contextual_ligature (t_("substitution"), t_("beginning"), t_("middle"), t_("end"));
 				TabContent.hide_text_input ();
 			}
-		} else if (row.has_row_data ()) {
-			i = row.get_index ();
-			cl = (ContextualLigature) ((!) row.get_row_data ());
-			
-			/* // FIXME: DELETE
-			if (delete_button) {
-				cl.remove_ligature_at (i);
-			} else if (column == 0) {
-				cl.set_ligature (i);
-			} else if (column == 2) {
-				cl.set_substitution (i);
-			}
-			*/
 		} else if (row.get_index () < ligatures.count ()) {
 			if (ligatures.count () != 0) {
 				if (delete_button) {
@@ -89,19 +75,15 @@ public class LigatureList : Table {
 				if (delete_button) {
 					ligatures.remove_contextual_ligatures_at (i);
 					TabContent.hide_text_input ();
-				}
-				
-				/* FIXME: DELETE
-				 else if (column == 0) {
-					ligatures.set_beginning (i);
+				} if (column == 0) {
+					ligatures.set_contextual_ligature (i);
 				} else if (column == 1) {
-					ligatures.set_middle (i);
+					ligatures.set_beginning (i);
 				} else if (column == 2) {
-					ligatures.set_end (i);
+					ligatures.set_middle (i);
 				} else if (column == 3) {
-					ligatures.add_substitution_at (i);
-				}
-				*/
+					ligatures.set_end (i);
+				} 
 			}
 		}
 			

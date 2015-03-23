@@ -713,6 +713,10 @@ class BirdFontFile : GLib.Object {
 				parse_ligature (t);
 			}
 
+			if (t.get_name () == "contextual") {
+				parse_contectual_ligature (t);
+			}
+			
 			if (t.get_name () == "weight") {
 				font.weight = int.parse (t.get_content ());
 			}
@@ -1551,6 +1555,43 @@ class BirdFontFile : GLib.Object {
 				warning (e.message);
 			}
 		});
+		
+		foreach (ContextualLigature c in ligatures.contextual_ligatures) {
+			os.put_string (@"<contextual "
+				+ @"ligature=\"$(c.ligatures)\" "
+				+ @"backtrack=\"$(c.backtrack)\" "
+				+ @"input=\"$(c.input)\" "
+				+ @"lookahead=\"$(c.lookahead)\" />\n");
+		}
+	}
+	
+	public void parse_contectual_ligature (Tag t) {
+		string ligature = "";
+		string backtrack = "";
+		string input = "";
+		string lookahead = "";
+		Ligatures ligatures;
+		
+		foreach (Attribute a in t.get_attributes ()) {
+			if (a.get_name () == "ligature") {
+				ligature = a.get_content ();
+			}
+
+			if (a.get_name () == "backtrack") {
+				backtrack = a.get_content ();
+			}
+
+			if (a.get_name () == "input") {
+				input = a.get_content ();
+			}
+			
+			if (a.get_name () == "lookahead") {
+				lookahead = a.get_content ();
+			}
+		}
+		
+		ligatures = font.get_ligatures ();
+		ligatures.add_contextual_ligature (ligature, backtrack, input, lookahead);
 	}
 	
 	public void parse_ligature (Tag t) {

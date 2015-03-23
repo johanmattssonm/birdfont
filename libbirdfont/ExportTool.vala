@@ -12,6 +12,8 @@
     Lesser General Public License for more details.
 */
 
+using Bird;
+
 namespace BirdFont {
 
 public class ExportTool : GLib.Object {
@@ -35,7 +37,7 @@ public class ExportTool : GLib.Object {
 		string name;
 		StringBuilder s;
 
-		name = glyph.get_name (); // FIXME: xml encode
+		name = XmlParser.encode (glyph.get_name ());
 		s = new StringBuilder ();
 		
 		s.append ("""<?xml version="1.0" encoding="utf-8"?>
