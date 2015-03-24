@@ -45,7 +45,10 @@ public class LigatureList : Table {
 		Font font = BirdFont.get_current_font ();
 		Ligatures ligatures = font.get_ligatures ();
 		int i;
+		int ncontextual;
 		
+		ncontextual = ligatures.contextual_ligatures.size;
+
 		if (row.get_index () == NEW_LIGATURE && column == 0) {
 			add_ligature (t_("character sequence"), t_("ligature"));
 			TabContent.hide_text_input ();
@@ -54,22 +57,8 @@ public class LigatureList : Table {
 				add_contextual_ligature (t_("substitution"), t_("beginning"), t_("middle"), t_("end"));
 				TabContent.hide_text_input ();
 			}
-		} else if (row.get_index () < ligatures.count ()) {
-			if (ligatures.count () != 0) {
-				if (delete_button) {
-					return_if_fail (0 <= row.get_index () < ligatures.count ());
-					ligatures.remove_at (row.get_index ());
-					TabContent.hide_text_input ();
-				} else if (column == 0) {
-					return_if_fail (0 <= row.get_index () < ligatures.count ());
-					ligatures.set_ligature (row.get_index ());
-				} else if (column == 2) {
-					return_if_fail (0 <= row.get_index () < ligatures.count ());
-					ligatures.set_substitution (row.get_index ());
-				}
-			}
-		} else {
-			i = row.get_index () - ligatures.count ();
+		} else if (row.get_index () < ncontextual) {
+			i = row.get_index ();
 			if (i < ligatures.count_contextual_ligatures ()) {
 				return_if_fail (0 <= i < ligatures.count_contextual_ligatures ());
 				if (delete_button) {
@@ -85,7 +74,23 @@ public class LigatureList : Table {
 					ligatures.set_end (i);
 				} 
 			}
-		}
+		} else if (row.get_index () >= ncontextual) {
+			i = row.get_index () - ncontextual;
+			
+			if (ligatures.count () != 0) {
+				if (delete_button) {
+					return_if_fail (0 <= i < ligatures.count ());
+					ligatures.remove_at (i);
+					TabContent.hide_text_input ();
+				} else if (column == 0) {
+					return_if_fail (0 <= i < ligatures.count ());
+					ligatures.set_ligature (i);
+				} else if (column == 2) {
+					return_if_fail (0 <= i < ligatures.count ());
+					ligatures.set_substitution (i);
+				}
+			}
+		} 
 			
 		update_rows ();
 		update_scrollbar ();
