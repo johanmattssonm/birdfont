@@ -39,10 +39,13 @@
 	<action key="k" ctrl="true" alt="false" command="false" shift="false" action="show kerning tab" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="list kerning pairs" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show spacing classes" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select next kerning pair" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select previous kerning pair" />
+	<action key="ｓ" ctrl="true" alt="false" command="false" shift="false" action="select next kerning pair" />
+	<action key="ｑ" ctrl="true" alt="false" command="false" shift="false" action="select previous kerning pair" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="load kerning strings" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="reloadload kerning strings" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show ligature tab" />
 	<action key="L" ctrl="true" alt="false" command="false" shift="true" action="add ligature" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="save as .bfp" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="settings" />
 	<action key="d" ctrl="true" alt="false" command="false" shift="false" action="name and description" />
 	<action key="b" ctrl="false" alt="false" command="false" shift="false" action="foresight" />
@@ -65,6 +68,7 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="skew" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="width" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="height" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="object_stroke" />
 	<action key="w" ctrl="false" alt="false" command="false" shift="false" action="tie_point" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="symmetric" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="create_line" />
@@ -94,10 +98,14 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="next" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="circle" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="rectangle" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="test_case" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="slow_test" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_class" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="kerning_text_input" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="insert_glyph_from_overview" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="insert_unichar" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="previous_kerning_string" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="next_kerning_string" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="update_webview" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="export_fonts" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="generate_html_document" />

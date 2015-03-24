@@ -43,7 +43,7 @@ public class KerningDisplay : FontDisplay {
 	Text kerning_label = new Text ();
 	
 	public bool adjust_side_bearings = false;
-	bool right_side_bearing = true;
+	public bool right_side_bearing = true;
 	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
@@ -538,13 +538,45 @@ public class KerningDisplay : FontDisplay {
 	}
 
 	public static void previous_pair () {
-		KerningDisplay d = MainWindow.get_kerning_display ();
-		d.set_selected_handle (d.selected_handle - 1);
+		KerningDisplay kd;
+		FontDisplay fd;
+		SpacingTab st;
+		
+		fd = MainWindow.get_current_display ();
+		
+		if (fd is SpacingTab) {
+			st = (SpacingTab) fd;
+			if (!st.right_side_bearing) {
+				st.right_side_bearing = true;
+			} else {
+				st.right_side_bearing = false;
+				st.set_selected_handle (st.selected_handle - 1);
+			}
+		} else if (fd is KerningDisplay) {
+			kd = (KerningDisplay) fd;
+			kd.set_selected_handle (kd.selected_handle - 1);	
+		}
 	}
 	
 	public static void next_pair () {
-		KerningDisplay d = MainWindow.get_kerning_display ();
-		d.set_selected_handle (d.selected_handle + 1);
+		KerningDisplay kd;
+		FontDisplay fd;
+		SpacingTab st;
+		
+		fd = MainWindow.get_current_display ();
+		
+		if (fd is SpacingTab) {
+			st = (SpacingTab) fd;
+			if (st.right_side_bearing) {
+				st.right_side_bearing = false;
+			} else {
+				st.right_side_bearing = true;
+				st.set_selected_handle (st.selected_handle + 1);
+			}
+		} else if (fd is KerningDisplay) {
+			kd = (KerningDisplay) fd;
+			kd.set_selected_handle (kd.selected_handle + 1);	
+		}
 	}
 
 	private static string round (double d) {
@@ -590,16 +622,14 @@ public class KerningDisplay : FontDisplay {
 
 			if (KeyBindings.modifier == CTRL && (keyval == Key.LEFT || keyval == Key.RIGHT)) {
 				if (keyval == Key.LEFT) { 
-					selected_handle--;
+					previous_pair ();
 				}
 				
 				if (keyval == Key.RIGHT) {
-					selected_handle++;
-				}
-				
-				set_selected_handle (selected_handle);
+					next_pair ();
+				}	
 			}
-			
+
 			if (KeyBindings.modifier == NONE 
 				|| KeyBindings.modifier == SHIFT 
 				|| KeyBindings.modifier == ALT) {		
