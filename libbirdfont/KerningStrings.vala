@@ -91,7 +91,6 @@ public class KerningStrings : GLib.Object {
 				w = s.replace ("\r", "");
 				if (w != "") {
 					kerning_strings.add (s);
-					print (s + " Added");
 				}
 			}
 			

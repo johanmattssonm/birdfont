@@ -109,6 +109,7 @@ public class Ligatures : GLib.Object {
 		listener.signal_submit.connect (() => {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
+			sort_ligatures ();
 		});
 		
 		TabContent.show_text_input (listener);			
@@ -130,6 +131,7 @@ public class Ligatures : GLib.Object {
 		listener.signal_submit.connect (() => {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
+			sort_ligatures ();
 		});
 		
 		TabContent.show_text_input (listener);		
@@ -151,6 +153,7 @@ public class Ligatures : GLib.Object {
 		listener.signal_submit.connect (() => {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
+			sort_ligatures ();
 		});
 		
 		TabContent.show_text_input (listener);
@@ -181,6 +184,7 @@ public class Ligatures : GLib.Object {
 		listener.signal_submit.connect (() => {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
+			sort_ligatures ();
 		});
 		
 		TabContent.show_text_input (listener);			

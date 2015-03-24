@@ -104,14 +104,14 @@ public class LigatureList : Table {
 		rows.add (row);
 		
 		i = 0;
-		ligatures.get_ligatures ((subst, liga) => {
-			row = new Row.columns_3 (liga, "",  subst, i);
+		ligatures.get_contextual_ligatures ((liga) => {
+			row = new Row.columns_4 (liga.ligatures, liga.backtrack, liga.input, liga.lookahead, i);
 			rows.add (row);
 			i++;
 		});
-
-		ligatures.get_contextual_ligatures ((liga) => {
-			row = new Row.columns_4 (liga.ligatures, liga.backtrack, liga.input, liga.lookahead, i);
+		
+		ligatures.get_ligatures ((subst, liga) => {
+			row = new Row.columns_3 (liga, "",  subst, i);
 			rows.add (row);
 			i++;
 		});
