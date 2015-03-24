@@ -194,33 +194,6 @@ public class GsubTable : OtfTable {
 		
 		return fd;
 	}
-	
-	/** 
-	 * @param glyphs Name of glyphs or unicode values separated by space.
-	 * @return glyph names
-	 */
-	public static Gee.ArrayList<string> get_names (string glyphs) {
-		Gee.ArrayList<string> names = new Gee.ArrayList<string> ();
-		Font font = BirdFont.get_current_font ();
-		string[] parts = glyphs.strip ().split (" ");
-								
-		foreach (string p in parts) {		
-			if (p.has_prefix ("U+") || p.has_prefix ("u+")) {
-				p = (!) Font.to_unichar (p).to_string ();
-			}
-			
-			if (!font.has_glyph (p)) {
-				warning (@"The character $p does have a glyph.");
-				p = ".notdef";
-			}
-			
-			if (p != "") {
-				names.add (p);
-			}
-		}
-		
-		return names;
-	}
 }
 
 }

@@ -346,7 +346,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string (@"\t<bottom_position>$(round (font.bottom_position))</bottom_position>\n");
 		os.put_string (@"\t<bottom_limit>$(round (font.bottom_limit))</bottom_limit>\n");
 		
-		foreach (Line guide in BirdFont.get_current_font ().custom_guides) {
+		foreach (Line guide in font.custom_guides) {
 			os.put_string (@"\t<custom_guide label=\"$(guide.label)\">$(round (guide.pos))</custom_guide>\n");
 		}
 		
@@ -1050,7 +1050,7 @@ class BirdFontFile : GLib.Object {
 				
 				line = new Line (label, position);
 				
-				BirdFont.get_current_font ().custom_guides.add (line);
+				font.custom_guides.add (line);
 			}
 		}	
 	}

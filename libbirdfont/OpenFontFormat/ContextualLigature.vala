@@ -21,8 +21,11 @@ public class ContextualLigature : GLib.Object {
 	public string lookahead = "";
 	public string ligatures = "";
 
+	Font font;
+
 	/** All arguments are list of glyph names separated by space. */
-	public ContextualLigature (string ligatures, string backtrack, string input, string lookahead) {
+	public ContextualLigature (Font font, string ligatures, string backtrack, string input, string lookahead) {
+		this.font = font;
 		this.backtrack = backtrack;
 		this.input = input;
 		this.lookahead = lookahead;
@@ -43,10 +46,11 @@ public class ContextualLigature : GLib.Object {
 	public FontData get_font_data (GlyfTable glyf_table, uint16 ligature_lookup_index) 
 		throws GLib.Error {
 		FontData fd = new FontData ();
+		Font font = BirdFont.get_current_font (); // FIXME: thread safety?
 		
-		Gee.ArrayList<string> backtrack = GsubTable.get_names (backtrack);
-		Gee.ArrayList<string> input = GsubTable.get_names (input);
-		Gee.ArrayList<string> lookahead = GsubTable.get_names (lookahead);
+		Gee.ArrayList<string> backtrack = font.get_names (backtrack);
+		Gee.ArrayList<string> input = font.get_names (input);
+		Gee.ArrayList<string> lookahead = font.get_names (lookahead);
 		
 		// FIXME: add ligatures
 		
@@ -114,6 +118,41 @@ public class ContextualLigature : GLib.Object {
 		}
 		
 		return fd;
+	}
+	
+	public GlyphSequence get_backtrack () {
+		return get_sequence (backtrack);
+	}
+
+	public GlyphSequence get_input () {
+		return get_sequence (input);
+	}
+	
+	public GlyphSequence get_lookahead () {
+		return get_sequence (lookahead);
+	}
+	
+	public GlyphSequence get_ligature_sequence () {
+		return get_sequence (ligatures);
+	}
+		
+	GlyphSequence get_sequence (string context) {
+		GlyphCollection? gc;
+		GlyphSequence gs;
+		
+		gs = new GlyphSequence ();
+		foreach (string s in font.get_names (context)) {
+			gc = font.get_glyph_collection_by_name (s);
+			
+			if (gc == null) {
+				warning (@"No glyph found for $s");
+				return new GlyphSequence ();
+			}
+			
+			gs.glyph.add (((!) gc).get_current ());
+		}
+		
+		return gs;
 	}
 }
 

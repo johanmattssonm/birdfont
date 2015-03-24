@@ -23,7 +23,7 @@ public class Ligatures : GLib.Object {
 	public Gee.ArrayList<ContextualLigature> contextual_ligatures = new Gee.ArrayList<ContextualLigature> ();
 	
 	public delegate void LigatureIterator (string substitution, string ligature);
-	public delegate void SingleLigatureIterator (GlyphSequence substitution, GlyphCollection ligature);
+	public delegate void SingleLigatureIterator (GlyphSequence substitution, GlyphSequence ligature);
 
 	public delegate void ContextualLigatureIterator (ContextualLigature lig);
 
@@ -48,17 +48,20 @@ public class Ligatures : GLib.Object {
 	public void get_single_substitution_ligatures (SingleLigatureIterator iter) {
 		get_ligatures ((substitution, ligature) => {
 			GlyphCollection? gc;
-			GlyphCollection li;
+			GlyphSequence lig;
 			GlyphSequence gs;
 			string[] subst_names = substitution.split (" ");
 			
-			gc = font.get_glyph_collection_by_name (ligature);
-			
-			if (gc == null) {
-				return;
+			lig = new GlyphSequence ();
+			foreach (string n in font.get_names (ligature)) {
+				gc = font.get_glyph_collection_by_name (n);
+				
+				if (gc == null) {
+					return;
+				}
+				
+				lig.add (((!) gc).get_current ());
 			}
-			
-			li = (!) gc;
 			
 			gs = new GlyphSequence ();
 			foreach (string s in subst_names) {
@@ -71,7 +74,7 @@ public class Ligatures : GLib.Object {
 				gs.glyph.add (((!) gc).get_current ());
 			}
 			
-			iter (gs, li);
+			iter (gs, lig);
 		});
 	}
 		
@@ -206,7 +209,7 @@ public class Ligatures : GLib.Object {
 	}
 
 	public void add_contextual_ligature (string ligature, string backtrack, string input, string lookahead) {
-		ContextualLigature l = new ContextualLigature (ligature, backtrack, input, lookahead);
+		ContextualLigature l = new ContextualLigature (font, ligature, backtrack, input, lookahead);
 		contextual_ligatures.insert (0, l);
 		sort_ligatures ();
 	}

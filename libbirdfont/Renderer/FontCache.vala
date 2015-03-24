@@ -38,7 +38,7 @@ public class FontCache {
 		bool ok;
 		
 		if (file_name == "") {
-			stderr.printf ("No file name provided.\n");
+			stderr.printf ("No file name.\n");
 			return null;
 		}
 		

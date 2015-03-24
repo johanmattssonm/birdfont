@@ -91,7 +91,6 @@ public abstract class Table : FontDisplay {
 			Row row, double y, bool color, bool dark) {
 		
 		Text t;
-		double margin;
 		double x;
 		double o;
 		

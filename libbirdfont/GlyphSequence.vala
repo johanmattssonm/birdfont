@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -30,6 +30,21 @@ public class GlyphSequence : GLib.Object {
 		return glyph.size;
 	}
 	
+	public void add (Glyph? g) {
+		glyph.add (g);
+		ranges.add (null);
+	}
+	
+	public void append (GlyphSequence c) {
+		foreach (Glyph? g in c.glyph) {
+			glyph.add (g);
+		}
+
+		foreach (GlyphRange? r in c.ranges) {
+			ranges.add (r);
+		}
+	}
+	
 	/** Do ligature substitution.
 	 * @return a new sequence with ligatures
 	 */
@@ -57,8 +72,13 @@ public class GlyphSequence : GLib.Object {
 		
 		ligatures = font.get_ligatures ();
 		ligatures.get_single_substitution_ligatures ((substitute, ligature) => {
-			ligature_sequence.replace (substitute, ligature.get_current ());
+			ligature_sequence.replace (substitute, ligature);
 		});
+		
+		foreach (ContextualLigature c in  ligatures.contextual_ligatures) {
+			ligature_sequence.replace_contextual (c.get_backtrack (),
+				c.get_input (), c.get_lookahead (), c.get_ligature_sequence ());	
+		}
 		
 		ligature_sequence.ranges.clear ();
 		for (int i = 0; i < ligature_sequence.glyph.size; i++) {
@@ -68,18 +88,35 @@ public class GlyphSequence : GLib.Object {
 		return ligature_sequence;
 	}
 	
-	void replace (GlyphSequence old, Glyph replacement) {
+	void replace (GlyphSequence old, GlyphSequence replacement) {
 		int i = 0;
 		while (i < glyph.size) {
 			if (starts_with (old, i)) {
 				substitute (i, old.glyph.size, replacement);
-				i = 0;
+				i += replacement.length ();
 			} else {
 				i++;
 			}
 		}
 	}
-	
+
+	void replace_contextual (GlyphSequence backtrack, GlyphSequence input, GlyphSequence lookahead, GlyphSequence replacement) {
+		bool start, middle, end;
+		int i = 0;
+		while (i < glyph.size) {
+			start = starts_with (backtrack, i);
+			middle = starts_with (input, i + backtrack.length ());
+			end = starts_with (lookahead, i + backtrack.length () + input.length ());
+			
+			if (start && middle && end) {
+				substitute (i + backtrack.length (), input.length (), replacement);
+				i += i + backtrack.length () + input.length ();
+			} else {
+				i++;
+			}
+		}
+	}
+		
 	bool starts_with (GlyphSequence old, uint index) {
 		Glyph? gl;
 
@@ -100,13 +137,15 @@ public class GlyphSequence : GLib.Object {
 		return true;
 	}
 	
-	void substitute (uint index, uint length, Glyph substitute) {
+	void substitute (uint index, uint length, GlyphSequence substitute) {
 		Gee.ArrayList<Glyph?> new_list = new Gee.ArrayList<Glyph?> ();
 		int i = 0;
 		
 		foreach (Glyph? g in glyph) {
 			if (i == index) {
-				new_list.add (substitute);
+				foreach (Glyph? gn in substitute.glyph) {
+					new_list.add (gn);
+				}
 			}
 
 			if (!(i >= index && i < index + length)) {

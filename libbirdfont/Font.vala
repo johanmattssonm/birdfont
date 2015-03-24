@@ -834,6 +834,32 @@ public class Font : GLib.Object {
 		read_only = r;
 	}
 
+	/** 
+	 * @param glyphs Name of glyphs or unicode values separated by space.
+	 * @return glyph names
+	 */
+	public Gee.ArrayList<string> get_names (string glyphs) {
+		Gee.ArrayList<string> names = new Gee.ArrayList<string> ();
+		string[] parts = glyphs.strip ().split (" ");
+								
+		foreach (string p in parts) {		
+			if (p.has_prefix ("U+") || p.has_prefix ("u+")) {
+				p = (!) to_unichar (p).to_string ();
+			}
+			
+			if (!has_glyph (p)) {
+				warning (@"The character $p does not have a glyph in " + get_file_name ());
+				p = ".notdef";
+			}
+			
+			if (p != "") {
+				names.add (p);
+			}
+		}
+		
+		return names;
+	}
+
 	public static unichar to_unichar (string unicode) {
 		int index = 2;
 		int i = 0;
