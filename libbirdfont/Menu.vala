@@ -166,21 +166,21 @@ public class Menu : GLib.Object {
 		});
 		edit_menu.items.add (paste);
 
-		MenuItem paste_in_place = add_menu_item (t_("Paste In Place"), "paste in place");
+		MenuItem paste_in_place = add_menu_item (t_("Paste In Place"), "paste in place", "Glyph");
 		paste_in_place.action.connect (() => {
 			ClipTool.paste_in_place ();
 			show_menu = false;
 		});
 		edit_menu.items.add (paste_in_place);
 		
-		MenuItem select_all_paths = add_menu_item (t_("Select All Paths"), "select all paths");
+		MenuItem select_all_paths = add_menu_item (t_("Select All Paths"), "select all paths", "Glyph");
 		select_all_paths.action.connect (() => {
 			MainWindow.select_all_paths ();
 			show_menu = false;
 		});
 		edit_menu.items.add (select_all_paths);
 
-		MenuItem move_to_baseline = add_menu_item (t_("Move To Baseline"), "move to baseline");
+		MenuItem move_to_baseline = add_menu_item (t_("Move To Baseline"), "move to baseline", "Glyph");
 		move_to_baseline.action.connect (() => {
 			MenuTab.move_to_baseline ();
 			show_menu = false;
@@ -194,14 +194,14 @@ public class Menu : GLib.Object {
 		});
 		edit_menu.items.add (search);
 
-		MenuItem export_glyph = add_menu_item (t_("Export Glyph as SVG"), "export glyph as svg");
+		MenuItem export_glyph = add_menu_item (t_("Export Glyph as SVG"), "export glyph as svg", "Glyph");
 		export_glyph.action.connect (() => {
 			ExportTool.export_current_glyph ();
 			show_menu = false;
 		});
 		edit_menu.items.add (export_glyph);
 
-		MenuItem import_svg = add_menu_item (t_("Import SVG file"), "import svg file");
+		MenuItem import_svg = add_menu_item (t_("Import SVG file"), "import svg file", "Glyph");
 		import_svg.action.connect (() => {
 			SvgParser.import ();
 			show_menu = false;
@@ -215,14 +215,14 @@ public class Menu : GLib.Object {
 		});
 		edit_menu.items.add (import_background_image);
 
-		MenuItem simplify_path = add_menu_item (t_("Simplify Path"), "simplify path");
+		MenuItem simplify_path = add_menu_item (t_("Simplify Path"), "simplify path", "Glyph");
 		simplify_path.action.connect (() => {
 			MenuTab.simplify_path ();
 			show_menu = false;
 		});
 		edit_menu.items.add (simplify_path);
 
-		MenuItem close_path = add_menu_item (t_("Close Path"), "close path");
+		MenuItem close_path = add_menu_item (t_("Close Path"), "close path", "Glyph");
 		close_path.action.connect (() => {
 			PenTool.close_all_paths ();
 			show_menu = false;
@@ -236,14 +236,14 @@ public class Menu : GLib.Object {
 		});
 		edit_menu.items.add (glyph_sequence);
 
-		MenuItem set_background_glyph = add_menu_item (t_("Set Background Glyph"), "set background glyph");
+		MenuItem set_background_glyph = add_menu_item (t_("Set Background Glyph"), "set background glyph", "Glyph");
 		set_background_glyph.action.connect (() => {
 			MenuTab.use_current_glyph_as_background ();
 			show_menu = false;
 		});
 		edit_menu.items.add (set_background_glyph);
 
-		MenuItem remove_background_glyph = add_menu_item (t_("Remove Background Glyph"), "remove background glyph");
+		MenuItem remove_background_glyph = add_menu_item (t_("Remove Background Glyph"), "remove background glyph", "Glyph");
 		remove_background_glyph.action.connect (() => {
 			MenuTab.reset_glyph_background ();
 			show_menu = false;
@@ -264,36 +264,32 @@ public class Menu : GLib.Object {
 		});
 		edit_menu.items.add (show_guide_guide);
 		
-		MenuItem select_point_above = add_menu_item (t_("Select Point Above"), "select point above");
+		MenuItem select_point_above = add_menu_item (t_("Select Point Above"), "select point above", "Glyph");
 		select_point_above.action.connect (() => {
 			PenTool.select_point_up ();
 			show_menu = false;
 		});
-		select_point_above.display = "Glyph";
 		edit_menu.items.add (select_point_above);
 
-		MenuItem select_next_point = add_menu_item (t_("Select Next Point"), "select next point");
+		MenuItem select_next_point = add_menu_item (t_("Select Next Point"), "select next point", "Glyph");
 		select_next_point.action.connect (() => {
 			PenTool.select_point_right ();
 			show_menu = false;
 		});
-		select_next_point.display = "Glyph";
 		edit_menu.items.add (select_next_point);
 		
-		MenuItem select_previous_point = add_menu_item (t_("Select Previous Point"), "select previous point");
+		MenuItem select_previous_point = add_menu_item (t_("Select Previous Point"), "select previous point", "Glyph");
 		select_previous_point.action.connect (() => {
 			PenTool.select_point_left ();
 			show_menu = false;
 		});
-		select_previous_point.display = "Glyph";
 		edit_menu.items.add (select_previous_point);
 
-		MenuItem select_point_below = add_menu_item (t_("Select Point Below"), "select point below");
+		MenuItem select_point_below = add_menu_item (t_("Select Point Below"), "select point below", "Glyph");
 		select_point_below.action.connect (() => {
 			PenTool.select_point_down ();
 			show_menu = false;
 		});
-		select_point_below.display = "Glyph";
 		edit_menu.items.add (select_point_below);
 
 		// tab menu
@@ -371,7 +367,8 @@ public class Menu : GLib.Object {
 			KerningDisplay.next_pair ();
 			show_menu = false;
 		});
-		next_kerning_pair.display = "Kerning";
+		next_kerning_pair.add_display("Kerning");
+		next_kerning_pair.add_display("Spacing");
 		kerning_menu.items.add (next_kerning_pair);
 
 		MenuItem previous_kerning_pair = add_menu_item (t_("Select Previous Kerning Pair"), "select previous kerning pair");
@@ -379,7 +376,8 @@ public class Menu : GLib.Object {
 			KerningDisplay.previous_pair ();
 			show_menu = false;
 		});
-		previous_kerning_pair.display = "Kerning";
+		previous_kerning_pair.add_display("Kerning");
+		previous_kerning_pair.add_display("Spacing");
 		kerning_menu.items.add (previous_kerning_pair);
 
 		MenuItem load_kerning_strings = add_menu_item (t_("Load Kerning Strings"), "load kerning strings");
@@ -473,27 +471,35 @@ public class Menu : GLib.Object {
 		foreach (MenuItem item in sorted_menu_items) {		
 			if (item.key == (unichar) keyval && item.modifiers == KeyBindings.modifier) {
 				
-				if (current_display is Glyph && item.display == "Glyph") {
+				if (current_display is Glyph && item.in_display ("Glyph")) {
 					item.action ();
 				}
 				
 				display = current_display.get_name ();
 
+				if (current_display is Glyph) {
+					display = "Glyph";
+				}
+
 				if (!current_display.needs_modifier () || item.modifiers != NONE) {
 					if (!SettingsDisplay.update_key_bindings 
-						&& (item.display == "" || item.display == display)) {
+						&& item.in_display (display)
+						&& !(item is ToolItem)) {
 						item.action ();
 					}
 					
 					if (item is ToolItem) {
 						tm  = (ToolItem) item;
 						
-						if (!tm.tool.is_tool_modifier) {
-							MainWindow.get_toolbox ().set_current_tool (tm.tool);
-							return;
-						} else {
-							tm.tool.select_action (tm.tool);
-							return;
+						if (tm.in_display (display)) {
+							if (tm.tool.editor_events) {
+								MainWindow.get_toolbox ().set_current_tool (tm.tool);
+								tm.tool.select_action (tm.tool);
+								return;
+							} else {
+								tm.tool.select_action (tm.tool);
+								return;
+							}
 						}
 					}
 				}
@@ -576,12 +582,16 @@ public class Menu : GLib.Object {
 		}
 	}
 	
-	MenuItem add_menu_item (string label, string description = "") {
+	MenuItem add_menu_item (string label, string description = "", string display = "") {
 		MenuItem i = new MenuItem (label, description);
 		
 		if (description != "") {
 			menu_items.set (description, i);
 			sorted_menu_items.add (i);
+		}
+		
+		if (display != "") {
+			i.add_display (display);
 		}
 								
 		return i;
@@ -617,6 +627,10 @@ public class Menu : GLib.Object {
 					if (tool_item.identifier != "" && !has_menu_item (tool_item.identifier)) {
 						menu_items.set (tool_item.identifier, tool_item);
 						sorted_menu_items.add (tool_item);
+					}
+					
+					foreach (string d in tool_set.get_displays ()) {
+						tool_item.add_display (d);
 					}
 				}
 			}

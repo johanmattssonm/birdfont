@@ -158,7 +158,12 @@ public class OverviewTools : ToolCollection  {
 	public override Gee.ArrayList<Expander> get_expanders () {
 		return expanders;
 	}
-	
+
+	public override Gee.ArrayList<string> get_displays () {
+		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
+		d.add ("Overview");
+		return d;
+	}
 }
 
 }

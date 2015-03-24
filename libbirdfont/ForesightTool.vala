@@ -200,8 +200,8 @@ public class ForesightTool : Tool {
 					
 					if (last.point.get_right_handle ().is_line () || last.point.get_left_handle ().is_line ()) {
 						last.point.convert_to_curve ();
-						last.point.get_right_handle ().length = 0.01;
-						last.point.get_left_handle ().length = 0.01;
+						last.point.get_right_handle ().length = 0.1;
+						last.point.get_left_handle ().length = 0.1;
 					}
 				}
 				
@@ -228,8 +228,8 @@ public class ForesightTool : Tool {
 					
 					last.point.convert_to_curve ();
 					last.point.set_reflective_handles (true);
-					last.point.get_right_handle ().length = 0.01;
-					last.point.get_left_handle ().length = 0.01;
+					last.point.get_right_handle ().length = 0.1;
+					last.point.get_left_handle ().length = 0.1;
 				}
 				
 				if (previous_point == 0) {
@@ -242,8 +242,8 @@ public class ForesightTool : Tool {
 				
 				if (h.is_line ()) {
 					last.point.convert_to_curve ();
-					last.point.get_right_handle ().length = 0.01;
-					last.point.get_left_handle ().length = 0.01;
+					last.point.get_right_handle ().length = 0.1;
+					last.point.get_left_handle ().length = 0.1;
 				}
 				
 				p.move_action (p, x, y);

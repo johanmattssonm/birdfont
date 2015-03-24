@@ -253,6 +253,12 @@ public class KerningTools : ToolCollection  {
 			kr.update_spacing_class ();
 		}
 	}
+
+	public override Gee.ArrayList<string> get_displays () {
+		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
+		d.add ("Kerning");
+		return d;
+	}
 }
 
 }

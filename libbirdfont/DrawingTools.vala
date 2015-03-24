@@ -1314,6 +1314,12 @@ public class DrawingTools : ToolCollection  {
 	private void add_expander (Expander e) {
 		expanders.add (e);
 	}
+
+	public override Gee.ArrayList<string> get_displays () {
+		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
+		d.add ("Glyph");
+		return d;
+	}
 }
 
 }

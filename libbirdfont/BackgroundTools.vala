@@ -278,6 +278,12 @@ public class BackgroundTools : ToolCollection  {
 		font.add_background_image (image);
 	}
 	
+	public override Gee.ArrayList<string> get_displays () {
+		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
+		d.add ("Backgrounds");
+		return d;
+	}
+	
 	class BackgroundSelectionLabel : LabelTool {
 		public BackgroundImage img;
 		public bool deleted;

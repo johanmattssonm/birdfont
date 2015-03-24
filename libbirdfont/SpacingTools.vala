@@ -50,6 +50,12 @@ public class SpacingTools : ToolCollection  {
 		expanders.add (zoom_expander);
 		expanders.add (spacing_tools_expander);
 	}
+
+	public override Gee.ArrayList<string> get_displays () {
+		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
+		d.add ("Spacing");
+		return d;
+	}
 	
 	public override Gee.ArrayList<Expander> get_expanders () {
 		return expanders;
