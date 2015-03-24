@@ -30,7 +30,7 @@ public abstract class Table : FontDisplay {
 	public abstract void selected_row (Row row, int column, bool delete_button);
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
-		double y = 20 * MainWindow.units;
+		double y = 0;
 		int s = 0;
 		bool color = (scroll + 1 % 2) == 0;
 		
@@ -51,19 +51,13 @@ public abstract class Table : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 		
-		cr.save ();
-		Theme.color (cr, "Background 5");
-		cr.set_font_size (12);
-
 		foreach (Row r in get_rows ()) {
 			if (s++ >= scroll) {
 				draw_row (allocation, cr, r, y, color, true);
-				y += 23 * MainWindow.units;
+				y += 25 * MainWindow.units;
 				color = !color;
 			}
 		}
-		
-		cr.restore ();
 	}	
 
 	private void layout () {
@@ -80,7 +74,13 @@ public abstract class Table : FontDisplay {
 			
 			for (int i = 0; i < row.columns; i++) {
 				width = (int) row.get_column (i).get_sidebearing_extent ();
-				if (column_width.get (i) < width) {
+				width +=  (int) (10 * MainWindow.units);
+				
+				if (width < 100 * MainWindow.units) {
+					width = (int) (100 * MainWindow.units);
+				}
+				
+				if (width > column_width.get (i)) {
 					column_width.set (i, width);
 				}
 			}
@@ -93,44 +93,39 @@ public abstract class Table : FontDisplay {
 		Text t;
 		double margin;
 		double x;
+		double o;
 		
-		if (color) {
-			cr.save ();
-			Theme.color (cr, "Background 6");
-			cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
-			cr.fill ();
-			cr.restore ();
-		}
+		o = color ? 1 : 0.5;
+		cr.save ();
+		Theme.color_opacity (cr, "Background 10", o);
+		cr.rectangle (0, y * MainWindow.units, allocation.width, 25 * MainWindow.units);
+		cr.fill ();
+		cr.restore ();
 
 		if (row.has_delete_button ()) {
 			cr.save ();
 			Theme.color (cr, "Foreground 1");
 			cr.set_line_width (1);
-			cr.move_to (10 * MainWindow.units, y - 8 * MainWindow.units);
-			cr.line_to (15 * MainWindow.units, y - 3 * MainWindow.units);
-			cr.move_to (10 * MainWindow.units, y - 3 * MainWindow.units);
-			cr.line_to (15 * MainWindow.units, y - 8 * MainWindow.units);		
+			cr.move_to (10 * MainWindow.units, y + 15 * MainWindow.units);
+			cr.line_to (15 * MainWindow.units, y + 10 * MainWindow.units);
+			cr.move_to (10 * MainWindow.units, y + 10 * MainWindow.units);
+			cr.line_to (15 * MainWindow.units, y + 15 * MainWindow.units);		
 			cr.stroke ();
 			cr.restore ();
 		}
 		
 		return_if_fail (row.columns <= column_width.size);
 		
-		x = 0;
-		margin = (row.has_delete_button ()) ? 120 * MainWindow.units : 0;
+		x = 40 * MainWindow.units;
 		for (int i = 0; i < row.columns; i++) {
 			cr.save ();
 			Theme.color (cr, "Foreground 1");
-			
-			x += margin;
-			margin = 3 * MainWindow.units;
-			
 			t = row.get_column (i);
 			t.widget_x = x;
-			t.widget_y = y - 17 * MainWindow.units;
+			t.widget_y = y + 3 * MainWindow.units;
 			t.draw (cr);
 			
-			x += column_width.get (i) + 10 * MainWindow.units; 
+			x += column_width.get (i); 
 			
 			cr.restore ();
 		}
@@ -139,7 +134,8 @@ public abstract class Table : FontDisplay {
 	public override void button_release (int button, double ex, double ey) {
 		int s = 0;
 		double y = 0;
-		int colum = -1;
+		double x = 0;
+		int column = -1;
 		Row? selected = null;
 		bool over_delete = false;
 
@@ -149,26 +145,36 @@ public abstract class Table : FontDisplay {
 
 		foreach (Row r in get_rows ()) {
 			if (s++ >= scroll) {
-				y += 18 * MainWindow.units;
-				
-				if (y - 10 * MainWindow.units <= ey * MainWindow.units <= y + 5 * MainWindow.units) {
+				if (y <= ey <= y + 25 * MainWindow.units) {
 					
-					// FIXME: new layout
-					if (r.has_delete_button ()) {
-						colum = (int) ((ex - 120) / 120 * MainWindow.units);
-					} else {
-						colum = (int) ((ex) / 120 * MainWindow.units);
+					x = 0;
+					for (int i = 0; i < r.columns; i++) {
+						return_if_fail (0 <= i < column_width.size);
+						
+						if (x <= ex < x + column_width.get (i)) {
+							column = i;
+						}
+						
+						x += column_width.get (i);
 					}
 					
 					over_delete = (ex < 18 && r.has_delete_button ());
+					
+					if (over_delete) {
+						column = -1;
+					}
+					
 					selected = r;
+					
 					break;
 				}
+
+				y += 25 * MainWindow.units;
 			}
 		}
 		
 		if (selected != null) {
-			selected_row ((!) selected, colum, over_delete);	
+			selected_row ((!) selected, column, over_delete);	
 		}
 		
 		update_scrollbar ();
