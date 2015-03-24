@@ -20,7 +20,7 @@
 	<action key="E" ctrl="true" alt="false" command="false" shift="true" action="export glyph as svg" />
 	<action key="i" ctrl="true" alt="false" command="false" shift="false" action="import svg file" />
 	<action key="b" ctrl="true" alt="false" command="false" shift="false" action="import background image" />
-	<action key="p" ctrl="false" alt="false" command="false" shift="false" action="simplify path" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="simplify path" />
 	<action key="c" ctrl="false" alt="false" command="false" shift="false" action="close path" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="glyph sequence" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="set background glyph" />
