@@ -27,11 +27,6 @@ rm -rf birdfont-$version
 
 git clone --depth 1 --no-hardlinks --local $rep
 
-# remove localizations that don't have supported character sets in the current font
-rm ./birdfont/po/zh_CN.po
-rm ./birdfont/po/ja.po
-rm ./birdfont/po/he.po
-
 mv birdfont birdfont-$version
 
 rm -rf birdfont-$version/.git

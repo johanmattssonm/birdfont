@@ -620,16 +620,6 @@ public class KerningDisplay : FontDisplay {
 				set_space (selected_handle, 1 / KerningTools.font_size);
 			}
 
-			if (KeyBindings.modifier == CTRL && (keyval == Key.LEFT || keyval == Key.RIGHT)) {
-				if (keyval == Key.LEFT) { 
-					previous_pair ();
-				}
-				
-				if (keyval == Key.RIGHT) {
-					next_pair ();
-				}	
-			}
-
 			if (KeyBindings.modifier == NONE 
 				|| KeyBindings.modifier == SHIFT 
 				|| KeyBindings.modifier == ALT) {		

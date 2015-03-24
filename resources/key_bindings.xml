@@ -15,7 +15,7 @@
 	<action key="v" ctrl="true" alt="false" command="false" shift="false" action="paste" />
 	<action key="V" ctrl="true" alt="false" command="false" shift="true" action="paste in place" />
 	<action key="a" ctrl="true" alt="false" command="false" shift="false" action="select all paths" />
-	<action key="b" ctrl="false" alt="false" command="false" shift="false" action="move to baseline" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="move to baseline" />
 	<action key="f" ctrl="true" alt="false" command="false" shift="false" action="search" />
 	<action key="E" ctrl="true" alt="false" command="false" shift="true" action="export glyph as svg" />
 	<action key="i" ctrl="true" alt="false" command="false" shift="false" action="import svg file" />
