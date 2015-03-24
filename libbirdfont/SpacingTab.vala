@@ -270,6 +270,11 @@ public class SpacingTab : KerningDisplay {
 		text_input = true;
 		TabContent.show_text_input (listener);
 	}
+
+	public override bool needs_modifier () {
+		return true;
+	}
+
 }
 
 }

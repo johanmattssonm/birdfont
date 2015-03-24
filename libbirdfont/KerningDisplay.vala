@@ -1019,7 +1019,11 @@ public class KerningDisplay : FontDisplay {
 		KerningTools.zoom_bar.set_zoom (KerningTools.font_size / 3);
 		GlyphCanvas.redraw ();
 	}
-	
+
+	public override bool needs_modifier () {
+		return true;
+	}
+
 	public class UndoItem : GLib.Object {
 		public string first;
 		public string next;

@@ -478,8 +478,8 @@ public class Menu : GLib.Object {
 				}
 				
 				display = current_display.get_name ();
-				
-				if (!((display == "Kerning" || display == "Spacing" || display == "Preview") && item.modifiers == NONE)) {
+
+				if (!current_display.needs_modifier () || item.modifiers != NONE) {
 					if (!SettingsDisplay.update_key_bindings 
 						&& (item.display == "" || item.display == display)) {
 						item.action ();

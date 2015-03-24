@@ -156,6 +156,11 @@ public abstract class FontDisplay : GLib.Object {
 	public static File find_file (string? dir, string name) {
 		return SearchPaths.find_file (dir, name);	
 	}
+
+	/** returns false if bindings to a single key works in the display. */
+	public virtual bool needs_modifier () {
+		return false;
+	}
 }
 
 }
