@@ -23,6 +23,7 @@ public abstract class Table : FontDisplay {
 	int scroll = 0;
 	int visible_rows = 0;
 	WidgetAllocation allocation = new WidgetAllocation ();
+	Gee.ArrayList<int> column_width = new Gee.ArrayList<int> ();
 
 	public abstract void update_rows ();
 	public abstract Gee.ArrayList<Row> get_rows ();
@@ -32,6 +33,8 @@ public abstract class Table : FontDisplay {
 		double y = 20 * MainWindow.units;
 		int s = 0;
 		bool color = (scroll + 1 % 2) == 0;
+		
+		layout ();
 		
 		if (allocation.width != this.allocation.width
 				|| allocation.height != this.allocation.height) {
@@ -55,7 +58,7 @@ public abstract class Table : FontDisplay {
 		foreach (Row r in get_rows ()) {
 			if (s++ >= scroll) {
 				draw_row (allocation, cr, r, y, color, true);
-				y += 18 * MainWindow.units;
+				y += 23 * MainWindow.units;
 				color = !color;
 			}
 		}
@@ -63,11 +66,34 @@ public abstract class Table : FontDisplay {
 		cr.restore ();
 	}	
 
-	private static void draw_row (WidgetAllocation allocation, Context cr,
+	private void layout () {
+		int width;
+		
+		column_width.clear ();
+		
+		for (int i = 0; i <= Row.MAX_COLUMNS; i++) {
+			column_width.add (0);
+		}
+		
+		foreach (Row row in get_rows ()) {
+			return_if_fail (row.columns <= column_width.size);
+			
+			for (int i = 0; i < row.columns; i++) {
+				width = (int) row.get_column (i).get_sidebearing_extent ();
+				if (column_width.get (i) < width) {
+					column_width.set (i, width);
+				}
+			}
+		}
+	}
+
+	private void draw_row (WidgetAllocation allocation, Context cr,
 			Row row, double y, bool color, bool dark) {
 		
+		Text t;
 		double margin;
-	
+		double x;
+		
 		if (color) {
 			cr.save ();
 			Theme.color (cr, "Background 6");
@@ -88,13 +114,24 @@ public abstract class Table : FontDisplay {
 			cr.restore ();
 		}
 		
+		return_if_fail (row.columns <= column_width.size);
+		
+		x = 0;
+		margin = (row.has_delete_button ()) ? 120 * MainWindow.units : 0;
 		for (int i = 0; i < row.columns; i++) {
 			cr.save ();
 			Theme.color (cr, "Foreground 1");
-			margin = (row.has_delete_button ()) ? 120 * MainWindow.units : 3* MainWindow.units;
-			cr.move_to (margin + i * 120 * MainWindow.units, y);
-			cr.set_font_size (12 * MainWindow.units);
-			cr.show_text (row.get_column (i));
+			
+			x += margin;
+			margin = 3 * MainWindow.units;
+			
+			t = row.get_column (i);
+			t.widget_x = x;
+			t.widget_y = y - 17 * MainWindow.units;
+			t.draw (cr);
+			
+			x += column_width.get (i) + 10 * MainWindow.units; 
+			
 			cr.restore ();
 		}
 	}
@@ -116,6 +153,7 @@ public abstract class Table : FontDisplay {
 				
 				if (y - 10 * MainWindow.units <= ey * MainWindow.units <= y + 5 * MainWindow.units) {
 					
+					// FIXME: new layout
 					if (r.has_delete_button ()) {
 						colum = (int) ((ex - 120) / 120 * MainWindow.units);
 					} else {
