@@ -493,6 +493,9 @@ public class Glyph : FontDisplay {
 		double x1, y1, x2, y2;
 		
 		if (boundaries (out x1, out y1, out x2, out y2)) {
+			if (get_name () == "g") {
+				print (@"G: $right_limit - $x2    left_limit - x2\n");
+			}
 			return right_limit - x2;
 		} else {
 			return right_limit - left_limit;
