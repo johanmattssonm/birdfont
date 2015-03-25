@@ -847,6 +847,14 @@ public class Font : GLib.Object {
 				p = (!) to_unichar (p).to_string ();
 			}
 			
+			if (p == "space") {
+				p = " ";
+			}
+
+			if (p == "divis") {
+				p = " ";
+			}
+			
 			if (!has_glyph (p)) {
 				warning (@"The character $p does not have a glyph in " + get_file_name ());
 				p = ".notdef";

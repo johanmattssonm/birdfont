@@ -70,12 +70,13 @@ public class GlyphSequence : GLib.Object {
 			return ligature_sequence;
 		}
 
+		ligatures = font.get_ligatures ();
+
 		foreach (ContextualLigature c in  ligatures.contextual_ligatures) {
 			ligature_sequence.replace_contextual (c.get_backtrack (),
 				c.get_input (), c.get_lookahead (), c.get_ligature_sequence ());	
 		}
 		
-		ligatures = font.get_ligatures ();
 		ligatures.get_single_substitution_ligatures ((substitute, ligature) => {
 			ligature_sequence.replace (substitute, ligature);
 		});
@@ -92,7 +93,7 @@ public class GlyphSequence : GLib.Object {
 		int i = 0;
 		while (i < glyph.size) {
 			if (starts_with (old, i)) {
-				substitute (i, old.glyph.size, replacement);
+				glyph = substitute (i, old.glyph.size, replacement);
 				i += replacement.length ();
 			} else {
 				i++;
@@ -100,17 +101,28 @@ public class GlyphSequence : GLib.Object {
 		}
 	}
 
-	void replace_contextual (GlyphSequence backtrack, GlyphSequence input, GlyphSequence lookahead, GlyphSequence replacement) {
+	void replace_contextual (GlyphSequence backtrack, GlyphSequence input, GlyphSequence lookahead, 
+		GlyphSequence replacement) {
+			
 		bool start, middle, end;
 		int i = 0;
+		int advance = 0;
+
 		while (i < glyph.size) {
 			start = starts_with (backtrack, i);
 			middle = starts_with (input, i + backtrack.length ());
 			end = starts_with (lookahead, i + backtrack.length () + input.length ());
 			
 			if (start && middle && end) {
-				substitute (i + backtrack.length (), input.length (), replacement);
-				i += i + backtrack.length () + input.length ();
+				glyph = substitute (i + backtrack.length (), input.length (), replacement);
+				
+				advance = backtrack.length () + replacement.length ();
+				i += advance;
+				
+				if (advance <= 0) {
+					warning ("No advancement.");
+					return;
+				}
 			} else {
 				i++;
 			}
@@ -137,7 +149,7 @@ public class GlyphSequence : GLib.Object {
 		return true;
 	}
 	
-	void substitute (uint index, uint length, GlyphSequence substitute) {
+	Gee.ArrayList<Glyph?> substitute (uint index, uint length, GlyphSequence substitute) {
 		Gee.ArrayList<Glyph?> new_list = new Gee.ArrayList<Glyph?> ();
 		int i = 0;
 		
@@ -155,7 +167,7 @@ public class GlyphSequence : GLib.Object {
 			i++;
 		}
 		
-		glyph = new_list;		
+		return new_list;
 	}
 }
 
