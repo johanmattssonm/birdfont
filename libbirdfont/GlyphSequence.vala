@@ -69,16 +69,16 @@ public class GlyphSequence : GLib.Object {
 		if (has_range) {
 			return ligature_sequence;
 		}
+
+		foreach (ContextualLigature c in  ligatures.contextual_ligatures) {
+			ligature_sequence.replace_contextual (c.get_backtrack (),
+				c.get_input (), c.get_lookahead (), c.get_ligature_sequence ());	
+		}
 		
 		ligatures = font.get_ligatures ();
 		ligatures.get_single_substitution_ligatures ((substitute, ligature) => {
 			ligature_sequence.replace (substitute, ligature);
 		});
-		
-		foreach (ContextualLigature c in  ligatures.contextual_ligatures) {
-			ligature_sequence.replace_contextual (c.get_backtrack (),
-				c.get_input (), c.get_lookahead (), c.get_ligature_sequence ());	
-		}
 		
 		ligature_sequence.ranges.clear ();
 		for (int i = 0; i < ligature_sequence.glyph.size; i++) {
