@@ -140,5 +140,10 @@ public class Preview : FontDisplay {
 		}
 		return sb.str;
 	}
+	
+	public override bool needs_modifier () {
+		return true;
+	}
+
 }
 }

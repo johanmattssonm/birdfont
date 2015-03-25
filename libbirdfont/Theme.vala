@@ -81,8 +81,6 @@ public class Theme : GLib.Object {
 	}
 	
 	public static Color get_color (string name) {
-		Color c;
-		
 		if (unlikely (!colors.has_key (name))) {
 			warning (@"Theme does not have a color for $name");
 			return new Color (0, 0, 0, 1);

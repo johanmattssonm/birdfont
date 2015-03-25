@@ -6191,4 +6191,5 @@
 
 
 <kerning left="T" right="e" hadjustment="-11.3891448975" />
+<kerning left="T" right="u" hadjustment="-7.0000000000" />
 </font>

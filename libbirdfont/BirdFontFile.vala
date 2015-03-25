@@ -346,7 +346,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string (@"\t<bottom_position>$(round (font.bottom_position))</bottom_position>\n");
 		os.put_string (@"\t<bottom_limit>$(round (font.bottom_limit))</bottom_limit>\n");
 		
-		foreach (Line guide in BirdFont.get_current_font ().custom_guides) {
+		foreach (Line guide in font.custom_guides) {
 			os.put_string (@"\t<custom_guide label=\"$(guide.label)\">$(round (guide.pos))</custom_guide>\n");
 		}
 		
@@ -662,15 +662,15 @@ class BirdFontFile : GLib.Object {
 			}
 
 			if (t.get_name () == "postscript_name") {
-				font.postscript_name = XmlParser.parse_escaped_text (t.get_content ());
+				font.postscript_name = XmlParser.decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "name") {
-				font.name = XmlParser.parse_escaped_text (t.get_content ());
+				font.name = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "subfamily") {
-				font.subfamily = XmlParser.parse_escaped_text (t.get_content ());
+				font.subfamily = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "bold") {
@@ -682,23 +682,23 @@ class BirdFontFile : GLib.Object {
 			}
 			
 			if (t.get_name () == "full_name") {
-				font.full_name = XmlParser.parse_escaped_text (t.get_content ());
+				font.full_name = XmlParser.decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "unique_identifier") {
-				font.unique_identifier = XmlParser.parse_escaped_text (t.get_content ());
+				font.unique_identifier = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "version") {
-				font.version = XmlParser.parse_escaped_text (t.get_content ());
+				font.version = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "description") {
-				font.description = XmlParser.parse_escaped_text (t.get_content ());
+				font.description = XmlParser.decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "copyright") {
-				font.copyright = XmlParser.parse_escaped_text (t.get_content ());
+				font.copyright = XmlParser.decode (t.get_content ());
 			}
 
 			if (t.get_name () == "kerning") {
@@ -713,6 +713,10 @@ class BirdFontFile : GLib.Object {
 				parse_ligature (t);
 			}
 
+			if (t.get_name () == "contextual") {
+				parse_contectual_ligature (t);
+			}
+			
 			if (t.get_name () == "weight") {
 				font.weight = int.parse (t.get_content ());
 			}
@@ -1046,7 +1050,7 @@ class BirdFontFile : GLib.Object {
 				
 				line = new Line (label, position);
 				
-				BirdFont.get_current_font ().custom_guides.add (line);
+				font.custom_guides.add (line);
 			}
 		}	
 	}
@@ -1551,6 +1555,47 @@ class BirdFontFile : GLib.Object {
 				warning (e.message);
 			}
 		});
+		
+		try {
+			foreach (ContextualLigature c in ligatures.contextual_ligatures) {
+				os.put_string (@"<contextual "
+					+ @"ligature=\"$(c.ligatures)\" "
+					+ @"backtrack=\"$(c.backtrack)\" "
+					+ @"input=\"$(c.input)\" "
+					+ @"lookahead=\"$(c.lookahead)\" />\n");
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+	
+	public void parse_contectual_ligature (Tag t) {
+		string ligature = "";
+		string backtrack = "";
+		string input = "";
+		string lookahead = "";
+		Ligatures ligatures;
+		
+		foreach (Attribute a in t.get_attributes ()) {
+			if (a.get_name () == "ligature") {
+				ligature = a.get_content ();
+			}
+
+			if (a.get_name () == "backtrack") {
+				backtrack = a.get_content ();
+			}
+
+			if (a.get_name () == "input") {
+				input = a.get_content ();
+			}
+			
+			if (a.get_name () == "lookahead") {
+				lookahead = a.get_content ();
+			}
+		}
+		
+		ligatures = font.get_ligatures ();
+		ligatures.add_contextual_ligature (ligature, backtrack, input, lookahead);
 	}
 	
 	public void parse_ligature (Tag t) {

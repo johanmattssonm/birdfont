@@ -431,8 +431,6 @@ public class Glyph : FontDisplay {
 					
 		left_line = new Line ("left", left_limit, true);
 		left_line.position_updated.connect ((pos) => {
-			double x1, y1, x2, y2;
-			
 			left_limit = pos;
 			update_other_spacing_classes ();
 			
@@ -442,8 +440,6 @@ public class Glyph : FontDisplay {
 		
 		right_line = new Line ("right", right_limit, true);
 		right_line.position_updated.connect ((pos) => {
-			double x1, y1, x2, y2;
-			
 			right_limit = pos;
 			update_other_spacing_classes ();
 			

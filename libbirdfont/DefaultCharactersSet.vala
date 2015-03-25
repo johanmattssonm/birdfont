@@ -109,17 +109,22 @@ public class DefaultCharacterSet {
 		string all_characters;
 		
 		all_characters = get_characters_for_prefered_language ();
-		if (all_characters != "") {
-			gr.parse_ranges (all_characters);
-		} else {			
-			/// All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-			lower_case = t_("a b c d e f g h i j k l m n o p q r s t u v w x y z");
-			
-			/// All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-			upper_case = t_("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
+		
+		try {
+			if (all_characters != "") {
+				gr.parse_ranges (all_characters);
+			} else {			
+				/// All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
+				lower_case = t_("a b c d e f g h i j k l m n o p q r s t u v w x y z");
+				
+				/// All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
+				upper_case = t_("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z");
 
-			gr.parse_ranges (lower_case);
-			gr.parse_ranges (upper_case);
+				gr.parse_ranges (lower_case);
+				gr.parse_ranges (upper_case);
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
 		}
 		
 		gr.add_range ('0', '9');

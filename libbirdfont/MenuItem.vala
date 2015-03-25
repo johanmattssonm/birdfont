@@ -25,13 +25,33 @@ public class MenuItem : GLib.Object {
 	// key bindings
 	public uint modifiers = NONE;
 	public unichar key = '\0';
-	public string display = "";	
+	
+	public Gee.ArrayList<string> displays = new Gee.ArrayList<string> ();	
 	
 	public MenuItem (string label, string identifier = "") {
 		this.label = new Text ();
 		this.label.set_text (label);
 		this.identifier = identifier;
 		y = 0;
+	}
+
+	public void add_display (string d) {
+		displays.add (d);
+	}
+
+	/** @return true if a key binding can be used in @param display. */
+	public bool in_display (string display) {
+		if (displays.size == 0) {
+			return true;
+		}
+
+		foreach (string d in displays) {
+			if (d == display) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public string get_key_bindings () {
@@ -50,6 +70,7 @@ public class MenuItem : GLib.Object {
 			
 			if ((modifiers & LOGO) > 0) {
 				key_binding += "Command+";
+	
 			}
 			
 			if ((modifiers & SHIFT) > 0) {

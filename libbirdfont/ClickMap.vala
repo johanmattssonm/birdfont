@@ -40,7 +40,6 @@ public class ClickMap : GLib.Object {
 	}
 		
 	public void create_click_map (Path path) {
-		double w, h;
 		Context c;
 				
 		c = new Context (map);

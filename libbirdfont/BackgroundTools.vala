@@ -28,7 +28,6 @@ public class BackgroundTools : ToolCollection  {
 		
 		Expander font_name = new Expander ();
 		font_name.add_tool (new FontName ());
-		font_name.draw_separator = false;
 
 		select_background = new BackgroundSelectionTool ();
 
@@ -277,6 +276,12 @@ public class BackgroundTools : ToolCollection  {
 		ZoomTool.zoom_full_background_image ();
 		
 		font.add_background_image (image);
+	}
+	
+	public override Gee.ArrayList<string> get_displays () {
+		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
+		d.add ("Backgrounds");
+		return d;
 	}
 	
 	class BackgroundSelectionLabel : LabelTool {

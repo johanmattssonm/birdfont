@@ -70,7 +70,7 @@ public class GposTable : OtfTable {
 		fd.add_ushort (1); // number of lookups
 		fd.add_ushort (4); // offset to lookup 1
 		
-		fd.add_ushort (2); // lookup type // FIXME	
+		fd.add_ushort (2); // lookup type 
 		fd.add_ushort (0); // lookup flags
 		fd.add_ushort (1); // number of subtables
 		fd.add_ushort (8); // array of offsets to subtables

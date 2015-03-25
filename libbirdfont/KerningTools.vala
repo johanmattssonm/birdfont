@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 2014 Johan Mattsson
+    Copyright (C) 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -25,6 +25,9 @@ public class KerningTools : ToolCollection  {
 	public static double font_size = 1;
 	public static ZoomBar zoom_bar;
 	
+	public static Tool previous_kerning_string;
+	public static Tool next_kerning_string;
+	
 	public KerningTools () {
 		init ();
 	}
@@ -36,7 +39,6 @@ public class KerningTools : ToolCollection  {
 
 		Expander font_name = new Expander ();
 		font_name.add_tool (new FontName ());
-		font_name.draw_separator = false;
 
 		Expander zoom_expander = new Expander (t_("Font Size"));
 
@@ -89,7 +91,45 @@ public class KerningTools : ToolCollection  {
 			d.insert_unichar ();
 		});
 		kerning_tools.add_tool (insert_unicode);
+
+		string empty_kerning_text = t_("Open a text file with kerning strings first.");
 		
+		previous_kerning_string = new Tool ("previous_kerning_string", t_("Previous kerning string"));
+		previous_kerning_string.select_action.connect ((self) => {
+			FontDisplay fd = MainWindow.get_current_display ();
+			KerningDisplay d = (KerningDisplay) fd;
+			Font f = BirdFont.get_current_font ();
+			string w = f.kerning_strings.previous ();
+			
+			if (f.kerning_strings.is_empty ()) {
+				MainWindow.show_message (empty_kerning_text);
+			} else if (w == "") {
+				MainWindow.show_message (t_("You have reached the beginning of the list."));
+			} else {
+				d.new_line ();
+				d.add_text (w);
+			}
+		});
+		kerning_tools.add_tool (previous_kerning_string);
+
+		next_kerning_string = new Tool ("next_kerning_string", t_("Next kerning string"));
+		next_kerning_string.select_action.connect ((self) => {
+			FontDisplay fd = MainWindow.get_current_display ();
+			KerningDisplay d = (KerningDisplay) fd;
+			Font f = BirdFont.get_current_font ();
+			string w = f.kerning_strings.next ();
+			
+			if (f.kerning_strings.is_empty ()) {
+				MainWindow.show_message (empty_kerning_text);
+			} else if (w == "") {
+				MainWindow.show_message (t_("You have reached the end of the list."));
+			} else {
+				d.new_line ();
+				d.add_text (w);
+			}	
+		});
+		kerning_tools.add_tool (next_kerning_string);
+				
 		kerning_tools.set_persistent (false);
 		kerning_tools.set_unique (false);
 
@@ -212,6 +252,12 @@ public class KerningTools : ToolCollection  {
 			kr = (KerningRange) t;
 			kr.update_spacing_class ();
 		}
+	}
+
+	public override Gee.ArrayList<string> get_displays () {
+		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
+		d.add ("Kerning");
+		return d;
 	}
 }
 

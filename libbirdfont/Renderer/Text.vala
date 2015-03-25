@@ -354,8 +354,6 @@ public class Text : Widget {
 		if (use_cached_glyphs) {
 			iterate ((glyph, kerning, last) => {
 				double end;
-				int offset_x, offset_y;
-				string cache_id;
 				
 				x += kerning * ratio;
 				end = x + glyph.get_width () * ratio;

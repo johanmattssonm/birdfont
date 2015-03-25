@@ -23,8 +23,7 @@ public class PreviewTools : ToolCollection  {
 
 		Expander font_name = new Expander ();
 		font_name.add_tool (new FontName ());
-		font_name.draw_separator = false;
-				
+			
 		Tool update_webview_button = new Tool ("update_webview", t_("Reload webview"));
 		update_webview_button.select_action.connect ((self) => {
 			update_preview ();
@@ -77,6 +76,12 @@ public class PreviewTools : ToolCollection  {
 		
 	public override Gee.ArrayList<Expander> get_expanders () {
 		return expanders;
+	}
+
+	public override Gee.ArrayList<string> get_displays () {
+		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
+		d.add ("Preview");
+		return d;
 	}
 }
 

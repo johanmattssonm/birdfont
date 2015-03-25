@@ -19,11 +19,11 @@ namespace BirdFont {
 
 public class Ligatures : GLib.Object {
 	
-	Gee.ArrayList<Ligature> ligatures = new Gee.ArrayList<Ligature> ();
-	Gee.ArrayList<ContextualLigature> contextual_ligatures = new Gee.ArrayList<ContextualLigature> ();
+	public Gee.ArrayList<Ligature> ligatures = new Gee.ArrayList<Ligature> ();
+	public Gee.ArrayList<ContextualLigature> contextual_ligatures = new Gee.ArrayList<ContextualLigature> ();
 	
 	public delegate void LigatureIterator (string substitution, string ligature);
-	public delegate void SingleLigatureIterator (GlyphSequence substitution, GlyphCollection ligature);
+	public delegate void SingleLigatureIterator (GlyphSequence substitution, GlyphSequence ligature);
 
 	public delegate void ContextualLigatureIterator (ContextualLigature lig);
 
@@ -48,17 +48,20 @@ public class Ligatures : GLib.Object {
 	public void get_single_substitution_ligatures (SingleLigatureIterator iter) {
 		get_ligatures ((substitution, ligature) => {
 			GlyphCollection? gc;
-			GlyphCollection li;
+			GlyphSequence lig;
 			GlyphSequence gs;
 			string[] subst_names = substitution.split (" ");
 			
-			gc = font.get_glyph_collection_by_name (ligature);
-			
-			if (gc == null) {
-				return;
+			lig = new GlyphSequence ();
+			foreach (string n in font.get_names (ligature)) {
+				gc = font.get_glyph_collection_by_name (n);
+				
+				if (gc == null) {
+					return;
+				}
+				
+				lig.add (((!) gc).get_current ());
 			}
-			
-			li = (!) gc;
 			
 			gs = new GlyphSequence ();
 			foreach (string s in subst_names) {
@@ -71,7 +74,7 @@ public class Ligatures : GLib.Object {
 				gs.glyph.add (((!) gc).get_current ());
 			}
 			
-			iter (gs, li);
+			iter (gs, lig);
 		});
 	}
 		
@@ -92,13 +95,7 @@ public class Ligatures : GLib.Object {
 		return_if_fail (0 <= i < contextual_ligatures.size);
 		contextual_ligatures.remove_at (i);
 	}
-	
-	/** Add ligaure for a chained substitution. */
-	public void add_substitution_at (int index) {
-		return_if_fail (0 <= index < contextual_ligatures.size);
-		contextual_ligatures.get (index).add_ligature ();
-	}
-	
+		
 	public void set_beginning (int index) {
 		ContextualLigature lig;
 		TextListener listener;
@@ -115,6 +112,7 @@ public class Ligatures : GLib.Object {
 		listener.signal_submit.connect (() => {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
+			sort_ligatures ();
 		});
 		
 		TabContent.show_text_input (listener);			
@@ -136,6 +134,7 @@ public class Ligatures : GLib.Object {
 		listener.signal_submit.connect (() => {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
+			sort_ligatures ();
 		});
 		
 		TabContent.show_text_input (listener);		
@@ -157,9 +156,10 @@ public class Ligatures : GLib.Object {
 		listener.signal_submit.connect (() => {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
+			sort_ligatures ();
 		});
 		
-		TabContent.show_text_input (listener);			
+		TabContent.show_text_input (listener);
 	}
 				
 	public void set_ligature (int index) {
@@ -170,7 +170,30 @@ public class Ligatures : GLib.Object {
 		lig = ligatures.get (index);
 		lig.set_ligature ();
 	}
-	
+
+	public void set_contextual_ligature (int index) {
+		ContextualLigature lig;
+		TextListener listener;
+		
+		return_if_fail (0 <= index < contextual_ligatures.size);
+
+		lig = contextual_ligatures.get (index);
+		listener = new TextListener (t_("Ligature"), lig.ligatures, t_("Set"));
+		
+		listener.signal_text_input.connect ((text) => {
+			lig.ligatures = text;
+		});
+		
+		listener.signal_submit.connect (() => {
+			TabContent.hide_text_input ();
+			MainWindow.get_ligature_display ().update_rows ();
+			sort_ligatures ();
+		});
+		
+		TabContent.show_text_input (listener);			
+
+	}
+		
 	public void set_substitution (int index) {
 		Ligature lig;
 		
@@ -185,8 +208,8 @@ public class Ligatures : GLib.Object {
 		sort_ligatures ();
 	}
 
-	public void add_contextual_ligature (string backtrack, string input, string lookahead) {
-		ContextualLigature l = new ContextualLigature (backtrack, input, lookahead);
+	public void add_contextual_ligature (string ligature, string backtrack, string input, string lookahead) {
+		ContextualLigature l = new ContextualLigature (font, ligature, backtrack, input, lookahead);
 		contextual_ligatures.insert (0, l);
 		sort_ligatures ();
 	}
@@ -222,10 +245,6 @@ public class Ligatures : GLib.Object {
 								
 			return chars_next - chars_first;
 		});
-		
-		foreach (ContextualLigature c in contextual_ligatures) {
-			c.sort ();
-		}
 	}
 }
 

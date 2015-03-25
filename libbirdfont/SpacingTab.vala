@@ -28,6 +28,7 @@ public class SpacingTab : KerningDisplay {
 	Glyph text_input_glyph;
 	
 	public SpacingTab () {
+		allocation = new WidgetAllocation ();
 		adjust_side_bearings = true;
 	}
 
@@ -172,11 +173,11 @@ public class SpacingTab : KerningDisplay {
 			p = 0;
 			foreach (Glyph? g in row.glyph) {
 				if (p < ex < p + box_size / 2.0) {
-					update_lsb(g);
+					update_lsb (g);
 				} 
 
 				if (p + box_size / 2.0 < ex < p + box_size) {
-					update_rsb(g);
+					update_rsb (g);
 				}
 				
 				p += box_size;
@@ -269,6 +270,11 @@ public class SpacingTab : KerningDisplay {
 		text_input = true;
 		TabContent.show_text_input (listener);
 	}
+
+	public override bool needs_modifier () {
+		return true;
+	}
+
 }
 
 }

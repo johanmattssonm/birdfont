@@ -20,9 +20,7 @@ namespace BirdFont {
 public class Expander : GLib.Object {
 
 	private static const double HEADLINE_MARGIN = 6;
-	
-	public bool draw_separator { get; set; }
-	
+		
 	public double x = 7;
 	public double y = 5;
 	public double scroll = 0;
@@ -48,7 +46,6 @@ public class Expander : GLib.Object {
 	public Expander (string? headline = null) {
 		this.headline = headline;
 		tool = new Gee.ArrayList<Tool> ();
-		draw_separator = true;
 	}
 
 	public void set_headline (string? h) {
@@ -224,8 +221,6 @@ public class Expander : GLib.Object {
 	
 	public void draw (int wd, int hd, Context cr) {
 		double yt = y + scroll + 2;
-		double ih2 = 5.4 / 2;
-		double iw2 = 5.4 / 2;
 		Text title;
 
 		if (tool.size > 0) {
@@ -236,29 +231,6 @@ public class Expander : GLib.Object {
 				Theme.text_color (title, "Foreground 2");
 				title.set_font_size (17 * Toolbox.get_scale ());
 				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 13  * Toolbox.get_scale ());
-			} else if (draw_separator) {	
-				cr.save ();
-				cr.set_line_width (0.5);
-				Theme.color (cr, "Foreground 2");
-				cr.move_to (x, yt);
-				cr.line_to (wd - w - x + 6, yt);	
-				cr.stroke ();
-				cr.restore ();
-				
-				// arrow
-				cr.save ();
-				cr.new_path ();
-				cr.set_line_width (1);
-				
-				Theme.color_opacity (cr, "Foreground 2", opacity);
-				
-				cr.move_to (x - iw2 + 3, yt - ih2 - 0.7 + 1);
-				cr.line_to (x + iw2 + 3, yt - ih2 - 0.7 + 1);
-				cr.line_to (x + iw2, yt + 2 + 1);	
-
-				cr.close_path();
-				cr.stroke ();
-				cr.restore ();
 			}
 		}
 	}

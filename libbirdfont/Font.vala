@@ -97,9 +97,12 @@ public class Font : GLib.Object {
 	
 	public Gee.ArrayList<Glyph> deleted_glyphs;
 
-	Ligatures ligatures_substitution;
+	public Ligatures ligature_substitution;
 	
 	public static string? default_license = null; 
+	
+	public FontSettings settings;
+	public KerningStrings kerning_strings;
 	
 	public Font () {
 		KerningClasses kerning_classes;
@@ -132,9 +135,12 @@ public class Font : GLib.Object {
 		bfp_file = new BirdFontPart (this);
 		
 		deleted_glyphs = new Gee.ArrayList<Glyph> ();
-		ligatures_substitution = new Ligatures (this);
+		ligature_substitution = new Ligatures (this);
 		
 		background_images = new Gee.ArrayList<BackgroundImage> ();
+		
+		settings = new FontSettings ();
+		kerning_strings = new KerningStrings ();
 	}
 
 	public static void set_default_license (string license) {
@@ -142,7 +148,7 @@ public class Font : GLib.Object {
 	}
 
 	public Ligatures get_ligatures () {
-		return ligatures_substitution;
+		return ligature_substitution;
 	}
 
 	public void set_weight (string w) {
@@ -626,6 +632,8 @@ public class Font : GLib.Object {
 		} else {
 			save_bf ();
 		}
+		
+		settings.save (get_file_name ());
 	}
 	
 	public bool save_bfp () {
@@ -763,6 +771,11 @@ public class Font : GLib.Object {
 			font_file = null;
 		}
 		
+		if (loaded) {
+			settings.load (get_file_name ());
+			kerning_strings.load (this);
+		}
+		
 		return loaded;
 	}
 	
@@ -819,6 +832,32 @@ public class Font : GLib.Object {
 
 	public void set_read_only (bool r) {
 		read_only = r;
+	}
+
+	/** 
+	 * @param glyphs Name of glyphs or unicode values separated by space.
+	 * @return glyph names
+	 */
+	public Gee.ArrayList<string> get_names (string glyphs) {
+		Gee.ArrayList<string> names = new Gee.ArrayList<string> ();
+		string[] parts = glyphs.strip ().split (" ");
+								
+		foreach (string p in parts) {		
+			if (p.has_prefix ("U+") || p.has_prefix ("u+")) {
+				p = (!) to_unichar (p).to_string ();
+			}
+			
+			if (!has_glyph (p)) {
+				warning (@"The character $p does not have a glyph in " + get_file_name ());
+				p = ".notdef";
+			}
+			
+			if (p != "") {
+				names.add (p);
+			}
+		}
+		
+		return names;
 	}
 
 	public static unichar to_unichar (string unicode) {

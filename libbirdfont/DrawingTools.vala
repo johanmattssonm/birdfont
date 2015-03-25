@@ -115,7 +115,6 @@ public class DrawingTools : ToolCollection  {
 
 		// font name 
 		font_name.add_tool (new FontName ());
-		font_name.draw_separator = false;
 
 		// Draw tools
 		foresight_tool = new ForesightTool ("foresight");
@@ -124,7 +123,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tools.add_tool (foresight_tool);
 
-		Tool bezier_line = new Tool ("bezier_line", t_("Convert the last segment to a straight line in the Beziér tool"));
+		Tool bezier_line = new Tool ("bezier_line", t_("Convert the last segment to a straight line"));
 		bezier_line.select_action.connect ((self) => {
 			foresight_tool.switch_to_line_mode ();
 		});
@@ -973,8 +972,6 @@ public class DrawingTools : ToolCollection  {
 
 		shape_tools.set_persistent (true);
 		shape_tools.set_unique (true);
-
-		view_tools.draw_separator = false;
 				
 		// let these tools progagate events even when other tools are selected			
 		foreach (Tool t in draw_tools.tool) {
@@ -1316,6 +1313,12 @@ public class DrawingTools : ToolCollection  {
 	
 	private void add_expander (Expander e) {
 		expanders.add (e);
+	}
+
+	public override Gee.ArrayList<string> get_displays () {
+		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
+		d.add ("Glyph");
+		return d;
 	}
 }
 

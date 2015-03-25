@@ -50,7 +50,7 @@ public class Attributes : GLib.Object {
 			return next_attribute != null;
 		}
 
-		public Attribute get () {
+		public new Attribute get () {
 			if (next_attribute == null) {
 				XmlParser.warning ("No attribute is parsed yet.");
 				return new Attribute.empty ();
