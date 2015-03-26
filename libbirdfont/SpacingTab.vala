@@ -218,7 +218,7 @@ public class SpacingTab : KerningDisplay {
 		
 		l = text_input_glyph.get_left_side_bearing ();
 
-		if (Math.fabs (r) < 0.001) {
+		if (Math.fabs (l) < 0.001) {
 			l = 0;
 		}
 				

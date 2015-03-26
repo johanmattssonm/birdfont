@@ -1968,10 +1968,10 @@ public class Path {
 			return;
 		}
 		
-		minx = double.MAX;
-		miny = double.MAX;
-		maxx = double.MIN;
-		maxy = double.MIN;
+		minx = Glyph.CANVAS_MAX;
+		miny = Glyph.CANVAS_MAX;
+		maxx = Glyph.CANVAS_MIN;
+		maxy = Glyph.CANVAS_MIN;
 		
 		x0 = 0;
 		y0 = 0;	
