@@ -173,11 +173,28 @@ public class SpacingTab : KerningDisplay {
 	}
 	
 	public override void button_press (uint button, double ex, double ey) {
+		if (button == 3) {
+			return;
+		}
+		
+		if (!(ey >= allocation.height - height)) {
+			base.button_press (button, ex, ey);
+		}
+	}
+	
+	public override void button_release (int button, double ex, double ey) {
 		GlyphSequence row;
 		double p;
 		Font font = BirdFont.get_current_font ();
 		
+		if (button == 3) {
+			return;
+		}
+		
 		if (ey >= allocation.height - height) {
+			
+			TabContent.hide_text_input ();
+			
 			// TODO: add button for processing ligatures
 			row = get_first_row ().process_ligatures (font);
 			p = 0;
@@ -193,16 +210,6 @@ public class SpacingTab : KerningDisplay {
 				p += box_size;
 			}
 		} else {
-			base.button_press (button, ex, ey);
-		}
-	}
-	
-	public override void button_release (int button, double ex, double ey) {
-		if (button == 3) {
-			return;
-		}
-		
-		if (!(ey >= allocation.height - height)) {
 			base.button_release (button, ex, ey);
 		}
 	}
@@ -216,13 +223,13 @@ public class SpacingTab : KerningDisplay {
 			return;
 		}
 		
+		text_input_glyph = (!) g;
 		l = text_input_glyph.get_left_side_bearing ();
 
 		if (Math.fabs (l) < 0.001) {
 			l = 0;
 		}
 				
-		text_input_glyph = (!) g;
 		listener = new TextListener (t_("Left"), @"$(l)", t_("Set"));
 		
 		listener.signal_text_input.connect ((text) => {
@@ -255,18 +262,18 @@ public class SpacingTab : KerningDisplay {
 		TextListener listener;
 		string submitted_value = "";
 		double r;
-		
+
 		if (g == null) {
 			return;
 		}
 		
+		text_input_glyph = (!) g;
 		r = text_input_glyph.get_right_side_bearing ();
 
 		if (Math.fabs (r) < 0.001) {
 			r = 0;
 		}
-					
-		text_input_glyph = (!) g;
+
 		listener = new TextListener (t_("Right"), @"$(r)", t_("Set"));
 		
 		listener.signal_text_input.connect ((text) => {

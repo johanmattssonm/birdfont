@@ -349,6 +349,7 @@ public class TabContent : GLib.Object {
 	
 	public static void hide_text_input () {
 		text_input_visible = false;
+		text_callback = new TextListener ("", "", "");
 	}
 }
 
