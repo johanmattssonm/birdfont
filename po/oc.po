@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-24 22:40+0100\n"
-"PO-Revision-Date: 2015-03-09 12:08+0000\n"
-"Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
+"POT-Creation-Date: 2015-03-27 12:30+0100\n"
+"PO-Revision-Date: 2015-03-26 20:40+0000\n"
+"Last-Translator: Cédric <cvalmary@yahoo.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: oc\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1425902886.000000\n"
+"X-POOTLE-MTIME: 1427402406.000000\n"
 
 #: libbirdfont/Argument.vala:247
 msgid "Usage"
@@ -62,7 +62,7 @@ msgstr "autorizar las personalizacions de Mac"
 
 #: libbirdfont/Argument.vala:258
 msgid "enable Windows customizations"
-msgstr ""
+msgstr "autorizar las personalizacions de Windows"
 
 #: libbirdfont/Argument.vala:259
 msgid "don't translate"
@@ -78,11 +78,11 @@ msgstr "aviar lo tèst de casa"
 
 #: libbirdfont/BackgroundSelectionTool.vala:23
 msgid "Select background"
-msgstr ""
+msgstr "Seleccionar lo rèire plan"
 
 #: libbirdfont/BackgroundTab.vala:46 libbirdfont/BackgroundTools.vala:26
 msgid "Background Image"
-msgstr ""
+msgstr "Imatge de rèire plan"
 
 #: libbirdfont/BackgroundTool.vala:41
 msgid "Move, resize and rotate background image"
@@ -94,7 +94,7 @@ msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:27
 msgid "Images"
-msgstr ""
+msgstr "Imatges"
 
 #: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileTab.vala:356
 msgid "Files"
@@ -102,11 +102,11 @@ msgstr "Fichièrs"
 
 #: libbirdfont/BackgroundTools.vala:38
 msgid "Parts"
-msgstr ""
+msgstr "Partidas"
 
 #: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2121
 msgid "Add"
-msgstr ""
+msgstr "Apondre"
 
 #: libbirdfont/BackgroundTools.vala:85
 msgid "Select Glyph"
@@ -1144,12 +1144,14 @@ msgid "Import"
 msgstr "Importar"
 
 #: libbirdfont/Theme.vala:192
+#, fuzzy
 msgid "Stroke Color"
-msgstr ""
+msgstr "Color del contorn"
 
 #: libbirdfont/Theme.vala:193
+#, fuzzy
 msgid "Handle Color"
-msgstr ""
+msgstr "Color de l'identificador"
 
 #: libbirdfont/Theme.vala:194
 msgid "Fill Color"
