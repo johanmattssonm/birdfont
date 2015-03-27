@@ -119,6 +119,11 @@ public class SpacingTab : KerningDisplay {
 			cap.draw_at_baseline (cr, cap.widget_x, cap.widget_y);			
 			
 			l = g.get_left_side_bearing ();
+			
+			if (Math.fabs (l) < 0.001) {
+				l = 0;
+			}
+			
 			left = new Text (truncate (l, 5), 17);
 			Theme.text_color (left, "Foreground 3");
 			left.widget_x = middle - box_size / 2.0 + (box_size / 2.0 - left.get_extent ()) / 2.0;
@@ -126,6 +131,11 @@ public class SpacingTab : KerningDisplay {
 			left.draw_at_baseline (cr, left.widget_x, left.widget_y);
 
 			r = g.get_right_side_bearing ();
+
+			if (Math.fabs (r) < 0.001) {
+				r = 0;
+			}
+			
 			right = new Text (truncate (r, 5), 17);
 			Theme.text_color (right, "Foreground 3");
 			right.widget_x = end - (box_size / 2.0 - right.get_extent ()) / 2.0 - right.get_extent ();
@@ -200,13 +210,20 @@ public class SpacingTab : KerningDisplay {
 	void update_lsb (Glyph? g) {
 		TextListener listener;
 		string submitted_value = "";
-
+		double l;
+		
 		if (g == null) {
 			return;
 		}
 		
+		l = text_input_glyph.get_left_side_bearing ();
+
+		if (Math.fabs (l) < 0.001) {
+			l = 0;
+		}
+				
 		text_input_glyph = (!) g;
-		listener = new TextListener (t_("Left"), @"$(text_input_glyph.get_left_side_bearing ())", t_("Set"));
+		listener = new TextListener (t_("Left"), @"$(l)", t_("Set"));
 		
 		listener.signal_text_input.connect ((text) => {
 			submitted_value = text;
@@ -237,13 +254,20 @@ public class SpacingTab : KerningDisplay {
 	void update_rsb (Glyph? g) {
 		TextListener listener;
 		string submitted_value = "";
-
+		double r;
+		
 		if (g == null) {
 			return;
 		}
 		
+		r = text_input_glyph.get_right_side_bearing ();
+
+		if (Math.fabs (r) < 0.001) {
+			r = 0;
+		}
+					
 		text_input_glyph = (!) g;
-		listener = new TextListener (t_("Right"), @"$(text_input_glyph.get_right_side_bearing ())", t_("Set"));
+		listener = new TextListener (t_("Right"), @"$(r)", t_("Set"));
 		
 		listener.signal_text_input.connect ((text) => {
 			submitted_value = text;

@@ -145,8 +145,8 @@ public class PointConverter {
 			return;		
 		} 
 		
-		max_d = double.MIN;
-		min_d = double.MAX;
+		max_d = Glyph.CANVAS_MIN;
+		min_d = Glyph.CANVAS_MAX;
 		Path.all_of (a0, a1, (xa, ya, ta) => {
 			
 			min_d = double.MAX;

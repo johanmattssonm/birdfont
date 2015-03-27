@@ -103,6 +103,9 @@ public class Glyph : FontDisplay {
 	/** Cache for Cairo rendering */
 	HashMap<string, Surface> glyph_cache = new HashMap<string, Surface> ();
 
+	public const double CANVAS_MIN = -10000;
+	public const double CANVAS_MAX = 10000;
+
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -195,15 +198,16 @@ public class Glyph : FontDisplay {
 			return false;
 		}
 
-		x1 = double.MAX;
-		x2 = double.MIN;
-		y1 = double.MAX;
-		y2 = double.MIN;
+		x1 = CANVAS_MAX;
+		x2 = CANVAS_MIN;
+		y1 = CANVAS_MAX;
+		y2 = CANVAS_MIN;
 	
 		foreach (Path p in path_list) {
 			p.update_region_boundaries ();
-					
-			if (p.points.size > 0) {
+
+			if (p.points.size > 1) {
+
 				if (p.xmin < x1) {
 					x1 = p.xmin;
 				}

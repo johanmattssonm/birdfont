@@ -34,16 +34,16 @@ rm -rf birdfont-$version/.gitignore
 
 tar -cf birdfont-$version.tar birdfont-$version
 
-gzip birdfont-$version.tar
+xz -z birdfont-$version.tar
 
-rm -rf ../birdfont-$version.tar.gz
+rm -rf ../birdfont-$version.tar.xz
 
-mv birdfont-$version.tar.gz ../
+mv birdfont-$version.tar.xz ../
 
 # build it to make sure that everything was checked in
 cd birdfont-$version && \
 ./configure && \
 ./scripts/linux_build.py && \
-gpg --output ../../birdfont-$version.tar.gz.sig --detach-sig ../../birdfont-$version.tar.gz && \
+gpg --output ../../birdfont-$version.tar.xz.sig --detach-sig ../../birdfont-$version.tar.xz && \
 cd .. && \
 rm -rf ../export/birdfont-$version

@@ -53,10 +53,8 @@ public class LigatureList : Table {
 			add_ligature (t_("character sequence"), t_("ligature"));
 			TabContent.hide_text_input ();
 		} else if (row.get_index () == NEW_LIGATURE && column == 1) {
-			if (BirdFont.has_argument ("--test")) {
-				add_contextual_ligature (t_("substitution"), t_("beginning"), t_("middle"), t_("end"));
-				TabContent.hide_text_input ();
-			}
+			add_contextual_ligature (t_("substitution"), t_("beginning"), t_("middle"), t_("end"));
+			TabContent.hide_text_input ();
 		} else if (row.get_index () < ncontextual) {
 			i = row.get_index ();
 			if (i < ligatures.count_contextual_ligatures ()) {

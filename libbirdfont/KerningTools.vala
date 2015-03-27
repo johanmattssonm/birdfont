@@ -257,6 +257,7 @@ public class KerningTools : ToolCollection  {
 	public override Gee.ArrayList<string> get_displays () {
 		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
 		d.add ("Kerning");
+		d.add ("Spacing");
 		return d;
 	}
 }
