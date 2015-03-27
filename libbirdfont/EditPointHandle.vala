@@ -40,7 +40,17 @@ public class EditPointHandle : GLib.Object {
 			return r;
 		}
 		
-		set { move_to_coordinate_internal (value, py ()); }
+		set { 
+			move_to_coordinate_internal (value, py ());
+			
+			if (parent.tie_handles) {
+				parent.process_tied_handle ();
+			}
+
+			if (parent.reflective_point) {
+				parent.process_symmetrical_handles ();
+			}	
+		}
 	}
 
 	public double y {
@@ -55,7 +65,17 @@ public class EditPointHandle : GLib.Object {
 			return r;	
 		}
 		
-		set { move_to_coordinate_internal (px (), value); }
+		set { 
+			move_to_coordinate_internal (px (), value);	
+
+			if (parent.tie_handles) {
+				parent.process_tied_handle ();
+			}
+
+			if (parent.reflective_point) {
+				parent.process_symmetrical_handles ();
+			}
+		}
 	}
 		
 	public EditPointHandle.empty() {
