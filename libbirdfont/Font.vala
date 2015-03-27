@@ -852,7 +852,7 @@ public class Font : GLib.Object {
 			}
 
 			if (p == "divis") {
-				p = " ";
+				p = "-";
 			}
 			
 			if (!has_glyph (p)) {
