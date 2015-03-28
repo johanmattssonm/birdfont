@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-24 22:40+0100\n"
-"PO-Revision-Date: 2015-02-11 19:12+0000\n"
+"POT-Creation-Date: 2015-03-27 12:30+0100\n"
+"PO-Revision-Date: 2015-03-26 22:46+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: it\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1423681927.000000\n"
+"X-POOTLE-MTIME: 1427410019.000000\n"
 
 #: libbirdfont/Argument.vala:247
 msgid "Usage"
@@ -61,8 +61,9 @@ msgid "enable Machintosh customizations"
 msgstr "abilita personalizzazioni Mac"
 
 #: libbirdfont/Argument.vala:258
+#, fuzzy
 msgid "enable Windows customizations"
-msgstr ""
+msgstr "sblocca personalizzazione Android"
 
 #: libbirdfont/Argument.vala:259
 msgid "don't translate"
@@ -77,8 +78,9 @@ msgid "run test case"
 msgstr "esegui test"
 
 #: libbirdfont/BackgroundSelectionTool.vala:23
+#, fuzzy
 msgid "Select background"
-msgstr ""
+msgstr "Seleziona lo sfondo"
 
 #: libbirdfont/BackgroundTab.vala:46 libbirdfont/BackgroundTools.vala:26
 msgid "Background Image"
@@ -241,7 +243,7 @@ msgstr "Svedese"
 
 #: libbirdfont/DefaultCharactersSet.vala:36
 msgid "Thai"
-msgstr ""
+msgstr "Tailandese"
 
 #. / All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
 #: libbirdfont/DefaultCharactersSet.vala:118
@@ -307,7 +309,7 @@ msgstr "Strumenti di disegno"
 
 #: libbirdfont/DrawingTools.vala:103
 msgid "Control Point"
-msgstr ""
+msgstr "Punto di controllo"
 
 #: libbirdfont/DrawingTools.vala:104
 msgid "Geometrical Shapes"
@@ -327,7 +329,7 @@ msgstr "Dimensione della griglia"
 
 #: libbirdfont/DrawingTools.vala:126
 msgid "Convert the last segment to a straight line"
-msgstr ""
+msgstr "Converte l'ultimo segmento in una linea retta"
 
 #: libbirdfont/DrawingTools.vala:176
 msgid "Move canvas"
@@ -462,8 +464,9 @@ msgid "Show guidelines"
 msgstr "Mostra linee guida"
 
 #: libbirdfont/DrawingTools.vala:821
+#, fuzzy
 msgid "Show more guidelines"
-msgstr ""
+msgstr "Mostra linee guida"
 
 #: libbirdfont/DrawingTools.vala:837
 msgid "Show guidelines at top and bottom margin"
@@ -499,11 +502,12 @@ msgstr "Strumento per lo sfondo"
 
 #: libbirdfont/DrawingTools.vala:1113
 msgid "Control Points"
-msgstr ""
+msgstr "Punti di controllo"
 
 #: libbirdfont/DrawingTools.vala:1128
+#, fuzzy
 msgid "Object Tools"
-msgstr ""
+msgstr "Strumenti oggetto"
 
 #: libbirdfont/DrawingTools.vala:1263
 msgid "Set size for grid"
@@ -516,8 +520,9 @@ msgid "Save"
 msgstr "Salva"
 
 #: libbirdfont/FileTab.vala:36
+#, fuzzy
 msgid "New Font"
-msgstr ""
+msgstr "Nuovo carattere"
 
 #: libbirdfont/FileTab.vala:251
 msgid "No fonts created yet."
@@ -537,7 +542,7 @@ msgstr "Crea curve di Beziér"
 
 #: libbirdfont/Glyph.vala:2121
 msgid "Guide"
-msgstr ""
+msgstr "Guida"
 
 #: libbirdfont/GridTool.vala:35
 msgid "Show grid"
@@ -545,7 +550,7 @@ msgstr "Mostra griglia"
 
 #: libbirdfont/GuideTab.vala:55
 msgid "Guides"
-msgstr ""
+msgstr "Guide"
 
 #: libbirdfont/HiddenTools.vala:28
 msgid "Zoom in"
@@ -612,8 +617,9 @@ msgid "Kerning Tools"
 msgstr ""
 
 #: libbirdfont/KerningTools.vala:43 libbirdfont/SpacingTools.vala:31
+#, fuzzy
 msgid "Font Size"
-msgstr ""
+msgstr "Dimensione caratteri"
 
 #: libbirdfont/KerningTools.vala:57
 msgid "Create new kerning class."
@@ -1123,12 +1129,14 @@ msgid "Import"
 msgstr "Importa"
 
 #: libbirdfont/Theme.vala:192
+#, fuzzy
 msgid "Stroke Color"
-msgstr ""
+msgstr "Colore tratto"
 
 #: libbirdfont/Theme.vala:193
+#, fuzzy
 msgid "Handle Color"
-msgstr ""
+msgstr "Colore maniglia"
 
 #: libbirdfont/Theme.vala:194
 msgid "Fill Color"
@@ -1355,8 +1363,9 @@ msgid "Active Control Point Handle"
 msgstr ""
 
 #: libbirdfont/Theme.vala:267
+#, fuzzy
 msgid "Control Point Handle"
-msgstr ""
+msgstr "Punto di controllo strumenti"
 
 #: libbirdfont/Theme.vala:269
 msgid "Merge"
