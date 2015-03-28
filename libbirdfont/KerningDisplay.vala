@@ -240,6 +240,8 @@ public class KerningDisplay : FontDisplay {
 				cr.line_to (x2, 20);
 				cr.stroke ();
 				cr.restore ();
+				
+				y += 30 * MainWindow.units;
 			}
 						
 			y += row_height + 20;
@@ -597,7 +599,6 @@ public class KerningDisplay : FontDisplay {
 		unichar c;
 		
 		if (MenuTab.suppress_event) { // don't update kerning while saving font
-			warning ("A background thread uses the current font.");
 			return;
 		}
 		

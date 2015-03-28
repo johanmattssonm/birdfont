@@ -438,16 +438,31 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void save_as ()  {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+
 		MenuTab.set_save_callback (new SaveCallback ());
 		MenuTab.save_callback.save_as();
 	}
 
 	public static void save ()  {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+
 		MenuTab.set_save_callback (new SaveCallback ());
 		MenuTab.save_callback.save ();
 	}
 	
 	public static void load () {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+
 		MenuTab.load_callback = new LoadCallback ();
 		MenuTab.load_callback.load ();
 	}
