@@ -21,8 +21,9 @@ namespace BirdFont {
 public class RecentFiles : Table {
 	Gee.ArrayList<Row> rows = new Gee.ArrayList<Row> ();
 	
-	const int RECENT_FONT = -2;
-	const int BACKUP = -3;
+	const int CURRENT_FONT = -4;
+	const int RECENT_FONT = -3;
+	const int BACKUP = -2;
 	
 	public RecentFiles () {
 	}
@@ -51,8 +52,20 @@ public class RecentFiles : Table {
 		Row row;
 		Gee.ArrayList<Font> recent_fonts = get_recent_font_files ();
 		Gee.ArrayList<Font> backups = get_backups ();
+		Font current_font = BirdFont.get_current_font ();
 		
 		rows.clear ();
+
+		if (current_font.font_file != null) {
+			row = new Row.headline (current_font.get_file_name ());
+			rows.add (row);	
+						
+			row = new Row.columns_1 (t_("Folder") + ": " + (!) current_font.get_folder ().get_path (), CURRENT_FONT, false);
+			rows.add (row);
+			
+			row = new Row.columns_1 (t_("Glyphs") + @": $(current_font.length ())", CURRENT_FONT, false);
+			rows.add (row);
+		}
 
 		if (recent_fonts.size > 0) {			
 			row = new Row.headline (t_("Recent Files"));

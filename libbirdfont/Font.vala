@@ -678,6 +678,7 @@ public class Font : GLib.Object {
 		modified = false;
 	}
 
+	/** Number of glyphs in this font. */
 	public uint length () {
 		return glyph_name.length ();
 	}
