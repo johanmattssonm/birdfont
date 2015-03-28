@@ -17,13 +17,17 @@ using Math;
 namespace BirdFont {
 
 public class Row : GLib.Object {
-
 	int index = 0;
 	bool delete_button = true;
+	
+	public double y = 0;
 	public Gee.ArrayList<Text> column_text = new Gee.ArrayList<Text> ();
+	
 	GLib.Object? row_data = null;
 	
 	public static const int MAX_COLUMNS = 5;
+	
+	public bool is_headline = false;
 	
 	public int columns {
 		get {
@@ -37,6 +41,13 @@ public class Row : GLib.Object {
 		this.delete_button = delete_button;
 	}
 
+	public Row.headline (string label) {
+		index = -1;
+		column_text.add (new Text (label, 25 * MainWindow.units));
+		delete_button = false;
+		is_headline = true;
+	}
+	
 	public Row.columns_1 (string label, int index, bool delete_button = true) {
 		this.index = index;
 		column_text.add (new Text (label, 17 * MainWindow.units));
@@ -112,6 +123,10 @@ public class Row : GLib.Object {
 
 	public void set_index (int index) {	
 		this.index = index;
+	}
+	
+	public double get_height () {
+		return is_headline ? 75 * MainWindow.units : 25 * MainWindow.units;
 	}
 }
 

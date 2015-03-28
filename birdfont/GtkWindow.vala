@@ -239,7 +239,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 
 	public void set_scrollbar_size (double size) {
-		scrollbar.adjustment.page_size = size;
+		scrollbar.adjustment.page_size = size;		
+		scrollbar.set_visible (size != 0);
 	}
 	
 	public void set_scrollbar_position (double position) {

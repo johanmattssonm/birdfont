@@ -533,7 +533,7 @@ public class BirdFont {
 	public static void load_font_from_command_line () {
 		string file = args.get_file ();
 		if (file != "") {
-			FileTab.load_font (file);
+			RecentFiles.load_font (file);
 		}	
 	}
 	
@@ -590,16 +590,6 @@ public class BirdFont {
 		}
 			
 		return backup;
-	}
-
-	internal static File get_thumbnail_directory () {
-		File thumbnails = get_child (get_settings_directory (), "thumbnails");
-		
-		if (!thumbnails.query_exists ()) {
-			DirUtils.create ((!) thumbnails.get_path (), 0755);
-		}
-		
-		return thumbnails;
 	}
 
 	internal static File get_settings_directory () {

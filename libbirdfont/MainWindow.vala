@@ -20,7 +20,7 @@ public class MainWindow : GLib.Object {
 	public static GlyphCanvas glyph_canvas;
 	public static MainWindow singleton;
 	public static MenuTab menu_tab;
-	public static FileTab file_tab;
+	public static RecentFiles file_tab;
 	public static OverView over_view;	
 	public static TabBar tabs;
 	public static NativeWindow native_window;
@@ -42,7 +42,7 @@ public class MainWindow : GLib.Object {
 		tabs = new TabBar ();
 		tools = new Toolbox (glyph_canvas, tabs);
 		menu_tab = new MenuTab ();
-		file_tab = new FileTab ();
+		file_tab = new RecentFiles ();
 		over_view = new OverView();
 		kerning_display = new KerningDisplay ();
 		character_database = new CharDatabase ();
@@ -100,7 +100,7 @@ public class MainWindow : GLib.Object {
 		singleton = new MainWindow ();
 	}
 
-	public static FileTab get_recent_files_tab () {
+	public static RecentFiles get_recent_files_tab () {
 		return file_tab;
 	}
 	

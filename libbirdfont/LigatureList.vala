@@ -107,11 +107,22 @@ public class LigatureList : Table {
 		rows.add (row);
 		
 		i = 0;
+		
+		if (ligatures.contextual_ligatures.size > 0) {
+			row = new Row.headline (t_("Contextual Substitutions"));
+			rows.add (row);			
+		}
+		
 		ligatures.get_contextual_ligatures ((liga) => {
 			row = new Row.columns_4 (liga.ligatures, liga.backtrack, liga.input, liga.lookahead, i);
 			rows.add (row);
 			i++;
 		});
+
+		if (ligatures.ligatures.size > 0) {
+			row = new Row.headline (t_("Ligatures"));
+			rows.add (row);			
+		}
 		
 		ligatures.get_ligatures ((subst, liga) => {
 			row = new Row.columns_3 (liga, "",  subst, i);
