@@ -438,7 +438,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void save_as ()  {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.suppress_event || !save_callback.is_done) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -448,7 +448,7 @@ public class MenuTab : FontDisplay {
 	}
 
 	public static void save ()  {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.suppress_event && !save_callback.is_done) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
