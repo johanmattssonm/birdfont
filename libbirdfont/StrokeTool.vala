@@ -185,24 +185,73 @@ public class StrokeTool : Tool {
 		
 		if (p.points.size >= 2) {
 			stroked = p.copy ();
-			add_corners (stroked);
-			stroked = change_stroke_width (stroked, thickness);
+			stroked = generate_stroke (stroked, thickness);
 
 			if (!p.is_open ()) {
 				stroked.reverse ();
 				stroked.close ();
 			}
 		} else {
-			// TODO: create stroke for path with one point
+			// TODO: create stroke for a path with one point
 			warning ("One point.");
 			stroked = new Path ();
 		}
 		
 		return stroked;
 	}
-	
-	static void add_corners (Path p) {
-		// TODO:
+
+	static Path generate_stroke (Path p, double thickness) {
+		Path stroked = new Path ();
+		EditPoint start;
+		EditPoint end;
+		
+		foreach (EditPoint ep in p.points) {	
+			start = ep.copy ();
+			end = ep.get_next ().copy ();
+
+			move_segment (start, end, thickness);
+			
+			start.get_left_handle ().convert_to_line (); // sharp corner
+			
+			stroked.add_point (start);
+			stroked.add_point (end);
+
+			end.get_right_handle ().convert_to_line ();  // sharp corner
+
+		}
+		stroked.recalculate_linear_handles ();
+		
+		return stroked;
+	}
+
+	static void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
+		EditPointHandle r, l;
+		double m, n;
+		double qx, qy;
+		
+		stroke_start.set_tie_handle (false);
+		stroke_stop.set_tie_handle (false);
+
+		r = stroke_start.get_right_handle ();
+		l = stroke_stop.get_left_handle ();
+		
+		m = cos (r.angle + PI / 2) * thickness;
+		n = sin (r.angle + PI / 2) * thickness;
+		
+		stroke_start.get_right_handle ().move_to_coordinate_delta (m, n);
+		stroke_start.get_left_handle ().move_to_coordinate_delta (m, n);
+		
+		stroke_start.independent_x += m;
+		stroke_start.independent_y += n;
+		
+		qx = cos (l.angle - PI / 2) * thickness;
+		qy = sin (l.angle - PI / 2) * thickness;
+
+		stroke_stop.get_right_handle ().move_to_coordinate_delta (qx, qy);
+		stroke_stop.get_left_handle ().move_to_coordinate_delta (qx, qy);
+		
+		stroke_stop.independent_x += qx;
+		stroke_stop.independent_y += qy;
 	}
 
 	static Path change_stroke_width (Path original, double thickness) {
@@ -210,7 +259,7 @@ public class StrokeTool : Tool {
 		EditPoint ep;
 		uint k;
 		uint npoints;
-		Path new_path = original.copy ();
+		Path new_path;
 
 		EditPoint np, sp, nprev, sprev;
 			
@@ -229,8 +278,16 @@ public class StrokeTool : Tool {
 		bool bad_segment = false;
 		bool failed = false;
 		int size;
-				
+
+		new_path = original.copy ();
 		new_path.remove_points_on_points ();
+		
+		// Add corner nodes
+		foreach (EditPoint e in original.points) {
+			new_path.add_point (e.copy ());
+			new_path.add_point (e.copy ());
+		}
+		 
 		new_path.update_region_boundaries ();
 
 		k = 0;
@@ -326,8 +383,6 @@ public class StrokeTool : Tool {
 			
 			stroke_start.get_right_handle ().move_to_coordinate_delta (m, n);
 			
-			EditPoint next_start = stroke_stop.copy ();
-			
 			la = l.angle;
 			qx = cos (la - PI / 2) * thickness;
 			qy = sin (la - PI / 2) * thickness;
@@ -339,18 +394,6 @@ public class StrokeTool : Tool {
 			stroke_stop.independent_x += qx;
 			stroke_stop.independent_y += qy;
 			
-			// new start
-			la = l.angle;
-			qx = cos (la - PI / 2) * thickness;
-			qy = sin (la - PI / 2) * thickness;
-
-			left_x = qx;
-			left_y = qy;
-			stroke_stop.get_left_handle ().move_to_coordinate_delta (left_x, left_y);
-			
-			stroke_stop.independent_x += qx;
-			stroke_stop.independent_y += qy;
-
 			// avoid jagged edges
 			double dar = stroke_start.get_right_handle ().angle - start.get_right_handle ().angle;
 			double dal = stroke_stop.get_left_handle ().angle - stop.get_left_handle ().angle;
@@ -438,12 +481,12 @@ public class StrokeTool : Tool {
 			if (failed) {
 				return stroked;
 			}
-			
+						
 			if (!new_point) {
 				ep = stroke_start.copy ();
 				stroked.add_point (ep);
 				previous_start = stroke_start;
-				new_start = stop; 
+				new_start = stop.get_next ();
 			} else {
 				la = split_point.get_left_handle ().angle;
 				qx = cos (la - PI / 2) * thickness;
