@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -118,65 +118,23 @@ public class StrokeTool : Tool {
 	 */
 	static Path merge_strokes (Path path, Path stroke, Path counter, double thickness) {
 		Path merged;
-		EditPoint corner1, corner2;
-		EditPoint corner3, corner4;
-		EditPoint end;
-		double angle;
-		
-		if (path.points.size < 2) {
-			warning ("Missing points.");
-			return stroke;
-		}
-		
-		if (stroke.points.size < 4) {
-			warning ("Missing points.");
-			return stroke;
-		}
 
-		if (counter.points.size < 4) {
-			warning ("Missing points.");
-			return stroke;
-		}
-				
-		// end of stroke
-		end = path.get_last_visible_point ();
-		corner1 = stroke.get_last_point ();
-		angle = end.get_left_handle ().angle;
-		corner1.x = end.x + cos (angle - PI / 2) * thickness;
-		corner1.y = end.y + sin (angle - PI / 2) * thickness;		
-
-		corner2 = counter.get_last_point ();
-		corner2.x = end.x + cos (angle + PI / 2) * thickness;
-		corner2.y = end.y + sin (angle + PI / 2) * thickness;
-
-		// the other end
-		end = path.get_first_point ();
-		corner3 = stroke.get_first_point ();
-		angle = end.get_right_handle ().angle;
-		corner3.x = end.x + cos (angle + PI / 2) * thickness;
-		corner3.y = end.y + sin (angle + PI / 2) * thickness;		
-
-		corner4 = counter.get_first_point ();
-		corner4.x = end.x + cos (angle - PI / 2) * thickness;
-		corner4.y = end.y + sin (angle - PI / 2) * thickness;
-		
-		corner1.get_left_handle ().convert_to_line ();
-		corner2.get_right_handle ().convert_to_line ();
-		
-		corner3.get_left_handle ().convert_to_line ();
-		corner4.get_right_handle ().convert_to_line ();
-				
 		counter.reverse ();
-
-		// Append the other part of the stroke
 		merged = stroke.copy ();
-		merged.append_path (counter);
-		corner2 = merged.points.get (merged.points.size - 1);
+
+		if (path.is_open ()) {
+			merged.delete_last_point ();
+			counter.delete_first_point ();
+			merged.delete_last_point ();
+			counter.delete_first_point ();
+		}
 		
+		merged.append_path (counter);
+
 		merged.close ();
 		merged.create_list ();
 		merged.recalculate_linear_handles ();
-						
+
 		return merged;
 	}
 	
@@ -202,18 +160,25 @@ public class StrokeTool : Tool {
 
 	static Path generate_stroke (Path p, double thickness) {
 		Path stroked = new Path ();
-		EditPoint start;
+		EditPoint start = new EditPoint ();
 		EditPoint end;
-		EditPoint previous = new EditPoint ();
+		EditPoint previous;
+		int i;
 		
+		previous = p.get_last_point ().copy ();
+		move_segment (start, previous, thickness);
+		
+		i = 0;
 		foreach (EditPoint ep in p.points) {	
 			start = ep.copy ();
 			end = ep.get_next ().copy ();
-
+			
 			move_segment (start, end, thickness);
 
-			if (end.get_left_handle ().length > 0) {
-				add_corner (stroked, previous, start, ep.copy (), thickness);
+			if (end.get_left_handle ().length > 0 && end.get_right_handle ().length > 0) {
+				if (!p.is_open () || (i != 0 && i != p.points.size - 1)) { // FIXME: first point i=0
+					add_corner (stroked, previous, start, ep.copy (), thickness);
+				}
 			}
 			
 			stroked.add_point (start);
@@ -222,12 +187,15 @@ public class StrokeTool : Tool {
 				stroked.add_point (end);
 			}
 
-			// line ends around corner
+			// open ends around corner
 			start.get_left_handle ().convert_to_line (); 
 			end.get_right_handle ().convert_to_line ();
 			
 			previous = end;
+			
+			i++;
 		}
+
 		stroked.recalculate_linear_handles ();
 		
 		return stroked;
@@ -286,7 +254,7 @@ public class StrokeTool : Tool {
 		
 		distance = Path.distance_to_point (corner, original);
 		
-		ratio = 1.5 * fabs (stroke_width) / distance; // FIXME: make cutoff a parameter
+		ratio = 1.5 * fabs (stroke_width) / distance; // FIXME: cutoff parameter
 				
 		if (ratio > 1) {
 			stroked.add_point (corner);	
