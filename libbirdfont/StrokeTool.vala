@@ -204,6 +204,7 @@ public class StrokeTool : Tool {
 		Path stroked = new Path ();
 		EditPoint start;
 		EditPoint end;
+		EditPoint previous = new EditPoint ();
 		
 		foreach (EditPoint ep in p.points) {	
 			start = ep.copy ();
@@ -211,13 +212,16 @@ public class StrokeTool : Tool {
 
 			move_segment (start, end, thickness);
 
+			add_corner (stroked, previous, start);
+			
 			stroked.add_point (start);
 			stroked.add_point (end);
 
-			// sharp corner
+			// line ends around corner
 			start.get_left_handle ().convert_to_line (); 
 			end.get_right_handle ().convert_to_line ();
-
+			
+			previous = end;
 		}
 		stroked.recalculate_linear_handles ();
 		
@@ -253,6 +257,29 @@ public class StrokeTool : Tool {
 		stroke_stop.independent_x += qx;
 		stroke_stop.independent_y += qy;
 	}
+
+	static void add_corner (Path stroked, EditPoint previous, EditPoint next) {
+		EditPoint corner;
+		double corner_x, corner_y;
+		EditPointHandle previous_handle;
+		EditPointHandle next_handle;
+		
+		previous_handle = previous.get_left_handle ();
+		next_handle = next.get_right_handle ();
+		
+		previous_handle.angle += PI;
+		next_handle.angle += PI;
+		
+		Path.find_intersection_handle (previous_handle, next_handle, out corner_x, out corner_y);
+		corner = new EditPoint (corner_x, corner_y, PointType.LINE_CUBIC); // FIXME: point type
+		stroked.add_point (corner);	
+
+		previous_handle.angle -= PI;
+		next_handle.angle -= PI;
+	}
+
+
 }
 
 }
+
