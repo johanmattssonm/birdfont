@@ -471,11 +471,6 @@ public class Menu : GLib.Object {
 		foreach (MenuItem item in sorted_menu_items) {		
 			if (item.key == (unichar) keyval && item.modifiers == KeyBindings.modifier) {
 				
-				if (current_display is Glyph && item.in_display ("Glyph")) {
-					item.action ();
-					return;
-				}
-				
 				display = current_display.get_name ();
 
 				if (current_display is Glyph) {

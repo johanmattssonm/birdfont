@@ -212,10 +212,15 @@ public class StrokeTool : Tool {
 
 			move_segment (start, end, thickness);
 
-			add_corner (stroked, previous, start);
+			if (end.get_left_handle ().length > 0) {
+				add_corner (stroked, previous, start, ep.copy (), thickness);
+			}
 			
 			stroked.add_point (start);
-			stroked.add_point (end);
+			
+			if (end.get_left_handle ().length > 0) {
+				stroked.add_point (end);
+			}
 
 			// line ends around corner
 			start.get_left_handle ().convert_to_line (); 
@@ -258,11 +263,16 @@ public class StrokeTool : Tool {
 		stroke_stop.independent_y += qy;
 	}
 
-	static void add_corner (Path stroked, EditPoint previous, EditPoint next) {
+	static void add_corner (Path stroked, EditPoint previous, EditPoint next,
+		EditPoint original, double stroke_width) {
+		
+		double ratio;
+		double distance;
 		EditPoint corner;
 		double corner_x, corner_y;
 		EditPointHandle previous_handle;
 		EditPointHandle next_handle;
+		EditPoint cutoff1, cutoff2;
 		
 		previous_handle = previous.get_left_handle ();
 		next_handle = next.get_right_handle ();
@@ -271,8 +281,33 @@ public class StrokeTool : Tool {
 		next_handle.angle += PI;
 		
 		Path.find_intersection_handle (previous_handle, next_handle, out corner_x, out corner_y);
-		corner = new EditPoint (corner_x, corner_y, PointType.LINE_CUBIC); // FIXME: point type
-		stroked.add_point (corner);	
+		corner = new EditPoint (corner_x, corner_y, previous.type);
+		corner.convert_to_line ();
+		
+		distance = Path.distance_to_point (corner, original);
+		
+		ratio = 1.5 * fabs (stroke_width) / distance; // FIXME: make cutoff a parameter
+				
+		if (ratio > 1) {
+			stroked.add_point (corner);	
+		} else {
+			cutoff1 = new EditPoint ();
+			cutoff1.set_point_type (previous.type);
+			cutoff1.convert_to_line ();
+
+			cutoff2 = new EditPoint ();
+			cutoff2.set_point_type (previous.type);
+			cutoff2.convert_to_line ();
+			
+			cutoff1.x = previous.x + (corner.x - previous.x) * ratio;
+			cutoff1.y = previous.y + (corner.y - previous.y) * ratio;
+
+			cutoff2.x = next.x + (corner.x - next.x) * ratio;
+			cutoff2.y = next.y + (corner.y - next.y) * ratio;
+			
+			stroked.add_point (cutoff1);
+			stroked.add_point (cutoff2);
+		}
 
 		previous_handle.angle -= PI;
 		next_handle.angle -= PI;

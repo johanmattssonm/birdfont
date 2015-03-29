@@ -711,6 +711,10 @@ public class Path {
 	public static double distance (double ax, double bx, double ay, double by) {
 		return Math.fabs (Math.sqrt (Math.pow (ax - bx, 2) + Math.pow (ay - by, 2)));
 	}
+
+	public static double distance_to_point (EditPoint a, EditPoint b) {
+		return distance (a.x, b.x, a.y, b.y);
+	}
 	
 	public static double distance_pixels (double x1, double y1, double x2, double y2) {
 		return distance (Glyph.path_coordinate_x (x1),
