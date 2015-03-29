@@ -22,13 +22,15 @@ public abstract class Table : FontDisplay {
 
 	double scroll = 0;
 	double page_height = 0;
-	
-	WidgetAllocation allocation = new WidgetAllocation ();
 	Gee.ArrayList<int> column_width = new Gee.ArrayList<int> ();
+	
+	public WidgetAllocation allocation = new WidgetAllocation ();
 
 	public abstract void update_rows ();
 	public abstract Gee.ArrayList<Row> get_rows ();
 	public abstract void selected_row (Row row, int column, bool delete_button);
+
+	Gee.ArrayList<Row> rows = new Gee.ArrayList<Row> ();
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
 		bool color = (scroll + 1 % 2) == 0;
@@ -48,7 +50,7 @@ public abstract class Table : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 		
-		foreach (Row r in get_rows ()) {
+		foreach (Row r in rows) {
 			if (scroll < r.y < scroll + allocation.height
 				|| scroll < r.y + r.get_height () < scroll + allocation.height) {
 					
@@ -66,6 +68,8 @@ public abstract class Table : FontDisplay {
 	private void layout () {
 		int width;
 		
+		rows = get_rows ();
+		
 		column_width.clear ();
 		
 		for (int i = 0; i <= Row.MAX_COLUMNS; i++) {
@@ -73,7 +77,7 @@ public abstract class Table : FontDisplay {
 		}
 		
 		page_height = 0;
-		foreach (Row row in get_rows ()) {
+		foreach (Row row in rows) {
 			return_if_fail (row.columns <= column_width.size);
 			
 			for (int i = 0; i < row.columns; i++) {
@@ -162,7 +166,7 @@ public abstract class Table : FontDisplay {
 			return;
 		}
 		
-		foreach (Row r in get_rows ()) {
+		foreach (Row r in rows) {
 			if (r.y <= ey + scroll <= r.y + r.get_height ()) {
 				
 				x = 0;

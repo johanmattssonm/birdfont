@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -17,151 +17,50 @@ using Math;
 
 namespace BirdFont {
 
-public class KerningList : FontDisplay {
+public class KerningList : Table {
 	
-	int scroll = 0;
-	int visible_rows = 0;
-	WidgetAllocation allocation;
 	Gee.ArrayList<UndoItem> undo_items;
-	Gee.ArrayList<string> single_pairs;
 	
 	public KerningList () {
-		allocation = new WidgetAllocation ();
 		undo_items = new Gee.ArrayList<UndoItem> ();
-		single_pairs = new Gee.ArrayList<string> ();
 	}
 
-	private void update_single_pair_list () {
+	public override Gee.ArrayList<Row> get_rows () {
+		Gee.ArrayList<Row> rows = new Gee.ArrayList<Row> ();
 		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
+		int i;
 		
-		single_pairs.clear ();
-		
-		classes.get_single_position_pairs ((left, right, kerning) => {
-			single_pairs.add (@"$left - $right");
-		});
-		
-		single_pairs.sort ();
-	}
+		i = 0;
 
-	public override void draw (WidgetAllocation allocation, Context cr) {
-		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
-		int y = 20;
-		int s = 0;
-		bool color = (scroll % 2) == 0;
-		string l, r;
-		string[] p;
-		double k;
-		
-		this.allocation = allocation;
-		
-		visible_rows = (int) (allocation.height / 18.0);
-		
-		cr.save ();
-		Theme.color (cr, "Background 1");
-		cr.rectangle (0, 0, allocation.width, allocation.height);
-		cr.fill ();
-		cr.restore ();
-		
-		cr.save ();
-		Theme.color (cr, "Background 5");
-		cr.set_font_size (12);
+		rows.add (new Row.headline (t_("Kerning Pairs")));
 
 		classes.get_classes ((left, right, kerning) => {
-			if (s++ >= scroll) {
-				draw_row (allocation, cr, left, right, @"$kerning", y, color);
-				y += 18;
-				color = !color;
-			}
+			Row r = new Row.columns_3 (left, right, @"$kerning", i);
+			rows.add (r);
+			i++;
 		});
-	
-		foreach (string pair in single_pairs) {
-			if (s++ >= scroll) {
-				p = pair.split (" - ");
-				return_if_fail (p.length == 2);
-								
-				l = p[0];
-				r = p[1];
-				k = classes.get_kerning (l, r);
-				
-				draw_row (allocation, cr, l, r, @"$k", y, color);
-				y += 18;
-				color = !color;
-			}
-		}
-		
-		cr.restore ();
-	}	
 
-	private static void draw_row (WidgetAllocation allocation, Context cr,
-		string left, string right, string kerning, int y, bool color) {
-
-		if (color) {
-			cr.save ();
-			Theme.color (cr, "Background 6");
-			cr.rectangle (0, y - 14, allocation.width, 18);
-			cr.fill ();
-			cr.restore ();
-		}
+		classes.get_single_position_pairs ((left, right, kerning) => {
+			Row r = new Row.columns_3 (left, right, @"$kerning", i);
+			rows.add (r);
+			i++;
+		});
 		
-		// remove kerning icon
-		cr.save ();
-		Theme.color (cr, "Foreground 1");
-		cr.set_line_width (1);
-		cr.move_to (10, y - 8);
-		cr.line_to (15, y - 3);
-		cr.move_to (10, y - 3);
-		cr.line_to (15, y - 8);		
-		cr.stroke ();
-		cr.restore ();
+		rows.sort ((a, b) => {
+			Row sa, sb;
+			sa = (Row) a;
+			sb = (Row) b;
+			return strcmp (sa.column_text.get (0).text, sb.column_text.get (0).text);
+		});
 		
-		Theme.color (cr, "Foreground 1");
-		cr.move_to (60, y);
-		cr.show_text (left);
-		cr.move_to (230, y);
-		cr.show_text (right);
-		cr.move_to (430, y);
-		cr.show_text (kerning);
+		return rows;
 	}
 
-	public override void button_release (int button, double ex, double ey) {
-		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
-		int s = 0;
-		int y = 0;
-		string l, r;
-		string[] p;
+	public override void selected_row (Row row, int column, bool delete_button) {
+		return_if_fail (row.column_text.size > 2);
 		
-		l = "";
-		r = "";
-		
-		if (ex < 20) {
-			classes.get_classes ((left, right, kerning) => {
-				if (s++ >= scroll) {
-					y += 18;
-					
-					if (y - 10 <= ey <= y + 5) {
-						l = left;
-						r = right;
-					}				
-				}
-			});
-
-			foreach (string pair in single_pairs) {
-				if (s++ >= scroll) {
-					y += 18;
-					p = pair.split (" - ");
-					return_if_fail (p.length == 2);
-					
-					if (y - 10 <= ey <= y + 5) {			
-						l = p[0];
-						r = p[1];
-					}
-				}
-			}	
-			delete_kerning (l, r);
-			
-			update_single_pair_list ();
-			update_scrollbar ();
-			redraw_area (0, 0, allocation.width, allocation.height);
+		if (delete_button) {
+			delete_kerning (row.column_text.get (0).text, row.column_text.get (1).text);
 		}
 	}
 
@@ -211,69 +110,6 @@ public class KerningList : FontDisplay {
 	public override string get_name () {
 		return "Kerning Pairs";
 	}
-
-	public override bool has_scrollbar () {
-		return true;
-	}
-	
-	public override void scroll_wheel_down (double x, double y) {
-		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
-		uint pairs = classes.get_number_of_pairs ();
-		scroll += 3;
-
-		if (scroll > pairs - visible_rows) {
-			scroll = (int) (pairs - visible_rows);
-		}
-		
-		if (visible_rows > pairs) {
-			scroll = 0;
-		} 
-		
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-	
-	public override void scroll_wheel_up (double x, double y) {
-		scroll -= 3;
-		
-		if (scroll < 0) {
-			scroll = 0;
-		}
-		
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-
-	public override void selected_canvas () {
-		update_single_pair_list ();
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-	
-	public override void update_scrollbar () {
-		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
-		uint rows = classes.get_number_of_pairs ();
-
-		if (rows == 0 || visible_rows == 0) {
-			MainWindow.set_scrollbar_size (0);
-			MainWindow.set_scrollbar_position (0);
-		} else {
-			MainWindow.set_scrollbar_size ((double) visible_rows / rows);
-			MainWindow.set_scrollbar_position ((double) scroll /  rows);
-		}
-	}
-
-	public override void scroll_to (double percent) {
-		KerningClasses classes = BirdFont.get_current_font ().get_kerning_classes ();
-		uint pairs = classes.get_number_of_pairs ();
-		scroll = (int) (percent * pairs);
-		
-		if (scroll > pairs - visible_rows) {
-			scroll = (int) (pairs - visible_rows);
-		}
-		
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
 	
 	public override void undo () {
 		UndoItem ui;
@@ -304,8 +140,10 @@ public class KerningList : FontDisplay {
 			warning (e.message);
 		}
 		
-		update_single_pair_list ();
-		update_scrollbar ();
+		update_rows ();
+	}
+	
+	public override void update_rows () {
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
