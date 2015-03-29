@@ -229,9 +229,7 @@ public class StrokeTool : Tool {
 		bool bad_segment = false;
 		bool failed = false;
 		int size;
-		
-		//FIXME: DELETE. add_self_intersection_points (new_path);
-		
+				
 		new_path.remove_points_on_points ();
 		new_path.update_region_boundaries ();
 
@@ -328,6 +326,20 @@ public class StrokeTool : Tool {
 			
 			stroke_start.get_right_handle ().move_to_coordinate_delta (m, n);
 			
+			EditPoint next_start = stroke_stop.copy ();
+			
+			la = l.angle;
+			qx = cos (la - PI / 2) * thickness;
+			qy = sin (la - PI / 2) * thickness;
+
+			left_x = qx;
+			left_y = qy;
+			stroke_stop.get_left_handle ().move_to_coordinate_delta (left_x, left_y);
+			
+			stroke_stop.independent_x += qx;
+			stroke_stop.independent_y += qy;
+			
+			// new start
 			la = l.angle;
 			qx = cos (la - PI / 2) * thickness;
 			qy = sin (la - PI / 2) * thickness;
@@ -421,52 +433,6 @@ public class StrokeTool : Tool {
 					}
 					return !new_point;
 				}, 3);
-				
-				/*
-				// FIXME: add many points
-				// bad segment
-				if (bad_segment) {
-					EditPoint first_split_point = new EditPoint ();
-					bool first = true;
-					Path.all_of (start, stop, (x, y, t) => {
-						
-						if (t == 0 || t == 1) {
-							return true;
-						}
-						
-						print ("add ... \n");
-						split_point = new EditPoint (x, y);
-						
-						if (first) {
-							first_split_point = split_point;
-							first = false;
-						}
-
-						split_point.prev = start;
-						split_point.next = stop;
-						
-						start.next = split_point;
-						stop.prev = split_point;
-						
-						if (start.x == split_point.x && start.y == split_point.y) {
-							warning (@"Point already added.");
-							return false;
-						} else {
-							new_path.insert_new_point_on_path (split_point, t);
-							new_point = true;
-						}
-							
-						return !new_point;
-					}, 6);
-					
-					la = first_split_point.get_left_handle ().angle;
-					left_x = cos (la - PI / 2) * thickness;
-					left_y = sin (la - PI / 2) * thickness;
-				
-					points_to_process += 5; // FIXME
-					new_start = start;
-				}
-				*/
 			}
 			
 			if (failed) {
@@ -507,10 +473,7 @@ public class StrokeTool : Tool {
 
 			stroked.get_last_point ().get_left_handle ().angle = l.angle;
 			stroked.get_last_point ().get_left_handle ().length = l.length;
-			stroked.get_last_point ().get_left_handle ().type = l.type;
-			
-			//stroked.get_last_point ().get_right_handle ().convert_to_line ();
-			//stroked.get_first_point ().get_left_handle ().convert_to_line ();
+			stroked.get_last_point ().get_left_handle ().type = l.type;		
 		}
 		
 		// remove self intersection
@@ -521,69 +484,6 @@ public class StrokeTool : Tool {
 		
 		snext = new EditPoint ();
 		nnext = new EditPoint ();
-		
-		print (@"\n");
-		/*
-		for (int index = 1; index < stroked.points.size; index++) {
-			np = new_path.points.get (index);
-			sp = stroked.points.get (index);
-
-			if (np.type == PointType.NONE) {
-				break;
-			}
-
-			if (index < stroked.points.size - 1) {
-				nnext = new_path.points.get (index + 1);
-				snext = stroked.points.get (index + 1);
-			}
-			
-			double inter_x, inter_y;
-			double first_inter_x, first_inter_y;
-			if (segment_intersects (stroked, sp, snext, out first_inter_x, out first_inter_y) && !sp.deleted) {
-				print (@"n----- $index    $(sp.x), $(sp.y)\n");
-			
-				if (has_end_of_intersection (stroked, index + 1, first_inter_x, first_inter_y)) {
-					for (int j = index + 1; j < stroked.points.size; j++) {
-						np = new_path.points.get (j);
-						sp = stroked.points.get (j);
-
-						print (@"del ---- $j    $(sp.x), $(sp.y)\n");
-
-						if (j < stroked.points.size - 1) {
-							nnext = new_path.points.get (j + 1);
-							snext = stroked.points.get (j + 1);
-						}
-						
-						if ((nnext.flags & EditPoint.INTERSECTION) > 0
-							|| (segment_intersects (stroked, sp, snext, out inter_x, out inter_y)
-									&& Path.distance (first_inter_x, inter_x, first_inter_y, inter_y) < 0.1)) {
-								print (@"done\n");
-								index = j +1;
-								break;
-						} else {
-							np.deleted = true;
-							sp.deleted = true;
-						}
-					}
-				} else {
-					warning ("Failed to remove self intersection.");
-				}
-			}
-		}
-		*/
-
-
-		foreach (EditPoint e in new_path.points) {
-			if ((e.flags & EditPoint.CORNER) > 0) {
-				//e.flags |= EditPoint.DELETED;
-			}
-		}
-
-		foreach (EditPoint e in stroked.points) {
-			if ((e.flags & EditPoint.CORNER) > 0) {
-				//e.flags |= EditPoint.DELETED;
-			}
-		}
 		
 		stroked.remove_deleted_points ();
 		new_path.remove_deleted_points ();
@@ -635,14 +535,8 @@ public class StrokeTool : Tool {
 			back_ratio = Path.distance (sprev.x, sp.x, sprev.y, sp.y);
 			back_ratio /=  Path.distance (nprev.x, np.x, nprev.y, np.y);
 				
-			// DELETE nsratio = (next_ratio + last_ratio + nsratio) / 3;
-				
-			//FIXME: false ...
 			if (!(0.0002 < next_ratio < fabs (thickness)
 				&& 0.0002 < back_ratio < fabs (thickness))) {
-				print (@"BAD next_ratio $next_ratio\n");
-				print (@"BAD back_ratio $back_ratio\n");
-
 				ratio = last_ratio;
 				sp.get_right_handle ().length = Path.distance (snext.x, sp.x, snext.y, sp.y); // HANDLE TYPE
 				
@@ -667,94 +561,6 @@ public class StrokeTool : Tool {
 
 		return stroked;
 	}
-
-/*	
-	static void add_self_intersection_points (Path path) {
-		Gee.ArrayList<EditPoint> n = new Gee.ArrayList<EditPoint> ();
-		
-		path.all_segments ((ep1, ep2) => {
-			double ix, iy;
-			EditPoint nep;
-			
-			if (segment_intersects (path, ep1, ep2, out ix, out iy)) {
-				nep = new EditPoint ();
-				nep.prev = ep1;
-				nep.next = ep2;
-				
-				nep.x = ix;
-				nep.y = iy;
-				
-				n.add (nep);
-			}
-			
-			return true;
-		});
-		
-		foreach (EditPoint np in n) {
-			path.insert_new_point_on_path (np, -1, true);
-			np.type = PointType.QUADRATIC;
-			np.flags |= EditPoint.INTERSECTION;
-		}
-	}
-*/
-
-/*
-	static bool segment_intersects (Path path, EditPoint ep, EditPoint next,
-		out double ix, out double iy) {
-		EditPoint p1, p2;
-		double cross_x, cross_y;
-		
-		ix = 0;
-		iy = 0;
-				
-		if (path.points.size == 0) {
-			return false;
-		}
-		
-		for (int i = 1; i < path.points.size - 2; i++) {
-			p1 = path.points.get (i - 1);
-			p2 = path.points.get (i);
-			
-			Path.find_intersection_point (ep, next, p1, p2, out cross_x, out cross_y);
-	
-			if ((p1.x < cross_x < p2.x || p1.x > cross_x > p2.x)
-				&& (p1.y < cross_y < p2.y || p1.y > cross_y > p2.y)
-				&& (ep.x < cross_x < next.x || ep.x > cross_x > next.x)
-				&& (ep.y < cross_y < next.y || ep.y > cross_y > next.y)) {
-					
-					// iterate to find intersection.
-					
-					ix = cross_x;
-					iy = cross_y;
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-
-	static bool has_end_of_intersection (Path p, int start, double x, double y) {
-		double inter_x, inter_y;
-		EditPoint ep, next;
-		
-		next = new EditPoint ();
-		for (int j = start; j < p.points.size - 1; j++) {
-			ep = p.points.get (j);
-
-			if (j < p.points.size - 1) {
-				next = p.points.get (j + 1);
-			}
-			
-			if (segment_intersects (p, ep, next, out inter_x, out inter_y)
-				&& Path.distance (x, inter_x, y, inter_y) < 0.1) {
-					return true;
-			}
-		}
-		
-		return false;
-	}
-	*/
 }
 
 }
