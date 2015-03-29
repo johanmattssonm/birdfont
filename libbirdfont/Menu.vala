@@ -467,12 +467,13 @@ public class Menu : GLib.Object {
 		string display;
 		FontDisplay current_display = MainWindow.get_current_display ();
 		ToolItem tm;
-
+		
 		foreach (MenuItem item in sorted_menu_items) {		
 			if (item.key == (unichar) keyval && item.modifiers == KeyBindings.modifier) {
 				
 				if (current_display is Glyph && item.in_display ("Glyph")) {
 					item.action ();
+					return;
 				}
 				
 				display = current_display.get_name ();
@@ -486,6 +487,7 @@ public class Menu : GLib.Object {
 						&& item.in_display (display)
 						&& !(item is ToolItem)) {
 						item.action ();
+						return;
 					}
 					
 					if (item is ToolItem) {
@@ -497,7 +499,7 @@ public class Menu : GLib.Object {
 								tm.tool.select_action (tm.tool);
 								return;
 							} else {
-								tm.tool.select_action (tm.tool);
+								tm.tool.select_action (tm.tool);								
 								return;
 							}
 						}
