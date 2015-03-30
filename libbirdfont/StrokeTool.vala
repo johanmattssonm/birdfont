@@ -70,7 +70,6 @@ public class StrokeTool : Tool {
 		} else if (!p.is_open () && !p.is_filled ()) {
 			outline = create_stroke (p, thickness);
 			counter = create_stroke (p, -1 * thickness);
-			
 			paths.add (outline);
 			paths.add (counter);
 			
@@ -92,7 +91,7 @@ public class StrokeTool : Tool {
 			outline = create_stroke (p, thickness);
 			counter = create_stroke (p, -1 * thickness);
 			merged = merge_strokes (p, outline, counter, thickness);
-			
+
 			if (p.is_clockwise ()) {
 				merged.force_direction (Direction.CLOCKWISE);
 			} else {
@@ -154,6 +153,8 @@ public class StrokeTool : Tool {
 			warning ("One point.");
 			stroked = new Path ();
 		}
+		
+		remove_self_intersections (stroked);
 		
 		return stroked;
 	}
@@ -281,7 +282,108 @@ public class StrokeTool : Tool {
 		next_handle.angle -= PI;
 	}
 
+	static void remove_self_intersections (Path p) {
+		bool keep = true;
+		
+		add_self_intersection_points (p);
+	
+		// FIXME: set start on non intersecting point
+		foreach (EditPoint ep in p.points) {
+			if ((ep.flags & EditPoint.INTERSECTION) > 0) {
+				print (@"Inter $(ep)");
+				keep = !keep;
+			}
+			
+			if (!keep && (ep.flags & EditPoint.INTERSECTION) == 0) {
+				ep.deleted = true;
+				ep.type = PointType.CUBIC;
+			}
+		}
+		
+		p.remove_deleted_points ();
+	}
 
+	static void add_self_intersection_points (Path path) {
+		Gee.ArrayList<EditPoint> n = new Gee.ArrayList<EditPoint> ();
+		
+		path.all_segments ((ep1, ep2) => {
+			double ix, iy;
+			EditPoint nep;
+			EditPoint nep2;
+			EditPoint p1;
+			EditPoint p2;
+			
+			if (segment_intersects (path, ep1, ep2, out ix, out iy, out p1, out p2)) {
+				nep = new EditPoint ();
+				nep.prev = ep1;
+				nep.next = ep2;
+				
+				nep.x = ix;
+				nep.y = iy;
+				
+				n.add (nep);
+				
+				nep2 = new EditPoint ();
+				nep2.prev = p1;
+				nep2.next = p2;
+				
+				nep2.x = ix;
+				nep2.y = iy;
+				
+				n.add (nep2);
+			}
+			
+			return true;
+		});
+		
+		foreach (EditPoint np in n) {
+			path.insert_new_point_on_path (np, -1, true);
+			np.type = PointType.QUADRATIC;
+			np.flags |= EditPoint.INTERSECTION;
+		}
+	}
+
+	static bool segment_intersects (Path path, EditPoint ep, EditPoint next,
+		out double ix, out double iy,
+		out EditPoint ia, out EditPoint ib) {
+		EditPoint p1, p2;
+		double cross_x, cross_y;
+		
+		ix = 0;
+		iy = 0;
+				
+		ia = new EditPoint ();
+		ib = new EditPoint ();
+		
+		if (path.points.size == 0) {
+			return false;
+		}
+		
+		// FIXME: last to first
+		for (int i = 1; i < path.points.size - 2; i++) {
+			p1 = path.points.get (i - 1);
+			p2 = path.points.get (i);
+			
+			Path.find_intersection_point (ep, next, p1, p2, out cross_x, out cross_y);
+	
+			if ((p1.x < cross_x < p2.x || p1.x > cross_x > p2.x)
+				&& (p1.y < cross_y < p2.y || p1.y > cross_y > p2.y)
+				&& (ep.x < cross_x < next.x || ep.x > cross_x > next.x)
+				&& (ep.y < cross_y < next.y || ep.y > cross_y > next.y)) {
+					
+				// iterate to find intersection.					
+				ix = cross_x;
+				iy = cross_y;
+				
+				ia = p1;
+				ib = p2;
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
 
 }

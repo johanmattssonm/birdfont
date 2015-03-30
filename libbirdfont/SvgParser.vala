@@ -477,7 +477,7 @@ public class SvgParser {
 			return false;
 		}
 		
-		prev = path.points.get (path.points.size - 1);
+		prev = path.get_last_point ();
 		
 		foreach (EditPoint p in path.points) {
 			if  ((p.y > point.y) != (prev.y > point.y)
