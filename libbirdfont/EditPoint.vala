@@ -151,6 +151,8 @@ public class EditPoint : GLib.Object {
 		}
 	}
 	
+	public Color? color = null;
+	
 	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {	
 		x = nx;
 		y = ny;
@@ -436,7 +438,9 @@ public class EditPoint : GLib.Object {
 		new_point.left_handle.angle = left_handle.angle;
 		new_point.left_handle.length = left_handle.length;		
 		new_point.left_handle.type = left_handle.type;
-				
+		
+		new_point.color = color;
+		
 		return new_point;
 	}
 

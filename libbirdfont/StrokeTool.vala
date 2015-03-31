@@ -289,37 +289,48 @@ public class StrokeTool : Tool {
 	}
 	
 	static Path remove_intersections (Path path) {
-		PathList pl; 
 		Path remaining_points = path;
+		int i = 0;
 		
-		add_self_intersection_points (remaining_points);
-
-
-		/*
-		foreach (EditPoint p in remaining_points.points) {
-				
-			if ((p.flags & EditPoint.INTERSECTION) > 0) {
-				p.flags = NONE;
-				
-				print (p.to_string ());
-				//p.deleted = true;
-			} 
-		}
+		while (add_self_intersection_points (remaining_points)) {
+			foreach (EditPoint p in remaining_points.points) {
+					
+				if ((p.flags & EditPoint.INTERSECTION) > 0) {
+					p.deleted = true;
+					p.color = new Color (1, 0, 0, 1);
+					print ("DELETE\n" + p.to_string ());
+				} 
+			}
 			
-		pl = remaining_points.process_deleted_points ();
+			remaining_points = get_remaining_points (remaining_points);
+			
+			if (i == 0) {
+				warning ("end");
+				break;
+			}
+			
+			i++;
+		}
 		
-		remaining_points = get_remaining_points (pl, remaining_points);
-	*/
 		return remaining_points;
 	}
 
-	static Path get_remaining_points (PathList pl, Path old_path) {
+	static Path get_remaining_points (Path old_path) {
 		Path new_path;
+		PathList pl;
 		
+		old_path.create_list ();
+		
+		if (!old_path.has_deleted_point ()) {
+			return old_path;
+		}
+
+		pl = old_path.process_deleted_points ();
+	
 		if (pl.paths.size == 0) {
 			return old_path;
 		}
-	
+
 		new_path = new Path ();
 		foreach (Path pn in pl.paths) {
 			print (@"pn.points.size: $(pn.points.size)   new_path.points.size: $(new_path.points.size)\n");
@@ -331,10 +342,8 @@ public class StrokeTool : Tool {
 		print (@"after new_path: $(new_path.points.size)\n"); 		
 	
 		new_path.reopen ();
-		new_path.create_list ();
-		//new_path.close ();
 		
-		return new_path;
+		return get_remaining_points (new_path);
 	}
 
 	static bool add_self_intersection_points (Path path) {
@@ -376,7 +385,7 @@ public class StrokeTool : Tool {
 		
 		ep1.prev = prev;
 		ep1.next = ep2;
-		ep1.flags |= EditPoint.INTERSECTION;
+		ep1.flags |= EditPoint.NEW_CORNER;
 		ep1.type = PointType.CUBIC;
 		ep1.x = px;
 		ep1.y = py;
@@ -384,15 +393,15 @@ public class StrokeTool : Tool {
 
 		ep2.prev = ep1;
 		ep2.next = ep3;
-		ep2.flags |= EditPoint.NEW_CORNER;
-		ep2.type = PointType.CUBIC;
+		ep2.flags |= EditPoint.INTERSECTION;
+		ep2.type = PointType.QUADRATIC;
 		ep2.x = px;
 		ep2.y = py;
 		n.add (ep2);
 
 		ep3.prev = ep2;
 		ep3.next = next;
-		ep3.flags |= EditPoint.INTERSECTION;
+		ep3.flags |= EditPoint.NEW_CORNER;
 		ep3.type = PointType.CUBIC;
 		ep3.x = px;
 		ep3.y = py;
@@ -404,11 +413,13 @@ public class StrokeTool : Tool {
 			path.create_list ();
 			
 			print ("\n");
+			/*
 			if  (np.prev != null && np.next != null) {
 				print (np.get_prev ().to_string ());
 				print (np.to_string ());
 				print (np.get_next ().to_string ());
 			}
+			*/
 		}
 		
 		path.recalculate_linear_handles ();

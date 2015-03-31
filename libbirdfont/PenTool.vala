@@ -1209,16 +1209,16 @@ public class PenTool : Tool {
 		
 		if (active_handle.active) {
 			Path.draw_control_point (cr, Glyph.path_coordinate_x (begin_action_x),
-				Glyph.path_coordinate_y (begin_action_y), "Control Point Handle");			
+				Glyph.path_coordinate_y (begin_action_y), Theme.get_color ("Control Point Handle"));	
 		} else if (selected_points.size > 0) {
 			ps = selected_points.get (selected_points.size - 1);
 			
 			if (ps.point.type == PointType.CUBIC) {
 				Path.draw_control_point (cr, Glyph.path_coordinate_x (begin_action_x),
-					Glyph.path_coordinate_y (begin_action_y), "Selected Cubic Control Point");
+					Glyph.path_coordinate_y (begin_action_y), Theme.get_color ("Selected Cubic Control Point"));
 			} else {
 				Path.draw_control_point (cr, Glyph.path_coordinate_x (begin_action_x),
-					Glyph.path_coordinate_y (begin_action_y), "Selected Quadratic Control Point");			
+					Glyph.path_coordinate_y (begin_action_y), Theme.get_color ("Selected Quadratic Control Point"));
 			}
 		}
 	}
