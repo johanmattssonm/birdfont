@@ -764,8 +764,7 @@ public class Path {
 		if (!is_over_boundry (x, y)) {
 			return false;
 		}
-		
-		
+			
 		// generate a rasterized image of the object
 		width = 160;
 		click_map = new ClickMap (width);
@@ -1667,7 +1666,7 @@ public class Path {
 		int i;
 		int index = 0;
 		
-		if (!has_deleted_point ()) { 
+		if (!has_deleted_point ()) {
 			return path_list;
 		}
 		
@@ -1959,6 +1958,7 @@ public class Path {
 		find_intersection (h1.parent.x, h1.parent.y, h1.x, h1.y, h2.parent.x, h2.parent.y, h2.x, h2.y, out point_x, out point_y);
 	}
 
+	/** Finx intersection point for two straight lines. */
 	public static void find_intersection_point (EditPoint p1, EditPoint p2, EditPoint q1, EditPoint q2, out double point_x, out double point_y) {
 		find_intersection (p1.x, p1.y, p2.x, p2.y, q1.x, q1.y, q2.x, q2.y, out point_x, out point_y);
 	}

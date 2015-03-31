@@ -153,9 +153,7 @@ public class StrokeTool : Tool {
 			warning ("One point.");
 			stroked = new Path ();
 		}
-		
-		remove_self_intersections (stroked);
-		
+
 		return stroked;
 	}
 
@@ -199,7 +197,7 @@ public class StrokeTool : Tool {
 
 		stroked.recalculate_linear_handles ();
 		
-		return stroked;
+		return remove_intersections (stroked);
 	}
 
 	static void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
@@ -253,94 +251,167 @@ public class StrokeTool : Tool {
 		corner = new EditPoint (corner_x, corner_y, previous.type);
 		corner.convert_to_line ();
 		
-		distance = Path.distance_to_point (corner, original);
-		
-		ratio = 1.5 * fabs (stroke_width) / distance; // FIXME: cutoff parameter
-				
-		if (ratio > 1) {
-			stroked.add_point (corner);	
-		} else {
-			cutoff1 = new EditPoint ();
-			cutoff1.set_point_type (previous.type);
-			cutoff1.convert_to_line ();
-
-			cutoff2 = new EditPoint ();
-			cutoff2.set_point_type (previous.type);
-			cutoff2.convert_to_line ();
-			
-			cutoff1.x = previous.x + (corner.x - previous.x) * ratio;
-			cutoff1.y = previous.y + (corner.y - previous.y) * ratio;
-
-			cutoff2.x = next.x + (corner.x - next.x) * ratio;
-			cutoff2.y = next.y + (corner.y - next.y) * ratio;
-			
-			stroked.add_point (cutoff1);
-			stroked.add_point (cutoff2);
-		}
-
 		previous_handle.angle -= PI;
 		next_handle.angle -= PI;
+		
+		distance = Path.distance_to_point (corner, original);
+		ratio = 1.5 * fabs (stroke_width) / distance; // FIXME: cutoff parameter
+		
+		double r = original.get_right_handle ().angle;
+		double l = original.get_left_handle ().angle;
+		double angle = atan2 (sin (l - r), cos (l - r));
+		
+		if (false) { //FIXME: && angle > PI
+			if (ratio > 1) {
+				stroked.add_point (corner);	
+			} else {
+				cutoff1 = new EditPoint ();
+				cutoff1.set_point_type (previous.type);
+				cutoff1.convert_to_line ();
+
+				cutoff2 = new EditPoint ();
+				cutoff2.set_point_type (previous.type);
+				cutoff2.convert_to_line ();
+				
+				cutoff1.x = previous.x + (corner.x - previous.x) * ratio;
+				cutoff1.y = previous.y + (corner.y - previous.y) * ratio;
+
+				cutoff2.x = next.x + (corner.x - next.x) * ratio;
+				cutoff2.y = next.y + (corner.y - next.y) * ratio;
+
+				cutoff1 = stroked.add_point (cutoff1);
+				cutoff2 = stroked.add_point (cutoff2);
+				
+				cutoff1.recalculate_linear_handles ();
+				cutoff2.recalculate_linear_handles ();
+			}	
+		}		
+	}
+	
+	static Path remove_intersections (Path path) {
+		PathList pl; 
+		Path remaining_points = path;
+		
+		add_self_intersection_points (remaining_points);
+
+
+		/*
+		foreach (EditPoint p in remaining_points.points) {
+				
+			if ((p.flags & EditPoint.INTERSECTION) > 0) {
+				p.flags = NONE;
+				
+				print (p.to_string ());
+				//p.deleted = true;
+			} 
+		}
+			
+		pl = remaining_points.process_deleted_points ();
+		
+		remaining_points = get_remaining_points (pl, remaining_points);
+	*/
+		return remaining_points;
 	}
 
-	static void remove_self_intersections (Path p) {
-		bool keep = true;
+	static Path get_remaining_points (PathList pl, Path old_path) {
+		Path new_path;
 		
-		add_self_intersection_points (p);
+		if (pl.paths.size == 0) {
+			return old_path;
+		}
 	
-		// FIXME: set start on non intersecting point
-		foreach (EditPoint ep in p.points) {
-			if ((ep.flags & EditPoint.INTERSECTION) > 0) {
-				print (@"Inter $(ep)");
-				keep = !keep;
-			}
-			
-			if (!keep && (ep.flags & EditPoint.INTERSECTION) == 0) {
-				ep.deleted = true;
-				ep.type = PointType.CUBIC;
+		new_path = new Path ();
+		foreach (Path pn in pl.paths) {
+			print (@"pn.points.size: $(pn.points.size)   new_path.points.size: $(new_path.points.size)\n");
+			if (pn.points.size > new_path.points.size) {
+				new_path = pn;
 			}
 		}
 		
-		p.remove_deleted_points ();
+		print (@"after new_path: $(new_path.points.size)\n"); 		
+	
+		new_path.reopen ();
+		new_path.create_list ();
+		//new_path.close ();
+		
+		return new_path;
 	}
 
-	static void add_self_intersection_points (Path path) {
-		Gee.ArrayList<EditPoint> n = new Gee.ArrayList<EditPoint> ();
+	static bool add_self_intersection_points (Path path) {
+		bool intersection = false;
 		
 		path.all_segments ((ep1, ep2) => {
 			double ix, iy;
-			EditPoint nep;
-			EditPoint nep2;
+			
 			EditPoint p1;
 			EditPoint p2;
+
+			if (ep2 == path.get_last_point ()) {
+				return false; // FIXME: LATS TO FIRST CASE
+			}
 			
 			if (segment_intersects (path, ep1, ep2, out ix, out iy, out p1, out p2)) {
-				nep = new EditPoint ();
-				nep.prev = ep1;
-				nep.next = ep2;
+
+				add_intersection (path, ep1.get_prev (), ep1, ix, iy); 
+
+				// FIXME: last to first
+				add_intersection (path, p1, p2, ix, iy); 
 				
-				nep.x = ix;
-				nep.y = iy;
+				intersection = true;
 				
-				n.add (nep);
-				
-				nep2 = new EditPoint ();
-				nep2.prev = p1;
-				nep2.next = p2;
-				
-				nep2.x = ix;
-				nep2.y = iy;
-				
-				n.add (nep2);
+				return false;
 			}
 			
 			return true;
 		});
 		
+		return intersection;
+	}
+	
+	static void add_intersection (Path path, EditPoint prev, EditPoint next, double px, double py) {
+		Gee.ArrayList<EditPoint> n = new Gee.ArrayList<EditPoint> ();
+		EditPoint ep1 = new EditPoint ();
+		EditPoint ep2 = new EditPoint ();
+		EditPoint ep3 = new EditPoint ();
+		
+		ep1.prev = prev;
+		ep1.next = ep2;
+		ep1.flags |= EditPoint.INTERSECTION;
+		ep1.type = PointType.CUBIC;
+		ep1.x = px;
+		ep1.y = py;
+		n.add (ep1);
+
+		ep2.prev = ep1;
+		ep2.next = ep3;
+		ep2.flags |= EditPoint.NEW_CORNER;
+		ep2.type = PointType.CUBIC;
+		ep2.x = px;
+		ep2.y = py;
+		n.add (ep2);
+
+		ep3.prev = ep2;
+		ep3.next = next;
+		ep3.flags |= EditPoint.INTERSECTION;
+		ep3.type = PointType.CUBIC;
+		ep3.x = px;
+		ep3.y = py;
+		n.add (ep3);
+						
+		print ("NEW:\n");
 		foreach (EditPoint np in n) {
-			path.insert_new_point_on_path (np, -1, true);
-			np.type = PointType.QUADRATIC;
-			np.flags |= EditPoint.INTERSECTION;
+			np = path.add_point_after (np, np.prev);
+			path.create_list ();
+			
+			print ("\n");
+			if  (np.prev != null && np.next != null) {
+				print (np.get_prev ().to_string ());
+				print (np.to_string ());
+				print (np.get_next ().to_string ());
+			}
 		}
+		
+		path.recalculate_linear_handles ();
 	}
 
 	static bool segment_intersects (Path path, EditPoint ep, EditPoint next,
@@ -360,29 +431,37 @@ public class StrokeTool : Tool {
 		}
 		
 		// FIXME: last to first
-		for (int i = 1; i < path.points.size - 2; i++) {
+		for (int i = 2; i < path.points.size - 2; i++) {
 			p1 = path.points.get (i - 1);
 			p2 = path.points.get (i);
 			
 			Path.find_intersection_point (ep, next, p1, p2, out cross_x, out cross_y);
 	
-			if ((p1.x < cross_x < p2.x || p1.x > cross_x > p2.x)
-				&& (p1.y < cross_y < p2.y || p1.y > cross_y > p2.y)
-				&& (ep.x < cross_x < next.x || ep.x > cross_x > next.x)
-				&& (ep.y < cross_y < next.y || ep.y > cross_y > next.y)) {
+			if (Glyph.CANVAS_MIN < cross_x < Glyph.CANVAS_MAX
+				&& Glyph.CANVAS_MIN < cross_y < Glyph.CANVAS_MAX) {
+
+				if (!((ep.x == cross_x && ep.y == cross_y)
+					|| (next.x == cross_x && next.y == cross_y)
+					|| (p1.x == cross_x && p1.y == cross_y) 
+					|| (p2.x == cross_x && p2.y == cross_y))) {
+
+					// iterate to find intersection.					
+					ix = cross_x;
+					iy = cross_y;
 					
-				// iterate to find intersection.					
-				ix = cross_x;
-				iy = cross_y;
-				
-				ia = p1;
-				ib = p2;
-				
-				return true;
+					ia = p1;
+					ib = p2;
+					
+					return true;
+				}
 			}
 		}
 		
 		return false;
+	}
+	
+	static bool is_line (double x1, double y1, double x2, double y2, double x3, double y3) {
+		return 0.001 < (x2 - x1) * (x3 - x1 ) + (y2 - y1) * (y3 - y1) < 0.001;
 	}
 }
 
