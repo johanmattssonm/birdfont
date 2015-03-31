@@ -528,6 +528,22 @@ public class TextArea : Widget {
 	}
 	
 	public void move_carret_next () {
+		unichar c;
+		
+		move_carret_one_character ();
+		
+		if (KeyBindings.has_ctrl ()) {
+			while (true) {
+				c = move_carret_one_character ();
+				
+				if (c == '\0' || c == ' ') {
+					break;
+				}
+			}
+		}
+	}
+	
+	unichar move_carret_one_character () {
 		Paragraph paragraph;
 		int index;
 		unichar c;
@@ -536,17 +552,37 @@ public class TextArea : Widget {
 		paragraph = paragraphs.get (carret.paragraph);
 		
 		index = carret.character_index;
+		
 		paragraph.text.get_next_char (ref index, out c);
 		
 		if (index >= paragraph.text_length && carret.paragraph + 1 < paragraphs.size) {
 			carret.paragraph++;
 			carret.character_index = 0;
+			c = ' ';
 		} else {
 			carret.character_index = index;
 		}
+		
+		return c;	
 	}
 
 	public void move_carret_previous () {
+		unichar c;
+		
+		move_carret_back_one_character ();
+		
+		if (KeyBindings.has_ctrl ()) {
+			while (true) {
+				c = move_carret_back_one_character ();
+				
+				if (c == '\0' || c == ' ') {
+					break;
+				}
+			}
+		}
+	}
+	
+	unichar move_carret_back_one_character () {
 		Paragraph paragraph;
 		int index, last_index;
 		unichar c;
@@ -571,11 +607,18 @@ public class TextArea : Widget {
 			if (paragraph.text.has_suffix ("\n")) {
 				carret.character_index -= "\n".length;
 			}
+			
+			c = ' ';
+		} else if (last_index > 0) {
+			carret.character_index = last_index;
 		} else {
-			carret.character_index = (last_index) > 0 ? last_index : 0;
+			carret.character_index = 0;
+			c = ' ';
 		}
 		
 		return_if_fail (0 <= carret.paragraph < paragraphs.size);
+		
+		return c;
 	}
 	
 	public void move_carret_next_row () {
