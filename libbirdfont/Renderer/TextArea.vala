@@ -992,7 +992,7 @@ public class TextArea : Widget {
 			cr.save ();
 			cr.set_line_width (1);
 			Theme.color (cr, "Text Area Background");
-			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
+			draw_rounded_rectangle (cr, x, y, this.width, this.height - padding, padding);
 			cr.fill ();
 			cr.restore ();
 			
@@ -1000,7 +1000,7 @@ public class TextArea : Widget {
 			cr.save ();
 			cr.set_line_width (1);
 			Theme.color (cr, "Foreground 1");
-			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
+			draw_rounded_rectangle (cr, x, y, this.width, this.height - padding, padding);
 			cr.stroke ();
 			cr.restore ();
 		}
