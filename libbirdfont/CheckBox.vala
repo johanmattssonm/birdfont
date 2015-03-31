@@ -26,6 +26,8 @@ public class CheckBox : Widget {
 	public double w = 12 * MainWindow.units;
 	public double h = 12 * MainWindow.units;
 	
+	bool has_focus = false;
+	
 	public Text label;
 	
 	public CheckBox (string text = "", double font_size = -1) {
@@ -61,7 +63,13 @@ public class CheckBox : Widget {
 		
 		cr.save ();
 		cr.set_line_width (1);
-		Theme.color (cr, "Foreground 1");
+		
+		if (has_focus) {
+			Theme.color (cr, "Highlighted 1");
+		} else {
+			Theme.color (cr, "Foreground 1");
+		}
+		
 		draw_rounded_rectangle (cr, widget_x, widget_y + center_y, w, h - padding, padding);
 		cr.stroke ();
 		cr.restore ();
@@ -88,6 +96,18 @@ public class CheckBox : Widget {
 		label.draw (cr);
 	}
 	
+	public override void key_press (uint keyval) {
+		unichar c = (unichar) keyval;
+
+		if (c == ' ') {
+			checked = !checked;
+		}
+	}
+
+	public override void focus (bool focus) {
+		has_focus = focus;
+	}
+
 }
 
 }

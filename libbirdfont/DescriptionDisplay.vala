@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -22,8 +22,10 @@ public class DescriptionDisplay : FontDisplay {
 	double scroll = 0;
 	double content_height = 1;
 	WidgetAllocation allocation;
+	Gee.ArrayList<Widget> focus_ring = new Gee.ArrayList<Widget> ();
+	int focus_index = 0;
 	
-	TextArea? keyboard_focus = null;
+	Widget? keyboard_focus = null;
 	
 	TextArea postscript_name;
 	TextArea name;
@@ -74,6 +76,7 @@ public class DescriptionDisplay : FontDisplay {
 			font.touch ();
 		});
 		widgets.add (postscript_name);
+		focus_ring.add (postscript_name);
 		
 		widgets.add (new Text (t_("Name"), label_size, label_margin));
 		name.margin_bottom = margin;
@@ -83,7 +86,8 @@ public class DescriptionDisplay : FontDisplay {
 			font.touch ();
 		});
 		widgets.add (name);
-				
+		focus_ring.add (name);
+		
 		widgets.add (new Text (t_("Style"), label_size, label_margin));
 		style.margin_bottom = 1.5 * margin;
 		style.set_text (font.subfamily);
@@ -92,6 +96,7 @@ public class DescriptionDisplay : FontDisplay {
 			font.touch ();
 		});
 		widgets.add (style);
+		focus_ring.add (style);
 		
 		bold = new CheckBox (t_("Bold"), label_size);
 		bold.updated.connect ((c) => {
@@ -100,6 +105,7 @@ public class DescriptionDisplay : FontDisplay {
 		});
 		bold.checked = font.bold;
 		widgets.add (bold);
+		focus_ring.add (bold);
 		
 		italic = new CheckBox (t_("Italic"), label_size);
 		italic.updated.connect ((c) => {
@@ -109,6 +115,7 @@ public class DescriptionDisplay : FontDisplay {
 		italic.checked = font.italic;
 		italic.margin_bottom = margin;
 		widgets.add (italic);
+		focus_ring.add (italic);
 		
 		widgets.add (new Text (t_("Weight"), label_size, label_margin));
 		weight.margin_bottom = margin;
@@ -118,6 +125,7 @@ public class DescriptionDisplay : FontDisplay {
 			font.touch ();
 		});
 		widgets.add (weight);
+		focus_ring.add (weight);
 		
 		widgets.add (new Text (t_("Full Name (Name and Style)"), label_size, label_margin));
 		full_name.margin_bottom = margin;
@@ -127,6 +135,7 @@ public class DescriptionDisplay : FontDisplay {
 			font.touch ();
 		});
 		widgets.add (full_name);
+		focus_ring.add (full_name);
 		
 		widgets.add (new Text (t_("Unique Identifier"), label_size, label_margin));
 		unique_id.margin_bottom = margin;
@@ -136,6 +145,7 @@ public class DescriptionDisplay : FontDisplay {
 			font.touch ();
 		});
 		widgets.add (unique_id);
+		focus_ring.add (unique_id);
 		
 		widgets.add (new Text (t_("Version"), label_size, label_margin));
 		version.margin_bottom = margin;
@@ -145,6 +155,7 @@ public class DescriptionDisplay : FontDisplay {
 			font.touch ();
 		});
 		widgets.add (version);
+		focus_ring.add (version);
 
 		widgets.add (new Text (t_("Description"), label_size, label_margin));
 		description.margin_bottom = margin;
@@ -155,6 +166,7 @@ public class DescriptionDisplay : FontDisplay {
 			font.touch ();
 		});
 		widgets.add (description);
+		focus_ring.add (description);
 		
 		widgets.add (new Text (t_("Copyright"), label_size, label_margin));
 		copyright.margin_bottom = margin;
@@ -166,6 +178,9 @@ public class DescriptionDisplay : FontDisplay {
 		});
 		copyright.set_editable (!disable_copyright);
 		widgets.add (copyright);
+		focus_ring.add (copyright);
+		
+		set_focus (postscript_name);
 	}
 
 	public static void set_copyright_editable (bool t) {
@@ -228,19 +243,43 @@ public class DescriptionDisplay : FontDisplay {
 	}
 
 	public override void key_press (uint keyval) {
-		TextArea focus;
-		
-		if (keyboard_focus == null) {
-			return;
+		Widget focus;
+
+		if (keyval == Key.SHIFT_TAB) {
+			focus_previous ();
+		} else if (keyval == Key.TAB) {
+			focus_next ();
+		} else if (keyboard_focus != null) {
+			focus = (!) keyboard_focus;
+			focus.key_press (keyval);
 		}
 		
-		focus = (!) keyboard_focus;
-		focus.key_press (keyval);
+		GlyphCanvas.redraw ();
+	}
+	
+	void focus_previous () {
+		focus_index--;
+		
+		if (focus_index < 0) {
+			focus_index = 0;
+		}
+		
+		set_focus (focus_ring.get (focus_index));
+	}
+	
+	void focus_next () {
+		focus_index++;
+		
+		if (focus_index >= focus_ring.size) {
+			focus_index = focus_ring.size - 1;
+		}
+		
+		set_focus (focus_ring.get (focus_index));
 	}
 	
 	public override void button_press (uint button, double x, double y) {
-		TextArea t;
-		TextArea old;
+		Widget t;
+		Widget old;
 		CheckBox c;
 		
 		foreach (Widget w in widgets) {
@@ -249,12 +288,11 @@ public class DescriptionDisplay : FontDisplay {
 					t = (TextArea) w;
 					if (keyboard_focus != null && (!) keyboard_focus != t) {
 						old = (!) keyboard_focus;
-						old.draw_carret = false;
+						old.focus (false);
 					}
 					
-					t.draw_carret = true;
+					set_focus (t);
 					t.button_press (button, x, y);
-					keyboard_focus = t;
 				} else if (w is CheckBox) {
 					c = (CheckBox) w;
 					c.set_checked (!c.checked);
@@ -265,11 +303,30 @@ public class DescriptionDisplay : FontDisplay {
 		GlyphCanvas.redraw ();
 	}
 	
+	public void set_focus (Widget w) {
+		Widget old;
+		
+		if (keyboard_focus != null && (!) keyboard_focus != w) {
+			old = (!) keyboard_focus;
+			old.focus (false);
+		}
+		
+		keyboard_focus = w;
+		w.focus (true);
+		
+		focus_index = focus_ring.index_of (w);
+
+		if (!(0 <= focus_index < focus_ring.size)) {
+			focus_index = 0;
+		}
+	}
+	
 	public override void button_release (int button, double x, double y) {
-		TextArea t;
+		Widget t;
 		
 		if (keyboard_focus != null) {
 			t = (!) keyboard_focus;
+			set_focus (t);
 			t.button_release (button, x, y);
 		}
 					
@@ -277,7 +334,7 @@ public class DescriptionDisplay : FontDisplay {
 	}
 
 	public override void motion_notify (double x, double y) {
-		TextArea t;
+		Widget t;
 		
 		if (keyboard_focus != null) {
 			t = (!) keyboard_focus;

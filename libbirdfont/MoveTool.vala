@@ -61,7 +61,7 @@ public class MoveTool : Tool {
 		});
 		
 		key_press_action.connect ((self, keyval) => {
-			key_press (keyval);
+			key_down (keyval);
 		});
 		
 		draw_action.connect ((self, cr, glyph) => {
@@ -75,7 +75,7 @@ public class MoveTool : Tool {
 		}
 	}
 	
-	public void key_press (uint32 keyval) {
+	public void key_down (uint32 keyval) {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		// delete selected paths

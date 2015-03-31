@@ -53,6 +53,22 @@ public abstract class Widget : GLib.Object {
 			|| (widget_y <= allocation.height <= widget_y + get_height ())
 			|| (0 <= widget_y <= allocation.height);
 	}
+
+	public virtual void key_press (uint keyval) {	
+	}
+
+	public virtual void focus (bool enter) {	
+	}
+
+	public virtual void button_press (uint button, double x, double y) {
+	}
+
+	public virtual void button_release (uint button, double x, double y) {
+	}
+	
+	public virtual bool motion (double x, double y) {
+		return false;
+	}
 }
 
 }

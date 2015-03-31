@@ -72,6 +72,10 @@ public class TextArea : Widget {
 		editable = true;
 	}
 
+	public override void focus (bool focus) {
+		draw_carret = focus;
+	}
+
 	public override double get_height () {
 		return height + 2 * padding;
 	}
@@ -114,7 +118,7 @@ public class TextArea : Widget {
 		}
 	}
 	
-	public void key_press (uint keyval) {
+	public override void key_press (uint keyval) {
 		unichar c;
 		TextUndoItem ui;
 		
@@ -994,7 +998,7 @@ public class TextArea : Widget {
 		}
 	}
 	
-	public void button_press (uint button, double x, double y) {
+	public override void button_press (uint button, double x, double y) {
 		if (is_over (x, y)) {
 			carret = get_carret_at (x, y);
 			selection_end = carret.copy ();
@@ -1002,12 +1006,12 @@ public class TextArea : Widget {
 		}
 	}
 
-	public void button_release (uint button, double x, double y) {
+	public override void button_release (uint button, double x, double y) {
 		update_selection = false;
 		show_selection = selection_is_visible ();
 	}
 	
-	public bool motion (double x, double y) {
+	public override bool motion (double x, double y) {
 		if (update_selection) {
 			selection_end = get_carret_at (x, y);
 			show_selection = selection_is_visible ();

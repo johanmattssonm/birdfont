@@ -35,9 +35,6 @@ public class Dialog : Widget {
 		return 0;	
 	}
 	
-	public virtual void button_press (uint button, double x, double y) {
-	}
-	
 }
 
 }
