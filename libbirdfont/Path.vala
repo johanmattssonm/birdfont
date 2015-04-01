@@ -1711,7 +1711,7 @@ public class Path {
 			return path_list;
 		}
 		
-		// set start position to the point that will be removed	
+		// set start position to a point that will be removed	
 		for (i = 0; i < points.size; i++) {
 			p = points.get (i);
 						
