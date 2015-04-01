@@ -507,11 +507,13 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void show_tooltip (string tool_tip, double x, double y) {
-		this.tool_tip = tool_tip;
-		this.tool_tip_x = x;
-		this.tool_tip_y = y;
-		
-		redraw_tool_box ();
+		if (tool_tip != "") {
+			this.tool_tip = tool_tip;
+			this.tool_tip_x = x;
+			this.tool_tip_y = y;
+			
+			redraw_tool_box ();
+		}
 	}
 	
 	public class EmptySet : ToolCollection  {

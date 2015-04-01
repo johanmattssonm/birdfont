@@ -135,18 +135,18 @@ public class Expander : GLib.Object {
 			first_row = true;
 			foreach (Tool t in tool) {
 				if (t.tool_is_visible ()) {
-					new_row = xt + t.w > Toolbox.allocation_width - margin_small;
+					new_row = xt + t.w > Toolbox.allocation_width - 7 * scale;
 					
 					if (new_row && !first_row) {
 						content_height += previous.h + margin_small; 
 						xt = x;
-						yt += previous.h + margin_small;
+						yt += previous.h + 7 * scale;
 					}
 				
 					t.x = xt;
 					t.y = yt;
 				
-					xt += t.w + margin_small;
+					xt += t.w + 7 * scale;
 					
 					previous = t;
 					first_row = false;

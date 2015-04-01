@@ -72,6 +72,10 @@ public class TextArea : Widget {
 		editable = true;
 	}
 
+	public override void focus (bool focus) {
+		draw_carret = focus;
+	}
+
 	public override double get_height () {
 		return height + 2 * padding;
 	}
@@ -114,7 +118,7 @@ public class TextArea : Widget {
 		}
 	}
 	
-	public void key_press (uint keyval) {
+	public override void key_press (uint keyval) {
 		unichar c;
 		TextUndoItem ui;
 		
@@ -528,6 +532,22 @@ public class TextArea : Widget {
 	}
 	
 	public void move_carret_next () {
+		unichar c;
+		
+		move_carret_one_character ();
+		
+		if (KeyBindings.has_ctrl ()) {
+			while (true) {
+				c = move_carret_one_character ();
+				
+				if (c == '\0' || c == ' ') {
+					break;
+				}
+			}
+		}
+	}
+	
+	unichar move_carret_one_character () {
 		Paragraph paragraph;
 		int index;
 		unichar c;
@@ -536,17 +556,37 @@ public class TextArea : Widget {
 		paragraph = paragraphs.get (carret.paragraph);
 		
 		index = carret.character_index;
+		
 		paragraph.text.get_next_char (ref index, out c);
 		
 		if (index >= paragraph.text_length && carret.paragraph + 1 < paragraphs.size) {
 			carret.paragraph++;
 			carret.character_index = 0;
+			c = ' ';
 		} else {
 			carret.character_index = index;
 		}
+		
+		return c;	
 	}
 
 	public void move_carret_previous () {
+		unichar c;
+		
+		move_carret_back_one_character ();
+		
+		if (KeyBindings.has_ctrl ()) {
+			while (true) {
+				c = move_carret_back_one_character ();
+				
+				if (c == '\0' || c == ' ') {
+					break;
+				}
+			}
+		}
+	}
+	
+	unichar move_carret_back_one_character () {
 		Paragraph paragraph;
 		int index, last_index;
 		unichar c;
@@ -571,11 +611,18 @@ public class TextArea : Widget {
 			if (paragraph.text.has_suffix ("\n")) {
 				carret.character_index -= "\n".length;
 			}
+			
+			c = ' ';
+		} else if (last_index > 0) {
+			carret.character_index = last_index;
 		} else {
-			carret.character_index = (last_index) > 0 ? last_index : 0;
+			carret.character_index = 0;
+			c = ' ';
 		}
 		
 		return_if_fail (0 <= carret.paragraph < paragraphs.size);
+		
+		return c;
 	}
 	
 	public void move_carret_next_row () {
@@ -951,7 +998,7 @@ public class TextArea : Widget {
 		}
 	}
 	
-	public void button_press (uint button, double x, double y) {
+	public override void button_press (uint button, double x, double y) {
 		if (is_over (x, y)) {
 			carret = get_carret_at (x, y);
 			selection_end = carret.copy ();
@@ -959,12 +1006,12 @@ public class TextArea : Widget {
 		}
 	}
 
-	public void button_release (uint button, double x, double y) {
+	public override void button_release (uint button, double x, double y) {
 		update_selection = false;
 		show_selection = selection_is_visible ();
 	}
 	
-	public bool motion (double x, double y) {
+	public override bool motion (double x, double y) {
 		if (update_selection) {
 			selection_end = get_carret_at (x, y);
 			show_selection = selection_is_visible ();
@@ -992,7 +1039,7 @@ public class TextArea : Widget {
 			cr.save ();
 			cr.set_line_width (1);
 			Theme.color (cr, "Text Area Background");
-			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
+			draw_rounded_rectangle (cr, x, y, this.width, this.height - padding, padding);
 			cr.fill ();
 			cr.restore ();
 			
@@ -1000,7 +1047,7 @@ public class TextArea : Widget {
 			cr.save ();
 			cr.set_line_width (1);
 			Theme.color (cr, "Foreground 1");
-			draw_rounded_rectangle (cr, x, y, this.width, this.height, padding);
+			draw_rounded_rectangle (cr, x, y, this.width, this.height - padding, padding);
 			cr.stroke ();
 			cr.restore ();
 		}
