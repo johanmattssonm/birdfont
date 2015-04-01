@@ -179,7 +179,7 @@ public class StrokeTool : Tool {
 		EditPoint previous;
 		int i;
 		
-		previous = p.get_last_point ().copy ();
+		previous = p.get_first_point ().copy ();
 		move_segment (start, previous, thickness);
 		
 		i = 0;
@@ -189,12 +189,12 @@ public class StrokeTool : Tool {
 			
 			move_segment (start, end, thickness);
 
-			if (end.get_left_handle ().length > 0 && end.get_right_handle ().length > 0) {
-				if (!p.is_open ()) {
-					if (i != 0 && i != p.points.size - 1) { // FIXME: first point i=0
-						add_corner (stroked, previous, start, ep.copy (), thickness);
-					}
-				}
+			if (start == p.get_last_point ()) {
+				end = p.get_first_point ();
+			}
+			
+			if (!p.is_open () || (i != 0 && i != p.points.size - 1)) {
+				add_corner (stroked, previous, start, ep.copy (), thickness);
 			}
 			
 			stroked.add_point (start);
@@ -279,10 +279,9 @@ public class StrokeTool : Tool {
 		double l = original.get_left_handle ().angle;
 		double angle = atan2 (sin (r - l), cos (r - l));
 		
-		if (-1 < original.x < 1)
-			print (@"ANGLE: $angle \n $(original)");
-			
-		if (angle > PI || angle < 0) {
+		if (-1 < original.x < 1) print (@"angle: $angle\n");
+		
+		if (true || 0 < angle < PI) {
 			if (ratio > 1) {
 				stroked.add_point (corner);	
 			} else {
@@ -312,14 +311,12 @@ public class StrokeTool : Tool {
 	static StrokeParts remove_intersections (Path path, double thickness, Path original) {
 		StrokeParts parts = new StrokeParts ();
 		Path remaining_points = path;
-		int i = 0;
 		
 		while (add_self_intersection_points (remaining_points)) {
-			if (i++ > 90) break; // FIXME: DELETE
 			foreach (EditPoint p in remaining_points.points) {
 				if ((p.flags & EditPoint.INTERSECTION) > 0) {
 					p.deleted = true;
-					p.color = new Color (1, 1, 0, 1);
+					// FIXME: delete p.color = new Color (1, 1, 0, 1);
 				} 
 			}
 			
@@ -512,11 +509,11 @@ public class StrokeTool : Tool {
 						if (is_line (ep.x, ep.y, cross_x, cross_y, next.x, next.y)
 							&& is_line (p1.x, p1.y, cross_x, cross_y, p2.x, p2.y)) {
 					
-						ep.color = new Color (1, 0, 0, 1);
+						// FIXME: delete ep.color = new Color (1, 0, 0, 1);
 						next.color = new Color (0.5, 0, 0, 1);
 						
-						p1.color = new Color (0, 0, 1, 1);
-						p2.color = new Color (0, 0, 0.5, 1);
+						// FIXME: delete p1.color = new Color (0, 0, 1, 1);
+						// FIXME: delete p2.color = new Color (0, 0, 0.5, 1);
 						
 						ix = cross_x;
 						iy = cross_y;
@@ -569,12 +566,12 @@ public class StrokeTool : Tool {
 		foreach (EditPoint p in part.points) {
 			foreach (EditPoint ep in original.points) {
 				if (Path.distance (ep.x, p.x, ep.y, p.y) < stroke_size + 0.0001) {
-					p.color = new Color (1, 0, 1, 1); // FIXME: DELETE
+					// FIXME: delete p.color = new Color (1, 0, 1, 1); // FIXME: DELETE
 					return true;
 				} else {
 					if (-1 < p.x - 19 < 1 && -1 < ep.x - 18 < 1)
 						print (p.to_string () + "\n " + ep.to_string () + "\n" + @" D: $(Path.distance (ep.x, p.x, ep.y, p.y)) <  $(stroke_size) \n");
-					p.color = new Color (1, 1, 1, 1); // FIXME: DELETE
+					// FIXME: delete p.color = new Color (1, 1, 1, 1); // FIXME: DELETE
 				}
 			}
 		}
