@@ -36,6 +36,7 @@ public class CoordinateFlags {
 /** Data for one entry in the glyf table. */
 public class GlyfData : GLib.Object {		
 	public Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
+	public Gee.ArrayList<EditPoint> points = new Gee.ArrayList<EditPoint> ();
 	public Gee.ArrayList<uint16> end_points = new Gee.ArrayList<uint16> ();
 	public Gee.ArrayList<uint8> flags = new Gee.ArrayList<uint8> ();
 	public Gee.ArrayList<int16> coordinate_x = new Gee.ArrayList<int16> ();
@@ -55,26 +56,48 @@ public class GlyfData : GLib.Object {
 		get { return HeadTable.UNITS; }
 	}
 		
-	public GlyfData (Glyph g) {	
+	public GlyfData (Glyph g) {
+		bool process;
+		PathList qp = g.get_quadratic_paths (); 
+		
 		glyph = g;
 						
-		foreach (Path p in g.get_quadratic_paths ().paths) {
+		foreach (Path p in qp.paths) {
 			if (p.points.size > 0) {
 				if (!is_empty (p)) {
 					// Add points at extrema
 					p.add_extrema ();
-					paths.add (p);
 				}
 			}
 		}
 		
-		if (paths.size > 0) {
+		process = true;
+		
+		while (process) {
+			points.clear ();
+			paths.clear ();
+			foreach (Path p in qp.paths) {
+				if (!is_empty (p)) {
+					paths.add (p);
+					foreach (EditPoint ep in p.points) {
+						points.add (ep);
+					}
+				}
+			}
+			
+			if (paths.size == 0) {
+				break;
+			}
+			
 			process_end_points ();
 			process_flags ();
 			process_x ();
-			process_y ();
+			
+			// error checking is done here
+			process = !process_y (); 
+			
 			process_bounding_box ();
-		}
+		 }
 	}
 
 	bool is_empty (Path p) {
@@ -112,6 +135,7 @@ public class GlyfData : GLib.Object {
 		uint16 last_end_point = 0;
 		PointType type;
 		
+		end_points.clear ();
 		end_point = 0;
 		
 		foreach (Path quadratic in paths) {
@@ -187,6 +211,7 @@ public class GlyfData : GLib.Object {
 		double x;
 		PointType type;
 		
+		coordinate_x.clear ();
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
 				x = rint (e.x * UNITS - prev - glyph.left_limit * UNITS);
@@ -205,16 +230,30 @@ public class GlyfData : GLib.Object {
 		}
 	}
 	
-	void process_y () {
+	bool process_y () {
 		double prev = 0;
 		double y;
 		Font font = OpenFontFormatWriter.get_current_font ();
 		PointType type;
+		int epi = 0;
+		
+		coordinate_y.clear ();
 		
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
 				y = rint (e.y * UNITS - prev - font.base_line  * UNITS);
 				coordinate_y.add ((int16) y);
+				
+				if ((int16) y == 0 && (int16) coordinate_x.get (coordinate_y.size - 1) == 0) {
+					warning (@"Point on point in TTF. Index $(coordinate_y.size - 1)");
+					
+					if (BirdFont.has_argument ("--test")) {
+						print (glyph.get_name () + "\n");
+						print (points.get (epi).to_string ());
+						PenTool.remove_point_simplify (new PointSelection (points.get (epi), p));
+						return false;
+					}
+				}
 				
 				prev = rint (e.y * UNITS - font.base_line * UNITS);
 				
@@ -223,10 +262,24 @@ public class GlyfData : GLib.Object {
 				// off curve
 				y = rint (e.get_right_handle ().y * UNITS - prev - font.base_line * UNITS);
 				coordinate_y.add ((int16) y);
-			
+
+				if ((int16) y == 0 && (int16) coordinate_x.get (coordinate_y.size - 1) == 0) {
+					warning (@"Point on point in TTF (off curve) Index: $(coordinate_y.size - 1) ");
+					if (BirdFont.has_argument ("--test")) {
+						print (glyph.get_name () + "\n");
+						print (points.get (epi).to_string ());
+						
+						PenTool.remove_point_simplify (new PointSelection (points.get (epi), p));
+						return false;
+					}
+				}
+							
 				prev = rint (e.get_right_handle ().y * UNITS - font.base_line  * UNITS);
+				epi++;
 			}
 		}
+		
+		return true;
 	}
 	
 	void process_bounding_box () {
@@ -283,3 +336,4 @@ public class GlyfData : GLib.Object {
 }
 
 }
+

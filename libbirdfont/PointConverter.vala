@@ -38,8 +38,6 @@ public class PointConverter {
 			warning ("Too many points in segment.");
 		}
 	
-		quadratic_path.remove_points_on_points ();
-
 		if (quadratic_path.points.size < 2) {
 			return new Path ();
 		}
