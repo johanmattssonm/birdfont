@@ -57,12 +57,15 @@ public class StrokeTool : Tool {
 	}
 	
 	public static PathList get_stroke (Path path, double thickness) {
-		Path p = path.copy ();
-		PathList pl;
-
-		path.get_first_point ().color = new Color (0, 1, 0, 1);
+		PathList pl = new PathList ();
+		StrokeParts parts;
 		
-		pl = get_stroke_outline (p, thickness);	
+		parts = get_parts (path.copy (), thickness, path);
+
+		foreach (Path p in parts.get_all ()) {
+			p.get_first_point ().color = new Color (0, 1, 0, 1);
+			pl.append (get_stroke_outline (p, thickness));
+		}
 		
 		return pl;	
 	}
@@ -329,7 +332,7 @@ public class StrokeTool : Tool {
 		
 		return parts;
 	}
-	
+		
 	static StrokeParts get_parts (Path path, double thickness, Path original) {
 		StrokeParts sp;
 		PathList pl = new PathList ();
@@ -450,13 +453,8 @@ public class StrokeTool : Tool {
 			
 			if (segment_intersects (path, ep1, ep2, out ix, out iy, out p1, out p2)) {				
 				add_intersection (path, ep1, ep2, ix, iy);
-
-				// FIXME: last to first
-				
 				add_intersection (path, p1, p2, ix, iy); 
-				
 				intersection = true;
-				
 				return false;
 			}
 			
@@ -466,7 +464,7 @@ public class StrokeTool : Tool {
 		return intersection;
 	}
 	
-	static void add_intersection (Path path, EditPoint prev, EditPoint next, double px, double py) {
+	static void add_intersection (Path path, EditPoint prev, EditPoint next, double px, double py, Color? c = null) {
 		Gee.ArrayList<EditPoint> n = new Gee.ArrayList<EditPoint> ();
 		EditPoint ep1 = new EditPoint ();
 		EditPoint ep2 = new EditPoint ();
@@ -484,6 +482,7 @@ public class StrokeTool : Tool {
 		ep1.type = PointType.CUBIC;
 		ep1.x = px;
 		ep1.y = py;
+		ep1.color = c;
 		n.add (ep1);
 
 		ep2.prev = ep1;
@@ -492,6 +491,7 @@ public class StrokeTool : Tool {
 		ep2.type = PointType.QUADRATIC;
 		ep2.x = px;
 		ep2.y = py;
+		ep2.color = c;
 		n.add (ep2);
 
 		ep3.prev = ep2;
@@ -500,6 +500,7 @@ public class StrokeTool : Tool {
 		ep3.type = PointType.CUBIC;
 		ep3.x = px;
 		ep3.y = py;
+		ep3.color = c;
 		n.add (ep3);
 						
 		foreach (EditPoint np in n) {
