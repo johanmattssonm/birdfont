@@ -60,16 +60,6 @@ public class OpenFontFormatReader : Object {
 		dis.close ();
 	}
 	
-	public Glyph? read_glyph (string name) {
-		try {
-			return directory_table.glyf_table.read_glyph (name);
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
-		
-		return null;
-	}
-	
 	public void parse_index (string file_name) throws Error {
 		file = File.new_for_path (file_name);
 		if (!file.query_exists ()) {

@@ -485,18 +485,7 @@ public class Font : GLib.Object {
 	
 	/** Obtain all versions and alterntes for this glyph. */
 	public GlyphCollection? get_glyph_collection (string glyph) {
-		GlyphCollection? gc = get_cached_glyph_collection (glyph);
-		Glyph? g;
-		
-		if (gc == null && otf_font) {
-			// load it from otf file if we need to
-			g = otf.read_glyph (glyph);
-			
-			if (g != null) {
-				return get_cached_glyph_collection (glyph);
-			}
-		}
-			
+		GlyphCollection? gc = get_cached_glyph_collection (glyph);	
 		return gc;
 	}
 

@@ -44,8 +44,8 @@ public class EditPoint : GLib.Object {
 	public static uint DELETED = 1 << 2;
 	public static uint TIE = 1 << 3;
 	public static uint REFLECTIVE = 1 << 4;
-	public static uint CORNER = 1 << 5;
-	public static uint INTERSECTION = 1 << 6;
+	public static uint INTERSECTION = 1 << 5;
+	public static uint NEW_CORNER = 1 << 6;
 	
 	public uint flags = NONE;
 	
@@ -150,6 +150,8 @@ public class EditPoint : GLib.Object {
 			left_handle.y -= d;
 		}
 	}
+	
+	public Color? color = null;
 	
 	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {	
 		x = nx;
@@ -436,7 +438,9 @@ public class EditPoint : GLib.Object {
 		new_point.left_handle.angle = left_handle.angle;
 		new_point.left_handle.length = left_handle.length;		
 		new_point.left_handle.type = left_handle.type;
-				
+		
+		new_point.color = color;
+		
 		return new_point;
 	}
 

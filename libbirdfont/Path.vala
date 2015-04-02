@@ -410,8 +410,8 @@ public class Path {
 	}
 	
 	public void draw_edit_point_handles (EditPoint e, Context cr) {
-		string color_left = "Control Point Handle";
-		string color_right = "Control Point Handle";
+		Color color_left = Theme.get_color ("Control Point Handle");
+		Color color_right = Theme.get_color ("Control Point Handle");
 		EditPoint handle_right = e.get_right_handle ().get_point ();
 		EditPoint handle_left = e.get_left_handle ().get_point ();
 
@@ -419,19 +419,19 @@ public class Path {
 		
 		if (e.type != PointType.HIDDEN) {
 			if (e.get_right_handle ().selected) {
-				color_right = "Selected Control Point Handle";
+				color_right = Theme.get_color ("Selected Control Point Handle");
 			} else if (e.get_right_handle ().active) {
-				color_right = "Active Control Point Handle";
+				color_right = Theme.get_color ("Active Control Point Handle");
 			} else {
-				color_right = "Control Point Handle";
+				color_right = Theme.get_color ("Control Point Handle");
 			}
 			
 			if (e.get_left_handle ().selected) {
-				color_left = "Selected Control Point Handle";
+				color_left = Theme.get_color ("Selected Control Point Handle");
 			} else if (e.get_left_handle ().active) {
-				color_left = "Active Control Point Handle";
+				color_left = Theme.get_color ("Active Control Point Handle");
 			} else {
-				color_left = "Control Point Handle";
+				color_left = Theme.get_color ("Control Point Handle");
 			}
 
 			if (!hide_end_handle || !(is_open () && e == points.get (points.size - 1))) {
@@ -447,40 +447,76 @@ public class Path {
 	}
 
 	public static void draw_edit_point_center (EditPoint e, Context cr) {
+		Color c;
+		
 		if (e.type != PointType.HIDDEN) {
 			if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
 				if (e.is_selected ()) {
 					if (e.active_point) {
-						draw_control_point (cr, e.x, e.y, "Selected Active Cubic Control Point");
+						if (e.color != null) {
+							c = (!) e.color;
+						} else  {
+							c = Theme.get_color ("Selected Active Cubic Control Point");
+						}
 					} else {
-						draw_control_point (cr, e.x, e.y, "Selected Cubic Control Point");
+						if (e.color != null) {
+							c = (!) e.color;
+						} else  {
+							c = Theme.get_color ("Selected Cubic Control Point");
+						}						
 					}
 				} else {
 					if (e.active_point) {
-						draw_control_point (cr, e.x, e.y, "Active Cubic Control Point");
+						if (e.color != null) {
+							c = (!) e.color;
+						} else  {
+							c = Theme.get_color ("Active Cubic Control Point");
+						}	
 					} else {
-						draw_control_point (cr, e.x, e.y, "Cubic Control Point");
+						if (e.color != null) {
+							c = (!) e.color;
+						} else  {
+							c = Theme.get_color ("Cubic Control Point");
+						}
 					}
 				}
 			} else {
 				if (e.is_selected ()) {
 					if (e.active_point) {
-						draw_control_point (cr, e.x, e.y, "Selected Active Quadratic Control Point");
+						if (e.color != null) {
+							c = (!) e.color;
+						} else  {
+							c = Theme.get_color ("Selected Active Quadratic Control Point");
+						}
 					} else {
-						draw_control_point (cr, e.x, e.y, "Selected Quadratic Control Point");
+						if (e.color != null) {
+							c = (!) e.color;
+						} else  {
+							c = Theme.get_color ("Selected Quadratic Control Point");
+						}
 					}
 				} else {
 					if (e.active_point) {
-						draw_control_point (cr, e.x, e.y, "Active Quadratic Control Point");
+						if (e.color != null) {
+							c = (!) e.color;
+						} else  {
+							c = Theme.get_color ("Active Quadratic Control Point");
+						}
 					} else {
-						draw_control_point (cr, e.x, e.y, "Quadratic Control Point");
+						if (e.color != null) {
+							c = (!) e.color;
+						} else  {
+							c = Theme.get_color ("Quadratic Control Point");
+						}
 					}
 				}
 			}
+			
+			draw_control_point (cr, e.x, e.y, c);
 		} 
 	}
 	
-	public static void draw_control_point (Context cr, double x, double y, string color, double size = 3.5) {
+	public static void draw_control_point (Context cr, double x, double y, Color color, double size = 3.5) {
 		Glyph g = MainWindow.get_current_glyph ();
 		double ivz = 1 / g.view_zoom;
 		double width = size * Math.sqrt (stroke_width) * ivz;
@@ -492,7 +528,7 @@ public class Path {
 		x = xc + x - (width / 2.0) * ivz; 
 		y = yc - y - (width / 2.0) * ivz;
 
-		Theme.color (cr, color);
+		cr.set_source_rgba (color.r, color.g, color.b, color.a);
 		
 		cr.move_to (x, y);
 		cr.arc (x, y, width, 0, 2 * Math.PI);
@@ -764,8 +800,7 @@ public class Path {
 		if (!is_over_boundry (x, y)) {
 			return false;
 		}
-		
-		
+			
 		// generate a rasterized image of the object
 		width = 160;
 		click_map = new ClickMap (width);
@@ -1667,7 +1702,7 @@ public class Path {
 		int i;
 		int index = 0;
 		
-		if (!has_deleted_point ()) { 
+		if (!has_deleted_point ()) {
 			return path_list;
 		}
 		
@@ -1676,7 +1711,7 @@ public class Path {
 			return path_list;
 		}
 		
-		// set start position to the point that will be removed	
+		// set start position to a point that will be removed	
 		for (i = 0; i < points.size; i++) {
 			p = points.get (i);
 						
@@ -1959,6 +1994,7 @@ public class Path {
 		find_intersection (h1.parent.x, h1.parent.y, h1.x, h1.y, h2.parent.x, h2.parent.y, h2.x, h2.y, out point_x, out point_y);
 	}
 
+	/** Finx intersection point for two straight lines. */
 	public static void find_intersection_point (EditPoint p1, EditPoint p2, EditPoint q1, EditPoint q2, out double point_x, out double point_y) {
 		find_intersection (p1.x, p1.y, p2.x, p2.y, q1.x, q1.y, q2.x, q2.y, out point_x, out point_y);
 	}

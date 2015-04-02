@@ -319,20 +319,6 @@ public class GlyfTable : OtfTable {
 		}
 		printd (@"length after padding: $(fd.length ())\n");
 	}
-
-	public Glyph? read_glyph (string name) throws GLib.Error {
-		Glyph? glyph;
-		int i;
-		
-		i = post_table.get_gid (name);
-		
-		if (i == -1) {
-			return null;
-		}
-		
-		glyph = parse_index (i, dis, loca_table, hmtx_table, head_table, post_table);
-		return glyph;
-	}
 	
 	public new void parse (FontData dis, CmapTable cmap_table, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table, KernTable kern_table) throws GLib.Error {
 		this.cmap_table = cmap_table;
@@ -342,56 +328,6 @@ public class GlyfTable : OtfTable {
 		this.head_table = head_table;
 		this.kern_table = kern_table;
 		this.dis = dis;
-	}
-	
-	Glyph parse_index (int index, FontData dis, LocaTable loca, HmtxTable hmtx_table, HeadTable head_table, PostTable post_table) throws GLib.Error {
-
-// FIXME: DELETE parse with freetype
-		Glyph glyph = new Glyph ("");
-/*
-		double xmin, xmax;
-		double units_per_em = head_table.get_units_per_em ();
-		unichar character = 0;
-		string name;
-		
-		character = cmap_table.get_char (index);
-		name = post_table.get_name (index);
-		
-		if (name == "") {
-			StringBuilder name_c = new StringBuilder ();
-			name_c.append_unichar (character);
-			name = name_c.str;
-		}
-
-		printd (@"name: $(name)\n");
-
-		if (!loca.is_empty (index)) {	
-			glyph = parse_next_glyf (dis, character, index, out xmin, out xmax, units_per_em);
-			
-			glyph.left_limit = xmin - hmtx_table.get_lsb (index);
-			glyph.left_limit = 0;
-			glyph.right_limit = glyph.left_limit + hmtx_table.get_advance (index);
-		} else {
-			// add empty glyph
-			glyph = new Glyph (name, character);
-			glyph.left_limit = -hmtx_table.get_lsb (index);
-			glyph.right_limit = hmtx_table.get_advance (index) - hmtx_table.get_lsb (index);				
-		}
-		
-		glyph.name = name;
-
-		if (character == 0) {
-			glyph.set_unassigned (true);
-		}
-		
-		if (character == 0 && name != "") {
-			stderr.printf (@"Got null character\n");
-			stderr.printf (@"gid: $index\n");
-			stderr.printf (@"char: $((uint) character)\n");
-			stderr.printf (@"name: $(name)\n");
-		}
-*/
-		return glyph;
 	}
 	
 	Glyph parse_next_composite_glyf (FontData dis, unichar character, int pgid) throws Error {
