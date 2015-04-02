@@ -255,7 +255,7 @@ public class StrokeTool : Tool {
 		
 		distance = Path.distance_to_point (corner, original);
 		
-		ratio = 1.5 * fabs (stroke_width) / distance; // FIXME: cutoff parameter
+		ratio = fabs (stroke_width) / distance;
 				
 		if (ratio > 1) {
 			stroked.add_point (corner);	
