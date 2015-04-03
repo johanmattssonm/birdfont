@@ -678,7 +678,7 @@ public class TabBar : GLib.Object {
 			if (MainWindow.get_menu ().show_menu) {
 				Theme.text_color (menu_icon, "Foreground Inverted");
 			} else {
-				Theme.text_color (menu_icon, "Foreground 2");
+				Theme.text_color (menu_icon, "Highlighted 1");
 			}
 			
 			menu_icon.set_font_size (40 / scale);

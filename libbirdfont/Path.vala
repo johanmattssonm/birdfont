@@ -2082,6 +2082,10 @@ public class Path {
 	}
 	
 	public static bool is_counter (PathList pl, Path path) {
+		return counters (pl, path) % 2 != 0;
+	}
+
+	public static int counters (PathList pl, Path path) {
 		int inside_count = 0;
 		bool inside;
 		
@@ -2100,10 +2104,11 @@ public class Path {
 			}
 		}
 		
-		return inside_count % 2 != 0;
-	}
+		return inside_count;
+	}	
 	
-	public void remove_points_on_points () {
+	/** @param t smallest distance to other points. */
+	public void remove_points_on_points (double t = 0.00001) {
 		Gee.ArrayList<EditPoint> remove = new Gee.ArrayList<EditPoint> ();
 		EditPoint n;
 		EditPointHandle hr, h;
@@ -2121,7 +2126,7 @@ public class Path {
 				n = points.get (0);
 			}
 				
-			if (fabs (n.x - ep.x) < 0.00001 && fabs (n.y - ep.y) < 0.00001) {
+			if (fabs (n.x - ep.x) < t && fabs (n.y - ep.y) < t) {
 				remove.add (ep);
 			}
 		}
@@ -2140,8 +2145,8 @@ public class Path {
 			h.angle = hr.angle;
 			h.type = hr.type;
 			
-			if (h.length < 0.00001) {
-				h.length = 0.00001;
+			if (h.length < t) {
+				h.length = t;
 				h.angle = n.get_right_handle ().angle - PI;
 			}
 			

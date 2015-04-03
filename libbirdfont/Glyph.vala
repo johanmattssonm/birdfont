@@ -835,6 +835,10 @@ public class Glyph : FontDisplay {
 		double view_zoom_x, view_zoom_y;
 		double ivz, off;
 
+		if (move_canvas) {
+			return;
+		}
+
 		if (Path.distance (x, x + w, y, y + h) < 7) {
 			zoom_in ();
 		} else {
@@ -1230,6 +1234,10 @@ public class Glyph : FontDisplay {
 	}
 	
 	public override void zoom_in () {
+		if (move_canvas) {
+			return;
+		}
+		
 		set_zoom_area (10, 10, allocation.width - 10, allocation.height - 10);
 		set_zoom_from_area ();
 		update_view ();

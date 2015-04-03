@@ -21,6 +21,12 @@ public class PathList : GLib.Object {
 		 paths = new Gee.ArrayList<Path> ();
 	}
 	
+	public void add_unique (Path p) {
+		if (paths.index_of (p) == -1) {
+			paths.add (p);
+		}
+	}
+	
 	public void add (Path p) {
 		paths.add (p);
 	}

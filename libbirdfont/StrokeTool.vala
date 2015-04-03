@@ -48,11 +48,7 @@ public class StrokeTool : Tool {
 		PathList paths = new PathList ();
 		
 		foreach (Path p in g.active_paths) {
-			if (p.stroke == 0) {
-				add_self_intersection_points (p);
-			} else {
-				paths.append (get_stroke (p, p.stroke));
-			}
+			paths.append (get_stroke (p, p.stroke));
 		}
 		
 		foreach (Path np in paths.paths) {
@@ -63,18 +59,20 @@ public class StrokeTool : Tool {
 	public static PathList get_stroke (Path path, double thickness) {
 		PathList pl = new PathList ();
 		PathList parts;
+		Path original = path.copy ();
 		
-		parts = new PathList ();
-		parts.add (path);
+		original.remove_points_on_points ();
 		
 		// split self intersecting paths before interpolating
-		// parts = get_parts (path.copy ()); 
+		parts = get_parts (original); 
 
 		foreach (Path p in parts.paths) {
 			p.get_first_point ().color = new Color (0, 1, 0, 1);
 			p.get_last_point ().color = new Color (0, 0, 0, 1);
 			pl.append (get_stroke_outline (p, thickness));
 		}
+		
+		pl = merge (pl);
 		
 		return pl;	
 	}
@@ -347,10 +345,33 @@ public class StrokeTool : Tool {
 		return parts;
 	}
 	
-	static PathList get_parts (Path path, PathList? paths = null) {
+	static PathList get_parts (Path path) {
+		PathList intersections;
+		PathList pli;
+		PathList r;
+		Path np;
+		
+		r = get_parts_self (path);
+		intersections = new PathList ();
+		
+		foreach (Path p in r.paths) {
+			intersections.add (p);
+		}
+		
+		foreach (Path p1 in r.paths) {
+			foreach (Path p2 in r.paths) {
+				if (merge_path (p1, p2, out np)) {
+					intersections.append (get_parts (np));
+				}
+			}	
+		}
+		return intersections;
+	}
+	
+	static PathList get_parts_self (Path path, PathList? paths = null) {
 		PathList pl;
 		PathList r;
-		
+
 		r = paths == null ? new PathList () : (!) paths;
 		pl = split (path);
 
@@ -358,14 +379,14 @@ public class StrokeTool : Tool {
 			if (!has_self_intersection (part)) {
 				r.add (part);
 			} else {
-				get_parts (part, r);
+				get_parts_self (part, r);
 			}
 		}
 		
 		if (r.paths.size == 0) {
 			warning ("No parts in path");
 		}
-					
+				
 		return r;
 	}
 
@@ -446,19 +467,7 @@ public class StrokeTool : Tool {
 			pl.add (old_path);
 		}
 		
-		if (stroke_selected) { 
-			foreach (Path pn in pl.paths) {
-				((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (pn);
-			}
-		}
-		
 		foreach (Path pn in pl.paths) {
-			
-			// FIXME: DELETE
-			if (pn.has_deleted_point ()) {
-				warning ("Points left.");
-			}
-			
 			pn.close ();
 		}
 		
@@ -636,6 +645,11 @@ public class StrokeTool : Tool {
 		PathList remove = new PathList ();
 		
 		foreach (Path p in parts.paths) {
+			
+			if (stroke_selected) { // FIXME: DELETE
+				((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (p);
+			}
+			
 			if (is_stroke (original, p, stroke_width)) {
 				remove.add (p);
 			}
@@ -654,13 +668,11 @@ public class StrokeTool : Tool {
 		original.all_of_path ((cx, cy, ct) => {
 			foreach (EditPoint p in part.points) {
 					if (Path.distance (cx, p.x, cy, p.y) < stroke_size - 0.5) {
-						if (48 < p.x < 50) print (@"D: $(Path.distance (cx, p.x, cy, p.y)) <  $(stroke_size) \n");
-						
-						// p.color = new Color (1, 0, 1, 1); // FIXME: DELETE
+						p.color = new Color (1, 0, 1, 1); // FIXME: DELETE
 						stroke = true;
 						return false;
 					} else {
-						// p.color = new Color (1, 1, 1, 1); // FIXME: DELETE
+						p.color = new Color (1, 1, 1, 1); // FIXME: DELETE
 					}
 			}
 			
@@ -670,18 +682,60 @@ public class StrokeTool : Tool {
 		return stroke;
 	}
 	
-	static PathList merge (PathList pl) {
-		Path merged;
+	static Path get_outline (Path path) {
+		PathList pl = get_parts (path);
+		Path outline = new Path ();
+		int inside;
+		int min_inside = int.MAX;
+		int points = 0;		
+		int i = 0;
 		
-		foreach (Path p1 in pl.paths) {
-			foreach (Path p2 in pl.paths) {
-				if (merge_path (p1, p2, out merged)) {
-					//pl.paths.remove (p1);
-					//pl.paths.remove (p2);
-					pl.add (merged);
-					return pl;
+		foreach (Path p in pl.paths) {
+			inside = Path.counters (pl, p);
+				
+			if (inside < min_inside) {
+				outline = p;
+				min_inside = inside;
+			}
+				
+			if (stroke_selected) { // FIXME: DELETE
+				((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (p);
+			}
+			i++;
+		}
+		
+		if (min_inside == 0) {
+			foreach (Path p in pl.paths) {
+				if (p.points.size > points) {
+					outline = p;
+					points = p.points.size;
 				}
 			}
+		}
+		
+		return outline;
+	}
+	
+	static PathList merge (PathList pl) {
+		Path merged;
+		int i, j;
+		
+		i = 0;
+		foreach (Path p1 in pl.paths) {
+			j = 0;
+			foreach (Path p2 in pl.paths) {
+				if (merge_path (p1, p2, out merged)) {
+					pl.paths.remove (p1);
+					pl.paths.remove (p2);
+					
+					merged = get_outline (merged); 
+					pl.add (merged);
+					
+					return merge (pl);
+				} 
+				j++;
+			}
+			i++;
 		}
 		
 		return pl;
@@ -700,7 +754,7 @@ public class StrokeTool : Tool {
 		
 		return i;
 	}
-
+	
 	/** @return true if the two paths can be merged. */
 	static bool merge_path (Path path1, Path path2, out Path merged) {
 		PathList pl1, pl2;
@@ -708,6 +762,10 @@ public class StrokeTool : Tool {
 		int i;
 		
 		merged = new Path ();
+		
+		if (path1 == path2) {
+			return false;
+		}
 		
 		if (add_intersection_points (path1, path2)) {
 			i = mark_intersection_as_deleted (path1);
@@ -752,6 +810,7 @@ public class StrokeTool : Tool {
 		
 		return intersection;
 	}
+
 }
 
 }
