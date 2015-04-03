@@ -16,7 +16,7 @@ using Cairo;
 
 namespace BirdFont {
 
-/** Help line */
+/** Guide */
 public class Line : GLib.Object {
 	public static const bool VERTICAL = true;
 	public static const bool HORIZONTAL = false;

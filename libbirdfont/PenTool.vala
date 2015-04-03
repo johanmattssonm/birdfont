@@ -1004,6 +1004,88 @@ public class PenTool : Tool {
 		return m;	
 	}
 	
+	public static Path merge_open_paths (Path path1, Path path2) {
+		Path union, merge;
+		EditPoint first_point;
+		
+		return_if_fail (path1.points.size > 1);
+		return_if_fail (path2.points.size > 1);
+
+		union = path1.copy ();
+		merge = path2.copy ();
+
+		merge.points.get (0).set_tie_handle (false);
+		merge.points.get (0).set_reflective_handles (false);
+		
+		merge.points.get (merge.points.size - 1).set_tie_handle (false);
+		merge.points.get (merge.points.size - 1).set_reflective_handles (false);
+						
+		union.points.get (union.points.size - 1).set_tie_handle (false);
+		union.points.get (union.points.size - 1).set_reflective_handles (false);
+
+		union.points.get (0).set_tie_handle (false);
+		union.points.get (0).set_reflective_handles (false);
+				
+		first_point = merge.get_first_point ();
+		
+		if (union.get_last_point ().get_left_handle ().is_curve ()) {
+			first_point.get_left_handle ().convert_to_curve ();
+		} else {
+			first_point.get_left_handle ().convert_to_line ();
+		}
+		
+		first_point.get_left_handle ().move_to_coordinate_internal (
+			union.get_last_point ().get_left_handle ().x,
+			union.get_last_point ().get_left_handle ().y);
+
+		union.delete_last_point ();
+		
+		union.append_path (merge);
+		
+		return union;
+	}
+	
+	public static void close_path (Path path) {
+		Path? p;
+		EditPoint first_point;
+		bool last_segment_is_line;
+		bool first_segment_is_line;
+		
+		return_if_fail (path.points.size > 1);
+
+		last_segment_is_line = path.get_last_point ().get_left_handle ().is_line ();
+		first_segment_is_line = path.get_first_point ().get_right_handle ().is_line ();
+		
+		// TODO: set point type
+		path.points.get (0).left_handle.move_to_coordinate (
+			path.points.get (path.points.size - 1).left_handle.x,
+			path.points.get (path.points.size - 1).left_handle.y);
+			
+		path.points.get (0).left_handle.type = 
+			path.points.get (path.points.size - 1).left_handle.type;
+
+		path.points.get (0).recalculate_linear_handles ();
+		path.points.get (path.points.size - 1).recalculate_linear_handles ();
+		
+		// force the connected handle to move
+		path.points.get (0).set_position (
+			path.points.get (0).x, path.points.get (0).y);
+	
+		path.points.remove_at (path.points.size - 1);
+		
+		path.close ();
+
+		if (last_segment_is_line) {
+			path.get_first_point ().get_left_handle ().convert_to_line ();
+			path.get_first_point ().recalculate_linear_handles ();
+		}
+
+		if (first_segment_is_line) {
+			path.get_first_point ().get_right_handle ().convert_to_line ();
+			path.get_first_point ().recalculate_linear_handles ();
+		}
+	}	
+	
 	private static void join_paths (double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path? p;
@@ -1024,8 +1106,8 @@ public class PenTool : Tool {
 			warning ("No path to join.");
 			return;
 		}
+		
 		path = (!) p;
-
 		if (!path.is_open ()) {
 			warning ("Path is closed.");
 			return;
@@ -1053,56 +1135,19 @@ public class PenTool : Tool {
 		if (is_endpoint ((!) active_edit_point)
 			&& is_close_to_point (path.points.get (0), px, py)) {
 			
-			last_segment_is_line = path.get_last_point ().get_left_handle ().is_line ();
-			first_segment_is_line = path.get_first_point ().get_right_handle ().is_line ();
-			
-			// TODO: set point type
-			path.points.get (0).left_handle.move_to_coordinate (
-				path.points.get (path.points.size - 1).left_handle.x,
-				path.points.get (path.points.size - 1).left_handle.y);
-				
-			path.points.get (0).left_handle.type = 
-				path.points.get (path.points.size - 1).left_handle.type;
-
-			path.points.get (0).recalculate_linear_handles ();
-			path.points.get (path.points.size - 1).recalculate_linear_handles ();
-			
-			// force the connected handle to move
-			path.points.get (0).set_position (
-				path.points.get (0).x, path.points.get (0).y);
-		
-			path.points.remove_at (path.points.size - 1);
-			
-			path.close ();
+			close_path (path);
 			glyph.close_path ();
-
-			if (last_segment_is_line) {
-				path.get_first_point ().get_left_handle ().convert_to_line ();
-				path.get_first_point ().recalculate_linear_handles ();
-			}
-
-			if (first_segment_is_line) {
-				path.get_first_point ().get_right_handle ().convert_to_line ();
-				path.get_first_point ().recalculate_linear_handles ();
-			}
+			force_direction ();
 			
- 			force_direction ();
-
 			if (direction_changed) {
 				path.reverse ();
 				update_selection ();
 			}
 			
 			remove_all_selected_points ();
-
 			return;
 		}
 		
-		union = new Path ();
-		foreach (EditPoint ep in path.points) {
-			union.add_point (ep.copy ());
-		}
-				
 		foreach (Path merge in glyph.path_list) {
 			// don't join path with itself here
 			if (path == merge) {
@@ -1123,35 +1168,9 @@ public class PenTool : Tool {
 			return_if_fail (merge.points.size > 0);
 
 			if (is_close_to_point (merge.points.get (0), px, py)) {
-				merge.points.get (0).set_tie_handle (false);
-				merge.points.get (0).set_reflective_handles (false);
-				
-				merge.points.get (merge.points.size - 1).set_tie_handle (false);
-				merge.points.get (merge.points.size - 1).set_reflective_handles (false);
-								
-				path.points.get (path.points.size - 1).set_tie_handle (false);
-				path.points.get (path.points.size - 1).set_reflective_handles (false);
+				union = merge_open_paths (path, merge); 
 
-				path.points.get (0).set_tie_handle (false);
-				path.points.get (0).set_reflective_handles (false);
-				
-				second_path = merge.copy ();
-				
-				first_point = second_path.get_first_point ();
-				
-				if (union.get_last_point ().get_left_handle ().is_curve ()) {
-					first_point.get_left_handle ().convert_to_curve ();
-				} else {
-					first_point.get_left_handle ().convert_to_line ();
-				}
-				
-				first_point.get_left_handle ().move_to_coordinate_internal (union.get_last_point ().get_left_handle ().x, union.get_last_point ().get_left_handle ().y);
-
-				union.delete_last_point ();
-				
-				union.append_path (second_path);
 				glyph.add_path (union);
-				
 				glyph.delete_path (path);
 				glyph.delete_path (merge);
 				glyph.clear_active_paths ();
