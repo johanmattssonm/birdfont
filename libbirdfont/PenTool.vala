@@ -1046,8 +1046,6 @@ public class PenTool : Tool {
 	}
 	
 	public static void close_path (Path path) {
-		Path? p;
-		EditPoint first_point;
 		bool last_segment_is_line;
 		bool first_segment_is_line;
 		
@@ -1090,12 +1088,9 @@ public class PenTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path? p;
 		Path path;
+		Path union;
 		bool direction_changed = false;
-		Path union, second_path;
-		EditPoint first_point;
 		int px, py;
-		bool last_segment_is_line;
-		bool first_segment_is_line;
 
 		if (glyph.path_list.size == 0) {
 			return;

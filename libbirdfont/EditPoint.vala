@@ -44,8 +44,10 @@ public class EditPoint : GLib.Object {
 	public static uint DELETED = 1 << 2;
 	public static uint TIE = 1 << 3;
 	public static uint REFLECTIVE = 1 << 4;
+	
 	public static uint INTERSECTION = 1 << 5;
 	public static uint NEW_CORNER = 1 << 6;
+	public static uint STROKE_OFFSET = 1 << 7;
 	
 	public uint flags = NONE;
 	
