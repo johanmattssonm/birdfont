@@ -48,6 +48,9 @@ public class EditPoint : GLib.Object {
 	public static uint INTERSECTION = 1 << 5;
 	public static uint NEW_CORNER = 1 << 6;
 	public static uint STROKE_OFFSET = 1 << 7;
+	public static uint COUNTER_TO_OUTLINE = 1 << 8;
+	
+	public bool counter_to_outline = false;
 	
 	public uint flags = NONE;
 	
@@ -442,6 +445,7 @@ public class EditPoint : GLib.Object {
 		new_point.left_handle.type = left_handle.type;
 		
 		new_point.color = color;
+		new_point.counter_to_outline = counter_to_outline;
 		
 		return new_point;
 	}

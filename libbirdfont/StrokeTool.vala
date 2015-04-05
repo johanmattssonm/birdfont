@@ -65,36 +65,41 @@ public class StrokeTool : Tool {
 		
 		n = get_stroke_outline (original, thickness);
 		o = split_corners (n);
-		remove_self_intersecting_corners (o);	
-		
+		remove_self_intersecting_corners (o);
+		o = merge (o);
+			
 		return o;
 	}
 	
 	static bool is_corner_self_intersection (Path p) {
 		EditPointHandle l, r;
-		bool corner, i;
+		bool corner, i, remove;
 		
+		remove = false;
 		i = false;
 		p.remove_points_on_points ();
 		foreach (EditPoint ep in p.points) {
 			
 			corner = (ep.flags & EditPoint.NEW_CORNER) > 0;
-							
+
+			if ((ep.flags & EditPoint.COUNTER_TO_OUTLINE) > 0) {
+				return false;
+			}
+										
 			if (corner || i) {
 				l = ep.get_left_handle ();
 				r = ep.get_right_handle ();
 				
 				if (fabs (l.angle - r.angle) < 0.005) { 
 					ep.color = new Color (1,0,0,1);
-					
-					return true;
+					remove = true;
 				} else ep.color = new Color (0,0,1,1);
 			}
 			
 			i = corner && p.points.size == 4;
 		}
 		
-		return false;
+		return remove;
 	}
 	
 	static void remove_self_intersecting_corners (PathList pl) {
@@ -130,8 +135,9 @@ public class StrokeTool : Tool {
 	}
 	
 	public static PathList get_strokes (Path p, double thickness) {
-		Path counter, outline;
-		Path merged;
+		Path counter = new Path ();
+		Path outline = new Path ();
+		Path merged = new Path ();
 		PathList paths = new PathList ();
 			
 		if (!p.is_open () && p.is_filled ()) {
@@ -444,16 +450,20 @@ public class StrokeTool : Tool {
 				
 							if ((p1.flags & EditPoint.STROKE_OFFSET) > 0
 								&& (a1.flags & EditPoint.STROKE_OFFSET) > 0) {
-								p1.deleted = true;
-								a1.deleted = true;
-								p.remove_deleted_points ();
+								p1.color = new Color (1,0,1,0.7);
+								a1.color = new Color (1,0,1,0.7);
+								p1.flags = EditPoint.COUNTER_TO_OUTLINE;
+								a1.flags = EditPoint.COUNTER_TO_OUTLINE;
+								
+								p1.counter_to_outline = true;
+								a1.counter_to_outline = true;
 							}
 						}
 					}
 				}		
-			}
+			}		
 		}
-		
+
 		return false;
 	}
 	
@@ -863,9 +873,62 @@ public class StrokeTool : Tool {
 		return outline;
 	}
 	
+	static void remove_points_in_stroke (PathList pl) {
+		foreach (Path p in pl.paths) {
+			remove_points_in_stroke_for_path (p, pl);
+		}
+	}
+
+	static void remove_points_in_stroke_for_path (Path p, PathList pl) {
+		bool remove = false;
+		EditPoint ep;
+		EditPoint next;
+		EditPoint prev;
+		
+		for (int i = 0; i < p.points.size; i++) {
+			prev = p.points.get ((i - 1) % p.points.size);
+			ep = p.points.get (i);
+			next = p.points.get ((i + 1) % p.points.size);
+			
+			if ((prev.flags & EditPoint.COUNTER_TO_OUTLINE) > 0) { // FIXME: backwards
+				remove = true;
+			}
+			
+			if (remove) {
+				bool i = is_inside (new PointSelection (ep, p), pl);
+				if (is_inside (new PointSelection (ep, p), pl)) { // try next is inside
+					ep.deleted = remove;
+					ep.color = new Color (1, 1, 0.5, 0.5);
+				} else {
+					// here.					
+					remove = false;
+				}
+			}
+
+
+		}
+					
+		p.remove_deleted_points ();
+	}
+	
+	static bool is_inside (PointSelection ps, PathList pl) {
+		foreach (Path p in pl.paths) {
+			if (p != ps.path) {
+				if (SvgParser.is_inside (ps.point, p)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	static PathList merge (PathList pl) {
 		Path merged;
 		int i, j;
+		
+		remove_points_in_stroke (pl);
+		return pl;
 		
 		i = 0;
 		foreach (Path p1 in pl.paths) {
