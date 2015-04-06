@@ -744,6 +744,10 @@ public class Path {
 		return is_over_coordinate_var (x, y);
 	}
 	
+	public static double point_distance (EditPoint p1, EditPoint p2) {
+		return distance (p1.x, p2.x, p1.y, p2.y);
+	}
+	
 	public static double distance (double ax, double bx, double ay, double by) {
 		return Math.fabs (Math.sqrt (Math.pow (ax - bx, 2) + Math.pow (ay - by, 2)));
 	}

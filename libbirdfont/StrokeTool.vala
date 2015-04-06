@@ -64,11 +64,18 @@ public class StrokeTool : Tool {
 		original.remove_points_on_points ();
 		
 		n = get_stroke_outline (original, thickness);
+		
 		o = split_corners (n);
 		remove_self_intersecting_corners (o);
+
 		o = merge (o);
+		
+		PathList parts = new PathList ();
+		foreach (Path p in o.paths) {
+			parts.append (split (p));
+		}
 			
-		return o;
+		return parts;
 	}
 	
 	static bool is_corner_self_intersection (Path p) {
@@ -106,10 +113,6 @@ public class StrokeTool : Tool {
 		PathList parts;
 		foreach (Path p in pl.paths) {
 			
-			if (stroke_selected) { // FIXME: DELETE
-				((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (p);
-			}
-		
 			if (is_corner_self_intersection (p)) {
 				parts = get_parts (p);
 				if (parts.paths.size > 1) {
@@ -402,7 +405,6 @@ public class StrokeTool : Tool {
 		EditPoint a1, a2;
 		PathList r;
 		bool split;
-		
 		
 		foreach (Path p in pl.paths) {
 			if (p.points.size == 0) {
@@ -874,47 +876,195 @@ public class StrokeTool : Tool {
 	}
 	
 	static void remove_points_in_stroke (PathList pl) {
+		PathList result;
+		PathList r;
+		PathList parts;
+		
 		foreach (Path p in pl.paths) {
-			remove_points_in_stroke_for_path (p, pl);
+			if (remove_points_in_stroke_for_path (p, pl, out r)) {
+				pl.append (r);
+				remove_points_in_stroke (pl);
+				return;
+			}
 		}
 	}
 
-	static void remove_points_in_stroke_for_path (Path p, PathList pl) {
+	static bool remove_points_in_stroke_for_path (Path p, PathList pl, out PathList result) {
 		bool remove = false;
-		EditPoint ep;
-		EditPoint next;
-		EditPoint prev;
+		EditPoint start_ep;
+		EditPoint start_next;
+		EditPoint start_prev;
+		EditPoint end_ep = new EditPoint ();
+		EditPoint end_next;
+		EditPoint end_prev;		
+		Path path2;
+		EditPoint found = new EditPoint ();
 		
-		for (int i = 0; i < p.points.size; i++) {
-			prev = p.points.get ((i - 1) % p.points.size);
-			ep = p.points.get (i);
-			next = p.points.get ((i + 1) % p.points.size);
+		result = new PathList ();
+		
+		for (int i = 1; i < p.points.size + 1; i++) {
+			start_prev = p.points.get ((i - 1) % p.points.size);
+			start_ep = p.points.get (i % p.points.size);
+			start_next = p.points.get ((i + 1) % p.points.size);
+		
+			if ((start_ep.flags & EditPoint.COUNTER_TO_OUTLINE) > 0) {
+				for (int j = i; j < p.points.size + i; j++) {
+					end_prev = p.points.get ((j - 1) % p.points.size);
+					end_ep = p.points.get (j % p.points.size);
+					end_next = p.points.get ((j + 1) % p.points.size);
+					
+					// FIXME: if (!is_inside_of_path
+					
+					if ((end_ep.flags & EditPoint.COUNTER_TO_OUTLINE) > 0) {
+						start_ep.flags = EditPoint.NONE;
+						end_ep.flags = EditPoint.NONE;
+					
+						//start_ep.color = new Color (0,0,1,1);
+						//end_ep.color = new Color (0,0,1,1);
+					
+						if (merge_segments (pl, p, start_prev, start_ep, end_ep, end_next, out result)) {
+							return true;
+						}
+					}
+				}
+			}			
+
+			start_ep.flags = EditPoint.NONE;
+			end_ep.flags = EditPoint.NONE;
+		}		
+		
+		return false;
+	}
+
+	static bool merge_segments (PathList pl,
+		Path path1, EditPoint start1, EditPoint stop1,
+		EditPoint start2, EditPoint stop2,
+		out PathList result) {
 			
-			if ((prev.flags & EditPoint.COUNTER_TO_OUTLINE) > 0) { // FIXME: backwards
-				remove = true;
-			}
-			
-			if (remove) {
-				bool i = is_inside (new PointSelection (ep, p), pl);
-				if (is_inside (new PointSelection (ep, p), pl)) { // try next is inside
-					ep.deleted = remove;
-					ep.color = new Color (1, 1, 0.5, 0.5);
+		result = new PathList ();
+		
+		PathList r1;
+		PathList r2;
+		
+		foreach (Path path2 in pl.paths) {
+			if (path2 != path1) {
+				reset_intersections (path1);
+				reset_intersections (path2);
+
+				if (add_merge_intersection_point (path1, path2, start1, stop1)) {
+					if (add_merge_intersection_point (path1, path2, start2, stop2)) {
+						
+						r1 = get_remaining_points (path1.copy ());
+						r2 = get_remaining_points (path2.copy ());
+						
+						if (r1.paths.size != 2) {
+							warning (@"Expecting two paths in r1 found $(r1.paths.size)\n");
+							reset_intersections (path1);
+							reset_intersections (path2);
+							return true;
+						}
+						
+						if (r2.paths.size != 2) {
+							warning (@"Expecting two paths in r2 found $(r2.paths.size)\n");
+							reset_intersections (path1);
+							reset_intersections (path2);
+							return true;
+						}
+						
+						pl.paths.remove (path1);
+						pl.paths.remove (path2);
+						
+						// FIXME: find criteria
+						
+						start1.color = new Color (1,0,0,1);
+						stop1.color = new Color (1,0,0,1);
+						start2.color = new Color (1,0,0,1);
+						stop2.color = new Color (1,0,0,1);
+						
+						double d1 = Path.point_distance (r1.paths.get (0).get_first_point (), 
+							r2.paths.get (0).get_first_point ());
+							
+						double d2 = Path.point_distance (r1.paths.get (0).get_first_point (), 
+							r2.paths.get (1).get_first_point ());
+						
+						Path m1, m2;
+						
+						if (d1 > d2) {
+							m1 = PenTool.merge_open_paths (r1.paths.get (0), r2.paths.get (0));
+							m2 = PenTool.merge_open_paths (r1.paths.get (1), r2.paths.get (1));
+						} else {
+							m1 = PenTool.merge_open_paths (r1.paths.get (1), r2.paths.get (0));
+							m2 = PenTool.merge_open_paths (r1.paths.get (0), r2.paths.get (1));
+						}
+
+						result.add (m1);
+						result.add (m2);
+												
+						return true;
+					} else {
+						reset_intersections (path1);
+						reset_intersections (path2);
+					}
 				} else {
-					// here.					
-					remove = false;
+					reset_intersections (path1);
+					reset_intersections (path2);
 				}
 			}
-
-
 		}
-					
-		p.remove_deleted_points ();
+		
+		return false;
 	}
-	
-	static bool is_inside (PointSelection ps, PathList pl) {
+
+	static void reset_intersections (Path p) {
+		foreach (EditPoint ep in p.points) {
+			ep.flags &= uint.MAX ^ EditPoint.INTERSECTION;
+			ep.deleted = false;
+		}
+		p.remove_points_on_points ();
+	}
+
+	static bool has_counter_to_outline (Path p) {
+		foreach (EditPoint ep in p.points) {
+			if ((ep.flags & EditPoint.COUNTER_TO_OUTLINE) > 0) {
+				return true;
+			}	
+		}
+		
+		return false;
+	}
+
+	static bool add_merge_intersection_point (Path path1, Path path2, EditPoint first, EditPoint next) {
+		double ix, iy;
+		bool intersection;
+
+		intersection = false;
+		ix = 0;
+		iy = 0;
+		path2.all_segments ((p1, p2) => {
+			int i;
+			
+			intersection = segments_intersects (first, next, p1, p2, out ix, out iy);
+			
+			if (intersection) {			
+				add_intersection (path1, first, next, ix, iy);
+				add_intersection (path2, p1, p2, ix, iy);
+
+				i = mark_intersection_as_deleted (path1);
+				i = mark_intersection_as_deleted (path2);
+			} 
+			
+			return !intersection;
+		});
+		
+		return intersection;
+	}
+		
+	static bool is_inside_of_path (PointSelection ps, PathList pl, out Path outline) {
+		outline = new Path ();
 		foreach (Path p in pl.paths) {
 			if (p != ps.path) {
 				if (SvgParser.is_inside (ps.point, p)) {
+					outline = p;
 					return true;
 				}
 			}
@@ -928,29 +1078,38 @@ public class StrokeTool : Tool {
 		int i, j;
 		
 		remove_points_in_stroke (pl);
-		return pl;
 		
-		i = 0;
-		foreach (Path p1 in pl.paths) {
-			j = 0;
-			foreach (Path p2 in pl.paths) {
-				if (merge_path (p1, p2, out merged)) {
-					pl.paths.remove (p1);
-					pl.paths.remove (p2);
-					
-					merged = get_outline (merged); 
-					pl.add (merged);
-					
-					return merge (pl);
-				} 
-				j++;
+		PathList r = new PathList ();
+		foreach (Path p in pl.paths) {
+			r.append (get_parts (p));
+			
+			if (stroke_selected) { // FIXME: DELETE
+				((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (p);
 			}
-			i++;
 		}
 		
-		return pl;
+		return r;
 	}
 
+	public static int counters_in_point_in_path (Path p, EditPoint ep) {
+		int inside_count = 0;
+		bool inside;
+		
+		if (p.points.size > 1) {
+			inside = true;
+			
+			if (!SvgParser.is_inside (ep, p)) {
+				inside = false;
+			}
+
+			if (inside) {
+				inside_count++; 
+			}
+		}
+		
+		return inside_count;
+	}
+	
 	static int mark_intersection_as_deleted (Path path) {
 		int i = 0;
 		

@@ -173,7 +173,7 @@ public class HmtxTable : OtfTable {
 		
 		font_data = fd;
 		
-		if (max_advance != 0) {
+		if (max_advance == 0) {
 			warning ("max_advance is zero");
 		}
 	}
