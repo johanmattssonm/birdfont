@@ -23,6 +23,7 @@
 	<color name="Control Point Handle" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 8" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Fill Color" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Foreground Inverted Table" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 9" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Stroke Color" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Tool Foreground" red="1" green="1" blue="1" alpha="1"/>
@@ -54,6 +55,7 @@
 	<color name="Active Cubic Control Point" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Foreground 1" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Active Control Point Handle" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Merge" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Foreground 2" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Foreground 3" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Overview Selected Foreground" red="1" green="1" blue="1" alpha="1"/>

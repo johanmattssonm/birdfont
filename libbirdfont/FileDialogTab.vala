@@ -204,7 +204,7 @@ public class FileDialogTab : FontDisplay {
 				cr.restore ();
 			} else {
 				cr.save ();
-				Theme.color (cr, "Foreground Inverted");
+				Theme.color (cr, "Foreground");
 				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
 				cr.fill ();
 				cr.restore ();
@@ -214,7 +214,7 @@ public class FileDialogTab : FontDisplay {
 		// text
 		cr.save ();
 		if (dark) {
-			Theme.color (cr, "Foreground Inverted");
+			Theme.color (cr, "Foreground Inverted Table");
 		}
 		cr.move_to (60, y);
 		cr.set_font_size (12 * MainWindow.units);
