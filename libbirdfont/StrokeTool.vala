@@ -1106,7 +1106,7 @@ public class StrokeTool : Tool {
 	static PathList merge_path (Path path1, Path path2) {
 		EditPoint ep1, next, p1, p2, start_point;
 		Path path, other;
-		PathList pl1, pl2, r;
+		PathList pl1, pl2, r, other_paths;
 		bool intersects;
 		int s = 0;
 		int i;
@@ -1119,18 +1119,28 @@ public class StrokeTool : Tool {
 			s++;
 		}
 		
+		other_paths = new PathList ();
 		r = new PathList ();
 		path = path1;
 		other = path2;
+		other_paths.add (other);
+		intersects = false;
+		p1 = new EditPoint ();
+		p2 = new EditPoint ();
+		ix = 0;
+		iy = 0;
 		i = s;
 		path.points.get (i % path.points.size).color = new Color (0,1,0,1);
 		while (i < path.points.size + s) {
 			ep1 = path.points.get (i % path.points.size);
 			next = path.points.get ((i + 1) % path.points.size);
 			
-			intersects = segment_intersects (other, ep1, next, out ix, out iy,
-				out p1, out p2, true);
-				
+			foreach (Path o in other_paths.paths) {
+				other = o;
+				intersects = segment_intersects (other, ep1, next, out ix, out iy,
+					out p1, out p2, true);
+			}
+			
 			if (intersects) {
 				add_intersection (path, ep1, next, ix, iy);
 				add_intersection (other, p1, p2, ix, iy);
@@ -1144,10 +1154,10 @@ public class StrokeTool : Tool {
 				r.paths.remove (path);
 				r.paths.remove (other);
 				
-				path = pl2.paths.get (pl2.paths.size - 1);
-				other = pl1.paths.get (pl1.paths.size - 1);
-				
-				other.reverse ();
+				path = get_next_part (pl2, path.get_last_point ());
+				other_paths = pl1;
+				other_paths.append (pl2);
+				other_paths.paths.remove (path);
 				
 				r.append (pl1);
 				r.append (pl2);
@@ -1156,6 +1166,23 @@ public class StrokeTool : Tool {
 			}
 			
 			i++;
+		}
+		
+		return r;
+	}
+	
+	static Path get_next_part (PathList pl, EditPoint ep) {
+		double d, m;
+		Path r;
+		
+		r = new Path ();
+		m = double.MAX;
+		foreach (Path p in pl.paths) {
+			d = Path.distance_to_point (p.get_last_point (), ep);
+			if (d < m) {
+				m = d;
+				r = p;
+			}
 		}
 		
 		return r;
