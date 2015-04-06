@@ -1074,23 +1074,93 @@ public class StrokeTool : Tool {
 	}
 	
 	static PathList merge (PathList pl) {
-		Path merged;
-		int i, j;
-		
 		remove_points_in_stroke (pl);
 		
-		PathList r = new PathList ();
+		PathList r = pl;
 		foreach (Path p in pl.paths) {
-			r.append (get_parts (p));
-			
 			if (stroke_selected) { // FIXME: DELETE
 				((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (p);
 			}
 		}
+
+		PathList result = new PathList ();
+		PathList m;
+		
+		foreach (Path p1 in r.paths) {
+			foreach (Path p2 in r.paths) {
+				if (p1 != p2) {
+					if (p1.is_clockwise ()) { // FIXME
+						m = merge_path (p1, p2);
+						if (m.paths.size > 1) {
+							result.append (m);
+						}
+					}
+				}
+			}
+			result.add (p1);	
+		}
+		
+		return result;
+	}
+	
+	static PathList merge_path (Path path1, Path path2) {
+		EditPoint ep1, next, p1, p2, start_point;
+		Path path, other;
+		PathList pl1, pl2, r;
+		bool intersects;
+		int s = 0;
+		int i;
+		double ix, iy;
+		
+		foreach (EditPoint e in path1.points) {
+			if (SvgParser.is_inside (e, path2)) {
+				break;
+			}
+			s++;
+		}
+		
+		r = new PathList ();
+		path = path1;
+		other = path2;
+		i = s;
+		path.points.get (i % path.points.size).color = new Color (0,1,0,1);
+		while (i < path.points.size + s) {
+			ep1 = path.points.get (i % path.points.size);
+			next = path.points.get ((i + 1) % path.points.size);
+			
+			intersects = segment_intersects (other, ep1, next, out ix, out iy,
+				out p1, out p2, true);
+				
+			if (intersects) {
+				add_intersection (path, ep1, next, ix, iy);
+				add_intersection (other, p1, p2, ix, iy);
+				
+				pl1 = get_remaining_points (path.copy ());
+				pl2 = get_remaining_points (other.copy ());
+			
+				return_val_if_fail (0 < pl1.paths.size < 3, r);
+				return_val_if_fail (0 < pl2.paths.size < 3, r);
+				
+				r.paths.remove (path);
+				r.paths.remove (other);
+				
+				path = pl2.paths.get (pl2.paths.size - 1);
+				other = pl1.paths.get (pl1.paths.size - 1);
+				
+				other.reverse ();
+				
+				r.append (pl1);
+				r.append (pl2);
+				
+				i = 0;
+			}
+			
+			i++;
+		}
 		
 		return r;
 	}
-
+	
 	public static int counters_in_point_in_path (Path p, EditPoint ep) {
 		int inside_count = 0;
 		bool inside;
@@ -1114,6 +1184,7 @@ public class StrokeTool : Tool {
 		int i = 0;
 		
 		foreach (EditPoint p in path.points) {
+
 			if ((p.flags & EditPoint.INTERSECTION) > 0) {
 				p.deleted = true;
 				i++;
@@ -1124,7 +1195,7 @@ public class StrokeTool : Tool {
 	}
 	
 	/** @return true if the two paths can be merged. */
-	static bool merge_path (Path path1, Path path2, out Path merged) {
+	static bool merge_path_delete (Path path1, Path path2, out Path merged) {
 		PathList pl1, pl2;
 		Path p1, p2;
 		int i;
