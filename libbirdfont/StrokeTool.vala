@@ -699,7 +699,7 @@ public class StrokeTool : Tool {
 		return intersection;
 	}
 	
-	static void add_intersection (Path path, EditPoint prev, EditPoint next, double px, double py, Color? c = null) {
+	static EditPoint add_intersection (Path path, EditPoint prev, EditPoint next, double px, double py, Color? c = null) {
 		Gee.ArrayList<EditPoint> n = new Gee.ArrayList<EditPoint> ();
 		EditPoint ep1 = new EditPoint ();
 		EditPoint ep2 = new EditPoint ();
@@ -744,6 +744,8 @@ public class StrokeTool : Tool {
 		}
 		
 		path.recalculate_linear_handles ();
+		
+		return ep2;
 	}
 
 	static bool segments_intersects (EditPoint p1, EditPoint p2, EditPoint ep, EditPoint next,
@@ -787,11 +789,19 @@ public class StrokeTool : Tool {
 		bool only_offsets = false) {
 			
 		EditPoint p1, p2;
-		bool intersection;
+		bool intersection, inter;
+		double iix, iiy;
+		
+		double distance, min_distance;
+		
+		intersection = false;
 		
 		ix = 0;
 		iy = 0;
 				
+		iix = 0;
+		iiy = 0;
+
 		ia = new EditPoint ();
 		ib = new EditPoint ();
 		
@@ -799,6 +809,7 @@ public class StrokeTool : Tool {
 			return false;
 		}
 		
+		min_distance = double.MAX;
 		p1 = path.points.get (path.points.size - 1);
 		for (int i = 0; i < path.points.size; i++) {
 			p2 = path.points.get (i);
@@ -809,20 +820,32 @@ public class StrokeTool : Tool {
 				&& ((next.flags & EditPoint.STROKE_OFFSET) > 0);
 			
 			if (!only_offsets || is_offset) {
-				intersection = segments_intersects (p1, p2, ep, next, out ix, out iy, 
-					skip_points_on_points);
-					
-				if (intersection) {
-					ia = p1;
-					ib = p2;
-					return true;
+				if (p1 != ep && p2 != next) {
+					inter = segments_intersects (p1, p2, ep, next, out iix, out iiy, 
+						skip_points_on_points);
+						
+					if (inter) {
+						distance = Path.distance (ep.x, iix, ep.y, iiy);
+						if (distance < min_distance) {
+							ia = p1;
+							ib = p2;
+							ix = iix;
+							iy = iiy;
+							intersection = true;
+							min_distance = distance;
+						}
+					}
 				}
 			}
 			
 			p1 = p2;
 		}
 		
-		return false;
+		return intersection;
+	}
+	
+	static bool same (EditPoint a, EditPoint b) {
+		return a.x == b.x && a.y == b.y;
 	}
 	
 	/** @return true if p2 is on the line p1 to p3 */
@@ -1075,100 +1098,222 @@ public class StrokeTool : Tool {
 	
 	static PathList merge (PathList pl) {
 		remove_points_in_stroke (pl);
-		
-		PathList r = pl;
-		foreach (Path p in pl.paths) {
-			if (stroke_selected) { // FIXME: DELETE
-				((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (p);
-			}
-		}
+		return merge_paths (pl);
+	}
 
+	static PathList merge_paths (PathList r) {
 		PathList result = new PathList ();
 		PathList m;
+
+		foreach (Path p1 in r.paths) {
+			result.add (p1);	
+		}
 		
 		foreach (Path p1 in r.paths) {
 			foreach (Path p2 in r.paths) {
 				if (p1 != p2) {
-					if (p1.is_clockwise ()) { // FIXME
-						m = merge_path (p1, p2);
-						if (m.paths.size > 1) {
-							result.append (m);
-						}
+					if (merge_path (p1, p2, out m)) {
+						result.append (m);
+						result.paths.remove (p1);
+						result.paths.remove (p2);
+						print ("Merge next.");
+						return merge_paths (result);
 					}
 				}
 			}
-			result.add (p1);	
 		}
 		
 		return result;
+	
 	}
 	
-	static PathList merge_path (Path path1, Path path2) {
-		EditPoint ep1, next, p1, p2, start_point;
-		Path path, other;
+	public class Intersection : GLib.Object {
+		public bool done = false;
+		public EditPoint point;
+		public EditPoint other_point;
+		public Path path;
+		
+		public Intersection (EditPoint point, Path path, EditPoint other_point)  {
+			this.point = point;
+			this.path = path;
+			this.other_point = other_point;
+		}
+	}
+	
+	static bool merge_path (Path path1, Path path2, out PathList result) {
+		Gee.ArrayList<Intersection> intersections;
+		EditPoint ep1, next, p1, p2, pp1, pp2;
+		Path path, other, merged;
 		PathList pl1, pl2, r, other_paths;
 		bool intersects;
 		int s = 0;
 		int i;
-		double ix, iy;
+		double ix, iy, iix, iiy;
+		bool merge = false;
+		EditPoint intersection_point, other_intersection_point;
+		Intersection intersection;
+		
+		intersections = new Gee.ArrayList<Intersection> ();
+		
+		iix = 0;
+		iiy = 0;
+		
+		result = new PathList ();
+		
+		if (path1.points.size == 0 || path2.points.size == 0) {
+			return false;
+		}
 		
 		foreach (EditPoint e in path1.points) {
-			if (SvgParser.is_inside (e, path2)) {
+			if (!SvgParser.is_inside (e, path2)) {
 				break;
 			}
 			s++;
+		}
+		
+		if (s >= path1.points.size) {
+			warning ("No start point found.");
 		}
 		
 		other_paths = new PathList ();
 		r = new PathList ();
 		path = path1;
 		other = path2;
-		other_paths.add (other);
+		other_paths.add (path1);
+		other_paths.add (path2);
 		intersects = false;
 		p1 = new EditPoint ();
 		p2 = new EditPoint ();
+		pp1 = new EditPoint ();
+		pp2 = new EditPoint ();
+
 		ix = 0;
 		iy = 0;
 		i = s;
+		merged = new Path ();
+		
 		path.points.get (i % path.points.size).color = new Color (0,1,0,1);
-		while (i < path.points.size + s) {
+		
+		while (true) {
 			ep1 = path.points.get (i % path.points.size);
 			next = path.points.get ((i + 1) % path.points.size);
 			
+			if (merged.points.index_of (ep1) != -1) {
+				print ("Done. Point already added.\n");
+				
+				if (merge) {
+					reset_intersections (merged);
+					merged.close ();
+					result.add (merged);
+				}
+				
+				if (stroke_selected) { // FIXME: DELETE
+					((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (merged.copy ());
+				}
+
+				merged = new Path ();
+				
+				if (intersections.size == 0) {
+					break;
+				}
+				
+				int j = 0;
+				intersection = intersections.get (j);
+				while (intersection.done) {
+					if (j >= intersections.size) {
+						break;
+					}
+					intersection = intersections.get (j);
+					intersection.done = true;
+					j++;
+				}
+				
+				if (intersection.done) {
+					break;
+				}
+				
+				intersection.done = true;
+				path = intersection.path;
+				i = index_of (path, intersection.point);
+				continue;
+			}
+			
+			intersects = false;
+			
+			double dm = double.MAX;
+			double d;
 			foreach (Path o in other_paths.paths) {
-				other = o;
-				intersects = segment_intersects (other, ep1, next, out ix, out iy,
-					out p1, out p2, true);
+				bool inter = segment_intersects (o, ep1, next, out iix, out iiy,
+					out pp1, out pp2, true);
+				d = Path.distance (ep1.x, iix, ep1.y, iiy);
+				if (d < dm && inter) {
+					print ("Found one at $iix, $iiy  d: $d\n");
+					other = o;
+					dm = d;
+					intersects = true;
+					p1 = pp1;
+					p2 = pp2;
+					ix = iix;
+					iy = iiy;
+				}
 			}
 			
 			if (intersects) {
-				add_intersection (path, ep1, next, ix, iy);
-				add_intersection (other, p1, p2, ix, iy);
+				print ("Swap\n");
+				if (ep1.x == 0 && ep1.y == 0) warning ("Add zero -1");
+				print (@"Add $(ep1.x) $(ep1.y)\n");
+				merged.add_point (ep1);
+
+				intersection_point = add_intersection (path, ep1, next, ix, iy);
+				other_intersection_point = add_intersection (other, p1, p2, ix, iy);
 				
-				pl1 = get_remaining_points (path.copy ());
-				pl2 = get_remaining_points (other.copy ());
-			
-				return_val_if_fail (0 < pl1.paths.size < 3, r);
-				return_val_if_fail (0 < pl2.paths.size < 3, r);
+				bool g = false;
+				foreach (Intersection old_intersection in intersections) {
+					if (old_intersection.point  == intersection_point
+						|| old_intersection.other_point == other_intersection_point) {
+						old_intersection.done = true;
+						g = true;
+					}
+				}
 				
-				r.paths.remove (path);
-				r.paths.remove (other);
+				if (!g) {
+					Intersection ip = new Intersection (intersection_point, path, other_intersection_point);
+					intersections.add (ip);
+				}
 				
-				path = get_next_part (pl2, path.get_last_point ());
-				other_paths = pl1;
-				other_paths.append (pl2);
-				other_paths.paths.remove (path);
+				merged.add_point (intersection_point);
 				
-				r.append (pl1);
-				r.append (pl2);
+				i = index_of (other, other_intersection_point);
 				
-				i = 0;
+				if (i < 0) {
+					warning (@"Point not found ($i).");
+					break;
+				}
+				
+				i++;
+				
+				path = other;
+				merge = true;
+			} else {
+				print (@"Add $(ep1.x) $(ep1.y)\n");
+				merged.add_point (ep1);
+				i++;
 			}
+		}
 			
+		return merge;
+	}
+	
+	static int index_of (Path p, EditPoint ep) {
+		int i = 0;
+		foreach (EditPoint e in p.points) {
+			if (e == ep) {
+				return i;
+			}
 			i++;
 		}
 		
-		return r;
+		return -1;
 	}
 	
 	static Path get_next_part (PathList pl, EditPoint ep) {
