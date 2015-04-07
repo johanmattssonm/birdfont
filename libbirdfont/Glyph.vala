@@ -434,6 +434,7 @@ public class Glyph : FontDisplay {
 		});
 					
 		left_line = new Line ("left", left_limit, true);
+		left_line.lsb = true;
 		left_line.position_updated.connect ((pos) => {
 			left_limit = pos;
 			update_other_spacing_classes ();
@@ -443,6 +444,7 @@ public class Glyph : FontDisplay {
 		left_line.position_updated (left_limit);
 		
 		right_line = new Line ("right", right_limit, true);
+		right_line.rsb = true;
 		right_line.position_updated.connect ((pos) => {
 			right_limit = pos;
 			update_other_spacing_classes ();
@@ -482,7 +484,7 @@ public class Glyph : FontDisplay {
 			add_line (guide);
 		}
 	}
-
+	
 	public double get_left_side_bearing () {
 		double x1, y1, x2, y2;
 		

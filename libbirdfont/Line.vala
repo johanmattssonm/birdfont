@@ -43,6 +43,9 @@ public class Line : GLib.Object {
 	bool visible = true;
 	bool moveable = true;
 	
+	public bool rsb = false;
+	public bool lsb = false;
+	
 	public Line (string label = "No label set", double position = 10, bool vertical = false) {
 		this.label = label;
 		this.vertical = vertical;
@@ -135,19 +138,43 @@ public class Line : GLib.Object {
 			if (button == 3 || KeyBindings.has_shift ()) {
 				move = false;
 				text_input = true;		
-				position = @"$pos";
-
+				
+				g = MainWindow.get_current_glyph ();
+				if (lsb) {
+					position = @"$(g.get_left_side_bearing ())";
+				} else if (rsb) {
+					position = @"$(g.get_right_side_bearing ())";
+				} else {
+					position = @"$pos";
+				}
+			
 				listener = new TextListener (t_("Position"), position, t_("Move"));
 				
 				listener.signal_text_input.connect ((text) => {
 					string submitted_value;
 					double parsed_value;
+					Glyph glyph;
+					double x1, y1, x2, y2;
 					
+					glyph = MainWindow.get_current_glyph ();
 					submitted_value = text.replace (",", ".");
 					parsed_value = double.parse (submitted_value);
 					
-					pos = parsed_value;
+					if (lsb) {
+						if (glyph.boundaries (out x1, out y1, out x2, out y2)) {
+							parsed_value = x1 - parsed_value;
+						} else {
+							parsed_value = glyph.right_limit - parsed_value;
+						}
+					} else if (rsb) {
+						if (glyph.boundaries (out x1, out y1, out x2, out y2)) {
+							parsed_value += x2;
+						} else {
+							parsed_value = glyph.left_limit - parsed_value;
+						}
+					}
 					
+					pos = parsed_value;
 					position_updated (parsed_value);
 					GlyphCanvas.redraw ();
 				});
