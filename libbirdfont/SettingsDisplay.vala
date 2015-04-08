@@ -304,6 +304,8 @@ public class SettingsDisplay : FontDisplay {
 	}
 
 	public override void key_release (uint keyval) {
+		SettingsItem old_key_binding;
+		
 		if (update_key_bindings) {
 			if (keyval == Key.BACK_SPACE) {
 				update_key_bindings = false;
@@ -311,6 +313,13 @@ public class SettingsDisplay : FontDisplay {
 				new_key_bindings.menu_item.modifiers = NONE;
 				new_key_bindings.menu_item.key = '\0';	
 			} else if (KeyBindings.get_mod_from_key (keyval) == NONE) {
+				
+				if (has_key_binding (KeyBindings.modifier, (unichar) keyval)) {
+					old_key_binding = (!) get_key_binding (KeyBindings.modifier, (unichar) keyval);
+					old_key_binding.menu_item.modifiers = NONE;
+					old_key_binding.menu_item.key = '\0';
+				}
+				
 				new_key_bindings.menu_item.modifiers = KeyBindings.modifier;
 				new_key_bindings.menu_item.key = (unichar) keyval;
 				update_key_bindings = false;
@@ -320,6 +329,20 @@ public class SettingsDisplay : FontDisplay {
 			MainWindow.get_menu ().write_key_bindings ();
 			GlyphCanvas.redraw ();	
 		}
+	}
+
+	bool has_key_binding (uint modifier, unichar key) {
+		return get_key_binding (modifier, key) != null;
+	}
+	
+	SettingsItem? get_key_binding (uint modifier, unichar key) {
+		foreach (SettingsItem i in tools) {
+			if (i.menu_item.modifiers == modifier && i.menu_item.key == key) {
+				return i;
+			}
+		}
+		
+		return null; 
 	}
 
 	public override void button_press (uint button, double x, double y) {
