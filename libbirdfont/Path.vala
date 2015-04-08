@@ -41,10 +41,10 @@ public class Path {
 	EditPoint? last_point = null;
 	
 	/** Path boundaries */
-	public double xmax = double.MIN;
-	public double xmin = double.MAX;
-	public double ymax = double.MIN;
-	public double ymin = double.MAX;
+	public double xmax = Glyph.CANVAS_MIN;
+	public double xmin = Glyph.CANVAS_MAX;
+	public double ymax = Glyph.CANVAS_MIN;
+	public double ymin = Glyph.CANVAS_MAX;
 
 	/** Stroke width */
 	public double stroke = 0;
@@ -1011,10 +1011,10 @@ public class Path {
 	}
 
 	public void update_region_boundaries () {	
-		xmax = -10000;
-		xmin = 10000;
-		ymax = -10000;
-		ymin = 10000;
+		xmax = Glyph.CANVAS_MIN;
+		xmin = Glyph.CANVAS_MAX;
+		ymax = Glyph.CANVAS_MIN;
+		ymin = Glyph.CANVAS_MAX;
 		
 		if (points.size == 0) {
 			xmax = 0;
