@@ -2094,7 +2094,9 @@ public class Path {
 		bool inside;
 		
 		foreach (Path p in pl.paths) {
-			if (p.points.size > 1 && p != path) {
+			if (p.points.size > 1 && p != path 
+				&& path.boundaries_intersecting (p)) {
+					
 				inside = true;
 				foreach (EditPoint ep in path.points) {
 					if (!SvgParser.is_inside (ep, p)) {
@@ -2110,6 +2112,32 @@ public class Path {
 		
 		return inside_count;
 	}	
+	
+	public bool boundaries_intersecting (Path p) {
+		bool xm1 = in_boundaries (p.xmin, p.ymin);
+		bool xm2 = in_boundaries (p.xmax, p.ymax);
+		bool xm3 = in_boundaries (p.xmin, p.ymax);
+		bool xm4 = in_boundaries (p.xmax, p.ymin);
+		
+		if (xm1 || xm2 || xm3 || xm3) {
+			return true;
+		}
+		
+		xm1 = p.in_boundaries (xmin, ymin);
+		xm2 = p.in_boundaries (xmax, ymax);
+		xm3 = p.in_boundaries (xmin, ymax);
+		xm4 = p.in_boundaries (xmax, ymin);
+		
+		if (xm1 || xm2 || xm3 || xm3) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public bool in_boundaries (double x, double y) {
+		return xmin <= x <= xmax && ymin <= y <= ymax;
+	}
 	
 	/** @param t smallest distance to other points. */
 	public void remove_points_on_points (double t = 0.00001) {

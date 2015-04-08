@@ -480,7 +480,10 @@ public class SvgParser {
 		prev = path.get_last_point ();
 		
 		foreach (EditPoint p in path.points) {
-			if  ((p.y > point.y) != (prev.y > point.y)
+			if (p.x == point.x && point.y == p.y) {
+				inside = true;
+				break;
+			} else if ((p.y > point.y) != (prev.y > point.y)
 				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
 				inside = !inside;
 			}

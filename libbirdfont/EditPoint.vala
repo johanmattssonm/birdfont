@@ -49,6 +49,7 @@ public class EditPoint : GLib.Object {
 	public static uint NEW_CORNER = 1 << 6;
 	public static uint STROKE_OFFSET = 1 << 7;
 	public static uint COUNTER_TO_OUTLINE = 1 << 8;
+	public static uint COPIED = 1 << 9;
 	
 	public bool counter_to_outline = false;
 	
