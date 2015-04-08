@@ -12,6 +12,7 @@
     Lesser General Public License for more details.
 */
 using BirdFont;
+
 public const string GETTEXT_PACKAGE = "birdfont"; 
 
 namespace BirdFont {
