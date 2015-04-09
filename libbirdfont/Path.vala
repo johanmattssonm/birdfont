@@ -1805,6 +1805,7 @@ public class Path {
 		
 		foreach (Path path in path_list.paths) {
 			path.update_region_boundaries ();
+			path.reverse ();
 		}
 		
 		return path_list;

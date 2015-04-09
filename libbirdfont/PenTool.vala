@@ -849,9 +849,7 @@ public class PenTool : Tool {
 	public static void force_direction () {
 		Glyph g = MainWindow.get_current_glyph ();
 
-		// don't retain direction
-		clockwise.clear ();
-		counter_clockwise.clear ();
+		clear_directions ();
 
 		foreach (Path p in g.path_list) {
 			if (!p.has_direction ()) {
@@ -864,6 +862,11 @@ public class PenTool : Tool {
 		}
 		
 		update_selected_points ();
+	}
+	
+	public static void clear_directions () {
+		clockwise.clear ();
+		counter_clockwise.clear ();
 	}
 
 	public static bool is_counter_path (Path path) {
