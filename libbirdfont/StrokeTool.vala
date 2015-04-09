@@ -161,9 +161,7 @@ public class StrokeTool : Tool {
 			i = corner && p.points.size == 4;
 
 			if ((ep.flags & EditPoint.COUNTER_TO_OUTLINE) > 0) {
-				ep.color = new Color (0,1,0,1); // FIXME: DELETE
 				ep.flags |= EditPoint.REMOVE_PART;
-				
 				return false;
 			}
 		}
@@ -182,7 +180,6 @@ public class StrokeTool : Tool {
 					remove_self_intersecting_corners (pl);
 					return;
 				} else {
-					
 					if (has_self_intersection (p)) { // FIXME: DELETE
 						warning ("Path ha self intersection.");
 					}
@@ -288,7 +285,6 @@ public class StrokeTool : Tool {
 		
 		if (p.points.size >= 2) {
 			path = p.copy ();
-			//FIXME: DELETE path.remove_points_on_points ();
 			stroked = generate_stroke (path, thickness);
 
 			if (!p.is_open ()) {
@@ -492,7 +488,7 @@ public class StrokeTool : Tool {
 				if ((p1.flags & EditPoint.STROKE_OFFSET) > 0
 					|| (p2.flags & EditPoint.STROKE_OFFSET) > 0
 					|| (a1.flags & EditPoint.STROKE_OFFSET) > 0
-					|| (a2.flags & EditPoint.STROKE_OFFSET) > 0) { // FIXME: safe?
+					|| (a2.flags & EditPoint.STROKE_OFFSET) > 0) {
 					
 					split = split_segment (p, a1, a2, p1, p2, out r);  
 										
@@ -516,8 +512,6 @@ public class StrokeTool : Tool {
 							split_corner (pl);
 							return true;
 						} else {
-
-							// FIXME: the special case, merge counter path with outline here
 							p1 = p.points.get ((index - 1) % p.points.size);
 							p2 = p.points.get (index % p.points.size);
 							a1 = p.points.get ((index + 3) % p.points.size); // two points ahead
@@ -643,6 +637,7 @@ public class StrokeTool : Tool {
 		return r;
 	}
 
+
 	static bool has_intersection_points (Path path) {
 		foreach (EditPoint p in path.points) {
 			if ((p.flags & EditPoint.INTERSECTION) > 0) {
@@ -654,6 +649,7 @@ public class StrokeTool : Tool {
 	
 	/** Split one path at intersection points in two parts. */
 	static PathList split (Path path) {
+		Path new_path;
 		PathList pl;
 		int i;
 
@@ -669,7 +665,8 @@ public class StrokeTool : Tool {
 			warning (@"Split should only create two parts, $i points will be deleted.");
 		}
 		
-		pl = get_remaining_points (path.copy ());
+		new_path = path.copy ();
+		pl = get_remaining_points (new_path);
 		
 		return pl;
 	}
@@ -723,7 +720,6 @@ public class StrokeTool : Tool {
 		foreach (Path pn in pl.paths) {
 			pn.close ();
 		}
-		
 		return pl;
 	}
 	
@@ -763,10 +759,6 @@ public class StrokeTool : Tool {
 			return true;
 		});
 		
-		if (intersection) {
-			// FIXME: path.create_list ();
-		}
-		
 		return intersection;
 	}
 	
@@ -776,7 +768,7 @@ public class StrokeTool : Tool {
 		EditPoint ep2 = new EditPoint ();
 		EditPoint ep3 = new EditPoint ();
 		
-		if (next == path.get_first_point ()) { // FIXME: double check
+		if (next == path.get_first_point ()) {
 			ep1.prev = null;
 		} else {
 			ep1.prev = prev;
@@ -1012,7 +1004,6 @@ public class StrokeTool : Tool {
 					end_ep = p.points.get (j % p.points.size);
 					end_next = p.points.get ((j + 1) % p.points.size);
 					
-					// FIXME: if (!is_inside_of_path
 					
 					if ((end_ep.flags & EditPoint.COUNTER_TO_OUTLINE) > 0) {
 						start_ep.flags = EditPoint.NONE;
@@ -1069,8 +1060,6 @@ public class StrokeTool : Tool {
 						
 						pl.paths.remove (path1);
 						pl.paths.remove (path2);
-						
-						// FIXME: find criteria
 												
 						double d1 = Path.point_distance (r1.paths.get (0).get_first_point (), 
 							r2.paths.get (0).get_first_point ());
@@ -1166,13 +1155,25 @@ public class StrokeTool : Tool {
 	}
 
 	static PathList get_all_parts (PathList pl) {
+		PathList m;
 		bool intersects = false;
 		PathList r = new PathList ();
+		bool counter;
 		
-		foreach (Path p in pl.paths) { // FIXM: remove
+		foreach (Path p in pl.paths) {
 			if (has_self_intersection (p)) {
-				r.append (get_parts (p));
+				m = get_parts (p);
+				r.append (m);
 				intersects = true;
+				
+				counter = Path.is_counter (pl, p);
+				foreach (Path pp in pl.paths) {
+					if (counter) {
+						pp.force_direction (Direction.CLOCKWISE);
+					} else {
+						pp.force_direction (Direction.COUNTER_CLOCKWISE);
+					}
+				}
 			} else {
 				r.add (p);
 			}
@@ -1201,8 +1202,6 @@ public class StrokeTool : Tool {
 		PathList m;
 		PathList r = pl;
 		Path p1, p2;
-		
-		// FIXME: DELETE remove_points_in_stroke (r);
 		
 		r = get_all_parts (r);
 
@@ -1247,6 +1246,11 @@ public class StrokeTool : Tool {
 		
 		if (!error) {
 			remove_merged_parts (r);
+		}
+		
+		foreach (Path p in r.paths) {
+			p.close ();
+			p.recalculate_linear_handles ();
 		}
 		
 		foreach (Path p in r.paths) {

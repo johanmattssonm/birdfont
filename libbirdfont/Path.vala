@@ -1805,7 +1805,6 @@ public class Path {
 		
 		foreach (Path path in path_list.paths) {
 			path.update_region_boundaries ();
-			path.reverse ();
 		}
 		
 		return path_list;
@@ -2112,7 +2111,7 @@ public class Path {
 		}
 		
 		return inside_count;
-	}	
+	}
 	
 	public bool boundaries_intersecting (Path p) {
 		bool xm1 = in_boundaries (p.xmin, p.ymin);
