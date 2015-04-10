@@ -538,29 +538,6 @@ public class Path {
 		cr.restore ();
 	}
 	
-	public static void draw_image (Context cr, ImageSurface img, double x, double y) {
-		Glyph g = MainWindow.get_current_glyph ();
-		double r = 1.0 / 10.0;
-		
-		double width = Math.sqrt (stroke_width);
-		
-		double ivz = 1 / g.view_zoom;
-		double ivs = 1 / width;
-
-		double xc = g.allocation.width / 2.0;
-		double yc = g.allocation.height / 2.0;
-
-		cr.save ();
-		cr.scale (ivz * width * r, ivz * width * r);
-		
-		x = xc + x - (width * r * img.get_width () / 2.0) * ivz; 
-		y = yc - y - (width * r * img.get_height () / 2.0) * ivz;
-		
-		cr.set_source_surface (img, x * g.view_zoom * ivs * 1/r, y * g.view_zoom * ivs * 1/r);
-		cr.paint ();
-		cr.restore ();
-	}
-	
 	/** Set direction for this path to clockwise for outline and 
 	 * counter clockwise for inline paths.
 	 */
@@ -1415,9 +1392,23 @@ public class Path {
 	}
 
 	public static void get_point_for_step (EditPoint start, EditPoint stop, double step, out double x, out double y) {
-		// FIXME: Types
-		x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
-		y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
+		PointType right = start.type;
+		PointType left = stop.type;
+		
+		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
+			x = double_bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
+			y = double_bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);
+		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
+			x = quadratic_bezier_path (step, start.x, start.get_right_handle ().x, stop.x);
+			y = quadratic_bezier_path (step, start.y, start.get_right_handle ().y, stop.y);
+		} else if (right == PointType.CUBIC && left == PointType.CUBIC) {
+			x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
+			y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
+		} else {
+			warning (@"Mixed point types");
+			x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
+			y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
+		}
 	}
 
 	private static bool all_of_double (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3, 

@@ -180,10 +180,14 @@ public class EditPoint : GLib.Object {
 		}
 	}
 
-	public static bool is_valid (double x, double y) {
+	public bool is_valid () {
+		return is_valid_position (x, y);
+	}
+
+	public static bool is_valid_position (double x, double y) {
 		return likely (x.is_finite () && y.is_finite () 
-			&& x > -100000 && x < 100000
-			&& y > -100000 && y < 100000);
+			&& x > Glyph.CANVAS_MIN && x < Glyph.CANVAS_MAX
+			&& y > Glyph.CANVAS_MIN && y < Glyph.CANVAS_MAX);
 	}
 
 	public void set_point_type (PointType t) {
