@@ -30,6 +30,26 @@ public class Color {
 	public static Color black () {
 		return new Color (0, 0, 0, 1);
 	}
+
+	public static Color red () {
+		return new Color (1, 0, 0, 1);
+	}
+
+	public static Color green () {
+		return new Color (0, 1, 0, 1);
+	}
+
+	public static Color blue () {
+		return new Color (0, 0, 1, 1);
+	}
+
+	public static Color yellow () {
+		return new Color (222.0 / 255, 203.0 / 255, 43 / 255.0, 1);
+	}
+
+	public static Color pink () {
+		return new Color (247.0 / 255, 27.0 / 255, 113 / 255.0, 1);
+	}
 }
 
 }

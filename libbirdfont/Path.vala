@@ -583,7 +583,7 @@ public class Path {
 	}
 
 	/** Switch direction from clockwise path to counter clockwise path or vise versa. */
-	public void reverse () {
+	public bool reverse () {
 		bool direction = is_clockwise ();
 
 		if (no_derived_direction) {
@@ -597,7 +597,10 @@ public class Path {
 			stderr.printf (@"Length: $(points.size)\n");
 			stderr.printf (@"No particular direction can be derived: $no_derived_direction \n");
 			warning ("Path.reverse () failed.\n");
+			return false;
 		}
+		
+		return true;
 	}
 
 	private void reverse_points () requires (points.size > 0) {

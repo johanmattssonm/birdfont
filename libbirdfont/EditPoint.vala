@@ -52,8 +52,6 @@ public class EditPoint : GLib.Object {
 	public static uint COPIED = 1 << 9;
 	public static uint REMOVE_PART = 1 << 10;
 	
-	public bool counter_to_outline = false;
-	
 	public uint flags = NONE;
 	
 	public bool active_point {
@@ -359,7 +357,6 @@ public class EditPoint : GLib.Object {
 			return 0;
 		}
 		
-		// FIXME:
 		return (x - get_prev ().x) * (y + get_prev ().y);
 	}
 	
@@ -447,7 +444,6 @@ public class EditPoint : GLib.Object {
 		new_point.left_handle.type = left_handle.type;
 		
 		new_point.color = color;
-		new_point.counter_to_outline = counter_to_outline;
 		
 		return new_point;
 	}
