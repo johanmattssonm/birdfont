@@ -100,6 +100,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
 		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
 		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
+		Theme.set_default_color ("Selected Objects", 0.5, 0.5, 0.5, 1);
 		
 		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
 		Theme.set_default_color ("Background 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);

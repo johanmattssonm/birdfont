@@ -106,6 +106,8 @@ public class Glyph : FontDisplay {
 	public const double CANVAS_MIN = -10000;
 	public const double CANVAS_MAX = 10000;
 
+	public bool show_orientation_arrow = false;
+
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -1437,7 +1439,7 @@ public class Glyph : FontDisplay {
 	/** Draw filled paths. */
 	public void draw_paths (Context cr) {
 		PathList stroke;
-		
+
 		cr.save ();
 		cr.new_path ();
 		foreach (Path p in path_list) {
@@ -1453,12 +1455,14 @@ public class Glyph : FontDisplay {
 	}
 	
 	public void draw_path (Context cr) {
+		PathList stroke;
 		if (is_open () && Path.fill_open_path) {
 			cr.save ();
 			cr.new_path ();
 			foreach (Path p in path_list) {
 				if (p.stroke > 0) {
-					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr, get_path_fill_color ());
+					stroke = StrokeTool.get_stroke (p, p.stroke);
+					draw_path_list (stroke, cr, get_path_fill_color ());
 				}
 
 				p.draw_path (cr, this, get_path_fill_color ());
@@ -1471,27 +1475,29 @@ public class Glyph : FontDisplay {
 			cr.save ();
 			cr.new_path ();
 			foreach (Path p in path_list) {
-				if (p.stroke > 0) {			
-					draw_outline_for_paths (StrokeTool.get_stroke (p, p.stroke), cr);
+				if (p.stroke > 0) {
+					stroke = StrokeTool.get_stroke (p, p.stroke);
+					draw_outline_for_paths (stroke, cr);
 				}
 
 				p.draw_outline (cr);
-				p.draw_edit_points (cr);	
+				p.draw_edit_points (cr);
 			}
 			cr.restore ();
 		}
-
+			
 		if (!is_open ()) {
 			// This was good for testing but it is way too slow:
 			// Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
-			
+				
 			cr.save ();
 			cr.new_path ();
 			foreach (Path p in path_list) {
 				if (p.stroke == 0) {
 					p.draw_path (cr, this, Color.black ());
 				} else {
-					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr, Color.black ());
+					stroke = StrokeTool.get_stroke (p, p.stroke);
+					draw_path_list (stroke, cr, Color.black ());
 				}
 			}
 			cr.close_path ();
@@ -1509,6 +1515,19 @@ public class Glyph : FontDisplay {
 				cr.close_path ();
 				cr.fill ();
 				cr.restore ();
+			}
+		}
+		
+		if (show_orientation_arrow) {
+			foreach (Path p in path_list) {
+				if (p.stroke > 0) {
+					stroke = StrokeTool.get_stroke (p, p.stroke);
+					foreach (Path ps in stroke.paths) {
+						ps.draw_orientation_arrow (cr);
+					}	
+				} else {
+					p.draw_orientation_arrow (cr);
+				}
 			}
 		}
 	}

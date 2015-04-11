@@ -85,7 +85,7 @@ public class DrawingTools : ToolCollection  {
 	Tool undo_tool;
 	Tool select_all_button;
 	
-	Tool reverse_path_tool;
+	OrientationTool reverse_path_tool;
 	Tool move_layer;
 	Tool flip_vertical;
 	Tool flip_horizontal;
@@ -579,16 +579,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tool_modifiers.add_tool (create_line);
 	
-		reverse_path_tool = new Tool ("reverse_path", t_("Create counter from outline"));
-		reverse_path_tool.select_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			
-			foreach (Path p in g.active_paths) {
-				p.reverse ();
-			}
-		
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-		});
+		reverse_path_tool = new OrientationTool ("reverse_path", t_("Create counter from outline"));
 		draw_tool_modifiers.add_tool (reverse_path_tool);
 
 		move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"));

@@ -280,12 +280,42 @@ public class Path {
 			c = (!) color;
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
 		} else {
-			if (is_clockwise ()) {
-				cr.set_source_rgba (80/255.0, 95/255.0, 137/255.0, 0.5);
-			} else {
-				cr.set_source_rgba (144/255.0, 145/255.0, 236/255.0, 0.5);
+			Theme.color (cr, "Selected Objects");
+		}
+	}
+
+	public void draw_orientation_arrow (Context cr) {
+		EditPoint top = new EditPoint ();
+		double max = Glyph.CANVAS_MIN;
+		Text arrow;
+		double x, y, angle;
+		double size = 50 * Glyph.ivz ();
+				
+		foreach (EditPoint e in points) {
+			if (e.y > max) {
+				max = e.y;
+				top = e;
 			}
 		}
+		
+		arrow = new Text ("orientation_arrow", size);
+		arrow.load_font ("icons.bf");
+		arrow.use_cache (false);
+		
+		Theme.text_color (arrow, "Highlighted 1");
+
+		angle = top.get_right_handle ().angle;
+		x = Glyph.xc () + top.x + cos (angle + PI / 2) * 10 * Glyph.ivz ();	
+		y = Glyph.yc () - top.y - sin (angle + PI / 2) * 10 * Glyph.ivz ();
+		
+		cr.save ();
+		cr.translate (x, y);
+		cr.rotate (-angle);
+		cr.translate (-x, -y); 
+		
+		arrow.draw_at_baseline (cr, x, y);
+		
+		cr.restore ();
 	}
 
 	private void draw_next (EditPoint e, EditPoint en, Context cr, bool highlighted = false) {

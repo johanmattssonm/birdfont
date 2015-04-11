@@ -576,6 +576,12 @@ GNU Lesser General Public License</copyright>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+<collection name="orientation_arrow">
+	<selected id="1"/>
+	<glyph id="1" left="-28" right="28">
+		<path stroke="0" skew="0" data="S -41.4110032362,2.3559870550 L -21.4110032362,2.3559870550 L -21.4110032362,6.3559870550 L -13.1715210356,0.0809061489 L -21.4110032362,-5.6440129450 L -21.4110032362,-5.6440129450 L -21.4110032362,-1.6440129450 L -41.4110032362,-1.6440129450 L -41.4110032362,2.3559870550" />
+	</glyph>
+</collection>
 <collection unicode="U+70">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -971,6 +977,7 @@ GNU Lesser General Public License</copyright>
 <ligature sequence="n e x t _ k e r n i n g _ s t r i n g" replacement="next_kerning_string"/>
 <ligature sequence="k e r n i n g _ t e x t _ i n p u t" replacement="kerning_text_input"/>
 <ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold"/>
+<ligature sequence="o r i e n t a t i o n _ a r r o w" replacement="orientation_arrow"/>
 <ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background"/>
 <ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
 <ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
