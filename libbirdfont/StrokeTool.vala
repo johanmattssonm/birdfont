@@ -461,25 +461,23 @@ public class StrokeTool : Tool {
 		double op = Path.distance_to_point (start, end);
 		double on = Path.distance_to_point (end, next);
 		double rp = dp / op;  
-		double rn = dn / on;
+		double rn = on / dn;
 		EditPointHandle r = stroke_start.get_right_handle ();
 		EditPointHandle l = stroke_end.get_left_handle ();
 		
 		if (!r.is_line ()) {
 
 			if (r.type == PointType.CUBIC) {
-				r.length *= 1 + rp / 3;
+				r.length *= rp;
 			} else {
-				l.length *= 1 + rp / 2;
-				r.length *= 1 + rp / 2;
-				
 				Path.find_intersection_handle (r, l, out px, out py);
+				
 				l.move_to_coordinate (px, py); 
 				r.move_to_coordinate (px, py); 
 			}
 
 			if (l.type == PointType.CUBIC) {
-				l.length *= 1 + rn / 3; 
+				l.length *= rn; 
 			} 
 		}
 	}
