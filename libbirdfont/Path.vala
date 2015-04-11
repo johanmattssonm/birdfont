@@ -280,17 +280,17 @@ public class Path {
 			c = (!) color;
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
 		} else {
-			Theme.color (cr, "Selected Objects");
+			Theme.color_opacity (cr, "Selected Objects", 0.5);
 		}
 	}
 
-	public void draw_orientation_arrow (Context cr) {
+	public void draw_orientation_arrow (Context cr, double opacity) {
 		EditPoint top = new EditPoint ();
 		double max = Glyph.CANVAS_MIN;
 		Text arrow;
 		double x, y, angle;
 		double size = 50 * Glyph.ivz ();
-				
+		
 		foreach (EditPoint e in points) {
 			if (e.y > max) {
 				max = e.y;
@@ -302,20 +302,22 @@ public class Path {
 		arrow.load_font ("icons.bf");
 		arrow.use_cache (false);
 		
-		Theme.text_color (arrow, "Highlighted 1");
+		Theme.text_color_opacity (arrow, "Highlighted 1", opacity);
 
 		angle = top.get_right_handle ().angle;
 		x = Glyph.xc () + top.x + cos (angle + PI / 2) * 10 * Glyph.ivz ();	
 		y = Glyph.yc () - top.y - sin (angle + PI / 2) * 10 * Glyph.ivz ();
 		
-		cr.save ();
-		cr.translate (x, y);
-		cr.rotate (-angle);
-		cr.translate (-x, -y); 
-		
-		arrow.draw_at_baseline (cr, x, y);
-		
-		cr.restore ();
+		if (points.size > 0) {
+			cr.save ();
+			cr.translate (x, y);
+			cr.rotate (-angle);
+			cr.translate (-x, -y); 
+			
+			arrow.draw_at_baseline (cr, x, y);
+			
+			cr.restore ();
+		}
 	}
 
 	private void draw_next (EditPoint e, EditPoint en, Context cr, bool highlighted = false) {

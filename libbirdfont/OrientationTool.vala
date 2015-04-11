@@ -19,6 +19,9 @@ namespace BirdFont {
 
 public class OrientationTool : Tool {
 
+	double time = 0;
+	bool count_down = false;
+	
 	public OrientationTool (string n, string tip) {
 		base (n, tip);
 
@@ -33,10 +36,10 @@ public class OrientationTool : Tool {
 		});
 
 		panel_move_action.connect ((t, x, y) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			
-			if (!g.show_orientation_arrow && is_active ()) {
-				g.show_orientation_arrow = true;
+			if (!Glyph.show_orientation_arrow && is_active ()) {
+				count_down = false;
+				Glyph.show_orientation_arrow = true;
+				Glyph.orientation_arrow_opacity = 1;
 				GlyphCanvas.redraw ();
 			}
 			
@@ -44,21 +47,37 @@ public class OrientationTool : Tool {
 		});
 		
 		move_out_action.connect ((t) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			
-			if (g.show_orientation_arrow) {
-				g.show_orientation_arrow = false;
+			if (Glyph.show_orientation_arrow) {
+				count_down = true;
+				time = 6;
+				fade_out ();
 				GlyphCanvas.redraw ();
 			}
 		});
-						
-		draw_action.connect ((self, cr, glyph) => {
-			draw_actions (cr);
-		});
 	}
 	
-	public static void draw_actions (Context cr) {
-
+	public void fade_out () {
+			TimeoutSource timer = new TimeoutSource (100);
+			timer.set_callback (() => {
+				if (count_down) {
+					if (time <= 0) {
+						Glyph.show_orientation_arrow = false;
+						count_down = false;
+					}
+					
+					if (time < 1) {
+						Glyph.orientation_arrow_opacity = time;
+						GlyphCanvas.redraw ();
+					}
+					
+					time -= 0.1;
+				} else {
+					Glyph.show_orientation_arrow = false;
+				}
+				
+				return count_down;
+			});
+			timer.attach (null);
 	}
 }
 

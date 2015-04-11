@@ -106,8 +106,9 @@ public class Glyph : FontDisplay {
 	public const double CANVAS_MIN = -10000;
 	public const double CANVAS_MAX = 10000;
 
-	public bool show_orientation_arrow = false;
-
+	public static bool show_orientation_arrow = false;
+	public static double orientation_arrow_opacity = 1;
+	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -129,6 +130,7 @@ public class Glyph : FontDisplay {
 
 	public GlyfData get_ttf_data () {
 		if (ttf_data == null) {
+			
 			ttf_data =  new GlyfData (this);
 		}
 		
@@ -1523,10 +1525,10 @@ public class Glyph : FontDisplay {
 				if (p.stroke > 0) {
 					stroke = StrokeTool.get_stroke (p, p.stroke);
 					foreach (Path ps in stroke.paths) {
-						ps.draw_orientation_arrow (cr);
+						ps.draw_orientation_arrow (cr, orientation_arrow_opacity);
 					}	
 				} else {
-					p.draw_orientation_arrow (cr);
+					p.draw_orientation_arrow (cr, orientation_arrow_opacity);
 				}
 			}
 		}

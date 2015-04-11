@@ -56,7 +56,7 @@ public class CheckBox : Widget {
 		double center_y = (get_height () - (h + 2 * padding)) / 2.0 + padding;
 
 		cr.save ();
-		Theme.color (cr, "Background 2");	
+		Theme.color (cr, "Checkbox Background");
 		draw_rounded_rectangle (cr, widget_x, widget_y + center_y, w, h - padding, padding);
 		cr.fill ();
 		cr.restore ();

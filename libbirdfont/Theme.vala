@@ -113,6 +113,8 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
 		Theme.set_default_color ("Background 10", 223/255.0, 223/255.0, 223/255.0, 1);
 		
+		Theme.set_default_color ("Checkbox Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
 		Theme.set_default_color ("Foreground 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
@@ -194,6 +196,7 @@ public class Theme : GLib.Object {
 			t_("Stroke Color");
 			t_("Handle Color");
 			t_("Fill Color");
+			t_("Selected Objects");
 			
 			t_("Background 1");
 			t_("Background 2");
@@ -204,6 +207,8 @@ public class Theme : GLib.Object {
 			t_("Background 7");
 			t_("Background 8");
 			t_("Background 9");
+			
+			t_("Checkbox Background");
 			
 			t_("Foreground 1");
 			t_("Foreground 2");

@@ -6,14 +6,14 @@
 	<color name="Active Quadratic Control Point" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 1" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Guide 2" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Foreground 7" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Foreground 7" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 2" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Guide 3" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Overview Item 1" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 3" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Overview Item 2" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 4" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Dialog Shadow" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Dialog Shadow" red="0" green="0" blue="0" alpha="0.29999999999999999"/>
 	<color name="Background 5" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Glyph Count Background" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Background 6" red="1" green="1" blue="1" alpha="1"/>
@@ -23,7 +23,7 @@
 	<color name="Control Point Handle" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 8" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Fill Color" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Foreground Inverted Table" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Foreground Inverted Table" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Background 9" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Stroke Color" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Tool Foreground" red="1" green="1" blue="1" alpha="1"/>
@@ -50,8 +50,10 @@
 	<color name="Selected Button Foreground" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Menu Foreground" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Overview Foreground" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Selected Objects" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Tool Foreground" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Quadratic Control Point" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Checkbox Background" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Active Cubic Control Point" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Foreground 1" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Active Control Point Handle" red="0" green="0" blue="0" alpha="1"/>
