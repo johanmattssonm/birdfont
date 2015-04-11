@@ -104,6 +104,12 @@ public class StrokeTool : Tool {
 		n = get_stroke_outline (stroke, thickness);
 		
 		foreach (Path p in n.paths) {
+			if (stroke_selected) {// FIXME: DELETE
+				((!) BirdFont.get_current_font ().get_glyph ("c")).add_path (p);
+			}
+		}
+		
+		foreach (Path p in n.paths) {
 			p.remove_points_on_points (0.3);
 		}
 		
@@ -171,8 +177,6 @@ public class StrokeTool : Tool {
 						}
 					}
 					
-					ep.color = Color.red ();
-					
 					return true;
 				} 
 			}
@@ -197,7 +201,6 @@ public class StrokeTool : Tool {
 				
 				if (fabs (l.angle - r.angle) < 0.005) { 
 					remove = true;
-					ep.color = Color.blue ();
 				}
 				
 				if (Path.distance_to_point (ep.get_prev (), ep.get_next ()) < 1) {
@@ -278,8 +281,14 @@ public class StrokeTool : Tool {
 		} else if (p.is_open ()) { // FIXME: this can create many parts
 			outline = create_stroke (p, thickness);
 			counter = create_stroke (p, -1 * thickness);
+			
+			if (stroke_selected) {// FIXME: DELETE
+				((!) BirdFont.get_current_font ().get_glyph ("b")).add_path (outline.copy ());
+				((!) BirdFont.get_current_font ().get_glyph ("b")).add_path (counter.copy ());
+			}
+			
 			merged = merge_strokes (p, outline, counter, thickness);
-
+			
 			if (p.is_clockwise ()) {
 				merged.force_direction (Direction.CLOCKWISE);
 			} else {
@@ -305,10 +314,14 @@ public class StrokeTool : Tool {
 	 */
 	static Path merge_strokes (Path path, Path stroke, Path counter, double thickness) {
 		Path merged;
-
-		counter.reverse ();
+		EditPoint last_counter, first;
+		
 		merged = stroke.copy ();
-
+		counter.reverse ();
+		
+		last_counter = new EditPoint ();
+		first = new EditPoint ();
+		
 		if (path.is_open ()) {
 			merged.delete_last_point ();
 			counter.delete_first_point ();
@@ -321,6 +334,24 @@ public class StrokeTool : Tool {
 		merged.close ();
 		merged.create_list ();
 		merged.recalculate_linear_handles ();
+
+		if (path.is_open ()) {
+			first = merged.get_first_point ();
+			last_counter = merged.get_last_point ();
+				
+			if (first.type == PointType.QUADRATIC) {
+				first.get_left_handle ().convert_to_line ();
+				first.recalculate_linear_handles ();
+			}
+
+			if (last_counter.type == PointType.QUADRATIC) {
+				last_counter.get_right_handle ().convert_to_line ();
+				last_counter.recalculate_linear_handles ();
+			}
+
+			first.color = Color.pink ();
+			last_counter.color = Color.yellow ();
+		}
 
 		return merged;
 	}
@@ -353,6 +384,11 @@ public class StrokeTool : Tool {
 		EditPoint previous;
 		EditPoint next;
 		EditPoint ep;
+		
+		EditPoint original_start;
+		EditPoint original_end;
+		EditPoint original_next;
+		
 		int i;
 		bool bump, previous_bump;
 		double small_part = 0.5 * fabs (thickness);
@@ -363,10 +399,14 @@ public class StrokeTool : Tool {
 		i = 0;
 		previous_bump = false;
 		for (int j = 0; j < p.points.size; j++) {
-			ep = p.points.get (j % p.points.size);
-			start = ep.copy ();
-			end = p.points.get ((j + 1) % p.points.size).copy ();
-			next = p.points.get ((j + 2) % p.points.size).copy ();
+			original_start = p.points.get (j % p.points.size);
+			original_end = p.points.get ((j + 1) % p.points.size).copy ();
+			original_next = p.points.get ((j + 2) % p.points.size).copy ();
+			
+			ep = original_start.copy ();
+			start = original_start.copy ();
+			end = original_end.copy ();
+			next = original_next.copy ();
 			
 			move_segment (start, end, thickness);
 
@@ -396,8 +436,9 @@ public class StrokeTool : Tool {
 				warning ("Bad point in stroke.");
 			}
 			
-			// open ends around corner
+			adjust_handles (start, end, next, original_start, original_end, original_next);
 			
+			// open ends around corner
 			start.get_left_handle ().convert_to_line (); 
 			end.get_right_handle ().convert_to_line ();
 			
@@ -408,8 +449,39 @@ public class StrokeTool : Tool {
 		}
 
 		stroked.recalculate_linear_handles ();
-		
+			
 		return stroked;
+	}
+
+	static void adjust_handles (EditPoint stroke_start, EditPoint stroke_end, EditPoint stroke_next,
+		EditPoint start, EditPoint end, EditPoint next) {
+		double px, py;
+		double dp = Path.distance_to_point (stroke_start, stroke_end);
+		double dn = Path.distance_to_point (stroke_end, stroke_next);
+		double op = Path.distance_to_point (start, end);
+		double on = Path.distance_to_point (end, next);
+		double rp = dp / op;  
+		double rn = dn / on;
+		EditPointHandle r = stroke_start.get_right_handle ();
+		EditPointHandle l = stroke_end.get_left_handle ();
+		
+		if (!r.is_line ()) {
+
+			if (r.type == PointType.CUBIC) {
+				r.length *= 1 + rp / 3;
+			} else {
+				l.length *= 1 + rp / 2;
+				r.length *= 1 + rp / 2;
+				
+				Path.find_intersection_handle (r, l, out px, out py);
+				l.move_to_coordinate (px, py); 
+				r.move_to_coordinate (px, py); 
+			}
+
+			if (l.type == PointType.CUBIC) {
+				l.length *= 1 + rn / 3; 
+			} 
+		}
 	}
 
 	static void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
@@ -478,15 +550,10 @@ public class StrokeTool : Tool {
 			warning ("Invalid corner.");
 			return;
 		}
-
-		previous.color = Color.red ();
-		next.color = Color.blue ();
 		
 		if (Path.distance_to_point (previous, next) < fabs (0.2 * stroke_width)) {
 			return;
 		}
-		
-		corner.color = Color.pink ();
 				
 		if (distance < stroke_width) {
 			previous.flags |= EditPoint.NEW_CORNER;
@@ -560,10 +627,6 @@ public class StrokeTool : Tool {
 
 			if ((p2.flags & EditPoint.STROKE_OFFSET) > 0
 				&& (a1.flags & EditPoint.STROKE_OFFSET) > 0) {
-					
-					a1.color = Color.yellow ();
-					p2.color = Color.yellow ();
-					
 				return true;	
 			}
 		}
@@ -877,7 +940,7 @@ public class StrokeTool : Tool {
 		ep1.prev = prev;
 		ep1.next = ep2;
 		ep1.flags |= EditPoint.NEW_CORNER;
-		ep1.type = PointType.LINE_CUBIC;
+		ep1.type = prev.type;
 		ep1.x = px;
 		ep1.y = py;
 		ep1.color = c;
@@ -886,7 +949,7 @@ public class StrokeTool : Tool {
 		ep2.prev = ep1;
 		ep2.next = ep3;
 		ep2.flags |= EditPoint.INTERSECTION;
-		ep2.type = PointType.LINE_QUADRATIC;
+		ep2.type = prev.type;
 		ep2.x = px;
 		ep2.y = py;
 		ep2.color = c;
@@ -895,7 +958,7 @@ public class StrokeTool : Tool {
 		ep3.prev = ep2;
 		ep3.next = next;
 		ep3.flags |= EditPoint.NEW_CORNER;
-		ep3.type = PointType.LINE_CUBIC;
+		ep3.type = prev.type;
 		ep3.x = px;
 		ep3.y = py;
 		ep3.color = c;
@@ -1831,15 +1894,17 @@ public class StrokeTool : Tool {
 		}
 		
 		return sum > 0;
-	}
+	}	
 	
 	static void flatten (Path path, double stroke_width) {
 		EditPoint start, end, new_point;
 		double px, py;
 		int size, i, added_points;
 		double step = 0.51;
+		bool open = path.is_open ();
 		
-		size = path.is_open () ? path.points.size - 1 : path.points.size;
+		size = open ? path.points.size - 1 : path.points.size;
+		path.add_hidden_double_points ();
 		
 		i = 0;
 		added_points = 0;
@@ -1854,8 +1919,8 @@ public class StrokeTool : Tool {
 				added_points = 0;
 				i++;
 			} else if (!is_flat (start.x, start.y, px, py, end.x, end.y, 0.05 * stroke_width)
-					&& Path.distance (start.x, px, start.y, py) > 2 * stroke_width
-					&& Path.distance (end.x, px, end.y, py) > 2 * stroke_width) {
+					&& Path.distance (start.x, px, start.y, py) > 0.1 * stroke_width
+					&& Path.distance (end.x, px, end.y, py) > 0.1 * stroke_width) {
 				new_point = new EditPoint (px, py);
 				new_point.prev = start;
 				new_point.next = end;

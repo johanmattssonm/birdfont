@@ -1072,12 +1072,14 @@ public class Path {
 	public void add_hidden_double_points () requires (points.size > 1) {
 		EditPoint hidden;
 		EditPoint prev;
-		EditPoint first = points.get (points.size - 1);
+		EditPoint first;
 		PointType left;
 		PointType right;
 		double x, y;
 		Gee.ArrayList<EditPoint> middle_points = new Gee.ArrayList<EditPoint> ();
 		Gee.ArrayList<EditPoint> first_points = new Gee.ArrayList<EditPoint> ();
+		
+		first = points.get (points.size - 1);
 		
 		foreach (EditPoint next in points) {
 			left = first.get_right_handle ().type;
@@ -1098,6 +1100,7 @@ public class Path {
 				hidden.type = PointType.QUADRATIC;
 				
 				first.get_right_handle ().type = PointType.QUADRATIC;
+			
 				first.type = PointType.QUADRATIC;
 				
 				next.get_left_handle ().type = PointType.QUADRATIC;
@@ -1116,13 +1119,14 @@ public class Path {
 		
 		create_list ();
 
-		prev= get_last_point ();
+		prev = get_last_point ();
 		foreach (EditPoint ep in points) {
 			if (ep.type == PointType.QUADRATIC) {
 				x = prev.get_right_handle ().x;
 				y = prev.get_right_handle ().y;
 				ep.get_left_handle ().move_to_coordinate (x, y);
 			}
+			
 			prev = ep;
 		}
 	}
