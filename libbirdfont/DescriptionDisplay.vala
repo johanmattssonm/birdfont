@@ -319,20 +319,6 @@ public class DescriptionDisplay : FontDisplay {
 		if (!(0 <= focus_index < focus_ring.size)) {
 			focus_index = 0;
 		}
-		
-		if (w.widget_y < 0) {
-			scroll -= allocation.height;
-
-			if (scroll < 0) {
-				scroll = 0;
-			}			
-		} else if (w.widget_y > allocation.height - 30 * MainWindow.units) {
-			scroll += allocation.height;
-			
-			if (scroll + allocation.height >= content_height) {
-				scroll = content_height - allocation.height;
-			}			
-		} 
 
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
@@ -375,7 +361,7 @@ public class DescriptionDisplay : FontDisplay {
 	
 	public override void scroll_wheel_down (double x, double y) {
 		scroll += 25 * MainWindow.units;
-
+		
 		if (scroll + allocation.height >=  content_height) {
 			scroll = content_height - allocation.height;
 		}
