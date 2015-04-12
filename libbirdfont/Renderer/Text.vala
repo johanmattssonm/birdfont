@@ -456,14 +456,15 @@ public class Text : Widget {
 		double by;
 		
 		if (path.points.size > 0) {
-
-			prev = path.points.get (0);
+			path.add_hidden_double_points ();
+			
+			prev = path.points.get (path.points.size - 1);
 			xa = (prev.x - lsb) * scale + x;
 			ya = y - prev.y * scale;
 			cr.move_to (xa, ya);
 			
 			by = (y - font.base_line * scale);
-			for (int i = 1; i < path.points.size; i++) {
+			for (int i = 0; i < path.points.size; i++) {
 				e = path.points.get (i).copy ();
 				PenTool.convert_point_segment_type (prev, e, PointType.CUBIC);
 				
@@ -481,20 +482,6 @@ public class Text : Widget {
 				
 				prev = e;
 			}
-			
-			// close path
-			e = path.points.get (0);
-			
-			xb = (prev.get_right_handle ().x - lsb) * scale + x;
-			yb = by - prev.get_right_handle ().y * scale;
-
-			xc = (e.get_left_handle ().x - lsb) * scale + x;
-			yc = by - e.get_left_handle ().y * scale;
-				
-			xd = (e.x - lsb) * scale + x;
-			yd = by - e.y * scale;
-			
-			cr.curve_to (xb, yb, xc, yc, xd, yd);
 		}
 	}
 
