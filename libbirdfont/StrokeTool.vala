@@ -466,14 +466,17 @@ public class StrokeTool : Tool {
 		EditPointHandle l = stroke_end.get_left_handle ();
 		
 		if (!r.is_line ()) {
-
 			if (r.type == PointType.CUBIC) {
 				r.length *= rp;
 			} else {
 				Path.find_intersection_handle (r, l, out px, out py);
 				
-				l.move_to_coordinate (px, py); 
-				r.move_to_coordinate (px, py); 
+				if (EditPoint.is_valid_position (px, py)) {
+					l.move_to_coordinate (px, py); 
+					r.move_to_coordinate (px, py); 
+				} else {
+					warning ("Invalid position.");
+				}				
 			}
 
 			if (l.type == PointType.CUBIC) {
@@ -574,8 +577,10 @@ public class StrokeTool : Tool {
 				cutoff2.x = next.x + (corner.x - next.x) * ratio;
 				cutoff2.y = next.y + (corner.y - next.y) * ratio;
 
-				cutoff1 = stroked.add_point (cutoff1);
-				cutoff2 = stroked.add_point (cutoff2);
+				if (!cutoff1.is_valid () || cutoff2.is_valid ()) {
+					cutoff1 = stroked.add_point (cutoff1);
+					cutoff2 = stroked.add_point (cutoff2);
+				}
 				
 				cutoff1.recalculate_linear_handles ();
 				cutoff2.recalculate_linear_handles ();
@@ -1902,6 +1907,7 @@ public class StrokeTool : Tool {
 		bool open = path.is_open ();
 		
 		size = open ? path.points.size - 1 : path.points.size;
+		
 		path.add_hidden_double_points ();
 		
 		i = 0;
