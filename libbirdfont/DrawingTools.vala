@@ -250,7 +250,7 @@ public class DrawingTools : ToolCollection  {
 		convert_points = new Tool ("convert_point", t_("Convert selected points"));
 		convert_points.select_action.connect ((self) => {
 			PenTool.convert_point_types ();
-			MainWindow.get_current_glyph ().update_view ();
+			GlyphCanvas.redraw ();
 			update_type_selection ();
 		});
 		convert_points.set_persistent (false);

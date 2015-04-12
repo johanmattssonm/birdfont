@@ -487,7 +487,8 @@ public class SvgParser {
 			if (!StrokeTool.is_flat (x1, y1, x2, y2, x3, y3, 1)
 				&& step_end - step / 2.0 > step_start 
 				&& step_end - step / 2.0 > 0.1
-				&& step > 0.05) {
+				&& step > 0.05
+				&& Path.distance_to_point (start, end) > 1) {
 				
 				step /= 2.0;
 	

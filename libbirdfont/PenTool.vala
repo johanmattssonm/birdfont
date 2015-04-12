@@ -2102,6 +2102,7 @@ public class PenTool : Tool {
 		
 		foreach (PointSelection ps in selected_points) {
 			e = ps.point;
+			
 			// convert segments not control points
 			if (e.next == null || !e.get_next ().is_selected ()) {
 				continue;

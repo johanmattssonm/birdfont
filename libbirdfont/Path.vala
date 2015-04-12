@@ -1135,13 +1135,14 @@ public class Path {
 		Gee.ArrayList<EditPoint> middle_points = new Gee.ArrayList<EditPoint> ();
 		Gee.ArrayList<EditPoint> first_points = new Gee.ArrayList<EditPoint> ();
 		
-		first = points.get (points.size - 1);
+		first = is_open () ? points.get (0) : points.get (points.size - 1);
 		
 		foreach (EditPoint next in points) {
 			left = first.get_right_handle ().type;
 			right = next.get_left_handle ().type;
 						
-			if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
+			if (next != first && (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE)) {
+					
 				first.get_right_handle ().type = PointType.QUADRATIC;
 
 				// half way between handles

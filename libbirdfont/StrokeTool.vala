@@ -339,15 +339,12 @@ public class StrokeTool : Tool {
 			first = merged.get_first_point ();
 			last_counter = merged.get_last_point ();
 				
-			if (first.type == PointType.QUADRATIC) {
-				first.get_left_handle ().convert_to_line ();
-				first.recalculate_linear_handles ();
-			}
+			
+			first.get_left_handle ().convert_to_line ();
+			first.recalculate_linear_handles ();
 
-			if (last_counter.type == PointType.QUADRATIC) {
-				last_counter.get_right_handle ().convert_to_line ();
-				last_counter.recalculate_linear_handles ();
-			}
+			last_counter.get_right_handle ().convert_to_line ();
+			last_counter.recalculate_linear_handles ();
 
 			first.color = Color.pink ();
 			last_counter.color = Color.yellow ();
@@ -1906,13 +1903,15 @@ public class StrokeTool : Tool {
 		double step = 0.51;
 		bool open = path.is_open ();
 		
+		print (@"open: $open\n");
+		
 		size = open ? path.points.size - 1 : path.points.size;
 		
 		path.add_hidden_double_points ();
 		
 		i = 0;
 		added_points = 0;
-		while (i < path.points.size) {
+		while (i < size) {
 			start = path.points.get (i);
 			end = path.points.get ((i + 1) % path.points.size);
 			
