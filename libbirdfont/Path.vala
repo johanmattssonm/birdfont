@@ -657,10 +657,34 @@ public class Path {
 	
 	public bool is_clockwise () {
 		double s;
+		Path p;
 		
 		if (unlikely (points.size <= 2)) {
 			no_derived_direction = true;
 			return clockwise_direction;
+		}
+
+		if (unlikely (points.size == 2)) {
+			p = copy ();
+			all_segments ((a, b) => {
+				double px, py;
+				double step;
+				EditPoint new_point;
+				
+				step = 0.3;
+				
+				Path.get_point_for_step (a, b, step, out px, out py);
+				
+				new_point = new EditPoint (px, py);
+				new_point.prev = a;
+				new_point.next = b;
+				
+				p.insert_new_point_on_path (new_point, step);
+				
+				return true;
+			});
+			
+			return p.is_clockwise ();
 		}
 		
 		s = clockwise_sum ();
@@ -2125,7 +2149,7 @@ public class Path {
 		PathList lines = new PathList ();
 		
 		foreach (Path p in pl.paths) {
-			lines.add (SvgParser.get_lines (path));
+			lines.add (SvgParser.get_lines (p));
 		}
 		
 		foreach (Path p in lines.paths) {

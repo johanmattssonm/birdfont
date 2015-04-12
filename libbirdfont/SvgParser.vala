@@ -540,7 +540,6 @@ public class SvgParser {
 	public static bool is_inside (EditPoint point, Path path) {
 		EditPoint prev;
 		bool inside = false;
-		Path lines = path;
 		
 		if (path.points.size <= 1) {
 			return false;
