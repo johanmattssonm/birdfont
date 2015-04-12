@@ -24,6 +24,8 @@ public class ZoomBar : Tool {
 	
 	public signal void new_zoom (double zoom_level);
 	
+	double margin_percent = 0.05;
+	
 	public ZoomBar () {
 		base ();
 		
@@ -57,7 +59,7 @@ public class ZoomBar : Tool {
 	}
 	
 	void set_zoom_from_mouse (double tx) {
-		double margin = w * 0.1;
+		double margin = w * margin_percent;
 		double bar_width = w - margin - x;
 		
 		tx -= x;
@@ -81,7 +83,7 @@ public class ZoomBar : Tool {
 	}
 	
 	public override void draw (Context cr) {
-		double margin = w * 0.1;
+		double margin = w * margin_percent;
 		double bar_width = w - margin - x;
 		
 		// filled
@@ -110,7 +112,7 @@ public class ZoomBar : Tool {
 	void draw_bar (Context cr) {
 		double height = h;
 		double radius = height / 2;
-		double margin = w * 0.1;
+		double margin = w * margin_percent;
 	
 		cr.move_to (x + radius, y + height);
 		cr.arc (x + radius, y + radius, radius, PI / 2, 3 * (PI / 2));
