@@ -777,11 +777,11 @@ public class TabBar : GLib.Object {
 			label = new Text ();
 			label.use_cache (false);
 			label.set_text (t.get_label ());
-			text_height = 16 / scale;
+			text_height = (int) (16 / scale);
 			label.set_font_size (text_height);
 			text_width = label.get_extent ();
 			center_x = tab_width / 2.0 - text_width / 2.0;
-			center_y = tab_height / 2.0 + 4 / scale;
+			center_y = (int) (tab_height / 2.0 + 4 / scale);
 			
 			if (tab_index == selected) {
 				Theme.text_color (label, "Foreground 4");
