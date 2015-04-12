@@ -19,7 +19,7 @@ namespace BirdFont {
 
 public class StrokeTool : Tool {
 	
-	static bool stroke_selected = false;
+	public static bool stroke_selected = false;
 	static int iterations = 0;
 	
 	public StrokeTool (string tooltip) {
@@ -1082,7 +1082,7 @@ public class StrokeTool : Tool {
 			&& is_flat (x1, y1, x2, y2, x3, y3, tolerance);
 	}
 	
-	static bool is_flat (double x1, double y1, double x2, double y2, double x3, double y3, double tolerance = 0.01) {
+	public static bool is_flat (double x1, double y1, double x2, double y2, double x3, double y3, double tolerance = 0.01) {
 		double ds = Path.distance (x1, x3, y1, y3);
 		double d1 = Path.distance (x1, x2, y1, y2);
 		double d2 = Path.distance (x2, x3, y2, y3);

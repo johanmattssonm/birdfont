@@ -2122,8 +2122,13 @@ public class Path {
 	public static int counters (PathList pl, Path path) {
 		int inside_count = 0;
 		bool inside;
+		PathList lines = new PathList ();
 		
 		foreach (Path p in pl.paths) {
+			lines.add (SvgParser.get_lines (path));
+		}
+		
+		foreach (Path p in lines.paths) {
 			if (p.points.size > 1 && p != path 
 				&& path.boundaries_intersecting (p)) {
 					

@@ -468,27 +468,96 @@ public class SvgParser {
 		}
 	}
 
-	/** Check if a point is inside using the even odd fill rule. */
+	public static void create_lines_for_segment (Path path, EditPoint start, EditPoint end) {
+		double x1, x2, x3;
+		double y1, y2, y3;
+		double step_start, step, step_end;
+
+		path.add (start.x, start.y);
+
+		step_start = 0;
+		step = 0.5;
+		step_end = 1;
+					
+		while (true) {
+			Path.get_point_for_step (start, end, step_start, out x1, out y1);
+			Path.get_point_for_step (start, end, step, out x2, out y2);
+			Path.get_point_for_step (start, end, step_end, out x3, out y3);
+		
+			if (!StrokeTool.is_flat (x1, y1, x2, y2, x3, y3, 1)
+				&& step_end - step / 2.0 > step_start 
+				&& step_end - step / 2.0 > 0.1
+				&& step > 0.05) {
+				
+				step /= 2.0;
+	
+				if (step < 0.05) {
+					step = 0.05;
+				} else {
+					step_end = step_start + 2 * step;
+				}
+			} else {
+				path.add (x3, y3);
+				
+				if (step_end + step < 1) {
+					step_start = step_end;
+					step_end += step;
+				} else {
+					break;
+				}
+			}
+		}
+	}
+
+	// FIXME: cache lines in path
+	public static Path get_lines (Path p) {
+		EditPoint start;
+		Path path = new Path ();
+		
+		if (p.points.size == 0) {
+			return path;
+		}
+		
+		// create a set of straight lines
+		start = p.points.get (p.points.size - 1);
+		
+		foreach (EditPoint end in p.points) {
+			create_lines_for_segment (path, start, end);
+			start = end;
+		}
+
+		if (StrokeTool.stroke_selected) { // FIXME: DELETE
+			((!) BirdFont.get_current_font ().get_glyph ("b")).add_path (path);
+			path.recalculate_linear_handles ();
+		}
+						
+		return path;
+	}
+
+	/** Check if a point is inside using the even odd fill rule.
+	 * The path should only have straight lines.
+	 */
 	public static bool is_inside (EditPoint point, Path path) {
 		EditPoint prev;
 		bool inside = false;
+		Path lines = path;
 		
-		if (path.points.size == 0) {
+		if (path.points.size <= 1) {
 			return false;
 		}
-		
+				
 		prev = path.get_last_point ();
-		
-		foreach (EditPoint p in path.points) {
-			if (p.x == point.x && point.y == p.y) {
+
+		foreach (EditPoint start in path.points) {
+			if (start.x == point.x && point.y == start.y) {
 				inside = true;
 				break;
-			} else if ((p.y > point.y) != (prev.y > point.y)
-				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
+			} else if ((start.y > point.y) != (prev.y > point.y)
+				&& point.x < (prev.x - start.x) * (point.y - start.y) / (prev.y - start.y) + start.x) {
 				inside = !inside;
 			}
 			
-			prev = p;
+			prev = start;
 		}
 		
 		return inside;
