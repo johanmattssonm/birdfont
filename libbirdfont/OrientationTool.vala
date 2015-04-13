@@ -31,28 +31,17 @@ public class OrientationTool : Tool {
 			foreach (Path p in g.active_paths) {
 				p.reverse ();
 			}
-		
-			GlyphCanvas.redraw ();
-		});
 
-		panel_move_action.connect ((t, x, y) => {
 			if (!Glyph.show_orientation_arrow && is_active ()) {
-				count_down = false;
+				count_down = true;
 				Glyph.show_orientation_arrow = true;
 				Glyph.orientation_arrow_opacity = 1;
-				GlyphCanvas.redraw ();
-			}
-			
-			return false;
-		});
-		
-		move_out_action.connect ((t) => {
-			if (Glyph.show_orientation_arrow) {
-				count_down = true;
-				time = 6;
+				time = 10;
 				fade_out ();
 				GlyphCanvas.redraw ();
 			}
+
+			GlyphCanvas.redraw ();
 		});
 	}
 	
