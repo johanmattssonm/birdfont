@@ -582,6 +582,30 @@ GNU Lesser General Public License</copyright>
 		<path stroke="0" skew="0" data="S -41.4110032362,2.3559870550 L -21.4110032362,2.3559870550 L -21.4110032362,6.3559870550 L -13.1715210356,0.0809061489 L -21.4110032362,-5.6440129450 L -21.4110032362,-5.6440129450 L -21.4110032362,-1.6440129450 L -41.4110032362,-1.6440129450 L -41.4110032362,2.3559870550" />
 	</glyph>
 </collection>
+<collection name="orientation_both">
+	<selected id="1"/>
+	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
+		<path stroke="0" skew="0" data="B 24.7000424278,52.6385195962 C 24.7000424278,52.6385195962 28.2755400756,50.9915601345 32.0454982193,48.2024125779 C 35.8155024524,45.4132650213 39.9659472235,41.4500354888 40.7736828072,36.3343860095 C 41.5782382208,31.2389236976 39.1082138330,25.7194386890 36.5968287965,21.3841753294 C 35.0178420166,18.6583546408 33.6301632161,16.7582720649 32.6216160139,15.4500698664 M 40.5432356894,13.1168388877 M 44.7200897001,11.8781395399 M 40.5432356894,10.5531607913 M 17.2104650087,3.2076128209 M 15.4533057353,2.6602548266 M 15.4821577144,4.5038317693 M 15.5973812733,22.3923353805 M 15.5973812733,24.8408820969 M 17.6714053338,23.4869591902 M 24.3831776407,19.0797041511 C 25.3474974321,20.7321943437 29.0147038150,27.2707165074 27.6094372904,33.4537970365 C 26.8754908738,36.6830985882 23.3230471556,39.5523495629 19.7742352841,41.4905941816 C 16.2254234125,43.4289309791 12.8608217491,44.4576469131 12.8608217491,44.4576469131 M 9.7209797686,45.3794353844 M 12.6303746312,46.9061014507 M 23.5478068386,52.5809078167 M 24.1239246332,52.8977265143 M 24.7000424278,52.6385195962" />
+		<path stroke="0" skew="0" data="B 24.1814903232,49.9019139825 M 16.5479295450,45.9267933787 C 17.8507669346,45.4070890386 19.3636891347,44.7692114164 21.0416483427,43.8527693182 C 24.8695869813,41.7619687075 29.1583184588,38.6504717225 30.2019212766,34.0587668103 C 32.1653399384,25.4198574358 26.0250672659,16.4007103169 26.0250672659,16.4007103169 M 25.3049200227,15.2773267068 M 24.1814903232,16.0261876610 M 18.2186711493,19.9437886641 M 18.1322995695,6.2898891113 M 35.6174746351,11.7917679602 M 30.0003261379,13.4625095645 M 28.0415256363,14.0386273591 M 29.3665965639,15.5941454044 C 29.3665965639,15.5941454044 31.9122352600,18.6003741460 34.2924037076,22.7091540781 C 36.6725721552,26.8180261891 38.7410654849,31.9916561633 38.1235870416,35.9023437529 C 37.5092887685,39.7928441751 33.9790878062,43.4681069891 30.4612203736,46.0707767379 C 27.4211988667,48.3199406080 24.9171143949,49.5519108999 24.1815364126,49.9019139825 M 24.1814903232,49.9019139825" />
+		<path stroke="0" skew="0" data="B 2.0546235781,52.3710516520 M 1.9262535781,32.9589516520 M -5.6495264219,38.0974516520 C -5.6495264219,38.0974516520 -12.9863064219,29.1023516520 -11.0580064219,20.6176516520 C -9.1296364219,12.1329516520 5.9114635781,7.6333516520 5.9114635781,7.6333516520 M -5.9157164219,1.4627516520 C -5.9157164219,1.4627516520 -20.9643867219,8.2750516520 -22.4995067219,18.0464516520 C -24.4057467319,30.1802516520 -13.0213164219,41.2527516520 -13.0213164219,41.2527516520 M -23.2708067219,44.4005516520 M 2.0546235781,52.3710516520" />
+	</glyph>
+</collection>
+<collection name="orientation_clockwise">
+	<selected id="1"/>
+	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
+		<path stroke="0" skew="0" data="B 24.7000424278,52.6385195962 C 24.7000424278,52.6385195962 28.2755400756,50.9915601345 32.0454982193,48.2024125779 C 35.8155024524,45.4132650213 39.9659472235,41.4500354888 40.7736828072,36.3343860095 C 41.5782382208,31.2389236976 39.1082138330,25.7194386890 36.5968287965,21.3841753294 C 35.0178420166,18.6583546408 33.6301632161,16.7582720649 32.6216160139,15.4500698664 M 40.5432356894,13.1168388877 M 44.7200897001,11.8781395399 M 40.5432356894,10.5531607913 M 17.2104650087,3.2076128209 M 15.4533057353,2.6602548266 M 15.4821577144,4.5038317693 M 15.5973812733,22.3923353805 M 15.5973812733,24.8408820969 M 17.6714053338,23.4869591902 M 24.3831776407,19.0797041511 C 25.3474974321,20.7321943437 29.0147038150,27.2707165074 27.6094372904,33.4537970365 C 26.8754908738,36.6830985882 23.3230471556,39.5523495629 19.7742352841,41.4905941816 C 16.2254234125,43.4289309791 12.8608217491,44.4576469131 12.8608217491,44.4576469131 M 9.7209797686,45.3794353844 M 12.6303746312,46.9061014507 M 23.5478068386,52.5809078167 M 24.1239246332,52.8977265143 M 24.7000424278,52.6385195962" />
+		<path stroke="0" skew="0" data="B -7.5886873777,2.0218830082 C -7.5886873777,2.0218830082 -11.1641850255,3.6688424699 -14.9341431692,6.4579900265 C -18.7041474023,9.2471375831 -22.8545921734,13.2103671156 -23.6623277571,18.3260165949 C -24.4668831707,23.4214789068 -21.9968587829,28.9409639154 -19.4854737464,33.2762272750 C -17.9064869665,36.0020479636 -16.5188081660,37.9021305395 -15.5102609638,39.2103327380 M -23.4318806393,41.5435637167 M -27.6087346500,42.7822630645 M -23.4318806393,44.1072418131 M -0.0991099586,51.4527897835 M 1.6580493148,52.0001477778 M 1.6291973357,50.1565708351 M 1.5139737768,32.2680672239 M 1.5139737768,29.8195205075 M -0.5600502837,31.1734434142 M -7.2718225906,35.5806984533 C -8.2361423820,33.9282082607 -11.9033487649,27.3896860970 -10.4980822403,21.2066055679 C -9.7641358237,17.9773040162 -6.2116921055,15.1080530415 -2.6628802340,13.1698084228 C 0.8859316376,11.2314716253 4.2505333010,10.2027556913 4.2505333010,10.2027556913 M 7.3903752815,9.2809672200 M 4.4809804189,7.7543011537 M -6.4364517885,2.0794947877 M -7.0125695831,1.7626760901 M -7.5886873777,2.0218830082" />
+	</glyph>
+</collection>
+<collection name="orientation_counter_clockwise">
+	<selected id="1"/>
+	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
+		<path stroke="0" skew="0" data="B 24.1239246332,0.0000000000 M 23.5478068386,0.3168186976 M 12.6303746312,5.9916250636 M 9.7209797686,7.5182911299 M 12.8608217491,8.4400796012 C 12.8608217491,8.4400796012 16.2254234125,9.4687955352 19.7742352841,11.4071323327 C 23.3230471556,13.3453769514 26.8754908738,16.2146279261 27.6094372904,19.4439294778 C 29.0147038150,25.6270100069 25.3474974321,32.1655321706 24.3831776407,33.8180223632 M 17.6714053338,29.4107673241 M 15.5973812733,28.0568444174 M 15.5973812733,30.5053911338 M 15.4821577144,48.3938947450 M 15.4533057353,50.2374716877 M 17.2104650087,49.6901136934 M 40.5432356894,42.3445657230 M 44.7200897001,41.0195869744 M 40.5432356894,39.7808876266 M 32.6216160139,37.4476566479 C 33.6301632161,36.1394544494 35.0178420166,34.2393718735 36.5968287965,31.5135511849 C 39.1082138330,27.1782878253 41.5782382208,21.6588028167 40.7736828072,16.5633405048 C 39.9659472235,11.4476910255 35.8155024524,7.4844614930 32.0454982193,4.6953139364 C 28.2755400756,1.9061663798 24.7000424278,0.2592069181 24.7000424278,0.2592069181 M 24.1239246332,0.0000000000" />
+		<path stroke="0" skew="0" data="B 24.1815364126,2.9958125318 C 24.9171143949,3.3458156144 27.4211988667,4.5777859063 30.4612203736,6.8269497764 C 33.9790878062,9.4296195252 37.5092887685,13.1048823392 38.1235870416,16.9953827614 C 38.7410654849,20.9060703510 36.6725721552,26.0797003252 34.2924037076,30.1885724362 C 31.9122352600,34.2973523683 29.3665965639,37.3035811099 29.3665965639,37.3035811099 M 28.0415256363,38.8590991552 M 30.0003261379,39.4352169498 M 35.6174746351,41.1059585541 M 18.1322995695,46.6078374030 M 18.2186711493,32.9539378502 M 24.1814903232,36.8715388533 M 25.3049200227,37.6203998075 M 26.0250672659,36.4970161974 C 26.0250672659,36.4970161974 32.1653399384,27.4778690785 30.2019212766,18.8389597040 C 29.1583184588,14.2472547918 24.8695869813,11.1357578068 21.0416483427,9.0449571961 C 19.3636891347,8.1285150979 17.8507669346,7.4906374757 16.5479295450,6.9709331356 M 24.1814903232,2.9958125318 M 24.1815364126,2.9958125318" />
+		<path stroke="0" skew="0" data="B -7.0125695831,51.1350504242 M -6.4364517885,50.8182317266 M 4.4809804189,45.1434253606 M 7.3903752815,43.6167592943 M 4.2505333010,42.6949708230 C 4.2505333010,42.6949708230 0.8859316376,41.6662548890 -2.6628802340,39.7279180915 C -6.2116921055,37.7896734728 -9.7641358237,34.9204224981 -10.4980822403,31.6911209464 C -11.9033487649,25.5080404173 -8.2361423820,18.9695182536 -7.2718225906,17.3170280610 M -0.5600502837,21.7242831001 M 1.5139737768,23.0782060068 M 1.5139737768,20.6296592904 M 1.6291973357,2.7411556792 M 1.6580493148,0.8975787365 M -0.0991099586,1.4449367308 M -23.4318806393,8.7904847012 M -27.6087346500,10.1154634498 M -23.4318806393,11.3541627976 M -15.5102609638,13.6873937763 C -16.5188081660,14.9955959748 -17.9064869665,16.8956785507 -19.4854737464,19.6214992393 C -21.9968587829,23.9567625989 -24.4668831707,29.4762476075 -23.6623277571,34.5717099194 C -22.8545921734,39.6873593987 -18.7041474023,43.6505889312 -14.9341431692,46.4397364878 C -11.1641850255,49.2288840444 -7.5886873777,50.8758435061 -7.5886873777,50.8758435061 M -7.0125695831,51.1350504242" />
+		<path stroke="0" skew="0" data="B -7.0701813625,48.1392378924 C -7.8057593448,47.7892348098 -10.3098438166,46.5572645179 -13.3498653235,44.3081006478 C -16.8677327561,41.7054308990 -20.3979337184,38.0301680850 -21.0122319915,34.1396676628 C -21.6297104348,30.2289800732 -19.5612171051,25.0553500990 -17.1810486575,20.9464779880 C -14.8008802099,16.8376980559 -12.2552415138,13.8314693143 -12.2552415138,13.8314693143 M -10.9301705862,12.2759512690 M -12.8889710878,11.6998334744 M -18.5061195850,10.0290918701 M -1.0209445194,4.5272130212 M -1.1073160992,18.1811125740 M -7.0701352731,14.2635115709 M -8.1935649726,13.5146506167 M -8.9137122158,14.6380342268 C -8.9137122158,14.6380342268 -15.0539848883,23.6571813457 -13.0905662265,32.2960907202 C -12.0469634087,36.8877956324 -7.7582319312,39.9992926174 -3.9302932926,42.0900932281 C -2.2523340846,43.0065353263 -0.7394118845,43.6444129485 0.5634255051,44.1641172886 M -7.0701352731,48.1392378924 M -7.0701813625,48.1392378924" />
+	</glyph>
+</collection>
 <collection unicode="U+70">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -964,83 +988,86 @@ GNU Lesser General Public License</copyright>
 </collection>
 
 
+<ligature sequence="o r i e n t a t i o n _ c o u n t e r _ c l o c k w i s e" replacement="orientation_counter_clockwise"/>
 <ligature sequence="i n s e r t _ g l y p h _ f r o m _ o v e r v i e w" replacement="insert_glyph_from_overview"/>
 <ligature sequence="h i g h _ c o n t r a s t _ b a c k g r o u n d" replacement="high_contrast_background"/>
 <ligature sequence="p r e v i o u s _ k e r n i n g _ s t r i n g" replacement="previous_kerning_string"/>
-<ligature sequence="s h o w _ x h e i g h t _ h e l p l i n e s" replacement="show_xheight_helplines"/>
 <ligature sequence="g e n e r a t e _ h t m l _ d o c u m e n t" replacement="generate_html_document"/>
-<ligature sequence="s h o w _ a l l _ l i n e _ h a n d l e s" replacement="show_all_line_handles"/>
-<ligature sequence="b a c k g r o u n d _ h e l p _ l i n e s" replacement="background_help_lines"/>
-<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution"/>
+<ligature sequence="s h o w _ x h e i g h t _ h e l p l i n e s" replacement="show_xheight_helplines"/>
+<ligature sequence="o r i e n t a t i o n _ c l o c k w i s e" replacement="orientation_clockwise"/>
 <ligature sequence="z o o m _ b a c k g r o u n d _ i m a g e" replacement="zoom_background_image"/>
-<ligature sequence="a u t o _ t r a c e _ s i m p l i f y" replacement="auto_trace_simplify"/>
+<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution"/>
+<ligature sequence="b a c k g r o u n d _ h e l p _ l i n e s" replacement="background_help_lines"/>
+<ligature sequence="s h o w _ a l l _ l i n e _ h a n d l e s" replacement="show_all_line_handles"/>
 <ligature sequence="n e x t _ k e r n i n g _ s t r i n g" replacement="next_kerning_string"/>
-<ligature sequence="k e r n i n g _ t e x t _ i n p u t" replacement="kerning_text_input"/>
+<ligature sequence="a u t o _ t r a c e _ s i m p l i f y" replacement="auto_trace_simplify"/>
 <ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold"/>
-<ligature sequence="o r i e n t a t i o n _ a r r o w" replacement="orientation_arrow"/>
-<ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background"/>
-<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
-<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
+<ligature sequence="k e r n i n g _ t e x t _ i n p u t" replacement="kerning_text_input"/>
 <ligature sequence="s e l e c t _ b a c k g r o u n d" replacement="select_background"/>
-<ligature sequence="s c a l e _ b a c k g r o u n d" replacement="scale_background"/>
+<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
+<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
+<ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background"/>
+<ligature sequence="o r i e n t a t i o n _ a r r o w" replacement="orientation_arrow"/>
+<ligature sequence="o r i e n t a t i o n _ b o t h" replacement="orientation_both"/>
 <ligature sequence="q u a d r a t i c _ p o i n t s" replacement="quadratic_points"/>
-<ligature sequence="m o v e _ b a c k g r o u n d" replacement="move_background"/>
-<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal"/>
-<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background"/>
+<ligature sequence="s c a l e _ b a c k g r o u n d" replacement="scale_background"/>
 <ligature sequence="z o o m _ b o u n d a r i e s" replacement="zoom_boundaries"/>
-<ligature sequence="i n s e r t _ u n i c h a r" replacement="insert_unichar"/>
-<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background"/>
-<ligature sequence="u p d a t e _ w e b v i e w" replacement="update_webview"/>
+<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background"/>
+<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal"/>
+<ligature sequence="m o v e _ b a c k g r o u n d" replacement="move_background"/>
 <ligature sequence="f i l l _ o p e n _ p a t h" replacement="fill_open_path"/>
-<ligature sequence="d r o p d o w n _ m e n u" replacement="dropdown_menu"/>
-<ligature sequence="f l i p _ v e r t i c a l" replacement="flip_vertical"/>
-<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button"/>
-<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point"/>
-<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points"/>
-<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class"/>
+<ligature sequence="u p d a t e _ w e b v i e w" replacement="update_webview"/>
+<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background"/>
+<ligature sequence="i n s e r t _ u n i c h a r" replacement="insert_unichar"/>
 <ligature sequence="a d d _ n e w _ t h e m e" replacement="add_new_theme"/>
-<ligature sequence="y _ c o o r d i n a t e" replacement="y_coordinate"/>
-<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate"/>
-<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points"/>
-<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path"/>
+<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class"/>
+<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points"/>
+<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point"/>
+<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button"/>
+<ligature sequence="f l i p _ v e r t i c a l" replacement="flip_vertical"/>
+<ligature sequence="d r o p d o w n _ m e n u" replacement="dropdown_menu"/>
 <ligature sequence="e x p o r t _ f o n t s" replacement="export_fonts"/>
-<ligature sequence="r i g h t _ a r r o w" replacement="right_arrow"/>
-<ligature sequence="b e z i e r _ l i n e" replacement="bezier_line"/>
-<ligature sequence="c r e a t e _ l i n e" replacement="create_line"/>
-<ligature sequence="s p i n _ b u t t o n" replacement="spin_button"/>
+<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path"/>
+<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points"/>
+<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate"/>
+<ligature sequence="y _ c o o r d i n a t e" replacement="y_coordinate"/>
 <ligature sequence="m o v e _ c a n v a s" replacement="move_canvas"/>
-<ligature sequence="l e f t _ a r r o w" replacement="left_arrow"/>
-<ligature sequence="h e l p _ l i n e s" replacement="help_lines"/>
-<ligature sequence="m o v e _ l a y e r" replacement="move_layer"/>
-<ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
-<ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
+<ligature sequence="s p i n _ b u t t o n" replacement="spin_button"/>
+<ligature sequence="c r e a t e _ l i n e" replacement="create_line"/>
+<ligature sequence="b e z i e r _ l i n e" replacement="bezier_line"/>
+<ligature sequence="r i g h t _ a r r o w" replacement="right_arrow"/>
 <ligature sequence="f u l l _ g l y p h" replacement="full_glyph"/>
-<ligature sequence="i n f o _ i c o n" replacement="info_icon"/>
-<ligature sequence="s h o w _ g r i d" replacement="show_grid"/>
-<ligature sequence="a u t o t r a c e" replacement="autotrace"/>
-<ligature sequence="u n d o _ t o o l" replacement="undo_tool"/>
-<ligature sequence="t i e _ p o i n t" replacement="tie_point"/>
-<ligature sequence="s y m m e t r i c" replacement="symmetric"/>
-<ligature sequence="f o r e s i g h t" replacement="foresight"/>
-<ligature sequence="z o o m _ t o o l" replacement="zoom_tool"/>
-<ligature sequence="r e c t a n g l e" replacement="rectangle"/>
-<ligature sequence="t t f _ u n i t s" replacement="ttf_units"/>
+<ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
+<ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
+<ligature sequence="m o v e _ l a y e r" replacement="move_layer"/>
+<ligature sequence="h e l p _ l i n e s" replacement="help_lines"/>
+<ligature sequence="l e f t _ a r r o w" replacement="left_arrow"/>
 <ligature sequence="m e n u _ i c o n" replacement="menu_icon"/>
-<ligature sequence="z o o m _ o u t" replacement="zoom_out"/>
-<ligature sequence="r o t a t i o n" replacement="rotation"/>
-<ligature sequence="p e n _ t o o l" replacement="pen_tool"/>
-<ligature sequence="z o o m _ 1 _ 1" replacement="zoom_1_1"/>
+<ligature sequence="t t f _ u n i t s" replacement="ttf_units"/>
+<ligature sequence="r e c t a n g l e" replacement="rectangle"/>
+<ligature sequence="z o o m _ t o o l" replacement="zoom_tool"/>
+<ligature sequence="f o r e s i g h t" replacement="foresight"/>
+<ligature sequence="s y m m e t r i c" replacement="symmetric"/>
+<ligature sequence="t i e _ p o i n t" replacement="tie_point"/>
+<ligature sequence="u n d o _ t o o l" replacement="undo_tool"/>
+<ligature sequence="a u t o t r a c e" replacement="autotrace"/>
+<ligature sequence="s h o w _ g r i d" replacement="show_grid"/>
+<ligature sequence="i n f o _ i c o n" replacement="info_icon"/>
 <ligature sequence="p r o g r e s s" replacement="progress"/>
+<ligature sequence="z o o m _ 1 _ 1" replacement="zoom_1_1"/>
+<ligature sequence="p e n _ t o o l" replacement="pen_tool"/>
+<ligature sequence="r o t a t i o n" replacement="rotation"/>
+<ligature sequence="z o o m _ o u t" replacement="zoom_out"/>
 <ligature sequence="z o o m _ i n" replacement="zoom_in"/>
-<ligature sequence="h e i g h t" replacement="height"/>
-<ligature sequence="r e s i z e" replacement="resize"/>
 <ligature sequence="c i r c l e" replacement="circle"/>
-<ligature sequence="t h e m e" replacement="theme"/>
-<ligature sequence="w i d t h" replacement="width"/>
+<ligature sequence="r e s i z e" replacement="resize"/>
+<ligature sequence="h e i g h t" replacement="height"/>
 <ligature sequence="t r a c k" replacement="track"/>
-<ligature sequence="s k e w" replacement="skew"/>
-<ligature sequence="m o v e" replacement="move"/>
-<ligature sequence="p r e v" replacement="prev"/>
+<ligature sequence="w i d t h" replacement="width"/>
+<ligature sequence="t h e m e" replacement="theme"/>
 <ligature sequence="n e x t" replacement="next"/>
+<ligature sequence="p r e v" replacement="prev"/>
+<ligature sequence="m o v e" replacement="move"/>
+<ligature sequence="s k e w" replacement="skew"/>
 
 </font>

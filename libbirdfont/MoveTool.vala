@@ -152,7 +152,7 @@ public class MoveTool : Tool {
 		}
 	}
 		
-	public static void press (int b, int x, int y) {
+	public void press (int b, int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 					
 		glyph.store_undo_state ();
@@ -177,7 +177,8 @@ public class MoveTool : Tool {
 			selection_y = y;	
 		}
 		
-		update_boundaries_for_selection ();	
+		update_boundaries_for_selection ();
+		selection_changed ();
 	}
 	
 	

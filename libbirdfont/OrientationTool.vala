@@ -22,8 +22,10 @@ public class OrientationTool : Tool {
 	double time = 0;
 	bool count_down = false;
 	
-	public OrientationTool (string n, string tip) {
-		base (n, tip);
+	public OrientationTool (string name, string tip) {
+		base (name, tip);
+		
+		set_icon ("orientation_both");
 
 		select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
@@ -32,17 +34,47 @@ public class OrientationTool : Tool {
 				p.reverse ();
 			}
 
-			if (!Glyph.show_orientation_arrow && is_active ()) {
-				count_down = true;
-				Glyph.show_orientation_arrow = true;
-				Glyph.orientation_arrow_opacity = 1;
-				time = 10;
-				fade_out ();
-				GlyphCanvas.redraw ();
-			}
+			count_down = true;
+			Glyph.show_orientation_arrow = true;
+			Glyph.orientation_arrow_opacity = 1;
+			time = 10;
+			fade_out ();
 
+			update_icon ();
 			GlyphCanvas.redraw ();
 		});
+		
+		DrawingTools.move_tool.selection_changed.connect (() => {
+			update_icon ();
+		});
+	}
+	
+	public void update_icon () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		bool has_clockwise_paths = false;
+		bool has_counter_clockwise_paths = false;
+		
+		foreach (Path p in glyph.active_paths) {
+			if (p.is_clockwise ()) {
+				has_clockwise_paths = true;
+			}
+			
+			if (!p.is_clockwise ()) {
+				has_counter_clockwise_paths = true;
+			}
+		}
+		
+		if (has_clockwise_paths && has_counter_clockwise_paths) {
+			set_icon ("orientation_both");
+		} else if (has_clockwise_paths) {
+			set_icon ("orientation_clockwise");
+		} else if (has_counter_clockwise_paths) {
+			set_icon ("orientation_counter_clockwise");
+		} else {
+			set_icon ("orientation_both");
+		}
+		
+		Toolbox.redraw_tool_box ();
 	}
 	
 	public void fade_out () {

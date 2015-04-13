@@ -96,7 +96,7 @@ public class ResizeTool : Tool {
 			last_resize_x = x;
 			last_rotate_y = y;
 			
-			MoveTool.press (b, x, y);
+			DrawingTools.move_tool.press (b, x, y);
 			
 			move_paths = true;
 		});

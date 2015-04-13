@@ -228,15 +228,14 @@ public class KerningClasses : GLib.Object {
 
 	public bool has_kerning (string first, string next) {
 		string f = "";
-		string n = "";		
-		GlyphRange gf, gn;
+		string n = "";
 		GlyphRange gr;
 		GlyphRange gl;
 		int len;
 		
 		foreach (string l in get_spacing_class (first)) {
 			foreach (string r in get_spacing_class (next)) {
-				f = GlyphRange.serialize (f);
+				f = GlyphRange.serialize (l);
 				n = GlyphRange.serialize (r);	
 				if (single_kerning.has_key (@"$f - $n")) {
 					return true;
