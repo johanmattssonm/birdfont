@@ -1,9 +1,10 @@
-birdfont (2.4.5) stable;
+birdfont (2.5.0) stable;
 
+  * Export settings
   * Curve orientation
   * Bug fixes
 
- -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Apr 12 19:41:00 CET 2015
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Apr 13 16:45:00 CET 2015
 
 birdfont (2.4.4) stable;
 
