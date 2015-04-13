@@ -61,9 +61,13 @@ public class FileDialogTab : Table {
 		Row row;
 		
 		rows.clear ();
-
+	
+		// add empty rows under the text area
+		row = new Row.headline ("");
+		rows.add (row);	
+	
 		if (directories.size > 0) {
-			row = new Row.headline (t_("Directories"));
+			row = new Row.headline (t_("Folders"));
 			rows.add (row);	
 		}
 		
@@ -165,7 +169,8 @@ public class FileDialogTab : Table {
 
 		files.sort ();
 		
-		selected_canvas ();
+		layout ();
+		base.selected_canvas ();
 	}
 
 	public void show_text_area (string text) {
@@ -213,6 +218,11 @@ public class FileDialogTab : Table {
 
 	public override string get_name () {
 		return "FileDialogTab";
+	}
+	
+	public override void button_release (int button, double ex, double ey) {
+		base.button_release (button, ex, ey);
+		show_text_area (selected_filename);
 	}
 	
 	class SelectedFile : GLib.Object {

@@ -65,7 +65,7 @@ public abstract class Table : FontDisplay {
 		}
 	}	
 
-	private void layout () {
+	public void layout () {
 		int width;
 		
 		rows = get_rows ();
@@ -243,7 +243,7 @@ public abstract class Table : FontDisplay {
 	}
 
 	public override void scroll_to (double percent) {
-		scroll = percent * page_height;
+		scroll = percent * (page_height - allocation.height);
 		
 		if (scroll > page_height) {
 			scroll = (int) (page_height - allocation.height);

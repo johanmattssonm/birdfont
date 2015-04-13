@@ -263,7 +263,7 @@ public class SettingsDisplay : FontDisplay {
 		}
 	}	
 
-	void layout () {
+	public void layout () {
 		double y = -scroll;
 		bool first = true;
 		foreach (SettingsItem s in tools) {
