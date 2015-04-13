@@ -45,6 +45,18 @@ public class KerningPair : GLib.Object {
 			return strcmp (((!)first.glyph).get_unichar_string (), ((!)next.glyph).get_unichar_string ());
 		});		
 	}
+	
+	public void print () {
+		if (kerning.size == 0) {
+			warning ("No pairs.");
+		}
+		
+		foreach (Kerning k in kerning) {
+			if (k.glyph != null) {
+				stdout.printf (@"$(character.get_name ()) <-> $(((!) k.glyph).get_name ()): $(k.val)\n");
+			}
+		}
+	}
 }
 	
 }

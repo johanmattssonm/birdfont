@@ -230,32 +230,37 @@ public class KerningClasses : GLib.Object {
 		string f = "";
 		string n = "";		
 		GlyphRange gf, gn;
-
+		GlyphRange gr;
+		GlyphRange gl;
+		int len;
+		
 		foreach (string l in get_spacing_class (first)) {
 			foreach (string r in get_spacing_class (next)) {
-				f = GlyphRange.serialize (l);
+				f = GlyphRange.serialize (f);
 				n = GlyphRange.serialize (r);	
 				if (single_kerning.has_key (@"$f - $n")) {
 					return true;
 				}
 			}
 		}
+		
+		len = (int) classes_first.size;
+		
+		return_val_if_fail (len == classes_last.size, false);
+		return_val_if_fail (len == classes_kerning.size, false);
+		
+		for (int i = len - 1; i >= 0; i--) {
+			gl = classes_first.get (i);
+			gr = classes_last.get (i);
 			
-		gf = new GlyphRange ();
-		gn = new GlyphRange ();
-		
-		try {
-			gf.parse_ranges (f);
-			gn.parse_ranges (n);
-		} catch (MarkupError e) {
-			warning (e.message);
+			if (gl.has_character (first)
+				&& gr.has_character (next)) {
+
+				return true;
+			}
 		}
 		
-		if (!(gf.is_class () || gn.is_class ())) {
-			return false;
-		}
-		
-		return get_kerning_item_index (gf, gn) != -1;
+		return false;
 	}
 
 	public double get_kerning_for_range (GlyphRange range_first, GlyphRange range_last) {
@@ -272,7 +277,7 @@ public class KerningClasses : GLib.Object {
 			return 0;
 		}
 		
-		for (int i = len - 1; i >= 0; i--) {
+		for (int i = len - 1; i >= 0; i--) { // last class is applied first
 			l = classes_first.get (i);
 			r = classes_last.get (i);
 	
@@ -422,12 +427,20 @@ public class KerningClasses : GLib.Object {
 			warning ("Map is protected.");
 			return;
 		}
+		
 		foreach (string key in single_kerning.keys) {
 			print (key);
 			print ("\t\t");
 			print (@"$((!) single_kerning.get (key))\n");
 		}
+		
 		set_protect_map (false);
+		
+		print ("\n");
+		print ("Generated table:\n");
+		all_pairs ((k) => {
+			k.print ();
+		});
 	}
 
 	public void get_classes (KerningClassIterator kerningIterator) {
@@ -522,6 +535,8 @@ public class KerningClasses : GLib.Object {
 					for (unichar c = u.start; c <= u.stop; c++) {
 						right = (!)c.to_string ();
 						
+						print (@"has? $(character.get_name ())  $right   $( has_kerning (character.get_name (), right))\n");
+						
 						if (font.has_glyph (right) && has_kerning (character.get_name (), right)) {
 							kerning = get_kerning (character.get_name (), right);
 							kl.add_unique ((!) font.get_glyph (right), kerning);
@@ -540,6 +555,7 @@ public class KerningClasses : GLib.Object {
 			// TODO: The get_kerning () function is still slow. Optimize it.
 			foreach (string right_glyph_name in single_kerning_letters_right) {
 				Glyph? gl = font.get_glyph (right_glyph_name);
+				print (@"has? $(character.get_name ())  $right_glyph_name   $( has_kerning (character.get_name (), right_glyph_name))\n");
 				if (gl != null && has_kerning (character.get_name (), right_glyph_name)) {
 					kerning = get_kerning (character.get_name (), right_glyph_name);
 					kl.add_unique ((!) gl , kerning);
@@ -553,20 +569,20 @@ public class KerningClasses : GLib.Object {
 			if (kl.kerning.size == 0) {
 				warning (@"No kerning pairs for character: $((kl.character.get_name ()))");
 			}
-			
-						
+					
 			kl.sort ();
 		}
 		
 		// obtain the kerning value
 		foreach (KerningPair p in pairs) {
+			p.print ();
 			kerningIterator (p);
 		}
 	}
 
 	private bool set_protect_map (bool p) {
 		if (unlikely (p && protect_map)) {
-			warning ("Map is already protected, this is a criticl error.");
+			warning ("Map is already protected.");
 			return false;
 		}
 		
