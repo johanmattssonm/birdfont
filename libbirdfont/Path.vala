@@ -2174,29 +2174,14 @@ public class Path {
 	}
 	
 	public bool boundaries_intersecting (Path p) {
-		bool xm1 = in_boundaries (p.xmin, p.ymin);
-		bool xm2 = in_boundaries (p.xmax, p.ymax);
-		bool xm3 = in_boundaries (p.xmin, p.ymax);
-		bool xm4 = in_boundaries (p.xmax, p.ymin);
-		
-		if (xm1 || xm2 || xm3 || xm3) {
-			return true;
-		}
-		
-		xm1 = p.in_boundaries (xmin, ymin);
-		xm2 = p.in_boundaries (xmax, ymax);
-		xm3 = p.in_boundaries (xmin, ymax);
-		xm4 = p.in_boundaries (xmax, ymin);
-		
-		if (xm1 || xm2 || xm3 || xm3) {
-			return true;
-		}
-		
-		return false;
+		return in_boundaries (p.xmin, p.xmax, p.ymin, p.ymax);
 	}
 	
-	public bool in_boundaries (double x, double y) {
-		return xmin <= x <= xmax && ymin <= y <= ymax;
+	public bool in_boundaries (double other_xmin, double other_xmax, double other_ymin, double other_ymax) {
+		return ((xmin <= other_xmin <= xmax) || (xmin <= other_xmax <= xmax)
+			|| (other_xmin <= xmin <= other_xmax) || (other_xmin <= xmax <= other_xmax))
+			&& ((ymin <= other_ymin <= ymax) || (ymin <= other_ymax <= ymax)
+			|| (other_ymin <= ymin <= other_ymax) || (other_ymin <= ymax <= other_ymax));
 	}
 	
 	/** @param t smallest distance to other points. */

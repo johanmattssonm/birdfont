@@ -110,6 +110,13 @@ public class Menu : GLib.Object {
 		});
 		file_menu.items.add (export);
 
+		MenuItem export_settings = add_menu_item (t_("Export Settings"), "export settings");
+		export_settings.action.connect (() => {
+			MenuTab.show_export_settings_tab ();
+			show_menu = false;
+		});
+		file_menu.items.add (export_settings);
+		
 		MenuItem preview = add_menu_item (t_("Preview"), "preview");
 		preview.action.connect (() => {
 			MenuTab.preview ();

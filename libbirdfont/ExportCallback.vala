@@ -41,8 +41,15 @@ public class ExportCallback : GLib.Object {
 	
 	/** Export TTF, EOT and SVG fonts. */
 	public static void export_fonts () {
-		ExportTool.export_ttf_font ();
-		ExportTool.export_svg_font ();
+		Font font = BirdFont.get_current_font ();
+		
+		if (ExportSettings.export_ttf_setting (font) || ExportSettings.export_eot_setting (font)) {
+			ExportTool.export_ttf_font ();
+		}
+		
+		if (ExportSettings.export_svg_setting (font)) {
+			ExportTool.export_svg_font ();
+		}
 	}
 }
 

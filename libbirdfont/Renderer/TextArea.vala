@@ -93,6 +93,11 @@ public class TextArea : Widget {
 
 		int next_paragraph = -1;
 		
+		if (is_null (text)) {
+			warning ("No text");
+			return false;
+		}
+		
 		if (last_paragraph == DONE) {
 			return false;
 		}

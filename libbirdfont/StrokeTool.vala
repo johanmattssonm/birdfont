@@ -985,33 +985,66 @@ public class StrokeTool : Tool {
 		out double ix, out double iy,
 		bool skip_points_on_points = false) {
 		double cross_x, cross_y;
+		Path lines1, lines2;
+		EditPoint a1, a2, b1, b2;
 		
 		ix = 0;
 		iy = 0;
-
-		Path.find_intersection_point (ep, next, p1, p2, out cross_x, out cross_y);
 		
-		if (Glyph.CANVAS_MIN < cross_x < Glyph.CANVAS_MAX
-			&& Glyph.CANVAS_MIN < cross_y < Glyph.CANVAS_MAX) {
-			// iterate to find intersection.
+		lines1 = new Path ();
+		lines2 = new Path ();
+		SvgParser.create_lines_for_segment (lines1, p1, p2);
+		SvgParser.create_lines_for_segment (lines2, ep, next);
 
-			if (skip_points_on_points ||
-				!((ep.x == cross_x && ep.y == cross_y)
-				|| (next.x == cross_x && next.y == cross_y)
-				|| (p1.x == cross_x && p1.y == cross_y) 
-				|| (p2.x == cross_x && p2.y == cross_y))) {
-									
-				if (is_line (ep.x, ep.y, cross_x, cross_y, next.x, next.y)
-					&& is_line (p1.x, p1.y, cross_x, cross_y, p2.x, p2.y)) {
-				
-					ix = cross_x;
-					iy = cross_y;
-					
-					return true;
-				}
-			} 
+		lines1.xmax = fmax (p1.max_x (), p2.max_x ());
+		lines1.xmin = fmax (p1.min_x (), p2.min_x ());
+		lines1.ymax = fmax (p1.max_y (), p2.max_y ());
+		lines1.ymin = fmax (p1.min_y (), p2.min_y ());
+
+		lines2.xmax = fmax (ep.max_x (), next.max_x ());
+		lines2.xmin = fmax (ep.min_x (), next.min_x ());
+		lines2.ymax = fmax (ep.max_y (), next.max_y ());
+		lines2.ymin = fmax (ep.min_y (), next.min_y ());
+		
+		if (!lines1.boundaries_intersecting (lines2)) {
+			return false;
 		}
+		
+		// FIXME: two intersection on the same segment
+		
+		for (int i = 0; i < lines1.points.size - 1; i++) {
+			a1 = lines1.points.get (i);
+			a2 = lines1.points.get (i + 1);
+			
+			for (int j = 0; j < lines2.points.size - 1; j++) {
+				b1 = lines2.points.get (j);
+				b2 = lines2.points.get (j + 1);
 				
+				Path.find_intersection_point (a1, a2, b1, b2, out cross_x, out cross_y);
+				
+				if (Glyph.CANVAS_MIN < cross_x < Glyph.CANVAS_MAX
+					&& Glyph.CANVAS_MIN < cross_y < Glyph.CANVAS_MAX) {
+					// iterate to find intersection.
+
+					if (skip_points_on_points ||
+						!((ep.x == cross_x && ep.y == cross_y)
+						|| (next.x == cross_x && next.y == cross_y)
+						|| (p1.x == cross_x && p1.y == cross_y) 
+						|| (p2.x == cross_x && p2.y == cross_y))) {
+											
+						if (is_line (ep.x, ep.y, cross_x, cross_y, next.x, next.y)
+							&& is_line (p1.x, p1.y, cross_x, cross_y, p2.x, p2.y)) {
+						
+							ix = cross_x;
+							iy = cross_y;
+							
+							return true;
+						}
+					} 
+				}
+			}
+		}
+			
 		return false;
 	}
 	
@@ -1902,9 +1935,7 @@ public class StrokeTool : Tool {
 		int size, i, added_points;
 		double step = 0.51;
 		bool open = path.is_open ();
-		
-		print (@"open: $open\n");
-		
+
 		size = open ? path.points.size - 1 : path.points.size;
 		
 		path.add_hidden_double_points ();

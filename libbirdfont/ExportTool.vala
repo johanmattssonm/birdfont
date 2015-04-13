@@ -159,40 +159,11 @@ public class ExportTool : GLib.Object {
 		
 		MainWindow.file_chooser (t_("Save"), fc, FileChooser.SAVE);
 	}
-
-	/* Font must be saved before export in order to know where the
-	 * generated files should be stored.
-	 */
-	internal static void export_all () {
-		Font font = BirdFont.get_current_font ();
-		
-		printd ("Exporting all fonts.\n");
-		
-		if (font.font_file == null) {
-			warning ("Font is not saved.");
-		} else {
-			do_export ();
-		}
-	}
-		
-	static void do_export () {
-		bool f;
-				
-		f = export_ttf_font ();
-		if (!f) {
-			warning ("Failed to export ttf font");
-		}
-
-		f = export_svg_font ();
-		if (!f) {
-			warning ("Failed to export svg font");
-		}
-	}
-
+	
 	public static void generate_html_document (string html_file, Font font) {
 		File file = File.new_for_path (html_file);
 		DataOutputStream os;
-		string name = font.get_full_name ();
+		string name = ExportSettings.get_file_name (font);
 
 		try {
 			os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
@@ -384,15 +355,15 @@ os.put_string (
 		return export_ttf_font_path (f);
 	}
 
-	public static bool export_ttf_font_path (File folder) {
+	public static bool export_ttf_font_path (File folder, bool use_export_settings = true) {
 		Font current_font = BirdFont.get_current_font ();
 		File ttf_file;
 		File eot_file;
 		bool done = true;
 		
 		try {
-			ttf_file = get_child (folder, current_font.get_full_name () + ".ttf");
-			eot_file = get_child (folder, current_font.get_full_name () + ".eot");
+			ttf_file = get_child (folder, ExportSettings.get_file_name (current_font) + ".ttf");
+			eot_file = get_child (folder, ExportSettings.get_file_name (current_font) + ".eot");
 
 			printd (@"Writing TTF fonts to $((!) ttf_file.get_path ())\n");
 			
@@ -405,7 +376,16 @@ os.put_string (
 			}
 						
 			write_ttf ((!) ttf_file.get_path ());
-			write_eot ((!) ttf_file.get_path (), (!) eot_file.get_path ());
+			
+			if (!use_export_settings || ExportSettings.export_eot_setting (current_font)) {
+				write_eot ((!) ttf_file.get_path (), (!) eot_file.get_path ());
+			}
+			
+			if (use_export_settings && !ExportSettings.export_ttf_setting (current_font)) {
+				if (ttf_file.query_exists ()) {
+					ttf_file.delete ();
+				}
+			}			
 		} catch (Error e) {
 			critical (@"$(e.message)");
 			done = false;
@@ -421,7 +401,7 @@ os.put_string (
 		
 	public static bool export_svg_font_path (File folder) {
 		Font font = BirdFont.get_current_font ();
-		string file_name = @"$(font.get_full_name ()).svg";
+		string file_name = @"$(ExportSettings.get_file_name (font)).svg";
 		File file;
 		SvgFontFormatWriter fo;
 		

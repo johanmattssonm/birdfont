@@ -593,6 +593,62 @@ public class EditPoint : GLib.Object {
 		s.append (@"Right handle: angle: $(right_handle.angle) l: $(right_handle.length)\n");
 		return s.str;
 	}
+	
+	public double max_x () {
+		double mx = x;
+		
+		if (get_right_handle ().x > mx) {
+			mx = get_right_handle ().x;
+		}
+
+		if (get_left_handle ().x > mx) {
+			mx = get_left_handle ().x;
+		}
+		
+		return mx;
+	}
+
+	public double min_x () {
+		double mx = x;
+		
+		if (get_right_handle ().x < mx) {
+			mx = get_right_handle ().x;
+		}
+
+		if (get_left_handle ().x < mx) {
+			mx = get_left_handle ().x;
+		}
+		
+		return mx;
+	}
+	
+	public double max_y () {
+		double my = y;
+		
+		if (get_right_handle ().y > my) {
+			my = get_right_handle ().y;
+		}
+
+		if (get_left_handle ().y > my) {
+			my = get_left_handle ().y;
+		}
+		
+		return my;
+	}
+
+	public double min_y () {
+		double my = y;
+		
+		if (get_right_handle ().y < my) {
+			my = get_right_handle ().y;
+		}
+
+		if (get_left_handle ().y < my) {
+			my = get_left_handle ().y;
+		}
+		
+		return my;
+	}
 }
 
 }

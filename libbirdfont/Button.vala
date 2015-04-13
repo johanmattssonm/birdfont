@@ -24,7 +24,8 @@ public class Button : Widget {
 
 	public signal void action ();
 
-	public Button (string label) {
+	public Button (string label, double margin_bottom = 0) {
+		this.margin_bottom = margin_bottom;
 		font_size =  17 * MainWindow.units;
 		this.label = new Text (label, font_size);
 		padding = 15 * MainWindow.units;

@@ -78,7 +78,7 @@ public class MenuTab : FontDisplay {
 	
 	public static bool validate_metadata () {
 		Font font = BirdFont.get_current_font ();
-		string m = t_("Missing metadata in font:") + "\n ";
+		string m = t_("Missing metadata in font:") + "\n";
 		
 		if (font.postscript_name == "") {
 			MainWindow.show_message (m + t_("PostScript Name"));
@@ -109,14 +109,22 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void export_fonts_in_background () {
+		Font f;
+		
 		if (suppress_event 
 			|| !MainWindow.native_window.can_export ()
 			|| !validate_metadata ()) {
 			return;
 		}
 		
-		MenuTab.export_callback = new ExportCallback ();
-		MenuTab.export_callback.export_fonts_in_background ();
+		f = BirdFont.get_current_font ();
+		
+		if (ExportSettings.has_export_settings  (f)) {
+			MenuTab.export_callback = new ExportCallback ();
+			MenuTab.export_callback.export_fonts_in_background ();			
+		} else {
+			show_export_settings_tab ();
+		}
 	}
 	
 	public static bool set_suppress_event (bool e) {
@@ -295,6 +303,10 @@ public class MenuTab : FontDisplay {
 			MainWindow.show_dialog (new SaveDialog (dialog));
 		}
 	} 
+	
+	public static void show_export_settings_tab () {
+		MainWindow.get_tab_bar ().add_unique_tab (new ExportSettings ());
+	}
 	
 	public static void show_description () {
 		MainWindow.get_tab_bar ().add_unique_tab (new DescriptionDisplay ());

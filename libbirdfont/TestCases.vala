@@ -546,11 +546,10 @@ class TestCases {
 
 		// TODO: run this many times on big fonts
 		for (int i = 0; i < 10; i++) {
-			ExportTool.export_all ();
+			MenuTab.export_fonts_in_background ();
 			Tool.yield ();
-		}		
+		}
 	}
-
 
 	public static void test_preview () {
 		Glyph g;
