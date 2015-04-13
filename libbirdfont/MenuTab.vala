@@ -111,19 +111,26 @@ public class MenuTab : FontDisplay {
 	public static void export_fonts_in_background () {
 		Font f;
 		
-		if (suppress_event 
-			|| !MainWindow.native_window.can_export ()
-			|| !validate_metadata ()) {
+		if (suppress_event || !MainWindow.native_window.can_export ()) {
 			return;
 		}
 		
 		f = BirdFont.get_current_font ();
 		
-		if (ExportSettings.has_export_settings  (f)) {
+		if (f.font_file == null) {
+			MainWindow.show_message (t_("You need to save your font before exporting it."));
+			return;
+		} 
+		
+		if (!validate_metadata ()) {
+			return;
+		}
+		
+		if (!ExportSettings.has_export_settings  (f)) {
+			show_export_settings_tab ();
+		} else {
 			MenuTab.export_callback = new ExportCallback ();
 			MenuTab.export_callback.export_fonts_in_background ();			
-		} else {
-			show_export_settings_tab ();
 		}
 	}
 	
