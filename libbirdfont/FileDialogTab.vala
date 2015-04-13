@@ -16,11 +16,12 @@ using Math;
 
 namespace BirdFont {
 
-public class FileDialogTab : FontDisplay {
-
-	int scroll = 0;
-	int visible_rows = 0;
-	WidgetAllocation allocation;
+public class FileDialogTab : Table {
+	Gee.ArrayList<Row> rows;
+	
+	const int DIRECTORY = -3;
+	const int FILE = -2;
+	
 	Gee.ArrayList<string> files;
 	Gee.ArrayList<string> directories;
 	
@@ -38,10 +39,12 @@ public class FileDialogTab : FontDisplay {
 	public FileDialogTab (string title, FileChooser action) {
 		this.title = title;
 		this.action = action;
-		allocation = new WidgetAllocation ();
+		
+		rows = new Gee.ArrayList<Row> ();
 		files = new Gee.ArrayList<string> ();
 		directories = new Gee.ArrayList<string> ();
 		
+		selected_filename = "";
 		selected_canvas ();
 	}
 
@@ -54,6 +57,57 @@ public class FileDialogTab : FontDisplay {
 		drive_letters.add (@"$((!) c.to_string ()):\\");
 	}
 
+	public override void update_rows () {
+		Row row;
+		
+		rows.clear ();
+
+		if (directories.size > 0) {
+			row = new Row.headline (t_("Directories"));
+			rows.add (row);	
+		}
+		
+		foreach (string dir in directories) {
+			row = new Row.columns_1 (dir, DIRECTORY, false);
+			row.set_row_data (new SelectedFile (dir));
+			rows.add (row);
+		}
+
+		if (files.size > 0) {
+			row = new Row.headline (t_("Files"));
+			rows.add (row);	
+		}
+		
+		foreach (string f in files) {
+			row = new Row.columns_1 (f, FILE, false);
+			row.set_row_data (new SelectedFile (f));
+			rows.add (row);
+		}
+		
+		GlyphCanvas.redraw ();
+	}
+
+	public override Gee.ArrayList<Row> get_rows () {
+		return rows;
+	}
+	
+	public override void selected_row (Row row, int column, bool delete_button) {	
+		SelectedFile f;
+
+		if (row.get_index () == FILE) {
+			return_if_fail (row.get_row_data () is SelectedFile);
+			f = (SelectedFile) row.get_row_data ();
+			selected_filename = f.file_name;
+		} else if (row.get_index () == DIRECTORY) {
+			return_if_fail (row.get_row_data () is SelectedFile);
+			f = (SelectedFile) row.get_row_data ();
+			selected_filename = "";
+			propagate_files (f.file_name);
+		}
+		
+		show_text_area (selected_filename);
+	}
+	
 	public override void selected_canvas () {
 		string d;
 		show_text_area ("");
@@ -65,9 +119,7 @@ public class FileDialogTab : FontDisplay {
 		}
 		
 		propagate_files (d);
-		
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
+		base.selected_canvas ();
 	}
 
 	public void propagate_files (string dir) {
@@ -112,9 +164,8 @@ public class FileDialogTab : FontDisplay {
 		}
 
 		files.sort ();
-			
-		scroll = 0;
-		update_scrollbar ();
+		
+		selected_canvas ();
 	}
 
 	public void show_text_area (string text) {
@@ -139,143 +190,7 @@ public class FileDialogTab : FontDisplay {
 		
 		TabContent.show_text_input (listener);
 	}
-			
-	public override void draw (WidgetAllocation allocation, Context cr) {
-		double y = 75 * MainWindow.units;
-		int s = 0;
-		bool color = (scroll % 2) == 0;
-		
-		this.allocation = allocation;
-		
-		visible_rows = (int) (allocation.height / 18.0);
-		
-		cr.save ();
-		Theme.color (cr, "Background 4");
-		cr.rectangle (0, 0, allocation.width, allocation.height);
-		cr.fill ();
-		cr.restore ();
-		
-		cr.save ();
-		Theme.color (cr, "Background 5");
-		cr.set_font_size (12);
-
-		foreach (string file in directories) {
-			if (s++ >= scroll) {
-				draw_row (allocation, cr, file, y, color, true);
-				y += 18 * MainWindow.units;
-				color = !color;
-			}
-		}
-							
-		foreach (string file in files) {
-			if (s++ >= scroll) {
-				draw_row (allocation, cr, file, y, color, false);
-				y += 18 * MainWindow.units;
-				color = !color;
-			}
-		}
-		
-		cr.restore ();
-	}	
-
-	private static void draw_row (WidgetAllocation allocation, Context cr,
-			string file, double y, bool color, bool dark) {
-
-		if (color) {
-			if (dark) {
-				cr.save ();
-				Theme.color (cr, "Background 8");
-				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
-				cr.fill ();
-				cr.restore ();
-			} else {
-				cr.save ();
-				Theme.color (cr, "Background 6");
-				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
-				cr.fill ();
-				cr.restore ();
-			}
-		} else {
-			if (dark) {
-				cr.save ();
-				Theme.color (cr, "Background 9");
-				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
-				cr.fill ();
-				cr.restore ();
-			} else {
-				cr.save ();
-				Theme.color (cr, "Foreground");
-				cr.rectangle (0, y - 14 * MainWindow.units, allocation.width, 18 * MainWindow.units);
-				cr.fill ();
-				cr.restore ();
-			}
-		}
-		
-		// text
-		cr.save ();
-		if (dark) {
-			Theme.color (cr, "Foreground Inverted Table");
-		}
-		cr.move_to (60, y);
-		cr.set_font_size (12 * MainWindow.units);
-		cr.show_text (file);
-		cr.restore ();
-		
-	}
-
-	public override void button_release (int button, double ex, double ey) {
-		int s = 0;
-		double y = 75 * MainWindow.units - 20 * MainWindow.units;
-		string selected;
-		bool dir = false;
-		File f;
-		
-		selected = "";
-
-		foreach (string d in directories) {
-			if (s++ >= scroll) {
-				y += 18 * MainWindow.units;
-				
-				if (y - 10 * MainWindow.units <= ey <= y + 5 * MainWindow.units) {
-					selected = d;
-					dir = true;
-				}
-			}
-		}
-		
-		foreach (string file in files) {
-			if (s++ >= scroll) {
-				y += 18 * MainWindow.units;
-				
-				if (y - 10 * MainWindow.units <= ey <= y + 5 * MainWindow.units) {
-					selected = file;
-				}
-			}
-		}
-		
-		if (button == 1) {
-			if (!dir) {
-				selected_filename = selected;
-				show_text_area (selected);
-			} else {
-				if (selected == "..") {
-					propagate_files ((!)((!)current_dir.get_parent ()).get_path ());
-				} else {
-					
-					if (selected.index_of (":\\") != -1) {
-						propagate_files (selected);
-					} else {
-						f = get_child (current_dir, selected);
-						propagate_files ((!) f.get_path ());
-					}
-				}
-			}
-		}
-		
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-
+	
 	public override void double_click (uint button, double ex, double ey) {	
 		File f;
 
@@ -288,7 +203,7 @@ public class FileDialogTab : FontDisplay {
 		
 		if (selected_filename != "") {
 			f = get_child (current_dir, selected_filename);
-			action.file_selected ((!)f.get_path ());
+			action.file_selected ((!) f.get_path ());
 		}
 	}
 
@@ -299,59 +214,13 @@ public class FileDialogTab : FontDisplay {
 	public override string get_name () {
 		return "FileDialogTab";
 	}
-
-	public override bool has_scrollbar () {
-		return true;
-	}
 	
-	public override void scroll_wheel_down (double x, double y) {
-		double rows = 4.16 + files.size + directories.size;
-		scroll += 3;
-
-		if (scroll > rows - visible_rows) {
-			scroll = (int) (rows - visible_rows);
+	class SelectedFile : GLib.Object {
+		public string file_name;
+		
+		public SelectedFile (string fn) {
+			file_name = fn;
 		}
-		
-		if (visible_rows > rows) {
-			scroll = 0;
-		} 
-		
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-	
-	public override void scroll_wheel_up (double x, double y) {
-		scroll -= 3;
-		
-		if (scroll < 0) {
-			scroll = 0;
-		}
-		
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-	
-	public override void update_scrollbar () {
-		double rows = 4.16 + files.size + directories.size; // 4.16 rows under the text input
-
-		if (rows == 0 || visible_rows == 0) {
-			MainWindow.set_scrollbar_size (0);
-			MainWindow.set_scrollbar_position (0);
-		} else {
-			MainWindow.set_scrollbar_size (visible_rows / rows);
-			MainWindow.set_scrollbar_position (scroll /  rows);
-		}
-	}
-
-	public override void scroll_to (double percent) {
-		double rows = 4.16 + files.size + directories.size;
-		scroll = (int) (percent * rows);
-		
-		if (scroll > rows - visible_rows) {
-			scroll = (int) (rows - visible_rows);
-		}
-		
-		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 }
 
