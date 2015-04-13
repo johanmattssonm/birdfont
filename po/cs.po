@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-13 16:02+0200\n"
+"POT-Creation-Date: 2015-04-13 16:30+0200\n"
 "PO-Revision-Date: 2015-03-26 21:10+0000\n"
 "Last-Translator: fri <pavelfric@yahoo.com>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -270,7 +270,7 @@ msgid "PostScript Name"
 msgstr "Název PostScript"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:559 birdfont/GtkWindow.vala:880
+#: libbirdfont/MenuTab.vala:566 birdfont/GtkWindow.vala:880
 msgid "Name"
 msgstr "Název"
 
@@ -533,7 +533,7 @@ msgid "Export"
 msgstr "Vyvést"
 
 #: libbirdfont/ExportTool.vala:160 libbirdfont/Menu.vala:92
-#: libbirdfont/MenuTab.vala:223 libbirdfont/SaveCallback.vala:67
+#: libbirdfont/MenuTab.vala:230 libbirdfont/SaveCallback.vala:67
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Uložit"
@@ -948,11 +948,15 @@ msgstr "VPRAVO"
 msgid "Missing metadata in font:"
 msgstr "V písmu chybějící popisná data:"
 
-#: libbirdfont/MenuTab.vala:141
+#: libbirdfont/MenuTab.vala:121
+msgid "You need to save your font before exporting it."
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:148
 msgid "Menu"
 msgstr "Nabídka"
 
-#: libbirdfont/MenuTab.vala:559
+#: libbirdfont/MenuTab.vala:566
 msgid "Add ligature"
 msgstr "Přidat slitek"
 

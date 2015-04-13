@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-13 16:02+0200\n"
+"POT-Creation-Date: 2015-04-13 16:30+0200\n"
 "PO-Revision-Date: 2014-09-04 12:10+0000\n"
 "Last-Translator: goya <nisam.depresivan@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -267,7 +267,7 @@ msgid "PostScript Name"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:559 birdfont/GtkWindow.vala:880
+#: libbirdfont/MenuTab.vala:566 birdfont/GtkWindow.vala:880
 msgid "Name"
 msgstr ""
 
@@ -530,7 +530,7 @@ msgid "Export"
 msgstr ""
 
 #: libbirdfont/ExportTool.vala:160 libbirdfont/Menu.vala:92
-#: libbirdfont/MenuTab.vala:223 libbirdfont/SaveCallback.vala:67
+#: libbirdfont/MenuTab.vala:230 libbirdfont/SaveCallback.vala:67
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr ""
@@ -942,11 +942,15 @@ msgstr ""
 msgid "Missing metadata in font:"
 msgstr ""
 
-#: libbirdfont/MenuTab.vala:141
+#: libbirdfont/MenuTab.vala:121
+msgid "You need to save your font before exporting it."
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:148
 msgid "Menu"
 msgstr ""
 
-#: libbirdfont/MenuTab.vala:559
+#: libbirdfont/MenuTab.vala:566
 msgid "Add ligature"
 msgstr ""
 

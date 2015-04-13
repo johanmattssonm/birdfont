@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-13 16:02+0200\n"
-"PO-Revision-Date: 2015-04-13 14:00+0000\n"
+"POT-Creation-Date: 2015-04-13 16:30+0200\n"
+"PO-Revision-Date: 2015-04-13 14:27+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1428933619.000000\n"
+"X-POOTLE-MTIME: 1428935238.000000\n"
 
 #: libbirdfont/Argument.vala:247
 msgid "Usage"
@@ -265,7 +265,7 @@ msgid "PostScript Name"
 msgstr "PostScript namn"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:559 birdfont/GtkWindow.vala:880
+#: libbirdfont/MenuTab.vala:566 birdfont/GtkWindow.vala:880
 msgid "Name"
 msgstr "Namn"
 
@@ -528,7 +528,7 @@ msgid "Export"
 msgstr "Exportera"
 
 #: libbirdfont/ExportTool.vala:160 libbirdfont/Menu.vala:92
-#: libbirdfont/MenuTab.vala:223 libbirdfont/SaveCallback.vala:67
+#: libbirdfont/MenuTab.vala:230 libbirdfont/SaveCallback.vala:67
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Spara"
@@ -942,13 +942,17 @@ msgstr "HÖGER"
 
 #: libbirdfont/MenuTab.vala:81
 msgid "Missing metadata in font:"
-msgstr "Metadata saknas:"
+msgstr "Metadata saknas i typsnittet:"
 
-#: libbirdfont/MenuTab.vala:141
+#: libbirdfont/MenuTab.vala:121
+msgid "You need to save your font before exporting it."
+msgstr "Du måste spara ditt typsnitt innan du exporterar det."
+
+#: libbirdfont/MenuTab.vala:148
 msgid "Menu"
 msgstr "Meny"
 
-#: libbirdfont/MenuTab.vala:559
+#: libbirdfont/MenuTab.vala:566
 msgid "Add ligature"
 msgstr "Lägg till ligatur"
 
