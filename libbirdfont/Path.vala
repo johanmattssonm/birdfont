@@ -2149,9 +2149,13 @@ public class Path {
 		bool inside;
 		PathList lines = new PathList ();
 		
+		lines = pl;
+		
+		/** // FIXME: Check automatic orientation.
 		foreach (Path p in pl.paths) {
 			lines.add (SvgParser.get_lines (p));
 		}
+		*/
 		
 		foreach (Path p in lines.paths) {
 			if (p.points.size > 1 && p != path 

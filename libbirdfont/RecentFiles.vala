@@ -21,6 +21,7 @@ namespace BirdFont {
 public class RecentFiles : Table {
 	Gee.ArrayList<Row> rows = new Gee.ArrayList<Row> ();
 	
+	const int NEW_FONT = -5;
 	const int CURRENT_FONT = -4;
 	const int RECENT_FONT = -3;
 	const int BACKUP = -2;
@@ -35,13 +36,14 @@ public class RecentFiles : Table {
 	public override void selected_row (Row row, int column, bool delete_button) {	
 		Font f;
 
-		if (row.get_index () == RECENT_FONT) {
+		if (row.get_index () == NEW_FONT) {
+			MenuTab.new_file ();
+			MenuTab.select_overview ();
+		} else if (row.get_index () == RECENT_FONT) {
 			return_if_fail (row.get_row_data () is Font);
 			f = (Font) row.get_row_data ();
 			load_font (f.get_path ());
-		}
-				
-		if (row.get_index () == BACKUP) {
+		} else if (row.get_index () == BACKUP) {
 			return_if_fail (row.get_row_data () is Font);
 			f = (Font) row.get_row_data ();
 			delete_backup (f.get_file_name ());
@@ -56,6 +58,11 @@ public class RecentFiles : Table {
 		
 		rows.clear ();
 
+		if (recent_fonts.size == 0) {
+			row = new Row.columns_1 (t_("Create a New Font"), NEW_FONT, false);
+			rows.add (row);	
+		}
+
 		if (current_font.font_file != null) {
 			row = new Row.headline (current_font.get_file_name ());
 			rows.add (row);	
@@ -67,7 +74,7 @@ public class RecentFiles : Table {
 			rows.add (row);
 		}
 
-		if (recent_fonts.size > 0) {			
+		if (recent_fonts.size > 0) {
 			row = new Row.headline (t_("Recent Files"));
 			rows.add (row);	
 		}

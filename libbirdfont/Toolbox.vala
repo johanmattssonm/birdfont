@@ -116,7 +116,7 @@ public class Toolbox : GLib.Object  {
 			allocation_width = w;
 			allocation_height = h;
 			
-			scale = Toolbox.allocation_width / 160.0;
+			scale = 1;
 			
 			Toolbox.redraw_tool_box ();
 		}
