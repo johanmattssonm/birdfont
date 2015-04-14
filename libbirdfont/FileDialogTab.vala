@@ -105,8 +105,13 @@ public class FileDialogTab : Table {
 		} else if (row.get_index () == DIRECTORY) {
 			return_if_fail (row.get_row_data () is SelectedFile);
 			f = (SelectedFile) row.get_row_data ();
+			
+			if (f.file_name.index_of (":") > -1) {
+				propagate_files (f.file_name);
+			} else {
+				propagate_files (((!) current_dir.get_path ()) + "\\" + f.file_name);
+			}
 			selected_filename = "";
-			propagate_files (f.file_name);
 		}
 		
 		show_text_area (selected_filename);
@@ -171,6 +176,7 @@ public class FileDialogTab : Table {
 		
 		layout ();
 		base.selected_canvas ();
+		scroll_to (0);
 	}
 
 	public void show_text_area (string text) {
