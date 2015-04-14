@@ -211,7 +211,6 @@ public class Glyph : FontDisplay {
 			p.update_region_boundaries ();
 
 			if (p.points.size > 1) {
-
 				if (p.xmin < x1) {
 					x1 = p.xmin;
 				}
@@ -492,7 +491,7 @@ public class Glyph : FontDisplay {
 	public double get_left_side_bearing () {
 		double x1, y1, x2, y2;
 		
-		if (boundaries (out x1, out y1, out x2, out y2)) {
+		if (get_boundaries (out x1, out y1, out x2, out y2)) {
 			return x1 - left_limit;
 		} else {
 			return right_limit - left_limit;
@@ -502,11 +501,60 @@ public class Glyph : FontDisplay {
 	public double get_right_side_bearing () {
 		double x1, y1, x2, y2;
 		
-		if (boundaries (out x1, out y1, out x2, out y2)) {
+		if (get_boundaries (out x1, out y1, out x2, out y2)) {
 			return right_limit - x2;
 		} else {
 			return right_limit - left_limit;
 		}
+	}
+	
+	public bool get_boundaries (out double x1, out double y1,
+		out double x2, out double y2) {
+		
+		double max_x, min_x, max_y, min_y;
+
+		if (path_list.size == 0) {
+			x1 = 0;
+			y1 = 0;
+			x2 = 0;
+			y2 = 0;
+			return false;
+		}
+				
+		max_x = CANVAS_MIN;
+		min_x = CANVAS_MAX;
+		max_y = CANVAS_MIN;
+		min_y = CANVAS_MAX;
+		
+		// FIXME: optimize
+		foreach (Path p in path_list) {
+			p.all_of_path ((x, y, t) => {
+				if (x > max_x) {
+					max_x = x;
+				}
+
+				if (y > max_y) {
+					max_y = y;
+				}
+
+				if (x < min_x) {
+					min_x = x;
+				}
+				
+				if (y < min_y) {
+					min_y = y;
+				}
+				
+				return true;
+			});
+		}
+
+		x1 = min_x;
+		y1 = max_y;
+		x2 = max_x;
+		y2 = min_y;
+		
+		return max_x != CANVAS_MIN;
 	}
 	
 	bool has_top_line () {
