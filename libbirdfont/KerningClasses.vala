@@ -574,7 +574,6 @@ public class KerningClasses : GLib.Object {
 		
 		// obtain the kerning value
 		foreach (KerningPair p in pairs) {
-			p.print ();
 			kerningIterator (p);
 		}
 	}

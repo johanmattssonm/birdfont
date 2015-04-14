@@ -671,7 +671,7 @@ public class TabBar : GLib.Object {
 			// menu icon
 			if (MainWindow.get_menu ().show_menu) {
 				Theme.color (cr, "Background 3");
-				cr.rectangle (w - 32 / scale, 0, 32 / scale, h);
+				cr.rectangle (w - 33 / scale, 0, 33 / scale, h);
 				cr.fill ();
 			}
 			
@@ -682,8 +682,8 @@ public class TabBar : GLib.Object {
 			}
 			
 			menu_icon.set_font_size (40 / scale);
-			menu_icon.widget_x = w - 25 / scale;
-			menu_icon.widget_y = 3 / scale;
+			menu_icon.widget_x = (int) (w - 25 / scale);
+			menu_icon.widget_y = (int) (2 / scale);
 			menu_icon.draw (cr);
 		}
 		
