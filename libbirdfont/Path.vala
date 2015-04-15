@@ -280,7 +280,11 @@ public class Path {
 			c = (!) color;
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
 		} else {
-			Theme.color_opacity (cr, "Selected Objects", 0.5);
+			if (is_clockwise ()) {
+				Theme.color_opacity (cr, "Selected Objects", 0.4);
+			} else {
+				Theme.color_opacity (cr, "Selected Objects", 0.8);
+			}	
 		}
 	}
 
@@ -2138,10 +2142,10 @@ public class Path {
 			if (p.points.size > 1 && p != path 
 				&& path.boundaries_intersecting (p)) {
 					
-				inside = true;
+				inside = false;
 				foreach (EditPoint ep in path.points) {
-					if (!SvgParser.is_inside (ep, p)) {
-						inside = false;
+					if (SvgParser.is_inside (ep, p)) {
+						inside = true;
 					}
 				}
 

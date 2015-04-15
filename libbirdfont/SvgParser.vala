@@ -450,14 +450,34 @@ public class SvgParser {
 				pl.paths.append (path_list);
 			}
 		}
-		
+	
 		// assume the even odd rule is applied and convert the path
 		// to a path using the non-zero rule
+		int inside_count;
+		bool inside;
 		foreach (Path p1 in pl.paths.paths) {
-			if (Path.is_counter (pl.paths, p1)) {
-				p1.force_direction (Direction.COUNTER_CLOCKWISE);
-			} else {
+			inside_count = 0;
+			
+			foreach (Path p2 in pl.paths.paths) {
+				if (p1 != p2) {
+					inside = true;
+					
+					foreach (EditPoint ep in p1.points) {
+						if (!is_inside (ep, p2)) {
+							inside = false;
+						}
+					}
+
+					if (inside) {
+						inside_count++; 
+					}
+				}
+			}
+
+			if (inside_count % 2 == 0) {
 				p1.force_direction (Direction.CLOCKWISE);
+			} else {
+				p1.force_direction (Direction.COUNTER_CLOCKWISE);
 			}
 		}
 		
@@ -545,19 +565,16 @@ public class SvgParser {
 		if (path.points.size <= 1) {
 			return false;
 		}
-				
-		prev = path.get_last_point ();
-
-		foreach (EditPoint start in path.points) {
-			if (start.x == point.x && point.y == start.y) {
-				inside = true;
-				break;
-			} else if ((start.y > point.y) != (prev.y > point.y)
-				&& point.x < (prev.x - start.x) * (point.y - start.y) / (prev.y - start.y) + start.x) {
-				inside = !inside;
-			}
-			
-			prev = start;
+		
+		prev = path.points.get (path.points.size - 1);
+		
+ 		foreach (EditPoint p in path.points) {
+			if  ((p.y > point.y) != (prev.y > point.y) 
+ 				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
+ 				inside = !inside;
+ 			}
+ 			
+ 			prev = p;
 		}
 		
 		return inside;

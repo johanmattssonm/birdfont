@@ -98,6 +98,10 @@ public class StrokeTool : Tool {
 		PathList n;
 		Path stroke = path.copy ();
 		
+		if (!stroke.is_clockwise ()) {
+			stroke.force_direction (Direction.CLOCKWISE);
+		}
+		
 		stroke.remove_points_on_points (0.3);
 
 		flatten (stroke, thickness);
@@ -167,12 +171,14 @@ public class StrokeTool : Tool {
 					
 					if ((ep.flags & EditPoint.REMOVE_PART) > 0) {
 						if (p.points.size > 5) {
+							ep.color = Color.pink ();
 							return false;
 						}
 					}
 					
 					if ((ep.flags & EditPoint.NEW_CORNER) > 0) {
 						if (p.points.size > 5) {
+							ep.color = Color.pink ();
 							return false;
 						}
 					}
@@ -205,6 +211,7 @@ public class StrokeTool : Tool {
 				
 				if (Path.distance_to_point (ep.get_prev (), ep.get_next ()) < 1) {
 					ep.deleted = true;
+					ep.color = Color.red ();
 					p.remove_deleted_points ();
 					return is_corner_self_intersection (p) || is_counter_to_outline (p);
 				}
@@ -620,10 +627,6 @@ public class StrokeTool : Tool {
 			p2 = p.points.get (index % p.points.size);
 			a1 = p.points.get ((index + 3) % p.points.size); // two points ahead
 			a2 = p.points.get ((index + 4) % p.points.size);			
-			
-			if ((p2.flags & EditPoint.STROKE_OFFSET) > 0) {
-				a1.color = Color.yellow ();
-			}
 
 			if ((p2.flags & EditPoint.STROKE_OFFSET) > 0
 				&& (a1.flags & EditPoint.STROKE_OFFSET) > 0) {
@@ -824,7 +827,6 @@ public class StrokeTool : Tool {
 		foreach (EditPoint p in path.points) {
 			if (insides (p, path) == 1) {
 				path.set_new_start (p);
-				p.color = Color.green ();
 				path.close ();
 				break;
 			}
@@ -1732,6 +1734,7 @@ public class StrokeTool : Tool {
 						ps = new PointSelection (ep1, merged);
 						if (is_inside_of_path (ps, result, out outline)) {
 							ep1.deleted = true;
+							ep1.color = Color.red ();
 						}
 					}
 				}
@@ -1953,12 +1956,14 @@ public class StrokeTool : Tool {
 			if (start.type == PointType.HIDDEN) {
 				start.tie_handles = false;
 				start.deleted = true;
+				start.color = Color.red ();
 			}
 
 			if (end.type == PointType.HIDDEN) {
 				start.tie_handles = false;
 				end.tie_handles = false;
 				end.deleted = true;
+				end.color = Color.red ();
 			}
 									
 			if (unlikely (added_points > 4)) {
