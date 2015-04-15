@@ -820,7 +820,16 @@ public class StrokeTool : Tool {
 		} else {
 			warning ("points already created.");
 		}
-		
+
+		foreach (EditPoint p in path.points) {
+			if (insides (p, path) == 1) {
+				path.set_new_start (p);
+				p.color = Color.green ();
+				path.close ();
+				break;
+			}
+		}
+
 		i = mark_intersection_as_deleted (path);
 		
 		if (!(i == 0 || i == 2)) {
@@ -1391,6 +1400,30 @@ public class StrokeTool : Tool {
 				((!) BirdFont.get_current_font ().get_glyph ("j")).add_path (mm);
 		}
 	}
+
+	public static int insides (EditPoint point, Path path) {
+		EditPoint prev;
+		int inside = 0;
+		
+		if (path.points.size <= 1) {
+			return 0;
+		}
+				
+		prev = path.get_last_point ();
+
+		foreach (EditPoint start in path.points) {
+			if (start.x == point.x && point.y == start.y) {
+				inside++;
+			} else if ((start.y > point.y) != (prev.y > point.y)
+				&& point.x < (prev.x - start.x) * (point.y - start.y) / (prev.y - start.y) + start.x) {
+				inside++;
+			}
+			
+			prev = start;
+		}
+		
+		return inside;
+	}
 	
 	static bool merge_path (Path path1, Path path2, out PathList merged_paths, out bool error) {
 		IntersectionList intersections;
@@ -1431,7 +1464,9 @@ public class StrokeTool : Tool {
 		
 		s = 0;
 		foreach (EditPoint e in original_path1.points) {
-			if (!SvgParser.is_inside (e, original_path2)) {
+			print (@"insides: (e, original_path1): $(insides (e, original_path1)) $(e.x),$(e.y)\n");
+			if (!SvgParser.is_inside (e, original_path2)
+				&& insides (e, original_path1) == 1) { // FIXME: later as well
 				break;
 			}
 			s++;
@@ -1444,6 +1479,7 @@ public class StrokeTool : Tool {
 			original_path2 = t;
 			s = 0;
 			foreach (EditPoint e in original_path1.points) {
+				print (@"insides2: (e, original_path1): $(insides (e, original_path1))\n");
 				if (!SvgParser.is_inside (e, original_path2)) {
 					break;
 				}
@@ -1776,7 +1812,6 @@ public class StrokeTool : Tool {
 		int i = 0;
 		
 		foreach (EditPoint p in path.points) {
-
 			if ((p.flags & EditPoint.INTERSECTION) > 0) {
 				p.deleted = true;
 				i++;

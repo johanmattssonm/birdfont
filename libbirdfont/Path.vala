@@ -1837,7 +1837,6 @@ public class Path {
 				ep.type = PenTool.to_curve (ep.type);
 				set_new_start (current_path.points.get (0));
 				path_list.add (current_path);
-				
 				ep = current_path.points.get (current_path.points.size - 1);
 				ep.get_right_handle ().type = PenTool.to_line (ep.type);
 				ep.type = PenTool.to_curve (ep.get_right_handle ().type);
@@ -1865,48 +1864,26 @@ public class Path {
 		return path_list;
 	}
 		
-	public void set_new_start (EditPoint ep) {
+	public void set_new_start (EditPoint ep) 
+	requires (points.size > 0) {
 		Gee.ArrayList<EditPoint> list = new Gee.ArrayList<EditPoint> ();
-		uint len = points.size;
-		EditPoint iter = points.get (0);
-		EditPoint? ni = null;
-		bool found = false;
-
-		foreach (EditPoint it in points) {
-			if (it == ep) {
-				found = true;
-				break;
+		int start = 0;
+		
+		for (int i = 0; i < points.size; i++) {
+			if (ep == points.get (i)) {
+				start = i;
 			}
-			
-			iter = iter.get_next ();
-			ni = (!) iter;
 		}
 		
-		if (unlikely (!found)) {
-			warning ("Could not find edit point.");
+		for (int i = start; i < points.size; i++) {
+			list.add (points.get (i));
 		}
-		
-		if (ni == null) {
-			return;			
+
+		for (int i = 0; i < start; i++) {
+			list.add (points.get (i));
 		}
-		
-		iter = (!) ni;
-		
-		for (uint i = 0; i < len; i++) {
-			list.add (iter);
-			
-			if (iter == points.get (points.size - 1)) {
-				iter = points.get (0).get_link_item ();
-			} else {
-				iter = iter.get_next ();
-			}		
-		}
-		
-		points.clear ();
-		
-		foreach (EditPoint p in list) {
-			points.add (p);
-		}
+				
+		control_points = list;
 	}
 	
 	public void append_path (Path path) {
