@@ -683,7 +683,7 @@ public class TabBar : GLib.Object {
 			
 			menu_icon.set_font_size (40 / scale);
 			menu_icon.widget_x = (int) (w - 25 / scale);
-			menu_icon.widget_y = (int) (2 / scale);
+			menu_icon.widget_y = (int) (h / 2.0 - 20 / scale);
 			menu_icon.draw (cr);
 		}
 		

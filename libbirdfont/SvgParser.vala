@@ -468,7 +468,7 @@ public class SvgParser {
 		}
 	}
 
-	public static void create_lines_for_segment (Path path, EditPoint start, EditPoint end) {
+	public static void create_lines_for_segment (Path path, EditPoint start, EditPoint end, double tolerance) {
 		double x1, x2, x3;
 		double y1, y2, y3;
 		double step_start, step, step_end;
@@ -484,7 +484,7 @@ public class SvgParser {
 			Path.get_point_for_step (start, end, step, out x2, out y2);
 			Path.get_point_for_step (start, end, step_end, out x3, out y3);
 		
-			if (!StrokeTool.is_flat (x1, y1, x2, y2, x3, y3, 1)
+			if (!StrokeTool.is_flat (x1, y1, x2, y2, x3, y3, tolerance)
 				&& step_end - step / 2.0 > step_start 
 				&& step_end - step / 2.0 > 0.1
 				&& step > 0.05
@@ -523,7 +523,7 @@ public class SvgParser {
 		start = p.points.get (p.points.size - 1);
 		
 		foreach (EditPoint end in p.points) {
-			create_lines_for_segment (path, start, end);
+			create_lines_for_segment (path, start, end, 1);
 			start = end;
 		}
 

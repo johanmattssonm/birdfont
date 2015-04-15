@@ -534,8 +534,6 @@ public class KerningClasses : GLib.Object {
 					for (unichar c = u.start; c <= u.stop; c++) {
 						right = (!)c.to_string ();
 						
-						print (@"has? $(character.get_name ())  $right   $( has_kerning (character.get_name (), right))\n");
-						
 						if (font.has_glyph (right) && has_kerning (character.get_name (), right)) {
 							kerning = get_kerning (character.get_name (), right);
 							kl.add_unique ((!) font.get_glyph (right), kerning);
@@ -554,7 +552,6 @@ public class KerningClasses : GLib.Object {
 			// TODO: The get_kerning () function is still slow. Optimize it.
 			foreach (string right_glyph_name in single_kerning_letters_right) {
 				Glyph? gl = font.get_glyph (right_glyph_name);
-				print (@"has? $(character.get_name ())  $right_glyph_name   $( has_kerning (character.get_name (), right_glyph_name))\n");
 				if (gl != null && has_kerning (character.get_name (), right_glyph_name)) {
 					kerning = get_kerning (character.get_name (), right_glyph_name);
 					kl.add_unique ((!) gl , kerning);
