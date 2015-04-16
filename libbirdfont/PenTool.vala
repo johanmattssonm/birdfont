@@ -95,28 +95,18 @@ public class PenTool : Tool {
 		
 		select_action.connect ((self) => {
 		});
-
-		deselect_action.connect ((self) => {
-			force_direction ();		
-			move_point_on_path = false;
-		});
 		
 		press_action.connect ((self, b, x, y) => {			
 			// retain path direction
 			Glyph glyph = MainWindow.get_current_glyph ();
+			
 			clockwise = new Gee.ArrayList<Path> ();
 			counter_clockwise = new Gee.ArrayList<Path> ();
 
 			begin_action_x = x;
 			begin_action_y = y;
 
-			foreach (Path p in glyph.path_list) {
-				if (p.is_clockwise ()) {
-					clockwise.add (p);
-				} else {
-					counter_clockwise.add (p);
-				}
-			}
+			update_orientation ();
 			
 			first_move_action = true;
 
@@ -245,6 +235,20 @@ public class PenTool : Tool {
 		draw_action.connect ((tool, cairo_context, glyph) => {
 			draw_on_canvas (cairo_context, glyph);
 		});
+	}
+	
+	public static void update_orientation () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		
+		clockwise.clear ();
+		counter_clockwise.clear ();
+		foreach (Path p in glyph.path_list) {
+			if (p.is_clockwise ()) {
+				clockwise.add (p);
+			} else {
+				counter_clockwise.add (p);
+			}
+		}
 	}
 
 	public void set_stroke_width (double width) {

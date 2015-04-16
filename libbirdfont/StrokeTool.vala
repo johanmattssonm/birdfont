@@ -89,7 +89,9 @@ public class StrokeTool : Tool {
 				g.add_path (np);
 				g.active_paths.add (np);
 			}
-					
+			
+			PenTool.update_orientation ();
+			
 			GlyphCanvas.redraw ();
 		}
 	}
@@ -139,7 +141,9 @@ public class StrokeTool : Tool {
 		
 		n = merge (n);
 	
-		remove_self_intersecting_corners (n);
+		// FIXME: this needs to be solved.
+		// remove_self_intersecting_corners (n);
+
 		n = remove_remaining_corners (n);
 		
 		return n;
@@ -151,6 +155,10 @@ public class StrokeTool : Tool {
 		foreach (Path p in pl.paths) {
 			if (!has_remove_parts (p)) {
 				r.add (p);
+			} else {
+				if (stroke_selected) { // FIXME: DELETE
+					((!) BirdFont.get_current_font ().get_glyph ("k")).add_path (p);
+				}
 			}
 		}
 		
@@ -171,18 +179,17 @@ public class StrokeTool : Tool {
 					
 					if ((ep.flags & EditPoint.REMOVE_PART) > 0) {
 						if (p.points.size > 5) {
-							ep.color = Color.pink ();
 							return false;
 						}
 					}
 					
 					if ((ep.flags & EditPoint.NEW_CORNER) > 0) {
 						if (p.points.size > 5) {
-							ep.color = Color.pink ();
 							return false;
 						}
 					}
 					
+					ep.color = Color.red ();
 					return true;
 				} 
 			}
@@ -207,6 +214,7 @@ public class StrokeTool : Tool {
 				
 				if (fabs (l.angle - r.angle) < 0.005) { 
 					remove = true;
+					ep.color = Color.red ();
 				}
 				
 				if (Path.distance_to_point (ep.get_prev (), ep.get_next ()) < 1) {
@@ -240,6 +248,11 @@ public class StrokeTool : Tool {
 					remove_self_intersecting_corners (pl);
 					return;
 				} else {
+						
+					if (stroke_selected) { // FIXME: DELETE
+						((!) BirdFont.get_current_font ().get_glyph ("l")).add_path (p);
+					}
+				
 					pl.paths.remove (p);
 					remove_self_intersecting_corners (pl);
 					return;
@@ -845,7 +858,7 @@ public class StrokeTool : Tool {
 	}
 
 	static PathList process_deleted_control_points (Path path) {
-		PathList paths, nl, pl, rl;
+		PathList paths, nl, pl, rl, result;
 		
 		paths = new PathList ();
 		rl = new PathList ();
@@ -867,15 +880,22 @@ public class StrokeTool : Tool {
 			}
 		}
 		
+		result = new PathList ();
 		foreach (Path p in rl.paths) {
 			pl = process_deleted_control_points (p);
 			
 			if (pl.paths.size > 0) {
-				paths.append (pl);
+				result.append (pl);
 			} else {
-				paths.add (p);
+				result.add (p);
 			}
 		}
+		
+		for (int i = 1; i < result.paths.size; i++) {
+			result.paths.get (i).reverse ();
+		}
+		
+		paths.append (result);
 		
 		return paths;
 	}
@@ -1272,7 +1292,7 @@ public class StrokeTool : Tool {
 		outline = new Path ();
 		foreach (Path p in pl.paths) {
 			if (p != ps.path) {
-				if (SvgParser.is_inside (ps.point, p)) {
+				if (is_inside (ps.point, p)) {
 					outline = p;
 					return true;
 				}
@@ -1378,13 +1398,27 @@ public class StrokeTool : Tool {
 
 	static void remove_merged_parts (PathList r) {
 		Gee.ArrayList<Path> remove = new Gee.ArrayList<Path> ();
+		int c;
+		
 		foreach (Path p in r.paths) {
-			if (Path.is_counter (r, p)) {
-				if (is_clockwise (p)) {
-					remove.add (p);	
+			c = counters (r, p); // FIXME: this needs improvements
+			
+			print (@"$c $(p.is_clockwise ()) $(p.points.size)\n");
+			if (c % 2 == 0) {
+				if (!p.is_clockwise ()) {
+					remove.add (p);
 				}
+				
+				if (stroke_selected)
+					((!) BirdFont.get_current_font ().get_glyph ("m")).add_path (p);
+					
 			} else {
-				p.force_direction (Direction.CLOCKWISE);
+				if (stroke_selected)
+					((!) BirdFont.get_current_font ().get_glyph ("n")).add_path (p);
+					
+				if (p.is_clockwise ()) {
+					remove.add (p);
+				}
 			}
 		}
 
@@ -1403,6 +1437,71 @@ public class StrokeTool : Tool {
 		}
 	}
 
+	// When one point is on the outside is the path not a counter path.
+	// Path.counters works the other way around.
+	public static int counters (PathList pl, Path path) {
+		int inside_count = 0;
+		bool inside;
+		
+		foreach (Path p in pl.paths) {
+			inside = false;
+			
+			if (p.points.size > 1
+				&& p != path 
+				&& path.boundaries_intersecting (p)
+				&& !has_remove_parts (p)) {
+				
+				// FIXME: all points can be corners in counter paths
+				foreach (EditPoint ep in path.points) {
+					if (is_inside (ep, p)) {
+						inside = true;
+					}
+				}
+
+				if (inside) {
+					print (@"Match $(path.points.size) with $(p.points.size)\n");
+					inside_count++; 
+				}
+			}
+		}
+		
+		return inside_count;
+	}
+
+	public static bool is_inside (EditPoint point, Path path) {
+		EditPoint prev;
+		bool inside = false;
+		
+		if (path.points.size <= 1) {
+			return false;
+		}
+		
+		if (!(path.xmin <= point.x <= path.xmax)) {
+			return false;
+		}
+		
+		if (!(path.ymin <= point.y <= path.ymax)) {
+			return false;
+		}
+				
+		prev = path.points.get (path.points.size - 1);
+		
+ 		foreach (EditPoint p in path.points) {
+			if (p.x == point.x && p.y == point.y) {
+				point.color = Color.pink ();
+				// inside = !inside;
+				return false; // FIXME: double check
+			} else if  ((p.y > point.y) != (prev.y > point.y) 
+ 				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
+ 				inside = !inside;
+ 			}
+ 			
+ 			prev = p;
+		}
+		
+		return inside;
+	}
+	
 	public static int insides (EditPoint point, Path path) {
 		EditPoint prev;
 		int inside = 0;
@@ -1467,7 +1566,7 @@ public class StrokeTool : Tool {
 		s = 0;
 		foreach (EditPoint e in original_path1.points) {
 			print (@"insides: (e, original_path1): $(insides (e, original_path1)) $(e.x),$(e.y)\n");
-			if (!SvgParser.is_inside (e, original_path2)
+			if (!is_inside (e, original_path2)
 				&& insides (e, original_path1) == 1) { // FIXME: later as well
 				break;
 			}
@@ -1482,7 +1581,7 @@ public class StrokeTool : Tool {
 			s = 0;
 			foreach (EditPoint e in original_path1.points) {
 				print (@"insides2: (e, original_path1): $(insides (e, original_path1))\n");
-				if (!SvgParser.is_inside (e, original_path2)) {
+				if (!is_inside (e, original_path2)) {
 					break;
 				}
 				s++;
@@ -1658,7 +1757,7 @@ public class StrokeTool : Tool {
 					ep1.flags |= EditPoint.COPIED;
 					
 					if (path1_direction == path2_direction) {
-						if (!SvgParser.is_inside (ep1, original_path1)) {
+						if (!is_inside (ep1, original_path1)) {
 							merged.add_point (ep1.copy ());
 						}
 					} else {
@@ -1755,17 +1854,6 @@ public class StrokeTool : Tool {
 				bool has_direction = true;
 				
 				p.remove_points_on_points ();
-				counter = Path.counters (result, p);
-
-				if (counter == 0) {
-					has_direction = !merged.force_direction (Direction.CLOCKWISE);
-				} else {
-					if (is_clockwise (original_path1) != is_clockwise (original_path2)) {
-						has_direction = !merged.force_direction (Direction.COUNTER_CLOCKWISE);
-					} else {
-						has_direction = !merged.force_direction (Direction.CLOCKWISE);
-					}
-				}
 				
 				if (has_direction) {
 					p.close ();
@@ -1799,7 +1887,7 @@ public class StrokeTool : Tool {
 		if (p.points.size > 1) {
 			inside = true;
 			
-			if (!SvgParser.is_inside (ep, p)) {
+			if (!is_inside (ep, p)) {
 				inside = false;
 			}
 
@@ -1910,7 +1998,7 @@ public class StrokeTool : Tool {
 		foreach (Path path in pl.paths) {
 			if (path != p) {
 				foreach (EditPoint ep in p.points) {
-					if (!SvgParser.is_inside (ep, path)) {
+					if (!is_inside (ep, path)) {
 						return true;
 					}
 				}
@@ -1956,14 +2044,12 @@ public class StrokeTool : Tool {
 			if (start.type == PointType.HIDDEN) {
 				start.tie_handles = false;
 				start.deleted = true;
-				start.color = Color.red ();
 			}
 
 			if (end.type == PointType.HIDDEN) {
 				start.tie_handles = false;
 				end.tie_handles = false;
 				end.deleted = true;
-				end.color = Color.red ();
 			}
 									
 			if (unlikely (added_points > 4)) {

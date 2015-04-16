@@ -451,6 +451,10 @@ public class SvgParser {
 			}
 		}
 	
+		foreach (Path p1 in pl.paths.paths) {
+			p1.update_region_boundaries ();
+		}
+		
 		// assume the even odd rule is applied and convert the path
 		// to a path using the non-zero rule
 		int inside_count;
@@ -565,7 +569,15 @@ public class SvgParser {
 		if (path.points.size <= 1) {
 			return false;
 		}
+
+		if (!(path.xmin <= point.x <= path.xmax)) {
+			return false;
+		}
 		
+		if (!(path.ymin <= point.y <= path.ymax)) {
+			return false;
+		}
+				
 		prev = path.points.get (path.points.size - 1);
 		
  		foreach (EditPoint p in path.points) {
