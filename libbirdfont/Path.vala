@@ -1153,12 +1153,12 @@ public class Path {
 				x = first.get_right_handle ().x + (next.get_left_handle ().x - first.get_right_handle ().x) / 2;
 				y = first.get_right_handle ().y + (next.get_left_handle ().y - first.get_right_handle ().y) / 2;
 				
-				hidden = new EditPoint (x, y, PointType.QUADRATIC);
-				hidden.right_handle.move_to_coordinate_internal (next.get_left_handle ().x, next.get_left_handle ().y);
+				hidden = new EditPoint (x, y, PointType.QUADRATIC);		
 				hidden.get_right_handle ().type = PointType.QUADRATIC;
-				
 				hidden.get_left_handle ().type = PointType.QUADRATIC;
 				hidden.type = PointType.QUADRATIC;
+				
+				hidden.right_handle.move_to_coordinate_internal (next.get_left_handle ().x, next.get_left_handle ().y);
 				
 				first.get_right_handle ().type = PointType.QUADRATIC;
 			
@@ -1297,7 +1297,9 @@ public class Path {
 			ep.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
 			ep.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
 			ep.type = PointType.DOUBLE_CURVE;
-		} else 
+		} else {
+			warning ("Point types: $right and $left in insert_new_point_on_path");
+		}
 
 		ep.get_left_handle ().parent = ep;
 		ep.get_right_handle ().parent = ep;

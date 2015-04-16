@@ -588,9 +588,16 @@ public class EditPoint : GLib.Object {
 			
 	public string to_string () {
 		StringBuilder s = new StringBuilder ();
-		s.append (@"Position: $x, $y\n");
+		
+		if (deleted) {
+			s.append (@"Deleted ");
+		}
+		
+		s.append (@"Control point: $x, $y\n");
 		s.append (@"Left handle: angle: $(left_handle.angle) l: $(left_handle.length)\n");
 		s.append (@"Right handle: angle: $(right_handle.angle) l: $(right_handle.length)\n");
+		s.append (@"Type: $type Left: $(left_handle.type) Right: $(right_handle.type)\n".replace ("BIRD_FONT_POINT_TYPE_", ""));
+		
 		return s.str;
 	}
 	

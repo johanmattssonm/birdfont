@@ -358,16 +358,12 @@ public class StrokeTool : Tool {
 		if (path.is_open ()) {
 			first = merged.get_first_point ();
 			last_counter = merged.get_last_point ();
-				
-			
+
 			first.get_left_handle ().convert_to_line ();
 			first.recalculate_linear_handles ();
 
 			last_counter.get_right_handle ().convert_to_line ();
 			last_counter.recalculate_linear_handles ();
-
-			first.color = Color.pink ();
-			last_counter.color = Color.yellow ();
 		}
 
 		return merged;
@@ -1488,7 +1484,7 @@ public class StrokeTool : Tool {
 		
  		foreach (EditPoint p in path.points) {
 			if (p.x == point.x && p.y == point.y) {
-				point.color = Color.pink ();
+				point.color = Color.green ();
 				// inside = !inside;
 				return false; // FIXME: double check
 			} else if  ((p.y > point.y) != (prev.y > point.y) 
@@ -2026,13 +2022,13 @@ public class StrokeTool : Tool {
 		EditPoint start, end, new_point;
 		double px, py;
 		int size, i, added_points;
-		double step = 0.51;
+		double step = 0.5;
 		bool open = path.is_open ();
-
-		size = open ? path.points.size - 1 : path.points.size;
 		
 		path.add_hidden_double_points ();
 		
+		size = open ? path.points.size - 1 : path.points.size;
+
 		i = 0;
 		added_points = 0;
 		while (i < size) {
@@ -2060,6 +2056,7 @@ public class StrokeTool : Tool {
 					&& Path.distance (start.x, px, start.y, py) > 0.1 * stroke_width
 					&& Path.distance (end.x, px, end.y, py) > 0.1 * stroke_width) {
 				new_point = new EditPoint (px, py);
+
 				new_point.prev = start;
 				new_point.next = end;
 				path.insert_new_point_on_path (new_point, step);
@@ -2073,10 +2070,6 @@ public class StrokeTool : Tool {
 		
 		path.remove_deleted_points ();	
 		path.remove_points_on_points ();
-		
-		if (stroke_selected) {// FIXME: DELETE
-			((!) BirdFont.get_current_font ().get_glyph ("c")).add_path (path);
-		}
 	}
 }
 
