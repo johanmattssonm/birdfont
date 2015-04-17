@@ -690,21 +690,41 @@ public class OverView : FontDisplay {
 			case Key.UP:
 				key_up ();
 				selected_item = get_selected_item ();
+				
+				selected_items.clear ();
+				if (selected_item.glyphs != null) {
+					selected_items.add ((!) selected_item.glyphs);
+				}
 				return;
 				
 			case Key.RIGHT:
 				key_right ();
 				selected_item = get_selected_item ();
+				
+				selected_items.clear ();
+				if (selected_item.glyphs != null) {
+					selected_items.add ((!) selected_item.glyphs);
+				}
 				return;
 				
 			case Key.LEFT:
 				key_left ();
 				selected_item = get_selected_item ();
+				
+				selected_items.clear ();
+				if (selected_item.glyphs != null) {
+					selected_items.add ((!) selected_item.glyphs);
+				}
 				return;
 				
 			case Key.DOWN:
 				key_down ();
 				selected_item = get_selected_item ();
+				
+				selected_items.clear ();
+				if (selected_item.glyphs != null) {
+					selected_items.add ((!) selected_item.glyphs);
+				}
 				return;
 				
 			case Key.PG_UP:
@@ -712,6 +732,11 @@ public class OverView : FontDisplay {
 					key_up ();
 				}
 				selected_item = get_selected_item ();
+				
+				selected_items.clear ();
+				if (selected_item.glyphs != null) {
+					selected_items.add ((!) selected_item.glyphs);
+				}
 				return;
 				
 			case Key.PG_DOWN:
@@ -719,6 +744,11 @@ public class OverView : FontDisplay {
 					key_down ();
 				}
 				selected_item = get_selected_item ();
+
+				selected_items.clear ();
+				if (selected_item.glyphs != null) {
+					selected_items.add ((!) selected_item.glyphs);
+				}
 				return;
 				
 			case Key.DEL:
