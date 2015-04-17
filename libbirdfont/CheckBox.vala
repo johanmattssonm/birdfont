@@ -36,6 +36,7 @@ public class CheckBox : Widget {
 		}
 		
 		label = new Text (text, font_size);
+		Theme.text_color (label, "Text Foreground");
 	}
 	
 	public void set_checked (bool c) {
@@ -67,7 +68,7 @@ public class CheckBox : Widget {
 		if (has_focus) {
 			Theme.color (cr, "Highlighted 1");
 		} else {
-			Theme.color (cr, "Foreground 1");
+			Theme.color (cr, "Text Foreground");
 		}
 		
 		draw_rounded_rectangle (cr, widget_x, widget_y + center_y, w, h - padding, padding);
@@ -77,7 +78,7 @@ public class CheckBox : Widget {
 		if (checked) {
 			cr.save ();
 			
-			Theme.color (cr, "Foreground 1");
+			Theme.color (cr, "Text Foreground");
 			cr.set_line_width (1);
 			
 			cr.move_to (widget_x + d, widget_y + d + center_y);

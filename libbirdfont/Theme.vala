@@ -106,6 +106,9 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Dialog Background", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
 		Theme.set_default_color ("Menu Background", 222 / 255.0, 221 / 255.0, 226 / 255.0, 1);
 		Theme.set_default_color ("Default Background", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
+		Theme.set_default_color ("Headline Background", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
+		Theme.set_default_color ("Empty Tool Box", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
+		
 		Theme.set_default_color ("Background 5", 0.3, 0.3, 0.3, 1);
 		Theme.set_default_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
 		Theme.set_default_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
@@ -113,21 +116,28 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
 		Theme.set_default_color ("Background 10", 223/255.0, 223/255.0, 223/255.0, 1);
 		
-		Theme.set_default_color ("Checkbox Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Checkbox Background", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
 		
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
-		Theme.set_default_color ("Text Foreground", 125 / 255.0, 130 / 255.0, 136 / 255.0, 1);
+		Theme.set_default_color ("Text Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
 		Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
 		Theme.set_default_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
 		Theme.set_default_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
 		Theme.set_default_color ("Foreground 6", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
 		Theme.set_default_color ("Foreground 7", 219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
-		Theme.set_default_color ("Foreground Inverted Table", 1, 1, 1, 1);
 		
+		Theme.set_default_color ("Table Background 1", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
+		Theme.set_default_color ("Table Background 2", 210 / 255.0, 212 / 255.0, 223 / 255.0, 1);
+		
+		Theme.set_default_color ("Selected Tab Foreground", 0, 0, 0, 1);
+		Theme.set_default_color ("Tab Separator", 207 / 255.0, 210 / 255.0, 215 / 255.0, 1);
+				
 		Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
-		Theme.set_default_color ("Menu Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Menu Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
 		
-		Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+		// FIXME: DELETE Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+		Theme.set_default_color ("Highlighted 1", 159 / 255.0, 165 / 255.0, 192 / 255.0, 1);
+
 		
 		Theme.set_default_color ("Highlighted Guide", 0, 0, 0.3, 1);
 		Theme.set_default_color ("Guide 1", 0.7, 0.7, 0.8, 1);
@@ -150,24 +160,25 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Button Border 4", 173 / 255.0, 176 / 255.0, 188 / 255.0, 1);
 		Theme.set_default_color ("Button Background 4", 242 / 255.0, 246 / 255.0, 246 / 255.0, 1);
 		
-		Theme.set_default_color ("Button Foreground", 125 / 255.0, 130 / 255.0, 136 / 255.0, 1);
-		Theme.set_default_color ("Selected Button Foreground", 125 / 255.0, 130 / 255.0, 136 / 255.0, 1);
+		Theme.set_default_color ("Button Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
+		Theme.set_default_color ("Selected Button Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
 
-		Theme.set_default_color ("Tool Foreground", 125 / 255.0, 130 / 255.0, 136 / 255.0, 1);
-		Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Tool Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
+		Theme.set_default_color ("Selected Tool Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
 		
-		Theme.set_default_color ("Text Area Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Text Area Background", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
 
-		Theme.set_default_color ("Selected Overview Item 1", 208 / 255.0, 208 / 255.0, 208 / 255.0, 1);
-		Theme.set_default_color ("Selected Overview Item 2", 229 / 255.0, 229 / 255.0, 229 / 255.0, 1);
-
+		Theme.set_default_color ("Overview Item Border", 207 / 255.0, 210 / 255.0, 215 / 255.0, 1);
+		
+		Theme.set_default_color ("Selected Overview Item", 211 / 255.0, 212 / 255.0, 216 / 255.0, 1);
 		Theme.set_default_color ("Overview Item 1", 236 / 255.0, 236 / 255.0, 236 / 255.0, 1);
 		Theme.set_default_color ("Overview Item 2", 246 / 255.0, 246 / 255.0, 246 / 255.0, 1);
 		
 		Theme.set_default_color ("Overview Selected Foreground", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
 		Theme.set_default_color ("Overview Foreground", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
 		
-		Theme.set_default_color ("Glyph Count Background", 211 / 255.0, 212 / 255.0, 216 / 255.0, 1);
+		Theme.set_default_color ("Glyph Count Background 1", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
+		Theme.set_default_color ("Glyph Count Background 2", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
 		
 		Theme.set_default_color ("Dialog Shadow", 0, 0, 0, 0.3);
 		
@@ -189,6 +200,8 @@ public class Theme : GLib.Object {
 		
 		Theme.set_default_color ("Spin Button", 164 / 255.0, 167 / 255.0, 175 / 255.0, 1);
 		Theme.set_default_color ("Active Spin Button", 104 / 255.0, 108 / 255.0, 119 / 255.0, 1);
+		Theme.set_default_color ("Zoom Bar Border", 122 / 255.0, 131 / 255.0, 145 / 255.0, 1);
+
 
 		if (BirdFont.has_argument ("--test")) {
 			current_theme = "generated_theme.theme";
@@ -220,6 +233,8 @@ public class Theme : GLib.Object {
 			t_("Foreground 7");
 			t_("Foreground Inverted");
 			t_("Menu Foreground");
+			t_("Selected Tab Foreground");
+			t_("Tab Separator");
 			
 			t_("Highlighted 1");
 			t_("Highlighted Guide");
@@ -247,16 +262,17 @@ public class Theme : GLib.Object {
 			
 			t_("Text Area Background");
 			
-			t_("Selected Overview Item 1");
-			t_("Selected Overview Item 2");
+			t_("Overview Item Border");
 
+			t_("Selected Overview Item");
 			t_("Overview Item 1");
 			t_("Overview Item 2");
 		
 			t_("Overview Selected Foreground");
 			t_("Overview Foreground");
 			
-			t_("Glyph Count Background");
+			t_("Glyph Count Background 1");
+			t_("Glyph Count Background 2");
 			
 			t_("Dialog Shadow");
 
@@ -277,6 +293,7 @@ public class Theme : GLib.Object {
 			t_("Merge");
 			t_("Spin Button");
 			t_("Active Spin Button");
+			t_("Zoom Bar Border");
 		}
 	}
 	

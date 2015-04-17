@@ -90,7 +90,7 @@ class SettingsItem : GLib.Object {
 		
 		if (headline) {
 			cr.save ();
-			Theme.color (cr, "Background 2");
+			Theme.color (cr, "Headline Background");
 			cr.rectangle (0, y, allocation.width, 40 * MainWindow.units);
 			cr.fill ();
 			cr.restore ();

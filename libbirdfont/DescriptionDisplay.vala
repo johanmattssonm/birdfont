@@ -166,6 +166,12 @@ public class DescriptionDisplay : TableLayout {
 		focus_ring.add (copyright);
 		
 		set_focus (postscript_name);
+		
+		foreach (Widget w in widgets) {
+			if (w is Text) {
+				Theme.text_color ((Text) w, "Text Foreground");
+			}
+		}
 	}
 
 	public static void set_copyright_editable (bool t) {

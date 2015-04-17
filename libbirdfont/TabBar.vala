@@ -784,7 +784,7 @@ public class TabBar : GLib.Object {
 			center_y = (int) (tab_height / 2.0 + 4 / scale);
 			
 			if (tab_index == selected) {
-				Theme.text_color (label, "Foreground Inverted");
+				Theme.text_color (label, "Selected Tab Foreground");
 			} else {
 				Theme.text_color (label, "Text Foreground");
 			}
@@ -796,7 +796,7 @@ public class TabBar : GLib.Object {
 			if (tab_index != selected) { // don't draw edges for the selected tab
 				if (tab_index + 1 != selected) {
 					cr.save ();
-					Theme.color (cr, "Text Foreground");
+					Theme.color (cr, "Tab Separator");
 					cr.rectangle (tab_width - 1 / scale, 0, 1 / scale, h);
 					cr.fill ();
 					cr.restore ();
@@ -804,7 +804,7 @@ public class TabBar : GLib.Object {
 				
 				if (tab_index == first_tab) {
 					cr.save ();
-					Theme.color (cr, "Text Foreground");
+					Theme.color (cr, "Tab Separator");
 					cr.rectangle (0, 0, 1 / scale, h);
 					cr.fill ();
 					cr.restore ();

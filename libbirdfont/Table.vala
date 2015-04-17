@@ -104,7 +104,7 @@ public abstract class Table : FontDisplay {
 		Text t;
 
 		cr.save ();
-		Theme.color (cr, "Foreground 1");
+		Theme.color (cr, "Text Foreground");
 		t = row.get_column (0);
 		t.widget_x = 40 * MainWindow.units;;
 		t.widget_y = y + 45 * MainWindow.units;
@@ -118,11 +118,15 @@ public abstract class Table : FontDisplay {
 		
 		Text t;
 		double x;
-		double o;
 		
-		o = color ? 1 : 0.5;
 		cr.save ();
-		Theme.color_opacity (cr, "Background 10", o);
+		
+		if (color) {
+			Theme.color (cr, "Table Background 2");
+		} else {
+			Theme.color (cr, "Table Background 1");
+		}
+		
 		cr.rectangle (0, y * MainWindow.units, allocation.width, 25 * MainWindow.units);
 		cr.fill ();
 		cr.restore ();

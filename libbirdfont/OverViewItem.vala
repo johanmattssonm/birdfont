@@ -117,7 +117,7 @@ public class OverViewItem : GLib.Object {
 		cr.restore ();
 
 		cr.save ();
-		Theme.color (cr, "Text Foreground");
+		Theme.color (cr, "Overview Item Border");
 		cr.rectangle (x, y, width, height);
 		cr.set_line_width (1);
 		cr.stroke ();
@@ -229,16 +229,16 @@ public class OverViewItem : GLib.Object {
 		
 		cr.save ();
 		
-		p = new Cairo.Pattern.linear (0.0, y + height - 20, 0.0, y + height);
-
-		if (selected) {
-			Theme.gradient (p, "Selected Overview Item 1", "Selected Overview Item 2");
-		} else {
-			Theme.gradient (p, "Overview Item 1", "Overview Item 2");
-		}
-
 		cr.rectangle (x + 1, y + height - 20, width - 2, 20 - 1);
-		cr.set_source (p);
+
+		if (!selected) {
+			p = new Cairo.Pattern.linear (0.0, y + height - 20, 0.0, y + height);
+			Theme.gradient (p, "Overview Item 1", "Overview Item 2");
+			cr.set_source (p);
+		} else {
+			Theme.color (cr, "Selected Overview Item");
+		}
+		
 		cr.fill ();
 		
 		if (has_icons ()) {

@@ -444,15 +444,25 @@ public class SpinButton : Tool {
 
 		double text_x = -13 * scale;
 		double text_y = 7 * scale;
+
 		Text text = new Text (get_short_display_value (), 15);
 
-		if (is_selected ()) {
-			base.icon_color = "Active Spin Button";
+		if (!show_icon_tool_icon || waiting_for_icon_switch) {
+			if (is_selected ()) {
+				base.icon_color = "Active Spin Button";
+			} else {
+				base.icon_color = "Spin Button";
+			}
 		} else {
-			base.icon_color = "Spin Button";
+			if (is_selected ()) {
+				base.icon_color = "Selected Tool Foreground";
+			} else {
+				base.icon_color = "Tool Foreground";
+			}	
 		}
 		
 		base.draw (cr);
+		
 	
 		if (!show_icon_tool_icon || waiting_for_icon_switch) {
 			if (is_selected ()) {

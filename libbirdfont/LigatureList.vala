@@ -103,6 +103,9 @@ public class LigatureList : Table {
 		
 		rows.clear ();
 
+		row = new Row.headline (t_("Add"));
+		rows.add (row);	
+		
 		row = new Row.columns_2 (t_("New Ligature"), t_("New Contextual Substitution"), NEW_LIGATURE, false);
 		rows.add (row);
 		

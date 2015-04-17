@@ -102,7 +102,7 @@ public class ZoomBar : Tool {
 		
 		// border
 		cr.save ();
-		Theme.color (cr, "Button Border 1");
+		Theme.color (cr, "Zoom Bar Border");
 		cr.set_line_width (0.8);
 		draw_bar (cr);
 		cr.stroke ();
