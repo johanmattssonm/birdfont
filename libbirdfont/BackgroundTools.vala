@@ -101,6 +101,7 @@ public class BackgroundTools : ToolCollection  {
 				}		
 				
 				set_new_background_image (gc, bpl);
+				g.set_background_visible (true);
 			});
 			
 			gs.open_new_glyph_signal.connect ((character) => {
