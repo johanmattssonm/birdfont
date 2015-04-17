@@ -637,9 +637,13 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void show_settings_tab () {
-		MainWindow.get_tab_bar ().add_unique_tab (new SettingsDisplay ());
+		MainWindow.get_tab_bar ().add_unique_tab (new SettingsTab ());
 	}
 
+	public static void show_theme_tab () {
+		MainWindow.get_tab_bar ().add_unique_tab (new ThemeTab ());
+	}
+	
 	public static void show_guide_tab () {
 		MainWindow.get_tab_bar ().add_unique_tab (new GuideTab ());
 	}	

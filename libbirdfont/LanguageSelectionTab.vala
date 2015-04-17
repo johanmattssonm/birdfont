@@ -78,7 +78,7 @@ public class LanguageSelectionTab : FontDisplay {
 
 		if (color) {
 			cr.save ();
-			Theme.color (cr, "Background 6");
+			Theme.color (cr, "Table Background 2");
 			cr.rectangle (0, y - 14, allocation.width, 18);
 			cr.fill ();
 			cr.restore ();

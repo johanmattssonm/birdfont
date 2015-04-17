@@ -1479,7 +1479,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	private void draw_coordinate (Context cr) {
-		Theme.color (cr, "Foreground 3");
+		Theme.color (cr, "Table Border");
 		cr.set_font_size (12);
 		cr.move_to (0, 10);
 		cr.show_text (@"($motion_x, $motion_y)");
@@ -1601,7 +1601,7 @@ public class Glyph : FontDisplay {
 	private void draw_zoom_area(Context cr) {
 		cr.save ();
 		cr.set_line_width (2.0);
-		Theme.color (cr, "Foreground 4");
+		Theme.color (cr, "Selection Border");
 		cr.rectangle (Math.fmin (zoom_x1, zoom_x2), Math.fmin (zoom_y1, zoom_y2), Math.fabs (zoom_x1 - zoom_x2), Math.fabs (zoom_y1 - zoom_y2));
 		cr.stroke ();
 		cr.restore ();
@@ -1611,7 +1611,7 @@ public class Glyph : FontDisplay {
 		if (opacity > 0) {
 			cr.save ();
 			cr.rectangle (0, 0, allocation.width, allocation.height);
-			Theme.color (cr, "Background 1");
+			Theme.color (cr, "Canvas Background");
 			cr.fill ();
 			cr.restore ();
 		}

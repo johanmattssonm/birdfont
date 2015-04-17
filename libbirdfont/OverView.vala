@@ -466,7 +466,7 @@ public class OverView : FontDisplay {
 		
 	void draw_empty_canvas (WidgetAllocation allocation, Context cr) {
 		cr.save ();
-		Theme.color (cr, "Background 7");
+		Theme.color (cr, "Default Background");
 		cr.move_to (30, 40);
 		cr.set_font_size (18);
 		cr.show_text (t_("No glyphs in this view."));

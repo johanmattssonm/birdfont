@@ -17,7 +17,7 @@ using Math;
 
 namespace BirdFont {
 
-class SettingsItem : GLib.Object {	
+public class SettingsItem : GLib.Object {	
 	public bool handle_events;
 	public bool key_bindings = false;
 	public double y = 0;

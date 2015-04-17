@@ -97,6 +97,7 @@ public class Theme : GLib.Object {
 
 		add_theme_files ();
 		
+		Theme.set_default_color ("Canvas Background", 1, 1, 1, 1);
 		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
 		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
 		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
@@ -109,21 +110,13 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Headline Background", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
 		Theme.set_default_color ("Empty Tool Box", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
 		
-		Theme.set_default_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
-		Theme.set_default_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
-		Theme.set_default_color ("Background 8", 55/255.0, 55/255.0, 55/255.0, 1);
-		Theme.set_default_color ("Background 9", 72/255.0, 72/255.0, 72/255.0, 1);
-		Theme.set_default_color ("Background 10", 223/255.0, 223/255.0, 223/255.0, 1);
-		
 		Theme.set_default_color ("Checkbox Background", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
 		
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
 		Theme.set_default_color ("Text Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
-		Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
-		Theme.set_default_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
-		Theme.set_default_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
-		Theme.set_default_color ("Foreground 6", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
-		Theme.set_default_color ("Foreground 7", 219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
+		Theme.set_default_color ("Table Border", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
+		Theme.set_default_color ("Selection Border", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
+		Theme.set_default_color ("Overview Glyph", 219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
 		
 		Theme.set_default_color ("Table Background 1", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
 		Theme.set_default_color ("Table Background 2", 210 / 255.0, 212 / 255.0, 223 / 255.0, 1);
@@ -206,6 +199,7 @@ public class Theme : GLib.Object {
 			current_theme = "generated_theme.theme";
 			write_theme ();
 			
+			t_("Canvas Background");
 			t_("Stroke Color");
 			t_("Handle Color");
 			t_("Fill Color");
@@ -215,20 +209,14 @@ public class Theme : GLib.Object {
 			t_("Dialog Background");
 			t_("Menu Background");
 			t_("Default Background");
-			t_("Background 6");
-			t_("Background 7");
-			t_("Background 8");
-			t_("Background 9");
 			
 			t_("Checkbox Background");
 			
 			t_("Foreground 1");
 			t_("Text Foreground");
-			t_("Foreground 3");
-			t_("Foreground 4");
-			t_("Foreground 5");
-			t_("Foreground 6");
-			t_("Foreground 7");
+			t_("Table Border");
+			t_("Selection Border");
+			t_("Overview Glyph");
 			t_("Foreground Inverted");
 			t_("Menu Foreground");
 			t_("Selected Tab Foreground");

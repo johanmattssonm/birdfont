@@ -59,7 +59,7 @@ public class SpacingTab : KerningDisplay {
 		
 		// character bar
 		cr.save ();
-		Theme.color (cr, "Foreground 3");
+		Theme.color (cr, "Table Border");
 		cr.set_line_width (0.8);
 		cr.move_to (0, allocation.height - height);
 		cr.line_to (allocation.width, allocation.height - height);
@@ -113,7 +113,7 @@ public class SpacingTab : KerningDisplay {
 			
 			c = g.get_unichar ();
 			cap = new Text ((!) c.to_string (), 17);
-			Theme.text_color (cap, "Foreground 3");
+			Theme.text_color (cap, "Table Border");
 			cap.widget_x = middle - cap.get_extent () / 2.0;
 			cap.widget_y = allocation.height - height + character_height - 4 * MainWindow.units;
 			cap.draw_at_baseline (cr, cap.widget_x, cap.widget_y);			
@@ -137,7 +137,7 @@ public class SpacingTab : KerningDisplay {
 			}
 			
 			right = new Text (truncate (r, 5), 17);
-			Theme.text_color (right, "Foreground 3");
+			Theme.text_color (right, "Table Border");
 			right.widget_x = end - (box_size / 2.0 - right.get_extent ()) / 2.0 - right.get_extent ();
 			right.widget_y = allocation.height - 7 * MainWindow.units;
 			right.draw_at_baseline (cr, right.widget_x, right.widget_y);					

@@ -291,6 +291,7 @@ public class TabContent : GLib.Object {
 	
 	public static void draw_text_input (WidgetAllocation allocation, Context cr) {
 		cr.save ();
+		
 		Theme.color (cr, "Default Background");
 		cr.rectangle (0, 0, allocation.width, TEXT_INPUT_HEIGHT);
 		cr.fill ();

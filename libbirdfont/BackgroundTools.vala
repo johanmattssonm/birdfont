@@ -101,7 +101,6 @@ public class BackgroundTools : ToolCollection  {
 				}		
 				
 				set_new_background_image (gc, bpl);
-				g.set_background_visible (true);
 			});
 			
 			gs.open_new_glyph_signal.connect ((character) => {
@@ -152,9 +151,13 @@ public class BackgroundTools : ToolCollection  {
 	}
 
 	void set_new_background_image (GlyphCollection gc, BackgroundPartLabel bpl) {
+		Glyph g;
+		
+		g = gc.get_current ();
 		bpl.selection.assigned_glyph = gc.get_name ();
 		bpl.label = gc.get_name ();
-		gc.get_current ().set_background_image (bpl.selection.image);
+		g.set_background_image (bpl.selection.image);
+		g.set_background_visible (true);
 		
 		if (bpl.selection.image != null) {
 			((!) bpl.selection.image).center_in_glyph (gc.get_current ());

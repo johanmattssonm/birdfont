@@ -198,7 +198,7 @@ public class OverViewItem : GLib.Object {
 		} else {
 			c.save ();
 			fallback = new Text ();
-			Theme.text_color (fallback, "Foreground 7");
+			Theme.text_color (fallback, "Overview Glyph");
 			fallback.set_text ((!) character.to_string ());
 			font_size = height * 0.8;
 			fallback.set_font_size (font_size);

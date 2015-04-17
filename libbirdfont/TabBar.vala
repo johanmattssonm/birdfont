@@ -670,7 +670,7 @@ public class TabBar : GLib.Object {
 		} else {
 			// menu icon
 			if (MainWindow.get_menu ().show_menu) {
-				Theme.color (cr, "Background 3");
+				Theme.color (cr, "Menu Background");
 				cr.rectangle (w - 33 / scale, 0, 33 / scale, h);
 				cr.fill ();
 			}

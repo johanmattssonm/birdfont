@@ -17,12 +17,12 @@ using Math;
 
 namespace BirdFont {
 
-public class SettingsDisplay : FontDisplay {
+public abstract class SettingsDisplay : FontDisplay {
 	
 	double scroll = 0;
 	double content_height = 1;
 	WidgetAllocation allocation;
-	Gee.ArrayList<SettingsItem> tools;
+	public Gee.ArrayList<SettingsItem> tools;
 
 	public static SpinButton precision;
 	
@@ -34,213 +34,9 @@ public class SettingsDisplay : FontDisplay {
 		tools = new Gee.ArrayList<SettingsItem> ();
 		content_height = 200;
 		precision = new SpinButton ("precision");
-		create_setting_items ();
 	}
 	
-	public void create_setting_items () {
-		tools.clear ();
-		// setting items
-		tools.add (new SettingsItem.head_line (t_("Settings")));
-		
-		SpinButton stroke_width = new SpinButton ("stroke_width");
-		tools.add (new SettingsItem (stroke_width, t_("Stroke width")));
-		
-		stroke_width.set_max (4);
-		stroke_width.set_min (0.002);
-		stroke_width.set_value_round (1);
-
-		if (Preferences.get ("stroke_width_for_open_paths") != "") {
-			stroke_width.set_value (Preferences.get ("stroke_width_for_open_paths"));
-		}
-
-		stroke_width.new_value_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			Path.stroke_width = stroke_width.get_value ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
-			Preferences.set ("stroke_width_for_open_paths", stroke_width.get_display_value ());
-			MainWindow.get_toolbox ().redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
-		});
-		
-		Path.stroke_width = stroke_width.get_value ();
-		
-		// adjust precision
-		string precision_value = Preferences.get ("precision");
-
-		if (precision_value != "") {
-			precision.set_value (precision_value);
-		} else {
-#if ANDROID
-			precision.set_value_round (0.5);
-#else
-			precision.set_value_round (1);
-#endif
-		}
-		
-		precision.new_value_action.connect ((self) => {
-			MainWindow.get_toolbox ().select_tool (precision);
-			Preferences.set ("precision", self.get_display_value ());
-			MainWindow.get_toolbox ().redraw ((int) precision.x, (int) precision.y, 70, 70);
-		});
-
-		precision.select_action.connect((self) => {
-			DrawingTools.pen_tool.set_precision (((SpinButton)self).get_value ());
-		});
-		
-		precision.set_min (0.001);
-		precision.set_max (1);
-		
-		tools.add (new SettingsItem (precision, t_("Precision for pen tool")));
-
-		Tool show_all_line_handles = new Tool ("show_all_line_handles");
-		show_all_line_handles.select_action.connect((self) => {
-			Path.show_all_line_handles = !Path.show_all_line_handles;
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
-		});
-		tools.add (new SettingsItem (show_all_line_handles, t_("Show or hide control point handles")));
-
-		Tool fill_open_path = new Tool ("fill_open_path");
-		fill_open_path.select_action.connect((self) => {
-			Path.fill_open_path = !Path.fill_open_path;
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
-		});
-		tools.add (new SettingsItem (fill_open_path, t_("Fill open paths.")));
-
-		Tool ttf_units = new Tool ("ttf_units");
-		ttf_units.select_action.connect((self) => {
-			GridTool.ttf_units = !GridTool.ttf_units;
-			Preferences.set ("ttf_units", @"$(GridTool.ttf_units)");
-		});
-		tools.add (new SettingsItem (ttf_units, t_("Use TTF units.")));
-
-		SpinButton freehand_samples = new SpinButton ("freehand_samples_per_point");
-		tools.add (new SettingsItem (freehand_samples, t_("Number of points added by the freehand tool")));
-		
-		freehand_samples.set_max (9);
-		freehand_samples.set_min (0.002);
-		
-		if (BirdFont.android) {
-			freehand_samples.set_value_round (2.5);
-		} else {
-			freehand_samples.set_value_round (1);
-		}
-
-		if (Preferences.get ("freehand_samples") != "") {
-			freehand_samples.set_value (Preferences.get ("freehand_samples"));
-			DrawingTools.track_tool.set_samples_per_point (freehand_samples.get_value ());
-		}
-
-		freehand_samples.new_value_action.connect ((self) => {
-			DrawingTools.track_tool.set_samples_per_point (freehand_samples.get_value ());
-		});
-
-		SpinButton simplification_threshold = new SpinButton ("simplification_threshold");
-		simplification_threshold.set_value_round (0.5);
-		tools.add (new SettingsItem (simplification_threshold, t_("Path simplification threshold")));
-		
-		simplification_threshold.set_max (5);
-		freehand_samples.set_min (0.002);
-
-		if (Preferences.get ("simplification_threshold") != "") {
-			freehand_samples.set_value (Preferences.get ("simplification_threshold"));
-			DrawingTools.pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
-		}
-
-		freehand_samples.new_value_action.connect ((self) => {
-			DrawingTools.pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
-		});
-		
-		tools.add (new SettingsItem.head_line (t_("Key Bindings")));
-		
-		foreach (MenuItem menu_item in MainWindow.get_menu ().sorted_menu_items) {
-			tools.add (new SettingsItem.key_binding (menu_item));
-		}
-		
-		tools.add (new SettingsItem.head_line (t_("Themes")));
-		
-		Gee.ArrayList<Tool> theme_buttons = new Gee.ArrayList<Tool> ();
-		
-		foreach (string theme in Theme.themes) {			
-			string label;
-			Tool select_theme = new Tool (theme);
-			
-			select_theme.deselect_action.connect((self) => {
-				self.set_active (false);
-			});
-			
-			select_theme.select_action.connect((self) => {
-				string theme_file = self.get_name ();
-				TabBar tb;
-				
-				Preferences.set ("theme", theme_file);
-				Theme.load_theme (theme_file);
-					
-				foreach (Tool t in theme_buttons) {
-					t.set_selected (false);
-					t.set_active (false);
-				}
-				
-				self.set_selected (true);
-				create_setting_items ();
-				
-				Toolbox.redraw_tool_box ();
-				GlyphCanvas.redraw ();
-				
-				tb = MainWindow.get_tab_bar ();
-				tb.redraw (0, 0, tb.width, tb.height);
-			});
-			
-			select_theme.set_icon ("theme");
-			
-			if (theme == "default.theme") {
-				label = t_("Default theme");
-			} else if (theme == "high_contrast.theme") {
-				label = t_("High contrast theme");
-			} else if (theme == "custom.theme") {
-				label = t_("Custom theme");
-			} else {
-				label = theme.replace (".theme", "");
-			}
-			
-			tools.add (new SettingsItem (select_theme, label));
-			theme_buttons.add (select_theme);
-			
-			if (select_theme.get_name () == Theme.current_theme) {
-				select_theme.set_selected (true);
-			}
-		}
-
-		foreach (Tool t in theme_buttons) {
-			t.set_selected (t.name == Theme.current_theme);
-		}
-
-		Tool add_theme = new Tool ("add_new_theme");
-		add_theme.select_action.connect((self) => {
-			foreach (Tool t in theme_buttons) {
-				t.set_selected (false);
-			}
-			
-			self.set_selected (false);
-			Theme.add_new_theme (this); 
-			GlyphCanvas.redraw ();
-		});
-		tools.add (new SettingsItem (add_theme, t_("Add new theme")));
-		
-		tools.add (new SettingsItem.head_line (t_("Colors")));
-
-		foreach (string color in Theme.color_list) {
-			SettingsItem s = new SettingsItem.color (color);
-			ColorTool c = (ColorTool) ((!) s.button);
-			
-			tools.add (s);
-			
-			c.color_updated.connect (() => {
-				create_setting_items ();
-				GlyphCanvas.redraw ();
-			});
-		}		
-	}
+	public abstract void create_setting_items ();
 
 	public override void draw (WidgetAllocation allocation, Context cr) {		
 		this.allocation = allocation;
