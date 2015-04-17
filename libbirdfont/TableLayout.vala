@@ -210,6 +210,10 @@ public class TableLayout : FontDisplay {
 		
 		if (scroll + allocation.height >=  content_height) {
 			scroll = content_height - allocation.height;
+			
+			if (scroll < 0) {
+				scroll = 0;
+			}
 		}
 		
 		update_scrollbar ();
