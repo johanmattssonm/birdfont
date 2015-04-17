@@ -1399,9 +1399,11 @@ public class StrokeTool : Tool {
 		foreach (Path p in r.paths) {
 			c = counters (r, p); // FIXME: this needs improvements
 			
-			print (@"$c $(p.is_clockwise ()) $(p.points.size)\n");
 			if (c % 2 == 0) {
-				if (!p.is_clockwise ()) {
+				
+				if (c == 0) {
+					p.force_direction (Direction.CLOCKWISE);
+				} else if (!p.is_clockwise ()) {
 					remove.add (p);
 				}
 				
@@ -1455,7 +1457,6 @@ public class StrokeTool : Tool {
 				}
 
 				if (inside) {
-					print (@"Match $(path.points.size) with $(p.points.size)\n");
 					inside_count++; 
 				}
 			}
@@ -1561,7 +1562,6 @@ public class StrokeTool : Tool {
 		
 		s = 0;
 		foreach (EditPoint e in original_path1.points) {
-			print (@"insides: (e, original_path1): $(insides (e, original_path1)) $(e.x),$(e.y)\n");
 			if (!is_inside (e, original_path2)
 				&& insides (e, original_path1) == 1) { // FIXME: later as well
 				break;
@@ -1576,7 +1576,6 @@ public class StrokeTool : Tool {
 			original_path2 = t;
 			s = 0;
 			foreach (EditPoint e in original_path1.points) {
-				print (@"insides2: (e, original_path1): $(insides (e, original_path1))\n");
 				if (!is_inside (e, original_path2)) {
 					break;
 				}
@@ -2024,6 +2023,7 @@ public class StrokeTool : Tool {
 		int size, i, added_points;
 		double step = 0.5;
 		bool open = path.is_open ();
+		bool flat;
 		
 		path.add_hidden_double_points ();
 		
@@ -2047,12 +2047,16 @@ public class StrokeTool : Tool {
 				end.tie_handles = false;
 				end.deleted = true;
 			}
-									
-			if (unlikely (added_points > 4)) {
+			
+			flat = is_flat (start.x, start.y, px, py, end.x, end.y, 0.05 * stroke_width) 
+				&& ((px - start.x) > 0) == ((start.get_right_handle ().x - start.x) > 0)
+				&& ((py - start.y) > 0) == ((start.get_right_handle ().y - start.y) > 0);
+			
+			if (unlikely (added_points > 20)) {
 				warning ("More than four points added in stroke.");
 				added_points = 0;
 				i++;
-			} else if (!is_flat (start.x, start.y, px, py, end.x, end.y, 0.05 * stroke_width)
+			} else if (!flat
 					&& Path.distance (start.x, px, start.y, py) > 0.1 * stroke_width
 					&& Path.distance (end.x, px, end.y, py) > 0.1 * stroke_width) {
 				new_point = new EditPoint (px, py);
