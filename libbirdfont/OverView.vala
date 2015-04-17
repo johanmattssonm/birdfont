@@ -605,7 +605,7 @@ public class OverView : FontDisplay {
 		if (selected >= visible_items.size) { 
 			selected = (int) (visible_items.size - 1); 
 		}
-		
+
 		selected_item = get_selected_item ();
 	}
 
@@ -644,7 +644,7 @@ public class OverView : FontDisplay {
 		
 		if (first_visible < 0) {
 			first_visible = 0;		
-		}	
+		}
 	}
 	
 	public void key_left () {
@@ -734,6 +734,11 @@ public class OverView : FontDisplay {
 
 		scroll_to_char (keyval);
 		selected_item = get_selected_item ();
+
+		selected_items.clear ();
+		if (selected_item.glyphs != null) {
+			selected_items.add ((!) selected_item.glyphs);
+		}
 	}
 	
 	public void delete_selected_glyph () {

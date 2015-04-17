@@ -439,9 +439,6 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void draw (int w, int h, Context cr) { 
-		ImageSurface bg;
-		double scale_x, scale_y, scale;
-		
 		cr.save ();
 			
 		if (current_set is EmptySet) {

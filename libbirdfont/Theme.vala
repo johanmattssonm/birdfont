@@ -109,7 +109,6 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Headline Background", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
 		Theme.set_default_color ("Empty Tool Box", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
 		
-		Theme.set_default_color ("Background 5", 0.3, 0.3, 0.3, 1);
 		Theme.set_default_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
 		Theme.set_default_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
 		Theme.set_default_color ("Background 8", 55/255.0, 55/255.0, 55/255.0, 1);
@@ -201,7 +200,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Spin Button", 164 / 255.0, 167 / 255.0, 175 / 255.0, 1);
 		Theme.set_default_color ("Active Spin Button", 104 / 255.0, 108 / 255.0, 119 / 255.0, 1);
 		Theme.set_default_color ("Zoom Bar Border", 122 / 255.0, 131 / 255.0, 145 / 255.0, 1);
-
+		Theme.set_default_color ("Font Name", 0 / 255.0, 0 / 255.0, 0 / 255.0, 1);
 
 		if (BirdFont.has_argument ("--test")) {
 			current_theme = "generated_theme.theme";
@@ -216,7 +215,6 @@ public class Theme : GLib.Object {
 			t_("Dialog Background");
 			t_("Menu Background");
 			t_("Default Background");
-			t_("Background 5");
 			t_("Background 6");
 			t_("Background 7");
 			t_("Background 8");
@@ -294,6 +292,7 @@ public class Theme : GLib.Object {
 			t_("Spin Button");
 			t_("Active Spin Button");
 			t_("Zoom Bar Border");
+			t_("Font Name");
 		}
 	}
 	

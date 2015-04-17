@@ -1688,7 +1688,6 @@ public class Path {
 			cr.save ();
 			
 			all_of_path ((x, y) => {
-				//Theme.color (cr, "Background 5");
 				cr.move_to (px + xc, -py + yc);
 				cr.line_to (x + xc, -y + yc);
 				

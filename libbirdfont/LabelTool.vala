@@ -85,9 +85,9 @@ public class LabelTool : Tool {
 			bgy = y + 2;
 			
 			if (is_selected ()) {
-				Theme.color (cr, "Glyph Count Background");
+				Theme.color (cr, "Glyph Count Background 1");
 			} else {
-				Theme.color (cr, "Menu Background");
+				Theme.color (cr, "Glyph Count Background 2");
 			}
 			
 			draw_rounded_rectangle (cr, bgx, bgy, counter_box_width, counter_box_height, 3);

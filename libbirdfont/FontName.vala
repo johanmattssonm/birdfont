@@ -50,7 +50,7 @@ public class FontName : Tool {
 			text_height *= max_width / extent;
 		}
 		
-		Theme.text_color (font_name, "Highlighted 1");
+		Theme.text_color (font_name, "Font Name");
 		font_name.set_font_size (text_height);
 		font_name.draw_at_baseline (cr, x, y + 13 * Toolbox.get_scale ());
 		cr.restore ();

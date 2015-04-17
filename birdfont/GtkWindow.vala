@@ -210,7 +210,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 	public void font_loaded () {
 		Font f = BirdFont.get_current_font ();
-		set_title (@"BirdFont $(f.full_name)");
+		set_title (@"$(f.full_name)");
 	}
 
 	public void set_overwrite_dialog (OverWriteDialogListener d) {
