@@ -30,7 +30,7 @@ public class ZoomBar : Tool {
 		base ();
 		
 		panel_press_action.connect ((selected, button, tx, ty) => {
-			if (y <= ty <= y + h) {
+			if (y <= ty <= y + h + 2) {
 				set_zoom_from_mouse (tx);
 				update_zoom = true;
 			}

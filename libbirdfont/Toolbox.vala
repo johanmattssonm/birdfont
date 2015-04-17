@@ -27,6 +27,7 @@ public class Toolbox : GLib.Object  {
 	public static BackgroundTools background_tools;
 	public static HiddenTools hidden_tools;
 	public static SpacingTools spacing_tools;
+	public static FileTools file_tools;
 	
 	Tool current_tool;
 	
@@ -63,15 +64,17 @@ public class Toolbox : GLib.Object  {
 		background_tools = new BackgroundTools ();
 		hidden_tools = new HiddenTools ();
 		spacing_tools = new SpacingTools ();
+		file_tools = new FileTools ();
 		
 		tool_sets.append (drawing_tools);
 		tool_sets.append (kerning_tools);
 		tool_sets.append (preview_tools);
 		tool_sets.append (overview_tools);
 		tool_sets.append (background_tools);
+		// the menu has all the file_tools commands, it won't be added here
 		tool_sets.append (hidden_tools); // tools without a button
 		
-		current_set = drawing_tools;
+		current_set = file_tools;
 		
 		tab_bar.signal_tab_selected.connect ((tab) => {
 			string tab_name = tab.get_display ().get_name ();
@@ -95,7 +98,7 @@ public class Toolbox : GLib.Object  {
 		} else if (t != null && ((!) t).get_display () is Glyph) {
 			current_set = (ToolCollection) drawing_tools;
 		} else {
-			current_set = new EmptySet ();
+			current_set = (ToolCollection) file_tools;
 		}
 		
 		MainWindow.get_toolbox ().update_expanders ();
