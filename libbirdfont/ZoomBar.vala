@@ -88,21 +88,21 @@ public class ZoomBar : Tool {
 		
 		// filled
 		cr.save ();
-		Theme.color (cr, "Foreground 3");
+		Theme.color (cr, "Button Border 1");
 		draw_bar (cr);
 		cr.fill ();
 		cr.restore ();
 		
 		// remove non filled parts
 		cr.save ();
-		Theme.color (cr, "Background 4");
+		Theme.color (cr, "Default Background");
 		cr.rectangle (x + bar_width * zoom_level, y, w, h);
 		cr.fill ();
 		cr.restore ();
 		
 		// border
 		cr.save ();
-		Theme.color (cr, "Foreground 1");
+		Theme.color (cr, "Button Border 1");
 		cr.set_line_width (0.8);
 		draw_bar (cr);
 		cr.stroke ();

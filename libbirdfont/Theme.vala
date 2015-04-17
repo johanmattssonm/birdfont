@@ -103,9 +103,9 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Selected Objects", 35 / 255.0, 131 / 255.0, 194 / 255.0, 1);
 		
 		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
-		Theme.set_default_color ("Background 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		Theme.set_default_color ("Background 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Background 4", 51 / 255.0, 54 / 255.0, 59 / 255.0, 1);
+		Theme.set_default_color ("Dialog Background", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
+		Theme.set_default_color ("Menu Background", 222 / 255.0, 221 / 255.0, 226 / 255.0, 1);
+		Theme.set_default_color ("Default Background", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
 		Theme.set_default_color ("Background 5", 0.3, 0.3, 0.3, 1);
 		Theme.set_default_color ("Background 6", 224/255.0, 224/255.0, 224/255.0, 1);
 		Theme.set_default_color ("Background 7", 56 / 255.0, 59 / 255.0, 65 / 255.0, 1);
@@ -116,7 +116,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Checkbox Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
-		Theme.set_default_color ("Foreground 2", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Text Foreground", 125 / 255.0, 130 / 255.0, 136 / 255.0, 1);
 		Theme.set_default_color ("Foreground 3", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
 		Theme.set_default_color ("Foreground 4", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
 		Theme.set_default_color ("Foreground 5", 70 / 255.0, 77 / 255.0, 83 / 255.0, 1);
@@ -138,24 +138,22 @@ public class Theme : GLib.Object {
 		
 		Theme.set_default_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
 		
-		Theme.set_default_color ("Button Border 1", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Button Background 1", 14 / 255.0, 16 / 255.0, 17 / 255.0, 1);
+		Theme.set_default_color ("Button Border 1", 173 / 255.0, 176 / 255.0, 188 / 255.0, 1);
+		Theme.set_default_color ("Button Background 1", 211 / 255.0, 212 / 255.0, 216 / 255.0, 1);
 
-		Theme.set_default_color ("Button Border 2", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Button Background 2", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
+		Theme.set_default_color ("Button Border 2", 173 / 255.0, 176 / 255.0, 188 / 255.0, 1);
+		Theme.set_default_color ("Button Background 2", 211 / 255.0, 212 / 255.0, 216 / 255.0, 1);
 
-		Theme.set_default_color ("Button Border 3", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Button Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
+		Theme.set_default_color ("Button Border 3", 173 / 255.0, 176 / 255.0, 188 / 255.0, 1);
+		Theme.set_default_color ("Button Background 3", 242 / 255.0, 246 / 255.0, 246 / 255.0, 1);
 
-		Theme.set_default_color ("Button Border 4", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
-		Theme.set_default_color ("Button Background 4", 33 / 255.0, 36 / 255.0, 39 / 255.0, 1);
+		Theme.set_default_color ("Button Border 4", 173 / 255.0, 176 / 255.0, 188 / 255.0, 1);
+		Theme.set_default_color ("Button Background 4", 242 / 255.0, 246 / 255.0, 246 / 255.0, 1);
 		
-		Theme.set_default_color ("Button Foreground", 1, 1, 1, 1);
-		Theme.set_default_color ("Selected Button Foreground", 1, 1, 1, 1);
+		Theme.set_default_color ("Button Foreground", 125 / 255.0, 130 / 255.0, 136 / 255.0, 1);
+		Theme.set_default_color ("Selected Button Foreground", 125 / 255.0, 130 / 255.0, 136 / 255.0, 1);
 
-		Theme.set_default_color ("Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
-		
+		Theme.set_default_color ("Tool Foreground", 125 / 255.0, 130 / 255.0, 136 / 255.0, 1);
 		Theme.set_default_color ("Selected Tool Foreground", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		
 		Theme.set_default_color ("Text Area Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
@@ -169,7 +167,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Overview Selected Foreground", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
 		Theme.set_default_color ("Overview Foreground", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
 		
-		Theme.set_default_color ("Glyph Count Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Glyph Count Background", 211 / 255.0, 212 / 255.0, 216 / 255.0, 1);
 		
 		Theme.set_default_color ("Dialog Shadow", 0, 0, 0, 0.3);
 		
@@ -187,7 +185,10 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Active Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
 		Theme.set_default_color ("Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
 		
-		Theme.set_default_color ("Merge", 101 / 255.0, 108 / 255.0, 116 / 255.0, 0.3);
+		Theme.set_default_color ("Merge", 167 / 255.0, 170 / 255.0, 178 / 255.0, 0.3);
+		
+		Theme.set_default_color ("Spin Button", 164 / 255.0, 167 / 255.0, 175 / 255.0, 1);
+		Theme.set_default_color ("Active Spin Button", 104 / 255.0, 108 / 255.0, 119 / 255.0, 1);
 
 		if (BirdFont.has_argument ("--test")) {
 			current_theme = "generated_theme.theme";
@@ -199,9 +200,9 @@ public class Theme : GLib.Object {
 			t_("Selected Objects");
 			
 			t_("Background 1");
-			t_("Background 2");
-			t_("Background 3");
-			t_("Background 4");
+			t_("Dialog Background");
+			t_("Menu Background");
+			t_("Default Background");
 			t_("Background 5");
 			t_("Background 6");
 			t_("Background 7");
@@ -211,7 +212,7 @@ public class Theme : GLib.Object {
 			t_("Checkbox Background");
 			
 			t_("Foreground 1");
-			t_("Foreground 2");
+			t_("Text Foreground");
 			t_("Foreground 3");
 			t_("Foreground 4");
 			t_("Foreground 5");
@@ -274,6 +275,8 @@ public class Theme : GLib.Object {
 			t_("Control Point Handle");
 
 			t_("Merge");
+			t_("Spin Button");
+			t_("Active Spin Button");
 		}
 	}
 	

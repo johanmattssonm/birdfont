@@ -467,7 +467,7 @@ public class Toolbox : GLib.Object  {
 			
 			cr.rectangle (0, 0, w, h);
 			cr.set_line_width (0);
-			Theme.color (cr, "Background 4");
+			Theme.color (cr, "Default Background");
 			cr.fill ();
 
 			draw_expanders (w, h, cr);

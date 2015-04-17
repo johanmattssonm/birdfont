@@ -700,7 +700,7 @@ public class Menu : GLib.Object {
 		
 		foreach (MenuItem item in current_menu.items) {
 			cr.save ();
-			Theme.color (cr, "Background 3");
+			Theme.color (cr, "Menu Background");
 			cr.rectangle (x, y, width, height);
 			cr.fill ();
 			cr.restore ();

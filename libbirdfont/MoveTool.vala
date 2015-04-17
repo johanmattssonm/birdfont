@@ -233,7 +233,7 @@ public class MoveTool : Tool {
 		
 		cr.save ();
 		
-		Theme.color (cr, "Background 4");
+		Theme.color (cr, "Default Background");
 		cr.set_line_width (2);
 		cr.rectangle (x, y, w, h);
 		cr.stroke ();

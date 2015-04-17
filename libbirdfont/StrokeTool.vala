@@ -1842,8 +1842,7 @@ public class StrokeTool : Tool {
 			original_path2.remove_points_on_points ();
 			original_path1.remove_deleted_points ();
 			original_path2.remove_deleted_points ();
-					
-			int counter;
+
 			foreach (Path np in result.paths) {
 				Path p = np.copy ();
 				bool has_direction = true;

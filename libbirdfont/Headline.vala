@@ -28,7 +28,7 @@ class Headline : Widget {
 	
 	public override void draw (Context cr) {
 		cr.save ();
-		Theme.color (cr, "Background 2");
+		Theme.color (cr, "Dialog Background");
 		cr.rectangle (0, widget_y, allocation.width, 40 * MainWindow.units);
 		cr.fill ();
 		cr.restore ();

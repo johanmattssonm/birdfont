@@ -57,7 +57,7 @@ public class MessageDialog : Dialog {
 		cr.restore ();
 		
 		cr.save ();
-		Theme.color (cr, "Background 2");
+		Theme.color (cr, "Dialog Background");
 		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
 		cr.fill ();
 		cr.restore ();

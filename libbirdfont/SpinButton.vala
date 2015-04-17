@@ -442,9 +442,15 @@ public class SpinButton : Tool {
 		double xt = x + w / 2;
 		double yt = y;
 
-		double text_x = -14 * scale;
+		double text_x = -13 * scale;
 		double text_y = 7 * scale;
 		Text text = new Text (get_short_display_value (), 15);
+
+		if (is_selected ()) {
+			base.icon_color = "Active Spin Button";
+		} else {
+			base.icon_color = "Spin Button";
+		}
 		
 		base.draw (cr);
 	

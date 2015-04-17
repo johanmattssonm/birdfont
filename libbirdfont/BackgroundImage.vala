@@ -589,7 +589,7 @@ public class BackgroundImage {
 		double x, y;
 		cr.save ();
 		
-		Theme.color (cr, "Background 3");
+		Theme.color (cr, "Menu Background");
 
 		x = img_middle_x - (img_scale_x * get_img ().get_width () / 2);
 		y = img_middle_y - (img_scale_y * get_img ().get_height () / 2);
@@ -612,8 +612,8 @@ public class BackgroundImage {
 		cr.scale (g.view_zoom, g.view_zoom);
 		
 		if (selected_handle == 2) Theme.color (cr, "Highlighted 1");
-		else if (active_handle == 2) Theme.color (cr, "Background 4");
-		else Theme.color (cr, "Background 3");
+		else if (active_handle == 2) Theme.color (cr, "Default Background");
+		else Theme.color (cr, "Menu Background");
 
 		x = img_offset_x - g.view_offset_x + (size_margin / 2) * img_scale_x;
 		y = img_offset_y - g.view_offset_y + (size_margin / 2) * img_scale_y;
@@ -648,8 +648,8 @@ public class BackgroundImage {
 		cr.set_line_width (ivz);
 		
 		if (selected_handle == 1) Theme.color (cr, "Highlighted 1");
-		else if (active_handle == 1) Theme.color (cr, "Background 4");
-		else Theme.color (cr, "Background 3");
+		else if (active_handle == 1) Theme.color (cr, "Default Background");
+		else Theme.color (cr, "Menu Background");
 
 		size = (8) * s;
 		

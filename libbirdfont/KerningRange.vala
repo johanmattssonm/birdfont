@@ -143,7 +143,7 @@ public class KerningRange : Tool {
 	
 		label_text = new Text ();
 		label_text.set_text (name);
-		Theme.text_color (label_text, "Foreground 2");
+		Theme.text_color (label_text, "Text Foreground");
 		label_text.set_font_size (18);
 		label_text.widget_x = x;
 		label_text.widget_y = y;

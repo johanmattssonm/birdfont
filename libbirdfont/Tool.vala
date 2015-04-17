@@ -28,7 +28,7 @@ public class Tool : Widget {
 	public bool active = false;
 	public bool selected = false;
 	
-	Text icon_font;
+	public Text icon_font;
 		
 	public signal void select_action (Tool selected);
 	public signal void deselect_action (Tool selected);
@@ -79,6 +79,8 @@ public class Tool : Widget {
 	
 	bool visible = true;
 	public bool is_tool_modifier = false;
+	
+	public string icon_color = "";
 	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "") {
@@ -290,14 +292,18 @@ public class Tool : Widget {
 		draw_rounded_rectangle (cr, bgx, bgy, 34, 28, 4);
 		cr.stroke ();
 		
-		iconx = bgx + w / 2 - icon_font.get_sidebearing_extent () / 2;
-		icony = bgy + h / 2 - icon_font.get_height () / 2;
+		iconx = bgx + 1 + (w - 1) / 2 - icon_font.get_sidebearing_extent () / 2;
+		icony = bgy + 1 + (h - 1)/ 2 - icon_font.get_height () / 2;
 		
-		if (!selected) {
-			Theme.text_color (icon_font, "Tool Foreground");
+		if (icon_color == "") {
+			if (!selected) {
+				Theme.text_color (icon_font, "Tool Foreground");
+			} else {
+				Theme.text_color (icon_font, "Selected Tool Foreground");
+			}
 		} else {
-			Theme.text_color (icon_font, "Selected Tool Foreground");
-		}	
+			Theme.text_color (icon_font, icon_color);
+		}
 		
 		icon_font.widget_x = iconx;
 		icon_font.widget_y = icony;

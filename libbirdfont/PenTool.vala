@@ -98,8 +98,6 @@ public class PenTool : Tool {
 		
 		press_action.connect ((self, b, x, y) => {			
 			// retain path direction
-			Glyph glyph = MainWindow.get_current_glyph ();
-			
 			clockwise = new Gee.ArrayList<Path> ();
 			counter_clockwise = new Gee.ArrayList<Path> ();
 

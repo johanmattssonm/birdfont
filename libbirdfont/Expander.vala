@@ -228,7 +228,7 @@ public class Expander : GLib.Object {
 				title = new Text ();
 				title.set_text ((!) headline);
 				title.use_cache (true);
-				Theme.text_color (title, "Foreground 2");
+				Theme.text_color (title, "Text Foreground");
 				title.set_font_size (17 * Toolbox.get_scale ());
 				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 13  * Toolbox.get_scale ());
 			}

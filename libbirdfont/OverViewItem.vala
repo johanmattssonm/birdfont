@@ -117,7 +117,7 @@ public class OverViewItem : GLib.Object {
 		cr.restore ();
 
 		cr.save ();
-		Theme.color (cr, "Foreground 3");
+		Theme.color (cr, "Text Foreground");
 		cr.rectangle (x, y, width, height);
 		cr.set_line_width (1);
 		cr.stroke ();

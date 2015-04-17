@@ -56,7 +56,7 @@ public class LabelTool : Tool {
 		// background
 		if (is_selected ()) {
 			cr.save ();
-			Theme.color (cr, "Background 3");
+			Theme.color (cr, "Menu Background");
 			cr.rectangle (0, y - 2, w, h + 7);
 			cr.fill ();
 			cr.restore ();		
@@ -69,9 +69,9 @@ public class LabelTool : Tool {
 		text_height = 18;
 
 		if (is_selected ()) {
-			Theme.text_color (label_text, "Foreground Inverted");
+			Theme.text_color (label_text, "Text Foreground");
 		} else {
-			Theme.text_color (label_text, "Foreground 2");
+			Theme.text_color (label_text, "Text Foreground");
 		}
 		
 		label_text.set_font_size (text_height);
@@ -81,13 +81,13 @@ public class LabelTool : Tool {
 		// glyph count
 		if (has_counter) {
 			cr.save ();
-			bgx = Toolbox.allocation_width - counter_box_width - 15;
+			bgx = Toolbox.allocation_width - counter_box_width - 9;
 			bgy = y + 2;
 			
 			if (is_selected ()) {
 				Theme.color (cr, "Glyph Count Background");
 			} else {
-				Theme.color (cr, "Background 3");
+				Theme.color (cr, "Menu Background");
 			}
 			
 			draw_rounded_rectangle (cr, bgx, bgy, counter_box_width, counter_box_height, 3);
@@ -103,9 +103,9 @@ public class LabelTool : Tool {
 			center_y = bgy + (counter_box_height / 2.0 + 5);
 
 			if (is_selected ()) {
-				Theme.text_color (glyph_count, "Foreground 1");
+				Theme.text_color (glyph_count, "Text Foreground");
 			} else {
-				Theme.text_color (glyph_count, "Foreground Inverted");
+				Theme.text_color (glyph_count, "Text Foreground");
 			}
 			
 			glyph_count.set_font_size (text_height);

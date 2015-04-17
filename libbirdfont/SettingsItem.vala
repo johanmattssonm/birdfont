@@ -103,7 +103,7 @@ class SettingsItem : GLib.Object {
 		} else {
 			if (active) {
 				cr.save ();
-				Theme.color (cr, "Background 3");
+				Theme.color (cr, "Menu Background");
 				cr.rectangle (0, y - 5 * MainWindow.units, allocation.width, 40 * MainWindow.units);
 				cr.fill ();
 				cr.restore ();
@@ -118,7 +118,7 @@ class SettingsItem : GLib.Object {
 			}
 			
 			cr.save ();
-			Theme.text_color (label, "Foreground 2");
+			Theme.text_color (label, "Text Foreground");
 			label.set_font_size (17 * MainWindow.units);
 			label.draw_at_baseline (cr, label_x, y + 20 * MainWindow.units);
 			cr.restore ();
@@ -131,7 +131,7 @@ class SettingsItem : GLib.Object {
 				if (active) {
 					Theme.text_color (key_binding_text, "Foreground Inverted");
 				} else {
-					Theme.text_color (key_binding_text, "Foreground 2");
+					Theme.text_color (key_binding_text, "Text Foreground");
 				}
 				
 				key_binding_text.set_font_size (17 * MainWindow.units);

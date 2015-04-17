@@ -619,7 +619,7 @@ public class TabBar : GLib.Object {
 		
 		cr.save ();
 		cr.set_line_width (0);
-		Theme.color (cr, "Background 4");
+		Theme.color (cr, "Default Background");
 		cr.rectangle (0, 0, width, height);
 		cr.fill ();
 		cr.restore ();
@@ -632,14 +632,14 @@ public class TabBar : GLib.Object {
 
 		if (has_scroll () && !has_progress_wheel ()) {
 			// left arrow
-			Theme.text_color (left_arrow, "Foreground 2");
+			Theme.text_color (left_arrow, "Text Foreground");
 			left_arrow.set_font_size (40 / scale);
 			left_arrow.widget_x =  2 / scale;
 			left_arrow.widget_y =  h / 2.0 - (40 / scale ) / 2;
 			left_arrow.draw (cr);
 
 			// right arrow
-			Theme.text_color (right_arrow, "Foreground 2");
+			Theme.text_color (right_arrow, "Text Foreground");
 			next_tab_x = (has_progress_wheel ()) ? w - (2 * 19 + 3) / scale : w - 19 / scale;
 			next_tab_x-= 32 / scale;
 
@@ -653,7 +653,7 @@ public class TabBar : GLib.Object {
 		if (has_progress_wheel ()) {
 			double progress_size = 40 / scale;
 			
-			Theme.text_color (progress_icon, "Foreground 2");
+			Theme.text_color (progress_icon, "Text Foreground");
 			
 			progress_icon.set_font_size (progress_size);
 			progress_icon.widget_x = w - 14 / scale;
@@ -737,13 +737,13 @@ public class TabBar : GLib.Object {
 				cr.restore ();				
 			} else if (tab_index == over) {
 				cr.save ();
-				Theme.color (cr, "Background 7");
+				Theme.color (cr, "Default Background");
 				cr.rectangle (0, 0, tab_width, h);
 				cr.fill ();
 				cr.restore ();			
 			} else {
 				cr.save ();
-				Theme.color (cr, "Background 4");
+				Theme.color (cr, "Default Background");
 				cr.rectangle (0, 0, tab_width, h);
 				cr.fill ();
 				cr.restore ();
@@ -758,9 +758,9 @@ public class TabBar : GLib.Object {
 				close_opacity = (over_close_tab == tab_index) ? 1 : 0.2; 
 
 				if (tab_index == selected) {
-					Theme.color_opacity (cr, "Foreground 4", close_opacity);
+					Theme.color_opacity (cr, "Foreground 1", close_opacity);
 				} else {
-					Theme.color_opacity (cr, "Foreground 2", close_opacity);
+					Theme.color_opacity (cr, "Text Foreground", close_opacity);
 				}
 				
 				cr.move_to (tab_width - 7 / scale, h / 2.0 - 2.5 / scale);
@@ -784,9 +784,9 @@ public class TabBar : GLib.Object {
 			center_y = (int) (tab_height / 2.0 + 4 / scale);
 			
 			if (tab_index == selected) {
-				Theme.text_color (label, "Foreground 4");
+				Theme.text_color (label, "Foreground Inverted");
 			} else {
-				Theme.text_color (label, "Foreground 2");
+				Theme.text_color (label, "Text Foreground");
 			}
 			
 			label.set_font_size (text_height);
@@ -796,7 +796,7 @@ public class TabBar : GLib.Object {
 			if (tab_index != selected) { // don't draw edges for the selected tab
 				if (tab_index + 1 != selected) {
 					cr.save ();
-					Theme.color (cr, "Foreground 5");
+					Theme.color (cr, "Text Foreground");
 					cr.rectangle (tab_width - 1 / scale, 0, 1 / scale, h);
 					cr.fill ();
 					cr.restore ();
@@ -804,7 +804,7 @@ public class TabBar : GLib.Object {
 				
 				if (tab_index == first_tab) {
 					cr.save ();
-					Theme.color (cr, "Foreground 5");
+					Theme.color (cr, "Text Foreground");
 					cr.rectangle (0, 0, 1 / scale, h);
 					cr.fill ();
 					cr.restore ();

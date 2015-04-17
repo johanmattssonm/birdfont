@@ -77,7 +77,7 @@ public class SaveDialog : Dialog {
 		
 		save_question.widget_x = save_button.widget_x + center;
 		save_question.widget_y = cy + 15 * MainWindow.units;
-		Theme.text_color (save_question, "Foreground Inverted");
+		Theme.text_color (save_question, "Text Foreground");
 		
 		qh = (question_font_size + 1) * MainWindow.units;
 		
@@ -106,13 +106,13 @@ public class SaveDialog : Dialog {
 		cr.restore ();
 		
 		cr.save ();
-		Theme.color (cr, "Background 2");
+		Theme.color (cr, "Dialog Background");
 		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
-		Theme.color (cr, "Foreground 1");
+		Theme.color (cr, "Button Border 4");
 		cr.set_line_width (1);
 		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
 		cr.stroke ();
