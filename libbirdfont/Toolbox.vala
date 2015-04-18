@@ -418,14 +418,14 @@ public class Toolbox : GLib.Object  {
 		
 		pos = 4 * get_scale ();
 		foreach (Expander e in current_set.get_expanders ()) {
-			e.set_offset (pos);
-			
-			pos += e.get_content_height () + 4 * get_scale ();
-					
-			current_set.content_height = pos;
-			
-			if (BirdFont.android) {
-				current_set.content_height *= 1.15;
+			if (e.visible) {
+				e.set_offset (pos);
+				pos += e.get_content_height () + 4 * get_scale ();
+				current_set.content_height = pos;
+				
+				if (BirdFont.android) {
+					current_set.content_height *= 1.15;
+				}
 			}
 		}
 
@@ -436,8 +436,10 @@ public class Toolbox : GLib.Object  {
 	
 	private void draw_expanders (int w, int h, Context cr) {
 		foreach (Expander e in current_set.get_expanders ()) {
-			e.draw (w, h, cr);
-			e.draw_content (w, h, cr);
+			if (e.visible) {
+				e.draw (w, h, cr);
+				e.draw_content (w, h, cr);
+			}
 		}
 	}
 	

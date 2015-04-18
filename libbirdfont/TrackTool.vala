@@ -103,8 +103,6 @@ public class TrackTool : Tool {
 					}
 					glyph.set_active_path (end_point.path);
 					add_corner (x, y);
-					
-					set_stroke_width (end_point.path.stroke);
 				} else {
 					p = new Path ();
 					glyph.add_path (p);
@@ -193,12 +191,6 @@ public class TrackTool : Tool {
 
 	public void set_samples_per_point (double s) {
 		samples_per_point = s;
-	}
-
-	public void set_stroke_width (double width) {
-		string w = SpinButton.convert_to_string (width);
-		Preferences.set ("freehand_stroke_width", w);
-		stroke_width = width;
 	}
 
 	void add_endpoint_and_merge (int x, int y) {
