@@ -36,7 +36,7 @@ public class EmptyTab : FontDisplay {
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
 		cr.save ();
-		Theme.color (cr, "Default Background");
+		Theme.color (cr, "Background 9");
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();

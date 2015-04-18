@@ -1101,12 +1101,10 @@ public class Glyph : FontDisplay {
 		double xt, yt;
 		Path np;
 		EditPoint inserted;
-		bool stroke = StrokeTool.add_stroke;
 		
 		if (path_list.size == 0) {
 			np = new Path ();
 			path_list.add (np);
-			np.stroke = stroke ? StrokeTool.stroke_width : 0;
 		}
 			
 		xt = path_coordinate_x (x);
@@ -1119,7 +1117,6 @@ public class Glyph : FontDisplay {
 			np.add (xt, yt);
 		} else {
 			np = new Path ();
-			np.stroke = stroke ? StrokeTool.stroke_width : 0;
 			path_list.add (np);
 			np.add (xt, yt);
 			

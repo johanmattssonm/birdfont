@@ -248,6 +248,12 @@ public class PenTool : Tool {
 			}
 		}
 	}
+
+	public void set_stroke_width (double width) {
+		string w = SpinButton.convert_to_string (width);
+		Preferences.set ("pen_tool_stroke_width", w);
+		path_stroke_width = width;
+	}
 	
 	public bool has_join_icon () {
 		double mx, my;
