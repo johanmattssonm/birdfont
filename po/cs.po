@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-13 16:30+0200\n"
+"POT-Creation-Date: 2015-04-18 21:53+0200\n"
 "PO-Revision-Date: 2015-03-26 21:10+0000\n"
 "Last-Translator: fri <pavelfric@yahoo.com>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -97,7 +97,8 @@ msgstr "Vybrat obrázek pozadí"
 msgid "Images"
 msgstr "Obrázky"
 
-#: libbirdfont/BackgroundTools.vala:34 libbirdfont/RecentFiles.vala:96
+#: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileDialogTab.vala:81
+#: libbirdfont/RecentFiles.vala:103
 msgid "Files"
 msgstr "Soubory"
 
@@ -105,7 +106,8 @@ msgstr "Soubory"
 msgid "Parts"
 msgstr "Části"
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2156
+#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2204
+#: libbirdfont/LigatureList.vala:106
 msgid "Add"
 msgstr "Přidat"
 
@@ -113,7 +115,7 @@ msgstr "Přidat"
 msgid "Select Glyph"
 msgstr "Vybrat znak"
 
-#: libbirdfont/BackgroundTools.vala:178 libbirdfont/LoadCallback.vala:87
+#: libbirdfont/BackgroundTools.vala:182 libbirdfont/LoadCallback.vala:87
 #: libbirdfont/Menu.vala:78
 msgid "Open"
 msgstr "Otevřít"
@@ -259,7 +261,7 @@ msgstr ""
 "Ý Z Ž"
 
 #: libbirdfont/DescriptionDisplay.vala:52
-#: libbirdfont/DescriptionDisplay.vala:176 libbirdfont/ExportSettings.vala:91
+#: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:91
 #: libbirdfont/Menu.vala:458 libbirdfont/TableLayout.vala:197
 msgid "Name and Description"
 msgstr "Název a popis"
@@ -395,7 +397,7 @@ msgstr "Šířka"
 msgid "Height"
 msgstr "Výška"
 
-#: libbirdfont/DrawingTools.vala:485 libbirdfont/SettingsDisplay.vala:46
+#: libbirdfont/DrawingTools.vala:485 libbirdfont/SettingsTab.vala:34
 msgid "Stroke width"
 msgstr "Šířka tahu"
 
@@ -538,11 +540,35 @@ msgstr "Vyvést"
 msgid "Save"
 msgstr "Uložit"
 
+#: libbirdfont/FileDialogTab.vala:70
+msgid "Folders"
+msgstr ""
+
+#: libbirdfont/FileTools.vala:31
+msgid "New font"
+msgstr "Nova fonte"
+
+#: libbirdfont/FileTools.vala:37
+#, fuzzy
+msgid "Open font"
+msgstr "Nova fonte"
+
+#: libbirdfont/FileTools.vala:43
+#, fuzzy
+msgid "Save font"
+msgstr "Nova fonte"
+
+#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:451
+#: libbirdfont/SettingsDisplay.vala:209 libbirdfont/SettingsTab.vala:31
+#: libbirdfont/SettingsTab.vala:157
+msgid "Settings"
+msgstr "Nastavení"
+
 #: libbirdfont/ForesightTool.vala:41
 msgid "Create Beziér curves"
 msgstr "Vytvořit Bézierovy křivky"
 
-#: libbirdfont/Glyph.vala:2156
+#: libbirdfont/Glyph.vala:2204
 msgid "Guide"
 msgstr "Vodítko"
 
@@ -606,7 +632,7 @@ msgstr "Třída podřezávání"
 #: libbirdfont/Ligatures.vala:128 libbirdfont/Ligatures.vala:150
 #: libbirdfont/Ligatures.vala:181 libbirdfont/SpacingClass.vala:45
 #: libbirdfont/SpacingTab.vala:233 libbirdfont/SpacingTab.vala:277
-#: libbirdfont/SpinButton.vala:199 libbirdfont/Theme.vala:456
+#: libbirdfont/SpinButton.vala:199 libbirdfont/Theme.vala:463
 msgid "Set"
 msgstr "Nastavit"
 
@@ -686,19 +712,19 @@ msgstr "prostředek"
 msgid "end"
 msgstr "konec"
 
-#: libbirdfont/LigatureList.vala:106
+#: libbirdfont/LigatureList.vala:109
 msgid "New Ligature"
 msgstr "Nový slitek"
 
-#: libbirdfont/LigatureList.vala:106
+#: libbirdfont/LigatureList.vala:109
 msgid "New Contextual Substitution"
 msgstr "Nová náhrada vyplývající ze souvislosti"
 
-#: libbirdfont/LigatureList.vala:112
+#: libbirdfont/LigatureList.vala:115
 msgid "Contextual Substitutions"
 msgstr ""
 
-#: libbirdfont/LigatureList.vala:123 libbirdfont/LigatureList.vala:137
+#: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
 #: libbirdfont/Menu.vala:406
 msgid "Ligatures"
 msgstr "Slitky"
@@ -715,7 +741,7 @@ msgstr "Prostředek"
 msgid "End"
 msgstr "Konec"
 
-#: libbirdfont/Ligatures.vala:181 libbirdfont/OverView.vala:1151
+#: libbirdfont/Ligatures.vala:181 libbirdfont/OverView.vala:1186
 msgid "Ligature"
 msgstr "Slitek"
 
@@ -739,7 +765,7 @@ msgstr "Soubor"
 msgid "New"
 msgstr "Nový"
 
-#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:71
+#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:78
 msgid "Recent Files"
 msgstr "Nedávno otevřené soubory"
 
@@ -923,11 +949,6 @@ msgstr "Uložit jako BFP"
 msgid "Overview"
 msgstr "Přehled"
 
-#: libbirdfont/Menu.vala:451 libbirdfont/SettingsDisplay.vala:43
-#: libbirdfont/SettingsDisplay.vala:413
-msgid "Settings"
-msgstr "Nastavení"
-
 #: libbirdfont/MenuItem.vala:82
 msgid "UP"
 msgstr "NAHORU"
@@ -972,7 +993,7 @@ msgstr "Filtr"
 msgid "No glyphs in this view."
 msgstr "Žádné znaky v tomto zobrazení."
 
-#: libbirdfont/OverView.vala:1174
+#: libbirdfont/OverView.vala:1209
 msgid "See also:"
 msgstr "Další podrobnosti:"
 
@@ -1024,15 +1045,20 @@ msgstr "Vyvést písma"
 msgid "Generate html document"
 msgstr "Vytvořit soubor HTML"
 
-#: libbirdfont/RecentFiles.vala:63
+#: libbirdfont/RecentFiles.vala:62
+#, fuzzy
+msgid "Create a New Font"
+msgstr "Criar uma nova fonte"
+
+#: libbirdfont/RecentFiles.vala:70
 msgid "Folder"
 msgstr ""
 
-#: libbirdfont/RecentFiles.vala:66
+#: libbirdfont/RecentFiles.vala:73
 msgid "Glyphs"
 msgstr ""
 
-#: libbirdfont/RecentFiles.vala:82
+#: libbirdfont/RecentFiles.vala:89
 msgid "Backups"
 msgstr ""
 
@@ -1056,57 +1082,38 @@ msgstr "Zahodit"
 msgid "Save?"
 msgstr "Uložit?"
 
-#: libbirdfont/SettingsDisplay.vala:92
+#: libbirdfont/SettingsTab.vala:80
 msgid "Precision for pen tool"
 msgstr "Přesnost pro nástroj psacího pera"
 
-#: libbirdfont/SettingsDisplay.vala:100
+#: libbirdfont/SettingsTab.vala:88
 msgid "Show or hide control point handles"
 msgstr "Ukázat nebo skrýt úchopy ovládacích bodů"
 
-#: libbirdfont/SettingsDisplay.vala:108
+#: libbirdfont/SettingsTab.vala:96
 msgid "Fill open paths."
 msgstr "Vyplnit otevřené cesty."
 
-#: libbirdfont/SettingsDisplay.vala:115
+#: libbirdfont/SettingsTab.vala:103
 msgid "Use TTF units."
 msgstr "Použít jednotky TTF."
 
-#: libbirdfont/SettingsDisplay.vala:118
+#: libbirdfont/SettingsTab.vala:106
 msgid "Number of points added by the freehand tool"
 msgstr "Počet bodů přidávaných nástrojem kreslení od ruky"
 
-#: libbirdfont/SettingsDisplay.vala:140
+#: libbirdfont/SettingsTab.vala:128
 msgid "Path simplification threshold"
 msgstr "Práh pro zjednodušení cesty"
 
-#: libbirdfont/SettingsDisplay.vala:154
-msgid "Key Bindings"
-msgstr "Přiřazení klávesových zkratek"
-
-#: libbirdfont/SettingsDisplay.vala:160
-msgid "Themes"
-msgstr "Motivy"
-
-#: libbirdfont/SettingsDisplay.vala:197
-msgid "Default theme"
-msgstr "Výchozí motiv"
-
-#: libbirdfont/SettingsDisplay.vala:199
-msgid "High contrast theme"
-msgstr "Motiv s vysokým kontrastem"
-
-#: libbirdfont/SettingsDisplay.vala:201
-msgid "Custom theme"
+#: libbirdfont/SettingsTab.vala:147
+#, fuzzy
+msgid "Color theme"
 msgstr "Vlastní motiv"
 
-#: libbirdfont/SettingsDisplay.vala:228
-msgid "Add new theme"
-msgstr "Přidat nový motiv"
-
-#: libbirdfont/SettingsDisplay.vala:230
-msgid "Colors"
-msgstr "Barvy"
+#: libbirdfont/SettingsTab.vala:149
+msgid "Key Bindings"
+msgstr "Přiřazení klávesových zkratek"
 
 #: libbirdfont/SpacingClass.vala:45
 msgid "Character"
@@ -1132,89 +1139,72 @@ msgstr "Vpravo"
 msgid "Import"
 msgstr "Zavést"
 
-#: libbirdfont/Theme.vala:196
+#: libbirdfont/Theme.vala:202
+#, fuzzy
+msgid "Canvas Background"
+msgstr "Hintergründe"
+
+#: libbirdfont/Theme.vala:203
 msgid "Stroke Color"
 msgstr "Barva tahu"
 
-#: libbirdfont/Theme.vala:197
+#: libbirdfont/Theme.vala:204
 msgid "Handle Color"
 msgstr "Barva úchopu"
 
-#: libbirdfont/Theme.vala:198
+#: libbirdfont/Theme.vala:205
 msgid "Fill Color"
 msgstr "Barva výplně"
 
-#: libbirdfont/Theme.vala:199
+#: libbirdfont/Theme.vala:206
 msgid "Selected Objects"
 msgstr ""
 
-#: libbirdfont/Theme.vala:201
+#: libbirdfont/Theme.vala:208
 msgid "Background 1"
 msgstr "Pozadí 1"
 
-#: libbirdfont/Theme.vala:202
-msgid "Background 2"
-msgstr "Pozadí 2"
-
-#: libbirdfont/Theme.vala:203
-msgid "Background 3"
-msgstr "Pozadí 3"
-
-#: libbirdfont/Theme.vala:204
-msgid "Background 4"
-msgstr "Pozadí 4"
-
-#: libbirdfont/Theme.vala:205
-msgid "Background 5"
-msgstr "Pozadí 5"
-
-#: libbirdfont/Theme.vala:206
-msgid "Background 6"
-msgstr "Pozadí 6"
-
-#: libbirdfont/Theme.vala:207
-msgid "Background 7"
-msgstr "Pozadí 7"
-
-#: libbirdfont/Theme.vala:208
-msgid "Background 8"
-msgstr "Pozadí 8"
-
 #: libbirdfont/Theme.vala:209
-msgid "Background 9"
-msgstr "Pozadí 9"
+#, fuzzy
+msgid "Dialog Background"
+msgstr "Hintergründe"
+
+#: libbirdfont/Theme.vala:210
+#, fuzzy
+msgid "Menu Background"
+msgstr "Hintergründe"
 
 #: libbirdfont/Theme.vala:211
+#, fuzzy
+msgid "Default Background"
+msgstr "Vybrat pozadí"
+
+#: libbirdfont/Theme.vala:213
 msgid "Checkbox Background"
 msgstr ""
 
-#: libbirdfont/Theme.vala:213
+#: libbirdfont/Theme.vala:215
 msgid "Foreground 1"
 msgstr "Popředí 1"
 
-#: libbirdfont/Theme.vala:214
-msgid "Foreground 2"
-msgstr "Popředí 2"
-
-#: libbirdfont/Theme.vala:215
-msgid "Foreground 3"
-msgstr "Popředí 3"
-
 #: libbirdfont/Theme.vala:216
-msgid "Foreground 4"
-msgstr "Popředí 4"
+#, fuzzy
+msgid "Text Foreground"
+msgstr "Popředí nabídky"
 
 #: libbirdfont/Theme.vala:217
-msgid "Foreground 5"
-msgstr "Popředí 5"
+msgid "Table Border"
+msgstr ""
 
 #: libbirdfont/Theme.vala:218
-msgid "Foreground 6"
-msgstr "Popředí 6"
+#, fuzzy
+msgid "Selection Border"
+msgstr "Vybrat výše ležící bod"
 
 #: libbirdfont/Theme.vala:219
-msgid "Foreground 7"
-msgstr "Popředí 7"
+#, fuzzy
+msgid "Overview Glyph"
+msgstr "Přehled"
 
 #: libbirdfont/Theme.vala:220
 msgid "Foreground Inverted"
@@ -1224,165 +1214,224 @@ msgstr "Popředí obráceno"
 msgid "Menu Foreground"
 msgstr "Popředí nabídky"
 
+#: libbirdfont/Theme.vala:222
+#, fuzzy
+msgid "Selected Tab Foreground"
+msgstr "Popředí vybraného nástroje"
+
 #: libbirdfont/Theme.vala:223
+msgid "Tab Separator"
+msgstr ""
+
+#: libbirdfont/Theme.vala:225
 msgid "Highlighted 1"
 msgstr "Zvýrazněno 1"
 
-#: libbirdfont/Theme.vala:224
+#: libbirdfont/Theme.vala:226
 msgid "Highlighted Guide"
 msgstr "Zvýrazněné vodítko"
 
-#: libbirdfont/Theme.vala:226
+#: libbirdfont/Theme.vala:228
 msgid "Grid"
 msgstr "Mřížka"
 
-#: libbirdfont/Theme.vala:228
+#: libbirdfont/Theme.vala:230
 msgid "Guide 1"
 msgstr "Vodítko 1"
 
-#: libbirdfont/Theme.vala:229
+#: libbirdfont/Theme.vala:231
 msgid "Guide 2"
 msgstr "Vodítko 2"
 
-#: libbirdfont/Theme.vala:230
+#: libbirdfont/Theme.vala:232
 msgid "Guide 3"
 msgstr "Vodítko 3"
 
-#: libbirdfont/Theme.vala:232
+#: libbirdfont/Theme.vala:234
 msgid "Button Border 1"
 msgstr "Okraj tlačítka 1"
 
-#: libbirdfont/Theme.vala:233
+#: libbirdfont/Theme.vala:235
 msgid "Button Background 1"
 msgstr "Pozadí tlačítka 1"
 
-#: libbirdfont/Theme.vala:234
+#: libbirdfont/Theme.vala:236
 msgid "Button Border 2"
 msgstr "Okraj tlačítka 2"
 
-#: libbirdfont/Theme.vala:235
+#: libbirdfont/Theme.vala:237
 msgid "Button Background 2"
 msgstr "Pozadí tlačítka 2"
 
-#: libbirdfont/Theme.vala:236
+#: libbirdfont/Theme.vala:238
 msgid "Button Border 3"
 msgstr "Okraj tlačítka 3"
 
-#: libbirdfont/Theme.vala:237
+#: libbirdfont/Theme.vala:239
 msgid "Button Background 3"
 msgstr "Pozadí tlačítka 3"
 
-#: libbirdfont/Theme.vala:238
+#: libbirdfont/Theme.vala:240
 msgid "Button Border 4"
 msgstr "Okraj tlačítka 4"
 
-#: libbirdfont/Theme.vala:239
+#: libbirdfont/Theme.vala:241
 msgid "Button Background 4"
 msgstr "Pozadí tlačítka 4"
 
-#: libbirdfont/Theme.vala:241
+#: libbirdfont/Theme.vala:243
 msgid "Button Foreground"
 msgstr "Popředí tlačítka"
 
-#: libbirdfont/Theme.vala:242
+#: libbirdfont/Theme.vala:244
 msgid "Selected Button Foreground"
 msgstr "Popředí vybraného tlačítka"
 
-#: libbirdfont/Theme.vala:244
+#: libbirdfont/Theme.vala:246
 msgid "Tool Foreground"
 msgstr "Popředí nástroje"
 
-#: libbirdfont/Theme.vala:245
+#: libbirdfont/Theme.vala:247
 msgid "Selected Tool Foreground"
 msgstr "Popředí vybraného nástroje"
 
-#: libbirdfont/Theme.vala:247
+#: libbirdfont/Theme.vala:249
 msgid "Text Area Background"
 msgstr "Pozadí textové oblasti"
 
-#: libbirdfont/Theme.vala:249
-msgid "Selected Overview Item 1"
-msgstr "Položka vybraného přehledu 1"
-
-#: libbirdfont/Theme.vala:250
-msgid "Selected Overview Item 2"
-msgstr "Položka vybraného přehledu 2"
-
-#: libbirdfont/Theme.vala:252
-msgid "Overview Item 1"
+#: libbirdfont/Theme.vala:251
+#, fuzzy
+msgid "Overview Item Border"
 msgstr "Položka přehledu 1"
 
 #: libbirdfont/Theme.vala:253
+#, fuzzy
+msgid "Selected Overview Item"
+msgstr "Položka vybraného přehledu 1"
+
+#: libbirdfont/Theme.vala:254
+msgid "Overview Item 1"
+msgstr "Položka přehledu 1"
+
+#: libbirdfont/Theme.vala:255
 msgid "Overview Item 2"
 msgstr "Položka přehledu 2"
 
-#: libbirdfont/Theme.vala:255
+#: libbirdfont/Theme.vala:257
 msgid "Overview Selected Foreground"
 msgstr "Popředí vybraného přehledu"
 
-#: libbirdfont/Theme.vala:256
+#: libbirdfont/Theme.vala:258
 msgid "Overview Foreground"
 msgstr "Popředí přehledu"
 
-#: libbirdfont/Theme.vala:258
-msgid "Glyph Count Background"
+#: libbirdfont/Theme.vala:260
+#, fuzzy
+msgid "Glyph Count Background 1"
 msgstr "Pozadí počtu znaků"
 
-#: libbirdfont/Theme.vala:260
+#: libbirdfont/Theme.vala:261
+#, fuzzy
+msgid "Glyph Count Background 2"
+msgstr "Pozadí počtu znaků"
+
+#: libbirdfont/Theme.vala:263
 msgid "Dialog Shadow"
 msgstr "Stín dialogu"
 
-#: libbirdfont/Theme.vala:262
+#: libbirdfont/Theme.vala:265
 msgid "Selected Active Cubic Control Point"
 msgstr "Vybraný činný krychlový ovládací bod"
 
-#: libbirdfont/Theme.vala:263
+#: libbirdfont/Theme.vala:266
 msgid "Selected Cubic Control Point"
 msgstr "Vybraný krychlový ovládací bod"
 
-#: libbirdfont/Theme.vala:264
+#: libbirdfont/Theme.vala:267
 msgid "Active Cubic Control Point"
 msgstr "Činný krychlový ovládací bod"
 
-#: libbirdfont/Theme.vala:265
+#: libbirdfont/Theme.vala:268
 msgid "Cubic Control Point"
 msgstr "Krychlový ovládací bod"
 
-#: libbirdfont/Theme.vala:267
+#: libbirdfont/Theme.vala:270
 msgid "Selected Active Quadratic Control Point"
 msgstr "Vybraný činný čtvercový ovládací bod"
 
-#: libbirdfont/Theme.vala:268
+#: libbirdfont/Theme.vala:271
 msgid "Selected Quadratic Control Point"
 msgstr "Vybraný čtvercový ovládací bod"
 
-#: libbirdfont/Theme.vala:269
+#: libbirdfont/Theme.vala:272
 msgid "Active Quadratic Control Point"
 msgstr "Činný čtvercový ovládací bod"
 
-#: libbirdfont/Theme.vala:270
+#: libbirdfont/Theme.vala:273
 msgid "Cubic Quadratic Point"
 msgstr "Krychlový čtvercový bod "
 
-#: libbirdfont/Theme.vala:272
+#: libbirdfont/Theme.vala:275
 msgid "Selected Control Point Handle"
 msgstr "Vybraný úchop ovládacího bodu"
 
-#: libbirdfont/Theme.vala:273
+#: libbirdfont/Theme.vala:276
 msgid "Active Control Point Handle"
 msgstr "Činný úchop ovládacího bodu"
 
-#: libbirdfont/Theme.vala:274
+#: libbirdfont/Theme.vala:277
 msgid "Control Point Handle"
 msgstr "Úchop ovládacího bodu"
 
-#: libbirdfont/Theme.vala:276
+#: libbirdfont/Theme.vala:279
 msgid "Merge"
 msgstr "Sloučit"
 
-#: libbirdfont/Theme.vala:456
+#: libbirdfont/Theme.vala:280
+msgid "Spin Button"
+msgstr ""
+
+#: libbirdfont/Theme.vala:281
+msgid "Active Spin Button"
+msgstr ""
+
+#: libbirdfont/Theme.vala:282
+#, fuzzy
+msgid "Zoom Bar Border"
+msgstr "Oddálit více"
+
+#: libbirdfont/Theme.vala:283
+#, fuzzy
+msgid "Font Name"
+msgstr "Velikost písma"
+
+#: libbirdfont/Theme.vala:463
 msgid "New theme"
 msgstr "Nový motiv"
+
+#: libbirdfont/ThemeTab.vala:29 libbirdfont/ThemeTab.vala:115
+msgid "Themes"
+msgstr "Motivy"
+
+#: libbirdfont/ThemeTab.vala:66
+msgid "Default theme"
+msgstr "Výchozí motiv"
+
+#: libbirdfont/ThemeTab.vala:68
+msgid "High contrast theme"
+msgstr "Motiv s vysokým kontrastem"
+
+#: libbirdfont/ThemeTab.vala:70
+msgid "Custom theme"
+msgstr "Vlastní motiv"
+
+#: libbirdfont/ThemeTab.vala:97
+msgid "Add new theme"
+msgstr "Přidat nový motiv"
+
+#: libbirdfont/ThemeTab.vala:99
+msgid "Colors"
+msgstr "Barvy"
 
 #: libbirdfont/TrackTool.vala:61
 msgid "Freehand drawing"
@@ -1440,6 +1489,51 @@ msgstr "Neznámý formát souboru."
 msgid "Writing"
 msgstr "Zapisuje se"
 
+#~ msgid "Background 2"
+#~ msgstr "Pozadí 2"
+
+#~ msgid "Background 3"
+#~ msgstr "Pozadí 3"
+
+#~ msgid "Background 4"
+#~ msgstr "Pozadí 4"
+
+#~ msgid "Background 5"
+#~ msgstr "Pozadí 5"
+
+#~ msgid "Background 6"
+#~ msgstr "Pozadí 6"
+
+#~ msgid "Background 7"
+#~ msgstr "Pozadí 7"
+
+#~ msgid "Background 8"
+#~ msgstr "Pozadí 8"
+
+#~ msgid "Background 9"
+#~ msgstr "Pozadí 9"
+
+#~ msgid "Foreground 2"
+#~ msgstr "Popředí 2"
+
+#~ msgid "Foreground 3"
+#~ msgstr "Popředí 3"
+
+#~ msgid "Foreground 4"
+#~ msgstr "Popředí 4"
+
+#~ msgid "Foreground 5"
+#~ msgstr "Popředí 5"
+
+#~ msgid "Foreground 6"
+#~ msgstr "Popředí 6"
+
+#~ msgid "Foreground 7"
+#~ msgstr "Popředí 7"
+
+#~ msgid "Selected Overview Item 2"
+#~ msgstr "Položka vybraného přehledu 2"
+
 #~ msgid "New Font"
 #~ msgstr "Nové písmo"
 
@@ -1454,9 +1548,6 @@ msgstr "Zapisuje se"
 
 #~ msgid "Control Point Tools"
 #~ msgstr "Nástroje pro práci s body"
-
-#~ msgid "Select Background"
-#~ msgstr "Vybrat pozadí"
 
 #~ msgid "Saving"
 #~ msgstr "Ukládá se"
@@ -1735,9 +1826,6 @@ msgstr "Zapisuje se"
 #~ msgid "Set contrast for background image"
 #~ msgstr "Kontrast Hintergrundbild einstellen"
 
-#~ msgid "Backgrounds"
-#~ msgstr "Hintergründe"
-
 #~ msgid "Creating thumbnails"
 #~ msgstr "Miniaturbilder werden erstellt"
 
@@ -1796,14 +1884,8 @@ msgstr "Zapisuje se"
 #~ msgid "Full name (name & style)"
 #~ msgstr "Nome completo (nome e estilo)"
 
-#~ msgid "New font"
-#~ msgstr "Nova fonte"
-
 #~ msgid "Update name & description"
 #~ msgstr "Atualizar nome e descrição"
-
-#~ msgid "Create a new font"
-#~ msgstr "Criar uma nova fonte"
 
 #~ msgid "Add name and description to this font."
 #~ msgstr "Adicionar nome e descrição para esta fonte."
