@@ -173,7 +173,9 @@ public class Glyph : FontDisplay {
 			path = (!) p;
 			
 			if (Toolbox.get_move_tool ().is_selected ()) {
-				Toolbox.set_object_stroke (path.stroke);
+				if (path.stroke > 0) {
+					Toolbox.set_object_stroke (path.stroke);
+				}
 			}
 			
 			if (!active_paths.contains (path)) {
