@@ -271,6 +271,15 @@ public class OverViewItem : GLib.Object {
 		info.draw_icon (cr, selected);
 	}
 	
+	public void hide_menu () {
+		GlyphCollection g;
+		
+		if (glyphs != null) {
+			g = (!) glyphs;
+			g.get_version_list ().menu_visible = false;
+		}
+	}
+	
 	private void draw_menu (Context cr) {
 		GlyphCollection g;
 		DropMenu menu;

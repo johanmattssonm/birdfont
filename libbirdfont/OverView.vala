@@ -234,12 +234,26 @@ public class OverView : FontDisplay {
 		key_up ();
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
+		hide_menu ();
+
+		selected_item = get_selected_item ();
+		selected_items.clear ();
+		if (selected_item.glyphs != null) {
+			selected_items.add ((!) selected_item.glyphs);
+		}
 	}
 	
 	public override void scroll_wheel_down (double x, double y) {
 		key_down ();
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
+		hide_menu ();
+
+		selected_item = get_selected_item ();
+		selected_items.clear ();
+		if (selected_item.glyphs != null) {
+			selected_items.add ((!) selected_item.glyphs);
+		}
 	}
 	
 	public override void selected_canvas () {
@@ -348,8 +362,9 @@ public class OverView : FontDisplay {
 	
 	int get_items_per_row () {
 		int i = 1;
-		double l = OverViewItem.full_width ();
-		while (l < allocation.width) {
+		OverViewItem.margin = OverViewItem.width * 0.1;
+		double l = OverViewItem.margin + OverViewItem.full_width ();
+		while (l <= allocation.width) {
 			l += OverViewItem.full_width ();
 			i++;
 		}
@@ -365,8 +380,7 @@ public class OverView : FontDisplay {
 		double x, y;
 		unichar character;
 		Glyph glyph;
-
-		OverViewItem.margin = OverViewItem.width * 0.1;
+		
 		items_per_row = get_items_per_row ();
 		rows = (int) (allocation.height /  OverViewItem.full_height ()) + 2;
 		
@@ -465,9 +479,10 @@ public class OverView : FontDisplay {
 	}
 		
 	void draw_empty_canvas (WidgetAllocation allocation, Context cr) {
-		Text t = new Text (t_("No glyphs in this view."), 24);
+		Text t;
 		
 		cr.save ();
+		t = new Text (t_("No glyphs in this view."), 24);
 		Theme.text_color (t, "Text Foreground");
 		t.widget_x = 40;
 		t.widget_y = 40;
@@ -678,6 +693,7 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void key_press (uint keyval) {
+		hide_menu ();
 		GlyphCanvas.redraw ();
 
 		if (KeyBindings.modifier == CTRL) {
@@ -1012,6 +1028,12 @@ public class OverView : FontDisplay {
 		}
 		
 		return index;
+	}
+
+	public void hide_menu () {
+		foreach (OverViewItem i in visible_items) {
+			i.hide_menu ();
+		}	
 	}
 
 	public override void button_press (uint button, double x, double y) {
