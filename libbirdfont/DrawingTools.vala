@@ -765,6 +765,20 @@ public class DrawingTools : ToolCollection  {
 			StrokeTool.stroke_width = object_stroke.get_value ();
 		});
 		stroke_expander.add_tool (object_stroke);
+		
+		move_tool.selection_changed.connect (() => {
+			bool stroke = false;
+			Glyph g = MainWindow.get_current_glyph ();
+			
+			foreach (Path p in g.active_paths) {
+				if (p.stroke > 0) {
+					stroke = true;
+				}
+			}
+			
+			add_stroke.selected = stroke;
+			Toolbox.redraw_tool_box ();
+		});
 
 		// create outline from path
 		Tool outline = new Tool ("stroke_to_outline", t_("Create outline form stroke"));

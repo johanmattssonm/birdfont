@@ -145,6 +145,7 @@ public class MoveTool : Tool {
 		moved = false;
 		
 		if (glyph.active_paths.size > 0) {
+			selection_changed ();
 			objects_moved ();
 			DrawingTools.resize_tool.signal_objects_rotated ();
 		} else {
