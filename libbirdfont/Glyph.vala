@@ -863,6 +863,8 @@ public class Glyph : FontDisplay {
 		path_list.remove (p);
 		path_list.add (p);
 		p.reopen ();
+		clear_active_paths ();
+		add_active_path (p);
 	}
 
 	/** Insert new edit point for current path on the appropriate zoom
@@ -1105,19 +1107,20 @@ public class Glyph : FontDisplay {
 		EditPoint inserted;
 		bool stroke = StrokeTool.add_stroke;
 		
-		if (path_list.size == 0) {
+		if (active_paths.size == 0) {
 			np = new Path ();
 			path_list.add (np);
 			np.stroke = stroke ? StrokeTool.stroke_width : 0;
+			add_active_path (np);
 		}
 			
 		xt = path_coordinate_x (x);
 		yt = path_coordinate_y (y);
 	
-		return_val_if_fail (path_list.size > 0, new PointSelection.empty ());
+		return_val_if_fail (active_paths.size > 0, new PointSelection.empty ());
 
-		if (path_list.get (path_list.size - 1).is_open ()) {
-			np = path_list.get (path_list.size - 1);
+		if (active_paths.get (active_paths.size - 1).is_open ()) {
+			np = active_paths.get (active_paths.size - 1);
 			np.add (xt, yt);
 		} else {
 			np = new Path ();
@@ -1245,14 +1248,14 @@ public class Glyph : FontDisplay {
 			}
 		}
 		
-		redraw_area (0, 0, allocation.width, allocation.height);
 		open = false;
+		clear_active_paths ();
+		GlyphCanvas.redraw ();
+		
 		return r;
 	}
 
 	public void open_path () {
-		clear_active_paths ();
-		
 		foreach (Path p in path_list) {
 			p.set_editable (true);
 			p.recalculate_linear_handles ();
@@ -1766,7 +1769,7 @@ public class Glyph : FontDisplay {
 		foreach (Path p in active_paths) {
 			g.active_paths.add (p);
 		}
-
+		
 		if (background_image != null) {
 			g.background_image = ((!) background_image).copy ();
 		}
