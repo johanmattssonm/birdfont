@@ -43,6 +43,8 @@ public class Expander : GLib.Object {
 	
 	string? headline;
 	
+	public bool visible = true;
+	
 	public Expander (string? headline = null) {
 		this.headline = headline;
 		tool = new Gee.ArrayList<Tool> ();

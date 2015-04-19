@@ -26,6 +26,7 @@ public class DrawingTools : ToolCollection  {
 	Expander grid_expander;
 	Expander shape_tools;
 	public static Expander draw_tool_modifiers;
+	public static Expander stroke_expander;
 	public static Expander zoombar_tool;
 	public static Expander view_tools;
 	public static Expander guideline_tools;
@@ -101,6 +102,7 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tools = new Expander (t_("Drawing Tools"));
 		draw_tool_modifiers = new Expander (t_("Control Point"));
+		stroke_expander = new Expander (t_("Stroke"));
 		shape_tools = new Expander (t_("Geometrical Shapes"));
 		zoombar_tool = new Expander (t_("Zoom"));
 		view_tools = new Expander ();
@@ -218,7 +220,21 @@ public class DrawingTools : ToolCollection  {
 		});
 		insert_point_on_path_tool.set_persistent (true);
 		key_tools.add_tool (insert_point_on_path_tool);		
-			
+
+		// stroke
+		Tool stroke_settings = new Tool ("stroke");
+		stroke_settings.select_action.connect((self) => {
+			StrokeTool.show_stroke_tools = !StrokeTool.show_stroke_tools;
+			stroke_settings.set_selected (StrokeTool.show_stroke_tools);
+			stroke_expander.visible = StrokeTool.show_stroke_tools;
+			MainWindow.get_toolbox ().update_expanders ();
+			Toolbox.redraw_tool_box ();
+		});
+		
+		if (BirdFont.has_argument ("--test")) {
+			draw_tool_modifiers.add_tool (stroke_settings);
+		}
+					
 		// quadratic Bézier points
 		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
@@ -255,7 +271,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		convert_points.set_persistent (false);
 		draw_tool_modifiers.add_tool (convert_points);
-
+							
 		// x coordinate
 		x_coordinate = new SpinButton ("x_coordinate", t_("X coordinate"));
 		x_coordinate.set_big_number (true);
@@ -480,38 +496,6 @@ public class DrawingTools : ToolCollection  {
 			width.set_value_round (MoveTool.selection_box_width, true, false);
 			height.set_value_round (MoveTool.selection_box_height, true, false);
 		});
-							
-		// edit stroke width
-		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
-		object_stroke.set_int_value ("2.000");
-		object_stroke.set_int_step (0.015);
-		
-		object_stroke.new_value_action.connect((self) => {
-			if (move_tool.is_selected () && object_stroke.is_selected ()) {
-				StrokeTool.set_stroke_for_selected_paths (object_stroke.get_value ());
-			}
-			
-			if (track_tool.is_selected ()) {
-				track_tool.set_stroke_width (object_stroke.get_value ());
-			}
-			
-			if (pen_tool.is_selected ()) {
-				pen_tool.set_stroke_width (object_stroke.get_value ());
-			}
-		});
-		
-		if (BirdFont.has_argument ("--test") || BirdFont.android) {
-			draw_tool_modifiers.add_tool (object_stroke);
-		}
-
-		stroke_tool = new StrokeTool ("stroke"); // create outline from path
-		stroke_tool.select_action.connect ((self) => {
-			update_drawing_and_background_tools (self);
-		});
-		
-		if (BirdFont.has_argument ("--test") || BirdFont.android) {
-			draw_tools.add_tool (stroke_tool);
-		}
 
 		// tie edit point handles
 		tie_handles = new Tool ("tie_point", t_("Tie curve handles for the selected edit point"));
@@ -753,6 +737,55 @@ public class DrawingTools : ToolCollection  {
 		});			
 			
 		draw_tool_modifiers.add_tool (delete_background);	
+
+		// add stroke to path
+		Tool add_stroke = new Tool ("apply_stroke", t_("Apply stroke"));
+		add_stroke.select_action.connect ((self) => {
+			Glyph g = MainWindow.get_current_glyph ();
+			StrokeTool.add_stroke = !StrokeTool.add_stroke;
+			add_stroke.selected = StrokeTool.add_stroke;
+			
+			if (StrokeTool.add_stroke) {
+				foreach (Path p in g.active_paths) {
+					p.stroke = StrokeTool.stroke_width;
+				}
+			} else {
+				foreach (Path p in g.active_paths) {
+					p.stroke = 0;
+				}
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		stroke_expander.add_tool (add_stroke);	
+		
+		// edit stroke width
+		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
+		object_stroke.set_value_round (StrokeTool.stroke_width);
+		object_stroke.set_int_step (0.015);
+		
+		object_stroke.new_value_action.connect((self) => {
+			bool tool = resize_tool.is_selected ()
+				|| move_tool.is_selected ()
+				|| pen_tool.is_selected ()
+				|| track_tool.is_selected ()
+				|| point_tool.is_selected ()
+				|| foresight_tool.is_selected ();
+			
+			if (tool && object_stroke.is_selected () && StrokeTool.add_stroke) {
+				StrokeTool.set_stroke_for_selected_paths (object_stroke.get_value ());
+			}
+			
+			StrokeTool.stroke_width = object_stroke.get_value ();
+		});
+		stroke_expander.add_tool (object_stroke);
+
+		// create outline from path
+		Tool outline = new Tool ("stroke_to_outline", t_("Create outline form stroke"));
+		outline.select_action.connect ((self) => {
+			stroke_tool.select_action (stroke_tool);
+		});
+		stroke_expander.add_tool (outline);	
 				
 		if (BirdFont.has_argument ("--test")) {
 			Tool test_case = new Tool ("test_case");
@@ -925,6 +958,8 @@ public class DrawingTools : ToolCollection  {
 		});
 		shape_tools.add_tool (rectangle);
 		
+		stroke_expander.visible = false;
+		
 		add_expander (font_name);
 		add_expander (draw_tools);
 		
@@ -933,6 +968,7 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		add_expander (draw_tool_modifiers);
+		add_expander (stroke_expander);
 		add_expander (guideline_tools);
 		add_expander (grid);
 		add_expander (zoombar_tool);
@@ -946,6 +982,9 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tools.set_persistent (true);
 		draw_tools.set_unique (false);
+		
+		stroke_expander.set_persistent (true);
+		stroke_expander.set_unique (false);
 		
 		key_tools.set_persistent (false);
 		key_tools.set_unique (false);

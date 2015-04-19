@@ -19,6 +19,10 @@ namespace BirdFont {
 
 public class StrokeTool : Tool {
 	
+	public static double stroke_width = 0;
+	public static bool add_stroke = false;
+	
+	public static bool show_stroke_tools = false;
 	public static bool stroke_selected = false;
 	static int iterations = 0;
 	
