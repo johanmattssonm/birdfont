@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -26,8 +26,6 @@ public class ResizeTool : Tool {
 
 	bool move_paths = false;
 
-	ImageSurface? resize_handle;
-
 	static double selection_box_width = 0;
 	static double selection_box_height = 0;
 	static double selection_box_center_x = 0;
@@ -45,8 +43,6 @@ public class ResizeTool : Tool {
 	
 	public ResizeTool (string n) {
 		base (n, t_("Resize and rotate paths"));
-		
-		resize_handle = Icons.get_icon ("resize_handle.png");
 	
 		select_action.connect((self) => {
 		});
@@ -99,6 +95,8 @@ public class ResizeTool : Tool {
 			DrawingTools.move_tool.press (b, x, y);
 			
 			move_paths = true;
+			
+			update_selection_box ();
 		});
 
 		release_action.connect((self, b, x, y) => {
@@ -118,10 +116,7 @@ public class ResizeTool : Tool {
 			}
 
 			if (!rotate_path) {
-				MoveTool.update_boundaries_for_selection ();
-				MoveTool.get_selection_box_boundaries (out selection_box_center_x,
-					out selection_box_center_y, out selection_box_width,
-					out selection_box_height);	
+				update_selection_box ();
 			}
 		
 			if (move_paths || rotate_path || resize_path) {
@@ -132,12 +127,21 @@ public class ResizeTool : Tool {
 		});
 		
 		draw_action.connect ((self, cr, glyph) => {
+			Text handle;
 			Glyph g = MainWindow.get_current_glyph ();
-			ImageSurface resize_img = (!) resize_handle;
 			
 			foreach (Path p in g.active_paths) {
-				cr.set_source_surface (resize_img, Glyph.reverse_path_coordinate_x (p.xmax) - 10, Glyph.reverse_path_coordinate_y (p.ymax) - 10);
-				cr.paint ();
+				handle = new Text ("resize_handle", 60 * MainWindow.units);
+				handle.load_font ("icons.bf");
+				
+				handle.widget_x = Glyph.reverse_path_coordinate_x (p.xmax)
+					- handle.get_sidebearing_extent () / 2.0;
+					
+				handle.widget_y = Glyph.reverse_path_coordinate_y (p.ymax)
+					- handle.get_height () / 2.0;
+				
+				Theme.text_color (handle, "Highlighted 1");
+				handle.draw (cr);
 			}
 			
 			if (g.active_paths.size > 0) {
@@ -252,7 +256,7 @@ public class ResizeTool : Tool {
 		cr.rectangle (cx + hx - 2.5, cy + hy - 2.5, 5, 5);
 		cr.fill ();
 					
-		cr.restore ();				
+		cr.restore ();
 	}
 	
 	double get_resize_ratio (double px, double py) {
@@ -296,11 +300,16 @@ public class ResizeTool : Tool {
 		}
 		
 		if (glyph.active_paths.size > 0) {
-			MoveTool.get_selection_box_boundaries (out selection_box_center_x,
-					out selection_box_center_y, out selection_box_width,
-					out selection_box_height);	
+			update_selection_box ();
 			objects_resized (selection_box_width, selection_box_height);
 		}
+	}
+
+	void update_selection_box () {
+		MoveTool.update_boundaries_for_selection ();
+		MoveTool.get_selection_box_boundaries (out selection_box_center_x,
+				out selection_box_center_y, out selection_box_width,
+				out selection_box_height);
 	}
 
 	/** Move resize handle to pixel x,y. */
@@ -355,7 +364,7 @@ public class ResizeTool : Tool {
 	bool is_over_resize_handle (Path p, double x, double y) {
 		double handle_x = Math.fabs (Glyph.reverse_path_coordinate_x (p.xmax)); 
 		double handle_y = Math.fabs (Glyph.reverse_path_coordinate_y (p.ymax));
-		return fabs (handle_x - x + 10) < 20 * MainWindow.units && fabs (handle_y - y + 10) < 20 * MainWindow.units;
+		return Path.distance (handle_x, x, handle_y, y) < 12 * MainWindow.units;
 	}
 	
 	public void skew (double skew) {
