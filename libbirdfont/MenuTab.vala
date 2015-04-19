@@ -195,12 +195,20 @@ public class MenuTab : FontDisplay {
 	}
 		
 	public static void set_font_setting_from_tools (Font f) {	
+		string stroke_width;
+		
 		f.background_scale = DrawingTools.background_scale.get_display_value ();
 		
 		f.grid_width.clear ();
 		
 		foreach (SpinButton s in GridTool.sizes) {
 			f.grid_width.add (s.get_display_value ());
+		}
+		
+		stroke_width = f.settings.get_setting ("stroke_width");
+		
+		if (stroke_width != "") {
+			DrawingTools.object_stroke.set_value (stroke_width);
 		}
 	}
 	
@@ -484,6 +492,11 @@ public class MenuTab : FontDisplay {
 
 		MenuTab.load_callback = new LoadCallback ();
 		MenuTab.load_callback.load ();
+		
+		MenuTab.load_callback.file_loaded.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			MenuTab.set_font_setting_from_tools (f);
+		});
 	}
 
 	public static void move_to_baseline () {

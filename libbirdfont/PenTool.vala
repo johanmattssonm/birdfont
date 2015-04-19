@@ -526,7 +526,9 @@ public class PenTool : Tool {
 	public static void close_all_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
 		foreach (Path p in g.path_list) {
-			p.close ();
+			if (p.stroke == 0) {
+				p.close ();
+			}
 		}
 		g.close_path ();
 		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
@@ -1430,6 +1432,7 @@ public class PenTool : Tool {
 	public PointSelection new_point_action (int x, int y) {
 		Glyph glyph;
 		PointSelection new_point;
+		
 		glyph = MainWindow.get_current_glyph ();
 		glyph.open_path ();
 		

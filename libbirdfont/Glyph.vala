@@ -34,7 +34,7 @@ public class Glyph : FontDisplay {
 	// Paths
 	public Gee.ArrayList<Path> path_list = new Gee.ArrayList<Path> ();	
 	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
-
+	
 	// The point where edit event begun 
 	double pointer_begin_x = 0;
 	double pointer_begin_y = 0;
@@ -1234,7 +1234,7 @@ public class Glyph : FontDisplay {
 	public bool close_path () {
 		bool r = false;
 
-		foreach (var p in path_list) {
+		foreach (Path p in path_list) {
 			if (p.is_editable ()) {
 				r = true;
 				p.set_editable (false);

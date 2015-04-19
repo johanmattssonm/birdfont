@@ -747,10 +747,12 @@ public class DrawingTools : ToolCollection  {
 		
 		// edit stroke width
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
-		object_stroke.set_value_round (StrokeTool.stroke_width);
+		object_stroke.set_value_round (2);
 		object_stroke.set_int_step (0.015);
 		
 		object_stroke.new_value_action.connect((self) => {
+			Font f;
+			
 			bool tool = resize_tool.is_selected ()
 				|| move_tool.is_selected ()
 				|| pen_tool.is_selected ()
@@ -763,6 +765,8 @@ public class DrawingTools : ToolCollection  {
 			}
 			
 			StrokeTool.stroke_width = object_stroke.get_value ();
+			f = BirdFont.get_current_font ();
+			f.settings.set_setting ("stroke_width", object_stroke.get_display_value ());
 		});
 		stroke_expander.add_tool (object_stroke);
 		

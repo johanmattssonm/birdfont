@@ -218,7 +218,12 @@ public class RecentFiles : Table {
 			KerningTools.update_kerning_classes ();
 			MenuTab.show_all_available_characters ();
 		});
-		
+
+		MenuTab.load_callback.file_loaded.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			MenuTab.set_font_setting_from_tools (f);
+		});
+			
 		dialog.signal_discard.connect (() => {
 			Font f;
 
@@ -253,7 +258,7 @@ public class RecentFiles : Table {
 		dialog.signal_cancel.connect (() => {
 			MainWindow.hide_dialog ();
 		});
-				
+			
 		if (!font.is_modified ()) {
 			dialog.signal_discard ();
 		} else {
