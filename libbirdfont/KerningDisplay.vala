@@ -241,7 +241,7 @@ public class KerningDisplay : FontDisplay {
 				cr.stroke ();
 				cr.restore ();
 				
-				y += 30 * MainWindow.units;
+				y += (50 / KerningTools.font_size) * MainWindow.units;
 			}
 						
 			y += row_height + 20;
