@@ -140,11 +140,20 @@ public class Glyph : FontDisplay {
 	public PathList get_quadratic_paths () {
 		PointConverter pc;
 		PathList pl;
+		PathList stroke;
 
 		pl = new PathList ();
 		foreach (Path p in path_list) {
-			pc = new PointConverter (p);
-			pl.add (pc.get_quadratic_path ());
+			if (p.stroke > 0) {
+				stroke = StrokeTool.get_stroke (p, p.stroke);
+				foreach (Path stroke_part in stroke.paths) {
+					pc = new PointConverter (stroke_part);
+					pl.add (pc.get_quadratic_path ());
+				}
+			} else {
+				pc = new PointConverter (p);
+				pl.add (pc.get_quadratic_path ());
+			}
 		}
 
 		return pl;

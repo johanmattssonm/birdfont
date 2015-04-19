@@ -1196,7 +1196,8 @@ public class Path {
 	 * for ttf-export.
 	 */ 
 	public Path get_quadratic_points () {
-		PointConverter converter = new PointConverter (this);
+		PointConverter converter;
+		converter = new PointConverter (this);		
 		return converter.get_quadratic_path ();
 	}
 
