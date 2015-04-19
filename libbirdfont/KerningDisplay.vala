@@ -739,8 +739,6 @@ public class KerningDisplay : FontDisplay {
 	
 	public void set_active_handle (double ex, double ey) {
 		double item_size = 1.0 / KerningTools.font_size;
-		double y = 100 * item_size;
-		double x = 20;
 		double w = 0;
 		double d, kern;
 		double min = double.MAX;
@@ -750,7 +748,9 @@ public class KerningDisplay : FontDisplay {
 		double fs = KerningTools.font_size;
 		Glyph glyph = new Glyph.no_lines ("");
 		Font font = BirdFont.get_current_font ();
-		
+		double y = font.get_height () * item_size;
+		double x = 20;
+				
 		GlyphRange? gr_left, gr_right;
 		
 		Glyph? prev = null;
