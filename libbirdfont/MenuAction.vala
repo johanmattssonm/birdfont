@@ -22,16 +22,14 @@ public class MenuAction : GLib.Object {
 	public DropMenu? parent = null;
 	public int index = -1;
 	public bool has_delete_button = true;
+	public double width = 100;
+	public Text text;
 	
 	bool selected = false;
-	static ImageSurface? delete_button = null;
 	
 	public MenuAction (string label) {
 		this.label = label;
-		
-		if (delete_button == null) {
-			delete_button = Icons.get_icon ("delete_menu_item.png");
-		}
+		text = new Text (label);
 	}
 	
 	public void set_selected (bool s) {
@@ -39,36 +37,29 @@ public class MenuAction : GLib.Object {
 	}
 	
 	public virtual void draw (double x, double y, Context cr) {
-		ImageSurface img;
-		
 		if (selected) {
 			cr.save ();
-			Theme.color (cr, "Selected Menu Item");
-			cr.rectangle (x - 2, y - 12, 93, 15);
+			Theme.color (cr, "Highlighted 1");
+			cr.rectangle (x - 2, y - 12, width, 15);
 			cr.fill_preserve ();
 			cr.stroke ();
 			cr.restore ();			
 		}
 
-		if (has_delete_button && delete_button != null) {
-			img = (!) delete_button;
+		if (has_delete_button) {
 			cr.save ();
-			cr.set_source_surface (img, x - img.get_width () / 2 + 82, y - img.get_height () / 2 - 5);
-			cr.paint ();
+			Theme.color (cr, "Foreground 1");
+			cr.move_to (x + width - 10, y - 2);
+			cr.line_to (x + width - 10 - 5, y - 2 - 5);
+			cr.move_to (x + width - 10 - 5, y - 2);
+			cr.line_to (x + width - 10, y - 2 - 5);
+			cr.set_line_width (1);
+			cr.stroke ();
 			cr.restore ();
 		}
 		
-		cr.save ();
-		
-		Theme.color (cr, "Foreground 1");
-		
-		cr.set_font_size (12);
-		cr.select_font_face ("Cantarell", FontSlant.NORMAL, FontWeight.NORMAL);
-		
-		cr.move_to (x, y);
-
-		cr.show_text (label);
-		cr.restore ();
+		Theme.text_color (text, "Foreground 1");
+		text.draw_at_baseline (cr, x, y);
 	}
 }
 

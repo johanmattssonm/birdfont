@@ -290,7 +290,7 @@ public class OverViewItem : GLib.Object {
 		g = (!) glyphs;
 		menu = g.get_version_list ();		
 		menu.draw_menu (cr);
-		menu.set_position (x + width - 32, y + height - 16);
+		menu.set_position (x + width - 21, y + height - 18);
 	}
 }
 

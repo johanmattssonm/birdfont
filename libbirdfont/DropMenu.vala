@@ -28,6 +28,7 @@ public class DropMenu : GLib.Object {
 	
 	double x = -1;
 	double y = -1;
+	double width = 0;
 	
 	double menu_x = -1;
 	
@@ -99,7 +100,7 @@ public class DropMenu : GLib.Object {
 			return false;
 		}
 		
-		return x - 5 < px < x + 12 + 5 && y - 5 < py < y + 12 + 5;
+		return x - 12 < px <= x && y - 5 < py < y + 12 + 5;
 	}
 
 	public bool menu_item_action (double px, double py) {
@@ -113,9 +114,9 @@ public class DropMenu : GLib.Object {
 			
 			if (action != null) {
 				a = (!) action;
-
+				
 				// action for the delete button
-				if (a.has_delete_button && menu_x + 88 - 7 < px < menu_x + 88 + 13) { 
+				if (a.has_delete_button && menu_x + width - 13 < px <= menu_x + width) { 
 					index = 0;
 					ma = actions.get (0);
 					while (true) {
@@ -164,7 +165,7 @@ public class DropMenu : GLib.Object {
 				iy = y - 24 - n * item_height;
 			}
 	
-			if (ix <= px <= ix + 100 && iy <= py <= iy + item_height) {
+			if (ix <= px <= ix + width && iy <= py <= iy + item_height) {
 				return item;
 			}
 			
@@ -177,33 +178,31 @@ public class DropMenu : GLib.Object {
 	public void set_position (double px, double py) {
 		x = px;
 		y = py;
-		
-		if (x - 100 + 19 < 0) {
-			menu_x = 10;
+
+		foreach (MenuAction item in actions) {
+			if (item.text.get_sidebearing_extent () + 25 > width) {
+				width = item.text.get_sidebearing_extent () + 25;
+			}
+		}
+				
+		if (x - width + 19 < 0) {
+			menu_x = 30;
 		} else {
-			menu_x = x - 100 + 19;
+			menu_x = x - width;
 		}
 	}
 	
 	public void draw_menu (Context cr) {
 		double ix, iy;
 		int n;
-		Pattern gradient;
 		
 		if (likely (!menu_visible)) {
 			return;
 		}
 		
 		cr.save ();
-		cr.set_source_rgba (177/255.0, 177/255.0, 177/255.0, 1);
-		cr.set_line_width (0);
-		
-		gradient = new Pattern.linear (menu_x, y - 3 * item_height, menu_x, y);
-		gradient.add_color_stop_rgb (0, 177/255.0, 177/255.0, 177/255.0);
-		gradient.add_color_stop_rgb (1, 234/255.0, 234/255.0, 234/255.0);
-		
-		cr.set_source (gradient);
-		cr.rectangle (menu_x, y - actions.size * item_height, 94, actions.size * item_height);
+		Theme.color (cr, "Default Background");
+		cr.rectangle (menu_x, y - actions.size * item_height, width, actions.size * item_height);
 		
 		cr.fill_preserve ();
 		cr.stroke ();
@@ -213,6 +212,8 @@ public class DropMenu : GLib.Object {
 		
 		n = 0;
 		foreach (MenuAction item in actions) {
+			item.width = width;
+			
 			iy = y - 8 - n * item_height;
 			ix = menu_x + 2;
 			
