@@ -104,6 +104,8 @@ public class ResizeTool : Tool {
 			rotate_path = false;
 			move_paths = false;
 			DrawingTools.move_tool.release (b, x, y);
+			update_selection_box ();
+			GlyphCanvas.redraw ();
 		});
 		
 		move_action.connect ((self, x, y)	 => {
@@ -115,11 +117,8 @@ public class ResizeTool : Tool {
 				rotate (x, y);
 			}
 
-			if (!rotate_path) {
-				update_selection_box ();
-			}
-		
 			if (move_paths || rotate_path || resize_path) {
+				update_selection_box ();
 				GlyphCanvas.redraw ();
 			}
 			
@@ -134,11 +133,10 @@ public class ResizeTool : Tool {
 				handle = new Text ("resize_handle", 60 * MainWindow.units);
 				handle.load_font ("icons.bf");
 				
-				handle.widget_x = Glyph.reverse_path_coordinate_x (p.xmax)
-					- handle.get_sidebearing_extent () / 2.0;
-					
-				handle.widget_y = Glyph.reverse_path_coordinate_y (p.ymax)
-					- handle.get_height () / 2.0;
+				get_reseize_handle_position (p, out handle.widget_x, out handle.widget_y);
+				
+				handle.widget_x -= handle.get_sidebearing_extent () / 2;
+				handle.widget_y -= handle.get_height () / 2;
 				
 				Theme.text_color (handle, "Highlighted 1");
 				handle.draw (cr);
@@ -154,7 +152,24 @@ public class ResizeTool : Tool {
 		key_press_action.connect ((self, keyval) => {
 			DrawingTools.move_tool.key_press (keyval);
 		});
+	}
+
+	public static void get_reseize_handle_position (Path p, out double px, out double py) {
+		px = Glyph.reverse_path_coordinate_x (p.xmax);
+		py = Glyph.reverse_path_coordinate_y (p.ymax);
+	}
+
+	public static double get_rotated_handle_length () {
+		double s, hx, hy;
+		double d;
+
+		s = fmin (selection_box_width, selection_box_height) * 1.1;
+		d = (s / Glyph.ivz ()) / 2;
+
+		hx = cos (rotation) * d;
+		hy = sin (rotation) * d;
 		
+		return d;
 	}
 
 	public void signal_objects_rotated () {
@@ -224,8 +239,8 @@ public class ResizeTool : Tool {
 		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
 		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
 
-		hx = cos (rotation) * 75;
-		hy = sin (rotation) * 75;
+		hx = cos (rotation) * get_rotated_handle_length ();
+		hy = sin (rotation) * get_rotated_handle_length ();
 
 		inx = x - size * MainWindow.units <= cx + hx - 2.5 <= x + size * MainWindow.units;
 		iny = y - size * MainWindow.units <= cy + hy - 2.5 <= y + size * MainWindow.units;
@@ -244,8 +259,8 @@ public class ResizeTool : Tool {
 		cr.rectangle (cx - 2.5, cy - 2.5, 5, 5);
 		cr.fill ();
 
-		hx = cos (rotation) * 75;
-		hy = sin (rotation) * 75;
+		hx = cos (rotation) * get_rotated_handle_length ();
+		hy = sin (rotation) * get_rotated_handle_length ();
 	
 		cr.set_line_width (1);
 		cr.move_to (cx, cy);
@@ -362,8 +377,8 @@ public class ResizeTool : Tool {
 	}
 
 	bool is_over_resize_handle (Path p, double x, double y) {
-		double handle_x = Math.fabs (Glyph.reverse_path_coordinate_x (p.xmax)); 
-		double handle_y = Math.fabs (Glyph.reverse_path_coordinate_y (p.ymax));
+		double handle_x, handle_y;
+		get_reseize_handle_position (p, out handle_x, out handle_y);
 		return Path.distance (handle_x, x, handle_y, y) < 12 * MainWindow.units;
 	}
 	

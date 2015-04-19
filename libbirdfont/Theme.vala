@@ -119,7 +119,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Overview Glyph", 219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
 		
 		Theme.set_default_color ("Table Background 1", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
-		Theme.set_default_color ("Table Background 2", 210 / 255.0, 212 / 255.0, 223 / 255.0, 1);
+		Theme.set_default_color ("Table Background 2", 225 / 255.0, 227 / 255.0, 233 / 255.0, 1);
 		
 		Theme.set_default_color ("Selected Tab Foreground", 0, 0, 0, 1);
 		Theme.set_default_color ("Tab Separator", 207 / 255.0, 210 / 255.0, 215 / 255.0, 1);
