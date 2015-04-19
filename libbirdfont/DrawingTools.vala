@@ -220,21 +220,7 @@ public class DrawingTools : ToolCollection  {
 		});
 		insert_point_on_path_tool.set_persistent (true);
 		key_tools.add_tool (insert_point_on_path_tool);		
-
-		// stroke
-		Tool stroke_settings = new Tool ("stroke");
-		stroke_settings.select_action.connect((self) => {
-			StrokeTool.show_stroke_tools = !StrokeTool.show_stroke_tools;
-			stroke_settings.set_selected (StrokeTool.show_stroke_tools);
-			stroke_expander.visible = StrokeTool.show_stroke_tools;
-			MainWindow.get_toolbox ().update_expanders ();
-			Toolbox.redraw_tool_box ();
-		});
 		
-		if (BirdFont.has_argument ("--test")) {
-			draw_tool_modifiers.add_tool (stroke_settings);
-		}
-					
 		// quadratic Bézier points
 		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
 		quadratic_points.select_action.connect ((self) => {
@@ -783,7 +769,8 @@ public class DrawingTools : ToolCollection  {
 		// create outline from path
 		Tool outline = new Tool ("stroke_to_outline", t_("Create outline form stroke"));
 		outline.select_action.connect ((self) => {
-			stroke_tool.select_action (stroke_tool);
+			StrokeTool.stroke_selected_paths ();
+			outline.set_selected (false);
 		});
 		stroke_expander.add_tool (outline);	
 				
@@ -958,8 +945,6 @@ public class DrawingTools : ToolCollection  {
 		});
 		shape_tools.add_tool (rectangle);
 		
-		stroke_expander.visible = false;
-		
 		add_expander (font_name);
 		add_expander (draw_tools);
 		
@@ -968,7 +953,11 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		add_expander (draw_tool_modifiers);
-		add_expander (stroke_expander);
+		
+		if (BirdFont.has_argument ("--test")) {
+			add_expander (stroke_expander);
+		}
+		
 		add_expander (guideline_tools);
 		add_expander (grid);
 		add_expander (zoombar_tool);

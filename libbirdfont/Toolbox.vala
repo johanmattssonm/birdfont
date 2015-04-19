@@ -131,11 +131,13 @@ public class Toolbox : GLib.Object  {
 			return;
 		}
 		
-		foreach (Expander exp in current_set.get_expanders ()) {	
-			foreach (Tool t in exp.tool) {
-				if (t.tool_is_visible () && t.is_over (x, y)) {
-					t.panel_press_action (t, button, x, y);
-					press_tool = t;
+		foreach (Expander exp in current_set.get_expanders ()) {
+			if (exp.visible) {
+				foreach (Tool t in exp.tool) {
+					if (t.tool_is_visible () && t.is_over (x, y)) {
+						t.panel_press_action (t, button, x, y);
+						press_tool = t;
+					}
 				}
 			}
 		}
@@ -152,18 +154,20 @@ public class Toolbox : GLib.Object  {
 			return;
 		}
 				
-		foreach (Expander exp in current_set.get_expanders ()) {			
-			foreach (Tool t in exp.tool) {
-				if (t.tool_is_visible ()) {
-					active = t.is_over (x, y);
-					
-					if (active) {
-						if (press_tool == t) {
-							select_tool (t);
+		foreach (Expander exp in current_set.get_expanders ()) {
+			if (exp.visible) {	
+				foreach (Tool t in exp.tool) {
+					if (t.tool_is_visible ()) {
+						active = t.is_over (x, y);
+						
+						if (active) {
+							if (press_tool == t) {
+								select_tool (t);
+							}
 						}
+						
+						t.panel_release_action (t, button, x, y);
 					}
-					
-					t.panel_release_action (t, button, x, y);
 				}
 			}
 		}
@@ -181,10 +185,12 @@ public class Toolbox : GLib.Object  {
 				
 		if (!scrolling_toolbox) {	
 			foreach (Expander exp in current_set.get_expanders ()) {
-				foreach (Tool t in exp.tool) {
-					if (t.tool_is_visible () && t.is_over (x, y)) {
-						action = t.scroll_wheel_up_action (t);
-						press_tool = t;
+				if (exp.visible) {
+					foreach (Tool t in exp.tool) {
+						if (t.tool_is_visible () && t.is_over (x, y)) {
+							action = t.scroll_wheel_up_action (t);
+							press_tool = t;
+						}
 					}
 				}
 			}
@@ -219,10 +225,12 @@ public class Toolbox : GLib.Object  {
 
 		if (!scrolling_toolbox) {	
 			foreach (Expander exp in current_set.get_expanders ()) {
-				foreach (Tool t in exp.tool) {
-					if (t.tool_is_visible () && t.is_over (x, y)) {
-						action = t.scroll_wheel_down_action (t);
-						press_tool = t;
+				if (exp.visible) {
+					foreach (Tool t in exp.tool) {
+						if (t.tool_is_visible () && t.is_over (x, y)) {
+							action = t.scroll_wheel_down_action (t);
+							press_tool = t;
+						}
 					}
 				}
 			}
@@ -251,30 +259,32 @@ public class Toolbox : GLib.Object  {
 		bool active;
 					
 		foreach (Expander exp in current_set.get_expanders ()) {
-			a = exp.is_over (x, y);
-			update = exp.set_active (a);
-			
-			if (update) {
-				redraw ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 10), (int) (exp.y + exp.h + 10));
-			}
-			
+			if (exp.visible) {
+				a = exp.is_over (x, y);
+				update = exp.set_active (a);
+				
+				if (update) {
+					redraw ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 10), (int) (exp.y + exp.h + 10));
+				}
+				
 
-			foreach (Tool t in exp.tool) {
-				if (t.tool_is_visible ()) {
-					active = t.is_over (x, y);
+				foreach (Tool t in exp.tool) {
+					if (t.tool_is_visible ()) {
+						active = t.is_over (x, y);
 
-					if (!active && t.is_active ()) {
-						t.move_out_action (t);
-					}
-					
-					update = t.set_active (active);
-					
-					if (update) {
-						redraw (0, 0, allocation_width, allocation_height);
-					}
-					
-					if (t.panel_move_action (t, x, y)) {
-						consumed = true;
+						if (!active && t.is_active ()) {
+							t.move_out_action (t);
+						}
+						
+						update = t.set_active (active);
+						
+						if (update) {
+							redraw (0, 0, allocation_width, allocation_height);
+						}
+						
+						if (t.panel_move_action (t, x, y)) {
+							consumed = true;
+						}
 					}
 				}
 			}
@@ -333,29 +343,30 @@ public class Toolbox : GLib.Object  {
 		bool update;
 		
 		foreach (Expander exp in current_set.get_expanders ()) {
-			foreach (Tool t in exp.tool) {
-				if (tool.get_id () == t.get_id ()) {
-					if (!t.tool_is_visible ()) {
-						warning ("Tool is hidden");
-					} else {						
-						update = false;
-						
-						update = tool.set_selected (true);
-						if (tool.persistent) {
-							update = tool.set_active (true);
+			if (exp.visible) {
+				foreach (Tool t in exp.tool) {
+					if (tool.get_id () == t.get_id ()) {
+						if (!t.tool_is_visible ()) {
+							warning ("Tool is hidden");
+						} else {						
+							update = false;
+							
+							update = tool.set_selected (true);
+							if (tool.persistent) {
+								update = tool.set_active (true);
+							}
+							
+							tool.select_action (tool);
+							
+							if (update) {							
+								redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
+							}
+							
+							set_current_tool (tool);
 						}
-						
-						tool.select_action (tool);
-						
-						if (update) {							
-							redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
-						}
-						
-						set_current_tool (tool);
 					}
 				}
 			}
-			
 		}
 	}
 	

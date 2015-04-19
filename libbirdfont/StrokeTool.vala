@@ -24,16 +24,8 @@ public class StrokeTool : Tool {
 	
 	public static bool show_stroke_tools = false;
 	public static bool stroke_selected = false;
-	static int iterations = 0;
 	
 	public StrokeTool (string tooltip) {
-		iterations = 10;
-		select_action.connect((self) => {
-			stroke_selected = true;
-			iterations++;
-			stroke_selected_paths ();
-			stroke_selected = false;
-		});
 	}
 	
 	public static void set_stroke_for_selected_paths (double width) {
@@ -49,9 +41,11 @@ public class StrokeTool : Tool {
 	}
 
 	/** Create strokes for the selected outlines. */
-	void stroke_selected_paths () {
+	public static void stroke_selected_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
 		PathList paths = new PathList ();
+
+		stroke_selected = true; // FIXME: delete
 			
 		g.store_undo_state ();
 		
@@ -98,6 +92,8 @@ public class StrokeTool : Tool {
 			
 			GlyphCanvas.redraw ();
 		}
+		
+		stroke_selected = false; // FIXME: delete 
 	}
 	
 	public static PathList get_stroke (Path path, double thickness) {
