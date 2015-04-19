@@ -62,8 +62,10 @@ public class ThemeTab : SettingsDisplay {
 			
 			select_theme.set_icon ("theme");
 			
-			if (theme == "default.theme") {
-				label = t_("Default theme");
+			if (theme == "dark.theme") {
+				label = t_("Dark theme");
+			} else if (theme == "bright.theme") {
+				label = t_("Bright theme");
 			} else if (theme == "high_contrast.theme") {
 				label = t_("High contrast theme");
 			} else if (theme == "custom.theme") {

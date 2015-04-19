@@ -85,7 +85,8 @@ for file in os.listdir('./icons'):
 	install ('icons/' + file, '/share/birdfont/icons', 644)
 
 install ('resources/icons.bf', '/share/birdfont', 644)
-install ('resources/default.theme', '/share/birdfont', 644)
+install ('resources/bright.theme', '/share/birdfont', 644)
+install ('resources/dark.theme', '/share/birdfont', 644)
 install ('resources/high_contrast.theme', '/share/birdfont', 644)
 install ('resources/key_bindings.xml', '/share/birdfont', 644)
 install ('resources/roboto.bf', '/share/birdfont', 644)

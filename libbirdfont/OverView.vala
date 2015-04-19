@@ -485,7 +485,7 @@ public class OverView : FontDisplay {
 		t = new Text (t_("No glyphs in this view."), 24);
 		Theme.text_color (t, "Text Foreground");
 		t.widget_x = 40;
-		t.widget_y = 40;
+		t.widget_y = 30;
 		t.draw (cr);
 		cr.restore ();
 	}

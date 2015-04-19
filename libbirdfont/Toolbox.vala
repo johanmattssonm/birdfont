@@ -457,12 +457,8 @@ public class Toolbox : GLib.Object  {
 	public void draw (int w, int h, Context cr) { 
 		cr.save ();
 			
-		if (current_set is EmptySet) {
-			Theme.color (cr, "Empty Tool Box");
-		} else {
-			Theme.color (cr, "Default Background");
-		}
-
+		Theme.color (cr, "Default Background");
+		
 		cr.rectangle (0, 0, w, h);
 		cr.set_line_width (0);
 		cr.fill ();

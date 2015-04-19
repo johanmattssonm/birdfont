@@ -90,13 +90,14 @@ public class Theme : GLib.Object {
 	}
 		
 	public static void set_default_colors () {
-		current_theme = "default.theme";
+		current_theme = "dark.theme";
 		color_list = new Gee.ArrayList<string> ();
 		colors = new Gee.HashMap<string, Color> ();
 		themes = new Gee.ArrayList<string> ();
 
 		add_theme_files ();
 		
+		// Bright theme
 		Theme.set_default_color ("Canvas Background", 1, 1, 1, 1);
 		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
 		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
@@ -108,12 +109,17 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Menu Background", 222 / 255.0, 221 / 255.0, 226 / 255.0, 1);
 		Theme.set_default_color ("Default Background", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
 		Theme.set_default_color ("Headline Background", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
-		Theme.set_default_color ("Empty Tool Box", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
 		
 		Theme.set_default_color ("Checkbox Background", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
 		
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
+		
 		Theme.set_default_color ("Text Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
+		Theme.set_default_color ("Text Tool Box", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
+		Theme.set_default_color ("Text Tab Bar", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
+		Theme.set_default_color ("Selected Tab Foreground", 0, 0, 0, 1);
+		Theme.set_default_color ("Menu Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
+		
 		Theme.set_default_color ("Table Border", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
 		Theme.set_default_color ("Selection Border", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
 		Theme.set_default_color ("Overview Glyph", 219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
@@ -121,16 +127,12 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Table Background 1", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
 		Theme.set_default_color ("Table Background 2", 225 / 255.0, 227 / 255.0, 233 / 255.0, 1);
 		
-		Theme.set_default_color ("Selected Tab Foreground", 0, 0, 0, 1);
 		Theme.set_default_color ("Tab Separator", 207 / 255.0, 210 / 255.0, 215 / 255.0, 1);
 				
 		Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
-		Theme.set_default_color ("Menu Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
 		
-		// FIXME: DELETE Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 		Theme.set_default_color ("Highlighted 1", 159 / 255.0, 165 / 255.0, 192 / 255.0, 1);
 
-		
 		Theme.set_default_color ("Highlighted Guide", 0, 0, 0.3, 1);
 		Theme.set_default_color ("Guide 1", 0.7, 0.7, 0.8, 1);
 		Theme.set_default_color ("Guide 2", 0.7, 0, 0, 0.5);
@@ -198,7 +200,114 @@ public class Theme : GLib.Object {
 		if (BirdFont.has_argument ("--test")) {
 			current_theme = "generated_theme.theme";
 			write_theme ();
-			
+		}
+		
+		// Dark theme
+		Theme.set_default_color ("Canvas Background", 1, 1, 1, 1);
+		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
+		Theme.set_default_color ("Selected Objects", 35 / 255.0, 131 / 255.0, 194 / 255.0, 1);
+		
+		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
+		Theme.set_default_color ("Dialog Background", 55 / 255.0, 56 / 255.0, 62 / 255.0, 1);
+		Theme.set_default_color ("Menu Background", 43 / 255.0, 42 / 255.0, 47 / 255.0, 1);
+		Theme.set_default_color ("Default Background", 55 / 255.0, 56 / 255.0, 62 / 255.0, 1);
+		Theme.set_default_color ("Headline Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		
+		Theme.set_default_color ("Checkbox Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		
+		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Text Foreground", 0 / 255.0, 0 / 255.0, 0 / 255.0, 1);
+		Theme.set_default_color ("Text Tool Box", 128 / 255.0, 130 / 255.0, 136 / 255.0, 1);
+		Theme.set_default_color ("Text Tab Bar", 128 / 255.0, 130 / 255.0, 136 / 255.0, 1);
+		Theme.set_default_color ("Selected Tab Foreground", 38 / 255.0, 36 / 255.0, 39 / 255.0, 1);
+		Theme.set_default_color ("Menu Foreground", 128 / 255.0, 130 / 255.0, 136 / 255.0, 1);
+		
+		Theme.set_default_color ("Table Border", 26 / 255.0, 30 / 255.0, 32 / 255.0, 1);
+		Theme.set_default_color ("Selection Border", 40 / 255.0, 57 / 255.0, 65 / 255.0, 1);
+		Theme.set_default_color ("Overview Glyph", 219 / 255.0, 221 / 255.0, 233 / 255.0, 1);
+		
+		Theme.set_default_color ("Table Background 1", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
+		Theme.set_default_color ("Table Background 2", 225 / 255.0, 227 / 255.0, 233 / 255.0, 1);
+		
+		Theme.set_default_color ("Tab Separator", 123 / 255.0, 127 / 255.0, 132 / 255.0, 1);
+				
+		Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
+		
+		Theme.set_default_color ("Highlighted 1", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+
+		Theme.set_default_color ("Highlighted Guide", 0, 0, 0.3, 1);
+		Theme.set_default_color ("Guide 1", 0.7, 0.7, 0.8, 1);
+		Theme.set_default_color ("Guide 2", 0.7, 0, 0, 0.5);
+		Theme.set_default_color ("Guide 3", 120 / 255.0, 68 / 255.0, 120 / 255.0, 120 / 255.0);
+		
+		Theme.set_default_color ("Grid",0.2, 0.6, 0.2, 0.2);
+		
+		Theme.set_default_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
+		
+		Theme.set_default_color ("Button Border 1", 39 / 255.0, 40 / 255.0, 44 / 255.0, 1);
+		Theme.set_default_color ("Button Background 1", 25 / 255.0, 28 / 255.0, 30 / 255.0, 1);
+
+		Theme.set_default_color ("Button Border 2", 39 / 255.0, 40 / 255.0, 44 / 255.0, 1);
+		Theme.set_default_color ("Button Background 2", 25 / 255.0, 28 / 255.0, 30 / 255.0, 1);
+
+		Theme.set_default_color ("Button Border 3", 39 / 255.0, 40 / 255.0, 44 / 255.0, 1);
+		Theme.set_default_color ("Button Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
+
+		Theme.set_default_color ("Button Border 4", 39 / 255.0, 40 / 255.0, 44 / 255.0, 1);
+		Theme.set_default_color ("Button Background 4", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
+		
+		Theme.set_default_color ("Button Foreground", 107 / 255.0, 112 / 255.0, 122 / 255.0, 1);
+		Theme.set_default_color ("Selected Button Foreground", 107 / 255.0, 112 / 255.0, 122 / 255.0, 1);
+
+		Theme.set_default_color ("Tool Foreground", 123 / 255.0, 127 / 255.0, 132 / 255.0, 1);
+		Theme.set_default_color ("Selected Tool Foreground", 123 / 255.0, 127 / 255.0, 132 / 255.0, 1);
+		
+		Theme.set_default_color ("Text Area Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+
+		Theme.set_default_color ("Overview Item Border", 207 / 255.0, 210 / 255.0, 215 / 255.0, 1);
+		
+		Theme.set_default_color ("Selected Overview Item", 211 / 255.0, 212 / 255.0, 216 / 255.0, 1);
+		Theme.set_default_color ("Overview Item 1", 236 / 255.0, 236 / 255.0, 236 / 255.0, 1);
+		Theme.set_default_color ("Overview Item 2", 246 / 255.0, 246 / 255.0, 246 / 255.0, 1);
+		
+		Theme.set_default_color ("Overview Selected Foreground", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
+		Theme.set_default_color ("Overview Foreground", 45 / 255.0, 45 / 255.0, 45 / 255.0, 1);
+		
+		Theme.set_default_color ("Glyph Count Background 1", 92 / 255.0, 106 / 255.0, 117 / 255.0, 1);
+		Theme.set_default_color ("Glyph Count Background 2", 92 / 255.0, 106 / 255.0, 117 / 255.0, 1);
+		
+		Theme.set_default_color ("Dialog Shadow", 0, 0, 0, 0.3);
+		
+		Theme.set_default_color ("Selected Active Cubic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Cubic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Active Cubic Control Point", 70 / 255.0, 70 / 255.0, 70 / 255.0, 1);
+		Theme.set_default_color ("Cubic Control Point", 116 / 255.0, 116 / 255.0, 116 / 255.0, 1);
+
+		Theme.set_default_color ("Selected Active Quadratic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Quadratic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Active Quadratic Control Point", 85 / 255.0, 115 / 255.0, 149 / 255.0, 1);
+		Theme.set_default_color ("Quadratic Control Point", 123 / 255.0, 151 / 255.0, 184 / 255.0, 1);
+
+		Theme.set_default_color ("Selected Control Point Handle", 0, 0, 0, 1);
+		Theme.set_default_color ("Active Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
+		Theme.set_default_color ("Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
+		
+		Theme.set_default_color ("Merge", 167 / 255.0, 170 / 255.0, 178 / 255.0, 0.3);
+		
+		Theme.set_default_color ("Spin Button", 107 / 255.0, 112 / 255.0, 122 / 255.0, 1);
+		Theme.set_default_color ("Active Spin Button", 107 / 255.0, 112 / 255.0, 122 / 255.0, 1);
+		Theme.set_default_color ("Zoom Bar Border", 38 / 255.0, 39 / 255.0, 43 / 255.0, 1);
+		Theme.set_default_color ("Font Name", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+		
+		if (BirdFont.has_argument ("--test")) {
+			current_theme = "generated_dark_theme.theme";
+			write_theme ();
+		}
+		
+		if (BirdFont.has_argument ("--test")) {
 			t_("Canvas Background");
 			t_("Stroke Color");
 			t_("Handle Color");
@@ -293,7 +402,8 @@ public class Theme : GLib.Object {
 		dir = BirdFont.get_settings_directory ();
 
 		themes.clear ();
-		themes.add ("default.theme");
+		themes.add ("dark.theme");
+		themes.add ("bright.theme");
 		themes.add ("high_contrast.theme");
 		
 		try {
@@ -319,7 +429,7 @@ public class Theme : GLib.Object {
 		colors.set (name, new Color (r, g, b, a));
 		write_theme ();
 	}
-
+	
 	public static void load_theme (string theme_file) {
 		File default_theme;
 		File user_theme;
@@ -352,14 +462,17 @@ public class Theme : GLib.Object {
 			return;
 		}
 
-		if (current_theme == "default.theme" || current_theme == "high_contrast.theme") {
+		if (current_theme == "dark.theme" 
+			|| current_theme == "bright.theme"
+			|| current_theme == "high_contrast.theme") {
+				
 			current_theme = "custom.theme";
 			
 			file = get_child (BirdFont.get_settings_directory (), current_theme);
 			i = 2;
 			base_name = "custom";
 			while (file.query_exists ()) {
-				current_theme = @"$(base_name)_theme_$(i).theme";
+				current_theme = @"$(base_name)_$(i).theme";
 				file = get_child (BirdFont.get_settings_directory (), current_theme);
 				i++;
 			}
@@ -409,7 +522,7 @@ public class Theme : GLib.Object {
 		XmlParser parser;
 		
 		try {
-			FileUtils.get_contents((!) f.get_path (), out xml_data);
+			FileUtils.get_contents ((!) f.get_path (), out xml_data);
 			parser = new XmlParser (xml_data);
 			parse_colors (parser.get_root_tag ());
 		} catch (GLib.Error e) {
@@ -485,7 +598,9 @@ public class Theme : GLib.Object {
 		return_val_if_fail (!is_null (current_theme), "icons.bf".dup ());
 		return_val_if_fail (current_theme != "", "icons.bf".dup ());
 		
-		if (current_theme == "default.theme" || current_theme == "high_contrast.theme") {
+		if (current_theme == "dark.theme" 
+			|| current_theme == "bright.theme"
+			|| current_theme == "high_contrast.theme") {
 			return "icons.bf".dup ();
 		}
 		

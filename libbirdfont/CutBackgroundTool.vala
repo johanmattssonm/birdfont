@@ -170,7 +170,7 @@ public class CutBackgroundTool : Tool {
 		wc = bg.get_margin_width ();
 		hc = bg.get_margin_height ();
 		
-		Theme.color (cg, "Background 1");
+		Theme.color (cg, "Canvas Background");
 		cg.rectangle (0, 0, bg.size_margin, bg.size_margin);
 		cg.fill ();
 
@@ -203,7 +203,7 @@ public class CutBackgroundTool : Tool {
 		sr = new Surface.similar (sg, img.get_content (), (int) (w / bg.img_scale_x), (int) (h / bg.img_scale_y));
 		cr = new Context (sr);
 
-		Theme.color (cr, "Background 1");
+		Theme.color (cr, "Canvas Background");
 		cr.rectangle (0, 0, w, h);
 		cr.fill ();
 

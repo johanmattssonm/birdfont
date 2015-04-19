@@ -69,9 +69,9 @@ public class LabelTool : Tool {
 		text_height = 18;
 
 		if (is_selected ()) {
-			Theme.text_color (label_text, "Text Foreground");
+			Theme.text_color (label_text, "Text Tool Box");
 		} else {
-			Theme.text_color (label_text, "Text Foreground");
+			Theme.text_color (label_text, "Text Tool Box");
 		}
 		
 		label_text.set_font_size (text_height);

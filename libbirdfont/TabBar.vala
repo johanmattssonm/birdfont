@@ -632,14 +632,14 @@ public class TabBar : GLib.Object {
 
 		if (has_scroll () && !has_progress_wheel ()) {
 			// left arrow
-			Theme.text_color (left_arrow, "Text Foreground");
+			Theme.text_color (left_arrow, "Text Tab Bar");
 			left_arrow.set_font_size (40 / scale);
 			left_arrow.widget_x =  2 / scale;
 			left_arrow.widget_y =  h / 2.0 - (40 / scale ) / 2;
 			left_arrow.draw (cr);
 
 			// right arrow
-			Theme.text_color (right_arrow, "Text Foreground");
+			Theme.text_color (right_arrow, "Text Tab Bar");
 			next_tab_x = (has_progress_wheel ()) ? w - (2 * 19 + 3) / scale : w - 19 / scale;
 			next_tab_x-= 32 / scale;
 
@@ -653,7 +653,7 @@ public class TabBar : GLib.Object {
 		if (has_progress_wheel ()) {
 			double progress_size = 40 / scale;
 			
-			Theme.text_color (progress_icon, "Text Foreground");
+			Theme.text_color (progress_icon, "Text Tab Bar");
 			
 			progress_icon.set_font_size (progress_size);
 			progress_icon.widget_x = w - 14 / scale;
@@ -671,7 +671,7 @@ public class TabBar : GLib.Object {
 			// menu icon
 			if (MainWindow.get_menu ().show_menu) {
 				Theme.color (cr, "Menu Background");
-				cr.rectangle (w - 33 / scale, 0, 33 / scale, h);
+				cr.rectangle (w - 40 / scale, 0, 40 / scale, h);
 				cr.fill ();
 			}
 			
@@ -682,7 +682,7 @@ public class TabBar : GLib.Object {
 			}
 			
 			menu_icon.set_font_size (40 / scale);
-			menu_icon.widget_x = (int) (w - 25 / scale);
+			menu_icon.widget_x = (int) (w - 27 / scale);
 			menu_icon.widget_y = (int) (h / 2.0 - 20 / scale);
 			menu_icon.draw (cr);
 		}
@@ -786,7 +786,7 @@ public class TabBar : GLib.Object {
 			if (tab_index == selected) {
 				Theme.text_color (label, "Selected Tab Foreground");
 			} else {
-				Theme.text_color (label, "Text Foreground");
+				Theme.text_color (label, "Text Tab Bar");
 			}
 			
 			label.set_font_size (text_height);

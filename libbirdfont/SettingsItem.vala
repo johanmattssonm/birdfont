@@ -118,7 +118,7 @@ public class SettingsItem : GLib.Object {
 			}
 			
 			cr.save ();
-			Theme.text_color (label, "Text Foreground");
+			Theme.text_color (label, "Text Tool Box");
 			label.set_font_size (17 * MainWindow.units);
 			label.draw_at_baseline (cr, label_x, y + 20 * MainWindow.units);
 			cr.restore ();
@@ -131,7 +131,7 @@ public class SettingsItem : GLib.Object {
 				if (active) {
 					Theme.text_color (key_binding_text, "Foreground Inverted");
 				} else {
-					Theme.text_color (key_binding_text, "Text Foreground");
+					Theme.text_color (key_binding_text, "Text Tool Box");
 				}
 				
 				key_binding_text.set_font_size (17 * MainWindow.units);
