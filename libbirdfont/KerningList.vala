@@ -32,8 +32,6 @@ public class KerningList : Table {
 		
 		i = 0;
 
-		rows.add (new Row.headline (t_("Kerning Pairs")));
-
 		classes.get_classes ((left, right, kerning) => {
 			Row r = new Row.columns_3 (left, right, @"$kerning", i);
 			rows.add (r);
@@ -52,6 +50,8 @@ public class KerningList : Table {
 			sb = (Row) b;
 			return strcmp (sa.column_text.get (0).text, sb.column_text.get (0).text);
 		});
+
+		rows.insert (0, new Row.headline (t_("Kerning Pairs")));
 		
 		return rows;
 	}
