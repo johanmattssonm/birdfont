@@ -65,6 +65,15 @@ public class ForesightTool : Tool {
 			PointSelection ps;
 			EditPoint first_point;
 			bool clockwise;
+			
+			if (b == 2) {
+				p.release_action (p, 1, x, y);
+				p.press_action (p, 2, x, y);
+				p.release_action (p, 2, x, y);
+				current_path.hide_end_handle = true;
+				state = NONE;
+				return;
+			} 
 
 			MainWindow.get_current_glyph ().store_undo_state ();
 
@@ -180,6 +189,10 @@ public class ForesightTool : Tool {
 			PointSelection last;
 			bool lh;
 			EditPointHandle h;
+
+			if (state == NONE) {
+				return;
+			}
 
 			last_move_x = x;
 			last_move_y = y;
