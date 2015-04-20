@@ -33,7 +33,9 @@ public class DrawingTools : ToolCollection  {
 	
 	public static PointType point_type = PointType.DOUBLE_CURVE;
 	
+	public static Tool add_stroke;	
 	public static SpinButton object_stroke;
+	Tool outline;
 	
 	public static MoveTool move_tool;
 	public static PenTool pen_tool;
@@ -724,7 +726,7 @@ public class DrawingTools : ToolCollection  {
 		draw_tool_modifiers.add_tool (delete_background);	
 
 		// add stroke to path
-		Tool add_stroke = new Tool ("apply_stroke", t_("Apply stroke"));
+		add_stroke = new Tool ("apply_stroke", t_("Apply stroke"));
 		add_stroke.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			StrokeTool.add_stroke = !StrokeTool.add_stroke;
@@ -736,6 +738,7 @@ public class DrawingTools : ToolCollection  {
 				}
 				
 				StrokeTool.stroke_width = object_stroke.get_value ();
+				StrokeTool.set_stroke_for_selected_paths (StrokeTool.stroke_width);
 			} else {
 				foreach (Path p in g.active_paths) {
 					p.stroke = 0;
@@ -774,21 +777,11 @@ public class DrawingTools : ToolCollection  {
 		stroke_expander.add_tool (object_stroke);
 		
 		move_tool.selection_changed.connect (() => {
-			bool stroke = false;
-			Glyph g = MainWindow.get_current_glyph ();
-			
-			foreach (Path p in g.active_paths) {
-				if (p.stroke > 0) {
-					stroke = true;
-				}
-			}
-			
-			add_stroke.selected = stroke;
-			Toolbox.redraw_tool_box ();
+			update_stroke_settings ();
 		});
 
 		// create outline from path
-		Tool outline = new Tool ("stroke_to_outline", t_("Create outline form stroke"));
+		outline = new Tool ("stroke_to_outline", t_("Create outline form stroke"));
 		outline.select_action.connect ((self) => {
 			StrokeTool.stroke_selected_paths ();
 			outline.set_selected (false);
@@ -1068,6 +1061,20 @@ public class DrawingTools : ToolCollection  {
 				update_line_selection (glyph);
 			}
 		});
+	}
+
+	public static void update_stroke_settings () {
+		bool stroke = false;
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		foreach (Path p in g.active_paths) {
+			if (p.stroke > 0) {
+				stroke = true;
+			}
+		}
+		
+		add_stroke.selected = stroke;
+		Toolbox.redraw_tool_box ();	
 	}
 
 	void auto_trace_background () {

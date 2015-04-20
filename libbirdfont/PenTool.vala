@@ -895,8 +895,7 @@ public class PenTool : Tool {
 	}
 	
 	public void select_active_point (double x, double y) {
-		Glyph? g = MainWindow.get_current_glyph ();
-		Glyph glyph = (!) g;
+		Glyph glyph = MainWindow.get_current_glyph ();
 		bool reverse;
 		
 		control_point_event (x, y);
@@ -905,7 +904,6 @@ public class PenTool : Tool {
 		reverse = false;
 
 		foreach (Path p in glyph.path_list) {
-			
 			if (p.is_open () && p.points.size >= 1 
 				&& (active_edit_point == p.points.get (0) 
 				|| active_edit_point == p.points.get (p.points.size - 1))) {
@@ -940,6 +938,13 @@ public class PenTool : Tool {
 		move_point_on_path = true;
 		
 		if (active_edit_point != null) {
+			
+			glyph.clear_active_paths ();
+			glyph.add_active_path (active_path);
+			
+			DrawingTools.update_stroke_settings ();
+			
+			
 			if (KeyBindings.modifier == SHIFT) {
 				if (((!)active_edit_point).is_selected () && selected_points.size > 1) {
 					((!)active_edit_point).set_selected (false);
@@ -1135,6 +1140,9 @@ public class PenTool : Tool {
 			glyph.close_path ();
 			force_direction ();
 			
+			glyph.clear_active_paths ();
+			glyph.add_active_path (path);
+			
 			if (direction_changed) {
 				path.reverse ();
 				update_selection ();
@@ -1170,6 +1178,7 @@ public class PenTool : Tool {
 				glyph.delete_path (path);
 				glyph.delete_path (merge);
 				glyph.clear_active_paths ();
+				glyph.add_active_path (union);
 				
 				union.reopen ();
 				union.create_list ();
@@ -1344,7 +1353,7 @@ public class PenTool : Tool {
 		bool redraw;
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		foreach (var p in g.path_list) {
+		foreach (Path p in g.path_list) {
 			foreach (var ep in p.points) {
 				ep.set_active (false);
 			}
@@ -1353,7 +1362,7 @@ public class PenTool : Tool {
 		redraw = active_edit_point != e; 
 		active_edit_point = e;
 		active_path = path;
-		
+			
 		if (e != null) {
 			((!)e).set_active (true);
 		}
