@@ -42,7 +42,6 @@ public class DrawingTools : ToolCollection  {
 	PointTool point_tool;
 	public static ZoomTool zoom_tool;
 	public static ResizeTool resize_tool;
-	StrokeTool stroke_tool;
 	public static TrackTool track_tool;
 	public static BackgroundTool move_background;
 	public static Tool move_canvas;
@@ -735,14 +734,18 @@ public class DrawingTools : ToolCollection  {
 				foreach (Path p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
 				}
+				
+				StrokeTool.stroke_width = object_stroke.get_value ();
 			} else {
 				foreach (Path p in g.active_paths) {
 					p.stroke = 0;
 				}
-			}
+			}	
 			
+			add_stroke.selected = StrokeTool.add_stroke;
 			GlyphCanvas.redraw ();
 		});
+		
 		stroke_expander.add_tool (add_stroke);	
 		
 		// edit stroke width
@@ -1031,12 +1034,13 @@ public class DrawingTools : ToolCollection  {
 		// Default selection
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
-			MainWindow.get_toolbox ().reset_active_tool ();
-		
-			foresight_tool.set_selected (true);
-			update_drawing_and_background_tools (foresight_tool);
+			Toolbox tb = MainWindow.get_toolbox ();
 			
-			select_draw_tool ();			
+			tb.reset_active_tool ();
+			update_drawing_and_background_tools (foresight_tool);
+			tb.select_tool (foresight_tool);
+			tb.set_current_tool (foresight_tool);
+					
 			set_point_type_from_preferences ();
 			
 			if (GlyphCanvas.get_current_glyph ().get_show_help_lines ()) {
@@ -1194,7 +1198,6 @@ public class DrawingTools : ToolCollection  {
 			zoom_tool.set_selected (false);
 			move_tool.set_selected (false);
 			resize_tool.set_selected (false);
-			stroke_tool.set_selected (false);
 			track_tool.set_selected (false);
 			move_canvas.set_selected (false);
 			delete_background.set_selected (false);
@@ -1275,10 +1278,6 @@ public class DrawingTools : ToolCollection  {
 	/** Insert new points of this type. */
 	public static PointType get_selected_point_type () {
 		return point_type;
-	}
-
-	private void select_draw_tool () {
-		Toolbox.select_tool_by_name ("pen_tool");
 	}
 	
 	public void remove_all_grid_buttons () {

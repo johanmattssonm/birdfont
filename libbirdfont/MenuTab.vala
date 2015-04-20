@@ -209,6 +209,7 @@ public class MenuTab : FontDisplay {
 		
 		if (stroke_width != "") {
 			DrawingTools.object_stroke.set_value (stroke_width);
+			StrokeTool.stroke_width = DrawingTools.object_stroke.get_value ();
 		}
 	}
 	

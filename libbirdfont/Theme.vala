@@ -259,7 +259,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Button Border 4", 39 / 255.0, 40 / 255.0, 44 / 255.0, 1);
 		Theme.set_default_color ("Button Background 4", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
 		
-		Theme.set_default_color ("Button Foreground", 107 / 255.0, 112 / 255.0, 122 / 255.0, 1);
+		Theme.set_default_color ("Button Foreground", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
 		Theme.set_default_color ("Selected Button Foreground", 107 / 255.0, 112 / 255.0, 122 / 255.0, 1);
 
 		Theme.set_default_color ("Tool Foreground", 123 / 255.0, 127 / 255.0, 132 / 255.0, 1);

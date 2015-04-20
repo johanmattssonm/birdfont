@@ -267,7 +267,6 @@ public class Toolbox : GLib.Object  {
 					redraw ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 10), (int) (exp.y + exp.h + 10));
 				}
 				
-
 				foreach (Tool t in exp.tool) {
 					if (t.tool_is_visible ()) {
 						active = t.is_over (x, y);
