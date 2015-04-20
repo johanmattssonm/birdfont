@@ -306,7 +306,112 @@ public class Theme : GLib.Object {
 			current_theme = "generated_dark_theme.theme";
 			write_theme ();
 		}
+
+		// Bright theme
+		Theme.set_default_color ("Canvas Background", 1, 1, 1, 1);
+		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Fill Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Objects", 0, 0, 0, 1);
 		
+		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
+		Theme.set_default_color ("Dialog Background", 1, 1, 1, 1);
+		Theme.set_default_color ("Menu Background", 1, 1, 1, 1);
+		Theme.set_default_color ("Default Background", 1, 1, 1, 1);
+		Theme.set_default_color ("Headline Background", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Checkbox Background", 1, 1, 1, 1);
+		
+		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Text Foreground", 0, 0, 0, 1);
+		Theme.set_default_color ("Text Tool Box", 0, 0, 0, 1);
+		Theme.set_default_color ("Text Tab Bar", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Tab Foregrund", 1, 1, 1, 1);
+		Theme.set_default_color ("Menu Foreground", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Table Border", 0, 0, 0, 1);
+		Theme.set_default_color ("Selection Border", 0, 0, 0, 1);
+		Theme.set_default_color ("Overview Glyph", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Table Background 1", 1, 1, 1, 1);
+		Theme.set_default_color ("Table Background 2", 1, 1, 1, 1);
+		
+		Theme.set_default_color ("Tab Separator", 0, 0, 0, 1);
+				
+		Theme.set_default_color ("Foreground Inverted", 1, 1, 1, 1);
+		
+		Theme.set_default_color ("Highlighted 1", 0, 0, 0, 1);
+
+		Theme.set_default_color ("Highlighted Guide", 0, 0, 0, 1);
+		Theme.set_default_color ("Guide 1", 0, 0, 0, 1);
+		Theme.set_default_color ("Guide 2", 0, 0, 0, 1);
+		Theme.set_default_color ("Guide 3", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Grid", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Background Glyph", 0.2, 0.2, 0.2, 0.5);
+		
+		Theme.set_default_color ("Button Border 1", 0, 0, 0, 1);
+		Theme.set_default_color ("Button Background 1", 0, 0, 0, 1);
+
+		Theme.set_default_color ("Button Border 2", 0, 0, 0, 1);
+		Theme.set_default_color ("Button Background 2", 0, 0, 0, 1);
+
+		Theme.set_default_color ("Button Border 3", 0, 0, 0, 1);
+		Theme.set_default_color ("Button Background 3", 1, 1, 1, 1);
+
+		Theme.set_default_color ("Button Border 4", 0, 0, 0, 1);
+		Theme.set_default_color ("Button Background 4", 1, 1, 1, 1);
+		
+		Theme.set_default_color ("Button Foreground", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Button Foreground", 1, 1, 1, 1);
+
+		Theme.set_default_color ("Tool Foreground", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Tool Foreground", 1, 1, 1, 1);
+		
+		Theme.set_default_color ("Text Area Background", 1, 1, 1, 1);
+
+		Theme.set_default_color ("Overview Item Border", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Selected Overview Item", 0, 0, 0, 1);
+		Theme.set_default_color ("Overview Item 1", 1, 1, 1, 1);
+		Theme.set_default_color ("Overview Item 2", 1, 1, 1, 1);
+		
+		Theme.set_default_color ("Overview Selected Foreground", 1, 1, 1, 1);
+		Theme.set_default_color ("Overview Foreground", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Glyph Count Background 1", 1, 1, 1, 1);
+		Theme.set_default_color ("Glyph Count Background 2", 1, 1, 1, 1);
+		
+		Theme.set_default_color ("Dialog Shadow", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Selected Active Cubic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Cubic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Active Cubic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Cubic Control Point", 0, 0, 0, 1);
+
+		Theme.set_default_color ("Selected Active Quadratic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Quadratic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Active Quadratic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Quadratic Control Point", 0, 0, 0, 1);
+
+		Theme.set_default_color ("Selected Control Point Handle", 0, 0, 0, 1);
+		Theme.set_default_color ("Active Control Point Handle", 0, 0, 0, 1);
+		Theme.set_default_color ("Control Point Handle", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Merge", 0, 0, 0, 1);
+		
+		Theme.set_default_color ("Spin Button", 0, 0, 0, 1);
+		Theme.set_default_color ("Active Spin Button", 0, 0, 0, 1);
+		Theme.set_default_color ("Zoom Bar Border", 0, 0, 0, 1);
+		Theme.set_default_color ("Font Name", 0, 0, 0, 1);
+
+		if (BirdFont.has_argument ("--test")) {
+			current_theme = "generated_high_contrast.theme";
+			write_theme ();
+		}
+
 		if (BirdFont.has_argument ("--test")) {
 			t_("Canvas Background");
 			t_("Stroke Color");

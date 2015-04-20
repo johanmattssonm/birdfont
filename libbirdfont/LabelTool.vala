@@ -114,7 +114,7 @@ public class LabelTool : Tool {
 		
 		if (has_delete_button) {
 			cr.save ();
-			Theme.color (cr, "Foreground Inverted");
+			Theme.color (cr, "Text Foreground");
 			cr.set_line_width (1);
 			cr.move_to (w - 20, y + h / 2 - 2.5 + 2);
 			cr.line_to (w - 25, y + h / 2 + 2.5 + 2);

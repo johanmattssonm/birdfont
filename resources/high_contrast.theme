@@ -2,44 +2,45 @@
 <theme>
 	<color name="Highlighted 1" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Guide 1" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Foreground 6" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Overview Item Border" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Active Quadratic Control Point" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Background 1" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Guide 2" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Foreground 7" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Background 2" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Guide 3" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Selected Overview Item 1" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Background 3" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Selected Overview Item 2" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Background 4" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Dialog Shadow" red="0" green="0" blue="0" alpha="0.29999999999999999"/>
-	<color name="Background 5" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Glyph Count Background" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Background 6" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Tab Separator" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Overview Glyph" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Dialog Shadow" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Active Cubic Control Point" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Cubic Control Point" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Background 7" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Selected Tab Foreground" red="0.14901960784313725" green="0.14117647058823529" blue="0.15294117647058825" alpha="1"/>
 	<color name="Control Point Handle" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Background 8" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Text Tab Bar" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Zoom Bar Border" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Selected Tab Foregrund" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Text Foreground" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Fill Color" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Foreground Inverted Table" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Background 9" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Table Background 1" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Stroke Color" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Menu Background" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Table Background 2" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Selected Tool Foreground" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Selected Control Point Handle" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Font Name" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Button Foreground" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Grid" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Text Area Background" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Background 10" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Button Background 1" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Glyph Count Background 1" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Button Border 1" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Button Background 2" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Glyph Count Background 2" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Button Border 2" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Button Background 3" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Selection Border" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Button Border 3" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Button Background 4" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Background Glyph" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Background Glyph" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="0.5"/>
+	<color name="Default Background" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Handle Color" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Button Border 4" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Highlighted Guide" red="0" green="0" blue="0" alpha="1"/>
@@ -48,7 +49,12 @@
 	<color name="Selected Active Quadratic Control Point" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Overview Item 2" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Selected Button Foreground" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Menu Foreground" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Active Spin Button" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Menu Foreground" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Dialog Background" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Table Border" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Spin Button" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Text Tool Box" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Overview Foreground" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Objects" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Tool Foreground" red="0" green="0" blue="0" alpha="1"/>
@@ -58,11 +64,10 @@
 	<color name="Foreground 1" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Active Control Point Handle" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Merge" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Foreground 2" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Foreground 3" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Headline Background" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Overview Selected Foreground" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Foreground 4" red="1" green="1" blue="1" alpha="1"/>
+	<color name="Canvas Background" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Foreground Inverted" red="1" green="1" blue="1" alpha="1"/>
-	<color name="Foreground 5" red="0" green="0" blue="0" alpha="1"/>
+	<color name="Selected Overview Item" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Quadratic Control Point" red="0" green="0" blue="0" alpha="1"/>
 </theme>
