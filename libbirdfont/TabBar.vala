@@ -758,7 +758,7 @@ public class TabBar : GLib.Object {
 				close_opacity = (over_close_tab == tab_index) ? 1 : 0.2; 
 
 				if (tab_index == selected) {
-					Theme.color_opacity (cr, "Selected Tab Foregrund", close_opacity);
+					Theme.color_opacity (cr, "Selected Tab Foreground", close_opacity);
 				} else {
 					Theme.color_opacity (cr, "Text Foreground", close_opacity);
 				}
@@ -784,7 +784,7 @@ public class TabBar : GLib.Object {
 			center_y = (int) (tab_height / 2.0 + 4 / scale);
 			
 			if (tab_index == selected) {
-				Theme.text_color (label, "Selected Tab Foregrund");
+				Theme.text_color (label, "Selected Tab Foreground");
 			} else {
 				Theme.text_color (label, "Text Tab Bar");
 			}

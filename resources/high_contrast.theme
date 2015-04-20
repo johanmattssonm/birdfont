@@ -12,11 +12,10 @@
 	<color name="Dialog Shadow" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Active Cubic Control Point" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Selected Cubic Control Point" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Selected Tab Foreground" red="0.14901960784313725" green="0.14117647058823529" blue="0.15294117647058825" alpha="1"/>
+	<color name="Selected Tab Foreground" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Control Point Handle" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Text Tab Bar" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Zoom Bar Border" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Selected Tab Foregrund" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Text Foreground" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Fill Color" red="0" green="0" blue="0" alpha="1"/>
 	<color name="Table Background 1" red="1" green="1" blue="1" alpha="1"/>

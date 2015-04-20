@@ -307,7 +307,7 @@ public class Theme : GLib.Object {
 			write_theme ();
 		}
 
-		// Bright theme
+		// High contrast theme
 		Theme.set_default_color ("Canvas Background", 1, 1, 1, 1);
 		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
 		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
@@ -327,7 +327,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Text Foreground", 0, 0, 0, 1);
 		Theme.set_default_color ("Text Tool Box", 0, 0, 0, 1);
 		Theme.set_default_color ("Text Tab Bar", 0, 0, 0, 1);
-		Theme.set_default_color ("Selected Tab Foregrund", 1, 1, 1, 1);
+		Theme.set_default_color ("Selected Tab Foreground", 1, 1, 1, 1);
 		Theme.set_default_color ("Menu Foreground", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Table Border", 0, 0, 0, 1);

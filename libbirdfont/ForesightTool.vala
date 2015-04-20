@@ -190,15 +190,15 @@ public class ForesightTool : Tool {
 			bool lh;
 			EditPointHandle h;
 
-			if (state == NONE) {
-				return;
-			}
-
 			last_move_x = x;
 			last_move_y = y;
 			
 			PenTool.active_path = current_path;
 			PenTool.active_path.hide_end_handle = (state == MOVE_POINT);
+			
+			if (state == NONE) {
+				return;
+			}
 			
 			if (state == MOVE_HANDLES || state == MOVE_LAST_HANDLE) {				
 				if (previous_point > 0) {
