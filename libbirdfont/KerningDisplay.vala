@@ -738,17 +738,15 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public void set_active_handle (double ex, double ey) {
-		double item_size = 1.0 / KerningTools.font_size;
 		double w = 0;
 		double d, kern;
 		double min = double.MAX;
 		int i = 0;
 		int row_index = 0;
 		int col_index = 0;
-		double fs = KerningTools.font_size;
 		Glyph glyph = new Glyph.no_lines ("");
 		Font font = BirdFont.get_current_font ();
-		double y = font.get_height () * item_size;
+		double fs = KerningTools.font_size;
 		double x = 20;
 				
 		GlyphRange? gr_left, gr_right;
@@ -788,7 +786,7 @@ public class KerningDisplay : FontDisplay {
 					kern = get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 				}
 								
-				d = Math.pow (fs * (x + kern) - ex, 2) + Math.pow (fs * (y - ey), 2);
+				d = Math.pow (fs * (x + kern) - ex, 2);
 				
 				if (d < min) {
 					min = d;
@@ -816,7 +814,6 @@ public class KerningDisplay : FontDisplay {
 			}
 			
 			row_index++;
-			y += MainWindow.get_current_glyph ().get_height () + 20;
 			x = 20;
 		}
 	}

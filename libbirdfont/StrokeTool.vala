@@ -404,11 +404,11 @@ public class StrokeTool : Tool {
 		
 		int i;
 		bool bump, previous_bump;
-		double small_part = 0.5 * fabs (thickness);
+		double small_part = 0.4 * fabs (thickness);
 		
 		previous = p.get_first_point ().copy ();
 		move_segment (start, previous, thickness);
-		
+
 		i = 0;
 		previous_bump = false;
 		for (int j = 0; j < p.points.size; j++) {
@@ -421,9 +421,28 @@ public class StrokeTool : Tool {
 			end = original_end.copy ();
 			next = original_next.copy ();
 			
-			move_segment (start, end, thickness);
-
 			bump = Path.distance_to_point (previous, start) < small_part;
+			bump = false;
+			
+			if (bump) {
+				Gee.ArrayList<EditPoint> s = new Gee.ArrayList<EditPoint> ();
+				
+				Path.all_of (start, end, (x, y, t) => {
+					EditPoint e = stroked.add (x, y);
+					e.set_point_type (PointType.LINE_CUBIC);
+					e.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
+					e.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
+					s.add (e);
+					return true;
+				}, 4);
+				
+				foreach (EditPoint e in s) {
+					e.recalculate_linear_handles ();
+					move_segment (new EditPoint (), e, thickness);
+				}
+			} else {
+				move_segment (start, end, thickness);
+			}
 
 			if (start == p.get_last_point ()) {
 				end = p.get_first_point ();
@@ -435,20 +454,22 @@ public class StrokeTool : Tool {
 			bool flat = (Path.distance_to_point (previous, start) < 0.05 * thickness);
 
 			if (!flat && !p.is_open () || (i != 0 && i != p.points.size - 1)) {
-				if (!ep.tie_handles) {
-					add_corner (stroked, previous, start, ep.copy (), thickness);
-				} else {
-					warning ("Tied handles.");
+				if (!bump) {
+					if (!ep.tie_handles) {
+						add_corner (stroked, previous, start, ep.copy (), thickness);
+					} else {
+						warning ("Tied handles.");
+					}
 				}
 			}
 			
-			if (start.is_valid () && end.is_valid ()) {
+			if (!bump && start.is_valid () && end.is_valid ()) {
 				stroked.add_point (start);	
 				stroked.add_point (end);
 			} else {
 				warning ("Bad point in stroke.");
 			}
-			
+		
 			adjust_handles (start, end, next, original_start, original_end, original_next);
 			
 			// open ends around corner
@@ -462,7 +483,7 @@ public class StrokeTool : Tool {
 		}
 
 		stroked.recalculate_linear_handles ();
-			
+		
 		return stroked;
 	}
 
@@ -1111,7 +1132,7 @@ public class StrokeTool : Tool {
 			&& is_flat (x1, y1, x2, y2, x3, y3, tolerance);
 	}
 	
-	public static bool is_flat (double x1, double y1, double x2, double y2, double x3, double y3, double tolerance = 0.01) {
+	public static bool is_flat (double x1, double y1, double x2, double y2, double x3, double y3, double tolerance = 0.001) {
 		double ds = Path.distance (x1, x3, y1, y3);
 		double d1 = Path.distance (x1, x2, y1, y2);
 		double d2 = Path.distance (x2, x3, y2, y3);
@@ -1120,7 +1141,7 @@ public class StrokeTool : Tool {
 		double y = fabs ((y3 - y1) * p - (y2 - y1));
 		double d = fabs (ds - (d1 + d2));
 		
-		return ds > 0.01 && d1 > 0.01 && d2 > 0.01
+		return ds > 0.001 && d1 > 0.001 && d2 > 0.001
 			&& d < tolerance && x < tolerance && y < tolerance;	
 	}
 	
@@ -2022,10 +2043,9 @@ public class StrokeTool : Tool {
 		int size, i, added_points;
 		double step = 0.5;
 		bool open = path.is_open ();
-		bool flat;
+		bool flat, back;
 		
 		path.add_hidden_double_points ();
-		
 		size = open ? path.points.size - 1 : path.points.size;
 
 		i = 0;
@@ -2051,15 +2071,17 @@ public class StrokeTool : Tool {
 				&& ((px - start.x) > 0) == ((start.get_right_handle ().x - start.x) > 0)
 				&& ((py - start.y) > 0) == ((start.get_right_handle ().y - start.y) > 0);
 			
+			back = is_flat (start.x, start.y, end.x, end.y, end.get_left_handle ().x, end.get_left_handle ().y, 0.2 * stroke_width)
+				|| is_flat (start.get_right_handle ().x, start.get_right_handle ().y, start.x, start.y, end.x, end.y, 0.2 * stroke_width);
+				
 			if (unlikely (added_points > 20)) {
-				warning ("More than four points added in stroke.");
+				warning ("More than twenty points added in stroke.");
 				added_points = 0;
 				i++;
-			} else if (!flat
+			} else if ((!flat || back)
 					&& Path.distance (start.x, px, start.y, py) > 0.1 * stroke_width
 					&& Path.distance (end.x, px, end.y, py) > 0.1 * stroke_width) {
 				new_point = new EditPoint (px, py);
-
 				new_point.prev = start;
 				new_point.next = end;
 				path.insert_new_point_on_path (new_point, step);
@@ -2073,7 +2095,12 @@ public class StrokeTool : Tool {
 		
 		path.remove_deleted_points ();	
 		path.remove_points_on_points ();
+
+		if (stroke_selected) { // FIXME: DELETE	
+			((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (path);
+		}
 	}
+
 }
 
 }
