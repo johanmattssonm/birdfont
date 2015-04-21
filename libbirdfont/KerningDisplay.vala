@@ -815,6 +815,7 @@ public class KerningDisplay : FontDisplay {
 			
 			row_index++;
 			x = 20;
+			return;
 		}
 	}
 	

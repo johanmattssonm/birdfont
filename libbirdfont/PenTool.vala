@@ -2124,6 +2124,10 @@ public class PenTool : Tool {
 			selected_points.add (selected);
 			selected.point.set_selected (true);
 		}
+		
+		foreach (Path p in glyph.path_list) {
+			p.update_region_boundaries ();
+		}
 	}
 	
 	public static void update_selected_points () {
