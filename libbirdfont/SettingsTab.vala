@@ -89,9 +89,11 @@ public class SettingsTab : SettingsDisplay {
 
 		Tool fill_open_path = new Tool ("fill_open_path");
 		fill_open_path.select_action.connect((self) => {
-			Path.fill_open_path = !Path.fill_open_path;
-			Glyph g = MainWindow.get_current_glyph ();
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
+			Path.fill_open_path = true;	
+		});
+		
+		fill_open_path.deselect_action.connect((self) => {
+			Path.fill_open_path = false;	
 		});
 		tools.add (new SettingsItem (fill_open_path, t_("Fill open paths.")));
 

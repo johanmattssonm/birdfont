@@ -247,6 +247,7 @@ public class GlyfData : GLib.Object {
 				if ((int16) y == 0 && (int16) coordinate_x.get (coordinate_y.size - 1) == 0) {
 					warning (@"Point on point in TTF. Index $(coordinate_y.size - 1)");
 					
+					// FIXME: distorted shape
 					if (BirdFont.has_argument ("--test")) {
 						print (glyph.get_name () + "\n");
 						print (points.get (epi).to_string ());
@@ -269,6 +270,7 @@ public class GlyfData : GLib.Object {
 						print (glyph.get_name () + "\n");
 						print (points.get (epi).to_string ());
 						
+						// FIXME: distorted shape
 						PenTool.remove_point_simplify (new PointSelection (points.get (epi), p));
 						return false;
 					}
