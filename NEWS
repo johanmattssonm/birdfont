@@ -1,3 +1,11 @@
+birdfont (2.6.0) stable;
+
+  * A tool box in the recent files tab
+  * Bright and dark color themes
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Apr 24 11:15:23 CEST 2015
+
 birdfont (2.5.1) stable;
 
   * Bug fixes
