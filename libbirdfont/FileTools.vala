@@ -51,9 +51,39 @@ public class FileTools : ToolCollection  {
 			MenuTab.show_settings_tab ();
 		});	
 		file_tools.add_tool (settings);
+		
+		Expander themes = new Expander (t_("Themes"));
+
+		foreach (string theme in Theme.themes) {			
+			string label;
+			LabelTool theme_label;
+			
+			label = ThemeTab.get_label_from_file_name (theme);
+			
+			theme_label = new LabelTool (label);
+			theme_label.data = theme;
+			
+			theme_label.select_action.connect((self) => {
+				TabBar tb;
+				LabelTool s = (LabelTool) self;
+				string theme_file = s.data;
+
+				Preferences.set ("theme", theme_file);
+				Theme.load_theme (theme_file);
+
+				Toolbox.redraw_tool_box ();
+				GlyphCanvas.redraw ();
 				
+				tb = MainWindow.get_tab_bar ();
+				tb.redraw (0, 0, tb.width, tb.height);
+			});
+			
+			themes.add_tool (theme_label);
+		}
+		
 		expanders.add (font_name);					
 		expanders.add (file_tools);
+		expanders.add (themes);
 	}
 
 	public override Gee.ArrayList<string> get_displays () {

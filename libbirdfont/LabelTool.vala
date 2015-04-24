@@ -23,6 +23,7 @@ public class LabelTool : Tool {
 	public bool has_counter { get; set; }
 	public bool has_delete_button { get; set; }
 	public signal void delete_action (LabelTool self);
+	public string data = "";
 
 	double counter_box_width = 24;
 	double counter_box_height = 11;

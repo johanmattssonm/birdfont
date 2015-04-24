@@ -30,7 +30,7 @@ public class ThemeTab : SettingsDisplay {
 		
 		Gee.ArrayList<Tool> theme_buttons = new Gee.ArrayList<Tool> ();
 		
-		foreach (string theme in Theme.themes) {			
+		foreach (string theme in Theme.themes) {
 			string label;
 			Tool select_theme = new Tool (theme);
 			
@@ -62,17 +62,7 @@ public class ThemeTab : SettingsDisplay {
 			
 			select_theme.set_icon ("theme");
 			
-			if (theme == "dark.theme") {
-				label = t_("Dark theme");
-			} else if (theme == "bright.theme") {
-				label = t_("Bright theme");
-			} else if (theme == "high_contrast.theme") {
-				label = t_("High contrast theme");
-			} else if (theme == "custom.theme") {
-				label = t_("Custom theme");
-			} else {
-				label = theme.replace (".theme", "");
-			}
+			label = get_label_from_file_name (theme);
 			
 			tools.add (new SettingsItem (select_theme, label));
 			theme_buttons.add (select_theme);
@@ -111,6 +101,24 @@ public class ThemeTab : SettingsDisplay {
 				GlyphCanvas.redraw ();
 			});
 		}		
+	}
+
+	public static string get_label_from_file_name (string theme) {
+		string label;
+		
+		if (theme == "dark.theme") {
+			label = t_("Dark");
+		} else if (theme == "bright.theme") {
+			label = t_("Bright");
+		} else if (theme == "high_contrast.theme") {
+			label = t_("High contrast");
+		} else if (theme == "custom.theme") {
+			label = t_("Custom");
+		} else {
+			label = theme.replace (".theme", "");
+		}
+		
+		return label;
 	}
 
 	public override string get_label () {
