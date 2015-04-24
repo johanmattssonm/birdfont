@@ -603,7 +603,7 @@ public class PenTool : Tool {
 			handle_selection.path.update_region_boundaries ();
 			
 			// FIXME: redraw line only
-			glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
+			GlyphCanvas.redraw ();
 			
 			if (GridTool.is_visible ()) {
 				last_point_x = selected_handle.x;
@@ -733,6 +733,8 @@ public class PenTool : Tool {
 				last_point_x = Glyph.path_coordinate_x (x);
 				last_point_y = Glyph.path_coordinate_y (y);
 			}
+		
+			GlyphCanvas.redraw ();
 		}
 		
 		if (show_selection_box) {
