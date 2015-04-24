@@ -633,6 +633,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public bool can_export () {
 		return true;
 	}
+	
+	public void set_cursor (int visible) {
+		if (visible != NativeWindow.VISIBLE) {
+			get_window ().set_cursor (new Cursor (CursorType.BLANK_CURSOR));
+		} else {
+			get_window ().set_cursor (new Cursor (CursorType.ARROW));
+		}
+	}
 }
 
 class TabbarCanvas : DrawingArea {

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+    Copyright (C) 2012, 2013, 2014, 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -69,7 +69,7 @@ public interface NativeWindow : GLib.Object {
 	public abstract bool can_export ();
 
 	/** Set cursor visibility */
-	public abstract bool set_cursor (int visible);
+	public abstract void set_cursor (int visible);
 }
 
 }
