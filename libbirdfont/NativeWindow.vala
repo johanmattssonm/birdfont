@@ -63,6 +63,9 @@ public interface NativeWindow : GLib.Object {
 	
 	/** @return true if the current font can be exported. */
 	public abstract bool can_export ();
+
+	/** Set cursor visibility */
+	public abstract bool set_cursor (bool visible);
 }
 
 }

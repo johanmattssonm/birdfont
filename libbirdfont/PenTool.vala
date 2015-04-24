@@ -557,6 +557,12 @@ public class PenTool : Tool {
 			move_selected_handle = false;
 		}
 
+		if (move_selected_handle || move_selected) {
+			MainWindow.native_window.set_cursor (false);
+		} else {
+			MainWindow.native_window.set_cursor (true);
+		}
+
 		// move control point handles
 		if (move_selected_handle) {
 			set_type_for_moving_handle ();
