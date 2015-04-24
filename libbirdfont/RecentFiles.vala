@@ -59,13 +59,16 @@ public class RecentFiles : Table {
 		rows.clear ();
 
 		if (recent_fonts.size == 0) {
+			row = new Row.headline (t_("No fonts created yet"));
+			rows.add (row);
+
 			row = new Row.columns_1 (t_("Create a New Font"), NEW_FONT, false);
 			rows.add (row);	
 		}
 
 		if (current_font.font_file != null) {
 			row = new Row.headline (current_font.get_file_name ());
-			rows.add (row);	
+			rows.add (row);
 						
 			row = new Row.columns_1 (t_("Folder") + ": " + (!) current_font.get_folder ().get_path (), CURRENT_FONT, false);
 			rows.add (row);

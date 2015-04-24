@@ -53,6 +53,10 @@ public class KerningList : Table {
 
 		rows.insert (0, new Row.headline (t_("Kerning Pairs")));
 		
+		if (rows.size == 1) {
+			rows.insert (1, new Row.columns_1 (t_("No kerning pairs created."), 0, false));
+		}
+		
 		return rows;
 	}
 
