@@ -37,7 +37,7 @@ public class Row : GLib.Object {
 	
 	public Row (string label, int index, bool delete_button = true) {
 		this.index = index;
-		column_text.add (new Text (label, 17 * MainWindow.units));
+		column_text.add (new Text (label, 18 * MainWindow.units));
 		this.delete_button = delete_button;
 	}
 
@@ -50,15 +50,15 @@ public class Row : GLib.Object {
 	
 	public Row.columns_1 (string label, int index, bool delete_button = true) {
 		this.index = index;
-		column_text.add (new Text (label, 17 * MainWindow.units));
+		column_text.add (new Text (label, 18 * MainWindow.units));
 		this.delete_button = delete_button;
 	}
 	
 	public Row.columns_2 (string label0, string label1, int index,
 		bool delete_button = true) {
 			
-		column_text.add (new Text (label0, 17 * MainWindow.units));
-		column_text.add (new Text (label1, 17 * MainWindow.units));
+		column_text.add (new Text (label0, 18 * MainWindow.units));
+		column_text.add (new Text (label1, 18 * MainWindow.units));
 		this.index = index;
 		this.delete_button = delete_button;
 	}
@@ -66,9 +66,9 @@ public class Row : GLib.Object {
 	public Row.columns_3 (string label0, string label1, string label2,
 		int index, bool delete_button = true) {
 			
-		column_text.add (new Text (label0, 17 * MainWindow.units));
-		column_text.add (new Text (label1, 17 * MainWindow.units));
-		column_text.add (new Text (label2, 17 * MainWindow.units));
+		column_text.add (new Text (label0, 18 * MainWindow.units));
+		column_text.add (new Text (label1, 18 * MainWindow.units));
+		column_text.add (new Text (label2, 18 * MainWindow.units));
 		this.index = index;
 		this.delete_button = delete_button;
 	}
@@ -76,10 +76,10 @@ public class Row : GLib.Object {
 	public Row.columns_4 (string label0, string label1, string label2, 
 		string label3, int index, bool delete_button = true) {
 			
-		column_text.add (new Text (label0, 17 * MainWindow.units));
-		column_text.add (new Text (label1, 17 * MainWindow.units));
-		column_text.add (new Text (label2, 17 * MainWindow.units));
-		column_text.add (new Text (label3, 17 * MainWindow.units));
+		column_text.add (new Text (label0, 18 * MainWindow.units));
+		column_text.add (new Text (label1, 18 * MainWindow.units));
+		column_text.add (new Text (label2, 18 * MainWindow.units));
+		column_text.add (new Text (label3, 18 * MainWindow.units));
 		this.index = index;
 		this.delete_button = delete_button;
 	}
@@ -87,11 +87,11 @@ public class Row : GLib.Object {
 	public Row.columns_5 (string label0, string label1, string label2,
 		string label3, string label4, int index, bool delete_button = true) {
 			
-		column_text.add (new Text (label0, 17 * MainWindow.units));
-		column_text.add (new Text (label1, 17 * MainWindow.units));
-		column_text.add (new Text (label2, 17 * MainWindow.units));
-		column_text.add (new Text (label3, 17 * MainWindow.units));
-		column_text.add (new Text (label4, 17 * MainWindow.units));
+		column_text.add (new Text (label0, 18 * MainWindow.units));
+		column_text.add (new Text (label1, 18 * MainWindow.units));
+		column_text.add (new Text (label2, 18 * MainWindow.units));
+		column_text.add (new Text (label3, 18 * MainWindow.units));
+		column_text.add (new Text (label4, 18 * MainWindow.units));
 		this.index = index;
 		this.delete_button = delete_button;
 	}
