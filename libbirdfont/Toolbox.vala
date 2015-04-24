@@ -467,7 +467,6 @@ public class Toolbox : GLib.Object  {
 		cr.restore ();
 		
 		draw_tool_tip (cr);
-		
 	}
 	
 	private void draw_tool_tip (Context cr) {

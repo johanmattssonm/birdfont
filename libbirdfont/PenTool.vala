@@ -76,7 +76,7 @@ public class PenTool : Tool {
 	public static double simplification_threshold = 0.5;
 		
 	public static bool retain_angle = false;
-		
+	
 	public PenTool (string name) {	
 		base (name, t_("Add new points"));
 		
@@ -96,22 +96,23 @@ public class PenTool : Tool {
 		select_action.connect ((self) => {
 		});
 		
-		press_action.connect ((self, b, x, y) => {			
+		press_action.connect ((self, b, x, y) => {		
 			// retain path direction
 			clockwise = new Gee.ArrayList<Path> ();
 			counter_clockwise = new Gee.ArrayList<Path> ();
 
 			begin_action_x = x;
 			begin_action_y = y;
-
+				
 			update_orientation ();
-			
+
 			first_move_action = true;
 
 			last_point_x = Glyph.path_coordinate_x (x);
 			last_point_y = Glyph.path_coordinate_y (y);
 		
 			move_action (this, x, y);
+			
 			press (b, x, y, false);
 
 			if (BirdFont.android) {
@@ -186,7 +187,7 @@ public class PenTool : Tool {
 			if (Path.distance (begin_action_x, x, begin_action_y, y) > 10 * MainWindow.units) {
 				point_selection_image = false;
 			}
-			
+
 			move (x, y);
 		});
 		
@@ -531,7 +532,7 @@ public class PenTool : Tool {
 			}
 		}
 		g.close_path ();
-		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+		GlyphCanvas.redraw ();
 	}
 	
 	public void set_precision (double p) {
@@ -1370,7 +1371,7 @@ public class PenTool : Tool {
 		}
 
 		if (redraw) {
-			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+			GlyphCanvas.redraw ();
 		}
 	}
 
@@ -1737,7 +1738,7 @@ public class PenTool : Tool {
 		}
 
 		set_selected_point (next.point, next.path);		
-		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);	
+		GlyphCanvas.redraw ();
 	}
 
 	private static PointSelection get_next_point (double angle) 
@@ -1882,7 +1883,7 @@ public class PenTool : Tool {
 		}
 		
 		// TODO: redraw only the relevant parts
-		g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
+		GlyphCanvas.redraw ();
 	}
 	
 	public static void convert_point_to_line (EditPoint ep, bool both) {

@@ -1074,7 +1074,7 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		add_stroke.selected = stroke;
-		Toolbox.redraw_tool_box ();	
+		// Too slow. Toolbox.redraw_tool_box ();	
 	}
 
 	void auto_trace_background () {
