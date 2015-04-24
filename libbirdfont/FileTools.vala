@@ -67,7 +67,7 @@ public class FileTools : ToolCollection  {
 				TabBar tb;
 				LabelTool s = (LabelTool) self;
 				string theme_file = s.data;
-
+				
 				Preferences.set ("theme", theme_file);
 				Theme.load_theme (theme_file);
 
@@ -78,7 +78,9 @@ public class FileTools : ToolCollection  {
 				tb.redraw (0, 0, tb.width, tb.height);
 			});
 			
-			themes.add_tool (theme_label);
+			if (!theme.has_prefix ("generated_")) {
+				themes.add_tool (theme_label);
+			}
 		}
 		
 		expanders.add (font_name);					
