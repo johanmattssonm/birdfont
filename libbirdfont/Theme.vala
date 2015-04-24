@@ -412,6 +412,8 @@ public class Theme : GLib.Object {
 			write_theme ();
 		}
 
+		load_theme ("dark.theme");
+
 		if (BirdFont.has_argument ("--test")) {
 			t_("Canvas Background");
 			t_("Stroke Color");

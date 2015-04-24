@@ -396,7 +396,9 @@ public class BirdFont {
 		File font_file;
 		string exec_path;
 		string theme;
-
+		int default_theme_version;
+		string theme_version;
+		
 		args = new Argument.command_line (arg);
 
 #if ANDROID
@@ -440,15 +442,26 @@ public class BirdFont {
 
 		Preferences.load ();
 		
+		// always load default theme when names in theme does change
+		default_theme_version = 1;
+		theme = Preferences.get ("theme");
+		theme_version = Preferences.get ("theme_version");
+
 		Theme.set_default_colors ();
 		
-		theme = Preferences.get ("theme");
-		
-		if (theme != "") {
-			Theme.load_theme (theme);
+		if (theme_version == "" || int.parse (theme_version) < default_theme_version) {
+			
+			Theme.load_theme ("dark.theme");
+			Preferences.set ("theme", "dark.theme");
 		} else {
-			Theme.load_theme ("default.theme");
+			if (theme != "") {
+				Theme.load_theme (theme);
+			} else {
+				Theme.load_theme ("dark.theme");
+			}
 		}
+
+		Preferences.set ("theme_version", @"$default_theme_version");
 		
 		current_font = new Font ();
 		current_font.set_name ("");
