@@ -176,6 +176,8 @@ public class PenTool : Tool {
 				}
 			}
 			
+			MainWindow.native_window.set_cursor (NativeWindow.VISIBLE);
+			
 			point_selection_image = false;
 			BirdFont.get_current_font ().touch ();
 		});
@@ -556,11 +558,11 @@ public class PenTool : Tool {
 			move_selected = false;
 			move_selected_handle = false;
 		}
-
+		
 		if (move_selected_handle || move_selected) {
-			MainWindow.native_window.set_cursor (false);
+			MainWindow.native_window.set_cursor (NativeWindow.HIDDEN);
 		} else {
-			MainWindow.native_window.set_cursor (true);
+			MainWindow.native_window.set_cursor (NativeWindow.VISIBLE);
 		}
 
 		// move control point handles

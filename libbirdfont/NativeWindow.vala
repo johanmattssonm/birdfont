@@ -15,6 +15,10 @@
 namespace BirdFont {
 
 public interface NativeWindow : GLib.Object {
+	
+	public static const int HIDDEN = 0;
+	public static const int VISIBLE = 1;
+
 	public abstract void file_chooser (string title, FileChooser file_chooser_callback, uint flags);
 	
 	public abstract void update_window_size ();
@@ -65,7 +69,7 @@ public interface NativeWindow : GLib.Object {
 	public abstract bool can_export ();
 
 	/** Set cursor visibility */
-	public abstract bool set_cursor (bool visible);
+	public abstract bool set_cursor (int visible);
 }
 
 }
