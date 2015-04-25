@@ -72,6 +72,7 @@ public class ForesightTool : Tool {
 				p.release_action (p, 2, x, y);
 				current_path.hide_end_handle = true;
 				state = NONE;
+				MainWindow.native_window.set_cursor (NativeWindow.VISIBLE);
 				return;
 			} 
 
@@ -193,6 +194,10 @@ public class ForesightTool : Tool {
 
 			last_move_x = x;
 			last_move_y = y;
+			
+			if (state == NONE) {
+				MainWindow.native_window.set_cursor (NativeWindow.VISIBLE);
+			}
 			
 			PenTool.active_path = current_path;
 			PenTool.active_path.hide_end_handle = (state == MOVE_POINT);
