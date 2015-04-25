@@ -72,7 +72,7 @@ parser.add_option ("-m", "--nogzip", dest="nogzip", help="don't gzip manpages", 
 parser.add_option ("-n", "--manpages-directory", dest="mandir", help="put man pages in this directory under prefix")
 parser.add_option ("-l", "--libdir", dest="libdir", help="path to directory for shared libraries (lib or lib64).")
 parser.add_option ("-c", "--skip-command-line-tools", dest="nocli", help="don't install command line tools")
-parser.add_option ("-a", "--apport", dest="apport", help="install apport scripts")
+parser.add_option ("-a", "--apport", dest="apport", help="install apport scripts", default=True)
 
 (options, args) = parser.parse_args()
 
@@ -83,10 +83,6 @@ if not options.nocli:
 	options.nocli = False
 
 nogzip = options.nogzip
-
-apport = options.apport
-if apport == None:
-	apport = True
 
 if not options.mandir:
 	mandir = "/man/man1"
@@ -200,7 +196,7 @@ for lang_dir in glob.glob('build/locale/*'):
 install ('resources/linux/birdfont.xml', '/share/mime/packages', 644)
 
 #apport hooks
-if apport:
+if options.apport == "True":
 	install ('resources/birdfont.py', '/share/apport/package-hooks', 644)
 	install ('resources/source_birdfont.py', '/share/apport/package-hooks', 644)
 	install_root ('resources/birdfont-crashdb.conf', '/etc/apport/crashdb.conf.d', 644)
