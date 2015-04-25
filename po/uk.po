@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-24 12:17+0200\n"
+"POT-Creation-Date: 2015-04-25 18:20+0200\n"
 "PO-Revision-Date: 2014-06-30 01:43+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,7 +103,7 @@ msgid "Images"
 msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileDialogTab.vala:81
-#: libbirdfont/RecentFiles.vala:103
+#: libbirdfont/RecentFiles.vala:106
 msgid "Files"
 msgstr "Файли"
 
@@ -176,7 +176,7 @@ msgid "Glyph"
 msgstr ""
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
-#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:929
+#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:937
 msgid "Version"
 msgstr "Версія"
 
@@ -276,30 +276,30 @@ msgid "Name and Description"
 msgstr "Ім'я та _Опис"
 
 #: libbirdfont/DescriptionDisplay.vala:56 libbirdfont/MenuTab.vala:84
-#: birdfont/GtkWindow.vala:873
+#: birdfont/GtkWindow.vala:881
 #, fuzzy
 msgid "PostScript Name"
 msgstr "Postscript ім'я"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:880
+#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:888
 msgid "Name"
 msgstr "Назва"
 
 #: libbirdfont/DescriptionDisplay.vala:76 libbirdfont/MenuTab.vala:94
-#: birdfont/GtkWindow.vala:887
+#: birdfont/GtkWindow.vala:895
 msgid "Style"
 msgstr "Стиль"
 
-#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:893
+#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:901
 msgid "Bold"
 msgstr ""
 
-#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:900
+#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:908
 msgid "Italic"
 msgstr ""
 
-#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:908
+#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:916
 msgid "Weight"
 msgstr ""
 
@@ -313,11 +313,11 @@ msgstr "Повне ім'я"
 msgid "Unique Identifier"
 msgstr "Унікальний ідентифікатор"
 
-#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:936
+#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:944
 msgid "Description"
 msgstr "Опис"
 
-#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:944
+#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:952
 #, fuzzy
 msgid "Copyright"
 msgstr "Telif Hakkı"
@@ -331,9 +331,8 @@ msgid "Control Point"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:106
-#, fuzzy
 msgid "Stroke"
-msgstr "Товщина штриха"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:107
 msgid "Geometrical Shapes"
@@ -490,9 +489,8 @@ msgid "Stroke width"
 msgstr "Товщина штриха"
 
 #: libbirdfont/DrawingTools.vala:784
-#, fuzzy
 msgid "Create outline form stroke"
-msgstr "Створити контур з лінії"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:834
 msgid "Show guidelines"
@@ -575,19 +573,16 @@ msgid "Folders"
 msgstr ""
 
 #: libbirdfont/FileTools.vala:31
-#, fuzzy
 msgid "New font"
-msgstr "Нова версія"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:37
-#, fuzzy
 msgid "Open font"
-msgstr "Відкрити"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:43
-#, fuzzy
 msgid "Save font"
-msgstr "Зберегти _як"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:451
 #: libbirdfont/SettingsDisplay.vala:209 libbirdfont/SettingsTab.vala:31
@@ -656,9 +651,13 @@ msgstr ""
 msgid "Close"
 msgstr "Закрити"
 
-#: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:107
+#: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:111
 msgid "Kerning Pairs"
 msgstr "Пари кернінгу"
+
+#: libbirdfont/KerningList.vala:57
+msgid "No kerning pairs created."
+msgstr ""
 
 #: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:60
 msgid "Kerning class"
@@ -804,7 +803,7 @@ msgstr "Файли"
 msgid "New"
 msgstr "_Новий"
 
-#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:78
+#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:81
 #, fuzzy
 msgid "Recent Files"
 msgstr "_Останні файли"
@@ -1106,19 +1105,22 @@ msgid "Generate html document"
 msgstr "Генерувати документ html"
 
 #: libbirdfont/RecentFiles.vala:62
-#, fuzzy
-msgid "Create a New Font"
-msgstr "_Створити контур"
+msgid "No fonts created yet"
+msgstr ""
 
-#: libbirdfont/RecentFiles.vala:70
-msgid "Folder"
+#: libbirdfont/RecentFiles.vala:65
+msgid "Create a New Font"
 msgstr ""
 
 #: libbirdfont/RecentFiles.vala:73
+msgid "Folder"
+msgstr ""
+
+#: libbirdfont/RecentFiles.vala:76
 msgid "Glyphs"
 msgstr ""
 
-#: libbirdfont/RecentFiles.vala:89
+#: libbirdfont/RecentFiles.vala:92
 msgid "Backups"
 msgstr ""
 
@@ -1199,9 +1201,8 @@ msgid "Import"
 msgstr "Імпорт"
 
 #: libbirdfont/Theme.vala:418
-#, fuzzy
 msgid "Canvas Background"
-msgstr "Фони"
+msgstr ""
 
 #: libbirdfont/Theme.vala:419
 msgid "Stroke Color"
@@ -1224,19 +1225,16 @@ msgid "Background 1"
 msgstr ""
 
 #: libbirdfont/Theme.vala:425
-#, fuzzy
 msgid "Dialog Background"
-msgstr "Фони"
+msgstr ""
 
 #: libbirdfont/Theme.vala:426
-#, fuzzy
 msgid "Menu Background"
-msgstr "Фони"
+msgstr ""
 
 #: libbirdfont/Theme.vala:427
-#, fuzzy
 msgid "Default Background"
-msgstr "Фони"
+msgstr ""
 
 #: libbirdfont/Theme.vala:429
 msgid "Checkbox Background"
@@ -1255,14 +1253,12 @@ msgid "Table Border"
 msgstr ""
 
 #: libbirdfont/Theme.vala:434
-#, fuzzy
 msgid "Selection Border"
-msgstr "_Виділити точку над"
+msgstr ""
 
 #: libbirdfont/Theme.vala:435
-#, fuzzy
 msgid "Overview Glyph"
-msgstr "Огляд"
+msgstr ""
 
 #: libbirdfont/Theme.vala:436
 msgid "Foreground Inverted"
@@ -1381,14 +1377,12 @@ msgid "Overview Foreground"
 msgstr ""
 
 #: libbirdfont/Theme.vala:476
-#, fuzzy
 msgid "Glyph Count Background 1"
-msgstr "Установити фон для гліфа"
+msgstr ""
 
 #: libbirdfont/Theme.vala:477
-#, fuzzy
 msgid "Glyph Count Background 2"
-msgstr "Установити фон для гліфа"
+msgstr ""
 
 #: libbirdfont/Theme.vala:479
 msgid "Dialog Shadow"
@@ -1455,9 +1449,8 @@ msgid "Zoom Bar Border"
 msgstr ""
 
 #: libbirdfont/Theme.vala:499
-#, fuzzy
 msgid "Font Name"
-msgstr "Розмір шрифту"
+msgstr ""
 
 #: libbirdfont/Theme.vala:683
 msgid "New theme"
@@ -1476,9 +1469,8 @@ msgid "Dark"
 msgstr ""
 
 #: libbirdfont/ThemeTab.vala:112
-#, fuzzy
 msgid "Bright"
-msgstr "Telif Hakkı"
+msgstr ""
 
 #: libbirdfont/ThemeTab.vala:116
 msgid "Custom"
@@ -1501,12 +1493,12 @@ msgstr "Колір об'єкта"
 msgid "Your fonts have been exported."
 msgstr ""
 
-#: birdfont/GtkWindow.vala:915
+#: birdfont/GtkWindow.vala:923
 #, fuzzy
 msgid "Full name (name and style)"
 msgstr "Повне ім'я"
 
-#: birdfont/GtkWindow.vala:922
+#: birdfont/GtkWindow.vala:930
 msgid "Unique identifier"
 msgstr "Унікальний ідентифікатор"
 
@@ -1580,6 +1572,10 @@ msgstr "Запис"
 
 #~ msgid "Object color"
 #~ msgstr "Колір об'єкта"
+
+#, fuzzy
+#~ msgid "Font size"
+#~ msgstr "Розмір шрифту"
 
 #~ msgid "Font size "
 #~ msgstr "Розмір шрифту"
@@ -1683,6 +1679,9 @@ msgstr "Запис"
 #~ msgid "_Glyph Sequence"
 #~ msgstr "_Послідовність гліфів"
 
+#~ msgid "Set Glyph _Background"
+#~ msgstr "Установити фон для гліфа"
+
 #~ msgid "_Remove Glyph Background"
 #~ msgstr "_Вилучити фон гліфа"
 
@@ -1706,6 +1705,9 @@ msgstr "Запис"
 
 #~ msgid "Close _All Tabs"
 #~ msgstr "Закрити _усі вкладки"
+
+#~ msgid "_Create Path"
+#~ msgstr "_Створити контур"
 
 #~ msgid "_Zoom"
 #~ msgstr "_Наближення/Віддалення"
@@ -1754,6 +1756,9 @@ msgstr "Запис"
 
 #~ msgid "Set contrast for background image"
 #~ msgstr "Встановити контраст для фонового зображення"
+
+#~ msgid "Backgrounds"
+#~ msgstr "Фони"
 
 #~ msgid "Creating thumbnails"
 #~ msgstr "Створення мініатюр"

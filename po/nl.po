@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-24 12:17+0200\n"
+"POT-Creation-Date: 2015-04-25 18:20+0200\n"
 "PO-Revision-Date: 2015-02-20 14:08+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -97,7 +97,7 @@ msgid "Images"
 msgstr "Afbeeldingen"
 
 #: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileDialogTab.vala:81
-#: libbirdfont/RecentFiles.vala:103
+#: libbirdfont/RecentFiles.vala:106
 msgid "Files"
 msgstr "Bestanden"
 
@@ -169,7 +169,7 @@ msgid "Glyph"
 msgstr "Symbool"
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
-#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:929
+#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:937
 msgid "Version"
 msgstr "Versie"
 
@@ -262,29 +262,29 @@ msgid "Name and Description"
 msgstr "Naam en beschrijving"
 
 #: libbirdfont/DescriptionDisplay.vala:56 libbirdfont/MenuTab.vala:84
-#: birdfont/GtkWindow.vala:873
+#: birdfont/GtkWindow.vala:881
 msgid "PostScript Name"
 msgstr "PostScript-naam"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:880
+#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:888
 msgid "Name"
 msgstr "Naam"
 
 #: libbirdfont/DescriptionDisplay.vala:76 libbirdfont/MenuTab.vala:94
-#: birdfont/GtkWindow.vala:887
+#: birdfont/GtkWindow.vala:895
 msgid "Style"
 msgstr "Stijl"
 
-#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:893
+#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:901
 msgid "Bold"
 msgstr "Vet"
 
-#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:900
+#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:908
 msgid "Italic"
 msgstr "Cursief"
 
-#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:908
+#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:916
 msgid "Weight"
 msgstr "Lijndikte"
 
@@ -296,11 +296,11 @@ msgstr "Volledige naam (naam en stijl)"
 msgid "Unique Identifier"
 msgstr "Unieke id"
 
-#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:936
+#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:944
 msgid "Description"
 msgstr "Beschrijving"
 
-#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:944
+#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:952
 msgid "Copyright"
 msgstr "Auteursrecht"
 
@@ -313,9 +313,8 @@ msgid "Control Point"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:106
-#, fuzzy
 msgid "Stroke"
-msgstr "Lijndikte"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:107
 msgid "Geometrical Shapes"
@@ -470,9 +469,8 @@ msgid "Stroke width"
 msgstr "Lijndikte"
 
 #: libbirdfont/DrawingTools.vala:784
-#, fuzzy
 msgid "Create outline form stroke"
-msgstr "Tegenstelling van omlijning aanmaken"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:834
 msgid "Show guidelines"
@@ -554,19 +552,16 @@ msgid "Folders"
 msgstr ""
 
 #: libbirdfont/FileTools.vala:31
-#, fuzzy
 msgid "New font"
-msgstr "Nieuwe versie"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:37
-#, fuzzy
 msgid "Open font"
-msgstr "Openen"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:43
-#, fuzzy
 msgid "Save font"
-msgstr "Opslaan als"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:451
 #: libbirdfont/SettingsDisplay.vala:209 libbirdfont/SettingsTab.vala:31
@@ -633,9 +628,13 @@ msgstr "Invoegen"
 msgid "Close"
 msgstr "Sluiten"
 
-#: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:107
+#: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:111
 msgid "Kerning Pairs"
 msgstr "Afspatieercombinaties"
+
+#: libbirdfont/KerningList.vala:57
+msgid "No kerning pairs created."
+msgstr ""
 
 #: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:60
 msgid "Kerning class"
@@ -778,7 +777,7 @@ msgstr "Bestand"
 msgid "New"
 msgstr "Nieuw"
 
-#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:78
+#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:81
 msgid "Recent Files"
 msgstr "Recente bestanden"
 
@@ -1059,19 +1058,22 @@ msgid "Generate html document"
 msgstr "Html-document genereren"
 
 #: libbirdfont/RecentFiles.vala:62
-#, fuzzy
-msgid "Create a New Font"
-msgstr "Pad aan_maken"
+msgid "No fonts created yet"
+msgstr ""
 
-#: libbirdfont/RecentFiles.vala:70
-msgid "Folder"
+#: libbirdfont/RecentFiles.vala:65
+msgid "Create a New Font"
 msgstr ""
 
 #: libbirdfont/RecentFiles.vala:73
+msgid "Folder"
+msgstr ""
+
+#: libbirdfont/RecentFiles.vala:76
 msgid "Glyphs"
 msgstr ""
 
-#: libbirdfont/RecentFiles.vala:89
+#: libbirdfont/RecentFiles.vala:92
 msgid "Backups"
 msgstr ""
 
@@ -1152,9 +1154,8 @@ msgid "Import"
 msgstr "Importeren"
 
 #: libbirdfont/Theme.vala:418
-#, fuzzy
 msgid "Canvas Background"
-msgstr "Achtergronden"
+msgstr ""
 
 #: libbirdfont/Theme.vala:419
 msgid "Stroke Color"
@@ -1177,19 +1178,16 @@ msgid "Background 1"
 msgstr ""
 
 #: libbirdfont/Theme.vala:425
-#, fuzzy
 msgid "Dialog Background"
-msgstr "Achtergronden"
+msgstr ""
 
 #: libbirdfont/Theme.vala:426
-#, fuzzy
 msgid "Menu Background"
-msgstr "Achtergronden"
+msgstr ""
 
 #: libbirdfont/Theme.vala:427
-#, fuzzy
 msgid "Default Background"
-msgstr "Achtergrond selecteren"
+msgstr ""
 
 #: libbirdfont/Theme.vala:429
 msgid "Checkbox Background"
@@ -1208,14 +1206,12 @@ msgid "Table Border"
 msgstr ""
 
 #: libbirdfont/Theme.vala:434
-#, fuzzy
 msgid "Selection Border"
-msgstr "Bovenstaande punt selecteren"
+msgstr ""
 
 #: libbirdfont/Theme.vala:435
-#, fuzzy
 msgid "Overview Glyph"
-msgstr "Overzicht"
+msgstr ""
 
 #: libbirdfont/Theme.vala:436
 msgid "Foreground Inverted"
@@ -1226,9 +1222,8 @@ msgid "Menu Foreground"
 msgstr ""
 
 #: libbirdfont/Theme.vala:438
-#, fuzzy
 msgid "Selected Tab Foreground"
-msgstr "Achtergrond selecteren"
+msgstr ""
 
 #: libbirdfont/Theme.vala:439
 msgid "Tab Separator"
@@ -1335,14 +1330,12 @@ msgid "Overview Foreground"
 msgstr ""
 
 #: libbirdfont/Theme.vala:476
-#, fuzzy
 msgid "Glyph Count Background 1"
-msgstr "Symbool_achtergrond instellen"
+msgstr ""
 
 #: libbirdfont/Theme.vala:477
-#, fuzzy
 msgid "Glyph Count Background 2"
-msgstr "Symbool_achtergrond instellen"
+msgstr ""
 
 #: libbirdfont/Theme.vala:479
 msgid "Dialog Shadow"
@@ -1405,14 +1398,12 @@ msgid "Active Spin Button"
 msgstr ""
 
 #: libbirdfont/Theme.vala:498
-#, fuzzy
 msgid "Zoom Bar Border"
-msgstr "Meer uitzoomen"
+msgstr ""
 
 #: libbirdfont/Theme.vala:499
-#, fuzzy
 msgid "Font Name"
-msgstr "Tekengrootte"
+msgstr ""
 
 #: libbirdfont/Theme.vala:683
 msgid "New theme"
@@ -1431,9 +1422,8 @@ msgid "Dark"
 msgstr ""
 
 #: libbirdfont/ThemeTab.vala:112
-#, fuzzy
 msgid "Bright"
-msgstr "Auteursrecht"
+msgstr ""
 
 #: libbirdfont/ThemeTab.vala:116
 msgid "Custom"
@@ -1455,11 +1445,11 @@ msgstr "Kleur selecteren"
 msgid "Your fonts have been exported."
 msgstr "Uw lettertypen zijn geëxporteerd."
 
-#: birdfont/GtkWindow.vala:915
+#: birdfont/GtkWindow.vala:923
 msgid "Full name (name and style)"
 msgstr "Volledige naam (naam en stijl)"
 
-#: birdfont/GtkWindow.vala:922
+#: birdfont/GtkWindow.vala:930
 msgid "Unique identifier"
 msgstr "Unieke id"
 
@@ -1507,6 +1497,9 @@ msgstr "Schrijven"
 #~ msgid "Control Point Tools"
 #~ msgstr "Controlepunthulpmiddelen"
 
+#~ msgid "Select Background"
+#~ msgstr "Achtergrond selecteren"
+
 #~ msgid "Saving"
 #~ msgstr "Opslaan"
 
@@ -1542,6 +1535,9 @@ msgstr "Schrijven"
 
 #~ msgid "Select Background Image"
 #~ msgstr "Achtergrondafbeelding selecteren"
+
+#~ msgid "Font size"
+#~ msgstr "Tekengrootte"
 
 #~ msgid "Font size "
 #~ msgstr "Lettergrootte "
@@ -1666,6 +1662,9 @@ msgstr "Schrijven"
 #~ msgid "_Glyph Sequence"
 #~ msgstr "_Symboolvolgorde"
 
+#~ msgid "Set Glyph _Background"
+#~ msgstr "Symbool_achtergrond instellen"
+
 #~ msgid "_Remove Glyph Background"
 #~ msgstr "Symboolachtergrond _verwijderen"
 
@@ -1692,6 +1691,9 @@ msgstr "Schrijven"
 
 #~ msgid "Close _All Tabs"
 #~ msgstr "_Alle tabbladen sluiten"
+
+#~ msgid "_Create Path"
+#~ msgstr "Pad aan_maken"
 
 #~ msgid "_Zoom"
 #~ msgstr "_Zoomen"
@@ -1776,6 +1778,9 @@ msgstr "Schrijven"
 
 #~ msgid "Set contrast for background image"
 #~ msgstr "Contrast voor achtergrondafbeelding instellen"
+
+#~ msgid "Backgrounds"
+#~ msgstr "Achtergronden"
 
 #~ msgid "Creating thumbnails"
 #~ msgstr "Miniaturen aanmaken"

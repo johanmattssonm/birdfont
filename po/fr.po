@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-24 12:17+0200\n"
+"POT-Creation-Date: 2015-04-25 18:20+0200\n"
 "PO-Revision-Date: 2015-04-22 09:54+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -99,7 +99,7 @@ msgid "Images"
 msgstr "Images"
 
 #: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileDialogTab.vala:81
-#: libbirdfont/RecentFiles.vala:103
+#: libbirdfont/RecentFiles.vala:106
 msgid "Files"
 msgstr "Fichiers"
 
@@ -171,7 +171,7 @@ msgid "Glyph"
 msgstr "Glyphe"
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
-#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:929
+#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:937
 msgid "Version"
 msgstr "Version"
 
@@ -267,29 +267,29 @@ msgid "Name and Description"
 msgstr "Nom et _Description"
 
 #: libbirdfont/DescriptionDisplay.vala:56 libbirdfont/MenuTab.vala:84
-#: birdfont/GtkWindow.vala:873
+#: birdfont/GtkWindow.vala:881
 msgid "PostScript Name"
 msgstr "Nom PostScript"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:880
+#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:888
 msgid "Name"
 msgstr "Nom"
 
 #: libbirdfont/DescriptionDisplay.vala:76 libbirdfont/MenuTab.vala:94
-#: birdfont/GtkWindow.vala:887
+#: birdfont/GtkWindow.vala:895
 msgid "Style"
 msgstr "Style"
 
-#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:893
+#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:901
 msgid "Bold"
 msgstr "Gras"
 
-#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:900
+#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:908
 msgid "Italic"
 msgstr "Italique"
 
-#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:908
+#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:916
 msgid "Weight"
 msgstr "Graisse"
 
@@ -303,11 +303,11 @@ msgstr "Nom complet (nom et style)"
 msgid "Unique Identifier"
 msgstr "Identifiant unique"
 
-#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:936
+#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:944
 msgid "Description"
 msgstr "Description"
 
-#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:944
+#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:952
 msgid "Copyright"
 msgstr "Copyright"
 
@@ -320,9 +320,8 @@ msgid "Control Point"
 msgstr "Point de contrôle"
 
 #: libbirdfont/DrawingTools.vala:106
-#, fuzzy
 msgid "Stroke"
-msgstr "Épaisseur de trait"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:107
 msgid "Geometrical Shapes"
@@ -477,9 +476,8 @@ msgid "Stroke width"
 msgstr "Épaisseur de trait"
 
 #: libbirdfont/DrawingTools.vala:784
-#, fuzzy
 msgid "Create outline form stroke"
-msgstr "Créer un compteur depuis la ligne extérieure"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:834
 msgid "Show guidelines"
@@ -562,19 +560,16 @@ msgid "Folders"
 msgstr ""
 
 #: libbirdfont/FileTools.vala:31
-#, fuzzy
 msgid "New font"
-msgstr "Nouvelle version"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:37
-#, fuzzy
 msgid "Open font"
-msgstr "Ouvrir"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:43
-#, fuzzy
 msgid "Save font"
-msgstr "Enregistrer _sous"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:451
 #: libbirdfont/SettingsDisplay.vala:209 libbirdfont/SettingsTab.vala:31
@@ -643,9 +638,13 @@ msgstr ""
 msgid "Close"
 msgstr "Fermer"
 
-#: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:107
+#: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:111
 msgid "Kerning Pairs"
 msgstr "Approche de paires"
+
+#: libbirdfont/KerningList.vala:57
+msgid "No kerning pairs created."
+msgstr ""
 
 #: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:60
 msgid "Kerning class"
@@ -795,7 +794,7 @@ msgstr "Fichiers"
 msgid "New"
 msgstr "_Nouveau"
 
-#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:78
+#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:81
 #, fuzzy
 msgid "Recent Files"
 msgstr "Fichiers _récents"
@@ -1109,20 +1108,23 @@ msgid "Generate html document"
 msgstr "Générer un document HTML"
 
 #: libbirdfont/RecentFiles.vala:62
-#, fuzzy
-msgid "Create a New Font"
-msgstr "_Créer un chemin"
+msgid "No fonts created yet"
+msgstr ""
 
-#: libbirdfont/RecentFiles.vala:70
-msgid "Folder"
+#: libbirdfont/RecentFiles.vala:65
+msgid "Create a New Font"
 msgstr ""
 
 #: libbirdfont/RecentFiles.vala:73
+msgid "Folder"
+msgstr ""
+
+#: libbirdfont/RecentFiles.vala:76
 #, fuzzy
 msgid "Glyphs"
 msgstr "Glyphe"
 
-#: libbirdfont/RecentFiles.vala:89
+#: libbirdfont/RecentFiles.vala:92
 #, fuzzy
 msgid "Backups"
 msgstr "Sauvegarde"
@@ -1205,9 +1207,8 @@ msgid "Import"
 msgstr "Importer"
 
 #: libbirdfont/Theme.vala:418
-#, fuzzy
 msgid "Canvas Background"
-msgstr "Arrière-plans"
+msgstr ""
 
 #: libbirdfont/Theme.vala:419
 #, fuzzy
@@ -1232,19 +1233,16 @@ msgid "Background 1"
 msgstr ""
 
 #: libbirdfont/Theme.vala:425
-#, fuzzy
 msgid "Dialog Background"
-msgstr "Arrière-plans"
+msgstr ""
 
 #: libbirdfont/Theme.vala:426
-#, fuzzy
 msgid "Menu Background"
-msgstr "Arrière-plans"
+msgstr ""
 
 #: libbirdfont/Theme.vala:427
-#, fuzzy
 msgid "Default Background"
-msgstr "Sélectionner un arrière-plan"
+msgstr ""
 
 #: libbirdfont/Theme.vala:429
 msgid "Checkbox Background"
@@ -1263,14 +1261,12 @@ msgid "Table Border"
 msgstr ""
 
 #: libbirdfont/Theme.vala:434
-#, fuzzy
 msgid "Selection Border"
-msgstr "_Sélectionner le point au dessus"
+msgstr ""
 
 #: libbirdfont/Theme.vala:435
-#, fuzzy
 msgid "Overview Glyph"
-msgstr "Vue d'ensemble"
+msgstr ""
 
 #: libbirdfont/Theme.vala:436
 msgid "Foreground Inverted"
@@ -1281,9 +1277,8 @@ msgid "Menu Foreground"
 msgstr ""
 
 #: libbirdfont/Theme.vala:438
-#, fuzzy
 msgid "Selected Tab Foreground"
-msgstr "Sélectionner un arrière-plan"
+msgstr ""
 
 #: libbirdfont/Theme.vala:439
 msgid "Tab Separator"
@@ -1390,14 +1385,12 @@ msgid "Overview Foreground"
 msgstr ""
 
 #: libbirdfont/Theme.vala:476
-#, fuzzy
 msgid "Glyph Count Background 1"
-msgstr "Définir l'_arrière-plan du glyphe"
+msgstr ""
 
 #: libbirdfont/Theme.vala:477
-#, fuzzy
 msgid "Glyph Count Background 2"
-msgstr "Définir l'_arrière-plan du glyphe"
+msgstr ""
 
 #: libbirdfont/Theme.vala:479
 msgid "Dialog Shadow"
@@ -1464,9 +1457,8 @@ msgid "Zoom Bar Border"
 msgstr ""
 
 #: libbirdfont/Theme.vala:499
-#, fuzzy
 msgid "Font Name"
-msgstr "Taille de la police"
+msgstr ""
 
 #: libbirdfont/Theme.vala:683
 msgid "New theme"
@@ -1485,9 +1477,8 @@ msgid "Dark"
 msgstr ""
 
 #: libbirdfont/ThemeTab.vala:112
-#, fuzzy
 msgid "Bright"
-msgstr "Copyright"
+msgstr ""
 
 #: libbirdfont/ThemeTab.vala:116
 msgid "Custom"
@@ -1510,11 +1501,11 @@ msgstr "Sélectionnez une couleur"
 msgid "Your fonts have been exported."
 msgstr "Vos Fontes ont été exportées."
 
-#: birdfont/GtkWindow.vala:915
+#: birdfont/GtkWindow.vala:923
 msgid "Full name (name and style)"
 msgstr "Nom complet (nom et style)"
 
-#: birdfont/GtkWindow.vala:922
+#: birdfont/GtkWindow.vala:930
 msgid "Unique identifier"
 msgstr "Identifiant unique"
 
@@ -1559,6 +1550,9 @@ msgstr "Écriture"
 
 #~ msgid "Backup"
 #~ msgstr "Sauvegarde"
+
+#~ msgid "Select Background"
+#~ msgstr "Sélectionner un arrière-plan"
 
 #~ msgid "Saving"
 #~ msgstr "Enregistrer"
@@ -1714,6 +1708,9 @@ msgstr "Écriture"
 #~ msgid "_Glyph Sequence"
 #~ msgstr "_Séquence du glyphe"
 
+#~ msgid "Set Glyph _Background"
+#~ msgstr "Définir l'_arrière-plan du glyphe"
+
 #~ msgid "_Remove Glyph Background"
 #~ msgstr "_Supprimer l'arrière-plan du glyphe"
 
@@ -1737,6 +1734,9 @@ msgstr "Écriture"
 
 #~ msgid "Close _All Tabs"
 #~ msgstr "_Fermer _tous les onglets"
+
+#~ msgid "_Create Path"
+#~ msgstr "_Créer un chemin"
 
 #~ msgid "_Zoom"
 #~ msgstr "_Zoom"
@@ -1817,6 +1817,9 @@ msgstr "Écriture"
 
 #~ msgid "Set contrast for background image"
 #~ msgstr "Définir le contraste de l'image de fond"
+
+#~ msgid "Backgrounds"
+#~ msgstr "Arrière-plans"
 
 #~ msgid "Creating thumbnails"
 #~ msgstr "Création des miniatures"

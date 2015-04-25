@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-24 12:17+0200\n"
+"POT-Creation-Date: 2015-04-25 18:20+0200\n"
 "PO-Revision-Date: 2015-03-26 21:10+0000\n"
 "Last-Translator: fri <pavelfric@yahoo.com>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -98,7 +98,7 @@ msgid "Images"
 msgstr "Obrázky"
 
 #: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileDialogTab.vala:81
-#: libbirdfont/RecentFiles.vala:103
+#: libbirdfont/RecentFiles.vala:106
 msgid "Files"
 msgstr "Soubory"
 
@@ -170,7 +170,7 @@ msgid "Glyph"
 msgstr "Znak"
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
-#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:929
+#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:937
 msgid "Version"
 msgstr "Verze"
 
@@ -267,29 +267,29 @@ msgid "Name and Description"
 msgstr "Název a popis"
 
 #: libbirdfont/DescriptionDisplay.vala:56 libbirdfont/MenuTab.vala:84
-#: birdfont/GtkWindow.vala:873
+#: birdfont/GtkWindow.vala:881
 msgid "PostScript Name"
 msgstr "Název PostScript"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:880
+#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:888
 msgid "Name"
 msgstr "Název"
 
 #: libbirdfont/DescriptionDisplay.vala:76 libbirdfont/MenuTab.vala:94
-#: birdfont/GtkWindow.vala:887
+#: birdfont/GtkWindow.vala:895
 msgid "Style"
 msgstr "Styl"
 
-#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:893
+#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:901
 msgid "Bold"
 msgstr "Tučné"
 
-#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:900
+#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:908
 msgid "Italic"
 msgstr "Kurzíva"
 
-#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:908
+#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:916
 msgid "Weight"
 msgstr "Tloušťka"
 
@@ -301,11 +301,11 @@ msgstr "Celý název (název a styl)"
 msgid "Unique Identifier"
 msgstr "Jedinečný identifikátor"
 
-#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:936
+#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:944
 msgid "Description"
 msgstr "Popis"
 
-#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:944
+#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:952
 msgid "Copyright"
 msgstr "Autorská práva"
 
@@ -318,9 +318,8 @@ msgid "Control Point"
 msgstr "Ovládací bod"
 
 #: libbirdfont/DrawingTools.vala:106
-#, fuzzy
 msgid "Stroke"
-msgstr "Šířka tahu"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:107
 msgid "Geometrical Shapes"
@@ -475,9 +474,8 @@ msgid "Stroke width"
 msgstr "Šířka tahu"
 
 #: libbirdfont/DrawingTools.vala:784
-#, fuzzy
 msgid "Create outline form stroke"
-msgstr "Obrátit cestu"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:834
 msgid "Show guidelines"
@@ -563,14 +561,12 @@ msgid "New font"
 msgstr "Nova fonte"
 
 #: libbirdfont/FileTools.vala:37
-#, fuzzy
 msgid "Open font"
-msgstr "Nova fonte"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:43
-#, fuzzy
 msgid "Save font"
-msgstr "Nova fonte"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:451
 #: libbirdfont/SettingsDisplay.vala:209 libbirdfont/SettingsTab.vala:31
@@ -639,9 +635,13 @@ msgstr "Vložit"
 msgid "Close"
 msgstr "Zavřít"
 
-#: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:107
+#: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:111
 msgid "Kerning Pairs"
 msgstr "Dvojice podřezávání"
+
+#: libbirdfont/KerningList.vala:57
+msgid "No kerning pairs created."
+msgstr ""
 
 #: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:60
 msgid "Kerning class"
@@ -784,7 +784,7 @@ msgstr "Soubor"
 msgid "New"
 msgstr "Nový"
 
-#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:78
+#: libbirdfont/Menu.vala:85 libbirdfont/RecentFiles.vala:81
 msgid "Recent Files"
 msgstr "Nedávno otevřené soubory"
 
@@ -1065,19 +1065,22 @@ msgid "Generate html document"
 msgstr "Vytvořit soubor HTML"
 
 #: libbirdfont/RecentFiles.vala:62
-#, fuzzy
-msgid "Create a New Font"
-msgstr "Criar uma nova fonte"
+msgid "No fonts created yet"
+msgstr ""
 
-#: libbirdfont/RecentFiles.vala:70
-msgid "Folder"
+#: libbirdfont/RecentFiles.vala:65
+msgid "Create a New Font"
 msgstr ""
 
 #: libbirdfont/RecentFiles.vala:73
+msgid "Folder"
+msgstr ""
+
+#: libbirdfont/RecentFiles.vala:76
 msgid "Glyphs"
 msgstr ""
 
-#: libbirdfont/RecentFiles.vala:89
+#: libbirdfont/RecentFiles.vala:92
 msgid "Backups"
 msgstr ""
 
@@ -1126,9 +1129,8 @@ msgid "Path simplification threshold"
 msgstr "Práh pro zjednodušení cesty"
 
 #: libbirdfont/SettingsTab.vala:149
-#, fuzzy
 msgid "Color theme"
-msgstr "Vlastní motiv"
+msgstr ""
 
 #: libbirdfont/SettingsTab.vala:151
 msgid "Key Bindings"
@@ -1159,9 +1161,8 @@ msgid "Import"
 msgstr "Zavést"
 
 #: libbirdfont/Theme.vala:418
-#, fuzzy
 msgid "Canvas Background"
-msgstr "Hintergründe"
+msgstr ""
 
 #: libbirdfont/Theme.vala:419
 msgid "Stroke Color"
@@ -1184,19 +1185,16 @@ msgid "Background 1"
 msgstr "Pozadí 1"
 
 #: libbirdfont/Theme.vala:425
-#, fuzzy
 msgid "Dialog Background"
-msgstr "Hintergründe"
+msgstr ""
 
 #: libbirdfont/Theme.vala:426
-#, fuzzy
 msgid "Menu Background"
-msgstr "Hintergründe"
+msgstr ""
 
 #: libbirdfont/Theme.vala:427
-#, fuzzy
 msgid "Default Background"
-msgstr "Vybrat pozadí"
+msgstr ""
 
 #: libbirdfont/Theme.vala:429
 msgid "Checkbox Background"
@@ -1207,23 +1205,20 @@ msgid "Foreground 1"
 msgstr "Popředí 1"
 
 #: libbirdfont/Theme.vala:432
-#, fuzzy
 msgid "Text Foreground"
-msgstr "Popředí nabídky"
+msgstr ""
 
 #: libbirdfont/Theme.vala:433
 msgid "Table Border"
 msgstr ""
 
 #: libbirdfont/Theme.vala:434
-#, fuzzy
 msgid "Selection Border"
-msgstr "Vybrat výše ležící bod"
+msgstr ""
 
 #: libbirdfont/Theme.vala:435
-#, fuzzy
 msgid "Overview Glyph"
-msgstr "Přehled"
+msgstr ""
 
 #: libbirdfont/Theme.vala:436
 msgid "Foreground Inverted"
@@ -1234,9 +1229,8 @@ msgid "Menu Foreground"
 msgstr "Popředí nabídky"
 
 #: libbirdfont/Theme.vala:438
-#, fuzzy
 msgid "Selected Tab Foreground"
-msgstr "Popředí vybraného nástroje"
+msgstr ""
 
 #: libbirdfont/Theme.vala:439
 msgid "Tab Separator"
@@ -1319,14 +1313,12 @@ msgid "Text Area Background"
 msgstr "Pozadí textové oblasti"
 
 #: libbirdfont/Theme.vala:467
-#, fuzzy
 msgid "Overview Item Border"
-msgstr "Položka přehledu 1"
+msgstr ""
 
 #: libbirdfont/Theme.vala:469
-#, fuzzy
 msgid "Selected Overview Item"
-msgstr "Položka vybraného přehledu 1"
+msgstr ""
 
 #: libbirdfont/Theme.vala:470
 msgid "Overview Item 1"
@@ -1345,14 +1337,12 @@ msgid "Overview Foreground"
 msgstr "Popředí přehledu"
 
 #: libbirdfont/Theme.vala:476
-#, fuzzy
 msgid "Glyph Count Background 1"
-msgstr "Pozadí počtu znaků"
+msgstr ""
 
 #: libbirdfont/Theme.vala:477
-#, fuzzy
 msgid "Glyph Count Background 2"
-msgstr "Pozadí počtu znaků"
+msgstr ""
 
 #: libbirdfont/Theme.vala:479
 msgid "Dialog Shadow"
@@ -1415,14 +1405,12 @@ msgid "Active Spin Button"
 msgstr ""
 
 #: libbirdfont/Theme.vala:498
-#, fuzzy
 msgid "Zoom Bar Border"
-msgstr "Oddálit více"
+msgstr ""
 
 #: libbirdfont/Theme.vala:499
-#, fuzzy
 msgid "Font Name"
-msgstr "Velikost písma"
+msgstr ""
 
 #: libbirdfont/Theme.vala:683
 msgid "New theme"
@@ -1441,14 +1429,12 @@ msgid "Dark"
 msgstr ""
 
 #: libbirdfont/ThemeTab.vala:112
-#, fuzzy
 msgid "Bright"
-msgstr "Vpravo"
+msgstr ""
 
 #: libbirdfont/ThemeTab.vala:116
-#, fuzzy
 msgid "Custom"
-msgstr "Vlastní motiv"
+msgstr ""
 
 #: libbirdfont/TrackTool.vala:61
 msgid "Freehand drawing"
@@ -1466,11 +1452,11 @@ msgstr "Vybrat barvu"
 msgid "Your fonts have been exported."
 msgstr "Písma byla uložena."
 
-#: birdfont/GtkWindow.vala:915
+#: birdfont/GtkWindow.vala:923
 msgid "Full name (name and style)"
 msgstr "Celý název (název a styl)"
 
-#: birdfont/GtkWindow.vala:922
+#: birdfont/GtkWindow.vala:930
 msgid "Unique identifier"
 msgstr "Jedinečný identifikátor"
 
@@ -1511,6 +1497,9 @@ msgstr "Zapisuje se"
 
 #~ msgid "High contrast theme"
 #~ msgstr "Motiv s vysokým kontrastem"
+
+#~ msgid "Custom theme"
+#~ msgstr "Vlastní motiv"
 
 #~ msgid "Background 2"
 #~ msgstr "Pozadí 2"
@@ -1554,8 +1543,14 @@ msgstr "Zapisuje se"
 #~ msgid "Foreground 7"
 #~ msgstr "Popředí 7"
 
+#~ msgid "Selected Overview Item 1"
+#~ msgstr "Položka vybraného přehledu 1"
+
 #~ msgid "Selected Overview Item 2"
 #~ msgstr "Položka vybraného přehledu 2"
+
+#~ msgid "Glyph Count Background"
+#~ msgstr "Pozadí počtu znaků"
 
 #~ msgid "New Font"
 #~ msgstr "Nové písmo"
@@ -1571,6 +1566,9 @@ msgstr "Zapisuje se"
 
 #~ msgid "Control Point Tools"
 #~ msgstr "Nástroje pro práci s body"
+
+#~ msgid "Select Background"
+#~ msgstr "Vybrat pozadí"
 
 #~ msgid "Saving"
 #~ msgstr "Ukládá se"
@@ -1849,6 +1847,9 @@ msgstr "Zapisuje se"
 #~ msgid "Set contrast for background image"
 #~ msgstr "Kontrast Hintergrundbild einstellen"
 
+#~ msgid "Backgrounds"
+#~ msgstr "Hintergründe"
+
 #~ msgid "Creating thumbnails"
 #~ msgstr "Miniaturbilder werden erstellt"
 
@@ -1909,6 +1910,9 @@ msgstr "Zapisuje se"
 
 #~ msgid "Update name & description"
 #~ msgstr "Atualizar nome e descrição"
+
+#~ msgid "Create a new font"
+#~ msgstr "Criar uma nova fonte"
 
 #~ msgid "Add name and description to this font."
 #~ msgstr "Adicionar nome e descrição para esta fonte."
