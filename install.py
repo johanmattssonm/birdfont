@@ -102,7 +102,7 @@ install ('resources/dark.theme', '/share/birdfont', 644)
 install ('resources/high_contrast.theme', '/share/birdfont', 644)
 install ('resources/key_bindings.xml', '/share/birdfont', 644)
 install ('resources/roboto.bf', '/share/birdfont', 644)
-install ('resources/linux/birdfont_window_icon.png', '/share/birdfont/icons', 644)
+install ('resources/linux/birdfont_window_icon.png', '/share/birdfont', 644)
 
 install ('resources/linux/256x256/birdfont.png', '/share/icons/hicolor/256x256/apps', 644)
 install ('resources/linux/128x128/birdfont.png', '/share/icons/hicolor/128x128/apps', 644)
