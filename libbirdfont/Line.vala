@@ -288,6 +288,18 @@ public class Line : GLib.Object {
 	}
 	
 	public void set_active (bool active) {
+		Glyph g;
+		
+		if (active) {
+			g = MainWindow.get_current_glyph ();
+			
+			if (lsb) {
+				set_metrics (g.get_left_side_bearing ());
+			} else if (rsb) {
+				set_metrics (g.get_right_side_bearing ());
+			}	
+		}
+		
 		this.active = active;
 	}
 	
