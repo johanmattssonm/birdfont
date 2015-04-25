@@ -33,6 +33,15 @@ def getDest (file, dir):
 	else:
 		f += file
 	return f
+
+def getDestRoot (file, dir):
+	f = dest + dir + '/'
+	s = file.rfind ('/')
+	if s > -1:
+		f += file[s + 1:]
+	else:
+		f += file
+	return f
 	
 def install (file, dir, mode):
 	f = getDest (file, dir)
@@ -40,6 +49,12 @@ def install (file, dir, mode):
 	run ('install -d ' + dest + prefix + dir)
 	run ('install -m ' + `mode` + ' '   + file + ' ' + dest + prefix + dir + '/')
 	installed.write (f + "\n")
+
+def install_root (file, dir, mode):
+        f = getDestRoot (file, dir)
+        print ("install: " + f)
+        run ('install -d ' + dest + dir)
+	run ('install -m ' + `mode` + ' '   + file + ' ' + dest + dir + '/')
 
 def link (dir, file, linkname):
 	f = getDest (linkname, dir)
@@ -179,5 +194,10 @@ for lang_dir in glob.glob('build/locale/*'):
 
 #file type 
 install ('resources/linux/birdfont.xml', '/share/mime/packages', 644)
+
+#apport hooks
+install ('resources/birdfont.py', '/share/apport/package-hooks', 644)
+install ('resources/source_birdfont.py', '/share/apport/package-hooks', 644)
+install_root ('resources/birdfont-crashdb.conf', '/etc/apport/crashdb.conf.d', 644)
 
 installed.close ()
