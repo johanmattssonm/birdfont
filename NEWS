@@ -1,3 +1,9 @@
+birdfont (2.6.2) stable;
+
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Apr 25 14:04:17 CEST 2015
+
 birdfont (2.6.0) stable;
 
   * A tool box in the recent files tab
