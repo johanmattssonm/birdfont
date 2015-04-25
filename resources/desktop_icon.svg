@@ -115,6 +115,51 @@
        y1="82.838142"
        x2="77.407417"
        y2="-10.225219" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4468"
+       id="linearGradient4470-8"
+       gradientUnits="userSpaceOnUse"
+       x1="8.5716257"
+       y1="82.838142"
+       x2="77.407417"
+       y2="-10.225219" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4468"
+       id="linearGradient4756-4"
+       gradientUnits="userSpaceOnUse"
+       x1="8.5716257"
+       y1="82.838142"
+       x2="77.407417"
+       y2="-10.225219" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4468"
+       id="linearGradient4470-8-2"
+       gradientUnits="userSpaceOnUse"
+       x1="8.5716257"
+       y1="82.838142"
+       x2="77.407417"
+       y2="-10.225219" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4468"
+       id="linearGradient4756-4-6"
+       gradientUnits="userSpaceOnUse"
+       x1="8.5716257"
+       y1="82.838142"
+       x2="77.407417"
+       y2="-10.225219" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4468"
+       id="linearGradient4470-8-2-2"
+       gradientUnits="userSpaceOnUse"
+       x1="8.5716257"
+       y1="82.838142"
+       x2="77.407417"
+       y2="-10.225219" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -124,8 +169,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35355339"
-     inkscape:cx="692.42406"
-     inkscape:cy="493.70049"
+     inkscape:cx="495.02085"
+     inkscape:cy="-441.66098"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -268,5 +313,184 @@
          inkscape:connector-curvature="0"
          sodipodi:nodetypes="ccccccccccccscscccc" />
     </g>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4875"
+       width="256"
+       height="256"
+       x="40.925945"
+       y="1112.1814"
+       inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+       inkscape:export-xdpi="90.000008"
+       inkscape:export-ydpi="90.000008" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4921"
+       width="107.53895"
+       height="137.04079"
+       x="115.93333"
+       y="1169.0635"
+       inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+       inkscape:export-xdpi="90.000008"
+       inkscape:export-ydpi="90.000008" />
+    <g
+       id="B-7-1"
+       transform="matrix(2.130976,0,0,2.130976,86.642821,1164.4828)"
+       style="fill:url(#linearGradient4756);fill-opacity:1"
+       inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+       inkscape:export-xdpi="90.000008"
+       inkscape:export-ydpi="90.000008">
+      <path
+         id="path_B-2-79"
+         d="m 20.86914,62.970709 18.43555,0 0,-17.67774 13.63671,0 0.75782,-14.900389 -13.63672,0 0,-10.10156 16.66601,0.25195 1.51563,-10.85937 -37.375,-0.25196 0,53.539069 z M 52.56497,-16.43502 C 76.483865,-16.096019 80.396814,0.3836932 80.35742,9.1153716 80.298161,22.250049 74.686675,28.231432 69.28515,31.35742 74.782731,35.924597 80.775758,39.77855 81.07226,55.026583 81.643428,84.399491 53.92969,83.85742 53.92969,83.85742 L 0,84.21485 0,-16.5 l 52.56497,0.06498 z"
+         style="fill:url(#linearGradient4470-8);fill-opacity:1;stroke-width:0px"
+         inkscape:connector-curvature="0" />
+    </g>
+    <g
+       id="B-0-0-6"
+       transform="matrix(2.130976,0,0,2.130976,86.502181,1164.8155)"
+       style="fill:#a3daf6;fill-opacity:1"
+       inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+       inkscape:export-xdpi="90.000008"
+       inkscape:export-ydpi="90.000008">
+      <path
+         id="path_B-6-9-30"
+         d="m 59.141772,4.0476554 -0.88539,5.4764683 -33.851972,0 0,53.2868233 -6.06092,0 0,-59.0952026 40.798282,0.3319117 z"
+         style="fill:#a3daf6;fill-opacity:1;stroke-width:0px"
+         inkscape:connector-curvature="0" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="311.12698"
+       y="1244.6953"
+       id="text4923"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="311.12698"
+         y="1244.6953"
+         id="tspan4927">256x256</tspan></text>
+    <g
+       id="g4990"
+       transform="matrix(0.1875,0,0,0.1875,79.073728,1398.6565)">
+      <rect
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         y="1376.9105"
+         x="38.142113"
+         height="256"
+         width="256"
+         id="rect4875-7"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         y="1433.7926"
+         x="113.1495"
+         height="137.04079"
+         width="107.53895"
+         id="rect4921-8"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <g
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         style="fill:url(#linearGradient4756-4);fill-opacity:1"
+         transform="matrix(2.130976,0,0,2.130976,83.85899,1429.2119)"
+         id="B-7-1-1">
+        <path
+           inkscape:connector-curvature="0"
+           style="fill:url(#linearGradient4470-8-2);fill-opacity:1;stroke-width:0px"
+           d="m 20.86914,62.970709 18.43555,0 0,-17.67774 13.63671,0 0.75782,-14.900389 -13.63672,0 0,-10.10156 16.66601,0.25195 1.51563,-10.85937 -37.375,-0.25196 0,53.539069 z M 52.56497,-16.43502 C 76.483865,-16.096019 80.396814,0.3836932 80.35742,9.1153716 80.298161,22.250049 74.686675,28.231432 69.28515,31.35742 74.782731,35.924597 80.775758,39.77855 81.07226,55.026583 81.643428,84.399491 53.92969,83.85742 53.92969,83.85742 L 0,84.21485 0,-16.5 l 52.56497,0.06498 z"
+           id="path_B-2-79-4" />
+      </g>
+      <g
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         style="fill:#a3daf6;fill-opacity:1"
+         transform="matrix(2.130976,0,0,2.130976,83.71835,1429.5446)"
+         id="B-0-0-6-6">
+        <path
+           inkscape:connector-curvature="0"
+           style="fill:#a3daf6;fill-opacity:1;stroke-width:0px"
+           d="m 59.141772,4.0476554 -0.88539,5.4764683 -33.851972,0 0,53.2868233 -6.06092,0 0,-59.0952026 40.798282,0.3319117 z"
+           id="path_B-6-9-30-0" />
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="319.65689"
+       y="1699.6499"
+       id="text4923-0"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="319.65689"
+         y="1699.6499"
+         id="tspan4998">48x58</tspan></text>
+    <g
+       id="g4990-7"
+       transform="matrix(0.5,0,0,0.5,45.373646,699.24186)">
+      <rect
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         y="1376.9105"
+         x="38.142113"
+         height="256"
+         width="256"
+         id="rect4875-7-0"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         y="1433.7926"
+         x="113.1495"
+         height="137.04079"
+         width="107.53895"
+         id="rect4921-8-8"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <g
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         style="fill:url(#linearGradient4756-4-6);fill-opacity:1"
+         transform="matrix(2.130976,0,0,2.130976,83.85899,1429.2119)"
+         id="B-7-1-1-7">
+        <path
+           inkscape:connector-curvature="0"
+           style="fill:url(#linearGradient4470-8-2-2);fill-opacity:1;stroke-width:0px"
+           d="m 20.86914,62.970709 18.43555,0 0,-17.67774 13.63671,0 0.75782,-14.900389 -13.63672,0 0,-10.10156 16.66601,0.25195 1.51563,-10.85937 -37.375,-0.25196 0,53.539069 z M 52.56497,-16.43502 C 76.483865,-16.096019 80.396814,0.3836932 80.35742,9.1153716 80.298161,22.250049 74.686675,28.231432 69.28515,31.35742 74.782731,35.924597 80.775758,39.77855 81.07226,55.026583 81.643428,84.399491 53.92969,83.85742 53.92969,83.85742 L 0,84.21485 0,-16.5 l 52.56497,0.06498 z"
+           id="path_B-2-79-4-3" />
+      </g>
+      <g
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         style="fill:#a3daf6;fill-opacity:1"
+         transform="matrix(2.130976,0,0,2.130976,83.71835,1429.5446)"
+         id="B-0-0-6-6-0">
+        <path
+           inkscape:connector-curvature="0"
+           style="fill:#a3daf6;fill-opacity:1;stroke-width:0px"
+           d="m 59.141772,4.0476554 -0.88539,5.4764683 -33.851972,0 0,53.2868233 -6.06092,0 0,-59.0952026 40.798282,0.3319117 z"
+           id="path_B-6-9-30-0-4" />
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="312.70465"
+       y="1472.8214"
+       id="text4923-0-4"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="312.70465"
+         y="1472.8214"
+         id="tspan5119">128x128</tspan></text>
   </g>
 </svg>

@@ -177,7 +177,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		add (vbox);
 		
 		try {
-			set_icon_from_file ((!) Icons.find_icon ("window_icon.png").get_path ());
+			set_icon_from_file ((!) Icons.find_icon ("birdfont_window_icon.png").get_path ());
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
