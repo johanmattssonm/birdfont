@@ -872,7 +872,6 @@ public class Path {
 		return !(xmax <= p.xmin || ymax <= p.ymin) || (xmin >= p.xmax || ymin >= p.ymax);
 	}
 	
-	// FIXME: DELETE?
 	public EditPoint delete_first_point () {
 		EditPoint r;
 		int size;

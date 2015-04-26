@@ -730,23 +730,24 @@ public class DrawingTools : ToolCollection  {
 		add_stroke.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			StrokeTool.add_stroke = !StrokeTool.add_stroke;
+			StrokeTool.stroke_width = object_stroke.get_value ();
+
 			add_stroke.selected = StrokeTool.add_stroke;
-			
+						
+			GlyphCanvas.redraw ();
+			g.store_undo_state ();
+		
 			if (StrokeTool.add_stroke) {
 				foreach (Path p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
 				}
-				
-				StrokeTool.stroke_width = object_stroke.get_value ();
-				StrokeTool.set_stroke_for_selected_paths (StrokeTool.stroke_width);
 			} else {
 				foreach (Path p in g.active_paths) {
 					p.stroke = 0;
-				}
-			}	
+				}	
+			}
 			
-			add_stroke.selected = StrokeTool.add_stroke;
-			GlyphCanvas.redraw ();
+			print (@"select $(StrokeTool.add_stroke)\n");
 		});
 		
 		stroke_expander.add_tool (add_stroke);	
@@ -758,6 +759,7 @@ public class DrawingTools : ToolCollection  {
 		
 		object_stroke.new_value_action.connect((self) => {
 			Font f;
+			Glyph g = MainWindow.get_current_glyph ();
 			
 			bool tool = resize_tool.is_selected ()
 				|| move_tool.is_selected ()
@@ -766,11 +768,14 @@ public class DrawingTools : ToolCollection  {
 				|| point_tool.is_selected ()
 				|| foresight_tool.is_selected ();
 			
-			if (tool && object_stroke.is_selected () && StrokeTool.add_stroke) {
-				StrokeTool.set_stroke_for_selected_paths (object_stroke.get_value ());
+			StrokeTool.stroke_width = object_stroke.get_value ();
+			
+			if (tool && StrokeTool.add_stroke) {
+				foreach (Path p in g.active_paths) {
+					p.stroke = StrokeTool.stroke_width;
+				}
 			}
 			
-			StrokeTool.stroke_width = object_stroke.get_value ();
 			f = BirdFont.get_current_font ();
 			f.settings.set_setting ("stroke_width", object_stroke.get_display_value ());
 		});
