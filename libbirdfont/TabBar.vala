@@ -83,7 +83,7 @@ public class TabBar : GLib.Object {
 	}
 	
 	public void motion (double x, double y) {
-		MainWindow.native_window.set_cursor (NativeWindow.VISIBLE);
+		MainWindow.set_cursor (NativeWindow.VISIBLE);
 		
 		if (MenuTab.suppress_event) {
 			warn_if_test ("Event suppressed");

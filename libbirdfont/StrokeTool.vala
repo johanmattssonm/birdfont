@@ -2068,11 +2068,13 @@ first.color = Color.pink ();
 		int i;
 		
 		if (path.is_open ()) {
+		/*
 			get_segment (thickness, 0, 0.001, p2, p3, out start);
 			add_corner (side1, previous, start, p2.copy (), thickness);
 
 			get_segment (-thickness, 0, 0.001, p2, p3, out start);
 			add_corner (side2, previous_inside, start, p2.copy (), thickness);
+			*/
 		}
 
 		for (i = 0; i < size; i++) {

@@ -75,6 +75,16 @@ public class MainWindow : GLib.Object {
 		dialog = d;
 		dialog.visible = true;
 		GlyphCanvas.redraw ();
+		
+		set_cursor (NativeWindow.VISIBLE);
+	}
+
+	public static void set_cursor (int flags) {
+		if (dialog.visible) {
+			native_window.set_cursor (NativeWindow.VISIBLE);
+		} else {
+			native_window.set_cursor (flags);
+		}
 	}
 
 	public static void show_message (string text) {

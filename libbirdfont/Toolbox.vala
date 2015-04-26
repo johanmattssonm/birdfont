@@ -258,7 +258,7 @@ public class Toolbox : GLib.Object  {
 		bool consumed = false;
 		bool active;
 		
-		MainWindow.native_window.set_cursor (NativeWindow.VISIBLE);
+		MainWindow.set_cursor (NativeWindow.VISIBLE);
 			
 		foreach (Expander exp in current_set.get_expanders ()) {
 			if (exp.visible) {

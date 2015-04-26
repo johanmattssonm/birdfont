@@ -72,10 +72,11 @@ public class ForesightTool : Tool {
 				p.release_action (p, 2, x, y);
 				current_path.hide_end_handle = true;
 				state = NONE;
-				MainWindow.native_window.set_cursor (NativeWindow.VISIBLE);
+				MainWindow.set_cursor (NativeWindow.VISIBLE);
 				return;
 			} 
 
+			BirdFont.get_current_font ().touch ();
 			MainWindow.get_current_glyph ().store_undo_state ();
 
 			last_move_x = x;
@@ -195,8 +196,13 @@ public class ForesightTool : Tool {
 			last_move_x = x;
 			last_move_y = y;
 			
+			if (MainWindow.dialog.visible && state != NONE) {
+				state = NONE;
+				p.release_action (p, 1, last_move_x, last_move_y);
+			}
+			
 			if (state == NONE) {
-				MainWindow.native_window.set_cursor (NativeWindow.VISIBLE);
+				MainWindow.set_cursor (NativeWindow.VISIBLE);
 			}
 			
 			PenTool.active_path = current_path;
