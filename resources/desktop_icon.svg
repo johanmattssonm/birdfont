@@ -372,7 +372,10 @@
          id="tspan4927">256x256</tspan></text>
     <g
        id="g4990"
-       transform="matrix(0.1875,0,0,0.1875,79.073728,1398.6565)">
+       transform="matrix(0.1875,0,0,0.1875,79.073728,1398.6565)"
+       inkscape:export-filename="/home/johan/birdfont/resources/linux/48x48/birdfont.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          inkscape:export-ydpi="90.000008"
          inkscape:export-xdpi="90.000008"
@@ -433,7 +436,10 @@
          id="tspan4998">48x58</tspan></text>
     <g
        id="g4990-7"
-       transform="matrix(0.5,0,0,0.5,45.373646,699.24186)">
+       transform="matrix(0.5,0,0,0.5,45.373646,731.24186)"
+       inkscape:export-filename="/home/johan/birdfont/resources/linux/128x128/birdfont.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          inkscape:export-ydpi="90.000008"
          inkscape:export-xdpi="90.000008"
@@ -485,12 +491,12 @@
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="312.70465"
-       y="1472.8214"
+       y="1504.8214"
        id="text4923-0-4"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          x="312.70465"
-         y="1472.8214"
+         y="1504.8214"
          id="tspan5119">128x128</tspan></text>
   </g>
 </svg>
