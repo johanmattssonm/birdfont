@@ -277,18 +277,6 @@ public class StrokeTool : Tool {
 		last_counter = new EditPoint ();
 		first = new EditPoint ();
 		
-		if (path.is_open ()) {
-			counter.delete_last_point ();
-			counter.delete_last_point ();
-			merged.delete_first_point ();
-			merged.delete_first_point ();
-			
-			counter.delete_last_point ();
-			counter.delete_last_point ();
-			merged.delete_first_point ();
-			merged.delete_first_point ();	
-		}
-		
 		merged.append_path (counter);
 
 		merged.close ();
@@ -298,13 +286,14 @@ public class StrokeTool : Tool {
 		if (path.is_open ()) {
 			first = merged.get_first_point ();
 			last_counter = merged.get_last_point ();
-first.color = Color.pink ();
+			first.color = Color.pink ();
 
 			first.get_left_handle ().convert_to_line ();
 			first.recalculate_linear_handles ();
 
 			last_counter.get_right_handle ().convert_to_line ();
 			last_counter.recalculate_linear_handles ();
+			last_counter.color = Color.yellow ();
 		}
 
 		return merged;
@@ -2054,27 +2043,29 @@ first.color = Color.pink ();
 		double x, y, x2, y2, x3, y3, next_x, next_y, step, prev_x, prev_y;
 		double previus_x, previus_y, previus_x2, previus_y2;
 		double previus_middle_x, previus_middle_y;
-		int size = path.points.size;
+		int size = path.is_open () ? path.points.size - 1 : path.points.size;
 		bool flat, f, f_next;
+		int i;
 	
 		side1 = new Path ();
 		side2 = new Path ();
 
-		return_val_if_fail (path.points.size > 0, pl);
+		return_val_if_fail (path.points.size > 1, pl);
 
 		previous = new EditPoint ();
 		previous_inside = new EditPoint ();
-
-		int i;
 		
 		if (path.is_open ()) {
-		/*
-			get_segment (thickness, 0, 0.001, p2, p3, out start);
-			add_corner (side1, previous, start, p2.copy (), thickness);
+			p1 = path.points.get (0);
+			p2 = path.points.get (1 % path.points.size);
+			
+			get_segment (thickness, 0, 0.0001, p1, p2, out start);
+			start.color = Color.green ();
+			side1.add_point (start.copy ());
 
-			get_segment (-thickness, 0, 0.001, p2, p3, out start);
-			add_corner (side2, previous_inside, start, p2.copy (), thickness);
-			*/
+			get_segment (-thickness, 0, 0.0001, p1, p2, out start);
+			start.color = Color.blue ();
+			side2.add_point (start.copy ());
 		}
 
 		for (i = 0; i < size; i++) {
@@ -2102,21 +2093,21 @@ first.color = Color.pink ();
 				f_next = is_flat (x, y, x2, y2, x3, y3, 0.01); // FIXME: stroke_width
 				
 				if (!flat && !f_next && step_size > 0.013) {
-					print (@"Not flat. $step_size\n");
 					step_size /= 2;
 					continue;
 				}
 								
 				if (flat && f_next && step_size < 0.5) {
-					print (@"Flat. $step_size\n");
 					step_size *= 2;
 					continue;
 				}
 							
 				get_segment (thickness, step, step_size, p1, p2, out corner1);
 				get_segment (-thickness, step, step_size, p1, p2, out corner1_inside);
+				
 				side1.add_point (corner1.copy ());
 				side2.add_point (corner1_inside.copy ());
+			
 				previous = corner1;
 				previous_inside = corner1_inside;
 				
@@ -2130,13 +2121,15 @@ first.color = Color.pink ();
 			previous = corner1;
 			previous_inside = corner1_inside;
 			
-			get_segment (thickness, 0, 0.001, p2, p3, out start);
-			add_corner (side1, previous, start, p2.copy (), thickness);
+			if (!path.is_open () || i < size - 1) {
+				get_segment (thickness, 0, 0.001, p2, p3, out start);
+				add_corner (side1, previous, start, p2.copy (), thickness);
 
-			get_segment (-thickness, 0, 0.001, p2, p3, out start);
-			add_corner (side2, previous_inside, start, p2.copy (), thickness);
+				get_segment (-thickness, 0, 0.001, p2, p3, out start);
+				add_corner (side2, previous_inside, start, p2.copy (), thickness);
+			}
 		}
-		
+
 		side1.recalculate_linear_handles ();
 		side2.recalculate_linear_handles ();
 		
