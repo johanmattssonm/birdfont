@@ -1692,6 +1692,8 @@ public class StrokeTool : Tool {
 		EditPoint corner1, corner1_inside;
 		double step;
 		
+		EditPointHandle l, r;
+		
 		side1 = new Path ();
 		side2 = new Path ();
 
@@ -1770,13 +1772,18 @@ public class StrokeTool : Tool {
 			side2.add_point (corner1_inside.copy ());
 			previous = corner1;
 			previous_inside = corner1_inside;
-			
-			if (!path.is_open () || i < size - 1) {
-				get_segment (thickness, 0, 0.001, p2, p3, out start);
-				add_corner (side1, previous, start, p2.copy (), thickness);
 
-				get_segment (-thickness, 0, 0.001, p2, p3, out start);
-				add_corner (side2, previous_inside, start, p2.copy (), thickness);
+			l = p2.get_left_handle ();
+			r = p2.get_right_handle ();
+			
+			if (fabs (l.angle - r.angle - PI) % 2 * PI > 0.0001) {
+				if (!path.is_open () || i < size - 1) {
+					get_segment (thickness, 0, 0.001, p2, p3, out start);
+					add_corner (side1, previous, start, p2.copy (), thickness);
+
+					get_segment (-thickness, 0, 0.001, p2, p3, out start);
+					add_corner (side2, previous_inside, start, p2.copy (), thickness);
+				}
 			}
 		}
 
