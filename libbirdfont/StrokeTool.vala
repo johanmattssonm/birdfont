@@ -1032,7 +1032,13 @@ public class StrokeTool : Tool {
 		foreach (EditPoint ep in p.points) {
 			l = ep.get_left_handle ();
 			r = ep.get_right_handle ();
-			if (!(fabs (l.angle - r.angle) < 0.0001 && l.length > 0.01 && r.length > 0.01)) {
+			
+			if (l.length < 0.01 || r.length < 0.01) {
+				continue;
+			}
+			
+			if (!(fabs ((l.angle - r.angle + PI) % 2 * PI) < 0.0001)
+				&& !(fabs (l.angle - r.angle) < 0.0001)) {
 				return false;
 			}
 		}
@@ -1710,7 +1716,7 @@ public class StrokeTool : Tool {
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 			
-			tolerance = 1.2 / sqrt (stroke_width);
+			tolerance = 0.13 / sqrt (stroke_width);
 			step_increment = 1.1;
 			step_size = 0.039 / stroke_width;
 

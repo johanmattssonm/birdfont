@@ -47,6 +47,7 @@ public class ForesightTool : Tool {
 				p.release_action (p, 1, last_move_x, last_move_y);
 			}
 			
+			MainWindow.set_cursor (NativeWindow.VISIBLE);
 			state = NONE;
 		});
 
@@ -57,6 +58,7 @@ public class ForesightTool : Tool {
 				p.release_action (p, 1, last_move_x, last_move_y);
 			}
 			
+			MainWindow.set_cursor (NativeWindow.VISIBLE);
 			state = NONE;
 		});
 		
@@ -211,6 +213,7 @@ public class ForesightTool : Tool {
 			if (state == MOVE_HANDLES || state == MOVE_LAST_HANDLE) {				
 				if (previous_point > 0) {
 					return_if_fail (PenTool.active_path.points.size >= previous_point + 1);
+					return_if_fail (PenTool.active_path.points.size > 0);
 					last = new PointSelection (PenTool.active_path.points.get (PenTool.active_path.points.size - (previous_point + 1)), PenTool.active_path);				
 				} else {
 					if (unlikely (PenTool.selected_points.size == 0)) {
