@@ -85,21 +85,12 @@ public class StrokeTool : Tool {
 	}
 	
 	public static PathList get_stroke (Path path, double thickness) {
-		PathList n, o;
+		PathList o;
 		Path stroke = path.copy ();
-		
-		/*if (!is_clockwise (stroke)) {
-			stroke.reverse ();
-		}
-		*/
-		
-		stroke.remove_points_on_points (0.3);
 
-		// FIXME: flatten (stroke, thickness);
+		stroke.remove_points_on_points (0.3);
 		
-		// n = get_stroke_outline (stroke, thickness);
-		
-		o = get_overlay (stroke, thickness);
+		o = create_stroke (stroke, thickness);
 		foreach (Path p in o.paths) {
 			if (stroke_selected) {// FIXME: DELETE
 				((!) BirdFont.get_current_font ().get_glyph ("c")).add_path (p);
@@ -116,154 +107,7 @@ public class StrokeTool : Tool {
 		// FIXME: only on stroke to outline
 		o = merge (o);
 		
-		// remove_merged_parts (o);
-				
-		/*
-		foreach (Path p in n.paths) {
-			p.remove_points_on_points (0.3);
-		}
-		*/
-		
-		// o = get_all_parts (n);
-		
-		// Changing orientation causes a problem with self intersecting corners
-		// but it solves the problem where the original path is self intersection.
-		// According to the fill rule should intersection be counter paths but 
-		// it is better to try to merge paths with filled intersections.
-		//
-		// TODO: Implement merging with other fill rules.
-		
-		// this works for glyphs like 8 but not for other intersections
-		/*
-		foreach (Path p in o.paths) {
-			if (has_points_outside (o, p)) {
-				p.force_direction (Direction.CLOCKWISE);
-			} else {
-				p.force_direction (Direction.COUNTER_CLOCKWISE);
-			}
-		}*/
-		
-		//n = merge (n);
-	
-		// FIXME: this needs to be solved.
-		// remove_self_intersecting_corners (n);
-
-		// n = remove_remaining_corners (n);
-		
-		// return n; // FIXME:
 		return o;
-	}
-	
-	static PathList remove_remaining_corners (PathList pl) {
-		PathList r = new PathList ();
-		
-		foreach (Path p in pl.paths) {
-			if (!has_remove_parts (p)) {
-				r.add (p);
-			} else {
-				if (stroke_selected) { // FIXME: DELETE
-					((!) BirdFont.get_current_font ().get_glyph ("k")).add_path (p);
-				}
-			}
-		}
-		
-		return r;
-	}
-	
-	static bool has_remove_parts (Path p) {
-		EditPointHandle l, r;
-		
-		foreach (EditPoint ep in p.points) {
-			if ((ep.flags & EditPoint.REMOVE_PART) > 0 || (ep.flags & EditPoint.NEW_CORNER) > 0) {
-				l = ep.get_left_handle ();
-				r = ep.get_right_handle ();
-				
-				if (fabs (l.angle - r.angle) < 0.005 
-					&& l.length > 0.001
-					&& r.length > 0.001) {
-					
-					if ((ep.flags & EditPoint.REMOVE_PART) > 0) {
-						if (p.points.size > 5) {
-							return false;
-						}
-					}
-					
-					if ((ep.flags & EditPoint.NEW_CORNER) > 0) {
-						if (p.points.size > 5) {
-							return false;
-						}
-					}
-					
-					ep.color = Color.red ();
-					return true;
-				} 
-			}
-		}
-		
-		return false;
-	}
-	
-	static bool is_corner_self_intersection (Path p) {
-		EditPointHandle l, r;
-		bool corner, i, remove;
-		
-		remove = false;
-		i = false;
-		p.remove_points_on_points ();
-		foreach (EditPoint ep in p.points) {
-			corner = (ep.flags & EditPoint.NEW_CORNER) > 0;
-		
-			if (corner || i) {
-				l = ep.get_left_handle ();
-				r = ep.get_right_handle ();
-				
-				if (fabs (l.angle - r.angle) < 0.005) { 
-					remove = true;
-					ep.color = Color.red ();
-				}
-				
-				if (Path.distance_to_point (ep.get_prev (), ep.get_next ()) < 1) {
-					ep.deleted = true;
-					ep.color = Color.red ();
-					p.remove_deleted_points ();
-					return is_corner_self_intersection (p) || is_counter_to_outline (p);
-				}
-			}
-			
-			i = corner && p.points.size == 4;
-
-			if ((ep.flags & EditPoint.COUNTER_TO_OUTLINE) > 0) {
-				ep.flags |= EditPoint.REMOVE_PART;
-				return false;
-			}
-		}
-		
-		return remove;
-	}
-
-	static void remove_self_intersecting_corners (PathList pl) {
-		PathList parts;
-		foreach (Path p in pl.paths) {
-			
-			if (is_corner_self_intersection (p)) {
-				parts = get_parts (p);
-				if (parts.paths.size > 1) {
-					pl.paths.remove (p);
-					pl.append (parts);
-					remove_self_intersecting_corners (pl);
-					return;
-				} else {
-						
-					if (stroke_selected) { // FIXME: DELETE
-						((!) BirdFont.get_current_font ().get_glyph ("l")).add_path (p);
-					}
-				
-					pl.paths.remove (p);
-					remove_self_intersecting_corners (pl);
-					return;
-				}
-			}
-		}
 	}
 	
 	/** Create one stroke from the outline and counter stroke and close the 
@@ -304,124 +148,6 @@ public class StrokeTool : Tool {
 		}
 
 		return merged;
-	}
-	
-	static Path create_stroke (Path p, double thickness) {
-		Path stroked;
-		Path path;
-		
-		if (p.points.size >= 2) {
-			path = p.copy ();
-			stroked = generate_stroke (path, thickness);
-
-			if (!p.is_open ()) {
-				stroked.reverse ();
-				stroked.close ();
-			}
-		} else {
-			// TODO: create stroke for a path with one point
-			warning ("One point.");
-			stroked = new Path ();
-		}
-
-		return stroked;
-	}
-
-	static Path generate_stroke (Path p, double thickness) {
-		Path stroked = new Path ();
-		EditPoint start = new EditPoint ();
-		EditPoint end;
-		EditPoint previous;
-		EditPoint next;
-		EditPoint ep;
-		
-		EditPoint original_start;
-		EditPoint original_end;
-		EditPoint original_next;
-		
-		int i;
-		bool bump, previous_bump;
-		double small_part = 0.4 * fabs (thickness);
-		
-		previous = p.get_first_point ().copy ();
-		move_segment (start, previous, thickness);
-
-		i = 0;
-		previous_bump = false;
-		for (int j = 0; j < p.points.size; j++) {
-			original_start = p.points.get (j % p.points.size);
-			original_end = p.points.get ((j + 1) % p.points.size).copy ();
-			original_next = p.points.get ((j + 2) % p.points.size).copy ();
-			
-			ep = original_start.copy ();
-			start = original_start.copy ();
-			end = original_end.copy ();
-			next = original_next.copy ();
-			
-			bump = Path.distance_to_point (previous, start) < small_part;
-			bump = false;
-			
-			if (bump) {
-				Gee.ArrayList<EditPoint> s = new Gee.ArrayList<EditPoint> ();
-				
-				Path.all_of (start, end, (x, y, t) => {
-					EditPoint e = stroked.add (x, y);
-					e.set_point_type (PointType.LINE_CUBIC);
-					e.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
-					e.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
-					s.add (e);
-					return true;
-				}, 4);
-				
-				foreach (EditPoint e in s) {
-					e.recalculate_linear_handles ();
-					move_segment (new EditPoint (), e, thickness);
-				}
-			} else {
-				move_segment (start, end, thickness);
-			}
-
-			if (start == p.get_last_point ()) {
-				end = p.get_first_point ();
-			}
-
-			start.flags |= EditPoint.STROKE_OFFSET;
-			end.flags |= EditPoint.STROKE_OFFSET;
-
-			bool flat = (Path.distance_to_point (previous, start) < 0.05 * thickness);
-
-			if (!flat && !p.is_open () || (i != 0 && i != p.points.size - 1)) {
-				if (!bump) {
-					if (!ep.tie_handles) {
-						add_corner (stroked, previous, start, ep.copy (), thickness);
-					} else {
-						warning ("Tied handles.");
-					}
-				}
-			}
-			
-			if (!bump && start.is_valid () && end.is_valid ()) {
-				stroked.add_point (start);	
-				stroked.add_point (end);
-			} else {
-				warning ("Bad point in stroke.");
-			}
-		
-			adjust_handles (start, end, next, original_start, original_end, original_next);
-			
-			// open ends around corner
-			start.get_left_handle ().convert_to_line (); 
-			end.get_right_handle ().convert_to_line ();
-			
-			previous = end;
-			previous_bump = bump;
-			
-			i++;
-		}
-
-		stroked.recalculate_linear_handles ();
-		
-		return stroked;
 	}
 
 	static void adjust_handles (EditPoint stroke_start, EditPoint stroke_end, EditPoint stroke_next,
@@ -561,29 +287,6 @@ public class StrokeTool : Tool {
 		}
 
 		return intersections;
-	}
-	
-	public static bool is_counter_to_outline (Path p) {
-		EditPoint p1, p2;
-		EditPoint a1, a2;
-		
-		if (p.points.size == 0) {
-			return false;
-		} 
-		
-		for (int index = 1; index < p.points.size + 2; index++) {
-			p1 = p.points.get ((index - 1) % p.points.size);
-			p2 = p.points.get (index % p.points.size);
-			a1 = p.points.get ((index + 3) % p.points.size); // two points ahead
-			a2 = p.points.get ((index + 4) % p.points.size);			
-
-			if ((p2.flags & EditPoint.STROKE_OFFSET) > 0
-				&& (a1.flags & EditPoint.STROKE_OFFSET) > 0) {
-				return true;	
-			}
-		}
-		
-		return false;
 	}
 	
 	static bool split_corner (PathList pl) {
@@ -983,25 +686,16 @@ public class StrokeTool : Tool {
 		
 		if (Glyph.CANVAS_MIN < cross_x < Glyph.CANVAS_MAX
 			&& Glyph.CANVAS_MIN < cross_y < Glyph.CANVAS_MAX) {
-			// iterate to find intersection.
-/*
-			if (skip_points_on_points ||
-				!((ep.x == cross_x && ep.y == cross_y)
-				|| (next.x == cross_x && next.y == cross_y)
-				|| (p1.x == cross_x && p1.y == cross_y) 
-				|| (p2.x == cross_x && p2.y == cross_y))) {
-*/					
+			// iterate to find intersection.				
+			if (is_line (ep.x, ep.y, cross_x, cross_y, next.x, next.y)
+				&& is_line (p1.x, p1.y, cross_x, cross_y, p2.x, p2.y)) {
+			
+				ix = cross_x;
+				iy = cross_y;
 				
-				if (is_line (ep.x, ep.y, cross_x, cross_y, next.x, next.y)
-					&& is_line (p1.x, p1.y, cross_x, cross_y, p2.x, p2.y)) {
-				
-					ix = cross_x;
-					iy = cross_y;
-					
-					return true;
-				}	
-			} 
-	//	}
+				return true;
+			}	
+		} 
 
 		return false;
 	}
@@ -1429,23 +1123,12 @@ public class StrokeTool : Tool {
 			return false;
 		}
 		
-		/* //FIXME: DELETE
-		if (!(path.xmin < point.x < path.xmax)) {
-			return false;
-		}
-		
-		if (!(path.ymin < point.y < path.ymax)) {
-			return false;
-		}
-		*/
-				
 		prev = path.points.get (path.points.size - 1);
 		
  		foreach (EditPoint p in path.points) {
 			if ((p.x == point.x && p.y == point.y) || (prev.x == point.x && prev.y == point.y)) {
 				point.color = Color.green ();
 				return true;
-				continue;
 			} else if  ((p.y > point.y) != (prev.y > point.y) 
  				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
  				inside = !inside;
@@ -1984,80 +1667,15 @@ public class StrokeTool : Tool {
 		
 		return sum > 0;
 	}	
-	
-	static void flatten (Path path, double stroke_width) {
-		EditPoint start, end, new_point;
-		double px, py;
-		int size, i, added_points;
-		double step = 0.5;
-		bool open = path.is_open ();
-		bool flat;
-		
-		path.add_hidden_double_points ();
-		size = open ? path.points.size - 1 : path.points.size;
 
-		i = 0;
-		added_points = 0;
-		while (i < size) {
-			start = path.points.get (i);
-			end = path.points.get ((i + 1) % path.points.size);
-			
-			Path.get_point_for_step (start, end, step, out px, out py);
-			
-			if (start.type == PointType.HIDDEN) {
-				start.tie_handles = false;
-				start.deleted = true;
-			}
-
-			if (end.type == PointType.HIDDEN) {
-				start.tie_handles = false;
-				end.tie_handles = false;
-				end.deleted = true;
-			}
-			
-			flat = is_flat (start.x, start.y, px, py, end.x, end.y, 0.05 * stroke_width) 
-				&& ((px - start.x) > 0) == ((start.get_right_handle ().x - start.x) > 0)
-				&& ((py - start.y) > 0) == ((start.get_right_handle ().y - start.y) > 0);
-
-			if (unlikely (added_points > 20)) {
-				warning ("More than twenty points added in stroke.");
-				added_points = 0;
-				i++;
-			} else if (flat
-					&& Path.distance (start.x, px, start.y, py) > 0.1 * stroke_width
-					&& Path.distance (end.x, px, end.y, py) > 0.1 * stroke_width) {
-				new_point = new EditPoint (px, py);
-				new_point.prev = start;
-				new_point.next = end;
-				path.insert_new_point_on_path (new_point, step);
-				added_points++;
-				size++;
-			} else {
-				added_points = 0;
-				i++;
-			}
-		}
-		
-		path.remove_deleted_points ();	
-		path.remove_points_on_points ();
-
-		if (stroke_selected) { // FIXME: DELETE	
-			((!) BirdFont.get_current_font ().get_glyph ("a")).add_path (path);
-		}
-	}
-
-	public static PathList get_overlay (Path path, double thickness) {
+	public static PathList create_stroke (Path path, double thickness) {
 		PathList pl = new PathList ();
-		Path np;
 		EditPoint p1, p2, p3;
-		EditPoint last1, last2;
-		EditPoint previous, previous_inside, start, original_start;
+		EditPoint previous, previous_inside, start;
 		
 		Path side1, side2;
 		
-		double x, y, x2, y2, x3, y3, next_x, next_y, step, prev_x, prev_y;
-		double previus_x, previus_y, previus_x2, previus_y2;
-		double previus_middle_x, previus_middle_y;
+		double x, y, x2, y2, x3, y3;
 		int size = path.is_open () ? path.points.size - 1 : path.points.size;
 		bool flat, f_next, f_bigger;
 		int i;
@@ -2066,7 +1684,7 @@ public class StrokeTool : Tool {
 		double step_increment;
 		double step_size;
 		EditPoint corner1, corner1_inside;
-		double min_step, max_step;
+		double step;
 		
 		side1 = new Path ();
 		side2 = new Path ();
@@ -2092,7 +1710,7 @@ public class StrokeTool : Tool {
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 			
-			tolerance = 1.5 / sqrt (stroke_width);
+			tolerance = 1.2 / sqrt (stroke_width);
 			step_increment = 1.1;
 			step_size = 0.039 / stroke_width;
 

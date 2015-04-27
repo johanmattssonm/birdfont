@@ -543,7 +543,6 @@ public class PenTool : Tool {
 	}
 	
 	public void move (int x, int y) {
-		Glyph glyph = MainWindow.get_current_glyph ();
 		double coordinate_x, coordinate_y;
 		double delta_coordinate_x, delta_coordinate_y;
 		double angle = 0;
@@ -1722,7 +1721,6 @@ public class PenTool : Tool {
 
 	static void move_select_next_point (uint keyval) {
 		PointSelection next = new PointSelection.empty ();
-		Glyph g = MainWindow.get_current_glyph();
 		
 		if (selected_points.size == 0) {
 			return;
@@ -1828,7 +1826,6 @@ public class PenTool : Tool {
 	 * current zoom.
 	 */
 	void move_selected_points (uint keyval) {
-		Glyph g = MainWindow.get_current_glyph();
 		Path? last_path = null;
 		
 		if (!last_selected_is_handle) {
