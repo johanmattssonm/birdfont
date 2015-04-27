@@ -305,6 +305,7 @@ public class ForesightTool : Tool {
 		key_release_action.connect ((self, keyval) => {
 			Tool p = PointTool.pen ();
 			p.key_release_action (p, keyval);
+			MainWindow.set_cursor (NativeWindow.VISIBLE);
 		});
 		
 		draw_action.connect ((tool, cairo_context, glyph) => {
@@ -388,8 +389,6 @@ public class ForesightTool : Tool {
 		if (PenTool.active_path.points.size > 1) {
 			last = PenTool.active_path.points.get (PenTool.active_path.points.size - 2);
 			last.convert_to_curve ();
-			
-			print (@"Before $(last.x)  $(last.y)\n");
 		}
 	}
 	
@@ -403,8 +402,6 @@ public class ForesightTool : Tool {
 		if (PenTool.active_path.points.size > 0) {
 			last = PenTool.active_path.points.get (PenTool.active_path.points.size - 1);
 			last.convert_to_curve ();
-			
-			print (@"After $(last.x)  $(last.y)\n");
 		}
 	}
 

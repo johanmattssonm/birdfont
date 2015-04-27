@@ -111,8 +111,12 @@ public class StrokeTool : Tool {
 			if (stroke_selected) {// FIXME: DELETE
 				((!) BirdFont.get_current_font ().get_glyph ("d")).add_path (p);
 			}
-		}	
-		remove_merged_parts (o);
+		}
+		
+		// FIXME: only on stroke to outline
+		o = merge (o);
+		
+		// remove_merged_parts (o);
 				
 		/*
 		foreach (Path p in n.paths) {
@@ -509,9 +513,6 @@ public class StrokeTool : Tool {
 
 		distance = Path.distance_to_point (corner, original);
 		ratio = 1.5 * fabs (adjusted_stroke) / distance;
-		
-		print (@"$ratio   $distance\n");
-		print (original.to_string ());
 		
 		if (ratio > 1) {
 			stroked.add_point (corner);
@@ -1355,8 +1356,6 @@ public class StrokeTool : Tool {
 		foreach (Path p in r.paths) {
 			c = counters (r, p); // FIXME: this needs improvements
 			
-			print (@"$(p.points.size): $c $(is_clockwise (p))\n");
-			
 			if (has_zero_area_segment (p)) {
 				remove.add (p);
 			}
@@ -2067,7 +2066,8 @@ public class StrokeTool : Tool {
 		double step_increment;
 		double step_size;
 		EditPoint corner1, corner1_inside;
-			
+		double min_step, max_step;
+		
 		side1 = new Path ();
 		side2 = new Path ();
 
@@ -2091,10 +2091,10 @@ public class StrokeTool : Tool {
 			p1 = path.points.get (i % path.points.size);
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
-
-			tolerance = 0.05 * stroke_width;
+			
+			tolerance = 1.5 / sqrt (stroke_width);
 			step_increment = 1.1;
-			step_size = 0.013;
+			step_size = 0.039 / stroke_width;
 
 			corner1 = new EditPoint ();
 			
@@ -2104,19 +2104,19 @@ public class StrokeTool : Tool {
 				Path.get_point_for_step (p1, p2, step + step_size, out x2, out y2);
 				Path.get_point_for_step (p1, p2, step + 2 * step_size, out x3, out y3);
 				
-				flat = is_flat (x, y, x2, y2, x3, y3, tolerance); // FIXME: stroke_width
+				flat = is_flat (x, y, x2, y2, x3, y3, tolerance); 
 				
 				Path.get_point_for_step (p1, p2, step, out x, out y);
 				Path.get_point_for_step (p1, p2, step + step_size / step_increment, out x2, out y2);
 				Path.get_point_for_step (p1, p2, step + 2 * step_size / step_increment, out x3, out y3);
 				
-				f_next = is_flat (x, y, x2, y2, x3, y3, tolerance); // FIXME: stroke_width
+				f_next = is_flat (x, y, x2, y2, x3, y3, tolerance);
 
 				Path.get_point_for_step (p1, p2, step, out x, out y);
 				Path.get_point_for_step (p1, p2, step + step_size * step_increment, out x2, out y2);
 				Path.get_point_for_step (p1, p2, step + 2 * step_size * step_increment, out x3, out y3);
 				
-				f_bigger = is_flat (x, y, x2, y2, x3, y3, tolerance); // FIXME: stroke_width
+				f_bigger = is_flat (x, y, x2, y2, x3, y3, tolerance);
 				
 				if (!flat && !f_next && step_size > 0.013) {
 					step_size /= step_increment;

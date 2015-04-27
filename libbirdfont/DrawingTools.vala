@@ -749,8 +749,8 @@ public class DrawingTools : ToolCollection  {
 			
 			print (@"select $(StrokeTool.add_stroke)\n");
 		});
-		
-		stroke_expander.add_tool (add_stroke);	
+		stroke_expander.add_tool (add_stroke);
+		add_stroke.selected = StrokeTool.add_stroke;
 		
 		// edit stroke width
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
@@ -778,6 +778,8 @@ public class DrawingTools : ToolCollection  {
 			
 			f = BirdFont.get_current_font ();
 			f.settings.set_setting ("stroke_width", object_stroke.get_display_value ());
+			
+			GlyphCanvas.redraw ();
 		});
 		stroke_expander.add_tool (object_stroke);
 		
