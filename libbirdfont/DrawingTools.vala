@@ -756,6 +756,7 @@ public class DrawingTools : ToolCollection  {
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
 		object_stroke.set_value_round (2);
 		object_stroke.set_int_step (0.015);
+		object_stroke.set_big_number (true);
 		
 		object_stroke.new_value_action.connect((self) => {
 			Font f;

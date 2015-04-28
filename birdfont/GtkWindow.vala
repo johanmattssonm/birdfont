@@ -71,7 +71,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		description = new DescriptionForm ();
 		
 		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
-		
+
+		Signal.connect(this, "notify::is-active", (GLib.Callback) window_focus, null);
+
 		scrollbar.value_changed.connect (() => {
 			double p;
 			
@@ -184,6 +186,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 
 		key_press_event.connect ((t, event) => {
 			if (!GtkWindow.text_input_is_active) {
+				GtkWindow.reset_modifier (event.state);
 				TabContent.key_press (event.keyval);
 			}
 			
@@ -208,6 +211,32 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MainWindow.open_recent_files_tab ();
 	}
 
+	public void window_focus (void* data) {
+		TabContent.key_release ((uint) ' ');
+	}
+
+	public static void reset_modifier (ModifierType flags) {
+		if ((flags & ModifierType.CONTROL_MASK) == 0) {
+			TabContent.key_release (Key.CTRL_RIGHT);
+			TabContent.key_release (Key.CTRL_LEFT);
+		}
+		
+		if ((flags & ModifierType.SHIFT_MASK) == 0) {
+			TabContent.key_release (Key.SHIFT_LEFT);
+			TabContent.key_release (Key.SHIFT_RIGHT);
+		}
+
+		if ((flags & ModifierType.MOD1_MASK) == 0) {
+			TabContent.key_release (Key.ALT_LEFT);
+			TabContent.key_release (Key.ALT_RIGHT);
+		}
+		
+		if ((flags & ModifierType.MOD5_MASK) == 0) {
+			TabContent.key_release (Key.LOGO_LEFT);
+			TabContent.key_release (Key.LOGO_RIGHT);
+		}
+	}
+	
 	public void font_loaded () {
 		Font f = BirdFont.get_current_font ();
 		set_title (@"$(f.full_name)");
@@ -663,6 +692,7 @@ class TabbarCanvas : DrawingArea {
 		button_press_event.connect ((t, e)=> {
 			Gtk.Allocation alloc;
 			get_allocation (out alloc);
+			GtkWindow.reset_modifier (e.state);
 			tabbar.select_tab_click (e.x, e.y, alloc.width, alloc.height);
 			queue_draw_area (0, 0, alloc.width, alloc.height);
 			return true;
@@ -820,12 +850,14 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 
 		button_press_event.connect ((t, e)=> {
+			GtkWindow.reset_modifier (e.state);
+			
 			if (e.type == EventType.BUTTON_PRESS) {
 				TabContent.button_press (e.button, e.x, e.y);	
 			} else if (e.type == EventType.2BUTTON_PRESS) {
 				TabContent.double_click (e.button, e.x, e.y);
 			}
-				
+			
 			return true;
 		});
 		

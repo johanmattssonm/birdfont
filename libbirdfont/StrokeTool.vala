@@ -1776,7 +1776,7 @@ public class StrokeTool : Tool {
 			l = p2.get_left_handle ();
 			r = p2.get_right_handle ();
 			
-			if (fabs (l.angle - r.angle - PI) % 2 * PI > 0.0001) {
+			if (fabs (l.angle + r.angle - PI) % 2 * PI > 0.0001) {
 				if (!path.is_open () || i < size - 1) {
 					get_segment (thickness, 0, 0.001, p2, p3, out start);
 					add_corner (side1, previous, start, p2.copy (), thickness);
