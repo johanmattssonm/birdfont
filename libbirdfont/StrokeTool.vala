@@ -1054,7 +1054,7 @@ public class StrokeTool : Tool {
 		}
 		
 		foreach (Path p in r.paths) {
-			c = counters (r, p); // FIXME: this needs improvements
+			c = counters (r, p);
 			
 			if (has_zero_area_segment (p)) {
 				remove.add (p);

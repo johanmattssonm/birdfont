@@ -68,6 +68,8 @@ public class ForesightTool : Tool {
 			EditPoint first_point;
 			bool clockwise;
 			
+			MainWindow.set_cursor (NativeWindow.HIDDEN);
+			
 			if (b == 2) {
 				p.release_action (p, 1, x, y);
 				p.press_action (p, 2, x, y);
@@ -180,6 +182,7 @@ public class ForesightTool : Tool {
 				PenTool.force_direction ();
 				
 				state = NONE;
+				MainWindow.set_cursor (NativeWindow.VISIBLE);
 			} else if (state == MOVE_POINT) {
 			} else if (state == NONE) {
 			} else {
@@ -210,7 +213,7 @@ public class ForesightTool : Tool {
 			PenTool.active_path = current_path;
 			PenTool.active_path.hide_end_handle = (state == MOVE_POINT);
 			
-			if (state == MOVE_HANDLES || state == MOVE_LAST_HANDLE) {				
+			if (state == MOVE_HANDLES || state == MOVE_LAST_HANDLE) {			
 				if (previous_point > 0) {
 					return_if_fail (PenTool.active_path.points.size >= previous_point + 1);
 					return_if_fail (PenTool.active_path.points.size > 0);
@@ -285,6 +288,8 @@ public class ForesightTool : Tool {
 				}
 				
 				PenTool.retain_angle = false;
+				
+				MainWindow.set_cursor (NativeWindow.HIDDEN);
 			} else {
 				if (DrawingTools.get_selected_point_type () != PointType.QUADRATIC) {
 					p.move_action (p, x, y);

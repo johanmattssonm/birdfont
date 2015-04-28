@@ -362,7 +362,7 @@ public class TabContent : GLib.Object {
 		TabContent.key_release (Key.ALT_RIGHT);
 		TabContent.key_release (Key.LOGO_LEFT);
 		TabContent.key_release (Key.LOGO_RIGHT);
-			
+		
 		if (MainWindow.get_current_display () is Glyph) {
 			TabContent.key_release ((uint) ' ');
 		}
