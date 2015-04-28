@@ -352,6 +352,21 @@ public class TabContent : GLib.Object {
 		text_input_visible = false;
 		text_callback = new TextListener ("", "", "");
 	}
+	
+	public static void reset_modifier () {
+		TabContent.key_release (Key.CTRL_RIGHT);
+		TabContent.key_release (Key.CTRL_LEFT);
+		TabContent.key_release (Key.SHIFT_LEFT);
+		TabContent.key_release (Key.SHIFT_RIGHT);
+		TabContent.key_release (Key.ALT_LEFT);
+		TabContent.key_release (Key.ALT_RIGHT);
+		TabContent.key_release (Key.LOGO_LEFT);
+		TabContent.key_release (Key.LOGO_RIGHT);
+			
+		if (MainWindow.get_current_display () is Glyph) {
+			TabContent.key_release ((uint) ' ');
+		}
+	}
 }
 
 }

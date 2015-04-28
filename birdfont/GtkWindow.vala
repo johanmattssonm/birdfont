@@ -212,7 +212,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 
 	public void window_focus (void* data) {
-		TabContent.key_release ((uint) ' ');
+		TabContent.reset_modifier ();
 	}
 
 	public static void reset_modifier (ModifierType flags) {
