@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-25 18:20+0200\n"
+"POT-Creation-Date: 2015-04-29 22:37+0200\n"
 "PO-Revision-Date: 2015-01-05 13:16+0000\n"
 "Last-Translator: Piotr <strebski@o2.pl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -170,7 +170,7 @@ msgid "Glyph"
 msgstr "Glif"
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
-#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:937
+#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:969
 msgid "Version"
 msgstr "Wersja"
 
@@ -263,29 +263,29 @@ msgid "Name and Description"
 msgstr "Nazwa i opis"
 
 #: libbirdfont/DescriptionDisplay.vala:56 libbirdfont/MenuTab.vala:84
-#: birdfont/GtkWindow.vala:881
+#: birdfont/GtkWindow.vala:913
 msgid "PostScript Name"
 msgstr "Nazwa PostScript"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:888
+#: libbirdfont/MenuTab.vala:580 birdfont/GtkWindow.vala:920
 msgid "Name"
 msgstr "Nazwa"
 
 #: libbirdfont/DescriptionDisplay.vala:76 libbirdfont/MenuTab.vala:94
-#: birdfont/GtkWindow.vala:895
+#: birdfont/GtkWindow.vala:927
 msgid "Style"
 msgstr "Styl"
 
-#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:901
+#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:933
 msgid "Bold"
 msgstr "Pogrubienie"
 
-#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:908
+#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:940
 msgid "Italic"
 msgstr "Kursywa"
 
-#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:916
+#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:948
 msgid "Weight"
 msgstr "Waga"
 
@@ -297,11 +297,11 @@ msgstr "Pełna nazwa (Nazwa i styl)"
 msgid "Unique Identifier"
 msgstr "Unikalny identyfikator"
 
-#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:944
+#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:976
 msgid "Description"
 msgstr "Opis"
 
-#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:952
+#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:984
 msgid "Copyright"
 msgstr "Prawa autorskie"
 
@@ -465,63 +465,63 @@ msgstr "Usuń obraz tła"
 msgid "Apply stroke"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:755 libbirdfont/SettingsTab.vala:34
+#: libbirdfont/DrawingTools.vala:756 libbirdfont/SettingsTab.vala:34
 msgid "Stroke width"
 msgstr "Szerokość pociągnięcia"
 
-#: libbirdfont/DrawingTools.vala:784
+#: libbirdfont/DrawingTools.vala:792
 msgid "Create outline form stroke"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:834
+#: libbirdfont/DrawingTools.vala:842
 msgid "Show guidelines"
 msgstr "Pokaż wytyczne"
 
-#: libbirdfont/DrawingTools.vala:846
+#: libbirdfont/DrawingTools.vala:854
 msgid "Show more guidelines"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:862
+#: libbirdfont/DrawingTools.vala:870
 msgid "Show guidelines at top and bottom margin"
 msgstr "Pokaż linijki na górnym i dolnym marginesie"
 
-#: libbirdfont/DrawingTools.vala:903
+#: libbirdfont/DrawingTools.vala:911
 msgid "Zoom Out More"
 msgstr "Pomniejsz jeszcze"
 
-#: libbirdfont/DrawingTools.vala:912
+#: libbirdfont/DrawingTools.vala:920
 msgid "Show full glyph"
 msgstr "Pokaż pełny glif"
 
-#: libbirdfont/DrawingTools.vala:919
+#: libbirdfont/DrawingTools.vala:927
 msgid "Fit in view"
 msgstr "Dopasuj do widoku"
 
-#: libbirdfont/DrawingTools.vala:926
+#: libbirdfont/DrawingTools.vala:934
 msgid "Zoom in on background image"
 msgstr "Powiększ na obrazie tła"
 
-#: libbirdfont/DrawingTools.vala:936
+#: libbirdfont/DrawingTools.vala:944
 msgid "Previous view"
 msgstr "Poprzedni widok"
 
-#: libbirdfont/DrawingTools.vala:942
+#: libbirdfont/DrawingTools.vala:950
 msgid "Next view"
 msgstr "Następny widok"
 
-#: libbirdfont/DrawingTools.vala:1146
+#: libbirdfont/DrawingTools.vala:1154
 msgid "Background Tools"
 msgstr "Narzędzia tła"
 
-#: libbirdfont/DrawingTools.vala:1161
+#: libbirdfont/DrawingTools.vala:1169
 msgid "Control Points"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1176
+#: libbirdfont/DrawingTools.vala:1184
 msgid "Object Tools"
 msgstr "Narzędzia obiektowe"
 
-#: libbirdfont/DrawingTools.vala:1306
+#: libbirdfont/DrawingTools.vala:1314
 msgid "Set size for grid"
 msgstr "Ustaw rozmiar siatki"
 
@@ -623,7 +623,7 @@ msgstr "Unicode"
 msgid "Insert"
 msgstr "Wstaw"
 
-#: libbirdfont/KerningDisplay.vala:844 libbirdfont/MainWindow.vala:202
+#: libbirdfont/KerningDisplay.vala:844 libbirdfont/MainWindow.vala:212
 #: libbirdfont/MessageDialog.vala:35 libbirdfont/SpinButton.vala:199
 msgid "Close"
 msgstr "Zamknij"
@@ -765,7 +765,7 @@ msgstr "Położenie"
 msgid "Move"
 msgstr "Przenieś"
 
-#: libbirdfont/MainWindow.vala:202
+#: libbirdfont/MainWindow.vala:212
 msgid "Glyph sequence"
 msgstr "Kolejność glifów"
 
@@ -1437,19 +1437,19 @@ msgstr "Odręczne rysowanie"
 msgid "New version"
 msgstr "Nowa wersja"
 
-#: birdfont/GtkWindow.vala:263
+#: birdfont/GtkWindow.vala:292
 msgid "Select color"
 msgstr "Wybierz kolor"
 
-#: birdfont/GtkWindow.vala:566
+#: birdfont/GtkWindow.vala:595
 msgid "Your fonts have been exported."
 msgstr "Twoje czcionki zostały eksportowane."
 
-#: birdfont/GtkWindow.vala:923
+#: birdfont/GtkWindow.vala:955
 msgid "Full name (name and style)"
 msgstr "Pełna nazwa (nazwa i styl)"
 
-#: birdfont/GtkWindow.vala:930
+#: birdfont/GtkWindow.vala:962
 msgid "Unique identifier"
 msgstr "Unikalny identyfikator"
 
