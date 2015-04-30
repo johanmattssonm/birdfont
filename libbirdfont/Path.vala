@@ -563,8 +563,8 @@ public class Path {
 
 		cr.save ();
 
-		x = xc + x - (width / 2.0) * ivz; 
-		y = yc - y - (width / 2.0) * ivz;
+		x = xc + x; 
+		y = yc - y;
 
 		cr.set_source_rgba (color.r, color.g, color.b, color.a);
 		

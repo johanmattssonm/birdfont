@@ -1713,7 +1713,7 @@ public class StrokeTool : Tool {
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 			
-			tolerance = 1.3 / sqrt (stroke_width);
+			tolerance = 0.13 / sqrt (stroke_width);
 			step_increment = 1.1;
 			step_size = 0.039 / stroke_width;
 

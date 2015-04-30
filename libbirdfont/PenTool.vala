@@ -552,8 +552,13 @@ public class PenTool : Tool {
 	
 	public static void reset_stroke () {
 		Glyph g = MainWindow.get_current_glyph ();
+		
 		foreach (PointSelection p in selected_points) {
 			p.path.reset_stroke ();
+		}
+		
+		foreach (Path path in g.active_paths) {
+			path.reset_stroke ();
 		}
 	}
 	

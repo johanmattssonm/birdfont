@@ -1530,12 +1530,17 @@ public class Glyph : FontDisplay {
 		foreach (Path p in path_list) {
 			if (p.stroke > 0) {
 				stroke = p.get_stroke_fast ();
-
-				if (p.is_editable () || active_paths.index_of (p) > -1) {
-					draw_path_list (stroke, cr);					
+				
+				if (p.is_editable ()) {
+					color = Theme.get_color ("Filled Stroke");	
+					color.a = 0.8;
+				} else if (active_paths.index_of (p) > -1) {
+					color = Theme.get_color ("Selected Objects");
 				} else {
-					draw_path_list (stroke, cr, Theme.get_color ("Filled Stroke"));
+					color = Color.black ();
 				}
+				
+				draw_path_list (stroke, cr, color);
 			}
 		}
 		cr.fill ();
