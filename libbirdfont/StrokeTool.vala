@@ -39,7 +39,7 @@ public class StrokeTool : Tool {
 		
 		foreach (Path p in g.active_paths) {
 			if (p.stroke > 0) {
-				paths.append (get_stroke (p, p.stroke));
+				paths.append (p.get_stroke ());
 			}
 		}
 
@@ -84,27 +84,22 @@ public class StrokeTool : Tool {
 		stroke_selected = false; // FIXME: delete 
 	}
 	
+	public static PathList get_stroke_fast (Path path, double thickness) {
+		PathList o;
+		Path stroke;
+		
+		stroke = path.copy ();
+		stroke.remove_points_on_points (0.3);
+		o = create_stroke (stroke, thickness);
+		
+		return o;
+	}
+	
 	public static PathList get_stroke (Path path, double thickness) {
 		PathList o;
-		Path stroke = path.copy ();
-
-		stroke.remove_points_on_points (0.3);
 		
-		o = create_stroke (stroke, thickness);
-		foreach (Path p in o.paths) {
-			if (stroke_selected) {// FIXME: DELETE
-				((!) BirdFont.get_current_font ().get_glyph ("c")).add_path (p);
-			}
-		}
-		
-		o = get_all_parts (o); // FIXME: only on stroke to outline
-		foreach (Path p in o.paths) {
-			if (stroke_selected) {// FIXME: DELETE
-				((!) BirdFont.get_current_font ().get_glyph ("d")).add_path (p);
-			}
-		}
-		
-		// FIXME: only on stroke to outline
+		o = get_stroke_fast (path, thickness);
+		o = get_all_parts (o);
 		o = merge (o);
 		
 		return o;
@@ -1133,12 +1128,10 @@ public class StrokeTool : Tool {
 		
  		foreach (EditPoint p in path.points) {
 			if ((p.x == point.x && p.y == point.y) || (prev.x == point.x && prev.y == point.y)) {
-				point.color = Color.green ();
 				return true;
 			} else if  ((p.y > point.y) != (prev.y > point.y) 
  				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
  				inside = !inside;
- 				point.color = Color.yellow ();
  			}
  			
  			prev = p;
@@ -1658,7 +1651,9 @@ public class StrokeTool : Tool {
 		
 		p.recalculate_linear_handles ();
 						
-		return_val_if_fail (p.points.size >= 3, true);
+		if (p.points.size < 3) {
+			return true;
+		}
 		
 		for (int i = 0; i < p.points.size; i++) {
 			p1 = p.points.get (i);
@@ -1804,6 +1799,7 @@ public class StrokeTool : Tool {
 		Path overlay; 
 		double x, y, x2, y2, x3, y3;
 		EditPoint corner1, corner2, corner3;
+		PointType type;
 		
 		Path.get_point_for_step (p1, p2, step, out x, out y);
 		Path.get_point_for_step (p1, p2, step + step_size, out x2, out y2);
@@ -1811,9 +1807,10 @@ public class StrokeTool : Tool {
 		
 		overlay = new Path ();
 		
-		corner1 = new EditPoint (x, y, PointType.LINE_CUBIC);
-		corner2 = new EditPoint (x2, y2, PointType.LINE_CUBIC);
-		corner3 = new EditPoint (x3, y3, PointType.LINE_CUBIC);
+		type = p1.get_right_handle ().type;
+		corner1 = new EditPoint (x, y, type);
+		corner2 = new EditPoint (x2, y2, type);
+		corner3 = new EditPoint (x3, y3, type);
 		
 		overlay.add_point (corner1);
 		overlay.add_point (corner2);

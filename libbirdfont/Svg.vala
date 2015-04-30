@@ -23,11 +23,11 @@ class Svg {
 		StringBuilder svg = new StringBuilder ();
 		PathList stroke_list;
 		
-		foreach (Path pl in g.path_list) {
-			if (pl.stroke == 0) {
-				write_path_as_glyph (pl, svg, g);
+		foreach (Path p in g.path_list) {
+			if (p.stroke == 0) {
+				write_path_as_glyph (p, svg, g);
 			} else {
-				stroke_list = StrokeTool.get_stroke (pl, pl.stroke);
+				stroke_list = p.get_stroke ();
 				write_paths_as_glyph (stroke_list, svg, g);
 			}
 		}

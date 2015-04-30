@@ -255,6 +255,7 @@ public class DrawingTools : ToolCollection  {
 			PenTool.convert_point_types ();
 			GlyphCanvas.redraw ();
 			update_type_selection ();
+			PenTool.reset_stroke ();
 		});
 		convert_points.set_persistent (false);
 		draw_tool_modifiers.add_tool (convert_points);
@@ -375,6 +376,7 @@ public class DrawingTools : ToolCollection  {
 		
 		resize_tool.objects_rotated.connect ((angle) => {
 			rotation.set_value_round (angle, true, false);
+			PenTool.reset_stroke ();
 		});
 		
 		move_tool.objects_deselected.connect (() => {
@@ -395,6 +397,7 @@ public class DrawingTools : ToolCollection  {
 		skew.set_persistent (false);
 		skew.new_value_action.connect ((self) => {
 			resize_tool.skew (-skew.get_value ());
+			PenTool.reset_stroke ();
 			GlyphCanvas.redraw ();
 		});
 		
@@ -517,6 +520,7 @@ public class DrawingTools : ToolCollection  {
 			}
 			
 			MainWindow.get_current_glyph ().update_view ();
+			PenTool.reset_stroke ();
 		});
 		draw_tool_modifiers.add_tool (tie_handles);
 		
@@ -540,6 +544,8 @@ public class DrawingTools : ToolCollection  {
 				}
 				MainWindow.get_current_glyph ().update_view ();
 			}
+			
+			PenTool.reset_stroke ();
 		});
 		draw_tool_modifiers.add_tool (reflect_handle);
 
@@ -547,6 +553,7 @@ public class DrawingTools : ToolCollection  {
 		create_line.select_action.connect ((self) => {
 			PenTool.convert_segment_to_line ();
 			MainWindow.get_current_glyph ().update_view ();
+			PenTool.reset_stroke ();
 		});
 		draw_tool_modifiers.add_tool (create_line);
 	
@@ -568,6 +575,7 @@ public class DrawingTools : ToolCollection  {
 		flip_vertical.select_action.connect ((self) => {
 			MoveTool.flip_vertical ();
 			MainWindow.get_current_glyph ().update_view ();
+			PenTool.reset_stroke ();
 		});
 		draw_tool_modifiers.add_tool (flip_vertical);
 
@@ -575,6 +583,7 @@ public class DrawingTools : ToolCollection  {
 		flip_horizontal.select_action.connect ((self) => {
 			MoveTool.flip_horizontal ();
 			MainWindow.get_current_glyph ().update_view ();
+			PenTool.reset_stroke ();
 		});
 		draw_tool_modifiers.add_tool (flip_horizontal);
 

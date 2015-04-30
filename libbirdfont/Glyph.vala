@@ -145,7 +145,7 @@ public class Glyph : FontDisplay {
 		pl = new PathList ();
 		foreach (Path p in path_list) {
 			if (p.stroke > 0) {
-				stroke = StrokeTool.get_stroke (p, p.stroke);
+				stroke = p.get_stroke_fast ();
 				foreach (Path stroke_part in stroke.paths) {
 					pc = new PointConverter (stroke_part);
 					pl.add (pc.get_quadratic_path ());
@@ -1511,7 +1511,7 @@ public class Glyph : FontDisplay {
 		cr.new_path ();
 		foreach (Path p in path_list) {
 			if (p.stroke > 0) {
-				stroke = StrokeTool.get_stroke (p, p.stroke);
+				stroke = p.get_stroke_fast ();
 				draw_path_list (stroke, cr, Color.black ());
 			} else {
 				p.draw_path (cr, this, Color.black ());
@@ -1528,7 +1528,7 @@ public class Glyph : FontDisplay {
 			cr.new_path ();
 			foreach (Path p in path_list) {
 				if (p.stroke > 0) {
-					stroke = StrokeTool.get_stroke (p, p.stroke);
+					stroke = p.get_stroke_fast ();
 					draw_path_list (stroke, cr, get_path_fill_color ());
 				}
 
@@ -1543,7 +1543,7 @@ public class Glyph : FontDisplay {
 			cr.new_path ();
 			foreach (Path p in path_list) {
 				if (p.stroke > 0) {
-					stroke = StrokeTool.get_stroke (p, p.stroke);
+					stroke = p.get_stroke_fast ();
 					draw_outline_for_paths (stroke, cr);
 				}
 
@@ -1563,7 +1563,7 @@ public class Glyph : FontDisplay {
 				if (p.stroke == 0) {
 					p.draw_path (cr, this, Color.black ());
 				} else {
-					stroke = StrokeTool.get_stroke (p, p.stroke);
+					stroke = p.get_stroke_fast ();
 					draw_path_list (stroke, cr, Color.black ());
 				}
 			}
@@ -1577,7 +1577,7 @@ public class Glyph : FontDisplay {
 				if (p.stroke == 0) {
 					p.draw_path (cr, this);
 				} else {
-					draw_path_list (StrokeTool.get_stroke (p, p.stroke), cr);
+					draw_path_list (p.get_stroke_fast (), cr);
 				}
 				cr.close_path ();
 				cr.fill ();
@@ -1588,7 +1588,7 @@ public class Glyph : FontDisplay {
 		if (show_orientation_arrow) {
 			foreach (Path p in path_list) {
 				if (p.stroke > 0) {
-					stroke = StrokeTool.get_stroke (p, p.stroke);
+					stroke = p.get_stroke_fast ();
 					foreach (Path ps in stroke.paths) {
 						ps.draw_orientation_arrow (cr, orientation_arrow_opacity);
 					}	

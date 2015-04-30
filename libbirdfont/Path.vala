@@ -48,6 +48,8 @@ public class Path {
 
 	/** Stroke width */
 	public double stroke = 0;
+	PathList? full_stroke = null;
+	PathList? fast_stroke = null;
 	
 	/** Fill property for closed paths with stroke. */
 	public bool fill = false;
@@ -830,7 +832,7 @@ public class Path {
 		}
 
 		if (stroke > 0) {
-			pathlist = StrokeTool.get_stroke (this, stroke);
+			pathlist = get_stroke_fast (); // FIXME: add to clickmap instead
 			
 			if (pathlist.paths.size > 1) {
 				if (pathlist.paths.get (1).is_over_coordinate_var (x, y)) {
@@ -2285,6 +2287,38 @@ public class Path {
 
 		nx = npx;
 		ny = npy;
+	}
+	
+	public void reset_stroke () {
+		full_stroke = null;
+		fast_stroke = null;
+	}
+	
+	public void create_full_stroke () {
+		full_stroke = StrokeTool.get_stroke (this, stroke);
+	}
+	
+	public PathList get_stroke () {
+		if (full_stroke == null) {
+			full_stroke = StrokeTool.get_stroke (this, stroke);
+		}
+		
+		return (!) full_stroke;
+	}
+	
+	public PathList get_stroke_fast () {
+		PathList s;
+		
+		if (full_stroke != null) {
+			return (!) full_stroke;
+		}
+
+		if (fast_stroke != null) {
+			return (!) fast_stroke;
+		}
+		
+		fast_stroke = StrokeTool.get_stroke_fast (this, stroke);
+		return (!) fast_stroke;
 	}
 }
 

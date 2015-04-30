@@ -131,6 +131,8 @@ public class PenTool : Tool {
 			if (b == 1 && (GridTool.has_ttf_grid () || GridTool.is_visible ())) {
 				move (x, y);	
 			}
+			
+			reset_stroke ();
 		});
 		
 		double_click_action.connect ((self, b, x, y) => {
@@ -142,7 +144,9 @@ public class PenTool : Tool {
 
 		release_action.connect ((self, b, ix, iy) => {
 			double x, y;
+			Glyph g;
 			
+			g = MainWindow.get_current_glyph ();
 			x = Glyph.path_coordinate_x (ix);
 			y = Glyph.path_coordinate_y (iy);
 
@@ -177,7 +181,7 @@ public class PenTool : Tool {
 			}
 			
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
-			
+
 			point_selection_image = false;
 			BirdFont.get_current_font ().touch ();
 		});
@@ -220,6 +224,8 @@ public class PenTool : Tool {
 			
 			GlyphCanvas.redraw ();
 			BirdFont.get_current_font ().touch ();
+			
+			reset_stroke ();
 		});
 		
 		key_release_action.connect ((self, keyval) => {
@@ -229,6 +235,7 @@ public class PenTool : Tool {
 					x = Glyph.reverse_path_coordinate_x (selected_point.x);
 					y = Glyph.reverse_path_coordinate_y (selected_point.y);
 					join_paths (x, y);
+					reset_stroke ();
 				}
 			}	
 		});
@@ -542,11 +549,21 @@ public class PenTool : Tool {
 		SettingsDisplay.precision.set_value_round (p, false, false);
 	}
 	
+	public static void reset_stroke () {
+		Glyph g = MainWindow.get_current_glyph ();
+		foreach (Path p in g.active_paths) {
+			p.reset_stroke ();
+		}
+	}
+	
 	public void move (int x, int y) {
 		double coordinate_x, coordinate_y;
 		double delta_coordinate_x, delta_coordinate_y;
 		double angle = 0;
 		bool tied;
+		Glyph g;
+		
+		g = MainWindow.get_current_glyph ();
 		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
@@ -560,6 +577,7 @@ public class PenTool : Tool {
 		
 		if (move_selected_handle || move_selected) {
 			MainWindow.set_cursor (NativeWindow.HIDDEN);
+			reset_stroke ();
 		} else {
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
 		}
@@ -780,7 +798,7 @@ public class PenTool : Tool {
 		}
 
 		if (button == 2) {
-			if (glyph.is_open ()) {
+			if (glyph.is_open ()) {			
 				force_direction ();
 				glyph.close_path ();
 			} else {
@@ -1660,7 +1678,9 @@ public class PenTool : Tool {
 
 	private void curve_active_corner_event (double event_x, double event_y) {
 		PointSelection eh;
+		Glyph glyph;
 		
+		glyph = MainWindow.get_current_glyph ();
 		active_handle.active = false;
 		
 		if (!is_over_handle (event_x, event_y)) {
@@ -1671,6 +1691,9 @@ public class PenTool : Tool {
 		eh.handle.active = true;
 		active_handle = eh.handle;
 		active_path = eh.path;
+		
+		glyph.clear_active_paths ();
+		glyph.add_active_path (eh.path);
 	}
 
 	private void curve_corner_event (double event_x, double event_y) {
