@@ -1523,16 +1523,31 @@ public class Glyph : FontDisplay {
 	
 	public void draw_path (Context cr) {
 		PathList stroke;
+		Color color;
+		
+		cr.save ();
+		cr.new_path ();
+		foreach (Path p in path_list) {
+			if (p.stroke > 0) {
+				stroke = p.get_stroke_fast ();
+
+				if (p.is_editable () || active_paths.index_of (p) > -1) {
+					draw_path_list (stroke, cr);					
+				} else {
+					draw_path_list (stroke, cr, Theme.get_color ("Filled Stroke"));
+				}
+			}
+		}
+		cr.fill ();
+		cr.restore ();
+			
 		if (is_open () && Path.fill_open_path) {
 			cr.save ();
 			cr.new_path ();
 			foreach (Path p in path_list) {
-				if (p.stroke > 0) {
-					stroke = p.get_stroke_fast ();
-					draw_path_list (stroke, cr, get_path_fill_color ());
+				if (p.stroke == 0) {
+					p.draw_path (cr, this, get_path_fill_color ());
 				}
-
-				p.draw_path (cr, this, get_path_fill_color ());
 			}
 			cr.fill ();
 			cr.restore ();
@@ -1542,11 +1557,6 @@ public class Glyph : FontDisplay {
 			cr.save ();
 			cr.new_path ();
 			foreach (Path p in path_list) {
-				if (p.stroke > 0) {
-					stroke = p.get_stroke_fast ();
-					draw_outline_for_paths (stroke, cr);
-				}
-
 				p.draw_outline (cr);
 				p.draw_edit_points (cr);
 			}
@@ -1562,9 +1572,6 @@ public class Glyph : FontDisplay {
 			foreach (Path p in path_list) {
 				if (p.stroke == 0) {
 					p.draw_path (cr, this, Color.black ());
-				} else {
-					stroke = p.get_stroke_fast ();
-					draw_path_list (stroke, cr, Color.black ());
 				}
 			}
 			cr.close_path ();
@@ -1576,8 +1583,6 @@ public class Glyph : FontDisplay {
 				cr.new_path ();
 				if (p.stroke == 0) {
 					p.draw_path (cr, this);
-				} else {
-					draw_path_list (p.get_stroke_fast (), cr);
 				}
 				cr.close_path ();
 				cr.fill ();

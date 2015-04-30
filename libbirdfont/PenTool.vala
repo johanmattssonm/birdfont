@@ -184,6 +184,7 @@ public class PenTool : Tool {
 
 			point_selection_image = false;
 			BirdFont.get_current_font ().touch ();
+			reset_stroke ();
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -198,6 +199,8 @@ public class PenTool : Tool {
 		});
 		
 		key_press_action.connect ((self, keyval) => {
+			reset_stroke ();
+			
 			if (keyval == Key.DEL || keyval == Key.BACK_SPACE) {
 				if (KeyBindings.has_shift ()) {
 					delete_selected_points ();
@@ -224,8 +227,6 @@ public class PenTool : Tool {
 			
 			GlyphCanvas.redraw ();
 			BirdFont.get_current_font ().touch ();
-			
-			reset_stroke ();
 		});
 		
 		key_release_action.connect ((self, keyval) => {
@@ -551,8 +552,8 @@ public class PenTool : Tool {
 	
 	public static void reset_stroke () {
 		Glyph g = MainWindow.get_current_glyph ();
-		foreach (Path p in g.active_paths) {
-			p.reset_stroke ();
+		foreach (PointSelection p in selected_points) {
+			p.path.reset_stroke ();
 		}
 	}
 	
@@ -1909,6 +1910,8 @@ public class PenTool : Tool {
 				selected_handle.move_delta_coordinate (1 * Glyph.ivz (), 0);
 			}				
 		}
+		
+		reset_stroke ();
 		
 		// TODO: redraw only the relevant parts
 		GlyphCanvas.redraw ();

@@ -114,6 +114,7 @@ public class MoveTool : Tool {
 		last_y = y;
 
 		GlyphCanvas.redraw ();
+		PenTool.reset_stroke ();
 		
 		update_selection_boundaries ();
 		
@@ -303,6 +304,7 @@ public class MoveTool : Tool {
 			path.move (x * Glyph.ivz (), y * Glyph.ivz ());
 		}
 		
+		PenTool.reset_stroke ();
 		update_selection_boundaries ();
 		objects_moved ();
 		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
@@ -420,6 +422,7 @@ public class MoveTool : Tool {
 		}
 		
 		update_selection_boundaries ();
+		PenTool.reset_stroke ();
 		
 		BirdFont.get_current_font ().touch ();
 	}

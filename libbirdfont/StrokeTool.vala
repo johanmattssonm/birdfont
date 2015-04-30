@@ -1701,10 +1701,10 @@ public class StrokeTool : Tool {
 			p1 = path.points.get (0);
 			p2 = path.points.get (1 % path.points.size);
 			
-			get_segment (thickness, 0, 0.0001, p1, p2, out start);
+			get_segment (thickness, 0, 0.00001, p1, p2, out start);
 			side1.add_point (start.copy ());
 
-			get_segment (-thickness, 0, 0.0001, p1, p2, out start);
+			get_segment (-thickness, 0, 0.00001, p1, p2, out start);
 			side2.add_point (start.copy ());
 		}
 
@@ -1713,14 +1713,14 @@ public class StrokeTool : Tool {
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 			
-			tolerance = 0.13 / sqrt (stroke_width);
+			tolerance = 1.3 / sqrt (stroke_width);
 			step_increment = 1.1;
 			step_size = 0.039 / stroke_width;
 
 			corner1 = new EditPoint ();
 			
 			step = 0;
-			while (step < 1 - step_size) {
+			while (step < 1 - 2 * step_size) {
 				Path.get_point_for_step (p1, p2, step, out x, out y);
 				Path.get_point_for_step (p1, p2, step + step_size, out x2, out y2);
 				Path.get_point_for_step (p1, p2, step + 2 * step_size, out x3, out y3);
@@ -1761,8 +1761,8 @@ public class StrokeTool : Tool {
 				step += step_size;
 			}
 
-			get_segment (thickness, 1 - step_size, step_size, p1, p2, out corner1);
-			get_segment (-thickness, 1 - step_size, step_size, p1, p2, out corner1_inside);
+			get_segment (thickness, 1 - 0.00001, 0.00001, p1, p2, out corner1);
+			get_segment (-thickness, 1 - 0.00001, 0.00001, p1, p2, out corner1_inside);
 			side1.add_point (corner1.copy ());
 			side2.add_point (corner1_inside.copy ());
 			previous = corner1;
@@ -1773,10 +1773,10 @@ public class StrokeTool : Tool {
 			
 			if (fabs (l.angle + r.angle - PI) % 2 * PI > 0.0001) {
 				if (!path.is_open () || i < size - 1) {
-					get_segment (thickness, 0, 0.001, p2, p3, out start);
+					get_segment (thickness, 0, 0.00001, p2, p3, out start);
 					add_corner (side1, previous, start, p2.copy (), thickness);
 
-					get_segment (-thickness, 0, 0.001, p2, p3, out start);
+					get_segment (-thickness, 0, 0.00001, p2, p3, out start);
 					add_corner (side2, previous_inside, start, p2.copy (), thickness);
 				}
 			}

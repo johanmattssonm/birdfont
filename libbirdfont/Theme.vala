@@ -99,8 +99,9 @@ public class Theme : GLib.Object {
 		
 		// Bright theme
 		Theme.set_default_color ("Canvas Background", 1, 1, 1, 1);
-		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
-		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Filled Stroke", 0, 0, 0, 1);
+		Theme.set_default_color ("Stroke Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
+		Theme.set_default_color ("Handle Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
 		Theme.set_default_color ("Selected Objects", 35 / 255.0, 131 / 255.0, 194 / 255.0, 1);
 		
@@ -176,17 +177,17 @@ public class Theme : GLib.Object {
 		
 		Theme.set_default_color ("Dialog Shadow", 0, 0, 0, 0.3);
 		
-		Theme.set_default_color ("Selected Active Cubic Control Point", 0, 0, 0, 1);
-		Theme.set_default_color ("Selected Cubic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Active Cubic Control Point", 0 / 255.0, 112 / 255.0, 244 / 255.0, 1);
+		Theme.set_default_color ("Selected Cubic Control Point", 0 / 255.0, 112 / 255.0, 244 / 255.0, 1);
 		Theme.set_default_color ("Active Cubic Control Point", 70 / 255.0, 70 / 255.0, 70 / 255.0, 1);
 		Theme.set_default_color ("Cubic Control Point", 116 / 255.0, 116 / 255.0, 116 / 255.0, 1);
 
-		Theme.set_default_color ("Selected Active Quadratic Control Point", 0, 0, 0, 1);
-		Theme.set_default_color ("Selected Quadratic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Active Quadratic Control Point", 0 / 255.0, 112 / 255.0, 244 / 255.0, 1);
+		Theme.set_default_color ("Selected Quadratic Control Point", 0 / 255.0, 112 / 255.0, 244 / 255.0, 1);
 		Theme.set_default_color ("Active Quadratic Control Point", 85 / 255.0, 115 / 255.0, 149 / 255.0, 1);
 		Theme.set_default_color ("Quadratic Control Point", 123 / 255.0, 151 / 255.0, 184 / 255.0, 1);
 
-		Theme.set_default_color ("Selected Control Point Handle", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Control Point Handle", 0 / 255.0, 112 / 255.0, 244 / 255.0, 1);
 		Theme.set_default_color ("Active Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
 		Theme.set_default_color ("Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
 		
@@ -204,8 +205,9 @@ public class Theme : GLib.Object {
 		
 		// Dark theme
 		Theme.set_default_color ("Canvas Background", 1, 1, 1, 1);
-		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
-		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Filled Stroke", 0, 0, 0, 1);
+		Theme.set_default_color ("Stroke Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
+		Theme.set_default_color ("Handle Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
 		Theme.set_default_color ("Selected Objects", 35 / 255.0, 131 / 255.0, 194 / 255.0, 1);
 		
@@ -281,17 +283,17 @@ public class Theme : GLib.Object {
 		
 		Theme.set_default_color ("Dialog Shadow", 0, 0, 0, 0.3);
 		
-		Theme.set_default_color ("Selected Active Cubic Control Point", 0, 0, 0, 1);
-		Theme.set_default_color ("Selected Cubic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Active Cubic Control Point", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+		Theme.set_default_color ("Selected Cubic Control Point", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 		Theme.set_default_color ("Active Cubic Control Point", 70 / 255.0, 70 / 255.0, 70 / 255.0, 1);
 		Theme.set_default_color ("Cubic Control Point", 116 / 255.0, 116 / 255.0, 116 / 255.0, 1);
 
-		Theme.set_default_color ("Selected Active Quadratic Control Point", 0, 0, 0, 1);
-		Theme.set_default_color ("Selected Quadratic Control Point", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Active Quadratic Control Point", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
+		Theme.set_default_color ("Selected Quadratic Control Point", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 		Theme.set_default_color ("Active Quadratic Control Point", 85 / 255.0, 115 / 255.0, 149 / 255.0, 1);
 		Theme.set_default_color ("Quadratic Control Point", 123 / 255.0, 151 / 255.0, 184 / 255.0, 1);
 
-		Theme.set_default_color ("Selected Control Point Handle", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Control Point Handle", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
 		Theme.set_default_color ("Active Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
 		Theme.set_default_color ("Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
 		
@@ -309,8 +311,9 @@ public class Theme : GLib.Object {
 
 		// High contrast theme
 		Theme.set_default_color ("Canvas Background", 1, 1, 1, 1);
-		Theme.set_default_color ("Stroke Color", 0, 0, 0, 1);
-		Theme.set_default_color ("Handle Color", 0, 0, 0, 1);
+		Theme.set_default_color ("Filled Stroke", 0, 0, 0, 1);
+		Theme.set_default_color ("Stroke Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
+		Theme.set_default_color ("Handle Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Fill Color", 0, 0, 0, 1);
 		Theme.set_default_color ("Selected Objects", 0, 0, 0, 1);
 		
@@ -416,6 +419,7 @@ public class Theme : GLib.Object {
 
 		if (BirdFont.has_argument ("--test")) {
 			t_("Canvas Background");
+			t_("Filled Stroke");
 			t_("Stroke Color");
 			t_("Handle Color");
 			t_("Fill Color");
