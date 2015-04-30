@@ -1670,14 +1670,14 @@ public class StrokeTool : Tool {
 	}	
 
 	public static PathList create_stroke (Path path, double thickness) {
-		PathList pl = new PathList ();
+		PathList pl;
 		EditPoint p1, p2, p3;
 		EditPoint previous, previous_inside, start;
 		
 		Path side1, side2;
 		
 		double x, y, x2, y2, x3, y3;
-		int size = path.is_open () ? path.points.size - 1 : path.points.size;
+		int size;
 		bool flat, f_next, f_bigger;
 		int i;
 
@@ -1689,10 +1689,15 @@ public class StrokeTool : Tool {
 		
 		EditPointHandle l, r;
 		
+		pl = new PathList ();
+		size = path.is_open () ? path.points.size - 1 : path.points.size;
+		
 		side1 = new Path ();
 		side2 = new Path ();
 
-		return_val_if_fail (path.points.size > 1, pl);
+		if (path.points.size < 2) {
+			return pl;
+		}
 
 		previous = new EditPoint ();
 		previous_inside = new EditPoint ();

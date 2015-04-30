@@ -972,12 +972,9 @@ public class PenTool : Tool {
 		move_point_on_path = true;
 		
 		if (active_edit_point != null) {
-			
 			glyph.clear_active_paths ();
 			glyph.add_active_path (active_path);
-			
 			DrawingTools.update_stroke_settings ();
-			
 			
 			if (KeyBindings.modifier == SHIFT) {
 				if (((!)active_edit_point).is_selected () && selected_points.size > 1) {
@@ -1017,7 +1014,7 @@ public class PenTool : Tool {
 		}
 	}
 	
-	private static Path? find_path_to_join () {
+	public static Path? find_path_to_join () {
 		Path? m = null;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		EditPoint ep_last, ep_first;
@@ -1148,7 +1145,39 @@ public class PenTool : Tool {
 			return;
 		}
 		
-		return_if_fail (path.points.size > 1);
+		return_if_fail (path.points.size > 0);
+		
+		px = Glyph.reverse_path_coordinate_x (((!) active_edit_point).x);
+		py = Glyph.reverse_path_coordinate_y (((!) active_edit_point).y);
+		
+		if (path.points.size == 1) {
+			glyph.delete_path (path);
+			glyph.clear_active_paths ();
+
+			foreach (Path merge in glyph.path_list) {
+				if (merge.points.size > 0) {
+					if (is_close_to_point (merge.points.get (merge.points.size - 1), px, py)) {
+						glyph.add_active_path (merge);
+						active_path = merge;
+						merge.reopen ();
+						glyph.open_path ();
+						return;
+					}
+					
+					if (is_close_to_point (merge.points.get (0), px, py)) {
+						glyph.add_active_path (merge);
+						active_path = merge;
+						merge.reverse ();
+						clear_directions ();
+						merge.reopen ();
+						glyph.open_path ();
+						return;
+					}
+				}
+			}
+			
+			return;
+		}
 		
 		if (active_edit_point == path.points.get (0)) {
 			path.reverse ();
@@ -1165,8 +1194,6 @@ public class PenTool : Tool {
 		}
 		
 		// join path with it self
-		px = Glyph.reverse_path_coordinate_x (((!) active_edit_point).x);
-		py = Glyph.reverse_path_coordinate_y (((!) active_edit_point).y);
 		if (is_endpoint ((!) active_edit_point)
 			&& is_close_to_point (path.points.get (0), px, py)) {
 			
@@ -1183,6 +1210,7 @@ public class PenTool : Tool {
 			}
 			
 			remove_all_selected_points ();
+			
 			return;
 		}
 		
@@ -1193,7 +1221,7 @@ public class PenTool : Tool {
 			}
 
 			// we need both start and end points
-			if (merge.points.size < 1 || path.points.size < 1) {
+			if (merge.points.size <= 1 || path.points.size <= 1) {
 				continue;
 			}
 			
@@ -1205,28 +1233,34 @@ public class PenTool : Tool {
 
 			return_if_fail (merge.points.size > 0);
 
-			if (is_close_to_point (merge.points.get (0), px, py)) {
-				union = merge_open_paths (path, merge); 
+			if (is_close_to_point (merge.points.get (0), px, py)) {				
+				if (path.points.size == 1) {
+					warning ("path.points.size == 1\n");
+				} else if (merge.points.size == 1) {
+					warning ("merge.points.size == 1\n");
+				} else {
+					union = merge_open_paths (path, merge); 
 
-				glyph.add_path (union);
-				glyph.delete_path (path);
-				glyph.delete_path (merge);
-				glyph.clear_active_paths ();
-				glyph.add_active_path (union);
-				
-				union.reopen ();
-				union.create_list ();
-				
- 				force_direction ();
-				
-				if (direction_changed) {
-					path.reverse ();
-					update_selection ();
+					glyph.add_path (union);
+					glyph.delete_path (path);
+					glyph.delete_path (merge);
+					glyph.clear_active_paths ();
+					glyph.add_active_path (union);
+					
+					union.reopen ();
+					union.create_list ();
+					
+					force_direction ();
+					
+					if (direction_changed) {
+						path.reverse ();
+						update_selection ();
+					}
+					
+					union.update_region_boundaries ();
+					
+					return;
 				}
-				
-				union.update_region_boundaries ();
-				
-				return;
 			}
 		}
 
@@ -1245,7 +1279,7 @@ public class PenTool : Tool {
 
 		distance = sqrt (fabs (pow (px - x, 2)) + fabs (pow (py - y, 2)));
 		
-		return (distance < 8 * MainWindow.units);
+		return (distance < 7 * MainWindow.units);
 	}
 
 	/** Show the user that curves will be merged on release. */

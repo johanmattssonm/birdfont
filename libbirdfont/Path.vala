@@ -608,10 +608,6 @@ public class Path {
 		reverse_points ();
 		
 		if (unlikely (direction == is_clockwise ())) {
-			stderr.printf ("Error: Direction did not change after reversing path.\n");
-			stderr.printf (@"Length: $(points.size)\n");
-			stderr.printf (@"No particular direction can be derived: $no_derived_direction \n");
-			warning ("Path.reverse () failed.\n");
 			return false;
 		}
 		

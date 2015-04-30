@@ -49,9 +49,6 @@ public class TrackTool : Tool {
 	int join_y = -1;
 	bool join_paths = false;
 
-	/** Create a stroked path instead of filling the shape. */
-	double stroke_width = 0; 
-
 	/** Adjust the number of samples per point by this factor. */
 	double samples_per_point = 1;
 
@@ -59,15 +56,6 @@ public class TrackTool : Tool {
 		string sw;
 		
 		base (name, t_("Freehand drawing"));
-		
-		sw = Preferences.get ("free_hand_stroke_width");
-		if (sw != "") {
-			stroke_width = SpinButton.convert_to_double (sw);
-		}
-		
-		select_action.connect((self) => {
-			Toolbox.set_object_stroke (stroke_width);
-		});
 		
 		press_action.connect ((self, button, x, y) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
@@ -109,7 +97,6 @@ public class TrackTool : Tool {
 					glyph.open_path ();
 					
 					PenTool.add_new_edit_point (x, y).point;
-					p.set_stroke (stroke_width);
 				}
 
 				glyph.update_view ();				
@@ -143,7 +130,7 @@ public class TrackTool : Tool {
 			
 			if (join != join_paths) {
 				MainWindow.get_current_glyph ().update_view ();
-
+				PenTool.reset_stroke ();
 			}
 			
 			join_paths = join;
@@ -159,6 +146,7 @@ public class TrackTool : Tool {
 				convert_on_timeout ();
 				last_x = x;
 				last_y = y;
+				PenTool.reset_stroke ();
 			}
 		});
 		
@@ -410,7 +398,7 @@ public class TrackTool : Tool {
 			update_cycles = 0;
 		}
 			
-		if (added_points > 40 / samples_per_point) {
+		if (added_points > 10 / samples_per_point) {
 			last_update  = get_current_time ();
 			convert_points_to_line ();
 		}
@@ -537,6 +525,7 @@ public class TrackTool : Tool {
 		added_points = 0;
 		last_update = get_current_time ();
 		glyph.update_view ();
+		PenTool.reset_stroke ();
 	}
 	
 	/** @return current time in milli seconds. */
