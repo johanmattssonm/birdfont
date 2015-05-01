@@ -1469,6 +1469,9 @@ public class Path {
 		} else if (right == PointType.CUBIC && left == PointType.CUBIC) {
 			x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
 			y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
+		} else if (right == PointType.HIDDEN && left == PointType.HIDDEN) {
+			x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
+			y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
 		} else {
 			warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
 			x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);

@@ -138,7 +138,6 @@ public class PenTool : Tool {
 		double_click_action.connect ((self, b, x, y) => {
 			last_point_x = Glyph.path_coordinate_x (x);
 			last_point_y = Glyph.path_coordinate_y (y);
-
 			press (b, x, y, true);
 		});
 

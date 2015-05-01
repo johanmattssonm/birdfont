@@ -51,6 +51,7 @@ public class TrackTool : Tool {
 
 	/** Adjust the number of samples per point by this factor. */
 	double samples_per_point = 1;
+	bool drawing = false;
 
 	public TrackTool (string name) {
 		string sw;
@@ -72,6 +73,8 @@ public class TrackTool : Tool {
 			}
 			
 			if (button == 1) {
+				return_if_fail (!drawing);
+				
 				draw_freehand = true;
 				
 				last_x = x;
@@ -96,13 +99,14 @@ public class TrackTool : Tool {
 					glyph.add_path (p);
 					glyph.open_path ();
 					
-					PenTool.add_new_edit_point (x, y).point;
+					PenTool.add_new_edit_point (x, y);
 				}
 
 				glyph.update_view ();				
 				added_points = 0;
 				last_update = get_current_time ();
 				start_update_timer ();
+				drawing = true;
 			}
 		});
 		
@@ -111,14 +115,17 @@ public class TrackTool : Tool {
 
 		release_action.connect ((self, button, x, y) => {
 			if (button == 1 && draw_freehand) {
+				return_if_fail (drawing);
 				add_endpoint_and_merge (x, y);
 			}
 			
+			convert_points_to_line ();
+			MainWindow.get_current_glyph ().clear_active_paths ();
+			
 			set_tie ();
-			
 			PenTool.force_direction (); 
-			
 			BirdFont.get_current_font ().touch ();
+			drawing = false;
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -334,12 +341,12 @@ public class TrackTool : Tool {
 	
 		glyph = MainWindow.get_current_glyph ();
 		
-		if (glyph.path_list.size == 0) {
+		if (glyph.active_paths.size == 0) {
 			warning ("No path.");
 			return;
 		}
 		
-		p = glyph.path_list.get (glyph.path_list.size - 1);
+		p = glyph.active_paths.get (glyph.active_paths.size - 1);
 		p.reopen ();
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);
@@ -363,12 +370,11 @@ public class TrackTool : Tool {
 		TimeoutSource timer = new TimeoutSource (100);
 
 		timer.set_callback (() => {
-			
 			if (draw_freehand) {
 				record_new_position (last_x, last_y);
 				convert_on_timeout ();
 			}
-			
+					
 			return draw_freehand;
 		});
 
@@ -420,12 +426,12 @@ public class TrackTool : Tool {
 	Path get_active_path () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
-		if (glyph.path_list.size == 0) {
+		if (glyph.active_paths.size == 0) {
 			warning ("No path.");
 			return new Path ();
 		}
 			
-		return glyph.path_list.get (glyph.path_list.size - 1);		
+		return glyph.active_paths.get (glyph.active_paths.size - 1);		
 	}
 	
 	/** Delete all points close to the pixel at x,y. */

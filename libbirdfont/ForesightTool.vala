@@ -160,14 +160,6 @@ public class ForesightTool : Tool {
 				} 
 			}
 		});
-		
-		double_click_action.connect ((self, b, x, y) => {
-			Tool p = PointTool.pen ();
-			
-			if (!BirdFont.android) {
-				p.double_click_action (p, b, x, y);
-			}
-		});
 
 		release_action.connect ((self, b, x, y) => {
 			PenTool p = (PenTool) PointTool.pen ();
