@@ -1,0 +1,51 @@
+# Birdfont - Font Editor
+
+Birdfont is a font editor which can create vector graphics and
+export SVG, EOT and TTF fonts.
+
+Author: Johan Mattsson and others see AUTHORS for full attribution.
+License: GNU GPL v3
+Webpage: http://birdfont.org
+Bugtracker: http://birdfont.org/bugtracker/my_view_page.php
+
+## Building from Source
+
+Install vala and all required libraries, they are most likely in
+packages with a -dev or -devel affix:
+
+valac
+libgee-dev
+libglib2.0-dev 
+libgtk-3-dev 
+python-gtk2-dev
+libwebkitgtk-3.0-dev
+libnotify-dev
+unicode-data (unicode character database)
+
+BirdFont have two build systems, one python script that builds all
+binaries at once and one dependency based build system that uses
+doit.
+
+Configure, build and install with python:
+./configure
+./scripts/linux_build.py
+sudo ./install.py
+
+Configure, build and install with doit:
+./configure
+doit
+sudo ./install.py
+
+The default prefix is /usr/local on Fedora should BirdFont be compiled with
+/usr as prefix.
+
+./configure --prefix=/usr
+./scripts/linux_build.py --prefix=/usr
+sudo ./install.py
+
+## Packages
+
+Windows and Mac binaries can be downloaded from
+http://birdfont.org Many Linux distributions have packages of
+Birdfont in their repositories. There is a BSD package in OpenBSD.
+
