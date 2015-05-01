@@ -756,7 +756,7 @@ public class DrawingTools : ToolCollection  {
 				}	
 			}
 			
-			print (@"select $(StrokeTool.add_stroke)\n");
+			add_stroke.selected = StrokeTool.add_stroke;
 		});
 		stroke_expander.add_tool (add_stroke);
 		add_stroke.selected = StrokeTool.add_stroke;
@@ -764,7 +764,8 @@ public class DrawingTools : ToolCollection  {
 		// edit stroke width
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
 		object_stroke.set_value_round (2);
-		object_stroke.set_int_step (0.015);
+		object_stroke.set_max (0.01);
+		object_stroke.set_max (50);
 		object_stroke.set_big_number (true);
 		
 		object_stroke.new_value_action.connect((self) => {
@@ -783,6 +784,7 @@ public class DrawingTools : ToolCollection  {
 			if (tool && StrokeTool.add_stroke) {
 				foreach (Path p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
+					p.reset_stroke ();
 				}
 			}
 			
@@ -796,7 +798,11 @@ public class DrawingTools : ToolCollection  {
 		move_tool.selection_changed.connect (() => {
 			update_stroke_settings ();
 		});
-
+		
+		move_tool.objects_moved.connect (() => {
+			update_stroke_settings ();
+		});
+		
 		// create outline from path
 		outline = new Tool ("stroke_to_outline", t_("Create outline form stroke"));
 		outline.select_action.connect ((self) => {
@@ -1091,7 +1097,8 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		add_stroke.selected = stroke;
-		// Too slow. Toolbox.redraw_tool_box ();	
+		StrokeTool.add_stroke = stroke;
+		// FIXME: This is slow: Toolbox.redraw_tool_box ();	
 	}
 
 	void auto_trace_background () {

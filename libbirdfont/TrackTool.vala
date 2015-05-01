@@ -114,16 +114,38 @@ public class TrackTool : Tool {
 		});
 
 		release_action.connect ((self, button, x, y) => {
+			Path p;
+			Glyph g = MainWindow.get_current_glyph ();
+			EditPoint previous;
+			
+			convert_points_to_line ();
+			
+			g = MainWindow.get_current_glyph ();
+			
+			if (g.active_paths.size > 0) { // set type for last point
+				p = g.active_paths.get (g.active_paths.size - 1);
+				
+				if (p.points.size > 1) {
+					previous = p.points.get (p.points.size - 1);
+					previous.type = DrawingTools.point_type;
+					previous.set_tie_handle (false);
+
+					previous = p.points.get (0);
+					previous.type = DrawingTools.point_type;
+					previous.set_tie_handle (false);
+				}
+			}
+
 			if (button == 1 && draw_freehand) {
 				return_if_fail (drawing);
 				add_endpoint_and_merge (x, y);
 			}
-			
-			convert_points_to_line ();
-			MainWindow.get_current_glyph ().clear_active_paths ();
+						
+			g.clear_active_paths ();
 			
 			set_tie ();
 			PenTool.force_direction (); 
+			PenTool.reset_stroke ();
 			BirdFont.get_current_font ().touch ();
 			drawing = false;
 		});
@@ -189,70 +211,70 @@ public class TrackTool : Tool {
 	}
 
 	void add_endpoint_and_merge (int x, int y) {
-			Glyph glyph;
-			Path p;
-			PointSelection? open_path = get_path_with_end_point (x, y);
-			PointSelection joined_path;
-			
-			glyph = MainWindow.get_current_glyph ();
-			
-			if (glyph.path_list.size == 0) {
-				warning ("No path.");
-				return;
-			}
-			
-			p = glyph.path_list.get (glyph.path_list.size - 1);
-			draw_freehand = false;
-			
-			convert_points_to_line ();
+		Glyph glyph;
+		Path p;
+		PointSelection? open_path = get_path_with_end_point (x, y);
+		PointSelection joined_path;
+		
+		glyph = MainWindow.get_current_glyph ();
+		
+		if (glyph.path_list.size == 0) {
+			warning ("No path.");
+			return;
+		}
+		
+		p = glyph.path_list.get (glyph.path_list.size - 1);
+		draw_freehand = false;
+		
+		convert_points_to_line ();
 
-			if (join_paths && open_path != null) {
-				joined_path = (!) open_path;
-				 
-				if (joined_path.path == p) {
-					delete_last_points_at (x, y);
+		if (join_paths && open_path != null) {
+			joined_path = (!) open_path;
+			 
+			if (joined_path.path == p) {
+				delete_last_points_at (x, y);
+				glyph.close_path ();
+				p.close ();
+			} else {
+				p = merge_paths (p, joined_path);
+				if (!p.is_open ()) {
 					glyph.close_path ();
-					p.close ();
-				} else {
-					p = merge_paths (p, joined_path);
-					if (!p.is_open ()) {
-						glyph.close_path ();
-					}
 				}
-				
-				glyph.clear_active_paths ();
-			} else {
-				add_corner (x, y);
 			}
-
-			if (p.points.size == 0) {
-				warning ("No point.");
-				return;
-			}
-
-			p.create_list ();
 			
-			if (glyph.path_list.size < 2) {
-				warning ("Less than two points");
-				return;
-			}
+			glyph.clear_active_paths ();
+		} else {
+			add_corner (x, y);
+		}
 
-			if (DrawingTools.get_selected_point_type () == PointType.QUADRATIC) {
-				foreach (EditPoint e in p.points) {
-					if (e.tie_handles) {
-						e.convert_to_curve ();
-						e.process_tied_handle ();							
-					}
+		if (p.points.size == 0) {
+			warning ("No point.");
+			return;
+		}
+
+		p.create_list ();
+		
+		if (glyph.path_list.size < 2) {
+			warning ("Less than two points");
+			return;
+		}
+
+		if (DrawingTools.get_selected_point_type () == PointType.QUADRATIC) {
+			foreach (EditPoint e in p.points) {
+				if (e.tie_handles) {
+					e.convert_to_curve ();
+					e.process_tied_handle ();							
 				}
 			}
+		}
 
-			if (PenTool.is_counter_path (p)) {
-				p.force_direction (Direction.COUNTER_CLOCKWISE);
-			} else {
-				p.force_direction (Direction.CLOCKWISE);
-			}
-					
-			glyph.update_view ();
+		if (PenTool.is_counter_path (p)) {
+			p.force_direction (Direction.COUNTER_CLOCKWISE);
+		} else {
+			p.force_direction (Direction.CLOCKWISE);
+		}
+				
+		glyph.update_view ();
 	}
 
 	private static Path merge_paths (Path a, PointSelection b) {
@@ -404,7 +426,7 @@ public class TrackTool : Tool {
 			update_cycles = 0;
 		}
 			
-		if (added_points > 10 / samples_per_point) {
+		if (added_points > 25 / samples_per_point) {
 			last_update  = get_current_time ();
 			convert_points_to_line ();
 		}
@@ -467,18 +489,13 @@ public class TrackTool : Tool {
 		EditPoint ep, last_point;
 		double sum_x, sum_y, nx, ny;
 		int px, py;
-		EditPoint average;
+		EditPoint average, previous;
 		Path p;
 		Glyph glyph;
 		Gee.ArrayList<EditPoint> points;
 		
 		points = new Gee.ArrayList<EditPoint> ();
-		
-		if (added_points == 0) {
-			warning ("No points to add.");
-			return;
-		}
-		
+
 		glyph = MainWindow.get_current_glyph ();
 		
 		if (glyph.path_list.size == 0) {
@@ -487,6 +504,11 @@ public class TrackTool : Tool {
 		}
 			
 		p = glyph.path_list.get (glyph.path_list.size - 1);
+				
+		if (added_points == 0) { // last point
+			warning ("No points");
+			return;
+		}
 
 		if (unlikely (p.points.size < added_points)) {
 			warning ("Missing point.");
@@ -511,7 +533,7 @@ public class TrackTool : Tool {
 		px = Glyph.reverse_path_coordinate_x (nx);
 		py = Glyph.reverse_path_coordinate_y (ny);
 		average = PenTool.add_new_edit_point (px, py).point;
-		average.type = PointType.HIDDEN; //FIXME:
+		average.type = PointType.HIDDEN;
 		
 		// tie handles for all points except for the end points
 		average.set_tie_handle (p.points.size > 1); 
@@ -523,10 +545,12 @@ public class TrackTool : Tool {
 		
 		if (average.prev != null && average.get_prev ().tie_handles) {
 			if (p.points.size > 2) {
-				PenTool.convert_point_to_line (average.get_prev (), true);
-				average.get_prev ().process_tied_handle ();
-				average.get_prev ().set_tie_handle (false);
-				average.get_prev ().type = PointType.CUBIC; //FIXME:
+				previous = average.get_prev ();
+				previous.type = DrawingTools.point_type;
+				PenTool.convert_point_to_line (previous, true);
+				previous.recalculate_linear_handles ();
+				previous.process_tied_handle ();
+				previous.set_tie_handle (false);
 			}
 		}
 
