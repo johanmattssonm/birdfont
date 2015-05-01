@@ -511,6 +511,7 @@ public class TrackTool : Tool {
 		px = Glyph.reverse_path_coordinate_x (nx);
 		py = Glyph.reverse_path_coordinate_y (ny);
 		average = PenTool.add_new_edit_point (px, py).point;
+		average.type = PointType.HIDDEN; //FIXME:
 		
 		// tie handles for all points except for the end points
 		average.set_tie_handle (p.points.size > 1); 
@@ -525,6 +526,7 @@ public class TrackTool : Tool {
 				PenTool.convert_point_to_line (average.get_prev (), true);
 				average.get_prev ().process_tied_handle ();
 				average.get_prev ().set_tie_handle (false);
+				average.get_prev ().type = PointType.CUBIC; //FIXME:
 			}
 		}
 

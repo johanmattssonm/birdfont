@@ -1717,12 +1717,17 @@ public class StrokeTool : Tool {
 			p1 = path.points.get (i % path.points.size);
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
-			
+
 			tolerance = 0.13 / sqrt (stroke_width);
 			step_increment = 1.1;
 			step_size = 0.039 / stroke_width;
 
 			corner1 = new EditPoint ();
+			
+			if (p1.type == PointType.HIDDEN
+				|| p2.type == PointType.HIDDEN) {
+				continue;
+			}
 			
 			step = 0;
 			while (step < 1 - 2 * step_size) {
@@ -1776,7 +1781,7 @@ public class StrokeTool : Tool {
 			l = p2.get_left_handle ();
 			r = p2.get_right_handle ();
 			
-			if (fabs (l.angle + r.angle - PI) % 2 * PI > 0.0001) {
+			if (fabs (l.angle + r.angle - PI) % 2 * PI > 0.01) {
 				if (!path.is_open () || i < size - 1) {
 					get_segment (thickness, 0, 0.00001, p2, p3, out start);
 					add_corner (side1, previous, start, p2.copy (), thickness);

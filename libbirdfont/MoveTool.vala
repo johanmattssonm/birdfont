@@ -80,6 +80,11 @@ public class MoveTool : Tool {
 		
 		// delete selected paths
 		if (keyval == Key.DEL || keyval == Key.BACK_SPACE) {
+			
+			if (g.active_paths.size > 0) {
+				g.store_undo_state ();
+			}
+			
 			foreach (Path p in g.active_paths) {
 				g.path_list.remove (p);
 				g.update_view ();

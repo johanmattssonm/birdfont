@@ -129,10 +129,15 @@ public class MainWindow : GLib.Object {
 		Tool t = tools.get_current_tool ();
 		
 		if (! (t is MoveTool || t is ResizeTool)) {
-			Toolbox.select_tool_by_name ("move");
+			get_toolbox ().select_tool (DrawingTools.move_tool);
 		}
 
-		DrawingTools.move_tool.select_all_paths ();
+		IdleSource idle = new IdleSource (); 
+		idle.set_callback (() => {
+			DrawingTools.move_tool.select_all_paths ();
+			return false;
+		});
+		idle.attach (null);
 	}
 
 	public static DrawingTools get_drawing_tools () {
