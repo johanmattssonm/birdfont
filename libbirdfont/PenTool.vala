@@ -94,8 +94,13 @@ public class PenTool : Tool {
 		counter_clockwise = new Gee.ArrayList<Path> ();
 		
 		select_action.connect ((self) => {
+			MainWindow.get_current_glyph ().clear_active_paths ();
 		});
 		
+		deselect_action.connect ((self) => {
+			MainWindow.get_current_glyph ().clear_active_paths ();
+		});
+				
 		press_action.connect ((self, b, x, y) => {		
 			// retain path direction
 			clockwise = new Gee.ArrayList<Path> ();
@@ -809,6 +814,9 @@ public class PenTool : Tool {
 			} else {
 				glyph.open_path ();
 			}
+			
+			glyph.clear_active_paths ();
+			
 			return;
 		}
 		
@@ -1523,6 +1531,10 @@ public class PenTool : Tool {
 		return_if_fail (glyph.active_paths.size > 0);		
 		add_selected_point (selected_point, glyph.active_paths.get (glyph.active_paths.size - 1));
 
+		active_path = new_point.path;
+		glyph.clear_active_paths ();
+		glyph.add_active_path (new_point.path);
+		
 		move_selected = true;
 		
 		return new_point;

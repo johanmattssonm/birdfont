@@ -1546,7 +1546,8 @@ public class Glyph : FontDisplay {
 
 		if (!(MainWindow.get_toolbox ().get_current_tool () is PenTool)
 			&& !(MainWindow.get_toolbox ().get_current_tool () is PointTool)
-			&& !(MainWindow.get_toolbox ().get_current_tool () is TrackTool)) {
+			&& !(MainWindow.get_toolbox ().get_current_tool () is TrackTool)
+			&& !(MainWindow.get_toolbox ().get_current_tool () is ForesightTool)) {
 			cr.save ();
 			cr.new_path ();
 			foreach (Path p in active_paths) {
