@@ -817,44 +817,23 @@ public class Path {
 
 	/** Variable precision */
 	public bool is_over_coordinate_var (double x, double y) {
-		PathList pathlist;
-		int width;
-		ClickMap click_map;
-		int px, py;
-		int click_x, click_y;
+		int insides = 0;
 		
-		if (points.size < 2) {
-			return false;
-		}
-
 		if (stroke > 0) {
-			pathlist = get_stroke_fast (); // FIXME: add to clickmap instead
-			
-			if (pathlist.paths.size > 1) {
-				if (pathlist.paths.get (1).is_over_coordinate_var (x, y)) {
-					return false;
+			foreach (Path p in get_stroke_fast ().paths) {
+				if (StrokeTool.is_inside (new EditPoint (x, y), p)) {
+					insides++;
 				}
 			}
 			
-			return pathlist.get_first_path ().is_over_coordinate_var (x, y);
-		}	
-		
-		if (!is_over_boundry (x, y)) {
-			return false;
+			if (insides % 2 == 1) {
+				return true;
+			}
+		} else if (is_over_boundry (x, y)) {
+			return StrokeTool.is_inside (new EditPoint (x, y), this);
 		}
-			
-		// generate a rasterized image of the object
-		width = 160;
-		click_map = new ClickMap (width);
-		px = 0;
-		py = 0;
 		
-		click_map.create_click_map (this);
-
-		click_x = (int) (width * ((x - xmin) / (xmax - xmin)));
-		click_y = (int) (width * ((y - ymin) / (ymax - ymin)));
-
-		return click_map.get_value (click_x, click_y);
+		return false;
 	}
 	
 	public bool is_over_boundry (double x, double y) {
