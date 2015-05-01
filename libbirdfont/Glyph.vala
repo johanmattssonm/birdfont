@@ -1534,12 +1534,22 @@ public class Glyph : FontDisplay {
 				if (p.is_editable ()) {
 					color = Theme.get_color ("Filled Stroke");	
 					color.a = 0.8;
-				} else if (active_paths.index_of (p) > -1) {
-					color = Theme.get_color ("Selected Objects");
 				} else {
 					color = Color.black ();
 				}
 				
+				draw_path_list (stroke, cr, color);
+			}
+		}
+		cr.fill ();
+		cr.restore ();
+
+		cr.save ();
+		cr.new_path ();
+		foreach (Path p in active_paths) {
+			if (p.stroke > 0) {
+				stroke = p.get_stroke_fast ();
+				color = Theme.get_color ("Selected Objects");
 				draw_path_list (stroke, cr, color);
 			}
 		}
