@@ -1544,17 +1544,21 @@ public class Glyph : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 
-		cr.save ();
-		cr.new_path ();
-		foreach (Path p in active_paths) {
-			if (p.stroke > 0) {
-				stroke = p.get_stroke_fast ();
-				color = Theme.get_color ("Selected Objects");
-				draw_path_list (stroke, cr, color);
+		if (!(MainWindow.get_toolbox ().get_current_tool () is PenTool)
+			&& !(MainWindow.get_toolbox ().get_current_tool () is PointTool)
+			&& !(MainWindow.get_toolbox ().get_current_tool () is TrackTool)) {
+			cr.save ();
+			cr.new_path ();
+			foreach (Path p in active_paths) {
+				if (p.stroke > 0) {
+					stroke = p.get_stroke_fast ();
+					color = Theme.get_color ("Selected Objects");
+					draw_path_list (stroke, cr, color);
+				}
 			}
+			cr.fill ();
+			cr.restore ();
 		}
-		cr.fill ();
-		cr.restore ();
 			
 		if (is_open () && Path.fill_open_path) {
 			cr.save ();
@@ -1581,6 +1585,7 @@ public class Glyph : FontDisplay {
 		if (!is_open ()) {
 			// This was good for testing but it is way too slow:
 			// Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
+		
 				
 			cr.save ();
 			cr.new_path ();

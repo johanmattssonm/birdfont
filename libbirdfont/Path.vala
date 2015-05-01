@@ -815,13 +815,26 @@ public class Path {
 		return Math.fabs (Math.sqrt (x * x + y * y));
 	} 
 
+	public Path flatten () {
+		Path flat = new Path ();
+		
+		all_of_path ((x, y, t) => {
+			flat.add (x, y);
+			return true;
+		});
+		
+		return flat;
+	}
+	
 	/** Variable precision */
 	public bool is_over_coordinate_var (double x, double y) {
 		int insides = 0;
+		Path path;
 		
 		if (stroke > 0) {
 			foreach (Path p in get_stroke_fast ().paths) {
-				if (StrokeTool.is_inside (new EditPoint (x, y), p)) {
+				path = p.flatten ();
+				if (StrokeTool.is_inside (new EditPoint (x, y), path)) {
 					insides++;
 				}
 			}
@@ -830,7 +843,8 @@ public class Path {
 				return true;
 			}
 		} else if (is_over_boundry (x, y)) {
-			return StrokeTool.is_inside (new EditPoint (x, y), this);
+			path = flatten ();
+			return StrokeTool.is_inside (new EditPoint (x, y), path);
 		}
 		
 		return false;
