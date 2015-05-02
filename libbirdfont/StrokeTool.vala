@@ -92,7 +92,11 @@ public class StrokeTool : Tool {
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.3);
 		o = create_stroke (stroke, thickness);
-		
+
+		// FIXME: remove
+		//o = get_all_parts (o);
+		//o = merge (o);
+				
 		return o;
 	}
 	
@@ -100,7 +104,7 @@ public class StrokeTool : Tool {
 		PathList o;
 		
 		o = get_stroke_fast (path, thickness);
-		o = get_all_parts (o);
+		o = get_all_parts (o); // FIXME: keep.
 		o = merge (o);
 		
 		return o;
@@ -1021,12 +1025,12 @@ public class StrokeTool : Tool {
 			c = counters (r, p);
 			
 			if (has_zero_area_segment (p)) {
-				remove.add (p);
+				//FIXME: remove.add (p);
 			}
 			
 			if (c % 2 == 0) {
 				
-				if (!is_clockwise (p)) {
+				if (!p.is_clockwise ()) {
 					remove.add (p);
 				}
 				
@@ -1037,7 +1041,7 @@ public class StrokeTool : Tool {
 				if (stroke_selected)
 					((!) BirdFont.get_current_font ().get_glyph ("n")).add_path (p);
 					
-				if (is_clockwise (p)) {
+				if (p.is_clockwise ()) {
 					remove.add (p);
 				}
 			}
@@ -1619,7 +1623,7 @@ public class StrokeTool : Tool {
 		EditPointHandle l, r;
 		
 		p.recalculate_linear_handles ();
-						
+				
 		if (p.points.size < 3) {
 			return true;
 		}
@@ -1638,10 +1642,10 @@ public class StrokeTool : Tool {
 		return sum > 0;
 	}	
 
-	public static PathList create_stroke (Path path, double thickness) {
+	public static PathList create_stroke (Path original_path, double thickness) {
 		PathList pl;
 		EditPoint p1, p2, p3;
-		EditPoint previous, previous_inside, start;
+		EditPoint previous, previous_inside, start, start_inside;
 		
 		Path side1, side2;
 		
@@ -1658,7 +1662,14 @@ public class StrokeTool : Tool {
 		
 		EditPointHandle l, r;
 
-		//path.add_hidden_double_points ();
+		Path path = original_path.copy ();
+
+		path.add_hidden_double_points (); // FIXME:
+		foreach (EditPoint ep in path.points) {
+			if (ep.type == PointType.DOUBLE_CURVE || ep.type == PointType.LINE_DOUBLE_CURVE) {
+				PenTool.convert_point_type (ep, PointType.QUADRATIC);
+			}
+		}
 
 		pl = new PathList ();
 		size = path.is_open () ? path.points.size - 1 : path.points.size;
@@ -1680,11 +1691,14 @@ public class StrokeTool : Tool {
 			p2 = path.points.get (1 % path.points.size);
 			
 			get_segment (thickness, 0, 0.00001, p1, p2, out start);
-			get_segment (-thickness, 0, 0.00001, p1, p2, out start);
+			get_segment (-thickness, 0, 0.00001, p1, p2, out start_inside);
 
 			previous = start.copy ();
-			previous_inside = start.copy ();
-															
+			previous_inside = start_inside.copy ();
+			
+			previous.flags |= EditPoint.CURVE;
+			previous_inside.flags |= EditPoint.CURVE;
+							
 			side1.add_point (previous);
 			side2.add_point (previous_inside);
 		}
@@ -1694,8 +1708,8 @@ public class StrokeTool : Tool {
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 
-			// tolerance = 0.13 / sqrt (stroke_width);
-			tolerance = 2 / sqrt (stroke_width);
+			tolerance = 0.13 / sqrt (stroke_width);
+			// tolerance = 2 / sqrt (stroke_width);
 			step_increment = 1.05;
 			step_size = 0.039 / stroke_width;
 
@@ -1735,7 +1749,7 @@ public class StrokeTool : Tool {
 					step_size *= step_increment;
 					continue;
 				}
-					
+			
 				get_segment (thickness, step, step_size, p1, p2, out corner1);
 				get_segment (-thickness, step, step_size, p1, p2, out corner1_inside);
 
@@ -1749,19 +1763,28 @@ public class StrokeTool : Tool {
 				
 				previous = corner1.copy ();
 				previous_inside = corner1_inside.copy ();
-																
+				
+				previous.flags |= EditPoint.CURVE;
+				previous_inside.flags |= EditPoint.CURVE;
+												
 				side1.add_point (previous);
 				side2.add_point (previous_inside);
 				
-				adjust_left_handle (x2, y2, x3, y3, previous);
-				adjust_left_handle (x2, y2, x3, y3, previous_inside);
+				// FIXME: DELETE
+				//adjust_left_handle (x2, y2, x3, y3, previous);
+				//adjust_left_handle (x2, y2, x3, y3, previous_inside);
 				
 				step += step_size;
 			}
+
+			previous.get_right_handle ().length *= step_size;
+			corner1.get_left_handle ().length *= step_size;
+			previous_inside.get_right_handle ().length *= step_size;
+			corner1_inside.get_left_handle ().length *= step_size;
 			
 			get_segment (thickness, 1 - 0.00001, 0.00001, p1, p2, out corner1);
 			get_segment (-thickness, 1 - 0.00001, 0.00001, p1, p2, out corner1_inside);
-	
+			
 			previous = corner1.copy ();
 			previous_inside = corner1_inside.copy ();
 
@@ -1770,13 +1793,16 @@ public class StrokeTool : Tool {
 			previous_inside.get_right_handle ().length *= step_size;
 			previous_inside.get_left_handle ().length *= step_size;
 
+			previous.flags |= EditPoint.CURVE;
+			previous_inside.flags |= EditPoint.CURVE;
+							
 			side1.add_point (previous);
 			side2.add_point (previous_inside);
-					
+				
 			l = p2.get_left_handle ();
 			r = p2.get_right_handle ();
 			
-			if (fabs (l.angle + r.angle - PI) % 2 * PI > 0.01) {
+			if (fabs ((l.angle + r.angle + PI) % (2 * PI) - PI) > 0.005) { // FIXME: 0.01
 				if (!path.is_open () || i < size - 1) {
 					get_segment (thickness, 0, 0.00001, p2, p3, out start);
 					add_corner (side1, previous, start, p2.copy (), thickness);
@@ -1784,17 +1810,51 @@ public class StrokeTool : Tool {
 					get_segment (-thickness, 0, 0.00001, p2, p3, out start);
 					add_corner (side2, previous_inside, start, p2.copy (), thickness);
 				}
+			} else {
+				print (@"l.angle + r.angle   $(l.angle) + $(r.angle)  $(fabs (l.angle + r.angle % (2 * PI) - PI) )\n");
+				
+				//previous.flags |= EditPoint.CURVE;
+				//previous_inside.flags |= EditPoint.CURVE;
 			}
 		}
 		
-		side1.recalculate_linear_handles ();
-		side2.recalculate_linear_handles ();
+		convert_to_curve (side1);
+		convert_to_curve (side2);
 		
 		side2.reverse ();
 		
 		pl = merge_stroke_parts (path, side1, side2);
 		
 		return pl;
+	}
+	
+	static void convert_to_curve (Path path) {
+		
+		if (path.is_open ()) {
+			path.get_first_point ().flags &= EditPoint.ALL ^ EditPoint.CURVE;
+			path.get_last_point ().flags &= EditPoint.ALL ^ EditPoint.CURVE;
+		}
+		
+		path.recalculate_linear_handles ();
+		path.remove_points_on_points ();
+
+		foreach (EditPoint ep in path.points) {
+			if ((ep.flags & EditPoint.CURVE) > 0) {
+				ep.convert_to_curve (); 
+			}
+		}
+			
+		foreach (EditPoint ep in path.points) {
+			if ((ep.flags & EditPoint.CURVE) > 0) {
+				ep.set_tie_handle (true);
+			}
+		}
+			
+		foreach (EditPoint ep in path.points) {
+			if ((ep.flags & EditPoint.CURVE) > 0) {
+				ep.process_tied_handle ();
+			}
+		}			
 	}
 	
 	public static void adjust_left_handle (double x0, double y0, double x1, double y1, EditPoint ep) {
@@ -1805,8 +1865,8 @@ public class StrokeTool : Tool {
 		double rp = dp / op;
 		EditPointHandle l = ep.get_left_handle ();
 		
-		if (l.type == PointType.CUBIC) {
-			l.length *= 2 * rp;  
+		if (l.type == PointType.CUBIC  && dp > 0 && op > 0) {
+			//l.length *= rp * rp;  
 		} 
 	}
 	
@@ -1818,9 +1878,19 @@ public class StrokeTool : Tool {
 		double rp = dp / op;
 		EditPointHandle r = ep.get_right_handle ();
 		
-		if (r.type == PointType.CUBIC) {
-			r.length *= 2 * rp; 
-		} 	
+		if (r.type == PointType.CUBIC && dp > 0 && op > 0) {
+			//r.length *= rp * rp; 
+		} 
+		
+		// FIXME: DELETE
+		/*
+		ep.convert_to_line ();
+		ep.recalculate_linear_handles ();
+		ep.convert_to_curve ();
+		ep.set_tie_handle (true);
+		ep.process_tied_handle ();
+		ep.set_tie_handle (false);
+		*/
 	}
 		
 	public static void get_segment (double stroke_thickness, double step, double step_size,
@@ -1844,6 +1914,9 @@ public class StrokeTool : Tool {
 		corner2 = new EditPoint (x2, y2, type);
 		corner3 = new EditPoint (x3, y3, type);
 		
+		//corner2.convert_to_curve ();
+		corner2.convert_to_line (); // FIXME: delete
+		
 		overlay.add_point (corner1);
 		overlay.add_point (corner2);
 		overlay.add_point (corner3);
@@ -1851,13 +1924,14 @@ public class StrokeTool : Tool {
 		overlay.close ();
 		overlay.recalculate_linear_handles ();
 		
+		// FIXME: DELETE
+		/*
 		Path.get_handles_for_step (p1, p2, step + step_size, 
 			out handle1_x, out handle1_y, out handle2_x, out handle2_y);
-
+		
 		corner2.get_left_handle ().move_to_coordinate (handle1_x, handle1_y);
 		corner2.get_right_handle ().move_to_coordinate (handle2_x, handle2_y);
-		
-		corner2.convert_to_curve ();
+		*/
 		
 		move_segment (corner1, corner2, thickness);
 

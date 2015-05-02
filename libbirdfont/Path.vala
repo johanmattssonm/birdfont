@@ -1134,7 +1134,7 @@ public class Path {
 		foreach (EditPoint next in points) {
 			left = first.get_right_handle ().type;
 			right = next.get_left_handle ().type;
-						
+
 			if (next != first && (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE)) {
 					
 				first.get_right_handle ().type = PointType.QUADRATIC;
@@ -1151,7 +1151,6 @@ public class Path {
 				hidden.right_handle.move_to_coordinate_internal (next.get_left_handle ().x, next.get_left_handle ().y);
 				
 				first.get_right_handle ().type = PointType.QUADRATIC;
-			
 				first.type = PointType.QUADRATIC;
 				
 				next.get_left_handle ().type = PointType.QUADRATIC;
@@ -1162,7 +1161,7 @@ public class Path {
 			}
 			first = next;
 		}
-		
+	
 		for (int i = 0; i < middle_points.size; i++) {
 			hidden = middle_points.get (i);
 			add_point_after (middle_points.get (i), first_points.get (i));
@@ -1456,6 +1455,7 @@ public class Path {
 		PointType left =  PenTool.to_curve (stop.type);
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
+			warning ("FIX the double curve in stroke.");
 			x = double_bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
 			y = double_bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);
 		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
@@ -1683,8 +1683,8 @@ public class Path {
 		PointType left =  PenTool.to_curve (stop.type);
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
-			double_bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x2, out x1); // FIXME: swap parameter
-			double_bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y2, out y1);
+			double_bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x1, out x2); // FIXME: swap parameter?
+			double_bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y1, out y2);
 		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
 			x1 = quadratic_bezier_vector (step, start.x, start.get_right_handle ().x, stop.x);
 			y1 = quadratic_bezier_vector (step, start.y, start.get_right_handle ().y, stop.y);

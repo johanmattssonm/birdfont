@@ -52,6 +52,8 @@ public class EditPoint : GLib.Object {
 	public static uint COPIED = 1 << 9;
 	public static uint REMOVE_PART = 1 << 10;
 	public static uint OVERLAY = 1 << 11;
+	public static uint CURVE = 1 << 12;
+	public static uint ALL = 0xFFFFFF;
 	
 	public uint flags = NONE;
 	
