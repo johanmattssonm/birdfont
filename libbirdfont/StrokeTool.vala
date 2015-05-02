@@ -146,38 +146,6 @@ public class StrokeTool : Tool {
 		return merged;
 	}
 
-	static void adjust_handles (EditPoint stroke_start, EditPoint stroke_end, EditPoint stroke_next,
-		EditPoint start, EditPoint end, EditPoint next) {
-		double px, py;
-		double dp = Path.distance_to_point (stroke_start, stroke_end);
-		double dn = Path.distance_to_point (stroke_end, stroke_next);
-		double op = Path.distance_to_point (start, end);
-		double on = Path.distance_to_point (end, next);
-		double rp = dp / op;  
-		double rn = on / dn;
-		EditPointHandle r = stroke_start.get_right_handle ();
-		EditPointHandle l = stroke_end.get_left_handle ();
-		
-		if (!r.is_line ()) {
-			if (r.type == PointType.CUBIC) {
-				r.length *= rp;
-			} else {
-				Path.find_intersection_handle (r, l, out px, out py);
-				
-				if (EditPoint.is_valid_position (px, py)) {
-					l.move_to_coordinate (px, py); 
-					r.move_to_coordinate (px, py); 
-				} else {
-					warning ("Invalid position.");
-				}				
-			}
-
-			if (l.type == PointType.CUBIC) {
-				l.length *= rn; 
-			} 
-		}
-	}
-
 	static void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
 		EditPointHandle r, l;
 		double m, n;
@@ -1690,6 +1658,8 @@ public class StrokeTool : Tool {
 		
 		EditPointHandle l, r;
 
+		//path.add_hidden_double_points ();
+
 		pl = new PathList ();
 		size = path.is_open () ? path.points.size - 1 : path.points.size;
 		
@@ -1774,11 +1744,17 @@ public class StrokeTool : Tool {
 				previous_inside.get_right_handle ().length *= step_size;
 				corner1_inside.get_left_handle ().length *= step_size;
 
+				adjust_right_handle (x, y, x2, y2, previous, corner1);
+				adjust_right_handle (x, y, x2, y2, previous_inside, corner1_inside);
+				
 				previous = corner1.copy ();
 				previous_inside = corner1_inside.copy ();
 																
 				side1.add_point (previous);
 				side2.add_point (previous_inside);
+				
+				adjust_left_handle (x2, y2, x3, y3, previous);
+				adjust_left_handle (x2, y2, x3, y3, previous_inside);
 				
 				step += step_size;
 			}
@@ -1788,8 +1764,6 @@ public class StrokeTool : Tool {
 	
 			previous = corner1.copy ();
 			previous_inside = corner1_inside.copy ();
-
-			previous_inside.color = Color.pink ();
 
 			previous.get_right_handle ().length *= step_size;
 			previous.get_left_handle ().length *= step_size;
@@ -1823,6 +1797,32 @@ public class StrokeTool : Tool {
 		return pl;
 	}
 	
+	public static void adjust_left_handle (double x0, double y0, double x1, double y1, EditPoint ep) {
+		return_if_fail (ep.prev != null);
+	
+		double dp = Path.distance_to_point (ep.get_prev (), ep);
+		double op = Path.distance (x0, x1, y0, y1);
+		double rp = dp / op;
+		EditPointHandle l = ep.get_left_handle ();
+		
+		if (l.type == PointType.CUBIC) {
+			l.length *= 2 * rp;  
+		} 
+	}
+	
+	public static void adjust_right_handle (double x0, double y0, double x1, double y1,
+		EditPoint ep, EditPoint next) {
+				
+		double dp = Path.distance_to_point (ep, next);
+		double op = Path.distance (x0, x1, y0, y1);
+		double rp = dp / op;
+		EditPointHandle r = ep.get_right_handle ();
+		
+		if (r.type == PointType.CUBIC) {
+			r.length *= 2 * rp; 
+		} 	
+	}
+		
 	public static void get_segment (double stroke_thickness, double step, double step_size,
 		EditPoint p1, EditPoint p2, out EditPoint ep1) {
 		

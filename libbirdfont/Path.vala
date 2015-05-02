@@ -1683,8 +1683,8 @@ public class Path {
 		PointType left =  PenTool.to_curve (stop.type);
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
-			double_bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x1, out x2);
-			double_bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y2, out y2);
+			double_bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x2, out x1); // FIXME: swap parameter
+			double_bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y2, out y1);
 		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
 			x1 = quadratic_bezier_vector (step, start.x, start.get_right_handle ().x, stop.x);
 			y1 = quadratic_bezier_vector (step, start.y, start.get_right_handle ().y, stop.y);
