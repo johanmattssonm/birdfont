@@ -102,7 +102,7 @@ public abstract class SettingsDisplay : FontDisplay {
 	public override void key_release (uint keyval) {
 		SettingsItem old_key_binding;
 		
-		if (!KeyBindings.is_modifier_key (keyval)) {
+		if (!is_modifier_key (keyval)) {
 			if (update_key_bindings) {
 				if (keyval == Key.BACK_SPACE) {
 					update_key_bindings = false;

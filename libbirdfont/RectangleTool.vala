@@ -70,6 +70,10 @@ public class RectangleTool : Tool {
 			rectangle.add (x2, y2);
 			rectangle.add (x1, y2);
 
+			if (StrokeTool.add_stroke) {
+				rectangle.stroke = StrokeTool.stroke_width;
+			}
+		
 			rectangle.init_point_type ();
 			rectangle.close ();
 			
@@ -78,6 +82,9 @@ public class RectangleTool : Tool {
 			foreach (EditPoint e in rectangle.points) {
 				e.recalculate_linear_handles ();
 			}
+			
+			rectangle.reset_stroke ();
+			rectangle.update_region_boundaries ();
 			
 			GlyphCanvas.redraw ();
 		}

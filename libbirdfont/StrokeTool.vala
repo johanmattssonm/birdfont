@@ -1811,8 +1811,7 @@ public class StrokeTool : Tool {
 					add_corner (side2, previous_inside, start, p2.copy (), thickness);
 				}
 			} else {
-				print (@"l.angle + r.angle   $(l.angle) + $(r.angle)  $(fabs (l.angle + r.angle % (2 * PI) - PI) )\n");
-				
+				// FIXME: DELETE
 				//previous.flags |= EditPoint.CURVE;
 				//previous_inside.flags |= EditPoint.CURVE;
 			}

@@ -109,6 +109,8 @@ public class ResizeTool : Tool {
 		});
 		
 		move_action.connect ((self, x, y)	 => {
+			Glyph glyph;
+			
 			if (resize_path && can_resize (x, y)) {
 				resize (x, y);
 			}
@@ -118,6 +120,12 @@ public class ResizeTool : Tool {
 			}
 
 			if (move_paths || rotate_path || resize_path) {
+				glyph = MainWindow.get_current_glyph ();
+				
+				foreach (Path selected_path in glyph.active_paths) {
+					selected_path.reset_stroke ();
+				}
+				
 				update_selection_box ();
 				GlyphCanvas.redraw ();
 			}
@@ -150,7 +158,7 @@ public class ResizeTool : Tool {
 		});
 		
 		key_press_action.connect ((self, keyval) => {
-			DrawingTools.move_tool.key_press (keyval);
+			DrawingTools.move_tool.key_down (keyval);
 		});
 	}
 

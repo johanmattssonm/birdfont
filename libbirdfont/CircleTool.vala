@@ -55,16 +55,19 @@ public class CircleTool : Tool {
 		double dy = last_y - y; 
 		double p = PenTool.precision;
 		double ratio, diameter, radius, cx, cy, nx, ny;
+		double xmin, xmax, ymin;
 		
 		if (move_circle) {
 			circle.move (Glyph.ivz () * -dx * p, Glyph.ivz () * dy * p);
+			circle.reset_stroke ();
 		}
 		
 		if (resize_circle) {
-			circle.update_region_boundaries ();
-			diameter = circle.xmax - circle.xmin;
-			cx = circle.xmin + diameter / 2;
-			cy = circle.ymin + diameter / 2;
+			get_boundaries (out xmin, out xmax, out ymin);
+			
+			diameter = xmax - xmin;
+			cx = xmin + diameter / 2;
+			cy = ymin + diameter / 2;
 		
 			radius = Path.distance_pixels (press_x, press_y, x, y);
 			ratio = 2 * radius / diameter;
@@ -73,20 +76,42 @@ public class CircleTool : Tool {
 				circle.resize (ratio);
 			}
 			
-			diameter = circle.xmax - circle.xmin;
-			nx = circle.xmin + diameter / 2;
-			ny = circle.ymin + diameter / 2;
+			get_boundaries (out xmin, out xmax, out ymin);
+		
+			diameter = xmax - xmin;
+			nx = xmin + diameter / 2;
+			ny = ymin + diameter / 2;
 			
-			circle.update_region_boundaries ();
 			circle.move (cx - nx, cy - ny);
 			
 			last_radius = radius;
+			circle.reset_stroke ();
+			circle.update_region_boundaries ();
 		}
 		
 		last_x = x;
 		last_y = y;
 
 		GlyphCanvas.redraw ();
+	}
+	
+	void get_boundaries (out double xmin, out double xmax, out double ymin) {
+		xmin = Glyph.CANVAS_MAX;
+		xmax = Glyph.CANVAS_MIN;
+		ymin = Glyph.CANVAS_MAX;
+		foreach (EditPoint p in circle.points) {
+			if (p.x < xmin) {
+				xmin = p.x;
+			} 
+
+			if (p.x > xmax) {
+				xmax = p.x;
+			}
+			
+			if (p.y < ymin) {
+				ymin = p.y;
+			}
+		}
 	}
 	
 	void press (int button, double x, double y) {
@@ -118,6 +143,10 @@ public class CircleTool : Tool {
 		path.init_point_type ();
 		path.close ();
 		path.recalculate_linear_handles ();
+
+		if (StrokeTool.add_stroke) {
+			path.stroke = StrokeTool.stroke_width;
+		}
 
 		for (int i = 0; i < 3; i++) {
 			foreach (EditPoint ep in path.points) {
