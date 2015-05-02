@@ -1250,7 +1250,7 @@ public class Path {
 			ep.get_left_handle ().set_point_type (PointType.DOUBLE_CURVE);	
 			ep.get_right_handle ().set_point_type (PointType.DOUBLE_CURVE);
 						
-			ep.get_left_handle ().move_to_coordinate (x0, y0);  // FIXME: SWAPPED?
+			ep.get_left_handle ().move_to_coordinate (x0, y0);
 			ep.get_right_handle ().move_to_coordinate (x1, y1);
 
 			ep.type = PointType.DOUBLE_CURVE;
@@ -1449,7 +1449,9 @@ public class Path {
 		return all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().x, stop.x, stop.y, iter, steps);
 	}
 
-	public static void get_point_for_step (EditPoint start, EditPoint stop, double step, out double x, out double y) {
+	public static void get_point_for_step (EditPoint start, EditPoint stop, double step, 
+		out double x, out  double y) {
+		
 		PointType right =  PenTool.to_curve (start.type);
 		PointType left =  PenTool.to_curve (stop.type);
 		
@@ -1672,6 +1674,33 @@ public class Path {
 	
 		a0 = d0;
 		a1 = d1;
+	}
+
+	public static void get_handles_for_step (EditPoint start, EditPoint stop, double step,
+		out double x1, out double y1, out double x2, out double y2) {
+			
+		PointType right =  PenTool.to_curve (start.type);
+		PointType left =  PenTool.to_curve (stop.type);
+		
+		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
+			double_bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x1, out x2);
+			double_bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y2, out y2);
+		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
+			x1 = quadratic_bezier_vector (step, start.x, start.get_right_handle ().x, stop.x);
+			y1 = quadratic_bezier_vector (step, start.y, start.get_right_handle ().y, stop.y);
+			x2 = x1;
+			y2 = y1;
+		} else if (right == PointType.CUBIC && left == PointType.CUBIC) {
+			bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x1, out x2);
+			bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y1, out y2);	
+		} else if (right == PointType.HIDDEN && left == PointType.HIDDEN) {
+			bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x1, out x2);
+			bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y1, out y2);	
+		} else {
+			warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
+			bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x1, out x2);
+			bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y1, out y2);	
+		}
 	}
 	
 	public void plot (Context cr, WidgetAllocation allocation, double view_zoom) {

@@ -81,6 +81,7 @@ public class StrokeTool : Tool {
 			GlyphCanvas.redraw ();
 		}
 		
+		PenTool.update_orientation ();
 		stroke_selected = false; // FIXME: delete 
 	}
 	
@@ -1688,7 +1689,7 @@ public class StrokeTool : Tool {
 		double step;
 		
 		EditPointHandle l, r;
-		
+
 		pl = new PathList ();
 		size = path.is_open () ? path.points.size - 1 : path.points.size;
 		
@@ -1701,16 +1702,21 @@ public class StrokeTool : Tool {
 
 		previous = new EditPoint ();
 		previous_inside = new EditPoint ();
-		
+		corner1 = new EditPoint ();
+		corner1_inside = new EditPoint ();
+				
 		if (path.is_open ()) {
 			p1 = path.points.get (0);
 			p2 = path.points.get (1 % path.points.size);
 			
 			get_segment (thickness, 0, 0.00001, p1, p2, out start);
-			side1.add_point (start.copy ());
-
 			get_segment (-thickness, 0, 0.00001, p1, p2, out start);
-			side2.add_point (start.copy ());
+
+			previous = start.copy ();
+			previous_inside = start.copy ();
+															
+			side1.add_point (previous);
+			side2.add_point (previous_inside);
 		}
 
 		for (i = 0; i < size; i++) {
@@ -1718,8 +1724,9 @@ public class StrokeTool : Tool {
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 
-			tolerance = 0.13 / sqrt (stroke_width);
-			step_increment = 1.1;
+			// tolerance = 0.13 / sqrt (stroke_width);
+			tolerance = 2 / sqrt (stroke_width);
+			step_increment = 1.05;
 			step_size = 0.039 / stroke_width;
 
 			corner1 = new EditPoint ();
@@ -1758,26 +1765,40 @@ public class StrokeTool : Tool {
 					step_size *= step_increment;
 					continue;
 				}
-							
+					
 				get_segment (thickness, step, step_size, p1, p2, out corner1);
 				get_segment (-thickness, step, step_size, p1, p2, out corner1_inside);
-				
-				side1.add_point (corner1.copy ());
-				side2.add_point (corner1_inside.copy ());
-			
-				previous = corner1;
-				previous_inside = corner1_inside;
+
+				previous.get_right_handle ().length *= step_size;
+				corner1.get_left_handle ().length *= step_size;
+				previous_inside.get_right_handle ().length *= step_size;
+				corner1_inside.get_left_handle ().length *= step_size;
+
+				previous = corner1.copy ();
+				previous_inside = corner1_inside.copy ();
+																
+				side1.add_point (previous);
+				side2.add_point (previous_inside);
 				
 				step += step_size;
 			}
-
+			
 			get_segment (thickness, 1 - 0.00001, 0.00001, p1, p2, out corner1);
 			get_segment (-thickness, 1 - 0.00001, 0.00001, p1, p2, out corner1_inside);
-			side1.add_point (corner1.copy ());
-			side2.add_point (corner1_inside.copy ());
-			previous = corner1;
-			previous_inside = corner1_inside;
+	
+			previous = corner1.copy ();
+			previous_inside = corner1_inside.copy ();
 
+			previous_inside.color = Color.pink ();
+
+			previous.get_right_handle ().length *= step_size;
+			previous.get_left_handle ().length *= step_size;
+			previous_inside.get_right_handle ().length *= step_size;
+			previous_inside.get_left_handle ().length *= step_size;
+
+			side1.add_point (previous);
+			side2.add_point (previous_inside);
+					
 			l = p2.get_left_handle ();
 			r = p2.get_right_handle ();
 			
@@ -1791,7 +1812,7 @@ public class StrokeTool : Tool {
 				}
 			}
 		}
-
+		
 		side1.recalculate_linear_handles ();
 		side2.recalculate_linear_handles ();
 		
@@ -1810,6 +1831,7 @@ public class StrokeTool : Tool {
 		double x, y, x2, y2, x3, y3;
 		EditPoint corner1, corner2, corner3;
 		PointType type;
+		double handle1_x, handle1_y, handle2_x, handle2_y;
 		
 		Path.get_point_for_step (p1, p2, step, out x, out y);
 		Path.get_point_for_step (p1, p2, step + step_size, out x2, out y2);
@@ -1828,6 +1850,14 @@ public class StrokeTool : Tool {
 		
 		overlay.close ();
 		overlay.recalculate_linear_handles ();
+		
+		Path.get_handles_for_step (p1, p2, step + step_size, 
+			out handle1_x, out handle1_y, out handle2_x, out handle2_y);
+
+		corner2.get_left_handle ().move_to_coordinate (handle1_x, handle1_y);
+		corner2.get_right_handle ().move_to_coordinate (handle2_x, handle2_y);
+		
+		corner2.convert_to_curve ();
 		
 		move_segment (corner1, corner2, thickness);
 
