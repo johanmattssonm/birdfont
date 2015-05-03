@@ -198,10 +198,17 @@ public class ForesightTool : Tool {
 			PointSelection last;
 			bool lh;
 			EditPointHandle h;
-
+			Path a;
+			
 			last_move_x = x;
 			last_move_y = y;
-			
+
+			a = get_active_path ();
+			if (a.is_open ()) {
+				a.get_first_point ().set_reflective_handles (false);
+				a.get_first_point ().set_tie_handle (false);
+			}
+							
 			if (MainWindow.dialog.visible && state != NONE) {
 				state = NONE;
 				p.release_action (p, 1, last_move_x, last_move_y);
@@ -325,12 +332,14 @@ public class ForesightTool : Tool {
 	
 	public void stop_drawing () {
 		PenTool p = (PenTool) PointTool.pen ();
+		Path a;
 		
 		p.release_action (p, 1, 0, 0);
 		
 		if (state != NONE) {
-			if (get_active_path ().is_open () && state != NONE) {
-				get_active_path ().delete_last_point ();
+			a = get_active_path ();
+			if (a.is_open () && state != NONE) {
+				a.delete_last_point ();
 			}
 		}
 	

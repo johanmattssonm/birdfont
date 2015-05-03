@@ -194,6 +194,15 @@ public class PenTool : Tool {
 			point_selection_image = false;
 			BirdFont.get_current_font ().touch ();
 			reset_stroke ();
+			
+			foreach (Path p in g.active_paths) {
+				if (p.is_open ()) {
+					p.get_first_point ().set_tie_handle (false);
+					p.get_first_point ().set_reflective_handles (false);
+					p.get_last_point ().set_tie_handle (false);
+					p.get_last_point ().set_reflective_handles (false);
+				}
+			}
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -798,6 +807,7 @@ public class PenTool : Tool {
 	public void press (int button, int x, int y, bool double_click) {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
+		bool reflective;
 		
 		return_if_fail (g != null);
 
@@ -832,9 +842,22 @@ public class PenTool : Tool {
 			if ((KeyBindings.has_alt () || KeyBindings.has_ctrl ())
 				&& is_over_handle (x, y)) {
 				
-				selected_handle.parent.set_reflective_handles (false);
-				selected_handle.parent.set_tie_handle (false);
-				GlyphCanvas.redraw ();
+				// don't use set point to reflective to on open ends
+				reflective = true;
+				foreach (Path path in MainWindow.get_current_glyph ().active_paths) {
+					if (path.is_open ()) {
+						if (selected_handle.parent == path.get_first_point ()	
+							|| selected_handle.parent == path.get_last_point ()) {
+							reflective = false;
+						}
+					}
+				}
+				
+				if (reflective) {
+					selected_handle.parent.set_reflective_handles (false);
+					selected_handle.parent.set_tie_handle (false);
+					GlyphCanvas.redraw ();
+				}
 			}
 			
 			return;
@@ -1750,7 +1773,8 @@ public class PenTool : Tool {
 	}
 
 	private void curve_corner_event (double event_x, double event_y) {
-		MainWindow.get_current_glyph ().open_path ();
+		Glyph g = MainWindow.get_current_glyph ();
+		g.open_path ();
 		PointSelection p;
 
 		if (!is_over_handle (event_x, event_y)) {
@@ -1764,6 +1788,9 @@ public class PenTool : Tool {
 		selected_handle = p.handle;
 		handle_selection = p;
 		selected_handle.selected = true;
+		
+		active_path = p.path;
+		g.add_active_path (active_path);
 	}
 
 	public static void add_selected_point (EditPoint p, Path path) {

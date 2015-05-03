@@ -491,12 +491,21 @@ public class DrawingTools : ToolCollection  {
 		// tie edit point handles
 		tie_handles = new Tool ("tie_point", t_("Tie curve handles for the selected edit point"));
 		tie_handles.select_action.connect ((self) => {
-			bool tie;
+			bool tie, end_point;
 			EditPoint p;
 			
 			if (PenTool.move_selected_handle) {
 				p = PenTool.active_handle.parent;
 				tie = !p.tie_handles;
+				
+				// don't tie end points
+				foreach (Path path in MainWindow.get_current_glyph ().active_paths) {
+					if (path.is_open ()) {
+						if (p == path.get_first_point () || p == path.get_last_point ()) {
+							tie = false;
+						}
+					}
+				}
 				
 				if (tie) {
 					p.process_tied_handle ();
@@ -510,13 +519,18 @@ public class DrawingTools : ToolCollection  {
 				foreach (PointSelection ep in PenTool.selected_points) {
 					tie = !ep.point.tie_handles;
 					
-					if (tie) {
-						ep.point.process_tied_handle ();
-						ep.point.set_reflective_handles (false);
+					end_point = ep.point == ep.path.get_first_point () 
+						|| ep.point == ep.path.get_last_point ();
+					
+					if (!ep.path.is_open () || !end_point) {
+						if (tie) {
+							ep.point.process_tied_handle ();
+							ep.point.set_reflective_handles (false);
+						}
+					
+						ep.point.set_tie_handle (tie);
+						ep.path.update_region_boundaries ();
 					}
-				
-					ep.point.set_tie_handle (tie);
-					ep.path.update_region_boundaries ();
 				}
 			}
 			
@@ -528,20 +542,26 @@ public class DrawingTools : ToolCollection  {
 		// symmetrical handles
 		reflect_handle = new Tool ("symmetric", t_("Symmetrical handles"));
 		reflect_handle.select_action.connect ((self) => {
-			bool symmetrical;
+			bool symmetrical, end_point;
 			PointSelection ep;
 			if (PenTool.selected_points.size > 0) {
 				ep = PenTool.selected_points.get (0);
 				symmetrical = ep.point.reflective_point;
-				foreach (PointSelection p in PenTool.selected_points) {
-					p.point.set_reflective_handles (!symmetrical);
-					p.point.process_symmetrical_handles ();
+				
+				foreach (PointSelection p in PenTool.selected_points) {					
+					end_point = p.point == p.path.get_first_point () 
+						|| p.point == p.path.get_last_point ();
 					
-					if (symmetrical) {
-						ep.point.set_tie_handle (false);
+					if (!p.path.is_open () || !end_point) {
+						p.point.set_reflective_handles (!symmetrical);
+						p.point.process_symmetrical_handles ();
+						
+						if (symmetrical) {
+							ep.point.set_tie_handle (false);
+						}
+						
+						p.path.update_region_boundaries ();
 					}
-					
-					p.path.update_region_boundaries ();
 				}
 				MainWindow.get_current_glyph ().update_view ();
 			}

@@ -107,7 +107,7 @@ public class EditPointHandle : GLib.Object {
 		return n;
 	}
 
-	public unowned EditPoint get_parent () {
+	public EditPoint get_parent () {
 		return parent;
 	}
 
