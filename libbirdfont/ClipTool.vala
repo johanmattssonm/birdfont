@@ -237,11 +237,19 @@ public class ClipTool : Tool {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
 					s.append ("\n");
+					
+					s.append ("BF stroke: ");
+					s.append (@"$(path.stroke)");
+					s.append ("\n");
 				}
 			} else if (glyph.path_list.size > 0) {
 				foreach (Path path in glyph.active_paths) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
+					s.append ("\n");
+					
+					s.append ("BF stroke: ");
+					s.append (@"$(path.stroke)");
 					s.append ("\n");
 				}
 			} else {
@@ -282,6 +290,10 @@ public class ClipTool : Tool {
 						s.append ("BF path: ");
 						s.append (BirdFontFile.get_point_data (path));
 						s.append ("\n");
+						
+						s.append ("BF stroke: ");
+						s.append (@"$(path.stroke)");
+						s.append ("\n");
 					}
 				}
 			}
@@ -309,6 +321,7 @@ public class ClipTool : Tool {
 		Glyph destination;
 		GlyphCollection glyph_collection = new GlyphCollection ('\0', "");
 		OverView o;
+		Path path = new Path ();
 		
 		foreach (string p in items) {
 			if (p.has_prefix ("glyph:")) {
@@ -338,7 +351,7 @@ public class ClipTool : Tool {
 			if (p.has_prefix ("path:")) {
 				p = p.replace ("path: ", "");
 				p = p.replace ("\n", "");
-				import_birdfont_path (glyph, p);
+				path = import_birdfont_path (glyph, p);
 			}
 			
 			if (p.has_prefix ("left:")) {
@@ -351,6 +364,10 @@ public class ClipTool : Tool {
 				glyph.right_limit = double.parse (p.replace ("right: ", ""));
 				glyph.remove_lines ();
 				glyph.add_help_lines ();	
+			}
+			
+			if (p.has_prefix ("stroke:")) {
+				path.stroke = double.parse (p.replace ("stroke: ", ""));
 			}
 		}
 		
@@ -380,7 +397,7 @@ public class ClipTool : Tool {
 		}
 	}
 	
-	static void import_birdfont_path (Glyph glyph, string data) {
+	static Path import_birdfont_path (Glyph glyph, string data) {
 		Path path = new Path ();
 		
 		BirdFontFile.parse_path_data (data, path);
@@ -402,6 +419,7 @@ public class ClipTool : Tool {
 		}
 		
 		PenTool.update_selection ();
+		return path;
 	}
 	
 	static void paste_letters_to_kerning_tab () {

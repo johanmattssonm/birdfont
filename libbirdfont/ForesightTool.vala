@@ -204,7 +204,7 @@ public class ForesightTool : Tool {
 			last_move_y = y;
 
 			a = get_active_path ();
-			if (a.is_open ()) {
+			if (a.is_open () && a.points.size > 1) {
 				a.get_first_point ().set_reflective_handles (false);
 				a.get_first_point ().set_tie_handle (false);
 			}
