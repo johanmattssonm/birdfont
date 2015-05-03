@@ -72,7 +72,7 @@ public class ForesightTool : Tool {
 			bool one_point = false;
 			
 			MainWindow.set_cursor (NativeWindow.HIDDEN);
-			
+				
 			if (b == 2) {
 				stop_drawing ();
 				return;
@@ -87,7 +87,7 @@ public class ForesightTool : Tool {
 			if (previous_point > 0) {
 				previous_point = 0;
 				state = MOVE_POINT;
-			} else {	
+			} else {
 				if (state == MOVE_POINT) {			
 					state = MOVE_HANDLES;
 					
@@ -135,19 +135,21 @@ public class ForesightTool : Tool {
 							state = NONE;
 						}
 					}
-				}
-				
-				if (state == NONE) {
-					state = MOVE_POINT;
-					add_new_point (x, y);
-					
-					PenTool.last_point_x = Glyph.path_coordinate_x (x);
-					PenTool.last_point_y = Glyph.path_coordinate_y (y);
-					
-					move_action (this, x, y);
-					state = MOVE_FIRST_HANDLE;
-					release_action(this, b, x, y);
 				} 
+			}
+			
+			if (state == NONE) {
+				state = MOVE_POINT;
+				PenTool.active_path = get_active_path ();
+				
+				add_new_point (x, y);
+				
+				PenTool.last_point_x = Glyph.path_coordinate_x (x);
+				PenTool.last_point_y = Glyph.path_coordinate_y (y);
+				
+				move_action (this, x, y);
+				state = MOVE_FIRST_HANDLE;
+				release_action(this, b, x, y);
 			}
 		});
 
@@ -156,7 +158,7 @@ public class ForesightTool : Tool {
 			PointSelection last;
 			
 			if (state == MOVE_HANDLES || state == MOVE_FIRST_HANDLE) {
-				if (state != MOVE_FIRST_HANDLE) { // FIXME:
+				if (state != MOVE_FIRST_HANDLE) {
 					last = add_new_point (x, y);	
 				}
 				
@@ -324,23 +326,23 @@ public class ForesightTool : Tool {
 	public void stop_drawing () {
 		PenTool p = (PenTool) PointTool.pen ();
 		
+		p.release_action (p, 1, 0, 0);
+		
 		if (state != NONE) {
-			p.release_action (p, 1, 0, 0);
-			
 			if (get_active_path ().is_open () && state != NONE) {
 				get_active_path ().delete_last_point ();
 			}
-			
-			p.press_action (p, 2, 0, 0);
-			p.release_action (p, 2, 0, 0);
-			current_path.hide_end_handle = true;
-			
-			MainWindow.set_cursor (NativeWindow.VISIBLE);
-			MainWindow.get_current_glyph ().clear_active_paths ();
-				
-			state = NONE;
-			MainWindow.set_cursor (NativeWindow.VISIBLE);
 		}
+	
+		p.press_action (p, 2, 0, 0);
+		p.release_action (p, 2, 0, 0);
+		current_path.hide_end_handle = true;
+		
+		MainWindow.set_cursor (NativeWindow.VISIBLE);
+		MainWindow.get_current_glyph ().clear_active_paths ();
+			
+		state = NONE;
+		MainWindow.set_cursor (NativeWindow.VISIBLE);
 	}
 	
 	public Path get_active_path () {

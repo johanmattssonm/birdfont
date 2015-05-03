@@ -143,7 +143,12 @@ public class PenTool : Tool {
 		double_click_action.connect ((self, b, x, y) => {
 			last_point_x = Glyph.path_coordinate_x (x);
 			last_point_y = Glyph.path_coordinate_y (y);
-			press (b, x, y, true);
+			
+			if (!move_selected_handle && !move_selected) {
+				press (b, x, y, true);
+			} else {
+				warning ("double click suppressed");
+			}
 		});
 
 		release_action.connect ((self, b, ix, iy) => {
@@ -839,11 +844,13 @@ public class PenTool : Tool {
 	public void add_point_event (int x, int y) {
 		Glyph? g = MainWindow.get_current_glyph ();
 		Glyph glyph = (!) g;
+		PointSelection ps;
 		
 		return_if_fail (g != null);
 		
 		remove_all_selected_points ();
-		new_point_action (x, y);
+		ps = new_point_action (x, y);
+		active_path = ps.path;
 		glyph.store_undo_state ();
 	}
 		
