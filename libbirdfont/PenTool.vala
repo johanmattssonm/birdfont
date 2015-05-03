@@ -1436,7 +1436,6 @@ public class PenTool : Tool {
 		
 		redraw = active_edit_point != e; 
 		active_edit_point = e;
-		active_path = path;
 			
 		if (e != null) {
 			((!)e).set_active (true);
@@ -1741,10 +1740,6 @@ public class PenTool : Tool {
 		eh = get_closest_handle (event_x, event_y);
 		eh.handle.active = true;
 		active_handle = eh.handle;
-		active_path = eh.path;
-		
-		glyph.clear_active_paths ();
-		glyph.add_active_path (eh.path);
 	}
 
 	private void curve_corner_event (double event_x, double event_y) {
@@ -1761,7 +1756,6 @@ public class PenTool : Tool {
 		p = get_closest_handle (event_x, event_y);
 		selected_handle = p.handle;
 		handle_selection = p;
-		active_path = p.path;
 		selected_handle.selected = true;
 	}
 

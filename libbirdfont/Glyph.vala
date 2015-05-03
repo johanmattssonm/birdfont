@@ -190,6 +190,7 @@ public class Glyph : FontDisplay {
 			if (!active_paths.contains (path)) {
 				active_paths.add (path);
 			}
+			PenTool.active_path = path;
 		}
 	}
 	
@@ -1121,6 +1122,7 @@ public class Glyph : FontDisplay {
 			path_list.add (np);
 			np.stroke = stroke ? StrokeTool.stroke_width : 0;
 			add_active_path (np);
+			PenTool.active_path = np;
 		}
 			
 		xt = path_coordinate_x (x);
@@ -1128,8 +1130,8 @@ public class Glyph : FontDisplay {
 	
 		return_val_if_fail (active_paths.size > 0, new PointSelection.empty ());
 
-		if (active_paths.get (active_paths.size - 1).is_open ()) {
-			np = active_paths.get (active_paths.size - 1);
+		if (PenTool.active_path.is_open ()) {
+			np = PenTool.active_path;
 			np.add (xt, yt);
 		} else {
 			np = new Path ();
@@ -1140,10 +1142,13 @@ public class Glyph : FontDisplay {
 			if (DrawingTools.pen_tool.is_selected ()) {
 				np.set_stroke (PenTool.path_stroke_width);
 			}
+			
+			PenTool.active_path = np;
 		}
 
 		clear_active_paths ();
 		add_active_path (np);
+		PenTool.active_path = np;
 		
 		inserted = np.points.get (np.points.size - 1);
 		
