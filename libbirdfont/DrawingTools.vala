@@ -81,6 +81,7 @@ public class DrawingTools : ToolCollection  {
 	Tool tie_handles;
 	Tool reflect_handle;
 	Tool create_line;
+	Tool close_path_tool;
 
 	Tool delete_button;
 	public Tool insert_point_on_path_tool;
@@ -560,6 +561,29 @@ public class DrawingTools : ToolCollection  {
 		reverse_path_tool = new OrientationTool ("reverse_path", t_("Create counter from outline"));
 		draw_tool_modifiers.add_tool (reverse_path_tool);
 
+		// close path
+		close_path_tool = new Tool ("close_path", t_("Close path"));
+		close_path_tool.select_action.connect ((self) => {
+			Tool current;
+			Glyph g;
+			
+			current = MainWindow.get_toolbox ().get_current_tool ();
+			
+			if (current is ForesightTool) {
+				((ForesightTool) current).stop_drawing ();
+			}
+			
+			PenTool.reset_stroke ();
+			
+			g = MainWindow.get_current_glyph ();
+			g.close_path ();
+			g.clear_active_paths ();
+			
+			self.set_selected (false);
+			GlyphCanvas.redraw ();
+		});
+		draw_tool_modifiers.add_tool (close_path_tool);
+		
 		move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"));
 		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
@@ -1148,6 +1172,7 @@ public class DrawingTools : ToolCollection  {
 		tie_handles.set_tool_visibility (false);
 		reflect_handle.set_tool_visibility (false);
 		create_line.set_tool_visibility (false);
+		close_path_tool.set_tool_visibility (false);
 
 		quadratic_points.set_tool_visibility (false);
 		cubic_points.set_tool_visibility (false);
@@ -1187,7 +1212,8 @@ public class DrawingTools : ToolCollection  {
 		tie_handles.set_tool_visibility (true);
 		reflect_handle.set_tool_visibility (true);
 		create_line.set_tool_visibility (true);
-		
+		close_path_tool.set_tool_visibility (true);
+
 		quadratic_points.set_tool_visibility (true);
 		cubic_points.set_tool_visibility (true);
 		double_points.set_tool_visibility (true);

@@ -74,18 +74,7 @@ public class ForesightTool : Tool {
 			MainWindow.set_cursor (NativeWindow.HIDDEN);
 			
 			if (b == 2) {
-				p.release_action (p, 1, x, y);
-				
-				if (PenTool.active_path.is_open ()) {
-					PenTool.active_path.delete_last_point ();
-				}
-				
-				p.press_action (p, 2, x, y);
-				p.release_action (p, 2, x, y);
-				current_path.hide_end_handle = true;
-				state = NONE;
-				MainWindow.set_cursor (NativeWindow.VISIBLE);
-				MainWindow.get_current_glyph ().clear_active_paths ();
+				stop_drawing ();
 				return;
 			} 
 
@@ -109,6 +98,7 @@ public class ForesightTool : Tool {
 					}
 					
 					if (p.has_join_icon ()) {
+						// FIXME: last activa path in list
 						ps = new PointSelection (PenTool.active_path.points.get (PenTool.active_path.points.size - 1), PenTool.active_path);
 						ps.point.set_tie_handle (false);
 						
@@ -329,6 +319,34 @@ public class ForesightTool : Tool {
 			Tool p = PointTool.pen ();
 			p.draw_action (p, cairo_context, glyph);
 		});
+	}
+	
+	public void stop_drawing () {
+		PenTool p = (PenTool) PointTool.pen ();
+		
+		if (state != NONE) {
+			p.release_action (p, 1, 0, 0);
+			
+			if (get_active_path ().is_open () && state != NONE) {
+				get_active_path ().delete_last_point ();
+			}
+			
+			p.press_action (p, 2, 0, 0);
+			p.release_action (p, 2, 0, 0);
+			current_path.hide_end_handle = true;
+			
+			MainWindow.set_cursor (NativeWindow.VISIBLE);
+			MainWindow.get_current_glyph ().clear_active_paths ();
+				
+			state = NONE;
+			MainWindow.set_cursor (NativeWindow.VISIBLE);
+		}
+	}
+	
+	public Path get_active_path () {
+		Glyph g = MainWindow.get_current_glyph ();
+		return_val_if_fail (g.active_paths.size > 0, new Path ());
+		return g.active_paths.get (g.active_paths.size -1);
 	}
 	
 	public void switch_to_line_mode () {
