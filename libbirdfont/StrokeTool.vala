@@ -1664,7 +1664,10 @@ public class StrokeTool : Tool {
 
 		Path path = original_path.copy ();
 
-		path.add_hidden_double_points (); // FIXME:
+		if (path.points.size > 1) {
+			path.add_hidden_double_points (); // FIXME:
+		}
+		
 		foreach (EditPoint ep in path.points) {
 			if (ep.type == PointType.DOUBLE_CURVE || ep.type == PointType.LINE_DOUBLE_CURVE) {
 				PenTool.convert_point_type (ep, PointType.QUADRATIC);
@@ -1708,8 +1711,8 @@ public class StrokeTool : Tool {
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 
-			tolerance = 0.13 / sqrt (stroke_width);
-			// tolerance = 2 / sqrt (stroke_width);
+			//tolerance = 0.13 / sqrt (stroke_width);
+			tolerance = 1.6 / sqrt (stroke_width);
 			step_increment = 1.05;
 			step_size = 0.039 / stroke_width;
 

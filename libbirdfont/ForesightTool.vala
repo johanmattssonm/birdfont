@@ -37,6 +37,9 @@ public class ForesightTool : Tool {
 
 	public bool skip_deselect = false;
 
+	static int press_counter = 0;
+	bool button_pressed = false;
+	
 	public ForesightTool (string name) {
 		base (name, t_ ("Create Beziér curves"));
 
@@ -50,6 +53,8 @@ public class ForesightTool : Tool {
 			MainWindow.get_current_glyph ().clear_active_paths ();
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
 			state = NONE;
+			
+			print (@"select press_action\n");
 		});
 
 		deselect_action.connect ((self) => {
@@ -61,101 +66,24 @@ public class ForesightTool : Tool {
 			
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
 			state = NONE;
+			
+			print (@"deselect press_action\n");
 		});
 		
 		press_action.connect ((self, b, x, y) => {
-			PenTool p = (PenTool) PointTool.pen ();
-			PointSelection ps;
-			EditPoint first_point;
-			bool clockwise;
-			Path? path = null;
-			bool one_point = false;
-			
-			MainWindow.set_cursor (NativeWindow.HIDDEN);
-				
-			if (b == 2) {
-				stop_drawing ();
-				return;
-			} 
-
-			BirdFont.get_current_font ().touch ();
-			MainWindow.get_current_glyph ().store_undo_state ();
-
-			last_move_x = x;
-			last_move_y = y;
-
-			if (previous_point > 0) {
-				previous_point = 0;
-				state = MOVE_POINT;
-			} else {
-				if (state == MOVE_POINT) {			
-					state = MOVE_HANDLES;
-					
-					path = PenTool.find_path_to_join ();
-					
-					if (path != null) {
-						one_point = (((!) path).points.size == 1);
-					}
-					
-					if (p.has_join_icon ()) {
-						// FIXME: last activa path in list
-						ps = new PointSelection (PenTool.active_path.points.get (PenTool.active_path.points.size - 1), PenTool.active_path);
-						ps.point.set_tie_handle (false);
-						
-						ps = new PointSelection (PenTool.active_path.points.get (0), PenTool.active_path);
-						ps.point.set_tie_handle (false);
-						
-						first_point = PenTool.active_path.points.get (0);
-						clockwise = PenTool.active_path.is_clockwise ();
-		
-						PenTool.move_selected = false;
-						p.release_action (p, 2, x, y);
-						
-						PenTool.move_selected = false;
-						p.press_action (p, 2, x, y);
-						
-						if (ps.path.has_point (first_point)) {
-							ps.path.reverse ();
-						}
-						
-						if (clockwise && PenTool.active_path.is_clockwise ()) {
-							ps = new PointSelection (PenTool.active_path.points.get (0), PenTool.active_path);
-						} else {
-							ps = new PointSelection (PenTool.active_path.points.get (PenTool.active_path.points.size - 1), PenTool.active_path);
-						}
-						
-						PenTool.selected_points.clear ();
-						PenTool.selected_points.add (ps);
-						PenTool.selected_point = ps.point; 
-						
-						state = MOVE_LAST_HANDLE;
-						
-						if (one_point) {
-							p.press_action (p, 2, x, y);
-							state = NONE;
-						}
-					}
-				} 
-			}
-			
-			if (state == NONE) {
-				state = MOVE_POINT;
-				PenTool.active_path = get_active_path ();
-				
-				add_new_point (x, y);
-				
-				PenTool.last_point_x = Glyph.path_coordinate_x (x);
-				PenTool.last_point_y = Glyph.path_coordinate_y (y);
-				
-				move_action (this, x, y);
-				state = MOVE_FIRST_HANDLE;
-				release_action(this, b, x, y);
-			}
+			press (b, x, y);
 		});
 
 		release_action.connect ((self, b, x, y) => {
 			PenTool p = (PenTool) PointTool.pen ();
 			PointSelection last;
+
+			if (!button_pressed) {
+				warning ("!button_pressed");
+				return;
+			}
+			
+			print (@"bezier release_action\n");
 			
 			if (state == MOVE_HANDLES || state == MOVE_FIRST_HANDLE) {
 				if (state != MOVE_FIRST_HANDLE) {
@@ -191,6 +119,7 @@ public class ForesightTool : Tool {
 			}
 			
 			current_path.hide_end_handle = true;
+			button_pressed = false;
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -330,6 +259,104 @@ public class ForesightTool : Tool {
 		});
 	}
 	
+	public void press (int b, int x, int y) {
+		PenTool p = (PenTool) PointTool.pen ();
+		PointSelection ps;
+		EditPoint first_point;
+		bool clockwise;
+		Path? path = null;
+		bool one_point = false;
+		
+		if (button_pressed) {
+			warning ("no release event");
+			return;
+		}
+		button_pressed = true;
+		
+		MainWindow.set_cursor (NativeWindow.HIDDEN);
+		
+		print (@"$(press_counter++) bezier press_action\n");
+		
+		if (b == 2) {
+			stop_drawing ();
+			return;
+		} 
+
+		BirdFont.get_current_font ().touch ();
+		MainWindow.get_current_glyph ().store_undo_state ();
+
+		last_move_x = x;
+		last_move_y = y;
+
+		if (previous_point > 0) {
+			previous_point = 0;
+			state = MOVE_POINT;
+		} else {
+			if (state == MOVE_POINT) {			
+				state = MOVE_HANDLES;
+				
+				path = PenTool.find_path_to_join ();
+				
+				if (path != null) {
+					one_point = (((!) path).points.size == 1);
+				}
+				
+				if (p.has_join_icon ()) {
+					// FIXME: last activa path in list
+					ps = new PointSelection (PenTool.active_path.points.get (PenTool.active_path.points.size - 1), PenTool.active_path);
+					ps.point.set_tie_handle (false);
+					
+					ps = new PointSelection (PenTool.active_path.points.get (0), PenTool.active_path);
+					ps.point.set_tie_handle (false);
+					
+					first_point = PenTool.active_path.points.get (0);
+					clockwise = PenTool.active_path.is_clockwise ();
+
+					PenTool.move_selected = false;
+					p.release_action (p, 2, x, y);
+					
+					PenTool.move_selected = false;
+					p.press_action (p, 2, x, y);
+					
+					if (ps.path.has_point (first_point)) {
+						ps.path.reverse ();
+					}
+					
+					if (clockwise && PenTool.active_path.is_clockwise ()) {
+						ps = new PointSelection (PenTool.active_path.points.get (0), PenTool.active_path);
+					} else {
+						ps = new PointSelection (PenTool.active_path.points.get (PenTool.active_path.points.size - 1), PenTool.active_path);
+					}
+					
+					PenTool.selected_points.clear ();
+					PenTool.selected_points.add (ps);
+					PenTool.selected_point = ps.point; 
+					
+					state = MOVE_LAST_HANDLE;
+					
+					if (one_point) {
+						p.press_action (p, 2, x, y);
+						state = NONE;
+					}
+				}
+			} 
+		}
+		
+		if (state == NONE) {
+			state = MOVE_POINT;
+			PenTool.active_path = get_active_path ();
+			
+			add_new_point (x, y);
+			
+			PenTool.last_point_x = Glyph.path_coordinate_x (x);
+			PenTool.last_point_y = Glyph.path_coordinate_y (y);
+			
+			move_action (this, x, y);
+			state = MOVE_FIRST_HANDLE;
+			release_action(this, b, x, y);
+		}	
+	}
+	
 	public void stop_drawing () {
 		PenTool p = (PenTool) PointTool.pen ();
 		Path a;
@@ -338,8 +365,14 @@ public class ForesightTool : Tool {
 		
 		if (state != NONE) {
 			a = get_active_path ();
-			if (a.is_open () && state != NONE) {
+			if (a.is_open ()) {
 				a.delete_last_point ();
+
+				a.get_first_point ().set_reflective_handles (false);
+				a.get_first_point ().set_tie_handle (false);
+
+				a.get_last_point ().set_reflective_handles (false);
+				a.get_last_point ().set_tie_handle (false);
 			}
 		}
 	
@@ -356,7 +389,9 @@ public class ForesightTool : Tool {
 	
 	public Path get_active_path () {
 		Glyph g = MainWindow.get_current_glyph ();
-		return_val_if_fail (g.active_paths.size > 0, new Path ());
+		if (g.active_paths.size == 0) {
+			return new Path ();
+		}
 		return g.active_paths.get (g.active_paths.size -1);
 	}
 	
@@ -380,6 +415,7 @@ public class ForesightTool : Tool {
 		PointSelection last;
 		double handle_x, handle_y;
 		
+		print (@"add_new_point: $(PenTool.active_path.points.size)\n");
 		PenTool p = (PenTool) PointTool.pen ();
 
 		if (PenTool.active_path.points.size == 0) {

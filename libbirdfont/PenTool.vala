@@ -76,6 +76,9 @@ public class PenTool : Tool {
 	public static double simplification_threshold = 0.5;
 		
 	public static bool retain_angle = false;
+	bool button_pressed = false;
+	
+	static int press_counter = 0;
 	
 	public PenTool (string name) {	
 		base (name, t_("Add new points"));
@@ -101,7 +104,16 @@ public class PenTool : Tool {
 			MainWindow.get_current_glyph ().clear_active_paths ();
 		});
 				
-		press_action.connect ((self, b, x, y) => {		
+		press_action.connect ((self, b, x, y) => {
+			if (button_pressed) {
+				warning ("Unexpected event");
+				return;
+			}
+			
+			print (@"$(press_counter++) pen press_action\n");
+			
+			button_pressed = true;
+			
 			// retain path direction
 			clockwise = new Gee.ArrayList<Path> ();
 			counter_clockwise = new Gee.ArrayList<Path> ();
@@ -144,7 +156,7 @@ public class PenTool : Tool {
 			last_point_x = Glyph.path_coordinate_x (x);
 			last_point_y = Glyph.path_coordinate_y (y);
 			
-			if (!move_selected_handle && !move_selected) {
+			if (!move_selected_handle && !move_selected && !button_pressed) {
 				press (b, x, y, true);
 			} else {
 				warning ("double click suppressed");
@@ -203,6 +215,8 @@ public class PenTool : Tool {
 					p.get_last_point ().set_reflective_handles (false);
 				}
 			}
+			
+			button_pressed = false;
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -869,6 +883,11 @@ public class PenTool : Tool {
 		Glyph glyph = (!) g;
 		PointSelection ps;
 		
+		if (move_selected_handle)  {
+			warning ("moving handle");
+			return;
+		}
+		
 		return_if_fail (g != null);
 		
 		remove_all_selected_points ();
@@ -978,9 +997,6 @@ public class PenTool : Tool {
 			if (p.is_open () && p.points.size >= 1 
 				&& (active_edit_point == p.points.get (0) 
 				|| active_edit_point == p.points.get (p.points.size - 1))) {
-				active_path = p;
-				glyph.set_active_path (p);
-				
 				update_selection ();
 				reverse = true;
 				control_point_event (x, y);
@@ -1539,6 +1555,9 @@ public class PenTool : Tool {
 
 		if (distance < contact_surface) {
 			set_active_edit_point (e.point, e.path);
+			
+			active_path = e.path;
+			g.add_active_path (active_path);
 		}
 	}
 	
@@ -1563,6 +1582,8 @@ public class PenTool : Tool {
 		active_path = new_point.path;
 		glyph.clear_active_paths ();
 		glyph.add_active_path (new_point.path);
+		
+		print (@"PointSelection new_point_action; $(glyph.active_paths.size)\n");
 		
 		move_selected = true;
 		
