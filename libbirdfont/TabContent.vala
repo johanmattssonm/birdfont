@@ -26,6 +26,9 @@ public class TabContent : GLib.Object {
 	static TextListener text_callback;
 
 	static const int TEXT_INPUT_HEIGHT = 51;
+	
+	static double last_press_time = 0;
+	static bool double_click_event = false;
 
 	public static void zoom_in () {
 		if (MenuTab.suppress_event) {
@@ -153,7 +156,7 @@ public class TabContent : GLib.Object {
 		if (MenuTab.suppress_event) {
 			return;
 		}
-		
+
 		if (MainWindow.get_menu ().show_menu) {
 			MainWindow.get_menu ().button_release (button, x, y);
 		} else {
@@ -170,6 +173,8 @@ public class TabContent : GLib.Object {
 		if (MenuTab.suppress_event) {
 			return;
 		}
+
+		last_press_time = GLib.get_real_time ();
 
 		if (MainWindow.get_dialog ().visible) {
 			MainWindow.get_dialog ().button_press (button, x, y);

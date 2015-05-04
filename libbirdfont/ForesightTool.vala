@@ -38,7 +38,7 @@ public class ForesightTool : Tool {
 	public bool skip_deselect = false;
 
 	static int press_counter = 0;
-	bool button_pressed = false;
+	double last_release_time = 0;
 	
 	public ForesightTool (string name) {
 		base (name, t_ ("Create Beziér curves"));
@@ -53,8 +53,6 @@ public class ForesightTool : Tool {
 			MainWindow.get_current_glyph ().clear_active_paths ();
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
 			state = NONE;
-			
-			print (@"select press_action\n");
 		});
 
 		deselect_action.connect ((self) => {
@@ -66,25 +64,37 @@ public class ForesightTool : Tool {
 			
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
 			state = NONE;
-			
-			print (@"deselect press_action\n");
 		});
 		
 		press_action.connect ((self, b, x, y) => {
+			// ignore double clicks
+			if ((GLib.get_real_time () - last_release_time) / 1000000.0 < 0.4) {
+				print ("Double click.");
+				last_release_time = GLib.get_real_time ();
+				MainWindow.set_cursor (NativeWindow.VISIBLE);
+				return;
+			}
+			last_release_time = GLib.get_real_time ();
+
 			press (b, x, y);
+		});
+
+		double_click_action.connect ((self, b, x, y) => {
+			EditPoint last;
+			get_active_path ().delete_last_point ();
+			
+			last = get_active_path ().get_last_point ();
+			
+			PenTool.selected_points.clear ();
+			PenTool.selected_points.add (new PointSelection (last, get_active_path ()));	
+			PenTool.selected_point = last; 
+			PenTool.active_edit_point = null;
 		});
 
 		release_action.connect ((self, b, x, y) => {
 			PenTool p = (PenTool) PointTool.pen ();
 			PointSelection last;
-
-			if (!button_pressed) {
-				warning ("!button_pressed");
-				return;
-			}
-			
-			print (@"bezier release_action\n");
-			
+		
 			if (state == MOVE_HANDLES || state == MOVE_FIRST_HANDLE) {
 				if (state != MOVE_FIRST_HANDLE) {
 					last = add_new_point (x, y);	
@@ -119,7 +129,6 @@ public class ForesightTool : Tool {
 			}
 			
 			current_path.hide_end_handle = true;
-			button_pressed = false;
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -148,7 +157,7 @@ public class ForesightTool : Tool {
 			}
 			
 			PenTool.active_path = current_path;
-			PenTool.active_path.hide_end_handle = (state == MOVE_POINT);
+			PenTool.active_path.hide_end_handle = PenTool.active_path.is_open ();
 			
 			if (state == MOVE_HANDLES || state == MOVE_LAST_HANDLE) {			
 				if (previous_point > 0) {
@@ -266,32 +275,18 @@ public class ForesightTool : Tool {
 		bool clockwise;
 		Path? path = null;
 		bool one_point = false;
-		
-		if (button_pressed) {
-			warning ("no release event");
-			return;
-		}
-		button_pressed = true;
+		Glyph g;
 		
 		MainWindow.set_cursor (NativeWindow.HIDDEN);
-		
-		print (@"$(press_counter++) bezier press_action\n");
-		
-		if (b == 2) {
-			stop_drawing ();
-			return;
-		} 
 
 		BirdFont.get_current_font ().touch ();
-		MainWindow.get_current_glyph ().store_undo_state ();
+		g = MainWindow.get_current_glyph ();
+		g.store_undo_state ();
 
 		last_move_x = x;
 		last_move_y = y;
 
-		if (previous_point > 0) {
-			previous_point = 0;
-			state = MOVE_POINT;
-		} else {
+		if (previous_point == 0) {
 			if (state == MOVE_POINT) {			
 				state = MOVE_HANDLES;
 				
@@ -344,28 +339,39 @@ public class ForesightTool : Tool {
 		
 		if (state == NONE) {
 			state = MOVE_POINT;
-			PenTool.active_path = get_active_path ();
-			
 			add_new_point (x, y);
+			
+			PenTool.active_path = get_active_path ();
 			
 			PenTool.last_point_x = Glyph.path_coordinate_x (x);
 			PenTool.last_point_y = Glyph.path_coordinate_y (y);
 			
 			move_action (this, x, y);
 			state = MOVE_FIRST_HANDLE;
+			
+			press_action(this, b, x, y);
 			release_action(this, b, x, y);
-		}	
+		}
+		
+		if (previous_point > 0) {
+			previous_point = 0;
+			state = MOVE_POINT;
+		}
+		
+		if (b == 2) {
+			stop_drawing ();
+		} 
 	}
 	
 	public void stop_drawing () {
 		PenTool p = (PenTool) PointTool.pen ();
 		Path a;
 		
-		p.release_action (p, 1, 0, 0);
-		
+		p.release_action (p, 1, last_move_x, last_move_y);
+
 		if (state != NONE) {
 			a = get_active_path ();
-			if (a.is_open ()) {
+			if (a.is_open () && a.points.size > 0) {
 				a.delete_last_point ();
 
 				a.get_first_point ().set_reflective_handles (false);
@@ -375,16 +381,15 @@ public class ForesightTool : Tool {
 				a.get_last_point ().set_tie_handle (false);
 			}
 		}
-	
-		p.press_action (p, 2, 0, 0);
-		p.release_action (p, 2, 0, 0);
+
+		MainWindow.get_current_glyph ().clear_active_paths ();
+						
+		p.press_action (p, 2, last_move_x, last_move_y);
+		p.release_action (p, 2, last_move_x, last_move_y);
 		current_path.hide_end_handle = true;
 		
-		MainWindow.set_cursor (NativeWindow.VISIBLE);
-		MainWindow.get_current_glyph ().clear_active_paths ();
-			
+		previous_point = 0;
 		state = NONE;
-		MainWindow.set_cursor (NativeWindow.VISIBLE);
 	}
 	
 	public Path get_active_path () {
@@ -415,12 +420,16 @@ public class ForesightTool : Tool {
 		PointSelection last;
 		double handle_x, handle_y;
 		
-		print (@"add_new_point: $(PenTool.active_path.points.size)\n");
 		PenTool p = (PenTool) PointTool.pen ();
 
 		if (PenTool.active_path.points.size == 0) {
 			last = p.new_point_action (x, y);
 		} else {
+			
+			if (PenTool.selected_points.size == 0) {
+				p.press_action (p, 1, x, y);
+			}
+			
 			if (PenTool.selected_points.size == 0) {
 				warning ("No selected points.");
 				return new PointSelection.empty ();

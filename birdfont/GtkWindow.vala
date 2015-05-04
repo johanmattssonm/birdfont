@@ -851,7 +851,7 @@ public class GlyphCanvasArea : DrawingArea  {
 
 		button_press_event.connect ((t, e)=> {
 			GtkWindow.reset_modifier (e.state);
-			
+
 			if (e.type == EventType.BUTTON_PRESS) {
 				TabContent.button_press (e.button, e.x, e.y);	
 			} else if (e.type == EventType.2BUTTON_PRESS) {
@@ -887,7 +887,7 @@ public class GlyphCanvasArea : DrawingArea  {
 }
 
 public class DescriptionForm : GLib.Object {
-	
+
 	public ScrolledWindow canvas;
 	public Box box;
 	

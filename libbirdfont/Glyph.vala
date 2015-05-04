@@ -1273,6 +1273,13 @@ public class Glyph : FontDisplay {
 		foreach (Path p in path_list) {
 			p.set_editable (true);
 			p.recalculate_linear_handles ();
+			
+			if (p.is_open () && p.points.size > 0) {
+				p.get_first_point ().set_reflective_handles (false);
+				p.get_first_point ().set_tie_handle (false);
+				p.get_last_point ().set_reflective_handles (false);
+				p.get_last_point ().set_tie_handle (false);
+			}
 		}
 		
 		open = true;

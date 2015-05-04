@@ -76,7 +76,6 @@ public class PenTool : Tool {
 	public static double simplification_threshold = 0.5;
 		
 	public static bool retain_angle = false;
-	bool button_pressed = false;
 	
 	static int press_counter = 0;
 	
@@ -105,15 +104,6 @@ public class PenTool : Tool {
 		});
 				
 		press_action.connect ((self, b, x, y) => {
-			if (button_pressed) {
-				warning ("Unexpected event");
-				return;
-			}
-			
-			print (@"$(press_counter++) pen press_action\n");
-			
-			button_pressed = true;
-			
 			// retain path direction
 			clockwise = new Gee.ArrayList<Path> ();
 			counter_clockwise = new Gee.ArrayList<Path> ();
@@ -156,7 +146,7 @@ public class PenTool : Tool {
 			last_point_x = Glyph.path_coordinate_x (x);
 			last_point_y = Glyph.path_coordinate_y (y);
 			
-			if (!move_selected_handle && !move_selected && !button_pressed) {
+			if (!move_selected_handle && !move_selected) {
 				press (b, x, y, true);
 			} else {
 				warning ("double click suppressed");
@@ -208,15 +198,13 @@ public class PenTool : Tool {
 			reset_stroke ();
 			
 			foreach (Path p in g.active_paths) {
-				if (p.is_open ()) {
+				if (p.is_open () && p.points.size > 0) {
 					p.get_first_point ().set_tie_handle (false);
 					p.get_first_point ().set_reflective_handles (false);
 					p.get_last_point ().set_tie_handle (false);
 					p.get_last_point ().set_reflective_handles (false);
 				}
 			}
-			
-			button_pressed = false;
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -859,7 +847,7 @@ public class PenTool : Tool {
 				// don't use set point to reflective to on open ends
 				reflective = true;
 				foreach (Path path in MainWindow.get_current_glyph ().active_paths) {
-					if (path.is_open ()) {
+					if (path.is_open () && path.points.size > 0) {
 						if (selected_handle.parent == path.get_first_point ()	
 							|| selected_handle.parent == path.get_last_point ()) {
 							reflective = false;
@@ -1582,9 +1570,7 @@ public class PenTool : Tool {
 		active_path = new_point.path;
 		glyph.clear_active_paths ();
 		glyph.add_active_path (new_point.path);
-		
-		print (@"PointSelection new_point_action; $(glyph.active_paths.size)\n");
-		
+
 		move_selected = true;
 		
 		return new_point;
@@ -1598,6 +1584,13 @@ public class PenTool : Tool {
 		
 		new_point = glyph.add_new_edit_point (x, y);
 		new_point.path.update_region_boundaries ();
+
+		if (new_point.path.is_open () && new_point.path.points.size > 0) {
+			new_point.path.get_first_point ().set_reflective_handles (false);
+			new_point.path.get_first_point ().set_tie_handle (false);
+			new_point.path.get_last_point ().set_reflective_handles (false);
+			new_point.path.get_last_point ().set_tie_handle (false);
+		}
 
 		selected_point = new_point.point;
 		active_edit_point = new_point.point;	

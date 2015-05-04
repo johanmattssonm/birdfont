@@ -429,7 +429,7 @@ public class BackgroundImage {
 		ct = new Context (st);
 		ct.save ();
 
-		Theme.color (ct, "Background 1");
+		ct.set_source_rgba (1, 1, 1, 1);
 		ct.rectangle (0, 0, allocation.width, allocation.height);
 		ct.fill ();
 
