@@ -1202,16 +1202,22 @@ public class PenTool : Tool {
 						active_path = merge;
 						merge.reopen ();
 						glyph.open_path ();
+						
+						print ("CONTINUE FIRST\n");
+						
 						return;
 					}
 					
 					if (is_close_to_point (merge.points.get (0), px, py)) {
 						glyph.add_active_path (merge);
 						active_path = merge;
-						merge.reverse ();
 						clear_directions ();
 						merge.reopen ();
 						glyph.open_path ();
+						merge.reverse ();
+						
+						print ("CONTINUE\n");
+						
 						return;
 					}
 				}

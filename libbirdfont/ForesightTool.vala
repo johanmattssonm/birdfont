@@ -68,7 +68,7 @@ public class ForesightTool : Tool {
 		
 		press_action.connect ((self, b, x, y) => {
 			// ignore double clicks
-			if ((GLib.get_real_time () - last_release_time) / 1000000.0 < 0.4) {
+			if ((GLib.get_real_time () - last_release_time) / 1000000.0 < 0.2) {
 				print ("Double click.");
 				last_release_time = GLib.get_real_time ();
 				MainWindow.set_cursor (NativeWindow.VISIBLE);
@@ -94,7 +94,14 @@ public class ForesightTool : Tool {
 		release_action.connect ((self, b, x, y) => {
 			PenTool p = (PenTool) PointTool.pen ();
 			PointSelection last;
-		
+			
+			last_move_x = x;
+			last_move_y = y;
+				
+			if (b == 2) {
+				return;
+			}
+			
 			if (state == MOVE_HANDLES || state == MOVE_FIRST_HANDLE) {
 				if (state != MOVE_FIRST_HANDLE) {
 					last = add_new_point (x, y);	
@@ -140,7 +147,7 @@ public class ForesightTool : Tool {
 			
 			last_move_x = x;
 			last_move_y = y;
-
+			
 			a = get_active_path ();
 			if (a.is_open () && a.points.size > 1) {
 				a.get_first_point ().set_reflective_handles (false);
@@ -157,7 +164,7 @@ public class ForesightTool : Tool {
 			}
 			
 			PenTool.active_path = current_path;
-			PenTool.active_path.hide_end_handle = PenTool.active_path.is_open ();
+			PenTool.active_path.hide_end_handle = (state == MOVE_POINT);
 			
 			if (state == MOVE_HANDLES || state == MOVE_LAST_HANDLE) {			
 				if (previous_point > 0) {
@@ -283,9 +290,38 @@ public class ForesightTool : Tool {
 		g = MainWindow.get_current_glyph ();
 		g.store_undo_state ();
 
-		last_move_x = x;
-		last_move_y = y;
-
+		if (b == 2) {
+			last_move_x = x;
+			last_move_y = y;
+			
+			stop_drawing ();
+			
+			move_action (this, x, y);
+			return;
+		} 
+		
+		if (state == NONE) {
+			state = MOVE_POINT;
+			
+			PenTool.active_path = get_active_path ();
+			
+			add_new_point (x, y);
+			
+			PenTool.last_point_x = Glyph.path_coordinate_x (x);
+			PenTool.last_point_y = Glyph.path_coordinate_y (y);
+			
+			move_action (this, x, y);
+			state = MOVE_FIRST_HANDLE;
+			
+			press_action(this, b, x, y);
+			release_action(this, b, x, y);
+		}
+		
+		if (previous_point > 0) {
+			previous_point = 0;
+			state = MOVE_POINT;
+		}
+		
 		if (previous_point == 0) {
 			if (state == MOVE_POINT) {			
 				state = MOVE_HANDLES;
@@ -336,31 +372,9 @@ public class ForesightTool : Tool {
 				}
 			} 
 		}
-		
-		if (state == NONE) {
-			state = MOVE_POINT;
-			add_new_point (x, y);
-			
-			PenTool.active_path = get_active_path ();
-			
-			PenTool.last_point_x = Glyph.path_coordinate_x (x);
-			PenTool.last_point_y = Glyph.path_coordinate_y (y);
-			
-			move_action (this, x, y);
-			state = MOVE_FIRST_HANDLE;
-			
-			press_action(this, b, x, y);
-			release_action(this, b, x, y);
-		}
-		
-		if (previous_point > 0) {
-			previous_point = 0;
-			state = MOVE_POINT;
-		}
-		
-		if (b == 2) {
-			stop_drawing ();
-		} 
+
+		last_move_x = x;
+		last_move_y = y;
 	}
 	
 	public void stop_drawing () {
@@ -382,14 +396,15 @@ public class ForesightTool : Tool {
 			}
 		}
 
-		MainWindow.get_current_glyph ().clear_active_paths ();
-						
 		p.press_action (p, 2, last_move_x, last_move_y);
 		p.release_action (p, 2, last_move_x, last_move_y);
 		current_path.hide_end_handle = true;
 		
 		previous_point = 0;
 		state = NONE;
+		
+		MainWindow.get_current_glyph ().clear_active_paths ();
+		PenTool.active_path = new Path ();
 	}
 	
 	public Path get_active_path () {
@@ -421,13 +436,12 @@ public class ForesightTool : Tool {
 		double handle_x, handle_y;
 		
 		PenTool p = (PenTool) PointTool.pen ();
-
+		
 		if (PenTool.active_path.points.size == 0) {
 			last = p.new_point_action (x, y);
-		} else {
-			
+		} else {			
 			if (PenTool.selected_points.size == 0) {
-				p.press_action (p, 1, x, y);
+				last = p.new_point_action (x, y);
 			}
 			
 			if (PenTool.selected_points.size == 0) {
