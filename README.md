@@ -1,3 +1,5 @@
+![Birdfont logo][birdfont]
+
 # Birdfont - Font Editor
 
 Birdfont is a font editor which can create vector graphics and
@@ -7,8 +9,6 @@ export SVG, EOT and TTF fonts.
     License: GNU GPL v3
     Webpage: http://birdfont.org
     Bugtracker: http://birdfont.org/bugtracker/my_view_page.php
-
-[logo]: http://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
 
 ## Building from Source
 
@@ -52,4 +52,6 @@ The default prefix is /usr/local on Fedora should BirdFont be compiled with
 Windows and Mac binaries can be downloaded from
 http://birdfont.org Many Linux distributions have packages of
 Birdfont in their repositories. There is a BSD package in OpenBSD.
+
+[birdfont]: http://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
 
