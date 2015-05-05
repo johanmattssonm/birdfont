@@ -161,8 +161,8 @@ public class PenTool : Tool {
 			x = Glyph.path_coordinate_x (ix);
 			y = Glyph.path_coordinate_y (iy);
 
-			if (has_join_icon ()) {
-				join_paths (x, y);
+			if (has_join_icon () && active_edit_point != null) {
+				join_paths ((!) active_edit_point);
 			}
 
 			active_handle = new EditPointHandle.empty ();
@@ -176,20 +176,7 @@ public class PenTool : Tool {
 			edit_active_corner = false;
 			show_selection_box = false;
 			
-			// update path direction if it has changed
-			foreach (Path p in clockwise) {
-				if (!p.is_open () && !p.is_clockwise ()) {
-					p.reverse ();
-					update_selection ();
-				}
-			}
-
-			foreach (Path p in counter_clockwise) {
-				if (!p.is_open () &&  p.is_clockwise ()) {
-					p.reverse ();
-					update_selection ();
-				}
-			}
+			set_orientation ();
 			
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
 
@@ -252,10 +239,10 @@ public class PenTool : Tool {
 		key_release_action.connect ((self, keyval) => {
 			double x, y;
 			if (is_arrow_key (keyval)) {
-				if (KeyBindings.modifier != CTRL) {
+				if (KeyBindings.modifier != CTRL && active_edit_point != null) {
 					x = Glyph.reverse_path_coordinate_x (selected_point.x);
 					y = Glyph.reverse_path_coordinate_y (selected_point.y);
-					join_paths (x, y);
+					join_paths ((!) active_edit_point);
 					reset_stroke ();
 				}
 			}	
@@ -280,9 +267,34 @@ public class PenTool : Tool {
 		}
 	}
 	
+	public static void set_orientation () {
+		// update path direction if it has changed
+		foreach (Path p in clockwise) {
+			if (!p.is_open () && !p.is_clockwise ()) {
+				p.reverse ();
+				update_selection ();
+			}
+		}
+
+		foreach (Path p in counter_clockwise) {
+			if (!p.is_open () &&  p.is_clockwise ()) {
+				p.reverse ();
+				update_selection ();
+			}
+		}	
+	}
+	
 	public bool has_join_icon () {
+		if (active_edit_point != null) {
+			return can_join ((!) active_edit_point);
+		}
+		
+		return false;
+	}
+
+	public static bool can_join (EditPoint ep) {
 		double mx, my;
-		get_tie_position (out mx, out my);
+		get_tie_position (ep, out mx, out my);
 		return (mx > -10 * MainWindow.units && my > -10 * MainWindow.units);
 	}
 
@@ -1055,7 +1067,7 @@ public class PenTool : Tool {
 		}
 	}
 	
-	public static Path? find_path_to_join () {
+	public static Path? find_path_to_join (EditPoint end_point) {
 		Path? m = null;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		EditPoint ep_last, ep_first;
@@ -1068,12 +1080,12 @@ public class PenTool : Tool {
 			ep_last = path.points.get (path.points.size - 1);
 			ep_first = path.points.get (0);	
 			
-			if (active_edit_point == ep_last) {
+			if (end_point == ep_last) {
 				m = path;
 				break;
 			}
 			
-			if (active_edit_point == ep_first) {
+			if (end_point == ep_first) {
 				m = path;
 				break;				
 			}
@@ -1162,7 +1174,8 @@ public class PenTool : Tool {
 		}
 	}	
 	
-	private static void join_paths (double x, double y) {
+	/** @return the new path or null if no path could be merged with the end point. */
+	public static Path? join_paths (EditPoint end_point) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path? p;
 		Path path;
@@ -1171,25 +1184,26 @@ public class PenTool : Tool {
 		int px, py;
 
 		if (glyph.path_list.size == 0) {
-			return;
+			warning ("No paths.");
+			return null;
 		}
 
-		p = find_path_to_join ();
+		p = find_path_to_join (end_point);
 		if (p == null) {
 			warning ("No path to join.");
-			return;
+			return null;
 		}
 		
 		path = (!) p;
 		if (!path.is_open ()) {
 			warning ("Path is closed.");
-			return;
+			return null;
 		}
 		
 		return_if_fail (path.points.size > 0);
 		
-		px = Glyph.reverse_path_coordinate_x (((!) active_edit_point).x);
-		py = Glyph.reverse_path_coordinate_y (((!) active_edit_point).y);
+		px = Glyph.reverse_path_coordinate_x (end_point.x);
+		py = Glyph.reverse_path_coordinate_y (end_point.y);
 		
 		if (path.points.size == 1) {
 			glyph.delete_path (path);
@@ -1202,10 +1216,7 @@ public class PenTool : Tool {
 						active_path = merge;
 						merge.reopen ();
 						glyph.open_path ();
-						
-						print ("CONTINUE FIRST\n");
-						
-						return;
+						return merge;
 					}
 					
 					if (is_close_to_point (merge.points.get (0), px, py)) {
@@ -1215,15 +1226,12 @@ public class PenTool : Tool {
 						merge.reopen ();
 						glyph.open_path ();
 						merge.reverse ();
-						
-						print ("CONTINUE\n");
-						
-						return;
+						return merge;
 					}
 				}
 			}
 			
-			return;
+			return null;
 		}
 		
 		if (active_edit_point == path.points.get (0)) {
@@ -1237,11 +1245,11 @@ public class PenTool : Tool {
 		
 		if (path.points.get (0) == active_edit_point) {
 			warning ("Wrong direction.");
-			return;
+			return null;
 		}
 		
 		// join path with it self
-		if (is_endpoint ((!) active_edit_point)
+		if (is_endpoint (end_point)
 			&& is_close_to_point (path.points.get (0), px, py)) {
 			
 			close_path (path);
@@ -1258,7 +1266,7 @@ public class PenTool : Tool {
 			
 			remove_all_selected_points ();
 			
-			return;
+			return path;
 		}
 		
 		foreach (Path merge in glyph.path_list) {
@@ -1306,7 +1314,7 @@ public class PenTool : Tool {
 					
 					union.update_region_boundaries ();
 					
-					return;
+					return union;
 				}
 			}
 		}
@@ -1315,6 +1323,8 @@ public class PenTool : Tool {
 			path.reverse ();
 			update_selection ();
 		}
+		
+		return null;
 	}
 	
 	/** Merge paths if ends are close. */
@@ -1390,29 +1400,27 @@ public class PenTool : Tool {
 
 	void draw_merge_icon (Context cr) {
 		double x, y;
-		get_tie_position (out x, out y);
-		draw_join_icon (cr, x, y);
+		if (active_edit_point != null) {
+			get_tie_position ((!) active_edit_point, out x, out y);
+			draw_join_icon (cr, x, y);
+		}
 	}
 	
 	/** Obtain the position where to ends meet. */
-	void get_tie_position (out double x, out double y) {
+	static void get_tie_position (EditPoint current_point, out double x, out double y) {
 		Glyph glyph;
 		EditPoint active;
 		double px, py;
 
 		x = -100;
 		y = -100;
-				
-		if (active_edit_point == null) {
-			return;
-		}
 		
-		if (!is_endpoint ((!) active_edit_point)) {
+		if (!is_endpoint (current_point)) {
 			return;
 		}
 		
 		glyph = MainWindow.get_current_glyph ();
-		active = (!) active_edit_point;
+		active = current_point;
 		
 		return_if_fail (!is_null (glyph));
 		

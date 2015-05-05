@@ -40,7 +40,7 @@ public class DrawingTools : ToolCollection  {
 	public static MoveTool move_tool;
 	public static PenTool pen_tool;
 
-	public static ForesightTool foresight_tool;
+	public static BezierTool bezier_tool;
 	PointTool point_tool;
 	public static ZoomTool zoom_tool;
 	public static ResizeTool resize_tool;
@@ -121,15 +121,15 @@ public class DrawingTools : ToolCollection  {
 		font_name.add_tool (new FontName ());
 
 		// Draw tools
-		foresight_tool = new ForesightTool ("foresight");
-		foresight_tool.select_action.connect ((self) => {
+		bezier_tool = new BezierTool ("bezier_tool");
+		bezier_tool.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);
 		});
-		draw_tools.add_tool (foresight_tool);
+		draw_tools.add_tool (bezier_tool);
 
 		Tool bezier_line = new Tool ("bezier_line", t_("Convert the last segment to a straight line"));
 		bezier_line.select_action.connect ((self) => {
-			foresight_tool.switch_to_line_mode ();
+			bezier_tool.switch_to_line_mode ();
 		});
 		bezier_line.is_tool_modifier = true;
 		draw_tools.add_tool (bezier_line);
@@ -589,8 +589,8 @@ public class DrawingTools : ToolCollection  {
 			
 			current = MainWindow.get_toolbox ().get_current_tool ();
 			
-			if (current is ForesightTool) {
-				((ForesightTool) current).stop_drawing ();
+			if (current is BezierTool) {
+				((BezierTool) current).stop_drawing ();
 			}
 			
 			PenTool.reset_stroke ();
@@ -821,7 +821,7 @@ public class DrawingTools : ToolCollection  {
 				|| pen_tool.is_selected ()
 				|| track_tool.is_selected ()
 				|| point_tool.is_selected ()
-				|| foresight_tool.is_selected ();
+				|| bezier_tool.is_selected ();
 			
 			StrokeTool.stroke_width = object_stroke.get_value ();
 			
@@ -1097,9 +1097,9 @@ public class DrawingTools : ToolCollection  {
 			Toolbox tb = MainWindow.get_toolbox ();
 			
 			tb.reset_active_tool ();
-			update_drawing_and_background_tools (foresight_tool);
-			tb.select_tool (foresight_tool);
-			tb.set_current_tool (foresight_tool);
+			update_drawing_and_background_tools (bezier_tool);
+			tb.select_tool (bezier_tool);
+			tb.set_current_tool (bezier_tool);
 					
 			set_point_type_from_preferences ();
 			
@@ -1269,7 +1269,7 @@ public class DrawingTools : ToolCollection  {
 			move_background.set_selected (false);
 			cut_background.set_selected (false);
 			
-			foresight_tool.set_selected (false);
+			bezier_tool.set_selected (false);
 			pen_tool.set_selected (false);
 			point_tool.set_selected (false);
 			zoom_tool.set_selected (false);
@@ -1296,7 +1296,7 @@ public class DrawingTools : ToolCollection  {
 		
 			if (resize_tool.is_selected () || move_tool.is_selected ()) {
 				show_object_tool_modifiers ();
-			} else if (foresight_tool.is_selected ()
+			} else if (bezier_tool.is_selected ()
 					|| pen_tool.is_selected () 
 					|| point_tool.is_selected ()
 					|| track_tool.is_selected ()) {

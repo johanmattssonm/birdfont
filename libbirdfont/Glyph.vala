@@ -1559,7 +1559,7 @@ public class Glyph : FontDisplay {
 		if (!(MainWindow.get_toolbox ().get_current_tool () is PenTool)
 			&& !(MainWindow.get_toolbox ().get_current_tool () is PointTool)
 			&& !(MainWindow.get_toolbox ().get_current_tool () is TrackTool)
-			&& !(MainWindow.get_toolbox ().get_current_tool () is ForesightTool)) {
+			&& !(MainWindow.get_toolbox ().get_current_tool () is BezierTool)) {
 			cr.save ();
 			cr.new_path ();
 			foreach (Path p in active_paths) {
@@ -2277,6 +2277,16 @@ public class Glyph : FontDisplay {
 		});
 		
 		TabContent.show_text_input (listener);
+	}
+	
+	public PathList get_paths () {
+		PathList pl = new PathList ();
+		
+		foreach (Path p in path_list) {
+			pl.add (p);
+		}
+		
+		return pl;
 	}
 }
 

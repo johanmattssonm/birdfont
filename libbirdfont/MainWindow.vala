@@ -52,7 +52,7 @@ public class MainWindow : GLib.Object {
 		dialog = new Dialog ();
 		spacing_tab = new SpacingTab ();
 		
-		tools.select_tool (DrawingTools.foresight_tool);
+		tools.select_tool (DrawingTools.bezier_tool);
 	}
 
 	public static SpacingTab get_spacing_tab () {
