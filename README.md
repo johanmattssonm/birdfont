@@ -8,6 +8,8 @@ export SVG, EOT and TTF fonts.
     Webpage: http://birdfont.org
     Bugtracker: http://birdfont.org/bugtracker/my_view_page.php
 
+[logo]: http://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
+
 ## Building from Source
 
 Install vala and all required libraries, they are most likely in
