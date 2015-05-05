@@ -423,9 +423,21 @@ public class PenTool : Tool {
 		active_edit_point = null;
 		selected_point = new EditPoint ();
 	}
-	
+
 	/** @return path distortion. */
 	public static double remove_point_simplify (PointSelection p, double tolerance = 0.6) {
+		double e;
+
+		e = remove_point_simplify_path (p, tolerance, Glyph.CANVAS_MAX);
+		p.path.update_region_boundaries ();
+		
+		return e;
+	}	
+	
+	/** @return path distortion. */
+	public static double remove_point_simplify_path (PointSelection p,
+		double tolerance = 0.6, double keep_tolerance = 10000) {
+			
 		double start_length, stop_length;
 		double start_distortion, start_min_distortion, start_previous_length;
 		double stop_distortion, stop_min_distortion, stop_previous_length;
@@ -508,7 +520,7 @@ public class PenTool : Tool {
 							
 					ep1.get_right_handle ().length = start_length + a;
 					ep2.get_left_handle ().length = stop_length + b;
-					
+
 					get_path_distortion (prev, p.point, next, 
 						ep1, ep2, 
 						out start_distortion, out stop_distortion);
@@ -519,33 +531,34 @@ public class PenTool : Tool {
 							&& start_length + a > 0
 							&& stop_length + b > 0) {
 						min_distortion = distortion;
-						
 						prev_length_adjustment_reverse = a;
 						next_length_adjustment = b;
 					}
 				}
 			}
-						
+				
 			start_length += prev_length_adjustment_reverse;
 			stop_length += next_length_adjustment;
 		}
 		
-		prev.get_right_handle ().length = start_length;
 		
-		if (prev.get_right_handle ().type != PointType.QUADRATIC) {
-			next.get_left_handle ().length = stop_length;
-		} else {
-			next.get_left_handle ().move_to_coordinate (
-				prev.get_right_handle ().x, prev.get_right_handle ().y);
+		if (min_distortion < keep_tolerance || keep_tolerance >= Glyph.CANVAS_MAX) {
+			prev.get_right_handle ().length = start_length;
+			
+			if (prev.get_right_handle ().type != PointType.QUADRATIC) {
+				next.get_left_handle ().length = stop_length;
+			} else {
+				next.get_left_handle ().move_to_coordinate (
+					prev.get_right_handle ().x, prev.get_right_handle ().y);
+			}
+		
+			p.point.deleted = true;
+			p.path.remove_deleted_points ();
 		}
-		
-		p.point.deleted = true;
-		p.path.remove_deleted_points ();
-		p.path.update_region_boundaries ();
-		
+
 		return min_distortion;
 	}
-	
+
 	/** Retain selected points even if path is copied after running reverse. */
 	public static void update_selection () {
 		Glyph g = MainWindow.get_current_glyph ();
@@ -2208,7 +2221,7 @@ public class PenTool : Tool {
 		} else {
 			first.get_right_handle ().type = to_line (point_type);
 		}
-
+		
 		if (!line) {
 			next.get_left_handle ().type = point_type;
 		} else {

@@ -69,9 +69,6 @@ public class PointConverter {
 		int points_in_segment = 0;
 		int size;
 
-		if (quadratic_path.points.size <= 1) {
-		}
-
 		foreach (EditPoint ep in quadratic_path.points) {
 			ep.set_tie_handle (false);
 			ep.set_reflective_handles (false);

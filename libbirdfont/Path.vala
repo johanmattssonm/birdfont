@@ -1455,7 +1455,6 @@ public class Path {
 		PointType left =  PenTool.to_curve (stop.type);
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
-			warning ("FIX the double curve in stroke.");
 			x = double_bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
 			y = double_bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);
 		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
