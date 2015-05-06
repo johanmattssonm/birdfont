@@ -17,6 +17,9 @@ using Math;
 
 namespace BirdFont {
 
+[CCode (cname = "fit_bezier_curve_to_line")]
+public extern static Path fit_bezier_curve_to_line (Path lines, int start, int stop, double error);
+
 public enum Direction {
 	CLOCKWISE,
 	COUNTER_CLOCKWISE
@@ -2341,6 +2344,45 @@ public class Path {
 		
 		fast_stroke = StrokeTool.get_stroke_fast (this, stroke);
 		return (!) fast_stroke;
+	}
+	
+	// Callback for path simplifier
+	public void add_cubic_bezier_points (double x0, double y0, double x1, double y1,
+		double x2, double y2, double x3, double y3) {
+			
+		EditPoint start;
+		EditPoint end;
+
+		if (points.size > 0) {
+			start = get_last_point ();
+		} else {
+			start = add (x0, y0);
+		}
+		
+		end = add (x3, y3);
+		
+		start.set_point_type (PointType.CUBIC);
+		end.set_point_type (PointType.CUBIC);
+		
+		start.convert_to_curve ();
+		end.convert_to_curve ();
+		
+		start.get_right_handle ().move_to_coordinate (x1, y1);
+		end.get_left_handle ().move_to_coordinate (x2, y2);
+	}
+	
+	public int size () {
+		return points.size;
+	}
+	
+	public double get_x_at (int i) {
+		return_val_if_fail (0 <= i < points.size, 0);
+		return points.get (i).x;
+	}
+
+	public double get_y_at (int i) {
+		return_val_if_fail (0 <= i < points.size, 0);
+		return points.get (i).y;
 	}
 }
 

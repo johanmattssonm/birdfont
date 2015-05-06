@@ -1237,12 +1237,12 @@ public class PenTool : Tool {
 	public static Path merge_open_paths (Path path1, Path path2) {
 		Path union, merge;
 		EditPoint first_point;
-		
-		return_if_fail (path1.points.size > 1);
-		return_if_fail (path2.points.size > 1);
 
 		union = path1.copy ();
 		merge = path2.copy ();
+				
+		return_val_if_fail (path1.points.size >= 1, merge);
+		return_val_if_fail (path2.points.size >= 1, union);
 
 		merge.points.get (0).set_tie_handle (false);
 		merge.points.get (0).set_reflective_handles (false);

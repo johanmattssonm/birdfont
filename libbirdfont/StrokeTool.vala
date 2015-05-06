@@ -99,42 +99,198 @@ public class StrokeTool : Tool {
 	}
 	
 	public static PathList get_stroke (Path path, double thickness) {
-		PathList o;
+		PathList o, m;
 		
 		o = get_stroke_fast (path, thickness);
 		o = get_all_parts (o);
 		o = merge (o);
 		
+		m = new PathList ();
 		foreach (Path p in o.paths) {
-			simplify_stroke (p);
+			m.add (simplify_stroke (p));
 		}
 		
-		return o;
+		return m;
 	}
 	
-	static void simplify_stroke (Path p) {
-		Gee.ArrayList<PointSelection> points = new Gee.ArrayList<PointSelection> ();
-		double error;
+	static Path simplify_stroke (Path p) {
+		Path simplified = new Path ();
+		Path segment;
+		EditPoint ep, ep_start, last, first;
+		int start, stop;
+		int j;
 		
-		//p.remove_points_on_points (0.1); // FIXME:
+		foreach (EditPoint e in p.points) {
+			PenTool.convert_point_type (e, PointType.CUBIC);
+		}
 		
-		foreach (EditPoint ep in p.points) {
+		foreach (EditPoint e in p.points) {
+			if ((e.flags & EditPoint.CURVE) == 0) {
+				p.set_new_start (e);
+				break;
+			}
+		}
+		
+		for (int i = 0; i < p.points.size; i++) {
+			ep = p.points.get (i);
+			
 			if ((ep.flags & EditPoint.CURVE) > 0) {
-				points.add (new PointSelection (ep, p));
+				start = i;
+				ep_start = ep;
+				for (j = start + 1; j < p.points.size; j++) {
+					ep = p.points.get (j);
+					if ((ep.flags & EditPoint.CURVE) == 0) {
+						break;
+					}
+				}
+				
+				stop = j;
+				start -= 1;
+				
+				if (start < 0) {
+					warning ("start < 0");
+					start = 0;
+				}
+
+				if (stop >= p.points.size) {
+					warning ("stop >= p.points.size");
+					stop = p.points.size - 1;
+				}
+				
+				if (ep_start.get_right_handle ().is_line () && ep.get_left_handle ().is_line ()) {
+					simplified.add_point (ep_start.copy ());
+					simplified.add_point (ep.copy ());
+					continue;
+				}
+							
+				segment = fit_bezier_curve_to_line (p, start, stop, 0.0007);
+
+				segment.get_first_point ().color = Color.yellow ();
+				segment.get_last_point ().color = Color.pink ();
+		
+				if (stroke_selected) { // FIXME: DELETE	
+					((!) BirdFont.get_current_font ().get_glyph ("l")).add_path (segment.copy ());
+				}
+
+				last = simplified.get_last_point ();
+				first = segment.get_first_point ();
+				
+				if (segment.get_last_point ().get_right_handle ().y > 140) {
+					print (segment.get_last_point ().to_string ());
+					print ("RIGHT\n");
+				}
+	
+				if (segment.get_last_point ().get_left_handle ().y > 140) {
+					print (segment.get_last_point ().to_string ());
+					print ("LEFT\n");
+				}
+
+				if (segment.get_first_point ().get_right_handle ().y > 140) {
+					print (segment.get_first_point ().to_string ());
+					print ("FRIGHT\n");
+				}
+	
+				if (segment.get_first_point ().get_left_handle ().y > 140) {
+					print (segment.get_first_point ().to_string ());
+					print ("FLEFT\n");
+				}
+				
+				if (simplified.points.size > 1) {
+					simplified.delete_last_point ();
+				}
+				
+				if (ep_start.get_right_handle ().is_line ()) {
+					segment.get_first_point ().get_right_handle ().convert_to_line ();
+					segment.get_first_point ().recalculate_linear_handles ();
+				}
+				
+				first.get_left_handle ().convert_to_curve ();
+				first.get_left_handle ().x = last.get_left_handle ().x;
+				first.get_left_handle ().y = last.get_left_handle ().y;
+	
+				if (first.get_left_handle ().y > 140) {
+					print (first.to_string ());
+					print ("LEFT2\n");
+				}
+								
+				simplified.append_path (segment.copy ());
+				
+				last = simplified.get_last_point ();
+				last.get_right_handle ().convert_to_line ();
+				last.recalculate_linear_handles ();
+				
+				i = stop;
+			} else {
+				if (ep.get_left_handle ().y > 140) {
+					print (ep.to_string ());
+					print ("LEFT3\n");
+				}
+				if (ep.get_right_handle ().y > 140) {
+					print (ep.to_string ());
+					print ("RIFGHIR 4\n");
+				}
+								
+				simplified.add_point (ep.copy ());
 			}
 		}
 
-		if (stroke_selected) { // FIXME: DELETE	
-			((!) BirdFont.get_current_font ().get_glyph ("k")).add_path (p.copy ());
+		simplified.close ();
+		simplified.remove_points_on_points ();
+		simplified.recalculate_linear_handles ();
+		
+		if (p.get_first_point ().tie_handles) {
+			first = simplified.get_first_point ();
+			first.convert_to_curve ();
+			first.tie_handles = true;
+			first.process_tied_handle ();
 		}
-				
-		foreach (PointSelection ps in points) {
-			error = PenTool.remove_point_simplify_path_fast (ps, 0.6, 0.8);
+
+		if (p.get_last_point ().tie_handles) {
+			last = simplified.get_last_point ();
+			last.convert_to_curve ();
+			last.tie_handles = true;
+			last.process_tied_handle ();
 		}
 		
-		p.update_region_boundaries ();
+		simplified.get_first_point ().color = Color.green ();
+		simplified.get_last_point ().color = Color.blue ();
+
+		foreach (EditPoint e in simplified.points) {
+				if (e.get_right_handle ().y > 140) {
+					print (e.to_string ());
+					print ("R1 4\n");
+				}
+
+				if (e.get_left_handle ().y > 140) {
+					print (e.to_string ());
+					print ("L1 4\n");
+				}
+		}
+
+		return simplified;
 	}
 	
+	static bool segment_is_line (Path p, int start, int stop) {
+		EditPoint p0, p1, p2;
+		
+		if (stop - start < 2) {
+			warning ("Too small segment.");
+			return true;
+		}
+		
+		for (int i = start; i <= stop - 2; i++) {
+			p0 = p.points.get (i);
+			p1 = p.points.get (i + 1);
+			p2 = p.points.get (i + 2);
+			
+			if (!is_line (p0.x, p0.y, p1.x, p1.y, p2.x, p2.y)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 	/** Create one stroke from the outline and counter stroke and close the 
 	 * open endings.
 	 * 
