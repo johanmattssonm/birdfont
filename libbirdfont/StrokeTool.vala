@@ -115,10 +115,11 @@ public class StrokeTool : Tool {
 	
 	static Path simplify_stroke (Path p) {
 		Path simplified = new Path ();
-		Path segment;
-		EditPoint ep, ep_start, last, first;
+		Path segment, added_segment;
+		EditPoint ep, ep_start, last, first, segment_last;
 		int start, stop;
 		int j;
+		EditPointHandle rh;
 		
 		foreach (EditPoint e in p.points) {
 			PenTool.convert_point_type (e, PointType.CUBIC);
@@ -130,13 +131,12 @@ public class StrokeTool : Tool {
 				break;
 			}
 		}
-		
+
 		for (int i = 0; i < p.points.size; i++) {
 			ep = p.points.get (i);
 			
 			if ((ep.flags & EditPoint.CURVE) > 0) {
 				start = i;
-				ep_start = ep;
 				for (j = start + 1; j < p.points.size; j++) {
 					ep = p.points.get (j);
 					if ((ep.flags & EditPoint.CURVE) == 0) {
@@ -157,86 +157,55 @@ public class StrokeTool : Tool {
 					stop = p.points.size - 1;
 				}
 				
-				if (ep_start.get_right_handle ().is_line () && ep.get_left_handle ().is_line ()) {
-					simplified.add_point (ep_start.copy ());
-					simplified.add_point (ep.copy ());
-					continue;
-				}
+				ep_start =  p.points.get (start);
+				ep = p.points.get (stop);
 							
 				segment = fit_bezier_curve_to_line (p, start, stop, 0.0007);
-
-				segment.get_first_point ().color = Color.yellow ();
-				segment.get_last_point ().color = Color.pink ();
 		
 				if (stroke_selected) { // FIXME: DELETE	
 					((!) BirdFont.get_current_font ().get_glyph ("l")).add_path (segment.copy ());
 				}
 
-				last = simplified.get_last_point ();
-				first = segment.get_first_point ();
-				
-				if (segment.get_last_point ().get_right_handle ().y > 140) {
-					print (segment.get_last_point ().to_string ());
-					print ("RIGHT\n");
-				}
-	
-				if (segment.get_last_point ().get_left_handle ().y > 140) {
-					print (segment.get_last_point ().to_string ());
-					print ("LEFT\n");
-				}
+				added_segment = segment.copy ();	
 
-				if (segment.get_first_point ().get_right_handle ().y > 140) {
-					print (segment.get_first_point ().to_string ());
-					print ("FRIGHT\n");
-				}
-	
-				if (segment.get_first_point ().get_left_handle ().y > 140) {
-					print (segment.get_first_point ().to_string ());
-					print ("FLEFT\n");
-				}
+				last = simplified.get_last_point ();
+				first = added_segment.get_first_point ();
+				segment_last = added_segment.get_last_point ();
+				
+				segment_last.get_right_handle ().convert_to_line ();
 				
 				if (simplified.points.size > 1) {
 					simplified.delete_last_point ();
 				}
 				
-				if (ep_start.get_right_handle ().is_line ()) {
-					segment.get_first_point ().get_right_handle ().convert_to_line ();
-					segment.get_first_point ().recalculate_linear_handles ();
-				}
+				last.get_right_handle ().x = first.get_right_handle ().x;
+				last.get_right_handle ().y = first.get_right_handle ().y;
 				
 				first.get_left_handle ().convert_to_curve ();
 				first.get_left_handle ().x = last.get_left_handle ().x;
 				first.get_left_handle ().y = last.get_left_handle ().y;
-	
-				if (first.get_left_handle ().y > 140) {
-					print (first.to_string ());
-					print ("LEFT2\n");
-				}
-								
-				simplified.append_path (segment.copy ());
 				
-				last = simplified.get_last_point ();
+				simplified.append_path (added_segment);
+				
+				last = added_segment.get_last_point ();
 				last.get_right_handle ().convert_to_line ();
 				last.recalculate_linear_handles ();
 				
+				if (ep_start.get_right_handle ().is_line ()) {
+					first = added_segment.get_first_point ();
+					first.get_right_handle ().convert_to_line ();
+					first.recalculate_linear_handles ();
+				}
+				
 				i = stop;
 			} else {
-				if (ep.get_left_handle ().y > 140) {
-					print (ep.to_string ());
-					print ("LEFT3\n");
-				}
-				if (ep.get_right_handle ().y > 140) {
-					print (ep.to_string ());
-					print ("RIFGHIR 4\n");
-				}
-								
 				simplified.add_point (ep.copy ());
 			}
 		}
 
-		simplified.close ();
 		simplified.remove_points_on_points ();
 		simplified.recalculate_linear_handles ();
+		simplified.close ();
 		
 		if (p.get_first_point ().tie_handles) {
 			first = simplified.get_first_point ();
@@ -245,26 +214,17 @@ public class StrokeTool : Tool {
 			first.process_tied_handle ();
 		}
 
+		print (p.get_last_point ().to_string ());
+
 		if (p.get_last_point ().tie_handles) {
 			last = simplified.get_last_point ();
 			last.convert_to_curve ();
 			last.tie_handles = true;
 			last.process_tied_handle ();
-		}
-		
-		simplified.get_first_point ().color = Color.green ();
-		simplified.get_last_point ().color = Color.blue ();
-
-		foreach (EditPoint e in simplified.points) {
-				if (e.get_right_handle ().y > 140) {
-					print (e.to_string ());
-					print ("R1 4\n");
-				}
-
-				if (e.get_left_handle ().y > 140) {
-					print (e.to_string ());
-					print ("L1 4\n");
-				}
+		} else {
+			rh = simplified.get_last_point ().get_right_handle ();
+			rh.convert_to_line ();
+			rh.parent.recalculate_linear_handles ();
 		}
 
 		return simplified;
@@ -756,6 +716,8 @@ public class StrokeTool : Tool {
 			ep1.prev = prev;
 		}
 		
+		prev.get_right_handle ().convert_to_line ();
+		
 		ep1.prev = prev;
 		ep1.next = ep2;
 		ep1.flags |= EditPoint.NEW_CORNER;
@@ -782,7 +744,9 @@ public class StrokeTool : Tool {
 		ep3.y = py;
 		ep3.color = c;
 		n.add (ep3);
-						
+		
+		next.get_left_handle ().convert_to_line ();			
+		
 		foreach (EditPoint np in n) {
 			np = path.add_point_after (np, np.prev);
 			path.create_list ();
@@ -795,6 +759,9 @@ public class StrokeTool : Tool {
 		ep1.recalculate_linear_handles ();
 		ep2.recalculate_linear_handles ();
 		ep3.recalculate_linear_handles ();
+		
+		prev.recalculate_linear_handles ();
+		next.recalculate_linear_handles ();
 		
 		return ep2;
 	}
@@ -1898,6 +1865,8 @@ public class StrokeTool : Tool {
 			
 			step = 0;
 			keep = 0;
+			step_size = 0.013;
+
 			while (step < 1 - 2 * step_size) {
 				Path.get_point_for_step (p1, p2, step, out x, out y);
 				Path.get_point_for_step (p1, p2, step + step_size, out x2, out y2);
@@ -1922,7 +1891,7 @@ public class StrokeTool : Tool {
 					continue;
 				}
 								
-				if (flat && f_bigger && step_size < 0.5) {
+				if (flat && f_bigger && step_size < 0.1) {
 					step_size *= step_increment;
 					continue;
 				}
