@@ -511,6 +511,133 @@ public class PenTool : Tool {
 			min_distortion = double.MAX;
 			
 			double first = (m == 50.0) ? 0 : -m;
+			
+			for (double a = first; a < m; a += step) {
+				for (double b = first; b < m; b += step) {
+					
+					if (start_length + a + stop_length + b > distance) {
+						break;
+					}
+							
+					ep1.get_right_handle ().length = start_length + a;
+					ep2.get_left_handle ().length = stop_length + b;
+
+					get_path_distortion (prev, p.point, next, 
+						ep1, ep2, 
+						out start_distortion, out stop_distortion);
+					
+					distortion = Math.fmax (start_distortion, stop_distortion);
+					
+					if (distortion < min_distortion
+							&& start_length + a > 0
+							&& stop_length + b > 0) {
+						min_distortion = distortion;
+						prev_length_adjustment_reverse = a;
+						next_length_adjustment = b;
+					}
+				}
+			}
+				
+			start_length += prev_length_adjustment_reverse;
+			stop_length += next_length_adjustment;
+		}
+		
+		
+		if (min_distortion < keep_tolerance || keep_tolerance >= Glyph.CANVAS_MAX) {
+			prev.get_right_handle ().length = start_length;
+			
+			if (prev.get_right_handle ().type != PointType.QUADRATIC) {
+				next.get_left_handle ().length = stop_length;
+			} else {
+				next.get_left_handle ().move_to_coordinate (
+					prev.get_right_handle ().x, prev.get_right_handle ().y);
+			}
+		
+			p.point.deleted = true;
+			p.path.remove_deleted_points ();
+		}
+
+		return min_distortion;
+	}
+
+	/** @return path distortion. */
+	public static double remove_point_simplify_path_fast (PointSelection p,
+		double tolerance = 0.6, double keep_tolerance = 10000) {
+			
+		double start_length, stop_length;
+		double start_distortion, start_min_distortion, start_previous_length;
+		double stop_distortion, stop_min_distortion, stop_previous_length;
+		double distortion, min_distortion; 
+		double prev_length_adjustment, next_length_adjustment;
+		double prev_length_adjustment_reverse, next_length_adjustment_reverse;
+		EditPoint ep1, ep2;
+		EditPoint next, prev;
+		double step, distance;
+				
+		return_if_fail (p.path.points.size > 0);
+		
+		if (p.path.points.size <= 2) {
+			p.point.deleted = true;
+			p.path.remove_deleted_points ();
+			return 0;
+		}
+		
+		p.point.deleted = true;
+		
+		if (p.point.next != null) {
+			next = p.point.get_next ();
+		} else {
+			next = p.path.points.get (0);
+		}
+
+		if (p.point.prev != null) {
+			prev = p.point.get_prev ();
+		} else {
+			prev = p.path.points.get (p.path.points.size - 1);
+		}
+		
+		prev.get_right_handle ().convert_to_curve ();
+		next.get_left_handle ().convert_to_curve ();
+
+		if (prev.get_right_handle ().type == PointType.QUADRATIC
+				&& next.get_left_handle ().type != PointType.QUADRATIC) {
+			convert_point_type (prev, next.get_left_handle ().type);
+		}
+
+		if (prev.get_right_handle ().type != PointType.QUADRATIC
+				&& next.get_left_handle ().type == PointType.QUADRATIC) {
+			convert_point_type (next, prev.get_right_handle ().type);
+		}
+				
+		ep1 = prev.copy ();
+		ep2 = next.copy ();
+
+		start_length = ep1.get_right_handle ().length;
+		stop_length = ep2.get_left_handle ().length;
+		
+		stop_previous_length = start_length;
+		start_previous_length = stop_length;
+
+		stop_min_distortion = double.MAX;
+		ep1.get_right_handle ().length = start_length;
+		
+		start_min_distortion = double.MAX;
+		ep2.get_left_handle ().length = stop_length;
+				
+		prev_length_adjustment = 0;
+		next_length_adjustment = 0;
+		prev_length_adjustment_reverse = 0;
+		next_length_adjustment_reverse = 0;
+
+		min_distortion = double.MAX;
+		distance = Path.distance (ep1.x, ep2.x, ep1.y, ep2.y);
+
+		for (double m = 50.0; m >= tolerance / 2.0; m /= 10.0) {
+			step = m / 10.0;
+			min_distortion = double.MAX;
+			
+			double first = (m == 50.0) ? 0 : -m;
+			
 			for (double a = first; a < m; a += step) {
 				for (double b = first; b < m; b += step) {
 					

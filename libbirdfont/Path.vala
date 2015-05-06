@@ -2212,7 +2212,9 @@ public class Path {
 			}
 				
 			if (fabs (n.x - ep.x) < t && fabs (n.y - ep.y) < t) {
-				remove.add (ep);
+				if ((ep.flags & EditPoint.NEW_CORNER) == 0) {
+					remove.add (ep);
+				}
 			}
 		}
 

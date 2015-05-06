@@ -102,7 +102,7 @@ public class StrokeTool : Tool {
 		PathList o;
 		
 		o = get_stroke_fast (path, thickness);
-		o = get_all_parts (o); // FIXME: keep.
+		o = get_all_parts (o);
 		o = merge (o);
 		
 		foreach (Path p in o.paths) {
@@ -116,22 +116,20 @@ public class StrokeTool : Tool {
 		Gee.ArrayList<PointSelection> points = new Gee.ArrayList<PointSelection> ();
 		double error;
 		
-		p.remove_points_on_points (0.1);
+		//p.remove_points_on_points (0.1); // FIXME:
 		
 		foreach (EditPoint ep in p.points) {
 			if ((ep.flags & EditPoint.CURVE) > 0) {
 				points.add (new PointSelection (ep, p));
 			}
 		}
-		
+
+		if (stroke_selected) { // FIXME: DELETE	
+			((!) BirdFont.get_current_font ().get_glyph ("k")).add_path (p.copy ());
+		}
+				
 		foreach (PointSelection ps in points) {
-			error = PenTool.remove_point_simplify_path (ps, 1, 2);
-			
-			if (error > 0.2) {
-				ps.point.deleted = false;
-				ps.point.flags ^= EditPoint.CURVE;
-				ps.point.flags |= EditPoint.CURVE_KEEP;
-			}
+			error = PenTool.remove_point_simplify_path_fast (ps, 0.6, 0.8);
 		}
 		
 		p.update_region_boundaries ();
@@ -1693,19 +1691,7 @@ public class StrokeTool : Tool {
 		
 		int keep;
 		bool on_curve;
-
-		// FIXME: DELETE
-/*
-		if (path.points.size > 1) {
-			path.add_hidden_double_points (); // FIXME:
-		}
 		
-		foreach (EditPoint ep in path.points) {
-			if (ep.type == PointType.DOUBLE_CURVE || ep.type == PointType.LINE_DOUBLE_CURVE) {
-				PenTool.convert_point_type (ep, PointType.QUADRATIC);
-			}
-		}
-*/
 		pl = new PathList ();
 		size = path.is_open () ? path.points.size - 1 : path.points.size;
 		
