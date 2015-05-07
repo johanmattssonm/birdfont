@@ -109,8 +109,7 @@ public class StrokeTool : Tool {
 		o = create_stroke (stroke, thickness, false);
 		o = get_all_parts (o);
 		o = merge (o);
-		
-		
+				
 		m = new PathList ();
 		foreach (Path p in o.paths) {
 			m.add (simplify_stroke (p));
@@ -428,14 +427,16 @@ public class StrokeTool : Tool {
 			
 			bool d1 = corner.x - previous.x > 0 == previous.x - previous.get_prev ().x > 0;
 			bool d2 = corner.y - previous.y > 0 == previous.y - previous.get_prev ().y > 0;
-			
-			if (!d1 && !d2) {
+		
+			if (!d1 && !d2) { // self intersection
 				cutoff1.deleted = true;
 				cutoff2.deleted = true;
 				
 				stroked.remove_deleted_points ();
+				stroked.add (cutoff1.x + (cutoff2.x - cutoff1.x) / 2, cutoff1.y + (cutoff2.y - cutoff1.y) / 2);
+				
 				return;
-			}
+			} 
 			
 			if (distance > 4 * stroke_width) {
 				previous.flags = EditPoint.NONE;
@@ -2103,7 +2104,6 @@ public class StrokeTool : Tool {
 			foreach (Path p in pl.paths) {
 				p.close ();
 				convert_to_curve (p);
-				p.recalculate_linear_handles ();
 			}
 		}
 		
