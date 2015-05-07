@@ -23,8 +23,9 @@ public class BezierTool : Tool {
 	public const uint NONE = 0;
 	public const uint MOVE_POINT = 1;
 	public const uint MOVE_HANDLES = 2;
-	public const uint MOVE_LAST_HANDLE = 3;
-	public const uint MOVE_FIRST_HANDLE = 4;
+	public const uint MOVE_LAST_HANDLE_RIGHT = 3;
+	public const uint MOVE_LAST_HANDLE_LEFT = 4;
+	public const uint MOVE_FIRST_HANDLE = 5;
 	
 	uint state = NONE;
 
@@ -86,7 +87,11 @@ public class BezierTool : Tool {
 		double px, py;
 		Path? p;
 		Path path;
-
+		
+		return_if_fail (state != MOVE_HANDLES);
+		return_if_fail (state != MOVE_LAST_HANDLE_RIGHT);
+		return_if_fail (state != MOVE_LAST_HANDLE_LEFT);
+		
 		if (b == 2) {
 			if (g.is_open ()) {
 				stop_drawing ();
@@ -128,6 +133,8 @@ public class BezierTool : Tool {
 			current_point.recalculate_linear_handles ();
 			g.add_path (current_path);
 			
+			set_point_type ();
+			
 			if (StrokeTool.add_stroke) {
 				current_path.stroke = StrokeTool.stroke_width;
 			}
@@ -136,6 +143,10 @@ public class BezierTool : Tool {
 			state = MOVE_POINT;
 		} else if (state == MOVE_POINT) {
 			if (PenTool.can_join (current_point)) {
+				bool clockwise;
+				bool swap;
+				
+				clockwise = current_path.is_clockwise ();
 				p = PenTool.join_paths (current_point);
 				
 				return_if_fail (p != null);
@@ -149,8 +160,9 @@ public class BezierTool : Tool {
 				} else {
 					g.open_path ();
 					current_path = path;
-					current_point = path.get_first_point ();
-					state = MOVE_LAST_HANDLE;	
+					swap = path.is_clockwise () != clockwise;
+					current_point = !swap ? path.get_first_point () : path.get_last_point ();
+					state = !swap ? MOVE_LAST_HANDLE_RIGHT : MOVE_LAST_HANDLE_LEFT;
 				}
 			} else {
 				state = MOVE_HANDLES;
@@ -158,9 +170,24 @@ public class BezierTool : Tool {
 		}
 	}
 
+	void set_point_type () {
+		PointType pt;
+		
+		pt = DrawingTools.get_selected_point_type ();
+		
+		current_point.type = pt; 
+		current_point.get_left_handle ().type = pt;
+		current_point.get_right_handle ().type = pt;
+		
+		current_point.get_left_handle ().convert_to_line ();
+		current_point.get_right_handle ().convert_to_line ();	
+	}
+	
 	public void release (int b, int x, int y) {
 		double px, py;
 		Glyph g;
+		
+		return_if_fail (state != MOVE_POINT);
 		
 		// ignore double clicks
 		if ((GLib.get_real_time () - last_release_time) / 1000000.0 < 0.2) {
@@ -178,11 +205,12 @@ public class BezierTool : Tool {
 			current_path.hide_end_handle = true;
 			current_point.get_left_handle ().convert_to_line ();
 			current_point.recalculate_linear_handles ();
+			set_point_type ();
 			g.clear_active_paths ();
 			g.add_active_path (current_path);
 			GlyphCanvas.redraw ();
 			state = MOVE_POINT;
-		} else if (state == MOVE_LAST_HANDLE) {
+		} else if (state == MOVE_LAST_HANDLE_LEFT || state == MOVE_LAST_HANDLE_RIGHT) {
 			current_path.update_region_boundaries ();
 			g.close_path ();
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
@@ -192,6 +220,8 @@ public class BezierTool : Tool {
 			} else {
 				current_path.force_direction (Direction.CLOCKWISE);
 			}
+			
+			current_path.reset_stroke ();
 			
 			state = NONE;
 		}
@@ -213,11 +243,20 @@ public class BezierTool : Tool {
 			current_point.recalculate_linear_handles ();
 			current_path.reset_stroke ();
 			GlyphCanvas.redraw ();
-		} else if (state == MOVE_HANDLES || state == MOVE_LAST_HANDLE) {
+		} else if (state == MOVE_HANDLES 
+			|| state == MOVE_LAST_HANDLE_LEFT
+			|| state == MOVE_LAST_HANDLE_RIGHT) {
+				
 			current_path.hide_end_handle = false;
 			current_point.set_reflective_handles (true);
 			current_point.convert_to_curve ();
-			current_point.get_right_handle ().move_to_coordinate (px, py);
+			
+			if (state == MOVE_LAST_HANDLE_LEFT) {
+				current_point.get_left_handle ().move_to_coordinate (px, py);
+			} else {
+				current_point.get_right_handle ().move_to_coordinate (px, py);
+			}
+			
 			current_path.reset_stroke ();
 			GlyphCanvas.redraw ();
 		}

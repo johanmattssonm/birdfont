@@ -88,7 +88,7 @@ public class StrokeTool : Tool {
 	}
 	
 	public static PathList get_stroke_fast (Path path, double thickness) {
-		PathList o;
+/*		PathList o;
 		Path stroke;
 		
 		stroke = path.copy ();
@@ -96,6 +96,8 @@ public class StrokeTool : Tool {
 		o = create_stroke (stroke, thickness, true);
 				
 		return o;
+		*/
+		return get_stroke (path, thickness);
 	}
 	
 	public static PathList get_stroke (Path path, double thickness) {
@@ -107,6 +109,7 @@ public class StrokeTool : Tool {
 		o = create_stroke (stroke, thickness, false);
 		o = get_all_parts (o);
 		o = merge (o);
+		
 		
 		m = new PathList ();
 		foreach (Path p in o.paths) {
@@ -2046,7 +2049,13 @@ public class StrokeTool : Tool {
 				side2.reverse ();
 				s1 = side1.get_last_point ().copy ();
 				s2 = side2.get_first_point ().copy ();
+
+				s1.flags &= EditPoint.CURVE ^ EditPoint.ALL;
+				s2.flags &= EditPoint.CURVE ^ EditPoint.ALL;
 				
+				s1.convert_to_line ();
+				s2.convert_to_line ();
+							
 				open = path.is_open ();
 				
 				if (!open) {
@@ -2062,8 +2071,20 @@ public class StrokeTool : Tool {
 				side1 = new Path ();
 				side2 = new Path ();
 				
+				get_segment (thickness, 0, 0.00001, p2, p3, out start);
+				get_segment (-thickness, 0, 0.00001, p2, p3, out start_inside);
+
+				previous = start.copy ();
+				previous_inside = start_inside.copy ();
+				
+				previous.flags |= EditPoint.CURVE;
+				previous_inside.flags |= EditPoint.CURVE;
+
 				side1.add_point (s1);
 				side2.add_point (s2);
+								
+				side1.add_point (previous);
+				side2.add_point (previous_inside);		
 			}
 		}
 		
@@ -2076,6 +2097,14 @@ public class StrokeTool : Tool {
 		
 			side2.reverse ();
 			pl = merge_stroke_parts (path, side1, side2);
+		}
+
+		if (fast) {
+			foreach (Path p in pl.paths) {
+				p.close ();
+				convert_to_curve (p);
+				p.recalculate_linear_handles ();
+			}
 		}
 		
 		return pl;
