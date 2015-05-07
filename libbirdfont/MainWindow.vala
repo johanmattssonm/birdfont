@@ -80,10 +80,12 @@ public class MainWindow : GLib.Object {
 	}
 
 	public static void set_cursor (int flags) {
-		if (dialog.visible) {
-			native_window.set_cursor (NativeWindow.VISIBLE);
-		} else {
-			native_window.set_cursor (flags);
+		if (BirdFont.has_argument ("--test")) {
+			if (dialog.visible) {
+				native_window.set_cursor (NativeWindow.VISIBLE);
+			} else {
+				native_window.set_cursor (flags);
+			}
 		}
 	}
 

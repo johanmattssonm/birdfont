@@ -126,15 +126,7 @@ public class DrawingTools : ToolCollection  {
 			update_drawing_and_background_tools (self);
 		});
 		draw_tools.add_tool (bezier_tool);
-
-		Tool bezier_line = new Tool ("bezier_line", t_("Convert the last segment to a straight line"));
-		bezier_line.select_action.connect ((self) => {
-			bezier_tool.switch_to_line_mode ();
-		});
-		bezier_line.is_tool_modifier = true;
-		draw_tools.add_tool (bezier_line);
-		bezier_line.set_tool_visibility (false);	
-			
+		
 		pen_tool = new PenTool ("pen_tool");
 		pen_tool.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);

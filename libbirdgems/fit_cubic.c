@@ -89,9 +89,6 @@ void fit_bezier_curve_to_line (
 	}
 	
 	npoints = lines_size / 2;
-	
-	printf ("npoints: %d alloc: %d\n", npoints, npoints * sizeof (Point2));
-	
 	points = malloc (npoints * sizeof (Point2));
 
 	j = 0;
@@ -101,7 +98,6 @@ void fit_bezier_curve_to_line (
 		j += 2;
 	}
 	
-	printf ("simplified_path\n");
 	simplified_path = malloc (8 * npoints * sizeof (double));
 	simplified_path_buffer_size = 8 * npoints;
 	simplified_path_size = 0;

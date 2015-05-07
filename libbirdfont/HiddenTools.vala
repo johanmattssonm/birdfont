@@ -38,7 +38,15 @@ public class HiddenTools : ToolCollection  {
 			GlyphCanvas.current_display.zoom_out ();
 		});
 		hidden_expander.add_tool (zoom_out);
-		
+
+		Tool bezier_line = new Tool ("bezier_line", t_("Convert the last segment to a straight line"));
+		bezier_line.select_action.connect ((self) => {
+			DrawingTools.bezier_tool.switch_to_line_mode ();
+		});
+		bezier_line.is_tool_modifier = true;
+		hidden_expander.add_tool (bezier_line);
+		bezier_line.set_tool_visibility (false);
+				
 		expanders.add (hidden_expander);
 	}
 

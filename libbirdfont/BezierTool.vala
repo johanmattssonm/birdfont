@@ -27,6 +27,7 @@ public class BezierTool : Tool {
 	public const uint MOVE_FIRST_HANDLE = 4;
 	
 	uint state = NONE;
+
 	bool move_right_handle = true;
 	int previous_point = 0;
 	
@@ -37,6 +38,7 @@ public class BezierTool : Tool {
 	int last_y = 0;
 
 	double last_release_time = 0;
+	double last_press_time = 0;
 	
 	public BezierTool (string name) {
 		base (name, t_ ("Create Beziér curves"));
@@ -87,6 +89,7 @@ public class BezierTool : Tool {
 
 		if (b == 2) {
 			if (g.is_open ()) {
+				stop_drawing ();
 				g.close_path ();
 			} else {
 				g.open_path ();
@@ -97,6 +100,15 @@ public class BezierTool : Tool {
 
 			return;
 		}
+
+		// ignore double clicks
+		if ((GLib.get_real_time () - last_press_time) / 1000000.0 < 0.2) {
+			last_press_time = GLib.get_real_time ();
+			return;
+		}
+		last_press_time = GLib.get_real_time ();
+				
+		g.store_undo_state ();
 		
 		PenTool.update_orientation ();
 		
@@ -115,6 +127,11 @@ public class BezierTool : Tool {
 			current_point.get_left_handle ().convert_to_line ();
 			current_point.recalculate_linear_handles ();
 			g.add_path (current_path);
+			
+			if (StrokeTool.add_stroke) {
+				current_path.stroke = StrokeTool.stroke_width;
+			}
+			
 			GlyphCanvas.redraw ();
 			state = MOVE_POINT;
 		} else if (state == MOVE_POINT) {
@@ -192,12 +209,14 @@ public class BezierTool : Tool {
 			current_point.y = py;
 			current_path.hide_end_handle = true;
 			current_point.recalculate_linear_handles ();
+			current_path.reset_stroke ();
 			GlyphCanvas.redraw ();
 		} else if (state == MOVE_HANDLES || state == MOVE_LAST_HANDLE) {
 			current_path.hide_end_handle = false;
 			current_point.set_reflective_handles (true);
 			current_point.convert_to_curve ();
 			current_point.get_right_handle ().move_to_coordinate (px, py);
+			current_path.reset_stroke ();
 			GlyphCanvas.redraw ();
 		}
 		
@@ -209,20 +228,39 @@ public class BezierTool : Tool {
 	
 	public void switch_to_line_mode () {
 		int s = current_path.points.size;
+		EditPoint p;
+		
 		if (s > 2) {
-			current_path.points.get (s - 2).get_right_handle ().convert_to_line ();
+			p = current_path.points.get (s - 2);
+			p.get_right_handle ().convert_to_line ();
 			current_point.get_left_handle ().convert_to_line ();
+			p.recalculate_linear_handles ();
+			current_point.recalculate_linear_handles ();
+			current_path.reset_stroke ();
+			GlyphCanvas.redraw ();
+			
+			state = MOVE_POINT;
 		}
 	}
 	
 	public void stop_drawing () {
 		if (state == MOVE_POINT && current_path.points.size > 0) {
 			current_path.delete_last_point ();
+			current_path.reset_stroke ();
 		}
 		
 		state = NONE;
 	}
-	
+
+	public override void before_undo () {
+	}
+
+	public override void after_undo () {
+		if (state != NONE) {
+			MainWindow.set_cursor (NativeWindow.VISIBLE);
+			state = NONE;
+		}
+	}
 }
 
 }
