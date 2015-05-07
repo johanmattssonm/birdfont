@@ -82,13 +82,15 @@ class Vala(object):
         
         if library:
             self.header = join(build, library) + '.h'
-            self.vapi = join(build, library) + '.vapi'
+            self.vapi = join(build, library) + '.vapi' # generated vapi file
+            self.other_vapi_files = get_sources_path (src, '*.vapi') # other vapi files
             self.so = join(build, src) + '.so.' + so_version
             self.so_link = join(build, src) + '.so'
             self.so_link_name = src + '.so'
             self.so_version = so_version
             self.so_name = 'lib' + library + '.so.' + so_version
-
+        else:
+			   self.other_vapi_files = []
 
     def gen_c(self, opts):
         """translate code from vala to C and create .vapi"""
@@ -107,9 +109,10 @@ class Vala(object):
         dep_vapi = [d.vapi for d in self.vala_deps]
         action = cmd('valac', options, params, dep_vapi, self.vala)
         targets = self.cc[:]
+        
         if self.library:
             targets += [self.header, self.vapi]
-        
+       
         for f in self.c:
             yield {
                 'name': 'copy_c_' + f,
@@ -118,14 +121,25 @@ class Vala(object):
                     'cp ' + f + ' ' + self.build + '/' + self.src + '/'
                     ],
                 }
+ 
+        for f in self.other_vapi_files:
+            yield {
+                'name': 'vapi_files_' + f,
+                'actions': [ 
+                    'mkdir -p '+  self.build + '/', 
+                    'cp ' + f + ' ' + self.build + '/'
+                    ],
+                }
         
-        print (action)                     
-        yield {
-            'name': 'compile_c',
-            'actions': [ action ],
-            'file_dep': self.vala + dep_vapi,
-            'targets': targets,
-            }
+        print (action)
+        
+        if not self.vala == []:
+			  yield {
+					'name': 'compile_c',
+					'actions': [ action ],
+					'file_dep': self.vala + dep_vapi,
+					'targets': targets,
+					}
 
 
     def gen_o(self, opts):

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Copyright (C) 2013, 2014 Johan Mattsson
+Copyright (C) 2013, 2014 2015 Johan Mattsson
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as 
@@ -164,6 +164,61 @@ def libbirdxml(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull =
 		elif library.find ('.dylib') > -1:
 			run ("""cd build/bin && ln -sf """ + library + " libbirdxml.dylib")
  		
+
+def libbirdgems(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
+	#libbirdfont
+	run("mkdir -p build/libbirdgems")
+	run("mkdir -p build/bin")
+
+	experimentalNonNull = ""
+	if nonNull:
+		experimentalNonNull = "--enable-experimental-non-null"
+
+	run(valac + """\
+		-C \
+		""" + valaflags + """ \
+		--pkg posix \
+		--vapidir=./ \
+		--basedir build/libbirdgems/ \
+		""" + experimentalNonNull + """ \
+		--enable-experimental \
+		--library libbirdgems \
+		-H build/libbirdxml/birdxml.h \
+		libbirdxml/*.vala \
+		""")
+	
+	if cc == "":
+		print ("Skipping compilation");
+	else:
+		run(cc + " " + cflags + """ \
+			-c build/libbirdgems/*.c \
+			""")
+			
+		run("mv ./*.o build/libbirdgems/ ")
+
+		if library.endswith (".dylib"):
+			sonameparam = "" # gcc on mac os does not have the soname parameter
+		else:
+			sonameparam = "-Wl,-soname," + library
+		
+		run(cc + " " + ldflags + """ \
+			-shared \
+			""" + sonameparam + """ \
+			build/libbirdgems/*.o \
+			$(pkg-config --libs glib-2.0) \
+			$(pkg-config --libs gobject-2.0) \
+			-o """ + library)
+		run("mv " + library + " build/bin/")
+		
+		if os.path.exists("build/bin/libbirdgems.so"):
+			run ("cd build/bin && unlink libbirdgems.so")
+
+		# create link to the versioned library
+		if library.find ('.so') > -1:
+			run ("""cd build/bin && ln -sf """ + library + " libbirdgems.so")
+		elif library.find ('.dylib') > -1:
+			run ("""cd build/bin && ln -sf """ + library + " libbirdgems.dylib")
+
 	
 def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
 	# birdfont-export

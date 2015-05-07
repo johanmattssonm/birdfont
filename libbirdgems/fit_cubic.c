@@ -20,8 +20,7 @@ Adapted to BirdFont by Johan Mattsson 2015
 /*  fit_cubic.c	*/									
 /*	Piecewise cubic fitting code	*/
 
-#include "GraphicsGems.h"	
-#include "birdfont.h"
+#include "GraphicsGems.h"
 #include <stdio.h>
 #include <malloc.h>
 #include <math.h>
@@ -48,53 +47,101 @@ static	Vector2		V2SubII();
 
 #define MAXPOINTS	1000		/* The most points you can have */
 
-BirdFontPath* simplified_path = NULL;
+int simplified_path_buffer_size = 0;
+int simplified_path_size = 0;
+double* simplified_path = NULL;
 
-BirdFontPath* fit_bezier_curve_to_line (BirdFontPath* path, int start, int stop, double error) {
-	int i, j, n;
+/** Generates an a bezier path and returns the length of the output array. */ 
+void fit_bezier_curve_to_line (
+	double* lines,
+	int lines_size,
+	double error,
+	double** bezier_path,		/** generated Bezier curves */
+	int* bezier_path_size)
+{
+	int i, j;
 	Point2* points;
-	BirdFontPath* result; 
+	int npoints;
+
+	if (npoints % 2 != 0) {
+		fprintf (stderr, "Odd number of coordinates in fit_bezier_curve_to_line.");		
+		return;
+	}
+
+	if (lines == NULL || lines_size == 0) {
+		fprintf (stderr, "No lines in fit_bezier_curve_to_line.");
+		return;
+	}
 
 	if (simplified_path != NULL) {
-		printf ("Simplifier is not thread safe.");
-		return bird_font_path_new ();
+		fprintf (stderr, "Path simplification is alreading running.");
+		return;	
+	}
+	
+	if (bezier_path == NULL) {
+		fprintf (stderr, "No destination for output buffer in fit_bezier_curve_to_line");
+		return;	
 	}
 
-	n = stop - start + 1;
-	
-	if (n > bird_font_path_size (path) || n < 0) {
-		printf ("Index of of bounds in simplifier");
-		return bird_font_path_new ();
+	if (bezier_path_size == NULL) {
+		fprintf (stderr, "No destination for bezier_path_size in fit_bezier_curve_to_line");
+		return;	
 	}
 	
-	points = malloc (n * sizeof (Point2));	
+	npoints = lines_size / 2;
 	
+	printf ("npoints: %d alloc: %d\n", npoints, npoints * sizeof (Point2));
+	
+	points = malloc (npoints * sizeof (Point2));
+
 	j = 0;
-	for (i = start; i <= stop; i++) {
-		points[j].x = bird_font_path_get_x_at (path, i);
-		points[j].y = bird_font_path_get_y_at (path, i);
-		j++;
+	for (i = 0; i < npoints; i++) {
+		points[i].x = lines[j];
+		points[i].y = lines[j + 1];
+		j += 2;
 	}
 	
-	simplified_path = bird_font_path_new ();
-	FitCurve(points, n, error);
-	free (points);
-
-	result = simplified_path;
+	printf ("simplified_path\n");
+	simplified_path = malloc (8 * npoints * sizeof (double));
+	simplified_path_buffer_size = 8 * npoints;
+	simplified_path_size = 0;
+ 
+	FitCurve(points, npoints, error);
+	
+	*bezier_path = simplified_path;
+	*bezier_path_size = simplified_path_size;
+	
 	simplified_path = NULL;
-	return result;
+	
+	free (points);
 }
 
-DrawBezierCurve(int n, Point2* curve) {
-	if (n == 3) {
-		bird_font_path_add_cubic_bezier_points (simplified_path,
-			curve[0].x, curve[0].y, 
-			curve[1].x, curve[1].y, 
-			curve[2].x, curve[2].y,
-			curve[3].x, curve[3].y);
-	} else {
-		printf ("Expecting three points\n");
+DrawBezierCurve(int n, Point2* curve)
+{
+	int i;
+
+	if (simplified_path_size + 8 > simplified_path_buffer_size) {
+		fprintf (stderr, "The bezier buffer is full (%d).\n", simplified_path_buffer_size);
+		return;
 	}
+
+	if (n != 3) {
+		fprintf (stderr, "Expecting three points\n");
+		return;
+	}
+	
+	i = simplified_path_size;
+
+	simplified_path[i + 0] = curve[0].x;
+	simplified_path[i + 1] = curve[0].y;
+	simplified_path[i + 2] = curve[1].x;
+	simplified_path[i + 3] = curve[1].y;
+	simplified_path[i + 4] = curve[2].x;
+	simplified_path[i + 5] = curve[2].y;
+	simplified_path[i + 6] = curve[3].x;
+	simplified_path[i + 7] = curve[3].y;
+
+	simplified_path_size = i + 8;
 }
 
 /*

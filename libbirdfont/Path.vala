@@ -17,9 +17,6 @@ using Math;
 
 namespace BirdFont {
 
-[CCode (cname = "fit_bezier_curve_to_line")]
-public extern static Path fit_bezier_curve_to_line (Path lines, int start, int stop, double error);
-
 public enum Direction {
 	CLOCKWISE,
 	COUNTER_CLOCKWISE
@@ -2369,20 +2366,6 @@ public class Path {
 		
 		start.get_right_handle ().move_to_coordinate (x1, y1);
 		end.get_left_handle ().move_to_coordinate (x2, y2);
-	}
-	
-	public int size () {
-		return points.size;
-	}
-	
-	public double get_x_at (int i) {
-		return_val_if_fail (0 <= i < points.size, 0);
-		return points.get (i).x;
-	}
-
-	public double get_y_at (int i) {
-		return_val_if_fail (0 <= i < points.size, 0);
-		return points.get (i).y;
 	}
 }
 

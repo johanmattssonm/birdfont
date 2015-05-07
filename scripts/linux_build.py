@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Copyright (C) 2013 2014 Johan Mattsson
+Copyright (C) 2013 2014 2015 Johan Mattsson
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as 
@@ -53,11 +53,15 @@ ldflags = options.ldflags + " " + "$(pkg-config --libs gdk-pixbuf-2.0)"
 library_cflags = options.cflags
 library_ldflags= options.ldflags + " -Wl,-soname," + "libbirdfont.so." + version.LIBBIRDXML_SO_VERSION
 
+birdgemslibrary_cflags = options.cflags
+birdgemslibrary_ldflags= options.ldflags + " -Wl,-soname," + "birdgems.so." + version.LIBBIRDGEMS_SO_VERSION
+
 xmllibrary_cflags = options.cflags
 xmllibrary_ldflags= options.ldflags + " -Wl,-soname," + "libbirdxml.so." + version.SO_VERSION
 
 configfile.write_config (prefix)
 compile_translations()
+build.libbirdgems(prefix, cc, birdgemslibrary_cflags, birdgemslibrary_ldflags, valac, valaflags, "birdgems.so." + version.LIBBIRDGEMS_SO_VERSION, False)
 build.libbirdxml(prefix, cc, xmllibrary_cflags, xmllibrary_ldflags, valac, valaflags, "libbirdxml.so." + version.LIBBIRDXML_SO_VERSION, False)
 build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, "libbirdfont.so." + version.SO_VERSION, False)
 build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, False)

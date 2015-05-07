@@ -157,10 +157,10 @@ public class StrokeTool : Tool {
 					stop = p.points.size - 1;
 				}
 				
-				ep_start =  p.points.get (start);
+				ep_start = p.points.get (start);
 				ep = p.points.get (stop);
 							
-				segment = fit_bezier_curve_to_line (p, start, stop, 0.0007);
+				segment = fit_bezier_path (p, start, stop, 0.0007);
 		
 				if (stroke_selected) { // FIXME: DELETE	
 					((!) BirdFont.get_current_font ().get_glyph ("l")).add_path (segment.copy ());
@@ -227,6 +227,49 @@ public class StrokeTool : Tool {
 			rh.parent.recalculate_linear_handles ();
 		}
 
+		return simplified;
+	}
+	
+	static Path fit_bezier_path (Path p, int start, int stop, double error) {
+		int index, size;
+		Path simplified;
+		double[] lines;
+		double[] result;
+		EditPoint ep;
+		
+		simplified = new Path ();
+
+		return_val_if_fail (0 <= start < p.points.size, simplified);
+		return_val_if_fail (0 <= stop < p.points.size, simplified);
+
+		size = stop - start + 1;
+		lines = new double[2 * size];
+		
+		index = 0;
+				
+		for (int i = start; i <= stop; i++) {
+			ep = p.points.get (i);
+			lines[index] = ep.x;
+			index++;
+			
+			lines[index] = ep.y;
+			index++;
+		}
+		
+		return_val_if_fail (2 * size == index, new Path ());
+		
+		Gems.fit_bezier_curve_to_line (lines, error, out result);
+
+		return_val_if_fail (!is_null (result), simplified);
+		
+		for (int i = 0; i + 7 < result.length; i += 8) {
+			simplified.add_cubic_bezier_points (
+				result[i], result[i + 1],
+				result[i + 2], result[i + 3],
+				result[i + 4], result[i + 5],
+				result[i + 6], result[i + 7]);
+		}
+		
 		return simplified;
 	}
 	
