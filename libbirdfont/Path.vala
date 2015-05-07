@@ -1788,6 +1788,9 @@ public class Path {
 		int i;
 		int index = 0;
 		
+		remaining_points.stroke = stroke;
+		current_path.stroke = stroke;
+		
 		if (!has_deleted_point ()) {
 			return path_list;
 		}

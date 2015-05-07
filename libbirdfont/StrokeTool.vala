@@ -1898,7 +1898,7 @@ public class StrokeTool : Tool {
 		corner1 = new EditPoint ();
 		corner1_inside = new EditPoint ();
 				
-		if (path.is_open ()) {
+		if (path.is_open () || fast) {
 			p1 = path.points.get (0);
 			p2 = path.points.get (1 % path.points.size);
 			
