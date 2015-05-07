@@ -398,6 +398,7 @@ public class StrokeTool : Tool {
 		if (ratio > 1) {
 			stroked.add_point (corner);
 		} else {
+
 			cutoff1 = new EditPoint ();
 			cutoff1.set_point_type (previous.type);
 			cutoff1.convert_to_line ();
@@ -405,13 +406,13 @@ public class StrokeTool : Tool {
 			cutoff2 = new EditPoint ();
 			cutoff2.set_point_type (previous.type);
 			cutoff2.convert_to_line ();
-			
+
 			cutoff1.x = previous.x + (corner.x - previous.x) * ratio;
 			cutoff1.y = previous.y + (corner.y - previous.y) * ratio;
 
 			cutoff2.x = next.x + (corner.x - next.x) * ratio;
 			cutoff2.y = next.y + (corner.y - next.y) * ratio;
-
+			
 			if (!cutoff1.is_valid () || cutoff2.is_valid ()) {
 				cutoff1 = stroked.add_point (cutoff1);
 				cutoff2 = stroked.add_point (cutoff2);
@@ -419,6 +420,19 @@ public class StrokeTool : Tool {
 			
 			cutoff1.recalculate_linear_handles ();
 			cutoff2.recalculate_linear_handles ();
+
+			return_if_fail (previous.prev != null);
+			
+			bool d1 = corner.x - previous.x > 0 == previous.x - previous.get_prev ().x > 0;
+			bool d2 = corner.y - previous.y > 0 == previous.y - previous.get_prev ().y > 0;
+			
+			if (!d1 && !d2) {
+				cutoff1.deleted = true;
+				cutoff2.deleted = true;
+				
+				stroked.remove_deleted_points ();
+				return;
+			}
 			
 			if (distance > 4 * stroke_width) {
 				previous.flags = EditPoint.NONE;
@@ -1874,7 +1888,7 @@ public class StrokeTool : Tool {
 		
 		side1 = new Path ();
 		side2 = new Path ();
-
+		
 		if (path.points.size < 2) {
 			return pl;
 		}
@@ -2023,14 +2037,33 @@ public class StrokeTool : Tool {
 			}
 				
 			if (fast) {
+				EditPoint s1, s2;
+				bool open;
+				
 				convert_to_curve (side1);
 				convert_to_curve (side2);
 			
 				side2.reverse ();
-				pl.append (merge_stroke_parts (path, side1, side2));
+				s1 = side1.get_last_point ().copy ();
+				s2 = side2.get_first_point ().copy ();
 				
+				open = path.is_open ();
+				
+				if (!open) {
+					path.reopen ();
+				}
+				
+				pl.append (merge_stroke_parts (path, side1, side2));
+
+				if (!open) {
+					path.close ();
+				}
+								
 				side1 = new Path ();
 				side2 = new Path ();
+				
+				side1.add_point (s1);
+				side2.add_point (s2);
 			}
 		}
 		

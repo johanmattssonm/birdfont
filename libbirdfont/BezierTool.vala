@@ -171,17 +171,19 @@ public class BezierTool : Tool {
 			
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);
+		g = MainWindow.get_current_glyph ();
 		
 		if (state == MOVE_HANDLES) {
 			current_point = current_path.add (px, py);
 			current_path.hide_end_handle = true;
 			current_point.get_left_handle ().convert_to_line ();
 			current_point.recalculate_linear_handles ();
+			g.clear_active_paths ();
+			g.add_active_path (current_path);
 			GlyphCanvas.redraw ();
 			state = MOVE_POINT;
 		} else if (state == MOVE_LAST_HANDLE) {
 			current_path.update_region_boundaries ();
-			g = MainWindow.get_current_glyph ();
 			g.close_path ();
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
 			

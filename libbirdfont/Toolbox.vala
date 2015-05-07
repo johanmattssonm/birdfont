@@ -332,7 +332,6 @@ public class Toolbox : GLib.Object  {
 
 	public void set_current_tool (Tool tool) {
 		if (tool.editor_events) {
-			print (@"NEW PROP $(tool.get_name ())\n");
 			current_tool = tool;
 		}
 	}
