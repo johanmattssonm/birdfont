@@ -1266,6 +1266,8 @@ public class Glyph : FontDisplay {
 		clear_active_paths ();
 		GlyphCanvas.redraw ();
 		
+		MainWindow.set_cursor (NativeWindow.VISIBLE);
+		
 		return r;
 	}
 

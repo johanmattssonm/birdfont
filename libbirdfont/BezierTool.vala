@@ -151,14 +151,13 @@ public class BezierTool : Tool {
 			state = MOVE_POINT;
 		} else if (state == MOVE_POINT) {
 			if (PenTool.can_join (current_point)) {
-				bool clockwise;
+				EditPoint first = current_path.get_first_point ();
 				bool swap;
 				
-				clockwise = current_path.is_clockwise ();
 				p = PenTool.join_paths (current_point);
-				
 				return_if_fail (p != null);
 				path = (!) p;
+				swap = path.get_first_point () != first;
 				
 				if (current_path.points.size == 1) {
 					return_if_fail (path.is_open ());
@@ -168,7 +167,6 @@ public class BezierTool : Tool {
 				} else {
 					g.open_path ();
 					current_path = path;
-					swap = path.is_clockwise () != clockwise;
 					current_point = !swap ? path.get_first_point () : path.get_last_point ();
 					state = !swap ? MOVE_LAST_HANDLE_RIGHT : MOVE_LAST_HANDLE_LEFT;
 				}
