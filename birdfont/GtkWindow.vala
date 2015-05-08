@@ -805,7 +805,9 @@ class ToolboxCanvas : DrawingArea {
 public class GlyphCanvasArea : DrawingArea  {
 	GlyphCanvas glyph_canvas;
 	WidgetAllocation alloc = new WidgetAllocation ();
-	
+	uint32 last_release = 0;
+	uint32 last_press = 0;
+
 	public GlyphCanvasArea (GlyphCanvas gc) {
 		int event_flags;
 		
@@ -852,17 +854,33 @@ public class GlyphCanvasArea : DrawingArea  {
 		button_press_event.connect ((t, e)=> {
 			GtkWindow.reset_modifier (e.state);
 
+			if (e.time < last_press) {
+				warning ("Discarding event.");
+				return true;
+			}
+			
+			last_press = e.time;
+			
 			if (e.type == EventType.BUTTON_PRESS) {
 				TabContent.button_press (e.button, e.x, e.y);	
 			} else if (e.type == EventType.2BUTTON_PRESS) {
 				TabContent.double_click (e.button, e.x, e.y);
 			}
-			
+			 
 			return true;
 		});
 		
 		button_release_event.connect ((t, e)=> {
-			TabContent.button_release ((int) e.button, e.x, e.y);
+			if (e.time < last_release) {
+				warning ("Discarding event.");
+				return true;
+			}
+			
+			if (e.type == EventType.BUTTON_RELEASE) {
+				TabContent.button_release ((int) e.button, e.x, e.y);
+				last_release = e.time;
+			}
+			
 			return true;
 		});
 		

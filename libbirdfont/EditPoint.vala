@@ -54,6 +54,8 @@ public class EditPoint : GLib.Object {
 	public static uint OVERLAY = 1 << 11;
 	public static uint CURVE = 1 << 12;
 	public static uint CURVE_KEEP = 1 << 13;
+	public static uint SEGMENT_END = 1 << 14;
+	
 	public static uint ALL = 0xFFFFFF;
 	
 	public uint flags = NONE;

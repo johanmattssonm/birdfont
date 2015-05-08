@@ -312,6 +312,7 @@ public class ResizeTool : Tool {
 		// resize paths
 		foreach (Path selected_path in glyph.active_paths) {
 			selected_path.resize (ratio);
+			selected_path.reset_stroke ();
 		}
 		
 		// move paths relative to the updated xmin and xmax
@@ -319,7 +320,7 @@ public class ResizeTool : Tool {
 		dx = resize_pos_x - selection_minx;
 		dy = resize_pos_y - selection_miny;
 		foreach (Path selected_path in glyph.active_paths) {
-			selected_path.move (dx, dy);
+			selected_path.move (dx, dy);			
 		}
 		
 		if (glyph.active_paths.size > 0) {
@@ -409,6 +410,7 @@ public class ResizeTool : Tool {
 		
 		foreach (Path p in glyph.active_paths) {
 			p.move (dx, 0);
+			p.reset_stroke ();
 		}
 		
 		last_skew = skew;

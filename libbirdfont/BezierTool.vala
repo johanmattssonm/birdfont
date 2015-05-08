@@ -40,6 +40,7 @@ public class BezierTool : Tool {
 
 	double last_release_time = 0;
 	double last_press_time = 0;
+	bool button_down = false;
 	
 	public BezierTool (string name) {
 		base (name, t_ ("Create Beziér curves"));
@@ -87,11 +88,18 @@ public class BezierTool : Tool {
 		double px, py;
 		Path? p;
 		Path path;
-		
+
+		if (button_down) {
+			warning ("Discarding event.");
+			return;
+		}
+				
+		button_down = true;
+
 		return_if_fail (state != MOVE_HANDLES);
 		return_if_fail (state != MOVE_LAST_HANDLE_RIGHT);
 		return_if_fail (state != MOVE_LAST_HANDLE_LEFT);
-		
+				
 		if (b == 2) {
 			if (g.is_open ()) {
 				stop_drawing ();
@@ -186,6 +194,13 @@ public class BezierTool : Tool {
 	public void release (int b, int x, int y) {
 		double px, py;
 		Glyph g;
+		
+		if (!button_down) {
+			warning ("Discarding event.");
+			return;
+		}
+		
+		button_down = false;
 		
 		return_if_fail (state != MOVE_POINT);
 		
