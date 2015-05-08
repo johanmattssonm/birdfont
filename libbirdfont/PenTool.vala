@@ -77,8 +77,6 @@ public class PenTool : Tool {
 		
 	public static bool retain_angle = false;
 	
-	static int press_counter = 0;
-	
 	public PenTool (string name) {	
 		base (name, t_("Add new points"));
 		

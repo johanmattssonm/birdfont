@@ -54,8 +54,6 @@ public class TrackTool : Tool {
 	bool drawing = false;
 
 	public TrackTool (string name) {
-		string sw;
-		
 		base (name, t_("Freehand drawing"));
 		
 		press_action.connect ((self, button, x, y) => {

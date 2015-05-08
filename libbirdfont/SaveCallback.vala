@@ -85,7 +85,6 @@ public class SaveCallback : GLib.Object {
 			fn = f.get_path ();
 			
 			if (f.font_file != null && fn.has_suffix (".bf")) {
-				MenuTab.set_font_setting_from_tools (f);
 				f.set_font_file (fn);
 				MainWindow.native_window.save ();
 			} else {

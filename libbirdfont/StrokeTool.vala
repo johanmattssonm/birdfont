@@ -23,7 +23,6 @@ public class StrokeTool : Tool {
 	public static bool add_stroke = false;
 	
 	public static bool show_stroke_tools = false;
-	public static bool stroke_selected = false;
 	
 	public StrokeTool (string tooltip) {
 	}
@@ -32,10 +31,6 @@ public class StrokeTool : Tool {
 	public static void stroke_selected_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
 		PathList paths = new PathList ();
-		
-		// FIXME: use background thread
-
-		stroke_selected = true; // FIXME: delete
 			
 		g.store_undo_state ();
 		
@@ -43,27 +38,6 @@ public class StrokeTool : Tool {
 			if (p.stroke > 0) {
 				paths.append (p.get_stroke ());
 			}
-		}
-
-		// FIXME: delete
-		bool h = false;
-		foreach (Path p in g.active_paths) {
-			if (p.stroke == 0) {
-				h = true;
-			}
-		}
-		
-		if (h) {
-			PathList n = new PathList ();
-			
-			foreach (Path p in g.active_paths) {
-				if (p.stroke == 0) {
-					n.add (p);
-				}
-			}
-			
-			n = merge (n);
-			paths.append (n);
 		}
 
 		if (paths.paths.size > 0) {
@@ -84,20 +58,29 @@ public class StrokeTool : Tool {
 		}
 		
 		PenTool.update_orientation ();
-		stroke_selected = false; // FIXME: delete 
+	}
+	
+	public PathList merge_selected_paths () {
+		PathList n = new PathList ();
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		foreach (Path p in g.active_paths) {
+			if (p.stroke == 0) {
+				n.add (p);
+			}
+		}
+		
+		n = merge (n);
+		return n;
 	}
 	
 	public static PathList get_stroke_fast (Path path, double thickness) {
 		PathList o;
 		Path stroke;
 		
-		o = get_stroke (path, thickness);
-		
-		/* // FIXME:
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.3);
-		o = create_stroke (stroke, thickness, true);
-		*/
+		o = create_stroke (stroke, thickness, false); // set to true for faster stroke
 			
 		return o;
 	}
@@ -109,19 +92,7 @@ public class StrokeTool : Tool {
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.3);
 		o = create_stroke (stroke, thickness, false);
-
-		if (stroke_selected) { // FIXME: DELETE	
-			foreach (Path mm in o.paths)
-					((!) BirdFont.get_current_font ().get_glyph ("o")).add_path (mm);
-		}
-
 		o = get_all_parts (o);
-
-		if (stroke_selected) { // FIXME: DELETE	
-			foreach (Path mm in o.paths)
-					((!) BirdFont.get_current_font ().get_glyph ("p")).add_path (mm);
-		}
-				
 		o = remove_intersection_paths (o);
 		o = merge (o);
 		
@@ -139,7 +110,6 @@ public class StrokeTool : Tool {
 		EditPoint ep, ep_start, last, first, segment_last;
 		int start, stop;
 		int j;
-		EditPointHandle rh;
 		
 		segment_last = new EditPoint ();
 		last = new EditPoint ();
@@ -184,10 +154,6 @@ public class StrokeTool : Tool {
 				ep = p.points.get (stop);
 							
 				segment = fit_bezier_path (p, start, stop, 0.0007);
-		
-				if (stroke_selected) { // FIXME: DELETE	
-					((!) BirdFont.get_current_font ().get_glyph ("l")).add_path (segment.copy ());
-				}
 
 				added_segment = segment.copy ();	
 				
@@ -1252,27 +1218,6 @@ public class StrokeTool : Tool {
 		return r;
 	}
 
-	static bool has_zero_area_segment (Path p) {
-		EditPointHandle l, r;
-		
-		p.recalculate_linear_handles ();
-		
-		foreach (EditPoint ep in p.points) {
-			l = ep.get_left_handle ();
-			r = ep.get_right_handle ();
-			
-			if (l.length < 0.01 || r.length < 0.01) {
-				continue;
-			}
-			
-			if (!(fabs ((l.angle - r.angle + PI) % 2 * PI) < 0.0001)
-				&& !(fabs (l.angle - r.angle) < 0.0001)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	static void remove_merged_parts (PathList r) {
 		Gee.ArrayList<Path> remove = new Gee.ArrayList<Path> ();
 		int c;
@@ -1284,41 +1229,20 @@ public class StrokeTool : Tool {
 		foreach (Path p in r.paths) {
 			c = counters (r, p);
 			
-			if (has_zero_area_segment (p)) {
-				//FIXME: remove.add (p);
-			}
-			
 			if (c % 2 == 0) {
 				
 				if (!p.is_clockwise ()) {
 					remove.add (p);
 				}
-				
-				if (stroke_selected)
-					((!) BirdFont.get_current_font ().get_glyph ("m")).add_path (p);
-					
 			} else {
-				if (stroke_selected)
-					((!) BirdFont.get_current_font ().get_glyph ("n")).add_path (p);
-					
 				if (p.is_clockwise ()) {
 					remove.add (p);
 				}
 			}
 		}
-
-		if (stroke_selected) { // FIXME: DELETE	
-			foreach (Path mm in r.paths)
-				((!) BirdFont.get_current_font ().get_glyph ("i")).add_path (mm);
-		}
 						
 		foreach (Path p in remove) {
 			r.paths.remove (p);
-		}
-		
-		if (stroke_selected) { // FIXME: DELETE	
-			foreach (Path mm in r.paths)
-				((!) BirdFont.get_current_font ().get_glyph ("j")).add_path (mm);
 		}
 	}
 
@@ -1333,7 +1257,6 @@ public class StrokeTool : Tool {
 				&& p != path 
 				&& path.boundaries_intersecting (p)) {
 				
-				// FIXME: all points can be corners in counter paths
 				foreach (EditPoint ep in path.points) {
 					if (!is_inside (ep, p)) {
 						inside = false;
@@ -1784,9 +1707,6 @@ public class StrokeTool : Tool {
 	static bool add_intersection_points (Path path1, Path path2, int n = 1) {
 		bool intersection = false;
 		int found = 0;
-		
-		path1.close (); // FIXME:
-		path2.close ();
 
 		path1.all_segments ((ep1, ep2) => {
 			double ix, iy;
@@ -2205,8 +2125,7 @@ public class StrokeTool : Tool {
 		double x, y, x2, y2, x3, y3;
 		EditPoint corner1, corner2, corner3;
 		PointType type;
-		double handle1_x, handle1_y, handle2_x, handle2_y;
-		
+				
 		Path.get_point_for_step (p1, p2, step, out x, out y);
 		Path.get_point_for_step (p1, p2, step + step_size, out x2, out y2);
 		Path.get_point_for_step (p1, p2, step + 2 * step_size, out x3, out y3);

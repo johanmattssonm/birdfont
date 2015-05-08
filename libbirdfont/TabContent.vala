@@ -28,8 +28,7 @@ public class TabContent : GLib.Object {
 	static const int TEXT_INPUT_HEIGHT = 51;
 	
 	static double last_press_time = 0;
-	static bool double_click_event = false;
-
+	
 	public static void zoom_in () {
 		if (MenuTab.suppress_event) {
 		}

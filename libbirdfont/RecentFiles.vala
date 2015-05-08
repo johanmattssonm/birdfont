@@ -230,7 +230,7 @@ public class RecentFiles : Table {
 			if (MenuTab.suppress_event) {
 				return;
 			}
-					
+			
 			f = BirdFont.new_font ();
 			
 			MainWindow.clear_glyph_cache ();

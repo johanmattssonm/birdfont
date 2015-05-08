@@ -125,7 +125,7 @@ public class SpacingTab : KerningDisplay {
 			}
 			
 			left = new Text (truncate (l, 5), 17);
-			Theme.text_color (left, "Foreground 3");
+			Theme.text_color (left, "Foreground 1");
 			left.widget_x = middle - box_size / 2.0 + (box_size / 2.0 - left.get_extent ()) / 2.0;
 			left.widget_y = allocation.height - 7 * MainWindow.units;
 			left.draw_at_baseline (cr, left.widget_x, left.widget_y);

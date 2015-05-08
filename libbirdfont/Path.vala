@@ -2332,8 +2332,6 @@ public class Path {
 	}
 	
 	public PathList get_stroke_fast () {
-		PathList s;
-		
 		if (full_stroke != null) {
 			return (!) full_stroke;
 		}

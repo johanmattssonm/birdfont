@@ -210,27 +210,12 @@ public class MenuTab : FontDisplay {
 		}
 		
 		string pt = f.settings.get_setting ("point_type");
-		print (@"PT: $pt\n");
 		DrawingTools.set_default_point_type (pt);
-	}
-	
-	public static void set_font_setting_from_tools (Font f) {	
-		string stroke_width;
-		
-		f.background_scale = DrawingTools.background_scale.get_display_value ();
-		
-		f.grid_width.clear ();
-		
-		foreach (SpinButton s in GridTool.sizes) {
-			f.grid_width.add (s.get_display_value ());
-		}
-		
-		stroke_width = f.settings.get_setting ("stroke_width");
-		
-		if (stroke_width != "") {
-			DrawingTools.object_stroke.set_value (stroke_width);
-			StrokeTool.stroke_width = DrawingTools.object_stroke.get_value ();
-		}
+
+		string stroke = f.settings.get_setting ("apply_stroke");
+		bool s = bool.parse (stroke);
+		DrawingTools.add_stroke.set_selected (s);
+		StrokeTool.add_stroke = s;
 	}
 	
 	// FIXME: background thread

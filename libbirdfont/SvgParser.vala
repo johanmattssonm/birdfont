@@ -550,11 +550,6 @@ public class SvgParser {
 			create_lines_for_segment (path, start, end, 1);
 			start = end;
 		}
-
-		if (StrokeTool.stroke_selected) { // FIXME: DELETE
-			((!) BirdFont.get_current_font ().get_glyph ("b")).add_path (path);
-			path.recalculate_linear_handles ();
-		}
 						
 		return path;
 	}

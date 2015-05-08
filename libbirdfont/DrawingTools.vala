@@ -773,6 +773,7 @@ public class DrawingTools : ToolCollection  {
 		// add stroke to path
 		add_stroke = new Tool ("apply_stroke", t_("Apply stroke"));
 		add_stroke.select_action.connect ((self) => {
+			Font f;
 			Glyph g = MainWindow.get_current_glyph ();
 			StrokeTool.add_stroke = !StrokeTool.add_stroke;
 			StrokeTool.stroke_width = object_stroke.get_value ();
@@ -791,6 +792,9 @@ public class DrawingTools : ToolCollection  {
 					p.stroke = 0;
 				}	
 			}
+			
+			f = BirdFont.get_current_font ();
+			f.settings.set_setting ("apply_stroke", @"$(StrokeTool.add_stroke)");
 			
 			add_stroke.selected = StrokeTool.add_stroke;
 		});

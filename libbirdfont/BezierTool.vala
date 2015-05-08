@@ -28,9 +28,6 @@ public class BezierTool : Tool {
 	public const uint MOVE_FIRST_HANDLE = 5;
 	
 	uint state = NONE;
-
-	bool move_right_handle = true;
-	int previous_point = 0;
 	
 	Path current_path = new Path ();
 	EditPoint current_point = new EditPoint ();

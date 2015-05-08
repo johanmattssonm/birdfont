@@ -1671,12 +1671,6 @@ public class Glyph : FontDisplay {
 		return Theme.get_color ("Fill Color");
 	}
 	
-	private void draw_outline_for_paths (PathList pl, Context cr) {
-		foreach (Path p in pl.paths) {			
-			p.draw_outline (cr);
-		}
-	} 
-	
 	private void draw_path_list (PathList pl, Context cr, Color? c = null) {
 		foreach (Path p in pl.paths) {
 			p.draw_path (cr, this, c);
