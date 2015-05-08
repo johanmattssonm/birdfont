@@ -220,11 +220,8 @@ public class RecentFiles : Table {
 			DrawingTools.background_scale.set_value (f.background_scale);
 			KerningTools.update_kerning_classes ();
 			MenuTab.show_all_available_characters ();
-		});
-
-		MenuTab.load_callback.file_loaded.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			MenuTab.set_font_setting_from_tools (f);
+			
+			MenuTab.apply_font_setting (f);
 		});
 			
 		dialog.signal_discard.connect (() => {

@@ -194,6 +194,26 @@ public class MenuTab : FontDisplay {
 		idle.attach (null);
 	}
 		
+	public static void apply_font_setting  (Font f) {
+		DrawingTools.background_scale.set_value (f.background_scale);
+		
+		DrawingTools.grid_expander.tool.clear ();
+		
+		foreach (string grid in f.grid_width) {
+			DrawingTools.add_new_grid (double.parse (grid));
+		}
+
+		string sw = f.settings.get_setting ("stroke_width");
+		if (sw != ""){
+			StrokeTool.stroke_width = double.parse (sw);
+			DrawingTools.object_stroke.set_value_round (StrokeTool.stroke_width);
+		}
+		
+		string pt = f.settings.get_setting ("point_type");
+		print (@"PT: $pt\n");
+		DrawingTools.set_default_point_type (pt);
+	}
+	
 	public static void set_font_setting_from_tools (Font f) {	
 		string stroke_width;
 		
@@ -496,7 +516,7 @@ public class MenuTab : FontDisplay {
 		
 		MenuTab.load_callback.file_loaded.connect (() => {
 			Font f = BirdFont.get_current_font ();
-			MenuTab.set_font_setting_from_tools (f);
+			MenuTab.apply_font_setting (f);
 		});
 	}
 

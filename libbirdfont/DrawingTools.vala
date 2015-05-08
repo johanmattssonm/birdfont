@@ -23,7 +23,7 @@ public class DrawingTools : ToolCollection  {
 	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
 	Expander draw_tools;
-	Expander grid_expander;
+	public static Expander grid_expander;
 	Expander shape_tools;
 	public static Expander draw_tool_modifiers;
 	public static Expander stroke_expander;
@@ -48,10 +48,10 @@ public class DrawingTools : ToolCollection  {
 	public static BackgroundTool move_background;
 	public static Tool move_canvas;
 	
-	Tool quadratic_points;
-	Tool cubic_points;
-	Tool double_points;
-	Tool convert_points;
+	static Tool quadratic_points;
+	static Tool cubic_points;
+	static Tool double_points;
+	static Tool convert_points;
 
 	public static CutBackgroundTool cut_background;
 	Tool show_bg;
@@ -799,10 +799,10 @@ public class DrawingTools : ToolCollection  {
 		
 		// edit stroke width
 		object_stroke = new SpinButton ("object_stroke", t_("Stroke width"));
+		object_stroke.set_big_number (true);
 		object_stroke.set_value_round (2);
 		object_stroke.set_max (0.01);
 		object_stroke.set_max (50);
-		object_stroke.set_big_number (true);
 		
 		object_stroke.new_value_action.connect((self) => {
 			Font f;
@@ -1314,7 +1314,9 @@ public class DrawingTools : ToolCollection  {
 		IdleSource idle = new IdleSource ();
 
 		// Do this in idle, after the animation
-		idle.set_callback (() => {			
+		idle.set_callback (() => {	
+			Font f = BirdFont.get_current_font ();
+					
 			quadratic_points.set_selected (false);
 			cubic_points.set_selected (false);
 			double_points.set_selected (false);
@@ -1322,12 +1324,15 @@ public class DrawingTools : ToolCollection  {
 			switch (point_type) {
 				case PointType.QUADRATIC:
 					quadratic_points.set_selected (true);
+					f.settings.set_setting ("point_type", "quadratic");
 					break;
 				case PointType.CUBIC:
 					cubic_points.set_selected (true);
+					f.settings.set_setting ("point_type", "cubic");
 					break;
 				case PointType.DOUBLE_CURVE:
 					double_points.set_selected (true);
+					f.settings.set_setting ("point_type", "double_curve");
 					break;			
 			}
 
@@ -1338,6 +1343,19 @@ public class DrawingTools : ToolCollection  {
 		});
 		
 		idle.attach (null);
+	}
+	
+	public static void set_default_point_type (string type) {
+		if (type == "quadratic") {
+			quadratic_points.set_selected (true);
+			point_type = PointType.QUADRATIC;
+		} else if (type == "cubic") {
+			cubic_points.set_selected (true);
+			point_type = PointType.CUBIC;
+		} else if (type == "double_curve") {
+			double_points.set_selected (true);
+			point_type = PointType.DOUBLE_CURVE;
+		}
 	}
 	
 	public override Gee.ArrayList<Expander> get_expanders () {
@@ -1364,7 +1382,7 @@ public class DrawingTools : ToolCollection  {
 		MainWindow.get_toolbox ().select_tool (sb);
 	}
 
-	public SpinButton add_new_grid (double size = 2) {
+	public static SpinButton add_new_grid (double size = 2) {
 		SpinButton grid_width = new SpinButton ("grid_width", t_("Set size for grid"));
 		Toolbox tb = MainWindow.get_toolbox ();
 		
