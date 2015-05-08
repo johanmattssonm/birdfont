@@ -161,10 +161,6 @@ public class PenTool : Tool {
 			x = Glyph.path_coordinate_x (ix);
 			y = Glyph.path_coordinate_y (iy);
 			
-			
-			if (active_edit_point == null) print ("NULL\n");
-			else print ("NOT NULL\n");
-
 			if (has_join_icon () && active_edit_point != null) {
 				join_paths ((!) active_edit_point);
 			}

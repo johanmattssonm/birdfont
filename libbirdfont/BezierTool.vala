@@ -131,6 +131,10 @@ public class BezierTool : Tool {
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);		
 
+		if (GridTool.is_visible ()) {
+			GridTool.tie_coordinate (ref px, ref py);
+		}
+
 		if (state == NONE) {
 			g.open_path ();
 			current_path = new Path ();
@@ -211,6 +215,11 @@ public class BezierTool : Tool {
 			
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);
+
+		if (GridTool.is_visible ()) {
+			GridTool.tie_coordinate (ref px, ref py);
+		}
+		
 		g = MainWindow.get_current_glyph ();
 		
 		if (state == MOVE_HANDLES) {
@@ -248,7 +257,11 @@ public class BezierTool : Tool {
 		
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);	
-		
+
+		if (GridTool.is_visible ()) {
+			GridTool.tie_coordinate (ref px, ref py);
+		}
+				
 		if (state == MOVE_POINT) {
 			current_point.x = px;
 			current_point.y = py;
