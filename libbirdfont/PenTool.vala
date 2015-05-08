@@ -160,6 +160,10 @@ public class PenTool : Tool {
 			g = MainWindow.get_current_glyph ();
 			x = Glyph.path_coordinate_x (ix);
 			y = Glyph.path_coordinate_y (iy);
+			
+			
+			if (active_edit_point == null) print ("NULL\n");
+			else print ("NOT NULL\n");
 
 			if (has_join_icon () && active_edit_point != null) {
 				join_paths ((!) active_edit_point);
@@ -1371,6 +1375,7 @@ public class PenTool : Tool {
 				}
 			}
 			
+			warning ("No point to merge.");
 			return null;
 		}
 		
@@ -1389,8 +1394,7 @@ public class PenTool : Tool {
 		}
 		
 		// join path with it self
-		if (is_endpoint (end_point)
-			&& is_close_to_point (path.points.get (0), px, py)) {
+		if (is_close_to_point (path.points.get (0), px, py)) {
 			
 			close_path (path);
 			glyph.close_path ();
@@ -1464,6 +1468,7 @@ public class PenTool : Tool {
 			update_selection ();
 		}
 		
+		warning ("No paths merged.");
 		return null;
 	}
 	
@@ -1697,9 +1702,7 @@ public class PenTool : Tool {
 
 		if (distance < contact_surface) {
 			set_active_edit_point (e.point, e.path);
-			
-			active_path = e.path;
-			g.add_active_path (active_path);
+			e.path.reset_stroke ();
 		}
 	}
 	
