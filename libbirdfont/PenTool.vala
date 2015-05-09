@@ -45,6 +45,7 @@ public class PenTool : Tool {
 	public static Path active_path;
 	
 	public static EditPoint selected_point;
+	public static Path selected_path;
 
 	public static double last_point_x = 0;
 	public static double last_point_y = 0;
@@ -88,6 +89,7 @@ public class PenTool : Tool {
 		
 		active_edit_point = new EditPoint ();
 		active_path = new Path ();
+		selected_path = new Path ();
 		
 		selected_point = new EditPoint ();
 		clockwise = new Gee.ArrayList<Path> ();
@@ -143,12 +145,8 @@ public class PenTool : Tool {
 		double_click_action.connect ((self, b, x, y) => {
 			last_point_x = Glyph.path_coordinate_x (x);
 			last_point_y = Glyph.path_coordinate_y (y);
-			
-			if (!move_selected_handle && !move_selected) {
-				press (b, x, y, true);
-			} else {
-				warning ("double click suppressed");
-			}
+
+			press (b, x, y, true);
 		});
 
 		release_action.connect ((self, b, ix, iy) => {
@@ -852,6 +850,7 @@ public class PenTool : Tool {
 							selected.point.y + delta_coordinate_y);
 					}
 					
+					selected.path.reset_stroke ();
 					selected.point.recalculate_linear_handles ();
 					selected.path.update_region_boundaries ();
 				}
@@ -885,7 +884,8 @@ public class PenTool : Tool {
 						selected.point.set_position (selected.point.x + delta_coordinate_x,
 							selected.point.y + delta_coordinate_y);
 					}
-						
+					
+					selected.path.reset_stroke ();
 					selected.point.recalculate_linear_handles ();
 					selected.path.update_region_boundaries ();
 				}
@@ -920,6 +920,7 @@ public class PenTool : Tool {
 					}
 					
 					selected.point.recalculate_linear_handles ();
+					selected.path.reset_stroke ();
 					selected.path.update_region_boundaries ();
 				}
 			}
@@ -937,7 +938,7 @@ public class PenTool : Tool {
 				last_point_x = Glyph.path_coordinate_x (x);
 				last_point_y = Glyph.path_coordinate_y (y);
 			}
-		
+			
 			GlyphCanvas.redraw ();
 		}
 		
@@ -990,6 +991,7 @@ public class PenTool : Tool {
 		}
 		
 		if (button == 3) {
+			selected_path = active_path;
 			move_point_event (x, y);
 			
 			// alt+click on a handle ends the symmetrical editing
@@ -1625,7 +1627,8 @@ public class PenTool : Tool {
 		
 		redraw = active_edit_point != e; 
 		active_edit_point = e;
-			
+		active_path = path;
+		
 		if (e != null) {
 			((!)e).set_active (true);
 		}
@@ -1732,9 +1735,7 @@ public class PenTool : Tool {
 		Glyph glyph;
 		PointSelection new_point;
 		
-		glyph = MainWindow.get_current_glyph ();
-		
-		new_point = glyph.add_new_edit_point (x, y);
+		new_point = insert_edit_point (x, y);
 		new_point.path.update_region_boundaries ();
 
 		if (new_point.path.is_open () && new_point.path.points.size > 0) {
@@ -1756,6 +1757,52 @@ public class PenTool : Tool {
 		return new_point;
 	}
 
+	private static PointSelection insert_edit_point (double x, double y) {
+		double xt, yt;
+		Path np;
+		EditPoint inserted;
+		bool stroke = StrokeTool.add_stroke;
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		if (g.active_paths.size == 0) {
+			np = new Path ();
+			g.add_path (np);
+			np.stroke = stroke ? StrokeTool.stroke_width : 0;
+			g.add_active_path (np);
+			
+			active_path = np;
+			selected_path = np;
+		}
+			
+		xt = Glyph.path_coordinate_x (x);
+		yt = Glyph.path_coordinate_y (y);
+	
+		if (selected_path.is_open ()) {
+			np = PenTool.selected_path;
+			np.add (xt, yt);
+		} else {
+			np = new Path ();
+			np.stroke = stroke ? StrokeTool.stroke_width : 0;
+			g.add_path (np);
+			np.add (xt, yt);
+			
+			if (DrawingTools.pen_tool.is_selected ()) {
+				np.set_stroke (PenTool.path_stroke_width);
+			}
+			
+			PenTool.active_path = np;
+		}
+
+		g.clear_active_paths ();
+		g.add_active_path (np);
+		active_path = np;
+		selected_path = np;
+
+		inserted = np.points.get (np.points.size - 1);
+		
+		return new PointSelection (inserted, np);
+	}
+	
 	static void set_point_type (EditPoint p) {
 		if (p.prev != null && p.get_prev ().right_handle.type == PointType.QUADRATIC) {
 			p.left_handle.type = PointType.QUADRATIC;

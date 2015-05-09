@@ -905,13 +905,6 @@ public class Glyph : FontDisplay {
 		add_active_path (p);
 	}
 
-	/** Insert new edit point for current path on the appropriate zoom
-	 * level.
-	 */
-	public PointSelection add_new_edit_point (int x, int y) {
-		return insert_edit_point (x, y);
-	}
-
 	/** Move view port centrum to this coordinate. */
 	public void set_center (double x, double y) {
 		x -= allocation.width / 2.0;
@@ -1137,50 +1130,6 @@ public class Glyph : FontDisplay {
 		}
 		
 		return min_point;
-	}
-	
-	private PointSelection insert_edit_point (double x, double y) {
-		double xt, yt;
-		Path np;
-		EditPoint inserted;
-		bool stroke = StrokeTool.add_stroke;
-		
-		if (active_paths.size == 0) {
-			np = new Path ();
-			path_list.add (np);
-			np.stroke = stroke ? StrokeTool.stroke_width : 0;
-			add_active_path (np);
-			PenTool.active_path = np;
-		}
-			
-		xt = path_coordinate_x (x);
-		yt = path_coordinate_y (y);
-	
-		return_val_if_fail (active_paths.size > 0, new PointSelection.empty ());
-
-		if (PenTool.active_path.is_open ()) {
-			np = PenTool.active_path;
-			np.add (xt, yt);
-		} else {
-			np = new Path ();
-			np.stroke = stroke ? StrokeTool.stroke_width : 0;
-			path_list.add (np);
-			np.add (xt, yt);
-			
-			if (DrawingTools.pen_tool.is_selected ()) {
-				np.set_stroke (PenTool.path_stroke_width);
-			}
-			
-			PenTool.active_path = np;
-		}
-
-		clear_active_paths ();
-		add_active_path (np);
-		PenTool.active_path = np;
-		
-		inserted = np.points.get (np.points.size - 1);
-		
-		return new PointSelection (inserted, np);
 	}
 	
 	public void move_selected_edit_point_coordinates (EditPoint selected_point, double xt, double yt) {	

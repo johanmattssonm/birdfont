@@ -154,6 +154,10 @@ public class MoveTool : Tool {
 			selection_changed ();
 			objects_moved ();
 			DrawingTools.resize_tool.signal_objects_rotated ();
+			
+			foreach (Path p in glyph.active_paths) {
+				p.get_stroke ();
+			}
 		} else {
 			objects_deselected ();
 		}

@@ -106,6 +106,10 @@ public class ResizeTool : Tool {
 			DrawingTools.move_tool.release (b, x, y);
 			update_selection_box ();
 			GlyphCanvas.redraw ();
+			
+			foreach (Path p in MainWindow.get_current_glyph ().active_paths) {
+				p.get_stroke ();
+			}
 		});
 		
 		move_action.connect ((self, x, y)	 => {
