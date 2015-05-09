@@ -48,6 +48,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		--pkg gio-2.0 \
 		--pkg cairo \
 		--pkg libbirdxml \
+		--pkg libbirdgems \
 		""")
 	
 	#copy c sources 
@@ -64,7 +65,8 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			$(pkg-config --cflags gio-2.0) \
 			$(pkg-config --cflags cairo) \
 			$(pkg-config --cflags glib-2.0) \
-			-I ./build/libbirdxml""")
+			-I ./build/libbirdxml \
+			-I ./build/libbirdgems""")
 		run("mv ./*.o build/libbirdfont/ ")
 
 		if library.endswith (".dylib"):
@@ -81,7 +83,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			$(pkg-config --libs gio-2.0) \
 			$(pkg-config --libs cairo) \
 			$(pkg-config --libs glib-2.0) \
-			-L./build -L./build/bin -l birdxml \
+			-L./build -L./build/bin -l birdxml -l birdgems\
 			-o """ + library)
 		run("mv " + library + " build/bin/")
 		
@@ -166,7 +168,7 @@ def libbirdxml(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull =
  		
 
 def libbirdgems(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull = True):
-	#libbirdfont
+	print ('Compiling libbirdgems')
 	run("mkdir -p build/libbirdgems")
 	run("mkdir -p build/bin")
 
@@ -177,19 +179,22 @@ def libbirdgems(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 	run(valac + """\
 		-C \
 		""" + valaflags + """ \
+		-H build/libbirdgems/birdgems.h \
 		--pkg posix \
 		--vapidir=./ \
 		--basedir build/libbirdgems/ \
 		""" + experimentalNonNull + """ \
 		--enable-experimental \
 		--library libbirdgems \
-		-H build/libbirdxml/birdxml.h \
-		libbirdxml/*.vala \
+		libbirdgems/*.vala \
 		""")
 	
 	if cc == "":
 		print ("Skipping compilation");
 	else:
+		run("cp libbirdgems/*.c build/libbirdgems/")
+		run("cp libbirdgems/*.h build/libbirdgems/")
+			
 		run(cc + " " + cflags + """ \
 			-c build/libbirdgems/*.c \
 			""")
