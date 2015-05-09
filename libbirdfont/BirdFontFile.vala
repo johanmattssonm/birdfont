@@ -1185,6 +1185,10 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 
+		foreach (Path p in glyph.path_list) {
+			p.reset_stroke ();
+		}
+
 		glyph.version_id = (has_id) ? id : (int) gc.length () + 1;
 		gc.set_unassigned (unassigned);
 		gc.insert_glyph (glyph, selected || selected_id == id);

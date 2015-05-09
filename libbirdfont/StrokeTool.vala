@@ -75,14 +75,19 @@ public class StrokeTool : Tool {
 	}
 	
 	public static PathList get_stroke_fast (Path path, double thickness) {
-		PathList o;
+		PathList o, m;
 		Path stroke;
 		
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.3);
 		o = create_stroke (stroke, thickness, false); // set to true for faster stroke
-			
-		return o;
+		
+		m = new PathList ();
+		foreach (Path p in o.paths) {
+			m.add (simplify_stroke (p));
+		}
+		
+		return m;
 	}
 	
 	public static PathList get_stroke (Path path, double thickness) {
@@ -203,11 +208,6 @@ public class StrokeTool : Tool {
 		simplified.close ();
 		
 		simplified.remove_points_on_points (0.01);
-
-		if (simplified.points.size > 0) {
-			simplified.get_last_point ().color = Color.pink ();
-			simplified.get_first_point ().color = Color.green ();
-		}
 		
 		return simplified;
 	}
@@ -795,7 +795,7 @@ public class StrokeTool : Tool {
 		ep1.type = prev.type;
 		ep1.x = px;
 		ep1.y = py;
-		ep1.color = Color.yellow ();
+		ep1.color = c;
 		n.add (ep1);
 
 		ep2.prev = ep1;
@@ -813,7 +813,7 @@ public class StrokeTool : Tool {
 		ep3.type = prev.type;
 		ep3.x = px;
 		ep3.y = py;
-		ep3.color = Color.yellow ();
+		ep3.color = c;
 		n.add (ep3);
 		
 		next.get_left_handle ().convert_to_line ();			
@@ -834,9 +834,6 @@ public class StrokeTool : Tool {
 		d =  Path.distance_to_point (prev, next);
 		prev.get_right_handle ().length *= Path.distance_to_point (prev, ep1) / d;
 		next.get_left_handle ().length *= Path.distance_to_point (ep3, next) / d;
-		
-		prev.color = Color.green ();
-		next.color = Color.blue ();
 		
 		next.recalculate_linear_handles ();
 		
@@ -1625,7 +1622,6 @@ public class StrokeTool : Tool {
 						ps = new PointSelection (ep1, merged);
 						if (is_inside_of_path (ps, result, out outline)) {
 							ep1.deleted = true;
-							ep1.color = Color.red ();
 						}
 					}
 				}

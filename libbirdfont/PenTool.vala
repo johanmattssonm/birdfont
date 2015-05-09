@@ -182,13 +182,15 @@ public class PenTool : Tool {
 			BirdFont.get_current_font ().touch ();
 			reset_stroke ();
 			
-			foreach (Path p in g.active_paths) {
+			foreach (Path p in g.path_list) {
 				if (p.is_open () && p.points.size > 0) {
 					p.get_first_point ().set_tie_handle (false);
 					p.get_first_point ().set_reflective_handles (false);
 					p.get_last_point ().set_tie_handle (false);
 					p.get_last_point ().set_reflective_handles (false);
 				}
+				
+				p.get_stroke (); // cache good stroke
 			}
 		});
 
@@ -1696,7 +1698,6 @@ public class PenTool : Tool {
 
 		if (distance < contact_surface) {
 			set_active_edit_point (e.point, e.path);
-			e.path.reset_stroke ();
 		}
 	}
 	
@@ -1959,6 +1960,19 @@ public class PenTool : Tool {
 	}
 
 	public static void add_selected_point (EditPoint p, Path path) {
+		bool in_path = false;
+		
+		foreach (EditPoint e in path.points) {
+			if (e == p) {
+				in_path = true;
+				break;
+			}
+		}
+		
+		if (!in_path) {
+			warning ("Point is not in path.");
+		}
+		
 		foreach (PointSelection ep in selected_points) {
 			if (p == ep.point) {
 				return;

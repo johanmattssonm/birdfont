@@ -1288,6 +1288,8 @@ public class Glyph : FontDisplay {
 			if (p.is_open ()) {
 				p.convert_path_ending_to_line ();
 			}
+			
+			p.get_stroke (); // cache stroke
 		}
 		
 		open = false;

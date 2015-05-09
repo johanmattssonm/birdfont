@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -56,6 +56,16 @@ public class TrackTool : Tool {
 	public TrackTool (string name) {
 		base (name, t_("Freehand drawing"));
 		
+		select_action.connect (() => {
+			convert_points_to_line ();
+			draw_freehand = false;
+		});
+
+		deselect_action.connect (() => {
+			convert_points_to_line ();
+			draw_freehand = false;
+		});
+				
 		press_action.connect ((self, button, x, y) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			Path p;
@@ -71,6 +81,11 @@ public class TrackTool : Tool {
 			}
 			
 			if (button == 1) {
+				if (draw_freehand) {
+					warning ("Already drawing.");
+					return;
+				}
+				
 				return_if_fail (!drawing);
 				
 				draw_freehand = true;
@@ -105,6 +120,10 @@ public class TrackTool : Tool {
 				last_update = get_current_time ();
 				start_update_timer ();
 				drawing = true;
+				
+				foreach (Path path in glyph.active_paths) {
+					path.get_stroke (); // cache merged stroke parts
+				}
 			}
 		});
 		
@@ -115,37 +134,48 @@ public class TrackTool : Tool {
 			Path p;
 			Glyph g = MainWindow.get_current_glyph ();
 			EditPoint previous;
-			
-			convert_points_to_line ();
-			
-			g = MainWindow.get_current_glyph ();
-			
-			if (g.active_paths.size > 0) { // set type for last point
-				p = g.active_paths.get (g.active_paths.size - 1);
-				
-				if (p.points.size > 1) {
-					previous = p.points.get (p.points.size - 1);
-					previous.type = DrawingTools.point_type;
-					previous.set_tie_handle (false);
 
-					previous = p.points.get (0);
-					previous.type = DrawingTools.point_type;
-					previous.set_tie_handle (false);
+			if (button == 1) {
+				if (!draw_freehand) {
+					warning ("Not drawing.");
+					return;
 				}
-			}
+				
+				convert_points_to_line ();
+				
+				g = MainWindow.get_current_glyph ();
+				
+				if (g.active_paths.size > 0) { // set type for last point
+					p = g.active_paths.get (g.active_paths.size - 1);
+					
+					if (p.points.size > 1) {
+						previous = p.points.get (p.points.size - 1);
+						previous.type = DrawingTools.point_type;
+						previous.set_tie_handle (false);
 
-			if (button == 1 && draw_freehand) {
-				return_if_fail (drawing);
-				add_endpoint_and_merge (x, y);
+						previous = p.points.get (0);
+						previous.type = DrawingTools.point_type;
+						previous.set_tie_handle (false);
+					}
+				}
+
+				if (button == 1 && draw_freehand) {
+					return_if_fail (drawing);
+					add_endpoint_and_merge (x, y);
+				}
+							
+				foreach (Path path in g.active_paths) {
+					convert_hidden_points (path);
+				}
+				
+				g.clear_active_paths ();
+				
+				set_tie ();
+				PenTool.force_direction (); 
+				PenTool.reset_stroke ();
+				BirdFont.get_current_font ().touch ();
+				drawing = false;
 			}
-						
-			g.clear_active_paths ();
-			
-			set_tie ();
-			PenTool.force_direction (); 
-			PenTool.reset_stroke ();
-			BirdFont.get_current_font ().touch ();
-			drawing = false;
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -184,11 +214,17 @@ public class TrackTool : Tool {
 		});
 		
 		key_press_action.connect ((self, keyval) => {
-			Tool p = MainWindow.get_toolbox ().get_tool ("pen_tool");
-			p.key_press_action (p, keyval);
 		});
 	}
-		
+	
+	void convert_hidden_points (Path p) {
+		foreach (EditPoint e in p.points) {
+			if (e.type == PointType.HIDDEN) {
+				e.type = DrawingTools.point_type;
+			}
+		}
+	}
+	
 	void set_tie () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path p = glyph.path_list.get (glyph.path_list.size - 1);
@@ -555,7 +591,7 @@ public class TrackTool : Tool {
 		added_points = 0;
 		last_update = get_current_time ();
 		glyph.update_view ();
-		PenTool.reset_stroke ();
+		p.reset_stroke ();
 	}
 	
 	/** @return current time in milli seconds. */

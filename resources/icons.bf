@@ -935,10 +935,11 @@ GNU Lesser General Public License</copyright>
 <collection name="track">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="42.053343949044596">
-		<path stroke="0" skew="0" data="B -5.2851563694,22.8019798959 M -3.9414063694,21.4269798959 M 10.4960936306,6.5206798959 M 11.8085936306,5.1769798959 M 10.1523436306,4.2394798959 M -8.9726563694,-6.2605201041 M -9.3789063694,-6.4793201041 M -9.8164063694,-6.4163201041 M -19.1601563694,-5.5726201041 M -21.4101563694,-5.3851201041 M -20.2851563694,-3.4163201041 M -6.2539063694,21.1460798959 M -5.2851563694,22.8023798959 M -5.2851563694,22.8019798959" />
-		<path stroke="0" skew="0" data="B -16.6601563694,-2.8851201041 M -9.9726563694,-3.5101201041 M 7.0898436306,5.8960798959 M -4.6914063694,18.0210798959 M -16.6601563694,-2.8851201041" />
-		<path stroke="0" skew="0" data="B 37.2461436306,63.2086798959 M 36.9961436306,60.3648798959 M 33.5898936306,20.3960798959 M 33.5585936306,19.8336798959 M 33.1523436306,19.4586798959 C 33.1523436306,19.4586798959 31.7244036306,18.1425798959 29.9335936306,16.6773798959 C 28.1427836306,15.2121798959 26.0469936306,13.5875798959 24.2148436306,12.8023798959 C 21.4025636306,11.5970798959 13.4960936306,7.5523798959 13.4960936306,7.5523798959 M 12.5273436306,7.0836798959 M 11.8085936306,7.8336798959 M -3.5039063694,23.3960798959 M -4.2226563694,24.1148798959 M -3.7851563694,25.0523798959 C -3.7851563694,25.0523798959 0.2848236306,33.5615798959 5.9648436306,40.5523798959 C 9.0398236306,44.3369798959 16.1265536306,49.4535798959 22.5898436306,53.8336798959 C 29.0531336306,58.2136798959 34.8085936306,61.7086798959 34.8085936306,61.7086798959 M 37.2460936306,63.2086798959 M 37.2461436306,63.2086798959" />
-		<path stroke="0" skew="0" data="B 24.2148436306,51.4273798959 C 17.8166036306,47.0913798959 10.6358836306,41.7580798959 8.1835936306,38.7398798959 C 3.2801936306,32.7049798959 -0.0722063694,25.9392798959 -0.6914063694,24.6773798959 M 13.1210936306,10.6148798959 C 14.2875436306,11.2110798959 20.2276636306,14.2319798959 23.0898436306,15.4586798959 C 24.2339236306,15.9489798959 26.4042136306,17.5226798959 28.1210936306,18.9273798959 C 29.6039436306,20.1406798959 30.4745136306,20.9320798959 30.7773436306,21.2086798959 M 33.8710936306,57.6773798959 C 30.6523436306,55.5940465626 29.3264336306,54.8914798959 24.2148436306,51.4273798959" />
+		<path stroke="0" skew="0" data="B -12.9270550845,7.1315115997 C -10.6941551857,10.5777682494 -8.5634252662,14.0734645098 -6.4677943062,17.6045005918 C -4.9657997376,20.1301369418 -3.4457949173,22.6396358283 -1.8865936128,25.1304019791 C -0.0079402387,27.9931878144 0.7840685183,29.2763468352 3.1479101987,32.3592394104 C 6.3640617305,36.5536598369 9.7788424484,40.5803082884 13.2272350510,44.5835792592 C 15.7483786968,47.4621581412 18.2834622800,50.3277619081 20.8238996662,53.1893204949 C 23.7071029966,56.4467957169 26.5739065596,59.7181109010 29.4035281801,63.0223751195 C 29.8384198679,62.8564742888 30.2733115558,62.6905734581 30.7082032436,62.5246726275 C 30.6275465472,58.5993800549 30.5468898504,54.6740874824 30.4662331537,50.7487949099 C 30.4181812056,48.4102667714 30.3701292576,46.0717386328 30.3220773095,43.7332104943 C 30.2728484976,41.3374083165 30.2236196854,38.9416061387 30.1743908740,36.5458039608 C 28.5390884723,34.3264613604 26.9245492146,32.0920761503 25.3082664663,29.8588798420 C 24.1955857480,28.3255187631 23.0787704721,26.7955215722 21.9551362583,25.2701671591 C 20.6931432057,23.5780576198 20.1084382391,22.7820077865 18.6563213734,20.9149983413 C 16.5418980984,18.1964607597 14.3793045301,15.5167438909 12.2089562818,12.8428454015 C 10.6295476125,10.9088902879 9.0466558019,8.9778444720 7.4625048477,7.0477725796 C 5.9039052663,5.1467083882 4.3458567011,3.2454949348 2.7985936593,1.3350995000 C 0.7293335384,-0.0519869547 -1.3399265826,-1.4390734094 -3.4091867035,-2.8261598641 C -4.8667624611,-3.8032161411 -6.3243382186,-4.7802724182 -7.7819139762,-5.7573286952 C -9.4254230054,-6.8590215609 -11.0689320345,-7.9607144265 -12.7124410636,-9.0624072923 C -13.3078003035,-8.7448823645 -13.9031595433,-8.4273574366 -14.4985187832,-8.1098325087 C -14.7387785234,-7.9816939806 -14.9790382637,-7.8535554524 -15.2192980039,-7.7254169243 C -15.8055947197,-7.4127253426 -16.3918914354,-7.1000337608 -16.9781881511,-6.7873421791 C -16.3820966652,-4.7010219788 -15.7860051795,-2.6147017785 -15.1899136937,-0.5283815782 C -14.8375327413,0.7049517551 -14.4851517889,1.9382850884 -14.1327708365,3.1716184218 C -13.7742178443,4.4265538944 -13.4156648520,5.6814893670 -13.0571118600,6.9364248398 M -12.9270550845,7.1315115997" />
+		<path stroke="0" skew="0" data="B 27.5803541605,56.3335025745 C 24.7636304688,53.0984227778 27.5803541605,56.3335025745 27.5803541605,56.3335025745 C 24.7636304688,53.0984227778 26.2663178250,54.8118280015 23.0673601794,51.1976164693 C 20.5368304955,48.3472247580 18.0115571847,45.4928644403 15.5001734657,42.6255825885 C 12.0887538245,38.6656472143 8.7101011166,34.6830064195 5.5286165185,30.5337977053 C 3.2430921771,27.5530454212 2.4783018028,26.3136803683 0.6561765976,23.5384473136 C -0.8907049694,21.0679845884 -2.3980892097,18.5785869783 -3.8879490688,16.0733577014 C -5.9686898308,12.5675624568 -8.0811257459,9.0934813847 -10.2983316153,5.6719908622 C -10.3426891709,5.5167394175 -11.0922082563,2.8934226187 -11.2481989936,2.3474550381 C -11.6005799460,1.1141217047 -11.9529608984,-0.1192116286 -12.3053418507,-1.3525449619 C -12.6794725872,-2.6620025394 -13.0536033236,-3.9714601169 -13.4277340600,-5.2809176944 C -13.3140740658,-5.3415363580 -13.2004140715,-5.4021550216 -13.0867540773,-5.4627736852 C -13.0205981656,-5.4980568381 -12.9544422538,-5.5333399910 -12.8882863421,-5.5686231439 C -12.8882863421,-5.5686231439 -12.8882863421,-5.5686231439 -12.8882863421,-5.5686231439 C -11.7429670885,-4.8008816662 -10.5976478348,-4.0331401885 -9.4523285812,-3.2653987108 C -7.9947528236,-2.2883424337 -6.5371770660,-1.3112861566 -5.0796013085,-0.3342298796 C -3.1350267646,0.9692761333 -1.1904522207,2.2727821463 0.7541223232,3.5762881592 C 4.0870728201,7.6663372902 2.6224227542,5.8759626899 5.1435808883,8.9510832927 C 6.7242729595,10.8769400564 8.3037188799,12.8037605474 9.8796889962,14.7334838948 C 12.0369667439,17.3912221765 14.1866026917,20.0546898678 16.2882653294,22.7568209636 C 17.7186008317,24.5958257937 18.2949832120,25.3805522188 19.5397468804,27.0494631303 C 20.6584150794,28.5680280040 21.7702536736,30.0912441815 22.8779959708,31.6177957920 C 24.3129176268,33.6004075654 25.7478749091,35.5828679905 27.1945343768,37.5569397675 C 27.2372597299,39.6362402851 27.2799850830,41.7155408028 27.3227104361,43.7948413205 C 27.3707623842,46.1333694590 27.4188143322,48.4718975975 27.4668662803,50.8104257361 C 27.5046955737,52.6514513489 27.5425248671,54.4924769617 27.5803541605,56.3335025745" />
+		<path stroke="0" skew="0" data="B 1.3468332665,0.1692575111 C 1.2834691572,0.1602054954 1.2201050479,0.1511534798 1.1567409385,0.1421014642 C 1.1070920961,0.1350087724 1.0574432537,0.1279160807 1.0077944113,0.1208233889 C 0.7470657585,0.0835764385 0.4863371057,0.0463294877 0.2256084529,0.0090825377 C -0.6241753702,-0.1123003320 -1.5096183688,0.1115089735 -2.3359943542,0.2729492001 C -3.4004133519,0.5612696324 -3.7172783914,0.6183436368 -4.7787316153,1.0327653911 C -5.2463420640,1.2153339096 -5.7008121032,1.4299187072 -6.1618523471,1.6284953653 C -6.6425428268,1.8819967608 -7.1350656555,2.1142299243 -7.6039237861,2.3889995517 C -8.6119100846,2.9797198602 -9.6343004883,3.6915539228 -10.5071329930,4.4688625568 C -11.0284791729,4.9331519648 -11.5004218221,5.4501083349 -11.9970662367,5.9407312239 C -11.2511325125,6.6067514032 -10.5051987884,7.2727715825 -9.7592650643,7.9387917617 C -9.3121787102,7.4998261524 -8.8875727112,7.0367251640 -8.4180060021,6.6218949337 C -7.3166971806,5.6489635414 -6.0661691868,4.9572991233 -4.7715057649,4.2868663668 C -4.3811325485,4.1217977241 -3.9961806796,3.9432703596 -3.6003861157,3.7916604387 C -2.7068413247,3.4493862706 -2.4515150191,3.4059024729 -1.5604711864,3.1709767735 C -1.2999914674,3.1224748141 -1.0413931870,3.0624674772 -0.7790320294,3.0254708952 C -0.3230149753,2.9611661313 -0.0064729961,3.0063822819 -0.1986300432,2.9789346719 C 0.0620900847,3.0161804096 0.3228102140,3.0534261372 0.5835303426,3.0906718699 C 0.6331791850,3.0977645616 0.6828280274,3.1048572534 0.7324768698,3.1119499452 C 0.7958409791,3.1210019608 0.8592050885,3.1300539764 0.9225691978,3.1391059920 C 1.0639905540,2.1491564984 1.2054119102,1.1592070047 1.3468332665,0.1692575111" />
+		<path stroke="0" skew="0" data="B 4.2435014141,28.6289531377 C 4.4414919998,27.9385972905 4.9864573070,27.4170730917 5.4304160570,26.8820957217 C 5.8151067004,26.5110574216 6.1843518342,26.1233074649 6.5844879871,25.7689808213 C 7.7343256032,24.7507821398 8.2790928341,24.4092011364 9.5383860502,23.5038451211 C 11.0923001362,22.5164733501 12.6445895686,21.5316130381 14.3530655191,20.8244674573 C 14.8799007902,20.6064080613 15.4268177692,20.4404397009 15.9636938943,20.2484258228 C 15.6951714433,19.2851523967 15.4266489923,18.3218789707 15.1581265413,17.3586055446 C 14.5482465162,17.5740206493 13.9272962458,17.7603428633 13.3284864658,18.0048508586 C 11.4123395935,18.7872583043 9.6751857181,19.8687659727 7.9328534951,20.9696262643 C 6.5486225393,21.9596419429 5.9547210229,22.3305407355 4.6857795333,23.4462870818 C 4.2250525495,23.8513920082 3.7979828515,24.2932430852 3.3540845106,24.7167210868 C 2.9954027154,25.1378590273 1.9915586379,26.2121124817 1.7591565861,26.8264996947 C 1.5143094385,27.4737872530 1.4203167488,28.1684806185 1.2508968301,28.8394710804 C 2.2484316914,28.7692984328 3.2459665527,28.6991257853 4.2435014141,28.6289531377" />
+		<path stroke="0" skew="0" data="B 7.9082847141,33.4384896360 C 8.1062752999,32.7481337888 8.6512406071,32.2266095899 9.0951993571,31.6916322200 C 9.4798900004,31.3205939199 9.8491351343,30.9328439632 10.2492712871,30.5785173196 C 11.3991089032,29.5603186381 11.9438761341,29.2187376347 13.2031693502,28.3133816194 C 14.7570834362,27.3260098484 16.3093728686,26.3411495364 18.0178488191,25.6340039556 C 18.5446840902,25.4159445596 19.0916010692,25.2499761993 19.6284771943,25.0579623211 C 19.3599547433,24.0946888951 19.0914322923,23.1314154690 18.8229098414,22.1681420430 C 18.2130298162,22.3835571476 17.5920795458,22.5698793616 16.9932697658,22.8143873569 C 15.0771228935,23.5967948026 13.3399690181,24.6783024710 11.5976367951,25.7791627626 C 10.2134058394,26.7691784412 9.6195043229,27.1400772338 8.3505628333,28.2558235801 C 7.8898358496,28.6609285065 7.4627661516,29.1027795835 7.0188678107,29.5262575852 C 6.6601860155,29.9473955256 5.6563419380,31.0216489800 5.4239398862,31.6360361930 C 5.1790927386,32.2833237513 5.0851000489,32.9780171168 4.9156801302,33.6490075787 C 5.9132149915,33.5788349311 6.9107498528,33.5086622836 7.9082847141,33.4384896360" />
 	</glyph>
 </collection>
 <collection name="ttf_units">
@@ -1063,91 +1064,91 @@ GNU Lesser General Public License</copyright>
 <ligature sequence="i n s e r t _ g l y p h _ f r o m _ o v e r v i e w" replacement="insert_glyph_from_overview"/>
 <ligature sequence="h i g h _ c o n t r a s t _ b a c k g r o u n d" replacement="high_contrast_background"/>
 <ligature sequence="p r e v i o u s _ k e r n i n g _ s t r i n g" replacement="previous_kerning_string"/>
-<ligature sequence="g e n e r a t e _ h t m l _ d o c u m e n t" replacement="generate_html_document"/>
 <ligature sequence="s h o w _ x h e i g h t _ h e l p l i n e s" replacement="show_xheight_helplines"/>
-<ligature sequence="o r i e n t a t i o n _ c l o c k w i s e" replacement="orientation_clockwise"/>
-<ligature sequence="z o o m _ b a c k g r o u n d _ i m a g e" replacement="zoom_background_image"/>
-<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution"/>
-<ligature sequence="b a c k g r o u n d _ h e l p _ l i n e s" replacement="background_help_lines"/>
+<ligature sequence="g e n e r a t e _ h t m l _ d o c u m e n t" replacement="generate_html_document"/>
 <ligature sequence="s h o w _ a l l _ l i n e _ h a n d l e s" replacement="show_all_line_handles"/>
-<ligature sequence="n e x t _ k e r n i n g _ s t r i n g" replacement="next_kerning_string"/>
+<ligature sequence="b a c k g r o u n d _ h e l p _ l i n e s" replacement="background_help_lines"/>
+<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution"/>
+<ligature sequence="z o o m _ b a c k g r o u n d _ i m a g e" replacement="zoom_background_image"/>
+<ligature sequence="o r i e n t a t i o n _ c l o c k w i s e" replacement="orientation_clockwise"/>
 <ligature sequence="a u t o _ t r a c e _ s i m p l i f y" replacement="auto_trace_simplify"/>
-<ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold"/>
+<ligature sequence="n e x t _ k e r n i n g _ s t r i n g" replacement="next_kerning_string"/>
 <ligature sequence="k e r n i n g _ t e x t _ i n p u t" replacement="kerning_text_input"/>
-<ligature sequence="s t r o k e _ t o _ o u t l i n e" replacement="stroke_to_outline"/>
-<ligature sequence="s e l e c t _ b a c k g r o u n d" replacement="select_background"/>
-<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
-<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
-<ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background"/>
+<ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold"/>
 <ligature sequence="o r i e n t a t i o n _ a r r o w" replacement="orientation_arrow"/>
-<ligature sequence="o r i e n t a t i o n _ b o t h" replacement="orientation_both"/>
-<ligature sequence="q u a d r a t i c _ p o i n t s" replacement="quadratic_points"/>
+<ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background"/>
+<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
+<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
+<ligature sequence="s e l e c t _ b a c k g r o u n d" replacement="select_background"/>
+<ligature sequence="s t r o k e _ t o _ o u t l i n e" replacement="stroke_to_outline"/>
 <ligature sequence="s c a l e _ b a c k g r o u n d" replacement="scale_background"/>
-<ligature sequence="z o o m _ b o u n d a r i e s" replacement="zoom_boundaries"/>
-<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background"/>
-<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal"/>
+<ligature sequence="q u a d r a t i c _ p o i n t s" replacement="quadratic_points"/>
+<ligature sequence="o r i e n t a t i o n _ b o t h" replacement="orientation_both"/>
 <ligature sequence="m o v e _ b a c k g r o u n d" replacement="move_background"/>
-<ligature sequence="f i l l _ o p e n _ p a t h" replacement="fill_open_path"/>
-<ligature sequence="u p d a t e _ w e b v i e w" replacement="update_webview"/>
-<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background"/>
+<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal"/>
+<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background"/>
+<ligature sequence="z o o m _ b o u n d a r i e s" replacement="zoom_boundaries"/>
 <ligature sequence="i n s e r t _ u n i c h a r" replacement="insert_unichar"/>
-<ligature sequence="a d d _ n e w _ t h e m e" replacement="add_new_theme"/>
-<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class"/>
-<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points"/>
-<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point"/>
-<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button"/>
-<ligature sequence="f l i p _ v e r t i c a l" replacement="flip_vertical"/>
-<ligature sequence="d r o p d o w n _ m e n u" replacement="dropdown_menu"/>
+<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background"/>
+<ligature sequence="u p d a t e _ w e b v i e w" replacement="update_webview"/>
+<ligature sequence="f i l l _ o p e n _ p a t h" replacement="fill_open_path"/>
 <ligature sequence="r e s i z e _ h a n d l e" replacement="resize_handle"/>
-<ligature sequence="a p p l y _ s t r o k e" replacement="apply_stroke"/>
-<ligature sequence="e x p o r t _ f o n t s" replacement="export_fonts"/>
-<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path"/>
-<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points"/>
-<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate"/>
+<ligature sequence="d r o p d o w n _ m e n u" replacement="dropdown_menu"/>
+<ligature sequence="f l i p _ v e r t i c a l" replacement="flip_vertical"/>
+<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button"/>
+<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point"/>
+<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points"/>
+<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class"/>
+<ligature sequence="a d d _ n e w _ t h e m e" replacement="add_new_theme"/>
 <ligature sequence="y _ c o o r d i n a t e" replacement="y_coordinate"/>
-<ligature sequence="m o v e _ c a n v a s" replacement="move_canvas"/>
-<ligature sequence="s p i n _ b u t t o n" replacement="spin_button"/>
-<ligature sequence="c r e a t e _ l i n e" replacement="create_line"/>
-<ligature sequence="b e z i e r _ l i n e" replacement="bezier_line"/>
-<ligature sequence="r i g h t _ a r r o w" replacement="right_arrow"/>
+<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate"/>
+<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points"/>
+<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path"/>
+<ligature sequence="e x p o r t _ f o n t s" replacement="export_fonts"/>
+<ligature sequence="a p p l y _ s t r o k e" replacement="apply_stroke"/>
 <ligature sequence="b e z i e r _ t o o l" replacement="bezier_tool"/>
-<ligature sequence="f u l l _ g l y p h" replacement="full_glyph"/>
-<ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
-<ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
-<ligature sequence="m o v e _ l a y e r" replacement="move_layer"/>
-<ligature sequence="h e l p _ l i n e s" replacement="help_lines"/>
-<ligature sequence="l e f t _ a r r o w" replacement="left_arrow"/>
+<ligature sequence="r i g h t _ a r r o w" replacement="right_arrow"/>
+<ligature sequence="b e z i e r _ l i n e" replacement="bezier_line"/>
+<ligature sequence="c r e a t e _ l i n e" replacement="create_line"/>
+<ligature sequence="s p i n _ b u t t o n" replacement="spin_button"/>
+<ligature sequence="m o v e _ c a n v a s" replacement="move_canvas"/>
 <ligature sequence="c l o s e _ p a t h" replacement="close_path"/>
-<ligature sequence="o p e n _ f o n t" replacement="open_font"/>
-<ligature sequence="m e n u _ i c o n" replacement="menu_icon"/>
-<ligature sequence="t t f _ u n i t s" replacement="ttf_units"/>
-<ligature sequence="r e c t a n g l e" replacement="rectangle"/>
-<ligature sequence="z o o m _ t o o l" replacement="zoom_tool"/>
-<ligature sequence="s y m m e t r i c" replacement="symmetric"/>
-<ligature sequence="t i e _ p o i n t" replacement="tie_point"/>
-<ligature sequence="u n d o _ t o o l" replacement="undo_tool"/>
-<ligature sequence="a u t o t r a c e" replacement="autotrace"/>
-<ligature sequence="s h o w _ g r i d" replacement="show_grid"/>
-<ligature sequence="i n f o _ i c o n" replacement="info_icon"/>
+<ligature sequence="l e f t _ a r r o w" replacement="left_arrow"/>
+<ligature sequence="h e l p _ l i n e s" replacement="help_lines"/>
+<ligature sequence="m o v e _ l a y e r" replacement="move_layer"/>
+<ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
+<ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
+<ligature sequence="f u l l _ g l y p h" replacement="full_glyph"/>
 <ligature sequence="s a v e _ f o n t" replacement="save_font"/>
-<ligature sequence="n e w _ f o n t" replacement="new_font"/>
-<ligature sequence="p r o g r e s s" replacement="progress"/>
-<ligature sequence="z o o m _ 1 _ 1" replacement="zoom_1_1"/>
-<ligature sequence="p e n _ t o o l" replacement="pen_tool"/>
-<ligature sequence="r o t a t i o n" replacement="rotation"/>
-<ligature sequence="z o o m _ o u t" replacement="zoom_out"/>
+<ligature sequence="i n f o _ i c o n" replacement="info_icon"/>
+<ligature sequence="s h o w _ g r i d" replacement="show_grid"/>
+<ligature sequence="a u t o t r a c e" replacement="autotrace"/>
+<ligature sequence="u n d o _ t o o l" replacement="undo_tool"/>
+<ligature sequence="t i e _ p o i n t" replacement="tie_point"/>
+<ligature sequence="s y m m e t r i c" replacement="symmetric"/>
+<ligature sequence="z o o m _ t o o l" replacement="zoom_tool"/>
+<ligature sequence="r e c t a n g l e" replacement="rectangle"/>
+<ligature sequence="t t f _ u n i t s" replacement="ttf_units"/>
+<ligature sequence="m e n u _ i c o n" replacement="menu_icon"/>
+<ligature sequence="o p e n _ f o n t" replacement="open_font"/>
 <ligature sequence="s e t t i n g s" replacement="settings"/>
+<ligature sequence="z o o m _ o u t" replacement="zoom_out"/>
+<ligature sequence="r o t a t i o n" replacement="rotation"/>
+<ligature sequence="p e n _ t o o l" replacement="pen_tool"/>
+<ligature sequence="z o o m _ 1 _ 1" replacement="zoom_1_1"/>
+<ligature sequence="p r o g r e s s" replacement="progress"/>
+<ligature sequence="n e w _ f o n t" replacement="new_font"/>
 <ligature sequence="z o o m _ i n" replacement="zoom_in"/>
-<ligature sequence="c i r c l e" replacement="circle"/>
-<ligature sequence="r e s i z e" replacement="resize"/>
 <ligature sequence="h e i g h t" replacement="height"/>
-<ligature sequence="t r a c k" replacement="track"/>
-<ligature sequence="w i d t h" replacement="width"/>
+<ligature sequence="r e s i z e" replacement="resize"/>
+<ligature sequence="c i r c l e" replacement="circle"/>
 <ligature sequence="t h e m e" replacement="theme"/>
-<ligature sequence="n e x t" replacement="next"/>
-<ligature sequence="p r e v" replacement="prev"/>
-<ligature sequence="m o v e" replacement="move"/>
+<ligature sequence="w i d t h" replacement="width"/>
+<ligature sequence="t r a c k" replacement="track"/>
 <ligature sequence="s k e w" replacement="skew"/>
+<ligature sequence="m o v e" replacement="move"/>
+<ligature sequence="p r e v" replacement="prev"/>
+<ligature sequence="n e x t" replacement="next"/>
 
 <kerning left="settings" right="l" hadjustment="3.8289794922" />
 </font>
