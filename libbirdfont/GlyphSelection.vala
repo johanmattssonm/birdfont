@@ -20,7 +20,17 @@ public class GlyphSelection : OverView {
 
 	public GlyphSelection () {
 		base (null, false);
-		display_all_available_glyphs ();
+		
+		if (BirdFont.get_current_font ().length () > 0) {
+			display_all_available_glyphs ();
+		} else {
+			GlyphRange gr = new GlyphRange ();
+			DefaultCharacterSet.use_default_range (gr);
+			set_glyph_range (gr);
+		}
+
+		OverviewTools.update_overview_characterset (this);
+		FontDisplay.dirty_scrollbar = true;	
 		
 		open_glyph_signal.connect ((gc) => {
 			selected_glyph (gc);

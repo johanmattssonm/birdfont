@@ -101,11 +101,11 @@ public class OverviewTools : ToolCollection  {
 		all_glyphs.select_action (all_glyphs);
 	}
 	
-	public static void update_overview_characterset () {
+	public static void update_overview_characterset (OverView? tab = null) {
 		GlyphRange gr;
 		uint size;
 		OverView overview;
-		
+
 		// All characters
 		size = BirdFont.get_current_font ().length ();
 		all_glyphs.number = get_display_value (size);
@@ -122,7 +122,7 @@ public class OverviewTools : ToolCollection  {
 		size = gr.get_length ();
 		unicode.number = get_display_value (size);
 		
-		overview = MainWindow.get_overview ();
+		overview = (tab == null) ? MainWindow.get_overview () : (!) tab;
 		
 		// set selected item
 		all_glyphs.set_selected (false);
