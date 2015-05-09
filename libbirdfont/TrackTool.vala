@@ -540,7 +540,6 @@ public class TrackTool : Tool {
 		p = glyph.path_list.get (glyph.path_list.size - 1);
 				
 		if (added_points == 0) { // last point
-			warning ("No points");
 			return;
 		}
 

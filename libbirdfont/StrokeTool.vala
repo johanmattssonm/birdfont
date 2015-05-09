@@ -23,6 +23,7 @@ public class StrokeTool : Tool {
 	public static bool add_stroke = false;
 	
 	public static bool show_stroke_tools = false;
+	public static bool convert_stroke = false;
 	
 	public StrokeTool (string tooltip) {
 	}
@@ -31,7 +32,8 @@ public class StrokeTool : Tool {
 	public static void stroke_selected_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
 		PathList paths = new PathList ();
-			
+		
+		convert_stroke = true;	
 		g.store_undo_state ();
 		
 		foreach (Path p in g.active_paths) {
@@ -58,6 +60,7 @@ public class StrokeTool : Tool {
 		}
 		
 		PenTool.update_orientation ();
+		convert_stroke = false;
 	}
 	
 	public PathList merge_selected_paths () {
@@ -75,19 +78,14 @@ public class StrokeTool : Tool {
 	}
 	
 	public static PathList get_stroke_fast (Path path, double thickness) {
-		PathList o, m;
+		PathList o;
 		Path stroke;
 		
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.3);
 		o = create_stroke (stroke, thickness, false); // set to true for faster stroke
-		
-		m = new PathList ();
-		foreach (Path p in o.paths) {
-			m.add (simplify_stroke (p));
-		}
-		
-		return m;
+				
+		return o;
 	}
 	
 	public static PathList get_stroke (Path path, double thickness) {
@@ -97,6 +95,7 @@ public class StrokeTool : Tool {
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.3);
 		o = create_stroke (stroke, thickness, false);
+		
 		o = get_all_parts (o);
 		o = remove_intersection_paths (o);
 		o = merge (o);
@@ -188,7 +187,9 @@ public class StrokeTool : Tool {
 						
 					simplified.append_path (added_segment);
 					
-					if (ep_start.get_right_handle ().is_line ()) {
+					if (ep_start.get_right_handle ().is_line ()
+						&& added_segment.points.size > 0) {
+							
 						first = added_segment.get_first_point ();
 						first.get_right_handle ().convert_to_line ();
 						first.recalculate_linear_handles ();
@@ -1909,8 +1910,8 @@ public class StrokeTool : Tool {
 			previous = start.copy ();
 			previous_inside = start_inside.copy ();
 			
-			previous.flags |= EditPoint.CURVE;
-			previous_inside.flags |= EditPoint.CURVE;
+			previous.flags |= EditPoint.CURVE | EditPoint.SEGMENT_END;
+			previous_inside.flags |= EditPoint.CURVE | EditPoint.SEGMENT_END;
 
 			side1.add_point (previous);
 			side2.add_point (previous_inside);	
@@ -1999,8 +2000,8 @@ public class StrokeTool : Tool {
 			previous_inside.get_right_handle ().length *= step_size;
 			previous_inside.get_left_handle ().length *= step_size;
 
-			previous.flags |= EditPoint.CURVE;
-			previous_inside.flags |= EditPoint.CURVE;
+			previous.flags |= EditPoint.CURVE | EditPoint.SEGMENT_END;
+			previous_inside.flags |= EditPoint.CURVE | EditPoint.SEGMENT_END;
 
 			side1.add_point (previous);
 			side2.add_point (previous_inside);
@@ -2095,20 +2096,26 @@ public class StrokeTool : Tool {
 		path.remove_points_on_points ();
 
 		foreach (EditPoint ep in path.points) {
-			if ((ep.flags & EditPoint.CURVE) > 0 || (ep.flags & EditPoint.CURVE_KEEP) > 0) {
-				ep.convert_to_curve (); 
+			if ((ep.flags & EditPoint.SEGMENT_END) == 0) {
+				if ((ep.flags & EditPoint.CURVE) > 0 || (ep.flags & EditPoint.CURVE_KEEP) > 0) {
+					ep.convert_to_curve (); 
+				}
 			}
 		}
 			
 		foreach (EditPoint ep in path.points) {
-			if ((ep.flags & EditPoint.CURVE) > 0 || (ep.flags & EditPoint.CURVE_KEEP) > 0) {
-				ep.set_tie_handle (true);
+			if ((ep.flags & EditPoint.SEGMENT_END) == 0) {
+				if ((ep.flags & EditPoint.CURVE) > 0 || (ep.flags & EditPoint.CURVE_KEEP) > 0) {
+					ep.set_tie_handle (true);
+				}
 			}
 		}
 			
 		foreach (EditPoint ep in path.points) {
-			if ((ep.flags & EditPoint.CURVE) > 0 || (ep.flags & EditPoint.CURVE_KEEP) > 0) {
-				ep.process_tied_handle ();
+			if ((ep.flags & EditPoint.SEGMENT_END) == 0) {
+				if ((ep.flags & EditPoint.CURVE) > 0 || (ep.flags & EditPoint.CURVE_KEEP) > 0) {
+					ep.process_tied_handle ();
+				}
 			}
 		}			
 	}
@@ -2133,7 +2140,7 @@ public class StrokeTool : Tool {
 		corner2 = new EditPoint (x2, y2, type);
 		corner3 = new EditPoint (x3, y3, type);
 		
-		corner2.convert_to_line (); // FIXME: delete
+		corner2.convert_to_line (); 
 		
 		overlay.add_point (corner1);
 		overlay.add_point (corner2);
