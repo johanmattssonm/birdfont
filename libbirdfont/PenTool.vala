@@ -1732,7 +1732,6 @@ public class PenTool : Tool {
 	}
 	
 	public static PointSelection add_new_edit_point (int x, int y) {
-		Glyph glyph;
 		PointSelection new_point;
 		
 		new_point = insert_edit_point (x, y);

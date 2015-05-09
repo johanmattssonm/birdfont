@@ -1031,9 +1031,7 @@ public class DrawingTools : ToolCollection  {
 		
 		add_expander (draw_tool_modifiers);
 		
-		if (BirdFont.has_argument ("--test")) {
-			add_expander (stroke_expander);
-		}
+		add_expander (stroke_expander);
 		
 		add_expander (guideline_tools);
 		add_expander (grid);
