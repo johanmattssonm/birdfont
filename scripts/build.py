@@ -196,6 +196,7 @@ def libbirdgems(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		run("cp libbirdgems/*.h build/libbirdgems/")
 			
 		run(cc + " " + cflags + """ \
+			$(pkg-config --cflags glib-2.0) \
 			-c build/libbirdgems/*.c \
 			""")
 			
