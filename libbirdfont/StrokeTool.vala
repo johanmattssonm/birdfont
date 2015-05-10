@@ -174,6 +174,9 @@ public class StrokeTool : Tool {
 						simplified.delete_last_point ();
 					}
 					
+					first.set_tie_handle (false);
+					last.set_tie_handle (false);
+					
 					last.get_right_handle ().x = first.get_right_handle ().x;
 					last.get_right_handle ().y = first.get_right_handle ().y;
 					
