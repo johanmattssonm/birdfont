@@ -1238,7 +1238,7 @@ public class Glyph : FontDisplay {
 				p.convert_path_ending_to_line ();
 			}
 			
-			p.get_stroke (); // cache stroke
+			p.create_full_stroke (); // cache stroke
 		}
 		
 		open = false;

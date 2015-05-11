@@ -122,7 +122,7 @@ public class TrackTool : Tool {
 				drawing = true;
 				
 				foreach (Path path in glyph.active_paths) {
-					path.get_stroke (); // cache merged stroke parts
+					path.create_full_stroke (); // cache merged stroke parts
 				}
 			}
 		});

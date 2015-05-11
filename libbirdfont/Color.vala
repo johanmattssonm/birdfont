@@ -47,8 +47,24 @@ public class Color {
 		return new Color (222.0 / 255, 203.0 / 255, 43 / 255.0, 1);
 	}
 
+	public static Color brown () {
+		return new Color (160.0 / 255, 90.0 / 255, 44.0 / 255, 1);
+	}
+	
 	public static Color pink () {
 		return new Color (247.0 / 255, 27.0 / 255, 113 / 255.0, 1);
+	}
+	
+	public static Color white () {
+		return new Color (1, 1, 1, 1);
+	}
+	
+	public static Color grey () {
+		return new Color (0.5, 0.5, 0.5, 1);
+	}
+	
+	public static Color magenta () {
+		return new Color (103.0 / 255, 33.0 / 255, 120.0 / 255, 1);
 	}
 }
 

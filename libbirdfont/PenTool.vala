@@ -188,7 +188,7 @@ public class PenTool : Tool {
 					p.get_last_point ().set_reflective_handles (false);
 				}
 				
-				p.get_stroke (); // cache good stroke
+				p.create_full_stroke (); // cache good stroke
 			}
 		});
 

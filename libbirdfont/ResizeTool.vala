@@ -108,7 +108,7 @@ public class ResizeTool : Tool {
 			GlyphCanvas.redraw ();
 			
 			foreach (Path p in MainWindow.get_current_glyph ().active_paths) {
-				p.get_stroke ();
+				p.create_full_stroke ();
 			}
 		});
 		

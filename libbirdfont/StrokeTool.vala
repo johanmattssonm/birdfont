@@ -17,6 +17,12 @@ using Math;
 
 namespace BirdFont {
 
+public enum LineCap {
+	BUTT,
+	SQUARE,
+	ROUND
+}
+
 public class StrokeTool : Tool {
 	
 	public static double stroke_width = 0;
@@ -283,26 +289,123 @@ public class StrokeTool : Tool {
 		return false;
 	}
 
-	static void add_line_cap (Path path, Path stroke,
-		EditPointHandle last_handle, 
-		EditPoint start, EditPoint end) {
+	static void add_line_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
+		if (path.line_cap == LineCap.SQUARE) {
+			add_square_cap (path, stroke1, stroke2, last_cap);
+		} else if (path.line_cap == LineCap.ROUND) {
+			add_round_cap (path, stroke1, stroke2, last_cap);
+		}
+	}
+	
+	static void add_round_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
+		double px, py;
+		double step, start_angle, stop_angle;
+		double radius;
+		EditPoint n, nstart, nend;
+		Path cap = new Path ();
 
+		EditPoint start, end;
+		EditPointHandle last_handle;
+		EditPoint first, last; 
+		
+		stroke1.remove_points_on_points ();
+		stroke2.remove_points_on_points ();
+		
+		last_handle = path.get_first_point ().get_right_handle ();
+		start = stroke1.get_last_point ();
+		end = stroke2.get_first_point ();
+		
+		start_angle = last_handle.angle + PI / 2;
+		stop_angle = start_angle + PI;	
+					
+		nstart = cap.add (start.x, start.y);
+		radius = Path.distance_to_point (start, end) / 2;
+		step = PI / 5;
+		
+		for (int j = 0; j < 5; j++) {
+			double angle = start_angle + step * j;
+			px = radius * cos (angle) + last_handle.parent.x;
+			py = radius * sin (angle) + last_handle.parent.y;
+			n = cap.add (px, py);
+			
+			n.type = PointType.LINE_CUBIC;
+			n.get_right_handle ().type = PointType.LINE_CUBIC;
+			n.get_left_handle ().type = PointType.LINE_CUBIC;
+		}
+		
+		nend = cap.add (end.x, end.y);
+				
+		for (int i = 0; i < cap.points.size; i++) {
+			cap.points.get (i).recalculate_linear_handles ();
+		}
+		
+		int size = cap.points.size;
+
+		for (int i = 1; i < size; i++) {
+			n = cap.points.get (i);
+			n.convert_to_curve ();
+			n.set_tie_handle (true);
+			n.process_tied_handle ();
+		}
+
+		int f = stroke1.points.size - 1;
+		
+		for (int i = 2; i < cap.points.size - 1; i++) {
+			n = cap.points.get (i).copy ();
+			stroke1.add_point (n);
+		}
+
+		return_if_fail (0 < f < stroke1.points.size);
+		
+		first = stroke1.points.get (f);
+		stroke1.add_point (stroke2.get_first_point ());
+		
+		last = stroke1.get_last_point ();
+		
+		double a;
+		double l;
+		
+		return_if_fail (cap.points.size > 1);
+		
+		a = (first.get_left_handle ().angle + PI) % (2 * PI);
+		l = cap.points.get (1).get_right_handle ().length;
+		
+		first.get_right_handle ().convert_to_curve ();
+		first.get_right_handle ().angle = a;
+		first.get_right_handle ().length = l;
+		
+		a = (first.get_left_handle ().angle + PI) % (2 * PI);
+		
+		last.get_left_handle ().convert_to_curve ();
+		last.get_left_handle ().angle = a;
+		last.get_left_handle ().length = l;
+	}
+		
+	static void add_square_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
+		EditPointHandle last_handle;
+		EditPoint start;
+		EditPoint end;
 		EditPoint n;
+		double x, y;
 		double stroke_width = path.stroke / 2;
-		
-		double y = sin (last_handle.angle - PI) * stroke_width;
-		double x = cos (last_handle.angle - PI) * stroke_width;
-		
-		n = stroke.add (start.x + x, start.y + y);
-		n.type = start.type;
-		n.get_right_handle ().type = start.type;
-		n.get_left_handle ().type = start.type;
+
+		last_handle = path.get_first_point ().get_right_handle ();
+		start = stroke1.get_last_point ();
+		end = stroke2.get_first_point ();
+
+		y = sin (last_handle.angle - PI) * stroke_width;
+		x = cos (last_handle.angle - PI) * stroke_width;
+						
+		n = stroke1.add (start.x + x, start.y + y);
+		n.type = PointType.CUBIC;
+		n.get_right_handle ().type = PointType.CUBIC;
+		n.get_left_handle ().type = PointType.CUBIC;
 		n.convert_to_line ();
 		
-		n = stroke.add (end.x + x, end.y + y);
-		n.type = start.type;
-		n.get_right_handle ().type = start.type;
-		n.get_left_handle ().type = start.type;
+		n = stroke1.add (end.x + x, end.y + y);
+		n.type = PointType.CUBIC;
+		n.get_right_handle ().type = PointType.CUBIC;
+		n.get_left_handle ().type = PointType.CUBIC;
 		n.convert_to_line ();
 	}
 
@@ -317,28 +420,26 @@ public class StrokeTool : Tool {
 			
 		Path merged;
 		EditPoint last_counter, first;
-		
+
 		merged = stroke.copy ();
-		counter.reverse ();
-		
-		counter.reverse ();
 		merged.reverse ();
 		
 		last_counter = new EditPoint ();
 		first = new EditPoint ();
 		
-		add_line_cap (path, merged, path.get_first_point ().get_right_handle (), 
-			merged.get_last_point (), counter.get_first_point ());
+		add_line_cap (path, merged, counter, true);		
+		path.reverse ();		
+		
+		add_line_cap (path, counter, merged, true);
+		path.reverse ();
 			
 		merged.append_path (counter);
-		
-		add_line_cap (path, merged, path.get_last_point ().get_left_handle (), 
-			merged.get_last_point (), merged.get_first_point ());
 
 		merged.close ();
 		merged.create_list ();
 		merged.recalculate_linear_handles ();
-
+/*
+// BUTT CAP
 		if (path.is_open ()) {
 			first = merged.get_first_point ();
 			last_counter = merged.get_last_point ();
@@ -349,7 +450,7 @@ public class StrokeTool : Tool {
 			last_counter.get_right_handle ().convert_to_line ();
 			last_counter.recalculate_linear_handles ();
 		}
-
+*/
 		return merged;
 	}
 
@@ -2094,17 +2195,17 @@ public class StrokeTool : Tool {
 				previous_inside.flags |= EditPoint.CURVE;
 
 				side1.add_point (previous);
-				side2.add_point (previous_inside);		
+				side2.add_point (previous_inside);
 			}
 		}
 		
 		if (!fast) {
 			side1.remove_points_on_points ();
 			side2.remove_points_on_points ();
-				
+		
 			convert_to_curve (side1);
 			convert_to_curve (side2);
-		
+			
 			side2.reverse ();
 			pl = merge_stroke_parts (path, side1, side2);
 		}

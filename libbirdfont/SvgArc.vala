@@ -159,6 +159,8 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 	for (double a = 0; a < fabs (angleExtent); a += step) {
 		theta = PI - angleStart - angleExtent + s * a;
 
+		return_if_fail (0 <= bi < bezier_points.length);
+
 		bezier_points[bi].type = 'S';
 		bezier_points[bi].svg_type = 'a';
 

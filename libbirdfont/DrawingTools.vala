@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+    Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -850,7 +850,41 @@ public class DrawingTools : ToolCollection  {
 			outline.set_selected (false);
 		});
 		stroke_expander.add_tool (outline);	
-				
+
+		// set line cap
+		Tool line_cap_round = new Tool ("line_cap_round", t_("Round line cap"));
+		line_cap_round.select_action.connect ((self) => {
+			Glyph g;
+			
+			g = MainWindow.get_current_glyph ();
+			g.store_undo_state ();
+			
+			foreach (Path p in g.active_paths) {
+				p.line_cap = LineCap.ROUND;
+				p.reset_stroke ();
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		stroke_expander.add_tool (line_cap_round);	
+
+		Tool line_cap_square = new Tool ("line_cap_square", t_("Square line cap"));
+		line_cap_square.select_action.connect ((self) => {
+			Glyph g;
+			
+			g = MainWindow.get_current_glyph ();
+			g.store_undo_state ();
+			
+			foreach (Path p in g.active_paths) {
+				p.line_cap = LineCap.SQUARE;
+				p.reset_stroke ();
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		stroke_expander.add_tool (line_cap_square);	
+
+		// tests
 		if (BirdFont.has_argument ("--test")) {
 			Tool test_case = new Tool ("test_case");
 			test_case.select_action.connect((self) => {

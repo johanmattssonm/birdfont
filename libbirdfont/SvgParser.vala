@@ -1195,16 +1195,8 @@ public class SvgParser {
 			return path_list;	
 		}
 		
-		/* //FIXME: DELETE
-		if (bezier_points[bi - 1].type != 'z') {
-			bezier_points[bi].type = 'z';
-			bezier_points[bi].svg_type = 'z';
-			bi++;
-		}
-		*/
-		
 		move_and_resize (bezier_points, bi, svg_glyph, units, glyph);
-
+		
 		if (format == SvgFormat.ILLUSTRATOR) {
 			path_list = create_paths_illustrator (bezier_points, bi);
 		} else {
@@ -1578,7 +1570,6 @@ public class SvgParser {
 		}
 				
 		if (path.points.size > 0) {
-			warning ("Open path.");
 			path_list.add (path);
 		}
 		
