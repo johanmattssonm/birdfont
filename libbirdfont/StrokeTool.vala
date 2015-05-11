@@ -283,6 +283,29 @@ public class StrokeTool : Tool {
 		return false;
 	}
 
+	static void add_line_cap (Path path, Path stroke,
+		EditPointHandle last_handle, 
+		EditPoint start, EditPoint end) {
+
+		EditPoint n;
+		double stroke_width = path.stroke / 2;
+		
+		double y = sin (last_handle.angle - PI) * stroke_width;
+		double x = cos (last_handle.angle - PI) * stroke_width;
+		
+		n = stroke.add (start.x + x, start.y + y);
+		n.type = start.type;
+		n.get_right_handle ().type = start.type;
+		n.get_left_handle ().type = start.type;
+		n.convert_to_line ();
+		
+		n = stroke.add (end.x + x, end.y + y);
+		n.type = start.type;
+		n.get_right_handle ().type = start.type;
+		n.get_left_handle ().type = start.type;
+		n.convert_to_line ();
+	}
+
 	/** Create one stroke from the outline and counter stroke and close the 
 	 * open endings.
 	 * 
@@ -291,6 +314,7 @@ public class StrokeTool : Tool {
 	 * @param stroke for the counter path
 	 */
 	static Path merge_strokes (Path path, Path stroke, Path counter) {
+			
 		Path merged;
 		EditPoint last_counter, first;
 		
@@ -303,7 +327,13 @@ public class StrokeTool : Tool {
 		last_counter = new EditPoint ();
 		first = new EditPoint ();
 		
+		add_line_cap (path, merged, path.get_first_point ().get_right_handle (), 
+			merged.get_last_point (), counter.get_first_point ());
+			
 		merged.append_path (counter);
+		
+		add_line_cap (path, merged, path.get_last_point ().get_left_handle (), 
+			merged.get_last_point (), merged.get_first_point ());
 
 		merged.close ();
 		merged.create_list ();
