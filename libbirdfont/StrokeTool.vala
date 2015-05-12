@@ -355,7 +355,7 @@ public class StrokeTool : Tool {
 			stroke1.add_point (n);
 		}
 
-		cap.remove_points_on_points (); // FIXME:
+		cap.remove_points_on_points ();
 		return_if_fail (0 < f < stroke1.points.size);
 		
 		first = stroke1.points.get (f);

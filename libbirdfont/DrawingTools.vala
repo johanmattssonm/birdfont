@@ -852,6 +852,22 @@ public class DrawingTools : ToolCollection  {
 		stroke_expander.add_tool (outline);	
 
 		// set line cap
+		Tool line_cap_butt = new Tool ("line_cap_butt", t_("Butt line cap"));
+		line_cap_butt.select_action.connect ((self) => {
+			Glyph g;
+			
+			g = MainWindow.get_current_glyph ();
+			g.store_undo_state ();
+			
+			foreach (Path p in g.active_paths) {
+				p.line_cap = LineCap.BUTT;
+				p.reset_stroke ();
+			}
+			
+			GlyphCanvas.redraw ();
+		});
+		stroke_expander.add_tool (line_cap_butt);	
+		
 		Tool line_cap_round = new Tool ("line_cap_round", t_("Round line cap"));
 		line_cap_round.select_action.connect ((self) => {
 			Glyph g;
