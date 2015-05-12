@@ -1767,6 +1767,8 @@ public class PenTool : Tool {
 			np = new Path ();
 			g.add_path (np);
 			np.stroke = stroke ? StrokeTool.stroke_width : 0;
+			np.line_cap = StrokeTool.line_cap;
+			
 			g.add_active_path (np);
 			
 			active_path = np;

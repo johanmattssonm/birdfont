@@ -72,6 +72,7 @@ public class RectangleTool : Tool {
 
 			if (StrokeTool.add_stroke) {
 				rectangle.stroke = StrokeTool.stroke_width;
+				rectangle.line_cap = StrokeTool.line_cap;
 			}
 		
 			rectangle.init_point_type ();

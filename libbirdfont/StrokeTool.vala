@@ -31,6 +31,8 @@ public class StrokeTool : Tool {
 	public static bool show_stroke_tools = false;
 	public static bool convert_stroke = false;
 	
+	public static LineCap line_cap = LineCap.BUTT;
+	
 	public StrokeTool (string tooltip) {
 	}
 

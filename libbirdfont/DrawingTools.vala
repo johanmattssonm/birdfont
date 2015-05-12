@@ -786,6 +786,7 @@ public class DrawingTools : ToolCollection  {
 			if (StrokeTool.add_stroke) {
 				foreach (Path p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
+					p.line_cap = StrokeTool.line_cap;
 				}
 			} else {
 				foreach (Path p in g.active_paths) {
@@ -864,6 +865,10 @@ public class DrawingTools : ToolCollection  {
 				p.reset_stroke ();
 			}
 			
+			StrokeTool.line_cap = LineCap.BUTT;
+			Font f = BirdFont.get_current_font ();
+			f.settings.set_setting ("line_cap", @"butt");
+			
 			GlyphCanvas.redraw ();
 		});
 		stroke_expander.add_tool (line_cap_butt);	
@@ -880,6 +885,11 @@ public class DrawingTools : ToolCollection  {
 				p.reset_stroke ();
 			}
 			
+			StrokeTool.line_cap = LineCap.ROUND;
+
+			Font f = BirdFont.get_current_font ();
+			f.settings.set_setting ("line_cap", @"round");
+			
 			GlyphCanvas.redraw ();
 		});
 		stroke_expander.add_tool (line_cap_round);	
@@ -895,6 +905,11 @@ public class DrawingTools : ToolCollection  {
 				p.line_cap = LineCap.SQUARE;
 				p.reset_stroke ();
 			}
+			
+			StrokeTool.line_cap = LineCap.SQUARE;
+
+			Font f = BirdFont.get_current_font ();
+			f.settings.set_setting ("line_cap", @"square");
 			
 			GlyphCanvas.redraw ();
 		});

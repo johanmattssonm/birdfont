@@ -216,6 +216,16 @@ public class MenuTab : FontDisplay {
 		bool s = bool.parse (stroke);
 		DrawingTools.add_stroke.set_selected (s);
 		StrokeTool.add_stroke = s;
+
+		string lc = f.settings.get_setting ("line_cap");
+		
+		if (lc == "butt") {
+			StrokeTool.line_cap = LineCap.BUTT;
+		} else if (lc == "square") {
+			StrokeTool.line_cap = LineCap.SQUARE;
+		} else if (lc == "round") {
+			StrokeTool.line_cap = LineCap.ROUND;
+		}
 	}
 	
 	// FIXME: background thread
