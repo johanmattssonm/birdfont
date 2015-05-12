@@ -164,8 +164,9 @@ public class StrokeTool : Tool {
 				
 				ep_start = p.points.get (start);
 				ep = p.points.get (stop);
-							
-				segment = fit_bezier_path (p, start, stop, 0.0007);
+				
+				double l = Path.distance_to_point (ep_start, ep);
+				segment = fit_bezier_path (p, start, stop, 0.00001 * l * l);
 
 				added_segment = segment.copy ();	
 				
@@ -197,15 +198,16 @@ public class StrokeTool : Tool {
 					last.recalculate_linear_handles ();
 						
 					simplified.append_path (added_segment);
-					
-					if (ep_start.get_right_handle ().is_line ()
-						&& added_segment.points.size > 0) {
-							
-						first = added_segment.get_first_point ();
-						segment_last.right_handle = ep_start.get_right_handle ().copy ();
-						first.recalculate_linear_handles ();
-					}
 
+					segment_last.right_handle = ep.get_right_handle ().copy ();
+					
+					if (added_segment.points.size > 0) {
+						
+						if (ep_start.get_right_handle ().is_line ()) {
+							first = added_segment.get_first_point ();
+							first.recalculate_linear_handles ();
+						}
+					}
 				} else {
 					warning ("No points in segment.");
 				}
@@ -1103,9 +1105,9 @@ public class StrokeTool : Tool {
 		double d1 = Path.distance (x1, x2, y1, y2);
 		double d2 = Path.distance (x2, x3, y2, y3);
 		double p = d1 / ds;
-		double x = fabs ((x3 - x1) * p - (x2 - x1));
-		double y = fabs ((y3 - y1) * p - (y2 - y1));
-		double d = fabs (ds - (d1 + d2));
+		double x = fabs ((x3 - x1) * p - (x2 - x1)) / ds;
+		double y = fabs ((y3 - y1) * p - (y2 - y1)) / ds;
+		double d = fabs (ds - (d1 + d2)) / ds;
 		
 		return ds > 0.001 && d1 > 0.001 && d2 > 0.001
 			&& d < tolerance && x < tolerance && y < tolerance;	
@@ -2031,9 +2033,9 @@ public class StrokeTool : Tool {
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 
-			tolerance = 0.13 / sqrt (stroke_width);
+			tolerance = 0.01; //  0.13 / sqrt (stroke_width)
 			step_increment = 1.05;
-			step_size = 0.039 / stroke_width;
+			step_size = 0.039; // / stroke_width;
 
 			corner1 = new EditPoint ();
 			
@@ -2056,7 +2058,7 @@ public class StrokeTool : Tool {
 		
 			step = step_size;
 			keep = 0;
-			step_size = 0.1;
+			step_size = 0.01;
 
 			while (step < 1 - 2 * step_size) {
 				Path.get_point_for_step (p1, p2, step, out x, out y);

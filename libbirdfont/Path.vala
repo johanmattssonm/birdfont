@@ -819,11 +819,12 @@ public class Path {
 
 	public Path flatten () {
 		Path flat = new Path ();
+		Glyph g = MainWindow.get_current_glyph ();
 		
 		all_of_path ((x, y, t) => {
 			flat.add (x, y);
 			return true;
-		});
+		}, 10); // FIXME: g.view_zoom
 		
 		return flat;
 	}
