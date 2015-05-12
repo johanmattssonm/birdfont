@@ -105,12 +105,12 @@ public class StrokeTool : Tool {
 		o = get_all_parts (o);
 		o = remove_intersection_paths (o);
 		o = merge (o);
-		
+				
 		m = new PathList ();
 		foreach (Path p in o.paths) {
 			m.add (simplify_stroke (p));
 		}
-		
+				
 		return m;
 	}
 	
@@ -174,7 +174,7 @@ public class StrokeTool : Tool {
 				if (added_segment.points.size > 0) {
 					segment_last = added_segment.get_last_point ();
 					first = added_segment.get_first_point ();
-					segment_last.get_right_handle ().convert_to_line ();
+					segment_last.right_handle = ep_start.get_right_handle ().copy ();
 					
 					if (simplified.points.size > 1) {
 						simplified.delete_last_point ();
@@ -191,7 +191,7 @@ public class StrokeTool : Tool {
 					first.get_left_handle ().y = last.get_left_handle ().y;
 	
 					last = added_segment.get_last_point ();
-					last.get_right_handle ().convert_to_line ();
+					last.right_handle = ep.get_right_handle ().copy ();
 					last.recalculate_linear_handles ();
 						
 					simplified.append_path (added_segment);
@@ -200,7 +200,7 @@ public class StrokeTool : Tool {
 						&& added_segment.points.size > 0) {
 							
 						first = added_segment.get_first_point ();
-						first.get_right_handle ().convert_to_line ();
+						segment_last.right_handle = ep_start.get_right_handle ().copy ();
 						first.recalculate_linear_handles ();
 					}
 
@@ -355,13 +355,27 @@ public class StrokeTool : Tool {
 			stroke1.add_point (n);
 		}
 
+		cap.remove_points_on_points (); // FIXME:
 		return_if_fail (0 < f < stroke1.points.size);
 		
 		first = stroke1.points.get (f);
-		stroke1.add_point (stroke2.get_first_point ());
 		
 		last = stroke1.get_last_point ();
+		last.convert_to_curve ();
 		
+		last = stroke1.add_point (stroke2.get_first_point ());
+		stroke2.delete_first_point ();
+
+		last.convert_to_line ();
+		last.recalculate_linear_handles ();
+		
+		last.next = stroke1.add_point (stroke2.get_first_point ()).get_link_item ();
+		stroke2.delete_first_point ();
+		
+		last.get_left_handle ().convert_to_curve ();
+		last.get_left_handle ().angle = last.get_right_handle ().angle + PI;
+		last.flags = EditPoint.CURVE_KEEP;
+								
 		double a;
 		double l;
 		
@@ -438,19 +452,7 @@ public class StrokeTool : Tool {
 		merged.close ();
 		merged.create_list ();
 		merged.recalculate_linear_handles ();
-/*
-// BUTT CAP
-		if (path.is_open ()) {
-			first = merged.get_first_point ();
-			last_counter = merged.get_last_point ();
-
-			first.get_left_handle ().convert_to_line ();
-			first.recalculate_linear_handles ();
-
-			last_counter.get_right_handle ().convert_to_line ();
-			last_counter.recalculate_linear_handles ();
-		}
-*/
+		
 		return merged;
 	}
 
@@ -2216,7 +2218,7 @@ public class StrokeTool : Tool {
 				convert_to_curve (p);
 			}
 		}
-		
+				
 		return pl;
 	}
 	
