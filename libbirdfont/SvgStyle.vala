@@ -25,6 +25,24 @@ public class SvgStyle {
 		style = new Gee.HashMap<string, string> ();
 	}
 	
+	public LineCap get_line_cap () {
+		string l;
+		
+		if (!style.has_key ("stroke-linecap")) {
+			return LineCap.BUTT;
+		}
+		
+		l = style.get ("stroke-linecap");
+		
+		if (l == "round") {
+			return LineCap.ROUND;
+		} else if (l == "square") {
+			return LineCap.SQUARE;
+		}
+		
+		return LineCap.BUTT; 	
+	}
+	
 	public double get_stroke_width () {
 		if (!style.has_key ("stroke-width")) {
 			return 0;

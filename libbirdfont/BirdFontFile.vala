@@ -389,7 +389,22 @@ class BirdFontFile : GLib.Object {
 		foreach (Path p in g.path_list) {
 			data = get_point_data (p);
 			if (data != "") {
-				os.put_string (@"\t\t<path stroke=\"$(double_to_string (p.stroke))\" skew=\"$(double_to_string (p.skew))\" data=\"$(data)\" />\n");
+				os.put_string (@"\t\t<path ");
+				os.put_string (@"stroke=\"$(double_to_string (p.stroke))\" ");
+				
+				if (p.line_cap != LineCap.BUTT) {
+					if (p.line_cap == LineCap.ROUND) {
+						os.put_string (@"cap=\"round\" ");
+					} else if (p.line_cap == LineCap.SQUARE) {
+						os.put_string (@"cap=\"square\" ");
+					}
+				}
+				
+				if (p.skew != 0) {
+					os.put_string (@"skew=\"$(double_to_string (p.skew))\" ");
+				}
+				
+				os.put_string (@"data=\"$(data)\" />\n");
 			}
 		}
 		write_glyph_background (g, os);
@@ -1211,7 +1226,15 @@ class BirdFontFile : GLib.Object {
 
 			if (attr.get_name () == "skew") {
 				path.skew = double.parse (attr.get_content ());
-			}	
+			}
+			
+			if (attr.get_name () == "cap") {
+				if (attr.get_content () == "round") {
+					path.line_cap = LineCap.ROUND;
+				} else if (attr.get_content () == "square") {
+					path.line_cap = LineCap.SQUARE;
+				}
+			}
 		}
 		
 		return path;	

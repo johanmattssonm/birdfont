@@ -456,12 +456,13 @@ public class SvgParser {
 			}
 		}
 	
-		foreach (Path p1 in pl.paths.paths) {
-			p1.stroke = style.get_stroke_width ();
-			p1.reset_stroke ();
-			p1.update_region_boundaries ();
+		foreach (Path p in path_list.paths) {
+			p.stroke = style.get_stroke_width ();
+			p.line_cap = style.get_line_cap ();
+			p.reset_stroke ();
+			p.update_region_boundaries ();		
 		}
-		
+
 		// assume the even odd rule is applied and convert the path
 		// to a path using the non-zero rule
 		int inside_count;
