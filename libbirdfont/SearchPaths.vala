@@ -180,6 +180,11 @@ public class SearchPaths {
 		if (f.query_exists ()) {
 			return f;
 		}
+
+		f = (!) File.new_for_path (BirdFont.bundle_path + "/Contents/Resources/NamesList.txt");
+		if (f.query_exists ()) {
+			return f;
+		}
 		
 		f = (!) File.new_for_path ("/usr/share/unicode/ucd/NamesList.txt");
 		if (f.query_exists ()) {

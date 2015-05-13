@@ -366,7 +366,7 @@ public class BirdFont {
 	public static bool mac = false;
 	public static bool android = false;
 	public static string exec_path = "";
-	public static string bundle_path = "";
+	public static string? bundle_path = null;
 
 	public static bool logging = false;
 	public static DataOutputStream? logstream = null;
