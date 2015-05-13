@@ -210,8 +210,8 @@ def libbirdgems(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		run(cc + " " + ldflags + """ \
 			-shared \
 			""" + sonameparam + """ \
-			build/libbirdgems/*.o \
 			-fPIC \
+			build/libbirdgems/*.o \
 			$(pkg-config --libs glib-2.0) \
 			$(pkg-config --libs gobject-2.0) \
 			-o """ + library)
