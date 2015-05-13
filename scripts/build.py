@@ -266,7 +266,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
-		-L./build -L./build/bin -l birdxml \
+		-L./build -L./build/bin -l birdxml -l birdgems\
 		-o ./build/bin/birdfont-export""")
 
 	run("rm -f build/birdfont.1.gz")
@@ -323,7 +323,7 @@ def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
-                -L./build -L./build/bin -l birdxml \
+                -L./build -L./build/bin -l birdxml -l birdgems\
 		-o ./build/bin/birdfont-import""")
 
 def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
@@ -368,7 +368,7 @@ def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = 
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs gdk-pixbuf-2.0) \
-                -L./build -L./build/bin -l birdxml \
+      -L./build -L./build/bin -l birdxml -l birdgems\
 		-o ./build/bin/birdfont-autotrace""")
 
 
@@ -420,6 +420,6 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
 		$(pkg-config --libs webkitgtk-3.0) \
 		$(pkg-config --libs gtk+-2.0) \
 		$(pkg-config --libs libnotify) \
-                -L./build -L./build/bin -l birdxml \
+                -L./build -L./build/bin -l birdxml -l birdgems\
 		-o ./build/bin/birdfont""")
 
