@@ -146,6 +146,7 @@ public class BezierTool : Tool {
 			
 			if (StrokeTool.add_stroke) {
 				current_path.stroke = StrokeTool.stroke_width;
+				current_path.line_cap = StrokeTool.line_cap;
 			}
 			
 			GlyphCanvas.redraw ();
@@ -311,7 +312,7 @@ public class BezierTool : Tool {
 		if (state == MOVE_POINT && current_path.points.size > 0) {
 			current_path.delete_last_point ();
 			current_path.reset_stroke ();
-			current_path.get_stroke (); // cache better stroke
+			current_path.create_full_stroke (); // cache better stroke
 		}
 		
 		state = NONE;

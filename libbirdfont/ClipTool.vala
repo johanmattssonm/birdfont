@@ -241,6 +241,12 @@ public class ClipTool : Tool {
 					s.append ("BF stroke: ");
 					s.append (@"$(path.stroke)");
 					s.append ("\n");
+					
+					if (path.line_cap == LineCap.ROUND) {
+						s.append ("BF cap: round\n");
+					} else if (path.line_cap == LineCap.SQUARE) {
+						s.append ("BF cap: square\n");
+					}
 				}
 			} else if (glyph.path_list.size > 0) {
 				foreach (Path path in glyph.active_paths) {
@@ -251,6 +257,12 @@ public class ClipTool : Tool {
 					s.append ("BF stroke: ");
 					s.append (@"$(path.stroke)");
 					s.append ("\n");
+					
+					if (path.line_cap == LineCap.ROUND) {
+						s.append ("BF cap: round\n");
+					} else if (path.line_cap == LineCap.SQUARE) {
+						s.append ("BF cap: square\n");
+					}
 				}
 			} else {
 				new_path = new Path ();
@@ -294,6 +306,12 @@ public class ClipTool : Tool {
 						s.append ("BF stroke: ");
 						s.append (@"$(path.stroke)");
 						s.append ("\n");
+						
+						if (path.line_cap == LineCap.ROUND) {
+							s.append ("BF cap: round\n");
+						} else if (path.line_cap == LineCap.SQUARE) {
+							s.append ("BF cap: square\n");
+						}
 					}
 				}
 			}
@@ -369,6 +387,16 @@ public class ClipTool : Tool {
 			if (p.has_prefix ("stroke:")) {
 				path.stroke = double.parse (p.replace ("stroke: ", ""));
 			}
+
+			if (p.has_prefix ("cap:")) {
+				string cap = p.replace ("cap: ", "");
+				
+				if (cap == "round") {
+					path.line_cap = LineCap.ROUND;
+				} else if (cap == "square") {
+					path.line_cap = LineCap.SQUARE;
+				}
+			}
 		}
 		
 		if (!overview) {
@@ -377,6 +405,7 @@ public class ClipTool : Tool {
 			glyph = glyphs.get (0).get_current ();
 			
 			foreach (Path p in glyph.path_list) {
+				PenTool.clear_directions ();
 				destination.add_path (p);
 				destination.add_active_path (p);
 			}
@@ -403,6 +432,7 @@ public class ClipTool : Tool {
 		BirdFontFile.parse_path_data (data, path);
 
 		if (path.points.size > 0) {
+			PenTool.clear_directions ();
 			glyph.add_path (path);
 			glyph.active_paths.add (path);
 			path.update_region_boundaries ();

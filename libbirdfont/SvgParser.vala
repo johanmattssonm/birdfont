@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+    Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -443,18 +443,26 @@ public class SvgParser {
 	private void parse_path (Tag tag, Layer pl) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
+		SvgStyle style = new SvgStyle ();
 
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "d") {
 				path_list = parse_svg_data (attr.get_content (), glyph);
 				pl.paths.append (path_list);
 			}
+
+			if (attr.get_name () == "style") {
+				style = SvgStyle.parse (attr.get_content ());
+			}
 		}
 	
-		foreach (Path p1 in pl.paths.paths) {
-			p1.update_region_boundaries ();
+		foreach (Path p in path_list.paths) {
+			p.stroke = style.get_stroke_width ();
+			p.line_cap = style.get_line_cap ();
+			p.reset_stroke ();
+			p.update_region_boundaries ();		
 		}
-		
+
 		// assume the even odd rule is applied and convert the path
 		// to a path using the non-zero rule
 		int inside_count;
@@ -534,7 +542,6 @@ public class SvgParser {
 		}
 	}
 
-	// FIXME: cache lines in path
 	public static Path get_lines (Path p) {
 		EditPoint start;
 		Path path = new Path ();
@@ -678,7 +685,7 @@ public class SvgParser {
 		int i = -1;
 		while (++i < c.length && bi < bezier_points.length) {	
 			if (c[i] == "m") {
-				while (i + 2 < c.length && is_point (c[i + 1])) { // FIXME: check array bounds
+				while (i + 2 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'M';
 					bezier_points[bi].svg_type = 'm';
 					
@@ -1189,15 +1196,8 @@ public class SvgParser {
 			return path_list;	
 		}
 		
-		// TODO: this code assumes that all paths are closed since stroke has not been implemented yet
-		if (bezier_points[bi - 1].type != 'z') {
-			bezier_points[bi].type = 'z';
-			bezier_points[bi].svg_type = 'z';
-			bi++;
-		}
-		
 		move_and_resize (bezier_points, bi, svg_glyph, units, glyph);
-
+		
 		if (format == SvgFormat.ILLUSTRATOR) {
 			path_list = create_paths_illustrator (bezier_points, bi);
 		} else {
@@ -1241,6 +1241,7 @@ public class SvgParser {
 	
 	void find_last_handle (int start_index, BezierPoints[] b, int num_b, out double left_x, out double left_y, out PointType last_type) {
 		BezierPoints last = new BezierPoints ();
+		bool found = false;
 		
 		left_x = 0;
 		left_y = 0;
@@ -1257,38 +1258,43 @@ public class SvgParser {
 				case 'C':
 					break;
 				case 'z':
-					if (b[i - 1].type == 'Q') {
-						return_if_fail (i >= 1);
-						left_x = b[i - 1].x0;
-						left_y = b[i - 1].y0;
-						last_type = PointType.QUADRATIC;
-					} else if (b[i - 1].type == 'C') {
-						return_if_fail (i >= 1);
-						left_x = b[i - 1].x1;
-						left_y = b[i - 1].y1;
-						last_type = PointType.CUBIC;
-					} else if (b[i - 1].type == 'S') {
-						return_if_fail (i >= 1);
-						left_x = b[i - 1].x1;
-						left_y = b[i - 1].y1;
-						last_type = PointType.CUBIC;
-					}else if (b[i - 1].type == 'L' || last.type == 'M') {
-						return_if_fail (i >= 2); // FIXME: -2 can be C or L
-						left_x = b[i - 2].x0 + (b[i - 1].x0 - b[i - 2].x0) / 3.0;
-						left_y = b[i - 2].y0 + (b[i - 1].y0 - b[i - 2].y0) / 3.0;
-						last_type = PointType.LINE_CUBIC;
-					} else {
-						warning (@"Unexpected type. $(b[i - 1])\n");
-					}
-					return;
+					found = true;
+					break;
 				default:
 					break;
+			}
+			
+			if (found || i + 1 == num_b) {
+				if (b[i - 1].type == 'Q') {
+					return_if_fail (i >= 1);
+					left_x = b[i - 1].x0;
+					left_y = b[i - 1].y0;
+					last_type = PointType.QUADRATIC;
+				} else if (b[i - 1].type == 'C') {
+					return_if_fail (i >= 1);
+					left_x = b[i - 1].x1;
+					left_y = b[i - 1].y1;
+					last_type = PointType.CUBIC;
+				} else if (b[i - 1].type == 'S') {
+					return_if_fail (i >= 1);
+					left_x = b[i - 1].x1;
+					left_y = b[i - 1].y1;
+					last_type = PointType.CUBIC;
+				}else if (b[i - 1].type == 'L' || last.type == 'M') {
+					return_if_fail (i >= 2); // FIXME: -2 can be C or L
+					left_x = b[i - 2].x0 + (b[i - 1].x0 - b[i - 2].x0) / 3.0;
+					left_y = b[i - 2].y0 + (b[i - 1].y0 - b[i - 2].y0) / 3.0;
+					last_type = PointType.LINE_CUBIC;
+				} else {
+					warning (@"Unexpected type. $(b[i - 1])\n");
+				}
+				return;	
 			}
 			
 			last = b[i];
 		}
 		
-		warning ("Expecting z");
+		warning ("Last point not found.");
 	}
 
 	PathList create_paths_inkscape (BezierPoints[] b, int num_b) {
@@ -1334,7 +1340,9 @@ public class SvgParser {
 				}
 			}
 			
-			return_val_if_fail (i + 1 < num_b, path_list);
+			if (i >= num_b) {
+				break;
+			}
 			
 			if (b[i].type == 'M') {
 				ep = path.add (b[i].x0, b[i].y0);
@@ -1424,7 +1432,6 @@ public class SvgParser {
 			e.recalculate_linear_handles ();
 		}
 		
-
 		for (int i = 0; i < 3; i++) {
 			foreach (EditPoint e in smooth_points) {
 				e.set_tie_handle (true);
@@ -1443,6 +1450,7 @@ public class SvgParser {
 		return path_list;
 	}
 
+	// FIXME: NO END
 	PathList create_paths_illustrator (BezierPoints[] b, int num_b) {
 		Path path;
 		PathList path_list = new PathList ();
@@ -1466,8 +1474,8 @@ public class SvgParser {
 		first_left_x = 0;
 		first_left_y = 0;
 
-		for (int i = 0; i < num_b; i++) {
-						
+		// FIXME: array boundaries
+		for (int i = 0; i < num_b; i++) {			
 			if (b[i].type == '\0') {
 				warning ("Parser error.");
 				return path_list;
@@ -1555,7 +1563,6 @@ public class SvgParser {
 			e.recalculate_linear_handles ();
 		}
 		
-
 		for (int i = 0; i < 3; i++) {
 			foreach (EditPoint e in smooth_points) {
 				e.set_tie_handle (true);
@@ -1564,7 +1571,6 @@ public class SvgParser {
 		}
 				
 		if (path.points.size > 0) {
-			warning ("Open path.");
 			path_list.add (path);
 		}
 		

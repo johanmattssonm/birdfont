@@ -156,7 +156,7 @@ public class MoveTool : Tool {
 			DrawingTools.resize_tool.signal_objects_rotated ();
 			
 			foreach (Path p in glyph.active_paths) {
-				p.get_stroke ();
+				p.create_full_stroke ();
 			}
 		} else {
 			objects_deselected ();

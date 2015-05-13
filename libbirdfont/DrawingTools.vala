@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+    Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -70,7 +70,7 @@ public class DrawingTools : ToolCollection  {
 	Tool help_lines;
 	Tool xheight_help_lines;
 	Tool background_help_lines;
-
+	
 	SpinButton x_coordinate;
 	SpinButton y_coordinate;
 	SpinButton rotation;
@@ -94,7 +94,11 @@ public class DrawingTools : ToolCollection  {
 	Tool flip_horizontal;
 	
 	public ZoomBar zoom_bar;
-	
+
+	Tool line_cap_butt;
+	Tool line_cap_round;
+	Tool line_cap_square;
+			
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		bool selected_line;
 		
@@ -786,6 +790,7 @@ public class DrawingTools : ToolCollection  {
 			if (StrokeTool.add_stroke) {
 				foreach (Path p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
+					p.line_cap = StrokeTool.line_cap;
 				}
 			} else {
 				foreach (Path p in g.active_paths) {
@@ -850,7 +855,83 @@ public class DrawingTools : ToolCollection  {
 			outline.set_selected (false);
 		});
 		stroke_expander.add_tool (outline);	
-				
+
+		// set line cap
+		line_cap_butt = new Tool ("line_cap_butt", t_("Butt line cap"));
+		line_cap_butt.select_action.connect ((self) => {
+			Glyph g;
+			
+			g = MainWindow.get_current_glyph ();
+			g.store_undo_state ();
+			
+			foreach (Path p in g.active_paths) {
+				p.line_cap = LineCap.BUTT;
+				p.reset_stroke ();
+			}
+			
+			StrokeTool.line_cap = LineCap.BUTT;
+			Font f = BirdFont.get_current_font ();
+			f.settings.set_setting ("line_cap", @"butt");
+
+			line_cap_butt.selected = true;
+			line_cap_round.selected = false;
+			line_cap_square.selected = false;
+			
+			GlyphCanvas.redraw ();
+		});
+		stroke_expander.add_tool (line_cap_butt);	
+		
+		line_cap_round = new Tool ("line_cap_round", t_("Round line cap"));
+		line_cap_round.select_action.connect ((self) => {
+			Glyph g;
+			
+			g = MainWindow.get_current_glyph ();
+			g.store_undo_state ();
+			
+			foreach (Path p in g.active_paths) {
+				p.line_cap = LineCap.ROUND;
+				p.reset_stroke ();
+			}
+			
+			StrokeTool.line_cap = LineCap.ROUND;
+
+			Font f = BirdFont.get_current_font ();
+			f.settings.set_setting ("line_cap", @"round");
+
+			line_cap_butt.selected = false;
+			line_cap_round.selected = true;
+			line_cap_square.selected = false;
+						
+			GlyphCanvas.redraw ();
+		});
+		stroke_expander.add_tool (line_cap_round);	
+
+		line_cap_square = new Tool ("line_cap_square", t_("Square line cap"));
+		line_cap_square.select_action.connect ((self) => {
+			Glyph g;
+			
+			g = MainWindow.get_current_glyph ();
+			g.store_undo_state ();
+			
+			foreach (Path p in g.active_paths) {
+				p.line_cap = LineCap.SQUARE;
+				p.reset_stroke ();
+			}
+			
+			StrokeTool.line_cap = LineCap.SQUARE;
+
+			Font f = BirdFont.get_current_font ();
+			f.settings.set_setting ("line_cap", @"square");
+			
+			line_cap_butt.selected = false;
+			line_cap_round.selected = false;
+			line_cap_square.selected = true;
+			
+			GlyphCanvas.redraw ();
+		});
+		stroke_expander.add_tool (line_cap_square);	
+
+		// tests
 		if (BirdFont.has_argument ("--test")) {
 			Tool test_case = new Tool ("test_case");
 			test_case.select_action.connect((self) => {

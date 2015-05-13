@@ -188,7 +188,7 @@ public class PenTool : Tool {
 					p.get_last_point ().set_reflective_handles (false);
 				}
 				
-				p.get_stroke (); // cache good stroke
+				p.create_full_stroke (); // cache good stroke
 			}
 		});
 
@@ -1767,6 +1767,8 @@ public class PenTool : Tool {
 			np = new Path ();
 			g.add_path (np);
 			np.stroke = stroke ? StrokeTool.stroke_width : 0;
+			np.line_cap = StrokeTool.line_cap;
+			
 			g.add_active_path (np);
 			
 			active_path = np;

@@ -317,11 +317,14 @@ public class SpinButton : Tool {
 			
 			fv = int.parse (v);
 			fv = (fv < 0) ? -fv : fv;
+		
 			if (fv < 10) {
 				v = @"00$v";
 			} else if (fv < 100) {
 				v = @"0$v";
 			}
+			
+			v = @"$v";
 		}
 
 		while (v.char_count () < 6) {
@@ -425,15 +428,23 @@ public class SpinButton : Tool {
 	}
 
 	public string get_display_value () {
+		string v;
+		
 		if (!big_number) {
 			return @"$n0.$n1$n2$n3$n4";
 		}
 		
-		if (negative) {
-			return @"-$n0$n1$n2.$n3$n4";
+		v = (negative) ? "-" : "";
+			
+		if (n0 == 0 && n1 == 0) {
+			v = @"$v$n2.$n3$n4";
+		} else if (n0 == 0) {
+			v =  @"$v$n1$n2.$n3$n4";
+		} else {
+			v = @"$v$n0$n1$n2.$n3$n4";
 		}
 		
-		return @"$n0$n1$n2.$n3$n4";
+		return v;
 	}
 	
 	public override void draw (Context cr) {

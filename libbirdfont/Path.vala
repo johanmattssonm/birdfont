@@ -48,6 +48,7 @@ public class Path {
 
 	/** Stroke width */
 	public double stroke = 0;
+	public LineCap line_cap = LineCap.BUTT;
 	PathList? full_stroke = null;
 	PathList? fast_stroke = null;
 	
@@ -756,6 +757,7 @@ public class Path {
 		new_path.edit = edit;
 		new_path.open = open;
 		new_path.stroke = stroke;
+		new_path.line_cap = line_cap;
 		new_path.skew = skew;
 		new_path.fill = fill;
 		new_path.direction_is_set = direction_is_set;
@@ -817,11 +819,11 @@ public class Path {
 
 	public Path flatten () {
 		Path flat = new Path ();
-		
+
 		all_of_path ((x, y, t) => {
 			flat.add (x, y);
 			return true;
-		});
+		}, 10); // FIXME: g.view_zoom
 		
 		return flat;
 	}
@@ -2320,7 +2322,9 @@ public class Path {
 	}
 	
 	public void create_full_stroke () {
-		full_stroke = StrokeTool.get_stroke (this, stroke);
+		if (stroke > 0) {
+			full_stroke = StrokeTool.get_stroke (this, stroke);
+		}
 	}
 	
 	public PathList get_stroke () {

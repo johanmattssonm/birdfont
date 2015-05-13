@@ -91,24 +91,57 @@ public class ExportTool : GLib.Object {
 		string glyph_svg;
 		StringBuilder s;
 		string name;
+		int id = 0;
+		
 		name = glyph.get_name ();
-								
+		
+		Gee.ArrayList<Path> pl;
+		
 		s = new StringBuilder ();
 		glyph_svg = "";
+
+		pl = only_selected_paths ? glyph.active_paths : glyph.path_list;
+		foreach (Path p in pl) {
+			if (p.stroke > 0) {
+				s.append (@"<path ");
+				s.append (@"style=\"");
+				s.append (@"fill:none;");
+				s.append (@"stroke:#000000;");
+				s.append (@"stroke-width:$(p.stroke)px;");
+				
+				if (p.line_cap == LineCap.ROUND) {
+					s.append (@"stroke-linecap:round;");
+				} else if (p.line_cap == LineCap.SQUARE) {
+					s.append (@"stroke-linecap:square;");
+				}
+				
+				s.append (@"\" ");
+				
+				s.append (@"d=\"$(Svg.to_svg_path (p, glyph))\" id=\"path_$(name)_$(id)\" />\n");
+				id++;
+			}
+		}
 		
 		if (only_selected_paths) {
 			foreach (Path p in glyph.active_paths) {
-				glyph_svg += Svg.to_svg_path (p, glyph);
+				if (p.stroke == 0) {
+					glyph_svg += Svg.to_svg_path (p, glyph);
+				}
 			}	
 		} else {
 			foreach (Path p in glyph.path_list) {
-				glyph_svg += Svg.to_svg_path (p, glyph);
+				if (p.stroke == 0) {
+					glyph_svg += Svg.to_svg_path (p, glyph);
+				}
 			}
 		}
 
-		s.append (@"<path ");
-		s.append (@"style=\"fill:#000000;stroke-width:0px\" ");
-		s.append (@"d=\"$(glyph_svg)\" id=\"path_$(name)\" />\n");
+		if (glyph_svg != "") {
+			s.append (@"<path ");
+			s.append (@"style=\"fill:#000000;stroke-width:0px\" ");
+			s.append (@"d=\"$(glyph_svg)\" id=\"path_$(name)_$(id)\" />\n");
+			id++;
+		}
 		
 		return s.str;
 	}

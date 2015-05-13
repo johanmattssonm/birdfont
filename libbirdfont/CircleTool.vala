@@ -146,6 +146,7 @@ public class CircleTool : Tool {
 
 		if (StrokeTool.add_stroke) {
 			path.stroke = StrokeTool.stroke_width;
+			path.line_cap = StrokeTool.line_cap;
 		}
 
 		for (int i = 0; i < 3; i++) {
