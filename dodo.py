@@ -117,7 +117,7 @@ libbirdgems = Vala(src='libbirdgems', build='build', library='birdgems', so_vers
 def task_libbirdgems():
     yield libbirdgems.gen_c(valac_options)
     yield libbirdgems.gen_o(['-fPIC'])
-    yield libbirdgems.gen_so('-L ./build -l m')
+    yield libbirdgems.gen_so('-shared -L ./build -l m')
     yield libbirdgems.gen_ln()
 
 
