@@ -1999,6 +1999,13 @@ public class StrokeTool : Tool {
 		side1 = new Path ();
 		side2 = new Path ();
 		
+		foreach (EditPoint ph in path.points) {
+			if (ph.type == PointType.HIDDEN) {
+				ph.type = PointType.CUBIC;
+			}
+		}
+		path.remove_deleted_points ();
+		
 		if (path.points.size < 2) {
 			return pl;
 		}

@@ -46,6 +46,8 @@ public class LanguageSelectionTab : Table {
 
 	void select_language (int row) {
 		string iso_code;
+		OverView overview;
+		GlyphRange gr;
 		TabBar tb = MainWindow.get_tab_bar ();
 		
 		return_if_fail (0 <= row < DefaultLanguages.codes.size);
@@ -53,7 +55,13 @@ public class LanguageSelectionTab : Table {
 		iso_code = DefaultLanguages.codes.get (row);
 		Preferences.set ("language", iso_code);
 		tb.close_display (this);
-		Toolbox.select_tool_by_name ("custom_character_set");
+
+		overview = MainWindow.get_overview ();
+		gr = new GlyphRange ();
+		DefaultCharacterSet.use_default_range (gr);
+		overview.set_glyph_range (gr);
+		OverviewTools.update_overview_characterset ();
+		FontDisplay.dirty_scrollbar = true;
 	}
 	
 	public override string get_label () {

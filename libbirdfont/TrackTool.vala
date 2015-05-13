@@ -221,6 +221,8 @@ public class TrackTool : Tool {
 		foreach (EditPoint e in p.points) {
 			if (e.type == PointType.HIDDEN) {
 				e.type = DrawingTools.point_type;
+				e.get_right_handle ().type = DrawingTools.point_type;
+				e.get_left_handle ().type = DrawingTools.point_type;
 			}
 		}
 	}
