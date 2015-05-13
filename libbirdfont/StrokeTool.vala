@@ -103,7 +103,6 @@ public class StrokeTool : Tool {
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.3);
 		o = create_stroke (stroke, thickness, false);
-		
 		o = get_all_parts (o);
 		o = remove_intersection_paths (o);
 		o = merge (o);
@@ -273,7 +272,7 @@ public class StrokeTool : Tool {
 		PathList r = new PathList ();
 		
 		foreach (Path p in pl.paths) {
-			if (p.points.size > 7) {
+			if (p.points.size > 22) {
 				r.add (p);
 			} else {
 				has_new_corner (p);
@@ -575,8 +574,6 @@ public class StrokeTool : Tool {
 				cutoff2.deleted = true;
 				
 				stroked.remove_deleted_points ();
-				stroked.add (cutoff1.x + (cutoff2.x - cutoff1.x) / 2, cutoff1.y + (cutoff2.y - cutoff1.y) / 2);
-				
 				return;
 			}
 			
@@ -1015,8 +1012,8 @@ public class StrokeTool : Tool {
 				
 		Path.find_intersection_point (ep, next, p1, p2, out cross_x, out cross_y);
 		
-		if (Glyph.CANVAS_MIN < cross_x < Glyph.CANVAS_MAX
-			&& Glyph.CANVAS_MIN < cross_y < Glyph.CANVAS_MAX) {
+		if (fmin (ep.x, next.x) <= cross_x <= fmax (ep.x, next.x)
+			&& fmin (ep.y, next.y) <= cross_y <= fmax (ep.y, next.y)) {
 			// iterate to find intersection.				
 			if (is_line (ep.x, ep.y, cross_x, cross_y, next.x, next.y)
 				&& is_line (p1.x, p1.y, cross_x, cross_y, p2.x, p2.y)) {
@@ -2021,7 +2018,7 @@ public class StrokeTool : Tool {
 			
 			previous.flags |= EditPoint.CURVE_KEEP;
 			previous_inside.flags |= EditPoint.CURVE_KEEP;
-			
+						
 			side1.add_point (previous);
 			side2.add_point (previous_inside);
 		}
@@ -2117,7 +2114,7 @@ public class StrokeTool : Tool {
 					previous.flags |= EditPoint.CURVE_KEEP;
 					previous_inside.flags |= EditPoint.CURVE_KEEP;
 				}
-				
+
 				side1.add_point (previous);
 				side2.add_point (previous_inside);
 				
@@ -2213,6 +2210,7 @@ public class StrokeTool : Tool {
 			convert_to_curve (side2);
 			
 			side2.reverse ();
+			
 			pl = merge_stroke_parts (path, side1, side2);
 		}
 
