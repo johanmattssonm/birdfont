@@ -211,6 +211,7 @@ def libbirdgems(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			-shared \
 			""" + sonameparam + """ \
 			build/libbirdgems/*.o \
+			-fPIC \
 			$(pkg-config --libs glib-2.0) \
 			$(pkg-config --libs gobject-2.0) \
 			-o """ + library)
@@ -319,6 +320,7 @@ def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 		build/birdfont-import/*.o \
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
+		-fPIC \
 		$(pkg-config --libs """ + config.GEE + """) \
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
