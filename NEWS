@@ -1,3 +1,11 @@
+birdfont (2.7.0) stable;
+
+  * Stroke
+  * Round line caps
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Wed May 13 16:11:44 CEST 2015
+
 birdfont (2.6.2) stable;
 
   * Bug fixes
