@@ -274,8 +274,10 @@ public class StrokeTool : Tool {
 		foreach (Path p in pl.paths) {
 			if (p.points.size > 22) {
 				r.add (p);
-			} else {
-				has_new_corner (p);
+			} else if (!has_new_corner (p)) {
+				r.add (p);
+			} else if (counters (pl, p) == 0) {
+				r.add (p);
 			}
 		}
 		
