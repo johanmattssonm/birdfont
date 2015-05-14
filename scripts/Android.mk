@@ -8,7 +8,7 @@ LOCAL_CFLAGS    := -D 'GETTEXT_PACKAGE="birdfont"'
 LOCAL_CFLAGS    += -Wno-missing-field-initializers 
 LOCAL_CFLAGS    += -I. 
 LOCAL_CFLAGS    += -I ./include 
-LOCAL_CFLAGS    += -I ./include/glib-2.0
+LOCAL_CFLAGS    += -I ./include/glib
 LOCAL_CFLAGS    += -I ./include/gee-1.0
 LOCAL_CFLAGS    += -I ./include/freetype
 
