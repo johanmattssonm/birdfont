@@ -31,13 +31,26 @@ library = "libbirdfont.so"
 
 configfile.write_config (prefix)
 compile_translations()
+
 build.libbirdgems(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
+run ("mkdir -p build/libbirdgems/jni");
+run ("cp scripts/AndroidBirdGems.mk build/libbirdgems/jni/Android.mk");
+run ("cp build/libbirdgems/*.c build/libbirdgems/jni/");
+run ("cd build/libbirdgems/jni && ndk-build");
+run ("cp -ra build/libbirdgems/libs/armeabi/libbirdgems.so build/");
+
 build.libbirdxml(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
+run ("mkdir -p build/libbirdxml/jni");
+run ("cp scripts/AndroidBirdXml.mk build/libbirdxml/jni/Android.mk");
+run ("cp build/libbirdxml/*.c build/libbirdxml/jni/");
+run ("cd build/libbirdxml/jni && ndk-build");
+run ("cp -ra build/libbirdxml/libs/armeabi/libbirdxml.so build/");
+
 build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
-run ("mkdir -p build/jni");
-run ("cp scripts/Android.mk build/jni/");
-run ("cp scripts/Application.mk build/jni");
-run ("cp build/libbirdfont/*.c build/jni/");
-run ("cd build/jni && ndk-build");
+run ("mkdir -p build/libbirdfont/jni");
+run ("cp scripts/AndroidBirdFont.mk build/libbirdfont/jni/Android.mk");
+run ("cp build/libbirdfont/*.c build/libbirdfont/jni/");
+run ("cd build/libbirdfont/jni && ndk-build");
+run ("cp -ra build/libbirdfont/libs/armeabi/libbirdfont.so build/");
 
 print ("Done")
