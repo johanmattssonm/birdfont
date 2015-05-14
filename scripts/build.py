@@ -188,13 +188,13 @@ def libbirdgems(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		--library libbirdgems \
 		libbirdgems/*.vala \
 		""")
+
+	run("cp libbirdgems/*.c build/libbirdgems/")
+	run("cp libbirdgems/*.h build/libbirdgems/")
 	
 	if cc == "":
 		print ("Skipping compilation");
-	else:
-		run("cp libbirdgems/*.c build/libbirdgems/")
-		run("cp libbirdgems/*.h build/libbirdgems/")
-			
+	else:	
 		run(cc + " " + cflags + """ \
 			-fPIC \
 			$(pkg-config --cflags glib-2.0) \

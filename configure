@@ -131,7 +131,8 @@ if not options.gee:
 	options.gee = "Any"
 if not options.posix:
 	options.posix = has_posixvala ()
-	
+
 configure (options.gtk, options.gee, options.posix)
+
 configfile.write_config (options.prefix)
 configfile.write_compile_parameters (options.prefix, options.dest, options.cc, gee, options.posix)	
