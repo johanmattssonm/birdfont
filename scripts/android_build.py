@@ -31,6 +31,8 @@ library = "libbirdfont.so"
 
 configfile.write_config (prefix)
 compile_translations()
+build.libbirdgems(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
+build.libbirdxml(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
 build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, library)
 run ("mkdir -p build/jni");
 run ("cp scripts/Android.mk build/jni/");

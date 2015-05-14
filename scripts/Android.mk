@@ -7,13 +7,12 @@ LOCAL_MODULE    := birdfont
 LOCAL_CFLAGS    := -D 'GETTEXT_PACKAGE="birdfont"'
 LOCAL_CFLAGS    += -Wno-missing-field-initializers 
 LOCAL_CFLAGS    += -I. 
-LOCAL_CFLAGS    += -I /opt/android/include 
-LOCAL_CFLAGS    += -I /opt/android/include/glib-2.0
-LOCAL_CFLAGS    += -I /opt/android/include/libxml2
-LOCAL_CFLAGS    += -I /opt/android/include/gee-1.0
-LOCAL_CFLAGS    += -I /opt/android/include/freetype
+LOCAL_CFLAGS    += -I ./include 
+LOCAL_CFLAGS    += -I ./include/glib
+LOCAL_CFLAGS    += -I ./include/gee-1.0
+LOCAL_CFLAGS    += -I ./include/freetype
 
-LOCAL_LDLIBS	+= -L/opt/android/lib/$(TARGET_ARCH_ABI) 
+LOCAL_LDLIBS	+= -L/opt/local/$(TARGET_ARCH_ABI) 
 LOCAL_LDLIBS    += -lm 
 LOCAL_LDLIBS    += -lc 
 LOCAL_LDLIBS    += -llog
