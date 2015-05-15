@@ -1290,7 +1290,7 @@ public class Path {
 			ep.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
 			ep.type = PointType.DOUBLE_CURVE;
 		} else {
-			warning ("Point types: $right and $left in insert_new_point_on_path");
+			warning (@"Point types: $right and $left in insert_new_point_on_path");
 		}
 
 		ep.get_left_handle ().parent = ep;

@@ -44,8 +44,8 @@ public class FallbackFont : GLib.Object {
 		string fallback;
 		
 		if (fonts == null) {
-			stderr.printf ("Add a list of fonts to use as fallback in the --fonts parameter.\n");
-			stderr.printf ("Separate each path with \":\"\n");
+			stderr.printf ("Add a list of fonts to use as fallback to the \"--fonts\" argument.\n");
+			stderr.printf ("Separate each font file with \":\"\n");
 			return;
 		}
 		
@@ -74,7 +74,6 @@ public class FallbackFont : GLib.Object {
 		Font font;
 		Glyph g;
 		BirdFontFile bf;
-		DataOutputStream os;
 		File single_glyph_font;
 		
 		font = new Font ();
@@ -111,7 +110,7 @@ public class FallbackFont : GLib.Object {
 				font_data      TEXT                       NOT NULL
 			);
 		""";
-
+		
 		ec = db.exec (create_font_table, null, out errmsg);
 		if (ec != Sqlite.OK) {
 			warning ("Error: %s\n", (!) errmsg);

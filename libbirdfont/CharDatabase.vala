@@ -88,7 +88,7 @@ public class CharDatabase {
 					c = (unichar) statement.column_int64 (0);
 					ucd_result.add_single (c);
 				} else {
-					printerr ("Error: %d, %s\n", rc, db.errmsg ());
+					warning ("Error: %d, %s\n", rc, db.errmsg ());
 					break;
 				}
 			}
@@ -103,7 +103,7 @@ public class CharDatabase {
 			}
 			
 		} else {
-			printerr ("SQL error: %d, %s\n", rc, db.errmsg ());
+			warning ("SQL error: %d, %s\n", rc, db.errmsg ());
 		}
 		
 		return result;

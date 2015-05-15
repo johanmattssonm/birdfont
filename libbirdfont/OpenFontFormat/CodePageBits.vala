@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -12,28 +12,32 @@
     Lesser General Public License for more details.
 */
 
+using Sqlite;
+
 namespace BirdFont {
 
 public class CodePageBits : GLib.Object {
 
 	/** The first characters in all code pages. */
 	PageBit default_range;
-	
-	static bool has_codepages = false;
 	static Gee.ArrayList<PageBit> codepages; 
-	
-	public CodePageBits () {
-		default_range = new PageBit (-1, "null-");
+	static Gee.ArrayList<string> all_characters; 
+
+	public static unowned Database db;
+	public static Database? database = null;
 		
-		if (!has_codepages) {
-			codepages = new Gee.ArrayList<PageBit> ();
-			create_codepage_list ();
-			has_codepages = true;
+	public CodePageBits () {
+		if (database == null) {
+			open_database (get_database_file ());
 		}
+	}
+
+	public File get_database_file () {
+		return SearchPaths.find_file (null, "codepages.sqlite");
 	}
 	
 	public void get_pages (Font font, out uint32 p0, out uint32 p1) {
-		uint32 indice;
+		uint32 indice, a0, a1;
 		GlyphCollection? gl;
 		GlyphCollection g;
 		
@@ -43,46 +47,52 @@ public class CodePageBits : GLib.Object {
 		for (indice = 0; (gl = font.get_glyph_collection_indice (indice)) != null; indice++) {		
 			g = (!) gl;
 			
-			if (default_range.has_char (g.get_unicode_character ())) {
-				set_bit (0, ref p0, ref p1);
-			} else {
-				set_bits_for_glyph (g, ref p0, ref p1);
-			}
-		}
-	}
-
-	void set_bits_for_glyph (GlyphCollection g, ref uint32 p0, ref uint32 p1) {
-		Gee.ArrayList<int> bits;
-		
-		if (!g.is_unassigned ()) {
-			bits = get_bits (g.get_unicode_character ());
-						
-			foreach (int bit in bits) {
-				set_bit (bit, ref p0, ref p1);
+			if (!g.is_unassigned ()) {
+				get_bits (g.get_unicode_character (), out a0, out a1);
+				p0 |= a0;
+				p1 |= a1;
 			}
 		}
 	}
 	
-	public Gee.ArrayList<int> get_bits (unichar c) {
-		Gee.ArrayList<int> bits = new Gee.ArrayList<int> ();
-		foreach (PageBit pb in codepages) {
-			if (pb.has_char (c)) {
-				bits.add (pb.bit); 
-			}
-		}
-		return bits;
-	}
-
-	void set_bit (int bit, ref uint32 p0, ref uint32 p1) {
-		const int length = 32;
+	public void get_bits (unichar ch, out uint p0, out uint p1) {
+		int rc, cols;
+		Statement statement;
+		int64 c = (int64) ch;
+		string select = "SELECT codepages1, codepages2 FROM CodePages "
+			 + "WHERE unicode = " + @"$c" + ";";
 		
-		if (bit	< length) {
-			p0 |= 1 << bit;
+		p0 = 0;	
+		p1 = 0;
+		
+		rc = db.prepare_v2 (select, select.length, out statement, null);
+		
+		if (rc == Sqlite.OK) {
+			cols = statement.column_count();
+			
+			if (cols != 2) {
+				warning ("Expecting two columns.");
+				return;
+			}
+
+			while (true) {
+				rc = statement.step ();
+				
+				if (rc == Sqlite.DONE) {
+					break;
+				} else if (rc == Sqlite.ROW) {
+					p0 = (uint) statement.column_int64 (0);
+					p1 = (uint) statement.column_int64 (1);
+				} else {
+					printerr ("Error: %d, %s\n", rc, db.errmsg ());
+					break;
+				}
+			}
 		} else {
-			p1 |= 1 << (bit - length);
+			warning ("Database error: %s",  db.errmsg ());
 		}
 	}
-
+	
 	void create_codepage_list () {
 		// TODO: Add ASMO 
 		// Windows-1252
@@ -149,11 +159,157 @@ public class CodePageBits : GLib.Object {
 		create_codepage (63, "- ß-â ä-ï Ä-Ç É ö-÷ ñ-ô ù-ü ÿ Ö Ü  -£ ¥ ₧ ƒ Ñ ¿ ⌐ ª-¬ º-½ ▐-▓ │ ┤ ┐ └ ┴ ┬ ├ ─ ┼ ═-╬ ┘ ┌ █ ▄ ▌ ▀ α Γ π Σ σ-τ µ Φ Θ Ω δ-ε ∞ φ ∩ ≡ °-² ≤-≥ ⌠-⌡ ≈ ∙-√ · ⁿ ■");		
 	}
 
-	void create_codepage (int bit, string ranges) {
-		PageBit b = new PageBit (bit, ranges);
+	void create_codepage (int bit, string characters) {
+		string c;
+		PageBit b = new PageBit (bit, characters);
 		codepages.add (b);
+		
+		for (int i = 0; i < b.ranges.length (); i++) {
+			c = b.ranges.get_char (i);
+			if (all_characters.index_of (c) == -1) {
+				all_characters.add (c);
+			}
+		}
+	}
+	
+	File get_new_database_file () {
+		string? fn = BirdFont.get_argument ("--codepages");
+		
+		if (fn != null && ((!) fn) != "") {
+			return File.new_for_path ((!) fn);
+		}
+		
+		return File.new_for_path ("codepages.sqlite");
+	}
+		
+	public void generate_codepage_database () {
+		File f = get_new_database_file ();
+
+		stdout.printf ("Generating codepage database: %s\n", (!) f.get_path ());
+
+		try {
+			if (f.query_exists ()) {
+				f.delete ();
+			}
+			
+			open_database (f);
+			create_tables ();
+		
+			default_range = new PageBit (-1, "null-");
+			codepages = new Gee.ArrayList<PageBit> ();
+			all_characters = new Gee.ArrayList<string> ();
+			create_codepage_list ();
+			
+			write_database ();
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+		
+		stdout.printf ("Done\n");
 	}
 
+	void write_database () {
+		unichar ch;
+		uint32 pages1, pages2;
+		string? errmsg;
+		
+		int ec = db.exec ("BEGIN TRANSACTION", null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+		
+		foreach (string c in all_characters) {
+			ch = c.get_char (0);
+			get_pages_for_character (ch, out pages1, out pages2);
+			insert_codepage_for_character ((int64) ch, pages1, pages2);
+		}
+		
+		ec = db.exec ("END TRANSACTION", null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+	}
+
+	void insert_codepage_for_character (int64 character, uint32 codepages1, uint32 codepages2) {
+		string? errmsg;
+		string query = """
+			INSERT INTO CodePages (unicode, codepages1, codepages2)
+			VALUES (""" + @"$((int64) character)" + ", " + @"$(codepages1), " + @"$(codepages2)" + ");";
+		int ec = db.exec (query, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			stderr.printf (query);
+			warning ("Error: %s\n", (!) errmsg);
+		}
+	}
+	
+	void open_database (File db_file) {
+		int rc = Database.open ((!) db_file.get_path (), out database);
+
+		db = (!) database;
+
+		if (rc != Sqlite.OK) {
+			stderr.printf ("Can't open database: %d, %s\n", rc, db.errmsg ());
+		}
+	}
+
+	void create_tables () {
+		int ec;
+		string? errmsg;
+		string create_font_table = """
+			CREATE TABLE CodePages (
+				unicode        INTEGER     PRIMARY KEY    NOT NULL,
+				codepages1     INTEGER                    NOT NULL,
+				codepages2     INTEGER                    NOT NULL
+			);
+		""";
+		
+		ec = db.exec (create_font_table, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+	}
+
+	void get_pages_for_character (unichar character, out uint32 p0, out uint32 p1) {
+		p0 = 0;
+		p1 = 0;
+	
+		if (default_range.has_char (character)) {
+			set_bit (0, ref p0, ref p1);
+		} else {
+			set_bits_for_character (character, ref p0, ref p1);
+		}
+	}
+
+	void set_bits_for_character (unichar c, ref uint32 p0, ref uint32 p1) {
+		Gee.ArrayList<int> bits;
+		
+		bits = get_code_page_bits (c);
+					
+		foreach (int bit in bits) {
+			set_bit (bit, ref p0, ref p1);
+		}
+	}
+	
+	Gee.ArrayList<int> get_code_page_bits (unichar c) {
+		Gee.ArrayList<int> bits = new Gee.ArrayList<int> ();
+		foreach (PageBit pb in codepages) {
+			if (pb.has_char (c)) {
+				bits.add (pb.bit); 
+			}
+		}
+		return bits;
+	}
+	
+	void set_bit (int bit, ref uint32 p0, ref uint32 p1) {
+		const int length = 32;
+		
+		if (bit	< length) {
+			p0 |= 1 << bit;
+		} else {
+			p1 |= 1 << (bit - length);
+		}
+	}
+	
 	private class PageBit : GLib.Object {
 		public GlyphRange ranges;
 		public int bit;
