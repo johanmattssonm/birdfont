@@ -398,7 +398,8 @@ public class BirdFont {
 		string theme;
 		int default_theme_version;
 		string theme_version;
-		
+		CharDatabaseParser parser;
+
 		args = new Argument.command_line (arg);
 
 #if ANDROID
@@ -523,6 +524,11 @@ public class BirdFont {
 
 		if (TestBirdFont.get_singleton ().test_cases_to_run != "All") {
 			TestBirdFont.run_tests ();
+		}
+		
+		if (has_argument ("--parse-ucd")) {
+			parser = new CharDatabaseParser ();
+			parser.regenerate_database ();
 		}
 	}
 

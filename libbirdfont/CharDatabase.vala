@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -19,7 +19,6 @@ namespace BirdFont {
 
 public class CharDatabase {
 	public static GlyphRange full_unicode_range;
-	public static bool database_is_loaded = false;
 
 	public static unowned Database db;
 	public static Database? database = null;
@@ -28,24 +27,8 @@ public class CharDatabase {
 		File f;
 			
 		full_unicode_range = new GlyphRange ();
-
 		f = get_database_file ();
-		regenerate_database ();		
-	}
-	
-	public static void regenerate_database () {
-		File f = get_database_file ();
-		
-		try {
-			if (f.query_exists ()) {
-				f.delete ();
-			}
-			
-			open_database ();
-			create_tables ();
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
+		open_database () ;
 	}
 	
 	public static void open_database () {
@@ -59,66 +42,8 @@ public class CharDatabase {
 		}
 	}
 	
-	public static void create_tables () {
-		int ec;
-		string? errmsg;
-		string description_table = """
-			CREATE TABLE Description (
-				unicode        INTEGER     PRIMARY KEY    NOT NULL,
-				description    TEXT                       NOT NULL
-			);
-		""";
-
-		ec = db.exec (description_table, null, out errmsg);
-		if (ec != Sqlite.OK) {
-			warning ("Error: %s\n", (!) errmsg);
-		}
-
-		string index_table = """
-			CREATE TABLE Words (
-				unicode        INTEGER     NOT NULL,
-				word           TEXT        NOT NULL
-			);
-		""";
-
-		ec = db.exec (index_table, null, out errmsg);
-		if (ec != Sqlite.OK) {
-			warning ("Error: %s\n", (!) errmsg);
-		}
-
-		string create_index = "CREATE INDEX word_index ON Words (word);";
-
-		ec = db.exec (create_index, null, out errmsg);
-		if (ec != Sqlite.OK) {
-			warning ("Error: %s\n", (!) errmsg);
-		}
-	}
-
 	public static File get_database_file () {
-		return get_child (BirdFont.get_settings_directory (), "ucd.sqlite");
-	}
-
-	public static void add_lookup (int64 character, string word) {
-		string? errmsg;
-		string query = """
-			INSERT INTO Words (unicode, word)
-			VALUES (""" + @"$((int64) character)" + """, '""" + word.replace ("'", "\'") + "\"');";
-		int ec = db.exec (query, null, out errmsg);
-		if (ec != Sqlite.OK) {
-			warning ("Error: %s\n", (!) errmsg);
-		}
-	}
-	
-	public static void add_entry (int64 character, string description) {
-		string? errmsg;
-		string query = """
-			INSERT INTO Description (unicode, description)
-			VALUES (""" + @"$((int64) character)" + """, '""" + description.replace ("'", "\'") + "\"');";
-		int ec = db.exec (query, null, out errmsg);
-		if (ec != Sqlite.OK) {
-			warning ("Error: %s\n", (!) errmsg);
-			warning (@"Can't insert description to: $(character)");
-		}
+		return SearchPaths.find_file (null, "ucd.sqlite");
 	}
 
 	public static GlyphRange search (string s) {
@@ -137,12 +62,16 @@ public class CharDatabase {
 			}
 		}
 
+		if (s.char_count () == 1) {
+			result.add_single (s.get_char (0));
+		}
+
 		select = "SELECT unicode FROM Words "
-			+ "WHERE word = '" + s.replace ("'", "\\'") + "'";
+			 + "WHERE word = '" + s.replace ("'", "''") + "';";
 					
 		rc = db.prepare_v2 (select, select.length, out statement, null);
 		
-		if (rc != 1) {
+		if (rc == Sqlite.OK) {
 			cols = statement.column_count();
 			
 			if (cols != 1) {
@@ -156,7 +85,7 @@ public class CharDatabase {
 				if (rc == Sqlite.DONE) {
 					break;
 				} else if (rc == Sqlite.ROW) {
-					c = (unichar) statement.column_integer (0);
+					c = (unichar) statement.column_int64 (0);
 					ucd_result.add_single (c);
 				} else {
 					printerr ("Error: %d, %s\n", rc, db.errmsg ());
@@ -207,22 +136,6 @@ public class CharDatabase {
 		return false;		
 	}
 	
-	/** Convert from the U+xx form to the unicode database hex value. */ 
-	static string to_database_hex (unichar c) {
-		string hex_char = Font.to_hex (c).replace ("U+", "");
-
-		if (hex_char.char_count () == 2) {
-			hex_char = "00" + hex_char;
-		}
-		
-		if (hex_char.char_count () == 6 && hex_char.has_prefix ("0")) {
-			hex_char = hex_char.substring (1);
-		}
-		
-		hex_char = hex_char.up ();		
-		return hex_char;
-	}
-	
 	public static string get_unicode_database_entry (unichar c) {
 		string description = "";
 		int rc, cols;
@@ -232,7 +145,7 @@ public class CharDatabase {
 		
 		rc = db.prepare_v2 (select, select.length, out statement, null);
 		
-		if (rc != 1) {
+		if (rc == Sqlite.OK) {
 			cols = statement.column_count();
 			
 			if (cols != 1) {
