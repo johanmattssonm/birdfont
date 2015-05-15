@@ -13,31 +13,121 @@
 */
 
 using Gee;
+using Sqlite;
 
 namespace BirdFont {
 
 public class CharDatabase {
-	
-	public static HashMap<string, string> entries;
-	public static HashMultiMap<string, string> index;
-
 	public static GlyphRange full_unicode_range;
 	public static bool database_is_loaded = false;
 
+	public static unowned Database db;
+	public static Database? database = null;
+
 	public CharDatabase () {
-		entries = new HashMap<string, string> ();
-		index = new HashMultiMap<string, string> ();
-	
+		File f;
+			
 		full_unicode_range = new GlyphRange ();
+
+		f = get_database_file ();
+		regenerate_database ();		
+	}
+	
+	public static void regenerate_database () {
+		File f = get_database_file ();
+		
+		try {
+			if (f.query_exists ()) {
+				f.delete ();
+			}
+			
+			open_database ();
+			create_tables ();
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+	
+	public static void open_database () {
+		File f = get_database_file ();
+		int rc = Database.open ((!) f.get_path (), out database);
+
+		db = (!) database;
+
+		if (rc != Sqlite.OK) {
+			stderr.printf ("Can't open database: %d, %s\n", rc, db.errmsg ());
+		}
+	}
+	
+	public static void create_tables () {
+		int ec;
+		string? errmsg;
+		string description_table = """
+			CREATE TABLE Description (
+				unicode        INTEGER     PRIMARY KEY    NOT NULL,
+				description    TEXT                       NOT NULL
+			);
+		""";
+
+		ec = db.exec (description_table, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+
+		string index_table = """
+			CREATE TABLE Words (
+				unicode        INTEGER     NOT NULL,
+				word           TEXT        NOT NULL
+			);
+		""";
+
+		ec = db.exec (index_table, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+
+		string create_index = "CREATE INDEX word_index ON Words (word);";
+
+		ec = db.exec (create_index, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+	}
+
+	public static File get_database_file () {
+		return get_child (BirdFont.get_settings_directory (), "ucd.sqlite");
+	}
+
+	public static void add_lookup (int64 character, string word) {
+		string? errmsg;
+		string query = """
+			INSERT INTO Words (unicode, word)
+			VALUES (""" + @"$((int64) character)" + """, '""" + word.replace ("'", "\'") + "\"');";
+		int ec = db.exec (query, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+	}
+	
+	public static void add_entry (int64 character, string description) {
+		string? errmsg;
+		string query = """
+			INSERT INTO Description (unicode, description)
+			VALUES (""" + @"$((int64) character)" + """, '""" + description.replace ("'", "\'") + "\"');";
+		int ec = db.exec (query, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+			warning (@"Can't insert description to: $(character)");
+		}
 	}
 
 	public static GlyphRange search (string s) {
 		GlyphRange result = new GlyphRange ();
 		GlyphRange ucd_result = new GlyphRange ();
+		int rc, cols;
+		Statement statement;
+		string select;
 		unichar c;
-		
-		return_val_if_fail (!is_null (index), result);		
-		return_val_if_fail (result.get_length () == 0, result);
 		
 		if (s.has_prefix ("U+") || s.has_prefix ("u+")) {
 			c = Font.to_unichar (s.down ());
@@ -46,23 +136,45 @@ public class CharDatabase {
 				result.add_single (c);
 			}
 		}
+
+		select = "SELECT unicode FROM Words "
+			+ "WHERE word = '" + s.replace ("'", "\\'") + "'";
+					
+		rc = db.prepare_v2 (select, select.length, out statement, null);
 		
-		if (s.char_count () == 1) {
-			result.add_single (s.get_char ()); 
-		}
-		
-		foreach (string i in index.get (s)) {
-			c = Font.to_unichar ("U+" + i.down ());
-			ucd_result.add_single (c);
-		}
-		
-		try {
-			if (ucd_result.get_length () > 0) {
-				ucd_result.sort ();
-				result.parse_ranges (ucd_result.get_all_ranges ());
+		if (rc != 1) {
+			cols = statement.column_count();
+			
+			if (cols != 1) {
+				warning ("Expecting one column.");
+				return result;
 			}
-		} catch (MarkupError e) {
-			warning (e.message);
+
+			while (true) {
+				rc = statement.step ();
+				
+				if (rc == Sqlite.DONE) {
+					break;
+				} else if (rc == Sqlite.ROW) {
+					c = (unichar) statement.column_integer (0);
+					ucd_result.add_single (c);
+				} else {
+					printerr ("Error: %d, %s\n", rc, db.errmsg ());
+					break;
+				}
+			}
+			
+			try {
+				if (ucd_result.get_length () > 0) {
+					ucd_result.sort ();
+					result.parse_ranges (ucd_result.get_all_ranges ());
+				}
+			} catch (MarkupError e) {
+				warning (e.message);
+			}
+			
+		} else {
+			printerr ("SQL error: %d, %s\n", rc, db.errmsg ());
 		}
 		
 		return result;
@@ -112,18 +224,44 @@ public class CharDatabase {
 	}
 	
 	public static string get_unicode_database_entry (unichar c) {
-		string description;
-		string? d;
+		string description = "";
+		int rc, cols;
+		Statement statement;
+		string select = "SELECT description FROM Description "
+			+ @"WHERE unicode = $((int64) c)";
 		
-		d = entries.get (to_database_hex (c));
+		rc = db.prepare_v2 (select, select.length, out statement, null);
 		
-		if (d == null) {
-			description = Font.to_hex (c).replace ("U+", "") + "\tUNICODE CHARACTER";
+		if (rc != 1) {
+			cols = statement.column_count();
+			
+			if (cols != 1) {
+				warning ("Expecting one column.");
+				return description;
+			}
+
+			while (true) {
+				rc = statement.step ();
+				
+				if (rc == Sqlite.DONE) {
+					break;
+				} else if (rc == Sqlite.ROW) {
+					description = statement.column_text (0);
+				} else {
+					printerr ("Error: %d, %s\n", rc, db.errmsg ());
+					break;
+				}
+			}
+					
 		} else {
-			description = (!) d;
+			printerr ("SQL error: %d, %s\n", rc, db.errmsg ());
 		}
 		
-		return description;		
+		if (description == "") {
+			description = Font.to_hex (c).replace ("U+", "") + "\tUNICODE CHARACTER";
+		}
+		
+		return description;
 	}
 	
 	public static void get_full_unicode (GlyphRange glyph_range) {

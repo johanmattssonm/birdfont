@@ -63,7 +63,7 @@ public class CharDatabaseParser : GLib.Object {
 		ch = Font.to_unichar ("U+" + unicode_hex.down ());
 		
 		Idle.add (() => {
-			CharDatabase.entries.set (unicode_hex, data);
+			CharDatabase.add_entry ((int64) ch, data);
 			return false;
 		});
 		sync ();
@@ -77,7 +77,7 @@ public class CharDatabaseParser : GLib.Object {
 				foreach (string token in d) {
 					if (token != "") {
 						Idle.add (() => {
-							CharDatabase.index.set (token, unicode_hex);
+							CharDatabase.add_lookup ((int64)ch, token);
 							return false;
 						});
 						sync ();
