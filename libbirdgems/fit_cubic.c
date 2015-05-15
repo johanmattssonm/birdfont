@@ -69,7 +69,7 @@ void fit_bezier_curve_to_line (
 	Point2* points;
 	int npoints;
 
-	if (npoints % 2 != 0) {
+	if (lines_size % 2 != 0) {
 		fprintf (stderr, "Odd number of coordinates in fit_bezier_curve_to_line.");		
 		return;
 	}
