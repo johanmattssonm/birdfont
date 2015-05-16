@@ -265,7 +265,7 @@ public class BirdFontPart : GLib.Object{
 		os = create_file (@"$(file_name).bfp", "glyphs", dir_name);
 		bf.write_root_tag (os);
 		bf.write_glyph_collection_start (gc, os);
-		bf.write_glyph (g, gc, os);
+		bf.write_glyph (g, os);
 		bf.write_glyph_collection_end (os);
 		bf.write_closing_root_tag (os);
 		os.close ();

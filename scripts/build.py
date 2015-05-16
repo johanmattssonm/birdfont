@@ -49,6 +49,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		--pkg cairo \
 		--pkg libbirdxml \
 		--pkg libbirdgems \
+		--pkg sqlite3 \
 		""")
 	
 	#copy c sources 
@@ -61,6 +62,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			-c build/libbirdfont/*.c \
 			-fPIC \
 			-D 'GETTEXT_PACKAGE="birdfont"' \
+			$(pkg-config --cflags sqlite) \
 			$(pkg-config --cflags """ + config.GEE + """) \
 			$(pkg-config --cflags gio-2.0) \
 			$(pkg-config --cflags cairo) \
@@ -78,6 +80,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			-shared \
 			""" + sonameparam + """ \
 			build/libbirdfont/*.o \
+			$(pkg-config --libs sqlite) \
 			$(freetype-config --libs) \
 			$(pkg-config --libs """ + config.GEE + """) \
 			$(pkg-config --libs gio-2.0) \

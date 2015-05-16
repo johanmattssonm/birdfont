@@ -23,7 +23,6 @@ public static int main (string[] arg) {
 	string file;
 	BirdFont.BirdFont birdfont;
 
-	Icons.use_high_resolution (true);
 	birdfont = new BirdFont.BirdFont ();
 	birdfont.init (arg, null);
 	Gtk.init (ref arg);
@@ -36,50 +35,8 @@ public static int main (string[] arg) {
 
 	birdfont.load_font_from_command_line ();
 
-	load_ucd ();
 	Gtk.main ();
-
 	return 0;
-}
-
-/** Load descriptions from the unicode character database in a 
- * background thread.
- */
-void load_ucd () {	
-	CharDatabaseParser db;
-	unowned Thread<CharDatabaseParser> db_thread;
-	Mutex database_mutex = new Mutex ();
-	Cond main_loop_idle = new Cond ();
-	bool in_idle = false;
-	
-	try {
-		db = new CharDatabaseParser ();
-		db_thread = Thread.create<CharDatabaseParser> (db.load, false);
-		
-		// wait until main loop is done
-		db.sync.connect (() => {
-			database_mutex.lock ();
-			IdleSource idle = new IdleSource ();
-			in_idle = false;
-			
-			idle.set_callback (() => {
-				database_mutex.lock ();
-				in_idle = true;
-				main_loop_idle.broadcast ();
-				database_mutex.unlock ();
-				return false;
-			});
-			idle.attach (null);
-			
-			while (!in_idle) {
-				main_loop_idle.wait (database_mutex);
-			}
-			
-			database_mutex.unlock ();
-		});
-	} catch (GLib.Error e) {
-		warning (e.message);
-	}
 }
 
 

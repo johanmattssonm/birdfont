@@ -377,12 +377,12 @@ class BirdFontFile : GLib.Object {
 		write_glyph_collection_start (gc, os);
 		write_selected (gc, os);
 		foreach (Glyph g in gc.get_version_list ().glyphs) {
-			write_glyph (g, gc, os);
+			write_glyph (g, os);
 		}
 		write_glyph_collection_end (os);
 	} 
 
-	public void write_glyph (Glyph g, GlyphCollection gc, DataOutputStream os) throws GLib.Error {
+	public void write_glyph (Glyph g, DataOutputStream os) throws GLib.Error {
 		string data;
 		
 		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(double_to_string (g.left_limit))\" right=\"$(double_to_string (g.right_limit))\">\n");
@@ -390,7 +390,10 @@ class BirdFontFile : GLib.Object {
 			data = get_point_data (p);
 			if (data != "") {
 				os.put_string (@"\t\t<path ");
-				os.put_string (@"stroke=\"$(double_to_string (p.stroke))\" ");
+				
+				if (p.stroke != 0) {
+					os.put_string (@"stroke=\"$(double_to_string (p.stroke))\" ");
+				}
 				
 				if (p.line_cap != LineCap.BUTT) {
 					if (p.line_cap == LineCap.ROUND) {
