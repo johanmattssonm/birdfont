@@ -44,6 +44,7 @@ DOIT_CONFIG = {
 
 # external Vala libs
 LIBS = [
+    'sqlite3',
     'glib-2.0',
     'gio-2.0',
     'cairo',

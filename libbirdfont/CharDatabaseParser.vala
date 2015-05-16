@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 Johan Mattsson
+    Copyright (C) 2013 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -13,16 +13,118 @@
 */
 
 using Gee;
+using Sqlite;
 
 namespace BirdFont {
 
 public class CharDatabaseParser : GLib.Object {
+	static unowned Database db;
+	static Database? database = null;
 
-	public signal void sync ();
-	
 	GlyphRange utf8 = new GlyphRange ();
 	
 	public CharDatabaseParser () {	
+	}
+
+	public File get_database_file () {
+		string? fn = BirdFont.get_argument ("--parse-ucd");
+		
+		if (fn != null && ((!) fn) != "") {
+			return File.new_for_path ((!) fn);
+		}
+		
+		return File.new_for_path ("ucd.sqlite");
+	}
+	
+	public void regenerate_database () {
+		File f = get_database_file ();
+		
+		stdout.printf ("Generating sqlite database in: %s\n", (!) f.get_path ());
+		
+		try {
+			if (f.query_exists ()) {
+				f.delete ();
+			}
+			
+			open_database ();
+			create_tables ();
+			parse_all_entries ();
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+	
+	public void open_database () {
+		File f = get_database_file ();
+		int rc = Database.open ((!) f.get_path (), out database);
+
+		db = (!) database;
+
+		if (rc != Sqlite.OK) {
+			stderr.printf ("Can't open database: %d, %s\n", rc, db.errmsg ());
+		}
+	}
+	
+	public void create_tables () {
+		int ec;
+		string? errmsg;
+		string description_table = """
+			CREATE TABLE Description (
+				unicode        INTEGER     PRIMARY KEY    NOT NULL,
+				description    TEXT                       NOT NULL
+			);
+		""";
+
+		ec = db.exec (description_table, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+
+		string index_table = """
+			CREATE TABLE Words (
+				unicode        INTEGER     NOT NULL,
+				word           TEXT        NOT NULL
+			);
+		""";
+
+		ec = db.exec (index_table, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+
+		string create_index = "CREATE INDEX word_index ON Words (word);";
+
+		ec = db.exec (create_index, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+	}
+
+	public void insert_lookup (int64 character, string word) {
+		string? errmsg;
+		string query = """
+			INSERT INTO Words (unicode, word)
+			VALUES (""" + @"$((int64) character)" + """, '""" + word.replace ("'", "''") + "');";
+		int ec = db.exec (query, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			stderr.printf (query);
+			warning ("Error: %s\n", (!) errmsg);
+		}
+	}
+	
+	public void insert_entry (int64 character, string description) {
+		string? errmsg;
+		string query = """
+			INSERT INTO Description (unicode, description)
+			VALUES (""" + @"$((int64) character)" + """, '""" + description.replace ("'", "''") + "');";
+		
+		int ec = db.exec (query, null, out errmsg);
+		
+		if (ec != Sqlite.OK) {
+			stderr.printf (query);
+			warning ("Error: %s\n", (!) errmsg);
+			warning (@"Can't insert description to: $(character)");
+		}
 	}
 
 	private void add_entry (string data) {
@@ -61,13 +163,8 @@ public class CharDatabaseParser : GLib.Object {
 		unicode_hex = e[0].up ();
 		
 		ch = Font.to_unichar ("U+" + unicode_hex.down ());
-		
-		Idle.add (() => {
-			CharDatabase.entries.set (unicode_hex, data);
-			return false;
-		});
-		sync ();
-		
+		stdout.printf ("Adding " + (!) ch.to_string () + "\n");
+		insert_entry ((int64) ch, data);
 		utf8.add_single (ch);
 		
 		foreach (string s in e) {
@@ -76,11 +173,7 @@ public class CharDatabaseParser : GLib.Object {
 				d = t.split (" ");
 				foreach (string token in d) {
 					if (token != "") {
-						Idle.add (() => {
-							CharDatabase.index.set (token, unicode_hex);
-							return false;
-						});
-						sync ();
+						insert_lookup ((int64)ch, token);
 					}
 				}
 			}
@@ -94,14 +187,17 @@ public class CharDatabaseParser : GLib.Object {
 		string data;
 		string description = "";
 		File file;
-
-		if (BirdFont.has_argument ("--no-ucd")) {
-			warning ("Not loading UCD.");
-			return;
-		}
-
-		file = get_unicode_database ();
+		int ec;
+		string? errmsg;
+		uint64 transaction_number = 0;
 		
+		file = get_unicode_database ();
+
+		ec = db.exec ("BEGIN TRANSACTION", null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+				
 		try {
 			fin = file.read ();
 			din = new DataInputStream (fin);
@@ -119,6 +215,23 @@ public class CharDatabaseParser : GLib.Object {
 					} else {
 						if (description.index_of ("<not a character>") == -1) {
 							add_entry (description);
+							transaction_number++;
+							
+							if (transaction_number >= 1000) {
+								print ("Write to database\n");
+								
+								ec = db.exec ("END TRANSACTION", null, out errmsg);
+								if (ec != Sqlite.OK) {
+									warning ("Error: %s\n", (!) errmsg);
+								}								
+
+								ec = db.exec ("BEGIN TRANSACTION", null, out errmsg);
+								if (ec != Sqlite.OK) {
+									warning ("Error: %s\n", (!) errmsg);
+								}
+								
+								transaction_number = 0;	
+							} 
 						}
 						break;
 					}					
@@ -139,23 +252,16 @@ public class CharDatabaseParser : GLib.Object {
 			warning (e.message);
 			warning ("In %s", (!) get_unicode_database ().get_path ());
 		}
-	}
-	
-	public CharDatabaseParser load () {
-		parse_all_entries ();
 		
-		IdleSource idle = new IdleSource ();
-		idle.set_callback (() => {
-			CharDatabase.full_unicode_range = utf8;
-			CharDatabase.database_is_loaded = true;
-			return false;
-		});
-		idle.attach (null);
-		
-		return this;
+		ec = db.exec ("END TRANSACTION", null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+				
+		stdout.printf ("Done");
 	}
 
-	static File get_unicode_database () {
+	File get_unicode_database () {
 		return SearchPaths.get_char_database ();
 	}
 }

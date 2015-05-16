@@ -444,17 +444,27 @@ public class SvgParser {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
 		SvgStyle style = new SvgStyle ();
+		bool hidden = false;
 
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "d") {
 				path_list = parse_svg_data (attr.get_content (), glyph);
-				pl.paths.append (path_list);
 			}
 
 			if (attr.get_name () == "style") {
 				style = SvgStyle.parse (attr.get_content ());
 			}
+	
+			if (attr.get_name () == "display" && attr.get_content () == "none") {
+				hidden = true;
+			}
 		}
+		
+		if (hidden) {
+			return;
+		}
+	
+		pl.paths.append (path_list);
 	
 		foreach (Path p in path_list.paths) {
 			p.stroke = style.get_stroke_width ();
@@ -1483,11 +1493,18 @@ public class SvgParser {
 				path.close ();
 				path.create_list ();
 				
-				if (b[1].type == 'C' || b[1].type == 'S') {
+				int first_index = 1;
+				for (int j = i; j >= 1; j--) {
+					if (b[j].type == 'z') {
+						first_index = j + 2; // skipping M 
+					}
+				}
+				
+				if (b[first_index].type == 'C' || b[first_index].type == 'S') {
 					return_val_if_fail (path.points.size != 0, path_list);
 					ep = path.points.get (path.points.size - 1);
 					ep.get_right_handle ().set_point_type (PointType.CUBIC);
-					ep.get_right_handle ().move_to_coordinate (b[1].x0, b[1].y0);
+					ep.get_right_handle ().move_to_coordinate (b[first_index].x0, b[first_index].y0);
 				}
 
 				path.recalculate_linear_handles ();

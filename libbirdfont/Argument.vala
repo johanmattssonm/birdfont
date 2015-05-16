@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 Johan Mattsson
+    Copyright (C) 2012 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -16,18 +16,18 @@ namespace BirdFont {
 	
 public class Argument : GLib.Object {
 	
-	List<string> args;
+	Gee.ArrayList<string> args;
 	
 	public Argument (string line) {
-		args = new List<string> ();
+		args = new Gee.ArrayList<string> ();
 		set_argument (line);
 	}
 	
 	public Argument.command_line (string[] arg) {	
-		args = new List<string> ();
+		args = new Gee.ArrayList<string> ();
 
 		foreach (string a in arg) {
-			args.append (a);
+			args.add (a);
 		}
 	}
 	
@@ -35,8 +35,9 @@ public class Argument : GLib.Object {
 	public int validate () {
 		string prev = "";
 		int i = 0;
-		foreach (string a in args) {
-			
+		string[] p;
+		
+		foreach (string a in args) {			
 			if (a == "") {
 				continue;
 			}
@@ -55,6 +56,11 @@ public class Argument : GLib.Object {
 				continue;
 			}
 
+			if (a.index_of ("=") > -1) {
+				p = a.split ("=");
+				a = p[0];
+			}
+
 			// a single character, like -t
 			if (!a.has_prefix ("--") && a.has_prefix ("-")) {
 				a = expand_param (a);
@@ -71,8 +77,9 @@ public class Argument : GLib.Object {
 				a == "--mac" ||
 				a == "--android" ||
 				a == "--log" ||
-				a == "--no-ucd" ||
-				a == "--windows") {
+				a == "--windows" ||
+				a == "--parse-ucd" ||
+				a == "--codepages") {
 				prev = a;
 				i++;
 				continue;
@@ -96,8 +103,8 @@ public class Argument : GLib.Object {
 	public string get_file () {
 		string f = "";
 		
-		if (args.length () >= 2) {
-			f = args.nth (1).data;
+		if (args.size >= 2) {
+			f = args.get (1);
 		}
 
 		if (f.has_prefix ("-")) {
@@ -108,7 +115,7 @@ public class Argument : GLib.Object {
 	}
 	
 	public void print_all () {
-		print (@"$(args.length ()) arguments:\n");
+		print (@"$(args.size) arguments:\n");
 		
 		foreach (string p in args) {
 			print (@"$p\n");
@@ -124,7 +131,9 @@ public class Argument : GLib.Object {
 		int i = 0;
 		string? n;
 		string p;
-
+		string v = "";
+		string[] pm;
+		
 		if (param.substring (0, 1) != "-") {
 			warning (@"parameters must begin with \"-\" got $param");
 			return null;
@@ -132,10 +141,22 @@ public class Argument : GLib.Object {
 
 		foreach (string s in args) {
 
-			// this is content not a parameter 
-			if (s.substring (0, 1) != "-") continue;
+			if (s.index_of ("=") > -1) {
+				pm = s.split ("=");
+				
+				if (pm.length > 1) {
+					v = pm[1];
+				}
+				
+				s = pm[0];
+			}
 
-			// we might need to expand -t to test fo instance
+			// this is content not a parameter 
+			if (s.substring (0, 1) != "-") {
+				continue;
+			}
+
+			// we might need to expand -t to test for instance
 			if (s.substring (0, 2) != "--") {
 				p = expand_param (s);
 			} else {				
@@ -143,20 +164,24 @@ public class Argument : GLib.Object {
 			}
 			
 			if (param == p) {
-				if (i + 2 >= args.length ()) {
+				if (v != "") {
+					return v;
+				}
+				
+				if (i + 2 >= args.size) {
 					return "";
 				}
 				
-				n = args.nth (i + 2).data;
+				n = args.get (i + 2);
 				if (n == null) {
 					return "";
 				}
 				
-				if (args.nth (i + 2).data.substring (0, 1) == "-") {
+				if (args.get (i + 2).substring (0, 1) == "-") {
 					return "";
 				}
 				
-				return args.nth (i + 2).data;
+				return args.get (i + 2);
 			}
 			
 			i++;
@@ -184,10 +209,14 @@ public class Argument : GLib.Object {
 	private string expand_param (string? param) {
 		if (param == null) return "";
 		var p = (!) param;
+
+		if (p.get_char (0) != '-') {
+			return "";
+		}
 		
-		if (p.length == 0) return "";
-		if (p.get_char (0) != '-') return "";
-		if (p.char_count () != 2) return "";
+		if (p.char_count () != 2) {
+			return "";
+		}
 		
 		switch (p.get_char (1)) {
 			case 'c':
@@ -235,17 +264,17 @@ public class Argument : GLib.Object {
 				n = arg.substring (i, a - i + 1);
 			}
 					
-			args.append (n);
+			args.add (n);
 			
 			i += n.char_count () + 1;
 		} while (i < arg.char_count ());
 	}
 
 	public void print_help () 
-		requires (args.length () > 0)
+		requires (args.size > 0)
 	{
 		stdout.printf (t_("Usage") + ": ");
-		stdout.printf (args.nth (0).data);
+		stdout.printf (args.get (0));
 		stdout.printf (" [" + t_("FILE") + "] [" + t_("OPTION") + " ...]\n");
 
 		print_padded ("-a, --android", t_("enable Android customizations"));

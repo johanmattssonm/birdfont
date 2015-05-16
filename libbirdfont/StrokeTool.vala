@@ -71,20 +71,6 @@ public class StrokeTool : Tool {
 		convert_stroke = false;
 	}
 	
-	public PathList merge_selected_paths () {
-		PathList n = new PathList ();
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		foreach (Path p in g.active_paths) {
-			if (p.stroke == 0) {
-				n.add (p);
-			}
-		}
-		
-		n = merge (n);
-		return n;
-	}
-	
 	public static PathList get_stroke_fast (Path path, double thickness) {
 		PathList o;
 		Path stroke;
@@ -114,7 +100,21 @@ public class StrokeTool : Tool {
 				
 		return m;
 	}
-	
+
+	public PathList merge_selected_paths () {
+		PathList n = new PathList ();
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		foreach (Path p in g.active_paths) {
+			if (p.stroke == 0) {
+				n.add (p);
+			}
+		}
+		
+		n = merge (n);
+		return n;
+	}
+		
 	static Path simplify_stroke (Path p) {
 		Path simplified = new Path ();
 		Path segment, added_segment;
@@ -272,7 +272,7 @@ public class StrokeTool : Tool {
 		PathList r = new PathList ();
 		
 		foreach (Path p in pl.paths) {
-			if (p.points.size > 22) {
+			if (p.points.size > 7) {
 				r.add (p);
 			} else if (!has_new_corner (p)) {
 				r.add (p);
