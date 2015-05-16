@@ -33,6 +33,7 @@ public class SearchPaths {
 		File f;
 		string d = (dir == null) ? "" : (!) dir;
 		string resources;
+		string bundle_path = (BirdFont.bundle_path != null) ? (!) BirdFont.bundle_path : "";
 
 		resources = (is_null (resources_folder)) ? "" : resources_folder; 
 		
@@ -60,13 +61,13 @@ public class SearchPaths {
 		f = get_file (BirdFont.exec_path + "\\", name + "\\");
 		if (likely (f.query_exists ())) return f;
 		
-		f = get_file (BirdFont.bundle_path + "/Contents/Resources/", d + "/" + name);
+		f = get_file (bundle_path + "/Contents/Resources/", d + "/" + name);
 		if (likely (f.query_exists ())) return f;
 		
-		f = get_file (BirdFont.bundle_path + "/Contents/Resources/", name + "/");
+		f = get_file (bundle_path + "/Contents/Resources/", name + "/");
 		if (likely (f.query_exists ())) return f;
 
-		f = get_file (BirdFont.bundle_path + "/Contents/MacOS/", name);
+		f = get_file (bundle_path + "/Contents/MacOS/", name);
 		if (likely (f.query_exists ())) return f;
 				
 		f = get_file ("./" + d + "/", name);
@@ -99,7 +100,8 @@ public class SearchPaths {
 	public static string get_locale_directory () {
 		string f = "";
 		string resources;
-
+		string bundle_path = (BirdFont.bundle_path != null) ? (!) BirdFont.bundle_path : "";
+		
 		resources = (is_null (resources_folder)) ? "" : resources_folder; 
 
 		f = resources + "\\locale\\sv\\LC_MESSAGES\\birdfont.mo";
@@ -144,9 +146,9 @@ public class SearchPaths {
 			return BirdFont.exec_path + "/Contents/Resources/locale";
 		}
 
-		f = BirdFont.bundle_path + "/Contents/Resources/locale";
+		f = bundle_path + "/Contents/Resources/locale";
 		if (exists (f)) {
-			return BirdFont.bundle_path + "/Contents/Resources/locale";
+			return bundle_path + "/Contents/Resources/locale";
 		}
 				
 		warning ("translations not found");
@@ -155,6 +157,7 @@ public class SearchPaths {
 
 	public static File get_char_database () {
 		File f;
+		string bundle_path = (BirdFont.bundle_path != null) ? (!) BirdFont.bundle_path : "";
 		
 		f = (!) File.new_for_path (PREFIX + "/share/unicode/NamesList.txt");
 		if (f.query_exists ()) {
@@ -181,7 +184,7 @@ public class SearchPaths {
 			return f;
 		}
 
-		f = (!) File.new_for_path (BirdFont.bundle_path + "/Contents/Resources/NamesList.txt");
+		f = (!) File.new_for_path (bundle_path + "/Contents/Resources/NamesList.txt");
 		if (f.query_exists ()) {
 			return f;
 		}
