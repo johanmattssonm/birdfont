@@ -23,8 +23,8 @@ public class CodePageBits : GLib.Object {
 	static Gee.ArrayList<PageBit> codepages; 
 	static Gee.ArrayList<string> all_characters; 
 
-	public static unowned Database db;
-	public static Database? database = null;
+	static unowned Database db;
+	static Database? database = null;
 		
 	public CodePageBits () {
 		if (database == null) {

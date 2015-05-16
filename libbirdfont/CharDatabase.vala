@@ -20,8 +20,8 @@ namespace BirdFont {
 public class CharDatabase {
 	public static GlyphRange full_unicode_range;
 
-	public static unowned Database db;
-	public static Database? database = null;
+	static unowned Database db;
+	static Database? database = null;
 
 	public CharDatabase () {
 		File f;
