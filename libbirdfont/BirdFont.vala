@@ -728,7 +728,11 @@ public static void printd (string s) {
 
 /** Translate string */
 public string t_ (string t) {
+#if ANDROID
+	return t;
+#else 
 	return _(t);
+#endif
 }
 
 /** Translate mac menu items */

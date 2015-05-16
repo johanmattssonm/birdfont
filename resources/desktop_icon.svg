@@ -57,7 +57,6 @@
          style="stop-color:#0087bf;stop-opacity:1" />
     </linearGradient>
     <linearGradient
-       inkscape:collect="always"
        id="linearGradient4410"
        osb:paint="gradient">
       <stop
@@ -160,6 +159,33 @@
        y1="82.838142"
        x2="77.407417"
        y2="-10.225219" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4468"
+       id="linearGradient4268"
+       gradientUnits="userSpaceOnUse"
+       x1="8.5716257"
+       y1="82.838142"
+       x2="77.407417"
+       y2="-10.225219" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4468"
+       id="linearGradient4276"
+       gradientUnits="userSpaceOnUse"
+       x1="8.5716257"
+       y1="82.838142"
+       x2="77.407417"
+       y2="-10.225219" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4468"
+       id="linearGradient4278"
+       gradientUnits="userSpaceOnUse"
+       x1="8.5716257"
+       y1="82.838142"
+       x2="77.407417"
+       y2="-10.225219" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -169,14 +195,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35355339"
-     inkscape:cx="495.02085"
-     inkscape:cy="-441.66098"
+     inkscape:cx="33.987228"
+     inkscape:cy="-476.06456"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1201"
+     inkscape:window-width="1217"
      inkscape:window-height="734"
-     inkscape:window-x="79"
+     inkscape:window-x="63"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
      showguides="false" />
@@ -188,7 +214,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -318,8 +344,8 @@
        id="rect4875"
        width="256"
        height="256"
-       x="40.925945"
-       y="1112.1814"
+       x="-4.3288889"
+       y="1310.1713"
        inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
        inkscape:export-xdpi="90.000008"
        inkscape:export-ydpi="90.000008" />
@@ -328,14 +354,14 @@
        id="rect4921"
        width="107.53895"
        height="137.04079"
-       x="115.93333"
-       y="1169.0635"
+       x="62.193203"
+       y="1695.1509"
        inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
        inkscape:export-xdpi="90.000008"
        inkscape:export-ydpi="90.000008" />
     <g
        id="B-7-1"
-       transform="matrix(2.130976,0,0,2.130976,86.642821,1164.4828)"
+       transform="matrix(2.130976,0,0,2.130976,32.902706,1690.5702)"
        style="fill:url(#linearGradient4756);fill-opacity:1"
        inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
        inkscape:export-xdpi="90.000008"
@@ -348,7 +374,7 @@
     </g>
     <g
        id="B-0-0-6"
-       transform="matrix(2.130976,0,0,2.130976,86.502181,1164.8155)"
+       transform="matrix(2.130976,0,0,2.130976,32.762066,1690.9029)"
        style="fill:#a3daf6;fill-opacity:1"
        inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
        inkscape:export-xdpi="90.000008"
@@ -362,17 +388,17 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="311.12698"
-       y="1244.6953"
+       x="257.38687"
+       y="1770.7827"
        id="text4923"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="311.12698"
-         y="1244.6953"
+         x="257.38687"
+         y="1770.7827"
          id="tspan4927">256x256</tspan></text>
     <g
        id="g4990"
-       transform="matrix(0.1875,0,0,0.1875,79.073728,1398.6565)"
+       transform="matrix(0.1875,0,0,0.1875,25.333613,1924.7439)"
        inkscape:export-filename="/home/johan/birdfont/resources/linux/48x48/birdfont.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
@@ -426,17 +452,17 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="319.65689"
-       y="1699.6499"
+       x="265.91678"
+       y="2225.7373"
        id="text4923-0"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="319.65689"
-         y="1699.6499"
+         x="265.91678"
+         y="2225.7373"
          id="tspan4998">48x58</tspan></text>
     <g
        id="g4990-7"
-       transform="matrix(0.5,0,0,0.5,45.373646,731.24186)"
+       transform="matrix(0.5,0,0,0.5,-8.3664691,1257.3293)"
        inkscape:export-filename="/home/johan/birdfont/resources/linux/128x128/birdfont.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
@@ -490,13 +516,76 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="312.70465"
-       y="1504.8214"
+       x="258.96454"
+       y="2030.9088"
        id="text4923-0-4"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="312.70465"
-         y="1504.8214"
+         x="258.96454"
+         y="2030.9088"
          id="tspan5119">128x128</tspan></text>
+    <g
+       id="g4280"
+       transform="matrix(2,0,0,2,1248.057,-1106.8227)">
+      <rect
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         y="1113.8668"
+         x="-654.08746"
+         height="256"
+         width="256"
+         id="rect4875-0"
+         style="fill:none;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         y="1170.7489"
+         x="-579.08008"
+         height="137.04079"
+         width="107.53895"
+         id="rect4921-2"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <g
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         style="fill:url(#linearGradient4278);fill-opacity:1"
+         transform="matrix(2.130976,0,0,2.130976,-608.37057,1166.1682)"
+         id="B-7-1-8">
+        <path
+           inkscape:connector-curvature="0"
+           style="fill:url(#linearGradient4276);fill-opacity:1;stroke-width:0px"
+           d="m 20.86914,62.970709 18.43555,0 0,-17.67774 13.63671,0 0.75782,-14.900389 -13.63672,0 0,-10.10156 16.66601,0.25195 1.51563,-10.85937 -37.375,-0.25196 0,53.539069 z M 52.56497,-16.43502 C 76.483865,-16.096019 80.396814,0.3836932 80.35742,9.1153716 80.298161,22.250049 74.686675,28.231432 69.28515,31.35742 74.782731,35.924597 80.775758,39.77855 81.07226,55.026583 81.643428,84.399491 53.92969,83.85742 53.92969,83.85742 L 0,84.21485 0,-16.5 l 52.56497,0.06498 z"
+           id="path_B-2-79-45" />
+      </g>
+      <g
+         inkscape:export-ydpi="90.000008"
+         inkscape:export-xdpi="90.000008"
+         inkscape:export-filename="/home/johan/birdfont/resources/linux/256x256/birdfont.png"
+         style="fill:#a3daf6;fill-opacity:1"
+         transform="matrix(2.130976,0,0,2.130976,-608.51121,1166.5009)"
+         id="B-0-0-6-61">
+        <path
+           inkscape:connector-curvature="0"
+           style="fill:#a3daf6;fill-opacity:1;stroke-width:0px"
+           d="m 59.141772,4.0476554 -0.88539,5.4764683 -33.851972,0 0,53.2868233 -6.06092,0 0,-59.0952026 40.798282,0.3319117 z"
+           id="path_B-6-9-30-7" />
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="468.76266"
+       y="1375.2213"
+       id="text4923-4"
+       sodipodi:linespacing="125%"
+       inkscape:transform-center-x="93.338095"
+       inkscape:transform-center-y="50.911688"><tspan
+         sodipodi:role="line"
+         x="468.76266"
+         y="1375.2213"
+         id="tspan4927-4">512x512</tspan></text>
   </g>
 </svg>

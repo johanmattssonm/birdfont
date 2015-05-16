@@ -184,7 +184,7 @@ elif os.path.isfile ('build/bin/libbirdgems.' + version.LIBBIRDGEMS_SO_VERSION +
         link (libdir, 'libbirdgems.' + version.LIBBIRDGEMS_SO_VERSION + '.dylib', ' libbirdgems.dylib.' + version.LIBBIRDGEMS_SO_VERSION_MAJOR)
         link (libdir, 'libbirdgems.' + version.LIBBIRDGEMS_SO_VERSION + '.dylib', ' libbirdgems.dylib')
 else:
-        print ("Can't find libbirdgems.")
+        print ("Can't find libbirdgems, version: " + version.LIBBIRDGEMS_SO_VERSION)
 	exit (1)
 
 	

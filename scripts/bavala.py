@@ -147,7 +147,7 @@ class Vala(object):
         def compile_cmd(conf, opts, libs, pos):
             flags = []
             for l in libs:
-		if not l == "posix" and not l == "posixtypes":
+		  if not l == "posix" and not l == "posixtypes":
                     process = subprocess.Popen ('pkg-config --cflags ' + l, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     cflags = process.stdout.readline()
                     process.communicate()[0]
@@ -162,6 +162,7 @@ class Vala(object):
             pos = ["-c " + cc, "-o " + obj ]
             cmd_args = {'libs':self.pkg_libs, 'opts':opts, 'pos':pos}
             action = CmdAction((compile_cmd, [], cmd_args))
+            
             yield {
                 'name': obj.rsplit('/')[-1],
                 'file_dep': [ cc ],

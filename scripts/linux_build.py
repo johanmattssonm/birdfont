@@ -61,7 +61,7 @@ xmllibrary_ldflags= options.ldflags + " -Wl,-soname," + "libbirdxml.so." + versi
 
 configfile.write_config (prefix)
 compile_translations()
-build.libbirdgems(prefix, cc, birdgemslibrary_cflags, birdgemslibrary_ldflags, valac, valaflags, "birdgems.so." + version.LIBBIRDGEMS_SO_VERSION, False)
+build.libbirdgems(prefix, cc, birdgemslibrary_cflags, birdgemslibrary_ldflags, valac, valaflags, "libbirdgems.so." + version.LIBBIRDGEMS_SO_VERSION, False)
 build.libbirdxml(prefix, cc, xmllibrary_cflags, xmllibrary_ldflags, valac, valaflags, "libbirdxml.so." + version.LIBBIRDXML_SO_VERSION, False)
 build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, "libbirdfont.so." + version.SO_VERSION, False)
 build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, False)
