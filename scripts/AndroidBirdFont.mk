@@ -19,11 +19,8 @@ LOCAL_CFLAGS    += -I /opt/android/include/cairo
 
 #FIXME: $(TARGET_ARCH_ABI)
 
-LOCAL_LDLIBS	+= -L $(LOCAL_PATH)/../../
-LOCAL_LDLIBS    += -lbirdxml
-LOCAL_LDLIBS    += -lbirdgems
-
 LOCAL_LDLIBS	+= -L/opt/android/lib
+LOCAL_LDLIBS    += -lsqliteX
 LOCAL_LDLIBS    += -ljava-bitmap 
 LOCAL_LDLIBS    += -lgee
 LOCAL_LDLIBS    += -lft2
@@ -37,6 +34,10 @@ LOCAL_LDLIBS    += -lm
 LOCAL_LDLIBS    += -lc
 LOCAL_LDLIBS    += -lz
 LOCAL_LDLIBS    += -llog
+
+LOCAL_LDLIBS	+= -L $(LOCAL_PATH)/../../
+LOCAL_LDLIBS    += -lbirdxml
+LOCAL_LDLIBS    += -lbirdgems
 
 LOCAL_SRC_FILES := $(wildcard *.c) 
 
