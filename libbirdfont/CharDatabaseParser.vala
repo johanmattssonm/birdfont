@@ -18,8 +18,8 @@ using Sqlite;
 namespace BirdFont {
 
 public class CharDatabaseParser : GLib.Object {
-	public static unowned Database db;
-	public static Database? database = null;
+	static unowned Database db;
+	static Database? database = null;
 
 	GlyphRange utf8 = new GlyphRange ();
 	

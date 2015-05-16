@@ -18,8 +18,8 @@ using Sqlite;
 namespace BirdFont {
 
 public class FallbackFont : GLib.Object {
-	public static unowned Database db;
-	public static Database? database = null;
+	static unowned Database db;
+	static Database? database = null;
 
 	public FallbackFont () {	
 	}

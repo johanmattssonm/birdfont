@@ -44,7 +44,7 @@ public class GlyphCanvas : GLib.Object {
 		current_display.key_press (e);
 	}
 	
-	internal static void set_display (FontDisplay fd) {
+	public static void set_display (FontDisplay fd) {
 		current_display = fd;
 	}
 	
