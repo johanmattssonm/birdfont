@@ -46,13 +46,13 @@ public class Test : Object {
 		return benchmark;
 	}
 	
-	public static void print_time (string mess, double start_time) {
-		double stop_time = GLib.get_real_time ();
-		stdout.printf (@"$mess $((stop_time - start_time) / 1000000.0)s\n");
+	public void print () {
+		stdout.printf (get_time ());
 	}
 	
-	public void print () {
-		print_time (name, time_stamp);
+	public string get_time () {
+		double stop_time = GLib.get_real_time ();
+		return @"$name $((stop_time - start_time) / 1000000.0)s\n";
 	}
 }
 
