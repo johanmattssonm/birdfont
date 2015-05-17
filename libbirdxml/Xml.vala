@@ -192,7 +192,7 @@ public class XmlParser : GLib.Object {
 	public static string decode (string s) {
 		string t;
 		t = s.replace ("&quot;", "\"");
-		t = t.replace ("&apos;;", "'");
+		t = t.replace ("&apos;", "'");
 		t = t.replace ("&lt;", "<");
 		t = t.replace ("&gt;", ">");
 		t = t.replace ("&amp;", "&");
@@ -202,7 +202,7 @@ public class XmlParser : GLib.Object {
 	public static string encode (string s) {
 		string t;
 		t = s.replace ("\"", "&quot;");
-		t = t.replace ("'", "&apos;;");
+		t = t.replace ("'", "&apos;");
 		t = t.replace ("<", "&lt;");
 		t = t.replace (">", "&gt;");
 		t = t.replace ("&", "&amp;");
