@@ -214,7 +214,14 @@ public class Menu : GLib.Object {
 			show_menu = false;
 		});
 		edit_menu.items.add (import_svg);
-
+		
+		MenuItem import_svg_folder = add_menu_item (t_("Import SVG folder"), "import svg folder", "");
+		import_svg_folder.action.connect (() => {
+			SvgParser.import_folder ();
+			show_menu = false;
+		});
+		edit_menu.items.add (import_svg_folder);
+		
 		MenuItem import_background_image = add_menu_item (t_("Import Background Image"), "import background image");
 		import_background_image.action.connect (() => {
 			MenuTab.show_background_tab ();

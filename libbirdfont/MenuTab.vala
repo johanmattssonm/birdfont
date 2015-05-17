@@ -524,8 +524,9 @@ public class MenuTab : FontDisplay {
 		DrawingTools.move_tool.move_to_baseline ();
 	}
 
-	public static void show_file_dialog_tab (string title, FileChooser action) {
-		MainWindow.get_tab_bar ().add_tab (new FileDialogTab (title, action));
+	public static void show_file_dialog_tab (string title, FileChooser action, bool folder) {
+		FileDialogTab ft = new FileDialogTab (title, action, folder);
+		MainWindow.get_tab_bar ().add_tab (ft);
 	}
 	
 	public static void simplify_path () {

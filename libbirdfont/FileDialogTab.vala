@@ -36,10 +36,19 @@ public class FileDialogTab : Table {
 	private static bool has_drive_letters = false;
 	private static Gee.ArrayList<string> drive_letters;
 
-	public FileDialogTab (string title, FileChooser action) {
+	bool select_folder = false;
+
+#if LINUX
+	public static const string path_separator = "/";
+#else
+	public static const string path_separator = "\\";
+#endif
+
+	public FileDialogTab (string title, FileChooser action, bool folder) {
 		this.title = title;
 		this.action = action;
 		
+		select_folder = folder;
 		rows = new Gee.ArrayList<Row> ();
 		files = new Gee.ArrayList<string> ();
 		directories = new Gee.ArrayList<string> ();
@@ -65,6 +74,10 @@ public class FileDialogTab : Table {
 		// add empty rows under the text area
 		row = new Row.headline ("");
 		rows.add (row);	
+	
+		if (select_folder) {
+			row = new Row.headline (t_("Select a Folder"));
+		}
 	
 		if (directories.size > 0) {
 			row = new Row.headline (t_("Folders"));
@@ -99,19 +112,26 @@ public class FileDialogTab : Table {
 		SelectedFile f;
 
 		if (row.get_index () == FILE) {
-			return_if_fail (row.get_row_data () is SelectedFile);
-			f = (SelectedFile) row.get_row_data ();
-			selected_filename = f.file_name;
+			if (!select_folder) {
+				return_if_fail (row.get_row_data () is SelectedFile);
+				f = (SelectedFile) row.get_row_data ();
+				selected_filename = f.file_name;
+			}
 		} else if (row.get_index () == DIRECTORY) {
 			return_if_fail (row.get_row_data () is SelectedFile);
 			f = (SelectedFile) row.get_row_data ();
 			
-			if (f.file_name.index_of (":") > -1) {
-				propagate_files (f.file_name);
+			if (select_folder && f.file_name != "..") {
+				selected_filename = f.file_name;
 			} else {
-				propagate_files (((!) current_dir.get_path ()) + "\\" + f.file_name);
+				if (f.file_name.index_of (":") > -1) {
+					propagate_files (f.file_name);
+				} else {
+					propagate_files (((!) current_dir.get_path ()) + path_separator + f.file_name);
+				}
+				
+				selected_filename = "";
 			}
-			selected_filename = "";
 		}
 		
 		show_text_area (selected_filename);
@@ -211,10 +231,18 @@ public class FileDialogTab : Table {
 			warning ("No file.");
 			return;
 		}
-		
-		if (selected_filename != "") {
-			f = get_child (current_dir, selected_filename);
-			action.file_selected ((!) f.get_path ());
+
+		if (select_folder) {
+			if (selected_filename.index_of (":") > -1) {
+				propagate_files (selected_filename);
+			} else {
+				propagate_files (((!) current_dir.get_path ()) + path_separator + selected_filename);
+			}
+		} else {		
+			if (selected_filename != "") {
+				f = get_child (current_dir, selected_filename);
+				action.file_selected ((!) f.get_path ());
+			}
 		}
 	}
 

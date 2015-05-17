@@ -767,9 +767,14 @@ public static File get_child (File folder, string file_name) {
 	string n;
 
 	// avoid drive letter problems on windows
-	
+
 	f = (!) folder.get_path ();
+
+#if LINUX
+	s = "/"; 
+#else
 	s = (BirdFont.win32) ? "\\" : "/"; 
+#endif
 	
 	n = file_name;
 	if (unlikely (BirdFont.win32 && file_name.index_of ("\\") != -1)) {

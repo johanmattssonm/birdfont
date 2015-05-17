@@ -50,6 +50,50 @@ public class SvgParser {
 		MainWindow.file_chooser (t_("Import"), fc, FileChooser.LOAD);
 	}
 	
+	public static void import_folder () {
+		FileChooser fc = new FileChooser ();
+		fc.file_selected.connect ((p) => {
+			string path;
+			File svg_folder;
+			File svg;
+			bool imported;
+			FileEnumerator enumerator;
+			FileInfo? file_info;
+			string file_name;
+			Font font;
+			
+			if (p == null) {
+				return;
+			}
+			
+			path = (!) p;
+			svg_folder = File.new_for_path (path);
+			font = BirdFont.get_current_font ();
+				
+			try {
+				enumerator = svg_folder.enumerate_children (FileAttribute.STANDARD_NAME, 0);
+				while ((file_info = enumerator.next_file ()) != null) {
+					file_name = ((!) file_info).get_name ();
+					
+					if (file_name.has_suffix (".svg")) {
+						svg = get_child (svg_folder, file_name);
+						imported = import_svg_file (font, svg);
+						
+						if (!imported) {
+							warning ("Can't import %s.", (!) svg.get_path ());
+						} else {
+							font.touch ();
+						}
+					}
+				}
+			} catch (Error e) {
+				warning (e.message);
+			}
+		});
+		
+		MainWindow.file_chooser (t_("Import"), fc, FileChooser.LOAD | FileChooser.DIRECTORY);
+	}
+	
 	public static void import_svg_data (string xml_data, SvgFormat format = SvgFormat.NONE) {
 		PathList path_list = new PathList ();
 		Glyph glyph; 
@@ -1460,7 +1504,6 @@ public class SvgParser {
 		return path_list;
 	}
 
-	// FIXME: NO END
 	PathList create_paths_illustrator (BezierPoints[] b, int num_b) {
 		Path path;
 		PathList path_list = new PathList ();
@@ -1494,19 +1537,30 @@ public class SvgParser {
 				path.create_list ();
 				
 				int first_index = 1;
-				for (int j = i; j >= 1; j--) {
+
+				for (int j = i - 1; j >= 1; j--) {
 					if (b[j].type == 'z') {
-						first_index = j + 2; // skipping M 
+						first_index = j + 1; // from z to M 
 					}
 				}
 				
 				if (b[first_index].type == 'C' || b[first_index].type == 'S') {
 					return_val_if_fail (path.points.size != 0, path_list);
 					ep = path.points.get (path.points.size - 1);
-					ep.get_right_handle ().set_point_type (PointType.CUBIC);
-					ep.get_right_handle ().move_to_coordinate (b[first_index].x0, b[first_index].y0);
+					
+					if (b[i - 1].type != 'L' ) {
+						ep.get_right_handle ().set_point_type (PointType.CUBIC);
+						ep.get_right_handle ().move_to_coordinate (b[first_index].x0, b[first_index].y0);
+					}
+				} else if (b[first_index].type == 'L') {
+					return_val_if_fail (path.points.size != 0, path_list);
+					ep = path.points.get (path.points.size - 1);
+					ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
+					ep.recalculate_linear_handles ();
+				} else {
+					warning ("Unexpected type: %s", (!) b[first_index].type.to_string ());
 				}
-
+				
 				path.recalculate_linear_handles ();
 				path_list.add (path);
 				
@@ -1523,9 +1577,9 @@ public class SvgParser {
 				ep = path.add (b[i].x0, b[i].y0);
 				ep.set_point_type (PointType.LINE_CUBIC); // TODO: quadratic
 				ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
-				
+
 				if (b[i -1].type == 'L' || first_point) {
-					//ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
+					// ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
 				}
 				
 				if (b[i + 1].type == 'C' || b[i + 1].type == 'S') {

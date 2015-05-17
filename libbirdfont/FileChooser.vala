@@ -19,6 +19,7 @@ public class FileChooser : GLib.Object {
 	public static const uint NONE = 0;
 	public static const uint SAVE = 1;
 	public static const uint LOAD = 1 << 1;
+	public static const uint DIRECTORY = 1 << 2;
 	
 	public signal void file_selected  (string? path);
 	
