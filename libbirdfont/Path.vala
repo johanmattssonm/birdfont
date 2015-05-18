@@ -2322,9 +2322,11 @@ public class Path {
 	}
 	
 	public void create_full_stroke () {
+#if ANDROID == false
 		if (stroke > 0) {
 			full_stroke = StrokeTool.get_stroke (this, stroke);
 		}
+#endif
 	}
 	
 	public PathList get_stroke () {

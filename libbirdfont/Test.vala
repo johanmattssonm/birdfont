@@ -47,12 +47,12 @@ public class Test : Object {
 	}
 	
 	public void print () {
-		stdout.printf (get_time ());
+		stdout.printf (get_test_time ());
 	}
 	
-	public string get_time () {
+	public string get_test_time () {
 		double stop_time = GLib.get_real_time ();
-		return @"$name $((stop_time - start_time) / 1000000.0)s\n";
+		return @"$name $((stop_time - time_stamp) / 1000000.0)s\n";
 	}
 }
 

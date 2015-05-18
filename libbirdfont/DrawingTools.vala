@@ -147,8 +147,9 @@ public class DrawingTools : ToolCollection  {
 		zoom_tool.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);
 		});
+#if ANDROID == false
 		draw_tools.add_tool (zoom_tool);
-
+#endif
 		move_tool = new MoveTool ("move");
 		move_tool.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);

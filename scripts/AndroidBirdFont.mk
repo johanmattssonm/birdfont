@@ -19,8 +19,8 @@ LOCAL_CFLAGS    += -I /opt/android/include/cairo
 
 #FIXME: $(TARGET_ARCH_ABI)
 
+LOCAL_LDLIBS    += /opt/android/lib/libsqlite.a
 LOCAL_LDLIBS	+= -L/opt/android/lib
-LOCAL_LDLIBS    += -lsqliteX
 LOCAL_LDLIBS    += -ljava-bitmap 
 LOCAL_LDLIBS    += -lgee
 LOCAL_LDLIBS    += -lft2
