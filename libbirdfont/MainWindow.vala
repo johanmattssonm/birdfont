@@ -103,7 +103,7 @@ public class MainWindow : GLib.Object {
 		return menu;
 	}
 
-	/** Set the number of picels per millimeter for the current screen. */
+	/** Set the number of pixels per millimeter for the current screen. */
 	public static void set_units_per_pixel (double u) {
 		MainWindow.units = u;
 	}

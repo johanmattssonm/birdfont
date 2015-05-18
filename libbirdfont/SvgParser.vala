@@ -502,6 +502,12 @@ public class SvgParser {
 			if (attr.get_name () == "display" && attr.get_content () == "none") {
 				hidden = true;
 			}
+			
+			if (attr.get_name () == "visibility"
+				&& (attr.get_content () == "hidden" 
+					|| attr.get_content () == "collapse")) {
+				hidden = true;
+			}
 		}
 		
 		if (hidden) {

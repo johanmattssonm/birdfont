@@ -56,6 +56,7 @@ public class Menu : GLib.Object {
 		SubMenu menu = new SubMenu ();
 		SubMenu file_menu = new SubMenu ();
 		SubMenu edit_menu = new SubMenu ();
+		SubMenu export_menu = new SubMenu ();
 		SubMenu tab_menu = new SubMenu ();
 		SubMenu kerning_menu = new SubMenu ();
 		SubMenu ligature_menu = new SubMenu ();
@@ -67,7 +68,7 @@ public class Menu : GLib.Object {
 			set_menu (file_menu);
 		});
 		menu.items.add (file);
-
+		
 		MenuItem new_file = add_menu_item (t_("New"), "new");
 		new_file.action.connect (() => {
 			MenuTab.new_file ();
@@ -102,27 +103,6 @@ public class Menu : GLib.Object {
 			show_menu = false;
 		});
 		file_menu.items.add (save_as);
-
-		MenuItem export = add_menu_item (t_("Export"), "export");
-		export.action.connect (() => {
-			MenuTab.export_fonts_in_background ();
-			show_menu = false;
-		});
-		file_menu.items.add (export);
-
-		MenuItem export_settings = add_menu_item (t_("Export Settings"), "export settings");
-		export_settings.action.connect (() => {
-			MenuTab.show_export_settings_tab ();
-			show_menu = false;
-		});
-		file_menu.items.add (export_settings);
-		
-		MenuItem preview = add_menu_item (t_("Preview"), "preview");
-		preview.action.connect (() => {
-			MenuTab.preview ();
-			show_menu = false;
-		});
-		file_menu.items.add (preview);
 
 		MenuItem select_character_set = add_menu_item (t_("Select Character Set"), "select character set");
 		select_character_set.action.connect (() => {
@@ -201,34 +181,6 @@ public class Menu : GLib.Object {
 		});
 		edit_menu.items.add (search);
 
-		MenuItem export_glyph = add_menu_item (t_("Export Glyph as SVG"), "export glyph as svg", "Glyph");
-		export_glyph.action.connect (() => {
-			ExportTool.export_current_glyph ();
-			show_menu = false;
-		});
-		edit_menu.items.add (export_glyph);
-
-		MenuItem import_svg = add_menu_item (t_("Import SVG file"), "import svg file", "Glyph");
-		import_svg.action.connect (() => {
-			SvgParser.import ();
-			show_menu = false;
-		});
-		edit_menu.items.add (import_svg);
-		
-		MenuItem import_svg_folder = add_menu_item (t_("Import SVG folder"), "import svg folder", "");
-		import_svg_folder.action.connect (() => {
-			SvgParser.import_folder ();
-			show_menu = false;
-		});
-		edit_menu.items.add (import_svg_folder);
-		
-		MenuItem import_background_image = add_menu_item (t_("Import Background Image"), "import background image");
-		import_background_image.action.connect (() => {
-			MenuTab.show_background_tab ();
-			show_menu = false;
-		});
-		edit_menu.items.add (import_background_image);
-
 		MenuItem simplify_path = add_menu_item (t_("Simplify Path"), "simplify path", "Glyph");
 		simplify_path.action.connect (() => {
 			MenuTab.simplify_path ();
@@ -306,6 +258,62 @@ public class Menu : GLib.Object {
 		});
 		edit_menu.items.add (select_point_below);
 
+		// import and export
+		MenuItem export = add_menu_item (t_("Import and Export"));
+		export.action.connect (() => {
+			set_menu (export_menu);
+		});
+		menu.items.add (export);
+
+		MenuItem export_fonts = add_menu_item (t_("Export Fonts"), "export");
+		export_fonts.action.connect (() => {
+			MenuTab.export_fonts_in_background ();
+			show_menu = false;
+		});
+		export_menu.items.add (export_fonts);
+
+		MenuItem export_glyph = add_menu_item (t_("Export Glyph as SVG"), "export glyph as svg", "Glyph");
+		export_glyph.action.connect (() => {
+			ExportTool.export_current_glyph ();
+			show_menu = false;
+		});
+		export_menu.items.add (export_glyph);
+
+		MenuItem import_svg = add_menu_item (t_("Import SVG file"), "import svg file", "Glyph");
+		import_svg.action.connect (() => {
+			SvgParser.import ();
+			show_menu = false;
+		});
+		export_menu.items.add (import_svg);
+		
+		MenuItem import_svg_folder = add_menu_item (t_("Import SVG folder"), "import svg folder", "");
+		import_svg_folder.action.connect (() => {
+			SvgParser.import_folder ();
+			show_menu = false;
+		});
+		export_menu.items.add (import_svg_folder);
+		
+		MenuItem import_background_image = add_menu_item (t_("Import Background Image"), "import background image");
+		import_background_image.action.connect (() => {
+			MenuTab.show_background_tab ();
+			show_menu = false;
+		});
+		export_menu.items.add (import_background_image);
+
+		MenuItem export_settings = add_menu_item (t_("Export Settings"), "export settings");
+		export_settings.action.connect (() => {
+			MenuTab.show_export_settings_tab ();
+			show_menu = false;
+		});
+		export_menu.items.add (export_settings);
+		
+		MenuItem preview = add_menu_item (t_("Preview"), "preview");
+		preview.action.connect (() => {
+			MenuTab.preview ();
+			show_menu = false;
+		});
+		export_menu.items.add (preview);
+		
 		// tab menu
 		MenuItem tab = add_menu_item (t_("Tab"));
 		tab.action.connect (() => {

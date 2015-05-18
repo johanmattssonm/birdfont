@@ -43,6 +43,8 @@ public class GuideTab : Table {
 		
 		rows.clear ();
 		
+		rows.add (new Row.headline (t_("Guides")));
+		
 		foreach (Line guide in BirdFont.get_current_font ().custom_guides) {
 			rows.add (new Row.columns_1 (guide.label, i));
 			i++;
