@@ -193,7 +193,24 @@ public class SvgParser {
 	
 	private void parse_layer (Tag tag, Layer pl) {
 		Layer layer;
+		bool hidden = false;
+
+		foreach (Attribute attr in tag.get_attributes ()) {	
+			if (attr.get_name () == "display" && attr.get_content () == "none") {
+				hidden = true;
+			}
+			
+			if (attr.get_name () == "visibility"
+				&& (attr.get_content () == "hidden" 
+					|| attr.get_content () == "collapse")) {
+				hidden = true;
+			}
+		}
 		
+		if (hidden) {
+			return;
+		}
+					
 		foreach (Tag t in tag) {
 			if (t.get_name () == "path") {
 				parse_path (t, pl);
