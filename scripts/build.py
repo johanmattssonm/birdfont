@@ -62,7 +62,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			-c build/libbirdfont/*.c \
 			-fPIC \
 			-D 'GETTEXT_PACKAGE="birdfont"' \
-			$(pkg-config --cflags sqlite) \
+			$(pkg-config --cflags sqlite3) \
 			$(pkg-config --cflags """ + config.GEE + """) \
 			$(pkg-config --cflags gio-2.0) \
 			$(pkg-config --cflags cairo) \
@@ -80,7 +80,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			-shared \
 			""" + sonameparam + """ \
 			build/libbirdfont/*.o \
-			$(pkg-config --libs sqlite) \
+			$(pkg-config --libs sqlite3) \
 			$(freetype-config --libs) \
 			$(pkg-config --libs """ + config.GEE + """) \
 			$(pkg-config --libs gio-2.0) \
@@ -256,6 +256,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 	run(cc + " " + cflags + """ \
 		-c ./build/libbirdfont/birdfont.h build/birdfont-export/*.c \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
+		$(pkg-config --cflags sqlite3) \
 		$(pkg-config --cflags """ + config.GEE + """) \
 		$(pkg-config --cflags gio-2.0) \
 		$(pkg-config --cflags cairo) \
@@ -267,6 +268,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 		build/birdfont-export/*.o \
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
+		$(pkg-config --libs sqlite3) \
 		$(pkg-config --libs """ + config.GEE + """) \
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
@@ -313,6 +315,7 @@ def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 	run(cc + " " + cflags + """ \
 		-c ./build/libbirdfont/birdfont.h build/birdfont-import/*.c \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
+		$(pkg-config --cflags sqlite3) \
 		$(pkg-config --cflags """ + config.GEE + """) \
 		$(pkg-config --cflags gio-2.0) \
 		$(pkg-config --cflags cairo) \
@@ -325,6 +328,7 @@ def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
 		-fPIC \
+		$(pkg-config --libs sqlite3) \
 		$(pkg-config --libs """ + config.GEE + """) \
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
@@ -357,6 +361,7 @@ def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = 
 	run(cc + " " + cflags + """ \
 		-c ./build/libbirdfont/birdfont.h build/birdfont-autotrace/*.c \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
+		$(pkg-config --cflags sqlite3) \
 		$(pkg-config --cflags """ + config.GEE + """) \
 		$(pkg-config --cflags gio-2.0) \
 		$(pkg-config --cflags cairo) \
@@ -369,12 +374,13 @@ def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = 
 		build/birdfont-autotrace/*.o \
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
+		$(pkg-config --libs sqlite3) \
 		$(pkg-config --libs """ + config.GEE + """) \
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs gdk-pixbuf-2.0) \
-      -L./build -L./build/bin -l birdxml -l birdgems\
+		-L./build -L./build/bin -l birdxml -l birdgems\
 		-o ./build/bin/birdfont-autotrace""")
 
 
@@ -405,6 +411,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
 	run(cc + " " + cflags + """\
 		-c ./build/libbirdfont/birdfont.h build/birdfont/*.c \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
+		$(pkg-config --cflags sqlite3) \
 		$(pkg-config --cflags """ + config.GEE + """) \
 		$(pkg-config --cflags gio-2.0) \
 		$(pkg-config --cflags cairo) \
@@ -418,6 +425,7 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
 	run(cc + " " + ldflags + """ \
 		build/birdfont/*.o \
 		-Lbuild/bin/ -lbirdfont \
+		$(pkg-config --libs sqlite3) \
 		$(pkg-config --libs """ + config.GEE + """) \
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
