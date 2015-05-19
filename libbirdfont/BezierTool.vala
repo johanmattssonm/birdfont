@@ -149,6 +149,8 @@ public class BezierTool : Tool {
 				current_path.line_cap = StrokeTool.line_cap;
 			}
 			
+			BirdFont.get_current_font ().touch ();
+			
 			GlyphCanvas.redraw ();
 			state = MOVE_POINT;
 		} else if (state == MOVE_POINT) {
