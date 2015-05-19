@@ -17,6 +17,7 @@ from "Graphics Gems", Academic Press, 1990
  */
 
 #include <math.h>
+#include <stdlib.h>
 #include "GraphicsGems.h"
 
 /******************/
