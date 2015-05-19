@@ -119,7 +119,10 @@ parser.add_option("-x", "--posix", dest="posix", help="Use posixvala", metavar="
 (options, args) = parser.parse_args()
 
 if not options.prefix:
-	options.prefix = "/usr"
+	if "bsd" in sys.platform:
+		options.prefix = "${DESTDIR}${PREFIX}"
+	else:
+		options.prefix = "/usr"
 if not options.dest:
 	options.dest = ""
 if not options.cc:

@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 import os
 import glob
 import subprocess
+import sys
 
 from optparse import OptionParser
 from doit.tools import run_once
@@ -101,7 +102,13 @@ valac_options = [
 	'--define=LINUX'
 	]
 
-libbirdxml = Vala(src='libbirdxml', build='build', library='birdxml', so_version=version.LIBBIRDXML_SO_VERSION, pkg_libs=LIBBIRD_XML_LIBS)
+
+if "bsd" in sys.platform:
+    LIBBIRDXML_SO_VERSION='${LIBbirdxml_VERSION}'
+else:
+    LIBBIRDXML_SO_VERSION=version.LIBBIRDXML_SO_VERSION
+
+libbirdxml = Vala(src='libbirdxml', build='build', library='birdxml', so_version=LIBBIRDXML_SO_VERSION, pkg_libs=LIBBIRD_XML_LIBS)
 def task_libbirdxml():
 
     if config.POSIXVALA == True:
@@ -114,15 +121,24 @@ def task_libbirdxml():
     yield libbirdxml.gen_ln()
     
 
-libbirdgems = Vala(src='libbirdgems', build='build', library='birdgems', so_version=version.LIBBIRDGEMS_SO_VERSION, pkg_libs=LIBBIRD_LIBS, vala_deps=[])
+if "bsd" in sys.platform:
+    LIBBIRDGEMS_SO_VERSION='${LIBbirdgems_VERSION}'
+else:
+    LIBBIRDGEMS_SO_VERSION=version.LIBBIRDGEMS_SO_VERSION
+
+libbirdgems = Vala(src='libbirdgems', build='build', library='birdgems', so_version=LIBBIRDGEMS_SO_VERSION, pkg_libs=LIBBIRD_LIBS, vala_deps=[])
 def task_libbirdgems():
     yield libbirdgems.gen_c(valac_options)
     yield libbirdgems.gen_o(['-fPIC'])
     yield libbirdgems.gen_so('-shared -L ./build -l m')
     yield libbirdgems.gen_ln()
 
+if "bsd" in sys.platform:
+    SO_VERSION='${LIBbirdfont_VERSION}'
+else:
+    SO_VERSION=version.SO_VERSION
 
-libbird = Vala(src='libbirdfont', build='build', library='birdfont', so_version=version.SO_VERSION, pkg_libs=LIBS, vala_deps=[libbirdgems, libbirdxml])
+libbird = Vala(src='libbirdfont', build='build', library='birdfont', so_version=SO_VERSION, pkg_libs=LIBS, vala_deps=[libbirdgems, libbirdxml])
 def task_libbirdfont():
     yield libbird.gen_c(valac_options)
     yield libbird.gen_o(['-fPIC -I./build/', """-D 'GETTEXT_PACKAGE="birdfont"'"""])

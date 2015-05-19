@@ -226,7 +226,10 @@ class Vala(object):
     def gen_ln(self):
         """generate a symbolic link to the generated ".so" file"""
         so_file = self.so.rsplit('/')[-1]
-        create_link = "ln -s -T " + so_file + " " + self.so_link_name + " "
+        
+        if not "bsd" in sys.platform:
+            create_link = "ln -s -T " + so_file + " " + self.so_link_name + " "
+
         create_link += "&& mv " + self.so_link_name + " " + self.build + "/" 
         return {
             'name': self.so_link_name,
