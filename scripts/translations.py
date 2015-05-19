@@ -17,7 +17,11 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 import glob
-from run import run
+
+try:
+    from scripts.run import run
+except ImportError:
+    from run import run
 
 def compile_translations ():
     for f_name in glob.glob('po/*.po'):

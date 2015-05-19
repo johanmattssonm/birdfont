@@ -22,25 +22,43 @@ import os
 import sys
 from os.path import join
 from doit.action import CmdAction
-import config
+
+try:
+    import scripts.config as config
+except ImportError:
+    import config
+
 import fnmatch
 import subprocess
 
 def cmd(name, *args):
     """create string for command line"""
     parts = [name]
+    
+    try:
+        base = basestring
+    except NameError:
+        base = str
+
     for item in args:
-        if isinstance(item, basestring):
+        if isinstance(item, base):
             parts.append(item)
         elif isinstance(item, dict):
-            for param, value in item.iteritems():
-                if isinstance(value, basestring):
+            for param, value in item.items():
+                if isinstance(value, base):
                     value = [value]
                 parts.extend('--{0} {1}'.format(param, v) for v in value)
         else:
             parts.extend(item)
-    return ' '.join(parts)
 
+    cmd_parts = [] 
+    for p in parts:
+        if isinstance(p, str):
+            cmd_parts += [p]
+        else:
+            cmd_parts += [p.decode("utf-8")]
+
+    return ' '.join(cmd_parts)
 
 def get_sources_path (folder, pattern):
     """obtain the path to all source files that matches pattern"""
@@ -90,7 +108,7 @@ class Vala(object):
             self.so_version = so_version
             self.so_name = 'lib' + library + '.so.' + so_version
         else:
-			   self.other_vapi_files = []
+            self.other_vapi_files = []
 
     def gen_c(self, opts):
         """translate code from vala to C and create .vapi"""
@@ -134,12 +152,12 @@ class Vala(object):
         print (action)
         
         if not self.vala == []:
-			  yield {
-					'name': 'compile_c',
-					'actions': [ action ],
-					'file_dep': self.vala + dep_vapi,
-					'targets': targets,
-					}
+            yield {
+                'name': 'compile_c',
+                'actions': [ action ],
+                'file_dep': self.vala + dep_vapi,
+                'targets': targets,
+            }
 
 
     def gen_o(self, opts):
@@ -147,7 +165,7 @@ class Vala(object):
         def compile_cmd(conf, opts, libs, pos):
             flags = []
             for l in libs:
-		  if not l == "posix" and not l == "posixtypes":
+                if not l == "posix" and not l == "posixtypes":
                     process = subprocess.Popen ('pkg-config --cflags ' + l, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                     cflags = process.stdout.readline()
                     process.communicate()[0]
@@ -193,7 +211,7 @@ class Vala(object):
                     flags += [cflags.strip ()]
 
             if generated_libs:
-			    flags += [generated_libs]
+                flags += [generated_libs]
 			    
             return cmd(config.CC, opts, flags)
 
