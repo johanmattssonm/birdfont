@@ -1461,17 +1461,27 @@ public class DrawingTools : ToolCollection  {
 	}
 	
 	public void parse_grid (string spin_button_value) {
-		SpinButton sb = add_new_grid ();
-		sb.set_value (spin_button_value);
+		SpinButton sb = add_new_grid (double.parse (spin_button_value), false);
 		MainWindow.get_toolbox ().select_tool (sb);
 	}
 
-	public static SpinButton add_new_grid (double size = 2) {
+	public static SpinButton add_new_grid (double size = 2, bool update_settings_in_font = true) {
 		SpinButton grid_width = new SpinButton ("grid_width", t_("Set size for grid"));
 		Toolbox tb = MainWindow.get_toolbox ();
 		
+		grid_width.set_value_round (size);
+		
 		grid_width.new_value_action.connect((self) => {
+			Font font = BirdFont.get_current_font ();
+			SpinButton w;
+			
 			grid_width.select_action (grid_width);
+			font.grid_width.clear ();
+			
+			foreach (Tool t in grid_expander.tool) {
+				w = (SpinButton) t;
+				font.grid_width.add (w.get_display_value ());
+			}
 		});
 
 		grid_width.select_action.connect((self) => {
@@ -1482,16 +1492,21 @@ public class DrawingTools : ToolCollection  {
 				
 		grid_expander.add_tool (grid_width);
 
-		GridTool.sizes.add (grid_width);
-		
-		grid_width.set_value_round (size);
-
 		tb.update_expanders ();
 		
 		tb.redraw (0, 0, Toolbox.allocation_width, Toolbox.allocation_height);
 		
 		tb.select_tool (grid_width);
 		grid_width.set_active (false);
+		
+		if (update_settings_in_font) {
+			GridTool.sizes.add (grid_width);
+			
+			foreach (Tool t in grid_expander.tool) {
+				SpinButton sb = (SpinButton) t;
+				BirdFont.get_current_font ().grid_width.add (sb.get_display_value ());
+			}
+		}
 		
 		return grid_width;
 	}

@@ -200,7 +200,7 @@ public class MenuTab : FontDisplay {
 		DrawingTools.grid_expander.tool.clear ();
 		
 		foreach (string grid in f.grid_width) {
-			DrawingTools.add_new_grid (double.parse (grid));
+			DrawingTools.add_new_grid (double.parse (grid), false);
 		}
 
 		string sw = f.settings.get_setting ("stroke_width");
