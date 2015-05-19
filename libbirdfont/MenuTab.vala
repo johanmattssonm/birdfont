@@ -198,7 +198,13 @@ public class MenuTab : FontDisplay {
 		DrawingTools.background_scale.set_value (f.background_scale);
 		
 		DrawingTools.grid_expander.tool.clear ();
-		
+
+		if (f.grid_width.size == 0) {
+			f.grid_width.add ("1");
+			f.grid_width.add ("2");
+			f.grid_width.add ("4");
+		}
+				
 		foreach (string grid in f.grid_width) {
 			DrawingTools.add_new_grid (double.parse (grid), false);
 		}
