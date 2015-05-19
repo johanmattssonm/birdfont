@@ -1,3 +1,12 @@
+birdfont (2.8.0) stable;
+
+  * Speed optimization in font export
+  * Faster search queries in the Unicode Data Base.
+  * Better parsing of SVG files generated with Illustrator
+  * Dialog for importing a folder with SVG files
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue May 19 15:04:13 CEST 2015
+
 birdfont (2.7.0) stable;
 
   * Stroke
