@@ -86,7 +86,7 @@ msgstr "Hintergrundbild"
 
 #: libbirdfont/BackgroundTool.vala:41
 msgid "Move, resize and rotate background image"
-msgstr "Bewege, verändere die Größe und rotiere Hintergrundbilder"
+msgstr "Verschiebe, skaliere und rotiere das Hintergrundbild"
 
 #: libbirdfont/BackgroundTool.vala:223
 msgid "Select background image"
@@ -474,19 +474,19 @@ msgstr "Breite der Kontur"
 
 #: libbirdfont/DrawingTools.vala:853
 msgid "Create outline form stroke"
-msgstr ""
+msgstr "Außenlinie von Kontur erstellen"
 
 #: libbirdfont/DrawingTools.vala:861
 msgid "Butt line cap"
-msgstr ""
+msgstr "Nicht überstehendes Ende"
 
 #: libbirdfont/DrawingTools.vala:885
 msgid "Round line cap"
-msgstr ""
+msgstr "Abgerundetes Ende"
 
 #: libbirdfont/DrawingTools.vala:910
 msgid "Square line cap"
-msgstr ""
+msgstr "Quadratisches Ende"
 
 #: libbirdfont/DrawingTools.vala:979
 msgid "Show guidelines"
@@ -538,7 +538,7 @@ msgstr "Objektwerkzeuge"
 
 #: libbirdfont/DrawingTools.vala:1469
 msgid "Set size for grid"
-msgstr "Cor das alças de ajuste"
+msgstr "Rastergröße einstellen"
 
 #: libbirdfont/ExportSettings.vala:39 libbirdfont/ExportSettings.vala:133
 #: libbirdfont/Menu.vala:303
@@ -555,7 +555,7 @@ msgstr "Formate"
 
 #: libbirdfont/ExportSettings.vala:97
 msgid "Export"
-msgstr "Exportar"
+msgstr "Export"
 
 #: libbirdfont/ExportTool.vala:193 libbirdfont/Menu.vala:93
 #: libbirdfont/MenuTab.vala:260 libbirdfont/SaveCallback.vala:67
@@ -565,7 +565,7 @@ msgstr "Speichern"
 
 #: libbirdfont/FileDialogTab.vala:79
 msgid "Select a Folder"
-msgstr ""
+msgstr "Verzeichnis auswählen"
 
 #: libbirdfont/FileDialogTab.vala:83
 #, fuzzy
@@ -574,7 +574,7 @@ msgstr "Ordner"
 
 #: libbirdfont/FileTools.vala:31
 msgid "New font"
-msgstr "Nova fonte"
+msgstr "Neue Schrift"
 
 #: libbirdfont/FileTools.vala:37
 msgid "Open font"
@@ -906,11 +906,11 @@ msgstr "_Darunterliegenden Punkt auswählen"
 
 #: libbirdfont/Menu.vala:262
 msgid "Import and Export"
-msgstr ""
+msgstr "Import und Export"
 
 #: libbirdfont/Menu.vala:268
 msgid "Export Fonts"
-msgstr ""
+msgstr "Schrift exportieren"
 
 #: libbirdfont/Menu.vala:275
 msgid "Export Glyph as SVG"
@@ -922,7 +922,7 @@ msgstr "SVG-Datei importieren"
 
 #: libbirdfont/Menu.vala:289
 msgid "Import SVG folder"
-msgstr ""
+msgstr "SVG Verzeichnis importieren"
 
 #: libbirdfont/Menu.vala:296
 msgid "Import Background Image"
@@ -1016,7 +1016,7 @@ msgstr "Übersicht"
 
 #: libbirdfont/MenuItem.vala:82
 msgid "UP"
-msgstr ""
+msgstr "Nach oben"
 
 #: libbirdfont/MenuItem.vala:85
 #, fuzzy
@@ -1140,7 +1140,7 @@ msgstr "Pfade skalieren und drehen"
 
 #: libbirdfont/SaveDialog.vala:36
 msgid "Save changes?"
-msgstr ""
+msgstr "Änderungen speichern?"
 
 #: libbirdfont/SaveDialog.vala:44 libbirdfont/SaveDialogListener.vala:30
 msgid "Discard"
@@ -1231,7 +1231,7 @@ msgstr "Grifffarbe"
 
 #: libbirdfont/Theme.vala:425
 msgid "Fill Color"
-msgstr ""
+msgstr "Füllfarbe"
 
 #: libbirdfont/Theme.vala:426
 msgid "Selected Objects"
@@ -1275,11 +1275,11 @@ msgstr "Rand der Auswahl"
 
 #: libbirdfont/Theme.vala:439
 msgid "Overview Glyph"
-msgstr ""
+msgstr "Glyphen Übersicht"
 
 #: libbirdfont/Theme.vala:440
 msgid "Foreground Inverted"
-msgstr ""
+msgstr "Vordergrund invertiert"
 
 #: libbirdfont/Theme.vala:441
 msgid "Menu Foreground"
@@ -1468,7 +1468,7 @@ msgstr ""
 
 #: libbirdfont/Theme.vala:503
 msgid "Font Name"
-msgstr ""
+msgstr "Schriftname"
 
 #: libbirdfont/Theme.vala:687
 msgid "New theme"
@@ -1476,23 +1476,23 @@ msgstr "Neues Schema"
 
 #: libbirdfont/ThemeTab.vala:89
 msgid "Add new theme"
-msgstr ""
+msgstr "Neues Theme hinzufügen"
 
 #: libbirdfont/ThemeTab.vala:91
 msgid "Colors"
-msgstr ""
+msgstr "Farben"
 
 #: libbirdfont/ThemeTab.vala:110
 msgid "Dark"
-msgstr ""
+msgstr "Dunkel"
 
 #: libbirdfont/ThemeTab.vala:112
 msgid "Bright"
-msgstr ""
+msgstr "Hell"
 
 #: libbirdfont/ThemeTab.vala:116
 msgid "Custom"
-msgstr ""
+msgstr "Benutzerdefiniert"
 
 #: libbirdfont/TrackTool.vala:57
 msgid "Freehand drawing"
@@ -1551,7 +1551,7 @@ msgid "Writing"
 msgstr "Wird geschrieben"
 
 #~ msgid "New Font"
-#~ msgstr "Neuer Font"
+#~ msgstr "Neue Schrift"
 
 #~ msgid "No fonts created yet."
 #~ msgstr "Es noch kein Zeichensatz erstellt."
