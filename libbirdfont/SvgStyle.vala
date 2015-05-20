@@ -43,6 +43,16 @@ public class SvgStyle {
 		return LineCap.BUTT; 	
 	}
 	
+	public bool has_stroke () {
+		bool s = true;
+		
+		if (style.has_key ("stroke")) {
+			s = style.get ("stroke") != "none";
+		}
+				
+		return get_stroke_width () > 0 && s;
+	}
+		
 	public double get_stroke_width () {
 		if (!style.has_key ("stroke-width")) {
 			return 0;

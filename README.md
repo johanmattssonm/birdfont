@@ -22,6 +22,7 @@ packages with a -dev or -devel affix:
     python-gtk2-dev
     libwebkitgtk-3.0-dev 
     libnotify-dev
+    libsqlite3-dev
     unicode-data (unicode character database)
 
 BirdFont have two build systems, one python script that builds all

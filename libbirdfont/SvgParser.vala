@@ -534,7 +534,12 @@ public class SvgParser {
 		pl.paths.append (path_list);
 	
 		foreach (Path p in path_list.paths) {
-			p.stroke = style.get_stroke_width ();
+			if (style.has_stroke ()) {
+				p.stroke = style.get_stroke_width ();
+			} else {
+				p.stroke = 0;
+			}
+			
 			p.line_cap = style.get_line_cap ();
 			p.reset_stroke ();
 			p.update_region_boundaries ();		
