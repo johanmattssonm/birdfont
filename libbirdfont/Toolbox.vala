@@ -20,12 +20,12 @@ namespace BirdFont {
 public class Toolbox : GLib.Object  {
 	public static ToolCollection current_set; 
 	
+	public static HiddenTools hidden_tools;
 	public static DrawingTools drawing_tools;
 	public static KerningTools kerning_tools;
 	public static PreviewTools preview_tools;
 	public static OverviewTools overview_tools;
-	public static BackgroundTools background_tools;
-	public static HiddenTools hidden_tools;
+	public static BackgroundTools background_tools;	
 	public static SpacingTools spacing_tools;
 	public static FileTools file_tools;
 	
@@ -46,8 +46,6 @@ public class Toolbox : GLib.Object  {
 	double scroll_y = 0;
 
 	public List<ToolCollection> tool_sets = new List<ToolCollection> ();
-	
-	static double scale = 1;
 
 	string? tool_tip = null;
 	double tool_tip_x = 0;
@@ -57,12 +55,12 @@ public class Toolbox : GLib.Object  {
 		current_tool = new Tool ("no_icon");
 		press_tool = new Tool (null);
 
+		hidden_tools = new HiddenTools ();
 		drawing_tools = new DrawingTools (glyph_canvas); 
 		kerning_tools = new KerningTools ();
 		preview_tools = new PreviewTools ();
 		overview_tools = new OverviewTools ();
 		background_tools = new BackgroundTools ();
-		hidden_tools = new HiddenTools ();
 		spacing_tools = new SpacingTools ();
 		file_tools = new FileTools ();
 		
@@ -118,9 +116,6 @@ public class Toolbox : GLib.Object  {
 		if (w != allocation_width || allocation_height != h) {
 			allocation_width = w;
 			allocation_height = h;
-			
-			scale = 1;
-			
 			Toolbox.redraw_tool_box ();
 		}
 	}
@@ -404,13 +399,9 @@ public class Toolbox : GLib.Object  {
 				
 		b.select_tool (b.get_tool (name));
 	}
-	
-	public static void set_scale (double s) {
-		scale = s;
-	}
-	
+		
 	public static double get_scale () {
-		return scale;
+		return MainWindow.units;
 	}
 	
 	public void set_default_tool_size () {

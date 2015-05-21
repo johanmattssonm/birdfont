@@ -20,9 +20,10 @@ namespace BirdFont {
 public class HiddenTools : ToolCollection  {
 
 	public Gee.ArrayList<Expander> expanders;
+	public Expander hidden_expander;
 
 	public HiddenTools () {
-		Expander hidden_expander = new Expander ();
+		hidden_expander = new Expander ();
 		expanders = new Gee.ArrayList<Expander> ();
 		
 		Tool zoom_in = new Tool ("zoom_in", t_("Zoom in"));
