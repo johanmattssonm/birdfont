@@ -49,7 +49,7 @@ class BirdFontFile : GLib.Object {
 			
 		return ok;
 	}
-
+	
 	public bool load_part (string bfp_file) {
 		string xml_data;
 		XmlParser parser;

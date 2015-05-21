@@ -1962,7 +1962,7 @@ public class Glyph : FontDisplay {
 		last_name = glyph.name;
 		for (int i = pos + 1; i < glyph_sequence.char_count (); i++) {
 			c = glyph_sequence.get_char (i);
-			name = font.get_name_for_character (c);			
+			name = (!) c.to_string ();			
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ().get_current ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {
@@ -1995,7 +1995,7 @@ public class Glyph : FontDisplay {
 		last_name = glyph.name;
 		for (int i = pos - 1; i >= 0; i--) {
 			c = glyph_sequence.get_char (i);
-			name = font.get_name_for_character (c);			
+			name = (!) c.to_string ();
 			juxtaposed = (font.has_glyph (name)) ? (!) font.get_glyph (name) : font.get_space ().get_current ();
 			
 			if (font.has_glyph (last_name) && font.has_glyph (name)) {

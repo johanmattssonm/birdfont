@@ -696,7 +696,7 @@ public class KerningDisplay : FontDisplay {
 		f = current_font;
 		
 		if (!is_modifier_key (c) && c.validate ()) {
-			name = f.get_name_for_character (c);
+			name = (!) c.to_string ();
 			g = f.get_glyph_by_name (name);
 			inser_glyph (g);
 		}

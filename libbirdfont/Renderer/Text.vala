@@ -15,30 +15,12 @@
 using Cairo;
 
 namespace BirdFont {
-
+	
 /** Test implementation of a birdfont rendering engine. */
 public class Text : Widget {
-
-	public Font font {
-		get {
-			if (current_font == null) {
-				current_font = get_default_font ();
-				
-				if (current_font == null) {
-					current_font = new Font ();
-				}
-			}
-			
-			return (!) current_font;
-		}
-		
-		set {
-			current_font = value;
-		}
-	}
-	
 	FontCache font_cache;
-	Font? current_font;
+	public FontCache.CachedFont cached_font;
+	
 	public string text;
 	
 	GlyphSequence glyph_sequence {
@@ -51,6 +33,7 @@ public class Text : Widget {
 		}
 	}
 	
+	Gee.ArrayList<string> glyph_names;
 	GlyphSequence? gs = null;
 	
 	public delegate void Iterator (Glyph glyph, double kerning, bool last);
@@ -66,9 +49,9 @@ public class Text : Widget {
 	double truncated_width = -1;
 	
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
-		current_font = null;
 		this.margin_bottom = margin_bottom;
 		font_cache = FontCache.get_default_cache ();
+		cached_font = font_cache.get_fallback ();
 		
 		set_font_size (size);
 		set_text (text);
@@ -76,12 +59,6 @@ public class Text : Widget {
 
 	public void use_cache (bool cache) {
 		use_cached_glyphs = cache;
-	}
-
-	public static void load_default_font () {
-		if (get_default_font () == null) {
-			warning ("Default font not found.");
-		}
 	}
 	
 	/** Set font for this text area.
@@ -95,15 +72,11 @@ public class Text : Widget {
 		f = File.new_for_path (font_file);
 		path = (f.query_exists ()) ? f : SearchPaths.find_file (null, font_file);
 		
-		current_font = FontCache.get_default_cache ().get_font ((!) path.get_path ());
-		return current_font != null;
+		cached_font = FontCache.get_default_cache ().get_font ((!) path.get_path ());
+		
+		return cached_font.font != null;
 	}
-
-	public static Font? get_default_font () {
-		File path = SearchPaths.find_file (null, "roboto.bf");
-		return FontCache.get_default_cache ().get_font ((!) path.get_path ());
-	}	
-
+	
 	public void set_font_size (double height_in_pixels) {
 		font_size = height_in_pixels;
 		sidebearing_extent = 0;
@@ -128,19 +101,16 @@ public class Text : Widget {
 		
 		gs = new GlyphSequence ();
 		
+		glyph_names = new Gee.ArrayList<string> ();
 		index = 0;
 		while (text.get_next_char (ref index, out c)) {
-			name = font.get_name_for_character (c);
-			g = font.get_glyph_by_name (name);
+			name = (!) c.to_string ();
+			g = cached_font.get_glyph_by_name (name);
 			gs.glyph.add (g);
+			glyph_names.add (name);
 		}
 		
 		return gs;
-	}
-
-	/** @param character a string with a single glyph or the name of the glyph if it is a ligature. */
-	public bool has_character (string character) {
-		return font.has_glyph (character);
 	}
 
 	public void iterate (Iterator iter) {
@@ -162,13 +132,22 @@ public class Text : Widget {
 		
 		word = glyph_sequence;
 		wi = 0;
-
-		return_if_fail (current_font != null);
-		word_with_ligatures = word.process_ligatures ((!) current_font);
+		
+		if (cached_font.font != null) {
+			word_with_ligatures = word.process_ligatures ((!) cached_font.font);
+		} else {
+			word_with_ligatures = word.process_ligatures (new Font ());
+		}
 		
 		gr_left = null;
 		gr_right = null;
-		kc = ((!) current_font).get_kerning_classes ();
+		
+		if (cached_font.font != null) {
+			kc = ((!) cached_font.font).get_kerning_classes ();
+		} else {
+			kc = new KerningClasses (new Font ());
+		}	
+		
 		for (int i = 0; i < word_with_ligatures.glyph.size; i++) {
 
 			g = word_with_ligatures.glyph.get (i);
@@ -186,7 +165,11 @@ public class Text : Widget {
 			}
 				
 			// process glyph
-			glyph = (g == null) ? font.get_not_def_character ().get_current () : (!) g;
+			if (g == null) {
+				g = cached_font.get_glyph_by_name (glyph_names.get (i));
+			}
+			
+			glyph = (g == null) ? cached_font.get_not_def_character ().get_current () : (!) g;
 			iter (glyph, kern, i + 1 == word_with_ligatures.glyph.size);
 			
 			prev = g;
@@ -259,7 +242,7 @@ public class Text : Widget {
 			}
 		});
 		
-		return max_height * ratio - font.base_line * ratio;
+		return max_height * ratio - cached_font.base_line * ratio;
 	}	
 
 	public override double get_width () {
@@ -303,18 +286,18 @@ public class Text : Widget {
 			}
 		});
 		
-		decender = font.base_line * ratio - min_y * ratio;
+		decender = cached_font.base_line * ratio - min_y * ratio;
 		return decender > 0 ? decender : 0; 
 	}		
 	
 	public override void draw (Context cr) {
-		double y = widget_y + get_height () + get_scale () * (font.bottom_limit + font.base_line);
+		double y = widget_y + get_height () + get_scale () * (cached_font.bottom_limit + cached_font.base_line);
 		draw_at_baseline (cr, widget_x, y);
 	}
 	
 	public void draw_at_top (Context cr, double px, double py, string cacheid = "") {
 		double s = get_scale ();
-		double y = py + s * (font.top_limit - font.base_line);
+		double y = py + s * (cached_font.top_limit - cached_font.base_line);
 		draw_at_baseline (cr, px, y, cacheid);
 	}
 	
@@ -346,7 +329,7 @@ public class Text : Widget {
 		double cc_y;
 
 		ratio = get_scale ();
-		cc_y = (font.top_limit - font.base_line) * ratio;
+		cc_y = (cached_font.top_limit - cached_font.base_line) * ratio;
 
 		y = py;
 		x = px;
@@ -463,7 +446,7 @@ public class Text : Widget {
 			ya = y - prev.y * scale;
 			cr.move_to (xa, ya);
 			
-			by = (y - font.base_line * scale);
+			by = (y - cached_font.base_line * scale);
 			for (int i = 0; i < path.points.size; i++) {
 				e = path.points.get (i).copy ();
 				PenTool.convert_point_segment_type (prev, e, PointType.CUBIC);
@@ -486,11 +469,11 @@ public class Text : Widget {
 	}
 
 	public double get_baseline_to_bottom () {
-		return get_scale () * (-font.base_line - font.bottom_limit);
+		return get_scale () * (-cached_font.base_line - cached_font.bottom_limit);
 	}
 
 	public double get_scale () {
-		return font_size / (font.top_limit - font.bottom_limit);
+		return font_size / (cached_font.top_limit - cached_font.bottom_limit);
 	}
 
 	public void truncate (double max_width) {

@@ -164,8 +164,6 @@ public class OverViewItem : GLib.Object {
 		double glyph_width, glyph_height;
 		Surface s;
 		Context c;
-		Text fallback;
-		double font_size;
 		OverView o;
 		Color color = Color.black ();
 
@@ -182,7 +180,7 @@ public class OverViewItem : GLib.Object {
 			g = ((!) gl).get_current ();
 		} else {
 			o = MainWindow.get_overview ();
-			g = o.fallback_font.get_glyph (character);
+			g = FontCache.fallback_font.get_glyph (character);
 			color = Theme.get_color ("Overview Glyph");
 		}
 		

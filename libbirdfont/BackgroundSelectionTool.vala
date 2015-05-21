@@ -66,15 +66,13 @@ public class BackgroundSelectionTool : CutBackgroundTool {
 				cr.fill ();
 				
 				if (bs.assigned_glyph != null) {
-					if (label.has_character ((!) bs.assigned_glyph)) {
-						font_height = 18;
-						label.set_text ((!) bs.assigned_glyph);
-						label.set_font_size (font_height);
-						tx = x  + w - label.get_width () / 2.0;
-						ty = y + h + label.get_acender () / 2.0 -  label.get_decender ();
-						label.set_font_size (font_height);
-						label.draw_at_baseline (cr, tx, ty);
-					}
+					font_height = 18;
+					label.set_text ((!) bs.assigned_glyph);
+					label.set_font_size (font_height);
+					tx = x  + w - label.get_width () / 2.0;
+					ty = y + h + label.get_acender () / 2.0 -  label.get_decender ();
+					label.set_font_size (font_height);
+					label.draw_at_baseline (cr, tx, ty);
 				}
 				
 				cr.restore ();

@@ -22,13 +22,13 @@ public class FallbackFont : GLib.Object {
 	static unowned Database db;
 	static Database? database = null;
 
-	Gee.ArrayList<FontFace> fallback_fonts;
+	Gee.ArrayList<File> fallback_fonts;
 	Gee.ArrayList<File> font_directories;
 
 	public FallbackFont () {	
 		string home = Environment.get_home_dir ();
 		
-		fallback_fonts = new Gee.ArrayList<FontFace> ();
+		fallback_fonts = new Gee.ArrayList<File> ();
 		font_directories = new Gee.ArrayList<File> ();
 		
 		add_font_folder ("/usr/share/fonts/");
@@ -36,19 +36,15 @@ public class FallbackFont : GLib.Object {
 		add_font_folder (home + "/.local/share/fonts");
 		add_font_folder ("C:\\Windows\\Fonts");
 		
+		//FIXME: MAC
+		
 		open_fallback_fonts ();
-	}
-
-	~FallbackFont () {
-		foreach (FontFace f in fallback_fonts) {
-			close_font (f);
-		}
 	}
 	
 	void open_fallback_fonts () {
 		add_font ("times.ttf");
-		add_font ("verdana.ttf");
 		add_font ("arial.ttf");
+		add_font ("verdana.ttf");
 		add_font ("calibri.ttf");
 		
 		add_font ("Ubuntu-R.ttf");
@@ -71,13 +67,8 @@ public class FallbackFont : GLib.Object {
 		File f = find_font_file (font);
 		
 		if (f.query_exists ()) {
-			add_font_file (f);
+			fallback_fonts.add (f);
 		}
-	}
-
-	void add_font_file (File font_file) {
-		FontFace f = open_font ((!) font_file.get_path ());
-		fallback_fonts.add (f);
 	}
 
 	File find_font_file (string font_file) {
@@ -120,12 +111,24 @@ public class FallbackFont : GLib.Object {
 	}
 	
 	public Glyph get_glyph (unichar c) {
-		Glyph? g;
-		FontFace f;
+		return get_glyph_from_ttf (c);
+	}
+	
+	public Glyph get_glyph_from_ttf (unichar c) {
+		Glyph? g = null;
+		File f;
+		FontFace* font;
 		
 		for (int i = fallback_fonts.size - 1; i >= 0; i--) {
 			f = fallback_fonts.get (i);
-			g = get_glyph_in_font (f, c);
+			
+			font = open_font ((!) f.get_path ());
+			
+			if (font != null) {
+				g = get_glyph_in_font ((!) font, c);
+			}
+			
+			close_font (font);
 			
 			if (g != null) {
 				return (!) g;
@@ -136,10 +139,10 @@ public class FallbackFont : GLib.Object {
 	}
 	
 	public Glyph? get_glyph_in_font (FontFace font, unichar c) {
-		StringBuilder? glyph_data;
+		StringBuilder? glyph_data = null;
 		GlyphCollection gc;
-		XmlParser parser;
 		BirdFontFile bf_parser;
+		Font bf_font;
 		
 		gc = new GlyphCollection (c, (!)c.to_string ());		
 		glyph_data = load_glyph (font, (uint) c);
@@ -147,14 +150,12 @@ public class FallbackFont : GLib.Object {
 		if (glyph_data == null) {
 			return null;
 		}
+
+		bf_font = new Font ();
+		bf_parser = new BirdFontFile (bf_font);
+		bf_parser.load_data (((!) glyph_data).str);
 		
-		parser = new XmlParser (((!) glyph_data).str);	
-		bf_parser = new BirdFontFile (new Font ());
-		
-		bf_parser.parse_glyph (parser.get_root_tag (),
-			gc, gc.get_name (), gc.get_unicode_character (), 0, false);
-		
-		return gc.get_current ();
+		return bf_font.get_glyph_by_name ((!) c.to_string ());
 	}
 
 	public File get_database_file () {

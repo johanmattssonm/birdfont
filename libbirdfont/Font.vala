@@ -451,7 +451,7 @@ public class Font : GLib.Object {
 		}
 	}
 	
-	public string get_name_for_character (unichar c) {
+	public static string get_name_for_character (unichar c) {
 		StringBuilder sb;
 		
 		if (c == 0) {

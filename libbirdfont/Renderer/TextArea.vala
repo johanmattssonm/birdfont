@@ -1110,7 +1110,7 @@ public class TextArea : Widget {
 						}
 						
 						if (paint_background && !(partial_start || partial_stop)) {	
-							double selection_y = widget_y + next_word.widget_y + scale * -next_word.font.bottom_limit - font_size;
+							double selection_y = widget_y + next_word.widget_y + scale * -next_word.cached_font.bottom_limit - font_size;
 							cr.rectangle (widget_x + padding + next_word.widget_x - 1, selection_y, cw + 1, font_size);
 							cr.fill ();
 						}
@@ -1129,7 +1129,7 @@ public class TextArea : Widget {
 								cwi = (glyph.get_width ()) * next_word.get_scale () + kerning;
 
 								if (draw) {
-									double selection_y = widget_y + next_word.widget_y + scale * -next_word.font.bottom_limit - font_size;
+									double selection_y = widget_y + next_word.widget_y + scale * -next_word.cached_font.bottom_limit - font_size;
 									cr.rectangle (bx - 1, selection_y, cwi + 1, font_size);
 									cr.fill ();
 								}

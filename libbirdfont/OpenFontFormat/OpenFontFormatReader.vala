@@ -27,10 +27,10 @@ public extern static bool validate_freetype_font (string file);
 public extern static StringBuilder? load_glyph (FontFace font, uint unicode);
 
 [CCode (cname = "open_font")]
-public extern static FontFace open_font (string font_file);
+public extern static FontFace* open_font (string font_file);
 
-[CCode (cname = "close_font")]
-public extern static FontFace close_font (FontFace font);
+[CCode (cname = "close_ft_font")]
+public extern static void close_font (FontFace* font);
 
 namespace BirdFont {
 

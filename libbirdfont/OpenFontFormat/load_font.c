@@ -524,7 +524,7 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 		}
 		
 		g_string_append (bf, contour->str);
-		g_string_free (contour, 0);
+		g_string_free (contour, TRUE);
 	}
 	
 	free (new_points);
@@ -541,7 +541,7 @@ GString* get_bf_path (guint unicode, FT_Face face, double units_per_em, int* err
 	int i;
 	int start;
 	int end;
-	
+
 	if (face->glyph->outline.n_points == 0) {
 		return bf;			
 	}
@@ -551,7 +551,7 @@ GString* get_bf_path (guint unicode, FT_Face face, double units_per_em, int* err
 		end = face->glyph->outline.contours [i];
 		contour = get_bf_contour_data (unicode, face->glyph->outline.points + start, face->glyph->outline.tags + start, end - start, units_per_em, err);
 		g_string_append_printf (bf, "\t\t<path data=\"%s\" />\n", contour->str);
-		g_string_free (contour, 0);
+		g_string_free (contour, TRUE);
 		start = face->glyph->outline.contours [i] + 1;
 	}
 
@@ -559,38 +559,57 @@ GString* get_bf_path (guint unicode, FT_Face face, double units_per_em, int* err
 }
 
 FontFace* open_font (const char* file) {
-	FT_Library library;
-	FT_Face face;
+	FT_Library library = NULL;
+	FT_Face face = NULL;
 	int error;
 	FontFace* font;
 	
 	error = FT_Init_FreeType (&library);
 	if (error != OK) {
-		g_warning ("Freetype init error %d.\n", error);
+		printf ("Freetype init error %d.\n", error);
 		return NULL;
 	}
 
 	error = FT_New_Face (library, file, 0, &face);
 	if (error) {
+		if (FT_Done_FreeType (library) != 0) {
+			g_warning ("Can't close freetype.");
+		}
+		
 		g_warning ("Freetype font face error %d\n", error);
-		return NULL;
-	}
-
-	error = FT_Select_Charmap (face , FT_ENCODING_UNICODE);
-	if (error) {
-		g_warning ("Freetype can not use Unicode, error: %d\n", error);
 		return NULL;
 	}
 	
 	font = malloc (sizeof (FontFace));
 	font->face = face;
 	font->library = library;
+	
+	error = FT_Select_Charmap (face , FT_ENCODING_UNICODE);
+	if (error) {
+		g_warning ("Freetype can not use Unicode, error: %d\n", error);
+		close_ft_font (font);
+		return NULL;
+	}
+	
+	return font;
 }
 
-void close_font (FontFace* font) {
+void close_ft_font (FontFace* font) {
 	if (font != NULL) {
-		FT_Done_Face (font->face);
-		FT_Done_FreeType (font->library);
+		if (font->face != NULL) {
+			if (FT_Done_Face (font->face) != 0) {
+				g_warning ("Can't close font.");
+			}
+			font->face = NULL;
+		}
+		
+		if (font->library != NULL) {
+			if (FT_Done_FreeType (font->library) != 0) {
+				g_warning ("Can't close freetype.");
+			}
+			font->library = NULL;
+		}
+		
 		free (font);
 	}
 }
@@ -602,9 +621,12 @@ GString* load_glyph (FontFace* font, guint unicode) {
 	int gid;
 	FT_ULong charcode = (FT_ULong) unicode;
 	double units;
+	gchar line_position_buffer[80];
+	gchar* line_position = (gchar*) &line_position_buffer;
+	FT_Error error;
 	
-	if (font == NULL || font->face == NULL) {
-		g_warning ("No font in load_glyph");
+	if (font == NULL || font->face == NULL || font->library == NULL) {
+		printf ("WARNING No font in load_glyph");
 		return NULL;
 	}
 	
@@ -614,24 +636,49 @@ GString* load_glyph (FontFace* font, guint unicode) {
 		return NULL;
 	}
 	
-	glyph = g_string_new ("");
-	FT_Load_Glyph(font->face, gid, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
-	
-	paths = get_bf_path (unicode, font->face, font->face->units_per_EM, &err);
-		
-	if (err != OK) {
-		g_warning ("WARNING Can't load glyph.");
-	}
-	
 	units = get_units (font->face->units_per_EM);
 	
+	glyph = g_string_new ("<font>");
+
+	g_string_append_printf (glyph, "<horizontal>\n");
+
+	g_ascii_formatd (line_position, 80, "%f", font->face->ascender * units);
+	g_string_append_printf (glyph, "\t<top_limit>%s</top_limit>\n", line_position);
+
+	g_string_append_printf (glyph, "\t<base_line>0</base_line>\n");
+	
+	g_ascii_formatd (line_position, 80, "%f", font->face->descender * units);
+	g_string_append_printf (glyph, "\t<bottom_limit>%s</bottom_limit>\n", line_position);		
+	
+	g_string_append_printf (glyph, "</horizontal>\n");
+
+	error = FT_Load_Glyph(font->face, gid, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
+	
+	if (error != 0) {
+		printf ("WARNING Failed to load glyph.");
+		g_string_free (glyph, TRUE);
+		return NULL;
+	}
+	
+	paths = get_bf_path (unicode, font->face, font->face->units_per_EM, &err);
+	
+	if (err != OK) {
+		printf ("WARNING Can't load glyph.");
+		g_string_free (glyph, TRUE);
+		g_string_free (paths, TRUE);
+		return NULL;
+	}
+
+	g_string_append_printf (glyph, "<collection unicode=\"U+%x\">\n", (guint)charcode);
 	g_string_append_printf (glyph, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 
 		0.0, font->face->glyph->metrics.horiAdvance * units);
 		
 	g_string_append_printf (glyph, "%s", paths->str);
 	g_string_append_printf (glyph, "%s", "\t</glyph>");
+	g_string_append_printf (glyph, "%s", "\t</collection>");
+	g_string_append_printf (glyph, "%s", "</font>");
 	
-	g_string_free (paths, 0);
+	g_string_free (paths, TRUE);
 	
 	if (err != OK) {
 		g_warning ("Can't load glyph data.");
@@ -878,7 +925,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		}
 
 		g_string_append (bf, glyph->str);
-		g_string_free (glyph, 0);
+		g_string_free (glyph, TRUE);
 	}
 
 	bird_font_open_font_format_reader_append_kerning (bf, file);
