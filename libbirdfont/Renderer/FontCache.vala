@@ -21,14 +21,17 @@ public class FontCache {
 	public static FallbackFont fallback_font;
 	
 	static FontCache? default_cache = null;
-	Gee.HashMap<string, Font> fonts;
+	Gee.HashMap<string, CachedFont> fonts;
+	CachedFont fallback;
 	
 	public FontCache () {
-		fonts = new Gee.HashMap<string, Font> ();
-		
 		if (is_null (fallback_font)) {
 			fallback_font = new FallbackFont ();
 		}
+		
+		fallback = new CachedFont (null);
+		fonts = new Gee.HashMap<string, CachedFont> ();
+		fonts.set ("", fallback);
 	}
 	
 	public void reload_font (string file_name) {
@@ -40,16 +43,16 @@ public class FontCache {
 	}
 	
 	public CachedFont get_font (string file_name) {
+		CachedFont c;
 		Font f;
 		bool ok;
-		
-		if (file_name == "") {
-			stderr.printf ("No file name.\n");
-			return new CachedFont (null);
+
+		if (fonts.has_key (file_name)) {
+			return fonts.get (file_name);
 		}
 		
-		if (fonts.has_key (file_name)) {
-			return new CachedFont (fonts.get (file_name));
+		if (file_name == "") {
+			return fallback;
 		}
 		
 		f = new Font ();
@@ -60,9 +63,10 @@ public class FontCache {
 			return new CachedFont (null);
 		}
 		
-		fonts.set (file_name, f);
+		c = new CachedFont (f);
+		fonts.set (file_name, c);
 		
-		return new CachedFont (f);
+		return c;
 	}
 	
 	public static FontCache get_default_cache () {
@@ -74,7 +78,7 @@ public class FontCache {
 	}
 	
 	public CachedFont get_fallback () {
-		return new CachedFont (null);
+		return fallback;
 	}
 	
 	public class CachedFont : GLib.Object {
@@ -84,12 +88,23 @@ public class FontCache {
 		public double top_limit = 84;
 		public double base_line = 0;
 		public double bottom_limit = -27;
-			
+		
+		public static int cached = 0; 
+		
 		public CachedFont (Font? font) {
 			this.font = font;
+			cached++;
+			
+			warning (@"$cached cached fonts\n");
+		}
+		
+		~CachedFont () {
+			cached--;
+			warning (@"$cached cached fonts\n");
 		}
 		
 		public Glyph? get_glyph_by_name (string name) {
+			Font f;
 			Glyph? g = null;
 			
 			if (font != null) {
@@ -97,7 +112,11 @@ public class FontCache {
 			}
 			
 			if (g == null && name.char_count () == 1) {
-				g = fallback_font.get_glyph (name.get_char (0));
+				f = fallback_font.get_single_glyph_font (name.get_char (0));
+				g = f.get_glyph_by_name (name);
+				top_limit = f.top_limit;
+				base_line = f.base_line;
+				bottom_limit = f.bottom_limit;		
 			}
 			
 			return g;

@@ -110,39 +110,36 @@ public class FallbackFont : GLib.Object {
 		}
 	}
 	
-	public Glyph get_glyph (unichar c) {
-		return get_glyph_from_ttf (c);
+	public Font get_single_glyph_font (unichar c) {
+		return load_glyph_from_ttf (c);
 	}
 	
-	public Glyph get_glyph_from_ttf (unichar c) {
-		Glyph? g = null;
+	public Font load_glyph_from_ttf (unichar c) {
+		Font? bf_font;
 		File f;
 		FontFace* font;
 		
+		bf_font = new Font ();
 		for (int i = fallback_fonts.size - 1; i >= 0; i--) {
 			f = fallback_fonts.get (i);
 			
 			font = open_font ((!) f.get_path ());
-			
-			if (font != null) {
-				g = get_glyph_in_font ((!) font, c);
-			}
-			
+			bf_font = get_glyph_in_font ((!) font, c);
 			close_font (font);
 			
-			if (g != null) {
-				return (!) g;
+			if (bf_font != null) {
+				return (!) bf_font;
 			}
 		}
 		
-		return new Glyph ("");
+		return bf_font != null ? (!) bf_font : new Font ();
 	}
 	
-	public Glyph? get_glyph_in_font (FontFace font, unichar c) {
+	public Font? get_glyph_in_font (FontFace font, unichar c) {
 		StringBuilder? glyph_data = null;
 		GlyphCollection gc;
 		BirdFontFile bf_parser;
-		Font bf_font;
+		Font bf_font = new Font ();
 		
 		gc = new GlyphCollection (c, (!)c.to_string ());		
 		glyph_data = load_glyph (font, (uint) c);
@@ -151,11 +148,10 @@ public class FallbackFont : GLib.Object {
 			return null;
 		}
 
-		bf_font = new Font ();
 		bf_parser = new BirdFontFile (bf_font);
 		bf_parser.load_data (((!) glyph_data).str);
 		
-		return bf_font.get_glyph_by_name ((!) c.to_string ());
+		return bf_font;
 	}
 
 	public File get_database_file () {

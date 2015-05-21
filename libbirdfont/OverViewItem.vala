@@ -156,6 +156,7 @@ public class OverViewItem : GLib.Object {
 
 	private void draw_thumbnail (Context cr, GlyphCollection? gl, double x, double y) {
 		Glyph g;
+		Glyph? glyph;
 		Font font;
 		double gx, gy;
 		double x1, x2, y1, y2;
@@ -167,7 +168,6 @@ public class OverViewItem : GLib.Object {
 		OverView o;
 		Color color = Color.black ();
 
-		font = BirdFont.get_current_font ();
 		w = width;
 		h = height;
 		
@@ -177,30 +177,41 @@ public class OverViewItem : GLib.Object {
 		c = new Context (s);
 			
 		if (gl != null) {
+			font = BirdFont.get_current_font ();
 			g = ((!) gl).get_current ();
+
+			c.save ();
+			g.boundaries (out x1, out y1, out x2, out y2);
+		
+			glyph_width = x2 - x1;
+			glyph_height = y2 - y1;
+			
+			gx = ((w / glyph_scale) - glyph_width) / 2;
+			gy = (h / glyph_scale) - 25 / glyph_scale;
+
+			c.save ();
+			c.scale (glyph_scale, glyph_scale);	
+
+			g.add_help_lines ();
+			
+			c.translate (gx - g.get_lsb () - Glyph.xc (), g.get_baseline () + gy - Glyph.yc ());
+			
+			g.draw_paths (c, color);
+			c.restore ();
 		} else {
-			o = MainWindow.get_overview ();
-			g = FontCache.fallback_font.get_glyph (character);
-			color = Theme.get_color ("Overview Glyph");
+			c.save ();
+			Text fallback = new Text ();
+			Theme.text_color (fallback, "Overview Glyph");
+			fallback.set_text ((!) character.to_string ());
+			double font_size = height * 0.8;
+			fallback.set_font_size (font_size);
+
+			gx = (width - fallback.get_extent ()) / 2.0;
+			gy = height - 30;
+			fallback.set_font_size (font_size);
+			fallback.draw_at_baseline (c, gx, gy);
+			c.restore ();
 		}
-		
-		g.boundaries (out x1, out y1, out x2, out y2);
-	
-		glyph_width = x2 - x1;
-		glyph_height = y2 - y1;
-		
-		gx = ((w / glyph_scale) - glyph_width) / 2;
-		gy = (h / glyph_scale) - 25 / glyph_scale;
-
-		c.save ();
-		c.scale (glyph_scale, glyph_scale);	
-
-		g.add_help_lines ();
-		
-		c.translate (gx - g.get_lsb () - Glyph.xc (), g.get_baseline () + gy - Glyph.yc ());
-		
-		g.draw_paths (c, color);
-		c.restore ();
 		
 		cr.save ();
 		cr.set_source_surface (s, x, y - h);
