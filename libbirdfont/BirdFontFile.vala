@@ -1163,7 +1163,7 @@ class BirdFontFile : GLib.Object {
 		return id;
 	}
 
-	private void parse_glyph (Tag tag, GlyphCollection gc, string name, 
+	public void parse_glyph (Tag tag, GlyphCollection gc, string name, 
 			unichar unicode, int selected_id, bool unassigned) {	
 		Glyph glyph = new Glyph (name, unicode);
 		Path path;

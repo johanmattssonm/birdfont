@@ -12,11 +12,25 @@
     Lesser General Public License for more details.
 */
 
+[SimpleType]
+[CCode (cname = "FontFace")]
+public extern class FontFace {
+}
+
 [CCode (cname = "load_freetype_font")]
 public extern static StringBuilder? load_freetype_font (string file, out int error);
 
 [CCode (cname = "validate_freetype_font")]
 public extern static bool validate_freetype_font (string file);
+
+[CCode (cname = "load_glyph")]
+public extern static StringBuilder? load_glyph (FontFace font, uint unicode);
+
+[CCode (cname = "open_font")]
+public extern static FontFace open_font (string font_file);
+
+[CCode (cname = "close_font")]
+public extern static FontFace close_font (FontFace font);
 
 namespace BirdFont {
 

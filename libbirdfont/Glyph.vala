@@ -1497,17 +1497,18 @@ public class Glyph : FontDisplay {
 	}
 	
 	/** Draw filled paths. */
-	public void draw_paths (Context cr) {
+	public void draw_paths (Context cr, Color? c = null) {
 		PathList stroke;
-
+		Color color = c == null ? Color.black () : (!) c;
+		
 		cr.save ();
 		cr.new_path ();
 		foreach (Path p in path_list) {
 			if (p.stroke > 0) {
 				stroke = p.get_stroke_fast ();
-				draw_path_list (stroke, cr, Color.black ());
+				draw_path_list (stroke, cr, color);
 			} else {
-				p.draw_path (cr, this, Color.black ());
+				p.draw_path (cr, this, color);
 			}
 		}
 		cr.fill ();

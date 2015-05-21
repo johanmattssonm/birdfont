@@ -14,6 +14,7 @@
 
 using Gee;
 using Sqlite;
+using Bird;
 
 namespace BirdFont {
 
@@ -21,7 +22,139 @@ public class FallbackFont : GLib.Object {
 	static unowned Database db;
 	static Database? database = null;
 
+	Gee.ArrayList<FontFace> fallback_fonts;
+	Gee.ArrayList<File> font_directories;
+
 	public FallbackFont () {	
+		string home = Environment.get_home_dir ();
+		
+		fallback_fonts = new Gee.ArrayList<FontFace> ();
+		font_directories = new Gee.ArrayList<File> ();
+		
+		add_font_folder ("/usr/share/fonts/");
+		add_font_folder ("/usr/local/share/fonts/");
+		add_font_folder (home + "/.local/share/fonts");
+		add_font_folder ("C:\\Windows\\Fonts");
+		
+		open_fallback_fonts ();
+	}
+
+	~FallbackFont () {
+		foreach (FontFace f in fallback_fonts) {
+			close_font (f);
+		}
+	}
+	
+	void open_fallback_fonts () {
+		add_font ("times.ttf");
+		add_font ("verdana.ttf");
+		add_font ("arial.ttf");
+		add_font ("calibri.ttf");
+		
+		add_font ("Ubuntu-R.ttf");
+		
+		add_font ("DroidKufi.ttf");
+		add_font ("DroidSansGeorgian.ttf");
+		add_font ("DroidSansHebrew.ttf");
+		add_font ("DroidNaskh.ttf");
+		add_font ("DroidSansJapanese.ttf");
+		add_font ("DroidSansArabic.ttf");
+		add_font ("DroidSansArmenian.ttf");
+		add_font ("DroidSans.ttf");
+		add_font ("DroidSansEthiopic.ttf");
+		add_font ("DroidSansFallbackFull.ttf");
+
+		add_font ("Roboto-Regular.ttf");
+	}
+
+	void add_font (string font) {
+		File f = find_font_file (font);
+		
+		if (f.query_exists ()) {
+			add_font_file (f);
+		}
+	}
+
+	void add_font_file (File font_file) {
+		FontFace f = open_font ((!) font_file.get_path ());
+		fallback_fonts.add (f);
+	}
+
+	File find_font_file (string font_file) {
+		File d, f;
+		
+		for (int i = font_directories.size - 1; i >= 0; i--) {
+			d = font_directories.get (i);
+			f = get_child (d, font_file);
+			
+			if (f.query_exists ()) {
+				return f;
+			}
+		}
+		
+		return File.new_for_path (font_file);
+	}
+		
+	void add_font_folder (string f) {
+		File folder = File.new_for_path (f);
+		FileInfo? file_info;
+		string fn;
+		
+		try {
+			if (folder.query_exists ()) {
+				font_directories.add (folder);
+				
+				var enumerator = folder.enumerate_children (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE, 0);
+				
+				while ((file_info = enumerator.next_file ()) != null) {
+					fn = ((!) file_info).get_name ();
+
+					if (((!)file_info).get_file_type () == FileType.DIRECTORY) {
+						add_font_folder ((!) get_child (folder, fn).get_path ());
+					}
+				}
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+	
+	public Glyph get_glyph (unichar c) {
+		Glyph? g;
+		FontFace f;
+		
+		for (int i = fallback_fonts.size - 1; i >= 0; i--) {
+			f = fallback_fonts.get (i);
+			g = get_glyph_in_font (f, c);
+			
+			if (g != null) {
+				return (!) g;
+			}
+		}
+		
+		return new Glyph ("");
+	}
+	
+	public Glyph? get_glyph_in_font (FontFace font, unichar c) {
+		StringBuilder? glyph_data;
+		GlyphCollection gc;
+		XmlParser parser;
+		BirdFontFile bf_parser;
+		
+		gc = new GlyphCollection (c, (!)c.to_string ());		
+		glyph_data = load_glyph (font, (uint) c);
+		
+		if (glyph_data == null) {
+			return null;
+		}
+		
+		parser = new XmlParser (((!) glyph_data).str);	
+		bf_parser = new BirdFontFile (new Font ());
+		
+		bf_parser.parse_glyph (parser.get_root_tag (),
+			gc, gc.get_name (), gc.get_unicode_character (), 0, false);
+		
+		return gc.get_current ();
 	}
 
 	public File get_database_file () {
@@ -70,6 +203,7 @@ public class FallbackFont : GLib.Object {
 		
 	}
 
+/* //FIXME:DELETE
 	public void add_font (string font_file) {
 		Font font;
 		Glyph g;
@@ -89,7 +223,7 @@ public class FallbackFont : GLib.Object {
 			g = (!) font.get_glyph_indice (i);
 			bf = new BirdFontFile (font);
 		}
-	}
+	} */
 
 	public void open_database (File db_file) {
 		int rc = Database.open ((!) db_file.get_path (), out database);

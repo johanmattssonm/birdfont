@@ -166,6 +166,8 @@ public class OverViewItem : GLib.Object {
 		Context c;
 		Text fallback;
 		double font_size;
+		OverView o;
+		Color color = Color.black ();
 
 		font = BirdFont.get_current_font ();
 		w = width;
@@ -178,37 +180,30 @@ public class OverViewItem : GLib.Object {
 			
 		if (gl != null) {
 			g = ((!) gl).get_current ();
-			g.boundaries (out x1, out y1, out x2, out y2);
-		
-			glyph_width = x2 - x1;
-			glyph_height = y2 - y1;
-			
-			gx = ((w / glyph_scale) - glyph_width) / 2;
-			gy = (h / glyph_scale) - 25 / glyph_scale;
-
-			c.save ();
-			c.scale (glyph_scale, glyph_scale);	
-
-			g.add_help_lines ();
-			
-			c.translate (gx - g.get_lsb () - Glyph.xc (), g.get_baseline () + gy - Glyph.yc ());
-			
-			g.draw_paths (c);
-			c.restore ();
 		} else {
-			c.save ();
-			fallback = new Text ();
-			Theme.text_color (fallback, "Overview Glyph");
-			fallback.set_text ((!) character.to_string ());
-			font_size = height * 0.8;
-			fallback.set_font_size (font_size);
-			gx = (width - fallback.get_extent ()) / 2.0;
-			gy = height - 30;
-			fallback.set_font_size (font_size);
-			fallback.draw_at_baseline (c, gx, gy);
-			c.restore ();
+			o = MainWindow.get_overview ();
+			g = o.fallback_font.get_glyph (character);
+			color = Theme.get_color ("Overview Glyph");
 		}
-				
+		
+		g.boundaries (out x1, out y1, out x2, out y2);
+	
+		glyph_width = x2 - x1;
+		glyph_height = y2 - y1;
+		
+		gx = ((w / glyph_scale) - glyph_width) / 2;
+		gy = (h / glyph_scale) - 25 / glyph_scale;
+
+		c.save ();
+		c.scale (glyph_scale, glyph_scale);	
+
+		g.add_help_lines ();
+		
+		c.translate (gx - g.get_lsb () - Glyph.xc (), g.get_baseline () + gy - Glyph.yc ());
+		
+		g.draw_paths (c, color);
+		c.restore ();
+		
 		cr.save ();
 		cr.set_source_surface (s, x, y - h);
 		cr.paint ();

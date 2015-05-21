@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013 2014 Johan Mattsson
+    Copyright (C) 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -33,6 +33,11 @@
 #define CUBIC_CURVE 2
 #define DOUBLE_CURVE 4
 #define HIDDEN_CURVE 8
+
+typedef struct FontFace {
+	FT_Face face;
+	FT_Library library;
+} FontFace;
 
 /** Convert units per em in font file format to the BirdFont format. */
 double get_units (double units_per_em) {
@@ -513,7 +518,7 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 			i += 1;
 		} else {
 			contour = g_string_new ("");
-			g_warning ("WARNING Can not parse outline.\n");
+			g_warning ("WARNING Can't parse outline.\n");
 			*err = 1;
 			i++;
 		}
@@ -551,6 +556,88 @@ GString* get_bf_path (guint unicode, FT_Face face, double units_per_em, int* err
 	}
 
 	return bf;
+}
+
+FontFace* open_font (const char* file) {
+	FT_Library library;
+	FT_Face face;
+	int error;
+	FontFace* font;
+	
+	error = FT_Init_FreeType (&library);
+	if (error != OK) {
+		g_warning ("Freetype init error %d.\n", error);
+		return NULL;
+	}
+
+	error = FT_New_Face (library, file, 0, &face);
+	if (error) {
+		g_warning ("Freetype font face error %d\n", error);
+		return NULL;
+	}
+
+	error = FT_Select_Charmap (face , FT_ENCODING_UNICODE);
+	if (error) {
+		g_warning ("Freetype can not use Unicode, error: %d\n", error);
+		return NULL;
+	}
+	
+	font = malloc (sizeof (FontFace));
+	font->face = face;
+	font->library = library;
+}
+
+void close_font (FontFace* font) {
+	if (font != NULL) {
+		FT_Done_Face (font->face);
+		FT_Done_FreeType (font->library);
+		free (font);
+	}
+}
+
+GString* load_glyph (FontFace* font, guint unicode) {
+	GString* glyph;
+	GString* paths;
+	int err = OK;
+	int gid;
+	FT_ULong charcode = (FT_ULong) unicode;
+	double units;
+	
+	if (font == NULL || font->face == NULL) {
+		g_warning ("No font in load_glyph");
+		return NULL;
+	}
+	
+	gid = FT_Get_Char_Index (font->face, charcode);
+	
+	if (gid == 0) {
+		return NULL;
+	}
+	
+	glyph = g_string_new ("");
+	FT_Load_Glyph(font->face, gid, FT_LOAD_DEFAULT | FT_LOAD_NO_SCALE);
+	
+	paths = get_bf_path (unicode, font->face, font->face->units_per_EM, &err);
+		
+	if (err != OK) {
+		g_warning ("WARNING Can't load glyph.");
+	}
+	
+	units = get_units (font->face->units_per_EM);
+	
+	g_string_append_printf (glyph, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 
+		0.0, font->face->glyph->metrics.horiAdvance * units);
+		
+	g_string_append_printf (glyph, "%s", paths->str);
+	g_string_append_printf (glyph, "%s", "\t</glyph>");
+	
+	g_string_free (paths, 0);
+	
+	if (err != OK) {
+		g_warning ("Can't load glyph data.");
+	}
+	
+	return glyph;
 }
 
 /** Get char code for a glyph.
@@ -680,9 +767,6 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	}
 	
 	g_string_append (bf, "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\n");
-	
-	// libxml2 fails on doctype declaration in windows.
-	
 	g_string_append (bf, "<font>\n");
 
 	g_string_append_printf (bf, "<postscript_name>%s</postscript_name>\n", g_markup_escape_text (FT_Get_Postscript_Name(face), -1));

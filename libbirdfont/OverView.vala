@@ -53,8 +53,14 @@ public class OverView : FontDisplay {
 	
 	double scroll_size = 1;
 	
+	public static FallbackFont fallback_font;
+	
 	public OverView (GlyphRange? range = null, bool open_selected = true) {
 		GlyphRange gr;
+
+		if (is_null (fallback_font)) {
+			fallback_font = new FallbackFont ();
+		}
 
 		if (range == null) {
 			gr = new GlyphRange ();
