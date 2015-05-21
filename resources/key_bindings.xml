@@ -5,9 +5,6 @@
 	<action key="r" ctrl="true" alt="false" command="false" shift="false" action="recent files" />
 	<action key="s" ctrl="true" alt="false" command="false" shift="false" action="save" />
 	<action key="S" ctrl="true" alt="false" command="false" shift="true" action="save as" />
-	<action key="e" ctrl="true" alt="false" command="false" shift="false" action="export" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="export settings" />
-	<action key="p" ctrl="true" alt="false" command="false" shift="false" action="preview" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select character set" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="quit" />
 	<action key="z" ctrl="true" alt="false" command="false" shift="false" action="undo" />
@@ -18,9 +15,6 @@
 	<action key="a" ctrl="true" alt="false" command="false" shift="false" action="select all paths" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="move to baseline" />
 	<action key="f" ctrl="true" alt="false" command="false" shift="false" action="search" />
-	<action key="E" ctrl="true" alt="false" command="false" shift="true" action="export glyph as svg" />
-	<action key="i" ctrl="true" alt="false" command="false" shift="false" action="import svg file" />
-	<action key="b" ctrl="true" alt="false" command="false" shift="false" action="import background image" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="simplify path" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="close path" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="glyph sequence" />
@@ -32,6 +26,13 @@
 	<action key="ｓ" ctrl="true" alt="false" command="false" shift="false" action="select next point" />
 	<action key="ｑ" ctrl="true" alt="false" command="false" shift="false" action="select previous point" />
 	<action key="ｔ" ctrl="true" alt="false" command="false" shift="false" action="select point below" />
+	<action key="e" ctrl="true" alt="false" command="false" shift="false" action="export" />
+	<action key="E" ctrl="true" alt="false" command="false" shift="true" action="export glyph as svg" />
+	<action key="i" ctrl="true" alt="false" command="false" shift="false" action="import svg file" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="import svg folder" />
+	<action key="b" ctrl="true" alt="false" command="false" shift="false" action="import background image" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="export settings" />
+	<action key="p" ctrl="true" alt="false" command="false" shift="false" action="preview" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="next tab" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="previous tab" />
 	<action key="w" ctrl="true" alt="false" command="false" shift="false" action="close tab" />
@@ -89,6 +90,9 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="apply_stroke" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="object_stroke" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="stroke_to_outline" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="line_cap_butt" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="line_cap_round" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="line_cap_square" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="help_lines" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="show_xheight_helplines" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="background_help_lines" />
@@ -116,4 +120,5 @@
 	<action key="+" ctrl="true" alt="false" command="false" shift="false" action="zoom_in" />
 	<action key="-" ctrl="true" alt="false" command="false" shift="false" action="zoom_out" />
 	<action key="s" ctrl="false" alt="false" command="false" shift="false" action="bezier_line" />
+	<action key="u" ctrl="false" alt="false" command="false" shift="false" action="bezier_corner" />
 </bindings>

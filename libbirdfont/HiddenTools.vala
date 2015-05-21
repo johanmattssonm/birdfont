@@ -47,7 +47,15 @@ public class HiddenTools : ToolCollection  {
 		bezier_line.is_tool_modifier = true;
 		hidden_expander.add_tool (bezier_line);
 		bezier_line.set_tool_visibility (false);
-				
+
+		Tool bezier_corner = new Tool ("bezier_corner", t_("Convert the last control point to a corner node"));
+		bezier_corner.select_action.connect ((self) => {
+			DrawingTools.bezier_tool.create_corner ();
+		});
+		bezier_corner.is_tool_modifier = true;
+		hidden_expander.add_tool (bezier_corner);
+		bezier_corner.set_tool_visibility (false);
+						
 		expanders.add (hidden_expander);
 	}
 

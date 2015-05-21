@@ -39,6 +39,12 @@ public class BezierTool : Tool {
 	double last_press_time = 0;
 	bool button_down = false;
 	
+	/** Create a corner instead of a control point with reflective handles. */
+	bool corner_node = false;
+	
+	/** Swap right and left handles if orientation changes */
+	bool swap = false; 
+	
 	public BezierTool (string name) {
 		base (name, t_ ("Create Beziér curves"));
 
@@ -93,9 +99,11 @@ public class BezierTool : Tool {
 				
 		button_down = true;
 
-		return_if_fail (state != MOVE_HANDLES);
-		return_if_fail (state != MOVE_LAST_HANDLE_RIGHT);
-		return_if_fail (state != MOVE_LAST_HANDLE_LEFT);
+		if (state == MOVE_HANDLES
+			|| state == MOVE_LAST_HANDLE_RIGHT
+			|| state == MOVE_LAST_HANDLE_LEFT) {
+			return;	
+		}
 				
 		if (b == 2) {
 			if (g.is_open ()) {
@@ -131,8 +139,22 @@ public class BezierTool : Tool {
 		if (GridTool.is_visible ()) {
 			GridTool.tie_coordinate (ref px, ref py);
 		}
-
-		if (state == NONE) {
+		
+		if (corner_node) {
+			if (current_path.is_open ()) {
+				current_point = current_path.add (px, py);
+				current_path.hide_end_handle = true;
+				current_point.get_left_handle ().convert_to_line ();
+				current_point.recalculate_linear_handles ();
+				set_point_type ();
+				g.clear_active_paths ();
+				g.add_active_path (current_path);
+				GlyphCanvas.redraw ();
+				state = MOVE_POINT;
+			} else {
+				state = NONE;
+			}
+		} else if (state == NONE) {
 			g.open_path ();
 			current_path = new Path ();
 			current_path.reopen ();
@@ -156,7 +178,6 @@ public class BezierTool : Tool {
 		} else if (state == MOVE_POINT) {
 			if (PenTool.can_join (current_point)) {
 				EditPoint first = current_path.get_first_point ();
-				bool swap;
 				
 				p = PenTool.join_paths (current_point);
 				return_if_fail (p != null);
@@ -204,7 +225,11 @@ public class BezierTool : Tool {
 		
 		button_down = false;
 		
-		return_if_fail (state != MOVE_POINT);
+		if (state == NONE || state == MOVE_POINT) {
+			return;
+		}
+		
+		corner_node = false;
 		
 		// ignore double clicks
 		if ((GLib.get_real_time () - last_release_time) / 1000000.0 < 0.2) {
@@ -230,6 +255,7 @@ public class BezierTool : Tool {
 			set_point_type ();
 			g.clear_active_paths ();
 			g.add_active_path (current_path);
+			
 			GlyphCanvas.redraw ();
 			state = MOVE_POINT;
 		} else if (state == MOVE_LAST_HANDLE_LEFT || state == MOVE_LAST_HANDLE_RIGHT) {
@@ -274,8 +300,11 @@ public class BezierTool : Tool {
 			|| state == MOVE_LAST_HANDLE_RIGHT) {
 				
 			current_path.hide_end_handle = false;
-			current_point.set_reflective_handles (true);
-			current_point.convert_to_curve ();
+			
+			if (!corner_node) {
+				current_point.set_reflective_handles (true);
+				current_point.convert_to_curve ();
+			}
 			
 			if (state == MOVE_LAST_HANDLE_LEFT) {
 				current_point.get_left_handle ().move_to_coordinate (px, py);
@@ -311,7 +340,10 @@ public class BezierTool : Tool {
 	}
 	
 	public void stop_drawing () {
-		if (state == MOVE_POINT && current_path.points.size > 0) {
+		if (state == MOVE_POINT
+			&& current_path.points.size > 0
+			&& current_path.is_open ()) {
+				
 			current_path.delete_last_point ();
 			current_path.reset_stroke ();
 			current_path.create_full_stroke (); // cache better stroke
@@ -328,6 +360,25 @@ public class BezierTool : Tool {
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
 			state = NONE;
 		}
+	}
+	
+	public void create_corner () {
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		corner_node = true;
+		g.open_path ();
+		
+		if (current_path.is_open ()) {
+			current_path.delete_last_point ();
+			current_path.reset_stroke ();
+			current_point = current_path.get_last_point ();
+			state = MOVE_HANDLES;
+		} else {
+			state = swap ? MOVE_LAST_HANDLE_RIGHT : MOVE_LAST_HANDLE_LEFT;
+		}
+		
+		current_point.set_reflective_handles (false);
+		current_point.get_right_handle ().convert_to_curve ();
 	}
 }
 
