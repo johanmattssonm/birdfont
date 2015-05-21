@@ -41,7 +41,7 @@ public class FontName : Tool {
 		// tab label
 		font_name = new Text ();
 		font_name.set_text (BirdFont.get_current_font ().get_full_name ());
-		text_height = 22;
+		text_height = 22 * Toolbox.get_scale ();
 		
 		max_width = (width - 2 * x * Toolbox.get_scale ());
 		font_name.set_font_size (text_height);

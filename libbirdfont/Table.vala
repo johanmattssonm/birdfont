@@ -106,7 +106,7 @@ public abstract class Table : FontDisplay {
 		cr.save ();
 		Theme.color (cr, "Text Foreground");
 		t = row.get_column (0);
-		t.widget_x = 40 * MainWindow.units;;
+		t.widget_x = 40 * MainWindow.units;
 		t.widget_y = y + 45 * MainWindow.units;
 		t.draw (cr);		
 		cr.restore ();
@@ -127,7 +127,7 @@ public abstract class Table : FontDisplay {
 			Theme.color (cr, "Table Background 1");
 		}
 		
-		cr.rectangle (0, y * MainWindow.units, allocation.width, 25 * MainWindow.units);
+		cr.rectangle (0, y, allocation.width, 25 * MainWindow.units);
 		cr.fill ();
 		cr.restore ();
 
@@ -211,7 +211,7 @@ public abstract class Table : FontDisplay {
 	}
 	
 	public override void scroll_wheel_down (double x, double y) {
-		scroll += 30;
+		scroll += 30  * MainWindow.units;
 
 		if (scroll > page_height - allocation.height) {
 			scroll = page_height - allocation.height;
@@ -226,7 +226,7 @@ public abstract class Table : FontDisplay {
 	}
 	
 	public override void scroll_wheel_up (double x, double y) {
-		scroll -= 30;
+		scroll -= 30 * MainWindow.units;
 		
 		if (scroll < 0) {
 			scroll = 0;

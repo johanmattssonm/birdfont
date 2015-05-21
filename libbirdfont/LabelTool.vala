@@ -67,7 +67,7 @@ public class LabelTool : Tool {
 		cr.save ();
 		label_text = new Text ();
 		label_text.set_text (label);
-		text_height = 18;
+		text_height = 18 * Toolbox.get_scale ();
 
 		if (is_selected ()) {
 			Theme.text_color (label_text, "Text Tool Box");

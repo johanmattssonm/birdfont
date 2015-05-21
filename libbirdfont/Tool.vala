@@ -20,8 +20,8 @@ public class Tool : Widget {
 	
 	public double x = 0;
 	public double y = 0;
-	public double w = 33 * Toolbox.get_scale ();
-	public double h = (33 / 1.11) * Toolbox.get_scale ();
+	public double w;
+	public double h;
 
 	double scale;
 			
@@ -88,8 +88,10 @@ public class Tool : Widget {
 		
 		icon_font = new Text ();
 		
-		scale = w / 111.0; // scale to 320 dpi
-		
+		scale = MainWindow.units;
+		w = 33 * Toolbox.get_scale ();
+		h = (33 / 1.11) * Toolbox.get_scale ();
+
 		if (name != null) {
 			set_icon ((!) name);
 			this.name = (!) name;
@@ -192,7 +194,7 @@ public class Tool : Widget {
 		icon_font = new Text ((!) name);
 		found = icon_font.load_font (icon_file);
 		icon_font.use_cache (true);
-		icon_font.set_font_size (35);
+		icon_font.set_font_size (35 * Toolbox.get_scale ());
 		
 		if (!found) {
 			warning (@"Icon font for toolbox was not found. ($(icon_file))");
@@ -257,6 +259,9 @@ public class Tool : Widget {
 		string border = "Button Border 3";
 		string background = "Button Border 3";
 		
+		double scale = Toolbox.get_scale ();	
+	
+		printd (@"scale: $scale\n");
 		cr.save ();
 			
 		bgx = xt;
@@ -284,12 +289,12 @@ public class Tool : Widget {
 		}
 
 		Theme.color (cr, background);
-		draw_rounded_rectangle (cr, bgx, bgy, 34, 28, 4);
+		draw_rounded_rectangle (cr, bgx, bgy, 34 * scale, 28 * scale, 4 * scale);
 		cr.fill ();
 				
 		cr.set_line_width (1);
 		Theme.color (cr, border);
-		draw_rounded_rectangle (cr, bgx, bgy, 34, 28, 4);
+		draw_rounded_rectangle (cr, bgx, bgy, 34 * scale, 28 * scale, 4 * scale);
 		cr.stroke ();
 		
 		iconx = bgx + 1 + (w - 1) / 2 - icon_font.get_sidebearing_extent () / 2;

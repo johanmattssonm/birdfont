@@ -147,7 +147,9 @@ public class DrawingTools : ToolCollection  {
 		zoom_tool.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);
 		});
-#if ANDROID == false
+#if ANDROID
+		Toolbox.hidden_tools.hidden_expander.add_tool (zoom_tool);
+#else
 		draw_tools.add_tool (zoom_tool);
 #endif
 		move_tool = new MoveTool ("move");
