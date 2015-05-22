@@ -85,7 +85,7 @@ public class OverView : FontDisplay {
 		IdleSource idle = new IdleSource ();
 
 		idle.set_callback (() => {			
-			selected_canvas ();
+			// FIXME: selected_canvas ();
 			return false;
 		});
 		

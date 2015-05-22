@@ -54,7 +54,7 @@ public class ZoomBar : Tool {
 		zoom_level = z;
 		
 		if (!MenuTab.background_thread) {
-			Toolbox.redraw_tool_box ();
+			//FIXME: DELETE Toolbox.redraw_tool_box ();
 		}
 	}
 	
