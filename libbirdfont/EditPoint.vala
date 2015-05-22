@@ -188,7 +188,6 @@ public class EditPoint : GLib.Object {
 		}
 		
 		n_points++;
-		print (@"n_points: $(n_points)\n");
 	}
 
 	~EditPoint () {

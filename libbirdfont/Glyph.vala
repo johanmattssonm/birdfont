@@ -121,9 +121,7 @@ public class Glyph : FontDisplay {
 		left_limit = -28;
 		right_limit = 28;
 		
-		n_instances++;
-		
-		warning (@"glyphs $name: $(n_instances)");
+		n_instances++;		
 	}
 
 	public Glyph.no_lines (string name, unichar unichar_code = 0) {
@@ -133,7 +131,6 @@ public class Glyph : FontDisplay {
 		path_list.add (new Path ());
 		
 		n_instances++;
-		warning (@"glyphs no lines $name: $(n_instances)");
 	}
 	
 	static int n_instances = 0;

@@ -100,8 +100,6 @@ public class EditPointHandle : GLib.Object {
 		this.selected = false;
 		
 		n_handles++;
-		
-		print (@"EditPointHandle $(n_handles)\n");
 	}
 
 	~EditPointHandle () {

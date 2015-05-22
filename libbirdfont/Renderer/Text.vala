@@ -58,13 +58,11 @@ public class Text : Widget {
 		set_font_size (size);
 		set_text (text);
 		
-		warning (@"ntext: $(ntext)");
 		ntext++;
 	}
  
 	~Text () {
 		ntext--;
-		warning (@"remove ntext: $(ntext)");
 	}
 	
 	public void use_cache (bool cache) {

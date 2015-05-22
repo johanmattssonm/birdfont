@@ -1136,16 +1136,12 @@ class BirdFontFile : GLib.Object {
 		foreach (Tag t in tag) {			
 			if (t.get_name () == "glyph") {
 				parse_glyph (t, gc, name, unicode, selected_id, unassigned);
-				
-				print (@"g e2: $(gc.get_current ().ref_count)\n");
 			}
 		}
 		
 		if (new_glyph_collection) {
 			font.add_glyph_collection (gc);
 		}
-		
-		print (@"g 2: $(gc.get_current ().ref_count)\n");
 	}
 
 	private int parse_selected (Tag tag) {
@@ -1214,10 +1210,8 @@ class BirdFontFile : GLib.Object {
 		glyph.version_id = (has_id) ? id : (int) gc.length () + 1;
 		gc.set_unassigned (unassigned);
 		
-		print (@"i parse_glyph $(glyph.ref_count)\n");
 		gc.insert_glyph (glyph, selected || selected_id == id);
 		glyph = new Glyph.no_lines ("");
-		print (@"i2 parse_glyph $(glyph.ref_count)\n");
 	}
 
 	private Path parse_path (Tag tag) {	

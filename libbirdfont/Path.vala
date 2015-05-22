@@ -97,7 +97,6 @@ public class Path {
 		}
 	
 		n_paths++;
-		print (@"Paths: $n_paths\n");
 	}
 
 	~Path () {

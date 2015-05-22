@@ -26,8 +26,6 @@ public class VersionList : DropMenu {
 	public VersionList (Glyph? g = null, GlyphCollection glyph_collection) {
 		base ();
 		
-		print (@"VersionList: glyph_collection: $(glyph_collection.ref_count)\n");
-		
 		this.glyph_collection = glyph_collection;
 		glyphs = new  Gee.ArrayList<Glyph> ();
 		set_direction (MenuDirection.POP_UP);
