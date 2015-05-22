@@ -91,7 +91,7 @@ public class Font : GLib.Object {
 	
 	bool read_only = false;
 	
-	/** Save font as many .bfp files instead of one big .bf */
+	/** Save font as many small .bfp files instead of one big .bf file */
 	bool bfp = false;
 	BirdFontPart bfp_file;
 	
@@ -437,7 +437,7 @@ public class Font : GLib.Object {
 			warning ("glyph has already been added");
 			return;
 		}
-		
+	
 		glyph_name.insert (glyph_collection.get_name (), glyph_collection);			
 		
 		if (glyph_collection.get_unicode () !=  "") {
@@ -484,13 +484,7 @@ public class Font : GLib.Object {
 	}
 	
 	/** Obtain all versions and alterntes for this glyph. */
-	public GlyphCollection? get_glyph_collection (string glyph) {
-		GlyphCollection? gc = get_cached_glyph_collection (glyph);	
-		return gc;
-	}
-
-	/** Get glyph collection by unichar code. */
-	public GlyphCollection? get_cached_glyph_collection (string unichar_code) {
+	public GlyphCollection? get_glyph_collection (string unichar_code) {
 		GlyphCollection? gc = null;
 		gc = glyph_cache.get (unichar_code);
 		return gc;

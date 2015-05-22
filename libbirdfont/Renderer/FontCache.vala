@@ -104,7 +104,7 @@ public class FontCache {
 		}
 		
 		public Glyph? get_glyph_by_name (string name) {
-			Font f;
+			Font f = new Font ();
 			Glyph? g = null;
 			
 			if (font != null) {
@@ -112,12 +112,59 @@ public class FontCache {
 			}
 			
 			if (g == null && name.char_count () == 1) {
+				return null; //FIXME
+				
 				f = fallback_font.get_single_glyph_font (name.get_char (0));
 				g = f.get_glyph_by_name (name);
+				
+				if (g == null) {
+					return null;
+				}
+				
 				top_limit = f.top_limit;
 				base_line = f.base_line;
-				bottom_limit = f.bottom_limit;		
+				bottom_limit = f.bottom_limit;	
+				
+				GlyphCollection? gc = f.get_glyph_collection (name);
+				if (gc != null) {
+					print (@"GC BEFORE UNREF: $(((!)gc).ref_count)\n");
+				}
+				
+				print (@"before bad unref: $(((!)g).ref_count)\n");
+				//((!)g).unref (); //FIXME:	
+				f = new Font (); // FIXME DELTE
+				print (@"after bad unref: $(((!)g).ref_count)\n");
+
+				if (gc != null) {
+					print (@"GC AFTER UNREF: $(((!)gc).ref_count)\n");
+				}
+
 			}
+			
+			print (@"font in get_glyph_by_name: $(f.ref_count)\n");
+
+			
+			if (g != null) {
+				print (@"b: $(((!)g).ref_count)\n");	
+			}
+					
+			
+			Glyph tg;
+			
+			// FIXME: DELETE
+			tg = new Glyph ("");
+			print (@"tg: $(tg.ref_count)\n");
+			
+			{
+				GlyphCollection tgc = new GlyphCollection ('\0', "");
+				tgc.add_glyph (tg);
+				
+				print (@"after add tg: $(tg.ref_count)\n");
+				
+				tgc.versions.glyphs.clear ();
+			}
+			
+			print (@"DONE tg: $(tg.ref_count)\n");
 			
 			return g;
 		}

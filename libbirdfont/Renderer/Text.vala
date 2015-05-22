@@ -48,6 +48,8 @@ public class Text : Widget {
 	bool use_cached_glyphs = true;
 	double truncated_width = -1;
 	
+	static int ntext = 0;
+	
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		this.margin_bottom = margin_bottom;
 		font_cache = FontCache.get_default_cache ();
@@ -55,8 +57,16 @@ public class Text : Widget {
 		
 		set_font_size (size);
 		set_text (text);
+		
+		warning (@"ntext: $(ntext)");
+		ntext++;
 	}
-
+ 
+	~Text () {
+		ntext--;
+		warning (@"remove ntext: $(ntext)");
+	}
+	
 	public void use_cache (bool cache) {
 		use_cached_glyphs = cache;
 	}
@@ -105,7 +115,7 @@ public class Text : Widget {
 		index = 0;
 		while (text.get_next_char (ref index, out c)) {
 			name = (!) c.to_string ();
-			g = cached_font.get_glyph_by_name (name);
+			g = cached_font.get_glyph_by_name (name);				
 			gs.glyph.add (g);
 			glyph_names.add (name);
 		}
@@ -118,10 +128,10 @@ public class Text : Widget {
 		double w, kern;
 		int wi;
 		Glyph? prev;
+		Glyph? g;
 		GlyphSequence word_with_ligatures;
 		GlyphRange? gr_left, gr_right;
 		GlyphSequence word;
-		Glyph? g;
 		KerningClasses kc;
 		
 		glyph = new Glyph.no_lines ("", '\0');
@@ -129,10 +139,10 @@ public class Text : Widget {
 		w = 0;
 		prev = null;
 		kern = 0;
-		
+	
 		word = glyph_sequence;
 		wi = 0;
-		
+
 		if (cached_font.font != null) {
 			word_with_ligatures = word.process_ligatures ((!) cached_font.font);
 		} else {
@@ -149,7 +159,6 @@ public class Text : Widget {
 		}	
 		
 		for (int i = 0; i < word_with_ligatures.glyph.size; i++) {
-
 			g = word_with_ligatures.glyph.get (i);
 			
 			if (g == null || prev == null || wi == 0) {
@@ -170,8 +179,7 @@ public class Text : Widget {
 			}
 			
 			glyph = (g == null) ? cached_font.get_not_def_character ().get_current () : (!) g;
-			iter (glyph, kern, i + 1 == word_with_ligatures.glyph.size);
-			
+			iter (glyph, kern, i + 1 == word_with_ligatures.glyph.size);			
 			prev = g;
 			wi++;
 		}
@@ -346,7 +354,7 @@ public class Text : Widget {
 					return;
 				}
 				
-				draw_chached (cr ,glyph, kerning, last, x, y, cc_y, 
+				draw_chached (cr, glyph, kerning, last, x, y, cc_y, 
 					ratio, cacheid);
 					
 				x = end;

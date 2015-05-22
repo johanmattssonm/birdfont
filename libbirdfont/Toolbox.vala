@@ -298,7 +298,7 @@ public class Toolbox : GLib.Object  {
 			warn_if_test ("Don't redraw toolbox when background thread is running.");
 			return;
 		}
-		
+
 		Toolbox t = MainWindow.get_toolbox ();
 		if (!is_null (t)) {
 			t.redraw (0, 0, allocation_width, allocation_height);

@@ -29,7 +29,6 @@ public class MenuAction : GLib.Object {
 	
 	public MenuAction (string label) {
 		this.label = label;
-		text = new Text (label);
 	}
 	
 	public void set_selected (bool s) {
@@ -58,6 +57,7 @@ public class MenuAction : GLib.Object {
 			cr.restore ();
 		}
 		
+		text = new Text (label);
 		Theme.text_color (text, "Foreground 1");
 		text.draw_at_baseline (cr, x, y);
 	}

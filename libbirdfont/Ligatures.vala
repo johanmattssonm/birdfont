@@ -27,7 +27,7 @@ public class Ligatures : GLib.Object {
 
 	public delegate void ContextualLigatureIterator (ContextualLigature lig);
 
-	Font font;
+	unowned Font font;
 
 	public Ligatures (Font font) {
 		this.font = font;

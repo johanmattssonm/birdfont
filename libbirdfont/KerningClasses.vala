@@ -37,7 +37,7 @@ public class KerningClasses : GLib.Object {
 	/** Ensure that map iterator is not invalidated because of inserts. */
 	bool protect_map = false;
 
-	public Font font;
+	public unowned Font font;
 
 	public KerningClasses (Font font) {
 		this.font = font;

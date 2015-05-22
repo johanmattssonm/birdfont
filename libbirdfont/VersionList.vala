@@ -19,12 +19,14 @@ namespace BirdFont {
 
 public class VersionList : DropMenu {
 	public int current_version_id = -1;
-	GlyphCollection glyph_collection;
+	unowned GlyphCollection glyph_collection;
 	
 	public Gee.ArrayList<Glyph> glyphs;
 	
 	public VersionList (Glyph? g = null, GlyphCollection glyph_collection) {
 		base ();
+		
+		print (@"VersionList: glyph_collection: $(glyph_collection.ref_count)\n");
 		
 		this.glyph_collection = glyph_collection;
 		glyphs = new  Gee.ArrayList<Glyph> ();
@@ -41,45 +43,51 @@ public class VersionList : DropMenu {
 			add_new_version ();
 			current_version_id = glyphs.get (glyphs.size - 1).version_id;
 		};
-		
+	
 		// delete one version
 		signal_delete_item.connect ((index) => {
-			int current_version;
-			Font font = BirdFont.get_current_font ();
-			OverView over_view = MainWindow.get_overview ();
-			
-			font.touch ();
-			
-			index--; // first item is the add new action
-			
-			// delete the entire glyph if the last remaining version is removed
-			if (glyphs.size == 1) {
-				over_view.store_undo_state (glyph_collection.copy ());
-				font.delete_glyph (glyph_collection);
-				return;
-			}
-			
-			return_if_fail (0 <= index < glyphs.size);
-			
-			font.deleted_glyphs.add (glyph_collection.get_current ());
-			
-			over_view.store_undo_state (glyph_collection.copy ());
-			glyphs.remove_at (index);
-			
-			recreate_index ();
-			
-			current_version = get_current_version_index ();
-			if (index == current_version) {
-				set_selected_item (get_action_no2 ()); // select the first glyph if the current glyph is deleted
-			} else if (index < current_version) {
-				return_if_fail (0 <= current_version - 1 < glyphs.size);
-				current_version_id = glyphs.get (current_version - 1).version_id;
-			}
+			delete_item (index);
 		});
 		
 		if (g != null) {
 			add_glyph ((!) g);
 		}
+
+	}
+
+	private void delete_item (int index) {
+		int current_version;
+		Font font = BirdFont.get_current_font ();
+		OverView over_view = MainWindow.get_overview ();
+		
+		font.touch ();
+		
+		index--; // first item is the add new action
+		
+		// delete the entire glyph if the last remaining version is removed
+		if (glyphs.size == 1) {
+			over_view.store_undo_state (glyph_collection.copy ());
+			font.delete_glyph (glyph_collection);
+			return;
+		}
+		
+		return_if_fail (0 <= index < glyphs.size);
+		
+		font.deleted_glyphs.add (glyph_collection.get_current ());
+		
+		over_view.store_undo_state (glyph_collection.copy ());
+		
+		glyphs.remove_at (index);
+		
+		recreate_index ();
+		
+		current_version = get_current_version_index ();
+		if (index == current_version) {
+			set_selected_item (get_action_no2 ()); // select the first glyph if the current glyph is deleted
+		} else if (index < current_version) {
+			return_if_fail (0 <= current_version - 1 < glyphs.size);
+			current_version_id = glyphs.get (current_version - 1).version_id;
+		}	
 	}
 
 	private int get_current_version_index () {

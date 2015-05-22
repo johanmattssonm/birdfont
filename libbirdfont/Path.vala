@@ -79,6 +79,8 @@ public class Path {
 	public bool highlight_last_segment = false;
 	
 	public string point_data = "";
+
+	static int n_paths = 0;
 	
 	public Path () {	
 		string width;
@@ -93,8 +95,16 @@ public class Path {
 		if (stroke_width < 1) {
 			stroke_width = 1;
 		}
+	
+		n_paths++;
+		print (@"Paths: $n_paths\n");
 	}
 
+	~Path () {
+		point_data = "";
+		n_paths--;
+	}
+	
 	public bool is_filled () {
 		return fill;
 	}

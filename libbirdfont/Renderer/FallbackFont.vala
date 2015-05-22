@@ -111,7 +111,9 @@ public class FallbackFont : GLib.Object {
 	}
 	
 	public Font get_single_glyph_font (unichar c) {
-		return load_glyph_from_ttf (c);
+		Font f = load_glyph_from_ttf (c);
+		print (@"font e1 : $(f.ref_count)\n");
+		return f;
 	}
 	
 	public Font load_glyph_from_ttf (unichar c) {
@@ -120,14 +122,25 @@ public class FallbackFont : GLib.Object {
 		FontFace* font;
 		
 		bf_font = new Font ();
+		
+		if (bf_font != null)
+			print (@"font e1 a : $(((!)bf_font).ref_count)\n");
+		
 		for (int i = fallback_fonts.size - 1; i >= 0; i--) {
 			f = fallback_fonts.get (i);
 			
 			font = open_font ((!) f.get_path ());
 			bf_font = get_glyph_in_font ((!) font, c);
+			
+			if (bf_font != null)
+				print (@"font e1 b : $(((!)bf_font).ref_count)\n");
+			
 			close_font (font);
 			
 			if (bf_font != null) {
+				if (((!)bf_font).get_glyph_by_name ((!) c.to_string ()) != null)
+					print (@"first: $(((!) ((!)bf_font).get_glyph_by_name ((!) c.to_string ())).ref_count)\n");
+					
 				return (!) bf_font;
 			}
 		}
@@ -141,16 +154,27 @@ public class FallbackFont : GLib.Object {
 		BirdFontFile bf_parser;
 		Font bf_font = new Font ();
 		
+		print (@"font e1 before load : $(bf_font.ref_count)\n");
+		
 		gc = new GlyphCollection (c, (!)c.to_string ());		
 		glyph_data = load_glyph (font, (uint) c);
-		
+
 		if (glyph_data == null) {
 			return null;
 		}
 
+		print (@"font e1 before parser : $(bf_font.ref_count)\n");
 		bf_parser = new BirdFontFile (bf_font);
+		print (@"font e2 before parser1 : $(bf_font.ref_count)\n");
 		bf_parser.load_data (((!) glyph_data).str);
-		
+		print (@"font e1 before parser load : $(bf_font.ref_count)\n");
+
+		if (((!)bf_font).get_glyph_by_name ((!) c.to_string ()) != null)
+			print (@"after parser: $(((!) ((!)bf_font).get_glyph_by_name ((!) c.to_string ())).ref_count)\n");
+
+		bf_parser = new BirdFontFile (new Font ());
+		print (@"font e1 after remove parser : $(bf_font.ref_count)\n");
+					
 		return bf_font;
 	}
 

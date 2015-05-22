@@ -22,7 +22,7 @@ namespace BirdFont {
  * tells the parser that bfp files in parent directories should be excluded.
  */
 public class BirdFontPart : GLib.Object{
-	Font font;
+	unowned Font font;
 	Gee.ArrayList<string> parts;
 	string root_directory;
 

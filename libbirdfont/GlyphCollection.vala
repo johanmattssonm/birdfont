@@ -18,7 +18,7 @@ using Math;
 namespace BirdFont {
 
 public class GlyphCollection : GLib.Object {
-	VersionList versions;
+	public VersionList versions;
 	unichar unicode_character;
 	string name;
 	bool unassigned = false;
@@ -26,7 +26,9 @@ public class GlyphCollection : GLib.Object {
 	public GlyphCollection (unichar unicode_character, string name) {
 		this.unicode_character = unicode_character;
 		this.name = name;
+		print (@"GlyphCollection: $(ref_count)\n");
 		versions = new VersionList (null, this);
+		print (@"Afer version list GlyphCollection: $(ref_count)\n");
 	}
 
 	public GlyphCollection.with_glyph (unichar unicode_character, string name) {
@@ -36,9 +38,16 @@ public class GlyphCollection : GLib.Object {
 		this.name = name;
 		
 		g = new Glyph (name, unicode_character);
+		
+		print (@"GlyphCollection: $(ref_count)\n");
 		versions = new VersionList (g, this);
+		print (@"Afer version list GlyphCollection: $(ref_count)\n");
 	}
 
+	~GlyphCollection () {
+		versions.glyphs.clear ();
+	}
+	
 	public void set_unassigned (bool a) {
 		unassigned = a;
 	}
@@ -60,7 +69,9 @@ public class GlyphCollection : GLib.Object {
 	}
 	
 	public void insert_glyph (Glyph g, bool selected) {
-		versions.add_glyph (g, selected);		
+		print (@"Before VersionList $(g.ref_count)\n");
+		versions.add_glyph (g, selected);
+		print (@"After VersionList $(g.ref_count)\n");
 		assert (versions.glyphs.size > 0);
 	}
 	

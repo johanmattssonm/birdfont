@@ -19,6 +19,7 @@ using Gee;
 namespace BirdFont {
 
 public class Glyph : FontDisplay {
+	
 	// Background image
 	BackgroundImage? background_image = null;
 	bool background_image_visible = true;
@@ -119,15 +120,32 @@ public class Glyph : FontDisplay {
 		
 		left_limit = -28;
 		right_limit = 28;
+		
+		n_instances++;
+		
+		warning (@"glyphs $name: $(n_instances)");
 	}
-	
+
 	public Glyph.no_lines (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
 
 		path_list.add (new Path ());
+		
+		n_instances++;
+		warning (@"glyphs no lines $name: $(n_instances)");
 	}
+	
+	static int n_instances = 0;
 
+	public int r = 1;
+		
+	~Glyph () {
+		path_list.clear ();
+		active_paths.clear ();
+		n_instances--;
+	}
+	
 	public GlyfData get_ttf_data () {
 		if (ttf_data == null) {
 			

@@ -42,11 +42,22 @@ public class Expander : GLib.Object {
 	double content_height = 0;
 	
 	string? headline;
-	
+	Text title;
+			
 	public bool visible = true;
 	
 	public Expander (string? headline = null) {
 		this.headline = headline;
+
+		title = new Text ();
+
+		if (headline != null) {
+			title.set_text ((!) headline);
+			title.use_cache (true);
+			Theme.text_color (title, "Text Tool Box");
+			title.set_font_size (17 * Toolbox.get_scale ());
+		}
+				
 		tool = new Gee.ArrayList<Tool> ();
 	}
 
@@ -223,15 +234,9 @@ public class Expander : GLib.Object {
 	
 	public void draw (int wd, int hd, Context cr) {
 		double yt = y + scroll + 2;
-		Text title;
 
 		if (tool.size > 0) {
 			if (headline != null) {
-				title = new Text ();
-				title.set_text ((!) headline);
-				title.use_cache (true);
-				Theme.text_color (title, "Text Tool Box");
-				title.set_font_size (17 * Toolbox.get_scale ());
 				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 13  * Toolbox.get_scale ());
 			}
 		}

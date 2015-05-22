@@ -164,6 +164,8 @@ public class EditPoint : GLib.Object {
 	
 	public Color? color = null;
 	
+	static int n_points = 0;
+	
 	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {	
 		x = nx;
 		y = ny;
@@ -184,8 +186,15 @@ public class EditPoint : GLib.Object {
 			x = 0;
 			y = 0;
 		}
+		
+		n_points++;
+		print (@"n_points: $(n_points)\n");
 	}
 
+	~EditPoint () {
+		n_points--;
+	}
+	
 	public bool is_valid () {
 		return is_valid_position (x, y);
 	}
