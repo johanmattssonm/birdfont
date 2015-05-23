@@ -54,6 +54,7 @@ public class OverViewItem : GLib.Object {
 			version_menu.add_glyph_item.connect ((glyph) => {
 				((!) glyphs).insert_glyph (glyph, true);
 			});
+			
 			version_menu.signal_delete_item.connect ((glyph_index) => {
 				OverView v = MainWindow.get_overview ();
 				version_menu = new VersionList ((!) glyphs);

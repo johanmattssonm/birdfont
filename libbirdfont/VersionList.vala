@@ -120,8 +120,6 @@ public class VersionList : GLib.Object {
 			int i = get_current_version_index ();
 			set_selected_item (get_action_index (i));
 		}
-		
-		get_current ().selected_canvas ();
 	}
 
 	private int get_current_version_index () {
@@ -191,18 +189,16 @@ public class VersionList : GLib.Object {
 		deselect_all ();
 		ma.set_selected (true);
 		
-		reload_all_open_glyphs ();
-		
 		glyph_collection.set_selected (g);
 		
-		/*
+		reload_all_open_glyphs ();
+
 		if (!is_null (BirdFont.current_glyph_collection)) {
 			current_glyph = MainWindow.get_current_glyph ();
 			g.set_allocation (current_glyph.allocation);
-			g.set_default_zoom ();
-		}
-		*/
-		
+			g.close_path ();
+			g.reset_zoom ();
+		}		
 	}
 	
 	/** Reload a glyph when a new version is selected. Updates the path
