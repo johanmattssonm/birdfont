@@ -18,6 +18,7 @@ using Bird;
 
 namespace BirdFont {
 
+// TODO: use font config
 public class FallbackFont : GLib.Object {
 	static unowned Database db;
 	static Database? database = null;
@@ -31,22 +32,25 @@ public class FallbackFont : GLib.Object {
 		fallback_fonts = new Gee.ArrayList<File> ();
 		font_directories = new Gee.ArrayList<File> ();
 		
+		open_database ();
+		
 		add_font_folder ("/usr/share/fonts/");
 		add_font_folder ("/usr/local/share/fonts/");
 		add_font_folder (home + "/.local/share/fonts");
-		add_font_folder ("C:\\Windows\\Fonts");
-		
+		add_font_folder (home + "/.fonts");
+		add_font_folder ("C:\\Windows\\Fonts");	
 		//FIXME: MAC
 		
-		open_fallback_fonts ();
+		add_fallback_fonts ();
 	}
 	
-	void open_fallback_fonts () {
+	void add_fallback_fonts () {
 		add_font ("times.ttf");
 		add_font ("arial.ttf");
 		add_font ("verdana.ttf");
 		add_font ("calibri.ttf");
-		
+
+		add_font ("DejaVuSans.ttf");
 		add_font ("Ubuntu-R.ttf");
 		
 		add_font ("DroidKufi.ttf");
@@ -111,121 +115,86 @@ public class FallbackFont : GLib.Object {
 	}
 	
 	public Font get_single_glyph_font (unichar c) {
-		Font f = load_glyph_from_ttf (c);
-		return f;
-	}
-	
-	public Font load_glyph_from_ttf (unichar c) {
-		Font? bf_font;
-		File f;
-		FontFace* font;
+		BirdFontFile bf_parser;
+		Font bf_font;
+		StringBuilder? glyph_data;
+		string data;
+		
+		glyph_data = find_cached_glyph (c);
+		
+		if (glyph_data == null) {
+			print (@"Load from TTF $((!) c.to_string ())\n");
+			glyph_data = load_glyph_from_ttf (c);
+		} else print (@"Found cached gd $((!) c.to_string ())\n");
 		
 		bf_font = new Font ();
+		
+		if (glyph_data != null) {
+			bf_parser = new BirdFontFile (bf_font);
+			data = ((!) glyph_data).str;
+			
+			if (data != "") {
+				bf_parser.load_data (data);
+			}
+		}
 
+		return bf_font;
+	}
+	
+	public StringBuilder? load_glyph_from_ttf (unichar c) {
+		StringBuilder? glyph_data;
+		string data;
+		
+		glyph_data = load_glyph_data_from_ttf (c);
+		
+		if (glyph_data != null) {
+			cache_glyph (c, ((!) glyph_data).str);
+		} else {
+			cache_glyph (c, "");
+		}
+		
+		return glyph_data;
+	}
+
+	public StringBuilder? load_glyph_data_from_ttf (unichar c) {
+		File f;
+		FontFace* font;
+		StringBuilder? data = null;
+		
 		for (int i = fallback_fonts.size - 1; i >= 0; i--) {
 			f = fallback_fonts.get (i);
 			
 			font = open_font ((!) f.get_path ());
-			bf_font = get_glyph_in_font ((!) font, c);
-			
+			data = get_glyph_in_font (font, c);
 			close_font (font);
 			
-			if (bf_font != null) {
-				return (!) bf_font;
+			if (data != null) {
+				return data;
 			}
 		}
 		
-		return bf_font != null ? (!) bf_font : new Font ();
+		return null;
 	}
 	
-	public Font? get_glyph_in_font (FontFace font, unichar c) {
+	public StringBuilder? get_glyph_in_font (FontFace font, unichar c) {
 		StringBuilder? glyph_data = null;
 		GlyphCollection gc;
-		BirdFontFile bf_parser;
 		Font bf_font = new Font ();
 		
 		gc = new GlyphCollection (c, (!)c.to_string ());		
 		glyph_data = load_glyph (font, (uint) c);
 
-		if (glyph_data == null) {
-			return null;
-		}
-
-		bf_parser = new BirdFontFile (bf_font);
-		bf_parser.load_data (((!) glyph_data).str);
-				
-		return bf_font;
-	}
-
-	public File get_database_file () {
-		return SearchPaths.find_file (null, "fallback-font.sqlite");
+		return glyph_data;
 	}
 	
-	public File get_new_database_file () {
-		string? fn = BirdFont.get_argument ("--fallback-font");
-		
-		if (fn != null && ((!) fn) != "") {
-			return File.new_for_path ((!) fn);
-		}
-		
-		return File.new_for_path ("fallback-font.sqlite");
+	File get_fallback_database () {
+		File f = BirdFont.get_settings_directory ();
+		return get_child (f, "fallback_font.sqlite");
 	}
-		
-	public void generate_fallback_font () {
-		File f = get_new_database_file ();
-		string? fonts = BirdFont.get_argument ("--fonts");
-		string fallback;
-		
-		if (fonts == null) {
-			stderr.printf ("Add a list of fonts to use as fallback to the \"--fonts\" argument.\n");
-			stderr.printf ("Separate each font file with \":\"\n");
-			return;
-		}
-		
-		fallback = (!) fonts;
-		
-		stdout.printf ("Generating fallback font: %s\n", (!) f.get_path ());
-		
-		try {
-			if (f.query_exists ()) {
-				f.delete ();
-			}
-			
-			open_database (f);
-			create_tables ();
-			
-			foreach (string font in fallback.split (":")) {
-				add_font (font);
-			}		
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
-		
-	}
-
-/* //FIXME:DELETE
-	public void add_font (string font_file) {
-		Font font;
-		Glyph g;
-		BirdFontFile bf;
-		File single_glyph_font;
-		
-		font = new Font ();
-		single_glyph_font = File.new_for_path ("/tmp/fallback_glyph.bf");
-		
-		font.set_file (font_file);
-		if (!font.load ()) {
-			stderr.printf ("Failed to load font: " + font_file);
-			return;
-		}
-		
-		for (int i = 0; i < font.length (); i++) {
-			g = (!) font.get_glyph_indice (i);
-			bf = new BirdFontFile (font);
-		}
-	} */
-
-	public void open_database (File db_file) {
+	
+	public void open_database () {
+		File db_file = get_fallback_database ();
+		bool create_table = !db_file.query_exists ();
 		int rc = Database.open ((!) db_file.get_path (), out database);
 
 		db = (!) database;
@@ -233,8 +202,12 @@ public class FallbackFont : GLib.Object {
 		if (rc != Sqlite.OK) {
 			stderr.printf ("Can't open database: %d, %s\n", rc, db.errmsg ());
 		}
-	}
 
+		if (create_table) {
+			create_tables ();
+		}
+	}
+	
 	public void create_tables () {
 		int ec;
 		string? errmsg;
@@ -249,6 +222,61 @@ public class FallbackFont : GLib.Object {
 		if (ec != Sqlite.OK) {
 			warning ("Error: %s\n", (!) errmsg);
 		}
+	}
+	
+	void cache_glyph (unichar c, string glyph_data) {
+		int64 character;
+		int ec;
+		string? errmsg;
+		string insert;
+		
+		character = (int64) c;
+		insert = "INSERT INTO FallbackFont (unicode, font_data) "
+			+ @"VALUES ('$character', '" + glyph_data.replace ("'", "''") + "');";
+		
+		ec = db.exec (insert, null, out errmsg);
+		if (ec != Sqlite.OK) {
+			warning ("Error: %s\n", (!) errmsg);
+		}
+	}
+
+	StringBuilder? find_cached_glyph (unichar c) {
+		int rc, cols;
+		Statement statement;
+		string select;
+		StringBuilder? font_data = null;
+		
+		select = "SELECT font_data FROM FallbackFont "
+			 + "WHERE unicode = '" + @"$((int64) c)" + "';";
+					
+		rc = db.prepare_v2 (select, select.length, out statement, null);
+		
+		if (rc == Sqlite.OK) {
+			cols = statement.column_count();
+			
+			if (cols != 1) {
+				warning ("Expecting one column.");
+				return font_data;
+			}
+
+			while (true) {
+				rc = statement.step ();
+				
+				if (rc == Sqlite.DONE) {
+					break;
+				} else if (rc == Sqlite.ROW) {
+					font_data = new StringBuilder ();
+					((!) font_data).append (statement.column_text (0));
+				} else {
+					warning ("Error: %d, %s\n", rc, db.errmsg ());
+					break;
+				}
+			}			
+		} else {
+			warning ("SQL error: %d, %s\n", rc, db.errmsg ());
+		}
+		
+		return font_data;
 	}
 }
 

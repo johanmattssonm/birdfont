@@ -35,7 +35,7 @@ public class OverViewItem : GLib.Object {
 
 	public static double glyph_scale = 1.0;
 	
-	VersionList version_menu;
+	public VersionList version_menu;
 	Text icon;
 	
 	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	

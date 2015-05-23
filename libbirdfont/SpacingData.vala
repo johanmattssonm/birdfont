@@ -32,13 +32,16 @@ public class SpacingData : GLib.Object {
 	}
 
 	public Gee.ArrayList<string> get_all_connections (string glyph) {
+		string t;
 		Gee.ArrayList<string> c = new Gee.ArrayList<string> ();
 		
 		connections.clear ();
 		
 		add_connections (glyph);
 		
-		foreach (string t in connections) {
+		for (int i = 0; i < connections.size; i++) {
+			return_val_if_fail (0 <= i < connections.size, c);
+			t = connections.get (i);
 			c.add (t.dup ());
 		}
 		

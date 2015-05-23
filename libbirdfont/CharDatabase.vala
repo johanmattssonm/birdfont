@@ -108,7 +108,7 @@ public class CharDatabase {
 		
 		return result;
 	}
-
+	
 	public static bool has_ascender (unichar c) {
 		if (!c.islower()) return true;
 		

@@ -535,6 +535,7 @@ public class OverView : FontDisplay {
 		default_position ();
 		
 		first_visible = (int) r;
+		update_item_list ();
 	}
 	
 	public override void scroll_to (double position) requires (items_per_row > 0) {
@@ -554,7 +555,7 @@ public class OverView : FontDisplay {
 		r *= items_per_row;
 		
 		scroll_to_position ((int64) r);
-		
+		update_item_list ();
 		GlyphCanvas.redraw ();
 	}
 		
@@ -578,11 +579,15 @@ public class OverView : FontDisplay {
 			view_offset_y = 0;
 			first_visible += items_per_row;
 		}
+		
+		update_item_list ();
 	}
 	
 	public void scroll_top () {
 		selected = 0;
 		first_visible = 0;
+		
+		update_item_list ();
 		
 		if (visible_items.size != 0) {
 			selected_item = get_selected_item ();
@@ -623,6 +628,7 @@ public class OverView : FontDisplay {
 		}
 
 		selected_item = get_selected_item ();
+		update_item_list ();
 	}
 
 	public void key_right () {
@@ -648,6 +654,7 @@ public class OverView : FontDisplay {
 			selected = (int) (len - first_visible - 1);
 			selected_item = get_selected_item ();
 		}
+		update_item_list ();
 	}
 	
 	public void key_up () {
@@ -661,6 +668,7 @@ public class OverView : FontDisplay {
 		if (first_visible < 0) {
 			first_visible = 0;		
 		}
+		update_item_list ();
 	}
 	
 	public void key_left () {
@@ -675,6 +683,7 @@ public class OverView : FontDisplay {
 		if (first_visible < 0) {
 			scroll_top ();
 		}
+		update_item_list ();
 	}
 	
 	public string get_selected_char () {
@@ -693,6 +702,7 @@ public class OverView : FontDisplay {
 	
 	public override void key_press (uint keyval) {
 		hide_menu ();
+		update_item_list ();
 		GlyphCanvas.redraw ();
 
 		if (KeyBindings.modifier == CTRL) {
@@ -786,6 +796,8 @@ public class OverView : FontDisplay {
 		if (selected_item.glyphs != null) {
 			selected_items.add ((!) selected_item.glyphs);
 		}
+		
+		update_item_list ();
 	}
 	
 	public void delete_selected_glyph () {
@@ -1038,6 +1050,7 @@ public class OverView : FontDisplay {
 	public override void button_press (uint button, double x, double y) {
 		int index = 0;
 		int selected_index = -1;
+		bool update = false;
 		
 		if (character_info != null) {
 			character_info = null;
@@ -1069,10 +1082,16 @@ public class OverView : FontDisplay {
 						selected_items.add ((!) selected_item.glyphs);
 					}
 				}
+				
+				update = !i.version_menu.menu_visible;
 			}
 			index++;
 		}
 	
+		if (update) {
+			update_item_list ();
+		}
+		
 		// FIXME: update_item_list ();
 		GlyphCanvas.redraw ();
 	}

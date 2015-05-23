@@ -173,7 +173,7 @@ public class CharDatabaseParser : GLib.Object {
 				d = t.split (" ");
 				foreach (string token in d) {
 					if (token != "") {
-						insert_lookup ((int64)ch, token);
+						insert_lookup ((int64) ch, token);
 					}
 				}
 			}
