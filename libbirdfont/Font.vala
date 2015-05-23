@@ -104,6 +104,10 @@ public class Font : GLib.Object {
 	public FontSettings settings;
 	public KerningStrings kerning_strings;
 	
+	public signal void font_deleted ();
+	
+	public static Font empty;
+	
 	public Font () {
 		KerningClasses kerning_classes;
 		
@@ -141,6 +145,10 @@ public class Font : GLib.Object {
 		
 		settings = new FontSettings ();
 		kerning_strings = new KerningStrings ();
+	}
+
+	~Font () {
+		font_deleted ();
 	}
 
 	public static void set_default_license (string license) {
@@ -473,7 +481,7 @@ public class Font : GLib.Object {
 		glyph_name.remove (glyph.get_name ());
 		ligature.remove (glyph.get_current ().get_name ());
 		
-		foreach (Glyph g in glyph.get_version_list ().glyphs) {
+		foreach (Glyph g in glyph.glyphs) {
 			deleted_glyphs.add (g);
 		}
 	}
@@ -492,7 +500,6 @@ public class Font : GLib.Object {
 
 	/** Get glyph collection by name. */
 	public GlyphCollection? get_glyph_collection_by_name (string? glyph) {
-		// TODO: load from disk here if needed.
 		GlyphCollection? gc = null;
 		
 		if (glyph != null) {

@@ -146,7 +146,7 @@ class BirdFontFile : GLib.Object {
 				
 				try {
 					string data;
-					foreach (Glyph g in gc.get_version_list ().glyphs) {
+					foreach (Glyph g in gc.glyphs) {
 						if (g.get_background_image () != null) {
 							bg = (!) g.get_background_image ();
 							data = bg.get_png_base64 ();
@@ -370,13 +370,13 @@ class BirdFontFile : GLib.Object {
 	}
 
 	public void write_selected (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
-		os.put_string (@"\t<selected id=\"$(gc.get_selected_id ())\"/>\n");
+		os.put_string (@"\t<selected id=\"$(gc.selected)\"/>\n");
 	}
 
 	public void write_glyph_collection (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
 		write_glyph_collection_start (gc, os);
 		write_selected (gc, os);
-		foreach (Glyph g in gc.get_version_list ().glyphs) {
+		foreach (Glyph g in gc.glyphs) {
 			write_glyph (g, os);
 		}
 		write_glyph_collection_end (os);
@@ -1124,8 +1124,13 @@ class BirdFontFile : GLib.Object {
 
 		current_gc = font.get_glyph_collection_by_name (name);
 		new_glyph_collection = (current_gc == null);
-		gc = (!new_glyph_collection) ? (!) current_gc : new GlyphCollection (unicode, name);
-
+		
+		if (!new_glyph_collection) {
+			gc =  (!) current_gc;
+		} else {
+			gc = new GlyphCollection (unicode, name);
+		}
+				
 		foreach (Tag t in tag) {			
 			if (t.get_name () == "selected") {
 				selected_id = parse_selected (t);

@@ -42,6 +42,10 @@ public class KerningClasses : GLib.Object {
 	public KerningClasses (Font font) {
 		this.font = font;
 		
+		font.font_deleted.connect (() => {
+			this.font = Font.empty;
+		});
+		
 		classes_first = new Gee.ArrayList<GlyphRange> ();
 		classes_last = new Gee.ArrayList<GlyphRange> ();
 		classes_kerning = new Gee.ArrayList<Kerning> ();

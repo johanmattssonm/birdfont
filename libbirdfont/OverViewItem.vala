@@ -24,7 +24,7 @@ public class OverViewItem : GLib.Object {
 	public double y;
 	public bool selected = false;
 	public CharacterInfo info;
-	
+		
 	public static double DEFAULT_WIDTH = 100;
 	public static double DEFAULT_HEIGHT = 130;
 	public static double DEFAULT_MARGIN = 20;
@@ -35,6 +35,7 @@ public class OverViewItem : GLib.Object {
 
 	public static double glyph_scale = 1.0;
 	
+	VersionList version_menu;
 	Text icon;
 	
 	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	
@@ -47,8 +48,23 @@ public class OverViewItem : GLib.Object {
 		icon = new Text ("dropdown_menu", 17);
 		icon.load_font ("icons.bf");
 		icon.use_cache (true);
+		
+		if (glyphs != null) {
+			version_menu = new VersionList ((!) glyphs);
+			version_menu.add_glyph_item.connect ((glyph) => {
+				((!) glyphs).insert_glyph (glyph, true);
+			});
+			version_menu.signal_delete_item.connect ((glyph_index) => {
+				OverView v = MainWindow.get_overview ();
+				version_menu = new VersionList ((!) glyphs);
+				v.update_item_list ();
+				GlyphCanvas.redraw ();
+			});
+		} else {
+			version_menu = new VersionList (new GlyphCollection (character, (!) character.to_string ()));
+		}
 	}
-	
+
 	public string get_name () {
 		StringBuilder s;
 		
@@ -81,12 +97,13 @@ public class OverViewItem : GLib.Object {
 		
 		if (has_icons () && glyphs != null) {
 			g = (!) glyphs;
-			a = g.get_version_list ().menu_item_action (px, py); // select one item on the menu
+
+			a = version_menu.menu_item_action (px, py); // select one item on the menu
 			if (a) {
 				return s;
 			}
 			
-			g.get_version_list ().menu_icon_action (px, py); // click in the open menu
+			version_menu.menu_icon_action (px, py); // click in the open menu
 		}
 		
 		if (has_icons () && info.is_over_icon (px, py)) {
@@ -276,18 +293,12 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	public void hide_menu () {
-		GlyphCollection g;
-		
-		if (glyphs != null) {
-			g = (!) glyphs;
-			g.get_version_list ().menu_visible = false;
-		}
+		version_menu.menu_visible = false;
 	}
 	
 	private void draw_menu (Context cr) {
 		GlyphCollection g;
-		DropMenu menu;
-				
+		
 		if (glyphs == null) {
 			return;
 		}
@@ -300,10 +311,8 @@ public class OverViewItem : GLib.Object {
 		
 		icon.draw_at_top (cr, x + width - 32, y + height - 19);
 		
-		g = (!) glyphs;
-		menu = g.get_version_list ();		
-		menu.draw_menu (cr);
-		menu.set_position (x + width - 21, y + height - 18);
+		version_menu.set_position (x + width - 21, y + height - 18);
+		version_menu.draw_menu (cr);
 	}
 }
 

@@ -113,7 +113,8 @@ public class Text : Widget {
 		index = 0;
 		while (text.get_next_char (ref index, out c)) {
 			name = (!) c.to_string ();
-			g = cached_font.get_glyph_by_name (name);				
+			g = cached_font.get_glyph_by_name (name);
+			
 			gs.glyph.add (g);
 			glyph_names.add (name);
 		}
@@ -131,6 +132,7 @@ public class Text : Widget {
 		GlyphRange? gr_left, gr_right;
 		GlyphSequence word;
 		KerningClasses kc;
+		Font empty = new Font ();
 		
 		glyph = new Glyph.no_lines ("", '\0');
 
@@ -140,7 +142,7 @@ public class Text : Widget {
 	
 		word = glyph_sequence;
 		wi = 0;
-
+	
 		if (cached_font.font != null) {
 			word_with_ligatures = word.process_ligatures ((!) cached_font.font);
 		} else {
@@ -153,9 +155,9 @@ public class Text : Widget {
 		if (cached_font.font != null) {
 			kc = ((!) cached_font.font).get_kerning_classes ();
 		} else {
-			kc = new KerningClasses (new Font ());
+			kc = new KerningClasses (empty);
 		}	
-		
+
 		for (int i = 0; i < word_with_ligatures.glyph.size; i++) {
 			g = word_with_ligatures.glyph.get (i);
 			
@@ -172,7 +174,7 @@ public class Text : Widget {
 			}
 				
 			// process glyph
-			if (g == null) {
+			if (g == null && (0 <= i < glyph_names.size)) {
 				g = cached_font.get_glyph_by_name (glyph_names.get (i));
 			}
 			
@@ -180,6 +182,7 @@ public class Text : Widget {
 			iter (glyph, kern, i + 1 == word_with_ligatures.glyph.size);			
 			prev = g;
 			wi++;
+
 		}
 	}
 
@@ -351,10 +354,10 @@ public class Text : Widget {
 				if (truncated_width > 0 && end - px > truncated_width) {
 					return;
 				}
-				
+
 				draw_chached (cr, glyph, kerning, last, x, y, cc_y, 
 					ratio, cacheid);
-					
+				
 				x = end;
 			});
 		} else {

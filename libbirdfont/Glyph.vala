@@ -2232,6 +2232,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public bool has_cache (string key) {
+		// FIXME: DELETE print (@"glyph_cache.keys.size $(glyph_cache.keys.size)\n");
 		return glyph_cache.has_key (key);
 	}
 

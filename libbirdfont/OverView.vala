@@ -85,7 +85,7 @@ public class OverView : FontDisplay {
 		IdleSource idle = new IdleSource ();
 
 		idle.set_callback (() => {			
-			// FIXME: selected_canvas ();
+			selected_canvas ();
 			return false;
 		});
 		
@@ -262,6 +262,7 @@ public class OverView : FontDisplay {
 		update_scrollbar ();
 		update_zoom_bar ();
 		OverViewItem.glyph_scale = 1;
+		update_item_list ();
 		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
 	}
@@ -371,7 +372,7 @@ public class OverView : FontDisplay {
 		return i - 1;
 	}
 		
-	void update_item_list (int item_list_length = -1) {
+	public void update_item_list (int item_list_length = -1) {
 		string character_string;
 		Font f = BirdFont.get_current_font ();
 		GlyphCollection? glyphs = null;
@@ -455,8 +456,6 @@ public class OverView : FontDisplay {
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {
 		this.allocation = allocation;
-		
-		update_item_list ();
 		
 		// clear canvas
 		cr.save ();
@@ -1074,7 +1073,7 @@ public class OverView : FontDisplay {
 			index++;
 		}
 	
-		update_item_list ();
+		// FIXME: update_item_list ();
 		GlyphCanvas.redraw ();
 	}
 

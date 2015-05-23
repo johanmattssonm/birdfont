@@ -402,6 +402,7 @@ public class BirdFont {
 		CodePageBits codepage_bits;
 
 		args = new Argument.command_line (arg);
+		Font.empty = new Font ();
 
 #if ANDROID
 		BirdFont.logging = true;

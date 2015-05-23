@@ -121,7 +121,7 @@ public class FallbackFont : GLib.Object {
 		FontFace* font;
 		
 		bf_font = new Font ();
-		
+
 		for (int i = fallback_fonts.size - 1; i >= 0; i--) {
 			f = fallback_fonts.get (i);
 			
@@ -153,8 +153,7 @@ public class FallbackFont : GLib.Object {
 
 		bf_parser = new BirdFontFile (bf_font);
 		bf_parser.load_data (((!) glyph_data).str);
-		bf_parser = new BirdFontFile (new Font ());
-					
+				
 		return bf_font;
 	}
 

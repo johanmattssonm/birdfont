@@ -15,44 +15,76 @@
 using Cairo;
 using Math;
 
+public enum MenuDirection {
+	DROP_DOWN,
+	POP_UP;
+}
+
 namespace BirdFont {
 
-public class VersionList : DropMenu {
+public class VersionList : GLib.Object {
 	public int current_version_id = -1;
-	unowned GlyphCollection glyph_collection;
+	GlyphCollection glyph_collection;
 	
 	public Gee.ArrayList<Glyph> glyphs;
 	
-	public VersionList (Glyph? g = null, GlyphCollection glyph_collection) {
-		base ();
-		
-		this.glyph_collection = glyph_collection;
-		glyphs = new  Gee.ArrayList<Glyph> ();
-		set_direction (MenuDirection.POP_UP);
-		
+	static int n_lists = 0;
+
+	public delegate void Selected (MenuAction self);
+	public signal void selected (VersionList self);
+	
+	double x = -1;
+	double y = -1;
+	double width = 0;
+	
+	double menu_x = -1;	
+	public bool menu_visible = false;
+	Gee.ArrayList <MenuAction> actions = new Gee.ArrayList <MenuAction> ();
+	const int item_height = 25;
+	MenuDirection direction = MenuDirection.DROP_DOWN;
+	
+	public signal void signal_delete_item  (int item_index);
+	public signal void add_glyph_item  (Glyph item);
+
+	public VersionList (GlyphCollection gc) {
 		MenuAction ma = add_item (t_("New version"));
 		ma.has_delete_button = false;
-		ma.action = (self) => {
-			return_if_fail (self.parent != null);
+		ma.action.connect ((self) => {
 			return_if_fail (glyphs.size > 0);
 			
 			BirdFont.get_current_font ().touch ();
 			
 			add_new_version ();
 			current_version_id = glyphs.get (glyphs.size - 1).version_id;
-		};
+		});
 	
 		// delete one version
 		signal_delete_item.connect ((index) => {
 			delete_item (index);
 		});
+
+		this.glyph_collection = gc;
+		glyphs = new Gee.ArrayList<Glyph> ();
+		set_direction (MenuDirection.POP_UP);
 		
-		if (g != null) {
-			add_glyph ((!) g);
+		glyphs = new Gee.ArrayList<Glyph> ();
+		
+		foreach (Glyph g in gc.glyphs) {
+			add_glyph (g, false);
 		}
-
+		
+		set_selected_version (gc.get_current ().version_id);
+		n_lists++;
 	}
+	
+	~VersionList () {
+		n_lists--;
 
+		if (menu_visible) {
+			warning ("menu is visible");
+		}
+	}
+	
 	private void delete_item (int index) {
 		int current_version;
 		Font font = BirdFont.get_current_font ();
@@ -72,10 +104,10 @@ public class VersionList : DropMenu {
 		return_if_fail (0 <= index < glyphs.size);
 		
 		font.deleted_glyphs.add (glyph_collection.get_current ());
-		
 		over_view.store_undo_state (glyph_collection.copy ());
 		
 		glyphs.remove_at (index);
+		glyph_collection.remove (index);
 		
 		recreate_index ();
 		
@@ -85,7 +117,11 @@ public class VersionList : DropMenu {
 		} else if (index < current_version) {
 			return_if_fail (0 <= current_version - 1 < glyphs.size);
 			current_version_id = glyphs.get (current_version - 1).version_id;
-		}	
+			int i = get_current_version_index ();
+			set_selected_item (get_action_index (i));
+		}
+		
+		get_current ().selected_canvas ();
 	}
 
 	private int get_current_version_index () {
@@ -96,7 +132,9 @@ public class VersionList : DropMenu {
 			}
 			i++;
 		}
-		return i;
+		
+		warning ("No index for menu item.");
+		return 0;
 	}
 
 	public void set_selected_version (int version_id) {
@@ -133,6 +171,7 @@ public class VersionList : DropMenu {
 		Glyph new_version = g.copy ();
 		new_version.version_id = get_last_id () + 1;
 		add_glyph (new_version);
+		add_glyph_item (new_version);
 	}
 	
 	public int get_last_id () {
@@ -149,19 +188,21 @@ public class VersionList : DropMenu {
 		g = glyphs.get (i);
 		
 		current_version_id = g.version_id;
-		
-		return_if_fail (ma.parent != null);
-		
-		((!)ma.parent).deselect_all ();
+		deselect_all ();
 		ma.set_selected (true);
 		
 		reload_all_open_glyphs ();
 		
+		glyph_collection.set_selected (g);
+		
+		/*
 		if (!is_null (BirdFont.current_glyph_collection)) {
 			current_glyph = MainWindow.get_current_glyph ();
 			g.set_allocation (current_glyph.allocation);
 			g.set_default_zoom ();
 		}
+		*/
+		
 	}
 	
 	/** Reload a glyph when a new version is selected. Updates the path
@@ -224,17 +265,19 @@ public class VersionList : DropMenu {
 		ma = add_item (t_("Version") + @" $v");
 		ma.index = (int) glyphs.size - 1;
 		
-		ma.action = (self) => {
+		ma.action.connect ((self) => {
 			Font font = BirdFont.get_current_font ();
 			set_selected_item (self);
 			font.touch ();
-		};
+		});
 
 		if (selected) {
 			set_selected_item (ma);
 		}
 		
-		update_selection ();
+		if (selected) {
+			update_selection ();
+		}
 	}
 	
 	bool has_version (int id) {
@@ -247,11 +290,192 @@ public class VersionList : DropMenu {
 	}
 	
 	void update_selection () {
+		int index;
+		
 		if (has_version (current_version_id)) {
-			set_selected_item (get_action_index (get_current_version_index () + 1)); // the first item is the "new version"
+			index = get_current_version_index ();
+			set_selected_item (get_action_index (index + 1)); // the first item is the "new version"
 		}
 	}
 
+	public MenuAction get_action_index (int index) {
+		if (!(0 <= index < actions.size)) {
+			warning (@"No action for index $index. (actions.size: $(actions.size))");
+			return new MenuAction ("None");
+		}
+		return actions.get (index);
+	}
+	
+	public void recreate_index () {
+		int i = -1;
+		foreach (MenuAction a in actions) {
+			a.index = i;
+			i++;
+		}
+	}
+	
+	public MenuAction get_action_no2 () {
+		if (actions.size < 2) {
+			warning ("No such action");
+			return new MenuAction ("None");
+		}
+		
+		return actions.get (1);
+	}
+	
+	public void deselect_all () {
+		foreach (MenuAction m in actions) {
+			m.set_selected (false);
+		}
+	}
+	
+	public void set_direction (MenuDirection d) {
+		direction = d;
+	}
+	
+	public void close () {
+		menu_visible = false;
+	}
+	
+	public MenuAction add_item (string label) {
+		MenuAction m = new MenuAction (label);
+		add_menu_item (m);
+		return m;
+	}
+	
+	public void add_menu_item (MenuAction m) {
+		actions.add (m);
+	}
+		
+	public bool is_over_icon (double px, double py) {
+		if (x == -1 || y == -1) {
+			return false;
+		}
+		
+		return x - 12 < px <= x && y - 5 < py < y + 12 + 5;
+	}
+
+	public bool menu_item_action (double px, double py) {
+		MenuAction? action;
+		MenuAction a;
+		MenuAction ma;
+		int index;
+		
+		if (menu_visible) {
+			action = get_menu_action_at (px, py);
+			
+			if (action != null) {
+				a = (!) action;
+				
+				// action for the delete button
+				if (a.has_delete_button && menu_x + width - 13 < px <= menu_x + width) { 
+					index = 0;
+					ma = actions.get (0);
+					while (true) {
+						if (a == ma) {
+							actions.remove_at (index);
+							signal_delete_item (index);
+							break;
+						}
+						
+						if (ma == actions.get (actions.size - 1)) {
+							break;
+						} else {
+							ma = actions.get (index + 1);
+							index++;
+						}
+					}
+					return false;
+				} else {
+					a.action (a);
+					selected (this);
+					menu_visible = false;
+				}
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public bool menu_icon_action (double px, double py) {		
+		menu_visible = is_over_icon (px, py);
+		return menu_visible;
+	}
+	
+	MenuAction? get_menu_action_at (double px, double py) {
+		double n = 0;
+		double ix, iy;
+		
+		foreach (MenuAction item in actions) {
+			ix = menu_x - 6;
+			
+			if (direction == MenuDirection.DROP_DOWN) {
+				iy = y + 12 + n * item_height;
+			} else {
+				iy = y - 24 - n * item_height;
+			}
+	
+			if (ix <= px <= ix + width && iy <= py <= iy + item_height) {
+				return item;
+			}
+			
+			n++;			
+		}
+
+		return null;
+	}
+	
+	public void set_position (double px, double py) {
+		x = px;
+		y = py;
+
+		foreach (MenuAction item in actions) {
+			item.text = new Text (item.label);
+			if (item.text.get_sidebearing_extent () + 25 > width) {
+				width = item.text.get_sidebearing_extent () + 25;
+			}
+		}
+				
+		if (x - width + 19 < 0) {
+			menu_x = 30;
+		} else {
+			menu_x = x - width;
+		}
+	}
+	
+	public void draw_menu (Context cr) {
+		double ix, iy;
+		int n;
+	
+		if (likely (!menu_visible)) {
+			return;
+		}
+		
+		cr.save ();
+		Theme.color (cr, "Default Background");
+		cr.rectangle (menu_x, y - actions.size * item_height, width, actions.size * item_height);
+		
+		cr.fill_preserve ();
+		cr.stroke ();
+		cr.restore ();
+		
+		cr.save ();
+		
+		n = 0;
+		foreach (MenuAction item in actions) {
+			item.width = width;
+			
+			iy = y - 8 - n * item_height;
+			ix = menu_x + 2;
+			
+			item.draw (ix, iy, cr);
+			n++;
+		}
+		
+		cr.restore ();
+	}
 }
 
 }

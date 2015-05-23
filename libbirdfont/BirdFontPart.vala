@@ -30,6 +30,11 @@ public class BirdFontPart : GLib.Object{
 
 	public BirdFontPart (Font font) {	
 		this.font = font;
+
+		font.font_deleted.connect (() => {
+			this.font = Font.empty;
+		});
+		
 		parts = new Gee.ArrayList<string> ();
 		root_directory = "";
 	}
@@ -154,7 +159,7 @@ public class BirdFontPart : GLib.Object{
 					bf.write_closing_root_tag (os);
 					os.close ();
 			
-					foreach (Glyph g in gc.get_version_list ().glyphs) {
+					foreach (Glyph g in gc.glyphs) {
 						try {
 							write_glyph (bf, gc, g);
 							write_glyph_background_image (bf, gc, g);

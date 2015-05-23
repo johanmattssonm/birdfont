@@ -18,8 +18,7 @@ namespace BirdFont {
 
 public class MenuAction : GLib.Object {
 	public string label;
-	public DropMenu.Selected action;
-	public DropMenu? parent = null;
+	public signal void action (MenuAction a);
 	public int index = -1;
 	public bool has_delete_button = true;
 	public double width = 100;

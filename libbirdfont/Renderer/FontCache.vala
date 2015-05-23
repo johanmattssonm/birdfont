@@ -47,12 +47,12 @@ public class FontCache {
 		Font f;
 		bool ok;
 
-		if (fonts.has_key (file_name)) {
-			return fonts.get (file_name);
-		}
-		
 		if (file_name == "") {
 			return fallback;
+		}
+				
+		if (fonts.has_key (file_name)) {
+			return fonts.get (file_name);
 		}
 		
 		f = new Font ();
@@ -94,13 +94,10 @@ public class FontCache {
 		public CachedFont (Font? font) {
 			this.font = font;
 			cached++;
-			
-			warning (@"$cached cached fonts\n");
 		}
 		
 		~CachedFont () {
 			cached--;
-			warning (@"$cached cached fonts\n");
 		}
 		
 		public Glyph? get_glyph_by_name (string name) {

@@ -31,6 +31,10 @@ public class Ligatures : GLib.Object {
 
 	public Ligatures (Font font) {
 		this.font = font;
+
+		font.font_deleted.connect (() => {
+			this.font = Font.empty;
+		});
 	}
 	
 	public void get_ligatures (LigatureIterator iter) {
