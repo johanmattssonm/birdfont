@@ -16,6 +16,17 @@ using Gee;
 using Sqlite;
 using Bird;
 
+[SimpleType]
+[CCode (has_type_id = false)]
+extern struct FcConfig {
+}
+
+[CCode (cname = "FcInitLoadConfigAndFonts")]
+extern FcConfig* FcInitLoadConfigAndFonts ();
+
+[CCode (cname = "find_font")]
+extern string? find_font (FcConfig* font_config, string characters);
+
 namespace BirdFont {
 
 // TODO: use font config
@@ -26,11 +37,15 @@ public class FallbackFont : GLib.Object {
 	Gee.ArrayList<File> fallback_fonts;
 	Gee.ArrayList<File> font_directories;
 
+	FcConfig* font_config;
+
 	public FallbackFont () {	
 		string home = Environment.get_home_dir ();
 		
 		fallback_fonts = new Gee.ArrayList<File> ();
 		font_directories = new Gee.ArrayList<File> ();
+		
+		font_config = FcInitLoadConfigAndFonts ();
 		
 		open_database ();
 		
@@ -115,6 +130,40 @@ public class FallbackFont : GLib.Object {
 	}
 	
 	public Font get_single_glyph_font (unichar c) {
+		string? font_file;
+		string file;
+		BirdFontFile bf_parser;
+		Font bf_font;
+		StringBuilder? glyph_data;
+		FontFace* font;
+
+		font_file = find_font (font_config, (!) c.to_string ());
+		
+		if (font_file == null) {
+			warning ("No font returned from fontconfig.");
+			return get_single_glyph_font_without_font_config (c);
+		}
+		
+		file = (!) font_file;
+		print (@"font_file: $(file)\n");
+		
+		print (@"Load from TTF $((!) c.to_string ())\n");
+
+		font = open_font (file);
+		glyph_data = get_glyph_in_font (font, c);
+		close_font (font);
+		
+		bf_font = new Font ();
+		if (glyph_data != null) {
+			bf_parser = new BirdFontFile (bf_font);
+			bf_parser.load_data (((!) glyph_data).str);
+		}
+
+		return bf_font;		
+	}
+	
+	// FIXME: remove after fixing the windows version
+	public Font get_single_glyph_font_without_font_config (unichar c) {
 		BirdFontFile bf_parser;
 		Font bf_font;
 		StringBuilder? glyph_data;
@@ -143,7 +192,6 @@ public class FallbackFont : GLib.Object {
 	
 	public StringBuilder? load_glyph_from_ttf (unichar c) {
 		StringBuilder? glyph_data;
-		string data;
 		
 		glyph_data = load_glyph_data_from_ttf (c);
 		
@@ -179,8 +227,7 @@ public class FallbackFont : GLib.Object {
 	public StringBuilder? get_glyph_in_font (FontFace font, unichar c) {
 		StringBuilder? glyph_data = null;
 		GlyphCollection gc;
-		Font bf_font = new Font ();
-		
+
 		gc = new GlyphCollection (c, (!)c.to_string ());		
 		glyph_data = load_glyph (font, (uint) c);
 

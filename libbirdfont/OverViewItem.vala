@@ -174,7 +174,6 @@ public class OverViewItem : GLib.Object {
 
 	private void draw_thumbnail (Context cr, GlyphCollection? gl, double x, double y) {
 		Glyph g;
-		Glyph? glyph;
 		Font font;
 		double gx, gy;
 		double x1, x2, y1, y2;
@@ -183,7 +182,6 @@ public class OverViewItem : GLib.Object {
 		double glyph_width, glyph_height;
 		Surface s;
 		Context c;
-		OverView o;
 		Color color = Color.black ();
 
 		w = width;
@@ -298,8 +296,6 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	private void draw_menu (Context cr) {
-		GlyphCollection g;
-		
 		if (glyphs == null) {
 			return;
 		}

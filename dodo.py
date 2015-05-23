@@ -48,6 +48,7 @@ LIBS = [
     'sqlite3',
     'glib-2.0',
     'gio-2.0',
+    'fontconfig',
     'cairo',
     'gdk-pixbuf-2.0',
     'webkitgtk-3.0',
