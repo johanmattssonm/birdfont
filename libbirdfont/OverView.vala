@@ -46,7 +46,18 @@ public class OverView : FontDisplay {
 	Gee.ArrayList<OverViewUndoItem> redo_items = new Gee.ArrayList<OverViewUndoItem> ();
 	
 	/** Show all characters that has been drawn. */
-	public bool all_available = true;
+	public bool all_available {
+		set {
+			_all_available = value;
+			update_item_list ();
+		}
+		
+		get {
+			return _all_available;
+		}
+	}
+	
+	bool _all_available = false;
 	
 	/** Show unicode database info. */
 	CharacterInfo? character_info = null;

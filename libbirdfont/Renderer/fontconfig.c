@@ -35,7 +35,7 @@ gchar* find_font (FcConfig* fontconfig, const gchar* characters) {
 	
 	character_set = FcCharSetCreate ();
 	
-	remaining_characters = characters;
+	remaining_characters = (gchar*) characters;
 	while (TRUE) {
 		character = g_utf8_get_char (remaining_characters);
 		
@@ -50,12 +50,13 @@ gchar* find_font (FcConfig* fontconfig, const gchar* characters) {
 
 	FcPatternAddCharSet (pattern, FC_CHARSET, character_set);
 	FcCharSetDestroy (character_set);
+	FcPatternAddInteger (pattern, FC_SLANT, FC_SLANT_ROMAN);
 	
 	FcPatternAddBool(pattern, FC_SCALABLE, FcTrue);
 	font_properties = FcObjectSetBuild (FC_FILE, NULL);	
 	fonts = FcFontList (fontconfig, pattern, font_properties);
 
-	if (fonts->nfont > 0) {
+	if (fonts && fonts->nfont > 0) {
 		font = fonts->fonts[0];
 		if (FcPatternGetString(font, FC_FILE, 0, &path) == FcResultMatch) {
 			result = g_strdup ((gchar*) path);
@@ -66,5 +67,53 @@ gchar* find_font (FcConfig* fontconfig, const gchar* characters) {
 		FcFontSetDestroy(fonts);
 	}
 
+	if (pattern) {
+		FcPatternDestroy(pattern);
+	}
+
 	return result;
+}
+
+/** Find a font file from its family name.
+ * @param font_config fontconfig instance
+ * @param font_name name of the font
+ * @return full path to the font file
+ */
+gchar* find_font_file (FcConfig* font_config, const gchar* font_name) {
+	const FcChar8* name;
+	FcPattern* search_pattern;
+	FcPattern* font;
+	FcChar8* file;
+	gchar* path;
+	FcObjectSet* font_properties;
+	FcFontSet* fonts;
+	int i;
+	
+	path = NULL;
+	name = font_name;
+
+	search_pattern = FcPatternCreate ();
+	FcPatternAddString (search_pattern, FC_FAMILY, name);
+	FcPatternAddBool (search_pattern, FC_SCALABLE, FcTrue);
+	FcPatternAddInteger (search_pattern, FC_WEIGHT, FC_WEIGHT_MEDIUM);
+	FcPatternAddInteger (search_pattern, FC_SLANT, FC_SLANT_ROMAN);
+		
+	font_properties = FcObjectSetBuild (FC_FILE, NULL);
+	fonts = FcFontList (font_config, search_pattern, font_properties);
+	
+	if (fonts->nfont > 0) {
+		for (i = 0; i < fonts->nfont; i++) {
+			font = fonts->fonts[i];
+			
+			if (FcPatternGetString(font, FC_FILE, 0, &file) == FcResultMatch) {
+				path = g_strdup ((gchar*) file);
+				break;
+			}
+		}
+		FcPatternDestroy (font);
+	}
+
+	FcPatternDestroy (search_pattern);
+	
+	return path;
 }

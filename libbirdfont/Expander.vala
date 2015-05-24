@@ -53,9 +53,6 @@ public class Expander : GLib.Object {
 
 		if (headline != null) {
 			title.set_text ((!) headline);
-			title.use_cache (true);
-			Theme.text_color (title, "Text Tool Box");
-			title.set_font_size (17 * Toolbox.get_scale ());
 		}
 				
 		tool = new Gee.ArrayList<Tool> ();
@@ -139,6 +136,10 @@ public class Expander : GLib.Object {
 		}
 
 		if (headline != null && tool.size > 0) {
+			Theme.text_color (title, "Text Tool Box");
+			title.use_cache (true);
+			title.set_font_size (17 * Toolbox.get_scale ());
+
 			yt += 17 * scale + HEADLINE_MARGIN;
 			content_height += 17 * scale + HEADLINE_MARGIN;
 		}

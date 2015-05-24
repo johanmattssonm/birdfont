@@ -16,6 +16,7 @@ Install vala and all required libraries, they are most likely in
 packages with a -dev or -devel affix:
 
     valac
+    font-roboto
     libgee-dev
     libglib2.0-dev 
     libgtk-3-dev 
