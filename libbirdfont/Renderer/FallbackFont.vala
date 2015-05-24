@@ -105,6 +105,16 @@ public class FallbackFont : GLib.Object {
 		font_file = null;
 		glyph_data = null;
 
+		// don't use fallback font for private use area
+		if (0xe000 <= c <= 0xf8ff) {
+			return bf_font;
+		}
+		
+		// control characters
+		if (c <= 0x001f) {
+			return bf_font;
+		}
+		
 		// check if glyph is available in roboto
 		if (font_file == null) {
 			roboto = SearchPaths.search_file (null, "Roboto-Regular.ttf");
