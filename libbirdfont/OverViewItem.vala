@@ -266,22 +266,22 @@ public class OverViewItem : GLib.Object {
 			draw_character_info_icon (cr);
 		}
 
-		text = (glyphs == null) 
-			? name.str
-			: ((!) glyphs).get_current ().name;
-		
-		double w = has_icons () ? width - 43 : width;
-		label = new Text (text, 17);
-		label.truncate (w);
-		label.use_cache (true);
-		
-		if (selected) {
-			Theme.text_color (label, "Overview Selected Foreground");
-		} else {
-			Theme.text_color (label, "Overview Foreground");
+		if (glyphs != null) {
+			text = name.str;
+					
+			double w = has_icons () ? width - 43 : width;
+			label = new Text (text, 17);
+			label.truncate (w);
+			label.use_cache (true);
+			
+			if (selected) {
+				Theme.text_color (label, "Overview Selected Foreground");
+			} else {
+				Theme.text_color (label, "Overview Foreground");
+			}
+			
+			label.draw_at_baseline (cr, x + 0.08 * width, y + height - 6);
 		}
-		
-		label.draw_at_baseline (cr, x + 0.08 * width, y + height - 6);
 	}
 
 	private void draw_character_info_icon (Context cr) {

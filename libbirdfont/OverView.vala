@@ -63,6 +63,7 @@ public class OverView : FontDisplay {
 	CharacterInfo? character_info = null;
 	
 	double scroll_size = 1;
+	const double UCD_LINE_HEIGHT = 17 * 1.3;
 
 	public OverView (GlyphRange? range = null, bool open_selected = true) {
 		GlyphRange gr;
@@ -1194,8 +1195,12 @@ public class OverView : FontDisplay {
 		bool see_also = false;
 		WidgetAllocation allocation = MainWindow.get_overview ().allocation;
 		string name;
+		string[] lines;
+		double character_start;
+		double character_height;
 		
 		entry = ((!)character_info).get_entry ();
+		lines = entry.split ("\n");
 		
 		foreach (string line in entry.split ("\n")) {
 			len = line.char_count ();
@@ -1239,7 +1244,7 @@ public class OverView : FontDisplay {
 			draw_info_line (t_("Ligature") + ": " + name, cr, x, y, 0);
 		} else {
 			i = 0;
-			foreach (string line in entry.split ("\n")) {
+			foreach (string line in lines) {
 				if (i == 0) {
 					column = line.split ("\t");
 					return_if_fail (column.length == 2);
@@ -1267,20 +1272,39 @@ public class OverView : FontDisplay {
 						draw_info_line (line.replace ("\tx (", "•").replace (")", ""), cr, x, y, i);
 						i++;
 					} else {
-
 						i++;
 					}
 				}
 			}
+			
+			character_start = y + 10 + i * UCD_LINE_HEIGHT;
+			character_height = h - character_start;
+			draw_fallback_character (cr, x, character_start, character_height);
 		}
+	}
+	
+	/** Fallback character in UCD info. */
+	void draw_fallback_character (Context cr, double x, double y, double height)
+	requires (character_info != null) {
+		unichar c = ((!)character_info).unicode;
+		
+		cr.save ();
+		Text character = new Text ();
+		Theme.text_color (character, "Foreground 1");
+		character.set_text ((!) c.to_string ());
+		character.set_font_size (height);
+		character.draw_at_top (cr, x + 10, y);
+		//character.draw_at_baseline (cr, x, y);
+		cr.restore ();
 	}
 
 	void draw_info_line (string line, Context cr, double x, double y, int row) {
+		Text ucd_entry = new Text (line);
 		cr.save ();
-		cr.set_font_size (12);
-		Theme.color (cr, "Foreground 1");
-		cr.move_to (x + 10, y + 28 + row * 18 * 1.2);
-		cr.show_text (line);
+		Theme.text_color (ucd_entry, "Foreground 1");
+		ucd_entry.widget_x = 10 + x;
+		ucd_entry.widget_y = 10 + y + row * UCD_LINE_HEIGHT;
+		ucd_entry.draw (cr);
 		cr.restore ();		
 	}
 	

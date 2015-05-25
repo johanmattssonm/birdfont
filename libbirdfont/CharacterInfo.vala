@@ -18,11 +18,12 @@ namespace BirdFont {
 
 /** Display functions for a unicode character database entry. */
 public class CharacterInfo : GLib.Object {
+	
+	public unichar unicode;
 
 	Text icon;
 	double x = 0;
 	double y = 0;
-	unichar unicode;
 	bool ligature = false;
 	string name = "";
 	

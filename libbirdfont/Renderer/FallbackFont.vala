@@ -83,7 +83,7 @@ public class FallbackFont : GLib.Object {
 		}
 		
 		// control characters
-		if (c <= 0x001f) {
+		if (c <= 0x001f || (0x007f <= c <= 0x008d)) {
 			return bf_font;
 		}
 		
