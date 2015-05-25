@@ -105,6 +105,7 @@ public class OverView : FontDisplay {
 		
 		update_scrollbar ();
 		reset_zoom ();
+		update_item_list ();
 	}
 	
 	public GlyphCollection create_new_glyph (unichar character) {
@@ -356,6 +357,7 @@ public class OverView : FontDisplay {
 		first_visible = 0;
 		selected = 0;
 		
+		update_item_list ();
 		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
 	}
