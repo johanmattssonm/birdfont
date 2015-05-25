@@ -149,8 +149,7 @@ public class Tag : GLib.Object {
 		int end;
 		int closing_tag;
 		XmlString? d;
-		char* start_tag_data;
-		
+
 		XmlString name;
 		XmlString attributes;
 		XmlString content;
@@ -170,7 +169,6 @@ public class Tag : GLib.Object {
 			return new Tag.empty ();
 		}
 		
-		index += data.find_char ('<');
 		while (data.get_next_char (ref index, out c)) {
 			if (c == '<') {
 				separator = find_next_separator (index);

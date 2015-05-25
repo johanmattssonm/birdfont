@@ -114,21 +114,6 @@ public class XmlString : GLib.Object {
 		Posix.assert (len + offset < length); 
 		return new XmlString (data + offset, len);
 	} 
-
-	internal int find_char (char needle) {
-		char* haystack = data;
-		char c = data[0];
-		int i = 0;
-		
-		while (c != '\0') {
-			if (haystack[i] == needle) {
-				return i;
-			}
-			i++;
-		}
-		
-		return -1;
-	}
 	
 	public string to_string () {
 		unowned string s = (string) data;
