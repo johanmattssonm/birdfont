@@ -449,14 +449,10 @@ public class SpinButton : Tool {
 	
 	public override void draw (Context cr) {
 		double scale = Toolbox.get_scale ();
-		
-		double xt = x + w / 2;
-		double yt = y;
-
-		double text_x = -13 * scale;
-		double text_y = 7 * scale;
-
-		Text text = new Text (get_short_display_value (), 15);
+		double text_height = 14 * scale;
+		Text text = new Text (get_short_display_value (), text_height);
+		double text_x = x + (w - text.get_sidebearing_extent ()) / 2;
+		double text_y = y + (h - text_height) / 2;
 
 		if (!show_icon_tool_icon || waiting_for_icon_switch) {
 			if (is_selected ()) {
@@ -482,8 +478,8 @@ public class SpinButton : Tool {
 				Theme.text_color (text, "Tool Foreground");
 			}
 			
-			text.widget_x = xt + text_x;
-			text.widget_y = yt + text_y;
+			text.widget_x = text_x;
+			text.widget_y = text_y;
 			text.draw (cr);
 		}
 	}

@@ -178,7 +178,7 @@ public class Text : Widget {
 				g = cached_font.get_glyph_by_name (glyph_names.get (i));
 			}
 			
-			glyph = (g == null) ? cached_font.get_not_def_character ().get_current () : (!) g;
+			glyph = (g == null) ? new Glyph ("") : (!) g;
 			iter (glyph, kern, i + 1 == word_with_ligatures.glyph.size);			
 			prev = g;
 			wi++;
@@ -301,9 +301,6 @@ public class Text : Widget {
 	public override void draw (Context cr) {
 		double descender = cached_font.bottom_limit + cached_font.base_line;
 		double y = widget_y + get_height () + get_scale () * descender;
-			
-		cached_font.get_glyph_by_name ((!) text.get_char (0).to_string ());
-		
 		draw_at_baseline (cr, widget_x, y);
 	}
 	
