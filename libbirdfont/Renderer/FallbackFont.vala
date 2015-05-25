@@ -34,7 +34,11 @@ namespace BirdFont {
 public class FallbackFont : GLib.Object {
 	Gee.ArrayList<File> font_directories;
 	
-	FcConfig* font_config;
+	FcConfig* font_config = null;
+	FontFace* default_font = null;
+	
+	string default_font_file_name = "Roboto-Regular.ttf";
+	string default_font_family_name = "Roboto";
 
 	public FallbackFont () {
 		string home = Environment.get_home_dir ();
@@ -46,8 +50,74 @@ public class FallbackFont : GLib.Object {
 		add_font_folder ("/usr/local/share/fonts/");
 		add_font_folder (home + "/.local/share/fonts");
 		add_font_folder (home + "/.fonts");
-		add_font_folder ("C:\\Windows\\Fonts");	
-		//FIXME: MAC
+		add_font_folder ("C:\\Windows\\Fonts");
+		add_font_folder (home + "/Library/Fonts");
+		add_font_folder ("/Library/Fonts");
+		add_font_folder ("/Network/Library/Fonts");
+		add_font_folder ("/System/Library/Fonts");
+		add_font_folder ("/System Folder/Fonts");
+		
+		open_default_font ();
+	}
+	
+	~FallbackFont () {
+		if (default_font != null) {
+			close_font (default_font);
+		}
+	}
+
+	public Font get_single_glyph_font (unichar c) {
+		string? font_file;
+		BirdFontFile bf_parser;
+		Font bf_font;
+		StringBuilder? glyph_data;
+		FontFace* font;
+
+		bf_font = new Font ();
+		font_file = null;
+		glyph_data = null;
+
+		// don't use fallback font in private use area
+		if (0xe000 <= c <= 0xf8ff) {
+			return bf_font;
+		}
+		
+		// control characters
+		if (c <= 0x001f) {
+			return bf_font;
+		}
+		
+		// check if glyph is available in roboto
+		if (default_font != null) {
+			glyph_data = get_glyph_in_font ((!) default_font, c);
+		}
+				
+		// use fontconfig to find a fallback font
+		if (glyph_data == null) {
+			font_file = find_font (font_config, (!) c.to_string ());
+			if (font_file != null) {
+				font = open_font ((!) font_file);
+				glyph_data = get_glyph_in_font (font, c);
+				close_font (font);
+			}
+		}
+		
+		if (glyph_data != null) {
+			bf_parser = new BirdFontFile (bf_font);
+			bf_parser.load_data (((!) glyph_data).str);
+		}
+
+		return bf_font;		
+	}
+
+	public StringBuilder? get_glyph_in_font (FontFace* font, unichar c) {
+		StringBuilder? glyph_data = null;
+		GlyphCollection gc;
+
+		gc = new GlyphCollection (c, (!)c.to_string ());		
+		glyph_data = load_glyph (font, (uint) c);
+
+		return glyph_data;
 	}
 	
 	void add_font_folder (string f) {
@@ -92,78 +162,28 @@ public class FallbackFont : GLib.Object {
 		warning (@"The font $font_file not found");
 		return File.new_for_path (font_file);
 	}
-			
-	public Font get_single_glyph_font (unichar c) {
-		string? font_file;
-		BirdFontFile bf_parser;
-		Font bf_font;
-		StringBuilder? glyph_data;
-		FontFace* font;
-		File roboto;
 
-		bf_font = new Font ();
-		font_file = null;
-		glyph_data = null;
-
-		// don't use fallback font for private use area
-		if (0xe000 <= c <= 0xf8ff) {
-			return bf_font;
-		}
+	void open_default_font () {
+		File font_file;
+		string? fn = null;
 		
-		// control characters
-		if (c <= 0x001f) {
-			return bf_font;
-		}
+		font_file = SearchPaths.search_file (null, default_font_file_name);
 		
-		// check if glyph is available in roboto
-		if (font_file == null) {
-			roboto = SearchPaths.search_file (null, "Roboto-Regular.ttf");
-			
-			if (roboto.query_exists ()) {
-				font_file = (!) roboto.get_path ();
+		if (font_file.query_exists ()) {
+			fn = (!) font_file.get_path ();
+		} else {
+			font_file = search_font_file (default_font_file_name);
+	
+			if (font_file.query_exists ()) {
+				fn = (!) font_file.get_path ();
 			} else {
-				roboto = search_font_file ("Roboto-Regular.ttf");
-		
-				if (roboto.query_exists ()) {
-					font_file = (!) roboto.get_path ();
-				} else {
-					font_file = find_font_file (font_config, "Roboto");
-				}
+				fn = find_font_file (font_config, default_font_family_name);
 			}
 		}
-		
-		if (font_file != null) {
-			font = open_font ((!) font_file);
-			glyph_data = get_glyph_in_font (font, c);
-			close_font (font);
+			
+		if (fn != null) {
+			default_font = open_font ((!) fn);
 		}
-		
-		// use fontconfig to find a fallback font
-		if (glyph_data == null) {
-			font_file = find_font (font_config, (!) c.to_string ());
-			if (font_file != null) {
-				font = open_font ((!) font_file);
-				glyph_data = get_glyph_in_font (font, c);
-				close_font (font);
-			}
-		}
-		
-		if (glyph_data != null) {
-			bf_parser = new BirdFontFile (bf_font);
-			bf_parser.load_data (((!) glyph_data).str);
-		}
-
-		return bf_font;		
-	}
-
-	public StringBuilder? get_glyph_in_font (FontFace* font, unichar c) {
-		StringBuilder? glyph_data = null;
-		GlyphCollection gc;
-
-		gc = new GlyphCollection (c, (!)c.to_string ());		
-		glyph_data = load_glyph (font, (uint) c);
-
-		return glyph_data;
 	}
 }
 

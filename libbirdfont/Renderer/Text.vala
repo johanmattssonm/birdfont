@@ -19,7 +19,7 @@ namespace BirdFont {
 /** Test implementation of a birdfont rendering engine. */
 public class Text : Widget {
 	FontCache font_cache;
-	public FontCache.CachedFont cached_font;
+	public CachedFont cached_font;
 	
 	public string text;
 	
