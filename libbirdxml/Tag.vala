@@ -18,6 +18,7 @@ namespace Bird {
  * Representation of one XML tag.
  */
 public class Tag : GLib.Object {
+	public XmlString entire_file;
 	
 	public int tag_index; 
 	public int attribute_index;
@@ -37,7 +38,10 @@ public class Tag : GLib.Object {
 	
 	public int refcount = 1;
 	
-	internal Tag (XmlString name, XmlString attributes, XmlString content, int log_level) {
+	internal Tag (XmlString name, XmlString attributes, XmlString content,
+		int log_level, XmlString entire_file) {
+		
+		this.entire_file = entire_file;
 		this.log_level = log_level;
 		this.name = name;
 		this.data = content;
@@ -47,6 +51,7 @@ public class Tag : GLib.Object {
 	}
 	
 	internal Tag.empty () {
+		entire_file = new XmlString ("", 0);
 		data = new XmlString ("", 0);
 		attributes = new XmlString ("", 0);
 		name = new XmlString ("", 0);
@@ -169,7 +174,7 @@ public class Tag : GLib.Object {
 			return new Tag.empty ();
 		}
 		
-		while (data.get_next_char (ref index, out c)) {
+		while (data.get_next_ascii_char (ref index, out c)) {
 			if (c == '<') {
 				separator = find_next_separator (index);
 
@@ -191,9 +196,9 @@ public class Tag : GLib.Object {
 				if (attributes.has_suffix ("/")) {
 					content = new XmlString ("", 0);
 					end_tag_index = data.index_of (">", index);
-					data.get_next_char (ref end_tag_index, out c);
+					data.get_next_ascii_char (ref end_tag_index, out c);
 				} else {
-					if (!data.get_next_char (ref end, out c)) {; // skip >
+					if (!data.get_next_ascii_char (ref end, out c)) {; // skip >
 						warn ("Unexpected end of data.");
 						error = true;
 						break;
@@ -215,10 +220,10 @@ public class Tag : GLib.Object {
 					
 					content = data.substring (end, closing_tag - end);
 					end_tag_index = data.index_of (">", closing_tag);
-					data.get_next_char (ref end_tag_index, out c);
+					data.get_next_ascii_char (ref end_tag_index, out c);
 				}
 				
-				return new Tag (name, attributes, content, log_level);	
+				return new Tag (name, attributes, content, log_level, entire_file);	
 			}
 		}
 		
@@ -233,7 +238,7 @@ public class Tag : GLib.Object {
 		while (true) {
 			
 			previous_index = index;
-			if (!data.get_next_char (ref index, out c)) {
+			if (!data.get_next_ascii_char (ref index, out c)) {
 				break;
 			}
 			
@@ -260,14 +265,14 @@ public class Tag : GLib.Object {
 		
 		while (true) {
 			previous_index = index;
-			if (!data.get_next_char (ref index, out c)) {
+			if (!data.get_next_ascii_char (ref index, out c)) {
 				warn (@"Unexpected end of file");
 				break;
 			}
 			
 			if (c == '<') {
 				slash_index = index;
-				data.get_next_char (ref slash_index, out slash);
+				data.get_next_ascii_char (ref slash_index, out slash);
 				if (slash == '/' && is_tag (name, slash_index)) {
 					if (start_count == 1) {
 						return previous_index;
@@ -295,15 +300,15 @@ public class Tag : GLib.Object {
 		unichar c;
 		unichar c_data;
 		
-		while (name.get_next_char (ref index, out c)) {
-			if (data.get_next_char (ref data_index, out c_data)) {
+		while (name.get_next_ascii_char (ref index, out c)) {
+			if (data.get_next_ascii_char (ref data_index, out c_data)) {
 				if (c_data != c) {
 					return false;
 				}
 			}
 		}
 		
-		if (data.get_next_char (ref data_index, out c_data)) {
+		if (data.get_next_ascii_char (ref data_index, out c_data)) {
 			return c_data == '>' || c_data == ' ' || c_data == '\t' 
 				|| c_data == '\n' || c_data == '\r' || c_data == '/';
 		}
@@ -328,7 +333,7 @@ public class Tag : GLib.Object {
 		while (true) {
 			previous_index = index;
 			
-			if (!attributes.get_next_char (ref index, out c)) {
+			if (!attributes.get_next_ascii_char (ref index, out c)) {
 				has_attributes = false;
 				return new Attribute.empty ();
 			}
@@ -343,7 +348,7 @@ public class Tag : GLib.Object {
 		// read attribute name
 		while (true) {
 			previous_index = index;
-			if (!attributes.get_next_char (ref index, out c)) {
+			if (!attributes.get_next_ascii_char (ref index, out c)) {
 				error = true;
 				warn (@"Unexpected end of attributes in tag $(this.name)");
 				has_attributes = false;
@@ -365,7 +370,7 @@ public class Tag : GLib.Object {
 		}
 		
 		// equal sign and space around it
-		while (attributes.get_next_char (ref index, out c)) {
+		while (attributes.get_next_ascii_char (ref index, out c)) {
 			if (!(c == ' ' || c == '\t' || c == '\n' || c == '\r')) {
 				if (c == '=') {
 					break;
@@ -373,12 +378,15 @@ public class Tag : GLib.Object {
 					has_attributes = false;
 					error = true;
 					warn (@"Expecting equal sign for attribute $(attribute_name).");
+					warn (@"Around: $(attributes.substring (index, 10)).");
+					warn (@"Row: $(get_row (((size_t) attributes.data) + index))");
+					
 					return new Attribute.empty ();
 				}
 			}
 		}
 		
-		while (attributes.get_next_char (ref index, out c)) {
+		while (attributes.get_next_ascii_char (ref index, out c)) {
 			if (!(c == ' ' || c == '\t' || c == '\n' || c == '\r')) {
 				if (c == '"' || c == '\'') {
 					break;
@@ -395,7 +403,7 @@ public class Tag : GLib.Object {
 		content_start = index;
 		
 		while (true) {
-			if (!attributes.get_next_char (ref index, out c)) {
+			if (!attributes.get_next_ascii_char (ref index, out c)) {
 				has_attributes = false;
 				error = true;
 				warn (@"Expecting end quote for attribute $(attribute_name).");
@@ -447,6 +455,26 @@ public class Tag : GLib.Object {
 			}
 			return (!) next_tag;
 		}
+	}
+	
+	internal int get_row (size_t pos) {
+		int index = 0;
+		unichar c;
+		int row = 1;
+		size_t p, e;
+		
+		e = (size_t) entire_file.data;
+		while (entire_file.get_next_ascii_char (ref index, out c)) {
+			if (c == '\n') {
+				row++;
+			}
+			
+			if (e + index >= pos) {
+				break;
+			}
+		}
+		
+		return row;
 	}
 	
 	internal void warn (string message) {

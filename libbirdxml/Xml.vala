@@ -138,8 +138,10 @@ public class XmlParser : GLib.Object {
 		int root_index;
 		Tag container;
 		XmlString content;
+		XmlString empty;
 		
 		error = false;
+		empty = new XmlString ("", 0);
 		
 		root_index = find_root_tag ();
 		if (root_index == -1) {
@@ -150,7 +152,7 @@ public class XmlParser : GLib.Object {
 			root = new Tag.empty ();
 		} else {
 			content = data.substring (root_index);
-			container = new Tag (new XmlString ("", 0), new XmlString ("", 0), content, log_level);
+			container = new Tag (empty, empty, content, log_level, data);
 			root = container.get_next_tag ();
 		}
 	}
@@ -163,13 +165,13 @@ public class XmlParser : GLib.Object {
 		
 		while (true) {
 			prev_index = index;
-			if (!data.get_next_char (ref index, out c)) {
+			if (!data.get_next_ascii_char (ref index, out c)) {
 				break;
 			}
 			
 			if (c == '<') {
 				modifier = index;
-				data.get_next_char (ref modifier, out c);
+				data.get_next_ascii_char (ref modifier, out c);
 				if (c != '?' && c != '[' && c != '!') {
 					return prev_index;
 				} 

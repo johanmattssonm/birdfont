@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -83,24 +83,38 @@ public class XmlString : GLib.Object {
 		unowned string s;
 		unowned string? n = (string) data;
 		
-		if (n == null) {
-			c = '\0';
-			return false;
-		}
-		
-		if (index < 0) {
-			c = '\0';
-			return false;			
-		}
-		
 		if (index >= length) {
 			c = '\0';
-			return false;
+ 			return false;
+ 		}
+ 		
+		s = (!) n;
+ 		
+		return s.get_next_char (ref index, out c);
+ 	}
+ 	
+	internal bool get_next_ascii_char (ref int index, out unichar c) {
+		const char first_bit = 1 << 7;
+		int i = index;
+		char* d = data;
+
+		if (index >= length) {
+			c = '\0';
+ 			return false;
+ 		}
+ 		
+		if (likely ((int) (d[i] & first_bit) == 0)) {
+			c = d[i];
+			index++;
+			return c != '\0';
 		}
 		
-		s = (!) n;
+		while ((int) (d[i] & first_bit) != 0) {
+			i++;
+		}
 		
-		return s.get_next_char (ref index, out c);
+		index = i;
+		return get_next_char (ref index, out c);
 	}
 
 	internal XmlString substring (int offset, int len = -1) {
