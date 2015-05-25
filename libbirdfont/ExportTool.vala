@@ -48,8 +48,8 @@ public class ExportTool : GLib.Object {
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	x="0px"
 	y="0px"
-	width="""" + @"$(glyph.get_width ())" + """px" 
-	height="""" + @"$(glyph.get_height ())" + """px">
+	width=""" + "\"" + @"$(glyph.get_width ())" + """px" 
+	height=""" + "\"" + @"$(glyph.get_height ())" + """px">
 """);
 		
 		s.append (@"<g id=\"$(name)\">\n");

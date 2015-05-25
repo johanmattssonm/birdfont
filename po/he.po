@@ -7,58 +7,58 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-05-25 07:30+0200\n"
-"PO-Revision-Date: 2014-12-02 23:07+0000\n"
+"PO-Revision-Date: 2014-07-26 21:55+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: nb\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1417561667.000000\n"
+"X-POOTLE-MTIME: 1406411700.000000\n"
 
 #: libbirdfont/Argument.vala:276
 msgid "Usage"
-msgstr "bruksmåte"
+msgstr "שימוש"
 
 #: libbirdfont/Argument.vala:278 libbirdfont/BirdFont.vala:179
 #: birdfont-autotrace/AutoTrace.vala:68
 msgid "FILE"
-msgstr "FIL"
+msgstr "קובץ"
 
 #: libbirdfont/Argument.vala:278 libbirdfont/BirdFont.vala:179
 #: birdfont-autotrace/AutoTrace.vala:68
 msgid "OPTION"
-msgstr "INNSTILLINGER"
+msgstr "אפשרות"
 
 #: libbirdfont/Argument.vala:280
 msgid "enable Android customizations"
-msgstr "slå på Android-tilpasninger"
+msgstr ""
 
 #: libbirdfont/Argument.vala:281
 msgid "show coordinate in glyph view"
-msgstr "vis koordinat i tegnvisning"
+msgstr "להציג נקודות ציון בתצוגת גליף"
 
 #: libbirdfont/Argument.vala:282
 msgid "exit if a test case fails"
-msgstr "avslutt hvis et testforsøk feiler"
+msgstr "לצאת אם בדיקה נכשלה"
 
 #: libbirdfont/Argument.vala:283
 msgid "treat warnings as fatal"
-msgstr "håndter advarsler som fatale"
+msgstr "להתייחס אל אזהרות כאל שגיאות סופניות"
 
 #: libbirdfont/Argument.vala:284
 msgid "show this message"
-msgstr "vis denne beskjeden"
+msgstr "להציג את ההודעה הזאת"
 
 #: libbirdfont/Argument.vala:285
 msgid "write a log file"
-msgstr "skriv en loggfil"
+msgstr ""
 
 #: libbirdfont/Argument.vala:286
 msgid "enable Machintosh customizations"
-msgstr "aktiver Macintosh-tilpasninger"
+msgstr "להפעיל התאמות למקינטוש"
 
 #: libbirdfont/Argument.vala:287
 msgid "enable Windows customizations"
@@ -66,15 +66,15 @@ msgstr ""
 
 #: libbirdfont/Argument.vala:288
 msgid "don't translate"
-msgstr "Ikke oversett"
+msgstr "לא לתרגם"
 
 #: libbirdfont/Argument.vala:289
 msgid "sleep between each command in test suite"
-msgstr "vent mellom hver kommando i testmodus"
+msgstr ""
 
 #: libbirdfont/Argument.vala:290
 msgid "run test case"
-msgstr "kjør testmodus"
+msgstr ""
 
 #: libbirdfont/BackgroundSelectionTool.vala:23
 msgid "Select background"
@@ -82,42 +82,42 @@ msgstr ""
 
 #: libbirdfont/BackgroundTab.vala:46 libbirdfont/BackgroundTools.vala:26
 msgid "Background Image"
-msgstr "Bakgrunnsbilde"
+msgstr ""
 
 #: libbirdfont/BackgroundTool.vala:41
 msgid "Move, resize and rotate background image"
-msgstr "Flytt, skaler og roter bakgrunnsbildet"
+msgstr ""
 
 #: libbirdfont/BackgroundTool.vala:223
 msgid "Select background image"
-msgstr "Velg bakgrunnsbilde"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:27
 msgid "Images"
-msgstr "Bilder"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileDialogTab.vala:94
 #: libbirdfont/RecentFiles.vala:106
 msgid "Files"
-msgstr "Filer"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:38
 msgid "Parts"
-msgstr "Deler"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2251
 #: libbirdfont/LigatureList.vala:106
 msgid "Add"
-msgstr "Legg til"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:85
 msgid "Select Glyph"
-msgstr "Velg type"
+msgstr ""
 
 #: libbirdfont/BackgroundTools.vala:182 libbirdfont/LoadCallback.vala:87
 #: libbirdfont/Menu.vala:79
 msgid "Open"
-msgstr "Åpne"
+msgstr ""
 
 #: libbirdfont/BezierTool.vala:49
 msgid "Create Beziér curves"
@@ -126,61 +126,60 @@ msgstr ""
 #: libbirdfont/BirdFont.vala:23 libbirdfont/BirdFont.vala:177
 #: birdfont-autotrace/AutoTrace.vala:66
 msgid "Usage:"
-msgstr "Bruksmåte:"
+msgstr "שימוש:"
 
 #: libbirdfont/BirdFont.vala:25
 msgid "BF-FILE"
-msgstr "BF-FIL"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:25
 msgid "SVG-FILES ..."
-msgstr "SVG-FILER ..."
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:59 libbirdfont/BirdFont.vala:67
 msgid "does not exist."
-msgstr "eksisterer ikke"
+msgstr "לא קיים"
 
 #: libbirdfont/BirdFont.vala:68
 msgid "A new font will be created."
-msgstr "Ny font skal opprettes."
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:90
 msgid "Failed to import"
-msgstr "Mislykket å importere"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:91
 msgid "Aborting"
-msgstr "Avbryter"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:129
 msgid "is not the name of a glyph or a Unicode value."
-msgstr "er ikke navnet på tegn eller Unicode-verdi"
+msgstr "לא שם גליף או ערך יוניקוד"
 
 #: libbirdfont/BirdFont.vala:130
 msgid "Unicode values must start with U+."
-msgstr "Unicode-verdier må begynne med U+"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:156
 msgid "Adding"
-msgstr "Legger til"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:160
 msgid "to"
-msgstr "for"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:162
 msgid "Glyph"
-msgstr "Tegn"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
 #: libbirdfont/VersionList.vala:261 birdfont/GtkWindow.vala:1008
 msgid "Version"
-msgstr "Versjon"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:180 birdfont-autotrace/AutoTrace.vala:71
-#, fuzzy
 msgid "print this message"
-msgstr "vis denne beskjeden\n"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:181
 msgid "write files to this directory"
@@ -196,57 +195,55 @@ msgstr ""
 
 #: libbirdfont/BirdFont.vala:297
 msgid "Can't find output directory"
-msgstr "Finner ikke mappen"
+msgstr ""
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
-msgstr "Sirkel"
+msgstr "עיגול"
 
 #: libbirdfont/CutBackgroundTool.vala:38
 msgid "Crop background image"
-msgstr "Sirkel"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:25
-#, fuzzy
 msgid "Default Language"
-msgstr "Standardspråk"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:26
-#, fuzzy
 msgid "Private Use Area"
-msgstr "Område for privat bruk"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:28
 msgid "Chinese"
-msgstr "Kinesisk"
+msgstr "סינית"
 
 #: libbirdfont/DefaultCharactersSet.vala:29
 msgid "English"
-msgstr "Engelsk"
+msgstr "אנגלית"
 
 #: libbirdfont/DefaultCharactersSet.vala:30
 msgid "Greek"
-msgstr "Gresk"
+msgstr "יוונית"
 
 #: libbirdfont/DefaultCharactersSet.vala:31
 msgid "Japanese"
-msgstr "Japansk"
+msgstr "יפנית"
 
 #: libbirdfont/DefaultCharactersSet.vala:32
 msgid "Javanese"
-msgstr "Javanesisk"
+msgstr "ג׳אוואנית"
 
 #: libbirdfont/DefaultCharactersSet.vala:33
 msgid "Latin"
-msgstr "Latinsk"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:34
 msgid "Russian"
-msgstr "Russisk"
+msgstr "רוסית"
 
 #: libbirdfont/DefaultCharactersSet.vala:35
 msgid "Swedish"
-msgstr "Svensk"
+msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:36
 msgid "Thai"
@@ -255,69 +252,65 @@ msgstr ""
 #. / All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
 #: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:365
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
-msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z æ ø å"
+msgstr ""
 
 #. / All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
 #: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:366
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:52
 #: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:91
 #: libbirdfont/Menu.vala:473 libbirdfont/TableLayout.vala:197
-#, fuzzy
 msgid "Name and Description"
-msgstr "Navn og _Beskrivelse"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:56 libbirdfont/MenuTab.vala:84
 #: birdfont/GtkWindow.vala:952
-#, fuzzy
 msgid "PostScript Name"
-msgstr "Postskript-navn"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
 #: libbirdfont/MenuTab.vala:602 birdfont/GtkWindow.vala:959
 msgid "Name"
-msgstr "Navn"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:76 libbirdfont/MenuTab.vala:94
 #: birdfont/GtkWindow.vala:966
 msgid "Style"
-msgstr "Stil"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:972
 msgid "Bold"
-msgstr "Fet skrift"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:979
 msgid "Italic"
-msgstr "Kursiv"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:987
 msgid "Weight"
-msgstr "Vekt"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:115 libbirdfont/MenuTab.vala:99
-#, fuzzy
 msgid "Full Name (Name and Style)"
-msgstr "Fullt navn (navn og stil)"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:125 libbirdfont/MenuTab.vala:104
-#, fuzzy
 msgid "Unique Identifier"
-msgstr "Unik identifikator"
+msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:1015
 msgid "Description"
-msgstr "Beskrivelse"
+msgstr "תיאור"
 
 #: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:1023
 msgid "Copyright"
-msgstr "Opphavsrett"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:109
 msgid "Drawing Tools"
-msgstr "Tegneverktøy"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:110
 msgid "Control Point"
@@ -332,9 +325,8 @@ msgid "Geometrical Shapes"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:113 libbirdfont/OverviewTools.vala:33
-#, fuzzy
 msgid "Zoom"
-msgstr "_Zoom"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:115
 msgid "Guidelines & Grid"
@@ -357,9 +349,8 @@ msgid "Select all points or paths"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:210 libbirdfont/Menu.vala:128
-#, fuzzy
 msgid "Undo"
-msgstr "_Angre"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:217
 msgid "Insert new points on path"
@@ -379,7 +370,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:253
 msgid "Convert selected points"
-msgstr "Konverter markerte punkter"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:264
 msgid "X coordinate"
@@ -407,7 +398,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:491
 msgid "Tie curve handles for the selected edit point"
-msgstr "Bind sammen kurvehåndtak for det valgte endrepunktet"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:542
 msgid "Symmetrical handles"
@@ -419,7 +410,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:580
 msgid "Create counter from outline"
-msgstr "Lag en en innvendig fra omriss"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:584
 msgid "Close path"
@@ -427,7 +418,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:606
 msgid "Move to path to the bottom layer"
-msgstr "Flytt linjeformen til det nederste laget"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:617
 msgid "Flip path vertically"
@@ -439,15 +430,15 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:634
 msgid "Set size for background image"
-msgstr "Angi størrelse for bakgrunnsbilde"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:672
 msgid "Show/hide background image"
-msgstr "Vis/skjul bakgrunnsbilde"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:683
 msgid "Insert a new background image"
-msgstr "Sett inn ett nytt bakgrunnsbilde"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:697 libbirdfont/ThemeTab.vala:114
 msgid "High contrast"
@@ -470,9 +461,8 @@ msgid "Autotrace background image"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:773
-#, fuzzy
 msgid "Delete background image"
-msgstr "Velg bakgrunnsbilde"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:781
 msgid "Apply stroke"
@@ -480,7 +470,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:813 libbirdfont/SettingsTab.vala:34
 msgid "Stroke width"
-msgstr "Kantlinje bredde"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:855
 msgid "Create outline form stroke"
@@ -500,7 +490,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:981
 msgid "Show guidelines"
-msgstr "Vis rettningslinjer"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:993
 msgid "Show more guidelines"
@@ -508,7 +498,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1009
 msgid "Show guidelines at top and bottom margin"
-msgstr "Vis hjelpelinjer på topp- og bunnmarginen"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1050
 msgid "Zoom Out More"
@@ -516,24 +506,23 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1059
 msgid "Show full glyph"
-msgstr "Vis hele tegnet"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1066
 msgid "Fit in view"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1073
-#, fuzzy
 msgid "Zoom in on background image"
-msgstr "Zoom inn bakgrunnsbildet"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1083
 msgid "Previous view"
-msgstr "Forrige visning"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1089
 msgid "Next view"
-msgstr "Neste visning"
+msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1293
 msgid "Background Tools"
@@ -549,7 +538,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:1471
 msgid "Set size for grid"
-msgstr "Angi størrelse for rutenett"
+msgstr ""
 
 #: libbirdfont/ExportSettings.vala:39 libbirdfont/ExportSettings.vala:133
 #: libbirdfont/Menu.vala:303
@@ -566,13 +555,13 @@ msgstr ""
 
 #: libbirdfont/ExportSettings.vala:97
 msgid "Export"
-msgstr "Eksporter"
+msgstr ""
 
 #: libbirdfont/ExportTool.vala:193 libbirdfont/Menu.vala:93
 #: libbirdfont/MenuTab.vala:260 libbirdfont/SaveCallback.vala:67
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
-msgstr "Lagre"
+msgstr ""
 
 #: libbirdfont/ExportTool.vala:364
 msgid "Alphabet"
@@ -588,7 +577,7 @@ msgstr ""
 
 #: libbirdfont/FileTools.vala:31
 msgid "New font"
-msgstr "Ny skrifttype"
+msgstr ""
 
 #: libbirdfont/FileTools.vala:37
 msgid "Open font"
@@ -615,7 +604,7 @@ msgstr ""
 
 #: libbirdfont/GridTool.vala:35
 msgid "Show grid"
-msgstr "Vis rutenett"
+msgstr ""
 
 #: libbirdfont/GuideTab.vala:46 libbirdfont/GuideTab.vala:57
 msgid "Guides"
@@ -623,11 +612,11 @@ msgstr ""
 
 #: libbirdfont/HiddenTools.vala:29
 msgid "Zoom in"
-msgstr "Zoom inn"
+msgstr ""
 
 #: libbirdfont/HiddenTools.vala:36
 msgid "Zoom out"
-msgstr "Zoom ut"
+msgstr ""
 
 #: libbirdfont/HiddenTools.vala:43
 msgid "Convert the last segment to a straight line"
@@ -639,7 +628,7 @@ msgstr ""
 
 #: libbirdfont/KerningDisplay.vala:61 libbirdfont/KerningDisplay.vala:844
 msgid "Kerning"
-msgstr "Kniping (tegnavstand)"
+msgstr ""
 
 #: libbirdfont/KerningDisplay.vala:69
 msgid "The current kerning class is malformed."
@@ -664,7 +653,7 @@ msgstr ""
 #: libbirdfont/KerningDisplay.vala:844 libbirdfont/MainWindow.vala:219
 #: libbirdfont/MessageDialog.vala:35 libbirdfont/SpinButton.vala:199
 msgid "Close"
-msgstr "Lukk"
+msgstr ""
 
 #: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:111
 msgid "Kerning Pairs"
@@ -736,14 +725,12 @@ msgid "You have reached the end of the list."
 msgstr ""
 
 #: libbirdfont/LanguageSelectionTab.vala:28 libbirdfont/OverviewTools.vala:32
-#, fuzzy
 msgid "Character Sets"
-msgstr "Tegnsett"
+msgstr ""
 
 #: libbirdfont/LanguageSelectionTab.vala:68
-#, fuzzy
 msgid "Character Set"
-msgstr "Tegnsett"
+msgstr ""
 
 #: libbirdfont/LigatureList.vala:53
 msgid "character sequence"
@@ -807,71 +794,60 @@ msgid "Position"
 msgstr ""
 
 #: libbirdfont/Line.vala:151
-#, fuzzy
 msgid "Move"
-msgstr "_Flytt"
+msgstr ""
 
 #: libbirdfont/MainWindow.vala:219
 msgid "Glyph sequence"
-msgstr "Tegnsekvens"
+msgstr ""
 
 #: libbirdfont/Menu.vala:66
-#, fuzzy
 msgid "File"
-msgstr "Filer"
+msgstr ""
 
 #: libbirdfont/Menu.vala:72
-#, fuzzy
 msgid "New"
-msgstr "_Ny"
+msgstr ""
 
 #: libbirdfont/Menu.vala:86 libbirdfont/RecentFiles.vala:81
-#, fuzzy
 msgid "Recent Files"
-msgstr "_Sist åpnede filer"
+msgstr ""
 
 #: libbirdfont/Menu.vala:100
-#, fuzzy
 msgid "Save As"
-msgstr "Lagre _som"
+msgstr ""
 
 #: libbirdfont/Menu.vala:107
-#, fuzzy
 msgid "Select Character Set"
-msgstr "Velg _Tegnsett"
+msgstr ""
 
 #: libbirdfont/Menu.vala:114
-#, fuzzy
 msgid "Quit"
-msgstr "_Avslutt"
+msgstr ""
 
 #: libbirdfont/Menu.vala:122
-#, fuzzy
 msgid "Edit"
-msgstr "_Endre"
+msgstr ""
 
 #: libbirdfont/Menu.vala:135
 msgid "Redo"
 msgstr ""
 
 #: libbirdfont/Menu.vala:142
-#, fuzzy
 msgid "Copy"
-msgstr "_Kopier"
+msgstr ""
 
 #: libbirdfont/Menu.vala:149
-#, fuzzy
 msgid "Paste"
-msgstr "_Lim inn"
+msgstr ""
 
 #: libbirdfont/Menu.vala:156
 msgid "Paste In Place"
 msgstr ""
 
 #: libbirdfont/Menu.vala:163
-#, fuzzy
 msgid "Select All Paths"
-msgstr "Velg Alle St_ier"
+msgstr ""
 
 #: libbirdfont/Menu.vala:170
 msgid "Move To Baseline"
@@ -886,14 +862,12 @@ msgid "Simplify Path"
 msgstr ""
 
 #: libbirdfont/Menu.vala:191
-#, fuzzy
 msgid "Close Path"
-msgstr "Lukk _Filsti"
+msgstr ""
 
 #: libbirdfont/Menu.vala:198
-#, fuzzy
 msgid "Glyph Sequence"
-msgstr "_Tegnsekvens"
+msgstr ""
 
 #: libbirdfont/Menu.vala:205
 msgid "Set Background Glyph"
@@ -912,24 +886,20 @@ msgid "List Guides"
 msgstr ""
 
 #: libbirdfont/Menu.vala:233
-#, fuzzy
 msgid "Select Point Above"
-msgstr "_Velg Punkt Over"
+msgstr ""
 
 #: libbirdfont/Menu.vala:240
-#, fuzzy
 msgid "Select Next Point"
-msgstr "Velg _Neste Punkt"
+msgstr ""
 
 #: libbirdfont/Menu.vala:247
-#, fuzzy
 msgid "Select Previous Point"
-msgstr "Velg _forrige punkt"
+msgstr ""
 
 #: libbirdfont/Menu.vala:254
-#, fuzzy
 msgid "Select Point Below"
-msgstr "Velg punkt _under"
+msgstr ""
 
 #: libbirdfont/Menu.vala:262
 msgid "Import and Export"
@@ -940,9 +910,8 @@ msgid "Export Fonts"
 msgstr ""
 
 #: libbirdfont/Menu.vala:275
-#, fuzzy
 msgid "Export Glyph as SVG"
-msgstr "_Eksportér tegn som SVG"
+msgstr ""
 
 #: libbirdfont/Menu.vala:282
 msgid "Import SVG file"
@@ -958,32 +927,27 @@ msgstr ""
 
 #: libbirdfont/Menu.vala:310 libbirdfont/Preview.vala:27
 msgid "Preview"
-msgstr "Forhåndsvis"
+msgstr ""
 
 #: libbirdfont/Menu.vala:318
-#, fuzzy
 msgid "Tab"
-msgstr "_Fane"
+msgstr ""
 
 #: libbirdfont/Menu.vala:324
-#, fuzzy
 msgid "Next Tab"
-msgstr "_Neste fane"
+msgstr ""
 
 #: libbirdfont/Menu.vala:331
-#, fuzzy
 msgid "Previous Tab"
-msgstr "_Forrige fane"
+msgstr ""
 
 #: libbirdfont/Menu.vala:338
-#, fuzzy
 msgid "Close Tab"
-msgstr "_Lukk fane"
+msgstr ""
 
 #: libbirdfont/Menu.vala:345
-#, fuzzy
 msgid "Close All Tabs"
-msgstr "Lukk _alle faner"
+msgstr ""
 
 #: libbirdfont/Menu.vala:353
 msgid "Spacing and Kerning"
@@ -1039,7 +1003,7 @@ msgstr ""
 
 #: libbirdfont/Menu.vala:458 libbirdfont/OverView.vala:345
 msgid "Overview"
-msgstr "Oversikt"
+msgstr ""
 
 #: libbirdfont/MenuItem.vala:82
 msgid "UP"
@@ -1067,7 +1031,7 @@ msgstr ""
 
 #: libbirdfont/MenuTab.vala:148
 msgid "Menu"
-msgstr "Meny"
+msgstr ""
 
 #: libbirdfont/MenuTab.vala:602
 msgid "Add ligature"
@@ -1075,7 +1039,7 @@ msgstr ""
 
 #: libbirdfont/MoveTool.vala:41
 msgid "Move paths"
-msgstr "Flytt linjeformer"
+msgstr ""
 
 #: libbirdfont/OverView.vala:184
 msgid "Filter"
@@ -1083,27 +1047,27 @@ msgstr ""
 
 #: libbirdfont/OverView.vala:495
 msgid "No glyphs in this view."
-msgstr "Ingen tegn i dette bildet"
+msgstr ""
 
 #: libbirdfont/OverView.vala:1262
 msgid "See also:"
-msgstr "Se også:"
+msgstr ""
 
 #: libbirdfont/OverWriteDialogListener.vala:30
 msgid "Overwrite TTF file?"
-msgstr "Overskrive TTF-filen?"
+msgstr ""
 
 #: libbirdfont/OverWriteDialogListener.vala:31
 msgid "Overwrite"
-msgstr "Overskriv"
+msgstr ""
 
 #: libbirdfont/OverWriteDialogListener.vala:32 libbirdfont/SaveDialog.vala:50
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr ""
 
 #: libbirdfont/OverWriteDialogListener.vala:33
 msgid "Yes, don't ask again."
-msgstr "Ja, ikke spør igjen."
+msgstr ""
 
 #: libbirdfont/OverviewTools.vala:46
 msgid "All Glyphs"
@@ -1167,11 +1131,11 @@ msgstr ""
 
 #: libbirdfont/SaveDialog.vala:44 libbirdfont/SaveDialogListener.vala:30
 msgid "Discard"
-msgstr "Avbryt og slett"
+msgstr ""
 
 #: libbirdfont/SaveDialogListener.vala:28
 msgid "Save?"
-msgstr "Lagre?"
+msgstr ""
 
 #: libbirdfont/SettingsTab.vala:80
 msgid "Precision for pen tool"
@@ -1227,7 +1191,7 @@ msgstr ""
 
 #: libbirdfont/SvgParser.vala:50 libbirdfont/SvgParser.vala:94
 msgid "Import"
-msgstr "Importer"
+msgstr ""
 
 #: libbirdfont/Theme.vala:421
 msgid "Canvas Background"
@@ -1515,7 +1479,7 @@ msgstr ""
 
 #: libbirdfont/VersionList.vala:50
 msgid "New version"
-msgstr "Ny versjon"
+msgstr ""
 
 #: birdfont/GtkWindow.vala:292
 msgid "Select color"
@@ -1526,13 +1490,12 @@ msgid "Your fonts have been exported."
 msgstr ""
 
 #: birdfont/GtkWindow.vala:994
-#, fuzzy
 msgid "Full name (name and style)"
-msgstr "Fullt navn (navn og stil)"
+msgstr ""
 
 #: birdfont/GtkWindow.vala:1001
 msgid "Unique identifier"
-msgstr "Unik identifikator"
+msgstr ""
 
 #: birdfont-autotrace/AutoTrace.vala:69
 msgid "brighness cutoff, from 0.001 to 2, the default value is 1"
@@ -1551,9 +1514,8 @@ msgid "simplification, from 0.001 to 1, the default value is 0.5"
 msgstr ""
 
 #: birdfont-autotrace/AutoTrace.vala:92
-#, fuzzy
 msgid "File does not exist."
-msgstr "eksisterer ikke"
+msgstr ""
 
 #: birdfont-autotrace/AutoTrace.vala:98
 msgid "Unknown file format."
@@ -1561,375 +1523,10 @@ msgstr ""
 
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
-msgstr "Skriver"
-
-#~ msgid "print this message\n"
-#~ msgstr "vis denne beskjeden\n"
-
-#~ msgid "write files to this directory\n"
-#~ msgstr "skriv filer til denne mappen\n"
-
-#~ msgid "write svg file\n"
-#~ msgstr "skriv svg-fil\n"
-
-#~ msgid "write ttf and eot files\n"
-#~ msgstr "skriv ttf- og eot-filer\n"
-
-#~ msgid "Recent files"
-#~ msgstr "Sist åpnede filer"
-
-#~ msgid "Select Background"
-#~ msgstr "Velg Bakgrunn"
-
-#~ msgid "Saving"
-#~ msgstr "Lagrer"
-
-#~ msgid "Loading the unicode character database"
-#~ msgstr "Laster ned unicode tegndatabase"
-
-#~ msgid "Stroke color"
-#~ msgstr "Kantlinje farge"
-
-#~ msgid "Handle color"
-#~ msgstr "Håndtakfarge"
-
-#~ msgid "Select Background Image"
-#~ msgstr "Velg Bakgrunnsbilde"
-
-#~ msgid "Show guidelines for x-height and baseline"
-#~ msgstr "Vis hjelpelinjer for x-høyden og grunnlinjen"
+msgstr ""
 
 #~ msgid "Default language"
-#~ msgstr "Standardspråk"
-
-#~ msgid "Private use area"
-#~ msgstr "Område for privat bruk"
-
-#~ msgid "Show full unicode characters set"
-#~ msgstr "Vis fullt Unicode-tegnsett"
-
-#~ msgid "Show default characters set"
-#~ msgstr "Vis standard tegnsett"
-
-#~ msgid "Show all characters in the font"
-#~ msgstr "Vis alle tegn i skrifttypen"
-
-#~ msgid "Set precision"
-#~ msgstr "Angi presisjon"
-
-#, fuzzy
-#~ msgid "Kerning:"
-#~ msgstr "Kniping (tegnavstand)"
-
-#~ msgid "_New"
-#~ msgstr "_Ny"
-
-#~ msgid "_Open"
-#~ msgstr "Å_pne"
-
-#~ msgid "_Recent Files"
-#~ msgstr "_Sist åpnede filer"
-
-#~ msgid "Save _as"
-#~ msgstr "Lagre _som"
-
-#~ msgid "_Export"
-#~ msgstr "_Eksporter"
-
-#~ msgid "_Preview"
-#~ msgstr "_Forhåndsvis"
-
-#~ msgid "Name and _Description"
-#~ msgstr "Navn og _Beskrivelse"
-
-#, fuzzy
-#~ msgid "Select _Character Set"
-#~ msgstr "Velg _Tegnsett"
-
-#~ msgid "_Quit"
-#~ msgstr "_Avslutt"
-
-#~ msgid "_Undo"
-#~ msgstr "_Angre"
-
-#~ msgid "_Copy"
-#~ msgstr "_Kopier"
-
-#~ msgid "_Paste"
-#~ msgstr "_Lim inn"
-
-#, fuzzy
-#~ msgid "Select All Pa_ths"
-#~ msgstr "Velg Alle St_ier"
-
-#, fuzzy
-#~ msgid "_Export Glyph as SVG"
-#~ msgstr "_Eksportér tegn som SVG"
-
-#~ msgid "_Import SVG"
-#~ msgstr "_Importer SVG"
-
-#, fuzzy
-#~ msgid "Close _Path"
-#~ msgstr "Lukk _Filsti"
-
-#, fuzzy
-#~ msgid "_Glyph Sequence"
-#~ msgstr "_Tegnsekvens"
-
-#, fuzzy
-#~ msgid "_Select Point Above"
-#~ msgstr "_Velg Punkt Over"
-
-#, fuzzy
-#~ msgid "Select _Next Point"
-#~ msgstr "Velg _Neste Punkt"
-
-#, fuzzy
-#~ msgid "Select _Previous Point"
-#~ msgstr "Velg _forrige punkt"
-
-#, fuzzy
-#~ msgid "Select Point _Below"
-#~ msgstr "Velg punkt _under"
-
-#, fuzzy
-#~ msgid "_Next Tab"
-#~ msgstr "_Neste fane"
-
-#, fuzzy
-#~ msgid "_Previous Tab"
-#~ msgstr "_Forrige fane"
-
-#, fuzzy
-#~ msgid "_Close Tab"
-#~ msgstr "_Lukk fane"
-
-#, fuzzy
-#~ msgid "Close _All Tabs"
-#~ msgstr "Lukk _alle faner"
-
-#, fuzzy
-#~ msgid "_Create Path"
-#~ msgstr "_Lag linjeform"
-
-#~ msgid "_Zoom"
-#~ msgstr "_Zoom"
-
-#, fuzzy
-#~ msgid "_Create Counter Path"
-#~ msgstr "_Lag motstående formlinje"
-
-#~ msgid "_Move"
-#~ msgstr "_Flytt"
-
-#, fuzzy
-#~ msgid "Show _Full Unicode Characters Set"
-#~ msgstr "Vis _fullt Unicode-tegnsett"
-
-#, fuzzy
-#~ msgid "Show De_fault Characters Set"
-#~ msgstr "Vis stan_dard tegnsett"
-
-#, fuzzy
-#~ msgid "Show Characters in Font"
-#~ msgstr "Vis tegnsett foran"
-
-#, fuzzy
-#~ msgid "Add New _Grid Item"
-#~ msgstr "Legg til nytt _rutenettelement"
-
-#, fuzzy
-#~ msgid "Remove Gr_id Item"
-#~ msgstr "Fjern rute_nettelement"
-
-#, fuzzy
-#~ msgid "_Zoom In"
-#~ msgstr "_Zoom inn"
-
-#, fuzzy
-#~ msgid "Zoom _Out"
-#~ msgstr "Zoom _Ut"
-
-#~ msgid "_File"
-#~ msgstr "_Fil"
-
-#~ msgid "_Edit"
-#~ msgstr "_Endre"
-
-#~ msgid "_Tab"
-#~ msgstr "_Fane"
-
-#~ msgid "T_ool"
-#~ msgstr "_Verktøy"
-
-#~ msgid "_Kerning"
-#~ msgstr "_Kniping"
-
-#~ msgid "_Close tab"
-#~ msgstr "_Lukk fane"
-
-#~ msgid "Show _full unicode characters set"
-#~ msgstr "Vis _fullt Unicode-tegnsett"
-
-#~ msgid "Set contrast for background image"
-#~ msgstr "Angi kontrast for bakgrunnsbilde"
-
-#~ msgid "Backgrounds"
-#~ msgstr "Bakgrunner"
-
-#~ msgid "Creating thumbnails"
-#~ msgstr "Lager miniatyrbilder"
-
-#~ msgid "Merge paths"
-#~ msgstr "Slå sammen linjeformer"
-
-#~ msgid "Delete selected glyph"
-#~ msgstr "Slett valgt tegn"
-
-#~ msgid "Right click to add new points, left click to move points"
-#~ msgstr "Høyreklikk for å legge til nye punkt, venstreklikk for å flytte dem"
-
-#~ msgid "and double click to add new point on path."
-#~ msgstr "og dobbelklikk for å legge til et nytt punkt på en linjeform."
-
-#~ msgid "Zoom to scale 1:1"
-#~ msgstr "Zoom til skala 1 til 1"
-
-#~ msgid "Zoom in at region boundries"
-#~ msgstr "Zoom inn til områdegrensene"
-
-#~ msgid "Zoom in background image"
-#~ msgstr "Zoom inn bakgrunnsbildet"
-
-#, fuzzy
-#~ msgid "Zoom to _Scale 1:1"
-#~ msgstr "Zoom til _skala 1 til 1"
-
-#~ msgid "_Save"
-#~ msgstr "_Lagre"
+#~ msgstr "שפת בררת המחדל"
 
 #~ msgid "exit if a test case failes"
-#~ msgstr "avslutt hvis et testforsøk feiler"
-
-#, fuzzy
-#~ msgid "Postscript Name"
-#~ msgstr "Postskript-navn"
-
-#~ msgid "Postscript name"
-#~ msgstr "Postskript-navn"
-
-#~ msgid "Character set"
-#~ msgstr "Tegnsett"
-
-#~ msgid "Select default character set"
-#~ msgstr "Velg standard tegnsett"
-
-#~ msgid "Recover"
-#~ msgstr "Gjenoprett"
-
-#~ msgid "Delete all"
-#~ msgstr "Slett alle"
-
-#~ msgid "Full name (name & style)"
-#~ msgstr "Fullt navn (navn og stil)"
-
-#~ msgid "Update name & description"
-#~ msgstr "Oppdater navn og beskrivelse"
-
-#~ msgid "Create a new font"
-#~ msgstr "Lag en ny skrifttype"
-
-#~ msgid "Preferences"
-#~ msgstr "Innstillinger"
-
-#~ msgid "Export SVG, TTF & EOT fonts"
-#~ msgstr "Eksporter SVG-, TTF- og EOT-skrifttyper"
-
-#~ msgid "Export SVG font and view the result"
-#~ msgstr "Eksporter SVG-skrifttype og vis resultatet"
-
-#~ msgid "Continue"
-#~ msgstr "Fortsett"
-
-#~ msgid "Continue and don't ask me again."
-#~ msgstr "Fortsett og spør meg ikke igjen."
-
-#~ msgid "Use left command key (⌘) + click to add new points"
-#~ msgstr "Bruk venstre cmd tast (⌘) + klikk for å legge til nye punkt"
-
-#~ msgid "Save as"
-#~ msgstr "Lagre som"
-
-#~ msgid "Show all characters in font"
-#~ msgstr "Vis alle tegn i skrifttypen"
-
-#~ msgid "_Select all paths"
-#~ msgstr "_Velg alle tegn"
-
-#~ msgid "_Export glyph as SVG"
-#~ msgstr "_Eksporter tegn som SVG"
-
-#~ msgid "Close _path"
-#~ msgstr "Lukk _linjeform"
-
-#~ msgid "_Select point above"
-#~ msgstr "_Velg punkt over"
-
-#~ msgid "Select _next point"
-#~ msgstr "Velg _neste punkt"
-
-#~ msgid "Select _previous point"
-#~ msgstr "Velg _forrige punkt"
-
-#~ msgid "Select point _below"
-#~ msgstr "Velg punkt _under"
-
-#~ msgid "_Next tab"
-#~ msgstr "_Neste fane"
-
-#~ msgid "_Previous tab"
-#~ msgstr "_Forrige fane"
-
-#~ msgid "Close _all tabs"
-#~ msgstr "Lukk _alle faner"
-
-#~ msgid "_Create path"
-#~ msgstr "_Lag linjeform"
-
-#~ msgid "_Create counter path"
-#~ msgstr "_Lag motstående formlinje"
-
-#~ msgid "Show de_fault characters set"
-#~ msgstr "Vis stan_dard tegnsett"
-
-#~ msgid "Show characters in font"
-#~ msgstr "Vis tegnsett foran"
-
-#~ msgid "Add new _grid item"
-#~ msgstr "Legg til nytt _rutenett-element"
-
-#~ msgid "Remove gr_id item"
-#~ msgstr "Fjern dette rute_nettelementet"
-
-#~ msgid "_Zoom in"
-#~ msgstr "_Zoom inn"
-
-#~ msgid "Zoom _out"
-#~ msgstr "Zoom _ut"
-
-#~ msgid "Zoom to _scale 1:1"
-#~ msgstr "Zoom til _skala 1 til 1"
-
-#~ msgid ""
-#~ "The loaded font will be overwritten if you choose to continue with "
-#~ "preview."
-#~ msgstr ""
-#~ "Den lastede skrifttypen vil bli overskrevet hvis du velger å fortsette "
-#~ "med å forhåndsvise."
-
-#~ msgid "Export glyph to svg file"
-#~ msgstr "Eksporter tegn til svg-fil"
-
-#~ msgid "Wrote font files"
-#~ msgstr "Skrev skrifttype-filer"
+#~ msgstr "לצאת אם נכשלת בדיקה"

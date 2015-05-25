@@ -136,10 +136,6 @@ public class Expander : GLib.Object {
 		}
 
 		if (headline != null && tool.size > 0) {
-			Theme.text_color (title, "Text Tool Box");
-			title.use_cache (true);
-			title.set_font_size (17 * Toolbox.get_scale ());
-
 			yt += 17 * scale + HEADLINE_MARGIN;
 			content_height += 17 * scale + HEADLINE_MARGIN;
 		}
@@ -238,6 +234,10 @@ public class Expander : GLib.Object {
 
 		if (tool.size > 0) {
 			if (headline != null) {
+				Theme.text_color (title, "Text Tool Box");
+				title.use_cache (false);
+				title.set_font_size (17 * Toolbox.get_scale ());
+		
 				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 13  * Toolbox.get_scale ());
 			}
 		}

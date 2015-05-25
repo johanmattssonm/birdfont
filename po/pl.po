@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-19 15:02+0200\n"
+"POT-Creation-Date: 2015-05-25 07:30+0200\n"
 "PO-Revision-Date: 2015-01-05 13:16+0000\n"
 "Last-Translator: Piotr <strebski@o2.pl>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,7 +106,7 @@ msgstr "Pliki"
 msgid "Parts"
 msgstr "Części"
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2234
+#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2251
 #: libbirdfont/LigatureList.vala:106
 msgid "Add"
 msgstr "Dodaj"
@@ -120,7 +120,7 @@ msgstr "Wybierz glif"
 msgid "Open"
 msgstr "Otwórz"
 
-#: libbirdfont/BezierTool.vala:43
+#: libbirdfont/BezierTool.vala:49
 msgid "Create Beziér curves"
 msgstr "Utwórz krzywe Beziéra"
 
@@ -174,25 +174,25 @@ msgid "Glyph"
 msgstr "Glif"
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
-#: libbirdfont/VersionList.vala:218 birdfont/GtkWindow.vala:1008
+#: libbirdfont/VersionList.vala:261 birdfont/GtkWindow.vala:1008
 msgid "Version"
 msgstr "Wersja"
 
-#: libbirdfont/BirdFont.vala:180
-msgid "print this message\n"
-msgstr "drukuj tę wiadomość\n"
+#: libbirdfont/BirdFont.vala:180 birdfont-autotrace/AutoTrace.vala:71
+msgid "print this message"
+msgstr "drukuj tę wiadomość"
 
 #: libbirdfont/BirdFont.vala:181
-msgid "write files to this directory\n"
-msgstr "zapisz pliki w tym katalogu\n"
+msgid "write files to this directory"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:182
-msgid "write svg file\n"
-msgstr "zapisz plik svg\n"
+msgid "write svg file"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:183
-msgid "write ttf and eot files\n"
-msgstr "zapisz pliki ttf i eot\n"
+msgid "write ttf and eot file"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:297
 msgid "Can't find output directory"
@@ -251,12 +251,12 @@ msgid "Thai"
 msgstr ""
 
 #. / All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:118
+#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:365
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 
 #. / All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:121
+#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:366
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
@@ -337,207 +337,207 @@ msgstr "Linijki i siatka"
 msgid "Grid Size"
 msgstr "Rozmiar siatki"
 
-#: libbirdfont/DrawingTools.vala:177
+#: libbirdfont/DrawingTools.vala:179
 msgid "Move canvas"
 msgstr "Przenieś płótno"
 
-#: libbirdfont/DrawingTools.vala:185
+#: libbirdfont/DrawingTools.vala:187
 msgid "Delete"
 msgstr "Usuń"
 
-#: libbirdfont/DrawingTools.vala:192
+#: libbirdfont/DrawingTools.vala:194
 msgid "Select all points or paths"
 msgstr "Wybierz wszystkie punkty albo ścieżki"
 
-#: libbirdfont/DrawingTools.vala:208 libbirdfont/Menu.vala:128
+#: libbirdfont/DrawingTools.vala:210 libbirdfont/Menu.vala:128
 msgid "Undo"
 msgstr "Cofnij"
 
-#: libbirdfont/DrawingTools.vala:215
+#: libbirdfont/DrawingTools.vala:217
 msgid "Insert new points on path"
 msgstr "Wstaw nowe punkty na ścieżce"
 
-#: libbirdfont/DrawingTools.vala:224
+#: libbirdfont/DrawingTools.vala:226
 msgid "Create quadratic Bézier curves"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:233
+#: libbirdfont/DrawingTools.vala:235
 msgid "Create cubic Bézier curves"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:242
+#: libbirdfont/DrawingTools.vala:244
 msgid "Quadratic path with two line handles"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:251
+#: libbirdfont/DrawingTools.vala:253
 msgid "Convert selected points"
 msgstr "Konwertuj wybrane punkty"
 
-#: libbirdfont/DrawingTools.vala:262
+#: libbirdfont/DrawingTools.vala:264
 msgid "X coordinate"
 msgstr "Współrzędna X"
 
-#: libbirdfont/DrawingTools.vala:306
+#: libbirdfont/DrawingTools.vala:308
 msgid "Y coordinate"
 msgstr "Współrzędna Y"
 
-#: libbirdfont/DrawingTools.vala:349
+#: libbirdfont/DrawingTools.vala:351
 msgid "Rotation"
 msgstr "Obrót"
 
-#: libbirdfont/DrawingTools.vala:388
+#: libbirdfont/DrawingTools.vala:390
 msgid "Skew"
 msgstr "Pochyl"
 
-#: libbirdfont/DrawingTools.vala:421
+#: libbirdfont/DrawingTools.vala:423
 msgid "Width"
 msgstr "Szerokość"
 
-#: libbirdfont/DrawingTools.vala:446
+#: libbirdfont/DrawingTools.vala:448
 msgid "Height"
 msgstr "Wysokość"
 
-#: libbirdfont/DrawingTools.vala:489
+#: libbirdfont/DrawingTools.vala:491
 msgid "Tie curve handles for the selected edit point"
 msgstr "Połącz uchwyty krzywej dla zaznaczonego punktu edycji"
 
-#: libbirdfont/DrawingTools.vala:540
+#: libbirdfont/DrawingTools.vala:542
 msgid "Symmetrical handles"
 msgstr "Uchwyty symetryczne"
 
-#: libbirdfont/DrawingTools.vala:570
+#: libbirdfont/DrawingTools.vala:572
 msgid "Convert segment to line."
 msgstr "Konwertuj odcinek na linie"
 
-#: libbirdfont/DrawingTools.vala:578
+#: libbirdfont/DrawingTools.vala:580
 msgid "Create counter from outline"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:582
+#: libbirdfont/DrawingTools.vala:584
 msgid "Close path"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:604
+#: libbirdfont/DrawingTools.vala:606
 msgid "Move to path to the bottom layer"
 msgstr "Przenieś do ścieżki na dolnej warstwie"
 
-#: libbirdfont/DrawingTools.vala:615
+#: libbirdfont/DrawingTools.vala:617
 msgid "Flip path vertically"
 msgstr "Odbij ścieżkę pionowo"
 
-#: libbirdfont/DrawingTools.vala:623
+#: libbirdfont/DrawingTools.vala:625
 msgid "Flip path horizontally"
 msgstr "Odbij ścieżkę poziomo"
 
-#: libbirdfont/DrawingTools.vala:632
+#: libbirdfont/DrawingTools.vala:634
 msgid "Set size for background image"
 msgstr "Ustaw rozmiar dla tła"
 
-#: libbirdfont/DrawingTools.vala:670
+#: libbirdfont/DrawingTools.vala:672
 msgid "Show/hide background image"
 msgstr "Pokaż/ukryj tło"
 
-#: libbirdfont/DrawingTools.vala:681
+#: libbirdfont/DrawingTools.vala:683
 msgid "Insert a new background image"
 msgstr "Wstaw nowe tło"
 
-#: libbirdfont/DrawingTools.vala:695 libbirdfont/ThemeTab.vala:114
+#: libbirdfont/DrawingTools.vala:697 libbirdfont/ThemeTab.vala:114
 msgid "High contrast"
 msgstr "Wysoki kontrast"
 
-#: libbirdfont/DrawingTools.vala:709
+#: libbirdfont/DrawingTools.vala:711
 msgid "Set background threshold"
 msgstr "Ustaw wartość progową tła"
 
-#: libbirdfont/DrawingTools.vala:727
+#: libbirdfont/DrawingTools.vala:729
 msgid "Amount of autotrace details"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:745
+#: libbirdfont/DrawingTools.vala:747
 msgid "Autotrace simplification"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:762
+#: libbirdfont/DrawingTools.vala:764
 msgid "Autotrace background image"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:771
+#: libbirdfont/DrawingTools.vala:773
 msgid "Delete background image"
 msgstr "Usuń obraz tła"
 
-#: libbirdfont/DrawingTools.vala:779
+#: libbirdfont/DrawingTools.vala:781
 msgid "Apply stroke"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:811 libbirdfont/SettingsTab.vala:34
+#: libbirdfont/DrawingTools.vala:813 libbirdfont/SettingsTab.vala:34
 msgid "Stroke width"
 msgstr "Szerokość pociągnięcia"
 
-#: libbirdfont/DrawingTools.vala:853
+#: libbirdfont/DrawingTools.vala:855
 msgid "Create outline form stroke"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:861
+#: libbirdfont/DrawingTools.vala:863
 msgid "Butt line cap"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:885
+#: libbirdfont/DrawingTools.vala:887
 msgid "Round line cap"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:910
+#: libbirdfont/DrawingTools.vala:912
 msgid "Square line cap"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:979
+#: libbirdfont/DrawingTools.vala:981
 msgid "Show guidelines"
 msgstr "Pokaż wytyczne"
 
-#: libbirdfont/DrawingTools.vala:991
+#: libbirdfont/DrawingTools.vala:993
 msgid "Show more guidelines"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1007
+#: libbirdfont/DrawingTools.vala:1009
 msgid "Show guidelines at top and bottom margin"
 msgstr "Pokaż linijki na górnym i dolnym marginesie"
 
-#: libbirdfont/DrawingTools.vala:1048
+#: libbirdfont/DrawingTools.vala:1050
 msgid "Zoom Out More"
 msgstr "Pomniejsz jeszcze"
 
-#: libbirdfont/DrawingTools.vala:1057
+#: libbirdfont/DrawingTools.vala:1059
 msgid "Show full glyph"
 msgstr "Pokaż pełny glif"
 
-#: libbirdfont/DrawingTools.vala:1064
+#: libbirdfont/DrawingTools.vala:1066
 msgid "Fit in view"
 msgstr "Dopasuj do widoku"
 
-#: libbirdfont/DrawingTools.vala:1071
+#: libbirdfont/DrawingTools.vala:1073
 msgid "Zoom in on background image"
 msgstr "Powiększ na obrazie tła"
 
-#: libbirdfont/DrawingTools.vala:1081
+#: libbirdfont/DrawingTools.vala:1083
 msgid "Previous view"
 msgstr "Poprzedni widok"
 
-#: libbirdfont/DrawingTools.vala:1087
+#: libbirdfont/DrawingTools.vala:1089
 msgid "Next view"
 msgstr "Następny widok"
 
-#: libbirdfont/DrawingTools.vala:1291
+#: libbirdfont/DrawingTools.vala:1293
 msgid "Background Tools"
 msgstr "Narzędzia tła"
 
-#: libbirdfont/DrawingTools.vala:1306
+#: libbirdfont/DrawingTools.vala:1308
 msgid "Control Points"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1322
+#: libbirdfont/DrawingTools.vala:1324
 msgid "Object Tools"
 msgstr "Narzędzia obiektowe"
 
-#: libbirdfont/DrawingTools.vala:1469
+#: libbirdfont/DrawingTools.vala:1471
 msgid "Set size for grid"
 msgstr "Ustaw rozmiar siatki"
 
@@ -563,6 +563,10 @@ msgstr "Eksport"
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Zapisz"
+
+#: libbirdfont/ExportTool.vala:364
+msgid "Alphabet"
+msgstr ""
 
 #: libbirdfont/FileDialogTab.vala:79
 msgid "Select a Folder"
@@ -595,7 +599,7 @@ msgstr "Ustawienia"
 msgid "Themes"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:2234
+#: libbirdfont/Glyph.vala:2251
 msgid "Guide"
 msgstr ""
 
@@ -607,16 +611,20 @@ msgstr "Pokaż siatkę"
 msgid "Guides"
 msgstr ""
 
-#: libbirdfont/HiddenTools.vala:28
+#: libbirdfont/HiddenTools.vala:29
 msgid "Zoom in"
 msgstr "Przybliż"
 
-#: libbirdfont/HiddenTools.vala:35
+#: libbirdfont/HiddenTools.vala:36
 msgid "Zoom out"
 msgstr "Oddal"
 
-#: libbirdfont/HiddenTools.vala:42
+#: libbirdfont/HiddenTools.vala:43
 msgid "Convert the last segment to a straight line"
+msgstr ""
+
+#: libbirdfont/HiddenTools.vala:51
+msgid "Convert the last control point to a corner node"
 msgstr ""
 
 #: libbirdfont/KerningDisplay.vala:61 libbirdfont/KerningDisplay.vala:844
@@ -660,11 +668,12 @@ msgstr ""
 msgid "Kerning class"
 msgstr ""
 
-#: libbirdfont/KerningRange.vala:113 libbirdfont/Ligatures.vala:106
-#: libbirdfont/Ligatures.vala:128 libbirdfont/Ligatures.vala:150
-#: libbirdfont/Ligatures.vala:181 libbirdfont/SpacingClass.vala:45
+#: libbirdfont/KerningRange.vala:113 libbirdfont/Ligatures.vala:110
+#: libbirdfont/Ligatures.vala:132 libbirdfont/Ligatures.vala:154
+#: libbirdfont/Ligatures.vala:185 libbirdfont/SpacingClass.vala:45
 #: libbirdfont/SpacingTab.vala:233 libbirdfont/SpacingTab.vala:277
 #: libbirdfont/SpinButton.vala:199 libbirdfont/Theme.vala:687
+#: birdfont/GtkWindow.vala:321
 msgid "Set"
 msgstr "Ustaw"
 
@@ -765,19 +774,19 @@ msgstr ""
 msgid "Ligatures"
 msgstr "Ligatury"
 
-#: libbirdfont/Ligatures.vala:106
+#: libbirdfont/Ligatures.vala:110
 msgid "Beginning"
 msgstr "Początek"
 
-#: libbirdfont/Ligatures.vala:128
+#: libbirdfont/Ligatures.vala:132
 msgid "Middle"
 msgstr "Środek"
 
-#: libbirdfont/Ligatures.vala:150
+#: libbirdfont/Ligatures.vala:154
 msgid "End"
 msgstr "Koniec"
 
-#: libbirdfont/Ligatures.vala:181 libbirdfont/OverView.vala:1210
+#: libbirdfont/Ligatures.vala:185 libbirdfont/OverView.vala:1239
 msgid "Ligature"
 msgstr ""
 
@@ -845,7 +854,7 @@ msgstr "Zaznacz wszystkie ścieżki"
 msgid "Move To Baseline"
 msgstr "Przenieś do linii bazowej"
 
-#: libbirdfont/Menu.vala:177 libbirdfont/OverView.vala:173
+#: libbirdfont/Menu.vala:177 libbirdfont/OverView.vala:184
 msgid "Search"
 msgstr "Wyszukaj"
 
@@ -993,7 +1002,7 @@ msgstr "Git"
 msgid "Save As .bfp"
 msgstr "Zapisz jako .bfp"
 
-#: libbirdfont/Menu.vala:458 libbirdfont/OverView.vala:333
+#: libbirdfont/Menu.vala:458 libbirdfont/OverView.vala:345
 msgid "Overview"
 msgstr "Przegląd"
 
@@ -1033,15 +1042,15 @@ msgstr "Dodaj ligaturę"
 msgid "Move paths"
 msgstr "Przenieś ścieżki"
 
-#: libbirdfont/OverView.vala:173
+#: libbirdfont/OverView.vala:184
 msgid "Filter"
 msgstr "Filtr"
 
-#: libbirdfont/OverView.vala:485
+#: libbirdfont/OverView.vala:495
 msgid "No glyphs in this view."
 msgstr "W tym widoku nie ma glifów."
 
-#: libbirdfont/OverView.vala:1233
+#: libbirdfont/OverView.vala:1262
 msgid "See also:"
 msgstr "Zobacz także:"
 
@@ -1469,7 +1478,7 @@ msgstr ""
 msgid "Freehand drawing"
 msgstr "Odręczne rysowanie"
 
-#: libbirdfont/VersionList.vala:33
+#: libbirdfont/VersionList.vala:50
 msgid "New version"
 msgstr "Nowa wersja"
 
@@ -1497,10 +1506,6 @@ msgstr ""
 msgid "details, from 0.001 to 9.999, the default value is 1"
 msgstr "szczegóły, od 0.001 do 9.999, wartością domyślną jest 1"
 
-#: birdfont-autotrace/AutoTrace.vala:71
-msgid "print this message"
-msgstr "drukuj tę wiadomość"
-
 #: birdfont-autotrace/AutoTrace.vala:72
 msgid "use quadratic control points"
 msgstr ""
@@ -1520,6 +1525,18 @@ msgstr "Nieznany format pliku."
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
 msgstr "Pisanie"
+
+#~ msgid "print this message\n"
+#~ msgstr "drukuj tę wiadomość\n"
+
+#~ msgid "write files to this directory\n"
+#~ msgstr "zapisz pliki w tym katalogu\n"
+
+#~ msgid "write svg file\n"
+#~ msgstr "zapisz plik svg\n"
+
+#~ msgid "write ttf and eot files\n"
+#~ msgstr "zapisz pliki ttf i eot\n"
 
 #~ msgid "No fonts created yet."
 #~ msgstr "Nie utworzono jeszcze czcionek."

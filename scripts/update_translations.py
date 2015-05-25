@@ -3,12 +3,16 @@ import subprocess
 import os
 
 def task_update_translations ():
-	subprocess.check_output ("xgettext --language=C# --keyword=t_ --add-comments=/ --from-code=utf-8 --output=./po/birdfont.pot ./libbirdfont/*.vala ./birdfont/*.vala ./birdfont-export/*.vala ./birdfont-autotrace/*.vala", shell=True)
+	subprocess.check_output ("xgettext --language=vala --keyword=t_ --add-comments=/ --from-code=utf-8 --output=./po/birdfont.pot ./libbirdfont/*.vala ./birdfont/*.vala ./birdfont-export/*.vala ./birdfont-autotrace/*.vala", shell=True)
 
 	for file in os.listdir('./po'):
 		if file == "birdfont.pot": continue
-		if not file.find ('skip') == -1: continue		
-	
+
+		try:
+			if file.index ('.po') == -1: continue		
+		except:
+			continue
+
 		loc = file.replace (".po", "")
 		d = "./po/" + loc + ".po"
 

@@ -177,10 +177,10 @@ static void print_export_help (string[] arg) {
 	stdout.printf (t_("Usage:"));
 	stdout.printf (arg[0]);
 	stdout.printf (" [" + t_("OPTION") + "...] " + t_("FILE") +"\n");
-	stdout.printf ("-h, --help                      " + t_("print this message\n"));
-	stdout.printf ("-o, --output [DIRECTORY]        " + t_("write files to this directory\n"));
-	stdout.printf ("-s, --svg                       " + t_("write svg file\n"));
-	stdout.printf ("-t, --ttf                       " + t_("write ttf and eot files\n"));
+	stdout.printf ("-h, --help                      " + t_("print this message") + "\n");
+	stdout.printf ("-o, --output [DIRECTORY]        " + t_("write files to this directory") + "\n");
+	stdout.printf ("-s, --svg                       " + t_("write svg file") + "\n");
+	stdout.printf ("-t, --ttf                       " + t_("write ttf and eot file") + "\n");
 	stdout.printf ("\n");
 }
 
