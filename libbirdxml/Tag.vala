@@ -265,19 +265,30 @@ public class Tag : GLib.Object {
 			warn ("No name for tag.");
 			return -1;
 		}
-		
+
+		index = entire_file.get_index (data) + start;
 		while (true) {
-			previous_index = index;			
+			while (!entire_file.substring (index).has_prefix ("</")) {
+				index = entire_file.find_next_tag_token (entire_file, index);
+				
+				if (index == -1) {
+					warning (@"No end tag for $(name)");
+					return -1;
+				}
+			}
+
+			previous_index = index - entire_file.get_index (data);
 			
-			if (!data.get_next_ascii_char (ref index, out c)) {
+			if (!entire_file.get_next_ascii_char (ref index, out c)) {
 				warn ("Unexpected end of file");
 				break;
 			}
 			
 			if (c == '<') {
 				slash_index = index;
-				data.get_next_ascii_char (ref slash_index, out slash);
-				if (slash == '/' && is_tag (name, slash_index)) {
+				entire_file.get_next_ascii_char (ref slash_index, out slash);
+
+				if (slash == '/' && entire_file.substring (slash_index).has_prefix (name.to_string ())) {
 					if (start_count == 1) {
 						return previous_index;
 					} else {
@@ -286,7 +297,7 @@ public class Tag : GLib.Object {
 							return previous_index;
 						}
 					}
-				} else if (is_tag (name, index)) {
+				} else if (entire_file.substring (index).has_prefix (name.to_string ())) {
 					start_count++;
 				}
 			}

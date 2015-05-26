@@ -22,29 +22,32 @@ public class XmlData : XmlString {
 	public XmlData (char* data, int length) {
 		base (data, length);
 		start_tags = new Gee.ArrayList<int> ();
-		// FIXME: index index_start_tags ();
+		index_start_tags ();
 	}
 	
-	public int find_next_tag_index (XmlString start, int index) {
+	public int get_index (XmlString start) {
 		int offset = (int) ((size_t) start.data - (size_t) data);
+		return offset;
+	}
+	
+	public int find_next_tag_token (XmlString start, int index) {
+		int offset = get_index (start);
 		int start_index = offset + index;
 		int new_index;
+		int j = 0;
 		
 		if (start_index >= length) {
 			return -1;
 		}
 		
-		assert (start.substring (index).data == substring (start_index).data);
-
 		foreach (int i in start_tags) {
 			new_index = i - offset;
-			if (new_index > start_index && new_index + 1 < start.length) {
-				assert (start.substring (new_index, 1).to_string () == "<");
+			if (new_index > start_index) {
 				return new_index;
 			}
 		}
 		
-		warning ("No tag found.");
+		warning ("No token not found.");
 		
 		return -1;
 	}
