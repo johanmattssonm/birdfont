@@ -19,6 +19,8 @@ public class XmlData : XmlString {
 	int tags_capacity;
 	int tags_size;
 	
+	internal bool error = false;
+	
 	public XmlData (char* data, int length) {
 		base (data, length);
 
@@ -92,8 +94,8 @@ public class XmlData : XmlString {
 	bool increase_capacity () {
 		int* tags;
 		
-		tags_capacity += 10;
-		tags = (int*) new int [tags_capacity];
+		tags_capacity += 512;
+		tags = (int*) try_malloc (tags_capacity * sizeof (int));
 		
 		if (tags == null) {
 			tags_capacity = 0;
@@ -101,6 +103,8 @@ public class XmlData : XmlString {
 			if (start_tags != null) {
 				delete start_tags;
 				start_tags = null;
+				tags_size = 0;
+				error = true;
 			}
 			
 			warning ("Can not allocate xml data buffer.");

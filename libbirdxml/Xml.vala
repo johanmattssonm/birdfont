@@ -69,11 +69,10 @@ internal const int WARNINGS = 1;
  * 
  */
 public class XmlParser : GLib.Object {
-	public Tag root;
-	public XmlData data;
-	public string input;
-	public bool error;
-	public int refcount = 1;
+	Tag root;
+	XmlData data;
+	string input;
+	bool error;
 	
 	/** 
 	 * Create a new xml parser. 
@@ -81,7 +80,7 @@ public class XmlParser : GLib.Object {
 	 */
 	public XmlParser (string data) {
 		this.input = data;
-		this.data = new XmlData (data, data.length);
+		this.data = new XmlData (data, data.length);		
 		reparse (NONE);
 	}
 		
@@ -90,6 +89,11 @@ public class XmlParser : GLib.Object {
 	 * @return true if the xml document is valid xml.
 	 */
 	public bool validate () {
+		if (this.data.error) {
+			error = true;
+			return false;
+		} 
+		
 		reparse (NONE);
 
 		if (error) {
