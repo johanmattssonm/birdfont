@@ -288,7 +288,7 @@ public class Tag : GLib.Object {
 				slash_index = index;
 				entire_file.get_next_ascii_char (ref slash_index, out slash);
 
-				if (slash == '/' && entire_file.substring (slash_index).has_prefix (name.to_string ())) {
+				if (slash == '/' && is_tag (entire_file, name, slash_index)) {
 					if (start_count == 1) {
 						return previous_index;
 					} else {
@@ -297,7 +297,7 @@ public class Tag : GLib.Object {
 							return previous_index;
 						}
 					}
-				} else if (entire_file.substring (index).has_prefix (name.to_string ())) {
+				} else if (is_tag (entire_file, name, slash_index)) {
 					start_count++;
 				}
 			}
@@ -309,21 +309,21 @@ public class Tag : GLib.Object {
 		return -1;
 	}
 	
-	bool is_tag (XmlString name, int start) {
+	bool is_tag (XmlString tag, XmlString name, int start) {
 		int index = 0;
 		int data_index = start;
 		unichar c;
 		unichar c_data;
 		
 		while (name.get_next_ascii_char (ref index, out c)) {
-			if (data.get_next_ascii_char (ref data_index, out c_data)) {
+			if (tag.get_next_ascii_char (ref data_index, out c_data)) {
 				if (c_data != c) {
 					return false;
 				}
 			}
 		}
 		
-		if (data.get_next_ascii_char (ref data_index, out c_data)) {
+		if (tag.get_next_ascii_char (ref data_index, out c_data)) {
 			return c_data == '>' || c_data == ' ' || c_data == '\t' 
 				|| c_data == '\n' || c_data == '\r' || c_data == '/';
 		}
