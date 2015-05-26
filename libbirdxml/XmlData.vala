@@ -12,7 +12,7 @@
     Lesser General Public License for more details.
 */
 
-namespace Bird {
+namespace B {
 
 public class XmlData : XmlString {
 	int* start_tags;

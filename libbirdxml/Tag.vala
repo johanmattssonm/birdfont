@@ -12,7 +12,7 @@
     Lesser General Public License for more details.
 */
 
-namespace Bird {
+namespace B {
 
 /**
  * Representation of one XML tag.
@@ -476,7 +476,7 @@ public class Tag : GLib.Object {
 		int index = 0;
 		unichar c;
 		int row = 1;
-		size_t p, e;
+		size_t e;
 		
 		e = (size_t) entire_file.data;
 		while (entire_file.get_next_ascii_char (ref index, out c)) {

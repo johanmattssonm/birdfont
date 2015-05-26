@@ -12,7 +12,7 @@
     Lesser General Public License for more details.
 */
 
-namespace Bird {
+namespace B {
 
 /** 
  * Representation of a string in the XmlParser. This class adds reference counting and

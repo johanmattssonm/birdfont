@@ -13,7 +13,7 @@
 */
 
 using Cairo;
-using Bird;
+using B;
 using Math;
 using Gee;
 

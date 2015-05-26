@@ -12,7 +12,7 @@
     Lesser General Public License for more details.
 */
 
-using Bird;
+using B;
 using Math;
 
 namespace BirdFont {

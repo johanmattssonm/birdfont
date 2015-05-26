@@ -15,7 +15,7 @@
 /** 
  * Tools originally written for the BirdFont project.
  */
-namespace Bird {
+namespace B {
 
 /** Log levels */
 internal const int NONE = 0;
