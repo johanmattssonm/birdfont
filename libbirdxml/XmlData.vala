@@ -12,17 +12,28 @@
     Lesser General Public License for more details.
 */
 
-using Gee;
-
 namespace Bird {
 
 public class XmlData : XmlString {
-	public Gee.ArrayList<int> start_tags;
+	int* start_tags;
+	int tags_capacity;
+	int tags_size;
 	
 	public XmlData (char* data, int length) {
 		base (data, length);
-		start_tags = new Gee.ArrayList<int> ();
+
+		start_tags = null;
+		tags_capacity = 0;
+		tags_size = 0;
+		
 		index_start_tags ();
+	}
+	
+	~XmlData () {
+		if (start_tags != null) {
+			delete start_tags;
+			start_tags =  null;
+		}
 	}
 	
 	public int get_index (XmlString start) {
@@ -30,24 +41,24 @@ public class XmlData : XmlString {
 		return offset;
 	}
 	
-	public int find_next_tag_token (XmlString start, int index) {
-		int offset = get_index (start);
-		int start_index = offset + index;
+	public int find_next_tag_token (int index) {
 		int new_index;
-		int j = 0;
-		
-		if (start_index >= length) {
+				
+		if (index >= length) {
 			return -1;
 		}
 		
-		foreach (int i in start_tags) {
-			new_index = i - offset;
-			if (new_index > start_index) {
+		for (int i = 0; i < tags_size; i++) {
+			new_index = start_tags[i];
+			if (new_index >= index) {
+				
+				if (new_index == 0 && i > 0) { //FIXME:DELETE
+					return -1;
+				}
+				
 				return new_index;
 			}
 		}
-		
-		warning ("No token not found.");
 		
 		return -1;
 	}
@@ -60,10 +71,76 @@ public class XmlData : XmlString {
  		while (d[i] != '\0') {
 			if ((int) (d[i] & first_bit) == 0) {
 				if (d[i] == '<') {
-					start_tags.add (i);
+					add_tag (i);
 				}
 			}
 			i++;
+		}
+	}
+	
+	void add_tag (int index) {
+		if (unlikely (tags_size == tags_capacity)) {
+			if (!increase_capacity ()) {
+				return;
+			}
+		}
+		
+		start_tags[tags_size] = index;
+		tags_size++;
+	}
+
+	bool increase_capacity () {
+		int* tags;
+		
+		tags_capacity += 10;
+		tags = (int*) new int [tags_capacity];
+		
+		if (tags == null) {
+			tags_capacity = 0;
+			
+			if (start_tags != null) {
+				delete start_tags;
+				start_tags = null;
+			}
+			
+			warning ("Can not allocate xml data buffer.");
+			return false;
+		}
+		
+		if (tags_size > 0) {
+			Posix.memcpy (tags, start_tags, tags_size * sizeof (int));
+		}
+		
+		if (start_tags != null) {
+			delete start_tags;
+		}
+		
+		start_tags = tags;
+		
+		return true;
+	}
+	
+	public void print_all () {
+		XmlString s;
+		int i = -1;
+		string e;
+		
+		print("All tags:\n");
+		
+		for (int j = 0; j < tags_size; j++) {
+			i = find_next_tag_token (i + 1);
+			
+			if (i > -1) {
+				s = substring (i);
+				s = s.substring (0, s.index_of (">"));
+				s = s.substring (0, s.index_of (" "));
+			} else {
+				e = "error";
+				s = new XmlString (e, e.length); 
+			}
+			
+			int o = start_tags[j];
+			print (s.to_string () + " : " + ((string) (data + o)).ndup (4) + @"  $o $j   i: $i\n");
 		}
 	}
 }

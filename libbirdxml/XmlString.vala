@@ -12,8 +12,6 @@
     Lesser General Public License for more details.
 */
 
-using Gee;
-
 namespace Bird {
 
 /** 

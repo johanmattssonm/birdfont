@@ -18,7 +18,7 @@ namespace Bird {
  * Representation of one XML tag.
  */
 public class Tag : GLib.Object {
-	public XmlData entire_file;
+	internal XmlData entire_file;
 	
 	public int tag_index; 
 	public int attribute_index;
@@ -265,11 +265,11 @@ public class Tag : GLib.Object {
 			warn ("No name for tag.");
 			return -1;
 		}
-
+	
 		index = entire_file.get_index (data) + start;
 		while (true) {
 			while (!entire_file.substring (index).has_prefix ("</")) {
-				index = entire_file.find_next_tag_token (entire_file, index);
+				index = entire_file.find_next_tag_token (index + 1);
 				
 				if (index == -1) {
 					warning (@"No end tag for $(name)");
