@@ -70,7 +70,7 @@ internal const int WARNINGS = 1;
  */
 public class XmlParser : GLib.Object {
 	public Tag root;
-	public XmlString data;
+	public XmlData data;
 	public string input;
 	public bool error;
 	public int refcount = 1;
@@ -81,7 +81,7 @@ public class XmlParser : GLib.Object {
 	 */
 	public XmlParser (string data) {
 		this.input = data;
-		this.data = new XmlString (data, data.length);
+		this.data = new XmlData (data, data.length);
 		reparse (NONE);
 	}
 		

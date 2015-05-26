@@ -59,11 +59,13 @@ LIBS = [
 if not config.POSIXVALA:
     LIBBIRD_XML_LIBS = [
         'glib-2.0',
+	config.GEE,
 	'posix'
     ]
 else:
     LIBBIRD_XML_LIBS = [
         'posix',
+	config.GEE,
 	'posixtypes'
     ]
 

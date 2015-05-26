@@ -18,7 +18,7 @@ namespace Bird {
  * Representation of one XML tag.
  */
 public class Tag : GLib.Object {
-	public XmlString entire_file;
+	public XmlData entire_file;
 	
 	public int tag_index; 
 	public int attribute_index;
@@ -39,19 +39,20 @@ public class Tag : GLib.Object {
 	public int refcount = 1;
 	
 	internal Tag (XmlString name, XmlString attributes, XmlString content,
-		int log_level, XmlString entire_file) {
+		int log_level, XmlData entire_file) {
 		
 		this.entire_file = entire_file;
 		this.log_level = log_level;
 		this.name = name;
 		this.data = content;
 		this.attributes = attributes;
+		
 		reparse ();
 		reparse_attributes ();
 	}
 	
 	internal Tag.empty () {
-		entire_file = new XmlString ("", 0);
+		entire_file = new XmlData ("", 0);
 		data = new XmlString ("", 0);
 		attributes = new XmlString ("", 0);
 		name = new XmlString ("", 0);
@@ -173,8 +174,9 @@ public class Tag : GLib.Object {
 			warn ("No data in xml string.");
 			return new Tag.empty ();
 		}
-		
+			
 		while (data.get_next_ascii_char (ref index, out c)) {
+		
 			if (c == '<') {
 				separator = find_next_separator (index);
 
@@ -256,6 +258,7 @@ public class Tag : GLib.Object {
 		int previous_index;
 		unichar c, slash;
 		int start_count = 1;
+		int next_tag;
 		
 		if (name.length == 0) {
 			error = true;
@@ -264,9 +267,10 @@ public class Tag : GLib.Object {
 		}
 		
 		while (true) {
-			previous_index = index;
+			previous_index = index;			
+			
 			if (!data.get_next_ascii_char (ref index, out c)) {
-				warn (@"Unexpected end of file");
+				warn ("Unexpected end of file");
 				break;
 			}
 			

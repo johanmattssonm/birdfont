@@ -11,6 +11,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
     Lesser General Public License for more details.
 */
+
+using Gee;
+
 namespace Bird {
 
 /** 
@@ -18,12 +21,11 @@ namespace Bird {
  * copies a pointer to string instead of the data. It is faster if the string is 
  * huge.
  */
-public class XmlString : GLib.Object {
-	
+public class XmlString : GLib.Object {	
 	public int length;
 	public char* data;
 	public int refcount = 1;
-	
+
 	internal XmlString (char* data, int length) {
 		this.data = data;
 		this.length = length;
