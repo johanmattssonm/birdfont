@@ -189,9 +189,8 @@ class TestBirdFont : GLib.Object {
 			pad (40 - t.name.char_count());
 			stdout.printf (@"$(t.get_time ())s\n");
 		}		
-
-		stdout.printf ("\n");
 		
+		stdout.printf ("\n");
 		stdout.printf ("Total %u test cases executed, %u passed and %u failed.\n", (passed.length () + failed.length ()), passed.length (), failed.length ());
 	}
 

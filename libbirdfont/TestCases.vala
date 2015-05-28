@@ -1307,9 +1307,8 @@ class TestCases {
 		} else {
 			warning ("Invalid XML code.");
 		}
-
 	}
-
+		
 	static void print_tags (Tag tag) {
 		print (tag.get_name ());
 		print ("\n");

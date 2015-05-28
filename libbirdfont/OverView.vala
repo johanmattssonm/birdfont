@@ -293,6 +293,7 @@ public class OverView : FontDisplay {
 		OverViewItem.width = OverViewItem.DEFAULT_WIDTH * z;
 		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT * z;
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * z;
+		update_item_list ();
 		GlyphCanvas.redraw ();	
 	}
 	
@@ -300,6 +301,7 @@ public class OverView : FontDisplay {
 		OverViewItem.width = OverViewItem.DEFAULT_WIDTH * 0.5;
 		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT * 0.5;
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * 0.5;
+		update_item_list ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
@@ -308,6 +310,7 @@ public class OverView : FontDisplay {
 		OverViewItem.width = OverViewItem.DEFAULT_WIDTH;
 		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT;
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN;
+		update_item_list ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
@@ -315,6 +318,7 @@ public class OverView : FontDisplay {
 	public override void zoom_max () {
 		OverViewItem.width = allocation.width;
 		OverViewItem.height = allocation.height;
+		update_item_list ();
 		GlyphCanvas.redraw ();
 	}
 	
@@ -322,6 +326,7 @@ public class OverView : FontDisplay {
 		OverViewItem.width *= 1.1;
 		OverViewItem.height *= 1.1;
 		OverViewItem.margin *= 1.1;
+		update_item_list ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
@@ -329,7 +334,8 @@ public class OverView : FontDisplay {
 	public override void zoom_out () {
 		OverViewItem.width *= 0.9;
 		OverViewItem.height *= 0.9;
-		OverViewItem.margin *= 0.9;	
+		OverViewItem.margin *= 0.9;
+		update_item_list ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
@@ -1296,7 +1302,6 @@ public class OverView : FontDisplay {
 		character.set_text ((!) c.to_string ());
 		character.set_font_size (height);
 		character.draw_at_top (cr, x + 10, y);
-		//character.draw_at_baseline (cr, x, y);
 		cr.restore ();
 	}
 

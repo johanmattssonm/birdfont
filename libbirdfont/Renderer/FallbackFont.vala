@@ -67,6 +67,7 @@ public class FallbackFont : GLib.Object {
 	}
 	
 	~FallbackFont () {
+		print("Delete fallback font.");
 		if (default_font != null) {
 			close_font (default_font);
 		}
@@ -76,7 +77,7 @@ public class FallbackFont : GLib.Object {
 		Font f;
 		
 		// remove glyphs from cache if it is full
-		if (cached.size > 300) { 
+		if (cached.size > 300) {
 			for (int i = 0; i < 100 && cached.size > 0; i++) {
 				glyphs.unset (cached.get (cached.size - 1));
 				cached.remove_at (cached.size - 1);

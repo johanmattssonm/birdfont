@@ -20,18 +20,12 @@ public class CachedFont : GLib.Object {
 	public Font? font;
 
 	public double top_limit {
-		get {
-			return _top_limit;
-		}
-		
+		get { return _top_limit; }
 		set { _top_limit = value; }
 	}
 
 	public double bottom_limit {
-		get {
-			return _bottom_limit;
-		}
-		
+		get { return _bottom_limit; }
 		set { _bottom_limit = value; }
 	}
 	
@@ -55,7 +49,6 @@ public class CachedFont : GLib.Object {
 	}
 	
 	public Glyph? get_glyph_by_name (string name) {
-		Font f = new Font ();
 		Glyph? g = null;
 		
 		if (font != null) {
@@ -63,7 +56,7 @@ public class CachedFont : GLib.Object {
 		}
 		
 		if (g == null && name.char_count () == 1) {
-			f = fallback_font.get_single_glyph_font (name.get_char (0));
+			Font f = fallback_font.get_single_glyph_font (name.get_char (0));
 			g = f.get_glyph_by_name (name);
 			
 			if (g == null) {
@@ -73,6 +66,8 @@ public class CachedFont : GLib.Object {
 			top_limit = f.top_limit;
 			base_line = f.base_line;
 			bottom_limit = f.bottom_limit;	
+			
+			font = f;
 		}
 				
 		return g;

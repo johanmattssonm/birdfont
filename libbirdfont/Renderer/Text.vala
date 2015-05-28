@@ -457,8 +457,8 @@ public class Text : Widget {
 				warning (@"Path is open in $(glyph.get_name ()).");
 			}
 			
-			path.add_hidden_double_points ();
-			
+			//path.add_hidden_double_points (); // FIXME: this distorts shapes
+				
 			prev = path.points.get (path.points.size - 1);
 			xa = (prev.x - lsb) * scale + x;
 			ya = y - prev.y * scale;
@@ -467,6 +467,7 @@ public class Text : Widget {
 			by = (y - cached_font.base_line * scale);
 			for (int i = 0; i < path.points.size; i++) {
 				e = path.points.get (i).copy ();
+				
 				PenTool.convert_point_segment_type (prev, e, PointType.CUBIC);
 				
 				xb = (prev.get_right_handle ().x - lsb) * scale + x;

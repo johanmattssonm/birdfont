@@ -39,6 +39,11 @@ public class Test : Object {
 	
 	public double get_time () {
 		double stop_time = GLib.get_real_time ();
+		
+		if (time_stamp == 0) {
+			return 0;
+		}
+		
 		return (stop_time - time_stamp) / 1000000.0;
 	}
 	
@@ -52,6 +57,11 @@ public class Test : Object {
 	
 	public string get_test_time () {
 		double stop_time = GLib.get_real_time ();
+		
+		if (time_stamp == 0) {
+			return "";
+		}
+		
 		return @"$name $((stop_time - time_stamp) / 1000000.0)s\n";
 	}
 }

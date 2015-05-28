@@ -1254,16 +1254,16 @@ class BirdFontFile : GLib.Object {
 		EditPoint ep;
 		
 		path.add (parse_double (px), parse_double (py));
-		ep = path.points.get (path.points.size - 1);
+		ep = path.get_last_point ();
 		ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		ep.type = PointType.LINE_DOUBLE_CURVE;
-		ep.recalculate_linear_handles ();			
+		ep.recalculate_linear_handles ();
 	}
 
 	private static void cubic_line (Path path, string px, string py) {
 		EditPoint ep;
-
+		
 		path.add (parse_double (px), parse_double (py));
 		ep = path.points.get (path.points.size - 1);
 		ep.get_right_handle ().type = PointType.LINE_CUBIC;

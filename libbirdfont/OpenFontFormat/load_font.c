@@ -914,10 +914,10 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		if (charcode > 32) { // not control character
 			g_string_append_printf (glyph, "<collection unicode=\"U+%x\">\n", (guint)charcode);
 			g_string_append_printf (glyph, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 0.0, face->glyph->metrics.horiAdvance * units);
-
+			
 			bf_data = get_bf_path (charcode, face, units_per_em, err);
 			g_string_append (glyph, bf_data->str);	
-			
+						
 			g_string_append (glyph, "\t</glyph>\n");
 			g_string_append_printf (glyph, "</collection>\n");
 		} else {
