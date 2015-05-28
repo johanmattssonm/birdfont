@@ -31,7 +31,7 @@ public class ExportSettings : TableLayout {
 		double margin = 12 * MainWindow.units;
 		double label_size = 20 * MainWindow.units;
 		double label_margin = 4 * MainWindow.units;
-		string fn;
+		string fn, folder;
 		
 		font = BirdFont.get_current_font ();		
 		font.settings.set_setting ("has_export_settings", "true");
@@ -54,6 +54,11 @@ public class ExportSettings : TableLayout {
 		
 		widgets.add (file_name);
 		focus_ring.add (file_name);
+		
+		folder = (!) font.get_folder ().get_path ();
+		Text folder_row = new Text (t_("Folder") + ": "  + folder, label_size, label_margin);
+		folder_row.margin_bottom = 20 * MainWindow.units;
+		widgets.add (folder_row);
 		
 		widgets.add (new Text (t_("Formats"), label_size, label_margin));
 
