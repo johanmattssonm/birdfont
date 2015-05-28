@@ -396,26 +396,25 @@ public class SpinButton : Tool {
 		return (negative) ? -r : r;
 	}
 
-	public string get_short_display_value () {
-		
+	public string get_short_display_value () {	
 		if (!big_number) {
 			return @"$n0.$n1$n2$n3";
 		}
 		
 		if (negative) {
 			if (n0 == 0 && n1 == 0) {
-				return @" -$n2.$n3$n4";
+				return @"-$n2.$n3$n4";
 			}
 			
 			if (n0 == 0) {
-				return @" -$n1$n2.$n3";
+				return @"-$n1$n2.$n3";
 			}
 			
-			return @" -$n0$n1$n2";
+			return @"-$n0$n1$n2";
 		}
 
 		if (n0 == 0 && n1 == 0) {
-			return @" $n2.$n3$n4";
+			return @"$n2.$n3$n4";
 		}
 		
 		if (n0 == 0) {
@@ -448,7 +447,9 @@ public class SpinButton : Tool {
 	public override void draw (Context cr) {
 		double scale = Toolbox.get_scale ();
 		double text_height = 14 * scale;
-		Text text = new Text (get_short_display_value (), text_height);
+		string display_value = get_short_display_value ();
+		Text text = new Text (display_value, text_height);
+		
 		double text_x = x + (w - text.get_sidebearing_extent ()) / 2;
 		double text_y = y + (h - text_height) / 2;
 
