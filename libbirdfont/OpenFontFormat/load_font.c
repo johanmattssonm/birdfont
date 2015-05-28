@@ -670,7 +670,8 @@ GString* load_glyph (FontFace* font, guint unicode) {
 	}
 
 	g_string_append_printf (glyph, "<collection unicode=\"U+%x\">\n", (guint)charcode);
-	g_string_append_printf (glyph, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 
+	g_string_append_printf (glyph, "\t<selected id=\"0\" />\n");
+	g_string_append_printf (glyph, "\t<glyph id=\"0\" left=\"%f\" right=\"%f\">\n", 
 		0.0, font->face->glyph->metrics.horiAdvance * units);
 		
 	g_string_append_printf (glyph, "%s", paths->str);
