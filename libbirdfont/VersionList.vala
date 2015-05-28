@@ -73,7 +73,7 @@ public class VersionList : GLib.Object {
 			add_glyph (g, false);
 		}
 		
-		set_selected_version (gc.get_current ().version_id);
+		set_selected_version (gc.get_current ().version_id, false);
 		n_lists++;
 	}
 	
@@ -135,9 +135,9 @@ public class VersionList : GLib.Object {
 		return 0;
 	}
 
-	public void set_selected_version (int version_id) {
+	public void set_selected_version (int version_id, bool update_loaded_glyph) {
 		current_version_id = version_id;
-		update_selection ();
+		update_selection (update_loaded_glyph);
 	}
 	
 	public Glyph get_current () {
@@ -152,7 +152,7 @@ public class VersionList : GLib.Object {
 		if (unlikely (glyphs.size > 0)) {
 			warning (@"Can not find current glyph for id $current_version_id");
 			gl = glyphs.get (glyphs.size - 1);
-			set_selected_version (((!) gl).version_id);
+			set_selected_version (((!) gl).version_id, false);
 			return (!) gl;
 		}
 		
@@ -177,7 +177,7 @@ public class VersionList : GLib.Object {
 		return glyphs.get (glyphs.size - 1).version_id;
 	}
 	
-	private void set_selected_item (MenuAction ma) {
+	private void set_selected_item (MenuAction ma, bool update_loaded_glyph = true) {
 		int i = ma.index;
 		Glyph current_glyph;
 		Glyph g;
@@ -193,7 +193,7 @@ public class VersionList : GLib.Object {
 		
 		reload_all_open_glyphs ();
 
-		if (!is_null (BirdFont.current_glyph_collection)) {
+		if (update_loaded_glyph && !is_null (BirdFont.current_glyph_collection)) {
 			current_glyph = MainWindow.get_current_glyph ();
 			g.set_allocation (current_glyph.allocation);
 			g.close_path ();
@@ -285,12 +285,12 @@ public class VersionList : GLib.Object {
 		return false;
 	}
 	
-	void update_selection () {
+	void update_selection (bool update_loaded_glyph = true) {
 		int index;
 		
 		if (has_version (current_version_id)) {
 			index = get_current_version_index ();
-			set_selected_item (get_action_index (index + 1)); // the first item is the "new version"
+			set_selected_item (get_action_index (index + 1), update_loaded_glyph); // the first item is the "new version"
 		}
 	}
 
