@@ -284,7 +284,6 @@ public class SpinButton : Tool {
 		
 		show_adjustmet_icon ();
 		new_value_action (this);
-		// FIXME: delete redraw ();
 	}
 
 	int8 parse (string s) {
@@ -370,7 +369,6 @@ public class SpinButton : Tool {
 		}
 		
 		show_adjustmet_icon ();
-		// FIXME: delete redraw ();
 	}
 
 	public void set_value_round (double v, bool check_boundaries = true, bool emit_signal = true) {
@@ -479,7 +477,7 @@ public class SpinButton : Tool {
 			}
 			
 			text.widget_x = text_x;
-			text.widget_y = text_y;
+			text.widget_y = text_y + text.get_decender ();
 			text.draw (cr);
 		}
 	}

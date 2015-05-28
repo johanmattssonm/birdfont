@@ -22,7 +22,7 @@ public class GlyphCollection : GLib.Object {
 	string name;
 	bool unassigned = false;
 	public Gee.ArrayList<Glyph> glyphs = new Gee.ArrayList<Glyph> ();
-	public int selected = 0;
+	int selected;
 
 	public GlyphCollection (unichar unicode_character, string name) {
 		this.unicode_character = unicode_character;

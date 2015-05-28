@@ -19,10 +19,25 @@ namespace BirdFont {
 public class CachedFont : GLib.Object {
 	public Font? font;
 
-	// FIXME: move fallback glyphs in to fond boundaries
-	public double top_limit = 84;
+	public double top_limit {
+		get {
+			return _top_limit;
+		}
+		
+		set { _top_limit = value; }
+	}
+
+	public double bottom_limit {
+		get {
+			return _bottom_limit;
+		}
+		
+		set { _bottom_limit = value; }
+	}
+	
 	public double base_line = 0;
-	public double bottom_limit = -27;
+	double _top_limit = 92.77; // FIXME: load before first glyph
+	double _bottom_limit = -24.4;
 	
 	FallbackFont fallback_font {
 		get {

@@ -370,7 +370,7 @@ class BirdFontFile : GLib.Object {
 	}
 
 	public void write_selected (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
-		os.put_string (@"\t<selected id=\"$(gc.selected)\"/>\n");
+		os.put_string (@"\t<selected id=\"$(gc.get_current ().version_id)\"/>\n");
 	}
 
 	public void write_glyph_collection (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {

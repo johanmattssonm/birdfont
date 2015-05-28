@@ -53,8 +53,8 @@ public class Text : Widget {
 		font_cache = FontCache.get_default_cache ();
 		cached_font = font_cache.get_fallback ();
 		
-		set_font_size (size);
 		set_text (text);
+		set_font_size (size);
 	}
 	
 	public void use_cache (bool cache) {
@@ -68,11 +68,14 @@ public class Text : Widget {
 	public bool load_font (string font_file) {
 		File path;
 		File f;
+		FontCache fc;
 		
 		f = File.new_for_path (font_file);
 		path = (f.query_exists ()) ? f : SearchPaths.find_file (null, font_file);
 		
-		cached_font = FontCache.get_default_cache ().get_font ((!) path.get_path ());
+		fc = FontCache.get_default_cache ();
+		cached_font = fc.get_font ((!) path.get_path ());
+		gs = generate_glyphs ();
 		
 		return cached_font.font != null;
 	}
@@ -80,6 +83,10 @@ public class Text : Widget {
 	public void set_font_size (double height_in_pixels) {
 		font_size = height_in_pixels;
 		sidebearing_extent = 0;
+		
+		if (gs == null) { // ensure height is loaded for the font
+			gs = generate_glyphs ();
+		}
 	}
 
 	public void set_font_cache (FontCache font_cache) {
