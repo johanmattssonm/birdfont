@@ -247,7 +247,7 @@ public class VersionList : GLib.Object {
 		v = new_version.version_id;
 		glyphs.add (new_version);
 
-		ma = add_item (t_("Version") + @" $v");
+		ma = add_item (t_("Version") + @" $(v - 1)");
 		ma.index = (int) glyphs.size - 1;
 		
 		ma.action.connect ((self) => {

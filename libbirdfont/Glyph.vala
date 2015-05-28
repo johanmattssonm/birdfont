@@ -93,7 +93,7 @@ public class Glyph : FontDisplay {
 	bool empty = false;
 	
 	/** Id in the version list. */
-	public int version_id = 1;
+	public int version_id = 0;
 	
 	/** Cache quadratic form on export. */
 	GlyfData? ttf_data = null;
