@@ -93,6 +93,8 @@ public class ExportSettings : TableLayout {
 		widgets.add (svg);
 		focus_ring.add (svg);
 
+		svg.margin_bottom = 20 * MainWindow.units;
+
 		name_tab = new Button (t_("Name and Description"), margin);
 		name_tab.action.connect ((c) => {
 			MenuTab.show_description ();
