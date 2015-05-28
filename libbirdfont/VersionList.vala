@@ -27,8 +27,6 @@ public class VersionList : GLib.Object {
 	GlyphCollection glyph_collection;
 	
 	public Gee.ArrayList<Glyph> glyphs;
-	
-	static int n_lists = 0;
 
 	public delegate void Selected (MenuAction self);
 	public signal void selected (VersionList self);
@@ -74,15 +72,6 @@ public class VersionList : GLib.Object {
 		}
 		
 		set_selected_version (gc.get_current ().version_id, false);
-		n_lists++;
-	}
-	
-	~VersionList () {
-		n_lists--;
-
-		if (menu_visible) {
-			warning ("menu is visible");
-		}
 	}
 	
 	private void delete_item (int index) {
@@ -92,7 +81,7 @@ public class VersionList : GLib.Object {
 		
 		font.touch ();
 		
-		index--; // first item is the add new action
+		index--; // first item adds new glyphs to the list
 		
 		// delete the entire glyph if the last remaining version is removed
 		if (glyphs.size == 1) {

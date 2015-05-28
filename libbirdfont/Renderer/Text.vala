@@ -48,8 +48,6 @@ public class Text : Widget {
 	bool use_cached_glyphs = true;
 	double truncated_width = -1;
 	
-	static int ntext = 0;
-	
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		this.margin_bottom = margin_bottom;
 		font_cache = FontCache.get_default_cache ();
@@ -57,12 +55,6 @@ public class Text : Widget {
 		
 		set_font_size (size);
 		set_text (text);
-		
-		ntext++;
-	}
- 
-	~Text () {
-		ntext--;
 	}
 	
 	public void use_cache (bool cache) {
@@ -343,6 +335,10 @@ public class Text : Widget {
 		y = py;
 		x = px;
 
+		if (unlikely (cached_font.base_line != 0)) {
+			warning ("Base line not zero.");
+		}
+
 		if (use_cached_glyphs) {
 			iterate ((glyph, kerning, last) => {
 				double end;
@@ -390,7 +386,7 @@ public class Text : Widget {
 		lsb = glyph.left_limit;
 
 		foreach (Path path in glyph.path_list) {
-			draw_path (cr, path, lsb, x, y, ratio);
+			draw_path (cr, glyph, path, lsb, x, y, ratio);
 		}
 
 		cr.fill ();
@@ -426,7 +422,7 @@ public class Text : Widget {
 			cc.new_path ();
 
 			foreach (Path path in glyph.path_list) {
-				draw_path (cc, path, lsb, offset_x / 10.0, cc_y + offset_y / 10.0, ratio);
+				draw_path (cc, glyph, path, lsb, offset_x / 10.0, cc_y + offset_y / 10.0, ratio);
 			}
 			
 			cc.fill ();
@@ -442,12 +438,18 @@ public class Text : Widget {
 		cr.restore ();
 	}
 	
-	void draw_path (Context cr, Path path, double lsb, double x, double y, double scale) {
+	void draw_path (Context cr, Glyph glyph, Path path,
+		double lsb, double x, double y, double scale) {
+			
 		EditPoint e, prev;
 		double xa, ya, xb, yb, xc, yc, xd, yd;
 		double by;
-		
+
 		if (path.points.size > 0) {
+			if (unlikely (path.is_open ())) {
+				warning (@"Path is open in $(glyph.get_name ()).");
+			}
+			
 			path.add_hidden_double_points ();
 			
 			prev = path.points.get (path.points.size - 1);
