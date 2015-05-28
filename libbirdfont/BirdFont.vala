@@ -590,9 +590,9 @@ public class BirdFont {
 		
 		if (!is_null (MainWindow.tools)) {
 			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
-			DrawingTools.add_new_grid (1);
-			DrawingTools.add_new_grid (2);
-			DrawingTools.add_new_grid (4);
+			DrawingTools.add_new_grid (1, false);
+			DrawingTools.add_new_grid (2, false);
+			DrawingTools.add_new_grid (4, false);
 		}
 		
 		if (!is_null (Toolbox.background_tools)) {

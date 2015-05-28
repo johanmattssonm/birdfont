@@ -40,7 +40,9 @@ public class VersionList : GLib.Object {
 	Gee.ArrayList <MenuAction> actions = new Gee.ArrayList <MenuAction> ();
 	const int item_height = 25;
 	MenuDirection direction = MenuDirection.DROP_DOWN;
-	
+
+	// Glyphs gets added to and removed from the glyph collection in 
+	// these signal.
 	public signal void signal_delete_item  (int item_index);
 	public signal void add_glyph_item  (Glyph item);
 
@@ -95,12 +97,13 @@ public class VersionList : GLib.Object {
 		font.deleted_glyphs.add (glyph_collection.get_current ());
 		over_view.store_undo_state (glyph_collection.copy ());
 		
+		current_version = get_current_version_index ();
+
 		glyphs.remove_at (index);
 		glyph_collection.remove (index);
 		
 		recreate_index ();
 		
-		current_version = get_current_version_index ();
 		if (index == current_version) {
 			set_selected_item (get_action_no2 ()); // select the first glyph if the current glyph is deleted
 		} else if (index < current_version) {
@@ -157,8 +160,12 @@ public class VersionList : GLib.Object {
 		Glyph g = get_current ();
 		Glyph new_version = g.copy ();
 		new_version.version_id = get_last_id () + 1;
-		add_glyph (new_version);
+		
+		// send signal back to the collection
 		add_glyph_item (new_version);
+		
+		// add the item to the menu
+		add_glyph (new_version);
 	}
 	
 	public int get_last_id () {

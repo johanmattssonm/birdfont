@@ -1050,7 +1050,6 @@ public class OverView : FontDisplay {
 		gc = selected_items.get (0);
 		
 		foreach (OverViewItem i in visible_items) {
-			
 			if (i.glyphs != null && gc == ((!) i.glyphs)) {
 				break;
 			}
@@ -1068,6 +1067,7 @@ public class OverView : FontDisplay {
 	}
 
 	public override void button_press (uint button, double x, double y) {
+		OverViewItem i;
 		int index = 0;
 		int selected_index = -1;
 		bool update = false;
@@ -1078,7 +1078,9 @@ public class OverView : FontDisplay {
 			return;
 		}
 		
-		foreach (OverViewItem i in visible_items) {
+		for (int j = 0; j < visible_items.size; j++) {
+			i = visible_items.get (j);
+			
 			if (i.click (button, x, y)) {
 				selected = index;
 				selected_item = get_selected_item ();

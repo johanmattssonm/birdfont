@@ -81,7 +81,8 @@ public class Font : GLib.Object {
 
 	OpenFontFormatReader otf;
 	bool otf_font = false;
-	
+
+	/** Grid sizes. */
 	public Gee.ArrayList<string> grid_width;
 	
 	/** File format. */
