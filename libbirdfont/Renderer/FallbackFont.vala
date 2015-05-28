@@ -40,6 +40,9 @@ public class FallbackFont : GLib.Object {
 	string default_font_file_name = "Roboto-Regular.ttf";
 	string default_font_family_name = "Roboto";
 
+	Gee.HashMap<unichar, Font> glyphs;
+	Gee.ArrayList<unichar> cached;
+
 	public FallbackFont () {
 		string home = Environment.get_home_dir ();
 		
@@ -57,6 +60,9 @@ public class FallbackFont : GLib.Object {
 		add_font_folder ("/System/Library/Fonts");
 		add_font_folder ("/System Folder/Fonts");
 		
+		glyphs = new Gee.HashMap<unichar, Font> ();
+		cached = new Gee.ArrayList<unichar> ();
+		
 		open_default_font ();
 	}
 	
@@ -67,6 +73,29 @@ public class FallbackFont : GLib.Object {
 	}
 
 	public Font get_single_glyph_font (unichar c) {
+		Font f;
+		
+		// remove glyphs from cache if it is full
+		if (cached.size > 300) { 
+			for (int i = 0; i < 100 && cached.size > 0; i++) {
+				glyphs.unset (cached.get (cached.size - 1));
+				cached.remove_at (cached.size - 1);
+			}
+		}
+		
+		if (glyphs.has_key (c)) {
+			f = glyphs.get (c);
+			return f;
+		}
+		
+		f = get_single_fallback_glyph_font (c);
+		glyphs.set (c, f);
+		cached.add (c);
+		
+		return f;
+	}
+	
+	Font get_single_fallback_glyph_font (unichar c) {
 		string? font_file;
 		BirdFontFile bf_parser;
 		Font bf_font;

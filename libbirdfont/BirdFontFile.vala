@@ -1516,7 +1516,7 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 		
-		path.update_region_boundaries ();	
+		path.update_region_boundaries (); 
 	}
 	
 	private static double parse_double (string p) {

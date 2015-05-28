@@ -1249,11 +1249,6 @@ public class Glyph : FontDisplay {
 				p.set_editable (false);
 			}
 			
-			if (p.is_open ()) {
-				// FIXME: this distorts ttf paths
-				//p.convert_path_ending_to_line ();
-			}
-			
 			p.create_full_stroke (); // cache stroke
 		}
 		

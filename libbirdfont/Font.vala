@@ -37,10 +37,10 @@ public class Font : GLib.Object {
 	
 	public Gee.ArrayList<BackgroundImage> background_images;
 	public string background_scale = "1";
-		
+	
 	/** Top margin */
 	public double top_limit;
-		
+	
 	/** Height of upper case letters. */
 	public double top_position;
 
@@ -787,7 +787,7 @@ public class Font : GLib.Object {
 		BirdFontFile bf_font = new BirdFontFile (this);
 		
 		data = load_freetype_font (path, out error);
-		
+
 		if (error != 0) {
 			warning ("Failed to load freetype font.");
 			return false;
