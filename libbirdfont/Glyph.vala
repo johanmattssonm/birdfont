@@ -1250,7 +1250,8 @@ public class Glyph : FontDisplay {
 			}
 			
 			if (p.is_open ()) {
-				p.convert_path_ending_to_line ();
+				// FIXME: this distorts ttf paths
+				//p.convert_path_ending_to_line ();
 			}
 			
 			p.create_full_stroke (); // cache stroke
