@@ -774,6 +774,7 @@ class ToolboxCanvas : DrawingArea {
 		});
 
 		motion_notify_event.connect ((sen, e)=> {
+			// FIXME: e.y is two pixels off in GTK under Gnome
 			tb.move (e.x, e.y);
 			return true;
 		});

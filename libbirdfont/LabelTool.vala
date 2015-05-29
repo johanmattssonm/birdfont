@@ -25,8 +25,8 @@ public class LabelTool : Tool {
 	public signal void delete_action (LabelTool self);
 	public string data = "";
 
-	double counter_box_width = 24;
-	double counter_box_height = 11;
+	double counter_box_width = 24 * Toolbox.get_scale ();
+	double counter_box_height = 11 * Toolbox.get_scale ();
 
 	public LabelTool (string label) {
 		base ();
@@ -38,7 +38,7 @@ public class LabelTool : Tool {
 		has_counter = false;
 
 		panel_press_action.connect ((selected, button, tx, ty) => {
-			if (has_delete_button && y <= ty <= y + h && tx >= w - 30) {
+			if (has_delete_button && y <= ty <= y + h && tx >= w - 30 * Toolbox.get_scale ()) {
 				delete_action (this);
 			}
 		});
@@ -58,7 +58,7 @@ public class LabelTool : Tool {
 		if (is_selected ()) {
 			cr.save ();
 			Theme.color (cr, "Menu Background");
-			cr.rectangle (0, y - 2, w, h + 7);
+			cr.rectangle (0, y - 2 * Toolbox.get_scale (), w, h ); // labels overlap with 2 pixels
 			cr.fill ();
 			cr.restore ();		
 		}
@@ -67,7 +67,7 @@ public class LabelTool : Tool {
 		cr.save ();
 		label_text = new Text ();
 		label_text.set_text (label);
-		text_height = 18 * Toolbox.get_scale ();
+		text_height = 17 * Toolbox.get_scale ();
 
 		if (is_selected ()) {
 			Theme.text_color (label_text, "Text Tool Box");
@@ -76,7 +76,7 @@ public class LabelTool : Tool {
 		}
 		
 		label_text.set_font_size (text_height);
-		label_text.draw_at_baseline (cr, x + 14, y + h - 1.5);
+		label_text.draw_at_top (cr, x, y);
 		cr.restore ();
 
 		// glyph count

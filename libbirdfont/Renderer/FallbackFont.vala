@@ -77,7 +77,6 @@ public class FallbackFont : GLib.Object {
 	public Font get_single_glyph_font (unichar c) {
 		Font f;
 		unichar last; 
-		int last_index;
 		CachePair p;
 		
 		if (likely (glyphs.has_key (c))) {
@@ -101,8 +100,6 @@ public class FallbackFont : GLib.Object {
 			
 			int j = 0;
 			for (int i = cached.size - 1; i > 0; i--) {
-				CachePair ca = cached.get (i);
-				
 				if (j > 100) {
 					break;
 				}

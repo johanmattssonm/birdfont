@@ -116,7 +116,7 @@ public class Expander : GLib.Object {
 				t.h = 7 * scale;
 			} else if (t is LabelTool) {
 				t.w = Toolbox.allocation_width * scale;
-				t.h = 15 * scale;
+				t.h = 22 * scale;
 			} else if (t is FontName) {
 				t.w = Toolbox.allocation_width * scale;
 				t.h = 20 * scale;
@@ -150,7 +150,13 @@ public class Expander : GLib.Object {
 					if (new_row && !first_row) {
 						content_height += previous.h + margin_small; 
 						xt = x;
-						yt += previous.h + 7 * scale;
+						yt += previous.h;
+						
+						if (t is LabelTool) {
+							yt += 0 * scale;
+						} else {
+							yt += 7 * scale;
+						}
 					}
 				
 					t.x = xt;
