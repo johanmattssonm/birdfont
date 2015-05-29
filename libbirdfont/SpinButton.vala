@@ -482,12 +482,6 @@ public class SpinButton : Tool {
 			text.draw (cr);
 		}
 	}
-	
-	public void redraw () {
-		if (!is_null (MainWindow.get_toolbox ())) {
-			MainWindow.get_toolbox ().redraw ((int) x, (int) y, 70, 70);
-		}
-	}
 }
 
 }

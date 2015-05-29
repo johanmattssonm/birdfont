@@ -19,7 +19,7 @@ namespace BirdFont {
 
 public class Expander : GLib.Object {
 
-	private static const double HEADLINE_MARGIN = 6;
+	private static const double HEADLINE_MARGIN = 4;
 		
 	public double x = 7;
 	public double y = 5;
@@ -45,6 +45,7 @@ public class Expander : GLib.Object {
 	Text title;
 			
 	public bool visible = true;
+	Surface? cached = null;
 	
 	public Expander (string? headline = null) {
 		this.headline = headline;
@@ -188,6 +189,10 @@ public class Expander : GLib.Object {
 			tool.insert (position, t);
 		}
 		
+		t.redraw_tool.connect (() => {
+			cached = null;
+		});
+		
 		update_tool_position ();
 		
 		t.select_action.connect ((selected) => {
@@ -234,26 +239,53 @@ public class Expander : GLib.Object {
 		active = a;
 		return r;
 	}
-	
-	public void draw (int wd, int hd, Context cr) {
-		double yt = y + scroll + 2;
 
-		if (tool.size > 0) {
-			if (headline != null) {
-				Theme.text_color (title, "Text Tool Box");
-				title.use_cache (false);
-				title.set_font_size (17 * Toolbox.get_scale ());
+	public void draw (Context cr) {
+		Surface cache;
+	
+		if (unlikely (cached == null)) {
+			Context cc;
+			
+			double text_height = 17 * Toolbox.get_scale ();
+			double offset_y = 0;
 		
-				title.draw_at_baseline (cr, x, yt + HEADLINE_MARGIN + 13  * Toolbox.get_scale ());
+			cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, Toolbox.allocation_width, (int) (h + content_height));
+			cc = new Context (cache);
+		
+			if (tool.size > 0 && headline != null) {
+				Theme.text_color (title, "Text Tool Box");
+				title.set_font_size (text_height);
+				title.draw_at_top (cc, 0, 0);
+				offset_y = text_height + HEADLINE_MARGIN;
 			}
+			
+			draw_content (cc, offset_y);
+			cached = (!) cache;
+		}
+		
+		if (cached != null) {
+			cache = (!) cached;
+			cr.save ();
+			cr.set_antialias (Cairo.Antialias.NONE);
+			cr.set_source_surface (cache, (int) x, (int) (y + scroll));
+			cr.paint ();
+			cr.restore ();
 		}
 	}
-	
-	public void draw_content (int w, int h, Context cr) {
+		
+	public void draw_content (Context cr, double text_end) {
+		double offset_y = 0;
+		double offset_x = 0;
+		
+		if (tool.size > 0) {
+			offset_x = tool.get (0).x;
+			offset_y = tool.get (0).y - text_end;
+		}
+		
 		cr.save ();
 		foreach (Tool t in tool) {
 			if (t.tool_is_visible ()) {
-				t.draw (cr);
+				t.draw_tool (cr, offset_x, offset_y);
 			}
 		}
 		cr.restore ();

@@ -30,12 +30,14 @@ public class FontName : Tool {
 		});
 	}
 	
-	public override void draw (Context cr) {
+	public override void draw_tool (Context cr, double px, double py) {
 		Text font_name;
 		double text_height;
 		double extent;
 		double width = Toolbox.allocation_width * Toolbox.get_scale ();
 		double max_width;
+		double x = this.x - px;
+		double y = this.y - py;
 		
 		cr.save ();
 		// tab label
@@ -52,7 +54,7 @@ public class FontName : Tool {
 		
 		Theme.text_color (font_name, "Font Name");
 		font_name.set_font_size (text_height);
-		font_name.draw_at_baseline (cr, x, y + 13 * Toolbox.get_scale ());
+		font_name.draw_at_top (cr, x, y);
 		cr.restore ();
 	}
 }

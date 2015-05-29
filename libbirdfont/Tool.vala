@@ -82,6 +82,8 @@ public class Tool : Widget {
 	
 	public string icon_color = "";
 	
+	public signal void redraw_tool ();
+	
 	/** Create tool with a certain name and load icon "name".png */
 	public Tool (string? name = null, string tip = "") {
 		this.tip = tip;
@@ -101,19 +103,37 @@ public class Tool : Widget {
 		next_id++;
 		
 		panel_press_action.connect ((self, button, x, y) => {
+			if (is_active ()) {
+				redraw ();
+			}
 		});
 		
+		select_action.connect ((self) => {
+			redraw ();
+		});
+
+		deselect_action.connect ((self) => {
+			redraw ();
+		});
+						
 		move_out_action.connect ((self) => {
 			MainWindow.get_toolbox ().hide_tooltip ();
 			active_tooltip.showing_this_tooltip = false;
+			redraw ();
 		});
 		
 		panel_move_action.connect ((self, x, y) => {
 			if (is_active ()) {
 				wait_for_tooltip ();
+				redraw ();
 			}
 			return false;
 		});
+	}
+
+	public void redraw () {
+		redraw_tool ();
+		Toolbox.redraw_tool_box ();
 	}
 
 	public override double get_height () {
@@ -250,8 +270,12 @@ public class Tool : Widget {
 	}
 	
 	public override void draw (Context cr) {
-		double xt = x;
-		double yt = y;
+		draw_tool (cr,0, 0);
+	}
+	
+	public virtual void draw_tool (Context cr, double px, double py) {
+		double xt = x - px;
+		double yt = y - py;
 		
 		double bgx, bgy;
 		double iconx, icony;
@@ -261,7 +285,6 @@ public class Tool : Widget {
 		
 		double scale = Toolbox.get_scale ();	
 	
-		printd (@"scale: $scale\n");
 		cr.save ();
 			
 		bgx = xt;
