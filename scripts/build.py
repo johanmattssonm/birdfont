@@ -53,7 +53,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 		""")
 	
 	#copy c sources 
-	run("cp libbirdfont/OpenFontFormat/*.c build/libbirdfont/")
+	run("cp libbirdfont/Renderer/*.c libbirdfont/OpenFontFormat/*.c build/libbirdfont/")
 
 	if cc == "":
 		print ("Skipping compilation");
@@ -63,6 +63,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			-fPIC \
 			-D 'GETTEXT_PACKAGE="birdfont"' \
 			$(pkg-config --cflags sqlite3) \
+			$(pkg-config --cflags fontconfig) \
 			$(pkg-config --cflags """ + config.GEE + """) \
 			$(pkg-config --cflags gio-2.0) \
 			$(pkg-config --cflags cairo) \
@@ -84,6 +85,7 @@ def libbirdfont(prefix, cc, cflags, ldflags, valac, valaflags, library, nonNull 
 			$(freetype-config --libs) \
 			$(pkg-config --libs """ + config.GEE + """) \
 			$(pkg-config --libs gio-2.0) \
+			$(pkg-config --libs fontconfig) \
 			$(pkg-config --libs cairo) \
 			$(pkg-config --libs glib-2.0) \
 			-L./build -L./build/bin -l birdxml -l birdgems\
