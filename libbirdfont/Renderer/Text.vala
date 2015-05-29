@@ -57,6 +57,10 @@ public class Text : Widget {
 		set_font_size (size);
 	}
 	
+	public string get_font_file_name () {
+		return cached_font.get_font_file_name ();
+	}
+	
 	public void use_cache (bool cache) {
 		use_cached_glyphs = cache;
 	}

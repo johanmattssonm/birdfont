@@ -1304,6 +1304,7 @@ public class OverView : FontDisplay {
 		character.set_text ((!) c.to_string ());
 		character.set_font_size (height);
 		character.draw_at_top (cr, x + 10, y);
+		printd ("Fallback font: " + character.get_font_file_name ());
 		cr.restore ();
 	}
 
