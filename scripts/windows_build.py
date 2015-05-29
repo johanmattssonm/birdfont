@@ -31,7 +31,6 @@ from run import run
 
 compile_translations()
 build.libbirdgems(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdgems.dll")
-build.libbirdxml(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdxml.dll")
 build.libbirdfont(prefix, cc, cflags, library_ldflags, valac, valaflags, "libbirdfont.dll")
 
 run ("cp build/bin/libbirdfont.dll ./")

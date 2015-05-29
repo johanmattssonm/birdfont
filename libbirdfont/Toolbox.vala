@@ -454,7 +454,7 @@ public class Toolbox : GLib.Object  {
 	
 	public void draw (int w, int h, Context cr) { 
 		Test t = new Test.time ("Toolbox drawing");
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 1; i++) { // 30
 			draw_single (w, h, cr);
 		}
 		t.print ();
