@@ -54,7 +54,6 @@ public class BackgroundTools : ToolCollection  {
 		expanders.add (font_name);
 		expanders.add (background_tools);
 		expanders.add (DrawingTools.zoombar_tool);
-		expanders.add (DrawingTools.view_tools);
 		expanders.add (DrawingTools.guideline_tools);
 		expanders.add (background_selection);
 		expanders.add (files);

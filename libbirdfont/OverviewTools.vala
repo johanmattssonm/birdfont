@@ -26,6 +26,8 @@ public class OverviewTools : ToolCollection  {
 
 	public static Gee.ArrayList<Expander> expanders;
 	public ZoomBar zoom_bar;
+	
+	public static Expander zoom_expander;
 
 	public OverviewTools () {
 		Expander font_name = new Expander ();

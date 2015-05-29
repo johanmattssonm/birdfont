@@ -16,7 +16,7 @@ prefix = ""
 valac = "valac"
 valaflags = ""
 cc = "gcc"
-cflags = "-g -Wl,-subsystem,windows "
+cflags = "-Wl,-subsystem,windows "
 ldflags = ""
 library_ldflags= "";
 

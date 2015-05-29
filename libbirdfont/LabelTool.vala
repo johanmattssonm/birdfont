@@ -27,13 +27,22 @@ public class LabelTool : Tool {
 
 	double counter_box_width = 24 * Toolbox.get_scale ();
 	double counter_box_height = 11 * Toolbox.get_scale ();
+	
+	Text label_text;
 
 	public LabelTool (string label) {
+		double text_height;
+		
 		base ();
 
 		this.label = label;
 		this.number = "-";
 		
+		label_text = new Text ();
+		label_text.set_text (label);
+		text_height = 17 * Toolbox.get_scale ();
+		label_text.set_font_size (text_height);
+
 		has_delete_button = false;
 		has_counter = false;
 
@@ -48,11 +57,13 @@ public class LabelTool : Tool {
 		});
 	}
 	
-	public override void draw (Context cr) {
-		Text label_text, glyph_count;
-		double text_height;
+	public override void draw_tool (Context cr, double px, double py) {
+		Text glyph_count;
 		double bgx, bgy;
 		double center_x, center_y;
+		double x = this.x - px;
+		double y = this.y - py;
+		double text_height;
 		
 		// background
 		if (is_selected ()) {
@@ -65,9 +76,6 @@ public class LabelTool : Tool {
 		
 		// tab label
 		cr.save ();
-		label_text = new Text ();
-		label_text.set_text (label);
-		text_height = 17 * Toolbox.get_scale ();
 
 		if (is_selected ()) {
 			Theme.text_color (label_text, "Text Tool Box");
@@ -75,7 +83,6 @@ public class LabelTool : Tool {
 			Theme.text_color (label_text, "Text Tool Box");
 		}
 		
-		label_text.set_font_size (text_height);
 		label_text.draw_at_top (cr, x, y);
 		cr.restore ();
 

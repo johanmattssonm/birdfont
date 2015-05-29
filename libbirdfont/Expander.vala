@@ -93,7 +93,7 @@ public class Expander : GLib.Object {
 		double scale = Toolbox.get_scale ();
 		double margin_small = 5 * scale;
 		double xt = x;
-		double yt = y + scroll + margin_small;
+		double yt = y + margin_small; // + scroll
 		bool new_row = false;
 		bool has_visible_tools = false;
 		Tool previous;
@@ -101,7 +101,7 @@ public class Expander : GLib.Object {
 
 		foreach (Tool t in tool) {
 			if (t.tool_is_visible ()) {
-				has_visible_tools = true;
+				has_visible_tools = true;				
 				break;
 			}
 		}
@@ -114,7 +114,7 @@ public class Expander : GLib.Object {
 		foreach (Tool t in tool) {
 			if (t is ZoomBar) {
 				t.w = Toolbox.allocation_width * scale;
-				t.h = 7 * scale;
+				t.h = 10 * scale; // 7
 			} else if (t is LabelTool) {
 				t.w = Toolbox.allocation_width * scale;
 				t.h = 22 * scale;
@@ -148,13 +148,26 @@ public class Expander : GLib.Object {
 				if (t.tool_is_visible ()) {
 					new_row = xt + t.w > Toolbox.allocation_width - 7 * scale;
 					
+					if (t is ZoomBar) {
+						t.x = xt;
+						t.y = yt;
+						//content_height += t.h;
+						yt  += t.h + 7 * scale;
+						previous = t;
+						continue;
+					}
+					
+					if (previous is ZoomBar) {
+						content_height += t.h;
+					}
+					
 					if (new_row && !first_row) {
 						content_height += previous.h + margin_small; 
 						xt = x;
 						yt += previous.h;
 						
 						if (t is LabelTool) {
-							yt += 0 * scale;
+							// yt += 0 * scale;
 						} else {
 							yt += 7 * scale;
 						}
@@ -164,7 +177,11 @@ public class Expander : GLib.Object {
 					t.y = yt;
 				
 					xt += t.w + 7 * scale;
-					
+
+					if (previous is ZoomBar) {
+						content_height += 7 * scale;
+					}
+										
 					previous = t;
 					first_row = false;
 				}
@@ -179,6 +196,11 @@ public class Expander : GLib.Object {
 	public void set_offset (double ty) {
 		y = ty;
 		update_tool_position ();
+	}
+	
+	public void redraw () {
+		cached = null;
+		Toolbox.redraw_tool_box ();
 	}
 	
 	public void add_tool (Tool t, int position = -1) {
@@ -196,36 +218,36 @@ public class Expander : GLib.Object {
 		update_tool_position ();
 		
 		t.select_action.connect ((selected) => {
-				MainWindow.get_toolbox ().redraw ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
+			MainWindow.get_toolbox ().redraw ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
+		
+			if (is_unique ()) {
+				foreach (var deselected in tool) {
+					if (selected.get_id () != deselected.get_id ()) {
+						deselected.set_selected (false);
+					}
+				}
+			}
+
+			if (!selected.new_selection && selected.persistent) {
+				if (is_persistent ()) {
+					selected.set_selected (true);
+				} else {
+					selected.set_selected (false);
+				}
+			}
 			
-				if (is_unique ()) {
-					foreach (var deselected in tool) {
-						if (selected.get_id () != deselected.get_id ()) {
-							deselected.set_selected (false);
-						}
-					}
-				}
+			if (!is_persistent () && !selected.persistent) {
+				var time = new TimeoutSource(200);
+				time.set_callback(() => {
+					selected.set_selected (false);
+					MainWindow.get_toolbox ().redraw ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
+					return false;
+				});
+				time.attach(null);
+			}
 
-				if (!selected.new_selection && selected.persistent) {
-					if (is_persistent ()) {
-						selected.set_selected (true);
-					} else {
-						selected.set_selected (false);
-					}
-				}
-				
-				if (!is_persistent () && !selected.persistent) {
-						var time = new TimeoutSource(200);
-						time.set_callback(() => {
-							selected.set_selected (false);
-							MainWindow.get_toolbox ().redraw ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
-							return false;
-						});
-						time.attach(null);
-				}
-
-				selected.new_selection = false;
-			});
+			selected.new_selection = false;
+		});
 	}
 	
 	public bool is_over (double xp, double yp) {
@@ -255,7 +277,7 @@ public class Expander : GLib.Object {
 			if (tool.size > 0 && headline != null) {
 				Theme.text_color (title, "Text Tool Box");
 				title.set_font_size (text_height);
-				title.draw_at_top (cc, 0, 0);
+				title.draw_at_top (cc, x, 0);
 				offset_y = text_height + HEADLINE_MARGIN;
 			}
 			
@@ -267,7 +289,7 @@ public class Expander : GLib.Object {
 			cache = (!) cached;
 			cr.save ();
 			cr.set_antialias (Cairo.Antialias.NONE);
-			cr.set_source_surface (cache, (int) x, (int) (y + scroll));
+			cr.set_source_surface (cache, 0, (int) (y + scroll));
 			cr.paint ();
 			cr.restore ();
 		}
@@ -277,6 +299,8 @@ public class Expander : GLib.Object {
 		double offset_y = 0;
 		double offset_x = 0;
 		
+		update_tool_position (); //FIXME
+		
 		if (tool.size > 0) {
 			offset_x = tool.get (0).x;
 			offset_y = tool.get (0).y - text_end;
@@ -285,7 +309,7 @@ public class Expander : GLib.Object {
 		cr.save ();
 		foreach (Tool t in tool) {
 			if (t.tool_is_visible ()) {
-				t.draw_tool (cr, offset_x, offset_y);
+				t.draw_tool (cr, offset_x - x, offset_y);
 			}
 		}
 		cr.restore ();

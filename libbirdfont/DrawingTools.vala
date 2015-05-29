@@ -28,7 +28,6 @@ public class DrawingTools : ToolCollection  {
 	public static Expander draw_tool_modifiers;
 	public static Expander stroke_expander;
 	public static Expander zoombar_tool;
-	public static Expander view_tools;
 	public static Expander guideline_tools;
 	
 	public static PointType point_type = PointType.DOUBLE_CURVE;
@@ -111,7 +110,6 @@ public class DrawingTools : ToolCollection  {
 		stroke_expander = new Expander (t_("Stroke"));
 		shape_tools = new Expander (t_("Geometrical Shapes"));
 		zoombar_tool = new Expander (t_("Zoom"));
-		view_tools = new Expander ();
 		guideline_tools = new Expander (t_("Guidelines & Grid"));
 		
 		Expander font_name = new Expander ();
@@ -1053,7 +1051,7 @@ public class DrawingTools : ToolCollection  {
 				glyph_canvas.get_current_display ().reset_zoom ();
 				glyph_canvas.redraw_area(0, 0, GlyphCanvas.allocation.width, GlyphCanvas.allocation.height);
 			});
-		view_tools.add_tool (reset_zoom);
+		zoombar_tool.add_tool (reset_zoom);
 		reset_zoom.set_tool_visibility (false);
 
 		Tool full_glyph = new Tool ("full_glyph", t_("Show full glyph"));
@@ -1061,14 +1059,14 @@ public class DrawingTools : ToolCollection  {
 			zoom_tool.store_current_view ();
 			zoom_tool.zoom_full_glyph ();
 		});
-		view_tools.add_tool (full_glyph);
+		zoombar_tool.add_tool (full_glyph);
 
 		Tool zoom_boundaries = new Tool ("zoom_boundaries", t_("Fit in view"));
 		zoom_boundaries.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_max ();
 		});
-		view_tools.add_tool (zoom_boundaries);
+		zoombar_tool.add_tool (zoom_boundaries);
 
 		Tool zoom_bg = new Tool ("zoom_background_image", t_("Zoom in on background image"));
 		zoom_bg.select_action.connect((self) => {
@@ -1078,19 +1076,19 @@ public class DrawingTools : ToolCollection  {
 				glyph_canvas.redraw_area(0, 0, GlyphCanvas.allocation.width, GlyphCanvas.allocation.height);
 			}
 		});
-		view_tools.add_tool (zoom_bg);
+		zoombar_tool.add_tool (zoom_bg);
 
 		Tool zoom_prev = new Tool ("prev", t_("Previous view"));
 		zoom_prev.select_action.connect((self) => {
 			zoom_tool.previous_view ();
 		});
-		view_tools.add_tool (zoom_prev);
+		zoombar_tool.add_tool (zoom_prev);
 
 		Tool zoom_next = new Tool ("next", t_("Next view"));
 		zoom_next.select_action.connect((self) => {
 			zoom_tool.next_view ();
 		});
-		view_tools.add_tool (zoom_next);
+		zoombar_tool.add_tool (zoom_next); // view_tools
 		zoom_next.set_tool_visibility (false);
 		
 		// shape tools 
@@ -1120,7 +1118,6 @@ public class DrawingTools : ToolCollection  {
 		add_expander (guideline_tools);
 		add_expander (grid);
 		add_expander (zoombar_tool);
-		add_expander (view_tools);
 		add_expander (shape_tools);
 		
 		// Fixa: add_expander (trace);
@@ -1386,9 +1383,9 @@ public class DrawingTools : ToolCollection  {
 					|| auto_trace.is_selected ()) {
 				show_background_tool_modifiers ();
 			}
-			
-			MainWindow.get_toolbox ().update_expanders ();
-			Toolbox.redraw_tool_box ();
+
+			MainWindow.get_toolbox ().update_expanders ();			
+			draw_tool_modifiers.redraw ();
 			
 			return false;
 		});

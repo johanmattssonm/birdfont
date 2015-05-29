@@ -133,6 +133,8 @@ public class Toolbox : GLib.Object  {
 			return;
 		}
 		
+		y -= current_set.scroll;
+		
 		foreach (Expander exp in current_set.get_expanders ()) {
 			if (exp.visible) {
 				foreach (Tool t in exp.tool) {
@@ -150,6 +152,8 @@ public class Toolbox : GLib.Object  {
 	
 	public void release (uint button, double x, double y) {
 		bool active;
+		
+		y -= current_set.scroll;
 		
 		if (MenuTab.suppress_event) {
 			warn_if_test ("Event suppressed");
@@ -179,6 +183,8 @@ public class Toolbox : GLib.Object  {
 
 	public void scroll_up (double x, double y) {
 		bool action = false;
+		
+		y -= current_set.scroll;
 		
 		if (MenuTab.suppress_event) {
 			warn_if_test ("Event suppressed");
@@ -225,6 +231,8 @@ public class Toolbox : GLib.Object  {
 	public void scroll_down (double x, double y) {
 		bool action = false;
 
+		y -= current_set.scroll;
+		
 		if (!scrolling_toolbox) {	
 			foreach (Expander exp in current_set.get_expanders ()) {
 				if (exp.visible) {
@@ -259,6 +267,8 @@ public class Toolbox : GLib.Object  {
 		bool a;
 		bool consumed = false;
 		bool active;
+		
+		y -= current_set.scroll;
 		
 		MainWindow.set_cursor (NativeWindow.VISIBLE);
 			
@@ -453,14 +463,6 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void draw (int w, int h, Context cr) { 
-		Test t = new Test.time ("Toolbox drawing");
-		for (int i = 0; i < 1; i++) { // 30
-			draw_single (w, h, cr);
-		}
-		t.print ();
-	}
-	
-	public void draw_single (int w, int h, Context cr) { 
 		cr.save ();
 			
 		Theme.color (cr, "Default Background");

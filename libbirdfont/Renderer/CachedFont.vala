@@ -72,15 +72,6 @@ public class CachedFont : GLib.Object {
 				
 		return g;
 	}
-	
-	public string get_font_file_name () {
-		if (font == null) {
-			warning ("No font loaded.");
-			return "";
-		}
-		
-		return (((!) font).font_file != null) ? (!) ((!) font).font_file : "".dup ();
-	}
 }
 
 }

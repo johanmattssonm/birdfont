@@ -44,7 +44,7 @@ public class FallbackFont : GLib.Object {
 	Gee.ArrayList<CachePair> cached;
 
 	public int max_cached_fonts = 300;
-
+	
 	public FallbackFont () {
 		string home = Environment.get_home_dir ();
 		
@@ -120,7 +120,7 @@ public class FallbackFont : GLib.Object {
 		
 		return (Font) f;
 	}
-	
+
 	Font get_single_fallback_glyph_font (unichar c) {
 		string? font_file;
 		BirdFontFile bf_parser;
@@ -151,6 +151,9 @@ public class FallbackFont : GLib.Object {
 		if (glyph_data == null) {
 			font_file = find_font (font_config, (!) c.to_string ());
 			if (font_file != null) {
+				printd ((!) font_file); // FIXME: DELETE
+				printd ("\n");
+
 				font = open_font ((!) font_file);
 				glyph_data = get_glyph_in_font (font, c);
 				close_font (font);

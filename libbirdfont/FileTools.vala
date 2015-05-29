@@ -64,18 +64,20 @@ public class FileTools : ToolCollection  {
 			theme_label.data = theme;
 			
 			theme_label.select_action.connect((self) => {
-				TabBar tb;
 				LabelTool s = (LabelTool) self;
 				string theme_file = s.data;
-				
+				TabBar tb = MainWindow.get_tab_bar ();
 				Preferences.set ("theme", theme_file);
 				Theme.load_theme (theme_file);
 
 				Toolbox.redraw_tool_box ();
 				GlyphCanvas.redraw ();
 				
-				tb = MainWindow.get_tab_bar ();
+				file_tools.redraw ();
+				font_name.redraw ();
 				tb.redraw (0, 0, tb.width, tb.height);
+				
+				OverviewTools.zoom_expander.redraw ();
 			});
 			
 			if (!theme.has_prefix ("generated_")) {

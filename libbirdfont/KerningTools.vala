@@ -60,7 +60,7 @@ public class KerningTools : ToolCollection  {
 			string label = t_("Kerning class");
 			KerningRange kr = new KerningRange (font, @"$label $(++next_class)");
 			classes.add_tool (kr);
-			Toolbox.redraw_tool_box ();
+			classes.redraw ();
 		});
 		kerning_tools.add_tool (new_kerning_class);
 

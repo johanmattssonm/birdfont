@@ -130,6 +130,10 @@ public class Tool : Widget {
 			return false;
 		});
 	}
+	
+	public override void draw (Context cr) {
+		draw_tool (cr, 0, 0);
+	}
 
 	public void redraw () {
 		redraw_tool ();
@@ -267,10 +271,6 @@ public class Tool : Widget {
 		bool ret = (active != ac);
 		active = ac;	
 		return ret;
-	}
-	
-	public override void draw (Context cr) {
-		draw_tool (cr,0, 0);
 	}
 	
 	public virtual void draw_tool (Context cr, double px, double py) {

@@ -444,13 +444,15 @@ public class SpinButton : Tool {
 		return v;
 	}
 	
-	public override void draw (Context cr) {
+	public override void draw_tool (Context cr, double px, double py) {
 		double scale = Toolbox.get_scale ();
 		double text_height = 14 * scale;
 		string display_value = get_short_display_value ();
 		Text text = new Text (display_value, text_height);
+		double x = x - px;
+		double y = y - py;
 		
-		double text_x = x + (w - text.get_sidebearing_extent ()) / 2;
+		double text_x = x + (w - text.get_sidebearing_extent ()) / 2 + 1;
 		double text_y = y + (h - text_height) / 2;
 
 		if (!show_icon_tool_icon || waiting_for_icon_switch) {
@@ -467,8 +469,7 @@ public class SpinButton : Tool {
 			}	
 		}
 		
-		base.draw (cr);
-		
+		base.draw_tool (cr, px, py);
 	
 		if (!show_icon_tool_icon || waiting_for_icon_switch) {
 			if (is_selected ()) {

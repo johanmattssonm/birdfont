@@ -132,10 +132,13 @@ public class KerningRange : Tool {
 		TabContent.show_text_input (listener);
 	}
 	
-	public override void draw (Context cr) {
+	public override void draw_tool (Context cr, double px, double py) {
 		double xt, yt;
 		Text label_text;
 
+		double x = this.x - px;
+		double y = this.y - py;
+		
 		xt = x + 5;
 		yt = y + 10;
 		
