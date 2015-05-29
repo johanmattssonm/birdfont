@@ -40,8 +40,10 @@ public class FallbackFont : GLib.Object {
 	string default_font_file_name = "Roboto-Regular.ttf";
 	string default_font_family_name = "Roboto";
 
-	Gee.HashMap<unichar, Font> glyphs;
-	Gee.ArrayList<unichar> cached;
+	Gee.HashMap<unichar, CachePair> glyphs;
+	Gee.ArrayList<CachePair> cached;
+
+	public int max_cached_fonts = 300;
 
 	public FallbackFont () {
 		string home = Environment.get_home_dir ();
@@ -60,14 +62,13 @@ public class FallbackFont : GLib.Object {
 		add_font_folder ("/System/Library/Fonts");
 		add_font_folder ("/System Folder/Fonts");
 		
-		glyphs = new Gee.HashMap<unichar, Font> ();
-		cached = new Gee.ArrayList<unichar> ();
+		glyphs = new Gee.HashMap<unichar, CachePair> ();
+		cached = new Gee.ArrayList<CachePair> ();
 		
 		open_default_font ();
 	}
 	
 	~FallbackFont () {
-		print("Delete fallback font.");
 		if (default_font != null) {
 			close_font (default_font);
 		}
@@ -75,25 +76,52 @@ public class FallbackFont : GLib.Object {
 
 	public Font get_single_glyph_font (unichar c) {
 		Font f;
+		unichar last; 
+		int last_index;
+		CachePair p;
 		
+		if (likely (glyphs.has_key (c))) {
+			p = glyphs.get (c);
+			
+			if (p.referenced < int.MAX) {
+				p.referenced++;
+			}
+			
+			return p.font;
+		}
+
 		// remove glyphs from cache if it is full
-		if (cached.size > 300) {
-			for (int i = 0; i < 100 && cached.size > 0; i++) {
-				glyphs.unset (cached.get (cached.size - 1));
-				cached.remove_at (cached.size - 1);
+		if (cached.size > max_cached_fonts - 100) {
+			
+			cached.sort ((a, b) => {
+				CachePair pa = (CachePair) a;
+				CachePair pb = (CachePair) b;
+				return pb.referenced - pa.referenced;
+			});
+			
+			int j = 0;
+			for (int i = cached.size - 1; i > 0; i--) {
+				CachePair ca = cached.get (i);
+				
+				if (j > 100) {
+					break;
+				}
+				
+				j++;
+				
+				last = cached.get (i).character;
+				glyphs.unset (last);
+				cached.remove_at (i);
 			}
 		}
-		
-		if (glyphs.has_key (c)) {
-			f = glyphs.get (c);
-			return f;
-		}
-		
+				
 		f = get_single_fallback_glyph_font (c);
-		glyphs.set (c, f);
-		cached.add (c);
+		p = new CachePair (f, c);
 		
-		return f;
+		glyphs.set (c, p);
+		cached.add (p);
+		
+		return (Font) f;
 	}
 	
 	Font get_single_fallback_glyph_font (unichar c) {
@@ -213,6 +241,17 @@ public class FallbackFont : GLib.Object {
 			
 		if (fn != null) {
 			default_font = open_font ((!) fn);
+		}
+	}
+	
+	class CachePair : GLib.Object {
+		public Font font;
+		public unichar character;
+		public int referenced = 1;
+		
+		public CachePair (Font f, unichar c) {
+			font = f;
+			character = c;
 		}
 	}
 }
