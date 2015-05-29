@@ -80,23 +80,24 @@ public class ZoomBar : Tool {
 		}
 		
 		FontDisplay.dirty_scrollbar = true;
+		redraw ();
 	}
 	
-	public override void draw (Context cr) {
+	public override void draw_tool (Context cr, double px, double py) {
 		double margin = w * margin_percent;
 		double bar_width = w - margin - x;
 		
 		// filled
 		cr.save ();
 		Theme.color (cr, "Button Border 1");
-		draw_bar (cr);
+		draw_bar (cr, px, py);
 		cr.fill ();
 		cr.restore ();
 		
 		// remove non filled parts
 		cr.save ();
 		Theme.color (cr, "Default Background");
-		cr.rectangle (x + bar_width * zoom_level, y, w, h);
+		cr.rectangle (x + bar_width * zoom_level - px, y - py, w, h);
 		cr.fill ();
 		cr.restore ();
 		
@@ -104,16 +105,19 @@ public class ZoomBar : Tool {
 		cr.save ();
 		Theme.color (cr, "Zoom Bar Border");
 		cr.set_line_width (0.8);
-		draw_bar (cr);
+		draw_bar (cr, px, py);
 		cr.stroke ();
 		cr.restore ();
 	}
 	
-	void draw_bar (Context cr) {
+	void draw_bar (Context cr, double px, double py) {
+		double x = this.x - px;
+		double y = this.y - py;
+		double w = this.w - px;
 		double height = h;
 		double radius = height / 2;
 		double margin = w * margin_percent;
-	
+		
 		cr.move_to (x + radius, y + height);
 		cr.arc (x + radius, y + radius, radius, PI / 2, 3 * (PI / 2));
 		cr.line_to (w - margin - radius, y);

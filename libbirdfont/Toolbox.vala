@@ -447,13 +447,20 @@ public class Toolbox : GLib.Object  {
 	private void draw_expanders (int w, int h, Context cr) {
 		foreach (Expander e in current_set.get_expanders ()) {
 			if (e.visible) {
-				e.draw (w, h, cr);
-				e.draw_content (w, h, cr);
+				e.draw (cr);
 			}
 		}
 	}
 	
 	public void draw (int w, int h, Context cr) { 
+		Test t = new Test.time ("Toolbox drawing");
+		for (int i = 0; i < 30; i++) {
+			draw_single (w, h, cr);
+		}
+		t.print ();
+	}
+	
+	public void draw_single (int w, int h, Context cr) { 
 		cr.save ();
 			
 		Theme.color (cr, "Default Background");
@@ -461,7 +468,7 @@ public class Toolbox : GLib.Object  {
 		cr.rectangle (0, 0, w, h);
 		cr.set_line_width (0);
 		cr.fill ();
-					
+				
 		draw_expanders (w, h, cr);
 	
 		cr.restore ();
