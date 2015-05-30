@@ -61,14 +61,14 @@ public class CharacterInfo : GLib.Object {
 		return (x <= px <= x + 12) && (y <= py <= y + 24);
 	}
 	
-	public void draw_icon (Context cr, bool selected) {	
+	public void draw_icon (Context cr, bool selected, double px, double py) {	
 		if (selected) {
 			Theme.text_color (icon, "Overview Selected Foreground");
 		} else {
 			Theme.text_color (icon, "Overview Foreground");
 		}
 		
-		icon.draw_at_top (cr, x, y);	
+		icon.draw_at_top (cr, px, py);	
 	}
 }
 

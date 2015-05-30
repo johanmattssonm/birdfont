@@ -49,6 +49,7 @@ public class OverViewItem : GLib.Object {
 		this.character = character;
 		this.glyphs = glyphs;
 		this.info = new CharacterInfo (character, glyphs);
+		info.set_position (x + width - 17, y + height - 22.5);
 
 		label = new Text ((!) character.to_string (), 17);		
 		truncate_label ();
@@ -379,11 +380,7 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	private void draw_character_info_icon (Context cr) {
-		double px = width - 17;
-		double py = -2.5;
-				
-		info.set_position (px, py);
-		info.draw_icon (cr, selected);
+		info.draw_icon (cr, selected, width - 17, -2.5);
 	}
 	
 	public void hide_menu () {
