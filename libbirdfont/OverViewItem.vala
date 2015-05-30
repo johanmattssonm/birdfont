@@ -36,7 +36,12 @@ public class OverViewItem : GLib.Object {
 	public static double glyph_scale = 1.0;
 	
 	public VersionList version_menu;
-	Text icon;
+	Text label;
+	
+	static Surface? label_background = null;
+	static Surface? selected_label_background = null;
+	static Surface? label_background_no_menu = null;
+	static Surface? selected_label_background_no_menu = null;
 	
 	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	
 		this.x = x;
@@ -45,10 +50,9 @@ public class OverViewItem : GLib.Object {
 		this.glyphs = glyphs;
 		this.info = new CharacterInfo (character, glyphs);
 
-		icon = new Text ("dropdown_menu", 17);
-		icon.load_font ("icons.bf");
-		icon.use_cache (true);
-		
+		label = new Text ((!) character.to_string (), 17);		
+		truncate_label ();
+			
 		if (glyphs != null) {
 			version_menu = new VersionList ((!) glyphs);
 			version_menu.add_glyph_item.connect ((glyph) => {
@@ -64,6 +68,16 @@ public class OverViewItem : GLib.Object {
 		} else {
 			version_menu = new VersionList (new GlyphCollection (character, (!) character.to_string ()));
 		}
+	}
+
+	public static void reset_label () {
+		label_background = null;
+		selected_label_background = null;
+	}
+	
+	void truncate_label () {
+		double w = has_icons () ? width - 43 : width;
+		label.truncate (w);
 	}
 
 	public string get_name () {
@@ -95,10 +109,11 @@ public class OverViewItem : GLib.Object {
 		bool a;
 		GlyphCollection g;
 		bool s = (x <= px <= x + width) && (y <= py <= y + height);
-		
+	
 		if (has_icons () && glyphs != null) {
 			g = (!) glyphs;
-
+			
+			version_menu.set_position (x + width - 21, y + height - 18);
 			a = version_menu.menu_item_action (px, py); // select one item on the menu
 			if (a) {
 				return s;
@@ -142,7 +157,7 @@ public class OverViewItem : GLib.Object {
 		cr.restore ();
 		
 		draw_thumbnail (cr, glyphs, x, y + height); 	
-		draw_caption (cr);	
+		draw_caption (cr);
 	}
 
 	public void adjust_scale () {
@@ -240,53 +255,133 @@ public class OverViewItem : GLib.Object {
 	}
 
 	public void draw_caption (Context cr) {
-		StringBuilder name = new StringBuilder ();
-		Cairo.Pattern p;
-		string text;
-		Text label;
-		
-		name.append_unichar (character);
+		draw_label_background (cr);
 		
 		cr.save ();
 		
-		cr.rectangle (x + 1, y + height - 20, width - 2, 20 - 1);
-
-		if (!selected) {
-			p = new Cairo.Pattern.linear (0.0, y + height - 20, 0.0, y + height);
-			Theme.gradient (p, "Overview Item 1", "Overview Item 2");
-			cr.set_source (p);
-		} else {
-			Theme.color (cr, "Selected Overview Item");
-		}
-		
-		cr.fill ();
-		
-		if (has_icons ()) {
-			draw_menu (cr);
-			draw_character_info_icon (cr);
-		}
-
 		if (glyphs != null) {
-			text = name.str;
-					
-			double w = has_icons () ? width - 43 : width;
-			label = new Text (text, 17);
-			label.truncate (w);
-			label.use_cache (true);
-			
 			if (selected) {
 				Theme.text_color (label, "Overview Selected Foreground");
 			} else {
 				Theme.text_color (label, "Overview Foreground");
 			}
-			
+		
 			label.draw_at_baseline (cr, x + 0.08 * width, y + height - 6);
 		}
+		
+		draw_menu (cr);
+		cr.restore ();
 	}
+	
+	public void create_label_background_cache (Context cr) {
+		Context cc;
+		Cairo.Pattern p;
+		Surface cache;
+			
+		// unselected item
+		cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) width, 20);
+		cc = new Context (cache);
+		cc.rectangle (0, 0, width - 1, 20 - 1);
+		p = new Cairo.Pattern.linear (0.0, 0, 0.0, 20);
+		Theme.gradient (p, "Overview Item 1", "Overview Item 2");
+		cc.set_source (p);
+			
+		cc.fill ();
+		
+		if (has_icons ()) {
+			draw_menu_icon (cc, false);
+			draw_character_info_icon (cc);
+		}
 
+		label_background = (!) cache;	
+
+		// selected item
+		cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) width, 20);
+		cc = new Context (cache);
+
+		cc.rectangle (0, 0, width - 1, 20 - 1);
+
+		Theme.color (cc, "Selected Overview Item");
+			
+		cc.fill ();
+		
+		if (has_icons ()) {
+			draw_menu_icon (cc, true);
+			draw_character_info_icon (cc);
+		}
+
+		selected_label_background = (!) cache;	
+	
+		// unselected item without menu icon
+		cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) width, 20);
+		cc = new Context (cache);
+
+		cc.rectangle (0, 0, width - 1, 20 - 1);
+		p = new Cairo.Pattern.linear (0.0, 0, 0.0, 20);
+		Theme.gradient (p, "Overview Item 1", "Overview Item 2");
+		cc.set_source (p);
+		cc.fill ();
+
+		if (has_icons ()) {
+			draw_character_info_icon (cc);
+		}
+		
+		label_background_no_menu = (!) cache;
+
+		// selected item
+		cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) width, 20);
+		cc = new Context (cache);
+		cc.rectangle (0, 0, width - 1, 20 - 1);
+		Theme.color (cc, "Selected Overview Item");
+		cc.fill ();
+
+		if (has_icons ()) {
+			draw_character_info_icon (cc);
+		}
+				
+		selected_label_background_no_menu = (!) cache;		
+	}
+	
+	bool has_menu () {
+		return glyphs != null;
+	}
+	
+	public void draw_label_background (Context cr) {
+		Surface cache;
+		bool icon;
+		
+		if (unlikely (label_background == null)) {
+			create_label_background_cache (cr);
+		}
+		
+		if (label_background != null 
+			&& selected_label_background != null
+			&& label_background_no_menu != null
+			&& selected_label_background_no_menu != null) {
+			
+			icon = has_menu ();
+			if (selected && icon) {
+				cache = (!) selected_label_background;
+			} else if (!selected && icon) {
+				cache = (!) label_background;
+			} else if (selected && !icon) {
+				cache = (!) selected_label_background_no_menu;
+			} else {
+				cache = (!) label_background_no_menu;
+			}
+			
+			cr.save ();
+			cr.set_antialias (Cairo.Antialias.NONE);
+			cr.set_source_surface (cache, (int) (x + 1), (int) (y + height - 20));
+			cr.paint ();
+			cr.restore ();
+		}
+	}
+	
 	private void draw_character_info_icon (Context cr) {
-		double px = x + width - 17;
-		double py = y + height - 21;
+		double px = width - 17;
+		double py = -2.5;
+				
 		info.set_position (px, py);
 		info.draw_icon (cr, selected);
 	}
@@ -295,20 +390,26 @@ public class OverViewItem : GLib.Object {
 		version_menu.menu_visible = false;
 	}
 	
-	private void draw_menu (Context cr) {
-		if (glyphs == null) {
-			return;
-		}
-		
+	private void draw_menu_icon (Context cc, bool selected) {
+		Text icon;
+
+		icon = new Text ("dropdown_menu", 17);
+		icon.load_font ("icons.bf");
+
 		if (selected) {
 			Theme.text_color (icon, "Overview Selected Foreground");
 		} else {
 			Theme.text_color (icon, "Overview Foreground");
 		}
 		
-		icon.draw_at_top (cr, x + width - 32, y + height - 19);
+		icon.draw_at_top (cc, width - 32, 0);
+	}
+	
+	private void draw_menu (Context cr) {
+		if (likely (glyphs == null || !version_menu.menu_visible)) {
+			return;
+		}
 		
-		version_menu.set_position (x + width - 21, y + height - 18);
 		version_menu.draw_menu (cr);
 	}
 }

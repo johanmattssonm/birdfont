@@ -45,13 +45,14 @@ public class Toolbox : GLib.Object  {
 	bool scrolling_touch = false;
 	double scroll_y = 0;
 
-	public List<ToolCollection> tool_sets = new List<ToolCollection> ();
+	public Gee.ArrayList<ToolCollection> tool_sets;
 
 	string? tool_tip = null;
 	double tool_tip_x = 0;
 	double tool_tip_y = 0;
 	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
+		tool_sets = new Gee.ArrayList<ToolCollection> ();
 		current_tool = new Tool ("no_icon");
 		press_tool = new Tool (null);
 
@@ -64,13 +65,13 @@ public class Toolbox : GLib.Object  {
 		spacing_tools = new SpacingTools ();
 		file_tools = new FileTools ();
 		
-		tool_sets.append (drawing_tools);
-		tool_sets.append (kerning_tools);
-		tool_sets.append (preview_tools);
-		tool_sets.append (overview_tools);
-		tool_sets.append (background_tools);
+		tool_sets.add (drawing_tools);
+		tool_sets.add (kerning_tools);
+		tool_sets.add (preview_tools);
+		tool_sets.add (overview_tools);
+		tool_sets.add (background_tools);
 		// the menu has all the file_tools commands, it won't be added here
-		tool_sets.append (hidden_tools); // tools without a button
+		tool_sets.add (hidden_tools); // tools without a button
 		
 		current_set = file_tools;
 		

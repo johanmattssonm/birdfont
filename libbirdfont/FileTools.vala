@@ -65,6 +65,7 @@ public class FileTools : ToolCollection  {
 			
 			theme_label.select_action.connect((self) => {
 				LabelTool s = (LabelTool) self;
+				Toolbox toolbox = MainWindow.get_toolbox ();
 				string theme_file = s.data;
 				TabBar tb = MainWindow.get_tab_bar ();
 				Preferences.set ("theme", theme_file);
@@ -77,7 +78,9 @@ public class FileTools : ToolCollection  {
 				font_name.redraw ();
 				tb.redraw (0, 0, tb.width, tb.height);
 				
-				OverviewTools.zoom_expander.redraw ();
+				foreach (ToolCollection tc in toolbox.tool_sets) {
+					tc.redraw ();
+				}
 			});
 			
 			if (!theme.has_prefix ("generated_")) {

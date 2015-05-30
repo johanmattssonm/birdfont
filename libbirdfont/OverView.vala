@@ -215,6 +215,7 @@ public class OverView : FontDisplay {
 		z.store_current_view ();
 		MainWindow.get_current_glyph ().default_zoom ();
 		z.store_current_view ();
+		OverViewItem.reset_label ();
 	}
 
 	public double get_height () {
@@ -294,6 +295,7 @@ public class OverView : FontDisplay {
 		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT * z;
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * z;
 		update_item_list ();
+		OverViewItem.reset_label ();
 		GlyphCanvas.redraw ();	
 	}
 	
@@ -302,6 +304,7 @@ public class OverView : FontDisplay {
 		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT * 0.5;
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * 0.5;
 		update_item_list ();
+		OverViewItem.reset_label ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
@@ -311,6 +314,7 @@ public class OverView : FontDisplay {
 		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT;
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN;
 		update_item_list ();
+		OverViewItem.reset_label ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
@@ -319,6 +323,7 @@ public class OverView : FontDisplay {
 		OverViewItem.width = allocation.width;
 		OverViewItem.height = allocation.height;
 		update_item_list ();
+		OverViewItem.reset_label ();
 		GlyphCanvas.redraw ();
 	}
 	
@@ -327,6 +332,7 @@ public class OverView : FontDisplay {
 		OverViewItem.height *= 1.1;
 		OverViewItem.margin *= 1.1;
 		update_item_list ();
+		OverViewItem.reset_label ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
@@ -336,6 +342,7 @@ public class OverView : FontDisplay {
 		OverViewItem.height *= 0.9;
 		OverViewItem.margin *= 0.9;
 		update_item_list ();
+		OverViewItem.reset_label ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
@@ -391,7 +398,7 @@ public class OverView : FontDisplay {
 		}
 		return i - 1;
 	}
-		
+	
 	public void update_item_list (int item_list_length = -1) {
 		string character_string;
 		Font f = BirdFont.get_current_font ();
@@ -488,11 +495,11 @@ public class OverView : FontDisplay {
 			i.draw (allocation, cr);
 		}
 		
-		if (visible_items.size == 0) {
+		if (unlikely (visible_items.size == 0)) {
 			draw_empty_canvas (allocation, cr);
 		}
 		
-		if (character_info != null) {
+		if (unlikely (character_info != null)) {
 			draw_character_info (cr);
 		}
 	}
