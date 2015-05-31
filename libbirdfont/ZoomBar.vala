@@ -45,7 +45,11 @@ public class ZoomBar : Tool {
 		});
 		
 		panel_release_action.connect ((selected, button, tx, ty) => {
+			if (update_zoom) {
+				DrawingTools.zoom_tool.store_current_view ();
+			}
 			update_zoom = false;
+			
 		});
 	}
 	

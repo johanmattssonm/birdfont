@@ -1388,14 +1388,14 @@ public class Glyph : FontDisplay {
 	}
 	
 	public override void restore_last_view () {
-		if (zoom_list.size == 0 || zoom_list_index - 1 < 0 || zoom_list.size == 0) {
+		if (zoom_list.size == 0 || zoom_list_index - 1 < 0) {
 			return;
 		}
 		
 		zoom_list_index--;
 			
 		ZoomView z = zoom_list.get (zoom_list_index);
-			
+		
 		view_offset_x = z.x;
 		view_offset_y = z.y;
 		view_zoom = z.zoom;

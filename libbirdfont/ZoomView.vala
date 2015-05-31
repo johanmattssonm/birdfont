@@ -26,6 +26,10 @@ class ZoomView : GLib.Object {
 		this.zoom = zoom;
 		this.allocation = allocation;
 	}
+	
+	public string to_string () {
+		return @"x: $(x), y: $y, zoom: $zoom\n" + allocation.to_string ();
+	}
 }
 
 }

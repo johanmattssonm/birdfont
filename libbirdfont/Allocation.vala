@@ -38,6 +38,10 @@ public class WidgetAllocation : GLib.Object {
 		w.height = height;
 		return w;
 	}
+	
+	public string to_string () {
+		return @"x: $x, y: $y, width: $width, height: $height\n";
+	}
 }
 
 }
