@@ -209,8 +209,8 @@ public class BezierTool : Tool {
 		current_point.type = pt; 
 		current_point.get_left_handle ().type = pt;
 		current_point.get_right_handle ().type = pt;
-		
 		current_point.get_left_handle ().convert_to_line ();
+		
 		current_point.get_right_handle ().convert_to_line ();	
 	}
 	
@@ -294,6 +294,12 @@ public class BezierTool : Tool {
 			current_path.hide_end_handle = true;
 			current_point.recalculate_linear_handles ();
 			current_path.reset_stroke ();
+
+			if (current_point.type == PointType.QUADRATIC) {
+				current_path.create_list ();
+				current_point.get_prev ().get_right_handle ().process_connected_handle ();
+			}
+				
 			GlyphCanvas.redraw ();
 		} else if (state == MOVE_HANDLES 
 			|| state == MOVE_LAST_HANDLE_LEFT

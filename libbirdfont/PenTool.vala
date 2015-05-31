@@ -1263,13 +1263,17 @@ public class PenTool : Tool {
 		if (union.get_last_point ().get_left_handle ().is_curve ()) {
 			first_point.get_left_handle ().convert_to_curve ();
 		} else {
-			first_point.get_left_handle ().convert_to_line ();
+			if (first_point.type != PointType.QUADRATIC) {
+				first_point.get_left_handle ().convert_to_line ();
+			}
 		}
 		
-		first_point.get_left_handle ().move_to_coordinate_internal (
-			union.get_last_point ().get_left_handle ().x,
-			union.get_last_point ().get_left_handle ().y);
-
+		if (first_point.type != PointType.QUADRATIC) {
+			first_point.get_left_handle ().move_to_coordinate_internal (
+				union.get_last_point ().get_left_handle ().x,
+				union.get_last_point ().get_left_handle ().y);
+		}
+		
 		union.delete_last_point ();
 		
 		union.append_path (merge);
