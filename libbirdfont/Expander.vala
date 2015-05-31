@@ -152,7 +152,7 @@ public class Expander : GLib.Object {
 						t.x = xt;
 						t.y = yt;
 						//content_height += t.h;
-						yt  += t.h + 7 * scale;
+						yt += t.h + 7 * scale;
 						previous = t;
 						continue;
 					}
@@ -166,9 +166,7 @@ public class Expander : GLib.Object {
 						xt = x;
 						yt += previous.h;
 						
-						if (t is LabelTool) {
-							// yt += 0 * scale;
-						} else {
+						if (!(t is LabelTool)) {
 							yt += 7 * scale;
 						}
 					}
@@ -186,6 +184,8 @@ public class Expander : GLib.Object {
 					first_row = false;
 				}
 			}
+			
+			content_height += 5 * scale;
 		}
 	}
 	

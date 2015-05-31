@@ -451,7 +451,8 @@ public class Text : Widget {
 		EditPoint e, prev;
 		double xa, ya, xb, yb, xc, yc, xd, yd;
 		double by;
-
+		double s = get_scale ();
+		
 		if (path.points.size > 0) {
 			if (unlikely (path.is_open ())) {
 				warning (@"Path is open in $(glyph.get_name ()).");
@@ -460,25 +461,25 @@ public class Text : Widget {
 			//path.add_hidden_double_points (); // FIXME: this distorts shapes
 				
 			prev = path.points.get (path.points.size - 1);
-			xa = (prev.x - lsb) * scale + x;
-			ya = y - prev.y * scale;
+			xa = (prev.x - lsb) * s + x;
+			ya = y - prev.y * s;
 			cr.move_to (xa, ya);
 			
-			by = (y - cached_font.base_line * scale);
+			by = (y - cached_font.base_line * s);
 			for (int i = 0; i < path.points.size; i++) {
 				e = path.points.get (i).copy ();
 				
 				PenTool.convert_point_segment_type (prev, e, PointType.CUBIC);
 				
-				xb = (prev.get_right_handle ().x - lsb) * scale + x;
-				yb = by - prev.get_right_handle ().y * scale;
+				xb = (prev.get_right_handle ().x - lsb) * s + x;
+				yb = by - prev.get_right_handle ().y * s;
 
-				xc = (e.get_left_handle ().x - lsb) * scale + x;
-				yc = by - e.get_left_handle ().y * scale;
+				xc = (e.get_left_handle ().x - lsb) * s + x;
+				yc = by - e.get_left_handle ().y * s;
 					
-				xd = (e.x - lsb) * scale + x;
-				yd = by - e.y * scale;
-				
+				xd = (e.x - lsb) * s + x;
+				yd = by - e.y * s;
+
 				cr.curve_to (xb, yb, xc, yc, xd, yd);
 				cr.line_to (xd, yd);
 				
