@@ -738,6 +738,7 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "weight") {
 				font.weight = int.parse (t.get_content ());
 			}
+			
 			if (t.get_name () == "images") {
 				parse_images (t);
 			}
@@ -1391,7 +1392,7 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	public static void close (Path path) {
-		EditPoint ep1, ep2;
+		EditPoint ep1, ep2, last;
 		
 		if (path.points.size < 2) {
 			warning ("Less  than two points in path.");
@@ -1404,10 +1405,12 @@ class BirdFontFile : GLib.Object {
 		
 		path.points.remove_at (path.points.size - 1);
 		
-		ep2.tie_handles = ep1.tie_handles;
-		ep2.left_handle.angle = ep1.left_handle.angle;
-		ep2.left_handle.length = ep1.left_handle.length;
-		ep2.left_handle.type = ep1.left_handle.type;
+		if (ep1.type != PointType.QUADRATIC || ep2.type != PointType.QUADRATIC) {
+			ep2.tie_handles = ep1.tie_handles;
+			ep2.left_handle.angle = ep1.left_handle.angle;
+			ep2.left_handle.length = ep1.left_handle.length;
+			ep2.left_handle.type = ep1.left_handle.type;
+		}
 		
 		path.close ();
 	}

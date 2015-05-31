@@ -48,8 +48,7 @@ public class OverViewItem : GLib.Object {
 		this.y = y;
 		this.character = character;
 		this.glyphs = glyphs;
-		this.info = new CharacterInfo (character, glyphs);
-		info.set_position (x + width - 17, y + height - 22.5);
+		this.info = new CharacterInfo (character, glyphs);		
 
 		label = new Text ((!) character.to_string (), 17);		
 		truncate_label ();
@@ -110,10 +109,9 @@ public class OverViewItem : GLib.Object {
 		bool a;
 		GlyphCollection g;
 		bool s = (x <= px <= x + width) && (y <= py <= y + height);
-	
+
 		if (has_icons () && glyphs != null) {
 			g = (!) glyphs;
-			
 			version_menu.set_position (x + width - 21, y + height - 18);
 			a = version_menu.menu_item_action (px, py); // select one item on the menu
 			if (a) {
@@ -123,6 +121,7 @@ public class OverViewItem : GLib.Object {
 			version_menu.menu_icon_action (px, py); // click in the open menu
 		}
 		
+		info.set_position (x + width - 17, y + height - 22.5);
 		if (has_icons () && info.is_over_icon (px, py)) {
 			MainWindow.get_overview ().set_character_info (info);
 		}
