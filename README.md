@@ -27,6 +27,8 @@ packages with a -dev or -devel affix:
     libsqlite3-dev
     unicode-data (unicode character database)
 
+XML Bird is available from [birdfont.org][xmlbird].
+
 BirdFont have two build systems, one python script that builds all
 binaries at once and one dependency based build system that uses
 doit.
@@ -57,4 +59,5 @@ http://birdfont.org Many Linux distributions have packages of
 Birdfont in their repositories. There is a BSD package in OpenBSD.
 
 [birdfont]: http://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
+[xmlbird]: http://birdfont.org/xmlbird.php "XML Bird – XML Parser for programs written in VALA"
 
