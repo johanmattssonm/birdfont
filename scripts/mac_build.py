@@ -52,16 +52,12 @@ ldflags = options.ldflags + " " + "$(pkg-config --libs gdk-pixbuf-2.0)"
 library_cflags = "-fno-common -fPIC " + cflags 
 library_ldflags = options.ldflags + " " + """-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,""" + prefix + """/lib/libbirdfont.dylib""" 
 
-xml_library_cflags = "-fno-common -fPIC " + cflags 
-xml_library_ldflags = options.ldflags + " " + """-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,""" + prefix + """/lib/libbirdxml.dylib""" 
-
 gems_library_cflags = "-fno-common -fPIC -D MAC" + cflags 
 gems_library_ldflags = options.ldflags + " " + """-dynamiclib -Wl,-headerpad_max_install_names,-undefined,dynamic_lookup,-compatibility_version,1.0,-current_version,1.0,-install_name,""" + prefix + """/lib/libbirdgems.dylib""" 
 
 configfile.write_config (prefix)
 compile_translations()
 build.libbirdgems(prefix, cc, gems_library_cflags, gems_library_ldflags, valac, valaflags, "libbirdgems." + version.LIBBIRDGEMS_SO_VERSION + ".dylib", False)
-build.libbirdxml(prefix, cc, xml_library_cflags, xml_library_ldflags, valac, valaflags, "libbirdxml." + version.LIBBIRDXML_SO_VERSION + ".dylib", False)
 build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, "libbirdfont." + version.SO_VERSION + ".dylib", False)
 build.birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, False)
 
