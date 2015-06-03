@@ -161,6 +161,7 @@ public class TabContent : GLib.Object {
 		} else if (MainWindow.get_menu ().show_menu) {
 			MainWindow.get_menu ().button_release (button, x, y);
 		} else if (text_input_visible) {
+			text_input_button.button_release (button, x, y);
 			text_input.button_release (button, x, y);				
 			GlyphCanvas.redraw ();
 		} else {
