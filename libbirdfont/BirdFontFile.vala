@@ -1392,7 +1392,7 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	public static void close (Path path) {
-		EditPoint ep1, ep2, last;
+		EditPoint ep1, ep2;
 		
 		if (path.points.size < 2) {
 			warning ("Less  than two points in path.");

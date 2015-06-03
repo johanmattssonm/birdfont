@@ -39,17 +39,16 @@ public class LayerLabel : Tool {
 		text_height = 17 * Toolbox.get_scale ();
 		label_text.set_font_size (text_height);
 
-		panel_press_action.connect ((selected, button, tx, ty) => {
-			LayerLabel l;
-			
-			DrawingTools.deselect_layers ();
-			
+		panel_press_action.connect ((selected, button, tx, ty) => {	
 			if (y <= ty <= y + h) {
 				if (tx >= w - 30 * Toolbox.get_scale ()) {
+					DrawingTools.deselect_layers ();
 					remove_layer ();
 				} if (tx < 25 * Toolbox.get_scale ()) {
 					layer.visible = !layer.visible;
 				} else {
+					MainWindow.get_current_glyph ().current_layer = layer;
+					DrawingTools.deselect_layers ();
 					selected_layer = true;
 				}
 			} else {
@@ -76,7 +75,6 @@ public class LayerLabel : Tool {
 		Text visibility_icon;
 		double x = this.x - px;
 		double y = this.y - py;
-		double text_height;
 		double text_width;
 		string visibility;
 		

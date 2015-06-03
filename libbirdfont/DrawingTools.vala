@@ -49,6 +49,7 @@ public class DrawingTools : ToolCollection  {
 	public static BackgroundTool move_background;
 	public static Tool move_canvas;
 	public static Tool add_layer;
+	public static Tool show_layers;
 	
 	static Tool quadratic_points;
 	static Tool cubic_points;
@@ -782,11 +783,23 @@ public class DrawingTools : ToolCollection  {
 
 		add_layer = new Tool ("add_layer", t_("Add layer"));
 		add_layer.select_action.connect ((self) => {
+			layer_tools.visible = true;
 			MainWindow.get_current_glyph ().add_new_layer ();
 			update_layers ();
+			show_layers.selected = true;
+			add_layer.selected = false;
 		});
 		layer_settings.add_tool (add_layer);
-		
+
+		show_layers = new Tool ("show_layers", t_("Show layers"));
+		show_layers.select_action.connect ((self) => {
+			layer_tools.visible = !layer_tools.visible;
+			MainWindow.get_toolbox ().update_expanders ();
+			Toolbox.redraw_tool_box ();
+			show_layers.selected = layer_tools.visible;
+		});
+		layer_settings.add_tool (show_layers);
+				
 		// add stroke to path
 		add_stroke = new Tool ("apply_stroke", t_("Apply stroke"));
 		add_stroke.select_action.connect ((self) => {
@@ -1136,6 +1149,9 @@ public class DrawingTools : ToolCollection  {
 		if (BirdFont.has_argument ("--test")) {
 			add_expander (test_tools);
 		}
+		
+		layer_settings.set_persistent (true);
+		layer_settings.set_unique (false);
 		
 		draw_tools.set_persistent (true);
 		draw_tools.set_unique (false);

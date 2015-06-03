@@ -111,13 +111,14 @@ public class Glyph : FontDisplay {
 	public static double orientation_arrow_opacity = 1;
 	
 	public Gee.ArrayList<Layer> layers = new Gee.ArrayList<Layer> ();
+	public Layer current_layer = new Layer ();
 	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
 
 		path_list.add (new Path ());
-		
+		layers.add (current_layer);
 		add_help_lines ();
 		
 		left_limit = -28;
@@ -129,6 +130,7 @@ public class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 
 		path_list.add (new Path ());
+		layers.add (current_layer);
 	}
 		
 	~Glyph () {
@@ -398,6 +400,7 @@ public class Glyph : FontDisplay {
 		}
 		
 		update_zoom_bar ();
+		DrawingTools.update_layers ();
 	}
 	
 	void update_zoom_bar () {
