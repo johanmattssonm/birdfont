@@ -40,10 +40,10 @@ public class Text : Widget {
 	public double font_size;
 	public double sidebearing_extent = 0;
 
-	double r = 0;
-	double g = 0;
-	double b = 0;
-	double a = 1;
+	public double r = 0;
+	public double g = 0;
+	public double b = 0;
+	public double a = 1;
 	
 	bool use_cached_glyphs = true;
 	double truncated_width = -1;

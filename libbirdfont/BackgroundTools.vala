@@ -75,6 +75,8 @@ public class BackgroundTools : ToolCollection  {
 		foreach (BackgroundSelection selection in current_image.selections) {
 			add_part (selection);
 		}
+		
+		parts.redraw ();
 	}
 
 	public void add_part (BackgroundSelection selection) {
@@ -147,6 +149,8 @@ public class BackgroundTools : ToolCollection  {
 			MainWindow.get_toolbox ().update_expanders ();
 			Toolbox.redraw_tool_box ();
 		}
+		
+		parts.redraw ();
 	}
 
 	void set_new_background_image (GlyphCollection gc, BackgroundPartLabel bpl) {
@@ -280,7 +284,7 @@ public class BackgroundTools : ToolCollection  {
 		
 		font.add_background_image (image);
 	}
-	
+
 	public override Gee.ArrayList<string> get_displays () {
 		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
 		d.add ("Backgrounds");

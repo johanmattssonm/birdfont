@@ -24,6 +24,7 @@ public class TextArea : Widget {
 	public double font_size;
 	public double padding = 3.3;
 	public bool single_line = false;
+	public Color text_color = Color.black ();
 	
 	public bool draw_carret {
 		get { return carret_is_visible; }
@@ -65,11 +66,15 @@ public class TextArea : Widget {
 	public bool editable;
 	public bool use_cache = true;
 	
-	public TextArea (double font_size = 20) {
+	public TextArea (double font_size = 20, Color? c = null) {
 		this.font_size = font_size;
 		width = min_width;
 		height = min_height;
 		editable = true;
+		
+		if (c != null) {
+			text_color = (!) c;
+		}
 	}
 
 	public override void focus (bool focus) {
@@ -105,12 +110,12 @@ public class TextArea : Widget {
 		next_paragraph = text.index_of ("\n", last_paragraph);
 		
 		if (next_paragraph == -1) {
-			paragraph = new Paragraph (text.substring (last_paragraph), font_size, paragraphs.size);
+			paragraph = new Paragraph (text.substring (last_paragraph), font_size, paragraphs.size, text_color);
 			paragraphs.add (paragraph);
 			last_paragraph = DONE;
 		} else {
 			next_paragraph +=  "\n".length;
-			paragraph = new Paragraph (text.substring (last_paragraph, next_paragraph - last_paragraph), font_size, paragraphs.size);
+			paragraph = new Paragraph (text.substring (last_paragraph, next_paragraph - last_paragraph), font_size, paragraphs.size, text_color);
 			paragraphs.add (paragraph);
 			last_paragraph = next_paragraph;
 		}
@@ -279,7 +284,7 @@ public class TextArea : Widget {
 		
 		if (unlikely (!(0 <= carret.paragraph < paragraphs.size))) {
 			warning (@"No paragraph, index: $(carret.paragraph), size: $(paragraphs.size)");
-			p = new Paragraph ("", 0, 0);
+			p = new Paragraph ("", 0, 0, text_color);
 			paragraphs.add (p);
 			return p;
 		}
@@ -710,7 +715,7 @@ public class TextArea : Widget {
 			u = true;
 			
 			if (paragraphs.size == 0) {
-				paragraphs.add (new Paragraph ("", font_size, 0));
+				paragraphs.add (new Paragraph ("", font_size, 0, text_color));
 			}
 		} else {
 			ui = new TextUndoItem (carret);
@@ -739,7 +744,7 @@ public class TextArea : Widget {
 			for (int i = 1; i < pgs.size; i++) {
 				paragraph_index++;
 				string next = pgs.get (i);
-				next_paragraph = new Paragraph (next, font_size, paragraph_index);
+				next_paragraph = new Paragraph (next, font_size, paragraph_index, text_color);
 				paragraphs.insert (paragraph_index, next_paragraph);
 				ui.added.add (next_paragraph);
 				u = true;
@@ -799,7 +804,7 @@ public class TextArea : Widget {
 
 						w = next_word.text;
 						if (next_word.widget_y <= tt_click <= next_word.widget_y + font_size) {
-							Theme.text_color (next_word, "Foreground 1");
+							//FIXME: DELETE Theme.text_color (next_word, "Foreground 1");
 							
 							p = next_word.get_sidebearing_extent ();
 
@@ -1187,7 +1192,7 @@ public class TextArea : Widget {
 
 		if (paragraphs.size > 0 && paragraphs.get (0).words.size > 0) {
 			Text t = paragraphs.get (0).words.get (0);
-			Theme.text_color (t, "Foreground 1");
+			//FIXME: DELETE Theme.text_color (t, "Foreground 1");
 		}
 		
 		for (int i = first_visible; i < last_visible; i++) {
@@ -1201,7 +1206,7 @@ public class TextArea : Widget {
 				cc = new Context ((!) paragraph.cached_surface);
 
 				foreach (Text next_word in paragraph.words) {
-					Theme.text_color (next_word, "Foreground 1");
+					//FIXME: DELETE Theme.text_color (next_word, "Foreground 1");
 					
 					if (next_word.text != "\n") {
 						next_word.draw_at_top (cc, next_word.widget_x, next_word.widget_y - ty);
@@ -1487,25 +1492,22 @@ public class TextArea : Widget {
 		}
 		
 		private Gee.ArrayList<Text> words_in_paragraph = new Gee.ArrayList<Text> ();
-		
 		public int text_length;
-		
 		public bool need_layout = true;
-		
 		public Surface? cached_surface = null;
-		
 		double font_size;
-		
 		public int index;
+		Color text_color;
 		
-		public Paragraph (string text, double font_size, int index) {
+		public Paragraph (string text, double font_size, int index, Color c) {
 			this.index = index;
 			this.font_size = font_size;
+			text_color = c;
 			set_text (text);
 		}
 
 		public Paragraph copy () {
-			Paragraph p = new Paragraph (text.dup (), font_size, index);
+			Paragraph p = new Paragraph (text.dup (), font_size, index, text_color);
 			p.need_layout = true;
 			return p;
 		}
@@ -1555,6 +1557,12 @@ public class TextArea : Widget {
 				}
 				
 				word = new Text (w, font_size);
+				
+				word.r = text_color.r;
+				word.g = text_color.g;
+				word.b = text_color.b;
+				word.a = text_color.a;
+				
 				words_in_paragraph.add (word);
 			}
 		}

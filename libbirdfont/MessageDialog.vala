@@ -22,7 +22,8 @@ public class MessageDialog : Dialog {
 	TextArea message;
 	
 	public MessageDialog (string message) {
-		this.message = new TextArea (20 * MainWindow.units);
+		Color c = Theme.get_color ("Text Tool Box");
+		this.message = new TextArea (20 * MainWindow.units, c);
 		this.message.set_text (message);
 		this.message.draw_border = false;
 		this.message.editable = false;
@@ -45,7 +46,9 @@ public class MessageDialog : Dialog {
 		message.layout ();
 
 		width = message.get_width ();
-		height = message.get_height () + ok_button.get_height ();
+		height = message.get_height ();
+		height += ok_button.get_height ();
+		height += 5 * MainWindow.units;
  
 		cx = (allocation.width - width) / 2.0;
 		cy = (allocation.height - height) / 2.0;
@@ -69,6 +72,7 @@ public class MessageDialog : Dialog {
 		cr.stroke ();
 		cr.restore ();
 
+		cy += 5 * MainWindow.units;
 		message.widget_x = cx + 10 * MainWindow.units;
 		message.widget_y = cy;
 		message.allocation = allocation;
@@ -82,6 +86,10 @@ public class MessageDialog : Dialog {
 
 	public override void button_press (uint button, double x, double y) {
 		ok_button.button_press (button, x, y);
+	}
+	
+	public override void button_release (uint button, double x, double y) {
+		ok_button.button_release (button, x, y);
 	}
 }
 

@@ -178,6 +178,12 @@ public class TableLayout : FontDisplay {
 			set_focus (t);
 			t.button_release (button, x, y);
 		}
+
+		foreach (Widget w in widgets) {
+			if (w.is_over (x, y)) {
+				w.button_release (button, x, y);
+			}
+		}
 					
 		GlyphCanvas.redraw ();
 	}
