@@ -86,7 +86,7 @@ public class MoveTool : Tool {
 			}
 			
 			foreach (Path p in g.active_paths) {
-				g.path_list.remove (p);
+				g.layers.remove_path (p);
 				g.update_view ();
 			}
 
@@ -202,7 +202,7 @@ public class MoveTool : Tool {
 		
 		glyph.clear_active_paths ();
 		
-		foreach (Path p in glyph.path_list) {
+		foreach (Path p in glyph.get_current_layer ()) {
 			if (p.xmin > x1 && p.xmax < x2 && p.ymin < y1 && p.ymax > y2) {
 				if (p.points.size > 0) {
 					glyph.add_active_path (p);
@@ -442,7 +442,7 @@ public class MoveTool : Tool {
 		
 		g.clear_active_paths ();
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_current_layer ()) {
 			if (p.points.size > 0) {
 				g.add_active_path (p);
 			}

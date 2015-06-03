@@ -357,8 +357,6 @@ public class Font : GLib.Object {
 		n.right_limit = 0;
 		n.remove_empty_paths ();
 		
-		assert (n.path_list.size == 0);
-		
 		return gc;
 	}
 	

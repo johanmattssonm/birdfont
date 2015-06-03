@@ -607,16 +607,19 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tool_modifiers.add_tool (close_path_tool);
 		
+		// FIXME: add new layer tools
+		/*
 		move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"));
 		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 
 			foreach (Path p in g.active_paths) {
-				g.path_list.remove (p);
+				g.layers.remove (p);
 				g.path_list.insert (0, p);
 			}
 		});
 		draw_tool_modifiers.add_tool (move_layer);
+		*/
 
 		flip_vertical = new Tool ("flip_vertical", t_("Flip path vertically"));
 		flip_vertical.select_action.connect ((self) => {
@@ -1575,7 +1578,7 @@ public class DrawingTools : ToolCollection  {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		layer_tools.tool.clear ();
-		foreach (Layer layer in g.layers) { 
+		foreach (Layer layer in g.layers.subgroups) { 
 			LayerLabel label = new LayerLabel ("Layer", layer);
 			layer_tools.add_tool (label);
 		}

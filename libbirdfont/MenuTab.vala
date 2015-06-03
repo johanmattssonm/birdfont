@@ -557,7 +557,7 @@ public class MenuTab : FontDisplay {
 		
 		// selected segments
 		if (paths.size == 0) {
-			foreach (Path p in g.path_list) {
+			foreach (Path p in g.get_all_paths ()) {
 				g.add_active_path (p);
 			}
 			
@@ -569,15 +569,15 @@ public class MenuTab : FontDisplay {
 		g.store_undo_state ();
 		
 		foreach (Path p in g.active_paths) {
-			g.path_list.remove (p);
+			g.layers.remove_path (p);
 		}
 
 		foreach (Path p in g.active_paths) {
-			g.path_list.remove (p);
+			g.layers.remove_path (p);
 		}
 				
 		foreach (Path p in paths) {
-			g.add_path (p);
+			g.layers.add_path (p);
 			g.add_active_path (p);
 		}
 

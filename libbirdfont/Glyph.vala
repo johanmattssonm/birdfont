@@ -32,10 +32,6 @@ public class Glyph : FontDisplay {
 	Gee.ArrayList<ZoomView> zoom_list = new Gee.ArrayList<ZoomView> ();
 	int zoom_list_index = 0;
 	
-	// Paths
-	public Gee.ArrayList<Path> path_list = new Gee.ArrayList<Path> ();	
-	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
-	
 	// The point where edit event begun 
 	double pointer_begin_x = 0;
 	double pointer_begin_y = 0;
@@ -110,15 +106,16 @@ public class Glyph : FontDisplay {
 	public static bool show_orientation_arrow = false;
 	public static double orientation_arrow_opacity = 1;
 	
-	public Gee.ArrayList<Layer> layers = new Gee.ArrayList<Layer> ();
+	public Layer layers = new Layer ();
 	public Layer current_layer = new Layer ();
+	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
 	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
 
-		path_list.add (new Path ());
-		layers.add (current_layer);
+		current_layer.add_path (new Path ());
+		layers.add_layer (current_layer);
 		add_help_lines ();
 		
 		left_limit = -28;
@@ -129,17 +126,28 @@ public class Glyph : FontDisplay {
 		this.name = name;
 		this.unichar_code = unichar_code;
 
-		path_list.add (new Path ());
-		layers.add (current_layer);
+		current_layer.add_path (new Path ());
+		layers.add_layer (current_layer);
+	}
+
+	public PathList get_visible_path_list () {
+		return layers.get_visible_paths ();
 	}
 		
-	~Glyph () {
-		path_list.clear ();
-		active_paths.clear ();
+	public Gee.ArrayList<Path> get_visible_paths () {
+		return layers.get_visible_paths ().paths;
+	}
+
+	public Gee.ArrayList<Path> get_current_layer () {
+		return current_layer.paths.paths;
+	}
+	
+	public Gee.ArrayList<Path> get_all_paths () {
+		return layers.get_all_paths ().paths;
 	}
 	
 	public void add_new_layer () {
-		layers.add (new Layer ());
+		layers.add_layer (new Layer ());
 	}
 	
 	public GlyfData get_ttf_data () {
@@ -157,7 +165,7 @@ public class Glyph : FontDisplay {
 		PathList stroke;
 
 		pl = new PathList ();
-		foreach (Path p in path_list) {
+		foreach (Path p in get_visible_paths ()) {
 			if (p.stroke > 0) {
 				stroke = p.get_stroke ();
 				foreach (Path stroke_part in stroke.paths) {
@@ -220,7 +228,9 @@ public class Glyph : FontDisplay {
 	}
 	
 	public bool boundaries (out double x1, out double y1, out double x2, out double y2) {
-		if (path_list.size == 0) {
+		var paths = get_all_paths ();
+		
+		if (paths.size == 0) {
 			x1 = 0;
 			y1 = 0;
 			x2 = 0;
@@ -233,7 +243,7 @@ public class Glyph : FontDisplay {
 		y1 = CANVAS_MAX;
 		y2 = CANVAS_MIN;
 	
-		foreach (Path p in path_list) {
+		foreach (Path p in paths) {
 			p.update_region_boundaries ();
 
 			if (p.points.size > 1) {
@@ -372,7 +382,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	public void add_path (Path p) {
-		path_list.add (p);
+		current_layer.add_path (p);
 	}
 	
 	public override void selected_canvas () {
@@ -540,8 +550,9 @@ public class Glyph : FontDisplay {
 		
 		double max_x, min_x, max_y, min_y;
 		PathList pl;
+		var paths = get_all_paths ();
 		
-		if (path_list.size == 0) {
+		if (paths.size == 0) {
 			x1 = 0;
 			y1 = 0;
 			x2 = 0;
@@ -555,7 +566,7 @@ public class Glyph : FontDisplay {
 		min_y = CANVAS_MAX;
 		
 		// FIXME: optimize
-		foreach (Path p in path_list) {
+		foreach (Path p in paths) {
 			
 			if (p.stroke > 0) {
 				pl = p.get_stroke_fast ();
@@ -641,7 +652,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	public void remove_empty_paths () {
-		foreach (Path p in path_list) {
+		foreach (Path p in get_all_paths ()) {
 			if (p.points.size < 2) {
 				delete_path (p);
 				remove_empty_paths ();
@@ -650,8 +661,8 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
-	public void delete_path (Path p) requires (path_list.size > 0) {
-		path_list.remove (p);
+	public void delete_path (Path p) {
+		layers.remove_path(p);
 	}
 	
 	public string get_svg_data () {
@@ -777,7 +788,7 @@ public class Glyph : FontDisplay {
 	 */
 	public bool process_deleted () {
 		Gee.ArrayList<Path> deleted_paths = new Gee.ArrayList<Path> ();
-		foreach (Path p in path_list) {
+		foreach (Path p in get_all_paths ()) {
 			if (p.points.size > 0) {
 				if (process_deleted_points_in_path (p)) {
 					return true;
@@ -913,8 +924,6 @@ public class Glyph : FontDisplay {
 
 	/** Add new points to this path. */
 	public void set_active_path (Path p) {
-		path_list.remove (p);
-		path_list.add (p);
 		p.reopen ();
 		clear_active_paths ();
 		add_active_path (p);
@@ -1065,7 +1074,7 @@ public class Glyph : FontDisplay {
 		Path? p = null;
 		bool found = false;
 		
-		foreach (Path pt in path_list) {
+		foreach (Path pt in get_visible_paths ()) {
 			if (pt.is_over (x, y)) {
 				p = pt;
 				found = true;
@@ -1115,14 +1124,15 @@ public class Glyph : FontDisplay {
 
 		double xt = path_coordinate_x (x);
 		double yt = path_coordinate_y (y);
+		var paths = get_visible_paths ();
 
-		foreach (Path p in path_list) {
+		foreach (Path p in paths) {
 			if (p.is_over (xt, yt)) {
 				return p;
 			}
 		}
 
-		foreach (Path p in path_list) {
+		foreach (Path p in paths) {
 			if (p.points.size == 0) continue;
 			
 			p.get_closest_point_on_path (ep, xt, yt);
@@ -1136,12 +1146,12 @@ public class Glyph : FontDisplay {
 		}
 		
 		// a path without any editpoints
-		if (path_list.size > 0) {
-			return path_list.get (0);
+		if (paths.size > 0) {
+			return paths.get (0);
 		}
 
 		if (unlikely (min_distance == double.MAX)) {
-			warning (@"No path found in path_list. Length: $(path_list.size)");
+			warning (@"No path found in path_list.");
 		}
 		
 		return min_point;
@@ -1224,13 +1234,6 @@ public class Glyph : FontDisplay {
 		redraw_area ((int)px - 20, (int)py - 20, tw + 120, th + 120); 		
 	}
 	
-	public Path? get_last_path () 
-		ensures (result != null)
-	{
-		return_val_if_fail (path_list.size > 0, null);
-		return path_list.get (path_list.size - 1);
-	}
-	
 	public bool has_active_path () {
 		return active_paths.size > 0;
 	}
@@ -1243,7 +1246,7 @@ public class Glyph : FontDisplay {
 	public bool close_path () {
 		bool r = false;
 
-		foreach (Path p in path_list) {
+		foreach (Path p in get_all_paths ()) {
 			if (p.is_editable ()) {
 				r = true;
 				p.set_editable (false);
@@ -1262,7 +1265,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public void open_path () {
-		foreach (Path p in path_list) {
+		foreach (Path p in get_visible_paths ()) {
 			p.set_editable (true);
 			p.recalculate_linear_handles ();
 			
@@ -1343,7 +1346,7 @@ public class Glyph : FontDisplay {
 		
 		reset_zoom ();
 
-		foreach (var p in path_list) {
+		foreach (var p in get_visible_paths ()) {
 			p.update_region_boundaries ();
 			
 			if (p.points.size > 2) {
@@ -1476,7 +1479,7 @@ public class Glyph : FontDisplay {
 	}
 	
 	public bool is_empty () {
-		foreach (Path p in path_list) {
+		foreach (Path p in get_visible_paths ()) {
 			if (p.points.size > 0) {
 				return false;
 			}
@@ -1514,7 +1517,7 @@ public class Glyph : FontDisplay {
 		
 		cr.save ();
 		cr.new_path ();
-		foreach (Path p in path_list) {
+		foreach (Path p in get_visible_paths ()) {
 			if (p.stroke > 0) {
 				stroke = p.get_stroke_fast ();
 				draw_path_list (stroke, cr, color);
@@ -1532,7 +1535,7 @@ public class Glyph : FontDisplay {
 		
 		cr.save ();
 		cr.new_path ();
-		foreach (Path p in path_list) {
+		foreach (Path p in get_visible_paths ()) {
 			if (p.stroke > 0) {
 				stroke = p.get_stroke_fast ();
 				
@@ -1569,7 +1572,7 @@ public class Glyph : FontDisplay {
 		if (is_open () && Path.fill_open_path) {
 			cr.save ();
 			cr.new_path ();
-			foreach (Path p in path_list) {
+			foreach (Path p in get_visible_paths ()) {
 				if (p.stroke == 0) {
 					p.draw_path (cr, this, get_path_fill_color ());
 				}
@@ -1581,7 +1584,7 @@ public class Glyph : FontDisplay {
 		if (is_open ()) {
 			cr.save ();
 			cr.new_path ();
-			foreach (Path p in path_list) {
+			foreach (Path p in get_visible_paths ()) {
 				p.draw_outline (cr);
 				p.draw_edit_points (cr);
 			}
@@ -1595,7 +1598,7 @@ public class Glyph : FontDisplay {
 				
 			cr.save ();
 			cr.new_path ();
-			foreach (Path p in path_list) {
+			foreach (Path p in get_visible_paths ()) {
 				if (p.stroke == 0) {
 					p.draw_path (cr, this, Color.black ());
 				}
@@ -1617,7 +1620,7 @@ public class Glyph : FontDisplay {
 		}
 		
 		if (show_orientation_arrow) {
-			foreach (Path p in path_list) {
+			foreach (Path p in get_visible_paths ()) {
 				if (p.stroke > 0) {
 					stroke = p.get_stroke_fast ();
 					foreach (Path ps in stroke.paths) {
@@ -1688,7 +1691,7 @@ public class Glyph : FontDisplay {
 		}
 
 		if (unlikely (Preferences.draw_boundaries)) {
-			foreach (Path p in path_list) {
+			foreach (Path p in get_visible_paths ()) {
 				p.draw_boundaries (cr);
 			}
 		}
@@ -1795,10 +1798,8 @@ public class Glyph : FontDisplay {
 		foreach (Line line in get_all_help_lines ()) {
 			g.add_line (line.copy ());
 		}
-
-		foreach (Path p in path_list) {
-			g.add_path (p.copy ());
-		}
+		
+		g.layers = layers.copy ();
 		
 		foreach (Path p in active_paths) {
 			g.active_paths.add (p);
@@ -1867,9 +1868,11 @@ public class Glyph : FontDisplay {
 	}
 	
 	void set_glyph_data (Glyph g) {
-		path_list.clear ();
+		// FIXME: get a pointer to current layer not a copy
+		// current_layer 
+		layers = g.layers.copy ();
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in get_all_paths ()) {
 			add_path (p);
 			p.update_region_boundaries ();
 		}
@@ -1911,7 +1914,7 @@ public class Glyph : FontDisplay {
 		
 		min = double.MAX;
 		
-		foreach (Path pp in path_list) {
+		foreach (Path pp in get_visible_paths ()) {
 			lep = new EditPoint ();
 			pp.get_closest_point_on_path (lep, xt, yt);
 			distance = Math.sqrt (Math.pow (Math.fabs (xt - lep.x), 2) + Math.pow (Math.fabs (yt - lep.y), 2));
@@ -2266,15 +2269,11 @@ public class Glyph : FontDisplay {
 		
 		TabContent.show_text_input (listener);
 	}
-	
-	public PathList get_paths () {
-		PathList pl = new PathList ();
-		
-		foreach (Path p in path_list) {
-			pl.add (p);
-		}
-		
-		return pl;
+
+	public Path? get_last_path ()  {
+		var paths = get_all_paths ();
+		return_val_if_fail (paths.size > 0, null);
+		return paths.get (paths.size - 1);
 	}
 }
 

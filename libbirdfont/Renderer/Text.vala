@@ -392,7 +392,7 @@ public class Text : Widget {
 
 		lsb = glyph.left_limit;
 
-		foreach (Path path in glyph.path_list) {
+		foreach (Path path in glyph.get_visible_paths ()) {
 			draw_path (cr, glyph, path, lsb, x, y, ratio);
 		}
 
@@ -428,7 +428,7 @@ public class Text : Widget {
 			cc.set_source_rgba (r, g, b, a);
 			cc.new_path ();
 
-			foreach (Path path in glyph.path_list) {
+			foreach (Path path in glyph.get_visible_paths ()) {
 				draw_path (cc, glyph, path, lsb, offset_x / 10.0, cc_y + offset_y / 10.0, ratio);
 			}
 			

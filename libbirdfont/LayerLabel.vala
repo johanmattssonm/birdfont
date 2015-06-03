@@ -63,7 +63,7 @@ public class LayerLabel : Tool {
 
 		idle.set_callback (() => {			
 			Glyph g = MainWindow.get_current_glyph ();
-			g.layers.remove (layer);
+			g.layers.remove_layer (layer);
 			DrawingTools.update_layers ();
 			return false;
 		});

@@ -100,7 +100,7 @@ public class ExportTool : GLib.Object {
 		s = new StringBuilder ();
 		glyph_svg = "";
 
-		pl = only_selected_paths ? glyph.active_paths : glyph.path_list;
+		pl = only_selected_paths ? glyph.active_paths : glyph.get_visible_paths ();
 		foreach (Path p in pl) {
 			if (p.stroke > 0) {
 				s.append (@"<path ");
@@ -129,7 +129,7 @@ public class ExportTool : GLib.Object {
 				}
 			}	
 		} else {
-			foreach (Path p in glyph.path_list) {
+			foreach (Path p in glyph.get_visible_paths ()) {
 				if (p.stroke == 0) {
 					glyph_svg += Svg.to_svg_path (p, glyph);
 				}

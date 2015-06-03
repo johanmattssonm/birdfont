@@ -263,7 +263,7 @@ public class BezierTool : Tool {
 			g.close_path ();
 			MainWindow.set_cursor (NativeWindow.VISIBLE);
 			
-			if (Path.is_counter (g.get_paths (), current_path)) {
+			if (Path.is_counter (g.get_visible_path_list (), current_path)) {
 				current_path.force_direction (Direction.COUNTER_CLOCKWISE);
 			} else {
 				current_path.force_direction (Direction.CLOCKWISE);

@@ -180,7 +180,7 @@ public class PenTool : Tool {
 			BirdFont.get_current_font ().touch ();
 			reset_stroke ();
 			
-			foreach (Path p in g.path_list) {
+			foreach (Path p in g.get_visible_paths ()) {
 				if (p.is_open () && p.points.size > 0) {
 					p.get_first_point ().set_tie_handle (false);
 					p.get_first_point ().set_reflective_handles (false);
@@ -256,7 +256,7 @@ public class PenTool : Tool {
 		
 		clockwise.clear ();
 		counter_clockwise.clear ();
-		foreach (Path p in glyph.path_list) {
+		foreach (Path p in glyph.get_visible_paths ()) {
 			if (p.is_clockwise ()) {
 				clockwise.add (p);
 			} else {
@@ -309,7 +309,7 @@ public class PenTool : Tool {
 		
 		remove_all_selected_points ();
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			// TODO: Select path only of bounding box is in selection box
 			foreach (EditPoint ep in p.points) {
 				if (x1 <= ep.x <= x2 && y2 <= ep.y <= y1) {
@@ -329,7 +329,7 @@ public class PenTool : Tool {
 		
 		process_deleted ();
 
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_all_paths ()) {
 			if (p.has_deleted_point ()) {
 				process_deleted ();
 			}
@@ -690,7 +690,7 @@ public class PenTool : Tool {
 		
 		selected_points.clear ();
 
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			foreach (EditPoint e in p.points) {
 				if (e.is_selected ()) {
 					selected_points.add (new PointSelection (e, p));
@@ -706,7 +706,7 @@ public class PenTool : Tool {
 	
 	public static void close_all_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			if (p.stroke == 0) {
 				p.close ();
 			}
@@ -1081,7 +1081,7 @@ public class PenTool : Tool {
 
 		clear_directions ();
 
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			if (!p.has_direction ()) {
 				if (is_counter_path (p)) {
 					p.force_direction (Direction.COUNTER_CLOCKWISE);
@@ -1103,7 +1103,7 @@ public class PenTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		PathList pl = new PathList ();
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			pl.add (p);
 		}
 		
@@ -1135,7 +1135,7 @@ public class PenTool : Tool {
 		// continue adding points from the other end of the selected path
 		reverse = false;
 
-		foreach (Path p in glyph.path_list) {
+		foreach (Path p in glyph.get_visible_paths ()) {
 			if (p.is_open () && p.points.size >= 1 
 				&& (active_edit_point == p.points.get (0) 
 				|| active_edit_point == p.points.get (p.points.size - 1))) {
@@ -1146,7 +1146,7 @@ public class PenTool : Tool {
 			}
 		}
 			
-		foreach (Path p in glyph.path_list) {
+		foreach (Path p in glyph.get_visible_paths ()) {
 			if (p.is_open () && p.points.size > 1 && active_edit_point == p.points.get (0)) {
 				p.reverse ();
 				update_selection ();
@@ -1214,7 +1214,7 @@ public class PenTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		EditPoint ep_last, ep_first;
 
-		foreach (Path path in glyph.path_list) {
+		foreach (Path path in glyph.get_visible_paths ()) {
 			if (path.points.size == 0) {
 				continue;
 			}
@@ -1328,8 +1328,10 @@ public class PenTool : Tool {
 		Path union;
 		bool direction_changed = false;
 		int px, py;
-
-		if (glyph.path_list.size == 0) {
+		
+		var paths = glyph.get_visible_paths ();
+	
+		if (paths.size == 0) {
 			warning ("No paths.");
 			return null;
 		}
@@ -1355,7 +1357,7 @@ public class PenTool : Tool {
 			glyph.delete_path (path);
 			glyph.clear_active_paths ();
 
-			foreach (Path merge in glyph.path_list) {
+			foreach (Path merge in paths) {
 				if (merge.points.size > 0) {
 					if (is_close_to_point (merge.points.get (merge.points.size - 1), px, py)) {
 						glyph.add_active_path (merge);
@@ -1415,7 +1417,7 @@ public class PenTool : Tool {
 			return path;
 		}
 		
-		foreach (Path merge in glyph.path_list) {
+		foreach (Path merge in paths) {
 			// don't join path with itself here
 			if (path == merge) {
 				continue;
@@ -1574,7 +1576,7 @@ public class PenTool : Tool {
 		px = Glyph.reverse_path_coordinate_x (active.x);
 		py = Glyph.reverse_path_coordinate_y (active.y);
 
-		foreach (Path path in glyph.path_list) {
+		foreach (Path path in glyph.get_visible_paths ()) {
 			
 			if (!path.is_open ()) {
 				continue;
@@ -1603,7 +1605,7 @@ public class PenTool : Tool {
 		EditPoint end;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
-		foreach (Path path in glyph.path_list) {
+		foreach (Path path in glyph.get_visible_paths ()) {
 			if (path.points.size < 1) {
 				continue;
 			}
@@ -1623,7 +1625,7 @@ public class PenTool : Tool {
 		bool redraw;
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			foreach (var ep in p.points) {
 				ep.set_active (false);
 			}
@@ -1652,7 +1654,7 @@ public class PenTool : Tool {
 		
 		path = null;
 		
-		foreach (Path current_path in g.path_list) {
+		foreach (Path current_path in g.get_visible_paths ()) {
 			if (is_close_to_path (current_path, ex, ey)) {
 				foreach (EditPoint e in current_path.points) {
 					nd = e.get_distance (x, y);
@@ -1830,7 +1832,7 @@ public class PenTool : Tool {
 
 	public static void set_default_handle_positions () {
 		Glyph g = MainWindow.get_current_glyph ();
-		foreach (var p in g.path_list) {
+		foreach (var p in g.get_visible_paths ()) {
 			if (p.is_editable ()) {
 				p.create_list ();
 				set_default_handle_positions_on_path (p);
@@ -1857,7 +1859,7 @@ public class PenTool : Tool {
 				}
 			}
 		} else {
-			foreach (Path p in g.path_list) {
+			foreach (Path p in g.get_visible_paths ()) {
 				if (is_close_to_path (p, event_x, event_y)) {
 					foreach (EditPoint ep in p.points) {
 						if (is_close_to_handle (ep, event_x, event_y, distance_to_edit_point)) {
@@ -1920,7 +1922,7 @@ public class PenTool : Tool {
 		EditPoint parent_point;
 		EditPoint tied_point;
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			if (is_close_to_path (p, event_x, event_y) || p == active_path) {
 				foreach (EditPoint ep in p.points) {
 					if (ep.is_selected () || Path.show_all_line_handles) {
@@ -2044,7 +2046,7 @@ public class PenTool : Tool {
 		
 		selected_points.clear ();
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			foreach (EditPoint e in p.points) {
 				e.set_active (false);
 				e.set_selected (false);
@@ -2468,7 +2470,7 @@ public class PenTool : Tool {
 			selected.point.set_selected (true);
 		}
 		
-		foreach (Path p in glyph.path_list) {
+		foreach (Path p in glyph.get_visible_paths ()) {
 			p.update_region_boundaries ();
 		}
 	}
@@ -2477,7 +2479,7 @@ public class PenTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		selected_points.clear ();
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			foreach (EditPoint ep in p.points) {
 				if (ep.is_selected ()) {
 					selected_points.add (new PointSelection (ep, p));
@@ -2489,7 +2491,7 @@ public class PenTool : Tool {
 	public void select_all_points () {
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			foreach (EditPoint ep in p.points) {
 				ep.set_selected (true);
 				add_selected_point (ep, p);

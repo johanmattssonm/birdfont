@@ -386,7 +386,8 @@ class BirdFontFile : GLib.Object {
 		string data;
 		
 		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(double_to_string (g.left_limit))\" right=\"$(double_to_string (g.right_limit))\">\n");
-		foreach (Path p in g.path_list) {
+		// FIXME: save layers
+		foreach (Path p in g.get_all_paths ()) {
 			data = get_point_data (p);
 			if (data != "") {
 				os.put_string (@"\t\t<path ");
@@ -1209,7 +1210,8 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 
-		foreach (Path p in glyph.path_list) {
+		// FIXME: save layers
+		foreach (Path p in glyph.get_all_paths ()) {
 			p.reset_stroke ();
 		}
 
