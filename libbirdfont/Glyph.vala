@@ -110,6 +110,8 @@ public class Glyph : FontDisplay {
 	public static bool show_orientation_arrow = false;
 	public static double orientation_arrow_opacity = 1;
 	
+	public Gee.ArrayList<Layer> layers = new Gee.ArrayList<Layer> ();
+	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -120,8 +122,6 @@ public class Glyph : FontDisplay {
 		
 		left_limit = -28;
 		right_limit = 28;
-		
-		n_instances++;		
 	}
 
 	public Glyph.no_lines (string name, unichar unichar_code = 0) {
@@ -129,18 +129,15 @@ public class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 
 		path_list.add (new Path ());
-		
-		n_instances++;
 	}
-	
-	static int n_instances = 0;
-
-	public int r = 1;
 		
 	~Glyph () {
 		path_list.clear ();
 		active_paths.clear ();
-		n_instances--;
+	}
+	
+	public void add_new_layer () {
+		layers.add (new Layer ());
 	}
 	
 	public GlyfData get_ttf_data () {

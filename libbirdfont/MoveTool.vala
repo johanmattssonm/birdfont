@@ -313,6 +313,7 @@ public class MoveTool : Tool {
 			path.move (x * Glyph.ivz (), y * Glyph.ivz ());
 		}
 		
+		BirdFont.get_current_font ().touch ();
 		PenTool.reset_stroke ();
 		update_selection_boundaries ();
 		objects_moved ();

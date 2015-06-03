@@ -80,14 +80,7 @@ public class Toolbox : GLib.Object  {
 			set_toolbox_from_tab (tab_name, tab);
 		});
 		
-		redraw.connect ((x, y, w, h) => {
-			redraw_notify ();
-		});
-		
 		update_expanders ();
-	}
-
-	void redraw_notify () {	
 	}
 
 	public static void set_toolbox_from_tab (string tab_name, Tab? t = null) {		

@@ -804,7 +804,6 @@ public class TextArea : Widget {
 
 						w = next_word.text;
 						if (next_word.widget_y <= tt_click <= next_word.widget_y + font_size) {
-							//FIXME: DELETE Theme.text_color (next_word, "Foreground 1");
 							
 							p = next_word.get_sidebearing_extent ();
 
@@ -1190,11 +1189,6 @@ public class TextArea : Widget {
 		tx = paragraph.start_x;
 		ty = paragraph.start_y;
 
-		if (paragraphs.size > 0 && paragraphs.get (0).words.size > 0) {
-			Text t = paragraphs.get (0).words.get (0);
-			//FIXME: DELETE Theme.text_color (t, "Foreground 1");
-		}
-		
 		for (int i = first_visible; i < last_visible; i++) {
 			paragraph = paragraphs.get (i);
 			
@@ -1206,8 +1200,6 @@ public class TextArea : Widget {
 				cc = new Context ((!) paragraph.cached_surface);
 
 				foreach (Text next_word in paragraph.words) {
-					//FIXME: DELETE Theme.text_color (next_word, "Foreground 1");
-					
 					if (next_word.text != "\n") {
 						next_word.draw_at_top (cc, next_word.widget_x, next_word.widget_y - ty);
 					}

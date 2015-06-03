@@ -247,7 +247,7 @@ public class BackgroundTools : ToolCollection  {
 
 				MainWindow.get_toolbox ().update_expanders ();
 				set_default_canvas ();
-				Toolbox.redraw_tool_box ();
+				image_selection.redraw ();
 				GlyphCanvas.redraw ();
 				return false;
 			});

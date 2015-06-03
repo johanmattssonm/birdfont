@@ -26,6 +26,8 @@ public class DrawingTools : ToolCollection  {
 	public static Expander grid_expander;
 	Expander shape_tools;
 	public static Expander draw_tool_modifiers;
+	public static Expander layer_tools;
+	public static Expander layer_settings;
 	public static Expander stroke_expander;
 	public static Expander zoombar_tool;
 	public static Expander guideline_tools;
@@ -46,6 +48,7 @@ public class DrawingTools : ToolCollection  {
 	public static TrackTool track_tool;
 	public static BackgroundTool move_background;
 	public static Tool move_canvas;
+	public static Tool add_layer;
 	
 	static Tool quadratic_points;
 	static Tool cubic_points;
@@ -107,6 +110,8 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tools = new Expander (t_("Drawing Tools"));
 		draw_tool_modifiers = new Expander (t_("Control Point"));
+		layer_tools = new Expander ();
+		layer_settings = new Expander (t_("Layers"));
 		stroke_expander = new Expander (t_("Stroke"));
 		shape_tools = new Expander (t_("Geometrical Shapes"));
 		zoombar_tool = new Expander (t_("Zoom"));
@@ -179,7 +184,7 @@ public class DrawingTools : ToolCollection  {
 			update_drawing_and_background_tools (self);
 		});	
 		draw_tools.add_tool (move_canvas);
-						
+								
 		// Tools on android
 		// Delete key
 		delete_button = new Tool ("delete_button", t_("Delete"));
@@ -775,6 +780,13 @@ public class DrawingTools : ToolCollection  {
 			
 		draw_tool_modifiers.add_tool (delete_background);	
 
+		add_layer = new Tool ("add_layer", t_("Add layer"));
+		add_layer.select_action.connect ((self) => {
+			MainWindow.get_current_glyph ().add_new_layer ();
+			update_layers ();
+		});
+		layer_settings.add_tool (add_layer);
+		
 		// add stroke to path
 		add_stroke = new Tool ("apply_stroke", t_("Apply stroke"));
 		add_stroke.select_action.connect ((self) => {
@@ -1112,9 +1124,9 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		add_expander (draw_tool_modifiers);
-		
+		add_expander (layer_settings);
+		add_expander (layer_tools);
 		add_expander (stroke_expander);
-		
 		add_expander (guideline_tools);
 		add_expander (grid);
 		add_expander (zoombar_tool);
@@ -1540,6 +1552,33 @@ public class DrawingTools : ToolCollection  {
 		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
 		d.add ("Glyph");
 		return d;
+	}
+	
+	public static void update_layers () 
+	requires (!is_null (layer_tools)) {
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		layer_tools.tool.clear ();
+		foreach (Layer layer in g.layers) { 
+			LayerLabel label = new LayerLabel ("Layer", layer);
+			layer_tools.add_tool (label);
+		}
+		
+		MainWindow.get_toolbox ().update_expanders ();
+		layer_tools.redraw ();
+		Toolbox.redraw_tool_box ();
+	}
+	
+	public static void deselect_layers ()
+	requires (!is_null (layer_tools)) {			
+		LayerLabel l;
+		
+		foreach (Tool t in layer_tools.tool) {
+			if (t is LayerLabel) {
+				l = (LayerLabel) t;
+				l.selected_layer = false;
+			}
+		}
 	}
 }
 

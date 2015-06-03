@@ -17,6 +17,7 @@ namespace BirdFont {
 public class Layer : GLib.Object {
 	public PathList paths;
 	public Gee.ArrayList<Layer> subgroups;
+	public bool visible = true;
 	
 	public Layer () {
 		paths = new PathList ();
