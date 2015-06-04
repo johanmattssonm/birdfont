@@ -232,6 +232,8 @@ public class MenuTab : FontDisplay {
 		} else if (lc == "round") {
 			StrokeTool.line_cap = LineCap.ROUND;
 		}
+		
+		DrawingTools.set_stroke_tool_visibility ();
 	}
 	
 	// FIXME: background thread

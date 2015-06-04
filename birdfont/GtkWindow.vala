@@ -802,7 +802,7 @@ class ToolboxCanvas : DrawingArea {
 		
 		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK | EventMask.SCROLL_MASK);
 
-		set_size_request (170, 100);
+		set_size_request (212, 100);
 
 		leave_notify_event.connect ((t, e)=> {
 			tb.reset_active_tool ();

@@ -70,12 +70,13 @@ public class LayerLabel : Tool {
 		// remove layer after the click loop
 		IdleSource idle = new IdleSource ();
 
-		idle.set_callback (() => {			
+		idle.set_callback (() => {	
 			Glyph g = MainWindow.get_current_glyph ();
 			g.layers.remove_layer (layer);
 			DrawingTools.update_layers ();
 			BirdFont.get_current_font ().touch ();
-			MainWindow.get_current_glyph ().clear_active_paths ();
+			g.clear_active_paths ();
+			g.store_undo_state ();
 			GlyphCanvas.redraw ();
 			return false;
 		});

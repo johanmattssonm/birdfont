@@ -98,9 +98,9 @@ public class DrawingTools : ToolCollection  {
 	
 	public ZoomBar zoom_bar;
 
-	Tool line_cap_butt;
-	Tool line_cap_round;
-	Tool line_cap_square;
+	static Tool line_cap_butt;
+	static Tool line_cap_round;
+	static Tool line_cap_square;
 			
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		bool selected_line;
@@ -812,7 +812,7 @@ public class DrawingTools : ToolCollection  {
 			StrokeTool.stroke_width = object_stroke.get_value ();
 
 			add_stroke.selected = StrokeTool.add_stroke;
-						
+			set_stroke_tool_visibility ();	
 			GlyphCanvas.redraw ();
 			g.store_undo_state ();
 		
@@ -830,7 +830,8 @@ public class DrawingTools : ToolCollection  {
 			f = BirdFont.get_current_font ();
 			f.settings.set_setting ("apply_stroke", @"$(StrokeTool.add_stroke)");
 			
-			add_stroke.selected = StrokeTool.add_stroke;
+			stroke_expander.redraw ();
+			MainWindow.get_toolbox ().update_expanders ();
 		});
 		stroke_expander.add_tool (add_stroke);
 		add_stroke.selected = StrokeTool.add_stroke;
@@ -1048,8 +1049,13 @@ public class DrawingTools : ToolCollection  {
 		background_help_lines.set_selected (selected_line);
 		guideline_tools.add_tool (background_help_lines);
 
-		Tool new_grid = new GridTool ("show_grid");
-		guideline_tools.add_tool (new_grid);
+		Tool show_grid = new GridTool ("show_grid");
+		show_grid.select_action.connect (() => {
+			grid_expander.visible = show_grid.selected;
+			MainWindow.get_toolbox ().update_expanders ();
+		});
+		guideline_tools.add_tool (show_grid);
+		grid_expander.visible = false;
 
 		// Zoom tools 
 		zoom_bar = new ZoomBar ();
@@ -1219,6 +1225,7 @@ public class DrawingTools : ToolCollection  {
 			add_new_grid (4);
 			
 			MainWindow.get_toolbox ().move (0, 0);
+			set_stroke_tool_visibility ();
 			
 			return false;
 		});
@@ -1248,6 +1255,7 @@ public class DrawingTools : ToolCollection  {
 		
 		add_stroke.selected = stroke;
 		StrokeTool.add_stroke = stroke;
+		set_stroke_tool_visibility ();
 		// FIXME: This is slow: Toolbox.redraw_tool_box ();	
 	}
 
@@ -1599,6 +1607,15 @@ public class DrawingTools : ToolCollection  {
 				l.selected_layer = false;
 			}
 		}
+	}
+	
+	public static void set_stroke_tool_visibility () {
+		object_stroke.visible = StrokeTool.add_stroke;
+		line_cap_butt.visible = StrokeTool.add_stroke;
+		line_cap_round.visible = StrokeTool.add_stroke;
+		line_cap_square.visible = StrokeTool.add_stroke;
+		MainWindow.get_toolbox ().update_expanders ();
+		stroke_expander.redraw ();
 	}
 }
 

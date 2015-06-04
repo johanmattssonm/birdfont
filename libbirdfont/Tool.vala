@@ -77,7 +77,7 @@ public class Tool : Widget {
 	bool showing_this_tooltip = false;
 	static Tool active_tooltip = new Tool ();
 	
-	bool visible = true;
+	public bool visible = true;
 	public bool is_tool_modifier = false;
 	
 	public string icon_color = "";
