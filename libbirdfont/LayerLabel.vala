@@ -46,6 +46,7 @@ public class LayerLabel : Tool {
 					remove_layer ();
 				} if (tx < 25 * Toolbox.get_scale ()) {
 					layer.visible = !layer.visible;
+					GlyphCanvas.redraw ();
 				} else {
 					MainWindow.get_current_glyph ().current_layer = layer;
 					DrawingTools.deselect_layers ();

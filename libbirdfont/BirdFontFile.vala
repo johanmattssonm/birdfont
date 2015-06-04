@@ -22,6 +22,7 @@ namespace BirdFont {
 class BirdFontFile : GLib.Object {
 	
 	Font font;
+	
 	public static const int FORMAT_MAJOR = 2;
 	public static const int FORMAT_MINOR = 0;
 	
@@ -388,14 +389,26 @@ class BirdFontFile : GLib.Object {
 	} 
 
 	public void write_glyph (Glyph g, DataOutputStream os) throws GLib.Error {
+		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(double_to_string (g.left_limit))\" right=\"$(double_to_string (g.right_limit))\">\n");
+		
+		foreach (Layer layer in g.layers.subgroups) {
+			write_layer (layer, os);
+		}
+
+		write_glyph_background (g, os);
+		os.put_string ("\t</glyph>\n");
+	}
+
+	void write_layer (Layer layer, DataOutputStream os) throws GLib.Error {
 		string data;
 		
-		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(double_to_string (g.left_limit))\" right=\"$(double_to_string (g.right_limit))\">\n");
-		// FIXME: save layers
-		foreach (Path p in g.get_all_paths ()) {
+		// FIXME: name, visibility etc.
+		os.put_string (@"\t\t<layer>\n");
+		
+		foreach (Path p in layer.get_all_paths ().paths) {
 			data = get_point_data (p);
 			if (data != "") {
-				os.put_string (@"\t\t<path ");
+				os.put_string (@"\t\t\t<path ");
 				
 				if (p.stroke != 0) {
 					os.put_string (@"stroke=\"$(double_to_string (p.stroke))\" ");
@@ -416,8 +429,8 @@ class BirdFontFile : GLib.Object {
 				os.put_string (@"data=\"$(data)\" />\n");
 			}
 		}
-		write_glyph_background (g, os);
-		os.put_string ("\t</glyph>\n");
+		
+		os.put_string ("\t\t</layer>\n");	
 	}
 
 	public static string double_to_string (double n) {
@@ -1199,6 +1212,7 @@ class BirdFontFile : GLib.Object {
 		bool selected = false;
 		bool has_id = false;
 		int id = 1;
+		Layer layer;
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "left") {
@@ -1222,17 +1236,26 @@ class BirdFontFile : GLib.Object {
 		}
 		
 		foreach (Tag t in tag) {
+			if (t.get_name () == "layer") {
+				layer = parse_layer (t);
+				glyph.layers.add_layer (layer);
+			}
+		}
+
+		// parse paths without layers in old versions of the format
+		foreach (Tag t in tag) {
 			if (t.get_name () == "path") {
 				path = parse_path (t);
 				glyph.add_path (path);
-			}
-			
+ 			}			
+		}
+
+		foreach (Tag t in tag) {
 			if (t.get_name () == "background") {
 				parse_background_scale (glyph, t);
 			}
 		}
 
-		// FIXME: save layers
 		foreach (Path p in glyph.get_all_paths ()) {
 			p.reset_stroke ();
 		}
@@ -1242,6 +1265,22 @@ class BirdFontFile : GLib.Object {
 		
 		gc.insert_glyph (glyph, selected || selected_id == id);
 		glyph = new Glyph.no_lines ("");
+	}
+
+	Layer parse_layer (Tag tag) {
+		Layer layer = new Layer ();
+		Path path;
+		
+		// FIXME: name, visibility etc.
+		
+		foreach (Tag t in tag) {
+			if (t.get_name () == "path") {
+				path = parse_path (t);
+				layer.add_path (path);
+			}
+		}
+		
+		return layer;
 	}
 
 	private Path parse_path (Tag tag) {	

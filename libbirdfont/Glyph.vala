@@ -115,7 +115,6 @@ public class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 
 		current_layer.add_path (new Path ());
-		layers.add_layer (current_layer);
 		add_help_lines ();
 		
 		left_limit = -28;
@@ -127,7 +126,6 @@ public class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 
 		current_layer.add_path (new Path ());
-		layers.add_layer (current_layer);
 	}
 
 	public PathList get_visible_path_list () {
@@ -382,6 +380,10 @@ public class Glyph : FontDisplay {
 	}
 	
 	public void add_path (Path p) {
+		if (layers.subgroups.size == 0) {
+			layers.add_layer (current_layer);
+		}
+		
 		current_layer.add_path (p);
 	}
 	
