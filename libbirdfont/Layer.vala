@@ -18,6 +18,7 @@ public class Layer : GLib.Object {
 	public PathList paths;
 	public Gee.ArrayList<Layer> subgroups;
 	public bool visible = true;
+	public string name = "Layer";
 	
 	public Layer () {
 		paths = new PathList ();
@@ -75,6 +76,7 @@ public class Layer : GLib.Object {
 	public Layer copy () {
 		Layer layer = new Layer ();
 		
+		layer.name = name;
 		layer.paths = paths.copy ();
 		foreach (Layer l in subgroups) {
 			layer.subgroups.add (l.copy ());

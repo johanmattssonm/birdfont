@@ -403,7 +403,7 @@ class BirdFontFile : GLib.Object {
 		string data;
 		
 		// FIXME: name etc.
-		os.put_string (@"\t\t<layer visible=\"$(layer.visible)\">\n");
+		os.put_string (@"\t\t<layer name= \"$(layer.name)\" visible=\"$(layer.visible)\">\n");
 		
 		foreach (Path p in layer.get_all_paths ().paths) {
 			data = get_point_data (p);
@@ -1276,6 +1276,10 @@ class BirdFontFile : GLib.Object {
 		foreach (Attribute a in tag.get_attributes ()) {
 			if (a.get_name () == "visible") {
 				layer.visible = bool.parse (a.get_content ());
+			}
+			
+			if (a.get_name () == "name") {
+				layer.name = a.get_content ();
 			}
 		}
 		

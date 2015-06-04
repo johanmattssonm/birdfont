@@ -24,20 +24,15 @@ public class LayerLabel : Tool {
 	public Layer layer;
 	Text label_text;
 
-	public LayerLabel (string label, Layer layer) {
-		double text_height;
-			
+	public LayerLabel (Layer layer) {
 		base ();
 
 		this.layer = layer;
-		this.label = label;
+		this.label = layer.name;
 		
 		selected_layer = false;
 		
-		label_text = new Text ();
-		label_text.set_text (label);
-		text_height = 17 * Toolbox.get_scale ();
-		label_text.set_font_size (text_height);
+		set_text ();
 
 		panel_press_action.connect ((selected, button, tx, ty) => {	
 			if (y <= ty <= y + h) {
@@ -56,6 +51,43 @@ public class LayerLabel : Tool {
 				selected_layer = false;
 			}
 		});
+		
+		panel_double_click_action.connect ((selected, button, tx, ty) => {
+			print ("double_click_action\n");	
+			if (y <= ty <= y + h) {
+				if (25 * Toolbox.get_scale () <= tx <= w - 30 * Toolbox.get_scale ()) {
+					set_layer_name ();
+				}
+			}
+		});
+	}
+	
+	void set_text () {
+		double text_height;
+		
+		label_text = new Text ();
+		label_text.set_text (label);
+		text_height = 17 * Toolbox.get_scale ();
+		label_text.set_font_size (text_height);	
+	}
+	
+	void set_layer_name () {
+		TextListener listener;
+		
+		listener = new TextListener (t_("Layer"), layer.name, t_("Set"));
+		
+		listener.signal_text_input.connect ((text) => {
+			layer.name = text;
+			label = text;
+			set_text ();
+			redraw ();
+		});
+		
+		listener.signal_submit.connect (() => {
+			TabContent.hide_text_input ();
+		});
+		
+		TabContent.show_text_input (listener);
 	}
 	
 	public void select_layer () {

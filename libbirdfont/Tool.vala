@@ -48,6 +48,7 @@ public class Tool : Widget {
 	
 	public signal void panel_press_action (Tool selected, uint button, double x, double y);
 	public signal void panel_release_action (Tool selected, uint button, double x, double y);
+	public signal void panel_double_click_action (Tool selected, uint button, double x, double y);
 
 	/** @return true is event is consumed. */
 	public signal bool panel_move_action (Tool selected, double x, double y);

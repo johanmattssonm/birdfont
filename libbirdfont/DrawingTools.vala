@@ -1256,7 +1256,6 @@ public class DrawingTools : ToolCollection  {
 		add_stroke.selected = stroke;
 		StrokeTool.add_stroke = stroke;
 		set_stroke_tool_visibility ();
-		// FIXME: This is slow: Toolbox.redraw_tool_box ();	
 	}
 
 	void auto_trace_background () {
@@ -1587,7 +1586,7 @@ public class DrawingTools : ToolCollection  {
 		
 		layer_tools.tool.clear ();
 		foreach (Layer layer in g.layers.subgroups) { 
-			LayerLabel label = new LayerLabel ("Layer", layer);
+			LayerLabel label = new LayerLabel (layer);
 			layer_tools.add_tool (label, 0);
 			label.select_layer ();
 		}

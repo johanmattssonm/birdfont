@@ -175,6 +175,23 @@ public class Toolbox : GLib.Object  {
 		scrolling_touch = false;
 	}
 
+	public void double_click (uint button, double x, double y) {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
+		y -= current_set.scroll;
+		
+		foreach (Expander e in current_set.get_expanders ()) {
+			if (e.visible) {
+				foreach (Tool t in e.tool) {
+					t.panel_double_click_action (t, button, x, y);
+				}
+			}
+		}
+	}
+	
 	public void scroll_up (double x, double y) {
 		bool action = false;
 		
