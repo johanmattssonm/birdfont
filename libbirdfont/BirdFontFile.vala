@@ -402,8 +402,8 @@ class BirdFontFile : GLib.Object {
 	void write_layer (Layer layer, DataOutputStream os) throws GLib.Error {
 		string data;
 		
-		// FIXME: name, visibility etc.
-		os.put_string (@"\t\t<layer>\n");
+		// FIXME: name etc.
+		os.put_string (@"\t\t<layer visible=\"$(layer.visible)\">\n");
 		
 		foreach (Path p in layer.get_all_paths ().paths) {
 			data = get_point_data (p);
@@ -1271,7 +1271,13 @@ class BirdFontFile : GLib.Object {
 		Layer layer = new Layer ();
 		Path path;
 		
-		// FIXME: name, visibility etc.
+		// FIXME: name etc.
+		
+		foreach (Attribute a in tag.get_attributes ()) {
+			if (a.get_name () == "visible") {
+				layer.visible = bool.parse (a.get_content ());
+			}
+		}
 		
 		foreach (Tag t in tag) {
 			if (t.get_name () == "path") {
