@@ -247,7 +247,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
 		os.put_string ("\n");
 		os.put_string ("<font>\n");
-		os.put_string (@"\t<format>$FORMAT_MAJOR.$FORMAT_MINOR</format>\n");
+		os.put_string (@"<format>$FORMAT_MAJOR.$FORMAT_MINOR</format>\n");
 	}
 	
 	public void write_closing_root_tag (DataOutputStream os) throws GLib.Error {

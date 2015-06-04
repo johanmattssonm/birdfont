@@ -47,15 +47,23 @@ public class LayerLabel : Tool {
 				} if (tx < 25 * Toolbox.get_scale ()) {
 					layer.visible = !layer.visible;
 					GlyphCanvas.redraw ();
+					BirdFont.get_current_font ().touch ();
+					MainWindow.get_current_glyph ().clear_active_paths ();
 				} else {
-					MainWindow.get_current_glyph ().current_layer = layer;
-					DrawingTools.deselect_layers ();
-					selected_layer = true;
+					select_layer ();
 				}
 			} else {
 				selected_layer = false;
 			}
 		});
+	}
+	
+	public void select_layer () {
+		MainWindow.get_current_glyph ().current_layer = layer;
+		DrawingTools.deselect_layers ();
+		selected_layer = true;
+		MainWindow.get_current_glyph ().clear_active_paths ();
+		GlyphCanvas.redraw ();
 	}
 	
 	public void remove_layer () {
@@ -66,6 +74,9 @@ public class LayerLabel : Tool {
 			Glyph g = MainWindow.get_current_glyph ();
 			g.layers.remove_layer (layer);
 			DrawingTools.update_layers ();
+			BirdFont.get_current_font ().touch ();
+			MainWindow.get_current_glyph ().clear_active_paths ();
+			GlyphCanvas.redraw ();
 			return false;
 		});
 		

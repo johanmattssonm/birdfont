@@ -192,7 +192,7 @@ public class Glyph : FontDisplay {
 		return empty;
 	}
 
-	public void clear_active_paths () {
+	public void clear_active_paths () {	
 		active_paths.clear ();
 	}
 	
@@ -1076,7 +1076,7 @@ public class Glyph : FontDisplay {
 		Path? p = null;
 		bool found = false;
 		
-		foreach (Path pt in get_visible_paths ()) {
+		foreach (Path pt in get_current_layer ()) {
 			if (pt.is_over (x, y)) {
 				p = pt;
 				found = true;
@@ -1596,8 +1596,7 @@ public class Glyph : FontDisplay {
 		if (!is_open ()) {
 			// This was good for testing but it is way too slow:
 			// Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
-		
-				
+			
 			cr.save ();
 			cr.new_path ();
 			foreach (Path p in get_visible_paths ()) {

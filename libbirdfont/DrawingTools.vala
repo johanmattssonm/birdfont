@@ -1580,7 +1580,8 @@ public class DrawingTools : ToolCollection  {
 		layer_tools.tool.clear ();
 		foreach (Layer layer in g.layers.subgroups) { 
 			LayerLabel label = new LayerLabel ("Layer", layer);
-			layer_tools.add_tool (label);
+			layer_tools.add_tool (label, 0);
+			label.select_layer ();
 		}
 		
 		MainWindow.get_toolbox ().update_expanders ();
