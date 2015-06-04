@@ -68,7 +68,7 @@ public class PathList : GLib.Object {
 		PathList pl = new PathList ();
 		
 		foreach (Path p in paths) {
-			pl.add (p);
+			pl.add (p.copy ());
 		}
 		
 		return pl;

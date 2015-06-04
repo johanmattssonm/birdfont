@@ -123,6 +123,7 @@ public class OverView : FontDisplay {
 			glyph_collection = add_character_to_font (character);
 			
 			glyph = glyph_collection.get_current ();
+			glyph.layers.add_layer (new Layer ());
 			tabs.add_tab (glyph, true, glyph_collection);
 			
 			selected_items.add (glyph_collection);

@@ -107,14 +107,13 @@ public class Glyph : FontDisplay {
 	public static double orientation_arrow_opacity = 1;
 	
 	public Layer layers = new Layer ();
-	public Layer current_layer = new Layer ();
+	public int current_layer = 0;
 	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
 	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
 
-		current_layer.add_path (new Path ());
 		add_help_lines ();
 		
 		left_limit = -28;
@@ -124,8 +123,24 @@ public class Glyph : FontDisplay {
 	public Glyph.no_lines (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
+	}
 
-		current_layer.add_path (new Path ());
+	public Layer get_current_layer () {
+		return_val_if_fail (0 <= current_layer < layers.subgroups.size, new Layer ());
+		return layers.subgroups.get (current_layer);
+	}
+
+	public void set_current_layer (Layer layer) {
+		int i = 0;
+		foreach (Layer l in layers.subgroups) {
+			if (likely (l == layer)) {
+				current_layer = i;
+				return;
+			}
+			i++;
+		}
+		
+		warning ("Layer is not added to glyph.");
 	}
 
 	public PathList get_visible_path_list () {
@@ -136,8 +151,8 @@ public class Glyph : FontDisplay {
 		return layers.get_visible_paths ().paths;
 	}
 
-	public Gee.ArrayList<Path> get_current_layer () {
-		return current_layer.paths.paths;
+	public Gee.ArrayList<Path> get_paths_in_current_layer () {
+		return get_current_layer ().paths.paths;
 	}
 	
 	public Gee.ArrayList<Path> get_all_paths () {
@@ -381,10 +396,10 @@ public class Glyph : FontDisplay {
 	
 	public void add_path (Path p) {
 		if (layers.subgroups.size == 0) {
-			layers.add_layer (current_layer);
+			layers.add_layer (new Layer ());
 		}
 		
-		current_layer.add_path (p);
+		get_current_layer ().add_path (p);
 	}
 	
 	public override void selected_canvas () {
@@ -1076,7 +1091,7 @@ public class Glyph : FontDisplay {
 		Path? p = null;
 		bool found = false;
 		
-		foreach (Path pt in get_current_layer ()) {
+		foreach (Path pt in get_paths_in_current_layer ()) {
 			if (pt.is_over (x, y)) {
 				p = pt;
 				found = true;
@@ -1791,6 +1806,8 @@ public class Glyph : FontDisplay {
 	public Glyph copy () {
 		Glyph g = new Glyph.no_lines (name, unichar_code);
 		
+		g.current_layer = current_layer;
+		
 		g.left_limit = left_limit;
 		g.right_limit = right_limit;
 		
@@ -1841,7 +1858,8 @@ public class Glyph : FontDisplay {
 		set_glyph_data (g);
 		
 		undo_list.remove_at (undo_list.size - 1);
-
+		
+		DrawingTools.update_layers ();
 		PenTool.update_selected_points ();
 		
 		clear_active_paths ();
@@ -1863,20 +1881,15 @@ public class Glyph : FontDisplay {
 		
 		redo_list.remove_at (redo_list.size - 1);
 
+		DrawingTools.update_layers ();
 		PenTool.update_selected_points ();
 		
 		clear_active_paths ();
 	}
 	
 	void set_glyph_data (Glyph g) {
-		// FIXME: get a pointer to current layer not a copy
-		// current_layer 
+		current_layer = g.current_layer;
 		layers = g.layers.copy ();
-		
-		foreach (Path p in get_all_paths ()) {
-			add_path (p);
-			p.update_region_boundaries ();
-		}
 
 		remove_lines ();
 		foreach (Line line in g.get_all_help_lines ()) {

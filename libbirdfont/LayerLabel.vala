@@ -59,7 +59,7 @@ public class LayerLabel : Tool {
 	}
 	
 	public void select_layer () {
-		MainWindow.get_current_glyph ().current_layer = layer;
+		MainWindow.get_current_glyph ().set_current_layer (layer);
 		DrawingTools.deselect_layers ();
 		selected_layer = true;
 		MainWindow.get_current_glyph ().clear_active_paths ();
