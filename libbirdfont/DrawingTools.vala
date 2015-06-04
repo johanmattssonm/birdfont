@@ -607,19 +607,17 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tool_modifiers.add_tool (close_path_tool);
 		
-		// FIXME: add new layer tools
-		/*
-		move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"));
+		move_layer = new Tool ("move_layer", t_("Move to path to the bottom of the layer"));
 		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
-
+			Layer layer = g.get_current_layer ();
+			
 			foreach (Path p in g.active_paths) {
-				g.layers.remove (p);
-				g.path_list.insert (0, p);
+				layer.paths.remove (p);
+				layer.paths.paths.insert (0, p);
 			}
 		});
 		draw_tool_modifiers.add_tool (move_layer);
-		*/
 
 		flip_vertical = new Tool ("flip_vertical", t_("Flip path vertically"));
 		flip_vertical.select_action.connect ((self) => {
@@ -1583,12 +1581,18 @@ public class DrawingTools : ToolCollection  {
 	public static void update_layers () 
 	requires (!is_null (layer_tools)) {
 		Glyph g = MainWindow.get_current_glyph ();
+		int i = 0;
 		
 		layer_tools.tool.clear ();
 		foreach (Layer layer in g.layers.subgroups) { 
 			LayerLabel label = new LayerLabel (layer);
 			layer_tools.add_tool (label, 0);
-			label.select_layer ();
+			
+			if (i == g.current_layer) {
+				label.select_layer ();
+			}
+			
+			i++;
 		}
 		
 		MainWindow.get_toolbox ().update_expanders ();

@@ -53,7 +53,6 @@ public class LayerLabel : Tool {
 		});
 		
 		panel_double_click_action.connect ((selected, button, tx, ty) => {
-			print ("double_click_action\n");	
 			if (y <= ty <= y + h) {
 				if (25 * Toolbox.get_scale () <= tx <= w - 30 * Toolbox.get_scale ()) {
 					set_layer_name ();
@@ -104,11 +103,11 @@ public class LayerLabel : Tool {
 
 		idle.set_callback (() => {	
 			Glyph g = MainWindow.get_current_glyph ();
+			g.store_undo_state ();
 			g.layers.remove_layer (layer);
 			DrawingTools.update_layers ();
 			BirdFont.get_current_font ().touch ();
 			g.clear_active_paths ();
-			g.store_undo_state ();
 			GlyphCanvas.redraw ();
 			return false;
 		});

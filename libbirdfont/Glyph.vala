@@ -161,6 +161,7 @@ public class Glyph : FontDisplay {
 	
 	public void add_new_layer () {
 		layers.add_layer (new Layer ());
+		current_layer = layers.subgroups.size - 1;
 	}
 	
 	public GlyfData get_ttf_data () {
@@ -2288,6 +2289,38 @@ public class Glyph : FontDisplay {
 		var paths = get_all_paths ();
 		return_val_if_fail (paths.size > 0, null);
 		return paths.get (paths.size - 1);
+	}
+
+	public void move_layer_up () {
+		Layer layer = get_current_layer ();
+		
+		if (current_layer + 2 <= layers.subgroups.size) {
+			return_if_fail (0 <= current_layer + 2 <= layers.subgroups.size);
+			layers.subgroups.insert (current_layer + 2, layer);
+
+			return_if_fail (0 <= current_layer + 1 < layers.subgroups.size);
+			layers.subgroups.remove_at (current_layer);
+			
+			set_current_layer (layer);
+		} 
+		
+		DrawingTools.update_layers ();
+	}
+		
+	public void move_layer_down () {
+		Layer layer = get_current_layer ();
+		
+		if (current_layer >= 1) {
+			return_if_fail (0 <= current_layer - 1 < layers.subgroups.size);
+			layers.subgroups.insert (current_layer - 1, layer);
+
+			return_if_fail (0 <= current_layer + 1 < layers.subgroups.size);
+			layers.subgroups.remove_at (current_layer + 1);
+			
+			set_current_layer (layer);
+		} 
+		
+		DrawingTools.update_layers ();
 	}
 }
 
