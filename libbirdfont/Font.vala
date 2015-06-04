@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+    Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -109,6 +109,9 @@ public class Font : GLib.Object {
 	
 	public static Font empty;
 	
+	public int format_major = 0;
+	public int format_minor = 0;
+	
 	public Font () {
 		KerningClasses kerning_classes;
 		
@@ -150,6 +153,36 @@ public class Font : GLib.Object {
 
 	~Font () {
 		font_deleted ();
+	}
+
+	public bool has_compatible_format () {
+		return !newer_format () && !older_format ();
+	}
+
+	public bool older_format () {
+		if (format_major < BirdFontFile.MIN_FORMAT_MAJOR) {
+			return true;
+		}
+
+		if (format_major == BirdFontFile.MIN_FORMAT_MAJOR 
+			&& format_minor < BirdFontFile.MIN_FORMAT_MINOR) {
+			return true;
+		}
+		
+		return false;
+	}
+		
+	public bool newer_format () {
+		if (format_major > BirdFontFile.FORMAT_MAJOR) {
+			return true;
+		}
+		
+		if (BirdFontFile.FORMAT_MAJOR == format_major 
+			&& format_minor > BirdFontFile.FORMAT_MINOR) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	public static void set_default_license (string license) {

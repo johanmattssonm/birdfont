@@ -20,7 +20,22 @@ public class LoadCallback : GLib.Object {
 
 	public signal void file_loaded ();
 	
-	public LoadCallback () {	
+	public LoadCallback () {
+		file_loaded.connect (() => {
+			Font f = BirdFont.get_current_font ();
+			
+			if (!f.has_compatible_format ()) {
+				if (f.newer_format ()) {
+					MainWindow.show_message (t_("This font was made with a newer version of Birdfont.")
+						+ " " + t_("You need to upgrade your version of Birdfont."));
+				}
+
+				if (f.older_format ()) {
+					MainWindow.show_message (t_("This font was made with an old version of Birdfont.")
+						+ " " + t_("You need an older version of Birdfont to open it."));
+				}
+			}
+		});
 	}
 
 	public void load () {

@@ -22,7 +22,12 @@ namespace BirdFont {
 class BirdFontFile : GLib.Object {
 	
 	Font font;
+	public static const int FORMAT_MAJOR = 2;
+	public static const int FORMAT_MINOR = 0;
 	
+	public static const int MIN_FORMAT_MAJOR = 0;
+	public static const int MIN_FORMAT_MINOR = 0;
+		
 	public BirdFontFile (Font f) {
 		font = f;
 	}
@@ -241,7 +246,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
 		os.put_string ("\n");
 		os.put_string ("<font>\n");
-		os.put_string ("<format>1.0</format>\n");
+		os.put_string (@"\t<format>$FORMAT_MAJOR.$FORMAT_MINOR</format>\n");
 	}
 	
 	public void write_closing_root_tag (DataOutputStream os) throws GLib.Error {
@@ -660,7 +665,12 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "backup") {
 				font.font_file = t.get_content ();
 			}
-			
+
+			// file format version
+			if (t.get_name () == "format") {
+				parse_format (t);
+			}
+						
 			// glyph format
 			if (t.get_name () == "collection") {
 				parse_glyph_collection (t);
@@ -747,7 +757,19 @@ class BirdFontFile : GLib.Object {
 		
 		return true;
 	}
+	
+	public void parse_format (Tag tag) {
+		string[] v = tag.get_content ().split (".");
 		
+		if (v.length != 2) {
+			warning ("Bad format string.");
+			return;
+		}
+		
+		font.format_major = int.parse (v[0]);
+		font.format_major = int.parse (v[1]);
+	}
+	
 	public void parse_images (Tag tag) {
 		BackgroundImage? new_img;
 		BackgroundImage img;
