@@ -156,22 +156,6 @@ else:
 	print ("Can't find libbirdfont.")
 	exit (1)
 
-if os.path.isfile ('build/bin/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION):
-        install ('build/bin/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, libdir, 644)
-        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
-        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so')
-elif os.path.isfile ('build/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION):
-        install ('build/libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, libdir, 644)
-        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
-        link (libdir, 'libbirdxml.so.' + version.LIBBIRDXML_SO_VERSION, ' libbirdxml.so')
-elif os.path.isfile ('build/bin/libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib'):
-        install ('build/bin/libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib', libdir, 644)
-        link (libdir, 'libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib', ' libbirdxml.dylib.' + version.LIBBIRDXML_SO_VERSION_MAJOR)
-        link (libdir, 'libbirdxml.' + version.LIBBIRDXML_SO_VERSION + '.dylib', ' libbirdxml.dylib')
-else:
-        print ("Can't find libbirdxml.")
-	exit (1)
-
 
 if "bsd" in sys.platform:
         install ('build/libbirdfont.so.' + '${LIBbirdfont_VERSION}', '/lib', 644)
