@@ -269,12 +269,14 @@ public class Menu : GLib.Object {
 		MenuItem layer_up = add_menu_item (t_("Move Layer Up"), "move layer up", "Glyph");
 		layer_up.action.connect (() => {
 			MainWindow.get_current_glyph ().move_layer_up ();
+			DrawingTools.update_layers ();
 		});
 		layers_menu.items.add (layer_up);
 
 		MenuItem layer_down = add_menu_item (t_("Move Layer Down"), "move layer down", "Glyph");
 		layer_down.action.connect (() => {
 			MainWindow.get_current_glyph ().move_layer_down ();
+			DrawingTools.update_layers ();
 		});
 		layers_menu.items.add (layer_down);
 		

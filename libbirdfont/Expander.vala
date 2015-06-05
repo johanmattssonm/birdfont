@@ -126,7 +126,7 @@ public class Expander : GLib.Object {
 				t.h = 17 * scale;
 			} else if (t is LayerLabel) {
 				t.w = Toolbox.allocation_width * scale;
-				t.h = 21 * scale;	
+				t.h = 21 * scale;
 			} else {
 				t.w = 33 * scale;
 				t.h = (33 / 1.11) * scale;
@@ -164,12 +164,16 @@ public class Expander : GLib.Object {
 					}
 					
 					if (new_row && !first_row) {
-						content_height += previous.h + margin_small; 
+						content_height += previous.h; 
 						xt = x;
 						yt += previous.h;
 						
 						if (!(t is LabelTool) && !(previous is LayerLabel)) {
 							yt += 7 * scale;
+						}
+						
+						if (!(previous is LayerLabel)) {
+							content_height += margin_small;
 						}
 					}
 				

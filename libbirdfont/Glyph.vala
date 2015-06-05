@@ -2303,8 +2303,6 @@ public class Glyph : FontDisplay {
 			
 			set_current_layer (layer);
 		} 
-		
-		DrawingTools.update_layers ();
 	}
 		
 	public void move_layer_down () {
@@ -2319,8 +2317,6 @@ public class Glyph : FontDisplay {
 			
 			set_current_layer (layer);
 		} 
-		
-		DrawingTools.update_layers ();
 	}
 }
 

@@ -51,10 +51,6 @@ public class LabelTool : Tool {
 				delete_action (this);
 			}
 		});
-
-		panel_move_action.connect ((selected, button, tx, ty) => {
-			return false;
-		});
 	}
 	
 	public override void draw_tool (Context cr, double px, double py) {

@@ -24,6 +24,9 @@ public class LayerLabel : Tool {
 	public Layer layer;
 	Text label_text;
 
+	/** Add margin when layer is moves. */
+	bool active_layer = false;
+	
 	public LayerLabel (Layer layer) {
 		base ();
 
@@ -45,6 +48,7 @@ public class LayerLabel : Tool {
 					BirdFont.get_current_font ().touch ();
 					MainWindow.get_current_glyph ().clear_active_paths ();
 				} else {
+					active_layer = true;
 					select_layer ();
 				}
 			} else {
@@ -59,6 +63,70 @@ public class LayerLabel : Tool {
 				}
 			}
 		});
+
+		panel_move_action.connect ((selected, button, tx, ty) => {
+			if (active_layer) {
+				if (ty > y) {
+					move_layer_down ();
+				} else if (ty < y - h) {
+					move_layer_up ();
+				}
+				
+				MainWindow.get_toolbox ().update_expanders ();
+				redraw ();
+			}
+			
+			return false;
+		});
+
+		panel_release_action.connect ((selected, button, tx, ty) => {
+			active_layer = false;
+		});
+	}
+	
+	void move_layer_up () {
+		int i;
+		Glyph g = MainWindow.get_current_glyph ();
+
+		// g.layers is ordered from bottom to top
+		i = DrawingTools.layer_tools.tool.size - g.current_layer - 1;
+		g.move_layer_up ();
+		
+		DrawingTools.update_layers ();
+		
+		if (i < 0) {
+			i = 0;
+		}
+		
+		set_moving_label (i);
+	}
+
+	void move_layer_down () {
+		int i;
+		Glyph g = MainWindow.get_current_glyph ();
+
+		i = DrawingTools.layer_tools.tool.size - g.current_layer + 1;
+		g.move_layer_down ();
+		
+		DrawingTools.update_layers ();
+		
+		if (i >= DrawingTools.layer_tools.tool.size) {
+			i = DrawingTools.layer_tools.tool.size - 1;
+		}
+		
+		set_moving_label (i);
+	}
+		
+	void set_moving_label (int i) {
+		LayerLabel label;
+		int j = 0;
+		foreach (Tool layer in DrawingTools.layer_tools.tool) {
+			label = (LayerLabel) layer;
+			if (i == j) {
+				label.active_layer = true;
+			}
+			j++;
+		}		
 	}
 	
 	void set_text () {
