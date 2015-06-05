@@ -38,6 +38,10 @@ public class ColorTool : Tool {
 		});
 	}
 	
+	public Color get_color () {
+		return new Color (color_r, color_g, color_b, color_a);
+	}
+	
 	public void signal_color_updated () {
 		color_updated ();
 	}

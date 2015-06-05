@@ -1531,11 +1531,20 @@ public class Glyph : FontDisplay {
 	/** Draw filled paths. */
 	public void draw_paths (Context cr, Color? c = null) {
 		PathList stroke;
-		Color color = c == null ? Color.black () : (!) c;
+		Color color;
 		
 		cr.save ();
 		cr.new_path ();
 		foreach (Path p in get_visible_paths ()) {
+			
+			if (c != null) {
+				color = (!) c;
+			} else if (p.color != null) {
+				color = (!) p.color;
+			} else {
+				color = Color.black ();
+			}
+			
 			if (p.stroke > 0) {
 				stroke = p.get_stroke_fast ();
 				draw_path_list (stroke, cr, color);

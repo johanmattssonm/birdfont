@@ -31,17 +31,8 @@ public class FontCache {
 		
 		fallback = new CachedFont (null);
 		fonts = new Gee.HashMap<string, CachedFont> ();
-		fonts.set ("", fallback);
 	}
 	
-	public void reload_font (string file_name) {
-		Font? f = get_font (file_name).font;
-		
-		if (f != null) {
-			((!) f).load ();
-		}
-	}	
-
 	public CachedFont get_font (string file_name) {
 		CachedFont c;
 		Font f;
@@ -50,9 +41,10 @@ public class FontCache {
 		if (file_name == "") {
 			return fallback;
 		}
-				
+		
 		if (fonts.has_key (file_name)) {
-			return fonts.get (file_name);
+			c = fonts.get (file_name);
+			return c;
 		}
 		
 		f = new Font ();
@@ -64,8 +56,13 @@ public class FontCache {
 		}
 		
 		c = new CachedFont (f);
-		fonts.set (file_name, c);
 		
+		if (file_name == "") {
+			warning ("No file.");
+			return c;
+		}
+		
+		fonts.set (file_name, c);
 		return c;
 	}
 

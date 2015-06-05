@@ -80,6 +80,8 @@ public class Path {
 	
 	public string point_data = "";
 
+	public Color? color = null;
+
 	public Path () {	
 		string width;
 		

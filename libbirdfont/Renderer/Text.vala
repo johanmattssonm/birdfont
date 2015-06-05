@@ -20,7 +20,7 @@ namespace BirdFont {
 public class Text : Widget {
 	FontCache font_cache;
 	public CachedFont cached_font;
-	
+
 	public string text;
 	
 	GlyphSequence glyph_sequence {
@@ -131,7 +131,7 @@ public class Text : Widget {
 		GlyphRange? gr_left, gr_right;
 		GlyphSequence word;
 		KerningClasses kc;
-		Font empty = new Font ();
+		Font empty = Font.empty;
 		
 		glyph = new Glyph.no_lines ("", '\0');
 

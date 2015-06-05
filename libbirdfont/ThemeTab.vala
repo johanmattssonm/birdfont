@@ -26,6 +26,7 @@ public class ThemeTab : SettingsDisplay {
 	
 	public override void create_setting_items () {
 		tools.clear ();
+		
 		tools.add (new SettingsItem.head_line (t_("Themes")));
 		
 		Gee.ArrayList<Tool> theme_buttons = new Gee.ArrayList<Tool> ();
@@ -33,7 +34,7 @@ public class ThemeTab : SettingsDisplay {
 		foreach (string theme in Theme.themes) {
 			string label;
 			Tool select_theme = new Tool (theme);
-			
+
 			select_theme.deselect_action.connect((self) => {
 				self.set_active (false);
 			});
@@ -58,8 +59,8 @@ public class ThemeTab : SettingsDisplay {
 				
 				tb = MainWindow.get_tab_bar ();
 				tb.redraw (0, 0, tb.width, tb.height);
-			});
-			
+			});		
+		
 			select_theme.set_icon ("theme");
 			
 			label = get_label_from_file_name (theme);
@@ -100,7 +101,7 @@ public class ThemeTab : SettingsDisplay {
 				create_setting_items ();
 				GlyphCanvas.redraw ();
 			});
-		}		
+		}
 	}
 
 	public static string get_label_from_file_name (string theme) {
