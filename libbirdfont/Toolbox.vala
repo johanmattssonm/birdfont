@@ -51,6 +51,8 @@ public class Toolbox : GLib.Object  {
 	double tool_tip_x = 0;
 	double tool_tip_y = 0;
 	
+	public signal void new_tool_set (Tab? tab);
+	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		tool_sets = new Gee.ArrayList<ToolCollection> ();
 		current_tool = new Tool ("no_icon");
@@ -78,6 +80,7 @@ public class Toolbox : GLib.Object  {
 		tab_bar.signal_tab_selected.connect ((tab) => {
 			string tab_name = tab.get_display ().get_name ();
 			set_toolbox_from_tab (tab_name, tab);
+			new_tool_set (tab);
 		});
 		
 		update_expanders ();
@@ -527,6 +530,10 @@ public class Toolbox : GLib.Object  {
 		}
 	}
 	
+	public void set_current_tool_set (ToolCollection ts) {
+		current_set = ts;
+	}
+	
 	public class EmptySet : ToolCollection  {
 		Gee.ArrayList<Expander> expanders;
 		
@@ -538,7 +545,6 @@ public class Toolbox : GLib.Object  {
 			return expanders;
 		}
 	}
-
 }
 
 }

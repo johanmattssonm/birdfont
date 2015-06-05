@@ -22,16 +22,21 @@ public class DrawingTools : ToolCollection  {
 	
 	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
-	Expander draw_tools;
-	public static Expander grid_expander;
-	Expander shape_tools;
-	public static Expander draw_tool_modifiers;
-	public static Expander layer_tools;
-	public static Expander layer_settings;
-	public static Expander stroke_expander;
-	public static Expander zoombar_tool;
-	public static Expander guideline_tools;
-	
+	public static Expander draw_tools { get; set; }
+	public static Expander grid_expander { get; set; }
+	public static Expander shape_tools { get; set; }
+	public static Expander draw_tool_modifiers { get; set; }
+	public static Expander layer_tools { get; set; }
+	public static Expander layer_settings { get; set; }
+	public static Expander stroke_expander { get; set; }
+	public static Expander zoombar_tool { get; set; }
+	public static Expander guideline_tools { get; set; }
+
+	public static Expander font_name { get; set; }
+	public static Expander key_tools { get; set; }
+	public static Expander test_tools { get; set; }
+	public static Expander grid { get; set; }
+			
 	public static PointType point_type = PointType.DOUBLE_CURVE;
 	
 	public static Tool add_stroke;	
@@ -118,10 +123,10 @@ public class DrawingTools : ToolCollection  {
 		zoombar_tool = new Expander (t_("Zoom"));
 		guideline_tools = new Expander (t_("Guidelines & Grid"));
 		
-		Expander font_name = new Expander ();
-		Expander key_tools = new Expander (); // tools on android
-		Expander test_tools = new Expander ();
-		Expander grid = new Expander (t_("Grid Size"));
+		font_name = new Expander ();
+		key_tools = new Expander (); // tools on android
+		test_tools = new Expander ();
+		grid = new Expander (t_("Grid Size"));
 		
 		grid_expander = grid;
 
