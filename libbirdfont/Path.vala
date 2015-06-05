@@ -281,7 +281,10 @@ public class Path {
 		// fill path
 		cr.close_path ();
 		
-		if (color != null) {
+		if (this.color != null) {
+			c = (!) this.color;
+			cr.set_source_rgba (c.r, c.g, c.b, c.a);
+		} else if (color != null) {
 			c = (!) color;
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
 		} else {

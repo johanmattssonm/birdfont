@@ -55,7 +55,7 @@ public class Glyph : FontDisplay {
 	double zoom_y1 = 0;
 	double zoom_x2 = 0;
 	double zoom_y2 = 0;
-	bool zoom_area_is_visible = false;
+	public bool zoom_area_is_visible = false;
 	
 	bool view_is_moving = false;
 	public double move_offset_x = 0;
@@ -73,7 +73,7 @@ public class Glyph : FontDisplay {
 	// x-height, lsb, etc.
 	public Gee.ArrayList<Line> vertical_help_lines = new Gee.ArrayList<Line> ();
 	public Gee.ArrayList<Line> horizontal_help_lines = new Gee.ArrayList<Line> ();
-	bool show_help_lines = true;
+	public bool show_help_lines = true;
 	bool xheight_lines_visible = false;
 	bool margin_boundaries_visible = false;
 	string new_guide_name = "";
@@ -1520,7 +1520,7 @@ public class Glyph : FontDisplay {
 		return background_image_visible;
 	}
 	
-	private void draw_coordinate (Context cr) {
+	public void draw_coordinate (Context cr) {
 		Theme.color (cr, "Table Border");
 		cr.set_font_size (12);
 		cr.move_to (0, 10);
@@ -1536,7 +1536,6 @@ public class Glyph : FontDisplay {
 		cr.save ();
 		cr.new_path ();
 		foreach (Path p in get_visible_paths ()) {
-			
 			if (c != null) {
 				color = (!) c;
 			} else if (p.color != null) {
@@ -1601,7 +1600,8 @@ public class Glyph : FontDisplay {
 			cr.new_path ();
 			foreach (Path p in get_visible_paths ()) {
 				if (p.stroke == 0) {
-					p.draw_path (cr, this, get_path_fill_color ());
+					color = p.color == null ? get_path_fill_color () : (!) p.color;
+					p.draw_path (cr, this, color);
 				}
 			}
 			cr.fill ();
@@ -1626,7 +1626,8 @@ public class Glyph : FontDisplay {
 			cr.new_path ();
 			foreach (Path p in get_visible_paths ()) {
 				if (p.stroke == 0) {
-					p.draw_path (cr, this, Color.black ());
+					color = p.color == null ? Color.black () : (!) p.color;
+					p.draw_path (cr, this, color);
 				}
 			}
 			cr.close_path ();
@@ -1669,7 +1670,7 @@ public class Glyph : FontDisplay {
 		}
 	}
 		
-	private void draw_zoom_area(Context cr) {
+	public void draw_zoom_area(Context cr) {
 		cr.save ();
 		cr.set_line_width (2.0);
 		Theme.color (cr, "Selection Border");
@@ -1678,7 +1679,7 @@ public class Glyph : FontDisplay {
 		cr.restore ();
 	}
 
-	private void draw_background_color (Context cr, double opacity) {
+	public void draw_background_color (Context cr, double opacity) {
 		if (opacity > 0) {
 			cr.save ();
 			cr.rectangle (0, 0, allocation.width, allocation.height);
@@ -1688,7 +1689,7 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
-	private void draw_help_lines (Context cr) {
+	public void draw_help_lines (Context cr) {
 		foreach (Line line in get_all_help_lines ()) {
 			cr.save ();
 			line.draw (cr, allocation);

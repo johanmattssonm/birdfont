@@ -107,7 +107,7 @@ public class PenTool : Tool {
 			// retain path direction
 			clockwise = new Gee.ArrayList<Path> ();
 			counter_clockwise = new Gee.ArrayList<Path> ();
-
+			
 			begin_action_x = x;
 			begin_action_y = y;
 				

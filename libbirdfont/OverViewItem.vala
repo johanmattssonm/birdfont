@@ -226,7 +226,7 @@ public class OverViewItem : GLib.Object {
 			g.add_help_lines ();
 			
 			c.translate (gx - g.get_lsb () - Glyph.xc (), g.get_baseline () + gy - Glyph.yc ());
-			
+						
 			g.draw_paths (c, color);
 			c.restore ();
 		} else {
