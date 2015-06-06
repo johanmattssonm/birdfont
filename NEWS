@@ -1,3 +1,10 @@
+birdfont (2.9.2) stable;
+
+  * Fallback font with support for many languages
+  * Faster GUI
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sat Jun  6 19:32:44 CEST 2015
+
 birdfont (2.8.0) stable;
 
   * Speed optimization in font export
