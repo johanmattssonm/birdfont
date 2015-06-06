@@ -125,6 +125,10 @@ public class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 	}
 
+	public Gee.ArrayList<Path> get_active_paths () {
+		return active_paths;
+	}
+	
 	public Layer get_current_layer () {
 		return_val_if_fail (0 <= current_layer < layers.subgroups.size, new Layer ());
 		return layers.subgroups.get (current_layer);
@@ -1664,7 +1668,7 @@ public class Glyph : FontDisplay {
 		return Theme.get_color ("Fill Color");
 	}
 	
-	private void draw_path_list (PathList pl, Context cr, Color? c = null) {
+	public void draw_path_list (PathList pl, Context cr, Color? c = null) {
 		foreach (Path p in pl.paths) {
 			p.draw_path (cr, this, c);
 		}

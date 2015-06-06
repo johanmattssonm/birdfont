@@ -70,7 +70,7 @@ public class Path {
 	/** The stroke of an outline when the path is not filled. */
 	public static double stroke_width = 0;
 	public static bool show_all_line_handles = true;
-	public static bool fill_open_path = false;
+	public static bool fill_open_path {get; set;}
 	
 	public double rotation = 0;
 	public double skew = 0;

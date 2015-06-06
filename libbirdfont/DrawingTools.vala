@@ -75,9 +75,10 @@ public class DrawingTools : ToolCollection  {
 	Tool rectangle;
 	Tool circle;
 
-	Tool help_lines;
-	Tool xheight_help_lines;
-	Tool background_help_lines;
+	public static Tool help_lines { get; set; }
+	public static Tool xheight_help_lines { get; set; }
+	public static Tool background_help_lines { get; set; }
+	public static Tool show_grid { get; set; }
 	
 	SpinButton x_coordinate;
 	SpinButton y_coordinate;
@@ -1052,7 +1053,7 @@ public class DrawingTools : ToolCollection  {
 		background_help_lines.set_selected (selected_line);
 		guideline_tools.add_tool (background_help_lines);
 
-		Tool show_grid = new GridTool ("show_grid");
+		show_grid = new GridTool ("show_grid");
 		show_grid.select_action.connect (() => {
 			grid_expander.visible = show_grid.selected;
 			MainWindow.get_toolbox ().update_expanders ();
