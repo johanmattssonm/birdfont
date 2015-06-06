@@ -129,6 +129,12 @@ public class SaveDialog : Dialog {
 		discard_button.button_press (button, x, y);
 		cancel_button.button_press (button, x, y);
 	}
+
+	public override void button_release (uint button, double x, double y) {
+		save_button.button_release (button, x, y);
+		discard_button.button_release (button, x, y);
+		cancel_button.button_release (button, x, y);
+	}
 }
 
 }

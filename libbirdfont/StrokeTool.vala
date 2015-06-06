@@ -52,7 +52,7 @@ public class StrokeTool : Tool {
 
 		if (paths.paths.size > 0) {
 			foreach (Path p in g.active_paths) {
-				g.path_list.remove (p);
+				g.layers.remove_path (p);
 			}
 			
 			g.active_paths.clear ();

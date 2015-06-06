@@ -66,6 +66,14 @@ public class Color {
 	public static Color magenta () {
 		return new Color (103.0 / 255, 33.0 / 255, 120.0 / 255, 1);
 	}
+	
+	public string to_string () {
+		return @"r: $r, g: $g, b: $b, a: $a";
+	}
+	
+	public Color copy () {
+		return new Color (r, g, b, a);
+	}
 }
 
 }

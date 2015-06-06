@@ -155,16 +155,17 @@ public class TabContent : GLib.Object {
 		if (MenuTab.suppress_event) {
 			return;
 		}
-
-		if (MainWindow.get_menu ().show_menu) {
+		
+		if (MainWindow.get_dialog ().visible) {
+			MainWindow.get_dialog ().button_release (button, x, y);
+		} else if (MainWindow.get_menu ().show_menu) {
 			MainWindow.get_menu ().button_release (button, x, y);
+		} else if (text_input_visible) {
+			text_input_button.button_release (button, x, y);
+			text_input.button_release (button, x, y);				
+			GlyphCanvas.redraw ();
 		} else {
-			if (text_input_visible) {
-				text_input.button_release (button, x, y);				
-				GlyphCanvas.redraw ();
-			} else {
-				GlyphCanvas.current_display.button_release (button, x, y);
-			}
+			GlyphCanvas.current_display.button_release (button, x, y);
 		}
 	}
 	
@@ -174,7 +175,7 @@ public class TabContent : GLib.Object {
 		}
 
 		last_press_time = GLib.get_real_time ();
-
+		
 		if (MainWindow.get_dialog ().visible) {
 			MainWindow.get_dialog ().button_press (button, x, y);
 		} else if (!MainWindow.get_menu ().show_menu) {

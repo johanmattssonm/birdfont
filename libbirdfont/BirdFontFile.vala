@@ -23,6 +23,12 @@ class BirdFontFile : GLib.Object {
 	
 	Font font;
 	
+	public static const int FORMAT_MAJOR = 2;
+	public static const int FORMAT_MINOR = 0;
+	
+	public static const int MIN_FORMAT_MAJOR = 0;
+	public static const int MIN_FORMAT_MINOR = 0;
+		
 	public BirdFontFile (Font f) {
 		font = f;
 	}
@@ -241,7 +247,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
 		os.put_string ("\n");
 		os.put_string ("<font>\n");
-		os.put_string ("<format>1.0</format>\n");
+		os.put_string (@"<format>$FORMAT_MAJOR.$FORMAT_MINOR</format>\n");
 	}
 	
 	public void write_closing_root_tag (DataOutputStream os) throws GLib.Error {
@@ -383,13 +389,26 @@ class BirdFontFile : GLib.Object {
 	} 
 
 	public void write_glyph (Glyph g, DataOutputStream os) throws GLib.Error {
+		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(double_to_string (g.left_limit))\" right=\"$(double_to_string (g.right_limit))\">\n");
+		
+		foreach (Layer layer in g.layers.subgroups) {
+			write_layer (layer, os);
+		}
+
+		write_glyph_background (g, os);
+		os.put_string ("\t</glyph>\n");
+	}
+
+	void write_layer (Layer layer, DataOutputStream os) throws GLib.Error {
 		string data;
 		
-		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(double_to_string (g.left_limit))\" right=\"$(double_to_string (g.right_limit))\">\n");
-		foreach (Path p in g.path_list) {
+		// FIXME: name etc.
+		os.put_string (@"\t\t<layer name= \"$(layer.name)\" visible=\"$(layer.visible)\">\n");
+		
+		foreach (Path p in layer.get_all_paths ().paths) {
 			data = get_point_data (p);
 			if (data != "") {
-				os.put_string (@"\t\t<path ");
+				os.put_string (@"\t\t\t<path ");
 				
 				if (p.stroke != 0) {
 					os.put_string (@"stroke=\"$(double_to_string (p.stroke))\" ");
@@ -410,8 +429,8 @@ class BirdFontFile : GLib.Object {
 				os.put_string (@"data=\"$(data)\" />\n");
 			}
 		}
-		write_glyph_background (g, os);
-		os.put_string ("\t</glyph>\n");
+		
+		os.put_string ("\t\t</layer>\n");	
 	}
 
 	public static string double_to_string (double n) {
@@ -659,7 +678,12 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "backup") {
 				font.font_file = t.get_content ();
 			}
-			
+
+			// file format version
+			if (t.get_name () == "format") {
+				parse_format (t);
+			}
+						
 			// glyph format
 			if (t.get_name () == "collection") {
 				parse_glyph_collection (t);
@@ -746,7 +770,19 @@ class BirdFontFile : GLib.Object {
 		
 		return true;
 	}
+	
+	public void parse_format (Tag tag) {
+		string[] v = tag.get_content ().split (".");
 		
+		if (v.length != 2) {
+			warning ("Bad format string.");
+			return;
+		}
+		
+		font.format_major = int.parse (v[0]);
+		font.format_major = int.parse (v[1]);
+	}
+	
 	public void parse_images (Tag tag) {
 		BackgroundImage? new_img;
 		BackgroundImage img;
@@ -1176,6 +1212,7 @@ class BirdFontFile : GLib.Object {
 		bool selected = false;
 		bool has_id = false;
 		int id = 1;
+		Layer layer;
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "left") {
@@ -1199,17 +1236,27 @@ class BirdFontFile : GLib.Object {
 		}
 		
 		foreach (Tag t in tag) {
+			if (t.get_name () == "layer") {
+				layer = parse_layer (t);
+				glyph.layers.add_layer (layer);
+			}
+		}
+
+		// parse paths without layers in old versions of the format
+		foreach (Tag t in tag) {
 			if (t.get_name () == "path") {
 				path = parse_path (t);
 				glyph.add_path (path);
-			}
-			
+ 			}			
+		}
+
+		foreach (Tag t in tag) {
 			if (t.get_name () == "background") {
 				parse_background_scale (glyph, t);
 			}
 		}
 
-		foreach (Path p in glyph.path_list) {
+		foreach (Path p in glyph.get_all_paths ()) {
 			p.reset_stroke ();
 		}
 
@@ -1218,6 +1265,32 @@ class BirdFontFile : GLib.Object {
 		
 		gc.insert_glyph (glyph, selected || selected_id == id);
 		glyph = new Glyph.no_lines ("");
+	}
+
+	Layer parse_layer (Tag tag) {
+		Layer layer = new Layer ();
+		Path path;
+		
+		// FIXME: name etc.
+		
+		foreach (Attribute a in tag.get_attributes ()) {
+			if (a.get_name () == "visible") {
+				layer.visible = bool.parse (a.get_content ());
+			}
+			
+			if (a.get_name () == "name") {
+				layer.name = a.get_content ();
+			}
+		}
+		
+		foreach (Tag t in tag) {
+			if (t.get_name () == "path") {
+				path = parse_path (t);
+				layer.add_path (path);
+			}
+		}
+		
+		return layer;
 	}
 
 	private Path parse_path (Tag tag) {	
@@ -1392,7 +1465,7 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	public static void close (Path path) {
-		EditPoint ep1, ep2, last;
+		EditPoint ep1, ep2;
 		
 		if (path.points.size < 2) {
 			warning ("Less  than two points in path.");

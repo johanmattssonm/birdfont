@@ -227,9 +227,11 @@ public class TrackTool : Tool {
 		}
 	}
 	
+	// FIXME: double check
 	void set_tie () {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		Path p = glyph.path_list.get (glyph.path_list.size - 1);
+		var paths = glyph.get_visible_paths ();
+		Path p = paths.get (paths.size - 1);
 		
 		foreach (EditPoint ep in p.points) {
 			if (ep.get_right_handle ().is_line () || ep.get_left_handle ().is_line ()) {
@@ -241,7 +243,7 @@ public class TrackTool : Tool {
 			}
 		}
 	}
-
+	
 	public void set_samples_per_point (double s) {
 		samples_per_point = s;
 	}
@@ -253,13 +255,15 @@ public class TrackTool : Tool {
 		PointSelection joined_path;
 		
 		glyph = MainWindow.get_current_glyph ();
+		var paths = glyph.get_visible_paths ();
 		
-		if (glyph.path_list.size == 0) {
+		if (paths.size == 0) {
 			warning ("No path.");
 			return;
 		}
 		
-		p = glyph.path_list.get (glyph.path_list.size - 1);
+		// FIXME: double check this
+		p = paths.get (paths.size - 1);
 		draw_freehand = false;
 		
 		convert_points_to_line ();
@@ -290,11 +294,6 @@ public class TrackTool : Tool {
 
 		p.create_list ();
 		
-		if (glyph.path_list.size < 2) {
-			warning ("Less than two points");
-			return;
-		}
-
 		if (DrawingTools.get_selected_point_type () == PointType.QUADRATIC) {
 			foreach (EditPoint e in p.points) {
 				if (e.tie_handles) {
@@ -374,7 +373,7 @@ public class TrackTool : Tool {
 			current_end = get_active_path ().get_last_point ();
 		}
 
-		foreach (Path p in glyph.path_list) {
+		foreach (Path p in glyph.get_visible_paths ()) {
 			if (p.is_open () && p.points.size > 2) {
 				e = p.points.get (0);
 				if (PenTool.is_close_to_point (e, x, y)) {
@@ -531,15 +530,15 @@ public class TrackTool : Tool {
 		Gee.ArrayList<EditPoint> points;
 		
 		points = new Gee.ArrayList<EditPoint> ();
-
 		glyph = MainWindow.get_current_glyph ();
+		var paths = glyph.get_visible_paths ();
 		
-		if (glyph.path_list.size == 0) {
+		if (paths.size == 0) {
 			warning ("No path.");
 			return;
 		}
 			
-		p = glyph.path_list.get (glyph.path_list.size - 1);
+		p = paths.get (paths.size - 1);
 				
 		if (added_points == 0) { // last point
 			return;

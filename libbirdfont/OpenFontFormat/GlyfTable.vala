@@ -214,7 +214,7 @@ public class GlyfTable : OtfTable {
 		
 		this.glyf_data.add (glyf_data);
 		
-		if (g.path_list.size == 0 || glyf_data.paths.size == 0 || glyf_data.get_ncontours () == 0) {
+		if (g.get_visible_paths ().size == 0 || glyf_data.paths.size == 0 || glyf_data.get_ncontours () == 0) {
 			// location_offsets will be equal to location_offset + 1 for
 			// all empty glyphs
 			g.set_empty_ttf (true);
@@ -715,15 +715,16 @@ public class GlyfTable : OtfTable {
 		if (ixmax <= ixmin) {
 			warning (@"Bounding box is bad. (xmax == xmin) ($xmax == $xmin)");
 			
-			if (glyph.path_list.size > 0) {
+			var visible_paths = glyph.get_visible_paths ();
+			if (visible_paths.size > 0) {
 				
-				Path ps = glyph.path_list.get (0);
+				Path ps = visible_paths.get (0);
 				
 				ps.update_region_boundaries ();
 				xmin = ps.xmin;
 				xmax = ps.xmax;
 
-				foreach (Path p in glyph.path_list) {
+				foreach (Path p in visible_paths) {
 					p.update_region_boundaries ();
 					
 					if (p.xmin < xmin) {

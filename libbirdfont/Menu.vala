@@ -56,6 +56,7 @@ public class Menu : GLib.Object {
 		SubMenu menu = new SubMenu ();
 		SubMenu file_menu = new SubMenu ();
 		SubMenu edit_menu = new SubMenu ();
+		SubMenu layers_menu = new SubMenu ();
 		SubMenu export_menu = new SubMenu ();
 		SubMenu tab_menu = new SubMenu ();
 		SubMenu kerning_menu = new SubMenu ();
@@ -258,6 +259,27 @@ public class Menu : GLib.Object {
 		});
 		edit_menu.items.add (select_point_below);
 
+		// layers
+		MenuItem layers = add_menu_item (t_("Layers"));
+		layers.action.connect (() => {
+			set_menu (layers_menu);
+		});
+		menu.items.add (layers);
+		
+		MenuItem layer_up = add_menu_item (t_("Move Layer Up"), "move layer up", "Glyph");
+		layer_up.action.connect (() => {
+			MainWindow.get_current_glyph ().move_layer_up ();
+			DrawingTools.update_layers ();
+		});
+		layers_menu.items.add (layer_up);
+
+		MenuItem layer_down = add_menu_item (t_("Move Layer Down"), "move layer down", "Glyph");
+		layer_down.action.connect (() => {
+			MainWindow.get_current_glyph ().move_layer_down ();
+			DrawingTools.update_layers ();
+		});
+		layers_menu.items.add (layer_down);
+		
 		// import and export
 		MenuItem export = add_menu_item (t_("Import and Export"));
 		export.action.connect (() => {
@@ -476,7 +498,16 @@ public class Menu : GLib.Object {
 			show_menu = false;
 		});
 		menu.items.add (description);
-																						
+
+		MenuItem version = add_menu_item (t_("Version"), "birdfont version");
+		version.action.connect (() => {
+			MainWindow.show_message (t_("Version") + ": " + get_version () + "\n"
+				+ get_build_stamp ());
+			show_menu = false;
+		});
+		menu.items.add (version);
+
+			
 		current_menu = menu;
 		top_menu = menu;
 		allocation = new WidgetAllocation ();

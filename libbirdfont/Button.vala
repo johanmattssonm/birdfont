@@ -59,7 +59,7 @@ public class Button : Widget {
 		return label.get_width () + 2 * padding;
 	}
 	
-	public override void button_press (uint button, double x, double y) {
+	public override void button_release (uint button, double x, double y) {
 		if (is_over (x, y)) {
 			action ();
 		}

@@ -226,7 +226,7 @@ public class OverViewItem : GLib.Object {
 			g.add_help_lines ();
 			
 			c.translate (gx - g.get_lsb () - Glyph.xc (), g.get_baseline () + gy - Glyph.yc ());
-			
+						
 			g.draw_paths (c, color);
 			c.restore ();
 		} else {
@@ -372,7 +372,7 @@ public class OverViewItem : GLib.Object {
 			
 			cr.save ();
 			cr.set_antialias (Cairo.Antialias.NONE);
-			cr.set_source_surface (cache, (int) (x + 1), (int) (y + height - 20));
+			cr.set_source_surface (cache, (int) (x + 1), (int) (y + height - 19));
 			cr.paint ();
 			cr.restore ();
 		}

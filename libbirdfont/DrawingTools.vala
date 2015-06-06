@@ -22,14 +22,21 @@ public class DrawingTools : ToolCollection  {
 	
 	public Gee.ArrayList<Expander> expanders = new Gee.ArrayList<Expander> ();
 	
-	Expander draw_tools;
-	public static Expander grid_expander;
-	Expander shape_tools;
-	public static Expander draw_tool_modifiers;
-	public static Expander stroke_expander;
-	public static Expander zoombar_tool;
-	public static Expander guideline_tools;
-	
+	public static Expander draw_tools { get; set; }
+	public static Expander grid_expander { get; set; }
+	public static Expander shape_tools { get; set; }
+	public static Expander draw_tool_modifiers { get; set; }
+	public static Expander layer_tools { get; set; }
+	public static Expander layer_settings { get; set; }
+	public static Expander stroke_expander { get; set; }
+	public static Expander zoombar_tool { get; set; }
+	public static Expander guideline_tools { get; set; }
+
+	public static Expander font_name { get; set; }
+	public static Expander key_tools { get; set; }
+	public static Expander test_tools { get; set; }
+	public static Expander grid { get; set; }
+			
 	public static PointType point_type = PointType.DOUBLE_CURVE;
 	
 	public static Tool add_stroke;	
@@ -46,6 +53,8 @@ public class DrawingTools : ToolCollection  {
 	public static TrackTool track_tool;
 	public static BackgroundTool move_background;
 	public static Tool move_canvas;
+	public static Tool add_layer;
+	public static Tool show_layers;
 	
 	static Tool quadratic_points;
 	static Tool cubic_points;
@@ -66,9 +75,10 @@ public class DrawingTools : ToolCollection  {
 	Tool rectangle;
 	Tool circle;
 
-	Tool help_lines;
-	Tool xheight_help_lines;
-	Tool background_help_lines;
+	public static Tool help_lines { get; set; }
+	public static Tool xheight_help_lines { get; set; }
+	public static Tool background_help_lines { get; set; }
+	public static Tool show_grid { get; set; }
 	
 	SpinButton x_coordinate;
 	SpinButton y_coordinate;
@@ -94,9 +104,9 @@ public class DrawingTools : ToolCollection  {
 	
 	public ZoomBar zoom_bar;
 
-	Tool line_cap_butt;
-	Tool line_cap_round;
-	Tool line_cap_square;
+	static Tool line_cap_butt;
+	static Tool line_cap_round;
+	static Tool line_cap_square;
 			
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		bool selected_line;
@@ -107,15 +117,17 @@ public class DrawingTools : ToolCollection  {
 		
 		draw_tools = new Expander (t_("Drawing Tools"));
 		draw_tool_modifiers = new Expander (t_("Control Point"));
+		layer_tools = new Expander ();
+		layer_settings = new Expander (t_("Layers"));
 		stroke_expander = new Expander (t_("Stroke"));
 		shape_tools = new Expander (t_("Geometrical Shapes"));
 		zoombar_tool = new Expander (t_("Zoom"));
 		guideline_tools = new Expander (t_("Guidelines & Grid"));
 		
-		Expander font_name = new Expander ();
-		Expander key_tools = new Expander (); // tools on android
-		Expander test_tools = new Expander ();
-		Expander grid = new Expander (t_("Grid Size"));
+		font_name = new Expander ();
+		key_tools = new Expander (); // tools on android
+		test_tools = new Expander ();
+		grid = new Expander (t_("Grid Size"));
 		
 		grid_expander = grid;
 
@@ -179,7 +191,7 @@ public class DrawingTools : ToolCollection  {
 			update_drawing_and_background_tools (self);
 		});	
 		draw_tools.add_tool (move_canvas);
-						
+								
 		// Tools on android
 		// Delete key
 		delete_button = new Tool ("delete_button", t_("Delete"));
@@ -601,13 +613,14 @@ public class DrawingTools : ToolCollection  {
 		});
 		draw_tool_modifiers.add_tool (close_path_tool);
 		
-		move_layer = new Tool ("move_layer", t_("Move to path to the bottom layer"));
+		move_layer = new Tool ("move_layer", t_("Move to path to the bottom of the layer"));
 		move_layer.select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
-
+			Layer layer = g.get_current_layer ();
+			
 			foreach (Path p in g.active_paths) {
-				g.path_list.remove (p);
-				g.path_list.insert (0, p);
+				layer.paths.remove (p);
+				layer.paths.paths.insert (0, p);
 			}
 		});
 		draw_tool_modifiers.add_tool (move_layer);
@@ -775,6 +788,25 @@ public class DrawingTools : ToolCollection  {
 			
 		draw_tool_modifiers.add_tool (delete_background);	
 
+		add_layer = new Tool ("add_layer", t_("Add layer"));
+		add_layer.select_action.connect ((self) => {
+			layer_tools.visible = true;
+			MainWindow.get_current_glyph ().add_new_layer ();
+			update_layers ();
+			show_layers.selected = true;
+			add_layer.selected = false;
+		});
+		layer_settings.add_tool (add_layer);
+
+		show_layers = new Tool ("show_layers", t_("Show layers"));
+		show_layers.select_action.connect ((self) => {
+			layer_tools.visible = !layer_tools.visible;
+			MainWindow.get_toolbox ().update_expanders ();
+			Toolbox.redraw_tool_box ();
+			show_layers.selected = layer_tools.visible;
+		});
+		layer_settings.add_tool (show_layers);
+				
 		// add stroke to path
 		add_stroke = new Tool ("apply_stroke", t_("Apply stroke"));
 		add_stroke.select_action.connect ((self) => {
@@ -784,7 +816,7 @@ public class DrawingTools : ToolCollection  {
 			StrokeTool.stroke_width = object_stroke.get_value ();
 
 			add_stroke.selected = StrokeTool.add_stroke;
-						
+			set_stroke_tool_visibility ();	
 			GlyphCanvas.redraw ();
 			g.store_undo_state ();
 		
@@ -802,7 +834,8 @@ public class DrawingTools : ToolCollection  {
 			f = BirdFont.get_current_font ();
 			f.settings.set_setting ("apply_stroke", @"$(StrokeTool.add_stroke)");
 			
-			add_stroke.selected = StrokeTool.add_stroke;
+			stroke_expander.redraw ();
+			MainWindow.get_toolbox ().update_expanders ();
 		});
 		stroke_expander.add_tool (add_stroke);
 		add_stroke.selected = StrokeTool.add_stroke;
@@ -1020,8 +1053,13 @@ public class DrawingTools : ToolCollection  {
 		background_help_lines.set_selected (selected_line);
 		guideline_tools.add_tool (background_help_lines);
 
-		Tool new_grid = new GridTool ("show_grid");
-		guideline_tools.add_tool (new_grid);
+		show_grid = new GridTool ("show_grid");
+		show_grid.select_action.connect (() => {
+			grid_expander.visible = show_grid.selected;
+			MainWindow.get_toolbox ().update_expanders ();
+		});
+		guideline_tools.add_tool (show_grid);
+		grid_expander.visible = false;
 
 		// Zoom tools 
 		zoom_bar = new ZoomBar ();
@@ -1112,9 +1150,9 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		add_expander (draw_tool_modifiers);
-		
+		add_expander (layer_settings);
+		add_expander (layer_tools);
 		add_expander (stroke_expander);
-		
 		add_expander (guideline_tools);
 		add_expander (grid);
 		add_expander (zoombar_tool);
@@ -1124,6 +1162,9 @@ public class DrawingTools : ToolCollection  {
 		if (BirdFont.has_argument ("--test")) {
 			add_expander (test_tools);
 		}
+		
+		layer_settings.set_persistent (true);
+		layer_settings.set_unique (false);
 		
 		draw_tools.set_persistent (true);
 		draw_tools.set_unique (false);
@@ -1188,6 +1229,7 @@ public class DrawingTools : ToolCollection  {
 			add_new_grid (4);
 			
 			MainWindow.get_toolbox ().move (0, 0);
+			set_stroke_tool_visibility ();
 			
 			return false;
 		});
@@ -1217,7 +1259,7 @@ public class DrawingTools : ToolCollection  {
 		
 		add_stroke.selected = stroke;
 		StrokeTool.add_stroke = stroke;
-		// FIXME: This is slow: Toolbox.redraw_tool_box ();	
+		set_stroke_tool_visibility ();
 	}
 
 	void auto_trace_background () {
@@ -1540,6 +1582,49 @@ public class DrawingTools : ToolCollection  {
 		Gee.ArrayList<string> d = new Gee.ArrayList<string> ();
 		d.add ("Glyph");
 		return d;
+	}
+	
+	public static void update_layers () 
+	requires (!is_null (layer_tools)) {
+		Glyph g = MainWindow.get_current_glyph ();
+		int i = 0;
+		
+		layer_tools.tool.clear ();
+		foreach (Layer layer in g.layers.subgroups) { 
+			LayerLabel label = new LayerLabel (layer);
+			layer_tools.add_tool (label, 0);
+			
+			if (i == g.current_layer) {
+				label.select_layer ();
+			}
+			
+			i++;
+		}
+		
+		MainWindow.get_toolbox ().update_expanders ();
+		layer_tools.redraw ();
+		Toolbox.redraw_tool_box ();
+	}
+	
+	public static void deselect_layers ()
+	requires (!is_null (layer_tools)) {			
+		LayerLabel l;
+		
+		foreach (Tool t in layer_tools.tool) {
+			if (t is LayerLabel) {
+				l = (LayerLabel) t;
+				l.selected_layer = false;
+			}
+		}
+	}
+	
+	public static void set_stroke_tool_visibility () {
+		object_stroke.visible = StrokeTool.add_stroke;
+		line_cap_butt.visible = StrokeTool.add_stroke;
+		line_cap_round.visible = StrokeTool.add_stroke;
+		line_cap_square.visible = StrokeTool.add_stroke;
+		MainWindow.get_toolbox ().update_expanders ();
+		stroke_expander.redraw ();
 	}
 }
 

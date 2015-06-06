@@ -308,6 +308,10 @@ public class MainWindow : GLib.Object {
 		
 		tb.close_tab (n);
 	}
+	
+	public static void set_toolbox (Toolbox tb) {
+		tools = tb;
+	}
 }
 
 }

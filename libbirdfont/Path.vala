@@ -70,7 +70,7 @@ public class Path {
 	/** The stroke of an outline when the path is not filled. */
 	public static double stroke_width = 0;
 	public static bool show_all_line_handles = true;
-	public static bool fill_open_path = false;
+	public static bool fill_open_path {get; set;}
 	
 	public double rotation = 0;
 	public double skew = 0;
@@ -80,8 +80,8 @@ public class Path {
 	
 	public string point_data = "";
 
-	static int n_paths = 0;
-	
+	public Color? color = null;
+
 	public Path () {	
 		string width;
 		
@@ -95,15 +95,8 @@ public class Path {
 		if (stroke_width < 1) {
 			stroke_width = 1;
 		}
-	
-		n_paths++;
 	}
 
-	~Path () {
-		point_data = "";
-		n_paths--;
-	}
-	
 	public bool is_filled () {
 		return fill;
 	}
@@ -288,7 +281,10 @@ public class Path {
 		// fill path
 		cr.close_path ();
 		
-		if (color != null) {
+		if (this.color != null) {
+			c = (!) this.color;
+			cr.set_source_rgba (c.r, c.g, c.b, c.a);
+		} else if (color != null) {
 			c = (!) color;
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
 		} else {

@@ -23,9 +23,21 @@ cd export
 
 version=$(cat ../../scripts/version.py | grep "VERSION = '" | grep -v "SO_VERSION" | sed -e "s:VERSION = '::" | sed "s:'.*::g")
 
+if [ $# -ne 0 -a $# -ne 2] ; then
+	echo "Usage: $0 branch version"
+	exit 1
+else
+	version="$2"
+fi
+
 rm -rf birdfont-$version
 
-git clone --depth 1 --no-hardlinks --local $rep
+if [ "$1" = "" ] ; then
+        echo "No branch specified, exporting master."
+	git clone --depth 1 file://$rep
+else
+	git clone --depth 1 -b $1 file://$rep
+fi
 
 mv birdfont birdfont-$version
 

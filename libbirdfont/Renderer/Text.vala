@@ -20,7 +20,7 @@ namespace BirdFont {
 public class Text : Widget {
 	FontCache font_cache;
 	public CachedFont cached_font;
-	
+
 	public string text;
 	
 	GlyphSequence glyph_sequence {
@@ -40,10 +40,10 @@ public class Text : Widget {
 	public double font_size;
 	public double sidebearing_extent = 0;
 
-	double r = 0;
-	double g = 0;
-	double b = 0;
-	double a = 1;
+	public double r = 0;
+	public double g = 0;
+	public double b = 0;
+	public double a = 1;
 	
 	bool use_cached_glyphs = true;
 	double truncated_width = -1;
@@ -131,7 +131,7 @@ public class Text : Widget {
 		GlyphRange? gr_left, gr_right;
 		GlyphSequence word;
 		KerningClasses kc;
-		Font empty = new Font ();
+		Font empty = Font.empty;
 		
 		glyph = new Glyph.no_lines ("", '\0');
 
@@ -392,7 +392,7 @@ public class Text : Widget {
 
 		lsb = glyph.left_limit;
 
-		foreach (Path path in glyph.path_list) {
+		foreach (Path path in glyph.get_visible_paths ()) {
 			draw_path (cr, glyph, path, lsb, x, y, ratio);
 		}
 
@@ -428,7 +428,7 @@ public class Text : Widget {
 			cc.set_source_rgba (r, g, b, a);
 			cc.new_path ();
 
-			foreach (Path path in glyph.path_list) {
+			foreach (Path path in glyph.get_visible_paths ()) {
 				draw_path (cc, glyph, path, lsb, offset_x / 10.0, cc_y + offset_y / 10.0, ratio);
 			}
 			

@@ -21,6 +21,10 @@ public class PathList : GLib.Object {
 		 paths = new Gee.ArrayList<Path> ();
 	}
 	
+	public void remove (Path p) {
+		paths.remove (p);
+	}
+	
 	public void add_unique (Path p) {
 		if (paths.index_of (p) == -1) {
 			paths.add (p);
@@ -58,6 +62,16 @@ public class PathList : GLib.Object {
 		}
 		
 		return p;	
+	}
+	
+	public PathList copy () {
+		PathList pl = new PathList ();
+		
+		foreach (Path p in paths) {
+			pl.add (p.copy ());
+		}
+		
+		return pl;
 	}
 }
 

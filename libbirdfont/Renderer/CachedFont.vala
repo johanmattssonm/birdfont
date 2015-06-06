@@ -66,8 +66,6 @@ public class CachedFont : GLib.Object {
 			top_limit = f.top_limit;
 			base_line = f.base_line;
 			bottom_limit = f.bottom_limit;	
-			
-			font = f;
 		}
 				
 		return g;

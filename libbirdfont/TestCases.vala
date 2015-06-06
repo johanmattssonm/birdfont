@@ -71,7 +71,7 @@ class TestCases {
 		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
 		Path pn;
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_all_paths ()) {
 			pn = p.copy ();
 			pn.add_hidden_double_points ();
 			paths.add (pn);
@@ -172,7 +172,7 @@ class TestCases {
 		
 		glyph = MainWindow.get_current_glyph ();
 		for (int i = 0; i < 5; i++) {
-			foreach (Path p in glyph.path_list) {
+			foreach (Path p in glyph.get_all_paths ()) {
 				p.set_stroke (i / 100.0);
 				glyph.update_view ();
 				Tool.yield ();
@@ -192,7 +192,7 @@ class TestCases {
 		
 		Toolbox.select_tool_by_name ("full_glyph");
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_all_paths ()) {
 			p.add_extrema ();
 		}
 	}
@@ -644,7 +644,7 @@ class TestCases {
 		// convert the current path
 		g = MainWindow.get_current_glyph ();
 		
-		foreach (Path path in g.path_list) {
+		foreach (Path path in g.get_all_paths ()) {
 			paths.append (path.get_quadratic_points ());
 			paths.append (path.copy ());
 		}
@@ -1245,7 +1245,7 @@ class TestCases {
 		test_open_next_glyph ();
 		test_inkscape_import (); // draw somee thing
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_all_paths ()) {
 			path = new Path ();
 			p.all_of_path ((cx, cy, ct) => {
 				path.add (cx, cy);

@@ -33,21 +33,28 @@ public class ColorTool : Tool {
 		});
 		
 		color_updated.connect (() => {
-			MainWindow.get_toolbox ().redraw ((int)x, (int)y, (int)x + 20, (int)y + 20);
+			redraw ();
 			GlyphCanvas.redraw ();
 		});
 	}
 	
+	public Color get_color () {
+		return new Color (color_r, color_g, color_b, color_a);
+	}
+	
 	public void signal_color_updated () {
+		print (get_color ().to_string ());
 		color_updated ();
 	}
 	
-	public override void draw (Context cr) {
+	public override void draw_tool (Context cr, double px, double py) {
 		double scale = Toolbox.get_scale ();
+		double x = this.x - px;
+		double y = this.y - py;
 		double xt = x + w / 2 - 8 * scale;
 		double yt = y + h / 2 - 8 * scale;
-		
-		base.draw (cr);
+				
+		base.draw_tool (cr, px, py);
 		
 		cr.save ();
 		cr.set_source_rgba (color_r, color_g, color_b, 1);

@@ -51,6 +51,8 @@ public class Toolbox : GLib.Object  {
 	double tool_tip_x = 0;
 	double tool_tip_y = 0;
 	
+	public signal void new_tool_set (Tab? tab);
+	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		tool_sets = new Gee.ArrayList<ToolCollection> ();
 		current_tool = new Tool ("no_icon");
@@ -78,16 +80,10 @@ public class Toolbox : GLib.Object  {
 		tab_bar.signal_tab_selected.connect ((tab) => {
 			string tab_name = tab.get_display ().get_name ();
 			set_toolbox_from_tab (tab_name, tab);
-		});
-		
-		redraw.connect ((x, y, w, h) => {
-			redraw_notify ();
+			new_tool_set (tab);
 		});
 		
 		update_expanders ();
-	}
-
-	void redraw_notify () {	
 	}
 
 	public static void set_toolbox_from_tab (string tab_name, Tab? t = null) {		
@@ -182,6 +178,23 @@ public class Toolbox : GLib.Object  {
 		scrolling_touch = false;
 	}
 
+	public void double_click (uint button, double x, double y) {
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+		
+		y -= current_set.scroll;
+		
+		foreach (Expander e in current_set.get_expanders ()) {
+			if (e.visible) {
+				foreach (Tool t in e.tool) {
+					t.panel_double_click_action (t, button, x, y);
+				}
+			}
+		}
+	}
+	
 	public void scroll_up (double x, double y) {
 		bool action = false;
 		
@@ -517,6 +530,10 @@ public class Toolbox : GLib.Object  {
 		}
 	}
 	
+	public void set_current_tool_set (ToolCollection ts) {
+		current_set = ts;
+	}
+	
 	public class EmptySet : ToolCollection  {
 		Gee.ArrayList<Expander> expanders;
 		
@@ -528,7 +545,6 @@ public class Toolbox : GLib.Object  {
 			return expanders;
 		}
 	}
-
 }
 
 }

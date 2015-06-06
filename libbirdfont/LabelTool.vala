@@ -51,10 +51,6 @@ public class LabelTool : Tool {
 				delete_action (this);
 			}
 		});
-
-		panel_move_action.connect ((selected, button, tx, ty) => {
-			return false;
-		});
 	}
 	
 	public override void draw_tool (Context cr, double px, double py) {
@@ -64,6 +60,7 @@ public class LabelTool : Tool {
 		double x = this.x - px;
 		double y = this.y - py;
 		double text_height;
+		double text_width;
 		
 		// background
 		if (is_selected ()) {
@@ -82,6 +79,18 @@ public class LabelTool : Tool {
 		} else {
 			Theme.text_color (label_text, "Text Tool Box");
 		}
+		
+		text_width = Toolbox.allocation_width;
+		
+		if (has_counter) {
+			text_width -= counter_box_width - 15;
+		}
+		
+		if (has_delete_button) {
+			text_width -= 30;
+		}
+		
+		label_text.truncate (text_width);
 		
 		label_text.draw_at_top (cr, x, y);
 		cr.restore ();
@@ -124,10 +133,10 @@ public class LabelTool : Tool {
 			cr.save ();
 			Theme.color (cr, "Text Foreground");
 			cr.set_line_width (1);
-			cr.move_to (w - 20, y + h / 2 - 2.5 + 2);
-			cr.line_to (w - 25, y + h / 2 + 2.5 + 2);
-			cr.move_to (w - 20, y + h / 2 + 2.5 + 2);
-			cr.line_to (w - 25, y + h / 2 - 2.5 + 2);	
+			cr.move_to (w - 20, y + h / 2 - 2.5 - 2);
+			cr.line_to (w - 25, y + h / 2 + 2.5 - 2);
+			cr.move_to (w - 20, y + h / 2 + 2.5 - 2);
+			cr.line_to (w - 25, y + h / 2 - 2.5 - 2);
 			cr.stroke ();
 			cr.restore ();
 		}

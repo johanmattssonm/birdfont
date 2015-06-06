@@ -123,7 +123,10 @@ public class Expander : GLib.Object {
 				t.h = 20 * scale;
 			} else if (t is KerningRange) {
 				t.w = Toolbox.allocation_width * scale;
-				t.h = 17 * scale;				
+				t.h = 17 * scale;
+			} else if (t is LayerLabel) {
+				t.w = Toolbox.allocation_width * scale;
+				t.h = 21 * scale;
 			} else {
 				t.w = 33 * scale;
 				t.h = (33 / 1.11) * scale;
@@ -151,7 +154,6 @@ public class Expander : GLib.Object {
 					if (t is ZoomBar) {
 						t.x = xt;
 						t.y = yt;
-						//content_height += t.h;
 						yt += t.h + 7 * scale;
 						previous = t;
 						continue;
@@ -162,12 +164,16 @@ public class Expander : GLib.Object {
 					}
 					
 					if (new_row && !first_row) {
-						content_height += previous.h + margin_small; 
+						content_height += previous.h; 
 						xt = x;
 						yt += previous.h;
 						
-						if (!(t is LabelTool)) {
+						if (!(t is LabelTool) && !(previous is LayerLabel)) {
 							yt += 7 * scale;
+						}
+						
+						if (!(previous is LayerLabel)) {
+							content_height += margin_small;
 						}
 					}
 				

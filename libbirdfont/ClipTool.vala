@@ -197,7 +197,7 @@ public class ClipTool : Tool {
 				s.append (@"$(gc.get_current ().right_limit)");
 				s.append ("\n");
 
-				foreach (Path path in gc.get_current ().path_list) {
+				foreach (Path path in gc.get_current ().get_all_paths ()) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
 					s.append ("\n");
@@ -233,7 +233,7 @@ public class ClipTool : Tool {
 			s.append ("\n");
 									
 			if (!selected) {
-				foreach (Path path in glyph.path_list) {
+				foreach (Path path in glyph.get_all_paths ()) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
 					s.append ("\n");
@@ -248,7 +248,7 @@ public class ClipTool : Tool {
 						s.append ("BF cap: square\n");
 					}
 				}
-			} else if (glyph.path_list.size > 0) {
+			} else if (glyph.get_all_paths ().size > 0) {
 				foreach (Path path in glyph.active_paths) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
@@ -266,7 +266,7 @@ public class ClipTool : Tool {
 				}
 			} else {
 				new_path = new Path ();
-				foreach (Path path in glyph.path_list) {
+				foreach (Path path in glyph.get_all_paths ()) {
 					if (path.points.size > 0
 						&& path.points.get (0).is_selected ()
 						&& path.points.get (path.points.size - 1).is_selected ()) {
@@ -404,7 +404,7 @@ public class ClipTool : Tool {
 			destination = MainWindow.get_current_glyph ();
 			glyph = glyphs.get (0).get_current ();
 			
-			foreach (Path p in glyph.path_list) {
+			foreach (Path p in glyph.get_all_paths ()) {
 				PenTool.clear_directions ();
 				destination.add_path (p);
 				destination.add_active_path (p);

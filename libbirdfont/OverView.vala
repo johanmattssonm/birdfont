@@ -123,6 +123,7 @@ public class OverView : FontDisplay {
 			glyph_collection = add_character_to_font (character);
 			
 			glyph = glyph_collection.get_current ();
+			glyph.layers.add_layer (new Layer ());
 			tabs.add_tab (glyph, true, glyph_collection);
 			
 			selected_items.add (glyph_collection);
@@ -138,7 +139,7 @@ public class OverView : FontDisplay {
 		OverviewTools.update_overview_characterset ();
 		return glyph_collection;
 	}
-	
+		
 	public GlyphCollection add_empty_character_to_font (unichar character, bool unassigned, string name) {
 		return add_character_to_font (character, true, unassigned);
 	}
@@ -209,7 +210,7 @@ public class OverView : FontDisplay {
 		return null;
 	}
 	
-	private void set_initial_zoom () {
+	public void set_initial_zoom () {
 		Toolbox tools = MainWindow.get_toolbox ();
 		ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");
 		z.store_current_view ();

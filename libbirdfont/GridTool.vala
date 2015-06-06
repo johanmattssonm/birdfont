@@ -22,7 +22,7 @@ class GridTool : Tool {
 	static Gee.ArrayList<Line> horizontal;
 	static Gee.ArrayList<Line> vertical;
 	
-	static bool visible = false;
+	static bool grid_visible = false;
 	public static bool ttf_units = false;
 	
 	public static double size_x;
@@ -50,16 +50,16 @@ class GridTool : Tool {
 		update_lines ();
 			
 		select_action.connect((self) => {
-			visible = !visible;
+			grid_visible = !grid_visible;
 			update_lines ();
 			GlyphCanvas.redraw ();
 			
-			self.set_selected (visible);
+			self.set_selected (grid_visible);
 			
 			Toolbox tb = MainWindow.get_toolbox ();
 			Tool t = tb.get_tool ("help_lines");
 			
-			if (visible && !t.is_selected ()) {
+			if (grid_visible && !t.is_selected ()) {
 				MainWindow.get_toolbox ().select_tool (t);
 			}
 		});
@@ -262,7 +262,7 @@ class GridTool : Tool {
 	}
 	
 	public static bool is_visible () {
-		return visible;
+		return grid_visible;
 	}
 	
 	public static Gee.ArrayList<Line> get_horizontal_lines () {

@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import version
 import time;
+from time import gmtime, strftime
 
 VERSION = version.VERSION
 
@@ -25,7 +26,7 @@ def write_config (prefix):
 	print ("Writing Config.vala")
 
 	vars = (('VERSION', VERSION),
-		('BUILD_TIMESTAMP', time.asctime( time.localtime(time.time()))),
+		('BUILD_TIMESTAMP', strftime("%Y-%m-%d %H:%M:%S +0000", gmtime())),
 		('PREFIX', prefix),
 		)
 

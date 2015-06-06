@@ -23,7 +23,7 @@ class Svg {
 		StringBuilder svg = new StringBuilder ();
 		PathList stroke_list;
 		
-		foreach (Path p in g.path_list) {
+		foreach (Path p in g.get_visible_paths ()) {
 			if (p.stroke == 0) {
 				write_path_as_glyph (p, svg, g);
 			} else {
