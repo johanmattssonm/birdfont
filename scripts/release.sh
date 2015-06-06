@@ -25,7 +25,12 @@ version=$(cat ../../scripts/version.py | grep "VERSION = '" | grep -v "SO_VERSIO
 
 rm -rf birdfont-$version
 
-git clone --depth 1 --no-hardlinks --local $rep
+if [ "$1" = "" ] ; then
+        echo "No branch specified, exporting master."
+	git clone --depth 1 file://$rep
+else
+	git clone --depth 1 -b $1 file://$rep
+fi
 
 mv birdfont birdfont-$version
 
