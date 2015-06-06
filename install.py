@@ -159,7 +159,6 @@ else:
 
 if "bsd" in sys.platform:
         install ('build/libbirdfont.so.' + '${LIBbirdfont_VERSION}', '/lib', 644)
-        install ('build/libbirdxml.so.' + '${LIBbirdxml_VERSION}', '/lib', 644)
         install ('build/libbirdgems.so.' + '${LIBbirdgems_VERSION}', '/lib', 644)
 elif os.path.isfile ('build/bin/libbirdgems.so.' + version.LIBBIRDGEMS_SO_VERSION):
         install ('build/bin/libbirdgems.so.' + version.LIBBIRDGEMS_SO_VERSION, libdir, 644)
