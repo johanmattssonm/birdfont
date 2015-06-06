@@ -23,6 +23,13 @@ cd export
 
 version=$(cat ../../scripts/version.py | grep "VERSION = '" | grep -v "SO_VERSION" | sed -e "s:VERSION = '::" | sed "s:'.*::g")
 
+if [ $? -ne 0 -a $? -ne 2] ; then
+	echo "Usage: $0 branch version"
+	exit 1
+else
+	version="$2"
+fi
+
 rm -rf birdfont-$version
 
 if [ "$1" = "" ] ; then

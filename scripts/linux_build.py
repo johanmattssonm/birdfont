@@ -56,13 +56,9 @@ library_ldflags= options.ldflags + " -Wl,-soname," + "libbirdfont.so." + version
 birdgemslibrary_cflags = options.cflags
 birdgemslibrary_ldflags= options.ldflags + " -Wl,-soname," + "birdgems.so." + version.LIBBIRDGEMS_SO_VERSION
 
-xmllibrary_cflags = options.cflags
-xmllibrary_ldflags= options.ldflags + " -Wl,-soname," + "libbirdxml.so." + version.SO_VERSION
-
 configfile.write_config (prefix)
 compile_translations()
 build.libbirdgems(prefix, cc, birdgemslibrary_cflags, birdgemslibrary_ldflags, valac, valaflags, "libbirdgems.so." + version.LIBBIRDGEMS_SO_VERSION, False)
-build.libbirdxml(prefix, cc, xmllibrary_cflags, xmllibrary_ldflags, valac, valaflags, "libbirdxml.so." + version.LIBBIRDXML_SO_VERSION, False)
 build.libbirdfont(prefix, cc, library_cflags, library_ldflags, valac, valaflags, "libbirdfont.so." + version.SO_VERSION, False)
 build.birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, False)
 build.birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, False)
