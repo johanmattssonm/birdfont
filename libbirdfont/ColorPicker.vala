@@ -34,7 +34,7 @@ public class ColorPicker : Tool {
 		base (null, tooltip);
 		
 		bar_height = 22 * Toolbox.get_scale ();
-		h = 4 * bar_height;
+		h = 5 * bar_height;
 		
 		color_updated.connect (() => {
 			redraw ();
@@ -44,7 +44,7 @@ public class ColorPicker : Tool {
 		panel_press_action.connect ((selected, button, tx, ty) => {	
 			if (y <= ty <= y + 4 * bar_height) {
 				update_color = true;
-				selected_bar = (int) Math.rint ((ty - y) / bar_height);
+				selected_bar = (int) ((ty - y) / bar_height);
 				set_color_from_pointer (tx);
 			}
 		});
@@ -82,7 +82,7 @@ public class ColorPicker : Tool {
 			a = (double) tx / Toolbox.allocation_width;
 		}
 				
-		redraw ();	
+		color_updated ();
 	}
 	
 	public Color get_color () {
@@ -103,10 +103,9 @@ public class ColorPicker : Tool {
 	
 	public void draw_bars (Context cr, double px, double py) {
 		double scale = Toolbox.get_scale ();
-		double x = this.x - px;
-		double y = this.y - py;
 		double step = 1.0 / Toolbox.allocation_width;
 		Color c;
+		double y = this.y - py;
 		
 		for (double p = 0; p < 1; p += step) {
 			c = new Color.hsba (p, 1, 0.5, 1);
@@ -137,10 +136,16 @@ public class ColorPicker : Tool {
 			cr.fill ();
 			cr.restore ();
 		}
+		
+		c = new Color.hsba (hue, s, b, a);
+		cr.save ();
+		cr.set_source_rgba (c.r, c.g, c.b, c.a);
+		cr.rectangle (0, y + 4 * bar_height, Toolbox.allocation_width, bar_height);
+		cr.fill ();
+		cr.restore ();
 	}
 	
 	void draw_dial (Context cr, double px, double py, int bar_index, double val) {
-		double x = this.x - px;
 		double y = this.y - py;
 		double scale = Toolbox.get_scale ();
 		double p;

@@ -27,10 +27,6 @@ public class ColorTool : Tool {
 	
 	public ColorTool (string tooltip = "") {
 		base (null, tooltip);
-
-		select_action.connect((self) => {
-			MainWindow.native_window.color_selection (this);
-		});
 		
 		color_updated.connect (() => {
 			redraw ();
@@ -41,7 +37,15 @@ public class ColorTool : Tool {
 	public Color get_color () {
 		return new Color (color_r, color_g, color_b, color_a);
 	}
-	
+
+	public void set_color (Color c) {
+		color_r = c.r;
+		color_g = c.g;
+		color_b = c.b;
+		color_a = c.a;
+		color_updated ();
+	}
+		
 	public void signal_color_updated () {
 		color_updated ();
 	}

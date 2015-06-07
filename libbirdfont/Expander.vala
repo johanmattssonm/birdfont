@@ -129,7 +129,7 @@ public class Expander : GLib.Object {
 				t.h = 21 * scale;
 			} else if (t is ColorPicker) {
 				t.w = Toolbox.allocation_width * scale;
-				t.h = 4 * ((ColorPicker) t).bar_height;
+				t.h = 5 * ((ColorPicker) t).bar_height;
 			} else {
 				t.w = 33 * scale;
 				t.h = (33 / 1.11) * scale;

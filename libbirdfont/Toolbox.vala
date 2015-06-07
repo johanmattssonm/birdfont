@@ -28,6 +28,7 @@ public class Toolbox : GLib.Object  {
 	public static BackgroundTools background_tools;	
 	public static SpacingTools spacing_tools;
 	public static FileTools file_tools;
+	public static ThemeTools theme_tools;
 	
 	Tool current_tool;
 	
@@ -66,6 +67,7 @@ public class Toolbox : GLib.Object  {
 		background_tools = new BackgroundTools ();
 		spacing_tools = new SpacingTools ();
 		file_tools = new FileTools ();
+		theme_tools = new ThemeTools ();
 		
 		tool_sets.add (drawing_tools);
 		tool_sets.add (kerning_tools);
@@ -97,6 +99,8 @@ public class Toolbox : GLib.Object  {
 			current_set = (ToolCollection) overview_tools;
 		} else if (tab_name == "Backgrounds") {
 			current_set = (ToolCollection) background_tools;
+		} else if (tab_name == "Themes") {
+			current_set = (ToolCollection) theme_tools;
 		} else if (t != null && ((!) t).get_display () is Glyph) {
 			current_set = (ToolCollection) drawing_tools;
 		} else {

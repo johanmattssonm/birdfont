@@ -38,10 +38,10 @@ public class OverViewItem : GLib.Object {
 	public VersionList version_menu;
 	Text label;
 	
-	static Surface? label_background = null;
-	static Surface? selected_label_background = null;
-	static Surface? label_background_no_menu = null;
-	static Surface? selected_label_background_no_menu = null;
+	public static Surface? label_background = null;
+	public static Surface? selected_label_background = null;
+	public static Surface? label_background_no_menu = null;
+	public static Surface? selected_label_background_no_menu = null;
 	
 	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	
 		this.x = x;
