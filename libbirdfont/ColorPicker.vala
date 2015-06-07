@@ -63,7 +63,6 @@ public class ColorPicker : Tool {
 	}
 	
 	public void set_color_from_pointer (double tx) {
-		
 		if (tx > Toolbox.allocation_width) {
 			tx = Toolbox.allocation_width;
 		}

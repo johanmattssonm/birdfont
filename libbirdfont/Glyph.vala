@@ -1091,7 +1091,21 @@ public class Glyph : FontDisplay {
 		y = (y + g.view_offset_y - yc ()) * g.view_zoom;	
 		return -y;
 	}
-	
+
+	public Path? get_path_at (double x, double y) {
+		Path? p = null;
+		bool found = false;
+		
+		foreach (Path pt in get_paths_in_current_layer ()) {
+			if (pt.is_over (x, y)) {
+				p = pt;
+				found = true;
+			}
+		}
+		
+		return p;
+	}
+		
 	public bool select_path (double x, double y) {
 		Path? p = null;
 		bool found = false;

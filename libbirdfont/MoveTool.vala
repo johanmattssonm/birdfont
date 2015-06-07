@@ -165,14 +165,28 @@ public class MoveTool : Tool {
 		
 	public void press (int b, int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-					
+		Path? p;
+		bool selected = false;
+		
 		glyph.store_undo_state ();
 		group_selection = false;
-				
-		if (!glyph.is_over_selected_path (x, y)) {
-			if (!glyph.select_path (x, y)) {
+		
+		p = glyph.get_path_at (x, y);
+		
+		if (p != null) {
+			selected = glyph.active_paths.contains ((!) p);
+			
+			if (!selected && !KeyBindings.has_shift ()) {
 				glyph.clear_active_paths ();
+			} 
+			
+			if (selected && KeyBindings.has_shift ()) {
+				glyph.active_paths.remove ((!) p);
+			} else {
+				glyph.add_active_path ((!) p);
 			}
+		} else if (!KeyBindings.has_shift ()) {
+			glyph.clear_active_paths ();
 		}
 		
 		move_path = true;
@@ -190,6 +204,7 @@ public class MoveTool : Tool {
 		
 		update_boundaries_for_selection ();
 		selection_changed ();
+		GlyphCanvas.redraw ();
 	}
 	
 	
