@@ -88,6 +88,8 @@ public class FileTools : ToolCollection  {
 			}
 		}
 		
+		themes.add_tool (new ColorPicker ());
+		
 		expanders.add (font_name);					
 		expanders.add (file_tools);
 		expanders.add (themes);

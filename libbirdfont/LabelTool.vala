@@ -66,7 +66,7 @@ public class LabelTool : Tool {
 		if (is_selected ()) {
 			cr.save ();
 			Theme.color (cr, "Menu Background");
-			cr.rectangle (0, y - 2 * Toolbox.get_scale (), w, h ); // labels overlap with 2 pixels
+			cr.rectangle (0, y - 2 * Toolbox.get_scale (), w, h); // labels overlap with 2 pixels
 			cr.fill ();
 			cr.restore ();		
 		}

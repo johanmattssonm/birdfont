@@ -127,6 +127,9 @@ public class Expander : GLib.Object {
 			} else if (t is LayerLabel) {
 				t.w = Toolbox.allocation_width * scale;
 				t.h = 21 * scale;
+			} else if (t is ColorPicker) {
+				t.w = Toolbox.allocation_width * scale;
+				t.h = 4 * ((ColorPicker) t).bar_height;
 			} else {
 				t.w = 33 * scale;
 				t.h = (33 / 1.11) * scale;
@@ -151,6 +154,10 @@ public class Expander : GLib.Object {
 				if (t.tool_is_visible ()) {
 					new_row = xt + t.w > Toolbox.allocation_width - 7 * scale;
 					
+					if (t is ColorPicker) {
+						content_height += t.h;
+					}
+										
 					if (t is ZoomBar) {
 						t.x = xt;
 						t.y = yt;
@@ -162,7 +169,7 @@ public class Expander : GLib.Object {
 					if (previous is ZoomBar) {
 						content_height += t.h;
 					}
-					
+										
 					if (new_row && !first_row) {
 						content_height += previous.h; 
 						xt = x;

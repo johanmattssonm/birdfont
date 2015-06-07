@@ -43,7 +43,6 @@ public class ColorTool : Tool {
 	}
 	
 	public void signal_color_updated () {
-		print (get_color ().to_string ());
 		color_updated ();
 	}
 	

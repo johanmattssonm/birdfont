@@ -2216,9 +2216,12 @@ public class Glyph : FontDisplay {
 		GlyphCollection? g;
 		GlyphCollection gc;
 		Glyph glyph;
+		Gee.ArrayList<string> s;
+		SpacingData sd;
 		
-		foreach (string l in font.get_spacing ()
-				.get_all_connections ((!) unichar_code.to_string ())) {
+		sd = font.get_spacing ();
+		s = sd.get_all_connections ((!) unichar_code.to_string ());
+		foreach (string l in s) {
 			if (l != (!) unichar_code.to_string ()) {
 				g = font.get_glyph_collection (l);
 				if (g != null) {
@@ -2239,9 +2242,13 @@ public class Glyph : FontDisplay {
 		GlyphCollection? g;
 		GlyphCollection gc;
 		Glyph glyph;
+		Gee.ArrayList<string> s;
+		SpacingData sd;
 		
-		foreach (string l in font.get_spacing ()
-				.get_all_connections ((!) unichar_code.to_string ())) {
+		sd = font.get_spacing ();
+		s = sd.get_all_connections ((!) unichar_code.to_string ());
+				
+		foreach (string l in s) {
 			if (l != (!) unichar_code.to_string ()) {
 				g = font.get_glyph_collection (l);
 				if (g != null) {
