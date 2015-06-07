@@ -759,6 +759,10 @@ public class Path {
 			new_path.add_point (p);
 		}
 		
+		if (color != null) {
+			new_path.color = ((!) color).copy ();
+		}
+		
 		new_path.edit = edit;
 		new_path.open = open;
 		new_path.stroke = stroke;

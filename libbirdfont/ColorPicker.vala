@@ -42,7 +42,7 @@ public class ColorPicker : Tool {
 		});
 
 		panel_press_action.connect ((selected, button, tx, ty) => {	
-			if (y <= ty <= y + 4 * bar_height) {
+			if (y <= ty <= y + 5 * bar_height) {
 				update_color = true;
 				selected_bar = (int) ((ty - y) / bar_height);
 				set_color_from_pointer (tx);
@@ -87,10 +87,6 @@ public class ColorPicker : Tool {
 	
 	public Color get_color () {
 		return new Color.hsba (hue, s, b, a);
-	}
-	
-	public void signal_color_updated () {
-		color_updated ();
 	}
 	
 	public override void draw_tool (Context cr, double px, double py) {

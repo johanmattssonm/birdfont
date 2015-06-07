@@ -153,10 +153,6 @@ public class Expander : GLib.Object {
 			foreach (Tool t in tool) {
 				if (t.tool_is_visible ()) {
 					new_row = xt + t.w > Toolbox.allocation_width - 7 * scale;
-					
-					if (t is ColorPicker) {
-						content_height += t.h;
-					}
 										
 					if (t is ZoomBar) {
 						t.x = xt;
