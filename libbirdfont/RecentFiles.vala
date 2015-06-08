@@ -35,7 +35,7 @@ public class RecentFiles : Table {
 
 	public override void selected_row (Row row, int column, bool delete_button) {	
 		Font f;
-
+		
 		if (row.get_index () == NEW_FONT) {
 			MenuTab.new_file ();
 			MenuTab.select_overview ();

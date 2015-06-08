@@ -622,6 +622,8 @@ public class DrawingTools : ToolCollection  {
 				layer.paths.remove (p);
 				layer.paths.paths.insert (0, p);
 			}
+			
+			GlyphCanvas.redraw ();
 		});
 		draw_tool_modifiers.add_tool (move_layer);
 

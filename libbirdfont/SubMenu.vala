@@ -12,14 +12,15 @@
     Lesser General Public License for more details.
 */
 
+using Cairo;
+using B;
+
 namespace BirdFont {
-
-public class SubMenu : GLib.Object { 
-	public Gee.ArrayList<MenuItem> items;
-	
-	public SubMenu () {
-		items = new Gee.ArrayList<MenuItem> ();
+	public class SubMenu : GLib.Object { 
+		public Gee.ArrayList<MenuItem> items;
+		
+		public SubMenu () {
+			items = new Gee.ArrayList<MenuItem> ();
+		}
 	}
-}
-
 }
