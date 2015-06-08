@@ -376,7 +376,7 @@ public class BirdFont {
 	
 	public static Drawing? drawing = null;
 	
-	public static string? settings_directory = null;
+	public static string? settings_subdirectory = null;
 	
 	public BirdFont () {
 		set_defaul_drawing_callbacks ();
@@ -610,7 +610,7 @@ public class BirdFont {
 	}
 
 	public static void set_settings_directory (string directory) {
-		settings_directory = directory;
+		settings_subdirectory = directory;
 	}
 	
 	public static File get_preview_directory () {
@@ -625,7 +625,7 @@ public class BirdFont {
 	}
 
 	public static void set_settings_subdir (string? subdir) {
-		settings_directory = subdir;
+		settings_subdirectory = subdir;
 	}
 
 	internal static File get_settings_directory () {
@@ -652,9 +652,9 @@ public class BirdFont {
 		
 		home = File.new_for_path (home_path);
 #endif
-		
+
 		if (settings_directory != null) {
-			settings = get_child(home, (!) settings_directory);
+			settings = get_child(home, (!) settings_subdirectory);
 		} else {
 			settings = get_child(home, "birdfont");
 		}
