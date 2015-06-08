@@ -207,7 +207,7 @@ public class MainWindow : GLib.Object {
 		
 		over_view = new OverView();
 		tabs.add_unique_tab (over_view);
-				
+					
 		return over_view;
 	}
 	

@@ -34,7 +34,7 @@ public static int main (string[] arg) {
 	native_window.init ();
 
 	birdfont.load_font_from_command_line ();
-
+	
 	Gtk.main ();
 	return 0;
 }

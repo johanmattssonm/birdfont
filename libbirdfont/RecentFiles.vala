@@ -192,6 +192,11 @@ public class RecentFiles : Table {
 		selected_canvas ();
 	}
 	
+	public override void draw (WidgetAllocation allocation, Context cr) {
+		MainWindow.get_overview ().allocation = allocation;
+		base.draw (allocation, cr);
+	}
+	
 	public static void load_font (string fn) {
 		Font font;
 		SaveDialogListener dialog = new SaveDialogListener ();

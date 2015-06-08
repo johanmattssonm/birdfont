@@ -98,6 +98,7 @@ public class OverView : FontDisplay {
 
 		idle.set_callback (() => {			
 			selected_canvas ();
+			use_default_character_set ();
 			return false;
 		});
 		
@@ -106,6 +107,15 @@ public class OverView : FontDisplay {
 		update_scrollbar ();
 		reset_zoom ();
 		update_item_list ();
+	}
+	
+	public void use_default_character_set () {
+		GlyphRange gr = new GlyphRange ();
+		all_available = false;
+		DefaultCharacterSet.use_default_range (gr);
+		set_glyph_range (gr);
+		OverviewTools.update_overview_characterset ();
+		FontDisplay.dirty_scrollbar = true;
 	}
 	
 	public GlyphCollection create_new_glyph (unichar character) {
@@ -280,6 +290,16 @@ public class OverView : FontDisplay {
 		update_item_list ();
 		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
+
+		IdleSource idle = new IdleSource ();
+
+		idle.set_callback (() => {	
+			use_default_character_set ();
+			GlyphCanvas.redraw ();
+			return false;
+		});
+		
+		idle.attach (null);
 	}
 	
 	public void update_zoom_bar () {
@@ -419,7 +439,7 @@ public class OverView : FontDisplay {
 		
 		visible_items.clear ();
 		visible_items = new Gee.ArrayList<OverViewItem> ();
-		
+						
 		// update item list
 		index = (uint32) first_visible;
 		x = OverViewItem.margin;
@@ -479,7 +499,7 @@ public class OverView : FontDisplay {
 		foreach (OverViewItem i in visible_items) {
 			i.y += view_offset_y;
 			i.x += view_offset_x;
-		}
+		}		
 	}
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {

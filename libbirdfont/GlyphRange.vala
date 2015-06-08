@@ -509,6 +509,10 @@ public class GlyphRange {
 		stdout.printf (get_all_ranges ());
 		stdout.printf ("\n");
 	}
+	
+	public string to_string () {
+		return get_all_ranges ();
+	}
 }
 
 }
