@@ -69,7 +69,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void draw (WidgetAllocation allocation, Context cr) {
-		Menu menu;
+		AbstractMenu menu;
 		Dialog dialog;
 		
 		if (unlikely (MenuTab.suppress_event)) {

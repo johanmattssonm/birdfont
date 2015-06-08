@@ -28,7 +28,7 @@ public class MainWindow : GLib.Object {
 	public static CharDatabase character_database;
 	public static LigatureList ligature_display;
 	public static SpacingClassTab spacing_class_tab;
-	public static Menu menu;
+	public static AbstractMenu menu;
 	public static Dialog dialog;
 	public static SpacingTab spacing_tab;
 	
@@ -99,7 +99,11 @@ public class MainWindow : GLib.Object {
 		GlyphCanvas.redraw ();
 	}
 
-	public static Menu get_menu () {
+	public static void set_menu (AbstractMenu m) {
+		menu = m;
+	}
+	
+	public static AbstractMenu get_menu () {
 		return menu;
 	}
 
