@@ -34,6 +34,7 @@ public class ClipTool : Tool {
 		
 		if (fd is Glyph) {
 			svg_data = ExportTool.export_selected_paths_to_svg ();
+			
 			bf_data = export_selected_paths_to_birdfont_clipboard ();
 			data = svg_data + bf_data;
 			MainWindow.native_window.set_clipboard (data);

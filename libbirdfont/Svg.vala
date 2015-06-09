@@ -80,10 +80,9 @@ class Svg {
 			i++;
 		}
 
-		m = p.points.get (0);	
-		add_abs_next ((!) n, m, svg, g, do_glyph);
-		
 		if (!p.is_open ()) {
+			m = p.points.get (0);	
+			add_abs_next ((!) n, m, svg, g, do_glyph);
 			close_path (svg);
 		}
 	}
