@@ -36,7 +36,18 @@ public class OverView : FontDisplay {
 	public signal void open_new_glyph_signal (unichar c);
 	public signal void open_glyph_signal (GlyphCollection c);
 	
-	public GlyphRange glyph_range;
+	public GlyphRange glyph_range {
+		get {
+			return _glyph_range;
+		}
+		
+		set {
+			_glyph_range = value;
+		}
+	}
+	
+	GlyphRange _glyph_range;
+	
 	string search_query = "";
 	
 	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
@@ -67,10 +78,10 @@ public class OverView : FontDisplay {
 
 	public OverView (GlyphRange? range = null, bool open_selected = true) {
 		GlyphRange gr;
-
+		
 		if (range == null) {
 			gr = new GlyphRange ();
-			set_glyph_range (gr);
+			set_current_glyph_range (gr);
 		}
 
 		if (open_selected) {
@@ -113,7 +124,7 @@ public class OverView : FontDisplay {
 		GlyphRange gr = new GlyphRange ();
 		all_available = false;
 		DefaultCharacterSet.use_default_range (gr);
-		set_glyph_range (gr);
+		set_current_glyph_range (gr);
 		OverviewTools.update_overview_characterset ();
 		FontDisplay.dirty_scrollbar = true;
 	}
@@ -204,7 +215,7 @@ public class OverView : FontDisplay {
 		listener.signal_submit.connect (() => {
 			OverView o = MainWindow.get_overview ();
 			GlyphRange r = CharDatabase.search (o.search_query);
-			o.set_glyph_range (r);
+			o.set_current_glyph_range (r);
 			TabContent.hide_text_input ();
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		});
@@ -290,16 +301,6 @@ public class OverView : FontDisplay {
 		update_item_list ();
 		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
-
-		IdleSource idle = new IdleSource ();
-
-		idle.set_callback (() => {	
-			use_default_character_set ();
-			GlyphCanvas.redraw ();
-			return false;
-		});
-		
-		idle.attach (null);
 	}
 	
 	public void update_zoom_bar () {
@@ -846,6 +847,7 @@ public class OverView : FontDisplay {
 		}
 		
 		update_item_list ();
+		GlyphCanvas.redraw ();
 	}
 	
 	public void delete_selected_glyph () {
@@ -860,6 +862,9 @@ public class OverView : FontDisplay {
 		foreach (GlyphCollection gc in selected_items) {
 			font.delete_glyph (gc);
 		}
+
+		update_item_list ();
+		GlyphCanvas.redraw ();
 	}
 	
 	public override void undo () {
@@ -1159,7 +1164,7 @@ public class OverView : FontDisplay {
 		return t >= glyph_range.length ();
 	}
 
-	public void set_glyph_range (GlyphRange range) {
+	public void set_current_glyph_range (GlyphRange range) {
 		GlyphRange? current = glyph_range;
 		string c;
 		
@@ -1397,7 +1402,7 @@ public class OverView : FontDisplay {
 
 				character_string = glyph_range.get_char ((uint32) (index + skip));
 				c = f.get_glyph_collection_by_name (character_string);
-
+				
 				if (c == null) {
 					gc = add_empty_character_to_font (character_string.get_char (), 
 						copied_glyphs.get (i).is_unassigned (),

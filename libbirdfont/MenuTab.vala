@@ -646,7 +646,7 @@ public class MenuTab : FontDisplay {
 		}
 			
 		DefaultCharacterSet.use_default_range (gr);
-		o.set_glyph_range (gr);
+		o.set_current_glyph_range (gr);
 
 		MainWindow.get_tab_bar ().select_tab_name ("Overview");
 	}

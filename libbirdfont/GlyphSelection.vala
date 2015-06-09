@@ -26,7 +26,7 @@ public class GlyphSelection : OverView {
 		} else {
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_default_range (gr);
-			set_glyph_range (gr);
+			set_current_glyph_range (gr);
 		}
 
 		OverviewTools.update_overview_characterset (this);

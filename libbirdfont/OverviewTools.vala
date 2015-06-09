@@ -61,7 +61,7 @@ public class OverviewTools : ToolCollection  {
 			OverView overview = get_overview ();
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_default_range (gr);
-			overview.set_glyph_range (gr);
+			overview.set_current_glyph_range (gr);
 			update_overview_characterset ();
 			FontDisplay.dirty_scrollbar = true;
 		});
@@ -73,7 +73,7 @@ public class OverviewTools : ToolCollection  {
 			OverView overview = get_overview ();
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_full_unicode_range (gr);
-			overview.set_glyph_range (gr);
+			overview.set_current_glyph_range (gr);
 			update_overview_characterset ();
 			FontDisplay.dirty_scrollbar = true;
 		});
