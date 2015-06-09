@@ -40,6 +40,16 @@ public class MoveTool : Tool {
 	public MoveTool (string n) {
 		base (n, t_("Move paths"));
 
+		selection_changed.connect (() => {
+			update_selection_boundaries ();
+			redraw();
+		});
+		
+		objects_deselected.connect (() => {
+			update_selection_boundaries ();
+			redraw();
+		});
+		
 		select_action.connect((self) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			glyph.close_path ();
