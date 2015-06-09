@@ -51,10 +51,10 @@ public class Glyph : FontDisplay {
 	public double motion_y = 0;
 		
 	// Zoom area
-	double zoom_x1 = 0;
-	double zoom_y1 = 0;
-	double zoom_x2 = 0;
-	double zoom_y2 = 0;
+	public double zoom_x1 = 0;
+	public double zoom_y1 = 0;
+	public double zoom_x2 = 0;
+	public double zoom_y2 = 0;
 	public bool zoom_area_is_visible = false;
 	
 	bool view_is_moving = false;
@@ -1687,15 +1687,6 @@ public class Glyph : FontDisplay {
 			p.draw_path (cr, this, c);
 		}
 	}
-		
-	public void draw_zoom_area(Context cr) {
-		cr.save ();
-		cr.set_line_width (2.0);
-		Theme.color (cr, "Selection Border");
-		cr.rectangle (Math.fmin (zoom_x1, zoom_x2), Math.fmin (zoom_y1, zoom_y2), Math.fabs (zoom_x1 - zoom_x2), Math.fabs (zoom_y1 - zoom_y2));
-		cr.stroke ();
-		cr.restore ();
-	}
 
 	public void draw_background_color (Context cr, double opacity) {
 		if (opacity > 0) {
@@ -1751,12 +1742,6 @@ public class Glyph : FontDisplay {
 		if (show_help_lines) {
 			cmp.save ();
 			draw_help_lines (cmp);
-			cmp.restore ();
-		}
-
-		if (zoom_area_is_visible) {
-			cmp.save ();
-			draw_zoom_area (cmp);
 			cmp.restore ();
 		}
 

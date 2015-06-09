@@ -12,6 +12,8 @@
     Lesser General Public License for more details.
 */
 
+using Cairo;
+
 namespace BirdFont {
 
 public class ZoomTool : Tool {
@@ -67,8 +69,30 @@ public class ZoomTool : Tool {
 				zoom_area_begin_y = -1;
 			}
 		});
+		
+		draw_action.connect ((tool, cairo_context, glyph) => {
+			 draw_zoom_area (cairo_context);
+		});
 	}
 
+	public void draw_zoom_area (Context cr) {
+		Glyph g = MainWindow.get_current_glyph ();
+		
+		if (g.zoom_area_is_visible) {
+			cr.save ();
+			cr.set_line_width (2.0);
+			Theme.color (cr, "Selection Border");
+			
+			cr.rectangle (Math.fmin (g.zoom_x1, g.zoom_x2), 
+				Math.fmin (g.zoom_y1, g.zoom_y2), 
+				Math.fabs (g.zoom_x1 - g.zoom_x2),
+				Math.fabs (g.zoom_y1 - g.zoom_y2));
+				
+			cr.stroke ();
+			cr.restore ();
+		}
+	}
+	
 	public static void zoom_full_background_image () {
 		BackgroundImage bg;
 		Glyph g = MainWindow.get_current_glyph ();
