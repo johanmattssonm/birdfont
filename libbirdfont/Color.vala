@@ -116,6 +116,14 @@ public class Color {
 	public Color copy () {
 		return new Color (r, g, b, a);
 	}
+
+	public string to_rgb_hex () {
+		string s = "#";
+		s += Font.to_hex_code ((unichar) Math.rint (r  * 254));
+		s += Font.to_hex_code ((unichar) Math.rint (g  * 254));
+		s += Font.to_hex_code ((unichar) Math.rint (b  * 254));
+		return s;
+	}
 }
 
 }

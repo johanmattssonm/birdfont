@@ -28,13 +28,9 @@ public class PenTool : Tool {
 
 	public static bool move_selected = false;
 	public static bool move_selected_handle = false;
-
 	public static bool move_point_on_path = false;
-
 	public static bool edit_active_corner = false;
-
 	public static bool move_point_independent_of_handle = false;
-	
 	public static Gee.ArrayList<PointSelection> selected_points; 
 
 	public static EditPointHandle active_handle;
@@ -1650,7 +1646,7 @@ public class PenTool : Tool {
 		
 		path = null;
 		
-		foreach (Path current_path in g.get_visible_paths ()) {
+		foreach (Path current_path in g.get_paths_in_current_layer ()) {
 			if (is_close_to_path (current_path, ex, ey)) {
 				foreach (EditPoint e in current_path.points) {
 					nd = e.get_distance (x, y);
@@ -1918,7 +1914,7 @@ public class PenTool : Tool {
 		EditPoint parent_point;
 		EditPoint tied_point;
 		
-		foreach (Path p in g.get_visible_paths ()) {
+		foreach (Path p in g.get_paths_in_current_layer ()) {
 			if (is_close_to_path (p, event_x, event_y) || p == active_path) {
 				foreach (EditPoint ep in p.points) {
 					if (ep.is_selected () || Path.show_all_line_handles) {

@@ -16,7 +16,7 @@ using Cairo;
 
 namespace BirdFont {
 
-class Svg {
+public class Svg {
 
 	/** Export to svg glyph data. */
 	public static string to_svg_glyph (Glyph g) {	

@@ -19,6 +19,7 @@ public class Layer : GLib.Object {
 	public Gee.ArrayList<Layer> subgroups;
 	public bool visible = true;
 	public string name = "Layer";
+	public bool is_counter = false;
 	
 	public Layer () {
 		paths = new PathList ();
@@ -83,6 +84,16 @@ public class Layer : GLib.Object {
 		}
 		
 		return layer;
+	}
+	
+	public void print (int indent = 0) {
+		foreach (Layer l in subgroups) {
+			for (int i = 0; i < indent; i++) {
+				stdout.printf ("\t");
+			}
+			stdout.printf ("%s\n", l.name);			
+			l.print (indent + 1);
+		}
 	}
 }
 
