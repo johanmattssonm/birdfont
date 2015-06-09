@@ -96,11 +96,9 @@ public class PenTool : Tool {
 		counter_clockwise = new Gee.ArrayList<Path> ();
 		
 		select_action.connect ((self) => {
-			MainWindow.get_current_glyph ().clear_active_paths ();
 		});
 		
 		deselect_action.connect ((self) => {
-			MainWindow.get_current_glyph ().clear_active_paths ();
 		});
 				
 		press_action.connect ((self, b, x, y) => {
@@ -984,8 +982,6 @@ public class PenTool : Tool {
 			} else {
 				glyph.open_path ();
 			}
-			
-			glyph.clear_active_paths ();
 			
 			return;
 		}
