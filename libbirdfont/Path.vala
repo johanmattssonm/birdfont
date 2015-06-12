@@ -763,7 +763,12 @@ public class Path {
 		if (color != null) {
 			new_path.color = ((!) color).copy ();
 		}
+
+		if (stroke_color != null) {
+			new_path.stroke_color = ((!) stroke_color).copy ();
+		}
 		
+		new_path.fill = fill;
 		new_path.edit = edit;
 		new_path.open = open;
 		new_path.stroke = stroke;
@@ -849,6 +854,10 @@ public class Path {
 				if (StrokeTool.is_inside (new EditPoint (x, y), path)) {
 					insides++;
 				}
+			}
+			
+			if (insides > 0 && is_filled ()) {
+				return true;
 			}
 			
 			if (insides % 2 == 1) {

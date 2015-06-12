@@ -30,8 +30,9 @@ public class ThemeTools : ToolCollection  {
 		Expander color_tools = new Expander (t_("Color"));
 		color_picker = new ColorPicker ();
 		
-		color_picker.color_updated.connect (() => {
-			ThemeTab.get_instance ().color_updated (color_picker.get_color ());
+		color_picker.fill_color_updated.connect (() => {
+			Color	c = color_picker.get_fill_color ();
+			ThemeTab.get_instance ().color_updated (c);
 		});
 		
 		color_tools.add_tool (color_picker);

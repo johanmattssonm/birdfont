@@ -1,16 +1,24 @@
-/*
-    Copyright (C) 2014 Johan Mattsson
-
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
-*/
+/* Copyright (C) 1999 The Free Software Foundation
+ *
+ * Authors: Simon Budig <Simon.Budig@unix-ag.org> (original code)
+ *          Federico Mena-Quintero <federico@gimp.org> (cleanup for GTK+)
+ *          Jonathan Blandford <jrb@redhat.com> (cleanup for GTK+)
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
 
 namespace BirdFont {
 
@@ -27,48 +35,73 @@ public class Color {
 		this.a = a;
 	}
 
-	public Color.hsba (double h, double s, double b, double a) {
-		double q, p;
+	public Color.hsba (double h, double s, double v, double a) {
+		double hue, saturation, value;
+		double f, p, q, t;
 
-		if (s == 0) {
-			r = b;
-			g = b;
-			this.b = b;
-		} else {
-			q = b < 0.5 ? b * (1 + s) : b + s - b * s;
-			p = 2 * b - q;
-			r = hue_to_rgb(p, q, h + 1f/3);
-			g = hue_to_rgb(p, q, h);
-			this.b = hue_to_rgb(p, q, h - 1f/3);
-		}
-		
 		this.a = a;
+
+		if (s == 0.0) {
+			r = v;
+			g = v;
+			b = v;
+		} else {
+			hue = h * 6.0;
+			saturation = s;
+			value = v;
+
+			if (hue == 6.0) {
+				hue = 0.0;
+			}
+
+			f = hue - (int) hue;
+			p = value * (1.0 - saturation);
+			q = value * (1.0 - saturation * f);
+			t = value * (1.0 - saturation * (1.0 - f));
+
+			switch ((int) hue) {
+			case 0:
+				r = value;
+				g = t;
+				b = p;
+				break;
+
+			case 1:
+				r = q;
+				g = value;
+				b = p;
+				break;
+
+			case 2:
+				r = p;
+				g = value;
+				b = t;
+				break;
+
+			case 3:
+				r = p;
+				g = q;
+				b = value;
+				break;
+
+			case 4:
+				r = t;
+				g = p;
+				b = value;
+				break;
+
+			case 5:
+				r = value;
+				g = p;
+				b = q;
+				break;
+
+			default:
+				assert_not_reached ();
+			}
+		}
 	}
 
-	static double hue_to_rgb (double p, double q, double t){
-		if(t < 0) {
-			t += 1;
-		}
-		
-		if(t > 1) {
-			t -= 1;
-		}
-		
-		if(t < 1.0 / 6) {
-			return p + (q - p) * 6 * t;
-		} 
-		
-		if(t < 1.0 / 2) {
-			return q;
-		}
-		
-		if(t < 2.0 / 3) {
-			return p + (q - p) * (2f/3 - t) * 6;
-		}
-		
-		return p;
-	}
-	
 	public static Color black () {
 		return new Color (0, 0, 0, 1);
 	}

@@ -128,9 +128,6 @@ public class MoveTool : Tool {
 		last_x = x;
 		last_y = y;
 
-		GlyphCanvas.redraw ();
-		PenTool.reset_stroke ();
-		
 		update_selection_boundaries ();
 		
 		if (glyph.active_paths.size > 0) {
@@ -138,6 +135,9 @@ public class MoveTool : Tool {
 		}
 		
 		BirdFont.get_current_font ().touch ();
+
+		GlyphCanvas.redraw ();
+		PenTool.reset_stroke ();
 	}
 	
 	public void release (int b, int x, int y) {

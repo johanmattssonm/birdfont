@@ -23,12 +23,19 @@ public class ColorPicker : Tool {
 	double b = 0;
 	double a = 1;
 
-	public signal void color_updated ();
+	public signal void fill_color_updated ();
+	public signal void stroke_color_updated ();
 	
 	bool update_color = false;
 	public double bar_height;
 	
 	int selected_bar = 0;
+	
+	public bool has_stroke_color = false;
+	bool stroke_selected = false;
+	
+	Color stroke_color = new Color (0, 0, 0, 1);
+	Color fill_color = new Color (0, 0, 0, 1);
 	
 	public ColorPicker (string tooltip = "") {
 		base (null, tooltip);
@@ -36,7 +43,7 @@ public class ColorPicker : Tool {
 		bar_height = 22 * Toolbox.get_scale ();
 		h = 5 * bar_height;
 		
-		color_updated.connect (() => {
+		stroke_color_updated.connect (() => {
 			redraw ();
 			GlyphCanvas.redraw ();
 		});
@@ -62,6 +69,11 @@ public class ColorPicker : Tool {
 		});
 	}
 	
+	public void set_color (Color c) {
+		c.get_hsba (out hue, out s, out b, out a);
+		print (@"hue $hue s $s b $b a $a\n");
+	}
+	
 	public void set_color_from_pointer (double tx) {
 		if (tx > Toolbox.allocation_width) {
 			tx = Toolbox.allocation_width;
@@ -79,15 +91,35 @@ public class ColorPicker : Tool {
 			b = (double) tx / Toolbox.allocation_width;
 		} else if (selected_bar == 3) {
 			a = (double) tx / Toolbox.allocation_width;
-		}
+		} else if (selected_bar == 4) {
+			if (has_stroke_color) {
+				stroke_selected = tx > Toolbox.allocation_width / 2.0;
 				
-		color_updated ();
+				if (stroke_selected) {
+					set_color (stroke_color);
+				} else {
+					set_color (fill_color);
+				}
+			}
+		}
+		
+		if (has_stroke_color && stroke_selected) {
+			stroke_color = new Color.hsba (hue, s, b, a);
+			stroke_color_updated ();
+		} else {
+			fill_color = new Color.hsba (hue, s, b, a);
+			fill_color_updated ();
+		}
 	}
 	
-	public Color get_color () {
-		return new Color.hsba (hue, s, b, a);
+	public Color get_stroke_color () {
+		return stroke_color;
 	}
 	
+	public Color get_fill_color () {
+		return fill_color;
+	}
+		
 	public override void draw_tool (Context cr, double px, double py) {
 		draw_bars (cr, px, py);
 		draw_dial (cr, px, py, 0, hue);
@@ -103,14 +135,14 @@ public class ColorPicker : Tool {
 		double y = this.y - py;
 
 		for (double p = 0; p < 1; p += step) {
-			c = new Color.hsba (p, 1, 0.5, 1);
+			c = new Color.hsba (p, 1, 1, 1);
 			cr.save ();
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
 			cr.rectangle (p * Toolbox.allocation_width, y, scale, bar_height);
 			cr.fill ();
 			cr.restore ();
 
-			c = new Color.hsba (hue, p, 0.5, 1);
+			c = new Color.hsba (hue, p, 1, 1);
 			cr.save ();
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
 			cr.rectangle (p * Toolbox.allocation_width, y + bar_height, scale, bar_height);
@@ -123,21 +155,54 @@ public class ColorPicker : Tool {
 			cr.rectangle (p * Toolbox.allocation_width, y + 2 * bar_height, scale, bar_height);
 			cr.fill ();
 			cr.restore ();
-			
+
 			c = new Color.hsba (hue, s, b, p);
 			cr.save ();
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
 			cr.rectangle (p * Toolbox.allocation_width, y + 3 * bar_height, scale, bar_height);
 			cr.fill ();
 			cr.restore ();
+						
+			if (!has_stroke_color) {
+				cr.save ();
+				cr.set_source_rgba (c.r, c.g, c.b, c.a);
+				cr.rectangle (0, y + 4 * bar_height, Toolbox.allocation_width, bar_height);
+				cr.fill ();
+				cr.restore ();
+			} else {
+				double cw = Toolbox.allocation_width / 2.0 - 2 * scale;
+				
+				cr.save ();
+				cr.set_source_rgba (fill_color.r, fill_color.g, fill_color.b, fill_color.a);
+				cr.rectangle (0, y + 4 * bar_height, cw, bar_height);
+				cr.fill ();
+				cr.restore ();
+
+				cr.save ();
+				cr.set_source_rgba (stroke_color.r, stroke_color.g, stroke_color.b, stroke_color.a);
+				cr.rectangle (cw + 4 * scale, y + 4 * bar_height, cw, bar_height);
+				cr.fill ();
+				cr.restore ();
+				
+				if (has_stroke_color) {
+					if (stroke_selected) {
+						cr.save ();
+						Theme.color (cr, "Tool Foreground");
+						cr.set_line_width (1);
+						cr.rectangle (cw + 4 * scale, y + 4 * bar_height, cw, bar_height);
+						cr.stroke ();
+						cr.restore ();
+					} else {
+						cr.save ();
+						Theme.color (cr, "Tool Foreground");
+						cr.set_line_width (1);
+						cr.rectangle (0, y + 4 * bar_height, cw, bar_height);
+						cr.stroke ();
+						cr.restore ();
+					}
+				}
+			}
 		}
-		
-		c = new Color.hsba (hue, s, b, a);
-		cr.save ();
-		cr.set_source_rgba (c.r, c.g, c.b, c.a);
-		cr.rectangle (0, y + 4 * bar_height, Toolbox.allocation_width, bar_height);
-		cr.fill ();
-		cr.restore ();
 	}
 	
 	void draw_dial (Context cr, double px, double py, int bar_index, double val) {
