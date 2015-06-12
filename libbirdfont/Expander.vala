@@ -196,6 +196,10 @@ public class Expander : GLib.Object {
 			
 			content_height += 5 * scale;
 		}
+		
+		if (unlikely (content_height < 0)) {
+			warning (@"content_height < 0");	
+		}
 	}
 	
 	public void set_scroll (double scroll) {
@@ -279,7 +283,7 @@ public class Expander : GLib.Object {
 			
 			double text_height = 17 * Toolbox.get_scale ();
 			double offset_y = 0;
-		
+			
 			cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, Toolbox.allocation_width, (int) (h + content_height));
 			cc = new Context (cache);
 		
@@ -298,6 +302,7 @@ public class Expander : GLib.Object {
 			cache = (!) cached;
 			cr.save ();
 			cr.set_antialias (Cairo.Antialias.NONE);
+			
 			cr.set_source_surface (cache, 0, (int) (y + scroll));
 			cr.paint ();
 			cr.restore ();
@@ -308,7 +313,7 @@ public class Expander : GLib.Object {
 		double offset_y = 0;
 		double offset_x = 0;
 		
-		update_tool_position (); //FIXME
+		update_tool_position ();
 		
 		if (tool.size > 0) {
 			offset_x = tool.get (0).x;

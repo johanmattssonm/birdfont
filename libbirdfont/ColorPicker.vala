@@ -101,7 +101,7 @@ public class ColorPicker : Tool {
 		double step = 1.0 / Toolbox.allocation_width;
 		Color c;
 		double y = this.y - py;
-		
+
 		for (double p = 0; p < 1; p += step) {
 			c = new Color.hsba (p, 1, 0.5, 1);
 			cr.save ();
@@ -144,13 +144,14 @@ public class ColorPicker : Tool {
 		double y = this.y - py;
 		double scale = Toolbox.get_scale ();
 		double p;
-		
 		p = bar_index * bar_height;
+			
+		return_if_fail (y + p + bar_height - 2 * scale > 0);			
 		
 		cr.save ();
 		cr.set_line_width (1 * scale);
 		cr.set_source_rgba (1, 1, 1, 1);
-		cr.move_to (val * Toolbox.allocation_width - 3 * scale, y + p + bar_height);
+		cr.move_to (val * Toolbox.allocation_width * scale - 3 * scale, y + p + bar_height);
 		cr.line_to (val * Toolbox.allocation_width, y + p + bar_height - 2 * scale);
 		cr.line_to (val * Toolbox.allocation_width + 3 * scale, y + p + bar_height);
 		cr.stroke_preserve ();
@@ -161,7 +162,7 @@ public class ColorPicker : Tool {
 		cr.save ();
 		cr.set_line_width (1 * scale);
 		cr.set_source_rgba (1, 1, 1, 1);
-		cr.move_to (val * Toolbox.allocation_width - 3 * scale, y + p);
+		cr.move_to (val * Toolbox.allocation_width * scale - 3 * scale, y + p);
 		cr.line_to (val * Toolbox.allocation_width, y + p + 2 * scale);
 		cr.line_to (val * Toolbox.allocation_width + 3 * scale, y + p);
 		cr.stroke_preserve ();

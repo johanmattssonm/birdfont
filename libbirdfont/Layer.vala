@@ -87,11 +87,24 @@ public class Layer : GLib.Object {
 	}
 	
 	public void print (int indent = 0) {
+		foreach (Path p in paths.paths) {
+			for (int i = 0; i < indent; i++) {
+				stdout.printf ("\t");
+			}
+			stdout.printf ("Path");
+			
+			if (p.color != null) {
+				stdout.printf (" %s", ((!) p.color).to_rgb_hex ());
+			}
+			
+			stdout.printf ("\n");
+		}
+		
 		foreach (Layer l in subgroups) {
 			for (int i = 0; i < indent; i++) {
 				stdout.printf ("\t");
 			}
-			stdout.printf ("%s\n", l.name);			
+			stdout.printf ("%s\n", l.name);
 			l.print (indent + 1);
 		}
 	}

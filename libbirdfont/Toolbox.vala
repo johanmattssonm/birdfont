@@ -372,7 +372,7 @@ public class Toolbox : GLib.Object  {
 	
 	public void select_tool (Tool tool) {
 		bool update;
-		
+		int offset_y;
 		foreach (Expander exp in current_set.get_expanders ()) {
 			if (exp.visible) {
 				foreach (Tool t in exp.tool) {
@@ -389,8 +389,9 @@ public class Toolbox : GLib.Object  {
 							
 							tool.select_action (tool);
 							
-							if (update) {							
-								redraw ((int) exp.x - 10, (int) exp.y - 10, allocation_width, (int) (allocation_height - exp.y + 10));
+							if (update) {
+								offset_y = (int) (exp.y - scroll_y);
+								redraw ((int) exp.x - 10, (int) offset_y - 10, allocation_width, (int) (allocation_height - offset_y + 10));
 							}
 							
 							set_current_tool (tool);

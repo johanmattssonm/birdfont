@@ -156,7 +156,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public Gee.ArrayList<Path> get_paths_in_current_layer () {
-		return get_current_layer ().paths.paths;
+		return get_current_layer ().get_all_paths ().paths;
 	}
 	
 	public Gee.ArrayList<Path> get_all_paths () {
