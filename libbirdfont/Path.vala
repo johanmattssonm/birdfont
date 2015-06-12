@@ -81,6 +81,7 @@ public class Path {
 	public string point_data = "";
 
 	public Color? color = null;
+	public Color? stroke_color = null;
 
 	public Path () {	
 		string width;

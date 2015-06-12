@@ -1852,11 +1852,9 @@ public class PenTool : Tool {
 			}
 		} else {
 			foreach (Path p in g.get_visible_paths ()) {
-				if (is_close_to_path (p, event_x, event_y)) {
-					foreach (EditPoint ep in p.points) {
-						if (is_close_to_handle (ep, event_x, event_y, distance_to_edit_point)) {
-							return true;
-						}
+				foreach (EditPoint ep in p.points) {
+					if (is_close_to_handle (ep, event_x, event_y, distance_to_edit_point)) {
+						return true;
 					}
 				}
 			}
@@ -1915,29 +1913,27 @@ public class PenTool : Tool {
 		EditPoint tied_point;
 		
 		foreach (Path p in g.get_paths_in_current_layer ()) {
-			if (is_close_to_path (p, event_x, event_y) || p == active_path) {
-				foreach (EditPoint ep in p.points) {
-					if (ep.is_selected () || Path.show_all_line_handles) {
-						left = ep.get_left_handle ();
-						right = ep.get_right_handle ();
+			foreach (EditPoint ep in p.points) {
+				if (ep.is_selected () || Path.show_all_line_handles) {
+					left = ep.get_left_handle ();
+					right = ep.get_right_handle ();
 
-						dn = left.get_point ().get_distance (x, y);
-						
-						if (dn < d) {
-							eh = left;
-							d = dn;
-							path = p;
-							left_handle = true;
-						}
+					dn = left.get_point ().get_distance (x, y);
+					
+					if (dn < d) {
+						eh = left;
+						d = dn;
+						path = p;
+						left_handle = true;
+					}
 
-						dn = right.get_point ().get_distance (x, y);
-						
-						if (dn < d) {
-							eh = right;
-							d = dn;
-							path = p;
-							left_handle = false;
-						}
+					dn = right.get_point ().get_distance (x, y);
+					
+					if (dn < d) {
+						eh = right;
+						d = dn;
+						path = p;
+						left_handle = false;
 					}
 				}
 			}
