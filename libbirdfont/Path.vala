@@ -1052,6 +1052,8 @@ public class Path {
 	}
 
 	public void update_region_boundaries () {	
+		PathList s;
+		
 		xmax = Glyph.CANVAS_MIN;
 		xmin = Glyph.CANVAS_MAX;
 		ymax = Glyph.CANVAS_MIN;
@@ -1063,17 +1065,20 @@ public class Path {
 			ymax = 0;
 			ymin = 0;
 		}
-
-		all_segments ((a, b) => {
-			update_region_boundaries_for_segment (a, b);
-			return true;
-		});
 		
-		if (stroke > 0) {
-			xmax += stroke;
-			ymax += stroke;
-			xmin -= stroke;
-			ymin -= stroke;
+		if (stroke == 0) {
+			all_segments ((a, b) => {
+				update_region_boundaries_for_segment (a, b);
+				return true;
+			});
+		} else {
+			s = get_stroke_fast ();
+			foreach (Path p in s.paths) {
+				p.all_segments ((a, b) => {
+					update_region_boundaries_for_segment (a, b);
+					return true;
+				});
+			}
 		}
 	}
 		
