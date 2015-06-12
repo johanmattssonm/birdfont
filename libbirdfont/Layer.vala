@@ -91,7 +91,7 @@ public class Layer : GLib.Object {
 			for (int i = 0; i < indent; i++) {
 				stdout.printf ("\t");
 			}
-			stdout.printf ("Path");
+			stdout.printf (@"Path open: $(p.is_open ())");
 			
 			if (p.color != null) {
 				stdout.printf (" %s", ((!) p.color).to_rgb_hex ());

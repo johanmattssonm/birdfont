@@ -1006,48 +1006,48 @@ public class Path {
 		update_region_boundaries ();
 	}
 	
-	private void update_region_boundaries_for_point (EditPoint p) {
+	private void update_region_boundaries_for_segment (EditPoint a, EditPoint b) {
 		EditPointHandle left_handle;
 		EditPointHandle right_handle;
+		int steps = 10;
 		
-		left_handle = p.get_left_handle ();
-		right_handle = p.get_right_handle ();
+		right_handle = a.get_right_handle ();
+		left_handle = b.get_left_handle ();
 	
-		if (p.x > xmax) {
-			xmax = p.x;
+		if (a.x > xmax || b.x > xmax || left_handle.x > xmax || right_handle.x > xmax) {
+			all_of (a, b, (cx, cy) => {
+				if (cx > xmax) {
+					this.xmax = cx;
+				}
+				return true;
+			}, steps);
 		}
 		
-		if (p.x < xmin) {
-			xmin = p.x;
+		if (a.x < xmin || b.x < xmin || left_handle.x < xmin || right_handle.x < xmin) {
+			all_of (a, b, (cx, cy) => {
+				if (cx < xmin) {
+					this.xmin = cx;
+				}
+				return true;
+			}, steps);
 		}
 
-		if (p.y > ymax) {
-			ymax = p.y;
+		if (a.y > ymax || b.y > ymax || left_handle.y > xmax || right_handle.y > xmax) {
+			all_of (a, b, (cx, cy) => {
+				if (cy > ymax) {
+					this.ymax = cy;
+				}
+				return true;
+			}, steps);
 		}
 
-		if (p.y < ymin) {
-			ymin = p.y;
-		}
-		
-		update_region_boundaries_for_handle (left_handle);
-		update_region_boundaries_for_handle (right_handle);
-	}
-
-	private void update_region_boundaries_for_handle (EditPointHandle h) {
-		if (h.x > xmax) {
-			xmax = h.x;
-		}
-
-		if (h.x < xmin) {
-			xmin = h.x;
-		}
-
-		if (h.y > ymax) {
-			ymax = h.y;
-		}
-
-		if (h.y < ymin) {
-			ymin = h.y;
+		if (a.y < ymin || b.y < ymin || left_handle.y < xmin || right_handle.y < xmin) {
+			all_of (a, b, (cx, cy) => {
+				if (cy < ymin) {
+					this.ymin = cy;
+				}
+				return true;
+			}, steps);
 		}
 	}
 
@@ -1064,9 +1064,10 @@ public class Path {
 			ymin = 0;
 		}
 
-		foreach (EditPoint p in points) {
-			update_region_boundaries_for_point (p);
-		}
+		all_segments ((a, b) => {
+			update_region_boundaries_for_segment (a, b);
+			return true;
+		});
 		
 		if (stroke > 0) {
 			xmax += stroke;
