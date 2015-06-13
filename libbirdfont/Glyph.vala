@@ -1092,18 +1092,31 @@ public class Glyph : FontDisplay {
 		return -y;
 	}
 
-	public Path? get_path_at (double x, double y) {
-		Path? p = null;
+	public Layer? get_path_at (double x, double y) {
+		Layer? group = null;
 		bool found = false;
-		
-		foreach (Path pt in get_paths_in_current_layer ()) {
-			if (pt.is_over (x, y)) {
-				p = pt;
-				found = true;
+
+		foreach (Layer layer in get_current_layer ().subgroups) {
+			foreach (Path pt in layer.paths.paths) {
+				if (pt.is_over (x, y)) {
+					found = true;
+					group = layer;
+				}
+			}
+		}
+					
+		if (!found) {
+			foreach (Path pt in get_paths_in_current_layer ()) {
+				if (pt.is_over (x, y)) {
+					Layer layer = new Layer ();
+					layer.is_counter = true;
+					layer.add_path (pt);
+					group = layer;
+				}
 			}
 		}
 		
-		return p;
+		return group;
 	}
 		
 	public bool select_path (double x, double y) {
