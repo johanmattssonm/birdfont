@@ -34,8 +34,8 @@ public class ColorPicker : Tool {
 	public bool has_stroke_color = false;
 	bool stroke_selected = false;
 	
-	Color stroke_color = new Color (0, 0, 0, 1);
-	Color fill_color = new Color (0, 0, 0, 1);
+	public Color stroke_color = new Color (0, 0, 0, 1);
+	public Color fill_color = new Color (0, 0, 0, 1);
 	
 	public ColorPicker (string tooltip = "") {
 		base (null, tooltip);

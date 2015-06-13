@@ -1090,6 +1090,14 @@ public class Path {
 				});
 			}
 		}
+		
+		if (points.size == 1) {
+			EditPoint e = points.get (0);
+			xmax = e.x;
+			xmin = e.x;
+			ymax = e.y;
+			ymin = e.y;
+		}
 	}
 		
 	/** Test if @param path is a valid outline for this object. */	

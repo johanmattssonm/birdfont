@@ -43,7 +43,7 @@ public class DrawingTools : ToolCollection  {
 	public static SpinButton object_stroke;
 	Tool outline;
 	
-	public static MoveTool move_tool;
+	public static MoveTool move_tool { get; set; }
 	public static PenTool pen_tool;
 
 	public static BezierTool bezier_tool;
