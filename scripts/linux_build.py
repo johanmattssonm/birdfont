@@ -51,7 +51,7 @@ cc = options.cc
 cflags = options.cflags + " " + "$(pkg-config --cflags gdk-pixbuf-2.0)"
 ldflags = options.ldflags + " " + "$(pkg-config --libs gdk-pixbuf-2.0)"
 library_cflags = options.cflags
-library_ldflags= options.ldflags + " -Wl,-soname," + "libbirdfont.so." + version.LIBBIRDXML_SO_VERSION
+library_ldflags= options.ldflags + " -Wl,-soname," + "libbirdfont.so." + version.SO_VERSION
 
 birdgemslibrary_cflags = options.cflags
 birdgemslibrary_ldflags= options.ldflags + " -Wl,-soname," + "birdgems.so." + version.LIBBIRDGEMS_SO_VERSION
