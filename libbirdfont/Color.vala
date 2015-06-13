@@ -102,6 +102,69 @@ public class Color {
 		}
 	}
 
+	public void to_hsva (out double h, out double s, out double v, out double a) {
+		double red, green, blue;
+		double min, max;
+		double delta;
+
+		a = this.a;
+		
+		red = r;
+		green = g;
+		blue = b;
+
+		h = 0.0;
+
+		if (red > green) {
+			if (red > blue)
+				max = red;
+			else
+				max = blue;
+
+			if (green < blue)
+				min = green;
+			else
+				min = blue;
+		} else {
+			if (green > blue)
+				max = green;
+			else
+				max = blue;
+
+			if (red < blue)
+				min = red;
+			else
+				min = blue;
+		}
+
+		v = max;
+
+		if (max != 0.0)
+			s = (max - min) / max;
+		else
+			s = 0.0;
+
+		if (s == 0.0)
+			h = 0.0;
+		else {
+			delta = max - min;
+
+			if (red == max)
+				h = (green - blue) / delta;
+			else if (green == max)
+				h = 2 + (blue - red) / delta;
+			else if (blue == max)
+				h = 4 + (red - green) / delta;
+
+			h /= 6.0;
+
+			if (h < 0.0)
+				h += 1.0;
+			else if (h > 1.0)
+				h -= 1.0;
+		}
+	}
+
 	public static Color black () {
 		return new Color (0, 0, 0, 1);
 	}

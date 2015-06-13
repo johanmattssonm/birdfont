@@ -70,8 +70,7 @@ public class ColorPicker : Tool {
 	}
 	
 	public void set_color (Color c) {
-		c.get_hsba (out hue, out s, out b, out a);
-		print (@"hue $hue s $s b $b a $a\n");
+		c.to_hsva (out hue, out s, out b, out a);
 	}
 	
 	public void set_color_from_pointer (double tx) {
