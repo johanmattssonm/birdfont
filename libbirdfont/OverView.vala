@@ -108,8 +108,8 @@ public class OverView : FontDisplay {
 		IdleSource idle = new IdleSource ();
 
 		idle.set_callback (() => {			
-			selected_canvas ();
 			use_default_character_set ();
+			selected_canvas ();
 			return false;
 		});
 		
@@ -504,6 +504,12 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {
+		
+		if (this.allocation.width == 0) {
+			this.allocation = allocation;
+			update_item_list ();
+		}
+		
 		this.allocation = allocation;
 		
 		// clear canvas

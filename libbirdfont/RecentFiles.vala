@@ -212,9 +212,10 @@ public class RecentFiles : Table {
 			Font f;
 
 			if (MenuTab.suppress_event) {
+				warning ("Load font event suppressed.");
 				return;
 			}
-				
+			
 			f = BirdFont.get_current_font ();
 			
 			MainWindow.get_drawing_tools ().remove_all_grid_buttons ();
@@ -223,10 +224,11 @@ public class RecentFiles : Table {
 			}
 			
 			DrawingTools.background_scale.set_value (f.background_scale);
-			KerningTools.update_kerning_classes ();
-			MenuTab.show_all_available_characters ();
-			
+			KerningTools.update_kerning_classes ();			
 			MenuTab.apply_font_setting (f);
+			
+			MenuTab.show_default_characters ();
+			MainWindow.get_overview ().selected_canvas ();
 		});
 			
 		dialog.signal_discard.connect (() => {
