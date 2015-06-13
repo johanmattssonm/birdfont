@@ -195,6 +195,7 @@ def birdfont_export(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
+		--pkg xmlbird \
 		--pkg libbirdfont""")
 	run("mv birdfont-export/*.c build/birdfont-export/")
 
@@ -255,6 +256,7 @@ def birdfont_import(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = Tru
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
+		--pkg xmlbird \
 		--pkg libbirdfont""")
 	run("mv birdfont-import/*.c build/birdfont-import/")
 
@@ -302,6 +304,7 @@ def birdfont_autotrace(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = 
 		--pkg gio-2.0  \
 		--pkg cairo \
 		--pkg gdk-pixbuf-2.0 \
+		--pkg xmlbird \
 		--pkg libbirdfont""")
 	run("mv birdfont-autotrace/*.c build/birdfont-autotrace/")
 
@@ -352,7 +355,8 @@ def birdfont_gtk(prefix, cc, cflags, ldflags, valac, valaflags, nonNull = True):
 		--pkg libsoup-2.4 \
 		--pkg gdk-pixbuf-2.0 \
 		--pkg webkitgtk-3.0 \
-		--pkg libnotify\
+		--pkg libnotify \
+		--pkg xmlbird \
 		--pkg libbirdfont""")
 	run("mv birdfont/*.c build/birdfont/")
 
