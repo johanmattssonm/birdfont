@@ -18,10 +18,22 @@ using Math;
 namespace BirdFont {
 
 public class ThemeTab : SettingsDisplay {
+	static ThemeTab singleton;
+	ColorTool color_tool;
 	
 	public ThemeTab () {
 		base ();
+		color_tool = new ColorTool ();
+		singleton = this;
 		create_setting_items ();
+	}
+	
+	public static ThemeTab get_instance () {
+		return singleton;
+	}
+	
+	public void color_updated (Color c) {
+		color_tool.set_color (c);
 	}
 	
 	public override void create_setting_items () {
@@ -42,6 +54,7 @@ public class ThemeTab : SettingsDisplay {
 			select_theme.select_action.connect((self) => {
 				string theme_file = self.get_name ();
 				TabBar tb;
+				Toolbox toolbox;
 				
 				Preferences.set ("theme", theme_file);
 				Theme.load_theme (theme_file);
@@ -54,12 +67,27 @@ public class ThemeTab : SettingsDisplay {
 				self.set_selected (true);
 				create_setting_items ();
 				
+				toolbox = MainWindow.get_toolbox ();
+				foreach (ToolCollection tc in toolbox.tool_sets) {
+					tc.redraw ();
+				}
+				
+				foreach (Expander e in Toolbox.current_set.get_expanders ()) {
+					e.redraw ();
+				}
+				
 				Toolbox.redraw_tool_box ();
+				
 				GlyphCanvas.redraw ();
 				
 				tb = MainWindow.get_tab_bar ();
 				tb.redraw (0, 0, tb.width, tb.height);
-			});		
+				
+				OverViewItem.label_background = null;
+				OverViewItem.selected_label_background = null;
+				OverViewItem.label_background_no_menu = null;
+				OverViewItem.selected_label_background_no_menu = null;
+			});
 		
 			select_theme.set_icon ("theme");
 			
@@ -96,6 +124,14 @@ public class ThemeTab : SettingsDisplay {
 			ColorTool c = (ColorTool) ((!) s.button);
 			
 			tools.add (s);
+
+			c.select_action.connect((self) => {
+				color_tool = (ColorTool) self;
+			});
+			
+			c.deselect_action.connect((self) => {
+				color_tool = new ColorTool ();
+			});
 			
 			c.color_updated.connect (() => {
 				create_setting_items ();

@@ -35,7 +35,7 @@ public class RecentFiles : Table {
 
 	public override void selected_row (Row row, int column, bool delete_button) {	
 		Font f;
-
+		
 		if (row.get_index () == NEW_FONT) {
 			MenuTab.new_file ();
 			MenuTab.select_overview ();
@@ -190,6 +190,11 @@ public class RecentFiles : Table {
 		}
 		
 		selected_canvas ();
+	}
+	
+	public override void draw (WidgetAllocation allocation, Context cr) {
+		MainWindow.get_overview ().allocation = allocation;
+		base.draw (allocation, cr);
 	}
 	
 	public static void load_font (string fn) {

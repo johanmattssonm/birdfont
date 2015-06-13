@@ -40,6 +40,16 @@ public class MoveTool : Tool {
 	public MoveTool (string n) {
 		base (n, t_("Move paths"));
 
+		selection_changed.connect (() => {
+			update_selection_boundaries ();
+			redraw();
+		});
+		
+		objects_deselected.connect (() => {
+			update_selection_boundaries ();
+			redraw();
+		});
+		
 		select_action.connect((self) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			glyph.close_path ();
@@ -118,9 +128,6 @@ public class MoveTool : Tool {
 		last_x = x;
 		last_y = y;
 
-		GlyphCanvas.redraw ();
-		PenTool.reset_stroke ();
-		
 		update_selection_boundaries ();
 		
 		if (glyph.active_paths.size > 0) {
@@ -128,6 +135,9 @@ public class MoveTool : Tool {
 		}
 		
 		BirdFont.get_current_font ().touch ();
+
+		GlyphCanvas.redraw ();
+		PenTool.reset_stroke ();
 	}
 	
 	public void release (int b, int x, int y) {
@@ -165,14 +175,35 @@ public class MoveTool : Tool {
 		
 	public void press (int b, int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-					
+		Path p;
+		bool selected = false;
+		Layer? group;
+		Layer g;
+		
 		glyph.store_undo_state ();
 		group_selection = false;
-				
-		if (!glyph.is_over_selected_path (x, y)) {
-			if (!glyph.select_path (x, y)) {
+		
+		group = glyph.get_path_at (x, y);
+		
+		if (group != null) {
+			g = (!) group;
+			return_if_fail (g.paths.paths.size > 0);
+			p = g.paths.paths.get (0);
+			selected = glyph.active_paths.contains (p);
+			
+			if (!selected && !KeyBindings.has_shift ()) {
 				glyph.clear_active_paths ();
+			} 
+			
+			foreach (Path lp in g.paths.paths) {
+				if (selected && KeyBindings.has_shift ()) {
+					glyph.active_paths.remove (lp);
+				} else {
+					glyph.add_active_path (lp);
+				}
 			}
+		} else if (!KeyBindings.has_shift ()) {
+			glyph.clear_active_paths ();
 		}
 		
 		move_path = true;
@@ -190,6 +221,7 @@ public class MoveTool : Tool {
 		
 		update_boundaries_for_selection ();
 		selection_changed ();
+		GlyphCanvas.redraw ();
 	}
 	
 	

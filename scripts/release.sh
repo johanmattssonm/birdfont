@@ -23,11 +23,11 @@ cd export
 
 version=$(cat ../../scripts/version.py | grep "VERSION = '" | grep -v "SO_VERSION" | sed -e "s:VERSION = '::" | sed "s:'.*::g")
 
+echo "Creating a release fo version $version"
+
 if [ $# -ne 0 -a $# -ne 2] ; then
 	echo "Usage: $0 branch version"
 	exit 1
-else
-	version="$2"
 fi
 
 rm -rf birdfont-$version
@@ -43,6 +43,10 @@ mv birdfont birdfont-$version
 
 rm -rf birdfont-$version/.git
 rm -rf birdfont-$version/.gitignore
+
+cd birdfont-$version
+./scripts/complete_translations.py -t 93 -i
+cd ..
 
 tar -cf birdfont-$version.tar birdfont-$version
 

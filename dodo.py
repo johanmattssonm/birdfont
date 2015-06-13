@@ -114,7 +114,7 @@ libbird = Vala(src='libbirdfont', build='build', library='birdfont', so_version=
 def task_libbirdfont():
     yield libbird.gen_c(valac_options)
     yield libbird.gen_o(['-fPIC -I./build/', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
-    yield libbird.gen_so('-L ./build -l birdxml -L ./build -l birdgems')
+    yield libbird.gen_so('-L ./build -L ./build -l birdgems')
     yield libbird.gen_ln()
 
 

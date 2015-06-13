@@ -31,4 +31,5 @@ def compile_translations ():
         target = build_path + "birdfont.mo"
         run ("mkdir -p " + build_path);
         f_name = f_name.replace ("\\", "/")
-        run ("msgfmt --output=%s %s" % (target, f_name));	
+        run ("msgfmt --output=%s %s" % (target, f_name));
+        

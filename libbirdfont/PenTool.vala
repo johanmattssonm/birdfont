@@ -28,13 +28,9 @@ public class PenTool : Tool {
 
 	public static bool move_selected = false;
 	public static bool move_selected_handle = false;
-
 	public static bool move_point_on_path = false;
-
 	public static bool edit_active_corner = false;
-
 	public static bool move_point_independent_of_handle = false;
-	
 	public static Gee.ArrayList<PointSelection> selected_points; 
 
 	public static EditPointHandle active_handle;
@@ -96,11 +92,9 @@ public class PenTool : Tool {
 		counter_clockwise = new Gee.ArrayList<Path> ();
 		
 		select_action.connect ((self) => {
-			MainWindow.get_current_glyph ().clear_active_paths ();
 		});
 		
 		deselect_action.connect ((self) => {
-			MainWindow.get_current_glyph ().clear_active_paths ();
 		});
 				
 		press_action.connect ((self, b, x, y) => {
@@ -985,8 +979,6 @@ public class PenTool : Tool {
 				glyph.open_path ();
 			}
 			
-			glyph.clear_active_paths ();
-			
 			return;
 		}
 		
@@ -1654,7 +1646,7 @@ public class PenTool : Tool {
 		
 		path = null;
 		
-		foreach (Path current_path in g.get_visible_paths ()) {
+		foreach (Path current_path in g.get_paths_in_current_layer ()) {
 			if (is_close_to_path (current_path, ex, ey)) {
 				foreach (EditPoint e in current_path.points) {
 					nd = e.get_distance (x, y);
@@ -1860,11 +1852,9 @@ public class PenTool : Tool {
 			}
 		} else {
 			foreach (Path p in g.get_visible_paths ()) {
-				if (is_close_to_path (p, event_x, event_y)) {
-					foreach (EditPoint ep in p.points) {
-						if (is_close_to_handle (ep, event_x, event_y, distance_to_edit_point)) {
-							return true;
-						}
+				foreach (EditPoint ep in p.points) {
+					if (is_close_to_handle (ep, event_x, event_y, distance_to_edit_point)) {
+						return true;
 					}
 				}
 			}
@@ -1922,30 +1912,28 @@ public class PenTool : Tool {
 		EditPoint parent_point;
 		EditPoint tied_point;
 		
-		foreach (Path p in g.get_visible_paths ()) {
-			if (is_close_to_path (p, event_x, event_y) || p == active_path) {
-				foreach (EditPoint ep in p.points) {
-					if (ep.is_selected () || Path.show_all_line_handles) {
-						left = ep.get_left_handle ();
-						right = ep.get_right_handle ();
+		foreach (Path p in g.get_paths_in_current_layer ()) {
+			foreach (EditPoint ep in p.points) {
+				if (ep.is_selected () || Path.show_all_line_handles) {
+					left = ep.get_left_handle ();
+					right = ep.get_right_handle ();
 
-						dn = left.get_point ().get_distance (x, y);
-						
-						if (dn < d) {
-							eh = left;
-							d = dn;
-							path = p;
-							left_handle = true;
-						}
+					dn = left.get_point ().get_distance (x, y);
+					
+					if (dn < d) {
+						eh = left;
+						d = dn;
+						path = p;
+						left_handle = true;
+					}
 
-						dn = right.get_point ().get_distance (x, y);
-						
-						if (dn < d) {
-							eh = right;
-							d = dn;
-							path = p;
-							left_handle = false;
-						}
+					dn = right.get_point ().get_distance (x, y);
+					
+					if (dn < d) {
+						eh = right;
+						d = dn;
+						path = p;
+						left_handle = false;
 					}
 				}
 			}

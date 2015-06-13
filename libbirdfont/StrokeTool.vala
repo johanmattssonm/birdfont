@@ -2305,11 +2305,7 @@ public class StrokeTool : Tool {
 		Path merged = new Path ();
 		PathList paths = new PathList ();
 			
-		if (!p.is_open () && p.is_filled ()) {
-			side1.close ();
-			side1.update_region_boundaries ();
-			paths.add (side1);
-		} else if (!p.is_open () && !p.is_filled ()) {
+		if (!p.is_open ()) {
 			side1.update_region_boundaries ();
 			paths.add (side1);
 			side2.update_region_boundaries ();

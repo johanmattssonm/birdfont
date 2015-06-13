@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-25 07:30+0200\n"
-"PO-Revision-Date: 2015-05-25 05:13+0000\n"
+"POT-Creation-Date: 2015-06-13 13:12+0200\n"
+"PO-Revision-Date: 2015-06-08 08:49+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1432530839.000000\n"
+"X-POOTLE-MTIME: 1433753356.000000\n"
 
 #: libbirdfont/Argument.vala:276
 msgid "Usage"
@@ -105,17 +105,17 @@ msgstr "Filer"
 msgid "Parts"
 msgstr "Delar"
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2251
+#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2298
 #: libbirdfont/LigatureList.vala:106
 msgid "Add"
 msgstr "Lägg till"
 
-#: libbirdfont/BackgroundTools.vala:85
+#: libbirdfont/BackgroundTools.vala:86
 msgid "Select Glyph"
 msgstr "Välj tecken"
 
-#: libbirdfont/BackgroundTools.vala:182 libbirdfont/LoadCallback.vala:87
-#: libbirdfont/Menu.vala:79
+#: libbirdfont/BackgroundTools.vala:185 libbirdfont/LoadCallback.vala:102
+#: libbirdfont/Menu.vala:50
 msgid "Open"
 msgstr "Öppna"
 
@@ -173,7 +173,8 @@ msgid "Glyph"
 msgstr "Tecken"
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
-#: libbirdfont/VersionList.vala:261 birdfont/GtkWindow.vala:1008
+#: libbirdfont/Menu.vala:472 libbirdfont/Menu.vala:474
+#: libbirdfont/VersionList.vala:257 birdfont/GtkWindow.vala:955
 msgid "Version"
 msgstr "Version"
 
@@ -260,35 +261,35 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö"
 
 #: libbirdfont/DescriptionDisplay.vala:52
-#: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:91
-#: libbirdfont/Menu.vala:473 libbirdfont/TableLayout.vala:197
+#: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:98
+#: libbirdfont/Menu.vala:465 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr "Namn och beskrivning"
 
 #: libbirdfont/DescriptionDisplay.vala:56 libbirdfont/MenuTab.vala:84
-#: birdfont/GtkWindow.vala:952
+#: birdfont/GtkWindow.vala:899
 msgid "PostScript Name"
 msgstr "PostScript namn"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:602 birdfont/GtkWindow.vala:959
+#: libbirdfont/MenuTab.vala:604 birdfont/GtkWindow.vala:906
 msgid "Name"
 msgstr "Namn"
 
 #: libbirdfont/DescriptionDisplay.vala:76 libbirdfont/MenuTab.vala:94
-#: birdfont/GtkWindow.vala:966
+#: birdfont/GtkWindow.vala:913
 msgid "Style"
 msgstr "Stil"
 
-#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:972
+#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:919
 msgid "Bold"
 msgstr "Fet"
 
-#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:979
+#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:926
 msgid "Italic"
 msgstr "Kursiv"
 
-#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:987
+#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:934
 msgid "Weight"
 msgstr "Linjebredd"
 
@@ -300,248 +301,260 @@ msgstr "Hela namnet (namn och stil)"
 msgid "Unique Identifier"
 msgstr "Unik identifikation"
 
-#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:1015
+#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:962
 msgid "Description"
 msgstr "Beskrivning"
 
-#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:1023
+#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:970
 msgid "Copyright"
 msgstr "Upphovsrätt"
 
-#: libbirdfont/DrawingTools.vala:109
+#: libbirdfont/DrawingTools.vala:118
 msgid "Drawing Tools"
 msgstr "Ritverktyg"
 
-#: libbirdfont/DrawingTools.vala:110
+#: libbirdfont/DrawingTools.vala:119
 msgid "Control Point"
 msgstr "Kontrollpunkt"
 
-#: libbirdfont/DrawingTools.vala:111
+#: libbirdfont/DrawingTools.vala:121 libbirdfont/Menu.vala:233
+msgid "Layers"
+msgstr "Lager"
+
+#: libbirdfont/DrawingTools.vala:122
 msgid "Stroke"
 msgstr "Streck"
 
-#: libbirdfont/DrawingTools.vala:112
+#: libbirdfont/DrawingTools.vala:123
 msgid "Geometrical Shapes"
 msgstr "Geometriska former"
 
-#: libbirdfont/DrawingTools.vala:113 libbirdfont/OverviewTools.vala:33
+#: libbirdfont/DrawingTools.vala:124 libbirdfont/OverviewTools.vala:35
 msgid "Zoom"
 msgstr "Zoom"
 
-#: libbirdfont/DrawingTools.vala:115
+#: libbirdfont/DrawingTools.vala:125
 msgid "Guidelines & Grid"
 msgstr "Stödlinjer & rutnät"
 
-#: libbirdfont/DrawingTools.vala:120
+#: libbirdfont/DrawingTools.vala:130
 msgid "Grid Size"
 msgstr "Storlek på rutnätet"
 
-#: libbirdfont/DrawingTools.vala:179
+#: libbirdfont/DrawingTools.vala:189
 msgid "Move canvas"
 msgstr "Flytta ritytan"
 
-#: libbirdfont/DrawingTools.vala:187
+#: libbirdfont/DrawingTools.vala:197
 msgid "Delete"
 msgstr "Radera"
 
-#: libbirdfont/DrawingTools.vala:194
+#: libbirdfont/DrawingTools.vala:204
 msgid "Select all points or paths"
 msgstr "Markera alla punkter eller slingor"
 
-#: libbirdfont/DrawingTools.vala:210 libbirdfont/Menu.vala:128
+#: libbirdfont/DrawingTools.vala:220 libbirdfont/Menu.vala:99
 msgid "Undo"
 msgstr "Ångra"
 
-#: libbirdfont/DrawingTools.vala:217
+#: libbirdfont/DrawingTools.vala:227
 msgid "Insert new points on path"
 msgstr "Lägg till nya punkter på en slinga"
 
-#: libbirdfont/DrawingTools.vala:226
+#: libbirdfont/DrawingTools.vala:236
 msgid "Create quadratic Bézier curves"
 msgstr "Skapa kvadratiska Bézier slingor"
 
-#: libbirdfont/DrawingTools.vala:235
+#: libbirdfont/DrawingTools.vala:245
 msgid "Create cubic Bézier curves"
 msgstr "Skapa kubiska Bézier slingor"
 
-#: libbirdfont/DrawingTools.vala:244
+#: libbirdfont/DrawingTools.vala:254
 msgid "Quadratic path with two line handles"
 msgstr "Kvadratisk slinga med två linjehandtag"
 
-#: libbirdfont/DrawingTools.vala:253
+#: libbirdfont/DrawingTools.vala:263
 msgid "Convert selected points"
 msgstr "Konvertera markerade punkter"
 
-#: libbirdfont/DrawingTools.vala:264
+#: libbirdfont/DrawingTools.vala:274
 msgid "X coordinate"
 msgstr "X-koordinat"
 
-#: libbirdfont/DrawingTools.vala:308
+#: libbirdfont/DrawingTools.vala:318
 msgid "Y coordinate"
 msgstr "Y-koordinat"
 
-#: libbirdfont/DrawingTools.vala:351
+#: libbirdfont/DrawingTools.vala:361
 msgid "Rotation"
 msgstr "Rotation"
 
-#: libbirdfont/DrawingTools.vala:390
+#: libbirdfont/DrawingTools.vala:400
 msgid "Skew"
 msgstr "Snedställ"
 
-#: libbirdfont/DrawingTools.vala:423
+#: libbirdfont/DrawingTools.vala:433
 msgid "Width"
 msgstr "Bredd"
 
-#: libbirdfont/DrawingTools.vala:448
+#: libbirdfont/DrawingTools.vala:458
 msgid "Height"
 msgstr "Höjd"
 
-#: libbirdfont/DrawingTools.vala:491
+#: libbirdfont/DrawingTools.vala:501
 msgid "Tie curve handles for the selected edit point"
 msgstr "Knyt handtagen för den markerade kontrollpunkten"
 
-#: libbirdfont/DrawingTools.vala:542
+#: libbirdfont/DrawingTools.vala:552
 msgid "Symmetrical handles"
 msgstr "Symmetriska handtag"
 
-#: libbirdfont/DrawingTools.vala:572
+#: libbirdfont/DrawingTools.vala:582
 msgid "Convert segment to line."
 msgstr "Konvertera segmentet till linje."
 
-#: libbirdfont/DrawingTools.vala:580
+#: libbirdfont/DrawingTools.vala:590
 msgid "Create counter from outline"
 msgstr "Skapa insida från kontur"
 
-#: libbirdfont/DrawingTools.vala:584
+#: libbirdfont/DrawingTools.vala:594
 msgid "Close path"
 msgstr "Stäng slinga"
 
-#: libbirdfont/DrawingTools.vala:606
-msgid "Move to path to the bottom layer"
-msgstr "Flytta slingan till bottenlagret"
+#: libbirdfont/DrawingTools.vala:616
+msgid "Move to path to the bottom of the layer"
+msgstr "Flytta slingan till botten av lagret"
 
-#: libbirdfont/DrawingTools.vala:617
+#: libbirdfont/DrawingTools.vala:630
 msgid "Flip path vertically"
 msgstr "Vänd slingan vertikalt"
 
-#: libbirdfont/DrawingTools.vala:625
+#: libbirdfont/DrawingTools.vala:638
 msgid "Flip path horizontally"
 msgstr "Vänd slingan horisontellt"
 
-#: libbirdfont/DrawingTools.vala:634
+#: libbirdfont/DrawingTools.vala:647
 msgid "Set size for background image"
 msgstr "Ställ in storleken på bakgrundsbilden"
 
-#: libbirdfont/DrawingTools.vala:672
+#: libbirdfont/DrawingTools.vala:685
 msgid "Show/hide background image"
 msgstr "Visa/dölj bakgrundsbilden"
 
-#: libbirdfont/DrawingTools.vala:683
+#: libbirdfont/DrawingTools.vala:696
 msgid "Insert a new background image"
 msgstr "Lägg till en ny bakgrundsbild"
 
-#: libbirdfont/DrawingTools.vala:697 libbirdfont/ThemeTab.vala:114
+#: libbirdfont/DrawingTools.vala:710 libbirdfont/ThemeTab.vala:151
 msgid "High contrast"
 msgstr "Hög kontrast"
 
-#: libbirdfont/DrawingTools.vala:711
+#: libbirdfont/DrawingTools.vala:724
 msgid "Set background threshold"
 msgstr "Ställ in tröskelvärde för bakgrundsbilden"
 
-#: libbirdfont/DrawingTools.vala:729
+#: libbirdfont/DrawingTools.vala:742
 msgid "Amount of autotrace details"
 msgstr "Mängden genererade detaljer i autotrace"
 
-#: libbirdfont/DrawingTools.vala:747
+#: libbirdfont/DrawingTools.vala:760
 msgid "Autotrace simplification"
 msgstr "Förenkling av genererade slingor"
 
-#: libbirdfont/DrawingTools.vala:764
+#: libbirdfont/DrawingTools.vala:777
 msgid "Autotrace background image"
 msgstr "Automatisk konvertering från bakgrundsbild till vektorgrafik"
 
-#: libbirdfont/DrawingTools.vala:773
+#: libbirdfont/DrawingTools.vala:786
 msgid "Delete background image"
 msgstr "Radera bakgrundsbild"
 
-#: libbirdfont/DrawingTools.vala:781
+#: libbirdfont/DrawingTools.vala:793
+msgid "Add layer"
+msgstr "Lägg till lager"
+
+#: libbirdfont/DrawingTools.vala:803
+msgid "Show layers"
+msgstr "Visa lager"
+
+#: libbirdfont/DrawingTools.vala:813
 msgid "Apply stroke"
 msgstr "Använd sträck"
 
-#: libbirdfont/DrawingTools.vala:813 libbirdfont/SettingsTab.vala:34
+#: libbirdfont/DrawingTools.vala:846 libbirdfont/SettingsTab.vala:34
 msgid "Stroke width"
 msgstr "Linjebredd"
 
-#: libbirdfont/DrawingTools.vala:855
+#: libbirdfont/DrawingTools.vala:888
 msgid "Create outline form stroke"
 msgstr "Skapa kantlinje från streck"
 
-#: libbirdfont/DrawingTools.vala:863
+#: libbirdfont/DrawingTools.vala:896
 msgid "Butt line cap"
 msgstr "Rak linjeavslutning"
 
-#: libbirdfont/DrawingTools.vala:887
+#: libbirdfont/DrawingTools.vala:920
 msgid "Round line cap"
 msgstr "Rund linjeavslutning"
 
-#: libbirdfont/DrawingTools.vala:912
+#: libbirdfont/DrawingTools.vala:945
 msgid "Square line cap"
 msgstr "Kvadratisk linjeavslutning"
 
-#: libbirdfont/DrawingTools.vala:981
+#: libbirdfont/DrawingTools.vala:1014
 msgid "Show guidelines"
 msgstr "Visa stödlinjer"
 
-#: libbirdfont/DrawingTools.vala:993
+#: libbirdfont/DrawingTools.vala:1026
 msgid "Show more guidelines"
 msgstr "Visa fler stödlinjer"
 
-#: libbirdfont/DrawingTools.vala:1009
+#: libbirdfont/DrawingTools.vala:1042
 msgid "Show guidelines at top and bottom margin"
 msgstr "Visa stödlinjer för botten- och toppmarginaler"
 
-#: libbirdfont/DrawingTools.vala:1050
+#: libbirdfont/DrawingTools.vala:1088
 msgid "Zoom Out More"
 msgstr "Zooma ut ytterligare"
 
-#: libbirdfont/DrawingTools.vala:1059
+#: libbirdfont/DrawingTools.vala:1097
 msgid "Show full glyph"
 msgstr "Visa hela"
 
-#: libbirdfont/DrawingTools.vala:1066
+#: libbirdfont/DrawingTools.vala:1104
 msgid "Fit in view"
 msgstr "Anpassa till vy"
 
-#: libbirdfont/DrawingTools.vala:1073
+#: libbirdfont/DrawingTools.vala:1111
 msgid "Zoom in on background image"
 msgstr "Visa hela bakgrundsbilden"
 
-#: libbirdfont/DrawingTools.vala:1083
+#: libbirdfont/DrawingTools.vala:1121
 msgid "Previous view"
 msgstr "Föregående vy"
 
-#: libbirdfont/DrawingTools.vala:1089
+#: libbirdfont/DrawingTools.vala:1127
 msgid "Next view"
 msgstr "Nästa vy"
 
-#: libbirdfont/DrawingTools.vala:1293
+#: libbirdfont/DrawingTools.vala:1334
 msgid "Background Tools"
 msgstr "Bakgrundsverktyg"
 
-#: libbirdfont/DrawingTools.vala:1308
+#: libbirdfont/DrawingTools.vala:1349
 msgid "Control Points"
 msgstr "Kontrollpunkter"
 
-#: libbirdfont/DrawingTools.vala:1324
+#: libbirdfont/DrawingTools.vala:1365
 msgid "Object Tools"
 msgstr "Objekt verktyg"
 
-#: libbirdfont/DrawingTools.vala:1471
+#: libbirdfont/DrawingTools.vala:1512
 msgid "Set size for grid"
 msgstr "Ställ in storleken på rutmönstret"
 
-#: libbirdfont/ExportSettings.vala:39 libbirdfont/ExportSettings.vala:133
-#: libbirdfont/Menu.vala:303
+#: libbirdfont/ExportSettings.vala:39 libbirdfont/ExportSettings.vala:140
+#: libbirdfont/Menu.vala:295
 msgid "Export Settings"
 msgstr "Exportinställningar"
 
@@ -549,16 +562,20 @@ msgstr "Exportinställningar"
 msgid "File Name"
 msgstr "Filnamn"
 
-#: libbirdfont/ExportSettings.vala:58
+#: libbirdfont/ExportSettings.vala:59 libbirdfont/RecentFiles.vala:73
+msgid "Folder"
+msgstr "Katalog"
+
+#: libbirdfont/ExportSettings.vala:63
 msgid "Formats"
 msgstr "Format"
 
-#: libbirdfont/ExportSettings.vala:97
+#: libbirdfont/ExportSettings.vala:104
 msgid "Export"
 msgstr "Exportera"
 
-#: libbirdfont/ExportTool.vala:193 libbirdfont/Menu.vala:93
-#: libbirdfont/MenuTab.vala:260 libbirdfont/SaveCallback.vala:67
+#: libbirdfont/ExportTool.vala:193 libbirdfont/Menu.vala:64
+#: libbirdfont/MenuTab.vala:262 libbirdfont/SaveCallback.vala:67
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Spara"
@@ -587,18 +604,18 @@ msgstr "Öppna ett typsnitt"
 msgid "Save font"
 msgstr "Spara typsnitt"
 
-#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:466
+#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:458
 #: libbirdfont/SettingsDisplay.vala:211 libbirdfont/SettingsTab.vala:31
 #: libbirdfont/SettingsTab.vala:159
 msgid "Settings"
 msgstr "Inställningar"
 
-#: libbirdfont/FileTools.vala:55 libbirdfont/ThemeTab.vala:29
-#: libbirdfont/ThemeTab.vala:125
+#: libbirdfont/FileTools.vala:55 libbirdfont/ThemeTab.vala:42
+#: libbirdfont/ThemeTab.vala:162
 msgid "Themes"
 msgstr "Temata"
 
-#: libbirdfont/Glyph.vala:2251
+#: libbirdfont/Glyph.vala:2298
 msgid "Guide"
 msgstr "Hjälplinje"
 
@@ -646,7 +663,7 @@ msgstr ""
 "Skriv ”space” för att justera avståndet mot mellanslag och ”divis” för att "
 "justera avståndet mot -."
 
-#: libbirdfont/KerningDisplay.vala:651 libbirdfont/OverviewTools.vala:68
+#: libbirdfont/KerningDisplay.vala:651 libbirdfont/OverviewTools.vala:70
 msgid "Unicode"
 msgstr "Unicode"
 
@@ -654,8 +671,8 @@ msgstr "Unicode"
 msgid "Insert"
 msgstr "Infoga"
 
-#: libbirdfont/KerningDisplay.vala:844 libbirdfont/MainWindow.vala:219
-#: libbirdfont/MessageDialog.vala:35 libbirdfont/SpinButton.vala:199
+#: libbirdfont/KerningDisplay.vala:844 libbirdfont/MainWindow.vala:218
+#: libbirdfont/MessageDialog.vala:36 libbirdfont/SpinButton.vala:199
 msgid "Close"
 msgstr "Stäng"
 
@@ -671,12 +688,12 @@ msgstr "Inga kerningpar är skapade."
 msgid "Kerning class"
 msgstr "Kerning klass"
 
-#: libbirdfont/KerningRange.vala:113 libbirdfont/Ligatures.vala:110
-#: libbirdfont/Ligatures.vala:132 libbirdfont/Ligatures.vala:154
-#: libbirdfont/Ligatures.vala:185 libbirdfont/SpacingClass.vala:45
-#: libbirdfont/SpacingTab.vala:233 libbirdfont/SpacingTab.vala:277
-#: libbirdfont/SpinButton.vala:199 libbirdfont/Theme.vala:687
-#: birdfont/GtkWindow.vala:321
+#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:144
+#: libbirdfont/Ligatures.vala:110 libbirdfont/Ligatures.vala:132
+#: libbirdfont/Ligatures.vala:154 libbirdfont/Ligatures.vala:185
+#: libbirdfont/SpacingClass.vala:45 libbirdfont/SpacingTab.vala:233
+#: libbirdfont/SpacingTab.vala:277 libbirdfont/SpinButton.vala:199
+#: libbirdfont/Theme.vala:687
 msgid "Set"
 msgstr "Lägg till"
 
@@ -728,13 +745,17 @@ msgstr "Nästa kerning sträng"
 msgid "You have reached the end of the list."
 msgstr "Du har nått slutet av listan."
 
-#: libbirdfont/LanguageSelectionTab.vala:28 libbirdfont/OverviewTools.vala:32
+#: libbirdfont/LanguageSelectionTab.vala:28 libbirdfont/OverviewTools.vala:34
 msgid "Character Sets"
 msgstr "Teckenuppsättning"
 
 #: libbirdfont/LanguageSelectionTab.vala:68
 msgid "Character Set"
 msgstr "Teckenuppsättning"
+
+#: libbirdfont/LayerLabel.vala:144
+msgid "Layer"
+msgstr "Lager"
 
 #: libbirdfont/LigatureList.vala:53
 msgid "character sequence"
@@ -773,7 +794,7 @@ msgid "Contextual Substitutions"
 msgstr "Ny kontextuell ligatur"
 
 #: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
-#: libbirdfont/Menu.vala:421
+#: libbirdfont/Menu.vala:413
 msgid "Ligatures"
 msgstr "Ligaturer"
 
@@ -789,7 +810,7 @@ msgstr "Mitten"
 msgid "End"
 msgstr "Slut"
 
-#: libbirdfont/Ligatures.vala:185 libbirdfont/OverView.vala:1239
+#: libbirdfont/Ligatures.vala:185 libbirdfont/OverView.vala:1287
 msgid "Ligature"
 msgstr "Ligatur"
 
@@ -801,211 +822,235 @@ msgstr "Position"
 msgid "Move"
 msgstr "Flytta"
 
-#: libbirdfont/MainWindow.vala:219
+#: libbirdfont/LoadCallback.vala:29
+msgid "This font was made with a newer version of Birdfont."
+msgstr "Det här typsnittet skapades med en nyare version av Birdfont."
+
+#: libbirdfont/LoadCallback.vala:30
+msgid "You need to upgrade your version of Birdfont."
+msgstr "Du behöver uppgradera din version av Birdfont."
+
+#: libbirdfont/LoadCallback.vala:34
+msgid "This font was made with an old version of Birdfont."
+msgstr "Det här typsnittet skapades med en gammal version av Birdfont."
+
+#: libbirdfont/LoadCallback.vala:35
+msgid "You need an older version of Birdfont to open it."
+msgstr "Du behöver en äldre version av Birdfont för att öppna det."
+
+#: libbirdfont/MainWindow.vala:218
 msgid "Glyph sequence"
 msgstr "Teckensekvens"
 
-#: libbirdfont/Menu.vala:66
+#: libbirdfont/Menu.vala:37
 msgid "File"
 msgstr "Arkiv"
 
-#: libbirdfont/Menu.vala:72
+#: libbirdfont/Menu.vala:43
 msgid "New"
 msgstr "Ny"
 
-#: libbirdfont/Menu.vala:86 libbirdfont/RecentFiles.vala:81
+#: libbirdfont/Menu.vala:57 libbirdfont/RecentFiles.vala:81
 msgid "Recent Files"
 msgstr "Senast använda filer"
 
-#: libbirdfont/Menu.vala:100
+#: libbirdfont/Menu.vala:71
 msgid "Save As"
 msgstr "Spara som"
 
-#: libbirdfont/Menu.vala:107
+#: libbirdfont/Menu.vala:78
 msgid "Select Character Set"
 msgstr "Välj teckentabell"
 
-#: libbirdfont/Menu.vala:114
+#: libbirdfont/Menu.vala:85
 msgid "Quit"
 msgstr "Avsluta"
 
-#: libbirdfont/Menu.vala:122
+#: libbirdfont/Menu.vala:93
 msgid "Edit"
 msgstr "Redigera"
 
-#: libbirdfont/Menu.vala:135
+#: libbirdfont/Menu.vala:106
 msgid "Redo"
 msgstr "Gör om"
 
-#: libbirdfont/Menu.vala:142
+#: libbirdfont/Menu.vala:113
 msgid "Copy"
 msgstr "Kopiera"
 
-#: libbirdfont/Menu.vala:149
+#: libbirdfont/Menu.vala:120
 msgid "Paste"
 msgstr "Klistra in"
 
-#: libbirdfont/Menu.vala:156
+#: libbirdfont/Menu.vala:127
 msgid "Paste In Place"
 msgstr "Klistra in på plats"
 
-#: libbirdfont/Menu.vala:163
+#: libbirdfont/Menu.vala:134
 msgid "Select All Paths"
 msgstr "Markera alla slingor"
 
-#: libbirdfont/Menu.vala:170
+#: libbirdfont/Menu.vala:141
 msgid "Move To Baseline"
 msgstr "Flytta till baslinjen"
 
-#: libbirdfont/Menu.vala:177 libbirdfont/OverView.vala:184
+#: libbirdfont/Menu.vala:148 libbirdfont/OverView.vala:208
 msgid "Search"
 msgstr "Sök"
 
-#: libbirdfont/Menu.vala:184
+#: libbirdfont/Menu.vala:155
 msgid "Simplify Path"
 msgstr "Förenkla slinga"
 
-#: libbirdfont/Menu.vala:191
+#: libbirdfont/Menu.vala:162
 msgid "Close Path"
 msgstr "Stäng slinga"
 
-#: libbirdfont/Menu.vala:198
+#: libbirdfont/Menu.vala:169
 msgid "Glyph Sequence"
 msgstr "Teckensekvens"
 
-#: libbirdfont/Menu.vala:205
+#: libbirdfont/Menu.vala:176
 msgid "Set Background Glyph"
 msgstr "Ange bakgrundstecken"
 
-#: libbirdfont/Menu.vala:212
+#: libbirdfont/Menu.vala:183
 msgid "Remove Background Glyph"
 msgstr "Ta bort bakgrundstecknet"
 
-#: libbirdfont/Menu.vala:219
+#: libbirdfont/Menu.vala:190
 msgid "Create Guide"
 msgstr "Skapa hjälplinje"
 
-#: libbirdfont/Menu.vala:226
+#: libbirdfont/Menu.vala:197
 msgid "List Guides"
 msgstr "Redigera hjälplinjer"
 
-#: libbirdfont/Menu.vala:233
+#: libbirdfont/Menu.vala:204
 msgid "Select Point Above"
 msgstr "Välj punkten ovanför"
 
-#: libbirdfont/Menu.vala:240
+#: libbirdfont/Menu.vala:211
 msgid "Select Next Point"
 msgstr "Välj punkten till höger"
 
-#: libbirdfont/Menu.vala:247
+#: libbirdfont/Menu.vala:218
 msgid "Select Previous Point"
 msgstr "Välj punkten till vänster"
 
-#: libbirdfont/Menu.vala:254
+#: libbirdfont/Menu.vala:225
 msgid "Select Point Below"
 msgstr "Välj punkten nedanför"
 
-#: libbirdfont/Menu.vala:262
+#: libbirdfont/Menu.vala:239
+msgid "Move Layer Up"
+msgstr "Flytta lager uppåt"
+
+#: libbirdfont/Menu.vala:246
+msgid "Move Layer Down"
+msgstr "Flytta lager neråt"
+
+#: libbirdfont/Menu.vala:254
 msgid "Import and Export"
 msgstr "Import och export"
 
-#: libbirdfont/Menu.vala:268
+#: libbirdfont/Menu.vala:260
 msgid "Export Fonts"
 msgstr "Exportera fonter"
 
-#: libbirdfont/Menu.vala:275
+#: libbirdfont/Menu.vala:267
 msgid "Export Glyph as SVG"
 msgstr "Exportera tecken som SVG"
 
-#: libbirdfont/Menu.vala:282
+#: libbirdfont/Menu.vala:274
 msgid "Import SVG file"
 msgstr "Infoga en SVG fil"
 
-#: libbirdfont/Menu.vala:289
+#: libbirdfont/Menu.vala:281
 msgid "Import SVG folder"
 msgstr "Infoga en SVG mapp"
 
-#: libbirdfont/Menu.vala:296
+#: libbirdfont/Menu.vala:288
 msgid "Import Background Image"
 msgstr "Infoga en bakgrundsbild"
 
-#: libbirdfont/Menu.vala:310 libbirdfont/Preview.vala:27
+#: libbirdfont/Menu.vala:302 libbirdfont/Preview.vala:27
 msgid "Preview"
 msgstr "Förhandsgranska"
 
-#: libbirdfont/Menu.vala:318
+#: libbirdfont/Menu.vala:310
 msgid "Tab"
 msgstr "Flik"
 
-#: libbirdfont/Menu.vala:324
+#: libbirdfont/Menu.vala:316
 msgid "Next Tab"
 msgstr "Nästa flik"
 
-#: libbirdfont/Menu.vala:331
+#: libbirdfont/Menu.vala:323
 msgid "Previous Tab"
 msgstr "Föregående flik"
 
-#: libbirdfont/Menu.vala:338
+#: libbirdfont/Menu.vala:330
 msgid "Close Tab"
 msgstr "Stäng flik"
 
-#: libbirdfont/Menu.vala:345
+#: libbirdfont/Menu.vala:337
 msgid "Close All Tabs"
 msgstr "Stäng alla flikar"
 
-#: libbirdfont/Menu.vala:353
+#: libbirdfont/Menu.vala:345
 msgid "Spacing and Kerning"
 msgstr "Teckenavstånd och Kerning"
 
-#: libbirdfont/Menu.vala:359
+#: libbirdfont/Menu.vala:351
 msgid "Show Spacing Tab"
 msgstr "Visa teckenavstånd"
 
-#: libbirdfont/Menu.vala:366
+#: libbirdfont/Menu.vala:358
 msgid "Show Kerning Tab"
 msgstr "Visa kerningflik"
 
-#: libbirdfont/Menu.vala:373
+#: libbirdfont/Menu.vala:365
 msgid "List Kerning Pairs"
 msgstr "Lista alla kerningpar"
 
-#: libbirdfont/Menu.vala:380 libbirdfont/SpacingClassTab.vala:80
+#: libbirdfont/Menu.vala:372 libbirdfont/SpacingClassTab.vala:80
 msgid "Spacing Classes"
 msgstr "Mellanrumsklasser"
 
-#: libbirdfont/Menu.vala:387
+#: libbirdfont/Menu.vala:379
 msgid "Select Next Kerning Pair"
 msgstr "Välj nästa kerningpar"
 
-#: libbirdfont/Menu.vala:396
+#: libbirdfont/Menu.vala:388
 msgid "Select Previous Kerning Pair"
 msgstr "Välj föregående kerningpar"
 
-#: libbirdfont/Menu.vala:405
+#: libbirdfont/Menu.vala:397
 msgid "Load Kerning Strings"
 msgstr "Ladda kerning strängar"
 
-#: libbirdfont/Menu.vala:412
+#: libbirdfont/Menu.vala:404
 msgid "Reload Kerning Strings"
 msgstr "Läs in kerning strängarna igen"
 
-#: libbirdfont/Menu.vala:427
+#: libbirdfont/Menu.vala:419
 msgid "Show Ligatures"
 msgstr "Visa ligaturer"
 
-#: libbirdfont/Menu.vala:434
+#: libbirdfont/Menu.vala:426
 msgid "Add Ligature"
 msgstr "Lägg till ligatur"
 
-#: libbirdfont/Menu.vala:443
+#: libbirdfont/Menu.vala:435
 msgid "Git"
 msgstr "Git"
 
-#: libbirdfont/Menu.vala:449
+#: libbirdfont/Menu.vala:441
 msgid "Save As .bfp"
 msgstr "Spara som .bfp"
 
-#: libbirdfont/Menu.vala:458 libbirdfont/OverView.vala:345
+#: libbirdfont/Menu.vala:450 libbirdfont/OverView.vala:382
 msgid "Overview"
 msgstr "Översikt"
 
@@ -1037,7 +1082,7 @@ msgstr "Du måste spara ditt typsnitt innan du exporterar det."
 msgid "Menu"
 msgstr "Meny"
 
-#: libbirdfont/MenuTab.vala:602
+#: libbirdfont/MenuTab.vala:604
 msgid "Add ligature"
 msgstr "Lägg till ligatur"
 
@@ -1045,15 +1090,15 @@ msgstr "Lägg till ligatur"
 msgid "Move paths"
 msgstr "Flytta objekt"
 
-#: libbirdfont/OverView.vala:184
+#: libbirdfont/OverView.vala:208
 msgid "Filter"
 msgstr "Filtrera"
 
-#: libbirdfont/OverView.vala:495
+#: libbirdfont/OverView.vala:533
 msgid "No glyphs in this view."
 msgstr "Inga tecken att visa."
 
-#: libbirdfont/OverView.vala:1262
+#: libbirdfont/OverView.vala:1310
 msgid "See also:"
 msgstr "Se även:"
 
@@ -1073,15 +1118,15 @@ msgstr "Avbryt"
 msgid "Yes, don't ask again."
 msgstr "Ja, fråga inte igen."
 
-#: libbirdfont/OverviewTools.vala:46
+#: libbirdfont/OverviewTools.vala:48
 msgid "All Glyphs"
 msgstr "Alla tecken"
 
-#: libbirdfont/OverviewTools.vala:56
+#: libbirdfont/OverviewTools.vala:58
 msgid "Default"
 msgstr "Standard"
 
-#: libbirdfont/PenTool.vala:82
+#: libbirdfont/PenTool.vala:78
 msgid "Add new points"
 msgstr "Lägg till nya punkter"
 
@@ -1108,10 +1153,6 @@ msgstr "Inga typsnitt är skapade än."
 #: libbirdfont/RecentFiles.vala:65
 msgid "Create a New Font"
 msgstr "Skapa ett nytt typsnitt"
-
-#: libbirdfont/RecentFiles.vala:73
-msgid "Folder"
-msgstr "Katalog"
 
 #: libbirdfont/RecentFiles.vala:76
 msgid "Glyphs"
@@ -1457,25 +1498,29 @@ msgstr "Typsnittsnamn"
 msgid "New theme"
 msgstr "Nytt tema"
 
-#: libbirdfont/ThemeTab.vala:89
+#: libbirdfont/ThemeTab.vala:118
 msgid "Add new theme"
 msgstr "Lägg till nytt tema"
 
-#: libbirdfont/ThemeTab.vala:91
+#: libbirdfont/ThemeTab.vala:120
 msgid "Colors"
 msgstr "Färger"
 
-#: libbirdfont/ThemeTab.vala:110
+#: libbirdfont/ThemeTab.vala:147
 msgid "Dark"
 msgstr "Mörk"
 
-#: libbirdfont/ThemeTab.vala:112
+#: libbirdfont/ThemeTab.vala:149
 msgid "Bright"
 msgstr "Ljus"
 
-#: libbirdfont/ThemeTab.vala:116
+#: libbirdfont/ThemeTab.vala:153
 msgid "Custom"
 msgstr "Anpassad"
+
+#: libbirdfont/ThemeTools.vala:30
+msgid "Color"
+msgstr "Färg"
 
 #: libbirdfont/TrackTool.vala:57
 msgid "Freehand drawing"
@@ -1485,19 +1530,15 @@ msgstr "Rita på fri hand"
 msgid "New version"
 msgstr "Ny version"
 
-#: birdfont/GtkWindow.vala:292
-msgid "Select color"
-msgstr "Välj färg"
-
-#: birdfont/GtkWindow.vala:604
+#: birdfont/GtkWindow.vala:548
 msgid "Your fonts have been exported."
 msgstr "Dina fonter har exporterats."
 
-#: birdfont/GtkWindow.vala:994
+#: birdfont/GtkWindow.vala:941
 msgid "Full name (name and style)"
 msgstr "Hela namnet (namn och stil)"
 
-#: birdfont/GtkWindow.vala:1001
+#: birdfont/GtkWindow.vala:948
 msgid "Unique identifier"
 msgstr "Unik identifikation"
 
@@ -1528,6 +1569,12 @@ msgstr "Okänt filformat."
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
 msgstr "Skriver"
+
+#~ msgid "Move to path to the bottom layer"
+#~ msgstr "Flytta slingan till bottenlagret"
+
+#~ msgid "Select color"
+#~ msgstr "Välj färg"
 
 #~ msgid "print this message\n"
 #~ msgstr "skriv ut detta meddelande\n"

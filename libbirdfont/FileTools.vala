@@ -81,6 +81,11 @@ public class FileTools : ToolCollection  {
 				foreach (ToolCollection tc in toolbox.tool_sets) {
 					tc.redraw ();
 				}
+
+				OverViewItem.label_background = null;
+				OverViewItem.selected_label_background = null;
+				OverViewItem.label_background_no_menu = null;
+				OverViewItem.selected_label_background_no_menu = null;
 			});
 			
 			if (!theme.has_prefix ("generated_")) {

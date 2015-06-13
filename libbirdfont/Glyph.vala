@@ -51,10 +51,10 @@ public class Glyph : FontDisplay {
 	public double motion_y = 0;
 		
 	// Zoom area
-	double zoom_x1 = 0;
-	double zoom_y1 = 0;
-	double zoom_x2 = 0;
-	double zoom_y2 = 0;
+	public double zoom_x1 = 0;
+	public double zoom_y1 = 0;
+	public double zoom_x2 = 0;
+	public double zoom_y2 = 0;
 	public bool zoom_area_is_visible = false;
 	
 	bool view_is_moving = false;
@@ -156,7 +156,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public Gee.ArrayList<Path> get_paths_in_current_layer () {
-		return get_current_layer ().paths.paths;
+		return get_current_layer ().get_all_paths ().paths;
 	}
 	
 	public Gee.ArrayList<Path> get_all_paths () {
@@ -1091,7 +1091,34 @@ public class Glyph : FontDisplay {
 		y = (y + g.view_offset_y - yc ()) * g.view_zoom;	
 		return -y;
 	}
-	
+
+	public Layer? get_path_at (double x, double y) {
+		Layer? group = null;
+		bool found = false;
+
+		foreach (Layer layer in get_current_layer ().subgroups) {
+			foreach (Path pt in layer.paths.paths) {
+				if (pt.is_over (x, y)) {
+					found = true;
+					group = layer;
+				}
+			}
+		}
+					
+		if (!found) {
+			foreach (Path pt in get_paths_in_current_layer ()) {
+				if (pt.is_over (x, y)) {
+					Layer layer = new Layer ();
+					layer.is_counter = true;
+					layer.add_path (pt);
+					group = layer;
+				}
+			}
+		}
+		
+		return group;
+	}
+		
 	public bool select_path (double x, double y) {
 		Path? p = null;
 		bool found = false;
@@ -1673,15 +1700,6 @@ public class Glyph : FontDisplay {
 			p.draw_path (cr, this, c);
 		}
 	}
-		
-	public void draw_zoom_area(Context cr) {
-		cr.save ();
-		cr.set_line_width (2.0);
-		Theme.color (cr, "Selection Border");
-		cr.rectangle (Math.fmin (zoom_x1, zoom_x2), Math.fmin (zoom_y1, zoom_y2), Math.fabs (zoom_x1 - zoom_x2), Math.fabs (zoom_y1 - zoom_y2));
-		cr.stroke ();
-		cr.restore ();
-	}
 
 	public void draw_background_color (Context cr, double opacity) {
 		if (opacity > 0) {
@@ -1737,12 +1755,6 @@ public class Glyph : FontDisplay {
 		if (show_help_lines) {
 			cmp.save ();
 			draw_help_lines (cmp);
-			cmp.restore ();
-		}
-
-		if (zoom_area_is_visible) {
-			cmp.save ();
-			draw_zoom_area (cmp);
 			cmp.restore ();
 		}
 
@@ -2216,9 +2228,12 @@ public class Glyph : FontDisplay {
 		GlyphCollection? g;
 		GlyphCollection gc;
 		Glyph glyph;
+		Gee.ArrayList<string> s;
+		SpacingData sd;
 		
-		foreach (string l in font.get_spacing ()
-				.get_all_connections ((!) unichar_code.to_string ())) {
+		sd = font.get_spacing ();
+		s = sd.get_all_connections ((!) unichar_code.to_string ());
+		foreach (string l in s) {
 			if (l != (!) unichar_code.to_string ()) {
 				g = font.get_glyph_collection (l);
 				if (g != null) {
@@ -2239,9 +2254,13 @@ public class Glyph : FontDisplay {
 		GlyphCollection? g;
 		GlyphCollection gc;
 		Glyph glyph;
+		Gee.ArrayList<string> s;
+		SpacingData sd;
 		
-		foreach (string l in font.get_spacing ()
-				.get_all_connections ((!) unichar_code.to_string ())) {
+		sd = font.get_spacing ();
+		s = sd.get_all_connections ((!) unichar_code.to_string ());
+				
+		foreach (string l in s) {
 			if (l != (!) unichar_code.to_string ()) {
 				g = font.get_glyph_collection (l);
 				if (g != null) {
