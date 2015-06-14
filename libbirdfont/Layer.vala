@@ -85,7 +85,39 @@ public class Layer : GLib.Object {
 		
 		return layer;
 	}
-	
+
+	public void get_boundaries (out double x, out double y, out double w, out double h) {
+		double px, py, px2, py2;
+		
+		px = Glyph.CANVAS_MAX;
+		py = Glyph.CANVAS_MAX;
+		px2 = Glyph.CANVAS_MIN;
+		py2 = Glyph.CANVAS_MIN;
+		
+		foreach (Path p in get_all_paths ().paths) {
+			if (px > p.xmin) {
+				px = p.xmin;
+			} 
+
+			if (py > p.ymin) {
+				py = p.ymin;
+			}
+
+			if (px2 < p.xmax) {
+				px2 = p.xmax;
+			}
+			
+			if (py2 < p.ymax) {
+				py2 = p.ymax;
+			}
+		}
+		
+		w = px2 - px;
+		h = py2 - py;
+		x = px;
+		y = py2;
+	}
+		
 	public void print (int indent = 0) {
 		foreach (Path p in paths.paths) {
 			for (int i = 0; i < indent; i++) {
