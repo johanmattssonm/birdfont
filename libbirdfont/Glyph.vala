@@ -399,7 +399,7 @@ public class Glyph : FontDisplay {
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
-	public void add_path (Path p) {
+	public virtual void add_path (Path p) {
 		if (layers.subgroups.size == 0) {
 			layers.add_layer (new Layer ());
 		}

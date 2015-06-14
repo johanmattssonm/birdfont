@@ -22,7 +22,7 @@ public enum Direction {
 	COUNTER_CLOCKWISE
 }
 
-public class Path {
+public class Path : GLib.Object {
 	
 	public Gee.ArrayList<EditPoint> points {
 		get  {

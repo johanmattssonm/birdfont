@@ -39,7 +39,7 @@ public class DrawingTools : ToolCollection  {
 			
 	public static PointType point_type = PointType.DOUBLE_CURVE;
 	
-	public static Tool add_stroke;	
+	public static Tool add_stroke { get; set; }
 	public static SpinButton object_stroke;
 	Tool outline;
 	
