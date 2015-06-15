@@ -653,12 +653,12 @@ public class BirdFont {
 		home = File.new_for_path (home_path);
 #endif
 
-		if (settings_directory != null) {
+		if (settings_subdirectory != null) {
 			settings = get_child(home, (!) settings_subdirectory);
 		} else {
 			settings = get_child(home, "birdfont");
 		}
-				
+			
 		if (!settings.query_exists ()) {
 			DirUtils.create ((!) settings.get_path (), 0755);
 		}

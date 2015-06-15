@@ -25,6 +25,7 @@ public class ColorPicker : Tool {
 
 	public signal void fill_color_updated ();
 	public signal void stroke_color_updated ();
+	public signal void gradient_color_updated ();
 	
 	bool update_color = false;
 	public double bar_height;
@@ -37,11 +38,17 @@ public class ColorPicker : Tool {
 	public Color stroke_color = new Color (0, 0, 0, 1);
 	public Color fill_color = new Color (0, 0, 0, 1);
 	
+	public Gradient gradient = new Gradient ();
+	bool update_gradient = false; 
+	int bars;
+	Stop current_stop = new Stop ();
+	
 	public ColorPicker (string tooltip = "") {
 		base (null, tooltip);
 		
 		bar_height = 22 * Toolbox.get_scale ();
-		h = 5 * bar_height;
+		bars = 5;
+		h = bars * bar_height;
 		
 		stroke_color_updated.connect (() => {
 			redraw ();
@@ -49,7 +56,7 @@ public class ColorPicker : Tool {
 		});
 
 		panel_press_action.connect ((selected, button, tx, ty) => {	
-			if (y <= ty <= y + 5 * bar_height) {
+			if (y <= ty <= y + bars * bar_height) {
 				update_color = true;
 				selected_bar = (int) ((ty - y) / bar_height);
 				set_color_from_pointer (tx);
@@ -67,6 +74,14 @@ public class ColorPicker : Tool {
 		panel_release_action.connect ((selected, button, tx, ty) => {
 			update_color = false;
 		});
+	}
+	
+	public void set_gradient (Gradient g, bool update_gradient) {
+		gradient = g;
+		this.update_gradient = update_gradient;
+		return_if_fail (g.stops.size > 0);
+		current_stop = g.stops.get (0);
+		redraw ();
 	}
 	
 	public void set_color (Color c) {
@@ -90,7 +105,7 @@ public class ColorPicker : Tool {
 			b = (double) tx / Toolbox.allocation_width;
 		} else if (selected_bar == 3) {
 			a = (double) tx / Toolbox.allocation_width;
-		} else if (selected_bar == 4) {
+		} else if (!update_gradient && selected_bar == 4) {
 			if (has_stroke_color) {
 				stroke_selected = tx > Toolbox.allocation_width / 2.0;
 				
@@ -100,14 +115,25 @@ public class ColorPicker : Tool {
 					set_color (fill_color);
 				}
 			}
+		} else if (update_gradient && selected_bar == 4) {
+			if (gradient.stops.size > 0) {
+				int g = (int) ((double) Toolbox.allocation_width / gradient.stops.size);
+				return_if_fail (0 <= g < gradient.stops.size);
+				current_stop = gradient.stops.get (g);
+			}
 		}
 		
-		if (has_stroke_color && stroke_selected) {
-			stroke_color = new Color.hsba (hue, s, b, a);
-			stroke_color_updated ();
+		if (update_gradient) {
+			current_stop.color = new Color.hsba (hue, s, b, a);
+			gradient_color_updated ();
 		} else {
-			fill_color = new Color.hsba (hue, s, b, a);
-			fill_color_updated ();
+			if (has_stroke_color && stroke_selected) {
+				stroke_color = new Color.hsba (hue, s, b, a);
+				stroke_color_updated ();
+			} else {
+				fill_color = new Color.hsba (hue, s, b, a);
+				fill_color_updated ();
+			}
 		}
 	}
 	
@@ -161,8 +187,11 @@ public class ColorPicker : Tool {
 			cr.rectangle (p * Toolbox.allocation_width, y + 3 * bar_height, scale, bar_height);
 			cr.fill ();
 			cr.restore ();
-						
+		}
+
+		if (!update_gradient) {
 			if (!has_stroke_color) {
+				c = fill_color;
 				cr.save ();
 				cr.set_source_rgba (c.r, c.g, c.b, c.a);
 				cr.rectangle (0, y + 4 * bar_height, Toolbox.allocation_width, bar_height);
@@ -201,7 +230,28 @@ public class ColorPicker : Tool {
 					}
 				}
 			}
+		} else { // update gradient
+			int stop_size = (int) ((double) Toolbox.allocation_width / gradient.stops.size);
+			for (int i = 0; i < gradient.stops.size; i++) {
+				Stop s = gradient.stops.get (i);
+				c = s.color;
+				cr.save ();
+				cr.set_source_rgba (c.r, c.g, c.b, c.a);
+				cr.rectangle (i * stop_size, y + 4 * bar_height, stop_size, bar_height);
+				cr.fill ();
+				cr.restore ();
+				
+				if (s == current_stop) {
+					cr.save ();
+					Theme.color (cr, "Tool Foreground");
+					cr.set_line_width (1);
+					cr.rectangle (i * stop_size, y + 4 * bar_height, stop_size, bar_height);
+					cr.stroke ();
+					cr.restore ();
+				}
+			}
 		}
+			
 	}
 	
 	void draw_dial (Context cr, double px, double py, int bar_index, double val) {

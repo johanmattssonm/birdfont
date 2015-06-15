@@ -88,6 +88,10 @@ public class Toolbox : GLib.Object  {
 		update_expanders ();
 	}
 
+	public static DrawingTools get_drawing_tools () {
+		return drawing_tools;
+	}
+
 	public static void set_toolbox_from_tab (string tab_name, Tab? t = null) {		
 		if (tab_name == "Spacing") {
 			current_set = (ToolCollection) spacing_tools;

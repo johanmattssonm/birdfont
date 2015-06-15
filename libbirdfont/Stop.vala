@@ -19,7 +19,7 @@ namespace BirdFont {
 
 public class Stop : GLib.Object {
 	public Color color = Color.black ();
-	double offset = 0;
+	public double offset = 0;
 	
 	public Stop () {
 	}

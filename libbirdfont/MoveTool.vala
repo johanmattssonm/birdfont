@@ -51,8 +51,6 @@ public class MoveTool : Tool {
 		});
 		
 		select_action.connect((self) => {
-			Glyph glyph = MainWindow.get_current_glyph ();
-			glyph.close_path ();
 		});
 
 		deselect_action.connect((self) => {
@@ -473,7 +471,6 @@ public class MoveTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		g.clear_active_paths ();
-		
 		foreach (Path p in g.get_paths_in_current_layer ()) {
 			if (p.points.size > 0) {
 				g.add_active_path (p);

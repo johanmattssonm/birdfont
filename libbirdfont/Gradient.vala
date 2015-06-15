@@ -23,7 +23,7 @@ public class Gradient : GLib.Object {
 	public double x2 = 0;
 	public double y2 = 0;
 	
-	Gee.ArrayList<Stop> stops = new Gee.ArrayList<Stop> ();
+	public Gee.ArrayList<Stop> stops = new Gee.ArrayList<Stop> ();
 	
 	public Gradient () {
 	}

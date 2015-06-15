@@ -249,6 +249,8 @@ public class Expander : GLib.Object {
 				}
 			}
 			
+			// FIXME: delete
+			/*
 			if (!is_persistent () && !selected.persistent) {
 				var time = new TimeoutSource(200);
 				time.set_callback(() => {
@@ -257,7 +259,7 @@ public class Expander : GLib.Object {
 					return false;
 				});
 				time.attach(null);
-			}
+			}*/
 
 			selected.new_selection = false;
 		});

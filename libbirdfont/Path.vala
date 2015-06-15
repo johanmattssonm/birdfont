@@ -83,6 +83,8 @@ public class Path : GLib.Object {
 	public Color? color = null;
 	public Color? stroke_color = null;
 
+	public Gradient? gradient = null;
+
 	public Path () {	
 		string width;
 		
@@ -1011,6 +1013,14 @@ public class Path : GLib.Object {
 		foreach (EditPoint ep in points) {
 			ep.x += delta_x;
 			ep.y += delta_y;
+		}
+		
+		if (gradient != null) {
+			Gradient g = (!) gradient;
+			g.x1 += delta_x;
+			g.x2 += delta_x;
+			g.y1 += delta_y;
+			g.y2 += delta_y;
 		}
 		
 		update_region_boundaries ();
