@@ -208,7 +208,7 @@ public class TabContent : GLib.Object {
 		}
 		
 		if (!MainWindow.get_menu ().show_menu) {
-			if (pixeldelta < 0) {
+			if (pixeldelta > 0) {
 				GlyphCanvas.current_display.scroll_wheel_up (x, y, pixeldelta);
 			} else {
 				GlyphCanvas.current_display.scroll_wheel_down (x, y, pixeldelta);
@@ -232,7 +232,7 @@ public class TabContent : GLib.Object {
 		}
 		
 		if (!MainWindow.get_menu ().show_menu) {
-			GlyphCanvas.current_display.scroll_wheel_down (x, y, 15);
+			GlyphCanvas.current_display.scroll_wheel_down (x, y, -15);
 		}
 	}
 
