@@ -220,7 +220,7 @@ public abstract class SettingsDisplay : FontDisplay {
 	}
 	
 	public override void scroll_wheel (double x, double y, double pixeldelta, double dy) {
-		if (dy > 0) {
+		if (dy < 0) {
 			foreach (SettingsItem s in tools) {
 				if (s.handle_events && s.button != null) {
 					if (((!) s.button).is_over (x, y)) {
@@ -240,7 +240,7 @@ public abstract class SettingsDisplay : FontDisplay {
 			}		
 		}
 		
-		scroll += dy * MainWindow.units;
+		scroll -= dy * MainWindow.units;
 
 		if (scroll + allocation.height >=  content_height) {
 			scroll = content_height - allocation.height;

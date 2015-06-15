@@ -220,7 +220,7 @@ public class TabContent : GLib.Object {
 		}
 		
 		if (!MainWindow.get_menu ().show_menu) {
-			GlyphCanvas.current_display.scroll_wheel (x, y, 15, 0);
+			GlyphCanvas.current_display.scroll_wheel (x, y, 0, 15);
 		}
 	}
 	
@@ -230,7 +230,7 @@ public class TabContent : GLib.Object {
 		}
 		
 		if (!MainWindow.get_menu ().show_menu) {
-			GlyphCanvas.current_display.scroll_wheel (x, y, -15, 0);
+			GlyphCanvas.current_display.scroll_wheel (x, y, 0, -15);
 		}
 	}
 
