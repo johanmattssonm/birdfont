@@ -375,25 +375,25 @@ public class Glyph : FontDisplay {
 		return background_image;
 	}
 		
-	public override void scroll_wheel_up (double x, double y) {
+	public override void scroll_wheel_up (double x, double y, double pixeldelta) {
 		if (KeyBindings.has_alt ()) {
 			zoom_in_at_point (x, y);
 		} else if (KeyBindings.has_ctrl ()) { 
-			view_offset_x -= 10 / view_zoom;
+			view_offset_x -= pixeldelta / view_zoom;
 		} else {
-			view_offset_y -= 10 / view_zoom;
+			view_offset_y -= pixeldelta / view_zoom;
 		}
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}
 	
-	public override void scroll_wheel_down (double x, double y) {
+	public override void scroll_wheel_down (double x, double y, double pixeldelta) {
 		if (KeyBindings.has_alt ()) {
 			zoom_out_at_point (x, y);
 		} else	if (KeyBindings.has_ctrl ()) { 
-			view_offset_x += 10 / view_zoom;
+			view_offset_x -= pixeldelta / view_zoom;
 		} else {
-			view_offset_y += 10 / view_zoom;
+			view_offset_y -= pixeldelta / view_zoom;
 		}
 		
 		redraw_area (0, 0, allocation.width, allocation.height);

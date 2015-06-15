@@ -219,7 +219,7 @@ public abstract class SettingsDisplay : FontDisplay {
 		return true;
 	}
 	
-	public override void scroll_wheel_down (double x, double y) {
+	public override void scroll_wheel_down (double x, double y, double pixeldelta) {
 		foreach (SettingsItem s in tools) {
 			if (s.handle_events && s.button != null) {
 				if (((!) s.button).is_over (x, y)) {
@@ -239,7 +239,7 @@ public abstract class SettingsDisplay : FontDisplay {
 		GlyphCanvas.redraw ();
 	}
 	
-	public override void scroll_wheel_up (double x, double y) {
+	public override void scroll_wheel_up (double x, double y, double pixeldelta) {
 		foreach (SettingsItem s in tools) {
 			if (s.handle_events && s.button != null) {
 				if (((!) s.button).is_over (x, y)) {

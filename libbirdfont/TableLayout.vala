@@ -211,7 +211,7 @@ public class TableLayout : FontDisplay {
 		return true;
 	}
 	
-	public override void scroll_wheel_down (double x, double y) {
+	public override void scroll_wheel_down (double x, double y, double pixeldelta) {
 		scroll += 25 * MainWindow.units;
 		
 		if (scroll + allocation.height >=  content_height) {
@@ -226,7 +226,7 @@ public class TableLayout : FontDisplay {
 		GlyphCanvas.redraw ();
 	}
 	
-	public override void scroll_wheel_up (double x, double y) {
+	public override void scroll_wheel_up (double x, double y, double pixeldelta) {
 		scroll -= 25 * MainWindow.units;
 		
 		if (scroll < 0) {

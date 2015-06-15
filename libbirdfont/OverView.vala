@@ -266,7 +266,7 @@ public class OverView : FontDisplay {
 		return true;
 	}
 
-	public override void scroll_wheel_up (double x, double y) {
+	public override void scroll_wheel_up (double x, double y, double pixeldelta) {
 		key_up ();
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
@@ -279,7 +279,7 @@ public class OverView : FontDisplay {
 		}
 	}
 	
-	public override void scroll_wheel_down (double x, double y) {
+	public override void scroll_wheel_down (double x, double y, double pixeldelta) {
 		key_down ();
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
