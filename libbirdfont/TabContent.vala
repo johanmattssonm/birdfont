@@ -202,17 +202,15 @@ public class TabContent : GLib.Object {
 		}
 	}
 	
-	public static void scroll_wheel_pixel_delta (double x, double y, double pixeldelta) {
+	public static void scroll_wheel_pixel_delta (double x, double y, 
+		double pixeldelta_x, double pixeldelta_y) {
+			
 		if (MenuTab.suppress_event) {
 			return;
 		}
 		
 		if (!MainWindow.get_menu ().show_menu) {
-			if (pixeldelta > 0) {
-				GlyphCanvas.current_display.scroll_wheel_up (x, y, pixeldelta);
-			} else {
-				GlyphCanvas.current_display.scroll_wheel_down (x, y, pixeldelta);
-			}
+			GlyphCanvas.current_display.scroll_wheel (x, y, pixeldelta_x, pixeldelta_y);
 		}		
 	}
 		
@@ -222,7 +220,7 @@ public class TabContent : GLib.Object {
 		}
 		
 		if (!MainWindow.get_menu ().show_menu) {
-			GlyphCanvas.current_display.scroll_wheel_up (x, y, 15);
+			GlyphCanvas.current_display.scroll_wheel (x, y, 15, 0);
 		}
 	}
 	
@@ -232,7 +230,7 @@ public class TabContent : GLib.Object {
 		}
 		
 		if (!MainWindow.get_menu ().show_menu) {
-			GlyphCanvas.current_display.scroll_wheel_down (x, y, -15);
+			GlyphCanvas.current_display.scroll_wheel (x, y, -15, 0);
 		}
 	}
 

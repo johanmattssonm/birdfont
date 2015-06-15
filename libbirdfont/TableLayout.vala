@@ -211,32 +211,27 @@ public class TableLayout : FontDisplay {
 		return true;
 	}
 	
-	public override void scroll_wheel_down (double x, double y, double pixeldelta) {
-		scroll += 25 * MainWindow.units;
-		
-		if (scroll + allocation.height >=  content_height) {
-			scroll = content_height - allocation.height;
-			
+	public override void scroll_wheel (double x, double y, double pixeldelta, double dy) {
+		scroll += dy * MainWindow.units;
+
+		if (dy > 0){			
+			if (scroll + allocation.height >=  content_height) {
+				scroll = content_height - allocation.height;
+				
+				if (scroll < 0) {
+					scroll = 0;
+				}
+			}
+		} else {
 			if (scroll < 0) {
 				scroll = 0;
-			}
+			}		
 		}
 		
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
 	}
 	
-	public override void scroll_wheel_up (double x, double y, double pixeldelta) {
-		scroll -= 25 * MainWindow.units;
-		
-		if (scroll < 0) {
-			scroll = 0;
-		}
-		
-		update_scrollbar ();
-		GlyphCanvas.redraw ();
-	}
-
 	public override void selected_canvas () {
 		update_scrollbar ();
 		GlyphCanvas.redraw ();

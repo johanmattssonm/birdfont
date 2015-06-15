@@ -210,8 +210,8 @@ public abstract class Table : FontDisplay {
 		return true;
 	}
 	
-	public override void scroll_wheel_down (double x, double y, double pixeldelta) {
-		scroll += 30  * MainWindow.units;
+	public override void scroll_wheel (double x, double y, double pixeldelta, double dy) {
+		scroll += dy * MainWindow.units;
 
 		if (scroll > page_height - allocation.height) {
 			scroll = page_height - allocation.height;
@@ -220,18 +220,11 @@ public abstract class Table : FontDisplay {
 		if (allocation.height > page_height) {
 			scroll = 0;
 		} 
-		
-		update_scrollbar ();
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-	
-	public override void scroll_wheel_up (double x, double y, double pixeldelta) {
-		scroll -= 30 * MainWindow.units;
-		
+
 		if (scroll < 0) {
 			scroll = 0;
 		}
-		
+				
 		update_scrollbar ();
 		redraw_area (0, 0, allocation.width, allocation.height);
 	}

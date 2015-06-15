@@ -266,29 +266,29 @@ public class OverView : FontDisplay {
 		return true;
 	}
 
-	public override void scroll_wheel_up (double x, double y, double pixeldelta) {
-		key_up ();
-		update_scrollbar ();
-		GlyphCanvas.redraw ();
-		hide_menu ();
-
-		selected_item = get_selected_item ();
-		selected_items.clear ();
-		if (selected_item.glyphs != null) {
-			selected_items.add ((!) selected_item.glyphs);
-		}
-	}
+	public override void scroll_wheel (double x, double y, double pixeldelta, double dy) {
+		if (dy > 0) {
+			key_up ();
+			update_scrollbar ();
+			GlyphCanvas.redraw ();
+			hide_menu ();
 	
-	public override void scroll_wheel_down (double x, double y, double pixeldelta) {
-		key_down ();
-		update_scrollbar ();
-		GlyphCanvas.redraw ();
-		hide_menu ();
-
-		selected_item = get_selected_item ();
-		selected_items.clear ();
-		if (selected_item.glyphs != null) {
-			selected_items.add ((!) selected_item.glyphs);
+			selected_item = get_selected_item ();
+			selected_items.clear ();
+			if (selected_item.glyphs != null) {
+				selected_items.add ((!) selected_item.glyphs);
+			}
+		} else {
+			key_down ();
+			update_scrollbar ();
+			GlyphCanvas.redraw ();
+			hide_menu ();
+	
+			selected_item = get_selected_item ();
+			selected_items.clear ();
+			if (selected_item.glyphs != null) {
+				selected_items.add ((!) selected_item.glyphs);
+			}
 		}
 	}
 	
