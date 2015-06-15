@@ -219,42 +219,37 @@ public abstract class SettingsDisplay : FontDisplay {
 		return true;
 	}
 	
-	public override void scroll_wheel_down (double x, double y, double pixeldelta) {
-		foreach (SettingsItem s in tools) {
-			if (s.handle_events && s.button != null) {
-				if (((!) s.button).is_over (x, y)) {
-					((!) s.button).scroll_wheel_down_action ((!) s.button);
-					return;
+	public override void scroll_wheel (double x, double y, double pixeldelta, double dy) {
+		if (dy > 0) {
+			foreach (SettingsItem s in tools) {
+				if (s.handle_events && s.button != null) {
+					if (((!) s.button).is_over (x, y)) {
+						((!) s.button).scroll_wheel_down_action ((!) s.button);
+						return;
+					}
 				}
 			}
+		} else {
+			foreach (SettingsItem s in tools) {
+				if (s.handle_events && s.button != null) {
+					if (((!) s.button).is_over (x, y)) {
+						((!) s.button).scroll_wheel_up_action ((!) s.button);
+						return;
+					}
+				}
+			}		
 		}
 		
-		scroll += 25 * MainWindow.units;
+		scroll += dy * MainWindow.units;
 
 		if (scroll + allocation.height >=  content_height) {
 			scroll = content_height - allocation.height;
 		}
-		
-		update_scrollbar ();
-		GlyphCanvas.redraw ();
-	}
-	
-	public override void scroll_wheel_up (double x, double y, double pixeldelta) {
-		foreach (SettingsItem s in tools) {
-			if (s.handle_events && s.button != null) {
-				if (((!) s.button).is_over (x, y)) {
-					((!) s.button).scroll_wheel_up_action ((!) s.button);
-					return;
-				}
-			}
-		}
-		
-		scroll -= 25 * MainWindow.units;
-		
+
 		if (scroll < 0) {
 			scroll = 0;
 		}
-		
+				
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
 	}

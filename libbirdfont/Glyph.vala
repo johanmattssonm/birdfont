@@ -375,25 +375,18 @@ public class Glyph : FontDisplay {
 		return background_image;
 	}
 		
-	public override void scroll_wheel_up (double x, double y, double pixeldelta) {
-		if (KeyBindings.has_alt ()) {
-			zoom_in_at_point (x, y);
-		} else if (KeyBindings.has_ctrl ()) { 
-			view_offset_x -= pixeldelta / view_zoom;
-		} else {
-			view_offset_y -= pixeldelta / view_zoom;
-		}
-		
-		redraw_area (0, 0, allocation.width, allocation.height);
-	}
-	
-	public override void scroll_wheel_down (double x, double y, double pixeldelta) {
-		if (KeyBindings.has_alt ()) {
-			zoom_out_at_point (x, y);
-		} else	if (KeyBindings.has_ctrl ()) { 
-			view_offset_x -= pixeldelta / view_zoom;
-		} else {
-			view_offset_y -= pixeldelta / view_zoom;
+	public override void scroll_wheel (double x, double y, 
+		double pixeldelta_x, double pixeldelta_y) {
+			
+		if (KeyBindings.has_alt () || KeyBindings.has_ctrl ()) {
+			if (pixeldelta_y > 0) {
+				zoom_in_at_point (x, y, pixeldelta_y);
+			} else {
+				zoom_out_at_point (x, y, pixeldelta_y);
+			}
+		} else { 
+			view_offset_x -= pixeldelta_x / view_zoom;
+			view_offset_y -= pixeldelta_y / view_zoom;
 		}
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
@@ -1777,13 +1770,14 @@ public class Glyph : FontDisplay {
 		cr.restore ();
 	}	
 
-	private void zoom_in_at_point (double x, double y) {
-		int n = -10;
+	private void zoom_in_at_point (double x, double y, double amount = 15) {
+		int n = (int) (-amount);
 		zoom_at_point (x, y, n);
 	}
 		
-	private void zoom_out_at_point (double x, double y) {
-		int n = (int) (10.0 * ((allocation.width - 10.0) / allocation.width));
+	private void zoom_out_at_point (double x, double y, double amount = 15) {
+		double a = -amount;
+		int n = (int) (a * ((allocation.width - a) / allocation.width));
 		zoom_at_point (x, y, n);
 	}
 	
