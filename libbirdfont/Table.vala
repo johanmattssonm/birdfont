@@ -211,7 +211,7 @@ public abstract class Table : FontDisplay {
 	}
 	
 	public override void scroll_wheel (double x, double y, double pixeldelta, double dy) {
-		scroll += dy * MainWindow.units;
+		scroll -= dy * MainWindow.units;
 
 		if (scroll > page_height - allocation.height) {
 			scroll = page_height - allocation.height;
