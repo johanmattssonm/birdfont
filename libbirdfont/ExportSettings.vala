@@ -19,6 +19,7 @@ namespace BirdFont {
 
 public class ExportSettings : TableLayout {
 	TextArea file_name;
+	TextArea file_name_mac;
 	CheckBox ttf;
 	CheckBox eot;
 	CheckBox svg;
@@ -54,7 +55,22 @@ public class ExportSettings : TableLayout {
 		
 		widgets.add (file_name);
 		focus_ring.add (file_name);
+
+		widgets.add (new Text (t_("File Name") + " Mac", label_size, label_margin));
 		
+		file_name_mac = new LineTextArea (label_size);
+		file_name_mac.margin_bottom = margin;
+		
+		fn = get_file_name_mac (font);
+		file_name_mac.set_text (fn);
+		file_name_mac.text_changed.connect ((t) => {
+			Font f = BirdFont.get_current_font ();
+			f.settings.set_setting ("file_name_mac", t);
+		});
+		
+		widgets.add (file_name_mac);
+		focus_ring.add (file_name_mac);
+
 		folder = (!) font.get_folder ().get_path ();
 		Text folder_row = new Text (t_("Folder") + ": "  + folder, label_size, label_margin);
 		folder_row.margin_bottom = 20 * MainWindow.units;
@@ -120,6 +136,16 @@ public class ExportSettings : TableLayout {
 		return n;
 	}
 
+	public static string get_file_name_mac (Font font) {
+		string n = font.settings.get_setting ("file_name_mac");
+		
+		if (n == "") {
+			n = font.full_name + " Mac";
+		}
+		
+		return n;
+	}
+	
 	public static bool export_ttf_setting (Font f) {
 		return f.settings.get_setting ("export_ttf") != "false";
 	}

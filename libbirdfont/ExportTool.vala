@@ -391,11 +391,13 @@ os.put_string (
 	public static bool export_ttf_font_path (File folder, bool use_export_settings = true) {
 		Font current_font = BirdFont.get_current_font ();
 		File ttf_file;
+		File ttf_file_mac;
 		File eot_file;
 		bool done = true;
 		
 		try {
 			ttf_file = get_child (folder, ExportSettings.get_file_name (current_font) + ".ttf");
+			ttf_file_mac  = get_child (folder, ExportSettings.get_file_name_mac (current_font) + ".ttf");
 			eot_file = get_child (folder, ExportSettings.get_file_name (current_font) + ".eot");
 
 			printd (@"Writing TTF fonts to $((!) ttf_file.get_path ())\n");
@@ -404,11 +406,15 @@ os.put_string (
 				ttf_file.delete ();
 			}
 
+			if (ttf_file_mac.query_exists ()) {
+				ttf_file_mac.delete ();
+			}
+			
 			if (eot_file.query_exists ()) {
 				eot_file.delete ();
 			}
 						
-			write_ttf ((!) ttf_file.get_path ());
+			write_ttf ((!) ttf_file.get_path (), (!) ttf_file_mac.get_path ());
 			
 			if (!use_export_settings || ExportSettings.export_eot_setting (current_font)) {
 				write_eot ((!) ttf_file.get_path (), (!) eot_file.get_path ());
@@ -457,13 +463,14 @@ os.put_string (
 		return true;
 	}
 
-	static void write_ttf (string ttf) {
+	static void write_ttf (string ttf, string ttf_mac) {
 		OpenFontFormatWriter fo = new OpenFontFormatWriter ();
 		Font f = BirdFont.get_current_font ();
 		File file = (!) File.new_for_path (ttf);
+		File file_mac = (!) File.new_for_path (ttf_mac);
 		
 		try {
-			fo.open (file);
+			fo.open (file, file_mac);
 			fo.write_ttf_font (f);
 			fo.close ();
 		} catch (Error e) {
