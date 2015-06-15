@@ -1386,7 +1386,9 @@ public class DrawingTools : ToolCollection  {
 			hide_all_modifiers ();
 
 			foreach (Tool t in draw_tools.tool) {
-				t.set_selected (false);
+				if (t != current_tool) {
+					t.set_selected (false);
+				}
 			}
 			
 			cut_background.set_selected (false);
@@ -1415,7 +1417,6 @@ public class DrawingTools : ToolCollection  {
 			flip_horizontal.set_selected (false);
 			
 			current_tool.set_selected (true);
-			current_tool.select_action (current_tool);
 		
 			if (resize_tool.is_selected () || move_tool.is_selected ()) {
 				show_object_tool_modifiers ();

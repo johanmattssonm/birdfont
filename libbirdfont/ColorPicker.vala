@@ -76,11 +76,10 @@ public class ColorPicker : Tool {
 		});
 	}
 	
-	public void set_gradient (Gradient g, bool update_gradient) {
+	public void set_gradient (Gradient g, Stop stop, bool update_gradient) {
 		gradient = g;
 		this.update_gradient = update_gradient;
-		return_if_fail (g.stops.size > 0);
-		current_stop = g.stops.get (0);
+		current_stop = stop;
 		redraw ();
 	}
 	
@@ -117,22 +116,25 @@ public class ColorPicker : Tool {
 			}
 		} else if (update_gradient && selected_bar == 4) {
 			if (gradient.stops.size > 0) {
-				int g = (int) ((double) Toolbox.allocation_width / gradient.stops.size);
+				int g = (int) ((tx / Toolbox.allocation_width) * gradient.stops.size);
 				return_if_fail (0 <= g < gradient.stops.size);
 				current_stop = gradient.stops.get (g);
+				set_color (current_stop.color);
 			}
 		}
 		
-		if (update_gradient) {
-			current_stop.color = new Color.hsba (hue, s, b, a);
-			gradient_color_updated ();
-		} else {
-			if (has_stroke_color && stroke_selected) {
-				stroke_color = new Color.hsba (hue, s, b, a);
-				stroke_color_updated ();
+		if (selected_bar != 4) {
+			if (update_gradient) {
+				current_stop.color = new Color.hsba (hue, s, b, a);
+				gradient_color_updated ();
 			} else {
-				fill_color = new Color.hsba (hue, s, b, a);
-				fill_color_updated ();
+				if (has_stroke_color && stroke_selected) {
+					stroke_color = new Color.hsba (hue, s, b, a);
+					stroke_color_updated ();
+				} else {
+					fill_color = new Color.hsba (hue, s, b, a);
+					fill_color_updated ();
+				}
 			}
 		}
 	}
@@ -240,7 +242,10 @@ public class ColorPicker : Tool {
 				cr.rectangle (i * stop_size, y + 4 * bar_height, stop_size, bar_height);
 				cr.fill ();
 				cr.restore ();
-				
+			}
+			
+			for (int i = 0; i < gradient.stops.size; i++) {
+				Stop s = gradient.stops.get (i);
 				if (s == current_stop) {
 					cr.save ();
 					Theme.color (cr, "Tool Foreground");

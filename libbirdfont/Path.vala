@@ -761,6 +761,10 @@ public class Path : GLib.Object {
 			p = ep.copy ();
 			new_path.add_point (p);
 		}
+
+		if (gradient != null) {
+			new_path.gradient = ((!) gradient).copy ();
+		}
 		
 		if (color != null) {
 			new_path.color = ((!) color).copy ();
