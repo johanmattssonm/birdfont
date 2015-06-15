@@ -17,6 +17,7 @@ namespace BirdFont {
 public class OpenFontFormatWriter : Object  {
 
 	DataOutputStream os;
+	DataOutputStream os_mac;
 	DirectoryTable directory_table;
 	
 	public static Font font;
@@ -29,15 +30,14 @@ public class OpenFontFormatWriter : Object  {
 		return font;
 	}
 	
-	public void open (File file) throws Error {
-		assert (!is_null (file));
-		
-		if (file.query_exists ()) {
+	public void open (File ttf, File ttf_mac) throws Error {
+		if (ttf.query_exists () || ttf_mac.query_exists ()) {
 			warning ("File exists in export.");
 			throw new FileError.EXIST("OpenFontFormatWriter: file exists.");
 		}
 		
-		os = new DataOutputStream(file.create (FileCreateFlags.REPLACE_DESTINATION));
+		os = new DataOutputStream(ttf.create (FileCreateFlags.REPLACE_DESTINATION));
+		os_mac = new DataOutputStream(ttf_mac.create (FileCreateFlags.REPLACE_DESTINATION));
 	}
 	
 	public void write_ttf_font (Font nfont) throws Error {
@@ -49,7 +49,7 @@ public class OpenFontFormatWriter : Object  {
 		
 		font = nfont;
 				
-		directory_table.process ();	
+		directory_table.process ();
 		tables = directory_table.get_tables ();
 
 		dl = directory_table.get_font_file_size ();
@@ -68,10 +68,23 @@ public class OpenFontFormatWriter : Object  {
 				os.put_byte (data[j]);
 			}
 		}
+		
+		directory_table.process_mac ();
+
+		foreach (OtfTable t in tables) {
+			fd = t.get_font_data ();
+			data = fd.table_data;
+			l = fd.length_with_padding ();
+			
+			for (int j = 0; j < l; j++) {
+				os_mac.put_byte (data[j]);
+			}
+		}
 	}
 	
 	public void close () throws Error {
 		os.close ();
+		os_mac.close ();
 	}
 }
 

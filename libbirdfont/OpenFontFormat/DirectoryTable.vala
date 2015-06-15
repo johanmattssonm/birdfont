@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+    Copyright (C) 2012 2013 2014 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -82,6 +82,12 @@ public class DirectoryTable : OtfTable {
 		kern_table.process ();
 		gpos_table.process (glyf_table);
 		
+		offset_table.process ();
+		process_directory (); // this table
+	}
+
+	public void process_mac ()  throws GLib.Error {
+		os_2_table.process_mac (glyf_table, hmtx_table);
 		offset_table.process ();
 		process_directory (); // this table
 	}

@@ -35,8 +35,16 @@ public class Os2Table : OtfTable {
 	
 	public override void parse (FontData dis) throws Error {
 	}
-	
+
 	public void process (GlyfTable glyf_table, HmtxTable hmtx_table) {
+		process_table (glyf_table, hmtx_table, false);
+	}
+	
+	public void process_mac (GlyfTable glyf_table, HmtxTable hmtx_table) {
+		process_table (glyf_table, hmtx_table, true);
+	}
+		
+	public void process_table (GlyfTable glyf_table, HmtxTable hmtx_table, bool mac) {
 		FontData fd = new FontData ();
 		Font font = OpenFontFormatWriter.get_current_font ();
 		int16 ascender;
@@ -112,8 +120,7 @@ public class Os2Table : OtfTable {
 		
 		ascender = (int16) rint (font.top_limit * HeadTable.UNITS);
 		descender = (int16) rint (font.bottom_limit * HeadTable.UNITS);
-
-		
+	
 		fd.add_16 (ascender); // sTypoAscender
 		fd.add_16 (descender); // sTypoDescender
 		fd.add_16 (100); // sTypoLineGap
@@ -128,9 +135,15 @@ public class Os2Table : OtfTable {
 		}
 		
 		pages.get_pages (font, out codepage1, out codepage2);
-		fd.add_u32 (codepage1); // ulCodePageRange1 Bits 0-31
-		fd.add_u32 (codepage2); // ulCodePageRange2 Bits 32-63
-
+		
+		if (mac) {
+			fd.add_u32 (1); // ulCodePageRange1 Bits 0-31 (this value is only used fontbook) 
+			fd.add_u32 (0); // ulCodePageRange2 Bits 32-63			
+		} else {
+			fd.add_u32 (codepage1); // ulCodePageRange1 Bits 0-31 (this value is used by Word on Windows)
+			fd.add_u32 (codepage2); // ulCodePageRange2 Bits 32-63
+		}
+		
 		fd.add_16 (ascender); // sHeight
 		fd.add_16 (ascender); // sCapHeight
 
@@ -144,7 +157,6 @@ public class Os2Table : OtfTable {
 	
 		this.font_data = fd;
 	}
-
 }
 
 }
