@@ -1386,7 +1386,8 @@ public class DrawingTools : ToolCollection  {
 			hide_all_modifiers ();
 
 			foreach (Tool t in draw_tools.tool) {
-				t.set_selected (false);
+				// FIXME: infinite loop on Mac OS 
+				// t.set_selected (false);
 			}
 			
 			cut_background.set_selected (false);

@@ -104,9 +104,9 @@ public abstract class FontDisplay : GLib.Object {
 			d = y - last_tap_y;		
 			if (last_tap_y > -1 && fabs (d) > 15) { // FIXME: pixels, other units are better
 				if (d > 0) {
-					scroll_wheel_up (x, y);
+					scroll_wheel_up (x, y, 15);
 				} else {
-					scroll_wheel_down (x, y);
+					scroll_wheel_down (x, y, 15);
 				}
 			}
 			
@@ -141,10 +141,10 @@ public abstract class FontDisplay : GLib.Object {
 	public virtual void next_view () {
 	}
 	
-	public virtual void scroll_wheel_up (double x, double y) {
+	public virtual void scroll_wheel_up (double x, double y, double pixeldelta) {
 	}
 	
-	public virtual void scroll_wheel_down (double x, double y) {
+	public virtual void scroll_wheel_down (double x, double y, double pixeldelta) {
 	}
 
 	public virtual void undo () {
