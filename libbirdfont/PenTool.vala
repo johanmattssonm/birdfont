@@ -1160,7 +1160,7 @@ public class PenTool : Tool {
 		
 		if (active_edit_point != null) {
 			glyph.clear_active_paths ();
-			glyph.add_active_path (active_path);
+			glyph.add_active_path (null, active_path);
 			DrawingTools.update_stroke_settings ();
 			
 			if (KeyBindings.modifier == SHIFT) {
@@ -1352,7 +1352,7 @@ public class PenTool : Tool {
 			foreach (Path merge in paths) {
 				if (merge.points.size > 0) {
 					if (is_close_to_point (merge.points.get (merge.points.size - 1), px, py)) {
-						glyph.add_active_path (merge);
+						glyph.add_active_path (null, merge);
 						active_path = merge;
 						merge.reopen ();
 						glyph.open_path ();
@@ -1360,7 +1360,7 @@ public class PenTool : Tool {
 					}
 					
 					if (is_close_to_point (merge.points.get (0), px, py)) {
-						glyph.add_active_path (merge);
+						glyph.add_active_path (null, merge);
 						active_path = merge;
 						clear_directions ();
 						merge.reopen ();
@@ -1397,7 +1397,7 @@ public class PenTool : Tool {
 			force_direction ();
 			
 			glyph.clear_active_paths ();
-			glyph.add_active_path (path);
+			glyph.add_active_path (null, path);
 			
 			if (direction_changed) {
 				path.reverse ();
@@ -1440,7 +1440,7 @@ public class PenTool : Tool {
 					glyph.delete_path (path);
 					glyph.delete_path (merge);
 					glyph.clear_active_paths ();
-					glyph.add_active_path (union);
+					glyph.add_active_path (null, union);
 					
 					union.reopen ();
 					union.create_list ();
@@ -1722,7 +1722,7 @@ public class PenTool : Tool {
 
 		active_path = new_point.path;
 		glyph.clear_active_paths ();
-		glyph.add_active_path (new_point.path);
+		glyph.add_active_path (null, new_point.path);
 
 		move_selected = true;
 		
@@ -1767,7 +1767,7 @@ public class PenTool : Tool {
 			np.stroke = stroke ? StrokeTool.stroke_width : 0;
 			np.line_cap = StrokeTool.line_cap;
 			
-			g.add_active_path (np);
+			g.add_active_path (null, np);
 			
 			active_path = np;
 			selected_path = np;
@@ -1793,7 +1793,7 @@ public class PenTool : Tool {
 		}
 
 		g.clear_active_paths ();
-		g.add_active_path (np);
+		g.add_active_path (null, np);
 		active_path = np;
 		selected_path = np;
 
@@ -1998,7 +1998,7 @@ public class PenTool : Tool {
 		selected_handle.selected = true;
 		
 		active_path = p.path;
-		g.add_active_path (active_path);
+		g.add_active_path (null, active_path);
 	}
 
 	public static void add_selected_point (EditPoint p, Path path) {

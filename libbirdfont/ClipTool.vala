@@ -408,7 +408,7 @@ public class ClipTool : Tool {
 			foreach (Path p in glyph.get_all_paths ()) {
 				PenTool.clear_directions ();
 				destination.add_path (p);
-				destination.add_active_path (p);
+				destination.add_active_path (null, p);
 			}
 			
 			if (paste_guide_lines) {

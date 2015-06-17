@@ -18,14 +18,19 @@ using Math;
 namespace BirdFont {
 
 public class Gradient : GLib.Object {
-	public double x1 = 0;
-	public double y1 = 0;
-	public double x2 = 0;
-	public double y2 = 0;
-	
-	public Gee.ArrayList<Stop> stops = new Gee.ArrayList<Stop> ();
+	public double x1;
+	public double y1;
+	public double x2;
+	public double y2;
+
+	public Gee.ArrayList<Stop> stops;
 	
 	public Gradient () {
+		x1 = 0;
+		y1 = 0;
+		x2 = 0;
+		y2 = 0;
+		stops = new Gee.ArrayList<Stop> ();
 	}
 	
 	public Gradient copy () {
@@ -33,7 +38,7 @@ public class Gradient : GLib.Object {
 		g.x1 = x1;
 		g.y1 = y1;
 		g.x2 = x2;
-		g.x2 = y2;
+		g.y2 = y2;
 		
 		foreach (Stop s in stops) {
 			g.stops.add (s.copy ());

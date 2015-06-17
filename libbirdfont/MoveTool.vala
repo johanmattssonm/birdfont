@@ -112,6 +112,7 @@ public class MoveTool : Tool {
 		double dx = last_x - x;
 		double dy = last_y - y; 
 		double p = PenTool.precision;
+		double delta_x, delta_y;
 		
 		if (!move_path) {
 			return;
@@ -119,8 +120,22 @@ public class MoveTool : Tool {
 		
 		if (move_path && (fabs(dx) > 0 || fabs (dy) > 0)) {
 			moved = true;
+
+			delta_x = Glyph.ivz () * -dx * p;
+			delta_y = Glyph.ivz () * dy * p;
+							
+			foreach (Layer group in glyph.selected_groups) {
+				if (group.gradient != null) {
+					Gradient g = (!) group.gradient;
+					g.x1 += delta_x;
+					g.x2 += delta_x;
+					g.y1 += delta_y;
+					g.y2 += delta_y;
+				}
+			}
+			
 			foreach (Path path in glyph.active_paths) {
-				path.move (Glyph.ivz () * -dx * p, Glyph.ivz () * dy * p);
+				path.move (delta_x, delta_y);
 			}
 		}
 
@@ -196,9 +211,10 @@ public class MoveTool : Tool {
 			
 			foreach (Path lp in g.paths.paths) {
 				if (selected && KeyBindings.has_shift ()) {
+					glyph.selected_groups.remove ((!) group);
 					glyph.active_paths.remove (lp);
 				} else {
-					glyph.add_active_path (lp);
+					glyph.add_active_path ((!) group, lp);
 				}
 			}
 		} else if (!KeyBindings.has_shift ()) {
@@ -236,7 +252,7 @@ public class MoveTool : Tool {
 		foreach (Path p in glyph.get_paths_in_current_layer ()) {
 			if (p.xmin > x1 && p.xmax < x2 && p.ymin < y1 && p.ymax > y2) {
 				if (p.points.size > 0) {
-					glyph.add_active_path (p);
+					glyph.add_active_path (null, p);
 				}
 			}
 		}
@@ -474,7 +490,7 @@ public class MoveTool : Tool {
 		g.clear_active_paths ();
 		foreach (Path p in g.get_paths_in_current_layer ()) {
 			if (p.points.size > 0) {
-				g.add_active_path (p);
+				g.add_active_path (null, p);
 			}
 		}
 		

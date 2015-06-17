@@ -133,7 +133,7 @@ public class SvgParser {
 		}
 		
 		foreach (Path p in path_list.paths) {
-			glyph.add_active_path (p);
+			glyph.add_active_path (null, p); // FIXME: groups
 			p.update_region_boundaries ();
 		}
 		

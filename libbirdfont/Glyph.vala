@@ -109,7 +109,8 @@ public class Glyph : FontDisplay {
 	public Layer layers = new Layer ();
 	public int current_layer = 0;
 	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
-	
+	public Gee.ArrayList<Layer> selected_groups = new Gee.ArrayList<Layer> ();
+
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -213,11 +214,14 @@ public class Glyph : FontDisplay {
 	}
 
 	public void clear_active_paths () {	
+		selected_groups.clear ();
 		active_paths.clear ();
 	}
 	
-	public void add_active_path (Path? p) {
+	public void add_active_path (Layer? group, Path? p) {
 		Path path;
+		Layer g;
+		
 		if (p != null) {
 			path = (!) p;
 			
@@ -231,6 +235,13 @@ public class Glyph : FontDisplay {
 				active_paths.add (path);
 			}
 			PenTool.active_path = path;
+		}
+
+		if (group != null) {
+			g = (!) group;
+			if (!selected_groups.contains (g)) {
+				selected_groups.add (g);
+			}
 		}
 	}
 	
@@ -828,7 +839,7 @@ public class Glyph : FontDisplay {
 			path.reopen ();
 			path.create_list ();
 			
-			add_active_path (path);
+			add_active_path (null, path);
 		}
 		
 		if (remaining_points.paths.size > 0) {
@@ -941,7 +952,7 @@ public class Glyph : FontDisplay {
 	public void set_active_path (Path p) {
 		p.reopen ();
 		clear_active_paths ();
-		add_active_path (p);
+		add_active_path (null, p);
 	}
 
 	/** Move view port centrum to this coordinate. */
@@ -1103,6 +1114,7 @@ public class Glyph : FontDisplay {
 				if (pt.is_over (x, y)) {
 					Layer layer = new Layer ();
 					layer.is_counter = true;
+					layer.single_path = true;
 					layer.add_path (pt);
 					group = layer;
 				}
@@ -1127,7 +1139,7 @@ public class Glyph : FontDisplay {
 			clear_active_paths ();
 		}
 		
-		add_active_path (p);
+		add_active_path (null, p);
 		
 		return found;
 	}
@@ -1925,7 +1937,7 @@ public class Glyph : FontDisplay {
 		
 		clear_active_paths ();
 		foreach (Path p in g.active_paths) {
-			add_active_path (p);
+			add_active_path (null, p);
 		}
 
 		redraw_area (0, 0, allocation.width, allocation.height);		

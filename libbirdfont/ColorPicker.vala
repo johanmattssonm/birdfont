@@ -244,9 +244,11 @@ public class ColorPicker : Tool {
 				cr.restore ();
 			}
 			
+			bool found = false;
 			for (int i = 0; i < gradient.stops.size; i++) {
 				Stop s = gradient.stops.get (i);
 				if (s == current_stop) {
+					found = true;
 					cr.save ();
 					Theme.color (cr, "Tool Foreground");
 					cr.set_line_width (1);
@@ -254,6 +256,10 @@ public class ColorPicker : Tool {
 					cr.stroke ();
 					cr.restore ();
 				}
+			}
+			
+			if (!found) {
+				warning ("No stop selected.");
 			}
 		}
 			

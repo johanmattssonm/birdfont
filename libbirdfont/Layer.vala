@@ -19,7 +19,10 @@ public class Layer : GLib.Object {
 	public Gee.ArrayList<Layer> subgroups;
 	public bool visible = true;
 	public string name = "Layer";
+	
 	public bool is_counter = false;
+	public Gradient? gradient = null;
+	public bool single_path = false;
 	
 	public Layer () {
 		paths = new PathList ();
