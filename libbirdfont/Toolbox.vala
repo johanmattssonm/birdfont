@@ -238,33 +238,7 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void scroll_up (double x, double y) {
-		bool action = false;
-		
-		y -= current_set.scroll;
-		
-		if (MenuTab.suppress_event) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
-				
-		if (!scrolling_toolbox) {	
-			foreach (Expander exp in current_set.get_expanders ()) {
-				if (exp.visible) {
-					foreach (Tool t in exp.tool) {
-						if (t.tool_is_visible () && t.is_over (x, y)) {
-							action = t.scroll_wheel_up_action (t);
-							press_tool = t;
-						}
-					}
-				}
-			}
-		}
-		
-		if (!action) {
-			scroll_current_set (35);
-		}
-		
-		redraw_tool_box ();
+		scroll_wheel (x, y, 0, -10);
 	}
 
 	void scroll_current_set (double d) {
@@ -285,28 +259,7 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public void scroll_down (double x, double y) {
-		bool action = false;
-
-		y -= current_set.scroll;
-		
-		if (!scrolling_toolbox) {	
-			foreach (Expander exp in current_set.get_expanders ()) {
-				if (exp.visible) {
-					foreach (Tool t in exp.tool) {
-						if (t.tool_is_visible () && t.is_over (x, y)) {
-							action = t.scroll_wheel_down_action (t);
-							press_tool = t;
-						}
-					}
-				}
-			}
-		}
-
-		if (!action) {
-			scroll_current_set (-35);
-		}
-
-		redraw_tool_box ();
+		scroll_wheel (x, y, 0, 10);
 	}
 	
 	void suppress_scroll () {
