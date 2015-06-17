@@ -51,6 +51,7 @@ public class MoveTool : Tool {
 		});
 		
 		select_action.connect((self) => {
+						MainWindow.get_current_glyph ().close_path ();
 		});
 
 		deselect_action.connect((self) => {

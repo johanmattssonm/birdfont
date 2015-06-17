@@ -236,10 +236,6 @@ public class Toolbox : GLib.Object  {
 		
 		redraw_tool_box ();
 	}
-	
-	public void scroll_up (double x, double y) {
-		scroll_wheel (x, y, 0, -10);
-	}
 
 	void scroll_current_set (double d) {
 		current_set.scroll += d;
@@ -258,8 +254,12 @@ public class Toolbox : GLib.Object  {
 		suppress_scroll ();	
 	}
 
+	public void scroll_up (double x, double y) {
+		scroll_wheel (x, y, 0, 20);
+	}
+	
 	public void scroll_down (double x, double y) {
-		scroll_wheel (x, y, 0, 10);
+		scroll_wheel (x, y, 0, -20);
 	}
 	
 	void suppress_scroll () {
