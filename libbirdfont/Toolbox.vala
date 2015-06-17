@@ -202,6 +202,40 @@ public class Toolbox : GLib.Object  {
 			}
 		}
 	}
+
+	public void scroll_wheel (double x, double y, double dx, double dy) {
+		bool action = false;
+		
+		y -= current_set.scroll;
+		
+		if (MenuTab.suppress_event) {
+			warn_if_test ("Event suppressed");
+			return;
+		}
+				
+		if (!scrolling_toolbox) {	
+			foreach (Expander exp in current_set.get_expanders ()) {
+				if (exp.visible) {
+					foreach (Tool t in exp.tool) {
+						if (t.tool_is_visible () && t.is_over (x, y)) {
+							if (dy < 0) {
+								action = t.scroll_wheel_up_action (t);
+							} else {
+								action = t.scroll_wheel_down_action (t);
+							}
+							press_tool = t;
+						}
+					}
+				}
+			}
+		}
+		
+		if (!action) {
+			scroll_current_set (dy);
+		}
+		
+		redraw_tool_box ();
+	}
 	
 	public void scroll_up (double x, double y) {
 		bool action = false;
