@@ -92,11 +92,18 @@ public class Os2Table : OtfTable {
 
 		ranges.get_ranges (font, out unicodeRange1, out unicodeRange2, out unicodeRange3, out unicodeRange4);
 
-		fd.add_u32 (unicodeRange1); // ulUnicodeRange1 Bits 0-31
-		fd.add_u32 (unicodeRange2); // ulUnicodeRange2 Bits 32-63
-		fd.add_u32 (unicodeRange3); // ulUnicodeRange3 Bits 64-95
-		fd.add_u32 (unicodeRange4); // ulUnicodeRange4 Bits 96-127
-
+		if (mac) {
+			fd.add_u32 (unicodeRange1); // ulUnicodeRange1 Bits 0-31
+			fd.add_u32 (0); // ulUnicodeRange2 Bits 32-63
+			fd.add_u32 (0); // ulUnicodeRange3 Bits 64-95
+			fd.add_u32 (0); // ulUnicodeRange4 Bits 96-127
+		} else {
+			fd.add_u32 (unicodeRange1); // ulUnicodeRange1 Bits 0-31
+			fd.add_u32 (unicodeRange2); // ulUnicodeRange2 Bits 32-63
+			fd.add_u32 (unicodeRange3); // ulUnicodeRange3 Bits 64-95
+			fd.add_u32 (unicodeRange4); // ulUnicodeRange4 Bits 96-127
+		}
+		
 		fd.add_tag ("Bird"); // VendID
 		
 		 // fsSelection (1 for italic 0 for upright)
