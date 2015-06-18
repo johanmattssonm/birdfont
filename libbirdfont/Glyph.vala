@@ -183,6 +183,8 @@ public class Glyph : FontDisplay {
 		PathList stroke;
 
 		pl = new PathList ();
+		
+		print (@"$(get_name ()) get_visible_paths (): $(get_visible_paths ().size)\n");
 		foreach (Path p in get_visible_paths ()) {
 			if (p.stroke > 0) {
 				stroke = p.get_stroke ();
