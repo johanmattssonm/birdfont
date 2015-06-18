@@ -25,6 +25,8 @@ public class Gradient : GLib.Object {
 
 	public Gee.ArrayList<Stop> stops;
 	
+	public int id = -1;
+
 	public Gradient () {
 		x1 = 0;
 		y1 = 0;

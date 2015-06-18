@@ -21,6 +21,11 @@ public class PathList : GLib.Object {
 		 paths = new Gee.ArrayList<Path> ();
 	}
 	
+	public PathList.for_path (Path p) {
+		 paths = new Gee.ArrayList<Path> ();
+		 paths.add (p);
+	}
+		
 	public void remove (Path p) {
 		paths.remove (p);
 	}

@@ -248,12 +248,14 @@ public class GlyfData : GLib.Object {
 					warning (@"Point on point in TTF. Index $(coordinate_y.size - 1)");
 					
 					// FIXME: distorted shape
+					/*
 					if (BirdFont.has_argument ("--test")) {
 						print (glyph.get_name () + "\n");
 						print (points.get (epi).to_string ());
 						PenTool.remove_point_simplify (new PointSelection (points.get (epi), p));
 						return false;
 					}
+					*/
 				}
 				
 				prev = rint (e.y * UNITS - font.base_line * UNITS);

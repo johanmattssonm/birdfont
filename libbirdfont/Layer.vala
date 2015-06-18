@@ -85,7 +85,13 @@ public class Layer : GLib.Object {
 		foreach (Layer l in subgroups) {
 			layer.subgroups.add (l.copy ());
 		}
+
+		if (gradient != null) {
+			layer.gradient = ((!) gradient).copy ();
+		}
 		
+		layer.single_path = single_path;
+			
 		return layer;
 	}
 
