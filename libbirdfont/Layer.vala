@@ -44,7 +44,9 @@ public class Layer : GLib.Object {
 	public PathList get_visible_paths () {
 		PathList p = new PathList ();
 		
-		p.append (paths);
+		if (visible) {
+			p.append (paths);
+		}
 		
 		foreach (Layer sublayer in subgroups) {
 			if (sublayer.visible) {
@@ -82,6 +84,8 @@ public class Layer : GLib.Object {
 		
 		layer.name = name;
 		layer.paths = paths.copy ();
+		layer.visible = visible;
+		
 		foreach (Layer l in subgroups) {
 			layer.subgroups.add (l.copy ());
 		}
