@@ -2151,6 +2151,8 @@ public class PenTool : Tool {
 	void move_selected_points (uint keyval) {
 		Path? last_path = null;
 		
+		update_selected_points ();
+		
 		if (!last_selected_is_handle) {
 			if (keyval == Key.UP) {
 				foreach (PointSelection e in selected_points) {
