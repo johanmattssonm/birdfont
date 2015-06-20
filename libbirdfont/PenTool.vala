@@ -1499,7 +1499,7 @@ public class PenTool : Tool {
 		
 		if (active_handle.active) {
 			Path.draw_control_point (cr, Glyph.path_coordinate_x (begin_action_x),
-				Glyph.path_coordinate_y (begin_action_y), Theme.get_color ("Control Point Handle"));	
+				Glyph.path_coordinate_y (begin_action_y), Theme.get_color ("Active Control Point Handle"));	
 		} else if (selected_points.size > 0) {
 			ps = selected_points.get (selected_points.size - 1);
 			
@@ -1977,6 +1977,11 @@ public class PenTool : Tool {
 		
 		eh = get_closest_handle (event_x, event_y);
 		eh.handle.active = true;
+		
+		if (active_handle != eh.handle) {
+			GlyphCanvas.redraw ();
+		}
+		
 		active_handle = eh.handle;
 	}
 

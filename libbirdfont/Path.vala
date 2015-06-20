@@ -476,11 +476,19 @@ public class Path : GLib.Object {
 			if (e.get_left_handle ().selected) {
 				color_left = Theme.get_color ("Selected Control Point Handle");
 			} else if (e.get_left_handle ().active) {
-				color_left = Theme.get_color ("Active Control Point Handle");
+				color_left = Theme.get_color ("Active Handle");
 			} else {
 				color_left = Theme.get_color ("Control Point Handle");
 			}
 
+			if (e.get_right_handle ().selected) {
+				color_right = Theme.get_color ("Selected Control Point Handle");
+			} else if (e.get_right_handle ().active) {
+				color_right = Theme.get_color ("Active Handle");
+			} else {
+				color_right = Theme.get_color ("Control Point Handle");
+			}
+			
 			if (!hide_end_handle || !(is_open () && e == points.get (points.size - 1))) {
 				draw_line (handle_right, e, cr, 0.15);
 				draw_control_point (cr, e.get_right_handle ().x, e.get_right_handle ().y, color_right);

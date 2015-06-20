@@ -47,6 +47,7 @@
 	<color name="Overview Item 1" red="0.92549019607843142" green="0.92549019607843142" blue="0.92549019607843142" alpha="1"/>
 	<color name="Cubic Control Point" red="0.45490196078431372" green="0.45490196078431372" blue="0.45490196078431372" alpha="1"/>
 	<color name="Selected Active Quadratic Control Point" red="0" green="0.4392156862745098" blue="0.95686274509803926" alpha="1"/>
+	<color name="Active Handle" red="0.082352941176470587" green="0.17254901960784313" blue="0.098039215686274508" alpha="1"/>
 	<color name="Overview Item 2" red="0.96470588235294119" green="0.96470588235294119" blue="0.96470588235294119" alpha="1"/>
 	<color name="Selected Button Foreground" red="0.011764705882352941" green="0.062745098039215685" blue="0.094117647058823528" alpha="1"/>
 	<color name="Active Spin Button" red="0.40784313725490196" green="0.42352941176470588" blue="0.46666666666666667" alpha="1"/>
@@ -62,7 +63,6 @@
 	<color name="Checkbox Background" red="1" green="1" blue="1" alpha="1"/>
 	<color name="Active Cubic Control Point" red="0.27450980392156865" green="0.27450980392156865" blue="0.27450980392156865" alpha="1"/>
 	<color name="Foreground 1" red="0" green="0" blue="0" alpha="1"/>
-	<color name="Active Control Point Handle" red="0.31764705882352939" green="0.57647058823529407" blue="0.35294117647058826" alpha="1"/>
 	<color name="Merge" red="0.65490196078431373" green="0.66666666666666663" blue="0.69803921568627447" alpha="0.29999999999999999"/>
 	<color name="Headline Background" red="0.43137254901960786" green="0.44313725490196076" blue="0.50980392156862742" alpha="1"/>
 	<color name="Overview Selected Foreground" red="0.17647058823529413" green="0.17647058823529413" blue="0.17647058823529413" alpha="1"/>

@@ -188,7 +188,8 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Quadratic Control Point", 123 / 255.0, 151 / 255.0, 184 / 255.0, 1);
 
 		Theme.set_default_color ("Selected Control Point Handle", 0 / 255.0, 112 / 255.0, 244 / 255.0, 1);
-		Theme.set_default_color ("Active Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
+		Theme.set_default_color ("Active Handle", 21 / 255.0, 44 / 255.0, 25 / 255.0, 1);
+
 		Theme.set_default_color ("Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
 		
 		Theme.set_default_color ("Merge", 167 / 255.0, 170 / 255.0, 178 / 255.0, 0.3);
@@ -294,8 +295,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Quadratic Control Point", 123 / 255.0, 151 / 255.0, 184 / 255.0, 1);
 
 		Theme.set_default_color ("Selected Control Point Handle", 234 / 255.0, 77 / 255.0, 26 / 255.0, 1);
-		Theme.set_default_color ("Active Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
-		Theme.set_default_color ("Control Point Handle", 81 / 255.0, 147 / 255.0, 90 / 255.0, 1);
+		Theme.set_default_color ("Active Handle", 21 / 255.0, 44 / 255.0, 25 / 255.0, 1);
 		
 		Theme.set_default_color ("Merge", 167 / 255.0, 170 / 255.0, 178 / 255.0, 0.3);
 		
@@ -400,7 +400,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Quadratic Control Point", 0, 0, 0, 1);
 
 		Theme.set_default_color ("Selected Control Point Handle", 0, 0, 0, 1);
-		Theme.set_default_color ("Active Control Point Handle", 0, 0, 0, 1);
+		Theme.set_default_color ("Active Handle", 0, 0, 0, 1);
 		Theme.set_default_color ("Control Point Handle", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Merge", 0, 0, 0, 1);
@@ -493,7 +493,7 @@ public class Theme : GLib.Object {
 			t_("Cubic Quadratic Point");
 
 			t_("Selected Control Point Handle");
-			t_("Active Control Point Handle");
+			t_("Active Handle");
 			t_("Control Point Handle");
 
 			t_("Merge");
