@@ -53,12 +53,24 @@ def completeness (pofile):
 parser = OptionParser()
 parser.add_option("-t", "--threshold", dest="threshold", help="completeness threshold in percens", metavar="THRESHOLD")
 parser.add_option("-i", "--incomplete", dest="incomplete", action="store_true", default=False, help="move incomplete translations to the folder for incomplete translations", metavar="MOVE_INCOMPLETE")
+parser.add_option("-r", "--remove-compiled", dest="compiled", action="store_true", default=False, help="remove compiled incomplete translations", metavar="MOVE_COMPILED_INCOMPLETE")
 (options, args) = parser.parse_args()
 
 if not options.threshold:
     for pofile in glob.glob('po/*.po'):
         completed = completeness (pofile)
         print (pofile + " " + str (completed) + "%")
+elif options.compiled:
+    for pofile in glob.glob('po/*.po'):
+        completed = completeness (pofile)
+        podir = pofile.replace ("po/", "")
+        podir = podir.replace (".po", "")
+        if completed >= float (options.threshold):
+            print ("Releasing " + podir)
+        else:
+            print ("Removing incomplete translation " + podir)
+            run ("mkdir -p build/incomplete")
+            run ("mv build/locale/" + podir + " build/incomplete/") 
 elif options.incomplete:
     for pofile in glob.glob('po/*.po'):
         completed = completeness (pofile)
