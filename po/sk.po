@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-13 13:12+0200\n"
+"POT-Creation-Date: 2015-06-20 20:08+0200\n"
 "PO-Revision-Date: 2015-05-09 12:36+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,7 +109,7 @@ msgstr "Súbor"
 msgid "Parts"
 msgstr ""
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2298
+#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2305
 #: libbirdfont/LigatureList.vala:106
 msgid "Add"
 msgstr ""
@@ -273,7 +273,7 @@ msgstr ""
 "U Ú V W X Y Ý Z Ž"
 
 #: libbirdfont/DescriptionDisplay.vala:52
-#: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:98
+#: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:114
 #: libbirdfont/Menu.vala:465 libbirdfont/TableLayout.vala:203
 #, fuzzy
 msgid "Name and Description"
@@ -566,28 +566,28 @@ msgstr ""
 msgid "Object Tools"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1512
+#: libbirdfont/DrawingTools.vala:1517
 msgid "Set size for grid"
 msgstr "Nastaviť veľkosť mriežky"
 
-#: libbirdfont/ExportSettings.vala:39 libbirdfont/ExportSettings.vala:140
+#: libbirdfont/ExportSettings.vala:40 libbirdfont/ExportSettings.vala:166
 #: libbirdfont/Menu.vala:295
 msgid "Export Settings"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:43
+#: libbirdfont/ExportSettings.vala:44 libbirdfont/ExportSettings.vala:59
 msgid "File Name"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:59 libbirdfont/RecentFiles.vala:73
+#: libbirdfont/ExportSettings.vala:75 libbirdfont/RecentFiles.vala:73
 msgid "Folder"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:63
+#: libbirdfont/ExportSettings.vala:79
 msgid "Formats"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:104
+#: libbirdfont/ExportSettings.vala:120
 #, fuzzy
 msgid "Export"
 msgstr "Export"
@@ -633,7 +633,7 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:2298
+#: libbirdfont/Glyph.vala:2305
 msgid "Guide"
 msgstr ""
 
@@ -828,7 +828,7 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:185 libbirdfont/OverView.vala:1287
+#: libbirdfont/Ligatures.vala:185 libbirdfont/OverView.vala:1293
 msgid "Ligature"
 msgstr "Ligatúra"
 
@@ -1127,11 +1127,11 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: libbirdfont/OverView.vala:533
+#: libbirdfont/OverView.vala:539
 msgid "No glyphs in this view."
 msgstr ""
 
-#: libbirdfont/OverView.vala:1310
+#: libbirdfont/OverView.vala:1316
 msgid "See also:"
 msgstr ""
 
@@ -1503,7 +1503,7 @@ msgid "Selected Control Point Handle"
 msgstr ""
 
 #: libbirdfont/Theme.vala:496
-msgid "Active Control Point Handle"
+msgid "Active Handle"
 msgstr ""
 
 #: libbirdfont/Theme.vala:497

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-13 13:12+0200\n"
-"PO-Revision-Date: 2015-06-08 08:49+0000\n"
+"POT-Creation-Date: 2015-06-20 20:08+0200\n"
+"PO-Revision-Date: 2015-06-20 18:08+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1433753356.000000\n"
+"X-POOTLE-MTIME: 1434823682.000000\n"
 
 #: libbirdfont/Argument.vala:276
 msgid "Usage"
@@ -105,7 +105,7 @@ msgstr "Filer"
 msgid "Parts"
 msgstr "Delar"
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2298
+#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2305
 #: libbirdfont/LigatureList.vala:106
 msgid "Add"
 msgstr "Lägg till"
@@ -261,7 +261,7 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Å Ä Ö"
 
 #: libbirdfont/DescriptionDisplay.vala:52
-#: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:98
+#: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:114
 #: libbirdfont/Menu.vala:465 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr "Namn och beskrivning"
@@ -549,28 +549,28 @@ msgstr "Kontrollpunkter"
 msgid "Object Tools"
 msgstr "Objekt verktyg"
 
-#: libbirdfont/DrawingTools.vala:1512
+#: libbirdfont/DrawingTools.vala:1517
 msgid "Set size for grid"
 msgstr "Ställ in storleken på rutmönstret"
 
-#: libbirdfont/ExportSettings.vala:39 libbirdfont/ExportSettings.vala:140
+#: libbirdfont/ExportSettings.vala:40 libbirdfont/ExportSettings.vala:166
 #: libbirdfont/Menu.vala:295
 msgid "Export Settings"
 msgstr "Exportinställningar"
 
-#: libbirdfont/ExportSettings.vala:43
+#: libbirdfont/ExportSettings.vala:44 libbirdfont/ExportSettings.vala:59
 msgid "File Name"
 msgstr "Filnamn"
 
-#: libbirdfont/ExportSettings.vala:59 libbirdfont/RecentFiles.vala:73
+#: libbirdfont/ExportSettings.vala:75 libbirdfont/RecentFiles.vala:73
 msgid "Folder"
 msgstr "Katalog"
 
-#: libbirdfont/ExportSettings.vala:63
+#: libbirdfont/ExportSettings.vala:79
 msgid "Formats"
 msgstr "Format"
 
-#: libbirdfont/ExportSettings.vala:104
+#: libbirdfont/ExportSettings.vala:120
 msgid "Export"
 msgstr "Exportera"
 
@@ -615,7 +615,7 @@ msgstr "Inställningar"
 msgid "Themes"
 msgstr "Temata"
 
-#: libbirdfont/Glyph.vala:2298
+#: libbirdfont/Glyph.vala:2305
 msgid "Guide"
 msgstr "Hjälplinje"
 
@@ -810,7 +810,7 @@ msgstr "Mitten"
 msgid "End"
 msgstr "Slut"
 
-#: libbirdfont/Ligatures.vala:185 libbirdfont/OverView.vala:1287
+#: libbirdfont/Ligatures.vala:185 libbirdfont/OverView.vala:1293
 msgid "Ligature"
 msgstr "Ligatur"
 
@@ -1094,11 +1094,11 @@ msgstr "Flytta objekt"
 msgid "Filter"
 msgstr "Filtrera"
 
-#: libbirdfont/OverView.vala:533
+#: libbirdfont/OverView.vala:539
 msgid "No glyphs in this view."
 msgstr "Inga tecken att visa."
 
-#: libbirdfont/OverView.vala:1310
+#: libbirdfont/OverView.vala:1316
 msgid "See also:"
 msgstr "Se även:"
 
@@ -1467,8 +1467,8 @@ msgid "Selected Control Point Handle"
 msgstr "Markerat handtag för en kontrollpunkt"
 
 #: libbirdfont/Theme.vala:496
-msgid "Active Control Point Handle"
-msgstr "Aktivt och makerat handtag för en kontrollpunkt"
+msgid "Active Handle"
+msgstr "Aktivt handtag"
 
 #: libbirdfont/Theme.vala:497
 msgid "Control Point Handle"
@@ -1569,6 +1569,9 @@ msgstr "Okänt filformat."
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
 msgstr "Skriver"
+
+#~ msgid "Active Control Point Handle"
+#~ msgstr "Aktivt och makerat handtag för en kontrollpunkt"
 
 #~ msgid "Move to path to the bottom layer"
 #~ msgstr "Flytta slingan till bottenlagret"
