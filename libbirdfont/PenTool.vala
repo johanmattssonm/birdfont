@@ -1875,7 +1875,7 @@ public class PenTool : Tool {
 			}
 		}
 		
-		return p.xmin - c - 10 <= x <= p.xmax + c && p.ymin - c - 10 <= y <= p.ymax + c;
+		return p.xmin - c - 10 <= x <= p.xmax + c + 10 && p.ymin - c - 10 <= y <= p.ymax + c + 10 ;
 	}
 
 	private bool is_close_to_handle (EditPoint selected_corner, double event_x, double event_y, double distance_to_edit_point) {
