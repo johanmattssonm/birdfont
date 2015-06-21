@@ -1,3 +1,10 @@
+birdfont (2.10.0) stable;
+
+  * Layers
+  * Mac specific TTF fonts (fixes fontbook problems)	
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Jun 21 18:33:10 CEST 2015
+
 birdfont (2.9.2) stable;
 
   * Fallback font with support for many languages
