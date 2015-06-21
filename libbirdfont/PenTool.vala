@@ -303,7 +303,7 @@ public class PenTool : Tool {
 		
 		remove_all_selected_points ();
 		
-		foreach (Path p in g.get_visible_paths ()) {
+		foreach (Path p in g.get_paths_in_current_layer ()) {
 			// TODO: Select path only of bounding box is in selection box
 			foreach (EditPoint ep in p.points) {
 				if (x1 <= ep.x <= x2 && y2 <= ep.y <= y1) {
