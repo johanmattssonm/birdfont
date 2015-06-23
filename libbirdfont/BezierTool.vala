@@ -26,6 +26,7 @@ public class BezierTool : Tool {
 	public const uint MOVE_LAST_HANDLE_RIGHT = 3;
 	public const uint MOVE_LAST_HANDLE_LEFT = 4;
 	public const uint MOVE_FIRST_HANDLE = 5;
+	public const uint MOVE_HANDLE_ON_AXIS = 6;
 	
 	uint state = NONE;
 	
@@ -140,7 +141,15 @@ public class BezierTool : Tool {
 			GridTool.tie_coordinate (ref px, ref py);
 		}
 		
-		if (corner_node) {
+		if (state == MOVE_HANDLE_ON_AXIS) {
+			current_point = current_path.add (px, py);
+			current_path.hide_end_handle = true;
+			current_point.get_left_handle ().convert_to_line ();
+			current_point.recalculate_linear_handles ();
+			set_point_type ();
+			corner_node = false;
+			state = MOVE_POINT;
+		} else if (corner_node) {
 			if (current_path.is_open ()) {
 				current_point = current_path.add (px, py);
 				current_path.hide_end_handle = true;
@@ -320,6 +329,24 @@ public class BezierTool : Tool {
 			
 			current_path.reset_stroke ();
 			GlyphCanvas.redraw ();
+		} else if (state == MOVE_HANDLE_ON_AXIS) {
+			EditPointHandle h = current_point.get_right_handle ();
+			double horizontal, vertical;
+			
+			vertical = Path.distance (px, h.parent.x, py, py);
+			horizontal = Path.distance (h.parent.y, py, py, py);
+
+			current_path.hide_end_handle = false;
+			current_point.set_reflective_handles (true);
+			current_point.convert_to_curve ();
+						
+			if (horizontal < vertical) {
+				h.move_to_coordinate (px, current_point.y);
+			} else {
+				h.move_to_coordinate (current_point.x, py);
+			}
+						
+			GlyphCanvas.redraw ();
 		}
 		
 		if (current_path.points.size > 0) {
@@ -385,6 +412,10 @@ public class BezierTool : Tool {
 		
 		current_point.set_reflective_handles (false);
 		current_point.get_right_handle ().convert_to_curve ();
+	}
+	
+	public void move_handle_on_axis () {
+		state = MOVE_HANDLE_ON_AXIS;
 	}
 }
 
