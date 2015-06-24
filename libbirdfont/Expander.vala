@@ -282,7 +282,6 @@ public class Expander : GLib.Object {
 	
 		if (unlikely (cached == null)) {
 			Context cc;
-			
 			double text_height = 17 * Toolbox.get_scale ();
 			double offset_y = 0;
 			

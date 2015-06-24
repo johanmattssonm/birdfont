@@ -38,7 +38,7 @@ public class Toolbox : GLib.Object  {
 	
 	public static int allocation_width = 0;
 	public static int allocation_height = 0;
-	
+		
 	/** Scrolling with scroll wheel */
 	bool scrolling_toolbox = false;
 	
@@ -124,10 +124,10 @@ public class Toolbox : GLib.Object  {
 		redraw_tool_box ();
 	}
 
-	public static void set_allocation (int w, int h) {
-		if (w != allocation_width || allocation_height != h) {
-			allocation_width = w;
-			allocation_height = h;
+	public static void set_allocation (int width, int height) {
+		if (width != allocation_width || allocation_height != height) {
+			allocation_width = width;
+			allocation_height = height;
 			Toolbox.redraw_tool_box ();
 		}
 	}

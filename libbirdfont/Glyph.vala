@@ -1729,30 +1729,27 @@ public class Glyph : FontDisplay {
 		allocation = a;
 	}
 	
-	public override void draw (WidgetAllocation allocation, Context cr) {
+	public override void draw (WidgetAllocation allocation, Context cmp) {
 		Tool tool;
 			
 		this.allocation = allocation;
-
-		ImageSurface ps = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
-		Context cmp = new Context (ps);
-
-		cr.save ();
-		draw_background_color (cr, 1);
-		cr.restore ();
+		
+		cmp.save ();
+		draw_background_color (cmp, 1);
+		cmp.restore ();
 		
 		if (background_image != null && background_image_visible) {
-			((!)background_image).draw (cr, allocation, view_offset_x, view_offset_y, view_zoom);
+			((!)background_image).draw (cmp, allocation, view_offset_x, view_offset_y, view_zoom);
 		}
 
 		if (unlikely (Preferences.draw_boundaries)) {
 			foreach (Path p in get_visible_paths ()) {
-				p.draw_boundaries (cr);
+				p.draw_boundaries (cmp);
 			}
 		}
 		
-		draw_background_glyph (allocation, cr);
-		juxtapose (allocation, cr);
+		draw_background_glyph (allocation, cmp);
+		juxtapose (allocation, cmp);
 
 		if (BirdFont.show_coordinates) {
 			draw_coordinate (cmp);
@@ -1776,11 +1773,6 @@ public class Glyph : FontDisplay {
 		tool = MainWindow.get_toolbox ().get_current_tool ();
 		tool.draw_action (tool, cmp, this);
 		cmp.restore ();
-				
-		cr.save ();
-		cr.set_source_surface (ps, 0, 0);
-		cr.paint ();
-		cr.restore ();
 	}	
 
 	private void zoom_in_at_point (double x, double y, double amount = 15) {

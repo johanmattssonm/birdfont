@@ -346,6 +346,7 @@ public class Text : Widget {
 			warning ("Base line not zero.");
 		}
 
+		// FIXME: cache is disabled for retina testing
 		if (use_cached_glyphs) {
 			iterate ((glyph, kerning, last) => {
 				double end;
