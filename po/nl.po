@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-20 20:08+0200\n"
-"PO-Revision-Date: 2015-05-16 08:18+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"POT-Creation-Date: 2015-06-24 13:55+0200\n"
+"PO-Revision-Date: 2015-06-23 18:51+0000\n"
+"Last-Translator: aravis <dorien_kamphuis@sil.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1431764285.000000\n"
+"X-POOTLE-MTIME: 1435085469.000000\n"
 
 #: libbirdfont/Argument.vala:276
 msgid "Usage"
@@ -119,7 +119,7 @@ msgstr "Symbool selecteren"
 msgid "Open"
 msgstr "Openen"
 
-#: libbirdfont/BezierTool.vala:49
+#: libbirdfont/BezierTool.vala:50
 msgid "Create Beziér curves"
 msgstr "Bézier-curven aanmaken"
 
@@ -183,16 +183,19 @@ msgid "print this message"
 msgstr "dit bericht afdrukken"
 
 #: libbirdfont/BirdFont.vala:181
+#, fuzzy
 msgid "write files to this directory"
-msgstr ""
+msgstr "bestanden naar deze map schrijven\n"
 
 #: libbirdfont/BirdFont.vala:182
+#, fuzzy
 msgid "write svg file"
-msgstr ""
+msgstr "svg-bestand schrijven\n"
 
 #: libbirdfont/BirdFont.vala:183
+#, fuzzy
 msgid "write ttf and eot file"
-msgstr ""
+msgstr "ttf- en eot-bestanden schrijven\n"
 
 #: libbirdfont/BirdFont.vala:297
 msgid "Can't find output directory"
@@ -423,8 +426,9 @@ msgid "Close path"
 msgstr "Pad sluiten"
 
 #: libbirdfont/DrawingTools.vala:616
+#, fuzzy
 msgid "Move to path to the bottom of the layer"
-msgstr ""
+msgstr "Pad naar de onderste laag verplaatsen"
 
 #: libbirdfont/DrawingTools.vala:630
 msgid "Flip path vertically"
@@ -472,15 +476,16 @@ msgstr "Achtergrondafbeelding verwijderen"
 
 #: libbirdfont/DrawingTools.vala:793
 msgid "Add layer"
-msgstr ""
+msgstr "Laag toevoegen"
 
 #: libbirdfont/DrawingTools.vala:803
 msgid "Show layers"
-msgstr ""
+msgstr "Lagen tonen"
 
 #: libbirdfont/DrawingTools.vala:813
+#, fuzzy
 msgid "Apply stroke"
-msgstr ""
+msgstr "Slag toepassen"
 
 #: libbirdfont/DrawingTools.vala:846 libbirdfont/SettingsTab.vala:34
 msgid "Stroke width"
@@ -558,7 +563,7 @@ msgstr "Grootte voor raster instellen"
 #: libbirdfont/ExportSettings.vala:40 libbirdfont/ExportSettings.vala:166
 #: libbirdfont/Menu.vala:295
 msgid "Export Settings"
-msgstr ""
+msgstr "Instellingen exporteren"
 
 #: libbirdfont/ExportSettings.vala:44 libbirdfont/ExportSettings.vala:59
 msgid "File Name"
@@ -596,15 +601,15 @@ msgstr ""
 
 #: libbirdfont/FileTools.vala:31
 msgid "New font"
-msgstr ""
+msgstr "Nieuw lettertype"
 
 #: libbirdfont/FileTools.vala:37
 msgid "Open font"
-msgstr ""
+msgstr "Lettertype openen"
 
 #: libbirdfont/FileTools.vala:43
 msgid "Save font"
-msgstr ""
+msgstr "Lettertype opslaan"
 
 #: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:458
 #: libbirdfont/SettingsDisplay.vala:211 libbirdfont/SettingsTab.vala:31
@@ -615,7 +620,7 @@ msgstr "Instellingen"
 #: libbirdfont/FileTools.vala:55 libbirdfont/ThemeTab.vala:42
 #: libbirdfont/ThemeTab.vala:162
 msgid "Themes"
-msgstr ""
+msgstr "Thema's"
 
 #: libbirdfont/Glyph.vala:2305
 msgid "Guide"
@@ -643,6 +648,10 @@ msgstr ""
 
 #: libbirdfont/HiddenTools.vala:51
 msgid "Convert the last control point to a corner node"
+msgstr ""
+
+#: libbirdfont/HiddenTools.vala:59
+msgid "Move handle along axis"
 msgstr ""
 
 #: libbirdfont/KerningDisplay.vala:61 libbirdfont/KerningDisplay.vala:844
@@ -956,8 +965,9 @@ msgid "Import and Export"
 msgstr ""
 
 #: libbirdfont/Menu.vala:260
+#, fuzzy
 msgid "Export Fonts"
-msgstr ""
+msgstr "Lettertypen exporteren"
 
 #: libbirdfont/Menu.vala:267
 msgid "Export Glyph as SVG"
@@ -968,8 +978,9 @@ msgid "Import SVG file"
 msgstr "SVG-bestand importeren"
 
 #: libbirdfont/Menu.vala:281
+#, fuzzy
 msgid "Import SVG folder"
-msgstr ""
+msgstr "SVG-bestand importeren"
 
 #: libbirdfont/Menu.vala:288
 msgid "Import Background Image"
@@ -1127,7 +1138,7 @@ msgstr "Alle symbolen"
 msgid "Default"
 msgstr "Standaard"
 
-#: libbirdfont/PenTool.vala:78
+#: libbirdfont/PenTool.vala:81
 msgid "Add new points"
 msgstr "Nieuwe punten toevoegen"
 

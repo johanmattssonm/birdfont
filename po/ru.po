@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-20 20:08+0200\n"
-"PO-Revision-Date: 2015-06-03 17:07+0000\n"
+"POT-Creation-Date: 2015-06-24 13:55+0200\n"
+"PO-Revision-Date: 2015-06-23 12:49+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1433351265.000000\n"
+"X-POOTLE-MTIME: 1435063781.000000\n"
 
 #: libbirdfont/Argument.vala:276
 msgid "Usage"
@@ -123,7 +123,7 @@ msgstr "выбрать глифф"
 msgid "Open"
 msgstr "Открыть"
 
-#: libbirdfont/BezierTool.vala:49
+#: libbirdfont/BezierTool.vala:50
 msgid "Create Beziér curves"
 msgstr "Создать кривые Безье"
 
@@ -329,7 +329,7 @@ msgstr "Контрольные точки"
 
 #: libbirdfont/DrawingTools.vala:121 libbirdfont/Menu.vala:233
 msgid "Layers"
-msgstr ""
+msgstr "Слои"
 
 #: libbirdfont/DrawingTools.vala:122
 msgid "Stroke"
@@ -435,8 +435,9 @@ msgid "Close path"
 msgstr "_Замкнуть контур"
 
 #: libbirdfont/DrawingTools.vala:616
+#, fuzzy
 msgid "Move to path to the bottom of the layer"
-msgstr ""
+msgstr "Переместить контур на слой ниже"
 
 #: libbirdfont/DrawingTools.vala:630
 msgid "Flip path vertically"
@@ -485,11 +486,11 @@ msgstr "Удалить фоновую картинку"
 
 #: libbirdfont/DrawingTools.vala:793
 msgid "Add layer"
-msgstr ""
+msgstr "Добавить слой"
 
 #: libbirdfont/DrawingTools.vala:803
 msgid "Show layers"
-msgstr ""
+msgstr "Показать слои"
 
 #: libbirdfont/DrawingTools.vala:813
 msgid "Apply stroke"
@@ -585,7 +586,7 @@ msgstr "Папки"
 
 #: libbirdfont/ExportSettings.vala:79
 msgid "Formats"
-msgstr ""
+msgstr "Форматы"
 
 #: libbirdfont/ExportSettings.vala:120
 msgid "Export"
@@ -599,7 +600,7 @@ msgstr "Сохранить"
 
 #: libbirdfont/ExportTool.vala:364
 msgid "Alphabet"
-msgstr ""
+msgstr "Алфавит"
 
 #: libbirdfont/FileDialogTab.vala:79
 msgid "Select a Folder"
@@ -658,6 +659,10 @@ msgstr "Конвертировать последний сегмент в пря
 
 #: libbirdfont/HiddenTools.vala:51
 msgid "Convert the last control point to a corner node"
+msgstr ""
+
+#: libbirdfont/HiddenTools.vala:59
+msgid "Move handle along axis"
 msgstr ""
 
 #: libbirdfont/KerningDisplay.vala:61 libbirdfont/KerningDisplay.vala:844
@@ -1168,7 +1173,7 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: libbirdfont/PenTool.vala:78
+#: libbirdfont/PenTool.vala:81
 msgid "Add new points"
 msgstr ""
 

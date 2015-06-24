@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-20 20:08+0200\n"
+"POT-Creation-Date: 2015-06-24 13:55+0200\n"
 "PO-Revision-Date: 2015-06-11 18:08+0000\n"
 "Last-Translator: Alessio <alessio.pini@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,7 +120,7 @@ msgstr "Seleziona tipo"
 msgid "Open"
 msgstr "Apri"
 
-#: libbirdfont/BezierTool.vala:49
+#: libbirdfont/BezierTool.vala:50
 msgid "Create Beziér curves"
 msgstr "Crea curve di Beziér"
 
@@ -651,6 +651,10 @@ msgstr "Converte l'ultimo segmento in una linea retta"
 msgid "Convert the last control point to a corner node"
 msgstr ""
 
+#: libbirdfont/HiddenTools.vala:59
+msgid "Move handle along axis"
+msgstr ""
+
 #: libbirdfont/KerningDisplay.vala:61 libbirdfont/KerningDisplay.vala:844
 msgid "Kerning"
 msgstr "Crenatura"
@@ -1148,7 +1152,7 @@ msgstr ""
 msgid "Default"
 msgstr "Predefinito"
 
-#: libbirdfont/PenTool.vala:78
+#: libbirdfont/PenTool.vala:81
 msgid "Add new points"
 msgstr "Aggiungi nuovi punti"
 
