@@ -198,10 +198,20 @@ public class ClipTool : Tool {
 				s.append (@"$(gc.get_current ().right_limit)");
 				s.append ("\n");
 
-				foreach (Path path in gc.get_current ().get_all_paths ()) {
+				foreach (Path path in gc.get_current ().get_visible_paths ()) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
 					s.append ("\n");
+
+					s.append ("BF stroke: ");
+					s.append (@"$(path.stroke)");
+					s.append ("\n");
+					
+					if (path.line_cap == LineCap.ROUND) {
+						s.append ("BF cap: round\n");
+					} else if (path.line_cap == LineCap.SQUARE) {
+						s.append ("BF cap: square\n");
+					}
 				}
 				
 				s.append ("BF end -->");
@@ -234,7 +244,7 @@ public class ClipTool : Tool {
 			s.append ("\n");
 									
 			if (!selected) {
-				foreach (Path path in glyph.get_all_paths ()) {
+				foreach (Path path in glyph.get_visible_paths ()) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
 					s.append ("\n");
@@ -249,7 +259,7 @@ public class ClipTool : Tool {
 						s.append ("BF cap: square\n");
 					}
 				}
-			} else if (glyph.get_all_paths ().size > 0) {
+			} else if (glyph.get_visible_paths ().size > 0) {
 				foreach (Path path in glyph.active_paths) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
@@ -267,7 +277,7 @@ public class ClipTool : Tool {
 				}
 			} else {
 				new_path = new Path ();
-				foreach (Path path in glyph.get_all_paths ()) {
+				foreach (Path path in glyph.get_visible_paths ()) {
 					if (path.points.size > 0
 						&& path.points.get (0).is_selected ()
 						&& path.points.get (path.points.size - 1).is_selected ()) {
@@ -405,7 +415,7 @@ public class ClipTool : Tool {
 			destination = MainWindow.get_current_glyph ();
 			glyph = glyphs.get (0).get_current ();
 			
-			foreach (Path p in glyph.get_all_paths ()) {
+			foreach (Path p in glyph.get_visible_paths ()) {
 				PenTool.clear_directions ();
 				destination.add_path (p);
 				destination.add_active_path (null, p);
