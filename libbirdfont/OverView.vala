@@ -1433,6 +1433,11 @@ public class OverView : FontDisplay {
 			return;
 		}
 
+		if (copied_glyphs.size < i) {
+			warning ("Array index out of bounds.");
+			return;
+		}
+		
 		i = 0;
 		foreach (GlyphCollection g in glyps) {
 			glyph = copied_glyphs.get (i).get_current ().copy ();

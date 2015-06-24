@@ -345,8 +345,7 @@ public class Text : Widget {
 		if (unlikely (cached_font.base_line != 0)) {
 			warning ("Base line not zero.");
 		}
-
-		// FIXME: cache is disabled for retina testing
+		
 		if (use_cached_glyphs) {
 			iterate ((glyph, kerning, last) => {
 				double end;
