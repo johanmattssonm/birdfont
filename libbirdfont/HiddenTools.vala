@@ -55,7 +55,20 @@ public class HiddenTools : ToolCollection  {
 		bezier_corner.is_tool_modifier = true;
 		hidden_expander.add_tool (bezier_corner);
 		bezier_corner.set_tool_visibility (false);
-						
+
+		Tool move_along_axis = new Tool ("bezier", t_("Move handle along axis"));
+		move_along_axis.select_action.connect ((self) => {
+			Tool t = MainWindow.get_toolbox ().get_current_tool ();
+			if (t is BezierTool) {
+				DrawingTools.bezier_tool.move_handle_on_axis ();
+			} else if (t is PenTool || t is PointTool) {
+				PenTool.move_handle_on_axis ();
+			}
+		});
+		move_along_axis.is_tool_modifier = true;
+		hidden_expander.add_tool (move_along_axis);
+		move_along_axis.set_tool_visibility (false);
+								
 		expanders.add (hidden_expander);
 	}
 

@@ -74,6 +74,9 @@ public class PenTool : Tool {
 		
 	public static bool retain_angle = false;
 	
+	/** Move handle along axis. */
+	public static bool on_axis = false;
+	
 	public PenTool (string name) {	
 		base (name, t_("Add new points"));
 		
@@ -184,6 +187,8 @@ public class PenTool : Tool {
 				
 				p.create_full_stroke (); // cache good stroke
 			}
+			
+			on_axis = false;
 		});
 
 		move_action.connect ((self, x, y) => {
@@ -781,6 +786,19 @@ public class PenTool : Tool {
 				delta_coordinate_x = coordinate_x - last_point_x;
 				delta_coordinate_y = coordinate_y - last_point_y;			
 				selected_handle.move_delta_coordinate (delta_coordinate_x, delta_coordinate_y);
+				
+				if (on_axis) {
+					double horizontal, vertical;
+
+					horizontal = Path.distance (selected_handle.parent.x, selected_handle.x, selected_handle.y, selected_handle.y);
+					vertical = Path.distance (selected_handle.x, selected_handle.x, selected_handle.parent.y, selected_handle.y);
+
+					if (horizontal < vertical) {
+						selected_handle.move_to_coordinate (selected_handle.parent.x, selected_handle.y);
+					} else {
+						selected_handle.move_to_coordinate (selected_handle.x, selected_handle.parent.y);
+					}					
+				}
 			}
 
 			if (KeyBindings.modifier == SHIFT || PenTool.retain_angle) {
@@ -2527,6 +2545,10 @@ public class PenTool : Tool {
 	
 	public void set_simplification_threshold (double t) {
 		simplification_threshold = t;
+	}
+	
+	public static void move_handle_on_axis () {
+		on_axis = true;
 	}
 }
 
