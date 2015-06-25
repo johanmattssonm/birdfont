@@ -27,6 +27,38 @@ public class ToolItem : MenuItem {
 			tool.select_action (tool);
 		});
 	}
+	
+	public string get_key_binding () {
+		StringBuilder sb = new StringBuilder ();
+		
+		if (key == '\0') {
+			return "".dup ();
+		}
+			
+		if ((modifiers & CTRL) > 0) {
+			sb.append ("Ctrl");
+			sb.append ("+");
+		}
+
+		if ((modifiers & SHIFT) > 0) {
+			sb.append (t_("Shift"));
+			sb.append ("+");
+		}
+
+		if ((modifiers & ALT) > 0) {
+			sb.append ("Alt");
+			sb.append ("+");
+		}
+
+		if ((modifiers & LOGO) > 0) {
+			sb.append ("Super");
+			sb.append ("+");
+		}
+	
+		sb.append_unichar (key);
+		
+		return sb.str;
+	}
 }
 
 }

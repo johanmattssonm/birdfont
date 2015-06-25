@@ -217,43 +217,16 @@ public class Tool : Widget {
 	}
 	
 	public string get_key_binding () {
-		StringBuilder sb = new StringBuilder ();
 		ToolItem? ti = MainWindow.get_menu ().get_item_for_tool (this);
 		ToolItem t;
 		
 		if (ti == null) {
+			warning ("No key binding for tool.");
 			return "";
 		}
 		
 		t = (!) ti;
-
-		if (t.key == '\0') {
-			return "";
-		}
-			
-		if ((t.modifiers & CTRL) > 0) {
-			sb.append ("Ctrl");
-			sb.append ("+");
-		}
-
-		if ((t.modifiers & SHIFT) > 0) {
-			sb.append (t_("Shift"));
-			sb.append ("+");
-		}
-
-		if ((t.modifiers & ALT) > 0) {
-			sb.append ("Alt");
-			sb.append ("+");
-		}
-
-		if ((t.modifiers & LOGO) > 0) {
-			sb.append ("Super");
-			sb.append ("+");
-		}
-	
-		sb.append_unichar (t.key);
-			
-		return sb.str;
+		return t.get_key_binding ();
 	}
 	
 	public void set_icon (string name) {
