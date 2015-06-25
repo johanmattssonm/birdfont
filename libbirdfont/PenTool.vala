@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014, 2015 Johan Mattsson
+    Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -149,6 +149,7 @@ public class PenTool : Tool {
 		release_action.connect ((self, b, ix, iy) => {
 			double x, y;
 			Glyph g;
+			EditPoint? a;
 			
 			g = MainWindow.get_current_glyph ();
 			x = Glyph.path_coordinate_x (ix);
@@ -186,6 +187,19 @@ public class PenTool : Tool {
 				}
 				
 				p.create_full_stroke (); // cache good stroke
+			}
+			
+			// select or deselect points
+			if (KeyBindings.has_shift ()) {
+				control_point_event (x, y, false);
+				if (active_edit_point != null) {
+					if (((!)active_edit_point).is_selected () && selected_points.size > 1) {
+						((!)active_edit_point).set_selected (false);
+					} else {
+						((!)active_edit_point).set_selected (true);
+					}
+					update_selection ();
+				}
 			}
 			
 			on_axis = false;
@@ -306,7 +320,9 @@ public class PenTool : Tool {
 		x2 = Glyph.path_coordinate_x (fmax (selection_box_x, selection_box_last_x));
 		y2 = Glyph.path_coordinate_y (fmax (selection_box_y, selection_box_last_y));
 		
-		remove_all_selected_points ();
+		if (!KeyBindings.has_shift ()) {
+			remove_all_selected_points ();
+		}
 		
 		foreach (Path p in g.get_paths_in_current_layer ()) {
 			// TODO: Select path only of bounding box is in selection box
@@ -1000,7 +1016,7 @@ public class PenTool : Tool {
 			return;
 		}
 		
-		if (button == 3) {
+		if (button == 3 && !KeyBindings.has_shift () ) {
 			selected_path = active_path;
 			move_point_event (x, y);
 			
@@ -1026,6 +1042,11 @@ public class PenTool : Tool {
 				}
 			}
 			
+			return;
+		}
+
+		if (KeyBindings.has_shift ()) {
+			show_selection_box = true;
 			return;
 		}
 	}
@@ -1144,7 +1165,6 @@ public class PenTool : Tool {
 
 		// continue adding points from the other end of the selected path
 		reverse = false;
-
 		foreach (Path p in glyph.get_visible_paths ()) {
 			if (p.is_open () && p.points.size >= 1 
 				&& (active_edit_point == p.points.get (0) 
@@ -1166,11 +1186,8 @@ public class PenTool : Tool {
 			}
 		}
 				
-		if (active_edit_point == null) {
-			if (KeyBindings.modifier != SHIFT) {
-				remove_all_selected_points ();
-				return;
-			}
+		if (active_edit_point == null && KeyBindings.modifier != SHIFT) {
+			remove_all_selected_points ();
 		}
 		
 		move_selected = true;
@@ -1181,19 +1198,7 @@ public class PenTool : Tool {
 			glyph.add_active_path (null, active_path);
 			DrawingTools.update_stroke_settings ();
 			
-			if (KeyBindings.modifier == SHIFT) {
-				if (((!)active_edit_point).is_selected () && selected_points.size > 1) {
-					((!)active_edit_point).set_selected (false);
-					remove_from_selected ((!)active_edit_point);
-					selected_point = new EditPoint ();
-					last_selected_is_handle = false;
-				} else {
-					((!)active_edit_point).set_selected (true);
-					selected_point = (!)active_edit_point;
-					add_selected_point (selected_point, active_path);
-					last_selected_is_handle = false;
-				}
-			} else {
+			if (KeyBindings.modifier != SHIFT) {
 				selected_point = (!)active_edit_point;
 				
 				if (!((!)active_edit_point).is_selected ()) {
@@ -1517,7 +1522,7 @@ public class PenTool : Tool {
 		
 		if (active_handle.active) {
 			Path.draw_control_point (cr, Glyph.path_coordinate_x (begin_action_x),
-				Glyph.path_coordinate_y (begin_action_y), Theme.get_color ("Active Control Point Handle"));	
+				Glyph.path_coordinate_y (begin_action_y), Theme.get_color ("Active Handle"));	
 		} else if (selected_points.size > 0) {
 			ps = selected_points.get (selected_points.size - 1);
 			
@@ -1698,7 +1703,7 @@ public class PenTool : Tool {
 		return e.point.get_distance (x, y);
 	}
 
-	public void control_point_event (double event_x, double event_y) {
+	public void control_point_event (double event_x, double event_y, bool reset_active_point = true) {
 		Path? p;
 		PointSelection? ep = get_closest_point (event_x, event_y, out p);
 		Glyph g = MainWindow.get_current_glyph ();
@@ -1706,10 +1711,13 @@ public class PenTool : Tool {
 		double y = Glyph.path_coordinate_y (event_y);
 		double distance;
 		PointSelection e;
-		set_active_edit_point (null, new Path ());
+		
+		if (reset_active_point) {
+			set_active_edit_point (null, new Path ());
+		}
 		
 		if (ep == null) {
-			return;	
+			return;
 		}
 		
 		e = (!) ep;

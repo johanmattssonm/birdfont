@@ -468,7 +468,7 @@ public class Path : GLib.Object {
 			if (e.get_right_handle ().selected) {
 				color_right = Theme.get_color ("Selected Control Point Handle");
 			} else if (e.get_right_handle ().active) {
-				color_right = Theme.get_color ("Active Control Point Handle");
+				color_right = Theme.get_color ("Active Handle");
 			} else {
 				color_right = Theme.get_color ("Control Point Handle");
 			}
