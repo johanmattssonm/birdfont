@@ -66,10 +66,6 @@ public class Tool : Widget {
 	bool show_bg = true;
 	
 	public string tip = "";
-
-	// keyboard bindings
-	public uint modifier_flag;
-	public unichar key;
 	
 	public bool persistent = false;
 	public bool editor_events = false;
@@ -188,6 +184,8 @@ public class Tool : Widget {
 	public static void show_tooltip () {
 		TimeoutSource timer_hide;
 		Toolbox toolbox;
+		string tip;
+		string key_binding;
 		
 		toolbox = MainWindow.get_toolbox ();
 		
@@ -206,9 +204,56 @@ public class Tool : Widget {
 		}
 		
 		active_tooltip.showing_this_tooltip = true;
-			
+		
+		tip = @"$(active_tooltip.tip)";
+		key_binding = active_tooltip.get_key_binding ();
+		
+		if (key_binding != "") {
+			tip += " (" +  key_binding + ")";
+		}
+		
 		toolbox.hide_tooltip ();
-		toolbox.show_tooltip (active_tooltip.tip, (int) active_tooltip.x, (int) active_tooltip.y);
+		toolbox.show_tooltip (tip, (int) active_tooltip.x, (int) active_tooltip.y);
+	}
+	
+	public string get_key_binding () {
+		StringBuilder sb = new StringBuilder ();
+		ToolItem? ti = MainWindow.get_menu ().get_item_for_tool (this);
+		ToolItem t;
+		
+		if (ti == null) {
+			return "";
+		}
+		
+		t = (!) ti;
+
+		if (t.key == '\0') {
+			return "";
+		}
+			
+		if ((t.modifiers & CTRL) > 0) {
+			sb.append ("Ctrl");
+			sb.append ("+");
+		}
+
+		if ((t.modifiers & SHIFT) > 0) {
+			sb.append (t_("Shift"));
+			sb.append ("+");
+		}
+
+		if ((t.modifiers & ALT) > 0) {
+			sb.append ("Alt");
+			sb.append ("+");
+		}
+
+		if ((t.modifiers & LOGO) > 0) {
+			sb.append ("Super");
+			sb.append ("+");
+		}
+	
+		sb.append_unichar (t.key);
+			
+		return sb.str;
 	}
 	
 	public void set_icon (string name) {

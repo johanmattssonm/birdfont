@@ -149,7 +149,6 @@ public class PenTool : Tool {
 		release_action.connect ((self, b, ix, iy) => {
 			double x, y;
 			Glyph g;
-			EditPoint? a;
 			
 			g = MainWindow.get_current_glyph ();
 			x = Glyph.path_coordinate_x (ix);

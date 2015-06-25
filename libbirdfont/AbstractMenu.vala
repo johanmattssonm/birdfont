@@ -55,6 +55,22 @@ public class AbstractMenu : GLib.Object {
 	public AbstractMenu () {
 	}
 
+	public ToolItem? get_item_for_tool (Tool t) {
+		ToolItem tm;
+		
+		foreach (MenuItem item in sorted_menu_items) {		
+			if (item is ToolItem) {
+				tm  = (ToolItem) item;
+						
+				if (tm.tool == t) {
+					return tm;
+				}
+			}
+		}
+		
+		return null;
+	}
+
 	public void process_key_binding_events (uint keyval) {
 		string display;
 		FontDisplay current_display = MainWindow.get_current_display ();

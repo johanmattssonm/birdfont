@@ -23,9 +23,6 @@ public class ToolItem : MenuItem {
 		
 		this.tool = tool;
 		
-		modifiers = tool.modifier_flag;
-		key = tool.key;
-		
 		action.connect (() => {
 			tool.select_action (tool);
 		});
