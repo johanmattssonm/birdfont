@@ -77,9 +77,11 @@ public class GlyphCollection : GLib.Object {
 	}
 	
 	public Glyph get_current () {
-		if (0 <= selected < glyphs.size) {
+		if (likely (0 <= selected < glyphs.size)) {
 			return glyphs.get (selected);
 		}
+		
+		warning (@"No glyph selected for $(name): $selected glyphs.size: $(glyphs.size)");
 		
 		return new Glyph ("", '\0');
 	}

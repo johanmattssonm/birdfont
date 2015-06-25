@@ -73,7 +73,9 @@ public class VersionList : GLib.Object {
 			add_glyph (g, false);
 		}
 		
-		set_selected_version (gc.get_current ().version_id, false);
+		if (gc.length () > 0) {
+			set_selected_version (gc.get_current ().version_id, false);
+		}
 	}
 	
 	private void delete_item (int index) {

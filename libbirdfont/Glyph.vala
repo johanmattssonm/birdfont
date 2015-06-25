@@ -67,8 +67,22 @@ public class Glyph : FontDisplay {
 	public unichar unichar_code = 0; // FIXME: name and unichar should be moved to to glyph collection 
 	public string name;
 
-	public double left_limit;
+	public double left_limit {
+		get {
+			return _left_limit;
+		}
+		
+		set {
+			if (value == 0) {
+				warning (@"zero left_limit in $(get_name ())");
+			} 
+			
+			_left_limit = value;
+		}
+	}
 	public double right_limit;
+	
+	private double _left_limit = 0;
 	
 	// x-height, lsb, etc.
 	public Gee.ArrayList<Line> vertical_help_lines = new Gee.ArrayList<Line> ();
@@ -508,17 +522,16 @@ public class Glyph : FontDisplay {
 			
 			left_line.set_metrics (get_left_side_bearing ());
 		});
-		left_line.position_updated (left_limit);
-		
+		left_line.set_metrics (get_left_side_bearing ());
+			
 		right_line = new Line ("right", right_limit, true);
 		right_line.rsb = true;
 		right_line.position_updated.connect ((pos) => {
 			right_limit = pos;
 			update_other_spacing_classes ();
-			
 			right_line.set_metrics (get_right_side_bearing ());
 		});
-		right_line.position_updated (right_limit);
+		right_line.set_metrics (get_right_side_bearing ());
 		
 		// lists of lines are sorted and lines are added only if 
 		// they are relevant for a particular glyph.
@@ -2238,8 +2251,14 @@ public class Glyph : FontDisplay {
 				if (g != null) {
 					gc = (!) g;
 					glyph = gc.get_current ();
+
+					if (glyph.left_limit == glyph.right_limit) {
+						warning ("Zero width glyph in kerning class.");
+					}
+					
 					left_limit = glyph.left_limit;
 					right_limit = glyph.right_limit;
+
 					break;
 				}
 			}
@@ -2267,7 +2286,6 @@ public class Glyph : FontDisplay {
 					glyph = gc.get_current ();
 					glyph.left_limit = left_limit;
 					glyph.right_limit = right_limit;
-					// FIXME: DELETE glyph.add_help_lines ();
 				}
 			}
 		}	
@@ -2278,7 +2296,6 @@ public class Glyph : FontDisplay {
 	}
 
 	public bool has_cache (string key) {
-		// FIXME: DELETE print (@"glyph_cache.keys.size $(glyph_cache.keys.size)\n");
 		return glyph_cache.has_key (key);
 	}
 
