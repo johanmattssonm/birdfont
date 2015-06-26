@@ -78,7 +78,8 @@ public class DrawingTools : ToolCollection  {
 	public static Tool help_lines { get; set; }
 	public static Tool xheight_help_lines { get; set; }
 	public static Tool background_help_lines { get; set; }
-	public static Tool show_grid { get; set; }
+	public static GridTool show_grid { get; set; }
+	public static Tool lock_grid { get; set; }
 	
 	SpinButton x_coordinate;
 	SpinButton y_coordinate;
@@ -1063,6 +1064,26 @@ public class DrawingTools : ToolCollection  {
 		guideline_tools.add_tool (show_grid);
 		grid_expander.visible = false;
 
+		lock_grid = new Tool ("lock_grid", t_("Lock guides and grid"));
+		lock_grid.select_action.connect ((self) => {
+			SpinButton sb;
+			FontSettings fs;
+			
+			GridTool.lock_grid = !GridTool.lock_grid;
+
+			foreach (Tool t in grid.tool) {
+				if (t is SpinButton) {
+					sb = (SpinButton) t;
+					sb.locked = GridTool.lock_grid;
+				}
+			}
+			
+			lock_grid.selected = GridTool.lock_grid;
+			fs = BirdFont.get_current_font ().settings;
+			fs.set_setting ("lock_grid", @"$(GridTool.lock_grid)");
+		});
+		guideline_tools.add_tool (lock_grid);
+
 		// Zoom tools 
 		zoom_bar = new ZoomBar ();
 		zoom_bar.new_zoom.connect ((z) => {
@@ -1527,12 +1548,14 @@ public class DrawingTools : ToolCollection  {
 			font.grid_width.clear ();
 			
 			foreach (Tool t in grid_expander.tool) {
+				return_if_fail (t is SpinButton);
 				w = (SpinButton) t;
 				font.grid_width.add (w.get_display_value ());
 			}
 		});
 
 		grid_width.select_action.connect((self) => {
+			return_if_fail (self is SpinButton);
 			SpinButton sb = (SpinButton) self;
 			GridTool.set_grid_width (sb.get_value ());
 			GlyphCanvas.redraw ();

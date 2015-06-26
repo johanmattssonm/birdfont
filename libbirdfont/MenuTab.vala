@@ -245,6 +245,11 @@ public class MenuTab : FontDisplay {
 		}
 		
 		DrawingTools.set_stroke_tool_visibility ();
+
+		string lock_grid = f.settings.get_setting ("lock_grid");
+		bool lg = bool.parse (lock_grid);		
+		GridTool.lock_grid = lg;
+		DrawingTools.lock_grid.selected = GridTool.lock_grid;
 	}
 	
 	// FIXME: background thread

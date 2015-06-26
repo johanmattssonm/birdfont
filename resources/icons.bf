@@ -785,6 +785,15 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+<collection name="lock_grid">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="B -17.0578842315,28.2275449102 M -17.0578842315,5.0339321357 M 18.9421157685,5.0339321357 M 18.9421157685,28.2275449102 M 14.9421157685,32.2275449102 M 12.9421157685,32.2275449102 C 12.9421157685,38.9156663475 11.7104167802,42.6277601901 9.5877372967,45.1331446395 C 7.3376970441,47.7888521558 4.1048073946,49.0339321357 0.9421157685,49.0339321357 T C -2.3697594249,49.0339321357 -5.5966436591,47.6065397199 -7.8685490061,44.6564085537 C -9.8129725013,42.1315215196 -11.0578842315,38.6492949922 -11.0578842315,32.2275449102 M -13.0578842315,32.2275449102 M -17.0578842315,28.2275449102" />
+			<path data="B 0.9421157685,45.6247504990 C 3.0955099958,45.6247504990 5.0387264990,44.9138823663 6.2629233977,43.6178377431 C 8.3891601165,41.3668128712 8.9421157685,37.3505326027 8.9421157685,32.2275449102 M 5.1421157685,32.2275449102 M -7.0578842315,32.2275449102 C -7.0578842315,36.6433734966 -6.7615353499,39.5277300307 -5.4742864127,41.8310568179 C -4.3126227376,43.9096687965 -2.3439738299,45.6247504990 0.9421157685,45.6247504990 T" />
+		</layer>
+	</glyph>
+</collection>
 <collection unicode="U+6d">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1548,6 +1557,7 @@ GNU Lesser General Public License</copyright>
 <ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
 <ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
 <ligature sequence="f u l l _ g l y p h" replacement="full_glyph"/>
+<ligature sequence="l o c k _ g r i d" replacement="lock_grid"/>
 <ligature sequence="s a v e _ f o n t" replacement="save_font"/>
 <ligature sequence="i n f o _ i c o n" replacement="info_icon"/>
 <ligature sequence="s h o w _ g r i d" replacement="show_grid"/>

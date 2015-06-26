@@ -42,6 +42,9 @@ public class SpinButton : Tool {
 	bool waiting_for_icon_switch = false;
 	bool show_icon_tool_icon = false;
 	
+	/** Lock the button to a fixed value. */
+	public bool locked = false;
+	
 	public SpinButton (string? name = null, string tip = "") {
 		base (null , tip);
 		
@@ -70,12 +73,18 @@ public class SpinButton : Tool {
 				} 
 					
 				for (int i = 0; i < n; i++) {
-					if (py < 9) increase ();
-					if (py > 25) decrease ();
+					if (py < 9 && !locked) {
+						increase ();
+					}
+					
+					if (py > 25 && !locked) {
+						decrease ();
+					}
 				}
 			}
 			
-			value_from_motion = true;
+			value_from_motion = !locked;
+			
 			begin_y = ty;
 			
 			begin_value = get_int_value ();

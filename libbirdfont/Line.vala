@@ -200,11 +200,6 @@ public class Line : GLib.Object {
 
 	void redraw_line () {
 		GlyphCanvas.redraw ();
-	}	
-	
-	public void move_line_to (int x, int y, WidgetAllocation allocation) {
-		set_move (true);
-		event_move_to (x, y, allocation);
 	}
 	
 	public bool event_move_to (int x, int y, WidgetAllocation allocation) {
@@ -218,7 +213,7 @@ public class Line : GLib.Object {
 		if (!moveable) {
 			return false;
 		}
-
+		
 		if (is_vertical ()) { // over line handle (y)
 			if (y > g.allocation.height - 10) {
 				p = pos;
@@ -251,20 +246,22 @@ public class Line : GLib.Object {
 			double np = pos;
 			redraw_line (); // clear old position
 			
-			if (is_vertical ()) {
-				pos = Glyph.path_coordinate_x (x);
+			if (!GridTool.lock_grid) {
+				if (is_vertical ()) {
+					pos = Glyph.path_coordinate_x (x);
 
-				if (GridTool.is_visible ()) {
-					GridTool.tie_coordinate (ref pos, ref none);
+					if (GridTool.is_visible ()) {
+						GridTool.tie_coordinate (ref pos, ref none);
+					}
+					redraw_line (); // draw at new position
+				} else {
+					pos = Glyph.path_coordinate_y (y);
+					
+					if (GridTool.is_visible ()) {
+						GridTool.tie_coordinate (ref none, ref pos);
+					}
+					redraw_line ();
 				}
-				redraw_line (); // draw at new position
-			} else {
-				pos = Glyph.path_coordinate_y (y);
-				
-				if (GridTool.is_visible ()) {
-					GridTool.tie_coordinate (ref none, ref pos);
-				}
-				redraw_line ();
 			}
 
 			if (Math.fabs (np - pos) > 10) {
@@ -419,9 +416,6 @@ public class Line : GLib.Object {
 		
 		cr.restore ();
 	}
-
-	
-
 }
 
 }

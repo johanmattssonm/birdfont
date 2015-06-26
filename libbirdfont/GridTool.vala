@@ -17,7 +17,7 @@ using Math;
 
 namespace BirdFont {
 
-class GridTool : Tool {
+public class GridTool : Tool {
 	
 	static Gee.ArrayList<Line> horizontal;
 	static Gee.ArrayList<Line> vertical;
@@ -29,6 +29,9 @@ class GridTool : Tool {
 	public static double size_y;
 	
 	public static Gee.ArrayList<SpinButton> sizes;
+	
+	/** Lock grid and guides. */
+	public static bool lock_grid = false;
 	
 	public GridTool (string n) {
 		string units;
