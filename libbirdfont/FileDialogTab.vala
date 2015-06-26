@@ -127,6 +127,7 @@ public class FileDialogTab : Table {
 				if (f.file_name.index_of (":") > -1) {
 					propagate_files (f.file_name);
 				} else {
+					printd (@"Subdir: $(f.file_name) in $((!) current_dir.get_path ()) path_separator: $path_separator\n");
 					propagate_files (((!) current_dir.get_path ()) + path_separator + f.file_name);
 				}
 				
@@ -155,6 +156,8 @@ public class FileDialogTab : Table {
 		FileEnumerator enumerator;
 		FileInfo? file_info;
 		string fn;
+		
+		printd (@"Propagate_files in directory: $dir\n");
 		
 		files.clear ();
 		directories.clear ();
