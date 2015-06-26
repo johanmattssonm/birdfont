@@ -127,8 +127,11 @@ public class FileDialogTab : Table {
 				if (f.file_name.index_of (":") > -1) {
 					propagate_files (f.file_name);
 				} else {
-					printd (@"Subdir: $(f.file_name) in $((!) current_dir.get_path ()) path_separator: $path_separator\n");
-					propagate_files (((!) current_dir.get_path ()) + path_separator + f.file_name);
+					string d = (!) current_dir.get_path ();
+					printd (@"Subdir: $(f.file_name) in $d path_separator: $path_separator\n");
+					string p = d + path_separator + f.file_name;
+					p = p.replace ("\\\\", "\\");
+					propagate_files (p);
 				}
 				
 				selected_filename = "";

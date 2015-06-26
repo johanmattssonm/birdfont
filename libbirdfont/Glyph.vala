@@ -73,10 +73,6 @@ public class Glyph : FontDisplay {
 		}
 		
 		set {
-			if (value == 0) {
-				warning (@"zero left_limit in $(get_name ())");
-			} 
-			
 			_left_limit = value;
 		}
 	}

@@ -14,7 +14,7 @@ except ImportError:
     
 def completeness (pofile):
     """ Returns the completeness of the translation in percent """
-    with open (pofile) as f:
+    with open (pofile, 'r', encoding='utf-8') as f:
         content = f.readlines ()
 
     translated = 0.0
@@ -65,6 +65,7 @@ elif options.compiled:
         completed = completeness (pofile)
         podir = pofile.replace ("po/", "")
         podir = podir.replace (".po", "")
+        podir = podir.replace ("\\", "/")
         if completed >= float (options.threshold):
             print ("Releasing " + podir)
         else:
