@@ -653,9 +653,8 @@ public class TextArea : Widget {
 	}
 
 	public void move_carret_to_beginning_of_line () {
-		carret = get_carret_at (0, carret.desired_y, false);	
+		carret = get_carret_at (widget_x, carret.desired_y, false);	
 	}
-	
 	
 	public void move_carret_previous_row () {
 		double nr = -font_size;
@@ -780,7 +779,9 @@ public class TextArea : Widget {
 		return sb.str;
 	}
 	
-	Carret get_carret_at (double click_x, double click_y, bool check_boundaries = true) {
+	Carret get_carret_at (double click_x, double click_y, 
+		bool check_boundaries = true) {
+			
 		int i = 0;
 		double tx, ty;
 		double p;
@@ -800,13 +801,14 @@ public class TextArea : Widget {
 
 				if (paragraph.start_y + widget_y - font_size <= click_y <= paragraph.end_y + widget_y + font_size) { 
 					foreach (Text next_word in paragraph.words) {
-						double tt_click = click_y - widget_y - padding + font_size; //  - next_word.get_baseline_to_bottom (); //- font_size + next_word.get_baseline_to_bottom ();
+						double tt_click = click_y - widget_y - padding + font_size;
 
 						w = next_word.text;
+						
 						if (next_word.widget_y <= tt_click <= next_word.widget_y + font_size) {
 							
 							p = next_word.get_sidebearing_extent ();
-
+								
 							if ((next_word.widget_y <= tt_click <= next_word.widget_y + font_size)
 								&& (next_word.widget_x + widget_x <= click_x <= next_word.widget_x + widget_x + padding + next_word.get_sidebearing_extent ())) {
 														
