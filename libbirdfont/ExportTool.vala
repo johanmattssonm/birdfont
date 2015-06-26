@@ -394,10 +394,20 @@ os.put_string (
 		File ttf_file_mac;
 		File eot_file;
 		bool done = true;
+		string ttf_name;
+		string ttf_name_mac;
 		
 		try {
-			ttf_file = get_child (folder, ExportSettings.get_file_name (current_font) + ".ttf");
-			ttf_file_mac  = get_child (folder, ExportSettings.get_file_name_mac (current_font) + ".ttf");
+			ttf_name = ExportSettings.get_file_name (current_font) + ".ttf";
+			ttf_name_mac = ExportSettings.get_file_name_mac (current_font) + ".ttf";
+			
+			if (ttf_name == ttf_name_mac) {
+				warning ("Same file name for the two ttf files.");
+				ttf_name_mac = ExportSettings.get_file_name_mac (current_font) + " Mac.ttf";
+			}
+			
+			ttf_file = get_child (folder, ttf_name);
+			ttf_file_mac  = get_child (folder, ttf_name_mac);
 			eot_file = get_child (folder, ExportSettings.get_file_name (current_font) + ".eot");
 
 			printd (@"Writing TTF fonts to $((!) ttf_file.get_path ())\n");

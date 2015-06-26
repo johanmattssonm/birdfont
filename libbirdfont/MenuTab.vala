@@ -105,6 +105,15 @@ public class MenuTab : FontDisplay {
 			return false;
 		}
 
+		string ttf_name = ExportSettings.get_file_name (current_font) + ".ttf";
+		string ttf_name_mac = ExportSettings.get_file_name_mac (current_font) + ".ttf";
+		
+		if (ttf_name == ttf_name_mac) {
+			warning ("You need to choose a different name for the TTF file with Mac adjustmets.");
+			ttf_name_mac = ExportSettings.get_file_name_mac (current_font) + " Mac.ttf";
+			return false;
+		}
+			
 		return true;
 	}
 	
