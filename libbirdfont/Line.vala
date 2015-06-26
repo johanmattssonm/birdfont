@@ -246,24 +246,22 @@ public class Line : GLib.Object {
 			double np = pos;
 			redraw_line (); // clear old position
 			
-			if (!GridTool.lock_grid) {
-				if (is_vertical ()) {
-					pos = Glyph.path_coordinate_x (x);
+			if (is_vertical ()) {
+				pos = Glyph.path_coordinate_x (x);
 
-					if (GridTool.is_visible ()) {
-						GridTool.tie_coordinate (ref pos, ref none);
-					}
-					redraw_line (); // draw at new position
-				} else {
-					pos = Glyph.path_coordinate_y (y);
-					
-					if (GridTool.is_visible ()) {
-						GridTool.tie_coordinate (ref none, ref pos);
-					}
-					redraw_line ();
+				if (GridTool.is_visible ()) {
+					GridTool.tie_coordinate (ref pos, ref none);
 				}
+				redraw_line (); // draw at new position
+			} else if (!GridTool.lock_grid) {
+				pos = Glyph.path_coordinate_y (y);
+				
+				if (GridTool.is_visible ()) {
+					GridTool.tie_coordinate (ref none, ref pos);
+				}
+				redraw_line ();
 			}
-
+				
 			if (Math.fabs (np - pos) > 10) {
 				queue_draw_area (0, 0, g.allocation.width, g.allocation.height);
 			}
