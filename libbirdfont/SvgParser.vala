@@ -293,6 +293,11 @@ public class SvgParser {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
 		foreach (EditPoint ep in path.points) {
+			ep.tie_handles = false;
+			ep.reflective_point = false;
+		}
+		
+		foreach (EditPoint ep in path.points) {
 			apply_matrix_on_handle (ep.get_right_handle (), a, b, c, d, e, f);
 			apply_matrix_on_handle (ep.get_left_handle (), a, b, c, d, e, f);
 
