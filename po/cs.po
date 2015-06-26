@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-24 13:55+0200\n"
+"POT-Creation-Date: 2015-06-26 12:06+0200\n"
 "PO-Revision-Date: 2015-04-28 11:07+0000\n"
 "Last-Translator: fri <pavelfric@yahoo.com>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -106,7 +106,7 @@ msgstr "Soubory"
 msgid "Parts"
 msgstr "Části"
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2305
+#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2314
 #: libbirdfont/LigatureList.vala:106
 msgid "Add"
 msgstr "Přidat"
@@ -175,7 +175,7 @@ msgstr "Znak"
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
 #: libbirdfont/Menu.vala:472 libbirdfont/Menu.vala:474
-#: libbirdfont/VersionList.vala:257 birdfont/GtkWindow.vala:955
+#: libbirdfont/VersionList.vala:259 birdfont/GtkWindow.vala:955
 msgid "Version"
 msgstr "Verze"
 
@@ -277,7 +277,7 @@ msgid "PostScript Name"
 msgstr "Název PostScript"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:604 birdfont/GtkWindow.vala:906
+#: libbirdfont/MenuTab.vala:615 birdfont/GtkWindow.vala:906
 msgid "Name"
 msgstr "Název"
 
@@ -580,7 +580,7 @@ msgid "Export"
 msgstr "Vyvést"
 
 #: libbirdfont/ExportTool.vala:193 libbirdfont/Menu.vala:64
-#: libbirdfont/MenuTab.vala:262 libbirdfont/SaveCallback.vala:67
+#: libbirdfont/MenuTab.vala:273 libbirdfont/SaveCallback.vala:67
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Uložit"
@@ -620,7 +620,7 @@ msgstr "Nastavení"
 msgid "Themes"
 msgstr "Motivy"
 
-#: libbirdfont/Glyph.vala:2305
+#: libbirdfont/Glyph.vala:2314
 msgid "Guide"
 msgstr "Vodítko"
 
@@ -1082,15 +1082,20 @@ msgstr "VPRAVO"
 msgid "Missing metadata in font:"
 msgstr "V písmu chybějící popisná data:"
 
-#: libbirdfont/MenuTab.vala:121
+#: libbirdfont/MenuTab.vala:114
+msgid ""
+"You need to choose a different name for the TTF file with Mac adjustmets."
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:132
 msgid "You need to save your font before exporting it."
 msgstr "Před vyvedením musíte písmo uložit."
 
-#: libbirdfont/MenuTab.vala:148
+#: libbirdfont/MenuTab.vala:159
 msgid "Menu"
 msgstr "Nabídka"
 
-#: libbirdfont/MenuTab.vala:604
+#: libbirdfont/MenuTab.vala:615
 msgid "Add ligature"
 msgstr "Přidat slitek"
 
@@ -1528,6 +1533,10 @@ msgstr "Vlastní"
 
 #: libbirdfont/ThemeTools.vala:30
 msgid "Color"
+msgstr ""
+
+#: libbirdfont/ToolItem.vala:44
+msgid "Shift"
 msgstr ""
 
 #: libbirdfont/TrackTool.vala:57

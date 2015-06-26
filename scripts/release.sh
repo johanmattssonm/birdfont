@@ -25,7 +25,7 @@ version=$(cat ../../scripts/version.py | grep "VERSION = '" | grep -v "SO_VERSIO
 
 echo "Creating a release fo version $version"
 
-if [ $# -ne 0 -a $# -ne 2] ; then
+if [ $# -ne 0 -a $# -ne 2 ] ; then
 	echo "Usage: $0 branch version"
 	exit 1
 fi

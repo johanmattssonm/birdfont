@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-24 13:55+0200\n"
+"POT-Creation-Date: 2015-06-26 12:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,7 +104,7 @@ msgstr ""
 msgid "Parts"
 msgstr ""
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2305
+#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2314
 #: libbirdfont/LigatureList.vala:106
 msgid "Add"
 msgstr ""
@@ -173,7 +173,7 @@ msgstr ""
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
 #: libbirdfont/Menu.vala:472 libbirdfont/Menu.vala:474
-#: libbirdfont/VersionList.vala:257 birdfont/GtkWindow.vala:955
+#: libbirdfont/VersionList.vala:259 birdfont/GtkWindow.vala:955
 msgid "Version"
 msgstr ""
 
@@ -271,7 +271,7 @@ msgid "PostScript Name"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:604 birdfont/GtkWindow.vala:906
+#: libbirdfont/MenuTab.vala:615 birdfont/GtkWindow.vala:906
 msgid "Name"
 msgstr ""
 
@@ -574,7 +574,7 @@ msgid "Export"
 msgstr ""
 
 #: libbirdfont/ExportTool.vala:193 libbirdfont/Menu.vala:64
-#: libbirdfont/MenuTab.vala:262 libbirdfont/SaveCallback.vala:67
+#: libbirdfont/MenuTab.vala:273 libbirdfont/SaveCallback.vala:67
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr ""
@@ -614,7 +614,7 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:2305
+#: libbirdfont/Glyph.vala:2314
 msgid "Guide"
 msgstr ""
 
@@ -1073,15 +1073,20 @@ msgstr ""
 msgid "Missing metadata in font:"
 msgstr ""
 
-#: libbirdfont/MenuTab.vala:121
+#: libbirdfont/MenuTab.vala:114
+msgid ""
+"You need to choose a different name for the TTF file with Mac adjustmets."
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:132
 msgid "You need to save your font before exporting it."
 msgstr ""
 
-#: libbirdfont/MenuTab.vala:148
+#: libbirdfont/MenuTab.vala:159
 msgid "Menu"
 msgstr ""
 
-#: libbirdfont/MenuTab.vala:604
+#: libbirdfont/MenuTab.vala:615
 msgid "Add ligature"
 msgstr ""
 
@@ -1519,6 +1524,10 @@ msgstr ""
 
 #: libbirdfont/ThemeTools.vala:30
 msgid "Color"
+msgstr ""
+
+#: libbirdfont/ToolItem.vala:44
+msgid "Shift"
 msgstr ""
 
 #: libbirdfont/TrackTool.vala:57
