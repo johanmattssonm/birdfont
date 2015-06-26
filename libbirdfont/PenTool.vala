@@ -1044,7 +1044,12 @@ public class PenTool : Tool {
 			return;
 		}
 
-		if (KeyBindings.has_shift ()) {
+		if (button == 3) {
+			selected_path = active_path;
+			move_point_event (x, y);
+		}
+		
+		if (KeyBindings.has_shift () && !is_over_handle (x, y)) {
 			show_selection_box = true;
 			return;
 		}
