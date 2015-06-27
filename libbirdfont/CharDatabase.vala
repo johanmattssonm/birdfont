@@ -67,7 +67,7 @@ public class CharDatabase {
 		}
 
 		select = "SELECT unicode FROM Words "
-			 + "WHERE word = '" + s.replace ("'", "''") + "';";
+			 + "WHERE word GLOB '" + s.replace ("'", "''") + "';";
 					
 		rc = db.prepare_v2 (select, select.length, out statement, null);
 		
