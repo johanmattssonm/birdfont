@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2013, 2014 Johan Mattsson
+    Copyright (C) 2013 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -341,6 +341,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string (@"<description>$(Markup.escape_text (font.description))</description>\n");
 		os.put_string (@"<copyright>$(Markup.escape_text (font.copyright))</copyright>\n");
 		os.put_string (@"<weight>$(font.weight)</weight>\n");
+		os.put_string (@"<units_per_em>$(font.units_per_em)</units_per_em>\n");
 	}
 
 	public void write_lines (DataOutputStream os) throws GLib.Error {
@@ -762,7 +763,11 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "weight") {
 				font.weight = int.parse (t.get_content ());
 			}
-			
+
+			if (t.get_name () == "units_per_em") {
+				font.units_per_em = int.parse (t.get_content ());
+			}
+						
 			if (t.get_name () == "images") {
 				parse_images (t);
 			}

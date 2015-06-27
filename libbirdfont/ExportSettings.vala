@@ -20,6 +20,7 @@ namespace BirdFont {
 public class ExportSettings : TableLayout {
 	TextArea file_name;
 	TextArea file_name_mac;
+	TextArea units_per_em;
 	CheckBox ttf;
 	CheckBox eot;
 	CheckBox svg;
@@ -70,6 +71,24 @@ public class ExportSettings : TableLayout {
 		
 		widgets.add (file_name_mac);
 		focus_ring.add (file_name_mac);
+
+		widgets.add (new Text (t_("Units Per Em"), label_size, label_margin));
+		
+		units_per_em = new LineTextArea (label_size);
+		units_per_em.margin_bottom = margin;
+		
+		units_per_em.set_text (@"$(font.units_per_em)");
+		units_per_em.text_changed.connect ((t) => {
+			Font f = BirdFont.get_current_font ();
+			int u = int.parse (t);
+			if (u > 0) {
+				f.units_per_em = u;
+				f.touch ();
+			}
+		});
+		
+		widgets.add (units_per_em);
+		focus_ring.add (units_per_em);
 
 		folder = (!) font.get_folder ().get_path ();
 		Text folder_row = new Text (t_("Folder") + ": "  + folder, label_size, label_margin);

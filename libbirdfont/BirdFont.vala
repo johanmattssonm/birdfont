@@ -527,7 +527,7 @@ public class BirdFont {
 		DefaultCharacterSet.create_default_character_sets ();
 		DefaultCharacterSet.get_characters_for_prefered_language ();
 
-		HeadTable.init ();
+		HeadTable.init (1024);
 
 		if (TestBirdFont.get_singleton ().test_cases_to_run != "All") {
 			TestBirdFont.run_tests ();

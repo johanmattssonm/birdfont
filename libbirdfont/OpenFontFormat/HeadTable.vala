@@ -53,13 +53,17 @@ public class HeadTable : OtfTable {
 	public HeadTable (GlyfTable gt) {
 		glyf_table = gt;
 		id = "head";
-		init ();
 	}
 	
 	/** Set default value for unit. */
-	public static void init () {
-		units_per_em = 1024;
-		UNITS = 10 * (units_per_em / 1000.0);
+	public static void init (int units_per_em) {
+		if (units_per_em <= 0 || units_per_em > uint16.MAX) {
+			HeadTable.units_per_em = 1024;
+		} else {
+			HeadTable.units_per_em = (uint16) units_per_em;
+		}
+		
+		UNITS = 10 * (HeadTable.units_per_em / 1000.0);
 	}
 	
 	public uint32 get_adjusted_checksum () {

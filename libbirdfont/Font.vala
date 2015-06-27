@@ -112,6 +112,8 @@ public class Font : GLib.Object {
 	public int format_major = 0;
 	public int format_minor = 0;
 	
+	public int units_per_em = 1024;
+
 	public Font () {
 		KerningClasses kerning_classes;
 		

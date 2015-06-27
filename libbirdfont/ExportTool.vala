@@ -474,8 +474,9 @@ os.put_string (
 	}
 
 	static void write_ttf (string ttf, string ttf_mac) {
-		OpenFontFormatWriter fo = new OpenFontFormatWriter ();
 		Font f = BirdFont.get_current_font ();
+		OpenFontFormatWriter fo = new OpenFontFormatWriter (f.units_per_em);
+		
 		File file = (!) File.new_for_path (ttf);
 		File file_mac = (!) File.new_for_path (ttf_mac);
 		

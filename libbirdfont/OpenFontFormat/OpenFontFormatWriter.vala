@@ -22,8 +22,9 @@ public class OpenFontFormatWriter : Object  {
 	
 	public static Font font;
 	
-	public OpenFontFormatWriter () {
+	public OpenFontFormatWriter (int units_per_em) {
 		directory_table = new DirectoryTable ();
+		HeadTable.init (units_per_em);
 	}
 	
 	public static Font get_current_font () {
