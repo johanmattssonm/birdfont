@@ -214,7 +214,13 @@ public class OverView : FontDisplay {
 		
 		listener.signal_submit.connect (() => {
 			OverView o = MainWindow.get_overview ();
-			GlyphRange r = CharDatabase.search (o.search_query);
+			string q = o.search_query;
+			
+			if (q.char_count () > 1) {
+				q = q.down ();
+			}
+			
+			GlyphRange r = CharDatabase.search (q);
 			o.set_current_glyph_range (r);
 			TabContent.hide_text_input ();
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");

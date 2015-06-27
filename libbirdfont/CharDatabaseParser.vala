@@ -102,9 +102,10 @@ public class CharDatabaseParser : GLib.Object {
 
 	public void insert_lookup (int64 character, string word) {
 		string? errmsg;
+		string w = word.down ();
 		string query = """
 			INSERT INTO Words (unicode, word)
-			VALUES (""" + @"$((int64) character)" + """, '""" + word.replace ("'", "''") + "');";
+			VALUES (""" + @"$((int64) character)" + """, '""" + w.replace ("'", "''") + "');";
 		int ec = db.exec (query, null, out errmsg);
 		if (ec != Sqlite.OK) {
 			stderr.printf (query);
@@ -163,7 +164,6 @@ public class CharDatabaseParser : GLib.Object {
 		unicode_hex = e[0].up ();
 		
 		ch = Font.to_unichar ("U+" + unicode_hex.down ());
-		stdout.printf ("Adding " + (!) ch.to_string () + "\n");
 		insert_entry ((int64) ch, data);
 		utf8.add_single (ch);
 		
@@ -217,9 +217,7 @@ public class CharDatabaseParser : GLib.Object {
 							add_entry (description);
 							transaction_number++;
 							
-							if (transaction_number >= 1000) {
-								print ("Write to database\n");
-								
+							if (transaction_number >= 1000) {								
 								ec = db.exec ("END TRANSACTION", null, out errmsg);
 								if (ec != Sqlite.OK) {
 									warning ("Error: %s\n", (!) errmsg);
