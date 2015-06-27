@@ -847,7 +847,7 @@ public class PenTool : Tool {
 		}
 
 		// move edit point
-		if (move_selected) {
+		if (move_selected && !show_selection_box) {
 			
 			if (GridTool.is_visible ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
