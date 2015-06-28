@@ -29,10 +29,13 @@ public class OverviewTools : ToolCollection  {
 	
 	public static Expander zoom_expander;
 
+	SpinButton skew;
+
 	public OverviewTools () {
 		Expander font_name = new Expander ();
 		Expander character_sets = new Expander (t_("Character Sets"));
 		Expander zoom_expander = new Expander (t_("Zoom"));
+		Expander transform_expander = new Expander (t_("Transform"));
 		
 		expanders = new Gee.ArrayList<Expander> ();
 		custom_character_sets = new Gee.ArrayList<LabelTool> ();
@@ -82,9 +85,48 @@ public class OverviewTools : ToolCollection  {
 		character_sets.set_persistent (true);
 		character_sets.set_unique (false);
 
+		skew = new SpinButton ("skew", t_("Skew"));
+		skew.set_big_number (true);
+		skew.set_int_value ("0.000");
+		skew.set_int_step (1);
+		skew.set_min (-100);
+		skew.set_max (100);
+		skew.show_icon (true);
+		skew.set_persistent (false);
+		transform_expander.add_tool (skew);
+	
+		Tool transform = new Tool ("transform", t_("Transform"));
+		transform.select_action.connect ((self) => {
+			transform.selected = false;
+			process_transform ();
+		});
+		transform.selected = false;
+		transform.set_persistent (false);
+		transform_expander.add_tool (transform);
+		
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
 		expanders.add (character_sets);
+		expanders.add (transform_expander);
+	}
+	
+	public void process_transform () {
+		OverView o = get_overview ();
+		Glyph g;
+		OverView.OverViewUndoItem ui = new OverView.OverViewUndoItem ();
+		
+		foreach (GlyphCollection gc in o.selected_items) {
+			if (gc.length () > 0) {
+				g = gc.get_current ();
+				print (@"gc.selected: $(gc.selected)\n");
+				ui.glyphs.add (gc.copy_deep ());
+				g.add_help_lines ();
+				DrawingTools.resize_tool.skew_glyph (g, -skew.get_value (), 0, false);
+			}
+		}
+		
+		o.undo_items.add (ui);
+		GlyphCanvas.redraw ();
 	}
 	
 	public OverView get_overview () {

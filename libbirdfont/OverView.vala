@@ -53,8 +53,8 @@ public class OverView : FontDisplay {
 	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
 	
 	/** List of undo commands. */
-	Gee.ArrayList<OverViewUndoItem> undo_items = new Gee.ArrayList<OverViewUndoItem> ();
-	Gee.ArrayList<OverViewUndoItem> redo_items = new Gee.ArrayList<OverViewUndoItem> ();
+	public Gee.ArrayList<OverViewUndoItem> undo_items = new Gee.ArrayList<OverViewUndoItem> ();
+	public Gee.ArrayList<OverViewUndoItem> redo_items = new Gee.ArrayList<OverViewUndoItem> ();
 	
 	/** Show all characters that has been drawn. */
 	public bool all_available {
@@ -852,7 +852,10 @@ public class OverView : FontDisplay {
 				return;
 		}
 
-		scroll_to_char (keyval);
+		if (!KeyBindings.has_ctrl () && !KeyBindings.has_logo ()) {
+			scroll_to_char (keyval);
+		}
+		
 		selected_item = get_selected_item ();
 
 		selected_items.clear ();

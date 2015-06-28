@@ -1870,6 +1870,7 @@ public class Glyph : FontDisplay {
 
 		g.empty = empty;
 		g.open = open;
+		g.version_id = version_id;
 		
 		return g;
 	}

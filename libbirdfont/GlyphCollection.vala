@@ -22,7 +22,7 @@ public class GlyphCollection : GLib.Object {
 	string name;
 	bool unassigned = false;
 	public Gee.ArrayList<Glyph> glyphs = new Gee.ArrayList<Glyph> ();
-	int selected;
+	public int selected;
 
 	public GlyphCollection (unichar unicode_character, string name) {
 		this.unicode_character = unicode_character;
@@ -147,7 +147,20 @@ public class GlyphCollection : GLib.Object {
 		
 		return n;
 	}
-	
+
+	public GlyphCollection copy_deep () {
+		GlyphCollection n = new GlyphCollection (unicode_character, name);
+		
+		foreach (Glyph g in glyphs) {
+			n.insert_glyph (g.copy (), false);
+		}
+		
+		n.selected = selected;
+		n.unassigned = unassigned;
+		
+		return n;
+	}
+		
 	public int get_last_id () {
 		return_val_if_fail (glyphs.size > 0, 0);
 		return glyphs.get (glyphs.size - 1).version_id;

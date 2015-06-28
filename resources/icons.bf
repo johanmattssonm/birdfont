@@ -14,6 +14,7 @@
 <copyright>Copyright 2015
 GNU Lesser General Public License</copyright>
 <weight>400</weight>
+<units_per_em>1024</units_per_em>
 
 <horizontal>
 	<top_limit>84.0000000000</top_limit>
@@ -1350,6 +1351,18 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+<collection name="transform">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="B -14.0000000000,42.0000000000 M -14.0000000000,36.0000000000 M -14.0000000000,36.0000000000 M -20.0000000000,36.0000000000 M -20.0000000000,42.0000000000 M -14.0000000000,42.0000000000" />
+			<path data="B -14.0000000000,32.9487179487 M -14.0000000000,26.9487179487 M -14.0000000000,26.9487179487 M -20.0000000000,26.9487179487 M -20.0000000000,32.9487179487 M -14.0000000000,32.9487179487" />
+			<path data="B -14.0000000000,24.0000000000 M -14.0000000000,18.0000000000 M -14.0000000000,18.0000000000 M -20.0000000000,18.0000000000 M -20.0000000000,24.0000000000 M -14.0000000000,24.0000000000" />
+			<path data="B -4.9487179487,42.0000000000 M -4.9487179487,18.0000000000 M -10.9487179487,18.0000000000 M -10.9487179487,42.0000000000 M -4.9487179487,42.0000000000" />
+			<path data="B 6.0000000000,42.0000000000 M 6.0000000000,50.0000000000 M 8.0000000000,50.0000000000 M 22.0000000000,30.0000000000 M 8.0000000000,10.0000000000 M 6.0000000000,10.0000000000 M 6.0000000000,18.0000000000 M -2.0000000000,18.0000000000 M -2.0000000000,42.0000000000 M 6.0000000000,42.0000000000" />
+		</layer>
+	</glyph>
+</collection>
 <collection name="ttf_units">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="33.862433862433868">
@@ -1571,6 +1584,7 @@ GNU Lesser General Public License</copyright>
 <ligature sequence="m e n u _ i c o n" replacement="menu_icon"/>
 <ligature sequence="o p e n _ f o n t" replacement="open_font"/>
 <ligature sequence="a d d _ l a y e r" replacement="add_layer"/>
+<ligature sequence="t r a n s f o r m" replacement="transform"/>
 <ligature sequence="s e t t i n g s" replacement="settings"/>
 <ligature sequence="z o o m _ o u t" replacement="zoom_out"/>
 <ligature sequence="r o t a t i o n" replacement="rotation"/>

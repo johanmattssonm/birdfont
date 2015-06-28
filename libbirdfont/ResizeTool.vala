@@ -394,14 +394,29 @@ public class ResizeTool : Tool {
 		get_reseize_handle_position (out handle_x, out handle_y);
 		return Path.distance (handle_x, x, handle_y, y) < 12 * MainWindow.units;
 	}
-	
+
 	public void skew (double skew) {
 		Glyph glyph = MainWindow.get_current_glyph ();
+		skew_glyph (glyph, skew, last_skew, true);
+		last_skew = skew;
+	}
+	
+	public void skew_glyph (Glyph glyph, double skew, double last_skew,
+		bool selected_paths) {
+		
 		double dx, nx, nw, dw, x, y, w, h;
 		double s = (skew - last_skew) / 100.0;
-		
+
+		if (!selected_paths) {
+			glyph.clear_active_paths ();
+			
+			foreach (Path path in glyph.get_visible_paths ()) {
+				glyph.add_active_path (null, path);
+			}
+		}
+
 		glyph.selection_boundaries (out x, out y, out w, out h);
-		
+	
 		foreach (Path path in glyph.active_paths) {
 			SvgParser.apply_matrix (path, 1, 0, s, 1, 0, 0);
 			path.skew = skew;
@@ -409,7 +424,7 @@ public class ResizeTool : Tool {
 		}
 		
 		glyph.selection_boundaries (out nx, out y, out nw, out h);
-
+		
 		dx = -(nx - x);
 		
 		foreach (Path p in glyph.active_paths) {
@@ -417,12 +432,14 @@ public class ResizeTool : Tool {
 			p.reset_stroke ();
 		}
 		
-		last_skew = skew;
-		
 		dw = (nw - w);
 		glyph.right_limit += dw;
 		glyph.remove_lines ();
-		glyph.add_help_lines ();
+		glyph.add_help_lines ();		
+
+		if (!selected_paths) {
+			glyph.clear_active_paths ();
+		}
 	}
 }
 
