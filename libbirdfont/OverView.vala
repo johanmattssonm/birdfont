@@ -222,8 +222,10 @@ public class OverView : FontDisplay {
 			
 			GlyphRange r = CharDatabase.search (q);
 			o.set_current_glyph_range (r);
-			TabContent.hide_text_input ();
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");
+	
+			TextListener tl = new TextListener (t_("Search"), o.search_query, t_("Filter"));
+			TabContent.show_text_input (tl);
 		});
 		
 		TabContent.show_text_input (listener);

@@ -153,7 +153,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Button Background 3", 242 / 255.0, 246 / 255.0, 246 / 255.0, 1);
 
 		Theme.set_default_color ("Button Border 4", 173 / 255.0, 176 / 255.0, 188 / 255.0, 1);
-		Theme.set_default_color ("Button Background 4", 242 / 255.0, 246 / 255.0, 246 / 255.0, 1);
+		Theme.set_default_color ("Button Background 4", 233 / 255.0, 233 / 255.0, 233 / 255.0, 1);
 		
 		Theme.set_default_color ("Button Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
 		Theme.set_default_color ("Selected Button Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
@@ -260,7 +260,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Button Background 3", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
 
 		Theme.set_default_color ("Button Border 4", 39 / 255.0, 40 / 255.0, 44 / 255.0, 1);
-		Theme.set_default_color ("Button Background 4", 44 / 255.0, 47 / 255.0, 51 / 255.0, 1);
+		Theme.set_default_color ("Button Background 4", 38 / 255.0, 41 / 255.0, 44 / 255.0, 1);
 		
 		Theme.set_default_color ("Button Foreground", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
 		Theme.set_default_color ("Selected Button Foreground", 107 / 255.0, 112 / 255.0, 122 / 255.0, 1);

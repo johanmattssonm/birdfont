@@ -38,7 +38,7 @@
 	<color name="Button Background 3" red="0.94901960784313721" green="0.96470588235294119" blue="0.96470588235294119" alpha="1"/>
 	<color name="Selection Border" red="0.15686274509803921" green="0.22352941176470589" blue="0.25490196078431371" alpha="1"/>
 	<color name="Button Border 3" red="0.67843137254901964" green="0.69019607843137254" blue="0.73725490196078436" alpha="1"/>
-	<color name="Button Background 4" red="0.94901960784313721" green="0.96470588235294119" blue="0.96470588235294119" alpha="1"/>
+	<color name="Button Background 4" red="0.9137254901960784" green="0.9137254901960784" blue="0.9137254901960784" alpha="1"/>
 	<color name="Background Glyph" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="0.5"/>
 	<color name="Default Background" red="0.93333333333333335" green="0.93725490196078431" blue="0.95294117647058818" alpha="1"/>
 	<color name="Handle Color" red="0.55294117647058827" green="0.55294117647058827" blue="0.55294117647058827" alpha="1"/>

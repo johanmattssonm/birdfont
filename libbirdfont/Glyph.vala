@@ -406,9 +406,15 @@ public class Glyph : FontDisplay {
 			} else {
 				zoom_out_at_point (x, y, pixeldelta_y);
 			}
-		} else { 
-			view_offset_x -= pixeldelta_x / view_zoom;
-			view_offset_y -= pixeldelta_y / view_zoom;
+		} else {
+			if (!KeyBindings.has_shift ()) {
+				view_offset_x -= pixeldelta_x / view_zoom;
+				view_offset_y -= pixeldelta_y / view_zoom;
+			} else {
+				// move canvas a long x axis instead of y
+				view_offset_x -= pixeldelta_y / view_zoom;
+				view_offset_y -= pixeldelta_x / view_zoom;
+			}
 		}
 		
 		redraw_area (0, 0, allocation.width, allocation.height);
