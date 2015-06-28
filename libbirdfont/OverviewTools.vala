@@ -30,7 +30,8 @@ public class OverviewTools : ToolCollection  {
 	public static Expander zoom_expander;
 
 	public static SpinButton skew;
-
+	public static SpinButton resize;
+	
 	public OverviewTools () {
 		Expander font_name = new Expander ();
 		Expander character_sets = new Expander (t_("Character Sets"));
@@ -85,7 +86,7 @@ public class OverviewTools : ToolCollection  {
 		character_sets.set_persistent (true);
 		character_sets.set_unique (false);
 
-		skew = new SpinButton ("skew", t_("Skew"));
+		skew = new SpinButton ("skew_overview", t_("Skew"));
 		skew.set_big_number (true);
 		skew.set_int_value ("0.000");
 		skew.set_int_step (1);
@@ -93,8 +94,24 @@ public class OverviewTools : ToolCollection  {
 		skew.set_max (100);
 		skew.show_icon (true);
 		skew.set_persistent (false);
+		skew.new_value_action.connect ((self) => {
+			resize.set_value_round (100, false, false);
+		});
 		transform_expander.add_tool (skew);
-	
+
+		resize = new SpinButton ("resize_overview", t_("Resize"));
+		resize.set_big_number (true);
+		resize.set_int_value ("0.000");
+		resize.set_int_step (1);
+		resize.set_min (0);
+		resize.set_max (300);
+		resize.show_icon (true);
+		resize.set_persistent (false);
+		resize.new_value_action.connect ((self) => {
+			skew.set_value_round (0, false, false);
+		});
+		transform_expander.add_tool (resize);
+			
 		Tool transform = new Tool ("transform", t_("Transform"));
 		transform.select_action.connect ((self) => {
 			FontSettings fs = BirdFont.get_current_font ().settings;
@@ -115,16 +132,27 @@ public class OverviewTools : ToolCollection  {
 	}
 	
 	public void process_transform () {
-		OverView o = get_overview ();
+		OverView o;
 		Glyph g;
-		OverView.OverViewUndoItem ui = new OverView.OverViewUndoItem ();
+		OverView.OverViewUndoItem ui;
+		
+		o = get_overview ();
+		ui = new OverView.OverViewUndoItem ();
 		
 		foreach (GlyphCollection gc in o.selected_items) {
 			if (gc.length () > 0) {
 				g = gc.get_current ();
 				ui.glyphs.add (gc.copy_deep ());
 				g.add_help_lines ();
-				DrawingTools.resize_tool.skew_glyph (g, -skew.get_value (), 0, false);
+				
+				if (skew.get_value () != 0) {
+					DrawingTools.resize_tool.skew_glyph (g, -skew.get_value (), 0, false);
+				}
+				
+				if (resize.get_value () != 100) {
+					double scale = resize.get_value () / 100;
+					DrawingTools.resize_tool.resize_glyph (g, scale, false);
+				}
 			}
 		}
 		

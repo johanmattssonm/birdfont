@@ -306,10 +306,22 @@ public class ResizeTool : Tool {
 	}
 
 	public void resize_selected_paths (double ratio) {
+		Glyph g = MainWindow.get_current_glyph ();
+		resize_glyph (g, ratio, true);
+	}
+	
+	public void resize_glyph (Glyph glyph, double ratio, bool selected = true) {
 		double resize_pos_x = 0;
 		double resize_pos_y = 0;
-		Glyph glyph = MainWindow.get_current_glyph ();
 		double selection_minx, selection_miny, dx, dy;
+		
+		if (!selected) {
+			glyph.clear_active_paths ();
+			
+			foreach (Path path in glyph.get_visible_paths ()) {
+				glyph.add_active_path (null, path);
+			}
+		}
 		
 		get_selection_min (out resize_pos_x, out resize_pos_y);
 		
@@ -330,6 +342,16 @@ public class ResizeTool : Tool {
 		if (glyph.active_paths.size > 0) {
 			update_selection_box ();
 			objects_resized (selection_box_width, selection_box_height);
+		}
+
+		if (!selected) {
+			double w;
+			w = (ratio * glyph.get_width () - glyph.get_width ()) / 2.0;
+			glyph.left_limit -= w; 
+			glyph.right_limit += w;
+			glyph.clear_active_paths ();
+			glyph.remove_lines ();
+			glyph.add_help_lines ();
 		}
 	}
 
