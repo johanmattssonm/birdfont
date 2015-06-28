@@ -250,6 +250,12 @@ public class MenuTab : FontDisplay {
 		bool lg = bool.parse (lock_grid);		
 		GridTool.lock_grid = lg;
 		DrawingTools.lock_grid.selected = GridTool.lock_grid;
+
+		string skew_overview = f.settings.get_setting ("skew_overview");
+		if (skew_overview != "") {
+			double so = double.parse (skew_overview);
+			OverviewTools.skew.set_value_round (so);
+		}
 	}
 	
 	// FIXME: background thread

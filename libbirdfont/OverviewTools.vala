@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -29,7 +29,7 @@ public class OverviewTools : ToolCollection  {
 	
 	public static Expander zoom_expander;
 
-	SpinButton skew;
+	public static SpinButton skew;
 
 	public OverviewTools () {
 		Expander font_name = new Expander ();
@@ -97,7 +97,11 @@ public class OverviewTools : ToolCollection  {
 	
 		Tool transform = new Tool ("transform", t_("Transform"));
 		transform.select_action.connect ((self) => {
+			FontSettings fs = BirdFont.get_current_font ().settings;
+			
+			fs.set_setting ("skew_overview", @"$(skew.get_value ())");
 			transform.selected = false;
+			
 			process_transform ();
 		});
 		transform.selected = false;
@@ -118,7 +122,6 @@ public class OverviewTools : ToolCollection  {
 		foreach (GlyphCollection gc in o.selected_items) {
 			if (gc.length () > 0) {
 				g = gc.get_current ();
-				print (@"gc.selected: $(gc.selected)\n");
 				ui.glyphs.add (gc.copy_deep ());
 				g.add_help_lines ();
 				DrawingTools.resize_tool.skew_glyph (g, -skew.get_value (), 0, false);
