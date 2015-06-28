@@ -215,7 +215,9 @@ public class Line : GLib.Object {
 		}
 		
 		if (is_vertical ()) { // over line handle (y)
-			if (y > g.allocation.height - 10) {
+			if (y > g.allocation.height - 10 * MainWindow.units
+				||  y < 10 * MainWindow.units) {
+					
 				p = pos;
 				c = Glyph.path_coordinate_x (x);
 				a = (p - margin * ivz <= c <= p + margin * ivz);
@@ -228,7 +230,9 @@ public class Line : GLib.Object {
 			set_active (a);
 			
 		} else { // over line handle (x)
-			if (x > g.allocation.width - 10) {
+			if (x > g.allocation.width - 10 * MainWindow.units
+				|| x < 10 * MainWindow.units) {
+					
 				p = pos;
 				c = Glyph.path_coordinate_y (y);
 				a = (p - margin * ivz <= c <= p + margin * ivz);
@@ -360,7 +364,14 @@ public class Line : GLib.Object {
 				cr.line_to (p + size, h);
 				cr.close_path();
 				cr.fill ();
-				
+
+				cr.new_path ();
+				cr.move_to (p - size, 0);
+				cr.line_to (p, size);	
+				cr.line_to (p + size, 0);
+				cr.close_path();
+				cr.fill ();
+								
 				if (get_active ()) { 
 					glyph_metrics = new Text (metrics, 17);
 					Theme.text_color (glyph_metrics, "Highlighted Guide");
@@ -383,6 +394,13 @@ public class Line : GLib.Object {
 				cr.move_to (w, p - size);	
 				cr.line_to (w - size, p);	
 				cr.line_to (w, p + size);
+				cr.close_path();
+				cr.fill ();
+
+				cr.new_path ();
+				cr.move_to (0, p - size);	
+				cr.line_to (0 + size, p);	
+				cr.line_to (0, p + size);
 				cr.close_path();
 				cr.fill ();
 			}
