@@ -846,13 +846,17 @@ public class Path : GLib.Object {
 		return Math.fabs (Math.sqrt (x * x + y * y));
 	} 
 
-	public Path flatten () {
+	public Path flatten (int steps = 10) {
 		Path flat = new Path ();
 
 		all_of_path ((x, y, t) => {
 			flat.add (x, y);
 			return true;
-		}, 10); // FIXME: g.view_zoom
+		}, steps); // FIXME: g.view_zoom
+		
+		if (!is_open ()) {
+			flat.close ();
+		}
 		
 		return flat;
 	}

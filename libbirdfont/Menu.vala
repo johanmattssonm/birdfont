@@ -229,6 +229,14 @@ public class Menu : AbstractMenu {
 		});
 		edit_menu.items.add (select_point_below);
 
+		// FIXME: overview
+		MenuItem merge_paths = add_menu_item (t_("Merge Paths"), "merge_paths", "Glyph");
+		merge_paths.action.connect (() => {
+			StrokeTool.merge_selected_paths ();
+			show_menu = false;
+		});
+		edit_menu.items.add (merge_paths);
+		
 		// layers
 		MenuItem layers = add_menu_item (t_("Layers"));
 		layers.action.connect (() => {

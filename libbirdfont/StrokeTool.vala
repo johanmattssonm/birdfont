@@ -101,17 +101,33 @@ public class StrokeTool : Tool {
 		return m;
 	}
 
-	public PathList merge_selected_paths () {
+	public static PathList merge_selected_paths () {
 		PathList n = new PathList ();
 		Glyph g = MainWindow.get_current_glyph ();
 		
+		g.store_undo_state ();
+		
 		foreach (Path p in g.active_paths) {
 			if (p.stroke == 0) {
-				n.add (p);
+				n.add (p.copy ().flatten ());
 			}
 		}
 		
 		n = merge (n);
+
+		foreach (Path p in g.active_paths) {
+			g.delete_path (p);
+		}
+		
+		g.clear_active_paths ();
+	
+		foreach (Path p in n.paths) {
+			g.add_path (p);
+			g.add_active_path (null, p);
+		}
+		
+		GlyphCanvas.redraw ();
+	
 		return n;
 	}
 		
@@ -963,6 +979,8 @@ public class StrokeTool : Tool {
 			path.create_list ();
 		}
 		
+		// FIXME: set handle position
+		/*
 		PenTool.convert_point_to_line (ep1, true);
 		PenTool.convert_point_to_line (ep2, true);
 		PenTool.convert_point_to_line (ep3, true);
@@ -970,6 +988,7 @@ public class StrokeTool : Tool {
 		ep1.recalculate_linear_handles ();
 		ep2.recalculate_linear_handles ();
 		ep3.recalculate_linear_handles ();
+		*/
 		
 		d =  Path.distance_to_point (prev, next);
 		prev.get_right_handle ().length *= Path.distance_to_point (prev, ep1) / d;
@@ -1011,7 +1030,7 @@ public class StrokeTool : Tool {
 			iy = next.y;
 			return true;
 		}
-				
+		
 		Path.find_intersection_point (ep, next, p1, p2, out cross_x, out cross_y);
 		
 		if (fmin (ep.x, next.x) <= cross_x <= fmax (ep.x, next.x)
@@ -1026,7 +1045,6 @@ public class StrokeTool : Tool {
 				return true;
 			}	
 		} 
-
 		return false;
 	}
 	
@@ -1313,7 +1331,7 @@ public class StrokeTool : Tool {
 		return r;
 	}
 	
-	static PathList merge (PathList pl) {
+	public static PathList merge (PathList pl) {
 		bool error = false;
 		PathList m;
 		PathList r = pl;
@@ -1700,7 +1718,7 @@ public class StrokeTool : Tool {
 				dm = double.MAX;
 				foreach (Path o in other_paths.paths) {
 					bool inter = segment_intersects (o, ep1, next, out iix, out iiy,
-						out pp1, out pp2);
+						out pp1, out pp2, false, false);
 					d = Path.distance (ep1.x, iix, ep1.y, iiy);
 					if (d < dm && inter) {
 						other = o;
