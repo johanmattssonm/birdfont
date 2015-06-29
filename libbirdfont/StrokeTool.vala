@@ -103,17 +103,51 @@ public class StrokeTool : Tool {
 
 	public static PathList merge_selected_paths () {
 		PathList n = new PathList ();
+		PathList o = new PathList ();
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		g.store_undo_state ();
 		
 		foreach (Path p in g.active_paths) {
 			if (p.stroke == 0) {
+				o.add (p.copy ());
 				n.add (p.copy ().flatten ());
 			}
 		}
 		
 		n = merge (n);
+		
+		foreach (Path p in n.paths) {
+			foreach (EditPoint ep in p.points) {
+				if ((ep.flags & EditPoint.SPLIT_POINT) > 0) {
+					foreach (Path pp in o.paths) {
+						EditPoint lep = new EditPoint ();
+						pp.get_closest_point_on_path (lep, ep.x, ep.y);
+						
+						if (Path.distance_to_point (ep, lep) < 1) {
+							pp.insert_new_point_on_path (lep);
+							EditPoint lep2 = lep.copy ();
+							EditPoint lep3 = lep.copy ();
+							
+							lep.get_right_handle ().convert_to_line ();
+							lep2.convert_to_line ();
+							lep3.get_left_handle ().convert_to_line ();
+							
+							lep.flags |= EditPoint.NEW_CORNER;
+							lep2.flags |= EditPoint.INTERSECTION;
+							lep3.flags |= EditPoint.NEW_CORNER;
+							
+							pp.add_point_after (lep2, lep);
+							pp.add_point_after (lep3, lep2);
+						}
+					}
+				}
+			}
+		}
+		
+		o = merge_curves (o);
+		
+		// FIXME: remove split points
 
 		foreach (Path p in g.active_paths) {
 			g.delete_path (p);
@@ -121,7 +155,7 @@ public class StrokeTool : Tool {
 		
 		g.clear_active_paths ();
 	
-		foreach (Path p in n.paths) {
+		foreach (Path p in o.paths) {
 			g.add_path (p);
 			g.add_active_path (null, p);
 		}
@@ -130,7 +164,147 @@ public class StrokeTool : Tool {
 	
 		return n;
 	}
+	
+	static PathList merge_curves (PathList pl) {
+		PathList r = new PathList ();
 		
+		if (pl.paths.size != 2) {
+			warning ("FIXME: more than two paths");
+			return pl;
+		}
+		
+		r = merge_paths_with_curves (pl.paths.get (0), pl.paths.get (1));
+		
+		return r;
+	}
+	
+	static PathList merge_paths_with_curves (Path path1, Path path2) {
+		PathList r = new PathList ();
+		IntersectionList intersections = new IntersectionList ();
+		EditPoint ep1, ep2, found;
+		double d;
+		double min_d;
+		Path current;
+		bool found_intersection;
+		
+		// reset copied points
+		foreach (EditPoint n in path2.points) {
+			n.flags &= uint.MAX ^ EditPoint.COPIED;
+		}
+				
+		// build list of intersection points
+		for (int i = 0; i < path1.points.size; i++) {
+			ep1 = path1.points.get (i);
+			found = new EditPoint ();
+			min_d = double.MAX;
+			found_intersection = false;
+			if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
+				for (int j = 0; j < path2.points.size; j++) {
+					ep2 = path2.points.get (j);
+					d = Path.distance_to_point (ep1, ep2);
+					if ((ep2.flags & EditPoint.COPIED) == 0
+						&& (ep2.flags & EditPoint.INTERSECTION) > 0) {
+						if (d < min_d) {
+							min_d = d;
+							found_intersection = true;
+							found = ep2;
+						}
+					}
+				}
+
+				if (!found_intersection) {
+					warning ("No intersection");
+					return r;
+				}
+				
+				found.flags |= EditPoint.COPIED;
+				
+				Intersection intersection = new Intersection (ep1, path1, found, path2);
+				intersections.points.add (intersection);
+			}
+		}
+		
+		foreach (Intersection inter in intersections.points) {
+			print (@"inter: $inter\n");
+		}
+		
+		// reset copied points
+		foreach (EditPoint n in path2.points) {
+			n.flags &= uint.MAX ^ EditPoint.COPIED;
+		}
+		
+		return_val_if_fail (intersections.points.size > 0, r);
+		
+		Path new_path = new Path ();
+		current = path1;
+		while (true) {
+			// find a beginning of a new part
+			bool find_parts = false;
+			Intersection new_start = new Intersection.empty ();
+			foreach (Intersection inter in intersections.points) {
+				if (!inter.done && !find_parts) {
+					find_parts = true;
+					new_start = inter;
+					
+					print (@"new_start: $new_start\n");
+					break;
+				}
+			}
+
+			if (new_path.points.size > 0) {
+				new_path.get_first_point ().color = Color.green ();
+				new_path.get_last_point ().color = Color.yellow ();
+				new_path.get_last_point ().get_prev ().color = Color.blue ();
+				r.add (new_path);
+			}
+						
+			if (!find_parts) { // no more parts
+				break;
+			}
+			
+			current = new_start.get_other_path (current);
+			int i = index_of (current, new_start.get_point (current));
+			
+			if (i < 0) {
+				warning ("i < 0");
+				return r;
+			}
+
+			new_path = new Path ();
+			ep1 = current.points.get (i);
+			current = new_start.get_other_path (current); // swap at first iteration
+			while (true) {
+				if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
+					bool other;
+					new_start = intersections.get_point (ep1, out other);
+					current = new_start.get_other_path (current);
+					i = index_of (current, new_start.get_point (current));
+					
+					if (i < 0) {
+						warning ("i < 0");
+						return r;
+					}
+					
+					ep1 = current.points.get (i);
+					ep2 = current.points.get ((i + 1) % current.points.size);
+				}
+				
+				if ((ep1.flags & EditPoint.COPIED) > 0) {
+					break;
+				}
+				
+				ep1.flags |= EditPoint.COPIED;
+				new_path.add_point (ep1.copy ());
+				i++;
+				ep1 = current.points.get (i % current.points.size);
+			}
+			
+			new_start.done = (new_start.get_other_point (current).flags & EditPoint.COPIED) > 0;
+		}
+		
+		return r;
+	}
+	
 	static Path simplify_stroke (Path p) {
 		Path simplified = new Path ();
 		Path segment, added_segment;
@@ -842,6 +1016,7 @@ public class StrokeTool : Tool {
 		nl = new PathList ();
 		
 		if (!path.has_deleted_point ()) {
+			print ("No deleted points\n");
 			return pl;
 		}
 		
@@ -883,6 +1058,7 @@ public class StrokeTool : Tool {
 		pl = process_deleted_control_points (old_path);
 		
 		if (pl.paths.size == 0) {
+			print ("No paths.\n");
 			pl.add (old_path);
 		}
 		
@@ -947,7 +1123,7 @@ public class StrokeTool : Tool {
 				
 		ep1.prev = prev;
 		ep1.next = ep2;
-		ep1.flags |= EditPoint.NEW_CORNER;
+		ep1.flags |= EditPoint.NEW_CORNER | EditPoint.SPLIT_POINT;
 		ep1.type = prev.type;
 		ep1.x = px;
 		ep1.y = py;
@@ -956,7 +1132,7 @@ public class StrokeTool : Tool {
 
 		ep2.prev = ep1;
 		ep2.next = ep3;
-		ep2.flags |= EditPoint.INTERSECTION;
+		ep2.flags |= EditPoint.INTERSECTION | EditPoint.SPLIT_POINT;
 		ep2.type = prev.type;
 		ep2.x = px;
 		ep2.y = py;
@@ -965,7 +1141,7 @@ public class StrokeTool : Tool {
 
 		ep3.prev = ep2;
 		ep3.next = next;
-		ep3.flags |= EditPoint.NEW_CORNER;
+		ep3.flags |= EditPoint.NEW_CORNER | EditPoint.SPLIT_POINT;
 		ep3.type = prev.type;
 		ep3.x = px;
 		ep3.y = py;
@@ -979,8 +1155,6 @@ public class StrokeTool : Tool {
 			path.create_list ();
 		}
 		
-		// FIXME: set handle position
-		/*
 		PenTool.convert_point_to_line (ep1, true);
 		PenTool.convert_point_to_line (ep2, true);
 		PenTool.convert_point_to_line (ep3, true);
@@ -988,7 +1162,6 @@ public class StrokeTool : Tool {
 		ep1.recalculate_linear_handles ();
 		ep2.recalculate_linear_handles ();
 		ep3.recalculate_linear_handles ();
-		*/
 		
 		d =  Path.distance_to_point (prev, next);
 		prev.get_right_handle ().length *= Path.distance_to_point (prev, ep1) / d;
@@ -1043,8 +1216,9 @@ public class StrokeTool : Tool {
 				iy = cross_y;
 				
 				return true;
-			}	
-		} 
+			}
+		}
+		
 		return false;
 	}
 	
@@ -1089,7 +1263,7 @@ public class StrokeTool : Tool {
 				if (p1 != ep && p2 != next) {
 					inter = segments_intersects (p1, p2, ep, next, out iix, out iiy, 
 						skip_points_on_points);
-						
+					
 					if (inter) {
 						distance = Path.distance (ep.x, iix, ep.y, iiy);
 						if (distance < min_distance) {
@@ -1349,7 +1523,7 @@ public class StrokeTool : Tool {
 					r.add (np);
 				}
 
-				r = get_all_parts (r);				
+				r = get_all_parts (r);
 			} else {
 				warning ("Not merged.");
 				error = true;

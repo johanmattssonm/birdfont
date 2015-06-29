@@ -65,6 +65,23 @@ public class Intersection : GLib.Object {
 		warning ("Wrong intersection.");
 		return new EditPoint ();
 	}
+	
+	public EditPoint get_other_point (Path p) {
+		if (p == path) {
+			return other_point;
+		}
+
+		if (p == other_path) {
+			return point;
+		}
+
+		warning ("Wrong intersection.");
+		return new EditPoint ();
+	}
+	
+	public string to_string () {
+		return @"$(point.x), $(point.y) & $(other_point.x), $(other_point.y)";
+	}
 }
 
 public class IntersectionList : GLib.Object {
