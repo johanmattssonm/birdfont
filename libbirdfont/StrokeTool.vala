@@ -111,7 +111,7 @@ public class StrokeTool : Tool {
 		foreach (Path p in g.active_paths) {
 			if (p.stroke == 0) {
 				o.add (p.copy ());
-				flat.add (p.copy ().flatten ());
+				flat.add (p.copy ().flatten (100));
 			}
 		}
 		
@@ -255,6 +255,7 @@ public class StrokeTool : Tool {
 				new_path.get_last_point ().color = Color.yellow ();
 				new_path.get_last_point ().get_prev ().color = Color.blue ();
 				new_path.close ();
+				new_path.recalculate_linear_handles ();
 				r.add (new_path);
 			}
 						
@@ -277,11 +278,13 @@ public class StrokeTool : Tool {
 			new_path = new Path ();
 			ep1 = current.points.get (i);
 			current = new_start.get_other_path (current); // swap at first iteration
+			bool first = true;
 			while (true) {
 				if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
 					bool other;
 					
 					previous = ep1;
+					
 					new_start = intersections.get_point (ep1, out other);
 					current = new_start.get_other_path (current);
 					i = index_of (current, new_start.get_point (current));
@@ -292,15 +295,12 @@ public class StrokeTool : Tool {
 					}
 					
 					ep1 = current.points.get (i);
-
-					// skip two points
 					ep2 = current.points.get ((i + 1) % current.points.size); 
 				
 					double px, py;
 					
 					Path.get_point_for_step (ep1, ep2, 0.5, out px, out py);
-					//print (ep1.to_string ());
-					//print (ep2.to_string ());
+
 					// FIXME: for merging outline with counters
 					
 					print (@"Path1 $(current == path1) && $(flat2.is_over_coordinate (px, py))  $(ep1.x), $(ep1.y)\n");
@@ -324,12 +324,17 @@ public class StrokeTool : Tool {
 					} else {
 						print (@"Outside $px $py\n");	
 					}
+
+					if (first) {
+						//previous = new_start.get_other_path (current).get_first_point ();
+						previous = new_start.get_other_point (current);
+						first = false;
+					}		
 					
 					ep1.left_handle = previous.left_handle.copy ();
 				}
 				
 				if ((ep1.flags & EditPoint.COPIED) > 0) {
-					//new_path.add_point (ep1.copy ());
 					print ("Copied, part done.\n");
 					break;
 				}
