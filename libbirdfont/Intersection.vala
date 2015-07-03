@@ -23,6 +23,7 @@ public class Intersection : GLib.Object {
 	public EditPoint other_point;
 	public Path path;
 	public Path other_path;
+	public bool self_intersection = false;
 	
 	public Intersection (EditPoint point, Path path,
 		EditPoint other_point, Path other_path)  {

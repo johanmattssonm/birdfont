@@ -1375,8 +1375,11 @@ public class Path : GLib.Object {
 		}
 	}
 			
-	/** Get a point on the this path closest to x and y coordinates. */
-	public void get_closest_point_on_path (EditPoint edit_point, double x, double y) {
+	/** Get a point on the this path closest to x and y coordinates.
+	 * Don't look for a point in the segment skip_previous to skip_next.
+	 */
+	public void get_closest_point_on_path (EditPoint edit_point, double x, double y,
+		EditPoint? skip_previous = null, EditPoint? skip_next = null) {
 		return_if_fail (points.size >= 1);
 		
 		double min = double.MAX;
@@ -1399,7 +1402,7 @@ public class Path : GLib.Object {
 		EditPoint previous;
 		EditPoint next;
 		double step = 0;
-
+		
 		if (points.size == 0) {
 			warning ("Empty path.");
 			return;
@@ -1434,7 +1437,18 @@ public class Path : GLib.Object {
 			} else {
 				break;
 			}
-			
+
+			if (skip_previous != null && skip_next != null) {
+				EditPoint? si, sp;
+				si = i;
+				sp = prev;
+				
+				if (skip_previous == sp && skip_next == si) {
+					print ("SKIP IN get_closest_point_on_path\n");
+					continue;
+				}
+			}
+						
 			all_of (prev, i, (cx, cy, t) => {
 				n = pow (x - cx, 2) + pow (y - cy, 2);
 				
