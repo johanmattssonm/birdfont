@@ -858,6 +858,8 @@ public class Path : GLib.Object {
 			flat.close ();
 		}
 		
+		flat.update_region_boundaries ();
+		
 		return flat;
 	}
 	

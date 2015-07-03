@@ -164,8 +164,8 @@ public class StrokeTool : Tool {
 			foreach (EditPoint ep in pp.points) {
 				if ((prev.flags & EditPoint.SELF_INTERSECTION) > 0
 					&& (ep.flags & EditPoint.SELF_INTERSECTION) > 0
-					&& fabs (ep.x - prev.x) < 0.01
-					&& fabs (ep.y - prev.y) < 0.01) {
+					&& fabs (ep.x - prev.x) < 0.001
+					&& fabs (ep.y - prev.y) < 0.001) {
 					
 					ep.deleted = true;
 				}
@@ -183,7 +183,6 @@ public class StrokeTool : Tool {
 		foreach (Path pp in o.paths) {
 			((!) BirdFont.get_current_font ().get_glyph_by_name ("a")).add_path (pp.copy ());
 		}
-		
 		
 		o = merge_curves (o, flat);
 		
@@ -224,8 +223,44 @@ public class StrokeTool : Tool {
 		}
 		
 		r = merge_paths_with_curves (pl.paths.get (0), pl.paths.get (1), flat);
+		remove_curves_inside (r);
 		
 		return r;
+	}
+	
+	static void remove_curves_inside (PathList r) {
+		PathList flat = new PathList ();
+		Gee.ArrayList<Path> remove = new Gee.ArrayList<Path> ();
+		int c;
+		
+		foreach (Path p in r.paths) {
+			p.update_region_boundaries ();
+			Path f = p.flatten (50);
+			flat.add (f);
+		}
+		
+		foreach (Path p in r.paths) {
+			c = counters (flat, p);
+			bool cp = Path.is_counter (flat, p);
+			
+			if (c > 1) {
+				//FIXME: delete
+				print (@"$(p.points.size) $c $(p.is_clockwise ()) $cp\n");
+				if (c % 2 != 0) { // path is always inside the outline in flat
+					if (!p.is_clockwise ()) {
+						remove.add (p);
+					}
+				} else {
+					if (p.is_clockwise ()) {
+						remove.add (p);
+					}
+				}
+			}
+		}
+						
+		foreach (Path p in remove) {
+			r.paths.remove (p);
+		}			
 	}
 	
 	// FIXME: remove flat
@@ -254,13 +289,14 @@ public class StrokeTool : Tool {
 		// build list of intersection points
 		for (int i = 0; i < path1.points.size; i++) {
 			ep1 = path1.points.get (i);
-			found = new EditPoint ();
-			min_d = double.MAX;
-			found_intersection = false;
 
 			if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0
 				&& (ep1.flags & EditPoint.COPIED) == 0) {
 				ep1.flags |= EditPoint.COPIED;
+				
+				found = new EditPoint ();
+				min_d = double.MAX;
+				found_intersection = false;
 				
 				for (int j = 0; j < path1.points.size; j++) {
 					ep2 = path1.points.get (j);
@@ -279,6 +315,11 @@ public class StrokeTool : Tool {
 					warning ("No self intersection");
 					return r;
 				}
+
+				ep1.tie_handles = false;
+				ep1.reflective_point = false;
+				found.tie_handles = false;
+				found.reflective_point = false;
 				
 				found.flags |= EditPoint.COPIED;
 				Intersection intersection = new Intersection (ep1, path1, found, path1);
@@ -287,6 +328,9 @@ public class StrokeTool : Tool {
 			}
 			
 			if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
+				found = new EditPoint ();
+				min_d = double.MAX;
+				found_intersection = false;
 				for (int j = 0; j < path2.points.size; j++) {
 					ep2 = path2.points.get (j);
 					d = Path.distance_to_point (ep1, ep2);
@@ -301,12 +345,16 @@ public class StrokeTool : Tool {
 				}
 
 				if (!found_intersection) {
-					warning ("No intersection");
+					warning (@"No intersection for $(ep1)");
 					return r;
 				}
 				
 				found.flags |= EditPoint.COPIED;
 				
+				ep1.tie_handles = false;
+				ep1.reflective_point = false;
+				found.tie_handles = false;
+				found.reflective_point = false;
 				Intersection intersection = new Intersection (ep1, path1, found, path2);
 				intersections.points.add (intersection);
 			}
@@ -370,7 +418,7 @@ public class StrokeTool : Tool {
 				return r;
 			}
 
-			EditPoint previous;
+			EditPoint previous = new EditPoint ();
 			new_path = new Path ();
 			ep1 = current.points.get (i);
 			current = new_start.get_other_path (current); // swap at first iteration
@@ -430,12 +478,14 @@ public class StrokeTool : Tool {
 						|| (current == path2 && flat1.is_over_coordinate (px, py));
 	
 					if (first) {
-						//previous = new_start.get_other_path (current).get_first_point ();
-						previous = new_start.get_other_point (current);
+						previous = new_start.get_other_path (current).get_first_point ();
+						//FIXME: DELETE previous = new_start.get_other_point (current);
 						first = false;
 					}
 					
-					ep1.left_handle = previous.left_handle.copy ();
+					print (@"ep1.left_handle.move_to_coordinate ($(previous.left_handle.x), $(previous.left_handle.y);\n");
+					print (@"ep1.left_handle.move_to_coordinate $(ep1 == previous) ($(ep1.left_handle.x), $(ep1.left_handle.y);\n");
+					print (@"$(ep1)\n$(previous)\n");
 				}
 				
 				if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
@@ -459,12 +509,22 @@ public class StrokeTool : Tool {
 					ep1 = current.points.get (i);
 				} else if ((ep1.flags & EditPoint.COPIED) > 0) {
 					print ("Copied, part done.\n");
+					
+					if ((ep1.flags & EditPoint.INTERSECTION) > 0) { // FIXME SELF INTERSECTION
+						new_path.get_first_point ().left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
+					}
+				
 					break;
 				}
 				
 				print ("add\n");
 				ep1.flags |= EditPoint.COPIED;
 				new_path.add_point (ep1.copy ());
+
+				if ((ep1.flags & EditPoint.INTERSECTION) > 0) { // FIXME SELF INTERSECTION
+					new_path.get_last_point ().left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
+				}
+
 				i++;
 				ep1 = current.points.get (i % current.points.size);
 			}
@@ -1763,9 +1823,14 @@ public class StrokeTool : Tool {
 				foreach (EditPoint ep in path.points) {
 					if (!is_inside (ep, p)) {
 						inside = false;
+						// FIXME: DELETE
+						print (@"OUTSIDE: $(ep.to_string ())\n");
+						((!) BirdFont.get_current_font ().get_glyph_by_name ("b")).add_path (path);
+						break;
 					}
 				}
-
+				
+				print (@"inside: $inside $(p.points.size) $(path.points.size)\n");
 				if (inside) {
 					inside_count++; 
 				}
@@ -1786,7 +1851,9 @@ public class StrokeTool : Tool {
 		prev = path.points.get (path.points.size - 1);
 		
  		foreach (EditPoint p in path.points) {
-			if ((p.x == point.x && p.y == point.y) || (prev.x == point.x && prev.y == point.y)) {
+			// FIXME: double check stroke
+			if ((fabs (p.x - point.x) < 0.1 && fabs (p.y - point.y) < 0.1) 
+				|| (fabs (prev.x - point.x) < 0.1 && fabs (prev.y - point.y) < 0.1)) {
 				return true;
 			} else if  ((p.y > point.y) != (prev.y > point.y) 
  				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
