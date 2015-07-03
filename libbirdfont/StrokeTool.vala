@@ -137,23 +137,15 @@ public class StrokeTool : Tool {
 								lep.flags |= EditPoint.SELF_INTERSECTION;
 								lep2.flags |= EditPoint.SELF_INTERSECTION;
 								
-								lep.color = Color.pink ();
-								lep2.color = Color.pink ();
-								
 								lep.tie_handles = false;
 								lep.reflective_point = false;
 								lep2.tie_handles = false;
-								lep2.reflective_point = false;
-								
-								print (@"SELF INTERSECTION AT $(ep.x) $(ep.y)  $(ep.get_prev ().x), $(ep.get_prev ().y)\n");
+								lep2.reflective_point = false;								
 							} else {
 								pp.insert_new_point_on_path (lep);
 								lep.flags |= EditPoint.INTERSECTION;
 								lep.tie_handles = false;
 								lep.reflective_point = false;
-								
-								lep.color = Color.magenta ();
-								print (@"INTERSECTION AT $(ep.x) $(ep.y)\n");
 							}
 						}
 					}
@@ -178,12 +170,6 @@ public class StrokeTool : Tool {
 		
 		foreach (Path pp in o.paths) {
 			pp.remove_deleted_points ();
-		}
-		
-		//FIXME:DELETE
-		
-		foreach (Path pp in o.paths) {
-			((!) BirdFont.get_current_font ().get_glyph_by_name ("a")).add_path (pp.copy ());
 		}
 		
 		o = merge_curves (o, flat);
@@ -224,7 +210,7 @@ public class StrokeTool : Tool {
 			return pl;
 		}
 		
-		r = merge_paths_with_curves (pl.paths.get (0), pl.paths.get (1), flat);
+		r = merge_paths_with_curves (pl.paths.get (0), pl.paths.get (1));
 		remove_curves_inside (r);
 		
 		return r;
@@ -246,8 +232,6 @@ public class StrokeTool : Tool {
 			bool cp = Path.is_counter (flat, p);
 			
 			if (c > 1) {
-				//FIXME: delete
-				print (@"$(p.points.size) $c $(p.is_clockwise ()) $cp\n");
 				if (c % 2 != 0) { // path is always inside the outline in flat
 					if (!p.is_clockwise ()) {
 						remove.add (p);
@@ -278,8 +262,7 @@ public class StrokeTool : Tool {
 		}			
 	}
 	
-	// FIXME: remove flat
-	static PathList merge_paths_with_curves (Path path1, Path path2, PathList flat) {
+	static PathList merge_paths_with_curves (Path path1, Path path2) {
 		PathList r = new PathList ();
 		IntersectionList intersections = new IntersectionList ();
 		EditPoint ep1, ep2, found;
@@ -375,10 +358,6 @@ public class StrokeTool : Tool {
 			}
 		}
 		
-		foreach (Intersection inter in intersections.points) {
-			print (@"inter: $inter\n");
-		}
-		
 		// reset copied points
 		foreach (EditPoint n in path1.points) {
 			n.flags &= uint.MAX ^ EditPoint.COPIED;
@@ -404,15 +383,11 @@ public class StrokeTool : Tool {
 					find_parts = true;
 					new_start = inter;
 					current = new_start.path;
-					print (@"new_start: $new_start\n");
 					break;
 				}
 			}
 
 			if (new_path.points.size > 0) {
-				new_path.get_first_point ().color = Color.green ();
-				new_path.get_last_point ().color = Color.yellow ();
-				new_path.get_last_point ().get_prev ().color = Color.blue ();
 				new_path.close ();
 				new_path.recalculate_linear_handles ();
 				r.add (new_path);
@@ -441,7 +416,6 @@ public class StrokeTool : Tool {
 			Intersection self_intersection_point = new Intersection.empty ();
 			while (true) {
 				if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
-					print ("intersection.\n");
 					bool other;
 					
 					previous = ep1;
@@ -464,9 +438,6 @@ public class StrokeTool : Tool {
 
 					// FIXME: for merging outline with counters
 					
-					print (@"Path1 $(current == path1) && $(flat2.is_over_coordinate (px, py))  $(ep1.x), $(ep1.y)\n");
-					print (@"Path2 $(current == path2) && $(flat1.is_over_coordinate (px, py))\n");
-					
 					bool inside = (current == path1 && flat2.is_over_coordinate (px, py))
 						|| (current == path2 && flat1.is_over_coordinate (px, py));
 					
@@ -474,7 +445,6 @@ public class StrokeTool : Tool {
 						|| (current != path2 && flat1.is_over_coordinate (px, py));
 										
 					if (inside && !other_inside) {
-						print (@"Middle point is inside $px $py\n");
 						current = new_start.get_other_path (current);
 						i = index_of (current, new_start.get_point (current));
 						
@@ -485,26 +455,18 @@ public class StrokeTool : Tool {
 						
 						new_start.done = true;
 						ep1 = current.points.get (i);
-					} else {
-						print (@"Outside $px $py\n");	
-					}
+					} 
 					
 					inside = (current == path1 && flat2.is_over_coordinate (px, py))
 						|| (current == path2 && flat1.is_over_coordinate (px, py));
 	
 					if (first) {
 						previous = new_start.get_other_path (current).get_first_point ();
-						// FIXME: DELETE previous = new_start.get_other_point (current);
 						first = false;
 					}
-					
-					print (@"ep1.left_handle.move_to_coordinate ($(previous.left_handle.x), $(previous.left_handle.y);\n");
-					print (@"ep1.left_handle.move_to_coordinate $(ep1 == previous) ($(ep1.left_handle.x), $(ep1.left_handle.y);\n");
-					print (@"$(ep1)\n$(previous)\n");
 				}
 				
 				if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
-					print ("self intersection.\n");
 					bool other;
 					new_start = intersections.get_point (ep1, out other);
 					i = index_of (current, other ? new_start.point : new_start.other_point);
@@ -523,8 +485,6 @@ public class StrokeTool : Tool {
 					
 					ep1 = current.points.get (i);
 				} else if ((ep1.flags & EditPoint.COPIED) > 0) {
-					print ("Copied, part done.\n");
-					
 					new_path.close ();
 					EditPoint first_point = new_path.get_first_point ();
 					EditPointHandle h;
@@ -534,14 +494,12 @@ public class StrokeTool : Tool {
 						if (first_point.next != null) {
 							h = first_point.get_next ().get_left_handle ();
 							h.process_connected_handle ();
-							//h.move_to (0,0);
 						}
 					}
 				
 					break;
 				}
-				
-				print ("add\n");
+
 				ep1.flags |= EditPoint.COPIED;
 				new_path.add_point (ep1.copy ());
 
@@ -1846,14 +1804,10 @@ public class StrokeTool : Tool {
 				foreach (EditPoint ep in path.points) {
 					if (!is_inside (ep, p)) {
 						inside = false;
-						// FIXME: DELETE
-						print (@"OUTSIDE: $(ep.to_string ())\n");
-						((!) BirdFont.get_current_font ().get_glyph_by_name ("b")).add_path (path);
 						break;
 					}
 				}
 				
-				print (@"inside: $inside $(p.points.size) $(path.points.size)\n");
 				if (inside) {
 					inside_count++; 
 				}

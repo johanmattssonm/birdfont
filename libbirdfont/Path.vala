@@ -1446,7 +1446,6 @@ public class Path : GLib.Object {
 				sp = prev;
 				
 				if (skip_previous == sp && skip_next == si) {
-					print ("SKIP IN get_closest_point_on_path\n");
 					continue;
 				}
 			}
