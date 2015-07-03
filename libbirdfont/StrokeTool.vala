@@ -111,7 +111,7 @@ public class StrokeTool : Tool {
 		foreach (Path p in g.active_paths) {
 			if (p.stroke == 0) {
 				o.add (p.copy ());
-				flat.add (p.copy ().flatten (100));
+				flat.add (p.copy ().flatten (50));
 			}
 		}
 		
@@ -127,10 +127,17 @@ public class StrokeTool : Tool {
 						if (Path.distance_to_point (ep, lep) < 1) {
 							pp.insert_new_point_on_path (lep);
 							lep.flags |= EditPoint.INTERSECTION;
+							lep.tie_handles = false;
+							lep.reflective_point = false;
 						}
 					}
 				}
 			}
+		}
+		
+		//FIXME:DELETE
+		foreach (Path pp in flat.paths) {
+			((!) BirdFont.get_current_font ().get_glyph_by_name ("a")).add_path (pp);
 		}
 		
 		o = merge_curves (o, flat);
@@ -144,6 +151,12 @@ public class StrokeTool : Tool {
 		g.clear_active_paths ();
 	
 		foreach (Path p in o.paths) {
+			foreach (EditPoint ep in p.points) {
+				ep.flags &= uint.MAX ^ (EditPoint.INTERSECTION | EditPoint.COPIED | EditPoint.NEW_CORNER);
+				ep.flags = 0;
+			}
+			p.update_region_boundaries ();
+			
 			g.add_path (p);
 			g.add_active_path (null, p);
 		}
@@ -309,7 +322,10 @@ public class StrokeTool : Tool {
 					bool inside = (current == path1 && flat2.is_over_coordinate (px, py))
 						|| (current == path2 && flat1.is_over_coordinate (px, py));
 					
-					if (inside) {
+					bool other_inside = (current != path1 && flat2.is_over_coordinate (px, py))
+						|| (current != path2 && flat1.is_over_coordinate (px, py));
+										
+					if (inside && !other_inside) {
 						print (@"Middle point is inside $px $py\n");
 						current = new_start.get_other_path (current);
 						i = index_of (current, new_start.get_point (current));
@@ -324,12 +340,15 @@ public class StrokeTool : Tool {
 					} else {
 						print (@"Outside $px $py\n");	
 					}
-
+					
+					inside = (current == path1 && flat2.is_over_coordinate (px, py))
+						|| (current == path2 && flat1.is_over_coordinate (px, py));
+	
 					if (first) {
 						//previous = new_start.get_other_path (current).get_first_point ();
 						previous = new_start.get_other_point (current);
 						first = false;
-					}		
+					}
 					
 					ep1.left_handle = previous.left_handle.copy ();
 				}
