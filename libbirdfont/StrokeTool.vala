@@ -129,7 +129,8 @@ public class StrokeTool : Tool {
 							EditPoint lep2 = new EditPoint ();
 							pp.get_closest_point_on_path (lep2, ep.x, ep.y, lep.prev, lep.next);
 							
-							if (Path.distance_to_point (ep, lep2) < 0.1) {
+							if (Path.distance_to_point (ep, lep2) < 0.01
+								&& Path.distance_to_point (lep, lep2) < 0.01) {
 								pp.insert_new_point_on_path (lep);
 								pp.insert_new_point_on_path (lep2);
 								
@@ -150,6 +151,8 @@ public class StrokeTool : Tool {
 								lep.flags |= EditPoint.INTERSECTION;
 								lep.tie_handles = false;
 								lep.reflective_point = false;
+								
+								lep.color = Color.magenta ();
 								print (@"INTERSECTION AT $(ep.x) $(ep.y)\n");
 							}
 						}
@@ -162,12 +165,11 @@ public class StrokeTool : Tool {
 		EditPoint prev = new EditPoint ();
 		foreach (Path pp in o.paths) {
 			foreach (EditPoint ep in pp.points) {
-				if ((prev.flags & EditPoint.SELF_INTERSECTION) > 0
-					&& (ep.flags & EditPoint.SELF_INTERSECTION) > 0
-					&& fabs (ep.x - prev.x) < 0.001
-					&& fabs (ep.y - prev.y) < 0.001) {
-					
-					ep.deleted = true;
+				if (((prev.flags & EditPoint.SELF_INTERSECTION) > 0 || (prev.flags & EditPoint.INTERSECTION) > 0)
+					&& ((ep.flags & EditPoint.SELF_INTERSECTION) > 0 || (ep.flags & EditPoint.INTERSECTION) > 0)
+					&& fabs (ep.x - prev.x) < 0.1
+					&& fabs (ep.y - prev.y) < 0.1) {
+					prev.deleted = true;
 				}
 				
 				prev = ep;
@@ -257,7 +259,20 @@ public class StrokeTool : Tool {
 				}
 			}
 		}
-						
+		
+		foreach (Path p in r.paths) {
+			bool inter = true;
+			foreach (EditPoint ep in p.points) {		
+				if ((ep.flags & EditPoint.INTERSECTION) == 0) {
+					inter = false;
+				}
+			}
+			
+			if (inter) {
+				remove.add (p);
+			}
+		}
+					
 		foreach (Path p in remove) {
 			r.paths.remove (p);
 		}			
@@ -312,7 +327,7 @@ public class StrokeTool : Tool {
 				}
 
 				if (!found_intersection) {
-					warning ("No self intersection");
+					warning (@"No self intersection:\n$(ep1)");
 					return r;
 				}
 
@@ -345,7 +360,7 @@ public class StrokeTool : Tool {
 				}
 
 				if (!found_intersection) {
-					warning (@"No intersection for $(ep1)");
+					warning (@"No intersection for:\n $(ep1)");
 					return r;
 				}
 				
@@ -479,7 +494,7 @@ public class StrokeTool : Tool {
 	
 					if (first) {
 						previous = new_start.get_other_path (current).get_first_point ();
-						//FIXME: DELETE previous = new_start.get_other_point (current);
+						// FIXME: DELETE previous = new_start.get_other_point (current);
 						first = false;
 					}
 					
@@ -495,7 +510,7 @@ public class StrokeTool : Tool {
 					i = index_of (current, other ? new_start.point : new_start.other_point);
 					
 					if (self_intersection_point == new_start) {
-						print ("Return to self intersection\n");
+						print ("Done self intersection\n");
 						break;
 					}
 					
@@ -510,8 +525,17 @@ public class StrokeTool : Tool {
 				} else if ((ep1.flags & EditPoint.COPIED) > 0) {
 					print ("Copied, part done.\n");
 					
+					new_path.close ();
+					EditPoint first_point = new_path.get_first_point ();
+					EditPointHandle h;
 					if ((ep1.flags & EditPoint.INTERSECTION) > 0) { // FIXME SELF INTERSECTION
-						new_path.get_first_point ().left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
+						first_point.left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
+						
+						if (first_point.next != null) {
+							h = first_point.get_next ().get_left_handle ();
+							h.process_connected_handle ();
+							//h.move_to (0,0);
+						}
 					}
 				
 					break;
@@ -625,7 +649,6 @@ public class StrokeTool : Tool {
 					segment_last.right_handle = ep.get_right_handle ().copy ();
 					
 					if (added_segment.points.size > 0) {
-						
 						if (ep_start.get_right_handle ().is_line ()) {
 							first = added_segment.get_first_point ();
 							first.recalculate_linear_handles ();
