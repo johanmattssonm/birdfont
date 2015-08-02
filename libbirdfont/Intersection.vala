@@ -49,8 +49,8 @@ public class Intersection : GLib.Object {
 		if (p == other_path) {
 			return path;
 		}
-
-		warning ("Wrong intersection.");
+		
+		warning (@"Wrong intersection.");
 		return new Path ();
 	}
 	

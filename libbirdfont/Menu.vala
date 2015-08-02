@@ -232,7 +232,10 @@ public class Menu : AbstractMenu {
 		// FIXME: overview
 		MenuItem merge_paths = add_menu_item (t_("Merge Paths"), "merge_paths", "Glyph");
 		merge_paths.action.connect (() => {
-			StrokeTool.merge_selected_paths ();
+			Task t = new Task ();
+			t.task.connect (merge_selected_paths);
+			MainWindow.native_window.run_background_thread (t);
+		
 			show_menu = false;
 		});
 		edit_menu.items.add (merge_paths);
@@ -490,6 +493,10 @@ public class Menu : AbstractMenu {
 		
 		add_tool_key_bindings ();
 		load_key_bindings ();
+	}
+	
+	void merge_selected_paths () {
+		StrokeTool.merge_selected_paths ();
 	}
 }
 

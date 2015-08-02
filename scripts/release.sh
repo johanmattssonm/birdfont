@@ -46,6 +46,7 @@ rm -rf birdfont-$version/.gitignore
 
 cd birdfont-$version
 python3 ./scripts/complete_translations.py -t 93 -i
+rm -rf ./scripts/__pycache__
 cd ..
 
 tar -cf birdfont-$version.tar birdfont-$version

@@ -850,7 +850,10 @@ public class Path : GLib.Object {
 		Path flat = new Path ();
 
 		all_of_path ((x, y, t) => {
-			flat.add (x, y);
+			EditPoint ep = flat.add (x, y);
+			ep.type = PointType.LINE_QUADRATIC;
+			ep.get_right_handle ().type = PointType.LINE_QUADRATIC;
+			ep.get_left_handle ().type = PointType.LINE_QUADRATIC;
 			return true;
 		}, steps); // FIXME: g.view_zoom
 		
@@ -1381,7 +1384,8 @@ public class Path : GLib.Object {
 	 * Don't look for a point in the segment skip_previous to skip_next.
 	 */
 	public void get_closest_point_on_path (EditPoint edit_point, double x, double y,
-		EditPoint? skip_previous = null, EditPoint? skip_next = null) {
+		EditPoint? skip_previous = null, EditPoint? skip_next = null,
+		int steps = -1) {
 		return_if_fail (points.size >= 1);
 		
 		double min = double.MAX;
@@ -1440,16 +1444,10 @@ public class Path : GLib.Object {
 				break;
 			}
 
-			if (skip_previous != null && skip_next != null) {
-				EditPoint? si, sp;
-				si = i;
-				sp = prev;
-				
-				if (skip_previous == sp && skip_next == si) {
-					continue;
-				}
+			if (skip_previous == prev && skip_next == i) {
+				continue;
 			}
-						
+
 			all_of (prev, i, (cx, cy, t) => {
 				n = pow (x - cx, 2) + pow (y - cy, 2);
 				
@@ -1468,7 +1466,7 @@ public class Path : GLib.Object {
 				}
 				
 				return true;
-			});
+			}, steps);
 			
 			first = false;
 		}
@@ -1494,6 +1492,10 @@ public class Path : GLib.Object {
 		edit_point.next = next_point;
 		
 		edit_point.set_position (ox, oy);
+		
+		edit_point.type = previous.type;
+		edit_point.get_left_handle ().type = previous.get_right_handle ().type;
+		edit_point.get_right_handle ().type = next.get_left_handle ().type;
 	}
 
 	public static bool all_of (EditPoint start, EditPoint stop,
