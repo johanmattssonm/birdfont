@@ -91,7 +91,10 @@ public class HheaTable : OtfTable {
 		fd.add_fixed (version); // table version
 		
 		ascender = (int16) rint (font.top_limit * HeadTable.UNITS);
+		ascender -= (int16) rint (font.base_line * HeadTable.UNITS);
+		
 		descender = (int16) rint (font.bottom_limit * HeadTable.UNITS);
+		descender -= (int16) rint (font.base_line * HeadTable.UNITS);
 		
 		fd.add_16 (ascender); // Ascender
 		fd.add_16 (descender); // Descender
