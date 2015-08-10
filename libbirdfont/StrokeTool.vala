@@ -106,6 +106,7 @@ public class StrokeTool : Tool {
 		PathList o = new PathList ();
 		PathList r;
 		PathList new_paths = new PathList ();
+		PathList removed_paths = new PathList ();
 		
 		g.store_undo_state ();
 				
@@ -147,6 +148,10 @@ public class StrokeTool : Tool {
 					/*o.paths.remove (p1);
 					o.paths.remove (p2);
 					*/
+					
+					removed_paths.add (p1);
+					removed_paths.add (p2);
+					
 					i = 0;
 					j = 0;
 				}
@@ -161,7 +166,7 @@ public class StrokeTool : Tool {
 		
 		//o.append (new_paths);
 		
-		foreach (Path p in g.active_paths) {
+		foreach (Path p in removed_paths.paths) {
 			g.delete_path (p);
 		}
 		
@@ -624,6 +629,13 @@ public class StrokeTool : Tool {
 					break;
 				}
 
+				// adjust the other handle
+				if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
+					ep1.left_handle.convert_to_curve ();
+					ep1.right_handle.convert_to_curve ();
+				}
+				
+				// add point to path
 				ep1.flags |= EditPoint.COPIED;
 				new_path.add_point (ep1.copy ());
 
