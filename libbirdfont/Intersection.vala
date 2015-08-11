@@ -94,15 +94,27 @@ public class IntersectionList : GLib.Object {
 	public Intersection get_point (EditPoint ep, out bool other) {
 		other = false;
 		foreach (Intersection i in points) {
-			if (i.other_point == ep || i.point == ep) {
+			if (likely (i.other_point == ep || i.point == ep)) {
 				other = (i.other_point == ep);
 				return i;
 			}	
 		}
 		
-		warning ("No intersection found for point.");
+		warning (@"No intersection found for point ($(ep.x), $(ep.y)).\n");
+		
 		return new Intersection.empty ();
 	}
+
+	public bool has_point (EditPoint ep) {
+		foreach (Intersection i in points) {
+			if (i.other_point == ep || i.point == ep) {
+				return true;
+			}	
+		}
+		
+		return false;
+	}
+
 }
 
 }
