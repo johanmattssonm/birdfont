@@ -383,7 +383,35 @@ public class StrokeTool : Tool {
 		p1 = o.paths.get (0);
 		p2 = o.paths.get (1);
 		
+		PathList parts = new PathList ();
+		PathList self_parts;
+		
+		self_parts = remove_self_intersections (p1);
+		parts.append (self_parts);
+		
+		foreach (Path p in self_parts.paths)  
+			((!) BirdFont.get_current_font ().get_glyph_by_name ("e")).add_path (p);
+		
+		self_parts = remove_self_intersections (p2);
+		parts.append (self_parts);
+		
+		foreach (Path p in self_parts.paths) 
+			((!) BirdFont.get_current_font ().get_glyph_by_name ("f")).add_path (p);
+		
+		return_val_if_fail (parts.paths.size >= 2, r);
+		
+		p1 = parts.paths.get (0);
+		p2 = parts.paths.get (1);
+
+		// FIXME: PUT BACK
+		return r;
+		
 		r = merge_paths_with_curves (p1, p2);
+		
+		for (int i = 2; i < parts.paths.size; i++) {
+			Path other_part = parts.paths.get (i);
+			r.add (other_part);
+		}
 		
 		print (@"Result $(r.paths.size)\n");
 		if (r.paths.size > 0) {
@@ -397,6 +425,207 @@ public class StrokeTool : Tool {
 		return r;
 	}
 	
+	static PathList remove_self_intersections (Path path) {
+		Path merged = new Path ();
+		IntersectionList intersections = new IntersectionList ();
+		EditPoint ep1, ep2, found;
+		double d;
+		double min_d;
+		Path current;
+		bool found_intersection;
+		PathList parts;
+		int i = 0;
+
+		// FIXME: DELETE
+		((!) BirdFont.get_current_font ().get_glyph_by_name ("f")).add_path (path);
+		
+		parts = new PathList ();
+
+		if (path.points.size <= 1) {
+			return parts;
+		}
+
+		// reset copied points
+		foreach (EditPoint n in path.points) {
+			n.flags &= uint.MAX ^ EditPoint.COPIED;
+		}
+				
+		// build list of intersection points
+		for (i = 0; i < path.points.size; i++) {
+			ep1 = path.points.get (i);
+
+			if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0
+				&& (ep1.flags & EditPoint.COPIED) == 0) {
+				ep1.flags |= EditPoint.COPIED;
+				
+				found = new EditPoint ();
+				min_d = double.MAX;
+				found_intersection = false;
+				
+				for (int j = 0; j < path.points.size; j++) {
+					ep2 = path.points.get (j);
+					d = Path.distance_to_point (ep1, ep2);
+					if ((ep2.flags & EditPoint.COPIED) == 0
+						&& (ep2.flags & EditPoint.SELF_INTERSECTION) > 0) {
+						if (d < min_d) {
+							min_d = d;
+							found_intersection = true;
+							found = ep2;
+						}
+					}
+				}
+
+				if (!found_intersection) {
+					warning (@"No self intersection:\n$(ep1)");
+					return parts;
+				}
+
+				ep1.tie_handles = false;
+				ep1.reflective_point = false;
+				found.tie_handles = false;
+				found.reflective_point = false;
+				
+				found.flags |= EditPoint.COPIED;
+				Intersection intersection = new Intersection (ep1, path, found, path);
+				intersection.self_intersection = true;
+				intersections.points.add (intersection);
+			}
+		}
+		
+		// reset copy flag
+		foreach (EditPoint n in path.points) {
+			n.flags &= uint.MAX ^ EditPoint.COPIED;
+		}
+		
+		if (intersections.points.size == 0) {
+			warning ("No intersection points.");
+			return parts;
+		}
+		
+		current = path;
+		
+		for (i = 0; i < current.points.size; i++) {
+			ep1 = current.points.get (i);
+			print (@"POINT $(ep1.x), $(ep1.y)\n");
+		}
+		
+		current.reverse ();
+
+		for (i = 0; i < current.points.size; i++) {
+			ep1 = current.points.get (i);
+			print (@"POINT AFTER $(ep1.x), $(ep1.y)\n");
+		}
+		
+		while (true) {
+			i = 0;
+			Intersection new_start = new Intersection.empty ();
+			EditPoint previous = new EditPoint ();
+			ep1 = current.points.get (i);
+			current = path;
+			
+			for (i = 0; i < current.points.size; i++) {
+				ep1 = current.points.get (i);
+				if ((ep1.flags & EditPoint.COPIED) == 0
+					&& (ep1.flags & EditPoint.SELF_INTERSECTION) == 0) {
+						// FIXME: insides current.reverse ();
+					break;
+				}
+			}	
+			
+			if (i >= current.points.size || (ep1.flags & EditPoint.COPIED) > 0) {
+				// all points have been copied
+				break;
+			}
+			
+			while (true) {
+				if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
+					bool other;
+					EditPointHandle handle;
+					
+					handle = ep1.get_left_handle ();
+					print (@"SELF_INTERSECTION: $(ep1.x), $(ep1.y)\n");
+					new_start = intersections.get_point (ep1, out other);
+					
+					print (@"from $i ");
+
+					// FIXME: DELETE
+					// Take the other route in some paths
+					// current.reverse ();
+					
+					i = index_of (current, other ? new_start.point : new_start.other_point);
+					
+					print (@"start at $i\n");
+					
+					if (!(0 <= i < current.points.size)) {
+						warning (@"Index out of bounds. ($i)");
+						return parts;
+					}
+					
+					ep1 = current.points.get (i);
+					ep1.left_handle.move_to_coordinate (handle.x, handle.y);
+				} 
+				
+				if ((ep1.flags & EditPoint.COPIED) > 0) {
+					merged.close ();
+					EditPoint first_point = merged.get_first_point ();
+					EditPointHandle h;
+					
+					// FIXME: self intersection not intersection
+					if ((ep1.flags & EditPoint.INTERSECTION) > 0) { // FIXME SELF INTERSECTION
+						first_point.left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
+						
+						if (first_point.next != null) {
+							h = first_point.get_next ().get_left_handle ();
+							h.process_connected_handle ();
+						}
+					}
+					
+					if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
+						ep1.flags |= EditPoint.COPIED;
+						merged.add_point (ep1.copy ());
+					}
+					
+					print (@"Break at $(ep1.x), $(ep1.y)\n");
+					
+					merged.close ();
+					merged.create_list ();
+					parts.add (merged);
+					
+					foreach (EditPoint n in merged.points) {
+						n.flags &= uint.MAX ^ EditPoint.SELF_INTERSECTION;
+					}
+					
+					merged.get_first_point ().color = Color.green ();
+					merged.get_last_point ().color = Color.brown ();
+					// return parts; // FIXME: DELETE
+					
+					merged = new Path ();
+					
+					break;
+				}
+				
+				// adjust the other handle
+				if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
+					ep1.left_handle.convert_to_curve ();
+					ep1.right_handle.convert_to_curve ();
+				}
+				
+				// add point to path
+				ep1.flags |= EditPoint.COPIED;
+				merged.add_point (ep1.copy ());
+				
+				print (@"Add point $i $(ep1.x), $(ep1.y)\n");
+				
+				i++;
+				ep1 = current.points.get (i % current.points.size);
+			}
+			
+			ep1.flags |= EditPoint.COPIED;
+		}
+		
+		return parts;
+	}
+	
 	static PathList merge_paths_with_curves (Path path1, Path path2) {
 		PathList r = new PathList ();
 		IntersectionList intersections = new IntersectionList ();
@@ -405,15 +634,14 @@ public class StrokeTool : Tool {
 		double min_d;
 		Path current;
 		bool found_intersection;
-		Path flat1;
-		Path flat2;
-
-		flat1 = path1.flatten ();
-		flat2 = path2.flatten ();
-			
+		Path flat1, flat2;
+		
 		if (path1.points.size <= 1 || path2.points.size <= 1) {
 			return r;
 		}
+
+		flat1 = path1.flatten ();
+		flat2 = path2.flatten ();
 
 		// reset copied points
 		foreach (EditPoint n in path2.points) {
@@ -423,7 +651,7 @@ public class StrokeTool : Tool {
 		// build list of intersection points
 		for (int i = 0; i < path1.points.size; i++) {
 			ep1 = path1.points.get (i);
-
+			/* // FIXME: DELETE
 			if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0
 				&& (ep1.flags & EditPoint.COPIED) == 0) {
 				ep1.flags |= EditPoint.COPIED;
@@ -460,6 +688,7 @@ public class StrokeTool : Tool {
 				intersection.self_intersection = true;
 				intersections.points.add (intersection);
 			}
+			*/
 			
 			if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
 				found = new EditPoint ();
@@ -550,7 +779,6 @@ public class StrokeTool : Tool {
 			ep1 = current.points.get (i);
 			current = new_start.get_other_path (current); // swap at first iteration
 			bool first = true;
-			Intersection self_intersection_point = new Intersection.empty ();
 			while (true) {
 				if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
 					bool other;
@@ -605,6 +833,8 @@ public class StrokeTool : Tool {
 					}
 				}
 				
+				// FIXME: DELETE
+				/*
 				if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
 					bool other;
 					print (@"SELF_INTERSECTION: $(ep1.x), $(ep1.y)\n");
@@ -635,7 +865,7 @@ public class StrokeTool : Tool {
 						ep1 = current.points.get (i);
 					}
 				} 
-				
+				*/
 				if ((ep1.flags & EditPoint.COPIED) > 0) {
 					new_path.close ();
 					EditPoint first_point = new_path.get_first_point ();

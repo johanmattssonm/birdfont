@@ -34,6 +34,10 @@ public class Path : GLib.Object {
 			
 			return (!) control_points;
 		}
+		
+		set {
+			control_points = value;
+		}
 	}
 
 	public Gee.ArrayList<EditPoint>? control_points = null;
@@ -633,23 +637,22 @@ public class Path : GLib.Object {
 
 	private void reverse_points () requires (points.size > 0) {
 		EditPointHandle t;
-		Path p = copy ();
 		EditPoint e;
+		Gee.ArrayList<EditPoint> new_points;
 		
-		create_list ();	
+		new_points = new Gee.ArrayList<EditPoint> ();
 		
-		points.clear ();
-		
-		for (int i = p.points.size - 1; i >= 0 ; i--) {
-			e = p.points.get (i);
+		for (int i = points.size - 1; i >= 0 ; i--) {
+			e = points.get (i);
 			
 			t = e.right_handle;
 			e.right_handle = e.left_handle;
 			e.left_handle = t;
 			
-			add_point (e);
+			new_points.add (e);
 		}
 		
+		points = new_points;
 		create_list ();
 	}
 
