@@ -495,7 +495,7 @@ public class StrokeTool : Tool {
 			}
 		}
 		
-		// reset copied points
+		// reset copy flag
 		foreach (EditPoint n in path1.points) {
 			n.flags &= uint.MAX ^ EditPoint.COPIED;
 		}
@@ -609,14 +609,12 @@ public class StrokeTool : Tool {
 					bool other;
 					print (@"SELF_INTERSECTION: $(ep1.x), $(ep1.y)\n");
 					new_start = intersections.get_point (ep1, out other);
+					
+					print (@"from $i ");
+					
 					i = index_of (current, other ? new_start.point : new_start.other_point);
 					
-					if (self_intersection_point == new_start) {
-						print ("Done self intersection\n");
-						break;
-					}
-					
-					self_intersection_point = new_start;
+					print (@"start at $i\n");
 					
 					if (!(0 <= i < current.points.size)) {
 						warning (@"Index out of bounds. ($i)");
@@ -624,7 +622,21 @@ public class StrokeTool : Tool {
 					}
 					
 					ep1 = current.points.get (i);
-				} else if ((ep1.flags & EditPoint.COPIED) > 0) {
+					
+					// take the other point if it already is copied
+					if ((ep1.flags & EditPoint.COPIED) > 0) {
+						i = index_of (current, !other ? new_start.point : new_start.other_point);
+						
+						if (!(0 <= i < current.points.size)) {
+							warning (@"Index out of bounds. ($i)");
+							return r;
+						}
+						
+						ep1 = current.points.get (i);
+					}
+				} 
+				
+				if ((ep1.flags & EditPoint.COPIED) > 0) {
 					new_path.close ();
 					EditPoint first_point = new_path.get_first_point ();
 					EditPointHandle h;
@@ -637,7 +649,18 @@ public class StrokeTool : Tool {
 						}
 					}
 				
-					break;
+					// self intersections will be copied twice
+					if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
+						if ((ep1.flags & EditPoint.COPIED_SELF_INTERSECTION) == 0) {
+							ep1.flags |= EditPoint.COPIED_SELF_INTERSECTION;
+						} else {
+							print (@"DONE SELF_INTERSECTION $(ep1.x), $(ep1.y)\n");
+							break;
+						}
+					} else {
+						print (@"DONE COPIED $(ep1.x), $(ep1.y)\n");
+						break;
+					}
 				}
 
 				// adjust the other handle
@@ -654,6 +677,8 @@ public class StrokeTool : Tool {
 					new_path.get_last_point ().left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
 				}
 
+				print (@"Add point $(ep1.x), $(ep1.y)\n");
+				
 				i++;
 				ep1 = current.points.get (i % current.points.size);
 			}

@@ -57,6 +57,7 @@ public class EditPoint : GLib.Object {
 	public static uint SEGMENT_END = 1 << 14;
 	public static uint SPLIT_POINT = 1 << 15;
 	public static uint SELF_INTERSECTION = 1 << 16;
+	public static uint COPIED_SELF_INTERSECTION = 1 << 17;
 	
 	public static uint ALL = 0xFFFFFF;
 	
