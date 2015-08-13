@@ -425,7 +425,7 @@ public class StrokeTool : Tool {
 		return r;
 	}
 	
-	static PathList remove_self_intersections (Path path) {
+	static PathList remove_self_intersections (Path original) {
 		Path merged = new Path ();
 		IntersectionList intersections = new IntersectionList ();
 		EditPoint ep1, ep2, found;
@@ -435,6 +435,7 @@ public class StrokeTool : Tool {
 		bool found_intersection;
 		PathList parts;
 		int i = 0;
+		Path path = original.copy ();
 
 		// FIXME: DELETE
 		((!) BirdFont.get_current_font ().get_glyph_by_name ("f")).add_path (path);
