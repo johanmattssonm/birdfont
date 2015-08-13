@@ -101,6 +101,19 @@ public class StrokeTool : Tool {
 		return m;
 	}
 
+	static void reset_flags (PathList o) {
+		foreach (Path p in o.paths) {
+			foreach (EditPoint ep in p.points) {
+				ep.flags &= uint.MAX ^ 
+					(EditPoint.INTERSECTION 
+						| EditPoint.COPIED 
+						| EditPoint.NEW_CORNER 
+						| EditPoint.SELF_INTERSECTION);
+			}
+			p.update_region_boundaries ();
+		}
+	}
+
 	public static void merge_selected_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
 		PathList o = new PathList ();
@@ -115,6 +128,14 @@ public class StrokeTool : Tool {
 			o.add (p);
 		}
 		
+		o = remove_overlap (o);
+
+		foreach (Path p in o.paths) {
+			((!) BirdFont.get_current_font ().get_glyph_by_name ("k")).add_path (p.copy ());
+		}
+	
+		reset_flags (o);
+
 		for (int i = 0; i < o.paths.size; i++) {
 			for (int j = 0; j < o.paths.size; j++) {
 				Path p1, p2;
@@ -123,11 +144,10 @@ public class StrokeTool : Tool {
 				p2 = o.paths.get (j);
 				
 				if (i == j) { // merge self intersections
-					p2 = new Path ();
-					r = merge_selected (p1, p2, false);
-				} else {
-					r = merge_selected (p1, p2);
-				}
+					continue;
+				} 
+
+				r = merge_selected (p1, p2, false);
 				
 				// FIXME: delete
 				foreach (Path p in r.paths) {
@@ -143,21 +163,11 @@ public class StrokeTool : Tool {
 				// FIXME: delete
 				print (@"Merge result $(r.paths.size) ($i, $j)\n");
 				if (r.paths.size > 0) {
-					foreach (Path p in r.paths) {
-						foreach (EditPoint ep in p.points) {
-							ep.flags &= uint.MAX ^ 
-								(EditPoint.INTERSECTION 
-									| EditPoint.COPIED 
-									| EditPoint.NEW_CORNER 
-									| EditPoint.SELF_INTERSECTION);
-						}
-						p.update_region_boundaries ();
-					}
-					
+					reset_flags (r);
 					new_paths.append (r);
 			
-					removed_paths.add (p1);
-					removed_paths.add (p2);
+					//removed_paths.add (p1);
+					//removed_paths.add (p2);
 					
 					i = 0;
 					j = 0;
@@ -171,7 +181,7 @@ public class StrokeTool : Tool {
 			}
 		}
 		
-		foreach (Path p in removed_paths.paths) {
+		foreach (Path p in g.active_paths) {
 			g.delete_path (p);
 		}
 		
@@ -185,6 +195,22 @@ public class StrokeTool : Tool {
 		}
 		
 		GlyphCanvas.redraw ();
+	}
+
+	static PathList remove_overlap (PathList pl) {
+		PathList r = new PathList ();
+		
+		foreach (Path p in pl.paths) {
+			PathList m = merge_selected (p, new Path (), true);
+			
+			if (m.paths.size > 0) {
+				r.append (m);
+			} else {
+				r.add (p);
+			}
+		}
+		
+		return r;
 	}
 
 	static void remove_merged_curve_parts (PathList r) {
@@ -212,6 +238,7 @@ public class StrokeTool : Tool {
 				}
 			}
 			
+
 			print (@"clockwise $clockwise  counters $counters  pl.size $(pl.paths.size)\n");
 			
 			if (p.is_clockwise ()) {
@@ -237,7 +264,7 @@ public class StrokeTool : Tool {
 	}
 	
 	public static PathList merge_selected (Path path1, Path path2,
-		bool check_boundaries = true) {
+		bool self_intersection) {
 			
 		PathList flat = new PathList ();
 		PathList o = new PathList ();
@@ -247,7 +274,7 @@ public class StrokeTool : Tool {
 		pl.add (path1);
 		pl.add (path2);
 		
-		if (check_boundaries) {
+		if (!self_intersection) {
 			if (!path1.boundaries_intersecting (path2)) {
 				return r;
 			}
@@ -387,66 +414,43 @@ public class StrokeTool : Tool {
 		
 		p1 = o.paths.get (0);
 		p2 = o.paths.get (1);
-		
 		PathList parts = new PathList ();
-		PathList self_parts;
 		
-		self_parts = remove_self_intersections (p1);
-		parts.append (self_parts);
-		
-		foreach (Path p in self_parts.paths)  
-			((!) BirdFont.get_current_font ().get_glyph_by_name ("e")).add_path (p);
-		
-		self_parts = remove_self_intersections (p2);
-		parts.append (self_parts);
-		
-		foreach (Path p in self_parts.paths) 
-			((!) BirdFont.get_current_font ().get_glyph_by_name ("f")).add_path (p);
-		
-		return_val_if_fail (parts.paths.size >= 2, r);
-		
-		//p1 = parts.paths.get (0);
-		//p2 = parts.paths.get (1);
-
-		parts = merge_all (parts);
-		
+		if (self_intersection) {
+			// remove overlap
+			
+			PathList self_parts;
+			
+			self_parts = remove_self_intersections (p1);
+			parts.append (self_parts);
+			
+			foreach (Path p in self_parts.paths)  
+				((!) BirdFont.get_current_font ().get_glyph_by_name ("e")).add_path (p);
+			
+			/* // FIXME: DELETE
+			self_parts = remove_self_intersections (p2);
+			parts.append (self_parts);
+			
+			foreach (Path p in self_parts.paths) 
+				((!) BirdFont.get_current_font ().get_glyph_by_name ("f")).add_path (p);
+				*/
+		} else {
+			// merge two path
+			PathList merged_paths = merge_paths_with_curves (p1, p2);
+			
+			if (merged_paths.paths.size > 0) {
+				parts.append (merged_paths);
+			} else {
+				parts.add (p1);
+				parts.add (p2);
+			}
+		}
 		// FIXME: remove split points
 
 		foreach (Path p in parts.paths) 
 			((!) BirdFont.get_current_font ().get_glyph_by_name ("g")).add_path (p);
 		
 		return parts;
-	}
-	
-	static PathList merge_all (PathList pl) {
-		PathList np = new PathList ();
-		
-		np.append (pl);
-		
-		for (int i = 0; i < np.paths.size; i++) {			
-			for (int j = 0; j < np.paths.size; j++) {
-				PathList merged_paths;
-				
-				if (i == j) {
-					continue;
-				}
-				
-				Path p1 = np.paths.get (i);
-				Path p2 = np.paths.get (j);
-				
-				merged_paths = merge_paths_with_curves (p1, p2);
-				
-				if (merged_paths.paths.size > 0) {
-					print (@"result: $(merged_paths.paths.size)\n");
-					np.remove (p1);
-					np.remove (p2);
-					np.append (merged_paths);
-					return merge_all (np);
-				}
-			}
-		}
-		
-		return np;
 	}
 	
 	static PathList remove_self_intersections (Path original) {
