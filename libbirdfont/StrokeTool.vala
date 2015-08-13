@@ -122,12 +122,13 @@ public class StrokeTool : Tool {
 				p1 = o.paths.get (i);
 				p2 = o.paths.get (j);
 				
-				if (i == j) {
-					continue;
+				if (i == j) { // merge self intersections
+					p2 = new Path ();
+					r = merge_selected (p1, p2, false);
+				} else {
+					r = merge_selected (p1, p2);
 				}
-						
-				r = merge_selected (p1, p2);
-
+				
 				// FIXME: delete
 				foreach (Path p in r.paths) {
 					((!) BirdFont.get_current_font ().get_glyph_by_name ("c")).add_path (p.copy ());
@@ -235,7 +236,9 @@ public class StrokeTool : Tool {
 		}
 	}
 	
-	public static PathList merge_selected (Path path1, Path path2) {
+	public static PathList merge_selected (Path path1, Path path2,
+		bool check_boundaries = true) {
+			
 		PathList flat = new PathList ();
 		PathList o = new PathList ();
 		PathList pl = new PathList ();
@@ -243,11 +246,13 @@ public class StrokeTool : Tool {
 		
 		pl.add (path1);
 		pl.add (path2);
-
-		if (!path1.boundaries_intersecting (path2)) {
-			return r;
+		
+		if (check_boundaries) {
+			if (!path1.boundaries_intersecting (path2)) {
+				return r;
+			}
 		}
-
+		
 		foreach (Path p in pl.paths) {
 			if (p.stroke == 0) {
 				o.add (p);
@@ -400,29 +405,48 @@ public class StrokeTool : Tool {
 		
 		return_val_if_fail (parts.paths.size >= 2, r);
 		
-		p1 = parts.paths.get (0);
-		p2 = parts.paths.get (1);
+		//p1 = parts.paths.get (0);
+		//p2 = parts.paths.get (1);
 
-		// FIXME: PUT BACK
-		return r;
+		parts = merge_all (parts);
 		
-		r = merge_paths_with_curves (p1, p2);
-		
-		for (int i = 2; i < parts.paths.size; i++) {
-			Path other_part = parts.paths.get (i);
-			r.add (other_part);
-		}
-		
-		print (@"Result $(r.paths.size)\n");
-		if (r.paths.size > 0) {
-			o.paths.remove (p1);
-			o.paths.remove (p2);
-			o.append (r);
-		}
-
 		// FIXME: remove split points
+
+		foreach (Path p in parts.paths) 
+			((!) BirdFont.get_current_font ().get_glyph_by_name ("g")).add_path (p);
 		
-		return r;
+		return parts;
+	}
+	
+	static PathList merge_all (PathList pl) {
+		PathList np = new PathList ();
+		
+		np.append (pl);
+		
+		for (int i = 0; i < np.paths.size; i++) {			
+			for (int j = 0; j < np.paths.size; j++) {
+				PathList merged_paths;
+				
+				if (i == j) {
+					continue;
+				}
+				
+				Path p1 = np.paths.get (i);
+				Path p2 = np.paths.get (j);
+				
+				merged_paths = merge_paths_with_curves (p1, p2);
+				
+				if (merged_paths.paths.size > 0) {
+					print (@"result: $(merged_paths.paths.size)\n");
+					np.remove (p1);
+					np.remove (p2);
+					np.append (merged_paths);
+					return merge_all (np);
+				}
+			}
+		}
+		
+		return np;
 	}
 	
 	static PathList remove_self_intersections (Path original) {
@@ -598,7 +622,8 @@ public class StrokeTool : Tool {
 					
 					merged.get_first_point ().color = Color.green ();
 					merged.get_last_point ().color = Color.brown ();
-					// return parts; // FIXME: DELETE
+					
+					merged.reverse ();
 					
 					merged = new Path ();
 					
