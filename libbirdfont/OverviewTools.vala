@@ -120,6 +120,8 @@ public class OverviewTools : ToolCollection  {
 			transform.selected = false;
 			
 			process_transform ();
+			
+			BirdFont.get_current_font ().touch ();
 		});
 		transform.selected = false;
 		transform.set_persistent (false);
