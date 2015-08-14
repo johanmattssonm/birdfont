@@ -129,10 +129,6 @@ public class StrokeTool : Tool {
 		}
 		
 		o = remove_overlap (o);
-
-		foreach (Path p in o.paths) {
-			((!) BirdFont.get_current_font ().get_glyph_by_name ("k")).add_path (p.copy ());
-		}
 	
 		reset_flags (o);
 
@@ -149,20 +145,9 @@ public class StrokeTool : Tool {
 				} 
 
 				r = merge_selected (p1, p2, false);
-				
-				// FIXME: delete
-				foreach (Path p in r.paths) {
-					((!) BirdFont.get_current_font ().get_glyph_by_name ("c")).add_path (p.copy ());
-				}
-				
-				// FIXME: delete
-				((!) BirdFont.get_current_font ().get_glyph_by_name ("d")).add_path (p1.copy ());
-				((!) BirdFont.get_current_font ().get_glyph_by_name ("d")).add_path (p2.copy ());
-				
+
 				remove_merged_curve_parts (r);
 				
-				// FIXME: delete
-				print (@"Merge result $(r.paths.size) ($i, $j)\n");
 				if (r.paths.size > 0) {
 					reset_flags (r);
 					new_paths.append (r);
@@ -172,12 +157,6 @@ public class StrokeTool : Tool {
 					
 					i = 0;
 					j = 0;
-				}
-				
-				//FIXME: delete
-				print (@"Remaining $(o.paths.size)\n");
-				foreach (Path p in o.paths) {
-					print (@"p.points.size $(p.points.size)\n");
 				}
 			}
 		}
@@ -219,8 +198,6 @@ public class StrokeTool : Tool {
 		Gee.ArrayList<Path> remove = new Gee.ArrayList<Path> ();
 		PathList flat = new PathList ();
 		
-		print (@"remove_merged_curve_parts: $(r.paths.size)\n");
-		
 		foreach (Path p in r.paths) {
 			p.update_region_boundaries ();
 			flat.add (p.flatten ());
@@ -234,18 +211,11 @@ public class StrokeTool : Tool {
 	
 			foreach (Path i in pl.paths) {
 				if (i.is_clockwise ()) {
-					// FIXME: DELETE
-					print (@"clockwise++: $(i.points.size) $(i.get_first_point ().x), $(i.get_first_point ().y)\n");
 					clockwise++;
 				} else {
-					// FIXME: DELETE
-					print (@"counters++: $(i.points.size)\n");
 					counters++;
 				}
 			}
-			
-			// FIXME: DELETE
-			print (@"clockwise $clockwise  counters $counters  pl.size $(pl.paths.size)\n");
 			
 			if (p.is_clockwise ()) {
 				if (clockwise - 1 > counters) {
@@ -293,85 +263,72 @@ public class StrokeTool : Tool {
 		
 		flat = merge (flat);
 		
-		foreach (Path p in flat.paths) {
-			((!) BirdFont.get_current_font ().get_glyph_by_name ("b")).add_path (p);
-		}
-		
 		bool has_split_point = false;
 		foreach (Path p in flat.paths) {
 			foreach (EditPoint ep in p.points) {
 				if ((ep.flags & EditPoint.SPLIT_POINT) > 0) {
-					
-					// FIXME: DELETE
-					ep.color = Color.pink ();
-					
 					foreach (Path pp in o.paths) {
 						EditPoint lep = new EditPoint ();
-						pp.get_closest_point_on_path (lep, ep.x, ep.y, null, null);
 						
-						if (Path.distance_to_point (lep, (!) lep.prev) < 0.1
-							|| Path.distance_to_point (lep, (!) lep.next) < 0.1) {
-								// FIXME: find a better solution
-							continue;
-						}
-						
-						if (Path.distance_to_point (ep, lep) < 0.1) {
-							EditPoint lep2 = new EditPoint ();
-							pp.get_closest_point_on_path (lep2, ep.x, ep.y, lep.prev, lep.next);
+						if (pp.points.size > 1) {						
+							pp.get_closest_point_on_path (lep, ep.x, ep.y, null, null);
 							
-							if (lep.prev != null) {
-								lep.get_left_handle ().type = lep.get_prev ().get_right_handle ().type;
-							} else {
-								lep.get_left_handle ().type = pp.get_last_point ().get_right_handle ().type;
-							}
-
-							if (lep.next != null) {
-								lep.get_right_handle ().type = lep.get_next ().get_left_handle ().type;
-							} else {
-								lep.get_left_handle ().type = pp.get_first_point ().get_right_handle ().type;
-							}
-
-							if (lep2.prev != null) {
-								lep2.get_left_handle ().type = lep2.get_prev ().get_right_handle ().type;
-							} else {
-								lep2.get_left_handle ().type = pp.get_first_point ().get_right_handle ().type;
-							}
-
-							if (lep2.next != null) {
-								lep2.get_right_handle ().type = lep2.get_next ().get_left_handle ().type;
-							} else {
-								lep2.get_left_handle ().type = pp.get_last_point ().get_right_handle ().type;
-							}							
-										
-							// self intersection				
-							if (Path.distance_to_point (ep, lep2) < 0.1
-								&& Path.distance_to_point (ep, lep) < 0.1) {
-								pp.insert_new_point_on_path (lep);
-								pp.insert_new_point_on_path (lep2);
-								
-								lep.flags |= EditPoint.SELF_INTERSECTION;
-								lep2.flags |= EditPoint.SELF_INTERSECTION;
-								
-								lep.tie_handles = false;
-								lep.reflective_point = false;
-								lep2.tie_handles = false;
-								lep2.reflective_point = false;
-								
-								// FIXME: DELETE
-								lep2.color = Color.magenta ();
-								lep.color = Color.magenta ();
-							} else {
-								pp.insert_new_point_on_path (lep);
-								lep.flags |= EditPoint.INTERSECTION;
-								lep.tie_handles = false;
-								lep.reflective_point = false;
-								
-								// FIXME: DELETE
-								lep2.color = Color.pink ();
-								lep.color = Color.pink ();
+							if (Path.distance_to_point (lep, (!) lep.prev) < 0.1
+								|| Path.distance_to_point (lep, (!) lep.next) < 0.1) {
+									// FIXME: find a better solution
+								continue;
 							}
 							
-							has_split_point = true;
+							if (Path.distance_to_point (ep, lep) < 0.1) {
+								EditPoint lep2 = new EditPoint ();
+								pp.get_closest_point_on_path (lep2, ep.x, ep.y, lep.prev, lep.next);
+								
+								if (lep.prev != null) {
+									lep.get_left_handle ().type = lep.get_prev ().get_right_handle ().type;
+								} else {
+									lep.get_left_handle ().type = pp.get_last_point ().get_right_handle ().type;
+								}
+
+								if (lep.next != null) {
+									lep.get_right_handle ().type = lep.get_next ().get_left_handle ().type;
+								} else {
+									lep.get_left_handle ().type = pp.get_first_point ().get_right_handle ().type;
+								}
+
+								if (lep2.prev != null) {
+									lep2.get_left_handle ().type = lep2.get_prev ().get_right_handle ().type;
+								} else {
+									lep2.get_left_handle ().type = pp.get_first_point ().get_right_handle ().type;
+								}
+
+								if (lep2.next != null) {
+									lep2.get_right_handle ().type = lep2.get_next ().get_left_handle ().type;
+								} else {
+									lep2.get_left_handle ().type = pp.get_last_point ().get_right_handle ().type;
+								}							
+											
+								// self intersection				
+								if (Path.distance_to_point (ep, lep2) < 0.1
+									&& Path.distance_to_point (ep, lep) < 0.1) {
+									pp.insert_new_point_on_path (lep);
+									pp.insert_new_point_on_path (lep2);
+									
+									lep.flags |= EditPoint.SELF_INTERSECTION;
+									lep2.flags |= EditPoint.SELF_INTERSECTION;
+									
+									lep.tie_handles = false;
+									lep.reflective_point = false;
+									lep2.tie_handles = false;
+									lep2.reflective_point = false;
+								} else {
+									pp.insert_new_point_on_path (lep);
+									lep.flags |= EditPoint.INTERSECTION;
+									lep.tie_handles = false;
+									lep.reflective_point = false;
+								}
+								
+								has_split_point = true;
+							}
 						}
 					}
 				}
@@ -406,11 +363,6 @@ public class StrokeTool : Tool {
 				ep.flags &= uint.MAX ^ EditPoint.COPIED;
 			}
 		}
-
-		// FIXME: delete
-		foreach (Path p in o.paths) {
-			((!) BirdFont.get_current_font ().get_glyph_by_name ("a")).add_path (p);
-		}
 		
 		return_val_if_fail (o.paths.size == 2, r);
 
@@ -426,9 +378,6 @@ public class StrokeTool : Tool {
 			
 			self_parts = remove_self_intersections (p1);
 			parts.append (self_parts);
-			
-			foreach (Path p in self_parts.paths)  
-				((!) BirdFont.get_current_font ().get_glyph_by_name ("e")).add_path (p);
 		} else {
 			// merge two path
 			PathList merged_paths = merge_paths_with_curves (p1, p2);
@@ -441,11 +390,10 @@ public class StrokeTool : Tool {
 			}
 		}
 		
-		// FIXME: remove split points
+		foreach (Path p in parts.paths) {
+			reset_intersections (p);
+		}
 
-		foreach (Path p in parts.paths) 
-			((!) BirdFont.get_current_font ().get_glyph_by_name ("g")).add_path (p);
-		
 		return parts;
 	}
 	
@@ -461,9 +409,6 @@ public class StrokeTool : Tool {
 		int i = 0;
 		Path path = original.copy ();
 
-		// FIXME: DELETE
-		((!) BirdFont.get_current_font ().get_glyph_by_name ("f")).add_path (path);
-		
 		parts = new PathList ();
 
 		if (path.points.size <= 1) {
@@ -528,18 +473,7 @@ public class StrokeTool : Tool {
 		}
 		
 		current = path;
-		
-		for (i = 0; i < current.points.size; i++) {
-			ep1 = current.points.get (i);
-			print (@"POINT $(ep1.x), $(ep1.y)\n");
-		}
-		
 		current.reverse ();
-
-		for (i = 0; i < current.points.size; i++) {
-			ep1 = current.points.get (i);
-			print (@"POINT AFTER $(ep1.x), $(ep1.y)\n");
-		}
 		
 		while (true) {
 			EditPoint modified;
@@ -556,7 +490,6 @@ public class StrokeTool : Tool {
 				modified = ep1.copy ();
 				if ((ep1.flags & EditPoint.COPIED) == 0
 					&& (ep1.flags & EditPoint.SELF_INTERSECTION) == 0) {
-						// FIXME: insides current.reverse ();
 					break;
 				}
 			}	
@@ -573,14 +506,9 @@ public class StrokeTool : Tool {
 					EditPointHandle handle;
 					
 					handle = ep1.get_left_handle ();
-					print (@"SELF_INTERSECTION: $(ep1.x), $(ep1.y)\n");
 					new_start = intersections.get_point (ep1, out other);
 					
-					print (@"from $i ");
-					
 					i = index_of (current, other ? new_start.point : new_start.other_point);
-					
-					print (@"start at $i\n");
 					
 					if (!(0 <= i < current.points.size)) {
 						warning (@"Index out of bounds. ($i)");
@@ -599,25 +527,7 @@ public class StrokeTool : Tool {
 
 					merged.get_first_point ().color = Color.green ();
 					merged.get_last_point ().color = Color.brown ();
-					
-					/*
-					//if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
-						bool other;
-	
-						//ep1.flags |= EditPoint.COPIED;
 
-						new_start = intersections.get_point (ep1, out other);
-						ep2 = other ? new_start.point : new_start.other_point;
-						merged.get_last_point ().left_handle.move_to_coordinate (ep2.left_handle.x, ep2.left_handle.y);
-
-						// FIXME: DELETE
-						//merged.add_point (ep1.copy ());
-						merged.get_last_point ().color = Color.yellow ();				
-					//}
-					*/
-					
-					print (@"Break at $(ep1.x), $(ep1.y)\n");
-					
 					merged.close ();
 					merged.create_list ();
 					parts.add (merged);
@@ -644,8 +554,6 @@ public class StrokeTool : Tool {
 				// add point to path
 				ep1.flags |= EditPoint.COPIED;
 				merged.add_point (modified.copy ());
-				
-				print (@"Add point $i $(ep1.x), $(ep1.y)\n");
 				
 				i++;
 				ep1 = current.points.get (i % current.points.size);
@@ -683,44 +591,6 @@ public class StrokeTool : Tool {
 		// build list of intersection points
 		for (int i = 0; i < path1.points.size; i++) {
 			ep1 = path1.points.get (i);
-			/* // FIXME: DELETE
-			if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0
-				&& (ep1.flags & EditPoint.COPIED) == 0) {
-				ep1.flags |= EditPoint.COPIED;
-				
-				found = new EditPoint ();
-				min_d = double.MAX;
-				found_intersection = false;
-				
-				for (int j = 0; j < path1.points.size; j++) {
-					ep2 = path1.points.get (j);
-					d = Path.distance_to_point (ep1, ep2);
-					if ((ep2.flags & EditPoint.COPIED) == 0
-						&& (ep2.flags & EditPoint.SELF_INTERSECTION) > 0) {
-						if (d < min_d) {
-							min_d = d;
-							found_intersection = true;
-							found = ep2;
-						}
-					}
-				}
-
-				if (!found_intersection) {
-					warning (@"No self intersection:\n$(ep1)");
-					return r;
-				}
-
-				ep1.tie_handles = false;
-				ep1.reflective_point = false;
-				found.tie_handles = false;
-				found.reflective_point = false;
-				
-				found.flags |= EditPoint.COPIED;
-				Intersection intersection = new Intersection (ep1, path1, found, path1);
-				intersection.self_intersection = true;
-				intersections.points.add (intersection);
-			}
-			*/
 			
 			if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
 				found = new EditPoint ();
@@ -746,7 +616,6 @@ public class StrokeTool : Tool {
 				
 				found.flags |= EditPoint.COPIED;
 				
-				print (@"Intersection in $(path1.points.size) ($(ep1.x),$(ep1.y)) and $(path2.points.size) ($(found.x),$(found.y))\n");
 				ep1.tie_handles = false;
 				ep1.reflective_point = false;
 				found.tie_handles = false;
@@ -817,8 +686,7 @@ public class StrokeTool : Tool {
 					
 					previous = ep1;
 					
-					if (intersections.has_point (ep1)) {
-						print (@"INTERSECTION: $(ep1.x), $(ep1.y)\n");
+					if (likely (intersections.has_point (ep1))) {
 						new_start = intersections.get_point (ep1, out other);
 						current = new_start.get_other_path (current);
 						i = index_of (current, new_start.get_point (current));
@@ -860,49 +728,14 @@ public class StrokeTool : Tool {
 							previous = new_start.get_other_path (current).get_first_point ();
 							first = false;
 						}
-					} else {
-						warning (@"Intersection not in list, $(ep1.x), $(ep1.y)\n");
 					}
 				}
 				
-				// FIXME: DELETE
-				/*
-				if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
-					bool other;
-					print (@"SELF_INTERSECTION: $(ep1.x), $(ep1.y)\n");
-					new_start = intersections.get_point (ep1, out other);
-					
-					print (@"from $i ");
-					
-					i = index_of (current, other ? new_start.point : new_start.other_point);
-					
-					print (@"start at $i\n");
-					
-					if (!(0 <= i < current.points.size)) {
-						warning (@"Index out of bounds. ($i)");
-						return r;
-					}
-					
-					ep1 = current.points.get (i);
-					
-					// take the other point if it already is copied
-					if ((ep1.flags & EditPoint.COPIED) > 0) {
-						i = index_of (current, !other ? new_start.point : new_start.other_point);
-						
-						if (!(0 <= i < current.points.size)) {
-							warning (@"Index out of bounds. ($i)");
-							return r;
-						}
-						
-						ep1 = current.points.get (i);
-					}
-				} 
-				*/
 				if ((ep1.flags & EditPoint.COPIED) > 0) {
 					new_path.close ();
 					EditPoint first_point = new_path.get_first_point ();
 					EditPointHandle h;
-					if ((ep1.flags & EditPoint.INTERSECTION) > 0) { // FIXME SELF INTERSECTION
+					if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
 						first_point.left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
 						
 						if (first_point.next != null) {
@@ -911,18 +744,7 @@ public class StrokeTool : Tool {
 						}
 					}
 				
-					// self intersections will be copied twice
-					if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
-						if ((ep1.flags & EditPoint.COPIED_SELF_INTERSECTION) == 0) {
-							ep1.flags |= EditPoint.COPIED_SELF_INTERSECTION;
-						} else {
-							print (@"DONE SELF_INTERSECTION $(ep1.x), $(ep1.y)\n");
-							break;
-						}
-					} else {
-						print (@"DONE COPIED $(ep1.x), $(ep1.y)\n");
-						break;
-					}
+					break;
 				}
 
 				// adjust the other handle
@@ -939,8 +761,6 @@ public class StrokeTool : Tool {
 					new_path.get_last_point ().left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
 				}
 
-				print (@"Add point $(ep1.x), $(ep1.y)\n");
-				
 				i++;
 				ep1 = current.points.get (i % current.points.size);
 			}
@@ -1665,7 +1485,6 @@ public class StrokeTool : Tool {
 		nl = new PathList ();
 		
 		if (!path.has_deleted_point ()) {
-			print ("No deleted points\n");
 			return pl;
 		}
 		
@@ -1707,7 +1526,6 @@ public class StrokeTool : Tool {
 		pl = process_deleted_control_points (old_path);
 		
 		if (pl.paths.size == 0) {
-			print ("No paths.\n");
 			pl.add (old_path);
 		}
 		
@@ -2082,6 +1900,7 @@ public class StrokeTool : Tool {
 		foreach (EditPoint ep in p.points) {
 			ep.flags &= uint.MAX ^ EditPoint.INTERSECTION;
 			ep.flags &= uint.MAX ^ EditPoint.COPIED;
+			ep.flags &= uint.MAX ^ EditPoint.SELF_INTERSECTION;
 			ep.deleted = false;
 		}
 		p.remove_points_on_points ();
@@ -3031,7 +2850,7 @@ public class StrokeTool : Tool {
 			l = p2.get_left_handle ();
 			r = p2.get_right_handle ();
 			
-			if (fabs ((l.angle + r.angle + PI) % (2 * PI) - PI) > 0.005) { // FIXME: 0.01
+			if (fabs ((l.angle + r.angle + PI) % (2 * PI) - PI) > 0.005) {
 				if (!path.is_open () || i < size - 1) {
 					get_segment (thickness, 0, 0.00001, p2, p3, out start);
 					add_corner (side1, previous, start, p2.copy (), thickness);
