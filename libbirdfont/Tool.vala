@@ -128,6 +128,10 @@ public class Tool : Widget {
 		});
 	}
 	
+	public virtual string get_tip () {
+		return tip;
+	}
+	
 	public override void draw (Context cr) {
 		draw_tool (cr, 0, 0);
 	}
@@ -170,7 +174,7 @@ public class Tool : Widget {
 				waiting_for_tooltip = true;
 				timer_show = new TimeoutSource (timeout_interval);
 				timer_show.set_callback (() => {
-					if (tip != "" && active_tooltip.is_active () && !active_tooltip.showing_this_tooltip) {
+					if (get_tip () != "" && active_tooltip.is_active () && !active_tooltip.showing_this_tooltip) {
 						show_tooltip ();
 					}
 					waiting_for_tooltip = false;
@@ -205,7 +209,7 @@ public class Tool : Widget {
 		
 		active_tooltip.showing_this_tooltip = true;
 		
-		tip = @"$(active_tooltip.tip)";
+		tip = @"$(active_tooltip.get_tip ())";
 		key_binding = active_tooltip.get_key_binding ();
 		
 		if (key_binding != "") {
@@ -262,10 +266,6 @@ public class Tool : Widget {
 
 	public bool is_selected () {
 		return selected;
-	}
-	
-	public string get_tip () {
-		return tip;
 	}
 
 	public new bool is_over (double xp, double yp) {

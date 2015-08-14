@@ -22,6 +22,10 @@ public class HiddenTools : ToolCollection  {
 	public Gee.ArrayList<Expander> expanders;
 	public Expander hidden_expander;
 
+	public static Tool bezier_line;
+	public static Tool bezier_corner;
+	public static Tool move_along_axis;
+
 	public HiddenTools () {
 		hidden_expander = new Expander ();
 		expanders = new Gee.ArrayList<Expander> ();
@@ -40,7 +44,7 @@ public class HiddenTools : ToolCollection  {
 		});
 		hidden_expander.add_tool (zoom_out);
 
-		Tool bezier_line = new Tool ("bezier_line", t_("Convert the last segment to a straight line"));
+		bezier_line = new Tool ("bezier_line", t_("Convert the last segment to a straight line"));
 		bezier_line.select_action.connect ((self) => {
 			DrawingTools.bezier_tool.switch_to_line_mode ();
 		});
@@ -48,7 +52,7 @@ public class HiddenTools : ToolCollection  {
 		hidden_expander.add_tool (bezier_line);
 		bezier_line.set_tool_visibility (false);
 
-		Tool bezier_corner = new Tool ("bezier_corner", t_("Convert the last control point to a corner node"));
+		bezier_corner = new Tool ("bezier_corner", t_("Convert the last control point to a corner node"));
 		bezier_corner.select_action.connect ((self) => {
 			DrawingTools.bezier_tool.create_corner ();
 		});
@@ -56,7 +60,7 @@ public class HiddenTools : ToolCollection  {
 		hidden_expander.add_tool (bezier_corner);
 		bezier_corner.set_tool_visibility (false);
 
-		Tool move_along_axis = new Tool ("bezier", t_("Move handle along axis"));
+		move_along_axis = new Tool ("bezier", t_("Move handle along axis"));
 		move_along_axis.select_action.connect ((self) => {
 			Tool t = MainWindow.get_toolbox ().get_current_tool ();
 			if (t is BezierTool) {

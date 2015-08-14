@@ -47,7 +47,7 @@ public class BezierTool : Tool {
 	bool swap = false; 
 	
 	public BezierTool (string name) {
-		base (name, t_ ("Create Beziér curves"));
+		base (name, "");
 
 		select_action.connect ((self) => {
 			state = NONE;
@@ -85,6 +85,24 @@ public class BezierTool : Tool {
 				PenTool.draw_join_icon (cairo_context, last_x, last_y);
 			}
 		});
+	}
+	
+	public override string get_tip () {
+		string tip = t_ ("Create Beziér curves") + "\n";
+		
+		tip += HiddenTools.bezier_line.get_key_binding ();
+		tip += " - ";
+		tip += t_ ("line") + "\n";
+
+		tip += HiddenTools.bezier_corner.get_key_binding ();
+		tip += " - ";
+		tip += t_ ("corner") + "\n";
+
+		tip += HiddenTools.move_along_axis.get_key_binding ();
+		tip += " - ";
+		tip += t_ ("on axis") + "\n";
+				
+		return tip;
 	}
 	
 	public void press (int b, int x, int y) {

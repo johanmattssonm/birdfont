@@ -505,6 +505,10 @@ public class Toolbox : GLib.Object  {
 			t.widget_x = 10 * get_scale ();
 			t.widget_y = tool_tip_y - t.height - 5 * get_scale ();		
 
+			if (t.widget_y < 5) {
+				t.widget_y = 5;
+			}
+
 			t.draw (cr);
 		}
 	}
