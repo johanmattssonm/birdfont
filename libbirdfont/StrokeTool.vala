@@ -136,6 +136,7 @@ public class StrokeTool : Tool {
 	
 		reset_flags (o);
 
+		new_paths.append (o);
 		for (int i = 0; i < o.paths.size; i++) {
 			for (int j = 0; j < o.paths.size; j++) {
 				Path p1, p2;
@@ -143,7 +144,7 @@ public class StrokeTool : Tool {
 				p1 = o.paths.get (i);
 				p2 = o.paths.get (j);
 				
-				if (i == j) { // merge self intersections
+				if (i == j) {
 					continue;
 				} 
 
@@ -165,9 +166,9 @@ public class StrokeTool : Tool {
 				if (r.paths.size > 0) {
 					reset_flags (r);
 					new_paths.append (r);
-			
-					//removed_paths.add (p1);
-					//removed_paths.add (p2);
+
+					new_paths.remove (p1);
+					new_paths.remove (p2);
 					
 					i = 0;
 					j = 0;
@@ -194,6 +195,7 @@ public class StrokeTool : Tool {
 			g.add_active_path (null, p);
 		}
 		
+		PenTool.update_orientation ();
 		GlyphCanvas.redraw ();
 	}
 
@@ -238,7 +240,6 @@ public class StrokeTool : Tool {
 				}
 			}
 			
-
 			print (@"clockwise $clockwise  counters $counters  pl.size $(pl.paths.size)\n");
 			
 			if (p.is_clockwise ()) {
@@ -610,8 +611,14 @@ public class StrokeTool : Tool {
 					}
 					
 					if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
+						bool other;
+						
 						ep1.flags |= EditPoint.COPIED;
 						merged.add_point (ep1.copy ());
+						
+						new_start = intersections.get_point (ep1, out other);
+						ep2 = new_start.get_other_point (current);
+						ep1.right_handle.move_to_coordinate (ep2.right_handle.x, ep2.right_handle.y);
 					}
 					
 					print (@"Break at $(ep1.x), $(ep1.y)\n");
