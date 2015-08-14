@@ -234,14 +234,17 @@ public class StrokeTool : Tool {
 	
 			foreach (Path i in pl.paths) {
 				if (i.is_clockwise ()) {
+					// FIXME: DELETE
 					print (@"clockwise++: $(i.points.size) $(i.get_first_point ().x), $(i.get_first_point ().y)\n");
 					clockwise++;
 				} else {
+					// FIXME: DELETE
 					print (@"counters++: $(i.points.size)\n");
 					counters++;
 				}
 			}
 			
+			// FIXME: DELETE
 			print (@"clockwise $clockwise  counters $counters  pl.size $(pl.paths.size)\n");
 			
 			if (p.is_clockwise ()) {
@@ -255,22 +258,6 @@ public class StrokeTool : Tool {
 					break;
 				}
 			}
-			
-			/*
-			if (p.is_clockwise ()) {
-				int c = clockwise - counters;
-				if (c % 2 == 0) {
-					remove.add (p);
-					break;
-				}
-			} else {
-				int c = clockwise - counters;
-				if (c % 2 == 1) {
-					remove.add (p);
-					break;
-				}
-			}
-			*/
 		}
 
 		foreach (Path p in remove) {
@@ -435,7 +422,6 @@ public class StrokeTool : Tool {
 		
 		if (self_intersection) {
 			// remove overlap
-			
 			PathList self_parts;
 			
 			self_parts = remove_self_intersections (p1);
@@ -443,14 +429,6 @@ public class StrokeTool : Tool {
 			
 			foreach (Path p in self_parts.paths)  
 				((!) BirdFont.get_current_font ().get_glyph_by_name ("e")).add_path (p);
-			
-			/* // FIXME: DELETE
-			self_parts = remove_self_intersections (p2);
-			parts.append (self_parts);
-			
-			foreach (Path p in self_parts.paths) 
-				((!) BirdFont.get_current_font ().get_glyph_by_name ("f")).add_path (p);
-				*/
 		} else {
 			// merge two path
 			PathList merged_paths = merge_paths_with_curves (p1, p2);
@@ -462,6 +440,7 @@ public class StrokeTool : Tool {
 				parts.add (p2);
 			}
 		}
+		
 		// FIXME: remove split points
 
 		foreach (Path p in parts.paths) 
@@ -563,14 +542,18 @@ public class StrokeTool : Tool {
 		}
 		
 		while (true) {
+			EditPoint modified;
 			i = 0;
 			Intersection new_start = new Intersection.empty ();
 			EditPoint previous = new EditPoint ();
 			ep1 = current.points.get (i);
 			current = path;
 			
+			modified = ep1.copy ();
+			
 			for (i = 0; i < current.points.size; i++) {
 				ep1 = current.points.get (i);
+				modified = ep1.copy ();
 				if ((ep1.flags & EditPoint.COPIED) == 0
 					&& (ep1.flags & EditPoint.SELF_INTERSECTION) == 0) {
 						// FIXME: insides current.reverse ();
@@ -584,6 +567,7 @@ public class StrokeTool : Tool {
 			}
 			
 			while (true) {
+				
 				if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
 					bool other;
 					EditPointHandle handle;
@@ -593,10 +577,6 @@ public class StrokeTool : Tool {
 					new_start = intersections.get_point (ep1, out other);
 					
 					print (@"from $i ");
-
-					// FIXME: DELETE
-					// Take the other route in some paths
-					// current.reverse ();
 					
 					i = index_of (current, other ? new_start.point : new_start.other_point);
 					
@@ -608,47 +588,43 @@ public class StrokeTool : Tool {
 					}
 					
 					ep1 = current.points.get (i);
-					ep1.left_handle.move_to_coordinate (handle.x, handle.y);
+					modified = ep1.copy ();
+					modified.left_handle.move_to_coordinate (handle.x, handle.y);
 				} 
 				
 				if ((ep1.flags & EditPoint.COPIED) > 0) {
 					merged.close ();
 					EditPoint first_point = merged.get_first_point ();
 					EditPointHandle h;
+
+					merged.get_first_point ().color = Color.green ();
+					merged.get_last_point ().color = Color.brown ();
 					
-					// FIXME: self intersection not intersection
-					if ((ep1.flags & EditPoint.INTERSECTION) > 0) { // FIXME SELF INTERSECTION
-						first_point.left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
-						
-						if (first_point.next != null) {
-							h = first_point.get_next ().get_left_handle ();
-							h.process_connected_handle ();
-						}
-					}
-					
-					if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
+					/*
+					//if ((ep1.flags & EditPoint.SELF_INTERSECTION) > 0) {
 						bool other;
-						
-						ep1.flags |= EditPoint.COPIED;
-						merged.add_point (ep1.copy ());
-						
+	
+						//ep1.flags |= EditPoint.COPIED;
+
 						new_start = intersections.get_point (ep1, out other);
-						ep2 = new_start.get_other_point (current);
-						ep1.right_handle.move_to_coordinate (ep2.right_handle.x, ep2.right_handle.y);
-					}
+						ep2 = other ? new_start.point : new_start.other_point;
+						merged.get_last_point ().left_handle.move_to_coordinate (ep2.left_handle.x, ep2.left_handle.y);
+
+						// FIXME: DELETE
+						//merged.add_point (ep1.copy ());
+						merged.get_last_point ().color = Color.yellow ();				
+					//}
+					*/
 					
 					print (@"Break at $(ep1.x), $(ep1.y)\n");
 					
 					merged.close ();
 					merged.create_list ();
 					parts.add (merged);
-					
+						
 					foreach (EditPoint n in merged.points) {
 						n.flags &= uint.MAX ^ EditPoint.SELF_INTERSECTION;
 					}
-					
-					merged.get_first_point ().color = Color.green ();
-					merged.get_last_point ().color = Color.brown ();
 					
 					merged.reverse ();
 					
@@ -661,16 +637,19 @@ public class StrokeTool : Tool {
 				if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
 					ep1.left_handle.convert_to_curve ();
 					ep1.right_handle.convert_to_curve ();
+					ep1.tie_handles = false;
+					ep1.reflective_point = false;
 				}
 				
 				// add point to path
 				ep1.flags |= EditPoint.COPIED;
-				merged.add_point (ep1.copy ());
+				merged.add_point (modified.copy ());
 				
 				print (@"Add point $i $(ep1.x), $(ep1.y)\n");
 				
 				i++;
 				ep1 = current.points.get (i % current.points.size);
+				modified = ep1.copy ();
 			}
 			
 			ep1.flags |= EditPoint.COPIED;
