@@ -725,7 +725,11 @@ public class StrokeTool : Tool {
 							|| (current == path2 && flat1.is_over_coordinate (px, py));
 		
 						if (first) {
-							previous = new_start.get_other_path (current).get_first_point ();
+							Path c = new_start.get_other_path (current);
+							if (c.points.size >= 1) {
+								previous = c.get_first_point ();
+							}
+							
 							first = false;
 						}
 					}
@@ -733,17 +737,20 @@ public class StrokeTool : Tool {
 				
 				if ((ep1.flags & EditPoint.COPIED) > 0) {
 					new_path.close ();
-					EditPoint first_point = new_path.get_first_point ();
-					EditPointHandle h;
-					if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
-						first_point.left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
-						
-						if (first_point.next != null) {
-							h = first_point.get_next ().get_left_handle ();
-							h.process_connected_handle ();
+					
+					if (new_path.points.size >= 1) {
+						EditPoint first_point = new_path.get_first_point ();
+						EditPointHandle h;
+						if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
+							first_point.left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
+							
+							if (first_point.next != null) {
+								h = first_point.get_next ().get_left_handle ();
+								h.process_connected_handle ();
+							}
 						}
 					}
-				
+					
 					break;
 				}
 
