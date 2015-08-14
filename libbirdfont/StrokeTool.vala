@@ -225,23 +225,38 @@ public class StrokeTool : Tool {
 			p.update_region_boundaries ();
 			flat.add (p.flatten ());
 		}
-		
+			
 		foreach (Path p in r.paths) {
 			PathList pl = get_insides (flat, p);
-
+			
 			int counters = 0;
 			int clockwise = 0;
 	
 			foreach (Path i in pl.paths) {
 				if (i.is_clockwise ()) {
+					print (@"clockwise++: $(i.points.size) $(i.get_first_point ().x), $(i.get_first_point ().y)\n");
 					clockwise++;
 				} else {
+					print (@"counters++: $(i.points.size)\n");
 					counters++;
 				}
 			}
 			
 			print (@"clockwise $clockwise  counters $counters  pl.size $(pl.paths.size)\n");
 			
+			if (p.is_clockwise ()) {
+				if (clockwise - 1 > counters) {
+					remove.add (p);
+					break;
+				}
+			} else {
+				if (clockwise < counters - 1) {
+					remove.add (p);
+					break;
+				}
+			}
+			
+			/*
 			if (p.is_clockwise ()) {
 				int c = clockwise - counters;
 				if (c % 2 == 0) {
@@ -255,8 +270,9 @@ public class StrokeTool : Tool {
 					break;
 				}
 			}
+			*/
 		}
-		
+
 		foreach (Path p in remove) {
 			r.paths.remove (p);
 			remove_merged_curve_parts (r);
@@ -2246,7 +2262,7 @@ public class StrokeTool : Tool {
 				}
 				
 				if (inside) {
-					insides.add (path);
+					insides.add (p); // add the flat inside to the list
 				}
 			}
 		}
@@ -2292,7 +2308,6 @@ public class StrokeTool : Tool {
 		prev = path.points.get (path.points.size - 1);
 		
  		foreach (EditPoint p in path.points) {
-			// FIXME: double check stroke
 			if ((fabs (p.x - point.x) < 0.1 && fabs (p.y - point.y) < 0.1) 
 				|| (fabs (prev.x - point.x) < 0.1 && fabs (prev.y - point.y) < 0.1)) {
 				return true;
