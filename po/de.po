@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-09 08:42+0200\n"
+"POT-Creation-Date: 2015-08-15 09:20+0200\n"
 "PO-Revision-Date: 2015-07-09 06:40+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,9 +119,21 @@ msgstr "Glyphe auswählen"
 msgid "Open"
 msgstr "Öffnen"
 
-#: libbirdfont/BezierTool.vala:50
+#: libbirdfont/BezierTool.vala:91
 msgid "Create Beziér curves"
 msgstr "Beziérkurven erstellen"
+
+#: libbirdfont/BezierTool.vala:95
+msgid "line"
+msgstr ""
+
+#: libbirdfont/BezierTool.vala:99
+msgid "corner"
+msgstr ""
+
+#: libbirdfont/BezierTool.vala:103
+msgid "on axis"
+msgstr ""
 
 #: libbirdfont/BirdFont.vala:23 libbirdfont/BirdFont.vala:177
 #: birdfont-autotrace/AutoTrace.vala:66
@@ -173,7 +185,7 @@ msgid "Glyph"
 msgstr "Glyphe"
 
 #: libbirdfont/BirdFont.vala:166 libbirdfont/DescriptionDisplay.vala:135
-#: libbirdfont/Menu.vala:485 libbirdfont/Menu.vala:487
+#: libbirdfont/Menu.vala:482 libbirdfont/Menu.vala:484
 #: libbirdfont/VersionList.vala:259 birdfont/GtkWindow.vala:955
 msgid "Version"
 msgstr "Version"
@@ -263,7 +275,7 @@ msgstr "A Ä B C D E F G H I J K L M O Ö P Q R S T U Ü V W X Y Z"
 
 #: libbirdfont/DescriptionDisplay.vala:52
 #: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:133
-#: libbirdfont/Menu.vala:478 libbirdfont/TableLayout.vala:203
+#: libbirdfont/Menu.vala:475 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr "Name und Beschreibung"
 
@@ -318,7 +330,7 @@ msgstr "Zeichenwerkzeuge"
 msgid "Control Point"
 msgstr "Kontrollpunkt"
 
-#: libbirdfont/DrawingTools.vala:122 libbirdfont/Menu.vala:246
+#: libbirdfont/DrawingTools.vala:122 libbirdfont/Menu.vala:243
 msgid "Layers"
 msgstr "Ebenen"
 
@@ -559,7 +571,7 @@ msgid "Set size for grid"
 msgstr "Rastergröße einstellen"
 
 #: libbirdfont/ExportSettings.vala:41 libbirdfont/ExportSettings.vala:185
-#: libbirdfont/Menu.vala:308
+#: libbirdfont/Menu.vala:305
 msgid "Export Settings"
 msgstr "Einstellungen exportieren"
 
@@ -613,7 +625,7 @@ msgstr "Schrift öffnen"
 msgid "Save font"
 msgstr "Schrift speichern"
 
-#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:471
+#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:468
 #: libbirdfont/SettingsDisplay.vala:211 libbirdfont/SettingsTab.vala:31
 #: libbirdfont/SettingsTab.vala:159
 msgid "Settings"
@@ -636,23 +648,23 @@ msgstr "Raster anzeigen"
 msgid "Guides"
 msgstr "Leitfäden"
 
-#: libbirdfont/HiddenTools.vala:29
+#: libbirdfont/HiddenTools.vala:33
 msgid "Zoom in"
 msgstr "Ansicht vergrößern"
 
-#: libbirdfont/HiddenTools.vala:36
+#: libbirdfont/HiddenTools.vala:40
 msgid "Zoom out"
 msgstr "Ansicht verkleinern"
 
-#: libbirdfont/HiddenTools.vala:43
+#: libbirdfont/HiddenTools.vala:47
 msgid "Convert the last segment to a straight line"
 msgstr "Letztes Segment in gerade Linie umwandeln"
 
-#: libbirdfont/HiddenTools.vala:51
+#: libbirdfont/HiddenTools.vala:55
 msgid "Convert the last control point to a corner node"
 msgstr "Letzten Ankerpunkt in Eckpunkt konvertieren"
 
-#: libbirdfont/HiddenTools.vala:59
+#: libbirdfont/HiddenTools.vala:63
 #, fuzzy
 msgid "Move handle along axis"
 msgstr "Griff auf Axis verschieben"
@@ -812,7 +824,7 @@ msgid "Contextual Substitutions"
 msgstr "Kontextabhängiger Ersatz"
 
 #: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
-#: libbirdfont/Menu.vala:426
+#: libbirdfont/Menu.vala:423
 msgid "Ligatures"
 msgstr "Ligaturen"
 
@@ -967,125 +979,124 @@ msgstr "Vorherigen Punkt auswählen"
 msgid "Select Point Below"
 msgstr "_Darunterliegenden Punkt auswählen"
 
-#: libbirdfont/Menu.vala:234
-#, fuzzy
+#: libbirdfont/Menu.vala:232
 msgid "Merge Paths"
-msgstr "Pfade vereinen"
+msgstr ""
 
-#: libbirdfont/Menu.vala:252
+#: libbirdfont/Menu.vala:249
 msgid "Move Layer Up"
 msgstr "Ebene nach oben schieben"
 
-#: libbirdfont/Menu.vala:259
+#: libbirdfont/Menu.vala:256
 msgid "Move Layer Down"
 msgstr "Ebene nach unten schieben"
 
-#: libbirdfont/Menu.vala:267
+#: libbirdfont/Menu.vala:264
 msgid "Import and Export"
 msgstr "Import und Export"
 
-#: libbirdfont/Menu.vala:273
+#: libbirdfont/Menu.vala:270
 msgid "Export Fonts"
 msgstr "Schrift exportieren"
 
-#: libbirdfont/Menu.vala:280
+#: libbirdfont/Menu.vala:277
 msgid "Export Glyph as SVG"
 msgstr "Zeichen als SVG exportieren"
 
-#: libbirdfont/Menu.vala:287
+#: libbirdfont/Menu.vala:284
 msgid "Import SVG file"
 msgstr "SVG-Datei importieren"
 
-#: libbirdfont/Menu.vala:294
+#: libbirdfont/Menu.vala:291
 msgid "Import SVG folder"
 msgstr "SVG Verzeichnis importieren"
 
-#: libbirdfont/Menu.vala:301
+#: libbirdfont/Menu.vala:298
 msgid "Import Background Image"
 msgstr "Hintergrundbild importieren"
 
-#: libbirdfont/Menu.vala:315 libbirdfont/Preview.vala:27
+#: libbirdfont/Menu.vala:312 libbirdfont/Preview.vala:27
 msgid "Preview"
 msgstr "Vorschau"
 
-#: libbirdfont/Menu.vala:323
+#: libbirdfont/Menu.vala:320
 #, fuzzy
 msgid "Tab"
 msgstr "_Reiter"
 
-#: libbirdfont/Menu.vala:329
+#: libbirdfont/Menu.vala:326
 #, fuzzy
 msgid "Next Tab"
 msgstr "_Nächster Tab"
 
-#: libbirdfont/Menu.vala:336
+#: libbirdfont/Menu.vala:333
 msgid "Previous Tab"
 msgstr "Vorheriger Tab"
 
-#: libbirdfont/Menu.vala:343
+#: libbirdfont/Menu.vala:340
 msgid "Close Tab"
 msgstr "Tab schließen"
 
-#: libbirdfont/Menu.vala:350
+#: libbirdfont/Menu.vala:347
 msgid "Close All Tabs"
 msgstr "Alle Tabs schließen"
 
-#: libbirdfont/Menu.vala:358
+#: libbirdfont/Menu.vala:355
 msgid "Spacing and Kerning"
 msgstr "Abstände und Unterschneidung"
 
-#: libbirdfont/Menu.vala:364
+#: libbirdfont/Menu.vala:361
 #, fuzzy
 msgid "Show Spacing Tab"
 msgstr "Zeige Registerkarte für Zeichenabstand"
 
-#: libbirdfont/Menu.vala:371
+#: libbirdfont/Menu.vala:368
 msgid "Show Kerning Tab"
 msgstr "Tab Unterschneidungen anzeigen"
 
-#: libbirdfont/Menu.vala:378
+#: libbirdfont/Menu.vala:375
 msgid "List Kerning Pairs"
 msgstr "Unterschneidungspaare auflisten"
 
 # sounds better
-#: libbirdfont/Menu.vala:385 libbirdfont/SpacingClassTab.vala:80
+#: libbirdfont/Menu.vala:382 libbirdfont/SpacingClassTab.vala:80
 msgid "Spacing Classes"
 msgstr "Format Abstand"
 
-#: libbirdfont/Menu.vala:392
+#: libbirdfont/Menu.vala:389
 msgid "Select Next Kerning Pair"
 msgstr "Nächstes Unterschneidungspaar auswählen"
 
-#: libbirdfont/Menu.vala:401
+#: libbirdfont/Menu.vala:398
 msgid "Select Previous Kerning Pair"
 msgstr "Vorheriges Unterschneidungspaar auswählen"
 
-#: libbirdfont/Menu.vala:410
+#: libbirdfont/Menu.vala:407
 #, fuzzy
 msgid "Load Kerning Strings"
 msgstr "Unterschneidungsdaten laden"
 
-#: libbirdfont/Menu.vala:417
+#: libbirdfont/Menu.vala:414
 msgid "Reload Kerning Strings"
 msgstr "Unterschneidungsdaten erneut laden"
 
-#: libbirdfont/Menu.vala:432
+#: libbirdfont/Menu.vala:429
 msgid "Show Ligatures"
 msgstr "Ligaturen anzeigen"
 
-#: libbirdfont/Menu.vala:439
+#: libbirdfont/Menu.vala:436
 msgid "Add Ligature"
 msgstr "Ligatur hinzufügen"
 
-#: libbirdfont/Menu.vala:448
+#: libbirdfont/Menu.vala:445
 msgid "Git"
 msgstr "Git"
 
-#: libbirdfont/Menu.vala:454
+#: libbirdfont/Menu.vala:451
 msgid "Save As .bfp"
 msgstr "Als .bfp speichern"
 
-#: libbirdfont/Menu.vala:463 libbirdfont/OverView.vala:390
+#: libbirdfont/Menu.vala:460 libbirdfont/OverView.vala:390
 msgid "Overview"
 msgstr "Übersicht"
 
@@ -1966,6 +1977,9 @@ msgstr "Wird geschrieben"
 
 #~ msgid "_Remove All Kerning Pairs"
 #~ msgstr "Alle Unterschneidungs-Paare _entfernen"
+
+#~ msgid "Merge paths"
+#~ msgstr "Pfade vereinen"
 
 #~ msgid "Delete selected glyph"
 #~ msgstr "Ausgewähltes Zeichen löschen"
