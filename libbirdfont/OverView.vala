@@ -497,7 +497,7 @@ public class OverView : FontDisplay {
 		
 		// offset 
 		item = get_selected_item ();
-		if (item.y + OverViewItem.height > allocation.height) {
+		if (item.y + OverViewItem.height + view_offset_y > allocation.height) {
 			view_offset_y = allocation.height - (item.y + OverViewItem.height);
 		}
 
