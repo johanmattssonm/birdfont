@@ -153,7 +153,12 @@ public class StrokeTool : Tool {
 
 					new_paths.remove (p1);
 					new_paths.remove (p2);
-					
+
+					o.remove (p1);
+					o.remove (p2);
+
+					o.append (r);
+										
 					i = 0;
 					j = 0;
 				}
@@ -392,6 +397,9 @@ public class StrokeTool : Tool {
 		foreach (Path p in parts.paths) {
 			reset_intersections (p);
 		}
+		
+		reset_intersections (path1);
+		reset_intersections (path2);
 
 		return parts;
 	}
