@@ -159,6 +159,16 @@ public class Menu : AbstractMenu {
 		});
 		edit_menu.items.add (simplify_path);
 
+		MenuItem merge_paths = add_menu_item (t_("Merge Paths"), "merge_paths", "Glyph");
+		merge_paths.action.connect (() => {
+			Task t = new Task ();
+			t.task.connect (merge_selected_paths);
+			MainWindow.native_window.run_background_thread (t);
+		
+			show_menu = false;
+		});
+		edit_menu.items.add (merge_paths);
+
 		MenuItem close_path = add_menu_item (t_("Close Path"), "close path", "Glyph");
 		close_path.action.connect (() => {
 			PenTool.close_all_paths ();
@@ -228,16 +238,6 @@ public class Menu : AbstractMenu {
 			show_menu = false;
 		});
 		edit_menu.items.add (select_point_below);
-
-		MenuItem merge_paths = add_menu_item (t_("Merge Paths"), "merge_paths", "Glyph");
-		merge_paths.action.connect (() => {
-			Task t = new Task ();
-			t.task.connect (merge_selected_paths);
-			MainWindow.native_window.run_background_thread (t);
-		
-			show_menu = false;
-		});
-		edit_menu.items.add (merge_paths);
 		
 		// layers
 		MenuItem layers = add_menu_item (t_("Layers"));
