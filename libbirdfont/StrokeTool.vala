@@ -119,7 +119,6 @@ public class StrokeTool : Tool {
 		PathList o = new PathList ();
 		PathList r;
 		PathList new_paths = new PathList ();
-		PathList removed_paths = new PathList ();
 		
 		g.store_undo_state ();
 				
@@ -479,7 +478,6 @@ public class StrokeTool : Tool {
 			EditPoint modified;
 			i = 0;
 			Intersection new_start = new Intersection.empty ();
-			EditPoint previous = new EditPoint ();
 			ep1 = current.points.get (i);
 			current = path;
 			
@@ -522,8 +520,6 @@ public class StrokeTool : Tool {
 				
 				if ((ep1.flags & EditPoint.COPIED) > 0) {
 					merged.close ();
-					EditPoint first_point = merged.get_first_point ();
-					EditPointHandle h;
 
 					merged.get_first_point ().color = Color.green ();
 					merged.get_last_point ().color = Color.brown ();
@@ -2162,6 +2158,10 @@ public class StrokeTool : Tool {
 		bool merge = false;
 		EditPoint intersection_point, other_intersection_point;
 		bool path1_direction, path2_direction;
+		
+		error = false;
+		merged_paths = new PathList ();
+		intersections = new IntersectionList ();
 
 		if (path1.points.size == 0) {
 			return false;
@@ -2170,11 +2170,7 @@ public class StrokeTool : Tool {
 		if (path2.points.size == 0) {
 			return false;
 		}
-		
-		error = false;
-		merged_paths = new PathList ();
-		intersections = new IntersectionList ();
-		
+				
 		reset_intersections (path1);
 		reset_intersections (path2);
 		
