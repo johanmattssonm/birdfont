@@ -521,9 +521,6 @@ public class StrokeTool : Tool {
 				if ((ep1.flags & EditPoint.COPIED) > 0) {
 					merged.close ();
 
-					merged.get_first_point ().color = Color.green ();
-					merged.get_last_point ().color = Color.brown ();
-
 					merged.close ();
 					merged.create_list ();
 					parts.add (merged);
