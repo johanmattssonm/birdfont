@@ -42,6 +42,7 @@ public class LigatureCollection : GLib.Object {
 		Font font = BirdFont.get_current_font ();
 		Ligatures ligatures = font.get_ligatures ();	
 		
+		int i = 0;
 		ligatures.get_ligatures ((parts, ligature) => {
 			add_ligatures (glyf_table, parts, ligature);
 		});	
@@ -49,7 +50,7 @@ public class LigatureCollection : GLib.Object {
 
 	void add_contextual_ligatures (GlyfTable glyf_table, ContextualLigature cl) {
 		foreach (string l in cl.ligatures.strip ().split (" ")) {
-			add_ligatures (glyf_table, cl.input, l); // FIXME: DELETE parts = "r" ? 
+			add_ligatures (glyf_table, cl.input, l);
 		}
 	}
 
@@ -60,6 +61,7 @@ public class LigatureCollection : GLib.Object {
 		Font font = BirdFont.get_current_font ();
 		string[] parts = characters.strip ().split (" ");
 		string l = ligatures;
+		bool has_set = false;
 
 		if (l.has_prefix ("U+") || l.has_prefix ("u+")) {
 			l = (!) Font.to_unichar (l).to_string ();
@@ -86,13 +88,19 @@ public class LigatureCollection : GLib.Object {
 			return;
 		}
 		
-		if (last_set.starts_with (parts[0])) {
+		foreach (LigatureSet s in ligature_sets) {
+			if (s.starts_with (parts[0])) {
+				has_set = true;
+				last_set = s;
+			}
+		}
+		
+		if (has_set) {
 			last_set.add (new Ligature (l, characters));
 		} else {
 			lig_set = new LigatureSet (glyf_table);
 			lig_set.add (new Ligature (l, characters));
 			ligature_sets.add (lig_set);
-			last_set = lig_set;
 		}		
 	}
 
