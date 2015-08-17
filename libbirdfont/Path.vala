@@ -1398,8 +1398,8 @@ public class Path : GLib.Object {
 		double ox = 0;
 		double oy = 0;
 		
-		EditPoint prev = points.get (points.size - 1).get_link_item ();
-		EditPoint i = points.get (0).get_link_item ();
+		EditPoint prev = points.get (points.size - 1);
+		EditPoint i = points.get (0);
 
 		bool done = false;
 		bool exit = false;
@@ -1440,17 +1440,29 @@ public class Path : GLib.Object {
 				i = i.get_next ();
 				prev = i.get_prev ();
 			}	else if (done && !is_open ()) {
-				i = points.get (0).get_link_item ();
-				prev = points.get (points.size - 1).get_link_item ();
+				i = points.get (0);
+				prev = points.get (points.size - 1);
 				exit = true;
 			} else {
 				break;
 			}
 
-			if (skip_previous == prev && skip_next == i) {
+			if (skip_previous == prev) {
 				continue;
 			}
 
+			if (prev.prev != null && skip_previous == prev.get_prev ()) {
+				continue;
+			}
+			
+			if (skip_next == i) {
+				continue;
+			}
+
+			if (prev.next != null && skip_next == prev.get_next ()) {
+				continue;
+			}
+			
 			all_of (prev, i, (cx, cy, t) => {
 				n = pow (x - cx, 2) + pow (y - cy, 2);
 				
