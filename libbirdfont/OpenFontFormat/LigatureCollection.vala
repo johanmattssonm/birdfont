@@ -42,7 +42,6 @@ public class LigatureCollection : GLib.Object {
 		Font font = BirdFont.get_current_font ();
 		Ligatures ligatures = font.get_ligatures ();	
 		
-		int i = 0;
 		ligatures.get_ligatures ((parts, ligature) => {
 			add_ligatures (glyf_table, parts, ligature);
 		});	

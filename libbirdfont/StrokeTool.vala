@@ -341,16 +341,18 @@ public class StrokeTool : Tool {
 									lep.reflective_point = false;
 									lep2.tie_handles = false;
 									lep2.reflective_point = false;
-									
-									// FIXME: DELETE
-									lep.color = Color.magenta ();
-									lep2.color = Color.magenta ();
 								} else {
-									if (Path.distance_to_point (lep, (!) lep.prev) < 0.001) {
+									if (lep.prev != null && Path.distance_to_point (lep, (!) lep.prev) < 0.00000001) {
+										lep.get_prev ().flags |= EditPoint.INTERSECTION;
+										lep.get_prev ().tie_handles = false;
+										lep.get_prev ().reflective_point = false;
 										continue;
 									}
 
-									if (Path.distance_to_point (lep, (!) lep.next) < 0.001) {
+									if (lep.next != null && Path.distance_to_point (lep, (!) lep.next) < 0.00000001) {
+										lep.get_next ().flags |= EditPoint.INTERSECTION;
+										lep.get_next ().tie_handles = false;
+										lep.get_next ().reflective_point = false;
 										continue;
 									}
 
@@ -358,9 +360,6 @@ public class StrokeTool : Tool {
 									lep.flags |= EditPoint.INTERSECTION;
 									lep.tie_handles = false;
 									lep.reflective_point = false;
-									
-									// FIXME: DELETE
-									lep.color = Color.pink ();
 								}
 								
 								has_split_point = true;
@@ -374,12 +373,7 @@ public class StrokeTool : Tool {
 		if (!has_split_point) {
 			return r;
 		}
-		
-		// FIXME: DELETE
-		foreach (Path p in o.paths) {
-			((!) BirdFont.get_current_font ().get_glyph_by_name ("a")).add_path (p.copy ());
-		}
-		
+
 		// remove double intersection points 
 		EditPoint prev = new EditPoint ();
 		foreach (Path pp in o.paths) {
@@ -399,11 +393,6 @@ public class StrokeTool : Tool {
 			pp.remove_deleted_points ();
 		}
 
-		// FIXME: DELETE
-		foreach (Path p in o.paths) {
-			((!) BirdFont.get_current_font ().get_glyph_by_name ("b")).add_path (p.copy ());
-		}
-				
 		foreach (Path p in o.paths) {
 			foreach (EditPoint ep in p.points) {
 				ep.flags &= uint.MAX ^ EditPoint.COPIED;
@@ -604,6 +593,7 @@ public class StrokeTool : Tool {
 			}
 			
 			ep1.flags |= EditPoint.COPIED;
+			
 		}
 		
 		return parts;
@@ -630,7 +620,7 @@ public class StrokeTool : Tool {
 		foreach (EditPoint n in path2.points) {
 			n.flags &= uint.MAX ^ EditPoint.COPIED;
 		}
-				
+						
 		// build list of intersection points
 		for (int i = 0; i < path1.points.size; i++) {
 			ep1 = path1.points.get (i);
@@ -644,7 +634,7 @@ public class StrokeTool : Tool {
 					d = Path.distance_to_point (ep1, ep2);
 					if ((ep2.flags & EditPoint.COPIED) == 0
 						&& (ep2.flags & EditPoint.INTERSECTION) > 0) {
-						if (d < min_d) {
+						if (d < min_d && d < 0.1) {
 							min_d = d;
 							found_intersection = true;
 							found = ep2;
@@ -654,7 +644,7 @@ public class StrokeTool : Tool {
 
 				if (!found_intersection) {
 					warning (@"No intersection for:\n $(ep1)");
-					return r;
+					continue;
 				}
 				
 				found.flags |= EditPoint.COPIED;
@@ -807,7 +797,7 @@ public class StrokeTool : Tool {
 				ep1.flags |= EditPoint.COPIED;
 				new_path.add_point (ep1.copy ());
 
-				if ((ep1.flags & EditPoint.INTERSECTION) > 0) { // FIXME SELF INTERSECTION
+				if ((ep1.flags & EditPoint.INTERSECTION) > 0) { 
 					new_path.get_last_point ().left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
 				}
 
