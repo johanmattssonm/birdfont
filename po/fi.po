@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-15 09:20+0200\n"
+"POT-Creation-Date: 2015-08-18 12:46+0200\n"
 "PO-Revision-Date: 2015-06-27 20:54+0000\n"
 "Last-Translator: Jyrki <yardan74@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -932,49 +932,49 @@ msgid "Simplify Path"
 msgstr "Yksinkertaista Polkua"
 
 #: libbirdfont/Menu.vala:162
+msgid "Merge Paths"
+msgstr ""
+
+#: libbirdfont/Menu.vala:172
 #, fuzzy
 msgid "Close Path"
 msgstr "Sulje polku"
 
-#: libbirdfont/Menu.vala:169
+#: libbirdfont/Menu.vala:179
 msgid "Glyph Sequence"
 msgstr "Glyyfijono"
 
-#: libbirdfont/Menu.vala:176
+#: libbirdfont/Menu.vala:186
 msgid "Set Background Glyph"
 msgstr "Aseta taustaglyyfi"
 
-#: libbirdfont/Menu.vala:183
+#: libbirdfont/Menu.vala:193
 msgid "Remove Background Glyph"
 msgstr "poista taustaglyyfi"
 
-#: libbirdfont/Menu.vala:190
+#: libbirdfont/Menu.vala:200
 msgid "Create Guide"
 msgstr "Luo apulinja"
 
-#: libbirdfont/Menu.vala:197
+#: libbirdfont/Menu.vala:207
 msgid "List Guides"
 msgstr "Listaa apulinjat"
 
-#: libbirdfont/Menu.vala:204
+#: libbirdfont/Menu.vala:214
 msgid "Select Point Above"
 msgstr "Valitse piste yläpuolelta"
 
-#: libbirdfont/Menu.vala:211
+#: libbirdfont/Menu.vala:221
 msgid "Select Next Point"
 msgstr "Valitse seuraava piste"
 
-#: libbirdfont/Menu.vala:218
+#: libbirdfont/Menu.vala:228
 msgid "Select Previous Point"
 msgstr "valitse edellinen piste"
 
-#: libbirdfont/Menu.vala:225
+#: libbirdfont/Menu.vala:235
 msgid "Select Point Below"
 msgstr "valitse piste alapuolelta"
-
-#: libbirdfont/Menu.vala:232
-msgid "Merge Paths"
-msgstr ""
 
 #: libbirdfont/Menu.vala:249
 msgid "Move Layer Up"

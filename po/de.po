@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-15 09:20+0200\n"
+"POT-Creation-Date: 2015-08-18 12:46+0200\n"
 "PO-Revision-Date: 2015-07-09 06:40+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -937,51 +937,51 @@ msgid "Simplify Path"
 msgstr "Pfad vereinfachen"
 
 #: libbirdfont/Menu.vala:162
+msgid "Merge Paths"
+msgstr ""
+
+#: libbirdfont/Menu.vala:172
 msgid "Close Path"
 msgstr "Pfad schließen"
 
-#: libbirdfont/Menu.vala:169
+#: libbirdfont/Menu.vala:179
 msgid "Glyph Sequence"
 msgstr "Glyphen Abfolge"
 
-#: libbirdfont/Menu.vala:176
+#: libbirdfont/Menu.vala:186
 msgid "Set Background Glyph"
 msgstr "Hintergrund-Glyphe festlegen"
 
-#: libbirdfont/Menu.vala:183
+#: libbirdfont/Menu.vala:193
 #, fuzzy
 msgid "Remove Background Glyph"
 msgstr "Hintergrund-Glyphe entfernen"
 
-#: libbirdfont/Menu.vala:190
+#: libbirdfont/Menu.vala:200
 #, fuzzy
 msgid "Create Guide"
 msgstr "Hilfslinien erstellen"
 
-#: libbirdfont/Menu.vala:197
+#: libbirdfont/Menu.vala:207
 msgid "List Guides"
 msgstr "Hilfslinien anzeigen"
 
-#: libbirdfont/Menu.vala:204
+#: libbirdfont/Menu.vala:214
 msgid "Select Point Above"
 msgstr "Darüberliegenden Punkt auswählen"
 
-#: libbirdfont/Menu.vala:211
+#: libbirdfont/Menu.vala:221
 msgid "Select Next Point"
 msgstr "Nächsten Punkt auswählen"
 
-#: libbirdfont/Menu.vala:218
+#: libbirdfont/Menu.vala:228
 msgid "Select Previous Point"
 msgstr "Vorherigen Punkt auswählen"
 
-#: libbirdfont/Menu.vala:225
+#: libbirdfont/Menu.vala:235
 #, fuzzy
 msgid "Select Point Below"
 msgstr "_Darunterliegenden Punkt auswählen"
-
-#: libbirdfont/Menu.vala:232
-msgid "Merge Paths"
-msgstr ""
 
 #: libbirdfont/Menu.vala:249
 msgid "Move Layer Up"

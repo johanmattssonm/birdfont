@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-15 09:20+0200\n"
-"PO-Revision-Date: 2015-08-15 07:19+0000\n"
+"POT-Creation-Date: 2015-08-18 12:46+0200\n"
+"PO-Revision-Date: 2015-08-15 15:38+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1439623143.000000\n"
+"X-POOTLE-MTIME: 1439653092.000000\n"
 
 #: libbirdfont/Argument.vala:276
 msgid "Usage"
@@ -815,7 +815,7 @@ msgstr "Ny kontextuell ligatur"
 
 #: libbirdfont/LigatureList.vala:115
 msgid "Contextual Substitutions"
-msgstr "Ny kontextuell ligatur"
+msgstr "Kontextuell ligatur"
 
 #: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
 #: libbirdfont/Menu.vala:423
@@ -928,48 +928,48 @@ msgid "Simplify Path"
 msgstr "Förenkla slinga"
 
 #: libbirdfont/Menu.vala:162
+msgid "Merge Paths"
+msgstr "Sammanfoga slingor"
+
+#: libbirdfont/Menu.vala:172
 msgid "Close Path"
 msgstr "Stäng slinga"
 
-#: libbirdfont/Menu.vala:169
+#: libbirdfont/Menu.vala:179
 msgid "Glyph Sequence"
 msgstr "Teckensekvens"
 
-#: libbirdfont/Menu.vala:176
+#: libbirdfont/Menu.vala:186
 msgid "Set Background Glyph"
 msgstr "Ange bakgrundstecken"
 
-#: libbirdfont/Menu.vala:183
+#: libbirdfont/Menu.vala:193
 msgid "Remove Background Glyph"
 msgstr "Ta bort bakgrundstecknet"
 
-#: libbirdfont/Menu.vala:190
+#: libbirdfont/Menu.vala:200
 msgid "Create Guide"
 msgstr "Skapa hjälplinje"
 
-#: libbirdfont/Menu.vala:197
+#: libbirdfont/Menu.vala:207
 msgid "List Guides"
 msgstr "Redigera hjälplinjer"
 
-#: libbirdfont/Menu.vala:204
+#: libbirdfont/Menu.vala:214
 msgid "Select Point Above"
 msgstr "Välj punkten ovanför"
 
-#: libbirdfont/Menu.vala:211
+#: libbirdfont/Menu.vala:221
 msgid "Select Next Point"
 msgstr "Välj punkten till höger"
 
-#: libbirdfont/Menu.vala:218
+#: libbirdfont/Menu.vala:228
 msgid "Select Previous Point"
 msgstr "Välj punkten till vänster"
 
-#: libbirdfont/Menu.vala:225
+#: libbirdfont/Menu.vala:235
 msgid "Select Point Below"
 msgstr "Välj punkten nedanför"
-
-#: libbirdfont/Menu.vala:232
-msgid "Merge Paths"
-msgstr "Sammanfoga slingor"
 
 #: libbirdfont/Menu.vala:249
 msgid "Move Layer Up"
