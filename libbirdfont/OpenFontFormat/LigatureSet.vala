@@ -101,7 +101,7 @@ public class LigatureSet : GLib.Object {
 		fd.add_ushort ((uint16) gid);
 		
 		// number of components including the coverage glyph
-		fd.add_ushort ((uint16) parts.length); 
+		fd.add_ushort ((uint16) parts.length);
 
 		foreach (string p in parts) {
 			if (p.has_prefix ("U+") || p.has_prefix ("u+")) {

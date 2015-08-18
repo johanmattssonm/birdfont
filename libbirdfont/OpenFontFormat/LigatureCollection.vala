@@ -100,7 +100,14 @@ public class LigatureCollection : GLib.Object {
 			lig_set = new LigatureSet (glyf_table);
 			lig_set.add (new Ligature (l, characters));
 			ligature_sets.add (lig_set);
-		}		
+		}
+		
+		// make sure coverage table is sorted otherwise will substitution not work
+		ligature_sets.sort ((a, b) => {
+			LigatureSet la = (LigatureSet) a;
+			LigatureSet lb = (LigatureSet) b;
+			return Posix.strcmp (la.get_coverage_char (), lb.get_coverage_char ());
+		});
 	}
 
 	public FontData get_font_data (GlyfTable glyf_table) throws GLib.Error {
@@ -115,7 +122,7 @@ public class LigatureCollection : GLib.Object {
 		table_start = (uint16) fd.length_with_padding ();
 
 		fd.add_ushort (1); // format identifier
-		fd.add_ushort (6 + (uint16) 2 * ligature_sets.size); // offset to coverage
+		fd.add_ushort (6 + (uint16) (2 * ligature_sets.size)); // offset to coverage
 		fd.add_ushort ((uint16) ligature_sets.size); // number of ligature set tables
 
 		// array of offsets to ligature sets
