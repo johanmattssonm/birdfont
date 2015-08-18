@@ -1,3 +1,10 @@
+birdfont (2.11.0) stable;
+
+  * Merge overlapping regions
+  * Bug fixes in the TTF generator
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue Aug 18 16:57:08 CEST 2015
+
 birdfont (2.10.5) stable;
 
   * Lock grid and guides
