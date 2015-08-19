@@ -89,7 +89,7 @@ public class ContextualLigature : GLib.Object {
 		// gid array 
 		foreach (string glyph_name in backtrack) {
 			fd.add_ushort (1); // format
-			fd.add_ushort ((uint16) backtrack.size); // coverage array length
+			fd.add_ushort (1); // coverage array length
 			fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
 		}
 				
@@ -101,19 +101,19 @@ public class ContextualLigature : GLib.Object {
 		// gid array 
 		foreach (string glyph_name in input) {
 			fd.add_ushort (1); // format
-			fd.add_ushort ((uint16) input.size); // coverage array length
+			fd.add_ushort (1); // coverage array length
 			fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
 		}
 
 		// lookahead coverage table1
 		if (fd.length_with_padding () != lookahead_offset) {
 			warning (@"Wrong lookahead offset: $lookahead_offset != $(fd.length_with_padding ())");
-		}	
+		}
 
 		// gid array 
 		foreach (string glyph_name in lookahead) {
 			fd.add_ushort (1); // format
-			fd.add_ushort ((uint16) lookahead.size); // coverage array length
+			fd.add_ushort (1); // coverage array length
 			fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
 		}
 		
