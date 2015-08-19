@@ -106,7 +106,7 @@ public class LigatureCollection : GLib.Object {
 		ligature_sets.sort ((a, b) => {
 			LigatureSet la = (LigatureSet) a;
 			LigatureSet lb = (LigatureSet) b;
-			return Posix.strcmp (la.get_coverage_char (), lb.get_coverage_char ());
+			return (int) (la.get_coverage_char ().get_char () - lb.get_coverage_char ().get_char ());
 		});
 	}
 
