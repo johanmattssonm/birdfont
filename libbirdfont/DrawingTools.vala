@@ -1236,9 +1236,9 @@ public class DrawingTools : ToolCollection  {
 			Toolbox tb = MainWindow.get_toolbox ();
 			
 			tb.reset_active_tool ();
-			update_drawing_and_background_tools (bezier_tool);
-			tb.select_tool (bezier_tool);
-			tb.set_current_tool (bezier_tool);
+			update_drawing_and_background_tools (point_tool);
+			tb.select_tool (point_tool);
+			tb.set_current_tool (point_tool);
 					
 			set_point_type_from_preferences ();
 			
