@@ -250,7 +250,7 @@ public class NameTable : OtfTable {
 		for (int i = 0; i < num_records; i++) {
 			t = (!) text.get (i);
 			p = (!) type.get (i);
-			l = (uint16) t.length;
+			l = (uint16) FontData.macroman_strlen (t);
 			
 			fd.add_ushort (1); // platform
 			fd.add_ushort (0); // encoding id
@@ -264,7 +264,7 @@ public class NameTable : OtfTable {
 		for (int i = 0; i < num_records; i++) {
 			t = (!) text.get (i);
 			p = (!) type.get (i);
-			l = (uint16) (2 * t.char_count ()); // FIXME: handle UTF-16 in a better way, gconvert it.
+			l = (uint16) FontData.utf16_strlen (t); 
 
 			fd.add_ushort (3); // platform
 			fd.add_ushort (1); 	// encoding id
@@ -277,7 +277,7 @@ public class NameTable : OtfTable {
 
 		// platform 1
 		foreach (string s in text) {
-			fd.add_str (s);
+			fd.add_macroman_str (s);
 		}
 		
 		// platform 3

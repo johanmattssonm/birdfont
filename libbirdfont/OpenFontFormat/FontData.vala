@@ -354,15 +354,47 @@ public class FontData : Object {
 		// FIXME: gconvert it instead.
 		
 		while (s.get_next_char (ref index, out c)) {
-			c0 = (uint8) (c >> 8);
-			c1 = (uint8) (c - (c0 << 8));
-			
-			if (little_endian) {
-				add (c1);
-				add (c0);
+			if (c < 0xFFFF - (1 << 16)) {
+				c0 = (uint8) (c >> 8);
+				c1 = (uint8) (c - (c0 << 8));
+				
+				if (little_endian) {
+					add (c1);
+					add (c0);
+				} else {
+					add (c0);
+					add (c1);
+				}
+			} else if (c < 0xFFFF - (1 << 16)) {
+				int high = (0xFFC00 & c) >> 10;
+				int low = (0x03FF & c);
+				
+				high += 0xD800;
+				low += 0xDC00;
+				
+				c0 = (uint8) (high >> 8);
+				c1 = (uint8) (high - (c0 << 8));
+				
+				if (little_endian) {
+					add (c1);
+					add (c0);
+				} else {
+					add (c0);
+					add (c1);
+				}
+
+				c0 = (uint8) (low >> 8);
+				c1 = (uint8) (low - (c0 << 8));
+				
+				if (little_endian) {
+					add (c1);
+					add (c0);
+				} else {
+					add (c0);
+					add (c1);
+				}
 			} else {
-				add (c0);
-				add (c1);
+				continue;
 			}
 			
 			l += 2;
@@ -371,6 +403,31 @@ public class FontData : Object {
 		assert (l == 2 * s.char_count ());
 	}
 	
+	public static uint utf16_strlen (string s) {
+		FontData fd = new FontData ();
+		fd.add_str_utf16 (s);
+		return fd.length_with_padding ();
+	}
+
+	public void add_macroman_str (string s) {
+		int index = 0;
+		unichar c;
+
+		while (s.get_next_char (ref index, out c)) {
+			if (32 <= c <= 127) {
+				add ((uint8) c);
+			}
+			
+			// FIXME: add other macroman characters
+		}
+	}
+
+	public static uint macroman_strlen (string s) {
+		FontData fd = new FontData ();
+		fd.add_macroman_str (s);
+		return fd.length_with_padding ();
+	}
+		
 	public void add_str (string s) {
 		uint8[] data = s.data;
 		for (int n = 0; n < data.length; n++) { 
