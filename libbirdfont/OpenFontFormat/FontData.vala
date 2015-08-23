@@ -345,7 +345,6 @@ public class FontData : Object {
 	}
 	
 	public void add_str_utf16 (string s, bool little_endian = false) {
-			
 		int index = 0;
 		unichar c;
 		uint8 c0;
@@ -353,11 +352,7 @@ public class FontData : Object {
 		int l = 0;
 		
 		while (s.get_next_char (ref index, out c)) {
-			if (skip_terminating_null && c == '\0') {
-				continue;
-			}
-			
-			if (c < 0xFFFF - (1 << 16)) {
+			if (c <= 0xFFFF - (1 << 16)) {
 				c0 = (uint8) (c >> 8);
 				c1 = (uint8) (c - (c0 << 8));
 				
@@ -368,7 +363,7 @@ public class FontData : Object {
 					add (c0);
 					add (c1);
 				}
-			} else if (c < 0xFFFF - (1 << 16)) {
+			} else if (c <= 0x423A35C7) {
 				int high = (0xFFC00 & c) >> 10;
 				int low = (0x03FF & c);
 				
@@ -406,12 +401,6 @@ public class FontData : Object {
 		assert (l == 2 * s.char_count ());
 	}
 	
-	public void add_unichar_utf16 (unichar c) {
-		StringBuilder s = new StringBuilder ();
-		s.append_unichar (c);
-		add_str_utf16 (s.str);
-	}
-	
 	public static uint utf16_strlen (string s) {
 		FontData fd = new FontData ();
 		fd.add_str_utf16 (s);
@@ -426,134 +415,134 @@ public class FontData : Object {
 			if (32 <= c <= 127) {
 				add ((uint8) c);
 			} else {
-				if (c == 128) add_unichar_utf16 ((unichar) 196);
-				if (c == 129) add_unichar_utf16 ((unichar) 197);
-				if (c == 130) add_unichar_utf16 ((unichar) 199);
-				if (c == 131) add_unichar_utf16 ((unichar) 201);
-				if (c == 132) add_unichar_utf16 ((unichar) 209);
-				if (c == 133) add_unichar_utf16 ((unichar) 214);
-				if (c == 134) add_unichar_utf16 ((unichar) 220);
-				if (c == 135) add_unichar_utf16 ((unichar) 225);
-				if (c == 136) add_unichar_utf16 ((unichar) 224);
-				if (c == 137) add_unichar_utf16 ((unichar) 226);
-				if (c == 138) add_unichar_utf16 ((unichar) 228);
-				if (c == 139) add_unichar_utf16 ((unichar) 227);
-				if (c == 140) add_unichar_utf16 ((unichar) 229);
-				if (c == 141) add_unichar_utf16 ((unichar) 231);
-				if (c == 142) add_unichar_utf16 ((unichar) 233);
-				if (c == 143) add_unichar_utf16 ((unichar) 232);
-				if (c == 144) add_unichar_utf16 ((unichar) 234);
-				if (c == 145) add_unichar_utf16 ((unichar) 235);
-				if (c == 146) add_unichar_utf16 ((unichar) 237);
-				if (c == 147) add_unichar_utf16 ((unichar) 236);
-				if (c == 148) add_unichar_utf16 ((unichar) 238);
-				if (c == 149) add_unichar_utf16 ((unichar) 239);
-				if (c == 150) add_unichar_utf16 ((unichar) 241);
-				if (c == 151) add_unichar_utf16 ((unichar) 243);
-				if (c == 152) add_unichar_utf16 ((unichar) 242);
-				if (c == 153) add_unichar_utf16 ((unichar) 244);
-				if (c == 154) add_unichar_utf16 ((unichar) 246);
-				if (c == 155) add_unichar_utf16 ((unichar) 245);
-				if (c == 156) add_unichar_utf16 ((unichar) 250);
-				if (c == 157) add_unichar_utf16 ((unichar) 249);
-				if (c == 158) add_unichar_utf16 ((unichar) 251);
-				if (c == 159) add_unichar_utf16 ((unichar) 252);
-				if (c == 160) add_unichar_utf16 ((unichar) 8224);
-				if (c == 161) add_unichar_utf16 ((unichar) 176);
-				if (c == 162) add_unichar_utf16 ((unichar) 162);
-				if (c == 163) add_unichar_utf16 ((unichar) 163);
-				if (c == 164) add_unichar_utf16 ((unichar) 167);
-				if (c == 165) add_unichar_utf16 ((unichar) 8226);
-				if (c == 166) add_unichar_utf16 ((unichar) 182);
-				if (c == 167) add_unichar_utf16 ((unichar) 223);
-				if (c == 168) add_unichar_utf16 ((unichar) 174);
-				if (c == 169) add_unichar_utf16 ((unichar) 169);
-				if (c == 170) add_unichar_utf16 ((unichar) 8482);
-				if (c == 171) add_unichar_utf16 ((unichar) 180);
-				if (c == 172) add_unichar_utf16 ((unichar) 168);
-				if (c == 173) add_unichar_utf16 ((unichar) 8800);
-				if (c == 174) add_unichar_utf16 ((unichar) 198);
-				if (c == 175) add_unichar_utf16 ((unichar) 216);
-				if (c == 176) add_unichar_utf16 ((unichar) 8734);
-				if (c == 177) add_unichar_utf16 ((unichar) 177);
-				if (c == 178) add_unichar_utf16 ((unichar) 8804);
-				if (c == 179) add_unichar_utf16 ((unichar) 8805);
-				if (c == 180) add_unichar_utf16 ((unichar) 165);
-				if (c == 181) add_unichar_utf16 ((unichar) 181);
-				if (c == 182) add_unichar_utf16 ((unichar) 8706);
-				if (c == 183) add_unichar_utf16 ((unichar) 8721);
-				if (c == 184) add_unichar_utf16 ((unichar) 8719);
-				if (c == 185) add_unichar_utf16 ((unichar) 960);
-				if (c == 186) add_unichar_utf16 ((unichar) 8747);
-				if (c == 187) add_unichar_utf16 ((unichar) 170);
-				if (c == 188) add_unichar_utf16 ((unichar) 186);
-				if (c == 189) add_unichar_utf16 ((unichar) 937);
-				if (c == 190) add_unichar_utf16 ((unichar) 230);
-				if (c == 191) add_unichar_utf16 ((unichar) 248);
-				if (c == 192) add_unichar_utf16 ((unichar) 191);
-				if (c == 193) add_unichar_utf16 ((unichar) 161);
-				if (c == 194) add_unichar_utf16 ((unichar) 172);
-				if (c == 195) add_unichar_utf16 ((unichar) 8730);
-				if (c == 196) add_unichar_utf16 ((unichar) 402);
-				if (c == 197) add_unichar_utf16 ((unichar) 8776);
-				if (c == 198) add_unichar_utf16 ((unichar) 8710);
-				if (c == 199) add_unichar_utf16 ((unichar) 171);
-				if (c == 200) add_unichar_utf16 ((unichar) 187);
-				if (c == 201) add_unichar_utf16 ((unichar) 8230);
-				if (c == 202) add_unichar_utf16 ((unichar) 160);
-				if (c == 203) add_unichar_utf16 ((unichar) 192);
-				if (c == 204) add_unichar_utf16 ((unichar) 195);
-				if (c == 205) add_unichar_utf16 ((unichar) 213);
-				if (c == 206) add_unichar_utf16 ((unichar) 338);
-				if (c == 207) add_unichar_utf16 ((unichar) 339);
-				if (c == 208) add_unichar_utf16 ((unichar) 8211);
-				if (c == 209) add_unichar_utf16 ((unichar) 8212);
-				if (c == 210) add_unichar_utf16 ((unichar) 8220);
-				if (c == 211) add_unichar_utf16 ((unichar) 8221);
-				if (c == 212) add_unichar_utf16 ((unichar) 8216);
-				if (c == 213) add_unichar_utf16 ((unichar) 8217);
-				if (c == 214) add_unichar_utf16 ((unichar) 247);
-				if (c == 215) add_unichar_utf16 ((unichar) 9674);
-				if (c == 216) add_unichar_utf16 ((unichar) 255);
-				if (c == 217) add_unichar_utf16 ((unichar) 376);
-				if (c == 218) add_unichar_utf16 ((unichar) 8260);
-				if (c == 219) add_unichar_utf16 ((unichar) 8364);
-				if (c == 220) add_unichar_utf16 ((unichar) 8249);
-				if (c == 221) add_unichar_utf16 ((unichar) 8250);
-				if (c == 222) add_unichar_utf16 ((unichar) 64257);
-				if (c == 223) add_unichar_utf16 ((unichar) 64258);
-				if (c == 224) add_unichar_utf16 ((unichar) 8225);
-				if (c == 225) add_unichar_utf16 ((unichar) 183);
-				if (c == 226) add_unichar_utf16 ((unichar) 8218);
-				if (c == 227) add_unichar_utf16 ((unichar) 8222);
-				if (c == 228) add_unichar_utf16 ((unichar) 8240);
-				if (c == 229) add_unichar_utf16 ((unichar) 194);
-				if (c == 230) add_unichar_utf16 ((unichar) 202);
-				if (c == 231) add_unichar_utf16 ((unichar) 193);
-				if (c == 232) add_unichar_utf16 ((unichar) 203);
-				if (c == 233) add_unichar_utf16 ((unichar) 200);
-				if (c == 234) add_unichar_utf16 ((unichar) 205);
-				if (c == 235) add_unichar_utf16 ((unichar) 206);
-				if (c == 236) add_unichar_utf16 ((unichar) 207);
-				if (c == 237) add_unichar_utf16 ((unichar) 204);
-				if (c == 238) add_unichar_utf16 ((unichar) 211);
-				if (c == 239) add_unichar_utf16 ((unichar) 212);
-				if (c == 240) add_unichar_utf16 ((unichar) 63743);
-				if (c == 241) add_unichar_utf16 ((unichar) 210);
-				if (c == 242) add_unichar_utf16 ((unichar) 218);
-				if (c == 243) add_unichar_utf16 ((unichar) 219);
-				if (c == 244) add_unichar_utf16 ((unichar) 217);
-				if (c == 245) add_unichar_utf16 ((unichar) 305);
-				if (c == 246) add_unichar_utf16 ((unichar) 710);
-				if (c == 247) add_unichar_utf16 ((unichar) 732);
-				if (c == 248) add_unichar_utf16 ((unichar) 175);
-				if (c == 249) add_unichar_utf16 ((unichar) 728);
-				if (c == 250) add_unichar_utf16 ((unichar) 729);
-				if (c == 251) add_unichar_utf16 ((unichar) 730);
-				if (c == 252) add_unichar_utf16 ((unichar) 184);
-				if (c == 253) add_unichar_utf16 ((unichar) 733);
-				if (c == 254) add_unichar_utf16 ((unichar) 731);
-				if (c == 255) add_unichar_utf16 ((unichar) 711);
+				if (c == 196) add ((uint8) 128);
+				if (c == 197) add ((uint8) 129);
+				if (c == 199) add ((uint8) 130);
+				if (c == 201) add ((uint8) 131);
+				if (c == 209) add ((uint8) 132);
+				if (c == 214) add ((uint8) 133);
+				if (c == 220) add ((uint8) 134);
+				if (c == 225) add ((uint8) 135);
+				if (c == 224) add ((uint8) 136);
+				if (c == 226) add ((uint8) 137);
+				if (c == 228) add ((uint8) 138);
+				if (c == 227) add ((uint8) 139);
+				if (c == 229) add ((uint8) 140);
+				if (c == 231) add ((uint8) 141);
+				if (c == 233) add ((uint8) 142);
+				if (c == 232) add ((uint8) 143);
+				if (c == 234) add ((uint8) 144);
+				if (c == 235) add ((uint8) 145);
+				if (c == 237) add ((uint8) 146);
+				if (c == 236) add ((uint8) 147);
+				if (c == 238) add ((uint8) 148);
+				if (c == 239) add ((uint8) 149);
+				if (c == 241) add ((uint8) 150);
+				if (c == 243) add ((uint8) 151);
+				if (c == 242) add ((uint8) 152);
+				if (c == 244) add ((uint8) 153);
+				if (c == 246) add ((uint8) 154);
+				if (c == 245) add ((uint8) 155);
+				if (c == 250) add ((uint8) 156);
+				if (c == 249) add ((uint8) 157);
+				if (c == 251) add ((uint8) 158);
+				if (c == 252) add ((uint8) 159);
+				if (c == 8224) add ((uint8) 160);
+				if (c == 176) add ((uint8) 161);
+				if (c == 162) add ((uint8) 162);
+				if (c == 163) add ((uint8) 163);
+				if (c == 167) add ((uint8) 164);
+				if (c == 8226) add ((uint8) 165);
+				if (c == 182) add ((uint8) 166);
+				if (c == 223) add ((uint8) 167);
+				if (c == 174) add ((uint8) 168);
+				if (c == 169) add ((uint8) 169);
+				if (c == 8482) add ((uint8) 170);
+				if (c == 180) add ((uint8) 171);
+				if (c == 168) add ((uint8) 172);
+				if (c == 8800) add ((uint8) 173);
+				if (c == 198) add ((uint8) 174);
+				if (c == 216) add ((uint8) 175);
+				if (c == 8734) add ((uint8) 176);
+				if (c == 177) add ((uint8) 177);
+				if (c == 8804) add ((uint8) 178);
+				if (c == 8805) add ((uint8) 179);
+				if (c == 165) add ((uint8) 180);
+				if (c == 181) add ((uint8) 181);
+				if (c == 8706) add ((uint8) 182);
+				if (c == 8721) add ((uint8) 183);
+				if (c == 8719) add ((uint8) 184);
+				if (c == 960) add ((uint8) 185);
+				if (c == 8747) add ((uint8) 186);
+				if (c == 170) add ((uint8) 187);
+				if (c == 186) add ((uint8) 188);
+				if (c == 937) add ((uint8) 189);
+				if (c == 230) add ((uint8) 190);
+				if (c == 248) add ((uint8) 191);
+				if (c == 191) add ((uint8) 192);
+				if (c == 161) add ((uint8) 193);
+				if (c == 172) add ((uint8) 194);
+				if (c == 8730) add ((uint8) 195);
+				if (c == 402) add ((uint8) 196);
+				if (c == 8776) add ((uint8) 197);
+				if (c == 8710) add ((uint8) 198);
+				if (c == 171) add ((uint8) 199);
+				if (c == 187) add ((uint8) 200);
+				if (c == 8230) add ((uint8) 201);
+				if (c == 160) add ((uint8) 202);
+				if (c == 192) add ((uint8) 203);
+				if (c == 195) add ((uint8) 204);
+				if (c == 213) add ((uint8) 205);
+				if (c == 338) add ((uint8) 206);
+				if (c == 339) add ((uint8) 207);
+				if (c == 8211) add ((uint8) 208);
+				if (c == 8212) add ((uint8) 209);
+				if (c == 8220) add ((uint8) 210);
+				if (c == 8221) add ((uint8) 211);
+				if (c == 8216) add ((uint8) 212);
+				if (c == 8217) add ((uint8) 213);
+				if (c == 247) add ((uint8) 214);
+				if (c == 9674) add ((uint8) 215);
+				if (c == 255) add ((uint8) 216);
+				if (c == 376) add ((uint8) 217);
+				if (c == 8260) add ((uint8) 218);
+				if (c == 8364) add ((uint8) 219);
+				if (c == 8249) add ((uint8) 220);
+				if (c == 8250) add ((uint8) 221);
+				if (c == 64257) add ((uint8) 222);
+				if (c == 64258) add ((uint8) 223);
+				if (c == 8225) add ((uint8) 224);
+				if (c == 183) add ((uint8) 225);
+				if (c == 8218) add ((uint8) 226);
+				if (c == 8222) add ((uint8) 227);
+				if (c == 8240) add ((uint8) 228);
+				if (c == 194) add ((uint8) 229);
+				if (c == 202) add ((uint8) 230);
+				if (c == 193) add ((uint8) 231);
+				if (c == 203) add ((uint8) 232);
+				if (c == 200) add ((uint8) 233);
+				if (c == 205) add ((uint8) 234);
+				if (c == 206) add ((uint8) 235);
+				if (c == 207) add ((uint8) 236);
+				if (c == 204) add ((uint8) 237);
+				if (c == 211) add ((uint8) 238);
+				if (c == 212) add ((uint8) 239);
+				if (c == 63743) add ((uint8) 240);
+				if (c == 210) add ((uint8) 241);
+				if (c == 218) add ((uint8) 242);
+				if (c == 219) add ((uint8) 243);
+				if (c == 217) add ((uint8) 244);
+				if (c == 305) add ((uint8) 245);
+				if (c == 710) add ((uint8) 246);
+				if (c == 732) add ((uint8) 247);
+				if (c == 175) add ((uint8) 248);
+				if (c == 728) add ((uint8) 249);
+				if (c == 729) add ((uint8) 250);
+				if (c == 730) add ((uint8) 251);
+				if (c == 184) add ((uint8) 252);
+				if (c == 733) add ((uint8) 253);
+				if (c == 731) add ((uint8) 254);
+				if (c == 711) add ((uint8) 255);
 			}
 		}
 	}
