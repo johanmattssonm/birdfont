@@ -352,7 +352,7 @@ public class FontData : Object {
 		int l = 0;
 		
 		while (s.get_next_char (ref index, out c)) {
-			if (c <= 0xFFFF - (1 << 16)) {
+			if (c <= 0x7FFF) {
 				c0 = (uint8) (c >> 8);
 				c1 = (uint8) (c - (c0 << 8));
 				
@@ -363,7 +363,7 @@ public class FontData : Object {
 					add (c0);
 					add (c1);
 				}
-			} else if (c <= 0x423A35C7) {
+			} else if (c <= 0xFFFFF) {
 				int high = (0xFFC00 & c) >> 10;
 				int low = (0x03FF & c);
 				
@@ -397,8 +397,6 @@ public class FontData : Object {
 			
 			l += 2;
 		}
-				
-		assert (l == 2 * s.char_count ());
 	}
 	
 	public static uint utf16_strlen (string s) {
