@@ -481,8 +481,7 @@ public class Menu : AbstractMenu {
 
 		MenuItem version = add_menu_item (t_("Version"), "birdfont version");
 		version.action.connect (() => {
-			MainWindow.show_message (t_("Version") + ": " + get_version () + "\n"
-				+ get_build_stamp ());
+			MainWindow.show_message (t_("Version") + ": " + get_version ());
 			show_menu = false;
 		});
 		menu.items.add (version);

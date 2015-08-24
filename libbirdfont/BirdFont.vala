@@ -188,10 +188,6 @@ public static string get_version () {
 	return VERSION;
 }
 
-public static string get_build_stamp () {
-	return BUILD_TIMESTAMP;
-}
-
 public static int run_export (string[] arg) {
 	string output_directory = ".";
 	string file_name = "";
@@ -203,7 +199,6 @@ public static int run_export (string[] arg) {
 	MainWindow main_window;
 
 	stdout.printf ("birdfont-export version %s\n", VERSION);
-	stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 
 	if (arg.length < 2) {
 		print_export_help (arg);
@@ -419,7 +414,6 @@ public class BirdFont {
 		android = true;
 #else
 		stdout.printf ("birdfont version %s\n", VERSION);
-		stdout.printf ("built on %s\n", BUILD_TIMESTAMP);
 		
 		android = args.has_argument ("--android");
 		
@@ -718,7 +712,6 @@ void init_logfile () {
 	BirdFont.logging = true;
 
 	printd (@"Program version: $(VERSION)\n");
-	printd (@"built on $(BUILD_TIMESTAMP)\n");
 }
 
 internal static void log_warning (string? log_domain, LogLevelFlags log_levels, string message) {

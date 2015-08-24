@@ -26,7 +26,6 @@ def write_config (prefix):
 	print ("Writing Config.vala")
 
 	vars = (('VERSION', VERSION),
-		('BUILD_TIMESTAMP', strftime("%Y-%m-%d %H:%M:%S +0000", gmtime())),
 		('PREFIX', prefix),
 		)
 

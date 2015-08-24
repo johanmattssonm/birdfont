@@ -443,13 +443,18 @@ public class StrokeTool : Tool {
 	 * change when new points are added to a 2x2 path.
 	 */
 	static void add_double_point_at_intersection (Path pp, EditPoint lep, EditPoint ep) {
+		EditPoint before;
+		EditPoint after;
+		EditPoint hidden;
+		double px, py;
+		
 		if (lep.get_right_handle ().type == PointType.DOUBLE_CURVE) {
 			return_if_fail (lep.prev != null);
 			return_if_fail (lep.next != null);
 			
-			EditPoint before = lep.get_prev ();
-			EditPoint after = lep.get_next ();
-			EditPoint hidden = new EditPoint (0, 0, PointType.QUADRATIC);
+			before = lep.get_prev ();
+			after = lep.get_next ();
+			hidden = new EditPoint (0, 0, PointType.QUADRATIC);
 			hidden.get_right_handle ().type = PointType.QUADRATIC;
 			hidden.get_left_handle ().type = PointType.QUADRATIC;
 			
@@ -458,9 +463,9 @@ public class StrokeTool : Tool {
 			before.type = PointType.QUADRATIC;
 			after.type = PointType.QUADRATIC;
 			
-			double px = before.get_right_handle ().x 
+			px = before.get_right_handle ().x 
 				+ (after.get_left_handle ().x - before.get_right_handle ().x) / 2.0;
-			double py = before.get_right_handle ().y 
+			py = before.get_right_handle ().y 
 				+ (after.get_left_handle ().y - before.get_right_handle ().y) / 2.0;
 			hidden.independent_x = px;
 			hidden.independent_y = py;
