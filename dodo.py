@@ -93,7 +93,9 @@ valac_options = [
 	]
 
 
-if "bsd" in sys.platform:
+if "kfreebsd" in sys.platform:
+    LIBBIRDGEMS_SO_VERSION=version.LIBBIRDGEMS_SO_VERSION
+elif "bsd" in sys.platform:
     LIBBIRDGEMS_SO_VERSION='${LIBbirdgems_VERSION}'
 else:
     LIBBIRDGEMS_SO_VERSION=version.LIBBIRDGEMS_SO_VERSION
@@ -105,7 +107,9 @@ def task_libbirdgems():
     yield libbirdgems.gen_so('-shared -L ./build -l m')
     yield libbirdgems.gen_ln()
 
-if "bsd" in sys.platform:
+if "kfreebsd" in sys.platform:
+    SO_VERSION=version.SO_VERSION
+elif "bsd" in sys.platform:
     SO_VERSION='${LIBbirdfont_VERSION}'
 else:
     SO_VERSION=version.SO_VERSION
