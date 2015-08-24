@@ -97,7 +97,7 @@ public class FontData : Object {
 	}
 	
 	/** Add additional checksum data to this checksum. */
-	public void continous_check_sum (ref uint32 current_check_sum) {
+	public void continous_checksum (ref uint32 current_checksum) {
 		uint trp = rp;
 		uint l;
 		
@@ -110,7 +110,7 @@ public class FontData : Object {
 		l = (length () % 4 > 0) ? length () / 4 + 1 : length () / 4; 
 
 		for (uint32 i = 0; i < l; i++) {
-			current_check_sum += read_uint32 ();
+			current_checksum += read_uint32 ();
 		}
 		
 		rp = trp;
@@ -118,9 +118,9 @@ public class FontData : Object {
 		return;
 	}
 
-	public uint32 check_sum () {
+	public uint32 checksum () {
 		uint32 sum = 0;
-		continous_check_sum (ref sum);
+		continous_checksum (ref sum);
 		return sum;
 	}
 	

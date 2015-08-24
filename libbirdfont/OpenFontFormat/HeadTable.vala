@@ -154,7 +154,7 @@ public class HeadTable : OtfTable {
 		return adjusted_checksum;
 	}
 	
-	public void set_check_sum_adjustment (uint32 csa) {
+	public void set_checksum_adjustment (uint32 csa) {
 		this.adjusted_checksum = csa;
 	}
 	

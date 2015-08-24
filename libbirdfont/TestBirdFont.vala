@@ -92,7 +92,7 @@ class TestBirdFont : GLib.Object {
 			
 			if (!has_test_case (st)) {
 				stderr.printf (@"Test case \"$st\" does not exist.\n");
-				stderr.printf ("\nAvaliable test cases:\n");
+				stderr.printf ("\nAvailable test cases:\n");
 				
 				foreach (var t in test_cases) {
 					stderr.printf (t.name);

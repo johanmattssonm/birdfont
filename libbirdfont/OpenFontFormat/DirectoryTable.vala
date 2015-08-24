@@ -386,7 +386,7 @@ public class DirectoryTable : OtfTable {
 		dis.write_at (p + 2, 0);
 		dis.write_at (p + 3, 0);
 		
-		checksum_font = (uint32) (0xB1B0AFBA - dis.check_sum ());
+		checksum_font = (uint32) (0xB1B0AFBA - dis.checksum ());
 
 		if (checksum_font != checksum_head) {
 			warning (@"Fontfile checksum in head table does not match calculated checksum. checksum_font: $checksum_font checksum_head: $checksum_head");
@@ -413,11 +413,11 @@ public class DirectoryTable : OtfTable {
 
 	// Check sum adjustment for the entire font
 	public uint32 get_font_file_checksum () {
-		uint32 check_sum = 0;
+		uint32 checksum = 0;
 		foreach (OtfTable t in tables) {
-			t.get_font_data ().continous_check_sum (ref check_sum);
+			t.get_font_data ().continous_checksum (ref checksum);
 		}
-		return check_sum;
+		return checksum;
 	}
 
 	public void create_directory () throws GLib.Error {
@@ -426,7 +426,7 @@ public class DirectoryTable : OtfTable {
 		uint32 table_offset = 0;
 		uint32 table_length = 0;
 		
-		uint32 check_sum = 0;
+		uint32 checksum = 0;
 		
 		fd = new FontData ();
 
@@ -438,7 +438,7 @@ public class DirectoryTable : OtfTable {
 			table_offset += this.get_font_data ().length_with_padding ();
 		}
 
-		head_table.set_check_sum_adjustment (0); // Set this to zero, calculate checksums and update the value
+		head_table.set_checksum_adjustment (0); // Set this to zero, calculate checksums and update the value
 		head_table.process ();
 		
 		// write the directory 
@@ -453,7 +453,7 @@ public class DirectoryTable : OtfTable {
 			table_length = t.get_font_data ().length (); // without padding
 			
 			fd.add_tag (t.get_id ()); // name of table
-			fd.add_u32 (t.get_font_data ().check_sum ());
+			fd.add_u32 (t.get_font_data ().checksum ());
 			fd.add_u32 (table_offset);
 			fd.add_u32 (table_length);
 			
@@ -465,8 +465,8 @@ public class DirectoryTable : OtfTable {
 						
 		this.font_data = fd;
 
-		check_sum = get_font_file_checksum ();
-		head_table.set_check_sum_adjustment ((uint32)(0xB1B0AFBA - check_sum));
+		checksum = get_font_file_checksum ();
+		head_table.set_checksum_adjustment ((uint32)(0xB1B0AFBA - checksum));
 		head_table.process (); // update the value		
 	}
 	
