@@ -227,9 +227,7 @@ class Vala(object):
         """generate a symbolic link to the generated ".so" file"""
         so_file = self.so.rsplit('/')[-1]
         
-        if "kfreebsd" in sys.platform:
-            create_link = "ln -s -T " + so_file + " " + self.so_link_name + " "
-        elif not "bsd" in sys.platform:
+        if not "bsd" in sys.platform or "kfreebsd" in sys.platform:
             create_link = "ln -s -T " + so_file + " " + self.so_link_name + " "
 
         create_link += "&& mv " + self.so_link_name + " " + self.build + "/" 
