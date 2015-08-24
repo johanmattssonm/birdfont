@@ -279,7 +279,7 @@ public class StrokeTool : Tool {
 			}
 		}
 		
-		flat = merge (flat);
+		flat = merge (flat);	
 		
 		bool has_split_point = false;
 		foreach (Path p in flat.paths) {
@@ -290,6 +290,40 @@ public class StrokeTool : Tool {
 						
 						if (pp.points.size > 1) {
 							pp.get_closest_point_on_path (lep, ep.x, ep.y, null, null);
+
+							// add hidden double points to make sure that path does not change
+							// when new points are added to a 2x2 path.
+							if (lep.get_right_handle ().type == PointType.DOUBLE_CURVE) {
+								return_val_if_fail (lep.prev != null, r);
+								return_val_if_fail (lep.next != null, r);
+								
+								EditPoint before = lep.get_prev ();
+								EditPoint after = lep.get_next ();
+								EditPoint hidden = new EditPoint (0, 0, PointType.QUADRATIC);
+								hidden.get_right_handle ().type = PointType.QUADRATIC;
+								hidden.get_left_handle ().type = PointType.QUADRATIC;
+								
+								before.get_right_handle ().type = PointType.QUADRATIC;
+								after.get_left_handle ().type = PointType.QUADRATIC;
+								before.type = PointType.QUADRATIC;
+								after.type = PointType.QUADRATIC;
+								
+								double px = before.get_right_handle ().x 
+									+ (after.get_left_handle ().x - before.get_right_handle ().x) / 2.0;
+								double py = before.get_right_handle ().y 
+									+ (after.get_left_handle ().y - before.get_right_handle ().y) / 2.0;
+								hidden.independent_x = px;
+								hidden.independent_y = py;
+								
+								hidden.get_right_handle ().x = after.get_left_handle ().x;
+								hidden.get_right_handle ().y = after.get_left_handle ().y;
+								hidden.get_left_handle ().x = before.get_right_handle ().x;
+								hidden.get_left_handle ().y = before.get_right_handle ().y;
+								
+								pp.add_point_after (hidden, before);
+								
+								pp.get_closest_point_on_path (lep, ep.x, ep.y, null, null);
+							}
 
 							if (Path.distance_to_point (ep, lep) < 0.1) {
 								EditPoint lep2 = new EditPoint ();
