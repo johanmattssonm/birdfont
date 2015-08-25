@@ -164,10 +164,18 @@ class AutoTrace {
 public static int main (string[] arg) {
 	AutoTrace autotrace;
 	Preferences p;
+
+	BirdFont.current_font = new Font ();
 	
 	p = new Preferences ();
 	
 	BirdFont.init_gettext ();
+	Theme.set_default_colors ();
+	
+	DrawingTools.background_threshold = new SpinButton ();
+	DrawingTools.background_scale = new SpinButton ();
+	DrawingTools.auto_trace_resolution = new SpinButton ();
+	DrawingTools.auto_trace_simplify = new SpinButton ();
 	
 	autotrace = new AutoTrace (arg);
 	
