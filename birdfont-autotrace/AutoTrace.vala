@@ -116,9 +116,9 @@ class AutoTrace {
 			font = BirdFont.new_font ();
 			bg = new BackgroundImage (f);
 			
-			bg.set_trace_resolution (details);
-			bg.set_threshold (cutoff);
-			bg.set_trace_simplification (simplification);
+			DrawingTools.auto_trace_resolution.set_value_round (details);
+			DrawingTools.background_threshold.set_value_round (details);
+			DrawingTools.auto_trace_simplify.set_value_round (simplification);
 			bg.set_high_contrast (true);
 
 			g = new Glyph.no_lines ("");

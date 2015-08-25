@@ -42,9 +42,6 @@ public class BackgroundImage {
 	private string path;
 
 	public bool high_contrast = false;
-	private double trace_resolution = 1.0;
-	private double threshold = 1.0;
-	private double simplification = 0.5;
 	private Gee.ArrayList<TracedPoint> points = new Gee.ArrayList<TracedPoint> ();
 	private Gee.ArrayList<TracedPoint> start_points = new Gee.ArrayList<TracedPoint> ();
 	
@@ -108,10 +105,7 @@ public class BackgroundImage {
 		bg.img_scale_y = img_scale_y;
 		bg.img_rotation = img_rotation;
 
-		bg.simplification = simplification;
-		bg.threshold = threshold;
 		bg.high_contrast = high_contrast;
-		bg.trace_resolution = trace_resolution;
 		
 		foreach (BackgroundSelection b in selections) {
 			bg.selections.add (b);
@@ -124,16 +118,8 @@ public class BackgroundImage {
 		selections.add (bs);
 	}
 
-	public void set_trace_simplification (double s) {
-		simplification = s;
-	}
-
 	public void set_high_contrast (bool t) {
 		high_contrast = t;
-	}
-
-	public void set_trace_resolution (double t) {
-		trace_resolution = t;
 	}
 
 	public double get_margin_width () {
@@ -684,10 +670,6 @@ public class BackgroundImage {
 		updated ();
 	}
 
-	public void set_threshold (double t) {
-		threshold = t;
-	}
-
 	ImageSurface get_contrast_image () {
 		ImageSurface s;
 		Context c;
@@ -702,6 +684,10 @@ public class BackgroundImage {
 		
 		ImageSurface img;
 		ImageSurface ns;
+
+		double trace_resolution = DrawingTools.auto_trace_resolution.get_value ();
+		double threshold = DrawingTools.background_threshold.get_value ();
+		double simplification = DrawingTools.auto_trace_simplify.get_value ();
 		
 		thres = (threshold - 0.5) * 255;
 		
@@ -1174,6 +1160,7 @@ public class BackgroundImage {
 		TracedPoint average_point;
 		int pi;
 		ImageSurface img;
+		double simplification = DrawingTools.auto_trace_simplify.get_value ();
 
 		img = (contrast_image == null) ? get_contrast_image () : (!) contrast_image;
 

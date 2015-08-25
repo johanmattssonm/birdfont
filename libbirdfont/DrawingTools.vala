@@ -64,12 +64,12 @@ public class DrawingTools : ToolCollection  {
 	public static CutBackgroundTool cut_background;
 	Tool show_bg;
 	Tool bg_selection;
-	SpinButton background_threshold;
+	public static SpinButton background_threshold;
 	public static SpinButton background_scale;
 	Tool high_contrast_background;
-	SpinButton auto_trace_resolution;
+	public static SpinButton auto_trace_resolution;
 	Tool auto_trace;
-	SpinButton auto_trace_simplify;
+	public static SpinButton auto_trace_simplify;
 	Tool delete_background;
 
 	Tool rectangle;
@@ -733,7 +733,6 @@ public class DrawingTools : ToolCollection  {
 			
 			if (bg != null) {
 				b = (!) bg;
-				b.set_threshold (background_threshold.get_value ());
 				b.update_background ();
 			}
 		});
@@ -751,7 +750,6 @@ public class DrawingTools : ToolCollection  {
 			
 			if (bg != null) {
 				b = (!) bg;
-				b.set_trace_resolution (auto_trace_resolution.get_value ());
 				b.update_background ();
 			}
 		});
@@ -763,14 +761,6 @@ public class DrawingTools : ToolCollection  {
 		auto_trace_simplify.show_icon (true);
 
 		auto_trace_simplify.new_value_action.connect ((self) => {
-			Glyph g = MainWindow.get_current_glyph ();
-			BackgroundImage? bg = g.get_background_image ();
-			BackgroundImage b;
-			
-			if (bg != null) {
-				b = (!) bg;
-				b.set_trace_simplification (auto_trace_simplify.get_value ());
-			}
 		});
 		
 		draw_tool_modifiers.add_tool (auto_trace_simplify);
