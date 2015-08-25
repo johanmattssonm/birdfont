@@ -735,6 +735,8 @@ public class DrawingTools : ToolCollection  {
 				b = (!) bg;
 				b.update_background ();
 			}
+			
+			BirdFont.get_current_font ().settings.set_setting ("autotrace_threshold", background_threshold.get_display_value ());
 		});
 		
 		draw_tool_modifiers.add_tool (background_threshold);
@@ -752,6 +754,8 @@ public class DrawingTools : ToolCollection  {
 				b = (!) bg;
 				b.update_background ();
 			}
+			
+			BirdFont.get_current_font ().settings.set_setting ("autotrace_resolution", auto_trace_resolution.get_display_value ());
 		});
 		
 		draw_tool_modifiers.add_tool (auto_trace_resolution);
@@ -761,6 +765,7 @@ public class DrawingTools : ToolCollection  {
 		auto_trace_simplify.show_icon (true);
 
 		auto_trace_simplify.new_value_action.connect ((self) => {
+			BirdFont.get_current_font ().settings.set_setting ("autotrace_simplification", background_threshold.get_display_value ());
 		});
 		
 		draw_tool_modifiers.add_tool (auto_trace_simplify);

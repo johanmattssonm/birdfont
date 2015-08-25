@@ -256,6 +256,24 @@ public class MenuTab : FontDisplay {
 			double so = double.parse (skew_overview);
 			OverviewTools.skew.set_value_round (so);
 		}
+
+		string autotrace_resolution = f.settings.get_setting ("autotrace_resolution");
+		if (autotrace_resolution != "") {
+			double ar = double.parse (autotrace_resolution);
+			DrawingTools.background_threshold.set_value_round (ar);
+		}
+		
+		string autotrace_threshold = f.settings.get_setting ("autotrace_threshold");
+		if (autotrace_threshold != "") {
+			double at = double.parse (autotrace_threshold);
+			DrawingTools.auto_trace_resolution.set_value_round (at);
+		}	
+
+		string autotrace_simplification = f.settings.get_setting ("autotrace_simplification");
+		if (autotrace_simplification != "") {
+			double asi = double.parse (autotrace_simplification);
+			DrawingTools.auto_trace_simplify.set_value_round (asi);
+		}	
 	}
 	
 	// FIXME: background thread
