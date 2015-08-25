@@ -34,6 +34,7 @@ public static int run_import (string[] arg) {
 	Font font;
 	bool imported;
 	
+	Theme.set_default_colors ();
 	Preferences.load ();
 	BirdFont.args = new Argument ("");
 	BirdFont.current_font = new Font ();
@@ -205,6 +206,7 @@ public static int run_export (string[] arg) {
 		return -1;
 	}
 
+	Theme.set_default_colors ();
 	BirdFont.current_font = BirdFont.new_font ();
 	BirdFont.current_glyph_collection = new GlyphCollection.with_glyph ( '\0', "null");
 	main_window = new MainWindow ();
