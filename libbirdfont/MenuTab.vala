@@ -601,7 +601,7 @@ public class MenuTab : FontDisplay {
 		}
 				
 		foreach (Path p in paths) {
-			g.layers.add_path (p);
+			g.add_path (p);
 			g.add_active_path (null, p);
 		}
 
