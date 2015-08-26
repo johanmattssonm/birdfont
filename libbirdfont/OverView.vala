@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 2014 Johan Mattsson
+    Copyright (C) 2012 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -123,6 +123,26 @@ public class OverView : FontDisplay {
 		update_scrollbar ();
 		reset_zoom ();
 		update_item_list ();
+	}
+	
+	public void select_all_glyphs () {
+		Font f;
+		GlyphCollection? glyphs;
+		
+		f = BirdFont.get_current_font ();
+		
+		for (int index = 0; index < f.length (); index++) {
+			glyphs = f.get_glyph_collection_indice ((uint32) index);
+			return_if_fail (glyphs != null);
+			
+			selected_items.add ((!) glyphs);
+		}
+		
+		foreach (OverViewItem item in visible_items) {
+			item.selected = item.glyphs != null;
+		}
+		
+		GlyphCanvas.redraw ();
 	}
 	
 	public void use_default_character_set () {

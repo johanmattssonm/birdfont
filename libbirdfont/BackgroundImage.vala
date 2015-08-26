@@ -687,7 +687,6 @@ public class BackgroundImage {
 
 		double trace_resolution = DrawingTools.auto_trace_resolution.get_value ();
 		double threshold = DrawingTools.background_threshold.get_value ();
-		double simplification = DrawingTools.auto_trace_simplify.get_value ();
 		
 		thres = (threshold - 0.5) * 255;
 		

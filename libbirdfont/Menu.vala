@@ -138,6 +138,13 @@ public class Menu : AbstractMenu {
 		});
 		edit_menu.items.add (select_all_paths);
 
+		MenuItem select_all_glyphs = add_menu_item (t_("Select All Glyphs"), "select all glyphs", "Overview");
+		select_all_glyphs.action.connect (() => {
+			MainWindow.get_overview ().select_all_glyphs ();
+			show_menu = false;
+		});
+		edit_menu.items.add (select_all_glyphs);
+
 		MenuItem move_to_baseline = add_menu_item (t_("Move To Baseline"), "move to baseline", "Glyph");
 		move_to_baseline.action.connect (() => {
 			MenuTab.move_to_baseline ();
