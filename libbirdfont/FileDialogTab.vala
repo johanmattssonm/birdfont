@@ -130,7 +130,11 @@ public class FileDialogTab : Table {
 					string d = (!) current_dir.get_path ();
 					printd (@"Subdir: $(f.file_name) in $d path_separator: $path_separator\n");
 					string p = d + path_separator + f.file_name;
-					p = p.replace ("\\\\", "\\");
+					
+					while (p.index_of ("\\\\") != -1) {
+						p = p.replace ("\\\\", "\\");
+					}
+					
 					propagate_files (p);
 				}
 				
