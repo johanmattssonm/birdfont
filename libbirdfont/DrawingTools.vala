@@ -1447,6 +1447,8 @@ public class DrawingTools : ToolCollection  {
 					|| high_contrast_background.is_selected ()
 					|| auto_trace.is_selected ()) {
 				show_background_tool_modifiers ();
+			} else {
+				show_point_tool_modifiers ();
 			}
 
 			MainWindow.get_toolbox ().update_expanders ();			
