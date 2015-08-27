@@ -269,6 +269,8 @@ public class PenTool : Tool {
 		clockwise.clear ();
 		counter_clockwise.clear ();
 		foreach (Path p in glyph.get_visible_paths ()) {
+			p.direction_is_set = true;
+			
 			if (p.is_clockwise ()) {
 				clockwise.add (p);
 			} else {

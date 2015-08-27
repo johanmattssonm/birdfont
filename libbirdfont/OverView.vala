@@ -97,6 +97,7 @@ public class OverView : FontDisplay {
 					tabs.add_tab (g, true, glyph_collection);
 					canvas.set_current_glyph_collection (glyph_collection);
 					set_initial_zoom ();
+					PenTool.update_orientation ();
 				}
 			});
 
