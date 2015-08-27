@@ -248,18 +248,6 @@ public class Expander : GLib.Object {
 					selected.set_selected (false);
 				}
 			}
-			
-			// FIXME: delete
-			/*
-			if (!is_persistent () && !selected.persistent) {
-				var time = new TimeoutSource(200);
-				time.set_callback(() => {
-					selected.set_selected (false);
-					MainWindow.get_toolbox ().redraw ((int) x, (int) y, (int) w  + 300, (int) (h + margin));
-					return false;
-				});
-				time.attach(null);
-			}*/
 
 			selected.new_selection = false;
 		});

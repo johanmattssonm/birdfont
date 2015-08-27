@@ -118,6 +118,7 @@ public class DescriptionDisplay : TableLayout {
 		full_name.text_changed.connect ((t) => {
 			font.full_name = t;
 			font.touch ();
+			MainWindow.get_toolbox ().update_all_expanders ();
 		});
 		widgets.add (full_name);
 		focus_ring.add (full_name);

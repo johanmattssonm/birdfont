@@ -273,7 +273,11 @@ public class MenuTab : FontDisplay {
 		if (autotrace_simplification != "") {
 			double asi = double.parse (autotrace_simplification);
 			DrawingTools.auto_trace_simplify.set_value_round (asi);
-		}	
+		}
+		
+		MainWindow.get_toolbox ().update_expanders ();
+		MainWindow.get_toolbox ().update_all_expanders ();
+		Toolbox.redraw_tool_box ();
 	}
 	
 	// FIXME: background thread

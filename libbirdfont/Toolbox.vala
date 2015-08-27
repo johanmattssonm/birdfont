@@ -69,12 +69,15 @@ public class Toolbox : GLib.Object  {
 		file_tools = new FileTools ();
 		theme_tools = new ThemeTools ();
 		
+		tool_sets.add (theme_tools);
+		tool_sets.add (file_tools);
+		tool_sets.add (hidden_tools);
 		tool_sets.add (drawing_tools);
 		tool_sets.add (kerning_tools);
 		tool_sets.add (preview_tools);
 		tool_sets.add (overview_tools);
 		tool_sets.add (background_tools);
-		// the menu has all the file_tools commands, it won't be added here
+		// the menu has all the file_tools commands, it will not be added here
 		tool_sets.add (hidden_tools); // tools without a button
 		
 		current_set = file_tools;
@@ -90,6 +93,12 @@ public class Toolbox : GLib.Object  {
 
 	public static DrawingTools get_drawing_tools () {
 		return drawing_tools;
+	}
+
+	public void update_all_expanders () {
+		foreach (ToolCollection tc in tool_sets) {
+			tc.redraw ();
+		}
 	}
 
 	public static void set_toolbox_from_tab (string tab_name, Tab? t = null) {		
@@ -287,7 +296,7 @@ public class Toolbox : GLib.Object  {
 				update = exp.set_active (a);
 				
 				if (update) {
-					redraw ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 10), (int) (exp.y + exp.h + 10));
+					redraw ((int) exp.x - 10, (int) exp.y - 10, (int) (exp.x + exp.w + 20), (int) (exp.y + exp.h + 20));
 				}
 				
 				foreach (Tool t in exp.tool) {
