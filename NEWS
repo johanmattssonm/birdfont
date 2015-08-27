@@ -1,3 +1,9 @@
+birdfont (2.11.3) stable;
+
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Aug 27 15:04:03 CEST 2015
+
 birdfont (2.11.0) stable;
 
   * Merge overlapping regions
