@@ -448,20 +448,15 @@ public class StrokeTool : Tool {
 		EditPoint hidden;
 		double px, py;
 		
-		if (lep.get_right_handle ().type == PointType.DOUBLE_CURVE) {
+		if (lep.get_right_handle ().type == PointType.DOUBLE_CURVE
+			|| lep.get_right_handle ().type == PointType.LINE_DOUBLE_CURVE) {
+				
 			return_if_fail (lep.prev != null);
 			return_if_fail (lep.next != null);
 			
 			before = lep.get_prev ();
 			after = lep.get_next ();
 			hidden = new EditPoint (0, 0, PointType.QUADRATIC);
-			hidden.get_right_handle ().type = PointType.QUADRATIC;
-			hidden.get_left_handle ().type = PointType.QUADRATIC;
-			
-			before.get_right_handle ().type = PointType.QUADRATIC;
-			after.get_left_handle ().type = PointType.QUADRATIC;
-			before.type = PointType.QUADRATIC;
-			after.type = PointType.QUADRATIC;
 			
 			px = before.get_right_handle ().x 
 				+ (after.get_left_handle ().x - before.get_right_handle ().x) / 2.0;
@@ -476,7 +471,15 @@ public class StrokeTool : Tool {
 			hidden.get_left_handle ().y = before.get_right_handle ().y;
 			
 			pp.add_point_after (hidden, before);
-			
+
+			hidden.get_right_handle ().type = PointType.QUADRATIC;
+			hidden.get_left_handle ().type = PointType.QUADRATIC;
+
+			before.get_right_handle ().type = PointType.QUADRATIC;
+			after.get_left_handle ().type = PointType.QUADRATIC;
+			before.type = PointType.QUADRATIC;
+			after.type = PointType.QUADRATIC;
+						
 			pp.get_closest_point_on_path (lep, ep.x, ep.y, null, null);
 		}
 	}
