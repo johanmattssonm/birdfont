@@ -75,9 +75,10 @@ public class AbstractMenu : GLib.Object {
 		string display;
 		FontDisplay current_display = MainWindow.get_current_display ();
 		ToolItem tm;
+		unichar lower_keyval = ((unichar) keyval).tolower ();
 		
 		foreach (MenuItem item in sorted_menu_items) {		
-			if (item.key == (unichar) keyval && item.modifiers == KeyBindings.modifier) {
+			if (item.key.tolower () == lower_keyval && item.modifiers == KeyBindings.modifier) {
 				
 				display = current_display.get_name ();
 
