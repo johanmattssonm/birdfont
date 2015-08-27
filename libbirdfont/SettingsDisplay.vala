@@ -102,13 +102,13 @@ public abstract class SettingsDisplay : FontDisplay {
 	public override void key_release (uint keyval) {
 		SettingsItem old_key_binding;
 		
-		if (!is_modifier_key (keyval)) {
+		if (!is_modifier_key (keyval) || keyval == Key.BACK_SPACE || keyval == Key.DEL) {
 			if (update_key_bindings) {
-				if (keyval == Key.BACK_SPACE) {
+				if (keyval == Key.BACK_SPACE || keyval == Key.DEL) {
 					update_key_bindings = false;
 					new_key_bindings.active = false;
 					new_key_bindings.menu_item.modifiers = NONE;
-					new_key_bindings.menu_item.key = '\0';	
+					new_key_bindings.menu_item.key = '\0';
 				} else if (KeyBindings.get_mod_from_key (keyval) == NONE) {
 					
 					if (has_key_binding (KeyBindings.modifier, (unichar) keyval)) {
