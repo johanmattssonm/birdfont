@@ -1762,8 +1762,8 @@ public class StrokeTool : Tool {
 		
 		Path.find_intersection_point (ep, next, p1, p2, out cross_x, out cross_y);
 		
-		if (fmin (ep.x, next.x) <= cross_x <= fmax (ep.x, next.x)
-			&& fmin (ep.y, next.y) <= cross_y <= fmax (ep.y, next.y)) {
+		if (fmin (ep.x, next.x) - 0.00001 <= cross_x <= fmax (ep.x, next.x) + 0.00001
+			&& fmin (ep.y, next.y) - 0.00001 <= cross_y <= fmax (ep.y, next.y) + 0.00001) {
 			// iterate to find intersection.				
 			if (is_line (ep.x, ep.y, cross_x, cross_y, next.x, next.y)
 				&& is_line (p1.x, p1.y, cross_x, cross_y, p2.x, p2.y)) {
@@ -1842,8 +1842,8 @@ public class StrokeTool : Tool {
 	
 	/** @return true if p2 is on the line p1 to p3 */
 	static bool is_line (double x1, double y1, double x2, double y2, double x3, double y3, double tolerance = 0.01) {
-		return fmin (x1, x3) <= x2 && x2 <= fmax (x1, x3) 
-			&& fmin (y1, y3) <= y2 && y2 <= fmax (y1, y3)
+		return fmin (x1, x3) - 0.00001 <= x2 && x2 <= fmax (x1, x3) + 0.00001
+			&& fmin (y1, y3) - 0.00001 <= y2 && y2 <= fmax (y1, y3) + 0.00001
 			&& is_flat (x1, y1, x2, y2, x3, y3, tolerance);
 	}
 	

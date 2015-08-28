@@ -152,6 +152,12 @@ public class MenuTab : FontDisplay {
 		}
 		background_thread = e;
 		suppress_event = e;
+		
+		// key up for all modifiers will be ignored if events are suppressed
+		if (suppress_event) {
+			KeyBindings.reset ();
+		}
+		
 		return true;
 	}
 
