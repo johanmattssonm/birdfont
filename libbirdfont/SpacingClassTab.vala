@@ -69,7 +69,7 @@ public class SpacingClassTab : Table {
 		rows.add (new Row (t_("New spacing class"), NEW_CLASS, false));
 		
 		foreach (SpacingClass c in spacing.classes) {
-			rows.add (new Row.columns_3 (@"$(c.first)", "=",  @"$(c.next)", i));
+			rows.add (new Row.columns_3 (@"$(c.first)", "->",  @"$(c.next)", i));
 			i++;
 		}
 		
