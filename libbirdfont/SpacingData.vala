@@ -99,22 +99,22 @@ public class SpacingData : GLib.Object {
 		GlyphCollection? g;
 		GlyphCollection gc;
 		
-		if (s.next != "?") {
-			kerning_classes.update_space_class (s.next);
-			g = font.get_glyph_collection (s.next);
-			if (g != null) {
-				gc = (!) g;
-				gc.get_current ().update_spacing_class ();
-			}
+		if (s.next == "?" || s.first == "?") {
+			return;
 		}
-		
-		if (s.first != "?") {
-			kerning_classes.update_space_class (s.first);
-			g = font.get_glyph_collection (s.first);
-			if (g != null) {
-				gc = (!) g;
-				gc.get_current ().update_spacing_class ();
-			}
+
+		kerning_classes.update_space_class (s.next);
+		g = font.get_glyph_collection (s.next);
+		if (g != null) {
+			gc = (!) g;
+			gc.get_current ().update_spacing_class ();
+		}
+
+		kerning_classes.update_space_class (s.first);
+		g = font.get_glyph_collection (s.first);
+		if (g != null) {
+			gc = (!) g;
+			gc.get_current ().update_spacing_class ();
 		}
 		
 		KerningTools.update_spacing_classes ();
