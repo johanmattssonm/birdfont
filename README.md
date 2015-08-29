@@ -17,7 +17,7 @@ packages with a -dev or -devel affix:
 
     valac
     font-roboto
-    libxmlbird
+    libxmlbird-dev
     libgee-dev
     libglib2.0-dev 
     libgtk-3-dev 
