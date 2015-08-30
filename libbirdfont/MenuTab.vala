@@ -290,6 +290,15 @@ public class MenuTab : FontDisplay {
 			}
 		}
 
+		string spacing_zoom = f.settings.get_setting ("spacing_zoom");
+		if (spacing_zoom != "") {
+			double sz = double.parse (spacing_zoom);
+			if (!is_null (SpacingTools.zoom_bar)) {
+				SpacingTools.zoom_bar.zoom_level = sz;
+				SpacingTools.zoom_bar.new_zoom (sz);
+			}
+		}
+
 		MainWindow.get_toolbox ().update_expanders ();
 		MainWindow.get_toolbox ().update_all_expanders ();
 		Toolbox.redraw_tool_box ();

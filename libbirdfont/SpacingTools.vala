@@ -32,11 +32,16 @@ public class SpacingTools : ToolCollection  {
 
 		zoom_bar = new ZoomBar ();
 		zoom_bar.new_zoom.connect ((z) => {
+			Font f;
+			
 			KerningTools.font_size = 3 * z;
 			
 			if (KerningTools.font_size < 0.1) {
 				KerningTools.font_size = 0.1;
 			}
+
+			f = BirdFont.get_current_font ();
+			f.settings.set_setting ("spacing_zoom", @"$z");
 			
 			GlyphCanvas.redraw ();
 		});
