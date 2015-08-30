@@ -44,11 +44,16 @@ public class KerningTools : ToolCollection  {
 
 		zoom_bar = new ZoomBar ();
 		zoom_bar.new_zoom.connect ((z) => {
+			Font f;
+			
 			font_size = 3 * z;
 			
 			if (font_size < 0.1) {
 				font_size = 0.1;
 			}
+			
+			f = BirdFont.get_current_font ();
+			f.settings.set_setting ("kerning_zoom", @"$z");
 			
 			GlyphCanvas.redraw ();
 		});

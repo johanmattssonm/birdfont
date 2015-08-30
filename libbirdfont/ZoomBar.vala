@@ -19,8 +19,8 @@ namespace BirdFont {
 
 public class ZoomBar : Tool {
 
-	double zoom_level = 1 / 3.0;
-	bool update_zoom = false;
+	public double zoom_level = 1 / 3.0;
+	public bool update_zoom = false;
 	
 	public signal void new_zoom (double zoom_level);
 	

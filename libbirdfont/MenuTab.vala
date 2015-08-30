@@ -281,6 +281,15 @@ public class MenuTab : FontDisplay {
 			DrawingTools.auto_trace_simplify.set_value_round (asi);
 		}
 		
+		string kerning_zoom = f.settings.get_setting ("kerning_zoom");
+		if (kerning_zoom != "") {
+			double k = double.parse (kerning_zoom);
+			if (!is_null (KerningTools.zoom_bar)) {
+				KerningTools.zoom_bar.zoom_level = k;
+				KerningTools.zoom_bar.new_zoom (k);
+			}
+		}
+
 		MainWindow.get_toolbox ().update_expanders ();
 		MainWindow.get_toolbox ().update_all_expanders ();
 		Toolbox.redraw_tool_box ();
