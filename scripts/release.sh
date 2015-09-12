@@ -14,6 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+if ! git diff --exit-code > /dev/null; then
+	echo "Uncommitted changes, commit before creating the release."
+	exit 1
+fi
+
+git push
+
 rep="$(pwd)"
 
 mkdir -p build
@@ -68,6 +75,6 @@ rm -rf ../export/birdfont-$version
 # tag the release on github
 
 # read github token and remove new line
-token=$(cat ../../../github.token | sed -z 's/\n//g')
+token=$(cat ../../github.token | sed -z 's/\n//g')
 curl --data '{"tag_name": "v$version","target_commitish": "master","name": "v$version","body": "Version $version","draft": false,"prerelease": false}' \
 	https://api.github.com/repos/johanmattssonm/birdfont.git?access_token=$token
