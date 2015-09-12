@@ -19,7 +19,7 @@ namespace BirdFont {
  * A class that stores kerning information for one letter. 
  */
 public class PairFormat1 : GLib.Object {
-	public uint16 left = -1;
+	public uint16 left = 0;
 	public Gee.ArrayList<Kern> pairs = new Gee.ArrayList<Kern> ();
 }
 
