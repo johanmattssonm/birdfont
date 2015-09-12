@@ -23,6 +23,13 @@ cd export
 
 version=$(cat ../../scripts/version.py | grep "VERSION = '" | grep -v "SO_VERSION" | sed -e "s:VERSION = '::" | sed "s:'.*::g")
 
+if ! git diff --exit-code > /dev/null; then
+	echo "Uncommitted changes, commit before creating the release."
+	exit 1
+fi
+
+git tag -a v$version -m "Version $version"
+
 echo "Creating a release fo version $version"
 
 if [ $# -ne 0 -a $# -ne 2 ] ; then
