@@ -18,6 +18,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ft2build.h>
+#include <ttnameid.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 #include FT_OPENTYPE_VALIDATE_H
@@ -824,32 +825,32 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append_printf (bf, "<subfamily>%s</subfamily>\n", g_markup_escape_text (face->style_name, -1));
 	}
 	
-	if (FT_Get_Sfnt_Name (face, 4, &name_table_data) == 0) { // full name
+	if (FT_Get_Sfnt_Name (face, TT_NAME_ID_FULL_NAME, &name_table_data) == 0) { // full name
 		g_string_append (bf, "<full_name>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</full_name>\n");
-	}	
+	}
 
-	if (FT_Get_Sfnt_Name (face, 3, &name_table_data) == 0) { // unique identifier
+	if (FT_Get_Sfnt_Name (face, TT_NAME_ID_UNIQUE_ID, &name_table_data) == 0) { // unique identifier
 		g_string_append (bf, "<unique_identifier>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</unique_identifier>\n");
 	}
 
-	if (FT_Get_Sfnt_Name (face, 5, &name_table_data) == 0) { // version
+	if (FT_Get_Sfnt_Name (face, TT_NAME_ID_UNIQUE_ID, &name_table_data) == 0) { // version
 		g_string_append (bf, "<version>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</version>\n");
 	}
 
 	// FIXME: for some fonts will this return entry 0 (copyright)
-	if (FT_Get_Sfnt_Name (face, 10, &name_table_data) == 0) { // description
+	if (FT_Get_Sfnt_Name (face, TT_NAME_ID_DESCRIPTION, &name_table_data) == 0) { // description
 		g_string_append (bf, "<description>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</description>\n");
 	}
 	
-	if (FT_Get_Sfnt_Name (face, 0, &name_table_data) == 0) { // copyright
+	if (FT_Get_Sfnt_Name (face, TT_NAME_ID_COPYRIGHT, &name_table_data) == 0) { // copyright
 		g_string_append (bf, "<copyright>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</copyright>\n");
