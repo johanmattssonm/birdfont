@@ -64,3 +64,10 @@ cd birdfont-$version && \
 gpg --output ../../birdfont-$version.tar.xz.sig --detach-sig ../../birdfont-$version.tar.xz && \
 cd .. && \
 rm -rf ../export/birdfont-$version
+
+# tag the release on github
+
+# read github token and remove new line
+token=$(cat ../../../github.token | sed -z 's/\n//g')
+curl --data '{"tag_name": "v$version","target_commitish": "master","name": "v$version","body": "Version $version","draft": false,"prerelease": false}' \
+	https://api.github.com/repos/johanmattssonm/birdfont.git?access_token=$token
