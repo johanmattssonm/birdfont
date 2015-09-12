@@ -242,31 +242,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		set_title (@"$(f.full_name)");
 	}
 
-	public void set_overwrite_dialog (OverWriteDialogListener d) {
-		Gtk.Dialog dialog = new Gtk.Dialog.with_buttons (d.message, null, 0);
-		
-		dialog.add_button (d.overwrite_message, 0);
-		dialog.add_button (d.cancel_message, 1);
-		dialog.add_button (d.dont_ask_again_message, 2);
-		
-		dialog.response.connect ((respons) => {
-			switch (respons) {
-				case 0:
-					d.overwrite ();
-					break;
-				case 1:
-					d.cancel ();
-					break;
-				case 2:
-					d.overwrite_dont_ask_again ();
-					break;
-			}
-			dialog.destroy ();
-		}); 
-		
-		dialog.show_all ();
-	}
-
 	public void set_scrollbar_size (double size) {
 		scrollbar.adjustment.page_size = size;		
 		scrollbar.set_visible (size != 0);

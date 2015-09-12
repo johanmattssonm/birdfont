@@ -469,7 +469,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void show_preview_tab () {
-		OverWriteDialogListener dialog = new OverWriteDialogListener ();
+		OverWriteDialogListener listener = new OverWriteDialogListener ();
 		TabBar tab_bar = MainWindow.get_tab_bar ();
 		FontFormat format = BirdFont.get_current_font ().format;
 		
@@ -478,16 +478,16 @@ public class MenuTab : FontDisplay {
 			return;
 		}	
 			
-		dialog.overwrite_signal.connect (() => {
+		listener.overwrite_signal.connect (() => {
 			KeyBindings.set_modifier (NONE);
 			tab_bar.add_unique_tab (new Preview (), true);
 			PreviewTools.update_preview ();
 		});
 			
 		if ((format == FontFormat.SVG || format == FontFormat.FREETYPE) && !OverWriteDialogListener.dont_ask_again) {
-			MainWindow.native_window.set_overwrite_dialog (dialog);
+			MainWindow.show_dialog (new OverwriteDialog (listener));
 		} else {
-			dialog.overwrite ();
+			listener.overwrite ();
 		}
 	}
 	

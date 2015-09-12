@@ -29,9 +29,6 @@ public interface NativeWindow : GLib.Object {
 
 	public abstract void set_scrollbar_size (double size);
 	public abstract void set_scrollbar_position (double position);
-
-	/** Show overwrite dialog */
-	public abstract void set_overwrite_dialog (OverWriteDialogListener dialog);
 	
 	/** Notify the UI about the new font. */
 	public abstract void font_loaded ();
