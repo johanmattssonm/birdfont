@@ -7,5 +7,5 @@ before_install:
          libsqlite3-dev valac libxmlbird-dev libgee-dev 
          libwebkitgtk-3.0-dev libnotify-dev
 script:
-  - ./configure
-  - ./scripts/linux_build.py
+  - python2 ./configure
+  - python2 ./scripts/linux_build.py
