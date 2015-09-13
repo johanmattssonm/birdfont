@@ -8,4 +8,4 @@ before_install:
          libwebkitgtk-3.0-dev libnotify-dev python-doit
 script:
   - ./configure
-  - doit
+  - ./scripts/linux_build.py
