@@ -5,7 +5,7 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq libglib2.0-dev libgtk-3-dev
          libsqlite3-dev valac libxmlbird-dev libgee-dev 
-         libwebkitgtk-3.0-dev libnotify-dev
+         libwebkitgtk-3.0-dev libnotify-dev python-doit
 script:
   - ./configure
   - doit
