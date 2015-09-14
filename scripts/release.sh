@@ -50,6 +50,7 @@ mv birdfont birdfont-$version
 
 rm -rf birdfont-$version/.git
 rm -rf birdfont-$version/.gitignore
+rm -rf birdfont-$version/.travis.yml
 
 cd birdfont-$version
 python3 ./scripts/complete_translations.py -t 93 -i
