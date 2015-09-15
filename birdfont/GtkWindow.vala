@@ -44,8 +44,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	Scrollbar scrollbar;
 	bool scrollbar_supress_signal = false;
 	
-	DescriptionForm description;
-	
 	/** Text input and callbacks. */
 	public static bool text_input_is_active = false;
 	TextListener text_listener = new TextListener ("", "", "");
@@ -67,8 +65,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	public void init () {
 		Notify.init ("Fonts have been exported.");
-		
-		description = new DescriptionForm ();
 		
 		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
 
@@ -120,15 +116,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 					warning ("Failed to load html into canvas.");
 				}
 				
-				// show the webview when loading has finished
-				html_box.set_visible (true);
-				glyph_canvas_area.set_visible (false);
-				description.canvas.set_visible (false);
-				
+				// show the webview when loading has finished 
+				html_box.set_visible (true); 
+				glyph_canvas_area.set_visible (false); 
 			} else {
 				html_box.set_visible (false);
 				glyph_canvas_area.set_visible (true);
-				description.canvas.set_visible (false);
 			}
 		});
 
@@ -142,7 +135,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		canvas_box = new Box (Orientation.HORIZONTAL, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
-		canvas_box.pack_start (description.canvas, true, true, 0);
 		canvas_box.pack_start (scrollbar, false, true, 0);
 
 		submit_text_button = new Gtk.Button ();
@@ -204,8 +196,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		show_all ();
 		
 		scrollbar.set_visible (false);
-		description.canvas.set_visible (false);
-		
+
 		hide_text_input ();
 		
 		MainWindow.open_recent_files_tab ();
@@ -844,176 +835,6 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 		
 		can_focus = true;
-	}
-}
-
-public class DescriptionForm : GLib.Object {
-
-	public ScrolledWindow canvas;
-	public Box box;
-	
-	Entry postscript_name;
-	Entry font_name;
-	Entry style;
-	CheckButton bold;
-	CheckButton italic;
-	Entry weight;
-	Entry full_name;
-	Entry id;
-	Entry version;
-
-	TextView description;
-	TextView copyright;
-		
-	public DescriptionForm () {
-		box = new Box (Orientation.VERTICAL, 6);
-		canvas = new ScrolledWindow (null, null);
-		canvas.set_policy (Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
-		
-		postscript_name = new Entry ();
-		add_entry (postscript_name, t_("PostScript Name"));
-		postscript_name.changed.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.postscript_name = postscript_name.text;
-		});
-		
-		font_name = new Entry ();
-		add_entry (font_name, t_("Name"));
-		font_name.changed.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.name = font_name.text;
-		});
-		
-		style = new Entry ();
-		add_entry (style, t_("Style"));
-		style.changed.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.subfamily = style.text;
-		});
-		
-		bold = new CheckButton.with_label (t_("Bold"));
-		bold.toggled.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.bold = bold.active;;
-		});
-		box.pack_start (bold, false, false, 0);
-		
-		italic = new CheckButton.with_label (t_("Italic"));
-		italic.toggled.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.italic = italic.active;;
-		});
-		box.pack_start (italic, false, false, 0);
-
-		weight = new Entry ();
-		add_entry (weight, t_("Weight"));
-		weight.changed.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.set_weight (weight.text);
-		});
-		
-		full_name = new Entry ();
-		add_entry (full_name, t_("Full name (name and style)"));
-		full_name.changed.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.full_name = full_name.text;
-		});
-		
-		id = new Entry ();
-		add_entry (id, t_("Unique identifier"));
-		id.changed.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.unique_identifier = id.text;
-		});
-		
-		version = new Entry ();
-		add_entry (version, t_("Version"));
-		version.changed.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.version = version.text;
-		});
-		
-		description = new TextView ();
-		add_textview (description, t_("Description"));
-		description.get_buffer ().changed.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.description = description.get_buffer ().text;
-		});
-		description.set_wrap_mode (Gtk.WrapMode.WORD);
-
-		copyright = new TextView ();
-		add_textview (copyright, t_("Copyright"));
-		copyright.get_buffer ().changed.connect (() => {
-			Font f = BirdFont.get_current_font ();
-			f.copyright = copyright.get_buffer ().text;
-		});
-		copyright.set_wrap_mode (Gtk.WrapMode.WORD);
-		
-		update_fields ();
-		
-		canvas.add_with_viewport (box);
-		canvas.show_all ();
-	}
-	
-	public void update_fields () {
-		Font font = BirdFont.get_current_font ();
-
-		return_if_fail (font.postscript_name.validate ());
-		return_if_fail (font.name.validate ());
-		return_if_fail (font.subfamily.validate ());
-		return_if_fail (font.full_name.validate ());
-		return_if_fail (font.unique_identifier.validate ());
-		return_if_fail (font.version.validate ());
-		return_if_fail (font.description.validate ());
-		return_if_fail (font.copyright.validate ());
-		
-		postscript_name.set_text (font.postscript_name);
-		font_name.set_text (font.name);
-		style.set_text (font.subfamily);
-		bold.active = font.bold;
-		italic.active = font.italic;
-		weight.set_text (font.get_weight ());
-		full_name.set_text (font.full_name);
-		id.set_text (font.unique_identifier);
-		version.set_text (font.version);
-
-		description.get_buffer ().set_text (font.description.dup ());
-		copyright.get_buffer ().set_text (font.copyright.dup ());
-
-	}
-	
-	void add_entry (Entry e, string label) {
-		Box vb;
-		Box hb;
-		Label l;
-		Box margin;
-		
-		margin = new Box (Orientation.HORIZONTAL, 6);
-		l = new Label (label);
-		vb = new Box (Orientation.VERTICAL, 2);
-		hb = new Box (Orientation.HORIZONTAL, 2);
-		hb.pack_start (l, false, false, 0);
-		vb.pack_start (hb, true, true, 5);
-		vb.pack_start (e, true, true, 0);
-		margin.pack_start (vb, true, true, 5);
-		box.pack_start (margin, false, false, 5);
-	}
-
-	void add_textview (TextView t, string label) {
-		Box vb;
-		Box hb;
-		Label l;
-		Box margin;
-		
-		margin = new Box (Orientation.HORIZONTAL, 6);
-		l = new Label (label);
-		vb = new Box (Orientation.VERTICAL, 2);
-		hb = new Box (Orientation.HORIZONTAL, 2);
-		hb.pack_start (l, false, false, 0);
-		vb.pack_start (hb, true, true, 5);
-		vb.pack_start (t, true, true, 0);
-		margin.pack_start (vb, true, true, 5);
-		box.pack_start (margin, false, false, 5);
 	}
 }
 
