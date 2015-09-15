@@ -126,7 +126,7 @@ parser.add_option('-c', '--cc', dest='cc', help='C compiler', metavar='CC')
 parser.add_option('-g', '--gtk', dest='gtk', help='Build Gtk version, default is True', metavar='GTK')
 parser.add_option('-e', '--gee', dest='gee', help='Version of libgee', metavar='GEE')
 parser.add_option('-v', '--valac', dest='valac', help='Vala compiler', metavar='VALAC')
-parser.add_option('-n', '--nonnull', dest='nonnull', help='Enable compiletime checks for null pointers', metavar='NONNULL')
+parser.add_option('-n', '--nonnull', dest='nonnull', action="store_true", help='Enable compiletime checks for null pointers', metavar='NONNULL')
 
 parser.add_option('', '--valac-flags', dest='valac_flags', help='Vala compiler flags for all targets', metavar='VALAC_FLAGS', default='')
 for target in TARGETS:
