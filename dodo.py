@@ -20,13 +20,10 @@ import glob
 import subprocess
 import sys
 
-from optparse import OptionParser
-from doit.tools import run_once
-from doit.action import CmdAction
-from scripts.bavala import Vala
 from scripts import version
 from scripts.translations import compile_translations
 from scripts import config
+from scripts.builder import Builder
 
 DOIT_CONFIG = {
     'default_tasks': [
@@ -34,31 +31,401 @@ DOIT_CONFIG = {
         'libbirdgems', 	
         'libbirdfont',
         'birdfont',
-        'birdfont_autotrace',
-        'birdfont_export',
-        'birdfont_import',
+        'birdfont-autotrace',
+        'birdfont-export',
+        'birdfont-import',
         'compile_translations',
         'man'
         ],
     }
 
-# external Vala libs
-LIBS = [
-    'sqlite3',
-    'glib-2.0',
-    'gio-2.0',
-    'fontconfig',
-    'cairo',
-    'gdk-pixbuf-2.0',
-    'webkitgtk-3.0',
-    config.GEE,
-    'libnotify',
-    'xmlbird'
-    ]
+if "kfreebsd" in sys.platform:
+    LIBBIRDGEMS_SO_VERSION=version.LIBBIRDGEMS_SO_VERSION
+elif "bsd" in sys.platform:
+    LIBBIRDGEMS_SO_VERSION='${LIBbirdgems_VERSION}'
+else:
+    LIBBIRDGEMS_SO_VERSION=version.LIBBIRDGEMS_SO_VERSION
 
-LIBBIRD_LIBS = [
-	'glib-2.0'
-]
+if "kfreebsd" in sys.platform:
+    SO_VERSION=version.SO_VERSION
+elif "bsd" in sys.platform:
+    SO_VERSION='${LIBbirdfont_VERSION}'
+else:
+    SO_VERSION=version.SO_VERSION
+
+def make_birdfont(target_binary):
+    valac_command = config.VALAC + """\
+        -C \
+        --vapidir=./ \
+        --basedir build/birdfont/ \
+        """ + config.NON_NULL + """ \
+        --enable-experimental \
+        birdfont/*.vala \
+		--vapidir=./ \
+		--pkg """ + config.GEE + """ \
+		--pkg gio-2.0  \
+		--pkg cairo \
+		--pkg libsoup-2.4 \
+		--pkg gdk-pixbuf-2.0 \
+		--pkg webkitgtk-3.0 \
+		--pkg libnotify \
+		--pkg xmlbird \
+		--pkg libbirdfont
+        """
+        
+    cflags = ''
+    cc_command = config.CC + " " + cflags + """ \
+        -c C_SOURCE \
+		-D 'GETTEXT_PACKAGE="birdfont"' \
+        -I./build/libbirdfont \
+		$(pkg-config --cflags sqlite3) \
+		$(pkg-config --cflags """ + config.GEE + """) \
+		$(pkg-config --cflags gio-2.0) \
+		$(pkg-config --cflags cairo) \
+		$(pkg-config --cflags glib-2.0) \
+		$(pkg-config --cflags gdk-pixbuf-2.0) \
+		$(pkg-config --cflags webkitgtk-3.0) \
+		$(pkg-config --cflags libnotify) \
+        -o OBJECT_FILE"""
+
+    soname_parameters = "-Wl,-soname," + target_binary
+
+    ldflags = ''
+    linker_command = config.CC + " " + ldflags + """ \
+        build/birdfont/*.o \
+		-L./build/bin -lbirdfont \
+		$(pkg-config --libs sqlite3) \
+		$(pkg-config --libs """ + config.GEE + """) \
+		$(pkg-config --libs gio-2.0) \
+		$(pkg-config --libs cairo) \
+		$(pkg-config --libs glib-2.0) \
+		$(pkg-config --libs gdk-pixbuf-2.0) \
+		$(pkg-config --libs webkitgtk-3.0) \
+		$(pkg-config --libs gtk+-2.0) \
+		$(pkg-config --libs xmlbird) \
+		$(pkg-config --libs libnotify) \
+		-L./build -L./build/bin -l birdgems\
+        -o build/bin/""" + target_binary
+
+    birdfont = Builder('birdfont',
+                          valac_command, 
+                          cc_command,
+                          linker_command,
+                          target_binary,
+                          None,
+                          ['libbirdgems.so', 'libbirdfont.so'])
+			
+    yield birdfont.build()
+
+def task_birdfont():
+    yield make_birdfont('birdfont')
+
+def make_birdfont_export(target_binary):
+    valac_command = config.VALAC + """ \
+        -C \
+		--enable-experimental \
+		--define=MAC \
+        --basedir build/birdfont-export/ \
+        """ + config.NON_NULL + """ \
+		birdfont-export/*.vala \
+		--vapidir=./ \
+		--pkg """ + config.GEE + """ \
+		--pkg gio-2.0  \
+		--pkg cairo \
+		--pkg xmlbird \
+		--pkg libbirdfont
+        """
+        
+    cflags = ''
+    cc_command = config.CC + " " + cflags + """ \
+        -c C_SOURCE \
+		-D 'GETTEXT_PACKAGE="birdfont"' \
+        -I./build/libbirdfont \
+		$(pkg-config --cflags sqlite3) \
+		$(pkg-config --cflags """ + config.GEE + """) \
+		$(pkg-config --cflags gio-2.0) \
+		$(pkg-config --cflags cairo) \
+		$(pkg-config --cflags glib-2.0) \
+        -o OBJECT_FILE"""
+
+    soname_parameters = "-Wl,-soname," + target_binary
+
+    ldflags = ''
+    linker_command = config.CC + " " + ldflags + """ \
+		build/birdfont-export/*.o \
+		-Lbuild/bin/ -lbirdfont \
+		-lm \
+		$(pkg-config --libs sqlite3) \
+		$(pkg-config --libs """ + config.GEE + """) \
+		$(pkg-config --libs gio-2.0) \
+		$(pkg-config --libs cairo) \
+		$(pkg-config --libs glib-2.0) \
+		$(pkg-config --libs xmlbird) \
+		-L./build -L./build/bin -l birdgems\
+		-o ./build/bin/""" + target_binary
+
+    birdfont_export = Builder('birdfont-export',
+                              valac_command, 
+                              cc_command,
+                              linker_command,
+                              target_binary,
+                              None,
+                              ['libbirdgems.so', 'libbirdfont.so'])
+			
+    yield birdfont_export.build()
+
+def task_birdfont_export():
+    yield make_birdfont_export('birdfont-export')
+
+def make_birdfont_import(target_binary):
+    valac_command = config.VALAC + """\
+        -C  \
+		--enable-experimental \
+		--define=MAC \
+        --basedir build/birdfont-import/ \
+        """ + config.NON_NULL + """ \
+		birdfont-import/*.vala \
+		--vapidir=./ \
+		--pkg """ + config.GEE + """ \
+		--pkg gio-2.0  \
+		--pkg cairo \
+		--pkg xmlbird \
+		--pkg libbirdfont
+        """
+        
+    cflags = ''
+    cc_command = config.CC + " " + cflags + """ \
+        -c C_SOURCE \
+		-D 'GETTEXT_PACKAGE="birdfont"' \
+        -I./build/libbirdfont \
+		$(pkg-config --cflags sqlite3) \
+		$(pkg-config --cflags """ + config.GEE + """) \
+		$(pkg-config --cflags gio-2.0) \
+		$(pkg-config --cflags cairo) \
+		$(pkg-config --cflags glib-2.0) \
+        -o OBJECT_FILE"""
+
+    soname_parameters = "-Wl,-soname," + target_binary
+
+    ldflags = ''
+    linker_command = config.CC + " " + ldflags + """ \
+		build/birdfont-import/*.o \
+		-Lbuild/bin/ -lbirdfont \
+		-lm \
+		$(pkg-config --libs sqlite3) \
+		$(pkg-config --libs """ + config.GEE + """) \
+		$(pkg-config --libs gio-2.0) \
+		$(pkg-config --libs cairo) \
+		$(pkg-config --libs glib-2.0) \
+		$(pkg-config --libs xmlbird) \
+		-L./build -L./build/bin -l birdgems\
+		-o ./build/bin/""" + target_binary
+
+    birdfont_import = Builder('birdfont-import',
+                          valac_command, 
+                          cc_command,
+                          linker_command,
+                          target_binary,
+                          None,
+                          ['libbirdgems.so', 'libbirdfont.so'])
+			
+    yield birdfont_import.build()
+
+def task_birdfont_import():
+    yield make_birdfont_import('birdfont-import')
+
+def make_birdfont_autotrace(target_binary):
+    valac_command = config.VALAC + """\
+        -C \
+		--enable-experimental \
+		--define=MAC \
+        --basedir build/birdfont-autotrace/ \
+        """ + config.NON_NULL + """ \
+		birdfont-autotrace/*.vala \
+		--vapidir=./ \
+		--pkg """ + config.GEE + """ \
+		--pkg gio-2.0  \
+		--pkg cairo \
+		--pkg xmlbird \
+		--pkg libbirdfont \
+        """
+        
+    cflags = ''
+    cc_command = config.CC + " " + cflags + """ \
+        -c C_SOURCE \
+		-D 'GETTEXT_PACKAGE="birdfont"' \
+        -I./build/libbirdfont \
+		$(pkg-config --cflags sqlite3) \
+		$(pkg-config --cflags """ + config.GEE + """) \
+		$(pkg-config --cflags gio-2.0) \
+		$(pkg-config --cflags cairo) \
+		$(pkg-config --cflags glib-2.0) \
+        -o OBJECT_FILE"""
+
+    soname_parameters = "-Wl,-soname," + target_binary
+
+    ldflags = ''
+    linker_command = config.CC + " " + ldflags + """ \
+		build/birdfont-autotrace/*.o \
+        -I./build/libbirdfont \
+		-Lbuild/bin/ -lbirdfont \
+		-lm \
+		$(pkg-config --libs sqlite3) \
+		$(pkg-config --libs """ + config.GEE + """) \
+		$(pkg-config --libs gio-2.0) \
+		$(pkg-config --libs cairo) \
+		$(pkg-config --libs glib-2.0) \
+		$(pkg-config --libs xmlbird) \
+		-L./build -L./build/bin -l birdgems\
+		-o ./build/bin/""" + target_binary
+
+    birdfont_autotrace = Builder('birdfont-autotrace',
+                          valac_command, 
+                          cc_command,
+                          linker_command,
+                          target_binary,
+                          None,
+                          ['libbirdgems.so', 'libbirdfont.so'])
+			
+    yield birdfont_autotrace.build()
+
+def task_birdfont_autotrace():
+    yield make_birdfont_autotrace('birdfont-autotrace')
+    
+def make_libbirdfont(target_binary):
+    valac_command = config.VALAC + """\
+        -C \
+        --vapidir=./ \
+        --basedir build/libbirdfont/ \
+        """ + config.NON_NULL + """ \
+        --enable-experimental \
+        --library libbirdfont \
+        -H build/libbirdfont/birdfont.h \
+        libbirdfont/*.vala \
+        libbirdfont/OpenFontFormat/*.vala \
+        libbirdfont/Renderer/*.vala \
+        --pkg """ + config.GEE + """ \
+        --pkg gio-2.0 \
+        --pkg cairo \
+        --pkg xmlbird \
+        --pkg libbirdgems \
+        --pkg sqlite3 \
+        """
+        
+    cflags = ''
+    cc_command = config.CC + " " + cflags + """ \
+            -c C_SOURCE \
+            -fPIC \
+            -D 'GETTEXT_PACKAGE="birdfont"' \
+            -I ./build/libbirdfont \
+            -I ./build/libbirdgems \
+            $(pkg-config --cflags sqlite3) \
+            $(pkg-config --cflags fontconfig) \
+            $(pkg-config --cflags """ + config.GEE + """) \
+            $(pkg-config --cflags gio-2.0) \
+            $(pkg-config --cflags cairo) \
+            $(pkg-config --cflags glib-2.0) \
+            $(pkg-config --cflags xmlbird) \
+            -o OBJECT_FILE"""
+
+    soname_parameters = "-Wl,-soname," + target_binary
+
+    ldflags = ''
+    linker_command = config.CC + " " + ldflags + """ \
+            -shared \
+            """ + soname_parameters + """ \
+            build/libbirdfont/*.o \
+            $(pkg-config --libs sqlite3) \
+            $(freetype-config --libs) \
+            $(pkg-config --libs """ + config.GEE + """) \
+            $(pkg-config --libs gio-2.0) \
+            $(pkg-config --libs fontconfig) \
+            $(pkg-config --libs cairo) \
+            $(pkg-config --libs glib-2.0) \
+            $(pkg-config --libs xmlbird) \
+            -L./build -L./build/bin -l birdgems\
+            -o ./build/bin/""" + target_binary
+
+    libbirdfont = Builder('libbirdfont',
+                          valac_command, 
+                          cc_command,
+                          linker_command,
+                          target_binary,
+                          'libbirdfont.so',
+                          ['libbirdgems.so'])
+			
+    yield libbirdfont.build()
+
+def task_libbirdfont():
+    yield make_libbirdfont('libbirdfont.so.' + version.SO_VERSION_MAJOR)
+    
+def make_libbirdgems(target_binary):
+    valac_command = config.VALAC + """\
+		-C \
+		-H build/libbirdgems/birdgems.h \
+		--pkg posix \
+		--vapidir=./ \
+		--basedir build/libbirdgems/ \
+		""" + config.NON_NULL + """ \
+		--enable-experimental \
+		--library libbirdgems \
+		libbirdgems/*.vala \
+        """
+
+    cc = 'gcc'
+    cflags = ''
+    cc_command = config.CC + " " + cflags + """ \
+			-fPIC \
+			$(pkg-config --cflags glib-2.0) \
+			-c C_SOURCE \
+            -o OBJECT_FILE \
+			"""
+
+    soname_parameters = "-Wl,-soname," + target_binary
+
+    ldflags = ''
+    linker_command = config.CC + " " + ldflags + """ \
+			-shared \
+			""" + soname_parameters + """ \
+			-fPIC \
+			build/libbirdgems/*.o \
+			$(pkg-config --libs glib-2.0) \
+			$(pkg-config --libs gobject-2.0) \
+			-o build/bin/""" + target_binary
+
+    libbirdgems = Builder('libbirdgems',
+                          valac_command, 
+                          cc_command,
+                          linker_command,
+                          target_binary,
+                          'libbirdgems.so')
+			
+    yield libbirdgems.build()
+
+def task_libbirdgems():
+    yield make_libbirdgems('libbirdgems.so.' + version.LIBBIRDGEMS_SO_VERSION_MAJOR) 
+
+def task_compile_translations ():
+    """translate po files"""
+    return  {
+        'actions': [compile_translations]
+        }
+        
+def task_man():
+    """gzip linux man pages"""
+    for name in ("birdfont.1", "birdfont-export.1", 
+                 "birdfont-import.1", "birdfont-autotrace.1"):
+        yield {
+            'name': name,
+            'file_dep': ['resources/linux/%s' % name],
+            'targets': ['build/%s.gz' % name],
+            'actions': ["gzip -9 -c %(dependencies)s > %(targets)s"],
+            }
+
+def task_distclean ():
+    return  {
+        'actions': ['rm -rf .doit.db build scripts/config.py scripts/*.pyc dodo.pyc libbirdfont/Config.vala'],
+        }
 
 def task_build ():
     if not os.path.exists ("build/configured"):
@@ -71,101 +438,3 @@ def task_build ():
     return  {
         'actions': ['echo "Build"'],
         }
-
-def task_pkg_flags():
-    """get compiler flags for libs/pkgs """
-    for pkg in LIBS:
-        cmd = 'pkg-config --cflags --libs {pkg}'
-
-        yield {
-            'name': pkg,
-            'actions': [CmdAction(cmd.format(pkg=pkg), save_out='out')],
-            'uptodate': [run_once],
-            }
-
-
-valac_options = [
-	'--thread',
-	'--enable-experimental-non-null',
-	'--enable-experimental',
-	'--target-glib=2.34', # see bug 0000004
-	'--define=LINUX'
-	]
-
-
-if "kfreebsd" in sys.platform:
-    LIBBIRDGEMS_SO_VERSION=version.LIBBIRDGEMS_SO_VERSION
-elif "bsd" in sys.platform:
-    LIBBIRDGEMS_SO_VERSION='${LIBbirdgems_VERSION}'
-else:
-    LIBBIRDGEMS_SO_VERSION=version.LIBBIRDGEMS_SO_VERSION
-
-libbirdgems = Vala(src='libbirdgems', build='build', library='birdgems', so_version=LIBBIRDGEMS_SO_VERSION, pkg_libs=LIBBIRD_LIBS, vala_deps=[])
-def task_libbirdgems():
-    yield libbirdgems.gen_c(valac_options)
-    yield libbirdgems.gen_o(['-fPIC'])
-    yield libbirdgems.gen_so('-shared -L ./build -l m')
-    yield libbirdgems.gen_ln()
-
-if "kfreebsd" in sys.platform:
-    SO_VERSION=version.SO_VERSION
-elif "bsd" in sys.platform:
-    SO_VERSION='${LIBbirdfont_VERSION}'
-else:
-    SO_VERSION=version.SO_VERSION
-
-libbird = Vala(src='libbirdfont', build='build', library='birdfont', so_version=SO_VERSION, pkg_libs=LIBS, vala_deps=[libbirdgems])
-def task_libbirdfont():
-    yield libbird.gen_c(valac_options)
-    yield libbird.gen_o(['-fPIC -I./build/', """-D 'GETTEXT_PACKAGE="birdfont"'"""])
-    yield libbird.gen_so('-L ./build -L ./build -l birdgems')
-    yield libbird.gen_ln()
-
-
-def task_birdfont():
-    bird = Vala(src='birdfont', build='build', pkg_libs=LIBS, vala_deps=[libbird, libbirdgems])
-    yield bird.gen_c(valac_options)
-    yield bird.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
-
-
-def task_birdfont_autotrace():
-     exp = Vala(src='birdfont-autotrace', build='build', pkg_libs=LIBS, vala_deps=[libbird, libbirdgems])
-     yield exp.gen_c(valac_options)
-     yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
-
-
-def task_birdfont_export():
-     exp = Vala(src='birdfont-export', build='build', pkg_libs=LIBS, vala_deps=[libbird, libbirdgems])
-     yield exp.gen_c(valac_options)
-     yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
-
-
-def task_birdfont_import():
-     exp = Vala(src='birdfont-import', build='build', pkg_libs=LIBS, vala_deps=[libbird, libbirdgems])
-     yield exp.gen_c(valac_options)
-     yield exp.gen_bin(["""-D 'GETTEXT_PACKAGE="birdfont"' """])
-
-
-def task_compile_translations ():
-    """translate po files"""
-    return  {
-        'actions': [compile_translations]
-        }
-
-def task_man():
-    """gzip linux man pages"""
-    for name in ("birdfont.1", "birdfont-export.1", 
-"birdfont-import.1", "birdfont-autotrace.1"):
-        yield {
-            'name': name,
-            'file_dep': ['resources/linux/%s' % name],
-            'targets': ['build/%s.gz' % name],
-            'actions': ["gzip -9 -c %(dependencies)s > %(targets)s"],
-            }
-
-
-def task_distclean ():
-    return  {
-        'actions': ['rm -rf .doit.db build scripts/config.py scripts/*.pyc dodo.pyc libbirdfont/Config.vala'],
-        }
-

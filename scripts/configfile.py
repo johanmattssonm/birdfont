@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 """
 Copyright (C) 2012, 2013 Eduardo Naufel Schettino and Johan Mattsson
 
@@ -39,13 +39,17 @@ def write_config (prefix):
 
 	f.write("}")
 
-def write_compile_parameters (prefix, dest, cc, gee, posixvala):
+def write_compile_parameters (prefix, dest, cc, gee, valac, non_null):
 	f = open('./scripts/config.py', 'w+')
-	f.write("#!/usr/bin/python\n")
+	f.write("#!/usr/bin/python3\n")
 	f.write("PREFIX =  \"" + prefix + "\"\n")
 	f.write("DEST = \"" + dest + "\"\n")
 	f.write("CC = \"" + cc + "\"\n")
 	f.write("GEE = \"" + gee + "\"\n")
-	f.write("POSIXVALA = " + posixvala + "\n")
+	f.write("VALAC = \"" + valac + "\"\n")
 
+	if non_null:
+		f.write("NON_NULL = \"--enable-experimental-non-null\"\n")
+	else:
+		f.write("NON_NULL = \"\"\n")
 	

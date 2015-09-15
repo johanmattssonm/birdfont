@@ -45,7 +45,7 @@ Configure, build and install with python:
 Configure, build and install with doit:
 
     ./configure
-    doit
+    doit3
     sudo ./install.py
 
 The default prefix is /usr/local on Fedora should BirdFont be compiled with
@@ -54,6 +54,9 @@ The default prefix is /usr/local on Fedora should BirdFont be compiled with
     ./configure --prefix=/usr
     ./scripts/linux_build.py --prefix=/usr
      sudo ./install.py
+
+All patches must be compiled with support for valas null pointer checks.
+Configure the project with ./configure --nonnull 
 
 ## Packages
 
