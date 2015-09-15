@@ -31,11 +31,11 @@ DOIT_CONFIG = {
         'compile_translations',
         'man',
         'libbirdfont', 
-       'libbirdgems', 
-       'birdfont', 
-       'birdfont-autotrace',
-       'birdfont-export',
-       'birdfont-import'
+        'libbirdgems', 
+        'birdfont', 
+        'birdfont-autotrace',
+        'birdfont-export',
+        'birdfont-import'
         ],
     }
 
@@ -412,8 +412,8 @@ def task_man():
 def task_distclean ():
     return  {
         'actions': ['rm -rf .doit.db build scripts/config.py'
-                    + ' scripts/*.pyc dodo.pyc libbirdfont/Config.vala'
-                    + ' __pycache__']
+                    + ' libbirdfont/Config.vala'
+                    + ' __pycache__ scripts/__pycache__']
         }
 
 def task_build ():
