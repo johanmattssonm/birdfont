@@ -1,8 +1,9 @@
 import os
 import fnmatch
 import glob
+import types
 from os import path
-from doit.tools import run_once
+from scripts.run import run
 
 def get_sources_path(directory, pattern):
     """obtain path of all source files for a matching pattern"""
@@ -66,7 +67,6 @@ class Builder(object):
                         'mkdir -p ' + build_directory, 
                         'touch ' + build_file],
             'targets': [build_file],
-            'uptodate': [run_once]
         }
         
         copied_csources = []
@@ -87,7 +87,7 @@ class Builder(object):
             }
         
         yield {
-            'basename': 'valac ' + build_directory,
+            'basename': 'valac ' + source_directory,
             'file_dep': [build_file] + bindep,
             'actions': [valac_command],
             'targets': generated_csource_paths
@@ -115,7 +115,7 @@ class Builder(object):
             'basename': source_directory,
             'file_dep': object_paths + [build_file] + bindep,
             'actions': [linker_command],
-            'targets': [path.join(build_directory, 'bin', target_binary)]
+            'targets': [path.join('build', 'bin', target_binary)]
         }
 
         if not self.link == None:
@@ -126,3 +126,15 @@ class Builder(object):
                 'actions': [createlink],
                 'targets': [path.join('build', 'bin', self.link)]
             }
+
+def execute_task(task):
+	for action in task['actions']:
+		print(action)
+		run(action)
+
+def process_tasks(generator):
+	for task in generator:
+		if isinstance(task, types.GeneratorType):
+			process_tasks(task)
+		else:
+			execute_task(task)

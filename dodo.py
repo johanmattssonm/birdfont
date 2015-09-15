@@ -28,14 +28,14 @@ from scripts.builder import Builder
 DOIT_CONFIG = {
     'default_tasks': [
         'build',
-        'libbirdgems', 	
-        'libbirdfont',
-        'birdfont',
-        'birdfont-autotrace',
-        'birdfont-export',
-        'birdfont-import',
         'compile_translations',
-        'man'
+        'man',
+        'libbirdfont', 
+       'libbirdgems', 
+       'birdfont', 
+       'birdfont-autotrace',
+       'birdfont-export',
+       'birdfont-import'
         ],
     }
 
@@ -53,12 +53,19 @@ elif "bsd" in sys.platform:
 else:
     SO_VERSION=version.SO_VERSION
 
+def soname(target_binary):
+    if "darwin" in sys.platform:
+        return ''
+        
+    return '-Wl,-soname,' + target_binary
+
 def make_birdfont(target_binary):
     valac_command = config.VALAC + """\
         -C \
         --vapidir=./ \
         --basedir build/birdfont/ \
         """ + config.NON_NULL + """ \
+        """ + config.VALACFLAGS.get("birdfont", "") + """ \
         --enable-experimental \
         birdfont/*.vala \
 		--vapidir=./ \
@@ -73,8 +80,7 @@ def make_birdfont(target_binary):
 		--pkg libbirdfont
         """
         
-    cflags = ''
-    cc_command = config.CC + " " + cflags + """ \
+    cc_command = config.CC + " " + config.CFLAGS.get("birdfont", "") + """ \
         -c C_SOURCE \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
         -I./build/libbirdfont \
@@ -87,11 +93,8 @@ def make_birdfont(target_binary):
 		$(pkg-config --cflags webkitgtk-3.0) \
 		$(pkg-config --cflags libnotify) \
         -o OBJECT_FILE"""
-
-    soname_parameters = "-Wl,-soname," + target_binary
-
-    ldflags = ''
-    linker_command = config.CC + " " + ldflags + """ \
+        
+    linker_command = config.CC + " " + config.LDFLAGS.get("birdfont", "") + """ \
         build/birdfont/*.o \
 		-L./build/bin -lbirdfont \
 		$(pkg-config --libs sqlite3) \
@@ -127,6 +130,7 @@ def make_birdfont_export(target_binary):
 		--define=MAC \
         --basedir build/birdfont-export/ \
         """ + config.NON_NULL + """ \
+        """ + config.VALACFLAGS.get("birdfont-export", "") + """ \
 		birdfont-export/*.vala \
 		--vapidir=./ \
 		--pkg """ + config.GEE + """ \
@@ -135,9 +139,8 @@ def make_birdfont_export(target_binary):
 		--pkg xmlbird \
 		--pkg libbirdfont
         """
-        
-    cflags = ''
-    cc_command = config.CC + " " + cflags + """ \
+
+    cc_command = config.CC + " " + config.CFLAGS.get("birdfont-export", "") + """ \
         -c C_SOURCE \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
         -I./build/libbirdfont \
@@ -147,11 +150,8 @@ def make_birdfont_export(target_binary):
 		$(pkg-config --cflags cairo) \
 		$(pkg-config --cflags glib-2.0) \
         -o OBJECT_FILE"""
-
-    soname_parameters = "-Wl,-soname," + target_binary
-
-    ldflags = ''
-    linker_command = config.CC + " " + ldflags + """ \
+        
+    linker_command = config.CC + " " + config.LDFLAGS.get("birdfont-export", "") + """ \
 		build/birdfont-export/*.o \
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
@@ -184,6 +184,7 @@ def make_birdfont_import(target_binary):
 		--define=MAC \
         --basedir build/birdfont-import/ \
         """ + config.NON_NULL + """ \
+        """ + config.VALACFLAGS.get("birdfont-import", "") + """ \
 		birdfont-import/*.vala \
 		--vapidir=./ \
 		--pkg """ + config.GEE + """ \
@@ -193,8 +194,7 @@ def make_birdfont_import(target_binary):
 		--pkg libbirdfont
         """
         
-    cflags = ''
-    cc_command = config.CC + " " + cflags + """ \
+    cc_command = config.CC + " " + config.CFLAGS.get("birdfont-import", "") + """ \
         -c C_SOURCE \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
         -I./build/libbirdfont \
@@ -205,10 +205,7 @@ def make_birdfont_import(target_binary):
 		$(pkg-config --cflags glib-2.0) \
         -o OBJECT_FILE"""
 
-    soname_parameters = "-Wl,-soname," + target_binary
-
-    ldflags = ''
-    linker_command = config.CC + " " + ldflags + """ \
+    linker_command = config.CC + " " + config.LDFLAGS.get("birdfont-import", "") + """ \
 		build/birdfont-import/*.o \
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
@@ -241,6 +238,7 @@ def make_birdfont_autotrace(target_binary):
 		--define=MAC \
         --basedir build/birdfont-autotrace/ \
         """ + config.NON_NULL + """ \
+        """ + config.VALACFLAGS.get("birdfont-autotrace", "") + """ \
 		birdfont-autotrace/*.vala \
 		--vapidir=./ \
 		--pkg """ + config.GEE + """ \
@@ -250,8 +248,7 @@ def make_birdfont_autotrace(target_binary):
 		--pkg libbirdfont \
         """
         
-    cflags = ''
-    cc_command = config.CC + " " + cflags + """ \
+    cc_command = config.CC + " " + config.CFLAGS.get("birdfont-autotrace", "") + """ \
         -c C_SOURCE \
 		-D 'GETTEXT_PACKAGE="birdfont"' \
         -I./build/libbirdfont \
@@ -261,11 +258,8 @@ def make_birdfont_autotrace(target_binary):
 		$(pkg-config --cflags cairo) \
 		$(pkg-config --cflags glib-2.0) \
         -o OBJECT_FILE"""
-
-    soname_parameters = "-Wl,-soname," + target_binary
-
-    ldflags = ''
-    linker_command = config.CC + " " + ldflags + """ \
+        
+    linker_command = config.CC + " " + config.LDFLAGS.get("birdfont-autotrace", "") + """ \
 		build/birdfont-autotrace/*.o \
         -I./build/libbirdfont \
 		-Lbuild/bin/ -lbirdfont \
@@ -298,6 +292,7 @@ def make_libbirdfont(target_binary):
         --vapidir=./ \
         --basedir build/libbirdfont/ \
         """ + config.NON_NULL + """ \
+        """ + config.VALACFLAGS.get("libbirdfont", "") + """ \
         --enable-experimental \
         --library libbirdfont \
         -H build/libbirdfont/birdfont.h \
@@ -311,9 +306,8 @@ def make_libbirdfont(target_binary):
         --pkg libbirdgems \
         --pkg sqlite3 \
         """
-        
-    cflags = ''
-    cc_command = config.CC + " " + cflags + """ \
+
+    cc_command = config.CC + " " + config.CFLAGS.get("libbirdfont", "") + """ \
             -c C_SOURCE \
             -fPIC \
             -D 'GETTEXT_PACKAGE="birdfont"' \
@@ -328,12 +322,9 @@ def make_libbirdfont(target_binary):
             $(pkg-config --cflags xmlbird) \
             -o OBJECT_FILE"""
 
-    soname_parameters = "-Wl,-soname," + target_binary
-
-    ldflags = ''
-    linker_command = config.CC + " " + ldflags + """ \
+    linker_command = config.CC + " " + config.LDFLAGS.get("libbirdfont", "") + """ \
             -shared \
-            """ + soname_parameters + """ \
+            """ + soname(target_binary) + """ \
             build/libbirdfont/*.o \
             $(pkg-config --libs sqlite3) \
             $(freetype-config --libs) \
@@ -367,26 +358,22 @@ def make_libbirdgems(target_binary):
 		--vapidir=./ \
 		--basedir build/libbirdgems/ \
 		""" + config.NON_NULL + """ \
+        """ + config.VALACFLAGS.get("libbirdgems", "") + """ \
 		--enable-experimental \
 		--library libbirdgems \
 		libbirdgems/*.vala \
         """
 
-    cc = 'gcc'
-    cflags = ''
-    cc_command = config.CC + " " + cflags + """ \
+    cc_command = config.CC + " " + config.CFLAGS.get("libbirdgems", "") + """ \
 			-fPIC \
 			$(pkg-config --cflags glib-2.0) \
 			-c C_SOURCE \
             -o OBJECT_FILE \
 			"""
 
-    soname_parameters = "-Wl,-soname," + target_binary
-
-    ldflags = ''
-    linker_command = config.CC + " " + ldflags + """ \
+    linker_command = config.CC + " " + config.LDFLAGS.get("libbirdgems", "") + """ \
 			-shared \
-			""" + soname_parameters + """ \
+			""" + soname(target_binary) + """ \
 			-fPIC \
 			build/libbirdgems/*.o \
 			$(pkg-config --libs glib-2.0) \
@@ -424,7 +411,9 @@ def task_man():
 
 def task_distclean ():
     return  {
-        'actions': ['rm -rf .doit.db build scripts/config.py scripts/*.pyc dodo.pyc libbirdfont/Config.vala'],
+        'actions': ['rm -rf .doit.db build scripts/config.py'
+                    + ' scripts/*.pyc dodo.pyc libbirdfont/Config.vala'
+                    + ' __pycache__']
         }
 
 def task_build ():
