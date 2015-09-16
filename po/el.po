@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-27 09:24+0200\n"
+"POT-Creation-Date: 2015-09-16 15:50+0200\n"
 "PO-Revision-Date: 2014-08-28 18:37+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,7 +105,7 @@ msgstr "Αρχεία"
 msgid "Parts"
 msgstr ""
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2317
+#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2318
 #: libbirdfont/LigatureList.vala:106
 msgid "Add"
 msgstr ""
@@ -184,9 +184,9 @@ msgstr ""
 msgid "Glyph"
 msgstr ""
 
-#: libbirdfont/BirdFont.vala:167 libbirdfont/DescriptionDisplay.vala:135
+#: libbirdfont/BirdFont.vala:167 libbirdfont/DescriptionDisplay.vala:136
 #: libbirdfont/Menu.vala:489 libbirdfont/Menu.vala:491
-#: libbirdfont/VersionList.vala:259 birdfont/GtkWindow.vala:955
+#: libbirdfont/VersionList.vala:259
 msgid "Version"
 msgstr "Έκδοση"
 
@@ -275,36 +275,34 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω"
 
 #: libbirdfont/DescriptionDisplay.vala:52
-#: libbirdfont/DescriptionDisplay.vala:182 libbirdfont/ExportSettings.vala:133
+#: libbirdfont/DescriptionDisplay.vala:183 libbirdfont/ExportSettings.vala:133
 #: libbirdfont/Menu.vala:482 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:56 libbirdfont/MenuTab.vala:84
-#: birdfont/GtkWindow.vala:899
 #, fuzzy
 msgid "PostScript Name"
 msgstr "Ονομασία αρχείου Postscript"
 
 #: libbirdfont/DescriptionDisplay.vala:66 libbirdfont/MenuTab.vala:89
-#: libbirdfont/MenuTab.vala:644 birdfont/GtkWindow.vala:906
+#: libbirdfont/MenuTab.vala:672
 msgid "Name"
 msgstr "Όνομα"
 
 #: libbirdfont/DescriptionDisplay.vala:76 libbirdfont/MenuTab.vala:94
-#: birdfont/GtkWindow.vala:913
 msgid "Style"
 msgstr "Στυλ"
 
-#: libbirdfont/DescriptionDisplay.vala:86 birdfont/GtkWindow.vala:919
+#: libbirdfont/DescriptionDisplay.vala:86
 msgid "Bold"
 msgstr "Έντονα"
 
-#: libbirdfont/DescriptionDisplay.vala:95 birdfont/GtkWindow.vala:926
+#: libbirdfont/DescriptionDisplay.vala:95
 msgid "Italic"
 msgstr "Πλάγια"
 
-#: libbirdfont/DescriptionDisplay.vala:105 birdfont/GtkWindow.vala:934
+#: libbirdfont/DescriptionDisplay.vala:105
 msgid "Weight"
 msgstr "Βάρος"
 
@@ -312,15 +310,15 @@ msgstr "Βάρος"
 msgid "Full Name (Name and Style)"
 msgstr ""
 
-#: libbirdfont/DescriptionDisplay.vala:125 libbirdfont/MenuTab.vala:104
+#: libbirdfont/DescriptionDisplay.vala:126 libbirdfont/MenuTab.vala:104
 msgid "Unique Identifier"
 msgstr ""
 
-#: libbirdfont/DescriptionDisplay.vala:145 birdfont/GtkWindow.vala:962
+#: libbirdfont/DescriptionDisplay.vala:146
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: libbirdfont/DescriptionDisplay.vala:156 birdfont/GtkWindow.vala:970
+#: libbirdfont/DescriptionDisplay.vala:157
 msgid "Copyright"
 msgstr "Πνευματικά δικαιώματα"
 
@@ -573,7 +571,7 @@ msgstr ""
 msgid "Object Tools"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1533
+#: libbirdfont/DrawingTools.vala:1535
 msgid "Set size for grid"
 msgstr ""
 
@@ -603,7 +601,7 @@ msgid "Export"
 msgstr ""
 
 #: libbirdfont/ExportTool.vala:193 libbirdfont/Menu.vala:64
-#: libbirdfont/MenuTab.vala:302 libbirdfont/SaveCallback.vala:67
+#: libbirdfont/MenuTab.vala:330 libbirdfont/SaveCallback.vala:67
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Αποθήκευση"
@@ -643,7 +641,7 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:2317
+#: libbirdfont/Glyph.vala:2318
 msgid "Guide"
 msgstr ""
 
@@ -713,7 +711,7 @@ msgstr ""
 msgid "No kerning pairs created."
 msgstr ""
 
-#: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:60
+#: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:65
 msgid "Kerning class"
 msgstr ""
 
@@ -738,39 +736,39 @@ msgstr ""
 msgid "Font Size"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:57
+#: libbirdfont/KerningTools.vala:62
 msgid "Create new kerning class."
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:67
+#: libbirdfont/KerningTools.vala:72
 msgid "Use text input to enter kerning values."
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:74
+#: libbirdfont/KerningTools.vala:79
 msgid "Insert glyph from overview"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:88
+#: libbirdfont/KerningTools.vala:93
 msgid "Insert character by unicode value"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:95
+#: libbirdfont/KerningTools.vala:100
 msgid "Open a text file with kerning strings first."
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:97
+#: libbirdfont/KerningTools.vala:102
 msgid "Previous kerning string"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:107
+#: libbirdfont/KerningTools.vala:112
 msgid "You have reached the beginning of the list."
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:115
+#: libbirdfont/KerningTools.vala:120
 msgid "Next kerning string"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:125
+#: libbirdfont/KerningTools.vala:130
 msgid "You have reached the end of the list."
 msgstr ""
 
@@ -839,7 +837,7 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: libbirdfont/Ligatures.vala:185 libbirdfont/OverView.vala:1329
+#: libbirdfont/Ligatures.vala:185 libbirdfont/OverView.vala:1330
 msgid "Ligature"
 msgstr ""
 
@@ -927,8 +925,8 @@ msgstr ""
 msgid "Move To Baseline"
 msgstr ""
 
-#: libbirdfont/Menu.vala:155 libbirdfont/OverView.vala:233
-#: libbirdfont/OverView.vala:252
+#: libbirdfont/Menu.vala:155 libbirdfont/OverView.vala:234
+#: libbirdfont/OverView.vala:253
 msgid "Search"
 msgstr "Αναζήτηση"
 
@@ -1088,7 +1086,7 @@ msgstr ""
 msgid "Save As .bfp"
 msgstr ""
 
-#: libbirdfont/Menu.vala:467 libbirdfont/OverView.vala:415
+#: libbirdfont/Menu.vala:467 libbirdfont/OverView.vala:416
 msgid "Overview"
 msgstr "Επισκόπηση"
 
@@ -1121,11 +1119,11 @@ msgstr ""
 msgid "You need to save your font before exporting it."
 msgstr ""
 
-#: libbirdfont/MenuTab.vala:159
+#: libbirdfont/MenuTab.vala:165
 msgid "Menu"
 msgstr "Κατάλογος"
 
-#: libbirdfont/MenuTab.vala:644
+#: libbirdfont/MenuTab.vala:672
 msgid "Add ligature"
 msgstr ""
 
@@ -1134,15 +1132,15 @@ msgstr ""
 msgid "Move paths"
 msgstr "Μετακίνηση μονοπατιού"
 
-#: libbirdfont/OverView.vala:233 libbirdfont/OverView.vala:252
+#: libbirdfont/OverView.vala:234 libbirdfont/OverView.vala:253
 msgid "Filter"
 msgstr "Φίλτρο"
 
-#: libbirdfont/OverView.vala:572
+#: libbirdfont/OverView.vala:573
 msgid "No glyphs in this view."
 msgstr ""
 
-#: libbirdfont/OverView.vala:1352
+#: libbirdfont/OverView.vala:1353
 msgid "See also:"
 msgstr ""
 
@@ -1586,17 +1584,9 @@ msgstr ""
 msgid "New version"
 msgstr "Νέα έκδοση"
 
-#: birdfont/GtkWindow.vala:548
+#: birdfont/GtkWindow.vala:514
 msgid "Your fonts have been exported."
 msgstr ""
-
-#: birdfont/GtkWindow.vala:941
-msgid "Full name (name and style)"
-msgstr "Πλήρης ονομασία (όνομα και στυλ)"
-
-#: birdfont/GtkWindow.vala:948
-msgid "Unique identifier"
-msgstr "Μοναδικό αναγνωριστικό"
 
 #: birdfont-autotrace/AutoTrace.vala:69
 msgid "brighness cutoff, from 0.001 to 2, the default value is 1"
@@ -1625,6 +1615,12 @@ msgstr ""
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
 msgstr ""
+
+#~ msgid "Full name (name and style)"
+#~ msgstr "Πλήρης ονομασία (όνομα και στυλ)"
+
+#~ msgid "Unique identifier"
+#~ msgstr "Μοναδικό αναγνωριστικό"
 
 #, fuzzy
 #~ msgid "Move to path to the bottom layer"
