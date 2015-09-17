@@ -39,6 +39,8 @@ typedef struct FontFace {
 	FT_Library library;
 } FontFace;
 
+void close_ft_font (FontFace* font);
+
 /** Convert units per em in font file format to the BirdFont format. */
 double get_units (double units_per_em) {
 	return 100.0 / units_per_em;

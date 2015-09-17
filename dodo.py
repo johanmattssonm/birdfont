@@ -385,7 +385,7 @@ def make_libbirdgems(target_binary, deps):
                           cc_command,
                           linker_command,
                           target_binary,
-						  None,
+						  'libbirdgems.so',
                           deps)
 			
     yield libbirdgems.build()
