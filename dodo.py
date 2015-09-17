@@ -405,9 +405,9 @@ def task_man():
                  "birdfont-import.1", "birdfont-autotrace.1"):
         yield {
             'name': name,
-            'file_dep': ['resources/linux/%s' % name],
-            'targets': ['build/%s.gz' % name],
-            'actions': ["gzip -9 -c %(dependencies)s > %(targets)s"],
+            'file_dep': ['resources/linux/' + name],
+            'targets': ['build/' + name + '.gz'],
+            'actions': ['gzip -9 -c resources/linux/' + name + ' > ' + 'build/' + name + '.gz'],
             }
 
 def task_distclean ():
