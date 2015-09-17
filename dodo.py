@@ -62,7 +62,7 @@ def soname(target_binary):
 def make_birdfont(target_binary, deps):
     valac_command = config.VALAC + """\
         -C \
-        --vapidir=./ \g
+        --vapidir=./ \
         --basedir build/birdfont/ \
         """ + config.NON_NULL + """ \
         """ + config.VALACFLAGS.get("birdfont", "") + """ \
