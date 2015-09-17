@@ -54,15 +54,15 @@ else:
     SO_VERSION=version.SO_VERSION
 
 def soname(target_binary):
-    if "darwin" in sys.platform:
+    if "darwin" in sys.platform or "msys" in sys.platform:
         return ''
         
     return '-Wl,-soname,' + target_binary
 
-def make_birdfont(target_binary):
+def make_birdfont(target_binary, deps):
     valac_command = config.VALAC + """\
         -C \
-        --vapidir=./ \
+        --vapidir=./ \g
         --basedir build/birdfont/ \
         """ + config.NON_NULL + """ \
         """ + config.VALACFLAGS.get("birdfont", "") + """ \
@@ -116,14 +116,14 @@ def make_birdfont(target_binary):
                           linker_command,
                           target_binary,
                           None,
-                          ['libbirdgems.so', 'libbirdfont.so'])
+                          deps)
 			
     yield birdfont.build()
 
 def task_birdfont():
-    yield make_birdfont('birdfont')
+    yield make_birdfont('birdfont', ['libbirdgems.so', 'libbirdfont.so'])
 
-def make_birdfont_export(target_binary):
+def make_birdfont_export(target_binary, deps):
     valac_command = config.VALAC + """ \
         -C \
 		--enable-experimental \
@@ -170,14 +170,14 @@ def make_birdfont_export(target_binary):
                               linker_command,
                               target_binary,
                               None,
-                              ['libbirdgems.so', 'libbirdfont.so'])
+                              deps)
 			
     yield birdfont_export.build()
 
 def task_birdfont_export():
-    yield make_birdfont_export('birdfont-export')
+    yield make_birdfont_export('birdfont-export', ['libbirdgems.so', 'libbirdfont.so'])
 
-def make_birdfont_import(target_binary):
+def make_birdfont_import(target_binary, deps):
     valac_command = config.VALAC + """\
         -C  \
 		--enable-experimental \
@@ -224,14 +224,14 @@ def make_birdfont_import(target_binary):
                           linker_command,
                           target_binary,
                           None,
-                          ['libbirdgems.so', 'libbirdfont.so'])
+                          deps)
 			
     yield birdfont_import.build()
 
 def task_birdfont_import():
-    yield make_birdfont_import('birdfont-import')
-
-def make_birdfont_autotrace(target_binary):
+    yield make_birdfont_import('birdfont-import', ['libbirdgems.so', 'libbirdfont.so'])
+	
+def make_birdfont_autotrace(target_binary, deps):
     valac_command = config.VALAC + """\
         -C \
 		--enable-experimental \
@@ -279,14 +279,14 @@ def make_birdfont_autotrace(target_binary):
                           linker_command,
                           target_binary,
                           None,
-                          ['libbirdgems.so', 'libbirdfont.so'])
+                          deps)
 			
     yield birdfont_autotrace.build()
 
 def task_birdfont_autotrace():
     yield make_birdfont_autotrace('birdfont-autotrace')
     
-def make_libbirdfont(target_binary):
+def make_libbirdfont(target_binary, deps):
     valac_command = config.VALAC + """\
         -C \
         --vapidir=./ \
@@ -343,14 +343,14 @@ def make_libbirdfont(target_binary):
                           linker_command,
                           target_binary,
                           'libbirdfont.so',
-                          ['libbirdgems.so'])
+                          deps)
 			
     yield libbirdfont.build()
 
 def task_libbirdfont():
-    yield make_libbirdfont('libbirdfont.so.' + version.SO_VERSION_MAJOR)
+    yield make_libbirdfont('libbirdfont.so.' + version.SO_VERSION_MAJOR, ['libbirdgems.so'])
     
-def make_libbirdgems(target_binary):
+def make_libbirdgems(target_binary, deps):
     valac_command = config.VALAC + """\
 		-C \
 		-H build/libbirdgems/birdgems.h \
@@ -385,12 +385,13 @@ def make_libbirdgems(target_binary):
                           cc_command,
                           linker_command,
                           target_binary,
-                          'libbirdgems.so')
+						  None,
+                          deps)
 			
     yield libbirdgems.build()
 
 def task_libbirdgems():
-    yield make_libbirdgems('libbirdgems.so.' + version.LIBBIRDGEMS_SO_VERSION_MAJOR) 
+    yield make_libbirdgems('libbirdgems.so.' + version.LIBBIRDGEMS_SO_VERSION_MAJOR, []) 
 
 def task_compile_translations ():
     """translate po files"""

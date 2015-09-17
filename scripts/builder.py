@@ -2,6 +2,7 @@ import os
 import fnmatch
 import glob
 import types
+import time
 from os import path
 from scripts.run import run
 
@@ -127,10 +128,42 @@ class Builder(object):
                 'targets': [path.join('build', 'bin', self.link)]
             }
 
+def is_up_to_date(task):
+    for target in task['targets']:
+        if not path.isfile(target):
+            return False
+
+    if not 'file_dep' in task.keys():
+        return False
+
+    for dep in task['file_dep']:
+        if not path.isfile(dep):
+            print('Dependency is not created yet: ' + dep + ' needed for ' + task['targets'])
+            exit(1)
+
+    target_times = []
+    for target in task['targets']:
+        target_times.append(path.getmtime(target))
+    target_times.sort()
+
+    dependency_times = []
+    for dependency in task['file_dep']:
+        if not path.basename(dependency) == 'placeholder':
+            dependency_times.append(path.getmtime(dependency))	
+    dependency_times.sort()
+
+    if len(dependency_times) == 0 or len(target_times) == 0:
+        return False
+
+    return dependency_times[-1] > target_times[0]
+
 def execute_task(task):
-	for action in task['actions']:
-		print(action)
-		run(action)
+    if is_up_to_date(task):
+        print(task['basename'] + ' - up to date.')
+    else:
+        for action in task['actions']:
+            print(action)
+            run(action)
 
 def process_tasks(generator):
 	for task in generator:

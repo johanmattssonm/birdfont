@@ -38,7 +38,7 @@ def write_config (prefix):
     f.write("}")
 
 def write_compile_parameters (prefix, dest, cc, gee, valac, non_null,
-                              valacflags, cflags, ldflags):
+                              valacflags, cflags, ldflags, gtk):
     f = open('./scripts/config.py', 'w+')
     f.write("#!/usr/bin/python3\n")
     f.write("PREFIX =  \"" + prefix + "\"\n")
@@ -55,3 +55,4 @@ def write_compile_parameters (prefix, dest, cc, gee, valac, non_null,
     f.write("VALACFLAGS = " + str(valacflags) + "\n")
     f.write("CFLAGS = " + str(cflags) + "\n")
     f.write("LDFLAGS = " + str(ldflags) + "\n")
+    f.write("GTK = " + str(gtk) + "\n")
