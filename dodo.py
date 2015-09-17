@@ -284,7 +284,7 @@ def make_birdfont_autotrace(target_binary, deps):
     yield birdfont_autotrace.build()
 
 def task_birdfont_autotrace():
-    yield make_birdfont_autotrace('birdfont-autotrace')
+    yield make_birdfont_autotrace('birdfont-autotrace', ['libbirdgems.so', 'libbirdfont.so'])
     
 def make_libbirdfont(target_binary, deps):
     valac_command = config.VALAC + """\
