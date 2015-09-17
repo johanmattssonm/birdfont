@@ -19,6 +19,7 @@ if config.GTK:
 	process_tasks(dodo.task_birdfont_autotrace())
 	process_tasks(dodo.task_birdfont_export())
 	process_tasks(dodo.task_birdfont_import())
+	process_tasks(dodo.task_man())
 
 compile_translations()
 
