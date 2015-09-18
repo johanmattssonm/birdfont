@@ -66,12 +66,12 @@ class Builder(object):
             'basename': 'mkdir ' + build_directory,
             'actions': ['mkdir -p ' + path.join('build', 'bin'),
                         'mkdir -p ' + build_directory, 
-                        'touch ' + build_file],
+                        '[ -e "' + build_file + '" ] || touch "' + build_file + '"'],
             'targets': [build_file],
         }
         
         copied_csources = []
-        copied_cheader = []
+        copied_cheader = [] 
         for csource in copied_cheader_paths + copied_csource_paths:
             dest = path.join(build_directory, path.basename(csource))
             
@@ -82,7 +82,7 @@ class Builder(object):
                 
             yield {
                 'basename': 'copy ' + csource,
-                'file_dep': [build_file] + bindep,
+                'file_dep': [build_file] + [csource],
                 'actions': ['cp ' + csource + ' ' + build_directory],
                 'targets': [dest]
             }
@@ -155,7 +155,7 @@ def is_up_to_date(task):
     if len(dependency_times) == 0 or len(target_times) == 0:
         return False
 
-    return dependency_times[-1] > target_times[0]
+    return dependency_times[-1] <= target_times[0]
 
 def execute_task(task):
     if is_up_to_date(task):

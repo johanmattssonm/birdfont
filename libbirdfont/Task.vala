@@ -24,6 +24,11 @@ public class Task : GLib.Object {
 	public void run () {
 		task ();
 	}
+
+	public void* perform_task() {
+		run ();
+		return null;
+	}
 }
 
 }

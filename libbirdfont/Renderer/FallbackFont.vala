@@ -36,6 +36,7 @@ public class FallbackFont : GLib.Object {
 	
 	FcConfig* font_config = null;
 	FontFace* default_font = null;
+	static bool font_config_stated = false;
 	
 	string default_font_file_name = "Roboto-Regular.ttf";
 	string default_font_family_name = "Roboto";
@@ -49,8 +50,20 @@ public class FallbackFont : GLib.Object {
 		string home = Environment.get_home_dir ();
 		
 		font_directories = new Gee.ArrayList<File> ();
-		font_config = FcInitLoadConfigAndFonts ();
 
+		if (!font_config_stated) {
+			font_config_stated = true;
+			
+			IdleSource idle = new IdleSource ();
+			idle.set_callback (() => {
+				Task t = new Task ();
+				t.task.connect (init_font_config);
+				MainWindow.native_window.run_non_blocking_background_thread (t);
+				return false;
+			});
+			idle.attach (null);
+		}
+		
 		add_font_folder ("/usr/share/fonts/");
 		add_font_folder ("/usr/local/share/fonts/");
 		add_font_folder (home + "/.local/share/fonts");
@@ -72,6 +85,17 @@ public class FallbackFont : GLib.Object {
 		if (default_font != null) {
 			close_font (default_font);
 		}
+	}
+
+	public void init_font_config () {
+		FcConfig* fc = FcInitLoadConfigAndFonts ();
+		IdleSource idle = new IdleSource ();
+		
+		idle.set_callback (() => {
+			font_config = fc;
+			return false;
+		});
+		idle.attach (null);
 	}
 
 	public Font get_single_glyph_font (unichar c) {

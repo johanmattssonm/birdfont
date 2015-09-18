@@ -483,6 +483,16 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}
 	}
 
+	public void run_non_blocking_background_thread (Task t) {
+		unowned Thread<void*> bg;
+		
+		try {
+			bg = Thread.create<void> (t.perform_task, true);
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
+	
 	public void* background_thread () {	
 		background_task.run ();
 		MenuTab.stop_background_thread ();

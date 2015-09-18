@@ -30,6 +30,11 @@ gchar* find_font (FcConfig* fontconfig, const gchar* characters) {
 	gchar* remaining_characters;
 	gunichar character;
 	
+	if (fontconfig == NULL) {
+		g_warning("Font config not loaded.");
+		return NULL;
+	}
+	
 	result = NULL;
 	pattern = FcPatternCreate ();
 	
@@ -88,6 +93,11 @@ gchar* find_font_file (FcConfig* font_config, const gchar* font_name) {
 	FcObjectSet* font_properties;
 	FcFontSet* fonts;
 	int i;
+
+	if (font_config == NULL) {
+		g_warning("Font config not loaded.");
+		return NULL;
+	}
 	
 	path = NULL;
 	name = font_name;

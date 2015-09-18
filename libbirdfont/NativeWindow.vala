@@ -51,8 +51,11 @@ public interface NativeWindow : GLib.Object {
 	/** Load images in a background thread. */
 	public abstract void load_background_image ();
 
-	/** Load images in a background thread. */
+	/** Run a background thread and block the gui. */
 	public abstract void run_background_thread (Task t);
+	
+	/** Run a background thread without blocking the gui. */
+	public abstract void run_non_blocking_background_thread (Task t);
 	
 	/** Copy text to clipboard. */
 	public abstract void set_clipboard_text (string text);
