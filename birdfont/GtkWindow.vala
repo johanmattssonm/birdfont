@@ -487,7 +487,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		unowned Thread<void*> bg;
 		
 		try {
-			bg = Thread.create<void> (t.perform_task, true);
+			bg = Thread.create<void*> (t.perform_task, true);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
