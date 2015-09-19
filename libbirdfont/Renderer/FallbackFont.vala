@@ -34,8 +34,8 @@ namespace BirdFont {
 public class FallbackFont : GLib.Object {
 	Gee.ArrayList<File> font_directories;
 	
-	FcConfig* font_config = null;
 	FontFace* default_font = null;
+	static FcConfig* font_config = null;
 	static bool font_config_stated = false;
 	
 	string default_font_file_name = "Roboto-Regular.ttf";
@@ -48,12 +48,11 @@ public class FallbackFont : GLib.Object {
 	
 	public FallbackFont () {
 		string home = Environment.get_home_dir ();
-		
 		font_directories = new Gee.ArrayList<File> ();
 
 		if (!font_config_stated) {
 			font_config_stated = true;
-			
+
 			IdleSource idle = new IdleSource ();
 			idle.set_callback (() => {
 				Task t = new Task ();

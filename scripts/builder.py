@@ -89,11 +89,11 @@ class Builder(object):
         
         yield {
             'basename': 'valac ' + source_directory,
-            'file_dep': [build_file] + bindep,
+            'file_dep': [build_file] + vala_source_paths + bindep,
             'actions': [valac_command],
             'targets': generated_csource_paths
         }
-        
+               
         csource_paths = generated_csource_paths + copied_csources
         object_files = []
         
@@ -157,9 +157,16 @@ def is_up_to_date(task):
 
     return dependency_times[-1] <= target_times[0]
 
+
+def get_name(task):
+    try:
+	    return task['name']
+    except KeyError:
+        return task['basename']
+
 def execute_task(task):
     if is_up_to_date(task):
-        print(task['basename'] + ' - up to date.')
+        print(get_name(task) + ' - up to date.')
     else:
         for action in task['actions']:
             print(action)
@@ -171,3 +178,4 @@ def process_tasks(generator):
 			process_tasks(task)
 		else:
 			execute_task(task)
+

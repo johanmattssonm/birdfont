@@ -127,7 +127,6 @@ def make_birdfont_export(target_binary, deps):
     valac_command = config.VALAC + """ \
         -C \
 		--enable-experimental \
-		--define=MAC \
         --basedir build/birdfont-export/ \
         """ + config.NON_NULL + """ \
         """ + config.VALACFLAGS.get("birdfont-export", "") + """ \
@@ -181,7 +180,6 @@ def make_birdfont_import(target_binary, deps):
     valac_command = config.VALAC + """\
         -C  \
 		--enable-experimental \
-		--define=MAC \
         --basedir build/birdfont-import/ \
         """ + config.NON_NULL + """ \
         """ + config.VALACFLAGS.get("birdfont-import", "") + """ \
@@ -235,7 +233,6 @@ def make_birdfont_autotrace(target_binary, deps):
     valac_command = config.VALAC + """\
         -C \
 		--enable-experimental \
-		--define=MAC \
         --basedir build/birdfont-autotrace/ \
         """ + config.NON_NULL + """ \
         """ + config.VALACFLAGS.get("birdfont-autotrace", "") + """ \
@@ -356,7 +353,7 @@ def make_libbirdgems(target_binary, deps):
 		-H build/libbirdgems/birdgems.h \
 		--pkg posix \
 		--vapidir=./ \
-		--basedir build/libbirdgems/ \
+		--basedir=build/libbirdgems/ \
 		""" + config.NON_NULL + """ \
         """ + config.VALACFLAGS.get("libbirdgems", "") + """ \
 		--enable-experimental \
