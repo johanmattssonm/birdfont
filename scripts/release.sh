@@ -30,6 +30,11 @@ fi
 
 git tag -a v$version -m "Version $version"
 
+if [ $? -ne 0 ] ; then
+	echo "Can't create release tag"
+	exit 1
+fi
+
 echo "Creating a release fo version $version"
 
 if [ $# -ne 0 -a $# -ne 2 ] ; then
