@@ -811,6 +811,8 @@ public class OverView : FontDisplay {
 				if (selected_item.glyphs != null) {
 					selected_items.add ((!) selected_item.glyphs);
 				}
+				
+				update_scrollbar ();
 				return;
 				
 			case Key.RIGHT:
@@ -821,6 +823,8 @@ public class OverView : FontDisplay {
 				if (selected_item.glyphs != null) {
 					selected_items.add ((!) selected_item.glyphs);
 				}
+				
+				update_scrollbar ();
 				return;
 				
 			case Key.LEFT:
@@ -831,6 +835,8 @@ public class OverView : FontDisplay {
 				if (selected_item.glyphs != null) {
 					selected_items.add ((!) selected_item.glyphs);
 				}
+				
+				update_scrollbar();
 				return;
 				
 			case Key.DOWN:
@@ -841,6 +847,8 @@ public class OverView : FontDisplay {
 				if (selected_item.glyphs != null) {
 					selected_items.add ((!) selected_item.glyphs);
 				}
+				
+				update_scrollbar ();
 				return;
 				
 			case Key.PG_UP:
@@ -853,6 +861,8 @@ public class OverView : FontDisplay {
 				if (selected_item.glyphs != null) {
 					selected_items.add ((!) selected_item.glyphs);
 				}
+				
+				update_scrollbar ();
 				return;
 				
 			case Key.PG_DOWN:
@@ -865,6 +875,8 @@ public class OverView : FontDisplay {
 				if (selected_item.glyphs != null) {
 					selected_items.add ((!) selected_item.glyphs);
 				}
+				
+				update_scrollbar ();
 				return;
 				
 			case Key.DEL:
@@ -1259,7 +1271,6 @@ public class OverView : FontDisplay {
 				nrows = 1;
 			}
 			
-			// FIXME: this is not correct
 			visible_rows = allocation.height / OverViewItem.height;
 			scroll_size = visible_rows / nrows;
 			MainWindow.set_scrollbar_size (scroll_size);
