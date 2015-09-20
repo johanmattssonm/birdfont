@@ -41,14 +41,14 @@ DOIT_CONFIG = {
 
 if "kfreebsd" in sys.platform:
     LIBBIRDGEMS_SO_VERSION=version.LIBBIRDGEMS_SO_VERSION
-elif "bsd" in sys.platform:
+elif "openbsd" in sys.platform:
     LIBBIRDGEMS_SO_VERSION='${LIBbirdgems_VERSION}'
 else:
     LIBBIRDGEMS_SO_VERSION=version.LIBBIRDGEMS_SO_VERSION
 
 if "kfreebsd" in sys.platform:
     SO_VERSION=version.SO_VERSION
-elif "bsd" in sys.platform:
+elif "openbsd" in sys.platform:
     SO_VERSION='${LIBbirdfont_VERSION}'
 else:
     SO_VERSION=version.SO_VERSION
