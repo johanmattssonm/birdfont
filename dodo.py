@@ -104,7 +104,6 @@ def make_birdfont(target_binary, deps):
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs gdk-pixbuf-2.0) \
 		$(pkg-config --libs webkitgtk-3.0) \
-		$(pkg-config --libs gtk+-2.0) \
 		$(pkg-config --libs xmlbird) \
 		$(pkg-config --libs libnotify) \
 		-L./build -L./build/bin -l birdgems\
