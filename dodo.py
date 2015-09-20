@@ -345,7 +345,7 @@ def make_libbirdfont(target_binary, deps):
     yield libbirdfont.build()
 
 def task_libbirdfont():
-    yield make_libbirdfont('libbirdfont.so.' + version.SO_VERSION_MAJOR, ['libbirdgems.so'])
+    yield make_libbirdfont('libbirdfont.so.' + SO_VERSION, ['libbirdgems.so'])
     
 def make_libbirdgems(target_binary, deps):
     valac_command = config.VALAC + """\
@@ -388,7 +388,7 @@ def make_libbirdgems(target_binary, deps):
     yield libbirdgems.build()
 
 def task_libbirdgems():
-    yield make_libbirdgems('libbirdgems.so.' + version.LIBBIRDGEMS_SO_VERSION_MAJOR, []) 
+    yield make_libbirdgems('libbirdgems.so.' + LIBBIRDGEMS_SO_VERSION, []) 
 
 def task_compile_translations ():
     """translate po files"""
