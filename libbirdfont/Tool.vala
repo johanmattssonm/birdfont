@@ -340,7 +340,7 @@ public class Tool : Widget {
 		cr.stroke ();
 		
 		iconx = bgx + 1 + (w - 1) / 2 - icon_font.get_sidebearing_extent () / 2;
-		icony = bgy - 1 + (h - 1) / 2 - icon_font.get_height () / 2;
+		icony = bgy + 1 + (h - 1) / 2 - icon_font.get_height () / 2;
 		
 		if (icon_color == "") {
 			if (!selected) {
