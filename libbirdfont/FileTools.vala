@@ -68,6 +68,7 @@ public class FileTools : ToolCollection  {
 				Toolbox toolbox = MainWindow.get_toolbox ();
 				string theme_file = s.data;
 				TabBar tb = MainWindow.get_tab_bar ();
+				
 				Preferences.set ("theme", theme_file);
 				Theme.load_theme (theme_file);
 
@@ -86,13 +87,27 @@ public class FileTools : ToolCollection  {
 				OverViewItem.selected_label_background = null;
 				OverViewItem.label_background_no_menu = null;
 				OverViewItem.selected_label_background_no_menu = null;
+				
+				foreach (Tool t in themes.tool) {					
+					t.set_selected (false);
+				}
+				
+				self.set_selected (true);
 			});
 			
 			if (!theme.has_prefix ("generated_")) {
 				themes.add_tool (theme_label);
 			}
 		}
-		
+
+		string theme_in_use = Preferences.get ("theme");
+		foreach (Tool t in themes.tool) {
+			if (t is LabelTool) {
+				LabelTool lt = (LabelTool) t;
+				t.set_selected (theme_in_use == lt.data);
+			}
+		}
+				
 		expanders.add (font_name);					
 		expanders.add (file_tools);
 		expanders.add (themes);
