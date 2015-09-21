@@ -48,14 +48,14 @@ def install (file, dir, mode):
 	f = getDest (file, dir)
 	print ("install: " + f)
 	run ('install -d ' + dest + prefix + dir)
-	run ('install -m ' + `mode` + ' '   + file + ' ' + dest + prefix + dir + '/')
+	run ('install -m ' + str(mode) + ' ' + file + ' ' + dest + prefix + dir + '/')
 	installed.write (f + "\n")
 
 def install_root (file, dir, mode):
-        f = getDestRoot (file, dir)
-        print ("install: " + f)
-        run ('install -d ' + dest + dir)
-	run ('install -m ' + `mode` + ' '   + file + ' ' + dest + dir + '/')
+	f = getDestRoot (file, dir)
+	print ("install: " + f)
+	run ('install -d ' + dest + dir)
+	run ('install -m ' + str(mode) + ' ' + file + ' ' + dest + dir + '/')
 
 def link (dir, file, linkname):
 	f = getDest (linkname, dir)
@@ -173,7 +173,7 @@ elif os.path.isfile ('build/bin/libbirdgems.' + version.LIBBIRDGEMS_SO_VERSION +
         link (libdir, 'libbirdgems.' + version.LIBBIRDGEMS_SO_VERSION + '.dylib', ' libbirdgems.dylib.' + version.LIBBIRDGEMS_SO_VERSION_MAJOR)
         link (libdir, 'libbirdgems.' + version.LIBBIRDGEMS_SO_VERSION + '.dylib', ' libbirdgems.dylib')
 else:
-        print ("Can't find libbirdgems, version: " + version.LIBBIRDGEMS_SO_VERSION)
+	print ("Can't find libbirdgems, version: " + version.LIBBIRDGEMS_SO_VERSION)
 	exit (1)
 
 	
