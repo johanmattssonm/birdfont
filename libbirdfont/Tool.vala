@@ -354,7 +354,7 @@ public class Tool : Widget {
 		
 		icon_font.widget_x = iconx;
 		icon_font.widget_y = icony;
-
+		
 		icon_font.draw (cr);
 		
 		cr.restore ();

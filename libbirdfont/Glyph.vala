@@ -121,6 +121,11 @@ public class Glyph : FontDisplay {
 	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
 	public Gee.ArrayList<Layer> selected_groups = new Gee.ArrayList<Layer> ();
 
+	// used if this glyph is fetched from a fallback font
+	public double top_limit = 0;
+	public double baseline = 0;
+	public double bottom_limit = 0;
+
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;

@@ -38,7 +38,7 @@ public class Text : Widget {
 	
 	public delegate void Iterator (Glyph glyph, double kerning, bool last);
 	public double font_size;
-	public double sidebearing_extent = 0;
+	double sidebearing_extent = 0;
 
 	public double r = 0;
 	public double g = 0;
@@ -187,7 +187,6 @@ public class Text : Widget {
 	// FIXME: some fonts doesn't have on curve extrema
 	public double get_extent () {
 		double x = 0;
-		double ratio = get_scale ();
 		
 		iterate ((glyph, kerning, last) => {
 			double x1, y1, x2, y2;
@@ -196,10 +195,10 @@ public class Text : Widget {
 			lsb = glyph.left_limit;
 			
 			if (!last) {
-				x += (glyph.get_width () + kerning) * ratio;
+				x += (glyph.get_width () + kerning) * get_scale (glyph);
 			} else {
 				glyph.boundaries (out x1, out y1, out x2, out y2);
-				x += (x2 - lsb) * ratio;
+				x += (x2 - lsb) * get_scale (glyph);
 			}
 		});
 		
@@ -215,16 +214,11 @@ public class Text : Widget {
 		}
 		
 		x = 0;
-		ratio = get_scale ();
-
-		if (unlikely (ratio == 0)) {
-			warning ("No scale.");
-		}
-				
+		
 		iterate ((glyph, kerning, last) => {
 			double lsb;
 			lsb = glyph.left_limit;
-			x += (glyph.get_width () + kerning) * ratio;
+			x += (glyph.get_width () + kerning) * get_scale (glyph);
 		});
 		
 		sidebearing_extent = x;
@@ -236,25 +230,24 @@ public class Text : Widget {
 	}
 
 	public double get_acender () {
-		double ratio = get_scale ();
 		double max_height = 0;
-
+		
 		iterate ((glyph, kerning, last) => {
 			double x1, y1, x2, y2;
 			double h;
 			glyph.boundaries (out x1, out y1, out x2, out y2);
-			h = Math.fmax (y1, y2) - Math.fmin (y1, y2) ;
+			h = Math.fmax (y1, y2) - Math.fmin (y1, y2);
+			h *= get_scale(glyph) - glyph.baseline * get_scale(glyph);
 			if (h > max_height) {
 				max_height = h;
 			}
 		});
 		
-		return max_height * ratio - cached_font.base_line * ratio;
+		return max_height;
 	}	
 
 	public override double get_width () {
 		double x = 0;
-		double ratio = get_scale ();
 		bool first = true;
 		
 		iterate ((glyph, kerning, last) => {
@@ -265,13 +258,13 @@ public class Text : Widget {
 			
 			if (first) {
 				glyph.boundaries (out x1, out y1, out x2, out y2);
-				x += (glyph.get_width () + kerning - Math.fmin (x1, x2)) * ratio;
+				x += (glyph.get_width () + kerning - Math.fmin (x1, x2)) * get_scale (glyph);
 				first = false;
 			} else if (!last) {
-				x += (glyph.get_width () + kerning) * ratio;
+				x += (glyph.get_width () + kerning) * get_scale (glyph);
 			} else {
 				glyph.boundaries (out x1, out y1, out x2, out y2);
-				x += (x2 - lsb) * ratio;
+				x += (x2 - lsb) * get_scale (glyph);
 			}
 		});
 		
@@ -279,32 +272,31 @@ public class Text : Widget {
 	}
 
 	public double get_decender () {
-		double ratio = get_scale ();
-		double min_y = 0;
-		double decender;
+		double decender = 0;
+		double decender_max = 0;
 		
 		iterate ((glyph, kerning, last) => {
 			double x1, y1, x2, y2;
 			double y;
 			glyph.boundaries (out x1, out y1, out x2, out y2);
 			y = Math.fmin (y1, y2);
-			if (y < min_y) {
-				min_y = y;
+			decender = (glyph.baseline - y) * get_scale (glyph);
+			if (decender > decender_max) {
+				decender_max = decender;
 			}
 		});
 		
-		decender = cached_font.base_line * ratio - min_y * ratio;
-		return decender > 0 ? decender : 0; 
+		return decender_max > 0 ? decender_max : 0; 
 	}		
 	
 	public override void draw (Context cr) {
 		double descender = cached_font.bottom_limit + cached_font.base_line;
-		double y = widget_y + get_height () + get_scale () * descender;
+		double y = widget_y + get_height () + get_font_scale () * descender; // FIXME:
 		draw_at_baseline (cr, widget_x, y);
 	}
 	
 	public void draw_at_top (Context cr, double px, double py, string cacheid = "") {
-		double s = get_scale ();
+		double s = get_font_scale ();
 		double y = py + s * (cached_font.top_limit - cached_font.base_line);
 		draw_at_baseline (cr, px, y, cacheid);
 	}
@@ -336,7 +328,7 @@ public class Text : Widget {
 		double ratio;
 		double cc_y;
 
-		ratio = get_scale ();
+		ratio = get_font_scale ();
 		cc_y = (cached_font.top_limit - cached_font.base_line) * ratio;
 
 		y = py;
@@ -451,7 +443,7 @@ public class Text : Widget {
 		EditPoint e, prev;
 		double xa, ya, xb, yb, xc, yc, xd, yd;
 		double by;
-		double s = get_scale ();
+		double s = get_scale (glyph);
 		
 		if (path.points.size > 0) {
 			if (unlikely (path.is_open ())) {
@@ -488,14 +480,28 @@ public class Text : Widget {
 		}
 	}
 
-	public double get_baseline_to_bottom () {
-		return get_scale () * (-cached_font.base_line - cached_font.bottom_limit);
+	public double get_baseline_to_bottom (Glyph g) {
+		return get_scale (g) * (-g.baseline - g.bottom_limit);
 	}
 
-	public double get_scale () {
+	public double get_scale (Glyph g) {
+		double s = g.top_limit - g.bottom_limit;
+		
+		if (s == 0) {
+			s = cached_font.top_limit - cached_font.bottom_limit;
+		}
+		
+		return font_size / s;
+	}
+
+	public double get_font_scale () {
 		return font_size / (cached_font.top_limit - cached_font.bottom_limit);
 	}
 
+	public double get_baseline_to_bottom_for_font () {
+		return get_font_scale () * (-cached_font.base_line - cached_font.bottom_limit);
+	}
+	
 	public void truncate (double max_width) {
 		truncated_width = max_width;
 	}

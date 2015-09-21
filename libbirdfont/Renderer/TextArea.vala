@@ -829,7 +829,7 @@ public class TextArea : Widget {
 										c.paragraph = i;
 									}
 									
-									cw = (glyph.get_width ()) * next_word.get_scale () + kerning;
+									cw = (glyph.get_width ()) * next_word.get_font_scale () + kerning;
 									ci = gc.length;
 									
 									tx += cw;
@@ -1070,7 +1070,7 @@ public class TextArea : Widget {
 		
 		width = this.width - padding;
 		x += padding;
-		scale = word.get_scale ();
+		scale = word.get_font_scale ();
 		y += font_size;
 		
 		// draw selection background
@@ -1100,7 +1100,7 @@ public class TextArea : Widget {
 						
 						w = next_word.text;
 						wl = w.length;
-						scale = next_word.get_scale ();
+						scale = next_word.get_font_scale ();
 												
 						if (selection_start.paragraph == selection_stop.paragraph) {
 							partial_start = true;
@@ -1132,7 +1132,7 @@ public class TextArea : Widget {
 									|| (index < selection_stop.character_index && !partial_start && partial_stop)
 									|| (selection_start.character_index <= index < selection_stop.character_index && partial_start && partial_stop);
 								
-								cwi = (glyph.get_width ()) * next_word.get_scale () + kerning;
+								cwi = (glyph.get_width ()) * next_word.get_font_scale () + kerning;
 
 								if (draw) {
 									double selection_y = widget_y + next_word.widget_y + scale * -next_word.cached_font.bottom_limit - font_size;
@@ -1263,10 +1263,10 @@ public class TextArea : Widget {
 
 			if (carret.character_index == ch_index) {
 				pos_x = next_word.widget_x + widget_x + padding;
-				pos_y = widget_y + next_word.widget_y + next_word.get_baseline_to_bottom ();		
+				pos_y = widget_y + next_word.widget_y + next_word.get_baseline_to_bottom_for_font ();		
 			} else if (carret.character_index >= ch_index + wl) {
 				pos_x = next_word.widget_x + next_word.get_sidebearing_extent () + widget_x + padding;
-				pos_y = widget_y + next_word.widget_y + next_word.get_baseline_to_bottom ();
+				pos_y = widget_y + next_word.widget_y + next_word.get_baseline_to_bottom_for_font ();
 				
 				if (next_word.text.has_suffix ("\n")) {
 					pos_x = widget_x + padding;
@@ -1274,7 +1274,7 @@ public class TextArea : Widget {
 				}
 			} else if (ch_index < carret.character_index <= ch_index + wl) {
 				tx = widget_x + next_word.widget_x;
-				ty = widget_y + next_word.widget_y + next_word.get_baseline_to_bottom ();
+				ty = widget_y + next_word.widget_y + next_word.get_baseline_to_bottom_for_font ();
 		
 				if (carret.character_index <= ch_index) {
 					pos_x = widget_x + padding;
@@ -1285,7 +1285,7 @@ public class TextArea : Widget {
 					double cw;
 					int ci;
 
-					cw = (glyph.get_width ()) * next_word.get_scale () + kerning;
+					cw = (glyph.get_width ()) * next_word.get_font_scale () + kerning;
 					ci = ((!) glyph.get_unichar ().to_string ()).length;
 					
 					if (ch_index < carret.character_index <= ch_index + ci) {

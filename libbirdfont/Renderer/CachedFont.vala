@@ -45,29 +45,47 @@ public class CachedFont : GLib.Object {
 	static FallbackFont? _fallback_font = null;
 
 	public CachedFont (Font? font) {
+		Glyph? g;
+		Glyph glyph;
+		
 		this.font = font;
+
+		g = get_glyph_by_name ("a");
+		if (g != null) {
+			glyph = (!) g;
+			base_line = glyph.baseline;
+			top_limit = glyph.top_limit;
+			bottom_limit = glyph.bottom_limit;
+		} else {
+			warning("No default chararacter found in font.");
+		}
 	}
 	
 	public Glyph? get_glyph_by_name (string name) {
 		Glyph? g = null;
+		Font f;
 		
 		if (font != null) {
-			g = ((!) font).get_glyph_by_name (name);
+			f = (!) font;
+			g = f.get_glyph_by_name (name);
+			g.top_limit = f.top_limit;
+			g.baseline = f.base_line;
+			g.bottom_limit = f.bottom_limit;
 		}
 		
 		if (g == null && name.char_count () == 1) {
-			Font f = fallback_font.get_single_glyph_font (name.get_char (0));
+			f = fallback_font.get_single_glyph_font (name.get_char (0));
 			g = f.get_glyph_by_name (name);
 			
 			if (g == null) {
 				return null;
 			}
 			
-			top_limit = f.top_limit;
-			base_line = f.base_line;
-			bottom_limit = f.bottom_limit;	
+			g.top_limit = f.top_limit;
+			g.baseline = f.base_line;
+			g.bottom_limit = f.bottom_limit;	
 		}
-				
+		
 		return g;
 	}
 }
