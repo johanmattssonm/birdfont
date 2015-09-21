@@ -124,7 +124,11 @@ public class SvgParser {
 		}
 
 		xmlparser = new XmlParser (xml_data);
-
+		
+		if (!xmlparser.validate()) {
+			warning("Invalid XML in SVG parser."); 
+		}
+		
 		path_list = parser.parse_svg_file (xmlparser.get_root_tag ());
 	
 		glyph = MainWindow.get_current_glyph ();
