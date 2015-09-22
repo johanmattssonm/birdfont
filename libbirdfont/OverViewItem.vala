@@ -222,7 +222,6 @@ public class OverViewItem : GLib.Object {
 
 			g.add_help_lines ();
 			
-			gx = 0;
 			gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
 			gy = (h / glyph_scale) - 25 / glyph_scale;
 			
@@ -288,7 +287,7 @@ public class OverViewItem : GLib.Object {
 		cc = new Context (cache);
 		cc.scale(Screen.get_scale(), Screen.get_scale());
 
-		cc.rectangle (0, 0, width - 1, 20 - 1);
+		cc.rectangle (0, 0, width, 20 - 1);
 		p = new Cairo.Pattern.linear (0.0, 0, 0.0, 20);
 		Theme.gradient (p, "Overview Item 1", "Overview Item 2");
 		cc.set_source (p);
@@ -307,7 +306,7 @@ public class OverViewItem : GLib.Object {
 		cc = new Context (cache);
 		cc.scale(Screen.get_scale(), Screen.get_scale());
 
-		cc.rectangle (0, 0, width - 1, 20 - 1);
+		cc.rectangle (0, 0, width, 20 - 1);
 
 		Theme.color (cc, "Selected Overview Item");
 			
