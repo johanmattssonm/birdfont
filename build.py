@@ -6,13 +6,20 @@ from sys import platform
 from scripts.builder import process_tasks
 from scripts import config
 from scripts.translations import compile_translations
+from scripts import version
 
-if not platform == "msys":
-	process_tasks(dodo.task_libbirdgems())
-	process_tasks(dodo.task_libbirdfont())
-else:
+if platform == 'msys':
 	process_tasks(dodo.make_libbirdgems('libbirdgems.dll', []))
 	process_tasks(dodo.make_libbirdfont('libbirdfont.dll', ['libbirdgems.dll']))
+elif platform == 'darwin':
+	gems = "libbirdgems." + str(version.LIBBIRDGEMS_SO_VERSION) + '.dylib'
+	bird = "libbirdfont." + str(version.SO_VERSION) + '.dylib';
+	process_tasks(dodo.make_libbirdgems(gems, []))
+	process_tasks(dodo.make_libbirdfont(bird, [gems]))
+	process_tasks(dodo.task_man())
+else:
+	process_tasks(dodo.task_libbirdgems())
+	process_tasks(dodo.task_libbirdfont())
 
 if config.GTK:
 	process_tasks(dodo.task_birdfont())

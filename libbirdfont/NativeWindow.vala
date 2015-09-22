@@ -68,6 +68,12 @@ public interface NativeWindow : GLib.Object {
 
 	/** Set cursor visibility */
 	public abstract void set_cursor (int visible);
+
+	/** Scale all offscreen buffers by this factor in order to 
+	 * support high resolution screens.
+	 */
+	public abstract double get_screen_scale ();
+
 }
 
 }

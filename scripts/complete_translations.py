@@ -71,7 +71,7 @@ elif options.compiled:
         else:
             print ("Removing incomplete translation " + podir)
             run ("mkdir -p build/incomplete")
-            run ("mv build/locale/" + podir + " build/incomplete/") 
+            run ("rm -r build/locale/" + podir) 
 elif options.incomplete:
     for pofile in glob.glob('po/*.po'):
         completed = completeness (pofile)

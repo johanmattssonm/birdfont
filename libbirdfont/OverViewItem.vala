@@ -204,9 +204,9 @@ public class OverViewItem : GLib.Object {
 		
 		scale_box = width / DEFAULT_WIDTH;
 
-		s = new Surface.similar (cr.get_target (), Content.COLOR_ALPHA, (int) w, (int) h - 20);
+		s = Screen.create_background_surface ((int) width, (int) height - 20);
 		c = new Context (s);
-			
+		
 		if (gl != null) {
 			font = BirdFont.get_current_font ();
 			g = ((!) gl).get_current ();
@@ -217,19 +217,22 @@ public class OverViewItem : GLib.Object {
 			glyph_width = x2 - x1;
 			glyph_height = y2 - y1;
 			
-			gx = ((w / glyph_scale) - glyph_width) / 2;
-			gy = (h / glyph_scale) - 25 / glyph_scale;
-
 			c.save ();
-			c.scale (glyph_scale, glyph_scale);	
+			c.scale (glyph_scale * Screen.get_scale (), glyph_scale * Screen.get_scale ());
 
 			g.add_help_lines ();
 			
-			c.translate (gx - g.get_lsb () - Glyph.xc (), g.get_baseline () + gy - Glyph.yc ());
+			gx = 0;
+			gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
+			gy = (h / glyph_scale) - 25 / glyph_scale;
+			
+			c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
 						
 			g.draw_paths (c, color);
 			c.restore ();
 		} else {
+			c.scale (Screen.get_scale (), Screen.get_scale ());
+
 			c.save ();
 			Text fallback = new Text ();
 			Theme.text_color (fallback, "Overview Glyph");
@@ -245,7 +248,9 @@ public class OverViewItem : GLib.Object {
 		}
 		
 		cr.save ();
-		cr.set_source_surface (s, x, y - h);
+		cr.set_antialias (Cairo.Antialias.NONE);
+		cr.scale (1 / Screen.get_scale (), 1 / Screen.get_scale ());	
+		cr.set_source_surface (s, (int) (x * Screen.get_scale ()), (int) ((y - h)) * Screen.get_scale ());
 		cr.paint ();
 		cr.restore ();
 	}
@@ -279,8 +284,10 @@ public class OverViewItem : GLib.Object {
 		Surface cache;
 			
 		// unselected item
-		cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) width, 20);
+		cache = Screen.create_background_surface ((int) width, 20);
 		cc = new Context (cache);
+		cc.scale(Screen.get_scale(), Screen.get_scale());
+
 		cc.rectangle (0, 0, width - 1, 20 - 1);
 		p = new Cairo.Pattern.linear (0.0, 0, 0.0, 20);
 		Theme.gradient (p, "Overview Item 1", "Overview Item 2");
@@ -296,8 +303,9 @@ public class OverViewItem : GLib.Object {
 		label_background = (!) cache;	
 
 		// selected item
-		cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) width, 20);
+		cache = Screen.create_background_surface ((int) width, 20);
 		cc = new Context (cache);
+		cc.scale(Screen.get_scale(), Screen.get_scale());
 
 		cc.rectangle (0, 0, width - 1, 20 - 1);
 
@@ -313,9 +321,9 @@ public class OverViewItem : GLib.Object {
 		selected_label_background = (!) cache;	
 	
 		// unselected item without menu icon
-		cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) width, 20);
+		cache = Screen.create_background_surface ((int) width, 20);
 		cc = new Context (cache);
-
+		cc.scale(Screen.get_scale(), Screen.get_scale());
 		cc.rectangle (0, 0, width - 1, 20 - 1);
 		p = new Cairo.Pattern.linear (0.0, 0, 0.0, 20);
 		Theme.gradient (p, "Overview Item 1", "Overview Item 2");
@@ -329,8 +337,9 @@ public class OverViewItem : GLib.Object {
 		label_background_no_menu = (!) cache;
 
 		// selected item
-		cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) width, 20);
+		cache = Screen.create_background_surface ((int) width, 20);
 		cc = new Context (cache);
+		cc.scale(Screen.get_scale(), Screen.get_scale());
 		cc.rectangle (0, 0, width - 1, 20 - 1);
 		Theme.color (cc, "Selected Overview Item");
 		cc.fill ();
@@ -370,16 +379,12 @@ public class OverViewItem : GLib.Object {
 				cache = (!) label_background_no_menu;
 			}
 			
-			cr.save ();
-			cr.set_antialias (Cairo.Antialias.NONE);
-			cr.set_source_surface (cache, (int) (x + 1), (int) (y + height - 19));
-			cr.paint ();
-			cr.restore ();
+			Screen.paint_background_surface (cr, cache, (int) x, (int) (y + height - 19));
 		}
 	}
 	
 	private void draw_character_info_icon (Context cr) {
-		info.draw_icon (cr, selected, width - 17, -2.5);
+		info.draw_icon (cr, selected, width - 17, -1.5);
 	}
 	
 	public void hide_menu () {

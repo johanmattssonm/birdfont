@@ -273,8 +273,9 @@ public class Expander : GLib.Object {
 			double text_height = 17 * Toolbox.get_scale ();
 			double offset_y = 0;
 			
-			cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, Toolbox.allocation_width, (int) (h + content_height));
+			cache = Screen.create_background_surface (Toolbox.allocation_width, (int) (h + content_height));
 			cc = new Context (cache);
+			cc.scale(Screen.get_scale(), Screen.get_scale());
 		
 			if (tool.size > 0 && headline != null) {
 				Theme.text_color (title, "Text Tool Box");
@@ -289,12 +290,7 @@ public class Expander : GLib.Object {
 		
 		if (cached != null) {
 			cache = (!) cached;
-			cr.save ();
-			cr.set_antialias (Cairo.Antialias.NONE);
-			
-			cr.set_source_surface (cache, 0, (int) (y + scroll));
-			cr.paint ();
-			cr.restore ();
+			Screen.paint_background_surface (cr, cache, 0, (int) (y + scroll));
 		}
 	}
 		

@@ -207,7 +207,6 @@ public class Text : Widget {
 
 	public double get_sidebearing_extent () {
 		double x ;
-		double ratio;
 		
 		if (likely (sidebearing_extent > 0)) {
 			return sidebearing_extent;
@@ -408,11 +407,15 @@ public class Text : Widget {
 		offset_x = (int) (10 * (xp - (int) xp));
 		offset_y = (int) (10 * (yp - (int) yp));
 		
-		cache_id = (cacheid == "") ? get_cache_id (offset_x, offset_y) : cacheid;		
+		cache_id = (cacheid == "") ? get_cache_id (offset_x, offset_y) : cacheid;
 				
 		if (unlikely (!glyph.has_cache (cache_id))) {
-			cache = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) (glyph.get_width () * ratio) + 2, (int) font_size + 2);
+			int w = (int) (glyph.get_width () * ratio) + 2;
+			int h = (int) font_size + 2;
+			cache = Screen.create_background_surface (w, h);
 			cc = new Context (cache);
+
+			cc.scale(Screen.get_scale (), Screen.get_scale ());
 			
 			lsb = glyph.left_limit;
 
@@ -432,7 +435,10 @@ public class Text : Widget {
 
 		cr.save ();
 		cr.set_antialias (Cairo.Antialias.NONE);
-		cr.set_source_surface (glyph.get_cache (cache_id), (int) xp, (int) yp);		
+		cr.scale(1 / Screen.get_scale (), 1 / Screen.get_scale ());
+		cr.set_source_surface (glyph.get_cache (cache_id),
+			(int) (xp * Screen.get_scale ()),
+			(int) (yp * Screen.get_scale ()));
 		cr.paint ();
 		cr.restore ();
 	}
