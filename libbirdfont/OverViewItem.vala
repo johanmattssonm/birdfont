@@ -283,7 +283,7 @@ public class OverViewItem : GLib.Object {
 		Surface cache;
 			
 		// unselected item
-		cache = Screen.create_background_surface ((int) width, 20);
+		cache = Screen.create_background_surface ((int) width + 1, 20);
 		cc = new Context (cache);
 		cc.scale(Screen.get_scale(), Screen.get_scale());
 
@@ -302,7 +302,7 @@ public class OverViewItem : GLib.Object {
 		label_background = (!) cache;	
 
 		// selected item
-		cache = Screen.create_background_surface ((int) width, 20);
+		cache = Screen.create_background_surface ((int) width + 1, 20);
 		cc = new Context (cache);
 		cc.scale(Screen.get_scale(), Screen.get_scale());
 
@@ -336,10 +336,10 @@ public class OverViewItem : GLib.Object {
 		label_background_no_menu = (!) cache;
 
 		// selected item
-		cache = Screen.create_background_surface ((int) width, 20);
+		cache = Screen.create_background_surface ((int) width + 1, 20);
 		cc = new Context (cache);
 		cc.scale(Screen.get_scale(), Screen.get_scale());
-		cc.rectangle (0, 0, width - 1, 20 - 1);
+		cc.rectangle (0, 0, width, 20 - 1);
 		Theme.color (cc, "Selected Overview Item");
 		cc.fill ();
 

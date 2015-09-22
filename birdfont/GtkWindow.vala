@@ -601,6 +601,17 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public double get_screen_scale () {
+		string? scale = Environment.get_variable ("GDK_SCALE");
+		double factor;
+		
+		if (scale == null) {
+			return 1;
+		}
+		
+		if (double.try_parse ((!) scale, out factor)) {
+			return factor;
+		}
+		
 		return 1;
 	}
 }
