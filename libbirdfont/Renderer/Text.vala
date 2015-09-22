@@ -207,7 +207,6 @@ public class Text : Widget {
 
 	public double get_sidebearing_extent () {
 		double x ;
-		double ratio;
 		
 		if (likely (sidebearing_extent > 0)) {
 			return sidebearing_extent;

@@ -73,11 +73,23 @@ public class Glyph : FontDisplay {
 		}
 		
 		set {
+			ttf_data = null;
 			_left_limit = value;
 		}
 	}
-	public double right_limit;
 	
+	public double right_limit {
+		get {
+			return _right_limit;
+		}
+		
+		set {
+			ttf_data = null;
+			_right_limit = value;
+		}
+	}
+	
+	private double _right_limit = 0;
 	private double _left_limit = 0;
 	
 	// x-height, lsb, etc.
@@ -527,7 +539,6 @@ public class Glyph : FontDisplay {
 		left_line.position_updated.connect ((pos) => {
 			left_limit = pos;
 			update_other_spacing_classes ();
-			
 			left_line.set_metrics (get_left_side_bearing ());
 		});
 		left_line.set_metrics (get_left_side_bearing ());
