@@ -599,6 +599,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			get_window ().set_cursor (new Cursor (CursorType.ARROW));
 		}
 	}
+	
+	public double get_screen_scale () {
+		return 1;
+	}
 }
 
 class TabbarCanvas : DrawingArea {

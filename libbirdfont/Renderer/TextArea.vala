@@ -1198,9 +1198,10 @@ public class TextArea : Widget {
 			ty = paragraph.start_y;
 
 			if (paragraph.cached_surface == null) {				
-				paragraph.cached_surface = new Surface.similar (cr.get_target (), Cairo.Content.COLOR_ALPHA, (int) width + 2, paragraph.get_height () + (int) font_size + 2);
+				paragraph.cached_surface = Screen.create_background_surface ((int) width + 2, paragraph.get_height () + (int) font_size + 2);
 				cc = new Context ((!) paragraph.cached_surface);
-
+				cc.scale (Screen.get_scale(), Screen.get_scale());
+				
 				foreach (Text next_word in paragraph.words) {
 					if (next_word.text != "\n") {
 						next_word.draw_at_top (cc, next_word.widget_x, next_word.widget_y - ty);
@@ -1210,8 +1211,10 @@ public class TextArea : Widget {
 			
 			if (likely (paragraph.cached_surface != null)) {
 				// FIXME: subpixel offset in text area
-				cr.set_source_surface ((!) paragraph.cached_surface, (int) (x + tx), (int) (widget_y + paragraph.start_y - font_size + padding));
-				cr.paint ();
+				Screen.paint_background_surface(cr, 
+					(!) paragraph.cached_surface,
+					(int) (x + tx),
+					(int) (widget_y + paragraph.start_y - font_size + padding));
 			} else {
 				warning ("No paragraph image.");
 			}
