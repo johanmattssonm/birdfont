@@ -56,11 +56,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	ToolboxCanvas toolbox;
 	
-	Task background_task = new Task ();
+	Task background_task = new Task(idle);
 	
 	public GtkWindow (string title) {
 		scrollbar = new Scrollbar (Orientation.VERTICAL, new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		((Gtk.Window)this).set_title ("BirdFont");
+	}
+	
+	public static void idle () {
 	}
 	
 	public void init () {
