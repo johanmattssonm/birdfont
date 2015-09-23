@@ -14,21 +14,15 @@
 
 namespace BirdFont {
 
+/** A tab for picking characters in the font. */
 public class GlyphSelection : OverView {
 
 	public signal void selected_glyph (GlyphCollection gc);
 
 	public GlyphSelection () {
-		base (null, false);
+		base (null, false, false);
+		update_default_characterset ();
 		
-		if (BirdFont.get_current_font ().length () > 0) {
-			display_all_available_glyphs ();
-		} else {
-			GlyphRange gr = new GlyphRange ();
-			DefaultCharacterSet.use_default_range (gr);
-			set_current_glyph_range (gr);
-		}
-
 		OverviewTools.update_overview_characterset (this);
 		FontDisplay.dirty_scrollbar = true;	
 		
@@ -36,6 +30,29 @@ public class GlyphSelection : OverView {
 			selected_glyph (gc);
 			Toolbox.redraw_tool_box ();
 		});
+		
+		Toolbox.set_toolbox_from_tab (get_name ());
+		
+		IdleSource idle = new IdleSource ();
+
+		idle.set_callback (() => {			
+			update_default_characterset ();
+			return false;
+		});
+		
+		idle.attach (null);
+	}
+	
+	void update_default_characterset () {
+		if (BirdFont.get_current_font ().length () > 0) {
+			display_all_available_glyphs ();
+		} else {
+			GlyphRange gr = new GlyphRange ();
+			DefaultCharacterSet.use_default_range (gr);
+			set_current_glyph_range (gr);
+		}
+		
+		update_item_list ();
 	}
 }
 

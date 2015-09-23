@@ -76,7 +76,9 @@ public class OverView : FontDisplay {
 	double scroll_size = 1;
 	const double UCD_LINE_HEIGHT = 17 * 1.3;
 
-	public OverView (GlyphRange? range = null, bool open_selected = true) {
+	public OverView (GlyphRange? range = null,
+		bool open_selected = true, bool default_character_set = true) {
+			
 		GlyphRange gr;
 		
 		if (range == null) {
@@ -111,19 +113,21 @@ public class OverView : FontDisplay {
 			});
 		}
 
-		IdleSource idle = new IdleSource ();
+		if (default_character_set) {
+			IdleSource idle = new IdleSource ();
 
-		idle.set_callback (() => {			
-			use_default_character_set ();
-			selected_canvas ();
-			return false;
-		});
+			idle.set_callback (() => {			
+				use_default_character_set ();
+				selected_canvas ();
+				return false;
+			});
+			
+			idle.attach (null);
+		}
 		
-		idle.attach (null);
-		
+		update_item_list ();
 		update_scrollbar ();
 		reset_zoom ();
-		update_item_list ();
 	}
 	
 	public void select_all_glyphs () {
@@ -446,12 +450,15 @@ public class OverView : FontDisplay {
 	
 	int get_items_per_row () {
 		int i = 1;
+		double tab_with = allocation.width;
 		OverViewItem.margin = OverViewItem.width * 0.1;
 		double l = OverViewItem.margin + OverViewItem.full_width ();
-		while (l <= allocation.width) {
+		
+		while (l <= tab_with) {
 			l += OverViewItem.full_width ();
 			i++;
 		}
+		
 		return i - 1;
 	}
 	
@@ -464,6 +471,9 @@ public class OverView : FontDisplay {
 		double x, y;
 		unichar character;
 		Glyph glyph;
+		double tab_with;
+		
+		tab_with =  allocation.width - 30; // scrollbar
 		
 		items_per_row = get_items_per_row ();
 		rows = (int) (allocation.height /  OverViewItem.full_height ()) + 2;
@@ -506,7 +516,7 @@ public class OverView : FontDisplay {
 			
 			x += OverViewItem.full_width ();
 			
-			if (x + OverViewItem.full_width () >= allocation.width) {
+			if (x + OverViewItem.full_width () >= tab_with) {
 				x = OverViewItem.margin;
 				y += OverViewItem.full_height ();
 			}
@@ -1202,7 +1212,6 @@ public class OverView : FontDisplay {
 			update_item_list ();
 		}
 		
-		// FIXME: update_item_list ();
 		GlyphCanvas.redraw ();
 	}
 

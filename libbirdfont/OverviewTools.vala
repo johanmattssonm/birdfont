@@ -54,7 +54,7 @@ public class OverviewTools : ToolCollection  {
 		all_glyphs.select_action.connect ((self) => {
 			OverView overview = get_overview ();
 			overview.display_all_available_glyphs ();
-			update_overview_characterset ();
+			update_overview_characterset (overview);
 			FontDisplay.dirty_scrollbar = true;
 		});
 		character_sets.add_tool (all_glyphs);
@@ -66,7 +66,7 @@ public class OverviewTools : ToolCollection  {
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_default_range (gr);
 			overview.set_current_glyph_range (gr);
-			update_overview_characterset ();
+			update_overview_characterset (overview);
 			FontDisplay.dirty_scrollbar = true;
 		});
 		character_sets.add_tool (default_glyphs);
@@ -78,7 +78,7 @@ public class OverviewTools : ToolCollection  {
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_full_unicode_range (gr);
 			overview.set_current_glyph_range (gr);
-			update_overview_characterset ();
+			update_overview_characterset (overview);
 			FontDisplay.dirty_scrollbar = true;
 		});
 		character_sets.add_tool (unicode);
