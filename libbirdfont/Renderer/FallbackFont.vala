@@ -55,8 +55,7 @@ public class FallbackFont : GLib.Object {
 
 			IdleSource idle = new IdleSource ();
 			idle.set_callback (() => {
-				Task t = new Task ();
-				t.task.connect (init_font_config);
+				Task t = new Task (init_font_config);
 				MainWindow.native_window.run_non_blocking_background_thread (t);
 				return false;
 			});

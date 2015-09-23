@@ -168,8 +168,7 @@ public class Menu : AbstractMenu {
 
 		MenuItem merge_paths = add_menu_item (t_("Merge Paths"), "merge_paths", "Glyph");
 		merge_paths.action.connect (() => {
-			Task t = new Task ();
-			t.task.connect (merge_selected_paths);
+			Task t = new Task (merge_selected_paths);
 			MainWindow.native_window.run_background_thread (t);
 		
 			show_menu = false;

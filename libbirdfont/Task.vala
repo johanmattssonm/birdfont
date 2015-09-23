@@ -16,9 +16,11 @@ namespace BirdFont {
 
 public class Task : GLib.Object {
 	
-	public signal void task ();
+	public delegate void Runnable ();
+	Runnable task;
 	
-	public Task () {
+	public Task (Runnable r) {
+		task = r;
 	}
 	
 	public void run () {

@@ -611,8 +611,7 @@ public class MenuTab : FontDisplay {
 			return;
 		}
 		
-		Task t = new Task ();
-		t.task.connect (simplify);
+		Task t = new Task (simplify);
 		MainWindow.native_window.run_background_thread (t);
 	}
 	
