@@ -19,8 +19,8 @@ public class Task : GLib.Object {
 	public delegate void Runnable ();
 	Runnable task;
 	
-	public Task (Runnable r) {
-		task = r;
+	public Task (owned Runnable r) {
+		task = (owned) r;
 	}
 	
 	public void run () {

@@ -91,6 +91,9 @@ public class SearchPaths {
 		f = get_file (@"/usr/local/share/birdfont/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
 
+		f = get_file (@"resources/linux/", name);
+		if (likely (f.query_exists ())) return f;
+
 		f = get_file (@"/usr/share/birdfont/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
 
