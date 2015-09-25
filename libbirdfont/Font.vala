@@ -72,6 +72,13 @@ public class Font : GLib.Object {
 	public string version;
 	public string description;
 	public string copyright;
+	public string license;
+	public string license_url;
+	public string trademark;
+	public string manufacturer;
+	public string designer;
+	public string vendor_url;
+	public string designer_url;
 
 	public bool bold = false;
 	public bool italic = false;
@@ -101,6 +108,7 @@ public class Font : GLib.Object {
 	public Ligatures ligature_substitution;
 	
 	public static string? default_license = null; 
+	public static string? default_license_url = null; 
 	
 	public FontSettings settings;
 	public KerningStrings kerning_strings;
@@ -124,8 +132,24 @@ public class Font : GLib.Object {
 		unique_identifier = "Typeface";
 		version = "Version 1.0";
 		description = "";
-		copyright = default_license != null ? ((!) default_license).dup () : "";
-	
+		copyright = "";
+		license = "";
+		license_url = "";
+		trademark = "";
+		manufacturer = "";
+		designer = "";
+		vendor_url = "";
+		designer_url = "";
+			
+		if (default_license != null) {
+			copyright = (!) default_license;
+			license = (!) default_license;
+		}
+
+		if (default_license_url != null) {
+			license_url = (!) default_license_url;
+		}
+				
 		glyph_cache = new GlyphTable ();
 		glyph_name = new GlyphTable ();
 		ligature = new GlyphTable ();
@@ -187,8 +211,9 @@ public class Font : GLib.Object {
 		return false;
 	}
 
-	public static void set_default_license (string license) {
+	public static void set_default_license (string license, string url) {
 		default_license = license;
+		default_license_url = url;
 	}
 
 	public Ligatures get_ligatures () {

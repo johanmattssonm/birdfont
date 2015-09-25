@@ -24,7 +24,7 @@ class BirdFontFile : GLib.Object {
 	Font font;
 	
 	public static const int FORMAT_MAJOR = 2;
-	public static const int FORMAT_MINOR = 0;
+	public static const int FORMAT_MINOR = 1;
 	
 	public static const int MIN_FORMAT_MAJOR = 0;
 	public static const int MIN_FORMAT_MINOR = 0;
@@ -340,8 +340,16 @@ class BirdFontFile : GLib.Object {
 		os.put_string (@"<version>$(Markup.escape_text (font.version))</version>\n");
 		os.put_string (@"<description>$(Markup.escape_text (font.description))</description>\n");
 		os.put_string (@"<copyright>$(Markup.escape_text (font.copyright))</copyright>\n");
+		os.put_string (@"<license>$(Markup.escape_text (font.license))</license>\n");
+		os.put_string (@"<license_url>$(Markup.escape_text (font.license_url))</license_url>\n");
 		os.put_string (@"<weight>$(font.weight)</weight>\n");
 		os.put_string (@"<units_per_em>$(font.units_per_em)</units_per_em>\n");
+		os.put_string (@"<trademark>$(Markup.escape_text (font.trademark))</trademark>\n");
+		os.put_string (@"<manufacturer>$(Markup.escape_text (font.manufacturer))</manufacturer>\n");
+		os.put_string (@"<designer>$(Markup.escape_text (font.designer))</designer>\n");
+		os.put_string (@"<vendor_url>$(Markup.escape_text (font.vendor_url))</vendor_url>\n");
+		os.put_string (@"<designer_url>$(Markup.escape_text (font.designer_url))</designer_url>\n");
+		
 	}
 
 	public void write_lines (DataOutputStream os) throws GLib.Error {
@@ -744,6 +752,34 @@ class BirdFontFile : GLib.Object {
 				font.copyright = XmlParser.decode (t.get_content ());
 			}
 
+			if (t.get_name () == "license") {
+				font.license = XmlParser.decode (t.get_content ());
+			}
+			
+			if (t.get_name () == "license_url") {
+				font.license_url = XmlParser.decode (t.get_content ());
+			}
+
+			if (t.get_name () == "trademark") {
+				font.trademark = XmlParser.decode (t.get_content ());
+			}
+			
+			if (t.get_name () == "manufacturer") {
+				font.manufacturer = XmlParser.decode (t.get_content ());
+			}
+			
+			if (t.get_name () == "designer") {
+				font.designer = XmlParser.decode (t.get_content ());
+			}
+			
+			if (t.get_name () == "vendor_url") {
+				font.vendor_url = XmlParser.decode (t.get_content ());
+			}
+			
+			if (t.get_name () == "designer_url") {
+				font.designer_url = XmlParser.decode (t.get_content ());
+			}
+			
 			if (t.get_name () == "kerning") {
 				parse_kerning (t);
 			}

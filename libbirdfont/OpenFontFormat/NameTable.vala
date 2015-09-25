@@ -23,9 +23,17 @@ public class NameTable : OtfTable {
 	public static const uint16 FULL_FONT_NAME = 4; // name + subfamily
 	public static const uint16 VERSION = 5;
 	public static const uint16 POSTSCRIPT_NAME = 6;
+	public static const uint16 TRADE_MARK = 7;
+	public static const uint16 MANUFACTURER = 8;
+	public static const uint16 DESIGNER = 9;
 	public static const uint16 DESCRIPTION = 10;
+	public static const uint16 VENDOR_URL = 11;
+	public static const uint16 DESIGNER_URL = 12;
+	public static const uint16 LICENSE = 13;
+	public static const uint16 LICENSE_URL = 14;
 	public static const uint16 PREFERED_FAMILY = 16;
 	public static const uint16 PREFERED_SUB_FAMILY = 17;
+
 	
 	Gee.ArrayList<uint16> identifiers;
 	Gee.ArrayList<string> text;
@@ -232,8 +240,29 @@ public class NameTable : OtfTable {
 		text.add (validate_ps_name (font.postscript_name));
 		type.add (POSTSCRIPT_NAME);
 
+		text.add (validate_ps_name (font.trademark));
+		type.add (TRADE_MARK);
+		
+		text.add (validate_ps_name (font.manufacturer));
+		type.add (MANUFACTURER);
+
+		text.add (validate_ps_name (font.designer));
+		type.add (DESIGNER);
+			
 		text.add (font.description);
 		type.add (DESCRIPTION);
+
+		text.add (font.vendor_url);
+		type.add (VENDOR_URL);
+
+		text.add (font.designer_url);
+		type.add (DESIGNER_URL);
+				
+		text.add (font.license);
+		type.add (LICENSE);
+		
+		text.add (font.license_url);
+		type.add (LICENSE_URL);
 		
 		text.add (validate_name (font.name));
 		type.add (PREFERED_FAMILY);

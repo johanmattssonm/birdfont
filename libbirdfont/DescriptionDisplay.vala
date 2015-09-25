@@ -29,6 +29,13 @@ public class DescriptionDisplay : TableLayout {
 	TextArea version;
 	TextArea description;
 	TextArea copyright;
+	TextArea license;
+	LineTextArea license_url;
+	TextArea trademark;
+	LineTextArea manufacturer;
+	LineTextArea designer;
+	LineTextArea vendor_url;
+	LineTextArea designer_url;
 	
 	private static bool disable_copyright = false;
 	
@@ -48,7 +55,14 @@ public class DescriptionDisplay : TableLayout {
 		version = new LineTextArea (label_size);
 		description = new TextArea (label_size);
 		copyright = new TextArea (label_size);
-
+		license = new TextArea (label_size);
+		license_url = new LineTextArea (label_size);
+		trademark = new TextArea (label_size);
+		manufacturer = new LineTextArea (label_size);
+		designer = new LineTextArea (label_size);
+		vendor_url = new LineTextArea (label_size);
+		designer_url = new LineTextArea (label_size);
+	
 		headline = new Headline (t_("Name and Description"));
 		headline.margin_bottom = 20 * MainWindow.units;
 		widgets.add (headline);
@@ -165,7 +179,87 @@ public class DescriptionDisplay : TableLayout {
 		copyright.set_editable (!disable_copyright);
 		widgets.add (copyright);
 		focus_ring.add (copyright);
-		
+
+		widgets.add (new Text (t_("License"), label_size, label_margin));
+		license.margin_bottom = margin;
+		license.set_text (font.license);
+		license.scroll.connect (scroll_event);
+		license.text_changed.connect ((t) => {
+			font.license = t;
+			font.touch ();
+		});
+		license.set_editable (!disable_copyright);
+		widgets.add (license);
+		focus_ring.add (license);
+
+		widgets.add (new Text (t_("License URL"), label_size, label_margin));
+		license_url.margin_bottom = margin;
+		license_url.set_text (font.license_url);
+		license_url.scroll.connect (scroll_event);
+		license_url.text_changed.connect ((t) => {
+			font.license_url = t;
+			font.touch ();
+		});
+		license_url.set_editable (!disable_copyright);
+		widgets.add (license_url);
+		focus_ring.add (license_url);
+
+		widgets.add (new Text (t_("Trademark"), label_size, label_margin));
+		trademark.margin_bottom = margin;
+		trademark.set_text (font.trademark);
+		trademark.scroll.connect (scroll_event);
+		trademark.text_changed.connect ((t) => {
+			font.trademark = t;
+			font.touch ();
+		});
+		trademark.set_editable (!disable_copyright);
+		widgets.add (trademark);
+		focus_ring.add (trademark);
+
+		widgets.add (new Text (t_("Manufakturer"), label_size, label_margin));
+		manufacturer.margin_bottom = margin;
+		manufacturer.set_text (font.manufacturer);
+		manufacturer.scroll.connect (scroll_event);
+		manufacturer.text_changed.connect ((t) => {
+			font.manufacturer = t;
+			font.touch ();
+		});
+		widgets.add (manufacturer);
+		focus_ring.add (manufacturer);
+
+		widgets.add (new Text (t_("Designer"), label_size, label_margin));
+		designer.margin_bottom = margin;
+		designer.set_text (font.designer);
+		designer.scroll.connect (scroll_event);
+		designer.text_changed.connect ((t) => {
+			font.designer = t;
+			font.touch ();
+		});
+		widgets.add (designer);
+		focus_ring.add (designer);
+
+		widgets.add (new Text (t_("Vendor URL"), label_size, label_margin));
+		vendor_url.margin_bottom = margin;
+		vendor_url.set_text (font.vendor_url);
+		vendor_url.scroll.connect (scroll_event);
+		vendor_url.text_changed.connect ((t) => {
+			font.vendor_url = t;
+			font.touch ();
+		});
+		widgets.add (vendor_url);
+		focus_ring.add (vendor_url);
+
+		widgets.add (new Text (t_("Designer URL"), label_size, label_margin));
+		designer_url.margin_bottom = margin;
+		designer_url.set_text (font.designer_url);
+		designer_url.scroll.connect (scroll_event);
+		designer_url.text_changed.connect ((t) => {
+			font.designer_url = t;
+			font.touch ();
+		});
+		widgets.add (designer_url);
+		focus_ring.add (designer_url);
+				
 		set_focus (postscript_name);
 		
 		foreach (Widget w in widgets) {
