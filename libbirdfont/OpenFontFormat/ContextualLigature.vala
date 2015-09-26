@@ -52,8 +52,6 @@ public class ContextualLigature : GLib.Object {
 		Gee.ArrayList<string> input = font.get_names (input);
 		Gee.ArrayList<string> lookahead = font.get_names (lookahead);
 		
-		// FIXME: add ligatures
-		
 		uint16 lookahead_offset, input_offset, backtrack_offset;
 		
 		fd.add_ushort (3); // format identifier

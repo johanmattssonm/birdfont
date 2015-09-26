@@ -29,6 +29,8 @@ public class FontData : Object {
 	
 	public uint8* table_data = null;
 	
+	public uint offset = 0; // for debugging
+	
 	public FontData (uint32 size = 1024) {
 		capacity = size;
 		table_data = malloc (size);

@@ -29,28 +29,18 @@ public class GsubTable : OtfTable {
 
 	public void process () throws GLib.Error {
 		FontData fd;
-		FontData clig_subtable;
-		uint16 length;
-		
-		LigatureCollection clig;
-		ContextualLigatureCollection contextual;
-
-		uint16 feature_lookups;
-		uint16 lookups_end;
-		
-		Gee.ArrayList<FontData> chain_data;
 		
 		fd = new FontData ();
-		clig = new LigatureCollection.clig (glyf_table);
-		contextual = new ContextualLigatureCollection (glyf_table);
+		CligFeature clig_feature = new CligFeature (glyf_table);
+		AlternateFeature alternate_feature = new AlternateFeature ();
 		
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
 		fd.add_ushort (30); // offset to feature list
-		fd.add_ushort (contextual.has_ligatures () ? 46 : 44); // offset to lookup list
+		fd.add_ushort (clig_feature.contextual.has_ligatures () ? 46 : 44); // offset to lookup list
 		
 		// script list
-		fd.add_ushort (1);   // number of items in script list
+		fd.add_ushort (1); // number of items in script list
 		fd.add_tag ("DFLT"); // default script
 		fd.add_ushort (8); // offset to script table from script list
 		
@@ -71,109 +61,30 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (8); // offset to feature
 		// FIXME: Should it be liga and clig?
 
-		clig = new LigatureCollection.clig (glyf_table);
-		contextual = new ContextualLigatureCollection (glyf_table);
-
-		feature_lookups = contextual.has_ligatures () ? 2 : 1;
+		Lookups lookups = new Lookups ();
+		lookups.append (clig_feature.get_lookups ());
+		
+		// FIXME: refactor clig_feature 
+		uint16 feature_lookups = clig_feature.contextual.has_ligatures () ? 2 : 1;
 		
 		fd.add_ushort (0); // feature prameters (null)
 		fd.add_ushort (feature_lookups); // number of lookups
 		
-		if (contextual.has_ligatures ()) {
-			fd.add_ushort (1 + contextual.get_size ()); // lookup chained_context (etc.) The chained context tables are listed here but the actual ligature table is only referenced in the context table
-			fd.add_ushort (0); // lookup clig_subtable
+		if (clig_feature.contextual.has_ligatures ()) {
+			fd.add_ushort ((uint16) lookups.tables.size - 2); // lookup chained_context (etc.) The chained context tables are listed here but the actual ligature table is only referenced in the context table
+			fd.add_ushort ((uint16) lookups.tables.size - 1); // lookup clig_subtable
 		} else {
 			fd.add_ushort (0); // lookup clig_subtable
 		}
 		
-		clig_subtable = clig.get_font_data (glyf_table);
-		chain_data = get_chaining_contextual_substition_subtable (contextual);
-		
-		// lookup table
-		uint16 lookups;
-		
-		if (contextual.has_ligatures ()) {
-			lookups = 2 + (uint16) contextual.get_size ();
-		} else {
-			lookups = 1;
-		}
-		
-		fd.add_ushort (lookups); // number of lookups
-		
-		if (contextual.has_ligatures ()) {
-			uint16 offset_to_lookup;
+		// lookup list
 
-			offset_to_lookup = 6 + 2 * contextual.get_size ();
-			fd.add_ushort (offset_to_lookup); // offset to lookup 1, regular ligatures
-			
-			for (int i = 0; i < contextual.get_size (); i++) {
-				offset_to_lookup += 8;
-				// offset to ligature lookups used in chaining substitution
-				fd.add_ushort (offset_to_lookup);
-			}
-
-			// offset to lookup for the chain table
-			offset_to_lookup += 8;
-			fd.add_ushort (offset_to_lookup); 
-		} else {
-			fd.add_ushort (4); // offset to lookup 1 
-		}
+		fd.append (lookups.genrate_lookup_list ());
 		
-		lookups_end = 8; // regular ligatures
-		
-		if (contextual.has_ligatures ()) {
-			lookups_end += 8 * contextual.get_size (); // contextual ligatures
-			lookups_end += 6; // chaining table
-			lookups_end += 2 * (uint16) contextual.get_size (); // chaining subtables
-		}
-		
-		length = 0;
-		fd.add_ushort (4); // lookup type 
-		fd.add_ushort (0); // lookup flags
-		fd.add_ushort (1); // number of subtables
-		fd.add_ushort (lookups_end + length); // array of offsets to subtable 
-		length += (uint16) clig_subtable.length_with_padding ();
-		lookups_end -= 8;
-		
-		if (contextual.has_ligatures ()) {			
-			
-			for (int i = 0; i < contextual.ligatures.size; i++) {
-				fd.add_ushort (4); // lookup type 
-				fd.add_ushort (0); // lookup flags
-				fd.add_ushort (1); // number of subtables
-
-				LigatureCollection ligature_set = contextual.ligatures.get (i);
-				fd.add_ushort (lookups_end + length); // array of offsets to subtable
-				length += (uint16) ligature_set.get_font_data (glyf_table).length_with_padding ();
-				
-				lookups_end -= 8;
-			}
-
-			fd.add_ushort (6); // lookup type 
-			fd.add_ushort (0); // lookup flags
-			fd.add_ushort (contextual.get_size ()); // number of subtables
-			
-			foreach (FontData d in chain_data) {
-				fd.add_ushort (lookups_end + length); // array of offsets to subtable
-				length += (uint16) d.length_with_padding ();
-			}
-			
-			lookups_end -= 6 + 2 * chain_data.size;
-		}
-		
-		if (lookups_end != 0) {
-			warning (@"Wrong offset to end of lookups, $lookups_end bytes left.");
-		}
-		
-		fd.append (clig_subtable);
-		
-		if (contextual.has_ligatures ()) {
-			foreach (LigatureCollection s in contextual.ligatures) {
-				fd.append (s.get_font_data (glyf_table));
-			}
-
-			foreach (FontData d in chain_data) {
-				fd.append (d);
+		// subtables
+		foreach (Lookup lookup in lookups.tables) {
+			foreach (FontData subtable in lookup.subtables) {
+				fd.append (subtable);
 			}
 		}
 		
@@ -181,19 +92,7 @@ public class GsubTable : OtfTable {
 		
 		this.font_data = fd;
 	}
-
-	// chaining contextual substitution format3
-	Gee.ArrayList<FontData> get_chaining_contextual_substition_subtable (ContextualLigatureCollection contexts) throws GLib.Error {
-		Gee.ArrayList<FontData> fd = new Gee.ArrayList<FontData> ();
-		uint16 ligature_lookup_index = 1;
-		
-		foreach (ContextualLigature context in contexts.ligature_context) {
-			fd.add (context.get_font_data (glyf_table, ligature_lookup_index)); 
-			ligature_lookup_index++;
-		}
-		
-		return fd;
-	}
 }
 
 }
+
