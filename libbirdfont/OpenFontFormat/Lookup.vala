@@ -12,6 +12,8 @@
     Lesser General Public License for more details.
 */
 
+namespace BirdFont {
+	
 /** Representation of one lookup in gsub and gpos tables. */
 public class Lookup : GLib.Object {
 	public uint16 type;
@@ -78,4 +80,6 @@ public class Lookup : GLib.Object {
 
 		return fd;
 	}
+}
+
 }
