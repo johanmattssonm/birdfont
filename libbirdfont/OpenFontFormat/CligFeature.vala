@@ -55,14 +55,14 @@ public class CligFeature : GLib.Object {
 				lookups.add_lookup(lookup);
 			}
 
-			lookup = new Lookup (6, 0);
+			lookup = new Lookup (6, 0, Lookups.CHAINED_CONTEXT);
 			foreach (FontData d in chain_data) {
 				lookup.add_subtable (d);
 			}
 			lookups.add_lookup(lookup);			
 		}
 
-		lookup = new Lookup (4, 0);
+		lookup = new Lookup (4, 0, Lookups.LIGATURES);
 		lookup.add_subtable (clig_subtable);
 		lookups.add_lookup(lookup);
 	}

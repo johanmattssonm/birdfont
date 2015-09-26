@@ -65,20 +65,25 @@ public class GsubTable : OtfTable {
 		lookups.append (clig_feature.get_lookups ());
 		
 		// FIXME: refactor clig_feature 
-		uint16 feature_lookups = clig_feature.contextual.has_ligatures () ? 2 : 1;
+		uint16 feature_lookups = 1;
+		
+		if (clig_feature.contextual.has_ligatures ()) {
+			feature_lookups++;
+		}
 		
 		fd.add_ushort (0); // feature prameters (null)
 		fd.add_ushort (feature_lookups); // number of lookups
 		
 		if (clig_feature.contextual.has_ligatures ()) {
-			fd.add_ushort ((uint16) lookups.tables.size - 2); // lookup chained_context (etc.) The chained context tables are listed here but the actual ligature table is only referenced in the context table
-			fd.add_ushort ((uint16) lookups.tables.size - 1); // lookup clig_subtable
+			// The chained context tables are listed here but the actual
+			// ligature table is only referenced in the context table
+			fd.add_ushort (lookups.find (Lookups.CHAINED_CONTEXT));
+			fd.add_ushort (lookups.find (Lookups.LIGATURES)); 
 		} else {
-			fd.add_ushort (0); // lookup clig_subtable
+			fd.add_ushort (lookups.find (Lookups.LIGATURES)); // lookup clig_subtable
 		}
 		
 		// lookup list
-
 		fd.append (lookups.genrate_lookup_list ());
 		
 		// subtables

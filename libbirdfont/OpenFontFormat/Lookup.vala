@@ -19,11 +19,13 @@ public class Lookup : GLib.Object {
 	public uint16 type;
 	public uint16 flags;
 	public Gee.ArrayList<FontData> subtables;
+	public int token;
 	
-	public Lookup (uint16 type, uint16 flags) {
+	public Lookup (uint16 type, uint16 flags, int token = Lookups.NONE) {
 		this.type = type;
 		this.flags = flags;
 		subtables = new Gee.ArrayList<FontData> ();
+		this.token = token;
 	}
 	
 	public void add_subtable (FontData subtable) {
