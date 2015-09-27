@@ -124,6 +124,7 @@ public class StrokeTool : Tool {
 				
 		foreach (Path p in g.active_paths) {
 			p.close ();
+			p.remove_points_on_points ();
 			o.add (p);
 		}
 		

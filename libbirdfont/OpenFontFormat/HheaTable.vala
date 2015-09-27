@@ -86,7 +86,7 @@ public class HheaTable : OtfTable {
 		int16 ascender, descender;
 		FontData fd = new FontData ();
 		Fixed version = 1 << 16;
-		Font font = BirdFont.get_current_font ();
+		Font font = OpenFontFormatWriter.get_current_font ();
 		
 		fd.add_fixed (version); // table version
 		

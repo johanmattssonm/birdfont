@@ -37,6 +37,7 @@ public class GlyphCollection : GLib.Object {
 		
 		g = new Glyph (name, unicode_character);
 		glyphs.add (g);
+		set_selected (g);
 	}
 	
 	public void remove (int index) {

@@ -35,6 +35,9 @@ public class Font : GLib.Object {
 	/** Table with ligatures. */
 	public GlyphTable ligature;
 	
+	/** List of alternate glyphs. */
+	public Gee.ArrayList<Alternate> alternates;
+	
 	public Gee.ArrayList<BackgroundImage> background_images;
 	public string background_scale = "1";
 	
@@ -63,7 +66,7 @@ public class Font : GLib.Object {
 	
 	bool modified = false;
 	
-	// name table descriptions
+	// name table strings
 	public string postscript_name;
 	public string name;
 	public string subfamily;
@@ -175,10 +178,39 @@ public class Font : GLib.Object {
 		
 		settings = new FontSettings ();
 		kerning_strings = new KerningStrings ();
+		
+		alternates = new Gee.ArrayList<Alternate> ();
 	}
 
 	~Font () {
 		font_deleted ();
+	}
+
+	public Alternate? get_alternate (GlyphCollection gc) {
+		foreach (Alternate a in alternates) {
+			if (a.glyph == gc) {
+				return a;
+			}
+		}
+		
+		return null;
+	}
+
+	public void add_new_alternate (GlyphCollection glyph,
+		GlyphCollection alternate) {
+	
+		Alternate  a;
+		Alternate? alt = get_alternate (alternate);
+		
+		if (alt == null) {
+			a = new Alternate (glyph);
+			alternates.add (a);
+		} else {
+			a = (!) alt;
+		}
+		
+		a.add (alternate);
+		glyph_name.insert (alternate.get_name (), alternate);
 	}
 
 	public bool has_compatible_format () {
@@ -539,6 +571,10 @@ public class Font : GLib.Object {
 		glyph_cache.remove (glyph.get_name ());
 		glyph_name.remove (glyph.get_name ());
 		ligature.remove (glyph.get_current ().get_name ());
+		
+		foreach (Alternate a in alternates) {
+			a.remove (glyph);
+		}
 		
 		foreach (Glyph g in glyph.glyphs) {
 			deleted_glyphs.add (g);

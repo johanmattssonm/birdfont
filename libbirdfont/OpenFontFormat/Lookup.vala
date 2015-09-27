@@ -33,6 +33,10 @@ public class Lookup : GLib.Object {
 	}
 	
 	public uint get_lookup_entry_size () throws GLib.Error {
+		if (subtables.size == 0) {
+			warning ("No subtables.");
+		}
+		
 		return 6 + 2 * subtables.size;
 	}
 	

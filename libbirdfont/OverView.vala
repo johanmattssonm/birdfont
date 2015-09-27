@@ -20,7 +20,7 @@ namespace BirdFont {
 public class OverView : FontDisplay {
 	public WidgetAllocation allocation = new WidgetAllocation ();
 	
-	OverViewItem selected_item = new OverViewItem (null, '\0', 0, 0);
+	public OverViewItem selected_item = new OverViewItem (null, '\0', 0, 0);
 
 	public Gee.ArrayList<GlyphCollection> copied_glyphs = new Gee.ArrayList<GlyphCollection> ();
 	public Gee.ArrayList<GlyphCollection> selected_items = new Gee.ArrayList<GlyphCollection> ();	
@@ -1347,7 +1347,7 @@ public class OverView : FontDisplay {
 		
 		if (((!)character_info).is_ligature ()) {
 			name = ((!)character_info).get_name ();
-			draw_info_line (t_("Ligature") + ": " + name, cr, x, y, 0);
+			draw_info_line (name, cr, x, y, 0);
 		} else {
 			i = 0;
 			foreach (string line in lines) {

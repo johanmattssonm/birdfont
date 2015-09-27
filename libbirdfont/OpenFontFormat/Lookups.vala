@@ -23,8 +23,9 @@ public class Lookups : GLib.Object {
 
 	public static const int NONE = 0;
 	public static const int CHAINED_CONTEXT = 1;
-	public static const int LIGATURES = 1;
-
+	public static const int LIGATURES = 2;
+	public static const int ALTERNATES = 2;
+	
 	public Lookups () {	
 	}
 	
@@ -57,7 +58,7 @@ public class Lookups : GLib.Object {
 		}
 	}
 	
-	public FontData genrate_lookup_list () throws GLib.Error {
+	public FontData generate_lookup_list () throws GLib.Error {
 		FontData fd = new FontData ();
 		uint lookup_offset;
 		uint tables_size;

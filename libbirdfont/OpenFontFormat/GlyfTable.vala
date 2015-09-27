@@ -144,7 +144,7 @@ public class GlyfTable : OtfTable {
 		Gee.ArrayList<GlyphCollection> unassigned_glyphs;
 		bool unassigned;
 		
-		// add notdef character and other special chars first
+		// add notdef character and other special characters first
 		glyphs.add (font.get_not_def_character ());
 		glyphs.add (font.get_null_character ());
 		glyphs.add (font.get_nonmarking_return ());
@@ -159,12 +159,10 @@ public class GlyfTable : OtfTable {
 		// add glyphs
 		for (indice = 0; (gcn = font.get_glyph_collection_indice (indice)) != null; indice++) {		
 			gc = (!) gcn;
-			g = gc.get_current ().copy ();
+			gc = gc.copy_deep ();
+			g = gc.get_current ();
 			g.remove_empty_paths ();
 			unassigned = gc.is_unassigned ();
-			
-			gc = new GlyphCollection (gc.get_unicode_character (), gc.get_name ());
-			gc.add_glyph (g);
 
 			if (unassigned) {
 				unassigned_glyphs.add (gc);

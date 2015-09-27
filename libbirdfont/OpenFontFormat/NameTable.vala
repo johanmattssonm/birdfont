@@ -149,7 +149,9 @@ public class NameTable : OtfTable {
 		return name_validation (s, true);
 	}
 		
-	public string name_validation (string s, bool allow_space) {
+	public static string name_validation (string s, bool allow_space,
+		int max_length = 27) {
+			
 		string n;
 		int ccount;
 		unichar c;
@@ -158,7 +160,7 @@ public class NameTable : OtfTable {
 		n = s;
 		ccount = n.char_count ();
 		// truncate strings longer than 28 characters
-		for (int i = 0; i < ccount && i < 27; i++) {
+		for (int i = 0; i < ccount && i < max_length; i++) {
 			c = n.get_char (n.index_of_nth_char (i));
 			
 			if (allow_space && c == ' ') {
@@ -173,7 +175,7 @@ public class NameTable : OtfTable {
 		return name.str;	
 	}		
 	
-	bool is_valid_ps_name_char (unichar c) {
+	static bool is_valid_ps_name_char (unichar c) {
 		switch (c) {
 			case '[':
 				return false;

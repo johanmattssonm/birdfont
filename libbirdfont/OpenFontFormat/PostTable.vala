@@ -20,124 +20,10 @@ public class PostTable : OtfTable {
 	
 	Gee.ArrayList<uint16> index = new Gee.ArrayList<uint16> ();
 	Gee.ArrayList<string> names = new Gee.ArrayList<string> ();
-
-	Gee.ArrayList<string> available_names = new Gee.ArrayList<string> ();
 	
 	public PostTable (GlyfTable g) {
 		id = "post";
 		glyf_table = g;
-	}
-		
-	public int get_gid (string name) { // FIXME: do fast lookup
-		int i = 0;
-		int j = 0;
-		foreach (string n in names) {
-			if (n == name) {				
-				j = 0;
-				foreach (uint16 k in index) {
-					if (k == i) {
-						return j;
-					}
-					j++;
-				}
-								
-				return i;
-			}
-			i++;
-		}
-		return -1;
-	}
-
-	public string get_name (int gid) {
-		int k;
-		
-		if (!(0 <= gid < index.size)) {
-			warning ("gid is out of range.");
-			return "";
-		}
-				
-		k = index.get (gid);
-		
-		if (gid != 0 && k == 0) {
-			warning (@"Glyph $gid is assigned to name .notdef, only gid 0 can be .notdef character.");
-			return "";
-		}
-		
-		if (!(0 <= k < names.size)) {
-			warning ("k is out of range.");
-			return "";
-		}
-				
-		return names.get (k);
-	}
-	
-	public override void parse (FontData dis) throws Error {
-		dis.seek (offset);
-		
-		Fixed format = dis.read_fixed ();
-		Fixed italic = dis.read_fixed ();
-		
-		int16 underlie_pos = dis.read_short ();
-		int16 underlie_thickness = dis.read_short ();
-		uint32 is_fixed_pitch  = dis.read_ulong ();
-		
-		uint32 mem_min42  = dis.read_ulong ();
-		uint32 mem_max42  = dis.read_ulong ();
-		uint32 mem_min1  = dis.read_ulong ();
-		uint32 mem_max1  = dis.read_ulong ();
-		
-		uint16 nnames  = dis.read_ushort ();
-		
-		if (format != 0x00020000) {
-			warning ("Only post tables of version 2 will be parsed found version $(format.get_string ())");
-			return;
-		}
-		
-		printd (@"format: $(format.get_string ())\n");
-		printd (@"italic: $(italic.get_string ())\n");
-		printd (@"underlie_pos: $(underlie_pos)\n");
-		printd (@"underlie_thickness: $(underlie_thickness)\n");
-		printd (@"is_fixed_pitch: $(is_fixed_pitch)\n");
-		printd (@"mem_min42: $(mem_min42)\n");
-		printd (@"mem_max42: $(mem_max42)\n");
-		printd (@"mem_min1: $(mem_min1)\n");
-		printd (@"mem_max1: $(mem_max1)\n");
-		printd (@"\n");
-		
-		printd (@"Num names: $(nnames)\n");
-		
-		uint16 k;
-		int non_standard_names = 0;
-		for (uint16 i = 0; i < nnames; i++) {
-			k = dis.read_ushort ();
-			index.add (k);
-			
-			if (k >= 258) {
-				non_standard_names++;
-			}
-		}
-		
-		add_standard_names ();
-		
-		// read non standard names
-		for (int i = 0; i < non_standard_names; i++) {
-			uint8 len = dis.read_byte ();
-			StringBuilder name = new StringBuilder ();
-			
-			for (int j = 0; j < len; j++) {
-				name.append_c (dis.read_char ());
-			}
-
-			names.add (name.str);
-		}
-
-		populate_available ();
-	}
-
-	void populate_available () {
-		for (int i = 0; i < index.size; i++) {
-			available_names.add (get_name (i));
-		}
 	}
 	
 	// the Macintosh standard order
@@ -1188,7 +1074,8 @@ public class PostTable : OtfTable {
 		int name_index;
 		GlyphCollection gc;
 		Glyph g;
-				
+		string ps_name;
+			
 		fd.add_fixed (0x00020000); // Version
 		fd.add_fixed (0x00000000); // italicAngle
 		
@@ -1214,19 +1101,23 @@ public class PostTable : OtfTable {
 		assert (names.size == 0);
 		add_standard_names ();
 
+		print ("Adding post names\n");
+
 		for (int i = 1; i < glyf_table.glyphs.size; i++) {
 			gc = glyf_table.glyphs.get (i);
 			g = gc.get_current ();
 			name_index = get_standard_index (g.unichar_code);
 			
-			if (name_index != 0) {
+			if (name_index != 0 && !gc.is_unassigned ()) {
 				fd.add_ushort ((uint16) name_index);  // use standard name
 			} else {
-				printd (@"Adding non standard postscript name $(g.get_name ())\n");
+				printd (@"Adding non standard postscript name $(gc.get_name ())\n");
 				
 				name_index = (int) names.size; // use font specific name
 				fd.add_ushort ((uint16) name_index);
-				names.add (g.get_name ());
+				
+				ps_name = create_ps_name (g.get_name ());
+				names.add (ps_name);
 			}
 			
 			this.index.add ((uint16) name_index);
@@ -1237,6 +1128,7 @@ public class PostTable : OtfTable {
 			
 			if (n.length > 0xFF) {
 				warning (@"too long name for glyph $n");
+				continue;
 			}
 			
 			fd.add ((uint8) n.length);
@@ -1248,6 +1140,33 @@ public class PostTable : OtfTable {
 		this.font_data = fd;
 	}
 
+	string create_ps_name (string name) {
+		string valid_name = NameTable.name_validation (name, false, 0xFF);
+		
+		if (valid_name.char_count () == 1) {
+			warning (@"Too short name: $valid_name generated from $name");
+			valid_name = add_suffix (valid_name);
+		}
+		
+		if (names.index_of (valid_name) > -1) {
+			valid_name = add_suffix (valid_name);
+		} 
+		
+		return valid_name;
+	}
+	
+	string add_suffix (string valid_name) {
+		int i = 2;
+		string s;
+		
+		s = valid_name + @"_$i";
+		while (names.index_of (s) > -1) {
+			i++;
+			s = valid_name + @"_$i";
+		}
+		
+		return s;
+	}
 }
 
 }

@@ -32,12 +32,46 @@ public class GsubTable : OtfTable {
 		
 		fd = new FontData ();
 		CligFeature clig_feature = new CligFeature (glyf_table);
-		AlternateFeature alternate_feature = new AlternateFeature ();
+		AlternateFeature alternate_feature = new AlternateFeature (glyf_table);
+
+		Lookups lookups = new Lookups ();
+		FeatureList features = new FeatureList ();
+
+		if (alternate_feature.has_alternates ()) {			
+			Lookups aalt_lookup = alternate_feature.get_lookups ();
+			Feature aalt_feature_lookup = new Feature ("aalt", lookups);
+			aalt_feature_lookup.add_feature_lookup (Lookups.ALTERNATES);
+			features.add (aalt_feature_lookup);	
+			lookups.append (aalt_lookup);
+		}
+	
+		bool has_clig = clig_feature.contextual.has_ligatures ()
+			|| clig_feature.has_regular_ligatures ();
+			
+		if (has_clig) {
+			Lookups clig_lookups = clig_feature.get_lookups ();
+			Feature clig_feature_lookup = new Feature ("clig", lookups);
+			
+			if (clig_feature.contextual.has_ligatures ()) {
+				clig_feature_lookup.add_feature_lookup (Lookups.CHAINED_CONTEXT);
+			}
+				
+			if (clig_feature.has_regular_ligatures ()) {
+				clig_feature_lookup.add_feature_lookup (Lookups.LIGATURES);
+			}
+			
+			features.add (clig_feature_lookup);
+			lookups.append (clig_lookups);
+		}
+
+		FontData feature_tags = features.generate_feature_tags ();
+
+		uint lookup_list_offset = 30 + feature_tags.length_with_padding ();
 		
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
 		fd.add_ushort (30); // offset to feature list
-		fd.add_ushort (clig_feature.contextual.has_ligatures () ? 46 : 44); // offset to lookup list
+		fd.add_ushort ((uint16) lookup_list_offset); // offset to lookup list
 		
 		// script list
 		fd.add_ushort (1); // number of items in script list
@@ -53,40 +87,18 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (0); // required features (0xFFFF is none)
 		fd.add_ushort (1); // number of features
 		fd.add_ushort (0); // feature index
-		
-		// feature table
-		fd.add_ushort (1); // number of features
-		
-		fd.add_tag ("clig"); // feature tag
-		fd.add_ushort (8); // offset to feature
-		// FIXME: Should it be liga and clig?
 
-		Lookups lookups = new Lookups ();
-		lookups.append (clig_feature.get_lookups ());
-		
-		// FIXME: refactor clig_feature 
-		uint16 feature_lookups = 1;
-		
-		if (clig_feature.contextual.has_ligatures ()) {
-			feature_lookups++;
+		// feature lookups with references to the lookup list
+		fd.append (feature_tags);
+
+		if (lookup_list_offset != fd.length_with_padding ()) {
+			warning (@"Bad offset to lookup list: $(lookup_list_offset) != $(fd.length_with_padding ())");
 		}
-		
-		fd.add_ushort (0); // feature prameters (null)
-		fd.add_ushort (feature_lookups); // number of lookups
-		
-		if (clig_feature.contextual.has_ligatures ()) {
-			// The chained context tables are listed here but the actual
-			// ligature table is only referenced in the context table
-			fd.add_ushort (lookups.find (Lookups.CHAINED_CONTEXT));
-			fd.add_ushort (lookups.find (Lookups.LIGATURES)); 
-		} else {
-			fd.add_ushort (lookups.find (Lookups.LIGATURES)); // lookup clig_subtable
-		}
-		
+
 		// lookup list
-		fd.append (lookups.genrate_lookup_list ());
-		
-		// subtables
+		fd.append (lookups.generate_lookup_list ());	
+
+		// subtable data
 		foreach (Lookup lookup in lookups.tables) {
 			foreach (FontData subtable in lookup.subtables) {
 				fd.append (subtable);
@@ -100,4 +112,3 @@ public class GsubTable : OtfTable {
 }
 
 }
-

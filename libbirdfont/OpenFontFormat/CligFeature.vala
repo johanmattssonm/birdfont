@@ -26,6 +26,10 @@ public class CligFeature : GLib.Object {
 		generate_feature ();
 	}
 	
+	public bool has_regular_ligatures () {
+		return clig.ligature_sets.size > 0;
+	}
+	
 	public Lookups get_lookups () {
 		return lookups;
 	}

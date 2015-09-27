@@ -32,11 +32,14 @@ public class OverviewTools : ToolCollection  {
 	public static SpinButton skew;
 	public static SpinButton resize;
 	
+	private string alternate_name = "";
+	
 	public OverviewTools () {
 		Expander font_name = new Expander ();
 		Expander character_sets = new Expander (t_("Character Sets"));
 		Expander zoom_expander = new Expander (t_("Zoom"));
 		Expander transform_expander = new Expander (t_("Transform"));
+		Expander glyph_expander = new Expander (t_("Glyph"));
 		
 		expanders = new Gee.ArrayList<Expander> ();
 		custom_character_sets = new Gee.ArrayList<LabelTool> ();
@@ -127,10 +130,59 @@ public class OverviewTools : ToolCollection  {
 		transform.set_persistent (false);
 		transform_expander.add_tool (transform);
 		
+		Tool alternate = new Tool ("alternate", t_("Create alternate"));
+		alternate.select_action.connect (add_new_alternate);
+		glyph_expander.add_tool (alternate);
+		
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
 		expanders.add (character_sets);
 		expanders.add (transform_expander);
+		expanders.add (glyph_expander);
+	}
+	
+	public void add_new_alternate (Tool tool) {
+		TextListener listener;
+		OverView o = MainWindow.get_overview ();
+		OverViewItem oi = o.selected_item;
+		GlyphCollection gc;
+		
+		if (oi.glyphs == null) {
+			return;
+		}
+		
+		gc = (!) oi.glyphs;
+		
+		listener = new TextListener (t_("Alternate"), "", t_("Add"));
+		
+		listener.signal_text_input.connect ((text) => {
+			alternate_name = text;
+		});
+		
+		listener.signal_submit.connect (() => {
+			GlyphCollection alt;
+			Font font;
+			OverView overview = MainWindow.get_overview ();
+			
+			font = BirdFont.get_current_font ();
+			
+			if (alternate_name == "") {
+				return;
+			}
+			
+			if (font.glyph_name.has_key (alternate_name)) {
+				MainWindow.show_message (t_("All glyphs must have unique names."));
+			} else {
+				alt = new GlyphCollection.with_glyph ('\0', alternate_name);
+				alt.set_unassigned (true);
+				font.add_new_alternate (gc, alt);
+				MainWindow.get_overview ().update_item_list ();
+				overview.open_glyph_signal (alt);
+			}
+		});
+		
+		tool.set_selected (false);
+		TabContent.show_text_input (listener);
 	}
 	
 	public void process_transform () {
