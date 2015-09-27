@@ -191,13 +191,15 @@ class BirdFontFile : GLib.Object {
 	}
 
 	public void write_alternates (DataOutputStream os) throws GLib.Error {
-		foreach (Alternate alternate in font.alternates) {
+		foreach (Alternate alternate in font.alternates.alternates) {
 			string character = @"$(Font.to_hex (alternate.character))";
+			string tag = alternate.tag;
 			
 			foreach (string alt in alternate.alternates) {
 				os.put_string (@"<alternate ");
 				os.put_string (@"character=\"$character\" ");
-				os.put_string (@"alternate=\"$alt\" />\n");
+				os.put_string (@"alternate=\"$alt\" ");
+				os.put_string (@"tag=\"$(tag)\" />\n");
 			}
 		}
 	}
@@ -832,6 +834,7 @@ class BirdFontFile : GLib.Object {
 	public void parse_alternate (Tag tag) {
 		unichar character = '\0';
 		string alt = "";
+		string alt_tag = "";
 		
 		foreach (Attribute attribute in tag.get_attributes ()) {
 			if (attribute.get_name () == "character") {
@@ -841,9 +844,13 @@ class BirdFontFile : GLib.Object {
 			if (attribute.get_name () == "alternate") {
 				alt = unserialize (attribute.get_content ());
 			}
+
+			if (attribute.get_name () == "tag") {
+				alt_tag = attribute.get_content ();
+			}
 		}
 		
-		font.add_alternate (character, alt);
+		font.add_alternate (character, alt, alt_tag);
 	}
 	
 	public void parse_format (Tag tag) {

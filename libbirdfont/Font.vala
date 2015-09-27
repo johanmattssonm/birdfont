@@ -36,7 +36,7 @@ public class Font : GLib.Object {
 	public GlyphTable ligature;
 	
 	/** List of alternate glyphs. */
-	public Gee.ArrayList<Alternate> alternates;
+	public AlternateSets alternates;
 	
 	public Gee.ArrayList<BackgroundImage> background_images;
 	public string background_scale = "1";
@@ -179,15 +179,17 @@ public class Font : GLib.Object {
 		settings = new FontSettings ();
 		kerning_strings = new KerningStrings ();
 		
-		alternates = new Gee.ArrayList<Alternate> ();
+		alternates = new AlternateSets ();
 	}
 
 	~Font () {
 		font_deleted ();
 	}
 
-	public Alternate? get_alternate (unichar character) {
-		foreach (Alternate a in alternates) {
+	public Alternate? get_alternate (unichar character, string tag) {
+		Gee.ArrayList<Alternate> alt = alternates.get_alt (tag);
+		
+		foreach (Alternate a in alt) {
 			if (a.character == character) {
 				return a;
 			}
@@ -197,12 +199,13 @@ public class Font : GLib.Object {
 	}
 
 	public void add_new_alternate (GlyphCollection glyph,
-		GlyphCollection alternate) {
+		GlyphCollection alternate, string tag) {
+
 		Alternate  a;
-		Alternate? alt = get_alternate (glyph.get_unicode_character ());
+		Alternate? alt = get_alternate (glyph.get_unicode_character (), tag);
 		
 		if (alt == null) {
-			a = new Alternate (glyph.get_unicode_character ());
+			a = new Alternate (glyph.get_unicode_character (), tag);
 			alternates.add (a);
 		} else {
 			a = (!) alt;
@@ -213,12 +216,14 @@ public class Font : GLib.Object {
 		glyph_cache.insert (alternate.get_name (), alternate);
 	}
 
-	public void add_alternate (unichar character, string alternate) {
+	public void add_alternate (unichar character, string alternate, 
+		string tag) {
+			
 		Alternate  a;
-		Alternate? alt = get_alternate (character);
+		Alternate? alt = get_alternate (character, tag);
 		
 		if (alt == null) {
-			a = new Alternate (character);
+			a = new Alternate (character, tag);
 			alternates.add (a);
 		} else {
 			a = (!) alt;
@@ -586,7 +591,7 @@ public class Font : GLib.Object {
 		glyph_name.remove (glyph.get_name ());
 		ligature.remove (glyph.get_current ().get_name ());
 		
-		foreach (Alternate a in alternates) {
+		foreach (Alternate a in alternates.alternates) {
 			a.remove (glyph);
 		}
 		

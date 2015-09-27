@@ -14,36 +14,13 @@
 
 namespace BirdFont {
 
-public class Alternate : GLib.Object {
+/** Boxed string class. */
+public class String : GLib.Object {
+	public string data;
 	
-	public unichar character;
-	public Gee.ArrayList<string> alternates;
-	public string tag;
-	
-	public Alternate (unichar character, string tag) {
-		this.character = character;
-		this.alternates = new Gee.ArrayList<string> ();
-		this.tag = tag;
+	public String (string data) {
+		this.data = data;
 	}
-
-	public void add (string glyph_name) {
-		alternates.add (glyph_name);
-	}
-	
-	public void remove (GlyphCollection g) {
-		int i = 0;
-		foreach (string a in alternates) {
-			if (a == g.get_name ()) {
-				break;
-			}
-			i++;
-		}
-		
-		if (i < alternates.size) {
-			alternates.remove_at (i);
-		}
-	}
-	
 }
 
 }

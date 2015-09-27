@@ -16,49 +16,56 @@ namespace BirdFont {
 
 public class AlternateFeature : GLib.Object {
 	GlyfTable glyf_table;
+	Gee.ArrayList<Alternate> alternates;
+	string tag;
 	
-	public AlternateFeature (GlyfTable glyf_table) {	
-		this.glyf_table = glyf_table;
-	}
-	
-	public bool has_alternates () {
-		Font font = OpenFontFormatWriter.get_current_font ();
-		return font.alternates.size > 0;
-	}
-	
-	public Lookups get_lookups () throws GLib.Error {
-		Lookups lookups = new Lookups ();
-		Lookup lookup = new Lookup (3, 0, Lookups.ALTERNATES);
-		FontData fd = new FontData ();
+	public AlternateFeature (GlyfTable glyf_table, string tag) {
 		Font font = OpenFontFormatWriter.get_current_font ();
 		
-		font.alternates.sort ((a, b) => {
+		this.tag = tag;
+		this.glyf_table = glyf_table;
+		alternates = font.alternates.get_alt (tag);
+
+		alternates.sort ((a, b) => {
 			Alternate alt1 = (Alternate) a;
 			Alternate alt2 = (Alternate) b;
 			return strcmp ((!) alt1.character.to_string (), (!) alt2.character.to_string ());
 		});
-		
+	}
+	
+	public bool has_alternates () {
+		return alternates.size > 0;
+	}
+	
+	public Lookups get_lookups () throws GLib.Error {
+		Lookups lookups = new Lookups ();
+		Lookup lookup = new Lookup (3, 0, tag);
+		FontData fd = new FontData ();
+
 		fd.add_ushort (1); // format identifier
 		
 		// offset to coverage
 		int coverage_offset = 6;
-		coverage_offset += 2 * font.alternates.size;
+		coverage_offset += 2 * alternates.size;
 		coverage_offset += 2 + 2 * get_number_of_alternates (); 
 		fd.add_ushort ((uint16) coverage_offset);
 		
 		// number of alternate sets
-		fd.add_ushort ((uint16) font.alternates.size); 
+		fd.add_ushort ((uint16) alternates.size); 
 		
-		int offset = 6 + 2 * font.alternates.size;
-		for (int i = 0; i < font.alternates.size; i++) {
+		print (@"alternates.size: $(alternates.size)\n");
+		
+		int offset = 6 + 2 * alternates.size;
+		for (int i = 0; i < alternates.size; i++) {
 			// offset to each alternate set
 			fd.add_ushort ((uint16) offset);
 			offset += 2;
-			offset += 2 * font.alternates.get (i).alternates.size;
+			offset += 2 * alternates.get (i).alternates.size;
 		}
 		
 		// alternates
-		foreach (Alternate alternate in font.alternates) {
+		foreach (Alternate alternate in alternates) {
+			print (@"alternate.alternates.size: $(alternate.alternates.size)\n");
 			fd.add_ushort ((uint16) alternate.alternates.size);
 			
 			foreach (string alt in alternate.alternates) {
@@ -68,8 +75,8 @@ public class AlternateFeature : GLib.Object {
 
 		// coverage  
 		fd.add_ushort (1); // format
-		fd.add_ushort ((uint16) font.alternates.size); // coverage array length
-		foreach (Alternate alternate in font.alternates) {
+		fd.add_ushort ((uint16) alternates.size); // coverage array length
+		foreach (Alternate alternate in alternates) {
 			string glyph_name = (!) alternate.character.to_string ();
 			fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
 		}
@@ -82,9 +89,8 @@ public class AlternateFeature : GLib.Object {
 	
 	int get_number_of_alternates () {
 		int n = 0;
-		Font font = OpenFontFormatWriter.get_current_font ();
 		
-		foreach (Alternate alternate in font.alternates) {
+		foreach (Alternate alternate in alternates) {
 			n += alternate.alternates.size;
 		}
 		

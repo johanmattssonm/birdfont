@@ -371,15 +371,13 @@ os.put_string (
 </div>
 
 <div>
-	<h3 class="big">Optional Features</h3>
+	<h3 class="big"></h3>
 	<p class="big">
-		<span class="swashes">Like swashes</span>
-		<span class="alternates">alternates &</span>
-		<span class="smallcaps">small caps</span> can be been added
+		OTF features, <span class="swashes">like swashes </span>
+		<span class="alternates">alternates & </span>
+		<span class="smallcaps">small caps</span>, can be been added
 		to the font.
 	</p>
-	
-</p>
 </div>
 
 <div>

@@ -32,17 +32,17 @@ public class GsubTable : OtfTable {
 		
 		fd = new FontData ();
 		CligFeature clig_feature = new CligFeature (glyf_table);
-		AlternateFeature alternate_feature = new AlternateFeature (glyf_table);
+		AlternateFeature salt = new AlternateFeature (glyf_table, "salt");
 
 		Lookups lookups = new Lookups ();
 		FeatureList features = new FeatureList ();
 
-		if (alternate_feature.has_alternates ()) {			
-			Lookups aalt_lookup = alternate_feature.get_lookups ();
-			Feature aalt_feature_lookup = new Feature ("salt", lookups);
-			aalt_feature_lookup.add_feature_lookup (Lookups.ALTERNATES);
-			features.add (aalt_feature_lookup);	
-			lookups.append (aalt_lookup);
+		if (salt.has_alternates ()) {			
+			Lookups salt_lookup = salt.get_lookups ();
+			Feature salt_feature_lookup = new Feature ("salt", lookups);
+			salt_feature_lookup.add_feature_lookup ("salt");
+			features.add (salt_feature_lookup);	
+			lookups.append (salt_lookup);
 		}
 	
 		bool has_clig = clig_feature.contextual.has_ligatures ()
