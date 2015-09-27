@@ -176,6 +176,7 @@ class BirdFontFile : GLib.Object {
 			
 			os.put_string ("\n");
 			write_spacing_classes (os);
+			write_alternates (os);
 			write_kerning (os);
 			write_closing_root_tag (os);
 			
@@ -187,6 +188,18 @@ class BirdFontFile : GLib.Object {
 		}
 	
 		return true;
+	}
+
+	public void write_alternates (DataOutputStream os) throws GLib.Error {
+		foreach (Alternate alternate in font.alternates) {
+			string character = @"$(Font.to_hex (alternate.character))";
+			
+			foreach (string alt in alternate.alternates) {
+				os.put_string (@"<alternate ");
+				os.put_string (@"character=\"$character\" ");
+				os.put_string (@"alternate=\"$alt\" />\n");
+			}
+		}
 	}
 	
 	public void write_images (DataOutputStream os) throws GLib.Error {
@@ -683,7 +696,7 @@ class BirdFontFile : GLib.Object {
 
 	private bool parse_file (Tag tag) {
 		foreach (Tag t in tag) {
-			// this is a backup file, but path pointing to the original file
+			// this is a backup file, but with a path to the original file
 			if (t.get_name () == "backup") {
 				font.font_file = t.get_content ();
 			}
@@ -807,9 +820,30 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "images") {
 				parse_images (t);
 			}
+
+			if (t.get_name () == "alternate") {
+				parse_alternate (t);
+			}
 		}
 		
 		return true;
+	}
+	
+	public void parse_alternate (Tag tag) {
+		unichar character = '\0';
+		string alt = "";
+		
+		foreach (Attribute attribute in tag.get_attributes ()) {
+			if (attribute.get_name () == "character") {
+				character = Font.to_unichar (attribute.get_content ());
+			}
+			
+			if (attribute.get_name () == "alternate") {
+				alt = unserialize (attribute.get_content ());
+			}
+		}
+		
+		font.add_alternate (character, alt);
 	}
 	
 	public void parse_format (Tag tag) {

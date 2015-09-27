@@ -39,7 +39,7 @@ public class GsubTable : OtfTable {
 
 		if (alternate_feature.has_alternates ()) {			
 			Lookups aalt_lookup = alternate_feature.get_lookups ();
-			Feature aalt_feature_lookup = new Feature ("aalt", lookups);
+			Feature aalt_feature_lookup = new Feature ("salt", lookups);
 			aalt_feature_lookup.add_feature_lookup (Lookups.ALTERNATES);
 			features.add (aalt_feature_lookup);	
 			lookups.append (aalt_lookup);
@@ -84,8 +84,8 @@ public class GsubTable : OtfTable {
 		
 		// LangSys table 
 		fd.add_ushort (0); // reserved
-		fd.add_ushort (0); // required features (0xFFFF is none)
-		fd.add_ushort (1); // number of features
+		fd.add_ushort (0xFFFF); // required features (0xFFFF is none)
+		fd.add_ushort ((uint16) features.features.size); // number of features
 		fd.add_ushort (0); // feature index
 
 		// feature lookups with references to the lookup list

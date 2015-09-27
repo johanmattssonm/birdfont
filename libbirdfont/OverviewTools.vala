@@ -166,7 +166,7 @@ public class OverviewTools : ToolCollection  {
 			
 			font = BirdFont.get_current_font ();
 			
-			if (alternate_name == "") {
+			if (alternate_name == "" || gc.is_unassigned ()) {
 				return;
 			}
 			

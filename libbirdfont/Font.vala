@@ -186,9 +186,9 @@ public class Font : GLib.Object {
 		font_deleted ();
 	}
 
-	public Alternate? get_alternate (GlyphCollection gc) {
+	public Alternate? get_alternate (unichar character) {
 		foreach (Alternate a in alternates) {
-			if (a.glyph == gc) {
+			if (a.character == character) {
 				return a;
 			}
 		}
@@ -198,19 +198,33 @@ public class Font : GLib.Object {
 
 	public void add_new_alternate (GlyphCollection glyph,
 		GlyphCollection alternate) {
-	
 		Alternate  a;
-		Alternate? alt = get_alternate (alternate);
+		Alternate? alt = get_alternate (glyph.get_unicode_character ());
 		
 		if (alt == null) {
-			a = new Alternate (glyph);
+			a = new Alternate (glyph.get_unicode_character ());
+			alternates.add (a);
+		} else {
+			a = (!) alt;
+		}
+		
+		a.add (alternate.get_name ());
+		glyph_name.insert (alternate.get_name (), alternate);
+		glyph_cache.insert (alternate.get_name (), alternate);
+	}
+
+	public void add_alternate (unichar character, string alternate) {
+		Alternate  a;
+		Alternate? alt = get_alternate (character);
+		
+		if (alt == null) {
+			a = new Alternate (character);
 			alternates.add (a);
 		} else {
 			a = (!) alt;
 		}
 		
 		a.add (alternate);
-		glyph_name.insert (alternate.get_name (), alternate);
 	}
 
 	public bool has_compatible_format () {

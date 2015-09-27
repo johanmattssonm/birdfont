@@ -16,22 +16,22 @@ namespace BirdFont {
 
 public class Alternate : GLib.Object {
 	
-	public GlyphCollection glyph;
-	public Gee.ArrayList<GlyphCollection> alternates;
+	public unichar character;
+	public Gee.ArrayList<string> alternates;
 	
-	public Alternate (GlyphCollection glyph) {
-		this.glyph = glyph;
-		this.alternates = new Gee.ArrayList<GlyphCollection> ();
+	public Alternate (unichar character) {
+		this.character = character;
+		this.alternates = new Gee.ArrayList<string> ();
 	}
 
-	public void add (GlyphCollection g) {
-		alternates.add (g);
+	public void add (string glyph_name) {
+		alternates.add (glyph_name);
 	}
 	
 	public void remove (GlyphCollection g) {
 		int i = 0;
-		foreach (GlyphCollection a in alternates) {
-			if (a.get_name () == g.get_name ()) {
+		foreach (string a in alternates) {
+			if (a == g.get_name ()) {
 				break;
 			}
 			i++;

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012 2014 Johan Mattsson
+    Copyright (C) 2012 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -331,6 +331,27 @@ os.put_string (
 			font-size: 12pt;
 		}
 
+		span.swashes {
+			-moz-font-feature-settings: "swsh";
+			-ms-font-feature-settings: "swsh";
+			-webkit-font-feature-settings: "swsh";
+			font-feature-settings: "swsh";	
+		}
+		
+		span.alternates {	
+			-moz-font-feature-settings: "salt" 1;
+			-ms-font-feature-settings: "salt" 1;
+			-webkit-font-feature-settings: "salt" 1;
+			font-feature-settings: "salt" 1;
+		}
+		
+		span.smallcaps {
+			font-variant-caps: small-caps;
+			-moz-font-feature-settings: "smcp";
+			-ms-font-feature-settings: "smcp";
+			-webkit-font-feature-settings: "smcp";
+			font-feature-settings: "smcp";
+		}
 	</style>
 """);
 	
@@ -350,8 +371,14 @@ os.put_string (
 </div>
 
 <div>
-	<h3 class="big">Handgloves & Mittoms</h3>
-	<p class="big">Bibliography</p>
+	<h3 class="big">Optional Features</h3>
+	<p class="big">
+		<span class="swashes">Like swashes</span>
+		<span class="alternates">alternates &</span>
+		<span class="smallcaps">small caps</span> can be been added
+		to the font.
+	</p>
+	
 </p>
 </div>
 

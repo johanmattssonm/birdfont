@@ -35,7 +35,7 @@ public class AlternateFeature : GLib.Object {
 		font.alternates.sort ((a, b) => {
 			Alternate alt1 = (Alternate) a;
 			Alternate alt2 = (Alternate) b;
-			return strcmp (alt1.glyph.get_name (), alt2.glyph.get_name ());
+			return strcmp ((!) alt1.character.to_string (), (!) alt2.character.to_string ());
 		});
 		
 		fd.add_ushort (1); // format identifier
@@ -48,7 +48,7 @@ public class AlternateFeature : GLib.Object {
 		
 		// number of alternate sets
 		fd.add_ushort ((uint16) font.alternates.size); 
-		
+				
 		int offset = 6 + 2 * font.alternates.size;
 		for (int i = 0; i < font.alternates.size; i++) {
 			// offset to each alternate set
@@ -60,9 +60,8 @@ public class AlternateFeature : GLib.Object {
 		// alternates
 		fd.add_ushort ((uint16) font.alternates.size);
 		foreach (Alternate alternate in font.alternates) {
-			foreach (GlyphCollection g in alternate.alternates) {
-				string name = g.get_name ();
-				fd.add_ushort ((uint16) glyf_table.get_gid (name));
+			foreach (string alt in alternate.alternates) {
+				fd.add_ushort ((uint16) glyf_table.get_gid (alt));
 			}
 		}		
 
@@ -70,7 +69,7 @@ public class AlternateFeature : GLib.Object {
 		fd.add_ushort (1); // format
 		fd.add_ushort ((uint16) font.alternates.size); // coverage array length
 		foreach (Alternate alternate in font.alternates) {
-			string glyph_name = alternate.glyph.get_name ();
+			string glyph_name = (!) alternate.character.to_string ();
 			fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
 		}
 		
