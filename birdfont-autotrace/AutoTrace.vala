@@ -149,12 +149,17 @@ class AutoTrace {
 			
 			file = File.new_for_path (file_name);
 			
-			if (file.query_exists ()) {
-				file.delete ();
+			try {
+				if (file.query_exists ()) {
+					file.delete ();
+				}
+					
+				data_stream = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
+				data_stream.put_string (svg);
+			} catch (GLib.Error e) {
+				warning(e.message);
+				return 1;
 			}
-				
-			data_stream = new DataOutputStream (file.create (FileCreateFlags.REPLACE_DESTINATION));
-			data_stream.put_string (svg);
 		}
 		
 		return 0;
