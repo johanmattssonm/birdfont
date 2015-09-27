@@ -48,18 +48,19 @@ public class AlternateFeature : GLib.Object {
 		
 		// number of alternate sets
 		fd.add_ushort ((uint16) font.alternates.size); 
-				
+		
 		int offset = 6 + 2 * font.alternates.size;
 		for (int i = 0; i < font.alternates.size; i++) {
 			// offset to each alternate set
 			fd.add_ushort ((uint16) offset);
 			offset += 2;
-			offset += 2 * font.alternates.size;
+			offset += 2 * font.alternates.get (i).alternates.size;
 		}
 		
 		// alternates
-		fd.add_ushort ((uint16) font.alternates.size);
 		foreach (Alternate alternate in font.alternates) {
+			fd.add_ushort ((uint16) alternate.alternates.size);
+			
 			foreach (string alt in alternate.alternates) {
 				fd.add_ushort ((uint16) glyf_table.get_gid (alt));
 			}
