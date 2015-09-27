@@ -44,6 +44,15 @@ public class Alternate : GLib.Object {
 		}
 	}
 	
+	public Alternate copy () {
+		Alternate n = new Alternate (character, tag);
+
+		foreach (string s in alternates) {
+			n.add (s);
+		}
+		
+		return n;
+	}
 }
 
 }

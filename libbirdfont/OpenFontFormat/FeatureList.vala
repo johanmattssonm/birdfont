@@ -28,14 +28,27 @@ public class FeatureList : GLib.Object {
 	public FontData generate_feature_tags () throws GLib.Error {
 		FontData fd = new FontData ();
 
+		features.sort ((fa, fb) => {
+			Feature a = (Feature) fa;
+			Feature b = (Feature) fb;
+			return strcmp (a.tag, b.tag);
+		});
+
 		fd.add_ushort ((uint16) features.size); // number of features
 		
 		uint offset = 2 + 6 * features.size;
 		foreach (Feature feature in features) {
-			fd.add_tag (feature.tag); // feature tag: aalt, clig etc.
-			fd.add_ushort ((uint16) offset); // offset to feature
+			// feature tag: aalt, clig etc.
+			fd.add_tag (feature.tag); 
+			
+			// offset to feature from beginning of this table
+			fd.add_ushort ((uint16) offset); 
 			
 			offset += 4 + 2 * feature.get_public_lookups ();
+			
+			if (feature.get_public_lookups () == 0) {
+				warning (@"No lookups for $(feature.tag)");
+			}
 		}
 
 		foreach (Feature feature in features) {
@@ -45,7 +58,7 @@ public class FeatureList : GLib.Object {
 			// number of lookups
 			fd.add_ushort ((uint16) feature.public_lookups.size); 
 			
-			foreach (int p in feature.public_lookups) {
+			foreach (string p in feature.public_lookups) {
 				// reference to a lookup table (lookup index)
 				fd.add_ushort (feature.lookups.find (p));
 			}

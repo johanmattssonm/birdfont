@@ -919,6 +919,8 @@ public class OverView : FontDisplay {
 		Font font = BirdFont.get_current_font ();
 		OverViewUndoItem undo_item = new OverViewUndoItem ();
 		
+		undo_item.alternate_sets = font.alternates.copy ();
+		
 		foreach (GlyphCollection g in selected_items) {
 			undo_item.glyphs.add (g.copy ());
 		}
@@ -952,6 +954,9 @@ public class OverView : FontDisplay {
 			}
 		}
 		
+		Font f = BirdFont.get_current_font ();
+		f.alternates = previous_collection.alternate_sets.copy ();
+
 		undo_items.remove_at (undo_items.size - 1);
 		GlyphCanvas.redraw ();
 	}
@@ -973,6 +978,8 @@ public class OverView : FontDisplay {
 			font.add_glyph_collection (g);
 		}
 		
+		font.alternates = previous_collection.alternate_sets.copy ();
+
 		redo_items.remove_at (redo_items.size - 1);
 		GlyphCanvas.redraw ();
 	}	
@@ -981,6 +988,8 @@ public class OverView : FontDisplay {
 		GlyphCollection? gc;
 		OverViewUndoItem ui = new OverViewUndoItem ();
 		Font font = BirdFont.get_current_font ();
+		
+		ui.alternate_sets = font.alternates.copy ();
 		
 		foreach (GlyphCollection g in previous_collection.glyphs) {
 			gc = font.get_glyph_collection (g.get_name ());
@@ -997,6 +1006,8 @@ public class OverView : FontDisplay {
 	
 	public void store_undo_state (GlyphCollection gc) {
 		OverViewUndoItem i = new OverViewUndoItem ();
+		Font f = BirdFont.get_current_font ();
+		i.alternate_sets = f.alternates.copy ();
 		i.glyphs.add (gc);
 		store_undo_items (i);
 	}
@@ -1414,7 +1425,7 @@ public class OverView : FontDisplay {
 	}
 	
 	public void paste () {
-		GlyphCollection gc = new GlyphCollection ('\0', "");
+		GlyphCollection gc;
 		GlyphCollection? c;
 		Glyph glyph;
 		uint32 index;
@@ -1422,9 +1433,13 @@ public class OverView : FontDisplay {
 		int skip = 0;
 		int s;
 		string character_string;
-		Gee.ArrayList<GlyphCollection> glyps = new Gee.ArrayList<GlyphCollection> ();
-		Font f = BirdFont.get_current_font ();
+		Gee.ArrayList<GlyphCollection> glyps;
+		Font f;
 		OverViewUndoItem undo_item;
+		
+		f = BirdFont.get_current_font ();
+		gc = new GlyphCollection ('\0', "");
+		glyps = new Gee.ArrayList<GlyphCollection> ();
 		
 		copied_glyphs.sort ((a, b) => {
 			return (int) ((GlyphCollection) a).get_unicode_character () 
@@ -1480,6 +1495,7 @@ public class OverView : FontDisplay {
 		}
 
 		undo_item = new OverViewUndoItem ();
+		undo_item.alternate_sets = f.alternates.copy ();
 		foreach (GlyphCollection g in glyps) {
 			undo_item.glyphs.add (g.copy ());
 		}
@@ -1515,6 +1531,7 @@ public class OverView : FontDisplay {
 	}
 	
 	public class OverViewUndoItem {
+		public AlternateSets alternate_sets = new AlternateSets ();
 		public Gee.ArrayList<GlyphCollection> glyphs = new Gee.ArrayList<GlyphCollection> ();
 	}
 }

@@ -352,6 +352,14 @@ os.put_string (
 			-webkit-font-feature-settings: "smcp";
 			font-feature-settings: "smcp";
 		}
+
+		span.capstosmallcaps {
+			font-variant-caps: all-small-caps;
+			-moz-font-feature-settings: "c2sc", "smcp";
+			-ms-font-feature-settings: "c2sc", "smcp";
+			-webkit-font-feature-settings: "c2sc", "smcp";
+			font-feature-settings: "c2sc", "smcp";
+		}
 	</style>
 """);
 	
@@ -373,10 +381,11 @@ os.put_string (
 <div>
 	<h3 class="big"></h3>
 	<p class="big">
-		OTF features, <span class="swashes">like swashes </span>
+		<span class="capstosmallcaps">OTF</span> features, 
+		<span class="swashes">like swashes </span>
 		<span class="alternates">alternates & </span>
 		<span class="smallcaps">small caps</span>, can be been added
-		to the font.
+		to the font.</span>
 	</p>
 </div>
 

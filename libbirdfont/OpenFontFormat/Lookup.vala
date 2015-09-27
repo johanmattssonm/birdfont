@@ -19,9 +19,15 @@ public class Lookup : GLib.Object {
 	public uint16 type;
 	public uint16 flags;
 	public Gee.ArrayList<FontData> subtables;
-	public int token;
+	public string token;
 	
-	public Lookup (uint16 type, uint16 flags, int token = Lookups.NONE) {
+	// the token is used for obtaining index in lookup list, an empty
+	// string ensures that the subtable can't be directly used by
+	// a table, chaining context use that feature.
+	//
+	// Lookups.find is used to obtain index in the lookup list for
+	// a token.
+	public Lookup (uint16 type, uint16 flags, string token = "") {
 		this.type = type;
 		this.flags = flags;
 		subtables = new Gee.ArrayList<FontData> ();

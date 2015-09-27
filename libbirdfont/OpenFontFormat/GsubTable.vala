@@ -32,19 +32,10 @@ public class GsubTable : OtfTable {
 		
 		fd = new FontData ();
 		CligFeature clig_feature = new CligFeature (glyf_table);
-		AlternateFeature salt = new AlternateFeature (glyf_table, "salt");
 
 		Lookups lookups = new Lookups ();
 		FeatureList features = new FeatureList ();
 
-		if (salt.has_alternates ()) {			
-			Lookups salt_lookup = salt.get_lookups ();
-			Feature salt_feature_lookup = new Feature ("salt", lookups);
-			salt_feature_lookup.add_feature_lookup ("salt");
-			features.add (salt_feature_lookup);	
-			lookups.append (salt_lookup);
-		}
-	
 		bool has_clig = clig_feature.contextual.has_ligatures ()
 			|| clig_feature.has_regular_ligatures ();
 			
@@ -53,24 +44,30 @@ public class GsubTable : OtfTable {
 			Feature clig_feature_lookup = new Feature ("clig", lookups);
 			
 			if (clig_feature.contextual.has_ligatures ()) {
-				clig_feature_lookup.add_feature_lookup (Lookups.CHAINED_CONTEXT);
+				clig_feature_lookup.add_feature_lookup ("chained");
 			}
 				
 			if (clig_feature.has_regular_ligatures ()) {
-				clig_feature_lookup.add_feature_lookup (Lookups.LIGATURES);
+				clig_feature_lookup.add_feature_lookup ("ligatures");
 			}
 			
 			features.add (clig_feature_lookup);
 			lookups.append (clig_lookups);
 		}
-
+		
+		add_alternate_table (features, lookups, "swsh");
+		add_alternate_table (features, lookups, "salt");
+		add_alternate_table (features, lookups, "c2sc");
+		add_alternate_table (features, lookups, "smcp");
+	
 		FontData feature_tags = features.generate_feature_tags ();
 
-		uint lookup_list_offset = 30 + feature_tags.length_with_padding ();
+		uint feature_list_offset = 28 + 2 * features.features.size;
+		uint lookup_list_offset = feature_list_offset + feature_tags.length_with_padding ();
 		
 		fd.add_ulong (0x00010000); // table version
 		fd.add_ushort (10); // offset to script list
-		fd.add_ushort (30); // offset to feature list
+		fd.add_ushort ((uint16) feature_list_offset); // offset to feature list
 		fd.add_ushort ((uint16) lookup_list_offset); // offset to lookup list
 		
 		// script list
@@ -86,7 +83,11 @@ public class GsubTable : OtfTable {
 		fd.add_ushort (0); // reserved
 		fd.add_ushort (0xFFFF); // required features (0xFFFF is none)
 		fd.add_ushort ((uint16) features.features.size); // number of features
-		fd.add_ushort (0); // feature index
+
+		// FIXME: double check this
+		for (int i = 0; i < features.features.size; i++) {
+			fd.add_ushort ((uint16) i); // feature index
+		}
 
 		// feature lookups with references to the lookup list
 		fd.append (feature_tags);
@@ -109,6 +110,20 @@ public class GsubTable : OtfTable {
 		
 		this.font_data = fd;
 	}
+
+	/** Add alterate substitutions to lookups and features. */
+	public void add_alternate_table (FeatureList features, Lookups lookups, string tag) 
+	throws GLib.Error {
+		AlternateFeature alt = new AlternateFeature (glyf_table, tag);
+		if (alt.has_alternates ()) {			
+			Lookups alt_lookup = alt.get_lookups ();
+			Feature alt_feature_lookup = new Feature (tag, lookups);
+			alt_feature_lookup.add_feature_lookup (tag);
+			features.add (alt_feature_lookup);	
+			lookups.append (alt_lookup);
+		}
+	}
+
 }
 
 }

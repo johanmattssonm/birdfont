@@ -20,11 +20,6 @@ namespace BirdFont {
 
 public class Lookups : GLib.Object {
 	public Gee.ArrayList<Lookup> tables = new Gee.ArrayList<Lookup> ();
-
-	public static const int NONE = 0;
-	public static const int CHAINED_CONTEXT = 1;
-	public static const int LIGATURES = 2;
-	public static const int ALTERNATES = 2;
 	
 	public Lookups () {	
 	}
@@ -38,7 +33,7 @@ public class Lookups : GLib.Object {
 	}
 
 	/** Find the lookup index for a particular lookup. */
-	public uint16 find (int token) {
+	public uint16 find (string token) {
 		uint16 index = 0;
 		foreach (Lookup lookup in tables) {
 			if (lookup.token == token) {

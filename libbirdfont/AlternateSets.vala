@@ -40,7 +40,7 @@ public class AlternateSets : GLib.Object {
 		alt = new Gee.ArrayList<Alternate> ();
 		
 		foreach (Alternate a in alternates) {
-			if (a.tag == tag) {
+			if (a.tag == tag && a.alternates.size > 0) {
 				alt.add (a);
 			}
 		}
@@ -50,6 +50,14 @@ public class AlternateSets : GLib.Object {
 	
 	public void add (Alternate alternate) {
 		alternates.add (alternate);
+	}
+	
+	public AlternateSets copy () {
+		AlternateSets n = new AlternateSets ();
+		foreach (Alternate a in alternates) {
+			n.alternates.add (a.copy ());
+		}
+		return n;
 	}
 }
 

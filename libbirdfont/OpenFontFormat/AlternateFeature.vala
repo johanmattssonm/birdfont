@@ -47,13 +47,16 @@ public class AlternateFeature : GLib.Object {
 		// offset to coverage
 		int coverage_offset = 6;
 		coverage_offset += 2 * alternates.size;
-		coverage_offset += 2 + 2 * get_number_of_alternates (); 
+		
+		foreach (Alternate a in alternates) {
+			coverage_offset += 2;
+			coverage_offset += 2 * a.alternates.size;
+		}
+		
 		fd.add_ushort ((uint16) coverage_offset);
 		
 		// number of alternate sets
 		fd.add_ushort ((uint16) alternates.size); 
-		
-		print (@"alternates.size: $(alternates.size)\n");
 		
 		int offset = 6 + 2 * alternates.size;
 		for (int i = 0; i < alternates.size; i++) {
@@ -65,13 +68,22 @@ public class AlternateFeature : GLib.Object {
 		
 		// alternates
 		foreach (Alternate alternate in alternates) {
-			print (@"alternate.alternates.size: $(alternate.alternates.size)\n");
 			fd.add_ushort ((uint16) alternate.alternates.size);
+			
+			alternate.alternates.sort ((a, b) => {
+				string alt1 = (string) a;
+				string alt2 = (string) b;
+				return strcmp (alt1, alt2);
+			});
 			
 			foreach (string alt in alternate.alternates) {
 				fd.add_ushort ((uint16) glyf_table.get_gid (alt));
 			}
 		}		
+
+		if (fd.length_with_padding () != coverage_offset) {
+			warning (@"Bad coverage offset. $(fd.length_with_padding ()) != $coverage_offset");
+		}
 
 		// coverage  
 		fd.add_ushort (1); // format
@@ -85,16 +97,6 @@ public class AlternateFeature : GLib.Object {
 		lookups.add_lookup (lookup);
 		
 		return lookups;
-	}
-	
-	int get_number_of_alternates () {
-		int n = 0;
-		
-		foreach (Alternate alternate in alternates) {
-			n += alternate.alternates.size;
-		}
-		
-		return n;
 	}
 }
 

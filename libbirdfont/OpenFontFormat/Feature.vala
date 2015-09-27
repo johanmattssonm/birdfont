@@ -18,16 +18,14 @@ public class Feature : GLib.Object {
 	
 	public string tag;
 	public Lookups lookups;
-	public Gee.ArrayList<int> public_lookups = new Gee.ArrayList<int> ();
-	
-	public int lookup_offset = 0; // FIXME:DELETE
+	public Gee.ArrayList<string> public_lookups = new Gee.ArrayList<string> ();
 	
 	public Feature (string tag, Lookups lookups) {
 		this.tag = tag;
 		this.lookups = lookups;
 	}
 	
-	public void add_feature_lookup (int lookup_token) {
+	public void add_feature_lookup (string lookup_token) {
 		public_lookups.add (lookup_token);
 	}
 	

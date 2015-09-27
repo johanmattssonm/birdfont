@@ -162,6 +162,9 @@ public class OverviewTools : ToolCollection  {
 		o = get_overview ();
 		ui = new OverView.OverViewUndoItem ();
 		
+		Font f = BirdFont.get_current_font ();
+		ui.alternate_sets = f.alternates.copy ();
+		
 		foreach (GlyphCollection gc in o.selected_items) {
 			if (gc.length () > 0) {
 				g = gc.get_current ();
