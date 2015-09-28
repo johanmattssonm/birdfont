@@ -804,7 +804,7 @@ public class OverView : FontDisplay {
 		update_item_list ();
 		GlyphCanvas.redraw ();
 
-		if (KeyBindings.modifier == CTRL) {
+		if (KeyBindings.has_ctrl ()) {
 			return;
 		}
 

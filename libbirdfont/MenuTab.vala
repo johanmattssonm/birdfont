@@ -155,7 +155,12 @@ public class MenuTab : FontDisplay {
 		
 		// key up for all modifiers will be ignored if events are suppressed
 		if (suppress_event) {
-			KeyBindings.reset ();
+			IdleSource idle = new IdleSource ();
+			idle.set_callback (() => {
+				KeyBindings.reset ();
+				return false;
+			});
+			idle.attach (null);
 		}
 		
 		return true;
