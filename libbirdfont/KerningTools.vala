@@ -65,6 +65,7 @@ public class KerningTools : ToolCollection  {
 			string label = t_("Kerning class");
 			KerningRange kr = new KerningRange (font, @"$label $(++next_class)");
 			classes.add_tool (kr);
+			self.set_selected (false);
 			classes.redraw ();
 		});
 		kerning_tools.add_tool (new_kerning_class);
@@ -73,6 +74,7 @@ public class KerningTools : ToolCollection  {
 		text_kerning.select_action.connect ((self) => {
 			KerningDisplay d = MainWindow.get_kerning_display ();
 			d.set_kerning_by_text ();
+			self.set_selected (false);
 		});
 		kerning_tools.add_tool (text_kerning);
 
@@ -87,6 +89,7 @@ public class KerningTools : ToolCollection  {
 			});
 			
 			GlyphCanvas.set_display (gs);
+			self.set_selected (false);
 		});
 		kerning_tools.add_tool (insert_last);
 
@@ -94,6 +97,7 @@ public class KerningTools : ToolCollection  {
 		insert_unicode.select_action.connect ((self) => {
 			KerningDisplay d = MainWindow.get_kerning_display ();
 			d.insert_unichar ();
+			self.set_selected (false);
 		});
 		kerning_tools.add_tool (insert_unicode);
 
@@ -114,6 +118,7 @@ public class KerningTools : ToolCollection  {
 				d.new_line ();
 				d.add_text (w);
 			}
+			self.set_selected (false);
 		});
 		kerning_tools.add_tool (previous_kerning_string);
 
@@ -131,7 +136,8 @@ public class KerningTools : ToolCollection  {
 			} else {
 				d.new_line ();
 				d.add_text (w);
-			}	
+			}
+			self.set_selected (false);
 		});
 		kerning_tools.add_tool (next_kerning_string);
 				
