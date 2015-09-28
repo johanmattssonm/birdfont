@@ -856,7 +856,49 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</copyright>\n");
 	}
+
+	if (FT_Get_Sfnt_Name (face, 7, &name_table_data) == 0) {
+		g_string_append (bf, "<trademark>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</trademark>\n");
+	}
+
+	if (FT_Get_Sfnt_Name (face, 8, &name_table_data) == 0) {
+		g_string_append (bf, "<manefacturer>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</manefacturer>\n");
+	}
+
+	if (FT_Get_Sfnt_Name (face, 9, &name_table_data) == 0) {
+		g_string_append (bf, "<designer>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</designer>\n");
+	}
+
+	if (FT_Get_Sfnt_Name (face, 11, &name_table_data) == 0) {
+		g_string_append (bf, "<vendor_url>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</vendor_url>\n");
+	}
+
+	if (FT_Get_Sfnt_Name (face, 12, &name_table_data) == 0) {
+		g_string_append (bf, "<designer_url>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</designer_url>\n");
+	}
+
+	if (FT_Get_Sfnt_Name (face, 13, &name_table_data) == 0) {
+		g_string_append (bf, "<license>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</license>\n");
+	}
 	
+	if (FT_Get_Sfnt_Name (face, 14, &name_table_data) == 0) {
+		g_string_append (bf, "<license_url>");
+		append_description (bf, &name_table_data);
+		g_string_append (bf, "</license_url>\n");
+	}
+		
 	g_string_append_printf (bf, "<backup>%s</backup>\n", g_markup_escape_text (file, -1));
 
 
