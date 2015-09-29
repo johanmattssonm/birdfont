@@ -70,7 +70,7 @@ public class OtfFeatureTable : Table {
 
 		rows.clear ();
 
-		row = new Row.headline (t_("OTF Features"));
+		row = new Row.headline (t_("Glyph Substitutions"));
 		rows.add (row);
 		
 		row = new Row.columns_1 (t_("Glyph") + ": " + glyph_collection.get_name (), SOURCE_GLYPH, false);
@@ -111,11 +111,11 @@ public class OtfFeatureTable : Table {
 	}
 
 	public override string get_label () {
-		return t_("OTF Feature Tags");
+		return t_("Glyph Substitutions");
 	}
 
 	public override string get_name () {
-		return "OTF Feature Tags";
+		return "Glyph Substitutions";
 	}
 
 	public override void draw (WidgetAllocation allocation, Context cr) {
