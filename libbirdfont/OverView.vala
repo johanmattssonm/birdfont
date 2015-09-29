@@ -549,7 +549,8 @@ public class OverView : FontDisplay {
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {
 		
-		if (this.allocation.width == 0) {
+		if (this.allocation.width == allocation.width
+			|| this.allocation.height == allocation.height) {
 			this.allocation = allocation;
 			update_item_list ();
 		}

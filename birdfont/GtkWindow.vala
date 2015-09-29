@@ -196,6 +196,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			return false;
 		});
 		
+		size_allocate.connect(() => {
+			GlyphCanvas.redraw ();
+		});
+		
 		show_all ();
 		
 		scrollbar.set_visible (false);
