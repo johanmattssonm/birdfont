@@ -118,7 +118,7 @@ void fit_bezier_curve_to_line (
 	free (points);
 }
 
-DrawBezierCurve(int n, Point2* curve)
+void DrawBezierCurve(int n, Point2* curve)
 {
 	int i;
 
