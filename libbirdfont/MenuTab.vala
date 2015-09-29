@@ -150,10 +150,15 @@ public class MenuTab : FontDisplay {
 			warning ("suppress_event is already set");
 			return false;
 		}
+		
+		if (e) {
+			TabContent.create_pause_surface ();
+		}
+		
 		background_thread = e;
 		suppress_event = e;
 		
-		// key up for all modifiers will be ignored if events are suppressed
+		// key up will be ignored if events are suppressed
 		if (suppress_event) {
 			IdleSource idle = new IdleSource ();
 			idle.set_callback (() => {
