@@ -29,7 +29,7 @@ public class AlternateFeature : GLib.Object {
 		alternates.sort ((a, b) => {
 			Alternate alt1 = (Alternate) a;
 			Alternate alt2 = (Alternate) b;
-			return strcmp ((!) alt1.character.to_string (), (!) alt2.character.to_string ());
+			return strcmp (alt1.glyph_name, alt2.glyph_name);
 		});
 	}
 	
@@ -89,7 +89,7 @@ public class AlternateFeature : GLib.Object {
 		fd.add_ushort (1); // format
 		fd.add_ushort ((uint16) alternates.size); // coverage array length
 		foreach (Alternate alternate in alternates) {
-			string glyph_name = (!) alternate.character.to_string ();
+			string glyph_name = alternate.glyph_name;
 			fd.add_ushort ((uint16) glyf_table.get_gid (glyph_name));
 		}
 		

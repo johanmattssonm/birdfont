@@ -450,7 +450,7 @@ public class OverView : FontDisplay {
 	
 	int get_items_per_row () {
 		int i = 1;
-		double tab_with = allocation.width;
+		double tab_with = allocation.width - 30; // 30 px for the scroll bar
 		OverViewItem.margin = OverViewItem.width * 0.1;
 		double l = OverViewItem.margin + OverViewItem.full_width ();
 		

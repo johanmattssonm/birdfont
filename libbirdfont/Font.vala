@@ -186,11 +186,11 @@ public class Font : GLib.Object {
 		font_deleted ();
 	}
 
-	public Alternate? get_alternate (unichar character, string tag) {
+	public Alternate? get_alternate (string glyph_name, string tag) {
 		Gee.ArrayList<Alternate> alt = alternates.get_alt (tag);
 		
 		foreach (Alternate a in alt) {
-			if (a.character == character) {
+			if (a.glyph_name == glyph_name) {
 				return a;
 			}
 		}
@@ -202,10 +202,10 @@ public class Font : GLib.Object {
 		GlyphCollection alternate, string tag) {
 
 		Alternate  a;
-		Alternate? alt = get_alternate (glyph.get_unicode_character (), tag);
+		Alternate? alt = get_alternate (glyph.get_name (), tag);
 		
 		if (alt == null) {
-			a = new Alternate (glyph.get_unicode_character (), tag);
+			a = new Alternate (glyph.get_name (), tag);
 			alternates.add (a);
 		} else {
 			a = (!) alt;
@@ -216,14 +216,14 @@ public class Font : GLib.Object {
 		glyph_cache.insert (alternate.get_name (), alternate);
 	}
 
-	public void add_alternate (unichar character, string alternate, 
+	public void add_alternate (string glyph_name, string alternate, 
 		string tag) {
 			
 		Alternate  a;
-		Alternate? alt = get_alternate (character, tag);
+		Alternate? alt = get_alternate (glyph_name, tag);
 		
 		if (alt == null) {
-			a = new Alternate (character, tag);
+			a = new Alternate (glyph_name, tag);
 			alternates.add (a);
 		} else {
 			a = (!) alt;

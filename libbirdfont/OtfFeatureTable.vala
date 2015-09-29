@@ -22,8 +22,11 @@ public class OtfFeatureTable : Table {
 	
 	static const int NONE = 0;
 	static const int OTF_FEATURE = 1;
+	static const int SOURCE_GLYPH = 2; // the glyph to replace
+	static const int REPLACEMENT_GLYPH = 3;
 	
 	GlyphCollection glyph_collection;
+	GlyphCollection? replacement_glyph = null;
 	string alternate_name = "";
 	TextListener listener;
 	
@@ -36,7 +39,27 @@ public class OtfFeatureTable : Table {
 	}
 
 	public override void selected_row (Row row, int column, bool delete_button) {
-		if (row.get_index () == OTF_FEATURE) {
+		int row_index = row.get_index ();
+		
+		if (row_index == SOURCE_GLYPH) {
+			GlyphSelection gs = new GlyphSelection ();
+			
+			gs.selected_glyph.connect ((gc) => {
+				glyph_collection = gc;		
+				MainWindow.get_tab_bar ().select_tab_name (get_name ());
+			});
+			
+			GlyphCanvas.set_display (gs);
+		} else if (row_index == REPLACEMENT_GLYPH) {
+			GlyphSelection gs = new GlyphSelection ();
+			
+			gs.selected_glyph.connect ((gc) => {
+				replacement_glyph = gc;		
+				MainWindow.get_tab_bar ().select_tab_name (get_name ());
+			});
+			
+			GlyphCanvas.set_display (gs);
+		} else if (row_index == OTF_FEATURE) {
 			String s = (String) row.get_row_data ();
 			add_new_alternate (s.data);
 		}
@@ -50,9 +73,19 @@ public class OtfFeatureTable : Table {
 		row = new Row.headline (t_("OTF Features"));
 		rows.add (row);
 		
-		row = new Row.columns_1 (t_("Glyph") + ": " + glyph_collection.get_name (), NONE, false);
+		row = new Row.columns_1 (t_("Glyph") + ": " + glyph_collection.get_name (), SOURCE_GLYPH, false);
 		rows.add (row);
-					
+		
+		string replacement = t_("New glyph");
+		
+		if (replacement_glyph != null) {
+			GlyphCollection gc = (!) replacement_glyph;
+			replacement = gc.get_name ();
+		}
+		
+		row = new Row.columns_1 (t_("Replacement") + ": " + replacement, REPLACEMENT_GLYPH, false);
+		rows.add (row);
+
 		// FIXME: reuse parts of this for fractions etc.
 	
 		row = new Row.headline (t_("Tag"));
@@ -122,7 +155,15 @@ public class OtfFeatureTable : Table {
 			}
 		});
 		
-		TabContent.show_text_input (listener);
+		if (replacement_glyph != null) {
+			GlyphCollection replacement = (!) replacement_glyph;
+			Font f = BirdFont.get_current_font ();
+			f.add_alternate (gc.get_name (), replacement.get_name (), tag);
+			MainWindow.tabs.close_display (this);
+		} else {
+			TabContent.show_text_input (listener);
+		}
+		
 	}
 }
 
