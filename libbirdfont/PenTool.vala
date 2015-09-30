@@ -462,7 +462,7 @@ public class PenTool : Tool {
 		EditPoint next, prev;
 		double step, distance;
 				
-		return_if_fail (p.path.points.size > 0);
+		return_val_if_fail (p.path.points.size > 0, 0);
 		
 		if (p.path.points.size <= 2) {
 			p.point.deleted = true;
@@ -588,7 +588,7 @@ public class PenTool : Tool {
 		EditPoint next, prev;
 		double step, distance;
 				
-		return_if_fail (p.path.points.size > 0);
+		return_val_if_fail (p.path.points.size > 0, 0);
 		
 		if (p.path.points.size <= 2) {
 			p.point.deleted = true;
@@ -1369,7 +1369,7 @@ public class PenTool : Tool {
 			return null;
 		}
 		
-		return_if_fail (path.points.size > 0);
+		return_val_if_fail (path.points.size > 0, null);
 		
 		px = Glyph.reverse_path_coordinate_x (end_point.x);
 		py = Glyph.reverse_path_coordinate_y (end_point.y);
@@ -1455,7 +1455,7 @@ public class PenTool : Tool {
 				direction_changed = !direction_changed;
 			}
 
-			return_if_fail (merge.points.size > 0);
+			return_val_if_fail (merge.points.size > 0, null);
 
 			if (is_close_to_point (merge.points.get (0), px, py)) {				
 				if (path.points.size == 1) {
@@ -1749,7 +1749,7 @@ public class PenTool : Tool {
 		selected_point = new_point.point;
 		active_edit_point = new_point.point;
 		
-		return_if_fail (glyph.active_paths.size > 0);		
+		return_val_if_fail (glyph.active_paths.size > 0, new PointSelection.empty ());
 		add_selected_point (selected_point, glyph.active_paths.get (glyph.active_paths.size - 1));
 
 		active_path = new_point.path;

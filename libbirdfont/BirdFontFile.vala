@@ -1581,7 +1581,7 @@ class BirdFontFile : GLib.Object {
 			return;
 		}
 		
-		return_val_if_fail (d.length > 1, path);
+		return_if_fail (d.length > 1);
 		
 		if (!(d[0] == "S" || d[0] == "B")) {
 			warning ("No start point.");
@@ -1592,13 +1592,13 @@ class BirdFontFile : GLib.Object {
 		
 		if (instruction == "S") {
 			p = d[i++].split (",");
-			return_val_if_fail (p.length == 2, path);
+			return_if_fail (p.length == 2);
 			line (path, p[0], p[1]);
 		}
 
 		if (instruction == "B") {
 			p = d[i++].split (",");
-			return_val_if_fail (p.length == 2, path);
+			return_if_fail (p.length == 2);
 			cubic_line (path, p[0], p[1]);
 		}
 		
@@ -1611,47 +1611,47 @@ class BirdFontFile : GLib.Object {
 			}
 			
 			if (instruction == "L") {
-				return_val_if_fail (i < d.length, path);
+				return_if_fail (i < d.length);
 				p = d[i++].split (",");
-				return_val_if_fail (p.length == 2, path);
+				return_if_fail (p.length == 2);
 				line (path, p[0], p[1]);
 			}else if (instruction == "M") {
-				return_val_if_fail (i < d.length, path);
+				return_if_fail (i < d.length);
 				p = d[i++].split (",");
-				return_val_if_fail (p.length == 2, path);
+				return_if_fail (p.length == 2);
 				cubic_line (path, p[0], p[1]);
 			} else if (instruction == "Q") {
-				return_val_if_fail (i + 1 < d.length, path);
+				return_if_fail (i + 1 < d.length);
 				
 				p = d[i++].split (",");
 				p1 = d[i++].split (",");
 				
-				return_val_if_fail (p.length == 2, path);
-				return_val_if_fail (p1.length == 2, path);
+				return_if_fail (p.length == 2);
+				return_if_fail (p1.length == 2);
 				
 				quadratic (path, p[0], p[1], p1[0], p1[1]);
 			} else if (instruction == "D") {
-				return_val_if_fail (i + 2 < d.length, path);
+				return_if_fail (i + 2 < d.length);
 				
 				p = d[i++].split (",");
 				p1 = d[i++].split (",");
 				p2 = d[i++].split (",");
 
-				return_val_if_fail (p.length == 2, path);
-				return_val_if_fail (p1.length == 2, path);
-				return_val_if_fail (p2.length == 2, path);
+				return_if_fail (p.length == 2);
+				return_if_fail (p1.length == 2);
+				return_if_fail (p2.length == 2);
 				
 				double_curve (path, p[0], p[1], p1[0], p1[1], p2[0], p2[1]);
 			} else if (instruction == "C") {
-				return_val_if_fail (i + 2 < d.length, path);
+				return_if_fail (i + 2 < d.length);
 				
 				p = d[i++].split (",");
 				p1 = d[i++].split (",");
 				p2 = d[i++].split (",");
 
-				return_val_if_fail (p.length == 2, path);
-				return_val_if_fail (p1.length == 2, path);
-				return_val_if_fail (p2.length == 2, path);
+				return_if_fail (p.length == 2);
+				return_if_fail (p1.length == 2);
+				return_if_fail (p2.length == 2);
 				
 				cubic (path, p[0], p[1], p1[0], p1[1], p2[0], p2[1]);
 			} else if (instruction == "T") {
