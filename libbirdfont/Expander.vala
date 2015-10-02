@@ -59,6 +59,10 @@ public class Expander : GLib.Object {
 		tool = new Gee.ArrayList<Tool> ();
 	}
 
+	public void clear_cache () {
+		cached = null;
+	}
+
 	public void set_headline (string? h) {
 		headline = h;
 	}

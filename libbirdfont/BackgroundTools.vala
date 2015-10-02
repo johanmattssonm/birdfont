@@ -134,6 +134,7 @@ public class BackgroundTools : ToolCollection  {
 				parts.tool.remove (bpl);
 				bpl.selection.parent_image.selections.remove (bpl.selection);
 				MainWindow.get_toolbox ().update_expanders ();
+				parts.clear_cache ();
 				set_default_canvas ();
 				Toolbox.redraw_tool_box ();
 				GlyphCanvas.redraw ();
@@ -168,6 +169,7 @@ public class BackgroundTools : ToolCollection  {
 		
 		set_default_canvas ();
 		ZoomTool.zoom_full_background_image ();
+		MainWindow.get_toolbox ().update_expanders ();
 	}
 
 	public override Gee.ArrayList<Expander> get_expanders () {

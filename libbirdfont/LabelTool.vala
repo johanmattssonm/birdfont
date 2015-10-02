@@ -18,7 +18,16 @@ namespace BirdFont {
 
 public class LabelTool : Tool {
 
-	public string label { get; set; }
+	public string label { 
+		get {
+			return label_text.text;
+		}
+		
+		set {
+			label_text.set_text (value);
+		}
+	}
+	
 	public string number { get; set; }
 	public bool has_counter { get; set; }
 	public bool has_delete_button { get; set; }
