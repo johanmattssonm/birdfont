@@ -24,6 +24,7 @@ public class TabContent : GLib.Object {
 	static Button text_input_button;
 	static bool text_input_visible = false;
 	static TextListener text_callback;
+	static ImageSurface? pause_surface = null;
 
 	static const int TEXT_INPUT_HEIGHT = 51;
 	
@@ -77,6 +78,13 @@ public class TabContent : GLib.Object {
 			Theme.color (cr, "Background 1");
 			cr.rectangle (0, 0, allocation.width, allocation.height);
 			cr.fill ();
+			
+			if (pause_surface != null) {
+				cr.scale (1.0 / Screen.get_scale (), 1.0 / Screen.get_scale ());
+				cr.set_source_surface ((!) pause_surface, 0, 0);
+				cr.paint ();
+			}
+			
 			cr.restore ();
 		} else {
 			menu = MainWindow.get_menu ();
@@ -104,6 +112,22 @@ public class TabContent : GLib.Object {
 				draw_text_input (allocation, cr);
 			}
 		}
+	}
+	
+	public static void create_pause_surface () {
+		Context cr;
+		WidgetAllocation alloc;
+		
+		if (MenuTab.suppress_event) {
+			warning ("Background surface already created.");
+			return;
+		}
+		
+		alloc = GlyphCanvas.get_allocation ();
+		pause_surface = Screen.create_background_surface (alloc.width, alloc.height);
+		cr = new Context ((!) pause_surface);
+		cr.scale (Screen.get_scale (), Screen.get_scale ());
+		draw (alloc, cr);
 	}
 	
 	public static void key_press (uint keyval) {

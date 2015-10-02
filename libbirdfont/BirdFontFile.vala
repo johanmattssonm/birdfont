@@ -192,12 +192,12 @@ class BirdFontFile : GLib.Object {
 
 	public void write_alternates (DataOutputStream os) throws GLib.Error {
 		foreach (Alternate alternate in font.alternates.alternates) {
-			string character = @"$(Font.to_hex (alternate.character))";
+			string glyph_name = alternate.glyph_name;
 			string tag = alternate.tag;
 			
 			foreach (string alt in alternate.alternates) {
 				os.put_string (@"<alternate ");
-				os.put_string (@"character=\"$character\" ");
+				os.put_string (@"glyph=\"$glyph_name\" ");
 				os.put_string (@"alternate=\"$alt\" ");
 				os.put_string (@"tag=\"$(tag)\" />\n");
 			}
@@ -832,13 +832,13 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	public void parse_alternate (Tag tag) {
-		unichar character = '\0';
+		string glyph_name = "";
 		string alt = "";
 		string alt_tag = "";
 		
 		foreach (Attribute attribute in tag.get_attributes ()) {
-			if (attribute.get_name () == "character") {
-				character = Font.to_unichar (attribute.get_content ());
+			if (attribute.get_name () == "glyph") {
+				glyph_name = unserialize (attribute.get_content ());
 			}
 			
 			if (attribute.get_name () == "alternate") {
@@ -850,7 +850,7 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 		
-		font.add_alternate (character, alt, alt_tag);
+		font.add_alternate (glyph_name, alt, alt_tag);
 	}
 	
 	public void parse_format (Tag tag) {
@@ -1581,7 +1581,7 @@ class BirdFontFile : GLib.Object {
 			return;
 		}
 		
-		return_val_if_fail (d.length > 1, path);
+		return_if_fail (d.length > 1);
 		
 		if (!(d[0] == "S" || d[0] == "B")) {
 			warning ("No start point.");
@@ -1592,13 +1592,13 @@ class BirdFontFile : GLib.Object {
 		
 		if (instruction == "S") {
 			p = d[i++].split (",");
-			return_val_if_fail (p.length == 2, path);
+			return_if_fail (p.length == 2);
 			line (path, p[0], p[1]);
 		}
 
 		if (instruction == "B") {
 			p = d[i++].split (",");
-			return_val_if_fail (p.length == 2, path);
+			return_if_fail (p.length == 2);
 			cubic_line (path, p[0], p[1]);
 		}
 		
@@ -1611,47 +1611,47 @@ class BirdFontFile : GLib.Object {
 			}
 			
 			if (instruction == "L") {
-				return_val_if_fail (i < d.length, path);
+				return_if_fail (i < d.length);
 				p = d[i++].split (",");
-				return_val_if_fail (p.length == 2, path);
+				return_if_fail (p.length == 2);
 				line (path, p[0], p[1]);
 			}else if (instruction == "M") {
-				return_val_if_fail (i < d.length, path);
+				return_if_fail (i < d.length);
 				p = d[i++].split (",");
-				return_val_if_fail (p.length == 2, path);
+				return_if_fail (p.length == 2);
 				cubic_line (path, p[0], p[1]);
 			} else if (instruction == "Q") {
-				return_val_if_fail (i + 1 < d.length, path);
+				return_if_fail (i + 1 < d.length);
 				
 				p = d[i++].split (",");
 				p1 = d[i++].split (",");
 				
-				return_val_if_fail (p.length == 2, path);
-				return_val_if_fail (p1.length == 2, path);
+				return_if_fail (p.length == 2);
+				return_if_fail (p1.length == 2);
 				
 				quadratic (path, p[0], p[1], p1[0], p1[1]);
 			} else if (instruction == "D") {
-				return_val_if_fail (i + 2 < d.length, path);
+				return_if_fail (i + 2 < d.length);
 				
 				p = d[i++].split (",");
 				p1 = d[i++].split (",");
 				p2 = d[i++].split (",");
 
-				return_val_if_fail (p.length == 2, path);
-				return_val_if_fail (p1.length == 2, path);
-				return_val_if_fail (p2.length == 2, path);
+				return_if_fail (p.length == 2);
+				return_if_fail (p1.length == 2);
+				return_if_fail (p2.length == 2);
 				
 				double_curve (path, p[0], p[1], p1[0], p1[1], p2[0], p2[1]);
 			} else if (instruction == "C") {
-				return_val_if_fail (i + 2 < d.length, path);
+				return_if_fail (i + 2 < d.length);
 				
 				p = d[i++].split (",");
 				p1 = d[i++].split (",");
 				p2 = d[i++].split (",");
 
-				return_val_if_fail (p.length == 2, path);
-				return_val_if_fail (p1.length == 2, path);
-				return_val_if_fail (p2.length == 2, path);
+				return_if_fail (p.length == 2);
+				return_if_fail (p1.length == 2);
+				return_if_fail (p2.length == 2);
 				
 				cubic (path, p[0], p[1], p1[0], p1[1], p2[0], p2[1]);
 			} else if (instruction == "T") {

@@ -240,7 +240,9 @@ public class TextArea : Widget {
 				text_changed (get_text ());
 				break;		
 			default:
-				add_character (keyval);
+				if (!KeyBindings.has_ctrl ()) {
+					add_character (keyval);
+				} 
 				break;
 		}
 			
@@ -358,7 +360,7 @@ public class TextArea : Widget {
 		sb.append (pg.text.substring (selection_start.character_index));
 		
 		for (i = selection_start.paragraph + 1; i < selection_stop.paragraph; i++) {
-			return_if_fail (0 <= i < paragraphs.size);
+			return_val_if_fail (0 <= i < paragraphs.size, "".dup ());
 			pg = paragraphs.get (i);
 			sb.append (pg.text);
 		}
@@ -522,7 +524,7 @@ public class TextArea : Widget {
 			paragraph.set_text (np);
 
 			if (np == "") {
-				return_if_fail (carret.paragraph > 0);
+				return_val_if_fail (carret.paragraph > 0, ui);
 				carret.paragraph--;
 				paragraph = paragraphs.get (carret.paragraph);
 				carret.character_index = paragraph.text_length;
@@ -562,7 +564,7 @@ public class TextArea : Widget {
 		int index;
 		unichar c;
 		
-		return_if_fail (0 <= carret.paragraph < paragraphs.size);
+		return_val_if_fail (0 <= carret.paragraph < paragraphs.size, '\0');
 		paragraph = paragraphs.get (carret.paragraph);
 		
 		index = carret.character_index;
@@ -601,7 +603,7 @@ public class TextArea : Widget {
 		int index, last_index;
 		unichar c;
 		
-		return_if_fail (0 <= carret.paragraph < paragraphs.size);
+		return_val_if_fail (0 <= carret.paragraph < paragraphs.size, '\0');
 		paragraph = paragraphs.get (carret.paragraph);
 		
 		index = 0;
@@ -614,7 +616,7 @@ public class TextArea : Widget {
 		if (last_index <= 0 && carret.paragraph > 0) {
 			carret.paragraph--;
 			
-			return_if_fail (0 <= carret.paragraph < paragraphs.size);
+			return_val_if_fail (0 <= carret.paragraph < paragraphs.size, '\0');
 			paragraph = paragraphs.get (carret.paragraph);
 			carret.character_index = paragraph.text_length;
 			
@@ -630,7 +632,7 @@ public class TextArea : Widget {
 			c = ' ';
 		}
 		
-		return_if_fail (0 <= carret.paragraph < paragraphs.size);
+		return_val_if_fail (0 <= carret.paragraph < paragraphs.size, '\0');
 		
 		return c;
 	}

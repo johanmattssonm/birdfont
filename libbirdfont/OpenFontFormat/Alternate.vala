@@ -16,18 +16,18 @@ namespace BirdFont {
 
 public class Alternate : GLib.Object {
 	
-	public unichar character;
+	public string glyph_name;
 	public Gee.ArrayList<string> alternates;
 	public string tag;
 	
-	public Alternate (unichar character, string tag) {
-		this.character = character;
+	public Alternate (string glyph_name, string tag) {
+		this.glyph_name = glyph_name;
 		this.alternates = new Gee.ArrayList<string> ();
 		this.tag = tag;
 	}
 
-	public void add (string glyph_name) {
-		alternates.add (glyph_name);
+	public void add (string alternate_name) {
+		alternates.add (alternate_name);
 	}
 	
 	public void remove (GlyphCollection g) {
@@ -45,7 +45,7 @@ public class Alternate : GLib.Object {
 	}
 	
 	public Alternate copy () {
-		Alternate n = new Alternate (character, tag);
+		Alternate n = new Alternate (glyph_name, tag);
 
 		foreach (string s in alternates) {
 			n.add (s);

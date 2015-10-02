@@ -1462,8 +1462,8 @@ public class StrokeTool : Tool {
 			pl1 = get_remaining_points (path1.copy ());
 			pl2 = get_remaining_points (path2.copy ());
 			
-			return_if_fail (pl1.paths.size == 2);
-			return_if_fail (pl2.paths.size == 2);
+			return_val_if_fail (pl1.paths.size == 2, false);
+			return_val_if_fail (pl2.paths.size == 2, false);
 			
 			a1 = pl1.paths.get (0);
 			a2 = pl1.paths.get (1);
