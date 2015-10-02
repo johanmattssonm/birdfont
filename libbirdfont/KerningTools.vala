@@ -192,10 +192,8 @@ public class KerningTools : ToolCollection  {
 			active_otf_features = tags;
 
 			if (enable) {
-				print ("enable " + tag + "\n");
 				tags.add (tag);
 			} else {
-				print ("disable " + tag + "\n");
 				tags.remove (tag);
 			}
 			
