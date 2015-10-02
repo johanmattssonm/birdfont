@@ -91,19 +91,19 @@ public class OtfFeatureTable : Table {
 		row = new Row.headline (t_("Tag"));
 		rows.add (row);
 		
-		row = new Row.columns_1 (t_("Stylistic Alternate") + " (salt)", OTF_FEATURE, false);
+		row = new Row.columns_1 (OtfLabel.get_string ("salt"), OTF_FEATURE, false);
 		row.set_row_data (new String ("salt"));
 		rows.add (row);
 
-		row = new Row.columns_1 (t_("Small Caps") + " (smcp)", OTF_FEATURE, false);
+		row = new Row.columns_1 (OtfLabel.get_string ("smcp"), OTF_FEATURE, false);
 		row.set_row_data (new String ("smcp"));
 		rows.add (row);
 
-		row = new Row.columns_1 (t_("Capitals to Small Caps") + " (c2sc)", OTF_FEATURE, false);
+		row = new Row.columns_1 (OtfLabel.get_string ("c2sc"), OTF_FEATURE, false);
 		row.set_row_data (new String ("c2sc"));
 		rows.add (row);
 
-		row = new Row.columns_1 (t_("Swashes") + " (swsh)", OTF_FEATURE, false);
+		row = new Row.columns_1 (OtfLabel.get_string ("swsh"), OTF_FEATURE, false);
 		row.set_row_data (new String ("swsh"));
 		rows.add (row);
 				

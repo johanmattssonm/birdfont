@@ -81,6 +81,7 @@ public class Toolbox : GLib.Object  {
 		tool_sets.add (hidden_tools); // tools without a button
 		
 		current_set = file_tools;
+		current_set.selected ();
 		
 		tab_bar.signal_tab_selected.connect ((tab) => {
 			string tab_name = tab.get_display ().get_name ();
@@ -120,6 +121,7 @@ public class Toolbox : GLib.Object  {
 			current_set = (ToolCollection) file_tools;
 		}
 		
+		current_set.selected ();
 		MainWindow.get_toolbox ().update_expanders ();
 		redraw_tool_box ();
 	}

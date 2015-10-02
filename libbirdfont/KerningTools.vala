@@ -28,11 +28,30 @@ public class KerningTools : ToolCollection  {
 	public static Tool previous_kerning_string;
 	public static Tool next_kerning_string;
 	
+	public static Expander otf_features;
+	
+	static OtfTags active_otf_features;
+	
 	public KerningTools () {
+		active_otf_features = new OtfTags ();
+		selected ();
+	}
+	
+	public override void selected () {
 		init ();
 	}
 	
+	public static OtfTags get_otf_tags () {
+		if (is_null (active_otf_features)) {
+			return new OtfTags ();
+		}
+		
+		return active_otf_features;
+	}
+
 	public static void init () {
+		Font font = BirdFont.get_current_font ();
+		
 		Expander kerning_tools = new Expander (t_("Kerning Tools"));
 		classes = new Expander ();
 		expanders = new Gee.ArrayList<Expander> ();
@@ -61,9 +80,9 @@ public class KerningTools : ToolCollection  {
 		
 		Tool new_kerning_class = new Tool ("kerning_class", t_("Create new kerning class."));
 		new_kerning_class.select_action.connect ((self) => {
-			Font font = BirdFont.get_current_font ();
+			Font f = BirdFont.get_current_font ();
 			string label = t_("Kerning class");
-			KerningRange kr = new KerningRange (font, @"$label $(++next_class)");
+			KerningRange kr = new KerningRange (f, @"$label $(++next_class)");
 			classes.add_tool (kr);
 			self.set_selected (false);
 			classes.redraw ();
@@ -141,9 +160,15 @@ public class KerningTools : ToolCollection  {
 		});
 		kerning_tools.add_tool (next_kerning_string);
 				
+		otf_features = new Expander (t_("Substitutions"));
+		
+		foreach (string tag in font.alternates.get_all_tags ()) {
+			add_otf_label (tag);
+		}
+
 		kerning_tools.set_persistent (false);
 		kerning_tools.set_unique (false);
-
+		
 		classes.set_persistent (true);
 		classes.set_unique (true);
 		
@@ -151,6 +176,33 @@ public class KerningTools : ToolCollection  {
 		expanders.add (zoom_expander);
 		expanders.add (kerning_tools);
 		expanders.add (classes);
+		expanders.add (otf_features);
+	}
+	
+	public static void add_otf_label (string tag) {
+		OtfLabel otf_label = new OtfLabel (tag);
+		otf_features.add_tool (otf_label);
+		otf_label.otf_feature_activity.connect ((enable, tag) => {
+			OtfTags tags = active_otf_features.copy ();
+			KerningDisplay kd = MainWindow.get_kerning_display ();
+			kd.new_segment ();
+			
+			// create a new feature set in order to keep the features
+			// for other parts of the text in kerning tab
+			active_otf_features = tags;
+
+			if (enable) {
+				print ("enable " + tag + "\n");
+				tags.add (tag);
+			} else {
+				print ("disable " + tag + "\n");
+				tags.remove (tag);
+			}
+			
+			kd.get_last_segment ().set_otf_tags (tags);
+			
+			GlyphCanvas.redraw ();
+		});
 	}
 	
 	public static void add_unique_class (KerningRange kerning_class) {
@@ -271,6 +323,7 @@ public class KerningTools : ToolCollection  {
 		d.add ("Spacing");
 		return d;
 	}
+		
 }
 
 }

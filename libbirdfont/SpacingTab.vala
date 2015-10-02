@@ -70,7 +70,6 @@ public class SpacingTab : KerningDisplay {
 		cr.stroke ();
 		cr.restore ();
 		
-		// TODO: add button for processing ligatures
 		row = get_first_row ().process_ligatures (font);
 		index = 0;
 		foreach (Glyph? g in row.glyph) {

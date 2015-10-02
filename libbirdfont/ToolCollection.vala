@@ -32,6 +32,9 @@ public abstract class ToolCollection : GLib.Object  {
 			e.redraw ();
 		}
 	}
+	
+	public virtual void selected () {	
+	}
 }
 
 }

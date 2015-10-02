@@ -850,6 +850,21 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 		
+		if (glyph_name == "") {
+			warning ("No name for source glyph in alternate.");
+			return;
+		}
+
+		if (alt == "") {
+			warning ("No name for alternate.");
+			return;
+		}
+
+		if (alt_tag == "") {
+			warning ("No tag for alternate.");
+			return;
+		}
+		
 		font.add_alternate (glyph_name, alt, alt_tag);
 	}
 	

@@ -21,9 +21,16 @@ public class GlyphSequence : GLib.Object {
 	/** A list of corresponding glyph ranges if applicable. */ 
 	public Gee.ArrayList<GlyphRange?> ranges;
 
+	OtfTags otf_tags;
+
 	public GlyphSequence () {
 		glyph = new Gee.ArrayList<Glyph?> ();
 		ranges = new Gee.ArrayList<GlyphRange?> ();
+		otf_tags = new OtfTags ();
+	}
+	
+	public void set_otf_tags (OtfTags tags) {
+		this.otf_tags = tags;
 	}
 	
 	public int length () {
@@ -45,7 +52,8 @@ public class GlyphSequence : GLib.Object {
 		}
 	}
 	
-	/** Do ligature substitution.
+	/** Perform glyph substitution.
+	 * @param tags enable otf features
 	 * @return a new sequence with ligatures
 	 */
 	public GlyphSequence process_ligatures (Font font) {
@@ -80,6 +88,37 @@ public class GlyphSequence : GLib.Object {
 		ligatures.get_single_substitution_ligatures ((substitute, ligature) => {
 			ligature_sequence.replace (substitute, ligature);
 		});
+		
+		// salt and similar tags
+		foreach (string tag in otf_tags.elements) {
+			Gee.ArrayList<Alternate> alternates;
+			alternates = font.alternates.get_alt (tag);
+
+			foreach (Alternate a in alternates) {
+				GlyphSequence old = new GlyphSequence ();
+				Glyph? g = font.get_glyph_by_name (a.glyph_name);
+
+				if (g != null) {
+					old.add (g);
+						
+					if (a.alternates.size > 0) {
+						// FIXME: pick one of several alternates
+						string alt_name = a.alternates.get (0);
+						Glyph? alt = font.get_glyph_by_name (alt_name);
+						
+						if (alt != null) {
+							GlyphSequence replacement = new GlyphSequence ();
+							replacement.add (alt);
+							ligature_sequence.replace (old, replacement);
+						} else {
+							warning (@"Alternate does not exist: $(alt_name)");
+						}
+					}
+				} else {
+					warning (@"Alternative for a missing glyph: $(a.glyph_name)");
+				}
+			}
+		}
 		
 		ligature_sequence.ranges.clear ();
 		for (int i = 0; i < ligature_sequence.glyph.size; i++) {
