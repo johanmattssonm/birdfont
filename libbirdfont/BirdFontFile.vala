@@ -198,7 +198,7 @@ class BirdFontFile : GLib.Object {
 			foreach (string alt in alternate.alternates) {
 				os.put_string (@"<alternate ");
 				os.put_string (@"glyph=\"$glyph_name\" ");
-				os.put_string (@"alternate=\"$alt\" ");
+				os.put_string (@"replacement=\"$alt\" ");
 				os.put_string (@"tag=\"$(tag)\" />\n");
 			}
 		}
@@ -841,7 +841,7 @@ class BirdFontFile : GLib.Object {
 				glyph_name = unserialize (attribute.get_content ());
 			}
 			
-			if (attribute.get_name () == "alternate") {
+			if (attribute.get_name () == "replacement") {
 				alt = unserialize (attribute.get_content ());
 			}
 

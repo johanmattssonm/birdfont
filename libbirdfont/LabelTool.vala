@@ -43,12 +43,13 @@ public class LabelTool : Tool {
 		double text_height;
 		
 		base ();
-
-		this.label = label;
-		this.number = "-";
 		
 		label_text = new Text ();
 		label_text.set_text (label);
+		
+		this.label = label;
+		this.number = "-";
+
 		text_height = 17 * Toolbox.get_scale ();
 		label_text.set_font_size (text_height);
 

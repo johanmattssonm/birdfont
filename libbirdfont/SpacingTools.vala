@@ -48,6 +48,30 @@ public class SpacingTools : ToolCollection  {
 		zoom_expander.add_tool (zoom_bar);
 		
 		Expander spacing_tools_expander = new Expander ();
+		
+		Tool insert_last = new Tool ("insert_glyph_from_overview", t_("Insert glyph from overview"));
+		insert_last.select_action.connect ((self) => {
+			SpacingTab d = MainWindow.get_spacing_tab ();
+			GlyphSelection gs = new GlyphSelection ();
+			
+			gs.selected_glyph.connect ((gc) => {
+				d.inser_glyph (gc.get_current ());
+				MainWindow.get_tab_bar ().select_tab_name ("Spacing");
+			});
+			
+			GlyphCanvas.set_display (gs);
+			self.set_selected (false);
+		});
+		spacing_tools_expander.add_tool (insert_last);
+
+		Tool insert_unicode = new Tool ("insert_unichar", t_("Insert character by unicode value"));
+		insert_unicode.select_action.connect ((self) => {
+			SpacingTab d = MainWindow.get_spacing_tab ();
+			d.insert_unichar ();
+			self.set_selected (false);
+		});
+		spacing_tools_expander.add_tool (insert_unicode);
+
 		spacing_tools_expander.add_tool (KerningTools.previous_kerning_string);
 		spacing_tools_expander.add_tool (KerningTools.next_kerning_string);
 		
