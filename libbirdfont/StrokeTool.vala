@@ -119,6 +119,7 @@ public class StrokeTool : Tool {
 		PathList o = new PathList ();
 		PathList r;
 		PathList new_paths = new PathList ();
+		bool error = false;
 		
 		g.store_undo_state ();
 
@@ -133,9 +134,29 @@ public class StrokeTool : Tool {
 		foreach (Path p in o.paths) {
 			p.close ();
 			p.remove_points_on_points ();
+	
+			// fix paths with intersections around a single points 
+			PointSelection ps;
+			for (int i = 0; i < p.points.size; i++) {
+				EditPoint ep = p.points.get (i);
+				if (fabs (ep.get_right_handle ().angle - ep.get_left_handle ().angle) < 0.001) {
+					ps = new PointSelection (ep, p);
+					PenTool.remove_point_simplify (ps);
+					i--;
+				} else if (ep.next != null && Path.distance_to_point (ep, ep.get_next ()) < 0.1) {
+					ps = new PointSelection (ep, p);
+					PenTool.remove_point_simplify (ps);
+					i--;
+				}
+			}
 		}
 		
-		o = remove_overlap (o);
+		o = remove_overlap (o, out error);
+		
+		if (error) {
+			warning ("merge_selected_paths failed.");
+			return;
+		}
 	
 		reset_flags (o);
 		new_paths.append (o);
@@ -163,8 +184,13 @@ public class StrokeTool : Tool {
 					if (i == j) {
 						continue;
 					} 
-
-					r = merge_selected (p1, p2, false);
+				
+					r = merge_selected (p1, p2, false, out error);
+					
+					if (error) {
+						warning ("Can't merge selected paths.");
+						return;
+					}
 
 					remove_merged_curve_parts (r);
 					
@@ -204,11 +230,18 @@ public class StrokeTool : Tool {
 		GlyphCanvas.redraw ();
 	}
 
-	static PathList remove_overlap (PathList pl) {
+	static PathList remove_overlap (PathList pl, out bool error) {
 		PathList r = new PathList ();
 		
+		error = false;
+		
 		foreach (Path p in pl.paths) {
-			PathList m = merge_selected (p, new Path (), true);
+			PathList m = merge_selected (p, new Path (), true, out error);
+			
+			if (error) {
+				warning ("Can't remove overlap.");
+				return pl;
+			}
 			
 			if (m.paths.size > 0) {
 				r.append (m);
@@ -264,7 +297,7 @@ public class StrokeTool : Tool {
 	}
 	
 	public static PathList merge_selected (Path path1, Path path2,
-		bool self_intersection) {
+		bool self_intersection, out bool error) {
 			
 		PathList flat = new PathList ();
 		PathList o = new PathList ();
@@ -273,6 +306,8 @@ public class StrokeTool : Tool {
 		
 		pl.add (path1);
 		pl.add (path2);
+		
+		error = false;
 		
 		if (!self_intersection) {
 			if (!path1.boundaries_intersecting (path2)) {
@@ -288,6 +323,10 @@ public class StrokeTool : Tool {
 		}
 		
 		flat = merge (flat);	
+
+		foreach (Path pp in o.paths) {
+			pp.remove_points_on_points (0.1);
+		}
 		
 		bool has_split_point = false;
 		foreach (Path p in flat.paths) {
@@ -298,7 +337,7 @@ public class StrokeTool : Tool {
 						
 						if (pp.points.size > 1) {
 							pp.get_closest_point_on_path (lep, ep.x, ep.y, null, null);
-
+							
 							if (Path.distance_to_point (ep, lep) < 0.1) {								
 								EditPoint lep2 = new EditPoint ();
 								pp.get_closest_point_on_path (lep2, ep.x, ep.y, lep.prev, lep.next);
@@ -330,12 +369,14 @@ public class StrokeTool : Tool {
 								// self intersection				
 								if (Path.distance_to_point (ep, lep2) < 0.1
 									&& Path.distance_to_point (ep, lep) < 0.1) {
-
+									
 									if (Path.distance_to_point (lep, (!) lep.prev) < 0.001) {
+										// FIXME: DELETE ep.flags &= uint.MAX ^ EditPoint.SPLIT_POINT;
 										continue;
 									}
 
 									if (Path.distance_to_point (lep, (!) lep.next) < 0.001) {
+										// FIXME: DELETE ep.flags &= uint.MAX ^ EditPoint.SPLIT_POINT;
 										continue;
 									}
 									
@@ -381,7 +422,7 @@ public class StrokeTool : Tool {
 				}
 			}
 		}
-		
+						
 		if (!has_split_point) {
 			return r;
 		}
@@ -423,7 +464,13 @@ public class StrokeTool : Tool {
 			// remove overlap
 			PathList self_parts;
 			
-			self_parts = remove_self_intersections (p1);
+			self_parts = remove_self_intersections (p1, out error);
+			
+			if (error) {
+				warning ("remove_self_intersections failed");
+				return new PathList ();
+			}
+			
 			parts.append (self_parts);
 		} else {
 			// merge two path
@@ -492,7 +539,7 @@ public class StrokeTool : Tool {
 		}
 	}
 	
-	static PathList remove_self_intersections (Path original) {
+	static PathList remove_self_intersections (Path original, out bool error) {
 		Path merged = new Path ();
 		IntersectionList intersections = new IntersectionList ();
 		EditPoint ep1, ep2, found;
@@ -504,6 +551,9 @@ public class StrokeTool : Tool {
 		int i = 0;
 		Path path = original.copy ();
 
+		error = false;
+
+		path.remove_points_on_points ();
 		parts = new PathList ();
 
 		if (path.points.size <= 1) {
@@ -563,7 +613,8 @@ public class StrokeTool : Tool {
 		}
 		
 		if (intersections.points.size == 0) {
-			warning ("No intersection points.");
+			warning ("No intersection points.");				
+			error = true;
 			return parts;
 		}
 		
@@ -1441,74 +1492,7 @@ public class StrokeTool : Tool {
 		
 		return intersection;	
 	}
-		
-	static bool split_path (Path path1, Path path2, PathList result) {
-		PathList pl1, pl2;
-		Path a1, a2, b1, b2;
-		Path m1, m2;
-		int i;
-		
-		if (path1 == path2) {
-			return false;
-		}
-		
-		if (add_intersection_points (path1, path2, 2)) {
-			i = mark_intersection_as_deleted (path1);
-			if (i != 2) {
-				warning (@"Expecting 2 points, $i points found.");
-				return false;
-			}
-
-			i = mark_intersection_as_deleted (path2);
-			if (i != 2) {
-				warning (@"Expecting 2 points, $i points found.");
-				return false;
-			}
-
 			
-			pl1 = get_remaining_points (path1.copy ());
-			pl2 = get_remaining_points (path2.copy ());
-			
-			return_val_if_fail (pl1.paths.size == 2, false);
-			return_val_if_fail (pl2.paths.size == 2, false);
-			
-			a1 = pl1.paths.get (0);
-			a2 = pl1.paths.get (1);
-			b1 = pl2.paths.get (0);
-			b2 = pl2.paths.get (1);
-			
-			m1 = PenTool.merge_open_paths (a1, b2);
-			m2 = PenTool.merge_open_paths (b1, a2);
-			
-			result.add (m1);
-			result.add (m2);
-			
-			return true;
-		}
-		
-		return false;	
-	}
-	
-	static PathList split_paths (PathList pl) {
-		PathList n = new PathList ();
-		
-		n.append (pl);
-		
-		foreach (Path p1 in pl.paths) {
-			foreach (Path p2 in pl.paths) {
-				if (p1 != p2) {
-					if (split_path (p1, p2, n)) {
-						n.paths.remove (p1);
-						n.paths.remove (p2);
-						return split_paths (n);
-					}
-				}
-			}	
-		}
-		
-		return n;		
-	}
-		
 	static PathList get_parts_self (Path path, PathList? paths = null) {
 		PathList pl;
 		PathList r;
@@ -1740,7 +1724,7 @@ public class StrokeTool : Tool {
 		out double ix, out double iy,
 		bool skip_points_on_points = false) {
 		double cross_x, cross_y;
-		
+				
 		ix = 0;
 		iy = 0;
 
@@ -2049,7 +2033,7 @@ public class StrokeTool : Tool {
 		PathList r = new PathList ();
 		
 		foreach (Path p in pl.paths) {
-			if (has_self_intersection (p)) {				
+			if (has_self_intersection (p)) {
 				m = get_parts (p);
 				r.append (m);
 				intersects = true;
@@ -2093,11 +2077,11 @@ public class StrokeTool : Tool {
 		PathList m;
 		PathList r = pl;
 		Path p1, p2;
-		
+
 		r = get_all_parts (r);
 		remove_single_points (r);
 		
-		while (paths_has_intersection (r, out p1, out p2)) {	
+		while (paths_has_intersection (r, out p1, out p2)) {
 			if (merge_path (p1, p2, out m, out error)) {
 				r.paths.remove (p1);
 				r.paths.remove (p2);
@@ -2109,6 +2093,11 @@ public class StrokeTool : Tool {
 
 				r = get_all_parts (r);
 				remove_single_points (r);
+				
+				if (paths_has_intersection (m, out p1, out p2)) {
+					warning ("Paths are not merged.");
+					error = true;
+				}
 			} else {
 				warning ("Not merged.");
 				error = true;
@@ -2651,37 +2640,6 @@ public class StrokeTool : Tool {
 		return i;
 	}
 	
-	/** @param n number of interrsections to find per path. */
-	static bool add_intersection_points (Path path1, Path path2, int n = 1) {
-		bool intersection = false;
-		int found = 0;
-
-		path1.all_segments ((ep1, ep2) => {
-			double ix, iy;
-			EditPoint p1, p2;
-			bool i;
-			
-			i = segment_intersects (path2, ep1, ep2, out ix, out iy,
-				out p1, out p2, true);
-				
-			if (i) {
-				add_intersection (path1, ep1, ep2, ix, iy);
-				add_intersection (path2, p1, p2, ix, iy);
-				intersection = true;
-				found++;
-				return found < n;
-			}
-			
-			return true;
-		});
-		
-		if (intersection && found != n) {
-			warning (@"Wrong number of points, $found != $n");
-		}
-		
-		return intersection;
-	}
-
 	/** @param n number of interrsections to find per path. */
 	static bool has_intersection (Path path1, Path path2) {
 		bool intersection = false;
