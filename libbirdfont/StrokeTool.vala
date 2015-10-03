@@ -2069,7 +2069,25 @@ public class StrokeTool : Tool {
 		
 		return r;
 	}
-	
+
+	static void remove_single_points (PathList pl) {
+		PathList r = new PathList ();
+		
+		foreach (Path p in pl.paths) {
+			p.update_region_boundaries ();
+			if (p.points.size < 10 
+				|| p.xmax - p.xmin < 0.01
+				|| p.ymax - p.ymin < 0.01) {
+						
+				r.add (p);
+			}
+		}
+		
+		foreach (Path p in r.paths) {
+			pl.remove (p);
+		}
+	}
+
 	public static PathList merge (PathList pl) {
 		bool error = false;
 		PathList m;
@@ -2077,6 +2095,7 @@ public class StrokeTool : Tool {
 		Path p1, p2;
 		
 		r = get_all_parts (r);
+		remove_single_points (r);
 		
 		while (paths_has_intersection (r, out p1, out p2)) {	
 			if (merge_path (p1, p2, out m, out error)) {
@@ -2089,6 +2108,7 @@ public class StrokeTool : Tool {
 				}
 
 				r = get_all_parts (r);
+				remove_single_points (r);
 			} else {
 				warning ("Not merged.");
 				error = true;
