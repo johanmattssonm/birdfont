@@ -121,11 +121,18 @@ public class StrokeTool : Tool {
 		PathList new_paths = new PathList ();
 		
 		g.store_undo_state ();
-				
+
 		foreach (Path p in g.active_paths) {
+			if (p.stroke == 0) {
+				o.add (p);
+			} else {
+				o.append (p.get_stroke ());
+			}
+		}
+						
+		foreach (Path p in o.paths) {
 			p.close ();
 			p.remove_points_on_points ();
-			o.add (p);
 		}
 		
 		o = remove_overlap (o);
