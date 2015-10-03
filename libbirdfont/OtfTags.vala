@@ -36,6 +36,14 @@ public class OtfTags : GLib.Object {
 		
 		return tags;
 	}
+	
+	public string to_string () {
+		StringBuilder sb = new StringBuilder ();
+		foreach (string s in elements) {
+			sb.append (s);
+		}
+		return sb.str;
+	}
 }
 
 }
