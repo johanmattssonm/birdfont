@@ -133,22 +133,7 @@ public class StrokeTool : Tool {
 						
 		foreach (Path p in o.paths) {
 			p.close ();
-			p.remove_points_on_points ();
-	
-			// fix paths with intersections around a single points 
-			PointSelection ps;
-			for (int i = 0; i < p.points.size; i++) {
-				EditPoint ep = p.points.get (i);
-				if (fabs (ep.get_right_handle ().angle - ep.get_left_handle ().angle) < 0.001) {
-					ps = new PointSelection (ep, p);
-					PenTool.remove_point_simplify (ps);
-					i--;
-				} else if (ep.next != null && Path.distance_to_point (ep, ep.get_next ()) < 0.1) {
-					ps = new PointSelection (ep, p);
-					PenTool.remove_point_simplify (ps);
-					i--;
-				}
-			}
+			remove_single_point_intersections (p);
 		}
 		
 		o = remove_overlap (o, out error);
@@ -230,6 +215,25 @@ public class StrokeTool : Tool {
 		GlyphCanvas.redraw ();
 	}
 
+	static void remove_single_point_intersections (Path p) {
+		PointSelection ps;
+
+		p.remove_points_on_points (0.1);
+		
+		for (int i = 0; i < p.points.size; i++) {
+			EditPoint ep = p.points.get (i);
+			if (fabs (ep.get_right_handle ().angle - ep.get_left_handle ().angle) < 0.001) {
+				ps = new PointSelection (ep, p);
+				PenTool.remove_point_simplify (ps);
+				i--;
+			} else if (ep.next != null && Path.distance_to_point (ep, ep.get_next ()) < 0.01) {
+				ps = new PointSelection (ep, p);
+				PenTool.remove_point_simplify (ps);
+				i--;
+			}
+		}
+	}
+	
 	static PathList remove_overlap (PathList pl, out bool error) {
 		PathList r = new PathList ();
 		
@@ -929,9 +933,14 @@ public class StrokeTool : Tool {
 		EditPoint ep, ep_start, last, first, segment_last;
 		int start, stop;
 		int j;
+		EditPointHandle last_handle;
+		
+		last_handle = new EditPointHandle.empty ();
 		
 		segment_last = new EditPoint ();
 		last = new EditPoint ();
+		
+		p.remove_points_on_points ();
 		
 		foreach (EditPoint e in p.points) {
 			PenTool.convert_point_type (e, PointType.CUBIC);
@@ -987,7 +996,7 @@ public class StrokeTool : Tool {
 					segment_last.right_handle = ep_start.get_right_handle ().copy ();
 					
 					if (simplified.points.size > 1) {
-						simplified.delete_last_point ();
+						last = simplified.delete_last_point ();
 					}
 					
 					first.set_tie_handle (false);
@@ -1014,6 +1023,8 @@ public class StrokeTool : Tool {
 							first.recalculate_linear_handles ();
 						}
 					}
+
+					last_handle = last.get_left_handle ();					
 				} else {
 					warning ("No points in segment.");
 				}
@@ -1026,8 +1037,12 @@ public class StrokeTool : Tool {
 
 		simplified.recalculate_linear_handles ();
 		simplified.close ();
+		remove_single_point_intersections (simplified);
 		
-		simplified.remove_points_on_points (0.01);
+		first = simplified.get_first_point ();
+		first.left_handle.angle = last_handle.angle;
+		first.left_handle.length = last_handle.length;
+		first.recalculate_linear_handles ();
 		
 		return simplified;
 	}

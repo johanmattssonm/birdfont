@@ -128,9 +128,11 @@ public class OverviewTools : ToolCollection  {
 		transform.set_persistent (false);
 		transform_expander.add_tool (transform);
 		
-		Tool alternate = new Tool ("alternate", t_("Create alternate"));
-		alternate.select_action.connect (add_new_alternate);
-		glyph_expander.add_tool (alternate);
+		if (BirdFont.has_argument ("--test")) {
+			Tool alternate = new Tool ("alternate", t_("Create alternate"));
+			alternate.select_action.connect (add_new_alternate);
+			glyph_expander.add_tool (alternate);
+		}
 		
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
