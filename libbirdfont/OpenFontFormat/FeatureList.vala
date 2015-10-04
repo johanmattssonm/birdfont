@@ -37,7 +37,7 @@ public class FeatureList : GLib.Object {
 		fd.add_ushort ((uint16) features.size); // number of features
 		
 		uint offset = 2 + 6 * features.size;
-		foreach (Feature feature in features) {
+		foreach (Feature feature in features) {			
 			// feature tag: aalt, clig etc.
 			fd.add_tag (feature.tag); 
 			

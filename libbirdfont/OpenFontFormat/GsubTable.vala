@@ -96,15 +96,9 @@ public class GsubTable : OtfTable {
 			warning (@"Bad offset to lookup list: $(lookup_list_offset) != $(fd.length_with_padding ())");
 		}
 
-		// lookup list
-		fd.append (lookups.generate_lookup_list ());	
-
-		// subtable data
-		foreach (Lookup lookup in lookups.tables) {
-			foreach (FontData subtable in lookup.subtables) {
-				fd.append (subtable);
-			}
-		}
+		// lookup list and the table data
+		FontData lookup_list = lookups.generate_lookup_list ();
+		fd.append (lookup_list);
 		
 		fd.pad ();
 		

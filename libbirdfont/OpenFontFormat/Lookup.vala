@@ -21,6 +21,9 @@ public class Lookup : GLib.Object {
 	public Gee.ArrayList<FontData> subtables;
 	public string token;
 	
+	public uint subtable_offset = 0;
+	public uint entry_offset = 0;
+	
 	// the token is used for obtaining index in lookup list, an empty
 	// string ensures that the subtable can't be directly used by
 	// a table, chaining context use that feature.
@@ -32,6 +35,7 @@ public class Lookup : GLib.Object {
 		this.flags = flags;
 		subtables = new Gee.ArrayList<FontData> ();
 		this.token = token;
+		subtable_offset = 0;
 	}
 	
 	public void add_subtable (FontData subtable) {
@@ -39,11 +43,7 @@ public class Lookup : GLib.Object {
 	}
 	
 	public uint get_lookup_entry_size () throws GLib.Error {
-		if (subtables.size == 0) {
-			warning ("No subtables.");
-		}
-		
-		return 6 + 2 * subtables.size;
+		return get_lookup_entry (0).length_with_padding ();
 	}
 	
 	public uint get_subtable_size () throws GLib.Error {
@@ -65,7 +65,7 @@ public class Lookup : GLib.Object {
 		return size;
 	}
 	
-	public FontData get_lookup_entry (uint lookup_offset) 
+	public FontData get_lookup_entry (uint offset) 
 	throws GLib.Error {
 		FontData fd = new FontData ();
 		
@@ -77,17 +77,16 @@ public class Lookup : GLib.Object {
 		
 		// array of offsets to subtable 
 		uint s;
-		foreach (FontData subtable in subtables) {
-			uint offset = lookup_offset;
+		
+		foreach (FontData subtable in subtables) {	
 			fd.add_ushort ((uint16) offset); 
-			subtable.offset = offset;
 			s = subtable.length_with_padding ();
 			
 			if (s == 0) {
 				warning ("Zero size in subtable.");
 			}
 			
-			lookup_offset += s;
+			offset += 2 + s;
 		}
 
 		return fd;

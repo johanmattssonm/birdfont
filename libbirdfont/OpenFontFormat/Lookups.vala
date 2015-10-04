@@ -55,33 +55,38 @@ public class Lookups : GLib.Object {
 	
 	public FontData generate_lookup_list () throws GLib.Error {
 		FontData fd = new FontData ();
-		uint lookup_offset;
-		uint tables_size;
-		uint entry_size;
-		uint total_entries_size;
 		FontData entry; 
+		uint lookup_offset;
 		
 		fd.add_ushort ((uint16) tables.size); // number of lookups
 		lookup_offset = 2 + 2 * tables.size;
-		total_entries_size = 0;
 		
 		foreach (Lookup lookup in tables) {
 			fd.add_ushort ((uint16) lookup_offset);
-			entry_size = lookup.get_lookup_entry_size ();
-			return_val_if_fail (lookup.subtables.size != 0, fd);
-			return_val_if_fail (entry_size == 6 + 2 * lookup.subtables.size, fd);
-			lookup_offset += entry_size;
-			total_entries_size += entry_size;
+			lookup_offset += lookup.get_lookup_entry_size ();
 		}
 		
-		tables_size = 0;
-		uint offset = total_entries_size;
+		// add empty lookups and step back when tables are written
+		foreach (Lookup lookup in tables) {
+			entry = lookup.get_lookup_entry (0);
+			lookup.entry_offset = fd.length_with_padding ();
+			fd.append (entry);
+		}
+
+		if (lookup_offset != fd.length_with_padding ()) {
+			warning ("Wrong lookup offset."); 
+			warning (@"$lookup_offset != $(fd.length_with_padding ())");
+		}
 
 		foreach (Lookup lookup in tables) {
-			entry = lookup.get_lookup_entry (offset);
-			offset -= lookup.get_lookup_entry_size ();
-			offset += lookup.get_subtable_size ();
-			fd.append (entry);
+			uint offset_pos = lookup.entry_offset + 6;
+			fd.seek (offset_pos);
+			fd.add_ushort ((uint16) (fd.length_with_padding () - (lookup.entry_offset)));
+			fd.seek_end ();
+			
+			foreach (FontData subtable in lookup.subtables) {
+				fd.append (subtable);
+			}
 		}
 		
 		return fd;

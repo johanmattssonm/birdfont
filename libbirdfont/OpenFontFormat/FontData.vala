@@ -46,7 +46,11 @@ public class FontData : Object {
 	public int get_read_pos () {
 		return (int) rp;
 	}
-	
+
+	public int get_write_pos () {
+		return (int) wp;
+	}
+		
 	public void write_at (uint pos, uint8 new_data) throws GLib.Error
 		requires (pos <= capacity) 
 	{		
