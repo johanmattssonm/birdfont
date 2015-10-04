@@ -934,7 +934,7 @@ public class StrokeTool : Tool {
 		int start, stop;
 		int j;
 		EditPointHandle last_handle;
-		
+
 		last_handle = new EditPointHandle.empty ();
 		
 		segment_last = new EditPoint ();
@@ -1023,8 +1023,8 @@ public class StrokeTool : Tool {
 							first.recalculate_linear_handles ();
 						}
 					}
-
-					last_handle = last.get_left_handle ();					
+					
+					last_handle = last.get_left_handle ();
 				} else {
 					warning ("No points in segment.");
 				}
@@ -1038,11 +1038,20 @@ public class StrokeTool : Tool {
 		simplified.recalculate_linear_handles ();
 		simplified.close ();
 		remove_single_point_intersections (simplified);
-		
+	
 		first = simplified.get_first_point ();
 		first.left_handle.angle = last_handle.angle;
 		first.left_handle.length = last_handle.length;
-		first.recalculate_linear_handles ();
+
+		double left = first.get_left_handle ().angle;
+		double right = first.get_right_handle ().angle;
+		
+		if (fabs (right - left) < 0.001) {
+			first.get_left_handle ().convert_to_line ();
+			first.recalculate_linear_handles ();
+		}
+		
+		simplified.remove_points_on_points ();
 		
 		return simplified;
 	}
