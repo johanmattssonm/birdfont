@@ -44,7 +44,6 @@ public class GlyfTable : OtfTable {
 	// sorted array of glyphs
 	public Gee.ArrayList<GlyphCollection> glyphs;
 	public Gee.ArrayList<GlyfData> glyf_data;
-	public uint number_of_unassigned_glyphs = 0;
 	
 	uint16 max_points = 0;
 	uint16 max_contours = 0;
@@ -185,9 +184,15 @@ public class GlyfTable : OtfTable {
 			}
 		}
 		
+		glyphs.sort ((a, b) => {
+			GlyphCollection g1, g2;
+			g1 = (GlyphCollection) a;
+			g2 = (GlyphCollection) b;
+			return (int) (g1.get_unicode_character () - g2.get_unicode_character ());
+		});
+		
 		foreach (GlyphCollection ug in unassigned_glyphs) {
-			glyphs.insert (1, ug);
-			number_of_unassigned_glyphs++;
+			glyphs.add (ug);
 		}
 	}
 
