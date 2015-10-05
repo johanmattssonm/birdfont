@@ -1046,7 +1046,7 @@ public class StrokeTool : Tool {
 		double left = first.get_left_handle ().angle;
 		double right = first.get_right_handle ().angle;
 		
-		if (fabs (right - left) < 0.001) {
+		if (fabs (right - left) % (2 * PI) < 0.01) {
 			first.get_left_handle ().convert_to_line ();
 			first.recalculate_linear_handles ();
 		}
