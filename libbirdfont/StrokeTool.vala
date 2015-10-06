@@ -946,6 +946,13 @@ public class StrokeTool : Tool {
 			PenTool.convert_point_type (e, PointType.CUBIC);
 		}
 		
+		foreach (EditPoint e in p.points) {
+			if ((e.flags & EditPoint.CURVE) == 0) {
+				p.set_new_start (e);
+				break;
+			}
+		}
+		
 		for (int i = 0; i < p.points.size; i++) {
 			ep = p.points.get (i);
 			
