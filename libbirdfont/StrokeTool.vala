@@ -222,7 +222,7 @@ public class StrokeTool : Tool {
 		
 		for (int i = 0; i < p.points.size; i++) {
 			EditPoint ep = p.points.get (i);
-			if (fabs (ep.get_right_handle ().angle - ep.get_left_handle ().angle) < 0.001) {
+			if (fabs (ep.get_right_handle ().angle - ep.get_left_handle ().angle) % (2 * PI) < 0.01) {
 				ps = new PointSelection (ep, p);
 				PenTool.remove_point_simplify (ps);
 				i--;
@@ -946,13 +946,6 @@ public class StrokeTool : Tool {
 			PenTool.convert_point_type (e, PointType.CUBIC);
 		}
 		
-		foreach (EditPoint e in p.points) {
-			if ((e.flags & EditPoint.CURVE) == 0) {
-				p.set_new_start (e);
-				break;
-			}
-		}
-
 		for (int i = 0; i < p.points.size; i++) {
 			ep = p.points.get (i);
 			
@@ -1342,7 +1335,7 @@ public class StrokeTool : Tool {
 		next_handle.angle += PI;
 		
 		Path.find_intersection_handle (previous_handle, next_handle, out corner_x, out corner_y);
-		corner = new EditPoint (corner_x, corner_y, previous.type);
+		corner = new EditPoint (corner_x, corner_y, PointType.CUBIC);
 		corner.convert_to_line ();
 		
 		previous_handle.angle -= PI;

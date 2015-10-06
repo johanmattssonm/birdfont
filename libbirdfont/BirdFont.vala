@@ -732,19 +732,27 @@ public static void printd (string s) {
 #if ANDROID
 	__android_log_print (ANDROID_LOG_WARN, "BirdFont", s);
 #else
-	if (unlikely (BirdFont.logging)) {
-		try {
-			if (BirdFont.logstream != null) {
-				((!)BirdFont.logstream).put_string (s);
-			} else {
-				warning ("No logstream.");
+	IdleSource idle = new IdleSource ();
+
+	idle.set_callback (() => {
+		if (unlikely (BirdFont.logging)) {
+			try {
+				if (BirdFont.logstream != null) {
+					((!)BirdFont.logstream).put_string (s);
+				} else {
+					warning ("No logstream.");
+				}
+				
+				stderr.printf (s);
+			} catch (GLib.Error e) {
+				warning (e.message);
 			}
-			
-			stderr.printf (s);
-		} catch (GLib.Error e) {
-			warning (e.message);
 		}
-	}
+		
+		return false;
+	});
+	
+	idle.attach (null);
 #endif
 }
 
