@@ -379,7 +379,7 @@ int i, j, k;
 
 /* binary greatest common divisor by Silver and Terzian.  See Knuth */
 /* both inputs must be >= 0 */
-gcd(u, v)
+int gcd(u, v)
 int u, v;
 {
 int t, f;

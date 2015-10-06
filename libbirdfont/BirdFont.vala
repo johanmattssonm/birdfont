@@ -365,7 +365,7 @@ public class BirdFont {
 	public static string exec_path = "";
 	public static string? bundle_path = null;
 
-	public static bool logging = false;
+	internal static bool logging = false;
 	public static DataOutputStream? logstream = null;
 
 	public static Font current_font;
@@ -683,7 +683,25 @@ public class BirdFont {
 	
 	internal static string? get_argument (string param) {
 		return args.get_argument (param);
-	}	
+	}
+	
+	public static void debug_message (string s) {
+		lock (BirdFont.logging) {
+			if (unlikely (BirdFont.logging)) {
+				try {
+					if (BirdFont.logstream != null) {
+						((!)BirdFont.logstream).put_string (s);
+					} else {
+						warning ("No logstream.");
+					}
+					
+					stderr.printf (s);
+				} catch (GLib.Error e) {
+					warning (e.message);
+				}
+			}
+		}
+	}
 }
 
 void init_logfile () {
@@ -732,27 +750,7 @@ public static void printd (string s) {
 #if ANDROID
 	__android_log_print (ANDROID_LOG_WARN, "BirdFont", s);
 #else
-	IdleSource idle = new IdleSource ();
-
-	idle.set_callback (() => {
-		if (unlikely (BirdFont.logging)) {
-			try {
-				if (BirdFont.logstream != null) {
-					((!)BirdFont.logstream).put_string (s);
-				} else {
-					warning ("No logstream.");
-				}
-				
-				stderr.printf (s);
-			} catch (GLib.Error e) {
-				warning (e.message);
-			}
-		}
-		
-		return false;
-	});
-	
-	idle.attach (null);
+	BirdFont.debug_message (s);
 #endif
 }
 
