@@ -11,8 +11,6 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
     Lesser General Public License for more details.
 */
-using BirdFont;
-
 namespace BirdFont {
 
 static void print_export_help (string[] arg) {
@@ -51,7 +49,7 @@ public static int run_export (string[] arg) {
 	
 	// FIXME: create a option for this and add structure the log messages
 	
-	if (BirdFont.logging) {
+	if (BirdFont.has_logging ()) {
 		init_logfile ();
 	}
 	

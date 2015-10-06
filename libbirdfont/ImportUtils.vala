@@ -11,8 +11,6 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
     Lesser General Public License for more details.
 */
-using BirdFont;
-
 namespace BirdFont {
 
 static void print_import_help (string[] arg) {

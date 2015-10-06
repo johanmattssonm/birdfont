@@ -260,6 +260,16 @@ public class BirdFont {
 		}
 	}
 
+	public static bool has_logging () {
+		bool log;
+		
+		lock (BirdFont.logging) {
+			log = BirdFont.logging;
+		}
+		
+		return log;
+	}
+	
 	public static Argument get_arguments () {
 		return args;
 	}
@@ -406,19 +416,17 @@ public class BirdFont {
 	}
 	
 	public static void debug_message (string s) {
-		lock (BirdFont.logging) {
-			if (unlikely (BirdFont.logging)) {
-				try {
-					if (BirdFont.logstream != null) {
-						((!)BirdFont.logstream).put_string (s);
-					} else {
-						warning ("No logstream.");
-					}
-					
-					stderr.printf (s);
-				} catch (GLib.Error e) {
-					warning (e.message);
+		if (unlikely (has_logging ())) {
+			try {
+				if (BirdFont.logstream != null) {
+					((!)BirdFont.logstream).put_string (s);
+				} else {
+					warning ("No logstream.");
 				}
+				
+				stderr.printf (s);
+			} catch (GLib.Error e) {
+				warning (e.message);
 			}
 		}
 	}
