@@ -218,18 +218,17 @@ public class StrokeTool : Tool {
 	static void remove_single_point_intersections (Path p) {
 		PointSelection ps;
 
-		p.remove_points_on_points (0.1);
+		p.remove_points_on_points ();
 		
 		for (int i = 0; i < p.points.size; i++) {
 			EditPoint ep = p.points.get (i);
+			EditPoint next = p.points.get ((i + 1) % p.points.size);
 			if (fabs (ep.get_right_handle ().angle - ep.get_left_handle ().angle) % (2 * PI) < 0.01) {
 				ps = new PointSelection (ep, p);
 				PenTool.remove_point_simplify (ps);
-				i--;
-			} else if (ep.next != null && Path.distance_to_point (ep, ep.get_next ()) < 0.01) {
+			} else if (ep.next != null && Path.distance_to_point (ep, next) < 0.01) {
 				ps = new PointSelection (ep, p);
 				PenTool.remove_point_simplify (ps);
-				i--;
 			}
 		}
 	}
