@@ -135,6 +135,13 @@ public class TabContent : GLib.Object {
 			return;
 		}
 		
+		unichar c = (unichar) keyval;
+		
+		if (unlikely (!c.validate ())) {
+			warning ("Invalid unichar: $(keyval)");
+			return;
+		}
+		
 		KeyBindings.add_modifier_from_keyval (keyval);
 		
 		if (!text_input_visible) {
@@ -147,6 +154,13 @@ public class TabContent : GLib.Object {
 	
 	public static void key_release (uint keyval) {
 		if (MenuTab.has_suppress_event ()) {
+			return;
+		}
+
+		unichar c = (unichar) keyval;
+		
+		if (unlikely (!c.validate ())) {
+			warning ("Invalid unichar: $(keyval)");
 			return;
 		}
 
