@@ -948,11 +948,6 @@ public class StrokeTool : Tool {
 		foreach (EditPoint e in p.points) {
 			if ((e.flags & EditPoint.CURVE) == 0) {
 				p.set_new_start (e);
-				print(@"start: $(e)");
-				
-				// FIXME:
-				e.get_left_handle ().convert_to_line ();
-				
 				break;
 			}
 		}
@@ -1042,18 +1037,6 @@ public class StrokeTool : Tool {
 		simplified.recalculate_linear_handles ();
 		simplified.close ();
 		remove_single_point_intersections (simplified);
-	
-		first = simplified.get_first_point ();
-		first.left_handle.angle = last_handle.angle;
-		first.left_handle.length = last_handle.length;
-
-		double left = first.get_left_handle ().angle;
-		double right = first.get_right_handle ().angle;
-		
-		if (fabs (right - left) % (2 * PI) < 0.01) {
-			first.get_left_handle ().convert_to_line ();
-			first.recalculate_linear_handles ();
-		}
 		
 		simplified.remove_points_on_points ();
 		

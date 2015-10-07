@@ -120,10 +120,6 @@ public class OverViewItem : GLib.Object {
 			}
 			
 			version_menu.menu_icon_action (px, py); // click in the open menu
-
-			if (version_menu.menu_visible) {
-				print("Menu is visible 222\n");
-			}
 		}
 		
 		info.set_position (x + width - 17, y + height - 22.5);
