@@ -33,7 +33,6 @@ public class KerningTools : ToolCollection  {
 	static OtfTags active_otf_features;
 	
 	public KerningTools () {
-		active_otf_features = new OtfTags ();
 		selected ();
 	}
 	
@@ -51,6 +50,8 @@ public class KerningTools : ToolCollection  {
 
 	public static void init () {
 		Font font = BirdFont.get_current_font ();
+		
+		active_otf_features = new OtfTags ();
 		
 		Expander kerning_tools = new Expander (t_("Kerning Tools"));
 		classes = new Expander ();
@@ -181,6 +182,8 @@ public class KerningTools : ToolCollection  {
 	
 	public static void add_otf_label (string tag) {
 		OtfLabel otf_label = new OtfLabel (tag);
+		FontSettings fs = BirdFont.get_current_font ().settings;
+		
 		otf_features.add_tool (otf_label);
 		otf_label.otf_feature_activity.connect ((enable, tag) => {
 			OtfTags tags = active_otf_features.copy ();
@@ -190,17 +193,22 @@ public class KerningTools : ToolCollection  {
 			// create a new feature set in order to keep the features
 			// for other parts of the text in kerning tab
 			active_otf_features = tags;
-
+			
 			if (enable) {
 				tags.add (tag);
+				fs.set_setting (@"kerning_$(tag)", "true");
 			} else {
 				tags.remove (tag);
+				fs.set_setting (@"kerning_$(tag)", "false");
 			}
 			
 			kd.get_last_segment ().set_otf_tags (tags);
 			
 			GlyphCanvas.redraw ();
 		});
+		
+		bool enable = fs.get_setting (@"kerning_$(tag)") == "true";
+		otf_label.set_selected_tag (enable);
 	}
 	
 	public static void add_unique_class (KerningRange kerning_class) {
