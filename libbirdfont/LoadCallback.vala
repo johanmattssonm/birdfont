@@ -39,7 +39,7 @@ public class LoadCallback : GLib.Object {
 	}
 
 	public void load () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -73,7 +73,7 @@ public class LoadCallback : GLib.Object {
 	private void load_new_font () {
 		FileChooser fc = new FileChooser ();
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}

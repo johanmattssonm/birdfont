@@ -79,7 +79,7 @@ public class ZoomBar : Tool {
 		
 		set_zoom (zoom_level);
 		
-		if (!MenuTab.suppress_event) {
+		if (!MenuTab.has_suppress_event ()) {
 			new_zoom (zoom_level);
 		}
 		

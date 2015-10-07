@@ -23,7 +23,7 @@ public class MenuTab : FontDisplay {
 	 * 
 	 * This variable is used only in the gui thread.
 	 */
-	public static bool suppress_event;
+	private static bool suppress_event;
 
 	/** True if the background thread is running. */
 	public static bool background_thread;
@@ -46,6 +46,16 @@ public class MenuTab : FontDisplay {
 		
 		suppress_event = false;
 		background_thread = false;
+	}
+
+	public static bool has_suppress_event () {
+		bool suppress;
+		
+		lock (suppress_event) {
+			suppress = suppress_event;
+		}
+		
+		return suppress;
 	}
 
 	public static void set_save_callback (SaveCallback c) {
@@ -567,7 +577,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void save_as ()  {
-		if (MenuTab.suppress_event || !save_callback.is_done) {
+		if (MenuTab.has_suppress_event () || !save_callback.is_done) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -577,7 +587,7 @@ public class MenuTab : FontDisplay {
 	}
 
 	public static void save ()  {
-		if (MenuTab.suppress_event && !save_callback.is_done) {
+		if (MenuTab.has_suppress_event () && !save_callback.is_done) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -587,7 +597,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void load () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}

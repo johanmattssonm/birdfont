@@ -26,7 +26,7 @@ public class SaveCallback : GLib.Object {
 	}
 	
 	public void save_as ()  {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -71,7 +71,7 @@ public class SaveCallback : GLib.Object {
 		Font f;
 		string fn;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}

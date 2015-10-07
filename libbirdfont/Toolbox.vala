@@ -144,7 +144,7 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void press (uint button, double x, double y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -171,7 +171,7 @@ public class Toolbox : GLib.Object  {
 		
 		y -= current_set.scroll;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -198,7 +198,7 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public void double_click (uint button, double x, double y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -219,7 +219,7 @@ public class Toolbox : GLib.Object  {
 		
 		y -= current_set.scroll;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -331,7 +331,7 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public static void redraw_tool_box () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Don't redraw toolbox when background thread is running.");
 			return;
 		}

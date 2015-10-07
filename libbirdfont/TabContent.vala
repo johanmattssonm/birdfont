@@ -31,14 +31,14 @@ public class TabContent : GLib.Object {
 	static double last_press_time = 0;
 	
 	public static void zoom_in () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 		}
 		
 		GlyphCanvas.current_display.zoom_in ();
 	}
 	
 	public static void zoom_out () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -46,7 +46,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void move_view (double x, double y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -54,7 +54,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static bool has_scrollbar () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return false;
 		}
 		
@@ -62,7 +62,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void scroll_to (double percent) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -73,7 +73,7 @@ public class TabContent : GLib.Object {
 		AbstractMenu menu;
 		Dialog dialog;
 		
-		if (unlikely (MenuTab.suppress_event)) {
+		if (unlikely (MenuTab.has_suppress_event ())) {
 			cr.save ();
 			Theme.color (cr, "Background 1");
 			cr.rectangle (0, 0, allocation.width, allocation.height);
@@ -118,7 +118,7 @@ public class TabContent : GLib.Object {
 		Context cr;
 		WidgetAllocation alloc;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warning ("Background surface already created.");
 			return;
 		}
@@ -131,7 +131,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void key_press (uint keyval) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -146,7 +146,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void key_release (uint keyval) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 
@@ -160,7 +160,7 @@ public class TabContent : GLib.Object {
 	public static void motion_notify (double x, double y) {
 		Toolbox toolbox;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -176,7 +176,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void button_release (int button, double x, double y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -194,7 +194,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void button_press (uint button, double x, double y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 
@@ -217,7 +217,7 @@ public class TabContent : GLib.Object {
 	}
 
 	public static void double_click (uint button, double ex, double ey) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -229,7 +229,7 @@ public class TabContent : GLib.Object {
 	public static void scroll_wheel_pixel_delta (double x, double y, 
 		double pixeldelta_x, double pixeldelta_y) {
 			
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -239,7 +239,7 @@ public class TabContent : GLib.Object {
 	}
 		
 	public static void scroll_wheel_up (double x, double y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -249,7 +249,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void scroll_wheel_down (double x, double y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -259,7 +259,7 @@ public class TabContent : GLib.Object {
 	}
 
 	public static void tap_down (int finger, int x, int y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -269,7 +269,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void tap_up (int finger, int x, int y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -279,7 +279,7 @@ public class TabContent : GLib.Object {
 	}
 	
 	public static void tap_move (int finger, int x, int y) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -289,7 +289,7 @@ public class TabContent : GLib.Object {
 	}
 		
 	public static void undo () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -297,7 +297,7 @@ public class TabContent : GLib.Object {
 	}
 
 	public static void redo () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		

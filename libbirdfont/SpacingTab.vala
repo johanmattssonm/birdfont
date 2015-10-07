@@ -234,7 +234,7 @@ public class SpacingTab : KerningDisplay {
 		listener.signal_text_input.connect ((text) => {
 			submitted_value = text;
 			
-			if (MenuTab.suppress_event) {
+			if (MenuTab.has_suppress_event ()) {
 				return;
 			}
 			
@@ -278,7 +278,7 @@ public class SpacingTab : KerningDisplay {
 		listener.signal_text_input.connect ((text) => {
 			submitted_value = text;
 			
-			if (MenuTab.suppress_event) {
+			if (MenuTab.has_suppress_event ()) {
 				return;
 			}
 			

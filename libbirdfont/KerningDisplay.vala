@@ -392,7 +392,7 @@ public class KerningDisplay : FontDisplay {
 	public void set_absolute_kerning (int handle, double val) {
 		double kern;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -612,7 +612,7 @@ public class KerningDisplay : FontDisplay {
 	public override void key_press (uint keyval) {
 		unichar c;
 		
-		if (MenuTab.suppress_event) { // don't update kerning while saving font
+		if (MenuTab.has_suppress_event ()) { // don't update kerning while saving font
 			return;
 		}
 		
@@ -680,7 +680,7 @@ public class KerningDisplay : FontDisplay {
 		listener.signal_text_input.connect ((text) => {
 			submitted_value = text;
 			
-			if (MenuTab.suppress_event) {
+			if (MenuTab.has_suppress_event ()) {
 				return;
 			}
 			
@@ -719,7 +719,7 @@ public class KerningDisplay : FontDisplay {
 		Glyph? g;
 		string name;
 
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -752,7 +752,7 @@ public class KerningDisplay : FontDisplay {
 	public override void motion_notify (double ex, double ey) {
 		double k, y;
 
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 				
@@ -866,7 +866,7 @@ public class KerningDisplay : FontDisplay {
 		TextListener listener;
 		string kerning = @"$(get_kerning_for_handle (selected_handle))";
 
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 				
@@ -880,7 +880,7 @@ public class KerningDisplay : FontDisplay {
 			string submitted_value;
 			double parsed_value;
 			
-			if (MenuTab.suppress_event) {
+			if (MenuTab.has_suppress_event ()) {
 				return;
 			}
 		
@@ -916,7 +916,7 @@ public class KerningDisplay : FontDisplay {
 	public void add_text (string t) {
 		int c;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -932,7 +932,7 @@ public class KerningDisplay : FontDisplay {
 		UndoItem ui;
 		UndoItem redo_state;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -951,7 +951,7 @@ public class KerningDisplay : FontDisplay {
 	public override void redo () {
 		UndoItem ui;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
