@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 	
-class StrokeTask : Task {
+public class StrokeTask : Task {
 	bool cancelled = false;
 	Path original; // path in gui thread
 	Path background_path; // path in background thread
@@ -24,19 +24,36 @@ class StrokeTask : Task {
 		original = path;
 		background_path = path.copy ();
 	}
+
+	public StrokeTask.none () {
+		base (null);
+		original = new Path ();
+		background_path = new Path ();
+	}
 	
 	public void cancel () {
 		lock (cancelled) {	
 			cancelled = true;
 		}
 	}
-	
+
+	public bool is_cancelled () {
+		bool c;
+		
+		lock (cancelled) {	
+			c = cancelled;
+		}
+		
+		return c;
+	}
+		
 	public override void run () {
 		PathList stroke;
 		double w;
+		StrokeTool tool = new StrokeTool.with_task (this);
 		
 		w = background_path.stroke;
-		stroke = StrokeTool.get_stroke (background_path, w);
+		stroke = tool.get_stroke (background_path, w);
 
 		IdleSource idle = new IdleSource (); 
 		idle.set_callback (() => {
@@ -47,7 +64,7 @@ class StrokeTask : Task {
 					GlyphCanvas.redraw ();
 				}
 			}
-			
+
 			return false;
 		});
 		idle.attach (null);		

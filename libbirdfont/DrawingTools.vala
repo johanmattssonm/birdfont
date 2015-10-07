@@ -882,7 +882,8 @@ public class DrawingTools : ToolCollection  {
 		// create outline from path
 		outline = new Tool ("stroke_to_outline", t_("Create outline form stroke"));
 		outline.select_action.connect ((self) => {
-			StrokeTool.stroke_selected_paths ();
+			StrokeTool s = new StrokeTool ();
+			s.stroke_selected_paths ();
 			outline.set_selected (false);
 		});
 		stroke_expander.add_tool (outline);	

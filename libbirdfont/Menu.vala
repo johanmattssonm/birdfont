@@ -500,7 +500,9 @@ public class Menu : AbstractMenu {
 	}
 	
 	void merge_selected_paths () {
-		StrokeTool.merge_selected_paths ();
+		// FIXME: make task
+		StrokeTool s = new StrokeTool ();
+		s.merge_selected_paths ();
 	}
 }
 

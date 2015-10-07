@@ -2421,16 +2421,20 @@ public class Path : GLib.Object {
 		StrokeTask task = new StrokeTask (this);
 		MainWindow.native_window.run_non_blocking_background_thread (task);
 		
+		stop_stroke_creator ();
+		stroke_creator = task;
+	}
+
+	public void stop_stroke_creator () {
 		if (stroke_creator != null) {
 			((!) stroke_creator).cancel ();
-		}
-		
-		stroke_creator = task;
+		}	
 	}
 
 	public PathList get_stroke () {
 		if (full_stroke == null) {
-			full_stroke = StrokeTool.get_stroke (this, stroke);
+			StrokeTool s = new StrokeTool ();
+			full_stroke = s.get_stroke (this, stroke);
 		}
 		
 		return (!) full_stroke;
@@ -2445,7 +2449,8 @@ public class Path : GLib.Object {
 			return (!) fast_stroke;
 		}
 		
-		fast_stroke = StrokeTool.get_stroke_fast (this, stroke);
+		StrokeTool s = new StrokeTool ();
+		fast_stroke = s.get_stroke_fast (this, stroke);
 		return (!) fast_stroke;
 	}
 	

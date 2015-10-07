@@ -23,7 +23,7 @@ public enum LineCap {
 	ROUND
 }
 
-public class StrokeTool : Tool {
+public class StrokeTool : GLib.Object {
 	
 	public static double stroke_width = 0;
 	public static bool add_stroke = false;
@@ -33,11 +33,18 @@ public class StrokeTool : Tool {
 	
 	public static LineCap line_cap = LineCap.BUTT;
 	
-	public StrokeTool (string tooltip) {
+	StrokeTask task;
+
+	public StrokeTool () {
+		task = new StrokeTask.none ();
+	}
+	
+	public StrokeTool.with_task (StrokeTask cancelable_task) {
+		task = cancelable_task;
 	}
 
 	/** Create strokes for the selected outlines. */
-	public static void stroke_selected_paths () {
+	public void stroke_selected_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
 		PathList paths = new PathList ();
 		
@@ -71,18 +78,19 @@ public class StrokeTool : Tool {
 		convert_stroke = false;
 	}
 	
-	public static PathList get_stroke_fast (Path path, double thickness) {
+	public PathList get_stroke_fast (Path path, double thickness) {
 		PathList o;
 		Path stroke;
+		StrokeTool s = new StrokeTool ();
 		
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.3);
-		o = create_stroke (stroke, thickness, false); // set to true for faster stroke
+		o = s.create_stroke (stroke, thickness, false); // set to true for faster stroke
 				
 		return o;
 	}
 	
-	public static PathList get_stroke (Path path, double thickness) {
+	public PathList get_stroke (Path path, double thickness) {
 		PathList o, m;
 		Path stroke;
 		
@@ -101,7 +109,7 @@ public class StrokeTool : Tool {
 		return m;
 	}
 
-	static void reset_flags (PathList o) {
+	void reset_flags (PathList o) {
 		foreach (Path p in o.paths) {
 			foreach (EditPoint ep in p.points) {
 				ep.flags &= uint.MAX ^ 
@@ -114,7 +122,7 @@ public class StrokeTool : Tool {
 		}
 	}
 
-	public static void merge_selected_paths () {
+	public void merge_selected_paths () {
 		Glyph g = MainWindow.get_current_glyph ();
 		PathList o = new PathList ();
 		PathList r;
@@ -150,7 +158,11 @@ public class StrokeTool : Tool {
 			for (int i = 0; i < o.paths.size; i++) {
 				for (int j = 0; j < o.paths.size; j++) {
 					Path p1, p2;
-					
+
+					if (task.is_cancelled ()) {
+						return;
+					}
+				
 					p1 = o.paths.get (i);
 					p2 = o.paths.get (j);
 					
@@ -215,7 +227,7 @@ public class StrokeTool : Tool {
 		GlyphCanvas.redraw ();
 	}
 
-	static void remove_single_point_intersections (Path p) {
+	void remove_single_point_intersections (Path p) {
 		PointSelection ps;
 
 		p.remove_points_on_points ();
@@ -233,7 +245,7 @@ public class StrokeTool : Tool {
 		}
 	}
 	
-	static PathList remove_overlap (PathList pl, out bool error) {
+	PathList remove_overlap (PathList pl, out bool error) {
 		PathList r = new PathList ();
 		
 		error = false;
@@ -256,7 +268,7 @@ public class StrokeTool : Tool {
 		return r;
 	}
 
-	static void remove_merged_curve_parts (PathList r) {
+	void remove_merged_curve_parts (PathList r) {
 		Gee.ArrayList<Path> remove = new Gee.ArrayList<Path> ();
 		PathList flat = new PathList ();
 		
@@ -299,7 +311,7 @@ public class StrokeTool : Tool {
 		}
 	}
 	
-	public static PathList merge_selected (Path path1, Path path2,
+	public PathList merge_selected (Path path1, Path path2,
 		bool self_intersection, out bool error) {
 			
 		PathList flat = new PathList ();
@@ -500,7 +512,7 @@ public class StrokeTool : Tool {
 	/** Add hidden double points to make sure that the path does not
 	 * change when new points are added to a 2x2 path.
 	 */
-	static void add_double_point_at_intersection (Path pp, EditPoint lep, EditPoint ep) {
+	void add_double_point_at_intersection (Path pp, EditPoint lep, EditPoint ep) {
 		EditPoint before;
 		EditPoint after;
 		EditPoint hidden;
@@ -542,7 +554,7 @@ public class StrokeTool : Tool {
 		}
 	}
 	
-	static PathList remove_self_intersections (Path original, out bool error) {
+	PathList remove_self_intersections (Path original, out bool error) {
 		Path merged = new Path ();
 		IntersectionList intersections = new IntersectionList ();
 		EditPoint ep1, ep2, found;
@@ -710,7 +722,7 @@ public class StrokeTool : Tool {
 		return parts;
 	}
 	
-	static PathList merge_paths_with_curves (Path path1, Path path2) {
+	PathList merge_paths_with_curves (Path path1, Path path2) {
 		PathList r = new PathList ();
 		IntersectionList intersections = new IntersectionList ();
 		EditPoint ep1, ep2, found;
@@ -926,7 +938,7 @@ public class StrokeTool : Tool {
 		return r;
 	}
 	
-	static Path simplify_stroke (Path p) {
+	Path simplify_stroke (Path p) {
 		Path simplified = new Path ();
 		Path segment, added_segment;
 		EditPoint ep, ep_start, last, first, segment_last;
@@ -963,6 +975,11 @@ public class StrokeTool : Tool {
 						break;
 					}
 				}
+	
+				if (task.is_cancelled ()) {
+					return new Path ();
+				}
+
 				
 				stop = j;
 				start -= 1;
@@ -1043,7 +1060,7 @@ public class StrokeTool : Tool {
 		return simplified;
 	}
 	
-	static Path fit_bezier_path (Path p, int start, int stop, double error) {
+	Path fit_bezier_path (Path p, int start, int stop, double error) {
 		int index, size;
 		Path simplified;
 		double[] lines;
@@ -1086,7 +1103,7 @@ public class StrokeTool : Tool {
 		return simplified;
 	}
 	
-	static PathList remove_intersection_paths (PathList pl) {
+	PathList remove_intersection_paths (PathList pl) {
 		PathList r = new PathList ();
 		
 		foreach (Path p in pl.paths) {
@@ -1102,7 +1119,7 @@ public class StrokeTool : Tool {
 		return r;
 	}
 
-	static bool has_new_corner (Path p) {
+	bool has_new_corner (Path p) {
 		foreach (EditPoint ep in p.points) {
 			if ((ep.flags & EditPoint.NEW_CORNER) > 0) {
 				return true;
@@ -1112,7 +1129,7 @@ public class StrokeTool : Tool {
 		return false;
 	}
 
-	static void add_line_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
+	void add_line_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
 		if (path.line_cap == LineCap.SQUARE) {
 			add_square_cap (path, stroke1, stroke2, last_cap);
 		} else if (path.line_cap == LineCap.ROUND) {
@@ -1120,7 +1137,7 @@ public class StrokeTool : Tool {
 		}
 	}
 	
-	static void add_round_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
+	void add_round_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
 		double px, py;
 		double step, start_angle, stop_angle;
 		double radius;
@@ -1218,7 +1235,7 @@ public class StrokeTool : Tool {
 		last.get_left_handle ().length = l;
 	}
 		
-	static void add_square_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
+	void add_square_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
 		EditPointHandle last_handle;
 		EditPoint start;
 		EditPoint end;
@@ -1253,7 +1270,7 @@ public class StrokeTool : Tool {
 	 * @param stroke for the outline of path
 	 * @param stroke for the counter path
 	 */
-	static Path merge_strokes (Path path, Path stroke, Path counter) {
+	Path merge_strokes (Path path, Path stroke, Path counter) {
 			
 		Path merged;
 		EditPoint last_counter, first;
@@ -1279,7 +1296,7 @@ public class StrokeTool : Tool {
 		return merged;
 	}
 
-	static void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
+	void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
 		EditPointHandle r, l;
 		double m, n;
 		double qx, qy;
@@ -1309,7 +1326,7 @@ public class StrokeTool : Tool {
 		stroke_stop.independent_y += qy;
 	}
 
-	static void add_corner (Path stroked, EditPoint previous, EditPoint next,
+	void add_corner (Path stroked, EditPoint previous, EditPoint next,
 		EditPoint original, double stroke_width) {
 		
 		double ratio;
@@ -1410,7 +1427,7 @@ public class StrokeTool : Tool {
 		}
 	}
 
-	static PathList get_parts (Path path) {
+	PathList get_parts (Path path) {
 		PathList intersections;
 		PathList r;
 		
@@ -1424,7 +1441,7 @@ public class StrokeTool : Tool {
 		return intersections;
 	}
 	
-	static bool split_corner (PathList pl) {
+	bool split_corner (PathList pl) {
 		EditPoint p1, p2;
 		EditPoint a1, a2;
 		PathList result;
@@ -1486,7 +1503,7 @@ public class StrokeTool : Tool {
 		return false;
 	}
 
-	static bool split_segment (Path p, EditPoint first, EditPoint next, EditPoint p1, EditPoint p2, out PathList result) {
+	bool split_segment (Path p, EditPoint first, EditPoint next, EditPoint p1, EditPoint p2, out PathList result) {
 		double ix, iy;
 		bool intersection;
 		int i;
@@ -1507,7 +1524,7 @@ public class StrokeTool : Tool {
 		return intersection;	
 	}
 			
-	static PathList get_parts_self (Path path, PathList? paths = null) {
+	PathList get_parts_self (Path path, PathList? paths = null) {
 		PathList pl;
 		PathList r;
 
@@ -1530,7 +1547,7 @@ public class StrokeTool : Tool {
 	}
 
 
-	static bool has_intersection_points (Path path) {
+	bool has_intersection_points (Path path) {
 		foreach (EditPoint p in path.points) {
 			if ((p.flags & EditPoint.INTERSECTION) > 0) {
 				return true;
@@ -1540,7 +1557,7 @@ public class StrokeTool : Tool {
 	}
 	
 	/** Split one path at intersection points in two parts. */
-	static PathList split (Path path) {
+	PathList split (Path path) {
 		Path new_path;
 		PathList pl;
 		int i;
@@ -1571,7 +1588,7 @@ public class StrokeTool : Tool {
 		return pl;
 	}
 
-	static PathList process_deleted_control_points (Path path) {
+	PathList process_deleted_control_points (Path path) {
 		PathList paths, nl, pl, rl, result;
 		
 		paths = new PathList ();
@@ -1614,7 +1631,7 @@ public class StrokeTool : Tool {
 		return paths;
 	}
 
-	static PathList get_remaining_points (Path old_path) {
+	PathList get_remaining_points (Path old_path) {
 		PathList pl;
 		
 		old_path.close ();
@@ -1631,7 +1648,7 @@ public class StrokeTool : Tool {
 		return pl;
 	}
 	
-	static bool has_self_intersection (Path path) {
+	bool has_self_intersection (Path path) {
 		bool intersection = false;
 
 		path.all_segments ((ep1, ep2) => {
@@ -1649,7 +1666,7 @@ public class StrokeTool : Tool {
 		return intersection;
 	}
 	
-	static bool add_self_intersection_points (Path path, bool only_offsets = false) {
+	bool add_self_intersection_points (Path path, bool only_offsets = false) {
 		bool intersection = false;
 		
 		path.all_segments ((ep1, ep2) => {
@@ -1670,7 +1687,7 @@ public class StrokeTool : Tool {
 		return intersection;
 	}
 	
-	static EditPoint add_intersection (Path path, EditPoint prev, EditPoint next, double px, double py, Color? c = null) {
+	EditPoint add_intersection (Path path, EditPoint prev, EditPoint next, double px, double py, Color? c = null) {
 		Gee.ArrayList<EditPoint> n = new Gee.ArrayList<EditPoint> ();
 		EditPoint ep1 = new EditPoint ();
 		EditPoint ep2 = new EditPoint ();
@@ -1734,7 +1751,7 @@ public class StrokeTool : Tool {
 		return ep2;
 	}
 
-	static bool segments_intersects (EditPoint p1, EditPoint p2, EditPoint ep, EditPoint next,
+	bool segments_intersects (EditPoint p1, EditPoint p2, EditPoint ep, EditPoint next,
 		out double ix, out double iy,
 		bool skip_points_on_points = false) {
 		double cross_x, cross_y;
@@ -1784,7 +1801,7 @@ public class StrokeTool : Tool {
 		return false;
 	}
 	
-	static bool segment_intersects (Path path, EditPoint ep, EditPoint next,
+	bool segment_intersects (Path path, EditPoint ep, EditPoint next,
 		out double ix, out double iy,
 		out EditPoint ia, out EditPoint ib,
 		bool skip_points_on_points = false,
@@ -1847,7 +1864,7 @@ public class StrokeTool : Tool {
 	}
 	
 	/** @return true if p2 is on the line p1 to p3 */
-	static bool is_line (double x1, double y1, double x2, double y2, double x3, double y3, double tolerance = 0.01) {
+	bool is_line (double x1, double y1, double x2, double y2, double x3, double y3, double tolerance = 0.01) {
 		return fmin (x1, x3) - 0.00001 <= x2 && x2 <= fmax (x1, x3) + 0.00001
 			&& fmin (y1, y3) - 0.00001 <= y2 && y2 <= fmax (y1, y3) + 0.00001
 			&& is_flat (x1, y1, x2, y2, x3, y3, tolerance);
@@ -1867,7 +1884,7 @@ public class StrokeTool : Tool {
 	}
 	
 	// indside becomes outside in some paths
-	static void remove_points_in_stroke (PathList pl) {
+	void remove_points_in_stroke (PathList pl) {
 		PathList r;
 		
 		foreach (Path p in pl.paths) {
@@ -1879,7 +1896,7 @@ public class StrokeTool : Tool {
 		}
 	}
 
-	static bool remove_points_in_stroke_for_path (Path p, PathList pl, out PathList result) {
+	bool remove_points_in_stroke_for_path (Path p, PathList pl, out PathList result) {
 		EditPoint start_ep;
 		EditPoint start_next;
 		EditPoint start_prev;
@@ -1919,7 +1936,7 @@ public class StrokeTool : Tool {
 		return false;
 	}
 
-	static bool merge_segments (PathList pl,
+	bool merge_segments (PathList pl,
 		Path path1, EditPoint start1, EditPoint stop1,
 		EditPoint start2, EditPoint stop2,
 		out PathList result) {
@@ -1991,7 +2008,7 @@ public class StrokeTool : Tool {
 		return false;
 	}
 
-	static void reset_intersections (Path p) {
+	void reset_intersections (Path p) {
 		foreach (EditPoint ep in p.points) {
 			ep.flags &= uint.MAX ^ EditPoint.INTERSECTION;
 			ep.flags &= uint.MAX ^ EditPoint.COPIED;
@@ -2001,7 +2018,7 @@ public class StrokeTool : Tool {
 		p.remove_points_on_points ();
 	}
 
-	static bool add_merge_intersection_point (Path path1, Path path2, EditPoint first, EditPoint next) {
+	bool add_merge_intersection_point (Path path1, Path path2, EditPoint first, EditPoint next) {
 		double ix, iy;
 		bool intersection;
 
@@ -2027,7 +2044,7 @@ public class StrokeTool : Tool {
 		return intersection;
 	}
 	
-	static bool is_inside_of_path (PointSelection ps, PathList pl, out Path outline) {
+	bool is_inside_of_path (PointSelection ps, PathList pl, out Path outline) {
 		outline = new Path ();
 		foreach (Path p in pl.paths) {
 			if (p != ps.path) {
@@ -2041,7 +2058,7 @@ public class StrokeTool : Tool {
 		return false;
 	}
 				
-	static PathList get_all_parts (PathList pl) {
+	PathList get_all_parts (PathList pl) {
 		PathList m;
 		bool intersects = false;
 		PathList r = new PathList ();
@@ -2068,7 +2085,7 @@ public class StrokeTool : Tool {
 		return r;
 	}
 
-	static void remove_single_points (PathList pl) {
+	void remove_single_points (PathList pl) {
 		PathList r = new PathList ();
 		
 		foreach (Path p in pl.paths) {
@@ -2086,7 +2103,7 @@ public class StrokeTool : Tool {
 		}
 	}
 
-	public static PathList merge (PathList pl) {
+	public PathList merge (PathList pl) {
 		bool error = false;
 		PathList m;
 		PathList r = pl;
@@ -2096,6 +2113,10 @@ public class StrokeTool : Tool {
 		remove_single_points (r);
 		
 		while (paths_has_intersection (r, out p1, out p2)) {
+			if (task.is_cancelled ()) {
+				return new PathList ();
+			}
+			
 			if (merge_path (p1, p2, out m, out error)) {
 				r.paths.remove (p1);
 				r.paths.remove (p2);
@@ -2135,7 +2156,7 @@ public class StrokeTool : Tool {
 		return r;
 	}
 
-	static void remove_merged_parts (PathList r) {
+	void remove_merged_parts (PathList r) {
 		Gee.ArrayList<Path> remove = new Gee.ArrayList<Path> ();
 		int c;
 		
@@ -2162,7 +2183,7 @@ public class StrokeTool : Tool {
 		}
 	}
 
-	public static PathList get_insides (PathList pl, Path path) {
+	public PathList get_insides (PathList pl, Path path) {
 		bool inside = false;
 		PathList insides = new PathList ();
 		
@@ -2188,7 +2209,7 @@ public class StrokeTool : Tool {
 		return insides;		
 	} 
 
-	public static int counters (PathList pl, Path path) {
+	public int counters (PathList pl, Path path) {
 		int inside_count = 0;
 		bool inside;
 		
@@ -2240,7 +2261,7 @@ public class StrokeTool : Tool {
 		return inside;
 	}
 	
-	public static int insides (EditPoint point, Path path) {
+	public int insides (EditPoint point, Path path) {
 		EditPoint prev;
 		int inside = 0;
 		
@@ -2264,7 +2285,7 @@ public class StrokeTool : Tool {
 		return inside;
 	}
 	
-	static bool merge_path (Path path1, Path path2, out PathList merged_paths, out bool error) {
+	bool merge_path (Path path1, Path path2, out PathList merged_paths, out bool error) {
 		IntersectionList intersections;
 		EditPoint ep1, next, p1, p2, pp1, pp2;
 		Path path, other, merged;
@@ -2381,6 +2402,10 @@ public class StrokeTool : Tool {
 					}
 				}
 				
+				if (task.is_cancelled ()) {
+					return false;
+				}
+
 				if (!find_parts) {
 					break; // done, no more parts to merge
 				} else {
@@ -2610,7 +2635,7 @@ public class StrokeTool : Tool {
 		return merge && !error;
 	}
 	
-	static int index_of (Path p, EditPoint ep) {
+	int index_of (Path p, EditPoint ep) {
 		int i = 0;
 		foreach (EditPoint e in p.points) {
 			if (e == ep) {
@@ -2622,7 +2647,7 @@ public class StrokeTool : Tool {
 		return -1;
 	}
 	
-	public static int counters_in_point_in_path (Path p, EditPoint ep) {
+	public int counters_in_point_in_path (Path p, EditPoint ep) {
 		int inside_count = 0;
 		bool inside;
 		
@@ -2641,7 +2666,7 @@ public class StrokeTool : Tool {
 		return inside_count;
 	}
 	
-	static int mark_intersection_as_deleted (Path path) {
+	int mark_intersection_as_deleted (Path path) {
 		int i = 0;
 		
 		foreach (EditPoint p in path.points) {
@@ -2655,7 +2680,7 @@ public class StrokeTool : Tool {
 	}
 	
 	/** @param n number of interrsections to find per path. */
-	static bool has_intersection (Path path1, Path path2) {
+	bool has_intersection (Path path1, Path path2) {
 		bool intersection = false;
 		
 		if (!path1.boundaries_intersecting (path2)) {
@@ -2680,7 +2705,7 @@ public class StrokeTool : Tool {
 		return intersection;
 	}
 	
-	static bool paths_has_intersection (PathList r, out Path path1, out Path path2) {
+	bool paths_has_intersection (PathList r, out Path path1, out Path path2) {
 		int i, j;
 		path1 = new Path ();
 		path2 = new Path ();
@@ -2704,7 +2729,7 @@ public class StrokeTool : Tool {
 		return false;
 	}
 
-	public static bool has_points_outside (PathList pl, Path p) {
+	public bool has_points_outside (PathList pl, Path p) {
 		if (pl.paths.size != 2) {
 			warning ("Stroke should only create two parts.");
 			return false;
@@ -2723,7 +2748,7 @@ public class StrokeTool : Tool {
 		return false;
 	}
 
-	static bool is_clockwise (Path p) {
+	bool is_clockwise (Path p) {
 		double sum = 0;
 		EditPoint p1, p2;
 
@@ -2749,7 +2774,7 @@ public class StrokeTool : Tool {
 		return sum > 0;
 	}	
 
-	public static PathList create_stroke (Path original_path,
+	public PathList create_stroke (Path original_path,
 		double thickness, bool fast) {
 			
 		PathList pl;
@@ -2823,6 +2848,10 @@ public class StrokeTool : Tool {
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 
+			if (task.is_cancelled ()) {
+				return new PathList ();
+			}
+					
 			tolerance = 0.01; //  0.13 / sqrt (stroke_width)
 			step_increment = 1.05;
 			step_size = 0.039; // / stroke_width;
@@ -3017,7 +3046,7 @@ public class StrokeTool : Tool {
 		return pl;
 	}
 	
-	static void convert_to_curve (Path path) {
+	void convert_to_curve (Path path) {
 		if (path.is_open ()) {
 			path.get_first_point ().flags &= EditPoint.ALL ^ EditPoint.CURVE;
 			path.get_last_point ().flags &= EditPoint.ALL ^ EditPoint.CURVE;
@@ -3033,6 +3062,10 @@ public class StrokeTool : Tool {
 				}
 			}
 		}
+
+		if (task.is_cancelled ()) {
+			return;
+		}
 			
 		foreach (EditPoint ep in path.points) {
 			if ((ep.flags & EditPoint.SEGMENT_END) == 0) {
@@ -3040,6 +3073,10 @@ public class StrokeTool : Tool {
 					ep.set_tie_handle (true);
 				}
 			}
+		}
+
+		if (task.is_cancelled ()) {
+			return;
 		}
 			
 		foreach (EditPoint ep in path.points) {
@@ -3051,7 +3088,7 @@ public class StrokeTool : Tool {
 		}			
 	}
 		
-	public static void get_segment (double stroke_thickness, double step, double step_size,
+	public void get_segment (double stroke_thickness, double step, double step_size,
 		EditPoint p1, EditPoint p2, out EditPoint ep1) {
 		
 		double thickness = stroke_thickness / 2;
@@ -3085,7 +3122,7 @@ public class StrokeTool : Tool {
 		ep1 = corner2;
 	}
 
-	public static PathList merge_stroke_parts (Path p, Path side1, Path side2) {
+	public PathList merge_stroke_parts (Path p, Path side1, Path side2) {
 		Path merged = new Path ();
 		PathList paths = new PathList ();
 			

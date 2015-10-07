@@ -762,6 +762,10 @@ public class PenTool : Tool {
 		
 		g = MainWindow.get_current_glyph ();
 		
+		if (move_selected || move_selected_handle) {
+			cancel_stroke_creator ();
+		}
+		
 		control_point_event (x, y);
 		curve_active_corner_event (x, y);
 		set_default_handle_positions ();
@@ -861,7 +865,6 @@ public class PenTool : Tool {
 				coordinate_y = Glyph.path_coordinate_y (y);
 				
 				if (selected_point.tie_handles && KeyBindings.modifier == SHIFT) {
-					
 					if (first_move_action) {
 						last_point_x = selected_point.x;
 						last_point_y = selected_point.y;
@@ -895,7 +898,6 @@ public class PenTool : Tool {
 				GridTool.ttf_grid_coordinate (ref coordinate_x, ref coordinate_y);
 	
 				if (selected_point.tie_handles && KeyBindings.modifier == SHIFT) {
-					
 					if (first_move_action) {
 						last_point_x = selected_point.x;
 						last_point_y = selected_point.y;
@@ -924,12 +926,10 @@ public class PenTool : Tool {
 					selected.path.update_region_boundaries ();
 				}
 			} else {
-
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);	
 									
 				if (selected_point.tie_handles && KeyBindings.modifier == SHIFT) {
-					
 					if (first_move_action) {
 						last_point_x = selected_point.x;
 						last_point_y = selected_point.y;
@@ -979,6 +979,12 @@ public class PenTool : Tool {
 		if (show_selection_box) {
 			GlyphCanvas.redraw ();
 		}
+	}
+
+	static void cancel_stroke_creator () {
+		foreach (PointSelection p in selected_points) {
+			p.path.stop_stroke_creator ();
+		}	
 	}
 
 	private void move_point_on_handles (double px, double py, out double cx, out double cy) {
@@ -2091,6 +2097,8 @@ public class PenTool : Tool {
 			return;
 		}
 
+		cancel_stroke_creator ();
+
 		switch (keyval) {
 			case Key.UP:
 				next = get_next_point_up ();
@@ -2108,7 +2116,8 @@ public class PenTool : Tool {
 				break;
 		}
 
-		set_selected_point (next.point, next.path);		
+		set_selected_point (next.point, next.path);
+		
 		GlyphCanvas.redraw ();
 	}
 
@@ -2193,6 +2202,7 @@ public class PenTool : Tool {
 	void move_selected_points (uint keyval) {
 		Path? last_path = null;
 		
+		cancel_stroke_creator ();
 		update_selected_points ();
 		
 		if (!last_selected_is_handle) {
