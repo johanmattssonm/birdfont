@@ -50,7 +50,7 @@ public class FallbackFont : GLib.Object {
 		string home = Environment.get_home_dir ();
 		font_directories = new Gee.ArrayList<File> ();
 
-		if (!font_config_stated && ! BirdFont.has_argument ("--no-fontconfig")) {
+		if (!font_config_stated) {
 			font_config_stated = true;
 
 			IdleSource idle = new IdleSource ();
