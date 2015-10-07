@@ -32,9 +32,13 @@ public class OtfLabel : LabelTool {
 		
 		select_action.connect ((self) => {
 			active_substitution = !active_substitution;
-			self.set_selected (active_substitution);
-			otf_feature_activity (active_substitution, tag);
+			set_selected_tag (active_substitution);
 		});
+	}
+	
+	public void set_selected_tag (bool enabled) {
+		set_selected (enabled);
+		otf_feature_activity (enabled, tag);
 	}
 	
 	/** @return translated string representation of a OTF feature tag. */

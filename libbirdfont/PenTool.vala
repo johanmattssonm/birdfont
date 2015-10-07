@@ -424,8 +424,13 @@ public class PenTool : Tool {
 				
 		foreach (PointSelection p in selected_points) {
 			remove_point_simplify (p);
+			p.path.reset_stroke ();
 		}
-		
+
+		foreach (PointSelection p in selected_points) {
+			p.path.create_full_stroke ();
+		}
+				
 		g.update_view ();
 
 		selected_points.clear ();

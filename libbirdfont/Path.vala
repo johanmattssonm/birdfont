@@ -53,8 +53,9 @@ public class Path : GLib.Object {
 	/** Stroke width */
 	public double stroke = 0;
 	public LineCap line_cap = LineCap.BUTT;
-	PathList? full_stroke = null;
+	public PathList? full_stroke = null;
 	PathList? fast_stroke = null;
+	StrokeTask? stroke_creator;
 	
 	/** Fill property for closed paths with stroke. */
 	public bool fill = false;
@@ -2413,13 +2414,20 @@ public class Path : GLib.Object {
 	}
 	
 	public void create_full_stroke () {
-#if ANDROID == false
-		if (stroke > 0) {
-			full_stroke = StrokeTool.get_stroke (this, stroke);
+		if (stroke <= 0) {
+			return;
 		}
-#endif
+		
+		StrokeTask task = new StrokeTask (this);
+		MainWindow.native_window.run_non_blocking_background_thread (task);
+		
+		if (stroke_creator != null) {
+			((!) stroke_creator).cancel ();
+		}
+		
+		stroke_creator = task;
 	}
-	
+
 	public PathList get_stroke () {
 		if (full_stroke == null) {
 			full_stroke = StrokeTool.get_stroke (this, stroke);

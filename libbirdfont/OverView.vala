@@ -549,8 +549,8 @@ public class OverView : FontDisplay {
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {
 		
-		if (this.allocation.width == allocation.width
-			|| this.allocation.height == allocation.height
+		if (this.allocation.width != allocation.width
+			|| this.allocation.height != allocation.height
 			|| this.allocation.width == 0) {
 			this.allocation = allocation;
 			update_item_list ();
@@ -816,6 +816,8 @@ public class OverView : FontDisplay {
 				return;
 			
 			case Key.UP:
+				get_selected_item ().selected = false;
+			
 				key_up ();
 				selected_item = get_selected_item ();
 				
@@ -828,6 +830,8 @@ public class OverView : FontDisplay {
 				return;
 				
 			case Key.RIGHT:
+				get_selected_item ().selected = false;
+			
 				key_right ();
 				selected_item = get_selected_item ();
 				
@@ -840,6 +844,8 @@ public class OverView : FontDisplay {
 				return;
 				
 			case Key.LEFT:
+				get_selected_item ().selected = false;
+				
 				key_left ();
 				selected_item = get_selected_item ();
 				
@@ -852,6 +858,8 @@ public class OverView : FontDisplay {
 				return;
 				
 			case Key.DOWN:
+				get_selected_item ().selected = false;
+				
 				key_down ();
 				selected_item = get_selected_item ();
 				
@@ -864,6 +872,8 @@ public class OverView : FontDisplay {
 				return;
 				
 			case Key.PG_UP:
+				get_selected_item ().selected = false;
+				
 				for (int i = 0; i < rows; i++) {
 					key_up ();
 				}
@@ -878,6 +888,8 @@ public class OverView : FontDisplay {
 				return;
 				
 			case Key.PG_DOWN:
+				get_selected_item ().selected = false;
+				
 				for (int i = 0; i < rows; i++) {
 					key_down ();
 				}

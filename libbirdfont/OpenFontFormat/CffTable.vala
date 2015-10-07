@@ -113,11 +113,9 @@ public class CffTable : OtfTable {
 			len = offsets.get (i + 1) - off;
 			//dis.seek (offset + off + header_size);
 			data = dis.read_string (len);
-			print (@"Found name $data\n");		
 		}	
 
 		// dict index
-		print (@"dict index\n");
 		dict_index = read_index ();
 
 		// dict data

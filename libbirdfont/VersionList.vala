@@ -36,7 +36,7 @@ public class VersionList : GLib.Object {
 	double width = 0;
 	
 	double menu_x = -1;	
-	public bool menu_visible = false;
+	public bool menu_visible { get; set; }
 	Gee.ArrayList <MenuAction> actions = new Gee.ArrayList <MenuAction> ();
 	const int item_height = 25;
 	MenuDirection direction = MenuDirection.DROP_DOWN;
@@ -47,6 +47,7 @@ public class VersionList : GLib.Object {
 	public signal void add_glyph_item  (Glyph item);
 
 	public VersionList (GlyphCollection gc) {
+		menu_visible = false;
 		MenuAction ma = add_item (t_("New version"));
 		ma.has_delete_button = false;
 		ma.action.connect ((self) => {
@@ -432,8 +433,8 @@ public class VersionList : GLib.Object {
 			}
 		}
 				
-		if (x - width + 19 < 0) {
-			menu_x = 30;
+		if (x - width < 5) {
+			menu_x = 5;
 		} else {
 			menu_x = x - width;
 		}

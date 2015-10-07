@@ -19,11 +19,18 @@ public class Task : GLib.Object {
 	public delegate void Runnable ();
 	Runnable task;
 	
-	public Task (owned Runnable r) {
-		task = (owned) r;
+	public Task (owned Runnable? r) {
+		if (r != null) {
+			task = (!) ((owned) r);
+		}
 	}
 	
-	public void run () {
+	public virtual void run () {
+		if (task == null) {
+			warning ("No task set.");
+			return;
+		}
+		
 		task ();
 	}
 

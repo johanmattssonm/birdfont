@@ -85,7 +85,7 @@ public class TabBar : GLib.Object {
 	public void motion (double x, double y) {
 		MainWindow.set_cursor (NativeWindow.VISIBLE);
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -170,7 +170,7 @@ public class TabBar : GLib.Object {
 	public bool select_char (string s) {
 		int i = 0;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return false;
 		}
@@ -187,7 +187,7 @@ public class TabBar : GLib.Object {
 	}
 
 	public bool select_tab_name (string s) {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return false;
 		}
@@ -196,7 +196,7 @@ public class TabBar : GLib.Object {
 	}
 
 	public void select_overview () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -208,7 +208,7 @@ public class TabBar : GLib.Object {
 		Tab t;
 		bool open;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -228,7 +228,7 @@ public class TabBar : GLib.Object {
 	public void close_display (FontDisplay f) {
 		int i = -1;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -248,7 +248,7 @@ public class TabBar : GLib.Object {
 	} 
 
 	public void close_all_tabs () {
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -266,7 +266,7 @@ public class TabBar : GLib.Object {
 		Tab empty_tab;
 		GlyphCollection gc;
 
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return false;
 		}
@@ -331,7 +331,7 @@ public class TabBar : GLib.Object {
 	public bool selected_open_tab (Tab t) {
 		int i = 0;
 
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return false;
 		}
@@ -369,7 +369,7 @@ public class TabBar : GLib.Object {
 	public bool selected_open_tab_by_name (string t) {
 		int i = 0;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return false;
 		}
@@ -407,7 +407,7 @@ public class TabBar : GLib.Object {
 	public void select_tab (int index, bool signal_selected = true) {
 		Tab t;
 
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -567,7 +567,7 @@ public class TabBar : GLib.Object {
 		int s = (tabs.size == 0) ? 0 : selected + 1;
 		Tab t;
 
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -596,7 +596,7 @@ public class TabBar : GLib.Object {
 	public bool add_unique_tab (FontDisplay display_item, bool signal_selected = true) {
 		bool i;
 		
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return false;
 		}

@@ -218,18 +218,17 @@ public class StrokeTool : Tool {
 	static void remove_single_point_intersections (Path p) {
 		PointSelection ps;
 
-		p.remove_points_on_points (0.1);
+		p.remove_points_on_points ();
 		
 		for (int i = 0; i < p.points.size; i++) {
 			EditPoint ep = p.points.get (i);
+			EditPoint next = p.points.get ((i + 1) % p.points.size);
 			if (fabs (ep.get_right_handle ().angle - ep.get_left_handle ().angle) % (2 * PI) < 0.01) {
 				ps = new PointSelection (ep, p);
 				PenTool.remove_point_simplify (ps);
-				i--;
-			} else if (ep.next != null && Path.distance_to_point (ep, ep.get_next ()) < 0.01) {
+			} else if (Path.distance_to_point (ep, next) < 0.01) {
 				ps = new PointSelection (ep, p);
 				PenTool.remove_point_simplify (ps);
-				i--;
 			}
 		}
 	}
@@ -946,6 +945,13 @@ public class StrokeTool : Tool {
 			PenTool.convert_point_type (e, PointType.CUBIC);
 		}
 		
+		foreach (EditPoint e in p.points) {
+			if ((e.flags & EditPoint.CURVE) == 0) {
+				p.set_new_start (e);
+				break;
+			}
+		}
+		
 		for (int i = 0; i < p.points.size; i++) {
 			ep = p.points.get (i);
 			
@@ -1027,22 +1033,10 @@ public class StrokeTool : Tool {
 				simplified.add_point (ep.copy ());
 			}
 		}
-
+		
 		simplified.recalculate_linear_handles ();
 		simplified.close ();
 		remove_single_point_intersections (simplified);
-	
-		first = simplified.get_first_point ();
-		first.left_handle.angle = last_handle.angle;
-		first.left_handle.length = last_handle.length;
-
-		double left = first.get_left_handle ().angle;
-		double right = first.get_right_handle ().angle;
-		
-		if (fabs (right - left) % (2 * PI) < 0.01) {
-			first.get_left_handle ().convert_to_line ();
-			first.recalculate_linear_handles ();
-		}
 		
 		simplified.remove_points_on_points ();
 		
@@ -1330,6 +1324,9 @@ public class StrokeTool : Tool {
 		
 		previous_handle = previous.get_left_handle ();
 		next_handle = next.get_right_handle ();
+		
+		previous_handle.convert_to_line ();
+		next_handle.convert_to_line ();
 		
 		previous_handle.angle += PI;
 		next_handle.angle += PI;

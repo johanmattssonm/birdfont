@@ -201,7 +201,7 @@ public class RecentFiles : Table {
 		Font font;
 		SaveDialogListener dialog = new SaveDialogListener ();
 
-		if (MenuTab.suppress_event) {
+		if (MenuTab.has_suppress_event ()) {
 			return;
 		}
 		
@@ -211,7 +211,7 @@ public class RecentFiles : Table {
 		MenuTab.load_callback.file_loaded.connect (() => {
 			Font f;
 
-			if (MenuTab.suppress_event) {
+			if (MenuTab.has_suppress_event ()) {
 				warning ("Load font event suppressed.");
 				return;
 			}
@@ -234,7 +234,7 @@ public class RecentFiles : Table {
 		dialog.signal_discard.connect (() => {
 			Font f;
 
-			if (MenuTab.suppress_event) {
+			if (MenuTab.has_suppress_event ()) {
 				return;
 			}
 			
@@ -250,7 +250,7 @@ public class RecentFiles : Table {
 		});
 
 		dialog.signal_save.connect (() => {
-			if (MenuTab.suppress_event) {
+			if (MenuTab.has_suppress_event ()) {
 				warn_if_test ("Event suppressed.");
 				return;
 			}
