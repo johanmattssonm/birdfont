@@ -114,11 +114,16 @@ public class OverViewItem : GLib.Object {
 			g = (!) glyphs;
 			version_menu.set_position (x + width - 21, y + height - 18);
 			a = version_menu.menu_item_action (px, py); // select one item on the menu
+			
 			if (a) {
 				return s;
 			}
 			
 			version_menu.menu_icon_action (px, py); // click in the open menu
+
+			if (version_menu.menu_visible) {
+				print("Menu is visible 222\n");
+			}
 		}
 		
 		info.set_position (x + width - 17, y + height - 22.5);
@@ -158,6 +163,7 @@ public class OverViewItem : GLib.Object {
 		
 		draw_thumbnail (cr, glyphs, x, y + height); 	
 		draw_caption (cr);
+		draw_menu (cr);
 	}
 
 	public void adjust_scale () {
@@ -273,7 +279,6 @@ public class OverViewItem : GLib.Object {
 			label.draw_at_baseline (cr, x + 0.08 * width, y + height - 6);
 		}
 		
-		draw_menu (cr);
 		cr.restore ();
 	}
 	
