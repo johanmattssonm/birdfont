@@ -26,14 +26,18 @@ public class Alternate : GLib.Object {
 		this.tag = tag;
 	}
 
+	public bool is_empty () {
+		return alternates.size == 0;
+	}
+
 	public void add (string alternate_name) {
 		alternates.add (alternate_name);
 	}
 	
-	public void remove (GlyphCollection g) {
+	public void remove_alternate (string alt) {
 		int i = 0;
 		foreach (string a in alternates) {
-			if (a == g.get_name ()) {
+			if (a == alt) {
 				break;
 			}
 			i++;
@@ -41,7 +45,11 @@ public class Alternate : GLib.Object {
 		
 		if (i < alternates.size) {
 			alternates.remove_at (i);
-		}
+		}		
+	}
+	
+	public void remove (GlyphCollection g) {
+		remove_alternate (g.get_name ());
 	}
 	
 	public Alternate copy () {

@@ -32,6 +32,10 @@ public class AlternateSets : GLib.Object {
 			}
 		}
 		
+		tags.sort ((a, b) => {
+			return strcmp ((string) a, (string) b);
+		});
+		
 		return tags;
 	}
 
@@ -48,6 +52,18 @@ public class AlternateSets : GLib.Object {
 		return alt;
 	}
 	
+	public void remove_empty_sets () {
+		int i = 0;
+		foreach (Alternate a in alternates) {
+			if (a.is_empty ()) {
+				alternates.remove_at (i);
+				remove_empty_sets ();
+				return;
+			}
+			i++;
+		}
+	}
+	
 	public void add (Alternate alternate) {
 		alternates.add (alternate);
 	}
@@ -58,6 +74,20 @@ public class AlternateSets : GLib.Object {
 			n.alternates.add (a.copy ());
 		}
 		return n;
+	}
+}
+
+public class AlternateItem : GLib.Object {
+	public Alternate alternate_list;
+	public string alternate;
+	
+	public AlternateItem (Alternate alternate_list, string alternate) {
+		this.alternate_list = alternate_list;
+		this.alternate = alternate;
+	}
+	
+	public void delete_item_from_list () {
+		alternate_list.remove_alternate (alternate);
 	}
 }
 

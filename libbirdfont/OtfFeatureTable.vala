@@ -24,14 +24,19 @@ public class OtfFeatureTable : Table {
 	static const int OTF_FEATURE = 1;
 	static const int SOURCE_GLYPH = 2; // the glyph to replace
 	static const int REPLACEMENT_GLYPH = 3;
+	static const int ALTERNATE_ENTRY = 4;
 	
 	GlyphCollection glyph_collection;
 	GlyphCollection? replacement_glyph = null;
 	string alternate_name = "";
 	TextListener listener;
 	
+	Gee.ArrayList<AlternateItem> undo_items;
+	// FIXME: implement redo
+	
 	public OtfFeatureTable (GlyphCollection gc) {
 		glyph_collection = gc;
+		undo_items = new Gee.ArrayList<AlternateItem> ();
 	}
 
 	public override Gee.ArrayList<Row> get_rows () {
@@ -40,6 +45,9 @@ public class OtfFeatureTable : Table {
 
 	public override void selected_row (Row row, int column, bool delete_button) {
 		int row_index = row.get_index ();
+		Object o;
+		String s;
+		AlternateItem a;
 		
 		if (row_index == SOURCE_GLYPH) {
 			GlyphSelection gs = new GlyphSelection ();
@@ -60,14 +68,35 @@ public class OtfFeatureTable : Table {
 			
 			GlyphCanvas.set_display (gs);
 		} else if (row_index == OTF_FEATURE) {
-			String s = (String) row.get_row_data ();
+			return_if_fail (row.has_row_data ());
+			o = (!) row.get_row_data ();
+			return_if_fail (o is String);
+			s = (String) o;
 			add_new_alternate (s.data);
+		} else if (row_index == ALTERNATE_ENTRY) {
+			if (delete_button) {
+				return_if_fail (row.has_row_data ());
+				o = (!) row.get_row_data ();
+				return_if_fail (o is AlternateItem);
+				a = (AlternateItem) o;
+				
+				a.delete_item_from_list ();				
+				Font f = BirdFont.get_current_font ();
+				f.alternates.remove_empty_sets ();
+				
+				undo_items.add (a);
+				
+				update_rows ();
+				GlyphCanvas.redraw ();
+			}
 		}
 	}
 
 	public override void update_rows () {
 		Row row;
-
+		Font font;
+		
+		font = BirdFont.get_current_font ();
 		rows.clear ();
 
 		row = new Row.headline (t_("Glyph Substitutions"));
@@ -106,8 +135,32 @@ public class OtfFeatureTable : Table {
 		row = new Row.columns_1 (OtfLabel.get_string ("swsh"), OTF_FEATURE, false);
 		row.set_row_data (new String ("swsh"));
 		rows.add (row);
-				
+		
+		Gee.ArrayList<string> tags = font.alternates.get_all_tags ();
+		foreach (string tag in tags) {
+			row = new Row.headline (OtfLabel.get_string (tag));
+			rows.add (row);
+			add_alternate_items (tag);
+		}
+			
 		GlyphCanvas.redraw ();
+	}
+
+	void add_alternate_items (string tag) {
+		Font font = BirdFont.get_current_font ();
+		foreach (Alternate alt in font.alternates.get_alt (tag)) {
+			add_alternate_rows (alt);
+		}		
+	}
+
+	void add_alternate_rows (Alternate alt) {
+		Row row;
+		
+		foreach (string a in alt.alternates) {
+			row = new Row.columns_2 (alt.glyph_name, a, ALTERNATE_ENTRY, true);
+			row.set_row_data (new AlternateItem (alt, a));
+			rows.add (row);
+		}		
 	}
 
 	public override string get_label () {
@@ -162,8 +215,26 @@ public class OtfFeatureTable : Table {
 			MainWindow.tabs.close_display (this);
 		} else {
 			TabContent.show_text_input (listener);
-		}
+		}		
+	}
+	
+	public override void undo () {
+		AlternateItem item;
+		Font font;
 		
+		font = BirdFont.get_current_font ();
+		
+		if (undo_items.size > 0) {
+			item = undo_items.get (undo_items.size - 1);
+			undo_items.remove_at (undo_items.size - 1);
+			
+			font.add_alternate (item.alternate_list.glyph_name,
+				item.alternate,
+				item.alternate_list.tag);
+				
+			update_rows ();
+			GlyphCanvas.redraw ();
+		}
 	}
 }
 

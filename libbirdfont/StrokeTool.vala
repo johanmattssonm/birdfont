@@ -226,7 +226,7 @@ public class StrokeTool : Tool {
 			if (fabs (ep.get_right_handle ().angle - ep.get_left_handle ().angle) % (2 * PI) < 0.01) {
 				ps = new PointSelection (ep, p);
 				PenTool.remove_point_simplify (ps);
-			} else if (ep.next != null && Path.distance_to_point (ep, next) < 0.01) {
+			} else if (Path.distance_to_point (ep, next) < 0.01) {
 				ps = new PointSelection (ep, p);
 				PenTool.remove_point_simplify (ps);
 			}
