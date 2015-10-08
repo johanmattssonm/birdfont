@@ -52,7 +52,7 @@ The default prefix is /usr/local on Fedora should BirdFont be compiled with
 /usr as prefix.
 
     ./configure --prefix=/usr
-    ./scripts/linux_build.py --prefix=/usr
+    ./build.py
      sudo ./install.py
 
 All patches must be compiled with support for valas null pointer checks.
