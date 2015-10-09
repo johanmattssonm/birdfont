@@ -2294,28 +2294,45 @@ public class Path : GLib.Object {
 		Gee.ArrayList<EditPoint> remove = new Gee.ArrayList<EditPoint> ();
 		EditPoint n;
 		EditPointHandle hr, h;
+		double t3 = t / 3;
 		
 		if (points.size == 0) {
 			return;
 		}
-		
-		create_list ();
-		
-		foreach (EditPoint ep in points) {
-			if (ep.next != null) {
-				n = ep.get_next ();
-			} else {
-				n = points.get (0);
+
+		for (int i = 0; i < points.size + 1; i++) {
+			EditPoint ep = points.get (i % points.size);
+			if (ep.get_right_handle ().length < t3
+				&& ep.get_left_handle ().length < t3
+				&& !is_endpoint (ep)) {
+				ep.deleted = true;
 			}
-				
-			if (fabs (n.x - ep.x) < t && fabs (n.y - ep.y) < t) {
-				if ((ep.flags & EditPoint.NEW_CORNER) == 0) {
+		}
+		
+		remove_deleted_points ();
+		
+		for (int i = 0; i < points.size + 1; i++) {
+			EditPoint ep = points.get (i % points.size);
+			n = points.get ((i + 1) % points.size);
+			
+			if ((ep.flags & EditPoint.NEW_CORNER) == 0) {
+				if (ep.get_right_handle ().length < t
+					&& ep.get_left_handle ().length < t
+					&& !is_endpoint (ep)) {
+					ep.deleted = true;
+				} else if (Path.distance_to_point (n, ep) < t) {
 					remove.add (ep);
 				}
 			}
 		}
+		
+		create_list ();
 
 		foreach (EditPoint r in remove) {
+			if (points.size == 0) {
+				return;
+			}
+			
 			if (r.next != null) {
 				n = r.get_next ();
 			} else {
@@ -2338,6 +2355,14 @@ public class Path : GLib.Object {
 		}
 		
 		recalculate_linear_handles ();
+	}
+	
+	public bool is_endpoint (EditPoint ep) {
+		if (points.size == 0) {
+			return false;
+		}
+		
+		return ep == points.get (0) || ep == points.get (points.size - 1);
 	}
 	
 	public void remove_deleted_points () {

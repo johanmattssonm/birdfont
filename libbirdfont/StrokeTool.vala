@@ -84,7 +84,7 @@ public class StrokeTool : GLib.Object {
 		StrokeTool s = new StrokeTool ();
 		
 		stroke = path.copy ();
-		stroke.remove_points_on_points (0.3);
+		stroke.remove_points_on_points (0.1);
 		o = s.create_stroke (stroke, thickness, false); // set to true for faster stroke
 				
 		return o;
@@ -95,7 +95,7 @@ public class StrokeTool : GLib.Object {
 		Path stroke;
 		
 		stroke = path.copy ();
-		stroke.remove_points_on_points (0.3);
+		stroke.remove_points_on_points (0.1);
 		o = create_stroke (stroke, thickness, false);
 		o = get_all_parts (o);
 		o = remove_intersection_paths (o);
@@ -957,11 +957,19 @@ public class StrokeTool : GLib.Object {
 			PenTool.convert_point_type (e, PointType.CUBIC);
 		}
 		
+		bool has_curve_start = true;
 		foreach (EditPoint e in p.points) {
+			e.flags &= uint.MAX ^ EditPoint.NEW_CORNER;
+			
 			if ((e.flags & EditPoint.CURVE) == 0) {
 				p.set_new_start (e);
+				has_curve_start = false;
 				break;
 			}
+		}
+		
+		if (has_curve_start) {
+			warning ("Curve start");
 		}
 		
 		for (int i = 0; i < p.points.size; i++) {
@@ -1054,8 +1062,6 @@ public class StrokeTool : GLib.Object {
 		simplified.recalculate_linear_handles ();
 		simplified.close ();
 		remove_single_point_intersections (simplified);
-		
-		simplified.remove_points_on_points ();
 		
 		return simplified;
 	}
