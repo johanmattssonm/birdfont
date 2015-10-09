@@ -1,3 +1,4 @@
+
 /*
     Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
@@ -201,6 +202,7 @@ public class PenTool : Tool {
 				}
 			}
 			
+			update_boundaries_for_selected_paths ();
 			on_axis = false;
 		});
 
@@ -417,6 +419,19 @@ public class PenTool : Tool {
 
 		distortion_first = df;
 		distortion_next = dn;
+	}
+
+	public static void update_boundaries_for_selected_paths () {
+		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
+		foreach (PointSelection p in selected_points) {
+			if (paths.index_of (p.path) == -1) {
+				paths.add (p.path);
+			}
+		}
+		
+		foreach (Path p in paths) {
+			p.update_region_boundaries ();
+		}
 	}
 
 	public static void delete_simplify () {
