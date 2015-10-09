@@ -2304,8 +2304,12 @@ public class Path : GLib.Object {
 			EditPoint ep = points.get (i % points.size);
 			if (ep.get_right_handle ().length < t3
 				&& ep.get_left_handle ().length < t3
-				&& !is_endpoint (ep)) {
+				&& !is_endpoint (ep)
+				&& (ep.flags & EditPoint.CURVE_KEEP) == 0
+				&& (ep.flags & EditPoint.SEGMENT_END) == 0) {
 				ep.deleted = true;
+				warning (ep.to_string ());
+				warning (@"A: EditPoint.CURVE_KEEP: $(EditPoint.CURVE_KEEP)  $(ep.flags & EditPoint.CURVE_KEEP)");
 			}
 		}
 		
@@ -2315,14 +2319,8 @@ public class Path : GLib.Object {
 			EditPoint ep = points.get (i % points.size);
 			n = points.get ((i + 1) % points.size);
 			
-			if ((ep.flags & EditPoint.NEW_CORNER) == 0) {
-				if (ep.get_right_handle ().length < t
-					&& ep.get_left_handle ().length < t
-					&& !is_endpoint (ep)) {
-					ep.deleted = true;
-				} else if (Path.distance_to_point (n, ep) < t) {
-					remove.add (ep);
-				}
+			if (Path.distance_to_point (n, ep) < t) {
+				remove.add (ep);
 			}
 		}
 		

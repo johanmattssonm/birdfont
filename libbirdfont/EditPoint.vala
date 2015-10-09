@@ -614,6 +614,7 @@ public class EditPoint : GLib.Object {
 		s.append (@"Left handle: angle: $(left_handle.angle) l: $(left_handle.length)\n");
 		s.append (@"Right handle: angle: $(right_handle.angle) l: $(right_handle.length)\n");
 		s.append (@"Type: $type Left: $(left_handle.type) Right: $(right_handle.type)\n".replace ("BIRD_FONT_POINT_TYPE_", ""));
+		s.append (@"Flags $(flags)\n");
 		
 		return s.str;
 	}
