@@ -53,7 +53,7 @@ public class ContextualLigature : GLib.Object {
 		Gee.ArrayList<string> lookahead = font.get_names (lookahead);
 		
 		uint16 lookahead_offset, input_offset, backtrack_offset;
-		
+
 		fd.add_ushort (3); // format identifier
 		
 		backtrack_offset = 14 + (uint16) (lookahead.size * 2) + (uint16) (input.size * 2) + (uint16) (backtrack.size * 2);
@@ -75,6 +75,7 @@ public class ContextualLigature : GLib.Object {
 		}
 		
 		fd.add_ushort (1); // substitute count
+		
 		// substitution lookup records
 		fd.add_ushort (0); // glyph sequence index for the character that will be substituted 
 		fd.add_ushort (ligature_lookup_index); // go to the ligature substitution via lookup table

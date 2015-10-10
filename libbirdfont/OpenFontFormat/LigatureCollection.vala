@@ -113,6 +113,7 @@ public class LigatureCollection : GLib.Object {
 		FontData set_data;
 		uint16 ligature_pos;
 		uint16 table_start;
+		int coverage_offset;
 		FontData fd;
 		
 		fd = new FontData ();
@@ -121,7 +122,9 @@ public class LigatureCollection : GLib.Object {
 		table_start = (uint16) fd.length_with_padding ();
 
 		fd.add_ushort (1); // format identifier
-		fd.add_ushort (6 + (uint16) (2 * ligature_sets.size)); // offset to coverage
+		
+		coverage_offset = 6 + 2 * ligature_sets.size;
+		fd.add_ushort ((uint16) coverage_offset); // offset to coverage
 		fd.add_ushort ((uint16) ligature_sets.size); // number of ligature set tables
 
 		// array of offsets to ligature sets

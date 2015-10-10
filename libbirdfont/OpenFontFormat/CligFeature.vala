@@ -54,12 +54,12 @@ public class CligFeature : GLib.Object {
 		
 		if (contextual.has_ligatures ()) {
 			foreach (LigatureCollection s in contextual.ligatures) {
-				lookup = new Lookup (4, 0);
+				lookup = new Lookup (4, 0, "chained data");
 				lookup.add_subtable (s.get_font_data (glyf_table));
 				lookups.add_lookup(lookup);
 			}
 
-			lookup = new Lookup (6, 0, "chained");
+			lookup = new Lookup (6, 0, "chain context");
 			foreach (FontData d in chain_data) {
 				lookup.add_subtable (d);
 			}

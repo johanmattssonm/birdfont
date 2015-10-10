@@ -44,7 +44,7 @@ public class GsubTable : OtfTable {
 			Feature clig_feature_lookup = new Feature ("clig", lookups);
 			
 			if (clig_feature.contextual.has_ligatures ()) {
-				clig_feature_lookup.add_feature_lookup ("chained");
+				clig_feature_lookup.add_feature_lookup ("chain context");
 			}
 				
 			if (clig_feature.has_regular_ligatures ()) {

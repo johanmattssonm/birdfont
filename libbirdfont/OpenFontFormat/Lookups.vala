@@ -81,7 +81,12 @@ public class Lookups : GLib.Object {
 		foreach (Lookup lookup in tables) {
 			uint offset_pos = lookup.entry_offset + 6;
 			fd.seek (offset_pos);
-			fd.add_ushort ((uint16) (fd.length_with_padding () - (lookup.entry_offset)));
+			
+			uint offset = (fd.length_with_padding () - (lookup.entry_offset));
+			foreach (FontData f in lookup.subtables) {
+				fd.add_ushort ((uint16) offset);
+				offset += f.length_with_padding ();
+			}
 			fd.seek_end ();
 			
 			foreach (FontData subtable in lookup.subtables) {
