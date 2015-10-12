@@ -420,6 +420,7 @@ public class BirdFont {
 			try {
 				if (BirdFont.logstream != null) {
 					((!)BirdFont.logstream).put_string (s);
+					((!)BirdFont.logstream).flush ();
 				} else {
 					warning ("No logstream.");
 				}
