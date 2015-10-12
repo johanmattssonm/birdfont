@@ -2308,8 +2308,6 @@ public class Path : GLib.Object {
 				&& (ep.flags & EditPoint.CURVE_KEEP) == 0
 				&& (ep.flags & EditPoint.SEGMENT_END) == 0) {
 				ep.deleted = true;
-				warning (ep.to_string ());
-				warning (@"A: EditPoint.CURVE_KEEP: $(EditPoint.CURVE_KEEP)  $(ep.flags & EditPoint.CURVE_KEEP)");
 			}
 		}
 		

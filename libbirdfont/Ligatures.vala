@@ -117,6 +117,7 @@ public class Ligatures : GLib.Object {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
 			sort_ligatures ();
+			GlyphCanvas.redraw ();
 		});
 		
 		TabContent.show_text_input (listener);			
@@ -139,6 +140,7 @@ public class Ligatures : GLib.Object {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
 			sort_ligatures ();
+			GlyphCanvas.redraw ();
 		});
 		
 		TabContent.show_text_input (listener);		
@@ -161,6 +163,7 @@ public class Ligatures : GLib.Object {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
 			sort_ligatures ();
+			GlyphCanvas.redraw ();
 		});
 		
 		TabContent.show_text_input (listener);
@@ -192,6 +195,7 @@ public class Ligatures : GLib.Object {
 			TabContent.hide_text_input ();
 			MainWindow.get_ligature_display ().update_rows ();
 			sort_ligatures ();
+			GlyphCanvas.redraw ();
 		});
 		
 		TabContent.show_text_input (listener);			
