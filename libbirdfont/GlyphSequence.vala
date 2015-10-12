@@ -81,8 +81,12 @@ public class GlyphSequence : GLib.Object {
 		ligatures = font.get_ligatures ();
 
 		foreach (ContextualLigature c in  ligatures.contextual_ligatures) {
-			ligature_sequence.replace_contextual (c.get_backtrack (),
-				c.get_input (), c.get_lookahead (), c.get_ligature_sequence ());	
+			if (c.is_valid ()) {
+				ligature_sequence.replace_contextual (c.get_backtrack (),
+					c.get_input (),
+					c.get_lookahead (),
+					c.get_ligature_sequence ());	
+			}
 		}
 		
 		ligatures.get_single_substitution_ligatures ((substitute, ligature) => {
@@ -156,7 +160,7 @@ public class GlyphSequence : GLib.Object {
 				glyph = substitute (i + backtrack.length (), input.length (), replacement);
 				
 				advance = backtrack.length () + replacement.length ();
-				i += advance;
+				i += advance + 1;
 				
 				if (advance <= 0) {
 					warning ("No advancement.");

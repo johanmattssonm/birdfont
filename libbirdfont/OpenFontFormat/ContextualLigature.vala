@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2014 Johan Mattsson
+    Copyright (C) 2014 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -141,7 +141,35 @@ public class ContextualLigature : GLib.Object {
 	public GlyphSequence get_ligature_sequence () {
 		return get_sequence (ligatures);
 	}
+	
+	public bool is_valid () {
+		foreach (string s in font.get_names (backtrack)) {
+			if (font.get_glyph_collection_by_name (s) == null) {
+				return false;
+			}
+		}
 		
+		foreach (string s in font.get_names (input)) {
+			if (font.get_glyph_collection_by_name (s) == null) {
+				return false;
+			}
+		}
+
+		foreach (string s in font.get_names (lookahead)) {
+			if (font.get_glyph_collection_by_name (s) == null) {
+				return false;
+			}
+		}
+
+		foreach (string s in font.get_names (ligatures)) {
+			if (font.get_glyph_collection_by_name (s) == null) {
+				return false;
+			}
+		}
+						
+		return true;
+	}
+	
 	GlyphSequence get_sequence (string context) {
 		GlyphCollection? gc;
 		GlyphSequence gs;
