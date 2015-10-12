@@ -944,6 +944,14 @@ public class Font : GLib.Object {
 	 * @return glyph names
 	 */
 	public Gee.ArrayList<string> get_names (string glyphs) {
+		 return get_names_order (glyphs, false);
+	}
+
+	public Gee.ArrayList<string> get_names_in_reverse_order (string glyphs) {
+		return get_names_order (glyphs, true);
+	}
+		
+	public Gee.ArrayList<string> get_names_order (string glyphs, bool reverse) {
 		Gee.ArrayList<string> names = new Gee.ArrayList<string> ();
 		string[] parts = glyphs.strip ().split (" ");
 								
@@ -966,7 +974,11 @@ public class Font : GLib.Object {
 			}
 			
 			if (p != "") {
-				names.add (p);
+				if (reverse) {
+					names.insert (0, p);
+				} else {
+					names.add (p);
+				}
 			}
 		}
 		

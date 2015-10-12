@@ -48,7 +48,14 @@ public class ContextualLigature : GLib.Object {
 		FontData fd = new FontData ();
 		Font font = BirdFont.get_current_font (); // FIXME: thread safety?
 		
-		Gee.ArrayList<string> backtrack = font.get_names (backtrack);
+		// FIXME: it looks like get_names is the right function
+		// but harfbuzz assumes that glyphs appear in the other 
+		// order for latin scripts, get_names_in_reverse_order
+		// creates an array of glyphs in reverse order.
+		//
+		// I have not found out why yet.
+		
+		Gee.ArrayList<string> backtrack = font.get_names_in_reverse_order (backtrack);
 		Gee.ArrayList<string> input = font.get_names (input);
 		Gee.ArrayList<string> lookahead = font.get_names (lookahead);
 		

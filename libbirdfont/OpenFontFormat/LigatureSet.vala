@@ -85,8 +85,8 @@ public class LigatureSet : GLib.Object {
 		bool first = true;
 		int gid;
 		string l;
-
-		l = ligature.ligature;
+		
+		l = ligature.ligature.strip ();
 		if (l.has_prefix ("U+") || l.has_prefix ("u+")) {
 			l = (!) Font.to_unichar (l).to_string ();
 		}
