@@ -46,14 +46,7 @@ public class ContextualLigature : GLib.Object {
 	public FontData get_font_data (GlyfTable glyf_table, uint16 ligature_lookup_index) 
 		throws GLib.Error {
 		FontData fd = new FontData ();
-		Font font = BirdFont.get_current_font (); // FIXME: thread safety?
-		
-		// FIXME: it looks like get_names is the right function
-		// but harfbuzz assumes that glyphs appear in the other 
-		// order for latin scripts, get_names_in_reverse_order
-		// creates an array of glyphs in reverse order.
-		//
-		// I have not found out why yet.
+		Font font = BirdFont.get_current_font ();
 		
 		Gee.ArrayList<string> backtrack = font.get_names_in_reverse_order (backtrack);
 		Gee.ArrayList<string> input = font.get_names (input);
