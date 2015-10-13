@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012 2013 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -1075,7 +1075,8 @@ public class PostTable : OtfTable {
 		GlyphCollection gc;
 		Glyph g;
 		string ps_name;
-			
+		StringBuilder name;
+		
 		fd.add_fixed (0x00020000); // Version
 		fd.add_fixed (0x00000000); // italicAngle
 		
@@ -1116,7 +1117,19 @@ public class PostTable : OtfTable {
 				name_index = (int) names.size; // use font specific name
 				fd.add_ushort ((uint16) name_index);
 				
-				ps_name = create_ps_name (g.get_name ());
+				name = new StringBuilder ();
+				if (gc.is_unassigned ()) {
+					name.append (g.get_name ());
+				} else {
+					unichar c = gc.get_unicode_character ();
+					if (c < 0xFFFF) {
+						name.printf ("uni%04x", c);
+					} else {
+						name.printf ("u%05x", c);
+					}
+				}
+				
+				ps_name = create_ps_name (name.str);
 				names.add (ps_name);
 			}
 			
