@@ -2101,10 +2101,14 @@ public class Path : GLib.Object {
 		update_region_boundaries ();
 	}
 
-	public void init_point_type () {
+	public void init_point_type (PointType pt = PointType.NONE) {
 		PointType type;
 		
-		switch (DrawingTools.point_type) {
+		if (pt == PointType.NONE) {
+			pt = DrawingTools.point_type;
+		}
+		
+		switch (pt) {
 			case PointType.QUADRATIC:
 				type = PointType.LINE_QUADRATIC;
 				break;

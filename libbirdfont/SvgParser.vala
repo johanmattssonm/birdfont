@@ -190,6 +190,10 @@ public class SvgParser {
 			if (t.get_name () == "polygon") {
 				parse_polygon (t, pl);
 			}
+			
+			if (t.get_name () == "circle") {
+				parse_circle (t, pl);
+			}
 		}
 		
 		return pl.get_all_paths ();
@@ -232,6 +236,10 @@ public class SvgParser {
 
 			if (t.get_name () == "rect") {
 				parse_rect (t, pl);
+			}
+
+			if (t.get_name () == "circle") {
+				parse_circle (t, pl);
 			}
 		}
 
@@ -419,6 +427,71 @@ public class SvgParser {
 		return param.strip();			
 	}
 	
+	private void parse_circle (Tag tag, Layer pl) {
+		Path p;
+		double x, y, r;
+		Glyph g;
+		PathList npl;
+		BezierPoints[] bezier_points;
+		SvgStyle style = new SvgStyle ();
+		bool hidden = false;
+		
+		npl = new PathList ();
+		
+		x = 0;
+		y = 0;
+		r = 0;
+			
+		foreach (Attribute attr in tag.get_attributes ()) {			
+			if (attr.get_name () == "cx") {
+				x = parse_double (attr.get_content ());
+			}
+			
+			if (attr.get_name () == "cy") {
+				y = -parse_double (attr.get_content ());
+			}
+
+			if (attr.get_name () == "r") {
+				r = parse_double (attr.get_content ());
+			}
+	
+			if (attr.get_name () == "style") {
+				style = SvgStyle.parse (attr.get_content ());
+			}
+	
+			if (attr.get_name () == "display" && attr.get_content () == "none") {
+				hidden = true;
+			}
+		}
+		
+		if (hidden) {
+			return;
+		}
+		
+		bezier_points = new BezierPoints[1];
+		bezier_points[0] = new BezierPoints ();
+		bezier_points[0].type == 'L';
+		bezier_points[0].x0 = x;
+		bezier_points[0].y0 = y;
+
+		g = MainWindow.get_current_glyph ();
+		move_and_resize (bezier_points, 1, false, 1, g);
+			
+		p = CircleTool.create_circle (bezier_points[0].x0,
+			bezier_points[0].y0, r, PointType.CUBIC);
+
+		npl.add (p);
+		
+		foreach (Attribute attr in tag.get_attributes ()) {
+			if (attr.get_name () == "transform") {
+				transform_paths (attr.get_content (), npl);
+			}
+		}
+		
+		style.apply (npl);
+		pl.paths.append (npl);
+	}
+	
 	private void parse_rect (Tag tag, Layer pl) {
 		Path p;
 		double x, y, x2, y2;
@@ -541,18 +614,7 @@ public class SvgParser {
 		}
 	
 		pl.paths.append (path_list);
-	
-		foreach (Path p in path_list.paths) {
-			if (style.has_stroke ()) {
-				p.stroke = style.get_stroke_width ();
-			} else {
-				p.stroke = 0;
-			}
-			
-			p.line_cap = style.get_line_cap ();
-			p.reset_stroke ();
-			p.update_region_boundaries ();		
-		}
+		style.apply (path_list);
 
 		// assume the even odd rule is applied and convert the path
 		// to a path using the non-zero rule

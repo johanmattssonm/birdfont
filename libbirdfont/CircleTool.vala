@@ -114,10 +114,35 @@ public class CircleTool : Tool {
 		}
 	}
 	
+	public static Path create_circle (double x, double y,
+		double r, PointType pt) {	
+		
+		double px, py;
+		Path path = new Path ();
+		double steps = (pt == PointType.QUADRATIC) ? PI / 8 : PI / 4;  
+		
+		for (double angle = 0; angle < 2 * PI; angle += steps) {
+			px = r * cos (angle) + x;
+			py = r * sin (angle) + y;
+			path.add (px, py);
+		}
+		
+		path.init_point_type (pt);
+		path.close ();
+		path.recalculate_linear_handles ();
+
+		for (int i = 0; i < 3; i++) {
+			foreach (EditPoint ep in path.points) {
+				ep.set_tie_handle (true);
+				ep.process_tied_handle ();
+			}
+		}
+
+		return path;
+	}
+	
 	void press (int button, double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		double radius = 2;
-		double px, py, steps;
 		Path path = new Path ();
 		
 		press_x = x;
@@ -132,30 +157,16 @@ public class CircleTool : Tool {
 		
 		glyph.store_undo_state ();
 		
-		steps = (DrawingTools.point_type == PointType.QUADRATIC) ? PI / 8 : PI / 4;  
+		double px =  Glyph.path_coordinate_x (x);
+		double py =  Glyph.path_coordinate_y (y);
 		
-		for (double angle = 0; angle < 2 * PI; angle += steps) {
-			px = radius * cos (angle) + Glyph.path_coordinate_x (x);
-			py = radius * sin (angle) + Glyph.path_coordinate_y (y);
-			path.add (px, py);
-		}
-		
-		path.init_point_type ();
-		path.close ();
-		path.recalculate_linear_handles ();
+		path = create_circle (px, py, 2, DrawingTools.point_type);
 
 		if (StrokeTool.add_stroke) {
 			path.stroke = StrokeTool.stroke_width;
 			path.line_cap = StrokeTool.line_cap;
 		}
-
-		for (int i = 0; i < 3; i++) {
-			foreach (EditPoint ep in path.points) {
-				ep.set_tie_handle (true);
-				ep.process_tied_handle ();
-			}
-		}
-	
+			
 		glyph.add_path (path);
 	
 		if (!PenTool.is_counter_path (circle)) {

@@ -83,6 +83,20 @@ public class SvgStyle {
 		
 		return s;
 	}
+	
+	public void apply (PathList path_list) {
+		foreach (Path p in path_list.paths) {
+			if (has_stroke ()) {
+				p.stroke = get_stroke_width ();
+			} else {
+				p.stroke = 0;
+			}
+			
+			p.line_cap = get_line_cap ();
+			p.reset_stroke ();
+			p.update_region_boundaries ();		
+		}
+	}
 }
 
 }
