@@ -57,15 +57,39 @@ public class SvgStyle {
 		if (!style.has_key ("stroke-width")) {
 			return 0;
 		}
-		
+
 		return double.parse (style.get ("stroke-width"));
 	}
 	
-	public static SvgStyle parse (string svg_style) {
+	
+	public static SvgStyle parse (Attributes attributes) {
+		SvgStyle s = new SvgStyle ();
+		
+		foreach (Attribute a in attributes) {
+			if (a.get_name () == "style") {
+				s.parse_key_value_pairs (a.get_content ());
+			}
+			
+			if (a.get_name () == "stroke-width") {
+				s.style.set ("stroke-width", a.get_content ());
+			}
+
+			if (a.get_name () == "stroke") {
+				s.style.set ("stroke", a.get_content ());
+			}
+
+			if (a.get_name () == "fill") {
+				s.style.set ("fill", a.get_content ());
+			}
+		}
+		
+		return s;
+	}
+	
+	void parse_key_value_pairs (string svg_style) {
 		string[] p = svg_style.split (";");
 		string[] pair;
 		string k, v;
-		SvgStyle s = new SvgStyle ();
 		
 		foreach (string kv in p) {
 			pair = kv.split (":");
@@ -78,10 +102,8 @@ public class SvgStyle {
 			k = pair[0];
 			v = pair[1];
 			
-			s.style.set (k, v);
+			style.set (k, v);
 		}
-		
-		return s;
 	}
 	
 	public void apply (PathList path_list) {

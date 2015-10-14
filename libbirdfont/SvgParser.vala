@@ -479,14 +479,12 @@ public class SvgParser {
 				r = parse_double (attr.get_content ());
 			}
 	
-			if (attr.get_name () == "style") {
-				style = SvgStyle.parse (attr.get_content ());
-			}
-	
 			if (attr.get_name () == "display" && attr.get_content () == "none") {
 				hidden = true;
 			}
 		}
+		
+		style = SvgStyle.parse (tag.get_attributes ());
 		
 		if (hidden) {
 			return;
@@ -549,14 +547,12 @@ public class SvgParser {
 				ry = parse_double (attr.get_content ());
 			}
 	
-			if (attr.get_name () == "style") {
-				style = SvgStyle.parse (attr.get_content ());
-			}
-	
 			if (attr.get_name () == "display" && attr.get_content () == "none") {
 				hidden = true;
 			}
 		}
+		
+		style = SvgStyle.parse (tag.get_attributes ());
 		
 		if (hidden) {
 			return;
@@ -616,15 +612,13 @@ public class SvgParser {
 			if (attr.get_name () == "xy") {
 				y2 = -parse_double (attr.get_content ());
 			}
-
-			if (attr.get_name () == "style") {
-				style = SvgStyle.parse (attr.get_content ());
-			}
 	
 			if (attr.get_name () == "display" && attr.get_content () == "none") {
 				hidden = true;
 			}
 		}
+		
+		style = SvgStyle.parse (tag.get_attributes ());
 		
 		if (hidden) {
 			return;
@@ -695,15 +689,13 @@ public class SvgParser {
 			if (attr.get_name () == "height") {
 				y2 = -parse_double (attr.get_content ());
 			}
-
-			if (attr.get_name () == "style") {
-				style = SvgStyle.parse (attr.get_content ());
-			}
 	
 			if (attr.get_name () == "display" && attr.get_content () == "none") {
 				hidden = true;
 			}
 		}
+		
+		style = SvgStyle.parse (tag.get_attributes ());
 		
 		if (hidden) {
 			return;
@@ -785,22 +777,21 @@ public class SvgParser {
 			if (attr.get_name () == "points") {
 				p = parse_poly_data (attr.get_content ());
 			}
-			
-			if (attr.get_name () == "style") {
-				style = SvgStyle.parse (attr.get_content ());
-			}
 	
 			if (attr.get_name () == "display" && attr.get_content () == "none") {
 				hidden = true;
 			}
 		}
+
+		style = SvgStyle.parse (tag.get_attributes ());
 		
 		if (hidden) {
 			return path_list;
 		}
 		
 		path_list.add (p);
-				
+		style.apply (path_list);
+		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "transform") {
 				transform_paths (attr.get_content (), path_list);
@@ -820,10 +811,6 @@ public class SvgParser {
 			if (attr.get_name () == "d") {
 				path_list = parse_svg_data (attr.get_content (), glyph);
 			}
-
-			if (attr.get_name () == "style") {
-				style = SvgStyle.parse (attr.get_content ());
-			}
 	
 			if (attr.get_name () == "display" && attr.get_content () == "none") {
 				hidden = true;
@@ -835,6 +822,8 @@ public class SvgParser {
 				hidden = true;
 			}
 		}
+		
+		style = SvgStyle.parse (tag.get_attributes ());
 		
 		if (hidden) {
 			return;
