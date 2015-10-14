@@ -141,6 +141,33 @@ public class CircleTool : Tool {
 		return path;
 	}
 	
+	public static Path create_ellipse (double x, double y,
+		double rx, double ry, PointType pt) {	
+		
+		double px, py;
+		Path path = new Path ();
+		double steps = (pt == PointType.QUADRATIC) ? PI / 8 : PI / 4;  
+		
+		for (double angle = 0; angle < 2 * PI; angle += steps) {
+			px = rx * cos (angle) + x;
+			py = ry * sin (angle) + y;
+			path.add (px, py);
+		}
+		
+		path.init_point_type (pt);
+		path.close ();
+		path.recalculate_linear_handles ();
+
+		for (int i = 0; i < 3; i++) {
+			foreach (EditPoint ep in path.points) {
+				ep.set_tie_handle (true);
+				ep.process_tied_handle ();
+			}
+		}
+
+		return path;
+	}
+	
 	void press (int button, double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Path path = new Path ();

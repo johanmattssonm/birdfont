@@ -20,7 +20,6 @@ using BirdFont;
 public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;
-	string file;
 	BirdFont.BirdFont birdfont;
 
 	birdfont = new BirdFont.BirdFont ();
