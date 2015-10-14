@@ -53,9 +53,25 @@ static	Vector2		V2SubII();
 
 #define MAXPOINTS	1000		/* The most points you can have */
 
-int simplified_path_buffer_size = 0;
-int simplified_path_size = 0;
-double* simplified_path = NULL;
+typedef struct {
+	int simplified_path_buffer_size ;
+	int simplified_path_size;
+	double* simplified_path;
+} Buffer;
+
+Buffer* gems_buffer_new (int buffer_size, double* simplified_path) {
+	Buffer* b = (Buffer*) malloc (sizeof (Buffer));
+	
+	b->simplified_path = simplified_path;
+	b->simplified_path_buffer_size = buffer_size;
+	b->simplified_path_size = 0;
+	
+	return b;
+}
+
+void gems_buffer_delete (Buffer* b) {
+	free (b);
+}
 
 /** Generates an a bezier path and returns the length of the output array. */ 
 void fit_bezier_curve_to_line (
@@ -78,11 +94,6 @@ void fit_bezier_curve_to_line (
 		fprintf (stderr, "No lines in fit_bezier_curve_to_line.");
 		return;
 	}
-
-	if (simplified_path != NULL) {
-		fprintf (stderr, "Path simplification is alreading running.");
-		return;	
-	}
 	
 	if (bezier_path == NULL) {
 		fprintf (stderr, "No destination for output buffer in fit_bezier_curve_to_line");
@@ -104,26 +115,26 @@ void fit_bezier_curve_to_line (
 		j += 2;
 	}
 	
-	simplified_path = malloc (8 * npoints * sizeof (double));
-	simplified_path_buffer_size = 8 * npoints;
-	simplified_path_size = 0;
- 
-	FitCurve(points, npoints, error);
+	int buffer_size = 8 * npoints;
+	double* simplified_path = malloc (buffer_size * sizeof (double));
+	Buffer* buffer = gems_buffer_new (buffer_size, simplified_path);
+	
+	FitCurve(buffer, points, npoints, error);
 	
 	*bezier_path = simplified_path;
-	*bezier_path_size = simplified_path_size;
+	*bezier_path_size = buffer->simplified_path_size;
 	
-	simplified_path = NULL;
-	
+	gems_buffer_delete (buffer);
 	free (points);
 }
 
-void DrawBezierCurve(int n, Point2* curve)
+void DrawBezierCurve(Buffer* buffer, int n, Point2* curve)
 {
 	int i;
+	double* simplified_path;
 
-	if (simplified_path_size + 8 > simplified_path_buffer_size) {
-		fprintf (stderr, "The bezier buffer is full (%d).\n", simplified_path_buffer_size);
+	if (buffer->simplified_path_size + 8 > buffer->simplified_path_buffer_size) {
+		fprintf (stderr, "The bezier buffer is full (%d).\n", buffer->simplified_path_buffer_size);
 		return;
 	}
 
@@ -132,7 +143,8 @@ void DrawBezierCurve(int n, Point2* curve)
 		return;
 	}
 	
-	i = simplified_path_size;
+	i = buffer->simplified_path_size;
+	simplified_path = buffer->simplified_path;
 
 	simplified_path[i + 0] = curve[0].x;
 	simplified_path[i + 1] = curve[0].y;
@@ -143,14 +155,15 @@ void DrawBezierCurve(int n, Point2* curve)
 	simplified_path[i + 6] = curve[3].x;
 	simplified_path[i + 7] = curve[3].y;
 
-	simplified_path_size = i + 8;
+	buffer->simplified_path_size = i + 8;
 }
 
 /*
  *  FitCurve :
  *  	Fit a Bezier curve to a set of digitized points 
  */
-void FitCurve(d, nPts, error)
+void FitCurve(buffer, d, nPts, error)
+    Buffer* buffer;
     Point2	*d;			/*  Array of digitized points	*/
     int		nPts;		/*  Number of digitized points	*/
     double	error;		/*  User-defined error squared	*/
@@ -159,14 +172,15 @@ void FitCurve(d, nPts, error)
 
     tHat1 = ComputeLeftTangent(d, 0);
     tHat2 = ComputeRightTangent(d, nPts - 1);
-    FitCubic(d, 0, nPts - 1, tHat1, tHat2, error);
+    FitCubic(buffer, d, 0, nPts - 1, tHat1, tHat2, error);
 }
 
 /*
  *  FitCubic :
  *  	Fit a Bezier curve to a (sub)set of digitized points
  */
-static void FitCubic(d, first, last, tHat1, tHat2, error)
+static void FitCubic(buffer, d, first, last, tHat1, tHat2, error)
+    Buffer* buffer;
     Point2	*d;			/*  Array of digitized points */
     int		first, last;	/* Indices of first and last pts in region */
     Vector2	tHat1, tHat2;	/* Unit tangent vectors at endpoints */
@@ -195,7 +209,7 @@ static void FitCubic(d, first, last, tHat1, tHat2, error)
 		bezCurve[3] = d[last];
 		V2Add(&bezCurve[0], V2Scale(&tHat1, dist), &bezCurve[1]);
 		V2Add(&bezCurve[3], V2Scale(&tHat2, dist), &bezCurve[2]);
-		DrawBezierCurve(3, bezCurve);
+		DrawBezierCurve(buffer, 3, bezCurve);
 		free((void *)bezCurve);
 		return;
     }
@@ -207,7 +221,7 @@ static void FitCubic(d, first, last, tHat1, tHat2, error)
     /*  Find max deviation of points to fitted curve */
     maxError = ComputeMaxError(d, first, last, bezCurve, u, &splitPoint);
     if (maxError < error) {
-		DrawBezierCurve(3, bezCurve);
+		DrawBezierCurve(buffer, 3, bezCurve);
 		free((void *)u);
 		free((void *)bezCurve);
 		return;
@@ -224,7 +238,7 @@ static void FitCubic(d, first, last, tHat1, tHat2, error)
 	    	maxError = ComputeMaxError(d, first, last,
 				       bezCurve, uPrime, &splitPoint);
 	    	if (maxError < error) {
-			DrawBezierCurve(3, bezCurve);
+			DrawBezierCurve(buffer, 3, bezCurve);
 			free((void *)u);
 			free((void *)bezCurve);
 			free((void *)uPrime);
@@ -239,9 +253,9 @@ static void FitCubic(d, first, last, tHat1, tHat2, error)
     free((void *)u);
     free((void *)bezCurve);
     tHatCenter = ComputeCenterTangent(d, splitPoint);
-    FitCubic(d, first, splitPoint, tHat1, tHatCenter, error);
+    FitCubic(buffer, d, first, splitPoint, tHat1, tHatCenter, error);
     V2Negate(&tHatCenter);
-    FitCubic(d, splitPoint, last, tHatCenter, tHat2, error);
+    FitCubic(buffer, d, splitPoint, last, tHatCenter, tHat2, error);
 }
 
 
