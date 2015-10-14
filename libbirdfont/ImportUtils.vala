@@ -93,7 +93,7 @@ public static int run_import (string[] arg) {
 	return 0;
 }
 
-static bool import_svg_file (Font font, File svg_file) {
+public static bool import_svg_file (Font font, File svg_file) {
 	string file_name = (!) svg_file.get_basename ();
 	string glyph_name;
 	StringBuilder n;

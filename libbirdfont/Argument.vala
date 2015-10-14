@@ -79,6 +79,7 @@ public class Argument : GLib.Object {
 				a == "--log" ||
 				a == "--windows" ||
 				a == "--parse-ucd" ||
+				a == "--fuzz" ||
 				a == "--codepages") {
 				prev = a;
 				i++;

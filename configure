@@ -15,7 +15,8 @@ TARGETS = ['libbirdfont',
            'birdfont', 
            'birdfont-autotrace',
            'birdfont-export',
-           'birdfont-import']
+           'birdfont-import',
+           'birdfont-test']
            
 VERSION = version.VERSION
 

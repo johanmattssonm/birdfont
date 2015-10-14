@@ -2443,6 +2443,7 @@ public class Path : GLib.Object {
 			return;
 		}
 		
+		print(@"Create full stroke for $(points.size) points.\n");
 		StrokeTask task = new StrokeTask (this);
 		MainWindow.native_window.run_non_blocking_background_thread (task);
 		
@@ -2475,7 +2476,10 @@ public class Path : GLib.Object {
 		}
 		
 		StrokeTool s = new StrokeTool ();
+		Test t = new Test.time ("fast stroke");
 		fast_stroke = s.get_stroke_fast (this, stroke);
+		t.print();
+		
 		return (!) fast_stroke;
 	}
 	

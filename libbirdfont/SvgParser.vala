@@ -667,6 +667,7 @@ public class SvgParser {
 		PathList npl = new PathList ();
 		SvgStyle style = new SvgStyle ();
 		bool hidden = false;
+		EditPoint ep;
 		
 		x = 0;
 		y = 0;
@@ -730,10 +731,17 @@ public class SvgParser {
 					
 		p = new Path ();	
 		
-		p.add (bezier_points[0].x0, bezier_points[0].y0);
-		p.add (bezier_points[1].x0, bezier_points[1].y0);
-		p.add (bezier_points[2].x0, bezier_points[2].y0);
-		p.add (bezier_points[3].x0, bezier_points[3].y0);
+		ep = p.add (bezier_points[0].x0, bezier_points[0].y0);
+		ep.set_point_type (PointType.CUBIC);
+		
+		ep = p.add (bezier_points[1].x0, bezier_points[1].y0);
+		ep.set_point_type (PointType.CUBIC);
+		
+		ep = p.add (bezier_points[2].x0, bezier_points[2].y0);
+		ep.set_point_type (PointType.CUBIC);
+		
+		ep = p.add (bezier_points[3].x0, bezier_points[3].y0);
+		ep.set_point_type (PointType.CUBIC);
 						
 		p.close ();
 		p.create_list ();
@@ -1570,6 +1578,7 @@ public class SvgParser {
 		if (format == SvgFormat.ILLUSTRATOR) {
 			path_list = create_paths_illustrator (bezier_points, bi);
 		} else {
+			print(d + "\n\n"); // FIXME: DELETE
 			path_list = create_paths_inkscape (bezier_points, bi);
 		}
 
@@ -1619,6 +1628,13 @@ public class SvgParser {
 		return_if_fail (b.length != 0);
 		return_if_fail (b[0].type != 'z');
 		return_if_fail (num_b < b.length);
+
+		if (num_b == 2) {
+			left_x = b[0].x0 + (b[1].x0 - b[0].x0) / 3.0;
+			left_y = b[0].y0 + (b[1].y0 - b[0].y0) / 3.0;
+			last_type = PointType.LINE_CUBIC;
+			return;
+		}
 		
 		for (int i = start_index; i < num_b; i++) {
 			switch (b[i].type) {
@@ -1634,6 +1650,9 @@ public class SvgParser {
 			}
 			
 			if (found || i + 1 == num_b) {
+				
+				return_if_fail (i >= 1);
+				
 				if (b[i - 1].type == 'Q') {
 					return_if_fail (i >= 1);
 					left_x = b[i - 1].x0;
@@ -1649,7 +1668,7 @@ public class SvgParser {
 					left_x = b[i - 1].x1;
 					left_y = b[i - 1].y1;
 					last_type = PointType.CUBIC;
-				}else if (b[i - 1].type == 'L' || last.type == 'M') {
+				} else if (b[i - 1].type == 'L' || last.type == 'M') {
 					return_if_fail (i >= 2); // FIXME: -2 can be C or L
 					left_x = b[i - 2].x0 + (b[i - 1].x0 - b[i - 2].x0) / 3.0;
 					left_y = b[i - 2].y0 + (b[i - 1].y0 - b[i - 2].y0) / 3.0;

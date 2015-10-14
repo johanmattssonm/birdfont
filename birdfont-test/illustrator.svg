@@ -1,0 +1,77 @@
+<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In  -->
+<svg version="1.1"
+         xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+         x="0px" y="0px" width="41.7px" height="41.7px" viewBox="0 0 41.7 41.7" overflow="scroll" enable-background="new 0 0 41.7 41.7"
+         xml:space="preserve">
+<defs>
+</defs>
+<circle cx="20.8" cy="20.8" r="20.8"/>
+
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+
+  <polygon fill="red" stroke="blue" stroke-width="2" 
+            points="350,75  379,161 469,161 397,215
+                    423,301 350,250 277,301 303,215
+                    231,161 321,161" />
+
+  <polygon fill="lime" stroke="blue" stroke-width="1" 
+            points="850,75  958,137.5 958,262.5
+                    850,325 742,262.6 742,137.5" />
+
+  <polyline fill="none" stroke="blue" stroke-width="3" 
+            points="50,375
+                    150,375 150,325 250,325 250,375
+                    350,375 350,250 450,250 450,375
+                    550,375 550,175 650,175 650,375
+                    750,375 750,100 850,100 850,375
+                    950,375 950,25 1050,25 1050,375
+                    1150,375" />
+  
+  <ellipse
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:10.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4136"
+       cx="171.42857"
+       cy="368.07651"
+       rx="82.85714"
+       ry="18.571428" />
+    <ellipse
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:10.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4138"
+       cx="170"
+       cy="249.50505"
+       rx="24.285715"
+       ry="25.714285" />
+    <circle
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4140"
+       cx="177.14285"
+       cy="472.36221"
+       r="28.571428" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:20.4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M -80,209.50506 -94.285714,515.21935"
+       id="path4224"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:20.4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m -352.54324,209.89499 -22.22335,262.63966"
+       id="path4235"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:20.4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m -345.47217,495.76816 78.7919,-2.02031 16.16244,-191.92898 80.8122,8.08122 10.10153,-103.03556"
+       id="path4237"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:46.79999924;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m -337.14286,592.3622 191.42857,20 62.857151,157.14286 -325.714291,-14.28572 z"
+       id="path4239"
+       inkscape:connector-curvature="0" />
+  </g>
+
+</svg>
+
+

@@ -1337,9 +1337,7 @@ public class Glyph : FontDisplay {
 			if (p.is_editable ()) {
 				r = true;
 				p.set_editable (false);
-			}
-			
-			p.create_full_stroke (); // cache stroke
+			}			
 		}
 		
 		open = false;

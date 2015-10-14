@@ -105,7 +105,7 @@ class Builder(object):
             object_path = path.join(build_directory, object_file)
             command = command.replace('OBJECT_FILE', object_path)
             yield {
-                'basename': 'compile ' + path.basename(csource),
+                'basename': 'compile ' + csource,
                 'file_dep': [build_file, csource] + bindep + copied_cheader,
                 'actions': [command],
                 'targets': [path.join(build_directory, object_file)],

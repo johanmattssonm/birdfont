@@ -186,7 +186,10 @@ public class PenTool : Tool {
 					p.get_last_point ().set_reflective_handles (false);
 				}
 				
-				p.create_full_stroke (); // cache good stroke
+				// cache good stroke
+				if (p.full_stroke == null) {
+					p.create_full_stroke ();
+				}
 			}
 			
 			// select or deselect points

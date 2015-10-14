@@ -1533,6 +1533,10 @@ public class StrokeTool : GLib.Object {
 	PathList get_parts_self (Path path, PathList? paths = null) {
 		PathList pl;
 		PathList r;
+		
+		if (task.is_cancelled ()) {
+			return new PathList ();
+		}
 
 		r = paths == null ? new PathList () : (!) paths;
 		pl = split (path);
@@ -2847,8 +2851,9 @@ public class StrokeTool : GLib.Object {
 			side2.add_point (previous_inside);
 		}
 
-		min_increment = 0.013;
+		min_increment = 0.02; // 0.013
 		
+		Test t1 = new Test.time ("generate");
 		for (i = 0; i < size; i++) {
 			p1 = path.points.get (i % path.points.size);
 			p2 = path.points.get ((i + 1) % path.points.size);
@@ -2858,9 +2863,9 @@ public class StrokeTool : GLib.Object {
 				return new PathList ();
 			}
 					
-			tolerance = 0.01; //  0.13 / sqrt (stroke_width)
+			tolerance = 0.01;
 			step_increment = 1.05;
-			step_size = 0.039; // / stroke_width;
+			step_size = 0.039;
 
 			corner1 = new EditPoint ();
 			
@@ -2883,7 +2888,7 @@ public class StrokeTool : GLib.Object {
 		
 			step = step_size;
 			keep = 0;
-			step_size = 0.01;
+			step_size = 0.05; // 0.01
 
 			while (step < 1 - 2 * step_size) {
 				Path.get_point_for_step (p1, p2, step, out x, out y);
@@ -2913,7 +2918,7 @@ public class StrokeTool : GLib.Object {
 					step_size *= step_increment;
 					continue;
 				}
-			
+				
 				get_segment (thickness, step, step_size, p1, p2, out corner1);
 				get_segment (-thickness, step, step_size, p1, p2, out corner1_inside);
 
@@ -2983,7 +2988,8 @@ public class StrokeTool : GLib.Object {
 					add_corner (side2, previous_inside, start, p2.copy (), thickness);
 				}
 			}
-				
+			t1.print();
+			
 			if (fast) {
 				EditPoint s1, s2;
 				bool open;
@@ -3039,7 +3045,9 @@ public class StrokeTool : GLib.Object {
 			
 			side2.reverse ();
 			
+			Test t2 = new Test.time ("merge2");
 			pl = merge_stroke_parts (path, side1, side2);
+			t2.print();
 		}
 
 		if (fast) {

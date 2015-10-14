@@ -35,7 +35,8 @@ DOIT_CONFIG = {
         'birdfont', 
         'birdfont-autotrace',
         'birdfont-export',
-        'birdfont-import'
+        'birdfont-import',
+        'birdfont-test'
         ],
     }
 
@@ -424,3 +425,68 @@ def task_build ():
     return  {
         'actions': ['echo "Build"'],
         }
+
+def make_birdfont_test(target_binary, deps):
+    valac_command = config.VALAC + """\
+        -C \
+        --vapidir=./ \
+        --basedir build/birdfont-test/ \
+        """ + config.NON_NULL + """ \
+        """ + config.VALACFLAGS.get("birdfont-test", "") + """ \
+        --enable-experimental \
+        birdfont-test/*.vala \
+		--vapidir=./ \
+		--pkg """ + config.GEE + """ \
+		--pkg gio-2.0  \
+		--pkg cairo \
+		--pkg libsoup-2.4 \
+		--pkg gdk-pixbuf-2.0 \
+		--pkg webkitgtk-3.0 \
+		--pkg libnotify \
+		--pkg xmlbird \
+		--pkg libbirdfont
+        """
+
+    cc_command = config.CC + " " + config.CFLAGS.get("birdfont-test", "") + """ \
+        -c C_SOURCE \
+		-D 'GETTEXT_PACKAGE="birdfont"' \
+        -I./build/libbirdfont \
+		$(pkg-config --cflags sqlite3) \
+		$(pkg-config --cflags """ + config.GEE + """) \
+		$(pkg-config --cflags gio-2.0) \
+		$(pkg-config --cflags cairo) \
+		$(pkg-config --cflags glib-2.0) \
+		$(pkg-config --cflags gdk-pixbuf-2.0) \
+		$(pkg-config --cflags webkitgtk-3.0) \
+		$(pkg-config --cflags libnotify) \
+        -o OBJECT_FILE"""
+        
+    linker_command = config.CC + " " + config.LDFLAGS.get("birdfont-test", "") + """ \
+        build/birdfont-test/*.o \
+		-L./build/bin -lbirdfont \
+		$(pkg-config --libs sqlite3) \
+		$(pkg-config --libs """ + config.GEE + """) \
+		$(pkg-config --libs gio-2.0) \
+		$(pkg-config --libs cairo) \
+		$(pkg-config --libs glib-2.0) \
+		$(pkg-config --libs gdk-pixbuf-2.0) \
+		$(pkg-config --libs webkitgtk-3.0) \
+		$(pkg-config --libs xmlbird) \
+		$(pkg-config --libs libnotify) \
+		-L./build -L./build/bin -l birdgems\
+        -o build/bin/""" + target_binary
+
+    test = Builder('birdfont-test',
+                   valac_command, 
+                   cc_command,
+                   linker_command,
+                   target_binary,
+                   None,
+                   deps)
+			
+    yield test.build()
+
+def task_birdfont_test():
+    yield make_birdfont_test('birdfont-test', ['libbirdgems.so', 'libbirdfont.so'])
+
+
