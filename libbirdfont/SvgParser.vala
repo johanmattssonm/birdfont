@@ -190,7 +190,11 @@ public class SvgParser {
 			if (t.get_name () == "polygon") {
 				parse_polygon (t, pl);
 			}
-			
+
+			if (t.get_name () == "polyline") {
+				parse_polyline (t, pl);
+			}
+						
 			if (t.get_name () == "circle") {
 				parse_circle (t, pl);
 			}
@@ -198,6 +202,10 @@ public class SvgParser {
 			if (t.get_name () == "ellipse") {
 				parse_ellipse (t, pl);
 			}
+
+			if (t.get_name () == "line") {
+				parse_line (t, pl);
+			}			
 		}
 		
 		return pl.get_all_paths ();
@@ -238,6 +246,10 @@ public class SvgParser {
 				parse_polygon (t, pl);
 			}
 
+			if (t.get_name () == "polyline") {
+				parse_polyline (t, pl);
+			}
+			
 			if (t.get_name () == "rect") {
 				parse_rect (t, pl);
 			}
@@ -248,6 +260,10 @@ public class SvgParser {
 
 			if (t.get_name () == "ellipse") {
 				parse_ellipse (t, pl);
+			}
+			
+			if (t.get_name () == "line") {
+				parse_line (t, pl);
 			}
 		}
 
@@ -569,6 +585,85 @@ public class SvgParser {
 		style.apply (npl);
 		pl.paths.append (npl);
 	}
+
+	private void parse_line (Tag tag, Layer pl) {
+		Path p;
+		double x1, y1, x2, y2;
+		BezierPoints[] bezier_points;
+		Glyph g;
+		PathList npl = new PathList ();
+		SvgStyle style = new SvgStyle ();
+		bool hidden = false;
+		
+		x1 = 0;
+		y1 = 0;
+		x2 = 0;
+		y2 = 0;
+			
+		foreach (Attribute attr in tag.get_attributes ()) {			
+			if (attr.get_name () == "x1") {
+				x1 = parse_double (attr.get_content ());
+			}
+			
+			if (attr.get_name () == "y1") {
+				y1 = -parse_double (attr.get_content ());
+			}
+
+			if (attr.get_name () == "x2") {
+				x2 = parse_double (attr.get_content ());
+			}
+			
+			if (attr.get_name () == "xy") {
+				y2 = -parse_double (attr.get_content ());
+			}
+
+			if (attr.get_name () == "style") {
+				style = SvgStyle.parse (attr.get_content ());
+			}
+	
+			if (attr.get_name () == "display" && attr.get_content () == "none") {
+				hidden = true;
+			}
+		}
+		
+		if (hidden) {
+			return;
+		}
+
+		bezier_points = new BezierPoints[2];
+		bezier_points[0] = new BezierPoints ();
+		bezier_points[0].type == 'L';
+		bezier_points[0].x0 = x1;
+		bezier_points[0].y0 = y1;
+
+		bezier_points[1] = new BezierPoints ();
+		bezier_points[1].type == 'L';
+		bezier_points[1].x0 = x2;
+		bezier_points[1].y0 = y2;
+		
+		g = MainWindow.get_current_glyph ();
+		move_and_resize (bezier_points, 4, false, 1, g);
+					
+		p = new Path ();	
+		
+		p.add (bezier_points[0].x0, bezier_points[0].y0);
+		p.add (bezier_points[1].x0, bezier_points[1].y0);
+						
+		p.close ();
+		p.create_list ();
+		p.recalculate_linear_handles ();		
+		
+		npl.add (p);
+		
+		foreach (Attribute attr in tag.get_attributes ()) {
+			if (attr.get_name () == "transform") {
+				transform_paths (attr.get_content (), npl);
+			}
+		}
+		
+		style.apply (npl);
+		pl.paths.append (npl);
+	}
 		
 	private void parse_rect (Tag tag, Layer pl) {
 		Path p;
@@ -664,16 +759,55 @@ public class SvgParser {
 		style.apply (npl);
 		pl.paths.append (npl);
 	}
-		
+	
 	private void parse_polygon (Tag tag, Layer pl) {
-		Path p;
+		PathList path_list = get_polyline (tag);
 		
+		foreach (Path p in path_list.paths) {
+			p.close ();
+		}
+		
+		pl.paths.append (path_list);
+	}
+
+	
+	private void parse_polyline (Tag tag, Layer pl) {	
+		pl.paths.append (get_polyline (tag));
+	}
+	
+	private PathList get_polyline (Tag tag) {
+		Path p = new Path ();
+		bool hidden = false;
+		PathList path_list = new PathList ();
+		SvgStyle style = new SvgStyle ();
+				
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "points") {
-				p = parse_polygon_data (attr.get_content ());
-				pl.paths.add (p);
+				p = parse_poly_data (attr.get_content ());
 			}
-		}	
+			
+			if (attr.get_name () == "style") {
+				style = SvgStyle.parse (attr.get_content ());
+			}
+	
+			if (attr.get_name () == "display" && attr.get_content () == "none") {
+				hidden = true;
+			}
+		}
+		
+		if (hidden) {
+			return path_list;
+		}
+		
+		path_list.add (p);
+				
+		foreach (Attribute attr in tag.get_attributes ()) {
+			if (attr.get_name () == "transform") {
+				transform_paths (attr.get_content (), path_list);
+			}
+		}
+		
+		return path_list;
 	}
 	
 	private void parse_path (Tag tag, Layer pl) {
@@ -1883,13 +2017,14 @@ public class SvgParser {
 		return double.try_parse ((!) s);
 	}
 	
-	Path parse_polygon_data (string polygon_points) {
+	Path parse_poly_data (string polygon_points) {
 		string data = add_separators (polygon_points);
 		string[] c = data.split (" ");
 		Path path;
 		BezierPoints[] bezier_points = new BezierPoints[c.length + 1];
 		int bi;
 		Glyph g;
+		EditPoint ep;
 		
 		bi = 0;
 		for (int i = 0; i < c.length - 1; i += 2) {	
@@ -1914,11 +2049,11 @@ public class SvgParser {
 		move_and_resize (bezier_points, bi, false, 1, g);
 		
 		path = new Path ();
-		for (int i = 0; i < bi; i++) {
-			path.add (bezier_points[i].x0, bezier_points[i].y0);
+		for (int i = 0; i < bi; i++) {	
+			ep = path.add (bezier_points[i].x0, bezier_points[i].y0);
+			ep.set_point_type (PointType.LINE_CUBIC);
 		}
 		
-		path.close ();
 		path.create_list ();
 		path.recalculate_linear_handles ();
 		
