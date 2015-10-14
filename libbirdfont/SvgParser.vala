@@ -576,6 +576,8 @@ public class SvgParser {
 		BezierPoints[] bezier_points;
 		Glyph g;
 		PathList npl = new PathList ();
+		SvgStyle style = new SvgStyle ();
+		bool hidden = false;
 		
 		x = 0;
 		y = 0;
@@ -598,6 +600,18 @@ public class SvgParser {
 			if (attr.get_name () == "height") {
 				y2 = -parse_double (attr.get_content ());
 			}
+
+			if (attr.get_name () == "style") {
+				style = SvgStyle.parse (attr.get_content ());
+			}
+	
+			if (attr.get_name () == "display" && attr.get_content () == "none") {
+				hidden = true;
+			}
+		}
+		
+		if (hidden) {
+			return;
 		}
 		
 		x2 += x;
@@ -647,6 +661,7 @@ public class SvgParser {
 			}
 		}
 		
+		style.apply (npl);
 		pl.paths.append (npl);
 	}
 		
