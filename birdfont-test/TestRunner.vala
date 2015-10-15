@@ -1,14 +1,35 @@
 using BirdFont;
+using Cairo;
 
 namespace BirdFont {
 
 public class TestRunner : NativeWindow, GLib.Object  {
-	public static void fuzz_test (string[] arg) {
-		if (arg.length != 3) {
-			print ("Usage: " + arg[0] + " TEST FILE\n");
-			print ("TEST parameter can be BF or SVG\n");
+
+	public static void run (string[] args) {
+		if (args.length < 2) {
+			print_usage (args);
 			Process.exit (0);
 		}
+		
+		string type = args[1];
+		
+		if (type == "SVG" || type == "BF") {
+			fuzz_test (args);
+		} else if (type == "speed") {
+			speed_test ();
+		} else {
+			print_usage (args);
+		}
+		
+	}	
+	
+	static void print_usage (string[] args) {
+		print ("Usage: " + args[0] + " TEST FILE\n");
+		print ("TEST parameter can be BF SVG or speed\n");
+	}
+	
+	public static void fuzz_test (string[] arg) {
+		return_if_fail (arg.length == 3);
 		
 		string type = arg[1];
 		string file = arg[2];
@@ -24,6 +45,38 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		}
 		
 		Process.exit (0);
+	}
+	
+	static void speed_test () {
+		Test test_path = new Test.time ("Simple path creation");
+		
+		for (int i = 0; i < 3000; i++) {
+			Path p = new Path ();
+			for (int j = 0; j < 300; j++) {
+				p.add (0, 0);
+			}
+		}
+		
+		test_path.print ();
+		
+		Test test_cairo = new Test.time ("Simple Cairo");
+		
+		for (int i = 0; i < 3000; i++) {
+			ImageSurface s;
+			Context c;
+			
+			s = Screen.create_background_surface (1000, 1000);
+			c = new Context (s);
+			
+			for (int j = 0; j < 30; j++) {
+				c.save ();
+				c.rectangle (100, 100, 100, 100);
+				c.fill ();
+				c.restore ();
+			}
+		}
+		
+		test_cairo.print ();		
 	}
 	
 	public void file_chooser (string title, FileChooser file_chooser_callback, uint flags) {
@@ -128,7 +181,7 @@ public static int main (string[] arg) {
 	runner = new TestRunner ();	
 
 	window.set_native (runner);
-	TestRunner.fuzz_test (arg);
+	TestRunner.run (arg);
 	
 	return 0;
 }

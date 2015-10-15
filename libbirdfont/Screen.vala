@@ -16,7 +16,7 @@ using Cairo;
 
 namespace BirdFont {
 
-class Screen {
+public class Screen {
 	public static double get_scale () {
 		return MainWindow.native_window.get_screen_scale ();
 	}
