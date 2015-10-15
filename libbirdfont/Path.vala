@@ -964,11 +964,24 @@ public class Path : GLib.Object {
 	}
 
 	public EditPoint add_point (EditPoint p) {
-		if (points.size > 0) {
-			return add_point_after (p, points.get (points.size - 1));
+		int prev_index;
+		EditPoint previous_point;
+		
+		if (points.size == 0) {
+			points.add (p);
+			p.prev = points.get (0).get_link_item ();
+			p.next = points.get (0).get_link_item ();
+		} else {
+			previous_point = points.get (points.size - 1);
+			points.add (p);
+			p.prev = (!) previous_point;
+			p.next = null;
+			points.add (p);	
 		}
 		
-		return add_point_after (p, null);
+		last_point = p;
+		
+		return p;
 	}
 
 	/** Insert a new point after @param previous_point and return a reference 

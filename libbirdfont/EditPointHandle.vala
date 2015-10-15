@@ -78,8 +78,6 @@ public class EditPointHandle : GLib.Object {
 		}
 	}
 	
-	static int n_handles = 0;
-	
 	public EditPointHandle.empty() {
 		this.parent = none;
 		this.angle = 0;
@@ -87,8 +85,6 @@ public class EditPointHandle : GLib.Object {
 		this.type = PointType.NONE;
 		this.active = false;
 		this.selected = false;
-		
-		n_handles++;
 	}
 	
 	public EditPointHandle (EditPoint parent, double angle, double length) {
@@ -98,12 +94,6 @@ public class EditPointHandle : GLib.Object {
 		this.type = PointType.LINE_CUBIC;
 		this.active = false;
 		this.selected = false;
-		
-		n_handles++;
-	}
-
-	~EditPointHandle () {
-		n_handles--;
 	}
 	
 	public EditPointHandle copy () {

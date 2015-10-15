@@ -38,28 +38,28 @@ public class EditPoint : GLib.Object {
 	public unowned EditPoint? prev = null;
 	public unowned EditPoint? next = null;
 
-	public static uint NONE = 0;
-	public static uint ACTIVE = 1;
-	public static uint SELECTED = 1 << 1;
-	public static uint DELETED = 1 << 2;
-	public static uint TIE = 1 << 3;
-	public static uint REFLECTIVE = 1 << 4;
+	public static const uint NONE = 0;
+	public static const uint ACTIVE = 1;
+	public static const uint SELECTED = 1 << 1;
+	public static const uint DELETED_POINT = 1 << 2;
+	public static const uint TIE = 1 << 3;
+	public static const uint REFLECTIVE = 1 << 4;
 	
-	public static uint INTERSECTION = 1 << 5;
-	public static uint NEW_CORNER = 1 << 6;
-	public static uint STROKE_OFFSET = 1 << 7;
-	public static uint COUNTER_TO_OUTLINE = 1 << 8;
-	public static uint COPIED = 1 << 9;
-	public static uint REMOVE_PART = 1 << 10;
-	public static uint OVERLAY = 1 << 11;
-	public static uint CURVE = 1 << 12;
-	public static uint CURVE_KEEP = 1 << 13;
-	public static uint SEGMENT_END = 1 << 14;
-	public static uint SPLIT_POINT = 1 << 15;
-	public static uint SELF_INTERSECTION = 1 << 16;
-	public static uint COPIED_SELF_INTERSECTION = 1 << 17;
+	public static const uint INTERSECTION = 1 << 5;
+	public static const uint NEW_CORNER = 1 << 6;
+	public static const uint STROKE_OFFSET = 1 << 7;
+	public static const uint COUNTER_TO_OUTLINE = 1 << 8;
+	public static const uint COPIED = 1 << 9;
+	public static const uint REMOVE_PART = 1 << 10;
+	public static const uint OVERLAY = 1 << 11;
+	public static const uint CURVE = 1 << 12;
+	public static const uint CURVE_KEEP = 1 << 13;
+	public static const uint SEGMENT_END = 1 << 14;
+	public static const uint SPLIT_POINT = 1 << 15;
+	public static const uint SELF_INTERSECTION = 1 << 16;
+	public static const uint COPIED_SELF_INTERSECTION = 1 << 17;
 	
-	public static uint ALL = 0xFFFFFF;
+	public static const uint ALL = 0xFFFFFF;
 	
 	public uint flags = NONE;
 	
@@ -93,14 +93,14 @@ public class EditPoint : GLib.Object {
 	
 	public bool deleted {
 		get {
-			return (flags & DELETED) > 0;
+			return (flags & DELETED_POINT) > 0;
 		}
 		
 		set {
 			if (value) {
-				flags |= DELETED;
+				flags |= DELETED_POINT;
 			} else {
-				flags &= uint.MAX ^ DELETED;
+				flags &= uint.MAX ^ DELETED_POINT;
 			}
 		}	
 	}
@@ -166,16 +166,20 @@ public class EditPoint : GLib.Object {
 	}
 	
 	public Color? color = null;
-	
-	static int n_points = 0;
-	
+
 	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {	
 		x = nx;
 		y = ny;
 		type = nt;
-		active_point = false;
-		
-		set_active (true);
+		right_handle = new EditPointHandle (this, 0, 7);
+		left_handle = new EditPointHandle (this, PI, 7);	
+	}
+	
+	public EditPoint.full (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {
+		x = nx;
+		y = ny;
+		type = nt;
+		active_point = true;
 		
 		if (nt == PointType.FLOATING) {
 			active_point = false;
@@ -188,13 +192,7 @@ public class EditPoint : GLib.Object {
 			warning (@"Invalid point at ($nx,$ny).");
 			x = 0;
 			y = 0;
-		}
-		
-		n_points++;
-	}
-
-	~EditPoint () {
-		n_points--;
+		}		
 	}
 	
 	public bool is_valid () {

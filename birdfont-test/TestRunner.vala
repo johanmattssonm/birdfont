@@ -48,7 +48,47 @@ public class TestRunner : NativeWindow, GLib.Object  {
 	}
 	
 	static void speed_test () {
+		Test test_object = new Test.time ("GObject");
+		
+		for (uint i = 0; i < 3000 * 300; i++) {
+			GLib.Object o = new GLib.Object ();
+		}
+		
+		test_object.print ();
+
+		Test test_ref = new Test.time ("GObject ref");
+		
+		for (uint i = 0; i < 3000 * 300; i++) {
+			GLib.Object o = new GLib.Object ();
+			
+			for (int j = 0; j < 7; j++) {
+				o.ref ();
+			}
+			
+			for (int j = 0; j < 7; j++) {
+				o.unref ();
+			}
+		}
+		
+		test_ref.print ();
+		
+		Test test_edit_point = new Test.time ("EditPoint creation");
+		
+		for (uint i = 0; i < 3000 * 300; i++) {
+			EditPoint ep = new EditPoint ();
+		}
+		
+		test_edit_point.print ();
+		
 		Test test_path = new Test.time ("Simple path creation");
+		
+		for (uint i = 0; i < 3000 * 300; i++) {
+			Path p = new Path ();
+		}
+		
+		test_path.print ();
+
+		Test test_points = new Test.time ("Simple path with points");
 		
 		for (int i = 0; i < 3000; i++) {
 			Path p = new Path ();
@@ -57,7 +97,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 			}
 		}
 		
-		test_path.print ();
+		test_points.print ();
 		
 		Test test_cairo = new Test.time ("Simple Cairo");
 		
@@ -68,7 +108,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 			s = Screen.create_background_surface (1000, 1000);
 			c = new Context (s);
 			
-			for (int j = 0; j < 30; j++) {
+			for (int j = 0; j < 300; j++) {
 				c.save ();
 				c.rectangle (100, 100, 100, 100);
 				c.fill ();
@@ -76,7 +116,62 @@ public class TestRunner : NativeWindow, GLib.Object  {
 			}
 		}
 		
-		test_cairo.print ();		
+		test_cairo.print ();
+
+
+		Test test_toolbox = new Test.time ("Toolbox");
+		
+		for (int i = 0; i < 30; i++) {
+			ImageSurface s;
+			Context c;
+			
+			s = Screen.create_background_surface (1000, 1000);
+			c = new Context (s);
+			MainWindow.get_toolbox ().draw (300, 500, c); 
+		}
+		
+		test_toolbox.print ();
+
+		Test test_tool_drawing = new Test.time ("Draw Tool");
+		
+		for (int i = 0; i < 30; i++) {
+			ImageSurface s;
+			Context c;
+			Tool tool;
+			
+			tool = new Tool ();
+			s = Screen.create_background_surface (100, 100);
+			c = new Context (s);
+			MainWindow.get_toolbox ().draw (300, 500, c); 
+		}
+		
+		test_tool_drawing.print ();
+		
+		Test test_tool = new Test.time ("Create Tool");
+		
+		for (int i = 0; i < 30; i++) {
+			Tool tool;
+			tool = new Tool ();
+			tool.set_tool_visibility (true);
+		}
+		
+		test_tool.print ();
+		
+
+		Test test_text = new Test.time ("Text");
+		
+		for (int i = 0; i < 30; i++) {
+			ImageSurface s;
+			Context c;
+			
+			s = Screen.create_background_surface (100, 100);
+			c = new Context (s);
+			
+			Text text = new Text ("This is a test.");
+			text.draw_at_top (c, 0, 0);
+		}
+		
+		test_text.print ();
 	}
 	
 	public void file_chooser (string title, FileChooser file_chooser_callback, uint flags) {
