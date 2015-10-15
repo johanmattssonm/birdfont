@@ -439,10 +439,6 @@ def make_birdfont_test(target_binary, deps):
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
-		--pkg libsoup-2.4 \
-		--pkg gdk-pixbuf-2.0 \
-		--pkg webkitgtk-3.0 \
-		--pkg libnotify \
 		--pkg xmlbird \
 		--pkg libbirdfont
         """
@@ -456,9 +452,6 @@ def make_birdfont_test(target_binary, deps):
 		$(pkg-config --cflags gio-2.0) \
 		$(pkg-config --cflags cairo) \
 		$(pkg-config --cflags glib-2.0) \
-		$(pkg-config --cflags gdk-pixbuf-2.0) \
-		$(pkg-config --cflags webkitgtk-3.0) \
-		$(pkg-config --cflags libnotify) \
         -o OBJECT_FILE"""
         
     linker_command = config.CC + " " + config.LDFLAGS.get("birdfont-test", "") + """ \
@@ -469,10 +462,7 @@ def make_birdfont_test(target_binary, deps):
 		$(pkg-config --libs gio-2.0) \
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
-		$(pkg-config --libs gdk-pixbuf-2.0) \
-		$(pkg-config --libs webkitgtk-3.0) \
 		$(pkg-config --libs xmlbird) \
-		$(pkg-config --libs libnotify) \
 		-L./build -L./build/bin -l birdgems\
         -o build/bin/""" + target_binary
 
