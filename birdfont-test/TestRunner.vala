@@ -50,23 +50,27 @@ public class TestRunner : NativeWindow, GLib.Object  {
 	static void speed_test () {
 		Test test_object = new Test.time ("GObject");
 		
-		for (uint i = 0; i < 3000 * 300; i++) {
-			GLib.Object o = new GLib.Object ();
+		for (uint i = 0; i < 3000; i++) {
+			for (uint j = 0; j < 300; j++) {
+				GLib.Object o = new GLib.Object ();
+			}
 		}
 		
 		test_object.print ();
 
 		Test test_ref = new Test.time ("GObject ref");
 		
-		for (uint i = 0; i < 3000 * 300; i++) {
-			GLib.Object o = new GLib.Object ();
-			
-			for (int j = 0; j < 7; j++) {
-				o.ref ();
-			}
-			
-			for (int j = 0; j < 7; j++) {
-				o.unref ();
+		for (uint i = 0; i < 3000; i++) {
+			for (uint k = 0; k < 300; k++) {
+				GLib.Object o = new GLib.Object ();
+				
+				for (int j = 0; j < 7; j++) {
+					o.ref ();
+				}
+				
+				for (int j = 0; j < 7; j++) {
+					o.unref ();
+				}
 			}
 		}
 		
@@ -74,16 +78,20 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		
 		Test test_edit_point = new Test.time ("EditPoint creation");
 		
-		for (uint i = 0; i < 3000 * 300; i++) {
-			EditPoint ep = new EditPoint ();
+		for (uint i = 0; i < 3000; i++) {
+			for (uint j = 0; j < 300; j++) {
+				EditPoint ep = new EditPoint ();
+			}
 		}
 		
 		test_edit_point.print ();
 		
 		Test test_path = new Test.time ("Simple path creation");
 		
-		for (uint i = 0; i < 3000 * 300; i++) {
-			Path p = new Path ();
+		for (uint i = 0; i < 3000; i++) {
+			for (uint j = 0; j < 3000; j++) {
+				Path p = new Path ();
+			}
 		}
 		
 		test_path.print ();
