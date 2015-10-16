@@ -240,7 +240,7 @@ public class TextArea : Widget {
 				text_changed (get_text ());
 				break;		
 			default:
-				if (!KeyBindings.has_ctrl ()) {
+				if (!KeyBindings.has_ctrl () && !KeyBindings.has_logo ()) {
 					add_character (keyval);
 				} 
 				break;

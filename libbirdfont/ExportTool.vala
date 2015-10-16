@@ -196,8 +196,13 @@ public class ExportTool : GLib.Object {
 	public static void generate_html_document (string html_file, Font font) {
 		File file = File.new_for_path (html_file);
 		DataOutputStream os;
-		string name = ExportSettings.get_file_name (font);
+		string name;
 
+#if MAC 
+		name = ExportSettings.get_file_name_mac (font);
+#else
+		name = ExportSettings.get_file_name (font);
+#endif
 		try {
 			os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
 
