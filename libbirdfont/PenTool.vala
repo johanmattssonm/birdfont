@@ -149,8 +149,8 @@ public class PenTool : Tool {
 
 		release_action.connect ((self, b, ix, iy) => {
 			double x, y;
-			Glyph g;
-			
+			Glyph g;			
+	
 			g = MainWindow.get_current_glyph ();
 			x = Glyph.path_coordinate_x (ix);
 			y = Glyph.path_coordinate_y (iy);
@@ -176,8 +176,7 @@ public class PenTool : Tool {
 
 			point_selection_image = false;
 			BirdFont.get_current_font ().touch ();
-			reset_stroke ();
-			
+
 			foreach (Path p in g.get_visible_paths ()) {
 				if (p.is_open () && p.points.size > 0) {
 					p.get_first_point ().set_tie_handle (false);

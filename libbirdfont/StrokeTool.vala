@@ -85,7 +85,7 @@ public class StrokeTool : GLib.Object {
 		
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.1);
-		o = s.create_stroke (stroke, thickness, false); // set to true for faster stroke
+		o = s.create_stroke (stroke, thickness);
 				
 		return o;
 	}
@@ -94,9 +94,13 @@ public class StrokeTool : GLib.Object {
 		PathList o, m;
 		Path stroke;
 		
+		if (task.is_cancelled ()) {
+			return new PathList ();
+		}
+		
 		stroke = path.copy ();
 		stroke.remove_points_on_points (0.1);
-		o = create_stroke (stroke, thickness, false);
+		o = create_stroke (stroke, thickness);
 		o = get_all_parts (o);
 		o = remove_intersection_paths (o);
 		o = merge (o);
@@ -112,8 +116,7 @@ public class StrokeTool : GLib.Object {
 	void reset_flags (PathList o) {
 		foreach (Path p in o.paths) {
 			foreach (EditPoint ep in p.points) {
-				ep.flags &= uint.MAX ^ 
-					(EditPoint.INTERSECTION 
+				ep.flags &= ~(EditPoint.INTERSECTION 
 						| EditPoint.COPIED 
 						| EditPoint.NEW_CORNER 
 						| EditPoint.SELF_INTERSECTION);
@@ -2784,8 +2787,7 @@ public class StrokeTool : GLib.Object {
 		return sum > 0;
 	}	
 
-	public PathList create_stroke (Path original_path,
-		double thickness, bool fast) {
+	public PathList create_stroke (Path original_path, double thickness) {
 			
 		PathList pl;
 		EditPoint p1, p2, p3;
@@ -2834,7 +2836,7 @@ public class StrokeTool : GLib.Object {
 		corner1 = new EditPoint ();
 		corner1_inside = new EditPoint ();
 				
-		if (path.is_open () || fast) {
+		if (path.is_open ()) {
 			p1 = path.points.get (0);
 			p2 = path.points.get (1 % path.points.size);
 			
@@ -2852,17 +2854,16 @@ public class StrokeTool : GLib.Object {
 		}
 
 		min_increment = 0.02; // 0.013
-		
-		Test t1 = new Test.time ("generate");
+
 		for (i = 0; i < size; i++) {
 			p1 = path.points.get (i % path.points.size);
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
 
-			if (task.is_cancelled ()) {
+			if (unlikely (task.is_cancelled ())) {
 				return new PathList ();
 			}
-					
+
 			tolerance = 0.01;
 			step_increment = 1.05;
 			step_size = 0.039;
@@ -2888,8 +2889,8 @@ public class StrokeTool : GLib.Object {
 		
 			step = step_size;
 			keep = 0;
-			step_size = 0.05; // 0.01
-
+			step_size = 0.05;
+			
 			while (step < 1 - 2 * step_size) {
 				Path.get_point_for_step (p1, p2, step, out x, out y);
 				Path.get_point_for_step (p1, p2, step + step_size, out x2, out y2);
@@ -2988,86 +2989,27 @@ public class StrokeTool : GLib.Object {
 					add_corner (side2, previous_inside, start, p2.copy (), thickness);
 				}
 			}
-			t1.print();
-			
-			if (fast) {
-				EditPoint s1, s2;
-				bool open;
-				
-				convert_to_curve (side1);
-				convert_to_curve (side2);
-			
-				side2.reverse ();
-				s1 = side1.get_last_point ().copy ();
-				s2 = side2.get_first_point ().copy ();
-
-				s1.flags &= EditPoint.CURVE ^ EditPoint.ALL;
-				s2.flags &= EditPoint.CURVE ^ EditPoint.ALL;
-				
-				s1.convert_to_line ();
-				s2.convert_to_line ();
-							
-				open = path.is_open ();
-				
-				if (!open) {
-					path.reopen ();
-				}
-				
-				pl.append (merge_stroke_parts (path, side1, side2));
-
-				if (!open) {
-					path.close ();
-				}
-								
-				side1 = new Path ();
-				side2 = new Path ();
-				
-				get_segment (thickness, 0, 0.00001, p2, p3, out start);
-				get_segment (-thickness, 0, 0.00001, p2, p3, out start_inside);
-
-				previous = start.copy ();
-				previous_inside = start_inside.copy ();
-				
-				previous.flags |= EditPoint.CURVE;
-				previous_inside.flags |= EditPoint.CURVE;
-
-				side1.add_point (previous);
-				side2.add_point (previous_inside);
-			}
 		}
 		
-		if (!fast) {
-			side1.remove_points_on_points ();
-			side2.remove_points_on_points ();
+		side1.remove_points_on_points ();
+		side2.remove_points_on_points ();
+	
+		convert_to_curve (side1);
+		convert_to_curve (side2);
 		
-			convert_to_curve (side1);
-			convert_to_curve (side2);
+		side2.reverse ();		
+		pl = merge_stroke_parts (path, side1, side2);
 			
-			side2.reverse ();
-			
-			Test t2 = new Test.time ("merge2");
-			pl = merge_stroke_parts (path, side1, side2);
-			t2.print();
-		}
-
-		if (fast) {
-			foreach (Path p in pl.paths) {
-				p.close ();
-				convert_to_curve (p);
-			}
-		}
-				
 		return pl;
 	}
 	
 	void convert_to_curve (Path path) {
 		if (path.is_open ()) {
-			path.get_first_point ().flags &= EditPoint.ALL ^ EditPoint.CURVE;
-			path.get_last_point ().flags &= EditPoint.ALL ^ EditPoint.CURVE;
+			path.get_first_point ().flags &= ~EditPoint.CURVE;
+			path.get_last_point ().flags &= ~EditPoint.CURVE;
 		}
 		
 		path.recalculate_linear_handles ();
-		path.remove_points_on_points ();
 
 		foreach (EditPoint ep in path.points) {
 			if ((ep.flags & EditPoint.SEGMENT_END) == 0) {

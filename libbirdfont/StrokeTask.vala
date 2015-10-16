@@ -37,10 +37,7 @@ public class StrokeTask : Task {
 		
 		w = background_path.stroke;
 		
-		Test t = new Test.time ("full stroke");
 		stroke = tool.get_stroke (background_path, w);
-		t.print ();
-		print(@"Cancelled: $(is_cancelled ())\n");
 		
 		IdleSource idle = new IdleSource (); 
 		idle.set_callback (() => {	

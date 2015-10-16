@@ -956,11 +956,8 @@ public class Path : GLib.Object {
 	}
 	
 	public EditPoint add (double x, double y) {
-		if (points.size > 0) {
-			return add_after (x, y, points.get (points.size - 1));
-		}
-		
-		return add_after (x, y, null);
+		EditPoint ep = new EditPoint (x, y);
+		return add_point (ep);
 	}
 
 	public EditPoint add_point (EditPoint p) {
@@ -980,14 +977,6 @@ public class Path : GLib.Object {
 		last_point = p;
 		
 		return p;
-	}
-
-	/** Insert a new point after @param previous_point and return a reference 
-	 * to the new item in list.
-	 */
-	public EditPoint add_after (double x, double y, EditPoint? previous_point) {
-		EditPoint p = new EditPoint (x, y, PointType.NONE);	
-		return add_point_after (p, previous_point);
 	}
 	
 	/** @return a list item pointing to the new point */
@@ -2454,9 +2443,16 @@ public class Path : GLib.Object {
 			return;
 		}
 		
-		print(@"Create full stroke for $(points.size) points.\n");
 		StrokeTask task = new StrokeTask (this);
-		MainWindow.native_window.run_non_blocking_background_thread (task);
+		
+		// Create idle task in order ignore repeted calls to this method
+		// during one main loop iteration.
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {			
+			MainWindow.native_window.run_non_blocking_background_thread (task);
+			return false;
+		});
+		idle.attach (null);
 		
 		stop_stroke_creator ();
 		stroke_creator = task;
@@ -2487,9 +2483,7 @@ public class Path : GLib.Object {
 		}
 		
 		StrokeTool s = new StrokeTool ();
-		Test t = new Test.time ("fast stroke");
 		fast_stroke = s.get_stroke_fast (this, stroke);
-		t.print();
 		
 		return (!) fast_stroke;
 	}

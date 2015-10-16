@@ -89,7 +89,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		Test test_path = new Test.time ("Simple path creation");
 		
 		for (uint i = 0; i < 3000; i++) {
-			for (uint j = 0; j < 3000; j++) {
+			for (uint j = 0; j < 300; j++) {
 				Path p = new Path ();
 			}
 		}
@@ -109,7 +109,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		
 		Test test_cairo = new Test.time ("Simple Cairo");
 		
-		for (int i = 0; i < 3000; i++) {
+		for (int i = 0; i < 300; i++) {
 			ImageSurface s;
 			Context c;
 			
@@ -129,7 +129,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 
 		Test test_toolbox = new Test.time ("Toolbox");
 		
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 3000; i++) {
 			ImageSurface s;
 			Context c;
 			
@@ -142,7 +142,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 
 		Test test_tool_drawing = new Test.time ("Draw Tool");
 		
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 3000; i++) {
 			ImageSurface s;
 			Context c;
 			Tool tool;
@@ -157,7 +157,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		
 		Test test_tool = new Test.time ("Create Tool");
 		
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 3000; i++) {
 			Tool tool;
 			tool = new Tool ();
 			tool.set_tool_visibility (true);
