@@ -27,12 +27,7 @@ public class CmapSubtableFormat12 : GLib.Object {
 		uint32 first_assigned;
 		uint32 indice;
 		
-		first_assigned = 0;
-		foreach (GlyphCollection g in glyf_table.glyphs) {
-			if (!g.is_unassigned () && g.get_unicode_character () == '\0') {
-				first_assigned++;
-			}
-		}
+		first_assigned = 1;
 		
 		foreach (GlyphCollection g in glyf_table.glyphs) {
 			if (!g.is_unassigned () && g.get_unicode_character () < 0xFFFFFFFF) {
