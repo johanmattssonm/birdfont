@@ -148,7 +148,18 @@ public class NameTable : OtfTable {
 	public string validate_name (string s) {
 		return name_validation (s, true);
 	}
+
+	public string validate_full_name (string s) {
+		string n = name_validation (s, true);
+		string regular_suffix = " Regular";
 		
+		if (n.has_suffix (regular_suffix)) {
+			n = n.substring (0, n.length - regular_suffix.length);
+		}
+		
+		return n;
+	}
+			
 	public static string name_validation (string s, bool allow_space,
 		int max_length = 27) {
 			
@@ -157,7 +168,7 @@ public class NameTable : OtfTable {
 		unichar c;
 		StringBuilder name = new StringBuilder ();
 		
-		n = s;
+		n = s.strip ();
 		ccount = n.char_count ();
 		// truncate strings longer than 28 characters
 		for (int i = 0; i < ccount && i < max_length; i++) {
@@ -233,7 +244,7 @@ public class NameTable : OtfTable {
 		text.add (validate_name (font.unique_identifier));
 		type.add (UNIQUE_IDENTIFIER);
 
-		text.add (validate_name (font.full_name));
+		text.add (validate_full_name (font.full_name));
 		type.add (FULL_FONT_NAME);
 		
 		text.add (font.version);
@@ -242,13 +253,13 @@ public class NameTable : OtfTable {
 		text.add (validate_ps_name (font.postscript_name));
 		type.add (POSTSCRIPT_NAME);
 
-		text.add (validate_ps_name (font.trademark));
+		text.add (font.trademark);
 		type.add (TRADE_MARK);
 		
-		text.add (validate_ps_name (font.manufacturer));
+		text.add (font.manufacturer);
 		type.add (MANUFACTURER);
 
-		text.add (validate_ps_name (font.designer));
+		text.add (font.designer);
 		type.add (DESIGNER);
 			
 		text.add (font.description);
