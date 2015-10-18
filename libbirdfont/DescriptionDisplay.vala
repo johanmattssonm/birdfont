@@ -216,7 +216,7 @@ public class DescriptionDisplay : TableLayout {
 		widgets.add (trademark);
 		focus_ring.add (trademark);
 
-		widgets.add (new Text (t_("Manufakturer"), label_size, label_margin));
+		widgets.add (new Text (t_("Manufacturer"), label_size, label_margin));
 		manufacturer.margin_bottom = margin;
 		manufacturer.set_text (font.manufacturer);
 		manufacturer.scroll.connect (scroll_event);
