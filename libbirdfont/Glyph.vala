@@ -174,10 +174,6 @@ public class Glyph : FontDisplay {
 		
 		warning ("Layer is not added to glyph.");
 	}
-
-	public PathList get_visible_path_list () {
-		return layers.get_visible_paths ();
-	}
 		
 	public Gee.ArrayList<Path> get_visible_paths () {
 		return layers.get_visible_paths ().paths;
@@ -2384,6 +2380,39 @@ public class Glyph : FontDisplay {
 			
 			set_current_layer (layer);
 		} 
+	}
+	
+	public void fix_curve_orientation () {
+		int inside_count;
+		bool inside;
+		Path outline;
+		
+		foreach (Path p1 in get_visible_paths ()) {
+			inside_count = 0;
+			
+			foreach (Path p2 in get_visible_paths ()) {
+				if (p1 != p2) {
+					inside = true;
+					outline = p2.flatten ();
+					
+					foreach (EditPoint ep in p1.points) {
+						if (!SvgParser.is_inside (ep, outline)) {
+							inside = false;
+						}
+					}
+					
+					if (inside) {
+						inside_count++; 
+					}
+				}
+			}
+
+			if (inside_count % 2 == 0) {
+				p1.force_direction (Direction.CLOCKWISE);
+			} else {
+				p1.force_direction (Direction.COUNTER_CLOCKWISE);
+			}
+		}
 	}
 }
 

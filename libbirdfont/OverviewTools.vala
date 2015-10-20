@@ -132,11 +132,51 @@ public class OverviewTools : ToolCollection  {
 		alternate.select_action.connect (add_new_alternate);
 		glyph_expander.add_tool (alternate);
 		
+		Tool curve_orientation = new Tool ("curve_orientation", t_("Set curve orientation"));
+		curve_orientation.select_action.connect ((self) => {
+			Task t = new Task (fix_curve_orientation);
+			
+			MainWindow.native_window.run_background_thread (t);
+			
+			IdleSource idle = new IdleSource ();
+			idle.set_callback (() => {
+				self.set_selected (false);
+				BirdFont.get_current_font ().touch ();		
+				return false;
+			});
+			idle.attach (null);
+		});
+		glyph_expander.add_tool (curve_orientation);
+		
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
 		expanders.add (character_sets);
 		expanders.add (transform_expander);
 		expanders.add (glyph_expander);
+	}
+
+	void fix_curve_orientation () {
+		OverView o;
+		Glyph g;
+		OverView.OverViewUndoItem ui;
+		
+		o = get_overview ();
+		ui = new OverView.OverViewUndoItem ();
+		
+		Font f = BirdFont.get_current_font ();
+		ui.alternate_sets = f.alternates.copy ();
+		
+		foreach (GlyphCollection gc in o.selected_items) {
+			if (gc.length () > 0) {
+				g = gc.get_current ();
+				ui.glyphs.add (gc.copy_deep ());
+				g.add_help_lines ();
+				g.fix_curve_orientation ();
+			}
+		}
+		
+		o.undo_items.add (ui);
+		GlyphCanvas.redraw ();
 	}
 	
 	public void add_new_alternate (Tool tool) {
