@@ -38,7 +38,7 @@ doit.
 Configure, build and install with python:
 
     ./configure
-    ./scripts/linux_build.py
+    ./build.py
     sudo ./install.py
 
 Configure, build and install with doit:

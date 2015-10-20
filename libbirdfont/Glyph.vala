@@ -179,6 +179,10 @@ public class Glyph : FontDisplay {
 		return layers.get_visible_paths ().paths;
 	}
 
+	public PathList get_visible_path_list () {
+		return layers.get_visible_paths ();
+	}
+	
 	public Gee.ArrayList<Path> get_paths_in_current_layer () {
 		return get_current_layer ().get_all_paths ().paths;
 	}
