@@ -28,7 +28,6 @@ packages with a -dev or -devel affix:
     libwebkitgtk-3.0-dev 
     libnotify-dev
     libsqlite3-dev
-    unicode-data (unicode character database)
 
 XML Bird is available from [birdfont.org][xmlbird].
 
