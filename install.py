@@ -123,7 +123,9 @@ if not options.nocli:
 	install ('build/bin/birdfont-import', '/bin', 755)
 
 #library
-if not options.libdir:
+if sys.platform == 'darwin':
+	libdir = '/lib'
+elif not options.libdir:
 	
 	if platform.dist()[0] == 'Ubuntu' or platform.dist()[0] == 'Debian':
 		process = subprocess.Popen(['dpkg-architecture', '-qDEB_HOST_MULTIARCH'], stdout=subprocess.PIPE)
