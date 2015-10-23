@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2012, 2014, 2015 Johan Mattsson
+	Copyright (C) 2012 2014 2015 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 using Cairo;
@@ -28,6 +28,7 @@ public class TabBar : GLib.Object {
 	static const int PREVIOUS_TAB = -3;
 	static const int PROGRESS_WHEEL = -3;
 	static const int SHOW_MENU = -4;
+	static const int STOP_BUTTON = -5;
 
 	int first_tab = 0;
 	int selected = 0;
@@ -43,6 +44,7 @@ public class TabBar : GLib.Object {
 	double scale = 1; // scale images in 320 dpi
 	
 	bool processing = false;
+	bool stop_button = false;
 	double wheel_rotation = 0;
 
 	double background_r = 51 /255.0;
@@ -51,6 +53,7 @@ public class TabBar : GLib.Object {
 	
 	Text menu_icon;
 	Text progress_icon;
+	Text stop_icon;
 	Text left_arrow;
 	Text right_arrow;
 	
@@ -63,6 +66,9 @@ public class TabBar : GLib.Object {
 		progress_icon = new Text ("progress");
 		progress_icon.load_font (Theme.get_icon_file ());
 
+		stop_icon = new Text ("stop");
+		stop_icon.load_font (Theme.get_icon_file ());
+		
 		left_arrow = new Text ("left_arrow");
 		left_arrow.load_font (Theme.get_icon_file ());
 		
@@ -83,17 +89,11 @@ public class TabBar : GLib.Object {
 	}
 	
 	public void motion (double x, double y) {
-		MainWindow.set_cursor (NativeWindow.VISIBLE);
-		
-		if (MenuTab.has_suppress_event ()) {
-			warn_if_test ("Event suppressed");
-			return;
-		}
-		
-		over_close (x, y, out over, out over_close_tab);
+		MainWindow.set_cursor (NativeWindow.VISIBLE);		
+		motion_event (x, y, out over, out over_close_tab);
 	}
 
-	private void over_close (double x, double y, out int over, out int over_close_tab) {
+	private void motion_event (double x, double y, out int over, out int over_close_tab) {
 		int i = 0;
 		double offset = 0;
 		bool close_y, close_x;
@@ -110,14 +110,27 @@ public class TabBar : GLib.Object {
 				over = SHOW_MENU;
 				return;
 			}
-		} else if (has_scroll () && has_progress_wheel ()) {
-			if (x > width - 19) {
+		} else if (!has_scroll () && cancelable_task ()) {
+			if (x > width - 19 && 10 <= y < height - 10) {
 				over_close_tab = NO_TAB;
-				over = PROGRESS_WHEEL;
+				over = STOP_BUTTON;
+				stop_button = true;
+				redraw_tab_bar (0, 0, width, height);
+			} else {
+				stop_button = false;
+			}
+		} else if (has_scroll () && cancelable_task ()) {
+			if (x > width - 19 && 10 <= y < height - 10) {
+				over_close_tab = NO_TAB;
+				over = STOP_BUTTON;
+				stop_button = true;
+				redraw_tab_bar (0, 0, width, height);
+				return;
 			} else if (x > width - 2 * 19) {
 				over_close_tab = NO_TAB;
 				over = NEXT_TAB;
 			}
+			stop_button = false;
 		} else if (!has_scroll () && has_progress_wheel ()) {
 			if (x > width - 19) {
 				over_close_tab = NO_TAB;
@@ -158,11 +171,14 @@ public class TabBar : GLib.Object {
 			offset += t.get_width ();
 			i++;
 		}
-
+		
 		over_close_tab = NO_TAB;		
 		over = NO_TAB;
 	}	
 	
+	bool cancelable_task () {
+		return MainWindow.blocking_background_task.is_cancellable ();
+	}
 	
 	/** Select tab for a glyph by charcode or name.
 	 * @return true if the tab was found
@@ -447,9 +463,7 @@ public class TabBar : GLib.Object {
 		}
 
 		selected = index;
-		
 		t = tabs.get (index);
-		
 		previous_tab = current_tab;
 		current_tab = t;
 
@@ -510,7 +524,6 @@ public class TabBar : GLib.Object {
 		}
 		
 		foreach (Tab t in tabs) {
-			
 			if (i < first_tab) {
 				i++;
 				continue;
@@ -552,9 +565,11 @@ public class TabBar : GLib.Object {
 		this.height = height;
 		this.scale = height / 117.0;
 		
-		over_close (x, y, out over, out close);
-
-		if (over_close_tab >= 0 && over == selected) {
+		motion_event (x, y, out over, out close);
+		
+		if (stop_button) {
+			MainWindow.abort_task ();
+		} else if (over_close_tab >= 0 && over == selected) {
 			close_tab (over_close_tab);
 		} else {
 			select_tab (over);
@@ -651,26 +666,33 @@ public class TabBar : GLib.Object {
 			right_arrow.draw (cr);
 		}
 		
-		// progress wheel
 		if (has_progress_wheel ()) {
 			double progress_size = 40 / scale;
+			Text wheel = has_stop_button () ? stop_icon : progress_icon;
 			
-			Theme.text_color (progress_icon, "Text Tab Bar");
+			print (@"has_stop_button: $(has_stop_button())\n");
+			if (!has_stop_button ()) {
+				Theme.text_color (wheel, "Text Tab Bar");
+			} else {
+				Theme.text_color (wheel, "Highlighted 1");
+			}
 			
 			double middley = h / 2;
-			double middlex = w - (progress_icon.get_sidebearing_extent () / 2) / scale;
-			progress_icon.set_font_size (progress_size);
-			progress_icon.widget_x = middlex;
-			progress_icon.widget_y = middley;
+			double middlex = w - (wheel.get_sidebearing_extent () / 2) / scale;
+			wheel.set_font_size (progress_size);
+			wheel.widget_x = middlex;
+			wheel.widget_y = middley;
 			
-			progress_icon.use_cache (false);
+			wheel.use_cache (false);
 			
 			cr.save ();
-			cr.translate (middlex, middley);
-			cr.rotate (wheel_rotation);
-			cr.translate (-middlex, -middley);
-
-			progress_icon.draw_at_baseline (cr, progress_icon.widget_x, progress_icon.widget_y);
+			if (!has_stop_button ()) {
+				cr.translate (middlex, middley);
+				cr.rotate (wheel_rotation);
+				cr.translate (-middlex, -middley);
+			}
+			
+			wheel.draw_at_baseline (cr, wheel.widget_x, wheel.widget_y);
 			cr.restore ();
 		} else {
 			// menu icon
@@ -826,6 +848,11 @@ public class TabBar : GLib.Object {
 		add_tab (new EmptyTab (name, label));
 	}
 	
+	bool has_stop_button () {
+		return processing 
+			&& stop_button;
+	}
+	
 	bool has_progress_wheel () {
 		return processing;
 	}
@@ -840,6 +867,10 @@ public class TabBar : GLib.Object {
 		
 		processing = running;
 		
+		if (!processing) {
+			stop_button = false;
+		}
+		
 		if (processing) {
 			timer = new TimeoutSource (50);
 			timer.set_callback (() => {
@@ -850,6 +881,7 @@ public class TabBar : GLib.Object {
 				}
 				
 				redraw_tab_bar (width - 40, 0, 40, height);
+				
 				return processing;
 			});
 			timer.attach (null);

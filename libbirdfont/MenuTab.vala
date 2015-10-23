@@ -632,7 +632,7 @@ public class MenuTab : FontDisplay {
 		}
 		
 		Task t = new Task (simplify);
-		MainWindow.native_window.run_background_thread (t);
+		MainWindow.run_blocking_task (t);
 	}
 	
 	private static void simplify () {

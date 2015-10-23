@@ -19,13 +19,13 @@ public class StrokeTask : Task {
 	Path background_path; // path in background thread
 	
 	public StrokeTask (Path path) {
-		base (null);
+		base (null, true);
 		original = path;
 		background_path = path.copy ();
 	}
 
 	public StrokeTask.none () {
-		base (null);
+		base (null, true);
 		original = new Path ();
 		background_path = new Path ();
 	}

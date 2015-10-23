@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+    Copyright (C) 2012s 2013 2014 Johan Mattsson
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -629,7 +629,6 @@ class TabbarCanvas : DrawingArea {
 	public TabbarCanvas (TabBar tb) {		
 		tabbar = tb;
 
-		// FIXME: DELETE set_extension_events (ExtensionMode.CURSOR | EventMask.POINTER_MOTION_MASK);
 		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK);
 			  
 		motion_notify_event.connect ((t, e)=> {

@@ -19,15 +19,36 @@ public class Task : GLib.Object {
 	public delegate void Runnable ();
 	Runnable task;
 	bool cancelled = false;
-	
-	public Task (owned Runnable? r) {
+	bool cancelable = false;
+
+	public Task.empty () {
+	}
+		
+	public Task (owned Runnable? r, bool cancelable = false) {
 		if (r != null) {
 			task = (!) ((owned) r);
 		}
+		
+		this.cancelable = cancelable;
+	}
+	
+	public bool is_cancellable () {
+		bool c;
+		
+		lock (cancelled) {	
+			c = cancelable;
+		}
+		
+		return c;
 	}
 
 	public void cancel () {
-		lock (cancelled) {	
+		print("Cancel task.\n");
+		lock (cancelled) {			
+			if (unlikely (!cancelable)) {
+				warning ("Task is not cancelable.");
+			}
+			
 			cancelled = true;
 		}
 	}
@@ -49,6 +70,7 @@ public class Task : GLib.Object {
 		}
 		
 		task ();
+		print("Task finished.\n");
 	}
 
 	public void* perform_task() {

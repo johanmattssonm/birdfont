@@ -136,7 +136,7 @@ public class OverviewTools : ToolCollection  {
 		curve_orientation.select_action.connect ((self) => {
 			Task t = new Task (fix_curve_orientation);
 			
-			MainWindow.native_window.run_background_thread (t);
+			MainWindow.run_blocking_task (t);
 			
 			IdleSource idle = new IdleSource ();
 			idle.set_callback (() => {
