@@ -52,11 +52,7 @@ bool is_arrow_key (uint keyval) {
 }
 
 bool is_modifier_key (uint i) {
-	return Key.UP == i ||
-		Key.RIGHT == i ||
-		Key.DOWN == i ||
-		Key.LEFT == i ||
-		Key.PG_UP == i ||
+	return Key.PG_UP == i ||
 		Key.PG_DOWN == i ||
 		Key.ENTER == i ||
 		Key.BACK_SPACE == i ||
