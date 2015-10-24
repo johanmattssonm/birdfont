@@ -35,7 +35,7 @@ public class LicenseDialog : Dialog {
 		agreement.text_color = Theme.get_color ("Text Tool Box");
 		agreement.set_text ("This is the freeware version of BirdFont. You may use it for creating fonts under the SIL Open Font License.\n\nWhich license do you want to use for your font?");
 		
-		decline = new Button ("Commercial");
+		decline = new Button ("Commercial License");
 		decline.action.connect (() => {
 			commercial ();
 		});

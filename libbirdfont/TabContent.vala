@@ -97,9 +97,7 @@ public class TabContent : GLib.Object {
 			if (dialog.visible) {
 				dialog.allocation = allocation;
 				dialog.draw (cr);
-			}
-
-			if (menu.show_menu) {
+			} else if (menu.show_menu) {
 				menu.draw (allocation, cr);
 			}
 
@@ -131,7 +129,7 @@ public class TabContent : GLib.Object {
 	}
 
 	public static void key_press (uint keyval) {
-		if (MenuTab.has_suppress_event ()) {
+		if (MenuTab.has_suppress_event () || dialog.visible) {
 			return;
 		}
 
@@ -153,7 +151,7 @@ public class TabContent : GLib.Object {
 	}
 
 	public static void key_release (uint keyval) {
-		if (MenuTab.has_suppress_event ()) {
+		if (MenuTab.has_suppress_event () || dialog.visible) {
 			return;
 		}
 
