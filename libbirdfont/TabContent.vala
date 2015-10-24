@@ -129,7 +129,7 @@ public class TabContent : GLib.Object {
 	}
 
 	public static void key_press (uint keyval) {
-		if (MenuTab.has_suppress_event () || dialog.visible) {
+		if (MenuTab.has_suppress_event () || MainWindow.get_dialog ().visible) {
 			return;
 		}
 
@@ -151,7 +151,7 @@ public class TabContent : GLib.Object {
 	}
 
 	public static void key_release (uint keyval) {
-		if (MenuTab.has_suppress_event () || dialog.visible) {
+		if (MenuTab.has_suppress_event () || MainWindow.get_dialog ().visible) {
 			return;
 		}
 
