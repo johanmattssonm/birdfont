@@ -18,8 +18,9 @@ namespace BirdFont {
 
 public class MessageDialog : Dialog {
 
-	Button ok_button;
+	public Button ok_button;
 	TextArea message;
+	public signal void close ();
 	
 	public MessageDialog (string message) {
 		Color c = Theme.get_color ("Text Tool Box");
@@ -34,9 +35,12 @@ public class MessageDialog : Dialog {
 		this.message.height = this.message.min_height;
 
 		ok_button = new Button (t_("Close"));
-		ok_button.action.connect (() => {
-			MainWindow.hide_dialog ();
-		});
+		ok_button.action.connect (close_action);
+	}
+
+	public void close_action () {
+		close ();
+		MainWindow.hide_dialog ();
 	}
 
 	public override void draw (Context cr) {	

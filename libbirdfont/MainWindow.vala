@@ -79,6 +79,10 @@ public class MainWindow : GLib.Object {
 		set_cursor (NativeWindow.VISIBLE);
 	}
 
+	public static void show_license_dialog () {
+		show_dialog (new LicenseDialog ());
+	}
+
 	public static void set_cursor (int flags) {
 		if (BirdFont.has_argument ("--test")) {
 			if (dialog.visible) {
@@ -89,8 +93,9 @@ public class MainWindow : GLib.Object {
 		}
 	}
 
-	public static void show_message (string text) {
-		show_dialog (new MessageDialog (text));
+	public static void  show_message (string text) {
+		MessageDialog md = new MessageDialog (text);
+		show_dialog (md);
 	}
 
 	public static void hide_dialog () {

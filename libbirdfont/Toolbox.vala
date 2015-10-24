@@ -53,6 +53,7 @@ public class Toolbox : GLib.Object  {
 	double tool_tip_y = 0;
 	
 	public signal void new_tool_set (Tab? tab);
+	bool suppress_event = false;
 	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		tool_sets = new Gee.ArrayList<ToolCollection> ();
@@ -90,6 +91,10 @@ public class Toolbox : GLib.Object  {
 		});
 		
 		update_expanders ();
+	}
+
+	public void set_suppress_event (bool e) {
+		suppress_event = e;
 	}
 
 	public static DrawingTools get_drawing_tools () {
@@ -144,7 +149,7 @@ public class Toolbox : GLib.Object  {
 	}
 	
 	public void press (uint button, double x, double y) {
-		if (MenuTab.has_suppress_event ()) {
+		if (MenuTab.has_suppress_event () || suppress_event) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -171,7 +176,7 @@ public class Toolbox : GLib.Object  {
 		
 		y -= current_set.scroll;
 		
-		if (MenuTab.has_suppress_event ()) {
+		if (MenuTab.has_suppress_event () || suppress_event) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -198,7 +203,7 @@ public class Toolbox : GLib.Object  {
 	}
 
 	public void double_click (uint button, double x, double y) {
-		if (MenuTab.has_suppress_event ()) {
+		if (MenuTab.has_suppress_event () || suppress_event) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -219,7 +224,7 @@ public class Toolbox : GLib.Object  {
 		
 		y -= current_set.scroll;
 		
-		if (MenuTab.has_suppress_event ()) {
+		if (MenuTab.has_suppress_event () || suppress_event) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
