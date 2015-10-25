@@ -61,15 +61,12 @@ public class SearchPaths {
 		f = get_file (BirdFont.exec_path + "\\", name + "\\");
 		if (likely (f.query_exists ())) return f;
 		
-		f = get_file (bundle_path + "/Contents/Resources/", d + "/" + name);
+		f = get_file (bundle_path + "/Contents/Resources/birdfont_resources/", d + "/" + name);
 		if (likely (f.query_exists ())) return f;
 		
-		f = get_file (bundle_path + "/Contents/Resources/", name + "/");
+		f = get_file (bundle_path + "/Contents/Resources/birdfont_resources/", name + "/");
 		if (likely (f.query_exists ())) return f;
-
-		f = get_file (bundle_path + "/Contents/MacOS/", name);
-		if (likely (f.query_exists ())) return f;
-				
+        
 		f = get_file ("./" + d + "/", name);
 		if (likely (f.query_exists ())) return f;		
 
@@ -113,9 +110,9 @@ public class SearchPaths {
 		}
 		
 		if (!is_null (BirdFont.exec_path)) {
-			f = BirdFont.exec_path + "/Contents/Resources/locale/sv/LC_MESSAGES/birdfont.mo";
+			f = BirdFont.exec_path + "/Contents/Resources/birdfont_resources/locale/sv/LC_MESSAGES/birdfont.mo";
 			if (exists (f)) {
-				return BirdFont.exec_path + "/Contents/Resources/locale";
+				return BirdFont.exec_path + "/Contents/birdfont_resources/Resources/locale";
 			}
 			
 			f = BirdFont.exec_path + "\\locale\\sv\\LC_MESSAGES\\birdfont.mo";
@@ -144,14 +141,14 @@ public class SearchPaths {
 			return "/usr/share/locale";
 		}
 		
-		f = BirdFont.exec_path + "/Contents/Resources/locale";
+		f = BirdFont.exec_path + "/Contents/Resources/birdfont_resources/locale";
 		if (exists (f)) {
-			return BirdFont.exec_path + "/Contents/Resources/locale";
+			return BirdFont.exec_path + "/Contents/Resources/birdfont_resources/locale";
 		}
 
-		f = bundle_path + "/Contents/Resources/locale";
+		f = bundle_path + "/Contents/Resources/birdfont_resources/locale";
 		if (exists (f)) {
-			return bundle_path + "/Contents/Resources/locale";
+			return bundle_path + "/Contents/Resources/birdfont_resources/locale";
 		}
 				
 		warning ("translations not found");

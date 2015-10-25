@@ -327,6 +327,8 @@ public class BackgroundImage {
 			return;
 		}
 		
+        folder.make_directory ();
+        
 		converted = MainWindow.native_window.convert_to_png (path.dup (), ((!) png_image.get_path ()).dup ());
 		
 		if (!converted) {
