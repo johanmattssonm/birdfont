@@ -1,3 +1,14 @@
+birdfont (2.13.0) stable;
+
+  * More descriptive fields in TTF fonts (license, designer, URL etc.)
+  * Stylistic alternates (OpenType feature tag: salt)
+  * Small Caps (OpenType feature tag: scmp)
+  * Capitals to Small Caps (OpenType feature tag: c2sc)
+  * Swashes (OpenType feature tag: swsh)
+  * Parse circles, ellipses and lines in SVG files
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com  Mon Oct 26 11:33:09 CET 2015
+
 birdfont (2.12.0) stable;
 
   * Support for HiDPI screens and many small tweaks
