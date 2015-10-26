@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-18 12:02+0200\n"
-"PO-Revision-Date: 2015-10-07 17:31+0000\n"
+"POT-Creation-Date: 2015-10-26 11:35+0100\n"
+"PO-Revision-Date: 2015-10-19 18:37+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1444239106.000000\n"
+"X-POOTLE-MTIME: 1445279836.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -261,7 +261,7 @@ msgstr "Licence"
 
 #: libbirdfont/DescriptionDisplay.vala:195
 msgid "License URL"
-msgstr ""
+msgstr "URL Licence"
 
 #: libbirdfont/DescriptionDisplay.vala:207
 msgid "Trademark"
@@ -269,15 +269,15 @@ msgstr "ochranná známka"
 
 #: libbirdfont/DescriptionDisplay.vala:219
 msgid "Manufacturer"
-msgstr ""
+msgstr "Výrobce"
 
 #: libbirdfont/DescriptionDisplay.vala:230
 msgid "Designer"
-msgstr ""
+msgstr "Návrhář"
 
 #: libbirdfont/DescriptionDisplay.vala:241
 msgid "Vendor URL"
-msgstr ""
+msgstr "URL dodavatele"
 
 #: libbirdfont/DescriptionDisplay.vala:252
 msgid "Designer URL"
@@ -726,8 +726,8 @@ msgstr "Unicode"
 msgid "Insert"
 msgstr "Vložit"
 
-#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:218
-#: libbirdfont/MessageDialog.vala:36 libbirdfont/SpinButton.vala:208
+#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:223
+#: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
 msgid "Close"
 msgstr "Zavřít"
 
@@ -801,8 +801,9 @@ msgid "You have reached the end of the list."
 msgstr "Dosáhl jste konce seznamu."
 
 #: libbirdfont/KerningTools.vala:164
+#, fuzzy
 msgid "Substitutions"
-msgstr ""
+msgstr "nahrazení"
 
 #: libbirdfont/LanguageSelectionTab.vala:28 libbirdfont/OverviewTools.vala:37
 msgid "Character Sets"
@@ -897,7 +898,7 @@ msgstr "Toto písmo bylo uděláno ve staré verzi Birdfontu."
 msgid "You need an older version of Birdfont to open it."
 msgstr "K jeho otevření potřebujete starší verzi Birdfontu."
 
-#: libbirdfont/MainWindow.vala:218
+#: libbirdfont/MainWindow.vala:223
 msgid "Glyph sequence"
 msgstr "Pořadí znaků"
 
@@ -1250,6 +1251,10 @@ msgstr ""
 
 #: libbirdfont/OverviewTools.vala:131
 msgid "Create alternate"
+msgstr ""
+
+#: libbirdfont/OverviewTools.vala:135
+msgid "Set curve orientation"
 msgstr ""
 
 #: libbirdfont/PenTool.vala:82

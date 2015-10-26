@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-18 12:02+0200\n"
-"PO-Revision-Date: 2015-09-25 22:36+0000\n"
+"POT-Creation-Date: 2015-10-26 11:35+0100\n"
+"PO-Revision-Date: 2015-10-20 14:42+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1443220573.000000\n"
+"X-POOTLE-MTIME: 1445352169.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -133,7 +133,7 @@ msgstr "esquina"
 
 #: libbirdfont/BezierTool.vala:103
 msgid "on axis"
-msgstr ""
+msgstr "en eje"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -252,11 +252,11 @@ msgstr "Derechos de autor"
 
 #: libbirdfont/DescriptionDisplay.vala:183
 msgid "License"
-msgstr ""
+msgstr "Licencia"
 
 #: libbirdfont/DescriptionDisplay.vala:195
 msgid "License URL"
-msgstr ""
+msgstr "URL de la licencia"
 
 #: libbirdfont/DescriptionDisplay.vala:207
 msgid "Trademark"
@@ -726,8 +726,8 @@ msgstr "Unicode"
 msgid "Insert"
 msgstr "Insertar"
 
-#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:218
-#: libbirdfont/MessageDialog.vala:36 libbirdfont/SpinButton.vala:208
+#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:223
+#: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
 msgid "Close"
 msgstr "Cerrar"
 
@@ -903,7 +903,7 @@ msgstr ""
 msgid "You need an older version of Birdfont to open it."
 msgstr ""
 
-#: libbirdfont/MainWindow.vala:218
+#: libbirdfont/MainWindow.vala:223
 msgid "Glyph sequence"
 msgstr "Secuencia de glifos"
 
@@ -1260,6 +1260,10 @@ msgstr ""
 
 #: libbirdfont/OverviewTools.vala:131
 msgid "Create alternate"
+msgstr ""
+
+#: libbirdfont/OverviewTools.vala:135
+msgid "Set curve orientation"
 msgstr ""
 
 #: libbirdfont/PenTool.vala:82

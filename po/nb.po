@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-18 12:02+0200\n"
+"POT-Creation-Date: 2015-10-26 11:35+0100\n"
 "PO-Revision-Date: 2015-09-08 19:57+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -738,8 +738,8 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:218
-#: libbirdfont/MessageDialog.vala:36 libbirdfont/SpinButton.vala:208
+#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:223
+#: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
 msgid "Close"
 msgstr "Lukk"
 
@@ -912,7 +912,7 @@ msgstr ""
 msgid "You need an older version of Birdfont to open it."
 msgstr ""
 
-#: libbirdfont/MainWindow.vala:218
+#: libbirdfont/MainWindow.vala:223
 msgid "Glyph sequence"
 msgstr "Tegnsekvens"
 
@@ -1288,6 +1288,10 @@ msgstr ""
 
 #: libbirdfont/OverviewTools.vala:131
 msgid "Create alternate"
+msgstr ""
+
+#: libbirdfont/OverviewTools.vala:135
+msgid "Set curve orientation"
 msgstr ""
 
 #: libbirdfont/PenTool.vala:82

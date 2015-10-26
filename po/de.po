@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-18 12:02+0200\n"
-"PO-Revision-Date: 2015-08-26 07:52+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"POT-Creation-Date: 2015-10-26 11:35+0100\n"
+"PO-Revision-Date: 2015-10-25 09:40+0000\n"
+"Last-Translator: boombuler <boombuler@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1440575530.000000\n"
+"X-POOTLE-MTIME: 1445766015.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -252,19 +252,19 @@ msgstr "Copyright"
 
 #: libbirdfont/DescriptionDisplay.vala:183
 msgid "License"
-msgstr ""
+msgstr "Lizenz"
 
 #: libbirdfont/DescriptionDisplay.vala:195
 msgid "License URL"
-msgstr ""
+msgstr "Lizenzadresse"
 
 #: libbirdfont/DescriptionDisplay.vala:207
 msgid "Trademark"
-msgstr ""
+msgstr "Schutzmarke"
 
 #: libbirdfont/DescriptionDisplay.vala:219
 msgid "Manufacturer"
-msgstr ""
+msgstr "Hersteller"
 
 #: libbirdfont/DescriptionDisplay.vala:230
 msgid "Designer"
@@ -721,8 +721,8 @@ msgstr "Unicode"
 msgid "Insert"
 msgstr "Einfügen"
 
-#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:218
-#: libbirdfont/MessageDialog.vala:36 libbirdfont/SpinButton.vala:208
+#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:223
+#: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
 msgid "Close"
 msgstr "Schließen"
 
@@ -800,8 +800,9 @@ msgid "You have reached the end of the list."
 msgstr "Sie haben das Ende der Liste erreicht."
 
 #: libbirdfont/KerningTools.vala:164
+#, fuzzy
 msgid "Substitutions"
-msgstr ""
+msgstr "Ersetzung"
 
 #: libbirdfont/LanguageSelectionTab.vala:28 libbirdfont/OverviewTools.vala:37
 msgid "Character Sets"
@@ -900,7 +901,7 @@ msgstr "Diese Schriftart wurde mit einer alten Version von Birdfont erstellt."
 msgid "You need an older version of Birdfont to open it."
 msgstr "Sie brauchen eine ältere Version von Birdfont zum Öffnen"
 
-#: libbirdfont/MainWindow.vala:218
+#: libbirdfont/MainWindow.vala:223
 msgid "Glyph sequence"
 msgstr "Zeichenfolge"
 
@@ -953,8 +954,9 @@ msgid "Select All Paths"
 msgstr "Alle Pfade auswählen"
 
 #: libbirdfont/Menu.vala:141
+#, fuzzy
 msgid "Select All Glyphs"
-msgstr ""
+msgstr "Alle Pfade auswählen"
 
 #: libbirdfont/Menu.vala:148
 msgid "Move To Baseline"
@@ -1262,6 +1264,10 @@ msgstr ""
 
 #: libbirdfont/OverviewTools.vala:131
 msgid "Create alternate"
+msgstr ""
+
+#: libbirdfont/OverviewTools.vala:135
+msgid "Set curve orientation"
 msgstr ""
 
 #: libbirdfont/PenTool.vala:82
