@@ -53,6 +53,8 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		for (uint i = 0; i < 3000; i++) {
 			for (uint j = 0; j < 300; j++) {
 				GLib.Object o = new GLib.Object ();
+				o.ref ();
+				o.unref ();
 			}
 		}
 		
@@ -81,6 +83,8 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		for (uint i = 0; i < 3000; i++) {
 			for (uint j = 0; j < 300; j++) {
 				EditPoint ep = new EditPoint ();
+				ep.ref ();
+				ep.unref ();
 			}
 		}
 		
@@ -91,6 +95,8 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		for (uint i = 0; i < 3000; i++) {
 			for (uint j = 0; j < 300; j++) {
 				Path p = new Path ();
+				p.ref ();
+				p.unref ();
 			}
 		}
 		
