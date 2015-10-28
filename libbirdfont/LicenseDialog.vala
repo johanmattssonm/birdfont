@@ -33,7 +33,7 @@ public class LicenseDialog : Dialog {
 		agreement.set_editable (false);
 		agreement.draw_border = false;
 		agreement.text_color = Theme.get_color ("Text Tool Box");
-		agreement.set_text ("This is the freeware version of BirdFont. You may use it for creating fonts under the SIL Open Font License.\n\nWhich license do you want to use for your font?");
+		agreement.set_text ("BirdFont is developed with donations, please consider donating to the project.\n\nThis is the freeware version of BirdFont. You may use it for creating fonts under the SIL Open Font License.\n\nWhich license do you want to use for your font?");
 		
 		decline = new Button ("Commercial License");
 		decline.action.connect (() => {
@@ -46,9 +46,8 @@ public class LicenseDialog : Dialog {
 			MainWindow.get_toolbox ().set_suppress_event (false);
 		});
 		
-		height = 190 * MainWindow.units;
-		
 		MainWindow.get_toolbox ().set_suppress_event (true);
+		height = 240;
 	}
 
 	void layout () {
@@ -68,8 +67,9 @@ public class LicenseDialog : Dialog {
 		
 		agreement.widget_x = margin + center;
 		agreement.widget_y = cy + margin;
-		agreement.allocation = new WidgetAllocation.for_area (0, 0, 300, 300);
-				
+		agreement.allocation = new WidgetAllocation.for_area (0, 0, 300, 450);
+		agreement.layout ();
+		
 		h = agreement.get_height () + margin;
 		
 		decline.widget_x += center;
