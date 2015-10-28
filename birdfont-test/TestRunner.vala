@@ -59,24 +59,6 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		}
 		
 		test_object.print ();
-
-		Test test_ref = new Test.time ("GObject ref");
-		
-		for (uint i = 0; i < 3000; i++) {
-			for (uint k = 0; k < 300; k++) {
-				GLib.Object o = new GLib.Object ();
-				
-				for (int j = 0; j < 7; j++) {
-					o.ref ();
-				}
-				
-				for (int j = 0; j < 7; j++) {
-					o.unref ();
-				}
-			}
-		}
-		
-		test_ref.print ();
 		
 		Test test_edit_point = new Test.time ("EditPoint creation");
 		
