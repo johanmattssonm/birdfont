@@ -53,34 +53,20 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		for (uint i = 0; i < 3000; i++) {
 			for (uint j = 0; j < 300; j++) {
 				GLib.Object o = new GLib.Object ();
+				o.ref ();
+				o.unref ();
 			}
 		}
 		
 		test_object.print ();
-
-		Test test_ref = new Test.time ("GObject ref");
-		
-		for (uint i = 0; i < 3000; i++) {
-			for (uint k = 0; k < 300; k++) {
-				GLib.Object o = new GLib.Object ();
-				
-				for (int j = 0; j < 7; j++) {
-					o.ref ();
-				}
-				
-				for (int j = 0; j < 7; j++) {
-					o.unref ();
-				}
-			}
-		}
-		
-		test_ref.print ();
 		
 		Test test_edit_point = new Test.time ("EditPoint creation");
 		
 		for (uint i = 0; i < 3000; i++) {
 			for (uint j = 0; j < 300; j++) {
 				EditPoint ep = new EditPoint ();
+				ep.ref ();
+				ep.unref ();
 			}
 		}
 		
@@ -91,6 +77,8 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		for (uint i = 0; i < 3000; i++) {
 			for (uint j = 0; j < 300; j++) {
 				Path p = new Path ();
+				p.ref ();
+				p.unref ();
 			}
 		}
 		

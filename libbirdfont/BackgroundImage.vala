@@ -327,7 +327,11 @@ public class BackgroundImage {
 			return;
 		}
 		
-        folder.make_directory ();
+		try  {
+			folder.make_directory ();
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
         
 		converted = MainWindow.native_window.convert_to_png (path.dup (), ((!) png_image.get_path ()).dup ());
 		
