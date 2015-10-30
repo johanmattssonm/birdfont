@@ -837,7 +837,7 @@ public class OverView : FontDisplay {
 		update_item_list ();
 		GlyphCanvas.redraw ();
 
-		if (KeyBindings.has_ctrl ()) {
+		if (KeyBindings.has_ctrl () || KeyBindings.has_logo ()) {
 			return;
 		}
 
