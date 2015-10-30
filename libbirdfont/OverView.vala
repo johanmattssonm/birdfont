@@ -304,23 +304,36 @@ public class OverView : FontDisplay {
 		return true;
 	}
 
+    public bool all_characters_in_view () {
+		double length;
+		Font f;
+        
+		if (all_available) {
+			f = BirdFont.get_current_font ();
+			length = f.length ();
+		} else {
+			length = glyph_range.length ();
+		}
+        
+        return length < items_per_row * rows;
+    }
+    
 	public void move_up () {
 		first_visible -= items_per_row;
 		selected += items_per_row;
 		
 		if (first_visible < 0) {
+            selected -= items_per_row;
 			first_visible = 0;
 			view_offset_y = 0;
-			
-			while (selected < 0) {
-				selected += items_per_row;
-			}
-		}
+        }
 	}
 
 	public void move_down () {
-		first_visible += items_per_row;
-		selected -= items_per_row;
+        if (!at_bottom ()) {
+            first_visible += items_per_row;
+            selected -= items_per_row;
+        }
 	}
 	
 	public override void scroll_wheel (double x, double y, double dx, double dy) {
@@ -335,18 +348,22 @@ public class OverView : FontDisplay {
 			}						
 		} else {
 			if (at_bottom ()) {
-				if (view_offset_y > -2 * OverViewItem.height) {
+				if (view_offset_y > -2 * OverViewItem.height && !all_characters_in_view ()) {
 					view_offset_y += pixel_delta;
 				}
 			} else {
 				view_offset_y += pixel_delta;
 				while (view_offset_y < -OverViewItem.height) {
-					view_offset_y += OverViewItem.height;
-					move_down ();
+                    view_offset_y += OverViewItem.height;
+                    move_down ();
 				}
 			}
 		}
-		
+                
+        if (view_offset_y < -2 * OverViewItem.height) {
+            view_offset_y = -2 * OverViewItem.height;
+        }
+        
 		update_item_list ();
 		update_scrollbar ();
 		hide_menu ();	
@@ -450,6 +467,7 @@ public class OverView : FontDisplay {
 	public void display_all_available_glyphs () {
 		all_available = true;
 
+        view_offset_y = 0;
 		first_visible = 0;
 		selected = 0;
 		
@@ -699,7 +717,8 @@ public class OverView : FontDisplay {
 	public void scroll_top () {
 		selected = 0;
 		first_visible = 0;
-		
+		view_offset_y = 0;
+        
 		update_item_list ();
 		
 		if (visible_items.size != 0) {

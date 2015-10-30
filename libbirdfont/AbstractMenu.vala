@@ -77,18 +77,19 @@ public class AbstractMenu : GLib.Object {
 		ToolItem tm;
 		unichar lower_keyval = ((unichar) keyval).tolower ();
 		
+        display = current_display.get_name ();
+
+        if (current_display is Glyph) {
+            display = "Glyph";
+        }
+        
 		foreach (MenuItem item in sorted_menu_items) {		
-			if (item.key.tolower () == lower_keyval && item.modifiers == KeyBindings.modifier) {
+			if (item.key.tolower () == lower_keyval
+                && item.modifiers == KeyBindings.modifier
+                && item.in_display (display)) {
 				
-				display = current_display.get_name ();
-
-				if (current_display is Glyph) {
-					display = "Glyph";
-				}
-
 				if (!current_display.needs_modifier () || item.modifiers != NONE) {
 					if (!SettingsDisplay.update_key_bindings 
-						&& item.in_display (display)
 						&& !(item is ToolItem)) {
 						item.action ();
 						return;
