@@ -304,30 +304,53 @@ public class OverView : FontDisplay {
 		return true;
 	}
 
-	public override void scroll_wheel (double x, double y, double pixeldelta, double dy) {
-		if (dy > 0) {
-			key_up ();
-			update_scrollbar ();
-			GlyphCanvas.redraw ();
-			hide_menu ();
-	
-			selected_item = get_selected_item ();
-			selected_items.clear ();
-			if (selected_item.glyphs != null) {
-				selected_items.add ((!) selected_item.glyphs);
-			}
-		} else {
-			key_down ();
-			update_scrollbar ();
-			GlyphCanvas.redraw ();
-			hide_menu ();
-	
-			selected_item = get_selected_item ();
-			selected_items.clear ();
-			if (selected_item.glyphs != null) {
-				selected_items.add ((!) selected_item.glyphs);
+	public void move_up () {
+		first_visible -= items_per_row;
+		selected += items_per_row;
+		
+		if (first_visible < 0) {
+			first_visible = 0;
+			view_offset_y = 0;
+			
+			while (selected < 0) {
+				selected += items_per_row;
 			}
 		}
+	}
+
+	public void move_down () {
+		first_visible += items_per_row;
+		selected -= items_per_row;
+	}
+	
+	public override void scroll_wheel (double x, double y, double dx, double dy) {
+		double pixel_delta = 3 * dy;
+		
+		if (dy > 0) {
+			view_offset_y += pixel_delta;
+			
+			while (view_offset_y > 0) {
+				view_offset_y -= OverViewItem.height;
+				move_up ();
+			}						
+		} else {
+			if (at_bottom ()) {
+				if (view_offset_y > -2 * OverViewItem.height) {
+					view_offset_y += pixel_delta;
+				}
+			} else {
+				view_offset_y += pixel_delta;
+				while (view_offset_y < -OverViewItem.height) {
+					view_offset_y += OverViewItem.height;
+					move_down ();
+				}
+			}
+		}
+		
+		update_item_list ();
+		update_scrollbar ();
+		hide_menu ();	
+		GlyphCanvas.redraw ();
 	}
 	
 	public override void selected_canvas () {
@@ -440,11 +463,10 @@ public class OverView : FontDisplay {
 			return new OverViewItem (null, '\0', 0, 0);
 		}
 		
-		if (unlikely (!(0 <= selected < visible_items.size))) { 
-			warning (@"0 <= $selected < $(visible_items.size)");
-			return new OverViewItem (null, '\0', 0, 0);
-		}	
-		
+		if (!(0 <= selected < visible_items.size)) { 
+			return selected_item;
+		}
+
  		return visible_items.get (selected);
 	}
 	
@@ -530,17 +552,7 @@ public class OverView : FontDisplay {
 			visible_items.add (item);
 			index++;
 		}
-		
-		// offset 
-		item = get_selected_item ();
-		if (item.y + OverViewItem.height + view_offset_y > allocation.height) {
-			view_offset_y = allocation.height - (item.y + OverViewItem.height);
-		}
-
-		if (item.y + view_offset_y < 0) {
-			view_offset_y = 0;
-		}
-		
+				
 		foreach (OverViewItem i in visible_items) {
 			i.y += view_offset_y;
 			i.x += view_offset_x;
