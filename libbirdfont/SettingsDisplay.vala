@@ -113,8 +113,11 @@ public abstract class SettingsDisplay : FontDisplay {
 					
 					if (has_key_binding (KeyBindings.modifier, (unichar) keyval)) {
 						old_key_binding = (!) get_key_binding (KeyBindings.modifier, (unichar) keyval);
-						old_key_binding.menu_item.modifiers = NONE;
-						old_key_binding.menu_item.key = '\0';
+						
+						if (same_scope (old_key_binding, new_key_bindings)) {
+							old_key_binding.menu_item.modifiers = NONE;
+							old_key_binding.menu_item.key = '\0';
+						}
 					}
 					
 					new_key_bindings.menu_item.modifiers = KeyBindings.modifier;
@@ -129,6 +132,17 @@ public abstract class SettingsDisplay : FontDisplay {
 		}
 	}
 
+	/** Check if key binding is used in same tab. */
+	bool same_scope (SettingsItem key_binding1, SettingsItem key_binding2) {
+		foreach (string scope in key_binding1.menu_item.displays) {
+			if (key_binding2.menu_item.in_display (scope)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	bool has_key_binding (uint modifier, unichar key) {
 		return get_key_binding (modifier, key) != null;
 	}
