@@ -13,9 +13,11 @@
 	<action key="v" ctrl="true" alt="false" command="false" shift="false" action="paste" />
 	<action key="V" ctrl="true" alt="false" command="false" shift="true" action="paste in place" />
 	<action key="a" ctrl="true" alt="false" command="false" shift="false" action="select all paths" />
+	<action key="a" ctrl="true" alt="false" command="false" shift="false" action="select all glyphs" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="move to baseline" />
 	<action key="f" ctrl="true" alt="false" command="false" shift="false" action="search" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="simplify path" />
+	<action key="m" ctrl="true" alt="false" command="false" shift="false" action="merge_paths" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="close path" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="glyph sequence" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="set background glyph" />
@@ -26,7 +28,6 @@
 	<action key="ｓ" ctrl="true" alt="false" command="false" shift="false" action="select next point" />
 	<action key="ｑ" ctrl="true" alt="false" command="false" shift="false" action="select previous point" />
 	<action key="ｔ" ctrl="true" alt="false" command="false" shift="false" action="select point below" />
-	<action key="m" ctrl="true" alt="false" command="false" shift="false" action="merge_paths" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="move layer up" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="move layer down" />
 	<action key="e" ctrl="true" alt="false" command="false" shift="false" action="export" />
@@ -54,6 +55,14 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="settings" />
 	<action key="d" ctrl="true" alt="false" command="false" shift="false" action="name and description" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="birdfont version" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="new_font" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="open_font" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="save_font" />
+	<action key="+" ctrl="true" alt="false" command="false" shift="false" action="zoom_in" />
+	<action key="-" ctrl="true" alt="false" command="false" shift="false" action="zoom_out" />
+	<action key="s" ctrl="false" alt="false" command="false" shift="false" action="bezier_line" />
+	<action key="u" ctrl="false" alt="false" command="false" shift="false" action="bezier_corner" />
+	<action key="x" ctrl="false" alt="false" command="false" shift="false" action="bezier" />
 	<action key="b" ctrl="false" alt="false" command="false" shift="false" action="bezier_tool" />
 	<action key="n" ctrl="false" alt="false" command="false" shift="false" action="pen_tool" />
 	<action key="m" ctrl="false" alt="false" command="false" shift="false" action="point_tool" />
@@ -126,10 +135,7 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="skew_overview" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="resize_overview" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="transform" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="alternate" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="curve_orientation" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select_background" />
-	<action key="+" ctrl="true" alt="false" command="false" shift="false" action="zoom_in" />
-	<action key="-" ctrl="true" alt="false" command="false" shift="false" action="zoom_out" />
-	<action key="s" ctrl="false" alt="false" command="false" shift="false" action="bezier_line" />
-	<action key="u" ctrl="false" alt="false" command="false" shift="false" action="bezier_corner" />
-	<action key="x" ctrl="false" alt="false" command="false" shift="false" action="bezier" />
 </bindings>
