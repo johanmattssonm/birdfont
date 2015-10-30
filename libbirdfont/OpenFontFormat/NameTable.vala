@@ -277,12 +277,6 @@ public class NameTable : OtfTable {
 		text.add (font.license_url);
 		type.add (LICENSE_URL);
 		
-		text.add (validate_name (font.name));
-		type.add (PREFERED_FAMILY);
-		
-		text.add (validate_name (font.subfamily));
-		type.add (PREFERED_SUB_FAMILY);
-		
 		num_records = (uint16) text.size;
 		
 		fd.add_ushort (0); // format 1
