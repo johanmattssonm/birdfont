@@ -55,7 +55,7 @@ public class DirectoryTable : OtfTable {
 		gpos_table = new GposTable ();
 		maxp_table = new MaxpTable (glyf_table);
 		name_table = new NameTable ();
-		os_2_table = new Os2Table (); 
+		os_2_table = new Os2Table (glyf_table, hmtx_table, hhea_table); 
 		post_table = new PostTable (glyf_table);
 		
 		id = "Directory table";
@@ -75,7 +75,7 @@ public class DirectoryTable : OtfTable {
 		hhea_table.process ();
 		maxp_table.process ();
 		name_table.process ();
-		os_2_table.process (glyf_table, hmtx_table);
+		os_2_table.process ();
 		head_table.process ();
 		loca_table.process (glyf_table, head_table);
 		post_table.process ();
@@ -87,7 +87,7 @@ public class DirectoryTable : OtfTable {
 	}
 
 	public void process_mac ()  throws GLib.Error {
-		os_2_table.process_mac (glyf_table, hmtx_table);
+		os_2_table.process_mac ();
 		offset_table.process ();
 		process_directory (); // this table
 	}

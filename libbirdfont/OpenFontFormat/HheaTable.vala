@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2012, 2013 Johan Mattsson
+    Copyright (C) 2012 2013 2015 Johan Mattsson
 
     This library is free software; you can redistribute it and/or modify 
     it under the terms of the GNU Lesser General Public License as 
@@ -18,10 +18,12 @@ namespace BirdFont {
 
 public class HheaTable : OtfTable {
 
+	public int16 ascender;
+	public int16 descender;
+	public int16 line_gap;
+	
 	Fixed version;
-	int16 ascender;
-	int16 descender;
-	int16 linegap;
+
 	uint16 max_advance;
 	int16 min_lsb;
 	int16 min_rsb;
@@ -37,19 +39,42 @@ public class HheaTable : OtfTable {
 	HeadTable head_table;
 	HmtxTable hmtx_table;
 	
+	int16 winAscent = 0;
+	int16 winDescent = 0;
+	
 	public HheaTable (GlyfTable g, HeadTable h, HmtxTable hm) {
 		glyf_table = g;
 		head_table = h;
 		hmtx_table = hm;
 		id = "hhea";
 	}
-	
-	public double get_ascender () {
-		return ascender * 1000 / head_table.get_units_per_em ();
-	}
 
-	public double get_descender () {
-		return descender * 1000 / head_table.get_units_per_em ();
+	public int16 get_winascent () {
+		if (winAscent != 0) {
+			return winAscent;
+		}
+		
+		foreach (GlyfData glyph in glyf_table.glyf_data) {
+			if (glyph.bounding_box_ymax > winAscent) {
+				winAscent = glyph.bounding_box_ymax;
+			}
+		}
+		
+		return winAscent;
+	}
+	
+	public int16 get_windescent () {
+		if (winDescent != 0) {
+			return winDescent;
+		}
+
+		foreach (GlyfData glyph in glyf_table.glyf_data) {
+			if (glyph.bounding_box_ymin < winDescent) {
+				winDescent = glyph.bounding_box_ymin;
+			}
+		}
+		
+		return winDescent;
 	}
 	
 	public override void parse (FontData dis) throws GLib.Error {
@@ -63,7 +88,7 @@ public class HheaTable : OtfTable {
 		
 		ascender = dis.read_short ();
 		descender = dis.read_short ();
-		linegap = dis.read_short ();
+		line_gap = dis.read_short ();
 		max_advance = dis.read_ushort ();
 		min_lsb = dis.read_short ();
 		min_rsb = dis.read_short ();
@@ -83,10 +108,10 @@ public class HheaTable : OtfTable {
 	}
 	
 	public void process () throws GLib.Error {
-		int16 ascender, descender;
 		FontData fd = new FontData ();
 		Fixed version = 1 << 16;
 		Font font = OpenFontFormatWriter.get_current_font ();
+		int upm, total_height;
 		
 		fd.add_fixed (version); // table version
 		
@@ -95,10 +120,16 @@ public class HheaTable : OtfTable {
 		
 		descender = (int16) rint (font.bottom_limit * HeadTable.UNITS);
 		descender -= (int16) rint (font.base_line * HeadTable.UNITS);
-		
+
+		upm = HeadTable.units_per_em;
+		total_height = get_winascent () - get_windescent ();
+		ascender = (int16) rint (upm * get_winascent () / (double) total_height);
+		descender = (int16) (ascender - upm);
+		line_gap = (int16) rint (total_height - upm);
+				
 		fd.add_16 (ascender); // Ascender
 		fd.add_16 (descender); // Descender
-		fd.add_16 (0); // LineGap
+		fd.add_16 (line_gap); // LineGap
 				
 		fd.add_u16 (hmtx_table.max_advance); // maximum advance width value in 'hmtx' table.
 		
@@ -118,7 +149,8 @@ public class HheaTable : OtfTable {
 		
 		fd.add_16 (0); // metricDataFormat 0 for current format.
 		
-		fd.add_u16 ((uint16) glyf_table.glyphs.size); // numberOfHMetrics Number of hMetric entries in 'hmtx' table
+		// numberOfHMetrics Number of hMetric entries in 'hmtx' table
+		fd.add_u16 ((uint16) glyf_table.glyphs.size); 
 
 		// padding
 		fd.pad ();
