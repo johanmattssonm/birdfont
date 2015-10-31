@@ -652,19 +652,13 @@ public class OverView : FontDisplay {
 		scroll ((int64) pixel_adjustment);
 	}
 	
-	void default_position () {
-		scroll_top ();
-		scroll_rows (1);
-	}
-	
 	void scroll_to_position (int64 r) {
 		if (r < 0) {
 			scroll_top ();
 			return;
 		}
 		
-		default_position ();
-		
+		selected -= (int) (r - first_visible);
 		first_visible = (int) r;
 		update_item_list ();
 	}
@@ -715,7 +709,6 @@ public class OverView : FontDisplay {
 	}
 	
 	public void scroll_top () {
-		selected = 0;
 		first_visible = 0;
 		view_offset_y = 0;
         
