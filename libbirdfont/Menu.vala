@@ -168,9 +168,7 @@ public class Menu : AbstractMenu {
 
 		MenuItem merge_paths = add_menu_item (t_("Merge Paths"), "merge_paths", "Glyph");
 		merge_paths.action.connect (() => {
-			Task t = new Task (merge_selected_paths);
-			MainWindow.native_window.run_background_thread (t);
-		
+			merge_selected_paths ();
 			show_menu = false;
 		});
 		edit_menu.items.add (merge_paths);
@@ -500,9 +498,8 @@ public class Menu : AbstractMenu {
 	}
 	
 	void merge_selected_paths () {
-		// FIXME: make task
-		StrokeTool s = new StrokeTool ();
-		s.merge_selected_paths ();
+		MergeTask t = new MergeTask ();
+		MainWindow.run_blocking_task (t);
 	}
 }
 

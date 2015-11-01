@@ -1327,6 +1327,14 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+<collection name="stop">
+	<selected id="0"/>
+	<glyph id="0" left="-38.02807708356368" right="-11.034366391739779">
+		<layer name= "Layer" visible="true">
+			<path data="B -46.2079237702,18.7968527394 M -29.8809661359,18.7968527216 M -18.9347484383,7.8506350191 M -18.9347484341,-8.4763225942 M -29.8943710871,-19.4359452494 M -46.4855929037,-19.1448711863 M -57.1541414920,-8.4763225846 M -57.1541415032,7.8506350137 M -46.2079237702,18.7968527394" />
+		</layer>
+	</glyph>
+</collection>
 <collection name="stroke_to_outline">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1356,6 +1364,8 @@ GNU Lesser General Public License</copyright>
 <collection unicode="U+74">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+		</layer>
 	</glyph>
 </collection>
 <collection name="theme">
@@ -1653,6 +1663,7 @@ GNU Lesser General Public License</copyright>
 <ligature sequence="t r a c k" replacement="track"/>
 <ligature sequence="w i d t h" replacement="width"/>
 <ligature sequence="t h e m e" replacement="theme"/>
+<ligature sequence="s t o p" replacement="stop"/>
 <ligature sequence="n e x t" replacement="next"/>
 <ligature sequence="p r e v" replacement="prev"/>
 <ligature sequence="m o v e" replacement="move"/>
