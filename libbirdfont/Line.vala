@@ -24,6 +24,7 @@ public class Line : GLib.Object {
 	public bool dashed { get; set; }
 	
 	public string label;
+	public string translated_label;
 	bool vertical;
 	string metrics;
 	
@@ -46,8 +47,13 @@ public class Line : GLib.Object {
 	public bool rsb = false;
 	public bool lsb = false;
 	
-	public Line (string label = "No label set", double position = 10, bool vertical = false) {
+	public Line (string label = "No label", 
+		string translated_label = "No label",
+		double position = 10,
+		bool vertical = false) {
+		
 		this.label = label;
+		this.translated_label = translated_label;
 		this.vertical = vertical;
 		this.pos = position;
 		
@@ -58,7 +64,7 @@ public class Line : GLib.Object {
 	}
 	
 	public Line copy () {
-		Line l = new Line (label, pos, vertical);
+		Line l = new Line (label, translated_label, pos, vertical);
 		
 		l.r = r;
 		l.g = g;
@@ -408,7 +414,7 @@ public class Line : GLib.Object {
 		
 		// Label
 		if (get_active ()) { 
-			line_label = new Text (get_label (), 19 * MainWindow.units);
+			line_label = new Text (translated_label, 19 * MainWindow.units);
 
 			if (is_vertical ()) {
 				line_label.widget_x = p + 8 * MainWindow.units;

@@ -121,7 +121,7 @@ public class GridTool : Tool {
 	
 		n = 0;
 		for (i = left.get_pos () - 7 * step; i <= right.get_pos () + 7 * step; i += step) {	
-			l = new Line ("grid", i, Line.VERTICAL);
+			l = new Line ("grid", "", i, Line.VERTICAL);
 			l.set_moveable (false);
 			l.set_color (color.r, color.g, color.b, color.a);
 			vertical.add (l);
@@ -133,7 +133,7 @@ public class GridTool : Tool {
 		
 		n = 0;
 		for (i = baseline.get_pos () - step; i >= bottom_margin.get_pos () - 7 * step; i -= step) {
-			t = new Line ("grid", i, Line.HORIZONTAL);
+			t = new Line ("grid", "", i, Line.HORIZONTAL);
 			t.set_moveable (false);
 			t.set_color (color.r, color.g, color.b, color.a);
 			horizontal.insert (0, t);	
@@ -145,7 +145,7 @@ public class GridTool : Tool {
 		}
 		
 		for (i = baseline.get_pos (); i <= top_margin.get_pos () + 7 * step; i += step) {
-			u = new Line ("grid", i, Line.HORIZONTAL);
+			u = new Line ("grid", "", i, Line.HORIZONTAL);
 			u.set_moveable (false);
 			u.set_color (color.r, color.g, color.b, color.a);
 			horizontal.add (u);	
@@ -187,10 +187,10 @@ public class GridTool : Tool {
 		}
 			
 		if (!coordinate) {
-			xpos = new Line ("", 0, Line.VERTICAL);
+			xpos = new Line ("", "", 0, Line.VERTICAL);
 			xpos.pos = Glyph.path_coordinate_x (x);
 		} else {
-			xpos = new Line ("", x, Line.VERTICAL);
+			xpos = new Line ("", "", x, Line.VERTICAL);
 		}
 
 		m = double.MAX;
@@ -234,10 +234,10 @@ public class GridTool : Tool {
 		}
 		
 		if (!coordinate) {
-			ypos = new Line ("", 0, Line.HORIZONTAL);
+			ypos = new Line ("", "", 0, Line.HORIZONTAL);
 			ypos.pos = Glyph.path_coordinate_y (y);
 		} else {
-			ypos = new Line ("", y, Line.HORIZONTAL);
+			ypos = new Line ("", "", y, Line.HORIZONTAL);
 		}
 
 		m = double.MAX;

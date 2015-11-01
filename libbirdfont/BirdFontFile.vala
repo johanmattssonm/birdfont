@@ -1200,7 +1200,7 @@ class BirdFontFile : GLib.Object {
 					}
 				}
 				
-				line = new Line (label, position);
+				line = new Line (label, label, position);
 				
 				font.custom_guides.add (line);
 			}
