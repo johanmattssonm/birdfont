@@ -670,7 +670,6 @@ public class TabBar : GLib.Object {
 			double progress_size = 40 / scale;
 			Text wheel = has_stop_button () ? stop_icon : progress_icon;
 			
-			print (@"has_stop_button: $(has_stop_button())\n");
 			if (!has_stop_button ()) {
 				Theme.text_color (wheel, "Text Tab Bar");
 			} else {

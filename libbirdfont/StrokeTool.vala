@@ -395,12 +395,10 @@ public class StrokeTool : GLib.Object {
 									&& Path.distance_to_point (ep, lep) < 0.1) {
 									
 									if (Path.distance_to_point (lep, (!) lep.prev) < 0.001) {
-										// FIXME: DELETE ep.flags &= uint.MAX ^ EditPoint.SPLIT_POINT;
 										continue;
 									}
 
 									if (Path.distance_to_point (lep, (!) lep.next) < 0.001) {
-										// FIXME: DELETE ep.flags &= uint.MAX ^ EditPoint.SPLIT_POINT;
 										continue;
 									}
 									
@@ -2178,8 +2176,6 @@ public class StrokeTool : GLib.Object {
 
 		if (task.is_cancelled ()) {
 			return new PathList ();
-		} else {
-			print("Task is running\n"); // FIXME: DELETE
 		}
 					
 		return r;
