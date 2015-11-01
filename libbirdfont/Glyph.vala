@@ -543,7 +543,7 @@ public class Glyph : FontDisplay {
 		});
 		left_line.set_metrics (get_left_side_bearing ());
 
-		right_line = new Line (t_("right"), t_("right"), right_limit, true);
+		right_line = new Line ("right", t_("right"), right_limit, true);
 		right_line.rsb = true;
 		right_line.position_updated.connect ((pos) => {
 			right_limit = pos;
