@@ -773,7 +773,7 @@ public class DrawingTools : ToolCollection  {
 		auto_trace = new Tool ("autotrace", t_("Autotrace background image"));
 		auto_trace.select_action.connect ((self) => {
 			Task t = new Task (auto_trace_background);
-			MainWindow.native_window.run_background_thread (t);
+			MainWindow.run_blocking_task (t);
 		});			
 			
 		draw_tool_modifiers.add_tool (auto_trace);		

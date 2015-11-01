@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-26 11:35+0100\n"
+"POT-Creation-Date: 2015-11-01 13:55+0100\n"
 "PO-Revision-Date: 2015-09-08 19:57+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,7 +203,7 @@ msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å"
 
 #: libbirdfont/DescriptionDisplay.vala:66
 #: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
-#: libbirdfont/Menu.vala:481 libbirdfont/TableLayout.vala:203
+#: libbirdfont/Menu.vala:479 libbirdfont/TableLayout.vala:203
 #, fuzzy
 msgid "Name and Description"
 msgstr "Navn og _Beskrivelse"
@@ -245,7 +245,7 @@ msgid "Unique Identifier"
 msgstr "Unik identifikator"
 
 #: libbirdfont/DescriptionDisplay.vala:150 libbirdfont/ImportUtils.vala:156
-#: libbirdfont/Menu.vala:488 libbirdfont/Menu.vala:490
+#: libbirdfont/Menu.vala:486 libbirdfont/Menu.vala:488
 #: libbirdfont/VersionList.vala:260
 msgid "Version"
 msgstr "Versjon"
@@ -294,7 +294,7 @@ msgstr "Tegneverktøy"
 msgid "Control Point"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:122 libbirdfont/Menu.vala:249
+#: libbirdfont/DrawingTools.vala:122 libbirdfont/Menu.vala:247
 msgid "Layers"
 msgstr ""
 
@@ -543,7 +543,7 @@ msgid "Set size for grid"
 msgstr "Angi størrelse for rutenett"
 
 #: libbirdfont/ExportSettings.vala:41 libbirdfont/ExportSettings.vala:185
-#: libbirdfont/Menu.vala:311
+#: libbirdfont/Menu.vala:309
 msgid "Export Settings"
 msgstr ""
 
@@ -626,8 +626,8 @@ msgstr ""
 msgid "Save font"
 msgstr ""
 
-#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:474
-#: libbirdfont/SettingsDisplay.vala:211 libbirdfont/SettingsTab.vala:31
+#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:472
+#: libbirdfont/SettingsDisplay.vala:225 libbirdfont/SettingsTab.vala:31
 #: libbirdfont/SettingsTab.vala:159
 msgid "Settings"
 msgstr ""
@@ -635,6 +635,38 @@ msgstr ""
 #: libbirdfont/FileTools.vala:55 libbirdfont/ThemeTab.vala:42
 #: libbirdfont/ThemeTab.vala:162
 msgid "Themes"
+msgstr ""
+
+#: libbirdfont/Glyph.vala:495
+msgid "top margin"
+msgstr ""
+
+#: libbirdfont/Glyph.vala:502
+msgid "top"
+msgstr ""
+
+#: libbirdfont/Glyph.vala:509
+msgid "x-height"
+msgstr ""
+
+#: libbirdfont/Glyph.vala:518
+msgid "baseline"
+msgstr ""
+
+#: libbirdfont/Glyph.vala:525
+msgid "bottom"
+msgstr ""
+
+#: libbirdfont/Glyph.vala:531
+msgid "bottom margin"
+msgstr ""
+
+#: libbirdfont/Glyph.vala:537
+msgid "left"
+msgstr ""
+
+#: libbirdfont/Glyph.vala:546
+msgid "right"
 msgstr ""
 
 #: libbirdfont/Glyph.vala:2332
@@ -738,7 +770,7 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:223
+#: libbirdfont/KerningDisplay.vala:877 libbirdfont/MainWindow.vala:234
 #: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
 msgid "Close"
 msgstr "Lukk"
@@ -867,7 +899,7 @@ msgid "Contextual Substitutions"
 msgstr ""
 
 #: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
-#: libbirdfont/Menu.vala:429
+#: libbirdfont/Menu.vala:427
 msgid "Ligatures"
 msgstr ""
 
@@ -887,11 +919,11 @@ msgstr ""
 msgid "Ligature"
 msgstr ""
 
-#: libbirdfont/Line.vala:151
+#: libbirdfont/Line.vala:157
 msgid "Position"
 msgstr ""
 
-#: libbirdfont/Line.vala:151
+#: libbirdfont/Line.vala:157
 #, fuzzy
 msgid "Move"
 msgstr "_Flytt"
@@ -912,7 +944,7 @@ msgstr ""
 msgid "You need an older version of Birdfont to open it."
 msgstr ""
 
-#: libbirdfont/MainWindow.vala:223
+#: libbirdfont/MainWindow.vala:234
 msgid "Glyph sequence"
 msgstr "Tegnsekvens"
 
@@ -996,168 +1028,168 @@ msgstr ""
 msgid "Merge Paths"
 msgstr ""
 
-#: libbirdfont/Menu.vala:178
+#: libbirdfont/Menu.vala:176
 #, fuzzy
 msgid "Close Path"
 msgstr "Lukk _Filsti"
 
-#: libbirdfont/Menu.vala:185
+#: libbirdfont/Menu.vala:183
 #, fuzzy
 msgid "Glyph Sequence"
 msgstr "_Tegnsekvens"
 
-#: libbirdfont/Menu.vala:192
+#: libbirdfont/Menu.vala:190
 msgid "Set Background Glyph"
 msgstr ""
 
-#: libbirdfont/Menu.vala:199
+#: libbirdfont/Menu.vala:197
 msgid "Remove Background Glyph"
 msgstr ""
 
-#: libbirdfont/Menu.vala:206
+#: libbirdfont/Menu.vala:204
 msgid "Create Guide"
 msgstr ""
 
-#: libbirdfont/Menu.vala:213
+#: libbirdfont/Menu.vala:211
 msgid "List Guides"
 msgstr ""
 
-#: libbirdfont/Menu.vala:220
+#: libbirdfont/Menu.vala:218
 #, fuzzy
 msgid "Select Point Above"
 msgstr "_Velg Punkt Over"
 
-#: libbirdfont/Menu.vala:227
+#: libbirdfont/Menu.vala:225
 #, fuzzy
 msgid "Select Next Point"
 msgstr "Velg _Neste Punkt"
 
-#: libbirdfont/Menu.vala:234
+#: libbirdfont/Menu.vala:232
 #, fuzzy
 msgid "Select Previous Point"
 msgstr "Velg _forrige punkt"
 
-#: libbirdfont/Menu.vala:241
+#: libbirdfont/Menu.vala:239
 #, fuzzy
 msgid "Select Point Below"
 msgstr "Velg punkt _under"
 
-#: libbirdfont/Menu.vala:255
+#: libbirdfont/Menu.vala:253
 msgid "Move Layer Up"
 msgstr ""
 
-#: libbirdfont/Menu.vala:262
+#: libbirdfont/Menu.vala:260
 msgid "Move Layer Down"
 msgstr ""
 
-#: libbirdfont/Menu.vala:270
+#: libbirdfont/Menu.vala:268
 msgid "Import and Export"
 msgstr ""
 
-#: libbirdfont/Menu.vala:276
+#: libbirdfont/Menu.vala:274
 msgid "Export Fonts"
 msgstr ""
 
-#: libbirdfont/Menu.vala:283
+#: libbirdfont/Menu.vala:281
 #, fuzzy
 msgid "Export Glyph as SVG"
 msgstr "_Eksportér tegn som SVG"
 
-#: libbirdfont/Menu.vala:290
+#: libbirdfont/Menu.vala:288
 msgid "Import SVG file"
 msgstr ""
 
-#: libbirdfont/Menu.vala:297
+#: libbirdfont/Menu.vala:295
 msgid "Import SVG folder"
 msgstr ""
 
-#: libbirdfont/Menu.vala:304
+#: libbirdfont/Menu.vala:302
 #, fuzzy
 msgid "Import Background Image"
 msgstr "Velg Bakgrunnsbilde"
 
-#: libbirdfont/Menu.vala:318 libbirdfont/Preview.vala:27
+#: libbirdfont/Menu.vala:316 libbirdfont/Preview.vala:27
 msgid "Preview"
 msgstr "Forhåndsvis"
 
-#: libbirdfont/Menu.vala:326
+#: libbirdfont/Menu.vala:324
 #, fuzzy
 msgid "Tab"
 msgstr "_Fane"
 
-#: libbirdfont/Menu.vala:332
+#: libbirdfont/Menu.vala:330
 #, fuzzy
 msgid "Next Tab"
 msgstr "_Neste fane"
 
-#: libbirdfont/Menu.vala:339
+#: libbirdfont/Menu.vala:337
 #, fuzzy
 msgid "Previous Tab"
 msgstr "_Forrige fane"
 
-#: libbirdfont/Menu.vala:346
+#: libbirdfont/Menu.vala:344
 #, fuzzy
 msgid "Close Tab"
 msgstr "_Lukk fane"
 
-#: libbirdfont/Menu.vala:353
+#: libbirdfont/Menu.vala:351
 #, fuzzy
 msgid "Close All Tabs"
 msgstr "Lukk _alle faner"
 
-#: libbirdfont/Menu.vala:361
+#: libbirdfont/Menu.vala:359
 msgid "Spacing and Kerning"
 msgstr ""
 
-#: libbirdfont/Menu.vala:367
+#: libbirdfont/Menu.vala:365
 msgid "Show Spacing Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:374
+#: libbirdfont/Menu.vala:372
 msgid "Show Kerning Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:381
+#: libbirdfont/Menu.vala:379
 msgid "List Kerning Pairs"
 msgstr ""
 
-#: libbirdfont/Menu.vala:388 libbirdfont/SpacingClassTab.vala:80
+#: libbirdfont/Menu.vala:386 libbirdfont/SpacingClassTab.vala:80
 msgid "Spacing Classes"
 msgstr ""
 
-#: libbirdfont/Menu.vala:395
+#: libbirdfont/Menu.vala:393
 msgid "Select Next Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:404
+#: libbirdfont/Menu.vala:402
 msgid "Select Previous Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:413
+#: libbirdfont/Menu.vala:411
 msgid "Load Kerning Strings"
 msgstr ""
 
-#: libbirdfont/Menu.vala:420
+#: libbirdfont/Menu.vala:418
 msgid "Reload Kerning Strings"
 msgstr ""
 
-#: libbirdfont/Menu.vala:435
+#: libbirdfont/Menu.vala:433
 msgid "Show Ligatures"
 msgstr ""
 
-#: libbirdfont/Menu.vala:442
+#: libbirdfont/Menu.vala:440
 msgid "Add Ligature"
 msgstr ""
 
-#: libbirdfont/Menu.vala:451
+#: libbirdfont/Menu.vala:449
 msgid "Git"
 msgstr ""
 
-#: libbirdfont/Menu.vala:457
+#: libbirdfont/Menu.vala:455
 msgid "Save As .bfp"
 msgstr ""
 
-#: libbirdfont/Menu.vala:466 libbirdfont/OverView.vala:420
+#: libbirdfont/Menu.vala:464 libbirdfont/OverView.vala:460
 msgid "Overview"
 msgstr "Oversikt"
 
@@ -1246,11 +1278,11 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: libbirdfont/OverView.vala:585
+#: libbirdfont/OverView.vala:615
 msgid "No glyphs in this view."
 msgstr "Ingen tegn i dette bildet"
 
-#: libbirdfont/OverView.vala:1398
+#: libbirdfont/OverView.vala:1422
 msgid "See also:"
 msgstr "Se også:"
 

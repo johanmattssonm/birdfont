@@ -1578,7 +1578,6 @@ public class SvgParser {
 		if (format == SvgFormat.ILLUSTRATOR) {
 			path_list = create_paths_illustrator (bezier_points, bi);
 		} else {
-			print(d + "\n\n"); // FIXME: DELETE
 			path_list = create_paths_inkscape (bezier_points, bi);
 		}
 

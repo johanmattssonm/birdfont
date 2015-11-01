@@ -31,6 +31,7 @@ public class MainWindow : GLib.Object {
 	public static AbstractMenu menu;
 	public static Dialog dialog;
 	public static SpacingTab spacing_tab;
+	public static Task blocking_background_task;
 	
 	/** Number of pixels per mm */
 	public static double units = 1;
@@ -51,8 +52,18 @@ public class MainWindow : GLib.Object {
 		menu = new Menu ();
 		dialog = new Dialog ();
 		spacing_tab = new SpacingTab ();
+		blocking_background_task = new Task (null);
 		
 		tools.select_tool (DrawingTools.bezier_tool);
+	}
+
+	public static void abort_task () {
+		blocking_background_task.cancel ();
+	}
+
+	public static void run_blocking_task (Task task) {
+		blocking_background_task = task;
+		native_window.run_background_thread (task);
 	}
 
 	public static SpacingTab get_spacing_tab () {

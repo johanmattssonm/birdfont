@@ -2,4 +2,6 @@ build
 *.pyc
 .doit.db
 libbirdfont/Config.vala
-
+scripts/config.py
+libbirdgems.vapi
+libbirdfont.vapi

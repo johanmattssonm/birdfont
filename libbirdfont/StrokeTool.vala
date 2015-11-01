@@ -212,7 +212,11 @@ public class StrokeTool : GLib.Object {
 				}
 			}
 		}
-		
+
+		if (task.is_cancelled ()) {
+			return;
+		}
+				
 		foreach (Path p in g.active_paths) {
 			g.delete_path (p);
 		}
@@ -234,13 +238,15 @@ public class StrokeTool : GLib.Object {
 		PointSelection ps;
 
 		p.remove_points_on_points ();
-		
+				
 		for (int i = 0; i < p.points.size; i++) {
 			EditPoint ep = p.points.get (i);
 			EditPoint next = p.points.get ((i + 1) % p.points.size);
 			if (fabs (ep.get_right_handle ().angle - ep.get_left_handle ().angle) % (2 * PI) < 0.01) {
-				ps = new PointSelection (ep, p);
-				PenTool.remove_point_simplify (ps);
+				if (ep.get_right_handle ().length > 0 && ep.get_left_handle ().length > 0) {
+					ps = new PointSelection (ep, p);
+					PenTool.remove_point_simplify (ps);
+				}
 			} else if (Path.distance_to_point (ep, next) < 0.01) {
 				ps = new PointSelection (ep, p);
 				PenTool.remove_point_simplify (ps);
@@ -389,12 +395,10 @@ public class StrokeTool : GLib.Object {
 									&& Path.distance_to_point (ep, lep) < 0.1) {
 									
 									if (Path.distance_to_point (lep, (!) lep.prev) < 0.001) {
-										// FIXME: DELETE ep.flags &= uint.MAX ^ EditPoint.SPLIT_POINT;
 										continue;
 									}
 
 									if (Path.distance_to_point (lep, (!) lep.next) < 0.001) {
-										// FIXME: DELETE ep.flags &= uint.MAX ^ EditPoint.SPLIT_POINT;
 										continue;
 									}
 									
@@ -2138,7 +2142,11 @@ public class StrokeTool : GLib.Object {
 					np.remove_points_on_points ();
 					r.add (np);
 				}
-
+		
+				if (task.is_cancelled ()) {
+					return new PathList ();
+				}
+		
 				r = get_all_parts (r);
 				remove_single_points (r);
 				
@@ -2165,7 +2173,11 @@ public class StrokeTool : GLib.Object {
 			p.close ();
 			p.recalculate_linear_handles ();
 		}
-		
+
+		if (task.is_cancelled ()) {
+			return new PathList ();
+		}
+					
 		return r;
 	}
 

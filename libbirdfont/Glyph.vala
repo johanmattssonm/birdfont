@@ -492,21 +492,21 @@ public class Glyph : FontDisplay {
 		return_if_fail (!is_null (BirdFont.get_current_font ()));
 
 		double bgt = BirdFont.get_current_font ().top_limit;
-		Line top_margin_line = new Line ("top margin", bgt, false);
+		Line top_margin_line = new Line ("top margin", t_("top margin"), bgt, false);
 		top_margin_line.set_color_theme ("Guide 2");
 		top_margin_line.position_updated.connect ((pos) => {
 			BirdFont.get_current_font ().top_limit = pos;
 		});
 
 		double thp = BirdFont.get_current_font ().top_position;
-		Line top_line = new Line ("top", thp, false);
+		Line top_line = new Line ("top", t_("top"), thp, false);
 		top_line.position_updated.connect ((pos) => {
 				Font f = BirdFont.get_current_font ();
 				f.top_position = pos;
 			});
 
 		double xhp = BirdFont.get_current_font ().xheight_position;
-		Line xheight_line = new Line ("x-height", xhp, false);
+		Line xheight_line = new Line ("x-height", t_("x-height"), xhp, false);
 		xheight_line.set_color_theme ("Guide 3");
 		xheight_line.dashed = true;
 		xheight_line.position_updated.connect ((pos) => {
@@ -515,26 +515,26 @@ public class Glyph : FontDisplay {
 			});
 
 		double xbl = BirdFont.get_current_font ().base_line;
-		Line base_line = new Line ("baseline", xbl, false);
+		Line base_line = new Line ("baseline", t_("baseline"), xbl, false);
 		base_line.position_updated.connect ((pos) => {
 				Font f = BirdFont.get_current_font ();
 				f.base_line = pos;
 			});
 
 		double bp = BirdFont.get_current_font ().bottom_position;
-		Line bottom_line = new Line ("bottom", bp, false);
+		Line bottom_line = new Line ("bottom", t_("bottom"), bp, false);
 		bottom_line.position_updated.connect ((pos) => {
 				BirdFont.get_current_font ().bottom_position = pos;
 			});
 
 		double bgb = BirdFont.get_current_font ().bottom_limit;
-		Line bottom_margin_line = new Line ("bottom margin", bgb, false);
+		Line bottom_margin_line = new Line ("bottom margin", t_("bottom margin"), bgb, false);
 		bottom_margin_line.set_color_theme ("Guide 2");
 		bottom_margin_line.position_updated.connect ((pos) => {
 			BirdFont.get_current_font ().bottom_limit = pos;
 		});
 
-		left_line = new Line ("left", left_limit, true);
+		left_line = new Line ("left", t_("left"), left_limit, true);
 		left_line.lsb = true;
 		left_line.position_updated.connect ((pos) => {
 			left_limit = pos;
@@ -543,7 +543,7 @@ public class Glyph : FontDisplay {
 		});
 		left_line.set_metrics (get_left_side_bearing ());
 
-		right_line = new Line ("right", right_limit, true);
+		right_line = new Line ("right", t_("right"), right_limit, true);
 		right_line.rsb = true;
 		right_line.position_updated.connect ((pos) => {
 			right_limit = pos;
@@ -2340,7 +2340,7 @@ public class Glyph : FontDisplay {
 			double position;
 
 			position = path_coordinate_y (allocation.height / 2.0);
-			guide = new Line (new_guide_name, position);
+			guide = new Line (new_guide_name, new_guide_name, position);
 			horizontal_help_lines.add (guide);
 
 			BirdFont.get_current_font ().custom_guides.add (guide);
