@@ -415,11 +415,44 @@ os.put_string (
 		}
 	}
 
-	public static bool export_ttf_font () {
+	public static string get_export_folder () {
 		Font font = BirdFont.get_current_font ();
-		File f = font.get_folder ();
-		
+		string? sandbox = BirdFont.get_sandbox_directory ();
+
+		if (sandbox != null) {
+			File s = File.new_for_path ((!) sandbox);
+			File f = get_child (s, "Fonts");
+			try {
+				if (!f.query_exists ()) {
+					f.make_directory ();
+				}
+			} catch (GLib.Error e) {
+				warning(e.message);
+			}
+			return (!) get_child (f, font.full_name).get_path ();
+		} else {
+			return (!) font.get_folder ().get_path ();
+		}
+	}
+
+	public static File get_export_dir () {
+		return File.new_for_path (get_export_folder ());
+	}
+    
+	public static bool export_ttf_font () {
+		File f = get_export_dir ();
+		Font font = BirdFont.get_current_font ();
+        
+		try {
+			if (!f.query_exists ()) {
+				f.make_directory ();
+			}
+		} catch (GLib.Error e) {
+			warning(e.message);
+		}
+			
 		printd (@"export_ttf_font:\n");
+		printd (@"get_export_folder (): $(get_export_folder ())\n");
 		printd (@"font.get_path (): $(font.get_path ())\n");
 		printd (@"font.get_folder_path (): $(font.get_folder_path ())\n");
 		printd (@"font.get_folder (): $((!) f.get_path ())\n");
@@ -483,8 +516,7 @@ os.put_string (
 	}
 
 	public static bool export_svg_font () {
-		Font font = BirdFont.get_current_font ();
-		return export_svg_font_path (font.get_folder ());
+		return export_svg_font_path (get_export_dir ());
 	}
 		
 	public static bool export_svg_font_path (File folder) {

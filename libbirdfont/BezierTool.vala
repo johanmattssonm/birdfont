@@ -256,6 +256,7 @@ public class BezierTool : Tool {
 			return;
 		}
 		
+		convert_zero_length_handles_to_lines ();	
 		corner_node = false;
 		
 		// ignore double clicks
@@ -387,6 +388,8 @@ public class BezierTool : Tool {
 			current_path.get_first_point ().set_reflective_handles (false);
 			current_path.get_last_point ().set_reflective_handles (false);
 		}
+        
+		convert_zero_length_handles_to_lines ();
 	}
 	
 	public void switch_to_line_mode () {

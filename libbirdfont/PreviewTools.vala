@@ -49,6 +49,7 @@ public class PreviewTools : ToolCollection  {
 	/** Export fonts and update html canvas. */
 	public static void update_preview () {
 		MenuTab.export_callback = new ExportCallback ();
+		MenuTab.export_callback.preview = true;
 		MenuTab.export_callback.file_exported.connect (signal_preview_updated);
 		MenuTab.export_callback.export_fonts_in_background ();
 	}

@@ -94,6 +94,7 @@ public class BirdFont {
 	public static Drawing? drawing = null;
 
 	public static string? settings_subdirectory = null;
+	public static string? sandbox_directory = null;
 
 	public BirdFont () {
 		set_defaul_drawing_callbacks ();
@@ -110,7 +111,7 @@ public class BirdFont {
 	 * @param program path
 	 * @param setting subdirectory
 	 */
-	public void init (string[] arg, string? program_path, string? settings_subdir) {
+	public void init (string[] arg, string? program_path, string? settings_subdir, string? sandbox_path) {
 		int i;
 		File font_file;
 		string exec_path;
@@ -121,7 +122,8 @@ public class BirdFont {
 		CodePageBits codepage_bits;
 
 		set_settings_subdir (settings_subdir);
-
+		sandbox_directory = sandbox_path;
+        
 		args = new Argument.command_line (arg);
 		Font.empty = new Font ();
 
@@ -335,6 +337,10 @@ public class BirdFont {
 		return current_font;
 	}
 
+	public static string? get_sandbox_directory () {
+		return sandbox_directory;
+	}
+
 	public static void set_settings_directory (string directory) {
 		settings_subdirectory = directory;
 	}
@@ -368,6 +374,9 @@ public class BirdFont {
 			DirUtils.create ((!) home.get_path (),0755);
 		}
 #else
+	if (sandbox_directory != null) {
+		home = File.new_for_path ((!) sandbox_directory);
+	} else {
 		home_path = (settings_directory != null)
 			? (!) settings_directory : Environment.get_user_config_dir ();
 
@@ -377,6 +386,7 @@ public class BirdFont {
 		}
 
 		home = File.new_for_path (home_path);
+	}
 #endif
 
 		if (settings_subdirectory != null) {

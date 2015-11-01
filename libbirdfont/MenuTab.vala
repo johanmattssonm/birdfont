@@ -48,6 +48,10 @@ public class MenuTab : FontDisplay {
 		background_thread = false;
 	}
 
+	public static ExportCallback get_export_callback () {
+		return export_callback;
+	}
+
 	public static bool has_suppress_event () {
 		bool suppress;
 		

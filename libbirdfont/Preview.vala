@@ -38,7 +38,7 @@ public class Preview : FontDisplay {
 	public static File get_file () {
 		Font font = BirdFont.get_current_font ();
 		string fn = get_html_file_name ();
-		File dir = font.get_folder ();
+		File dir = ExportTool.get_export_dir ();
 		File file = get_child (dir, fn);
 
 		if (!file.query_exists ()) {
@@ -49,9 +49,8 @@ public class Preview : FontDisplay {
 	}
 
 	public static bool has_html_document () {
-		Font font = BirdFont.get_current_font ();
 		string path = get_html_file_name ();
-		File dir = font.get_folder ();
+		File dir = 	ExportTool.get_export_dir ();
 		File file = get_child (dir, path);
 		return file.query_exists ();
 	}
@@ -59,7 +58,7 @@ public class Preview : FontDisplay {
 	public static void generate_html_document () {
 		Font font = BirdFont.get_current_font ();
 		string path = get_html_file_name ();
-		File dir = font.get_folder ();
+		File dir = ExportTool.get_export_dir ();
 		File file = get_child (dir, path);
 		ExportTool.generate_html_document ((!)file.get_path (), font);
 	}
@@ -116,9 +115,9 @@ public class Preview : FontDisplay {
 
 			preview_directory = BirdFont.get_preview_directory ();
 
-			f_ttf = get_child (font.get_folder (), @"$(ExportSettings.get_file_name (font)).ttf");
-			f_eot = get_child (font.get_folder (), @"$(ExportSettings.get_file_name (font)).eot");
-			f_svg = get_child (font.get_folder (), @"$(ExportSettings.get_file_name (font)).svg");
+			f_ttf = get_child (ExportTool.get_export_dir (), @"$(ExportSettings.get_file_name (font)).ttf");
+			f_eot = get_child (ExportTool.get_export_dir (), @"$(ExportSettings.get_file_name (font)).eot");
+			f_svg = get_child (ExportTool.get_export_dir (), @"$(ExportSettings.get_file_name (font)).svg");
 
 			if (!f_ttf.query_exists ()) {
 				warning ("TTF file does not exist.");

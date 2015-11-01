@@ -90,7 +90,7 @@ public class ExportSettings : TableLayout {
 		widgets.add (units_per_em);
 		focus_ring.add (units_per_em);
 
-		folder = (!) font.get_folder ().get_path ();
+		folder = ExportTool.get_export_folder ();
 		Text folder_row = new Text (t_("Folder") + ": "  + folder, label_size, label_margin);
 		folder_row.margin_bottom = 20 * MainWindow.units;
 		widgets.add (folder_row);

@@ -17,7 +17,8 @@ namespace BirdFont {
 public class ExportCallback : GLib.Object {
 	
 	public signal void file_exported ();
-	
+	public bool preview = false;
+    
 	public ExportCallback () {
 	}
 
