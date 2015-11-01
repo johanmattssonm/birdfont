@@ -244,7 +244,6 @@ public class BezierTool : Tool {
 	public void release (int b, int x, int y) {
 		double px, py;
 		Glyph g;
-		EditPoint first, last;
 		
 		if (!button_down) {
 			warning ("Discarding event.");
@@ -296,23 +295,29 @@ public class BezierTool : Tool {
 			} else {
 				current_path.force_direction (Direction.CLOCKWISE);
 			}
-			
-			first = current_path.get_first_point ();
-			if (first.get_right_handle ().length == 0) {
-				first.convert_to_line ();
-			}
-
-			last = current_path.get_last_point ();
-			if (last.get_left_handle ().length == 0) {
-				last.convert_to_line ();
-			}
 						
 			current_path.reset_stroke ();
 			
 			state = NONE;
 		}
+        
+        convert_zero_length_handles_to_lines ();
 	}
 	
+    void convert_zero_length_handles_to_lines () {
+        EditPoint first, last;
+        
+        first = current_path.get_first_point ();
+        if (first.get_right_handle ().length == 0) {
+            first.convert_to_line ();
+        }
+
+        last = current_path.get_last_point ();
+        if (last.get_left_handle ().length == 0) {
+            last.convert_to_line ();
+        }
+    }
+            
 	public void move (int x, int y) {
 		double px, py;
 		
