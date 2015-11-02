@@ -23,7 +23,7 @@ public static int main (string[] arg) {
 	BirdFont.BirdFont birdfont;
 
 	birdfont = new BirdFont.BirdFont ();
-	birdfont.init (arg, null, "birdfont");
+	birdfont.init (arg, null, "birdfont", null);
 	Gtk.init (ref arg);
 	
 	window = new MainWindow ();
