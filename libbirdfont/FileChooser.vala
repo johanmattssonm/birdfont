@@ -21,9 +21,24 @@ public class FileChooser : GLib.Object {
 	public static const uint LOAD = 1 << 1;
 	public static const uint DIRECTORY = 1 << 2;
 	
+	Gee.ArrayList<string> extensions = new Gee.ArrayList<string> ();
+	
 	public signal void file_selected  (string? path);
 	
 	public FileChooser () {	
+	}
+	
+	public int extensions_size () {
+		return extensions.size;
+	}
+
+	public string get_extension (int i) {
+		return_val_if_fail (0 <= i < extensions.size, "".dup ());
+		return extensions.get (i);
+	}
+	
+	public void add_extension (string file_extension) {
+		extensions.add (file_extension);
 	}
 	
 	public void selected (string? path) {

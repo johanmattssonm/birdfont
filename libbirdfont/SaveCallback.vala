@@ -19,6 +19,8 @@ public class SaveCallback : GLib.Object {
 	public signal void file_saved ();
 	public bool is_done = false;
 	
+	public string file_name = "";
+	
 	public SaveCallback () {	
 		file_saved.connect (() => {
 			is_done = true;
@@ -34,36 +36,32 @@ public class SaveCallback : GLib.Object {
 		FileChooser fc = new FileChooser ();
 		fc.file_selected.connect ((fn) => {
 			string f;
-			string file_name;
 			File file;
-			bool saved = false;
-			Font font = BirdFont.get_current_font ();
-			int i;	
+			OverwriteBfFile dialog;
 			
 			if (fn != null) {
 				f = (!) fn;
-				
+
+#if MAC
+				save ();
+#else
 				if (f.has_suffix (".bf")) {
 					f = f.replace (".bf", "");
 				}
 				
-				file_name = @"$(f).bf";
+				file_name = @"$(f)";
 				file = File.new_for_path (file_name);
-				i = 2;
-				while (file.query_exists ()) {
-					file_name = @"$(f)_$i.bf";
-					file = File.new_for_path (file_name);
-					i++;
+				if (!file.query_exists ()) {
+					save ();
+				} else {
+					dialog = new OverwriteBfFile (this);
+					MainWindow.show_dialog (dialog);
 				}
-				
-				Preferences.add_recent_files (file_name);
-				
-				font.font_file = file_name;
-				save ();
-				saved = true;
+#endif	
 			}
 		});
 		
+		fc.add_extension ("bf");
 		MainWindow.file_chooser (t_("Save"), fc, FileChooser.SAVE);
 	}
 
@@ -78,6 +76,9 @@ public class SaveCallback : GLib.Object {
 		
 		f = BirdFont.get_current_font ();
 
+		Preferences.add_recent_files (file_name);
+		f.font_file = file_name;
+					
 		if (f.is_bfp ()) {
 			MainWindow.native_window.save ();
 		} else {
@@ -93,5 +94,5 @@ public class SaveCallback : GLib.Object {
 		}
 	}
 }
-	
+
 }
