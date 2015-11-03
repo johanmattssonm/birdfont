@@ -35,6 +35,8 @@ public class QuestionDialog : Dialog {
 		question.set_text (message);
 		
 		this.height = height;
+		
+		buttons = new Gee.ArrayList<Button> ();
 	}
 
 	public void add_button (Button button) {

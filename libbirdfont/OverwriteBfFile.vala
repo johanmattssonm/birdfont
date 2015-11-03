@@ -26,14 +26,17 @@ public class OverwriteBfFile : QuestionDialog {
 		
 		replace = new Button (t_("Replace"));
 		replace.action.connect (() => {
-			save_callback.save ();
 			MainWindow.hide_dialog ();
+			save_callback.save ();
 		});
+		add_button (replace);
 
 		cancel = new Button (t_("Cancel"));
 		cancel.action.connect (() => {
+			save_callback.is_done = true;
 			MainWindow.hide_dialog ();
 		});
+		add_button (cancel);
 	}
 }
 

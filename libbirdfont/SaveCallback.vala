@@ -45,8 +45,8 @@ public class SaveCallback : GLib.Object {
 #if MAC
 				save ();
 #else
-				if (f.has_suffix (".bf")) {
-					f = f.replace (".bf", "");
+				if (!f.has_suffix (".bf")) {
+					f = @"$f.bf";
 				}
 				
 				file_name = @"$(f)";
