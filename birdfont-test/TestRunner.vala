@@ -266,7 +266,7 @@ public static int main (string[] arg) {
 
 	birdfont_args[0] = arg[0];
 	birdfont = new BirdFont.BirdFont ();
-	birdfont.init (birdfont_args, null, "birdfont");
+	birdfont.init (birdfont_args, null, "birdfont", null);
 	
 	window = new MainWindow ();
 	runner = new TestRunner ();	
