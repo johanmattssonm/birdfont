@@ -1538,7 +1538,7 @@ public class Path : GLib.Object {
 			return true;
 		}
 		
-		warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
+		// warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
 		return all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().x, stop.x, stop.y, iter, steps);
 	}
 
@@ -1561,7 +1561,7 @@ public class Path : GLib.Object {
 			x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
 			y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
 		} else {
-			warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
+			// warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
 			x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
 			y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
 		}
@@ -1790,7 +1790,7 @@ public class Path : GLib.Object {
 			bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x1, out x2);
 			bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y1, out y2);	
 		} else {
-			warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
+			// warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
 			bezier_vector (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x, out x1, out x2);
 			bezier_vector (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y, out y1, out y2);	
 		}
