@@ -96,6 +96,7 @@ public class TabContent : GLib.Object {
 
 			if (dialog.visible) {
 				dialog.allocation = allocation;
+				dialog.layout ();
 				dialog.draw (cr);
 			} else if (menu.show_menu) {
 				menu.draw (allocation, cr);

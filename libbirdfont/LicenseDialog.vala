@@ -50,7 +50,7 @@ public class LicenseDialog : Dialog {
 		height = 240;
 	}
 
-	void layout () {
+	public override void layout () {
 		double cx = 0;
 		double cy = (allocation.height - height) / 2.0;
 		double center;

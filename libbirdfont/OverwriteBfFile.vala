@@ -22,7 +22,7 @@ public class OverwriteBfFile : QuestionDialog {
 	Button cancel;
 	
 	public OverwriteBfFile (SaveCallback save_callback) {
-		base(t_("This file already exists. Do you want to replace it?"), 200);
+		base(t_("This file already exists. Do you want to replace it?"));
 		
 		replace = new Button (t_("Replace"));
 		replace.action.connect (() => {

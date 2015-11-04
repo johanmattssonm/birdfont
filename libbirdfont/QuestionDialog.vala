@@ -19,23 +19,22 @@ namespace BirdFont {
 public class QuestionDialog : Dialog {
 	TextArea question;
 	public Gee.ArrayList<Button> buttons;
-
-	double width = 0;
-	double height;
 	
 	static const double font_size = 20;
 	static const double margin = 20;
+	static const double margin_small = 5;
 	
-	public QuestionDialog (string message, int height) {
+	double width = 300;
+	double height = 0;
+	
+	public QuestionDialog (string message) {
 		question = new TextArea (font_size);
 		question.min_width = 300;
+		question.min_height = font_size;
 		question.set_editable (false);
 		question.draw_border = false;
 		question.text_color = Theme.get_color ("Text Tool Box");
 		question.set_text (message);
-		
-		this.height = height;
-		
 		buttons = new Gee.ArrayList<Button> ();
 	}
 
@@ -43,9 +42,9 @@ public class QuestionDialog : Dialog {
 		buttons.add (button);
 	}
 
-	void layout () {
+	public override void layout () {
 		double cx = 0;
-		double cy = (allocation.height - height) / 2.0;
+		double cy;
 		double center;
 		double h;
 		
@@ -60,23 +59,34 @@ public class QuestionDialog : Dialog {
 		center = (allocation.width - width) / 2.0;
 		
 		question.widget_x = margin + center;
-		question.widget_y = cy + margin;
-		question.allocation = new WidgetAllocation.for_area (0, 0, 300, 450);
+		question.allocation = new WidgetAllocation.for_area (0, 0, 3000, 3000);
 		question.layout ();
 		
 		h = question.get_height () + margin;
-
+		print (@"question.get_height (): $(question.get_height ())\n");
+		
 		foreach (Button button in buttons) {
 			button.widget_x += center;
-			button.widget_y = cy + h + margin;
 		}
+		
+		height = h + margin + margin_small;
+		
+		if (buttons.size > 0) {
+			height += buttons.get (0).get_height ();
+		}
+		
+		cy = (allocation.height - height) / 2.0;
+
+		foreach (Button button in buttons) {
+			button.widget_y = cy + h + margin_small;
+		}
+		
+		question.widget_y = cy + margin;
 	}
 
 	public override void draw (Context cr) {	
 		double cx, cy;
 		
-		layout ();
-
 		cx = (allocation.width - width) / 2.0;
 		cy = (allocation.height - height) / 2.0;
 		

@@ -56,7 +56,7 @@ public class SaveDialog : Dialog {
 		height = 90 * MainWindow.units;
 	}
 
-	void layout () {
+	public override void layout () {
 		double cx = 0;
 		double cy = (allocation.height - height) / 2.0;
 		double center;

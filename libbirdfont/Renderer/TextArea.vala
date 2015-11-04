@@ -880,7 +880,7 @@ public class TextArea : Widget {
 	}
 	
 	/** @return offset to click in text. */
-	public void layout () {
+	public override void layout () {
 		double p;
 		double tx, ty;
 		string w;
