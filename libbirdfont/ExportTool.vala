@@ -190,6 +190,7 @@ public class ExportTool : GLib.Object {
 			}
 		});
 		
+		fc.add_extension ("svg");
 		MainWindow.file_chooser (t_("Save"), fc, FileChooser.SAVE);
 	}
 	
