@@ -47,6 +47,7 @@ public class SvgParser {
 			import_svg (path);
 		});
 		
+		fc.add_extension ("svg");
 		MainWindow.file_chooser (t_("Import"), fc, FileChooser.LOAD);
 	}
 	

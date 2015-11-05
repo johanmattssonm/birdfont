@@ -184,6 +184,14 @@ public class BackgroundTools : ToolCollection  {
 			}
 		});
 		
+		fc.add_extension ("png");
+		fc.add_extension ("jpeg");
+		fc.add_extension ("jpg");
+		fc.add_extension ("gif");
+		fc.add_extension ("tiff");
+		fc.add_extension ("bmp");
+		fc.add_extension ("svg");
+		
 		MainWindow.file_chooser (t_("Open"), fc, FileChooser.LOAD);
 	}
 	
