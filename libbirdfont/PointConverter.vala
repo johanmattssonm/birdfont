@@ -47,13 +47,15 @@ public class PointConverter {
 				PenTool.convert_point_segment_type (e, e.get_next (), PointType.DOUBLE_CURVE);
 			}
 		}
-	
-		if (quadratic_path.get_last_point ().get_right_handle ().type == PointType.CUBIC) {
-			PenTool.convert_point_segment_type (quadratic_path.get_last_point (),
-				quadratic_path.get_first_point (),
-				PointType.DOUBLE_CURVE);
+		
+		if (!original_path.is_open ()) {
+			if (quadratic_path.get_last_point ().get_right_handle ().type == PointType.CUBIC) {
+				PenTool.convert_point_segment_type (quadratic_path.get_last_point (),
+					quadratic_path.get_first_point (),
+					PointType.DOUBLE_CURVE);
+			}
 		}
-	
+		
 		quadratic_path.add_hidden_double_points ();
 					
 		return quadratic_path;
@@ -76,6 +78,11 @@ public class PointConverter {
 
 		size = quadratic_path.points.size;
 		segment_start = quadratic_path.get_first_point ();
+		
+		if (original_path.is_open ()) {
+			size--;
+		}
+		
 		for (int i = 0; i < size; i++) {
 			segment_stop = (i == size -1) 
 				? quadratic_path.get_first_point () 

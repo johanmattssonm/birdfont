@@ -180,7 +180,8 @@ void create_contour (guint unicode, FT_Vector* points, char* flags, int* length,
 		i++;		
 	} 
 	
-	if (len > 2 && is_quadratic (flags[0]) && !is_quadratic (flags[1])) { // first point is of curve but it is not part of a double curve
+	// first point is of curve but it is not part of a double curve
+	if (len > 2 && is_quadratic (flags[0]) && !is_quadratic (flags[1])) { 
 		first_normal_off_curve = TRUE;
 	}
 	
@@ -385,11 +386,13 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 	gchar* coordinate = (gchar*) &coordinate_buffer;
 	double units = get_units (units_per_em);
 	guint prev_is_curve;
+	int points_length;
 
 	if (length == 0) {
 		return bf;
 	}
 	
+	points_length = length;
 	create_contour (unicode, points, flags, &length, &new_points, &new_flags, err);
 	
 	x0 = new_points[0].x * units;
