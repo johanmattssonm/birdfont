@@ -69,9 +69,26 @@ public class BackgroundTools : ToolCollection  {
 		MainWindow.get_tab_bar ().select_tab_name ("Backgrounds");
 	}
 
+	public override void selected () {
+		// perform update after label selection is done
+		IdleSource idle = new IdleSource (); 
+		idle.set_callback (() => {
+			foreach (Tool t in files.tool) {
+				BackgroundSelectionLabel bg = (BackgroundSelectionLabel) t;
+				
+				if (bg.is_selected ()) {
+					update_parts_list (bg.img);
+				}
+			}
+				
+			return false;
+		});
+		idle.attach (null);
+	}
+
 	public void update_parts_list (BackgroundImage current_image) {
 		parts.tool.clear ();
-		
+
 		foreach (BackgroundSelection selection in current_image.selections) {
 			add_part (selection);
 		}
@@ -239,6 +256,8 @@ public class BackgroundTools : ToolCollection  {
 			
 			set_default_canvas ();
 		});
+		
+		image_selection.select_action ((BackgroundSelectionLabel) image_selection);
 		
 		image_selection.delete_action.connect ((t) => {
 			// don't invalidate the toolbox iterator
