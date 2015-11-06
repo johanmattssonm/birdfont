@@ -60,10 +60,10 @@ public class BackgroundSelection : GLib.Object {
 		}
 	}
 	
-	private double height;
-	private double width;
-	private double x_img;
-	private double y_img;
+	public double height;
+	public double width;
+	public double x_img;
+	public double y_img;
 	
 	public BackgroundSelection (BackgroundImage? img, BackgroundImage parent_img,
 		double x, double y, double w, double h) {
@@ -75,6 +75,18 @@ public class BackgroundSelection : GLib.Object {
 		this.y = y;
 		this.w = w;
 		this.h = h;
+	}
+	
+	public BackgroundSelection.absolute (BackgroundImage? img, BackgroundImage parent_img,
+		double x_img, double y_img, double width, double height) {
+			
+		assigned_glyph = null;
+		parent_image = parent_img;
+		image = img;
+		this.x_img = x_img;
+		this.y_img = y_img;
+		this.width = width;
+		this.height = height;
 	}
 }
 

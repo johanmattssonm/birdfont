@@ -228,10 +228,10 @@ class BirdFontFile : GLib.Object {
 				
 				foreach (BackgroundSelection selection in b.selections) {
 					os.put_string ("\t\t<selection ");
-					os.put_string (@"x=\"$(selection.x)\" ");
-					os.put_string (@"y=\"$(selection.y)\" ");
-					os.put_string (@"width=\"$(selection.w)\" ");
-					os.put_string (@"height=\"$(selection.h)\" ");
+					os.put_string (@"x=\"$(selection.x_img)\" ");
+					os.put_string (@"y=\"$(selection.y_img)\" ");
+					os.put_string (@"width=\"$(selection.width)\" ");
+					os.put_string (@"height=\"$(selection.height)\" ");
 					
 					if (selection.assigned_glyph != null) {
 						glyph_name = (!) selection.assigned_glyph;
@@ -990,7 +990,7 @@ class BirdFontFile : GLib.Object {
 					}
 				}
 				
-				s = new BackgroundSelection (null, image, x, y, w, h);
+				s = new BackgroundSelection.absolute (null, image, x, y, w, h);
 				s.assigned_glyph = assigned_glyph;
 				
 				image.selections.add (s);
