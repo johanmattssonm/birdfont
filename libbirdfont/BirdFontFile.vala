@@ -1368,8 +1368,6 @@ class BirdFontFile : GLib.Object {
 		Layer layer = new Layer ();
 		Path path;
 		
-		// FIXME: name etc.
-		
 		foreach (Attribute a in tag.get_attributes ()) {
 			if (a.get_name () == "visible") {
 				layer.visible = bool.parse (a.get_content ());

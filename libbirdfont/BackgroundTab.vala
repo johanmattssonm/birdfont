@@ -24,8 +24,7 @@ public class BackgroundTab : Glyph {
 	public BackgroundTab () {
 		base ("", '\0');
 		singleton = this;
-		add_help_lines ();
-		
+
 		Toolbox tools = MainWindow.get_toolbox ();
 		ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");
 		z.store_current_view ();
@@ -47,6 +46,8 @@ public class BackgroundTab : Glyph {
 	}
 	
 	public override void selected_canvas () {
+		base.selected_canvas ();
+		
 		GlyphCanvas canvas = MainWindow.get_glyph_canvas ();
 		GlyphCollection gc = new GlyphCollection ('\0', "");
 		gc.add_glyph (this);
