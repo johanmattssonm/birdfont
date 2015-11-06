@@ -28,6 +28,8 @@ public class BackgroundTab : Glyph {
 		Toolbox tools = MainWindow.get_toolbox ();
 		ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");
 		z.store_current_view ();
+		
+		layers.add_layer (new Layer ());
 	}
 
 	public static BackgroundTab get_instance () {
