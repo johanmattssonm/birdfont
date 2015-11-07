@@ -765,7 +765,7 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 	gsize read, written;
 	GError* error = NULL;	
 	
-	if (name_table_data->encoding_id == 0 && name_table_data->platform_id == 1) { // mac roman
+	if (name_table_data->encoding_id == 0) { // mac roman
 		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "macintosh", &read, &written, &error);
 
 		if (error == NULL) {
@@ -775,7 +775,7 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 			g_warning ("Error in append_description: %s\n", error->message);
 			g_error_free (error);
 		}
-	} else if (name_table_data->encoding_id == 1 && name_table_data->platform_id == 3) { // windows unicode
+	} else if (name_table_data->encoding_id == 1) { // windows unicode
 		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2be", &read, &written, &error);
 
 		if (error == NULL) {
@@ -786,8 +786,38 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 			g_error_free (error);
 		}
 	} else {
-		g_warning ("Encoding %u is not supported.\n", name_table_data->encoding_id);
+		g_warning ("Encoding %u is not supported for platform %d.\n", name_table_data->encoding_id, name_table_data->platform_id);
 	}
+}
+
+int getIndexForNameIdEncoding (FT_Face face, int id, int encoding) {
+	FT_SfntName name_table_data;
+	FT_Error e;
+	int c = FT_Get_Sfnt_Name_Count (face);
+	int i = 0;
+	while (i < c){
+		e = FT_Get_Sfnt_Name (face, i, &name_table_data);
+		
+		if (e == 0 && name_table_data.name_id == id 
+			&& name_table_data.encoding_id == encoding) {
+			return i;
+		}
+		
+		i++;
+	}
+	
+	return -1;
+}
+
+int getIndexForNameId (FT_Face face, int id) {
+	int i = getIndexForNameIdEncoding (face, id, 1);
+	
+	if (i != -1) {
+		return i;
+		
+	}
+	
+	return getIndexForNameIdEncoding (face, id, 0);
 }
 
 /** Convert font to bf format.
@@ -809,6 +839,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	double units;
 	gchar line_position_buffer[80];
 	gchar* line_position = (gchar*) &line_position_buffer;
+	int name_index;
 	
 	*err = OK;
 
@@ -829,74 +860,89 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append_printf (bf, "<subfamily>%s</subfamily>\n", g_markup_escape_text (face->style_name, -1));
 	}
 	
-	if (FT_Get_Sfnt_Name (face, 4, &name_table_data) == 0) { // full name
+	// full name
+	name_index = getIndexForNameId (face, 4);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) { 
 		g_string_append (bf, "<full_name>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</full_name>\n");
-	}	
+	}
 
-	if (FT_Get_Sfnt_Name (face, 3, &name_table_data) == 0) { // unique identifier
+	// unique identifier
+	name_index = getIndexForNameId (face, 3);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) { 
 		g_string_append (bf, "<unique_identifier>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</unique_identifier>\n");
 	}
 
-	if (FT_Get_Sfnt_Name (face, 5, &name_table_data) == 0) { // version
+	// version
+	name_index = getIndexForNameId (face, 5);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) {
 		g_string_append (bf, "<version>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</version>\n");
 	}
 
-	// FIXME: for some fonts will this return entry 0 (copyright)
-	if (FT_Get_Sfnt_Name (face, 10, &name_table_data) == 0) { // description
+	name_index = getIndexForNameId (face, 10);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) { // description
 		g_string_append (bf, "<description>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</description>\n");
 	}
 	
-	if (FT_Get_Sfnt_Name (face, 0, &name_table_data) == 0) { // copyright
+	// copyright
+	name_index = getIndexForNameId (face, 0);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) { 
 		g_string_append (bf, "<copyright>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</copyright>\n");
 	}
 
-	if (FT_Get_Sfnt_Name (face, 7, &name_table_data) == 0) {
+	name_index = getIndexForNameId (face, 7);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) {
 		g_string_append (bf, "<trademark>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</trademark>\n");
 	}
 
-	if (FT_Get_Sfnt_Name (face, 8, &name_table_data) == 0) {
+	name_index = getIndexForNameId (face, 8);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, 8, &name_table_data) == 0) {
 		g_string_append (bf, "<manefacturer>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</manefacturer>\n");
 	}
 
-	if (FT_Get_Sfnt_Name (face, 9, &name_table_data) == 0) {
+	name_index = getIndexForNameId (face, 9);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) {
 		g_string_append (bf, "<designer>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</designer>\n");
 	}
 
-	if (FT_Get_Sfnt_Name (face, 11, &name_table_data) == 0) {
+	name_index = getIndexForNameId (face, 11);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) {
 		g_string_append (bf, "<vendor_url>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</vendor_url>\n");
 	}
 
-	if (FT_Get_Sfnt_Name (face, 12, &name_table_data) == 0) {
+	name_index = getIndexForNameId (face, 12);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) {
 		g_string_append (bf, "<designer_url>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</designer_url>\n");
 	}
 
-	if (FT_Get_Sfnt_Name (face, 13, &name_table_data) == 0) {
+	name_index = getIndexForNameId (face, 13);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) {
 		g_string_append (bf, "<license>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</license>\n");
 	}
 	
-	if (FT_Get_Sfnt_Name (face, 14, &name_table_data) == 0) {
+	name_index = getIndexForNameId (face, 14);
+	if (name_index != -1 && FT_Get_Sfnt_Name (face, name_index, &name_table_data) == 0) {
 		g_string_append (bf, "<license_url>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</license_url>\n");
