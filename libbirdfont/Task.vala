@@ -43,7 +43,6 @@ public class Task : GLib.Object {
 	}
 
 	public void cancel () {
-		print("Cancel task.\n");
 		lock (cancelled) {			
 			if (unlikely (!cancelable)) {
 				warning ("Task is not cancelable.");
@@ -70,7 +69,6 @@ public class Task : GLib.Object {
 		}
 		
 		task ();
-		print("Task finished.\n");
 	}
 
 	public void* perform_task() {

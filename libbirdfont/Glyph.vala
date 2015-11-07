@@ -1599,7 +1599,8 @@ public class Glyph : FontDisplay {
 	public void draw_paths (Context cr, Color? c = null) {
 		PathList stroke;
 		Color color;
-
+		bool open;
+		
 		cr.save ();
 		cr.new_path ();
 		foreach (Path p in get_visible_paths ()) {
@@ -1615,7 +1616,18 @@ public class Glyph : FontDisplay {
 				stroke = p.get_stroke_fast ();
 				draw_path_list (stroke, cr, color);
 			} else {
+				open = p.is_open ();
+				
+				if (open) {
+					p.close ();
+					p.recalculate_linear_handles ();
+				}
+				
 				p.draw_path (cr, this, color);
+				
+				if (open) {
+					p.reopen ();
+				}
 			}
 		}
 		cr.fill ();

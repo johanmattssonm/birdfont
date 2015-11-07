@@ -475,7 +475,7 @@ public class TrackTool : Tool {
 		p.point.set_tie_handle (false);
 		p.point.get_left_handle ().convert_to_line ();
 		p.point.get_right_handle ().convert_to_line ();
-		p.point.recalculate_linear_handles ();
+		p.path.recalculate_linear_handles_for_point (p.point);
 		last_update = get_current_time ();
 		MainWindow.get_current_glyph ().update_view ();
 	}
@@ -582,7 +582,7 @@ public class TrackTool : Tool {
 				previous = average.get_prev ();
 				previous.type = DrawingTools.point_type;
 				PenTool.convert_point_to_line (previous, true);
-				previous.recalculate_linear_handles ();
+				p.recalculate_linear_handles_for_point (previous);
 				previous.process_tied_handle ();
 				previous.set_tie_handle (false);
 			}

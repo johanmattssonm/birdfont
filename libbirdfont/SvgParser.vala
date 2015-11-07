@@ -1817,7 +1817,7 @@ public class SvgParser {
 		}
 
 		foreach (EditPoint e in smooth_points) {
-			e.recalculate_linear_handles ();
+			path.recalculate_linear_handles_for_point (e);
 		}
 		
 		for (int i = 0; i < 3; i++) {
@@ -1890,7 +1890,7 @@ public class SvgParser {
 					return_val_if_fail (path.points.size != 0, path_list);
 					ep = path.points.get (path.points.size - 1);
 					ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
-					ep.recalculate_linear_handles ();
+					path.recalculate_linear_handles_for_point (ep);
 				} else {
 					warning ("Unexpected type: %s", (!) b[first_index].type.to_string ());
 				}
@@ -1965,7 +1965,7 @@ public class SvgParser {
 		}
 
 		foreach (EditPoint e in smooth_points) {
-			e.recalculate_linear_handles ();
+			path.recalculate_linear_handles_for_point (e);
 		}
 		
 		for (int i = 0; i < 3; i++) {

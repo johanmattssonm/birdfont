@@ -1010,12 +1010,6 @@ public class Path : GLib.Object {
 		return p;
 	}
 
-	public void recalculate_linear_handles () {
-		foreach (EditPoint e in points) {
-			e.recalculate_linear_handles ();
-		}
-	}
-
 	public void close () {
 		open = false;
 		edit = false;
@@ -1023,8 +1017,8 @@ public class Path : GLib.Object {
 		create_list ();
 		
 		if (points.size > 2) {
-			points.get (0).recalculate_linear_handles ();
-			points.get (points.size - 1).recalculate_linear_handles ();
+			recalculate_linear_handles_for_point (get_last_point ());
+			recalculate_linear_handles_for_point (get_first_point ());
 		}
 	}
 	
@@ -1379,9 +1373,7 @@ public class Path : GLib.Object {
 		}
 		
 		create_list ();
-		foreach (EditPoint p in points) {
-			p.recalculate_linear_handles ();
-		}
+		recalculate_linear_handles ();
 	}
 			
 	/** Get a point on the this path closest to x and y coordinates.
@@ -2511,6 +2503,128 @@ public class Path : GLib.Object {
 		
 		start.get_right_handle ().move_to_coordinate (x1, y1);
 		end.get_left_handle ().move_to_coordinate (x2, y2);
+	}
+	
+	public void recalculate_linear_handles () {
+		foreach (EditPoint e in points) {
+			recalculate_linear_handles_for_point (e);
+		}
+	}
+		
+	/** Set bezier points for linear paths. */
+	public void recalculate_linear_handles_for_point (EditPoint ep) {
+		EditPointHandle h;
+		EditPoint n;
+		double nx, ny;
+
+		return_if_fail (!is_null (ep.right_handle) && !is_null (ep.left_handle));
+
+		// left handle
+		if (ep.prev != null) {
+			n = ep.get_prev ();
+			h = ep.get_left_handle ();
+		} else {
+			n = get_last_point ();
+			h = ep.get_left_handle ();
+		}
+		
+		return_if_fail (!is_null (n) && !is_null (h));
+		
+		if (h.type == PointType.LINE_CUBIC) {
+			nx = ep.x + ((n.x - ep.x) / 3);
+			ny = ep.y + ((n.y - ep.y) / 3);
+			h.move_to_coordinate (nx, ny);
+		}
+
+		if (h.type == PointType.LINE_DOUBLE_CURVE) {
+			nx = ep.x + ((n.x - ep.x) / 4);
+			ny = ep.y + ((n.y - ep.y) / 4);
+			h.move_to_coordinate (nx, ny);
+		}
+
+		if (h.type == PointType.LINE_QUADRATIC) {
+			nx = ep.x + ((n.x - ep.x) / 2);
+			ny = ep.y + ((n.y - ep.y) / 2);
+			h.move_to_coordinate (nx, ny);
+		}
+											
+		// the other side
+		h = n.get_right_handle ();
+		return_if_fail (!is_null (h) && !is_null (h));
+			
+		if (h.type == PointType.LINE_DOUBLE_CURVE) {
+			nx = n.x + ((ep.x - n.x) / 4);
+			ny = n.y + ((ep.y - n.y) / 4);	
+			h.move_to_coordinate (nx, ny);
+		}
+				
+		if (h.type == PointType.LINE_CUBIC) {
+			nx = n.x + ((ep.x - n.x) / 3);
+			ny = n.y + ((ep.y - n.y) / 3);	
+			h.move_to_coordinate (nx, ny);
+		}
+
+		if (h.type == PointType.LINE_QUADRATIC) {
+			nx = n.x + ((ep.x - n.x) / 2);
+			ny = n.y + ((ep.y - n.y) / 2);	
+			h.move_to_coordinate (nx, ny);
+		}
+
+		// right handle
+		if (ep.next != null) {
+			n = ep.get_next ();
+			h = ep.get_right_handle ();
+		} else {
+			n = get_first_point ();
+			h = ep.get_right_handle ();
+		}
+		
+		return_if_fail (!is_null (n) && !is_null (h));
+		
+		if (h.type == PointType.LINE_CUBIC) {
+			nx = ep.x + ((n.x - ep.x) / 3);
+			ny = ep.y + ((n.y - ep.y) / 3);
+			
+			h.move_to_coordinate (nx, ny);
+		}
+
+		if (h.type == PointType.LINE_DOUBLE_CURVE) {
+			nx = ep.x + ((n.x - ep.x) / 4);
+			ny = ep.y + ((n.y - ep.y) / 4);
+			
+			h.move_to_coordinate (nx, ny);
+		}
+
+		if (h.type == PointType.LINE_QUADRATIC) {
+			nx = ep.x + ((n.x - ep.x) / 2);
+			ny = ep.y + ((n.y - ep.y) / 2);
+			
+			h.move_to_coordinate (nx, ny);
+		}
+
+		h = n.get_left_handle ();
+		return_if_fail (!is_null (h));
+		
+		if (h.type == PointType.LINE_CUBIC) {
+			nx = n.x + ((ep.x - n.x) / 3);
+			ny = n.y + ((ep.y - n.y) / 3);
+
+			h.move_to_coordinate (nx, ny);
+		}
+		
+		if (h.type == PointType.LINE_DOUBLE_CURVE) {
+			nx = n.x + ((ep.x - n.x) / 4);
+			ny = n.y + ((ep.y - n.y) / 4);
+
+			h.move_to_coordinate (nx, ny);
+		}
+
+		if (h.type == PointType.LINE_QUADRATIC) {
+			nx = n.x + ((ep.x - n.x) / 2);
+			ny = n.y + ((ep.y - n.y) / 2);
+			
+			h.move_to_coordinate (nx, ny);
+		}
 	}
 }
 

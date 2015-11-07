@@ -1427,7 +1427,7 @@ class BirdFontFile : GLib.Object {
 		ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		ep.type = PointType.LINE_DOUBLE_CURVE;
-		ep.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep);
 	}
 
 	private static void cubic_line (Path path, string px, string py) {
@@ -1437,7 +1437,7 @@ class BirdFontFile : GLib.Object {
 		ep = path.points.get (path.points.size - 1);
 		ep.get_right_handle ().type = PointType.LINE_CUBIC;
 		ep.type = PointType.LINE_CUBIC;
-		ep.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep);
 	}
 
 	private static void quadratic (Path path, string px0, string py0, string px1, string py1) {
@@ -1454,7 +1454,7 @@ class BirdFontFile : GLib.Object {
 		}
 		
 		ep1 = path.points.get (path.points.size - 1);
-		ep1.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep1);
 		ep1.get_right_handle ().type = PointType.QUADRATIC;
 		ep1.get_right_handle ().move_to_coordinate (x0, y0);	
 		ep1.type = PointType.QUADRATIC;
@@ -1462,7 +1462,7 @@ class BirdFontFile : GLib.Object {
 		path.add (x1, y1);
 
 		ep2 = path.points.get (path.points.size - 1);
-		ep2.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep2);
 		ep2.get_left_handle ().type = PointType.QUADRATIC;
 		ep2.get_left_handle ().move_to_coordinate (x0, y0);
 		ep2.type = PointType.QUADRATIC;
@@ -1493,11 +1493,11 @@ class BirdFontFile : GLib.Object {
 		ly = ep1.y + ((y2 - ep1.y) / 3);
 						
 		ep1.get_right_handle ().move_to_coordinate (lx, ly);
-		ep1.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep1);
 		
 		// set curve handles
 		ep1 = path.points.get (path.points.size - 1);
-		ep1.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep1);
 		ep1.get_right_handle ().type = PointType.CUBIC;
 		ep1.get_right_handle ().move_to_coordinate (x0, y0);				
 		ep1.type = PointType.CUBIC;
@@ -1505,12 +1505,12 @@ class BirdFontFile : GLib.Object {
 		path.add (x2, y2);
 						
 		ep2 = path.points.get (path.points.size - 1);
-		ep2.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep2);
 		ep2.get_left_handle ().type = PointType.CUBIC;
 		ep2.get_left_handle ().move_to_coordinate (x1, y1);
 		ep2.type = PointType.CUBIC;
 		
-		ep1.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep2);
 	}
 	
 	/** Two quadratic off curve points. */
@@ -1539,24 +1539,22 @@ class BirdFontFile : GLib.Object {
 		ly = ep1.y + ((y2 - ep1.y) / 4);
 						
 		ep1.get_right_handle ().move_to_coordinate (lx, ly);
-		ep1.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep1);
 		
 		// set curve handles
 		ep1 = path.points.get (path.points.size - 1);
-		ep1.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep1);
 		ep1.get_right_handle ().type = PointType.DOUBLE_CURVE;
 		ep1.get_right_handle ().move_to_coordinate (x0, y0);				
 		ep1.type = PointType.DOUBLE_CURVE;
 		
-		path.add (x2, y2);
-						
-		ep2 = path.points.get (path.points.size - 1);
-		ep2.recalculate_linear_handles ();
+		ep2 = path.add (x2, y2);
+		path.recalculate_linear_handles_for_point (ep2);
 		ep2.get_left_handle ().type = PointType.DOUBLE_CURVE;
 		ep2.get_left_handle ().move_to_coordinate (x1, y1);
 		ep2.type = PointType.DOUBLE_CURVE;
 		
-		ep1.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep1);
 	}
 	
 	public static void close (Path path) {

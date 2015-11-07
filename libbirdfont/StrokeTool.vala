@@ -1042,7 +1042,7 @@ public class StrokeTool : GLib.Object {
 	
 					last = added_segment.get_last_point ();
 					last.right_handle = ep.get_right_handle ().copy ();
-					last.recalculate_linear_handles ();
+					added_segment.recalculate_linear_handles_for_point (last);
 						
 					simplified.append_path (added_segment);
 
@@ -1051,7 +1051,7 @@ public class StrokeTool : GLib.Object {
 					if (added_segment.points.size > 0) {
 						if (ep_start.get_right_handle ().is_line ()) {
 							first = added_segment.get_first_point ();
-							first.recalculate_linear_handles ();
+							simplified.recalculate_linear_handles_for_point (first);
 						}
 					}
 					
@@ -1189,7 +1189,7 @@ public class StrokeTool : GLib.Object {
 		nend = cap.add (end.x, end.y);
 				
 		for (int i = 0; i < cap.points.size; i++) {
-			cap.points.get (i).recalculate_linear_handles ();
+			cap.recalculate_linear_handles_for_point (cap.points.get (i));
 		}
 		
 		int size = cap.points.size;
@@ -1220,7 +1220,7 @@ public class StrokeTool : GLib.Object {
 		stroke2.delete_first_point ();
 
 		last.convert_to_line ();
-		last.recalculate_linear_handles ();
+		stroke1.recalculate_linear_handles_for_point (last);
 		
 		last.next = stroke1.add_point (stroke2.get_first_point ()).get_link_item ();
 		stroke2.delete_first_point ();
@@ -1418,8 +1418,8 @@ public class StrokeTool : GLib.Object {
 				cutoff2 = stroked.add_point (cutoff2);
 			}
 			
-			cutoff1.recalculate_linear_handles ();
-			cutoff2.recalculate_linear_handles ();
+			stroked.recalculate_linear_handles_for_point (cutoff1);
+			stroked.recalculate_linear_handles_for_point (cutoff2);
 
 			// self intersection
 			if (!d1 && !d2) { 
@@ -1755,15 +1755,15 @@ public class StrokeTool : GLib.Object {
 		PenTool.convert_point_to_line (ep2, true);
 		PenTool.convert_point_to_line (ep3, true);
 		
-		ep1.recalculate_linear_handles ();
-		ep2.recalculate_linear_handles ();
-		ep3.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (ep1);
+		path.recalculate_linear_handles_for_point (ep2);
+		path.recalculate_linear_handles_for_point (ep3);
 		
 		d =  Path.distance_to_point (prev, next);
 		prev.get_right_handle ().length *= Path.distance_to_point (prev, ep1) / d;
 		next.get_left_handle ().length *= Path.distance_to_point (ep3, next) / d;
 		
-		next.recalculate_linear_handles ();
+		path.recalculate_linear_handles_for_point (next);
 		
 		return ep2;
 	}

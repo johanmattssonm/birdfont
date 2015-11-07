@@ -81,7 +81,7 @@ public class RectangleTool : Tool {
 			g.add_path (rectangle);
 			
 			foreach (EditPoint e in rectangle.points) {
-				e.recalculate_linear_handles ();
+				rectangle.recalculate_linear_handles_for_point (e);
 			}
 			
 			rectangle.reset_stroke ();

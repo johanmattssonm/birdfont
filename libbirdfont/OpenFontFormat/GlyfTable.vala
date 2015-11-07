@@ -650,7 +650,7 @@ public class GlyfTable : OtfTable {
 						edit_point.get_left_handle ().set_point_type (PointType.NONE);
 						edit_point.get_left_handle ().length = 0;
 					} else {
-						edit_point.recalculate_linear_handles ();
+						path.recalculate_linear_handles_for_point (edit_point);
 					}
 					
 					prev_is_curve = false;

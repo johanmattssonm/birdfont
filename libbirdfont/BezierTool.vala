@@ -163,7 +163,7 @@ public class BezierTool : Tool {
 			current_point = current_path.add (px, py);
 			current_path.hide_end_handle = true;
 			current_point.get_left_handle ().convert_to_line ();
-			current_point.recalculate_linear_handles ();
+			current_path.recalculate_linear_handles_for_point (current_point);
 			set_point_type ();
 			corner_node = false;
 			state = MOVE_POINT;
@@ -172,7 +172,7 @@ public class BezierTool : Tool {
 				current_point = current_path.add (px, py);
 				current_path.hide_end_handle = true;
 				current_point.get_left_handle ().convert_to_line ();
-				current_point.recalculate_linear_handles ();
+				current_path.recalculate_linear_handles_for_point (current_point);
 				set_point_type ();
 				g.clear_active_paths ();
 				g.add_active_path (null, current_path);
@@ -188,7 +188,7 @@ public class BezierTool : Tool {
 			current_path.hide_end_handle = true;
 			current_point = current_path.add (px, py);
 			current_point.get_left_handle ().convert_to_line ();
-			current_point.recalculate_linear_handles ();
+			current_path.recalculate_linear_handles_for_point (current_point);
 			g.add_path (current_path);
 			
 			set_point_type ();
@@ -279,7 +279,7 @@ public class BezierTool : Tool {
 			current_point = current_path.add (px, py);
 			current_path.hide_end_handle = true;
 			current_point.get_left_handle ().convert_to_line ();
-			current_point.recalculate_linear_handles ();
+			current_path.recalculate_linear_handles_for_point (current_point);
 			set_point_type ();
 			g.clear_active_paths ();
 			g.add_active_path (null, current_path);
@@ -336,7 +336,7 @@ public class BezierTool : Tool {
 			current_point.x = px;
 			current_point.y = py;
 			current_path.hide_end_handle = true;
-			current_point.recalculate_linear_handles ();
+			current_path.recalculate_linear_handles_for_point (current_point);
 			current_path.reset_stroke ();
 
 			if (current_point.type == PointType.QUADRATIC) {
@@ -400,8 +400,8 @@ public class BezierTool : Tool {
 			p = current_path.points.get (s - 2);
 			p.get_right_handle ().convert_to_line ();
 			current_point.get_left_handle ().convert_to_line ();
-			p.recalculate_linear_handles ();
-			current_point.recalculate_linear_handles ();
+			current_path.recalculate_linear_handles_for_point (p);
+			current_path.recalculate_linear_handles_for_point (current_point);
 			current_path.reset_stroke ();
 			GlyphCanvas.redraw ();
 			

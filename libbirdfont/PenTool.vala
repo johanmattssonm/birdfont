@@ -905,7 +905,7 @@ public class PenTool : Tool {
 					}
 					
 					selected.path.reset_stroke ();
-					selected.point.recalculate_linear_handles ();
+					selected.path.recalculate_linear_handles_for_point(selected.point);
 					selected.path.update_region_boundaries ();
 				}
 			} else if (GridTool.has_ttf_grid ()) {
@@ -939,7 +939,7 @@ public class PenTool : Tool {
 					}
 					
 					selected.path.reset_stroke ();
-					selected.point.recalculate_linear_handles ();
+					selected.path.recalculate_linear_handles_for_point(selected.point);
 					selected.path.update_region_boundaries ();
 				}
 			} else {
@@ -970,7 +970,7 @@ public class PenTool : Tool {
 							selected.point.y + delta_coordinate_y);
 					}
 					
-					selected.point.recalculate_linear_handles ();
+					selected.path.recalculate_linear_handles_for_point(selected.point);
 					selected.path.reset_stroke ();
 					selected.path.update_region_boundaries ();
 				}
@@ -1346,9 +1346,9 @@ public class PenTool : Tool {
 			
 		path.points.get (0).left_handle.type = 
 			path.points.get (path.points.size - 1).left_handle.type;
-
-		path.points.get (0).recalculate_linear_handles ();
-		path.points.get (path.points.size - 1).recalculate_linear_handles ();
+			
+		path.recalculate_linear_handles_for_point (path.points.get (0));
+		path.recalculate_linear_handles_for_point (path.points.get (path.points.size - 1));
 		
 		// force the connected handle to move
 		path.points.get (0).set_position (
@@ -1360,12 +1360,12 @@ public class PenTool : Tool {
 
 		if (last_segment_is_line) {
 			path.get_first_point ().get_left_handle ().convert_to_line ();
-			path.get_first_point ().recalculate_linear_handles ();
+			path.recalculate_linear_handles_for_point (path.get_first_point ());
 		}
 
 		if (first_segment_is_line) {
 			path.get_first_point ().get_right_handle ().convert_to_line ();
-			path.get_first_point ().recalculate_linear_handles ();
+			path.recalculate_linear_handles_for_point (path.get_first_point ());
 		}
 	}	
 	
@@ -1895,7 +1895,7 @@ public class PenTool : Tool {
 	static void set_default_handle_positions_on_path (Path path) {
 		foreach (EditPoint e in path.points) {
 			if (!e.tie_handles && !e.reflective_point) {
-				e.recalculate_linear_handles ();
+				path.recalculate_linear_handles_for_point (e);
 			}
 		}
 	}
@@ -2226,28 +2226,28 @@ public class PenTool : Tool {
 			if (keyval == Key.UP) {
 				foreach (PointSelection e in selected_points) {
 					e.point.set_position (e.point.x, e.point.y + Glyph.ivz ());
-					e.point.recalculate_linear_handles ();
+					e.path.recalculate_linear_handles_for_point (e.point);
 				}
 			}
 			
 			if (keyval == Key.DOWN) {
 				foreach (PointSelection e in selected_points) {
 					e.point.set_position (e.point.x, e.point.y - Glyph.ivz ());
-					e.point.recalculate_linear_handles ();
+					e.path.recalculate_linear_handles_for_point (e.point);
 				}
 			}
 
 			if (keyval == Key.LEFT) {
 				foreach (PointSelection e in selected_points) {
 					e.point.set_position (e.point.x - Glyph.ivz (), e.point.y);
-					e.point.recalculate_linear_handles ();
+					e.path.recalculate_linear_handles_for_point (e.point);
 				}
 			}
 
 			if (keyval == Key.RIGHT) {
 				foreach (PointSelection e in selected_points) {
 					e.point.set_position (e.point.x + Glyph.ivz (), e.point.y);
-					e.point.recalculate_linear_handles ();
+					e.path.recalculate_linear_handles_for_point (e.point);
 				}
 			}
 			
@@ -2292,7 +2292,7 @@ public class PenTool : Tool {
 		ep.set_reflective_handles (false);
 		
 		if (ep.next == null) {
-			// FIXME: write a new function for this case
+			// FIXME: write a new method for this case
 			// warning ("Next is null.");
 		}
 
@@ -2362,7 +2362,7 @@ public class PenTool : Tool {
 			
 		}
 						
-		ep.recalculate_linear_handles ();
+		//FIXME: ep.recalculate_linear_handles ();
 	}
 	
 	public static void convert_segment_to_line () {
@@ -2376,6 +2376,10 @@ public class PenTool : Tool {
 			foreach (PointSelection p in selected_points) {
 				convert_point_to_line (p.point, false);
 			}
+		}
+
+		foreach (PointSelection p in selected_points) {
+			p.path.recalculate_linear_handles_for_point (p.point);
 		}
 	}
 	
@@ -2482,7 +2486,7 @@ public class PenTool : Tool {
 		// process connected handle
 		if (point_type == PointType.QUADRATIC) {
 			first.set_position (first.x, first.y);
-			first.recalculate_linear_handles ();
+			// FIXME: linear handles
 		}
 	}
 	
@@ -2521,6 +2525,7 @@ public class PenTool : Tool {
 			}
 
 			convert_point_type (e, DrawingTools.point_type);
+			ps.path.recalculate_linear_handles_for_point (ps.point);
 		}
 		
 		if (reset_selected) {
