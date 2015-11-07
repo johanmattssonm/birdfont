@@ -1422,8 +1422,7 @@ class BirdFontFile : GLib.Object {
 	private static void line (Path path, string px, string py) {
 		EditPoint ep;
 		
-		path.add (parse_double (px), parse_double (py));
-		ep = path.get_last_point ();
+		ep = path.add (parse_double (px), parse_double (py));
 		ep.get_right_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		ep.get_left_handle ().type = PointType.LINE_DOUBLE_CURVE;
 		ep.type = PointType.LINE_DOUBLE_CURVE;

@@ -133,8 +133,6 @@ public class PointConverter {
 		distance = 0;
 
 		new_point = new EditPoint ();
-		new_point.prev = a0;
-		new_point.next = a1;
 		new_point.get_right_handle ().type = PointType.CUBIC;
 		new_point.get_left_handle ().type = PointType.CUBIC;
 		

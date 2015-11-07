@@ -1298,7 +1298,7 @@ public class Glyph : FontDisplay {
 			EditPoint p;
 			EditPoint pl = path.get_last_point ();
 
-			if (pl.prev != null) {
+			if (pl.has_prev ()) {
 				p = pl.get_prev ();
 
 				px = p.x + xc;
