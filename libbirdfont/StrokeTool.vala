@@ -520,8 +520,8 @@ public class StrokeTool : GLib.Object {
 	 * change when new points are added to a 2x2 path.
 	 */
 	void add_double_point_at_intersection (Path pp, EditPoint lep, EditPoint ep) {
-		EditPoint before;
-		EditPoint after;
+		EditPoint prev;
+		EditPoint next;
 		EditPoint hidden;
 		double px, py;
 		
@@ -531,31 +531,31 @@ public class StrokeTool : GLib.Object {
 			return_if_fail (lep.prev != null);
 			return_if_fail (lep.next != null);
 			
-			before = lep.get_prev ();
-			after = lep.get_next ();
+			prev = lep.get_prev ();
+			next = lep.get_next ();
 			hidden = new EditPoint (0, 0, PointType.QUADRATIC);
 			
-			px = before.get_right_handle ().x 
-				+ (after.get_left_handle ().x - before.get_right_handle ().x) / 2.0;
-			py = before.get_right_handle ().y 
-				+ (after.get_left_handle ().y - before.get_right_handle ().y) / 2.0;
+			px = next.get_right_handle ().x 
+				+ (next.get_left_handle ().x - prev.get_right_handle ().x) / 2.0;
+			py = next.get_right_handle ().y 
+				+ (next.get_left_handle ().y - prev.get_right_handle ().y) / 2.0;
 			hidden.independent_x = px;
 			hidden.independent_y = py;
 			
-			hidden.get_right_handle ().x = after.get_left_handle ().x;
-			hidden.get_right_handle ().y = after.get_left_handle ().y;
-			hidden.get_left_handle ().x = before.get_right_handle ().x;
-			hidden.get_left_handle ().y = before.get_right_handle ().y;
+			hidden.get_right_handle ().x = next.get_left_handle ().x;
+			hidden.get_right_handle ().y = next.get_left_handle ().y;
+			hidden.get_left_handle ().x = prev.get_right_handle ().x;
+			hidden.get_left_handle ().y = prev.get_right_handle ().y;
 			
-			pp.add_point_after (hidden, before);
+			pp.add_point_after (hidden, prev);
 
 			hidden.get_right_handle ().type = PointType.QUADRATIC;
 			hidden.get_left_handle ().type = PointType.QUADRATIC;
 
-			before.get_right_handle ().type = PointType.QUADRATIC;
-			after.get_left_handle ().type = PointType.QUADRATIC;
-			before.type = PointType.QUADRATIC;
-			after.type = PointType.QUADRATIC;
+			prev.get_right_handle ().type = PointType.QUADRATIC;
+			next.get_left_handle ().type = PointType.QUADRATIC;
+			prev.type = PointType.QUADRATIC;
+			next.type = PointType.QUADRATIC;
 						
 			pp.get_closest_point_on_path (lep, ep.x, ep.y, null, null);
 		}
@@ -2871,7 +2871,7 @@ public class StrokeTool : GLib.Object {
 			p1 = path.points.get (i % path.points.size);
 			p2 = path.points.get ((i + 1) % path.points.size);
 			p3 = path.points.get ((i + 2) % path.points.size);
-
+			
 			if (unlikely (task.is_cancelled ())) {
 				return new PathList ();
 			}

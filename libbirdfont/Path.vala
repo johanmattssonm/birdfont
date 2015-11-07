@@ -1548,10 +1548,10 @@ public class Path : GLib.Object {
 	public static void get_point_for_step (EditPoint start, EditPoint stop, double step, 
 		out double x, out  double y) {
 		
-		PointType right =  PenTool.to_curve (start.type);
-		PointType left =  PenTool.to_curve (stop.type);
+		PointType right =  PenTool.to_curve (start.get_right_handle ().type);
+		PointType left =  PenTool.to_curve (stop.get_left_handle ().type);
 		
-		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
+		if (right == PointType.DOUBLE_CURVE && left == PointType.DOUBLE_CURVE) {
 			x = double_bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
 			y = double_bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);
 		} else if (right == PointType.QUADRATIC && left == PointType.QUADRATIC) {
@@ -1564,7 +1564,7 @@ public class Path : GLib.Object {
 			x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
 			y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
 		} else {
-			// warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
+			warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
 			x = bezier_path (step, start.x, start.get_right_handle ().x, stop.get_left_handle ().x, stop.x);
 			y = bezier_path (step, start.y, start.get_right_handle ().y, stop.get_left_handle ().y, stop.y);	
 		}

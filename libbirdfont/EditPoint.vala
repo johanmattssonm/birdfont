@@ -275,6 +275,11 @@ public class EditPoint : GLib.Object {
 		left_handle.process_symmetrical_handle ();
 	}
 	
+	public void to_curve () {
+		convert_from_line_to_curve (get_right_handle ());
+		convert_from_line_to_curve (get_left_handle ());
+	}
+	
 	public static void convert_from_line_to_curve (EditPointHandle h) {
 		switch (h.type) {
 			case PointType.LINE_QUADRATIC:
