@@ -1400,7 +1400,7 @@ class BirdFontFile : GLib.Object {
 
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "stroke") {
-				path.set_stroke (double.parse (attr.get_content ()));
+				path.stroke = double.parse (attr.get_content ());
 			}
 
 			if (attr.get_name () == "skew") {

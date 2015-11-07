@@ -173,7 +173,7 @@ class TestCases {
 		glyph = MainWindow.get_current_glyph ();
 		for (int i = 0; i < 5; i++) {
 			foreach (Path p in glyph.get_all_paths ()) {
-				p.set_stroke (i / 100.0);
+				p.stroke = (i / 100.0);
 				glyph.update_view ();
 				Tool.yield ();
 			}

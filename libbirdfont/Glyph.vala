@@ -214,7 +214,7 @@ public class Glyph : FontDisplay {
 
 		foreach (Path p in get_visible_paths ()) {
 			if (p.stroke > 0) {
-				stroke = p.get_stroke ();
+				stroke = p.get_completed_stroke ();
 				foreach (Path stroke_part in stroke.paths) {
 					pc = new PointConverter (stroke_part);
 					pl.add (pc.get_quadratic_path ());

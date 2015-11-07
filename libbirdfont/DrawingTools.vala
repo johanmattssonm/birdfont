@@ -806,6 +806,7 @@ public class DrawingTools : ToolCollection  {
 				
 		// add stroke to path
 		add_stroke = new Tool ("apply_stroke", t_("Apply stroke"));
+
 		add_stroke.select_action.connect ((self) => {
 			Font f;
 			Glyph g = MainWindow.get_current_glyph ();
@@ -856,7 +857,7 @@ public class DrawingTools : ToolCollection  {
 				|| bezier_tool.is_selected ();
 			
 			StrokeTool.stroke_width = object_stroke.get_value ();
-			
+					
 			if (tool && StrokeTool.add_stroke) {
 				foreach (Path p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;

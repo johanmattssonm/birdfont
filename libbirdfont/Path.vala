@@ -51,7 +51,22 @@ public class Path : GLib.Object {
 	public double ymin = Glyph.CANVAS_MAX;
 
 	/** Stroke width */
-	public double stroke = 0;
+	public double stroke {
+		get {
+			return path_stroke_width;
+		}
+		
+		set {
+			if (0 < value < 0.1) {
+				path_stroke_width = 0.2;
+			} else {
+				path_stroke_width = value;
+			}
+		}
+	}
+	
+	private double path_stroke_width = 0;
+	
 	public LineCap line_cap = LineCap.BUTT;
 	public PathList? full_stroke = null;
 	PathList? fast_stroke = null;
@@ -156,10 +171,6 @@ public class Path : GLib.Object {
 
 	public bool empty () {
 		return points.size == 0;
-	}
-
-	public void set_stroke (double width) {
-		stroke = width;	
 	}
 
 	public void draw_boundaries  (Context cr) {
@@ -2456,7 +2467,7 @@ public class Path : GLib.Object {
 		}	
 	}
 
-	public PathList get_stroke () {
+	public PathList get_completed_stroke () {
 		if (full_stroke == null) {
 			StrokeTool s = new StrokeTool ();
 			full_stroke = s.get_stroke (this, stroke);

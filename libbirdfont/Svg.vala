@@ -27,7 +27,7 @@ public class Svg {
 			if (p.stroke == 0) {
 				write_path_as_glyph (p, svg, g);
 			} else {
-				stroke_list = p.get_stroke ();
+				stroke_list = p.get_completed_stroke ();
 				write_paths_as_glyph (stroke_list, svg, g);
 			}
 		}

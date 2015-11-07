@@ -1846,7 +1846,7 @@ public class PenTool : Tool {
 			np.add (xt, yt);
 			
 			if (DrawingTools.pen_tool.is_selected ()) {
-				np.set_stroke (PenTool.path_stroke_width);
+				np.stroke = PenTool.path_stroke_width;
 			}
 			
 			PenTool.active_path = np;

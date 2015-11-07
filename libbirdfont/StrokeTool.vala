@@ -53,7 +53,7 @@ public class StrokeTool : GLib.Object {
 		
 		foreach (Path p in g.active_paths) {
 			if (p.stroke > 0) {
-				paths.append (p.get_stroke ());
+				paths.append (p.get_completed_stroke ());
 			}
 		}
 
@@ -138,7 +138,7 @@ public class StrokeTool : GLib.Object {
 			if (p.stroke == 0) {
 				o.add (p);
 			} else {
-				o.append (p.get_stroke ());
+				o.append (p.get_completed_stroke ());
 			}
 		}
 						
