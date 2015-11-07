@@ -792,13 +792,14 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 
 int getIndexForNameIdEncoding (FT_Face face, int id, int encoding) {
 	FT_SfntName name_table_data;
-	FT_Error e;
+	FT_Error error;
 	int c = FT_Get_Sfnt_Name_Count (face);
 	int i = 0;
 	while (i < c){
-		e = FT_Get_Sfnt_Name (face, i, &name_table_data);
+		error = FT_Get_Sfnt_Name (face, i, &name_table_data);
 		
-		if (e == 0 && name_table_data.name_id == id 
+		if (error == 0
+			&& name_table_data.name_id == id 
 			&& name_table_data.encoding_id == encoding) {
 			return i;
 		}

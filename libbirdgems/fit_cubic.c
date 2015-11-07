@@ -21,7 +21,6 @@ Adapted to BirdFont by Johan Mattsson 2015
 /*	Piecewise cubic fitting code	*/
 
 #include "GraphicsGems.h"
-#include <stdio.h>
 
 #ifdef MAC
 #include <malloc/malloc.h>
@@ -31,6 +30,8 @@ Adapted to BirdFont by Johan Mattsson 2015
 
 #include <math.h>
 #include <stdio.h>
+#include <glib.h>
+
 
 typedef Point2 *BezierCurve;
 
@@ -115,7 +116,7 @@ void fit_bezier_curve_to_line (
 		j += 2;
 	}
 	
-	int buffer_size = 8 * npoints;
+	int buffer_size = 8 * lines_size;
 	double* simplified_path = malloc (buffer_size * sizeof (double));
 	Buffer* buffer = gems_buffer_new (buffer_size, simplified_path);
 	
@@ -134,12 +135,12 @@ void DrawBezierCurve(Buffer* buffer, int n, Point2* curve)
 	double* simplified_path;
 
 	if (buffer->simplified_path_size + 8 > buffer->simplified_path_buffer_size) {
-		fprintf (stderr, "The bezier buffer is full (%d).\n", buffer->simplified_path_buffer_size);
+		g_warning ("The bezier buffer is full (%d).\n", buffer->simplified_path_buffer_size);
 		return;
 	}
 
 	if (n != 3) {
-		fprintf (stderr, "Expecting three points\n");
+		g_warning ("Expecting three points\n");
 		return;
 	}
 	
@@ -172,19 +173,20 @@ void FitCurve(buffer, d, nPts, error)
 
     tHat1 = ComputeLeftTangent(d, 0);
     tHat2 = ComputeRightTangent(d, nPts - 1);
-    FitCubic(buffer, d, 0, nPts - 1, tHat1, tHat2, error);
+    FitCubic(buffer, d, 0, nPts - 1, tHat1, tHat2, error, 0);
 }
 
 /*
  *  FitCubic :
  *  	Fit a Bezier curve to a (sub)set of digitized points
  */
-static void FitCubic(buffer, d, first, last, tHat1, tHat2, error)
+static void FitCubic(buffer, d, first, last, tHat1, tHat2, error, iterations)
     Buffer* buffer;
     Point2	*d;			/*  Array of digitized points */
     int		first, last;	/* Indices of first and last pts in region */
     Vector2	tHat1, tHat2;	/* Unit tangent vectors at endpoints */
     double	error;		/*  User-defined error squared	   */
+    int iterations;
 {
     BezierCurve	bezCurve; /*Control points of fitted Bezier curve*/
     double	*u;		/*  Parameter values for point  */
@@ -197,9 +199,20 @@ static void FitCubic(buffer, d, first, last, tHat1, tHat2, error)
     Vector2	tHatCenter;   	/* Unit tangent vector at splitPoint */
     int		i;		
 
+	if (iterations > 2000) {
+		g_warning("Too many iterations.");
+		return;
+	}
+	iterations++;
+
     iterationError = error * error;
     nPts = last - first + 1;
 
+	if (nPts <= 1) {
+		g_warning("nPts <= 1");
+		return;
+	}
+	
     /*  Use heuristic if region only has two points in it */
     if (nPts == 2) {
 	    double dist = V2DistanceBetween2Points(&d[last], &d[first]) / 3.0;
@@ -216,6 +229,10 @@ static void FitCubic(buffer, d, first, last, tHat1, tHat2, error)
 
     /*  Parameterize points, and attempt to fit curve */
     u = ChordLengthParameterize(d, first, last);
+    if (u == NULL) {
+		return;
+	}
+    
     bezCurve = GenerateBezier(d, first, last, u, tHat1, tHat2);
 
     /*  Find max deviation of points to fitted curve */
@@ -226,7 +243,6 @@ static void FitCubic(buffer, d, first, last, tHat1, tHat2, error)
 		free((void *)bezCurve);
 		return;
     }
-
 
     /*  If error not too large, try some reparameterization  */
     /*  and iteration */
@@ -253,9 +269,9 @@ static void FitCubic(buffer, d, first, last, tHat1, tHat2, error)
     free((void *)u);
     free((void *)bezCurve);
     tHatCenter = ComputeCenterTangent(d, splitPoint);
-    FitCubic(buffer, d, first, splitPoint, tHat1, tHatCenter, error);
+    FitCubic(buffer, d, first, splitPoint, tHat1, tHatCenter, error, iterations);
     V2Negate(&tHatCenter);
-    FitCubic(buffer, d, splitPoint, last, tHatCenter, tHat2, error);
+    FitCubic(buffer, d, splitPoint, last, tHatCenter, tHat2, error, iterations);
 }
 
 
@@ -558,7 +574,17 @@ static double *ChordLengthParameterize(d, first, last)
     int		i;	
     double	*u;			/*  Parameterization		*/
 
+	if (last-first+1 <= 0) {
+		g_warning("No array.");
+		return NULL;
+	}
+
     u = (double *)malloc((unsigned)(last-first+1) * sizeof(double));
+	
+	if (u == NULL) {
+		g_warning("Can't allocate array in ChordLengthParameterize");
+		return NULL;
+	}
 
     u[0] = 0.0;
     for (i = first+1; i <= last; i++) {
