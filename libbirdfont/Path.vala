@@ -699,7 +699,8 @@ public class Path : GLib.Object {
 				Path.get_point_for_step (a, b, step, out px, out py);
 				
 				new_point = new EditPoint (px, py);
-				new_point.index = a.index + 1;
+				new_point.prev = a;
+				new_point.next = b;
 				
 				p.insert_new_point_on_path (new_point, step);
 				
@@ -923,6 +924,10 @@ public class Path : GLib.Object {
 		r = points.get (0);
 		points.remove_at (0);
 		
+		if (size > 1) {
+			r.get_next ().prev = null;
+		}
+		
 		return r;
 	}
 		
@@ -939,6 +944,14 @@ public class Path : GLib.Object {
 		r = points.get (size - 1);
 		points.remove_at (size - 1);
 		
+		if (size > 1) {
+			r.get_prev ().next = null;
+			
+			if (r.next != null) {
+				r.get_next ().prev = null;
+			}
+		}
+		
 		return r;
 	}
 	
@@ -952,13 +965,13 @@ public class Path : GLib.Object {
 		
 		if (points.size == 0) {
 			points.add (p);
-			p.index = 0;
-			p.path = this;
+			p.prev = p;	
+			p.next = p;
 		} else {
 			previous_point = points.get (points.size - 1);
-			p.index = points.size;
-			p.path = this;
 			points.add (p);
+			p.prev = previous_point;
+			p.next = previous_point.next;
 		}
 		
 		last_point = p;
@@ -977,7 +990,12 @@ public class Path : GLib.Object {
 
 		if (points.size == 0) {
 			points.add (p);
+			p.prev = points.get (0).get_link_item ();
+			p.next = points.get (0).get_link_item ();
 		} else {
+			p.prev = (!) previous_point;
+			p.next = ((!) previous_point).next;
+			
 			prev_index = points.index_of ((!) previous_point);
 			
 			if (unlikely (!(0 <= prev_index < points.size))) {
@@ -987,7 +1005,6 @@ public class Path : GLib.Object {
 			points.insert (prev_index + 1, p);			
 		}
 		
-		create_list ();
 		last_point = p;
 		
 		return p;
@@ -1128,8 +1145,8 @@ public class Path : GLib.Object {
 		requires (outline.points.size >= 2 || points.size >= 2)
 	{	
 		// rather slow use it for testing, only
-		EditPoint i = outline.points.get (0);
-		EditPoint prev = outline.points.get (outline.points.size - 1);
+		unowned EditPoint i = outline.points.get (0).get_link_item ();
+		unowned EditPoint prev = outline.points.get (outline.points.size - 1).get_link_item ();
 
 		double tolerance = 1;
 		bool g = false;
@@ -1251,7 +1268,7 @@ public class Path : GLib.Object {
 		double closest_x = 0;
 		double closest_y = 0;
 		
-		if (ep.has_next () || ep.has_prev ()) {
+		if (ep.next == null || ep.prev == null) {
 			warning ("missing point");
 			return;
 		}
@@ -1351,7 +1368,7 @@ public class Path : GLib.Object {
 		start.get_right_handle ().length *= position;
 
 		if (right == PointType.QUADRATIC) { // update connected handle
-			if (ep.has_prev ()) {
+			if (ep.prev != null) {
 				ep.get_left_handle ().move_to_coordinate_internal (
 					ep.get_prev ().right_handle.x, 
 					ep.get_prev ().right_handle.y);
@@ -1395,7 +1412,6 @@ public class Path : GLib.Object {
 		EditPoint previous;
 		EditPoint next;
 		double step = 0;
-		int index = -1;
 		
 		if (points.size == 0) {
 			warning ("Empty path.");
@@ -1405,6 +1421,9 @@ public class Path : GLib.Object {
 		if (points.size == 1) {
 			edit_point.x = i.x;
 			edit_point.y = i.y;
+			
+			edit_point.prev = i;
+			edit_point.next = i;
 			return;
 		}
 		
@@ -1414,8 +1433,6 @@ public class Path : GLib.Object {
 		create_list ();
 		
 		while (!exit) {
-			++index;
-			
 			if (!first && i == points.get (points.size - 1)) {
 				done = true;
 			}
@@ -1435,7 +1452,7 @@ public class Path : GLib.Object {
 				continue;
 			}
 
-			if (prev.has_prev () && skip_previous == prev.get_prev ()) {
+			if (prev.prev != null && skip_previous == prev.get_prev ()) {
 				continue;
 			}
 			
@@ -1443,7 +1460,7 @@ public class Path : GLib.Object {
 				continue;
 			}
 
-			if (prev.has_next () && skip_next == prev.get_next ()) {
+			if (prev.next != null && skip_next == prev.get_next ()) {
 				continue;
 			}
 			
@@ -1456,7 +1473,7 @@ public class Path : GLib.Object {
 					ox = cx;
 					oy = cy;
 				
-					previous_point = i.get_prev ();
+					previous_point = i.prev;
 					next_point = i;
 					
 					step = t;
@@ -1487,9 +1504,9 @@ public class Path : GLib.Object {
 		previous = (!) previous_point;
 		next = (!) next_point;
 
-		edit_point.path = this;
-		edit_point.index = index;
-			
+		edit_point.prev = previous_point;
+		edit_point.next = next_point;
+		
 		edit_point.set_position (ox, oy);
 		
 		edit_point.type = previous.type;
@@ -1523,11 +1540,6 @@ public class Path : GLib.Object {
 		
 		// warning (@"Mixed point types in segment $(start.x),$(start.y) to $(stop.x),$(stop.y) right: $(right), left: $(left) (start: $(start.type), stop: $(stop.type))");
 		return all_of_quadratic_curve (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().x, stop.x, stop.y, iter, steps);
-	}
-
-	public EditPoint get_point (int i) {
-		return_val_if_fail (0 <= i < points.size, new EditPoint ());
-		return points.get (i);
 	}
 
 	public static void get_point_for_step (EditPoint start, EditPoint stop, double step, 
@@ -1656,14 +1668,14 @@ public class Path : GLib.Object {
 	}
 
 	public bool all_segments (SegmentIterator iter) {
-		EditPoint i, next;
+		unowned EditPoint i, next;
 		
 		if (points.size < 2) {
 			return false;
 		}
 
-		for (int j = 0; j < points.size - 2; j++) {
-			i = points.get (j);
+		for (int j = 0; j < points.size - 1; j++) {
+			i = points.get (j).get_link_item ();
 			next = i.get_next ();
 			if (!iter (i, next)) {
 				return false;
@@ -1825,16 +1837,24 @@ public class Path : GLib.Object {
 		
 		if (points.size == 1) {
 			ep = points.get (0);
-			ep.index = 0;
-			ep.path = this;
+			ep.next = null;
+			ep.prev = null;
 			return;
 		}
 		
-		for (int i = 0; i < points.size - 1; i++) {
+		ep = points.get (0);
+		ep.next = points.get (1).get_link_item ();
+		ep.prev = points.get (points.size - 1).get_link_item ();
+
+		for (int i = 1; i < points.size - 1; i++) {
 			ep = points.get (i);
-			ep.index = i;
-			ep.path = this;
+			ep.prev = points.get (i - 1).get_link_item ();
+			ep.next = points.get (i + 1).get_link_item ();
 		}
+		
+		ep = points.get (points.size - 1);
+		ep.next = points.get (0).get_link_item ();
+		ep.prev = points.get (points.size - 2).get_link_item ();
 	}
 
 	public bool has_point (EditPoint ep) {
@@ -2212,8 +2232,8 @@ public class Path : GLib.Object {
 		
 		get_closest_point_on_path (ep, x, y);
 
-		next = (ep.has_next ()) ? points.get (0) : ep.get_next ();
-		prev = (ep.has_prev ()) ? points.get (points.size - 1) : ep.get_prev ();
+		next = (ep.next == null) ? points.get (0) : ep.get_next ();
+		prev = (ep.prev == null) ? points.get (points.size - 1) : ep.get_prev ();
 		
 		exists = prev.x == ep.x && prev.y == ep.y;
 		exists |= next.x == ep.x && next.y == ep.y;
@@ -2313,7 +2333,7 @@ public class Path : GLib.Object {
 				return;
 			}
 			
-			if (r.has_next ()) {
+			if (r.next != null) {
 				n = r.get_next ();
 			} else {
 				n = points.get (0);

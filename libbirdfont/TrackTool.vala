@@ -577,7 +577,7 @@ public class TrackTool : Tool {
 			return;
 		}
 		
-		if (average.has_prev () && average.get_prev ().tie_handles) {
+		if (average.prev != null && average.get_prev ().tie_handles) {
 			if (p.points.size > 2) {
 				previous = average.get_prev ();
 				previous.type = DrawingTools.point_type;

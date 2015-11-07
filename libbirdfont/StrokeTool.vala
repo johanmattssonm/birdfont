@@ -364,27 +364,27 @@ public class StrokeTool : GLib.Object {
 							
 							if (Path.distance_to_point (ep, lep) < 0.1) {								
 								EditPoint lep2 = new EditPoint ();
-								pp.get_closest_point_on_path (lep2, ep.x, ep.y, lep.get_prev (), lep.get_next ());
+								pp.get_closest_point_on_path (lep2, ep.x, ep.y, lep.prev, lep.next);
 								
-								if (lep.has_prev ()) {
+								if (lep.prev != null) {
 									lep.get_left_handle ().type = lep.get_prev ().get_right_handle ().type;
 								} else {
 									lep.get_left_handle ().type = pp.get_last_point ().get_right_handle ().type;
 								}
 
-								if (lep.has_next ()) {
+								if (lep.next != null) {
 									lep.get_right_handle ().type = lep.get_next ().get_left_handle ().type;
 								} else {
 									lep.get_left_handle ().type = pp.get_first_point ().get_right_handle ().type;
 								}
 
-								if (lep2.has_prev ()) {
+								if (lep2.prev != null) {
 									lep2.get_left_handle ().type = lep2.get_prev ().get_right_handle ().type;
 								} else {
 									lep2.get_left_handle ().type = pp.get_first_point ().get_right_handle ().type;
 								}
 
-								if (lep2.has_next ()) {
+								if (lep2.next != null) {
 									lep2.get_right_handle ().type = lep2.get_next ().get_left_handle ().type;
 								} else {
 									lep2.get_left_handle ().type = pp.get_last_point ().get_right_handle ().type;
@@ -394,11 +394,11 @@ public class StrokeTool : GLib.Object {
 								if (Path.distance_to_point (ep, lep2) < 0.1
 									&& Path.distance_to_point (ep, lep) < 0.1) {
 									
-									if (Path.distance_to_point (lep, lep.get_prev ()) < 0.001) {
+									if (Path.distance_to_point (lep, (!) lep.prev) < 0.001) {
 										continue;
 									}
 
-									if (Path.distance_to_point (lep, lep.get_next ()) < 0.001) {
+									if (Path.distance_to_point (lep, (!) lep.next) < 0.001) {
 										continue;
 									}
 									
@@ -416,14 +416,14 @@ public class StrokeTool : GLib.Object {
 									lep2.tie_handles = false;
 									lep2.reflective_point = false;
 								} else {
-									if (lep.has_prev () && Path.distance_to_point (lep, lep.get_prev ()) < 0.00000001) {
+									if (lep.prev != null && Path.distance_to_point (lep, (!) lep.prev) < 0.00000001) {
 										lep.get_prev ().flags |= EditPoint.INTERSECTION;
 										lep.get_prev ().tie_handles = false;
 										lep.get_prev ().reflective_point = false;
 										continue;
 									}
 
-									if (lep.has_next () && Path.distance_to_point (lep, lep.get_next ()) < 0.00000001) {
+									if (lep.next != null && Path.distance_to_point (lep, (!) lep.next) < 0.00000001) {
 										lep.get_next ().flags |= EditPoint.INTERSECTION;
 										lep.get_next ().tie_handles = false;
 										lep.get_next ().reflective_point = false;
@@ -528,8 +528,8 @@ public class StrokeTool : GLib.Object {
 		if (lep.get_right_handle ().type == PointType.DOUBLE_CURVE
 			|| lep.get_right_handle ().type == PointType.LINE_DOUBLE_CURVE) {
 				
-			return_if_fail (lep.has_prev ());
-			return_if_fail (lep.has_next ());
+			return_if_fail (lep.prev != null);
+			return_if_fail (lep.next != null);
 			
 			before = lep.get_prev ();
 			after = lep.get_next ();
@@ -907,7 +907,7 @@ public class StrokeTool : GLib.Object {
 						if ((ep1.flags & EditPoint.INTERSECTION) > 0) {
 							first_point.left_handle.move_to_coordinate (previous.left_handle.x, previous.left_handle.y);
 							
-							if (first_point.has_next ()) {
+							if (first_point.next != null) {
 								h = first_point.get_next ().get_left_handle ();
 								h.process_connected_handle ();
 							}
@@ -1222,6 +1222,7 @@ public class StrokeTool : GLib.Object {
 		last.convert_to_line ();
 		last.recalculate_linear_handles ();
 		
+		last.next = stroke1.add_point (stroke2.get_first_point ()).get_link_item ();
 		stroke2.delete_first_point ();
 		
 		last.get_left_handle ().convert_to_curve ();
@@ -1373,7 +1374,7 @@ public class StrokeTool : GLib.Object {
 		double or = original.get_right_handle ().angle;
 		double ol = original.get_left_handle ().angle;			
 
-		if (!previous.has_prev ()) { // FIXME: first point 
+		if (previous.prev == null) { // FIXME: first point 
 			warning ("Point before corner.");
 			d1 = false;
 			d2 = false;
@@ -1710,6 +1711,14 @@ public class StrokeTool : GLib.Object {
 		EditPoint ep3 = new EditPoint ();
 		double d;
 		
+		if (next == path.get_first_point ()) {
+			ep1.prev = null;
+		} else {
+			ep1.prev = prev;
+		}
+				
+		ep1.prev = prev;
+		ep1.next = ep2;
 		ep1.flags |= EditPoint.NEW_CORNER | EditPoint.SPLIT_POINT;
 		ep1.type = prev.type;
 		ep1.x = px;
@@ -1717,13 +1726,17 @@ public class StrokeTool : GLib.Object {
 		ep1.color = c;
 		n.add (ep1);
 
+		ep2.prev = ep1;
+		ep2.next = ep3;
 		ep2.flags |= EditPoint.INTERSECTION | EditPoint.SPLIT_POINT;
 		ep2.type = prev.type;
 		ep2.x = px;
 		ep2.y = py;
 		ep2.color = c;
 		n.add (ep2);
-	
+
+		ep3.prev = ep2;
+		ep3.next = next;
 		ep3.flags |= EditPoint.NEW_CORNER | EditPoint.SPLIT_POINT;
 		ep3.type = prev.type;
 		ep3.x = px;
@@ -1734,7 +1747,7 @@ public class StrokeTool : GLib.Object {
 		next.get_left_handle ().convert_to_line ();			
 		
 		foreach (EditPoint np in n) {
-			np = path.add_point_after (np, np.get_prev ());
+			np = path.add_point_after (np, np.prev);
 			path.create_list ();
 		}
 		

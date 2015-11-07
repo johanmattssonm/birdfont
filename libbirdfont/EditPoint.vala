@@ -22,7 +22,7 @@ public enum PointType {
 	LINE_DOUBLE_CURVE,   // line with two quadratic handles
 	LINE_CUBIC,          // line with cubic handles
 	CUBIC,
-	DOUBLE_CURVE,        // two quadratic points with a hidden point half way between the two handles
+	DOUBLE_CURVE,        // two quadratic points with a hidden point half way between the two line handles
 	QUADRATIC,
 	HIDDEN,
 	FLOATING,
@@ -35,8 +35,8 @@ public class EditPoint : GLib.Object {
 	public double y;
 	public PointType type;
 	
-	public int index = 0;
-	public unowned Path? path = null;
+	public unowned EditPoint? prev = null;
+	public unowned EditPoint? next = null;
 
 	public static const uint NONE = 0;
 	public static const uint ACTIVE = 1;
@@ -167,14 +167,32 @@ public class EditPoint : GLib.Object {
 	
 	public Color? color = null;
 
-	public EditPoint (double nx = 0, double ny = 0,
-		PointType nt = PointType.NONE, Path? path = null) {
+	public EditPoint (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {	
 		x = nx;
 		y = ny;
 		type = nt;
 		right_handle = new EditPointHandle (this, 0, 7);
+		left_handle = new EditPointHandle (this, PI, 7);	
+	}
+	
+	public EditPoint.full (double nx = 0, double ny = 0, PointType nt = PointType.NONE) {
+		x = nx;
+		y = ny;
+		type = nt;
+		active_point = true;
+		
+		if (nt == PointType.FLOATING) {
+			active_point = false;
+		}
+	
+		right_handle = new EditPointHandle (this, 0, 7);
 		left_handle = new EditPointHandle (this, PI, 7);
-		this.path = path;
+
+		if (unlikely (nx.is_nan () || ny.is_nan ())) {
+			warning (@"Invalid point at ($nx,$ny).");
+			x = 0;
+			y = 0;
+		}		
 	}
 	
 	public bool is_valid () {
@@ -212,8 +230,8 @@ public class EditPoint : GLib.Object {
 		double dr, dl;
 		EditPointHandle t;
 		
-		if (!has_next () || !get_next ().has_next ()) {
-			return;
+		if (next == null || get_next ().next != null) {
+				return;
 		}
 
 		if (unlikely (reflective_point || tie_handles)) {
@@ -237,167 +255,115 @@ public class EditPoint : GLib.Object {
 		
 	/** Set bezier points for linear paths. */
 	public void recalculate_linear_handles () {
-		EditPointHandle h;
-		EditPoint n;
-		EditPoint prevoius_point, next_point;
+		unowned EditPointHandle h;
+		unowned EditPoint n;
 		double nx, ny;
-		Path p;
-		
-		return_if_fail (!is_null (right_handle) && !is_null (left_handle));
-	
-		if (unlikely (path == null)) {
-			warning("No path.");
-			return;
-		}
 
-		p = (!) path;
-		prevoius_point = has_prev () ? get_prev () : p.get_last_point ();
-		next_point = has_next () ? get_next () : p.get_first_point ();
+		return_if_fail (!is_null (right_handle) && !is_null (left_handle));
+
+		if (prev == null && next != null) {
+			// FIXME: prev = get_next ().last ();
+		}
 
 		// left handle
-		n = prevoius_point;
-		h = get_left_handle ();
-	
-		return_if_fail (!is_null (n) && !is_null (h));
+		if (prev != null) {
+			n = get_prev ();
+			h = get_left_handle ();
 		
-		if (h.type == PointType.LINE_CUBIC) {
-			nx = x + ((n.x - x) / 3);
-			ny = y + ((n.y - y) / 3);
-			h.move_to_coordinate (nx, ny);
-		}
-
-		if (h.type == PointType.LINE_DOUBLE_CURVE) {
-			nx = x + ((n.x - x) / 4);
-			ny = y + ((n.y - y) / 4);
-			h.move_to_coordinate (nx, ny);
-		}
-
-		if (h.type == PointType.LINE_QUADRATIC) {
-			nx = x + ((n.x - x) / 2);
-			ny = y + ((n.y - y) / 2);
-			h.move_to_coordinate (nx, ny);
-		}
-											
-		// the other side
-		h = n.get_right_handle ();
-		return_if_fail (!is_null (h) && !is_null (h));
+			return_if_fail (!is_null (n) && !is_null (h));
 			
-		if (h.type == PointType.LINE_DOUBLE_CURVE) {
-			nx = n.x + ((x - n.x) / 4);
-			ny = n.y + ((y - n.y) / 4);	
-			h.move_to_coordinate (nx, ny);
-		}
-				
-		if (h.type == PointType.LINE_CUBIC) {
-			nx = n.x + ((x - n.x) / 3);
-			ny = n.y + ((y - n.y) / 3);	
-			h.move_to_coordinate (nx, ny);
-		}
+			if (h.type == PointType.LINE_CUBIC) {
+				nx = x + ((n.x - x) / 3);
+				ny = y + ((n.y - y) / 3);
+				h.move_to_coordinate (nx, ny);
+			}
 
-		if (h.type == PointType.LINE_QUADRATIC) {
-			nx = n.x + ((x - n.x) / 2);
-			ny = n.y + ((y - n.y) / 2);	
-			h.move_to_coordinate (nx, ny);
+			if (h.type == PointType.LINE_DOUBLE_CURVE) {
+				nx = x + ((n.x - x) / 4);
+				ny = y + ((n.y - y) / 4);
+				h.move_to_coordinate (nx, ny);
+			}
+
+			if (h.type == PointType.LINE_QUADRATIC) {
+				nx = x + ((n.x - x) / 2);
+				ny = y + ((n.y - y) / 2);
+				h.move_to_coordinate (nx, ny);
+			}
+												
+			// the other side
+			h = n.get_right_handle ();
+			return_if_fail (!is_null (h) && !is_null (h));
+				
+			if (h.type == PointType.LINE_DOUBLE_CURVE) {
+				nx = n.x + ((x - n.x) / 4);
+				ny = n.y + ((y - n.y) / 4);	
+				h.move_to_coordinate (nx, ny);
+			}
+					
+			if (h.type == PointType.LINE_CUBIC) {
+				nx = n.x + ((x - n.x) / 3);
+				ny = n.y + ((y - n.y) / 3);	
+				h.move_to_coordinate (nx, ny);
+			}
+
+			if (h.type == PointType.LINE_QUADRATIC) {
+				nx = n.x + ((x - n.x) / 2);
+				ny = n.y + ((y - n.y) / 2);	
+				h.move_to_coordinate (nx, ny);
+			}
 		}
 
 		// right handle
-		n = next_point;
-		h = get_right_handle ();
-		
-		return_if_fail (!is_null (n) && !is_null (h));
-		
-		if (h.type == PointType.LINE_CUBIC) {
-			nx = x + ((n.x - x) / 3);
-			ny = y + ((n.y - y) / 3);
+		if (next != null) {
+			n = get_next ();
+			h = get_right_handle ();
 			
-			h.move_to_coordinate (nx, ny);
-		}
-
-		if (h.type == PointType.LINE_DOUBLE_CURVE) {
-			nx = x + ((n.x - x) / 4);
-			ny = y + ((n.y - y) / 4);
+			return_if_fail (!is_null (n) && !is_null (h));
 			
-			h.move_to_coordinate (nx, ny);
-		}
+			if (h.type == PointType.LINE_CUBIC) {
+				nx = x + ((n.x - x) / 3);
+				ny = y + ((n.y - y) / 3);
+				
+				h.move_to_coordinate (nx, ny);
+			}
 
-		if (h.type == PointType.LINE_QUADRATIC) {
-			nx = x + ((n.x - x) / 2);
-			ny = y + ((n.y - y) / 2);
+			if (h.type == PointType.LINE_DOUBLE_CURVE) {
+				nx = x + ((n.x - x) / 4);
+				ny = y + ((n.y - y) / 4);
+				
+				h.move_to_coordinate (nx, ny);
+			}
+
+			if (h.type == PointType.LINE_QUADRATIC) {
+				nx = x + ((n.x - x) / 2);
+				ny = y + ((n.y - y) / 2);
+				
+				h.move_to_coordinate (nx, ny);
+			}
+
+			h = n.get_left_handle ();
+			return_if_fail (!is_null (h));
 			
-			h.move_to_coordinate (nx, ny);
-		}
+			if (h.type == PointType.LINE_CUBIC) {
+				nx = n.x + ((x - n.x) / 3);
+				ny = n.y + ((y - n.y) / 3);
 
-		h = n.get_left_handle ();
-		return_if_fail (!is_null (h));
-		
-		if (h.type == PointType.LINE_CUBIC) {
-			nx = n.x + ((x - n.x) / 3);
-			ny = n.y + ((y - n.y) / 3);
-
-			h.move_to_coordinate (nx, ny);
-		}
-		
-		if (h.type == PointType.LINE_DOUBLE_CURVE) {
-			nx = n.x + ((x - n.x) / 4);
-			ny = n.y + ((y - n.y) / 4);
-
-			h.move_to_coordinate (nx, ny);
-		}
-
-		if (h.type == PointType.LINE_QUADRATIC) {
-			nx = n.x + ((x - n.x) / 2);
-			ny = n.y + ((y - n.y) / 2);
+				h.move_to_coordinate (nx, ny);
+			}
 			
-			h.move_to_coordinate (nx, ny);
-		}
-		n = next_point;
-		h = get_right_handle ();
-		
-		return_if_fail (!is_null (n) && !is_null (h));
-		
-		if (h.type == PointType.LINE_CUBIC) {
-			nx = x + ((n.x - x) / 3);
-			ny = y + ((n.y - y) / 3);
-			
-			h.move_to_coordinate (nx, ny);
-		}
+			if (h.type == PointType.LINE_DOUBLE_CURVE) {
+				nx = n.x + ((x - n.x) / 4);
+				ny = n.y + ((y - n.y) / 4);
 
-		if (h.type == PointType.LINE_DOUBLE_CURVE) {
-			nx = x + ((n.x - x) / 4);
-			ny = y + ((n.y - y) / 4);
-			
-			h.move_to_coordinate (nx, ny);
-		}
+				h.move_to_coordinate (nx, ny);
+			}
 
-		if (h.type == PointType.LINE_QUADRATIC) {
-			nx = x + ((n.x - x) / 2);
-			ny = y + ((n.y - y) / 2);
-			
-			h.move_to_coordinate (nx, ny);
-		}
-
-		h = n.get_left_handle ();
-		return_if_fail (!is_null (h));
-		
-		if (h.type == PointType.LINE_CUBIC) {
-			nx = n.x + ((x - n.x) / 3);
-			ny = n.y + ((y - n.y) / 3);
-
-			h.move_to_coordinate (nx, ny);
-		}
-		
-		if (h.type == PointType.LINE_DOUBLE_CURVE) {
-			nx = n.x + ((x - n.x) / 4);
-			ny = n.y + ((y - n.y) / 4);
-
-			h.move_to_coordinate (nx, ny);
-		}
-
-		if (h.type == PointType.LINE_QUADRATIC) {
-			nx = n.x + ((x - n.x) / 2);
-			ny = n.y + ((y - n.y) / 2);
-			
-			h.move_to_coordinate (nx, ny);
+			if (h.type == PointType.LINE_QUADRATIC) {
+				nx = n.x + ((x - n.x) / 2);
+				ny = n.y + ((y - n.y) / 2);
+				
+				h.move_to_coordinate (nx, ny);
+			}
 		}
 	}
 	
@@ -406,7 +372,7 @@ public class EditPoint : GLib.Object {
 	}
 	
 	public double get_direction () {
-		if (!has_prev ()) {
+		if (prev == null) {
 			return 0;
 		}
 		
@@ -441,7 +407,7 @@ public class EditPoint : GLib.Object {
 
 	/** This can only be performed if the path has been closed. */
 	public void process_tied_handle () 
-	requires (has_next () && has_prev ()) {
+	requires (next != null && prev != null) {
 		double a, b, c, length, angle;
 		EditPointHandle eh;
 		EditPointHandle prev_rh, next_lh;
@@ -485,8 +451,6 @@ public class EditPoint : GLib.Object {
 		new_point.x = x;
 		new_point.y = y;
 		
-		// don't copy the path reference
-		
 		new_point.type = type;
 		new_point.flags = flags;
 
@@ -523,39 +487,20 @@ public class EditPoint : GLib.Object {
 		return right_handle;
 	}
 	
-	public bool has_next () {
-		Path p;
-		return_val_if_fail (path != null, false);
-		p = (!) path;
-		return index < p.points.size - 1;
-	}
-
-	public bool has_prev () {
-		return 1 <= index;
-	}
-		
-	public EditPoint get_prev () {
-		Path p;
-		
-		if (unlikely (path == null)) {
-			warning ("No path path for point.");
-			return new EditPoint ();
+	public unowned EditPoint get_prev () {
+		if (unlikely (prev == null)) {
+			warning ("EditPoint.prev is null");
 		}
 		
-		p = (!) path;
-		return p.get_point (index - 1);
+		return (!) prev;
 	}
 
-	public EditPoint get_next () {
-		Path p;
-		
-		if (unlikely (path == null)) {
-			warning ("No path path for point.");
-			return new EditPoint ();
+	public unowned EditPoint get_next () {
+		if (unlikely (next == null)) {
+			warning ("EditPoint.next is null");
 		}
 		
-		p = (!) path;
-		return p.get_point (index + 1);
+		return (!) next;
 	}
 	
 	public unowned EditPoint get_link_item () {
@@ -591,7 +536,7 @@ public class EditPoint : GLib.Object {
 		
 		// move connected quadratic handle
 		if (right_handle.type == PointType.QUADRATIC) {
-			if (has_next ()) {
+			if (next != null) {
 				n = get_next ();
 				n.set_tie_handle (false);
 				n.set_reflective_handles (false);
@@ -600,7 +545,7 @@ public class EditPoint : GLib.Object {
 		}
 		
 		if (left_handle.type == PointType.QUADRATIC) {
-			if (has_prev () && !get_prev ().is_selected ()) {
+			if (prev != null && !get_prev ().is_selected ()) {
 				p = get_prev ();
 				p.set_tie_handle (false);
 				p.set_reflective_handles (false);

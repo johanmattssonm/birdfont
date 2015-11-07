@@ -228,7 +228,7 @@ public class OverViewItem : GLib.Object {
 			gy = (h / glyph_scale) - 25 / glyph_scale;
 			
 			c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
-			
+						
 			g.draw_paths (c, color);
 			c.restore ();
 		} else {

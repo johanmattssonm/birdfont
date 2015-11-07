@@ -253,14 +253,14 @@ public class EditPointHandle : GLib.Object {
 		
 		if (type == PointType.QUADRATIC) {
 			if (!is_left_handle ()) {
-				if (parent.has_next ()) {
+				if (parent.next != null) {
 					h = parent.get_next ().get_left_handle ();
 					h.parent.set_tie_handle (false);
 					h.type = PointType.QUADRATIC;
 					h.move_to_coordinate_internal (px (), py ());
 				}
 			} else {
-				if (parent.has_prev ()) {
+				if (parent.prev != null) {
 					h = parent.get_prev ().get_right_handle ();
 					h.parent.set_tie_handle (false);
 					h.type = PointType.QUADRATIC;
