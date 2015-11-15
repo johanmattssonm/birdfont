@@ -64,7 +64,8 @@ public class Glyph : FontDisplay {
 
 	public WidgetAllocation allocation = new WidgetAllocation ();
 
-	public unichar unichar_code = 0; // FIXME: name and unichar should be moved to to glyph collection
+	// FIXME: name and unichar should be moved to to glyph collection
+	public unichar unichar_code = 0; 
 	public string name;
 
 	public double left_limit {

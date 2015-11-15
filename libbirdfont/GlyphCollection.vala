@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012, 2014 2015 Johan Mattsson
+	Copyright (C) 2012 2014 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -20,17 +20,21 @@ namespace BirdFont {
 public class GlyphCollection : GLib.Object {
 	unichar unicode_character;
 	string name;
-	bool unassigned = false;
-	public Gee.ArrayList<Glyph> glyphs = new Gee.ArrayList<Glyph> ();
-	public int selected;
+	bool unassigned;
+	Gee.ArrayList<GlyphMaster> glyph_masters;
 
 	public GlyphCollection (unichar unicode_character, string name) {
 		this.unicode_character = unicode_character;
 		this.name = name;
+		glyph_masters = new Gee.ArrayList<GlyphMaster> ();
+		unassigned = false
 	}
 
 	public GlyphCollection.with_glyph (unichar unicode_character, string name) {
 		Glyph g;
+		
+		glyph_masters = new Gee.ArrayList<GlyphMaster> ();
+		unassigned = false
 		
 		this.unicode_character = unicode_character;
 		this.name = name;
