@@ -52,7 +52,11 @@ public class BackgroundTab : Glyph {
 		
 		GlyphCanvas canvas = MainWindow.get_glyph_canvas ();
 		GlyphCollection gc = new GlyphCollection ('\0', "");
-		gc.add_glyph (this);
+		
+		GlyphMaster master = new GlyphMaster ();
+		master.add_glyph (this);
+		gc.add_master (master);
+		
 		canvas.set_current_glyph_collection (gc, false);
 		DrawingTools.background_scale.set_tool_visibility (true);
 		ZoomTool.zoom_full_background_image ();

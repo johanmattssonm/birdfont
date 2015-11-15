@@ -32,12 +32,15 @@ public class OverviewTools : ToolCollection  {
 	public static SpinButton skew;
 	public static SpinButton resize;
 	
+	public static double current_master_size;
+	
 	public OverviewTools () {
 		Expander font_name = new Expander ();
 		Expander character_sets = new Expander (t_("Character Sets"));
 		Expander zoom_expander = new Expander (t_("Zoom"));
 		Expander transform_expander = new Expander (t_("Transform"));
 		Expander glyph_expander = new Expander (t_("Glyph"));
+		Expander multi_master = new Expander (t_("Multi-Master"));
 		
 		expanders = new Gee.ArrayList<Expander> ();
 		custom_character_sets = new Gee.ArrayList<LabelTool> ();
@@ -148,11 +151,30 @@ public class OverviewTools : ToolCollection  {
 		});
 		glyph_expander.add_tool (curve_orientation);
 		
+		SpinButton master_size;
+		current_master_size = 1
+		master_size = new SpinButton ("master_size", t_("Master Size")); /// master refers to a master in a multi-master font
+		master_size.set_big_number (false);
+		master_size.set_int_value ("1.000");
+		master_size.set_int_step (1);
+		master_size.set_min (0.001);
+		master_size.set_max (9);
+		master_size.show_icon (true);
+		master_size.set_persistent (false);
+		master_size.new_value_action.connect ((self) => {
+			current_master_size = self.get_value ();
+		});
+		multi_master.add_tool (master_size);
+		
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
 		expanders.add (character_sets);
 		expanders.add (transform_expander);
 		expanders.add (glyph_expander);
+		
+		if (BirdFont.has_argument ("--test")) {
+			expanders.add (multi_master);
+		}
 	}
 
 	void fix_curve_orientation () {

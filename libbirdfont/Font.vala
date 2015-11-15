@@ -106,7 +106,8 @@ public class Font : GLib.Object {
 	bool bfp = false;
 	BirdFontPart bfp_file;
 	
-	public Gee.ArrayList<Glyph> deleted_glyphs;
+	/** File names of deleted glyphs in bfp directories. */
+	public Gee.ArrayList<string> deleted_glyphs;
 
 	public Ligatures ligature_substitution;
 	
@@ -171,7 +172,7 @@ public class Font : GLib.Object {
 		
 		bfp_file = new BirdFontPart (this);
 		
-		deleted_glyphs = new Gee.ArrayList<Glyph> ();
+		deleted_glyphs = new Gee.ArrayList<string> ();
 		ligature_substitution = new Ligatures (this);
 		
 		background_images = new Gee.ArrayList<BackgroundImage> ();
@@ -445,7 +446,10 @@ public class Font : GLib.Object {
 		g.remove_empty_paths ();
 		
 		gc.set_unassigned (false);
-		gc.add_glyph (g);
+		
+		GlyphMaster master = new GlyphMaster ();
+		master.add_glyph (g);
+		gc.add_master (master);
 		
 		return gc;
 	}
@@ -461,7 +465,10 @@ public class Font : GLib.Object {
 		gc = new GlyphCollection ('\0', "null");
 		n = new Glyph ("null", '\0');
 		
-		gc.add_glyph (n);
+		GlyphMaster master = new GlyphMaster ();
+		master.add_glyph (n);
+		gc.add_master (master);
+
 		gc.set_unassigned (false);
 		
 		n.left_limit = 0;
@@ -490,7 +497,10 @@ public class Font : GLib.Object {
 		n.right_limit = 27;
 		n.remove_empty_paths ();
 		
-		gc.add_glyph (n);
+		GlyphMaster master = new GlyphMaster ();
+		master.add_glyph (n);
+		gc.add_master (master);
+		
 		gc.set_unassigned (false);
 		
 		return gc;		
@@ -513,7 +523,10 @@ public class Font : GLib.Object {
 		i = new Path ();
 		
 		gc.set_unassigned (true);
-		gc.add_glyph (g);
+		
+		GlyphMaster master = new GlyphMaster ();
+		master.add_glyph (g);
+		gc.add_master (master);
 		
 		g.left_limit = -20;
 		g.right_limit = 33;
@@ -595,9 +608,17 @@ public class Font : GLib.Object {
 			a.remove (glyph);
 		}
 		
-		foreach (Glyph g in glyph.glyphs) {
-			deleted_glyphs.add (g);
+		foreach (GlyphMaster master in glyph.glyph_masters) {
+			foreach (Glyph g in master.glyphs) {
+				add_deleted_glyph (g, master);
+			}
 		}
+	}
+	
+	public void add_deleted_glyph (Glyph g, GlyphMaster master) {
+		string file_name;
+		file_name = BirdFontPart.get_glyph_base_file_name (g, master) + ".bfp";
+		deleted_glyphs.add (file_name);		
 	}
 
 	// FIXME: the order of ligature substitutions

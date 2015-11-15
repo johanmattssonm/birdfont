@@ -164,9 +164,10 @@ public class OverView : FontDisplay {
 		TabBar tabs = MainWindow.get_tab_bar ();
 		bool selected;
 		Glyph glyph;
-		GlyphCollection glyph_collection = MainWindow.get_current_glyph_collection ();
+		GlyphCollection glyph_collection;
 		GlyphCanvas canvas;
-			
+		
+		glyph_collection = MainWindow.get_current_glyph_collection ();
 		name.append_unichar (character);
 		selected = tabs.select_char (name.str);
 				
@@ -221,7 +222,8 @@ public class OverView : FontDisplay {
 			glyph_collection = new GlyphCollection (character, name.str);
 			
 			if (!empty) {
-				glyph = new Glyph (name.str, (!unassigned) ? character : '\0');
+				glyph = new Glyph (name.str, !unassigned ? character : '\0');
+				glyph_collection.add_master (new GlyphMaster ());
 				glyph_collection.insert_glyph (glyph, true);
 			}
 			

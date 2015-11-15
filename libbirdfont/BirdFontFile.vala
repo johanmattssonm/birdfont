@@ -152,7 +152,7 @@ class BirdFontFile : GLib.Object {
 				
 				try {
 					string data;
-					foreach (Glyph g in gc.glyphs) {
+					foreach (Glyph g in gc.get_all_glyph_masters ()) {
 						if (g.get_background_image () != null) {
 							bg = (!) g.get_background_image ();
 							data = bg.get_png_base64 ();
@@ -383,33 +383,50 @@ class BirdFontFile : GLib.Object {
 		os.put_string ("</horizontal>\n");
 	}
 
-	public void write_glyph_collection_start (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
+	public void write_glyph_collection_start (GlyphCollection gc, GlyphMaster master, DataOutputStream os)  throws GLib.Error {
 		os.put_string ("<collection ");
 		
 		if (gc.is_unassigned ()) {
-			os.put_string (@"name=\"$(gc.get_current ().get_name ())\"");
+			os.put_string (@"name=\"$(gc.get_name ())\"");
 		} else {
-			os.put_string (@"unicode=\"$(Font.to_hex (gc.get_current ().unichar_code))\"");
+			os.put_string (@"unicode=\"$(Font.to_hex (gc.get_unicode_character ()))\"");
+		}
+		
+		if (gc.is_multimaster ()) {
+			os.put_string (" ");
+			os.put_string (@"master=\"$(master.get_id ())\"");
 		}
 		
 		os.put_string (">\n");
 	}
 
 	public void write_glyph_collection_end (DataOutputStream os)  throws GLib.Error {
-		os.put_string ("</collection>\n");
+		os.put_string ("</collection>\n\n");
 	}
 
-	public void write_selected (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
-		os.put_string (@"\t<selected id=\"$(gc.get_current ().version_id)\"/>\n");
+	public void write_selected (GlyphMaster master, DataOutputStream os)  throws GLib.Error {
+		Glyph? g = master.get_current ();
+		Glyph glyph;
+		
+		if (g != null) {
+			glyph = (!) g;
+			os.put_string (@"\t<selected id=\"$(glyph.version_id)\"/>\n");
+		}
 	}
 
 	public void write_glyph_collection (GlyphCollection gc, DataOutputStream os)  throws GLib.Error {
-		write_glyph_collection_start (gc, os);
-		write_selected (gc, os);
-		foreach (Glyph g in gc.glyphs) {
+		foreach (GlyphMaster master in gc.glyph_masters) {
+			write_glyph_collection_start (gc, master, os);
+			write_selected (master, os);
+			write_glyph_master (master, os);
+			write_glyph_collection_end (os);
+		}
+	}
+
+	public void write_glyph_master (GlyphMaster master, DataOutputStream os)  throws GLib.Error {
+		foreach (Glyph g in master.glyphs) {
 			write_glyph (g, os);
 		}
-		write_glyph_collection_end (os);
 	} 
 
 	public void write_glyph (Glyph g, DataOutputStream os) throws GLib.Error {
@@ -1234,6 +1251,8 @@ class BirdFontFile : GLib.Object {
 		string name = "";
 		int selected_id = -1;
 		bool unassigned = false;
+		string master_id = "";
+		GlyphMaster master;
 		
 		foreach (Attribute attribute in tag.get_attributes ()) {			
 			if (attribute.get_name () == "unicode") {
@@ -1249,10 +1268,15 @@ class BirdFontFile : GLib.Object {
 				unassigned = false;
 			}
 
-			if (attribute.get_name () == "name") {
+			// set name because either name or unicode is set in the bf file
+			if (attribute.get_name () == "name") { 
 				unicode = '\0';
 				name = attribute.get_content ();
 				unassigned = true;
+			}
+
+			if (attribute.get_name () == "master") {
+				master_id = attribute.get_content ();
 			}
 		}
 
@@ -1264,17 +1288,24 @@ class BirdFontFile : GLib.Object {
 		} else {
 			gc = new GlyphCollection (unicode, name);
 		}
-				
+		
+		if (gc.has_master (master_id)) {
+			master = gc.get_master (master_id);
+		} else {
+			master = new GlyphMaster.for_id (master_id);
+			gc.add_master (master);
+		}
+		
 		foreach (Tag t in tag) {			
 			if (t.get_name () == "selected") {
 				selected_id = parse_selected (t);
-				gc.set_selected_version (selected_id);
+				master.set_selected_version (selected_id);
 			}
 		}
 			
 		foreach (Tag t in tag) {			
 			if (t.get_name () == "glyph") {
-				parse_glyph (t, gc, name, unicode, selected_id, unassigned);
+				parse_glyph (t, gc, master, name, unicode, selected_id, unassigned);
 			}
 		}
 		
@@ -1302,8 +1333,8 @@ class BirdFontFile : GLib.Object {
 		return id;
 	}
 
-	public void parse_glyph (Tag tag, GlyphCollection gc, string name, 
-			unichar unicode, int selected_id, bool unassigned) {	
+	public void parse_glyph (Tag tag, GlyphCollection gc, GlyphMaster master,
+			string name, unichar unicode, int selected_id, bool unassigned) {
 		Glyph glyph = new Glyph (name, unicode);
 		Path path;
 		bool selected = false;
@@ -1360,8 +1391,7 @@ class BirdFontFile : GLib.Object {
 		glyph.version_id = (has_id) ? id : (int) gc.length () + 1;
 		gc.set_unassigned (unassigned);
 		
-		gc.insert_glyph (glyph, selected || selected_id == id);
-		glyph = new Glyph.no_lines ("");
+		master.insert_glyph (glyph, selected || selected_id == id);
 	}
 
 	Layer parse_layer (Tag tag) {

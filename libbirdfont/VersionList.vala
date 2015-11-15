@@ -70,8 +70,10 @@ public class VersionList : GLib.Object {
 		
 		glyphs = new Gee.ArrayList<Glyph> ();
 		
-		foreach (Glyph g in gc.glyphs) {
-			add_glyph (g, false);
+		if (gc.has_masters ()) {
+			foreach (Glyph g in gc.get_current_master ().glyphs) {
+				add_glyph (g, false);
+			}
 		}
 		
 		if (gc.length () > 0) {
@@ -96,8 +98,11 @@ public class VersionList : GLib.Object {
 		}
 		
 		return_if_fail (0 <= index < glyphs.size);
+
+		Glyph g = glyph_collection.get_current ();
+		GlyphMaster m = glyph_collection.get_current_master ();
+		font.add_deleted_glyph (g, m);
 		
-		font.deleted_glyphs.add (glyph_collection.get_current ());
 		over_view.store_undo_state (glyph_collection.copy ());
 		
 		current_version = get_current_version_index ();
