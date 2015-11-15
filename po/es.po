@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-07 18:07+0100\n"
-"PO-Revision-Date: 2015-10-20 14:42+0000\n"
+"POT-Creation-Date: 2015-11-12 21:35+0100\n"
+"PO-Revision-Date: 2015-11-09 22:39+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1445352169.000000\n"
+"X-POOTLE-MTIME: 1447108749.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -769,7 +769,7 @@ msgstr "Pares de interletraje"
 
 #: libbirdfont/KerningList.vala:57
 msgid "No kerning pairs created."
-msgstr "No se creó pareja de kerning"
+msgstr "No se emparejaron kernings"
 
 #: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:85
 msgid "Kerning class"

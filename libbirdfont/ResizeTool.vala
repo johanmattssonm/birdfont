@@ -335,7 +335,7 @@ public class ResizeTool : Tool {
 		// move paths relative to the updated xmin and xmax
 		get_selection_min (out selection_minx, out selection_miny);
 		dx = resize_pos_x - selection_minx;
-		dy = resize_pos_y - resize_pos_y;
+		dy = resize_pos_y - selection_miny;
 		
 		foreach (Path selected_path in glyph.active_paths) {
 			selected_path.move (dx, dy);			

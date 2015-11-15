@@ -1101,9 +1101,7 @@ public class Path : GLib.Object {
 		}
 	}
 
-	public void update_region_boundaries () {	
-		PathList s;
-		
+	public void update_region_boundaries () {
 		xmax = Glyph.CANVAS_MIN;
 		xmin = Glyph.CANVAS_MAX;
 		ymax = Glyph.CANVAS_MIN;
