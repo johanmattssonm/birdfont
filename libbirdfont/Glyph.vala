@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 3 of the
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as
+	published by the Free Software Foundation; either version 3 of the
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but
+	WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+	Lesser General Public License for more details.
 */
 
 using Cairo;
@@ -2432,15 +2432,15 @@ public class Glyph : FontDisplay {
 	}
 
   public override void magnify (double magnification) {
-    double x_center = path_coordinate_x (xc ());
-    double y_center = path_coordinate_y (yc ());
+	double x_center = path_coordinate_x (xc ());
+	double y_center = path_coordinate_y (yc ());
 
-    view_zoom *= 1 + magnification;
+	view_zoom *= 1 + magnification;
 
-    view_offset_x -= path_coordinate_x (xc ()) - x_center;
-    view_offset_y += path_coordinate_y (yc ()) - y_center;
+	view_offset_x -= path_coordinate_x (xc ()) - x_center;
+	view_offset_y += path_coordinate_y (yc ()) - y_center;
 
-    GlyphCanvas.redraw ();
+	GlyphCanvas.redraw ();
   }
 }
 

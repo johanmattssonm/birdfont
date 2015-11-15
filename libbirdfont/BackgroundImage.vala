@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+	Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 using Cairo;
@@ -332,7 +332,7 @@ public class BackgroundImage {
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
-        
+		
 		converted = MainWindow.native_window.convert_to_png (path.dup (), ((!) png_image.get_path ()).dup ());
 		
 		if (!converted) {
@@ -498,7 +498,7 @@ public class BackgroundImage {
 		c.rectangle (0, 0, size_margin, size_margin);
 		c.fill ();
 			
-   		c.translate (size_margin * 0.5, size_margin * 0.5);
+		c.translate (size_margin * 0.5, size_margin * 0.5);
 		c.rotate (img_rotation);
 		c.translate (-size_margin * 0.5, -size_margin * 0.5);
 		
@@ -707,7 +707,7 @@ public class BackgroundImage {
 		c.rectangle (0, 0, scaled_width, scaled_width);
 		c.fill ();
 
-   		c.translate (scaled_width * 0.5, scaled_width * 0.5);
+		c.translate (scaled_width * 0.5, scaled_width * 0.5);
 		c.rotate (img_rotation);
 		c.translate (-scaled_width * 0.5, -scaled_width * 0.5);
 

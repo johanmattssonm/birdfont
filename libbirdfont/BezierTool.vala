@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2015 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 using Math;
@@ -301,24 +301,24 @@ public class BezierTool : Tool {
 			
 			state = NONE;
 		}
-        
-        convert_zero_length_handles_to_lines ();
+		
+		convert_zero_length_handles_to_lines ();
 	}
 	
-    void convert_zero_length_handles_to_lines () {
-        EditPoint first, last;
-        
-        first = current_path.get_first_point ();
-        if (first.get_right_handle ().length == 0) {
-            first.convert_to_line ();
-        }
+	void convert_zero_length_handles_to_lines () {
+		EditPoint first, last;
+		
+		first = current_path.get_first_point ();
+		if (first.get_right_handle ().length == 0) {
+			first.convert_to_line ();
+		}
 
-        last = current_path.get_last_point ();
-        if (last.get_left_handle ().length == 0) {
-            last.convert_to_line ();
-        }
-    }
-            
+		last = current_path.get_last_point ();
+		if (last.get_left_handle ().length == 0) {
+			last.convert_to_line ();
+		}
+	}
+			
 	public void move (int x, int y) {
 		double px, py;
 		
@@ -388,7 +388,7 @@ public class BezierTool : Tool {
 			current_path.get_first_point ().set_reflective_handles (false);
 			current_path.get_last_point ().set_reflective_handles (false);
 		}
-        
+		
 		convert_zero_length_handles_to_lines ();
 	}
 	

@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2012, 2014 Johan Mattsson
+	Copyright (C) 2012, 2014 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 [SimpleType]
@@ -91,7 +91,7 @@ public class OpenFontFormatReader : Object {
 		FileInfo file_info = file.query_info ("*", FileQueryInfoFlags.NONE);
 		uint32 file_size = (uint32) file_info.get_size ();
 
-        try {
+		try {
 			font_data.write_table (dis, 0, file_size);
 		} catch (GLib.Error e) {
 			warning (@"Failed to read font data. $(e.message)");

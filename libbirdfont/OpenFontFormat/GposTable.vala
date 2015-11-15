@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+	Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 using Math;
 
@@ -194,7 +194,7 @@ public class GposTable : OtfTable {
 					// pair value record	
 					fd.add_ushort (k.right);     // gid of the second glyph
 					fd.add_short (k.kerning);    // value of ValueFormat1, horizontal adjustment for advance of the first glyph
-					                             // value of ValueFormat2 (null)
+												 // value of ValueFormat2 (null)
 					
 					if (unlikely (k.right < last_gid_right)) {
 						warning (@"Kerning table is not sorted $(k.right) < $last_gid_right).");

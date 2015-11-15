@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 using B;
@@ -960,13 +960,13 @@ public class SvgParser {
 				
 		prev = path.points.get (path.points.size - 1);
 		
- 		foreach (EditPoint p in path.points) {
+		foreach (EditPoint p in path.points) {
 			if  ((p.y > point.y) != (prev.y > point.y) 
- 				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
- 				inside = !inside;
- 			}
- 			
- 			prev = p;
+				&& point.x < (prev.x - p.x) * (point.y - p.y) / (prev.y - p.y) + p.x) {
+				inside = !inside;
+			}
+			
+			prev = p;
 		}
 		
 		return inside;

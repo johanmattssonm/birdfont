@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2014 2015 Johan Mattsson
+	Copyright (C) 2014 2015 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 using Cairo;
@@ -77,16 +77,16 @@ public class AbstractMenu : GLib.Object {
 		ToolItem tm;
 		unichar lower_keyval = ((unichar) keyval).tolower ();
 		
-        display = current_display.get_name ();
+		display = current_display.get_name ();
 
-        if (current_display is Glyph) {
-            display = "Glyph";
-        }
-        
+		if (current_display is Glyph) {
+			display = "Glyph";
+		}
+		
 		foreach (MenuItem item in sorted_menu_items) {		
 			if (item.key.tolower () == lower_keyval
-                && item.modifiers == KeyBindings.modifier
-                && item.in_display (display)) {
+				&& item.modifiers == KeyBindings.modifier
+				&& item.in_display (display)) {
 				
 				if (!current_display.needs_modifier () || item.modifiers != NONE) {
 					if (!SettingsDisplay.update_key_bindings 

@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2012, 2013, 2014 Johan Mattsson
+	Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 namespace BirdFont {
@@ -113,7 +113,7 @@ public class KernTable : OtfTable {
 		
 		if (pairs.get_length () > (uint16.MAX - 14) / 6.0) {
 			warning ("Too many kerning pairs!"); 
- 			n_pairs = (uint16) ((uint16.MAX - 14) / 6.0);
+			n_pairs = (uint16) ((uint16.MAX - 14) / 6.0);
 		} else {
 			n_pairs = (uint16) pairs.get_length ();
 		}

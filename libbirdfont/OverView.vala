@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2012 2014 2015 Johan Mattsson
+	Copyright (C) 2012 2014 2015 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 using Cairo;
@@ -304,36 +304,36 @@ public class OverView : FontDisplay {
 		return true;
 	}
 
-    public bool all_characters_in_view () {
+	public bool all_characters_in_view () {
 		double length;
 		Font f;
-        
+		
 		if (all_available) {
 			f = BirdFont.get_current_font ();
 			length = f.length ();
 		} else {
 			length = glyph_range.length ();
 		}
-        
-        return length < items_per_row * rows;
-    }
-    
+		
+		return length < items_per_row * rows;
+	}
+	
 	public void move_up () {
 		first_visible -= items_per_row;
 		selected += items_per_row;
 		
 		if (first_visible < 0) {
-            selected -= items_per_row;
+			selected -= items_per_row;
 			first_visible = 0;
 			view_offset_y = 0;
-        }
+		}
 	}
 
 	public void move_down () {
-        if (!at_bottom ()) {
-            first_visible += items_per_row;
-            selected -= items_per_row;
-        }
+		if (!at_bottom ()) {
+			first_visible += items_per_row;
+			selected -= items_per_row;
+		}
 	}
 	
 	public override void scroll_wheel (double x, double y, double dx, double dy) {
@@ -354,16 +354,16 @@ public class OverView : FontDisplay {
 			} else {
 				view_offset_y += pixel_delta;
 				while (view_offset_y < -OverViewItem.height) {
-                    view_offset_y += OverViewItem.height;
-                    move_down ();
+					view_offset_y += OverViewItem.height;
+					move_down ();
 				}
 			}
 		}
-                
-        if (view_offset_y < -2 * OverViewItem.height) {
-            view_offset_y = -2 * OverViewItem.height;
-        }
-        
+				
+		if (view_offset_y < -2 * OverViewItem.height) {
+			view_offset_y = -2 * OverViewItem.height;
+		}
+		
 		update_item_list ();
 		update_scrollbar ();
 		hide_menu ();	
@@ -467,7 +467,7 @@ public class OverView : FontDisplay {
 	public void display_all_available_glyphs () {
 		all_available = true;
 
-        view_offset_y = 0;
+		view_offset_y = 0;
 		first_visible = 0;
 		selected = 0;
 		
@@ -485,7 +485,7 @@ public class OverView : FontDisplay {
 			return selected_item;
 		}
 
- 		return visible_items.get (selected);
+		return visible_items.get (selected);
 	}
 	
 	int get_items_per_row () {
@@ -711,7 +711,7 @@ public class OverView : FontDisplay {
 	public void scroll_top () {
 		first_visible = 0;
 		view_offset_y = 0;
-        
+		
 		update_item_list ();
 		
 		if (visible_items.size != 0) {

@@ -1,15 +1,15 @@
 /*
-    Copyright (C) 2012 2014 2015 Johan Mattsson
+	Copyright (C) 2012 2014 2015 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 using B;
@@ -79,7 +79,7 @@ public class ExportTool : GLib.Object {
 			style="color:#000000;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
 			min="0,0"
 			max="0,0" />
-     """);
+	 """);
 
 		s.append (get_svg_path_elements (glyph, only_selected_paths));
 		s.append ("</svg>");
@@ -439,11 +439,11 @@ os.put_string (
 	public static File get_export_dir () {
 		return File.new_for_path (get_export_folder ());
 	}
-    
+	
 	public static bool export_ttf_font () {
 		File f = get_export_dir ();
 		Font font = BirdFont.get_current_font ();
-        
+		
 		try {
 			if (!f.query_exists ()) {
 				f.make_directory ();
