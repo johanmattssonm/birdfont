@@ -470,7 +470,7 @@ public class StrokeTool : GLib.Object {
 
 		foreach (Path p in o.paths) {
 			foreach (EditPoint ep in p.points) {
-				ep.flags &= uint.MAX ^ EditPoint.COPIED;
+				ep.flags &= ~EditPoint.COPIED;
 			}
 		}
 		
@@ -584,7 +584,7 @@ public class StrokeTool : GLib.Object {
 
 		// reset copied points
 		foreach (EditPoint n in path.points) {
-			n.flags &= uint.MAX ^ EditPoint.COPIED;
+			n.flags &= ~EditPoint.COPIED;
 		}
 				
 		// build list of intersection points
@@ -631,7 +631,7 @@ public class StrokeTool : GLib.Object {
 		
 		// reset copy flag
 		foreach (EditPoint n in path.points) {
-			n.flags &= uint.MAX ^ EditPoint.COPIED;
+			n.flags &= ~EditPoint.COPIED;
 		}
 		
 		if (intersections.points.size == 0) {
@@ -695,7 +695,7 @@ public class StrokeTool : GLib.Object {
 					parts.add (merged);
 						
 					foreach (EditPoint n in merged.points) {
-						n.flags &= uint.MAX ^ EditPoint.SELF_INTERSECTION;
+						n.flags &= ~EditPoint.SELF_INTERSECTION;
 					}
 					
 					merged.reverse ();
@@ -748,7 +748,7 @@ public class StrokeTool : GLib.Object {
 
 		// reset copied points
 		foreach (EditPoint n in path2.points) {
-			n.flags &= uint.MAX ^ EditPoint.COPIED;
+			n.flags &= ~EditPoint.COPIED;
 		}
 						
 		// build list of intersection points
@@ -790,11 +790,11 @@ public class StrokeTool : GLib.Object {
 		
 		// reset copy flag
 		foreach (EditPoint n in path1.points) {
-			n.flags &= uint.MAX ^ EditPoint.COPIED;
+			n.flags &= ~EditPoint.COPIED;
 		}
 		
 		foreach (EditPoint n in path2.points) {
-			n.flags &= uint.MAX ^ EditPoint.COPIED;
+			n.flags &= ~EditPoint.COPIED;
 		}
 		
 		if (intersections.points.size == 0) {
@@ -966,7 +966,7 @@ public class StrokeTool : GLib.Object {
 		
 		bool has_curve_start = true;
 		foreach (EditPoint e in p.points) {
-			e.flags &= uint.MAX ^ EditPoint.NEW_CORNER;
+			e.flags &= ~EditPoint.NEW_CORNER;
 			
 			if ((e.flags & EditPoint.CURVE) == 0) {
 				p.set_new_start (e);
@@ -2027,9 +2027,9 @@ public class StrokeTool : GLib.Object {
 
 	void reset_intersections (Path p) {
 		foreach (EditPoint ep in p.points) {
-			ep.flags &= uint.MAX ^ EditPoint.INTERSECTION;
-			ep.flags &= uint.MAX ^ EditPoint.COPIED;
-			ep.flags &= uint.MAX ^ EditPoint.SELF_INTERSECTION;
+			ep.flags &= ~EditPoint.INTERSECTION;
+			ep.flags &= ~EditPoint.COPIED;
+			ep.flags &= ~EditPoint.SELF_INTERSECTION;
 			ep.deleted = false;
 		}
 		p.remove_points_on_points ();

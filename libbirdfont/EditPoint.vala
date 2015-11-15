@@ -59,8 +59,6 @@ public class EditPoint : GLib.Object {
 	public static const uint SELF_INTERSECTION = 1 << 16;
 	public static const uint COPIED_SELF_INTERSECTION = 1 << 17;
 	
-	public static const uint ALL = 0xFFFFFF;
-	
 	public uint flags = NONE;
 	
 	public bool active_point {
@@ -72,7 +70,7 @@ public class EditPoint : GLib.Object {
 			if (value) {
 				flags |= ACTIVE;
 			} else {
-				flags &= uint.MAX ^ ACTIVE;
+				flags &= ~ACTIVE;
 			}
 		}	
 	}
@@ -86,7 +84,7 @@ public class EditPoint : GLib.Object {
 			if (value) {
 				flags |= SELECTED;
 			} else {
-				flags &= uint.MAX ^ SELECTED;
+				flags &= ~SELECTED;
 			}
 		}	
 	}
@@ -100,7 +98,7 @@ public class EditPoint : GLib.Object {
 			if (value) {
 				flags |= DELETED_POINT;
 			} else {
-				flags &= uint.MAX ^ DELETED_POINT;
+				flags &= ~DELETED_POINT;
 			}
 		}	
 	}
@@ -114,7 +112,7 @@ public class EditPoint : GLib.Object {
 			if (value) {
 				flags |= TIE;
 			} else {
-				flags &= uint.MAX ^ TIE;
+				flags &= ~TIE;
 			}
 		}	
 	}
@@ -128,7 +126,7 @@ public class EditPoint : GLib.Object {
 			if (value) {
 				flags |= REFLECTIVE;
 			} else {
-				flags &= uint.MAX ^ REFLECTIVE;
+				flags &= ~REFLECTIVE;
 			}
 		}	
 	}
