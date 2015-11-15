@@ -188,13 +188,15 @@ public class LayerLabel : Tool {
 		double x = this.x - px;
 		double y = this.y - py;
 		double text_width;
+		double visibility_center_y;
 		string visibility;
 		
 		// background
 		if (selected_layer) {
 			cr.save ();
 			Theme.color (cr, "Menu Background");
-			cr.rectangle (0, y - 2 * Toolbox.get_scale (), w, h); // labels overlap with 2 pixels
+			// labels overlap with 2 pixels
+			cr.rectangle (0, y - 2 * Toolbox.get_scale (), w, h);
 			cr.fill ();
 			cr.restore ();		
 		}
@@ -214,7 +216,10 @@ public class LayerLabel : Tool {
 		visibility_icon = new Text (visibility, 30 * Toolbox.get_scale ());
 		visibility_icon.load_font ("icons.bf");
 		Theme.text_color (visibility_icon, "Text Tool Box");
-		visibility_icon.draw_at_top (cr, x, y + h / 2 - (30 * Toolbox.get_scale ()) / 2);
+		visibility_center_y = y + h / 2.0;
+		visibility_center_y -= visibility_icon.get_height () / 2.0;
+		visibility_center_y -= 2;
+		visibility_icon.draw_at_top (cr, x, visibility_center_y);
 		
 		cr.restore ();
 

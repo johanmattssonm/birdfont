@@ -63,8 +63,7 @@ public class QuestionDialog : Dialog {
 		question.layout ();
 		
 		h = question.get_height () + margin;
-		print (@"question.get_height (): $(question.get_height ())\n");
-		
+
 		foreach (Button button in buttons) {
 			button.widget_x += center;
 		}

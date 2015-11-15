@@ -227,7 +227,7 @@ public class Text : Widget {
 	public override double get_height () {
 		return font_size;
 	}
-
+	
 	public double get_acender () {
 		double max_height = 0;
 		
@@ -271,6 +271,11 @@ public class Text : Widget {
 	}
 
 	public double get_decender () {
+		double decender_max = get_max_decender ();
+		return decender_max > 0 ? decender_max : 0; 
+	}		
+
+	private double get_max_decender () {
 		double decender = 0;
 		double decender_max = 0;
 		
@@ -285,9 +290,9 @@ public class Text : Widget {
 			}
 		});
 		
-		return decender_max > 0 ? decender_max : 0; 
-	}		
-	
+		return decender_max; 
+	}
+		
 	public override void draw (Context cr) {
 		double descender = cached_font.bottom_limit + cached_font.base_line;
 		double y = widget_y + get_height () + get_font_scale () * descender; // FIXME:
