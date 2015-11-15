@@ -192,6 +192,7 @@ public class ResizeTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();  
 		double dx, dy, xc2, yc2, w, h;
 		Path last_path;
+		
 		foreach (Path p in glyph.active_paths) {
 			p.rotate (angle, cx, cy);
 		}
@@ -334,7 +335,8 @@ public class ResizeTool : Tool {
 		// move paths relative to the updated xmin and xmax
 		get_selection_min (out selection_minx, out selection_miny);
 		dx = resize_pos_x - selection_minx;
-		dy = resize_pos_y - selection_miny;
+		dy = resize_pos_y - resize_pos_y;
+		
 		foreach (Path selected_path in glyph.active_paths) {
 			selected_path.move (dx, dy);			
 		}

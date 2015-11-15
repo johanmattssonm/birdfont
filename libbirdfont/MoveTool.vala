@@ -309,6 +309,8 @@ public class MoveTool : Tool {
 		py2 = -10000;
 		
 		foreach (Path p in glyph.active_paths) {
+			p.update_region_boundaries ();
+			
 			if (px > p.xmin) {
 				px = p.xmin;
 			} 

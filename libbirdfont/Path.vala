@@ -1115,20 +1115,18 @@ public class Path : GLib.Object {
 			ymax = 0;
 			ymin = 0;
 		}
-		
-		if (stroke == 0) {
-			all_segments ((a, b) => {
-				update_region_boundaries_for_segment (a, b);
-				return true;
-			});
-		} else {
-			s = get_stroke_fast ();
-			foreach (Path p in s.paths) {
-				p.all_segments ((a, b) => {
-					update_region_boundaries_for_segment (a, b);
-					return true;
-				});
-			}
+
+		all_segments ((a, b) => {
+			update_region_boundaries_for_segment (a, b);
+			return true;
+		});
+					
+		if (stroke > 0) {
+			double stroke2 = stroke / 2;
+			xmax += stroke2;
+			xmin -= stroke2;
+			ymax += stroke2;
+			ymin -= stroke2;
 		}
 		
 		if (points.size == 1) {
