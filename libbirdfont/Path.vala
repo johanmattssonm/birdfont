@@ -2640,8 +2640,8 @@ public class Path : GLib.Object {
 		EditPoint p = new EditPoint (Glyph.CANVAS_MAX, Glyph.CANVAS_MAX);
 		
 		foreach (EditPoint ep in points) {
-			d = distance (x, ep.x, y, ep.y);
-			
+			d = distance (x, ep.x, y, ep.y);	
+
 			if (d < min) {
 				min = d;
 				p = ep;
@@ -2651,69 +2651,78 @@ public class Path : GLib.Object {
 		return p;
 	}
 	
-	public void self_interpolate (double weight) {
+	public Path self_interpolate (double weight, bool counter) {
 		Path master;
+		Path p = new Path ();
 		
 		if (stroke > 0) {
-			stroke += 5 * weight * 2;
+			p = copy ();
+			p.stroke += 5 * weight * 2;
 			
-			if (stroke < 0.002) {
-				stroke = 0.002;
+			if (p.stroke < 0.002) {
+				p.stroke = 0.002;
 			}
 		} else {
 			remove_points_on_points ();
-			master = get_self_interpolated_master ();
-			interpolate_path (master, weight);
+			master = get_self_interpolated_master (counter);
+			p = interpolate_estimated_path (master, weight);
 			recalculate_linear_handles ();
-		}	
-	}
-	
-	Path get_self_interpolated_master () {
-		Path master = new Path ();
-		EditPoint ep1, ep2, none;
-		
-		none = new EditPoint ();
-		for (int i = 0; i < points.size; i++) {
-			ep1 = points.get (i).copy ();
-			ep2 = ep1.copy ();
-			
-			StrokeTool.move_segment (ep1, none, 5);
-			StrokeTool.move_segment (none, ep2, 5);
-			
-			ep1.x = (ep2.x + ep1.x) / 2;
-			ep1.y = (ep2.y + ep1.y) / 2;
-			
-			master.add_point (ep1.copy ());
 		}
 		
-		return master;	
+		return p;
 	}
 	
-	void interpolate_path (Path master, double weight) {
+	public Path self_interpolate_fast (double weight, bool counter) {
+		return StrokeTool.change_weight_fast (this,  5 * weight, counter);
+	}
+	
+	static double abs_max (double a, double b) {
+		return fabs (a) > fabs (b) ? a : b;
+	}
+		
+	public Path interpolate_estimated_path (Path master, double weight) {
+		Path p = copy ();
 		EditPoint ep, master_point;
 		EditPointHandle h;
 		double length;
-		
-		if (unlikely (points.size != master.points.size)) {
-			warning ("Master and path must have the same number of points.");
-			return;
-		}
-	
-		for (int i = 0; i < points.size; i++) {
-			ep = points.get (i);
-			master_point = master.points.get (i);
-						
+		double x, y;
+
+		master_point = new EditPoint ();
+
+		for (int i = 0; i < p.points.size; i++) {
+			ep = p.points.get (i);
+
+			double right_angle = ep.get_right_handle ().angle;
+			double left_angle = ep.get_left_handle ().angle;
+			double angle = EditPointHandle.average_angle (right_angle, left_angle);
+			angle += PI;
+			angle %= 2 * PI;
+			
+			x = ep.x + 5 * cos (angle);
+			y = ep.y + 5 * sin (angle);
+			
+			master_point = new EditPoint ();
+			master.get_closest_point_on_path (master_point, x, y);
+			master_point.color = Color.red ();
+			master.insert_new_point_on_path (master_point);
+			
 			ep.x += (master_point.x - ep.x) * weight;
 			ep.y += (master_point.y - ep.y) * weight;
 
+/*
 			h = ep.get_right_handle ();
-			length = master_point.get_right_handle ().length;
-			h.length = length * weight + h.length * (1 - weight);
+			h.length += 5 * weight;
 			
 			h = ep.get_left_handle ();
-			length = master_point.get_left_handle ().length;
-			h.length = length * weight + h.length * (1 - weight) ;
+			h.length += 5 * weight;
+			*/
 		}
+		
+		return p;
+	}
+
+	public Path get_self_interpolated_master (bool counter) {
+		return StrokeTool.change_weight (this, counter);	
 	}
 }
 

@@ -2444,10 +2444,36 @@ public class Glyph : FontDisplay {
 		GlyphCanvas.redraw ();
 	}
 	
-	public void self_interpolate (double weight) {
+	public Glyph self_interpolate (double weight) {
+		Glyph g = copy ();
+		g.fix_curve_orientation ();
+		g.layers = new Layer (); // remove all paths
+		
 		foreach (Path p in get_visible_paths ()) {
-			p.self_interpolate (weight);
+			bool counter = !p.is_clockwise ();
+			
+			g.add_path (p.copy ());
+			Path master = p.get_self_interpolated_master (counter);
+			g.add_path (master);
+			
+			g.add_path (p.interpolate_estimated_path (master, weight));
 		}
+		
+		return g;
+	}
+	
+	public Glyph self_interpolate_fast (double weight) {
+		Glyph g = copy ();
+		g.fix_curve_orientation ();
+		g.layers = new Layer (); // remove all paths
+		
+		foreach (Path p in get_visible_paths ()) {
+			bool counter = !p.is_clockwise ();
+			Path path = p.self_interpolate_fast (weight, counter);
+			g.add_path (path);
+		}
+		
+		return g;
 	}
 }
 

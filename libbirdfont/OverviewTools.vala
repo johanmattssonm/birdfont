@@ -199,7 +199,6 @@ public class OverviewTools : ToolCollection  {
 			master.add_glyph(g);
 			glyph_collection.add_master (master);
 			glyph_collection.set_selected_master (master);
-			print(@"$(glyph_collection.get_name ())\n");
 			
 			i++;
 			gc = font.get_glyph_collection_indice (i);

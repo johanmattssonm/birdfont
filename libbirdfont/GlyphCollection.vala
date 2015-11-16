@@ -21,10 +21,8 @@ public class GlyphCollection : GLib.Object {
 	unichar unicode_character;
 	string name;
 	bool unassigned;
-	public Gee.ArrayList<GlyphMaster> glyph_masters;
-	
-	// FIXME: move this somewhere
-	static int current_master = 0;
+	public Gee.ArrayList<GlyphMaster> glyph_masters;	
+	int current_master = 0;
 	
 	public GlyphCollection (unichar unicode_character, string name) {
 		this.unicode_character = unicode_character;
@@ -66,7 +64,7 @@ public class GlyphCollection : GLib.Object {
 			add_master (m);
 			return m;
 		} else if (unlikely (i >= glyph_masters.size)) {
-			warning(@"No master at index $i.");
+			warning(@"No master at index $i. ($(glyph_masters.size)) in $(name)");
 			i = glyph_masters.size - 1;
 		}
 		
@@ -146,16 +144,28 @@ public class GlyphCollection : GLib.Object {
 		}
 		
 		if (glyph_masters.size == 1) {
-			Glyph master1 = get_current ().copy ();
-			master1.self_interpolate (weight);
-			return master1;
+			return get_current ().self_interpolate (weight);
 		} else {
 			warning("Not implemented.");
 		}
 		
 		return get_current ();
 	}
-	
+
+	public Glyph get_interpolated_fast (double weight) {
+		if (weight == 0) { // FIXME: compare to master weight
+			return get_current (); 
+		}
+		
+		if (glyph_masters.size == 1) {
+			return get_current ().self_interpolate_fast (weight);
+		} else {
+			warning("Not implemented.");
+		}
+		
+		return get_current ();
+	}
+		
 	public void insert_glyph (Glyph g, bool selected_glyph) {
 		get_current_master ().insert_glyph (g, selected_glyph);
 	}

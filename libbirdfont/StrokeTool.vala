@@ -2799,8 +2799,7 @@ public class StrokeTool : GLib.Object {
 		return sum > 0;
 	}	
 
-	public PathList create_stroke (Path original_path, double thickness) {
-			
+	public PathList create_stroke (Path original_path, double thickness) {	
 		PathList pl;
 		EditPoint p1, p2, p3;
 		EditPoint previous, previous_inside, start, start_inside;
@@ -3115,6 +3114,56 @@ public class StrokeTool : GLib.Object {
 
 		return paths;
 	}
+	
+	public static Path change_weight_fast (Path path, double weight, bool counter) {
+		StrokeTool tool = new StrokeTool ();
+		PathList pl;
+		
+		pl = tool.get_stroke_fast (path, fabs(weight));
+		
+		return_val_if_fail (pl.paths.size == 2, new Path ());
+		
+		if (counter == !pl.paths.get (0).is_clockwise ()) {
+			return pl.paths.get (0);
+		}
+		
+		return pl.paths.get (1);
+	}
+	
+	public static Path change_weight (Path path, bool counter) {
+		StrokeTool tool = new StrokeTool ();
+		Path o = path.copy ();
+		Path interpolated = new Path();
+		o.force_direction (Direction.CLOCKWISE);
+		
+		PathList pl = tool.get_stroke (o, 5);
+		Gee.ArrayList<PointSelection> deleted;
+		
+		deleted = new Gee.ArrayList<PointSelection> (); 
+
+		return_val_if_fail (pl.paths.size > 0, new Path ());
+		
+		foreach (Path sp in pl.paths) {
+			if (sp.points.size > interpolated.points.size
+				&& counter == !sp.is_clockwise ()) {
+				interpolated = sp;
+			}
+		}
+		
+		/*
+		foreach (EditPoint ep in interpolated.points) {
+			if ((ep.flags & EditPoint.SEGMENT_END) != 0) {
+				deleted.add (new PointSelection (ep, interpolated));
+			}
+		}
+	
+		foreach (PointSelection ps in deleted) {
+			PenTool.remove_point_simplify_path (ps);
+		}
+		*/
+		
+		return interpolated; // FIXME: split paths in interpolation?
+	} 
 }
 
 }
