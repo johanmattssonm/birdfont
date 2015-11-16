@@ -1309,7 +1309,7 @@ public class StrokeTool : GLib.Object {
 		return merged;
 	}
 
-	void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
+	public static void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
 		EditPointHandle r, l;
 		double m, n;
 		double qx, qy;

@@ -2432,17 +2432,23 @@ public class Glyph : FontDisplay {
 		}
 	}
 
-  public override void magnify (double magnification) {
-	double x_center = path_coordinate_x (xc ());
-	double y_center = path_coordinate_y (yc ());
+	public override void magnify (double magnification) {
+		double x_center = path_coordinate_x (xc ());
+		double y_center = path_coordinate_y (yc ());
 
-	view_zoom *= 1 + magnification;
+		view_zoom *= 1 + magnification;
 
-	view_offset_x -= path_coordinate_x (xc ()) - x_center;
-	view_offset_y += path_coordinate_y (yc ()) - y_center;
+		view_offset_x -= path_coordinate_x (xc ()) - x_center;
+		view_offset_y += path_coordinate_y (yc ()) - y_center;
 
-	GlyphCanvas.redraw ();
-  }
+		GlyphCanvas.redraw ();
+	}
+	
+	public void self_interpolate (double weight) {
+		foreach (Path p in get_visible_paths ()) {
+			p.self_interpolate (weight);
+		}
+	}
 }
 
 }

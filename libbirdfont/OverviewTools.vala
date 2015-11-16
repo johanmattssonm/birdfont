@@ -152,20 +152,26 @@ public class OverviewTools : ToolCollection  {
 		glyph_expander.add_tool (curve_orientation);
 		
 		SpinButton master_size;
-		current_master_size = 1
-		master_size = new SpinButton ("master_size", t_("Master Size")); /// master refers to a master in a multi-master font
+		current_master_size = 0;
+		master_size = new SpinButton ("master_size", t_("Master Size")); /// Master refers to a glyph master in a multi-master font.
 		master_size.set_big_number (false);
-		master_size.set_int_value ("1.000");
+		master_size.set_int_value ("0.000");
 		master_size.set_int_step (1);
-		master_size.set_min (0.001);
-		master_size.set_max (9);
+		master_size.set_min (-2);
+		master_size.set_max (2);
 		master_size.show_icon (true);
 		master_size.set_persistent (false);
 		master_size.new_value_action.connect ((self) => {
 			current_master_size = self.get_value ();
+			MainWindow.get_overview ().update_item_list ();
+			GlyphCanvas.redraw ();
 		});
 		multi_master.add_tool (master_size);
-		
+
+		Tool create_new_master = new Tool ("new_master", t_("Create new master font")); /// Master is a master in a multi-master font.
+		create_new_master.select_action.connect (create_master);
+		multi_master.add_tool (create_new_master);
+				
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
 		expanders.add (character_sets);
@@ -175,6 +181,32 @@ public class OverviewTools : ToolCollection  {
 		if (BirdFont.has_argument ("--test")) {
 			expanders.add (multi_master);
 		}
+	}
+
+	void create_master () {
+		Font font = BirdFont.get_current_font ();
+		int i = 0;
+		GlyphCollection glyph_collection;
+		GlyphCollection? gc = font.get_glyph_collection_indice (i);
+		Glyph g;
+		
+		while (gc != null) {
+			glyph_collection = (!) gc;
+			
+			// FIXME: MASTER NAME
+			GlyphMaster master = new GlyphMaster.for_id("Master 2"); 
+			g = glyph_collection.get_interpolated (current_master_size);
+			master.add_glyph(g);
+			glyph_collection.add_master (master);
+			glyph_collection.set_selected_master (master);
+			print(@"$(glyph_collection.get_name ())\n");
+			
+			i++;
+			gc = font.get_glyph_collection_indice (i);
+		}
+
+		MainWindow.get_overview ().update_item_list ();
+		GlyphCanvas.redraw ();
 	}
 
 	void fix_curve_orientation () {

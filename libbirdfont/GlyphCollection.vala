@@ -58,9 +58,15 @@ public class GlyphCollection : GLib.Object {
 	/** This method returns the current master, it has global state. */
 	public GlyphMaster get_current_master () {
 		int i = current_master;
+		GlyphMaster m;
 		
-		if (i >= glyph_masters.size) {
+		if (unlikely (glyph_masters.size == 0)) {
 			warning("No master is set for glyph.");
+			m = new GlyphMaster ();
+			add_master (m);
+			return m;
+		} else if (unlikely (i >= glyph_masters.size)) {
+			warning(@"No master at index $i.");
 			i = glyph_masters.size - 1;
 		}
 		
@@ -114,6 +120,15 @@ public class GlyphCollection : GLib.Object {
 		glyph_masters.add (master);
 	}
 	
+	public void set_selected_master (GlyphMaster m) {
+		current_master = glyph_masters.index_of (m);
+		
+		if (current_master == -1) {
+			warning ("Master does not exits");
+			current_master = 0;
+		}
+	}
+	
 	public Glyph get_current () {
 		Glyph? g = get_current_master ().get_current ();
 		
@@ -126,6 +141,18 @@ public class GlyphCollection : GLib.Object {
 	}
 	
 	public Glyph get_interpolated (double weight) {
+		if (weight == 0) { // FIXME: compare to master weight
+			return get_current (); 
+		}
+		
+		if (glyph_masters.size == 1) {
+			Glyph master1 = get_current ().copy ();
+			master1.self_interpolate (weight);
+			return master1;
+		} else {
+			warning("Not implemented.");
+		}
+		
 		return get_current ();
 	}
 	
