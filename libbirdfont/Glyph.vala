@@ -1961,6 +1961,9 @@ public class Glyph : FontDisplay {
 		current_layer = g.current_layer;
 		layers = g.layers.copy ();
 
+		left_limit = g.left_limit;
+		right_limit = g.right_limit;
+
 		remove_lines ();
 		foreach (Line line in g.get_all_help_lines ()) {
 			add_line (line.copy ());
