@@ -141,7 +141,7 @@ class TestCases {
 		
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
-				g = font.get_glyph_indice (Random.int_range (0, (int) font.length () - 1));
+				g = font.get_glyph_index (Random.int_range (0, (int) font.length () - 1));
 				return_if_fail (g != null);
 				if (Random.int_range (1, 9) % 3 == 0) {
 					k.add_kerning_class (Random.int_range (0, 9));

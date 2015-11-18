@@ -29,21 +29,21 @@ public class CmapSubtableFormat4 : GLib.Object {
 		return table.size ();
 	}
 	
-	public unichar get_char (uint32 indice) {
-		int64? c = table.lookup (indice);
+	public unichar get_char (uint32 index) {
+		int64? c = table.lookup (index);
 		
-		if (c == 0 && indice == 0) {
+		if (c == 0 && index == 0) {
 			return 0;
 		}
 		
 		if (c == 0) {
-			while (table.lookup (--indice) == 0) {
-				if (indice == 0) {
+			while (table.lookup (--index) == 0) {
+				if (index == 0) {
 					return 0;
 				}
 			} 
 			
-			warning (@"There is no character for glyph number $indice in cmap table. table.size: $(table.size ()))");
+			warning (@"There is no character for glyph number $index in cmap table. table.size: $(table.size ()))");
 			return 0;
 		}
 		
@@ -131,7 +131,7 @@ public class CmapSubtableFormat4 : GLib.Object {
 		}
 		
 		// map all values in a hashtable
-		int indice = 0;
+		int index = 0;
 		unichar character = 0;
 		uint32 id;
 		for (uint16 i = 0; i < seg_count && start_char[i] != 0xFFFF; i++) {
@@ -141,10 +141,10 @@ public class CmapSubtableFormat4 : GLib.Object {
 			uint16 j = 0;
 			do {
 				character = start_char[i] + j;
-				indice = start_char[i] + id_delta[i] + j;
+				index = start_char[i] + id_delta[i] + j;
 				
 				if (id_range_offset[i] == 0) {
-					table.insert (indice, character);
+					table.insert (index, character);
 				} else {
 					// the indexing trick:
 					id = id_range_offset[i] / 2 + j + i - seg_count;
@@ -154,12 +154,12 @@ public class CmapSubtableFormat4 : GLib.Object {
 						break;
 					}
 					
-					indice = glyph_id_array [id] + id_delta[i];
+					index = glyph_id_array [id] + id_delta[i];
 										
 					StringBuilder s = new StringBuilder ();
 					s.append_unichar (character);
 										
-					table.insert (indice, character);
+					table.insert (index, character);
 				}
 				
 				j++;
@@ -187,7 +187,7 @@ public class CmapSubtableFormat4 : GLib.Object {
 		
 		uint16 gid_length = 0;
 		
-		uint32 indice;
+		uint32 index;
 		uint32 first_assigned;
 		
 		first_assigned = 1;
@@ -220,13 +220,13 @@ public class CmapSubtableFormat4 : GLib.Object {
 		fd.add_ushort (range_shift);										
 		
 		// end codes
-		indice = first_assigned;
+		index = first_assigned;
 		foreach (UniRange u in ranges) {
 			if (u.stop >= 0xFFFF) {
 				warning ("Not implemented yet.");
 			} else {
 				fd.add_ushort ((uint16) u.stop);
-				indice += u.length ();
+				index += u.length ();
 			}
 		}
 		fd.add_ushort (0xFFFF);
@@ -234,25 +234,25 @@ public class CmapSubtableFormat4 : GLib.Object {
 		fd.add_ushort (0); // Reserved
 		
 		// start codes
-		indice = first_assigned; // since first glyph are notdef, null and nonmarkingreturn
+		index = first_assigned; // since first glyph are notdef, null and nonmarkingreturn
 		foreach (UniRange u in ranges) {
 			if (u.start >= 0xFFFF) {
 				warning ("Not implemented yet.");
 			} else {
 				fd.add_ushort ((uint16) u.start);
-				indice += u.length ();
+				index += u.length ();
 			}
 		}
 		fd.add_ushort (0xFFFF);
 
 		// delta
-		indice = first_assigned;
+		index = first_assigned;
 		foreach (UniRange u in ranges) {
-			if ((u.start - indice) > 0xFFFF && u.start > indice) {
+			if ((u.start - index) > 0xFFFF && u.start > index) {
 				warning ("Need range offset.");
 			} else {
-				fd.add_ushort ((uint16) (indice - u.start));
-				indice += u.length ();
+				fd.add_ushort ((uint16) (index - u.start));
+				index += u.length ();
 			}
 		}
 		fd.add_ushort (1);

@@ -187,7 +187,7 @@ public class OverviewTools : ToolCollection  {
 		Font font = BirdFont.get_current_font ();
 		int i = 0;
 		GlyphCollection glyph_collection;
-		GlyphCollection? gc = font.get_glyph_collection_indice (i);
+		GlyphCollection? gc = font.get_glyph_collection_index (i);
 		Glyph g;
 		
 		while (gc != null) {
@@ -201,7 +201,7 @@ public class OverviewTools : ToolCollection  {
 			glyph_collection.set_selected_master (master);
 			
 			i++;
-			gc = font.get_glyph_collection_indice (i);
+			gc = font.get_glyph_collection_index (i);
 		}
 
 		MainWindow.get_overview ().update_item_list ();

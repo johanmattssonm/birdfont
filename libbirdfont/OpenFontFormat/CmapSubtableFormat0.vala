@@ -35,12 +35,12 @@ public class CmapSubtableFormat0 : GLib.Object {
 	}
 	
 	uint8 get_gid_for_unichar (unichar c, GlyfTable glyf_table) {
-		uint32 indice = 0;
+		uint32 index = 0;
 		foreach (GlyphCollection g in glyf_table.glyphs) {
 			if (g.get_unicode_character () == c && !g.is_unassigned ()) {
-				return (indice <= uint8.MAX) ? (uint8) indice : 0;
+				return (index <= uint8.MAX) ? (uint8) index : 0;
 			}
-			indice++;
+			index++;
 		}
 		return 0;		
 	}

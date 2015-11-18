@@ -23,7 +23,7 @@ public class UnicodeRangeBits : GLib.Object {
 	}
 	
 	public void get_ranges (Font font, out uint32 r0, out uint32 r1, out uint32 r2, out uint32 r3) {
-		uint32 indice;
+		uint32 index;
 		GlyphCollection? gl;
 		GlyphCollection g;
 		int bit;
@@ -33,7 +33,7 @@ public class UnicodeRangeBits : GLib.Object {
 		r2 = 0;
 		r3 = 0;
 		
-		for (indice = 0; (gl = font.get_glyph_collection_indice (indice)) != null; indice++) {		
+		for (index = 0; (gl = font.get_glyph_collection_index (index)) != null; index++) {		
 			g = (!) gl;
 			if (!g.is_unassigned ()) {
 				bit = get_bit (g.get_unicode_character ());

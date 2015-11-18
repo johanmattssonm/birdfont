@@ -622,8 +622,8 @@ public class Font : GLib.Object {
 	}
 
 	// FIXME: the order of ligature substitutions
-	public GlyphCollection? get_ligature (uint indice) {
-		return ligature.nth (indice);
+	public GlyphCollection? get_ligature (uint index) {
+		return ligature.nth (index);
 	}
 	
 	/** Obtain all versions and alterntes for this glyph. */
@@ -666,18 +666,18 @@ public class Font : GLib.Object {
 		return ((!)gc).get_current ();
 	}
 	
-	public GlyphCollection? get_glyph_collection_indice (unichar glyph_indice) {
-		if (!(0 <= glyph_indice < glyph_name.length ())) {
+	public GlyphCollection? get_glyph_collection_index (unichar glyph_index) {
+		if (!(0 <= glyph_index < glyph_name.length ())) {
 			return null;
 		}
 		
-		return glyph_name.nth (glyph_indice);
+		return glyph_name.nth (glyph_index);
 	}
 	
-	public Glyph? get_glyph_indice (unichar glyph_indice) {
+	public Glyph? get_glyph_index (unichar glyph_index) {
 		GlyphCollection? gc;
 		
-		gc = get_glyph_collection_indice (glyph_indice);
+		gc = get_glyph_collection_index (glyph_index);
 		
 		if (gc != null) {
 			return ((!) gc).get_current ();

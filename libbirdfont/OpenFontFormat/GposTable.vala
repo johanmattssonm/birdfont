@@ -64,7 +64,7 @@ public class GposTable : OtfTable {
 		
 		fd.add_ushort (0); // feature prameters (null)
 		fd.add_ushort (1); // number of lookups
-		fd.add_ushort (0); // lookup indice
+		fd.add_ushort (0); // lookup index
 		
 		// lookup table
 		fd.add_ushort (1); // number of lookups
