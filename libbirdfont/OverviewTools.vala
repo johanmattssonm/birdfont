@@ -157,8 +157,8 @@ public class OverviewTools : ToolCollection  {
 		master_size.set_big_number (false);
 		master_size.set_int_value ("0.000");
 		master_size.set_int_step (1);
-		master_size.set_min (-2);
-		master_size.set_max (2);
+		master_size.set_min (-1);
+		master_size.set_max (1);
 		master_size.show_icon (true);
 		master_size.set_persistent (false);
 		master_size.new_value_action.connect ((self) => {

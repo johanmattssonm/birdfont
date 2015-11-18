@@ -158,7 +158,8 @@ public class GlyphCollection : GLib.Object {
 		}
 		
 		if (glyph_masters.size == 1) {
-			return get_current ().self_interpolate_fast (weight);
+			//return get_current ().self_interpolate_fast (weight);
+			return get_current (); 
 		} else {
 			warning("Not implemented.");
 		}

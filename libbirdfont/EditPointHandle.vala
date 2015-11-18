@@ -314,6 +314,11 @@ public class EditPointHandle : GLib.Object {
 		double x = (cos (angle1) + cos (angle2)) / 2;
 		double y = (sin (angle1) + sin (angle2)) / 2;
 		handle.move_to_coordinate (x, y);
+		
+		if (fabs (x) < 0.001 && fabs (y) < 0.001) {
+			return (angle1 + PI / 2) % 2 * PI;
+		}
+		
 		return handle.angle;
 	}
 

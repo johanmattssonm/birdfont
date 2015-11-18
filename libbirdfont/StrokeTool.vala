@@ -3150,19 +3150,7 @@ public class StrokeTool : GLib.Object {
 			}
 		}
 		
-		/*
-		foreach (EditPoint ep in interpolated.points) {
-			if ((ep.flags & EditPoint.SEGMENT_END) != 0) {
-				deleted.add (new PointSelection (ep, interpolated));
-			}
-		}
-	
-		foreach (PointSelection ps in deleted) {
-			PenTool.remove_point_simplify_path (ps);
-		}
-		*/
-		
-		return interpolated; // FIXME: split paths in interpolation?
+		return interpolated;
 	} 
 }
 

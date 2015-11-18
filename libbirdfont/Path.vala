@@ -2634,23 +2634,6 @@ public class Path : GLib.Object {
 		}
 	}
 	
-	public EditPoint get_closest_point (double x, double y) {
-		double min = Glyph.CANVAS_MAX;
-		double d;	
-		EditPoint p = new EditPoint (Glyph.CANVAS_MAX, Glyph.CANVAS_MAX);
-		
-		foreach (EditPoint ep in points) {
-			d = distance (x, ep.x, y, ep.y);	
-
-			if (d < min) {
-				min = d;
-				p = ep;
-			}
-		}
-		
-		return p;
-	}
-	
 	public Path self_interpolate (double weight, bool counter) {
 		Path master;
 		Path p = new Path ();
@@ -2671,26 +2654,22 @@ public class Path : GLib.Object {
 		
 		return p;
 	}
-	
-	public Path self_interpolate_fast (double weight, bool counter) {
-		return StrokeTool.change_weight_fast (this,  5 * weight, counter);
-	}
-	
-	static double abs_max (double a, double b) {
-		return fabs (a) > fabs (b) ? a : b;
-	}
 		
 	public Path interpolate_estimated_path (Path master, double weight) {
 		Path p = copy ();
 		EditPoint ep, master_point;
-		EditPointHandle h;
-		double length;
 		double x, y;
+
+		if (p.points.size <= 1 || master.points.size <= 1) {
+			return p;
+		}
 
 		master_point = new EditPoint ();
 
 		for (int i = 0; i < p.points.size; i++) {
 			ep = p.points.get (i);
+			
+			bool debug = (-19 < ep.x < -21) && (39 < ep.y < 41);
 
 			double right_angle = ep.get_right_handle ().angle;
 			double left_angle = ep.get_left_handle ().angle;
@@ -2698,31 +2677,136 @@ public class Path : GLib.Object {
 			angle += PI;
 			angle %= 2 * PI;
 			
-			x = ep.x + 5 * cos (angle);
-			y = ep.y + 5 * sin (angle);
+			double close_x, close_y;
+			double min_distance = Glyph.CANVAS_MAX;
+			double distance;
+			double distance_to_edge = (5 / 2.0) * weight;
 			
-			master_point = new EditPoint ();
-			master.get_closest_point_on_path (master_point, x, y);
-			master_point.color = Color.red ();
-			master.insert_new_point_on_path (master_point);
+			close_x = Glyph.CANVAS_MAX;
+			close_y = Glyph.CANVAS_MAX;
+			
+			while (Path.distance (close_x, master_point.x, close_y, master_point.y) > 0.1) {
+				x = ep.x + distance_to_edge * cos (angle);
+				y = ep.y + distance_to_edge * sin (angle);
+				
+				if (debug) {
+					print(@"Search $x $y\n");
+				}
+				
+				master_point = new EditPoint ();
+				master.get_closest_point_on_path (master_point, x, y);
+				master_point.color = Color.red ();
+				master.insert_new_point_on_path (master_point);
+				master_point.get_right_handle ().angle = angle;
+				
+				distance_to_edge += 0.1;
+				
+				distance = Path.distance (x, master_point.x, y, master_point.y);
+				if (distance < min_distance) {
+					min_distance = distance;
+					close_x = x;
+					close_y = y;
+				}
+				
+				if (distance_to_edge > 5) {
+					break;
+				}
+			}
+
+			x = close_x;
+			y = close_x;
 			
 			ep.x += (master_point.x - ep.x) * weight;
 			ep.y += (master_point.y - ep.y) * weight;
-
-/*
-			h = ep.get_right_handle ();
-			h.length += 5 * weight;
-			
-			h = ep.get_left_handle ();
-			h.length += 5 * weight;
-			*/
 		}
+		
+		p.adjust_interpolated_handles (master, fabs ((5 / 2.0) * weight));
 		
 		return p;
 	}
 
 	public Path get_self_interpolated_master (bool counter) {
 		return StrokeTool.change_weight (this, counter);	
+	}
+	
+	void adjust_interpolated_handles (Path master, double edge) {
+		EditPoint ep, next;
+
+		for (int i = 0; i < points.size; i++) {
+			ep = points.get (i);
+			next = points.get (i % points.size);
+			adjust_interpolated_handle (master, ep, next, edge);
+		}
+	}
+
+	void adjust_interpolated_handle (Path master, 
+			EditPoint ep, EditPoint next,
+			double edge) {			
+		
+		double x, y;
+		double next_length_adjustment = 0;
+		double prev_length_adjustment_reverse = 0;
+		
+		double min_distortion = double.MAX;
+
+		EditPoint master_point = new EditPoint ();
+		
+		get_point_for_step (ep, next, 0.55, out x, out y);
+		master.get_closest_point_on_path (master_point, x, y);
+
+		double tolerance = 0.01;
+		double start_length = ep.get_right_handle ().length;
+		double stop_length = next.get_left_handle ().length;
+		
+		EditPoint ep1, ep2;
+		
+		ep1 = ep.copy ();
+		ep2 = next.copy ();
+		
+		double total_distance = Path.distance (ep1.x, ep2.x, ep1.y, ep2.y);
+		
+		for (double m = 50.0; m >= tolerance / 2.0; m /= 10.0) {
+			double step = m / 10.0;
+			min_distortion = double.MAX;
+			
+			double first = (m == 50.0) ? 0 : -m;
+			
+			for (double a = first; a < m; a += step) {
+				for (double b = first; b < m; b += step) {
+
+					if (start_length + a + stop_length + b > total_distance) {
+						break;
+					}
+					
+					ep1.get_right_handle ().length = start_length + a;
+					ep2.get_left_handle ().length = stop_length + b;
+
+					get_point_for_step (ep1, ep2, 0.55, out x, out y);
+					double error = distance (master_point.x, x, master_point.y, y);
+					error = fabs(error - edge);	
+	
+					if (error < min_distortion
+							&& start_length + a > 0
+							&& stop_length + b > 0) {
+						min_distortion = error;
+						prev_length_adjustment_reverse = a;
+						next_length_adjustment = b;
+					}
+				}
+			}
+				
+			start_length += prev_length_adjustment_reverse;
+			stop_length += next_length_adjustment;
+		}
+		
+		ep.get_right_handle ().length = start_length;
+		
+		if (ep.get_right_handle ().type != PointType.QUADRATIC) {
+			next.get_left_handle ().length = stop_length;
+		} else {
+			next.get_left_handle ().move_to_coordinate (
+				ep.get_right_handle ().x, ep.get_right_handle ().y);
+		}
 	}
 }
 

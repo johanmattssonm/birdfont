@@ -2445,35 +2445,28 @@ public class Glyph : FontDisplay {
 	}
 	
 	public Glyph self_interpolate (double weight) {
-		Glyph g = copy ();
-		g.fix_curve_orientation ();
-		g.layers = new Layer (); // remove all paths
+		Glyph g1 = copy ();
+		Glyph g2 = copy ();
 		
-		foreach (Path p in get_visible_paths ()) {
+		g1.fix_curve_orientation ();
+		g2.layers = new Layer (); // remove all paths
+		
+		foreach (Path p in g1.get_visible_paths ()) {
 			bool counter = !p.is_clockwise ();
+			//g2.add_path (p.self_interpolate (weight, counter));
+
+			g2.add_path (p.copy ());
 			
-			g.add_path (p.copy ());
+			p.remove_points_on_points ();
 			Path master = p.get_self_interpolated_master (counter);
-			g.add_path (master);
+			p = p.interpolate_estimated_path (master, weight);
+			p.recalculate_linear_handles ();
 			
-			g.add_path (p.interpolate_estimated_path (master, weight));
+			g2.add_path (p);
+			g2.add_path (master);
 		}
 		
-		return g;
-	}
-	
-	public Glyph self_interpolate_fast (double weight) {
-		Glyph g = copy ();
-		g.fix_curve_orientation ();
-		g.layers = new Layer (); // remove all paths
-		
-		foreach (Path p in get_visible_paths ()) {
-			bool counter = !p.is_clockwise ();
-			Path path = p.self_interpolate_fast (weight, counter);
-			g.add_path (path);
-		}
-		
-		return g;
+		return g2;
 	}
 }
 
