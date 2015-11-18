@@ -53,7 +53,7 @@ public class Expander : GLib.Object {
 		title = new Text ();
 
 		if (headline != null) {
-			title.set_text ((!) headline);
+			set_headline(headline);
 		}
 				
 		tool = new Gee.ArrayList<Tool> ();
@@ -65,6 +65,7 @@ public class Expander : GLib.Object {
 
 	public void set_headline (string? h) {
 		headline = h;
+		title.set_text ((!) headline);
 	}
 
 	public double get_content_height () {
