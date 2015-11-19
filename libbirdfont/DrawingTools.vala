@@ -102,6 +102,7 @@ public class DrawingTools : ToolCollection  {
 	Tool move_layer;
 	Tool flip_vertical;
 	Tool flip_horizontal;
+	Tool full_height_tool;
 	
 	public ZoomBar zoom_bar;
 
@@ -590,6 +591,14 @@ public class DrawingTools : ToolCollection  {
 	
 		reverse_path_tool = new OrientationTool ("reverse_path", t_("Create counter from outline"));
 		draw_tool_modifiers.add_tool (reverse_path_tool);
+
+		full_height_tool = new Tool ("full_height", t_("Scale object to font top/baseline"));
+		full_height_tool.select_action.connect ((self) => {
+				resize_tool.full_height ();
+				GlyphCanvas.redraw ();
+		});
+
+		draw_tool_modifiers.add_tool (full_height_tool);
 
 		// close path
 		close_path_tool = new Tool ("close_path", t_("Close path"));
@@ -1321,6 +1330,7 @@ public class DrawingTools : ToolCollection  {
 		height.set_tool_visibility (false);
 		skew.set_tool_visibility (false);
 		reverse_path_tool.set_tool_visibility (false);
+		full_height_tool.set_tool_visibility (false);
 		move_layer.set_tool_visibility (false);
 		flip_vertical.set_tool_visibility (false);
 		flip_horizontal.set_tool_visibility (false);
@@ -1392,6 +1402,8 @@ public class DrawingTools : ToolCollection  {
 		move_layer.set_tool_visibility (true);
 		flip_vertical.set_tool_visibility (true);
 		flip_horizontal.set_tool_visibility (true);
+
+		full_height_tool.set_tool_visibility (true);
 	}
 	
 	public void update_drawing_and_background_tools (Tool current_tool) {
