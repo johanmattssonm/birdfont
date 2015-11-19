@@ -388,10 +388,8 @@ public class ResizeTool : Tool {
 		//compute scale
 		double font_height = font.top_position - font.base_line;
 		double scale = font_height / h;
-		foreach (Path p in glyph.active_paths) {
-			p.scale(scale, scale);
-		}
 
+		resize_selected_paths (scale);
 		PenTool.reset_stroke ();
 
 		MoveTool.update_boundaries_for_selection ();
@@ -401,7 +399,9 @@ public class ResizeTool : Tool {
 											   out selection_box_center_y,
 											   out selection_box_width,
 											   out selection_box_height);
-
+		
+		DrawingTools.move_tool.move_to_baseline ();
+		
 		objects_resized (selection_box_width, selection_box_height);
 	}
 

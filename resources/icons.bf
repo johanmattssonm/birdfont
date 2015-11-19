@@ -43,51 +43,61 @@ GNU Lesser General Public License</copyright>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+31">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+32">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+33">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+34">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+35">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+36">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+37">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+38">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+39">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+41">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -95,6 +105,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+42">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -102,6 +113,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+43">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -109,6 +121,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+44">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -116,6 +129,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+45">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -123,6 +137,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+46">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -130,6 +145,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+47">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -137,11 +153,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+48">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+49">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -149,6 +167,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+4a">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -156,6 +175,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+4b">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -163,6 +183,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+4c">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -170,6 +191,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+4d">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -177,6 +199,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+4e">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -184,6 +207,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+4f">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -191,6 +215,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+50">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -198,6 +223,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+51">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -205,6 +231,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+52">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -212,6 +239,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+53">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -219,6 +247,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+54">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -226,6 +255,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+55">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -233,6 +263,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+56">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -240,6 +271,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+57">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -248,6 +280,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+58">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -255,6 +288,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+59">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -262,6 +296,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+5a">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -269,16 +304,19 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+5f">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+61">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="add_layer">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -290,6 +328,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="add_new_theme">
 	<selected id="1"/>
 	<glyph id="1" left="-24" right="28">
@@ -299,6 +338,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="alternate">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -314,6 +354,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="apply_stroke">
 	<selected id="1"/>
 	<glyph id="1" left="-26.53515625" right="29.796903565002076">
@@ -324,6 +365,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="auto_trace_resolution">
 	<selected id="1"/>
 	<glyph id="1" left="-27.706519058400005" right="32.620610941599999">
@@ -336,6 +378,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="auto_trace_simplify">
 	<selected id="1"/>
 	<glyph id="1" left="-20.814081653529328" right="25.14631642100748">
@@ -355,6 +398,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="autotrace">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="43.327433628318595">
@@ -385,6 +429,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+62">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -394,6 +439,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="background_help_lines">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="37.189826465707966">
@@ -407,6 +453,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="bezier_line">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="28">
@@ -424,6 +471,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="bezier_tool">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="28">
@@ -437,11 +485,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+63">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="circle">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28.419182948490214">
@@ -452,6 +502,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="close_path">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28.419182948490214">
@@ -461,6 +512,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="contrast_threshold">
 	<selected id="2"/>
 	<glyph id="1" left="-32.797247476493389" right="33.128416240320774">
@@ -476,6 +528,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="convert_point">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="39.866883116883095">
@@ -487,6 +540,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="create_line">
 	<selected id="1"/>
 	<glyph id="1" left="-35.507575757575779" right="47.63528138528136">
@@ -502,6 +556,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="cubic_points">
 	<selected id="1"/>
 	<glyph id="1" left="-34.667748917748938" right="34.617965367965347">
@@ -512,6 +567,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="curve_orientation">
 	<selected id="0"/>
 	<glyph id="0" left="-26.309523809523803" right="45.383597883597901">
@@ -522,6 +578,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="cut_background">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -533,11 +590,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+64">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="delete_background">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -547,6 +606,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="delete_button">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -556,6 +616,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="double_points">
 	<selected id="1"/>
 	<glyph id="1" left="-32.109195402298838" right="30.195402298850588">
@@ -568,6 +629,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="dropdown_menu">
 	<selected id="1"/>
 	<glyph id="1" left="-4" right="69.259259259299995">
@@ -578,11 +640,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+65">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="export_fonts">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -594,11 +658,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+66">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="fill_open_path">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -610,6 +676,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="flip_horizontal">
 	<selected id="1"/>
 	<glyph id="1" left="-23.6099694818" right="36.936734610499997">
@@ -620,6 +687,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="flip_vertical">
 	<selected id="1"/>
 	<glyph id="1" left="-28.616126296005103" right="40.464025466000002">
@@ -630,6 +698,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="full_glyph">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -638,22 +707,25 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="full_height">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
-			<path data="B 1.0673867152,64.5511235887 M 2.4423867152,63.1448235887 M 27.5673867152,37.3636235887 M 30.7861367152,34.0511235887 M 26.1923867152,34.0511235887 M 14.8486367152,34.0511235887 M 14.8486367152,20.2386235887 M 25.5048867152,20.2076235887 M 30.0361367152,20.1766235887 M 26.9111367152,16.9266235887 M 2.1298867152,-9.0733764113 M 0.7548867152,-10.5108764113 M -0.6513632848,-9.1046764113 M -26.4951132848,16.6766235887 M -29.7451132848,19.9266235887 M -25.1513632848,20.0206235887 M -15.1201132848,20.1769235887 M -14.9951132848,33.7082235887 M -25.0263632848,33.7082235887 M -29.7138632848,33.7082235887 M -26.4013632848,37.0206235887 M -0.3388632848,63.1456235887 M 1.0673867152,64.5519235887 M 1.0673867152,64.5511235887" />
-			<path data="B 1.0361367152,57.9322274474 M -20.3388632848,36.4948274474 M -12.9951132848,36.4948274474 M -11.0576132848,36.4948274474 M -11.0576132848,34.5572274474 M -11.2451132848,17.1510274474 M -11.2764132848,15.2448274474 M -13.1514132848,15.2138274474 M -20.4951632848,15.0888274474 M 0.6923367152,-6.0361725526 M 20.9735867152,15.2451274474 M 12.8798367152,15.2761274474 M 10.9423367152,15.2761274474 M 10.9423367152,17.2136274474 M 10.9423367152,34.9011274474 M 10.9423367152,36.8699274474 M 12.8798367152,36.8699274474 M 21.5673367152,36.8699274474 M 1.0360867152,57.9323274474 M 1.0361367152,57.9322274474" />
-			<path data="S 28.0000000000,67.0000000000 L 28.0000000000,64.0000000000 L -28.0000000000,64.0000000000 L -28.0000000000,67.0000000000 L 28.0000000000,67.0000000000" />
-			<path data="S 28.0000000000,-10.0000000000 L 28.0000000000,-13.0000000000 L -28.0000000000,-13.0000000000 L -28.0000000000,-10.0000000000 L 28.0000000000,-10.0000000000" />
+			<path data="B 0.3122062963,53.8623379327 M 1.2901782879,52.8621037424 M 19.1603937698,34.5251644634 M 21.4497372955,32.1691410292 M 18.1824217783,32.1691410292 M 10.1141528480,32.1691410292 M 10.1141528480,22.3449678414 M 17.6934357825,22.3229190183 M 20.9162980274,22.3008701952 M 18.6936344102,19.9893000333 M 1.0679119262,1.4967387386 M 0.0899399346,0.4743134747 M -0.9102586931,1.4744765398 M -19.2916868070,19.8114869440 M -21.6032569689,22.1230571058 M -18.3359414517,22.1899148274 M -11.2011912406,22.3010835709 M -11.1122846959,31.9252525958 M -18.2470349070,31.9252525958 M -21.5810303327,31.9252525958 M -19.2250068985,34.2812049048 M -0.6879923314,52.8626727442 M 0.3122062963,53.8629069346 M 0.3122062963,53.8623379327" />
+			<path data="B 0.2899796601,49.1546324482 M -14.9130394812,33.9072311597 M -9.6897799809,33.9072311597 M -8.3117285383,33.9072311597 M -8.3117285383,32.5291085918 M -8.4450883553,20.1489078069 M -8.4673505541,18.7931185630 M -9.8009487244,18.7710697399 M -15.0242082247,18.6821631953 M 0.0454510996,3.6569571433 M 14.4705379750,18.7933319387 M 8.7138392066,18.8153807618 M 7.3357877639,18.8153807618 M 7.3357877639,20.1934322045 M 7.3357877639,32.7737082776 M 7.3357877639,34.1740219190 M 8.7138392066,34.1740219190 M 14.8928440623,34.1740219190 M 0.2899440975,49.1547035734 M 0.2899796601,49.1546324482" />
+			<path data="S 19.4680909885,55.6041070534 L 19.4680909885,53.4703499810 L -20.3620410310,53.4703499810 L -20.3620410310,55.6041070534 L 19.4680909885,55.6041070534" />
+			<path data="S 19.4680909885,0.8376755266 L 19.4680909885,-1.2960815459 L -20.3620410310,-1.2960815459 L -20.3620410310,0.8376755266 L 19.4680909885,0.8376755266" />
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+67">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="generate_html_document">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -665,11 +737,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+68">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="height">
 	<selected id="1"/>
 	<glyph id="1" left="-27.652329749100002" right="32.878920250900002">
@@ -679,6 +753,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="help_lines">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="37.189826465707966">
@@ -688,6 +763,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="high_contrast_background">
 	<selected id="1"/>
 	<glyph id="1" left="-27.108818331300004" right="27.110524290899999">
@@ -698,11 +774,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+69">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="info_icon">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="33.597883597883616">
@@ -714,6 +792,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="insert_background">
 	<selected id="1"/>
 	<glyph id="1" left="-21.955947524900004" right="31.169052475099999">
@@ -725,6 +804,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="insert_glyph_from_overview">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -734,6 +814,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="insert_unichar">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -743,16 +824,19 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+6a">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+6b">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="kerning_class">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -762,6 +846,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="kerning_text_input">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -770,11 +855,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+6c">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="layer_hidden">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -783,6 +870,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="layer_visible">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -792,6 +880,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="left_arrow">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="25.184466019417457">
@@ -802,6 +891,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="line_cap_butt">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -811,6 +901,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="line_cap_round">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -820,6 +911,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="line_cap_square">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="32">
@@ -829,6 +921,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="lock_grid">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -838,11 +931,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+6d">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="menu_icon">
 	<selected id="1"/>
 	<glyph id="1" left="-20.425287356321846" right="23.574712643678154">
@@ -853,6 +948,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="move">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="44.833598726114666">
@@ -866,6 +962,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="move_background">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="44.817675159235684">
@@ -905,6 +1002,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="move_canvas">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="44.524681528662434">
@@ -914,6 +1012,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="move_layer">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="51.107526881720446">
@@ -926,11 +1025,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+6e">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="new_font">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -941,6 +1042,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="new_point_on_path">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="35.482683982683966">
@@ -959,6 +1061,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="next">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -967,6 +1070,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="next_kerning_string">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="28">
@@ -977,11 +1081,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+6f">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="open_font">
 	<selected id="1"/>
 	<glyph id="1" left="-19.733203287977929" right="28.542195674601658">
@@ -991,6 +1097,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="orientation_arrow">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -999,6 +1106,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="orientation_both">
 	<selected id="1"/>
 	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
@@ -1009,6 +1117,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="orientation_clockwise">
 	<selected id="1"/>
 	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
@@ -1018,6 +1127,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="orientation_counter_clockwise">
 	<selected id="1"/>
 	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
@@ -1029,11 +1139,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+70">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="pen_tool">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="40.883429529426067">
@@ -1045,6 +1157,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="point_tool">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="40.354299363057336">
@@ -1054,6 +1167,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="prev">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1062,6 +1176,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="previous_kerning_string">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="28">
@@ -1072,6 +1187,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="progress">
 	<selected id="1"/>
 	<glyph id="1" left="-38.02807708356368" right="-11.034366391739779">
@@ -1080,11 +1196,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+71">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="quadratic_points">
 	<selected id="1"/>
 	<glyph id="1" left="-33.827922077922103" right="35.457792207792181">
@@ -1095,11 +1213,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+72">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="rectangle">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="44.879928315412215">
@@ -1109,6 +1229,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="resize">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1118,6 +1239,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="resize_handle">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="20.375000000000004">
@@ -1126,6 +1248,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="resize_overview">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -1135,6 +1258,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="reverse_path">
 	<selected id="1"/>
 	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
@@ -1145,6 +1269,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="right_arrow">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="25.184466019417457">
@@ -1155,6 +1280,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="rotation">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="45.892473118279582">
@@ -1166,11 +1292,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+73">
 	<selected id="1"/>
 	<glyph id="1" left="-45" right="47">
 	</glyph>
 </collection>
+
 <collection name="save_font">
 	<selected id="1"/>
 	<glyph id="1" left="-24" right="26">
@@ -1185,6 +1313,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="scale_background">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1194,6 +1323,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="select_all">
 	<selected id="1"/>
 	<glyph id="1" left="-42.201298701298718" right="45.14069264069262">
@@ -1228,6 +1358,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="select_background">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1238,6 +1369,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="settings">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1247,6 +1379,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="show_all_line_handles">
 	<selected id="1"/>
 	<glyph id="1" left="-34.656084656084666" right="36.904761904761905">
@@ -1262,6 +1395,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="show_background">
 	<selected id="1"/>
 	<glyph id="1" left="-23.425538003800003" right="32.2307119962">
@@ -1273,6 +1407,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="show_grid">
 	<selected id="1"/>
 	<glyph id="1" left="-36" right="48">
@@ -1290,6 +1425,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="show_layers">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="26">
@@ -1300,6 +1436,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="show_xheight_helplines">
 	<selected id="1"/>
 	<glyph id="1" left="-31.518584070796479" right="34.046017699115026">
@@ -1311,6 +1448,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="skew">
 	<selected id="1"/>
 	<glyph id="1" left="-17.339080459770098" right="22.850574712643692">
@@ -1320,6 +1458,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="skew_overview">
 	<selected id="0"/>
 	<glyph id="0" left="-17.339080459770098" right="22.850574712643692">
@@ -1329,6 +1468,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="spin_button">
 	<selected id="1"/>
 	<glyph id="1" left="-22.111134617800001" right="49.367576713691193">
@@ -1338,6 +1478,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="stop">
 	<selected id="0"/>
 	<glyph id="0" left="-38.02807708356368" right="-11.034366391739779">
@@ -1346,6 +1487,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="stroke_to_outline">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1357,6 +1499,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="symmetric">
 	<selected id="1"/>
 	<glyph id="1" left="-40.784482758620676" right="42.890804597701162">
@@ -1372,6 +1515,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+74">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1379,6 +1523,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="theme">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="30.785031847133773">
@@ -1395,6 +1540,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="tie_point">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="46">
@@ -1410,6 +1556,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="track">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="42.053343949044596">
@@ -1422,6 +1569,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="transform">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
@@ -1434,6 +1582,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="ttf_units">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="33.862433862433868">
@@ -1444,11 +1593,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+75">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="undo_tool">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1459,6 +1610,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="update_webview">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1468,16 +1620,19 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+76">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection unicode="U+77">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="width">
 	<selected id="1"/>
 	<glyph id="1" left="-25.106321839080444" right="50.063218390804607">
@@ -1487,11 +1642,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+78">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="x_coordinate">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="33.383116883116863">
@@ -1500,11 +1657,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+79">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="y_coordinate">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="33.238095238095255">
@@ -1513,11 +1672,13 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection unicode="U+7a">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
+
 <collection name="zoom_1_1">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1528,6 +1689,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="zoom_background_image">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1539,6 +1701,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="zoom_boundaries">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1548,6 +1711,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="zoom_in">
 	<selected id="1"/>
 	<glyph id="1" left="-24" right="28">
@@ -1557,6 +1721,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="zoom_out">
 	<selected id="1"/>
 	<glyph id="1" left="-24" right="28">
@@ -1565,6 +1730,7 @@ GNU Lesser General Public License</copyright>
 		</layer>
 	</glyph>
 </collection>
+
 <collection name="zoom_tool">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
@@ -1576,110 +1742,111 @@ GNU Lesser General Public License</copyright>
 </collection>
 
 
+
 <ligature sequence="o r i e n t a t i o n _ c o u n t e r _ c l o c k w i s e" replacement="orientation_counter_clockwise"/>
 <ligature sequence="i n s e r t _ g l y p h _ f r o m _ o v e r v i e w" replacement="insert_glyph_from_overview"/>
 <ligature sequence="h i g h _ c o n t r a s t _ b a c k g r o u n d" replacement="high_contrast_background"/>
 <ligature sequence="p r e v i o u s _ k e r n i n g _ s t r i n g" replacement="previous_kerning_string"/>
-<ligature sequence="g e n e r a t e _ h t m l _ d o c u m e n t" replacement="generate_html_document"/>
 <ligature sequence="s h o w _ x h e i g h t _ h e l p l i n e s" replacement="show_xheight_helplines"/>
-<ligature sequence="o r i e n t a t i o n _ c l o c k w i s e" replacement="orientation_clockwise"/>
-<ligature sequence="z o o m _ b a c k g r o u n d _ i m a g e" replacement="zoom_background_image"/>
-<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution"/>
-<ligature sequence="b a c k g r o u n d _ h e l p _ l i n e s" replacement="background_help_lines"/>
+<ligature sequence="g e n e r a t e _ h t m l _ d o c u m e n t" replacement="generate_html_document"/>
 <ligature sequence="s h o w _ a l l _ l i n e _ h a n d l e s" replacement="show_all_line_handles"/>
-<ligature sequence="n e x t _ k e r n i n g _ s t r i n g" replacement="next_kerning_string"/>
+<ligature sequence="b a c k g r o u n d _ h e l p _ l i n e s" replacement="background_help_lines"/>
+<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution"/>
+<ligature sequence="z o o m _ b a c k g r o u n d _ i m a g e" replacement="zoom_background_image"/>
+<ligature sequence="o r i e n t a t i o n _ c l o c k w i s e" replacement="orientation_clockwise"/>
 <ligature sequence="a u t o _ t r a c e _ s i m p l i f y" replacement="auto_trace_simplify"/>
-<ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold"/>
+<ligature sequence="n e x t _ k e r n i n g _ s t r i n g" replacement="next_kerning_string"/>
 <ligature sequence="k e r n i n g _ t e x t _ i n p u t" replacement="kerning_text_input"/>
-<ligature sequence="c u r v e _ o r i e n t a t i o n" replacement="curve_orientation"/>
-<ligature sequence="s t r o k e _ t o _ o u t l i n e" replacement="stroke_to_outline"/>
-<ligature sequence="s e l e c t _ b a c k g r o u n d" replacement="select_background"/>
-<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
-<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
-<ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background"/>
+<ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold"/>
 <ligature sequence="o r i e n t a t i o n _ a r r o w" replacement="orientation_arrow"/>
-<ligature sequence="o r i e n t a t i o n _ b o t h" replacement="orientation_both"/>
-<ligature sequence="q u a d r a t i c _ p o i n t s" replacement="quadratic_points"/>
+<ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background"/>
+<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
+<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
+<ligature sequence="s e l e c t _ b a c k g r o u n d" replacement="select_background"/>
+<ligature sequence="s t r o k e _ t o _ o u t l i n e" replacement="stroke_to_outline"/>
+<ligature sequence="c u r v e _ o r i e n t a t i o n" replacement="curve_orientation"/>
 <ligature sequence="s c a l e _ b a c k g r o u n d" replacement="scale_background"/>
-<ligature sequence="z o o m _ b o u n d a r i e s" replacement="zoom_boundaries"/>
-<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background"/>
-<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal"/>
-<ligature sequence="m o v e _ b a c k g r o u n d" replacement="move_background"/>
-<ligature sequence="l i n e _ c a p _ s q u a r e" replacement="line_cap_square"/>
+<ligature sequence="q u a d r a t i c _ p o i n t s" replacement="quadratic_points"/>
+<ligature sequence="o r i e n t a t i o n _ b o t h" replacement="orientation_both"/>
 <ligature sequence="r e s i z e _ o v e r v i e w" replacement="resize_overview"/>
-<ligature sequence="f i l l _ o p e n _ p a t h" replacement="fill_open_path"/>
-<ligature sequence="u p d a t e _ w e b v i e w" replacement="update_webview"/>
-<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background"/>
-<ligature sequence="i n s e r t _ u n i c h a r" replacement="insert_unichar"/>
+<ligature sequence="l i n e _ c a p _ s q u a r e" replacement="line_cap_square"/>
+<ligature sequence="m o v e _ b a c k g r o u n d" replacement="move_background"/>
+<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal"/>
+<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background"/>
+<ligature sequence="z o o m _ b o u n d a r i e s" replacement="zoom_boundaries"/>
 <ligature sequence="l i n e _ c a p _ r o u n d" replacement="line_cap_round"/>
-<ligature sequence="a d d _ n e w _ t h e m e" replacement="add_new_theme"/>
-<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class"/>
-<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points"/>
-<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point"/>
-<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button"/>
-<ligature sequence="f l i p _ v e r t i c a l" replacement="flip_vertical"/>
-<ligature sequence="d r o p d o w n _ m e n u" replacement="dropdown_menu"/>
-<ligature sequence="r e s i z e _ h a n d l e" replacement="resize_handle"/>
-<ligature sequence="l i n e _ c a p _ b u t t" replacement="line_cap_butt"/>
-<ligature sequence="l a y e r _ v i s i b l e" replacement="layer_visible"/>
+<ligature sequence="i n s e r t _ u n i c h a r" replacement="insert_unichar"/>
+<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background"/>
+<ligature sequence="u p d a t e _ w e b v i e w" replacement="update_webview"/>
+<ligature sequence="f i l l _ o p e n _ p a t h" replacement="fill_open_path"/>
 <ligature sequence="s k e w _ o v e r v i e w" replacement="skew_overview"/>
-<ligature sequence="a p p l y _ s t r o k e" replacement="apply_stroke"/>
-<ligature sequence="e x p o r t _ f o n t s" replacement="export_fonts"/>
-<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path"/>
-<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points"/>
-<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate"/>
-<ligature sequence="y _ c o o r d i n a t e" replacement="y_coordinate"/>
+<ligature sequence="l a y e r _ v i s i b l e" replacement="layer_visible"/>
+<ligature sequence="l i n e _ c a p _ b u t t" replacement="line_cap_butt"/>
+<ligature sequence="r e s i z e _ h a n d l e" replacement="resize_handle"/>
+<ligature sequence="d r o p d o w n _ m e n u" replacement="dropdown_menu"/>
+<ligature sequence="f l i p _ v e r t i c a l" replacement="flip_vertical"/>
+<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button"/>
+<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point"/>
+<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points"/>
+<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class"/>
+<ligature sequence="a d d _ n e w _ t h e m e" replacement="add_new_theme"/>
 <ligature sequence="l a y e r _ h i d d e n" replacement="layer_hidden"/>
-<ligature sequence="m o v e _ c a n v a s" replacement="move_canvas"/>
-<ligature sequence="s p i n _ b u t t o n" replacement="spin_button"/>
-<ligature sequence="c r e a t e _ l i n e" replacement="create_line"/>
-<ligature sequence="b e z i e r _ l i n e" replacement="bezier_line"/>
-<ligature sequence="r i g h t _ a r r o w" replacement="right_arrow"/>
-<ligature sequence="b e z i e r _ t o o l" replacement="bezier_tool"/>
-<ligature sequence="s h o w _ l a y e r s" replacement="show_layers"/>
-<ligature sequence="f u l l _ g l y p h" replacement="full_glyph"/>
-<ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
-<ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
-<ligature sequence="m o v e _ l a y e r" replacement="move_layer"/>
-<ligature sequence="h e l p _ l i n e s" replacement="help_lines"/>
-<ligature sequence="l e f t _ a r r o w" replacement="left_arrow"/>
-<ligature sequence="c l o s e _ p a t h" replacement="close_path"/>
-<ligature sequence="t r a n s f o r m" replacement="transform"/>
-<ligature sequence="a d d _ l a y e r" replacement="add_layer"/>
-<ligature sequence="o p e n _ f o n t" replacement="open_font"/>
-<ligature sequence="m e n u _ i c o n" replacement="menu_icon"/>
-<ligature sequence="t t f _ u n i t s" replacement="ttf_units"/>
-<ligature sequence="r e c t a n g l e" replacement="rectangle"/>
-<ligature sequence="z o o m _ t o o l" replacement="zoom_tool"/>
-<ligature sequence="s y m m e t r i c" replacement="symmetric"/>
-<ligature sequence="t i e _ p o i n t" replacement="tie_point"/>
-<ligature sequence="u n d o _ t o o l" replacement="undo_tool"/>
-<ligature sequence="a u t o t r a c e" replacement="autotrace"/>
-<ligature sequence="s h o w _ g r i d" replacement="show_grid"/>
-<ligature sequence="i n f o _ i c o n" replacement="info_icon"/>
-<ligature sequence="s a v e _ f o n t" replacement="save_font"/>
-<ligature sequence="l o c k _ g r i d" replacement="lock_grid"/>
-<ligature sequence="a l t e r n a t e" replacement="alternate"/>
-<ligature sequence="n e w _ f o n t" replacement="new_font"/>
-<ligature sequence="p r o g r e s s" replacement="progress"/>
-<ligature sequence="z o o m _ 1 _ 1" replacement="zoom_1_1"/>
-<ligature sequence="p e n _ t o o l" replacement="pen_tool"/>
-<ligature sequence="r o t a t i o n" replacement="rotation"/>
-<ligature sequence="z o o m _ o u t" replacement="zoom_out"/>
-<ligature sequence="s e t t i n g s" replacement="settings"/>
-<ligature sequence="z o o m _ i n" replacement="zoom_in"/>
-<ligature sequence="c i r c l e" replacement="circle"/>
-<ligature sequence="r e s i z e" replacement="resize"/>
-<ligature sequence="h e i g h t" replacement="height"/>
+<ligature sequence="y _ c o o r d i n a t e" replacement="y_coordinate"/>
+<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate"/>
+<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points"/>
+<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path"/>
+<ligature sequence="e x p o r t _ f o n t s" replacement="export_fonts"/>
+<ligature sequence="a p p l y _ s t r o k e" replacement="apply_stroke"/>
 <ligature sequence="f u l l _ h e i g h t" replacement="full_height"/>
-<ligature sequence="t r a c k" replacement="track"/>
-<ligature sequence="w i d t h" replacement="width"/>
+<ligature sequence="s h o w _ l a y e r s" replacement="show_layers"/>
+<ligature sequence="b e z i e r _ t o o l" replacement="bezier_tool"/>
+<ligature sequence="r i g h t _ a r r o w" replacement="right_arrow"/>
+<ligature sequence="b e z i e r _ l i n e" replacement="bezier_line"/>
+<ligature sequence="c r e a t e _ l i n e" replacement="create_line"/>
+<ligature sequence="s p i n _ b u t t o n" replacement="spin_button"/>
+<ligature sequence="m o v e _ c a n v a s" replacement="move_canvas"/>
+<ligature sequence="c l o s e _ p a t h" replacement="close_path"/>
+<ligature sequence="l e f t _ a r r o w" replacement="left_arrow"/>
+<ligature sequence="h e l p _ l i n e s" replacement="help_lines"/>
+<ligature sequence="m o v e _ l a y e r" replacement="move_layer"/>
+<ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
+<ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
+<ligature sequence="f u l l _ g l y p h" replacement="full_glyph"/>
+<ligature sequence="a l t e r n a t e" replacement="alternate"/>
+<ligature sequence="l o c k _ g r i d" replacement="lock_grid"/>
+<ligature sequence="s a v e _ f o n t" replacement="save_font"/>
+<ligature sequence="i n f o _ i c o n" replacement="info_icon"/>
+<ligature sequence="s h o w _ g r i d" replacement="show_grid"/>
+<ligature sequence="a u t o t r a c e" replacement="autotrace"/>
+<ligature sequence="u n d o _ t o o l" replacement="undo_tool"/>
+<ligature sequence="t i e _ p o i n t" replacement="tie_point"/>
+<ligature sequence="s y m m e t r i c" replacement="symmetric"/>
+<ligature sequence="z o o m _ t o o l" replacement="zoom_tool"/>
+<ligature sequence="r e c t a n g l e" replacement="rectangle"/>
+<ligature sequence="t t f _ u n i t s" replacement="ttf_units"/>
+<ligature sequence="m e n u _ i c o n" replacement="menu_icon"/>
+<ligature sequence="o p e n _ f o n t" replacement="open_font"/>
+<ligature sequence="a d d _ l a y e r" replacement="add_layer"/>
+<ligature sequence="t r a n s f o r m" replacement="transform"/>
+<ligature sequence="s e t t i n g s" replacement="settings"/>
+<ligature sequence="z o o m _ o u t" replacement="zoom_out"/>
+<ligature sequence="r o t a t i o n" replacement="rotation"/>
+<ligature sequence="p e n _ t o o l" replacement="pen_tool"/>
+<ligature sequence="z o o m _ 1 _ 1" replacement="zoom_1_1"/>
+<ligature sequence="p r o g r e s s" replacement="progress"/>
+<ligature sequence="n e w _ f o n t" replacement="new_font"/>
+<ligature sequence="z o o m _ i n" replacement="zoom_in"/>
+<ligature sequence="h e i g h t" replacement="height"/>
+<ligature sequence="r e s i z e" replacement="resize"/>
+<ligature sequence="c i r c l e" replacement="circle"/>
 <ligature sequence="t h e m e" replacement="theme"/>
-<ligature sequence="s t o p" replacement="stop"/>
-<ligature sequence="n e x t" replacement="next"/>
-<ligature sequence="p r e v" replacement="prev"/>
-<ligature sequence="m o v e" replacement="move"/>
+<ligature sequence="w i d t h" replacement="width"/>
+<ligature sequence="t r a c k" replacement="track"/>
 <ligature sequence="s k e w" replacement="skew"/>
+<ligature sequence="m o v e" replacement="move"/>
+<ligature sequence="p r e v" replacement="prev"/>
+<ligature sequence="n e x t" replacement="next"/>
+<ligature sequence="s t o p" replacement="stop"/>
 
 <kerning left="settings" right="l" hadjustment="3.8289794922" />
 </font>
