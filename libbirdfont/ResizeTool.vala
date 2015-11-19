@@ -381,14 +381,20 @@ public class ResizeTool : Tool {
 		double xc, yc, w, h;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Font font = BirdFont.get_current_font ();
-
+		
 		MoveTool.update_boundaries_for_selection ();
 		MoveTool.get_selection_box_boundaries (out xc, out yc, out w, out h);
 
 		//compute scale
+		double descender = font.base_line - (yc - h / 2);
+		
+		if (descender < 0) {
+			descender = 0;
+		}
+		
 		double font_height = font.top_position - font.base_line;
-		double scale = font_height / h;
-
+		double scale = font_height / (h - descender);
+		
 		resize_selected_paths (scale);
 		PenTool.reset_stroke ();
 
@@ -400,7 +406,13 @@ public class ResizeTool : Tool {
 											   out selection_box_width,
 											   out selection_box_height);
 		
+		
 		DrawingTools.move_tool.move_to_baseline ();
+
+		
+		foreach (Path path in glyph.active_paths) {
+			path.move (0, -descender * scale);
+		}
 		
 		objects_resized (selection_box_width, selection_box_height);
 	}
