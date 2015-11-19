@@ -86,7 +86,6 @@ public class DrawingTools : ToolCollection  {
 	SpinButton rotation;
 	SpinButton width;
 	SpinButton height;
-	SpinButton skew;
 
 	Tool tie_handles;
 	Tool reflect_handle;
@@ -397,39 +396,6 @@ public class DrawingTools : ToolCollection  {
 		});
 		
 		draw_tool_modifiers.add_tool (rotation);
-
-		// skew
-		skew = new SpinButton ("skew", t_("Skew"));
-		skew.set_big_number (true);
-		skew.set_int_value ("0.000");
-		skew.set_int_step (1);
-		skew.set_min (-100);
-		skew.set_max (100);
-		skew.show_icon (true);
-		skew.set_persistent (false);
-		skew.new_value_action.connect ((self) => {
-			resize_tool.skew (-skew.get_value ());
-			PenTool.reset_stroke ();
-			GlyphCanvas.redraw ();
-		});
-		
-		move_tool.objects_moved.connect (() => {
-			Glyph glyph = MainWindow.get_current_glyph ();
-			double d;
-			
-			if (glyph.active_paths.size > 0) {
-				d = glyph.active_paths.get (0).skew;
-				resize_tool.last_skew = d;
-				skew.set_value_round (-d, true, false);
-			}
-		});
-		
-		move_tool.objects_deselected.connect (() => {
-			skew.set_value_round (0, true, false);
-			skew.hide_value ();
-		});
-		
-		draw_tool_modifiers.add_tool (skew);
 
 		// width
 		width = new SpinButton ("width", t_("Width"));
@@ -1328,7 +1294,7 @@ public class DrawingTools : ToolCollection  {
 		rotation.set_tool_visibility (false);
 		width.set_tool_visibility (false);
 		height.set_tool_visibility (false);
-		skew.set_tool_visibility (false);
+		
 		reverse_path_tool.set_tool_visibility (false);
 		full_height_tool.set_tool_visibility (false);
 		move_layer.set_tool_visibility (false);
@@ -1396,7 +1362,6 @@ public class DrawingTools : ToolCollection  {
 		rotation.set_tool_visibility (true);
 		width.set_tool_visibility (true);
 		height.set_tool_visibility (true);
-		skew.set_tool_visibility (true);
 
 		reverse_path_tool.set_tool_visibility (true);
 		move_layer.set_tool_visibility (true);
