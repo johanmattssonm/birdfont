@@ -377,6 +377,34 @@ public class ResizeTool : Tool {
 		}
 	}
 
+	public void full_height () {
+		double xc, yc, w, h;
+		Glyph glyph = MainWindow.get_current_glyph ();
+		Font font = BirdFont.get_current_font ();
+
+		MoveTool.update_boundaries_for_selection ();
+		MoveTool.get_selection_box_boundaries (out xc, out yc, out w, out h);
+
+		//compute scale
+		double font_height = font.top_position - font.base_line;
+		double scale = font_height / h;
+		foreach (Path p in glyph.active_paths) {
+			p.scale(scale, scale);
+		}
+
+		PenTool.reset_stroke ();
+
+		MoveTool.update_boundaries_for_selection ();
+		font.touch ();
+
+		MoveTool.get_selection_box_boundaries (out selection_box_center_x,
+											   out selection_box_center_y,
+											   out selection_box_width,
+											   out selection_box_height);
+
+		objects_resized (selection_box_width, selection_box_height);
+	}
+
 	void get_selection_min (out double x, out double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		x = double.MAX;
