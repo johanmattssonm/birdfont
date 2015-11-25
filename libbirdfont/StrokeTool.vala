@@ -3130,18 +3130,23 @@ public class StrokeTool : GLib.Object {
 		return pl.paths.get (1);
 	}
 	
-	public static Path change_weight (Path path, bool counter) {
+	public static Path change_weight (Path path, bool counter, double weight) {
 		StrokeTool tool = new StrokeTool ();
 		Path o = path.copy ();
 		Path interpolated = new Path();
 		o.force_direction (Direction.CLOCKWISE);
+		double default_weight = 5;
 		
-		PathList pl = tool.get_stroke (o, 5);
+		PathList pl = tool.get_stroke (o, default_weight);
 		Gee.ArrayList<PointSelection> deleted;
 		
 		deleted = new Gee.ArrayList<PointSelection> (); 
 
 		return_val_if_fail (pl.paths.size > 0, new Path ());
+		
+		if (weight < 0) {
+			counter = !counter;
+		}
 		
 		foreach (Path sp in pl.paths) {
 			if (sp.points.size > interpolated.points.size

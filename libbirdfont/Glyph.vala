@@ -2456,12 +2456,11 @@ public class Glyph : FontDisplay {
 		
 		foreach (Path p in g1.get_visible_paths ()) {
 			bool counter = !p.is_clockwise ();
-			//g2.add_path (p.self_interpolate (weight, counter));
 
 			g2.add_path (p.copy ());
 			
 			p.remove_points_on_points ();
-			Path master = p.get_self_interpolated_master (counter);
+			Path master = p.get_self_interpolated_master (counter, weight);
 			p = p.interpolate_estimated_path (master, weight);
 			p.recalculate_linear_handles ();
 			

@@ -2647,7 +2647,7 @@ public class Path : GLib.Object {
 			}
 		} else {
 			remove_points_on_points ();
-			master = get_self_interpolated_master (counter);
+			master = get_self_interpolated_master (counter, weight);
 			p = interpolate_estimated_path (master, weight);
 			recalculate_linear_handles ();
 		}
@@ -2659,7 +2659,10 @@ public class Path : GLib.Object {
 		Path p = copy ();
 		EditPoint ep, master_point;
 		double x, y;
-
+		double direction = weight;
+	
+		weight = fabs(weight);
+		
 		if (p.points.size <= 1 || master.points.size <= 1) {
 			return p;
 		}
@@ -2669,12 +2672,15 @@ public class Path : GLib.Object {
 		for (int i = 0; i < p.points.size; i++) {
 			ep = p.points.get (i);
 			
-			bool debug = (-19 < ep.x < -21) && (39 < ep.y < 41);
-
 			double right_angle = ep.get_right_handle ().angle;
 			double left_angle = ep.get_left_handle ().angle;
 			double angle = EditPointHandle.average_angle (right_angle, left_angle);
-			angle += PI;
+			angle += direction > 0 ? -PI : PI;
+			
+			if (angle < 0) {
+				angle += 2 * PI;
+			}
+			
 			angle %= 2 * PI;
 			
 			double close_x, close_y;
@@ -2685,19 +2691,17 @@ public class Path : GLib.Object {
 			close_x = Glyph.CANVAS_MAX;
 			close_y = Glyph.CANVAS_MAX;
 			
+			master_point = new EditPoint ();
 			while (Path.distance (close_x, master_point.x, close_y, master_point.y) > 0.1) {
 				x = ep.x + distance_to_edge * cos (angle);
 				y = ep.y + distance_to_edge * sin (angle);
 				
-				if (debug) {
-					print(@"Search $x $y\n");
-				}
-				
 				master_point = new EditPoint ();
 				master.get_closest_point_on_path (master_point, x, y);
 				master_point.color = Color.red ();
-				master.insert_new_point_on_path (master_point);
-				master_point.get_right_handle ().angle = angle;
+				//master.insert_new_point_on_path (master_point);
+				master_point.convert_to_curve ();
+				master_point.get_right_handle().angle = angle;
 				
 				distance_to_edge += 0.1;
 				
@@ -2711,13 +2715,15 @@ public class Path : GLib.Object {
 				if (distance_to_edge > 5) {
 					break;
 				}
+
 			}
+			master_point.color = Color.blue ();
 
 			x = close_x;
 			y = close_x;
 			
-			ep.x += (master_point.x - ep.x) * weight;
-			ep.y += (master_point.y - ep.y) * weight;
+			ep.x += (close_x - ep.x) * direction;
+			ep.y += (close_y - ep.y) * direction;
 		}
 		
 		p.adjust_interpolated_handles (master, fabs ((5 / 2.0) * weight));
@@ -2725,8 +2731,8 @@ public class Path : GLib.Object {
 		return p;
 	}
 
-	public Path get_self_interpolated_master (bool counter) {
-		return StrokeTool.change_weight (this, counter);	
+	public Path get_self_interpolated_master (bool counter, double weight) {
+		return StrokeTool.change_weight (this, counter, weight);	
 	}
 	
 	void adjust_interpolated_handles (Path master, double edge) {
