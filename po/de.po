@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-12 21:35+0100\n"
-"PO-Revision-Date: 2015-11-05 14:01+0000\n"
-"Last-Translator: rfs <i183291@trbvm.com>\n"
+"POT-Creation-Date: 2015-11-25 22:48+0100\n"
+"PO-Revision-Date: 2015-11-16 16:19+0000\n"
+"Last-Translator: qtng <qt.nguyen@gmx.de>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1446732073.000000\n"
+"X-POOTLE-MTIME: 1447690763.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -276,7 +276,7 @@ msgstr "Verkäufer"
 
 #: libbirdfont/DescriptionDisplay.vala:252
 msgid "Designer URL"
-msgstr ""
+msgstr "Designer-URL"
 
 #: libbirdfont/DrawingTools.vala:119
 msgid "Drawing Tools"
@@ -484,7 +484,7 @@ msgstr "Hilfslinien am oberen und unteren Rand anzeigen"
 
 #: libbirdfont/DrawingTools.vala:1063
 msgid "Lock guides and grid"
-msgstr ""
+msgstr "Hilfslinien und Gitter sperren"
 
 #: libbirdfont/DrawingTools.vala:1105
 msgid "Zoom Out More"
@@ -537,7 +537,7 @@ msgstr "Dateiname"
 
 #: libbirdfont/ExportSettings.vala:75
 msgid "Units Per Em"
-msgstr ""
+msgstr "Einheiten pro EM"
 
 #: libbirdfont/ExportSettings.vala:94 libbirdfont/RecentFiles.vala:73
 msgid "Folder"
@@ -619,11 +619,11 @@ msgstr "Designs"
 
 #: libbirdfont/Glyph.vala:495
 msgid "top margin"
-msgstr ""
+msgstr "Abstand oben"
 
 #: libbirdfont/Glyph.vala:502
 msgid "top"
-msgstr ""
+msgstr "oben"
 
 #: libbirdfont/Glyph.vala:509
 msgid "x-height"
@@ -635,21 +635,20 @@ msgstr ""
 
 #: libbirdfont/Glyph.vala:525
 msgid "bottom"
-msgstr ""
+msgstr "unten"
 
 #: libbirdfont/Glyph.vala:531
 msgid "bottom margin"
-msgstr ""
+msgstr "Abstand unten"
 
 #: libbirdfont/Glyph.vala:537
 #, fuzzy
 msgid "left"
-msgstr "Links"
+msgstr "links"
 
 #: libbirdfont/Glyph.vala:546
-#, fuzzy
 msgid "right"
-msgstr "Hell"
+msgstr "rechts"
 
 #: libbirdfont/Glyph.vala:2344
 msgid "Guide"
@@ -1007,7 +1006,7 @@ msgstr "Pfad vereinfachen"
 
 #: libbirdfont/Menu.vala:169
 msgid "Merge Paths"
-msgstr ""
+msgstr "Pfade zusammenführen"
 
 #: libbirdfont/Menu.vala:176
 msgid "Close Path"
@@ -1214,27 +1213,27 @@ msgstr "Pfade verschieben"
 
 #: libbirdfont/OtfFeatureTable.vala:102 libbirdfont/OtfFeatureTable.vala:167
 msgid "Glyph Substitutions"
-msgstr ""
+msgstr "Zeichenersetzungen"
 
 #: libbirdfont/OtfFeatureTable.vala:108
 msgid "New glyph"
-msgstr ""
+msgstr "Neues Zeichen"
 
 #: libbirdfont/OtfFeatureTable.vala:115
 msgid "Replacement"
-msgstr ""
+msgstr "Ersetzung"
 
 #: libbirdfont/OtfFeatureTable.vala:120
 msgid "Tag"
-msgstr ""
+msgstr "Tag"
 
 #: libbirdfont/OtfFeatureTable.vala:181
 msgid "Glyph name"
-msgstr ""
+msgstr "Zeichenname"
 
 #: libbirdfont/OtfFeatureTable.vala:200
 msgid "All glyphs must have unique names."
-msgstr ""
+msgstr "Alle Zeichen müssen eindeutige Namen haben."
 
 #: libbirdfont/OtfLabel.vala:47
 msgid "Stylistic Alternate"
