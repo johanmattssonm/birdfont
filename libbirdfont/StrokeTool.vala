@@ -535,10 +535,8 @@ public class StrokeTool : GLib.Object {
 			next = lep.get_next ();
 			hidden = new EditPoint (0, 0, PointType.QUADRATIC);
 			
-			px = next.get_right_handle ().x 
-				+ (next.get_left_handle ().x - prev.get_right_handle ().x) / 2.0;
-			py = next.get_right_handle ().y 
-				+ (next.get_left_handle ().y - prev.get_right_handle ().y) / 2.0;
+			px = (next.get_left_handle ().x + prev.get_right_handle ().x) / 2.0;
+			py = (next.get_left_handle ().y + prev.get_right_handle ().y) / 2.0;
 			hidden.independent_x = px;
 			hidden.independent_y = py;
 			

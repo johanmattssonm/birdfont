@@ -36,6 +36,8 @@ public class MainWindow : GLib.Object {
 	/** Number of pixels per mm */
 	public static double units = 1;
 
+	private static double scrollbar_size = -1;
+	
 	public MainWindow () {
 		singleton = this;
 		
@@ -250,8 +252,21 @@ public class MainWindow : GLib.Object {
 		MainWindow.native_window.file_chooser (title, fc, flags);
 	}
 	
+	public static void hide_scrollbar () {
+		if (!is_null (MainWindow.native_window)) {
+			MainWindow.native_window.set_scrollbar_size (-1);
+		}
+	}	
+
+	public static void show_scrollbar () {
+		if (!is_null (MainWindow.native_window)) {
+			MainWindow.native_window.set_scrollbar_size (scrollbar_size);
+		}
+	}
+	
 	public static void set_scrollbar_size (double size) {
 		if (!is_null (MainWindow.native_window)) {
+			scrollbar_size = size;
 			MainWindow.native_window.set_scrollbar_size (size);
 		}
 	}

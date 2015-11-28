@@ -36,11 +36,15 @@ public class AbstractMenu : GLib.Object {
 				if (tab_name == "Preview") {
 					MenuTab.select_overview ();
 				}
+				
+				MainWindow.hide_scrollbar ();
+			} else {
+				MainWindow.show_scrollbar ();
 			}
 		}
 	}
 	
-	public bool menu_visibility = false;
+	private bool menu_visibility = false;
 	public SubMenu top_menu;
 
 	SubMenu current_menu;
@@ -219,7 +223,7 @@ public class AbstractMenu : GLib.Object {
 				y += height;
 			}
 			
-			menu_visibility = false;
+			show_menu = false;
 			current_menu = (!) top_menu;
 			GlyphCanvas.redraw ();
 		}

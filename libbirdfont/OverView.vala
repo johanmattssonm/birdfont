@@ -129,6 +129,14 @@ public class OverView : FontDisplay {
 		update_scrollbar ();
 		reset_zoom ();
 	}
+
+	public Glyph? get_selected_glyph () {
+		if (selected_items.size == 0) {
+			return null;
+		}
+		
+		return selected_items.get (0).get_current ();
+	}
 	
 	public void select_all_glyphs () {
 		Font f;
